@@ -25,7 +25,7 @@ STDIO="@stdio@"
 
 TEMP=`mktemp -q ${TMPDIR-/tmp}/glibcbugXXXXXX 2>/dev/null`
 if test $? -ne 0; then
-  TEMP={$TMPDIR-/tmp}/glibcbug.$$
+  TEMP=${TMPDIR-/tmp}/glibcbug.$$
   echo > $TEMP
   chmod 600 $TEMP
 fi
