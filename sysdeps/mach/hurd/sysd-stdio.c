@@ -34,7 +34,7 @@ fd_fail (struct hurd_fd *fd, error_t err)
 {
   int signo = _hurd_fd_error_signal (err);
   if (signo)
-    _hurd_raise_signal (NULL, signo, __stdio_fileno (fd));
+    _hurd_raise_signal (NULL, signo, __stdio_fileno (fd), err);
   errno = err;
   return -1;
 }
