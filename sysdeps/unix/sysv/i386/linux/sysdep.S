@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 
 .globl syscall_error
 syscall_error:
+	subl 
 	negl %eax
 	movl %eax, ___errno
 	move $-1, %eax
