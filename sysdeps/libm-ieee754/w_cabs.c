@@ -7,9 +7,13 @@
 
 #include <math.h>
 
+struct __cabs_complex
+{
+  double x, y;
+};
+
 double
-__cabs(z)
-	struct __cabs_complex z;
+__cabs (struct __cabs_complex z)
 {
 	return __hypot(z.x, z.y);
 }
@@ -17,8 +21,7 @@ weak_alias (__cabs, cabs)
 
 #ifdef NO_LONG_DOUBLE
 double
-__cabsl(z)
-	struct __cabs_complexl z;
+__cabsl (struct __cabs_complexl z)
 {
 	return __hypotl(z.x, z.y);
 }
