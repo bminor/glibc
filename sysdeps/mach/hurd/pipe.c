@@ -40,12 +40,12 @@ DEFUN(__pipe, (fds), int fds[2])
   if (fds == NULL)
     return __hurd_fail (EINVAL);
 
-  /* Find the file domain socket server.  */
-  server = _hurd_socket_server (AF_FILE);
+  /* Find the local domain socket server.  */
+  server = _hurd_socket_server (PF_LOCAL);
   if (server == MACH_PORT_NULL)
     return -1;
 
-  /* Create two file domain sockets and connect them together.  */
+  /* Create two local domain sockets and connect them together.  */
 
   if (err = __socket_create (server, SOCK_STREAM, 0, &sock1))
     return __hurd_fail (err);
