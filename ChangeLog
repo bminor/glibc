@@ -1,3 +1,8 @@
+1998-06-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/svc_authux.c (_svcauth_unix): Use unsigned types for
+	str_len, gid_len and i.
+
 1998-06-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* pwd/fgetpwent_r.c (__fgetpwent_r): Correct buffer overflow fix.
