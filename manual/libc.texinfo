@@ -33,9 +33,8 @@ Copyright @copyright{} 1992 Free Software Foundation, Inc.
 @end titlepage
 @page
 
-@node Top
-
 @ifinfo
+@node Top
 @chapter Main Menu
 This is the reference manual for version 0.00 of the GNU C Library.
 @end ifinfo
