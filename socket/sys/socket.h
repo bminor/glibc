@@ -137,11 +137,12 @@ extern int EXFUN(recv, (int __fd, PTR __buf, size_t __n, int __flags));
 extern int EXFUN(sendto, (int __fd, PTR __buf, size_t __n, int __flags,
 			  struct sockaddr *__addr, size_t __addr_len));
 
-/* Read N bytes into BUF through socket FD from peer
-   at address ADDR (which is ADDR_LEN bytes long).
-   Returns the number read or -1 for errors.  */
+/* Read N bytes into BUF through socket FD.
+   If ADDR is not NULL, fill in *ADDR_LEN bytes of it with tha address of
+   the sender, and store the actual size of the address in *ADDR_LEN.
+   Returns the number of bytes read or -1 for errors.  */
 extern int EXFUN(recvfrom, (int __fd, PTR __buf, size_t __n, int __flags,
-			    struct sockaddr *__addr, size_t __addr_len));
+			    struct sockaddr *__addr, size_t *__addr_len));
 
 
 
