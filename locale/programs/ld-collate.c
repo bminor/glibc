@@ -1666,6 +1666,10 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
 	  runp->wcseqorder = wcseqact++;
 	}
+      else if (runp->mbs != NULL && runp->weights != NULL)
+        {
+          runp->wcseqorder = wcseqact++;
+        }
 
       /* Up to the next entry.  */
       runp = runp->next;
@@ -1700,8 +1704,9 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	  struct element_t *lastp;
 
 	  /* Insert the collation sequence value.  */
-	  collseq_table_add (&collate->wcseqorder, runp->wcs[0],
-			     runp->wcseqorder);
+	  if (runp->is_character)
+	    collseq_table_add (&collate->wcseqorder, runp->wcs[0],
+			       runp->wcseqorder);
 
 	  /* Find the point where to insert in the list.  */
 	  e = wchead_table_get (&collate->wcheads, runp->wcs[0]);
