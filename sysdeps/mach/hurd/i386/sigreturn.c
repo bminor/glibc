@@ -23,7 +23,7 @@ int
 __sigreturn (register const struct sigcontext *scp)
 {
   struct hurd_sigstate *ss;
-  register int *usp asm ("%eax");
+  register int *usp asm ("%eax"); /* Force it into a register.  */
 
   if (scp == NULL)
     {
@@ -31,7 +31,7 @@ __sigreturn (register const struct sigcontext *scp)
       return -1;
     }
 
-  ss = _hurd_thread_sigstate (__mach_thread_self ());
+  ss = _hurd_self_sigstate ();
   ss->blocked = scp->sc_mask;
   ss->intr_port = scp->sc_intr_port;
   if (scp->sc_onstack)
@@ -40,30 +40,32 @@ __sigreturn (register const struct sigcontext *scp)
 
   /* Push the flags and registers onto the stack we're returning to.  */
   usp = (int *) scp->sc_uesp;
-  *--usp = scp->sc_eip;
-  *--usp = scp->sc_efl;
-  /* Segment registers??? XXX */
-  *--usp = scp->sc_edi;
-  *--usp = scp->sc_esi;
-  *--usp = scp->sc_ebp;
-  *--usp = scp->sc_ebx;
-  *--usp = scp->sc_edx;
-  *--usp = scp->sc_ecx;
-  *--usp = scp->sc_eax;
 
-  /* Switch to the target stack, and pop the state off it.  */
-  asm volatile ("movl %0, %%esp\n"
-		"popl %%eax\n"
-		"popl %%ecx\n"
-		"popl %%edx\n"
-		"popl %%ebx\n"
-		"popl %%ebp\n"
-		"popl %%esi\n"
-		"popl %%edi\n"
-		"popf\n"
-		"ret"
-		: /* No outputs.  */
-		: "g" (usp));
+  /* The last thing popped will be the PC being restored, so push it first.  */
+  *--usp = scp->sc_eip;
+  *--usp = scp->sc_efl;		/* Second to last, processor flags.  */
+
+  /* Segment registers??? XXX */
+
+  /* Now push the general registers in the reverse of the order they will
+     be popped off by the `popa' instruction.  The instruction passes over
+     a word corresponding to %esp, but does not use the value.  */
+  *--usp = scp->sc_eax;
+  *--usp = scp->sc_ecx;
+  *--usp = scp->sc_edx;
+  *--usp = scp->sc_ebx;
+  *--usp = 0;			/* Ignored by `popa'.  */
+  *--usp = scp->sc_ebp;
+  *--usp = scp->sc_esi;
+  *--usp = scp->sc_edi;
+
+  asm volatile
+    ("movl %0, %%esp\n"		/* Switch to the target stack.  */
+     "popa\n"			/* Pop all the general registers.  */
+     "popf\n"			/* Pop the flags.  */
+     "ret\n"			/* Pop the target PC and jump to it.  */
+     "hlt" : :			/* Firewall.  */
+     "g" (usp));
 
   /* NOTREACHED */
   return -1;
