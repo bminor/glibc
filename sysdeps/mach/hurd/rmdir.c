@@ -22,9 +22,9 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 
-/* Remove the directory PATH.  */
+/* Remove the directory FILE_NAME.  */
 int
-DEFUN(__rmdir, (path), CONST char *path)
+DEFUN(__rmdir, (file_name), CONST char *file_name)
 {
   error_t err;
   const char *name;

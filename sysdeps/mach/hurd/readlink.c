@@ -23,12 +23,12 @@ Cambridge, MA 02139, USA.  */
 #include <fcntl.h>
 #include <string.h>
 
-/* Read the contents of the symbolic link PATH into no more than
+/* Read the contents of the symbolic link FILE_NAME into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
 ssize_t
-DEFUN(__readlink, (path, buf, len),
-      CONST char *path AND char *buf AND size_t len)
+DEFUN(__readlink, (file_name, buf, len),
+      CONST char *file_name AND char *buf AND size_t len)
 {
   error_t err;
   file_t file;

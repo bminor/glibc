@@ -41,8 +41,8 @@ getcwd (char *buf, size_t size)
   error_t err;
   dev_t rootdev, thisdev;
   ino_t rootino, thisino;
-  char *path;
-  register char *pathp;
+  char *file_name;
+  register char *file_namep;
   struct stat st;
   file_t parent;
   char *dirbuf = NULL;
@@ -73,16 +73,16 @@ getcwd (char *buf, size_t size)
     }
 
   if (buf != NULL)
-    path = buf;
+    file_name = buf;
   else
     {
-      path = malloc (size);
-      if (path == NULL)
+      file_name = malloc (size);
+      if (file_name == NULL)
 	return NULL;
     }
 
-  pathp = path + size;
-  *--pathp = '\0';
+  file_namep = file_name + size;
+  *--file_namep = '\0';
 
   /* Get a port to our root directory and stat it.  */
 
@@ -204,7 +204,7 @@ getcwd (char *buf, size_t size)
 	{
 	  /* Prepend the directory name just discovered.  */
 
-	  if (pathp - file_name < d->d_namlen + 1)
+	  if (file_namep - file_name < d->d_namlen + 1)
 	    {
 	      if (buf != NULL)
 		{
@@ -220,13 +220,13 @@ getcwd (char *buf, size_t size)
 		      free (file_name);
 		      return NULL;
 		    }
-		  pathp = &buf[pathp - file_name];
+		  file_namep = &buf[file_namep - file_name];
 		  file_name = buf;
 		}
 	    }
-	  pathp -= d->d_namlen;
-	  (void) memcpy (pathp, d->d_name, d->d_namlen);
-	  *--pathp = '/';
+	  file_namep -= d->d_namlen;
+	  (void) memcpy (file_namep, d->d_name, d->d_namlen);
+	  *--file_namep = '/';
 	}
 
       /* The next iteration will find the name of the directory we
@@ -235,12 +235,12 @@ getcwd (char *buf, size_t size)
       thisino = dotino;
     }
 
-  if (pathp == &file_name[size - 1])
+  if (file_namep == &file_name[size - 1])
     /* We found nothing and got all the way to the root.
        So the root is our current directory.  */
-    *--pathp = '/';
+    *--file_namep = '/';
 
-  memmove (file_name, pathp, file_name + size - pathp);
+  memmove (file_name, file_namep, file_name + size - file_namep);
   cleanup ();
   return file_name;
 

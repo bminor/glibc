@@ -22,9 +22,9 @@ Cambridge, MA 02139, USA.  */
 #include <sys/stat.h>
 #include <hurd.h>
 
-/* Create a directory named PATH with protections MODE.  */
+/* Create a directory named FILE_NAME with protections MODE.  */
 int
-DEFUN(__mkdir, (path, mode), CONST char *path AND mode_t mode)
+DEFUN(__mkdir, (file_name, mode), CONST char *file_name AND mode_t mode)
 {
   error_t err;
   const char *name;

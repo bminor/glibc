@@ -22,9 +22,9 @@ Cambridge, MA 02139, USA.  */
 #include <fcntl.h>
 #include <hurd/port.h>
 
-/* Change the current directory to PATH.  */
+/* Change the current directory to FILE_NAME.  */
 int
-DEFUN(__chdir, (path), CONST char *path)
+DEFUN(__chdir, (file_name), CONST char *file_name)
 {
   file_t file, dir;
   error_t err;
