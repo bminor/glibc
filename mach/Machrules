@@ -65,7 +65,7 @@ ifneq "$(*.ir)" "$(wildcard $(*.ir))"
 # If any .ir file is missing, we will be unable to make all the deps.
 no_deps=t
 endif
-generated += $(*.ir)
+generated += $(*.ir:$(objpfx)%=%)
 endif
 
 
@@ -155,7 +155,7 @@ interface-headers := $(user-interfaces:%=%.h) \
 # and don't distribute them.
 mach-generated = $(interface-routines:%=%.c) \
 		 $(foreach h,$(interface-headers:%.h=%),$h.h $h.uh $h.__h)
-generated += $(addprefix $(objpfx),$(mach-generated))
+generated += $(mach-generated)
 
 # These are needed to generate the dependencies.
 before-compile += $(interface-headers:%=$(objpfx)%)
