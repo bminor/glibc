@@ -69,10 +69,8 @@ extern printf_function **__printf_function_table;
 
 int
 DEFUN(vfprintf, (s, format, args),
-      register FILE *s AND CONST char *format AND va_list argptr)
+      register FILE *s AND CONST char *format AND va_list args)
 {
-  va_list args = (va_list) argptr;
-
   /* Lower-case digits.  */
   static CONST char lower_digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
   /* Upper-case digits.  */
