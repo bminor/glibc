@@ -21,13 +21,13 @@
 #
 subdir	:= sunrpc
 
-# The code in this subdirectory is taken verbatim from Sun's
-# RPCSRC-4.0 distribution.  A few files needed trivial modifications
-# to compile in the GNU environment; these changes are marked by
-# comments that say `roland@gnu'.  All the code from Sun's rpc, etc,
-# and rpcgen subdirectories is in this directory; the rpc subdirectory
-# contains only the header files.  Other than that, several files were
-# renamed so as not to exceed 14-character file name limits:
+# The code in this subdirectory is taken verbatim from Sun's RPCSRC-4.0
+# distribution.  A few files needed trivial modifications to compile in the
+# GNU environment; these changes are marked by comments that say
+# `roland@gnu'.  All the code from Sun's rpc, etc, and rpcgen
+# subdirectories is in this directory; the rpc subdirectory contains only
+# the header files.  Other than that, several files were renamed so as not
+# to exceed 14-character file name limits:
 #
 #	authunix_prot.c -> authuxprot.c
 #	bindresvport.c -> bindrsvprt.c
@@ -52,8 +52,8 @@ rpcsvc = bootparam.x nlm_prot.x rstat.x \
 	 yppasswd.x klm_prot.x rex.x sm_inter.x mount.x \
 	 rnusers.x spray.x nfs_prot.x rquota.x yp.x
 # These headers are installed with rpcgen by a rule below.
-install-others = $(rpcsvc:%.x=$(includedir)/%.h)
-		 $(includedir)/bootparam_prot.h \
+install-others = $(rpcsvc:%.x=$(includedir)/rpcsvc/%.h) \
+		 $(includedir)/rpcsvc/bootparam_prot.h \
 		 $(etcdir)/rpc
 
 routines := auth_none auth_unix authuxprot bindrsvprt \
@@ -70,7 +70,7 @@ rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o
 extra-objs = $(rpcgen-objs)
 # These headers are part of rpcgen.
-distribute := rpc_util.h rpc_parse.h rpc_scan.h $(rpcgen-objs:.o=.c)
+distribute := rpc_util.h rpc_parse.h rpc_scan.h $(rpcgen-objs:.o=.c) etc.rpc
 
 others := portmap rpcinfo
 
@@ -91,7 +91,7 @@ $(includedir)/rpcsvc/%.h: rpcsvc/%.x $(objpfx)rpcgen
 # The proper file name is longer than 14 chars, so we install it under
 # a shorter name.  But if the filesystem can handle it, we want to
 # install under the proper name as well.
-$(includedir)/bootparam_prot.h: $(includedir)/bootparam.h
+$(includedir)/rpcsvc/bootparam_prot.h: $(includedir)/rpcsvc/bootparam.h
 	@echo It is safe to ignore an error here if this file name is too long.
 	-$(do-install)
 
