@@ -1,3 +1,68 @@
+1997-03-21 20:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/machine-gmon.h: Update copyright.
+
+	* sysdeps/i386/Makefile [$(subdir)=gmon] (sysdep_routines): Add
+	i386-mcount.
+	* sysdeps/i386/dl-machine.h [PROF] (_dl_runtime_resolve): Don't
+	use regparam mechanism for call of `fixup' call.
+	* sysdeps/i386/Dist: New file.
+	* sysdeps/i386/i386-mcount.S: New file.  `mcount' entry point.
+	* sysdeps/i386/machine-gmon.h: New file.  i386 specific version
+	of gmon definitions.
+
+1997-03-20 13:39  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* stdlib/tst-strtol.c (main): Save the value of errno since printf
+	may modify it, use the saved errno everywhere.
+	* stdlib/tst-strtod.c (main): Likewise.
+
+1997-03-21 05:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/glob.c (glob): Fix completely broken handling of
+	GLOB_BRACE and partly broken handling of GLOB_TILDE.
+	Reported by Dennis Henriksen <opus@flamingo.osrl.dk>.
+
+1997-03-20 20:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/readv.c: Don't emulate readv with small
+	UIO_FASTIOV value by multiple readv calls since we need atomicity.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+	Reported by Matthis Urlichs.
+
+1997-03-20 04:34  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S (CALL_MCOUNT): Clear this
+	macro so ENTRY(__syscall_error) doesn't insert a call to _mcount,
+	which clobbers %eax.
+
+	* Makeconfig [$(elf)=yes] (+prector, +postctor): New variables for
+	crtbegin.o/crtend.o, using gcc to find them.
+	(+link): Use them.
+
+1997-03-20 00:06  Richard Henderson  <rth@tamu.edu>
+
+	* gmon/sys/gmon.h: Revert the bulk of the 960930 changes, as they
+	affect the alignment, and therefore the end padding of the structs.
+	Reported by David Mosberger <davidm@azstarnet.com>.
+	* gmon/gmon.c: Declare the variables with aligned tags to compensate.
+	Use __writev instead of write for the I/O.
+
+	* misc/sys/uio.h: Declare __writev and __readv.
+	* sysdeps/posix/readv.c: Rename and alias readv to __readv.
+	* sysdeps/posix/writev.c: Likewise for writev.
+	* sysdeps/stub/readv.c: Likewise.
+	* sysdeps/stub/writev.c: Likewise.
+	* sysdeps/unix/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/readv.c: Likewise.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+
+	* stdlib/testdiv.c: Exit with error status when we have an error.
+	* sysdeps/alpha/div.S: Initialize `quotient' and `mask'.
+	* sysdeps/alpha/ldiv.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Include ctype.h for isdigit.
+
 1997-03-20 04:21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/stub/msync.c (msync): Add parameter `flags' to match
@@ -12,7 +77,6 @@
 1997-03-20 01:49  Ulrich Drepper  <drepper@cygnus.com>
 
 	* setjmp/setjmp.h: Change references of ANSI C to ISO C.
-	* setjmp/tst-setjmp.c: Correct and extend test suite.
 	* sysdeps/i386/bsd-_setjmp.S: Correct fatal bug in jump to
 	`__sigsetjmp' in PIC code.
 	* sysdeps/i386/bsd-setjmp.S: Likewise.
@@ -80,6 +144,17 @@
 
 	* sysdeps/unix/sysv/linux/net/if_ppp.h (PPP_VERSION): Define to
 	2.2.0 to prevent version mismatch.
+
+1997-03-09 12:36  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* Make-dist (srcs): Add $(test-srcs).
+	* MakeTAGS (all-sources): Likewise.
+	* Makerules (depfiles, common-mostlyclean): Likewise.
+	* Rules (tests): Likewise.
+
+1997-03-18 05:28  Roland McGrath  <roland@frob.com>
+
+	* elf/dl-reloc.c (RESOLVE): Don't try to resolve local symbols.
 
 1997-03-17 21:39  Philip Blundell  <phil@london.uk.eu.org>
 
@@ -640,6 +715,12 @@
 
 	* stdio-common/vfprintf.c (printf_unknown): Correct printing of
 	numeric values.
+
+1997-02-23 04:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strtol.c (STRTOL): It is not illegal to parse a minus
+	sign in the strtouXX functions.  The results gets simply negated.
+	* stdlib/tst-strtol.c: Correct tests.
 
 1997-02-22 03:02  Ulrich Drepper  <drepper@cygnus.com>
 
