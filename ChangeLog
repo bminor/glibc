@@ -1,3 +1,48 @@
+1997-02-20 17:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/netinet/in.h: Protect contents using
+	__BEGIN/END_DECLS.  Reported by a sun <asun@zoology.washington.edu>.
+
+	* inet/net/ethernet.h: Move to sysdeps/unix/sysv/linux/net.
+	* inet/Makefile (headers): Remove net/ethernet.h.
+	* sysdeps/unix/sysv/linux/Makefile: Install net/ethernet.h.
+	* sysdeps/unix/sysv/linux/Dist: Distribute net/ethernet.h.
+
+1997-02-20 19:19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/mman/syscalls.list: Explain msync interface.
+	* sysdeps/unix/bsd/syscalls.list: Add msync with two parameters.
+
+1997-02-19 01:37  Erik Troan  <ewt@redhat.com>
+
+	* shadow/sgetspent_r.c: Accept empty third, fourth and fifth fields.
+
+1997-02-20 14:44  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* stdio-common/test-fseek.c: Remove temporary file, add
+	copyright.
+
+1997-02-19 01:02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/mman/syscalls.list: msync takes 3 arguments.
+	Reported by Andreas Jaeger <aj@arthur.pfalz.de>.
+
+1997-02-19 00:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/bsd/sigsuspend.c: Call __sigpause with needed
+	additional argument.
+
+1997-02-18 22:13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/net/ethernet.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/if_ether.c: Add BSD compatibility.
+	* sysdeps/unix/sysv/linux/net/if_slip.h: New file.
+	Contributed by a sun <asun@zoology.washington.edu>.
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h: Include <sys/socket.h>.
+	* sunrpc/rpc/rpc_msg.h: Include <rpc/clnt.h>.
+	Reported by a sun <asun@zoology.washington.edu>.
+
 1997-02-18 03:28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/bug10.c (main): Correct parameter.

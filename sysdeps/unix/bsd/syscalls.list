@@ -5,6 +5,7 @@ getdents	-	getdirentries	4	__getdirentries	getdirentries
 getdtsz		-	getdtablesize	0	__getdtablesize	getdtablesize
 getpagesize	-	getpagesize	0	__getpagesize	getpagesize
 killpg		-	killpg		2	killpg
+msync		-	msync		2	__libc_msync	msync
 sigblock	-	sigblock	1	__sigblock	sigblock
 sigpause	-	sigpause	1	__sigpause	sigpause
 sigsetmask	-	sigsetmask	1	__sigsetmask	sigsetmask
