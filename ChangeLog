@@ -1,3 +1,11 @@
+1997-10-15 06:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* glibcbug.in: Fix @gnu.ai.mit.edu -> @gnu.org.
+	* catgets/gencat.c: Likewise.
+	* db2/makedb.c: Likewise. (naja, in 2.0.7 für db/makedb.c)
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+
 1997-12-22 18:10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* malloc/malloc.c: __malloc_initialized now signals three states:
