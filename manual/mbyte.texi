@@ -55,10 +55,10 @@ An advantage of wide characters is that each character is a single data
 object, just like ordinary ASCII characters.  There are a few
 disadvantages:
 
-@itemize -
+@itemize @bullet
 @item
-Each program that uses wide characters must be modified and
-recompiled.
+Each existing program must be modified and recompiled to make it use
+wide characters.
 
 @item
 Files of wide characters cannot be read by programs that expect ordinary
