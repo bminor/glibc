@@ -3808,7 +3808,7 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
   (((INTERNAL_SIZE_T) 1) << (8 * sizeof (INTERNAL_SIZE_T) / 2))
   if (__builtin_expect ((n | elem_size) >= HALF_INTERNAL_SIZE_T, 0)) {
     if (elem_size != 0 && bytes / elem_size != n) {
-      MALLOC_FAILURE_ACTION;
+      __set_errno (ENOMEM);
       return 0;
     }
   }
