@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,18 +22,28 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 #include <fcntl.h>
+#include <hurd/port.h>
 
 /* Change the current root to PATH.  */
 int
 DEFUN(chroot, (path), CONST char *path)
 {
   file_t crdir;
-
-  /* XXX check is dir */
+  error_t err;
+  struct stat st;
 
   crdir = __path_lookup (path, O_EXEC, 0);
   if (crdir == MACH_PORT_NULL)
     return -1;
+
+  err = __io_stat (crdir, &st);
+  if (! err && ! S_ISDIR (st.st_mode))
+    err = ENOTDIR;
+  if (err)
+    {
+      __mach_port_deallocate (__mach_task_self (), crdir);
+      return __hurd_fail (err);
+    }
 
   _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], crdir);
 

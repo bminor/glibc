@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/socket.h>
 #include <hurd.h>
+#include <hurd/socket.h>
+#include <hurd/fd.h>
 
 /* Set socket FD's option OPTNAME at protocol level LEVEL
    to *OPTVAL (which is OPTLEN bytes long).
@@ -29,9 +31,9 @@ DEFUN(setsockopt, (fd, level, optname, optval, optlen),
       int fd AND int level AND int optname AND
       PTR optval AND size_t optlen)
 {
-  error_t err = _HURD_DPORT_USE (fd, __socket_setopt (port,
-						      level, optname,
-						      optval, optlen));
+  error_t err = HURD_DPORT_USE (fd, __socket_setopt (port,
+						     level, optname,
+						     optval, optlen));
   if (err)
     return __hurd_dfail (fd, err);
   return 0;

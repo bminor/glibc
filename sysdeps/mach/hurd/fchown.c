@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <hurd/fd.h>
 
 /* Change the owner and group of the file referred to by FD.  */
 int
@@ -29,7 +30,7 @@ DEFUN(__fchown, (fd, owner, group),
 {
   error_t err;
 
-  if (err = _HURD_DPORT_USE (fd, __file_chown (port, owner, group)))
+  if (err = HURD_DPORT_USE (fd, __file_chown (port, owner, group)))
     return __hurd_dfail (fd, err);
 
   return 0;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,17 +18,18 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <errno.h>
-#include <sys/socket.h>
 #include <hurd.h>
+#include <hurd/fd.h>
+#include <sys/socket.h>
+#include <hurd/socket.h>
 
 /* Prepare to accept connections on socket FD.
    N connection requests will be queued before further requests are refused.
    Returns 0 on success, -1 for errors.  */
 int
-DEFUN(listen, (fd, n),
-      int fd AND unsigned int n)
+DEFUN(listen, (fd, n), int fd AND unsigned int n)
 {
-  error_t err = _HURD_DPORT_USE (fd, __socket_listen (port, n));
+  error_t err = HURD_DPORT_USE (fd, __socket_listen (port, n));
   if (err)
     return __hurd_dfail (fd, err);
   return 0;

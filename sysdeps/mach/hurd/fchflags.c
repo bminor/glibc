@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <sys/stat.h>
 #include <hurd.h>
+#include <hurd/fd.h>
 
 /* Change the flags of the file FD refers to to FLAGS.  */
 int
@@ -28,7 +29,7 @@ DEFUN(fchflags, (fd, flags), int fd AND int flags)
 {
   error_t err;
 
-  if (err = _HURD_DPORT_USE (fd, __file_chflags (port, flags)))
+  if (err = HURD_DPORT_USE (fd, __file_chflags (port, flags)))
     return __hurd_dfail (fd, err);
 
   return 0;

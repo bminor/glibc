@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <sys/stat.h>
 #include <hurd.h>
+#include <hurd/fd.h>
 
 /* Get information about the file descriptor FD in BUF.  */
 int
@@ -28,7 +29,7 @@ DEFUN(__fstat, (fd, buf), int fd AND struct stat *buf)
 {
   error_t err;
 
-  if (err = _HURD_DPORT_USE (fd, __io_stat (port, buf)))
+  if (err = HURD_DPORT_USE (fd, __io_stat (port, buf)))
     return __hurd_dfail (fd, err);
 
   return 0;

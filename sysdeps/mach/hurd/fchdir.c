@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,9 +18,11 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <errno.h>
-#include <stddef.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <hurd/port.h>
+#include <hurd/fd.h>
+#include <sys/stat.h>
 
 /* Change the current directory to FD.  */
 int
@@ -29,13 +31,21 @@ DEFUN(fchdir, (fd), int fd)
   error_t err;
   file_t cwdir;
 
-/* XXX verify that it's a directory */
+  err = HURD_DPORT_USE
+    (fd,
+     ({ struct stat st;
+	cwdir = port;
+	err = __io_stat (cwdir, &st);
+	if (! err && ! S_ISDIR (st.st_mode))
+	  err = ENOTDIR;
+	if (! err)
+	  __mach_port_mod_refs (__mach_task_self (),
+				cwdir, MACH_PORT_RIGHT_SEND, 1);
+	err;
+      }));
 
-  if (err = _HURD_DPORT_USE (fd,
-			     __mach_port_mod_refs (__mach_task_self (),
-						   (cwdir = port),
-						   MACH_PORT_RIGHT_SEND, 1)))
-    return err;
+  if (err)
+    return __hurd_fail (err);
 
   _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], cwdir);
 
