@@ -18,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 
-auth_t _hurd_auth;
+struct _hurd_port _hurd_auth;
 
 static error_t
 add_auth (sigthread_t me,
@@ -41,7 +41,7 @@ add_auth (sigthread_t me,
   return POSIX_SUCCESS;
 }
 
-#include "_Xadd_auth.c"
+#include "misc_server/add_auth.c"
 
 asm (".stabs \"__hurd_sigport_ids\",23,0,0,23005"); /* XXX */
 text_set_element (_hurd_sigport_routines, _Xadd_auth);
@@ -104,7 +104,7 @@ del_auth (sigthread_t me, task_t task,
   return POSIX_SUCCESS;
 }
 
-#include "_Xdel_auth.c"
+#include "misc_server/del_auth.c"
 
 asm (".stabs \"__hurd_sigport_ids\",23,0,0,23006"); /* XXX */
 text_set_element (_hurd_sigport_routines, _Xdel_auth);
