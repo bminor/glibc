@@ -1,5 +1,5 @@
 /* Functions to read locale data files.
-Copyright (C) 1996 Free Software Foundation, Inc.
+Copyright (C) 1996, 1998 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -109,6 +109,9 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       if (__fstat (fd, &st) < 0)
 	goto puntfd;
     }
+  else if (st.st_size < sizeof (*filedata))
+    /* This cannot be a locale data file since it's too small.  */
+    goto puntfd;
 
   /* Map in the file's data.  */
   save_err = errno;
