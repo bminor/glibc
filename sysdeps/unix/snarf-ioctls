@@ -21,13 +21,15 @@ for file in $*; do
     < $file
 
   snarfexclude="$snarfexclude \
-		`echo $file | sed -e 's,/,\\/,g' -e 's,^.*$,-e /&/d'`"
+		`echo $file | sed -e 's,/,\\\\/,g' -e 's,^.*$,-e /&/d,'`"
   export snarfexclude
-echo "excluding --${snarfexclude}--"
 
-  included="`sed -n < $file -e 's,^#include[ 	]*<\(.*\)>.*$,./\1,p' \
-		 $snarfexclude`"
+  included="`sed -n < $file \
+		 -e 's,^#include[ 	]*<\(.*\)>.*$,/usr/include/\1,p' \
+	     | sed $snarfexclude`"
   if [ "$included" ]; then
-    sh -x $0 $included
+    $0 $included
   fi
 done
+
+exit 0
