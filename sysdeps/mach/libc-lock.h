@@ -72,6 +72,20 @@ typedef struct __libc_lock_opaque__ __libc_lock_t;
     (*__save_FCT)(__save_ARG);						    \
 }
 
+/* Use mutexes as once control variables. */
+
+/* Define once control variable.  */
+#define __libc_once_define(CLASS, NAME) \
+  CLASS __libc_lock_define_initialized(,NAME)
+
+/* Call handler iff the first call.  */
+#define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
+  do {									      \
+    if (!__libc_lock_trylock(ONCE_CONTROL) {				      \
+      (INIT_FUNCTION) ();						      \
+      __libc_lock_lock(ONCE_CONTROL);					      \
+    }									      \
+  } while (0)
 
 #ifdef _LIBC
 /* We need portable names for some functions.  E.g., when they are
