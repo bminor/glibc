@@ -1,3 +1,10 @@
+1999-08-25  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/unix/sysv/linux/ptsname.c: Add checks to make sure we're
+	really dealing with a master pseudo terminal, and really returning
+	the name of the associated slave pseudo terminal by checking the
+	device number.
+
 1999-08-23  Mark Kettenis  <kettenis@gnu.org>
 
 	* hurd/hurdsig.c (_hurd_internal_post_signal): Add missing else.
