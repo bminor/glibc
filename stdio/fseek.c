@@ -29,7 +29,6 @@ int
 DEFUN(fseek, (stream, offset, whence),
       register FILE *stream AND long int offset AND int whence)
 {
-  extern int EXFUN(__stdio_check_offset, (FILE *));
   long int o;
 
   if (!__validfp(stream))
