@@ -1,5 +1,8 @@
 2004-09-29  Jakub Jelinek  <jakub@redhat.com>
 
+	* time/tzfile.c (tzfile_mtime): New variable.
+	(__tzfile_read): Reread the file if mtime is different.
+
 	* sysdeps/i386/fpu/s_fdim.S (__fdim): Handle +inf/+inf.
 	* sysdeps/i386/fpu/s_fdimf.S (__fdimf): Likewise.
 	* sysdeps/i386/fpu/s_fdiml.S (__fdiml): Likewise.
