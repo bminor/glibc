@@ -473,7 +473,7 @@ the shell variables @samp{DEFS} and @samp{config_vars}; see the
 top-level @file{configure} script for details.  The script can check for
 @w{@samp{--with-@var{package}}} options that were passed to the
 top-level @file{configure}.  For an option
-@w{@samp{--with-@var{package}=var{@value}}} @file{configure} sets the
+@w{@samp{--with-@var{package}=@var{@value}}} @file{configure} sets the
 shell variable @w{@samp{with_@var{package}}} (with any dashes in
 @var{package} converted to underscores) to @var{value}; if the option is
 just @w{@samp{--with-@var{package}}} (no argument), then it sets
