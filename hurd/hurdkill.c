@@ -29,7 +29,7 @@ Cambridge, MA 02139, USA.  */
    If PID is < -1, send SIG to all processes in process group - PID.
    SIG and REFPORT are passed along in the request message.  */
 error_t
-hurd_sig_post (pid_t pid, int sig, mach_port_t arg_refport)
+_hurd_sig_post (pid_t pid, int sig, mach_port_t arg_refport)
 {
   int delivered = 0;		/* Set when we deliver any signal.  */
   error_t err;
