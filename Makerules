@@ -318,3 +318,6 @@ ifdef +depfiles
 else
 	cp /dev/null $@
 endif
+
+# Command to compile in $< in $(objdir) using the native libraries.
+native-compile = cwd=`pwd`; cd $(objdir); $(CC) $$cwd/$< -o $(@:$(objpfx)%=%)
