@@ -1,3 +1,9 @@
+1998-10-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfprintf.c (vfprintf): Fix the remaining premature
+	returns without cleaning up the lock.
+	(printf_unknown): Add label all_done.
+
 1998-10-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/fpu/__math.h (asinh): Put __sgn1 call outside log1p
