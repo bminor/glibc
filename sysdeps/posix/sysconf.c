@@ -20,10 +20,12 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <limits.h>
 #include <unistd.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <time.h>
 
 extern int EXFUN(__getdtablesize, (NOARGS));
+extern size_t EXFUN(__getpagesize, (NOARGS));
 
 /* Get the value of the system variable NAME.  */
 long int
@@ -81,6 +83,9 @@ DEFUN(__sysconf, (name), int name)
 #endif
     case _SC_VERSION:
       return _POSIX_VERSION;
+
+    case _SC_PAGESIZE:
+      return __getpagesize ();
 
     case _SC_BC_BASE_MAX:
 #ifdef	BC_BASE_MAX
