@@ -18,10 +18,11 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
+/* We jump here when a system call gets an error.
+   The error number is negated in %eax.  */
 .globl syscall_error
 syscall_error:
-	subl 
-	negl %eax
-	movl %eax, ___errno
-	move $-1, %eax
+	negl %eax		/* Make it positive.  */
+	movl %eax, _errno	/* Store it in `errno'.  */
+	move $-1, %eax		/* Return -1.  */
 	ret
