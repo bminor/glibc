@@ -1,54 +1,78 @@
-@node Diagnostics
-@chapter Diagnostics
-@cindex diagnostics
+@node Consistency Checking
+@chapter Explicitly Checking Internal Consistency
+@cindex consistency checking
+@cindex impossible events
 @cindex assertions
 
 When you're writing a program, it's often a good idea to put in checks
 at strategic places for ``impossible'' errors or violations of basic
 assumptions.  These kinds of checks are helpful in debugging problems
 with the interfaces between different parts of the program, for example.
-The @code{assert} macro, defined in the header file @file{assert.h},
-provides a convenient way to cause program termination with some
-debugging information about where in the program such an error was
-detected.
+
 @pindex assert.h
+The @code{assert} macro, defined in the header file @file{assert.h},
+provides a convenient way to abort the program while printing some
+debugging information about where in the program the error was detected.
 
-The @code{assert} facility is really oriented more towards debugging
-than towards providing general handling for errors detected by your
-program.  The information in the diagnostic messages provided by the
-@code{assert} macro is intended to to help you, the programmer, track
-down the source of a bug, but is not really useful in telling a user of
-your program what he or she did wrong.
-
-Once your program is debugged, you can disable the error checks
-performed by the @code{assert} macro by recompiling it with the
-preprocessor symbol @code{NDEBUG} defined.  This means you don't
-actually have to change the program source code to disable these checks.
 @vindex NDEBUG
+Once you think your program is debugged, you can disable the error
+checks performed by the @code{assert} macro by recompiling with the
+macro @code{NDEBUG} defined.  This means you don't actually have to
+change the program source code to disable these checks.
+
+But disabling these consistency checks is undesirable unless they make
+the program significantly slower.  All else being equal, more error
+checking is good no matter who is running the program.  A wise user
+would rather have a program crash, visibly, than have it return nonsense
+without indicating anything might be wrong.
 
 @comment assert.h
 @comment ANSI
 @deftypefn Macro void assert (int @var{expression})
-If the preprocessor macro @code{NDEBUG} is defined before
-@file{assert.h} is included, the @code{assert} macro is defined in
-such a way that it does absolutely nothing.  Even the argument
-expression @var{expression} is not evaluated, so you should avoid
-calling @code{assert} with arguments that involve side effects.
-Something like @code{assert(++i > 0);} is a bad idea because @code{i}
-will not be incremented if @code{NDEBUG} is defined.@refill
+Verify the programmer's belief that @var{expression} should be nonzero
+at a certain point in the program.
 
 If @code{NDEBUG} is not defined, @code{assert} tests the value of
-@var{expression}.  If it is false (zero), @code{assert} prints a message
-of the form:
+@var{expression}.  If it is false (zero), @code{assert} aborts the
+program (@pxref{Aborting a Program}) after printing a message of the
+form:
 
 @example
-@file{@var{file}}:@var{nnn}: Assertion `@var{expression}' failed.
+@file{@var{file}}:@var{linenum}: Assertion `@var{expression}' failed.
 @end example
 
 @noindent
-on the standard error stream @code{stderr} (@pxref{Standard Streams})
-and then aborts program execution via the @code{abort} function
-(@pxref{Aborting a Program}).  The filename and line number are taken
-from the C preprocessor macros @code{__FILE__} and @code{__LINE__} and
-specify where the call to @code{assert} was made from.@refill
+on the standard error stream @code{stderr} (@pxref{Standard Streams}).
+The filename and line number are taken from the C preprocessor macros
+@code{__FILE__} and @code{__LINE__} and specify where the call to
+@code{assert} was written.
+
+If the preprocessor macro @code{NDEBUG} is defined before
+@file{assert.h} is included, the @code{assert} macro is defined to do
+absolutely nothing.  Even the argument expression @var{expression} is
+not evaluated, so you should avoid calling @code{assert} with arguments
+that involve side effects.
+
+For example, @code{assert (++i > 0);} is a bad idea, because @code{i}
+will not be incremented if @code{NDEBUG} is defined.
 @end deftypefn
+
+@strong{Usage note:} The @code{assert} facility is designed for
+detecting @emph{internal inconsistency}; it is not suitable for
+reporting invalid input or improper usage.
+
+The information in the diagnostic messages provided by the @code{assert}
+macro is intended to to help you, the programmer, track down the cause
+of a bug, but is not really useful in telling a user of your program why
+his or her input was invalid or why a command could not be carried out.
+So you can't use @code{assert} to print the error messages for these
+eventualities.
+
+What's more, your program should not abort when given invalid input, as
+@code{assert} would do---it should exit with nonzero status after
+printing its error messages, or perhaps read another command or move
+on to the next input file.
+
+@xref{Error Messages}, for information on printing error messages for
+problems that @emph{do not} represent bugs in the program.
+
