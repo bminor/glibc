@@ -63,6 +63,9 @@ const struct hook _hurd_fork_setup_hook;
 /* Things to be run in the child fork.  */
 const struct hook _hurd_fork_child_hook;
 
+/* Things to be run in the parent fork.  */
+const struct hook _hurd_fork_parent_hook;
+
 
 /* Clone the calling process, creating an exact copy.
    Return -1 for errors, 0 to the new process,
