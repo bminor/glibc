@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -77,7 +77,7 @@ $(tzfiles:%=$(objpfx)z.%): $(objpfx)z.%: % Makefile
 	 echo '$*-zones := $$(subst $$(nl), ,$$($*-zones))'		;\
 	 echo 'ifdef $*-zones'						;\
 	 echo '$$(addprefix $$(datadir)/zone%/,$$($*-zones)): \'	;\
-	 echo '$< $$(objpfx)zic leapseconds'				;\
+	 echo '$< $$(objpfx)zic leapseconds yearistype'			;\
 	 echo '	$$(tzcompile)'						;\
 	 echo 'endif'							;\
 	 echo 'zonenames := $$(zonenames) $$($*-zones)'			;\
@@ -99,7 +99,7 @@ echo-zonenames: zonenames
 # the command line of `make install' (e.g., "make install prefix=/foo").
 zic-cmd = $(dir $(word 2,$^))$(notdir $(word 2,$^)) -d $(zonedir)
 define tzcompile
-$(zic-cmd) -L $(word 3,$^) $<
+$(zic-cmd) -L $(word 3,$^) -y $(dir $(word 4,$^))$(notdir $(word 4,$^)) $<
 endef
 
 ifdef localtime
