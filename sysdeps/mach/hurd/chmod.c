@@ -25,6 +25,13 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(__chmod, (file, mode), CONST char *file AND mode_t mode)
 {
+  error_t err;
   file_t port = __hurd_path_lookup (file, 0, 0);
-  
+  if (port == MACH_PORT_NULL)
+    return -1;
+  err = __file_chmod (port, mode);
+  __mach_port_deallocate (__mach_task_self (), port);
+  if (err)
+    return __hurd_fail (err);
+  return 0;
 }
