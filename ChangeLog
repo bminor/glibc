@@ -1,3 +1,11 @@
+1999-11-05  Geoff Keating  <geoffk@cygnus.com>
+
+	* sysdeps/powerpc/bits/fenv.h: Don't put commas at the end of
+	enumerator lists (-pedantic complains).
+	(feraiseexcept): Use i#*X as the constraint.  Fix a bug in the
+	test for 'one bit set'.
+	(feclearexcept): Likewise.
+
 1999-10-27  Andreas Jaeger  <aj@suse.de>
 
 	* stdlib/rand_r.c (rand_r): Really use 31 bits, the result was
