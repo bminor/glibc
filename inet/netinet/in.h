@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -131,7 +131,9 @@ struct in_addr
 /* Network number for local host loopback.  */
 #define	IN_LOOPBACKNET	127
 /* Address to loopback in software to local host.  */
+#ifndef INADDR_LOOPBACK
 #define	INADDR_LOOPBACK	0x7f000001	/* Internet address 127.0.0.1.  */
+#endif
 
 
 /* Structure describing an Internet socket address.  */
@@ -142,8 +144,10 @@ struct sockaddr_in
     struct in_addr sin_addr;		/* Internet address.  */
 
     /* Pad to size of `struct sockaddr'.  */
-    unsigned char __pad[sizeof(struct sockaddr) - sizeof(short int) -
-			sizeof(unsigned short int) - sizeof(struct in_addr)];
+    unsigned char sin_zero[sizeof(struct sockaddr) -
+			   sizeof(short int) -
+			   sizeof(unsigned short int) -
+			   sizeof(struct in_addr)];
   };
 
 

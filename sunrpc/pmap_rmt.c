@@ -189,7 +189,9 @@ getbroadcastnets(addrs, sock, buf)
 #ifdef SIOCGIFBRDADDR   /* 4.3BSD */
 			if (ioctl(sock, SIOCGIFBRDADDR, (char *)&ifreq) < 0) {
 				addrs[i++] = inet_makeaddr(inet_netof
-			    (sin->sin_addr.s_addr), INADDR_ANY);
+ 			    /* Changed to pass struct instead of s_addr member
+			       by roland@gnu.  */
+			    (sin->sin_addr), INADDR_ANY);
 			} else {
 				addrs[i++] = ((struct sockaddr_in*)
 				  &ifreq.ifr_addr)->sin_addr;
