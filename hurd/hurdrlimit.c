@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 
 /* This must be given an initializer, or the a.out linking rules will
    not include the entire file when this symbol is referenced. */
-struct rlimit _hurd_rlimits[RLIM_NLIMITS] = { { 0, } };
+struct rlimit _hurd_rlimits[RLIM_NLIMITS] = { { 0, }, };
 
 /* This must be initialized data for the same reason as above, but this is
    intentionally initialized to a bogus value to emphasize the point that
