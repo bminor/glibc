@@ -16,9 +16,29 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-ifeq ($(subdir), io)
+ifeq ($(subdir),io)
 
-sysdep-routines := $(sysdep-routines) sys_stat sys_fstat \
+sysdep_routines := $(sysdep-routines) sys_stat sys_fstat \
 		   __utssys
+
+endif
+
+ifeq ($(subdir), misc)
+
+sysdep_headers := $(sysdep_headers) termio.h
+dont_distribute := $(dont_distribute) termio.h		# Generated.
+
+# termio.h is just like sysv_termio.h except it uses the same
+# names for everything that System V termio does.  sysv_termio.h
+# is necessary to including in __tcgetatr.c, etc., because
+# some of the names in termio.h conflict with termios.h
+# The C library doesn't actually use termio.h, but we generate
+# it for those application programs which use it.
+$(objpfx)termio.h: $(..)sysdeps/unix/sysv/sysv_termio.h
+	sed < $< > $@-tmp			\
+	    -e 's/_SYSV_//'			\
+	    -e 's/^#define[ 	]*_T/#define T/'\
+	    -e 's/__sysv_termio/termio/'
+	mv $@-tmp $@
 
 endif
