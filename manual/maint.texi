@@ -143,10 +143,9 @@ properly with the GNU C library.  The @file{stddef.h} file in release
 GCC, use its version of @file{stddef.h} instead of the C library's.  To
 do this, put the line @w{@samp{override stddef.h =}} in
 @file{configparms}.  The other files are corrected in release 2.3 and
-later of GCC.  If you release 2.3 or later of GCC, use its
-@file{stdarg.h} and @file{va-@var{machine}.h} files instead of the C
-library's.  To do this, put the line @w{@samp{override stdarg.h =}} in
-@file{configparms}.
+later of GCC.  @file{configure} will automatically detect whether the
+installed @file{stdarg.h} and @file{va-@var{machine}.h} files are
+compatible with the C library, and use its own if not.
 
 There is a potential problem with the @code{size_t} type and versions of
 GCC prior to release 2.4.  ANSI C requires that @code{size_t} always be
@@ -163,31 +162,10 @@ We plan that in version 2.4, GCC will always define @code{size_t} as an
 unsigned type, and the @file{fixincludes} script will massage the
 system's @file{sys/types.h} so as not to conflict with this.
 
-In the meantime, the way to work around this problem is to tell GCC
-explicitly to use an unsigned type for @code{size_t} when you compile
-the GNU C library.  You can do this by compiling with
-@samp{-D__SIZE_TYPE__='unsigned long int'}.  You can either put this
-into the GCC @file{specs} file to affect all compilations using GCC, or
-specify the flag just to compile the C library, with this line in
-@file{configparms}:
-
-@example
-# Be sure to remember the 's to quote the spaces from the shell.
-defines := -D__SIZE_TYPE__='unsigned long int'
-@end example
-
-@noindent
-When you do this, the current version of GCC
-will give you the annoying warning:
-
-@example
-*Initialization*:1: warning: `__SIZE_TYPE__' redefined
-@end example
-
-@noindent
-It is safe to ignore this warning.  Version 2.3 of GCC is supposed to
-fix this bug (the spurious warning---the type of @code{size_t} will not
-be fixed until 2.4).
+In the meantime, we work around this problem by telling GCC explicitly
+to use an unsigned type for @code{size_t} when compiling the GNU C
+library.  @file{configure} will automatically detect what type GCC uses
+for @code{size_t} arrange to override it if necessary.
 
 To build the library, type @code{make lib}.  This will produce a lot of
 output, some of which looks like errors from @code{make} (but isn't).
