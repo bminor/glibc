@@ -27,16 +27,6 @@ Cambridge, MA 02139, USA.  */
 
 __BEGIN_DECLS
 
-#ifndef	__NORETURN
-#ifdef	__GNUC__
-/* The `volatile' keyword tells GCC that a function never returns.  */
-#define	__NORETURN	__volatile
-#else /* Not GCC.  */
-#define	__NORETURN
-#endif /* GCC.  */
-#endif /* __NORETURN not defined.  */
-
-
 /* Get the machine-dependent definition of `__jmp_buf'.  */
 #include <jmp_buf.h>
 

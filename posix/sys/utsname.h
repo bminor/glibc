@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,9 @@ Cambridge, MA 02139, USA.  */
 __BEGIN_DECLS
 
 #include <utsnamelen.h>
+#ifndef _UTSNAME_NODENAME_LENGTH
+#define _UTSNAME_NODENAME_LENGTH _UTSNAME_LENGTH
+#endif
 
 /* Structure describing the system and machine.  */
 struct utsname
@@ -36,7 +39,7 @@ struct utsname
     char sysname[_UTSNAME_LENGTH];
 
     /* Name of this node on the network.  */
-    char nodename[_UTSNAME_LENGTH];
+    char nodename[_UTSNAME_NODENAME_LENGTH];
 
     /* Current release level of this implementation.  */
     char release[_UTSNAME_LENGTH];

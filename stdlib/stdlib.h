@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -162,15 +162,6 @@ extern void cfree __P ((__ptr_t __ptr));
 extern __ptr_t valloc __P ((size_t __size));
 #endif
 
-
-#ifndef	__NORETURN
-#ifdef	__GNUC__
-/* The `volatile' keyword tells GCC that a function never returns.  */
-#define	__NORETURN	__volatile
-#else /* Not GCC.  */
-#define	__NORETURN
-#endif /* GCC.  */
-#endif /* __NORETURN not defined.  */
 
 /* Abort execution and generate a core-dump.  */
 extern __NORETURN void abort __P ((void));
