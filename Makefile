@@ -33,7 +33,7 @@ configure: configure.in
 
 %/configure: %/configure.in
 	autoconf $(ACFLAGS) $< > $@.new
-	mv $@.new $@
+	mv -f $@.new $@
 
 include Makeconfig
 
@@ -90,7 +90,7 @@ else
 
 $(objpfx)munch-init.c: munch.awk munch-tmpl.c $(+subdir_inits)
 	awk -f $< subdirs='$(+init_subdirs)' $(word 2,$^) > $@-t
-	mv $@-t $@
+	mv -f $@-t $@
 generated := $(generated) munch-init.c
 endif
 
@@ -132,7 +132,7 @@ $(objpfx)sysd-dirs: $(+sysdir_pfx)config.make
 	   fi;								      \
 	 done;								      \
 	 echo endef) > $@-tmp
-	 mv $@-tmp $@
+	 mv -f $@-tmp $@
 
 # Makerules creates a file `stub-$(subdir)' for each subdirectory, which
 # contains `#define __stub_FUNCTION' for each function which is a stub.
