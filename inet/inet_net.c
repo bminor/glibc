@@ -10,10 +10,6 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
@@ -70,7 +66,7 @@ again:
 			continue;
 		}
 		if (base == 16 && isxdigit(c)) {
-			val = (val << 4) + (c + 10 - (islower(c) ? 'a' : 'A'));
+			val = (val << 4) + (tolower (c) + 10 - 'a');
 			cp++;
 			digit = 1;
 			continue;
@@ -79,9 +75,9 @@ again:
 	}
 	if (!digit)
 		return (INADDR_NONE);
+	if (pp >= parts + 4 || val > 0xff)
+		return (INADDR_NONE);
 	if (*cp == '.') {
-		if (pp >= parts + 4 || val > 0xff)
-			return (INADDR_NONE);
 		*pp++ = val, cp++;
 		goto again;
 	}
@@ -89,8 +85,6 @@ again:
 		return (INADDR_NONE);
 	*pp++ = val;
 	n = pp - parts;
-	if (n > 4)
-		return (INADDR_NONE);
 	for (val = 0, i = 0; i < n; i++) {
 		val <<= 8;
 		val |= parts[i] & 0xff;
