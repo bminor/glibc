@@ -232,6 +232,22 @@ abort_all_rpcs (int signo, void *state)
 struct hurd_signal_preempt *_hurd_signal_preempt[NSIG];
 struct mutex _hurd_signal_preempt_lock;
 
+
+/* Fetch the MiG reply port in use by the thread whose interrupted state is
+   described by *THREAD_STATE.  */
+
+static mach_port_t
+fetch_reply_port (struct machine_thread_state *thread_state)
+{
+  if (setjmp (_hurd_sigthread_fault_env))
+    /* Faulted trying to read the stack.  */
+    return MACH_PORT_NULL;
+
+  return *__hurd_threadvar_location_from_sp (_HURD_THREADVAR_MIG_REPLY,
+					     (void *) thread_state->SP);
+}
+
+
 /* Deliver a signal.
    SS->lock is held on entry and released before return.  */
 void
@@ -245,6 +261,26 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
   sighandler_t handler;
   struct hurd_signal_preempt *pe;
   sighandler_t (*preempt) (thread_t, int, int) = NULL;
+
+  /* Check SS for pending signals and post them.  SS->lock is held on entry.
+     Return zero if no signals were pending.  If pending signals were posted,
+     unlock SS->lock and return nonzero.  */
+  inline int check_pending (struct hurd_sigstate *ss)
+    {
+      int signo;
+
+      if (ss->pending)
+	for (signo = 1; signo < NSIG; ++signo)
+	  if (__sigismember (&ss->pending, signo))
+	    {
+	      __sigdelset (&ss->pending, signo);
+	      _hurd_internal_post_signal (ss, signo, ss->sigcodes[signo],
+					  reply_port, reply_port_type);
+	      /* _hurd_internal_post_signal called us on SS before
+		 returning, so no need to keep looping.  */
+	      return 1;
+	    }
+    }
 
   /* Check for a preempted signal.  */
   __mutex_lock (&_hurd_signal_preempt_lock);
@@ -420,8 +456,10 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 				      &thread_state);
 
 	/* Set the machine-independent parts of the signal context.  */
-	scp->sc_intr_port = ss->intr_port;
 	scp->sc_mask = ss->blocked;
+	scp->sc_intr_port = ss->intr_port;
+	/* Fetch the thread variable for the MiG reply port.  */
+	scp->sc_reply_port = fetch_reply_port (&thread_state);
 
 	/* Block SIGNO and requested signals while running the handler.  */
 	ss->blocked |= __sigmask (signo) | ss->actions[signo].sa_mask;
@@ -448,28 +486,37 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
   /* We get here only if we are handling or ignoring the signal;
      otherwise we are stopped or dead by now.  We still hold SS->lock.
      Check for pending signals, and loop to post them.  */
-  if (ss->pending)
-    for (signo = 1; signo < NSIG; ++signo)
-      if (__sigismember (&ss->pending, signo))
-	{
-	  __sigdelset (&ss->pending, signo);
-	  _hurd_internal_post_signal (ss, signo, ss->sigcodes[signo],
-				      reply_port, reply_port_type);
-	  return;
-	}
+  if (! check_pending (ss))
+    {
+      /* No more signals pending; SS->lock is still locked.  */
+#ifdef noteven
+      if (ss->suspended)
+	/* There is a sigsuspend waiting.  Tell it to wake up.  */
+	__condition_signal (&ss->arrived, &ss->lock);
+      else
+#endif
+	__mutex_unlock (&ss->lock);
+    }
 
-  /* No pending signals left undelivered.
-     Now we can reply even for signal 0.  */
+  /* No pending signals left undelivered for this thread.
+     If we were sent signal 0, we need to check for pending
+     signals for all threads.  */
+  if (signo == 0)
+    {
+      __mutex_lock (&_hurd_siglock);
+      for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
+	{
+	  __mutex_lock (&ss->lock);
+	  if (! check_pending (ss))
+	    __mutex_unlock (&ss->lock);
+	}
+      __mutex_unlock (&_hurd_siglock);
+    }
+
+  /* All pending signals delivered to all threads.
+     Now we can send the reply message even for signal 0.  */
   if (reply_port)
     __sig_post_reply (reply_port, reply_port_type, 0);
-
-#ifdef noteven
-  if (ss->suspended)
-    /* There is a sigsuspend waiting.  Tell it to wake up.  */
-    __condition_broadcast (&ss->arrived, &ss->lock);
-  else
-#endif
-    __mutex_unlock (&ss->lock);
 }
 
 /* Implement the sig_post RPC from <hurd/msg.defs>;
