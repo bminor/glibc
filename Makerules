@@ -234,11 +234,10 @@ objects objs: $(objects)
 
 # Installation.
 
-# install-lib are installed from the object directory into libdir.
-# install-data are installed as they are into datadir.  headers are
-# installed from the object directory header directories into includedir.
-# install-others are absolute path names of files to install; rules to
-# install them are defined elsewhere.
+# install-lib are installed from the object directory into $(libdir).
+# install-data are installed as they are into $(datadir).  headers are
+# installed as they are in $(includedir).  install-others are absolute path
+# names of files to install; rules to install them are defined elsewhere.
 
 do-install = $(INSTALL_DATA) $< $@
 
@@ -264,8 +263,12 @@ $(addprefix $(includedir)/,$(headers)): \
 endif	# headers
 +install := $(filter-out $(addprefix %/,$(no-install)),$(+install))
 
++install-dirs := $(dir $(+install))
+# Get two levels of directories so $(datadir)/zoneinfo wins.
++install-dirs := $(+install-dirs) $(filter-out ./,$(dir $(+install-dirs)))
+
 .PHONY: install
-install: $(dir $(+install)) $(+install)
+install: $(+install-dirs) $(+install)
 
 define +make-deps
 $(+mkdep) $(CPPFLAGS) $< | sed 's,$*\.o,$(@:.dep=.o) $@,' > $@
