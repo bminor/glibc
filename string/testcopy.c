@@ -91,7 +91,7 @@ DEFUN(main, (argc, argv),
 		    abort ();
 		}
 
-	      /* Check that the area around the detination is not
+	      /* Check that the area around the destination is not
 		 clobbered.  */
 	      for (i = 1; i < space_around; i++)
 		{
