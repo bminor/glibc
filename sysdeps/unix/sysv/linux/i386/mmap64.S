@@ -18,8 +18,6 @@
 
 #include <sysdep.h>
 
-#include "kernel-features.h"
-
 #define EINVAL	22
 #define ENOSYS	38
 
