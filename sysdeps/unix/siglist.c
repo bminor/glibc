@@ -1,6 +1,9 @@
 #include <ansidecl.h>
 #include <stddef.h>
 
+#ifndef HAVE_GNU_LD
+#define _sys_siglist    sys_siglist
+#endif
 
 /* This is a list of all known signal numbers.  */
 
