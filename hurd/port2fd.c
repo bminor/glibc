@@ -70,5 +70,6 @@ _hurd_port2fd (struct hurd_fd *d, io_t port, int flags)
     /* No ctty magic happening here.  */
     ctty = MACH_PORT_NULL;
 
+  _hurd_port_set (&d->port, port);
   _hurd_port_set (&d->ctty, ctty);
 }
