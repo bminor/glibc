@@ -128,8 +128,8 @@ whose value is @code{0} through @code{0177} is always a character in
 itself.  The characters which are more than one byte must always start
 with a byte in the range from @code{0200} through @code{0377}.
 
-The byte value @code{0} can be used to terminated a string, just as it
-is often used in a string of ASCII characters.
+The byte value @code{0} can be used to terminate a string, just as it is
+often used in a string of ASCII characters.
 
 Specifying the basic byte sequences that represent single characters
 automatically gives meanings to many longer byte sequences, as more than
