@@ -52,13 +52,12 @@ __spin_try_lock (__spin_lock_t *__lock)
   return !__locked;
 }
 
-/* Return the current stack pointer.  */
+/* Return nonzero if LOCK is locked.  */
 
-_EXTERN_INLINE void *
-__thread_stack_pointer (void)
+_EXTERN_INLINE int
+__spin_lock_locked (__spin_lock_t *__lock)
 {
-  register void *__sp __asm__ ("%esp");
-  return __sp;
+  return *__lock != 0;
 }
 
 
