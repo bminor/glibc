@@ -42,17 +42,17 @@ __BEGIN_DECLS
 
 /* Returned by `div'.  */
 typedef struct
-{
-  int quot;			/* Quotient.  */
-  int rem;			/* Remainder.  */
-} div_t;
+  {
+    int quot;			/* Quotient.  */
+    int rem;			/* Remainder.  */
+  } div_t;
 
 /* Returned by `ldiv'.  */
 typedef struct
-{
-  long int quot;		/* Quotient.  */
-  long int rem;			/* Remainder.  */
-} ldiv_t;
+  {
+    long int quot;		/* Quotient.  */
+    long int rem;		/* Remainder.  */
+  } ldiv_t;
 
 
 /* The largest number rand will return (same as INT_MAX).  */
@@ -220,8 +220,8 @@ extern int system __P ((__const char *__command));
 /* Shorthand for type of comparison functions.  */
 typedef int (*__compar_fn_t) (__const __ptr_t, __const __ptr_t);
 
-#ifdef	__GNUC__
-#define	comparison_fn_t	__compar_fn_t
+#ifdef	__USE_GNU
+typedef __compar_fn_t comparison_fn_t;
 #endif
 
 /* Do a binary search for KEY in BASE, which consists of NMEMB elements
@@ -249,11 +249,6 @@ extern void qsort __P ((__ptr_t __base, size_t __nmemb, size_t __size,
 /* Return the absolute value of X.  */
 extern __CONSTVALUE int abs __P ((int __x));
 extern __CONSTVALUE long int labs __P ((long int __x));
-
-#if	defined(__GNUC__) && defined(__OPTIMIZE__)
-#define	abs(x)	__builtin_abs(x)
-#define	labs(x)	__builtin_labs(x)
-#endif /* GCC and optimizing.  */
 
 
 /* Return the `div_t' or `ldiv_t' representation
