@@ -30,8 +30,9 @@ DEFUN(__unlink, (name), CONST char *name)
   file_t dir;
   CONST char *file;
 
-  if (err = __hurd_path_split (name, &dir, &file))
-    return __hurd_fail (err);
+  dir = __hurd_path_split (name, &file);
+  if (dir == MACH_PORT_NULL)
+    return -1;
 
   err = __dir_unlink (dir, file);
   __mach_port_deallocate (__mach_task_self (), dir);
