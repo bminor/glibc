@@ -32,13 +32,14 @@
 #include <net/if_arp.h>
 #endif
 #ifdef	SIOCGNIT
-#ifdef HAVE_net_nit_h
+#ifdef	HAVE_net_nit_h
 #include <net/nit.h>
-#else
+#else	/* No net/nit.h.  */
 #undef SIOCGNIT
 #undef SIOCSNIT
-#endif
-#endif
+#endif	/* net/nit.h.  */
+#endif	/* SIOCGNIT.  */
+#endif	/* SIOCGIFCONF.  */
 
 /* These exist on Sequents.  */
 #ifdef SMIOSTATS

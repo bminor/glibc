@@ -41,10 +41,10 @@ DEFUN(__assert_fail, (assertion, file, line, function),
 #endif
 
   /* Print the message.  */
-  (void) fprintf (stderr, "%s:%u: %s%s%s%sAssertion `%s' failed.\n",
-		  file, line,
+  (void) fprintf (stderr, "%s%s%s:%u: %s%sAssertion `%s' failed.\n",
 		  __assert_program_name ? __assert_program_name : "",
 		  __assert_program_name ? ": " : "",
+		  file, line,
 		  function ? function : "", function ? ": " : "",
 		  assertion);
   (void) fflush (stderr);
