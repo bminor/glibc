@@ -36,6 +36,7 @@ pipe		-	pipe		1	__pipe		pipe
 prctl		EXTRA	prctl		5	prctl
 query_module	EXTRA	query_module	5	query_module
 quotactl	EXTRA	quotactl	4	quotactl
+s_chown		chown	chown		3	__syscall_chown
 s_getdents	EXTRA	getdents	3	__getdents
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_poll		poll	poll		3	__syscall_poll
