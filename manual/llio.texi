@@ -14,6 +14,8 @@ for which there are no equivalents on streams.
 * Opening and Closing Files::		How to open and close file descriptors.
 * Input and Output Primitives::		Reading, writing, and seeking 
 					 operations.
+* Waiting for Input or Output::		How to check for input or output
+					 on multiple file descriptors.
 * Control Operations on Files::		Various other operations on file
 					 descriptors.
 @end menu
@@ -454,6 +456,162 @@ The @code{lseek} function is the underlying primitive for the
 @code{fseek}, @code{ftell} and @code{rewind} functions, which operate on
 streams instead of file descriptors.
 @end deftypefun
+
+@node Waiting for Input or Output
+@section Waiting for Input or Output
+
+Sometimes a program needs to accept input on multiple input channels.
+For example, some workstations may have devices such as a digitizing
+tablet, function button box, or dial box that are connected via a normal
+asynchronous serial interface; good user interface style requires that
+programs that deal with these devices respond immediately to input on
+any device.  Another example is a program that acts as a server to
+several other processes via pipes or sockets.
+
+You cannot normally use @code{read} for this purpose, because this
+blocks the program until input is available on one particular file
+descriptor; input on other channels won't wake it up.  You could set
+nonblocking mode and poll each file descriptor in turn, but this is very
+inefficient.
+
+A better solution is to use the @code{select} function.  This blocks
+the program until input or output is ready on a specified set of file
+descriptors, or until a timer expires.  This facility is declared in
+the header file @file{<sys/types.h>}.
+
+The file descriptor sets for the @code{select} function are specified
+as @code{fd_set} objects.  Here is the description of the data type
+and some macros for manipulating these objects.
+
+@comment sys/types.h
+@comment BSD
+@deftp {Data Type} fd_set
+The @code{fd_set} data type represents file descriptor sets for the
+@code{select} function.  Internally, the information is stored as
+a bit array.
+@end deftp
+
+@comment sys/types.h
+@comment BSD
+@defvr {Macro} FD_SETSIZE
+The value of this macro is the maximum number of file descriptors that
+a @code{fd_set} object can hold information about.  This is greater
+than or equal to the maximum number of open file descriptors supported
+by the system.
+@end defvr
+
+@comment sys/types.h
+@comment BSD
+@deftypefn {Macro} void FD_ZERO (fd_set *@var{set})
+This macro initializes the file descriptor set @var{set} to be the
+empty set.
+@end deftypefn
+
+@comment sys/types.h
+@comment BSD
+@deftypefn {Macro} int FD_SET (int @var{filedes}, fd_set *@var{set})
+This macro adds @var{filedes} to the file descriptor set @var{set}.
+The return value is not useful.
+@end deftypefn
+
+@comment sys/types.h
+@comment BSD
+@deftypefn {Macro} int FD_CLR (int @var{filedes}, fd_set *@var{set})
+This macro removes @var{filedes} from the file descriptor set @var{set}.
+The return value is not useful.
+@end deftypefn
+
+@comment sys/types.h
+@comment BSD
+@deftypefn {Macro} int FD_ISSET (int @var{filedes}, fd_set *@var{set})
+This macro returns a non-zero value (true) if @var{filedes} is a member
+of the the file descriptor set @var{set}, and zero (false) otherwise.
+@end deftypefn
+
+Next, here is the description of the @code{select} function itself.
+
+@comment sys/types.h
+@comment BSD
+@deftypefun int select (int @var{nfds}, fd_set *@var{read_fds}, fd_set *@var{write_fds}, fd_set *@var{except_fds}, struct timeval *@var{timeout})
+The @code{select} function blocks the calling process until there is
+activity on any of the specified sets of file descriptors, or until the
+timeout period has expired.
+
+The file descriptors specified by the @var{read_fds} argument are checked
+to see if they are ready for reading; the @var{write_fds} file descriptors are
+checked to see if they are ready for writing; and the @var{except_fds}
+file descriptors are checked for exceptional conditions (errors).  A null
+pointer may be passed for any of these arguments if no file descriptors
+are of interest in that category.
+
+Only the first @var{nfds} file descriptors in each set are checked.  
+Normally, you pass @code{FD_SETSIZE} as the value of this argument.
+
+The @var{timeout} specifies the maximum time to wait.  You can pass a
+null pointer as this argument to indicate that the process should block
+indefinitely until one of the file descriptors is ready.  Otherwise, you
+should provide the time @code{struct timeval} format;
+@pxref{High-Resolution Calendar}.
+
+The normal return value from @code{select} is the total number of ready file
+descriptors in all of the sets.  Each of the argument sets is overwritten
+with information about the descriptors that are ready for the corresponding
+operation.
+
+If @code{select} returns because the timeout period expires, it returns
+a value of zero.
+
+If an error occurs, @code{select} returns @code{-1} and does not modify
+the argument file descriptor sets.  The following @code{errno} error 
+conditions are defined for this function:
+
+@table @code
+@item EBADF
+One of the file descriptor sets specified an invalid file descriptor.
+
+@item EINTR
+The operation was interrupted by a signal.
+
+@item EINVAL
+The @var{timeout} argument is invalid; one of the components is negative
+or too large.
+@end table
+@end deftypefun
+
+@strong{Portability Note:}  The @code{select} function is a BSD Unix
+feature.
+
+Here is an example showing how you can use @code{select} to establish a
+timeout period for reading from a file descriptor.  The @code{input_timeout}
+function blocks the calling process until input is available on the
+file descriptor, or until the timeout period expires.
+
+@comment This example is select.c.
+@example
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/time.h>
+
+int input_timeout (int filedes, int seconds)
+@{
+  fd_set set;
+  struct timeval timeout;
+
+  /* @r{Initialize the file descriptor set.} */
+  FD_ZERO (&set);
+  FD_SET (filedes, &set);
+
+  /* @r{Initialize the timeout data structure.} */
+  timeout.tv_sec = seconds;
+  timeout.tv_usec = 0;
+
+  /* @r{Return 0 if timeout, 1 if input available, -1 if error.} */
+  return select (FD_SETSIZE, &set, NULL, NULL, &timeout);
+@}
+@end example
+
+There is another example showing the use of @code{select} to multiplex
+input from multiple sockets in @ref{Byte Stream Socket Example}.
 
 
 @node Control Operations on Files
