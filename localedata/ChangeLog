@@ -1,11 +1,16 @@
+2000-01-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/POSIX: Remove trailing semicolon.
+	* locales/th_TH: Likewise.
+
 2000-01-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* SUPPORTED: Change lt_LT and lv_LV entries to use ISO-8859-13.
 
 1999-12-23  Ulrich Drepper  <drepper@cygnus.com>
 
-	* locale/en_BW: New file.
-	* locale/en_ZW: New file.
+	* locales/en_BW: New file.
+	* locales/en_ZW: New file.
 	Contributed by Schalk W. Cronjé <schalkc@ntaba.co.za>.
 
 1999-12-20  Ulrich Drepper  <drepper@cygnus.com>
