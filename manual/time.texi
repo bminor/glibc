@@ -947,17 +947,25 @@ Each process has three independent interval timers available:
 A real-time timer that counts clock time.  This timer sends a
 @code{SIGALRM} signal to the process when it expires.
 @cindex real-time timer
+@cindex timer, real-time
 
 @item 
 A virtual timer that counts CPU time used by the process.  This timer
 sends a @code{SIGVTALRM} signal to the process when it expires.
 @cindex virtual timer
+@cindex timer, virtual
 
 @item 
 A profiling timer that counts both CPU time used by the process, and CPU
 time spent in system calls on behalf of the process.  This timer sends a
 @code{SIGPROF} signal to the process when it expires.
 @cindex profiling timer
+@cindex timer, profiling
+
+This timer is useful for profiling in interpreters.  The interval timer
+mechanism does not have the fine granularity necessary for profiling
+native code.
+@c @xref{profil} !!!
 @end itemize
 
 You can only have one timer of each kind set at any given time.  If you
