@@ -54,7 +54,7 @@ __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
     {
       /* A biased exponent of zero is a special case.
 	 Either it is a zero or it is a denormal number.  */
-      if (res_ptr[0] == 0 && res_ptr[n - 1] == 0)
+      if (res_ptr[0] == 0 && res_ptr[N - 1] == 0) /* Assumes N<=2.  */
 	/* It's zero.  Just one limb records that.  */
 	return 1;
 
