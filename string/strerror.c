@@ -1,4 +1,4 @@
-/* Copyright (C) 19911993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,6 @@ extern char *_strerror_internal __P ((int, char buf[1024]));
 char *
 DEFUN(strerror, (errnum), int errnum)
 {
-  static buf[1024];
+  static char buf[1024];
   return _strerror_internal (errnum, buf);
 }
