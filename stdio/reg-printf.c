@@ -23,14 +23,15 @@ Cambridge, MA 02139, USA.  */
 
 /* Array of functions indexed by format character.  */
 static printf_function *printf_funcs[UCHAR_MAX + 1];
-printf_arginfo_function __printf_arginfo_table[UCHAR_MAX + 1];
+printf_arginfo_function *__printf_arginfo_table[UCHAR_MAX + 1];
 
 printf_function **__printf_function_table;
 
 /* Register FUNC to be called to format SPEC specifiers.  */
 int
 DEFUN(register_printf_function, (spec, converter, arginfo),
-      int spec AND printf_function converter AND printf_arginfo arginfo)
+      int spec AND printf_function converter AND
+      printf_arginfo_function arginfo)
 {
   if (spec < 0 || spec > (int) UCHAR_MAX)
     {
@@ -40,7 +41,7 @@ DEFUN(register_printf_function, (spec, converter, arginfo),
 
   __printf_function_table = printf_funcs;
   __printf_arginfo_table[spec] = arginfo;
-  printf_funcs[spec] = func;
+  printf_funcs[spec] = converter;
 
   return 0;
 }
