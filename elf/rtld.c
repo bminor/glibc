@@ -1218,6 +1218,7 @@ process_dl_debug (const char *dl_debug)
 		&& debopts[cnt].name[len] == '\0')
 	      {
 		_dl_debug_mask |= debopts[cnt].mask;
+		any_debug = 1;
 		break;
 	      }
 
