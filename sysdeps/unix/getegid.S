@@ -18,6 +18,10 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
+#ifdef	SYS_getegid
+SYSCALL__ (getegid)
+#else
 PSEUDO (__getegid, getgid, 2)
 	MOVE(r1, r0)
+#endif
 	ret
