@@ -347,6 +347,12 @@ objects objs: $(objects)
 # $(install-others) are absolute path names of files to install; rules to
 # install them are defined elsewhere.
 
+# The simple library name to install libc.a under.
+# This could be defined by a sysdep Makefile.
+ifndef libc-name
+libc-name := c
+endif
+
 define do-install
 $(make-target-directory)
 $(INSTALL_DATA) $< $@
@@ -365,14 +371,14 @@ endef
 # should install libc.a; this way "make install" in a subdir is guaranteed
 # to install everything it changes.
 ifdef objects
-install: $(libdir)/lib$(libprefix)c.a
+install: $(libdir)/lib$(libprefix)$(libc-name).a
 # We avoid depending on lib-noranlib because that makes the parent make
 # subdir_lib in all the subdirs, when the make install run they do will
 # update the library anyway.  Running ranlib after installing makes the
 # __.SYMDEF time stamp up to date, which avoids messages from some linkers.
 # Depending on subdir_install gets all the subdirs to update the library,
 # and is optimal for `make install' at top level.
-$(libdir)/lib$(libprefix)c.a: libobjs subdir_install
+$(libdir)/lib$(libprefix)$(libc-name).a: libobjs subdir_install
 	$(make-target-directory)
 	$(INSTALL_DATA) $(libc.a) $@
 	$(RANLIB) $@
