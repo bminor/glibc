@@ -57,7 +57,12 @@ DEFUN(__readlink, (path, buf, len),
       if (transp[translen - 1] == '\0')
 	/* Remove the null terminator.  */
 	--len;
-      memcpy (buf, transp + sizeof (_HURD_SYMLINK), len);
+      if (buf == NULL)
+	/* This call is just to find out how large a buffer is required.  */
+	len = translen - sizeof (_HURD_SYMLINK) - 1;
+      else
+	/* Copy into the user's buffer.  */
+	memcpy (buf, transp + sizeof (_HURD_SYMLINK), len);
     }
 
   if (transp != mybuf)
