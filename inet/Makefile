@@ -36,13 +36,6 @@ routines := ntohl ntohs htonl htons		\
 	    rcmd rexec ruserpass
 aux	 := herror
 
-# Look for source files in bsd/ for dist.
-export source_dirs := bsd
-
-%.c: bsd/%.c
-	(echo '#include <ansidecl.h>'; echo '#include "$<"') > $@-tmp
-	mv $@-tmp $@
-
 # No warnings about losing BSD code.
 override +gccwarn := -w
 
