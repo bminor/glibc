@@ -75,10 +75,10 @@ in C programs:
 
 @itemize @bullet
 @item
-@dfn{Static allocation} is what happens when you declare a static
-variable.  Each static variable defines one block of space, of a fixed
-size.  The space is allocated once, when your program is started, and
-is never freed.
+@dfn{Static allocation} is what happens when you declare a static or
+global variable.  Each static or global variable defines one block of
+space, of a fixed size.  The space is allocated once, when your program
+is started, and is never freed.
 
 @item
 @dfn{Automatic allocation} happens when you declare an automatic
@@ -815,10 +815,11 @@ must include the header file @file{obstack.h}, like this:
 @findex obstack_chunk_free
 Also, if the source file uses the macro @code{obstack_init}, it must
 declare or define two functions or macros that will be called by the
-obstack library.  One, @code{obstack_chunk_alloc}, is used to allocate the
-chunks of memory into which objects are packed.  The other,
+obstack library.  One, @code{obstack_chunk_alloc}, is used to allocate
+the chunks of memory into which objects are packed.  The other,
 @code{obstack_chunk_free}, is used to return chunks when the objects in
-them are freed.
+them are freed.  These macros should appear before any use of obstacks
+in the source file.
 
 Usually these are defined to use @code{malloc} via the intermediary
 @code{xmalloc} (@pxref{Unconstrained Allocation}).  This is done with
