@@ -3,7 +3,7 @@ provides the Unix `crypt' function, plus some other entry points.  Because
 of the United States export restriction on DES implementations, we are
 distributing this code separately from the rest of the C library.  There is
 an extra distribution tar file just for crypt; it is called
-`glibc-1.05-crypt.tar.Z'.  You can just unpack the crypt distribution
+`glibc-1.07-crypt.tar.gz'.  You can just unpack the crypt distribution
 along with the rest of the C library and build; you can also build the
 library without getting crypt.  Users outside the USA can get the crypt
 distribution via anonymous FTP from ftp.uni-c.dk [129.142.6.74], or another
