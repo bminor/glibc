@@ -16,8 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ctype.h>
-
 /* Different systems have different names for the array.
    This order is important for some systems.  */
 #ifdef	HAVE__CTYPE__
@@ -58,6 +56,8 @@ main ()
 #ifdef TABLE
 
   int i;
+
+  extern unsigned char TABLE[];
 
   puts ("#include <ansidecl.h>");
 #ifdef TABLE_NAME
