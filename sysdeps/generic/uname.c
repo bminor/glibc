@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,16 +22,13 @@ Cambridge, MA 02139, USA.  */
 #include <sys/utsname.h>
 #include <unistd.h>
 
-/* This file is created by the configuration process, and defines
-   LIBC_MACHINE to a string containing the machine configured for.  */
+/* This file is created by the configuration process, and defines UNAME_*.  */
 #include <config-name.h>
-
 
 /* Put information about the system in NAME.  */
 int
 DEFUN(uname, (name), struct utsname *name)
 {
-  extern CONST char __libc_release[], __libc_version[];
   int save;
 
   if (name == NULL)
@@ -49,13 +46,18 @@ DEFUN(uname, (name), struct utsname *name)
 	  name->nodename[0] = '\0';
 	  errno = save;
 	}
+#ifdef	ENAMETOOLONG
+      else if (errno == ENAMETOOLONG)
+	/* The name was truncated.  */
+	errno = save;
+#endif
       else
 	return -1;
     }
-  strcpy (name->sysname, "GNU C Library");
-  strncpy (name->release, __libc_release, sizeof (name->release));
-  strncpy (name->version, __libc_version, sizeof (name->version));
-  strncpy (name->machine, LIBC_MACHINE, sizeof (name->machine));
+  strncpy (name->sysname, UNAME_SYSNAME, sizeof (name->sysname));
+  strncpy (name->release, UNAME_RELEASE, sizeof (name->release));
+  strncpy (name->version, UNAME_VERSION, sizeof (name->version));
+  strncpy (name->machine, UNAME_MACHINE, sizeof (name->machine));
 
   return 0;
 }
