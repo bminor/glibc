@@ -42,7 +42,8 @@ void ReadFile(buffer, input)
   AppendToBuffer(buffer, "", 1);
 }
 
-main() {
+main() 
+{
   char * filename = "xbug.c";
   FILE *input;
   Buffer buffer;
@@ -57,4 +58,6 @@ main() {
   
   ReadFile(&buffer, input);
   pclose(input);
+
+  return 0;
 }
