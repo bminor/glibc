@@ -23,6 +23,8 @@ tar-name := $(subst _,.,$(tag-name))
 select-snapshot = -r '$($(glibc-branch)-sync-tag)'
 snapshot-id = $($(glibc-branch)-sync-tag)
 
+branch-name := $(patsubst %-$(patsubst glibc-%,%,$(tag-name)),%,\
+			  $(glibc-branch))
 
 branch.mk-vars = glibc-branch glibc-base DIST_BRANCH COLLECTION
 
@@ -77,11 +79,11 @@ force-tag: glibc.spec
 	cd ..; cvs -Q tag -F -c $(tag-prefix)$(spec-tag)
 
 # Note this rule assumes that your working directory (..) is up to date.
-$(tar-name)-$(glibc-branch).patch: makepatch.awk glibc.spec \
-				   ../ChangeLog ../*/ChangeLog
+$(tar-name)-$(branch-name).patch: makepatch.awk glibc.spec \
+				  ../ChangeLog ../*/ChangeLog
 	(cd ..; cvs -q diff -upN $(select-snapshot) $(select-release)) | \
 	awk -v OLDVER=$(tar-name)-$(snapshot-name) \
-	    -v NEWVER=$(tar-name)-$(snapshot-name)-$(glibc-branch) \
+	    -v NEWVER=$(tar-name)-$(snapshot-name)-$(branch-name) \
 	    -f $< > patch.tmp
 	mv -f patch.tmp $@
 
@@ -89,9 +91,9 @@ $(tar-name)-$(glibc-branch).patch: makepatch.awk glibc.spec \
 outside-patch = fedora c_stubs rtkaio glibc-compat \
 		localedata/charmaps/GB18030 iconvdata/gb18030.c
 
-$(tar-name)-$(glibc-branch)-$(snapshot-name).tar.bz2: Makefile branch.mk \
-						      ../ChangeLog \
-						      ../*/ChangeLog
+$(tar-name)-$(branch-name)-$(snapshot-name).tar.bz2: Makefile branch.mk \
+						     ../ChangeLog \
+						     ../*/ChangeLog
 	@rm -rf libc
 	cvs -Q export $(select-release) $(addprefix libc/,$(outside-patch))
 	tar cf - -C libc $(outside-patch) | bzip2 -9 > $@.new
@@ -106,8 +108,8 @@ $(tar-name)-$(snapshot-name).tar.bz2: Makefile branch.mk
 	mv -f $@.new $@
 
 archives = $(tar-name)-$(snapshot-name).tar.bz2 \
-	   $(tar-name)-$(glibc-branch)-$(snapshot-name).tar.bz2 \
-	   $(tar-name)-$(glibc-branch).patch
+	   $(tar-name)-$(branch-name)-$(snapshot-name).tar.bz2 \
+	   $(tar-name)-$(branch-name).patch
 finish_archive: $(archives)
 
 archive: glibc.spec
