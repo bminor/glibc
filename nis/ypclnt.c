@@ -688,7 +688,10 @@ yp_all (const char *indomain, const char *inmap,
       clnt_sin.sin_port = 0;
       clnt = clnttcp_create (&clnt_sin, YPPROG, YPVERS, &clnt_sock, 0, 0);
       if (clnt == NULL)
-	return YPERR_PMAP;
+	{
+	  __yp_unbind (ydb);
+	  return YPERR_PMAP;
+	}
       req.domain = (char *) indomain;
       req.map = (char *) inmap;
 
@@ -707,6 +710,7 @@ yp_all (const char *indomain, const char *inmap,
       else
 	res = YPERR_SUCCESS;
 
+      __yp_unbind (ydb);
       clnt_destroy (clnt);
       close (clnt_sock);
 
