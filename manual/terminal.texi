@@ -1470,6 +1470,18 @@ The MIN and TIME values interact to determine the criterion for when
 them are nonzero.  There are four possible cases:
 
 @itemize @bullet
+@item
+Both TIME and MIN are nonzero.
+
+In this case, TIME specifies how long to wait after each input character
+to see if more input arrives.  After the first character received,
+@code{read} keeps waiting until either MIN bytes have arrived in all, or
+TIME elapses with no further input.
+
+@code{read} always blocks until the first character arrives, even if
+TIME elapses first.  @code{read} can return more than MIN characters if
+more than MIN happen to be in the queue.
+
 @item 
 Both MIN and TIME are zero.
 
@@ -1495,17 +1507,6 @@ In this case, @code{read} waits until at least MIN bytes are available
 in the queue.  At that time, @code{read} returns as many characters as
 are available, up to the number requested.  @code{read} can return more
 than MIN characters if more than MIN happen to be in the queue.
-
-@item
-Both TIME and MIN are nonzero.
-
-In this case, TIME specifies how long to wait after each input character
-to see if more input arrives.  @code{read} keeps waiting until either
-MIN bytes have arrived, or TIME elapses with no further input.
-
-@code{read} can return no input if TIME elapses before the first input
-character arrives.  @code{read} can return more than MIN characters if
-more than MIN happen to be in the queue.
 @end itemize
 
 What happens if MIN is 50 and you ask to read just 10 bytes?
