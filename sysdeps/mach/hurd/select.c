@@ -38,7 +38,9 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   mach_port_t port;
   int got;
   struct _hurd_dtable dtable;
-  int dealloc_dtable, *dealloc, *types;
+  struct _hurd_port_userlink *ulink;
+  int dealloc_dtable;
+  int *types;
   mach_port_t *ports;
   struct _hurd_fd **cells;
   error_t err;
@@ -68,7 +70,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   cells = __alloca (nfds * sizeof (*cells));
   ports = __alloca (nfds * sizeof (*ports));
   types = __alloca (nfds * sizeof (*types));
-  dealloc = __alloca (nfds * sizeof (*dealloc));
+  ulink = __alloca (nfds * sizeof (*ulink));
   for (i = 0; i < nfds; ++i)
     {
       int type = 0;
@@ -82,12 +84,12 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
       if (type)
 	{
 	  cells[i] = _hurd_dtable_fd (i, dtable);
-	  ports[i] = _hurd_port_locked_get (&cells[i]->port, &dealloc[i]);
+	  ports[i] = _hurd_port_locked_get (&cells[i]->port, &ulink[i]);
 	  if (ports[i] == MACH_PORT_NULL)
 	    {
 	      /* If one descriptor is bogus, we fail completely.  */
 	      while (i-- > 0)
-		_hurd_port_free (&cells[i]->port, &dealloc[i], ports[i]);
+		_hurd_port_free (&cells[i]->port, &ulink[i], ports[i]);
 	      _hurd_dtable_done (dtable, &dealloc_dtable);
 	      errno = EBADF;
 	      return -1;
@@ -107,7 +109,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	    if (types[i])
 	      ++got;
 	  }
-	_hurd_port_free (&cells[i]->port, &dealloc[i], ports[i]);
+	_hurd_port_free (&cells[i]->port, &ulink[i], ports[i]);
       }
 
   if (!err && got == 0 && port != MACH_PORT_NULL)
