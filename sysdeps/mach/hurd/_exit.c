@@ -26,10 +26,8 @@ Cambridge, MA 02139, USA.  */
 void
 _hurd_exit (int status)
 {
-#ifdef notyet
   /* Give the proc server our exit status.  */
-  __USEPORT (PROC, __proc_exit (port, status));
-#endif
+  __USEPORT (PROC, __proc_mark_exit (port, status));
 
   /* Commit suicide.  */
   __task_terminate (__mach_task_self ());

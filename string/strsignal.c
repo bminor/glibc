@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ DEFUN(strsignal, (signum), int signum)
       size_t len = sprintf(unknown_signal, fmt, signum);
       if (len < sizeof(fmt) - 2)
 	return NULL;
-      unknown_signal[len - 1] = '\0';
+      unknown_signal[len] = '\0';
       return unknown_signal;
     }
 
