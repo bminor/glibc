@@ -44,8 +44,8 @@ dont_distribute := $(dont_distribute) sys/param.h	# Generated.
 endif
 
 $(objpfx)sys/param.h: /usr/include/sys/param.h $(objpfx)sys/
-	(echo '#ifndef _SYS_PARAM_H';	\
-	 echo '#define _SYS_PARAM_H 1';	\
+	(echo '#ifndef _GNU_SYS_PARAM_H';	\
+	 echo '#define _GNU_SYS_PARAM_H 1';	\
 	 awk < $<			\
 	   '/^#define[ 	]*NULL/ { print "#ifndef NULL";	\
 				  print $$0;		\
