@@ -19,7 +19,7 @@
 ifeq	($(subdir),math)
 ifndef	math-twiddled
 
-routines:= $(filter-out acos asin cos sin ceil __rint hypot,$(routines)) \
+routines:= $(filter-out acos asin cos sin hypot,$(routines)) \
 	   sincos asincos
 aux	:= $(aux) exp__E log__L
 
