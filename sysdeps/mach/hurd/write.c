@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <hurd/fd.h>
 
 ssize_t
 DEFUN(__write, (fd, buf, nbytes),
@@ -41,7 +42,7 @@ DEFUN(__write, (fd, buf, nbytes),
   __mutex_unlock (&ss->lock);
 #endif
   
-  _HURD_DPORT_USE
+  err = HURD_DPORT_USE
     (fd,
      ({
      call:
@@ -61,7 +62,7 @@ DEFUN(__write, (fd, buf, nbytes),
 	     err = EINTR;	/* XXX Is this right? */
 #endif
 	 }
-       0;
+       err;
      }));
 
   if (err)
