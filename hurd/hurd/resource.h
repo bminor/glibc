@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <sys/resource.h>
 #include <errno.h>
+#include <hurd/process.h>
 
 /* This array contains the current resource limits for the process.  */
 extern struct rlimit _hurd_rlimits[RLIM_NLIMITS];
