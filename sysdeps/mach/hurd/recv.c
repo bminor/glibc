@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/socket.h>
 #include <hurd.h>
+#include <hurd/fd.h>
+#include <hurd/socket.h>
 
 /* Read N bytes into BUF from socket FD.
    Returns the number read or -1 for errors.  */
