@@ -27,7 +27,7 @@ CONST char _itoa_upper_digits[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 char *
 DEFUN(_itoa, (value, buflim, base, upper_case),
-      unsigned long int value AND char *buflim AND
+      unsigned long long int value AND char *buflim AND
       unsigned int base AND int upper_case)
 {
   /* Base-36 digits for numbers.  */
