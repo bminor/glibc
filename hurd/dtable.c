@@ -143,14 +143,20 @@ fork_child_dtable (void)
       /* No other thread is using the send rights in the child task.  */
       d->port.users = d->ctty.users = NULL;
 
-      if (d->ctty.port)
-	/* There was a ctty-special port in the parent.
-	   We need to get one for ourselves too.  */
+      if (d->ctty.port != MACH_PORT_NULL)
+	{
+	  /* There was a ctty-special port in the parent.
+	     We need to get one for ourselves too.  */
+	  __mach_port_deallocate (__mach_task_self (), d->port.port);
 	  err = __term_become_ctty (d->ctty.port,
-				    /* XXX no guarantee that init_pids hook
-				       has been run BEFORE this one! */
 				    _hurd_pid, _hurd_pgrp, _hurd_msgport,
 				    &d->port.port);
+	  if (err)
+	    {
+	      d->port.port = d->ctty.port;
+	      d->ctty.port = MACH_PORT_NULL;
+	    }
+	}
 
       /* XXX for each fd with a cntlmap, reauth and re-map_cntl.  */
     }
