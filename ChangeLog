@@ -1,11 +1,91 @@
+2004-09-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.c (termination_handler): Reset timestamp so that
+	clients immediately stop using the database.
+
+	* nscd/nscd-client.h (__nscd_get_map_ref): Drop volatile from last
+	parameter.
+	(__nscd_drop_map_ref): Change second parameter to be a reference to
+	a variable.  Update variable when cycle count changed.
+	* nscd/nscd_helper.c (__nscd_get_map_ref): Remove volatile here, too.
+	* nscd/nscd_getai.c: Correctly use __nscd_drop_map_ref.  Reinitialize
+	all variables and avoid memory leak in case of retries.
+	* nscd/nscd_getgr_r.c: Likewise.
+	* nscd/nscd_gethst_r.c: Likewise.
+	* nscd/nscd_getpw_r.c: Likewise.
+	* nscd/nscd_initgroups.c: Likewise.
+
+	* nscd/nscd.h: Add declaration of addinitgroups and
+	readdinitgroups.
+
+2004-09-30  Andreas Jaeger  <aj@suse.de>
+
+	* nscd/Makefile (CFLAGS-nscd_initgroups.c): Set to -fpie.
+	(CFLAGS-initgrcache.c): Set to -fexceptions.
+
+2004-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/glob.c (glob_in_dir): Don't blindly trust
+	readdir results; for symlinks or files of unknown type check using
+	stat whether the file exists.
+
+	* posix/tst-gnuglob.c (find_file): Handle leading "./".  Fix
+	recognition of files.
+
 2004-09-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* time/tzfile.c (tzfile_mtime): New variable.
 	(__tzfile_read): Reread the file if mtime is different.
 
+2004-09-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/fpu/bits/mathinline.h (__fdimf, __fdim, fdimf, fdim):
+	Handle +inf/+inf.
+	* sysdeps/powerpc/fpu/bits/mathinline.h (fdim, fdimf): Likewise.
+	* sysdeps/sparc/fpu/bits/mathinline.h (fdim, fdimf): Likewise.
+
+2004-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Use correct constant for
+	testing result of __nscd_get_map_ref.
+
+2004-09-29  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/i386/fpu/s_fdim.S (__fdim): Handle +inf/+inf.
 	* sysdeps/i386/fpu/s_fdimf.S (__fdimf): Likewise.
 	* sysdeps/i386/fpu/s_fdiml.S (__fdiml): Likewise.
+
+004-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* grp/initgroups.c: Move compat_call implementation...
+	* grp/compat-initgroups.c: ...to here.  New file.
+	* grp/Makefile (distribute): Add compat-initgroups.c.
+	(CFLAGS-initgroups.c): Add -DUSE_NSCD=1.
+	* mscd/initgrcache.c: New file.
+	* nscd/nscd_initgroups.c: New file.
+	* nscd/Makefile (routines): Add nscd_initgroups.
+	(nscd-modules): Add initgrcache.
+	* nscd/cache.c (prune_cache): Add support for INITGROUPS entries.
+	* nscd/connections.c: Handle INITGROUPS requests.
+	* nscd/nscd-client.h: Define INITGROUPS, initgr_response_header.
+	Add initgrdata element to struct datahead.  Fix typo in comment.
+	* nscd/nscd_proto.h: Declare __nscd_getgrouplist.  Fix parameter
+	type in __nscd_getgrgrid_r.
+	* nscd/selinux.c (perms): Add INITGROUPS entry.
+
+	* nscd/nscd_getai.c: No need to include <sys/mman.h>.
+
+	* sunrpc/get_myaddr.c (get_myaddress): Account for interfaces without
+	assigned addresses.
+	* sunrpc/pmap_clnt.c (__get_myaddress): Likewise.
+	* sunrpc/pmap_rmt.c (getbroadcastnets): Likewise.
+	* sunrpc/clnt_udp.c (is_network_up): Likewise.
+
+	* nscd/nscd.c: Define getaddrinfo hidden so that it is never found
+	outside.
+
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h (si_segvflags):
+	Renamed from si_flags due to conflict with si_flags from <elf.h>.
 
 2004-09-28  Ulrich Drepper  <drepper@redhat.com>
 

@@ -1,4 +1,4 @@
-%define glibcrelease 60
+%define glibcrelease 61
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -708,10 +708,10 @@ gzip -9nvf $RPM_BUILD_ROOT%{_infodir}/libc*
 
 ln -sf libbsd-compat.a $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libbsd.a
 
-install -m 644 fedora/nsswitch.conf $RPM_BUILD_ROOT/etc/nsswitch.conf
+install -p -m 644 fedora/nsswitch.conf $RPM_BUILD_ROOT/etc/nsswitch.conf
 
 mkdir -p $RPM_BUILD_ROOT/etc/default
-install -m 644 nis/nss $RPM_BUILD_ROOT/etc/default/nss
+install -p -m 644 nis/nss $RPM_BUILD_ROOT/etc/default/nss
 
 # Take care of setuids
 # -- new security review sez that this shouldn't be needed anymore
@@ -1239,6 +1239,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Sep 30 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-61
+- update from CVS
+  - some nscd fixes (#134193)
+  - cache initgroups in nscd (#132850)
+  - reread /etc/localtime in tzset () even if just mtime changed
+    (#133481)
+  - fix glob (#126460)
+  - another get_myaddress fix
+
 * Wed Sep 29 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-60
 - update from CVS
   - fix get_myaddress (#133982)

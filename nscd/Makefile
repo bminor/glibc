@@ -21,7 +21,7 @@
 #
 subdir	:= nscd
 
-routines := nscd_getpw_r nscd_getgr_r nscd_gethst_r nscd_getai
+routines := nscd_getpw_r nscd_getgr_r nscd_gethst_r nscd_getai nscd_initgroups
 aux	:= nscd_helper
 
 include ../Makeconfig
@@ -32,7 +32,7 @@ vpath %.c ../locale/programs
 nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 		getgrnam_r getgrgid_r hstcache gethstbyad_r gethstbynm2_r \
 		dbg_log nscd_conf nscd_stat cache mem nscd_setup_thread \
-		xmalloc xstrdup aicache
+		xmalloc xstrdup aicache initgrcache
 
 ifeq ($(have-thread-library),yes)
 
@@ -66,6 +66,8 @@ include ../Rules
 CFLAGS-nscd_getpw_r.c = -fexceptions
 CFLAGS-nscd_getgr_r.c = -fexceptions
 CFLAGS-nscd_gethst_r.c = -fexceptions
+CFLAGS-nscd_getai.c = -fexceptions
+CFLAGS-nscd_initgroups.c = -fexceptions
 
 nscd-cflags = -DIS_IN_nscd=1
 ifeq (yesyes,$(have-fpie)$(build-shared))
@@ -93,6 +95,7 @@ CFLAGS-mem.c = $(nscd-cflags)
 CFLAGS-nscd_setup_thread.c = $(nscd-cflags)
 CFLAGS-aicache.c = $(nscd-cflags)
 CFLAGS-selinux.c = $(nscd-cflags)
+CFLAGS-initgrcache.c = $(nscd-cflags)
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
 $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))

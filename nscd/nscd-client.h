@@ -62,6 +62,7 @@ typedef enum
   GETFDGR,
   GETFDHST,
   GETAI,
+  INITGROUPS,
   LASTREQ
 } request_type;
 
@@ -140,6 +141,15 @@ struct nscd_ai_result
   char *addrs;
 };
 
+/* Structure sent in reply to initgroups query.  Note that this struct is
+   sent also if the service is disabled or there is no record found.  */
+typedef struct
+{
+  int32_t version;
+  int32_t found;
+  nscd_ssize_t ngrps;
+} initgr_response_header;
+
 
 /* Type for offsets in data part of database.  */
 typedef uint32_t ref_t;
@@ -173,6 +183,7 @@ struct datahead
     gr_response_header grdata;
     hst_response_header hstdata;
     ai_response_header aidata;
+    initgr_response_header initgrdata;
     nscd_ssize_t align1;
     nscd_time_t align2;
   } data[0];
@@ -244,7 +255,7 @@ struct mapped_database
   const struct database_pers_head *head;
   const char *data;
   size_t mapsize;
-  int counter;		/* > 0 indicates it isusable.  */
+  int counter;		/* > 0 indicates it is usable.  */
 };
 #define NO_MAPPING ((struct mapped_database *) -1l)
 
@@ -265,20 +276,24 @@ extern int __nscd_open_socket (const char *key, size_t keylen,
 extern struct mapped_database *__nscd_get_map_ref (request_type type,
 						   const char *name,
 						   struct locked_map_ptr *mapptr,
-						   volatile int *gc_cyclep);
+						   int *gc_cyclep);
 
 /* Unmap database.  */
 extern void __nscd_unmap (struct mapped_database *mapped);
 
 /* Drop reference of mapping.  */
 static inline int __nscd_drop_map_ref (struct mapped_database *map,
-				       int gc_cycle)
+				       int *gc_cycle)
 {
   if (map != NO_MAPPING)
     {
-      if (__builtin_expect (map->head->gc_cycle != gc_cycle, 0))
-	/* We might have read inconsistent data.  */
-	return -1;
+      int now_cycle = map->head->gc_cycle;
+      if (__builtin_expect (now_cycle != *gc_cycle, 0))
+	{
+	  /* We might have read inconsistent data.  */
+	  *gc_cycle = now_cycle;
+	  return -1;
+	}
 
       if (atomic_decrement_val (&map->counter) == 0)
 	__nscd_unmap (map);

@@ -438,9 +438,14 @@ termination_handler (int signum)
 
   /* Synchronize memory.  */
   for (int cnt = 0; cnt < lastdb; ++cnt)
-    if (dbs[cnt].persistent)
-      // XXX async OK?
-      msync (dbs[cnt].head, dbs[cnt].memsize, MS_ASYNC);
+    {
+      /* Make sure nobody keeps using the database.  */
+      dbs[cnt].head->timestamp = 0;
+
+      if (dbs[cnt].persistent)
+	// XXX async OK?
+	msync (dbs[cnt].head, dbs[cnt].memsize, MS_ASYNC);
+    }
 
   /* Shutdown the SELinux AVC.  */
   if (selinux_enabled)
@@ -496,6 +501,8 @@ write_pid (const char *file)
    into nscd.  There currently is no special getaddrinfo version for
    use in nscd.  In case it should be necessary such a version must be
    created and this dummy version should be removed.  */
+extern void getaddrinfo (void) __attribute ((visibility ("hidden")));
+
 void
 getaddrinfo (void)
 {
