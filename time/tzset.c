@@ -349,6 +349,9 @@ DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
   register time_t t;
   int y;
 
+  /* Turn tm_year into actual year.  */
+  year += 1970;
+
   if (year != -1 && rule->computed_for == year)
     /* Operations on times in 1969 will be slower.  Oh well.  */
     return 1;
