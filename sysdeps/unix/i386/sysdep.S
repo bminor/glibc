@@ -18,16 +18,15 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-#ifdef __STDC__
-#define PASTE(a,b) a##b
-#else
-#define PASTE(a,b) a/**/b
-#endif
-
 .globl C_SYMBOL_NAME(errno)
 .globl syscall_error
-/* Avoid space being appended when syscall_error is #defined.  */
-PASTE(syscall_error,:)
+
+#undef syscall_error
+#ifdef NO_UNDERSCORES
+__syscall_error:
+#else
+syscall_error:
+#endif
 	movl %eax, C_SYMBOL_NAME(errno)
 	movl $-1, %eax
 	ret
