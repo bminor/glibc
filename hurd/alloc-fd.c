@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/fd.h>
 #include <stdlib.h>
+#include "hurdmalloc.h"		/* XXX */
 
 int _hurd_dtable_rlimit;	/* Resource limit on open descriptors.  */
 
