@@ -16,13 +16,12 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #ifndef	_TAR_H
 
 #define	_TAR_H	1
-
 
 /* A tar archive consists of 512-byte blocks.
    Each file in the archive has a header block followed by 0+ data blocks.
@@ -98,7 +97,7 @@ Cambridge, MA 02139, USA.  */
 #define DIRTYPE		'5'	/* Directory.  */
 #define FIFOTYPE	'6'	/* Named pipe.  */
 #define CONTTYPE	'7'	/* Contiguous file */
-				/* (regular file if not supported).  */
+ /* (regular file if not supported).  */
 
 /* Contents of magic field and its length.  */
 #define TMAGIC	"ustar"
@@ -108,5 +107,4 @@ Cambridge, MA 02139, USA.  */
 #define TVERSION	"00"
 #define TVERSLEN	2
 
-
-#endif	/* tar.h */
+#endif /* tar.h */
