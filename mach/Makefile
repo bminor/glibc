@@ -29,7 +29,7 @@ headers = mach_init.h mach.h mach_error.h mach-shortcuts.h \
 	  $(lock-headers) machine-sp.h
 distribute = thread_state.h
 lock = spin-solid spin-lock spin-syms
-lock-headers = lock-intern.h machine-lock.h mutex.h
+lock-headers = lock-intern.h machine-lock.h mutex.h spin-lock.h
 routines = $(filter-out syscall_%,$(mach-syscalls)) \
 	   $(addprefix __,$(mach-syscalls)) \
 	   $(mach-shortcuts) $(addprefix __,$(mach-shortcuts)) \
@@ -86,6 +86,8 @@ mach-src-headers := $(wildcard $(foreach dir,mach device mach_debug \
 # Exclude $(headers) for Mach files we have our own versions of.
 mach-headers = $(filter-out mach/machine/% $(headers),\
 			    $(mach-src-headers:$(mach-srcdir)/%=%))
+# Rename Mach's sys/version.h to mach/version.h.
+mach-headers := $(patsubst sys/version.h,mach/version.h,$(mach-headers))
 
 # Don't distribute the Mach headers; they are in the Mach distribution.
 dont_distribute = $(mach-headers)
