@@ -1,3 +1,10 @@
+1999-07-25  Jakub Jelinek   <jj@ultra.linux.cz>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h: Define always __qaddr_t.
+	__ino64_t should be 32bit unsigned type on sparc32.
+	Define __off64_t to __quad_t instead of __int64_t.
+	Make __pic_pid_t unsigned on sparc32.
+
 1999-08-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* misc/search.h: Avoid namespace pollution.
