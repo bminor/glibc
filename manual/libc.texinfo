@@ -17,13 +17,14 @@ This will be free information when it is finished, but isn't finished yet.
 
 @titlepage
 @center @titlefont{The GNU C Library}
+@sp 1
+@center @titlefont{Reference Manual}
 @sp 2
 @center Sandra Loosemore
-@center Roland McGrath
-@center Andrew Oram
-@center Richard M. Stallman
+@center with
+@center Roland McGrath, Andrew Oram, and Richard M. Stallman
 @sp 3
-@center last updated Aug 9, 1991
+@center last updated Aug 30, 1991
 @sp 1
 @center for version 0.00
 @page
@@ -36,7 +37,7 @@ Copyright @copyright{} 1991 Free Software Foundation, Inc.
 
 @ifinfo
 @chapter Main Menu
-This is the documentation for the GNU C Library.
+This is the reference manual for version 0.00 of the GNU C Library.
 @end ifinfo
 
 @menu
