@@ -1,6 +1,6 @@
 # Make the TAGS files.
 
-# Copyright (C) 1992 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -53,7 +53,8 @@ all-dirs := $(objdir) \
 ifndef subdir
 subdirs := $(subdirs) \
 	   $(filter-out $(subdirs),\
-			$(shell cat $(wildcard $(addsuffix /Subdirs,\
+			$(shell sed -e 's/\#.*$$//' \
+				    $(wildcard $(addsuffix /Subdirs,\
 							   $(all-dirs)))\
 				    /dev/null))
 all-dist = $(shell cat /dev/null $(wildcard $(filter %.c %.h %.S %.s,\

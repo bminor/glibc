@@ -139,10 +139,12 @@ foo:=$(shell echo parent foobie>&2)
 foo:=$(shell echo +sysdep-distfiles='$(+sysdep-distfiles)'>&2)
 sysdep-Subdir-files := $(wildcard $(addsuffix /Subdirs,$(sysdep_dirs)))
 ifdef sysdep-Subdir-files
-subdirs := $(sort $(subdirs) $(shell cat $(sysdep-Subdir-files)))
+subdirs := $(sort $(subdirs) \
+		  $(shell sed -e 's/\#.*$$//' $(sysdep-Subdir-files)))
 endif
 +sysdep-dist := $(foreach file,$(+sysdep-distfiles),\
-			  $(addprefix $(dir $(file)),$(shell cat $(file)))) \
+			  $(addprefix $(dir $(file)), \
+				      $(shell sed -e 's/\#.*$$//' $(file)))) \
 		$(+sysdep-distfiles) \
 		$(sysdep-Subdir-files)
 foo:=$(shell echo '+sysdep-dist=$(+sysdep-dist)' >&2)
@@ -184,7 +186,7 @@ $(tardir).tar: dist.tar subdir_dist
 %.gz: %
 	gzip -9 -v -c $< > $@
 
-foo:=$(shell echo 'subdirs=$(subdirs)' >&2)
+foo:=$(shell echo subdirs=$(subdirs) >&2)
 dist-subdirs := $(addprefix dist-,$(subdirs)) # dist-manual
 .PHONY: subdir_dist $(dist-subdirs)
 subdir_dist: $(dist-subdirs)
