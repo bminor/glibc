@@ -33,9 +33,9 @@ divided by infinity.
 
 One noteworthy property of NaNs is that they are not equal to
 themselves.  Thus, @code{x == x} can be 0 if the value of @code{x} is a
-NaN.  In fact, this is the way to test whether a value is a NaN or not:
-if it is not equal to itself, then it is a NaN.
-@c !!! should use isnan
+NaN.  You can use this to test whether a value is a NaN or not: if it is
+not equal to itself, then it is a NaN.  But the recommended way to test
+for a NaN is with the @code{isnan} function (@pxref{Predicates on Floats}).
 
 Almost any arithmetic operation in which one argument is a NaN returns
 a NaN.
@@ -582,9 +582,8 @@ An optional plus or minus sign (@samp{+} or @samp{-}).
 
 @item
 A nonempty sequence of digits optionally containing a decimal-point
-character (@samp{.}).
-@c !!! what the decimal point char is varies with locale;
-@c localeconv()->decimal_point tells you.
+character---normally @samp{.}, but it depends on the locale
+(@pxref{Numeric Formatting}).
 
 @item
 An optional exponent part, consisting of a character @samp{e} or
