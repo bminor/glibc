@@ -170,9 +170,9 @@ unsigned type, and will not work correctly if it is signed.
 
 The GNU C library code which expects @code{size_t} to be unsigned is
 correct.  The definition of @code{size_t} as a signed type is incorrect.
-We plan that in version 2.4, GCC will always define @code{size_t} as an
-unsigned type, and the @file{fixincludes} script will massage the
-system's @file{sys/types.h} so as not to conflict with this.
+Versions 2.4 and later of GCC always define @code{size_t} as an unsigned
+type, and GCC's @file{fixincludes} script massages the system's
+@file{sys/types.h} so as not to conflict with this.
 
 In the meantime, we work around this problem by telling GCC explicitly
 to use an unsigned type for @code{size_t} when compiling the GNU C
@@ -442,7 +442,7 @@ directory contains various network-oriented operations which only make
 sense to put in the library on systems that support the Internet.@refill
 
 @item Dist
-This file contains the names of files (relative the the subdirectory of
+This file contains the names of files (relative to the subdirectory of
 @file{sysdeps} in which it appears) which should be included in the
 distribution.  List any new files used by rules in the @file{Makefile}
 in the same directory, or header files used by the source files in that
@@ -595,7 +595,7 @@ implemented in terms of itself, so a configuration using just
 @file{posix} cannot be complete.
 
 @item unix
-This is the directory for Unix-like things.  See @xref{Porting to Unix}.
+This is the directory for Unix-like things.  @xref{Porting to Unix}.
 @file{unix} implies @file{posix}.  There are some special-purpose
 subdirectories of @file{unix}:
 
