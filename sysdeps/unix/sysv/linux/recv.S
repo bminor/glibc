@@ -1,3 +1,4 @@
 #define	socket	recv
+#define	__socket __libc_recv
 #include <socket.S>
-strong_alias (__recv, __libc_recv)
+weak_alias (__libc_recv, __recv)

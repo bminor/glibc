@@ -1,3 +1,4 @@
 #define	socket	accept
+#define	__socket __libc_accept
 #include <socket.S>
-strong_alias (__accept, __libc_accept)
+weak_alias (__libc_accept, __accept)
