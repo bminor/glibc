@@ -1,10 +1,24 @@
-2004-12-15  Jakub Jelinek  <jakub@redhat.com>
+2004-12-15  Steven Munroe  <sjmunroe@us.ibm.com>
 
-	* nis/nis_domain_of_r.c (nis_domain_of_r): Use libnsl_hidden_def,
-	not libnsl_hidden_proto.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Correct stack
+	alignment.  Clean up flag bit tests.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Correct stack
+	alignment.  Clean up flag bit tests.  Remove redundent SP assignment.
+	Add TOC register save/restore around function call.
 
-	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (__clone): Save
-	and restore r2 around call to fn.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Make no_vmx symbol
+	local.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Make no_vmx symbol
+	local.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Make no_vmx symbol
+	local.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Make no_vmx and
+	aligned_save_vmx symbol local.
+
+2004-12-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i486/bits/string.h (__strncat_g): Fix i686
+	implementation.
 
 2004-09-08  H.J. Lu  <hongjiu.lu@intel.com>
 
@@ -13,20 +27,28 @@
 	(gnulib): Always set to -lgcc $(libgcc_eh).
 	(static-gnulib): Always set to -lgcc -lgcc_eh $(libunwind).
 	(libc.so-gnulib): New.
-
 	* Makerules (LDLIBS-c.so): Use $(libc.so-gnulib) instead of
 	$(static-gnulib).
-
 	* configure.in (libc_cv_cc_with_libunwind): Set to yes if gcc
 	uses -lunwind for static binaries.
-	* configure: Regenerated.
 
-2004-12-14  Jakub Jelinek  <jakub@redhat.com>
+2004-06-05  Joseph S. Myers  <jsm@polyomino.org.uk>
 
-	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S (__clone): Add support for
-	NPTL where the PID is stored at userlevel and needs to be reset when
-	CLONE_THREAD is not used.
+	* malloc/Makefile (install-bin): Remove memusage.
+	(install-bin-script): Add memusage.
+
+2004-12-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nis_domain_of_r.c (nis_domain_of_r): Use libnsl_hidden_def,
+	not libnsl_hidden_proto.
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S (__clone): Add support
+	for NPTL where the PID is stored at userlevel and needs to be reset
+	when CLONE_THREAD is not used.
 	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S (__clone): Likewise.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (__clone): Save
+	and restore r2 around call to fn.
 
 2004-12-15  Andreas Jaeger  <aj@suse.de>
 
