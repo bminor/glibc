@@ -59,7 +59,7 @@ all:
 
 
 # Define mach-syscalls and sysno-*.
-include mach-syscalls.mk
+#include mach-syscalls.mk
 dont_distribute := syscall_sw.h
 mach-syscalls.mk: syscall_sw.h mach-syscalls.awk
 	sed -n -e '/STANDALONE/,$$d' \
