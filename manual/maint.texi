@@ -164,8 +164,18 @@ system's @file{sys/types.h} so as not to conflict with this.
 In the meantime, the way to work around this problem is to tell GCC
 explicitly to use an unsigned type for @code{size_t} when you compile
 the GNU C library.  You can do this by compiling with
-``-D__SIZE_TYPE__=unsigned long int'', or by putting that switch into
-the GCC @file{specs} file.  When you do this, the current version of GCC
+@samp{-D__SIZE_TYPE__='unsigned long int'}.  You can either put this
+into the GCC @file{specs} file to affect all compilations using GCC, or
+specify the flag just to compile the C library, with this line in
+@file{configparms}:
+
+@example
+# Be sure to remember the 's to quote the spaces from the shell.
+defines := -D__SIZE_TYPE__='unsigned long int'
+@end example
+
+@noindent
+When you do this, the current version of GCC
 will give you the annoying warning:
 
 @example
