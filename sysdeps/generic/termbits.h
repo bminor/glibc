@@ -152,7 +152,7 @@ struct termios
 #ifdef	__USE_BSD
 #define	VSTATUS	18		/* Status character [ICANON].  */
 #endif
-#define	NCCS	20
+#define	NCCS	20		/* This number known by <hurd/tioctl.defs> */
   cc_t c_cc[NCCS];
 
   /* Input and output baud rates.  */
