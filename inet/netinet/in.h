@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -168,7 +168,23 @@ struct ip_opts
     char ip_opts[40];		/* Actually variable in size.  */
   };
 
-/* Get number representation conversion macros.  */
-#include <inet-cvt.h>
+
+/* Functions to convert between host and network byte order.  */
+
+extern unsigned long int ntohl __P ((unsigned long int));
+extern unsigned short int ntohs __P ((unsigned short int));
+extern unsigned long int htonl __P ((unsigned long int));
+extern unsigned short int htons __P ((unsigned short int));
+
+#include <endian.h>
+
+#if __BYTE_ORDER == __BIG_ENDIAN
+/* The host byte order is the same as network byte order,
+   so these functions are all just identity.  */
+#define	ntohl(x)	(x)
+#define	ntohs(x)	(x)
+#define	htonl(x)	(x)
+#define	htons(x)	(x)
+#endif
 
 #endif	/* netinet/in.h */
