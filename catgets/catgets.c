@@ -87,7 +87,7 @@ catopen (const char *cat_name, int flag)
       if (nlspath != NULL && *nlspath != '\0')
 	{
 	  /* Append the system dependent directory.  */
-	  size_t len = strlen (nlspath + 1 + sizeof NLSPATH);
+	  size_t len = strlen (nlspath) + 1 + sizeof NLSPATH;
 	  char *tmp = alloca (len);
 
 	  __stpcpy (__stpcpy (__stpcpy (tmp, nlspath), ":"), NLSPATH);
