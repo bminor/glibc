@@ -23,13 +23,14 @@ __pid2task (pid_t pid)
 {
   error_t err;
   task_t task;
-  __mutex_lock (&_hurd_lock);
-  err = __proc_pid2task (_hurd_proc, pid, &task);
-  __mutex_unlock (&_hurd_lock);
+
+  err = _HURD_PORT_USE (&_hurd_proc,
+			__proc_pid2task (port, pid, &task));
   if (err)
     {
       errno = err;
       return MACH_PORT_NULL;
     }
-  return task;
+  else
+    return task;
 }
