@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,97,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,12 +44,15 @@ __readlink (file_name, buf, len)
     if (S_ISLNK (st.st_mode))
       {
 	char *rbuf = buf;
+	size_t got;
 
-	err = __io_read (file, &rbuf, &len, 0, len);
+	err = __io_read (file, &rbuf, &got, 0, len);
+	if (got < len)
+	  len = got;
 	if (!err && rbuf != buf)
 	  {
 	    memcpy (buf, rbuf, len);
-	    __vm_deallocate (__mach_task_self (), (vm_address_t)rbuf, len);
+	    __vm_deallocate (__mach_task_self (), (vm_address_t)rbuf, got);
 	  }
       }
     else

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,97,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,11 +35,14 @@ _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes)
     }
 
   data = buf;
+  nread = *nbytes;
   if (err = HURD_FD_PORT_USE (fd, _hurd_ctty_input (port, ctty, readfd)))
     return err;
 
   if (data != buf)
     {
+      if (nread > *nbytes)	/* Server funny business, shouldn't happen.  */
+	*nbytes = nread;
       memcpy (buf, data, nread);
       __vm_deallocate (__mach_task_self (), (vm_address_t) data, nread);
     }

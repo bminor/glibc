@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994,97,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,6 +56,8 @@ recv (fd, buf, n, flags)
 
   if (bufp != buf)
     {
+      if (nread > n)		/* Server funny business, shouldn't happen.  */
+	nread = n;
       memcpy (buf, bufp, nread);
       __vm_deallocate (__mach_task_self (), (vm_address_t) bufp, nread);
     }
