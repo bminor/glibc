@@ -239,7 +239,8 @@ endif
 # other than there, so the zoneinfo directory contains only universal data,
 # localizing the configuration data elsewhere.
 ifndef localtime-file
-localtime-file = $(inst_sysconfdir)/localtime
+localtime-file = $(sysconfdir)/localtime
+inst_localtime-file = $(install_root)$(localtime-file)
 endif
 
 # What to use for leap second specifications in compiling the default
