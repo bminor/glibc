@@ -156,14 +156,20 @@ _dl_dst_count (const char *name, int is_path)
       size_t len = 1;
 
       /* $ORIGIN is not expanded for SUID/GUID programs.  */
-      if ((((!__libc_enable_secure
-	     && strncmp (&name[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
-	    || (strncmp (&name[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
+      if ((((strncmp (&name[1], "ORIGIN}", 6) == 0
+	     && (!__libc_enable_secure
+		 || ((name[7] == '\0' || (is_path && name[7] == ':'))
+		     && (name == start || (is_path && name[-1] == ':'))))
+	     && (len = 7) != 0)
+	    || (strncmp (&name[1], "PLATFORM}", 8) == 0 && (len = 9) != 0))
 	   && (name[len] == '\0' || name[len] == '/'
 	       || (is_path && name[len] == ':')))
 	  || (name[1] == '{'
-	      && ((!__libc_enable_secure
-		   && strncmp (&name[2], "ORIGIN}", 7) == 0 && (len = 9) != 0)
+	      && ((strncmp (&name[2], "ORIGIN}", 7) == 0
+		   && (!__libc_enable_secure
+		       || ((name[9] == '\0' || (is_path && name[9] == ':'))
+			   && (name == start || (is_path && name[-1] == ':'))))
+		   && (len = 9) != 0)
 		  || (strncmp (&name[2], "PLATFORM}", 9) == 0
 		      && (len = 11) != 0))))
 	++cnt;
@@ -195,8 +201,8 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	  const char *repl;
 	  size_t len;
 
-	  if ((((strncmp (&name[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
-		|| (strncmp (&name[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
+	  if ((((strncmp (&name[1], "ORIGIN}", 6) == 0 && (len = 7) != 0)
+		|| (strncmp (&name[1], "PLATFORM}", 8) == 0 && (len = 9) != 0))
 	       && (name[len] == '\0' || name[len] == '/'
 		   || (is_path && name[len] == ':')))
 	      || (name[1] == '{'
@@ -205,7 +211,12 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 			  && (len = 11) != 0))))
 	    {
 	      repl = ((len == 7 || name[2] == 'O')
-		      ? (__libc_enable_secure ? NULL : l->l_origin)
+		      ? (__libc_enable_secure
+			 && ((name[len] != '\0'
+			      && (!is_path || name[len] != ':'))
+			     || (name != start
+				 && (!is_path || name[-1] != ':')))
+			 ? NULL : l->l_origin)
 		      : _dl_platform);
 
 	      if (repl != NULL && repl != (const char *) -1)
@@ -656,9 +667,9 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 #define ELF32_CLASS ELFCLASS32
 #define ELF64_CLASS ELFCLASS64
 #if !defined VALID_ELF_HEADER
-#  define VALID_ELF_HEADER(hdr,exp,size) (memcmp(hdr,exp,size) == 0) 
-#  define VALID_ELF_OSABI(osabi) (osabi == ELFOSABI_SYSV) 
-#  define VALID_ELF_ABIVERSION(ver) (ver == 0) 
+#  define VALID_ELF_HEADER(hdr,exp,size) (memcmp(hdr,exp,size) == 0)
+#  define VALID_ELF_OSABI(osabi) (osabi == ELFOSABI_SYSV)
+#  define VALID_ELF_ABIVERSION(ver) (ver == 0)
 #endif
   static const unsigned char expected[EI_PAD] =
   {
