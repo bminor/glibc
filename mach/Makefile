@@ -195,8 +195,13 @@ endif
 # Be sure not to make these with implicit rules from foo.defs.
 mach.h mach/memory_object.h: ;
 
+ifeq (,)
+# XXX we have an errsystems.c here because a gcc bug makes the generated
+# version lose.
+else
 generated += $(objpfx)errsystems.c
 $(objpfx)errsystems.c: errsystems.awk err_*.sub \
 		       $(wildcard $(addsuffix /err_*.sub,$(+sysdep_dirs)))
 	gawk -v subsys='$(filter-out $<,$^)' -f $^ > $@.n
 	mv $@.n $@
+endif
