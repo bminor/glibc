@@ -67,6 +67,7 @@ input (FILE *f)
 }
 
 
+#if 0
 static void
 output (FILE *f, int c)
 {
@@ -123,10 +124,9 @@ output (FILE *f, int c)
 	*f->__bufp++ = (unsigned char) c;
     }
 }
+#endif
 
 
-
-#if 0				/* Translates \n to \r\n.  */
 static void
 output (FILE *f, int c)
 {
@@ -216,18 +216,40 @@ output (FILE *f, int c)
 	*f->__bufp++ = (unsigned char) c;
     }
 }
-#endif
+
+static int
+dealloc_ref (void *cookie)
+{
+  if (mach_port_deallocate (mach_task_self (), (mach_port_t) cookie))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+  return 0;
+}
+
 
 FILE *
 mach_open_devstream (mach_port_t dev, const char *mode)
 {
-  FILE *stream = fopencookie ((void *) dev, mode, __default_io_functions);
+  FILE *stream;
+
+  if (mach_port_mod_refs (mach_task_self (), dev, MACH_PORT_RIGHT_SEND, 1))
+    {
+      errno = EINVAL;
+      return NULL;
+    }
+
+  stream = fopencookie ((void *) dev, mode, __default_io_functions);
   if (stream == NULL)
-    return NULL;
+    {
+      mach_port_deallocate (mach_task_self (), dev);
+      return NULL;
+    }
 
   stream->__room_funcs.__input = input;
   stream->__room_funcs.__output = output;
-  stream->__io_funcs.__close = (__io_close_fn *) device_close;
+  stream->__io_funcs.__close = dealloc_ref;
   stream->__io_funcs.__seek = NULL; /* Cannot seek.  */
   stream->__io_funcs.__fileno = NULL; /* No corresponding POSIX.1 fd.  */
   stream->__seen = 1;
