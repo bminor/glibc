@@ -71,11 +71,8 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink);
   err = __io_reauthenticate (crdir, _hurd_pid);
   if (!err)
-    {
-      err = __auth_user_authenticate (_hurd_id.rid_auth,
-				      crdir, _hurd_pid, &rcrdir);
-      __mach_port_deallocate (__mach_task_self (), crdir);
-    }
+    err = __auth_user_authenticate (_hurd_id.rid_auth,
+				    crdir, _hurd_pid, &rcrdir);
   _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink, crdir);
 
   if (!err)
@@ -85,11 +82,8 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
       cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink);
       err = __io_reauthenticate (cwdir, _hurd_pid);
       if (!err)
-	{
-	  err = __auth_user_authenticate (_hurd_id.rid_auth,
-					  cwdir, _hurd_pid, &rcwdir);
-	  __mach_port_deallocate (__mach_task_self (), cwdir);
-	}
+	err = __auth_user_authenticate (_hurd_id.rid_auth,
+					cwdir, _hurd_pid, &rcwdir);
       _hurd_port_free (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink, cwdir);
     }
 
