@@ -319,4 +319,7 @@ _mcleanup ()
     write_bb_counts (fd);
 
     __close (fd);
+
+    /* free the memory. */
+    free (_gmonparam.tos);
 }
