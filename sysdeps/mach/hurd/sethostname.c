@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,8 @@ int
 DEFUN(sethostname, (name, len),
       CONST char *name AND size_t len)
 {
-  error_t err = __proc_sethostname (_hurd_proc, name, len);
+  error_t err = _HURD_PORT_USE (&_hurd_proc,
+				__proc_sethostname (port, name, len));
   if (err)
     return __hurd_fail (err);
   return 0;
