@@ -326,12 +326,13 @@ This function is like @code{execl}, except that it performs the same
 file name searching as the @code{execvp} function.
 @end deftypefun
 
-The size of the argument list and environment list taken together must not
-be greater than @code{ARG_MAX} bytes.  @xref{General Limits}.
-
-@strong{Incomplete:}  The POSIX.1 standard requires some statement here
-about how null terminators, null pointers, and alignment requirements
-affect the total size of the argument and environment lists.
+The size of the argument list and environment list taken together must
+not be greater than @code{ARG_MAX} bytes.  @xref{General Limits}.  In
+the GNU system, the size (which compares against @code{ARG_MAX})
+includes, for each string, the number of characters in the string, plus
+the size of a @code{char *}, plus one, rounded up to a multiple of' the
+size of a @code{char *}.  Other systems may have somewhat different
+rules for counting.
 
 These functions normally don't return, since execution of a new program
 causes the currently executing program to go away completely.  A value
@@ -471,7 +472,7 @@ error conditions are defined for this function:
 @table @code
 @item EINTR
 The function was interrupted by delivery of a signal to the calling
-process.
+process.  @xref{Interrupted Primitives}.
 
 @item ECHILD
 There are no child processes to wait for, or the specified @var{pid}
@@ -525,6 +526,7 @@ is equivalent to:
 @example
 waitpid (-1, &status, 0)
 @end example
+@end deftypefun
 
 Here's an example of how to use @code{waitpid} to get the status from
 all child processes that have terminated, without ever waiting.  This
@@ -549,7 +551,6 @@ sigchld_handler (int signum)
   @}
 @}
 @end example
-@end deftypefun
 
 @node Process Completion Status
 @section Process Completion Status
@@ -650,32 +651,24 @@ equivalent macros.
 
 @comment sys/wait.h
 @comment BSD
-@deftypefun pid_t wait3 (union wait *@var{status_ptr}, int @var{options}, void * @var{usage})
+@deftypefun pid_t wait3 (union wait *@var{status_ptr}, int @var{options}, struct rusage * @var{usage})
 If @var{usage} is a null pointer, this function is equivalent to
 @code{waitpid (-1, @var{status_ptr}, @var{options})}.
 
-The @var{usage} argument may also be a pointer to a 
-@code{struct rusage} object.  Information about system resources used by
-terminated processes (but not stopped processes) is returned in this
-structure.
-
-@strong{Incomplete:}  The description of the @code{struct rusage} structure
-hasn't been written yet.  Put in a cross-reference here.
+If @var{usage} is not null, @code{wait4} stores usage figures for the
+child process in @code{*@var{rusage}} (but only if the child has
+terminated, not if it has stopped).  @xref{Resource Usage}.
 @end deftypefun
 
 @comment sys/wait.h
 @comment BSD
-@deftypefun pid_t wait4 (pid_t @var{pid}, union wait *@var{status_ptr}, int @var{options}, void *@var{usage})
+@deftypefun pid_t wait4 (pid_t @var{pid}, union wait *@var{status_ptr}, int @var{options}, struct rusage *@var{usage})
 If @var{usage} is a null pointer, this function is equivalent to
 @code{waitpid (@var{pid}, @var{status_ptr}, @var{options})}.
 
-The @var{usage} argument may also be a pointer to a 
-@code{struct rusage} object.  Information about system resources used by
-terminated processes (but not stopped processes) is returned in this
-structure.
-
-@strong{Incomplete:}  The description of the @code{struct rusage} structure
-hasn't been written yet.  Put in a cross-reference here.
+If @var{usage} is not null, @code{wait4} stores usage figures for the
+child process in @code{*@var{rusage}} (but only if the child has
+terminated, not if it has stopped).  @xref{Resource Usage}.
 @end deftypefun
 
 @node Process Creation Example
