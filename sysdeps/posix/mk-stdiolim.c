@@ -22,7 +22,7 @@ int
 main()
 {
   printf("#define L_tmpnam %u\n", sizeof("/usr/tmp/") + 8);
-  printf("#define TMP_MAX %u\n", 52 * 52 * 52);
+  printf("#define TMP_MAX %u\n", 62 * 62 * 62);
   puts  ("#ifdef __USE_POSIX");
   printf("#define L_ctermid %u\n", sizeof("/dev/tty"));
   printf("#define L_cuserid 9\n");
