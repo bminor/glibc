@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -15,13 +15,6 @@
 # License along with the GNU C Library; see the file COPYING.LIB.  If
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
-
-ifeq ($(subdir),posix)
-ifeq ($(sysdep_dir)/unix/common/,\
-      $(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/__getgrps.[cSs])))))
-sysdep_routines := $(sysdep_routines) bsd_getgrp
-endif
-endif
 
 ifeq ($(subdir),ctype)
 
