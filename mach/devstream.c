@@ -153,13 +153,12 @@ output (FILE *f, int c)
 }
 
 FILE *
-mach_open_devstream (device_t dev)
+mach_open_devstream (device_t dev, const char *mode)
 {
-  FILE *stream = __newstream ();
+  FILE *stream = fopencookie (dev, mode, __default_io_functions);
   if (stream == NULL)
     return NULL;
 
-  stream->__cookie = (void *) dev;
   stream->__room_funcs.__input = input;
   stream->__room_funcs.__output = output;
   stream->__io_funcs.__close = device_close;
