@@ -42,8 +42,8 @@ struct termios
 #define	IGNPAR	(1 << 2)	/* Ignore characters with parity errors.  */
 #define	PARMRK	(1 << 3)	/* Mark parity and framing errors.  */
 #define	INPCK	(1 << 4)	/* Enable input parity check.  */
-#define	INLCR	(1 << 5)	/* Map NL to CR on input.  */
-#define	ISTRIP	(1 << 6)	/* Strip 8th bit off characters.  */
+#define	ISTRIP	(1 << 5)	/* Strip 8th bit off characters.  */
+#define	INLCR	(1 << 6)	/* Map NL to CR on input.  */
 #define	IGNCR	(1 << 7)	/* Ignore CR.  */
 #define	ICRNL	(1 << 8)	/* Map CR to NL on input.  */
 #define	IXON	(1 << 9)	/* Enable start/stop output control.  */
