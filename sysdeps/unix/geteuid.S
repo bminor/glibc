@@ -18,6 +18,10 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
+#ifdef	SYS_geteuid
+SYSCALL__ (geteuid)
+#else
 PSEUDO (__geteuid, getuid, 2)
 	MOVE(r1, r0)
+#endif
 	ret
