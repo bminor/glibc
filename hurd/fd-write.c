@@ -38,6 +38,8 @@ _hurd_fd_write (struct hurd_fd *fd, const void *buf, size_t *nbytes)
 	    __sigismember (SIGTTOU, &ss->blocked) ||
 	    ss->actions[SIGTTOU].sa_handler == SIG_IGN);
   __mutex_unlock (&ss->lock);
+#else
+  noctty = 1;
 #endif
   
   err = HURD_FD_PORT_USE
