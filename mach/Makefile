@@ -50,7 +50,8 @@ routines = $(interface-routines) \
 	   $(addprefix __,$(mach-syscalls)) \
 	   $(mach-shortcuts) $(addprefix __,$(mach-shortcuts)) \
 	   mach_init vm_page_size \
-	   mig_strncpy __mig_strncpy mig_support __bcopy __msg msg \
+	   mig_strncpy __mig_strncpy __bcopy __msg msg \
+	   mig_support mig_support_syms \
 	   msg_destroy msg_server msg_server_t \
 	   __msg_destroy __msg_server \
 	   devstream bootprivport privports
