@@ -27,8 +27,7 @@ include ../Makeconfig
 headers = mach_init.h mach.h mach_error.h mach-shortcuts.h \
 	  $(interface-headers) mach/mach.h mach/mig_support.h mach/error.h
 distribute = thread_state.h
-routines = $(interface-routines) \
-	   $(filter-out syscall_%,$(mach-syscalls)) \
+routines = $(filter-out syscall_%,$(mach-syscalls)) \
 	   $(addprefix __,$(mach-syscalls)) \
 	   $(mach-shortcuts) $(addprefix __,$(mach-shortcuts)) \
 	   mach_init vm_page_size \
@@ -38,6 +37,8 @@ routines = $(interface-routines) \
 	   __msg_dest __msgserver \
 	   mach_error mach_error_string error_compat errsystems \
 	   devstream bootprivport setup-thread thread-sym
+# The RPC interfaces go in a separate library.
+interface-library := libmachuser.a
 user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     memory_object_user			\
 				     memory_object_default		\
