@@ -1,6 +1,6 @@
-/* `HUGE_VAL' constant for IEEE 754 machines (where it is infinity).
+/* `HUGE_VAL' constants for IEEE 754 machines (where it is infinity).
    Used by <stdlib.h> and <math.h> functions for overflow.
-   Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
 
 /* GNU extensions: (float) HUGE_VALf and (long double) HUGE_VALl.  */
 
-#ifdef	__USE_GNU
+#ifdef __USE_GNU
 
 #if __BYTE_ORDER == __BIG_ENDIAN
 #define	__HUGE_VALf_bytes	{ 0x7f, 0x80, 0, 0 }
@@ -64,21 +64,10 @@ static __huge_valf_t __huge_valf = { __HUGE_VALf_bytes };
 #define	HUGE_VALf	(__huge_valf.__f)
 #endif	/* GCC.  */
 
-#if __BYTE_ORDER == __BIG_ENDIAN
-#define	__HUGE_VALl_bytes	{ 0x7f, 0xff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-#endif
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-#define	__HUGE_VALl_bytes	{ 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0x7f, 0, 0 }
-#endif
 
-#define __huge_vall_t	union { unsigned char __c[12]; long double __ld; }
-#ifdef	__GNUC__
-#define	HUGE_VALl	(__extension__ \
-			 ((__huge_vall_t) { __c: __HUGE_VALl_bytes }).__ld)
-#else	/* Not GCC.  */
-static __huge_vall_t __huge_vall = { __HUGE_VALl_bytes };
-#define	HUGE_VALl	(__huge_vall.__ld)
-#endif	/* GCC.  */
+/* Generally there is no separate `long double' format and it is the
+   same as `double'.  */
+#define HUGE_VALl HUGE_VAL
 
 #endif	/* __USE_GNU.  */
 
