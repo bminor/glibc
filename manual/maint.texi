@@ -54,7 +54,8 @@ i386-@var{anything}-sysv
 i386-@var{anything}-sysv4
 i386-sequent-bsd
 m68k-hp-bsd4.3
-m68k-sony-newsos
+m68k-sony-newsos3
+m68k-sony-newsos4
 m68k-sun-sunos4.@var{n}
 mips-dec-ultrix4.@var{n}
 mips-sgi-irix4.@var{n}
