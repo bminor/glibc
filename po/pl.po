@@ -1,10 +1,10 @@
-# Polish translation for GNU.
+# Polish translation for GNU libc-2.1.2
 # Copyright (C) 1996, 97, 98, 99 Free Software Foundation, Inc.
 # Pawe³ Krawczyk <kravietz@ceti.pl>, 1996,97,98,99.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.1\n"
+"Project-Id-Version: libc 2.1.2\n"
 "POT-Creation-Date: 1998-11-28 09:29-0800\n"
 "PO-Revision-Date: 1999-09-11 22:25+02:00\n"
 "Last-Translator: Pawe³ Krawczyk <kravietz@ceti.pl>\n"
