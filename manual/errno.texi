@@ -532,12 +532,9 @@ protocol violation.
 @comment errno.h
 @comment BSD: No buffer space available
 @deftypevr Macro int ENOBUFS
-The kernel's buffers for I/O operations are all in use.
-@c !!! this will probably never happen in GNU (I'm presuming the
-@c eventual implementation of the network won't want to use it); you get
-@c ENOMEM instead.
-@c ??? I think the network code should convert ENOMEM into ENOBUFS
-@c ??? just to be compatible--rms.
+The kernel's buffers for I/O operations are all in use.  In GNU, this
+error is always synonymous with @code{ENOMEM}; you may get one or the
+other from network operations.
 @end deftypevr
 
 @comment errno.h
