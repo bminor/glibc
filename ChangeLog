@@ -1,12 +1,20 @@
 1997-03-19 01:40  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/sco3.2.4/Dist: New file.
+
+	* sysdeps/unix/sysv/sysv4/Dist: Add __getpgid.c and __setpgid.c.
+
+	* sysdeps/unix/bsd/Dist: Add bsdstat.h, setrguid.c, and setruid.c.
+
+	* sysdeps/unix/sysv/Dist: Add direct.h.
+
+	* sysdeps/unix/sysv/linux/Dist: Add netinet/tcp.h.
+
 	* Make-dist ($(tardir).tar): Prefer writing temporary file to
 	$TMPDIR is available.  The default is /tmp.
 
-	* inet/Makefile (headers): Remove netinet/ip.h.
-
-	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=inet]
-	(sysdep_headers): Add netinet/ip.h.
+	* sysdeps/generic/ip.h: Move to...
+	* sysdeps/generic/netinet/ip.h: ...here.
 
 	* sysdeps/i386/setjmp.S (__setjmp): Fix fatal bug where 0 argument
 	is placed in wrong place on the stack.
