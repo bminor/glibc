@@ -32,6 +32,7 @@ DEFUN(setenv, (name, value, replace),
   register char **ep;
   register size_t size;
   CONST size_t namelen = strlen (name);
+  CONST size_t vallen = strlen (value);
 
   size = 0;
   for (ep = __environ; *ep != NULL; ++ep)
@@ -47,15 +48,39 @@ DEFUN(setenv, (name, value, replace),
       if (new_environ == NULL)
 	return -1;
       (void) memcpy((PTR) new_environ, (PTR) __environ, size * sizeof(char *));
-      new_environ[size] = (char *) string;
+
+      new_environ[size] = malloc (namelen + 1 + vallen + 1);
+      if (new_environ[size] == NULL)
+	{
+	  free (new_environ);
+	  errno = ENOMEM;
+	  return -1;
+	}
+      memcpy (new_environ[size], name, namelen);
+      new_environ[size][namelen] = '=';
+      memcpy (&new_environ[size][namelen + 1], value, vallen + 1);
+
       new_environ[size + 1] = NULL;
+
       if (last_environ != NULL)
-	free((PTR) last_environ);
+	free ((PTR) last_environ);
       last_environ = new_environ;
       __environ = new_environ;
     }
   else if (replace)
-    *ep = (char *) value;
+    {
+      size_t len = strlen (*ep);
+      if (len < namelen + 1 + vallen)
+	{
+	  char *new = malloc (namelen + 1 + vallen);
+	  if (new == NULL)
+	    return -1;
+	  *ep = new;
+	}
+      memcpy (*ep, name, namelen);
+      (*ep)[namelen] = '=';
+      memcpy (&(*ep)[namelen + 1], value, vallen + 1);
+    }
 
   return 0;
 }
