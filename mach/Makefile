@@ -24,7 +24,7 @@ all:
 include ../Makeconfig
 
 
-headers = mach_init.h mach.h mach-shortcuts.h \
+headers = mach_init.h mach.h mach_error.h mach-shortcuts.h \
 	  $(interface-headers) mach/mach.h mach/mig_support.h
 routines = $(interface-routines) \
 	   $(filter-out syscall_%,$(mach-syscalls)) \
@@ -35,6 +35,7 @@ routines = $(interface-routines) \
 	   mig_support mig_syms \
 	   msg_destroy msg_server msg_server_t \
 	   __msg_dest __msg_server \
+	   mach_error mach_error_string errsystems \
 	   devstream bootprivport
 user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     memory_object_user			\
@@ -44,7 +45,11 @@ user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 		   $(addprefix device/,device device_request)
 server-interfaces := device/device_reply mach/exc mach/notify
 tests := hello
-distribute = Machrules syscalls.awk shortcut.awk
+# It is important that we do not use the wildcard function to expand
+# `err_*.sub'.  Leaving the wildcard allows Make-dist to find all matching
+# files in all sysdep directories.
+distribute := Machrules syscalls.awk shortcut.awk \
+	      errorlib.h err_*.sub
 
 
 # XXX currently these files have been copied into mach/.  They will
@@ -188,3 +193,9 @@ endif
 
 # Be sure not to make these with implicit rules from foo.defs.
 mach.h mach/memory_object.h: ;
+
+generated += $(objpfx)errsystems.c
+$(objpfx)errsystems.c: errsystems.awk err_*.sub \
+		       $(wildcard $(addsuffix /err_*.sub,$(+sysdep_dirs)))
+	gawk -v subsys='$(filter-out $<,$^)' -f $^ > $@.n
+	mv $@.n $@
