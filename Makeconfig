@@ -1,0 +1,220 @@
+# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+#
+#	Makefile configuration options for the GNU C library.
+#
+ifneq (,)
+This makefile requires GNU Make.
+endif
+
+ifneq "$(origin +included-Makeconfig)" "file"
+
++included-Makeconfig := yes
+
+ifdef subdir
+.. := ../
+endif
+
+#
+#	These are the configuration variables.
+#
+
+# You can put variables that are specific to a configuration in the file
+# Makeconfig in the object directory for that configuration.  Variables
+# that do not vary between different configurations at your site can be
+# editted below.
+
+ifndef ARCH
+ifdef machine
+ARCH = $(machine)
+else
+include $(..)config.status
+endif
+endif
+
+# Directory for object files, libc.a, and ansi/ and trad/ directories.
+# If this is not defined, the object files live in the subdirectories
+# where their sources live, and libc.a and the ansi/ and trad/ directories
+# live in the parent directory.
+ifdef ARCH
+objdir := $(..)$(ARCH)
+
+ifneq ($(wildcard $(objdir)/Makeconfig),)
+include $(objdir)/Makeconfig
+endif
+endif
+
+
+# Common prefix for all installation directories.
+ifndef prefix
+prefix = /usr/local
+endif
+
+# Where to install the library and object files.
+ifndef libdir
+libdir = $(prefix)/lib
+endif
+
+# Where to install the header files.  There are two sets of header files
+# produced, an ANSI C set and a traditional C set.  ansi-incldir, if
+# defined, is where to install the ANSI C set; trad-incldir, if defined, is
+# where to install the traditional C set.  If you define both, you can
+# install both sets, in different places.
+ifndef ansi-incldir
+ansi-incldir = $(prefix)/include
+endif
+ifndef trad-incldir
+#trad-incldir = $(prefix)/include
+endif
+
+# Where to install machine-independent data files.
+# These are the timezone database, and eventually the locale database.
+ifndef datadir
+datadir = $(prefix)/lib
+endif
+
+
+# Commands to install files.
+INSTALL_DATA = $(INSTALL)
+INSTALL_PROGRAM = $(INSTALL)
+INSTALL = install
+
+
+# The name of the C compiler.
+# If you've got GCC, and it works, use it.
+ifndef CC
+CC := gcc -pipe
+endif
+
+# These are preprocessor macros we want to predefine.
+# Define __GNU_STAB__ if using GNU ld (which you should do if possible).
+# If you do this, you may need the GNU assembler as well.
+# If you don't do this, your library won't work as well (and won't be strictly
+# compliant with the ANSI C standard).
++defines = $(defines) -D__GNU_STAB__
+
+# Default flags to pass the C compiler.
+ifndef default_cflags
++default_cflags := -g
+endif
+
+# Command for linking programs with the C library.
++link = $(LD) -o $@ -e __start $(objpfx)start.o $(^:lib=$(objpfx)libc.a) /usr/local/lib/gcc-gnulib $(objpfx)libc.a -lc
+
+ifndef LD
+LD := ld -X
+endif
+
+ifndef	RANLIB
+RANLIB = ranlib
+endif
+
+# Define non-empty if the C compiler understands -v (print version).
++cc_version = $(filter gcc,$(notdir $(firstword $(CC)))) # if using gcc
+
+# Extra flags to pass to GCC.
++gccwarn := -Wall -Wwrite-strings -Wpointer-arith -Wstrict-prototypes
++gccopt := -O -fstrength-reduce -fcombine-regs
++gccflags = $(+gccwarn) $(+gccopt)
+
+# This is the program that generates makefile
+# dependencies from C source files.
+ifndef +mkdep
++mkdep = $(CC) -M
+endif
+
+# The program that makes Emacs-style TAGS files.
++etags	:= etags -tw
+
+ifdef objdir
+objpfx = $(objdir)/
+libc.a = $(objpfx)libc.a
+else
+objpfx :=
+libc.a = $(..)libc.a
+endif
+
+# We want to echo the commands we're running without
+# umpteem zillion filenames along with it (we use `...' instead)
+# but we don't want this echoing done when the user has said
+# he doesn't want to see commands echoed by using -s.
+ifneq	"$(findstring s,$(MAKEFLAGS))" ""	# if -s
++cmdecho	:= echo >/dev/null
+else						# not -s
++cmdecho	:= echo
+endif	   					# -s
+
+# These are the flags given to the compiler to tell
+# it what sort of optimization and/or debugging output to do.
+ifndef	+cflags
+# If `CFLAGS' was defined, use that.
+ifdef		CFLAGS
++cflags	:= $(filter-out -I%,$(CFLAGS))
+endif		# CFLAGS
+endif	# +cflags
+
+# If none of the above worked, default to "-g".
+ifeq	"$(strip $(+cflags))" ""
++cflags	:= $(+default_cflags)
+endif	# $(+cflags) == ""
+
+# If using gcc, add flags that only it will grok.
+ifneq	"$(findstring gcc,$(CC))" ""
++cflags := $(+cflags) $(+gccflags)
+endif	# gcc
+
+# Don't duplicate options if we inherited variables from the parent.
++cflags	:= $(sort $(+cflags))
+
+
+ifneq	"$(findstring v,$(MAKEFLAGS))" ""	# if -v
+ifneq	"$(strip $(+cc_version))" ""
+# If Make is telling us version info, tell the compiler to do so as well.
+CC	:= $(CC) -v
+endif	# +cc_version
+endif						# -v
+
+# These are flags given to the C compiler to
+# tell it to look for include files (including ones
+# given in angle brackets) in the current directory
+# and in the parent library source directory.
+ifneq "$(..)" ""
++includes	= -I. -I$(patsubst %/,%,$(..)) $(includes)
+else
++includes	= -I. $(includes)
+endif
+
+
+# These are the variables that the implicit compilation rules use.
+CPPFLAGS = $(+includes) $(+defines) -DLIBC
+override CFLAGS	= $(+cflags)
+
+
+# This is the macro that the implicit linking rules use.
+ifneq "$(filter -g,$(+cflags))" "" # -g is in $(+cflags)
+LDFLAGS	:= -g
+endif
+
+
+ifneq "$(filter -D__GNU_STAB__,$(CPPFLAGS))" ""
++gnu-stabs := yes
+endif
+
+
+endif # Makeconfig not yet included
