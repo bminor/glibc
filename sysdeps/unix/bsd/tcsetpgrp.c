@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Set the foreground process group ID of FD set PGRP_ID.  */
 int
-DEFUN(tcsetpgrp, (fd, pgrp), int fd AND pid_t pgrp)
+DEFUN(tcsetpgrp, (fd, pgrp_id), int fd AND pid_t pgrp_id)
 {
-  return __ioctl(fd, TIOCSPGRP, (PTR) pgrp);
+  return __ioctl(fd, TIOCSPGRP, &pgrp_id);
 }
