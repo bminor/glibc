@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -172,14 +172,16 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n)
       const weight_t *run = forward ? forw : backw;
       int idx = forward ? 0 : run->data[pass].number - 1;
 
-      do
+      while (1)
 	{
 	  int ignore = 0;
-	  u_int32_t w;
+	  u_int32_t w = 0;
 
 	  /* Here we have to check for IGNORE entries.  If these are
 	     found we count them and go on with he next value.  */
-	  while ((w = run->data[pass].value[idx]) == (u_int32_t) IGNORE_CHAR)
+	  while (run != NULL
+		 && ((w = run->data[pass].value[idx])
+		     == (u_int32_t) IGNORE_CHAR))
 	    {
 	      ++ignore;
 	      if ((forward && ++idx >= run->data[pass].number)
@@ -189,12 +191,19 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n)
 		  if (nextp == NULL)
 		    {
 		      w = 0;
-		      break;
+		      /* No more non-INGOREd elements means lowest
+			possible value.  */
+		      ignore = -1;
 		    }
+		  else
+		    idx = forward ? 0 : nextp->data[pass].number - 1;
 		  run = nextp;
-		  idx = forward ? 0 : run->data[pass].number - 1;
 		}
 	    }
+
+	  /* Stop if all characters are processed.  */
+	  if (run == NULL)
+	    break;
 
 	  /* Now we have information of the number of ignored weights
 	     and the value of the next weight.  We have to add 2
@@ -220,7 +229,6 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n)
 		  idx = run->data[pass].number - 1;
 	      }
 	}
-      while (run != NULL);
 
       /* Write marker for end of word.  */
       if (pass + 1 < collate_nrules)

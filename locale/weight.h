@@ -55,8 +55,8 @@ typedef struct weight_t
   ((u_int32_t *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_RULES))
 
 
-static __inline int get_weight (const STRING_TYPE **str, weight_t *result);
-static __inline int
+static __inline void get_weight (const STRING_TYPE **str, weight_t *result);
+static __inline void
 get_weight (const STRING_TYPE **str, weight_t *result)
 {
   unsigned int ch = *((USTRING_TYPE *) (*str))++;
@@ -86,7 +86,7 @@ get_weight (const STRING_TYPE **str, weight_t *result)
 		  result->data[cnt].value = &__collate_extra[idx];
 		  idx += result->data[cnt].number;
 		}
-	      return 0;
+	      return;
 	    }
 	  slot += level_size;
 	}
@@ -102,7 +102,7 @@ get_weight (const STRING_TYPE **str, weight_t *result)
 	  result->data[cnt].number = 1;
 	  result->data[cnt].value = &__collate_table[slot + 1 + cnt];
 	}
-      return ch == 0;
+      return;
     }
 
   /* We now look for any collation element which starts with CH.
@@ -135,14 +135,12 @@ get_weight (const STRING_TYPE **str, weight_t *result)
 	      result->data[cnt].value = &__collate_extra[idx];
 	      idx += result->data[cnt].number;
 	    }
-	  return 0;
+	  return;
 	}
 
       /* To next entry in list.  */
       slot += __collate_extra[slot];
     }
-  /* NOTREACHED */
-  return 0;	/* To calm down gcc.  */
 }
 
 
@@ -155,7 +153,7 @@ get_weight (const STRING_TYPE **str, weight_t *result)
   do									      \
     {									      \
       weight_t *newp;							      \
-      do								      \
+      while (*str != '\0')						      \
 	{								      \
 	  newp = (weight_t *) alloca (sizeof (weight_t)			      \
 				      + (collate_nrules			      \
@@ -168,7 +166,7 @@ get_weight (const STRING_TYPE **str, weight_t *result)
 	    backw->next = newp;						      \
 	  newp->next = NULL;						      \
 	  backw = newp;							      \
+	  get_weight (&str, newp);					      \
 	}								      \
-      while (get_weight (&str, newp) == 0);				      \
     }									      \
   while (0)
