@@ -1,5 +1,9 @@
 2004-10-06  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/jmp-unwind.c: Include pthreadP.h instead
+	of pthread-functions.h and pthreaddef.h.
+	* sysdeps/unix/sysv/linux/s390/jmp-unwind.c: Likewise.
+
 	* sysdeps/s390/jmpbuf-unwind.h: Include bits/wordsize.h.
 	(JMPBUF_CFA_UNWINDS_ADJ): Subtract 96 resp. 160 bytes from
 	CFA.
