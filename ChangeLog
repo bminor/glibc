@@ -1,3 +1,11 @@
+1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/resource.h: Don't depend on the
+	unreliable kernel headers.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h: New file.
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h: New file.
+
 1999-12-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/bits/string2.h (__strsep): Help gcc optimizing string access.
