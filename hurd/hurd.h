@@ -52,7 +52,7 @@ extern struct hurd_port *_hurd_ports;
 extern unsigned int _hurd_nports;
 extern volatile mode_t _hurd_umask;
 
-/* Shorthand macro for referencing _hurd_ports.  */
+/* Shorthand macro for referencing _hurd_ports (see <hurd/port.h>).  */
 
 #define	__USEPORT(which, expr) \
   HURD_PORT_USE (&_hurd_ports[INIT_PORT_##which], (expr))
@@ -220,6 +220,14 @@ extern pid_t __task2pid (task_t task), task2pid (task_t task);
    On error, sets `errno' and returns MACH_PORT_NULL.  */
 
 extern task_t __pid2task (pid_t pid), pid2task (pid_t pid);
+
+
+/* Return the io server port for file descriptor FD.
+   This adds a Mach user reference to the returned port.
+   On error, sets `errno' and returns MACH_PORT_NULL.  */
+
+extern io_t __getdport (int fd), getdport (int fd);
+
 
 
 #endif	/* hurd.h */
