@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
+#include <hurd.h>
 
 /* Change the protections of the file FD refers to to MODE.  */
 int
