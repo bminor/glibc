@@ -609,6 +609,11 @@ extern file_t path_lookup (const char *file, int flags, mode_t mode);
 /* Open a file descriptor on a port.  */
 extern int openport (io_t port, int flags);
 
+/* Execute a file, replacing the current program image.  */
+extern error_t _hurd_exec (file_t file,
+			   char *const argv[],
+			   char *const envp[]);
+
 /* Inform the proc server we have exitted with STATUS, and kill the
    task thoroughly.  This function never returns, no matter what.  */
 extern volatile void _hurd_exit (int status);
