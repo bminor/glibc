@@ -72,34 +72,32 @@ extern int errno;
 #include <unistd.h>
 #endif
 
-#if	(defined (STDC_HEADERS) || defined (__GNU_LIBRARY__) \
-	 || defined (POSIX))
+#if	(defined (STDC_HEADERS) || defined (__GNU_LIBRARY__))
 #include <stdlib.h>
 #include <string.h>
 #define	ANSI_STRING
 #else	/* No standard headers.  */
 
-#ifdef	USG
-
+#ifdef HAVE_STRING_H
 #include <string.h>
-#ifdef	NEED_MEMORY_H
+#define	ANSI_STRING
+#else
+#include <strings.h>
+#endif
+#ifdef	HAVE_MEMORY_H
 #include <memory.h>
 #endif
-#define	ANSI_STRING
 
-#else	/* Not USG.  */
+extern char *malloc (), *realloc ();
+extern void free ();
 
-#ifdef	NeXT
+extern void qsort ();
+extern void abort (), exit ();
 
-#include <string.h>
+#endif	/* Standard headers.  */
 
-#else	/* Not NeXT.  */
+#ifndef	ANSI_STRING
 
-#include <strings.h>
-
-#ifndef	bcmp
-extern int bcmp ();
-#endif
 #ifndef	bzero
 extern void bzero ();
 #endif
@@ -107,18 +105,7 @@ extern void bzero ();
 extern void bcopy ();
 #endif
 
-#endif	/* NeXT. */
-
-#endif	/* USG.  */
-
-extern char *malloc (), *realloc ();
-extern void free ();
-extern void qsort ();
-
-#endif /* Standard headers.  */
-
-#ifndef	ANSI_STRING
-#define	memcpy(d, s, n)	bcopy((s), (d), (n))
+#define	memcpy(d, s, n)	bcopy ((s), (d), (n))
 #define	strrchr	rindex
 /* memset is only used for zero here, but let's be paranoid.  */
 #define	memset(s, better_be_zero, n) \
