@@ -23,17 +23,17 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 .data
-.globl ___curbrk
-___curbrk:
+.globl C_SYMBOL_NAME(__curbrk)
+C_SYMBOL_NAME(__curbrk):
 #ifdef	HAVE_GNU_LD
-	.long __end
+	.long C_SYMBOL_NAME(_end)
 #else
-	.long _end
+	.long C_SYMBOL_NAME(end)
 #endif
 
 .text
 SYSCALL__ (brk, 1)
 	movl 4(%esp), %eax
-	movl %eax, ___curbrk
+	movl %eax, C_SYMBOL_NAME(__curbrk)
 	xorl %eax, %eax
 	ret
