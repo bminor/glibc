@@ -28,7 +28,7 @@ DEFUN(__link, (from, to), CONST char *from AND CONST char *to)
 {
   error_t err;
   file_t oldfile, linknode, todir;
-  CONST char *toname;
+  char *toname;
 
   oldfile = __path_lookup (from, 0, 0);
   if (oldfile == MACH_PORT_NULL)
