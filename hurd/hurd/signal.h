@@ -70,7 +70,6 @@ struct hurd_sigstate
     /* Not locked.  Used only by this thread, or by the signal thread with
        this thread suspended.  */
     volatile mach_port_t intr_port; /* Port interruptible RPC was sent on.  */
-    volatile int intr_restart;	/* If nonzero, restart interrupted RPC.  */
   };
 
 /* Linked list of states of all threads whose state has been asked for.  */
@@ -249,51 +248,48 @@ extern void _hurd_initialize_fault_recovery_state (void *state);
 extern void _hurd_siginfo_handler (int);
 
 
-#ifdef notyet
-
 /* Perform interruptible RPC CALL on PORT.
+   The call should use 
    The args in CALL should be constant or local variable refs.
    They may be evaluated many times, and must not change.
    PORT must not be deallocated before this RPC is finished.  */
-#define	HURD_EINTR_RPC(port, call) \
-  ({
-    error_t __err;
-    struct hurd_sigstate *__ss = _hurd_self_sigstate ();
-    __mutex_unlock (&__ss->lock); /* Lock not needed.  */
-    /* If we get a signal and should return EINTR, the signal thread will
-       clear this.  The RPC might return EINTR when some other thread gets
-       a signal, in which case we want to restart our call.  */
-    __ss->intr_restart = 1;
-    /* This one needs to be last.  A signal can arrive before here,
-       and if intr_port were set before intr_restart is
-       initialized, the signal thread would get confused.  */
-    __ss->intr_port = (port);
-    /* A signal may arrive here, after intr_port is set,
-       but before the mach_msg system call.  The signal handler might do an
-       interruptible RPC, and clobber intr_port; then it would not be set
-       properly when we actually did send the RPC, and a later signal
-       wouldn't interrupt that RPC.  So, _hurd_run_sighandler saves
-       intr_port in the sigcontext, and sigreturn restores it.  */
-  __do_call:
-    switch (__err = (call))
-      {
-      case EINTR:		/* RPC went out and was interrupted.  */
-      case MACH_SEND_INTERRUPTED: /* RPC didn't get out.  */
-	if (__ss->intr_restart)
-	  /* Restart the interrupted call.  */
-	  goto __do_call;
-	/* FALLTHROUGH */
-      case MACH_RCV_PORT_DIED:
-	/* Server didn't respond to interrupt_operation,
-	   so the signal thread destroyed the reply port.  */
-	__err = EINTR;
-	break;
-      }
-    __ss->intr_port = MACH_PORT_NULL;
-    __err;
-  })
+#define	HURD_EINTR_RPC(port, call)					      \
+  ({									      \
+    __label__ __do_call;	/* Give this label block scope.  */	      \
+    error_t __err;							      \
+    struct hurd_sigstate *__ss = _hurd_self_sigstate ();		      \
+    __mutex_unlock (&__ss->lock); /* Lock not needed.  */		      \
+    /* Tell the signal thread that we are doing an interruptible RPC on	      \
+       this port.  If we get a signal and should return EINTR, the signal     \
+       thread will set this variable to MACH_PORT_NULL.  The RPC might	      \
+       return EINTR when some other thread gets a signal, in which case we    \
+       want to restart our call.  */					      \
+    __ss->intr_port = (port);						      \
+    /* A signal may arrive here, after intr_port is set, but before the	      \
+       mach_msg system call.  The signal handler might do an interruptible    \
+       RPC, and clobber intr_port; then it would not be set properly when     \
+       we actually did send the RPC, and a later signal wouldn't interrupt    \
+       that RPC.  So, _hurd_run_sighandler saves intr_port in the	      \
+       sigcontext, and sigreturn restores it.  */			      \
+    __do_call:								      \
+    switch (__err = (call))						      \
+      {									      \
+      case EINTR:		/* RPC went out and was interrupted.  */      \
+      case MACH_SEND_INTERRUPTED: /* RPC didn't get out.  */		      \
+	if (__ss->intr_port == MACH_PORT_NULL)				      \
+	  /* Restart the interrupted call.  */				      \
+	  goto __do_call;						      \
+	/* FALLTHROUGH */						      \
+      case MACH_RCV_PORT_DIED:						      \
+	/* Server didn't respond to interrupt_operation,		      \
+	   so the signal thread destroyed the reply port.  */		      \
+	__err = EINTR;							      \
+	break;								      \
+      }									      \
+    __ss->intr_port = MACH_PORT_NULL;					      \
+    __err;								      \
+  })									      \
 
-#endif /* notyet */
 
 /* Mask of signals that cannot be caught, blocked, or ignored.  */
 #define	_SIG_CANT_MASK	(__sigmask (SIGSTOP) | __sigmask (SIGKILL))
