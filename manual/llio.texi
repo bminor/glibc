@@ -1423,7 +1423,7 @@ compatibility.
 @comment BSD
 @deftypevr Macro int O_SHLOCK
 Acquire a shared lock on the file, as with @code{flock}.
-@xref{BSD File Locking}.
+@xref{File Locks}.
 
 If @code{O_CREAT} is specified, the locking is done atomically when
 creating the file.  You are guaranteed that no other process will get
@@ -1434,7 +1434,7 @@ the lock on the new file first.
 @comment BSD
 @deftypevr Macro int O_EXLOCK
 Acquire an exclusive lock on the file, as with @code{flock}.
-@xref{BSD File Locking}.  This is atomic like @code{O_SHLOCK}.
+@xref{File Locks}.  This is atomic like @code{O_SHLOCK}.
 @end deftypevr
 
 @node Operating Modes
