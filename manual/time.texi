@@ -1395,7 +1395,7 @@ The value of var{class} is not valid.
 When the return value is @code{-1}, it could indicate failure, or it
 could be the priority value.  The only way to make certain is to set
 @code{errno = 0} before calling @code{getpriority}, then use @code{errno
-!= 0} afterward as the criterion for failure:
+!= 0} afterward as the criterion for failure.
 @end deftypefun
 
 @comment sys/resource.h
@@ -1456,6 +1456,8 @@ If the argument @var{id} is 0, it stands for the current process,
 current process group, or the current user, according to @var{class}.
 
 @c ??? I don't know where we should say this comes from.
+@comment Unix
+@comment dunno.h
 @deftypefun int nice (int @var{increment})
 Increment the priority of the current process by @var{increment}.
 The return value is not meaningful.
@@ -1471,3 +1473,4 @@ nice (int increment)
   setpriority (PRIO_PROCESS, 0, old + increment);
 @}
 @end example
+@end deftypefun
