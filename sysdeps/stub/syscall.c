@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 
 /* Do system call CALLNO, passing it the remaining arguments.
-   This only makes sense on some operating systems.  */
+   This only makes sense in certain operating systems.  */
 
 int
 DEFUN(syscall, (callno), callno DOTS)
