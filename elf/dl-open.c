@@ -113,11 +113,23 @@ _dl_open (const char *file, int mode)
 	      _dl_close (new);
 	      _dl_signal_error (ENOMEM, file, "cannot extend global scope");
 	    }
-	  _dl_global_scope[2] = _dl_default_scope[2];
-	  _dl_global_scope[3] = new;
-	  _dl_global_scope[4] = NULL;
-	  _dl_global_scope[5] = NULL;
-	  _dl_global_scope_end = &_dl_global_scope [4];
+
+	  if (_dl_default_scope[2] == new)
+	    {
+	      /* This happens when loading in static binaries.  */
+	      _dl_global_scope[2] = new;
+	      _dl_global_scope[3] = NULL;
+	      _dl_global_scope[4] = NULL;
+	      _dl_global_scope_end = &_dl_global_scope[3];
+	    }
+	  else
+	    {
+	      _dl_global_scope[2] = _dl_default_scope[2];
+	      _dl_global_scope[3] = new;
+	      _dl_global_scope[4] = NULL;
+	      _dl_global_scope[5] = NULL;
+	      _dl_global_scope_end = &_dl_global_scope[4];
+	    }
 	}
       else
 	{
