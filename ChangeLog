@@ -1,3 +1,54 @@
+1997-03-20 04:21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/stub/msync.c (msync): Add parameter `flags' to match
+	generic prototype.
+
+	* sysdeps/libm-ieee754/w_pow.c: Add definition for `signbit' function.
+	Future releases will have this function.
+	* sysdeps/libm-ieee754/w_powf.c: Likewise.
+	* sysdeps/libm-ieee754/w_powl.c: Likewise.
+	Reported by HJ Lu.
+
+1997-03-20 01:49  Ulrich Drepper  <drepper@cygnus.com>
+
+	* setjmp/setjmp.h: Change references of ANSI C to ISO C.
+	* setjmp/tst-setjmp.c: Correct and extend test suite.
+	* sysdeps/i386/bsd-_setjmp.S: Correct fatal bug in jump to
+	`__sigsetjmp' in PIC code.
+	* sysdeps/i386/bsd-setjmp.S: Likewise.
+
+	* sysdeps/libm-i387/e_pow.S: Correct recognition of mantissa
+	overflow.
+	* sysdeps/libm-i387/e_powf.S: Likewise.
+	* sysdeps/libm-i387/s_expm1.S: Handle x == +-0 as a special
+	case since expm1(-0) == -0.
+	* sysdeps/libm-i387/s_expm1f.S: Likewise.
+	* sysdeps/libm-i387/s_expm1l.S: Likewise.
+	* sysdeps/libm-ieee754/s_modf.c: Optimize code by avoiding unneeded
+	access to FP number.
+	* sysdeps/libm-ieee754/s_modff.c: Likewise.
+	* sysdeps/libm-ieee754/s_modfl.c: Correct former completely bogus
+	code.  It never worked correctly.
+	* sysdeps/libm-ieee754/s_tanh.c: Handle x == +-0 as a special
+	case since tanh(-0) == -0.
+	* sysdeps/libm-ieee754/s_tanhf.c: Likewise.
+	* sysdeps/libm-ieee754/s_tanhl.c (__tanhl): Correct handling of -inf.
+
+1997-03-19 21:13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/Makefile: Correct dependencies for test-tz.
+
+	* sysdeps/unix/sysv/linux/writev.c: Don't use MAX_IOVEC.  Test for
+	UIO_FASTIOV and set to 8 if not available.
+	* sysdeps/unix/sysv/linux/readv.c: Likewise.
+	Patch by HJ Lu.
+
+	* sysdeps/unix/sysv/linux/xstat.c: Include <kernel_stat.h>, not
+	"kernel_stat.h".
+	* sysdeps/unix/sysv/linux/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstat.c: Likewise.
+	Reported by fabsoft@fabsoft2.zarm.uni-bremen.de.
+
 1997-03-19 01:40  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/sco3.2.4/Dist: New file.
@@ -56,6 +107,11 @@
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Add sys_fstat,
 	sys_lstat and sys_stat.
+
+1997-03-17 12:52  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* mach/devstream.c (output/write_some): Don't try and write more
+	than IO_INBAND_MAX in a single call to device_write_inband.
 
 1997-03-17 04:00  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -276,6 +332,12 @@
 	* sysdeps/mach/hurd/euidaccess.c: Define as __euidaccess and make
 	euidaccess weak alias.
 
+1997-03-07 10:30  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/generic/netinet/in.h: Include <sys/types.h>.
+
+	* sysdeps/generic/sys/mman.h (msync): Mention third arg.
+
 1997-03-05 10:40  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* hurd/hurd.h (vpprintf): Include <stdarg.h>.  New declaration.
@@ -413,6 +475,12 @@
 	* time/asia: Likewise.
 	* time/zone.tab: Likewise.
 
+1997-03-04 19:14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/__math.h: Update feature tests.
+	(fabs): Remove defininition, it is a gcc builtin.
+	(sqrt, __sqrt): Remove definition, they have wrappers in libm.
+
 1997-03-05 03:59  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/rcmd.c (__ivaliduser): Don't use getline, but __getline
@@ -433,6 +501,39 @@
 
 	* time/Makefile $(tzfiles:%=$(objpfx)z.%): Remove unneeded
 	depedencies between installed $(tzlinks) and $(tzbases) files.
+
+1997-03-01 14:27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/math.h: Make compatible with traditional preprocessor;
+	requires carefull placement of whitespace in macro arguments.
+	Use __CONCAT instead of ##.
+	Declare long double functions only if __STDC__ or __GNUC__.
+	* math/mathcall.h: Avoid whitespace before argument of macro call
+	that is used as function name.
+
+	* sysdeps/m68k/fpu/__math.h: Use __CONCAT instead of ##.
+	(__m81_u, __m81_inline): Depend on __LIBC_M81_MATH_INLINES instead
+	of __NO_M81_MATH_INLINES.
+	[!__LIBC_M81_MATH_INLINES]: Don't define internal functions
+	starting with __ieee754.
+	[!__NO_MATH_INLINES && __OPTIMIZE__]: Define user visible
+	functions as inlines.
+	(__m81_defun): Put __attribute__ between return type and function
+	name.
+	* math/math.h: Include <__math.h> also if __LIBC_M81_MATH_INLINES
+	is defined.
+	* sysdeps/m68k/fpu/e_acos.c: Define __LIBC_M81_MATH_INLINES
+	instead of __NO_M81_MATH_INLINES.
+	* sysdeps/m68k/fpu/e_fmod.c: Likewise.
+	* sysdeps/m68k/fpu/k_cos.c: Likewise.
+	* sysdeps/m68k/fpu/k_sin.c: Likewise.
+	* sysdeps/m68k/fpu/k_tan.c: Likewise.
+	* sysdeps/m68k/fpu/s_atan.c: Likewise. De-ANSI-declify.
+	* sysdeps/m68k/fpu/s_frexp.c: Likewise.
+	* sysdeps/m68k/fpu/s_ilogb.c: Likewise.
+	* sysdeps/m68k/fpu/s_isinf.c: Likewise.
+	* sysdeps/m68k/fpu/s_modf.c: Likewise.
+	* sysdeps/m68k/fpu/s_scalbn.c: Likewise.
 
 1997-02-28 03:27  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -469,6 +570,11 @@
 	* sysdeps/generic/ntohl.c: Likewise.
 	* sysdeps/generic/ntohs.c: Likewise.
 	Suggested by a sun <asun@zoology.washington.edu>.
+
+1997-02-26 08:30  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* math/math.h: Include <__math.h> if __NO_MATH_INLINES is not
+	defined and we want optimization.
 
 1997-02-02 19:53  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
