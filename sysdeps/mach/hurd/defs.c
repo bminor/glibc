@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <stdio.h>
-#include <hurd.h>
+#include <hurd/fd.h>
 #include <gnu-stabs.h>
 #include <unistd.h>
 
@@ -29,19 +29,22 @@ FILE *stdin, *stdout, *stderr;
 /* Pointer to the first stream in the list.  */
 FILE *__stdio_head = NULL;
 
-
 static void
 init_stdio (void)
 {
-  /* XXX temp hack */
-  stdin = __fopenport (__getdport (STDIN_FILENO), "r");
-  setlinebuf (stdin);
-  stdout = __fopenport (__getdport (STDOUT_FILENO), "w");
-  setlinebuf (stdout);
-  stderr = __fopenport (__getdport (STDERR_FILENO), "w");
-  setbuffer (stderr, 0, 0);
+#define S(NAME, FD, MODE) \
+  (NAME = __newstream ())->__cookie = _hurd_fd_get (FD); \
+  NAME->__mode.__##MODE = 1;
+
+  S (stdin, STDIN_FILENO, read);
+  S (stdout, STDOUT_FILENO, write);
+  S (stderr, STDERR_FILENO, write);
+
+#undef S
+
+  stderr->__userbuf = 1;	/* stderr is always unbuffered.  */
 }
-text_set_element (__libc_subinit, init_stdio);
+text_set_element (_hurd_fd_subinit, init_stdio);
 
 /* This function MUST be in this file!
    This is because we want _cleanup to go into the __libc_atexit set
