@@ -1,3 +1,11 @@
+1998-08-04 15:24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/de.po: Update for 2.0.7.
+	* po/es.po: Likewise.
+	* po/fr.po: Likewise.
+	* po/no.po: New file.
+	* po/sk.po: New file.
+
 1998-08-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/glob.h: Define GLOB_TILDE_CHECK.
