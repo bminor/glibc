@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -42,7 +42,7 @@ __mbsrtowcs (dst, src, len, ps)
      mbstate_t *ps;
 {
   struct gconv_step_data data;
-  size_t result = 0;
+  size_t result;
   int status;
 
   /* Tell where we want the result.  */
@@ -61,6 +61,7 @@ __mbsrtowcs (dst, src, len, ps)
       const unsigned char *inbuf = (const unsigned char *) *src;
       const unsigned char *srcend = inbuf + strlen (inbuf) + 1;
 
+      result = 0;
       data.outbufend = (char *) buf + sizeof (buf);
       do
 	{
@@ -69,6 +70,8 @@ __mbsrtowcs (dst, src, len, ps)
 	  status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
 						     &data, &inbuf, srcend,
 						     &result, 0);
+
+	  result += (wchar_t *) data.__outbuf - buf;
 	}
       while (status == GCONV_FULL_OUTPUT);
 
@@ -98,6 +101,8 @@ __mbsrtowcs (dst, src, len, ps)
 						 &data,
 						 (const unsigned char **) src,
 						 srcend, &result, 0);
+
+      result = (wchar_t *) data.__outbuf - dst;
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */
