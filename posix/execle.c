@@ -24,14 +24,15 @@ Cambridge, MA 02139, USA.  */
 /* Execute PATH with all arguments after PATH until a NULL pointer,
    and the argument after that for environment.  */
 int
-DEFUN(execle, (path), CONST char *path DOTS)
+DEFUN(execle, (path), CONST char *path AND CONST char *arg DOTS)
 {
   CONST char *argv[1024], *CONST *envp;
   register unsigned int i;
   va_list args;
 
-  va_start(args, path);
-  i = 0;
+  va_start(args, arg);
+  argv[0] = arg;
+  i = 1;
   do
     {
       argv[i] = va_arg(args, CONST char *);
