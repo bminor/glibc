@@ -16,26 +16,17 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <stddef.h>
-#include <string.h>
-#include <memcopy.h>
+#include "sigsetops.h"
 
-/* Copy SRC to DEST.  */
-char *
-DEFUN(strcpy, (dest, src), char *dest AND CONST char *src)
+/* Clear all signals from SET.  */
+int
+DEFUN(sigemptyset, (set), sigset_t *set)
 {
-  reg_char c;
-  char *s = (char *) src;
-  CONST ptrdiff_t off = dest - src - 1;
-
-  do
+  if (set == NULL)
     {
-      c = *s++;
-      s[off] = c;
+      errno = EINVAL;
+      return -1;
     }
-  while (c != '\0');
 
-  return dest;
+  return __sigemptyset (set);
 }
-
