@@ -1,3 +1,11 @@
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/euc-jp.c (BODY for FROM_LOOP): When encountering an
+	invalid input (e.g. a byte > 0x80 followed by a byte < 0x80), skip
+	always one byte, not 0 bytes in some cases and 2 bytes in others.
+
+	* iconvdata/tst-table-from.c (main): Correct the usage message.
+
 2002-04-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* time/tst-mktime.c: Include <stdlib.h>.  Use %d, not %ld format
