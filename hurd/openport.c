@@ -19,29 +19,25 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 
 /* Open a file descriptor on a port.  */
+
 int
 openport (io_t port)
 {
   int fd;
 
-  __mutex_lock (&_hurd_dtable.lock);
-
-  fd = _hurd_dalloc ();
-  if (fd < 0)
-    {
-      __mutex_unlock (&_hurd_dtable.lock);
-      return -1;
-    }
-
+  /* Give the port a new user reference.
+     This is a good way to check that it is valid.  */
   if (__mach_port_mod_refs (__mach_task_self (), port,
 			    MACH_PORT_RIGHT_SEND, 1))
     {
-      __mutex_unlock (&_hurd_dtable.lock);
       errno = EINVAL;
       return -1;
     }
 
-  _hurd_dtable.d[fd].server = port;
-  __mutex_unlock (&_hurd_dtable.lock);
-  return 0;
+  fd = _hurd_dalloc (port, 0);
+  if (fd < 0)
+    /* The descriptor table is full.  */
+    __mach_port_deallocate (__mach_task_self (), port); 
+
+  return fd;
 }
