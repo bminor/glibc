@@ -60,11 +60,21 @@ aux := hurdsyms hurdinit msgstub # hurdmsg
 
 # The files inline-*.c contain the real-function definitions of the
 # functions defined with `extern inline' in hurd/*.h.
-$(inlines:%=$(objpfx)%.c): $(objpfx)inline-%.c: 
-	(echo '#define _EXTERN_INLINE /* Define the real function. */';\
-	 echo '#include "hurd/$*.h"') > $@-tmp
+$(inlines:%=$(objpfx)%.c): $(objpfx)inline-%.c:
+	$(generate-inline) > $@-tmp
 	mv $@-tmp $@
 generated += $(inlines:%=%.c)
+
+define generate-inline
+(echo '/* Include the other files that have inlines first so their';\
+ echo '   inlines are not defined here as well.  */';\
+$(foreach module,$(filter-out $*,$(inlines:inline-%=%)),\
+ echo '#include "hurd/$(module).h"';\
+)\
+ echo '#undef _EXTERN_INLINE';\
+ echo '#define _EXTERN_INLINE /* Define the real function. */';\
+ echo '#include "hurd/$*.h"')
+endef
 
 # XXX this is a temporary hack; see hurdmalloc.h
 routines += hurdmalloc
