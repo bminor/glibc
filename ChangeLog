@@ -1,3 +1,8 @@
+1998-06-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/ip.h (struct ip_options): Define
+	__data member only for gcc.
+
 1998-06-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/svc_authux.c (_svcauth_unix): Use unsigned types for
