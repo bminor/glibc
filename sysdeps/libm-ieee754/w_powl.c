@@ -22,6 +22,18 @@
 #include "math_private.h"
 
 
+/* This is a quick hack for now.  In version 2.1.x we'll have a real
+   function.  */
+static inline int
+signbit (long double x)
+{
+  int32_t e;
+
+  GET_LDOUBLE_EXP (e, x);
+  return e & 0x8000;
+}
+
+
 #ifdef __STDC__
 	long double __powl(long double x, long double y)/* wrapper powl */
 #else

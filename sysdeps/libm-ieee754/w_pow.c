@@ -20,6 +20,18 @@
 #include "math_private.h"
 
 
+/* This is a quick hack for now.  In version 2.1.x we'll have a real
+   function.  */
+static inline int
+signbit (double x)
+{
+  int32_t hx;
+
+  GET_HIGH_WORD (hx, x);
+  return hx & 0x80000000;
+}
+
+
 #ifdef __STDC__
 	double __pow(double x, double y)	/* wrapper pow */
 #else

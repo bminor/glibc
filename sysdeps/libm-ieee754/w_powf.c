@@ -25,6 +25,18 @@ static char rcsid[] = "$NetBSD: w_powf.c,v 1.3 1995/05/10 20:49:41 jtc Exp $";
 #include "math_private.h"
 
 
+/* This is a quick hack for now.  In version 2.1.x we'll have a real
+   function.  */
+static inline int
+signbit (float x)
+{
+  int32_t hx;
+
+  GET_FLOAT_WORD (hx, x);
+  return hx & 0x80000000;
+}
+
+
 #ifdef __STDC__
 	float __powf(float x, float y)	/* wrapper powf */
 #else
