@@ -229,12 +229,24 @@ DEFUN(flushbuf, (fp, c),
 	  /* Set up to write output into the buffer.  */
 	  fp->__put_limit = fp->__buffer + fp->__bufsize;
 	  fp->__bufp = fp->__buffer + buffer_offset;
+
 	  if (!flush_only)
 	    {
+	      /* Put C in the buffer to be written out.
+		 We only need to actually write it out now if
+		 it is a newline on a line-buffered stream.  */
 	      *fp->__bufp++ = (unsigned char) c;
 	      if (!fp->__linebuf || (unsigned char) c != '\n')
-		return;
-	      flush_only = 1;
+		{
+		  /* There is no need to flush C from the buffer right now.
+		     Record that nothing was written from the buffer,
+		     and go do clean-up at end.  */
+		  buffer_written = 0;
+		  goto end;
+		}
+	      else
+		/* We put C in the buffer, so don't write it again later.  */
+		flush_only = 1;
 	    }
 	}
     }
@@ -469,8 +481,20 @@ DEFUN(__flshfp, (fp, c),
   /* Make sure the stream is initialized (has functions and buffering).  */
   init_stream(fp);
 
-  if (!flush_only && fp->__get_limit == fp->__buffer &&
-      fp->__bufp > fp->__buffer && fp->__bufp < fp->__buffer + fp->__bufsize)
+  /* Do this early, so a `putc' on such a stream will never return success.  */
+  if (fp->__room_funcs.__output == NULL)
+    {
+      /* A NULL `output room' function means
+	 to always return an output error.  */
+      fp->__error = 1;
+      return EOF;
+    }
+
+  if (!flush_only &&
+      /* Will C fit into the buffer?
+	 See below about linebuf_active.  */
+      fp->__bufp < (fp->__linebuf_active ? fp->__buffer + fp->__bufsize :
+		    fp->__put_limit))
     {
       /* The character will fit in the buffer, so put it there.  */
       *fp->__bufp++ = (unsigned char) c;
@@ -480,26 +504,30 @@ DEFUN(__flshfp, (fp, c),
 	return (unsigned char) c;
     }
 
-  if (fp->__room_funcs.__output == NULL)
+  if (!fp->__linebuf_active &&
+      fp->__put_limit == fp->__buffer)
     {
-      /* A NULL `output room' function means
-	 to always return an output error.  */
-      fp->__error = 1;
-      return EOF;
+      /* The buffer was being used for reading (if at all).
+	 We must reset the buffer pointer, so it doesn't appear that
+	 the buffer contains text to be written out.  Movement of bufp
+	 should move the stream's file position, so we update its target
+	 (where buffer maps to) to account for this.  */
+      fp->__target += fp->__bufp - fp->__buffer;
+      fp->__bufp = fp->__buffer;
     }
 
-  if (!flush_only || fp->__bufp > fp->__buffer)
+  if (!flush_only ||		/* We must write C.  */
+      (fp->__bufp > fp->__buffer && /* There is something in the buffer.  */
+       /* And we are not in the midst of reading.  */
+       fp->__get_limit <= (fp->__linebuf_active ?
+			   fp->__buffer + fp->__bufsize : fp->__put_limit)))
     {
-      if (fp->__linebuf_active && fp->__bufp > fp->__buffer)
+      if (fp->__linebuf_active)
 	/* This is an active line-buffered stream, so its put-limit is set
 	   to the beginning of the buffer in order to force a __flshfp call
 	   on each putc (see below).  We undo this hack here (by setting
 	   the limit to the end of the buffer) to simplify the interface
-	   with the output-room function.  However, we must make sure we
-	   don't do this if there isn't actually anything in the buffer,
-	   because in that case we want to give the output-room function a
-	   chance to prime the stream for writing in whatever fashion turns
-	   it on.  */
+	   with the output-room function.  */
 	fp->__put_limit = fp->__buffer + fp->__bufsize;
 
       /* Make room in the buffer.  */
