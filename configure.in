@@ -85,14 +85,24 @@ fi
 
 dnl Generic infrastructure for drop-in additions to libc.
 AC_ARG_ENABLE(add-ons, dnl
-[  --enable-add-ons=DIR... configure and build named extra directories],
-   	      [add_ons=`echo "$enableval" | sed 's/,/ /g'`],
-	      [add_ons=])
+[  --enable-add-ons[=DIR1,DIR2]... configure and build add-ons in DIR1,DIR2,...
+                                  search for add-ons if no parameter given],
+ [case "$enableval" in
+    yes) add_ons=`echo $srcdir/*/configure | \
+		  sed -e "s!$srcdir/!!g" -e 's!/configure!!g'`;;
+    *) add_ons=`echo "$enableval" | sed 's/,/ /g'`;;
+   esac],
+  [add_ons=])
 AC_CONFIG_SUBDIRS($add_ons)
 add_ons_pfx=
 if test x"$add_ons" != x; then
   for f in $add_ons; do
-    add_ons_pfx="$add_ons_pfx $f/"
+    # Test whether such a subdir really exists.
+    if test -d $srcdir/$f; then
+      add_ons_pfx="$add_ons_pfx $f/"
+    else
+      AC_MSG_ERROR(add-on directory \"$f\" does not exist)
+    fi
   done
 fi
 
