@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -35,9 +35,7 @@ DIR *
 DEFUN(opendir, (name), CONST char *name)
 {
   DIR *dirp;
-  struct stat statbuf;
   file_t port;
-  error_t err;
 
   port = __path_lookup (name, O_RDONLY, 0);
   if (port == MACH_PORT_NULL)
@@ -45,25 +43,18 @@ DEFUN(opendir, (name), CONST char *name)
 
   /* XXX this port should be deallocated on exec */
 
-  if (err = __io_stat (port, &statbuf))
+  dirp = (DIR *) malloc (sizeof (DIR));
+  if (dirp == NULL)
     {
-      errno = err;
-    lose:
       __mach_port_deallocate (__mach_task_self (), port);
       return NULL;
     }    
 
-  dirp = (DIR *) malloc (sizeof (DIR));
-  if (dirp == NULL)
-    goto lose;
-
   dirp->__port = port;
-  dirp->__filepos = 0;
-  dirp->__block_size = statbuf.st_blksize;
-  dirp->__data = NULL;
+  dirp->__data = dirp->__ptr = NULL;
+  dirp->__entry_data = dirp->__entry_ptr = 0;
   dirp->__allocation = 0;
   dirp->__size = 0;
-  dirp->__offset = 0;
 
   return dirp;
 }
