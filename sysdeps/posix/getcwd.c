@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -336,17 +336,19 @@ __getcwd (buf, size)
 		}
 	      else
 		{
+		  char *tmp;
+
 		  size *= 2;
-		  buf = realloc (path, size);
-		  if (buf == NULL)
+		  tmp = realloc (path, size);
+		  if (tmp == NULL)
 		    {
 		      (void) __closedir (dirstream);
 		      free (path);
 		      __set_errno (ENOMEM);/* closedir might have changed it.*/
 		      goto lose;
 		    }
-		  pathp = &buf[pathp - path + size / 2];
-		  path = buf;
+		  pathp = &tmp[pathp - path + size / 2];
+		  path = tmp;
 		  /* Move current contents up to the end of the buffer.
 		     This is guaranteed to be non-overlapping.  */
 		  memcpy (pathp, pathp - size / 2, path + size - pathp);
