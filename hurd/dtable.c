@@ -242,11 +242,11 @@ reauth_dtable (void)
       /* Reauthenticate the descriptor's port.  */
       if (d->port.port != MACH_PORT_NULL &&
 	  ! __io_reauthenticate (d->port.port,
-				 ref, MACH_MSG_TYPE_MAKE_SEND_ONCE) &&
+				 ref, MACH_MSG_TYPE_MAKE_SEND) &&
 	  ! __USEPORT (AUTH, __auth_user_authenticate
 		       (port,
 			d->port.port,
-			ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+			ref, MACH_MSG_TYPE_MAKE_SEND,
 			&new)))
 	{
 	  /* Replace the port in the descriptor cell
@@ -254,11 +254,11 @@ reauth_dtable (void)
 
 	  if (d->ctty.port != MACH_PORT_NULL &&
 	      ! __io_reauthenticate (d->ctty.port,
-				     ref, MACH_MSG_TYPE_MAKE_SEND_ONCE) &&
+				     ref, MACH_MSG_TYPE_MAKE_SEND) &&
 	      ! __USEPORT (AUTH, __auth_user_authenticate
 			   (port,
 			    d->ctty.port,
-			    ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+			    ref, MACH_MSG_TYPE_MAKE_SEND,
 			    &newctty)))
 	    _hurd_port_set (&d->ctty, newctty);
 

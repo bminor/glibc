@@ -942,9 +942,9 @@ reauth_proc (mach_port_t new)
   ref = __mach_reply_port ();
   if (! HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
 		       __proc_reauthenticate (port, ref,
-					      MACH_MSG_TYPE_MAKE_SEND_ONCE) ||
+					      MACH_MSG_TYPE_MAKE_SEND) ||
 		       __auth_user_authenticate (new, port, ref,
-						 MACH_MSG_TYPE_MAKE_SEND_ONCE,
+						 MACH_MSG_TYPE_MAKE_SEND,
 						 &ignore))
       && ignore != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), ignore);
