@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,8 @@ Cambridge, MA 02139, USA.  */
 
 pid_t
 DEFUN(__wait4, (pid, stat_loc, options, usage),
-      pid_t pid AND union wait *stat_loc AND int options AND PTR __usage)
+      pid_t pid AND union wait *stat_loc AND int options AND
+      struct rusage *usage)
 {
   errno = ENOSYS;
   return (pid_t) -1;
