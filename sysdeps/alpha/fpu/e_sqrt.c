@@ -27,7 +27,7 @@
 #if 1 || defined(_IEEE_FP) && defined(_IEEE_FP_INEXACT)
 
 /* Most demanding: go to the original source.  */
-#include <libm-ieee754/e_sqrt.c>
+#include <sysdeps/libm-ieee754/e_sqrt.c>
 
 #else
 
