@@ -123,6 +123,8 @@ I am ready for my first lesson today.";
     fflush (stdout);
   }
 
+  printf ("%15.5e\n", 4.9406564584124654e-324);
+
 #define FORMAT "|%12.4f|%12.4e|%12.4g|\n"
   printf (FORMAT, 0.0, 0.0, 0.0);
   printf (FORMAT, 1.0, 1.0, 1.0);
