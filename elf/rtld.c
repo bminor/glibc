@@ -245,7 +245,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	{
 	  void doit (void)
 	    {
-	      l = _dl_map_object (NULL, _dl_argv[0], lt_library, 0);
+	      l = _dl_map_object (NULL, _dl_argv[0], 0, lt_library, 0);
 	    }
 	  char *err_str = NULL;
 	  const char *obj_name __attribute__ ((unused));
@@ -258,7 +258,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	    }
 	}
       else
-	l = _dl_map_object (NULL, _dl_argv[0], lt_library, 0);
+	l = _dl_map_object (NULL, _dl_argv[0], 0, lt_library, 0);
 
       phdr = l->l_phdr;
       phent = l->l_phnum;
@@ -358,7 +358,8 @@ of this helper program; chances are you did not intend to run this program.\n",
       while ((p = strsep (&list, " :")) != NULL)
 	if (! __libc_enable_secure || strchr (p, '/') == NULL)
 	  {
-	    struct link_map *new_map = _dl_map_object (NULL, p, lt_library, 0);
+	    struct link_map *new_map = _dl_map_object (NULL, p, 1, lt_library,
+						       0);
 	    if (new_map->l_opencount == 1)
 	      /* It is no duplicate.  */
 	      ++npreloads;
@@ -420,7 +421,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	  runp = file + strspn (file, ": \t\n");
 	  while ((p = strsep (&runp, ": \t\n")) != NULL)
 	    {
-	      struct link_map *new_map = _dl_map_object (NULL, p,
+	      struct link_map *new_map = _dl_map_object (NULL, p, 1,
 							 lt_library, 0);
 	      if (new_map->l_opencount == 1)
 		/* It is no duplicate.  */
@@ -434,7 +435,8 @@ of this helper program; chances are you did not intend to run this program.\n",
       if (problem != NULL)
 	{
 	  char *p = strndupa (problem, file_size - (problem - file));
-	  struct link_map *new_map = _dl_map_object (NULL, p, lt_library, 0);
+	  struct link_map *new_map = _dl_map_object (NULL, p, 1,
+						     lt_library, 0);
 	  if (new_map->l_opencount == 1)
 	    /* It is no duplicate.  */
 	    ++npreloads;
