@@ -38,7 +38,7 @@ do_prepare (void)
       printf ("cannot create temporary file: %m\n");
       exit (1);
     }
-  write (fd, pattern, sizeof (pattern));
+  write (fd, pattern, sizeof (pattern) - 1);
   close (fd);
 }
 

@@ -74,7 +74,6 @@ For bug reporting instructions, please see:
     ;;
   -u | --u | --un | --unu | --unus | --unuse | --unused)
     unused=yes
-    bind_now=yes
     shift
     ;;
   --v | --ve | --ver)
