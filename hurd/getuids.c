@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,33 +18,35 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 
-/* Return the effective uid set.  */
+
 int
-getuids (int n, uid_t *uidset)
+__getuids (int n, gid_t *gidset)
 {
+  error_t err;
   int nuids;
 
-  __mutex_lock (&_hurd_idlock);
-  if (!_hurd_id_valid)
+  __mutex_lock (&_hurd_id.lock);
+
+  if (err = _hurd_check_ids ())
     {
-      error_t err = _HURD_PORT_USE (&_hurd_auth,
-				    __auth_getids (port, &_hurd_id));
-      if (err)
-	{
-	  __mutex_unlock (&_hurd_idlock);
-	  return __hurd_fail (err);
-	}
-      _hurd_id_valid = 1;
+      __mutex_unlock (&_hurd_id.lock);
+      return __hurd_fail (err);
     }
-  nuids = _hurd_id.nuids;
-  if (uidset != NULL)
+
+  nuids = _hurd_id.gen.nuids;
+
+  if (n != 0)
     {
-      /* Copy into a temporary array before releasing the lock.  */
+      /* Copy the uids onto stack storage and then release the idlock.  */
       uid_t uids[nuids];
-      memcpy (uids, _hurd_id.uids, sizeof (uids));
-      __mutex_unlock (&_hurd_idlock);
-      /* Lock is released; now copy into user array, which might fault.  */
-      memcpy (uidset, uids, sizeof (uids));
+      memcpy (uids, _hurd_id.gen.uids, sizeof (uids));
+      __mutex_unlock (&_hurd_id.lock);
+
+      /* Now that the lock is released, we can safely copy the
+	 uid set into the user's array, which might fault.  */
+      if (nuids > n)
+	nuids = n;
+      memcpy (uidset, uids, nuids * sizeof (uid_t));
     }
   else
     __mutex_unlock (&_hurd_idlock);
