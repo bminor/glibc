@@ -1,3 +1,7 @@
+1998-03-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/resolv.h: Include <netinet/in.h>.
+
 1998-03-23 13:45  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/nss.texi: The database is not called network but networks.
