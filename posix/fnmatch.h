@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -34,14 +34,14 @@ extern "C" {
 #endif /* C++ or ANSI C.  */
 
 /* Bits set in the FLAGS argument to `fnmatch'.  */
-#define	FNM_PATHNAME	(1 << 0)/* No wildcard can ever match `/'.  */
-#define	FNM_NOESCAPE	(1 << 1)/* Backslashes don't quote special chars.  */
-#define	FNM_PERIOD	(1 << 2)/* Leading `.' is matched only explicitly.  */
-#define	__FNM_FLAGS	(FNM_PATHNAME|FNM_NOESCAPE|FNM_PERIOD|FNM_LEADING_DIR)
+#define	FNM_PATHNAME	(1 << 0) /* No wildcard can ever match `/'.  */
+#define	FNM_NOESCAPE	(1 << 1) /* Backslashes don't quote special chars.  */
+#define	FNM_PERIOD	(1 << 2) /* Leading `.' is matched only explicitly.  */
 
-#if !defined (_POSIX_C_SOURCE) || _POSIX_C_SOURCE < 2 || defined (_BSD_SOURCE)
-#define	FNM_LEADING_DIR	(1 << 3)/* Ignore `/...' after a match.  */
-#define	FNM_FILE_NAME	FNM_PATHNAME
+#if !defined (_POSIX_C_SOURCE) || _POSIX_C_SOURCE < 2 || defined (_GNU_SOURCE)
+#define	FNM_FILE_NAME	FNM_PATHNAME /* Preferred GNU name.  */
+#define	FNM_LEADING_DIR	(1 << 3) /* Ignore `/...' after a match.  */
+#define	FMN_CASEFOLD	(1 << 4) /* Compare without regard to case.  */
 #endif
 
 /* Value returned by `fnmatch' if STRING does not match PATTERN.  */
