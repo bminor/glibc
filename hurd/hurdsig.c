@@ -347,6 +347,8 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state)
      interruptible must have one.  We needn't bother locking because all
      other threads are stopped.  */
 
+  struct hurd_sigstate *ss;
+
   for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
     if (ss->thread != _hurd_msgport_thread)
       /* Abort any operation in progress with interrupt_operation.  We
