@@ -213,7 +213,7 @@ returned as if they were associated with option character @samp{\0}.
 The @code{getopt} function returns the option character for the next
 command line option.  When no more option arguments are available, it
 returns @code{-1}.  There may still be more non-option arguments; you
-must compare the external variable @code{optind} against the @var{argv}
+must compare the external variable @code{optind} against the @var{argc}
 parameter to check this.
 
 If the option has an argument, @code{getopt} returns the argument by
@@ -224,8 +224,11 @@ copy the @code{optarg} string, since it is a pointer into the original
 If @code{getopt} finds an option character in @var{argv} that was not
 included in @var{options}, or a missing option argument, it returns
 @samp{?} and sets the external variable @code{optopt} to the actual
-option character.  In addition, if the external variable @code{opterr}
-is nonzero (which is the default), @code{getopt} prints an error message.
+option character.  If the first character of @var{options} is a colon
+(@samp{:}), then @code{getopt} returns @samp{:} instead of @samp{?} to
+indicate a missing option argument.  In addition, if the external
+variable @code{opterr} is nonzero (which is the default), @code{getopt}
+prints an error message.
 @end deftypefun
 
 @node Example of Getopt
