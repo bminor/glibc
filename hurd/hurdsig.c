@@ -232,7 +232,7 @@ abort_all_rpcs (int signo, void *state)
 }
 
 
-struct hurd_signal_preempt _hurd_signal_preempt[NSIG];
+struct hurd_signal_preempt *_hurd_signal_preempt[NSIG];
 #ifdef noteven
 struct mutex _hurd_signal_preempt_lock;
 #endif
