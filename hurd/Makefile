@@ -33,22 +33,17 @@ user-interfaces		:= $(addprefix hurd/,\
 				       fs fsys io startup) # socket term
 server-interfaces	:= # hurd/__misc
 
-routines = $(interface-routines) # XXX
-ifneq (,)
-routines = __pid2task __task2pid pid2task task2pid \
-	   __setauth setauth hurdports \
-	   fchroot \
-	   privports \
-	   hurdauth hurdid hurdpath hurdpid hurdsig hurdsock hurdfrob \
+routines = $(interface-routines) \
+	   hurdauth hurdid hurdpath hurdpid hurdports \
+	   __setauth setauth \
+	   getuids getumask fchroot \
 	   dtable __getdport getdport openport setdtsz \
+#	   hurdsig hurdmsg hurdsock
+#	   __pid2task __task2pid pid2task task2pid \
+	   privports \
 	   msgportdemux startsig \
-	   getuids getumask \
-	   dead_recv \
 	   fopenport __fopenport \
-	   vpprintf \
-	   $(interface-routines)
-endif
-
+	   vpprintf
 aux := hurdsyms hurdinit
 
 # Get the proper definition of `hurd-srcdir'.
