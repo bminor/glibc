@@ -157,17 +157,17 @@ build the GNU C library:
      recommend you port GNU `make' instead.  *Really.* We recommend
      version GNU `make' version 3.75 or later.
 
-   * GCC 2.7.2.1
+   * GCC 2.7.2
 
      On most platforms, the GNU C library can only be compiled with the
      GNU C compiler.  We recommend GCC version 2.7.2 or later; earlier
      versions may have problems.
 
-   * `binutils' 2.7
+   * `binutils' 2.8
 
      Using the GNU `binutils' (assembler, linker, and related tools) is
      preferable when possible, and they are required to build an ELF
-     shared C library.  We recommend `binutils' version 2.7 or later;
+     shared C library.  We recommend `binutils' version 2.8 or later;
      earlier versions are known to have problems or to not support all
      architectures.
 
@@ -183,8 +183,8 @@ following patterns:
      iX86-ANYTHING-linux
      m68k-ANYTHING-linux
 
-   Former versions of this library used to support the following
-configurations but the current status is unknown:
+   Former releases of this library (version 1.09.1 and perhaps earlier
+versions) used to run on the following configurations:
 
      alpha-dec-osf1
      iX86-ANYTHING-bsd4.3
@@ -208,7 +208,13 @@ configurations but the current status is unknown:
      sparc-sun-solaris2.N
      sparc-sun-sunos4.N
 
-   Each case of `iX86' can be `i386', `i486', `i586', or `i686'..  All
+   Since no one has volunteered to test and fix the above
+configurations, these are not supported at the moment.  It's expected
+that these don't work anymore.  Porting the library is not hard.  If
+you are interested in doing a port, please contact the glibc
+maintainers by sending electronic mail to <bug-glibc@prep.ai.mit.edu>.
+
+   Each case of `iX86' can be `i386', `i486', `i586', or `i686'.  All
 of those configurations produce a library that can run on any of these
 processors.  The library will be optimized for the specified processor,
 but will not use instructions not available on all of them.
@@ -258,11 +264,11 @@ and `config.make' which are created by running `configure'; they will
 be in whatever directory was current when you ran `configure'.
 
    If you think you have found some way in which the GNU C library does
-not conform to the ANSI and POSIX standards (*note Standards and
+not conform to the ISO and POSIX standards (*note Standards and
 Portability::.), that is definitely a bug.  Report it!
 
-   Send bug reports to the Internet address `bug-glibc@prep.ai.mit.edu'
-or the UUCP path `mit-eddie!prep.ai.mit.edu!bug-glibc'.  If you have
+   Send bug reports to the Internet address <bug-glibc@prep.ai.mit.edu>
+or the UUCP path <mit-eddie!prep.ai.mit.edu!bug-glibc>.  If you have
 other problems with installation or use, please report those as well.
 
    If you are not sure how a function should behave, and this manual
@@ -270,8 +276,8 @@ doesn't tell you, that's a bug in the manual.  Report that too!  If the
 function's behavior disagrees with the manual, then either the library
 or the manual has a bug, so report the disagreement.  If you find any
 errors or omissions in this manual, please report them to the Internet
-address `bug-glibc-manual@prep.ai.mit.edu' or the UUCP path
-`mit-eddie!prep.ai.mit.edu!bug-glibc-manual'.
+address <bug-glibc-manual@prep.ai.mit.edu> or the UUCP path
+<mit-eddie!prep.ai.mit.edu!bug-glibc-manual>.
 
 Adding New Functions
 ====================
@@ -773,10 +779,9 @@ parts of the library were contributed or worked on by other people.
      platforms was written by Per Bothner and modified by Ulrich
      Drepper.
 
-   * Some of the Internet-related code (most of the `inet'
-     subdirectory) and several other miscellaneous functions and
-     header files have been included from 4.4 BSD with little or no
-     modification.
+   * The Internet-related code (most of the `inet' subdirectory) and
+     several other miscellaneous functions and header files have been
+     included from 4.4 BSD with little or no modification.
 
      All code incorporated from 4.4 BSD is under the following
      copyright:
@@ -827,7 +832,7 @@ parts of the library were contributed or worked on by other people.
      `rand' and `srand' functions, were written by Earl T. Cohen for
      the University of California at Berkeley and are copyrighted by the
      Regents of the University of California.  They have undergone minor
-     changes to fit into the GNU C library and to fit the ANSI C
+     changes to fit into the GNU C library and to fit the ISO C
      standard, but the functional code is Berkeley's.
 
    * The Internet resolver code is taken directly from BIND 4.9.5,
@@ -914,59 +919,7 @@ parts of the library were contributed or worked on by other people.
                 Carnegie Mellon University
                 Pittsburgh PA 15213-3890
 
-          or `Software.Distribution@CS.CMU.EDU' any improvements or
+          or <Software.Distribution@CS.CMU.EDU> any improvements or
           extensions that they make and grant Carnegie Mellon the
           rights to redistribute these changes.
 
-   * The `getaddrinfo' function is written by Craig Metz and it has the
-     following copyright:
-
-	The Inner Net License, Version 2.00
-	===================================
-
-	The author(s) grant permission for redistribution and use in source and
-	binary forms, with or without modification, of the software
-	and documentation provided that the following conditions are met:
-
-	0. If you receive a version of the software that is
-	   specifically labelled as not being for redistribution
-	   (check the version message and/or README), you are not
-	   permitted to redistribute that version of the software in
-	   any way or form.
-	1. All terms of the all other applicable copyrights and
-	   licenses must be followed.
-	2. Redistributions of source code must retain the authors'
-	   copyright notice(s), this list of conditions, and the
-	   following disclaimer.
-	3. Redistributions in binary form must reproduce the authors'
-	   copyright notice(s), this list of conditions, and the
-	   following disclaimer in the documentation and/or other
-	   materials provided with the distribution.
-	4. All advertising materials mentioning features or use of
-	   this software must display the following acknowledgement
-	   with the name(s) of the authors as specified in the
-	   copyright notice(s) substituted where indicated:
-
-	This product includes software developed by <name(s)>, The Inner
-	Net, and other contributors.
-
-	5. Neither the name(s) of the author(s) nor the names of its
-	   contributors may be used to endorse or promote products
-	   derived from this software without specific prior written
-	   permission.
-
-	THIS SOFTWARE IS PROVIDED BY ITS AUTHORS AND CONTRIBUTORS ``AS
-	IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-	FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
-	SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-	INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-	DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-	OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-	LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-	THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
-	OF SUCH DAMAGE.
-
-	If these license terms cause you a real problem, contact the author.
