@@ -25,8 +25,16 @@ endif
 include $(..)Makeconfig
 
 ifndef tags_sources
+ifeq ($(subdir),ctype)
+# In most cases, we want the C source files to come before
+# the header files so tags for optimizing #define's in the
+# headers won't be put in the tags files, but for ctype,
+# the functions are just backup for the #define's in the header.
+tags_sources = $(all-headers) $(all-sources)
+else	# Not ctype.
 tags_sources = $(all-sources) $(all-headers)
-endif
+endif	# ctype
+endif	# No tags_sources
 
 sysdep-dirs := $(addprefix $(sysdep_dir)/,$(sysdirs))
 
