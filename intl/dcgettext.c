@@ -1,5 +1,5 @@
 /* Implementation of the dcgettext(3) function.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.
@@ -372,9 +372,7 @@ DCGETTEXT (domainname, msgid, category)
 	  /* When this is a SUID binary we must not allow accessing files
 	     outside the dedicated directories.  */
 	  if (ENABLE_SECURE
-	      && (memchr (single_locale, '/',
-			  _nl_find_language (single_locale) - single_locale)
-		  != NULL))
+	      && memchr (single_locale, '/', single_locale) != NULL)
 	    /* Ingore this entry.  */
 	    continue;
 	}
