@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,21 +25,20 @@ Cambridge, MA 02139, USA.  */
    it contains no slashes, with all arguments after FILE until a
    NULL pointer and environment from `environ'.  */
 int
-DEFUN(execlp, (file), CONST char *file AND CONST char *arg DOTS)
+DEFUN(execlp, (file), CONST char *file DOTS)
 {
   CONST char *argv[1024];
   register unsigned int i;
   va_list args;
 
-  va_start(args, file);
-  argv[0] = arg;
-  i = 1;
+  va_start (args, file);
+
+  i = 0;
   do
-    {
-      argv[i] = va_arg(args, CONST char *);
-    } while (argv[i++] != NULL);
+    argv[i] = va_arg (args, CONST char *);
+  while (argv[i++] != NULL);
 
-  va_end(args);
+  va_end (args);
 
-  return execvp(file, (char *CONST *) argv);
+  return execvp (file, (char *CONST *) argv);
 }
