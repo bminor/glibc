@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,15 +29,20 @@ __BEGIN_DECLS
 
 #include <gnu/types.h>
 
-#define	__need_size_t
-#include <stddef.h>
 
+/* Directory entry structure.
 
-/* Directory entry structure.  */
+   This structure is laid out identically to the `struct direct' that
+   represents directory entries in the GNU Hurd and in BSD Unix (and
+   incidentally, on disk in the Berkeley fast file system).  The `readdir'
+   implementations for GNU and BSD know this; you must change them if you
+   change this structure.  */
+
 struct dirent
   {
     __ino_t d_fileno;		/* File serial number.  */
-    size_t d_namlen;		/* Length of the file name.  */
+    unsigned short int d_reclen; /* Length of the whole `struct dirent'.  */
+    unsigned short int d_namlen; /* Length of the file name.  */
 
     /* Only this member is in the POSIX standard.  */
     char d_name[1];		/* File name (actually longer).  */
@@ -47,19 +52,9 @@ struct dirent
 #define	d_ino		d_fileno /* Backward compatibility.  */
 #endif
 
-/* Directory stream type.  */
-typedef struct
-  {
-    int __fd;			/* File descriptor.  */
-
-    char *__data;		/* Directory block.  */
-    size_t __allocation;	/* Space allocated for the block.  */
-    size_t __offset;		/* Current offset into the block.  */
-    size_t __size;		/* Total valid data in the block.  */
-
-    struct dirent __entry;	/* Returned by `readdir'.  */
-  } DIR;
-
+/* Get the system-dependent definition of `DIR',
+   the data type of directory stream objects.  */
+#include <dirstream.h>
 
 /* Open a directory stream on NAME.
    Return a DIR stream on the directory, or NULL if it could not be opened.  */
