@@ -46,7 +46,7 @@
 
 /* These exist under Ultrix, but I figured there may be others.  */
 #ifdef DIOCGETPT
-#include <ufs/fs.h>           /* for DIOC* */
+#include <ufs/fs.h>		/* for DIOC* */
 #endif
 #ifdef DEVGETGEOM
 #include <sys/devio.h>
@@ -81,6 +81,30 @@
 /* struct mtop hasn't been in sys/mtio.h since 4.1 */
 #undef MTIOCTOP
 #undef MTIOCGET
+#endif
+
+#if defined(__osf__) && defined(__alpha__)
+#include <sys/ioctl_compat.h>	/* To get TIOCGETP, etc.  */
+#include <alpha/pt.h>		/* for DIOC* */
+#include <sys/mtio.h>		/* for MTIOC* */
+/* The binlog_getstatus structure doesn't seem to be defined.  */
+#undef BINLOG_GETSTATUS
+/* Can't find `struct ifdata' anywhere.  */
+#undef SIOCMANREQ
+#undef SIOCGETEVENTS
+/* OSF/1 smells an awful lot like Ultrix.  */
+#undef TCGETA
+#undef TCSETA
+#undef TCSETAF
+#undef TCSETAW
+/* This macro looks screwed in sys/devio.h.  */
+#undef DEV_DISKPART
+/* This is in sys/dkio.h, but we don't need it.  */
+#undef DKIOCACC
+#undef DKIOCDOP
+#undef DKIOCEXCL
+#undef DKIOCGET
+#undef DKIOCHDR
 #endif
 
 #define	DEFINE(name, value) \
