@@ -29,8 +29,14 @@ DEFUN(__gethostname, (name, len),
       char *name AND size_t len)
 {
   error_t err;
-  if (err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
-			    __proc_gethostname (port, name, len)))
+  char *buf = name;
+  unsigned int buflen = len;
+  if (err = __USEPORT (PROC, __proc_gethostname (port, &buf, &buflen)))
     return __hurd_fail (err);
+  if (buf != name)
+    {
+      memcpy (name, buf, len < buflen ? len : buflen);
+      __vm_deallocate (__mach_task_self (), (vm_address_t) buf, buflen);
+    }
   return 0;
 }
