@@ -73,7 +73,7 @@ $(tar-name)-$(snapshot-name)-$(glibc-branch).patch: makepatch.awk glibc.spec \
 	mv -f patch.tmp $@
 
 # makepatch.awk omits these files from the patch; we put them in a tar file.
-outside-patch = redhat c_stubs rtkaio glibc-compat \
+outside-patch = fedora c_stubs rtkaio glibc-compat \
 		localedata/charmaps/GB18030 iconvdata/gb18030.c
 
 $(tar-name)-$(glibc-branch)-$(snapshot-name).tar.bz2: FORCE
@@ -84,7 +84,7 @@ $(tar-name)-$(glibc-branch)-$(snapshot-name).tar.bz2: FORCE
 	rm -rf libc
 	mv -f $@.new $@
 
-$(tar-name)-$(snapshot-name).tar.bz2: FORCE
+$(tar-name)-$(snapshot-name).tar.bz2: Makefile branch.mk
 	@rm -rf $(tar-name)-$(snapshot-name)
 	cvs -Q export -d $(tar-name)-$(snapshot-name) $(select-snapshot) libc
 	tar cf - $(tar-name)-$(snapshot-name) | bzip2 -9 > $@.new
