@@ -53,4 +53,7 @@ GETSET (lock, file_t, ccdir)
 GETSET (lock, file_t, cwdir)
 GETSET (lock, file_t, crdir)
 GET (lock, auth_t, auth)
+
+#define	getsigthread	siggetthread
+#define	setsigthread	sigsetthread
 GETSET (siglock, thread_t, sigthread)
