@@ -49,9 +49,9 @@ static char sccsid[] = "@(#)fstab.c	8.1 (Berkeley) 6/4/93";
 static FILE *_fs_fp;
 static struct fstab _fs_fstab;
 
-static error __P((int));
+static void error __P((int));
 
-static void
+static int
 fstabscan __P((void))
 {
 	register char *cp;
@@ -190,7 +190,7 @@ endfsent()
 	}
 }
 
-static
+static void
 error(err)
 	int err;
 {
