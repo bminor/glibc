@@ -148,10 +148,13 @@ extern void _hurd_exception2signal (int exception, int code, int subcode,
 
 
 /* Make the thread described by SS take the signal described by SIGNO and
-   SIGCODE.  SS->lock is held on entry, and released before return.  */
+   SIGCODE.  When the signal can be considered delivered, sends a sig_post
+   reply message on REPLY_PORT indicating success.  SS->lock is held on
+   entry, and released before return.  */
 
 extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
-					int signo, int sigcode);
+					int signo, int sigcode,
+					mach_port_t reply_port);
 
 /* Set up STATE to handle signal SIGNO by running HANDLER.  FLAGS is the
    `sa_flags' member from `struct sigaction'.  If the SA_ONSTACK bit is
@@ -307,56 +310,6 @@ struct hurd_signal_preempt
 
 extern struct hurd_signal_preempt *_hurd_signal_preempt[NSIG];
 extern struct mutex _hurd_signal_preempt_lock;
-
-
-/* Initialize PREEMPTER with the information given and stick it in the
-   chain of preempters for SIGNO.  */
-
-_EXTERN_INLINE int
-hurd_preempt_signals (struct hurd_signal_preempt *preempter,
-		      int signo, int first_code, int last_code,
-		      sighandler_t (*handler) (thread_t, int, int))
-{
-  if (signo <= 0 || signo >= NSIG)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-  preempter->first = first_code;
-  preempter->last = last_code;
-  preempter->handler = handler;
-  __mutex_lock (&_hurd_signal_preempt_lock);
-  preempter->next = _hurd_signal_preempt[signo];
-  _hurd_signal_preempt[signo] = preempter;
-  __mutex_unlock (&_hurd_signal_preempt_lock);
-  return 0;
-}
-
-/* Remove PREEMPTER from the chain for SIGNO.  */
-
-_EXTERN_INLINE int
-hurd_unpreempt_signals (struct hurd_signal_preempt *preempter, int signo)
-{
-  struct hurd_signal_preempt *p, *lastp;
-  if (signo <= 0 || signo >= NSIG)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-  __mutex_lock (&_hurd_signal_preempt_lock);
-  for (p = _hurd_signal_preempt[signo], lastp = NULL;
-       p != NULL; lastp = p, p = p->next)
-    if (p == preempter)
-      {
-	(lastp == NULL ? _hurd_signal_preempt[signo] : lastp->next) = p->next;
-	__mutex_unlock (&_hurd_signal_preempt_lock);
-	return 0;
-      }
-  _hurd_signal_preempt[signo] = preempter;
-  __mutex_unlock (&_hurd_signal_preempt_lock);
-  errno = ENOENT;
-  return -1;
-}
 
 
 #endif	/* hurd/signal.h */
