@@ -54,7 +54,7 @@ libc.dvi: texinfo.tex
 summary.texi: stamp-summary ;
 stamp-summary: summary.awk $(chapters)
 	awk -f $^ \
-	| sort +1 -2 | tr '\014' '\012' > summary-tmp
+	| sort -df +1 -2 | tr '\014' '\012' > summary-tmp
 	./move-if-change summary-tmp summary.texi
 # touch is broken on our machines.  Sigh.
 	date > $@
