@@ -18,15 +18,15 @@ are described.
 
 @menu
 * Socket Creation and Naming::  Functions for creating and
-                                         initializing sockets.
+                                 initializing sockets.
 * Domains and Protocols::       How to specify the communications
-					 protocol for a socket.
-* Local Domain::            Details about the local (Unix) domain.
-* Internet Domain::         Details about the Internet domain.
+			         protocol for a socket.
+* Local Domain::                Details about the local (Unix) domain.
+* Internet Domain::             Details about the Internet domain.
 * Types of Sockets::            Different socket types have different
-					 semantics for data transmission.
-* Byte Stream Sockets::  Operations on sockets with connection
-					 state.
+				 semantics for data transmission.
+* Byte Stream Sockets::         Operations on sockets with connection
+				 state.
 * Datagram Socket Operations::  Operations on datagram sockets.
 * Socket Options::              Miscellaneous low-level socket options.
 @end menu
@@ -79,7 +79,7 @@ a @dfn{client}.
 * Creating a Socket::           How to open a socket.
 * Closing a Socket::            How to close a socket.
 * Socket Naming::               You must associate a name with a socket
-					 before it can receive data.
+				 before it can receive data.
 * Socket Pairs::                These are created like pipes.
 @end menu
 
@@ -514,15 +514,17 @@ conventions used in the Internet domain, @code{PF_INET}.
 
 @menu
 * Protocols Database::          Selecting a communications protocol.
-* Internet Socket Naming::      How socket names are specified in the Internet
-                                 domain.
-* Internet Host Addresses::     Hosts are assigned addresses that are numbers.
+* Internet Socket Naming::      How socket names are specified in the
+                                 Internet domain.
+* Internet Host Addresses::     Hosts are assigned addresses that are
+                                 numbers. 
 * Hosts Database::              A host may also have a symbolic host name.
 * Services Database::           Ports may also have symbolic names.
 * Networks Database::           There is also a database for network names.
 * Byte Order Conversion::       Different hosts may use different byte
-                                 ordering conventions; you need to canonicalize
-                                 host address and port numbers.
+                                 ordering conventions; you need to
+                                 canonicalize host address and port
+                                 numbers. 
 * Internet Socket Example::     Putting it all together.
 @end menu
 
@@ -1865,8 +1867,8 @@ argument.  @xref{Establishing a Connection}, for more information about
 the @code{connect} function.
 
 @menu
-* Transmitting Datagrams::      Functions for sending and receiving messages
-                                 on a datagram socket.
+* Transmitting Datagrams::      Functions for sending and receiving
+                                 messages on a datagram socket.
 * Datagram Socket Example::     An example program.
 @end menu
 

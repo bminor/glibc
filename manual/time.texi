@@ -217,7 +217,8 @@ date and time values.
 * Broken-down Time::            Facilities for manipulating local time.
 * Formatting Date and Time::    Converting times to strings.
 * TZ Variable::                 How users specify the time zone.
-* TZ Functions::         Functions to examine or specify the time zone.
+* TZ Functions::                Functions to examine or specify the time
+                                 zone. 
 * Time Functions Example::      An example program showing use of some of
 				 the time functions.
 @end menu

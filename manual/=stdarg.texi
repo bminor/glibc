@@ -15,11 +15,11 @@ defined in @file{stdarg.h}.
 
 @menu
 * Why Variable Arguments are Used::  
-* How Variable Arguments are Used::  An overview of the facilities for
-					 receiving variable arguments.
-* Variable Arguments Interface::  Detailed specification of the
+* How Variable Arguments are Used::     An overview of the facilities for
+				         receiving variable arguments.
+* Variable Arguments Interface::        Detailed specification of the
 					 library facilities.
-* Example of Variable Arguments::  A complete example.
+* Example of Variable Arguments::       A complete example.
 @end menu
 
 @node Why Variable Arguments are Used, How Variable Arguments are Used,  , Variable Argument Facilities
@@ -59,13 +59,13 @@ variable arguments, and how to access the values of the non-required
 arguments.
 
 @menu
-* Syntax for Variable Arguments::  How to make a prototype for a function
-					 with variable arguments.
-* Receiving the Argument Values::  Steps you must follow to access the
+* Syntax for Variable Arguments::       How to make a prototype for a
+                                         function with variable arguments.
+* Receiving the Argument Values::       Steps you must follow to access the
 					 optional argument values.
-* How Many Arguments::          How to decide whether there are more
+* How Many Arguments::                  How to decide whether there are more
 					 arguments.
-* Calling Variadic Functions::  Things you need to know about calling
+* Calling Variadic Functions::          Things you need to know about calling
 					 variable arguments functions.
 @end menu
 

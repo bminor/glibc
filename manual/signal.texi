@@ -24,19 +24,19 @@ and synchronize.
 
 @menu
 * Concepts of Signals::         Introduction to the signal facilities.
-* Standard Signals::            Particular kinds of signals with standard
-			     names and meanings.
-* Signal Actions::              Specifying what happens when a particular signal
-			     is delivered.
+* Standard Signals::            Particular kinds of signals with
+                                 standard names and meanings.
+* Signal Actions::              Specifying what happens when a
+                                 particular signal is delivered.
 * Defining Handlers::           How to write a signal handler function.
 * Generating Signals::          How to send a signal to a process.
 * Blocking Signals::            Making the system hold signals temporarily.
-* Waiting for a Signal::        Suspending your program until a signal arrives.
+* Waiting for a Signal::        Suspending your program until a signal
+                                 arrives. 
 * BSD Signal Handling::         Additional functions for backward
-			     compatibility with BSD.
-* BSD Handler::                 BSD Function to Establish a Handler
+			         compatibility with BSD.
+* BSD Handler::                 BSD Function to Establish a Handler.
 @end menu
-
 
 @node Concepts of Signals, Standard Signals,  , Signal Handling
 @section Basic Concepts of Signals
@@ -48,7 +48,8 @@ signals.
 @menu
 * Kinds of Signals::            Some examples of what can cause a signal.
 * Signal Generation::           Concepts of why and how signals occur.
-* Delivery of Signal::          Concepts of what a signal does to the process.
+* Delivery of Signal::          Concepts of what a signal does to the
+                                 process. 
 @end menu
 
 @node Kinds of Signals, Signal Generation,  , Concepts of Signals
@@ -216,11 +217,12 @@ defined.  Since the signal numbers are allocated consecutively,
 
 @menu
 * Program Error Signals::       Used to report serious program errors.
-* Termination Signals::         Used to interrupt and/or terminate the program.
+* Termination Signals::         Used to interrupt and/or terminate the
+                                 program. 
 * Alarm Signals::               Used to indicate expiration of timers.
 * Asynchronous I/O Signals::    Used to indicate input is available.
 * Job Control Signals::         Signals used to support job control.
-* Miscellaneous Signals::       Miscellaneous Signals
+* Miscellaneous Signals::       Miscellaneous Signals.
 * Other Signals::               Implementations can support other signals.
 * Signal Messages::             Printing a message describing a signal.
 @end menu
@@ -1591,10 +1593,10 @@ interrupt, your program can explicitly send signals to itself or to
 another process.
 
 @menu
-* Signaling Yourself::          Signaling Yourself
+* Signaling Yourself::          Signaling Yourself.
 * Signaling Another Process::   Send a signal to another process.
-* Permission for kill::         Permission for using @code{kill}
-* Kill Example::                Using @code{kill} for Communication
+* Permission for kill::         Permission for using @code{kill}.
+* Kill Example::                Using @code{kill} for Communication.
 @end menu
 
 
@@ -1863,17 +1865,20 @@ signal handler can run without being interrupted itself by signals.
 @end itemize
 
 @menu
-* Why Block::                   The purpose of blocking signals.
-* Signal Sets::                 How to specify which signals to block.
-* Process Signal Mask::         Blocking delivery of signals to your
-					 process during normal execution.
-* Testing for Delivery::        Blocking to Test for Delivery of a Signal
-* Blocking for Handler::        Blocking additional signals while a
-					 handler is being run.
-* Checking for Pending Signals::  Checking for Pending Signals
-* Remembering a Signal::        How you can get almost the same effect
-				 as blocking a signal, by handling it
-				 and setting a flag to be tested later.
+* Why Block::                           The purpose of blocking signals.
+* Signal Sets::                         How to specify which signals to
+                                         block. 
+* Process Signal Mask::                 Blocking delivery of signals to your
+				         process during normal execution.
+* Testing for Delivery::                Blocking to Test for Delivery of
+                                         a Signal. 
+* Blocking for Handler::                Blocking additional signals while a
+				         handler is being run.
+* Checking for Pending Signals::        Checking for Pending Signals
+* Remembering a Signal::                How you can get almost the same
+                                         effect as blocking a signal, by
+                                         handling it and setting a flag
+                                         to be tested later. 
 @end menu
 
 @node Why Block, Signal Sets,  , Blocking Signals
@@ -2502,7 +2507,8 @@ handlers.  Using a signal stack is the only way you can handle a signal
 caused by stack overflow.
 
 @menu
-* POSIX vs BSD::                Overview comparing BSD and POSIX signal functions.
+* POSIX vs BSD::                Overview comparing BSD and POSIX signal
+                                 functions. 
 @end menu
 
 @node POSIX vs BSD,  ,  , BSD Signal Handling
@@ -2608,8 +2614,8 @@ interrupted.
 @end deftypefun
 
 @menu
-* Blocking in BSD::             BSD Functions for Blocking Signals 
-* Signal Stack::                Using a Separate Signal Stack
+* Blocking in BSD::             BSD Functions for Blocking Signals. 
+* Signal Stack::                Using a Separate Signal Stack.
 @end menu
 
 @node Blocking in BSD, Signal Stack,  , BSD Handler

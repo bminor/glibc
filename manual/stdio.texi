@@ -12,7 +12,7 @@ useful here.
 @menu
 * Streams::                     About the data type representing a stream.
 * Standard Streams::            Streams to the standard input and output 
-                         devices are created for you.
+                                 devices are created for you.
 * Opening Streams::             How to create a stream to talk to a file.
 * Closing Streams::             Close a stream when you are finished with it.
 * Simple Output::               Unformatted output by characters and lines.
@@ -21,12 +21,12 @@ useful here.
 * Unreading::                   Peeking ahead/pushing back input just read.
 * Formatted Output::            @code{printf} and related functions.
 * Customizing Printf::          You can define new conversion specifiers for
-                         @code{printf} and friends.
+                                 @code{printf} and friends.
 * Formatted Input::             @code{scanf} and related functions.
 * Block Input/Output::          Input and output operations on blocks of data.
 * EOF and Errors::              How you can tell if an I/O error happens.
 * Binary Streams::              Some systems distinguish between text files
-                         and binary files.
+                                 and binary files.
 * File Positioning::            About random-access streams.
 * Portable Positioning::        Random access on peculiar ANSI C systems.
 * Stream Buffering::            How to control buffering of streams.
@@ -668,18 +668,18 @@ useful for printing error messages, tables of data, and the like.
 @menu
 * Formatted Output Basics::     Some examples to get you started.
 * Output Conversion Syntax::    General syntax of conversion
-                                         specifications.
-* Table of Output Conversions::  Summary of output conversions and
-                                         what they do.
+                                 specifications.
+* Table of Output Conversions:: Summary of output conversions and
+                                 what they do.
 * Integer Conversions::         Details about formatting of integers.
 * Floating-Point Conversions::  Details about formatting of
-                                         floating-point numbers.
+                                 floating-point numbers.
 * Other Output Conversions::    Details about formatting of strings,
-                                         characters, pointers, and the like.
+                                 characters, pointers, and the like.
 * Formatted Output Functions::  Descriptions of the actual functions.
-* Variable Arguments Output::  @code{vprintf} and friends.
-* Parsing a Template String::   What kinds of args
-                                         does a given template call for?
+* Variable Arguments Output::    @code{vprintf} and friends.
+* Parsing a Template String::   What kinds of args does a given template
+                                 call for? 
 @end menu
 
 @node Formatted Output Basics, Output Conversion Syntax,  , Formatted Output
@@ -1812,7 +1812,7 @@ reading arbitrary values under the control of a @dfn{format string} or
 * String Input Conversions::    Details of conversions for reading strings.
 * Other Input Conversions::     Details of miscellaneous other conversions.
 * Formatted Input Functions::   Descriptions of the actual functions.
-* Variable Arguments Input::  @code{vscanf} and friends.
+* Variable Arguments Input::    @code{vscanf} and friends.
 @end menu
 
 @node Formatted Input Basics, Input Conversion Syntax,  , Formatted Input

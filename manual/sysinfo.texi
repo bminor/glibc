@@ -5,12 +5,10 @@ This chapter contains information about functions that return
 information about the particular machine a program is running on.
 
 @menu
-* Host Identification::         Determining the name of the
-                                                 machine.
-* Hardware/Software Type ID::  Determining the hardware type
-                                                 of the machine and what
-                                                 operating system it is
-                                                 running.
+* Host Identification::         Determining the name of the machine.
+* Hardware/Software Type ID::   Determining the hardware type of the
+                                 machine and what operating system it is
+                                 running. 
 @end menu
 
 

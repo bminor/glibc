@@ -13,12 +13,14 @@ descriptor is and how to open a file descriptor for a terminal device.
 
 @menu
 * Is It a Terminal::            How to determine if a file is a terminal
-			  device, and what its name is.
+			         device, and what its name is.
 * I/O Queues::                  About flow control and typeahead.
 * Canonical or Not::            Two basic styles of input processing.
 * Terminal Modes::              How to examine and modify flags controlling
-			  details of terminal I/O: echoing, signals, editing.
-* Line Control::                Sending break sequences, clearing terminal buffers...
+			         details of terminal I/O: echoing,
+                                 signals, editing. 
+* Line Control::                Sending break sequences, clearing
+                                 terminal buffers @dots{} 
 * Noncanon Example::            How to read single characters without echo.
 @end menu
 
@@ -140,16 +142,19 @@ input and output are done.  The functions, data structures, and symbolic
 constants are all declared in the header file @file{termios.h}.
 
 @menu
-* Mode Data Types::             The data type @code{struct termios} and related types.
-* Mode Functions::              Functions to read and set the terminal attributes.
-* Setting Modes::               The right way to set terminal attributes reliably.
+* Mode Data Types::             The data type @code{struct termios} and
+                                 related types. 
+* Mode Functions::              Functions to read and set the terminal
+                                 attributes. 
+* Setting Modes::               The right way to set terminal attributes
+                                 reliably.
 * Input Modes::                 Flags controlling low-level input handling.
 * Output Modes::                Flags controlling low-level output handling.
 * Control Modes::               Flags controlling serial port behavior.
 * Local Modes::                 Flags controlling high-level input handling.
 * Line Speed::                  How to read and set the terminal line speed.
 * Special Characters::          Characters that have special effects,
-			  and how to change them.
+			         and how to change them.
 * Noncanonical Input::          Controlling how long to wait for input.
 @end menu
 

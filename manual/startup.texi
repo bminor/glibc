@@ -71,7 +71,7 @@ you are usually better off using @code{getopt} to do the parsing.
 * Parsing Options::       The @code{getopt} function.
 * Example of Getopt:: 	  An example of parsing options with @code{getopt}.
 * Long Options::	  GNU suggests utilities accept long-named options.
-			    Here is how to do that.
+			   Here is how to do that.
 * Long Option Example::   An example of using @code{getopt_long}.
 @end menu
 
@@ -427,9 +427,9 @@ character, since this is assumed to terminate the string.
 
 @menu
 * Environment Access::    How to get and set the values of
-			      environment variables.
+			   environment variables.
 * Standard Environment::  These environment variables have
-			      standard interpretations.
+			   standard interpretations.
 @end menu
 
 @node Environment Access
