@@ -1,3 +1,9 @@
+2000-01-18  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/bits/socket.h
+	(__ss_aligntype, struct sockaddr_storage): Make these like Linux
+	version, replacing old type name `__ss_align'.
+
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/TESTS: Fix expected result for test cases with * with no
