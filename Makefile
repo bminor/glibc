@@ -44,7 +44,7 @@ sysdep-subdirs := $(subst $(\n), ,$(sysdep-subdirs))
 +ansi_dirs	:= assert ctype locale math setjmp \
 		   signal stdio stdlib malloc string time
 +posix_dirs	:= dirent grp pwd posix io termios
-+other_dirs	:= resource socket misc gnulib $(wildcard crypt)
++other_dirs	:= resource socket misc gnulib $(wildcard crypt) manual
 subdirs		:= $(strip $(+ansi_dirs) $(+posix_dirs) $(+other_dirs) \
 			   $(sysdep-subdirs))
 export subdirs := $(subdirs)	# Benign, useless in GNU make before 3.63.
@@ -179,7 +179,7 @@ parent_echo-distinfo:
 distribute  := README INSTALL NOTES COPYING.LIB COPYING ChangeLog NEWS	\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
 	       ansidecl.h		     				\
-	       configure configure.in aclocal.m4 config.sub		\
+	       configure configure.in aclocal.m4 config.sub config.guess\
 	       munch-tmpl.c munch.awk gnu-stabs.h sysdep.h
 
 export distribute := $(strip $(distribute))
