@@ -142,7 +142,7 @@ interface-headers := $(user-interfaces:%=%.h) \
 # Remove the generated user stub source and header files,
 # and don't distribute them.
 mach-generated = $(interface-routines:%=%.c) \
-		 $(interface-headers:%.h=%.h %.uh %.__h)
+		 $(foreach h,$(interface-headers:%.h=%),$h.h $h.uh $h.__h)
 generated += $(mach-generated)
 
 # These are needed to generate the dependencies.
@@ -151,3 +151,7 @@ before-compile += $(interface-headers:%=$(objpfx)%)
 # Don't let these be intermediate files and get removed.
 $(foreach h,$(interface-headers:%.h=$(objpfx)%),$h.h $h.__h $h.uh) :
 $(interface-routines:%=$(objpfx)%.c) :
+
+# Convenient target to generate all the headers.
+.PHONY: interface-headers
+interface-headers: $(interface-headers)
