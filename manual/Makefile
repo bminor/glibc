@@ -36,7 +36,7 @@ endif
 define find-includes
 (echo '$@ :=' \\	;\
  awk '$$1 == "@include" { print $$2 " \\" }' $^) > $@.new
-mv $@.new $@
+move-if-change $@.new $@
 endef
 
 library.dvi library.info: $(chapters) summary.texinfo $(chapters-incl)
@@ -46,7 +46,7 @@ library.dvi: texinfo.tex
 summary.texinfo: summary.awk $(chapters)
 	awk -f $^ \
 	| sort +1 -2 | tr '\014' '\012' > $@.new
-	mv $@.new $@
+	move-if-change $@.new $@
 
 # Generate Texinfo files from the C source for the example programs.
 %.c.texi: examples/%.c
@@ -58,7 +58,7 @@ summary.texinfo: summary.awk $(chapters)
 	mv $@.new $@
 
 
-minimal-dist = library.texinfo summary.awk Makefile	\
+minimal-dist = library.texinfo summary.awk Makefile move-if-change	\
 	       $(chapters) $(chapters-incl:%.c.texi=examples/%.c)
 distribute = $(minimal-dist) texinfo.tex summary.texinfo
 
