@@ -272,6 +272,7 @@ __hurd_file_name_lookup_retry (file_t crdir,
 	    bad_magic:
 	      return EGRATUITOUS;
 	    }
+	  break;		
 
 	default:
 	  return EGRATUITOUS;
