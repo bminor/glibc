@@ -71,8 +71,8 @@
 #define SYS_getpgrp		65
 #define SYS_setsid		66
 #define SYS_sigaction		67
-#define SYS_sgetmask		68
-#define SYS_ssetmask		69
+#define SYS_siggetmask		68
+#define SYS_sigsetmask		69
 #define SYS_setreuid		70
 #define SYS_setregid		71
 #define SYS_sigsuspend		72
