@@ -175,7 +175,11 @@ endif
 # Command for linking programs with the C library.
 ifndef +link
 +link = $(CC) -nostdlib -o $@ $(objpfx)start.o $(^:lib=$(objpfx)libc.a) \
-	/usr/local/lib/gcc-gnulib $(objpfx)libc.a
+	$(libgcc.a) $(objpfx)libc.a
+endif
+
+ifndef libgcc.a
+libgcc.a = /usr/local/lib/gcc-gnulib
 endif
 
 ifndef LD
