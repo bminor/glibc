@@ -101,6 +101,22 @@ DEFUN(seek, (cookie, pos, whence),
       return -1;
     }
 }
+
+/* Input room function for obstack streams.
+   Only what has been written to the stream can be read back.  */
+
+static int
+DEFUN(input, (stream), FILE *stream)
+{
+  /* Re-sync with the obstack, growing the object if necessary.  */
+  grow (stream, EOF);
+
+  if (stream->__bufp < stream->__get_limit)
+    return (unsigned char) *stream->__bufp++;
+
+  stream.__eof = 1;
+  return EOF;
+}
 
 /* Initialize STREAM to talk to OBSTACK.  */
 
@@ -111,8 +127,8 @@ DEFUN(init_obstream, (stream, obstack),
   stream->__mode.__write = 1;
   stream->__mode.__read = 1;
 
-  /* Input gets EOF.  */
-  stream->__room_funcs.__input = NULL;
+  /* Input can read only what has been written.  */
+  stream->__room_funcs.__input = input;
 
   /* Do nothing for close.  */
   stream->__io_funcs.__close = NULL;
