@@ -48,7 +48,7 @@ main ()
   int i;
 
   puts ("#include <ansidecl.h>");
-  printf ("CONST char %s[] =\n  {\n", EVALLED_STRINGIFY (TABLE));
+  printf ("CONST unsigned char %s[] =\n  {\n", EVALLED_STRINGIFY (TABLE));
 
   for (i = -1; i < 256; ++i)
     printf ("    %d,\n", (int) ((TABLE+1)[i]));
