@@ -103,11 +103,11 @@ endif
 
 # Define first rules to find the source files in $(objpfx).
 # Generated source files will end up there.
-$(objpfx)%.o: $(objpfx)/%.S $(before-compile); $(compile-command.S)
-$(objpfx)%.dep: $(objpfx)/%.S $(before-compile); $(+make-deps)
-$(objpfx)%.o: $(objpfx)/%.s $(before-compile); $(compile-command.s)
-$(objpfx)%.o: $(objpfx)/%.c $(before-compile); $(compile-command.c)
-$(objpfx)%.dep: $(objpfx)/%.c $(before-compile); $(+make-deps)
+$(objpfx)%.o: $(objpfx)%.S $(before-compile); $(compile-command.S)
+$(objpfx)%.dep: $(objpfx)%.S $(before-compile); $(+make-deps)
+$(objpfx)%.o: $(objpfx)%.s $(before-compile); $(compile-command.s)
+$(objpfx)%.o: $(objpfx)%.c $(before-compile); $(compile-command.c)
+$(objpfx)%.dep: $(objpfx)%.c $(before-compile); $(+make-deps)
 
 include $(+sysdir_pfx)sysd-Makefile
 $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)sysdirs $(..)Makerules
