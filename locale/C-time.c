@@ -6,7 +6,7 @@
 #include <stddef.h>
 
 
-struct time_info __time_C =
+CONST struct time_info __time_C =
   {
     { 
 (char *) "Sun", (char *) "Mon", (char *) "Tue", (char *) "Wed", (char *) "Thu", (char *) "Fri", (char *) "Sat",  },

@@ -3,7 +3,7 @@
 #include <stddef.h>
 
 
-struct response_info __response_C =
+CONST struct response_info __response_C =
   {
     (char *) "[yY][[:alpha:]]",
     (char *) "[nN][[:alpha:]]"
