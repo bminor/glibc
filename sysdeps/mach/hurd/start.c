@@ -45,8 +45,8 @@ extern void __mach_init (void);
 extern void __libc_init (int argc, char **argv, char **envp);
 extern int main (int argc, char **argv, char **envp);
 
-extern void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
-extern void (*_cthread_exit_routine) (int status);
+void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
+void (*_cthread_exit_routine) (int status);
 
 static int split_args (char *, size_t, char **);
 
@@ -74,7 +74,8 @@ start1 (void)
     char dummy;
     const vm_address_t newsp = (vm_address_t) &dummy;
 
-    if (newsp < _hurd_stack_low || newsp > _hurd_stack_high)
+    if ((_hurd_stack_low || _hurd_stack_high) &&
+	(newsp < _hurd_stack_low || newsp > _hurd_stack_high))
       /* The new stack pointer does not intersect with the
 	 stack the exec server set up for us, so free that stack.  */
       __vm_deallocate (__mach_task_self (),
@@ -178,21 +179,17 @@ _start (void)
 {
   error_t err;
   mach_port_t in_bootstrap;
+  vm_address_t stack_pointer, stack_base;
 
-  /* GET_STACK (LOW, HIGH) should put the boundaries of the allocated
-     stack into LOW and HIGH.  We later round them to page boundaries.  */
+  /* GET_STACK (SP) should put the stack pointer in SP.  */
 
-#ifndef	GET_STACK
-#error GET_STACK not defined by sysdeps/mach/hurd/MACHINE/sysdep.h
+#ifndef	GET_SP
+#error GET_SP not defined by sysdeps/mach/hurd/MACHINE/sysdep.h
 #endif
-  GET_STACK (_hurd_stack_low, _hurd_stack_high);
+  GET_SP (stack_pointer);
 
   /* Basic Mach initialization, must be done before RPCs can be done.  */
   __mach_init ();
-
-  /* We can use `round_page' now because __mach_init has set vm_page_size.  */
-  _hurd_stack_low = trunc_page (_hurd_stack_low);
-  _hurd_stack_high = round_page (_hurd_stack_high);
 
   if (err = __task_get_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
 				     &in_bootstrap))
@@ -207,6 +204,7 @@ _start (void)
       _hurd_init_dtablesize = portarraysize = intarraysize = 0;
 
       err = __exec_startup (in_bootstrap,
+			    &stack_base,
 			    &flags,
 			    &args, &argslen, &env, &envlen,
 			    &_hurd_init_dtable, &_hurd_init_dtablesize,
@@ -238,7 +236,22 @@ _start (void)
       intarraysize = 0;
     }
   else
-    argv = envp = NULL;
+    {
+      argv = envp = NULL;
+
+      if (stack_base < stack_pointer)
+	{
+	  /* Stack grows down.  */
+	  _hurd_stack_low = trunc_page (stack_base);
+	  _hurd_stack_high = round_page (stack_pointer);
+	}
+      else
+	{
+	  /* Stack grows up.  */
+	  _hurd_stack_low = trunc_page (stack_pointer);
+	  _hurd_stack_high = round_page (stack_base);
+	}
+    }
 
 
   /* Do cthreads initialization and switch to the cthread stack.  */
