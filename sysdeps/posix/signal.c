@@ -39,7 +39,7 @@ DEFUN(signal, (sig, handler), int sig AND __sighandler_t handler)
   act.sa_handler = handler;
   if (__sigemptyset (&act.sa_mask) < 0)
     return SIG_ERR;
-  act.sa_flags = __sigismember (sig, _sigintr) ? 0 : SA_RESTART;
+  act.sa_flags = __sigismember (&_sigintr, sig) ? 0 : SA_RESTART;
   if (__sigaction (sig, &act, &oact) < 0)
     return SIG_ERR;
 
