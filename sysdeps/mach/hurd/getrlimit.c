@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,9 @@ Cambridge, MA 02139, USA.  */
 #include <sys/resource.h>
 #include <errno.h>
 #include <hurd.h>
+
+extern int _hurd_core_limit, _hurd_dtable_rlimit; /* XXX */
+
 
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
@@ -48,6 +51,17 @@ DEFUN(getrlimit, (resource, rlimits),
       rlimits->rlim_cur = _hurd_data_end;
       rlimits->rlim_max = RLIM_INFINITY;
       break;
+
+    case RLIMIT_OFILE:
+      {
+	int lim;
+	__mutex_lock (&_hurd_dtable_lock);
+	lim = _hurd_dtable_rlimit;
+	__mutex_unlock (&_hurd_dtable_lock);
+	rlimits->rlim_cur = lim;
+	rlimits->rlim_max = RLIM_INFINITY;
+	break;
+      }
 
     case RLIMIT_CPU:
     case RLIMIT_FSIZE:
