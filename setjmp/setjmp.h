@@ -49,8 +49,8 @@ __BEGIN_DECLS
 typedef struct
   {
     __jmp_buf __jmpbuf;		/* Calling environment.  */
-    int __savemask;		/* Saved the signal mask?  */
-    sigset_t __sigmask;		/* Saved signal mask.  */
+    int __mask_was_saved;	/* Saved the signal mask?  */
+    sigset_t __saved_mask;	/* Saved signal mask.  */
   } sigjmp_buf[1];
 
 /* Store the calling environment in ENV, also saving the
