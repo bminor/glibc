@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #ifndef	   _HUGE_VAL_H
 #define	   _HUGE_VAL_H	1
 
+#include <sys/cdefs.h>
 #include <endian.h>
 
 /* IEEE positive infinity.  */
@@ -38,8 +39,8 @@ Cambridge, MA 02139, USA.  */
 			   double __d; })				      \
 		  { __huge_val_bytes }).__d)
 #else	/* Not GCC.  */
-static CONST char __huge_val[8] = __huge_val_bytes;
-#define	HUGE_VAL	(*(CONST double *) __huge_val)
+static __const char __huge_val[8] = __huge_val_bytes;
+#define	HUGE_VAL	(*(__const double *) __huge_val)
 #endif	/* GCC.  */
 
 #endif	   /* huge_val.h */
