@@ -501,9 +501,14 @@ __fork (void)
 	 Delay freeing them until later because some of the further setup
 	 and unlocking might be required for free to work.  */
       oldstates = _hurd_sigstates;
-      while (_hurd_sigstates->next != ss)
-	_hurd_sigstates = _hurd_sigstates->next;
-      _hurd_sigstates->next = ss->next;
+      if (oldstates == ss)
+	oldstates = ss->next;
+      else
+	{
+	  while (_hurd_sigstates->next != ss)
+	    _hurd_sigstates = _hurd_sigstates->next;
+	  _hurd_sigstates->next = ss->next;
+	}
       ss->next = NULL;
       _hurd_sigstates = ss;
 
