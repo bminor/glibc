@@ -32,10 +32,10 @@ routines = __pid2task __task2pid pid2task task2pid \
 	   __setauth setauth hurdports \
 	   fchroot \
 	   hurdauth hurdid hurdpath hurdpid hurdsig hurdsock hurdfrob \
-	   dtable __getdport getdport openport setdtablesize \
+	   dtable __getdport getdport openport setdtsz \
 	   msgportdemux _hurd_start_sigthread \
 	   getuids getumask \
-	   _hurd_dead_recv \
+	   dead_recv \
 	   fopenport __fopenport \
 	   $(interface-routines)
 aux := hurdsyms
