@@ -38,9 +38,8 @@ all:
 # Make sure no value comes from the environment, since we append to it.
 # This is done also in ../Rules, but we append to the value before
 # including Rules, which changes the origin.
-ifneq	"$(findstring env,$(origin generated))" ""
 generated :=
-endif
+
 
 include ../Makeconfig
 
