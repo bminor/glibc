@@ -22,12 +22,12 @@ Cambridge, MA 02139, USA.  */
 
 #ifndef	_SIGNAL_H
 
-__BEGIN_DECLS
-
 #if	!defined(__need_sig_atomic_t) && !defined(__need_sigset_t)
 #define	_SIGNAL_H	1
 #include <features.h>
 #endif
+
+__BEGIN_DECLS
 
 #define	 __need_size_t
 #include <stddef.h>
@@ -158,10 +158,10 @@ extern int sigprocmask __P ((int __how,
 extern int sigsuspend __P ((__const sigset_t *__set));
 
 /* Get and/or set the action for signal SIG.  */
-extern int __sigaction __P ((int __sig, __const struct __sigaction *__act,
-			     struct __sigaction *__oact));
-extern int sigaction __P ((int __sig, __const struct __sigaction *__act,
-			   struct __sigaction *__oact));
+extern int __sigaction __P ((int __sig, __const struct sigaction *__act,
+			     struct sigaction *__oact));
+extern int sigaction __P ((int __sig, __const struct sigaction *__act,
+			   struct sigaction *__oact));
 
 /* Put in SET all signals that are blocked and waiting to be delivered.  */
 extern int sigpending __P ((sigset_t *__set));
