@@ -1,3 +1,7 @@
+2000-01-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signal/Versions [GLIBC_2.1.3] (libc): Export __sigsuspend.
+
 2000-01-02  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/generic/bits/mathdef.h: Test __USE_ISOC9X not
@@ -7,7 +11,7 @@
 
 	* sysdeps/unix/sysv/linux/llseek.c: Emit link time warning for
 	llseek.
-        Requested by Michael Deutschmann <michael@talamasca.wkpowerlink.com>.
+	Requested by Michael Deutschmann <michael@talamasca.wkpowerlink.com>.
 
 1999-12-14  Andreas Jaeger  <aj@suse.de>
 
@@ -21,8 +25,8 @@
 	(OPCODE_ADDIS_HI): New macro.
 	(OPCODE_LIS_HI): New macro.
 	(__elf_machine_runtime_setup): Change PLT code-generation scheme
- 	for thread safety even with very large PLTs, better efficiency,
- 	and to fix a cache-flushing bug.
+	for thread safety even with very large PLTs, better efficiency,
+	and to fix a cache-flushing bug.
 	(__elf_machine_fixup_plt): Likewise.
 	(__process_machine_rela): Don't use elf_machine_fixup_plt.
 
