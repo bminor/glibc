@@ -47,7 +47,7 @@ __cbrtf (float x)
 
   /* If X is not finite or is null return it (with raising exceptions
      if necessary.  */
-  if (xe == 0)
+  if (xe == 0 && (x == 0.0 || isnanf (x) || isinff (x)))
     return x + x;
 
   u = (0.492659620528969547 + (0.697570460207922770

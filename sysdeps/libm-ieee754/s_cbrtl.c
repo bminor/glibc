@@ -49,7 +49,7 @@ __cbrtl (long double x)
 
   /* If X is not finite or is null return it (with raising exceptions
      if necessary.  */
-  if (xe == 0)
+  if (xe == 0 && (x == 0.0 || isnanl (x) || isinfl (x)))
     return x + x;
 
   u = (0.338058687610520237

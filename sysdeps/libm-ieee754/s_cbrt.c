@@ -47,7 +47,7 @@ __cbrt (double x)
 
   /* If X is not finite or is null return it (with raising exceptions
      if necessary.  */
-  if (xe == 0)
+  if (xe == 0 && (x == 0.0 || isnan (x) || isinf (x)))
     return x + x;
 
  u = (0.354895765043919860
