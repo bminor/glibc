@@ -1853,7 +1853,7 @@ as the optional arguments to @code{scanf}; the values that are read are
 stored in the objects that the pointers point to.  Even experienced
 programmers tend to forget this occasionally, so if your program is
 getting strange errors that seem to be related to @code{scanf}, you
-might want to doublecheck this.
+might want to double-check this.
 
 When a @dfn{matching failure} occurs, @code{scanf} returns immediately,
 leaving the first non-matching character as the next character to be
@@ -2064,13 +2064,13 @@ Specifies that the argument is a @code{long int *} or @code{unsigned
 long int *}.
 
 @item L
-Specifies that the argument is a @code{long lont int *} or @code{unsigned long long int *}.  (The @code{long long} type is an extension supported by the
+Specifies that the argument is a @code{long long int *} or @code{unsigned long long int *}.  (The @code{long long} type is an extension supported by the
 GNU C compiler.  For systems that don't provide extra-long integers, this
 is the same as @code{long int}.)
 @end table
 
 All of the @samp{%e}, @samp{%f}, @samp{%g}, @samp{%E}, and @samp{%G}
-input conversions are interchangable.  They all match an optionally
+input conversions are interchangeable.  They all match an optionally
 signed floating point number, in the same syntax as for the
 @code{strtod} function (@pxref{Parsing of Floats}).
 
@@ -2552,7 +2552,7 @@ provided is relative to the beginning of the file.
 @deftypevr Macro int SEEK_CUR
 This is an integer constant which, when used as the @var{whence}
 argument to the @code{fseek} function, specifies that the offset
-provided is relative to the currrent file position.
+provided is relative to the current file position.
 @end deftypevr
 
 @comment stdio.h

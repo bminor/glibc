@@ -207,8 +207,8 @@ files, not the files themselves.
 @cindex file name component
 The name of a file contained in a directory entry is called a @dfn{file
 name component}.  In general, a file name consists of a sequence of one
-or more such components, seperated by the slash character (@samp{/}).  A
-file name whih is just one component names a file with respect to its
+or more such components, separated by the slash character (@samp{/}).  A
+file name which is just one component names a file with respect to its
 directory.  A file name with multiple components names a directory, and
 then a file in that directory, and so on.
 
@@ -291,8 +291,8 @@ working directory, use a file name of @file{.} or @file{./}.
 Unlike some other operating systems, the GNU system doesn't have any
 built-in support for file types (or extensions) or file versions as part
 of its file name syntax.  Many programs and utilities use conventions
-for file names --- for example, files containing C source code usually
-have names suffixed with @samp{.c} --- but there is nothing in the file
+for file names---for example, files containing C source code usually
+have names suffixed with @samp{.c}---but there is nothing in the file
 system itself that enforces this kind of convention.
 
 @node File Name Errors

@@ -84,7 +84,7 @@ typing the input by hand!)
 @cindex terminal output queue
 The @dfn{terminal output queue} is like the input queue, but for output;
 it contains characters that have been written by processes, but not yet
-transmitted to the terminal.  If ouput flow control is enabled by
+transmitted to the terminal.  If output flow control is enabled by
 setting the @code{IXON} input mode bit (@pxref{Input Modes}), the
 terminal driver obeys STOP and STOP characters sent by the terminal to
 stop and restart transmission of output.
@@ -696,7 +696,7 @@ input, without which @code{ECHOE} is simply irrelevant.
 @item ECHOK
 If this bit is set, then erasure of a whole like with the KILL character
 is indicated by erasing the current line on the screen.  Otherwise, it
-is indicated by echoingthe KILL character and moving to a new line
+is indicated by echoing the KILL character and moving to a new line
 (suitable for a printing terminal).
 
 This bit only controls the display behavior; the @code{ICANON} bit by
@@ -1215,7 +1215,7 @@ uses.
 @section Line Control Functions
 @cindex terminal line control functions
 
-These functions perform miscellanous control actions on terminal
+These functions perform miscellaneous control actions on terminal
 devices.  As regards terminal access, they are treated like doing
 output: if any of these functions is used by a background process on its
 controlling terminal, normally all processes in the process group are
@@ -1425,7 +1425,7 @@ set_input_mode (void)
 void
 resumed (int sig)
 @{
-  set_intput_mode ();
+  set_input_mode ();
 @}
 
 /* @r{Handle signals that take the terminal away.} */
