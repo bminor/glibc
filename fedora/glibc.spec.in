@@ -1258,6 +1258,7 @@ rm -f *.filelist*
 %changelog
 * Mon Nov 15 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-78
 - update from CVS
+  - fix LD_DEBUG=statistics
   - issue error message before aborting in __chk_fail ()
   - some more free () checking
 
