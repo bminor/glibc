@@ -40,8 +40,12 @@ headers := $(headers) $(sysdep_headers)
 export sources := $(sources)
 export headers := $(headers)
 
-ifneq ($(findstring e,$(MAKEFLAGS)),)
+oPATH := $(PATH)
+PATH := this definition should take precedence over $(oPATH)
+ifeq ($(PATH),$(oPATH))
 You must not use the -e flag when building the GNU C library.
+else
+PATH := $(oPATH)
 endif
 
 ifndef +included-Makeconfig
