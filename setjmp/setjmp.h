@@ -13,7 +13,7 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 /*
@@ -25,14 +25,16 @@ Cambridge, MA 02139, USA.  */
 #define	_SETJMP_H	1
 #include <features.h>
 
+__BEGIN_DECLS
+
 #ifndef	__NORETURN
 #ifdef	__GNUC__
 /* The `volatile' keyword tells GCC that a function never returns.  */
 #define	__NORETURN	__volatile
-#else	/* Not GCC.  */
+#else /* Not GCC.  */
 #define	__NORETURN
-#endif	/* GCC.  */
-#endif	/* __NORETURN not defined.  */
+#endif /* GCC.  */
+#endif /* __NORETURN not defined.  */
 
 
 /* Get the machine-dependent definition of `__jmp_buf'.  */
@@ -45,15 +47,15 @@ Cambridge, MA 02139, USA.  */
 
 /* Calling environment, plus possibly a saved signal mask.  */
 typedef struct
-  {
-    __jmp_buf __jmpbuf;		/* Calling environment.  */
-    int __savemask;		/* Saved the signal mask?  */
-    sigset_t __sigmask;		/* Saved signal mask.  */
-  } sigjmp_buf[1];
+{
+  __jmp_buf __jmpbuf;		/* Calling environment.  */
+  int __savemask;		/* Saved the signal mask?  */
+  sigset_t __sigmask;		/* Saved signal mask.  */
+} sigjmp_buf[1];
 
 /* Store the calling environment in ENV, also saving the
    signal mask if SAVEMASK is nonzero.  Return 0.  */
-extern void EXFUN(__sigjmp_save, (sigjmp_buf __env, int __savemask));
+extern void __sigjmp_save __P ((sigjmp_buf __env, int __savemask));
 #ifdef __GNUC__
 #define	sigsetjmp(env, savemask) \
   ({ sigjmp_buf *__e = (env);	 \
@@ -68,8 +70,8 @@ extern void EXFUN(__sigjmp_save, (sigjmp_buf __env, int __savemask));
 /* Jump to the environment saved in ENV, making the
    sigsetjmp call there return VAL, or 1 if VAL is 0.
    Restore the signal mask if that sigsetjmp call saved it.  */
-extern __NORETURN void EXFUN(siglongjmp, (CONST sigjmp_buf __env, int __val));
-#endif	/* Use POSIX.  */
+extern __NORETURN void siglongjmp __P ((__const sigjmp_buf __env, int __val));
+#endif /* Use POSIX.  */
 
 
 #ifdef	__FAVOR_BSD
@@ -77,39 +79,39 @@ extern __NORETURN void EXFUN(siglongjmp, (CONST sigjmp_buf __env, int __val));
 /* BSD defines `setjmp' and `longjmp' to save and restore the set of
    blocked signals.  For this, `jmp_buf' must be what POSIX calls
    `sigjmp_buf', which includes that information.  */
-typedef	sigjmp_buf jmp_buf;
+typedef sigjmp_buf jmp_buf;
 
-#else	/* Don't favor BSD.  */
+#else /* Don't favor BSD.  */
 
 /* A `jmp_buf' really is a `jmp_buf'.  Oh boy.  */
-typedef	__jmp_buf jmp_buf;
+typedef __jmp_buf jmp_buf;
 
-#endif	/* Favor BSD.  */
+#endif /* Favor BSD.  */
 
 
 /* Jump to the environment saved in ENV, making the
    setjmp call there return VAL, or 1 if VAL is 0.  */
-extern __NORETURN void EXFUN(__longjmp, (CONST __jmp_buf __env, int __val));
-extern __NORETURN void EXFUN(longjmp, (CONST jmp_buf __env, int __val));
+extern __NORETURN void __longjmp __P ((__const __jmp_buf __env, int __val));
+extern __NORETURN void longjmp __P ((__const jmp_buf __env, int __val));
 
 #ifdef	__OPTIMIZE__
 #define	longjmp(env, val)	__longjmp ((env), (val))
-#endif	/* Optimizing.  */
+#endif /* Optimizing.  */
 
 /* Set ENV to the current position and return 0.  */
-extern int EXFUN(__setjmp, (__jmp_buf __env));
+extern int __setjmp __P ((__jmp_buf __env));
 /* The ANSI C standard says `setjmp' is a macro.  */
 #define	setjmp(env)	__setjmp (env)
 
 
 #ifdef	__USE_BSD
-extern __NORETURN void EXFUN(_longjmp, (CONST jmp_buf __env, int __val));
+extern __NORETURN void _longjmp __P ((__const jmp_buf __env, int __val));
 #define	_setjmp(env)	sigsetjmp((env), 0)
 
 #ifdef	__OPTIMIZE__
 #define	_longjmp(env, val)	siglongjmp ((env), (val))
-#endif	/* Optimizing.  */
-#endif	/* Use BSD.  */
+#endif /* Optimizing.  */
+#endif /* Use BSD.  */
 
 
 #ifdef	__FAVOR_BSD
@@ -121,9 +123,11 @@ extern __NORETURN void EXFUN(_longjmp, (CONST jmp_buf __env, int __val));
 
 #ifdef	__OPTIMIZE__
 #define	longjmp(env, val)	siglongjmp ((env), (val))
-#endif	/* Optimizing.  */
+#endif /* Optimizing.  */
 
-#endif	/* Favor BSD.  */
+#endif /* Favor BSD.  */
 
 
-#endif	/* setjmp.h  */
+__END_DECLS
+
+#endif /* setjmp.h  */
