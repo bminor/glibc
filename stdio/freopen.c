@@ -59,6 +59,7 @@ DEFUN(freopen, (filename, mode, stream),
   stream->__io_funcs.__close = NULL;
   (void) fclose (stream);
 
+  stream->__magic = _IOMAGIC;
   stream->__cookie = cookie;
   stream->__mode = m;
 
