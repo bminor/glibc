@@ -1,0 +1,61 @@
+# configure fragment for Unix-based systems.
+# This file is sourced by the top-level configure script.  Note that we use
+# the prefix `unix_' on all shell variables here, to avoid conflicting with
+# any variables the top-level script might be using.
+
+sysincludedir=/usr/include # XXX
+
+# Find the <syscall.h> file we will be using, or something like it.
+unix_syscall_h=
+for unix_dir in $sysnames; do
+  if [ -r $sysdep_dir/$unix_dir/syscall.h ]; then
+    unix_syscall_h=$sysdep_dir/$unix_dir/syscall.h
+    break
+  fi
+done
+# XXX This list of possibilities duplicates the list in Makefile.
+test -z "$unix_syscall_h" && for try in syscall.h sys/syscall.h \
+					sys.s sys/sys.s sys.S sys/sys.S; do
+  if [ -r $sysincludedir/$try ]; then
+    unix_syscall_h=$sysincludedir/$try
+    break
+  fi
+done
+
+test -n "$unix_syscall_h" && {
+
+# These several functions are system calls on Unix systems which have them.
+# The details of these calls are universal enough that if a system's
+# <syscall.h> defines the system call number, we know that the simple
+# system call implementations in unix/common will be sufficient.
+
+for unix_function in dup2 lstat mkdir rmdir readlink getpgrp access; do
+
+  unix_implementor=none
+  for unix_dir in $sysnames; do
+    if [ -r $sysdep_dir/$unix_dir/__${unix_function}.c -o \
+	 -r $sysdep_dir/$unix_dir/__${unix_function}.S ]; then
+      unix_implementor=$unix_dir
+      break
+    fi
+  done
+
+  case $unix_implementor in
+  none|stub|generic|posix)
+    # The chosen implementation of ${unix_function} is a boring one.
+    # We want to use the unix/common implementation instead iff
+    # ${unix_function} appears in <syscall.h>.
+    echo checking for ${unix_function} system call
+    if grep "[ 	_]${unix_function}[ 	]" $unix_syscall_h >/dev/null; then
+      # It does seem to be present in <syscall.h>.
+      echo "#include <sysdeps/unix/common/__${unix_function}.S>" \
+      > __${unix_function}.S
+      test -n "$verbose" && echo "	found ${unix_function}"
+    fi
+  ;;
+  *) ;;
+  esac
+
+done
+
+}
