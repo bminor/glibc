@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,10 @@
 BEGIN {
     print "/* This file is generated from errno.texinfo by errnos.awk. */";
     print "";
-    print "#ifdef _ERRNO_H";
+    print "#ifdef _ERRNO_H\n";
+    print "\
+/* The Hurd uses Mach error system 0x10, currently only subsystem 0.  */";
+    print "#define _HURD_ERRNO(n)\t((0x10 << 26) | ((n) & 0x3fff))";
     errno = 0;
     errnoh = 0;
   }
@@ -42,22 +45,24 @@ errnoh == 2 && $1 == "@deftypevr"  && $2 == "Macro" && $3 == "int" \
     e = $4;
     if (e == "EDOM" || e == "ERANGE")
       {
-        print "#endif /* <errno.h> included.  */";
-	print "#if (!defined (__Emath_defined) && \\\n     (defined (_ERRNO_H) || defined (__need_Emath)))";
+	print "#endif /* <errno.h> included.  */";
+	print "#if (!defined (__Emath_defined) && \\\n\
+     (defined (_ERRNO_H) || defined (__need_Emath)))";\
       }
     s = "#define\t" e;
     l = 24 - length (s);
     while (l-- > 0)
       s = s " ";
-    printf "%s%d\t/*%s */\n", s, ++errno, etext;
+    printf "%s_HURD_ERRNO (%d)\t/*%s */\n", s, ++errno, etext;
     if (e == "EDOM" || e == "ERANGE")
       {
-        print "#endif /* Emath not defined and <errno.h> included or need Emath.  */";
-	print "#ifdef _ERRNO_H"
+	print "#endif /* Emath not defined and <errno.h> included or need Emath.  */";
+	print "#ifdef _ERRNO_H";
       }
     next;
   }
 { errnoh=0 }
 END {
-    print "#endif /* <errno.h> included.  */"
-  }
+  printf "#define _HURD_ERRNOS %d\n", ++errno;
+  print "#endif /* <errno.h> included.  */"
+}
