@@ -51,6 +51,7 @@
 
 	* sysdeps/generic/shmget.c: Correct type of size parameter.
 	* sysdeps/unix/sysv/linux/shmget.c: Likewise.
+	* sysvips/sys/shm.h: Likewise.
 
 1999-12-18  Andreas Jaeger  <aj@suse.de>
 
