@@ -99,7 +99,7 @@ getrpcbynumber(number)
 
 struct rpcent *
 getrpcbyname(name)
-	char *name;
+     const char *name;		/* const added by roland@gnu */
 {
 	struct rpcent *rpc;
 	char **rp;
