@@ -1268,10 +1268,10 @@ EOF
       CFLAGS="-g -O2"
     fi
   else
-    { echo "configure: error: " 1>&2; exit 1; } (We require GNU CC version 2.7 or newer)
+    { echo "configure: error: We require GNU CC version 2.7 or newer" 1>&2; exit 1; }
   fi
 else
-  { echo "configure: error: " 1>&2; exit 1; } (GNU libc must be compiled using GNU CC)
+  { echo "configure: error: GNU libc must be compiled using GNU CC" 1>&2; exit 1; }
 fi
 
 echo $ac_n "checking build system type""... $ac_c" 1>&6
