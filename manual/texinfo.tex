@@ -1,5 +1,5 @@
 % texinfo.tex -- TeX macros to handle Texinfo files.
-% $Id: texinfo.tex,v 2.196.2.3 1998/03/04 17:19:59 drepper Exp $
+% $Id: texinfo.tex,v 2.196.2.4 1998/06/18 09:42:58 drepper Exp $
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98
 % Free Software Foundation, Inc.
@@ -25,16 +25,30 @@
 %
 % Please try the latest version of texinfo.tex before submitting bug
 % reports; you can get the latest version from:
-% ftp://ftp.cs.umb.edu/pub/tex/texinfo.tex
-% /home/gd/gnu/doc/texinfo.tex on the GNU machines.
+%   ftp://ftp.gnu.org/pub/gnu/texinfo.tex
+%   /home/gd/gnu/doc/texinfo.tex on the GNU machines.
+%   (and all GNU mirrors, see ftp://ftp.gnu.org/pub/gnu/README.mirrors)
+%   ftp://tug.org/tex/texinfo.tex
+%   ftp://ctan.org/macros/texinfo/texinfo.tex
+%   (and all CTAN mirrors, finger ctan@tug.org for a list).
+% The texinfo.tex in the texinfo distribution itself could well be out
+% of date, so if that's what you're using, please check.
 % 
 % Send bug reports to bug-texinfo@gnu.org.
 % Please include a precise test case in each bug report,
 % including a complete document with which we can reproduce the problem.
 % 
-% Texinfo macros (with @macro) are *not* supported by texinfo.tex.  You
-% have to run makeinfo -E to expand macros first; the texi2dvi script
-% does this.
+% To process a Texinfo manual with TeX, it's most reliable to use the
+% texi2dvi shell script that comes with the distribution.  For simple
+% manuals, you can get away with:
+%   tex foo.texi
+%   texindex foo.??
+%   tex foo.texi
+%   tex foo.texi
+%   dvips foo.dvi -o # or whatever, to process the dvi file.
+% The extra runs of TeX get the cross-reference information correct.
+% Sometimes one run after texindex suffices, and sometimes you need more
+% than two; texi2dvi does it as many times as necessary.
 
 
 % Make it possible to create a .fmt file just by loading this file:
@@ -44,7 +58,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 2.196.2.3 $
+\deftexinfoversion$Revision: 2.196.2.4 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -70,17 +84,9 @@
 \let\ptexstar=\*
 \let\ptext=\t
 
-% Be sure we're in horizontal mode when doing a tie, since we make space
-% equivalent to this in @example-like environments. Otherwise, a space
-% at the beginning of a line will start with \penalty -- and
-% since \penalty is valid in vertical mode, we'd end up putting the
-% penalty on the vertical list instead of in the new paragraph.
-{\catcode`@ = 11
- % Avoid using \@M directly, because that causes trouble
- % if the definition is written into an index file.
- \global\let\tiepenalty = \@M
- \gdef\tie{\leavevmode\penalty\tiepenalty\ }
-}
+% We never want plain's outer \+ definition in Texinfo.
+% For @tex, we can use \tabalign.
+\let\+ = \relax
 
 
 \message{Basics,}
@@ -90,18 +96,20 @@
 % starts a new line in the output.
 \newlinechar = `^^J
 
-% Set up fixed words for English.
-\ifx\putwordChapter\undefined{\gdef\putwordChapter{Chapter}}\fi%
-\def\putwordInfo{Info}%
-\ifx\putwordSee\undefined{\gdef\putwordSee{See}}\fi%
-\ifx\putwordsee\undefined{\gdef\putwordsee{see}}\fi%
-\ifx\putwordfile\undefined{\gdef\putwordfile{file}}\fi%
-\ifx\putwordpage\undefined{\gdef\putwordpage{page}}\fi%
-\ifx\putwordsection\undefined{\gdef\putwordsection{section}}\fi%
-\ifx\putwordSection\undefined{\gdef\putwordSection{Section}}\fi%
-\ifx\putwordTableofContents\undefined{\gdef\putwordTableofContents{Table of Contents}}\fi%
-\ifx\putwordShortContents\undefined{\gdef\putwordShortContents{Short Contents}}\fi%
-\ifx\putwordAppendix\undefined{\gdef\putwordAppendix{Appendix}}\fi%
+% Set up fixed words for English if not already set.
+\ifx\putwordAppendix\undefined \gdef\putwordAppendix{Appendix}\fi
+\ifx\putwordChapter\undefined  \gdef\putwordChapter{Chapter}\fi
+\ifx\putwordfile\undefined     \gdef\putwordfile{file}\fi
+\ifx\putwordInfo\undefined     \gdef\putwordfile{Info}\fi
+\ifx\putwordMethodon\undefined \gdef\putwordMethodon{Method on}\fi
+\ifx\putwordon\undefined       \gdef\putwordon{on}\fi
+\ifx\putwordpage\undefined     \gdef\putwordpage{page}\fi
+\ifx\putwordsection\undefined  \gdef\putwordsection{section}\fi
+\ifx\putwordSection\undefined  \gdef\putwordSection{Section}\fi
+\ifx\putwordsee\undefined      \gdef\putwordsee{see}\fi
+\ifx\putwordSee\undefined      \gdef\putwordSee{See}\fi
+\ifx\putwordShortContents\undefined  \gdef\putwordShortContents{Short Contents}\fi
+\ifx\putwordTableofContents\undefined\gdef\putwordTableofContents{Table of Contents}\fi
 
 % Ignore a token.
 %
@@ -137,15 +145,10 @@
 % Dimensions to add cropmarks at corners.
 % Added by P. A. MacKay, 12 Nov. 1986
 %
-\newdimen\cornerlong \newdimen\cornerthick
-\newdimen\topandbottommargin
-\newdimen\outerhsize \newdimen\outervsize
-\cornerlong=1pc\cornerthick=.3pt        % These set size of cropmarks
-\outerhsize=7in
-%\outervsize=9.5in
-% Alternative @smallbook page size is 9.25in
-\outervsize=9.25in
-\topandbottommargin=.75in
+\newdimen\outerhsize \newdimen\outervsize % set by the paper size routines
+\newdimen\cornerlong  \cornerlong=1pc
+\newdimen\cornerthick \cornerthick=.3pt
+\newdimen\topandbottommargin \topandbottommargin=.75in
 
 % Main output routine.
 \chardef\PAGE = 255
@@ -393,7 +396,7 @@
 
 % @@ prints an @
 % Kludge this until the fonts are right (grr).
-\def\@{{\tt \char '100}}
+\def\@{{\tt\char64}}
 
 % This is turned off because it was never documented
 % and you can use @w{...} around a quote to suppress ligatures.
@@ -403,8 +406,8 @@
 %\def\'{{'}}
 
 % Used to generate quoted braces.
-\def\mylbrace {{\tt \char '173}}
-\def\myrbrace {{\tt \char '175}}
+\def\mylbrace {{\tt\char123}}
+\def\myrbrace {{\tt\char125}}
 \let\{=\mylbrace
 \let\}=\myrbrace
 \begingroup
@@ -439,6 +442,18 @@
   \else\ifx\temp\jmacro \j
   \else \errmessage{@dotless can be used only with i or j}%
   \fi\fi
+}
+
+% Be sure we're in horizontal mode when doing a tie, since we make space
+% equivalent to this in @example-like environments. Otherwise, a space
+% at the beginning of a line will start with \penalty -- and
+% since \penalty is valid in vertical mode, we'd end up putting the
+% penalty on the vertical list instead of in the new paragraph.
+{\catcode`@ = 11
+ % Avoid using \@M directly, because that causes trouble
+ % if the definition is written into an index file.
+ \global\let\tiepenalty = \@M
+ \gdef\tie{\leavevmode\penalty\tiepenalty\ }
 }
 
 % @: forces normal size whitespace following.
@@ -769,12 +784,6 @@ where each line of input produces a line of output.}
 \def\menu{\doignore{menu}}
 \def\direntry{\doignore{direntry}}
 
-% Also ignore @macro ... @end macro.  The user must run texi2dvi,
-% which runs makeinfo to do macro expansion.  Ignore @unmacro, too.
-\def\macro{\doignore{macro}}
-\let\unmacro = \comment
-
-
 % @dircategory CATEGORY  -- specify a category of the dir file
 % which this file should belong to.  Ignore this in TeX.
 \let\dircategory = \comment
@@ -786,7 +795,9 @@ where each line of input produces a line of output.}
   \ignoresections
   %
   % Define a command to swallow text until we reach `@end #1'.
-  \long\def\doignoretext##1\end #1{\enddoignore}%
+  % This @ is a catcode 12 token (that is the normal catcode of @ in
+  % this texinfo.tex file).  We change the catcode of @ below to match.
+  \long\def\doignoretext##1@end #1{\enddoignore}%
   %
   % Make sure that spaces turn into tokens that match what \doignoretext wants.
   \catcode32 = 10
@@ -794,6 +805,16 @@ where each line of input produces a line of output.}
   % Ignore braces, too, so mismatched braces don't cause trouble.
   \catcode`\{ = 9
   \catcode`\} = 9
+  %
+  % We must not have @c interpreted as a control sequence.
+  \catcode`\@ = 12
+  %
+  % Make the letter c a comment character so that the rest of the line
+  % will be ignored. This way, the document can have (for example)
+  %   @c @end ifinfo
+  % and the @end ifinfo will be properly ignored.
+  % (We've just changed @ to catcode 12.)
+  \catcode`\c = 14
   %
   % And now expand that command.
   \doignoretext
@@ -924,13 +945,24 @@ where each line of input produces a line of output.}
 \def\value{\begingroup
   \catcode`\-=12 \catcode`\_=12 % Allow - and _ in VAR.
   \valuexxx}
-\def\valuexxx#1{%
+\def\valuexxx#1{\expandablevalue{#1}\endgroup}
+
+% We have this subroutine so that we can handle at least some @value's
+% properly in indexes (we \let\value to this in \indexdummies).  Ones
+% whose names contain - or _ still won't work, but we can't do anything
+% about that.  The command has to be fully expandable, since the result
+% winds up in the index file.  This means that if the variable's value
+% contains other Texinfo commands, it's almost certain it will fail
+% (although perhaps we could fix that with sufficient work to do a
+% one-level expansion on the result, instead of complete).
+% 
+\def\expandablevalue#1{%
   \expandafter\ifx\csname SET#1\endcsname\relax
-    {\{No value for ``#1''\}}%
+    {[No value for ``#1'']v}%
   \else
     \csname SET#1\endcsname
   \fi
-\endgroup}
+}
 
 % @ifset VAR ... @end ifset reads the `...' iff VAR has been defined
 % with @set.
@@ -1038,12 +1070,21 @@ where each line of input produces a line of output.}
 % @refill is a no-op.
 \let\refill=\relax
 
+% If working on a large document in chapters, it is convenient to
+% be able to disable indexing, cross-referencing, and contents, for test runs.
+% This is done with @novalidate (before @setfilename).
+%
+\newif\iflinks \linkstrue % by default we want the aux files.
+\let\novalidate = \linksfalse
+
 % @setfilename is done at the beginning of every texinfo file.
 % So open here the files we need to have open while reading the input.
 % This makes it possible to make a .fmt file for texinfo.
 \def\setfilename{%
-   \readauxfile
-   \opencontents
+   \iflinks 
+     \readauxfile
+     \opencontents
+   \fi % \openindices needs to do some work in any case.
    \openindices
    \fixbackslash  % Turn off hack to swallow `\input texinfo'.
    \global\let\setfilename=\comment % Ignore extra @setfilename cmds.
@@ -1059,30 +1100,25 @@ where each line of input produces a line of output.}
    \comment % Ignore the actual filename.
 }
 
+% Called from \setfilename.
+% 
+\def\openindices{%
+  \newindex{cp}%
+  \newcodeindex{fn}%
+  \newcodeindex{vr}%
+  \newcodeindex{tp}%
+  \newcodeindex{ky}%
+  \newcodeindex{pg}%
+}
+
 % @bye.
 \outer\def\bye{\pagealignmacro\tracingstats=1\ptexend}
 
-% \def\macro#1{\begingroup\ignoresections\catcode`\#=6\def\macrotemp{#1}\parsearg\macroxxx}
-% \def\macroxxx#1#2 \end macro{%
-% \expandafter\gdef\macrotemp#1{#2}%
-% \endgroup}
-
-%\def\linemacro#1{\begingroup\ignoresections\catcode`\#=6\def\macrotemp{#1}\parsearg\linemacroxxx}
-%\def\linemacroxxx#1#2 \end linemacro{%
-%\let\parsearg=\relax
-%\edef\macrotempx{\csname M\butfirst\expandafter\string\macrotemp\endcsname}%
-%\expandafter\xdef\macrotemp{\parsearg\macrotempx}%
-%\expandafter\gdef\macrotempx#1{#2}%
-%\endgroup}
-
-%\def\butfirst#1{}
-
 
 \message{fonts,}
-
 % Font-change commands.
 
-% Texinfo supports the sans serif font style, which plain TeX does not.
+% Texinfo sort of supports the sans serif font style, which plain TeX does not.
 % So we set up a \sf analogous to plain's \rm, etc.
 \newfam\sffam
 \def\sf{\fam=\sffam \tensf}
@@ -1154,11 +1190,12 @@ where each line of input produces a line of output.}
 % Do not make many font distinctions in general in the index, since they
 % aren't very useful.
 \setfont\ninett\ttshape{9}{1000}
+\setfont\ninettsl\ttslshape{9}{1000}
 \setfont\indrm\rmshape{9}{1000}
 \setfont\indit\slshape{9}{1000}
 \let\indsl=\indit
 \let\indtt=\ninett
-\let\indttsl=\ninett
+\let\indttsl=\ninettsl
 \let\indsf=\indrm
 \let\indbf=\indrm
 \setfont\indsc\scshape{10}{900}
@@ -1702,18 +1739,6 @@ July\or August\or September\or October\or November\or December\fi
 
 
 \message{tables,}
-
-% @tabs -- simple alignment
-
-% These don't work.  For one thing, \+ is defined as outer.
-% So these macros cannot even be defined.
-
-%\def\tabs{\parsearg\tabszzz}
-%\def\tabszzz #1{\settabs\+#1\cr}
-%\def\tabline{\parsearg\tablinezzz}
-%\def\tablinezzz #1{\+#1\cr}
-%\def\&{&}
-
 % Tables -- @table, @ftable, @vtable, @item(x), @kitem(x), @xitem(x).
 
 % default indentation of table text
@@ -1869,7 +1894,7 @@ July\or August\or September\or October\or November\or December\fi
 \def\itemize{\parsearg\itemizezzz}
 
 \def\itemizezzz #1{%
-  \begingroup % ended by the @end itemsize
+  \begingroup % ended by the @end itemize
   \itemizey {#1}{\Eitemize}
 }
 
@@ -2235,12 +2260,14 @@ width0pt\relax} \fi
 % the file that accumulates this index.  The file's extension is foo.
 % The name of an index should be no more than 2 characters long
 % for the sake of vms.
-
-\def\newindex #1{
-\expandafter\newwrite \csname#1indfile\endcsname% Define number for output file
-\openout \csname#1indfile\endcsname \jobname.#1 % Open the file
-\expandafter\xdef\csname#1index\endcsname{%     % Define \xxxindex
-\noexpand\doindex {#1}}
+%
+\def\newindex#1{%
+  \iflinks
+    \expandafter\newwrite \csname#1indfile\endcsname
+    \openout \csname#1indfile\endcsname \jobname.#1 % Open the file
+  \fi
+  \expandafter\xdef\csname#1index\endcsname{%     % Define @#1index
+    \noexpand\doindex{#1}}
 }
 
 % @defindex foo  ==  \newindex{foo}
@@ -2249,31 +2276,37 @@ width0pt\relax} \fi
 
 % Define @defcodeindex, like @defindex except put all entries in @code.
 
-\def\newcodeindex #1{
-\expandafter\newwrite \csname#1indfile\endcsname% Define number for output file
-\openout \csname#1indfile\endcsname \jobname.#1 % Open the file
-\expandafter\xdef\csname#1index\endcsname{%     % Define \xxxindex
-\noexpand\docodeindex {#1}}
+\def\newcodeindex#1{%
+  \iflinks
+    \expandafter\newwrite \csname#1indfile\endcsname
+    \openout \csname#1indfile\endcsname \jobname.#1
+  \fi
+  \expandafter\xdef\csname#1index\endcsname{%
+    \noexpand\docodeindex{#1}}
 }
 
 \def\defcodeindex{\parsearg\newcodeindex}
 
 % @synindex foo bar    makes index foo feed into index bar.
 % Do this instead of @defindex foo if you don't want it as a separate index.
-\def\synindex #1 #2 {%
-\expandafter\let\expandafter\synindexfoo\expandafter=\csname#2indfile\endcsname
-\expandafter\let\csname#1indfile\endcsname=\synindexfoo
-\expandafter\xdef\csname#1index\endcsname{%     % Define \xxxindex
-\noexpand\doindex {#2}}%
+% The \closeout helps reduce unnecessary open files; the limit on the
+% Acorn RISC OS is a mere 16 files.
+\def\synindex#1 #2 {%
+  \expandafter\let\expandafter\synindexfoo\expandafter=\csname#2indfile\endcsname
+  \expandafter\closeout\csname#1indfile\endcsname
+  \expandafter\let\csname#1indfile\endcsname=\synindexfoo
+  \expandafter\xdef\csname#1index\endcsname{% define \xxxindex
+    \noexpand\doindex{#2}}%
 }
 
 % @syncodeindex foo bar   similar, but put all entries made for index foo
 % inside @code.
-\def\syncodeindex #1 #2 {%
-\expandafter\let\expandafter\synindexfoo\expandafter=\csname#2indfile\endcsname
-\expandafter\let\csname#1indfile\endcsname=\synindexfoo
-\expandafter\xdef\csname#1index\endcsname{%     % Define \xxxindex
-\noexpand\docodeindex {#2}}%
+\def\syncodeindex#1 #2 {%
+  \expandafter\let\expandafter\synindexfoo\expandafter=\csname#2indfile\endcsname
+  \expandafter\closeout\csname#1indfile\endcsname
+  \expandafter\let\csname#1indfile\endcsname=\synindexfoo
+  \expandafter\xdef\csname#1index\endcsname{% define \xxxindex
+    \noexpand\docodeindex{#2}}%
 }
 
 % Define \doindex, the driver for all \fooindex macros.
@@ -2294,6 +2327,7 @@ width0pt\relax} \fi
 \def\singlecodeindexer #1{\doind{\indexname}{\code{#1}}}
 
 \def\indexdummies{%
+\def\ { }%
 % Take care of the plain tex accent commands.
 \def\"{\realbackslash "}%
 \def\`{\realbackslash `}%
@@ -2335,7 +2369,6 @@ width0pt\relax} \fi
 \def\gtr{\realbackslash gtr}%
 \def\less{\realbackslash less}%
 \def\hat{\realbackslash hat}%
-%\def\char{\realbackslash char}%
 \def\TeX{\realbackslash TeX}%
 \def\dots{\realbackslash dots }%
 \def\result{\realbackslash result}%
@@ -2362,7 +2395,12 @@ width0pt\relax} \fi
 \def\kbd##1{\realbackslash kbd {##1}}%
 \def\dfn##1{\realbackslash dfn {##1}}%
 \def\emph##1{\realbackslash emph {##1}}%
-\def\value##1{\realbackslash value {##1}}%
+%
+% Handle some cases of @value -- where the variable name does not
+% contain - or _, and the value does not contain any
+% (non-fully-expandable) commands.
+\let\value = \expandablevalue
+%
 \unsepspaces
 }
 
@@ -2435,14 +2473,24 @@ width0pt\relax} \fi
 % so we do not become unable to do a definition.
 
 {\catcode`\@=0 \catcode`\\=\other
-@gdef@realbackslash{\}}
+ @gdef@realbackslash{\}}
 
 \let\indexbackslash=0  %overridden during \printindex.
+\let\SETmarginindex=\relax % put index entries in margin (undocumented)?
 
-\let\SETmarginindex=\relax %initialize!
-% workhorse for all \fooindexes
-% #1 is name of index, #2 is stuff to put there
-\def\doind #1#2{%
+% For \ifx comparisons.
+\def\emptymacro{\empty}
+
+% Most index entries go through here, but \dosubind is the general case.
+% 
+\def\doind#1#2{\dosubind{#1}{#2}\empty}
+
+% Workhorse for all \fooindexes.
+% #1 is name of index, #2 is stuff to put there, #3 is subentry --
+% \empty if called from \doind, as we usually are.  The main exception
+% is with defuns, which call us directly.
+% 
+\def\dosubind#1#2#3{%
   % Put the index entry in the margin if desired.
   \ifx\SETmarginindex\relax\else
     \insert\margin{\hbox{\vrule height8pt depth3pt width0pt #2}}%
@@ -2453,13 +2501,22 @@ width0pt\relax} \fi
       \indexdummies % Must do this here, since \bf, etc expand at this stage
       \escapechar=`\\
       {%
-        \let\folio=0% We will expand all macros now EXCEPT \folio.
+        \let\folio = 0% We will expand all macros now EXCEPT \folio.
         \def\rawbackslashxx{\indexbackslash}% \indexbackslash isn't defined now
         % so it will be output as is; and it will print as backslash.
         %
+        \def\thirdarg{#3}%
+        %
+        % If third arg is present, precede it with space in sort key.
+        \ifx\thirdarg\emptymacro
+          \let\subentry = \empty
+        \else
+          \def\subentry{ #3}%
+        \fi
+        %
         % First process the index-string with all font commands turned off
         % to get the string to sort by.
-        {\indexnofonts \xdef\indexsorttmp{#2}}%
+        {\indexnofonts \xdef\indexsorttmp{#2\subentry}}%
         %
         % Now produce the complete index entry, with both the sort key and the
         % original text, including any font commands.
@@ -2468,32 +2525,34 @@ width0pt\relax} \fi
           \write\csname#1indfile\endcsname{%
             \realbackslash entry{\indexsorttmp}{\folio}{\the\toks0}}%
         }%
-        \temp
+        %
+        % If third (subentry) arg is present, add it to the index string.
+        \ifx\thirdarg\emptymacro \else
+          \toks0 = {#3}%
+          \edef\temp{\temp{\the\toks0}}%
+        \fi
+        %
+        % If a skip is the last thing on the list now, preserve it
+        % by backing up by \lastskip, doing the \write, then inserting
+        % the skip again.  Otherwise, the whatsit generated by the
+        % \write will make \lastskip zero.  The result is that sequences
+        % like this:
+        % @end defun
+        % @tindex whatever
+        % @defun ...
+        % will have extra space inserted, because the \medbreak in the
+        % start of the @defun won't see the skip inserted by the @end of
+        % the previous defun.
+        \iflinks
+          \skip0 = \lastskip \ifdim\lastskip = 0pt \else \vskip-\lastskip \fi
+          \temp
+          \ifdim\skip0 = 0pt \else \vskip\skip0 \fi
+        \fi
       }%
     }%
     \penalty\count255
   }%
 }
-
-\def\dosubind #1#2#3{%
-{\count10=\lastpenalty %
-{\indexdummies % Must do this here, since \bf, etc expand at this stage
-\escapechar=`\\%
-{\let\folio=0%
-\def\rawbackslashxx{\indexbackslash}%
-%
-% Now process the index-string once, with all font commands turned off,
-% to get the string to sort the index by.
-{\indexnofonts
-\xdef\temp1{#2 #3}%
-}%
-% Now produce the complete index entry.  We process the index-string again,
-% this time with font commands expanded, to get what to print in the index.
-\edef\temp{%
-\write \csname#1indfile\endcsname{%
-\realbackslash entry {\temp1}{\folio}{#2}{#3}}}%
-\temp }%
-}\penalty\count10}}
 
 % The index entry written in the file actually looks like
 %  \entry {sortstring}{page}{topic}
@@ -2918,7 +2977,7 @@ width0pt\relax} \fi
 \toks0 = {#1}%
 \edef\temp{{\realbackslash chapentry{\the\toks0}{\the\chapno}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp  %
+\iflinks \write\contentsfile\temp \fi
 \donoderef %
 \global\let\section = \numberedsec
 \global\let\subsection = \numberedsubsec
@@ -2939,7 +2998,7 @@ width0pt\relax} \fi
 \edef\temp{{\realbackslash chapentry{\the\toks0}%
   {\putwordAppendix{} \appendixletter}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp  %
+\iflinks \write\contentsfile\temp \fi
 \appendixnoderef %
 \global\let\section = \appendixsec
 \global\let\subsection = \appendixsubsec
@@ -2974,7 +3033,7 @@ width0pt\relax} \fi
 \toks0 = {#1}%
 \edef\temp{{\realbackslash unnumbchapentry{\the\toks0}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp  %
+\iflinks \write\contentsfile\temp \fi
 \unnumbnoderef %
 \global\let\section = \unnumberedsec
 \global\let\subsection = \unnumberedsubsec
@@ -2991,7 +3050,7 @@ width0pt\relax} \fi
 \edef\temp{{\realbackslash secentry %
 {\the\toks0}{\the\chapno}{\the\secno}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \donoderef %
 \penalty 10000 %
 }}
@@ -3007,7 +3066,7 @@ width0pt\relax} \fi
 \edef\temp{{\realbackslash secentry %
 {\the\toks0}{\appendixletter}{\the\secno}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \appendixnoderef %
 \penalty 10000 %
 }}
@@ -3020,7 +3079,7 @@ width0pt\relax} \fi
 \toks0 = {#1}%
 \edef\temp{{\realbackslash unnumbsecentry{\the\toks0}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \unnumbnoderef %
 \penalty 10000 %
 }}
@@ -3035,7 +3094,7 @@ width0pt\relax} \fi
 \edef\temp{{\realbackslash subsecentry %
 {\the\toks0}{\the\chapno}{\the\secno}{\the\subsecno}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \donoderef %
 \penalty 10000 %
 }}
@@ -3050,7 +3109,7 @@ width0pt\relax} \fi
 \edef\temp{{\realbackslash subsecentry %
 {\the\toks0}{\appendixletter}{\the\secno}{\the\subsecno}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \appendixnoderef %
 \penalty 10000 %
 }}
@@ -3063,7 +3122,7 @@ width0pt\relax} \fi
 \toks0 = {#1}%
 \edef\temp{{\realbackslash unnumbsubsecentry{\the\toks0}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \unnumbnoderef %
 \penalty 10000 %
 }}
@@ -3080,7 +3139,7 @@ width0pt\relax} \fi
   {\the\chapno}{\the\secno}{\the\subsecno}{\the\subsubsecno}
   {\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \donoderef %
 \penalty 10000 %
 }}
@@ -3097,7 +3156,7 @@ width0pt\relax} \fi
   {\appendixletter}
   {\the\secno}{\the\subsecno}{\the\subsubsecno}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \appendixnoderef %
 \penalty 10000 %
 }}
@@ -3110,7 +3169,7 @@ width0pt\relax} \fi
 \toks0 = {#1}%
 \edef\temp{{\realbackslash unnumbsubsubsecentry{\the\toks0}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \unnumbnoderef %
 \penalty 10000 %
 }}
@@ -3553,6 +3612,7 @@ width0pt\relax} \fi
   \let\!=\ptexexclam
   \let\i=\ptexi
   \let\{=\ptexlbrace
+  \let\+=\tabalign
   \let\}=\ptexrbrace
   \let\*=\ptexstar
   \let\t=\ptext
@@ -3604,8 +3664,8 @@ width0pt\relax} \fi
 % \nonarrowing is a flag.  If "set", @lisp etc don't narrow margins.
 \let\nonarrowing=\relax
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \cartouche: draw rectangle w/rounded corners around argument
+% @cartouche ... @end cartouche: draw rectangle w/rounded corners around
+% environment contents.
 \font\circle=lcircle10
 \newdimen\circthick
 \newdimen\cartouter\newdimen\cartinner
@@ -3632,9 +3692,9 @@ width0pt\relax} \fi
         \cartinner=\hsize \advance\cartinner by-\lskip
                           \advance\cartinner by-\rskip
         \cartouter=\hsize
-        \advance\cartouter by 18pt % allow for 3pt kerns on either
+        \advance\cartouter by 18.4pt % allow for 3pt kerns on either
 %                                    side, and for 6pt waste from
-%                                    each corner char
+%                                    each corner char, and rule thickness
         \normbskip=\baselineskip \normpskip=\parskip \normlskip=\lineskip
         % Flag to tell @lisp, etc., not to narrow margin.
         \let\nonarrowing=\comment
@@ -3688,49 +3748,52 @@ width0pt\relax} \fi
   \fi
 }
 
-% To ending an @example-like environment, we first end the paragraph
-% (via \afterenvbreak's vertical glue), and then the group.  That way we
-% keep the zero \parskip that the environments set -- \parskip glue
-% will be inserted at the beginning of the next paragraph in the
-% document, after the environment.
+% Define the \E... control sequence only if we are inside the particular
+% environment, so the error checking in \end will work.
+% 
+% To end an @example-like environment, we first end the paragraph (via
+% \afterenvbreak's vertical glue), and then the group.  That way we keep
+% the zero \parskip that the environments set -- \parskip glue will be
+% inserted at the beginning of the next paragraph in the document, after
+% the environment.
 %
-\def\nonfillfinish{\afterenvbreak\endgroup}%
+\def\nonfillfinish{\afterenvbreak\endgroup}
 
+% @lisp: indented, narrowed, typewriter font.
 \def\lisp{\begingroup
   \nonfillstart
   \let\Elisp = \nonfillfinish
   \tt
-  % Make @kbd do something special, if requested.
-  \let\kbdfont\kbdexamplefont
-  \rawbackslash % have \ input char produce \ char from current font
-  \gobble
+  \let\kbdfont = \kbdexamplefont % Allow @kbd to do something special.
+  \gobble       % eat return
 }
 
-% Define the \E... control sequence only if we are inside the
-% environment, so the error checking in \end will work.
-%
-% We must call \lisp last in the definition, since it reads the
-% return following the @example (or whatever) command.
-%
+% @example: Same as @lisp.
 \def\example{\begingroup \def\Eexample{\nonfillfinish\endgroup}\lisp}
-\def\smallexample{\begingroup \def\Esmallexample{\nonfillfinish\endgroup}\lisp}
-\def\smalllisp{\begingroup \def\Esmalllisp{\nonfillfinish\endgroup}\lisp}
 
-% @smallexample and @smalllisp.  This is not used unless the @smallbook
-% command is given.  Originally contributed by Pavel@xerox.
+% @small... is usually equivalent to the non-small (@smallbook
+% redefines).  We must call \example (or whatever) last in the
+% definition, since it reads the return following the @example (or
+% whatever) command.
+% 
+% This actually allows (for example) @end display inside an
+% @smalldisplay.  Too bad, but makeinfo will catch the error anyway.
 %
+\def\smalldisplay{\begingroup\def\Esmalldisplay{\nonfillfinish\endgroup}\display}
+\def\smallexample{\begingroup\def\Esmallexample{\nonfillfinish\endgroup}\lisp}
+\def\smallformat{\begingroup\def\Esmallformat{\nonfillfinish\endgroup}\format}
+\def\smalllisp{\begingroup\def\Esmalllisp{\nonfillfinish\endgroup}\lisp}
+
+% Real @smallexample and @smalllisp (when @smallbook): use smaller fonts.
+% Originally contributed by Pavel@xerox.
 \def\smalllispx{\begingroup
-  \nonfillstart
-  \let\Esmalllisp = \nonfillfinish
-  \let\Esmallexample = \nonfillfinish
-  %
-  % Smaller fonts for small examples.
-  \indexfonts \tt
-  \rawbackslash % make \ output the \ character from the current font (tt)
-  \gobble
+  \def\Esmalllisp{\nonfillfinish\endgroup}%
+  \def\Esmallexample{\nonfillfinish\endgroup}%
+  \indexfonts
+  \lisp
 }
 
-% This is @display; same as @lisp except use roman font.
+% @display: same as @lisp except keep current font.
 %
 \def\display{\begingroup
   \nonfillstart
@@ -3738,7 +3801,15 @@ width0pt\relax} \fi
   \gobble
 }
 
-% This is @format; same as @display except don't narrow margins.
+% @smalldisplay (when @smallbook): @display plus smaller fonts.
+%
+\def\smalldisplayx{\begingroup
+  \def\Esmalldisplay{\nonfillfinish\endgroup}%
+  \indexfonts \rm
+  \display
+}
+
+% @format: same as @display except don't narrow margins.
 %
 \def\format{\begingroup
   \let\nonarrowing = t
@@ -3747,20 +3818,27 @@ width0pt\relax} \fi
   \gobble
 }
 
-% @flushleft (same as @format) and @flushright.
+% @smallformat (when @smallbook): @format plus smaller fonts.
 %
-\def\flushleft{\begingroup
-  \let\nonarrowing = t
-  \nonfillstart
-  \let\Eflushleft = \nonfillfinish
-  \gobble
+\def\smallformatx{\begingroup
+  \def\Esmallformat{\nonfillfinish\endgroup}%
+  \indexfonts \rm
+  \format
 }
+
+% @flushleft (same as @format).
+%
+\def\flushleft{\begingroup \def\Eflushleft{\nonfillfinish\endgroup}\format}
+
+% @flushright.
+% 
 \def\flushright{\begingroup
   \let\nonarrowing = t
   \nonfillstart
   \let\Eflushright = \nonfillfinish
   \advance\leftskip by 0pt plus 1fill
-  \gobble}
+  \gobble
+}
 
 % @quotation does normal linebreaking (hence we can't use \nonfillstart)
 % and narrows the margins.
@@ -3782,6 +3860,7 @@ width0pt\relax} \fi
     \let\nonarrowing = \relax
   \fi
 }
+
 
 \message{defuns,}
 % Define formatter for defuns
@@ -3892,7 +3971,12 @@ width0pt\relax} \fi
 \catcode 61=\active % 61 is `='
 \obeylines\activeparens\spacesplit#3}
 
-\def\defmethparsebody #1#2#3#4 {\begingroup\inENV %
+% #1 is the \E... control sequence to end the definition (which we define).
+% #2 is the \...x control sequence for consecutive fns (which we define).
+% #3 is the control sequence to call to resume processing.
+% #4, delimited by the space, is the class name.
+% 
+\def\defmethparsebody#1#2#3#4 {\begingroup\inENV %
 \medbreak %
 % Define the end token that this defining construct specifies
 % so that it will exit this group.
@@ -3902,6 +3986,24 @@ width0pt\relax} \fi
 \advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
 \exdentamount=\defbodyindent
 \begingroup\obeylines\activeparens\spacesplit{#3{#4}}}
+
+% @deftypemethod has an extra argument that nothing else does.  Sigh.
+% #1 is the \E... control sequence to end the definition (which we define).
+% #2 is the \...x control sequence for consecutive fns (which we define).
+% #3 is the control sequence to call to resume processing.
+% #4, delimited by the space, is the class name.
+% #5 is the method's return type.
+% 
+\def\deftypemethparsebody#1#2#3#4 #5 {\begingroup\inENV %
+\medbreak %
+% Define the end token that this defining construct specifies
+% so that it will exit this group.
+\def#1{\endgraf\endgroup\medbreak}%
+\def#2##1 ##2 {\begingroup\obeylines\activeparens\spacesplit{#3{##1}{##2}}}%
+\parindent=0in
+\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\exdentamount=\defbodyindent
+\begingroup\obeylines\activeparens\spacesplit{#3{#4}{#5}}}
 
 \def\defopparsebody #1#2#3#4#5 {\begingroup\inENV %
 \medbreak %
@@ -4120,39 +4222,46 @@ width0pt\relax} \fi
 \def\defspecx #1 {\errmessage{@defspecx in invalid context}}
 \def\deftypefnx #1 {\errmessage{@deftypefnx in invalid context}}
 \def\deftypemethodx #1 {\errmessage{@deftypemethodx in invalid context}}
-\def\deftypeunx #1 {\errmessage{@deftypeunx in invalid context}}
+\def\deftypefunx #1 {\errmessage{@deftypefunx in invalid context}}
 
 % @defmethod, and so on
 
-% @defop {Funny Method} foo-class frobnicate argument
+% @defop CATEGORY CLASS OPERATION ARG...
 
 \def\defop #1 {\def\defoptype{#1}%
 \defopparsebody\Edefop\defopx\defopheader\defoptype}
 
 \def\defopheader #1#2#3{%
-\dosubind {fn}{\code{#2}}{on #1}% Make entry in function index
+\dosubind {fn}{\code{#2}}{\putwordon\ #1}% Make entry in function index
 \begingroup\defname {#2}{\defoptype{} on #1}%
 \defunargs {#3}\endgroup %
 }
 
-% @deftypemethod foo-class return-type foo-method args
+% @deftypemethod CLASS RETURN-TYPE METHOD ARG...
 %
 \def\deftypemethod{%
-  \defmethparsebody\Edeftypemethod\deftypemethodx\deftypemethodheader}
+  \deftypemethparsebody\Edeftypemethod\deftypemethodx\deftypemethodheader}
 %
 % #1 is the class name, #2 the data type, #3 the method name, #4 the args.
 \def\deftypemethodheader#1#2#3#4{%
-  \deftypefnheaderx{Method on #1}{#2}#3 #4\relax
+  \dosubind{fn}{\code{#3}}{\putwordon\ \code{#1}}% entry in function index
+  \begingroup
+    \defname{\defheaderxcond#2\relax$$$#3}{\putwordMethodon\ \code{#1}}%
+    \deftypefunargs{#4}%
+  \endgroup
 }
 
 % @defmethod == @defop Method
-
+%
 \def\defmethod{\defmethparsebody\Edefmethod\defmethodx\defmethodheader}
-
-\def\defmethodheader #1#2#3{%
-\dosubind {fn}{\code{#2}}{on #1}% entry in function index
-\begingroup\defname {#2}{Method on #1}%
-\defunargs {#3}\endgroup %
+%
+% #1 is the class name, #2 the method name, #3 the args.
+\def\defmethodheader#1#2#3{%
+  \dosubind{fn}{\code{#2}}{\putwordon\ \code{#1}}% entry in function index
+  \begingroup
+    \defname{#2}{\putwordMethodon\ \code{#1}}%
+    \defunargs{#3}%
+  \endgroup
 }
 
 % @defcv {Class Option} foo-class foo-flag
@@ -4269,19 +4378,231 @@ width0pt\relax} \fi
 \def\deftpx #1 {\errmessage{@deftpx in invalid context}}
 
 
-\message{cross reference,}
-% Define cross-reference macros
-\newwrite \auxfile
+\message{macros,}
+% @macro.
 
-\newif\ifhavexrefs  % True if xref values are known.
+% To do this right we need a feature of e-TeX, \scantokens, 
+% which we arrange to emulate with a temporary file in ordinary TeX.
+\ifx\eTeXversion\undefined
+ \newwrite\macscribble
+ \def\scantokens#1{%
+%   \toks0={#1}%
+   \immediate\openout\macscribble=\jobname.tmp
+   \immediate\write\macscribble{#1}%\the\toks0}%
+   \immediate\closeout\macscribble
+   \input \jobname.tmp
+}
+\fi
+
+\newcount\paramno   % Count of parameters
+\newtoks\macname    % Macro name
+\newif\ifrecursive  % Is it recursive?
+
+% Utility: does \let #1 = #2, except with \csnames.
+\def\cslet#1#2{%
+\expandafter\expandafter
+\expandafter\let
+\expandafter\expandafter
+\csname#1\endcsname
+\csname#2\endcsname}
+
+% Macro bodies are absorbed as an argument in a context where
+% all characters are catcode 10, 11 or 12, except \ which is active
+% (as in normal texinfo). It is necessary to change the definition of \.
+
+\def\macrobodyctxt{%
+  \catcode`\~=12
+  \catcode`\^=12
+  \catcode`\_=12
+  \catcode`\|=12
+  \catcode`\<=12
+  \catcode`\>=12
+  \catcode`\+=12
+  \catcode`\{=12
+  \catcode`\}=12
+  \catcode`\@=12
+  \catcode`\^^M=10
+  \usembodybackslash}
+
+% \mbodybackslash is the definition of \ in @macro bodies.
+% It maps \foo\ => \csname macarg.foo\endcsname => #N 
+% where N is the macro parameter number.
+% We define \csname macarg.\endcsname to be \realbackslash, so
+% \\ in macro replacement text gets you a backslash.
+
+{\catcode`@=0 \catcode`\\=\active
+ @gdef@usembodybackslash{@let\=@mbodybackslash}
+ @gdef@mbodybackslash#1\{@csname macarg.#1@endcsname}
+}
+\expandafter\def\csname macarg.\endcsname{\realbackslash}
+
+% The catcode games are necessary because @macro may or may not
+% have a brace-surrounded list of arguments, and we need to do
+% different stuff in each case.  Making {, } \other is the only 
+% way to prevent their being deleted by the tokenizer.
+\def\macro{\recursivefalse
+  \bgroup\catcode`\{=\other\catcode`\}=\other\parsearg\macroxxx}
+\def\rmacro{\recursivetrue
+  \bgroup\catcode`\{=\other\catcode`\}=\other\parsearg\macroxxx}
+
+\def\macroxxx#1{\egroup   % started in \macro
+  \getargs{#1}%           now \macname is the macname and \toks0 the arglist
+  \edef\temp{\the\toks0}%
+  \ifx\temp\empty       % no arguments
+     \paramno=0%
+  \else
+     \expandafter\parsemargdef \the\toks0;% 
+  \fi
+  \expandafter\ifx \csname macsave.\the\macname\endcsname \relax
+     \cslet{macsave.\the\macname}{\the\macname}%
+  \else
+     \message{Warning: redefining \the\macname}%
+  \fi
+  \begingroup \macrobodyctxt
+  \ifrecursive \expandafter\parsermacbody
+  \else \expandafter\parsemacbody 
+  \fi}
+
+\def\unmacro{\parsearg\unmacroxxx}
+\def\unmacroxxx#1{
+  \expandafter\ifx \csname macsave.\the\macname\endcsname \relax
+    \errmessage{Macro \the\macname\ not defined.}%
+  \else
+    \cslet{#1}{macsave.#1}%
+    \expandafter\let \csname macsave.\the\macname\endcsname \undefined
+  \fi
+}
+
+% Parse the optional {params} list.  Set up \paramno and \paramlist
+% so \defmacro knows what to do.  Define \macarg.blah for each blah
+% in the params list, to be ##N where N is the position in that list.
+% That gets used by \mbodybackslash (above).
+
+% This code has to take great care with `macro parameter char #'.  The
+% eight hashes in a row on the macarg.#1 line collapse to four in the
+% definition of \macarg.blah, to two when \parsemacbody expands the
+% macro replacement text, and to one when \defmacro writes the macro
+% definiton.  The games with \twohash are to postpone expansion till
+% the very end, when \parsemargdefyyy crunches \paramlist into
+% something that can be splatted into a \expandafter\def\blah line (in
+% \defmacro).
+\def\parsemargdef#1;{\paramno=0\def\paramlist{}\parsemargdefxxx#1,;,}
+\def\parsemargdefxxx#1,{%
+  \let\twohash\relax
+  \if#1;\let\next=\parsemargdefyyy
+  \else \let\next=\parsemargdefxxx
+    \advance\paramno by 1%
+    \expandafter\edef\csname macarg.#1\endcsname{########\the\paramno}%
+    \edef\paramlist{\paramlist\twohash\twohash\the\paramno,}%
+  \fi\next}
+\def\parsemargdefyyy{\let\twohash##\relax \edef\paramlist{\paramlist}}
+
+% These two commands read recursive and nonrecursive macro bodies.
+% (They're different since rec and nonrec macros end differently.)
+
+\long\def\parsemacbody#1@end macro%
+{\xdef\temp{#1} \endgroup\defmacro}%
+\long\def\parsermacbody#1@end macro%
+{\xdef\temp{#1} \endgroup\defmacro}%
+
+
+% This defines the macro itself. There are six cases: recursive and
+% nonrecursive macros of zero, one, and many arguments.
+% Much magic with \expandafter here.
+\def\defmacro{%
+  \ifrecursive
+    \ifcase\paramno
+    % 0
+      \expandafter\edef\csname\the\macname\endcsname{%
+        \noexpand\scantokens{\temp}}%
+    \or % 1
+      \expandafter\edef\csname\the\macname\endcsname{%
+         \noexpand\braceorline\csname\the\macname xxx\endcsname}%
+      \expandafter\edef\csname\the\macname xxx\endcsname##1{%
+         \noexpand\scantokens{\temp}}%
+    \else % many
+      \expandafter\edef\csname\the\macname\endcsname##1{%
+          \csname\the\macname xxx\endcsname ##1,}%
+      \expandafter\expandafter
+      \expandafter\edef
+      \expandafter\expandafter
+        \csname\the\macname xxx\endcsname 
+          \paramlist{\noexpand\scantokens{\temp}}%
+    \fi
+  \else
+    \ifcase\paramno
+    % 0
+      \expandafter\edef\csname\the\macname\endcsname{%
+        \noexpand\norecurse{\the\macname}%
+        \noexpand\scantokens{\temp}\egroup}%
+    \or % 1
+      \expandafter\edef\csname\the\macname\endcsname{%
+         \noexpand\braceorline\csname\the\macname xxx\endcsname}%
+      \expandafter\edef\csname\the\macname xxx\endcsname##1{%
+        \noexpand\norecurse{\the\macname}
+        \noexpand\scantokens{\temp}\egroup}%
+    \else % many
+      \expandafter\edef\csname\the\macname\endcsname##1{%
+          \csname\the\macname xxx\endcsname ##1,}%
+      \expandafter\expandafter
+      \expandafter\edef
+      \expandafter\expandafter
+      \csname\the\macname xxx\endcsname
+      \paramlist{%
+          \noexpand\norecurse{\the\macname}
+          \noexpand\scantokens{\temp}\egroup}%
+    \fi
+  \fi}
+
+\def\norecurse#1{\bgroup\cslet{#1}{macsave.#1}}
+
+% \braceorline decides whether the next nonwhitespace character is a
+% {.  If so it reads up to the closing }, if not, it reads the whole
+% line.  Whatever was read is then fed to the next control sequence
+% as an argument (by \parsebrace or \parsearg)
+\def\braceorline#1{\let\next=#1\futurelet\nchar\braceorlinexxx}
+\def\braceorlinexxx{%
+  \ifx\nchar\bgroup\else
+    \expandafter\parsearg 
+  \fi \next}
+
+% We need {} to be \other inside these commands. [] are temporary
+% grouping symbols.
+\begingroup
+\catcode`\{=\other \catcode`\}=\other
+\catcode`\[=1  \catcode`\]=2
+
+% @macro can be called with or without a brace-surrounded macro
+% argument list.  These three sequences extract the macro name and arg
+% list in hopefully all cases.  Note that anything on the line after the
+% first pair of braces will be thrown out (Makeinfo puts it into the
+% macro body).
+\gdef\getargs#1[\getargsxxx|#1 {}|]
+\gdef\getargsxxx|#1 {#2}#3|[%
+  \toks0=[#2]%
+  \edef\tmp[\the\toks0]%
+  \ifx\tmp\empty
+     \getargsnospaces|#1{}|%
+  \else
+     \macname=[#1]%
+  \fi]
+\gdef\getargsnospaces|#1{#2}#3|[\macname=[#1]\toks0=[#2]]
+
+\endgroup
+
+
+\message{cross references,}
+\newwrite\auxfile
+
+\newif\ifhavexrefs    % True if xref values are known.
 \newif\ifwarnedxrefs  % True if we warned once that they aren't known.
 
-% @inforef is simple.
+% @inforef is relatively simple.
 \def\inforef #1{\inforefzzz #1,,,,**}
 \def\inforefzzz #1,#2,#3,#4**{\putwordSee{} \putwordInfo{} \putwordfile{} \file{\ignorespaces #3{}},
   node \samp{\ignorespaces#1{}}}
 
-% \setref{foo} defines a cross-reference point named foo.
+% @setref{foo} defines a cross-reference point named foo.
 
 \def\setref#1{%
 \dosetq{#1-title}{Ytitle}%
@@ -4349,7 +4670,7 @@ width0pt\relax} \fi
     % into the usual \leavevmode...\vrule stuff for purposes of
     % printing. So we \turnoffactive for the \refx-snt, back on for the
     % printing, back off for the \refx-pg.
-    {\turnoffactive \refx{#1-snt}{}}%
+    {\normalturnoffactive \refx{#1-snt}{}}%
     \space [\printednodename],\space
     \turnoffactive \putwordpage\tie\refx{#1-pg}{}%
   \fi
@@ -4357,11 +4678,17 @@ width0pt\relax} \fi
 
 % \dosetq is the interface for calls from other macros
 
-% Use \turnoffactive so that punctuation chars such as underscore
-% work in node names.
-\def\dosetq #1#2{{\let\folio=0 \turnoffactive
-\edef\next{\write\auxfile{\internalsetq {#1}{#2}}}%
-\next}}
+% Use \normalturnoffactive so that punctuation chars such as underscore
+% and backslash work in node names.  (\turnoffactive doesn't do \.)
+\def\dosetq#1#2{%
+  {\let\folio=0
+   \normalturnoffactive
+   \edef\next{\write\auxfile{\internalsetq{#1}{#2}}}%
+   \iflinks
+     \next
+   \fi
+  }%
+}
 
 % \internalsetq {foo}{page} expands into
 % CHARACTERS 'xrdef {foo}{...expansion of \Ypage...}
@@ -4413,12 +4740,14 @@ width0pt\relax} \fi
   \expandafter\ifx\csname X#1\endcsname\relax
     % If not defined, say something at least.
     \angleleft un\-de\-fined\angleright
-    \ifhavexrefs
-      \message{\linenumber Undefined cross reference `#1'.}%
-    \else
-      \ifwarnedxrefs\else
-        \global\warnedxrefstrue
-        \message{Cross reference values unknown; you must run TeX again.}%
+    \iflinks
+      \ifhavexrefs
+        \message{\linenumber Undefined cross reference `#1'.}%
+      \else
+        \ifwarnedxrefs\else
+          \global\warnedxrefstrue
+          \message{Cross reference values unknown; you must run TeX again.}%
+        \fi
       \fi
     \fi
   \else
@@ -4492,8 +4821,7 @@ width0pt\relax} \fi
   \catcode`\$=\other
   \catcode`\#=\other
   \catcode`\&=\other
-  % `\+ does not work, so use 43.
-  \catcode43=\other
+  \catcode`+=\other % avoid \+ for paranoia even though we've turned it off
   % Make the characters 128-255 be printing characters
   {%
     \count 1=128
@@ -4662,7 +4990,9 @@ width0pt\relax} \fi
 \openin 1 = epsf.tex
 \ifeof 1 \else
   \closein 1
-  \def\epsfannounce{\toks0 = }% do not bother showing banner
+  % Do not bother showing banner with post-v2.7 epsf.tex (available in
+  % doc/epsf.tex until it shows up on ctan).
+  \def\epsfannounce{\toks0 = }%
   \input epsf.tex
 \fi
 %
@@ -4692,39 +5022,26 @@ width0pt\relax} \fi
   % \epsfbox itself resets \epsf?size at each figure.
   \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \epsfxsize=#2\relax \fi
   \setbox0 = \hbox{\ignorespaces #3}\ifdim\wd0 > 0pt \epsfysize=#3\relax \fi
-  \epsfbox{#1.eps}%
+  % If the image is by itself, center it.
+  \ifvmode
+    \centerline{\epsfbox{#1.eps}}%
+  \else
+    \epsfbox{#1.eps}%
+  \fi
 }
 
-% End of control word definitions.
 
+\message{paper sizes,}
+% And other related parameters.
 
-\message{and turning on texinfo input format.}
-
-\def\openindices{%
-   \newindex{cp}%
-   \newcodeindex{fn}%
-   \newcodeindex{vr}%
-   \newcodeindex{tp}%
-   \newcodeindex{ky}%
-   \newcodeindex{pg}%
-}
-
-% Set some numeric style parameters, for 8.5 x 11 format.
-
-\hsize = 6in
-\hoffset = .25in
 \newdimen\defaultparindent \defaultparindent = 15pt
-\parindent = \defaultparindent
-\parskip 3pt plus 2pt minus 1pt
-\setleading{13.2pt}
-\advance\topskip by 1.2cm
 
 \chapheadingskip = 15pt plus 4pt minus 2pt
 \secheadingskip = 12pt plus 3pt minus 2pt
 \subsecheadingskip = 9pt plus 2pt minus 2pt
 
 % Prevent underfull vbox error messages.
-\vbadness=10000
+\vbadness = 10000
 
 % Following George Bush, just get rid of widows and orphans.
 \widowpenalty=10000
@@ -4733,101 +5050,126 @@ width0pt\relax} \fi
 % Use TeX 3.0's \emergencystretch to help line breaking, but if we're
 % using an old version of TeX, don't do anything.  We want the amount of
 % stretch added to depend on the line length, hence the dependence on
-% \hsize.  This makes it come to about 9pt for the 8.5x11 format.
+% \hsize.  This makes it come to about 9pt for the 8.5x11 format.  We
+% call this whenever the paper size is set.
 %
-\ifx\emergencystretch\thisisundefined
-  % Allow us to assign to \emergencystretch anyway.
-  \def\emergencystretch{\dimen0}%
-\else
-  \emergencystretch = \hsize
-  \divide\emergencystretch by 45
-\fi
-
-% Use @smallbook to reset parameters for 7x9.5 format  (or else 7x9.25)
-\def\smallbook{
-  \global\chapheadingskip = 15pt plus 4pt minus 2pt
-  \global\secheadingskip = 12pt plus 3pt minus 2pt
-  \global\subsecheadingskip = 9pt plus 2pt minus 2pt
-  %
-  \global\lispnarrowing = 0.3in
-  \setleading{12pt}
-  \advance\topskip by -1cm
-  \global\parskip 2pt plus 1pt
-  \global\hsize = 5in
-  \global\vsize=7.5in
-  \global\tolerance=700
-  \global\hfuzz=1pt
-  \global\contentsrightmargin=0pt
-  \global\deftypemargin=0pt
-  \global\defbodyindent=.5cm
-  %
-  \global\pagewidth=\hsize
-  \global\pageheight=\vsize
-  %
-  \global\let\smalllisp=\smalllispx
-  \global\let\smallexample=\smalllispx
-  \global\def\Esmallexample{\Esmalllisp}
+\def\setemergencystretch{%
+  \ifx\emergencystretch\thisisundefined
+    % Allow us to assign to \emergencystretch anyway.
+    \def\emergencystretch{\dimen0}%
+  \else
+    \emergencystretch = \hsize
+    \divide\emergencystretch by 45
+  \fi
 }
+
+% Parameters in order: 1) textheight; 2) textwidth; 3) voffset;
+% 4) hoffset; 5) binding offset; 6) topskip.  Then whoever calls us can
+% set \parskip and call \setleading for \baselineskip.
+%
+\def\internalpagesizes#1#2#3#4#5#6{%
+  \voffset = #3\relax
+  \topskip = #6\relax
+  \splittopskip = \topskip
+  %
+  \vsize = #1\relax
+  \advance\vsize by \topskip
+  \outervsize = \vsize
+  \advance\outervsize by 0.6in
+  \pageheight = \vsize
+  %
+  \hsize = #2\relax
+  \outerhsize = \hsize
+  \advance\outerhsize by 0.5in
+  \pagewidth = \hsize
+  %
+  \normaloffset = #4\relax
+  \bindingoffset = #5\relax
+  %
+  \parindent = \defaultparindent
+  \setemergencystretch
+}
+
+% @letterpaper (the default).
+\def\letterpaper{{\globaldefs = 1
+  \parskip = 3pt plus 2pt minus 1pt
+  \setleading{13.2pt}%
+  %
+  % If page is nothing but text, make it come out even.
+  \internalpagesizes{46\baselineskip}{6in}{\voffset}{.25in}{\bindingoffset}{36pt}%
+}}
+
+% Use @smallbook to reset parameters for 7x9.5 (or so) format.
+\def\smallbook{{\globaldefs = 1
+  \parskip = 2pt plus 1pt
+  \setleading{12pt}%
+  %
+  \internalpagesizes{7.5in}{5.in}{\voffset}{.25in}{\bindingoffset}{16pt}%
+  %
+  \lispnarrowing = 0.3in
+  \tolerance = 700
+  \hfuzz = 1pt
+  \contentsrightmargin = 0pt
+  \deftypemargin = 0pt
+  \defbodyindent = .5cm
+  %
+  \let\smalldisplay = \smalldisplayx
+  \let\smallexample = \smalllispx
+  \let\smallformat = \smallformatx
+  \let\smalllisp = \smalllispx
+}}
 
 % Use @afourpaper to print on European A4 paper.
-\def\afourpaper{
-\global\tolerance=700
-\global\hfuzz=1pt
-\setleading{12pt}
-\global\parskip 15pt plus 1pt
-
-\global\vsize= 53\baselineskip
-\advance\vsize by \topskip
-%\global\hsize=   5.85in     % A4 wide 10pt
-\global\hsize=  6.5in
-\global\outerhsize=\hsize
-\global\advance\outerhsize by 0.5in
-\global\outervsize=\vsize
-\global\advance\outervsize by 0.6in
-
-\global\pagewidth=\hsize
-\global\pageheight=\vsize
-}
-
-\bindingoffset=0pt
-\normaloffset=\hoffset
-\pagewidth=\hsize
-\pageheight=\vsize
-
-% Allow control of the text dimensions.  Parameters in order: textheight;
-% textwidth; voffset; hoffset; binding offset; topskip.
-% All require a dimension;
-% header is additional; added length extends the bottom of the page.
-
-\def\changepagesizes#1#2#3#4#5#6{
- \global\vsize= #1
- \global\topskip= #6
- \advance\vsize by \topskip
- \global\voffset= #3
- \global\hsize= #2
- \global\outerhsize=\hsize
- \global\advance\outerhsize by 0.5in
- \global\outervsize=\vsize
- \global\advance\outervsize by 0.6in
- \global\pagewidth=\hsize
- \global\pageheight=\vsize
- \global\normaloffset= #4
- \global\bindingoffset= #5}
+\def\afourpaper{{\globaldefs = 1
+  \setleading{12pt}%
+  \parskip = 3pt plus 2pt minus 1pt
+  %
+  \internalpagesizes{53\baselineskip}{6.5in}{\voffset}{.25in}{\bindingoffset}{44pt}%
+  %
+  \tolerance = 700
+  \hfuzz = 1pt
+}}
 
 % A specific text layout, 24x15cm overall, intended for A4 paper.  Top margin
 % 29mm, hence bottom margin 28mm, nominal side margin 3cm.
-\def\afourlatex
-        {\global\tolerance=700
-        \global\hfuzz=1pt
-        \setleading{12pt}
-        \global\parskip 15pt plus 1pt
-        \advance\baselineskip by 1.6pt
-        \changepagesizes{237mm}{150mm}{3.6mm}{3.6mm}{3mm}{7mm}
-        }
+\def\afourlatex{{\globaldefs = 1
+  \setleading{13.6pt}%
+  %
+  \afourpaper
+  \internalpagesizes{237mm}{150mm}{3.6mm}{3.6mm}{3mm}{7mm}%
+  %
+  \globaldefs = 0
+}}
 
 % Use @afourwide to print on European A4 paper in wide format.
-\def\afourwide{\afourpaper
-\changepagesizes{9.5in}{6.5in}{\hoffset}{\normaloffset}{\bindingoffset}{7mm}}
+\def\afourwide{%
+  \afourpaper
+  \internalpagesizes{9.5in}{6.5in}{\hoffset}{\normaloffset}{\bindingoffset}{7mm}%
+  %
+  \globaldefs = 0
+}
+
+% @pagesizes TEXTHEIGHT[,TEXTWIDTH]
+% Perhaps we should allow setting the margins, \topskip, \parskip,
+% and/or leading, also. Or perhaps we should compute them somehow.
+% 
+\def\pagesizes{\parsearg\pagesizesxxx}
+\def\pagesizesxxx#1{\pagesizesyyy #1,,\finish}
+\def\pagesizesyyy#1,#2,#3\finish{{%
+  \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \hsize=#2\relax \fi
+  \globaldefs = 1
+  %
+  \parskip = 3pt plus 2pt minus 1pt
+  \setleading{13.2pt}%
+  %
+  \internalpagesizes{#1}{\hsize}{\voffset}{\normaloffset}{\bindingoffset}{44pt}%
+}}
+
+% Set default to letter.
+% 
+\letterpaper
+
+\message{and turning on texinfo input format.}
 
 % Define macros to output various characters with catcode for normal text.
 \catcode`\"=\other
@@ -4864,10 +5206,10 @@ width0pt\relax} \fi
 % use math or other variants that look better in normal text.
 
 \catcode`\"=\active
-\def\activedoublequote{{\tt \char '042}}
+\def\activedoublequote{{\tt\char34}}
 \let"=\activedoublequote
 \catcode`\~=\active
-\def~{{\tt \char '176}}
+\def~{{\tt\char126}}
 \chardef\hat=`\^
 \catcode`\^=\active
 \def^{{\tt \hat}}
@@ -4878,7 +5220,7 @@ width0pt\relax} \fi
 \def\_{\leavevmode \kern.06em \vbox{\hrule width.3em height.1ex}}
 
 \catcode`\|=\active
-\def|{{\tt \char '174}}
+\def|{{\tt\char124}}
 \chardef \less=`\<
 \catcode`\<=\active
 \def<{{\tt \less}}
@@ -4965,8 +5307,8 @@ width0pt\relax} \fi
 @gdef@fixbackslash{@ifx\@eatinput @let\ = @normalbackslash @fi
   @catcode`+=@active @catcode`@_=@active}
 
-%% These look ok in all fonts, so just make them not special.  The @rm below
-%% makes sure that the current font starts out as the newly loaded cmr10
+% These look ok in all fonts, so just make them not special.  The @rm below
+% makes sure that the current font starts out as the newly loaded cmr10
 @catcode`@$=@other @catcode`@%=@other @catcode`@&=@other @catcode`@#=@other
 
 @textfonts
