@@ -27,11 +27,11 @@ DEFUN(__close, (fd), int fd)
 {
   file_t server;
 
-  __mutex_lock (&_hurd_dtable.lock);
+  __mutex_lock (&_hurd_dtable_lock);
   if (fd < 0 || fd >= _hurd_dtable.size ||
       _hurd_dtable.d[fd].server == MACH_PORT_NULL)
     {
-      __mutex_unlock (&_hurd_dtable.lock);
+      __mutex_unlock (&_hurd_dtable_lock);
       errno = EBADF;
       return -1;
     }
@@ -39,7 +39,7 @@ DEFUN(__close, (fd), int fd)
   server = _hurd_dtable.d[fd].server;
   _hurd_dtable.d[fd].server = MACH_PORT_NULL;
   /* ctty? XXX */
-  __mutex_unlock (&_hurd_dtable.lock);
+  __mutex_unlock (&_hurd_dtable_lock);
 
   __mach_port_deallocate (__mach_task_self (), server);
   return 0;
