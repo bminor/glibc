@@ -42,8 +42,6 @@ DEFUN_VOID(__newstream)
       if (stream == NULL)
 	return NULL;
       stream->__next = NULL;
-      __stdio_tail->__next = stream;
-      __stdio_tail = stream;
     }
 
   __invalidate(stream);
