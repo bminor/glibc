@@ -26,7 +26,7 @@
 /* If anything should be added here check whether the size of each string
    is still ok with the given array size.  */
 extern const char _dl_arm_cap_flags[][10];
-#define _DL_HWCAP_COUNT 32
+#define _DL_HWCAP_COUNT 8
 
 /* The kernel provides platform data but it is not interesting.  */
 #define _DL_HWCAP_PLATFORM 	0
