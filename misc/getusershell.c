@@ -48,12 +48,12 @@ static char sccsid[] = "@(#)getusershell.c	5.7 (Berkeley) 2/23/91";
 /*
  * Do not add local shells here.  They should be added in /etc/shells
  */
-static char *okshells[] =
+static const char *okshells[] =
     { "/bin/sh", "/bin/csh", 0 };
 
 static char **shells, *strings;
 static char **curshell = NULL;
-extern char **initshells();
+static char **initshells();
 
 /*
  * Get a list of shells from SHELLS, if it exists.
