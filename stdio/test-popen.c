@@ -1,5 +1,6 @@
 #include <ansidecl.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 void write_data (FILE *stream)
 {
