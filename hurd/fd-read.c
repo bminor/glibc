@@ -39,8 +39,7 @@ _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes)
 #if 1
 	   abort ();
 #else
-	   struct _hurd_sigstate *ss
-	     = _hurd_thread_sigstate (__mach_thread_self ());
+	   struct _hurd_sigstate *ss = _hurd_self_sigstate ();
 	   if (_hurd_orphaned ||
 	       __sigismember (SIGTTIN, &ss->blocked) ||
 	       ss->actions[SIGTTIN].sa_handler == SIG_IGN)
