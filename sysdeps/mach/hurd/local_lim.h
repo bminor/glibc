@@ -1,6 +1,6 @@
 /* Minimum guaranteed maximum values for system limits.  Hurd version.
 
-Copyright (C) 1993 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,6 @@ Cambridge, MA 02139, USA.  */
    ELOOP.  This name is a GNU extension; POSIX.1 has no such limit, and BSD
    calls it MAXSYMLINKS in <sys/param.h>.  */
 
-#ifdef __USE_BSD
-#define	SYMLINK_MAX	8
+#ifdef __USE_GNU		/* 1003.1a defines this */
+#define	SYMLOOP_MAX	8
 #endif

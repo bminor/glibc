@@ -41,11 +41,11 @@ Cambridge, MA 02139, USA.  */
 #define	SIGKILL		9	/* Kill, unblockable (POSIX).  */
 #define	SIGBUS		10	/* Bus error (4.2 BSD).  */
 #define	SIGSEGV		11	/* Segmentation violation (ANSI).  */
-#define	SIGSYS		12	/* Bad argument to system call (4.2 BSD)*/
+#define	SIGSYS		12	/* Bad argument to system call (4.2 BSD).  */
 #define	SIGPIPE		13	/* Broken pipe (POSIX).  */
 #define	SIGALRM		14	/* Alarm clock (POSIX).  */
 #define	SIGTERM		15	/* Termination (ANSI).  */
-#define	SIGURG		16	/* Urgent condition on socket (4.2 BSD).*/
+#define	SIGURG		16	/* Urgent condition on socket (4.2 BSD).  */
 #define	SIGSTOP		17	/* Stop, unblockable (POSIX).  */
 #define	SIGTSTP		18	/* Keyboard stop (POSIX).  */
 #define	SIGCONT		19	/* Continue (POSIX).  */
@@ -63,7 +63,8 @@ Cambridge, MA 02139, USA.  */
 #define SIGINFO		29	/* Information request (4.4 BSD).  */
 #define	SIGUSR1		30	/* User-defined signal 1 (POSIX).  */
 #define	SIGUSR2		31	/* User-defined signal 2 (POSIX).  */
+#define SIGLOST		32	/* Resource lost (Sun); server died (GNU).  */
 
 #endif	/* <signal.h> included.  */
 
-#define	_NSIG		32	/* Biggest signal number + 1.  */
+#define	_NSIG		33	/* Biggest signal number + 1.  */

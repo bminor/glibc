@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -84,7 +84,7 @@ Cambridge, MA 02139, USA.  */
    for the values which are not statically limited, such as NOFILE.  */
 
 #define	NGROUPS		NGROUPS_MAX
-#define	MAXSYMLINKS	SYMLINK_MAX
+#define	MAXSYMLINKS	SYMLOOP_MAX
 #define	CANBSIZ		MAX_CANON /* XXX ? */
 
 /* ARG_MAX is unlimited, but we define NCARGS for BSD programs that want to
