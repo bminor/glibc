@@ -2,13 +2,13 @@
 # mkinstalldirs --- make directory hierarchy
 # Author: Noah Friedman <friedman@prep.ai.mit.edu>
 # Created: 1993-05-16
-# Last modified: 1994-03-17
+# Last modified: 1994-03-25
 # Public domain
 
 errstatus=0
 
 for file in ${1+"$@"} ; do 
-   set fnord `echo ":$file" | sed -ne 's/^://;s/\// /g;p'`
+   set fnord `echo ":$file" | sed -ne 's/^:\//#/;s/^://;s/\// /g;s/^#/\//;p'`
    shift
 
    pathcomp=
