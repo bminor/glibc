@@ -57,8 +57,10 @@ __END_DECLS
 				    __FILE__, __LINE__, __ASSERT_FUNCTION)))
 
 /* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'
-   which contains the name of the function currently being defined.  */
-#if !defined (__GNUC__) || __GNUC__ < 2 || __GNUC_MINOR__ < 4
+   which contains the name of the function currently being defined.
+   This is broken in G++ before version 2.6.  */
+#if (!defined (__GNUC__) || __GNUC__ < 2 || \
+     __GNUC_MINOR__ < (defined (__cplusplus) ? 6 : 4))
 #define __ASSERT_FUNCTION	((__const char *) 0)
 #else
 #define __ASSERT_FUNCTION	__PRETTY_FUNCTION__
