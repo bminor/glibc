@@ -1,6 +1,6 @@
 /* bzero -- set a block of memory to zero.
    For Intel 80x86, x>=3.
-   Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -46,6 +46,9 @@ DEFUN(bzero, (dstpp, len),
   /* This threshold value is optimal.  */
   if (len >= 12)
     {
+      /* Adjust LEN for the bytes handled in the first loop.  */
+      len -= (-dstp) % OPSIZ;
+
       /* There are at least some bytes to set.
 	 No need to test for LEN == 0 in this alignment loop.  */
 
@@ -55,7 +58,6 @@ DEFUN(bzero, (dstpp, len),
 		   "=D" (dstp) :
 		   "0" (dstp), "c" ((-dstp) % OPSIZ), "a" (x) :
 		   "cx");
-      len -= (-dstp) % OPSIZ;
 
       /* Fill longwords.  */
       asm volatile("rep\n"
