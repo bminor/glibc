@@ -338,16 +338,15 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 
     case core:
     case term:
-      _HURD_PORT_USE
-	(&_hurd_proc,
-	 ({
-	   __proc_dostop (port, __mach_thread_self ());
-	  abort_all_rpcs (signo, thread_state);
-	  __proc_exit (port,
-		       (W_EXITCODE (0, signo) |
-			(act == core && write_corefile (signo, sigcode) ?
-			 WCOREDUMP : 0)))
-	  }));
+      /* Have the proc server stop all other threads in our task.  */
+      __USEPORT (PROC, __proc_dostop (port, __mach_thread_self ()));
+      /* Abort all server operations now in progress.  */
+      abort_all_rpcs (signo, thread_state);
+      /* Tell proc how we died and then stick the saber in the gut.  */
+      _hurd_exit (W_EXITCODE (0, signo) |
+		  (act == core && write_corefile (signo, sigcode) ?
+		   WCOREDUMP : 0));
+      /* NOTREACHED */
 
     case handle:
       __thread_suspend (ss->thread);
