@@ -1,3 +1,8 @@
+1999-09-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_compat/compat-grp.c (getgrgid_plusgroup): Correct
+	returned errno value in some cases.
+
 1999-09-18  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/wait4.c (__wait4): When proc_wait returns EAGAIN,
