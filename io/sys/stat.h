@@ -25,6 +25,8 @@ Cambridge, MA 02139, USA.  */
 #define	_SYS_STAT_H	1
 #include <features.h>
 
+#include <gnu/types.h>		/* For __mode_t and __dev_t.  */
+
 __BEGIN_DECLS
 
 #include <statbuf.h>
@@ -91,19 +93,19 @@ __BEGIN_DECLS
 
 
 /* Get file attributes for FILE and put them in BUF.  */
-extern int __stat __P ((__const char *__file, struct stat * __buf));
-extern int stat __P ((__const char *__file, struct stat * __buf));
+extern int __stat __P ((__const char *__file, struct stat *__buf));
+extern int stat __P ((__const char *__file, struct stat *__buf));
 
 /* Get file attributes for the file, device, pipe, or socket
    that file descriptor FD is open on and put them in BUF.  */
-extern int __fstat __P ((int __fd, struct stat * __buf));
-extern int fstat __P ((int __fd, struct stat * __buf));
+extern int __fstat __P ((int __fd, struct stat *__buf));
+extern int fstat __P ((int __fd, struct stat *__buf));
 
 /* Get file attributes about FILE and put them in BUF.
    If FILE is a symbolic link, do not follow it.  */
-extern int __lstat __P ((__const char *__file, struct stat * __buf));
+extern int __lstat __P ((__const char *__file, struct stat *__buf));
 #ifdef	__USE_BSD
-extern int lstat __P ((__const char *__file, struct stat * __buf));
+extern int lstat __P ((__const char *__file, struct stat *__buf));
 #endif
 
 /* Set file access permissions for FILE to MODE.
