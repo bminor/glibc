@@ -22,6 +22,16 @@ Cambridge, MA 02139, USA.  */
 /* The first piece of initialized data.  */
 int __data_start = 0;
 
+process_t _hurd_proc;
+file_t _hurd_ccdir, _hurd_cwdir, _hurd_crdir, _hurd_auth;
+mode_t _hurd_umask;
+int _hurd_ctty_fstype;
+fsid_t _hurd_ctty_fsid;
+ino_t _hurd_ctty_fileid;
+
+mach_port_t *_hurd_init_dtable;
+size_t _hurd_init_dtablesize;
+
 volatile int errno;
 
 char **__environ;
@@ -29,6 +39,13 @@ char **__environ;
 extern void EXFUN(__libc_init, (NOARGS));
 extern void EXFUN(__mach_init, (NOARGS));
 extern int EXFUN(main, (int argc, char **argv, char **envp));
+
+extern void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
+extern void (*_cthread_exit_routine) (int status);
+
+#ifndef	SET_SP
+#error "Machine-dependent cthread startup code needs to exist."
+#endif
 
 static int count (char *, size_t);
 static void makevec (char *, size_t, char **);
@@ -43,9 +60,9 @@ _start (void)
   error_t err;
   mach_port_t in_bootstrap, passed_bootstrap;
   char *args, *env;
-  mach_port_t *dtable, *portarray;
+  mach_port_t *portarray;
   int *intarray;
-  size_t argslen, envlen, dtablesize, portarraysize, intarraysize;
+  size_t argslen, envlen, portarraysize, intarraysize;
   int dealloc_args, dealloc_env;
 
   int argc, envc;
@@ -56,17 +73,22 @@ _start (void)
   /* Basic Mach initialization, must be done before RPCs can be done.  */
   __mach_init ();
 
+  if (_cthread_init_routine != NULL)
+    SET_SP ((*_cthread_init_routine) ());
+
   if (err = __task_get_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
 				     &in_bootstrap))
     _exit (err);
 
-  if (err = __exec_startup (in_bootstrap,
-			    &args, &argslen, &dealloc_args,
-			    &env, &envlen, &dealloc_env,
-			    &dtable, &dtablesize,
-			    &portarray, &portarraysize,
-			    &intarray, &intarraysize,
-			    &passed_bootstrap))
+  err = __exec_startup (in_bootstrap,
+			&args, &argslen, &dealloc_args,
+			&env, &envlen, &dealloc_env,
+			&_hurd_init_dtable, &_hurd_init_dtablesize,
+			&portarray, &portarraysize,
+			&intarray, &intarraysize,
+			&passed_bootstrap);
+  __mach_port_deallocate (__mach_task_self (), in_bootstrap);
+  if (err)
     _exit (err);
 
   /* When the user asks for the bootstrap port,
@@ -88,14 +110,57 @@ _start (void)
   makevec (args, argslen, argv);
   makevec (env, envlen, __environ);
 
-  /* Tell the proc server where our args and environment are.  */
-  __proc_setprocargs (portarray[INIT_PORT_PROC], argv, envp);
+  for (i = 0; i < portarraysize; ++i)
+    switch (i)
+      {
+      case INIT_PORT_PROC:
+	_hurd_proc = portarray[i];
+	break;
+      case INIT_PORT_CCDIR:
+	_hurd_ccdir = portarray[i];
+	break;
+      case INIT_PORT_CWDIR:
+	_hurd_cwdir = portarray[i];
+	break;
+      case INIT_PORT_CRDIR:
+	_hurd_crdir = portarray[i];
+	break;
+      case INIT_PORT_AUTH:
+	_hurd_auth = portarray[INIT_PORT_AUTH];
+	break;
+      default:
+	/* Wonder what that could be.  */
+	__mach_port_deallocate (__mach_task_self (), portarray[i]);
+	break;
+      }
 
-  /* Make signal thread, init umask and ctty info from intarray, etc.  XXX */
+  /* Tell the proc server where our args and environment are.  */
+  __proc_setprocargs (_hurd_proc, argv, __environ);
+
+  /* XXX Create the signal thread.  */
+
+  {
+    mach_port_t oldsig, oldtask;
+    __proc_setports (_hurd_proc, _hurd_sigport, __mach_task_self (),
+		     &oldsig, &oldtask);
+    __mach_port_deallocate (__mach_task_self (), oldsig);
+    __mach_port_deallocate (__mach_task_self (), oldtask);
+  }
+
+  if (intarraysize > INIT_UMASK)
+    _hurd_umask = intarray[INIT_UMASK] & 0777;
+  if (intarraysize > INIT_CTTY_FILEID) /* Knows that these are sequential.  */
+    {
+      _hurd_ctty_fstype = intarray[INIT_CTTY_FSTYPE];
+      _hurd_ctty_fsid.val[0] = intarray[INIT_CTTY_FSID1];
+      _hurd_ctty_fsid.val[1] = intarray[INIT_CTTY_FSID2];
+      _hurd_ctty_fileid = intarray[INIT_CTTY_FILEID];
+    }
 
   __libc_init ();
 
-  exit (main (argc, argv, envp));
+  (_cthread_exit_routine != NULL ? *_cthread_exit_routine : exit)
+    (main (argc, argv, __environ));
 }
 
 static int
