@@ -1,3 +1,7 @@
+1998-10-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-close.c: Fix one more memory leak.
+
 1998-10-07 07:57  H.J. Lu  <hjl@gnu.org>
 
 	* elf/dl-close.c (_dl_close): Fix a memory leak.
