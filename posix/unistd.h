@@ -712,6 +712,9 @@ extern int EXFUN(chroot, (CONST char *__path));
 /* Make the block special device PATH available to the system for swapping.
    This call is restricted to the super-user.  */
 extern int EXFUN(swapon, (CONST char *__path));
+
+/* Reboot or halt the system.  */
+extern int EXFUN(reboot, (int __howto));
 #endif	/* Use BSD.  */
 
 
