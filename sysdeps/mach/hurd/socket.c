@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -37,5 +37,5 @@ DEFUN(socket, (domain, type, protocol),
   if (err = __socket_create (server, type, protocol, &sock))
     return __hurd_fail (err);
 
-  return _hurd_dalloc (sock, MACH_PORT_NULL, 0);
+  return _hurd_alloc_fd (sock, 0, 1);
 }
