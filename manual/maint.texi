@@ -43,13 +43,11 @@ no others:
 @example
 sparc-sun-sunos4.1
 m68k-hp-bsd4.3
-mips-dec-ultrix
+mips-dec-ultrix4.2
 @end example
 
-@strong{Incomplete:} Which version(s) of Ultrix does it support?
-
 While no other configurations are supported, there are handy aliases for
-these two.  (These aliases work in other GNU software as well.)
+these few.  (These aliases work in other GNU software as well.)
 
 @example
 sun4-sunos4.1
