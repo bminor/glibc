@@ -7,10 +7,9 @@
 
 Many functions in the GNU C library detect and report error conditions,
 and sometimes your programs need to check for these error conditions.
-For example, if your program needs to open an input file, you should
-make sure that the file was actually opened correctly before trying to
-read from it, and print an error message or take other appropriate
-action if the call to the library function failed.
+For example, when you open an input file, you should verify that the
+file was actually opened correctly, and print an error message or take
+other appropriate action if the call to the library function failed.
 
 This chapter describes how the error reporting facility works.  Your
 program should include the header file @file{errno.h} to use this
@@ -27,10 +26,10 @@ facility.
 @section Checking for Errors
 
 Most library functions return a special value to indicate that they have
-failed.  This is often a value of @code{-1}, a null pointer, or a
+failed.  The special value is typically @code{-1}, a null pointer, or a
 constant such as @code{EOF} that is defined for that purpose.  But this
-a return value tells you only that an error has occurred.  To find out
-what went wrong, you need to look at the error code stored in the
+return value tells you only that an error has occurred.  To find out
+what kind of error it was, you need to look at the error code stored in the
 variable @code{errno}.  This variable is declared in the header file
 @file{errno.h}.
 @pindex errno.h
@@ -45,13 +44,28 @@ Since @code{errno} is declared @code{volatile}, it might be changed
 asynchronously by a signal handler; @pxref{Defining a Signal Handler}.
 However, a properly written signal handler saves and restores the value
 of @code{errno}, so you generally do not need to worry about this
-possibility in ordinary code.
+possibility except when writing signal handlers.
 
 The initial value of @code{errno} at program startup is zero.  Many
 library functions are guaranteed to set it to certain nonzero values
 when they encounter certain kinds of errors.  These error conditions are
-listed for each function.  No library funciton ever stores zero in
+listed for each function.  No library function ever stores zero in
 @code{errno}.
+
+When you define a feature test macro to request a larger class of
+features, defining in it as well the feature test macro for a strict
+subset of those features is harmless but has no effect.  For example, if
+you define @code{_posix_c_source}, then defining @code{_posix_source} as
+well has no effect.  Likewise, if you define @code{_gnu_source}, then
+defining either @code{_posix_source} or @code{_posix_c_source} or
+@code{_svid_source} as well has no effect.  Note, however, that
+@code{_bsd_source} does not select a set of features which is not a
+subset of any of the other feature test macros supported.  This is
+because it defines BSD features that take precedence over the POSIX
+features that are requested by the other macros.  For this reason,
+defining @code{_bsd_source} in addition to the other feature test macros
+does have an effect: it causes the BSD features to take priority over
+the conflicting POSIX features.  
 @end deftypevr
 
 @strong{Portability Note:} ANSI C specifies @code{errno} as a
@@ -68,7 +82,7 @@ to zero before calling the function, and then check its value afterward.
 
 All the error codes have symbolic names, macros defined in
 @file{errno.h}.  The names start with @samp{E} and an upper-case
-letter or digit, and you should consider names of this form to be
+letter or digit; you should consider names of this form to be
 reserved names.  @xref{Reserved Names}.
 @pindex errno.h
 
@@ -78,7 +92,7 @@ The error code values are all positive integers and all distinct.
 other assumptions about the specific values of these symbolic constants.
 
 The value of @code{errno} doesn't necessarily have to correspond to any
-of these macros, since implementations might define additional error
+of these macros, since some library functions might return other error
 codes of their own for other situations.  The only values that are
 guaranteed to be meaningful for a particular library function are the
 ones that this manual explicitly lists for that function.
@@ -87,12 +101,12 @@ Here is an example showing how to handle failure to open a file
 correctly.  The function @code{open_sesame} tries to open the named file
 for reading and returns a stream if successful.  The @code{fopen}
 library function returns a null pointer if it couldn't open the file for
-some reason.  In that situation, this example constructs an appropriate
-error message using the @code{strerror} function, and the program exits.
-If we were going to make some other library calls before passing the
-error code to @code{strerror}, we'd have to save it in a local variable
-instead, because those other library functions might overwrite
-@code{errno} in the meantime.
+some reason.  In that situation, @code{open_sesame} constructs an
+appropriate error message using the @code{strerror} function, and
+terminates the program.  If we were going to make some other library
+calls before passing the error code to @code{strerror}, we'd have to
+save it in a local variable instead, because those other library
+functions might overwrite @code{errno} in the meantime.
 
 @example
 #include <errno.h>
@@ -151,7 +165,7 @@ expected to already exist.
 @comment POSIX.1
 @comment ###errno: ESRCH	3	No such process
 @deftypevr Macro int ESRCH
-There is no such process that matches the specified process ID.
+No process matches the specified process ID.
 @end deftypevr
 
 @comment errno.h
@@ -185,7 +199,8 @@ system can't find the right kind of device driver for it.
 @deftypevr Macro int E2BIG
 Argument list too long; used when the arguments passed to a new program
 being executed with one of the @code{exec} functions (@pxref{Executing a
-File}) are too large.  This condition never arises in the GNU system.
+File}) occupy too much memory space.  This condition never arises in the
+GNU system.
 @end deftypevr
 
 @comment errno.h
@@ -200,8 +215,9 @@ Invalid executable file format.  This condition is detected by the
 @comment POSIX.1
 @comment ###errno: EBADF	9	Bad file descriptor
 @deftypevr Macro int EBADF
-Bad file descriptor; the file might have been closed or perhaps you are
-trying to read to a file open only for writing (or vice versa).
+Bad file descriptor; for example, I/O on a descriptor that has been
+closed or reading from a descriptor open only for writing (or vice
+versa).
 @end deftypevr
 
 @comment errno.h
@@ -225,14 +241,15 @@ a deadlock situation.  For an example, @xref{File Locks}.
 @comment POSIX.1
 @comment ###errno: ENOMEM	12	Cannot allocate memory
 @deftypevr Macro int ENOMEM
-Not enough memory available.
+No memory available.  The system cannot allocate more virtual memory
+because its capacity is full.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
 @comment ###errno: EACCES	13	Permission denied
 @deftypevr Macro int EACCES
-Permission denied; the file permissions do not allow the attempted access.
+Permission denied; the file permissions do not allow the attempted operation.
 @end deftypevr
 
 @comment errno.h
@@ -248,7 +265,7 @@ Bad address; an invalid pointer was detected.
 @deftypevr Macro int ENOTBLK
 A file that isn't a block special file was given in a situation that
 requires one.  For example, trying to mount an ordinary file as a file
-system will give this error.
+system gives this error.
 @end deftypevr
 
 @comment errno.h
@@ -281,14 +298,15 @@ An attempt to make an improper link across file systems was detected.
 @deftypevr Macro int ENODEV
 No such device.  This a ``file doesn't exist'' error, but is
 used only when the file is expected to represent a device, like a
-block special file for a disk.
+block special file for a disk.  @strong{Incomplete:} The user should
+verify this meaning; it might not be true.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
 @comment ###errno: ENOTDIR	20	Not a directory
 @deftypevr Macro int ENOTDIR
-A file that isn't a directory was given in a situation that requires
+A file that isn't a directory was specified when a directory is required.
 one.
 @end deftypevr
 
@@ -296,7 +314,8 @@ one.
 @comment POSIX.1
 @comment ###errno: EISDIR	21	Is a directory
 @deftypevr Macro int EISDIR
-File is a directory; it can't be written to like an ordinary file.
+File is a directory; attempting to open a directory for writing gives
+this error.
 @end deftypevr
 
 @comment errno.h
@@ -318,7 +337,8 @@ There are too many files open in the entire system.
 @comment POSIX.1
 @comment ###errno: EMFILE	24	Too many open files
 @deftypevr Macro int EMFILE
-The process has too many files open and can't open any more.
+The current process has too many files open and can't open any more,
+and the kernel's table of open files is full.
 @c In GNU, use setdtablesize.
 @end deftypevr
 
@@ -352,7 +372,7 @@ File too big; the size of a file would be larger than allowed by the system.
 @comment ###errno: ENOSPC	28	No space left on device
 @deftypevr Macro int ENOSPC
 No space left on device; write operation on a file failed because the
-device is full.
+disk is full.
 @end deftypevr
 
 @comment errno.h
@@ -441,7 +461,7 @@ mode selected.
 @comment BSD
 @comment ###errno: ENOTSOCK	38	Socket operation on non-socket
 @deftypevr Macro int ENOTSOCK
-A file that isn't a socket was given in a situation that requires one.
+A file that isn't a socket was specified when a socket is required.
 @end deftypevr
 
 @comment errno.h
@@ -517,7 +537,7 @@ inconsistent with the protocol being used on the socket.  @xref{Sockets}.
 @comment BSD
 @comment ###errno: EADDRINUSE	48	Address already in use
 @deftypevr Macro int EADDRINUSE
-The socket address is already in use.  @xref{Socket Naming}.
+The requested socket address is already in use.  @xref{Socket Naming}.
 @end deftypevr
 
 @comment errno.h
@@ -540,7 +560,8 @@ A socket operation failed because the network was down.
 @comment BSD
 @comment ###errno: ENETUNREACH	51	Network is unreachable
 @deftypevr Macro int ENETUNREACH
-A socket operation failed because the network was unreachable.
+A socket operation failed because the subnet containing the remost host
+was unreachable.
 @end deftypevr
 
 @comment errno.h
@@ -548,6 +569,8 @@ A socket operation failed because the network was unreachable.
 @comment ###errno: ENETRESET	52	Network dropped connection on reset
 @deftypevr Macro int ENETRESET
 The network connection was reset because the remote host crashed.
+@strong{Incomplete:} The user should verify this definition; it
+might be incorrect.
 @end deftypevr
 
 @comment errno.h
@@ -561,14 +584,15 @@ A network connection was aborted locally.
 @comment BSD
 @comment ###errno: ECONNRESET	54	Connection reset by peer
 @deftypevr Macro int ECONNRESET
-A network connection was closed, such as by the remote machine rebooting.
+A network connection was closed for reasons outside the control of the
+local host, such as by the remote machine rebooting.
 @end deftypevr
 
 @comment errno.h
 @comment BSD
 @comment ###errno: ENOBUFS	55	No buffer space available
 @deftypevr Macro int ENOBUFS
-No internal buffer space available for an operation on a pipe or socket.
+The kernel's buffers for I/O operations are all in use.
 @end deftypevr
 
 @comment errno.h
@@ -583,7 +607,7 @@ You tried to connect a socket that is already connected.
 @comment BSD
 @comment ###errno: ENOTCONN	57	Socket is not connected
 @deftypevr Macro int ENOTCONN
-The socket is not connected to anything.  You get this message when you
+The socket is not connected to anything.  You get this error when you
 try to transmit data over a socket, without first specifying a destination
 for the data.
 @end deftypevr
@@ -599,8 +623,8 @@ The socket has already been shut down.
 @comment BSD
 @comment ###errno: ETIMEDOUT	60	Connection timed out
 @deftypevr Macro int ETIMEDOUT
-The operation on a socket failed because no response was received
-during the timeout period.
+A socket operation with a specified timeout received no response during
+the timeout period.
 @end deftypevr
 
 @comment errno.h
@@ -608,7 +632,7 @@ during the timeout period.
 @comment ###errno: ECONNREFUSED	61	Connection refused
 @deftypevr Macro int ECONNREFUSED
 A remote host refused to allow the network connection (typically because
-it is not running the appropriate service).
+it is not running the requested service).
 @end deftypevr
 
 @comment errno.h
@@ -616,7 +640,7 @@ it is not running the appropriate service).
 @comment ###errno: ELOOP	62	Too many levels of symbolic links
 @deftypevr Macro int ELOOP
 Too many levels of symbolic links were encountered in looking up a file name.
-Maybe there is a circular reference.
+This often indicates a cycle of symbolic links.
 @end deftypevr
 
 @comment errno.h
@@ -631,14 +655,14 @@ Filename too long (longer than @code{PATH_MAX};
 @comment BSD
 @comment ###errno: EHOSTDOWN	64	Host is down
 @deftypevr Macro int EHOSTDOWN
-The remote host for a network connection is down.
+The remote host for a requested network connection is down.
 @end deftypevr
 
 @comment errno.h
 @comment BSD
 @comment ###errno: EHOSTUNREACH	65	No route to host
 @deftypevr Macro int EHOSTUNREACH
-The remote host for a network connection is not reachable.
+The remote host for a requested network connection is not reachable.
 @end deftypevr
 
 @comment errno.h
@@ -646,7 +670,7 @@ The remote host for a network connection is not reachable.
 @comment ###errno: ENOTEMPTY	66	Directory not empty
 @deftypevr Macro int ENOTEMPTY
 Directory not empty, where an empty directory was expected.  Typically,
-this error occurs when you are trying to remove a directory.
+this error occurs when you are trying to delete a directory.
 @end deftypevr
 
 @comment errno.h
@@ -667,7 +691,10 @@ The user's disk quota was exceeded.
 @comment BSD
 @comment ###errno: ESTALE	70	Stale NFS file handle
 @deftypevr Macro int ESTALE
-The NFS file handle is stale; the file on the file server has been deleted.
+Stale NFS file handle.  This indicates an internal confusion in the NFS
+system which is due to file system rearrangements on the server host.
+Repairing this condition usually requires unmounting and remounting
+the NFS file system on the local host.
 @end deftypevr
 
 @comment errno.h
@@ -692,7 +719,7 @@ No locks available.  This is used by the file locking facilities;
 @deftypevr Macro int ENOSYS
 Function not implemented.  Some functions have commands or options defined
 that might not be supported in all implementations, and this is the kind
-of error you get if you request them and they aren't there.
+of error you get if you request them and they are not supported.
 @end deftypevr
 
 @comment errno.h
@@ -724,9 +751,11 @@ prints the error message.@refill
 @comment string.h
 @comment ANSI
 @deftypefun {char *} strerror (int @var{errnum})
-The @code{strerror} function maps the error code (@pxref{Error
-Reporting}) specified by the @var{errnum} argument to a descriptive
-error message string.  The return value is a pointer to this string.
+The @code{strerror} function maps the error code (@pxref{Checking for
+Errors}) specified by the @var{errnum} argument to a descriptive error
+message string.  The return value is a pointer to this string.
+
+The value @var{errnum} normally comes from the variable @code{errno}.
 
 You should not modify the string returned by @code{strerror}.  Also, if
 you make subsequent calls to @code{strerror}, the string might be
@@ -750,12 +779,11 @@ character to separate the @var{message} from the error string corresponding
 to @code{errno}.
 @end deftypefun
 
-The exact error messages used by @code{strerror} and @code{perror} vary
-from system to system (but all implementations use the same set of
-messages for both functions).  On the GNU system, the messages are
-fairly short; there are no multi-line messages or embedded newlines.
-Each error message begins with a capital letter and does not include any
-terminating punctuation.
+@code{strerror} and @code{perror} produce the exact same message for any
+given error code; the precise text varies from system to system.  On the
+GNU system, the messages are fairly short; there are no multi-line
+messages or embedded newlines.  Each error message begins with a capital
+letter and does not include any terminating punctuation.
 
 There is an example showing the use of @code{strerror} in @ref{Checking
 for Errors}.

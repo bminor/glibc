@@ -3022,7 +3022,7 @@ stream explicitly, using the functions described in @ref{String Streams}.
 
 More generally, you can define streams that do input/output to arbitrary
 objects using functions supplied by your program.  This protocol is
-discussed in @ref{Generalized Streams}.
+discussed in @ref{Custom Streams}.
 
 @strong{Portability Note:} The facilities described in this section are
 specific to GNU.  Other systems or C implementations might or might not

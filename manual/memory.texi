@@ -606,7 +606,7 @@ Here is a summary of the functions that work with @code{malloc}:
 Allocate a block of @var{size} bytes.  @xref{Basic Allocation}.
 
 @item free (@var{addr})
-Free a block previously allocated by @code{malloc}.  @xref{Freeing and
+Free a block previously allocated by @code{malloc}.  @xref{Freeing after
 Malloc}.
 
 @item realloc (@var{addr}, @var{size})
