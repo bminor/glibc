@@ -20,7 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
-
+#include <sys/types.h>
+#include <fcntl.h>
 
 /* Create a new session with the calling process as its leader.
    The process group IDs of the session and the calling process
@@ -39,14 +40,18 @@ DEFUN_VOID(__setsid)
       return -1;
     }
 
-  if (__setpgrp (pid, pid) < 0)
+  if (setpgid (pid, pid) < 0)
     return -1;
 
   tty = open ("/dev/tty", 0);
   if (tty < 0)
-    return 0;
+    {
+      errno = save;
+      return 0;
+    }
   (void) __ioctl (tty, TIOCNOTTY, 0);
   (void) __close (tty);
 
+  errno = save;
   return 0;
 }
