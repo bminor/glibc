@@ -81,8 +81,6 @@ __yp_bind (const char *domain, dom_binding **ypdb)
       ysd->dom_socket = -1;
       ysd->dom_vers = -1;
     }
-  else
-    ysd->dom_client = NULL;
 
   try = 0;
 
