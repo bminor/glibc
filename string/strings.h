@@ -18,29 +18,4 @@ Cambridge, MA 02139, USA.  */
 
 /* Compatibility with BSD string(3).  */
 
-#ifndef	_STRINGS_H
-
-#define	_STRINGS_H	1
-#include <features.h>
-
-#ifndef	_STRING_H
 #include <string.h>
-#endif	/* string.h  */
-
-#ifdef	__cplusplus
-extern "C" {
-#endif
-
-/* These do not depend on __USE_BSD because
-   <strings.h> is a BSD-only header.  */
-
-/* Find the first occurrence of C in S.  */
-extern char *EXFUN(index, (CONST char *__s, int __c));
-/* Find the last occurrence of C in S.  */
-extern char *EXFUN(rindex, (CONST char *__s, int __c));
-
-#ifdef	__cplusplus
-}
-#endif
-
-#endif	/* strings.h  */
