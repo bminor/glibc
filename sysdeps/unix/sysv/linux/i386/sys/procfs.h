@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,17 +17,17 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_PROCFS_H
-
 #define _SYS_PROCFS_H	1
-#include <features.h>
 
 /* This is somehow modelled after the file of the same name on SysVr4
    systems.  It provides a definition of the core file format for ELF
    used on Linux.  */
 
+#include <features.h>
 #include <signal.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <sys/ucontext.h>
 #include <sys/user.h>
 #include <sys/elf.h>
 
@@ -40,10 +40,6 @@ struct elf_siginfo
     int si_errno;			/* Errno.  */
   };
 
-typedef elf_greg_t greg_t;
-typedef elf_gregset_t gregset_t;
-typedef elf_fpregset_t fpregset_t;
-#define NGREG ELF_NGREG
 
 /* Definitions to generate Intel SVR4-like core files.  These mostly
    have the same names as the SVR4 types with "elf_" tacked on the
@@ -99,6 +95,18 @@ struct elf_prpsinfo
     char pr_fname[16];			/* Filename of executable.  */
     char pr_psargs[ELF_PRARGSZ];	/* Initial part of arg list.  */
   };
+
+
+/* Addresses.  */
+typedef void *psaddr_t;
+
+/* Register sets.  Linux has different names.  */
+typedef gregset_t prgregset_t;
+typedef fpregset_t prfpregset_t;
+
+/* We don't have any differences between processes and threads,
+   therefore habe only ine PID type.  */
+typedef __pid_t lwpid_t;
 
 
 typedef struct elf_prstatus prstatus_t;
