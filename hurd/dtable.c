@@ -98,7 +98,7 @@ init_dtable (void)
     dt[i] = NULL;
 }
 
-text_set_element (__libc_subinit, init_dtable);
+text_set_element (_hurd_subinit, init_dtable);
 
 /* XXX when the linker supports it, the following functions should all be
    elsewhere and just have text_set_elements here.  */
