@@ -49,7 +49,7 @@ DEFUN(localtime, (timer), CONST time_t *timer)
   if (tp == NULL)
     return NULL;
 
-  if (!__tz_compute (*timer, tp))
+  if (!__tz_compute (*timer, *tp))
     return NULL;
 
   tp = __offtime(timer, __timezone);
