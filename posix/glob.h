@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,10 @@ Cambridge, MA 02139, USA.  */
 #ifndef	_GLOB_H
 
 #define	_GLOB_H	1
+
+#ifdef	__cplusplus
+extern "C" {
+#endif
 
 /* Bits set in the FLAGS argument to `glob'.  */
 #define	GLOB_ERR	(1 << 0)/* Return on read errors.  */
@@ -60,5 +64,8 @@ extern int EXFUN(glob, (CONST char *__pattern, int __flags,
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
 extern void EXFUN(globfree, (glob_t *__pglob));
 
+#ifdef	__cplusplus
+}
+#endif
 
 #endif	/* glob.h  */
