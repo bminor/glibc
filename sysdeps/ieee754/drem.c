@@ -50,7 +50,7 @@ DEFUN(__drem, (x, y),
   ux.d = x;
   uy.d = y;
 #define x ux.d
-#define	y ux.d
+#define	y uy.d
 
   uy.ieee.negative = 0;
 
