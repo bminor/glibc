@@ -72,7 +72,7 @@ extern char *strcpy __P ((char *__dest, __const char *__src));
 extern char *strncpy __P ((char *__dest, __const char *__src, size_t __n));
 
 /* Append SRC onto DEST.  */
-extern char *strcat __P ((char *__src, __const char *__dest));
+extern char *strcat __P ((char *__dest, __const char *__src));
 /* Append no more than N characters from SRC onto DEST.  */
 extern char *strncat __P ((char *__dest, __const char *__src, size_t __n));
 
