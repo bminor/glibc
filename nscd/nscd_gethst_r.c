@@ -67,7 +67,7 @@ __nscd_gethostbyname2_r (const char *name, int af, struct hostent *resultbuf,
 
 
 int
-__nscd_gethostbyaddr_r (const char *addr, int len, int type,
+__nscd_gethostbyaddr_r (const char *addr, size_t len, int type,
 			struct hostent *resultbuf, char *buffer, size_t buflen,
 			int *h_errnop)
 {
@@ -182,7 +182,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       align2 = ((__alignof__ (char *) - ((cp + align1 + hst_resp.h_name_len)
 					 - ((char *) 0)))
 		& (__alignof__ (char *) - 1));
-      if (buflen < (align1 + hst_resp.h_name_len + align2 +
+      if (buflen < (align1 + hst_resp.h_name_len + align2
 		    + ((hst_resp.h_aliases_cnt + hst_resp.h_addr_list_cnt + 2)
 		       * sizeof (char *))
 		    + hst_resp.h_addr_list_cnt * (type == AF_INET
