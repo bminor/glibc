@@ -37,6 +37,7 @@ _hurd_setup_sighandler (int flags,
 			int signo, int sigcode,
 			void *state)
 {
+  extern jmp_buf _hurd_sigthread_fault_env;
   struct i386_thread_state *ts;
   void *sigsp;
   struct sigcontext *scp;
@@ -66,32 +67,41 @@ _hurd_setup_sighandler (int flags,
   /* Push the arguments to call `trampoline' on the stack.  */
   sigsp -= sizeof (*stackframe);
   stackframe = sigsp;
-  stackframe->handler = handler;
-  stackframe->signo = signo;
-  stackframe->sigcode = sigcode;
-  stackframe->scp = scp = &stackframe->ctx;
 
-  /* Set up the sigcontext from the current state of the thread.  */
+  if (! setjmp (_hurd_sigthread_fault_env))
+    {
+      stackframe->handler = handler;
+      stackframe->signo = signo;
+      stackframe->sigcode = sigcode;
+      stackframe->scp = scp = &stackframe->ctx;
 
-  scp->sc_onstack = sigaltstack->ss_flags & SA_ONSTACK ? 1 : 0;
+      /* Set up the sigcontext from the current state of the thread.  */
 
-  scp->sc_gs = ts->gs;
-  scp->sc_fs = ts->fs;
-  scp->sc_es = ts->es;
-  scp->sc_ds = ts->ds;
+      scp->sc_onstack = sigaltstack->ss_flags & SA_ONSTACK ? 1 : 0;
 
-  scp->sc_edi = ts->edi;
-  scp->sc_esi = ts->esi;
-  scp->sc_ebp = ts->ebp;
+      scp->sc_gs = ts->gs;
+      scp->sc_fs = ts->fs;
+      scp->sc_es = ts->es;
+      scp->sc_ds = ts->ds;
 
-  scp->sc_ebx = ts->ebx;
-  scp->sc_edx = ts->edx;
-  scp->sc_ecx = ts->ecx;
-  scp->sc_eax = ts->eax;
+      scp->sc_edi = ts->edi;
+      scp->sc_esi = ts->esi;
+      scp->sc_ebp = ts->ebp;
+
+      scp->sc_ebx = ts->ebx;
+      scp->sc_edx = ts->edx;
+      scp->sc_ecx = ts->ecx;
+      scp->sc_eax = ts->eax;
   
-  scp->sc_eip = ts->eip;
-  scp->sc_uesp = ts->uesp;
-  scp->sc_efl = ts->efl;
+      scp->sc_eip = ts->eip;
+      scp->sc_uesp = ts->uesp;
+      scp->sc_efl = ts->efl;
+    }
+  else
+    /* We got a fault trying to write the stack frame.
+       We cannot set up the signal handler.
+       Returning NULL tells our caller, who will nuke us with a SIGILL.  */
+    return NULL;
 
   /* Modify the thread state to call `trampoline' on the new stack.  */
   ts->uesp = (int) sigsp;
