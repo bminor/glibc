@@ -72,9 +72,9 @@ library.  This section gives you an overview of these standards, so that
 you will know what they are when they are mentioned in other parts of
 the manual.
 
-@c !!! this should explain better how to use the summary
-@xref{Library Summary}, for information about what
-standards specify what features.
+@xref{Library Summary}, for an alphabetical list of the functions and
+other symbols provided by the library.  This list also states which
+standards each function or symbol comes from.
 
 @menu
 * ANSI C::                      The American National Standard for the
@@ -182,10 +182,9 @@ specifically from the 4.2 BSD and 4.3 BSD Unix systems (also known as
 @dfn{Berkeley Unix}) and from @dfn{SunOS} (a popular 4.2 BSD derivative
 that includes some Unix System V functionality).  
 
-@c !!! sockets, all network code, select, BSD signals, symlinks
-@strong{Incomplete:} Are there any particular Berkeley/SunOS facilities
-that ought to be mentioned specifically here?
-
+The BSD facilities include symbolic links (@pref{Symbolic Links}), the
+@code{select} function (@pref{Waiting for I/O}), the BSD signal
+functions (@pxref{BSD Signal Handling}), and sockets (@pxref{Sockets}).
 
 @node SVID,  , Berkeley Unix, Standards and Portability
 @subsection SVID (The System V Interface Description)
