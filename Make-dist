@@ -104,6 +104,9 @@ $(..)glibc-%:
 
 +tsrcs := $(+tsrcs) \
 	  TAGS
+.PHONY: TAGS
+TAGS: $(..)MakeTAGS
+	$(MAKE) -f $< $@
 
 ifdef	   subdir
 
