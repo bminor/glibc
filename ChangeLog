@@ -1,5 +1,15 @@
 1998-03-10  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/rtld.c (_dl_library_path): New variable.  Initialize from
+	LD_LIBRARY_PATH envvar and let user overwrite the value using new
+	--library-path option.
+
+	* elf/dl-load.c (_dl_map_object): Don't get LD_LIBRARY_PATH
+	envvar, use global variable _dl_library_path.
+
+	* Makeconfig: Use --library-path option instead of LD_LIBRARY_PATH
+	envvar.
+
 	* misc/syslog.c (vsyslog): Don't try to send if not connected to
 	syslog daemon.
 	(closelog_internal): Don't do anything if not connected.
