@@ -1,3 +1,8 @@
+2001-11-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c: If incomplete nan of inf(inity) strings
+	are found call conv_error and not input_error [PR libc/2669].
+
 2001-11-26  Stephen L Moshier <moshier@mediaone.net>
 
 	* sysdeps/ieee754/ldbl-128/e_log10l.c (L102B): Fix typo in
