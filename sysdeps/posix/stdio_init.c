@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -37,22 +37,36 @@ DEFUN(__stdio_init_stream, (stream), FILE *stream)
     return;
 
   /* Find out what sort of file this is.  */
-  if (__fstat(fd, &statb) < 0)
+  if (__fstat (fd, &statb) < 0)
       return;
 
-  if (S_ISFIFO(statb.st_mode))
+  if (S_ISFIFO (statb.st_mode))
     {
       /* It's a named pipe (FIFO).  Make it unbuffered.  */
       stream->__userbuf = 1;
       return;
     }
 
-  if (S_ISCHR(statb.st_mode))
+  if (S_ISCHR (statb.st_mode))
     {
       /* It's a character device.
 	 Make it line-buffered if it's a terminal.  */
-      if (__isatty(fd))
-	stream->__linebuf = 1;
+      if (__isatty (fd))
+	{
+	  stream->__linebuf = 1;
+
+	  /* Unix terminal devices have the bad habit of claiming to be
+	     seekable.  On systems I have tried, seeking on a terminal
+	     device seems to set its file position as specified, such that
+	     a later tell says the same thing.  This is in no way related
+	     to actual seekability--the ability to seek back and read old
+	     data.  Unix terminal devices will let you "seek back", and
+	     then read more new data from the terminal.  I can think of
+	     nothing to do about this lossage except to preemptively disable
+	     seeking on terminal devices.  */
+
+	  stream->__io_funcs.__seek = NULL; /* Seeks get ESPIPE.  */
+	}
     }
   
 #ifdef	_STATBUF_ST_BLKSIZE
