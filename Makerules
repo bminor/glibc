@@ -99,6 +99,16 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules
 	 done) > $@T
 	mv $@T $@
 
+# Reorder before-compile so that mach things come first, and hurd things
+# second, before all else.  The mach and hurd subdirectories have many
+# generated header files which the much of rest of the library depends on,
+# so it is best to build them first (and mach before hurd, at that).
+before-compile := $(filter $(common-objpfx)mach% $(common-objpfx)hurd%,\
+			   $(before-compile))
+		  $(filter-out $(common-objpfx)mach% $(common-objpfx)hurd%,\
+			       $(before-compile))
+
+
 # Remove existing files from `before-compile'.  Things are added there when
 # they must exist for dependency generation to work right, but once they
 # exist there is no further need for every single file to depend on them,
@@ -307,9 +317,13 @@ $(make-target-directory)
 $(INSTALL_DATA) $< $@
 endef
 
-# Make the target directory if it doesn't exist.
+# Make the target directory if it doesn't exist.  Because of make's
+# directory cache, this will produce the `mkdir' command when the directory
+# already exists, if it didn't exist at the start of the `make' run.  The
+# `-' prefix ignores errors from mkdir, so there will just be some
+# gratuitous but harmless `File exists' messages.
 define make-target-directory
-$(patsubst %/,-mkdir %,$(filter-out $(wildcard $(@D:%/=%)),$(@D:%/=%)))
+$(addprefix -mkdir ,$(filter-out $(wildcard $(@D:%/=%)),$(@D:%/=%)))
 endef
 
 
