@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,11 +17,12 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
+#include <hurd/signal.h>
 
 int
 __sigreturn (register const struct sigcontext *scp)
 {
-  struct _hurd_sigstate *ss;
+  struct hurd_sigstate *ss;
   register int *usp asm ("%eax");
 
   if (scp == NULL)
