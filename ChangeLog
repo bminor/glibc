@@ -1,5 +1,14 @@
 1998-03-30  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nss/getXXent_r.c (REENTRANT_GETNAME): Avoid endless loop.
+
+1998-03-30 17:26  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-open.c (_dl_open): Fix a typo.
+	(_dl_global_scope_alloc): Make it static.
+
+1998-03-30  Ulrich Drepper  <drepper@cygnus.com>
+
 	* csu/Makefile (routines): Add libc-start.
 	* sysdeps/generic/libc-stat.c: New file.
 
