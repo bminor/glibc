@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <fcntl.h>
 
 /* Change the current directory to PATH.  */
 int
