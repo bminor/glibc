@@ -34,10 +34,6 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- * 	This product includes software developed by the University of
- * 	California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
@@ -147,7 +143,7 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
     type = T_AAAA;
     break;
   default:
-    *h_errnop = NETDB_INTERNAL;
+    *h_errnop = NO_DATA;
     *errnop = EAFNOSUPPORT;
     return NSS_STATUS_UNAVAIL;
   }
@@ -195,7 +191,7 @@ _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
 
 
 enum nss_status
-_nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
+_nss_dns_gethostbyaddr_r (const char *addr, size_t len, int af,
 			  struct hostent *result, char *buffer, size_t buflen,
 			  int *errnop, int *h_errnop)
 {
@@ -211,7 +207,8 @@ _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
   } *host_data = (struct host_data *) buffer;
   querybuf host_buffer;
   char qbuf[MAXDNAME+1], *qp;
-  int size, n, status;
+  size_t size;
+  int n, status;
 
   if (af == AF_INET6 && len == IN6ADDRSZ &&
       (memcmp (uaddr, mapped, sizeof mapped) == 0
@@ -422,11 +419,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
 	{
 	  if (errno == EMSGSIZE)
-	    {
-	      *errnop = ERANGE;
-	      *h_errnop = NETDB_INTERNAL;
-	      return NSS_STATUS_TRYAGAIN;
-	    }
+	    goto too_small;
 
 	  n = -1;
 	}
@@ -473,7 +466,9 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  linebuflen -= n;
 	  /* Get canonical name.  */
 	  n = strlen (tbuf) + 1;	/* For the \0.  */
-	  if ((size_t) n > buflen || n >= MAXHOSTNAMELEN)
+	  if (n > linebuflen)
+	    goto too_small;
+	  if (n >= MAXHOSTNAMELEN)
 	    {
 	      ++had_error;
 	      continue;
@@ -495,7 +490,9 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  cp += n;
 	  /* Get canonical name.  */
 	  n = strlen (tbuf) + 1;   /* For the \0.  */
-	  if ((size_t) n > buflen || n >= MAXHOSTNAMELEN)
+	  if (n > linebuflen)
+	    goto too_small;
+	  if (n >= MAXHOSTNAMELEN)
 	    {
 	      ++had_error;
 	      continue;
@@ -539,11 +536,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
 	    {
 	      if (errno == EMSGSIZE)
-		{
-		  *errnop = ERANGE;
-		  *h_errnop = NETDB_INTERNAL;
-		  return NSS_STATUS_TRYAGAIN;
-		}
+		goto too_small;
 
 	      n = -1;
 	    }
@@ -616,11 +609,8 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  linebuflen -= sizeof (align) - ((u_long) bp % sizeof (align));
 	  bp += sizeof (align) - ((u_long) bp % sizeof (align));
 
-	  if (n >= linebuflen)
-	    {
-	      ++had_error;
-	      continue;
-	    }
+	  if (n > linebuflen)
+	    goto too_small;
 	  if (hap >= &host_data->h_addr_ptrs[MAX_NR_ADDRS-1])
 	    {
 	      cp += n;
@@ -655,11 +645,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	{
 	  n = strlen (qname) + 1;	/* For the \0.  */
 	  if (n > linebuflen)
-	    {
-	      *errnop = ERANGE;
-	      *h_errnop = NETDB_INTERNAL;
-	      return NSS_STATUS_TRYAGAIN;
-	    }
+	    goto too_small;
 	  if (n >= MAXHOSTNAMELEN)
 	    goto no_recovery;
 	  result->h_name = bp;
