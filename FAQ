@@ -444,11 +444,14 @@ libc binaries from the US.
 unless the user specifies a -dynamic-linker argument.  This is the
 name of the libc5 dynamic linker, which does not work with glibc.
 
-For casual use of GNU libc you can just specify
-    -dynamic-linker=/lib/ld-linux.so.2
+For casual use of GNU libc you can just specify to the linker
+    --dynamic-linker=/lib/ld-linux.so.2
 
 which is the glibc dynamic linker, on Linux systems.  On other systems
-the name is /lib/ld.so.1.
+name is /lib/ld.so.1.  When linking via gcc, you've got to add
+    -Wl,--dynamic-linker=/lib/ld-linux.so.2
+
+to the gcc command line.
 
 To change your environment to use GNU libc for compiling you need to
 change the `specs' file of your gcc.  This file is normally found at

@@ -1,3 +1,13 @@
+1998-09-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/res_init.c (res_init): Handle resolv.conf file with only
+	one nameserver correctly.  Patch by HJ Lu.
+
+1998-09-14  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_nis/nis-pwd.c (_nss_nis_getpwent_r): Correct test for
+	invalid password.
+
 1998-09-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/random_r.c (__setstate_r): Allow call with same state
