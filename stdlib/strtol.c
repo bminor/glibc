@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -134,7 +134,7 @@ DEFUN(strtol, (nptr, endptr, base),
 #if	!UNSIGNED
   /* Check for a value that is within the range of
      `unsigned long int', but outside the range of `long int'.  */
-  if (i > (unsigned long int) (sign > 0 ? LONG_MAX : - LONG_MAX))
+  if (i > (unsigned long int) (sign > 0 ? LONG_MAX : - LONG_MIN))
     overflow = 1;
 #endif
 
