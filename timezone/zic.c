@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.99";
+static char    elsieid[] = "@(#)zic.c  7.100";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -10,6 +10,8 @@ static char	elsieid[] = "@(#)zic.c	7.99";
 #ifdef unix
 #include "sys/stat.h"			/* for umask manifest constants */
 #endif /* defined unix */
+
+#include <libintl.h>
 
 /*
 ** On some ancient hosts, predicates like `isspace(C)' are defined
@@ -615,7 +617,7 @@ const char * const	tofile;
 		result = link(fromname, toname);
 #if (HAVE_SYMLINK - 0)
 		if (result != 0) {
-		        char *s = (char *) tofile;
+		        const char *s = tofile;
 		        register char *symlinkcontents = NULL;
 		        while ((s = strchr(s+1, '/')) != NULL)
 			        symlinkcontents = ecatalloc(symlinkcontents, "../");
@@ -1916,10 +1918,12 @@ const char * const	type;
 	buf = erealloc(buf, (int) (132 + strlen(yitcommand) + strlen(type)));
 	(void) sprintf(buf, "%s %d %s", yitcommand, year, type);
 	result = system(buf);
-	if (result == 0)
-		return TRUE;
-	if (result == (1 << 8))
-		return FALSE;
+	if (WIFEXITED(result)) switch (WEXITSTATUS(result)) {
+		case 0:
+			return TRUE;
+		case 1:
+			return FALSE;
+	}
 	error(_("Wild result from command execution"));
 	(void) fprintf(stderr, _("%s: command was '%s', result was %d\n"),
 		progname, buf, result);
