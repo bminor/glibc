@@ -18,12 +18,6 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 
-#define GET(lock, type, what)						      \
-type get##what (void)							      \
-{									      \
-  return _hurd_getport (&_hurd_##what, &_hurd_##lock);			      \
-}
-
 static inline mach_port_t
 get (struct _hurd_port *cell)
 {
