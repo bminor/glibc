@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN_VOID(sync)
 {
-  error_t err = __file_syncfs (_hurd_crdir, 1, 1);
+  error_t err = _HURD_PORT_USE (&_hurd_crdir, __file_syncfs (port, 1, 1));
   if (err)
     return __hurd_fail (err);
   return 0;
