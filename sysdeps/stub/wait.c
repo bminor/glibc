@@ -28,3 +28,12 @@ DEFUN(__wait, (stat_loc), __WAIT_STATUS stat_loc)
   errno = ENOSYS;
   return -1;
 }
+
+
+#ifdef	 HAVE_GNU_LD
+
+#include <gnu-stabs.h>
+
+stub_warning(__wait);
+
+#endif	/* GNU stabs.  */
