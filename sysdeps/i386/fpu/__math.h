@@ -406,8 +406,8 @@ asinh (double __x)
 {
   register double __y = fabs (__x);
 
-  return log1p ((__y * __y / (sqrt (__y * __y + 1.0) + 1.0) + __y)
-		* __sgn1 (__x));
+  return (log1p (__y * __y / (sqrt (__y * __y + 1.0) + 1.0) + __y)
+	  * __sgn1 (__x));
 }
 
 __MATH_INLINE double acosh (double __x);
