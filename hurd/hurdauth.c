@@ -39,11 +39,13 @@ __add_auth (mach_port_t me,
 }
 
 error_t
-__del_auth (mach_port_t me, task_t task,
-	    uid_t *uids, size_t nuids,
-	    gid_t *gids, size_t ngids)
+__del_auth (mach_port_t me,
+	    task_t task,
+	    uid_t *uids, mach_msg_type_number_t nuids,
+	    gid_t *gids, mach_msg_type_number_t ngids)
 {
   error_t err;
+  auth_t newauth;
 
   if (!_hurd_refport_secure_p (task))
     return EPERM;
@@ -53,7 +55,6 @@ __del_auth (mach_port_t me, task_t task,
 
   if (!err)
     {
-      auth_t newauth;
       size_t i, j;
       size_t nu = _hurd_id.gen.nuids, ng = _hurd_id.gen.ngids;
       uid_t newu[nu];
