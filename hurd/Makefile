@@ -21,20 +21,47 @@ subdir := hurd
 # XXX interfaces headers want to be in hurd/
 headers = hurd.h $(interface-headers)
 
-user-interfaces		:= process fs io
-server-interfaces	:= 
+user-interfaces		:= auth process \
+			   exec core interrupt \
+			   fs io socket term
+server-interfaces	:= misc
+
+routines = __pid2task __task2pid pid2task task2pid \
+	   __setauth setauth hurdports \
+	   chcore fchcore fchroot \
+	   hurdauth hurdid hurdpath hurdpid hurdsig hurdsock \
+	   dtable __getdport getdport openport setdtablesize \
+	   sigportdemux _hurd_start_sigthread \
+	   getuids getumask \
+	   _hurd_dead_recv \
+	   fopenport __fopenport \
+	   $(interface-routines)
+aux := hurdsyms
+
+all:
+
+
+# This rule needs to come before the implicit rules in Machrules.
+__%.c: intr_rpc.awk %_rpc.c
+	awk -f $^ rpc=__$*_rpc > $@-new
+	mv $@-new $@
+# %_rpc.c is made with mig by Machrules.
+__%_rpc.c: %_rpc.c
+	sed s/MACH_MSG_OPTION_NONE/MACH_SEND_INTERRUPT/ $< > $@
 
 include ../mach/Machrules
 
-routines := __pid2task __task2pid pid2task task2pid \
-	    __setauth setauth hurdports \
-	    chcore fchcore fchroot \
-	    hurdauth hurdid hurdpath hurdpid hurdsig hurdsock \
-	    dtable __getdport getdport openport setdtablesize \
-	    sigportdemux _hurd_start_sigthread \
-	    getuids getumask \
-	    _hurd_dead_recv \
-	    $(interface-routines)
-aux := hurdsyms
+ifneq (,)
+include hurdintr
+endif
+hurdintr: hurdintr.awk $(user-interfaces:%=%.defs)
+	awk -f $^ varname=intr-calls > $@-new
+	mv $@-new $@
+
+# Make the INTR user stubs be defined as CALL_rpc.
+migdefines := $(migdefines) $(foreach call,$(intr-calls),-D$(call)=$(call)_rpc)
+
+interface-routines := $(filter-out %_rpc,$(interface-routines)) \
+		      $(intr-calls:%=__% %)
 
 include ../Rules
