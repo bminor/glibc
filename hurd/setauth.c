@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,9 +16,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef MIB_HACKS
-
 #include <hurd.h>
+#include <hurd/port.h>
+#include <hurd/id.h>
 #include <gnu-stabs.h>
 
 /* Things in the library which want to be run when the auth port changes.  */
@@ -29,7 +29,9 @@ const struct
   } _hurd_reauth_hook;
 
 
+#ifdef noteven
 static struct mutex reauth_lock;
+#endif
 
 
 /* Set the auth port to NEW, and reauthenticate
@@ -39,7 +41,7 @@ __setauth (auth_t new)
 {
   int d;
   mach_port_t newport;
-  void (**fn) (auth_t);
+  void (*const *fn) (auth_t);
 
   /* Give the new send right a user reference.
      This is a good way to check that it is valid.  */
@@ -73,11 +75,11 @@ __setauth (auth_t new)
 	{
 	  mach_port_t new;
 	  if (! __io_reauthenticate (_hurd_init_dtable[d], _hurd_pid) &&
-	      ! _HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
-				__auth_user_authenticate (port,
-							  _hurd_init_dtable[d],
-							  _hurd_pid,
-							  &new)))
+	      ! HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
+			       __auth_user_authenticate (port,
+							 _hurd_init_dtable[d],
+							 _hurd_pid,
+							 &new)))
 	    {
 	      __mach_port_deallocate (__mach_task_self (),
 				      _hurd_init_dtable[d]);
@@ -107,9 +109,9 @@ __setauth (auth_t new)
 static void
 init_reauth (void)
 {
+#ifdef noteven
   __mutex_init (&reauth_lock);
+#endif
 }
 
 text_set_element (__libc_subinit, init_reauth);
-
-#endif
