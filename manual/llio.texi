@@ -312,8 +312,12 @@ Normally, when no input is immediately available, @code{read} waits for
 some input.  But if the @code{O_NONBLOCK} flag is set for the file
 (@pxref{File Status Flags}), @code{read} returns immediately without
 reading any data, and reports this error.
-@c !!! it is EWOULDBLOCK on BSD<4.4; in 4.4, EAGAIN==EWOULDBLOCK, so
-@c testing for EWOULDBLOCK wins.
+
+@c ??? This is a change yet to be made in the library.
+@strong{Compatibility Note:} Most versions of BSD Unix use a different
+error code for this: @code{EWOULDBLOCK}.  In the GNU library,
+@code{EWOULDBLOCK} is an alias for @code{EAGAIN}, so it doesn't matter
+which name you use.
 
 On some systems, reading a large amount of data from a character special
 file can also fail with @code{EAGAIN} if the kernel cannot find enough
@@ -370,7 +374,12 @@ reports this error.  An example of a situation that might cause the
 process to block on output is writing to a terminal device that supports
 flow control, where output has been suspended by receipt of a STOP
 character.
-@c !!! see comment wrt EAGAIN in read doc above
+
+@c ??? This is a change yet to be made in the library.
+@strong{Compatibility Note:} Most versions of BSD Unix use a different
+error code for this: @code{EWOULDBLOCK}.  In the GNU library,
+@code{EWOULDBLOCK} is an alias for @code{EAGAIN}, so it doesn't matter
+which name you use.
 
 On some systems, writing a large amount of data from a character special
 file can also fail with @code{EAGAIN} if the kernel cannot find enough
@@ -472,6 +481,11 @@ position, measured in bytes from the beginning of the file.
 You can use this feature together with @code{SEEK_CUR} to read the
 current file position.
 
+You can set the file position past the current end of the file.  This
+does not by itself make the file longer; @code{lseek} never changes the
+file.  But subsequent output at that position will extend the file's
+size.
+
 If the file position cannot be changed, or the operation is in some way
 invalid, @code{lseek} returns a value of @code{-1}.  The following
 @code{errno} error conditions are defined for this function:
@@ -488,8 +502,6 @@ file offset is not valid.
 The @var{filedes} corresponds to a pipe or FIFO, which cannot be positioned.
 (There may be other kinds of files that cannot be positioned either, but
 the behavior is not specified in those cases.)
-
-@c !!! can you also get ENOSPC when extending the file?
 @end table
 
 The @code{lseek} function is the underlying primitive for the
@@ -580,8 +592,8 @@ The return value is the new stream.  If the stream cannot be created
 (for example, if the modes for the file indicated by the file descriptor
 do not permit the access specified by the @var{opentype} argument), a
 null pointer is returned instead.
-@c !!! this failure mode is not detected; the fd is assumed valid (and
-@c there is no easy way to test this anyway)
+@c ??? The library does not currently detect the mismatch.
+@c ??? It ought to.  It can check the descriptor using fcntl F_GETFL.
 @end deftypefun
 
 For an example showing the use of the @code{fdopen} function,
@@ -709,10 +721,12 @@ obsolete data that had been in the stream's buffer.
 If you do output to one channel at the end of the file, this will
 certainly leave the other independent channels positioned somewhere
 before the new end.  If you want them to output at the end, you must set
-their file positions to end of file, first.  In order to make the
-end-of-file position accurate, you must clean the output channel you
-were using, if it is a stream.
-@c !!! or use append mode
+their file positions to end of file, first.  (This is not necessary if
+you use an append-type descriptor or stream; they always output at the
+current end of the file.)  In order to make the end-of-file position
+accurate, you must clean the output channel you were using, if it is a
+stream.  (This is necessary even if you plan to use an append-type
+channel next.)
 
 It's impossible for two channels to have separate file pointers for a
 file that doesn't support random access.  Thus, channels for reading or
@@ -809,11 +823,13 @@ The @code{fd_set} data type represents file descriptor sets for the
 @comment sys/types.h
 @comment BSD
 @deftypevr Macro int FD_SETSIZE
-The value of this macro is the maximum number of file descriptors that
-a @code{fd_set} object can hold information about.  This is greater
-than or equal to the maximum number of open file descriptors supported
-by the system.
-@c !!! in GNU, # of fds can be unlimited
+The value of this macro is the maximum number of file descriptors that a
+@code{fd_set} object can hold information about.  This is normally
+greater than or equal to the maximum number of open file descriptors
+supported by the system.  On some systems, including GNU, there is no
+absolute limit on the number of descriptors open, but this macro still
+has a constant value which controls the number of bytes in an @code{fd_set}.
+@c ??? xref needed here to setrlimit once we document that.
 @end deftypevr
 
 @comment sys/types.h
@@ -871,8 +887,10 @@ of this argument.
 The @var{timeout} specifies the maximum time to wait.  If you pass a
 null pointer for this argument, it means to block indefinitely until one
 of the file descriptors is ready.  Otherwise, you should provide the
-time @code{struct timeval} format; see @ref{High-Resolution Calendar}.
-@c !!! Use a timeout of {0,0} to poll without blocking.
+time in @code{struct timeval} format; see @ref{High-Resolution
+Calendar}.  Specify zero as the time (a @code{struct timeval} containing
+all zeros) if you want to find out which descriptors are ready without
+waiting if none are ready.
 
 The normal return value from @code{select} is the total number of ready file
 descriptors in all of the sets.  Each of the argument sets is overwritten
@@ -995,63 +1013,67 @@ Set process or process group ID to receive @code{SIGIO} signals.
 @cindex redirecting input and output
 
 You can @dfn{duplicate} a file descriptor, or allocate another file
-descriptor that refers to the same open file as the original.
+descriptor that refers to the same open file as the original.  Duplicate
+descriptors share one file position and one set of file status flags
+(@pxref{File Status Flags}), but each has its own set of file descriptor
+flags (@pxref{Descriptor Flags}).
+
 The major use of duplicating a file descriptor is to implement
 @dfn{redirection} of input or output:  that is, to change the
 file or pipe that a particular file descriptor corresponds to.
 
 You can perform this operation using the @code{fcntl} function with the
-@code{F_DUPFD} command, but there are also specialized functions
-@code{dup} and @code{dup2} to do the same operation.  
+@code{F_DUPFD} command, but there are also convenient functions
+@code{dup} and @code{dup2} for duplicating descriptors.
 
+@pindex unistd.h
+@pindex fcntl.h
 The @code{fcntl} function and flags are declared in @file{fcntl.h},
 while prototypes for @code{dup} and @code{dup2} are in the header file
 @file{unistd.h}.
-@pindex unistd.h
-@pindex fcntl.h
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun int dup (int @var{filedes})
-This function is equivalent to @code{fcntl (@var{filedes}, F_DUPFD, 0)}.
+@deftypefun int dup (int @var{old})
+This function copies descriptor @var{old} to the first available
+descriptor number (the first number not currently open).  It is
+equivalent to @code{fcntl (@var{old}, F_DUPFD, 0)}.
 @end deftypefun
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun int dup2 (int @var{filedes}, int @var{old_filedes})
-The call:
+@deftypefun int dup2 (int @var{old}, int @var{new})
+This function copies the descriptor @var{old} to descriptor number
+@var{new}.
+
+If @var{old} is an invalid descriptor, then @code{dup2} does nothing; it
+does not close @var{new}.  Otherwise, the new duplicate of @var{old}
+replaces any previous meaning of descriptor @var{new}, as if @var{new}
+were closed first.
+
+If @var{old} and @var{new} are different numbers, and @var{old} is a
+valid descriptor number, then @code{dup2} is equivalent to:
 
 @example
-dup2 (@var{filedes}, @var{old_filedes})
+close (@var{new});
+fcntl (@var{old}, F_DUPFD, @var{new})
 @end example
 
-@noindent
-is equivalent to:
-
-@example
-@c !!! dup2 is guaranteed atomic; this loses if FILEDES is bad.  dup2
-@c would leave OLD_FILEDES open if FILEDES were bad.
-close (@var{old_filedes});
-fcntl (@var{filedes}, F_DUPFD, @var{old_filedes})
-@end example
-
-In other words, the file previously associated with @var{old_filedes} is
-closed, and the descriptor is reassigned to point to the same open file
-as @var{filedes}.
+However, @code{dup2} does this atomically; there is no instant in the
+middle of calling @code{dup2} at which @var{new} is closed and not yet a
+duplicate of @var{old}.
 @end deftypefun
 
 @comment fcntl.h
 @comment POSIX.1
 @deftypevr Macro int F_DUPFD
 This macro is used as the @var{command} argument to @code{fcntl}, to
-specify that it should @dfn{duplicate} the file descriptor received as the
-first argument.  The new file descriptor refers to the same open file,
-but can have its own set of file descriptor flags.
+copy the file descriptor given as the first argument.
 
 The form of the call in this case is:
 
 @example
-fcntl (@var{filedes}, F_DUPFD, @var{next_filedes})
+fcntl (@var{old}, F_DUPFD, @var{next_filedes})
 @end example
 
 The @var{next_filedes} argument is of type @code{int} and specifies that
@@ -1065,7 +1087,7 @@ this command:
 
 @table @code
 @item EBADF
-The @var{filedes} argument is invalid.
+The @var{old} argument is invalid.
 
 @item EINVAL
 The @var{next_filedes} argument is invalid.
@@ -1075,9 +1097,13 @@ There are no more file descriptors available---your program is already
 using the maximum.
 @c !!! in GNU and 4.4, this can be fixed with setrlimit RLIM_OFILES;
 @c xref to there.
-
-@c !!! ENFILE ?
 @end table
+
+@code{ENFILE} is not a possible error code for @code{dup2} because
+@code{dup2} does not create a new opening of a file; duplicate
+descriptors do not count toward the limit which @code{ENFILE}
+indicates.  @code{EMFILE} is possible because it refers to the limit on
+distinct descriptor numbers in use in one process.
 @end deftypevr
 
 Here is an example showing how to use @code{dup2} to do redirection.
@@ -1501,14 +1527,12 @@ The following @code{errno} error conditions are defined for this
 function:
 
 @table @code
-@c !!! thse two errors mean the same thing???
 @item EACCES
-The lock cannot be set because it is blocked by an existing lock 
-on the file.
-
-@item EAGAIN
-The lock cannot be set because it is blocked by an existing lock 
-on the file.
+@itemx EAGAIN
+The lock cannot be set because it is blocked by an existing lock on the
+file.  Some systems use @code{EAGAIN} in this case, and other systems
+use @code{EACCES}; your program should treat them alike, after
+@code{F_SETLK}.
 
 @item EBADF
 Either: the @var{filedes} argument is invalid; you requested a read lock
