@@ -1,3 +1,7 @@
+Fri Jul 17 13:29:24 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/dl-envvars.h: New file.
+
 1998-07-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/vfscanf.c [_USE_IN_LIBIO] (encode_error): Free
