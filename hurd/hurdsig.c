@@ -230,8 +230,7 @@ abort_all_rpcs (int signo, void *state)
 void
 _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 			    int signo,
-			    int sigcode,
-			    sigset_t *restore_blocked)
+			    int sigcode)
 {
   struct hurd_thread_state thread_state;
   enum { stop, ignore, core, term, handle } act;
@@ -412,7 +411,7 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
     if (__sigismember (&ss->pending, signo))
       {
 	__sigdelset (&ss->pending, signo);
-	_hurd_internal_post_signal (ss, signo, ss->sigcodes[signo], NULL);
+	_hurd_internal_post_signal (ss, signo, ss->sigcodes[signo]);
 	return;
       }
 
@@ -528,7 +527,7 @@ _S_sig_post (mach_port_t me,
   __sig_post_reply (reply, 0);
 
   /* Post the signal.  */
-  _hurd_internal_post_signal (ss, signo, 0, NULL);
+  _hurd_internal_post_signal (ss, signo, 0);
 
   return MIG_NO_REPLY;		/* Already replied.  */
 }
