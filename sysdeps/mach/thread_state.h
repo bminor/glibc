@@ -46,7 +46,8 @@ machine_get_state (struct machine_thread_all_state *state,
 }
 
 static inline int
-machine_get_basic_state (void)
+machine_get_basic_state (struct machine_thread_all_state *state,
+			 struct sigcontext *scp)
 {
   return machine_get_state (MACHINE_THREAD_STATE_FLAVOR, &state->basic,
 			    &scp->sc_##machine_thread_state,
