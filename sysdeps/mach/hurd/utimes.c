@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ DEFUN(__utimes, (file, tvp),
       CONST char *file AND struct timeval tvp[2])
 {
   error_t err;
-  file_t f = __hurd_path_lookup (file, 0, 0);
+  file_t f = __path_lookup (file, 0, 0);
   if (f == MACH_PORT_NULL)
     return -1;
   err = __file_utimes (f, &tvp[0], &tvp[1]);
