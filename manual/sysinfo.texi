@@ -35,13 +35,24 @@ in bytes.
 
 The return value is @code{0} on success and @code{-1} on failure.  In
 the GNU C library, @code{gethostname} fails if @var{size} is not large
-enough; then you can try again with a larger array.
+enough; then you can try again with a larger array.  The following
+@code{errno} error condition is defined for this function:
+
+@table @code
+@item ENAMETOOLONG
+The @var{size} argument is less than the size of the host name plus one.
+@end table
 
 @pindex sys/param.h
 On some systems, there is a symbol for the maximum possible host name
-length: @code{MAXHOSTNAMELENGTH}.  It is defined in @file{sys/param.h}.
-But you can't count on this to exist, and it is cleaner to handle
+length: @code{MAXHOSTNAMELEN}.  It is defined in @file{sys/param.h}.
+But you can't count on this to exist, so it is cleaner to handle
 failure and try again.
+
+@code{gethostname} stores the beginning of the host name in @var{name}
+even if the host name won't entirely fit.  For some purposes, a
+truncated host name is good enough.  If it is, you can ignore the
+error code.
 @end deftypefun
 
 @comment unistd.h
@@ -53,6 +64,12 @@ processes are allowed to do this.  Usually it happens just once, at
 system boot time.
 
 The return value is @code{0} on success and @code{-1} on failure.
+The following @code{errno} error condition is defined for this function:
+
+@table @code
+@item EPERM
+This process cannot set the host name because it is not privileged.
+@end table
 @end deftypefun
 
 @comment unistd.h
@@ -69,10 +86,14 @@ The @code{sethostid} function sets the address of the host machine to
 @var{id}.  Only privileged processes are allowed to do this.  Usually it
 happens just once, at system boot time.
 
-@strong{Incomplete:}  Is the return type from this function really 
-@code{void}?  The BSD man page does not document a return value.
-@end deftypefun
+The return value is @code{0} on success and @code{-1} on failure.
+The following @code{errno} error condition is defined for this function:
 
+@table @code
+@item EPERM
+This process cannot set the host name because it is not privileged.
+@end table
+@end deftypefun
 
 @node Hardware/Software Type ID
 @section Hardware/Software Type Identification
@@ -108,17 +129,26 @@ This is the current version level within the release of the operating
 system.
 
 @item char machine[]
-This is a description of the hardware type that the operating system
-is running on.
+This is a description of the type of hardware that is in use.
 
-The possible values for the GNU C library are as follows:
+The GNU C Library fills in this field based on the configuration name
+that was specified when building and installing the library.  GNU uses a
+three-part name to describe a system configuration; the three parts are
+@var{cpu}, @var{manufacturer} and @var{system-type}, and they are
+separated with dashes.  Any possible combination of three names is
+potentially meaningful, but most such combinations are meaningless in
+practice and even the meaningful ones are not necessarily supported by
+any particular GNU program.
+
+Since the value in @code{machine} is supposed to describe just the
+hardware, it consists of the first two parts of the configuration name:
+@samp{@var{cpu}-@var{manufacturer}}.
+
+Here is a list of all the possible alternatives:
 
 @quotation
-@code{"i386"}, @code{"m68k"}, @code{"sparc"}
+@code{"i386-@var{anything}"}, @code{"m68k-hp"}, @code{"sparc-sun"}
 @end quotation
-
-We try to keep these strings' contents the same as the symbols that the
-GNU C compiler defines to indicate the type of machine.
 @end table
 @end deftp
 
