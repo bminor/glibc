@@ -50,19 +50,19 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
   register char *pathp;
   struct stat st;
 
-if (size == 0)
-  {
-    if (buf != NULL)
-      {
-	errno = EINVAL;
-	return NULL;
-      }
+  if (size == 0)
+    {
+      if (buf != NULL)
+	{
+	  errno = EINVAL;
+	  return NULL;
+	}
 
 #ifndef PATH_MAX
 #define	PATH_MAX 1024
 #endif
-    size = PATH_MAX + 1;
-  }
+      size = PATH_MAX + 1;
+    }
 
   if (buf != NULL)
     path = buf;
