@@ -177,9 +177,10 @@ extern file_t path_lookup (const char *file, int flags, mode_t mode);
 extern int openport (io_t port, int flags);
 
 
-/* Execute a file, replacing the current program image.  */
+/* Execute a file, replacing TASK's current program image.  */
 
-extern error_t _hurd_exec (file_t file,
+extern error_t _hurd_exec (task_t task,
+			   file_t file,
 			   char *const argv[],
 			   char *const envp[]);
 
