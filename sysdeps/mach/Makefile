@@ -55,7 +55,7 @@ ifneq (mach,$(subdir))
 ifdef objpfx
 mach-objpfx = $(objpfx)
 else
-mach-objpfx = $(..)mach
+mach-objpfx = $(..)mach/
 endif
 
 # These are all the generated files that <mach.h> includes.
