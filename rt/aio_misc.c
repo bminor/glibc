@@ -265,6 +265,8 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
       return NULL;
     }
   newp->aiocbp = aiocbp;
+  newp->caller_pid = (aiocbp->aiocb.aio_sigevent.sigev_notify == SIGEV_SIGNAL
+		      ? getpid () : 0);
   newp->waiting = NULL;
 
   aiocbp->aiocb.__abs_prio = prio;
@@ -435,6 +437,16 @@ handle_fildes_io (void *arg)
 					 (void *) aiocbp->aiocb.aio_buf,
 					 aiocbp->aiocb.aio_nbytes,
 					 aiocbp->aiocb.aio_offset));
+
+	  if (aiocbp->aiocb.__return_value == -1 && errno == ESPIPE)
+	    /* The Linux kernel is different from others.  It returns
+	       ESPIPE if using pread on a socket.  Other platforms
+	       simply ignore the offset parameter and behave like
+	       read.  */
+	    aiocbp->aiocb.__return_value =
+	      TEMP_FAILURE_RETRY (read (fildes,
+					(void *) aiocbp->aiocb64.aio_buf,
+					aiocbp->aiocb64.aio_nbytes));
 	}
       else if ((aiocbp->aiocb.aio_lio_opcode & 127) == LIO_WRITE)
 	{
@@ -450,6 +462,16 @@ handle_fildes_io (void *arg)
 					  (const void *) aiocbp->aiocb.aio_buf,
 					  aiocbp->aiocb.aio_nbytes,
 					  aiocbp->aiocb.aio_offset));
+
+	  if (aiocbp->aiocb.__return_value == -1 && errno == ESPIPE)
+	    /* The Linux kernel is different from others.  It returns
+	       ESPIPE if using pwrite on a socket.  Other platforms
+	       simply ignore the offset parameter and behave like
+	       write.  */
+	    aiocbp->aiocb.__return_value =
+	      TEMP_FAILURE_RETRY (write (fildes,
+					 (void *) aiocbp->aiocb64.aio_buf,
+					 aiocbp->aiocb64.aio_nbytes));
 	}
       else if (aiocbp->aiocb.aio_lio_opcode == LIO_DSYNC)
 	aiocbp->aiocb.__return_value = TEMP_FAILURE_RETRY (fdatasync (fildes));
