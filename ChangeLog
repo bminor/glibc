@@ -13,8 +13,7 @@
 
 	* iconv/iconv.h (iconv): Fix prototype.
 
-	* misc/libgen.h (basename): Define without parameter so that use as
-	function pointer also works.
+	* misc/libgen.h: Include <features.h>.
 
 	* misc/search.h (struct entry): Fix type of element data.
 
@@ -27,7 +26,8 @@
 
 	* signal/signal.h [__USE_XOPEN]: Define uid_t.
 	(sigstack): Correct type of first parameter.
-	* sysdeps/generic/sigstack.h (sigstack): Likewise.
+	* sysdeps/generic/sigstack.c (sigstack): Likewise.
+	* sysdeps/unix/sysv/linux/sigstack.c (sigstack): Likewise.
 
 	* po/de.po: Update from translation team.
 
