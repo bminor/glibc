@@ -18,24 +18,71 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-ifndef tags-sources
-tags-sources = $(all-sources) $(headers)
+ifdef subdir
+.. := ../
 endif
 
-all-sources = $(foreach file,$(sources),\
-			$(firstword $(wildcard $(file) \
-					       $(foreach dir,$(+sysdep_dirs),\
-							 $(dir)/$(file) \
-							 $(dir)/$(file:.c=.S) \
-							 $(dir)/$(file:.c=.s)\
-					        ))))
-TAGS: $(tags-sources)
-	@$(cmdecho) '$(ETAGS) -f $@ ...'
-ifdef subdir
-	@$(ETAGS) -f $@ $^
-else
-# Note that this uses the -i switch, and thus requires v19 etags.
-	@$(ETAGS) -f $@ \
-		  $(subdirs:%=-i %) \
-		  $^
+include $(..)Makeconfig
+
+ifndef tags_sources
+tags_sources = $(all-sources) $(all-headers)
 endif
+
+sysdep-dirs := $(addprefix $(sysdep_dir)/,$(sysdirs))
+
+# Find all sysdep dirs there are, but putting the ones
+# we are configured to use first and preserving their order.
+all-dirs := $(objdir) \
+	    $(sysdep-dirs) \
+	    $(source_dirs) \
+	    $(filter-out $(sysdep-dirs),\
+			 $(patsubst ./%,%,\
+				    $(shell find $(sysdep_dir) -type d -print)\
+			  ))
+
+# Find all the subdirs there are, but putting the ones
+# we are configured to use first and preserving their order.
+ifndef subdir
+subdirs := $(subdirs) \
+	   $(filter-out $(subdirs),\
+			$(shell cat $(wildcard $(addsuffix /Subdirs,\
+							   $(all-dirs)))\
+				    /dev/null))
+all-dist = $(shell cat /dev/null $(wildcard $(filter %.c %.h %.S %.s,\
+						     $(all-dirs:%=%/Dist))))
+tags_sources = $(all-sources) $(all-headers) $(all-dist)
+endif
+
+# All different versions of $(sources), preserving the configured sysdep
+# directory order.
+all-sources = $(wildcard $(foreach file,$(sources),\
+				   $(file) \
+				   $(foreach dir,$(all-dirs),\
+					     $(dir)/$(file) \
+					     $(dir)/$(file:.c=.S) \
+					     $(dir)/$(file:.c=.s))))
+
+all-headers = $(wildcard $(foreach file,$(headers),\
+				   $(file) \
+				   $(foreach dir,$(all-dirs),$(dir)/$(file))))
+
+tags_sources := $(strip $(tags_sources))
+
+TAGS: $(tags_sources)
+ifdef subdir
+ifdef tags_sources
+	$(ETAGS) -o $@ $^
+endif # tags_sources
+else # parent
+TAGS: subdir_TAGS
+# Note that this uses the -i switch, and thus requires v19 etags.
+	$(ETAGS) -o $@ \
+		 $(subdirs:%=-i %/TAGS) \
+		 $(filter-out subdir_TAGS,$^)
+
+.PHONY: subdir_TAGS $(subdirs:%=%/TAGS)
+subdir_TAGS: $(subdirs:%=%/TAGS)
+$(subdirs:%=%/TAGS):
+	$(MAKE) -C $(@D) no_deps=t $(@F)
+
+endif # subdir
