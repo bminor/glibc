@@ -1,7 +1,14 @@
 /*
+ *	@(#)nameser.h	5.25 (Berkeley) 4/3/91
+ *	$Id$
+ */
+
+/*
+ * ++Copyright++ 1983, 1989
+ * -
  * Copyright (c) 1983, 1989 Regents of the University of California.
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -12,12 +19,12 @@
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
+ * 	This product includes software developed by the University of
+ * 	California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,12 +36,38 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
- *	@(#)nameser.h	5.25 (Berkeley) 4/3/91
+ * -
+ * Portions Copyright (c) 1993 by Digital Equipment Corporation.
+ * 
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies, and that
+ * the name of Digital Equipment Corporation not be used in advertising or
+ * publicity pertaining to distribution of the document or software without
+ * specific, written prior permission.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
+ * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
+ * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+ * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
+ * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+ * SOFTWARE.
+ * -
+ * --Copyright--
  */
 
 #ifndef _NAMESER_H_
 #define	_NAMESER_H_
+
+#include <sys/param.h>
+#if (!defined(BSD)) || (BSD < 199306)
+# include <sys/bitypes.h>
+#else
+# include <sys/types.h>
+#endif
+#include <sys/cdefs.h>
 
 /*
  * Define constants based on rfc883
@@ -60,10 +93,10 @@
 #define IQUERY		0x1		/* inverse query */
 #define STATUS		0x2		/* nameserver status query */
 /*#define xxx		0x3		/* 0x3 reserved */
-	/* non standard */
+	/* non standard - supports ALLOW_UPDATES stuff from Mike Schwartz */
 #define UPDATEA		0x9		/* add resource record */
 #define UPDATED		0xa		/* delete a specific resource record */
-#define UPDATEDA	0xb		/* delete all nemed resource record */
+#define UPDATEDA	0xb		/* delete all named resource record */
 #define UPDATEM		0xc		/* modify a specific resource record */
 #define UPDATEMA	0xd		/* modify all named resource record */
 
@@ -101,6 +134,7 @@
 #define T_MINFO		14		/* mailbox information */
 #define T_MX		15		/* mail routing information */
 #define T_TXT		16		/* text strings */
+#define	T_RP		17		/* responsible person */
 	/* non standard */
 #define T_UINFO		100		/* user (finger) information */
 #define T_UID		101		/* user ID */
@@ -117,8 +151,8 @@
  */
 
 #define C_IN		1		/* the arpa internet */
-#define C_CHAOS		3		/* for chaos net at MIT */
-#define C_HS		4		/* for Hesiod name server at MIT */
+#define C_CHAOS		3		/* for chaos net (MIT) */
+#define C_HS		4		/* for Hesiod name server (MIT) */
 	/* Query class values which do not appear in resource records */
 #define C_ANY		255		/* wildcard match */
 
@@ -131,9 +165,36 @@
 #define CONV_BADCKSUM -3
 #define CONV_BADBUFLEN -4
 
-/* Hacked for GNU: The BSD code has #ifdef's here to set BYTE_ORDER.  */
-#include <endian.h>
+#ifndef BYTE_ORDER
+#define	LITTLE_ENDIAN	1234	/* least-significant byte first (vax, pc) */
+#define	BIG_ENDIAN	4321	/* most-significant byte first (IBM, net) */
+#define	PDP_ENDIAN	3412	/* LSB first in word, MSW first in long (pdp)*/
 
+#if defined(vax) || defined(ns32000) || defined(sun386) || defined(i386) || \
+    defined(MIPSEL) || defined(_MIPSEL) || defined(BIT_ZERO_ON_RIGHT) || \
+    defined(__alpha__) || defined(__alpha)
+#define BYTE_ORDER	LITTLE_ENDIAN
+#endif
+
+#if defined(sel) || defined(pyr) || defined(mc68000) || defined(sparc) || \
+    defined(is68k) || defined(tahoe) || defined(ibm032) || defined(ibm370) || \
+    defined(MIPSEB) || defined(_MIPSEB) || defined(_IBMR2) || \
+    defined(apollo) || defined(hp9000) || defined(hp9000s300) || \
+    defined (BIT_ZERO_ON_LEFT)
+#define BYTE_ORDER	BIG_ENDIAN
+#endif
+#endif /* BYTE_ORDER */
+
+#if !defined(BYTE_ORDER) || \
+    (BYTE_ORDER != BIG_ENDIAN && BYTE_ORDER != LITTLE_ENDIAN && \
+    BYTE_ORDER != PDP_ENDIAN)
+	/* you must determine what the correct bit order is for
+	 * your compiler - the next line is an intentional error
+	 * which will force your compiles to bomb until you fix
+	 * the above macros.
+	 */
+  #error "Undefined or invalid BYTE_ORDER";
+#endif
 /*
  * Structure for query header, the order of the fields is machine and
  * compiler dependent, in our case, the bits within a byte are assignd 
@@ -145,29 +206,29 @@ typedef struct {
 	u_short	id;		/* query identification number */
 #if BYTE_ORDER == BIG_ENDIAN
 			/* fields in third byte */
-	u_char	qr:1;		/* response flag */
-	u_char	opcode:4;	/* purpose of message */
-	u_char	aa:1;		/* authoritive answer */
-	u_char	tc:1;		/* truncated message */
-	u_char	rd:1;		/* recursion desired */
+	u_int	qr:1;		/* response flag */
+	u_int	opcode:4;	/* purpose of message */
+	u_int	aa:1;		/* authoritive answer */
+	u_int	tc:1;		/* truncated message */
+	u_int	rd:1;		/* recursion desired */
 			/* fields in fourth byte */
-	u_char	ra:1;		/* recursion available */
-	u_char	pr:1;		/* primary server required (non standard) */
-	u_char	unused:2;	/* unused bits */
-	u_char	rcode:4;	/* response code */
+	u_int	ra:1;		/* recursion available */
+	u_int	pr:1;		/* primary server required (non standard) */
+	u_int	unused:2;	/* unused bits */
+	u_int	rcode:4;	/* response code */
 #endif
 #if BYTE_ORDER == LITTLE_ENDIAN || BYTE_ORDER == PDP_ENDIAN
 			/* fields in third byte */
-	u_char	rd:1;		/* recursion desired */
-	u_char	tc:1;		/* truncated message */
-	u_char	aa:1;		/* authoritive answer */
-	u_char	opcode:4;	/* purpose of message */
-	u_char	qr:1;		/* response flag */
+	u_int	rd:1;		/* recursion desired */
+	u_int	tc:1;		/* truncated message */
+	u_int	aa:1;		/* authoritive answer */
+	u_int	opcode:4;	/* purpose of message */
+	u_int	qr:1;		/* response flag */
 			/* fields in fourth byte */
-	u_char	rcode:4;	/* response code */
-	u_char	unused:2;	/* unused bits */
-	u_char	pr:1;		/* primary server required (non standard) */
-	u_char	ra:1;		/* recursion available */
+	u_int	rcode:4;	/* response code */
+	u_int	unused:2;	/* unused bits */
+	u_int	pr:1;		/* primary server required (non standard) */
+	u_int	ra:1;		/* recursion available */
 #endif
 			/* remaining bytes */
 	u_short	qdcount;	/* number of question entries */
@@ -188,47 +249,60 @@ struct rrec {
 	short	r_zone;			/* zone number */
 	short	r_class;		/* class number */
 	short	r_type;			/* type number */
-	u_long	r_ttl;			/* time to live */
+	u_int32_t	r_ttl;			/* time to live */
 	int	r_size;			/* size of data area */
 	char	*r_data;		/* pointer to data */
 };
 
 extern	u_short	_getshort();
-extern	u_long	_getlong();
+extern	u_int32_t	_getlong();
 
 /*
- * Inline versions of get/put short/long.
- * Pointer is advanced; we assume that both arguments
- * are lvalues and will already be in registers.
- * cp MUST be u_char *.
+ * Inline versions of get/put short/long.  Pointer is advanced.
+ * We also assume that a "u_short" holds 2 "chars"
+ * and that a "u_int32_t" holds 4 "chars".
+ *
+ * These macros demonstrate the property of C whereby it can be
+ * portable or it can be elegant but never both.
  */
 #define GETSHORT(s, cp) { \
-	(s) = *(cp)++ << 8; \
-	(s) |= *(cp)++; \
+	register u_char *t_cp = (u_char*)(cp); \
+	(s) = (((u_short)t_cp[0]) << 8) \
+	    | (((u_short)t_cp[1])) \
+	    ; \
+	(cp) += 2; \
 }
 
 #define GETLONG(l, cp) { \
-	(l) = *(cp)++ << 8; \
-	(l) |= *(cp)++; (l) <<= 8; \
-	(l) |= *(cp)++; (l) <<= 8; \
-	(l) |= *(cp)++; \
+	register u_char *t_cp = (u_char*)(cp); \
+	(l) = (((u_int32_t)t_cp[0]) << 24) \
+	    | (((u_int32_t)t_cp[1]) << 16) \
+	    | (((u_int32_t)t_cp[2]) << 8) \
+	    | (((u_int32_t)t_cp[3])) \
+	    ; \
+	(cp) += 4; \
 }
 
-
 #define PUTSHORT(s, cp) { \
-	*(cp)++ = (s) >> 8; \
-	*(cp)++ = (s); \
+	register u_short t_s = (u_short)(s); \
+	register u_char *t_cp = (u_char*)(cp); \
+	*t_cp++ = t_s >> 8; \
+	*t_cp   = t_s; \
+	(cp) += 2; \
 }
 
 /*
- * Warning: PUTLONG destroys its first argument.
+ * Warning: PUTLONG --no-longer-- destroys its first argument.  if you
+ * were depending on this "feature", you will lose.
  */
 #define PUTLONG(l, cp) { \
-	(cp)[3] = l; \
-	(cp)[2] = (l >>= 8); \
-	(cp)[1] = (l >>= 8); \
-	(cp)[0] = l >> 8; \
-	(cp) += sizeof(u_long); \
+	register u_int32_t t_l = (u_int32_t)(l); \
+	register u_char *t_cp = (u_char*)(cp); \
+	*t_cp++ = t_l >> 24; \
+	*t_cp++ = t_l >> 16; \
+	*t_cp++ = t_l >> 8; \
+	*t_cp   = t_l; \
+	(cp) += 4; \
 }
 
 #endif /* !_NAMESER_H_ */

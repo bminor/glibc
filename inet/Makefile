@@ -23,7 +23,9 @@ subdir	:= inet
 
 headers	:= netdb.h resolv.h \
 	   netinet/in.h  \
+	   sys/bitypes.h \
 	   $(wildcard arpa/*.h protocols/*.h)
+distribute := ../conf/portability.h
 
 routines := ntohl ntohs htonl htons		\
 	    inet_addr inet_lnaof inet_mkadr	\
