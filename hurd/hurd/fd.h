@@ -63,25 +63,25 @@ extern struct hurd_userlink *_hurd_dtable_users;
 extern int _hurd_dtable_rlimit;	/* RLIM_OFILES: number of file descriptors.  */
 
 /* This locks _hurd_dtable, _hurd_dtable_users, and _hurd_dtable_rlimit.  */
-#ifdef noteven
 extern struct mutex _hurd_dtable_lock;
-#endif
 
+#include <lock-intern.h>
+
+#ifndef _EXTERN_INLINE
+#define _EXTERN_INLINE extern __inline
+#endif
+
 /* Get a descriptor table structure to use.
    Pass this structure and ULINK to _hurd_dtable_free when done.  */
 
-extern inline struct hurd_dtable
+_EXTERN_INLINE struct hurd_dtable
 _hurd_dtable_get (struct hurd_userlink *ulink)
 {
   struct hurd_dtable dtable;
-#ifdef noteven
   __mutex_lock (&_hurd_dtable_lock);
-#endif
   _hurd_userlink_link (&_hurd_dtable_users, ulink);
   dtable = _hurd_dtable;
-#ifdef noteven
   __mutex_unlock (&_hurd_dtable_lock);
-#endif
   return dtable;
 }
 
@@ -93,18 +93,14 @@ extern void (*_hurd_dtable_deallocate) (void *);
 
 /* Free a reference gotten with `DTABLE = _hurd_dtable_get (ULINK);' */
 
-extern inline void
+_EXTERN_INLINE void
 _hurd_dtable_free (struct hurd_dtable dtable,
 		   struct hurd_userlink *ulink)
 {
   int dealloc;
-#ifdef noteven
   __mutex_lock (&_hurd_dtable_lock);
-#endif
   dealloc = _hurd_userlink_unlink (ulink);
-#ifdef noteven
   __mutex_unlock (&_hurd_dtable_lock);
-#endif
   if (dealloc && _hurd_dtable_deallocate)
     (*_hurd_dtable_deallocate) (dtable.d);
 }
@@ -113,7 +109,7 @@ _hurd_dtable_free (struct hurd_dtable dtable,
 /* Return the descriptor cell for FD in DTABLE, locked.
    If FD is invalid or unused, return NULL.  */
 
-extern inline struct hurd_fd *
+_EXTERN_INLINE struct hurd_fd *
 _hurd_dtable_fd (int fd, struct hurd_dtable dtable)
 {
   if (fd < 0 || fd >= dtable.size)
@@ -124,16 +120,12 @@ _hurd_dtable_fd (int fd, struct hurd_dtable dtable)
       if (cell == NULL)
 	/* No descriptor allocated at this index.  */
 	return NULL;
-#ifdef noteven
       __spin_lock (&cell->port.lock);
-#endif
       if (cell->port.port == MACH_PORT_NULL)
 	{
 	  /* The descriptor at this index has no port in it.
 	     This happens if it existed before but was closed.  */
-#ifdef noteven
 	  __spin_unlock (&cell->port.lock);
-#endif
 	  return NULL;
 	}
       return cell;
@@ -150,7 +142,7 @@ struct hurd_fd_user
    and returned structure hold onto the descriptor table to it doesn't move
    while you might be using a pointer into it.  */
 
-extern inline struct hurd_fd_user
+_EXTERN_INLINE struct hurd_fd_user
 _hurd_fd_get (int fd, struct hurd_userlink *ulink)
 {
   struct hurd_fd_user d;
@@ -164,7 +156,7 @@ _hurd_fd_get (int fd, struct hurd_userlink *ulink)
 /* Free a reference gotten with `D = _hurd_fd_get (FD, ULINK);'.
    The descriptor cell D.d should be unlocked before calling this function.  */
 
-extern inline void
+_EXTERN_INLINE void
 _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
 {
   _hurd_dtable_free (d.dtable, ulink);
@@ -214,24 +206,16 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
    always use this function to handle errors from RPCs made on file
    descriptor ports.  Some errors are translated into signals.  */   
 
-extern inline error_t
+_EXTERN_INLINE error_t
 _hurd_fd_error (int fd, error_t err)
 {
   switch (err)
     {
     case MACH_SEND_INVALID_DEST: /* The server has disappeared!  */
-#ifdef notyet
       _hurd_raise_signal (NULL, SIGLOST, fd);
-#else
-      abort ();
-#endif
       break;
     case EPIPE:
-#ifdef notyet
       _hurd_raise_signal (NULL, SIGPIPE, fd);
-#else
-      abort ();
-#endif
       break;
     }
   return err;
