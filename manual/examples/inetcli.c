@@ -29,7 +29,8 @@ int
 main (void)
 {
   extern void init_sockaddr (struct sockaddr_in *name,
-			     const char *hostname, unsigned short int port);
+			     const char *hostname,
+			     unsigned short int port);
   int sock;
   struct sockaddr_in servername;
 

@@ -81,7 +81,8 @@ main (void)
 		    perror ("accept");
 		    exit (EXIT_FAILURE);
 		  }
-		fprintf (stderr, "Server: connect from host %s, port %hd.\n",
+		fprintf (stderr,
+			 "Server: connect from host %s, port %hd.\n",
 			 inet_ntoa (clientname.sin_addr),
 			 ntohs (clientname.sin_port));
 		FD_SET (status, &active_fd_set);

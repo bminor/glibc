@@ -32,7 +32,8 @@ main (void)
   my_group = getgrgid (my_passwd->pw_gid);
   if (!my_group)
     {
-      printf ("Couldn't find out about group %d.\n", (int) my_passwd->pw_gid);
+      printf ("Couldn't find out about group %d.\n",
+	      (int) my_passwd->pw_gid);
       exit (EXIT_FAILURE);
     }
 
