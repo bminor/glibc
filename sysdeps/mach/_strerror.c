@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <string.h>
 #include <mach/error.h>
-
+#include <mach/errorlib.h>
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *
@@ -52,7 +52,7 @@ DEFUN(_strerror_internal, (errnum, buf), int errnum AND char buf[1024])
   if (code >= es->subsystem[sub].max_code)
     {
       sprintf (buf, "Unknown error %d in system %d subsystem %d",
-	       code, system, subsystem);
+	       code, system, sub);
       return buf;
     }
 
