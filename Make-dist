@@ -125,6 +125,8 @@ endif
 		$(sysdep-Subdir-files)
 foo:=$(shell echo '+sysdep-dist=$(+sysdep-dist)' >&2)
 
+subdirs := $(filter-out crypt,$(subdirs))
+
 +sysdep-tsrcs := $(wildcard $(foreach file,Makefile Implies,\
 				      $(addsuffix /$(file),$(sysdep_dirs)))) \
 		 $(+sysdep-dist)
@@ -134,7 +136,12 @@ foo:=$(shell echo '+sysdep-dist=$(+sysdep-dist)' >&2)
 .PHONY: dist
 # N.B.: The order in which these are done matters (so don't use -j).
 MAKEFLAGS = -j1	  # I wonder if that works.
-dist: dist.tar subdir_dist de-.. dist.tar.Z
+dist: dist.tar subdir_dist de-.. dist.tar.Z crypt.tar.Z
+
+crypt.tar.Z: crypt/crypt.tar.Z
+	ln $< $@
+crypt/%:
+	$(MAKE) -C $(@D) $(@F)
 
 dist.tar: $(tardir) $(+tsrcs)
 	tar ch$(verbose)f $@ $(addprefix $(tardir)/,$(filter-out $(tardir),$^))
