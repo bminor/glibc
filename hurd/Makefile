@@ -25,7 +25,7 @@ include ../Makeconfig
 
 
 headers = hurd.h $(interface-headers)
-distribute := intr_rpc.awk hurdintr.awk
+distribute := intr_rpc.awk hurdintr.awk thread_state.h
 
 user-interfaces		:= $(addprefix hurd/,\
 				       auth process startup msg msg_reply \
@@ -39,12 +39,16 @@ routines = $(interface-routines) \
 	   __setauth setauth \
 	   __pid2task __task2pid pid2task task2pid \
 	   getuids setuids getumask fchroot \
-	   dtable __getdport getdport openport setdtsz \
-	   hurdsig hurdsock hurdauth \
+	   hurdsock hurdauth \
 	   privports \
-	   msgportdemux startsig \
+	   msgportdemux \
 #	   fopenport __fopenport \
-	   vpprintf
+	   vpprintf \
+	   $(sig) $(dtable)
+sig	= hurdsig startsig init-fault msging_p hurd-raise \
+	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal \
+dtable	= dtable port2fd alloc-fd intern-fd \
+	  __getdport getdport openport setdtsz
 aux := hurdsyms hurdinit # hurdmsg
 
 # Get the proper definition of `hurd-srcdir'.
