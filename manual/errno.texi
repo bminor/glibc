@@ -59,7 +59,8 @@ examine @code{errno}.
 
 Many library functions can set @code{errno} to a nonzero value as a
 result of calling other library functions which might fail.  You should
-assume that any library function might alter @code{errno}.
+assume that any library function might alter @code{errno} when the
+function returns an error.
 
 @strong{Portability Note:} ANSI C specifies @code{errno} as a
 ``modifiable lvalue'' rather than as a variable, permitting it to be
@@ -151,9 +152,11 @@ Input/output error; usually used for physical read or write errors.
 @comment errno.h
 @comment POSIX.1: Device not configured
 @deftypevr Macro int ENXIO
-No such device or address.  Typically, this means that a file
-representing a device has been installed incorrectly, and the
-system can't find the right kind of device driver for it.
+No such device or address.  The system tried to use the device
+represented by a file you specified, and it couldn't find the device.
+This can mean that the device file was installed incorrectly, or that
+the physical device is missing or not correctly attached to the
+computer.
 @end deftypevr
 
 @comment errno.h
@@ -191,8 +194,10 @@ to manipulate.
 @comment errno.h
 @comment POSIX.1: Resource deadlock avoided
 @deftypevr Macro int EDEADLK
-Deadlock avoided; allocating a system resource would have resulted in
-a deadlock situation.  @xref{File Locks}, for an example.
+Deadlock avoided; allocating a system resource would have resulted in a
+deadlock situation.  The system does not guarantee that it will notice
+all such situations.  This error means you got lucky and the system
+noticed; it might just hang.  @xref{File Locks}, for an example.
 @end deftypevr
 
 @comment errno.h
@@ -241,6 +246,8 @@ makes sense to specify a new file.
 @comment POSIX.1: Invalid cross-device link
 @deftypevr Macro int EXDEV
 An attempt to make an improper link across file systems was detected.
+This happens not only when you use @code{link} (@pxref{Hard Links}) but
+also when you rename a file with @code{rename} (@pxref{Renaming Files}).
 @end deftypevr
 
 @comment errno.h
@@ -325,13 +332,15 @@ Invalid seek operation (such as on a pipe).
 @comment errno.h
 @comment POSIX.1: Read-only file system
 @deftypevr Macro int EROFS
-An attempt was made to modify a file on a read-only file system.
+An attempt was made to modify something on a read-only file system.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1: Too many links
 @deftypevr Macro int EMLINK
 Too many links; the link count of a single file is too large.
+@code{rename} can cause this error if the file being renamed already has
+as many links as it can take (@pxref{Renaming Files}).
 @end deftypevr
 
 @comment errno.h
@@ -364,6 +373,7 @@ not representable because of overflow or underflow.
 Resource temporarily unavailable; the call might work if you try again
 later.  Only @code{fork} returns error code @code{EAGAIN} for such a
 reason.
+@c !!! sysv uses it somehow?  Don't say "only fork" when ==EWOULDBLOCK.
 @end deftypevr
 
 @comment errno.h
@@ -383,7 +393,13 @@ set, and @code{EAGAIN} for other kinds of errors.@refill
 @comment BSD: Operation now in progress
 @deftypevr Macro int EINPROGRESS
 An operation that cannot complete immediately was initiated on an object
-that has non-blocking mode selected.
+that has non-blocking mode selected.  Some functions that must always
+block (such as @code{connect}; @pxref{Connecting}) never return
+@code{EWOULDBLOCK}.
+@c !!! EAGAIN?
+Instead, they return @code{EINPROGRESS} to indicate that the operation
+has begun and will take some time.  Attempts to manipulate the object
+before the call completes return @code{EALREADY}.
 @end deftypevr
 
 @comment errno.h
@@ -402,7 +418,7 @@ A file that isn't a socket was specified when a socket is required.
 @comment errno.h
 @comment BSD: Destination address required
 @deftypevr Macro int EDESTADDRREQ
-No destination address was supplied on a socket operation.
+No destination address was supplied on a socket operation that needed one.
 @end deftypevr
 
 @comment errno.h
@@ -428,7 +444,8 @@ particular protocol being used by the socket.  @xref{Socket Options}.
 @comment errno.h
 @comment BSD: Protocol not supported
 @deftypevr Macro int EPROTONOSUPPORT
-The socket domain does not support the requested communications protocol.
+The socket domain does not support the requested communications protocol
+(perhaps because the requested protocol is completely invalid.)
 @xref{Creating a Socket}.
 @end deftypevr
 
@@ -502,7 +519,8 @@ A network connection was aborted locally.
 @comment BSD: Connection reset by peer
 @deftypevr Macro int ECONNRESET
 A network connection was closed for reasons outside the control of the
-local host, such as by the remote machine rebooting.
+local host, such as by the remote machine rebooting or an unrecoverable
+protocol violation.
 @end deftypevr
 
 @comment errno.h
@@ -621,6 +639,7 @@ properly on the GNU system, making this error code impossible.)
 @deftypevr Macro int ENOLCK
 No locks available.  This is used by the file locking facilities;
 see @ref{File Locks}.
+This error never occurs in the GNU system.
 @end deftypevr
 
 @comment errno.h
@@ -641,6 +660,11 @@ The experienced user will know what is wrong.
 @comment GNU: You really blew it this time
 @deftypevr Macro int EGREGIOUS
 You did @strong{what}?
+
+@comment errno.h
+@comment GNU: Computer bought the farm
+@deftypevr Macro int EIOEIO
+Go home and have a glass of warm, dairy-fresh milk.
 
 @comment errno.h
 @comment GNU: Gratuitous error
@@ -766,11 +790,13 @@ open_sesame (char *name)
 
   errno = 0;                     
   stream = fopen (name, "r");
-  if (!stream) @{
-    fprintf (stderr, "%s: Couldn't open file %s; %s\n",
-             program_invocation_short_name, name, strerror (errno));
-    exit (EXIT_FAILURE);
-  @} else
+  if (stream == NULL)
+    @{
+      fprintf (stderr, "%s: Couldn't open file %s; %s\n",
+               program_invocation_short_name, name, strerror (errno));
+      exit (EXIT_FAILURE);
+    @}
+  else
     return stream;
 @}
 @end smallexample
