@@ -1754,7 +1754,7 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   if ((to_flush = hp->_IO_write_ptr - hp->_IO_write_base) > 0)
     {
       if ((int) _IO_sputn (s, hp->_IO_write_base, to_flush) != to_flush)
-	reesult = -1;
+	result = -1;
     }
 
   /* Unlock the stream.  */
