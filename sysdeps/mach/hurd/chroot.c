@@ -29,8 +29,9 @@ DEFUN(chroot, (path), CONST char *path)
   error_t err;
   file_t old, crdir;
 
-  if (err = __hurd_path_lookup (path, 0, 0, &crdir))
-    return __hurd_fail (err);
+  crdir = __hurd_path_lookup (path, FS_LOOKUP_EXECUTE, 0);
+  if (crdir == MACH_PORT_NULL)
+    return -1;
 
   old = _hurd_crdir;
   _hurd_crdir = crdir;
