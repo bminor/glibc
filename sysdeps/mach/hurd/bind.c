@@ -39,6 +39,6 @@ DEFUN(bind, (fd, addr, len),
        }));  
 
   if (err)
-    return __hurd_fail (err);
+    return __hurd_dfail (fd, err);
   return 0;
 }
