@@ -89,8 +89,7 @@ for purposes of access control.  These IDs are also called the
 Your login shell starts out with a persona which consists of your user
 ID and your default group ID.  
 @c !!! also supplementary group IDs.
-In normal circumstances. all your other
-processes inherit these values.
+In normal circumstances, all your other processes inherit these values.
 
 @cindex real user ID
 @cindex real group ID
@@ -158,12 +157,12 @@ circumstances.
 You can't arbitrarily set your user ID or group ID to anything you want;
 only privileged processes can do that.  Instead, the normal way for a
 program to change its persona is that it has been set up in advance to
-change to a particular user or group.  This is the function of the suid
-and sgid bits of a file's access mode.  @xref{Permission Bits}.
+change to a particular user or group.  This is the function of the setuid
+and setgid bits of a file's access mode.  @xref{Permission Bits}.
 
-When the suid bit of an executable file is set, executing that file
+When the setuid bit of an executable file is set, executing that file
 automatically changes the effective user ID to the user that owns the
-file.  Likewise, executing a file whose sgid bit is set changes the
+file.  Likewise, executing a file whose setgid bit is set changes the
 effective group ID to the group of the file.  @xref{Executing a File}.
 Creating a file that changes to a particular user or group ID thus
 requires full access to that user or group ID.
@@ -244,13 +243,16 @@ IDs:
 @example
 @group
 gid_t *
-read_all_groups ()
+read_all_groups (void)
 @{
   int ngroups = getgroups (NULL, 0);
   gid_t *groups = (gid_t *) xmalloc (ngroups * sizeof (gid_t));
   int val = getgroups (ngroups, groups);
   if (val < 0)
-    return 0;
+    @{
+      free (groups);
+      return NULL;
+    @}
   return groups;
 @}
 @end group
