@@ -79,9 +79,9 @@ __wcsrtombs (dst, src, len, ps)
 	  /* Count the number of bytes.  */
 	  result += data.__outbuf - buf;
 	}
-      while (status == __GCONV_FULL_OUTPUT);
+      while (status == GCONV_FULL_OUTPUT);
 
-      if (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT)
+      if (status == GCONV_OK || status == GCONV_EMPTY_INPUT)
 	{
 	  /* There better should be a NUL byte at the end.  */
 	  assert (data.__outbuf[-1] == '\0');
@@ -109,8 +109,8 @@ __wcsrtombs (dst, src, len, ps)
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */
-      if ((status == __GCONV_OK || status == __GCONV_EMPTY_INPUT
-	   || status == __GCONV_FULL_OUTPUT)
+      if ((status == GCONV_OK || status == GCONV_EMPTY_INPUT
+	   || status == GCONV_FULL_OUTPUT)
 	  && data.__outbuf[-1] == '\0')
 	{
 	  assert (data.__outbuf != (unsigned char *) dst);
@@ -122,13 +122,13 @@ __wcsrtombs (dst, src, len, ps)
 
   /* There must not be any problems with the conversion but illegal input
      characters.  */
-  assert (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT
-	  || status == __GCONV_ILLEGAL_INPUT
-	  || status == __GCONV_INCOMPLETE_INPUT
-	  || status == __GCONV_FULL_OUTPUT);
+  assert (status == GCONV_OK || status == GCONV_EMPTY_INPUT
+	  || status == GCONV_ILLEGAL_INPUT
+	  || status == GCONV_INCOMPLETE_INPUT
+	  || status == GCONV_FULL_OUTPUT);
 
-  if (status != __GCONV_OK && status != __GCONV_FULL_OUTPUT
-      && status != __GCONV_EMPTY_INPUT)
+  if (status != GCONV_OK && status != GCONV_FULL_OUTPUT
+      && status != GCONV_EMPTY_INPUT)
     {
       result = (size_t) -1;
       __set_errno (EILSEQ);

@@ -186,7 +186,8 @@ __STRING2_COPY_TYPE (8);
 
 /* GCC optimizes memset(s, 0, n) but not bzero(s, n).
    The optimization is broken before EGCS 1.1.  */
-# if __GNUC_PREREQ (2, 91)
+# if defined __GNUC__ \
+     && (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 90))
 #  define __bzero(s, n) __builtin_memset (s, '\0', n)
 # endif
 
