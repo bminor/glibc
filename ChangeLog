@@ -1,3 +1,9 @@
+2005-01-16  GOTO Masanori  <gotom@debian.or.jp>
+
+	[BZ #734]
+	* sysdeps/unix/rewinddir.c: Reset filepos.
+	* dirent/tst-seekdir.c: Check telldir value after calling rewinddir.
+
 2005-01-27  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #731]
