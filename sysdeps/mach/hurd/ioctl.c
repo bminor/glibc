@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/ioctl.h>
 #include <hurd.h>
 #include <hurd/fd.h>
+#include <hurd/signal.h>
 #include <stdarg.h>
 #include <mach/notify.h>
 #include <assert.h>
@@ -70,6 +71,62 @@ DEFUN(__ioctl, (fd, request),
   void *arg;
 
   error_t err;
+
+  struct hurd_sigstate *ss;
+  int noctty;
+
+  /* Send the RPC already packed up in MSG to IOPORT
+     and decode the return value.  */
+  inline error_t send_rpc (io_t ioport)
+    {
+      error_t err;
+
+      m->msgh_size = (char *) t - (char *) &msg;
+      m->msgh_remote_port = ioport;
+      m->msgh_local_port = __mig_get_reply_port ();
+      m->msgh_seqno = 0;
+      m->msgh_id = msgid;
+      m->msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_COPY_SEND,
+				     MACH_MSG_TYPE_MAKE_SEND_ONCE);
+      err = HURD_EINTR_RPC (ioport, __mach_msg (m, MACH_SEND_MSG|MACH_RCV_MSG,
+						m->msgh_size, sizeof (msg),
+						m->msgh_local_port,
+						MACH_MSG_TIMEOUT_NONE,
+						MACH_PORT_NULL));
+      switch (err)
+	{
+	case MACH_MSG_SUCCESS:
+	  break;
+	case MACH_SEND_INVALID_REPLY:
+	case MACH_RCV_INVALID_NAME:
+	  __mig_dealloc_reply_port ();
+	default:
+	  return err;
+	}
+
+      if ((m->msgh_bits & MACH_MSGH_BITS_COMPLEX))
+	{
+	  /* Allow no ports or VM.  */
+	  __mach_msg_destroy (m);
+	  /* Want to return a different error below for a different msgid.  */
+	  if (m->msgh_id == msgid + 100)
+	    return MIG_TYPE_ERROR;
+	}
+
+      if (m->msgh_id != msgid + 100)
+	return (m->msgh_id == MACH_NOTIFY_SEND_ONCE ?
+		MIG_SERVER_DIED : MIG_REPLY_MISMATCH);
+
+      if (m->msgh_size != reply_size &&
+	  m->msgh_size != sizeof (mig_reply_header_t))
+	return MIG_TYPE_ERROR;
+
+      if (*(int *) &msg.header.RetCodeType !=
+	  ((union { mach_msg_type_t t; int i; })
+	   { t: io2mach_type (1, _IOTS (sizeof msg.header.RetCode)) }).i)
+	return MIG_TYPE_ERROR;
+      return msg.header.RetCode;
+    }
 
 #define io2mach_type(count, type) \
   ((mach_msg_type_t) { mach_types[type], typesize (type) * 8, count, 1, 0, 0 })
@@ -146,63 +203,49 @@ DEFUN(__ioctl, (fd, request),
       figure_reply (_IOT_COUNT2 (type), _IOT_TYPE2 (type));
     }
 
-  /* Send the RPC.  */
+  /* Note that fd-write.c implements the same SIGTTOU behavior.
+     Any changes here should be done there as well.  */
+
+  /* Don't use the ctty io port if we are blocking or ignoring SIGTTOU.  */
+  ss = _hurd_self_sigstate ();
+  noctty = (__sigismember (SIGTTOU, &ss->blocked) ||
+	    ss->actions[SIGTTOU].sa_handler == SIG_IGN);
+  __mutex_unlock (&ss->lock);
 
   err = HURD_DPORT_USE
     (fd,
      ({
-       m->msgh_size = (char *) t - (char *) &msg;
-       m->msgh_remote_port = port;
-       m->msgh_local_port = __mig_get_reply_port ();
-       m->msgh_seqno = 0;
-       m->msgh_id = msgid;
-       m->msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_COPY_SEND,
-				      MACH_MSG_TYPE_MAKE_SEND_ONCE);
-#ifdef notyet
-       HURD_EINTR_RPC (port, __mach_msg (m, MACH_SEND_MSG|MACH_RCV_MSG,
-					 m->msgh_size, sizeof (msg),
-					 m->msgh_local_port,
-					 MACH_MSG_TIMEOUT_NONE,
-					 MACH_PORT_NULL));
-#else
-       __mach_msg (m, MACH_SEND_MSG|MACH_RCV_MSG, m->msgh_size, sizeof (msg),
-		   m->msgh_local_port, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-#endif       
+       const io_t ioport = (noctty && ctty != MACH_PORT_NULL) ? ctty : port;
+       do
+	 {
+	   /* The actual hair to send the RPC is in the inline `send_rpc'
+	      function (above), to avoid horrendous indentation.  */
+	   err = send_rpc (ioport);
+	   if (ioport == ctty && err == EBACKGROUND)
+	     {
+	       if (_hurd_orphaned)
+		 /* Our process group is orphaned, so we never generate a
+		    signal; we just fail.  */
+		 err = EIO;
+	       else
+		 {
+		   /* Send a SIGTTOU signal to our process group.  */
+		   int restart;
+		   err = __USEPORT (CTTYID, _hurd_sig_post (0, SIGTTOU, port));
+		   /* XXX what to do if error here? */
+		   /* At this point we should have just run the handler for
+		      SIGTTOU or resumed after being stopped.  Now this is
+		      still a "system call", so check to see if we should
+		      restart it.  */
+		   __mutex_lock (&ss->lock);
+		   if (!(ss->actions[SIGTTOU].sa_flags & SA_RESTART))
+		     err = EINTR;
+		   __mutex_unlock (&ss->lock);
+		 }
+	     }
+	 } while (err == EBACKGROUND);
+       err;
      }));
-
-  switch (err)
-    {
-    case MACH_MSG_SUCCESS:
-      break;
-    case MACH_SEND_INVALID_REPLY:
-    case MACH_RCV_INVALID_NAME:
-      __mig_dealloc_reply_port ();
-    default:
-      return __hurd_fail (err);
-    }
-
-  if ((m->msgh_bits & MACH_MSGH_BITS_COMPLEX))
-    {
-      /* Allow no ports or VM.  */
-      __mach_msg_destroy (m);
-      /* Want to return a different error below for a different msgid.  */
-      if (m->msgh_id == msgid + 100)
-	return __hurd_fail (MIG_TYPE_ERROR);
-    }
-
-  if (m->msgh_id != msgid + 100)
-    return __hurd_fail (m->msgh_id == MACH_NOTIFY_SEND_ONCE ?
-			MIG_SERVER_DIED : MIG_REPLY_MISMATCH);
-
-  if (m->msgh_size != reply_size &&
-      m->msgh_size != sizeof (mig_reply_header_t))
-    return __hurd_fail (MIG_TYPE_ERROR);
-
-  if (*(int *) &msg.header.RetCodeType !=
-      ((union { mach_msg_type_t t; int i; })
-       { t: io2mach_type (1, _IOTS (sizeof msg.header.RetCode)) }).i)
-    return __hurd_fail (MIG_TYPE_ERROR);
-  err = msg.header.RetCode;
 
   t = (mach_msg_type_t *) msg.data;
   switch (err)
