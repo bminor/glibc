@@ -1,3 +1,9 @@
+1998-03-23 07:52  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-close.c (_dl_close): Fix byte count while removing the
+	shared object from the global scope list and optimize a little
+	bit.
+
 1998-03-09 08:21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/chown.c: Moved to ...
