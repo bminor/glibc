@@ -136,7 +136,7 @@ $(spec-nvr).src.rpm: glibc.spec $(archives)
 
 ifdef DIST_COMMON
 DIST_BRANCH ?= devel
-COLLECTION ?= dist-fc3
+COLLECTION ?= dist-fc4
 BHC_FLAGS ?= -n
 
 bhc-baseurl := cvs://cvs.devel.redhat.com/cvs/dist?rpms
