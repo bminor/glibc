@@ -262,6 +262,8 @@ endif	# headers
 +install-dirs := $(dir $(+install))
 # Get two levels of directories so $(datadir)/zoneinfo wins.
 +install-dirs := $(+install-dirs) $(filter-out ./,$(dir $(+install-dirs)))
+# Sort them so containing dirs are guaranteed to come first.
++install-dirs := $(sort $(+install-dirs))
 
 .PHONY: install
 install: $(+install-dirs) $(+install)
