@@ -87,15 +87,14 @@ __fork (void)
       mach_port_t ports[_hurd_nports];
       thread_t thread;
       struct machine_thread_state state;
+      unsigned int statecount;
       mach_port_t *portnames = NULL;
       unsigned int nportnames = 0;
       mach_port_type_t *porttypes = NULL;
       unsigned int nporttypes = 0;
-      struct translate
-	{
-	  mach_port_t 
-	}
-
+      thread_t *threads = NULL;
+      unsigned int nthreads = 0;
+      thread_t thread_self = __mach_thread_self ();
 
       /* Run things that prepare for forking before we create the task.  */
       if (err = run_hooks (&_hurd_fork_prepare_hook,
@@ -136,6 +135,15 @@ __fork (void)
 	  err = EGRATUITOUS;
 	  goto lose;
 	}
+
+      /* Get send rights for all the threads in this task.
+	 We want to avoid giving these rights to the child.  */
+      if (err = __task_threads (__mach_task_self (), &threads, &nthreads))
+	goto lose;
+
+      /* Create the child main user thread.  */
+      if (err = __thread_create (newtask, &thread))
+	goto lose;
 
       /* Insert all our port rights into the child task.  */
       for (i = 0; i < nportnames; ++i)
@@ -202,7 +210,12 @@ __fork (void)
 		 Give the child as many references for it as we have.  */
 	      mach_port_urefs_t refs;
 	      mach_port_t insert;
+	      if (portnames[i] == newtask)
+		/* Skip the name we use for the child's task port.  */
+		continue;
 	      if (portnames[i] == __mach_task_self ())
+		/* For the name we use for our own task port,
+		   insert the child's task port instead.  */
 		insert = newtask;
 	      else if (portnames[i] == _hurd_ports[INIT_PORT_PROC].port)
 		{
@@ -211,20 +224,36 @@ __fork (void)
 							       &insert)))
 		    goto lose;
 		}
-	      else if (portnames[i] == _hurd_msgport_thread)
-		continue;
+	      else if (portnames[i] == thread_self)
+		/* For the name we use for our own thread port, insert the
+		   thread port for the child main user thread.  */
+		insert = thread;
 	      else
-		insert = portnames[i];
+		{
+		  /* Skip the name we use for any of our own thread ports.  */
+		  unsigned int j;
+		  for (j = 0; j < nthreads; ++j)
+		    if (portnames[i] == threads[j])
+		      break;
+		  if (j < nthreads)
+		    continue;
+
+		  insert = portnames[i];
+		}
+	      /* Find out how many user references we have for
+		 the send right with this name.  */
 	      if (err = __mach_port_get_refs (__mach_task_self (),
 					      portnames[i],
 					      MACH_PORT_RIGHT_SEND,
 					      &refs))
 		goto lose;
+	      /* Insert the chosen send right into the child.  */
 	      if (err = __mach_port_insert_right (newtask,
 						  portnames[i],
 						  insert,
 						  MACH_MSG_TYPE_COPY_SEND))
 		goto lose;
+	      /* Give the child as many user references as we have.  */
 	      if (refs > 1 &&
 		  (err = __mach_port_mod_refs (newtask,
 					       portnames[i],
@@ -247,11 +276,13 @@ __fork (void)
       if (err = __USEPORT (PROC, __proc_child (port, newtask)))
 	goto lose;
 
-      /* Create the child thread.  */
-      if (err = __thread_create (newtask, &thread))
+      /* Set the child thread up to return 1 from the setjmp above.  We
+	 fetch the state before longjmp'ing it so that miscellaneous
+	 registers not affected by longjmp (such as i386 segment registers)
+	 are in their normal default state.  */
+      statecount = MACHINE_THREAD_STATE_COUNT;
+      if (err = __thread_get_state (thread, &state, &statecount))
 	goto lose;
-
-      /* Set the child thread up to return 1 from the setjmp above.  */
       _hurd_longjmp_thread_state (&state, env, 1);
       if (err = __thread_resume (thread))
 	goto lose;
@@ -271,6 +302,8 @@ __fork (void)
 	__mach_port_deallocate (__mach_task_self (), thread);
       if (newproc != MACH_PORT_NULL)
 	__mach_port_deallocate (__mach_task_self (), newproc);
+      if (thread_self != MACH_PORT_NULL)
+	__mach_port_deallocate (__mach_task_self (), thread_self);
 
       if (portnames)
 	__vm_deallocate (__mach_task_self (),
@@ -280,6 +313,10 @@ __fork (void)
 	__vm_deallocate (__mach_task_self (),
 			 (vm_address_t) porttypes,
 			 nporttypes * sizeof (*porttypes));
+      if (threads)
+	__vm_deallocate (__mach_task_self (),
+			 (vm_address_t) threads,
+			 nthreads * sizeof (*threads));
 
       /* Run things that want to run in the parent to restore it to
 	 normality.  Usually prepare hooks and parent hooks are
