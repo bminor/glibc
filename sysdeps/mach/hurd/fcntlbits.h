@@ -22,47 +22,73 @@ Cambridge, MA 02139, USA.  */
 #define	_FCNTLBITS_H	1
 
 
-/* File access modes for `open', `fcntl', `dir_pathtrans',
-   `hurd_path_lookup', and `path_lookup'.  */
+/* File access modes.  These are understood by `open', `dir_pathtrans',
+   `hurd_path_lookup', and `path_lookup', and returned by `fcntl' with the
+   F_GETFL command.  */
 
-/*   In GNU, read and write are bits (unlike BSD).  */
+/* In GNU, read and write are bits (unlike BSD). */
 #ifdef __USE_GNU
 #define	O_READ		O_RDONLY /* Open for reading.  */
 #define O_WRITE		O_WRONLY /* Open for writing.  */
+#define	O_EXEC		0x0004	/* Open for execution.  */
 #endif
 #define	O_RDONLY	0x0001	/* POSIX.1 name: Open read-only.  */
 #define	O_WRONLY	0x0002	/* POSIX.1 name: Open write-only.  */
 #define	O_RDWR		(O_RDONLY|O_WRONLY) /* Open for reading and writing. */
+/* Mask for file access modes.  XXX Should this include O_EXEC??? */
+#define	O_ACCMODE	O_RDWR
 
 
-/* Bits OR'd into the second argument to open.  */
-#define	O_CREAT		0x0200	/* Create file if it doesn't exist.  */
-#define	O_EXCL		0x0800	/* Fail if file already exists.  */
-#define	O_TRUNC		0x0400	/* Truncate file to zero length.  */
-/* Apparently not assigning a controlling terminal is the default
-   behavior in BSD, so no bit is required to request that behavior.  */
+
+/* File name translation flags.  These are understood by `open',
+   `dir_pathtrans', `hurd_path_lookup', and `path_lookup'.  */
+
+#define	O_CREAT		0x0010	/* Create file if it doesn't exist.  */
+#define	O_EXCL		0x0020	/* Fail if file already exists.  */
+#define	O_TRUNC		0x0040	/* Truncate file to zero length.  */
+/* `open' never assigns a controlling terminal in GNU.  */
 #define	O_NOCTTY	0	/* Don't assign a controlling terminal.  */
 #ifdef	__USE_MISC
-#define	O_ASYNC		0x0040	/* Send SIGIO to owner when data is ready.  */
-#define	O_FSYNC		0x0080	/* Synchronous writes.  */
-#define	O_SYNC		O_FSYNC
-#define	O_SHLOCK	0x0010	/* Open with shared file lock.  */
-#define	O_EXLOCK	0x0020	/* Open with shared exclusive lock.  */
+#define	O_SHLOCK	0x0080	/* Open with shared file lock.  */
+#define	O_EXLOCK	0x0100	/* Open with shared exclusive lock.  */
+#endif
+#ifdef __USE_GNU
+#define	O_NOLINK	0x0200	/* No name mappings on final component.  */
+#define	O_NOTRANS	0x0400	/* No translator on final component. */
+#define	O_IGNORE_CTTY	0x0800	/* Don't do any ctty magic at all.  */
 #endif
 
-/* File status flags for `open' and `fcntl'.  */
-#define	O_APPEND	0x0008	/* Writes append to the file.  */
-#define	O_NONBLOCK	0x0004	/* Non-blocking I/O.  */
+/* The name O_NONBLOCK is unfortunately overloaded; it is both a file name
+   translation flag and a file status flag.  O_NDELAY is the deprecated BSD
+   name for the same flag, overloaded in the same way.
 
+   When used in `open', `dir_pathtrans', `hurd_path_lookup', or
+   `path_lookup', O_NONBLOCK it says the open should with EAGAIN instead of
+   blocking for any length of time (e.g., to wait for DTR on a serial
+   line).
+
+   When used in `fcntl' with the F_SETFL command, the O_NONBLOCK flag means
+   to do nonblocking i/o; any i/o operation that would block for any length
+   of time will instead fail with EAGAIN.  */
+
+#define	O_NONBLOCK	0x0800	/* Non-blocking open or non-blocking I/O.  */
 #ifdef __USE_BSD
 #define	O_NDELAY	O_NONBLOCK
 #endif
 
+
+/* File status flags.  These are understood by `open', `dir_pathtrans',
+   `hurd_path_lookup', `path_lookup', and `fcntl' with the F_SETFL command. */
+
+#define	O_APPEND	0x1000	/* Writes always append to the file.  */
+#define	O_ASYNC		0x2000	/* Send SIGIO to owner when data is ready.  */
+#define	O_FSYNC		0x4000	/* Synchronous writes.  */
+#define	O_SYNC		O_FSYNC
 #ifdef __USE_GNU
-#define	O_NOATIME	0x1000	/* Don't set access time on read by owner. */
-#define	O_NOLINK	0x2000	/* No name mappings on final component.  */
-#define	O_NOTRANS	0x4000	/* No translator on final component. */
+#define	O_NOATIME	0x8000	/* Don't set access time on read by owner. */
 #endif
+
+
 
 #ifdef __USE_BSD
 /* Bits in the file status flags returned by F_GETFL.  */
@@ -81,10 +107,6 @@ Cambridge, MA 02139, USA.  */
 #define FNONBLOCK	O_NONBLOCK
 #define FNDELAY		O_NDELAY
 #endif
-
-/* Mask for file access modes.  This is system-dependent in case
-   some system ever wants to define some other flavor of access.  */
-#define	O_ACCMODE	(O_RDONLY|O_WRONLY|O_RDWR)
 
 /* Values for the second argument to `fcntl'.  */
 #define	F_DUPFD	  	0	/* Duplicate file descriptor.  */
