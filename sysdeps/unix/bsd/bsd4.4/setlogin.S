@@ -18,6 +18,5 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-/* XXX: not 0 args */
-SYSCALL (setlogin, 0)
+SYSCALL (setlogin, 2)
 	ret

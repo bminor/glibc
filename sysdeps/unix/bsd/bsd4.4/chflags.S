@@ -18,6 +18,5 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-/* XXX: not 0 args */
-SYSCALL (chflags, 0)
+SYSCALL (chflags, 2)
 	ret

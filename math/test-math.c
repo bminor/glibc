@@ -39,7 +39,7 @@ DEFUN_VOID(main)
   
   lr = lr / exp(a*5.0);
   
-  printf("%g / exp(%g * 5) = %g\n", lrr, exp(a*5.0), lr);
+  printf("%g / exp(%g * 5) = %g\n", lrr, a, lr);
   
   lrr = li;
   
