@@ -9,6 +9,19 @@
 
 	* glibcbug.in: Use mktemp to generate temporary files.
 
+1998-08-31 22:44  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_nis/nis-pwd.c (_nss_nis_getpwnam_r): Correct test for
+	invalid password.
+	(_nss_nis_getpwuid_r): Likewise.
+	Patch by Matthew Arnison <matthewa@physics.usyd.edu.au>.
+
+1998-08-31  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* io/lockf.c (lockf): Move initilisation of fl.l_whence and
+	fl.l_start at beginning of function.
+	Patch by Geoff. Dash <geoffd@zeta.org.au> [PR libc/769].
+
 1998-08-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/Dist: Add umount.S.
