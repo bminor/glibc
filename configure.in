@@ -4,6 +4,8 @@ changequote(,)dnl
 #! /bin/sh
 
 # Configuration script for the GNU C Library.
+dnl You can ignore the following line if you are reading this sentence.
+# DO NOT EDIT!  This script is generated from configure.in; edit that instead.
 
 # Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
@@ -170,7 +172,7 @@ gnu*)
   os=mach/hurd ;;
 sunos* | ultrix* | newsos* | dynix | bsd*)
   base_os=unix/bsd ;;
-linux* | sysv* | isc* | esix*)
+linux* | sysv* | isc* | esix* | sco*)
   base_os=unix/sysv ;;
 esac
 
