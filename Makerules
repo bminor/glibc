@@ -56,11 +56,7 @@ parents-of = $(foreach x,$0,$(notdir $x) \
 # Finish this someday....
 endif
 
-ifdef  objdir
-+sysdir_pfx = $(objpfx)
-else
-+sysdir_pfx = $(..)
-endif
++sysdir_pfx = $(common-objpfx)
 
 # Right now, however, we do it with shell scripts and lots of strangeness.
 sysdep_dir := $(..)sysdeps
