@@ -1,3 +1,15 @@
+2002-01-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* scripts/cpp: Update from mainline.
+	Reported by Simon Derr <simon.derr@imag.fr> [PR libc/2893].
+
+	* sysdeps/posix/readv.c: Don't use alloca if the memory requirements
+	are too high.
+
+2002-01-31  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/posix/readv.c: Check for ssize_t overflow.
+
 2002-01-29  Ben Collins  <bcollins@debian.org>
 
 	* string/bits/string2.h (__mempcpy): Protect size arg for
