@@ -15,6 +15,7 @@ slibdir = @libc_cv_slibdir@
 sysconfdir = @libc_cv_sysconfdir@
 libexecdir = @libexecdir@
 rootsbindir = @libc_cv_rootsbindir@
+infodir = @infodir@
 
 # If ldconfig exists.  This will go away as soon as `ldconfig' is available
 # in GNU libc.
