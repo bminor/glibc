@@ -123,21 +123,15 @@ _start (void)
   for (i = 0; i < portarraysize; ++i)
     switch (i)
       {
-      case INIT_PORT_PROC:
-	_hurd_proc = portarray[i];
-	break;
-      case INIT_PORT_CCDIR:
-	_hurd_ccdir = portarray[i];
-	break;
-      case INIT_PORT_CWDIR:
-	_hurd_cwdir = portarray[i];
-	break;
-      case INIT_PORT_CRDIR:
-	_hurd_crdir = portarray[i];
-	break;
-      case INIT_PORT_AUTH:
-	_hurd_auth = portarray[INIT_PORT_AUTH];
-	break;
+#define	initport(upper, lower) \
+      case INIT_PORT_##upper: _hurd_##lower = portarray[i]; break
+	
+	initport (PROC, proc);
+	initport (CCDIR, ccdir);
+	initport (CWDIR, cwdir);
+	initport (CRDIR, crdir);
+	initport (AUTH, auth);
+
       default:
 	/* Wonder what that could be.  */
 	__mach_port_deallocate (__mach_task_self (), portarray[i]);
@@ -146,6 +140,8 @@ _start (void)
 
   if (intarraysize > INIT_UMASK)
     _hurd_umask = intarray[INIT_UMASK] & 0777;
+  else
+    _hurd_umask = 0022;		/* XXX */
   if (intarraysize > INIT_CTTY_FILEID) /* Knows that these are sequential.  */
     {
       _hurd_ctty_fstype = intarray[INIT_CTTY_FSTYPE];
@@ -159,8 +155,8 @@ _start (void)
     thread_t sigthread;
     mach_port_t oldsig, oldtask;
     int i;
-    sigset_t ignored = nints > INIT_SIGIGN ? intarray[INIT_SIGIGN] : 0;
-    ignored &= ~_SIG_CANT_IGNORE;
+    sigset_t ignored = ((nints > INIT_SIGIGN ? intarray[INIT_SIGIGN] : 0)
+			& ~_SIG_CANT_IGNORE);
 
     ss = _hurd_thread_sigstate (__mach_thread_self ());
     ss->blocked = nints > INIT_SIGMASK ? intarray[INIT_SIGMASK] : 0;
