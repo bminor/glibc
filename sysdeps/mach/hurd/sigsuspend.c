@@ -32,15 +32,17 @@ DEFUN(sigsuspend, (set), CONST sigset_t *set)
 
   if (set != NULL)
     /* Crash before locking.  */
-    *(volatile sigset_t *) set;
+    *(volatile const sigset_t *) set;
 
   ss = _hurd_thread_sigstate (__mach_thread_self ());
   omask = ss->blocked;
   if (set != NULL)
     ss->blocked = *set & ~_SIG_CANT_BLOCK;
 
+  ss->suspended = 1;
   while ((pending = ss->pending & ~ss->blocked) == 0)
-    __condition_wait (&ss->arrived);
+    __condition_wait (&ss->arrived, &ss->lock);
+  ss->suspended = 0;
 
   for (sig = 1; sig < NSIG; ++sig)
     if (pending & __sigmask (sig))
@@ -48,7 +50,7 @@ DEFUN(sigsuspend, (set), CONST sigset_t *set)
 	/* Post the first pending signal.
 	   This call will handle any more pending signals,
 	   and it will release SS->lock before returning.  */
-	(void) _hurd_internal_post_signal (MACH_PORT_NULL,
+	(void) _hurd_internal_post_signal (ss->suspend_reply,
 					   ss,
 					   signo,
 					   ss->sigcodes[signo],
@@ -60,4 +62,6 @@ DEFUN(sigsuspend, (set), CONST sigset_t *set)
 	errno = EINTR;
 	return -1;
       }
+
+  __libc_fatal ("sigsuspend: Woken up by nonexistent signal.\n");
 }
