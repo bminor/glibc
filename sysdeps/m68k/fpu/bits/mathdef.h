@@ -20,7 +20,7 @@
 # error "Never use <bits/mathdef.h> directly; include <math.h> instead"
 #endif
 
-#if defined __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
+#if defined __USE_ISOC9X && defined _MATH_H && !defined _MATH_H_MATHDEF
 # define _MATH_H_MATHDEF	1
 
 /* The m68k FPUs evaluate all values in the 96 bit floating-point format
