@@ -35,10 +35,10 @@ DEFUN_VOID(main)
 
   if (!win)
     {
-      puts("Didn't get any signal.");
+      puts("Didn't get any signal.  Test FAILED!");
       exit(EXIT_FAILURE);
     }
 
-  puts("Got a signal.");
+  puts("Got a signal.  Test succeeded.");
   exit(EXIT_SUCCESS);
 }
