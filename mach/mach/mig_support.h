@@ -48,5 +48,18 @@ extern void __mig_reply_setup (const mach_msg_header_t *__request,
 extern void mig_reply_setup (const mach_msg_header_t *__request,
 			     mach_msg_header_t *__reply);
 
+/* Idiocy support function.  */
+extern __inline vm_size_t
+__mig_strncpy (char *__dst, const char *__src, vm_size_t __len)
+{
+  return __stpncpy (dst, src, len) - dst;
+}
+extern __inline vm_size_t 
+mig_strncpy (char *__dst, const char *__src, vm_size_t __len)
+{
+  return __mig_strncpy (dst, src, len);
+}
+
+
 
 #endif	/* mach/mig_support.h */
