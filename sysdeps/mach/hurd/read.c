@@ -42,15 +42,13 @@ DEFUN(__read, (fd, buf, nbytes),
       return -1;
     }
 
-  __mutex_lock (&_hurd_dtable.d[fd].lock); /* XXX ???? */
   server = _hurd_dtable.d[fd].server;
   isctty = _hurd_ctty_check (fd);
-  __mutex_unlock (&_hurd_dtable.lock); /* XXX ???? */
+  __mutex_unlock (&_hurd_dtable.lock);
 
   data = buf;
   err = __io_read (server, isctty, _hurd_pid, _hurd_pgrp,
 		   &data, &nread, &vmalloc, -1, nbytes);
-  __mutex_unlock (&_hurd_dtable.d[fd].lock);
 
   if (err)
     return __hurd_fail (err);
