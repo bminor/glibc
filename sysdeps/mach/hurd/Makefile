@@ -52,7 +52,12 @@ subdirs := $(filter-out inet sunrpc manual,$(subdirs)) # XXX
 includes += -I$(..)hurd
 
 # When compiling, use the Hurd header files directly from the sources.
-includes += -I$(hurd-srcdir) -I$(hurd-srcdir)/libthreads
+includes += -I$(hurd-srcdir)
+
+# When compiling, find cthreads.h in the Hurd cthreads source.
+# This directory has some other (private) header file with
+# conflicting names, so we put it last.
+last-includes += -I$(hurd-srcdir)/libthreads
 
 # Find the Hurd header files in the Hurd source.
 vpath hurd/%.h $(hurd-srcdir)
