@@ -1,3 +1,7 @@
+2000-01-05  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/mmap64.S: Correct check for ENOSYS.
+
 2000-01-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/Dist: Add sys/io.h.
