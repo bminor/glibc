@@ -1,5 +1,5 @@
-@chapter System Configuration Limits
 @node System Configuration Limits
+@chapter System Configuration Limits
 
 The functions and macros listed in this chapter describe various operating
 system limits.
