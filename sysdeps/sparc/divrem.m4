@@ -222,12 +222,12 @@ ifelse(OP, `div',
 ')
 
 Lgot_result:
-ifelse(S, `true', 
-ifelse(OP, `div', dnl Remainder should always be positive, says RMS.
+ifelse(S, `true',
+`ifelse(OP, `div', dnl Remainder should always be positive, says RMS.
 `	! check to see if answer should be < 0
 	tst	SIGN
 	bl,a	1f
 	ifelse(OP, `div', `sub %g0, Q, Q', `sub %g0, R, R')
-1:'))
+1:')')
 	retl
 	ifelse(OP, `div', `mov Q, %o0', `mov R, %o0')
