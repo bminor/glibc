@@ -1,5 +1,23 @@
 2004-11-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/tzfile.c (__tzfile_read): Avoid open for checking whether
+	the file we already use changed.
+
+	* misc/syslog.c: Remove !USE_IN_LIBIO code.
+
+2004-11-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* signal/signal.h (__sysv_signal, sysv_signal, signal, bsd_signal,
+	ssignal): Remove __nonnull attribute.
+
+2004-11-20  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sys/procfs.h: New file.
+
+2004-11-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* signal/signal.h: Add nonnull attributes.
+
 	* signal/signal.h: Add deprecated attributes to sigstack,
 	sigpause, sigblock, sigsetmask, siggetmask.
 
