@@ -31,7 +31,7 @@ DEFUN(__read, (fd, buf, nbytes),
   size_t nread;
 
   data = buf;
-  _HURD_DPORT_USE
+!!  _HURD_DPORT_USE
     (fd,
      ({
      call:
@@ -53,9 +53,7 @@ DEFUN(__read, (fd, buf, nbytes),
 	   else
 	     {
 	       const int restart = ss->actions[SIGTTIN].sa_flags & SA_RESTART;
-	       __sigaddmember (SIGTTIN, &ss->pending);
-	       __mutex_unlock (&ss->lock);
-	       /* XXX deliver pending signals */
+	       _hurd_raise_signal (ss, SIGTTIN, 0); /* Unlocks SS->lock.  */
 	       if (restart)
 		 goto call;
 	       else
@@ -65,7 +63,7 @@ DEFUN(__read, (fd, buf, nbytes),
      }));
 
   if (err)
-    return __hurd_fail (err);
+    return __hurd_dfail (fd, err);
 
   if (data != buf)
     {
