@@ -1,3 +1,6 @@
+#include <sysdeps/stub/defs.c>
+#if 0
+
 /* Definitions of global stdio data structures.
 
 Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
@@ -53,3 +56,4 @@ DEFUN_VOID(_cleanup)
   (void) fclose ((FILE *) NULL);
 }
 text_set_element (__libc_atexit, _cleanup);
+#endif /* 0 */
