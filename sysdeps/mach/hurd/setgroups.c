@@ -29,27 +29,26 @@ DEFUN(setgroups, (n, groups), size_t n AND CONST gid_t *groups)
   error_t err;
   auth_t newauth;
   size_t i;
-  gid_t new[2 + n];
+  gid_t new[n];
 
+  /* Fault before taking locks.  */
   for (i = 0; i < n; ++i)
-    new[2 + i] = groups[i];
+    new[i] = groups[i];
 
-  __mutex_lock (&_hurd_idlock);
+  __mutex_lock (&_hurd_id.lock);
   err = _hurd_check_ids ();
   if (! err)
     {
-      /* Set up the new group idlist.  */
-      new[0] = _hurd_gid->rid;
-      new[1] = _hurd_gid->svid;
-
       /* Get a new auth port using those IDs.  */
-      err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
-			    __auth_makeauth (port,
-					     _hurd_uid, _hurd_nuids,
-					     new, 2 + n,
-					     &newauth));
+      err = __USEPORT (AUTH,
+		       __auth_makeauth (port,
+					_hurd_id.gen.uids, _hurd_id.gen.nuids,
+					_hurd_id.aux.uids, _hurd_id.aux.nuids,
+					new, n,
+					_hurd_id.aux.gids, _hurd_id.aux.ngids,
+					&newauth));
     }
-  __mutex_unlock (&_hurd_idlock);
+  __mutex_unlock (&_hurd_id.lock);
 
   if (err)
     return __hurd_fail (err);
