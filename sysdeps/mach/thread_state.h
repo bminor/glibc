@@ -22,6 +22,22 @@ Cambridge, MA 02139, USA.  */
    called `thread_status'.  Oh boy.  */
 #include <mach/thread_status.h>
 
+/* The machine-dependent thread_state.h file can either define these
+   macros, or just define PC and SP to the register names.  */
+
+#ifndef MACHINE_THREAD_STATE_SET_PC
+#define MACHINE_THREAD_STATE_SET_PC(ts, pc) ((ts)->PC = (pc))
+#endif
+#ifndef MACHINE_THREAD_STATE_SET_SP
+#ifdef STACK_GROWTH_UP
+#define MACHINE_THREAD_STATE_SET_SP(ts, stack, size) \
+  ((ts)->SP = (stack))
+#else
+#define MACHINE_THREAD_STATE_SET_SP(ts, stack, size) \
+  ((ts)->SP = (stack) + (size))
+#endif
+#endif
+
 /* These functions are of use in machine-dependent signal trampoline
    implementations.  */
 
