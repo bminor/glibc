@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -59,7 +59,7 @@ $(objpfx)libposix.a:
 glob.tar.Z: glob.tar
 	compress -c $< > $@-tmp
 	mv $@-tmp $@
-glob.tar: glob/COPYING.LIB glob/Makefile.in glob/configure \
+glob.tar: glob/COPYING.LIB glob/Makefile.in glob/configure glob/configure.in \
 	  glob/fnmatch.h glob/glob.h glob/fnmatch.c glob/glob.c	  
 	tar ch$(verbose)f $@ $^
 glob/%.c: %.c
