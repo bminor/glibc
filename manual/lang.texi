@@ -1,0 +1,1061 @@
+@node Language Features, Summary of Library Facilities, System Configuration Limits, Top
+@appendix Library Facilities that are Part of the C Language
+
+Some of the facilities that are implemented by the C library really should
+be thought of as parts of the C language itself.  These facilities ought 
+to be documented in the C Language Manual, not in the library manual; but
+since we don't have the language manual yet, and documentation for these
+features has been written, we are publishing it here.
+
+@menu 
+* Consistency Checking::     Using @code{assert} to abort
+				if something ``impossible'' happens.
+* Variadic Functions::       Defining functions with varying numbers of args.
+* Null Pointer Constant::    The macro @code{NULL}.
+* Important Data Types::     Data types for object sizes.
+* Data Type Measurements::   Parameters of data type representations.
+@end menu
+
+@node Consistency Checking
+@section Explicitly Checking Internal Consistency
+@cindex consistency checking
+@cindex impossible events
+@cindex assertions
+
+When you're writing a program, it's often a good idea to put in checks
+at strategic places for ``impossible'' errors or violations of basic
+assumptions.  These checks are helpful in debugging problems due to
+misunderstandings between different parts of the program.
+
+@pindex assert.h
+The @code{assert} macro, defined in the header file @file{assert.h},
+provides a convenient way to abort the program while printing a message
+about where in the program the error was detected.
+
+@vindex NDEBUG
+Once you think your program is debugged, you can disable the error
+checks performed by the @code{assert} macro by recompiling with the
+macro @code{NDEBUG} defined.  This means you don't actually have to
+change the program source code to disable these checks.
+
+But disabling these consistency checks is undesirable unless they make
+the program significantly slower.  All else being equal, more error
+checking is good no matter who is running the program.  A wise user
+would rather have a program crash, visibly, than have it return nonsense
+without indicating anything might be wrong.
+
+@comment assert.h
+@comment ANSI
+@deftypefn Macro void assert (int @var{expression})
+Verify the programmer's belief that @var{expression} should be nonzero
+at a certain point in the program.
+
+If @code{NDEBUG} is not defined, @code{assert} tests the value of
+@var{expression}.  If it is false (zero), @code{assert} aborts the
+program (@pxref{Aborting a Program}) after printing a message of the
+form:
+
+@example
+@file{@var{file}}:@var{linenum}: Assertion `@var{expression}' failed.
+@end example
+
+@noindent
+on the standard error stream @code{stderr} (@pxref{Standard Streams}).
+The filename and line number are taken from the C preprocessor macros
+@code{__FILE__} and @code{__LINE__} and specify where the call to
+@code{assert} was written.
+
+If the preprocessor macro @code{NDEBUG} is defined before
+@file{assert.h} is included, the @code{assert} macro is defined to do
+absolutely nothing.  Even the argument expression @var{expression} is
+not evaluated, so you should avoid calling @code{assert} with arguments
+that involve side effects.
+
+For example, @code{assert (++i > 0);} is a bad idea, because @code{i}
+will not be incremented if @code{NDEBUG} is defined.
+@end deftypefn
+
+@strong{Usage note:} The @code{assert} facility is designed for
+detecting @emph{internal inconsistency}; it is not suitable for
+reporting invalid input or improper usage.
+
+The information in the diagnostic messages printd by the @code{assert}
+macro is intended to to help you, the programmer, track down the cause
+of a bug, but is not really useful for telling a user of your program
+why his or her input was invalid or why a command could not be carried
+out.  So you can't use @code{assert} to print the error messages for
+these eventualities.
+
+What's more, your program should not abort when given invalid input, as
+@code{assert} would do---it should exit with nonzero status (@pxref{Exit
+Status}) after printing its error messages, or perhaps read another
+command or move on to the next input file.
+
+@xref{Error Messages}, for information on printing error messages for
+problems that @emph{do not} represent bugs in the program.
+
+
+@node Variadic Functions
+@section Variadic Functions
+@cindex variable number of arguments
+@cindex variadic functions
+@cindex optional arguments
+
+ANSI C defines a syntax for declaring a function to take a variable
+number or type of arguments.  (Such functions are referred to as
+@dfn{varargs functions} or @dfn{variadic functions}.)  However, the
+language itself provides no mechanism for such functions to access their
+non-required arguments; instead, you use the variable arguments macros
+defined in @file{stdarg.h}.
+
+This section describes how to declare variadic functions, how to write
+them, and how to call them properly.
+
+@strong{Compatibility Note:} Many older C dialects provide a similar,
+but incompatible, mechanism for defining functions with variable numbers
+of arguments, using @file{varargs.h}.
+
+@menu
+* Why Variadic::        Reasons for making functions take variable arguments.
+* How Variadic::        How to define and call variadic functions.
+* Argument Macros::     Detailed specification of the macros
+			   for accessing variable arguments.
+* Variadic Example::    A complete example.
+@end menu
+
+@node Why Variadic
+@subsection Why Variadic Functions are Used
+
+Ordinary C functions take a fixed number of arguments.  When you define
+a function, you specify the data type for each argument.  Every call to
+the function should supply the expected number of arguments, with types
+that can be converted to the specified ones.  Thus, if the function foo
+is declared with @code{int foo (int, char *);} then you must call it
+with two arguments, a number (any kind will do) and a string pointer.
+
+But some functions perform operations that can meaningfully accept an
+unlimited number of arguments.
+
+In some cases a function can handle any number of values by operating on
+all of them as a block.  For example, consider a function that allocates
+a one-dimensional array with @code{malloc} to hold a specified set of
+values.  This operation makes sense for any number of values, as long as
+the length of the array corresponds to that number.  Without facilities
+for variable arguments, you would have to define a separate function for
+each possible array size.
+
+The library function @code{printf} (@pxref{Formatted Output}) is an
+example of another class of function where variable arguments are
+useful.  This function prints its arguments (which can vary in type as
+well as number) under the control of a format template string.
+
+These are good reasons to define a @dfn{variadic} function which can
+handle as many arguments as the caller chooses to pass.
+
+Some functions such as @code{open} take a fixed set of arguments, but
+occasionally ignore the last few.  Strict adherence to ANSI C requires
+these functions to be defined as variadic; in practice, however, the GNU
+C compiler and most other C compilers let you define such a function to
+take a fixed set of arguments---the most it can ever use---and then only
+@emph{declare} the function as variadic (or not declare its arguments
+at all!).
+
+@node How Variadic
+@subsection How Variadic Functions are Defined and Used
+
+Defining and using a variadic function involves three steps:
+
+@itemize @bullet
+@item
+@emph{Define} the function as variadic, using an ellipsis
+(@samp{@dots{}}) in the argument list, and using special macros to
+access the variable arguments.  @xref{Receiving Argument Values}.
+
+@item
+@emph{Declare} the function as variadic, using a prototype with an
+ellipsis (@samp{@dots{}}), in all the files which call it.
+@xref{Variadic Prototypes}.
+
+@item
+@emph{Call} the function by writing the fixed arguments followed by the
+additional variable arguments.  @xref{Calling Variadic Functions}.
+@end itemize
+
+@menu
+* Variadic Prototypes::         How to make a prototype for a function
+				   with variable arguments.
+* Receiving Argument Values::   Steps you must follow to access the
+				   optional argument values.
+* How Many Arguments::          How to decide whether there are more arguments.
+* Calling Variadic Functions::  Things you need to know about calling
+				   variable arguments functions.
+@end menu
+
+@node Variadic Prototypes
+@subsubsection Syntax for Variable Arguments
+
+A function that accepts a variable number of arguments must be declared
+with a prototype that says so.   You write the fixed arguments as usual,
+and then tack on @samp{@dots{}} to indicate the possibility of 
+additional arguments.  The syntax of ANSI C requires at least one fixed
+argument before the @samp{@dots{}}.  For example,
+
+@example
+int 
+func (const char *a, int b, @dots{})
+@{
+  @dots{}
+@}	
+@end example
+
+@noindent
+outlines a definition of a function @code{func} which returns an
+@code{int} and takes two required arguments, a @code{const char *} and
+an @code{int}.  These are followed by any number of anonymous
+arguments.
+
+@strong{Portability note:} For some C compilers, the last required
+argument must not be declared @code{register} in the function
+definition.  Furthermore, this argument's type must be
+@dfn{self-promoting}: that is, the default promotions must not change
+its type.  This rules out array and function types, as well as
+@code{float}, @code{char} (whether signed or not) and @code{short}
+(whether signed or not).  This is actually an ANSI C requirement.
+
+@node Receiving Argument Values
+@subsubsection Receiving the Argument Values
+
+Ordinary fixed arguments have individual names, and you can use these
+names to access their values.  But optional arguments have no
+names---nothing but @samp{@dots{}}.  How can you access them?
+
+@pindex stdarg.h
+The only way to access them is sequentially, in the order they were
+written, and you must use special macros from @file{stdarg.h} in the
+following three step process:
+
+@enumerate
+@item
+You initialize an argument pointer variable of type @code{va_list} using
+@code{va_start}.  The argument pointer when initialized points to the
+first optional argument.
+
+@item
+You access the optional arguments by successive calls to @code{va_arg}.
+The first call to @code{va_arg} gives you the first optional argument,
+the next call gives you the second, and so on.
+
+You can stop at any time if you wish to ignore any remaining optional
+arguments.  It is perfectly all right for a function to access fewer
+arguments than were supplied in the call, but you will get garbage
+values if you try to access too many arguments.
+
+@item
+You call @code{va_end} to indicate that you are finished with the
+argument pointer variable.
+
+(In practice, with most C compilers, calling @code{va_end} does nothing
+and you do not really need to call it.  This is always true in the GNU C
+compiler.  But you might as well call @code{va_end} just in case your
+program is someday compiled with a peculiar compiler.)
+@end enumerate
+
+Steps 1 and 3 must be performed in the function that accepts the
+optional arguments.  However, you can pass the @code{va_list} variable
+as an argument to another function and perform all or part of step 2
+there.
+
+You can perform the entire sequence of the three steps multiple times
+within a single function invocation.  And, if you don't want to look at
+the optional arguments, you can do these steps zero times.
+
+You can have more than one argument pointer variable if you like.  You
+can initialize each variable with @code{va_start} when you wish, and
+then you can fetch arguments with each argument pointer as you wish.
+Each argument pointer variable will sequence through the same set of
+argument values.
+
+@strong{Portability note:} With some compilers, once you pass an
+argument pointer value to a subroutine, you must not keep using the same
+argument pointer value after that subroutine returns.  For full
+portability, you should just pass it to @code{va_end}.  This is actually
+an ANSI C requirement, but most ANSI C compilers work happily
+regardless.
+
+@node How Many Arguments
+@subsubsection How Many Arguments Were Supplied
+
+There is no general way for a function to determine the number and type
+of the optional arguments it was called with.  So whoever designs the
+function typically designs a convention for the caller to tell it how
+many arguments it has, and what kind.  It is up to you to define an
+appropriate calling convention for each variadic function, and write all
+calls accordingly.
+
+One kind of calling convention is to pass the number of optional
+arguments as one of the fixed arguments.  This convention works provided
+all of the optional arguments are of the same type.
+
+A similar alternative is to have one of the required arguments be a bit
+mask, with a bit for each possible purpose for which an optional
+argument might be supplied.  You would test the bits in a predefined
+sequence; if the bit is set, fetch the value of the next argument,
+otherwise use a default value.
+
+A required argument can be used as a pattern to specify both the number
+and types of the optional arguments.  The format string argument to
+@code{printf} is one example of this.
+
+Another possibility is to pass an ``end marker'' value as the last
+optional argument.  For example, for a function that manipulates an
+arbitrary number of pointer arguments, a null pointer might indicate the
+end of the argument list.  (This assumes that a null pointer isn't
+otherwise meaningful to the function.)
+
+
+@node Calling Variadic Functions
+@subsubsection Calling Variadic Functions
+
+In principle, functions that are @emph{defined} to be variadic must also
+be @emph{declared} to be variadic using a function prototype whenever
+you call them.  This is because some C compilers use a different calling
+convention to pass the same set of argument values to a function 
+depending on whether that function takes variable arguments or fixed
+arguments.
+@cindex function prototypes
+@cindex prototypes for variadic functions
+@cindex variadic functions need prototypes
+
+In practice, the GNU C compiler always passes a given set of argument
+types in the same way regardless of whether they are optional or
+required.  So, as long as the argument types are self-promoting, you can
+safely omit declaring them.  Usually it is a good idea to declare the
+argument types for variadic functions, and indeed for all functions.
+But there are a few functions which it is extremely convenient not to
+have to declare as variadic---for example, @code{open} and
+@code{printf}.
+
+@cindex default argument promotions
+@cindex argument promotion
+Since the prototype doesn't specify types for optional arguments, in a
+call to a variadic function the @dfn{default argument promotions} are
+performed on the optional argument values.  This means the objects of
+type @code{char} or @code{short int} (whether signed or not) are
+promoted to either @code{int} or @code{unsigned int}, as appropriate;
+and that objects of type @code{float} are promoted to type
+@code{double}.  So, if the caller passes a @code{char} as an optional
+argument, it is promoted to a @code{int}, and the function should get it
+with @code{va_arg (@var{ap}, int)}.
+
+Conversion of the required arguments is controlled by the function
+prototype in the usual way: the argument expression is converted to the
+declared argument type as if it were being assigned to a variable of
+that type.
+
+@node Argument Macros
+@subsection Argument Access Macros
+
+Here are descriptions of the macros used to retrieve variable arguments.
+These macros are defined in the header file @file{stdarg.h}.
+@pindex stdarg.h
+
+@comment stdarg.h
+@comment ANSI
+@deftp {Data Type} va_list
+The type @code{va_list} is used for argument pointer variables.
+@end deftp
+
+@comment stdarg.h
+@comment ANSI
+@deftypefn {Macro} void va_start (va_list @var{ap}, @var{last_required})
+This macro initializes the argument pointer variable @var{ap} to point
+to the first of the optional arguments of the current function;
+@var{last_required} must be the last required argument to the function.
+@end deftypefn
+
+@comment stdarg.h
+@comment ANSI
+@deftypefn {Macro} @var{type} va_arg (va_list @var{ap}, @var{type})
+The @code{va_arg} macro returns the value of the next optional argument,
+and modifies the value of @var{ap} to point to the subsequent argument.
+Thus, successive uses of @code{va_arg} return successive optional 
+arguments.
+
+The type of the value returned by @code{va_arg} is @var{type} as
+specified in the call.  @var{type} must be a self-promoting type (not
+@code{char} or @code{short int} or @code{float}) that matches the type
+of the actual argument.
+@end deftypefn
+
+@comment stdarg.h
+@comment ANSI
+@deftypefn {Macro} void va_end (va_list @var{ap})
+This ends the use of @var{ap}.  After a @code{va_end} call, further
+@code{va_arg} calls with the same @var{ap} may not work.  You should invoke
+@code{va_end} before returning from the function in which @code{va_start}
+was invoked with the same @var{ap} argument.
+
+In the GNU C library, @code{va_end} does nothing, and you need not ever
+use it except for reasons of portability.
+@refill
+@end deftypefn
+
+@node Variadic Example
+@subsection Example of a Variadic Function
+
+Here is a complete sample function that accepts variable numbers of
+arguments.  The first argument to the function is the count of remaining
+arguments, which are added up and the result returned.  While trivial,
+this function is sufficient to illustrate how to use the variable
+arguments facility.
+
+@comment Yes, this example has been tested.
+@example
+#include <stdarg.h>
+
+int 
+add_em_up (int count, @dots{})
+@{
+  va_list ap;
+  int i, sum;
+
+  va_start (ap, count);           /* @r{Initialize the argument list.} */
+
+  sum = 0;
+  for (i = 0; i < count; i++)
+    sum = sum + va_arg (ap, int); /* @r{Get the next argument value.} */
+
+  va_end (ap);                    /* @r{Clean up.} */
+  return sum;
+@}
+
+void
+main ()
+@{
+  /* @r{This call prints 16.} */
+  printf ("%d\n", add_em_up (3, 5, 5, 6));
+
+  /* @r{This call prints 55.} */
+  printf ("%d\n", add_em_up (10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+@}
+@end example
+
+@node Null Pointer Constant
+@section Null Pointer Constant
+
+@comment stddef.h
+@comment ANSI
+@deftypevr Macro {void *} NULL
+@cindex null pointer
+This is a null pointer constant.  It can be assigned to any pointer
+variable since it has type @code{void *}, and is guaranteed not to
+point to any real object.  This macro is the best way to get a null
+pointer value.  You can also use @code{0} or @code{(void *)0} as a null
+pointer constant, but using @code{NULL} makes the purpose of the
+constant more evident.  
+
+When passing a null pointer as an argument to a function for which there
+is no prototype declaration in scope, you should explicitly cast
+@code{NULL} or @code{0} into a pointer of the appropriate type.  Again,
+this is because the default argument promotions may not do the right
+thing.
+@end deftypevr
+
+@node Important Data Types
+@section Important Data Types
+
+@comment stddef.h
+@comment ANSI
+@deftp {Data Type} ptrdiff_t
+This is the signed integer type of the result of subtracting two
+pointers.  For example, with the declaration @code{char *p1, *p2;}, the
+expression @code{p2 - p1} is of type @code{ptrdiff_t}.  This will
+probably be one of the standard signed integer types (@code{short int},
+@code{int} or @code{long int}), but might be a nonstandard type that
+exists only for this purpose.
+@end deftp
+
+@comment stddef.h
+@comment ANSI
+@deftp {Data Type} size_t
+This is an unsigned integer type used to represent the sizes of objects.
+The result of the @code{sizeof} operator is of this type, and functions
+such as @code{malloc} (@pxref{Unconstrained Allocation}) and
+@code{memcpy} (@pxref{Copying and Concatenation}) that manipulate
+objects of arbitrary sizes accept arguments of this type to specify
+object sizes.
+@end deftp
+
+In the GNU system @code{size_t} is equivalent to one of the types 
+@code{unsigned int} and @code{unsigned long int}.  These types have
+identical properties on the GNU system, and for most purposes, you
+can use them interchangeably.  However, they are distinct types, 
+and in certain contexts, you may not treat them as identical.  For
+example, when you specify the type of a function argument in a 
+function prototype, it makes a difference which one you use.  If
+the system header files declare @code{malloc} with an argument
+of type @code{size_t} and you declare @code{malloc} with an argument
+of type @code{unsigned int}, you will get a compilation error if
+@code{size_t} happens to be @code{unsigned long int} on your system.
+To avoid any possibility of error, when a function argument is
+supposed to have type @code{size_t}, always write the type as
+@code{size_t}, and make no assumptions about what that type might
+actually be.
+
+@strong{Compatibility Note:}  Types such as @code{size_t} are new
+features of ANSI C.  Older, pre-ANSI C implementations have
+traditionally used @code{unsigned int} for representing object sizes
+and @code{int} for pointer subtraction results.
+
+@node Data Type Measurements
+@section Data Type Measurements
+
+Most of the time, if you choose the proper C data type for each object
+in your program, you need not be concerned with just how it is
+represented or how many bits it uses.  When you do need such
+information, the C language itself does not provide a way to get it.
+But the information is available in macros defined in the header files
+@file{limits.h} and @file{float.h}.
+
+@menu
+* Integer Type Macros::    Parameters that measure the integer types.
+* Floating Type Macros::   Parameters that measure the floating point types.
+* Structure Measurement::  Getting measurements on structure types.
+@end menu
+
+@node Integer Type Macros
+@subsection Integer Data Type Macros
+@cindex integer type measurements
+@cindex measurements of integer types
+@cindex type measurements, integer
+@cindex limits, integer types
+
+The most common reason that a program needs to know how many bits are in
+an integer type is for using an array of @code{long} as a bit vector.
+You can access the bit at index @var{n} with
+
+@example
+vector[@var{n} / LONGBITS} & (1 << (@var{n} % LONGBITS))
+@end example
+
+@noindent
+provided you can define @code{LONGBITS} as the number of bits in a
+@code{long}.
+
+Another reason you might want to know the actual representation of an
+integer type is so that you can decide which type has sufficient range
+for a particular use.  For example, you might want to define a certain
+object as type @code{int} provided that has at least 20 bits of
+precision, and use @code{long} otherwise.
+
+@pindex limits.h
+There is no operator in the C language that can give you the number of
+bits in an integer data type.  But you can get the information from the
+following macros defined in the header file @file{limits.h}.  The values
+of these macros are all integer constant expressions.
+
+The @samp{MAX} and @samp{MIN} macros for @code{char} and @code{short}
+types have values of type @code{int}.  The @samp{MAX} and @samp{MIN}
+macros for the other types have values of the same type described by the
+macro---thus, @code{ULONG_MAX} has type @code{unsigned long int}.
+
+@table @code
+@comment limits.h
+@comment ANSI
+@item CHAR_BIT
+This is the number of bits in a @code{char}---eight, on most systems.
+The value has type @code{int}.
+
+You can compute the number of bits in any data type @var{type} like
+this:
+
+@example
+sizeof (@var{type}) * CHAR_BIT
+@end example
+
+@comment limits.h
+@comment ANSI
+@item SCHAR_MIN
+This is the minimum value that can be represented by a @code{signed char}.
+
+@comment limits.h
+@comment ANSI
+@item SCHAR_MAX
+This is the maximum value that can be represented by a @code{signed char}.
+
+@comment limits.h
+@comment ANSI
+@item UCHAR_MAX
+This is the maximum value that can be represented by a @code{unsigned char}.
+(The minimum value of an @code{unsigned char} is zero.)
+
+@comment limits.h
+@comment ANSI
+@item CHAR_MIN
+This is the minimum value that can be represented by a @code{char}.
+It's equal to @code{SCHAR_MIN} if @code{char} is signed, or zero
+otherwise.
+
+@comment limits.h
+@comment ANSI
+@item CHAR_MAX
+This is the maximum value that can be represented by a @code{char}.
+It's equal to @code{SCHAR_MAX} if @code{char} is signed, or
+@code{UCHAR_MAX} otherwise.
+
+@comment limits.h
+@comment ANSI
+@item SHRT_MIN
+This is the minimum value that can be represented by a @code{signed
+short int}.  On most machines that the GNU C library runs on,
+@code{short} integers are 16-bit quantities.
+
+@comment limits.h
+@comment ANSI
+@item SHRT_MAX
+This is the maximum value that can be represented by a @code{signed
+short int}.
+
+@comment limits.h
+@comment ANSI
+@item USHRT_MAX
+This is the maximum value that can be represented by an @code{unsigned
+short int}.  (The minimum value of an @code{unsigned short int} is zero.)
+
+@comment limits.h
+@comment ANSI
+@item INT_MIN
+This is the minimum value that can be represented by a @code{signed
+int}.  On most machines that the GNU C system runs on, an @code{int} is
+a 32-bit quantity.
+
+@comment limits.h
+@comment ANSI
+@item INT_MAX
+This is the maximum value that can be represented by a @code{signed
+int}.
+
+@comment limits.h
+@comment ANSI
+@item UINT_MAX
+This is the maximum value that can be represented by an @code{unsigned
+int}.  (The minimum value of an @code{unsigned int} is zero.)
+
+@comment limits.h
+@comment ANSI
+@item LONG_MIN
+This is the minimum value that can be represented by a @code{signed long
+int}.  On most machines that the GNU C system runs on, @code{long}
+integers are 32-bit quantities, the same size as @code{int}.
+
+@comment limits.h
+@comment ANSI
+@item LONG_MAX
+This is the maximum value that can be represented by a @code{signed long
+int}.
+
+@comment limits.h
+@comment ANSI
+@item ULONG_MAX
+This is the maximum value that can be represented by an @code{unsigned
+long int}.  (The minimum value of an @code{unsigned long int} is zero.)
+
+@comment limits.h
+@comment GNU
+@item LONG_LONG_MIN
+This is the minimum value that can be represented by a @code{signed long
+long int}.  On most machines that the GNU C system runs on, @code{long
+long} integers are 64-bit quantities.
+
+@comment limits.h
+@comment GNU
+@item LONG_LONG_MAX
+This is the maximum value that can be represented by a @code{signed long
+long int}.
+
+@comment limits.h
+@comment GNU
+@item ULONG_LONG_MAX
+This is the maximum value that can be represented by an @code{unsigned
+long long int}.  (The minimum value of an @code{unsigned long int} is
+zero.)
+@end table
+
+The header file @file{limits.h} also defines some additional constants
+that parameterize various operating system and file system limits.  These
+constants are described in @ref{System Parameters} and @ref{File System
+Parameters}.
+
+@node Floating Type Macros
+@subsection Floating Type Macros
+@cindex floating type measurements
+@cindex measurements of floating types
+@cindex type measurements, floating
+@cindex limits, floating types
+
+Because floating-point numbers are represented internally as approximate
+quantities, algorithms for manipulating floating-point data often need
+to take account of  the accuracy of the representation.
+
+Some of the functions in the C library itself need this information; for
+example, the algorithms for printing and reading floating-point numbers
+(@pxref{Input/Output on Streams}) and for calculating trigonometric and
+irrational functions (@pxref{Mathematics}) use it to avoid round-off
+error and loss of accuracy.  User programs that implement numerical
+analysis techniques also often need this information in order to
+minimize or compute error bounds.
+
+The specific representation of floating-point numbers varies from
+machine to machine.  The header file @file{float.h} describes the
+format used by your machine.
+
+@menu
+* Floating Point Concepts::     Definitions of terminology.
+* Floating Type Parameters::    Descriptions of the individual macros.
+* IEEE Floating Point::         How one common representation is described.
+@end menu
+
+@node Floating Point Concepts
+@subsubsection Floating Point Representation Concepts
+
+This section introduces the terminology used to characterize the
+parameters of floating-point representations.
+
+You are probably already familiar with most of these concepts in terms
+of scientific or exponential notation for floating-point numbers.  For
+example, the number @code{123456.0} could be expressed in exponential
+notation as @code{1.23456e+05}, a shorthand notation indicating that the
+mantissa @code{1.23456} is multiplied by the base @code{10} raised to
+power @code{5}.
+
+More formally, the internal representation of a floating-point number
+can be characterized in terms of the following parameters:
+
+@itemize @bullet
+@item
+@cindex sign (of floating-point number)
+The @dfn{sign} is either @code{-1} or @code{1}.
+
+@item
+@cindex base (of floating-point number)
+@cindex radix (of floating-point number)
+The @dfn{base} or @dfn{radix} for exponentiation; an integer greater
+than @code{1}.  This is a constant for the particular representation.
+
+@item
+@cindex exponent (of floating-point number)
+The @dfn{exponent} to which the base is raised.  The upper and lower
+bounds of the exponent value are constants for the particular
+representation.
+
+@cindex bias (of floating-point number exponent)
+Sometimes, in the actual bits representing the floating-point number,
+the exponent is @dfn{biased} by adding a constant to it, to make it
+always be represented as an unsigned quantity.  This is only important
+if you have some reason to pick apart the bit fields making up the
+floating-point number by hand, which is something for which the GNU
+library provides no support.  So this is ignored in the discussion that
+follows.
+
+@item
+@cindex mantissa (of floating-point number)
+@cindex significand (of floating-point number)
+The value of the @dfn{mantissa} or @dfn{significand}, which is an
+unsigned integer.
+
+@item 
+@cindex precision (of floating-point number)
+The @dfn{precision} of the mantissa.  If the base of the representation
+is @var{b}, then the precision is the number of base-@var{b} digits in
+the mantissa.  This is a constant for the particular representation.
+
+@cindex hidden bit (of floating-point number mantissa)
+Many floating-point representations have an implicit @dfn{hidden bit} in
+the mantissa.  This is a bit which is present virtually in the mantissa,
+but not stored in memory because its value is always 1 in a normalized
+number.  The precision figure (see above) includes any hidden bits.
+
+Again, the GNU library provides no facilities for dealing with such
+low-level aspects of the representation.
+@end itemize
+
+The mantissa of a floating-point number actually represents an implicit
+fraction whose denominator is the base raised to the power of the
+precision.  Since the largest representable mantissa is one less than
+this denominator, the value of the fraction is always strictly less than
+@code{1}.  The mathematical value of a floating-point number is then the
+product of this fraction; the sign; and the base raised to the exponent.
+
+@cindex normalized floating-point number
+If the floating-point number is @dfn{normalized}, the mantissa is also
+greater than or equal to the base raised to the power of one less
+than the precision (unless the number represents a floating-point zero,
+in which case the mantissa is zero).  The fractional quantity is
+therefore greater than or equal to @code{1/@var{b}}, where @var{b} is
+the base.
+
+@node Floating-Point Parameters
+@subsubsection Floating-Point Parameters
+
+@strong{Incomplete:}  This section needs some more concrete examples
+of what these parameters mean and how to use them in a program.
+
+@pindex float.h
+These macro definitions can be accessed by including the header file
+@file{float.h} in your program.
+
+Macro names starting with @samp{FLT_} refer to the @code{float} type,
+while names beginning with @samp{DBL_} refer to the @code{double} type
+and names beginning with @samp{LDBL_} refer to the @code{long double}
+type.  (Currently GCC does not support @code{long double} as a distinct
+data type, so the values for the @samp{LDBL_} constants are equal to as
+the corresponding constants for the @code{double} type.)@refill
+
+Of these macros, only @code{FLT_RADIX} is guaranteed to be a constant
+expression.  The other macros listed here cannot be reliably used in
+places that require constant expressions, such as @samp{#if}
+preprocessing directives or in the dimensions of static arrays.
+
+Although the ANSI C standard specifies minimum and maximum values for
+most of these parameters, the GNU C implementation uses whatever
+floating-point representations are supported by the underlying hardware.
+So whether GNU C actually satisfies the ANSI C requirements depends on
+what machine it is running on.
+
+@itemize @bullet
+@comment float.h
+@comment ANSI
+@item FLT_ROUNDS
+This value characterizes the rounding mode for floating-point addition.
+The following values indicate standard rounding modes:
+
+@table @code
+@item -1
+The mode is indeterminable.
+@item 0
+Rounding is towards zero.
+@item 1
+Rounding is to the nearest number.
+@item 2
+Rounding is towards positive infinity.
+@item 3
+Rounding is towards negative infinity.
+@end table
+
+@noindent
+Any other value represents a machine-dependent nonstandard rounding
+mode.
+
+@comment float.h
+@comment ANSI
+@item FLT_RADIX
+This is the value of the base, or radix, of exponent representation.
+This is guaranteed to be a constant expression, unlike the other macros
+described in this section.
+
+@comment float.h
+@comment ANSI
+@item FLT_MANT_DIG
+This is the number of base-@code{FLT_RADIX} digits in the floating-point
+mantissa for the @code{float} data type.
+
+@comment float.h
+@comment ANSI
+@item DBL_MANT_DIG
+@itemx LDBL_MANT_DIG
+This is the number of base-@code{FLT_RADIX} digits in the floating-point
+mantissa for the data types @code{double} and @code{long double},
+respectively.
+
+@comment float.h
+@comment ANSI
+@item FLT_DIG
+This is the number of decimal digits of precision for the @code{float}
+data type.  Technically, if @var{p} and @var{b} are the precision and
+base (respectively) for the representation, then the decimal precision
+@var{q} is the maximum number of decimal digits such that any floating
+point number with @var{q} base 10 digits can be rounded to a floating
+point number with @var{p} base @var{b} digits and back again, without
+change to the @var{q} decimal digits.
+
+The value of this macro is guaranteed to be at least @code{6}.
+
+@comment float.h
+@comment ANSI
+@item DBL_DIG
+@itemx LDBL_DIG
+These are similar to @code{FLT_DIG}, but for the data types
+@code{double} and @code{long double}, respectively.  The values of these
+macros are guaranteed to be at least @code{10}.
+
+@comment float.h
+@comment ANSI
+@item FLT_MIN_EXP
+This is the minimum negative integer such that the mathematical value
+@code{FLT_RADIX} raised to this power minus 1 can be represented as a
+normalized floating-point number of type @code{float}.  In terms of the
+actual implementation, this is just the smallest value that can be
+represented in the exponent field of the number.
+
+@comment float.h
+@comment ANSI
+@item DBL_MIN_EXP
+@itemx LDBL_MIN_EXP
+These are similar to @code{FLT_MIN_EXP}, but for the data types
+@code{double} and @code{long double}, respectively.
+
+@comment float.h
+@comment ANSI
+@item FLT_MIN_10_EXP
+This is the minimum negative integer such that the mathematical value
+@code{10} raised to this power minus 1 can be represented as a
+normalized floating-point number of type @code{float}.  This is
+guaranteed to be no greater than @code{-37}.
+
+@comment float.h
+@comment ANSI
+@item DBL_MIN_10_EXP
+These are similar to @code{FLT_MIN_10_EXP}, but for the data types
+@code{double} and @code{long double}, respectively.
+
+@comment float.h
+@comment ANSI
+@item FLT_MAX_EXP
+This is the maximum negative integer such that the mathematical value
+@code{FLT_RADIX} raised to this power minus 1 can be represented as a
+floating-point number of type @code{float}.  In terms of the actual
+implementation, this is just the largest value that can be represented
+in the exponent field of the number.
+
+@comment float.h
+@comment ANSI
+@item DBL_MAX_EXP
+@itemx LDBL_MAX_EXP
+These are similar to @code{FLT_MAX_EXP}, but for the data types
+@code{double} and @code{long double}, respectively.
+
+@comment float.h
+@comment ANSI
+@item FLT_MAX_10_EXP
+This is the maximum negative integer such that the mathematical value
+@code{10} raised to this power minus 1 can be represented as a
+normalized floating-point number of type @code{float}.  This is
+guaranteed to be at least @code{37}.
+
+@comment float.h
+@comment ANSI
+@item DBL_MAX_10_EXP
+@itemx LDBL_MAX_10_EXP
+These are similar to @code{FLT_MAX_10_EXP}, but for the data types
+@code{double} and @code{long double}, respectively.
+
+@comment float.h
+@comment ANSI
+@item FLT_MAX
+The value of this macro is the maximum number representable in type
+@code{float}.  It is guaranteed to be at least @code{1E+37}.  The value
+has type @code{float}.
+
+@comment float.h
+@comment ANSI
+@item DBL_MAX
+@itemx LDBL_MAX
+These are similar to @code{FLT_MAX}, but for the data types
+@code{double} and @code{long double}, respectively.  The type of the
+macro's value is the same as the type it describes.
+
+@comment float.h
+@comment ANSI
+@item FLT_MIN
+The value of this macro is the minimum normalized positive
+floating-point number that is representable by type @code{float}, and is
+guaranteed to be no more than @code{1E-37}.
+
+@comment float.h
+@comment ANSI
+@item DBL_MIN
+@itemx LDBL_MIN
+These are similar to @code{FLT_MIN}, but for the data types
+@code{double} and @code{long double}, respectively.  The type of the
+macro's value is the same as the type it describes.
+
+@comment float.h
+@comment ANSI
+@item FLT_EPSILON
+This is the minimum positive floating-point number of type @code{float}
+such that @code{1.0 + FLT_EPSILON != 1.0} is true.  It's guaranteed to
+be no greater than @code{1E-5}.
+
+@comment float.h
+@comment ANSI
+@item DBL_EPSILON
+@itemx LDBL_EPSILON
+These are similar to @code{FLT_MIN}, but for the data types
+@code{double} and @code{long double}, respectively.  The type of the
+macro's value is the same as the type it describes.  The values are
+never greater than @code{1E-9}.
+@end itemize
+
+@node IEEE Floating Point
+@subsubsection IEEE Floating Point
+@cindex IEEE floating-point representation 
+@cindex floating-point, IEEE
+
+Here is an example showing how the floating type measurements work for
+the most common floating point representation, specified by the
+@cite{IEEE Standard for Binary Floating-Point Arithmetic (ANSI/IEEE Std
+754-1985)}.  Nearly all computers today use this format.
+
+The IEEE single-precision float representation uses a base of 2.  There
+is a sign bit, a mantissa with 23 bits plus one hidden bit (so the total
+precision is 24 base-2 digits), and an 8-bit exponent that can represent
+values in the range -125 to 128, inclusive.
+
+So, for an implementation that uses this representation for the
+@code{float} data type, appropriate values for the corresponding
+parameters are:
+
+@example
+FLT_RADIX                             2
+FLT_MANT_DIG                         24
+FLT_DIG                               6
+FLT_MIN_EXP                        -125
+FLT_MIN_10_EXP                      -37
+FLT_MAX_EXP                         128
+FLT_MAX_10_EXP                      +38
+FLT_MIN                 1.17549435E-38F
+FLT_MAX                 3.40282347E+38F
+FLT_EPSILON             1.19209290E-07F
+@end example
+
+Here are the values for the @code{double} data type:
+
+@example
+DBL_MANT_DIG                         53
+DBL_DIG                              15
+DBL_MIN_EXP                       -1021
+DBL_MIN_10_EXP                     -307
+DBL_MAX_EXP                        1024
+DBL_MAX_10_EXP                      308
+DBL_MAX         1.7976931348623157E+308
+DBL_MIN         2.2250738585072014E-308
+DBL_EPSILON     2.2204460492503131E-016
+@end example
+
+@node Structure Measurement
+@subsection Structure Type Measurement
+
+You can use @code{offsetof} to measure the location within a structure
+type of a particular structure field.
+
+@comment stddef.h
+@comment ANSI
+@deftypefn {Macro} size_t offsetof (@var{type}, @var{member})
+This expands to a integer constant expression that is the offset of the
+structure member named @var{member} in a the structure type @var{type}.
+For example, @code{offsetof (struct s, elem)} is the offset, in bytes,
+of the member @code{elem} in a @code{struct s}.
+
+This macro won't work if @var{member} is a bit field; you get an error
+from the C compiler in that case.
+@end deftypefn
