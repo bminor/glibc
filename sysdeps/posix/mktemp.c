@@ -31,31 +31,31 @@ DEFUN(mktemp, (template), char *template)
 {
   static CONST char letters[]
     = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  static pid_t oldpid = (pid_t) 0;
-  pid_t pid = __getpid();
-  static size_t count;
   size_t len;
-  char c;
+  size_t i;
 
-  len = strlen(template);
-  if (len < 6 || strcmp(&template[len - 6], "XXXXXX"))
+  len = strlen (template);
+  if (len < 6 || strcmp (&template[len - 6], "XXXXXX"))
     {
       errno = EINVAL;
-      return template;
+      return NULL;
     }
 
-  if (pid != oldpid)
-    {
-      oldpid = pid;
-      count = 0;
-    }
-
-  c = letters[count++];
-  count %= sizeof(letters) - 1;
-
-  if (sprintf (&template[len - 6], "%c%.5u",
-	       c, (unsigned int) pid % 100000) != 6)
+  if (sprintf (&template[len - 5], "%.5u", (unsigned int) pid % 100000) != 5)
+    /* Inconceivable lossage.  */
     return NULL;
 
+  for (i = 0; i < sizeof (letters); ++i)
+    {
+      struct stat ignored;
+
+      template[len - 6] = letters[i];
+
+      if (stat (template, &ignored) == 0)
+	return template;
+    }
+
+  /* We return the null string if we can't find a unique file name.  */
+  template[0] = '\0';
   return template;
 }
