@@ -33,6 +33,9 @@ endif
 
 ifndef ARCH
 ifdef machine
+# If config.make exists, the source directory was configured,
+# so don't try to be clever and find another directory to build in.
+ifeq (,$(wildcard $(..)config.make))
 ARCH = $(machine)
 endif
 endif
@@ -204,6 +207,14 @@ endif
 # Default flags to pass the C compiler.
 ifndef default_cflags
 +default_cflags := -g
+endif
+
+# Flags to pass the C compiler when assembling preprocessed assembly code
+# (`.S' files).  On some systems the assembler doesn't understand the `#' line
+# directives the preprocessor produces.  If you have troubling compiling
+# assembly code, try using -P here to suppress these directives.
+ifndef asm-CPPFLAGS
+asm-CPPFLAGS =
 endif
 
 # Command for linking programs with the C library.
