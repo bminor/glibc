@@ -20,6 +20,9 @@ Cambridge, MA 02139, USA.  */
 #define	_ALLOCA_H	1
 #include <features.h>
 
+#define	__need_size_t
+#include <stddef.h>
+
 /* Remove any previous definition.  */
 #undef	alloca
 
