@@ -143,6 +143,9 @@ DEFUN(__tzfile_read, (file), CONST char *file)
       fread((PTR) type_idxs, 1, num_transitions, f) != num_transitions)
     goto lose;
 
+  for (i = 0; i < num_transitions; ++i)
+    transitions[i] = uc2ul (&transitions[i]);
+
   for (i = 0; i < num_types; ++i)
     {
       unsigned char x[4];
