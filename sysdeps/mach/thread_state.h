@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
    implementations.  */
 
 static inline int
-machine_get_state (struct machine_thread_all_state *state,
+machine_get_state (thread_t thread, struct machine_thread_all_state *state,
 		   int flavor, void *stateptr, void *scpptr, size_t size)
 {
   if (state->set & (1 << flavor))
@@ -40,16 +40,22 @@ machine_get_state (struct machine_thread_all_state *state,
       /* Noone asked about this flavor of state before; fetch the state
 	 directly from the kernel into the sigcontext.  */
       unsigned int got;
-      return (! __thread_get_state (ss->thread, flavor, scpptr, &got)
+      return (! __thread_get_state (thread, flavor, scpptr, &got)
 	      && got == (size / sizeof (int)));
     }
 }
 
 static inline int
-machine_get_basic_state (struct machine_thread_all_state *state,
-			 struct sigcontext *scp)
+machine_get_basic_state (thread_t thread,
+			 struct machine_thread_all_state *state)
 {
-  return machine_get_state (MACHINE_THREAD_STATE_FLAVOR, &state->basic,
-			    &scp->sc_##machine_thread_state,
-			    sizeof (state->basic));
+  if (state->set & (1 << flavor))
+    return 1;
+
+  if (__thread_get_state (thread, MACHINE_THREAD_STATE_FLAVOR,
+			  &state->basic, MACHINE_THREAD_STATE_COUNT))
+    return 0;
+
+  state->set |= 1 << flavor;
+  return 1;
 }
