@@ -70,9 +70,12 @@ _hurd_init (char **argv,
     _hurd_umask = CMASK;
 
   /* All done with init ints and ports.  */
-  __vm_deallocate (__mach_task_self (), intarray, intarraysize * sizeof (int));
   __vm_deallocate (__mach_task_self (),
-		   portarray, portarraysize * sizeof (mach_port_t));
+		   (vm_address_t) intarray,
+		   intarraysize * sizeof (int));
+  __vm_deallocate (__mach_task_self (),
+		   (vm_address_t) portarray,
+		   portarraysize * sizeof (mach_port_t));
 }
 
 /* The user can do "int _hide_arguments = 1;" to make
@@ -85,7 +88,7 @@ int _hide_arguments, _hide_environment;
 void
 _hurd_proc_init (char **argv)
 {
-  mach_port_t oldmsg, oldtask;
+  mach_port_t oldmsg;
   int dealloc;
   process_t procserver;
 
@@ -103,11 +106,14 @@ _hurd_proc_init (char **argv)
 
   /* Give the proc server our message port.  */
   __proc_setmsgport (procserver, _hurd_msgport, &oldmsg);
+  if (oldmsg != MACH_PORT_NULL)
+    /* Deallocate the old msg port we replaced.  */
+    __mach_port_deallocate (__mach_task_self (), oldmsg);
 
   /* Tell the proc server where our args and environment are.  */
   __proc_setprocargs (procserver,
-		      _hide_arguments ? 0 : argv,
-		      _hide_environment ? 0 : __environ);
+		      _hide_arguments ? 0 : (vm_address_t) argv,
+		      _hide_environment ? 0 : (vm_address_t) __environ);
 
   _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], &dealloc, procserver);
 
@@ -115,9 +121,4 @@ _hurd_proc_init (char **argv)
   /* Initialize proc server-assisted fault recovery for the signal thread.  */
   _hurdsig_fault_init ();
 #endif
-
-  if (oldmsg != MACH_PORT_NULL)
-    __mach_port_deallocate (__mach_task_self (), oldmsg);
-  if (oldtask != MACH_PORT_NULL)
-    __mach_port_deallocate (__mach_task_self (), oldtask);
 }
