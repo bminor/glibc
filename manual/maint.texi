@@ -50,6 +50,7 @@ mips-dec-ultrix4.@var{n}
 i386-bsd4.3
 i386-sysv
 i386-sysv4
+i386-sequent-bsd
 @end example
 
 While no other configurations are supported, there are handy aliases for
@@ -63,6 +64,7 @@ sun3-sunos4.@var{n} sun3
 news
 decstation
 i386-svr4
+i386-sequent-dynix
 @end example
 
 Here are some options that you should specify (if appropriate) when
