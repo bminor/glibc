@@ -93,6 +93,8 @@ union __wait
 
 #ifdef	__USE_BSD
 #define	WCOREDUMP(status)	__WCOREDUMP(__WAIT_INT(status))
+#define	W_EXITCODE(ret, sig)	__W_EXITCODE(ret, sig)
+#define	W_STOPCODE(sig)		__W_STOPCODE(sig)
 #endif
 
 
