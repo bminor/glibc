@@ -36,7 +36,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Per-thread signal state.  */
 
-struct _hurd_sigstate
+struct hurd_sigstate
   {
     /* XXX should be in cthread variable (?) */
     thread_t thread;
@@ -79,22 +79,42 @@ struct _hurd_sigstate
 
 /* Linked list of states of all threads whose state has been asked for.  */
 
-extern struct _hurd_sigstate *_hurd_sigstates;
+extern struct hurd_sigstate *_hurd_sigstates;
 
 extern struct mutex _hurd_siglock; /* Locks _hurd_sigstates.  */
 
 /* Get the sigstate of a given thread, taking its lock.  */
 
-extern struct _hurd_sigstate *_hurd_thread_sigstate (thread_t);
+extern struct hurd_sigstate *_hurd_thread_sigstate (thread_t);
+
+/* Thread listening on our message port; also called the "signal thread".  */
+
+extern thread_t _hurd_msgport_thread;
+
+/* Our message port.  We hold the receive right and _hurd_msgport_thread
+   listens for messages on it.  We also hold a send right, for convenience.  */
+
+extern mach_port_t _hurd_msgport;
 
 
 /* Thread to receive process-global signals.  */
+
 extern thread_t _hurd_sigthread;
 
-/* SS->lock is held on entry, and released before return.  */
-extern void _hurd_internal_post_signal (struct _hurd_sigstate *ss,
-					int signo, int sigcode,
-					sigset_t *restore_blocked);
+
+/* Resource limit on core file size.  Enforced by hurdsig.c.  */
+extern int _hurd_core_limit;
+
+/* Translate a Mach exception into a signal (machine-dependent).  */
+
+extern void _hurd_exception2signal (int exception, int code, int subcode,
+				    int *signo, int *sigcode);
+
+
+/* Make the thread described by SS take the signal described by SIGNO and
+   SIGCODE.  SS->lock is held on entry, and released before return.  */
+extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
+					int signo, int sigcode);
 
 /* Function run by the signal thread to receive from the signal port.  */
 extern void _hurd_msgport_receive (void);
