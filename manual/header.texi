@@ -9,8 +9,9 @@ it.
 
 @table @code
 
-@comment summary.out is generated from the other texinfo files.  See Makefile.
+@comment summary.texinfo is generated from the other texinfo files.
+@comment See the Makefile and summary.awk for the details.
 
-@include summary.out
+@include summary.texinfo
 
 @end table
