@@ -1,3 +1,8 @@
+1998-07-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/rcmd.c (iruserok): Initialize hostf.
+	Reported by  Richard Kilgore <rkilgore@lore.ece.utexas.edu>.
+
 1998-06-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/nss_files/files-XXX.c (_nss_files_get,ENTNAME_r): Initialize
