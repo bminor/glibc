@@ -1,3 +1,7 @@
+2000-04-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/cs.po: Update from translation team.
+
 2000-04-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/globtest.sh: Work around inconsistency with expanding ~/
