@@ -53,6 +53,10 @@ ifdef user-interfaces
 ifndef no_deps
 include $(*.ir)
 endif
+ifneq "$(*.ir)" "$(wildcard $(*.ir))"
+# If any .ir file is missing, we will be unable to make all the deps.
+no_deps=t
+endif
 generated += $(*.ir)
 endif
 
@@ -67,7 +71,7 @@ $(objpfx)%.ir: $(objpfx)%.uh
 	 awk '/^kern_return_t/ { print $$2 }' $<		;\
 	 echo 'endef'						;\
 	 echo '$*-calls := $$(subst $$(nl), ,$$($*-calls))'	;\
-	 echo '$$($*-calls:%=_\%%.c): $*.defs'			;\
+	 echo '$$($*-calls:%=$(objpfx)_\%%.c): $*.defs'		;\
 	 echo '	$$(generate-user-calls)'			 \
 	) > $@-new
 	mv $@-new $@
@@ -107,7 +111,7 @@ $(objpfx)%.h: $(objpfx)%.__h $(objpfx)%.uh
 
 if-calls.c := $(strip $(foreach if,$(user-interfaces),$($(if)-calls:%=%.c)))
 ifdef if-calls.c
-$(addprefix $(objpfx),$(if-calls.c)):
+$(addprefix $(objpfx),$(if-calls.c)): $(objpfx)%.c:
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*)') > $@-new
 	mv $@-new $@
