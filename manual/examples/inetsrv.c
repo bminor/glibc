@@ -39,7 +39,6 @@ main (void)
 {
   extern int make_socket (unsigned short int port);
   int sock;
-  int status;
   fd_set active_fd_set, read_fd_set;
   int i;
   struct sockaddr_in clientname;
@@ -74,9 +73,10 @@ main (void)
 	    if (i == sock)
 	      {
 		/* Connection request on original socket. */
+		int new;
 		size = sizeof (clientname);
-		if (accept (sock,
-			    (struct sockaddr *) &clientname, &size) < 0)
+		new = accept (sock, (struct sockaddr *) &clientname, &size);
+		if (new < 0)
 		  {
 		    perror ("accept");
 		    exit (EXIT_FAILURE);
@@ -85,7 +85,7 @@ main (void)
 			 "Server: connect from host %s, port %hd.\n",
 			 inet_ntoa (clientname.sin_addr),
 			 ntohs (clientname.sin_port));
-		FD_SET (status, &active_fd_set);
+		FD_SET (new, &active_fd_set);
 	      }
 	    else
 	      {
