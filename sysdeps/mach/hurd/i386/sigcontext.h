@@ -76,7 +76,7 @@ struct sigcontext
        values can be found in <mach/i386/fp_reg.h>.  */
 #define sc_i386_float_state sc_fpkind
     int sc_fpkind;		/* FP_NO, FP_387, etc.  */
-    int sc_fpused;		/* If nonzero, ignore rest of float state.  */
+    int sc_fpused;		/* If zero, ignore rest of float state.  */
     struct i386_fp_save sc_fpsave;
     struct i386_fp_regs sc_fpregs;
     int sc_fpexcsr;		/* FPSR including exception bits.  */
