@@ -110,7 +110,9 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
       {
 	if (!err)
 	  {
-	    err = __io_select (ports[i], types[i], port, i, &types[i]);
+	    err = __io_select (ports[i], types[i],
+			       port, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+			       i, &types[i]);
 	    if (types[i])
 	      ++got;
 	  }
