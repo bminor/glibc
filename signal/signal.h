@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,9 +55,15 @@ typedef __sigset_t sigset_t;
 #include <bits/types.h>
 #include <bits/signum.h>
 
-#if defined __USE_XOPEN && !defined pid_t
+#ifdef __USE_XOPEN
+# ifndef pid_t
 typedef __pid_t pid_t;
-# define pid_t pid_t
+#  define pid_t pid_t
+# endif
+# ifndef uid_t
+typedef __uid_t uid_t;
+#  define uid_t uid_t
+# endif
 #endif	/* Unix98 */
 
 
@@ -307,12 +313,14 @@ extern int sigreturn __P ((struct sigcontext *__scp));
 extern int siginterrupt __P ((int __sig, int __interrupt));
 
 # include <bits/sigstack.h>
+# ifdef __USE_GNU
+#  include <ucontext.h>
+# endif
 
 /* Run signals handlers on the stack specified by SS (if not NULL).
    If OSS is not NULL, it is filled in with the old signal stack status.
    This interface is obsolete and on many platform not implemented.  */
-extern int sigstack __P ((__const struct sigstack *__ss,
-			  struct sigstack *__oss));
+extern int sigstack __P ((struct sigstack *__ss, struct sigstack *__oss));
 
 /* Alternate signal handler stack interface.
    This interface should always be preferred over `sigstack'.  */
