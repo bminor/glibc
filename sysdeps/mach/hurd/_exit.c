@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,12 +19,15 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <sysdep.h>
 
 volatile void
 _hurd_exit (int status)
 {
-  _HURD_PORT_USE (&_hurd_proc, __proc_exit (port, status));
+  /* Give the proc server our exit status.  */
+  _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC], __proc_exit (port, status));
 
+  /* Commit suicide.  */
   __task_terminate (__mach_task_self ());
 
   /* Perhaps the cached mach_task_self was bogus.  */
@@ -33,9 +36,13 @@ _hurd_exit (int status)
   /* This sucker really doesn't want to die.  */
   while (1)
     {
+#ifdef LOSE
+      LOSE;
+#else
       volatile const int zero = 0, one = 1;
       volatile int lossage = one / zero;
     }
+#endif
 }
 
 void
