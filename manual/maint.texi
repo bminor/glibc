@@ -57,6 +57,7 @@ m68k-hp-bsd4.3
 m68k-sony-newsos
 m68k-sun-sunos4.@var{n}
 mips-dec-ultrix4.@var{n}
+mips-sgi-irix4.@var{n}
 sparc-sun-solaris2.@var{n}
 sparc-sun-sunos4.@var{n}
 @end smallexample
@@ -934,5 +935,9 @@ Mountain View, California  94043
 @end display
 @end quotation
 @end itemize
+
+@item
+The port to SGI machines running Irix 4 (@code{mips-sgi-irix4}) was
+contributed by Tom Quinn.
 
 @c @bye
