@@ -540,7 +540,7 @@ extern int EXFUN(setlogin, (CONST char *__name));
    If OPTS begins with `--', then non-option arguments
    are treated as arguments to the option '\0'.
    This behavior is specific to the GNU `getopt'.  */
-extern int EXFUN(getopt, (int __argc, char **__argv,
+extern int EXFUN(getopt, (int __argc, char *CONST *__argv,
 			  CONST char *__opts));
 extern int opterr;
 extern int optind;
