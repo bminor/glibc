@@ -1,4 +1,16 @@
-2002-03-11  Jakub Jelinek  <jakub@redhat.com>
+2002-03-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tzset.c (tz_compute): Move __daylight, __tzname and
+	__tzname_cur_max setting...
+	(tzset_internal): ...here.
+
+2002-03-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tzset.c (compute_change): Don't return any value.
+	(tz_compute): Likewise.  Don't handle southern hemisphere here.
+	(__tz_convert): But here.
+
+2002-03-11  Jakub Jelinek  <jakub@redhat.com> 
 
 	* sysdeps/sparc/sparc64/configure.in: New file.
 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_load_address): Fix
