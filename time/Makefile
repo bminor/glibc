@@ -31,7 +31,7 @@ routines	:= offtime asctime clock ctime difftime gmtime	\
 		   __setitmr tzset gettod setitmr
 aux		:= syms-time
 
-others	:= ap date
+others	:= ap zdump
 tests	:= test_time
 
 
