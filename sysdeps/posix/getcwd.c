@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -76,12 +76,12 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
   pathp = path + size;
   *--pathp = '\0';
 
-  if (stat (".", &st) < 0)
+  if (__lstat (".", &st) < 0)
     return NULL;
   thisdev = st.st_dev;
   thisino = st.st_ino;
 
-  if (stat ("/", &st) < 0)
+  if (__lstat ("/", &st) < 0)
     return NULL;
   rootdev = st.st_dev;
   rootino = st.st_ino;
@@ -125,7 +125,7 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
       dotp -= 3;
 
       /* Figure out if this directory is a mount point.  */
-      if (stat (dotp, &st) < 0)
+      if (__lstat (dotp, &st) < 0)
 	goto lose;
       dotdev = st.st_dev;
       dotino = st.st_ino;
@@ -148,7 +148,7 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
 	      name[dotlist + dotsize - dotp] = '/';
 	      memcpy (&name[dotlist + dotsize - dotp + 1],
 		      d->d_name, d->d_namlen + 1);
-	      if (stat (name, &st) < 0)
+	      if (__lstat (name, &st) < 0)
 		{
 		  int save = errno;
 		  (void) closedir (dirstream);
