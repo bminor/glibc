@@ -490,8 +490,10 @@ dl_open_worker (void *a)
 	  /* We have to bump the generation counter.  */
 	  any_tls = true;
 	}
+#endif
     }
 
+#if USE_TLS
   /* Bump the generation number if necessary.  */
   if (any_tls)
     if (__builtin_expect (++GL(dl_tls_generation) == 0, 0))
