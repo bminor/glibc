@@ -23,6 +23,10 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 
 
+struct _hurd_port *_hurd_ports;
+size_t _hurd_nports;
+mode_t _hurd_umask;
+
 void _hurd_proc_init (char **argv);
 
 /* Initialize the library data structures from the
