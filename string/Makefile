@@ -27,7 +27,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
 		   strerror strlen strncat strncmp strncpy strpbrk	\
 		   strrchr strsignal strspn strstr strtok strxfrm	\
 		   __memccpy memchr memcmp memmove memset  		\
-		   bcopy bzero ffs stpcpy strcasecmp			\
+		   bcopy bzero ffs stpcpy strcasecmp strncase		\
 		   rindex index bcmp memccpy memcpy wordcopy
 
 tests		:= tester testcopy
