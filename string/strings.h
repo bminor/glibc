@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,10 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #endif	/* string.h  */
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
 /* These do not depend on __USE_BSD because
    <strings.h> is a BSD-only header.  */
 
@@ -35,5 +39,8 @@ extern char *EXFUN(index, (CONST char *__s, int __c));
 /* Find the last occurrence of C in S.  */
 extern char *EXFUN(rindex, (CONST char *__s, int __c));
 
+#ifdef	__cplusplus
+}
+#endif
 
 #endif	/* strings.h  */
