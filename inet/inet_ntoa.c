@@ -43,7 +43,7 @@ static void free_key_mem (void *mem);
 char *
 inet_ntoa (struct in_addr in)
 {
-  __libc_once_define (once);
+  __libc_once_define (static, once);
   char *buffer;
   unsigned char *bytes;
 
