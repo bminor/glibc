@@ -155,9 +155,8 @@ fails if the file already exists.
 
 @item O_NOCTTY
 If the @var{filename} names a terminal device, don't make it the
-controlling terminal for the process.  @xref{Controlling Terminal of a
-Process}, for information about how the controlling terminal of a
-process is determined.
+controlling terminal for the process.  @xref{Job Control}, for
+information about what it means to be the controlling terminal.
 
 @item O_NONBLOCK
 This sets nonblocking mode.  This option is usually only useful for
@@ -604,6 +603,9 @@ file = open (filename, O_RDONLY);
 dup2 (file, STDIN_FILENO);
 execv (program, NULL);
 @end example
+
+There is also a more detailed example showing how to implement redirection
+in the context of a pipeline of processes in @ref{Launching Jobs}.
 
 
 @node File Descriptor Flags
