@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -77,7 +77,7 @@ messages_finish (struct localedef_t *locale)
     = locale->categories[LC_MESSAGES].messages;
 
   /* The fields YESSTR and NOSTR are optional.  */
-  if (messages->yesexpr == NULL)
+  if (messages->yesexpr == NULL && !be_quiet)
     error (0, 0, _("field `%s' in category `%s' undefined"),
 	   "yesexpr", "LC_MESSAGES");
   else
@@ -87,7 +87,7 @@ messages_finish (struct localedef_t *locale)
 
       /* Test whether it are correct regular expressions.  */
       result = regcomp (&re, messages->yesexpr, REG_EXTENDED);
-      if (result != 0)
+      if (result != 0 && !be_quiet)
 	{
 	  char errbuf[BUFSIZ];
 
@@ -98,7 +98,7 @@ no correct regular expression for field `%s' in category `%s': %s"),
 	}
     }
 
-  if (messages->noexpr == NULL)
+  if (messages->noexpr == NULL && !be_quiet)
     error (0, 0, _("field `%s' in category `%s' undefined"),
 	   "noexpr", "LC_MESSAGES");
   else
@@ -108,7 +108,7 @@ no correct regular expression for field `%s' in category `%s': %s"),
 
       /* Test whether it are correct regular expressions.  */
       result = regcomp (&re, messages->noexpr, REG_EXTENDED);
-      if (result != 0)
+      if (result != 0 && !be_quiet)
 	{
 	  char errbuf[BUFSIZ];
 
