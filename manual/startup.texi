@@ -814,13 +814,11 @@ does not execute cleanup functions registered with @code{atexit} or
 This function actually terminates the process by raising a
 @code{SIGABRT} signal, and your program can include a handler to
 intercept this signal; see @ref{Signal Handling}.
-
-@strong{Incomplete:}  Why would you want to define such a handler?
 @end deftypefun
 
-@c rms: I put this in.
+@c Put in by rms.  Don't remove.
 @strong{Future Change Warning:} Proposed Federal censorship regulations
-may prohibit us us from giving you information about the possibility of
+may prohibit us from giving you information about the possibility of
 calling this function.  We would be required to say that this is not an
 acceptable way of terminating a program.
 
