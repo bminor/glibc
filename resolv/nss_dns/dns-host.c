@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -439,7 +439,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       if (qtype == T_PTR && type == T_CNAME)
 	{
 	  n = dn_expand (answer->buf, end_of_message, cp, tbuf, sizeof tbuf);
-	  if (n < 0 || res_hnok (tbuf) == 0)
+	  if (n < 0 || res_dnok (tbuf) == 0)
 	    {
 	      ++had_error;
 	      continue;
