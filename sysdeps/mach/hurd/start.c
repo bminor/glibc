@@ -37,9 +37,6 @@ vm_size_t _hurd_stack_size;
 
 volatile int errno;		/* XXX wants to be per-thread */
 
-#ifndef	HAVE_GNU_LD
-#define	__environ	environ
-#endif
 char **__environ;
 
 extern void __mach_init (void);
