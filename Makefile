@@ -70,8 +70,11 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 
 # These are the targets that are made by making them in each subdirectory.
 +subdir_targets	:= subdir_lib objects objs others mostlyclean		\
-		   subdir_clean tests subdir_lint.out subdir_install	\
-		   subdir_echo-headers subdir_echo-distinfo
+		   subdir_clean tests subdir_lint.out 			\
+		   subdir_echo-headers subdir_echo-distinfo		\
+		   subdir_install $(addprefix install-,			\
+					      no-libc.a bin lib		\
+					      data headers others)
 
 headers := features.h stubs.h errno.h sys/errno.h errnos.h limits.h \
 	   $(stddef.h) $(stdarg.h)
@@ -102,7 +105,6 @@ include Makerules
 
 # Install from subdirectories too.
 install: subdir_install
-install-no-libc.a: subdir_install
 
 # `crt0' is the traditional name for the startup code,
 # so that's what we install start.o as.
