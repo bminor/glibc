@@ -326,7 +326,7 @@ strtabfinalize (struct Strtab *st, size_t *size)
   copylen = 1;
   copystrings (st->root, &endp, &copylen);
   assert (copylen == st->total + 1);
-  assert (endp = retval + st->total + 1);
+  assert (endp == retval + st->total + 1);
   *size = copylen;
 
   return retval;
