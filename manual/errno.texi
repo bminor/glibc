@@ -288,8 +288,11 @@ with passing the wrong argument to a library function.
 @deftypevr Macro int EMFILE
 The current process has too many files open and can't open any more.
 Duplicate descriptors do count toward this limit.
-@c !!! In 4.4BSD and GNU, the number of open files is a resource limit
-@c set with setrlimit.
+
+In BSD and GNU, the number of open files is controlled by a resource
+limit that can usually be increased.  If you get this error, you might
+want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
+@pxref{Limits on Resources}.
 @end deftypevr
 
 @comment errno.h
@@ -377,22 +380,44 @@ not representable because of overflow or underflow.
 @comment POSIX.1: Resource temporarily unavailable
 @deftypevr Macro int EAGAIN
 Resource temporarily unavailable; the call might work if you try again
-later.  Only @code{fork} returns error code @code{EAGAIN} for such a
-reason.
-@c !!! sysv uses it somehow?  Don't say "only fork" when ==EWOULDBLOCK.
+later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
+they are always the same in the GNU C library.
+
+This error can happen in a few different situations:
+
+@itemize @bullet
+@item
+An operation that would block was attempted on an object that has
+non-blocking mode selected.  Trying the same operation again will block
+until some external condition makes it possible to read, write, or
+connect (whatever the operation).  You can use @code{select} to find out
+when the operation will be possible; @pxref{Waiting for I/O}.
+
+@strong{Portability Note:} In older Unix many systems, this condition
+was indicated by @code{EWOULDBLOCK}, which was a distinct error code
+different from @code{EAGAIN}.  To make your program portable, you should
+check for both codes and treat them the same.
+
+@item
+A temporary resource shortage made an operation impossible.  @code{fork}
+can return this error.  It indicates that the shortage is expected to
+pass, so your program can try the call again later and it may succeed.
+It is probably a good idea to delay for a few seconds before trying it
+again, to allow time for other processes to release scarce resources.
+Such shortages are usually fairly serious and affect the whole system,
+so usually an interactive program should report the error to the user
+and return to its command loop.
+@end itemize
 @end deftypevr
 
 @comment errno.h
 @comment BSD: Operation would block
 @deftypevr Macro int EWOULDBLOCK
-An operation that would block was attempted on an object that has
-non-blocking mode selected.
+In the GNU C library, this is another name for @code{EAGAIN} (above).
+The values are always the same, on every operating system.
 
-@strong{Portability Note:} In 4.4BSD and GNU, @code{EWOULDBLOCK} and
-@code{EAGAIN} are the same.  Earlier versions of BSD (@pxref{Berkeley
-Unix}) have two distinct codes, and use @code{EWOULDBLOCK} to indicate
-an I/O operation that would block on an object with non-blocking mode
-set, and @code{EAGAIN} for other kinds of errors.@refill
+C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
+separate error code.
 @end deftypevr
 
 @comment errno.h
@@ -401,8 +426,7 @@ set, and @code{EAGAIN} for other kinds of errors.@refill
 An operation that cannot complete immediately was initiated on an object
 that has non-blocking mode selected.  Some functions that must always
 block (such as @code{connect}; @pxref{Connecting}) never return
-@code{EWOULDBLOCK}.
-@c !!! EAGAIN?
+@code{EAGAIN}.
 Instead, they return @code{EINPROGRESS} to indicate that the operation
 has begun and will take some time.  Attempts to manipulate the object
 before the call completes return @code{EALREADY}.
