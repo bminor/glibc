@@ -16,7 +16,7 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-$(objpfx)stdio_lim.h: $(objpfx)mk-stdiolim
+$(common-objpfx)stdio_lim.h: $(common-objpfx)mk-stdiolim
 	$(dir $<)$(notdir $<) > $@-t
 	mv $@-t $@
 
@@ -29,10 +29,10 @@ endif
 cded-objdir-CPPFLAGS = $(patsubst -I$$cwd//%,-I/%,\
 				  $(patsubst -I%,-I$$cwd/%,$(CPPFLAGS)))
 # The point of this is to not use -W options to gcc.
-$(objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
-			posix1_lim.h local_lim.h
-	cwd=`pwd`; cd $(objdir); $(CC) $(cded-objdir-CPPFLAGS) \
-	  $$cwd/$< -o $(patsubst $(objpfx)%,%,$@)
+$(common-objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
+			     posix1_lim.h local_lim.h
+	cwd=`pwd`; cd $(common-objdir); $(CC) $(cded-objdir-CPPFLAGS) \
+	  $$cwd/$< -o $(patsubst $(common-objpfx)%,%,$@)
 
 
 ifeq ($(subdir),posix)
