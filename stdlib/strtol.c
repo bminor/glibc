@@ -42,7 +42,7 @@ long int
 DEFUN(strtol, (nptr, endptr, base),
       CONST char *nptr AND char **endptr AND int base)
 {
-  char sign;
+  int negative;
   register unsigned long int cutoff;
   register unsigned int cutlim;
   register unsigned long int i;
@@ -65,16 +65,16 @@ DEFUN(strtol, (nptr, endptr, base),
   /* Check for a sign.  */
   if (*s == '-')
     {
-      sign = -1;
+      negative = 1;
       ++s;
     }
   else if (*s == '+')
     {
-      sign = 1;
+      negative = 0;
       ++s;
     }
   else
-    sign = 1;
+    negative = 0;
 
   if (base == 16 && s[0] == '0' && toupper(s[1]) == 'X')
     s += 2;
@@ -134,7 +134,8 @@ DEFUN(strtol, (nptr, endptr, base),
 #if	!UNSIGNED
   /* Check for a value that is within the range of
      `unsigned long int', but outside the range of `long int'.  */
-  if (i > (unsigned long int) (sign > 0 ? LONG_MAX : - LONG_MIN))
+  if (i > (negative ?
+	   - (unsigned long int) LONG_MIN : (unsigned long int) LONG_MAX))
     overflow = 1;
 #endif
 
@@ -144,14 +145,14 @@ DEFUN(strtol, (nptr, endptr, base),
 #if	UNSIGNED
       return ULONG_MAX;
 #else
-      return sign > 0 ? LONG_MAX : LONG_MIN;
+      return negative ? LONG_MIN : LONG_MAX;
 #endif
     }
 
   /* Return the result of the appropriate sign.  */
-  return i * sign;
+  return (negative ? - i : i);
 
-noconv:;
+ noconv:
   /* There was no number to convert.  */
   if (endptr != NULL)
     *endptr = (char *) nptr;
