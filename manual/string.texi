@@ -45,28 +45,23 @@ material, you can skip this section.
 
 @cindex string
 @cindex null character
-A @dfn{string} is an array of @code{char} objects.  Since array values
-in C are converted automatically to pointers, string-valued variables
-are usually declared to be of type @code{char *}.  By convention, a
-@dfn{null character}, @code{'\0'}, marks the end of a string.  For
-example, in testing to see whether the @code{char *} @var{p} points to a
-null character marking the end of a string, you can write
-@code{!*@var{p}} or @code{*@var{p} == '\0'}.
+A @dfn{string} is an array of @code{char} objects.  But string-valued
+variables are usually declared to be pointers of type @code{char *}.
+Such variables do not include space for the text of a string; that has
+to be stored somewhere else---in an array variable, a string constant,
+or dynamically allocated memory (@pxref{Memory Allocation}).  It's up to
+you to store the address of the chosen memory space into the pointer
+variable.  Alternatively you can store a @dfn{null pointer} in the
+pointer variable.  The null pointer does not point anywhere, so
+attempting to reference the string it points to gets an error.
+
+By convention, a @dfn{null character}, @code{'\0'}, marks the end of a
+string.  For example, in testing to see whether the @code{char *}
+@var{p} points to a null character marking the end of a string, you can
+write @code{!*@var{p}} or @code{*@var{p} == '\0'}.
 
 A null character is quite different conceptually from a null pointer,
 although both are represented by the integer @code{0}.
-
-@c ??? rewrite
-Declaring a variable of type @code{char *} allocates storage only for a
-pointer to a string, not for the string itself.  If you declare a string
-as a @code{char *}, make sure that there is actually a character array
-allocated for it to point to, and that the pointer is actually
-initialized to point at the array.  Otherwise, you can get into big
-trouble by accessing random memory locations.  You can allocate storage
-for a string either by defining a character array variable, by
-allocating memory dynamically using a library function like
-@code{malloc} (@pxref{Unconstrained Allocation}), or by means of a
-string literal.
 
 @cindex string literal
 @dfn{String literals} appear in C program source as strings of
@@ -226,12 +221,11 @@ memcpy (new, old, sizeof(struct foo));
 @comment string.h
 @comment ANSI
 @deftypefun {void *} memmove (void *@var{to}, const void *@var{from}, size_t @var{size})
-The @code{memmove} function is just like @code{memcpy}, except that it works
-even if the objects @var{to} and @var{from} overlap.  However, since 
-@code{memmove} needs to make an intermediate copy into a temporary area,
-it can be less efficient than @code{memcpy}.
-@c ??? memmove should need just a few insns to detect the non-overlap case
-@c ??? and then act just like memcpy
+@code{memmove} copies the @var{size} bytes at @var{from} into the
+@var{size} bytes at @var{to}, even if those two blocks of space
+overlap.  In the case of overlap, @code{memmove} is careful to copy the
+original values of the bytes in the block at @var{from}, including those
+bytes which also belong to the block at @var{to}.
 @end deftypefun
 
 @comment string.h
