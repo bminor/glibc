@@ -86,7 +86,6 @@ _hurd_socket_server (int domain)
     /* If the server node is absent, we don't support that protocol.  */
     errno = EPFNOSUPPORT;
 
- out:
   __mutex_unlock (&lock);
   HURD_CRITICAL_END;
 
