@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -531,12 +531,14 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       else								      \
 	{								      \
 	  if (fspec == NULL)						      \
-	    if (is_long)						      \
-	      number.word = va_arg (ap, unsigned long int);		      \
-	    else if (!is_short)						      \
-	      number.word = va_arg (ap, unsigned int);			      \
-	    else							      \
-	      number.word = (unsigned short int) va_arg (ap, unsigned int);   \
+	    {								      \
+	      if (is_long)						      \
+		number.word = va_arg (ap, unsigned long int);		      \
+	      else if (!is_short)					      \
+		number.word = va_arg (ap, unsigned int);		      \
+	      else							      \
+		number.word = (unsigned short int) va_arg (ap, unsigned int); \
+	    }								      \
 	  else								      \
 	    if (is_long)						      \
 	      number.word = args_value[fspec->data_arg].pa_u_long_int;	      \
@@ -558,7 +560,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  /* If the precision is 0 and the number is 0 nothing has to	      \
 	     be written for the number.  */				      \
 	  if (prec == 0 && number.word == 0)				      \
-	    string = workend;						      \
+	    {								      \
+	      string = workend;						      \
+	      if (base == 8 && alt)					      \
+		*string-- = '0';					      \
+	    }								      \
 	  else								      \
 	    {								      \
 	      /* Put the number in WORK.  */				      \
@@ -838,14 +844,16 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (form_number):						      \
       /* Answer the count of characters written.  */			      \
       if (fspec == NULL)						      \
-	if (is_longlong)						      \
-	  *(long long int *) va_arg (ap, void *) = done;		      \
-	else if (is_long)						      \
-	  *(long int *) va_arg (ap, void *) = done;			      \
-	else if (!is_short)						      \
-	  *(int *) va_arg (ap, void *) = done;				      \
-	else								      \
-	  *(short int *) va_arg (ap, void *) = done;			      \
+	{								      \
+	  if (is_longlong)						      \
+	    *(long long int *) va_arg (ap, void *) = done;		      \
+	  else if (is_long)						      \
+	    *(long int *) va_arg (ap, void *) = done;			      \
+	  else if (!is_short)						      \
+	    *(int *) va_arg (ap, void *) = done;			      \
+	  else								      \
+	    *(short int *) va_arg (ap, void *) = done;			      \
+	}								      \
       else								      \
 	if (is_longlong)						      \
 	  *(long long int *) args_value[fspec->data_arg].pa_pointer = done;   \
