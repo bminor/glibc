@@ -1,5 +1,8 @@
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/rtld.c (_dl_start): Initialize bootstrap_map.l_info to zero.
+	[PR libc/1165].
+
 	* dirent/dirent.h: Redirect getdirentries to getdirentries64 if
 	compiled with _FILE_OFFSET_BITS=64.
 
