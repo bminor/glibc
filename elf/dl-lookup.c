@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -215,24 +215,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
   for (scope = symbol_scope; *scope; ++scope)
     if (do_lookup (undef_name, hash, *ref, &current_value, *scope, 0, flags,
 		   NULL, type_class))
-      {
-	/* We have to check whether this would bind UNDEF_MAP to an object
-	   in the global scope which was dynamically loaded.  In this case
-	   we have to prevent the latter from being unloaded unless the
-	   UNDEF_MAP object is also unloaded.  */
-	if (__builtin_expect (current_value.m->l_type == lt_loaded, 0)
-	    /* Don't do this for explicit lookups as opposed to implicit
-	       runtime lookups.  */
-	    && (flags & DL_LOOKUP_ADD_DEPENDENCY) != 0
-	    /* Add UNDEF_MAP to the dependencies.  */
-	    && add_dependency (undef_map, current_value.m) < 0)
-	  /* Something went wrong.  Perhaps the object we tried to reference
-	     was just removed.  Try finding another definition.  */
-	  return _dl_lookup_symbol (undef_name, undef_map, ref, symbol_scope,
-				    type_class, 0);
-
-	break;
-      }
+      break;
 
   if (__builtin_expect (current_value.s == NULL, 0))
     {
@@ -251,6 +234,38 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
     }
 
   protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
+  if (__builtin_expect (protected != 0, 0))
+    {
+      /* It is very tricky. We need to figure out what value to
+         return for the protected symbol */
+      struct sym_val protected_value = { NULL, NULL };
+
+      for (scope = symbol_scope; *scope; ++scope)
+	if (_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
+			   0, flags, NULL, ELF_RTYPE_CLASS_PLT))
+	  break;
+
+      if (protected_value.s != NULL && protected_value.m != undef_map)
+	{
+	  current_value.s = *ref;
+	  current_value.m = undef_map;
+	}
+    }
+
+  /* We have to check whether this would bind UNDEF_MAP to an object
+     in the global scope which was dynamically loaded.  In this case
+     we have to prevent the latter from being unloaded unless the
+     UNDEF_MAP object is also unloaded.  */
+  if (__builtin_expect (current_value.m->l_type == lt_loaded, 0)
+      /* Don't do this for explicit lookups as opposed to implicit
+	 runtime lookups.  */
+      && (flags & DL_LOOKUP_ADD_DEPENDENCY) != 0
+      /* Add UNDEF_MAP to the dependencies.  */
+      && add_dependency (undef_map, current_value.m) < 0)
+      /* Something went wrong.  Perhaps the object we tried to reference
+	 was just removed.  Try finding another definition.  */
+      return _dl_lookup_symbol (undef_name, undef_map, ref,
+				symbol_scope, type_class, flags);
 
   if (__builtin_expect (_dl_debug_mask & DL_DEBUG_BINDINGS, 0))
     {
@@ -264,30 +279,8 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 			protected ? "protected" : "normal", undef_name);
     }
 
-  if (__builtin_expect (protected == 0, 1))
-    {
-      *ref = current_value.s;
-      return LOOKUP_VALUE (current_value.m);
-    }
-  else
-    {
-      /* It is very tricky. We need to figure out what value to
-         return for the protected symbol */
-      struct sym_val protected_value = { NULL, NULL };
-
-      for (scope = symbol_scope; *scope; ++scope)
-	if (_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
-			   0, flags, NULL, ELF_RTYPE_CLASS_PLT))
-	  break;
-
-      if (protected_value.s == NULL || protected_value.m == undef_map)
-	{
-	  *ref = current_value.s;
-	  return LOOKUP_VALUE (current_value.m);
-	}
-
-      return LOOKUP_VALUE (undef_map);
-    }
+  *ref = current_value.s;
+  return LOOKUP_VALUE (current_value.m);
 }
 
 
@@ -401,25 +394,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
       int res = do_lookup_versioned (undef_name, hash, *ref, &current_value,
 				     *scope, 0, version, NULL, type_class);
       if (res > 0)
-	{
-	  /* We have to check whether this would bind UNDEF_MAP to an object
-	     in the global scope which was dynamically loaded.  In this case
-	     we have to prevent the latter from being unloaded unless the
-	     UNDEF_MAP object is also unloaded.  */
-	  if (__builtin_expect (current_value.m->l_type == lt_loaded, 0)
-	      /* Don't do this for explicit lookups as opposed to implicit
-		 runtime lookups.  */
-	      && flags != 0
-	      /* Add UNDEF_MAP to the dependencies.  */
-	      && add_dependency (undef_map, current_value.m) < 0)
-	    /* Something went wrong.  Perhaps the object we tried to reference
-	       was just removed.  Try finding another definition.  */
-	    return _dl_lookup_versioned_symbol (undef_name, undef_map, ref,
-						symbol_scope, version,
-						type_class, 0);
-
-	  break;
-	}
+	break;
 
       if (__builtin_expect (res, 0) < 0)
 	{
@@ -464,6 +439,40 @@ _dl_lookup_versioned_symbol (const char *undef_name,
     }
 
   protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
+  if (__builtin_expect (protected != 0, 0))
+    {
+      /* It is very tricky. We need to figure out what value to
+         return for the protected symbol */
+      struct sym_val protected_value = { NULL, NULL };
+
+      for (scope = symbol_scope; *scope; ++scope)
+	if (_dl_do_lookup_versioned (undef_name, hash, *ref, &protected_value,
+				     *scope, 0, version, NULL,
+				     ELF_RTYPE_CLASS_PLT))
+	  break;
+
+      if (protected_value.s != NULL && protected_value.m != undef_map)
+	{
+	  current_value.s = *ref;
+	  current_value.m = undef_map;
+	}
+    }
+
+  /* We have to check whether this would bind UNDEF_MAP to an object
+     in the global scope which was dynamically loaded.  In this case
+     we have to prevent the latter from being unloaded unless the
+     UNDEF_MAP object is also unloaded.  */
+  if (__builtin_expect (current_value.m->l_type == lt_loaded, 0)
+      /* Don't do this for explicit lookups as opposed to implicit
+	 runtime lookups.  */
+      && flags != 0
+      /* Add UNDEF_MAP to the dependencies.  */
+      && add_dependency (undef_map, current_value.m) < 0)
+      /* Something went wrong.  Perhaps the object we tried to reference
+	 was just removed.  Try finding another definition.  */
+      return _dl_lookup_versioned_symbol (undef_name, undef_map, ref,
+					  symbol_scope, version, type_class,
+					  flags);
 
   if (__builtin_expect (_dl_debug_mask & DL_DEBUG_BINDINGS, 0))
     {
@@ -478,31 +487,8 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 			undef_name, version->name);
     }
 
-  if (__builtin_expect (protected == 0, 1))
-    {
-      *ref = current_value.s;
-      return LOOKUP_VALUE (current_value.m);
-    }
-  else
-    {
-      /* It is very tricky. We need to figure out what value to
-         return for the protected symbol */
-      struct sym_val protected_value = { NULL, NULL };
-
-      for (scope = symbol_scope; *scope; ++scope)
-	if (_dl_do_lookup_versioned (undef_name, hash, *ref, &protected_value,
-				     *scope, 0, version, NULL,
-				     ELF_RTYPE_CLASS_PLT))
-	  break;
-
-      if (protected_value.s == NULL || protected_value.m == undef_map)
-	{
-	  *ref = current_value.s;
-	  return LOOKUP_VALUE (current_value.m);
-	}
-
-      return LOOKUP_VALUE (undef_map);
-    }
+  *ref = current_value.s;
+  return LOOKUP_VALUE (current_value.m);
 }
 
 
