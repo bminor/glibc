@@ -1,5 +1,5 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1994-1999, 2000 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -114,6 +114,10 @@ typedef _G_fpos64_t fpos64_t;
 extern FILE *stdin;		/* Standard input stream.  */
 extern FILE *stdout;		/* Standard output stream.  */
 extern FILE *stderr;		/* Standard error output stream.  */
+/* C89/C99 say they're macros.  Make them happy.  */
+#define stdin stdin
+#define stdout stdout
+#define stderr stderr
 
 
 /* Remove file FILENAME.  */
