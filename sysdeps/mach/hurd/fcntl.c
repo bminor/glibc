@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -58,11 +58,11 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	new = _hurd_alloc_fd (&result, 0);
 	if (new != NULL)
 	  {
-	    int dealloc, dealloc_ctty;
+	    struct _hurd_port_userlink ulink, ctty_ulink;
 	    int flags = d.d->flags;
-	    io_t ctty = _hurd_port_get (&d.d->ctty, &dealloc_ctty);
+	    io_t ctty = _hurd_port_get (&d.d->ctty, &ctty_ulink);
 	    io_t port = _hurd_port_locked_get (&d.d->port,
-					       &dealloc); /* Unlocks D.d.  */
+					       &ulink); /* Unlocks D.d.  */
 
 	    /* Give the ports each a user ref for the new descriptor.  */
 	    __mach_port_mod_refs (__mach_task_self (), port,
@@ -77,8 +77,8 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	    new->flags = flags;
 
 	    if (ctty != MACH_PORT_NULL)
-	      _hurd_port_free (&d.d->ctty, &dealloc_ctty, ctty);
-	    _hurd_port_free (&d.d->port, &dealloc, port);
+	      _hurd_port_free (&d.d->ctty, &ctty_ulink, ctty);
+	    _hurd_port_free (&d.d->port, &ulink, port);
 	  }
 	else
 	  result = -1;
@@ -113,14 +113,14 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 
     case F_GETFL:
       {
-	int dealloc;
+	struct _hurd_port_userlink ulink;
 	io_t port
-	  = _hurd_port_locked_get (&d.d->port, &dealloc); /* Unlocks D.d.  */
+	  = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */ 
 	error_t err;
 
 	err = __io_get_openmodes (port, &result);
 
-	_hurd_port_free (&d.d->port, &dealloc, port);
+	_hurd_port_free (&d.d->port, &ulink, port);
 
 	if (err)
 	  result = __hurd_fail (err);
@@ -130,14 +130,14 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
     case F_SETFL:
       {
 	const int flags = va_arg (ap, int);
-	int dealloc;
+	struct _hurd_port_userlink ulink;
 	io_t port
-	  = _hurd_port_locked_get (&d.d->port, &dealloc); /* Unlocks D.d.  */
+	  = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
 	error_t err;
 
 	err = __io_set_all_openmodes (port, flags);
 	    
-	_hurd_port_free (&d.d->port, &dealloc, port);
+	_hurd_port_free (&d.d->port, &ulink, port);
 
 	result = err ? __hurd_fail (err) : 0;
 	break;
@@ -145,12 +145,12 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 
     case F_GETOWN:
       {
-	int dealloc;
+	struct _hurd_port_userlink ulink;
 	error_t err;
 	io_t port
-	  = _hurd_port_locked_get (&d.d->port, &dealloc); /* Unlocks D.d.  */
+	  = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
 	err = __io_get_owner (port, &result);
-	_hurd_port_free (&d.d->port, &dealloc, port);
+	_hurd_port_free (&d.d->port, &ulink, port);
 	result = err ? __hurd_fail (err) : 0;
 	break;
       }
@@ -159,11 +159,11 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
       {
 	pid_t owner = va_arg (ap, pid_t);
 	error_t err;
-	int dealloc;
+	struct _hurd_port_userlink ulink;
 	io_t port
-	  = _hurd_port_locked_get (&d.d->port, &dealloc); /* Unlocks D.d.  */
+	  = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
 	err = __io_mod_owner (port, owner);
-	_hurd_port_free (&d.d->port, &dealloc, port);
+	_hurd_port_free (&d.d->port, &ulink, port);
 	result = err ? __hurd_fail (err) : 0;
 	break;
       }
