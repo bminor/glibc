@@ -67,7 +67,7 @@ DEFUN(scandir, (dir, namelist, select, cmp),
 	if (v[i] == NULL)
 	  goto lose;
 
-	v[i++] = *d;
+	*v[i++] = *d;
       }
 
   if (errno != 0)
