@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,3 +31,27 @@ Cambridge, MA 02139, USA.  */
   ret
 
 #define MOVE(x,y)	movl x , y
+
+
+#define SET_SP(sp) \
+  asm volatile ("movl %0, %%esp" : : "g" (sp) : "%esp")
+
+#define LOSE asm volatile ("hlt")
+
+#define SNARF_ARGS(argc, argv, envp)					      \
+  do									      \
+    {									      \
+      int *entry_sp;							      \
+      register char **p;						      \
+									      \
+      asm ("leal 4(%%ebp), %0" : "=r" (entry_sp));			      \
+									      \
+      argc = *entry_sp;							      \
+      argv = (char **) (entry_sp + 1);					      \
+      p = argv;								      \
+      while (*p++ != NULL)						      \
+	;								      \
+      if (p >= (char **) argv[0])					      \
+	--p;								      \
+      envp = p;							      \
+    } while (0)
