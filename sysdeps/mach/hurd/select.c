@@ -61,6 +61,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
     /* Get a port to receive the io_select_done message on.  */
     port = __mach_reply_port ();
 
+  HURD_CRITICAL_BEGIN;
   dtable = _hurd_dtable_get (&dtable_ulink);
 
   if (nfds > _hurd_dtable.size)
@@ -90,12 +91,17 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	      /* If one descriptor is bogus, we fail completely.  */
 	      while (i-- > 0)
 		_hurd_port_free (&cells[i]->port, &ulink[i], ports[i]);
-	      _hurd_dtable_free (dtable, &dtable_ulink);
 	      errno = EBADF;
-	      return -1;
+	      break;
 	    }
 	}
     }
+
+  _hurd_dtable_free (dtable, &dtable_ulink);
+  HURD_CRITICAL_END;
+
+  if (i < nfds)
+    return -1;
 
   /* Send them all io_select calls.  */
   got = 0;
