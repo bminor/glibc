@@ -16,7 +16,7 @@ AC_COMPILE_CHECK(_sys_siglist, ,
 # classification.  This is used by sysdeps/unix/common/glue-ctype.c.
 for ctype in _ctype_ __ctype_ __ctype _ctype__ _ctype _locp; do
 AC_COMPILE_CHECK($ctype, [#include <ctype.h>],
-		 [int x = $ctype[13];],
+		 [$ctype[13];],
 		 AC_DEFINE(HAVE_`echo $ctype | tr '[a-z]' '[A-Z]'`))
 done
 
