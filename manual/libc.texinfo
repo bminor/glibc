@@ -34,7 +34,7 @@ Copyright @copyright{} 1992 Free Software Foundation, Inc.
 @page
 
 @ifinfo
-@node Top
+@node Top, Introduction, (dir), (dir)
 @top Main Menu
 This is the reference manual for version 0.00 of the GNU C Library.
 @end ifinfo
@@ -140,6 +140,9 @@ Indices
 @include terminal.texinfo
 @include assert.texinfo
 @include math.texinfo
+@include math-arithmetic.texinfo
+@c the above file was created from `math.texinfo', which contained
+@c two @chapters and could not be updated easily.  --mew
 @include time.texinfo
 @include setjmp.texinfo
 @include signal.texinfo
@@ -154,8 +157,8 @@ Indices
 @include header.texinfo
 @include maint.texinfo
 
-@node Copying, Concept Index, Maintenance, Top
 @set lgpl-appendix
+@node Copying, Concept Index, Maintenance, Top
 @include lgpl.texinfo
 
 @node Concept Index
@@ -178,5 +181,6 @@ Indices
 @unnumbered Program and File Index
 @printindex pg
 
+@shortcontents
 @contents
 @bye
