@@ -32,26 +32,7 @@ int
 DEFUN(__stdio_read, (cookie, buf, n),
       PTR cookie AND register char *buf AND register size_t n)
 {
-#ifdef	EINTR
-  CONST int fd = *(int *) cookie;
-  int save = errno;
-  int nread;
-
- try:;
-  errno = 0;
-  nread = __read(fd, buf, (int) n);
-  if (nread < 0)
-    {
-      if (errno == EINTR)
-	goto try;
-      return -1;
-    }
-  errno = save;
-  return nread;
-
-#else	/* No EINTR.  */
-  return __read(*(int *) cookie, buf, (int) n);
-#endif
+  return __read (*(int *) cookie, buf, (int) n);
 }
 
 
@@ -62,12 +43,10 @@ DEFUN(__stdio_write, (cookie, buf, n),
 {
   CONST int fd = *(int *) cookie;
   register size_t written = 0;
-  int save = errno;
 
-  errno = 0;
   while (n > 0)
     {
-      int count = __write(fd, buf, (int) n);
+      int count = __write (fd, buf, (int) n);
       if (count > 0)
 	{
 	  buf += count;
@@ -75,16 +54,10 @@ DEFUN(__stdio_write, (cookie, buf, n),
 	  n -= count;
 	}
       else if (count < 0)
-	{
-	  /* Write error.  */
-#ifdef	EINTR
-	  if (errno != EINTR)
-#endif
-	    return -1;
-	}
+	/* Write error.  */
+	return -1;
     }
 
-  errno = save;
   return (int) written;
 }
 
@@ -156,10 +129,7 @@ DEFUN(__stdio_errmsg, (msg, len), CONST char *msg AND size_t len)
 	  len -= count;
 	}
       else if (count < 0)
-#ifdef	EINTR
-	if (errno != EINTR)
-#endif
-	  break;
+	break;
     }
 }
 
