@@ -1,5 +1,7 @@
 1998-03-14  Ulrich Drepper  <drepper@cygnus.com>
 
+	* string/tester.c (main): Update strsep tests from 2.1.
+
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Remove selection of
 	instruction set here.
 	* sysdeps/unix/sysv/linux/alpha/Makefile (CFLAGS-ioperm.c): Define

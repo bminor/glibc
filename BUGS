@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1997-12-28T12:54:55+0100 drepper>
+Time-stamp: <1998-03-14T09:23:56-0800 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -25,16 +25,8 @@ Severity: [  *] to [***]
 
 [ **]  There are problems with signal handling when using LinuxThreads.
 
-[ **]  The libm-ieee `log2' function seems to be very inaccurate.
-
-[  *]  The libm-ieee `asin' function gives wrong results (at least for 0.5).
-
 [  *]  The precision of the `sinhl' and/or `asinhl' function do not seem
        to be the best.
-
-[  *]  The syslog function should print to the console if the LOG_CONS
-       flag was given.
-       [PR libc/72]
 
 [  *]  On Linux, there should be a way to prevent defining the symbol
        NGROUPS_MAX in the <linux/limits.h> header file.  In glibc it
@@ -46,7 +38,7 @@ Severity: [  *] to [***]
        directive, with localedef, not only the copied category is
        checked for errors, but the whole file containing the same
        category.
-       [PR libc/207]
+       [PR libc/207 and PR libc/454]
 
 [  *]  The localedef program should not generate errors if for categories
        which are not used for the output there are characters referenced
@@ -54,7 +46,7 @@ Severity: [  *] to [***]
        [PR libc/229]
 
 [  *]  _IO_getline can loop forever, at least with C++
-       [PR libc/332]
+       [PR libc/332]  The problem is fixed for glibc 2.1.
 
 [  *]  The rcmd() functions (more concrete: the handling of .rhosts) does
        not support netgroups and wildcards (+).
