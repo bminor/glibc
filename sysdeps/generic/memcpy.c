@@ -26,8 +26,8 @@ PTR
 DEFUN(memcpy, (dstpp, srcpp, len),
       PTR dstpp AND CONST PTR srcpp AND size_t len)
 {
-  long int dstp = (long int) dstpp;
-  long int srcp = (long int) srcpp;
+  unsigned long int dstp = (long int) dstpp;
+  unsigned long int srcp = (long int) srcpp;
 
   /* Copy from the beginning to the end.  */
 
