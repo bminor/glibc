@@ -20,22 +20,26 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 
+volatile void
+_hurd_exit (int status)
+{
+  _HURD_PORT_USE (&_hurd_proc, __proc_exit (port, status));
+
+  __task_terminate (__mach_task_self ());
+
+  /* Perhaps the cached mach_task_self was bogus.  */
+  __task_terminate ((__mach_task_self) ());
+  
+  /* This sucker really doesn't want to die.  */
+  while (1)
+    {
+      volatile const int zero = 0, one = 1;
+      volatile int lossage = one / zero;
+    }
+}
+
 void
 DEFUN(_exit, (status), int status)
 {
-  /* Does not return (when applied to the calling task).  */
-  extern volatile void __task_terminate (task_t);
-
-#if 0
-  struct _hurd_sigstate *ss = _hurd_thread_sigstate (__mach_thread_self ());
-#endif
-
-  _HURD_PORT_USE (&_hurd_proc, __proc_exit (port, status));
-
-#if 0
-  if (ss->vforked)
-    longjmp (ss->vfork_saved.continuation, 1);
-#endif
-
-  __task_terminate (__mach_task_self ());
+  _hurd_exit (W_EXITCODE (status, 0));
 }
