@@ -37,7 +37,9 @@ all:
 # Make sure no value comes from the environment, since we append to it.
 # This is done also in ../Rules, but we append to the value before
 # including Rules, which changes the origin.
+ifneq	"$(findstring env,$(origin generated))" ""
 generated :=
+endif
 
 
 include ../Makeconfig
@@ -56,7 +58,9 @@ define nl	# This is needed by *.ir.
 endef
 ifdef user-interfaces
 *.ir := $(addprefix $(objpfx),$(foreach if,$(user-interfaces),$(if).ir))
+ifndef inhibit_interface_rules
 include $(*.ir)
+endif
 ifneq "$(*.ir)" "$(wildcard $(*.ir))"
 # If any .ir file is missing, we will be unable to make all the deps.
 no_deps=t
