@@ -22,7 +22,7 @@
 subdir	:= time
 
 headers	:= time.h sys/time.h gnu/time.h
-distribute := tzfile.h
+distribute := tzfile.h private.h scheck.c ialloc.c emkdir.c
 
 routines	:= offtime asctime clock ctime difftime gmtime	\
 		   localtime mktime strftime time __tzset tzfile \
@@ -31,8 +31,65 @@ routines	:= offtime asctime clock ctime difftime gmtime	\
 		   __setitmr tzset gettod setitmr
 aux		:= syms-time
 
-others	:= ap zdump
+others	:= ap zdump zic
 tests	:= test_time
+
+tzfiles := africa antarctica asia australasia europe northamerica \
+	   southamerica pacificnew etcetera factory systemv
+distribute := $(distribute) $(tzfiles) leapseconds
+
+install := zic zdump
+
+define \n
+
+
+endef
+include zonenames
+zonenames := $(subst $(\n), ,$(zonenames))
+
+include ../Makeconfig
+ifdef localtime
+zonenames := $(zonenames) localtime
+endif
+
+install-data := $(addprefix zoneinfo/,$(zonenames))
 
 
 include ../Rules
+
+
+$(tzfiles:%=zones-%): zones-%: %
+	(echo 'define $*-zones'						;\
+	 awk '$$1 == "Zone" { print $$2 } $$1 == "Link" { print $$3 }' $^;\
+	 echo 'endef'							;\
+	 echo '$*-zones := $$(subst $$(\\n), ,$$($*-zones))'		;\
+	 echo 'ifdef $*-zones'						;\
+	 echo '$$(addprefix %/,$$($*-zones)): \'			;\
+	 echo '$< $$(objpfx)zic leapseconds zoneinfo/'			;\
+	 echo '	$$(tzcompile)'						;\
+	 echo 'endif'							;\
+	) > $@
+zonenames: Makefile
+	(for file in $(tzfiles); do	\
+	   echo "include zones-$$file";	\
+	 done) > $@
+
+# Make all the zoneinfo files.
+.PHONY: zones zoneinfo
+zones: zoneinfo
+zoneinfo: $(foreach file,$(tzfiles),$(addprefix zoneinfo/,$($(file)-zones)))
+
+define tzcompile
+$(word 2,$^) -d zoneinfo -L $(word 3,$^) $<
+endef
+
+ifdef localtime
+zoneinfo/localtime: zoneinfo/$(localtime) $(objpfx)zic
+	$(word 2,$^) -d zoneinfo -l $(<:zoneinfo/%=%)
+zoneinfo: zoneinfo/localtime
+endif
+
+$(objpfx)zic: $(objpfx)scheck.o $(objpfx)ialloc.o $(objpfx)emkdir.o
+
+$(objpfx)tzfile.o: tzfile.c
+	$(COMPILE.c) -DTZDIR='"$(datadir)/zoneinfo"' $< $(OUTPUT_OPTION)
