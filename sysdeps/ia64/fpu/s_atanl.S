@@ -1,7 +1,7 @@
 .file "atanl.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -51,6 +51,7 @@
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 02/10/03 Reordered header: .section, .global, .proc, .align;
 //          used data8 for long double table values
+// 03/31/05 Reformatted delimiters between data tables
 //
 //*********************************************************************
 //
@@ -812,6 +813,7 @@ GLOBAL_IEEE754_ENTRY(atanl)
 ;;
 
 GLOBAL_IEEE754_END(atanl)
+
 GLOBAL_IEEE754_ENTRY(atan2l)
 
 { .mfi
@@ -1951,6 +1953,7 @@ ATANL_ArgY_Not_INF:
 ;;
 
 GLOBAL_IEEE754_END(atan2l)
+ 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

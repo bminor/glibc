@@ -1,7 +1,7 @@
 .file "logf.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -47,6 +47,7 @@
 // 05/23/02 Modified algorithm. Now only one polynomial is used
 //          for |x-1| >= 1/256 and for |x-1| < 1/256
 // 02/10/03 Reordered header: .section, .global, .proc, .align
+// 03/31/05 Reformatted delimiters between data tables
 //
 // API
 //==============================================================
@@ -841,6 +842,7 @@ GLOBAL_IEEE754_ENTRY(log10f)
       br.cond.sptk  logf_log10f_common
 };;
 GLOBAL_IEEE754_END(log10f)
+
 GLOBAL_IEEE754_ENTRY(logf)
 { .mfi
       getf.exp      GR_Exp = f8 // if x is unorm then must recompute
@@ -1086,6 +1088,7 @@ logf_libm_err:
       nop.i         0
 };;
 GLOBAL_IEEE754_END(logf)
+
 
 // Stack operations when calling error support.
 //       (1)               (2)                          (3) (call)              (4)

@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -110,6 +110,8 @@ int __stack_prot attribute_hidden attribute_relro
   = PROT_GROWSDOWN;
 #elif _STACK_GROWS_UP && defined PROT_GROWSUP
   = PROT_GROWSUP;
+#else
+  = 0;
 #endif
 
 

@@ -1,3 +1,8 @@
+2005-03-21  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #823]
+	* charmaps/WINDOWS-31J: Add % before alias keyword.
+
 2004-12-19  Roland McGrath  <roland@frob.com>
 
 	* gen-unicode-ctype.c (output_tables): Fix email address in output.

@@ -1,7 +1,7 @@
 .file "log.s"
 
 
-// Copyright (c) 2000 - 2002, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -51,6 +51,7 @@
 // 05/23/02 Modified algorithm. Now only one polynomial is used
 //          for |x-1| >= 1/256 and for |x-1| < 1/256
 // 12/11/02 Improved performance for Itanium 2
+// 03/31/05 Reformatted delimiters between data tables
 //
 // API
 //==============================================================
@@ -1386,6 +1387,7 @@ GLOBAL_IEEE754_ENTRY(log10)
 };;
 GLOBAL_IEEE754_END(log10)
 
+
 GLOBAL_IEEE754_ENTRY(log)
 { .mfi
       getf.exp      GR_Exp = f8 // if x is unorm then must recompute
@@ -1666,6 +1668,7 @@ log_libm_err:
       nop.i         0
 };;
 GLOBAL_IEEE754_END(log)
+
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
