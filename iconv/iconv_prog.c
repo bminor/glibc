@@ -368,7 +368,7 @@ conversion stopped due to problem in writing the output"));
 	    {
 	    case EILSEQ:
 	      error (0, 0, _("illegal input sequence at position %ld"),
-		     addr - start);
+		     (long) (addr - start));
 	      break;
 	    case EINVAL:
 	      error (0, 0, _("\
