@@ -205,11 +205,15 @@ corresponding formal parameters).
 Here are descriptions of the macros used to retrieve variable arguments.
 These macros are defined in the header file @file{<stdarg.h>}.
 
+@comment stdarg.h
+@comment ANSI
 @deftp {Data Type} va_list
 The type @code{va_list} is used to represent a list of an
 unknown number of arguments of unknown types.@refill
 @end deftp
 
+@comment stdarg.h
+@comment ANSI
 @deftypefn {Macro} void va_start (va_list @var{ap}, @var{last_required})
 This macro initializes the variable @var{ap} to hold the list of
 optional arguments supplied to the function; @var{last_required} must be
@@ -217,6 +221,8 @@ the last required argument parameter to the function.  Initially, @var{ap}
 ``points to'' the first optional argument.
 @end deftypefn
 
+@comment stdarg.h
+@comment ANSI
 @deftypefn {Macro} @var{type} va_arg (va_list @var{ap}, @var{type})
 The @code{va_arg} macro returns the value of the next optional argument,
 and changes the internal state of @var{ap} to move past this argument.
@@ -227,6 +233,8 @@ argument promotions are performed; if they aren't compatible, bad
 things will happen.
 @end deftypefn
 
+@comment stdarg.h
+@comment ANSI
 @deftypefn {Macro} void va_end (va_list @var{ap})
 This ends the use of @var{ap}.  After a @code{va_end} call, further
 @code{va_arg} calls with the same @var{ap} will not work.  You must invoke

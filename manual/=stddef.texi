@@ -8,6 +8,8 @@ as the macro @code{NULL}.  In order to use these type and macro
 definitions, your program should include the header file
 @file{<stddef.h>}.
 
+@comment stddef.h
+@comment ANSI
 @deftp {Data Type} ptrdiff_t
 This is the signed integer type of the result of subtracting two
 pointers.  For example, with the declaration @code{char *p1, *p2;}, the
@@ -17,6 +19,8 @@ probably be one of the standard signed integer types (@code{short int},
 exists only for this purpose.
 @end deftp
 
+@comment stddef.h
+@comment ANSI
 @deftp {Data Type} size_t
 This is an unsigned integer type used to represent the sizes of objects.
 The result of the @code{sizeof} operator is of this type, and functions
@@ -44,6 +48,8 @@ traditionally used @code{unsigned int} for representing object sizes,
 @code{int} for pointer subtraction results, and don't have any notion
 at all of wide characters.
 
+@comment stddef.h
+@comment ANSI
 @defvr {Macro} NULL
 @cindex null pointer
 This is a null pointer constant.  It can be assigned to any pointer
@@ -63,6 +69,8 @@ pointer to a function expecting a pointer to @code{int}, you should use
 @refill
 @end defvr
 
+@comment stddef.h
+@comment ANSI
 @deftypefn {Macro} size_t offsetof (@var{type}, @var{member})
 This expands to a integer constant expression that is the offset of the
 structure member named @var{member} in a @code{struct} of type

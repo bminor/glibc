@@ -151,6 +151,8 @@ or smaller at any time, and free the blocks in any order (or never).
 To allocate a block of memory, call @code{malloc}.  The prototype for
 this function is in @file{<stdlib.h>}.
 
+@comment malloc.h stdlib.h
+@comment ANSI
 @deftypefun {void *} malloc (size_t @var{size})
 This function returns a pointer to a newly allocated block @var{size}
 bytes long, or a null pointer if the block could not be allocated.
@@ -248,6 +250,8 @@ When you no longer need a block that you got with @code{malloc}, use the
 function @code{free} to make the block available to be allocated again.
 The prototype for this function is in @file{<stdlib.h>}.
 
+@comment malloc.h stdlib.h
+@comment ANSI
 @deftypefun void free (void *@var{ptr})
 The @code{free} function deallocates the block of storage pointed at
 by @var{ptr}.
@@ -300,6 +304,8 @@ longer.
 You can make the block longer by calling @code{realloc}.  This function
 is declared in @file{<stdlib.h>}.
 
+@comment malloc.h stdlib.h
+@comment ANSI
 @deftypefun {void *} realloc (void *@var{ptr}, size_t @var{newsize})
 The @code{realloc} function changes the size of the block whose address is
 @var{ptr} to be @var{newsize}.
@@ -347,6 +353,8 @@ is guaranteed to change nothing and return the same address that you gave.
 The function @code{calloc} allocates memory and clears it to zero.  It
 is declared in @file{<stdlib.h>}.
 
+@comment malloc.h stdlib.h
+@comment ANSI
 @deftypefun {void *} calloc (size_t @var{count}, size_t @var{eltsize})
 This function allocates a block long enough to contain a vector of
 @var{count} elements, each of size @var{eltsize}.  Its contents are
@@ -414,6 +422,8 @@ larger block, and then returning an address within the block that is on
 the desired boundary.
 @end deftypefun
 
+@comment malloc.h stdlib.h
+@comment BSD
 @deftypefun {void *} valloc (size_t @var{size})
 Using @code{valloc} is like using @code{memalign} and passing the page size
 as the value of the second argument.  Its advantage is that you don't need
@@ -432,6 +442,8 @@ You can ask @code{malloc} to check the consistency of the heap by using
 the @code{mcheck} function.  This function is a GNU extension, declared
 in @file{<malloc.h>}.
 
+@comment malloc.h
+@comment GNU
 @deftypefun void mcheck (void (*@var{abortfn}) (void))
 Calling @code{mcheck} tells @code{malloc} to perform consistency checks
 on the heap, which will catch things such as writing past the end of 
@@ -530,6 +542,8 @@ In the GNU C Library, you can get information about dynamic storage
 allocation by calling the @code{mstats} function.  This function and
 its associated data type are declared in @file{<malloc.h>}.
 
+@comment malloc.h
+@comment GNU
 @deftp {Data Type} {struct mstats}
 This structure type is used to return information about the dynamic
 storage allocator.  It contains the following members:
@@ -557,6 +571,8 @@ This is the number of bytes which are free.
 @end table
 @end deftp
 
+@comment malloc.h
+@comment GNU
 @deftypefun struct mstats mstats (void)
 This function returns information about the current dynamic memory usage
 in a structure of type @code{struct mstats}.
