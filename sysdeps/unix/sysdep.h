@@ -20,11 +20,11 @@ Cambridge, MA 02139, USA.  */
 
 /* Not that using a `PASTE' macro loses.  */
 #ifdef	__STDC__
-#define	SYSCALL__(name)	PSEUDO (__##name, name)
+#define	SYSCALL__(name,args)	PSEUDO (__##name, name, args)
 #else
-#define	SYSCALL__(name)	PSEUDO (__/**/name, name)
+#define	SYSCALL__(name,args)	PSEUDO (__/**/name, name, args)
 #endif
-#define	SYSCALL(name)	PSEUDO (name, name)
+#define	SYSCALL(name,args)	PSEUDO (name, name, args)
 
 /* Machine-dependent sysdep.h files are expected to define the macro
    PSEUDO (function_name, syscall_name) to emit assembly code to define the
