@@ -175,7 +175,20 @@ DEFUN(exists, (file), CONST char *file)
 {
   /* We can stat the file even if we can't read its data.  */
   struct stat st;
-  return __stat (file, &st) == 0;
+  int save = errno;
+  if (__stat (file, &st) == 0)
+    return 1;
+  else
+    {
+      /* We report that the file exists if stat failed for a reason other
+	 than nonexistence.  In this case, it may or may not exist, and we
+	 don't know; but reporting that it does exist will never cause any
+	 trouble, while reporting that it doesn't exist when it does would
+	 violate the interface of __stdio_gen_tempname.  */
+      int exists = errno != ENOENT;
+      errno = save;
+      return exists;
+    }
 }
 
 
@@ -265,12 +278,14 @@ DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr),
       infos[1].i = 0;
     }
 
-  len = dlen + 1 + plen + 8;
+  len = dlen + 1 + plen + 5 + 3;
   for (;;)
     {
       *info->s = letters[info->i];
-      if (sprintf(buf, "%.*s/%.*s%.5d%.3s", (int) dlen, dir, (int) plen,
-		  pfx, pid % 100000, info->buf) != (int) len)
+      if (sizeof (buf) < len ||
+	  sprintf (buf, "%.*s/%.*s%.5d%.3s",
+		   (int) dlen, dir, (int) plen,
+		   pfx, pid % 100000, info->buf) != (int) len)
 	return NULL;
 
       /* Always return a unique string.  */
