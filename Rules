@@ -23,6 +23,8 @@ ifneq (,)
 This makefile requires GNU Make.
 endif
 
+all: # Don't let the default goal come from Makeconfig.
+
 include ../Makeconfig
 
 ifndef	subdir
