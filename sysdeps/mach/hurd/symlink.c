@@ -30,23 +30,22 @@ DEFUN(__symlink, (from, to), CONST char *from AND CONST char *to)
 {
   error_t err;
   file_t node;
+  size_t to_write;
 
   node = __path_lookup (to, O_WRITE|O_CREAT|O_EXCL,
 			0777 & _hurd_umask);
   if (node == MACH_PORT_NULL)
     return -1;
 
-  if (!err)
+  to_write = strlen (from);
+
+  while (to_write > 0)
     {
-      size_t to_write = strlen (from);
-      while (to_write > 0)
-	{
-	  mach_msg_type_number_t wrote;
-	  if (err = __io_write (node, from, to_write, -1, &wrote))
-	    break;
-	  to_write -= wrote;
-	  from += wrote;
-	}
+      mach_msg_type_number_t wrote;
+      if (err = __io_write (node, from, to_write, -1, &wrote))
+	break;
+      to_write -= wrote;
+      from += wrote;
     }
 
   if (!err)
