@@ -61,7 +61,7 @@ DEFUN(__vfscanf, (s, format, arg),
   /* Type modifiers.  */
   char is_short, is_long, is_long_double;
 #ifdef	HAVE_LONGLONG
-      /* We use the `L' modifier for `long long int'.  */
+  /* We use the `L' modifier for `long long int'.  */
 #define	is_longlong	is_long_double
 #else
 #define	is_longlong	0
