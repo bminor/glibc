@@ -1,20 +1,20 @@
-/* Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifndef	_HURD_H
 
@@ -109,11 +109,10 @@ extern pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 extern int _hurd_orphaned;
 
 /* This variable is incremented every time the process IDs change.  */
-
-unsigned int _hurd_pids_changed_stamp;
+extern unsigned int _hurd_pids_changed_stamp;
 
 /* This condition is broadcast every time the process IDs change.  */
-struct condition _hurd_pids_changed_sync;
+extern struct condition _hurd_pids_changed_sync;
 
 /* Unix `data break', for brk and sbrk.
    If brk and sbrk are not used, this info will not be initialized or used.  */
@@ -302,6 +301,13 @@ extern int hurd_check_cancel (void);
    On error, sets `errno' and returns MACH_PORT_NULL.  */
 
 extern io_t __getdport (int fd), getdport (int fd);
+
+
+#include <stdarg.h>
+
+/* Write formatted output to PORT, a Mach port supporting the i/o protocol,
+   according to the format string FORMAT, using the argument list in ARG.  */
+int vpprintf (io_t port, const char *format, va_list arg);
 
 
 #endif	/* hurd.h */
