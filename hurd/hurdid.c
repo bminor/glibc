@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/id.h>
 #include <gnu-stabs.h>
 
-struct _hurd_id_data _hurd_id;
+struct hurd_id_data _hurd_id;
 
 static void
 init_id (void)
