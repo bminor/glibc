@@ -292,7 +292,7 @@ identifies the format of the data which follows.
 
 @item char sa_data[14]
 This is the actual socket address data, which is format-dependent.  Its
-length is also format-dependent, and may well be more than 14.  The
+length also depends on the format, and may well be more than 14.  The
 length 14 of @code{sa_data} is essentially arbitrary.
 @end table
 @end deftp
@@ -343,7 +343,7 @@ implemented.  We will document those that really work, as we receive
 information about how to use them.
 
 @node Setting Address
-@subsection Setting a Socket's Address
+@subsection Setting the Address of a Socket
 
 @pindex sys/socket.h
 Use the @code{bind} function to assign an address to a socket.  The
@@ -391,7 +391,7 @@ of the socket.
 @end deftypefun
 
 @node Reading Address
-@subsection Reading a Socket's Address
+@subsection Reading the Address of a Socket
 
 @pindex sys/socket.h
 Use the function @code{getsockname} to examine the address of an
@@ -536,9 +536,9 @@ the file name string.
 Here is an example showing how to create and name a socket in the file
 namespace.
 
-@example
+@smallexample
 @include mkfsock.c.texi
-@end example
+@end smallexample
 
 @node Internet Namespace
 @section The Internet Namespace
@@ -945,9 +945,9 @@ functions to set @code{errno}, but use of @code{h_errno} is compatible
 with other systems.)  Before using @code{h_errno}, you must declare it
 like this:
 
-@example
+@smallexample
 extern int h_errno;
-@end example
+@end smallexample
 
 Here are the error codes that you may find in @code{h_errno}:
 
@@ -1328,16 +1328,16 @@ the program is running on.  Rather than finding and using the machine's
 Internet address, this example specifies @code{INADDR_ANY} as the host
 address; the system replaces that with the machine's actual address.
 
-@example
+@smallexample
 @include mkisock.c.texi
-@end example
+@end smallexample
 
 Here is another example, showing how you can fill in a @code{sockaddr_in}
 structure, given a host name string and a port number:
 
-@example
+@smallexample
 @include isockad.c.texi
-@end example
+@end smallexample
 
 @node Misc Namespaces
 @section Other Namespaces
@@ -1979,9 +1979,9 @@ stream socket in the Internet namespace.  It doesn't do anything
 particularly interesting once it has connected to the server; it just
 sends a text string to the server and exits.
 
-@example
+@smallexample
 @include inetcli.c.texi
-@end example
+@end smallexample
 
 @node Server Example
 @subsection Byte Stream Connection Server Example
@@ -2002,9 +2002,9 @@ client shutting down its end of the connection).
 This program uses @code{make_socket} and @code{init_sockaddr} to set
 up the socket address; see @ref{Inet Example}.
 
-@example
+@smallexample
 @include inetsrv.c.texi
-@end example
+@end smallexample
 
 @node Out-of-Band Data
 @subsection Out-of-Band Data
@@ -2051,14 +2051,14 @@ data is ``cancel everything sent so far''.  Here is how you can test,
 in the receiving process, whether any ordinary data was sent before
 the mark:
 
-@example
+@smallexample
 success = ioctl (socket, SIOCATMARK, &result);
-@end example
+@end smallexample
 
 Here's a function to discard any ordinary data preceding the
 out-of-band mark:
 
-@example
+@smallexample
 int
 discard_until_mark (int socket)
 @{
@@ -2083,7 +2083,7 @@ discard_until_mark (int socket)
         perror ("read");
     @}
 @}
-@end example
+@end smallexample
 
 If you don't want to discard the ordinary data preceding the mark, you
 may need to read some of it anyway, to make room in internal system
@@ -2092,7 +2092,7 @@ and get an @code{EWOULDBLOCK} error, try reading some ordinary data
 (saving it so that you can use it when you want it) and see if that
 makes room.  Here is an example:
 
-@example
+@smallexample
 struct buffer
 @{
   char *buffer;
@@ -2172,7 +2172,7 @@ read_oob (int socket)
       @}
     @}
 @}
-@end example
+@end smallexample
 
 @node Datagrams
 @section Datagram Socket Operations
@@ -2312,9 +2312,9 @@ messages to arrive, bouncing each message back to the sender.
 Obviously, this isn't a particularly useful program, but it does show
 the general ideas involved.
 
-@example
+@smallexample
 @include filesrv.c.texi
-@end example
+@end smallexample
 
 @node Example Receiver
 @subsection Example of Reading Datagrams
@@ -2328,9 +2328,9 @@ a message back to the client.  Since the socket has no associated
 connection state, the only way the server can do this is by
 referencing the name of the client.
 
-@example
+@smallexample
 @include filecli.c.texi
-@end example
+@end smallexample
 
 Keep in mind that datagram socket communications are unreliable.  In
 this example, the client program waits indefinitely if the message
@@ -2401,9 +2401,9 @@ talk	dgram	udp	wait	root	/libexec/talkd	talkd
 
 An entry has this format:
 
-@example
+@smallexample
 @var{service} @var{style} @var{protocol} @var{wait} @var{username} @var{program} @var{arguments}
-@end example
+@end smallexample
 
 The @var{service} field says which service this program provides.  It
 should be the name of a service defined in @file{/etc/services}.
@@ -2511,7 +2511,8 @@ This function is used to set the socket option @var{optname} at level
 @var{level} for socket @var{socket}.  The value of the option is passed
 in the buffer @var{optval}, which has size @var{optlen}.
 
-The return value and error codes are the same as for @code{getsockopt}.
+The return value and error codes for @code{setsockopt} are the same as
+for @code{getsockopt}.
 @end deftypefun
 
 @node Socket-Level Options

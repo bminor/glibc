@@ -44,7 +44,7 @@ configuration before proceeding.
 The GNU C Library currently supports configurations that match the
 following patterns:
 
-@example
+@smallexample
 sparc-sun-sunos4.@var{n}
 sparc-sun-solaris2.@var{n}
 m68k-hp-bsd4.3
@@ -57,12 +57,12 @@ i386-@var{anything}-sysv4
 i386-@var{anything}-sco3.2v2
 i386-@var{anything}-sco3.2v4
 i386-sequent-bsd
-@end example
+@end smallexample
 
 While no other configurations are supported, there are handy aliases for
 these few.  (These aliases work in other GNU software as well.)
 
-@example
+@smallexample
 sun4-sunos4.@var{n} sun4
 sun4-solaris2.@var{n} sun4-sunos5.@var{n}
 hp320-bsd4.3 hp300bsd
@@ -73,7 +73,7 @@ i386-svr4
 i386-sco
 i386-sco3.2v4
 i386-sequent-dynix
-@end example
+@end smallexample
 
 Here are some options that you should specify (if appropriate) when
 you run @code{configure}:
@@ -112,11 +112,11 @@ You can prepare to build the library in some other directory by going
 to that other directory to run @code{configure}.  In order to run
 configure, you will have to specify a directory for it, like this:
 
-@example
+@smallexample
 mkdir ../hp320
 cd ../hp320
 ../src/configure hp320-bsd4.3
-@end example
+@end smallexample
 
 @noindent
 @code{configure} looks for the sources in whatever directory you
@@ -193,7 +193,7 @@ To format the @cite{GNU C Library Reference Manual} for printing, type
 line reading with @kbd{C-h i} in Emacs or with the @code{info} program,
 type @w{@code{make info}}.
 
-To install the library and header files, and the Info files of the
+To install the library and its header files, and the Info files of the
 manual, type @code{make install}, after setting the installation
 directories in @file{configparms}.  This will build things if necessary,
 before installing them.@refill
@@ -202,9 +202,10 @@ before installing them.@refill
 @appendixsec Reporting Bugs
 @cindex reporting bugs
 
-There are probably bugs in the GNU C library.  If you report them,
-they will get fixed.  If you don't, no one will ever know about them
-and they will remain unfixed for all eternity, if not longer.
+There are probably bugs in the GNU C library.  There are certainly
+errors and omissions in this manual.  If you report them, they will get
+fixed.  If you don't, no one will ever know about them and they will
+remain unfixed for all eternity, if not longer.
 
 To report a bug, first you must find it.  Hopefully, this will be the
 hard part.  Once you've found a bug, make sure it's really a bug.  A
@@ -227,11 +228,6 @@ library which you are using.  Also include the files
 @file{configure}; they will be in whatever directory was current when
 you ran @file{configure}.
 
-If you are not sure how a function should behave, and this manual
-doesn't tell you, that's a bug in the manual.  Report that too!  If the
-function's behavior disagrees with the manual, then either the library
-or the manual has a bug, so report the disagreement.
-
 If you think you have found some way in which the GNU C library does not
 conform to the ANSI and POSIX standards (@pxref{Standards and
 Portability}), that is definitely a bug.  Report it!@refill
@@ -239,8 +235,15 @@ Portability}), that is definitely a bug.  Report it!@refill
 Send bug reports to the Internet address
 @samp{bug-glibc@@prep.ai.mit.edu} or the UUCP path
 @samp{mit-eddie!prep.ai.mit.edu!bug-glibc}.  If you have other problems
-with installation, use, or the documentation, please report those as
-well.@refill
+with installation or use, please report those as well.@refill
+
+If you are not sure how a function should behave, and this manual
+doesn't tell you, that's a bug in the manual.  Report that too!  If the
+function's behavior disagrees with the manual, then either the library
+or the manual has a bug, so report the disagreement.  If you find any
+errors or omissions in this manual, please report them to the Internet
+address @samp{bug-glibc-manual@@prep.ai.mit.edu} or the UUCP path
+@samp{mit-eddie!prep.ai.mit.edu!bug-glibc-manual}.
 
 @node Source Layout
 @appendixsec Adding New Functions
@@ -259,9 +262,9 @@ Each subdirectory contains a simple makefile, called @file{Makefile},
 which defines a few @code{make} variables and then includes the global
 makefile @file{Rules} with a line like:
 
-@example
+@smallexample
 include ../Rules
-@end example
+@end smallexample
 
 @noindent
 The basic variables that a subdirectory makefile defines are:
@@ -304,13 +307,14 @@ small programs included with the library.  They are built by
 @item install-lib
 @itemx install-data
 @itemx install
-Files to be installed by @w{@samp{make install}}.  Things listed in
+Files to be installed by @w{@samp{make install}}.  Files listed in
 @samp{install-lib} are installed in the directory specified by
-@samp{libdir} in @file{Makeconfig} (@pxref{Installation}).  Files listed
-in @code{install-data} are installed in the directory specified by
-@samp{datadir} in @file{configparms} or @file{Makeconfig}.  Files listed
-in @code{install} are installed in the directory specified by
-@samp{bindir} in @file{Makeconfig}.@refill
+@samp{libdir} in @file{configparms} or @file{Makeconfig}
+(@pxref{Installation}).  Files listed in @code{install-data} are
+installed in the directory specified by @samp{datadir} in
+@file{configparms} or @file{Makeconfig}.  Files listed in @code{install}
+are installed in the directory specified by @samp{bindir} in
+@file{configparms} or @file{Makeconfig}.@refill
 
 @item distribute
 Other files from this subdirectory which should be put into a
@@ -363,15 +367,16 @@ appended to the list, appearing after the subdirectory containing the
 @file{Implies} file.  Lines in an @file{Implies} file that begin with a
 @samp{#} character are ignored as comments.  For example,
 @file{unix/bsd/Implies} contains:@refill
-@example
+@smallexample
 # BSD has Internet-related things.
 unix/inet
-@end example
+@end smallexample
 @noindent
 and @file{unix/Implies} contains:
-@example
+@need 300
+@smallexample
 posix
-@end example
+@end smallexample
 
 @noindent
 So the final list is @file{unix/bsd/vax unix/bsd unix/inet unix posix}.
@@ -403,8 +408,9 @@ directories.@refill
 There are a few special files that may exist in each subdirectory of
 @file{sysdeps}:
 
-@table @file
+@table @file                    @c Blank lines after items make it look better.
 @item Makefile
+
 A makefile for this machine or operating system, or class of machine or
 operating system.  This file is included by the library makefile
 @file{Makerules}, which is used by the top-level makefile and the
@@ -423,25 +429,28 @@ be searched is included in order.  Since several system-dependent
 makefiles may be included, each should append to @samp{sysdep-routines}
 rather than simply setting it:
 
-@example
+@smallexample
 sysdep-routines := $(sysdep-routines) foo bar
-@end example
+@end smallexample
 
+@need 1000
 @item Subdirs
+
 This file contains the names of new whole subdirectories under the
 top-level library source tree that should be included for this system.
 These subdirectories are treated just like the system-independent
 subdirectories in the library source tree, such as @file{stdio} and
 @file{math}.
 
-Use this when there are whole new sets of routines and header files that
-should go into the library for the system this subdirectory of
-@file{sysdeps} implements.  For example,
+Use this when there are completely new sets of functions and header
+files that should go into the library for the system this subdirectory
+of @file{sysdeps} implements.  For example,
 @file{sysdeps/unix/inet/Subdirs} contains @file{inet}; the @file{inet}
 directory contains various network-oriented operations which only make
 sense to put in the library on systems that support the Internet.@refill
 
 @item Dist
+
 This file contains the names of files (relative to the subdirectory of
 @file{sysdeps} in which it appears) which should be included in the
 distribution.  List any new files used by rules in the @file{Makefile}
@@ -451,6 +460,7 @@ directory.  You don't need to list files that are implementations
 machine-independent makefiles in the main source tree.
 
 @item configure
+
 This file is a shell script fragment to be run at configuration time.
 The top-level @file{configure} script uses the shell @code{.} command to
 read the @file{configure} file in each system-dependent directory
@@ -461,13 +471,17 @@ chosen.  The @file{configure} files are usually generated from
 script for details.
 
 @item configure.in
-This file is an Autoconf input fragment to be processed into
-@file{configure}.  You should write either @file{configure} or
-@file{configure.in}, but not both.  The first line of @file{configure}
-should invoke the @code{m4} macro @samp{GLIBC_PROVIDES}.  This macro
-does several @code{AC_PROVIDE} calls for Autoconf macros which are used
-by the top-level @file{configure} script; without this, those macros
-might be invoked again unnecessarily by Autoconf.
+
+This file is an Autoconf input fragment to be processed into the file
+@file{configure} in this subdirectory.  @xref{Introduction,,,
+autoconf.info, Autoconf: Generating Automatic Configuration Scripts},
+for a description of Autoconf.  You should write either @file{configure}
+or @file{configure.in}, but not both.  The first line of
+@file{configure} should invoke the @code{m4} macro
+@samp{GLIBC_PROVIDES}.  This macro does several @code{AC_PROVIDE} calls
+for Autoconf macros which are used by the top-level @file{configure}
+script; without this, those macros might be invoked again unnecessarily
+by Autoconf.
 @end table
 
 That is the general system for how system-dependencies are isolated.
@@ -484,7 +498,7 @@ the library to Unix variants.
 @end menu
 
 @node Hierarchy Conventions
-@appendixsubsec The Layout of the @file{sysdeps} Directory Hierarchy
+@appendixsubsec Layout of the @file{sysdeps} Directory Hierarchy
 
 A GNU configuration name has three parts: the CPU type, the
 manufacturer's name, and the operating system.  @file{configure} uses
@@ -511,7 +525,7 @@ As an example, here is the complete list of directories that would be
 tried for the configuration @w{@samp{sparc-sun-sunos4.1}} (without the
 @w{@samp{--nfp}} option):
 
-@example
+@smallexample
 sparc/fpu
 unix/bsd/sun/sunos4.1/sparc
 unix/bsd/sun/sunos4.1
@@ -560,16 +574,17 @@ sunos4
 sunos/sparc
 sunos
 sparc
-@end example
+@end smallexample
 
-Different machine architectures are generally at the top level of the
-@file{sysdeps} directory tree.  For example, @w{@file{sysdeps/sparc}}
-and @w{@file{sysdeps/m68k}}.  These contain files specific to those
-machine architectures, but not specific to any particular operating
-system.  There might be subdirectories for specializations of those
-architectures, such as @w{@file{sysdeps/m68k/68020}}. Code which is
-specific to the floating-point coprocessor used with a particular
-machine should go in @w{@file{sysdeps/@var{machine}/fpu}}.
+Different machine architectures are conventionally subdirectories at the
+top level of the @file{sysdeps} directory tree.  For example,
+@w{@file{sysdeps/sparc}} and @w{@file{sysdeps/m68k}}.  These contain
+files specific to those machine architectures, but not specific to any
+particular operating system.  There might be subdirectories for
+specializations of those architectures, such as
+@w{@file{sysdeps/m68k/68020}}. Code which is specific to the
+floating-point coprocessor used with a particular machine should go in
+@w{@file{sysdeps/@var{machine}/fpu}}.
 
 There are a few directories at the top level of the @file{sysdeps}
 hierarchy that are not for particular machine architectures.
@@ -643,11 +658,11 @@ variant.  See @file{sysdeps/unix/sysdep.h} and the machine-specific
 @file{sysdep.h} implementations to see what these macros are and what
 they should do.@refill
 
-The system-specific makefile for the @file{unix} directory,
-@file{sysdeps/unix/Makefile}, gives rules to generate several files from
-the Unix system you are building the library on (which is assumed to be
-the target system you are building the library @emph{for}).  All the
-generated files are put in the directory where the object files are
+The system-specific makefile for the @file{unix} directory (that is, the
+file @file{sysdeps/unix/Makefile}) gives rules to generate several files
+from the Unix system you are building the library on (which is assumed
+to be the target system you are building the library @emph{for}).  All
+the generated files are put in the directory where the object files are
 kept; they should not affect the source tree itself.  The files
 generated are @file{ioctls.h}, @file{errnos.h}, @file{sys/param.h}, and
 @file{errlist.c} (for the @file{stdio} section of the library).
@@ -670,13 +685,14 @@ to your program in order to get it to compile.
 @node Contributors
 @appendixsec Contributors to the GNU C Library
 
-The GNU C library was written almost entirely by Roland McGrath.
-Some parts of the library were contributed by other people.
+The GNU C library was written almost entirely by Roland McGrath, who now
+maintains it.  Some parts of the library were contributed or worked on
+by other people.
 
 @itemize @bullet
 @item
 The @code{getopt} function and related code were written by
-@w{Richard Stallman}, @w{David J. MacKenzie}, and @w{Roland McGrath}.
+Richard Stallman, @w{David J. MacKenzie}, and @w{Roland McGrath}.
 
 @item
 Most of the math functions are taken from 4.4 BSD; they have been
@@ -832,9 +848,7 @@ The Internet resolver code is taken directly from BIND 4.9.1, which is
 under both the Berkeley copyright above and also:
 
 @quotation
-@display
 Portions Copyright @copyright{} 1993 by Digital Equipment Corporation.
-@end display
 
 Permission to use, copy, modify, and distribute this software for any
 purpose with or without fee is hereby granted, provided that the above

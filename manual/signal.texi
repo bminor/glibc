@@ -897,9 +897,9 @@ This is the type of signal handler functions.  Signal handlers take one
 integer argument specifying the signal number, and have return type
 @code{void}.  So, you should define handler functions like this:
 
-@example
+@smallexample
 void @var{handler} (int @code{signum}) @{ @dots{} @}
-@end example
+@end smallexample
 
 The name @code{sighandler_t} for this data type is a GNU extension.
 @end deftp
@@ -978,7 +978,7 @@ a handler for @code{SIGKILL} or @code{SIGSTOP}.
 Here is a simple example of setting up a handler to delete temporary
 files when certain fatal signals happen:
 
-@example
+@smallexample
 #include <signal.h>
 
 void
@@ -1002,7 +1002,7 @@ main (void)
     signal (SIGTERM, SIG_IGN);
   @dots{}
 @}
-@end example
+@end smallexample
 
 @noindent
 Note how if a given signal was previously set to be ignored, this code
@@ -1150,7 +1150,7 @@ In @ref{Basic Signal Handling}, we gave an example of establishing a
 simple handler for termination signals using @code{signal}.  Here is an
 equivalent example using @code{sigaction}:
 
-@example
+@smallexample
 #include <signal.h>
 
 void
@@ -1184,7 +1184,7 @@ main (void)
     sigaction (SIGTERM, &new_action, NULL);
   @dots{}
 @}
-@end example
+@end smallexample
 
 The program just loads the @code{new_action} structure with the desired
 parameters and passes it in the @code{sigaction} call.  The usage of
@@ -1198,7 +1198,7 @@ lets us examine the current action without specifying a new one.
 Here is another example.  It retrieves information about the current
 action for @code{SIGINT} without changing that action.
 
-@example
+@smallexample
 struct sigaction query_action;
 
 if (sigaction (SIGINT, NULL, &query_action) < 0)
@@ -1209,7 +1209,7 @@ else if (query_action.sa_handler == SIG_IGN)
   /* @r{@code{SIGINT} is ignored.} */
 else
   /* @r{A programmer-defined signal handler is in effect.} */
-@end example
+@end smallexample
 
 @node Flags for Sigaction
 @subsection Flags for @code{sigaction}
@@ -1296,7 +1296,7 @@ own signal handlers.
 Here is an example of how to establish a handler for @code{SIGHUP}, but
 not if @code{SIGHUP} is currently ignored:
 
-@example
+@smallexample
 @group
 @dots{}
 struct sigaction temp;
@@ -1310,7 +1310,7 @@ if (temp.sa_handler != SIG_IGN)
     sigaction (SIGHUP, &temp, NULL);
   @}
 @end group
-@end example
+@end smallexample
 
 @node Defining Handlers
 @section Defining Signal Handlers
@@ -1384,9 +1384,9 @@ the loop until it has noticed that a @code{SIGALRM} signal has arrived.
 This technique is useful because it allows the iteration in progress
 when the signal arrives to complete before the loop exits.
 
-@example
+@smallexample
 @include sigh1.c.texi
-@end example
+@end smallexample
 
 @node Termination in Handler
 @subsection Handlers That Terminate the Process
@@ -1399,7 +1399,7 @@ The cleanest way for a handler to terminate the process is to raise the
 same signal that ran the handler in the first place.  Here is how to do
 this:
 
-@example
+@smallexample
 volatile sig_atomic_t fatal_error_in_progress = 0;
 
 void
@@ -1431,7 +1431,7 @@ fatal_error_signal (int sig)
   raise (sig);
 @}
 @end group
-@end example
+@end smallexample
 
 @node Longjmp in Handler
 @subsection Nonlocal Control Transfer in Handlers
@@ -1458,7 +1458,7 @@ handler, or make their values consistent.
 Here is a rather schematic example showing the reinitialization of one
 global variable.
 
-@example
+@smallexample
 @group
 #include <signal.h>
 #include <setjmp.h>
@@ -1506,7 +1506,7 @@ read_data ()
   @}
 @}
 @end group
-@end example
+@end smallexample
 
 
 @node Signals in Handler
@@ -1565,7 +1565,7 @@ the fact that the number of signals recieved may not equal the number of
 child processes generate them.  It assumes that the program keeps track
 of all the child processes with a chain of structures as follows:
 
-@example
+@smallexample
 struct process
 @{
   struct process *next;
@@ -1582,21 +1582,21 @@ struct process
 @};
 
 struct process *process_list;
-@end example
+@end smallexample
 
 This example also uses a flag to indicate whether signals have arrived
 since some time in the past---whenever the program last cleared it to
 zero.
 
-@example
+@smallexample
 /* @r{Nonzero means some child's status has changed}
    @r{so look at @code{process_list} for the details.}  */
 int process_status_change;
-@end example
+@end smallexample
 
 Here is the handler itself:
 
-@example
+@smallexample
 void
 sigchld_handler (int signo)
 @{
@@ -1645,11 +1645,11 @@ sigchld_handler (int signo)
        @r{that have something to tell us.}  */
   @}
 @}
-@end example
+@end smallexample
 
 Here is the proper way to check the flag @code{process_status_change}:
 
-@example
+@smallexample
 if (process_status_change) @{
   struct process *p;
   process_status_change = 0;
@@ -1658,7 +1658,7 @@ if (process_status_change) @{
       @dots{} @r{Examine @code{p->status}} @dots{}
     @}
 @}
-@end example
+@end smallexample
 
 @noindent
 It is vital to clear the flag before examining the list; otherwise, if a
@@ -1686,7 +1686,7 @@ previous check.  The advantage of this method is that different parts of
 the program can check independently, each part checking whether there
 has been a signal since that part last checked.
 
-@example
+@smallexample
 sig_atomic_t process_status_change;
 
 sig_atomic_t last_process_status_change;
@@ -1703,7 +1703,7 @@ sig_atomic_t last_process_status_change;
       @}
   @}
 @}
-@end example
+@end smallexample
 
 @node Nonreentrancy
 @subsection Signal Handling and Nonreentrant Functions 
@@ -1852,14 +1852,14 @@ block all signals around any access that had better not be interrupted
 @end menu
 
 @node Non-atomic Example
-@subsubsection Example of Problems with Non-Atomic Access
+@subsubsection Problems with Non-Atomic Access
 
 Here is an example which shows what can happen if a signal handler runs
 in the middle of modifying a variable.  (Interrupting the reading of a
 variable can also lead to paradoxical results, but here we only show
 writing.)
 
-@example
+@smallexample
 #include <signal.h>
 #include <stdio.h>
 
@@ -1887,7 +1887,7 @@ main (void)
      @}
 @}
 @end group
-@end example
+@end smallexample
 
 This program fills @code{memory} with zeros, ones, zeros, ones,
 alternating forever; meanwhile, once per second, the alarm signal handler
@@ -2086,7 +2086,7 @@ before stopping.  You might set this up like this:
 @comment the example is written, the signal that is raise'd will be delivered
 @comment as soon as the SIGTSTP handler returns, which is fine.
 
-@example
+@smallexample
 #include <signal.h>
 
 /* @r{When a stop signal arrives, set the action back to the default
@@ -2121,7 +2121,7 @@ main (void)
   @dots{}
 @}
 @end group
-@end example
+@end smallexample
 
 @strong{Portability note:} @code{raise} was invented by the ANSI C
 committee.  Older systems may not support it, so using @code{kill} may
@@ -2184,11 +2184,12 @@ for some special system processes.  Otherwise, send the signal to all
 processes with the same effective user ID.
 @end table
 
-A process can send a signal to itself with @w{@code{kill (getpid(),
-@var{signum});}}.  If @code{kill} is used by a process to send a signal to
-itself, and the signal is not blocked, then @code{kill} delivers at
-least one signal (which might be some other pending unblocked signal
-instead of the signal @var{signum}) to that process before it returns.
+A process can send a signal @var{signum} to itself with a call like
+@w{@code{kill (getpid(), @var{signum})}}.  If @code{kill} is used by a
+process to send a signal to itself, and the signal is not blocked, then
+@code{kill} delivers at least one signal (which might be some other
+pending unblocked signal instead of the signal @var{signum}) to that
+process before it returns.
 
 The return value from @code{kill} is zero if the signal can be sent
 successfully.  Otherwise, no signal is sent, and a value of @code{-1} is
@@ -2269,9 +2270,9 @@ for the child to complete its initialization.  The child process tells
 the parent when it is ready by sending it a @code{SIGUSR1} signal, using
 the @code{kill} function.
 
-@example
+@smallexample
 @include sigusr.c.texi
-@end example
+@end smallexample
 
 This example uses a busy wait, which is bad, because it wastes CPU
 cycles that other programs could otherwise use.  It is better to ask the
@@ -2531,7 +2532,7 @@ You can prevent additional @code{SIGALRM} signals from arriving in the
 meantime by wrapping the critical part of the code with calls to
 @code{sigprocmask}, like this:
 
-@example
+@smallexample
 /* @r{This variable is set by the SIGALRM signal handler.} */
 volatile sig_atomic_t flag = 0;
 
@@ -2562,7 +2563,7 @@ main (void)
     @}
 @}
 @end group
-@end example
+@end smallexample
 
 @node Blocking for Handler
 @subsection Blocking Signals for a Handler
@@ -2589,7 +2590,7 @@ structure.
 
 Here is an example:
 
-@example
+@smallexample
 #include <signal.h>
 #include <stddef.h>
 
@@ -2610,7 +2611,7 @@ install_handler (void)
   setup_action.sa_flags = 0;
   sigaction (SIGTSTP, &setup_action, NULL);
 @}
-@end example
+@end smallexample
 
 This is more reliable than blocking the other signals explicitly in the
 code for the handler.  If you block signals explicity in the handler,
@@ -2651,7 +2652,7 @@ that signal is not blocked is almost certainly bad design.
 
 Here is an example.
 
-@example
+@smallexample
 #include <signal.h>
 #include <stddef.h>
 
@@ -2673,7 +2674,7 @@ if (sigismember (&waiting_mask, SIGINT)) @{
 else if (sigismember (&waiting_mask, SIGTSTP)) @{
   /* @r{User has tried to stop the process.} */
 @}
-@end example
+@end smallexample
 
 Remember that if there is a particular signal pending for your process,
 additional signals of that same type that arrive in the meantime might
@@ -2691,7 +2692,7 @@ Instead of blocking a signal using the library facilities, you can get
 almost the same results by making the handler set a flag to be tested
 later, when you ``unblock''.  Here is an example:
 
-@example
+@smallexample
 /* @r{If this flag is nonzero, don't handle the signal right away.} */
 volatile sig_atomic_t signal_pending;
 
@@ -2723,7 +2724,7 @@ update_mumble (int frob)
   if (defer_signal == 0 && signal_pending != 0)
     raise (signal_pending);
 @}
-@end example
+@end smallexample
 
 Note how the particular signal that arrives is stored in
 @code{signal_pending}.  That way, we can handle several types of
@@ -2747,11 +2748,11 @@ It is absolutely vital to decrement @code{defer_signal} before testing
 @code{signal_pending}, because this avoids a subtle bug.  If we did
 these things in the other order, like this,
 
-@example
+@smallexample
   if (defer_signal == 1 && signal_pending != 0)
     raise (signal_pending);
   defer_signal--;
-@end example
+@end smallexample
 
 @noindent
 then a signal arriving in between the @code{if} statement and the decrement
@@ -2842,14 +2843,14 @@ and then resume real work.  Even if you arrange for the signal handler
 to cooperate by setting a flag, you still can't use @code{pause}
 reliably.  Here is an example of this problem:
 
-@example
+@smallexample
 /* @r{@code{usr_interrupt} is set by the signal handler.}  */
 if (!usr_interrupt)
   pause ();
 
 /* @r{Do work once the signal arrives.}  */
 @dots{}
-@end example
+@end smallexample
 
 @noindent
 This has a bug: the signal could arrive after the variable
@@ -2860,14 +2861,14 @@ You can put an upper limit on the excess waiting by using @code{sleep}
 in a loop, instead of using @code{pause}.  (@xref{Sleeping}, for more
 about @code{sleep}.)  Here is what this looks like:
 
-@example
+@smallexample
 /* @r{@code{usr_interrupt} is set by the signal handler.}
 while (!usr_interrupt)
   sleep (1);
 
 /* @r{Do work once the signal arrives.}  */
 @dots{}
-@end example
+@end smallexample
 
 For some purposes, that is good enough.  But with a little more
 complexity, you can wait reliably until a particular signal handler is
@@ -2907,7 +2908,7 @@ The return value and error conditions are the same as for @code{pause}.
 With @code{sigsuspend}, you can replace the @code{pause} or @code{sleep}
 loop in the previous section with something completely reliable:
 
-@example
+@smallexample
 sigset_t mask, oldmask;
 
 @dots{}
@@ -2923,7 +2924,7 @@ sigprocmask (SIG_BLOCK, &mask, &oldmask);
 while (!usr_interrupt)
   sigsuspend (&oldmask);
 sigprocmask (SIG_UNBLOCK, &mask, NULL);
-@end example
+@end smallexample
 
 This last piece of code is a little tricky.  The key point to remember
 here is that when @code{sigsuspend} returns, it resets the process's
@@ -3081,10 +3082,10 @@ This macro returns a signal mask that has the bit for signal @var{signum}
 set.  You can bitwise-OR the results of several calls to @code{sigmask}
 together to specify more than one signal.  For example,
 
-@example
+@smallexample
 (sigmask (SIGTSTP) | sigmask (SIGSTOP)
  | sigmask (SIGTTIN) | sigmask (SIGTTOU))
-@end example
+@end smallexample
 
 @noindent
 specifies a mask that includes all the job-control stop signals.
@@ -3093,16 +3094,16 @@ specifies a mask that includes all the job-control stop signals.
 @comment signal.h
 @comment BSD
 @deftypefun int sigblock (int @var{mask})
-This function is the equivalent of @code{sigprocmask} (@pxref{Process
-Signal Mask}) with a @var{how} argument of @code{SIG_BLOCK}: it adds the
-signals specified by @var{mask} to the calling process's signal mask.
-The return value is the previous set of blocked signals.
+This function is equivalent to @code{sigprocmask} (@pxref{Process Signal
+Mask}) with a @var{how} argument of @code{SIG_BLOCK}: it adds the
+signals specified by @var{mask} to the calling process's set of blocked
+signals.  The return value is the previous set of blocked signals.
 @end deftypefun
 
 @comment signal.h
 @comment BSD
 @deftypefun int sigsetmask (int @var{mask})
-This function is the equivalent of @code{sigprocmask} (@pxref{Process
+This function equivalent to @code{sigprocmask} (@pxref{Process
 Signal Mask}) with a @var{how} argument of @code{SIG_SETMASK}: it sets
 the calling process's signal mask to @var{mask}.  The return value is
 the previous set of blocked signals.

@@ -34,10 +34,10 @@ character.  It takes one argument, the character to test, and returns a
 nonzero integer if the character is alphabetic, and zero otherwise.  You
 would use it like this:
 
-@example
+@smallexample
 if (isalpha (c))
   printf ("The character `%c' is alphabetic.\n", c);
-@end example
+@end smallexample
 
 Each of the functions in this section tests for membership in a
 particular class of characters; each has a name starting with @samp{is}.

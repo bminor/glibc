@@ -530,16 +530,16 @@ terminated.
 This is a simplified version of @code{waitpid}, and is used to wait
 until any one child process terminates.  The call:
 
-@example
+@smallexample
 wait (&status)
-@end example
+@end smallexample
 
 @noindent
 is exactly equivalent to:
 
-@example
+@smallexample
 waitpid (-1, &status, 0)
-@end example
+@end smallexample
 @end deftypefun
 
 Here's an example of how to use @code{waitpid} to get the status from
@@ -547,7 +547,7 @@ all child processes that have terminated, without ever waiting.  This
 function is designed to be a handler for @code{SIGCHLD}, the signal that
 indicates that at least one child process has terminated.
 
-@example
+@smallexample
 @group
 void
 sigchld_handler (int signum)
@@ -568,7 +568,7 @@ sigchld_handler (int signum)
     @}
 @}
 @end group
-@end example
+@end smallexample
 
 @node Process Completion Status
 @section Process Completion Status
@@ -653,16 +653,20 @@ the following members:
 
 @table @code
 @item int w_termsig
-This member is equivalent to the @code{WTERMSIG} macro.
+The value of this member is the same as the result of the
+@code{WTERMSIG} macro.
 
 @item int w_coredump
-This member is equivalent to the @code{WCOREDUMP} macro.
+The value of this member is the same as the result of the
+@code{WCOREDUMP} macro.
 
 @item int w_retcode
-This member is equivalent to the @code{WEXISTATUS} macro.
+The value of this member is the same as the result of the
+@code{WEXITSTATUS} macro.
 
 @item int w_stopsig
-This member is equivalent to the @code{WSTOPSIG} macro.
+The value of this member is the same as the result of the
+@code{WSTOPSIG} macro.
 @end table
 
 Instead of accessing these members directly, you should use the
@@ -673,7 +677,7 @@ equivalent macros.
 @comment BSD
 @deftypefun pid_t wait3 (union wait *@var{status_ptr}, int @var{options}, struct rusage *@var{usage})
 If @var{usage} is a null pointer, @code{wait3} is equivalent to
-@w{@code{waitpid (-1, @var{status_ptr}, @var{options})}}.
+@code{waitpid (-1, @var{status_ptr}, @var{options})}.
 
 If @var{usage} is not null, @code{wait3} stores usage figures for the
 child process in @code{*@var{rusage}} (but only if the child has
@@ -684,7 +688,7 @@ terminated, not if it has stopped).  @xref{Resource Usage}.
 @comment BSD
 @deftypefun pid_t wait4 (pid_t @var{pid}, union wait *@var{status_ptr}, int @var{options}, struct rusage *@var{usage})
 If @var{usage} is a null pointer, @code{wait4} is equivalent to
-@w{@code{waitpid (@var{pid}, @var{status_ptr}, @var{options})}}.
+@code{waitpid (@var{pid}, @var{status_ptr}, @var{options})}.
 
 If @var{usage} is not null, @code{wait4} stores usage figures for the
 child process in @code{*@var{rusage}} (but only if the child has
@@ -698,7 +702,7 @@ Here is an example program showing how you might write a function
 similar to the built-in @code{system}.  It executes its @var{command}
 argument using the equivalent of @samp{sh -c @var{command}}.
 
-@example
+@smallexample
 #include <stddef.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -732,7 +736,7 @@ my_system (const char *command)
       status = -1;
   return status;
 @}
-@end example
+@end smallexample
 
 @comment Yes, this example has been tested.
 

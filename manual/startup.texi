@@ -35,9 +35,9 @@ You can define @code{main} either to take no arguments, or to take two
 arguments that represent the command line arguments to the program, like
 this:
 
-@example
+@smallexample
 int main (int @var{argc}, char *@var{argv}[])
-@end example
+@end smallexample
 
 @cindex argc (program argument count)
 @cindex argv (program argument vector)
@@ -251,14 +251,14 @@ is used later in the program.
 A second loop is used to process the remaining non-option arguments.
 @end itemize
 
-@example
+@smallexample
 @include testopt.c.texi
-@end example
+@end smallexample
 
 Here are some examples showing what this program prints with different
 combinations of arguments:
 
-@example
+@smallexample
 % testopt
 aflag = 0, bflag = 0, cvalue = (null)
 
@@ -293,7 +293,7 @@ Non-option argument -b
 % testopt -a -
 aflag = 1, bflag = 0, cvalue = (null)
 Non-option argument -
-@end example
+@end smallexample
 
 @node Long Options
 @subsection Parsing Long Options
@@ -387,9 +387,9 @@ When @code{getopt_long} has no more options to handle, it returns
 @node Long Option Example
 @subsection Example of Parsing Long Options
 
-@example
+@smallexample
 @include longopt.c.texi
-@end example
+@end smallexample
 
 @node Environment Variables
 @section Environment Variables
@@ -450,12 +450,11 @@ The value of an environment variable can be accessed with the
 @comment ANSI
 @deftypefun {char *} getenv (const char *@var{name})
 This function returns a string that is the value of the environment
-variable @var{name}.  You must not modify this string.  In some systems
-not using the GNU library, it might be overwritten by subsequent calls
-to @code{getenv} (but not by any other library function).
-@c !!! never overwritten on any unix system
-If the environment variable @var{name} is not defined, the value is a
-null pointer.
+variable @var{name}.  You must not modify this string.  In some non-Unix
+systems not using the GNU library, it might be overwritten by subsequent
+calls to @code{getenv} (but not by any other library function).  If the
+environment variable @var{name} is not defined, the value is a null
+pointer.
 @end deftypefun
 
 
@@ -549,9 +548,9 @@ current directory (@pxref{Working Directory}).
 
 A typical value for this environment variable might be a string like:
 
-@example
-:/bin:/etc:/usr/bin:/usr/new/X11:/usr/new:/usr/local:/usr/local/bin
-@end example
+@smallexample
+:/bin:/etc:/usr/bin:/usr/new/X11:/usr/new:/usr/local/bin
+@end smallexample
 
 This means that if the user tries to execute a program named @code{foo},
 the system will look for files named @file{foo}, @file{/bin/foo},
@@ -800,9 +799,9 @@ for SunOS, and may not be supported by other implementations.
 Here's a trivial program that illustrates the use of @code{exit} and
 @code{atexit}:
 
-@example
+@smallexample
 @include atexit.c.texi
-@end example
+@end smallexample
 
 @noindent
 When this program is executed, it just prints the message and exits.

@@ -252,9 +252,9 @@ nonzero, then @code{glob} doesn't give up right away when it can't read
 a directory; instead, it calls @var{errfunc} with two arguments, like
 this:
 
-@example
+@smallexample
 (*@var{errfunc}) (@var{filename}, @var{error-code})
-@end example
+@end smallexample
 
 @noindent
 The argument @var{filename} is the name of the directory that
@@ -563,8 +563,7 @@ The pattern didn't match the string.  This isn't really an error.
 @end table
 
 @node Regexp Subexpressions
-@c !!! I think this title is awkward -rm 
-@subsection Subexpressions Match Results
+@subsection Match Results with Subexpressions
 
 When @code{regexec} matches parenthetical subexpressions of
 @var{pattern}, it records which parts of @var{string} they match.  It
@@ -650,13 +649,14 @@ actually matches is near the end of the first word.  But it is
 @emph{considered} again in the second word, and fails to match there.
 @code{regexec} reports nonuse of the ``na'' subexpression.
 
-Another place where this rule applies is when @samp{\(ba\(na\)*s
-\|nefer\(ti\)* \)*} matches @samp{bananas nefertiti}.  The ``na''
-subexpression does match in the first word, but it doesn't match in the
-second word because the other alternative is used there.  Once again,
-the second repetition of the outer subexpression overrides the first,
-and within that second repetition, the ``na'' subexpression is not used.
-So @code{regexec} reports nonuse of the ``na'' subexpression.
+Another place where this rule applies is when the regular expression
+@w{@samp{\(ba\(na\)*s \|nefer\(ti\)* \)*}} matches @samp{bananas nefertiti}.
+The ``na'' subexpression does match in the first word, but it doesn't
+match in the second word because the other alternative is used there.
+Once again, the second repetition of the outer subexpression overrides
+the first, and within that second repetition, the ``na'' subexpression
+is not used.  So @code{regexec} reports nonuse of the ``na''
+subexpression.
 
 @node Regexp Cleanup
 @subsection POSIX Regexp Matching Cleanup
@@ -702,8 +702,10 @@ store the entire error message.  If this is less than @var{length}, then
 the error message was not truncated, and you can use it.  Otherwise, you
 should call @code{regerror} again with a larger buffer.
 
-@c !!! i wrote this example of how to do it right (i think) -- intro it. -rm
-@example
+Here is a function which uses @code{regerror}, but always dynamically
+allocates a buffer for the error message:
+
+@smallexample
 char *get_regerror (int errcode, regex_t *compiled)
 @{
   size_t length = regerror (errcode, compiled, NULL, 0);
@@ -711,7 +713,7 @@ char *get_regerror (int errcode, regex_t *compiled)
   (void) regerror (errcode, compiled, buffer, length);
   return buffer;
 @}
-@end example
+@end smallexample
 @end deftypefun
 
 @c !!!! this is not actually in the library....
@@ -767,19 +769,19 @@ from left to right:
 @item
 @cindex variable substitution
 @cindex substitution of variables and commands
-@dfn{Variable substitution}: The substitution of environment variables
-for references such as @samp{$foo}.
+@dfn{Variable substitution}: Environment variables are substituted for
+references such as @samp{$foo}.
 
 @item
 @cindex command substitution
-@dfn{Command substitution}: Replacement of constructs such as 
-@samp{`cat foo`} or @samp{$(cat foo)} with the output from the inner
-command.
+@dfn{Command substitution}: Constructs such as @w{@samp{`cat foo`}} and
+the equivalent @w{@samp{$(cat foo)}} are replaced with the output from
+the inner command.
 
 @item
 @cindex arithmetic expansion
-@dfn{Arithmetic expansion}: Replacement of constructs such as
-@samp{$(($x-1))} with the result of the arithmetic computation.
+@dfn{Arithmetic expansion}: Constructs such as @samp{$(($x-1))} are
+replaced with the result of the arithmetic computation.
 @end itemize
 
 @item
@@ -978,7 +980,7 @@ and use the results to run a shell command.  It also shows the use of
 @code{WRDE_APPEND} to concatenate the expansions and of @code{wordfree}
 to free the space allocated by @code{wordexp}.
 
-@example
+@smallexample
 int
 expand_and_execute (const char *program, const char *options)
 @{
@@ -1027,7 +1029,7 @@ expand_and_execute (const char *program, const char *options)
   wordfree (&result);
   return status;
 @}
-@end example
+@end smallexample
 
 In practice, since @code{wordexp} is executed by running a subshell, it
 would be faster to do this by concatenating the strings with spaces

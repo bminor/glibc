@@ -275,13 +275,7 @@ streams, see @ref{Stream Buffering}.
 
 @cindex writing to a stream, by characters
 This section describes functions for performing character- and
-line-oriented output.  Largely for historical compatibility, there are
-several variants of these functions, but as a matter of style (and for
-simplicity!) we suggest you stick with using @code{fputc} and
-@code{fputs}, and perhaps @code{putc} and @code{putchar}.
-@c !!! this "style" shit is completely bogus.  you should use the
-@c function most appropriate for what you are doing.  use putc for
-@c efficiency; there is never a reason to use fputc.
+line-oriented output.
 
 These functions are declared in the header file @file{stdio.h}.
 @pindex stdio.h
@@ -300,13 +294,14 @@ character @var{c} is returned.
 @deftypefun int putc (int @var{c}, FILE *@var{stream})
 This is just like @code{fputc}, except that most systems implement it as
 a macro, making it faster.  One consequence is that it may evaluate the
-@var{stream} argument more than once.
+@var{stream} argument more than once.  @code{putc} is usually the best
+function to use for writing a single character.
 @end deftypefun
 
 @comment stdio.h
 @comment ANSI
 @deftypefun int putchar (int @var{c})
-The @code{putchar} function is equivalent to @code{fputc} with
+The @code{putchar} function is equivalent to @code{putc} with
 @code{stdout} as the value of the @var{stream} argument.
 @end deftypefun
 
@@ -323,11 +318,11 @@ a non-negative value.
 
 For example:
 
-@example
+@smallexample
 fputs ("Are ", stdout);
 fputs ("you ", stdout);
 fputs ("hungry?\n", stdout);
-@end example
+@end smallexample
 
 @noindent
 outputs the text @samp{Are you hungry?} followed by a newline.
@@ -354,13 +349,7 @@ recommend you use @code{fwrite} instead (@pxref{Block Input/Output}).
 
 @cindex reading from a stream, by characters
 This section describes functions for performing character- and
-line-oriented input.  Again, there are several variants of these
-functions, some of which are considered obsolete stylistically.  It's
-suggested that you stick with @code{fgetc}, @code{getline}, and maybe
-@code{getc}, @code{getchar} and @code{fgets}.
-@c !!! this "style" shit is also completely bogus. use getc for speed;
-@c there is never a reason to use fgetc.
-
+line-oriented input.
 These functions are declared in the header file @file{stdio.h}.
 @pindex stdio.h
 
@@ -376,16 +365,17 @@ the stream @var{stream} and returns its value, converted to an
 @comment stdio.h
 @comment ANSI
 @deftypefun int getc (FILE *@var{stream})
-This is just like @code{fgetc}, except that it is permissible (and typical)
-for it to be implemented as a macro that evaluates the @var{stream}
-argument more than once.
-@c !!! and it's faster
+This is just like @code{fgetc}, except that it is permissible (and
+typical) for it to be implemented as a macro that evaluates the
+@var{stream} argument more than once.  @code{getc} is often highly
+optimized, so it is usually the best function to use to read a single
+character.
 @end deftypefun
 
 @comment stdio.h
 @comment ANSI
 @deftypefun int getchar (void)
-The @code{getchar} function is equivalent to @code{fgetc} with @code{stdin}
+The @code{getchar} function is equivalent to @code{getc} with @code{stdin}
 as the value of the @var{stream} argument.
 @end deftypefun
 
@@ -393,7 +383,7 @@ Here is an example of a function that does input using @code{fgetc}.  It
 would work just as well using @code{getc} instead, or using
 @code{getchar ()} instead of @code{fgetc (stdin)}.
 
-@example
+@smallexample
 int
 y_or_n_p (const char *question)
 @{
@@ -418,7 +408,7 @@ y_or_n_p (const char *question)
     fputs ("Please answer y or n:", stdout);
   @}
 @}
-@end example
+@end smallexample
 
 @comment stdio.h
 @comment SVID
@@ -521,14 +511,15 @@ The function @code{gets} reads characters from the stream @code{stdin}
 up to the next newline character, and stores them in the string @var{s}.
 The newline character is discarded (note that this differs from the
 behavior of @code{fgets}, which copies the newline character into the
-string).
+string).  If @code{gets} encounters a read error or end-of-file, it
+returns a null pointer; otherwise it returns @var{s}.
 
-@c !!! say what it returns!! either S if winning, or NULL if losing.
-
-@strong{Warning:}  The @code{gets} function is @strong{very dangerous} 
-because it provides no protection against overflowing the string @var{s}.
-The GNU library includes it for compatibility only.  You should 
-@strong{always} use @code{fgets} or @code{getline} instead.
+@strong{Warning:} The @code{gets} function is @strong{very dangerous}
+because it provides no protection against overflowing the string
+@var{s}.  The GNU library includes it for compatibility only.  You
+should @strong{always} use @code{fgets} or @code{getline} instead.  To
+remind you of this, the linker (if using GNU @code{ld}) will issue a
+warning whenever you use @code{gets}.
 @end deftypefn
 
 @node Unreading
@@ -560,10 +551,10 @@ stream reading a file that contains just six characters, the letters
 @samp{foobar}.  Suppose you have read three characters so far.  The
 situation looks like this:
 
-@example
+@smallexample
 f  o  o  b  a  r
          ^
-@end example
+@end smallexample
 
 @noindent
 so the next input character will be @samp{b}.
@@ -572,12 +563,12 @@ so the next input character will be @samp{b}.
 If instead of reading @samp{b} you unread the letter @samp{o}, you get a
 situation like this:
 
-@example
+@smallexample
 f  o  o  b  a  r
          |
       o--
       ^
-@end example
+@end smallexample
 
 @noindent
 so that the next input characters will be @samp{o} and @samp{b}.
@@ -586,12 +577,12 @@ so that the next input characters will be @samp{o} and @samp{b}.
 @c @group
 If you unread @samp{9} instead of @samp{o}, you get this situation:
 
-@example
+@smallexample
 f  o  o  b  a  r
          |
       9--
       ^
-@end example
+@end smallexample
 
 @noindent
 so that the next input characters will be @samp{9} and @samp{b}.
@@ -610,7 +601,9 @@ The @code{ungetc} function pushes back the character @var{c} onto the
 input stream @var{stream}.  So the next input from @var{stream} will
 read @var{c} before anything else.
 
-@c !!! if c==EOF, ungetc does nothing and returns EOF
+If @var{c} is @code{EOF}, @code{ungetc} does nothing and just returns
+@code{EOF}.  This lets call @code{ungetc} with the return value of
+@code{getc} without needing to check for an error from @code{getc}.
 
 The character that you push back doesn't have to be the same as the last
 character that was actually read from the stream.  In fact, it isn't
@@ -632,9 +625,8 @@ called, any pending pushed-back characters are discarded.
 
 Unreading a character on a stream that is at end of file clears the
 end-of-file indicator for the stream, because it makes the character of
-input available.  Reading that character will set the end-of-file
-indicator again.
-@c !!! no, it won't; EOF is not set until you try & fail to read a char.
+input available.  After you read that character, trying to read again
+will encounter end of file.
 @end deftypefun
 
 Here is an example showing the use of @code{getc} and @code{ungetc} to
@@ -642,7 +634,7 @@ skip over whitespace characters.  When this function reaches a
 non-whitespace character, it unreads that character to be seen again on
 the next read operation on the stream.
 
-@example
+@smallexample
 #include <stdio.h>
 
 void
@@ -656,7 +648,7 @@ skip_whitespace (FILE *stream)
   while (isspace (c));
   ungetc (c, stream);
 @}
-@end example
+@end smallexample
 
 @node Formatted Output
 @section Formatted Output
@@ -709,20 +701,20 @@ a @samp{%} character in the template cause subsequent arguments to be
 formatted and written to the output stream.  For example,
 @cindex conversion specifications (@code{printf})
 
-@example
+@smallexample
 int pct = 37;
 char filename[] = "foo.txt";
 printf ("Processing of `%s' is %d%% finished.\nPlease be patient.\n",
         filename, pct);
-@end example
+@end smallexample
 
 @noindent
 produces output like
 
-@example
+@smallexample
 Processing of `foo.txt' is 37% finished.
 Please be patient.
-@end example
+@end smallexample
 
 This example shows the use of the @samp{%d} conversion to specify that
 an @code{int} argument should be printed in decimal notation, the
@@ -770,9 +762,9 @@ a template string.
 The conversion specifications in a @code{printf} template string have
 the general form:
 
-@example
+@smallexample
 % @var{flags} @var{width} @r{[} . @var{precision} @r{]} @var{type} @var{conversion}
-@end example
+@end smallexample
 
 For example, in the conversion specifier @samp{%-10.8ld}, the @samp{-}
 is a flag, @samp{10} specifies the field width, the precision is
@@ -799,13 +791,11 @@ field is @emph{not} truncated.  Normally, the output is right-justified
 within the field.
 @cindex minimum field width (@code{printf})
 
-The GNU library's version of @code{printf} also allows you to specify a
-field width of @samp{*}.  This means that the next argument in the
-argument list (before the actual value to be printed) is used as the
-field width.  The value must be an @code{int}.  Other C library versions may
-not recognize this syntax.
-@c !!! ANSI specifies *. it is not a GNU extension.  if the passed
-@c number is negative, it sets the - flag and is negated to get the width.
+You can also specify a field width of @samp{*}.  This means that the
+next argument in the argument list (before the actual value to be
+printed) is used as the field width.  The value must be an @code{int}.
+If the value is negative, this means to set the @samp{-} flag (see
+below) and to use the absolute value as the field width.
 
 @item 
 An optional @dfn{precision} to specify the number of digits to be
@@ -814,15 +804,12 @@ consists of a period (@samp{.}) followed optionally by a decimal integer
 (which defaults to zero if omitted).
 @cindex precision (@code{printf})
 
-The GNU library's version of @code{printf} also allows you to specify a
-precision of @samp{*}.  This means that the next argument in the
-argument list (before the actual value to be printed) is used as the
-precision.  The value must be an @code{int}.  If you specify @samp{*}
-for both the field width and precision, the field width argument
-precedes the precision argument.  Other C library versions may not
-recognize this syntax.
-@c !!! ANSI specifies *. it is not a GNU extension.  if the passed
-@c number is negative, it is ignored.
+You can also specify a precision of @samp{*}.  This means that the next
+argument in the argument list (before the actual value to be printed) is
+used as the precision.  The value must be an @code{int}, and is ignored
+if it is negative.  If you specify @samp{*} for both the field width and
+precision, the field width argument precedes the precision argument.
+Other C library versions may not recognize this syntax.
 
 @item
 An optional @dfn{type modifier character}, which is used to specify the
@@ -949,12 +936,14 @@ character instead.  Since the @samp{+} flag ensures that the result
 includes a sign, this flag is ignored if you supply both of them.
 
 @item @samp{#}
-For the @samp{%o} conversion, this forces the leading digit to be @samp{0},
-as if by increasing the precision.  For @samp{%x} or @samp{%X}, this
-prefixes a leading @samp{0x} or @samp{0X} (respectively) to the result.
-This doesn't do anything useful for the @samp{%d}, @samp{%i}, or @samp{%u}
-conversions.
-@c !!! should mention this is the fmt grokked by strtoul, and xref to it.
+For the @samp{%o} conversion, this forces the leading digit to be
+@samp{0}, as if by increasing the precision.  For @samp{%x} or
+@samp{%X}, this prefixes a leading @samp{0x} or @samp{0X} (respectively)
+to the result.  This doesn't do anything useful for the @samp{%d},
+@samp{%i}, or @samp{%u} conversions.  Using this flag produces output
+which can be parsed by the @code{strtoul} function (@pxref{Parsing of
+Integers}) and @code{scanf} with the @code{%i} conversion
+(@pxref{Numeric Input Conversions}).
 
 @item @samp{0}
 Pad the field with zeros instead of spaces.  The zeros are placed after
@@ -1001,20 +990,20 @@ the sole purpose of @samp{%Z} is to specify the data type
 
 Here is an example.  Using the template string:
 
-@example
+@smallexample
 |%5d|%-5d|%+5d|%+-5d|% 5d|%05d|%5.0d|%5.2d|%d|\n"
-@end example
+@end smallexample
 
 @noindent
 to print numbers using the different options for the @samp{%d}
 conversion gives results like:
 
-@example
+@smallexample
 |    0|0    |   +0|+0   |    0|00000|     |   00|0|
 |    1|1    |   +1|+1   |    1|00001|    1|   01|1|
 |   -1|-1   |   -1|-1   |   -1|-0001|   -1|  -01|-1|
 |100000|100000|+100000| 100000|100000|100000|100000|100000|
-@end example
+@end smallexample
 
 In particular, notice what happens in the last case where the number
 is too large to fit in the minimum field width specified.
@@ -1022,15 +1011,15 @@ is too large to fit in the minimum field width specified.
 Here are some more examples showing how unsigned integers print under
 various format options, using the template string:
 
-@example
+@smallexample
 "|%5u|%5o|%5x|%5X|%#5o|%#5x|%#5X|%#10.8x|\n"
-@end example
+@end smallexample
 
-@example
+@smallexample
 |    0|    0|    0|    0|    0|  0x0|  0X0|0x00000000|
 |    1|    1|    1|    1|   01|  0x1|  0X1|0x00000001|
 |100000|303240|186a0|186A0|0303240|0x186a0|0X186A0|0x000186a0|
-@end example
+@end smallexample
 
 
 @node Floating-Point Conversions
@@ -1115,13 +1104,13 @@ Here are some examples showing how numbers print using the various
 floating-point conversions.  All of the numbers were printed using
 this template string:
 
-@example
+@smallexample
 "|%12.4f|%12.4e|%12.4g|\n"
-@end example
+@end smallexample
 
 Here is the output:
 
-@example
+@smallexample
 |      0.0000|  0.0000e+00|           0|
 |      1.0000|  1.0000e+00|           1|
 |     -1.0000| -1.0000e+00|          -1|
@@ -1131,7 +1120,7 @@ Here is the output:
 |  12345.0000|  1.2345e+04|   1.234e+04|
 | 100000.0000|  1.0000e+05|       1e+05|
 | 123456.0000|  1.2346e+05|   1.234e+05|
-@end example
+@end smallexample
 
 Notice how the @samp{%g} conversion drops trailing zeros.
 
@@ -1146,9 +1135,9 @@ flag can be used to specify left-justification in the field, but no
 other flags are defined, and no precision or type modifier can be given.
 For example:
 
-@example
+@smallexample
 printf ("%c%c%c%c%c", 'h', 'e', 'l', 'l', 'o');
-@end example
+@end smallexample
 
 @noindent
 prints @samp{hello}.
@@ -1161,9 +1150,9 @@ written to the output stream.  The @samp{-} flag can be used to specify
 left-justification in the field, but no other flags or type modifiers
 are defined for this conversion.  For example:
 
-@example
+@smallexample
 printf ("%3s%-6s", "no", "where");
-@end example
+@end smallexample
 
 @noindent
 prints @samp{ nowhere }.
@@ -1176,16 +1165,16 @@ argument intentionally.
 The @samp{%m} conversion prints the string corresponding to the error
 code in @code{errno}.  @xref{Error Messages}.  Thus:
 
-@example
+@smallexample
 fprintf (stderr, "can't open `%s': %m\n", filename);
-@end example
+@end smallexample
 
 @noindent
 is equivalent to:
 
-@example
+@smallexample
 fprintf (stderr, "can't open `%s': %s\n", filename, strerror (errno));
-@end example
+@end smallexample
 
 @noindent
 The @samp{%m} conversion is a GNU C library extension.
@@ -1200,9 +1189,9 @@ as if a @samp{%#x} conversion were used.  Null pointers print as
 
 For example:
 
-@example
+@smallexample
 printf ("%p", "testing");
-@end example
+@end smallexample
 
 @noindent
 prints @samp{0x} followed by a hexadecimal number---the address of the
@@ -1223,17 +1212,17 @@ flags, field width, or precision are permitted.
 
 For example,
 
-@example
+@smallexample
 int nchar;
 printf ("%d %s%n\n", 3, "bears", &nchar);
-@end  example
+@end smallexample
 
 @noindent
 prints:
 
-@example
+@smallexample
 3 bears
-@end example
+@end smallexample
 
 @noindent
 and sets @code{nchar} to @code{7}, because @samp{3 bears} is seven 
@@ -1250,7 +1239,10 @@ precision, or type modifiers are permitted.
 
 This section describes how to call @code{printf} and related functions.
 Prototypes for these functions are in the header file @file{stdio.h}.
-@c !!! mention you must have prototypes for these fns (because varargs).
+Because these functions take a variable number of arguments, you
+@emph{must} declare prototypes for them before using them.  Of course,
+the easiest way to make sure you have all the right prototypes is to
+just include @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
@@ -1320,7 +1312,8 @@ make_message (char *name, char *value)
     @{
       /* @r{Try to print in the allocated space.} */
       int nchars = snprintf (buffer, size,
-                             "value of %s is %s", name, value);
+                             "value of %s is %s",
+                             name, value);
       /* @r{If that worked, return the string.} */
       if (nchars < size)
         return buffer;
@@ -1415,10 +1408,11 @@ arguments again through that pointer.  Calling @code{vprintf} does not
 destroy the argument list of your function, merely the particular
 pointer that you passed to it.
 
-The GNU library does not have such restrictions.  You can safely continue
-to fetch arguments from a @code{va_list} pointer after passing it to
-@code{vprintf}, and @code{va_end} is a no-op.
-@c !!! but note that you will see the args vprintf already saw.
+The GNU library does not have such restrictions.  You can safely
+continue to fetch arguments from a @code{va_list} pointer after passing
+it to @code{vprintf}, and @code{va_end} is a no-op.  (Note, however,
+that subsequent @code{va_arg} calls will fetch the same arguments which
+@code{vprintf} previously used.)
 
 Prototypes for these functions are declared in @file{stdio.h}.
 @pindex stdio.h
@@ -1474,7 +1468,7 @@ with a prefix indicating the name of the program
 (@pxref{Error Messages}, for a description of 
 @code{program_invocation_short_name}).
 
-@example
+@smallexample
 @group
 #include <stdio.h>
 #include <stdarg.h>
@@ -1491,14 +1485,14 @@ eprintf (char *template, ...)
   va_end (ap);
 @}
 @end group
-@end example
+@end smallexample
 
 @noindent
 You could call @code{eprintf} like this:
 
-@example
+@smallexample
 eprintf ("file `%s' does not exist\n", filename);
-@end example
+@end smallexample
 
 @node Parsing a Template String
 @subsection Parsing a Template String
@@ -1594,10 +1588,10 @@ from @code{PA_LAST}.  For example, if you have data types @samp{foo}
 and @samp{bar} with their own specialized @code{printf} conversions,
 you could define encodings for these types as:
 
-@example
+@smallexample
 #define PA_FOO  PA_LAST
 #define PA_BAR  (PA_LAST + 1)
-@end example
+@end smallexample
 @end table
 
 Here are the flag bits that modify a basic type.  They are combined with
@@ -1653,7 +1647,7 @@ assume this is part of an interpreter which contains arguments of type
 @code{NUMBER}, @code{CHAR}, @code{STRING} and @code{STRUCTURE} (and
 perhaps others which are not valid here).
 
-@example
+@smallexample
 /* @r{Test whether the @var{nargs} specified objects}
    @r{in the vector @var{args} are valid}
    @r{for the format string @var{format}:}
@@ -1713,7 +1707,7 @@ validate_args (char *format, int nargs, OBJECT *args)
   @}
   return 1;
 @}
-@end example
+@end smallexample
 
 @node Customizing Printf
 @section Customizing @code{printf}
@@ -1725,7 +1719,7 @@ The GNU C library lets you define your own custom conversion specifiers
 for @code{printf} template strings, to teach @code{printf} clever ways
 to print the important data structures of your program.
 
-The way you do this is by registering the conversion with
+The way you do this is by registering the conversion with the function
 @code{register_printf_function}; see @ref{Registering New Conversions}.
 One of the arguments you pass to this function is a pointer to a handler
 function that produces the actual output; see @ref{Defining the Output
@@ -1874,10 +1868,10 @@ which are passed as arguments to @code{register_printf_function}.
 
 You should define your handler functions with a prototype like:
 
-@example
+@smallexample
 int @var{function} (FILE *stream, const struct printf_info *info,
                     va_list *ap_pointer)
-@end example
+@end smallexample
 
 The @code{stream} argument passed to the handler function is the stream to
 which it should write output.
@@ -1916,10 +1910,10 @@ application, you should also define a function to pass as the
 
 You should define these functions with a prototype like:
 
-@example
+@smallexample
 int @var{function} (const struct printf_info *info,
                     size_t n, int *argtypes)
-@end example
+@end smallexample
 
 The return value from the function should be the number of arguments the
 conversion expects, up to a maximum of @var{n}.  The function should
@@ -1945,17 +1939,17 @@ arguments, including the pointer value and the name stored in the data
 structure.  The @samp{%W} conversion supports the minimum field width and
 left-justification options, but ignores everything else.
 
-@example
+@smallexample
 @include rprintf.c.texi
-@end example
+@end smallexample
 
 The output produced by this program looks like:
 
-@example
+@smallexample
 |<Widget 0xffeffb7c: mywidget>|
 |      <Widget 0xffeffb7c: mywidget>|
 |<Widget 0xffeffb7c: mywidget>      |
-@end example
+@end smallexample
 
 @node Formatted Input
 @section Formatted Input
@@ -2019,7 +2013,7 @@ The @code{scanf} function is typically used for things like reading in
 the contents of tables.  For example, here is a function that uses
 @code{scanf} to initialize an array of @code{double}:
 
-@example
+@smallexample
 void
 readarray (double *array, int n)
 @{
@@ -2028,7 +2022,7 @@ readarray (double *array, int n)
     if (scanf (" %lf", &(array[i])) != 1)
       invalid_input_error ();
 @}
-@end example
+@end smallexample
 
 The formatted input functions are not used as frequently as the
 formatted output functions.  Partly, this is because it takes some care
@@ -2063,9 +2057,9 @@ this is not the case, a matching failure occurs.
 The conversion specifications in a @code{scanf} template string
 have the general form:
 
-@example
+@smallexample
 % @var{flags} @var{width} @var{type} @var{conversion}
-@end example
+@end smallexample
 
 In more detail, an input conversion specification consists of an initial
 @samp{%} character followed in sequence by:
@@ -2129,24 +2123,24 @@ language defines for specifying an integer constant.  @xref{Numeric
 Input Conversions}.
 
 @item @samp{%o}
-Matches an unsigned integer in octal radix.  @xref{Numeric
-Input Conversions}.
+Matches an unsigned integer written in octal radix.
+@xref{Numeric Input Conversions}.
 
 @item @samp{%u}
-Matches an unsigned integer in decimal radix.  @xref{Numeric
-Input Conversions}.
+Matches an unsigned integer written in decimal radix.
+@xref{Numeric Input Conversions}.
 
 @item @samp{%x}, @samp{%X}
-Matches an unsigned integer in hexadecimal radix.  @xref{Numeric
-Input Conversions}.
+Matches an unsigned integer written in hexadecimal radix.
+@xref{Numeric Input Conversions}.
 
 @item @samp{%e}, @samp{%f}, @samp{%g}, @samp{%E}, @samp{%G}
 Matches an optionally signed floating-point number.  @xref{Numeric Input
 Conversions}.
 
 @item @samp{%s}
-Matches a string of non-whitespace characters.  @xref{String Input
-Conversions}.
+Matches a string containing only non-whitespace characters.
+@xref{String Input Conversions}.
 
 @item @samp{%[}
 Matches a string of characters that belong to a specified set.
@@ -2193,8 +2187,9 @@ The @samp{%i} conversion matches an optionally signed integer in any of
 the formats that the C language defines for specifying an integer
 constant.  The syntax that is recognized is the same as that for the
 @code{strtol} function (@pxref{Parsing of Integers}) with the value
-@code{0} for the @var{base} argument.
-@c !!! mention printf %#[xod] generates something this can read.
+@code{0} for the @var{base} argument.  (You can print integers in this
+syntax with @code{printf} by using the @samp{#} flag character with the
+@samp{%x}, @samp{%o}, or @samp{%d} conversion.  @xref{Integer Conversions}.)
 
 For example, any of the strings @samp{10}, @samp{0xa}, or @samp{012}
 could be read in as integers under the @samp{%i} conversion.  Each of
@@ -2295,9 +2290,9 @@ at the end of the text that it reads.
 
 For example, reading the input:
 
-@example
+@smallexample
  hello, world
-@end example
+@end smallexample
 
 @noindent
 with the conversion @samp{%10c} produces @code{" hello, wo"}, but
@@ -2377,7 +2372,7 @@ Here is an example of using the @samp{a} flag with the @samp{%[@dots{}]}
 conversion specification to read a ``variable assignment'' of the form
 @samp{@var{variable} = @var{value}}.
 
-@example
+@smallexample
 @{
   char *variable, *value;
 
@@ -2390,7 +2385,7 @@ conversion specification to read a ``variable assignment'' of the form
 
   @dots{}
 @}
-@end example
+@end smallexample
 
 @node Other Input Conversions
 @subsection Other Input Conversions
@@ -3307,20 +3302,20 @@ supply the length of the string as the @var{size} argument.
 Here is an example of using @code{fmemopen} to create a stream for
 reading from a string:
 
-@example
+@smallexample
 @include memopen.c.texi
-@end example
+@end smallexample
 
 This program produces the following output:
 
-@example
+@smallexample
 Got f
 Got o
 Got o
 Got b
 Got a
 Got r
-@end example
+@end smallexample
 
 @comment stdio.h
 @comment GNU
@@ -3346,16 +3341,16 @@ already written fills the intervening space with zeroes.
 
 Here is an example of using @code{open_memstream}:
 
-@example
+@smallexample
 @include memstrm.c.texi
-@end example
+@end smallexample
 
 This program produces the following output:
 
-@example
+@smallexample
 buf = `hello', size = 5
 buf = `hello, world', size = 12
-@end example
+@end smallexample
 
 @c @group  Invalid outside @example.
 @node Obstack Streams
@@ -3390,9 +3385,9 @@ But how do you find out how long the object is?  You can get the length
 in bytes by calling @code{obstack_object_size} (@pxref{Status of an
 Obstack}), or you can null-terminate the object like this:
 
-@example
+@smallexample
 obstack_1grow (@var{obstack}, 0);
-@end example
+@end smallexample
 
 Whichever one you do, you must do it @emph{before} calling
 @code{obstack_finish}.  (You can do both if you wish.)
@@ -3400,7 +3395,7 @@ Whichever one you do, you must do it @emph{before} calling
 
 Here is a sample function that uses @code{open_obstack_stream}:
 
-@example
+@smallexample
 char *
 make_message_string (const char *a, int b)
 @{
@@ -3413,7 +3408,7 @@ make_message_string (const char *a, int b)
   obstack_1grow (&message_obstack, 0);
   return obstack_finish (&message_obstack);
 @}
-@end example
+@end smallexample
 
 @node Custom Streams
 @subsection Programming Your Own Custom Streams
@@ -3480,8 +3475,9 @@ discarded.
 @item cookie_seek_function *seek
 This is the function that performs the equivalent of file positioning on
 the cookie.  If the value is a null pointer instead of a function, calls
-to @code{fseek} on this stream return an @code{ESPIPE} error.
-@c !!! fseek works if you never seek outside the buffer
+to @code{fseek} on this stream can only seek to locations within the
+buffer; any attempt to seek outside the buffer will return an
+@code{ESPIPE} error.
 
 @item cookie_close_function *close
 This function performs any appropriate cleanup on the cookie when
@@ -3513,9 +3509,9 @@ that a custom stream needs.
 
 You should define the function to read data from the cookie as:
 
-@example
+@smallexample
 ssize_t @var{reader} (void *@var{cookie}, void *@var{buffer}, size_t @var{size})
-@end example
+@end smallexample
 
 This is very similar to the @code{read} function; see @ref{I/O
 Primitives}.  Your function should transfer up to @var{size} bytes into
@@ -3525,9 +3521,9 @@ an error.
 
 You should define the function to write data to the cookie as:
 
-@example
+@smallexample
 ssize_t @var{writer} (void *@var{cookie}, const void *@var{buffer}, size_t @var{size})
-@end example
+@end smallexample
 
 This is very similar to the @code{write} function; see @ref{I/O
 Primitives}.  Your function should transfer up to @var{size} bytes from
@@ -3537,9 +3533,9 @@ value of @code{-1} to indicate an error.
 You should define the function to perform seek operations on the cookie
 as:
 
-@example
+@smallexample
 int @var{seeker} (void *@var{cookie}, fpos_t *@var{position}, int @var{whence})
-@end example
+@end smallexample
 
 For this function, the @var{position} and @var{whence} arguments are
 interpreted as for @code{fgetpos}; see @ref{Portable Positioning}.  In
@@ -3555,9 +3551,9 @@ to indicate an error.
 You should define the function to do cleanup operations on the cookie
 appropriate for closing the stream as:
 
-@example
+@smallexample
 int @var{cleaner} (void *@var{cookie})
-@end example
+@end smallexample
 
 Your function should return @code{-1} to indicate an error, and @code{0}
 otherwise.

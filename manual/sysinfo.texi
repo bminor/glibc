@@ -75,20 +75,19 @@ This process cannot set the host name because it is not privileged.
 @comment unistd.h
 @comment BSD
 @deftypefun {long int} gethostid (void)
-This function returns the Internet address of the machine the program is
-running on.
-@c !!! this is not necessarily the IP address.  it is whatever was set
-@c with sethostid (or the `hostid' program).  on sun4s, it is an
-@c unchangeable constant that is unique for each machine.
-@c making it the primary IP address is a convention.
+This function returns the ``host ID'' of the machine the program is
+running on.  By convention, this is usually the primary Internet address
+of that machine, converted to a @w{@code{long int}}.  But on some
+systems it is a meaningless but unique number which is hard-coded for
+each machine.
 @end deftypefun
 
 @comment unistd.h
 @comment BSD
 @deftypefun int sethostid (long int @var{id})
-The @code{sethostid} function sets the address of the host machine to
-@var{id}.  Only privileged processes are allowed to do this.  Usually it
-happens just once, at system boot time.
+The @code{sethostid} function sets the ``host ID'' of the host machine
+to @var{id}.  Only privileged processes are allowed to do this.  Usually
+it happens just once, at system boot time.
 
 The return value is @code{0} on success and @code{-1} on failure.
 The following @code{errno} error condition is defined for this function:
@@ -96,6 +95,11 @@ The following @code{errno} error condition is defined for this function:
 @table @code
 @item EPERM
 This process cannot set the host name because it is not privileged.
+
+@item ENOSYS
+The operating system does not support setting the host ID.  On some
+systems, the host ID is a meaningless but unique number hard-coded for
+each machine.
 @end table
 @end deftypefun
 
@@ -133,27 +137,29 @@ system.
 @item char machine[]
 This is a description of the type of hardware that is in use.
 
-@c !!! this is only true if the operating system has no uname system call.
-The GNU C Library fills in this field based on the configuration name
-that was specified when building and installing the library.  GNU uses a
-three-part name to describe a system configuration; the three parts are
-@var{cpu}, @var{manufacturer} and @var{system-type}, and they are
-separated with dashes.  Any possible combination of three names is
+Some systems provide a mechanism to interrogate the kernel directly for
+this information.  On systems without such a mechanism, the GNU C
+library fills in this field based on the configuration name that was
+specified when building and installing the library.
+
+GNU uses a three-part name to describe a system configuration; the three
+parts are @var{cpu}, @var{manufacturer} and @var{system-type}, and they
+are separated with dashes.  Any possible combination of three names is
 potentially meaningful, but most such combinations are meaningless in
 practice and even the meaningful ones are not necessarily supported by
 any particular GNU program.
 
 Since the value in @code{machine} is supposed to describe just the
 hardware, it consists of the first two parts of the configuration name:
-@samp{@var{cpu}-@var{manufacturer}}.
-
-@c !!! this is yet another case where you are losing massively because
-@c you want to have an explicit list.  many others are possible.
-Here is a list of all the possible alternatives:
+@samp{@var{cpu}-@var{manufacturer}}.  For example, it might be one of these:
 
 @quotation
-@code{"i386-@var{anything}"}, @code{"m68k-hp"}, @code{"sparc-sun"},
-@code{"m68k-sun"}, @code{"m68k-sony"}, @code{"mips-dec"}
+@code{"sparc-sun"}, 
+@code{"i386-@var{anything}"},
+@code{"m68k-hp"}, 
+@code{"m68k-sony"},
+@code{"m68k-sun"},
+@code{"mips-dec"}
 @end quotation
 @end table
 @end deftp

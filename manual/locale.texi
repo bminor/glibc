@@ -200,9 +200,9 @@ ANSI C says that all programs start by default in the standard @samp{C}
 locale.  To use the locales specified by the environment, you must call
 @code{setlocale}.  Call it as follows:
 
-@example
+@smallexample
 setlocale (LC_ALL, "");
-@end example
+@end smallexample
 
 @noindent
 to select a locale based on the appropriate environment variables.
@@ -261,7 +261,7 @@ pointer and leaves the current locale unchanged.
 Here is an example showing how you might use @code{setlocale} to
 temporarily switch to a new locale.
 
-@example
+@smallexample
 #include <stddef.h>
 #include <locale.h>
 #include <stdlib.h>
@@ -290,7 +290,7 @@ with_other_locale (char *new_locale,
   setlocale (LC_ALL, saved_locale);
   free (saved_locale);
 @}
-@end example
+@end smallexample
 
 @strong{Portability Note:} Some ANSI C systems may define additional
 locale categories.  For portability, assume that any symbol beginning
@@ -413,8 +413,8 @@ If the last integer is @code{-1}, it means that there is no more
 grouping---or, put another way, any remaining digits form one large
 group without separators.
 
-For example, if @code{grouping} is @code{"4;3;2"}, the number
-@code{123456787654321} should be grouped into @samp{12}, @samp{34},
+For example, if @code{grouping} is @code{"4;3;2"}, the correct grouping
+for the number @code{123456787654321} is @samp{12}, @samp{34},
 @samp{56}, @samp{78}, @samp{765}, @samp{4321}.  This uses a group of 4
 digits at the end, preceded by a group of 3 digits, preceded by groups
 of 2 digits (as many as needed).  With a separator of @samp{,}, the

@@ -465,7 +465,7 @@ parameter you are interested in, and call @code{sysconf} only if the
 macro is not defined.  For example, here is how to test whether job
 control is supported:
 
-@example
+@smallexample
 @group
 int
 have_job_control (void)
@@ -482,11 +482,11 @@ have_job_control (void)
 #endif
 @}
 @end group
-@end example
+@end smallexample
 
 Here is how to get the value of a numeric limit:
 
-@example
+@smallexample
 int
 get_child_max ()
 @{
@@ -499,7 +499,7 @@ get_child_max ()
   return value;
 #endif
 @}
-@end example
+@end smallexample
 
 @node Minimums
 @section Minimum Values for General Capacity Limits
@@ -832,47 +832,47 @@ integer constants.
 @comment unistd.h
 @comment POSIX.1
 @item _PC_LINK_MAX
-Inquire about the parameter corresponding to @code{LINK_MAX}.
+Inquire about the value of @code{LINK_MAX}.
 
 @comment unistd.h
 @comment POSIX.1
 @item _PC_MAX_CANON
-Inquire about the parameter corresponding to @code{MAX_CANON}.
+Inquire about the value of @code{MAX_CANON}.
 
 @comment unistd.h
 @comment POSIX.1
 @item _PC_MAX_INPUT
-Inquire about the parameter corresponding to @code{MAX_INPUT}.
+Inquire about the value of @code{MAX_INPUT}.
 
 @comment unistd.h
 @comment POSIX.1
 @item _PC_NAME_MAX
-Inquire about the parameter corresponding to @code{NAME_MAX}.
+Inquire about the value of @code{NAME_MAX}.
 
 @comment unistd.h
 @comment POSIX.1
 @item _PC_PATH_MAX
-Inquire about the parameter corresponding to @code{PATH_MAX}.
+Inquire about the value of @code{PATH_MAX}.
 
 @comment unistd.h
 @comment POSIX.1
 @item _PC_PIPE_BUF
-Inquire about the parameter corresponding to @code{PIPE_BUF}.
+Inquire about the value of @code{PIPE_BUF}.
 
 @comment unistd.h
 @comment POSIX.1
 @item _PC_CHOWN_RESTRICTED
-Inquire about the parameter corresponding to @code{_POSIX_CHOWN_RESTRICTED}.
+Inquire about the value of @code{_POSIX_CHOWN_RESTRICTED}.
 
 @comment unistd.h
 @comment POSIX.1
 @item _PC_NO_TRUNC
-Inquire about the parameter corresponding to @code{_POSIX_NO_TRUNC}.
+Inquire about the value of @code{_POSIX_NO_TRUNC}.
 
 @comment unistd.h
 @comment POSIX.1
 @item _PC_VDISABLE
-Inquire about the parameter corresponding to @code{_POSIX_VDISABLE}.
+Inquire about the value of @code{_POSIX_VDISABLE}.
 @end table
 
 @node Utility Limits
@@ -1061,7 +1061,7 @@ is to call it twice: first call it to get the length, allocate the
 buffer accordingly, and then call @code{confstr} again to fill the
 buffer, like this:
 
-@example
+@smallexample
 @group
 char *
 get_default_path (void)
@@ -1078,4 +1078,4 @@ get_default_path (void)
   return buffer;
 @}
 @end group
-@end example
+@end smallexample

@@ -380,19 +380,20 @@ is less than @var{size}.
 Here is an example showing how to convert a string of multibyte
 characters, allocating enough space for the result.
 
-@example
+@smallexample
 wchar_t *
-mbstowcs_alloc (char *string)
+mbstowcs_alloc (const char *string)
 @{
-  int size = strlen (string) + 1;
-  wchar_t *buffer = (wchar_t) xmalloc (size * sizeof (wchar_t));
+  size_t size = strlen (string) + 1;
+  wchar_t *buf = xmalloc (size * sizeof (wchar_t));
 
-  size = mbstowcs (buffer, string, size);
-  if (size < 0)
+  size = mbstowcs (buf, string, size);
+  if (size == (size_t) -1)
     return NULL;
-  return (wchar_t) xrealloc (buffer, (size + 1) * sizeof (wchar_t));
+  buf = xrealloc (buf, (size + 1) * sizeof (wchar_t));
+  return buf;
 @}
-@end example
+@end smallexample
 
 @end deftypefun
 
@@ -535,7 +536,7 @@ stored shift state @emph{as well as} storing the multibyte character
 @end deftypefun
 
 @node Example of Conversion, Shift State, Converting One Char, Extended Characters
-@section Example of Character-by-Character Conversion
+@section Character-by-Character Conversion Example 
 
 Here is an example that reads multibyte character text from descriptor
 @code{input} and writes the corresponding wide characters to descriptor
@@ -544,7 +545,7 @@ example because @code{mbstowcs} is unable to continue past a null
 character, and cannot cope with an apparently invalid partial character
 by reading more input.
 
-@example
+@smallexample
 int
 file_mbstowcs (int input, int output)
 @{
@@ -619,7 +620,7 @@ file_mbstowcs (int input, int output)
 
   return 1;
 @}
-@end example
+@end smallexample
 
 @node Shift State,  , Example of Conversion, Extended Characters
 @section Multibyte Codes Using Shift Sequences
@@ -660,7 +661,7 @@ processing of different strings.
 
 Here is an example of using @code{mblen} following these rules:
 
-@example
+@smallexample
 void
 scan_string (char *s)
 @{
@@ -685,7 +686,7 @@ scan_string (char *s)
       length -= thischar;
     @}
 @}
-@end example
+@end smallexample
 
 The functions @code{mblen}, @code{mbtowc} and @code{wctomb} are not
 reentrant when using a multibyte code that uses a shift state.  However,

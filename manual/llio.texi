@@ -222,18 +222,18 @@ and @code{freopen} functions, that create streams.
 @comment fcntl.h
 @comment POSIX.1
 @deftypefn {Obsolete function} int creat (const char *@var{filename}, mode_t @var{mode})
-This function is obsolete.  The call
+This function is obsolete.  The call:
 
-@example
+@smallexample
 creat (@var{filename}, @var{mode})
-@end example
+@end smallexample
 
 @noindent
-is equivalent to
+is equivalent to:
 
-@example
+@smallexample
 open (@var{filename}, O_WRONLY | O_CREAT | O_TRUNC, @var{mode})
-@end example
+@end smallexample
 @end deftypefn
 
 @comment unistd.h
@@ -263,12 +263,13 @@ conditions are defined for this function:
 The @var{filedes} argument is not a valid file descriptor.
 
 @item EINTR
-The call was interrupted by a signal.  @xref{Interrupted Primitives}.
-Here's an example of how to handle @code{EINTR} properly:
+The @code{close} call was interrupted by a signal.
+@xref{Interrupted Primitives}.
+Here is an example of how to handle @code{EINTR} properly:
 
-@example
+@smallexample
 TEMP_FAILURE_RETRY (close (desc));
-@end example
+@end smallexample
 @end table
 @end deftypefun
 
@@ -440,9 +441,9 @@ error was @code{EINTR}, you should simply repeat the call.
 @xref{Interrupted Primitives}.  The easy way to do this is with the
 macro @code{TEMP_FAILURE_RETRY}, as follows:
 
-@example
+@smallexample
 nbytes = TEMP_FAILURE_RETRY (write (desc, buffer, count));
-@end example
+@end smallexample
 
 The @code{write} function is the underlying primitive for all of the
 functions that write to streams, such as @code{fputc}.
@@ -531,7 +532,8 @@ Descriptors that come from separate calls to @code{open} have independent
 file positions; using @code{lseek} on one descriptor has no effect on the
 other.  For example, 
 
-@example
+@smallexample
+@group
 @{
   int d1, d2;
   char buf[4];
@@ -540,7 +542,8 @@ other.  For example,
   lseek (d1, 1024, SEEK_SET);
   read (d2, buf, 4);
 @}
-@end example
+@end group
+@end smallexample
 
 @noindent
 will read the first four characters of the file @file{foo}.  (The
@@ -552,7 +555,7 @@ position with the original descriptor that was duplicated.  Anything
 which alters the file position of one of the duplicates, including
 reading or writing data, affects all of them alike.  Thus, for example,
 
-@example
+@smallexample
 @{
   int d1, d2, d3;
   char buf1[4], buf2[4];
@@ -563,7 +566,7 @@ reading or writing data, affects all of them alike.  Thus, for example,
   read (d1, buf1, 4);
   read (d2, buf2, 4);
 @}
-@end example
+@end smallexample
 
 @noindent
 will read four characters starting with the 1024'th character of
@@ -673,7 +676,7 @@ standard error output.
 @cindex standard error file descriptor
 
 @node Stream/Descriptor Precautions
-@section Precautions for Mixing Streams and Descriptors
+@section Dangers of Mixing Streams and Descriptors
 @cindex channels
 @cindex streams and descriptors
 @cindex descriptors and streams
@@ -964,9 +967,9 @@ timeout period for reading from a file descriptor.  The @code{input_timeout}
 function blocks the calling process until input is available on the
 file descriptor, or until the timeout period expires.
 
-@example
+@smallexample
 @include select.c.texi
-@end example
+@end smallexample
 
 There is another example showing the use of @code{select} to multiplex
 input from multiple sockets in @ref{Server Example}.
@@ -1085,10 +1088,10 @@ were closed first.
 If @var{old} and @var{new} are different numbers, and @var{old} is a
 valid descriptor number, then @code{dup2} is equivalent to:
 
-@example
+@smallexample
 close (@var{new});
 fcntl (@var{old}, F_DUPFD, @var{new})
-@end example
+@end smallexample
 
 However, @code{dup2} does this atomically; there is no instant in the
 middle of calling @code{dup2} at which @var{new} is closed and not yet a
@@ -1103,9 +1106,9 @@ copy the file descriptor given as the first argument.
 
 The form of the call in this case is:
 
-@example
+@smallexample
 fcntl (@var{old}, F_DUPFD, @var{next_filedes})
-@end example
+@end smallexample
 
 The @var{next_filedes} argument is of type @code{int} and specifies that
 the file descriptor returned should be the next available one greater
@@ -1149,7 +1152,7 @@ invoked.
 So, to redirect standard input to a file, the shell could do something
 like:
 
-@example
+@smallexample
 pid = fork ();
 if (pid == 0)
   @{
@@ -1162,7 +1165,7 @@ if (pid == 0)
     TEMP_FAILURE_RETRY (close (file));
     execv (program, NULL);
   @}
-@end example
+@end smallexample
 
 There is also a more detailed example showing how to implement redirection
 in the context of a pipeline of processes in @ref{Launching Jobs}.
@@ -1214,9 +1217,9 @@ specify that it should set the file descriptor flags associated with the
 @var{filedes} argument.  This requires a third @code{int} argument to
 specify the new flags, so the form of the call is:
 
-@example
+@smallexample
 fcntl (@var{filedes}, F_SETFD, @var{new_flags})
-@end example
+@end smallexample
 
 The normal return value from @code{fcntl} with this command is an
 unspecified value other than @code{-1}, which indicates an error.
@@ -1246,7 +1249,7 @@ program may be run years from now and more flags may exist then.  For
 example, here is a function to set or clear the flag @code{FD_CLOEXEC}
 without altering any other flags:
 
-@example
+@smallexample
 /* @r{Set the @code{FD_CLOEXEC} flag of @var{desc} if @var{value} is nonzero,}
    @r{or clear the flag if @var{value} is 0.}
    @r{Return 0 on success, or -1 on error with @code{errno} set.} */ 
@@ -1266,7 +1269,7 @@ set_cloexec_flag (int desc, int value)
   /* @r{Store modified flag word in the descriptor.} */
   return fcntl (desc, F_SETFD, oldflags);
 @}
-@end example
+@end smallexample
 
 @node File Status Flags
 @section File Status Flags
@@ -1323,9 +1326,9 @@ the file status flags for the open file corresponding to the
 @var{filedes} argument.  This command requires a third @code{int}
 argument to specify the new flags, so the call looks like this:
 
-@example
+@smallexample
 fcntl (@var{filedes}, F_SETFL, @var{new_flags})
-@end example
+@end smallexample
 
 You can't change the access mode for the file in this way; that is,
 whether the file descriptor was opened for reading or writing.  You can
@@ -1389,7 +1392,7 @@ may be run years from now and more flags may exist then.  For example,
 here is a function to set or clear the flag @code{O_NONBLOCK} without
 altering any other flags:
 
-@example
+@smallexample
 @group
 /* @r{Set the @code{O_NONBLOCK} flag of @var{desc} if @var{value} is nonzero,}
    @r{or clear the flag if @var{value} is 0.}
@@ -1411,7 +1414,7 @@ set_nonblock_flag (int desc, int value)
   return fcntl (desc, F_SETFL, oldflags);
 @}
 @end group
-@end example
+@end smallexample
 
 @node File Locks
 @section File Locks
@@ -1495,9 +1498,9 @@ specify that it should get information about a lock.  This command
 requires a third argument of type @w{@code{struct flock *}} to be passed
 to @code{fcntl}, so that the form of the call is:
 
-@example
+@smallexample
 fcntl (@var{filedes}, F_GETLK, @var{lockp})
-@end example
+@end smallexample
 
 If there is a lock already in place that would block the lock described
 by the @var{lockp} argument, information about that lock overwrites
@@ -1539,9 +1542,9 @@ specify that it should set or clear a lock.  This command requires a
 third argument of type @w{@code{struct flock *}} to be passed to
 @code{fcntl}, so that the form of the call is:
 
-@example
+@smallexample
 fcntl (@var{filedes}, F_SETLK, @var{lockp})
-@end example
+@end smallexample
 
 If the process already has a lock on any part of the region, the old lock
 on that part is replaced with the new lock.  You can remove a lock
@@ -1707,9 +1710,9 @@ specify that it should set the process or process group to which
 of type @code{pid_t} to be passed to @code{fcntl}, so that the form of
 the call is:
 
-@example
+@smallexample
 fcntl (@var{filedes}, F_SETOWN, @var{pid})
-@end example
+@end smallexample
 
 The @var{pid} argument should be a process ID.  You can also pass a
 negative number whose absolute value is a process group ID.

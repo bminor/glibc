@@ -1,5 +1,5 @@
 @node Language Features, Library Summary, System Configuration, Top
-@appendix C Language Facilities Implemented By the Library
+@appendix C Language Facilities in the Library
 
 Some of the facilities implemented by the C library really should be
 thought of as parts of the C language itself.  These facilities ought to
@@ -56,9 +56,9 @@ If @code{NDEBUG} is not defined, @code{assert} tests the value of
 program (@pxref{Aborting a Program}) after printing a message of the
 form:
 
-@example
+@smallexample
 @file{@var{file}}:@var{linenum}: Assertion `@var{expression}' failed.
-@end example
+@end smallexample
 
 @noindent
 on the standard error stream @code{stderr} (@pxref{Standard Streams}).
@@ -209,13 +209,13 @@ and then tack on @samp{@dots{}} to indicate the possibility of
 additional arguments.  The syntax of ANSI C requires at least one fixed
 argument before the @samp{@dots{}}.  For example,
 
-@example
+@smallexample
 int 
 func (const char *a, int b, @dots{})
 @{
   @dots{}
 @}	
-@end example
+@end smallexample
 
 @noindent
 outlines a definition of a function @code{func} which returns an
@@ -437,9 +437,9 @@ this function is sufficient to illustrate how to use the variable
 arguments facility.
 
 @comment Yes, this example has been tested.
-@example
+@smallexample
 @include add.c.texi
-@end example
+@end smallexample
 
 @node Old Varargs
 @subsubsection Old-Style Variadic Functions
@@ -457,19 +457,19 @@ There is no difference in how you call a variadic function;
 them.  First of all, you must use old-style non-prototype syntax, like
 this:
 
-@example
+@smallexample
 tree
 build (va_alist)
      va_dcl
 @{
-@end example
+@end smallexample
 
 Secondly, you must give @code{va_start} just one argument, like this:
 
-@example
+@smallexample
   va_list p;
   va_start (p);
-@end example
+@end smallexample
 
 These are the special macros used for defining old-style variadic
 functions:
@@ -580,12 +580,12 @@ happens to be @code{unsigned long int} on your system.  To avoid any
 possibility of error, when a function argument or value is supposed to
 have type @code{size_t}, never declare its type in any other way.
 
-@strong{Compatibility Note:} Pre-ANSI C implementations generally used
-@code{unsigned int} for representing object sizes and @code{int} for
-pointer subtraction results.  They did not necessarily define either
-@code{size_t} or @code{ptrdiff_t}.  Unix systems did define
-@code{size_t}, in @file{sys/types.h}, but the definition was usually a
-signed type.
+@strong{Compatibility Note:} Implementations of C before the advent of
+ANSI C generally used @code{unsigned int} for representing object sizes
+and @code{int} for pointer subtraction results.  They did not
+necessarily define either @code{size_t} or @code{ptrdiff_t}.  Unix
+systems did define @code{size_t}, in @file{sys/types.h}, but the
+definition was usually a signed type.
 
 @node Data Type Measurements
 @section Data Type Measurements
@@ -615,9 +615,9 @@ The most common reason that a program needs to know how many bits are in
 an integer type is for using an array of @code{long int} as a bit vector.
 You can access the bit at index @var{n} with
 
-@example
+@smallexample
 vector[@var{n} / LONGBITS] & (1 << (@var{n} % LONGBITS))
-@end example
+@end smallexample
 
 @noindent
 provided you define @code{LONGBITS} as the number of bits in a
@@ -638,9 +638,9 @@ The value has type @code{int}.
 You can compute the number of bits in any data type @var{type} like
 this:
 
-@example
+@smallexample
 sizeof (@var{type}) * CHAR_BIT
-@end example
+@end smallexample
 @end table
 
 @node Range of Type
@@ -941,7 +941,7 @@ supported are suitable.
 This value characterizes the rounding mode for floating point addition.
 The following values indicate standard rounding modes:
 
-@c !!! want @group or somesuch near here
+@need 750
 
 @table @code
 @item -1
@@ -967,13 +967,13 @@ Here is a table showing how certain values round for each possible value
 of @code{FLT_ROUNDS}, if the other aspects of the representation match
 the IEEE single-precision standard.
 
-@example
-                 0       1              2              3
- 1.00000003     1.0     1.0            1.00000012     1.0
- 1.00000007     1.0     1.00000012     1.00000012     1.0
--1.00000003    -1.0    -1.0           -1.0           -1.00000012
--1.00000007    -1.0    -1.00000012    -1.0           -1.00000012
-@end example
+@smallexample
+                0      1             2             3
+ 1.00000003    1.0    1.0           1.00000012    1.0
+ 1.00000007    1.0    1.00000012    1.00000012    1.0
+-1.00000003   -1.0   -1.0          -1.0          -1.00000012
+-1.00000007   -1.0   -1.00000012   -1.0          -1.00000012
+@end smallexample
 
 @comment float.h
 @comment ANSI
@@ -991,11 +991,11 @@ mantissa for the @code{float} data type.  The following expression
 yields @code{1.0} (even though mathematically it should not) due to the
 limited number of mantissa digits:
 
-@example
+@smallexample
 float radix = FLT_RADIX;
 
 1.0f + 1.0f / radix / radix / @dots{} / radix
-@end example
+@end smallexample
 
 @noindent
 where @code{radix} appears @code{FLT_MANT_DIG} times.
@@ -1167,7 +1167,7 @@ So, for an implementation that uses this representation for the
 @code{float} data type, appropriate values for the corresponding
 parameters are:
 
-@example
+@smallexample
 FLT_RADIX                             2
 FLT_MANT_DIG                         24
 FLT_DIG                               6
@@ -1178,11 +1178,11 @@ FLT_MAX_10_EXP                      +38
 FLT_MIN                 1.17549435E-38F
 FLT_MAX                 3.40282347E+38F
 FLT_EPSILON             1.19209290E-07F
-@end example
+@end smallexample
 
 Here are the values for the @code{double} data type:
 
-@example
+@smallexample
 DBL_MANT_DIG                         53
 DBL_DIG                              15
 DBL_MIN_EXP                       -1021
@@ -1192,7 +1192,7 @@ DBL_MAX_10_EXP                      308
 DBL_MAX         1.7976931348623157E+308
 DBL_MIN         2.2250738585072014E-308
 DBL_EPSILON     2.2204460492503131E-016
-@end example
+@end smallexample
 
 @node Structure Measurement
 @subsection Structure Field Offset Measurement

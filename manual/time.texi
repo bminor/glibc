@@ -65,7 +65,7 @@ In typical usage, you call the @code{clock} function at the beginning and
 end of the interval you want to time, subtract the values, and then divide
 by @code{CLOCKS_PER_SEC} (the number of clock ticks per second), like this:
 
-@example
+@smallexample
 @group
 #include <time.h>
 
@@ -77,7 +77,7 @@ start = clock();
 end = clock();
 elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
 @end group
-@end example
+@end smallexample
 
 Different computers and operating systems vary wildly in how they keep
 track of processor time.  It's common for the internal processor clock
@@ -305,7 +305,6 @@ Some times struct timeval values are user for time intervals.  Then the
 @end table
 @end deftp
 
-@c !!! struct timezone is obsolete and should NEVER, EVER be used.
 @comment sys/time.h
 @comment BSD
 @deftp {Data Type} {struct timezone}
@@ -319,6 +318,9 @@ This is the number of minutes west of GMT.
 @item int tz_dsttime
 If nonzero, daylight savings time applies during some part of the year.
 @end table
+
+The @code{struct timezone} type is obsolete and should never be used.
+Instead, use the facilities described in @ref{Time Zone Functions}.
 @end deftp
 
 It is often necessary to subtract two values of type @w{@code{struct
@@ -326,7 +328,7 @@ timeval}}.  Here is the best way to do this.  It works even on some
 peculiar operating systems where the @code{tv_sec} member has an
 unsigned type.
 
-@example
+@smallexample
 /* @r{Subtract the `struct timeval' values X and Y,}
    @r{storing the result in RESULT.}
    @r{Return 1 if the difference is negative, otherwise 0.}  */
@@ -335,7 +337,7 @@ int
 timeval_subtract (result, x, y)
      struct timeval *result, *x, *y;
 @{
-  /* @r{Perform the carry for the later subtraction by updating y.} */
+  /* @r{Perform the carry for the later subtraction by updating @var{y}.} */
   if (x->tv_usec < y->tv_usec) @{
     int nsec = (y->tv_usec - x->tv_usec) / 1000000 + 1;
     y->tv_usec -= 1000000 * nsec;
@@ -355,7 +357,7 @@ timeval_subtract (result, x, y)
   /* @r{Return 1 if result is negative.} */
   return x->tv_sec < y->tv_sec;
 @}
-@end example
+@end smallexample
 
 @comment sys/time.h
 @comment BSD
@@ -571,12 +573,12 @@ These functions are declared in the header file @file{time.h}.
 @comment time.h
 @comment ANSI
 @deftypefun {char *} asctime (const struct tm *@var{brokentime})
-The @code{asctime} function writes the broken-down time value pointed at by
-@var{brokentime} into a string in a standard format:
+The @code{asctime} function converts the broken-down time value that
+@var{brokentime} points to into a string in a standard format:
 
-@example
+@smallexample
 "Tue May 21 13:46:22 1991\n"
-@end example
+@end smallexample
 
 The abbreviations for the days of week are: @samp{Sun}, @samp{Mon},
 @samp{Tue}, @samp{Wed}, @samp{Thu}, @samp{Fri}, and @samp{Sat}.
@@ -598,9 +600,9 @@ The @code{ctime} function is similar to @code{asctime}, except that
 the time value is specified in calendar time (rather than local time)
 format.  It is equivalent to
 
-@example
+@smallexample
 asctime (localtime (@var{time}))
-@end example
+@end smallexample
 
 @code{ctime} sets the variable @code{tzname}, because @code{localtime}
 does so.  @xref{Time Zone Functions}.
@@ -704,7 +706,9 @@ characters, the excess characters are discarded.  The return value from
 not including the terminating null character.  If the value equals
 @var{size}, it means that the array @var{s} was too small; you should
 repeat the call, providing a bigger array.
-@c !!! can pass NULL for S to find size to allocate.
+
+If @var{s} is a null pointer, @code{strftime} does not actually write
+anything, but instead returns the number of characters it would have written.
 
 For an example of @code{strftime}, see @ref{Time Functions Example}.
 @end deftypefun
@@ -723,9 +727,9 @@ The value of the @code{TZ} variable can be of one of three formats.  The
 first format is used when there is no Daylight Saving Time (or summer
 time) in the local time zone:
 
-@example
+@smallexample
 @r{@var{std} @var{offset}}
-@end example
+@end smallexample
 
 The @var{std} string specifies the name of the time zone.  It must be
 three or more characters long and must not contain a leading colon or
@@ -743,15 +747,15 @@ negative if it is east.  The hour must be between @code{0} and
 For example, here is how we would specify Eastern Standard Time, but
 without any daylight savings time alternative:
 
-@example
+@smallexample
 EST+5
-@end example
+@end smallexample
 
 The second format is used when there is Daylight Saving Time:
 
-@example
+@smallexample
 @r{@var{std} @var{offset} @var{dst} [@var{offset}]@code{,}@var{start}[@code{/}@var{time}]@code{,}@var{end}[@code{/}@var{time}]}
-@end example
+@end smallexample
 
 The initial @var{std} and @var{offset} specify the standard time zone, as
 described above.  The @var{dst} string and @var{offset} specify the name
@@ -792,9 +796,9 @@ west of the prime meridian, the sign is positive.  Summer time begins on
 the first Sunday in April at 2:00am, and ends on the last Sunday in October
 at 2:00am.
 
-@example
+@smallexample
 EST+5EDT,M4.1.0/M10.5.0
-@end example
+@end smallexample
 
 @c !!! this is not true if using the tzfile database
 The schedule of daylight savings time in any particular jurisdiction has
@@ -807,9 +811,9 @@ used to convert any date, no matter when.
 
 The third format looks like this:
 
-@example
+@smallexample
 :@var{characters}
-@end example
+@end smallexample
 
 Each operating system interprets this format differently; in the GNU C
 library, @var{characters} is the name of a file which describes the time
@@ -830,7 +834,7 @@ say about them.
 
 @comment time.h
 @comment POSIX.1
-@deftypevar char *tzname[2]
+@deftypevar char * tzname [2]
 The array @code{tzname} contains two strings, which are the standard
 three-letter names of the pair of time zones (standard and daylight
 savings) that the user has selected.  @code{tzname[0]} is the name of
@@ -878,17 +882,17 @@ time rules apply.
 Here is an example program showing the use of some of the local time and
 calendar time functions.
 
-@example
+@smallexample
 @include strftim.c.texi
-@end example
+@end smallexample
 
 It produces output like this:
 
-@example
+@smallexample
 Wed Jul 31 13:02:36 1991
 Today is Wednesday, July 31.
 The time is 01:02 PM.
-@end example
+@end smallexample
 
 
 @node Setting an Alarm
@@ -1030,7 +1034,7 @@ returns zero.
 The @code{alarm} function could be defined in terms of @code{setitimer}
 like this:
 
-@example
+@smallexample
 unsigned int
 alarm (unsigned int seconds)
 @{
@@ -1044,7 +1048,7 @@ alarm (unsigned int seconds)
   else
     return old.it_value.tv_sec;
 @}
-@end example
+@end smallexample
 
 There is an example showing the use of the @code{alarm} function in
 @ref{Handler Returns}.
@@ -1464,12 +1468,12 @@ The return value is not meaningful.
 
 Here is an equivalent definition for @code{nice}:
 
-@example
+@smallexample
 int
 nice (int increment)
 @{
   int old = getpriority (PRIO_PROCESS, 0);
   setpriority (PRIO_PROCESS, 0, old + increment);
 @}
-@end example
+@end smallexample
 @end deftypefun

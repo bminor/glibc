@@ -99,9 +99,8 @@ checks for overflowing the array.  Many of the library functions
 an extra byte to hold the null character that marks the end of the
 string.
 
-@c !!! I think the / looks bad in the printed manual---use `and' instead?  -rm
 @node String/Array Conventions, String Length, Representation of Strings, String and Array Utilities
-@section String/Array Conventions
+@section String and Array Conventions
 
 This chapter describes both functions that work on arbitrary arrays or
 blocks of memory, and functions that are specific to null-terminated
@@ -148,23 +147,23 @@ string @var{s}.  (In other words, it returns the offset of the terminating
 null character within the array.)
 
 For example,
-@example
+@smallexample
 strlen ("hello, world")
     @result{} 12
-@end example
+@end smallexample
 
 When applied to a character array, the @code{strlen} function returns
 the length of the string stored there, not its allocation size.  You can
 get the allocation size of the character array that holds a string using
 the @code{sizeof} operator:
 
-@example
+@smallexample
 char string[32] = "hello, world"; 
 sizeof (string)
     @result{} 32
 strlen (string)
     @result{} 12
-@end example
+@end smallexample
 @end deftypefun
 
 @node Copying and Concatenation, String/Array Comparison, String Length, String and Array Utilities
@@ -214,11 +213,11 @@ The value returned by @code{memcpy} is the value of @var{to}.
 Here is an example of how you might use @code{memcpy} to copy the
 contents of a @code{struct}:
 
-@example
+@smallexample
 struct foo *old, *new;
 @dots{}
 memcpy (new, old, sizeof(struct foo));
-@end example
+@end smallexample
 @end deftypefun
 
 @comment string.h
@@ -302,9 +301,9 @@ null character) rather than the beginning.
 For example, this program uses @code{stpcpy} to concatenate @samp{foo}
 and @samp{bar} to produce @samp{foobar}, which it then prints.
 
-@example
+@smallexample
 @include stpcpy.c.texi
-@end example
+@end smallexample
 
 This function is not part of the ANSI or POSIX standards, and is not
 customary on Unix systems, but we did not invent it either.  Perhaps it
@@ -323,14 +322,14 @@ characters from @var{from} are concatenated or appended to the end of
 
 An equivalent definition for @code{strcat} would be:
 
-@example
+@smallexample
 char *
 strcat (char *to, const char *from)
 @{
   strcpy (to + strlen (to), from);
   return to;
 @}
-@end example
+@end smallexample
 
 This function has undefined results if the strings overlap.
 @end deftypefun
@@ -344,8 +343,9 @@ single null character is also always appended to @var{to}, so the total
 allocated size of @var{to} must be at least @code{@var{size} + 1} bytes
 longer than its initial length.
 
-@c !!! why is this here?  It should be introduced.
-@example
+The @code{strncat} function could be implemented like this:
+
+@smallexample
 @group
 char *
 strncat (char *to, const char *from, size_t size)
@@ -354,7 +354,7 @@ strncat (char *to, const char *from, size_t size)
   return to;
 @}
 @end group
-@end example
+@end smallexample
 
 The behavior of @code{strncat} is undefined if the strings overlap.
 @end deftypefun
@@ -363,17 +363,17 @@ Here is an example showing the use of @code{strncpy} and @code{strncat}.
 Notice how, in the call to @code{strncat}, the @var{size} parameter
 is computed to avoid overflowing the character array @code{buffer}.
 
-@example
+@smallexample
 @include strncat.c.texi
-@end example
+@end smallexample
 
 @noindent
 The output produced by this program looks like:
 
-@example
+@smallexample
 hello
 hello, wo
-@end example
+@end smallexample
 
 @comment string.h
 @comment BSD
@@ -416,9 +416,9 @@ If you are using these functions only to check for equality, you might
 find it makes for a cleaner program to hide them behind a macro
 definition, like this:
 
-@example
+@smallexample
 #define str_eq(s1,s2)  (!strcmp ((s1),(s2)))
-@end example
+@end smallexample
 
 All of these functions are declared in the header file @file{string.h}.
 @pindex string.h
@@ -454,7 +454,7 @@ component-wise comparison.
 
 For example, given a structure type definition like:
 
-@example
+@smallexample
 struct foo
   @{
     unsigned char tag;
@@ -465,7 +465,7 @@ struct foo
         char *p;
       @} value;
   @};
-@end example
+@end smallexample
 
 @noindent
 you are better off writing a specialized comparison function to compare
@@ -518,7 +518,7 @@ other character set---say, EBCDIC---is used instead, then the glyphs
 are associated with different numeric codes, and the return values
 and ordering may differ.)
 
-@example
+@smallexample
 strcmp ("hello", "hello")
     @result{} 0    /* @r{These two strings are the same.} */
 strcmp ("hello", "Hello")
@@ -531,7 +531,7 @@ strncmp ("hello", "hello, world"", 5)
     @result{} 0    /* @r{The initial 5 characters are the same.} */
 strncmp ("hello, world", "hello, stupid world!!!", 5)
     @result{} 0    /* @r{The initial 5 characters are the same.} */
-@end example
+@end smallexample
 
 @comment string.h
 @comment BSD
@@ -590,7 +590,7 @@ code shown here is to say how to compare the strings while sorting them.
 (Later on in this section, we will show a way to do this more
 efficiently using @code{strxfrm}.)
 
-@example
+@smallexample
 /* @r{This is the comparison function used with @code{qsort}.} */
 
 int
@@ -609,7 +609,7 @@ sort_strings (char **array, int nstrings)
   qsort (array, sizeof (char *),
          nstrings, compare_elements);
 @}
-@end example
+@end smallexample
 
 @cindex converting string to collation order
 @comment string.h
@@ -648,7 +648,7 @@ once, no matter how many times it is compared with other strings.  Even
 the time needed to allocate and free storage is much less than the time
 we save, when there are many strings.
 
-@example
+@smallexample
 struct sorter @{ char *input; char *transformed; @};
 
 /* @r{This is the comparison function used with @code{qsort}}
@@ -706,7 +706,7 @@ sort_strings_fast (char **array, int nstrings)
   for (i = 0; i < nstrings; i++)
     free (temp_array[i].transformed);
 @}
-@end example
+@end smallexample
 
 @strong{Compatibility Note:}  The string collation functions are a new
 feature of ANSI C.  Older C dialects have no equivalent feature.
@@ -739,12 +739,12 @@ beginning at @var{string}.  The return value is a pointer to the located
 character, or a null pointer if no match was found.
 
 For example,
-@example
+@smallexample
 strchr ("hello, world", 'l')
     @result{} "llo, world"
 strchr ("hello, world", '?')
     @result{} NULL
-@end example    
+@end smallexample    
 
 The terminating null character is considered to be part of the string,
 so you can use this function get a pointer to the end of a string by
@@ -759,10 +759,10 @@ backwards from the end of the string @var{string} (instead of forwards
 from the front).
 
 For example,
-@example
+@smallexample
 strrchr ("hello, world", 'l')
     @result{} "ld"
-@end example
+@end smallexample
 @end deftypefun
 
 @comment string.h
@@ -775,12 +775,12 @@ character of the substring, or a null pointer if no match was found.  If
 @var{needle} is an empty string, the function returns @var{haystack}.
 
 For example,
-@example
+@smallexample
 strstr ("hello, world", "l")
     @result{} "llo, world"
 strstr ("hello, world", "wo")
     @result{} "world"
-@end example
+@end smallexample
 @end deftypefun
 
 
@@ -804,10 +804,10 @@ are members of the set specified by the string @var{skipset}.  The order
 of the characters in @var{skipset} is not important.
 
 For example,
-@example
+@smallexample
 strspn ("hello, world", "abcdefghijklmnopqrstuvwxyz")
     @result{} 5
-@end example
+@end smallexample
 @end deftypefun
 
 @comment string.h
@@ -820,10 +820,10 @@ that are @emph{not} members of the set specified by the string @var{stopset}.
 that is a member of the set @var{stopset}.)
 
 For example,
-@example
+@smallexample
 strcspn ("hello, world", " \t\n,.;!?")
     @result{} 5
-@end example
+@end smallexample
 @end deftypefun
 
 @comment string.h
@@ -838,10 +838,10 @@ character from @var{stopset} is found.
 @c @group  Invalid outside the example.
 For example,
 
-@example
+@smallexample
 strpbrk ("hello, world", " \t\n,.;!?")
     @result{} ", world"
-@end example
+@end smallexample
 @c @end group
 @end deftypefun
 
@@ -916,7 +916,7 @@ a discussion of where and why reentrancy is important.
 Here is a simple example showing the use of @code{strtok}.
 
 @comment Yes, this example has been tested.
-@example
+@smallexample
 #include <string.h>
 #include <stddef.h>
 
@@ -935,4 +935,4 @@ token = strtok (NULL, delimiters);    /* token => "spaces" */
 token = strtok (NULL, delimiters);    /* token => "and" */
 token = strtok (NULL, delimiters);    /* token => "punctuation" */
 token = strtok (NULL, delimiters);    /* token => NULL */
-@end example
+@end smallexample

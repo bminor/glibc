@@ -271,23 +271,20 @@ with passing the wrong argument to a library function.
 @end deftypevr
 
 @comment errno.h
-@comment POSIX.1: Too many open files in system
-@deftypevr Macro int ENFILE
-There are too many distinct file openings in the entire system.  Note
-that any number of linked channels count as just one file opening; see
-@ref{Linked Channels}.
-@c !!! this will never happen in GNU; EMFILE or ENOMEM instead.
-@c ??? I'm not sure it is a good thing to return ENOMEM
-@c ??? in a case where programmers have been told to expect ENFILE--rms.
-@end deftypevr
-
-@comment errno.h
 @comment POSIX.1: Too many open files
 @deftypevr Macro int EMFILE
 The current process has too many files open and can't open any more.
 Duplicate descriptors do count toward this limit.
 @c !!! In 4.4BSD and GNU, the number of open files is a resource limit
 @c set with setrlimit.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1: Too many open files in system
+@deftypevr Macro int ENFILE
+There are too many distinct file openings in the entire system.  Note
+that any number of linked channels count as just one file opening; see
+@ref{Linked Channels}.  This error never occurs in the GNU system.
 @end deftypevr
 
 @comment errno.h
@@ -728,9 +725,8 @@ to say, it is the same as @code{program_invocation_name} minus
 everything up to the last slash, if any.)
 @end deftypevar
 
-Both @code{program_invocation_name} and
-@code{program_invocation_short_name} are set up by the system before
-@code{main} is called.
+The library initialization code sets up both of these variables before
+calling @code{main}.
 
 @strong{Portability Note:} These two variables are GNU extensions.  If
 you want your program to work with non-GNU libraries, you must save the
@@ -750,7 +746,7 @@ calls before passing the error code to @code{strerror}, we'd have to
 save it in a local variable instead, because those other library
 functions might overwrite @code{errno} in the meantime.
 
-@example
+@smallexample
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -770,5 +766,5 @@ open_sesame (char *name)
   @} else
     return stream;
 @}
-@end example
+@end smallexample
 

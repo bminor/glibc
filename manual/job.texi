@@ -269,7 +269,7 @@ set of subprocesses linked together with pipes.  The @code{process} type
 holds information about a single subprocess.  Here are the relevant
 data structure declarations:
 
-@example
+@smallexample
 @group
 /* @r{A process is a single process.}  */
 typedef struct process
@@ -299,12 +299,12 @@ typedef struct job
 /* @r{The active jobs are linked into a list.  This is its head.}   */
 job *first_job = NULL;
 @end group
-@end example
+@end smallexample
 
 Here are some utility functions that are used for operating on @code{job}
 objects.
 
-@example
+@smallexample
 @group
 /* @r{Find the active job with the indicated @var{pgid}.}  */
 job *
@@ -346,7 +346,7 @@ job_is_completed (job *j)
   return 1;
 @}
 @end group
-@end example
+@end smallexample
 
 
 @node Initializing the Shell, Launching Jobs, Data Structures, Implementing a Shell
@@ -395,7 +395,7 @@ you must remember to make the shell do it.
 Here is the initialization code for the sample shell that shows how to
 do all of this.
 
-@example
+@smallexample
 /* @r{Keep track of attributes of the shell.}  */
 
 #include <sys/types.h>
@@ -448,7 +448,7 @@ init_shell ()
       tcgetattr (shell_terminal, &shell_tmodes);
     @}
 @}
-@end example
+@end smallexample
 
 
 @node Launching Jobs, Foreground and Background, Initializing the Shell, Implementing a Shell
@@ -521,7 +521,7 @@ Here is the function from the sample shell program that is responsible
 for launching a program.  The function is executed by each child process
 immediately after it has been forked by the shell, and never returns.
 
-@example
+@smallexample
 void
 launch_process (process *p, pid_t pgid,
                 int infile, int outfile, int errfile,
@@ -572,7 +572,7 @@ launch_process (process *p, pid_t pgid,
   perror ("execvp");
   exit (1);
 @}
-@end example
+@end smallexample
 
 If the shell is not running interactively, this function does not do
 anything with process groups or signals.  Remember that a shell not
@@ -584,7 +584,7 @@ After creating the child processes, this function calls some other
 functions to put the newly created job into the foreground or background;
 these are discussed in @ref{Foreground and Background}.
 
-@example
+@smallexample
 void
 launch_job (job *j, int foreground)
 @{
@@ -612,7 +612,8 @@ launch_job (job *j, int foreground)
       pid = fork ();
       if (pid == 0)
         /* @r{This is the child process.}  */
-        launch_process (p, j->pgid, infile, outfile, j->stderr, foreground);
+        launch_process (p, j->pgid, infile,
+                        outfile, j->stderr, foreground);
       else if (pid < 0)
         @{
           /* @r{The fork failed.}  */
@@ -648,7 +649,7 @@ launch_job (job *j, int foreground)
   else
     put_job_in_background (j, 0);
 @}
-@end example
+@end smallexample
 
 
 @node Foreground and Background, Stopped and Terminated Jobs, Launching Jobs, Implementing a Shell
@@ -682,7 +683,7 @@ continued.  The functions for dealing with terminal modes are
 
 Here is the sample shell's function for doing all of this.
 
-@example
+@smallexample
 @group
 /* @r{Put job @var{j} in the foreground.  If @var{cont} is nonzero,}
    @r{restore the saved terminal modes and send the process group a}
@@ -717,7 +718,7 @@ put_job_in_foreground (job *j, int cont)
   tcsetattr (shell_terminal, TCSADRAIN, &shell_tmodes);
 @}
 @end group
-@end example
+@end smallexample
 
 @cindex background job, launching
 If the process group is launched as a background job, the shell should
@@ -727,7 +728,7 @@ the terminal.
 In the sample shell, there is not much that needs to be done to put
 a job into the background.  Here is the function it uses:
 
-@example
+@smallexample
 /* @r{Put a job in the background.  If the cont argument is true, send}
    @r{the process group a @code{SIGCONT} signal to wake it up.}  */
 
@@ -739,7 +740,7 @@ put_job_in_background (job *j, int cont)
     if (kill (-j->pgid, SIGCONT) < 0)
       perror ("kill (SIGCONT)");
 @}
-@end example
+@end smallexample
 
 
 @node Stopped and Terminated Jobs, Continuing Stopped Jobs, Foreground and Background, Implementing a Shell
@@ -776,7 +777,7 @@ called from within this handler.
 Here are the parts of the sample shell program that deal with checking
 the status of jobs and reporting the information to the user.
 
-@example
+@smallexample
 @group
 /* @r{Store the status of the process @var{pid} that was returned by waitpid.}
    @r{Return 0 if all went well, nonzero otherwise.}  */
@@ -911,7 +912,7 @@ do_job_notification (void)
     @}
 @}
 @end group
-@end example
+@end smallexample
 
 @node Continuing Stopped Jobs, Missing Pieces, Stopped and Terminated Jobs, Implementing a Shell
 @subsection Continuing Stopped Jobs
@@ -924,19 +925,18 @@ the terminal, and restore the saved terminal settings.  After continuing
 a job in the foreground, the shell should wait for the job to stop or
 complete, as if the job had just been launched in the foreground.
 
-The sample shell program uses the same set of
-functions---@w{@code{put_job_in_foreground}} and
-@w{@code{put_job_in_background}}---to handle both newly created and
-continued jobs.  The definitions of these functions were given in
-@ref{Foreground and Background}.  When continuing a stopped job, a
-nonzero value is passed as the @var{cont} argument to ensure that the
-@code{SIGCONT} signal is sent and the terminal modes reset, as
-appropriate.
+The sample shell program handles both newly created and continued jobs
+with the same pair of functions, @w{@code{put_job_in_foreground}} and
+@w{@code{put_job_in_background}}.  The definitions of these functions
+were given in @ref{Foreground and Background}.  When continuing a
+stopped job, a nonzero value is passed as the @var{cont} argument to
+ensure that the @code{SIGCONT} signal is sent and the terminal modes
+reset, as appropriate.
 
 This leaves only a function for updating the shell's internal bookkeeping
 about the job being continued:
 
-@example
+@smallexample
 @group
 /* @r{Mark a stopped job J as being running again.}  */
 
@@ -964,7 +964,7 @@ continue_job (job *j, int foreground)
     put_job_in_background (j, 1);
 @}
 @end group
-@end example
+@end smallexample
 
 @node Missing Pieces,  , Continuing Stopped Jobs, Implementing a Shell
 @subsection The Missing Pieces
@@ -1101,8 +1101,8 @@ you get.  Specifically, you get the BSD version if you define
 BSD systems will not include @file{unistd.h}, which defines
 @code{getpgrp} specially under @code{_BSD_SOURCE}.  You must link such
 programs with the @code{-lbsd-compat} option to get the BSD definition.@refill
-@findex -lbsd-compat
-@findex bsd-compat
+@pindex -lbsd-compat
+@pindex bsd-compat
 @cindex BSD compatibility library
 
 @comment unistd.h

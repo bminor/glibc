@@ -176,13 +176,13 @@ structure includes at least the following members:
 
 @table @code
 @item tcflag_t c_iflag
-A bit mask specifying input modes; see @ref{Input Modes}.
+A bit mask specifying flags for input modes; see @ref{Input Modes}.
 
 @item tcflag_t c_oflag
-A bit mask specifying output modes; see @ref{Output Modes}.
+A bit mask specifying flags for output modes; see @ref{Output Modes}.
 
 @item tcflag_t c_cflag
-A bit mask specifying control modes; see @ref{Control Modes}.
+A bit mask specifying flags for control modes; see @ref{Control Modes}.
 
 @item tcflag_t c_lflag
 A bit mask specifying flags for local modes; see @ref{Local Modes}.
@@ -357,7 +357,7 @@ Here is an example of how to set one flag (@code{ISTRIP}) in the
 @code{struct termios} structure while properly preserving all the other
 data in the structure:
 
-@example
+@smallexample
 @group
 int
 set_istrip (int desc, int value)
@@ -383,7 +383,7 @@ set_istrip (int desc, int value)
   return 1;
 @}
 @end group
-@end example
+@end smallexample
 
 @node Input Modes
 @subsection Input Modes
@@ -840,8 +840,7 @@ attempt to write to the terminal.  @xref{Access to the Terminal}.
 
 The following bits are BSD extensions; the GNU library defines these
 symbols on any system if you ask for them, but the settings of the bits
-have no effect except on BSD systems.
-@c !!! and GNU
+have no effect except on BSD systems and on the GNU system.
 
 @table @code
 @comment termios.h
@@ -1054,11 +1053,11 @@ the only speeds that typical serial lines can support.
 @comment termios.h
 @comment POSIX.1
 @vindex B38400
-@example
+@smallexample
 B0  B50  B75  B110  B134  B150  B200
 B300  B600  B1200  B1800  B2400  B4800
 B9600  B19200  B38400
-@end example
+@end smallexample
 
 @vindex EXTA
 @vindex EXTB
@@ -1069,15 +1068,16 @@ These aliases are obsolete.
 @comment termios.h
 @comment BSD
 @deftypefun int cfmakeraw (struct termios *@var{termios_p})
-@c !!! this is a BSD extension.  it does:
-@example
-  t->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP
+This function provides an easy way to set up @code{*@var{termios_p}} for
+what has traditionally been called ``raw mode'' in BSD.  It does exactly this:
+@smallexample
+  @var{termios_p}->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP
                   |INLCR|IGNCR|ICRNL|IXON);
-  t->c_oflag &= ~OPOST;
-  t->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
-  t->c_cflag &= ~(CSIZE|PARENB);
-  t->c_cflag |= CS8;
-@end example
+  @var{termios_p}->c_oflag &= ~OPOST;
+  @var{termios_p}->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
+  @var{termios_p}->c_cflag &= ~(CSIZE|PARENB);
+  @var{termios_p}->c_cflag |= CS8;
+@end smallexample
 @end deftypefun
 
 @node Special Characters
@@ -1700,19 +1700,21 @@ Here is an example program that shows how you can set up a terminal
 device to read single characters in noncanonical input mode, without
 echo.
 
-@example
+@smallexample
 @include termios.c.texi
-@end example
+@end smallexample
 
 This program is careful to restore the original terminal modes before
 exiting or terminating with a signal.  It uses the @code{atexit}
 function (@pxref{Cleanups on Exit}) to make sure this is done
 by @code{exit}.
 
+@ignore
 @c !!!! the example doesn't handle any signals!
 The signals handled in the example are the ones that typically occur due
 to actions of the user.  It might be desirable to handle other signals
 such as SIGSEGV that can result from bugs in the program.
+@end ignore
 
 The shell is supposed to take care of resetting the terminal modes when
 a process is stopped or continued; see @ref{Job Control}.  But some

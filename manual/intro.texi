@@ -115,7 +115,7 @@ to write programs to work portably under multiple C dialects, but does
 not aim for completeness.
 
 @node POSIX, Berkeley Unix, ANSI C, Standards and Portability
-@subsection POSIX (The Portable Operating System Interface)
+@subsection @sc{posix} (The Portable Operating System Interface)
 @cindex POSIX
 @cindex POSIX.1
 @cindex IEEE Std 1003.1
@@ -181,7 +181,7 @@ The BSD facilities include symbolic links (@pxref{Symbolic Links}), the
 functions (@pxref{BSD Signal Handling}), and sockets (@pxref{Sockets}).
 
 @node SVID,  , Berkeley Unix, Standards and Portability
-@subsection SVID (The System V Interface Description)
+@subsection @sc{svid} (The System V Interface Description)
 @cindex SVID
 @cindex System V Unix
 @cindex Unix, System V
@@ -248,9 +248,9 @@ Header files are included into a program source file by the
 @samp{#include} preprocessor directive.  The C language supports two
 forms of this directive; the first,
 
-@example
+@smallexample
 #include "@var{header}"
-@end example
+@end smallexample
 
 @noindent
 is typically used to include a header file @var{header} that you write
@@ -258,9 +258,9 @@ yourself; this would contain definitions and declarations describing the
 interfaces between the different parts of your particular application.
 By contrast,
 
-@example
+@smallexample
 #include <file.h>
-@end example
+@end smallexample
 
 @noindent
 is typically used to include a header file @file{file.h} that contains
@@ -347,30 +347,30 @@ explicitly in the description of that facility.
 For example, suppose the header file @file{stdlib.h} declares a function
 named @code{abs} with
 
-@example
+@smallexample
 extern int abs (int);
-@end example
+@end smallexample
 
 @noindent
 and also provides a macro definition for @code{abs}.  Then, in:
 
-@example
+@smallexample
 #include <stdlib.h>
 int f (int *i) @{ return (abs (++*i)); @}
-@end example
+@end smallexample
 
 @noindent
 the reference to @code{abs} might refer to either a macro or a function.
 On the other hand, in each of the following examples the reference is
 to a function and not a macro.
 
-@example
+@smallexample
 #include <stdlib.h>
 int g (int *i) @{ return ((abs)(++*i)); @}
 
 #undef abs
 int h (int *i) @{ return (abs (++*i)); @}
-@end example
+@end smallexample
 
 Since macro definitions that double for a function behave in
 exactly the same way as the actual function version, there is usually no
@@ -523,11 +523,11 @@ The header file @file{termios.h} reserves names prefixed with @samp{c_},
 The exact set of features available when you compile a source file
 is controlled by which @dfn{feature test macros} you define.
 
-If you compile your programs using @samp{gcc -ansi}, you get only
-the ANSI C library features, unless you explicitly request additional
+If you compile your programs using @samp{gcc -ansi}, you get only the
+ANSI C library features, unless you explicitly request additional
 features by defining one or more of the feature macros.
-@xref{Options,,, gcc.info, The GNU CC Manual}, for more information
-about GCC options.@refill
+@xref{Invoking GCC,, GNU CC Command Options, gcc.info, The GNU CC Manual},
+for more information about GCC options.@refill
 
 You should define these macros by using @samp{#define} preprocessor
 directives at the top of your source code files.  You could also use 
@@ -563,6 +563,19 @@ Some of the features derived from 4.3 BSD Unix conflict with the
 corresponding features specified by the POSIX.1 standard.  If this
 macro is defined, the 4.3 BSD definitions take precedence over the
 POSIX definitions.
+
+Due to the nature of some of the conflicts between 4.3 BSD and POSIX.1,
+you need to use a special @dfn{BSD compatibility library} when linking
+programs compiled for BSD compatibility.  This is because some functions
+must be defined in two different ways, one of them in the normal C
+library, and one of them in the compatibility library.  If your program
+defines @code{_BSD_SOURCE}, you must give the option @samp{-lbsd-compat}
+to the compiler or linker when linking the program, to tell it to find
+functions in this special compatibility library before looking for them in
+the normal C library.
+@pindex -lbsd-compat
+@pindex bsd-compat
+@cindex BSD compatibility library.
 @end defvr
 
 @comment (none)
@@ -583,11 +596,15 @@ If you want to get the full effect of @code{_GNU_SOURCE} but make the
 BSD definitions take precedence over the POSIX definitions, use this
 sequence of definitions:
 
-@example
+@smallexample
 #define _GNU_SOURCE
 #define _BSD_SOURCE
 #define _SVID_SOURCE
-@end example
+@end smallexample
+
+Note that if you do this, you may need to link your program with the BSD
+compatibility library by passing the @samp{-lbsd-compat} option to the
+compiler or linker.
 @end defvr
 
 We recommend you use @code{_GNU_SOURCE} in new programs.

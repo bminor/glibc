@@ -151,9 +151,9 @@ number @var{z}, whose real part is @code{@var{z}.real} and whose
 imaginary part is @code{@var{z}.imag}.  (See also the function
 @code{hypot} in @ref{Exponents and Logarithms}.)  The value is:
 
-@example
+@smallexample
 sqrt (@var{z}.real*@var{z}.real + @var{z}.imag*@var{z}.imag)
-@end example
+@end smallexample
 @end deftypefun
 
 @node Normalization Functions
@@ -300,8 +300,8 @@ returns @code{0.5} and stores @code{2.0} into @code{intpart}.
 @comment math.h
 @comment ANSI
 @deftypefun double fmod (double @var{numerator}, double @var{denominator})
-This function computes the remainder of dividing @var{numerator} by
-@var{denominator}.  Specifically, the return value is
+This function computes the remainder from the division of
+@var{numerator} by @var{denominator}.  Specifically, the return value is
 @w{@code{@var{numerator} - @var{n} * @var{denominator}}}, where @var{n}
 is the quotient of @var{numerator} divided by @var{denominator}, rounded
 towards zero to an integer.  Thus, @w{@code{fmod (6.5, 2.3)}} returns
@@ -344,7 +344,7 @@ operator always rounds towards zero.  But in other C implementations,
 @code{ldiv} are useful because they specify how to round the quotient:
 towards zero.  The remainder has the same sign as the numerator.
 
-These functions are specified to return a result @var{r} such that
+These functions are specified to return a result @var{r} such that the value
 @code{@var{r}.quot*@var{denominator} + @var{r}.rem} equals
 @var{numerator}.
 
@@ -379,10 +379,10 @@ behavior is undefined.
 
 Here is an example, albeit not a very useful one.
 
-@example
+@smallexample
 div_t result;
 result = div (20, -6);
-@end example
+@end smallexample
 
 @noindent
 Now @code{result.quot} is @code{-3} and @code{result.rem} is @code{2}.
@@ -524,7 +524,7 @@ considered obsolete; use @code{strtol} instead.
 Here is a function which parses a string as a sequence of integers and
 returns the sum of them:
 
-@example
+@smallexample
 int
 sum_ints_from_string (char *string)
 @{
@@ -555,7 +555,7 @@ sum_ints_from_string (char *string)
 
   return sum;
 @}
-@end example
+@end smallexample
 
 @node Parsing of Floats
 @subsection Parsing of Floats

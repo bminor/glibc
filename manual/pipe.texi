@@ -82,9 +82,9 @@ uses the @code{fork} function (@pxref{Creating a Process}) to create
 a child process.  The parent process writes data to the pipe, which is
 read by the child process.
 
-@example
+@smallexample
 @include pipe.c.texi
-@end example
+@end smallexample
 
 @node Pipe to a Subprocess
 @section Pipe to a Subprocess
@@ -138,9 +138,9 @@ Here is an example showing how to use @code{popen} and @code{pclose} to
 filter output through another program, in this case the paging program
 @code{more}.
 
-@example
+@smallexample
 @include popen.c.texi
-@end example
+@end smallexample
 
 @node FIFO Special Files
 @section FIFO Special Files

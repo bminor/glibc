@@ -57,9 +57,9 @@ statement.
 
 Here is how the example program described above might be set up:  
 
-@example
+@smallexample
 @include setjmp.c.texi
-@end example
+@end smallexample
 
 The function @code{abort_to_main_loop} causes an immediate transfer of
 control back to the main loop of the program, no matter where it is
@@ -77,14 +77,14 @@ of @code{-1}.
 @need 250
 So, the general pattern for using @code{setjmp} looks something like:
 
-@example
+@smallexample
 if (setjmp (@var{buffer}))
   /* @r{Code to clean up after premature return.} */
   @dots{}
 else
   /* @r{Code to be executed normally after setting up the return point.} */
   @dots{}
-@end example
+@end smallexample
 
 @node Non-Local Details, Non-Local Exits and Signals, Non-Local Intro, Non-Local Exits
 @section Details of Non-Local Exits

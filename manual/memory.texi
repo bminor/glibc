@@ -103,7 +103,7 @@ declare a variable of pointer type @code{struct foobar *} and assign it the
 address of the space.  Then you can use the operators @samp{*} and
 @samp{->} on this pointer variable to refer to the contents of the space:
 
-@example
+@smallexample
 @{
   struct foobar *ptr
      = (struct foobar *) malloc (sizeof (struct foobar));
@@ -111,7 +111,7 @@ address of the space.  Then you can use the operators @samp{*} and
   ptr->next = current_foobar;
   current_foobar = ptr;
 @}
-@end example
+@end smallexample
 
 @node Unconstrained Allocation
 @section Unconstrained Allocation
@@ -167,13 +167,13 @@ that you want to store in the block.  Here we show an example of doing
 so, and of initializing the space with zeros using the library function
 @code{memset} (@pxref{Copying and Concatenation}):
 
-@example
+@smallexample
 struct foo *ptr;
 @dots{}
 ptr = (struct foo *) malloc (sizeof (struct foo));
 if (ptr == 0) abort ();
 memset (ptr, 0, sizeof (struct foo));
-@end example
+@end smallexample
 
 You can store the result of @code{malloc} into any pointer variable
 without a cast, because ANSI C automatically converts the type
@@ -186,11 +186,11 @@ Remember that when allocating space for a string, the argument to
 because a string is terminated with a null character that doesn't count
 in the ``length'' of the string but does need space.  For example:
 
-@example
+@smallexample
 char *ptr;
 @dots{}
 ptr = (char *) malloc (length + 1);
-@end example
+@end smallexample
 
 @noindent
 @xref{Representation of Strings}, for more information about this.
@@ -205,7 +205,7 @@ error if the value is a null pointer, returning only if the value is
 nonzero.  This function is conventionally called @code{xmalloc}.  Here
 it is:
 
-@example
+@smallexample
 void *
 xmalloc (size_t size)
 @{
@@ -214,13 +214,13 @@ xmalloc (size_t size)
     fatal ("virtual memory exhausted");
   return value;
 @}
-@end example
+@end smallexample
 
 Here is a real example of using @code{malloc} (by way of @code{xmalloc}).
 The function @code{savestring} will copy a sequence of characters into
 a newly allocated null-terminated string:
 
-@example
+@smallexample
 char *
 savestring (const char *ptr, size_t len)
 @{
@@ -229,7 +229,7 @@ savestring (const char *ptr, size_t len)
   value[len] = 0;
   return value;
 @}
-@end example
+@end smallexample
 
 The block that @code{malloc} gives you is guaranteed to be aligned so
 that it can hold any type of data.  In the GNU system, the address is
@@ -277,7 +277,7 @@ the block after freeing it.}  Copy whatever you need out of the block before
 freeing it!  Here is an example of the proper way to free all the blocks in
 a chain, and the strings that they point to:
 
-@example
+@smallexample
 struct chain
   @{
     struct chain *next;
@@ -295,7 +295,7 @@ free_chain (struct chain *chain)
       chain = next;
     @}
 @}
-@end example
+@end smallexample
 
 Occasionally, @code{free} can actually return memory to the operating
 system and make the process smaller.  Usually, all it can do is allow a
@@ -345,7 +345,7 @@ message.  Often it is convenient to write and use a subroutine,
 conventionally called @code{xrealloc}, that takes care of the error message
 as @code{xmalloc} does for @code{malloc}:
 
-@example
+@smallexample
 void *
 xrealloc (void *ptr, size_t size)
 @{
@@ -354,7 +354,7 @@ xrealloc (void *ptr, size_t size)
     fatal ("Virtual memory exhausted");
   return value;
 @}
-@end example
+@end smallexample
 
 You can also use @code{realloc} to make a block smaller.  The reason you
 would do this is to avoid tying up a lot of memory space when only a little
@@ -381,7 +381,7 @@ cleared to zero before @code{calloc} returns.
 
 You could define @code{calloc} as follows:
 
-@example
+@smallexample
 void *
 calloc (size_t count, size_t eltsize)
 @{
@@ -391,7 +391,7 @@ calloc (size_t count, size_t eltsize)
     memset (value, 0, size);
   return value;
 @}
-@end example
+@end smallexample
 
 We rarely use @code{calloc} today, because it is equivalent to such a
 simple combination of other features that are more often used.  It is a
@@ -508,9 +508,9 @@ The value of this variable is a pointer to function that @code{malloc}
 uses whenever it is called.  You should define this function to look
 like @code{malloc}; that is, like:
 
-@example
+@smallexample
 void *@var{function} (size_t @var{size})
-@end example
+@end smallexample
 @end defvar
 
 @comment malloc.h
@@ -520,9 +520,9 @@ The value of this variable is a pointer to function that @code{realloc}
 uses whenever it is called.  You should define this function to look
 like @code{realloc}; that is, like:
 
-@example
+@smallexample
 void *@var{function} (void *@var{ptr}, size_t @var{size})
-@end example
+@end smallexample
 @end defvar
 
 @comment malloc.h
@@ -532,9 +532,9 @@ The value of this variable is a pointer to function that @code{free}
 uses whenever it is called.  You should define this function to look
 like @code{free}; that is, like:
 
-@example
+@smallexample
 void @var{function} (void *@var{ptr})
-@end example
+@end smallexample
 @end defvar
 
 You must make sure that the function you install as a hook for one of
@@ -546,7 +546,7 @@ Here is an example showing how to use @code{__malloc_hook} properly.  It
 installs a function that prints out information every time @code{malloc}
 is called.
 
-@example
+@smallexample
 static void *(*old_malloc_hook) (size_t);
 static void *
 my_malloc_hook (size_t size)
@@ -566,7 +566,7 @@ main ()
   __malloc_hook = my_malloc_hook;
   ...
 @}
-@end example
+@end smallexample
 
 The @code{mcheck} function (@pxref{Heap Consistency Checking}) works by
 installing such hooks.
@@ -749,9 +749,9 @@ These matters are described in the following section.
 Each source file in which you plan to use the obstack functions
 must include the header file @file{obstack.h}, like this:
 
-@example
+@smallexample
 #include <obstack.h>
-@end example
+@end smallexample
 
 @findex obstack_chunk_alloc
 @findex obstack_chunk_free
@@ -766,10 +766,10 @@ Usually these are defined to use @code{malloc} via the intermediary
 @code{xmalloc} (@pxref{Unconstrained Allocation}).  This is done with
 the following pair of macro definitions:
 
-@example
+@smallexample
 #define obstack_chunk_alloc xmalloc
 #define obstack_chunk_free free
-@end example
+@end smallexample
 
 @noindent
 Though the storage you get using obstacks really comes from @code{malloc},
@@ -789,21 +789,21 @@ Initialize obstack @var{obstack_ptr} for allocation of objects.
 Here are two examples of how to allocate the space for an obstack and
 initialize it.  First, an obstack that is a static variable:
 
-@example
+@smallexample
 static struct obstack myobstack;
 @dots{}
 obstack_init (&myobstack);
-@end example
+@end smallexample
 
 @noindent
 Second, an obstack that is itself dynamically allocated:
 
-@example
+@smallexample
 struct obstack *myobstack_ptr
   = (struct obstack *) xmalloc (sizeof (struct obstack));
 
 obstack_init (myobstack_ptr);
-@end example
+@end smallexample
 
 @node Allocation in an Obstack
 @subsection Allocation in an Obstack
@@ -825,7 +825,7 @@ requires you to specify an @var{obstack_ptr} as the first argument.
 For example, here is a function that allocates a copy of a string @var{str}
 in a specific obstack, which is the variable @code{string_obstack}:
 
-@example
+@smallexample
 struct obstack string_obstack;
 
 char *
@@ -836,7 +836,7 @@ copystring (char *string)
   memcpy (s, string, strlen (string));
   return s;
 @}
-@end example
+@end smallexample
 
 To allocate a block with specified contents, use the function
 @code{obstack_copy}, declared like this:
@@ -859,13 +859,13 @@ The @code{obstack_copy0} function is convenient for copying a sequence
 of characters into an obstack as a null-terminated string.  Here is an
 example of its use:
 
-@example
+@smallexample
 char *
 obstack_savestring (char *addr, size_t size)
 @{
   return obstack_copy0 (&myobstack, addr, size);
 @}
-@end example
+@end smallexample
 
 @noindent
 Contrast this with the previous example of @code{savestring} using
@@ -894,9 +894,9 @@ uninitialized obstack.  To free all storage in an obstack but leave it
 valid for further allocation, call @code{obstack_free} with the address
 of the first object allocated on the obstack:
 
-@example
+@smallexample
 obstack_free (obstack_ptr, first_object_allocated_ptr);
-@end example
+@end smallexample
 
 Recall that the objects in an obstack are grouped into chunks.  When all
 the objects in a chunk become free, the obstack library automatically
@@ -921,9 +921,9 @@ Calling the macros requires a special precaution: namely, the first
 operand (the obstack pointer) may not contain any side effects, because
 it may be computed more than once.  For example, if you write this:
 
-@example
+@smallexample
 obstack_alloc (get_obstack (), 4);
-@end example
+@end smallexample
 
 @noindent
 you will find that @code{get_obstack} may be called several times.
@@ -937,7 +937,7 @@ function without calling it.  An ordinary call uses the macro definition by
 default, but you can request the function definition instead by writing the
 function name in parentheses, as shown here:
 
-@example
+@smallexample
 char *x;
 void *(*funcp) ();
 /* @r{Use the macro}.  */
@@ -946,7 +946,7 @@ x = (char *) obstack_alloc (obptr, size);
 x = (char *) (obstack_alloc) (obptr, size);
 /* @r{Take the address of the function}.  */
 funcp = obstack_alloc;
-@end example
+@end smallexample
 
 @noindent
 This is the same situation that exists in ANSI C for the standard library
@@ -1043,9 +1043,9 @@ After it is finished, @code{obstack_object_size} will return zero.
 If you have started growing an object and wish to cancel it, you should
 finish it and then free it, like this:
 
-@example
+@smallexample
 obstack_free (obstack_ptr, obstack_finish (obstack_ptr));
-@end example
+@end smallexample
 
 @noindent
 This has no effect if no object was growing.
@@ -1113,7 +1113,7 @@ start using the fast growth functions again.
 
 Here is an example:
 
-@example
+@smallexample
 @group
 void
 add_string (struct obstack *obstack, char *ptr, size_t len)
@@ -1136,7 +1136,7 @@ add_string (struct obstack *obstack, char *ptr, size_t len)
     @}
 @}
 @end group
-@end example
+@end smallexample
 
 @node Status of an Obstack
 @subsection Status of an Obstack
@@ -1175,9 +1175,9 @@ returns the same value as @code{obstack_base}.
 This function returns the size in bytes of the currently growing object.
 This is equivalent to
 
-@example
+@smallexample
 obstack_next_free (@var{obstack_ptr}) - obstack_base (@var{obstack_ptr})
-@end example
+@end smallexample
 @end deftypefun
 
 @node Obstacks Data Alignment
@@ -1205,9 +1205,9 @@ on any multiple of 1 (that is, no alignment is required).
 The expansion of the macro @code{obstack_alignment_mask} is an lvalue,
 so you can alter the mask by assignment.  For example, this statement:
 
-@example
+@smallexample
 obstack_alignment_mask (obstack_ptr) = 0;
-@end example
+@end smallexample
 
 @noindent
 has the effect of turning off alignment processing in the specified obstack.
@@ -1242,10 +1242,10 @@ These two must be defined (as macros) or declared (as functions) in each
 source file that uses @code{obstack_init} (@pxref{Creating Obstacks}).
 Most often they are defined as macros like this:
 
-@example
+@smallexample
 #define obstack_chunk_alloc xmalloc
 #define obstack_chunk_free free
-@end example
+@end smallexample
 
 Note that these are simple macros (no arguments).  Macro definitions with
 arguments will not work!  It is necessary that @code{obstack_chunk_alloc}
@@ -1278,10 +1278,10 @@ smaller, but making it larger might improve efficiency if you are
 allocating many objects whose size is comparable to the chunk size.  Here
 is how to do so cleanly:
 
-@example
+@smallexample
 if (obstack_chunk_size (obstack_ptr) < @var{new_chunk_size})
   obstack_chunk_size (obstack_ptr) = @var{new_chunk_size};
-@end example
+@end smallexample
 
 @node Summary of Obstacks
 @subsection Summary of Obstack Functions
@@ -1414,7 +1414,7 @@ As an example of use of @code{alloca}, here is a function that opens a file
 name made from concatenating two argument strings, and returns a file
 descriptor or minus one signifying failure:
 
-@example
+@smallexample
 int
 open2 (char *str1, char *str2, int flags, int mode)
 @{
@@ -1423,13 +1423,13 @@ open2 (char *str1, char *str2, int flags, int mode)
   strcat (name, str2);
   return open (name, flags, mode);
 @}
-@end example
+@end smallexample
 
 @noindent
 Here is how you would get the same results with @code{malloc} and
 @code{free}:
 
-@example
+@smallexample
 int
 open2 (char *str1, char *str2, int flags, int mode)
 @{
@@ -1443,7 +1443,7 @@ open2 (char *str1, char *str2, int flags, int mode)
   free (name);
   return desc;
 @}
-@end example
+@end smallexample
 
 As you can see, it is simpler with @code{alloca}.  But @code{alloca} has
 other, more important advantages, and some disadvantages.
@@ -1478,7 +1478,7 @@ jumps out to the command level of your program using @code{longjmp}.
 Let's change @code{open2} (@pxref{Alloca Example}) to use this
 subroutine:@refill
 
-@example
+@smallexample
 int
 open2 (char *str1, char *str2, int flags, int mode)
 @{
@@ -1487,7 +1487,7 @@ open2 (char *str1, char *str2, int flags, int mode)
   strcat (name, str2);
   return open_or_report_error (name, flags, mode);
 @}
-@end example
+@end smallexample
 
 @noindent
 Because of the way @code{alloca} works, the storage it allocates is
@@ -1527,7 +1527,7 @@ is available for use on systems with this deficiency.
 In GNU C, you can replace most uses of @code{alloca} with an array of
 variable size.  Here is how @code{open2} would look then:
 
-@example
+@smallexample
 int open2 (char *str1, char *str2, int flags, int mode)
 @{
   char name[strlen (str1) + strlen (str2) + 1];
@@ -1535,7 +1535,7 @@ int open2 (char *str1, char *str2, int flags, int mode)
   strcat (name, str2);
   return open (name, flags, mode);
 @}
-@end example
+@end smallexample
 
 But @code{alloca} is not always equivalent to a variable-sized array, for
 several reasons:

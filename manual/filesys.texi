@@ -87,7 +87,7 @@ Here is an example showing how you could implement the behavior of GNU's
 @w{@code{getcwd (NULL, 0)}} using only the standard behavior of
 @code{getcwd}:
 
-@example
+@smallexample
 char *
 gnu_getcwd ()
 @{
@@ -104,7 +104,7 @@ gnu_getcwd ()
       buffer = (char *) xmalloc (size);
     @}
 @}
-@end example
+@end smallexample
 
 @noindent
 @xref{Malloc Examples}, for information about @code{xmalloc}, which is
@@ -300,9 +300,9 @@ The @var{dirstream} argument is not valid.
 Here's a simple program that prints the names of the files in
 the current working directory:
 
-@example
+@smallexample
 @include dir.c.texi
-@end example
+@end smallexample
 
 The order in which files appear in a directory tends to be fairly
 random.  A more useful program would sort the entries (perhaps by
@@ -519,7 +519,7 @@ If the return value equals @var{size}, you cannot tell whether or not
 there was room to return the entire name.  So make a bigger buffer and
 call @code{readlink} again.  Here is an example:
 
-@example
+@smallexample
 char *
 readlink_malloc (char *filename)
 @{
@@ -535,7 +535,7 @@ readlink_malloc (char *filename)
       size *= 2;
     @}
 @}
-@end example
+@end smallexample
 
 @c @group  Invalid outside example.
 A value of @code{-1} is returned in case of error.  In addition to the
@@ -910,9 +910,9 @@ disk.
 You can tell (approximately) whether a file is sparse by comparing this
 value with @code{st_size}, like this:
 
-@example
+@smallexample
 (st.st_blocks * 512 < st.st_size)
-@end example
+@end smallexample
 
 This test is not perfect because a file that is just slightly sparse
 might not be detected as sparse at all.  For practical applications,
@@ -1094,16 +1094,16 @@ compatibility with BSD.  The mode can be bitwise ANDed with
 @code{S_IFMT} to extract the file type code, and compared to the
 appropriate type code constant.  For example,
 
-@example
+@smallexample
 S_ISCHR (@var{mode})
-@end example
+@end smallexample
 
 @noindent
 is equivalent to:
 
-@example
+@smallexample
 ((@var{mode} & S_IFMT) == S_IFCHR)
-@end example
+@end smallexample
 
 @comment sys/stat.h
 @comment BSD
@@ -1496,14 +1496,14 @@ creation mask.
 Here is an example showing how to read the mask with @code{umask}
 without changing it permanently:
 
-@example
+@smallexample
 mode_t
 read_umask (void)
 @{
   mask = umask (0);
   umask (mask);
 @}
-@end example
+@end smallexample
 
 @noindent
 However, it is better to use @code{getumask} if you just want to read

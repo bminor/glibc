@@ -34,7 +34,7 @@ is ``greater''.
 Here is an example of a comparison function which works with an array of
 numbers of type @code{double}:
 
-@example
+@smallexample
 int
 compare_doubles (const double *a, const double *b)
 @{
@@ -46,7 +46,7 @@ compare_doubles (const double *a, const double *b)
   else
     return 0;
 @}
-@end example
+@end smallexample
 
 The header file @file{stdlib.h} defines a name for the data type of
 comparison functions.  This is a GNU extension and thus defined only if
@@ -55,9 +55,9 @@ you request the GNU extensions.
 @comment stdlib.h
 @comment GNU
 @tindex comparison_fn_t
-@example
+@smallexample
 int comparison_fn_t (const void *, const void *);
-@end example
+@end smallexample
 
 @node Array Search Function, Array Sort Function, Comparison Functions, Searching and Sorting
 @section Array Search Function
@@ -130,14 +130,14 @@ Here is a simple example of sorting an array of doubles in numerical
 order, using the comparison function defined above (@pxref{Comparison
 Functions}):
 
-@example
+@smallexample
 @{
   double *array;
   int size;
   @dots{}
   qsort (array, size, sizeof (double), compare_doubles);
 @}
-@end example
+@end smallexample
 
 The @code{qsort} function derives its name from the fact that it was
 originally implemented using the algorithm ``quick sort''.
@@ -152,14 +152,14 @@ by comparing their @code{name} fields with the @code{strcmp} function.
 Then, we can look up individual objects based on their names.
 
 @comment This example is dedicated to the memory of Jim Henson.  RIP.
-@example
+@smallexample
 @include search.c.texi
-@end example
+@end smallexample
 
 @cindex Kermit the frog
 The output from this program looks like:
 
-@example
+@smallexample
 Animal, the animal
 Beaker, the human
 Camilla, the chicken
@@ -180,6 +180,6 @@ Zoot, the human
 Kermit, the frog
 Gonzo, the whatever
 Couldn't find Janice.
-@end example
+@end smallexample
 
 

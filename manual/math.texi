@@ -99,9 +99,9 @@ that pi radians equals 180 degrees.
 The math library doesn't define a symbolic constant for pi, but you can
 define your own if you need one:
 
-@example
+@smallexample
 #define PI 3.14159265358979323846264338327
-@end example
+@end smallexample
 
 @noindent
 You can also compute the value of pi with the expression @code{acos
