@@ -92,7 +92,7 @@ _hurd_port_get (struct hurd_port *port,
 {
 #ifdef noteven
   __spin_lock (&port->lock);
-#ifdef endif
+#endif
   return _hurd_port_locked_get (port, link);
 }
 
