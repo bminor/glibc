@@ -19,14 +19,18 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <gnu-stabs.h>
 
+#if 0
 struct mutex _hurd_pid_lock;
+#endif
 pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 int _hurd_orphaned;
 
 static void
 init_pids (void)
 {
+#if 0
   __mutex_init (&_hurd_pid_lock);
+#endif
 
   __USEPORT (PROC,
 	     ({
