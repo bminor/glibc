@@ -73,6 +73,8 @@ DEFUN(__vfscanf, (s, format, arg),
   char not_in;
   /* Base for integral numbers.  */
   int base;
+  /* Signedness for integral numbers.  */
+  int number_signed;
   /* Integral holding variables.  */
   long int num;
   unsigned long int unum;
@@ -315,21 +317,29 @@ DEFUN(__vfscanf, (s, format, arg),
 	case 'x':	/* Hexadecimal integer.  */
 	case 'X':	/* Ditto.  */ 
 	  base = 16;
+	  number_signed = 0;
 	  goto number;
 
 	case 'o':	/* Octal integer.  */
 	  base = 8;
+	  number_signed = 0;
 	  goto number;
 
-	case 'u':	/* Decimal integer.  */
-	case 'd':	/* Ditto.  */
+	case 'u':	/* Unsigned decimal integer.  */
 	  base = 10;
+	  number_signed = 0;
+	  goto number;
+
+	case 'd':	/* Signed decimal integer.  */
+	  base = 10;
+	  number_signed = 1;
 	  goto number;
 
 	case 'i':	/* Generic number.  */
 	  base = 0;
+	  number_signed = 1;
 
-	number:;
+	number:
 	  if (c == EOF)
 	    input_error();
 
@@ -387,20 +397,38 @@ DEFUN(__vfscanf, (s, format, arg),
 
 	  /* Convert the number.  */
 	  *w = '\0';
-	  num = strtol(work, &w, base);
+	  if (number_signed)
+	    num = strtol (work, &w, base);
+	  else
+	    unum = strtoul (work, &w, base);
 	  if (w == work)
-	    conv_error();
+	    conv_error ();
 
 	  if (do_assign)
 	    {
-	      if (is_longlong)
-		*va_arg(arg, LONGLONG int *) = num;
-	      else if (is_long)
-		*va_arg(arg, long int *) = num;
-	      else if (is_short)
-		*va_arg(arg, short int *) = (short int) num;
+	      if (number_signed)
+		{
+		  if (is_longlong)
+		    *va_arg (arg, unsigned LONGLONG int *) = unum;
+		  else if (is_long)
+		    *va_arg (arg, unsigned long int *) = unum;
+		  else if (is_short)
+		    *va_arg (arg, unsigned short int *)
+		      = (unsigned short int) unum;
+		  else
+		    *va_arg(arg, int *) = (int) num;
+		}
 	      else
-		*va_arg(arg, int *) = (int) num;
+		{
+		  if (is_longlong)
+		    *va_arg(arg, LONGLONG int *) = num;
+		  else if (is_long)
+		    *va_arg(arg, long int *) = num;
+		  else if (is_short)
+		    *va_arg(arg, short int *) = (short int) num;
+		  else
+		    *va_arg(arg, int *) = (int) num;
+		}
 	      ++done;
 	    }
 	  break;
