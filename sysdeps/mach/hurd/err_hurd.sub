@@ -1,3 +1,5 @@
+/* This file defines the Mach error system for Hurd server errors.  */
+
 #include <stdio.h>
 #include <errnos.h>
 
