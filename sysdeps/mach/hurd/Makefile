@@ -21,7 +21,7 @@ errno.texinfo = $(..)manual/errno.texinfo
 $(objpfx)errnos.h: $(errno.texinfo) $(..)sysdeps/mach/hurd/errnos.awk
 	awk -f $(word 2,$^) $< > $@-tmp
 	mv $@-tmp $@
-$(objpfx)sys_errlist.c: $(errno.texinfo) $(..)sysdeps/mach/hurd/sys_errlist.awk
+$(objpfx)sys_errlist.c: $(errno.texinfo) $(..)sysdeps/mach/hurd/errlist.awk
 	grep '^@comment.###errno:' $< | sort -n +3 | \
 	awk -f $(word 2,$^) > $@-tmp
 	mv $@-tmp $@
