@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Written by Douglas C. Schmidt (schmidt@ics.uci.edu).
 
@@ -77,7 +77,7 @@ typedef struct
       stack size is needed (actually O(1) in this case)!  */
 
 void
-DEFUN(qsort, (pbase, total_elems, size, cmp),
+DEFUN(_quicksort, (pbase, total_elems, size, cmp),
       PTR CONST pbase AND size_t total_elems AND size_t size AND
       int EXFUN((*cmp), (CONST PTR, CONST PTR)))
 {
