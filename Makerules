@@ -512,9 +512,11 @@ distinfo: Makefile $(..)Makerules
 	mv -f $@.new $@
 
 define distinfo-vars
-$(foreach var,subdir sources sysdep_routines headers distribute \
+rm -f $@.new
+$(foreach var,subdir sources elided-routines headers distribute \
 	      dont_distribute generated others tests,
 echo >> $@.new '$(var)	:= $($(var))')
+sources := $(sources) $(addsuffix .c,$(elided-routines))
 endef
 
 ifneq (,$(strip $(gpl2lgpl)))
