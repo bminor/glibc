@@ -47,9 +47,11 @@ int
 DEFUN(__brk, (inaddr), PTR inaddr)
 {
   int ret;
+  HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_brk_lock);
   ret = _hurd_set_brk ((vm_address_t) inaddr);
   __mutex_unlock (&_hurd_brk_lock);
+  HURD_CRITICAL_END;
   return ret;
 }
 
@@ -122,6 +124,7 @@ int
 _hurd_set_data_limit (const struct rlimit *lim)
 {
   vm_address_t end = round_page (lim->rlim_max);
+  error_t err;
 
   if (lim->rlim_cur > lim->rlim_max)
     {
@@ -129,6 +132,9 @@ _hurd_set_data_limit (const struct rlimit *lim)
       return -1;
     }
 
+  err = 0;
+
+  HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_brk_lock);
   if (end > _hurd_data_end)
     {
@@ -137,16 +143,16 @@ _hurd_set_data_limit (const struct rlimit *lim)
 		    0, 0, MACH_PORT_NULL, 0, 0,
 		    0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE,
 		    VM_INHERIT_COPY)) /* ? */
-	{
-	  __mutex_unlock (&_hurd_brk_lock);
-	  errno = ENOMEM;
-	  return -1;
-	}
+	err = ENOMEM;
     }
   else if (end < _hurd_data_end)
     __vm_deallocate (__mach_task_self (), end, _hurd_data_end - end);
-  _hurd_brk_limit = lim->rlim_cur;
-  _hurd_data_end = end;
+  if (! err)
+    {
+      _hurd_brk_limit = lim->rlim_cur;
+      _hurd_data_end = end;
+    }
   __mutex_unlock (&_hurd_brk_lock);
-  return 0;
+  HURD_CRITICAL_END;
+  return err ? __hurd_fail (err) : 0;
 }
