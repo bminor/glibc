@@ -133,8 +133,14 @@ DEFUN(__stdio_check_offset, (stream), FILE *stream)
 static void
 DEFUN(seek_to_target, (fp), FILE *fp)
 {
+  int save = errno;
   if (__stdio_check_offset (fp) == EOF)
-    fp->__error = 1;
+    {
+      if (errno == ESPIPE)
+	errno = save;
+      else
+	fp->__error = 1;
+    }
   else if (fp->__target != fp->__offset)
     {
       /* We are not at the target file position.
