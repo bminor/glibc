@@ -49,19 +49,23 @@ __BEGIN_DECLS
 /* This is the type of the argument to `wait'.  With GCC 2.4 and later, the
    funky union causes redeclarations with either `int *' or `union wait *'
    to be allowed without complaint.  (__GNUC_MINOR__ is in fact only
-   defined in later versions, after 2.5.0.)  */
+   defined in later versions, after 2.5.0.)  __WAIT_STATUS_DEFN is the type
+   used in the actual function definitions.  */
 
 #if	(!defined (__GNUC__) || __GNUC__ < 2 || \
 	 (__GNUC__ == 2 && __GNUC_MINOR__ < 4))
-#define	__WAIT_STATUS	__ptr_t
+#define	__WAIT_STATUS		__ptr_t
+#define	__WAIT_STATUS_DEFN	__ptr_t
 #else
-#define	__WAIT_STATUS	union { union wait *__unionptr; int *__intptr; }
+#define	__WAIT_STATUS		union { union wait *__uptr; int *__iptr; }
+#define	__WAIT_STATUS_DEFN	int *
 #endif
 
 #else /* Don't use BSD.  */
 
 #define	__WAIT_INT(status)	(status)
 #define	__WAIT_STATUS		int *
+#define	__WAIT_STATUS_DEFN	int *
 
 #endif /* Use BSD.  */
 
