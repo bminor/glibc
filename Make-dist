@@ -144,7 +144,7 @@ de-..: dist.tar
 	tar cf $< -C /tmp $(tardir)
 	-rm -fr /tmp/$(tardir)
 
-README: README.template
+README: README.template version.c
 	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
 
 INSTALL: manual/maint.texinfo
