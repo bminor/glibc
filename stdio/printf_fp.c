@@ -30,6 +30,7 @@ Cambridge, MA 02139, USA.  */
 #include <math.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <string.h>
 #include <localeinfo.h>
 
 #include <printf.h>
