@@ -64,7 +64,7 @@ DEFUN(__mknod, (path, mode, dev),
       return -1;
     }
   
-  if (translator != _HURD_FIFO)
+  if (! S_ISFIFO (mode))
     {
       /* We set the translator to "ifmt\0major\0minor\0", where IFMT
 	 depends on the S_IFMT bits of our MODE argument, and MAJOR and
