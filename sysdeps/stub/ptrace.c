@@ -59,7 +59,7 @@ DEFUN(ptrace, (request), enum __ptrace_request request DOTS)
     case PTRACE_SETFPREGS:
     case PTRACE_GETFPAREGS:
     case PTRACE_SETFPAREGS:
-      va_start(ap);
+      va_start(ap, request);
       pid = va_arg(ap, pid_t);
       addr = va_arg(ap, PTR);
       va_end(ap);
@@ -68,7 +68,7 @@ DEFUN(ptrace, (request), enum __ptrace_request request DOTS)
     case PTRACE_POKETEXT:
     case PTRACE_POKEDATA:
     case PTRACE_POKEUSER:
-      va_start(ap);
+      va_start(ap, request);
       pid = va_arg(ap, pid_t);
       addr = va_arg(ap, PTR);
       data = va_arg(ap, int);
@@ -79,7 +79,7 @@ DEFUN(ptrace, (request), enum __ptrace_request request DOTS)
     case PTRACE_WRITEDATA:
     case PTRACE_READTEXT:
     case PTRACE_WRITETEXT:
-      va_start(ap);
+      va_start(ap, request);
       pid = va_arg(ap, pid_t);
       addr = va_arg(ap, PTR);
       data = va_arg(ap, int);
