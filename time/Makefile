@@ -61,8 +61,11 @@ posixrules-file := $(firstword $(filter /%,$(posixrules-file)) \
 			       $(addprefix $(zonedir)/, \
 					   $(posixrules-file)))
 
+ifndef cross-compiling
+# Don't try to install the zoneinfo files since we can't run zic.
 install-others = $(addprefix $(zonedir)/,$(zonenames)) \
 		 $(localtime-file) $(posixrules-file)
+endif
 
 include ../Rules
 
