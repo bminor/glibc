@@ -1,3 +1,8 @@
+2002-07-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Fix MS_SYNC and
+	MS_INVALIDATE values.
+
 2002-07-17  Andreas Schwab  <schwab@suse.de>
 	    Ulrich Drepper  <drepper@redhat.com>
 
@@ -11,7 +16,7 @@
 	* catgets/tst-catgets.c (main): Don't expect results for
 	untranslated messages.
 
-	* glibcbug.in: Fix little typo.  Remove STDIO.
+	* glibcbug.in: Fix little typo.
 
 	* config.h.in: Fail if __FAST_MATH__ is defined.
 	* math/Makefile (CPPFLAGS-test-ifloat.c): Also define TEST_FAST_MATH.
