@@ -1,3 +1,14 @@
+2002-02-03  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/posix/readv.c: Use ssize_t for bytes_read.
+
+	* sysdeps/posix/writev.c: Use ssize_t for bytes_written.  Fix comment.
+
+2002-02-03  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/posix/writev.c: Check for ssize_t overflow, don't use
+	alloca if the memory reqirements are too high.
+
 2002-02-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-reloc.c (_dl_relocate_object): Use _dl_debug_printf
