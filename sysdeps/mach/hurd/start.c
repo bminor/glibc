@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,11 +24,7 @@ Cambridge, MA 02139, USA.  */
 /* The first piece of initialized data.  */
 int __data_start = 0;
 
-struct _hurd_port _hurd_cwdir, _hurd_crdir;
 mode_t _hurd_umask;
-int _hurd_ctty_fstype;
-fsid_t _hurd_ctty_fsid;
-ino_t _hurd_ctty_fileid;
 
 mach_port_t *_hurd_init_dtable;
 size_t _hurd_init_dtablesize;
@@ -214,50 +210,34 @@ _hurd_init (char **argv,
 {
   int i;
 
+  _hurd_ports = malloc (portarraysize * sizeof (*_hurd_ports));
+  if (_hurd_ports == NULL)
+    __libc_fatal ("Can't allocate _hurd_ports\n");
+
   /* See what ports we were passed.  */
   for (i = 0; i < portarraysize; ++i)
-    switch (i)
-      {
-#define	initport(upper, lower) \
-      case INIT_PORT_##upper: \
-	_hurd_port_init (&_hurd_##lower, portarray[i]); \
-	break
+    {
+      _hurd_port_init (&_hurd_ports[i], portarray[i]);
+      switch (i)
+	{
+	case INIT_PORT_PROC:
+	  /* Tell the proc server we exist.  */
+	  _hurd_proc_init (argv);
+	  break;
 
-	  /* Install the standard ports in their cells.  */
-	initport (CWDIR, cwdir);
-	initport (CRDIR, crdir);
-	initport (AUTH, auth);
-
-      case INIT_PORT_PROC:
-	/* Install the proc port and tell the proc server we exist.  */
-	_hurd_proc_init (portarray[i], argv);
-	break;
-
-      case INIT_PORT_BOOTSTRAP:
-	/* When the user asks for the bootstrap port,
-	   he will get the one the exec server passed us.  */
-	__task_set_special_port (__mach_task_self (),
-				 TASK_BOOTSTRAP_PORT, portarray[i]);
-	/* FALLTHROUGH */
-
-      default:
-	/* Wonder what that could be.  */
-	__mach_port_deallocate (__mach_task_self (), portarray[i]);
-	break;
-      }
+	case INIT_PORT_BOOTSTRAP:
+	  /* When the user asks for the bootstrap port,
+	     he will get the one the exec server passed us.  */
+	  __task_set_special_port (__mach_task_self (),
+				   TASK_BOOTSTRAP_PORT, portarray[i]);
+	  break;
+	}
+    }
 
   if (intarraysize > INIT_UMASK)
     _hurd_umask = intarray[INIT_UMASK] & 0777;
   else
     _hurd_umask = 0022;		/* XXX */
-  if (intarraysize > INIT_CTTY_FILEID) /* Knows that these are sequential.  */
-    {
-      _hurd_ctty_fstype = intarray[INIT_CTTY_FSTYPE];
-      _hurd_ctty_fsid.val[0] = intarray[INIT_CTTY_FSID1];
-      _hurd_ctty_fsid.val[1] = intarray[INIT_CTTY_FSID2];
-      _hurd_ctty_fileid = intarray[INIT_CTTY_FILEID];
-    }
-
 
   /* All done with init ints and ports.  */
   __vm_deallocate (__mach_task_self (), intarray, nints * sizeof (int));
