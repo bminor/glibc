@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,17 +18,14 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 
-struct _hurd_port _hurd_auth;
-
 error_t
-__add_auth (sigthread_t me,
+__add_auth (mach_port_t me,
 	    auth_t addauth)
 {
   error_t err;
   auth_t newauth;
 
-  if (err = _HURD_PORT_USE (&_hurd_auth,
-			    __auth_combine (port, addauth, &newauth)))
+  if (err = __USEPORT (AUTH, __auth_combine (port, addauth, &newauth)))
     return err;
 
   /* XXX clobbers errno. Need per-thread errno. */
@@ -38,63 +35,74 @@ __add_auth (sigthread_t me,
     return errno;
 
   __mach_port_deallocate (__mach_task_self (), addauth);
-  return POSIX_SUCCESS;
+  return 0;
 }
 
 error_t
-__del_auth (sigthread_t me, task_t task,
+__del_auth (mach_port_t me, task_t task,
 	    uid_t *uids, size_t nuids,
 	    gid_t *gids, size_t ngids)
 {
   error_t err;
-  auth_t newauth;
-  size_t i, j;
 
-  if (task != __mach_task_self ())
+  if (!_hurd_refport_secure_p (task))
     return EPERM;
 
-  __mutex_lock (&_hurd_idlock);
-  if (!_hurd_id_valid)
+  __mutex_lock (&_hurd_id.lock);
+  err = _hurd_check_ids ();
+
+  if (!err)
     {
-      error_t err = _HURD_PORT_USE (&_hurd_auth,
-				    __auth_getids (port, &_hurd_id));
-      if (err)
+      auth_t newauth;
+      size_t i, j;
+      size_t nu = _hurd_id.gen.nuids, ng = _hurd_id.gen.ngids;
+      uid_t newu[nu];
+      gid_t newg[ng];
+
+      memcpy (newu, _hurd_id.gen.uids, nu * sizeof (uid_t));
+      memcpy (newg, _hurd_id.gen.gids, ng * sizeof (gid_t));
+
+      for (j = 0; j < nuids; ++j)
 	{
-	  __mutex_unlock (&_hurd_idlock);
-	  return err;
+	  const uid_t uid = uids[j];
+	  for (i = 0; i < nu; ++i)
+	    if (newu[i] == uid)
+	      /* Move the last uid into this slot, and decrease the
+		 number of uids so the last slot is no longer used.  */
+	      newu[i] = newu[--nu];
 	}
-      _hurd_id_valid = 1;
-    }
+      __vm_deallocate (__mach_task_self (),
+		       (vm_address_t) uids, nuids * sizeof (uid_t));
 
-  while (nuids-- > 0)
-    {
-      const uid_t uid = *uids++;
-      for (i = 0; i < _hurd_id.nuids; ++i)
-	if (_hurd_id.uidset[i] == uid)
-	  /* Move the last uid into this slot, and decrease the
-	     number of uids so the last slot is no longer used.  */
-	  _hurd_id.uidset[i] = _hurd_id.uidset[--_hurd_id.nuids];
-    }
-  while (ngids-- > 0)
-    {
-      const gid_t gid = *gids++;
-      for (i = 0; i < _hurd_id.ngroups; ++i)
-	if (_hurd_id.gidset[i] == gid)
-	  /* Move the last gid into this slot, and decrease the
-	     number of gids so the last slot is no longer used.  */
-	  _hurd_id.gidset[i] = _hurd_id.gidset[--_hurd_id.ngroups];
-    }
+      for (j = 0; j < ngids; ++j)
+	{
+	  const gid_t gid = gids[j];
+	  for (i = 0; i < nu; ++i)
+	    if (newu[i] == gid)
+	      /* Move the last gid into this slot, and decrease the
+		 number of gids so the last slot is no longer used.  */
+	      newu[i] = newu[--nu];
+	}
+      __vm_deallocate (__mach_task_self (),
+		       (vm_address_t) gids, ngids * sizeof (gid_t));
 
-  err = _HURD_PORT_USE (&_hurd_auth,
-			__auth_makeauth (port, &_hurd_id, &newauth));
-  _hurd_id_valid = !err;
-  __mutex_unlock (&_hurd_idlock);
+      err = __USEPORT (AUTH, __auth_makeauth
+		       (port,
+			newu, nu,
+			_hurd_id.aux.uids, _hurd_id.aux.nuids,
+			newg, ng,
+			_hurd_id.aux.uids, _hurd_id.aux.ngids,
+			&newauth));
+    }
+  __mutex_unlock (&_hurd_id.lock);
 
   if (err)
     return err;
+
   err = __setauth (newauth);	/* XXX clobbers errno */
   __mach_port_deallocate (__mach_task_self (), newauth);
   if (err)
     return errno;
-  return POSIX_SUCCESS;
+
+  return 0;
 }
