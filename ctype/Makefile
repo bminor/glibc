@@ -26,6 +26,11 @@ aux		:= ctype-info
 
 tests	:= test_ctype
 
+# In most cases, we want the C source files to come before
+# the header files so tags for optimizing #define's in the
+# headers won't be put in the tags files, but for ctype,
+# the functions are just backup for the #define's in the header.
+export tags_sources = $(all-headers) $(all-sources)
 
 all:
 include ../Rules
