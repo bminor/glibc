@@ -46,10 +46,10 @@ server-interfaces := __exc
 endif
 
 routines = $(interface-routines) \
-	   mach_init mach_init_syms \
+	   mach_init vm_page_size \
 	   mig_strncpy mig_support msg \
-	   mach_msg_destroy mach_msg_server mach_msg_server_timeout \
-	   __mach_msg_destroy __mach_msg_server \
+	   msg_destroy msg_server msg_server_t \
+	   __msg_destroy __msg_server \
 	   devstream
 
 tests := hello
@@ -61,7 +61,7 @@ all:
 # Define mach-syscalls and sysno-*.
 #include mach-syscalls.mk
 dont_distribute := syscall_sw.h
-mach-syscalls.mk: syscall_sw.h mach-syscalls.awk
+mach-syscalls.mk: syscall_sw.h syscalls.awk
 	sed -n -e '/STANDALONE/,$$d' \
 	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),[0-9]*)$$/\1 \2/p' \
 	< $< | awk -f $(word 2,$^) > $@-new		      
