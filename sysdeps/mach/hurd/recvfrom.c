@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/socket.h>
 #include <hurd.h>
+#include <hurd/fd.h>
+#include <hurd/socket.h>
 
 /* Read N bytes into BUF through socket FD from peer
    at address ADDR (which is ADDR_LEN bytes long).
@@ -52,16 +54,16 @@ DEFUN(recvfrom, (fd, buf, n, flags, addr, addr_len),
     unsigned int buflen = *addr_len;
     int type;
 
-    err = __socket_whatis_address (aport, &type, &buf, &buflen);
+    err = __socket_whatis_address (addrport, &type, &buf, &buflen);
     __mach_port_deallocate (__mach_task_self (), addrport);
     if (err)
       return __hurd_dfail (fd, err);
 
     if (buf != (char *) addr)
       {
-	if (*len < buflen)
-	  *len = buflen;
-	memcpy (addr, buf, *len);
+	if (*addr_len < buflen)
+	  *addr_len = buflen;
+	memcpy (addr, buf, *addr_len);
 	__vm_deallocate (__mach_task_self (), (vm_address_t) buf, buflen);
       }
 
