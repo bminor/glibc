@@ -185,8 +185,10 @@ stream in whatever order.
 The GNU C library defines one additional character for use in
 @var{opentype}: the character @samp{x} insists on creating a new
 file---if a file @var{filename} already exists, @code{fopen} fails
-rather than opening it.  This is equivalent to the @code{O_EXCL} option
-to the @code{open} function (@pxref{File Status Flags}).
+rather than opening it.  If you use @samp{x} you can are guaranteed that
+you will not clobber an existing file.  This is equivalent to the
+@code{O_EXCL} option to the @code{open} function (@pxref{Opening and
+Closing Files}).
 
 The character @samp{b} in @var{opentype} has a standard meaning; it
 requests a binary stream rather than a text stream.  But this makes no
