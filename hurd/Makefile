@@ -28,7 +28,7 @@ headers = hurd.h $(interface-headers) \
 	  $(addprefix hurd/,fd.h id.h port.h signal.h userlink.h \
 		            resource.h threadvar.h)
 
-distribute := intr-rpc.awk intr-rpc.defs STATUS
+distribute := hurdfault.h intr-rpc.awk intr-rpc.defs STATUS
 
 # The RPC interfaces go in a separate library.
 interface-library := libhurduser.a
@@ -50,7 +50,7 @@ routines = hurdinit hurdid hurdlookup hurdpid hurdrlimit hurdexec \
  	   vpprintf \
 	   ports-get ports-set hurdports hurdmsg \
 	   $(sig) $(dtable) hurdinline
-sig	= hurdsig siginfo init-fault hurd-raise preempt-sig \
+sig	= hurdsig hurdfault siginfo hurd-raise preempt-sig \
 	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal hurdkill
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport \
