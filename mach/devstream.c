@@ -74,20 +74,34 @@ output (FILE *f, int c)
 
   if (f->__buffer == NULL)
     {
+      /* The stream is unbuffered.  */
+
       if (c != EOF)
 	{
-	  char cc = (unsigned char) c;
-	  if (cc == '\n')
-	    cc = '\r';
+	  char buf[2];
+	  size_t n;
+	  if (c == '\n')
+	    {
+	      buf[0] = '\r';
+	      buf[1] = '\n';
+	      n = 2;
+	    }
+	  else
+	    {
+	      buf[0] = (unsigned char) c;
+	      n = 1;
+	    }
+
 	  if ((err = device_write_inband ((device_t) f->__cookie, 0,
-					  f->__target, &cc, 1, &wrote)) ||
-	      wrote != 1)
+					  f->__target, buf, n, &wrote)) ||
+	      wrote != n)
 	    {
 	      errno = err;
 	      f->__error = 1;
 	    }
+
+	  f->__target += n;
 	}
-      ++f->__target;
       return;
     }
 
@@ -136,16 +150,16 @@ output (FILE *f, int c)
     {
       if (f->__linebuf && (unsigned char) c == '\n')
 	{
-	  static const char nl = '\r';
+	  static const char crlf[] = "\r\n";
 	  if ((err = device_write_inband ((device_t) f->__cookie, 0,
-					  f->__target, &nl, 1, &wrote)) ||
-	      wrote != 1)
+					  f->__target, crlf, 2, &wrote)) ||
+	      wrote != 2)
 	    {
 	      errno = EIO;
 	      f->__error = 1;
 	    }
 	  else
-	    ++f->__target;
+	    f->__target += 2;
 	}
       else
 	*f->__bufp++ = (unsigned char) c;
