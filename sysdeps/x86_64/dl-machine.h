@@ -39,9 +39,12 @@ elf_machine_matches_host (const Elf64_Ehdr *ehdr)
 static inline Elf64_Addr __attribute__ ((unused))
 elf_machine_dynamic (void)
 {
-  register Elf64_Addr addr;
+  Elf64_Addr addr;
 
-  asm ("leaq _DYNAMIC, %0\n" : "=r" (addr));
+  /* This works because we have our GOT address available in the small PIC
+     model.  */
+  addr = (Elf64_Addr) &_DYNAMIC;
+
   return addr;
 }
 
@@ -52,10 +55,25 @@ elf_machine_load_address (void)
 {
   register Elf64_Addr addr, tmp;
 
-  asm ("leaq _dl_start, %0\n"
-       "leaq _dl_start(%%rip), %1\n"
-       "subq %0, %1\n"
-       : "=r" (tmp), "=r" (addr) : : "cc");
+  /* The easy way is just the same as on x86:
+       leaq _dl_start, %0
+       leaq _dl_start(%%rip), %1
+       subq %0, %1
+     but this does not work with binutils since we then have
+     a R_X86_64_32S relocation in a shared lib.
+
+     Instead we store the address of _dl_start in the data section
+     and compare it with the current value that we can get via
+     an RIP relative addressing mode.  */
+
+  asm ("movq .L1(%%rip), %1\n"
+       "0:\tleaq _dl_start(%%rip), %0\n\t"
+       "subq %1, %0\n\t"
+       ".section\t.data\n"
+       ".L1:\t.quad _dl_start\n\t"
+       ".previous\n\t"
+       : "=r" (addr), "=r" (tmp) : : "cc");
+
   return addr;
 }
 
