@@ -65,7 +65,7 @@ you will know what they are when they are mentioned in other parts of
 the manual.
 
 For information about what standards specify what features, 
-@pxref{Header File Contents}.  
+@pxref{Summary of Library Facilities}.
 
 @menu
 * ANSI C::			The American National Standard for the
@@ -532,12 +532,16 @@ directives at the top of your source code files.  You could also use
 the @samp{-D} option to GCC, but it's better if you make the source
 files indicate their own meaning in a self-contained way.
 
+@comment (none)
+@comment POSIX.1
 @defvr Macro _POSIX_SOURCE
 If you define this macro, then the functionality from the POSIX.1
 standard (IEEE Standard 1003.1) is made available, as well as all of the
 ANSI C facilities.
 @end defvr
 
+@comment (none)
+@comment POSIX.2
 @defvr Macro _POSIX_C_SOURCE
 If you define this macro with a value of @code{1}, then the
 functionality from the POSIX.1 standard (IEEE Standard 1003.1) is made
@@ -547,6 +551,8 @@ the POSIX.2 standard (IEEE Standard 1003.2) are made available.  This is
 in addition to the ANSI C facilities.
 @end defvr
 
+@comment (none)
+@comment GNU
 @defvr Macro _BSD_SOURCE
 If you define this macro, functionality derived from 4.3 BSD Unix is
 included as well as the ANSI C, POSIX.1, and POSIX.2 material.
@@ -557,11 +563,15 @@ macro is defined, the 4.3 BSD definitions take precedence over the
 POSIX definitions.
 @end defvr
 
+@comment (none)
+@comment GNU
 @defvr Macro _SVID_SOURCE
 If you define this macro, functionality derived from SVID is
 included as well as the ANSI C, POSIX.1, and POSIX.2 material.
 @end defvr
 
+@comment (none)
+@comment GNU
 @defvr Macro _GNU_SOURCE
 If you define this macro, everything is included: ANSI C, POSIX.1,
 POSIX.2, BSD, SVID, and GNU extensions.  In the cases where POSIX.1

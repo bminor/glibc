@@ -61,8 +61,8 @@ you are usually better off using @code{getopt} to do the parsing.
 
 @menu
 * Command Argument Syntax Conventions::
-* The @code{getopt} Function::
-* Example of @code{getopt}::
+* The getopt Function::
+* Example of getopt::
 @end menu
 
 @node Command Argument Syntax Conventions
@@ -119,7 +119,7 @@ Options may be supplied in any order, or appear multiple times.  The
 interpretation is left up to the particular application program.
 @end itemize
 
-@node The @code{getopt} Function
+@node The getopt Function
 @subsection The @code{getopt} Function
 
 Here are the details about how to call the @code{getopt} function.  To
@@ -194,7 +194,7 @@ option character.  In addition, if the external variable @code{opterr}
 has a nonzero value, @code{getopt} prints an error message.
 @end deftypefun
 
-@node Example of @code{getopt}
+@node Example of getopt
 @subsection Example of @code{getopt}
 
 Here is an example showing how @code{getopt} is typically used.  The
@@ -202,8 +202,8 @@ key points to notice are:
 
 @itemize @bullet
 @item
-Normally, @code{getopt} is called in a loop that terminates when it
-returns @code{-1}, indicating no more options are specified.
+Normally, @code{getopt} is called in a loop.  When @code{getopt} returns
+@code{-1}, indicating no more options are present, the loop terminates.
 
 @item
 A @code{switch} statement is used to dispatch on the return value from
