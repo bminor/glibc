@@ -12,15 +12,23 @@ this chapter unless you are writing a shell or login program.  The job
 control facilities are set up so that appropriate behavior for other
 kinds of programs normally happens automatically.
 
+This chapter covers some fairly advanced topics.  In particular, you
+need to be familiar with concepts relating to process creation
+(@pxref{Creating New Processes}), signal handling (@pxref{Signal
+Handling}) in order to understand this material.
+
 @menu
 * Job Control Concepts::		Introduction and overview.
 * Support for Job Control::		Not all POSIX systems support 
 					 job control.
-* Job Control and the Terminal Driver::	Terminal driver support for job
-					 control.
+* Controlling Terminal of a Process::	How a process gets its controlling
+					 terminal.
+* Access to the Controlling Terminal::	How processes share the controlling
+					 terminal
 * Implementing a Job Control Shell::	What a shell must do to implement
 					 job control.
-* Job Control Example::			A complete example program.
+* Job Control Functions::		Detailed specification of the
+					 functional interface.
 @end menu
 
 @node Job Control Concepts
@@ -52,31 +60,33 @@ and you can't move it out of that process group again.
 Usually, new sessions are created by the system login program, and the
 session leader is the process running the user's default shell.
 
+@cindex
 A shell that supports job control must also implement a protocol for
-allocating the terminal to a particular process group.  Without such a
-protocol, there might be multiple jobs trying to read from the terminal
-at once, and confusion about which process should receive the input
-typed by the user.  So, the shell must work cooperatively with the terminal
-driver to ensure that input and output to the controlling terminal are
-handled in a reasonable way.
+allocating its @dfn{controlling terminal} to a particular process group.
+Without such a protocol, there might be multiple jobs trying to read
+from the terminal at once, and confusion about which process should
+receive the input typed by the user.  So, the shell must work
+cooperatively with the terminal driver to ensure that input and output
+to the controlling terminal are handled in a reasonable way.
 
 @cindex foreground job
 @cindex background job
 Only one process group at a time can have unlimited access to the
-terminal; this is called the @dfn{foreground job}.  Other process groups
-in the session that are executing without such access to the terminal
-are called @dfn{background jobs}.
+controlling terminal; this is called the @dfn{foreground job}.  Other
+process groups in the session that are executing without such access to
+the terminal are called @dfn{background jobs}.
 
 @cindex stopped job
-If a background job needs to read from or write to the terminal, it is
-@dfn{stopped} by the terminal driver.  A job can also be stopped by
-sending it a @code{SIGTSTP} signal.  It's the responsibility of the
-shell to check for stopped jobs, notify the user about them, and to
-provide mechanisms for allowing the user to interactively continue
+If a background job needs to read from or write to its controlling
+terminal, it is @dfn{stopped} by the terminal driver.  A job can also be
+stopped by typing the SUSP character (@pxref{Special Characters}) or
+sending it a @code{SIGSTOP} signal.  It's the responsibility
+of the shell to check for stopped jobs, notify the user about them, and
+to provide mechanisms for allowing the user to interactively continue
 stopped jobs and switch jobs between foreground and background.
 
-Terminal driver support for job control is discussed in more detail in
-@ref{Job Control and the Terminal Driver}.
+For more information about I/O to the controlling terminal,
+@pxref{Access to the Controlling Terminal}.
 
 
 @node Support for Job Control
@@ -100,50 +110,35 @@ defined.  However, the implementation never generates these signals,
 and attempts to send a job control signal or examine or specify their
 actions fail.
 
-@node Job Control and the Terminal Driver
-@section Job Control and the Terminal Driver
-
-This section describes terminal driver support for job control, and
-discusses how access to the terminal is shared multiple jobs within
-a session.
-
-@menu
-* Controlling Terminal of a Process::	How a process's controlling terminal
-					 is determined.
-* Access to the Controlling Terminal::	Access to the controlling terminal is
-					 normally limited to foreground jobs.
-* Foreground Process Group::		How to inquire about and modify the
-					 foreground process group of a
-					 controlling terminal.
-@end menu
 
 @node Controlling Terminal of a Process
-@subsection Controlling Terminal of a Process
+@section Controlling Terminal of a Process
 
 @cindex controlling process
-A session leader that has control of a terminal is called a
-@dfn{controlling process}.  The way in which a session leader gains
-control of a terminal is implementation-dependent.  One way in which
-this might happen is for the session leader to open a terminal device
-file that isn't already the controlling terminal for another process,
-for example.  You generally don't need to worry about the exact
+A session leader that has control of a terminal is called the
+@dfn{controlling process} of that terminal.  The way in which a session
+leader gains control of a terminal is implementation-dependent.  One way
+in which this might happen is for the session leader to open a terminal
+device file that isn't already the controlling terminal for another
+process, for example.  You generally don't need to worry about the exact
 mechanism, since it is normally performed for you by the login program
 or programs like @code{getty} that are run automatically by the
 operating system.
 
-@cindex controlling terminal
-Child processes created with @code{fork} inherit the @dfn{controlling
-terminal} from their parent process.  In this way, all the processes
-in a session inherit the controlling terminal from the session leader.
+@strong{Incomplete:}  How does this happen in the GNU system?
+
+Child processes created with @code{fork} inherit the controlling
+terminal from their parent process.  In this way, all the processes in a
+session inherit the controlling terminal from the session leader.
 
 An individual process relinquishes its controlling terminal when it
 becomes the leader of a new session.
 
-When a controlling process terminates, this permits control of the
-terminal to be established by a new session.  This could cause a problem
-if any processes from the old session are still trying to access the
-terminal.  So, all of the processes associated with that session are
-sent a @code{SIGHUP} signal when the session leader terminates.  
+When a controlling process terminates, control of the terminal may be
+gained by a new session.  This could cause a problem if any processes
+from the old session are still trying to access the terminal.  So, all
+of the processes in a session are sent a @code{SIGHUP} signal when the
+session leader terminates.
 
 Ordinarily, receiving a @code{SIGHUP} signal causes a process to
 terminate.  However, if you have your program ignore this signal or
@@ -154,7 +149,12 @@ called an @dfn{orphaned process group}.
 @cindex orphaned process group
 
 @node Access to the Controlling Terminal
-@subsection Access to the Controlling Terminal
+@section Access to the Controlling Terminal
+
+Only processes in the foreground job of a controlling terminal have
+unrestricted access to that terminal.  This section describes in
+more details what happens when a process in a background job tries
+to access its controlling terminal.
 
 When a process in a background job tries to read from its controlling
 terminal, the process group is usually sent a @code{SIGTTIN} signal.
@@ -177,6 +177,847 @@ For more information about the primitive @code{read} and @code{write}
 functions, @pxref{Input and Output Primitives}.
 
 
+@node Implementing a Job Control Shell
+@section Implementing a Job Control Shell
+
+This section describes what a shell must do to implement a job control
+protocol by presenting an extensive example program to illustrate the
+concepts involved.
+
+@iftex
+@itemize @bullet
+@item 
+@ref{Data Structures and Utilities}, introduces the example program
+and its primary data structures.
+
+@item
+@ref{Initializing the Shell}, discusses actions which the shell must
+perform before taking responsibility for job control.
+
+@item
+@ref{Launching Jobs}, includes information about how to create jobs
+to execute commands.
+
+@item
+@ref{Foreground and Background Jobs}, discusses what the shell should
+do differently when launching jobs in the foreground as opposed to
+a background job.
+
+@item
+@ref{Stopped and Terminated Jobs}, discusses reporting of job status
+back to the shell.
+
+@item
+@ref{Continuing Stopped Jobs}, tells you how to continue jobs that
+have been stopped.
+
+@item
+@ref{The Missing Pieces}, discusses other parts of the shell.
+@end itemize
+@end iftex
+
+@menu
+* Data Structures and Utilities::	Introduction to the sample shell.
+* Initializing the Shell::		What the shell must do to take
+					 responsibility for job control.
+* Launching Jobs::			Creating jobs to execute commands.
+* Foreground and Background Jobs::	What the shell must do after launching
+					 the job.
+* Stopped and Terminated Jobs::		Reporting job status.
+* Continuing Stopped Jobs::		How to continue a stopped job in
+					 the foreground or background.
+* The Missing Pieces::			Other parts of the shell.
+@end menu
+
+@node Data Structures and Utilities
+@subsection Data Structures and Utilities
+
+All of the program examples included in this chapter are part of
+a simple shell program.  This section presents the data structures
+and some utility functions which are used throught the example.
+
+The sample shell deals with two main kinds of data structures.  The
+@code{Job} type contains information about a job, which corresponds to a
+set of subprocesses linked together with pipes.  The @code{Program} type
+holds information about a single subprocess.  Here are the relevant
+data structure declarations:
+
+@example
+
+/* @r{A Program is a single process.} */
+
+typedef struct program @{
+  struct program *next;       /* @r{next process in pipeline} */
+  char **argv;                /* @r{for exec} */
+  pid_t pid;                  /* @r{process ID} */
+  char completed;             /* @r{true if process has completed} */
+  char stopped;               /* @r{true if process has stopped} */
+  int status;                 /* @r{reported status value} */
+@} Program;
+
+
+/* @r{A Job is a pipeline of Programs.} */
+
+typedef struct job @{
+  struct job *next;           /* @r{next active job} */
+  char *command;              /* @r{command line, used for messages} */
+  Program *first_program;     /* @r{list of programs in this job} */
+  pid_t pgid;                 /* @r{process group ID} */
+  char notified;              /* @r{true if user told about stopped job} */
+  struct termios tmodes;      /* @r{saved terminal modes} */
+  int stdin, stdout, stderr;  /* @r{standard i/o channels} */
+@} Job;
+
+
+/* @r{The active jobs are linked into a list.  This is its head.}
+ */
+
+Job *first_job = NULL;
+@end example
+
+
+Here are some utility functions that are used for operating on @code{Job}
+objects.
+
+@example
+/* @r{Find the active job with the indicated pgid.}
+ */
+
+Job *find_job (pid_t pgid)
+@{
+  Job *j;
+  
+  for (j = first_job; j; j = j->next)
+    if (j->pgid == pgid)
+      return j;
+  return NULL;
+@}
+
+
+/* @r{Return true if all processes in the job have stopped or completed.}
+ */
+
+int job_is_stopped (Job *j)
+@{
+  Program *p;
+  
+  for (p = j->first_program; p; p = p->next)
+    if (!p->completed  && !p->stopped)
+      return 0;
+  return 1;
+@}
+
+
+/* @r{Return true if all processes in the job have completed.}
+ */
+
+int job_is_completed (Job *j)
+@{
+  Program *p;
+  
+  for (p = j->first_program; p; p = p->next)
+    if (!p->completed)
+      return 0;
+  return 1;
+@}
+@end example
+
+
+@node Initializing the Shell
+@subsection Initializing the Shell
+
+There can only be a single shell performing job control at any one time
+within a single session.  When a shell program that normally performs
+job control is started, it has to be careful in case it has been invoked
+from another shell that is already doing its own job control.
+
+A subshell that runs non-interactively cannot support job control.  It
+must leave all processes it creates in the same process group as the
+shell itself; this allows the non-interactive shell and its child
+processes to be treated as a single job by the parent shell.
+
+A subshell that runs interactively has to ensure that it has been placed
+in the foreground by its parent shell before it can enable job control
+itself.  It does this by getting its initial process group ID with the
+@code{getpgrp} function, and comparing it to the process group ID of the
+current foreground job associated with its controlling terminal (which
+can be retrieved using the @code{tcgetpgrp} function).
+
+If the subshell is not running as a foreground job, it must stop itself
+by sending a @code{SIGTTIN} signal to its own process group.  Remember
+that a job cannot arbitrarily put itself into the foreground; it must
+wait for the user to tell the shell to do this.  If the job is continued
+again, it should repeat the check and stop itself again if it is still
+not in the foreground.
+
+Once the subshell is running as a foreground job in its parent shell, it
+can enable its own job control.  It does this by calling @code{setpgid}
+to put itself into its own process group, and then calling
+@code{tcsetpgrp} to place this process group into the foreground.
+
+When a shell enables job control, it should set itself to ignore all the
+job control stop signals so that it doesn't accidentally stop itself.
+(Since only one shell at a time can be in charge of job control, there
+might not be anybody to restart it!)  You can do this by setting the
+action for all the stop signals to @code{SIG_IGN}.
+
+Here is the initialization code for the sample shell that shows how to
+do all of this.
+
+@example
+/* @r{Keep track of attributes of the shell.}
+ */
+
+pid_t shell_pgid;
+struct termios shell_tmodes;
+int shell_terminal;
+int shell_is_interactive;
+
+
+/* @r{Make sure the shell is running interactively as the foreground job }
+ * @r{before enabling job control.}
+ */
+
+void init_shell (void)
+@{
+  
+  /* @r{See if we are running interactively.} */
+  shell_terminal = STDIN_FILENO;
+  shell_is_interactive = isatty (shell_terminal);
+
+  if (shell_is_interactive) @{
+
+    /* @r{Loop until we are in the foreground.} */
+    while (tcgetpgrp (shell_terminal) != (shell_pgid = getpgrp ()))
+      kill (-1 * shell_pgid, SIGTTIN);
+  
+    /* @r{Set the process to ignore these signals.} */
+    signal (SIGINT, SIG_IGN);
+    signal (SIGQUIT, SIG_IGN);
+    signal (SIGTSTP, SIG_IGN);
+    signal (SIGTTIN, SIG_IGN);
+    signal (SIGTTOU, SIG_IGN);
+    signal (SIGCHLD, SIG_IGN);
+    
+    /* @r{Put ourselves in our own process group.} */
+    shell_pgid = getpid ();
+    if (setpgid (shell_pgid, shell_pgid) < 0) @{
+      fprintf (stderr, "Couldn't put the shell in its own process group.\n");
+      exit (errno);
+    @}
+    
+    /* @r{Grab control of the terminal.} */
+    tcsetpgrp (shell_terminal, shell_pgid);
+  
+    /* @r{Save default terminal attributes for shell.} */
+    tcgetattr (shell_terminal, &shell_tmodes);
+  @}
+@}
+@end example
+
+
+@node Launching Jobs
+@subsection Launching Jobs
+
+Once the shell has taken responsibility for performing job control on
+its controlling terminal, it can launch jobs in response to commands
+typed by the user.
+
+To create the processes in a process group, you use the same @code{fork}
+and @code{exec} functions described in @ref{Creating New Processes}.
+Since there are multiple child processes involved, though, things are a
+little more complicated and you need to take extra care to do things in
+the correct order and coordinate which process is doing what.
+Otherwise, nasty race conditions can result.
+
+You can either make all the processes in the process group be children
+of the shell process, or you can make one process in group be the
+ancestor of all the other processes in that group.  The sample shell
+program presented in this chapter uses the first approach because it
+makes bookkeeping somewhat simpler.
+
+@cindex process group leader
+@cindex process group ID
+As each process is forked, it should put itself in the new process group
+by calling @code{setpgid}.  The first process in the job becomes its
+@dfn{process group leader}, and its process ID becomes the @dfn{process
+group ID} for the job.
+
+The shell should also call @code{setpgid} to put each of its child
+processes into the new process group.  This is because there is a
+potential timing problem: each child process must be put in the process
+group before it begins executing a new program, and the shell depends on
+having all the child processes in the group before it continues
+executing.  Having both the child processes and the shell call
+@code{setpgid} ensures that the right things happen no matter which
+process gets to it first.
+
+If the job is being launched as a foreground job, the new process group
+also needs to be put into the foreground on the controlling terminal
+using @code{tcsetpgrp}.  Again, this should be done by the shell as well
+as by each of its child processes, to avoid race conditions.
+
+The next thing that has to be done by each child process is to reset its
+signal actions.
+
+During initialization, the shell process set itself to ignore job
+control signals; @pxref{Initializing the Shell}.  As a result, any child
+processes it creates also ignore these signals by inheritance.  This is
+definitely undesirable, so each child process should explicitly set the
+actions for these signals back to @code{SIG_DFL} as it is forked.
+
+(Applications also have a responsibility not to mess up the handling of
+stop signals.  In general, an application should assume that it inherits
+the correct handling of these signals from the shell.  Some applications
+disable the normal interpretation of the SUSP character; @pxref{Terminal
+Modes}.  If you are writing a program that does this, you can make your
+application be a ``good citizen'' by providing some other mechanism for
+users to interactively stop the job.  Implementationally, this involves
+sending a @code{SIGTSTP} signal to the process group of the process, not
+just to the process itself.)
+
+Finally, each child process should call @code{exec} in the normal way.
+This is also the point at which redirection of the standard input and 
+output channels should be handled.  @xref{Redirecting Input and Output},
+for an explanation of how to do this.
+
+Here is the function from the sample shell program that is responsible
+for launching a program.  The function is executed by each child process
+immediately after it has been forked by the shell, and never returns.
+
+@example
+void launch_program (Program *p, pid_t pgid,
+		     int infile, int outfile, int errfile,
+		     int foreground)
+@{
+  pid_t pid;
+
+  if (shell_is_interactive) @{
+  
+    /* @r{Put the process into the process group and give the process group}
+     * @r{the terminal, if appropriate.}
+     * @r{This has to be done both by the shell and in the individual}
+     * @r{child processes because of potential race conditions.}
+     */
+    pid = getpid ();
+    if (pgid == 0) pgid = pid;
+    setpgid (pid, pgid);
+    if (foreground)
+      tcsetpgrp (shell_terminal, pgid);
+  
+    /* @r{Set the handling for these signals back to the default.} */
+    signal (SIGINT, SIG_DFL);
+    signal (SIGQUIT, SIG_DFL);
+    signal (SIGTSTP, SIG_DFL);
+    signal (SIGTTIN, SIG_DFL);
+    signal (SIGTTOU, SIG_DFL);
+    signal (SIGCHLD, SIG_DFL);
+  @}
+
+  /* @r{Set the standard input/output channels of the new process.} */
+  if (infile != STDIN_FILENO) @{
+    dup2 (infile, STDIN_FILENO);
+    close (infile);
+  @}
+  if (outfile != STDOUT_FILENO) @{
+    dup2 (outfile, STDOUT_FILENO);
+    close (outfile);
+  @}
+  if (errfile != STDERR_FILENO) @{
+    dup2 (errfile, STDERR_FILENO);
+    close (errfile);
+  @}    
+  
+  /* @r{Exec the new program.  Make sure we exit.} */ 
+  execvp (p->argv[0], p->argv);
+  fprintf (stderr, "Exec failed.\n");
+  exit (errno);
+@}
+@end example
+
+Notice that if the shell is not running interactively, this function
+does not do anything with process groups or signals.  Remember that a
+noninteractive shell must keep all of its subprocesses in the same
+process group as the shell itself.
+
+Next, here is the function that actually launches a complete job.
+After creating the child processes, this function calls some other
+functions to put the newly crated job into the foreground or background;
+these are discussed in @ref{Foreground and Background Jobs}.
+
+@example
+void launch_job (Job *j, int foreground)
+@{
+  Program *p;
+  pid_t pid;
+  int mypipe[2], infile, outfile;
+  
+  infile = STDIN_FILENO;
+  for (p = j->first_program; p; p = p->next) @{
+    
+    /* @r{Set up pipes, if necessary.} */
+    if (p->next) @{
+      if (pipe (mypipe) < 0) @{
+        fprintf (stderr, "Pipe failed.\n");
+        exit (errno);
+      @}
+      outfile = mypipe[1];
+    @}
+    else
+      outfile = STDOUT_FILENO;
+    
+    /* @r{Fork the child processes.} */
+    pid = fork ();
+    if (pid == 0)
+      /* @r{This is the child process.} */
+      launch_program (p, j->pgid, infile, outfile, foreground);
+    else if (pid < 0) @{
+      /* @r{The fork failed.} */
+      fprintf (stderr, "Fork failed.\n");
+      exit (pid);
+    @}
+    else @{
+      /* @r{This is the parent process.} */
+      p->pid = pid;
+      if (shell_is_interactive) @{
+        if (!j->pgid) j->pgid = pid;
+        setpgid (pid, j->pgid);
+      @}
+    @}
+    
+    /* @r{Clean up after pipes.} */
+    if (infile != STDIN_FILENO)
+      close (infile);
+    if (outfile != STDOUT_FILENO)
+      close (outfile);
+    infile = mypipe[0];
+  @}
+  
+  format_job_info (j, "launched");
+
+  if (!shell_is_interactive)
+    wait_for_job (j);
+  else if (foreground)
+    put_job_in_foreground (j, 0);
+  else
+    put_job_in_background (j, 0);
+@}
+@end example
+
+
+@node Foreground and Background Jobs
+@subsection Foreground and Background Jobs
+
+Now let's consider what actions must be taken by the shell when it
+launches a job into the foreground, and how this differs from what
+must be done when a background job is launched.
+
+When a foreground job is launched, the shell must first give it access
+to the controlling terminal by calling @code{tcsetpgrp}.  Then, the
+shell should wait for processes in that process group to terminate or
+stop.  This is discussed in more detail in @ref{Stopped and Terminated
+Jobs}.
+
+When all of the processes in the group have either completed or stopped,
+the shell should regain control of the terminal for its own process
+group by calling @code{tcsetpgrp} again.  Since stop signals caused by
+I/O from a background process or a SUSP character typed by the user
+are sent to the process group, normally all the processes in the job
+stop together.
+
+The foreground job may have left the terminal in a strange state, so the
+shell should restore its own saved terminal modes before continuing.  In
+case the job is merely been stopped, the shell should first save the
+current terminal modes so that it can restore them later if the job is
+continued.  The functions for dealing with terminal modes are
+@code{tcgetattr} and @code{tcsetattr}; these are described in
+@ref{Terminal Modes}.
+
+
+Here is the sample shell's function for doing all of this.
+
+@example
+/* @r{Put a job in the foreground.  If the cont argument is true,}
+ * @r{restore its saved terminal modes and send the process group a}
+ * @r{SIGCONT signal to wake it up before blocking.}
+ */
+
+void put_job_in_foreground (Job *j, int cont)
+@{
+  /* @r{Put the job into the foreground.} */
+  tcsetpgrp (shell_terminal, j->pgid);
+
+  /* @r{Send the job a continue signal, if necessary.} */
+  if (cont) @{
+    tcsetattr (shell_terminal, TCSADRAIN, &(j->tmodes));
+    kill (-1 * j->pgid, SIGCONT);
+  @}
+  
+  /* @r{Wait for it to report.} */
+  wait_for_job (j);
+    
+  /* @r{Put the shell back in the foreground.} */
+  tcsetpgrp (shell_terminal, shell_pgid);
+    
+  /* @r{Restore the shell's terminal modes.} */
+  tcgetattr (shell_terminal, &(j->tmodes));
+  tcsetattr (shell_terminal, TCSADRAIN, &shell_tmodes);
+@}
+@end example
+
+If the process group is launched as a background job, the shell should
+remain in the foreground itself and continue to read commands from
+the terminal.  
+
+In the sample shell, there is not much that needs to be done to put
+a job into the background.  Here is the function it uses:
+
+@example
+/* @r{Put a job in the background.  If the cont argument is true, send}
+ * @r{the process group a SIGCONT signal to wake it up.}
+ */
+
+void put_job_in_background (Job *j, int cont)
+@{
+  /* @r{Send the job a continue signal, if necessary.} */
+  if (cont)
+    kill (-1 * j->pgid, SIGCONT);
+@}
+@end example
+
+
+@node Stopped and Terminated Jobs
+@subsection Stopped and Terminated Jobs
+
+When a foreground process is launched, the shell must block until all of
+the processes in that job have either terminated or stopped.  It can do
+this by calling the @code{waitpid} function.  The @code{WUNTRACED}
+option should be specified so that status is reported for processes that
+are stopped as well as processes that have completed.
+
+The shell must also check on the status of background jobs so that it
+can report terminated and stopped jobs to the user; this can be done by
+calling @code{waitpid} with the @code{WNOHANG} option.  A good place to
+put a such a check for terminated and stopped jobs is just before
+prompting for a new command.
+
+You can also receive asynchronous notification that there is status
+information available for a child process by establishing a handler for
+@code{SIGCHLD} signals.
+
+In the sample shell program, the @code{SIGCHLD} signal is normally
+ignored.  This is to avoid reentrancy problems involving the global data
+structures the shell manipulates.  But at specific times when the shell
+is not using these data structures --- such as when it is waiting for
+input on the terminal --- it makes sense to enable a handler for
+@code{SIGCHLD}.  The same function that is used to do the synchronous
+status checks (@code{do_job_notification}, in this case) can also be
+called from within this handler.
+
+Here are the parts of the sample shell program that deal with checking
+the status of jobs and reporting the information to the user.
+
+@example
+/* @r{Store the status of the process reported by the operating system.}
+ * @r{Return 0 if all went well, nonzero otherwise.}
+ */
+
+int mark_program_status (pid_t pid, int status)
+@{
+  Job *j;
+  Program *p;
+
+  if (pid > 0) @{
+    /* @r{Update the record for the process.} */
+    for (j = first_job; j; j = j->next)
+      for (p = j->first_program; p; p = p->next)
+        if (p->pid == pid) @{
+          p->status = status;
+          if (WIFSTOPPED (status))
+            p->stopped = 1;
+          else @{
+            p->completed = 1;
+            if (WIFSIGNALED (status))
+              fprintf (stderr, "%ld: Terminated by signal %d.\n",
+                       (long)pid, WTERMSIG (p->status));
+          @}
+          return 0;
+         @}
+    fprintf (stderr, "No child process %d.\n", pid);
+    return -1;
+  @}
+  else if (pid == 0 || errno == ECHILD)
+    /* @r{No processes ready to report.} */
+    return -1;
+  else @{
+    /* @r{Other weird errors.} */
+    fprintf (stderr, "waitpid returned error %d.\n", errno);
+    return -1;
+  @}
+@}
+
+
+/* @r{Check for processes that have status information available, without}
+ * @r{blocking.}
+ */
+
+void update_status (void)
+@{
+  int status;
+  pid_t pid;
+  
+  do @{
+    pid = waitpid (-1, &status, WUNTRACED|WNOHANG);
+  @} while (!mark_program_status (pid, status));
+@}
+
+
+/* @r{Check for processes that have status information available, blocking}
+ * @r{until all processes in the given job have reported.}
+ */
+
+void wait_for_job (Job *j)
+@{
+  int status;
+  pid_t pid;
+  
+  do @{
+    pid = waitpid (-1, &status, WUNTRACED);
+  @} while (!mark_program_status (pid, status) &&
+           !job_is_stopped (j) &&
+           !job_is_completed (j));
+@}
+
+
+/* @r{Format information about job status for the user to look at.}
+ */
+
+void format_job_info (Job *j, const char *status)
+@{
+  fprintf (stderr, "%ld (%s): %s\n", (long)j->pgid, status, j->command);
+@}
+
+
+/* @r{Notify the user about stopped or terminated jobs.}
+ * @r{Delete terminated jobs from the active job list.}
+ */
+
+void do_job_notification (void)
+@{
+  Job *j, *jlast, *jnext;
+  Program *p;
+
+  /* @r{Update status information for child processes.} */
+  update_status ();
+  
+  jlast = NULL;
+  for (j = first_job; j; j = jnext) @{
+    jnext = j->next;
+    
+    /* @r{If all processes have completed, tell the user the job has}
+     * @r{completed and delete it from the list of active jobs.}
+     */
+    if (job_is_completed (j)) @{
+      format_job_info (j, "completed");
+      if (jlast)
+        jlast->next = jnext;
+      else
+        first_job = jnext;
+      free_job (j);
+    @}
+    
+    /* @r{Notify the user about stopped jobs, marking them so that we won't}
+     * @r{do this more than once.}
+     */
+    else if (job_is_stopped (j) && !j->notified) @{
+      format_job_info (j, "stopped");
+      j->notified = 1;
+      jlast = j;
+    @}
+    
+    /* @r{Don't say anything about jobs that are still running.} */
+    else
+      jlast = j;
+  @}
+@}
+@end example
+
+
+@node Continuing Stopped Jobs
+@subsection Continuing Stopped Jobs
+
+Next, let's consider how the shell implements a mechanism for restarting
+stopped jobs.
+
+Jobs can be stopped in several different ways.  When a process in a
+background job tries to access the terminal, its job is normally stopped
+by the terminal driver.  Both foreground and background jobs can also be
+stopped explicitly by sending them a stop signal.  And, the terminal
+driver stops the current foreground process when the user types the
+SUSP character (usually @kbd{C-z}).
+
+The shell can continue a stopped job by sending a @code{SIGCONT} signal
+to its process group.  If the job is being continued in the foreground,
+the shell should first invoke @code{tcsetgrp} first to give the job
+access to the terminal, restore the saved terminal settings, and then
+wait for the job to stop or complete.  This is similar to what must be
+done when initially launching a foreground job.
+
+The sample shell program uses the same set of functions ---
+@code{put_job_in_foreground} and @code{put_job_in_background} --- to
+handle both newly created and continued jobs.  The definitions of these
+functions were given in @ref{Foreground and Background Jobs}.  When
+continuing a stopped job, a nonzero value is passed as the @var{cont}
+argument to ensure that the @code{SIGCONT} signal is sent and the
+terminal modes reset, as appropriate.
+
+This leaves only a function for updating the shell's internal bookkeeping
+about the job being continued:
+
+@example
+/* @r{Mark a stopped job as being unstopped again.}
+ */
+
+void mark_job_as_unstopped (Job *j)
+@{
+  Program *p;
+
+  for (p = j->first_program; p; p = p->next)
+    p->stopped = 0;
+  j->notified = 0;
+@}
+
+/* @r{Continue the given job.}
+ */
+
+void continue_job  (Job *j, int foreground)
+@{
+  mark_job_as_unstopped (j);
+  if (foreground)
+    put_job_in_foreground (j, 1);
+  else
+    put_job_in_background (j, 1);
+@}
+@end example
+
+
+@node The Missing Pieces
+@subsection The Missing Pieces
+
+The code extracts for the sample shell included in this chapter are only
+a part of the entire shell program.  In particular, nothing at all has
+been said about how @code{Job} and @code{Program} data structures are
+allocated and initialized.
+
+Most real shells provide a complex user interface that has support for
+a command language; variables; abbreviations, substitutions, and pattern
+matching on file names; and the like.  All of this is far too complicated
+to explain here!  Instead, we have concentrated on showing how to 
+implement the core process creation and job control functions that can
+be called from such a shell.
+
+Here is a table summarizing the major entry points we have presented:
+
+@table @code
+@item void init_shell (void)
+Called to initialize the shell's internal state.
+
+@item void launch_job (Job *@var{j}, int @var{foreground})
+Launch the job @var{j} as either a foreground or background job.
+
+@item void do_job_notification (void)
+Check for and report any jobs that have terminated or stopped.  Can be
+called synchronously or within a handler for @code{SIGCHLD} signals.
+
+@item void continue_job (Job *@var{j}, int @var{foreground})
+Continue the job @var{j}.
+@end table
+
+Of course, a real shell would also want to provide other functions for
+managing jobs.  For example, it would be useful to have commands to list
+all active jobs or to send a signal (such as @code{SIGKILL}) to a job.
+
+
+@node Job Control Functions
+@section Job Control Functions
+
+This section contains detailed descriptions of the functions relating
+to job control.
+
+@menu
+* Process Group Functions::	Functions for manipulating process groups.
+* Foreground Process Group::	How to inquire about and modify the 
+				 foreground process group of a terminal.
+@end menu
+
+@node Process Group Functions
+@subsection Process Group Functions
+
+Here are descriptions of the functions for manipulating process groups.
+Your program should include the header files @file{<sys/types.h>} and
+@file{<unistd.h>} to use these functions.
+
+@deftypefun pid_t setsid (void)
+The @code{setsid} function creates a new session.  The calling
+process becomes the session leader, and is put in a new process
+group.  The process group ID is the same as the process ID of the
+current process.  There are no other processes in the process group, and
+no other process groups in the session.
+
+This function also makes the calling process have no controlling terminal.
+
+The @code{setsid} function returns the process group ID of the calling
+process if successful.  A return value of @code{-1} indicates an error.
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EPERM
+The calling process is already a process group leader, or there is
+already another process group around that has the same process group ID.
+@end table
+@end deftypefun
+
+@deftypefun pid_t getpgrp (void)
+This function returns the process group ID of the calling process.
+@end deftypefun
+
+@deftypefun int setpgid (pid_t @var{pid}, pid_t @var{pgid})
+The @code{setpgid} function sets the process group ID of the process
+named by @var{pid} to @var{pgid}.  As a special case, both @var{pid}
+and @var{pgid} can be zero to indicate the process ID of the calling
+process.
+
+This function may fail if @code{_POSIX_JOB_CONTROL} is not defined.
+@xref{Support for Job Control}, for more information.
+
+If the operation is successful, @code{setpgid} returns zero.  Otherwise
+a value of @code{-1} is returned.  The following @code{errno} error
+conditions are defined for this function:
+
+@table @code
+@item EACCES
+The child process named by @var{pid} has already executed an @code{exec}
+function.
+
+@item EINVAL
+The value of the @var{pgid} is not valid.
+
+@item ENOSYS
+The implementation doesn't support job control.
+
+@item EPERM
+The process indicated by the @var{pid} argument is a session leader,
+or is not in the same session as the calling process, or the value of
+the @var{pgid} argument doesn't match a process group ID in the same
+session as the calling process.
+
+@item ESRCH
+The process indicated by the @var{pid} argument is not the calling
+process or a child of the calling process.
+@end table
+@end deftypefun
+
+
 @node Foreground Process Group
 @subsection Foreground Process Group
 
@@ -192,9 +1033,12 @@ file itself and not a particular open file descriptor.
 @deftypefun pid_t tcgetpgrp (int @var{filedes})
 This function returns the process group ID of the foreground process
 group associated with the terminal file with descriptor @var{filedes}.
+
 If there is no foreground process group, the return value is a number
 greater than @code{1} that does not match the process group ID of any
-existing process group.
+existing process group.  This can happen if all of the processes in the
+job that was formerly the foreground job have terminated, and not other
+job has yet been moved into the foreground.
 
 In case of an error, a value of @code{-1} is returned.  The
 following @code{errno} error conditions are defined for this function:
@@ -247,305 +1091,3 @@ The @var{pgid} isn't a process group in the same session as the calling
 process.
 @end table
 @end deftypefun
-
-
-@node Implementing a Job Control Shell
-@section Implementing a Job Control Shell
-
-This section describes the details of what a shell must do to implement
-a job control protocol.
-
-@menu
-Creating a Process Group::	How process creation meshes with putting
-				 processes into groups.
-Selecting the Foreground Job::	When and how to put a job in the
-				 foreground.
-Stopped Jobs::			How the shell is notified about stopped jobs,
-				 and how it can continue them.
-Terminated Jobs::		What to do when a job terminates
-Subshells::			Only one shell per session can do job control.
-Handling of Stop Signals::	How to avoid having a shell stop itself.
-Job Control Functions::		Specifications of the functions.
-@end menu
-
-@node Creating a Process Group
-@subsection Creating a Process Group
-
-To create the processes in a process group, you use the same @code{fork}
-and @code{exec} functions described in @ref{Creating New Processes}.
-Since there are multiple child processes involved, though, things are a
-little more complicated and you need to take extra care to do things in
-the correct order and coordinate which process is doing what.
-Otherwise, nasty race conditions can result.
-
-@strong{Incomplete:} Need to introduce an example here so that the
-subsequent discussion can build on it.
-
-The first step is to create the child processes using the @code{fork}
-function.  You can either make all the processes in the process group
-be children of the shell process, or you can make one process in group
-be the ancestor of all the other processes in that group.
-
-@cindex process group leader
-@cindex process group ID
-The next step is to put all of the processes into the new process group.
-The first process in the job becomes its @dfn{process group leader},
-and its process ID becomes the @dfn{process group ID} for the job.  
-
-If you had the shell fork off all the child processes for the job, then
-you should have the shell call @code{setpgid} to put each child process
-into the new process group, as well as having all the child processes do
-this individually for themselves.  This is because there is a potential
-timing problem: each child process must be put in the process group before
-it begins executing a new program, and the shell depends on having all
-the child processes in the group before it continues executing.  Having
-both the child processes and the shell call @code{setpgid} ensures that
-the right things happen no matter which process gets to it first.
-
-If you had the shell fork a single process that is the ancestor of all
-the other processes in the job, then the shell only needs to call
-@code{setpgid} on this one process.  The child process, in turn, should
-call @code{setpgid} before forking the remaining processes, so that these
-processes will automatically inherit the correct process group ID.
-
-Finally, each child process should call @code{exec} in the normal way.
-
-
-@strong{Incomplete:}  Put some more examples here showing how to do
-this using both of the possible strategies.
-
-If errors are encountered in starting any of the processes or programs
-in a process group, it's generally a good idea to kill off all of the
-processes in that group.
-
-
-@node Selecting the Foreground Job
-@subsection Selecting the Foreground Job
-
-What the shell should do after forking the child processes for a job
-depends on whether the job is being launched as a foreground or
-background job.
-
-If the job is being placed into the foreground, the shell needs to tell
-the terminal driver to give the new job access to the controlling
-terminal using the @code{tcsetpgrp} function.  (This function is
-described in detail in @ref{Foreground Process Group}.)
-
-@strong{Incomplete:}  Why does this have to be done by the shell and
-not a child processes?
-
-Then, the shell should wait for processes in that process group to
-report by calling the @code{waitpid} function.  The @code{WUNTRACED}
-option should be specified so that status is reported for processes that
-are stopped as well as processes that have completed.
-
-@strong{Incomplete:} Put a code fragment here showing how to do this.
-
-If the process group is launched as a background job, the shell should
-remain in the foreground itself and continue to read commands from
-the terminal.  The shell still needs to check on the status of
-background jobs so that it can report terminated and stopped jobs to the
-user; this can be done synchronously by calling @code{waitpid} with the
-@code{WNOHANG} option, or asynchronously by establishing a handler for
-@code{SIGCHLD} signals.  A good place for the shell to perform these
-checks is just before prompting for a new command.
-
-@strong{Incomplete:} Put a code fragment here showing how to do this.
-
-@node Stopped Jobs
-@subsection Stopped Jobs
-
-Jobs can be stopped in several different ways.  When a process in a
-background job tries to access the terminal, its job is normally stopped
-by the terminal driver.  Both foreground and background jobs can also be
-stopped explicitly by sending them a stop signal.  And, the terminal
-driver stops the current foreground process when the user types the
-SUSP character (usually @kbd{C-z}).
-
-When the shell receives notification of a stopped foreground job, it
-must regain access to the controlling terminal by putting itself into
-the foreground.  The shell must remember the terminal settings being
-used by the stopped job so it can restore them if the job is continued
-again in the foreground.  This is done using @code{tcgetattr} and
-@code{tcsetattr}; @pxref{Low-Level Terminal Interface}.  When it puts
-itself into the foreground, the shell should also restore its own
-terminal settings before reading additional commands from the user.
-
-The shell can continue a stopped job by sending a @code{SIGCONT} signal
-to its process group.  If the job is being continued in the foreground,
-the shell should first invoke @code{tcsetgrp} first to give the job
-access to the terminal, restore the saved terminal settings, and then
-wait for the job to stop or complete.  This is similar to what must be
-done when initially launching a foreground job.
-
-@strong{Incomplete:} Put a code fragment here showing how to do this.
-
-@node Terminated Jobs
-@subsection Terminated Jobs
-
-When the shell receives notification that all the processes in a
-foreground job have terminated, it should put itself into the foreground
-and reset its terminal modes, the same as when it receives notification
-of a stopped job.
-
-During the time in between when the last process in the foreground job
-exits and the shell puts itself into the foreground, the terminal has no
-associated foreground process group.
-
-When a background job terminates, the shell typically provides a message
-to the user to report this.  But there is no need to set a new foreground
-job in this case.
-
-
-@node Subshells
-@subsection Subshells
-
-There can only be a single shell performing job control within a single
-session.  When a shell program that normally performs job control is
-started, it has to be careful in case it has been invoked from another
-shell that is already doing its own job control.
-
-A subshell that runs non-interactively cannot support job control.  It
-must leave all processes it creates in the same process group as the
-shell itself; this allows the non-interactive shell and its child
-processes to be treated as a single job by the parent shell.
-
-The way you determine whether a shell is running interactively is to
-determine that its standard input file descriptor (@code{STDIN_FILENO})
-is a terminal device using @code{isatty}, and then compare the terminal
-device name for that file descriptor (accessed with @code{ttyname}) to
-the device name for the controlling terminal for the process (accessed
-with @code{ctermid}).
-
-A subshell that runs interactively has to ensure that it has been placed
-in the foreground by its parent shell before enabling job control.  It
-does this by getting its initial process group ID with the
-@code{getpgrp} function, and comparing it to the process group ID of the
-current foreground job associated with its controlling terminal (which
-can be retrieved using the @code{tcgetpgrp} function).
-
-If the subshell is not running as a foreground job, it must stop itself
-by sending a @code{SIGTTIN} signal to its own process group.  Remember
-that a job cannot arbitrarily put itself into the foreground; it must
-wait for the user to do this.  If the job is continued again, it should
-repeat the check and stop itself again if it is still not in the
-foreground.
-
-Once the subshell is running as a foreground job in its parent shell, it
-can enable its own job control.  It does this by calling @code{setpgid}
-to put itself into its own process group, and then by calling
-@code{tcsetpgrp} to place this process group into the foreground.
-
-When a shell terminates, it should return its process to its original
-process group using @code{setpgid}.  This allows its parent shell to
-regain responsibility for performing job control.
-
-@strong{Incomplete:} Put a code fragment here showing how to do this.
-
-
-@node Handling of Stop Signals
-@subsection Handling of Stop Signals
-
-When a shell enables job control, it should set itself to ignore all the
-job control stop signals so that it doesn't accidentally stop itself.
-(Since only one shell at a time can be in charge of job control, there
-might not be anybody to restart it!)  You can do this by setting the
-action for all the stop signals to @code{SIG_IGN}.
-
-@strong{Incomplete:} Put a code fragment here showing how to do this.
-
-Having the shell process ignore stop signals means that the default
-behavior for any child processes it creates is also to ignore stop
-signals, which is definitely undesirable.  So, as child processes within
-a job are forked, the shell should explicitly set the actions for these
-signals back to @code{SIG_DFL}.
-
-@strong{Incomplete:} Put a code fragment here showing how to do this.
-
-Applications also have a responsibility not to mess up handling of stop
-signals.  In general, an application should assume that it inherits the
-correct handling of these signals from the shell.
-
-Some applications disable the normal interpretation of the SUSP
-character; @pxref{Terminal Modes}.  If you are writing a program that
-does this, you can make your application be a ``good citizen'' by
-providing some other mechanism for users to interactively stop the job.
-Implementationally, this involves sending a @code{SIGTSTP} signal to the
-process group of the process (not just to the process itself).
-
-
-@node Job Control Functions
-@subsection Job Control Functions
-
-Here are descriptions of the functions for manipulating process groups.
-Your program should include the header files @file{<sys/types.h>} and
-@file{<unistd.h>} to use these functions.
-
-@deftypefun pid_t setsid (void)
-The @code{setsid} function is used to create a new session.  The calling
-process becomes the session leader, and it is put in a new process
-group.  The process group ID is the same as the process ID of the
-current process.  There are no other processes in the process group, or
-process groups in the session.
-
-There is initially no controlling terminal assigned to the process.
-
-The @code{setsid} function returns the process group ID of the calling
-process if successful.  A return value of @code{-1} indicates an error.
-The following @code{errno} error conditions are defined for this function:
-
-@table @code
-@item EPERM
-The calling process is already a process group leader, or there is
-already another process group around that has the same process group ID.
-@end table
-@end deftypefun
-
-@deftypefun pid_t getpgrp (void)
-This function returns the process group ID of the calling process.
-@end deftypefun
-
-@deftypefun int setpgid (pid_t @var{pid}, pid_t @var{pgid})
-The @code{setpgid} function sets the process group ID of the process
-named by @var{pid} to @var{pgid}.  As a special case, both @var{pid}
-and @var{gpid} can be zero to indicate the process ID of the calling
-process.
-
-This function may fail if @code{_POSIX_JOB_CONTROL} is not defined.
-@xref{Support for Job Control}, for more information.
-
-If the operation is successful, @code{setpgid} returns zero.  Otherwise
-a value of @code{-1} is returned.  The following @code{errno} error
-conditions are defined for this function:
-
-@table @code
-@item EACCES
-The child process named by @code{pid} has already executed an @code{exec}
-function.
-
-@item EINVAL
-The value of the @code{pgrp} is not valid.
-
-@item ENOSYS
-The implementation doesn't support job control.
-
-@item EPERM
-The process indicated by the @code{pid} argument is a session leader,
-or is not in the same session as the calling process, or the value of
-the @code{pgrp} argument doesn't match a process group ID in the same
-session as the calling process.
-
-@item ESRCH
-The process indicated by the @code{pid} argument is not the calling
-process or a child of the calling process.
-@end table
-@end deftypefun
-
-@node Job Control Example
-@section Job Control Example
-
-@strong{Incomplete:}  I think another section should be added here that
-has a complete example in it.  The bits and pieces of this example
-should be discussed in the appropriate places.
-
-
