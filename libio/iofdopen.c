@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1997-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1997-1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -132,7 +132,7 @@ _IO_new_fdopen (fd, mode)
 #endif
   if (_IO_file_attach ((_IO_FILE *) &new_f->fp, fd) == NULL)
     {
-      _IO_setb (&new_f->fp, NULL, NULL, 0);
+      _IO_setb (&new_f->fp.file, NULL, NULL, 0);
       _IO_un_link (&new_f->fp);
       free (new_f);
       return NULL;
