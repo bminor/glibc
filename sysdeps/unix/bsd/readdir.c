@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include "direct.h"
 
 
 /* Read a directory entry from DIRP.  */
