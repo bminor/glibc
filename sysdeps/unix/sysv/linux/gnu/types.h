@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -86,6 +86,6 @@ typedef struct
 
 typedef int __key_t;
 
-typedef short int __ipc_pid_t;
+typedef unsigned short int __ipc_pid_t;
 
 #endif /* gnu/types.h */
