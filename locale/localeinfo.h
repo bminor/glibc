@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -13,7 +13,7 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 /* Locale-specific information.  */
@@ -34,157 +34,157 @@ Cambridge, MA 02139, USA.  */
 
 /* Used by multibyte char functions.  */
 typedef struct
-  {
-    char *string;	/* Bytes.  */
-    size_t len;		/* # of bytes.  */
-    long int shift;	/* # of mb_char's to shift.  */
-  } mb_char;
+{
+  char *string;			/* Bytes.  */
+  size_t len;			/* # of bytes.  */
+  long int shift;		/* # of mb_char's to shift.  */
+} mb_char;
 
 struct ctype_mbchar_info
-  {
-    size_t mb_max;		/* Max MB char length.  */
-    mb_char *mb_chars;		/* MB chars.  */
-  };
+{
+  size_t mb_max;		/* Max MB char length.  */
+  mb_char *mb_chars;		/* MB chars.  */
+};
 
 struct ctype_ctype_info
-  {
-    unsigned char *ctype_b;		/* Characteristics.  */
-    unsigned char *ctype_tolower;	/* Case mappings.  */
-    unsigned char *ctype_toupper;	/* Case mappings.  */
-  };
+{
+  unsigned short int *ctype_b;	/* Characteristics.  */
+  unsigned char *ctype_tolower;	/* Case mappings.  */
+  unsigned char *ctype_toupper;	/* Case mappings.  */
+};
 
 struct ctype_info
-  {
-    struct ctype_ctype_info *ctype;
-    struct ctype_mbchar_info *mbchar;
-  };
+{
+  struct ctype_ctype_info *ctype;
+  struct ctype_mbchar_info *mbchar;
+};
 
-extern CONST struct ctype_info *_ctype_info;
+extern __const struct ctype_info *_ctype_info;
 
 /* These are necessary because they are used in a header file.  */
-extern CONST unsigned char *__ctype_b;
-extern CONST unsigned char *__ctype_tolower;
-extern CONST unsigned char *__ctype_toupper;
+extern __const unsigned short int *__ctype_b;
+extern __const unsigned char *__ctype_tolower;
+extern __const unsigned char *__ctype_toupper;
 
 
 /* Used by strcoll and strxfrm.  */
 typedef struct
-  {
-    unsigned char *values;
-    size_t nvalues;
-  } literal_value;
+{
+  unsigned char *values;
+  size_t nvalues;
+} literal_value;
 
 typedef struct
+{
+  union
   {
-    union
-      {
-	literal_value literal;
-	/* %%% This may become a regex_t in the future.  */
-	char *regexp;
-      } replace, with;
-    unsigned int regexp:1;
-  } subst;
+    literal_value literal;
+    /* %%% This may become a regex_t in the future.  */
+    char *regexp;
+  } replace, with;
+  unsigned int regexp:1;
+} subst;
 
 struct collate_info
-  {
-    size_t nsubsts;
-    subst *substs;
+{
+  size_t nsubsts;
+  subst *substs;
 
-    unsigned char *values;
-    unsigned char *offsets;
-  };
+  unsigned char *values;
+  unsigned char *offsets;
+};
 
-extern CONST struct collate_info *_collate_info;
+extern __const struct collate_info *_collate_info;
 
 
 /* Used by strtod, atof.  */
 struct numeric_info
-  {
-    char *decimal_point;
-    char *thousands_sep;
-    char *grouping;
-  };
+{
+  char *decimal_point;
+  char *thousands_sep;
+  char *grouping;
+};
 
-extern CONST struct numeric_info *_numeric_info;
+extern __const struct numeric_info *_numeric_info;
 
 
 /* Used in the return value of localeconv.  */
 struct monetary_info
-  {
-    char *int_curr_symbol;
-    char *currency_symbol;
-    char *mon_decimal_point;
-    char *mon_thousands_sep;
-    char *mon_grouping;
-    char *positive_sign;
-    char *negative_sign;
-    char int_frac_digits;
-    char frac_digits;
-    char p_cs_precedes;
-    char p_sep_by_space;
-    char n_cs_precedes;
-    char n_sep_by_space;
-    char p_sign_posn;
-    char n_sign_posn;
-  };
+{
+  char *int_curr_symbol;
+  char *currency_symbol;
+  char *mon_decimal_point;
+  char *mon_thousands_sep;
+  char *mon_grouping;
+  char *positive_sign;
+  char *negative_sign;
+  char int_frac_digits;
+  char frac_digits;
+  char p_cs_precedes;
+  char p_sep_by_space;
+  char n_cs_precedes;
+  char n_sep_by_space;
+  char p_sign_posn;
+  char n_sign_posn;
+};
 
-extern CONST struct monetary_info *_monetary_info;
+extern __const struct monetary_info *_monetary_info;
 
 
 /* Used by strftime, asctime.  */
 struct time_info
-  {
-    char *abbrev_wkday[7];	/* Short weekday names.  */
-    char *full_wkday[7];	/* Full weekday names.  */
-    char *abbrev_month[12];	/* Short month names.  */
-    char *full_month[12];	/* Full month names.  */
-    char *ampm[2];		/* "AM" and "PM" strings.  */
+{
+  char *abbrev_wkday[7];	/* Short weekday names.  */
+  char *full_wkday[7];		/* Full weekday names.  */
+  char *abbrev_month[12];	/* Short month names.  */
+  char *full_month[12];		/* Full month names.  */
+  char *ampm[2];		/* "AM" and "PM" strings.  */
 
-    char *date_time;		/* Appropriate date and time format.  */
-    char *date;			/* Appropriate date format.  */
-    char *time;			/* Appropriate time format.  */
+  char *date_time;		/* Appropriate date and time format.  */
+  char *date;			/* Appropriate date format.  */
+  char *time;			/* Appropriate time format.  */
 
-    char *ut0;			/* Name for GMT.  */
-    char *tz;			/* Default TZ value.  */
-  };
+  char *ut0;			/* Name for GMT.  */
+  char *tz;			/* Default TZ value.  */
+};
 
-extern CONST struct time_info *_time_info;
+extern __const struct time_info *_time_info;
 
 struct response_info
-  {
-    /* Regexp for affirmative answers.  */
-    char *yesexpr;
+{
+  /* Regexp for affirmative answers.  */
+  char *yesexpr;
 
-    /* Regexp for negative answers.  */
-    char *noexpr;
-  };
+  /* Regexp for negative answers.  */
+  char *noexpr;
+};
 
-extern CONST struct response_info *_response_info;
+extern __const struct response_info *_response_info;
 
 /* Locale structure.  */
 typedef struct
-  {
-    char *name;
-    int categories;
+{
+  char *name;
+  int categories;
 
-    unsigned int allocated:1;
+  unsigned int allocated:1;
 
-    int subcategories;
-    size_t num_sublocales;
-    struct sub_locale *sublocales;
+  int subcategories;
+  size_t num_sublocales;
+  struct sub_locale *sublocales;
 
-    PTR *info;
-  } locale;
+  __ptr_t *info;
+} locale;
 
 typedef struct sub_locale
-  {
-    unsigned int pointer:1;
+{
+  unsigned int pointer:1;
 
-    int categories;
-    char *name;
+  int categories;
+  char *name;
 
-    locale *locale;
-  } sublocale;
+  locale *locale;
+} sublocale;
 
 
 /* This is the magic number that localeinfo object files begin with.
@@ -197,12 +197,12 @@ typedef struct sub_locale
    magic number and unique for each category.  */
 #define	CATEGORY_MAGIC(x)	(LIMAGIC ^ (x))
 
-extern CONST char *__lidir, *__lidefault;
+extern __const char *__lidir, *__lidefault;
 
-extern locale *EXFUN(__find_locale, (int categories, CONST char *name));
-extern locale *EXFUN(__new_locale, (locale *));
-extern locale *EXFUN(__localefile, (CONST char *file));
-extern void EXFUN(__free_locale, (locale *));
+extern locale *__find_locale __P ((int categories, __const char *name));
+extern locale *__new_locale __P ((locale *));
+extern locale *__localefile __P ((__const char *file));
+extern void __free_locale __P ((locale *));
 
 
-#endif	/* localeinfo.h  */
+#endif /* localeinfo.h  */
