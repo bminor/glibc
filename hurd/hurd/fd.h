@@ -201,6 +201,7 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
      __result; })
 
 #include <errno.h>
+#include <hurd/signal.h>
 
 /* Handle an error from an RPC on a file descriptor's port.  You should
    always use this function to handle errors from RPCs made on file
@@ -224,7 +225,7 @@ _hurd_fd_error (int fd, error_t err)
 /* Handle error code ERR from an RPC on file descriptor FD's port.
    Set `errno' to the appropriate error code, and always return -1.  */
 
-extern inline int
+_EXTERN_INLINE int
 __hurd_dfail (int fd, error_t err)
 {
   errno = _hurd_fd_error (fd, err);
