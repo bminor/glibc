@@ -1,3 +1,8 @@
+1999-10-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/xpg_basename.c (__xpg_basename): Don't return pointer to
+	slash before the basename [PR libc/1383].
+
 1999-10-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nis/nss_nisplus/nisplus-parser.c (_nss_nisplus_parse_spent): Fix
