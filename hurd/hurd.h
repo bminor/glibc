@@ -572,6 +572,15 @@ extern void _hurd_init (int flags, char **argv,
 
 /* Do startup handshaking with the proc server.  */
 extern void _hurd_proc_init (char **argv);
+
+/* Fetch the host privileged port and device master port from the proc
+   server.  They are fetched only once and then cached in the variables
+   below.  A special program that gets them from somewhere other than the
+   proc server (such as a bootstrap filesystem) can set these variables at
+   startup to install the ports.  */
+extern kern_return_t get_privileged_ports (host_priv_t *host_priv_ptr,
+					   device_t *device_master_ptr);
+extern mach_port_t _hurd_host_priv, _hurd_device_master;
 
 /* User-registered handlers for specific `ioctl' requests.  */
 
