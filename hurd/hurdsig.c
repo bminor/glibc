@@ -76,6 +76,8 @@ _hurd_thread_sigstate (thread_t thread)
 
 jmp_buf _hurd_sigthread_fault_env;
 
+int _hurd_core_limit;	/* XXX */
+
 /* Call the core server to mummify us before we die.
    Returns nonzero if a core file was written.  */
 static int
