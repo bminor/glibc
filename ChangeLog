@@ -1,3 +1,8 @@
+2004-12-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (__clone): Save
+	and restore r2 around call to fn.
+
 2004-09-08  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* Makeconfig (libunwind): New.
