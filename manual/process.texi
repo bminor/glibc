@@ -549,6 +549,19 @@ waitpid (-1, &status, 0)
 @end smallexample
 @end deftypefun
 
+@comment sys/wait.h
+@comment BSD
+@deftypefun pid_t wait4 (pid_t @var{pid}, int *@var{status-ptr}, int @var{options}, struct rusage *@var{usage})
+If @var{usage} is a null pointer, @code{wait4} is equivalent to
+@code{waitpid (@var{pid}, @var{status-ptr}, @var{options})}.
+
+If @var{usage} is not null, @code{wait4} stores usage figures for the
+child process in @code{*@var{rusage}} (but only if the child has
+terminated, not if it has stopped).  @xref{Resource Usage}.
+
+This function is a BSD extension.
+@end deftypefun
+
 Here's an example of how to use @code{waitpid} to get the status from
 all child processes that have terminated, without ever waiting.  This
 function is designed to be a handler for @code{SIGCHLD}, the signal that
@@ -680,6 +693,9 @@ Instead of accessing these members directly, you should use the
 equivalent macros.
 @end deftp
 
+The @code{wait3} function is the predecessor to @code{wait4}, which is
+more flexible.  @code{wait3} is now obsolete.
+
 @comment sys/wait.h
 @comment BSD
 @deftypefun pid_t wait3 (union wait *@var{status-ptr}, int @var{options}, struct rusage *@var{usage})
@@ -687,17 +703,6 @@ If @var{usage} is a null pointer, @code{wait3} is equivalent to
 @code{waitpid (-1, @var{status-ptr}, @var{options})}.
 
 If @var{usage} is not null, @code{wait3} stores usage figures for the
-child process in @code{*@var{rusage}} (but only if the child has
-terminated, not if it has stopped).  @xref{Resource Usage}.
-@end deftypefun
-
-@comment sys/wait.h
-@comment BSD
-@deftypefun pid_t wait4 (pid_t @var{pid}, union wait *@var{status-ptr}, int @var{options}, struct rusage *@var{usage})
-If @var{usage} is a null pointer, @code{wait4} is equivalent to
-@code{waitpid (@var{pid}, @var{status-ptr}, @var{options})}.
-
-If @var{usage} is not null, @code{wait4} stores usage figures for the
 child process in @code{*@var{rusage}} (but only if the child has
 terminated, not if it has stopped).  @xref{Resource Usage}.
 @end deftypefun
