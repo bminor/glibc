@@ -54,11 +54,16 @@ DEFUN(opendir, (name), CONST char *name)
       return NULL;
     }
 
+#ifdef _STATBUF_ST_BLKSIZE
   if (__fstat (fd, &statbuf) < 0 ||
       statbuf.st_blksize < sizeof (struct direct))
     dirp->__allocation = sizeof (struct direct);
   else
     dirp->__allocation = statbuf.st_blksize;
+#else
+  dirp->__allocation = (BUFSIZ < sizeof (struct direct) ?
+			sizeof (struct direct) : BUFSIZ);
+#endif
   dirp->__data = (char *) malloc (dirp->__allocation);
   if (dirp->__data == NULL)
     {
