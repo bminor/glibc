@@ -112,9 +112,7 @@ by the @code{uname} function.  It has the following members:
 
 @table @code
 @item char sysname[]
-This is the name of the operating system implementation.  In the
-GNU library, the value is the string @code{"GNU C Library"}.
-@strong{Incomplete:} That had better not be true.
+This is the name of the operating system in use.
 
 @item char nodename[]
 This is the network name of this particular computer.  In the GNU
