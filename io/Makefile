@@ -28,7 +28,8 @@ routines :=								      \
 	mkfifo								      \
 	__stat __fstat __lstat						      \
 	__umask __chmod __fchmod __mkdir				      \
-	__open __close __read __write __lseek __access __fcntl __flock	      \
+	__open __close __read __write __lseek __access			      \
+	__fcntl __flock lockf						      \
 	__dup __dup2 __pipe						      \
 	creat								      \
 	__chdir fchdir							      \
