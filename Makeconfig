@@ -299,7 +299,7 @@ ifneq	"$(findstring s,$(MAKEFLAGS))" ""	# if -s
 else						# not -s
 +cmdecho	:= echo
 endif	   					# -s
-
+
 # These are preprocessor macros we want to predefine.  configure will
 # define HAVE_GNU_LD for you if you use GNU ld (which you should do if
 # possible).  If you do this, you may need the GNU assembler as well.  If
@@ -342,7 +342,7 @@ ifneq	"$(strip $(+cc_version))" ""
 CC	:= $(CC) -v
 endif	# +cc_version
 endif						# -v
-
+
 # These are flags given to the C compiler to tell it to look for include
 # files (including ones given in angle brackets) in the current directory
 # and in the parent library source directory.
@@ -371,6 +371,10 @@ endif
 
 ifneq "$(filter -DHAVE_GNU_AS,$(CPPFLAGS))" ""
 gnu-as := yes
+endif
+
+ifneq ($(HOST_CC),$(CC))
+cross-compiling = yes
 endif
 
 
