@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ __pid2task (pid_t pid)
   error_t err;
   task_t task;
 
-  err = _HURD_PORT_USE (&_hurd_proc,
+  err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
 			__proc_pid2task (port, pid, &task));
   if (err)
     {
