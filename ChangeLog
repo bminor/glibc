@@ -121,6 +121,7 @@
 	[BZ #736]
 	* timezone/asia: Update from tzdata2005c.
 	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
 	* timezone/leapseconds: Likewise.
 	* timezone/northamerica: Likewise.
 	* timezone/southamerica: Likewise.
@@ -252,12 +253,6 @@
 	(test_tm, main): Issue an error instead of segfaulting if
 	strptime returns NULL.
 
-2005-01-09  Andreas Jaeger  <aj@suse.de>
-
-	[BZ #732]
-	* time/strptime_l.c (__strptime_internal): Add braces to avoid
-	warning.
-
 2005-01-12  GOTO Masanori  <gotom@debian.or.jp>
 
 	[BZ #650]
@@ -267,6 +262,12 @@
 
 	* sysdeps/generic/dl-tls.c (_dl_next_tls_modid): Fix assertion and
 	recognition of last entry.
+
+2005-01-09  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #732]
+	* time/strptime_l.c (__strptime_internal): Add braces to avoid
+	warning.
 
 2005-01-08  Jakub Jelinek  <jakub@redhat.com>
 

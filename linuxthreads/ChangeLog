@@ -1,3 +1,17 @@
+2005-02-09  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	[BZ #740]
+	* descr.h (__pthread_find_self, thread_self): Mark as pure
+	instead of const.
+
+2005-02-07  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #739]
+	* specific.c (pthread_key_delete): If pthread_create has not been
+	called yet, clear p_specific for the current thread.
+	* Makefile (tests): Add tst-tsd1.
+	* tst-tsd1.c: New test.
+
 2004-12-21  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #723]
