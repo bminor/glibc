@@ -35,7 +35,7 @@ __BEGIN_DECLS
 #define	__need___va_list
 #include <stdarg.h>
 #ifndef	____va_list_defined
-#define	__va_list	__ptr_t
+#define	__gnuc_va_list	__ptr_t
 #endif
 
 #include <gnu/types.h>
@@ -348,11 +348,12 @@ extern int sprintf __P ((char *__s, __const char *__format, ...));
 
 /* Write formatted output to S from argument list ARG.  */
 extern int vfprintf __P ((FILE * __s, __const char *__format,
-			  __va_list __arg));
+			  __gnuc_va_list __arg));
 /* Write formatted output to stdout from argument list ARG.  */
 extern int vprintf __P ((__const char *__format, __ptr_t __arg));
 /* Write formatted output to S from argument list ARG.  */
-extern int vsprintf __P ((char *__s, __const char *__format, __va_list __arg));
+extern int vsprintf __P ((char *__s, __const char *__format,
+			  __gnuc_va_list __arg));
 
 #ifdef	__OPTIMIZE__
 #define	vprintf(fmt, arg)		vfprintf(stdout, (fmt), (arg))
@@ -364,15 +365,17 @@ extern int snprintf __P ((char *__s, size_t __maxlen,
 			  __const char *__format, ...));
 
 extern int vsnprintf __P ((char *__s, size_t __maxlen,
-			   __const char *__format, __va_list __arg));
+			   __const char *__format, __gnuc_va_list __arg));
 
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
-extern int vasprintf __P ((char **__ptr, __const char *__f, __va_list __arg));
+extern int vasprintf __P ((char **__ptr, __const char *__f,
+			   __gnuc_va_list __arg));
 extern int asprintf __P ((char **__ptr, __const char *__fmt, ...));
 
 /* Write formatted output to a file descriptor.  */
-extern int vdprintf __P ((int __fd, __const char *__fmt, __va_list __arg));
+extern int vdprintf __P ((int __fd, __const char *__fmt,
+			  __gnuc_va_list __arg));
 extern int dprintf __P ((int __fd, __const char *__fmt, ...));
 #endif
 
@@ -387,18 +390,18 @@ extern int sscanf __P ((__const char *__s, __const char *__format, ...));
 #ifdef	__USE_GNU
 /* Read formatted input from S into argument list ARG.  */
 extern int __vfscanf __P ((FILE * __s, __const char *__format,
-			   __va_list __arg));
+			   __gnuc_va_list __arg));
 extern int vfscanf __P ((FILE * __s, __const char *__format,
-			 __va_list __arg));
+			 __gnuc_va_list __arg));
 
 /* Read formatted input from stdin into argument list ARG.  */
-extern int vscanf __P ((__const char *__format, __va_list __arg));
+extern int vscanf __P ((__const char *__format, __gnuc_va_list __arg));
 
 /* Read formatted input from S into argument list ARG.  */
 extern int __vsscanf __P ((__const char *__s, __const char *__format,
-			   __va_list __arg));
+			   __gnuc_va_list __arg));
 extern int vsscanf __P ((__const char *__s, __const char *__format,
-			 __va_list __arg));
+			 __gnuc_va_list __arg));
 
 
 #ifdef	__OPTIMIZE__
