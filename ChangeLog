@@ -1,3 +1,11 @@
+2000-02-02  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdlookup.c (CHECK_ELOOP): New macro does SYMLOOP_MAX check;
+	deallocate *RESULT before returning ELOOP.
+	Don't conditionalize on SYMLOOP_MAX, we always better have one.
+	Move the check after case of empty retryname, which should not do it.
+	Use CHECK_ELOOP for absolute symlinks and other FS_RETRY_MAGICAL cases.
+
 2000-01-31  Andreas Jaeger  <aj@suse.de>
 
 	* inet/inet_net.c (inet_network): Synch with bind 8.2.2.  Fixes PR
