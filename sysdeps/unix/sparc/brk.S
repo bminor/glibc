@@ -42,13 +42,13 @@ C_SYMBOL_NAME(__brk):
 	andn %o0, 7, %o0
 	mov SYS_brk, %g1
 	mov %o0, %o1		/* Save rounded value.  */
-	ta 0
+	ta %g0
 	bcs error
 	sethi %hi(C_SYMBOL_NAME(__curbrk)), %g1
 	st %o1, [%g1 + %lo(C_SYMBOL_NAME(__curbrk))]
 	ret
 error:	sethi %hi(C_SYMBOL_NAME(errno)), %g1
 	st %o0, [%g1 + %lo(C_SYMBOL_NAME(errno))]
-	sub 0, 1, %o0
-	ret
+	sub %g0, 1, %o0
+	retl
 	nop			/* Fill the delay slot.  */
