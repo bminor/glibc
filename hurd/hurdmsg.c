@@ -401,6 +401,7 @@ _S_set_dtable (mach_port_t process,
 
 kern_return_t
 _S_io_select_done (mach_port_t notify_port,
+		   mach_msg_type_name_t notify_port_type,
 		   int select_result,
 		   int id_tag)
 { return EOPNOTSUPP; }
