@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1990, 1991, 1992 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 This file is part of the GNU C Library.
@@ -27,78 +27,82 @@ int
 DEFUN(main, (argc, argv),
       int argc AND char **argv)
 {
-  if (argc > 1)
+  char *mem, *memp;
+  char *rand_mem;
+  char *lo_around, *hi_around;
+  int size, max_size;
+  int src_off, dst_off;
+  int i;
+  int space_around = 10;
+
+  max_size = 256;
+
+  mem = malloc (max_size + 2 * max_size + 2 * space_around);
+  rand_mem = malloc (max_size);
+  lo_around = malloc (space_around);
+  hi_around = malloc (space_around);
+  memp = mem + space_around;
+
+  /* Fill RAND_MEM with random bytes, each non-zero.  */
+  for (i = 0; i < max_size; i++)
     {
-      long int s[1025], d[1025];
-      int i;
-      int a, b = 0;
-
-      a = atoi(argv[1]);
-      if (argc > 2)
-	b = atoi(argv[2]);
-
-      for (i = 10000; --i; )
-	memmove (((char *) d) + b, ((char *) s) + a, 1024 * 4);
+      int x;
+      do
+	x = random ();
+      while (x == 0);
+      rand_mem[i] = x;
     }
-  else
+
+  for (size = 0; size < max_size; size++)
     {
-#define SIZE (3*0x200)
-
-      unsigned char *p = valloc(SIZE + 40);
-      int src_align, dst_align;
-      int i;
-      int len;
-
-      for (len = 0; len < 256; len++)
+      printf("phase %d\n", size);
+      for (src_off = 0; src_off <= 16; src_off++)
 	{
-	  printf("phase %d\n", len);
-	  for (src_align = 0; src_align < 32; src_align++)
+	  for (dst_off = 0; dst_off <= 16; dst_off++)
 	    {
-	      unsigned char *src;
-
-	      src = p + 40 + SIZE/3 + src_align;
-
-	      for (dst_align = 0; dst_align < 32; dst_align++)
+	      /* Put zero around the intended destination, to check
+		 that it's not clobbered.  */
+	      for (i = 1; i < space_around; i++)
 		{
-		  unsigned char *dst;
+		  memp[dst_off - i] = 0;
+		  memp[dst_off + size - 1 + i] = 0;
+		}
 
-		  memset (p, 0, SIZE + 40);
-		  for (i = 0; i < len; i++)
-		    src[i] = i;
+	      /* Fill the source area with known contents.  */
+	      for (i = 0; i < size; i++)
+		memp[src_off + i] = rand_mem[i];
 
-		  dst = p + 40 + dst_align;
-		  memmove (dst, src, len);
+	      /* Remember the contents around the destination area.
+		 (It might not be what we wrote some lines above, since
+		 the src area and the dst area overlap.)  */
+	      for (i = 1; i < space_around; i++)
+		{
+		  lo_around[i] = memp[dst_off - i];
+		  hi_around[i] = memp[dst_off + size - 1 + i];
+		}
 
-		  for (i = -32; i < 0; i++)
-		    if (dst[i] != 0)
-		      abort();
-		  for (i = 0; i < len; i++)
-		    if (dst[i] != i)
-		      abort();
-		  for (i = 32; i >= 0; i--)
-		    if (dst[len + i] != 0)
-		      abort();
+	      memmove (memp + dst_off, memp + src_off, size);
 
-		  memset (p, 0, SIZE + 40);
-		  for (i = 0; i < len; i++)
-		    src[i] = i;
+	      /* Check that the destination area has the same
+		 contents we wrote to the source area.  */
+	      for (i = 0; i < size; i++)
+		{
+		  if (memp[dst_off + i] != rand_mem[i])
+		    abort ();
+		}
 
-		  dst = p + 40 + SIZE/3*2 + dst_align;
-		  memmove (dst, src, len);
-
-		  for (i = -32; i < 0; i++)
-		    if (dst[i] != 0)
-		      abort();
-		  for (i = 0; i < len; i++)
-		    if (dst[i] != i)
-		      abort();
-		  for (i = 32; i >= 0; i--)
-		    if (dst[len + i] != 0)
-		      abort();
+	      /* Check that the area around the detination is not
+		 clobbered.  */
+	      for (i = 1; i < space_around; i++)
+		{
+		  if (memp[dst_off - i] != lo_around[i])
+		    abort ();
+		  if (memp[dst_off + size - 1 + i] != hi_around[i])
+		    abort ();
 		}
 	    }
 	}
     }
 
-  exit (0);
+  return 0;
 }
