@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1982, 1986, 1988 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1982, 1986, 1988, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,12 +30,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	from: @(#)reboot.h	7.6 (Berkeley) 6/28/90
- *	$Id$
+ *	@(#)reboot.h	8.1 (Berkeley) 6/2/93
  */
-
-#ifndef _SYS_REBOOT_H_
-#define _SYS_REBOOT_H_
 
 /*
  * Arguments to reboot system call.
@@ -53,6 +49,7 @@
 #define	RB_KDB		0x40	/* give control to kernel debugger */
 #define	RB_RDONLY	0x80	/* mount root fs read-only */
 #define	RB_DUMP		0x100	/* dump kernel memory before reboot */
+#define	RB_MINIROOT	0x200	/* mini-root present in memory at boot time */
 
 /*
  * Constants for converting boot-style device number to type,
@@ -89,5 +86,3 @@
 	(((type) << B_TYPESHIFT) | ((adaptor) << B_ADAPTORSHIFT) | \
 	((controller) << B_CONTROLLERSHIFT) | ((unit) << B_UNITSHIFT) | \
 	((partition) << B_PARTITIONSHIFT) | B_DEVMAGIC)
-
-#endif /* !_SYS_REBOOT_H_ */

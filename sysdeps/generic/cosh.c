@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1985 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1985, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@
  */
 
 #ifndef lint
-static char sccsid[] = "@(#)cosh.c	5.6 (Berkeley) 10/9/90";
+static char sccsid[] = "@(#)cosh.c	8.1 (Berkeley) 6/4/93";
 #endif /* not lint */
 
 /* COSH(X)
@@ -117,7 +117,7 @@ double x;
 	if((x=copysign(x,one)) <= 22)
 	    if(x<0.3465) 
 		if(x<small) return(one+x);
-		else {t=x+exp__E(x,0.0);x=t+t; return(one+t*t/(2.0+x)); }
+		else {t=x+__exp__E(x,0.0);x=t+t; return(one+t*t/(2.0+x)); }
 
 	    else /* for x lies in [0.3465,22] */
 	        { t=exp(x); return((t+one/t)*half); }

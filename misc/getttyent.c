@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1989 The Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1989, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)getttyent.c	5.10 (Berkeley) 3/23/91";
+static char sccsid[] = "@(#)getttyent.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 
 #include <ttyent.h>
@@ -108,10 +108,6 @@ getttyent()
 			tty.ty_status |= TTY_ON;
 		else if (scmp(_TTYS_SECURE))
 			tty.ty_status |= TTY_SECURE;
-		else if (scmp(_TTYS_TRUSTED))
-			tty.ty_status |= TTY_TRUSTED;
-		else if (scmp(_TTYS_CONSOLE))
-			tty.ty_status |= TTY_CONSOLE;
 		else if (vcmp(_TTYS_WINDOW))
 			tty.ty_window = value(p);
 		else

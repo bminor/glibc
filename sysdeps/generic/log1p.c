@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1985 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1985, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@
  */
 
 #ifndef lint
-static char sccsid[] = "@(#)log1p.c	5.6 (Berkeley) 10/9/90";
+static char sccsid[] = "@(#)log1p.c	8.1 (Berkeley) 6/4/93";
 #endif /* not lint */
 
 /* LOG1P(x) 
@@ -114,7 +114,7 @@ ic(sqrt2, 1.4142135623730951455E0,     0, 1.6A09E667F3BCD)
 double log1p(x)
 double x;
 {
-	static const double zero=0.0, negone= -1.0, one=1.0, 
+	const static double zero=0.0, negone= -1.0, one=1.0, 
 		      half=1.0/2.0, small=1.0E-20;   /* 1+small == 1 */
 	double z,s,t,c;
 	int k;
@@ -137,7 +137,7 @@ double x;
  	   /* compute log(1+x)  */
               s = x/(2+x); t = x*x*half;
 	      c += (k*ln2lo-c*x);
-	      z = c+s*(t+log__L(s*s));
+	      z = c+s*(t+__log__L(s*s));
 	      x += (z - t) ;
 
 	      return(k*ln2hi+x);

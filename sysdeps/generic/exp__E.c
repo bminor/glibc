@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1985 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1985, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@
  */
 
 #ifndef lint
-static char sccsid[] = "@(#)exp__E.c	5.6 (Berkeley) 10/9/90";
+static char sccsid[] = "@(#)exp__E.c	8.1 (Berkeley) 6/4/93";
 #endif /* not lint */
 
 /* exp__E(x,c)
@@ -107,10 +107,10 @@ ic(q2, 9.9176615021572857300E-4, -10, 1.03FC4CB8C98E8)
 #define       q3    vccast(q3)
 #endif
 
-double exp__E(x,c)
+double __exp__E(x,c)
 double x,c;
 {
-	static const double zero=0.0, one=1.0, half=1.0/2.0, small=1.0E-19;
+	const static double zero=0.0, one=1.0, half=1.0/2.0, small=1.0E-19;
 	double z,p,q,xp,xh,w;
 	if(copysign(x,one)>small) {
            z = x*x  ;

@@ -1,6 +1,11 @@
 /*-
- * Copyright (c) 1982, 1986 The Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1982, 1986, 1993
+ *	The Regents of the University of California.  All rights reserved.
+ * (c) UNIX System Laboratories, Inc.
+ * All or some portions of this file are derived from material licensed
+ * to the University of California by American Telephone and Telegraph
+ * Co. or Unix System Laboratories, Inc. and are reproduced herein with
+ * the permission of UNIX System Laboratories, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,14 +35,14 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)ttydefaults.h	7.9 (Berkeley) 5/9/91
+ *	@(#)ttydefaults.h	8.4 (Berkeley) 1/21/94
  */
 
 /*
  * System wide defaults for terminal state.
  */
-#ifndef _TTYDEFAULTS_H_
-#define	_TTYDEFAULTS_H_
+#ifndef _SYS_TTYDEFAULTS_H_
+#define	_SYS_TTYDEFAULTS_H_
 
 /*
  * Defaults on "first" open.
@@ -53,10 +58,10 @@
  */
 #define CTRL(x)	(x&037)
 #define	CEOF		CTRL('d')
-#define	CEOL		((unsigned)'\377')	/* XXX avoid _POSIX_VDISABLE */
+#define	CEOL		((unsigned char)'\377')	/* XXX avoid _POSIX_VDISABLE */
 #define	CERASE		0177
 #define	CINTR		CTRL('c')
-#define	CSTATUS		((unsigned)'\377')	/* XXX avoid _POSIX_VDISABLE */
+#define	CSTATUS		((unsigned char)'\377')	/* XXX avoid _POSIX_VDISABLE */
 #define	CKILL		CTRL('u')
 #define	CMIN		1
 #define	CQUIT		034		/* FS, ^\ */
@@ -76,7 +81,7 @@
 #define	CFLUSH		CDISCARD
 
 /* PROTECTED INCLUSION ENDS HERE */
-#endif /* !_TTYDEFAULTS_H_ */
+#endif /* !_SYS_TTYDEFAULTS_H_ */
 
 /*
  * #define TTYDEFCHARS to include an array of default control characters.
@@ -84,9 +89,8 @@
 #ifdef TTYDEFCHARS
 cc_t	ttydefchars[NCCS] = {
 	CEOF,	CEOL,	CEOL,	CERASE, CWERASE, CKILL, CREPRINT, 
-	(cc_t) _POSIX_VDISABLE, CINTR,	CQUIT,	CSUSP,	CDSUSP,
-	CSTART,	CSTOP,	CLNEXT, CDISCARD, CMIN,	CTIME,  CSTATUS,
-	(cc_t) _POSIX_VDISABLE
+	_POSIX_VDISABLE, CINTR,	CQUIT,	CSUSP,	CDSUSP,	CSTART,	CSTOP,	CLNEXT,
+	CDISCARD, CMIN,	CTIME,  CSTATUS, _POSIX_VDISABLE
 };
 #undef TTYDEFCHARS
-#endif /* TTYDEFCHARS */
+#endif

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1985 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1985, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@
  */
 
 #ifndef lint
-static char sccsid[] = "@(#)asinh.c	5.6 (Berkeley) 10/9/90";
+static char sccsid[] = "@(#)asinh.c	8.1 (Berkeley) 6/4/93";
 #endif /* not lint */
 
 /* ASINH(X)
@@ -84,7 +84,7 @@ double asinh(x)
 double x;
 {	
 	double t,s;
-	static const double	small=1.0E-10,	/* fl(1+small*small) == 1 */
+	const static double	small=1.0E-10,	/* fl(1+small*small) == 1 */
 				big  =1.0E20,	/* fl(1+big) == big */
 				one  =1.0   ;	
 

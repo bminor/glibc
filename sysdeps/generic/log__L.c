@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1985 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1985, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@
  */
 
 #ifndef lint
-static char sccsid[] = "@(#)log__L.c	5.6 (Berkeley) 10/9/90";
+static char sccsid[] = "@(#)log__L.c	8.1 (Berkeley) 6/4/93";
 #endif /* not lint */
 
 /* log__L(Z)
@@ -99,7 +99,7 @@ ic(L7, 1.4795612545334174692E-1, -3, 1.2F039F0085122)
 #define	L8	vccast(L8)
 #endif
 
-double log__L(z)
+double __log__L(z)
 double z;
 {
 #if defined(vax)||defined(tahoe)
