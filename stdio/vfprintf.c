@@ -28,6 +28,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 #include <string.h>
 #include <printf.h>
+#include <assert.h>
 #include "_itoa.h"
 
 
@@ -296,6 +297,15 @@ DEFUN(vfprintf, (s, format, args),
 	    /* double's are long double's, and int's are long long int's.  */
 	    is_long_double = 1;
 	    break;
+
+	  case 'Z':
+	    /* int's are size_t's.  */
+#ifdef	HAVE_LONGLONG
+	    assert (sizeof(size_t) <= sizeof(unsigned long long int));
+	    is_longlong = sizeof(size_t) > sizeof(unsigned long int);
+#endif
+	    is_long = sizeof(size_t) > sizeof(unsigned int);
+	    break;
 	  }
 
       /* Format specification.  */
@@ -321,18 +331,6 @@ DEFUN(vfprintf, (s, format, args),
 	    is_neg = signed_num < 0;
 	    num = is_neg ? (- signed_num) : signed_num;
 	    goto number;
-
-	  case 'Z':
-	    /* `size_t' value.  */
-#ifdef	HAVE_LONGLONG
-	    if (sizeof(size_t) > sizeof(unsigned long long int))
-	      __libc_fatal("`size_t' is bigger than any known type!");
-	    else
-	      is_longlong = sizeof(size_t) > sizeof(unsigned long int);
-#endif
-	    is_long = sizeof(size_t) > sizeof(unsigned int);
-
-	    /* Fall through, to print a `size_t' as a decimal integer.  */
 
 	  case 'u':
 	    /* Decimal unsigned integer.  */

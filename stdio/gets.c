@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -53,7 +53,12 @@ DEFUN(gets, (s), char *s)
       *p++ = c;
 
   *p = '\0';
-  if (p == s || ferror(stream))
+
+  /* Return null if we had an error, or if we got EOF
+     before writing any characters.  */
+
+  if (ferror (stream) || (feof (stream) && p == s))
     return NULL;
+
   return s;
 }
