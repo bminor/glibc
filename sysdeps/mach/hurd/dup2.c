@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <hurd.h>
+#include <hurd/fd.h>
 
 
 /* Duplicate FD to FD2, closing the old FD2 and making FD2 be
@@ -28,20 +28,27 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
 {
-  int dealloc_dt;
-  struct _hurd_fd_user d;
-  struct _hurd_fd *d2;
+  struct hurd_fd_user d;
+  struct hurd_fd *d2;
   io_t port, ctty;
-  struct _hurd_port_userlink ulink, ctty_ulink;
+  struct hurd_userlink dtable_ulink, ulink, ctty_ulink;
   int flags;
 
   /* Extract the ports and flags from FD.  */
-  d = _hurd_fd (fd, &dealloc_dt); /* Locks D.d.  */
+  d = _hurd_fd_get (fd, &dtable_ulink); /* Locks D.d.  */
   if (d.d == NULL)
     {
       errno = EBADF;
       return -1;
     }
+
+  if (fd2 == fd)
+    {
+      /* FD is valid and FD2 is already the same; just return it.  */
+      __spin_unlock (&d.d->lock);
+      goto out;
+    }
+
   flags = d.d->flags;
   ctty = _hurd_port_get (&d.d->ctty, &ctty_ulink);
   port = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
@@ -54,19 +61,38 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
     }
   else
     {
-      /* Give the ports each a user ref for the new descriptor.  */
-      __mach_port_mod_refs (__mach_task_self (), port,
-			    MACH_PORT_RIGHT_SEND, 1);
-      if (ctty != MACH_PORT_NULL)
-	__mach_port_mod_refs (__mach_task_self (), ctty,
-			      MACH_PORT_RIGHT_SEND, 1);
+      /* Get a hold of the destination descriptor.  */
+      d2 = _hurd_dtable.d[fd2];
+      if (d2 == NULL)
+	{
+	  /* Must allocate a new one.  We don't initialize the port cells
+	     with this call so that if it fails (out of memory), we will
+	     not have already added user references for the ports, which we
+	     would then have to deallocate.  */
+	  d2 = _hurd_dtable.d[fd2] = _hurd_new_fd (MACH_PORT_NULL,
+						   MACH_PORT_NULL);
+	}
+      if (d2 == NULL)
+	{
+	  fd2 = -1;
+	  if (errno == EINVAL)
+	    errno = EBADF;	/* POSIX.1-1990 6.2.1.2 ll 54-55.  */
+	}
+      else
+	{
+	  /* Give the ports each a user ref for the new descriptor.  */
+	  __mach_port_mod_refs (__mach_task_self (), port,
+				MACH_PORT_RIGHT_SEND, 1);
+	  if (ctty != MACH_PORT_NULL)
+	    __mach_port_mod_refs (__mach_task_self (), ctty,
+				  MACH_PORT_RIGHT_SEND, 1);
 
-      /* Install the ports and flags in the new descriptor slot.  */
-      d2 = &_hurd_dtable.d[fd2];
-      __spin_lock (&d2->port.lock);
-      d2->flags = flags;
-      _hurd_port_set (&d2->ctty, ctty);
-      _hurd_port_locked_set (&d2->port, port); /* Unlocks D2.  */
+	  /* Install the ports and flags in the new descriptor slot.  */
+	  __spin_lock (&d2->port.lock);
+	  d2->flags = flags & ~FD_CLOEXEC; /* Duplication clears FD_CLOEXEC. */
+	  _hurd_port_set (&d2->ctty, ctty);
+	  _hurd_port_locked_set (&d2->port, port); /* Unlocks D2.  */
+	}
     }
   __mutex_unlock (&_hurd_dtable_lock);
 
@@ -74,7 +100,8 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
   if (ctty != MACH_PORT_NULL)
     _hurd_port_free (&d.d->ctty, &ctty_ulink, port);
 
-  _hurd_fd_done (d, &dealloc_dt);
+ out:
+  _hurd_fd_free (d, &dtable_ulink);
 
   return fd2;
 }
