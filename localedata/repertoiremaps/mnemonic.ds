@@ -589,6 +589,8 @@ escape_char /
 <';>                   <U02DB> OGONEK
 <1?>                   <U02DC> SMALL TILDE
 <'">                   <U02DD> DOUBLE ACUTE ACCENT
+<"`>                   <U0300> COMBINING GRAVE ACCENT
+<"'>                   <U0301> COMBINING ACUTE ACCENT
 <'G>                   <U0374> GREEK NUMERAL SIGN
 <,G>                   <U0375> GREEK LOWER NUMERAL SIGN
 <j3>                   <U037A> GREEK YPOGEGRAMMENI
