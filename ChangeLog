@@ -1,3 +1,11 @@
+1998-05-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* resolv/res_send.c: Security fixes from bind 4.9.7-REL.
+
+	* resolv/gethnamaddr.c: Likewise.
+
+	* resolv/res_comp.c: Likewise.
+
 1998-05-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/strops.c (_IO_str_underflow): Read newly available
