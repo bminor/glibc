@@ -296,9 +296,9 @@ Non-option argument -
 @subsection Parsing Long Options
 
 To accept GNU-style long options as well as single-character options,
-use the function @code{getopt_long} instead of @code{getopt}.  You
-should do this in every program that uses options, for it takes little
-extra work and helps beginners remember how to use the program.
+use @code{getopt_long} instead of @code{getopt}.  You should make every
+program accept long options if it uses any options, for this takes
+little extra work and helps beginners remember how to use the program.
 
 @comment getopt.h
 @comment GNU
