@@ -1780,8 +1780,8 @@ used to flag exceptional conditions.
 When out-of-band data is pending on a socket, a @code{SIGURG} signal is
 sent to the owner process or process group of the socket.  You establish
 this using the @code{F_SETOWN} command to the @code{fcntl} function;
-@pxref{wherever}.  You can establish a handler for this signal, as
-described in @ref{Signal Handling}.  
+@pxref{Interrupt-Driven Input}.  You can establish a handler for this
+signal, as described in @ref{Signal Handling}.
 
 Alternatively, you can get synchronous notification of pending out-of-band
 data by using the @code{select} function to wait for an exceptional

@@ -1403,7 +1403,7 @@ size.
 
 @item
 @cindex longjmp
-Nonlocal exits done with @code{longjmp} (@pxref{Non-Local Jumps})
+Nonlocal exits done with @code{longjmp} (@pxref{Non-Local Exits})
 automatically free the space allocated with @code{alloca} when they exit
 through the function that called @code{alloca}.  This is the most
 important reason to use @code{alloca}.
