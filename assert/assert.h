@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +31,10 @@ Cambridge, MA 02139, USA.  */
 #define	_ASSERT_H	1
 #include <features.h>
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
 /* void assert(int expression);
    If NDEBUG is defined, do nothing.
    If not, and EXPRESSION is zero, print an error message and abort.  */
@@ -62,3 +66,7 @@ extern int  EXFUN(__assert_fail, (CONST char *__assertion,
 	   __assert_fail(__assert_quotearg(expr), __FILE__, __LINE__)))
 
 #endif	/* NDEBUG.  */
+
+#ifdef	__cplusplus
+}
+#endif
