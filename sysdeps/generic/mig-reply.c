@@ -22,14 +22,6 @@ Cambridge, MA 02139, USA.  */
 
 static mach_port_t reply_port;
 
-/* Called at startup with NOP==0.  */
-void
-__mig_init (int nop)
-{
-  if (!nop)
-    reply_port = MACH_PORT_NULL;
-}
-
 /* Called by MiG to get a reply port.  */
 mach_port_t
 __mig_get_reply_port (void)
@@ -48,4 +40,14 @@ __mig_dealloc_reply_port (void)
   reply_port = MACH_PORT_NULL;	/* So the mod_refs RPC won't use it.  */
   __mach_port_mod_refs (__mach_task_self (), port,
 			MACH_PORT_RIGHT_RECEIVE, -1);
+}
+
+
+/* Called at startup with CPROC == NULL.  cthreads has a different version
+   of this function that is sometimes called with a `cproc_t' pointer.  */
+void
+__mig_init (void *cproc)
+{
+  if (cproc == 0)
+    reply_port = MACH_PORT_NULL;
 }
