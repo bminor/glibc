@@ -1,3 +1,10 @@
+1999-09-18  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/wait4.c (__wait4): When proc_wait returns EAGAIN,
+	return zero to indicate no children died yet (assuming WNOHANG).
+
+	* sysdeps/mach/hurd/setsid.c: #include <hurd/fd.h>.
+
 1999-09-17  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/Makefile (CFLAGS-initfini.s): Add also -mcpu=i386
