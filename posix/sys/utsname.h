@@ -27,11 +27,7 @@ Cambridge, MA 02139, USA.  */
 
 __BEGIN_DECLS
 
-
-/* The size of the character arrays used to hold the information
-   in a `struct utsname'.  Enlarge this as necessary.  */
-#define	_UTSNAME_LENGTH	100
-
+#include <utsnamelen.h>
 
 /* Structure describing the system and machine.  */
 struct utsname
