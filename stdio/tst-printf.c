@@ -224,6 +224,7 @@ I am ready for my first lesson today.";
   printf ("%g should be 123.456\n", 123.456);
   printf ("%g should be 1e+06\n", 1000000.0);
   printf ("%g should be 10\n", 10.0);
+  printf ("%g should be 0.02\n", 0.02);
 
   exit(EXIT_SUCCESS);
 }
