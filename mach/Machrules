@@ -92,16 +92,25 @@ $(objpfx)%_server.c $(objpfx)%_server.h: %.defs
 	       -user /dev/null -header /dev/null \
 	       -server $(@:.h=.c) -sheader $(@:.c=.h)
 
+# Make the target directory if it doesn't exist.
+define make-target-directory
+$(patsubst %/,-mkdir %,$(filter-out $(wildcard $(@D)),$(@D)))
+endef
+
 # To get header files that declare both the straight and __ functions,
 # we generate two files and paste them together.
-$(objpfx)%.uh: %.defs
-# Make the target directory if it doesn't exist.
-	$(patsubst %/,-mkdir %,$(filter-out $(wildcard $(@D)),$(@D)))
-	$(MIG) $< $(MIGFLAGS) \
-	       -header $@ -server /dev/null -user /dev/null
-$(objpfx)%.__h: %.defs
-	$(MIG) $< $(MIGFLAGS) -prefix __ \
-	       -header $@ -server /dev/null -user /dev/null
+$(objpfx)%.uh: %.defs; $(mig.uh)
+define mig.uh
+$(make-target-directory)
+$(MIG) $< $(MIGFLAGS) \
+       -header $@ -server /dev/null -user /dev/null
+endef
+$(objpfx)%.__h: %.defs; $(mig.__h)
+define mig.__h
+$(make-target-directory)
+$(MIG) $< $(MIGFLAGS) -prefix __ \
+       -header $@ -server /dev/null -user /dev/null
+endef
 
 $(objpfx)%.h: $(objpfx)%.__h $(objpfx)%.uh
 # The last line of foo.__h is "#endif _foo_user_".
