@@ -101,6 +101,12 @@ happen as a result of a bug in your program, and since it will not
 happen on the GNU system, we have saved space by not mentioning
 @code{EFAULT} in the descriptions of individual functions.
 
+In some Unix systems, many system calls can also return @code{EFAULT} if
+given as an argument a pointer into the stack, and the kernel for some
+obscure reason fails in its attempt to extend the stack.  If this ever
+happens, you should probably try using statically or dynamically
+allocated memory instead of stack memory on that system.
+
 @node Error Codes, Error Messages, Checking for Errors, Error Reporting
 @section Error Codes
 
