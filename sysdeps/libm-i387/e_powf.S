@@ -64,6 +64,13 @@ nan:	.byte 0, 0, 0, 0, 0, 0, 0xff, 0x7f
 ENTRY(__ieee754_powf)
 	flds	8(%esp)	// y
 	fxam
+
+#ifdef	PIC
+	call	1f
+1:	popl	%ecx
+	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx
+#endif
+
 	fnstsw
 	movb	%ah, %dl
 	andb	$0x45, %ah
@@ -75,12 +82,6 @@ ENTRY(__ieee754_powf)
 
 	cmpb	$0x01, %ah	// is y == NaN ?
 	je	30f
-
-#ifdef	PIC
-	call	1f
-1:	popl	%ecx
-	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx
-#endif
 
 	flds	4(%esp)		// x : y
 
@@ -299,7 +300,7 @@ ENTRY(__ieee754_powf)
 	testb	$1, %dl
 	jz	24f		// jump if not odd
 	cmpl	$0xff000000, %edx
-	jbe	24f		// does not fit in mantissa bits
+	jae	24f		// does not fit in mantissa bits
 	// It's an odd integer.
 	fldl	MO(mzero)
 	ret
