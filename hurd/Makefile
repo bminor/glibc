@@ -28,7 +28,7 @@ headers = hurd.h $(interface-headers) \
 	  $(addprefix hurd/,fd.h id.h port.h signal.h userlink.h \
 		            resource.h threadvar.h)
 
-distribute := intr_rpc.awk hurdintr.awk
+distribute := intr-rpc.awk intr-rpc.defs
 
 # The RPC interfaces go in a separate library.
 interface-library := libhurduser.a
@@ -43,7 +43,7 @@ routines = hurdinit hurdid hurdpath hurdpid hurdrlimit hurdexec \
 	   __setauth setauth \
 	   __pid2task __task2pid pid2task task2pid \
 	   getuids setuids getumask fchroot \
-	   hurdsock hurdauth \
+	   hurdsock hurdauth invoke-trans \
 	   privports \
 	   msgportdemux \
 	   fopenport __fopenport \
@@ -83,53 +83,22 @@ $(addprefix $(hurd-srcdir)/,$(hurd-headers)) : ;
 install-others += $(addprefix $(includedir)/,$(hurd-headers))
 $(includedir)/hurd/%: $(hurd-srcdir)/hurd/%; $(do-install)
 
-# Insert comment here.
-
-ifdef intrhack # XXX
-
-# RPC_%_rpc.c is made with mig by Machrules.  RPC_%.c is the stub function
-# we will actually compile: it is just the same, but passes option bits to
-# mach_msg to notice interrupts.
-$(intr-calls:%=$(objpfx)RPC_%.c): %.c: %_rpc.c
-	sed s/MACH_MSG_OPTION_NONE/MACH_SEND_INTERRUPT|MACH_RCV_INTERRUPT/ \
-	    $< > $@-new
-	mv -f $@-new $@
-generated += $(intr-calls:%=RPC_%.c)
-
-# __%.c defines the user-callable function for the stub: this is a wrapper
-# which calls __%_rpc inside HURD_EINTR_RPC.
-$(intr-calls:%=$(objpfx)__%.c): $(objpfx)__%.c: intr_rpc.awk \
-						$(objpfx)RPC_%_rpc.c
-	gawk -v call=__$* -v rpc=__$*_rpc -f $^ > $@-new
-	mv -f $@-new $@
-generated += $(intr-calls:%=__%.c)
-
-# %.c defines an alias % for __%.
-$(intr-calls:$(objpfx)%.c): $(objpfx)%.c:
-	(echo '#include <gnu-stabs.h>';\
-	 echo 'symbol_alias (__$*, $*);') > $@-new
-	mv -f $@-new $@
-generated += $(intr-calls:%=%.c)
-
-ifdef user-interfaces
-include $(objpfx)hurdintr
-endif
-$(objpfx)hurdintr: hurdintr.awk $(user-interfaces:%=%.defs)
-	awk -f $^ varname=intr-calls > $@-new
-	mv $@-new $@
-generated += hurdintr
-
-# Make the INTR user stubs be defined as CALL_rpc.
-migdefines += $(foreach call,$(intr-calls),-D$(call)=$(call)_rpc)
-
-# Machrules has put in routines for RPC_%_rpc and %_rpc.
-# We need RPC_%, __%, and %.
-interface-routines := $(filter-out $(intr-calls:%=RPC_%_rpc)\
-				   $(intr-calls:%=%_rpc),\
-				   $(interface-routines)) \
-		      $(foreach c,$(intr-calls),RPC_$c __$c $c)
-
-endif
-
 include ../mach/Machrules
 include ../Rules
+
+# intr-rpc.defs defines the INTR_INTERFACE macro to make the generated RPC
+# stubs send-interruptible, and to prefix them with `hurd_intr_rpc_'.
+user-MIGFLAGS += -imacros intr-rpc.defs
+
+# Run each generated user stub through intr-rpc.awk, which will detect
+# stubs __hurd_intr_rpc_% and generate the user-callable function for the
+# stub: this is a wrapper which calls __hurd_intr_rpc_% inside
+# HURD_EINTR_RPC.
+define transform-user-stub
+gawk -v call=$${call} -f $(word 2,$^) \
+	$(objpfx)tmp_$${call}.c > $(objpfx)tmpi_$${call}.c; \
+rm -f $(objpfx)tmp_$${call}.c;
+endef
+transform-user-stub-output = tmpi
+
+$(user-interfaces:%=$(objpfx)%.ustamp): intr-rpc.awk
