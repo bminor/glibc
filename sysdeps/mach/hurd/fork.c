@@ -371,8 +371,7 @@ __fork (void)
 		/* Insert the chosen send right into the child.  */
 		err = __mach_port_insert_right (newtask,
 						portnames[i],
-						insert,
-						MACH_MSG_TYPE_COPY_SEND);
+						insert, insert_type);
 	      switch (err)
 		{
 		case KERN_NAME_EXISTS:
