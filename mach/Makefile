@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -120,9 +120,9 @@ $(mach-syscalls:%=$(objpfx)__%.S): $(objpfx)__%.S: $(objpfx)mach-syscalls.mk
 	(echo '#include <sysdep.h>'; \
 	 echo 'SYSCALL_TRAP (__$*, $(sysno-$*))') > $@-new
 	 mv $@-new $@
-$(mach-syscalls:%=$(objpfx)%.c): $(objpfx)%.c:
+$(mach-syscalls:%=$(objpfx)%.c): $(objpfx)%.c: Makefile
 	(echo '#include <gnu-stabs.h>'; \
-	 echo 'symbol_alias (__$*, $*)') > $@-new
+	 echo 'symbol_alias (__$*, $*);') > $@-new
 	mv $@-new $@
 generated += $(mach-syscalls:%=$(objpfx)__%.S) \
 	     $(mach-syscalls:%=$(objpfx)%.c)
@@ -153,9 +153,9 @@ $(mach-shortcuts:%=$(objpfx)__%.c): $(objpfx)__%.c: shortcut.awk \
 # The shortcut calls have had their names changed to CALL_rpc, so
 # CALL_rpc.c is being generated with a symbol alias to __CALL_rpc.  
 # We also want CALL.c with an alias to __CALL.
-$(mach-shortcuts:%=$(objpfx)%.c): $(objpfx)%.c:
+$(mach-shortcuts:%=$(objpfx)%.c): $(objpfx)%.c: Makefile
 	(echo '#include <gnu-stabs.h>'; \
-	 echo 'symbol_alias (__$*, $*)') > $@-new
+	 echo 'symbol_alias (__$*, $*);') > $@-new
 	mv $@-new $@
 generated += $(mach-shortcuts:%=$(objpfx)%.c)
 endif	# mach-shortcuts
