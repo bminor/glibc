@@ -48,8 +48,9 @@ server-interfaces := # mach/__exc mach/exc
 routines = $(interface-routines) \
 	   $(filter-out syscall_%,$(mach-syscalls)) \
 	   $(addprefix __,$(mach-syscalls)) \
+	   $(mach-shortcuts) $(addprefix __,$(mach-shortcuts)) \
 	   mach_init vm_page_size \
-	   mig_strncpy mig_support __bcopy msg \
+	   mig_strncpy __mig_strncpy mig_support __bcopy __msg msg \
 	   msg_destroy msg_server msg_server_t \
 	   __msg_destroy __msg_server \
 	   devstream bootprivport privports
@@ -104,6 +105,14 @@ ifdef mach-shortcuts
 $(mach-shortcuts:%=__%.c): __%.c: shortcut.awk __%_rpc.c
 	gawk -v call=__$* -v rpc=__$*_rpc -v syscall=__syscall_$* \
 	     -f $^ > $@-new
+	mv $@-new $@
+
+# The shortcut calls have had their names changed to CALL_rpc, so
+# CALL_rpc.c is being generated with a symbol alias to __CALL_rpc.  
+# We also want CALL.c with an alias to __CALL.
+$(mach-shortcuts:%=%.c):
+	(echo '#include <gnu-stabs.h>'; \
+	 echo 'symbol_alias (__$*, $*)') > $@-new
 	mv $@-new $@
 endif
 
