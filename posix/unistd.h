@@ -472,10 +472,6 @@ extern __gid_t EXFUN(getegid, (NOARGS));
 extern int EXFUN(__getgroups, (int __size, __gid_t __list[]));
 extern int EXFUN(getgroups, (int __size, __gid_t __list[]));
 
-#ifdef __OPTIMIZE__
-#define getgroups(size, list)	__getgroups((size), (list))
-#endif /* Optimizing.  */
-
 /* Set the user ID of the calling process to UID.
    If the calling process is the super-user, set the real
    and effective user IDs, and the saved set-user-ID to UID;
