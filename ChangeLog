@@ -1,5 +1,6 @@
 2000-01-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/i386/Dist: Add sys/io.h.
 	* sysdeps/unix/sysv/linux/Dist: Remove sys/io.h.
 
 	* nscd/hstcache.c: Don't use NS_* names.
