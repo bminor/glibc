@@ -69,9 +69,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 }
 #endif
 
-/* If tls.h was included, it will include useldt.h after defining USE_TLS.
-   We don't want to include it here first when tls.h includes us.  */
-#if __ASSUME_LDT_WORKS > 0 && !defined _TLS_H
+#if __ASSUME_LDT_WORKS > 0
 #include "../useldt.h"
 #endif
 

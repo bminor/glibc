@@ -1,4 +1,4 @@
-%define glibcrelease 57
+%define glibcrelease 58
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1239,6 +1239,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sun Sep 26 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-58
+- update from CVS
+  - vasprintf fix (BZ #346)
+  - gettext locking (BZ #322)
+- change linuxthreads useldt.h inclusion login again, the last
+  one failed all linuxthreads FLOATING_STACKS tests
+
 * Sat Sep 25 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-57
 - update from CVS
   - fix setuid in LD_ASSUME_KERNEL=2.2.5 libc (#133558)
