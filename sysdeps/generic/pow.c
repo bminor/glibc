@@ -136,7 +136,7 @@ double x,y;
 	if     (y==zero)      return(one);
 	else if(y==one
 #if !defined(vax)&&!defined(tahoe)
-		||x!=x
+		|| __isnan (x)	/* BSD code did `x!=x' */
 #endif	/* !defined(vax)&&!defined(tahoe) */
 		) return( x );      /* if x is NaN or y=1 */
 #if !defined(vax)&&!defined(tahoe)
@@ -211,17 +211,18 @@ double x,y;
 	/* compute y*log(x) ~ mlog2 + t + c */
         	s=y*(n+invln2*t);
                 m=s+copysign(half,s);   /* m := nint(y*log(x)) */ 
-		if (y >= (double) LONG_MIN && y <= (double) LONG_MAX &&
-		    (double) (int) y == y)
+		/* (long int) (double) LONG_MIN overflows on some systems.  */
+		if (y >= (double) LONG_MIN + 1 && y <= (double) LONG_MAX &&
+		    (double) (long int) y == y)
 		  {
 		    /* Y is an integer */
-		    k = m-y*n;
+		    k = m - (long int) y * n;
 		    sx=t; tx+=(t-sx); }
 		else	{		/* if y is not an integer */    
 		    k =m;
 	 	    tx+=n*ln2lo;
 		    sx=(c=n*ln2hi)+t; tx+=(c-sx)+t; }
-	   /* end of checking whether k==y */
+ 	   /* end of reductions for integral/nonintegral y */
 
                 sy=y; ty=y-sy;          /* y ~ sy + ty */
 #ifdef tahoe
