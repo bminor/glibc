@@ -1,3 +1,7 @@
+2000-02-28  David S. Miller  <davem@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/getsysstats.c: New file.
+
 2000-02-27  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/configure.in: Treat also "/usr/" as
