@@ -113,4 +113,8 @@ libc {
     # Extended Interface.
     fnmatch;
   }
+  GLIBC_2.2.6 {
+    # For syscall wrapper
+    __nanosleep;
+  }
 }
