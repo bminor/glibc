@@ -1,4 +1,4 @@
-@node Consistency Checking
+@node Consistency Checking, Mathematics, Low-Level Terminal Interface, Top
 @chapter Explicitly Checking Internal Consistency
 @cindex consistency checking
 @cindex impossible events

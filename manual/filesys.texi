@@ -1,4 +1,4 @@
-@node File System Interface
+@node File System Interface, Pipes and FIFOs, Low-Level Input/Output, Top
 @chapter File System Interface
 
 This chapter describes the GNU C library's functions for manipulating
@@ -13,20 +13,20 @@ files, and functions for examining and setting file attributes such as
 access permissions and modification times.
 
 @menu
-* Working Directory::		This is used to resolve relative
+* Working Directory::           This is used to resolve relative
 				 file names.
-* Accessing Directories::	Finding out what files a directory
+* Accessing Directories::       Finding out what files a directory
 				 contains.
-* Hard Links::		        Adding alternate names to a file.
+* Hard Links::                  Adding alternate names to a file.
 * Symbolic Links::              A file that ``points to'' a file name.
 * Deleting Files::              How to delete a file, and what that means.
 * Renaming Files::              Changing a file's name.
 * Creating Directories::        A system call just for creating a directory.
-* File Attributes::		Attributes of individual files.
-* Making Special Files::	How to create special files.
+* File Attributes::             Attributes of individual files.
+* Making Special Files::        How to create special files.
 @end menu
 
-@node Working Directory
+@node Working Directory, Accessing Directories,  , File System Interface
 @section Working Directory
 
 @cindex current working directory
@@ -131,7 +131,7 @@ syntax errors (@pxref{File Name Errors}).
 @end deftypefun
 
 
-@node Accessing Directories
+@node Accessing Directories, Hard Links, Working Directory, File System Interface
 @section Accessing Directories
 @cindex accessing directories
 @cindex reading from a directory
@@ -151,15 +151,15 @@ parallels here to the stream facilities for ordinary files, described in
 @ref{Input/Output on Streams}.
 
 @menu
-* Directory Entries::            Format of one directory entry.
-* Opening a Directory::          How to open a directory stream.
-* Reading/Closing Directory::    How to read directory entries from the stream.
-* Simple Directory Lister::      A very simple directory listing program.
-* Random Access Directory::      Rereading part of the directory
+* Directory Entries::           Format of one directory entry.
+* Opening a Directory::         How to open a directory stream.
+* Reading/Closing Directory::   How to read directory entries from the stream.
+* Simple Directory Lister::     A very simple directory listing program.
+* Random Access Directory::     Rereading part of the directory
                                   already read with the same stream.
 @end menu
 
-@node Directory Entries
+@node Directory Entries, Opening a Directory,  , Accessing Directories
 @subsection Format of a Directory Entry
 
 @pindex dirent.h
@@ -197,7 +197,7 @@ of the file itself, not any particular directory entry.  @xref{File
 Attributes}.
 @end deftp
 
-@node Opening a Directory
+@node Opening a Directory, Reading/Closing Directory, Directory Entries, Accessing Directories
 @subsection Opening a Directory Stream
 
 @pindex dirent.h
@@ -245,7 +245,7 @@ and the @code{opendir} function in terms of the @code{open} function.
 file descriptors are closed on @code{exec} (@pxref{Executing a File}).
 @end deftypefun
 
-@node Reading/Closing Directory
+@node Reading/Closing Directory, Simple Directory Lister, Opening a Directory, Accessing Directories
 @subsection Reading and Closing a Directory Stream
 
 @pindex dirent.h
@@ -289,7 +289,7 @@ The @var{dirstream} argument is not valid.
 @end table
 @end deftypefun
 
-@node Simple Directory Lister
+@node Simple Directory Lister, Random Access Directory, Reading/Closing Directory, Accessing Directories
 @subsection Simple Program to List a Directory
 
 Here's a simple program that prints the names of the files in
@@ -320,7 +320,7 @@ The order in which files appear in a directory tends to be fairly
 random.  A more useful program would sort the entries (perhaps by
 alphabetizing them) before printing them.
 
-@node Random Access Directory
+@node Random Access Directory,  , Simple Directory Lister, Accessing Directories
 @subsection Random Access in a Directory Stream
 
 @pindex dirent.h
@@ -359,7 +359,7 @@ closing and reopening the directory can invalidate values returned by
 @code{telldir}.
 @end deftypefun
 
-@node Hard Links
+@node Hard Links, Symbolic Links, Accessing Directories, File System Interface
 @section Hard Links
 @cindex hard link
 @cindex link, hard
@@ -440,7 +440,7 @@ than the existing file.
 @end table
 @end deftypefun
 
-@node Symbolic Links
+@node Symbolic Links, Deleting Files, Hard Links, File System Interface
 @section Symbolic Links
 @cindex soft link
 @cindex link, soft
@@ -560,7 +560,7 @@ A hardware error occurred while reading or writing data on the disk.
 @end table
 @end deftypefun
 
-@node Deleting Files
+@node Deleting Files, Renaming Files, Symbolic Links, File System Interface
 @section Deleting Files
 @cindex deleting a file
 @cindex removing a file
@@ -650,7 +650,7 @@ The prototype for this function is declared in the header file
 @pindex unistd.h
 @end deftypefun
 
-@node Renaming Files
+@node Renaming Files, Creating Directories, Deleting Files, File System Interface
 @section Renaming Files
 
 The @code{rename} function is used to change a file's name.
@@ -739,7 +739,7 @@ file systems.
 @end table
 @end deftypefun
 
-@node Creating Directories
+@node Creating Directories, File Attributes, Renaming Files, File System Interface
 @section Creating Directories
 @cindex creating a directory
 @cindex directories, creating
@@ -789,7 +789,7 @@ To use this function, your program should include the header files
 @pindex sys/types.h
 @end deftypefun
 
-@node File Attributes
+@node File Attributes, Making Special Files, Creating Directories, File System Interface
 @section File Attributes
 
 @pindex ls
@@ -803,21 +803,21 @@ This section contains information about how you can inquire about and
 modify these attributes of files.
 
 @menu
-* Attribute Meanings::    The names of the file attributes, 
+* Attribute Meanings::          The names of the file attributes, 
                            and what their values mean.
-* Reading Attributes::    How to read the attributes of a file.
-* Testing File Type::     Distinguishing ordinary files, directories, links...
-* File Owner::		  How ownership for new files is determined,
+* Reading Attributes::          How to read the attributes of a file.
+* Testing File Type::           Distinguishing ordinary files, directories, links...
+* File Owner::                  How ownership for new files is determined,
 			   and how to change it.
-* Permission Bits::	  How information about a file's access mode is stored.
-* Access Permission::	  How the system decides who can access a file.
-* Setting Permissions::	  How permissions for new files are assigned,
+* Permission Bits::             How information about a file's access mode is stored.
+* Access Permission::           How the system decides who can access a file.
+* Setting Permissions::         How permissions for new files are assigned,
 			   and how to change them.
-* Testing File Access::	  How to find out if your process can access a file.
-* File Times::		  About the time attributes of a file.
+* Testing File Access::         How to find out if your process can access a file.
+* File Times::                  About the time attributes of a file.
 @end menu
 
-@node Attribute Meanings
+@node Attribute Meanings, Reading Attributes,  , File Attributes
 @subsection What the File Attribute Values Mean
 @cindex status of a file
 @cindex attributes of a file
@@ -954,7 +954,7 @@ This is an arithmetic data type used to represent file link counts.
 In the GNU system, this is equivalent to @code{unsigned short int}.
 @end deftp
 
-@node Reading Attributes
+@node Reading Attributes, Testing File Type, Attribute Meanings, File Attributes
 @subsection Reading the Attributes of a File
 
 To examine the attributes of files, use the functions @code{stat},
@@ -1010,7 +1010,7 @@ link, @code{lstat} returns information about the link itself; otherwise,
 @code{lstat} works like @code{stat}.  @xref{Symbolic Links}.
 @end deftypefun
 
-@node Testing File Type
+@node Testing File Type, File Owner, Reading Attributes, File Attributes
 @subsection Testing the Type of a File
 
 The @dfn{file mode}, stored in the @code{st_stat} field of the file
@@ -1153,7 +1153,7 @@ This macro represents the value of the file type code for a socket.
 This macro represents the value of the file type code for a FIFO or pipe.
 @end table
 
-@node File Owner
+@node File Owner, Permission Bits, Testing File Type, File Attributes
 @subsection File Owner
 @cindex file owner
 @cindex owner of a file
@@ -1247,7 +1247,7 @@ The file resides on a read-only file system.
 @end table
 @end deftypefun
 
-@node Permission Bits
+@node Permission Bits, Access Permission, File Owner, File Attributes
 @subsection The Mode Bits for Access Permission
 
 The @dfn{file mode}, stored in the @code{st_stat} field of the file
@@ -1397,7 +1397,7 @@ practice.  It is not only nonportable, it also requires everyone who
 reads your program to remember what the bits mean.  To make your
 program clean, use the symbolic names.
 
-@node Access Permission
+@node Access Permission, Setting Permissions, Permission Bits, File Attributes
 @subsection How Your Access to a File is Decided
 @cindex permission to access a file
 @cindex access permission for a file
@@ -1422,7 +1422,7 @@ its file permission bits.  As a special case, for a file to be
 executable even for a privileged user, at least one of its execute bits
 must be set.
 
-@node Setting Permissions
+@node Setting Permissions, Testing File Access, Access Permission, File Attributes
 @subsection Assigning File Permissions
 
 @cindex file creation mask
@@ -1560,7 +1560,7 @@ The file resides on a read-only file system.
 @end table
 @end deftypefun
 
-@node Testing File Access
+@node Testing File Access, File Times, Setting Permissions, File Attributes
 @subsection Testing Permission to Access a File
 @cindex testing access permission
 @cindex access, testing for
@@ -1663,7 +1663,7 @@ Argument that means, test for execute/search permission.
 Argument that means, test for existence of the file.
 @end deftypevr
 
-@node File Times
+@node File Times,  , Testing File Access, File Attributes
 @subsection File Times
 
 @cindex file access time
@@ -1786,7 +1786,7 @@ The return values and error conditions are the same as for the @code{utime}
 function.
 @end deftypefun
 
-@node Making Special Files
+@node Making Special Files,  , File Attributes, File System Interface
 @section Making Special Files
 @cindex creating special files
 @cindex special files

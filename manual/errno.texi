@@ -1,4 +1,4 @@
-@node Error Reporting, Common Definitions, Roadmap to the Manual, Top
+@node Error Reporting, Common Definitions, Introduction, Top
 @chapter Error Reporting
 @cindex error reporting
 @cindex reporting errors
@@ -17,12 +17,12 @@ facility.
 @pindex errno.h
 
 @menu
-* Checking for Errors::	How errors are reported by library functions.
-* Codes: Error Codes.	Symbolic names for error codes.
-* Error Messages::	Mapping error codes onto error messages.
+* Checking for Errors::         How errors are reported by library functions.
+* Error Codes::                 Error Codes
+* Error Messages::              Mapping error codes onto error messages.
 @end menu
 
-@node Checking for Errors
+@node Checking for Errors, Error Codes,  , Error Reporting
 @section Checking for Errors
 
 Most library functions return a special value to indicate that they have
@@ -82,7 +82,7 @@ codes of their own for other situations.  The only values that are
 guaranteed to be meaningful for a particular library function are the
 ones that this manual explicitly lists for that function.
 
-@node Error Codes
+@node Error Codes, Error Messages, Checking for Errors, Error Reporting
 @section Error Codes
 
 @pindex errno.h
@@ -610,7 +610,7 @@ This error code has no purpose.
 @end deftypevr
 
 
-@node Error Messages
+@node Error Messages,  , Error Codes, Error Reporting
 @section Error Messages
 
 The library has functions and variables designed to make it easy for

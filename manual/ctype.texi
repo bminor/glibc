@@ -1,4 +1,4 @@
-@node Character Handling
+@node Character Handling, String and Array Utilities, Memory Allocation, Top
 @chapter Character Handling
 
 Programs that work with characters and strings often need to classify a
@@ -15,12 +15,12 @@ by the locale currently selected for character classification.)
 @xref{Locales}.
 
 @menu
-* Classification of Characters::	Testing whether characters are
+* Classification of Characters::  Testing whether characters are
 					 letters, digits, punctuation, etc.
-* Case Conversion::			Case mapping, and the like.
+* Case Conversion::             Case mapping, and the like.
 @end menu
 
-@node Classification of Characters
+@node Classification of Characters, Case Conversion,  , Character Handling
 @section Classification of Characters
 @cindex character testing
 @cindex classification of characters
@@ -187,7 +187,7 @@ into the US/UK ASCII character set.
 @end deftypefun
 
 
-@node Case Conversion
+@node Case Conversion,  , Classification of Characters, Character Handling
 @section Case Conversion
 @cindex character case conversion
 @cindex case conversion of characters
