@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +40,8 @@ Cambridge, MA 02139, USA.  */
 
 main ()
 {
+#ifdef TABLE
+
   int i;
 
   puts ("#include <ansidecl.h>");
@@ -49,6 +51,15 @@ main ()
     printf ("    %u,\n", (unsigned int) ((TABLE+1)[i]));
 
   puts ("  };");
+
+#else
+
+  puts ("/* I don't know what the ctype table is called on this system.");
+  puts ("   If there is a table, and you want the ctype glue to work,");
+  puts ("   edit configure.in and sysdeps/unix/common/glue-ctype.c");
+  puts ("   to check for the right name.  */");
+
+#endif
 
   exit (0);
 }
