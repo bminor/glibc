@@ -77,6 +77,15 @@
 	* stdio-common/test-fseek.c: Remove temporary file, add
 	copyright.
 
+1997-02-19 11:46  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/strxfrm.c (STRCOLL): Correct handling of `position'
+	levels with no non-IGNOREd element and handling of NUL byte.
+	* string/strcoll.c (STRXFRM): Likewise.
+	* locale/weight.h: Likewise.
+
+	* shadow/sgetspent_r.c (LINE_PARSER): Add missing ')'.
+
 1997-02-19 01:02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/mman/syscalls.list: msync takes 3 arguments.
@@ -175,6 +184,21 @@
 	* resolv/gethnamaddr.c (gethostbyname2): Test for ':' in name before
 	trying to resolv name as numeric IPv6 address.
 	* nss/digits_dots.c: Likewise.
+
+1997-02-13 22:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/localedef.c: Implement --quiet option.
+	* locale/programs/charset.h: Declare be_quiet variable.
+	* locale/programs/locfile.h: Likewise.
+	* locale/programs/charmap.c: Don't print warnings if quiet option
+	was given.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/ld-messages.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+	* locale/programs/locfile.c: Likewise.
 
 1997-02-13 11:44  Andreas Jaeger  <aj@arthur.pfalz.de>
 
