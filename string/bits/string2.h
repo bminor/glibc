@@ -1205,32 +1205,6 @@ __strsep_g (char **__s, __const char *__reject)
 #  endif
 # endif
 
-# ifndef _HAVE_STRING_ARCH_strndup
-
-#  define __strndup(s, n) \
-  (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
-		  ? (((__const char *) (s))[0] == '\0'			      \
-		     ? (char *) calloc (1, 1)				      \
-		     : ({ size_t __len = strlen (s) + 1;		      \
-			  size_t __n = (n);				      \
-			  char *__retval;				      \
-			  if (__n < __len)				      \
-			    __len = __n;				      \
-			  __retval = (char *) malloc (__len);		      \
-			  if (__retval != NULL)				      \
-			    {						      \
-			      __retval[__len - 1] = '\0';		      \
-			      __retval = (char *) memcpy (__retval, s,	      \
-							  __len - 1);	      \
-			    }						      \
-			  __retval; }))					      \
-		  : __strndup ((s), (n))))
-
-#  ifdef __USE_GNU
-#   define strndup(s, n) __strndup ((s), (n))
-#  endif
-# endif
-
 #endif /* Use misc. or use GNU.  */
 
 #ifndef _FORCE_INLINES
