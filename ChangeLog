@@ -1,3 +1,8 @@
+2004-12-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/Makefile (tests): Add bug-ungetc4.
+	* libio/bug-ungetc4.c: New test.
+
 2004-12-02  Roland McGrath  <roland@redhat.com>
 
 	* extra-lib.mk (object-suffixes-$(lib)): Add .oS when
