@@ -481,7 +481,7 @@ string).
 because it provides no protection against overflowing the string @var{s}.
 The GNU library includes it for compatibility only.  You should 
 @strong{always} use @code{fgets} or @code{getline} instead.
-@end deftypefun
+@end deftypefn
 
 @comment stdio.h
 @comment SVID
@@ -1400,8 +1400,8 @@ this array is used for each argument expected.  This information is
 encoded using the various @samp{PA_} macros, listed below.
 
 The @var{n} argument specifies the number of elements in the array
-@var{argtypes}.  @code{parse_printf_format} will not try to write more
-elements than this.
+@var{argtypes}.  This is the most elements that
+@code{parse_printf_format} will try to write.
 
 @code{parse_printf_format} returns the total number of arguments required
 by @var{template}.  If this number is greater than @var{n}, then the
@@ -1416,10 +1416,10 @@ modifier flag bits.
 @comment printf.h
 @comment GNU
 @deftypevr Macro int PA_FLAG_MASK
-This macro is a bitmask for the type modifier flag bits.  Write
-@code{(argtypes[i] & PA_FLAG_MASK)} to extract just the flag bits for an
-argument, or @code{(argtypes[i] & ~PA_FLAG_MASK)} to extract just the
-basic type code.
+This macro is a bitmask for the type modifier flag bits.  Write the
+expression @code{(argtypes[i] & PA_FLAG_MASK)} to extract just the flag
+bits for an argument, or @code{(argtypes[i] & ~PA_FLAG_MASK)} to extract
+just the basic type code.
 @end deftypevr
 
 Here are symbolic constants that represent the basic types; they stand
@@ -3030,7 +3030,7 @@ provide equivalent functionality.
 
 @menu
 * String Streams::
-* Generalized Streams::
+* Custom Streams::
 @end menu
 
 @node String Streams
@@ -3159,8 +3159,8 @@ buf = `hello', size = 5
 buf = `hello, world', size = 12
 @end example
 
-@node Programming Your Own Streams
-@subsection Programming Your Own Streams
+@node Custom Streams
+@subsection Programming Your Own Custom Streams
 @cindex custom streams
 @cindex programming your own streams
 
@@ -3174,7 +3174,8 @@ programmed by you.  We call these @dfn{custom streams}.
 @end menu
 
 @node Streams and Cookies
-@cindex cookie, for custom streams
+@subsubsection Custom Streams and Cookies
+@cindex cookie, for custom stream
 
 Inside every custom stream is a special object called the @dfn{cookie}.
 This is an object supplied by you which records where to fetch or store

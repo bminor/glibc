@@ -160,7 +160,7 @@ much flexibility as using the low-level functions directly.
 @comment POSIX.2, SVID, BSD, GNU
 @deftypefun {FILE *} popen (const char *@var{command}, const char *@var{mode})
 The @code{popen} function is closely related to the @code{system}
-function; @pxref{Running a Command}.  It executes the shell command
+function; see @ref{Running a Command}.  It executes the shell command
 @var{command} as a subprocess.  However, instead of waiting for the
 command to complete, it creates a pipe to the subprocess and returns a
 stream that corresponds to that pipe.
@@ -240,7 +240,7 @@ The @code{mkfifo} function is declared in the header file
 @deftypefun int mkfifo (const char *@var{filename}, mode_t @var{mode})
 The @code{mkfifo} function makes a FIFO special file with name
 @var{filename}.  The @var{mode} argument is used to set the file's
-permissions; @pxref{Assigning File Permissions}.
+permissions; see @ref{Setting Permissions}.
 
 The normal, successful return value from @code{mkfifo} is @code{0}.  In
 the case of an error, @code{-1} is returned.  In addition to the usual

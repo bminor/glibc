@@ -99,7 +99,7 @@ declared in @file{sys/socket.h}.
 This function creates a socket of type @var{type}, which should be one
 of the socket types listed in @ref{Types of Sockets}.  The @var{domain}
 argument specifies the protocol family and the @var{protocol} the
-specific communications protocol within that family; @pxref{Domains and
+specific communications protocol within that family; see @ref{Domains and
 Protocols}.
 
 The return value from @code{socket} is the file descriptor for the new
@@ -138,11 +138,11 @@ support file positioning operations.
 @cindex shutting down a socket
 
 When you are finished using a socket, you can simply close its
-file descriptor with @code{close}; @pxref{Opening and Closing Files}.
+file descriptor with @code{close}; see @ref{Opening and Closing Files}.
 If there is still data waiting to be transmitted over the connection,
 normally @code{close} tries to complete this transmission.  You
 can control this behavior using the @code{SO_LINGER} socket option;
-@pxref{Socket Options}.
+see @ref{Socket Options}.
 
 To shut down a socket more cleanly, call @code{shutdown} before calling
 @code{close}.  This function is declared in @file{sys/socket.h}.
@@ -331,7 +331,7 @@ A @dfn{socket pair} consists of a pair of connected (but unnamed)
 sockets.  It is very similar to a pipe and is used in much the same way.
 Socket pairs are created with the @code{socketpair} function, declared
 in @file{sys/socket.h}.  (Compare this function with the @code{pipe}
-function; @pxref{Creating a Pipe}.)
+function; see @ref{Creating a Pipe}.)
 @pindex sys/socket.h
 
 @comment sys/socket.h
@@ -343,7 +343,7 @@ is a full-duplex communications channel, so that both reading and writing
 may be performed at either end.
 
 The @var{domain}, @var{type}, and @var{protocol} are interpreted as for
-the @code{socket} function; @pxref{Creating a Socket}.
+the @code{socket} function; see @ref{Creating a Socket}.
 
 The @code{socketpair} function returns @code{0} on success and @code{-1}
 on failure.  The following @code{errno} error conditions are defined
@@ -457,8 +457,7 @@ component of the address structure, and the string length (@emph{not}
 the allocation size!) of the file name string.
 
 After you close a socket in the local domain, you should delete the file.
-Use @code{unlink} or @code{remove} to do this; @pxref{Removing and
-Renaming Files}.
+Use @code{unlink} or @code{remove} to do this; see @ref{Deleting Files}.
 
 The default communications protocol (protocol number @code{0}) is the
 only one supported by the local domain.
@@ -864,7 +863,7 @@ As far as the host database is concerned, each address is just a block
 of memory @code{h_length} bytes long.  But in other contexts there is an
 implicit assumption that you can cast this to a @code{struct in_addr} or
 a @code{unsigned long int}.  Host addresses in a @code{struct hostent}
-structure are always given in network byte order; @pxref{Byte Order
+structure are always given in network byte order; see @ref{Byte Order
 Conversion}.
 
 You can use @code{gethostbyname} or @code{gethostbyaddr} to search the
@@ -1006,7 +1005,7 @@ strings.  A null pointer terminates the array.
 
 @item int s_port
 This is the port number for the service.  Port numbers are given in
-network byte order; @pxref{Byte Order Conversion}.
+network byte order; see @ref{Byte Order Conversion}.
 
 @item char *s_proto
 This is the name of the protocol to use with this service.
@@ -1097,7 +1096,7 @@ This is the type of the network number; this is always equal to
 
 @item unsigned long int n_net
 This is the network number.  Network numbers are returned in host
-byte order; @pxref{Byte Order Conversion}.
+byte order; see @ref{Byte Order Conversion}.
 @end table
 @end deftp
 
@@ -1830,7 +1829,7 @@ used to flag exceptional conditions.
 When out-of-band data is pending on a socket, a @code{SIGURG} signal is
 sent to the owner process or process group of the socket.  You establish
 this using the @code{F_SETOWN} command to the @code{fcntl} function;
-@pxref{Interrupt Input}.  You can establish a handler for this signal,
+see @ref{Interrupt Input}.  You can establish a handler for this signal,
 as described in @ref{Signal Handling}.
 
 Alternatively, you can get synchronous notification of pending
@@ -1892,7 +1891,7 @@ through the socket @var{filedes} to the target socket named by the
 specifies the number of bytes to be transmitted.
 
 The @var{flags} are interpreted the same way as for @code{send};
-@pxref{Transferring Data}.  The return value and error conditions are
+see @ref{Transferring Data}.  The return value and error conditions are
 also the same as for @code{send}.
 @end deftypefun
 
@@ -1909,7 +1908,7 @@ You can specify a null pointer as the @var{addr} argument if you are not
 interested in this information.
 
 The @var{flags} are interpreted the same way as for @code{recv};
-@pxref{Transferring Data}.  The return value and error conditions are
+see @ref{Transferring Data}.  The return value and error conditions are
 also the same as for @code{recv}.
 @end deftypefun
 
@@ -2180,7 +2179,7 @@ interface instead.  The value is an @code{int}, interpreted as a boolean.
 @deftypevr Macro int SO_LINGER
 This option specifies what should happen when the socket of a type that
 promises reliable delivery still has untransmitted messages when it is
-closed; @pxref{Closing a Socket}.  The value is a @code{struct linger}
+closed; see @ref{Closing a Socket}.  The value is a @code{struct linger}
 object.
 @end deftypevr
 

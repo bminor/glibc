@@ -201,7 +201,7 @@ Otherwise, the option applies to all files.
 If this option is enabled, the @code{chown} function is restricted so
 that the only changes permitted to nonprivileged processes is to change 
 the group owner of a file to either be the effective group ID of the
-process, or one of its supplementary group IDs.  @xref{File Ownership}.
+process, or one of its supplementary group IDs.  @xref{File Owner}.
 @end deftypevr
 
 @comment unistd.h

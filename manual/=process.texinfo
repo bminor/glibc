@@ -86,7 +86,7 @@ Multiple options may follow a hyphen delimiter in a single token.
 
 @item
 Option names are single alphanumeric (as for @code{isalnum};
-@pxref{Classification of Characters}) characters.
+see @ref{Classification of Characters}) characters.
 
 @item
 Options may accept an argument; the argument is usually required.
@@ -375,7 +375,7 @@ may not be available in other systems.
 You can deal directly with the underlying representation of environment
 objects when you are going to add things to the environment (for
 example, to communicate with another program you are about to execute;
-@pxref{Executing a File}).  If you just want to get the value of an
+see @ref{Executing a File}).  If you just want to get the value of an
 environment variable, use @code{getenv}.
 
 This variable is not declared in any header file, but if you declare it
@@ -555,9 +555,9 @@ resources allocated by the program, and the like.
 
 @item 
 All open streams are closed.  This action includes making sure all open
-output streams are flushed; @pxref{Opening and Closing Streams}.  In
+output streams are flushed; see @ref{Opening and Closing Streams}.  In
 addition, temporary files opened with the @code{tmpfile} function are
-removed; @pxref{Temporary Files}.
+removed; see @ref{Temporary Files}.
 
 @item 
 Control returns to the host environment, with the specified exit
@@ -664,7 +664,7 @@ executing functions registered with @code{atexit} or @code{on_exit}.
 
 This function actually terminates the process by raising a
 @code{SIGABRT} signal, and your program can include a handler to
-intercept this signal; @pxref{Signal Handling}.
+intercept this signal; see @ref{Signal Handling}.
 
 @strong{Incomplete:}  Why would you want to define such a handler?
 @end deftypefun
@@ -696,7 +696,7 @@ Input/Output}.
 @item
 The low-order 8 bits of the return status code are made available to
 be reported back to the parent process via @code{wait} or @code{waitpid};
-@pxref{Process Completion}.
+see @ref{Process Completion}.
 
 @item
 Any child processes of the process being terminated are assigned a new
@@ -825,7 +825,7 @@ is running in the parent process or the child.
 @cindex process image
 Having all processes run the same program is usually not very useful,
 but if you want the new process to execute a different program you must
-call one of the @code{exec} functions to load it; @pxref{Executing a
+call one of the @code{exec} functions to load it; see @ref{Executing a
 File}.  The program that the process is executing is called its
 @dfn{process image}.  Starting execution of a new program causes the
 process to forget all about its current process image; when the new
@@ -913,7 +913,7 @@ process won't change the file descriptors in the child, and vice versa.
 
 @item
 The elapsed processor times for the child process are set to zero;
-@pxref{Processor Time}.
+see @ref{Processor Time}.
 
 @item
 The child doesn't inherit file locks set by the parent process.
@@ -981,7 +981,7 @@ must be a null pointer.  @xref{Program Arguments}, for information on
 how programs can access these arguments.
 
 The environment for the new process image is taken from the
-@code{environ} variable of the current process image; @pxref{Environment
+@code{environ} variable of the current process image; see @ref{Environment
 Variables}, for information about environments.
 @end deftypefun
 
@@ -999,7 +999,7 @@ passed as the last such argument.
 This is similar to @code{execv}, but permits you to specify the environment
 for the new program explicitly as the @var{env} argument.  This should
 be an array of strings in the same format as for the @code{environ} 
-variable; @pxref{Environment Access}.
+variable; see @ref{Environment Access}.
 @end deftypefun
 
 @comment unistd.h
@@ -1093,16 +1093,16 @@ Pending alarms.  @xref{Setting an Alarm}.
 Current working directory and root directory.  @xref{Working Directory}.
 
 @item
-File mode creation mask.  @xref{Assigning File Permissions}.
+File mode creation mask.  @xref{Setting Permissions}.
 
 @item
-Process signal mask; @pxref{Process Signal Mask}.
+Process signal mask; see @ref{Process Signal Mask}.
 
 @item
-Pending signals; @pxref{Blocking Signals}.
+Pending signals; see @ref{Blocking Signals}.
 
 @item
-Elapsed processor time associated with the process; @pxref{Processor Time}.
+Elapsed processor time associated with the process; see @ref{Processor Time}.
 @end itemize
 
 If the set-user-ID and set-group-ID mode bits of the process image file
@@ -1120,7 +1120,7 @@ Input/Output}.
 Signals that are set to be ignored in the existing process image are
 also set to be ignored in the new process image.  All other signals are
 set to the default action in the new process image.  For more
-information about signals, @pxref{Signal Handling}.
+information about signals, see @ref{Signal Handling}.
 
 @node Process Completion
 @subsection Process Completion
@@ -1497,9 +1497,9 @@ belong to multiple groups, the additional groups that can affect
 access permissions are called @dfn{supplementary group IDs}.
 
 For details on how a process's user IDs and group IDs affect its
-permission to access files, @pxref{Permission to Access a File}.  For
+permission to access files, see @ref{Access Permission}.  For
 more information about the system user and group databases,
-@pxref{System Databases}.
+see @ref{System Databases}.
 
 The user ID of a process also controls permissions for sending signals
 using the @code{kill} function.  @xref{Signaling Another Process}.
@@ -1628,7 +1628,7 @@ the effective user ID back to the user's real user ID.
 If the @code{setuid} part of your program needs to access other files
 besides the controlled resource, it should verify that the user would
 ordinarily have permission to access those files.  You can use the
-@code{access} function (@pxref{Permission to Access a File}) to make
+@code{access} function (@pxref{Access Permission}) to make
 this determination; it uses the real user and group IDs, rather than the
 effective IDs.
 @end itemize

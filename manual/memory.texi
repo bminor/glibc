@@ -233,8 +233,7 @@ The block that @code{malloc} gives you is guaranteed to be aligned so
 that it can hold any type of data.  In the GNU system, this means the
 address is always a multiple of eight.  Only rarely is any higher
 boundary (such as a page boundary) necessary; for those cases, use
-@code{memalign} or @code{valloc} (@pxref{Allocation with Specified
-Alignment}).
+@code{memalign} or @code{valloc} (@pxref{Aligned Memory Blocks}).
 
 Note that the memory located after the end of the block is likely to be
 in use for something else; perhaps a block already allocated by another
@@ -243,7 +242,7 @@ you asked for it to be, you are liable to destroy the data that
 @code{malloc} uses to keep track of its blocks, or you may destroy the
 contents of another block.  If you have already allocated a block and
 discover you want it to be bigger, use @code{realloc} (@pxref{Changing
-the Size of a Block}).
+Block Size}).
 
 @node Freeing After Malloc
 @subsection Freeing Memory Allocated with @code{malloc}
@@ -575,8 +574,7 @@ This is the total size of memory managed by malloc, in bytes.
 @item size_t chunks_used
 This is the number of chunks in use.  (The storage allocator internally
 gets chunks of memory from the operating system, and them carves them up
-to satisfy individual @code{malloc} requests; @pxref{Efficiency
-Considerations}.)
+to satisfy individual @code{malloc} requests; @pxref{Efficiency and Malloc}.)
 
 @item size_t bytes_used
 This is the number of bytes in use.
@@ -605,16 +603,15 @@ Here is a summary of the functions that work with @code{malloc}:
 
 @table @code
 @item malloc (@var{size})
-Allocate a block of @var{size} bytes.  @xref{Basic Storage Allocation}.
+Allocate a block of @var{size} bytes.  @xref{Basic Allocation}.
 
 @item free (@var{addr})
-Free a block previously allocated by @code{malloc}.  @xref{Freeing
-Allocated Memory}.
+Free a block previously allocated by @code{malloc}.  @xref{Freeing and
+Malloc}.
 
 @item realloc (@var{addr}, @var{size})
 Make a block previously allocated by @code{malloc} larger or smaller,
-possibly by copying it to a new location.  @xref{Changing the Size of a
-Block}.
+possibly by copying it to a new location.  @xref{Changing Block Size}.
 
 @item calloc (@var{count}, @var{eltsize})
 Allocate a block of @var{count} * @var{eltsize} bytes using
@@ -623,11 +620,11 @@ Space}.
 
 @item valloc (@var{size})
 Allocate a block @var{size} bytes, starting on a page boundary.
-@xref{Allocation with Specified Alignment}.
+@xref{Aligned Memory Blocks}.
 
 @item memalign (@var{size}, @var{boundary})
 Allocate a block @var{size} bytes, starting on an address that is a
-multiple of @var{boundary}.  @xref{Allocation with Specified Alignment}.
+multiple of @var{boundary}.  @xref{Aligned Memory Blocks}.
 
 @item mcheck (@var{abortfn})
 Tell @code{malloc} to perform occasional consistency checks on
@@ -771,6 +768,7 @@ At run time, before the program can use a @code{struct obstack} object
 as an obstack, it must initialize the obstack by calling
 @code{obstack_init}.
 
+@comment obstack.h
 @comment GNU
 @deftypefun void obstack_init (struct obstack *@var{obstack_ptr})
 Initialize obstack @var{obstack_ptr} for allocation of objects.
@@ -859,7 +857,7 @@ obstack_savestring (char *addr, size_t size)
 
 @noindent
 Contrast this with the previous example of @code{savestring} using
-@code{malloc} (@pxref{Basic Storage Allocation}).
+@code{malloc} (@pxref{Basic Allocation}).
 
 @node Freeing Objects in an Obstack
 @subsection Freeing Objects in an Obstack
@@ -1147,9 +1145,9 @@ chunk).
 @comment GNU
 @deftypefun {void *} obstack_next_free (struct obstack *@var{obstack_ptr})
 This function returns the address of the first free byte in the current
-chunk of @var{obstack_ptr}.  This is the end of the currently growing
-object.  If no object is growing, @code{obstack_next_free} returns the
-same value as @code{obstack_base}.
+chunk of obstack @var{obstack_ptr}.  This is the end of the currently
+growing object.  If no object is growing, @code{obstack_next_free}
+returns the same value as @code{obstack_base}.
 @end deftypefun
 
 @comment obstack.h
@@ -1194,7 +1192,7 @@ obstack_alignment_mask (obstack_ptr) = 0;
 
 @noindent
 has the effect of turning off alignment processing in the specified obstack.
-@end deftypefun
+@end deftypefn
 
 Note that a change in alignment mask does not take effect until
 @emph{after} the next time an object is allocated or finished in the
@@ -1250,7 +1248,7 @@ not to waste too much memory the portion of the last chunk not yet used.
 @comment GNU
 @deftypefn Macro size_t obstack_chunk_size (struct obstack *@var{obstack_ptr})
 This returns the chunk size of the given obstack.
-@end deftypefun
+@end deftypefn
 
 Since this macro expands to an lvalue, you can specify a new chunk size by
 assigning it a new value.  Doing so does not affect the chunks already
