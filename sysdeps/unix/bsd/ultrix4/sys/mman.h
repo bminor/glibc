@@ -1,4 +1,4 @@
-/* Definitions for BSD-style memory management.  Generic/4.4 BSD version.
+/* Definitions for BSD-style memory management.  Ultrix 4 version.
 Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -37,28 +37,18 @@ Cambridge, MA 02139, USA.  */
    allowed without PROT_WRITE and no access will be allowed for PROT_NONE. */
 
 #define	PROT_NONE	0x00	/* No access.  */
-#define	PROT_READ	0x04	/* Pages can be read.  */
+#define	PROT_READ	0x01	/* Pages can be read.  */
 #define	PROT_WRITE	0x02	/* Pages can be written.  */
-#define	PROT_EXEC	0x01	/* Pages can be executed.  */
+#define	PROT_EXEC	0x04	/* Pages can be executed.  */
 
-
-/* Flags contain mapping type, sharing type and options.  */
-
-/* Mapping type (must choose one and only one of these).  */
-#define	MAP_FILE	0x0001	/* Mapped from a file or device.  */
-#define	MAP_ANON	0x0002	/* Allocated from anonymous virtual memory.  */
-#define	MAP_TYPE	0x000f	/* Mask for type field.  */
 
 /* Sharing types (must choose one and only one of these).  */
-#define	MAP_COPY	0x0020	/* Virtual copy of region at mapping time.  */
-#define	MAP_SHARED	0x0010	/* Share changes.  */
-#define	MAP_PRIVATE	0x0000	/* Changes private; copy pages on write.  */
+#define	MAP_SHARED	0x01	/* Share changes.  */
+#define	MAP_PRIVATE	0x02	/* Changes private; copy pages on write.  */
+#define	MAP_TYPE	0x0f	/* Mask for sharing type.  */
 
 /* Other flags.  */
-#define	MAP_FIXED	0x0100	/* Map address must be exactly as requested. */
-#define	MAP_NOEXTEND	0x0200	/* For MAP_FILE, don't change file size.  */
-#define	MAP_HASSEMPHORE	0x0400	/* Region may contain semaphores.  */
-#define	MAP_INHERIT	0x0800	/* Region is retained after exec.  */
+#define	MAP_FIXED	0x10	/* Map address must be exactly as requested. */
 
 /* Advice to `madvise'.  */
 #define	MADV_NORMAL	0	/* No further special treatment.  */
@@ -66,6 +56,7 @@ Cambridge, MA 02139, USA.  */
 #define	MADV_SEQUENTIAL	2	/* Expect sequential page references.  */
 #define	MADV_WILLNEED	3	/* Will need these pages.  */
 #define	MADV_DONTNEED	4	/* Don't need these pages.  */
+
 
 #include <sys/cdefs.h>
 
@@ -91,10 +82,12 @@ int munmap __P ((__caddr_t __addr, size_t __len));
    (and sets errno).  */
 int mprotect __P ((__caddr_t __addr, size_t __len, int __prot));
 
+/* Ultrix 4 does not implement `msync' or `madvise'.  */
+
 /* Synchronize the region starting at ADDR and extending LEN bytes with the
    file it maps.  Filesystem operations on a file being mapped are
    unpredictable before this is done.  */
-int msync __P ((__caddr_t __addr, size_t __len));
+int msync __P ((caddr_t __addr, size_t __len));
 
 /* Advise the system about particular usage patterns the program follows
    for the region starting at ADDR and extending LEN bytes.  */
