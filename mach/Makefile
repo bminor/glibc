@@ -38,7 +38,7 @@ routines = $(filter-out syscall_%,$(mach-syscalls)) \
 	   mig-alloc mig-dealloc mig-reply mig_syms \
 	   msg_destroy msgserver msgserver_t \
 	   __msg_dest __msgserver \
-	   mach_error mach_error_string error_compat errsystems \
+	   mach_error errstring error_compat errsystems \
 	   devstream bootprivport setup-thread thread-sym $(lock)
 # The RPC interfaces go in a separate library.
 interface-library := libmachuser.a
