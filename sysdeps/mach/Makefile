@@ -52,9 +52,15 @@ ifneq (mach,$(subdir))
 # Subdirectories other than mach/ might use the generated Mach headers.
 # So make sure we get a chance to run in mach/ to make them before all else.
 
-before-compile += $(common-objpfx)mach/mach_interface.h
-$(common-objpfx)mach/%:	# Run only if it doesn't exist.
-	$(MAKE) -C $(..)mach $(patsubst $(..)mach/%,%,$@)
+# These are all the generated files that <mach.h> includes.
+mach-before-compile := $(common-objpfx)mach-shortcuts.h \
+		       $(patsubst %,$(common-objpfx)mach/mach_%.h,\
+				  interface port host)
+
+$(patsubst %.h,%.%,$(mach-before-compile)): # Run only if one doesn't exist.
+	$(MAKE) -C $(..)mach generated no_deps=t
+
+before-compile += $(mach-before-compile)
 endif
 
 endif	# in-Makerules
