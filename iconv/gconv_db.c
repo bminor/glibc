@@ -222,7 +222,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 
 	      result[step_cnt].shlib_handle = shlib_handle;
 	      result[step_cnt].modname = shlib_handle->name;
-	      result[step_cnt].counter = 0;
+	      result[step_cnt].counter = 1;
 	      result[step_cnt].fct = shlib_handle->fct;
 	      result[step_cnt].init_fct = shlib_handle->init_fct;
 	      result[step_cnt].end_fct = shlib_handle->end_fct;
@@ -279,6 +279,35 @@ gen_steps (struct derivation_step *best, const char *toset,
 
   return status;
 }
+
+
+#ifndef STATIC_GCONV
+static int
+internal_function
+increment_counter (struct __gconv_step *steps, size_t nsteps)
+{
+  /* Increment the user counter.  */
+  size_t cnt = nsteps;
+  int result = __GCONV_OK;
+
+  while (cnt-- > 0)
+    if (steps[cnt].__counter++ == 0)
+      {
+	steps[cnt].__shlib_handle =
+	  __gconv_find_shlib (steps[cnt].__modname);
+	if (steps[cnt].__shlib_handle == NULL)
+	  {
+	    /* Oops, this is the second time we use this module (after
+	       unloading) and this time loading failed!?  */
+	    while (++cnt < nsteps)
+	      __gconv_release_shlib (steps[cnt].__shlib_handle);
+	    result = __GCONV_NOCONV;
+	    break;
+	  }
+      }
+  return result;
+}
+#endif
 
 
 /* The main function: find a possible derivation from the `fromset' (either
