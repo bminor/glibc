@@ -111,10 +111,10 @@ extern char *strtok __P ((char *__s, __const char *__delim));
 
 #ifdef	__USE_GNU
 /* Find the first occurence of NEEDLE in HAYSTACK.
-   NEEDLE is NEEDLE_LEN bytes long;
-   HAYSTACK is HAYSTACK_LEN bytes long.  */
-extern __ptr_t memmem __P ((__ptr_t __needle, size_t __needle_len,
-			    __ptr_t __haystack, size_t __haystack_len));
+   NEEDLE is NEEDLELEN bytes long;
+   HAYSTACK is HAYSTACKLEN bytes long.  */
+extern __ptr_t memmem __P ((__const __ptr_t __needle, size_t __needlelen,
+			    __const __ptr_t __haystack, size_t __haystacklen));
 #endif
 
 /* Return the length of S.  */
