@@ -20,6 +20,8 @@ $(objpfx)stdio_lim.h: $(objpfx)mk-stdiolim
 	$(dir $<)$(notdir $<) > $@-t
 	mv $@-t $@
 
+# I wish I knew why this was here, or that I wasn't so sure everything
+# would break if I removed it.
 vpath %.h $(..)
 
 ifdef subdir
@@ -27,10 +29,12 @@ objdir-CPPFLAGS = $(CPPFLAGS) # Already has appropriate `..'s.
 else
 objdir-CPPFLAGS = $(patsubst -I/..//%,-I/%,$(CPPFLAGS:-I%=-I../%))
 endif
+# Turn into a version that works when cd'd into $(objdir).
+cded-objdir-CPPFLAGS = $(patsubst -I$$cwd//%,-I/%,$(CPPFLAGS:-I%=-I$$cwd/%))
 # The point of this is to not use -W options to gcc.
 $(objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
 			posix1_lim.h local_lim.h
-	cwd=`pwd`; cd $(objdir); $(CC) $(objdir-CPPFLAGS) \
+	cwd=`pwd`; cd $(objdir); $(CC) $(cded-objdir-CPPFLAGS) \
 	  $$cwd/$< -o $(@:$(objpfx)%=%)
 
 
