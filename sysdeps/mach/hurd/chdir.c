@@ -26,7 +26,7 @@ DEFUN(__chdir, (path), CONST char *path)
 {
   file_t cwdir;
 
-  cwdir = __path_lookup (path, FS_LOOKUP_EXECUTE, 0);
+  cwdir = __path_lookup (path, FS_LOOKUP_EXEC, 0);
   if (cwdir == MACH_PORT_NULL)
     return -1;
 
