@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -85,6 +85,7 @@ struct winsize
   unsigned short int ws_row;	/* Rows, in characters.  */
   unsigned short int ws_col;	/* Columns, in characters.  */
 
+  /* These are not actually used.  */
   unsigned short int ws_xpixel;	/* Horizontal pixels.  */
   unsigned short int ws_ypixel;	/* Vertical pixels.  */
 };
@@ -94,6 +95,11 @@ struct winsize
 #endif
 
 #if	defined (TIOCGSIZE) || defined (TIOCSSIZE)
+#  if defined (TIOCGWINSZ) && TIOCGSIZE == TIOCGWINSZ
+/* Many systems that have TIOCGWINSZ define TIOCGSIZE for source
+   compatibility with Sun; they define `struct ttysize' to have identical
+   layout as `struct winsize' and #define TIOCGSIZE to be TIOCGWINSZ
+   (likewise TIOCSSIZE and TIOCSWINSZ).  */
 struct ttysize
 {
   unsigned short int ts_lines;
@@ -101,8 +107,16 @@ struct ttysize
   unsigned short int ts_xxx;
   unsigned short int ts_yyy;
 };
-
 #define	_IOT_ttysize	_IOT_winsize
+#  else
+/* Suns use a different layout for `struct ttysize', and TIOCGSIZE and
+   TIOCGWINSZ are separate commands that do the same thing with different
+   structures (likewise TIOCSSIZE and TIOCSWINSZ).  */
+struct ttysize
+{
+  int ts_lines, ts_cols;	/* Lines and columns, in characters.  */
+};
+#  endif
 #endif
 
 /* Perform the I/O control operation specified by REQUEST on FD.
