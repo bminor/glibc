@@ -1,3 +1,12 @@
+1997-08-28 17:30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/catgets.c (catopen): Correctly determine length of string
+	in NLSPATH environment variable.  Patch by HJ Lu <hjl@gnu.ai.mit.edu>.
+
+1997-08-26 20:17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/tcp.h: Fix typo.
+
 1997-08-25 17:01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/selectbits.h: Correct assembler versions to work even
