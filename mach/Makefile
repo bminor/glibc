@@ -74,8 +74,7 @@ mach-src-headers := $(wildcard $(foreach dir,mach device mach_debug \
 mach-headers = $(filter-out mach/machine/%,\
 			    $(mach-src-headers:$(mach-srcdir)/%=%))
 install-others += $(addprefix $(includedir)/,$(mach-headers))
-$(includedir)/mach/%: $(mach-srcdir)/mach/%; $(do-install)
-$(includedir)/device/%: $(mach-srcdir)/device/%; $(do-install)
+$(includedir)/%: $(mach-srcdir)/%; $(do-install)
 
 # Make a symlink for mach/machine in the installed include directory.
 install-others += $(includedir)/mach/machine
