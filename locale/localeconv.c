@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -37,6 +37,7 @@ DEFUN_VOID(localeconv)
   result.mon_grouping = (char *) _monetary_info->mon_grouping;
   result.positive_sign = (char *) _monetary_info->positive_sign;
   result.negative_sign = (char *) _monetary_info->negative_sign;
+  result.int_frac_digits = _monetary_info->int_frac_digits;
   result.frac_digits = _monetary_info->frac_digits;
   result.p_cs_precedes = _monetary_info->p_cs_precedes;
   result.p_sep_by_space = _monetary_info->p_sep_by_space;
