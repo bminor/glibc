@@ -45,20 +45,23 @@ __opendir (const char *name)
       return NULL;
     }
 
+  /* We first have to check whether the name is for a directory.  We
+     cannot do this after the open() call since the open/close operation
+     performed on, say, a tape device might have undesirable effects.  */
+  if (stat (name, &statbuf) < 0)
+    return NULL;
+  if (! S_ISDIR (statbuf.st_mode))
+    {
+      __set_errno (ENOTDIR);
+      return NULL;
+    }
+
   fd = __open (name, O_RDONLY|O_NDELAY);
   if (fd < 0)
     return NULL;
 
   if (__fcntl (fd, F_SETFD, FD_CLOEXEC) < 0)
     goto lose;
-
-  if (fstat (fd, &statbuf) < 0)
-    goto lose;
-  if (! S_ISDIR (statbuf.st_mode))
-    {
-      __set_errno (ENOTDIR);
-      goto lose;
-    }
 
   dirp = (DIR *) calloc (1, sizeof (DIR)); /* Zero-fill.  */
   if (dirp == NULL)
