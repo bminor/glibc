@@ -1,3 +1,24 @@
+1999-10-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/rcmd.c (iruserok2): Initialize isbad to -1 [PR libc/1405].
+	Patch by J. Richard Sladkey <jrs@world.std.com>.
+
+1999-10-18  Andreas Jaeger  <aj@suse.de>
+
+	* iconv/iconv_prog.c (process_block): Save errno value from iconv call.
+	Patch by Bruno Haible <haible@ilog.fr> [libc/1402].
+
+1999-10-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/gl.po: New file.
+
+1999-10-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/s_cproj.c (__cproj): Fix bug: NaN + i NaN
+	returns now NaN + i NaN.
+	* sysdeps/generic/s_cprojf.c (__cprojf): Likewise
+	* sysdeps/generic/s_cprojl.c (__cprojl): Likewise.
+
 1999-10-16  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/bits/in.h: Added struct in_pktinfo.
