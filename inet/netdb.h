@@ -1,9 +1,7 @@
-/*
- * ++Copyright++ 1980, 1983, 1988, 1993
- * -
+/*-
  * Copyright (c) 1980, 1983, 1988, 1993
- *    The Regents of the University of California.  All rights reserved.
- * 
+ *	The Regents of the University of California.  All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -14,12 +12,12 @@
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgement:
- * 	This product includes software developed by the University of
- * 	California, Berkeley and its contributors.
+ *	This product includes software developed by the University of
+ *	California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,6 +29,9 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
+ *
+ *      @(#)netdb.h	8.1 (Berkeley) 6/2/93
+ *	$Id$
  * -
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
  * 
@@ -53,19 +54,8 @@
  * --Copyright--
  */
 
-/*
- *      @(#)netdb.h	8.1 (Berkeley) 6/2/93
- *	$Id$
- */
-
 #ifndef _NETDB_H_
 #define _NETDB_H_
-
-#include <sys/param.h>
-#if (!defined(BSD)) || (BSD < 199306)
-# include <sys/bitypes.h>
-#endif
-#include <sys/cdefs.h>
 
 #define	_PATH_HEQUIV	"/etc/hosts.equiv"
 #define	_PATH_HOSTS	"/etc/hosts"
@@ -116,13 +106,13 @@ struct	protoent {
  * (left in extern int h_errno).
  */
 
-extern int h_errno;
-
 #define	HOST_NOT_FOUND	1 /* Authoritative Answer Host not found */
 #define	TRY_AGAIN	2 /* Non-Authoritive Host not found, or SERVERFAIL */
 #define	NO_RECOVERY	3 /* Non recoverable errors, FORMERR, REFUSED, NOTIMP */
 #define	NO_DATA		4 /* Valid name, no data record of requested type */
 #define	NO_ADDRESS	NO_DATA		/* no address, look for MX record */
+
+#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 void		endhostent __P((void));
@@ -133,11 +123,7 @@ struct hostent	*gethostbyaddr __P((const char *, int, int));
 struct hostent	*gethostbyname __P((const char *));
 struct hostent	*gethostent __P((void));
 struct netent	*getnetbyaddr __P((long, int)); /* u_long? */
-#ifdef sun
-struct netent	*getnetbyname __P((char *));
-#else
 struct netent	*getnetbyname __P((const char *));
-#endif
 struct netent	*getnetent __P((void));
 struct protoent	*getprotobyname __P((const char *));
 struct protoent	*getprotobynumber __P((int));
