@@ -1,3 +1,9 @@
+2000-03-15  Cristian Gafton  <gafton@redhat.com>
+
+	* db2/mutex/alpha.gcc (TSL_SET): Backport from db3.
+	* sysdeps/alpha/Makefile (CPPFLAGS): Define for db2 directory.
+	* db2/mutex/mutex.c: Include alpha.gcc ifdef HAVE_ASSEM_ALPHA_GCC.
+
 2000-03-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/sys/mman.h: Define off_t and mode_t.
