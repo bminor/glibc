@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Alpha version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -377,6 +377,7 @@ elf_machine_rela (struct link_map *map,
       loadbase = RESOLVE (&sym,
 			  r_info == R_ALPHA_JMP_SLOT ? DL_LOOKUP_NOPLT : 0);
       sym_value = sym ? loadbase + sym->st_value : 0;
+      sym_value += reloc->r_addend;
 
       if (r_info == R_ALPHA_GLOB_DAT)
 	*reloc_addr = sym_value;
@@ -400,10 +401,9 @@ elf_machine_rela (struct link_map *map,
 		= (void *)(map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
 	      sym_value -= map->l_addr;
 	      sym_value -= dlsymtab[ELF64_R_SYM(reloc->r_info)].st_value;
+	      sym_value -= reloc->r_addend;
 	    }
-	  else
 #endif
-	    sym_value += reloc->r_addend;
 	  *reloc_addr = sym_value;
 	}
       else
