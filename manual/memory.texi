@@ -480,7 +480,6 @@ The @var{abortfn} argument is the function to call when an inconsistency
 is found.  If you supply a null pointer, the @code{abort} function is
 used.
 
-@c ??? That is not true yet--malloc needs to be changed.
 It is too late to begin allocation checking once you have allocated
 anything with @code{malloc}.  So @code{mcheck} does nothing in that
 case.  The function returns @code{-1} if you call it too late, and
