@@ -45,7 +45,14 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 static const char undoc[] = "unknown signal";
 
 const char *sys_siglist[NSIG];
-#endif /* !HAVE_SYS_SIGLIST */
+
+#else	/* HAVE_SYS_SIGLIST.  */
+
+#ifndef SYS_SIGLIST_DECLARED
+extern char *sys_siglist[];
+#endif	/* Not SYS_SIGLIST_DECLARED.  */
+
+#endif	/* Not HAVE_SYS_SIGLIST.  */
 
 /* Table of abbreviations for signals.  Note:  A given number can
    appear more than once with different abbreviations.  */
