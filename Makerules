@@ -274,14 +274,11 @@ $(addprefix $(includedir)/,$(headers)): \
 endif	# headers
 +install := $(filter-out $(addprefix %/,$(no-install)),$(+install))
 
-+install-dirs := $(dir $(+install))
-# Get two levels of directories so $(datadir)/zoneinfo wins.
-+install-dirs := $(+install-dirs) $(filter-out ./,$(dir $(+install-dirs)))
-# Sort them so containing dirs are guaranteed to come first.
-+install-dirs := $(sort $(+install-dirs))
-
-.PHONY: install
-install: $(+install-dirs) $(+install)
+.PHONY: install installdirs
+install: $(+install)
+$(+install): installdirs
+installdirs: $(..)mkinstalldirs
+	$(dir $<)$(notdir $<) $(dir $(+install))
 
 S-CPPFLAGS = $(asm-CPPFLAGS)
 +make-deps = $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
@@ -324,7 +321,8 @@ endif
 endif
 
 # Command to compile $< in $(objdir) using the native libraries.
-native-compile = cwd=`pwd`; cd $(@D); $(CC) $(native-CFLAGS) $$cwd/$< -o $(@F)
+native-compile = cwd=`pwd`; cd $(@D); $(CC) $(native-CFLAGS) \
+					    $(addprefix $$cwd/,$^) -o $(@F)
 
 # Command to compile $< in $(common-objdir) using the native libraries.
 define common-objdir-compile
