@@ -22,11 +22,12 @@ Cambridge, MA 02139, USA.  */
 #define	_FCNTLBITS_H	1
 
 
-/* File access modes.  These are understood by `open', `dir_pathtrans',
-   `hurd_path_lookup', and `path_lookup', and returned by `fcntl' with the
-   F_GETFL command.  */
+/* File access modes.  These are understood by io servers; they can be
+   passed in `dir_pathtrans', and are returned by `io_get_openmodes'.
+   Consequently they can be passed to `open', `hurd_path_lookup', and
+   `path_lookup'; and are returned by `fcntl' with the F_GETFL command.  */
 
-/* In GNU, read and write are bits (unlike BSD). */
+/* In GNU, read and write are bits (unlike BSD).  */
 #ifdef __USE_GNU
 #define	O_READ		O_RDONLY /* Open for reading.  */
 #define O_WRITE		O_WRONLY /* Open for writing.  */
@@ -39,37 +40,46 @@ Cambridge, MA 02139, USA.  */
 #define	O_ACCMODE	O_RDWR
 
 
-
-/* File name translation flags.  These are understood by `open',
-   `dir_pathtrans', `hurd_path_lookup', and `path_lookup'.  */
+/* File name translation flags.  These are understood by io servers;
+   they can be passed in `dir_pathtrans', and consequently to `open',
+   `hurd_path_lookup', and `path_lookup'.  */
 
 #define	O_CREAT		0x0010	/* Create file if it doesn't exist.  */
 #define	O_EXCL		0x0020	/* Fail if file already exists.  */
-#define	O_TRUNC		0x0040	/* Truncate file to zero length.  */
-/* `open' never assigns a controlling terminal in GNU.  */
-#define	O_NOCTTY	0	/* Don't assign a controlling terminal.  */
-#ifdef	__USE_MISC
-#define	O_SHLOCK	0x0080	/* Open with shared file lock.  */
-#define	O_EXLOCK	0x0100	/* Open with shared exclusive lock.  */
-#endif
 #ifdef __USE_GNU
-#define	O_NOLINK	0x0200	/* No name mappings on final component.  */
-#define	O_NOTRANS	0x0400	/* No translator on final component. */
-#define	O_IGNORE_CTTY	0x0800	/* Don't do any ctty magic at all.  */
+#define	O_NOLINK	0x0040	/* No name mappings on final component.  */
+#define	O_NOTRANS	0x0080	/* No translator on final component. */
 #endif
+
+
+/* File status flags.  These are understood by io servers; they can be
+   passed in `dir_pathtrans' and set or fetched with `io_*_openmodes'.
+   Consequently they can be passed to `open', `hurd_path_lookup',
+   `path_lookup', and `fcntl' with the F_SETFL command; and are returned
+   by `fcntl' with the F_GETFL command.  */
+
+#define	O_APPEND	0x0100	/* Writes always append to the file.  */
+#define	O_ASYNC		0x0200	/* Send SIGIO to owner when data is ready.  */
+#define	O_FSYNC		0x0400	/* Synchronous writes.  */
+#define	O_SYNC		O_FSYNC
+#ifdef __USE_GNU
+#define	O_NOATIME	0x0800	/* Don't set access time on read by owner. */
+#endif
+
 
 /* The name O_NONBLOCK is unfortunately overloaded; it is both a file name
    translation flag and a file status flag.  O_NDELAY is the deprecated BSD
    name for the same flag, overloaded in the same way.
 
-   When used in `open', `dir_pathtrans', `hurd_path_lookup', or
-   `path_lookup', O_NONBLOCK it says the open should with EAGAIN instead of
-   blocking for any length of time (e.g., to wait for DTR on a serial
-   line).
+   When used in `dir_pathtrans' (and consequently `open', `hurd_path_lookup',
+   or `path_lookup'), O_NONBLOCK says the open should fail with EAGAIN
+   instead of blocking for any significant length of time (e.g., to wait for
+   DTR on a serial line).
 
-   When used in `fcntl' with the F_SETFL command, the O_NONBLOCK flag means
-   to do nonblocking i/o; any i/o operation that would block for any length
-   of time will instead fail with EAGAIN.  */
+   When used in `io_*_openmodes' (and consequently `fcntl' with the F_SETFL
+   command), the O_NONBLOCK flag means to do nonblocking i/o: any i/o
+   operation that would block for any significant length of time will instead
+   fail with EAGAIN.  */
 
 #define	O_NONBLOCK	0x0008	/* Non-blocking open or non-blocking I/O.  */
 #ifdef __USE_BSD
@@ -77,17 +87,30 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 
-/* File status flags.  These are understood by `open', `dir_pathtrans',
-   `hurd_path_lookup', `path_lookup', and `fcntl' with the F_SETFL command. */
-
-#define	O_APPEND	0x1000	/* Writes always append to the file.  */
-#define	O_ASYNC		0x2000	/* Send SIGIO to owner when data is ready.  */
-#define	O_FSYNC		0x4000	/* Synchronous writes.  */
-#define	O_SYNC		O_FSYNC
 #ifdef __USE_GNU
-#define	O_NOATIME	0x8000	/* Don't set access time on read by owner. */
+/* Mask of bits which are understood by io servers.  */
+#define O_HURD		0xffff	/* XXX name? want this? */
 #endif
 
+
+/* Open-time action flags.  These are understood by `hurd_path_lookup'
+   and consequently by `open' and `path_lookup'.  They are not preserved
+   once the file has been opened.  */
+
+#define	O_TRUNC		0x00010000 /* Truncate file to zero length.  */
+#ifdef	__USE_MISC
+#define	O_SHLOCK	0x00020000 /* Open with shared file lock.  */
+#define	O_EXLOCK	0x00040000 /* Open with shared exclusive lock.  */
+#endif
+
+/* Controlling terminal flags.  These are understood only by `open',
+   and are not preserved once the file has been opened.  */
+
+#ifdef __USE_GNU
+#define	O_IGNORE_CTTY	0x00080000 /* Don't do any ctty magic at all.  */
+#endif
+/* `open' never assigns a controlling terminal in GNU.  */
+#define	O_NOCTTY	0	/* Don't assign a controlling terminal.  */
 
 
 #ifdef __USE_BSD
@@ -132,11 +155,11 @@ Cambridge, MA 02139, USA.  */
    argument to `fcntl' for the F_GETLK, F_SETLK, and F_SETLKW requests.  */
 struct flock
   {
-    short int l_type;	/* Type of lock: F_RDLCK, F_WRLCK, or F_UNLCK.  */
-    short int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
+    int l_type;		/* Type of lock: F_RDLCK, F_WRLCK, or F_UNLCK.  */
+    int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
     __off_t l_start;	/* Offset where the lock begins.  */
     __off_t l_len;	/* Size of the locked area; zero means until EOF.  */
-    short int l_pid;	/* Process holding the lock.  */
+    __pid_t l_pid;	/* Process holding the lock.  */
   };
 
 /* Values for the `l_type' field of a `struct flock'.  */
