@@ -69,6 +69,11 @@ static int times_through_search; /* This library routine should never
 
 #ifdef DEBUG
 
+#include <stdio.h>
+#include <ctype.h>
+
+int debugging_enabled = 0;
+
 /* Print the values in a `struct tm'. */
 static void
 printtm (it)
@@ -176,9 +181,12 @@ search (target)
       guess_tm = localtime (&guess);
       
 #ifdef DEBUG
-      printf ("guess %d == ", guess);
-      printtm (guess_tm);
-      puts ("");
+      if (debugging_enabled)
+	{
+	  printf ("guess %d == ", (int) guess);
+	  printtm (guess_tm);
+	  puts ("");
+	}
 #endif
       
       /* Are we on the money? */
@@ -238,9 +246,12 @@ mktime (timeptr)
 	     tm_mon);
   
 #ifdef DEBUG
-  printf ("After normalizing: ");
-  printtm (me);
-  puts ("\n");
+  if (debugging_enabled)
+    {
+      printf ("After normalizing: ");
+      printtm (me);
+      puts ("\n");
+    }
 #endif
 
   result = search (me);
@@ -285,16 +296,18 @@ main (argc, argv)
       exit (0);
     }
   
+  debugging_enabled = 1;	/* We want to see the info */
+
   ++argv;
   time = atoi (*argv);
   
-  printf ("Time: %d %s\n", time, ctime (&time));
+  printf ("Time: %d %s\n", time, ctime ((time_t *) &time));
 
-  tmptr = localtime (&time);
+  tmptr = localtime ((time_t *) &time);
   printf ("localtime returns: ");
   printtm (tmptr);
   printf ("\n");
-  printf ("mktime: %d\n\n", mktime (tmptr));
+  printf ("mktime: %d\n\n", (int) mktime (tmptr));
 
   tmptr->tm_sec -= 20;
   tmptr->tm_min -= 20;
