@@ -26,24 +26,24 @@ gid_t
 DEFUN_VOID(__getgid)
 {
   error_t err;
-  gid_t rgid;
+  gid_t gid;
 
-  __mutex_lock (&_hurd_idlock);
+  __mutex_lock (&_hurd_id.lock);
 
   if (err = _hurd_check_ids ())
     {
       errno = err;
-      rgid = -1;
+      gid = -1;
     }
-  else if (_hurd_ngids == 0)
-    {
-      /* We have no real gid.  */
-      errno = XXX;
-      rgid = -1;
-    }
+  else if (_hurd_id.aux.ngids >= 1)
+    gid = _hurd_id.aux.gids[0];
   else
-    rgid = _hurd_gid.rid;
+    {
+      /* We do not even have a real gid.  */
+      errno = EIOEIO;		/* XXX */
+      gid = -1;
+    }
 
-  __mutex_unlock (&_hurd_idlock);
-  return rgid;
+  __mutex_unlock (&_hurd_id.lock);
+  return gid;
 }
