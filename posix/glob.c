@@ -129,12 +129,15 @@ extern void free ();
 #define bcopy(s, d, n)	memcpy ((d), (s), (n))
 #endif
 #undef	ANSI_STRING
-
-extern char *malloc ();
-extern char *realloc ();
+#define	strcoll	strcmp
 extern void free ();
 extern void qsort ();
+extern char *malloc ();
+extern char *realloc ();
+#endif /* Not STDC_HEADERS or __GNU_LIBRARY__.  */
 
+
+#ifndef	__GNU_LIBRARY__
 #ifdef	__GNUC__
 __inline
 #endif
@@ -147,12 +150,9 @@ my_realloc (p, n)
     return malloc (n);
   return realloc (p, n);
 }
-
 #define	realloc	my_realloc
+#endif
 
-#define	strcoll	strcmp
-
-#endif /* Not STDC_HEADERS or __GNU_LIBRARY__.  */
 
 #ifndef	STDC_STRINGS
 #define	memcpy(d, s, n)	bcopy((s), (d), (n))
