@@ -35,4 +35,5 @@ DEFUN(main, (argc, argv),
   fread(buffer, 1, 31, f);
   fwrite(buffer, 1, 31, stdout);
   fclose(f);
+  return 0;
 }
