@@ -1,6 +1,6 @@
 # Makefile for the GNU C Library manual.
 
-# Copyright (C) 1992 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -69,7 +69,7 @@ minimal-dist = library.texinfo summary.awk Makefile move-if-change	\
 distribute = $(minimal-dist) texinfo.tex summary.texinfo stamp-summary
 
 manual.tar: $(minimal-dist)
-	tar uvf $@ $^
+	tar uhvf $@ $^
 
 %.Z: %
 	compress -c $< > $@.new
