@@ -45,7 +45,7 @@ DEFUN(__setpgrp, (pid, pgid), pid_t pid AND pid_t pgid)
 	/* XXX we have no need for a mutex, but cthreads demands one.  */
 	__condition_wait (&_hurd_pids_changed_sync, NULL);
 #else
-	swtch_pri(0);
+	__swtch_pri(0);
 #endif
       }
 
