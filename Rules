@@ -101,21 +101,15 @@ endif
 export others := $(others)
 export tests := $(tests)
 
-# This removes everything that can be regenerated
-# except for the object files and the object-file library members.
-.PHONY: mostlyclean
-mostlyclean:
-	-rm -f $(addprefix $(objpfx),$(tests) $(others) \
-				     $(addsuffix .o,$(tests) $(others)))
-	-rm -f core TAGS $(objpfx)depend-$(subdir)
+.PHONY: distclean realclean subdir_distclean subdir_realclean \
+	subdir_clean subdir_mostlyclean
+subdir_mostlyclean: mostlyclean
+subdir_clean: clean
+subdir_distclean: distclean
+subdir_realclean: realclean
+realclean: distclean
+distclean: clean
 
-# This removes absolutely everything that can be regenerated.
-.PHONY: subdir_clean clean realclean
-subdir_clean realclean: clean
-clean: mostlyclean
-	-rm -f $(objects) $(addprefix $(objpfx),$(extra-objs)) \
-	       $(+depfiles) $(generated)
-
 .PHONY: subdir_echo-headers
 subdir_echo-headers: echo-headers
 
