@@ -242,12 +242,13 @@ So the final list is @file{unix/bsd/vax unix/bsd vax unix/inet unix posix}.
 
 A configuration is specified by three parameters: the machine, the
 vendor, and the operating system.  @file{configure} uses these to pick
-the list of system-dependent directories to look for.  The operating
-system usually has a @dfn{base operating system}; this is used like an
-additional parameter, and is the most significant one.  For example, if
-the operating system is @samp{sunos411}, the base operating system is
-@samp{unix/bsd}.  The algorithm is simple; read @file{configure} to see
-the details.
+the list of system-dependent directories to look for.  If the
+@samp{-nfp} option is not passed to @file{configure}, the directory
+@file{@var{machine}/fpu} is used.  The operating system usually has a
+@dfn{base operating system}; this is used like an additional parameter,
+and is the most significant one.  For example, if the operating system
+is @samp{sunos411}, the base operating system is @samp{unix/bsd}.  The
+algorithm is simple; read @file{configure} to see the details.
 
 There are two ``special'' subdirectories of @file{sysdeps},
 @file{generic} and @file{stub}.  These two are always implicitly
