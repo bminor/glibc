@@ -150,18 +150,20 @@ __hurd_path_lookup_retry (file_t crdir,
 		  errno = 0;
 		  fd = (int) strtol (retryname, &end, 10);
 		  if (end == NULL || errno || /* Malformed number.  */
-		      /* Check for excess text after the number.  A slash is
-			 valid; it ends the component.  Any other character
-			 before the null is a violation of the protocol by
-			 the server.  */
+		      /* Check for excess text after the number.  A slash
+			 is valid; it ends the component.  Anything else
+			 does not name a numeric file descriptor.  */
 		      (*end != '/' && *end != '\0'))
 		    {
 		      errno = save;
-		      goto bad_magic;
+		      return ENOENT;
 		    }
 		  *result = __getdport (fd);
 		  if (*result == MACH_PORT_NULL)
 		    {
+		      /* If the name was a proper number, but the file
+			 descriptor does not exist, we return EBADF instead
+			 of ENOENT.  */
 		      error_t err = errno;
 		      errno = save;
 		      return err;
