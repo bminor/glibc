@@ -21,7 +21,10 @@
 #
 subdir	:= io
 
-headers := statbuf.h sys/stat.h fcntlbits.h fcntl.h utime.h ftw.h sys/fcntl.h
+headers := sys/stat.h statbuf.h \
+	   fcntl.h sys/fcntl.h fcntlbits.h \
+	   poll.h sys/poll.h \
+	   utime.h ftw.h
 
 routines :=								      \
 	utime								      \
@@ -38,7 +41,7 @@ routines :=								      \
 	ttyname __isatty						      \
 	__link __symlink __readlink					      \
 	__unlink __rmdir						      \
-	ftw
+	ftw poll
 routines	:= $(sort $(foreach f,$(routines),$f $(f:__%=%)))
 
 others		:= pwd

@@ -25,12 +25,15 @@ __getuids (int n, uid_t *uidset)
 {
   error_t err;
   int nuids;
+  void *crit;
 
+  crit = _hurd_critical_section_lock ();
   __mutex_lock (&_hurd_id.lock);
 
   if (err = _hurd_check_ids ())
     {
       __mutex_unlock (&_hurd_id.lock);
+      _hurd_critical_section_unlock (crit);
       return __hurd_fail (err);
     }
 
@@ -42,6 +45,7 @@ __getuids (int n, uid_t *uidset)
       uid_t uids[nuids];
       memcpy (uids, _hurd_id.gen.uids, sizeof (uids));
       __mutex_unlock (&_hurd_id.lock);
+      _hurd_critical_section_unlock (crit);
 
       /* Now that the lock is released, we can safely copy the
 	 uid set into the user's array, which might fault.  */
@@ -50,7 +54,10 @@ __getuids (int n, uid_t *uidset)
       memcpy (uidset, uids, nuids * sizeof (uid_t));
     }
   else
-    __mutex_unlock (&_hurd_id.lock);
+    {
+      __mutex_unlock (&_hurd_id.lock);
+      _hurd_critical_section_unlock (crit);
+    }
 
   return nuids;
 }
