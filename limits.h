@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,6 +43,12 @@
  #define _LIBC_LIMITS_H_	/* This tells it not to look for another.  */
  #endif
  #ifndef _GCC_LIMITS_H_		/* This is what GCC's file defines.  */
+
+ /* Maximum length of any multibyte character in any locale.  We
+    define this here to prevent the value from the gcc value (which is
+    one) to take effect.  */
+ #define MB_LEN_MAX	6
+
  #include_next <limits.h>
  #endif
 
