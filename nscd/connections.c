@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -371,7 +371,8 @@ cannot handle old request version %d; current version is %d"),
       break;
 
     default:
-      abort ();
+      /* Ignore the command, it's nothing we know.  */
+      break;
     }
 }
 
