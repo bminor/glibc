@@ -77,7 +77,7 @@ DEFUN(memcmp_common_alignment, (srcp1, srcp2, len),
       len -= 1;
       if (OP_T_THRES <= 3 * OPSIZ && len == 0)
 	goto do0;
-      /* Fall through to do4.  */
+      /* Fall through.  */
     }
 
   do
@@ -106,13 +106,15 @@ DEFUN(memcmp_common_alignment, (srcp1, srcp2, len),
       if (res != 0)
 	return res;
 
-    do0:
       srcp1 += 4 * OPSIZ;
       srcp2 += 4 * OPSIZ;
       len -= 4;
     }
   while (len != 0);
 
+  /* This is the right position for do0.  Please don't move
+     it into the loop.  */
+ do0:
   return a1 - b1;
 }
 
@@ -177,7 +179,7 @@ DEFUN(memcmp_not_common_alignment, (srcp1, srcp2, len),
       len -= 1;
       if (OP_T_THRES <= 3 * OPSIZ && len == 0)
 	goto do0;
-      /* Fall through to do4.  */
+      /* Fall through.  */
     }
 
   do
@@ -210,13 +212,15 @@ DEFUN(memcmp_not_common_alignment, (srcp1, srcp2, len),
       if (res != 0)
 	return res;
 
-    do0:
       srcp1 += 4 * OPSIZ;
       srcp2 += 4 * OPSIZ;
       len -= 4;
     }
   while (len != 0);
 
+  /* This is the right position for do0.  Please don't move
+     it into the loop.  */
+ do0:
   x = MERGE(a2, shl, a3, shr);
   return x - b3;
 }
