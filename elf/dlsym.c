@@ -1,5 +1,5 @@
 /* dlsym -- Look up a symbol in a shared object loaded by `dlopen'.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,8 +53,12 @@ RTLD_NEXT used in code not dynamically loaded"));
 	  while (l->l_loader)
 	    l = l->l_loader;
 
-	  loadbase = _dl_lookup_symbol_skip
-	    (name, &ref, &_dl_loaded, NULL, l, 0);
+	  {
+	    struct link_map *map = l;
+	    struct link_map *mapscope[2] = { map, NULL };
+	    loadbase = _dl_lookup_symbol_skip
+	      (name, &ref, mapscope, NULL, match, 0);
+	  }
 	}
       else
 	{
