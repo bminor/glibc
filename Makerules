@@ -161,6 +161,7 @@ ARFLAGS := r$(verbose)
 
 override sources	:= $(addsuffix .c,$(routines) $(aux) \
 				          $(sysdep_routines))
+export sysdep_routines
 
 # This is the list of all object files, gotten by
 # replacing every ".c" in `sources' with a ".o".
