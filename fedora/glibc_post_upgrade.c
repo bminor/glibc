@@ -116,6 +116,12 @@ main (void)
       char linkbuf[64], *linkp;
       int linklen;
 
+      /* If installing bi-arch glibc, rpm sometimes doesn't unpack all files
+         before running one of the lib's %post scriptlet.  /sbin/ldconfig will
+         then be run by the other arch's %post.  */
+      if (access ("/sbin/ldconfig", X_OK))
+	break;
+
       verbose_exec (110, "/sbin/ldconfig", "/sbin/ldconfig");
 
       rerun_ldconfig = 0;
@@ -151,9 +157,11 @@ main (void)
      }
   while (rerun_ldconfig && ++rerun_cnt < 2);
 
-  if (! utimes (GCONV_MODULES_CACHE, NULL))
+  if (! utimes (GCONV_MODULES_DIR "/gconv-modules.cache", NULL))
     {
-      verbose_exec (113, "/usr/sbin/iconvconfig", "/usr/sbin/iconvconfig");
+      verbose_exec (113, "/usr/sbin/iconvconfig", "/usr/sbin/iconvconfig",
+		    "-o", GCONV_MODULES_DIR"/gconv-modules.cache",
+		    "--nostdlib", GCONV_MODULES_DIR);
     }
 
   /* Check if telinit is available and the init fifo as well.  */

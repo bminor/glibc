@@ -1,4 +1,4 @@
-%define glibcrelease 99
+%define glibcrelease 1
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -524,7 +524,7 @@ $GCC -static -L. -Os ../fedora/glibc_post_upgrade.c -o glibc_post_upgrade.%{_tar
 %ifarch %{nptlarches}
     '-DLIBTLS="/%{_lib}/tls/"' \
 %endif
-    '-DGCONV_MODULES_CACHE="%{_prefix}/%{_lib}/gconv/gconv-modules.cache"' \
+    '-DGCONV_MODULES_DIR="%{_prefix}/%{_lib}/gconv"' \
     '-DLD_SO_CONF="/etc/ld.so.conf"'
 cd ..
 
@@ -1266,6 +1266,17 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Dec 19 2004 Jakub Jelinek <jakub@redhat.com> 2.3.4-1
+- update from CVS
+  - glibc 2.3.4 release
+  - add -o and --nostdlib options to iconvconfig
+- if /sbin/ldconfig doesn't exist when running
+  glibc_post_upgrade.%%{_target_cpu}, just don't attempt to run it.
+  This can happen during first install of bi-arch glibc and the
+  other arch glibc's %post wil run /sbin/ldconfig (#143326)
+- use -o and --nostdlib options to create all needed
+  gconv-modules.cache files on bi-arch setups
+
 * Sun Dec 19 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-99
 - rebuilt
 
