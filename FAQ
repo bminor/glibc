@@ -77,6 +77,8 @@ please let me know.
         continues using NIS.
 2.19.	Under Linux/Alpha, I always get "do_ypcall: clnt_call:
 	RPC: Unable to receive; errno = Connection refused" when using NIS.
+2.22.	I just upgraded my Linux system to glibc and now I get
+	errors whenever I try to link any program.
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -95,6 +97,10 @@ please let me know.
 	still complains about redeclarations of types in the kernel
 	headers.
 3.7.	Why don't signals interrupt system calls anymore?
+3.10.	I can't compile with gcc -traditional (or
+	-traditional-cpp). Why?
+3.11.	I get some errors with `gcc -ansi'. Isn't glibc ANSI compatible?
+
 3.14.	The pow() inline function I get when including <math.h> is broken.
 	I get segmentation faults when I run the program.
 
@@ -441,14 +447,14 @@ libc binaries from the US.
 	the libc.so which comes with glibc all I get is a core dump.
 
 {UD} On Linux, gcc sets the dynamic linker to /lib/ld-linux.so.1
-unless the user specifies a -dynamic-linker argument.  This is the
+unless the user specifies a --dynamic-linker argument.  This is the
 name of the libc5 dynamic linker, which does not work with glibc.
 
 For casual use of GNU libc you can just specify to the linker
     --dynamic-linker=/lib/ld-linux.so.2
 
 which is the glibc dynamic linker, on Linux systems.  On other systems
-name is /lib/ld.so.1.  When linking via gcc, you've got to add
+the name is /lib/ld.so.1.  When linking via gcc, you've got to add
     -Wl,--dynamic-linker=/lib/ld-linux.so.2
 
 to the gcc command line.
@@ -596,7 +602,7 @@ it with nisinit from the nis-tools package (available at
 http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html).
 
 
-+2.11.	I have killed ypbind to stop using NIS, but glibc will
+2.11.	I have killed ypbind to stop using NIS, but glibc will
         continue using NIS.
 
 {TK} For faster NIS lookups, glibc uses the /var/yp/binding/ files
@@ -696,6 +702,19 @@ ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc3.diff.
 are not 64bit clean.  A 64bit clean implementation is ypbind-mt.  For
 ypbind 3.3, you need the patch from ftp.kernel.org (See the previous
 question).  I don't know about other versions.
+
+2.22.	I just upgraded my Linux system to glibc and now I get
+	errors whenever I try to link any program.
+
+{ZW} This happens when you have installed glibc as the primary C library but
+have stray symbolic links pointing at your old C library.  If the first
+`libc.so' the linker finds is libc 5, it will use that.  Your program
+expects to be linked with glibc, so the link fails.
+
+The most common case is that glibc put its `libc.so' in /usr/lib, but there
+was a `libc.so' from libc 5 in /lib, which gets searched first.  To fix the
+problem, just delete /lib/libc.so.  You may also need to delete other
+symbolic links in /lib, such as /lib/libm.so if it points to libm.so.5.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -884,6 +903,34 @@ and return EINTR (for example, to implement a timeout) you can do this with
 siginterrupt().
 
 
+3.10.	I can't compile with gcc -traditional (or
+	-traditional-cpp). Why?
+
+{AJ} glibc2 does break -traditional and -traditonal-cpp - and will continue
+to do so.  For example constructs of the form:
+
+enum {foo
+#define foo foo
+}
+
+are useful for debugging purposes (you can use foo with your debugger that's
+why we need the enum) and for compatibility (other systems use defines and
+check with #ifdef).
+
+
+3.11.	I get some errors with `gcc -ansi'. Isn't glibc ANSI compatible?
+
+{AJ} The GNU C library is compatible with the ANSI/ISO C standard.  If
+you're using `gcc -ansi', the glibc includes which are specified in the
+standard follow the standard.  The ANSI/ISO C standard defines what has to be
+in the include files - and also states that nothing else should be in the
+include files (btw. you can still enable additional standards with feature
+flags).
+
+The GNU C library is conforming to ANSI/ISO C - if and only if you're only
+using the headers and library functions defined in the standard.
+
+
 3.14.	The pow() inline function I get when including <math.h> is broken.
 	I get segmentation faults when I run the program.
 
@@ -916,6 +963,30 @@ incompatible changes made and the libc headers have to follow.
 Also, make sure you have a suitably recent kernel.  As of the 970401
 snapshot, according to Philip Blundell <Philip.Blundell@pobox.com>, the
 required kernel version is at least 2.1.30.
+
+
+4.3.	When I set the timezone by setting the TZ environment variable
+	to EST5EDT things go wrong since glibc computes the wrong time
+	from this information.
+
+{UD} The problem is that people still use the braindamaged POSIX method to
+select the timezone using the TZ environment variable with a format EST5EDT
+or whatever.  People, read the POSIX standard, the implemented behaviour is
+correct!  What you see is in fact the result of the decisions made while
+POSIX.1 was created.  We've only implemented the handling of TZ this way to
+be POSIX compliant.  It is not really meant to be used.
+
+The alternative approach to handle timezones which is implemented is the
+correct one to use: use the timezone database.  This avoids all the problems
+the POSIX method has plus it is much easier to use.  Simply run the tzselect
+hell script, answer the question and use the name printed in the end by
+making a symlink to /usr/share/zoneinfo/NAME (NAME is the returned value
+from tzselect) from the file /etc/localtime.  That's all.  You never again
+have to worry.
+
+So, please avoid sending bug reports about time related problems if you use
+the POSIX method and you have not verified something is really broken by
+reading the POSIX standards.
 
 
 4.4.    What other sources of documentation about glibc are available?
