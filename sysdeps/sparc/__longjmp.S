@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include "DEFS.h"
 #include <machine/trap.h>
 
+/* NOTE: This code depends on the definition of `__jmp_buf' in <jmp_buf.h>.  */
+
 FUNC (___longjmp)
 	/* Do a "flush register windows trap".  The trap handler in the
 	   kernel writes all the register windows to their stack slots, and
@@ -28,14 +30,14 @@ FUNC (___longjmp)
 	   windows.  */
 	ta ST_FLUSH_WINDOWS
 	ld [%o0], %o7		/* Return PC.  */
-	ld [%o0 + 4], %fp
-	sub %fp, 64, %sp
+	ld [%o0 + 4], %fp	/* Saved SP.  */
+	sub %fp, 64, %sp	/* Allocate a register save area.  */
 
 	/* if (%o1 == 0) %o1 = 1; */
 	tst %o1
-	be,a 0f
+	be,a Ldone
 	mov 1, %o1
 
-0:	retl
+Ldone:	retl
 	/* On the way out, put the return value in %o0.  */
 	restore %o1, 0, %o0
