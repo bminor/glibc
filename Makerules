@@ -35,8 +35,7 @@ sources :=
 endif
 export sources
 
-export headers
-
+export headers := $(headers) $(sysdep_headers)
 
 ifneq ($(findstring e,$(MAKEFLAGS)),)
 You must not use the -e flag when building the GNU C library.
@@ -214,50 +213,13 @@ endif
 .PHONY: objects objs
 objects objs: $(objects)
 
-# Make the ansi and trad versions of the headers from the ansidecl sources.
-
-headers := $(headers) $(sysdep_headers)
-
-ifdef objpfx
-+headers_pfx = $(objpfx)
-else
-+headers_pfx = $(..)
-endif
-
-+header_dirs	:= $(filter-out ./,$(dir $(headers)))
-
-.PHONY: headers
-headers: $(+headers_pfx)ansi/						\
-	 $(addprefix $(+headers_pfx)ansi/,$(+header_dirs) $(headers))	\
-	 $(+headers_pfx)trad/						\
-	 $(addprefix $(+headers_pfx)trad/,$(+header_dirs) $(headers))
-
-%/:
-# mkdir isn't smart enough to strip a trailing /.
-	mkdir $(@:%/=%)
-
-$(+headers_pfx)ansi/%: % $(..)ansidecl $(..)ansidecl.m4;$(+ansideclificate)
-$(+headers_pfx)trad/%: % $(..)ansidecl $(..)ansidecl.m4;$(+ansideclificate)
-
-# The bit with awk is to remove all the newlines from
-# ansidecl.m4, so the output doesn't have 20 blank
-# lines at the beginning.
-+ansideclificate = $(dir $(word 2,$^))$(notdir $(word 2,$^)) \
-		   -$(firstword $(subst /, ,$(@:$(+headers_pfx)%=%))) $< > $@
-
-
-.PHONY: echo-headers
-echo-headers:
-	@echo $(headers)
-
 # Installation.
 
 # install-lib are installed from the object directory into libdir.
-# install-data are installed as they are into datadir.  
-# headers are installed from the object directory header directories into
-# one or both of ansi-incldir and trad-incldir.
-# install-others are absolute path names of files to install;
-# rules to install them are defined elsewhere.
+# install-data are installed as they are into datadir.  headers are
+# installed from the object directory header directories into includedir.
+# install-others are absolute path names of files to install; rules to
+# install them are defined elsewhere.
 
 do-install = $(INSTALL_DATA) $< $@
 
@@ -277,16 +239,9 @@ endif
 	    $(install-others)
 headers := $(strip $(headers))
 ifdef headers
-ifdef ansi-incldir
-$(addprefix $(ansi-incldir)/,$(headers)): \
-	$(ansi-incldir)/%: $(objpfx)ansi/%;$(do-install)
-+install := $(+install) $(addprefix $(ansi-incldir)/,$(headers))
-endif
-ifdef trad-incldir
-$(addprefix $(trad-incldir)/,$(headers)): \
-	$(trad-incldir)/%: $(objpfx)trad/%;$(do-install)
-+install := $(+install) $(addprefix $(trad-incldir)/,$(headers))
-endif
+$(addprefix $(includedir)/,$(headers)): \
+	$(includedir)/%: %;$(do-install)
++install := $(+install) $(addprefix $(includedir)/,$(headers))
 endif	# headers
 +install := $(filter-out $(addprefix %/,$(no-install)),$(+install))
 
@@ -319,3 +274,8 @@ native-compile = cwd=`pwd`; cd $(objdir); $(CC) $$cwd/$< -o $(@:$(objpfx)%=%)
 
 TAGS: $(..)MakeTAGS
 	$(MAKE) -f $< $@
+
+.PHONY: echo-headers
+echo-headers:
+	@echo $(headers)
+
