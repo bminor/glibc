@@ -1,3 +1,34 @@
+2004-10-29  Kaz  Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S (sem_timedwait):
+	Set ETIMEDOUT to errno when time is up.  Tweak to avoid
+	assembler warning.
+
+2004-10-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread_create.c (__pthread_create_2_1): Avoid leaking stacks
+	if sched_priority is not between minprio and maxprio.
+
+2004-10-25  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Use clock_gettime syscall if exists.
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S
+	(__lll_mutex_timedlock_wait): Fix a bad branch condition.
+
+2004-10-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/smp.h (is_smp_system): Use
+	not-cancelable I/O functions.
+
+2004-10-21  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S
+	(__lll_mutex_timedlock_wait): If woken but cannot get the lock,
+	make sure 2 is stored in the futex and we looked at the old value.
+	Fix a few other problems to return the correct value.
+
 2004-10-14  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/tcb-offsets.sym (thread_offsetof): Redefine to

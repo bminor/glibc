@@ -73,14 +73,13 @@ static const char rcsid[] = "$BINDId: res_send.c,v 8.38 2000/03/30 20:16:51 vixi
  * Send query to name server and wait for reply.
  */
 
+#include <assert.h>
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/time.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
-#ifdef _LIBC
 #include <sys/poll.h>
-#endif
 
 #include <netinet/in.h>
 #include <arpa/nameser.h>
@@ -103,9 +102,6 @@ static const char rcsid[] = "$BINDId: res_send.c,v 8.38 2000/03/30 20:16:51 vixi
 #define MAXPACKET       65536
 #endif
 
-#ifndef _LIBC
-#include <isc/eventlib.h>
-#else
 
 /* From ev_streams.c.  */
 
@@ -170,17 +166,12 @@ evNowTime(struct timespec *res) {
 		TIMEVAL_TO_TIMESPEC (&now, res);
 }
 
-#endif
 
 /* Options.  Leave them on. */
 /* #undef DEBUG */
 #include "res_debug.h"
 
 #define EXT(res) ((res)->_u._ext)
-
-#ifndef _LIBC
-static const int highestFD = FD_SETSIZE - 1;
-#endif
 
 /* Forward. */
 
@@ -194,22 +185,11 @@ static void		Aerror(const res_state, FILE *, const char *, int,
 			       const struct sockaddr *);
 static void		Perror(const res_state, FILE *, const char *, int);
 #endif
-#ifdef _LIBC
 static int		sock_eq(struct sockaddr_in6 *, struct sockaddr_in6 *);
-#else
-static int		sock_eq(struct sockaddr_in *, struct sockaddr_in *);
-#endif
-#ifdef NEED_PSELECT
-static int		pselect(int, void *, void *, void *,
-				struct timespec *,
-				const sigset_t *);
-#endif
 
 /* Reachover. */
 
-#ifdef _LIBC
 static void convaddr4to6(struct sockaddr_in6 *sa);
-#endif
 void res_pquery(const res_state, const u_char *, int, FILE *);
 
 /* Public. */
@@ -224,15 +204,10 @@ void res_pquery(const res_state, const u_char *, int, FILE *);
  *	paul vixie, 29may94
  */
 int
-#ifdef _LIBC
 res_ourserver_p(const res_state statp, const struct sockaddr_in6 *inp)
-#else
-res_ourserver_p(const res_state statp, const struct sockaddr_in *inp)
-#endif
 {
 	int ns;
 
-#ifdef _LIBC
         if (inp->sin6_family == AF_INET) {
             struct sockaddr_in *in4p = (struct sockaddr_in *) inp;
 	    in_port_t port = in4p->sin_port;
@@ -260,18 +235,6 @@ res_ourserver_p(const res_state statp, const struct sockaddr_in *inp)
                     return (1);
             }
         }
-#else
-	struct sockaddr_in ina = *inp;
-	for (ns = 0; ns < statp->nscount; ns++) {
-		const struct sockaddr_in *srv = &statp->nsaddr_list[ns];
-
-		if (srv->sin_family == ina.sin_family &&
-		    srv->sin_port == ina.sin_port &&
-		    (srv->sin_addr.s_addr == INADDR_ANY ||
-		     srv->sin_addr.s_addr == ina.sin_addr.s_addr))
-			return (1);
-	}
-#endif
 	return (0);
 }
 
@@ -406,18 +369,12 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		if (EXT(statp).nscount != statp->nscount)
 			needclose++;
 		else
-#ifdef _LIBC
 			for (ns = 0; ns < MAXNS; ns++) {
 				unsigned int map = EXT(statp).nsmap[ns];
 				if (map < MAXNS
 				    && !sock_eq((struct sockaddr_in6 *)
 						&statp->nsaddr_list[map],
 						EXT(statp).nsaddrs[ns]))
-#else
-			for (ns = 0; ns < statp->nscount; ns++) {
-				if (!sock_eq(&statp->nsaddr_list[ns],
-					     &EXT(statp).nsaddrs[ns]))
-#endif
 				{
 					needclose++;
 					break;
@@ -431,7 +388,6 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 	 * Maybe initialize our private copy of the ns_addr_list.
 	 */
 	if (EXT(statp).nsinit == 0) {
-#ifdef _LIBC
 		unsigned char map[MAXNS];
 
 		memset (map, MAXNS, sizeof (map));
@@ -471,13 +427,6 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 				n++;
 			}
 		}
-#else
-		for (ns = 0; ns < statp->nscount; ns++) {
-			EXT(statp).nsaddrs[ns] = statp->nsaddr_list[ns];
-			EXT(statp).nssocks[ns] = -1;
-		}
-		EXT(statp).nscount = ns;
-#endif
 		EXT(statp).nsinit = 1;
 	}
 
@@ -487,7 +436,6 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 	 */
 	if ((statp->options & RES_ROTATE) != 0 &&
 	    (statp->options & RES_BLAST) == 0) {
-#ifdef _LIBC
 		struct sockaddr_in6 *ina;
 		unsigned int map;
 
@@ -511,35 +459,18 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 			EXT(statp).nsaddrs[n] = ina;
 			EXT(statp).nsmap[n] = map;
 		}
-#else
-		struct sockaddr_in ina;
-		int lastns = statp->nscount - 1;
-
-		ina = statp->nsaddr_list[0];
-		for (ns = 0; ns < lastns; ns++)
-			statp->nsaddr_list[ns] = statp->nsaddr_list[ns + 1];
-		statp->nsaddr_list[lastns] = ina;
-#endif
 	}
 
 	/*
 	 * Send request, RETRY times, or until successful.
 	 */
 	for (try = 0; try < statp->retry; try++) {
-#ifdef _LIBC
 	    for (ns = 0; ns < MAXNS; ns++)
-#else
-	    for (ns = 0; ns < statp->nscount; ns++)
-#endif
 	    {
-#ifdef _LIBC
 		struct sockaddr_in6 *nsap = EXT(statp).nsaddrs[ns];
 
 		if (nsap == NULL)
 			goto next_ns;
-#else
-		struct sockaddr_in *nsap = &statp->nsaddr_list[ns];
-#endif
  same_ns:
 		if (statp->qhook) {
 			int done = 0, loops = 0;
@@ -547,16 +478,11 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 			do {
 				res_sendhookact act;
 
-#ifdef _LIBC
 				struct sockaddr_in *nsap4;
 				nsap4 = (struct sockaddr_in *) nsap;
 				act = (*statp->qhook)(&nsap4, &buf, &buflen,
 						      ans, anssiz, &resplen);
 				nsap = (struct sockaddr_in6 *) nsap4;
-#else
-				act = (*statp->qhook)(&nsap, &buf, &buflen,
-						      ans, anssiz, &resplen);
-#endif
 				switch (act) {
 				case res_goahead:
 					done = 1;
@@ -579,19 +505,13 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 			} while (!done);
 		}
 
-#ifdef _LIBC
-# ifdef DEBUG
+#ifdef DEBUG
 		char tmpbuf[40];
-# endif
+#endif
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; Querying server (# %d) address = %s\n",
 			ns + 1, inet_ntop(AF_INET6, &nsap->sin6_addr,
 					  tmpbuf, sizeof (tmpbuf))));
-#else
-		Dprint(statp->options & RES_DEBUG,
-		       (stdout, ";; Querying server (# %d) address = %s\n",
-			ns + 1, inet_ntoa(nsap->sin_addr)));
-#endif
 
 		if (v_circuit) {
 			/* Use VC; at most one attempt per server. */
@@ -641,14 +561,9 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 			do {
 				res_sendhookact act;
 
-#ifdef _LIBC
 				act = (*statp->rhook)((struct sockaddr_in *)
 						      nsap, buf, buflen,
 						      ans, anssiz, &resplen);
-#else
-				act = (*statp->rhook)(nsap, buf, buflen,
-						      ans, anssiz, &resplen);
-#endif
 				switch (act) {
 				case res_goahead:
 				case res_done:
@@ -704,11 +619,7 @@ send_vc(res_state statp,
 	u_char *ans = *ansp;
 	int anssiz = *anssizp;
 	HEADER *anhp = (HEADER *) ans;
-#ifdef _LIBC
 	struct sockaddr_in6 *nsap = EXT(statp).nsaddrs[ns];
-#else
-	struct sockaddr_in *nsap = &statp->nsaddr_list[ns];
-#endif
 	int truncating, connreset, resplen, n;
 	struct iovec iov[2];
 	u_short len;
@@ -720,11 +631,7 @@ send_vc(res_state statp,
 
 	/* Are we still talking to whom we want to talk to? */
 	if (statp->_vcsock >= 0 && (statp->_flags & RES_F_VC) != 0) {
-#ifdef _LIBC
 		struct sockaddr_in6 peer;
-#else
-		struct sockaddr_in peer;
-#endif
 		int size = sizeof peer;
 
 		if (getpeername(statp->_vcsock,
@@ -739,15 +646,7 @@ send_vc(res_state statp,
 		if (statp->_vcsock >= 0)
 			res_nclose(statp);
 
-#ifdef _LIBC
 		statp->_vcsock = socket(nsap->sin6_family, SOCK_STREAM, 0);
-#else
-		statp->_vcsock = socket(PF_INET, SOCK_STREAM, 0);
-		if (statp->_vcsock > highestFD) {
-			res_nclose(statp);
-			__set_errno (ENOTSOCK);
-		}
-#endif
 		if (statp->_vcsock < 0) {
 			*terrno = errno;
 			Perror(statp, stderr, "socket(vc)", errno);
@@ -904,25 +803,15 @@ send_dg(res_state statp,
 	u_char *ans = *ansp;
 	int anssiz = *anssizp;
 	HEADER *anhp = (HEADER *) ans;
-#ifdef _LIBC
 	struct sockaddr_in6 *nsap = EXT(statp).nsaddrs[ns];
-#else
-	const struct sockaddr_in *nsap = &statp->nsaddr_list[ns];
-#endif
 	struct timespec now, timeout, finish;
-#ifdef _LIBC
 	struct pollfd pfd[1];
         int ptimeout;
 	struct sockaddr_in6 from;
 	static int socket_pf = 0;
-#else
-	fd_set dsmask;
-	struct sockaddr_in from;
-#endif
-	int fromlen, resplen, seconds, n, s;
+	int fromlen, resplen, seconds, n;
 
 	if (EXT(statp).nssocks[ns] == -1) {
-#ifdef _LIBC
 		/* only try IPv6 if IPv6 NS and if not failed before */
 		if ((EXT(statp).nscount6 > 0) && (socket_pf != PF_INET)) {
 			EXT(statp).nssocks[ns] =
@@ -932,24 +821,14 @@ send_dg(res_state statp,
 		}
 		if (EXT(statp).nssocks[ns] < 0)
 			EXT(statp).nssocks[ns] = socket(PF_INET, SOCK_DGRAM, 0);
-#else
-		EXT(statp).nssocks[ns] = socket(PF_INET, SOCK_DGRAM, 0);
-		if (EXT(statp).nssocks[ns] > highestFD) {
-			res_nclose(statp);
-			__set_errno (ENOTSOCK);
-		}
-#endif
 		if (EXT(statp).nssocks[ns] < 0) {
 			*terrno = errno;
 			Perror(statp, stderr, "socket(dg)", errno);
 			return (-1);
 		}
-#ifndef CANNOT_CONNECT_DGRAM
-#ifdef _LIBC
 		/* If IPv6 socket and nsap is IPv4, make it IPv4-mapped */
 		if ((socket_pf == PF_INET6) && (nsap->sin6_family == AF_INET))
 			convaddr4to6(nsap);
-#endif
 		/*
 		 * On a 4.3BSD+ machine (client and server,
 		 * actually), sending to a nameserver datagram
@@ -968,7 +847,6 @@ send_dg(res_state statp,
 			res_nclose(statp);
 			return (0);
 		}
-#endif /* !CANNOT_CONNECT_DGRAM */
 		/* Make socket non-blocking.  */
 		int fl = __fcntl (EXT(statp).nssocks[ns], F_GETFL);
 		if  (fl != -1)
@@ -977,7 +855,7 @@ send_dg(res_state statp,
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; new DG socket\n"))
 	}
-	s = EXT(statp).nssocks[ns];
+
 	/*
 	 * Compute time for the total operation.
 	 */
@@ -990,28 +868,29 @@ send_dg(res_state statp,
 	evConsTime(&timeout, seconds, 0);
 	evAddTime(&finish, &now, &timeout);
 	int need_recompute = 0;
- resend:
-#ifdef _LIBC
+	int nwritten = 0;
+	pfd[0].fd = EXT(statp).nssocks[ns];
+	pfd[0].events = POLLOUT;
+ wait:
+	if (need_recompute) {
+		evNowTime(&now);
+		if (evCmpTime(finish, now) <= 0) {
+			Perror(statp, stderr, "select", errno);
+			res_nclose(statp);
+			return (0);
+		}
+		evSubTime(&timeout, &finish, &now);
+	}
         /* Convert struct timespec in milliseconds.  */
 	ptimeout = timeout.tv_sec * 1000 + timeout.tv_nsec / 1000000;
 
-	pfd[0].fd = s;
-	pfd[0].events = POLLOUT;
-	n = __poll (pfd, 1, 0);
+	n = 0;
+	if (nwritten == 0)
+	  n = __poll (pfd, 1, 0);
 	if (__builtin_expect (n == 0, 0)) {
 		n = __poll (pfd, 1, ptimeout);
 		need_recompute = 1;
 	}
-#else
-	FD_ZERO(&dsmask);
-	FD_SET(s, &dsmask);
-	struct timeval zerotime = { 0, 0 };
-	n = pselect(s + 1, NULL, &dsmask, NULL, &zerotime, NULL);
-	if (n == 0) {
-		n = pselect(s + 1, NULL, &dsmask, NULL, &timeout, NULL);
-		need_recompute = 1;
-	}
-#endif
 	if (n == 0) {
 		Dprint(statp->options & RES_DEBUG, (stdout,
 						    ";; timeout sending\n"));
@@ -1024,183 +903,136 @@ send_dg(res_state statp,
 			evNowTime(&now);
 			if (evCmpTime(finish, now) > 0) {
 				evSubTime(&timeout, &finish, &now);
-				goto resend;
+				goto wait;
 			}
 		}
-		Perror(statp, stderr, "select", errno);
+		Perror(statp, stderr, "poll", errno);
 		res_nclose(statp);
 		return (0);
 	}
 	__set_errno (0);
-#ifndef CANNOT_CONNECT_DGRAM
-	if (send(s, (char*)buf, buflen, 0) != buflen) {
-		if (errno == EINTR || errno == EAGAIN)
-			goto recompute_resend;
-		Perror(statp, stderr, "send", errno);
-		res_nclose(statp);
-		return (0);
-	}
-#else /* !CANNOT_CONNECT_DGRAM */
-#ifdef _LIBC
-	/* If IPv6 socket and nsap is IPv4, make it IPv4-mapped */
-	if ((socket_pf == PF_INET6) && (nsap->sin6_family == AF_INET))
-		convaddr4to6(nsap);
-#endif
-	if (sendto(s, (char*)buf, buflen, 0,
-		   (struct sockaddr *)nsap, sizeof *nsap) != buflen)
-	{
-		if (errno == EINTR || errno == EAGAIN)
-			goto recompute_resend;
-		Aerror(statp, stderr, "sendto", errno,
-		       (struct sockaddr *) nsap);
-		res_nclose(statp);
-		return (0);
-	}
-#endif /* !CANNOT_CONNECT_DGRAM */
-
- wait:
-	if (need_recompute) {
-		evNowTime(&now);
-		if (evCmpTime(finish, now) <= 0) {
-		err_return:
-			Perror(statp, stderr, "select", errno);
+	if (pfd[0].revents & POLLOUT) {
+		if (send(pfd[0].fd, (char*)buf, buflen, 0) != buflen) {
+			if (errno == EINTR || errno == EAGAIN)
+				goto recompute_resend;
+			Perror(statp, stderr, "send", errno);
 			res_nclose(statp);
 			return (0);
 		}
-		evSubTime(&timeout, &finish, &now);
-	}
-#ifdef _LIBC
-        /* Convert struct timespec in milliseconds.  */
-	ptimeout = timeout.tv_sec * 1000 + timeout.tv_nsec / 1000000;
-
-	pfd[0].events = POLLIN;
-	n = __poll (pfd, 1, ptimeout);
-#else
-	n = pselect(s + 1, &dsmask, NULL, NULL, &timeout, NULL);
-#endif
-	if (n == 0) {
-		Dprint(statp->options & RES_DEBUG, (stdout,
-						    ";; timeout receiving\n"));
-		*gotsomewhere = 1;
-		return (0);
-	}
-	if (n < 0) {
-		if (errno == EINTR) {
-			need_recompute = 1;
-			goto wait;
-		}
-		goto err_return;
-	}
-	__set_errno (0);
-#ifdef _LIBC
-	fromlen = sizeof(struct sockaddr_in6);
-#else
-	fromlen = sizeof(struct sockaddr_in);
-#endif
-	if (anssiz < MAXPACKET
-	    && anscp
-	    && (ioctl (s, FIONREAD, &resplen) < 0
+		pfd[0].events = POLLIN;
+		++nwritten;
+		goto wait;
+	} else if (pfd[0].revents & POLLIN) {
+		fromlen = sizeof(struct sockaddr_in6);
+		if (anssiz < MAXPACKET
+		    && anscp
+		    && (ioctl (pfd[0].fd, FIONREAD, &resplen) < 0
 		|| anssiz < resplen)) {
-		ans = malloc (MAXPACKET);
-		if (ans == NULL)
-			ans = *ansp;
-		else {
-			anssiz = MAXPACKET;
-			*anssizp = MAXPACKET;
-			*ansp = ans;
-			*anscp = ans;
-			anhp = (HEADER *) ans;
+			ans = malloc (MAXPACKET);
+			if (ans == NULL)
+				ans = *ansp;
+			else {
+				anssiz = MAXPACKET;
+				*anssizp = MAXPACKET;
+				*ansp = ans;
+				*anscp = ans;
+				anhp = (HEADER *) ans;
+			}
 		}
-	}
-	resplen = recvfrom(s, (char*)ans, anssiz,0,
-			   (struct sockaddr *)&from, &fromlen);
-	if (resplen <= 0) {
-		if (errno == EINTR || errno == EAGAIN) {
-			need_recompute = 1;
+		resplen = recvfrom(pfd[0].fd, (char*)ans, anssiz,0,
+				   (struct sockaddr *)&from, &fromlen);
+		if (resplen <= 0) {
+			if (errno == EINTR || errno == EAGAIN) {
+				need_recompute = 1;
+				goto wait;
+			}
+			Perror(statp, stderr, "recvfrom", errno);
+			res_nclose(statp);
+			return (0);
+		}
+		*gotsomewhere = 1;
+		if (resplen < HFIXEDSZ) {
+			/*
+			 * Undersized message.
+			 */
+			Dprint(statp->options & RES_DEBUG,
+			       (stdout, ";; undersized: %d\n",
+				resplen));
+			*terrno = EMSGSIZE;
+			res_nclose(statp);
+			return (0);
+		}
+		if (hp->id != anhp->id) {
+			/*
+			 * response from old query, ignore it.
+			 * XXX - potential security hazard could
+			 *	 be detected here.
+			 */
+			DprintQ((statp->options & RES_DEBUG) ||
+				(statp->pfcode & RES_PRF_REPLY),
+				(stdout, ";; old answer:\n"),
+				ans, (resplen > anssiz) ? anssiz : resplen);
 			goto wait;
 		}
-		Perror(statp, stderr, "recvfrom", errno);
+		if (!(statp->options & RES_INSECURE1) &&
+		    !res_ourserver_p(statp, &from)) {
+			/*
+			 * response from wrong server? ignore it.
+			 * XXX - potential security hazard could
+			 *	 be detected here.
+			 */
+			DprintQ((statp->options & RES_DEBUG) ||
+				(statp->pfcode & RES_PRF_REPLY),
+				(stdout, ";; not our server:\n"),
+				ans, (resplen > anssiz) ? anssiz : resplen);
+			goto wait;
+		}
+		if (!(statp->options & RES_INSECURE2) &&
+		    !res_queriesmatch(buf, buf + buflen,
+				      ans, ans + anssiz)) {
+			/*
+			 * response contains wrong query? ignore it.
+			 * XXX - potential security hazard could
+			 *	 be detected here.
+			 */
+			DprintQ((statp->options & RES_DEBUG) ||
+				(statp->pfcode & RES_PRF_REPLY),
+				(stdout, ";; wrong query name:\n"),
+				ans, (resplen > anssiz) ? anssiz : resplen);
+			goto wait;
+		}
+		if (anhp->rcode == SERVFAIL ||
+		    anhp->rcode == NOTIMP ||
+		    anhp->rcode == REFUSED) {
+			DprintQ(statp->options & RES_DEBUG,
+				(stdout, "server rejected query:\n"),
+				ans, (resplen > anssiz) ? anssiz : resplen);
+			res_nclose(statp);
+			/* don't retry if called from dig */
+			if (!statp->pfcode)
+				return (0);
+		}
+		if (!(statp->options & RES_IGNTC) && anhp->tc) {
+			/*
+			 * To get the rest of answer,
+			 * use TCP with same server.
+			 */
+			Dprint(statp->options & RES_DEBUG,
+			       (stdout, ";; truncated answer\n"));
+			*v_circuit = 1;
+			res_nclose(statp);
+			return (1);
+		}
+		/*
+		 * All is well, or the error is fatal.  Signal that the
+		 * next nameserver ought not be tried.
+		 */
+		return (resplen);
+	} else if (pfd[0].revents & (POLLERR | POLLHUP | POLLNVAL)) {
+		/* Something went wrong.  We can stop trying.  */
 		res_nclose(statp);
 		return (0);
 	}
-	*gotsomewhere = 1;
-	if (resplen < HFIXEDSZ) {
-		/*
-		 * Undersized message.
-		 */
-		Dprint(statp->options & RES_DEBUG,
-		       (stdout, ";; undersized: %d\n",
-			resplen));
-		*terrno = EMSGSIZE;
-		res_nclose(statp);
-		return (0);
-	}
-	if (hp->id != anhp->id) {
-		/*
-		 * response from old query, ignore it.
-		 * XXX - potential security hazard could
-		 *	 be detected here.
-		 */
-		DprintQ((statp->options & RES_DEBUG) ||
-			(statp->pfcode & RES_PRF_REPLY),
-			(stdout, ";; old answer:\n"),
-			ans, (resplen > anssiz) ? anssiz : resplen);
-		goto wait;
-	}
-	if (!(statp->options & RES_INSECURE1) &&
-	    !res_ourserver_p(statp, &from)) {
-		/*
-		 * response from wrong server? ignore it.
-		 * XXX - potential security hazard could
-		 *	 be detected here.
-		 */
-		DprintQ((statp->options & RES_DEBUG) ||
-			(statp->pfcode & RES_PRF_REPLY),
-			(stdout, ";; not our server:\n"),
-			ans, (resplen > anssiz) ? anssiz : resplen);
-		goto wait;
-	}
-	if (!(statp->options & RES_INSECURE2) &&
-	    !res_queriesmatch(buf, buf + buflen,
-			      ans, ans + anssiz)) {
-		/*
-		 * response contains wrong query? ignore it.
-		 * XXX - potential security hazard could
-		 *	 be detected here.
-		 */
-		DprintQ((statp->options & RES_DEBUG) ||
-			(statp->pfcode & RES_PRF_REPLY),
-			(stdout, ";; wrong query name:\n"),
-			ans, (resplen > anssiz) ? anssiz : resplen);
-		goto wait;
-	}
-	if (anhp->rcode == SERVFAIL ||
-	    anhp->rcode == NOTIMP ||
-	    anhp->rcode == REFUSED) {
-		DprintQ(statp->options & RES_DEBUG,
-			(stdout, "server rejected query:\n"),
-			ans, (resplen > anssiz) ? anssiz : resplen);
-		res_nclose(statp);
-		/* don't retry if called from dig */
-		if (!statp->pfcode)
-			return (0);
-	}
-	if (!(statp->options & RES_IGNTC) && anhp->tc) {
-		/*
-		 * To get the rest of answer,
-		 * use TCP with same server.
-		 */
-		Dprint(statp->options & RES_DEBUG,
-		       (stdout, ";; truncated answer\n"));
-		*v_circuit = 1;
-		res_nclose(statp);
-		return (1);
-	}
-	/*
-	 * All is well, or the error is fatal.  Signal that the
-	 * next nameserver ought not be tried.
-	 */
-	return (resplen);
 }
 
 #ifdef DEBUG
@@ -1239,7 +1071,6 @@ Perror(const res_state statp, FILE *file, const char *string, int error) {
 #endif
 
 static int
-#ifdef _LIBC
 sock_eq(struct sockaddr_in6 *a1, struct sockaddr_in6 *a2) {
 	if (a1->sin6_family == a2->sin6_family) {
 		if (a1->sin6_family == AF_INET)
@@ -1262,15 +1093,7 @@ sock_eq(struct sockaddr_in6 *a1, struct sockaddr_in6 *a2) {
 		(a1->sin6_addr.s6_addr32[3] ==
 		 ((struct sockaddr_in *)a2)->sin_addr.s_addr));
 }
-#else
-sock_eq(struct sockaddr_in *a1, struct sockaddr_in *a2) {
-	return ((a1->sin_family == a2->sin_family) &&
-		(a1->sin_port == a2->sin_port) &&
-		(a1->sin_addr.s_addr == a2->sin_addr.s_addr));
-}
-#endif
 
-#ifdef _LIBC
 /*
  * Converts IPv4 family, address and port to
  * IPv6 family, IPv4-mapped IPv6 address and port.
@@ -1289,30 +1112,3 @@ convaddr4to6(struct sockaddr_in6 *sa)
     sa->sin6_addr.s6_addr32[2] = htonl(0xFFFF);
     sa->sin6_addr.s6_addr32[3] = addr;
 }
-#endif
-
-#ifdef NEED_PSELECT
-/* XXX needs to move to the porting library. */
-static int
-pselect(int nfds, void *rfds, void *wfds, void *efds,
-	struct timespec *tsp, const sigset_t *sigmask)
-{
-	struct timeval tv, *tvp;
-	sigset_t sigs;
-	int n;
-
-	if (tsp) {
-		tvp = &tv;
-		tv = evTimeVal(*tsp);
-	} else
-		tvp = NULL;
-	if (sigmask)
-		sigprocmask(SIG_SETMASK, sigmask, &sigs);
-	n = select(nfds, rfds, wfds, efds, tvp);
-	if (sigmask)
-		sigprocmask(SIG_SETMASK, &sigs, NULL);
-	if (tsp)
-		TIMEVAL_TO_TIMESPEC (tv, *tsp);
-	return (n);
-}
-#endif
