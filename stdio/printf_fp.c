@@ -67,11 +67,11 @@ extern mp_size_t __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
 				       int *expt, int *is_neg,
 				       double value);
 
-/* 1000 words is an arbitrarily chosen size that is big enough.  Some day I
-   should figure out how big it actually needs to be (which should be
-   computable from the <float.h> parameters).  The size initialization is
-   just a notable random number to catch uninitialized variable bugs.  */
-#define MPN_VAR(name) mp_limb name[1000]; mp_size_t name##size /*= 314159265*/
+/* We believe that these variables need as many bits as the largest binary
+   exponent of a double.  But we are not confident, so we add a few words.  */
+#define MPNSIZE ((DBL_MAX_EXP + BITS_PER_MP_LIMB - 1) / BITS_PER_MP_LIMB) + 3
+
+#define MPN_VAR(name) mp_limb name[MPNSIZE]; mp_size_t name##size
 #define MPN_ASSIGN(dst,src) \
   memcpy (dst, src, (dst##size = src##size) * sizeof (mp_limb))
 #define MPN_POW2(dst, power) \
