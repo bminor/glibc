@@ -1,3 +1,9 @@
+2005-03-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (ELF_MACHINE_NO_RELA): Define
+	unconditionally to (defined RTLD_BOOTSTRAP).
+	* sysdeps/arm/dl-machine.h (ELF_MACHINE_NO_RELA): Likewise.
+
 2005-03-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #776]

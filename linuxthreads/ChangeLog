@@ -1,3 +1,7 @@
+2005-03-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/tcb-offsets.sym (thread_offsetof): Rework for GCC 4.
+
 2005-02-09  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* descr.h (__pthread_find_self, thread_self): Mark as pure
