@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ DEFUN(__kill, (pid, sig), int pid AND int sig)
   mach_port_t proc;
   int dealloc_proc;
 
-  proc = _hurd_port_get (&_hurd_proc, &dealloc_proc);
+  proc = _hurd_port_get (&_hurd_ports[INIT_PORT_PROC], &dealloc_proc);
 
   if (pid <= 0)
     {
@@ -78,7 +78,5 @@ DEFUN(__kill, (pid, sig), int pid AND int sig)
   if (ports != portbuf)
     __vm_deallocate (__mach_task_self (), ports, nports * sizeof (ports[0]));
 
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+  return err ? __hurd_fail (err) : 0;
 }
