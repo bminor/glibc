@@ -288,7 +288,7 @@ constants are declared in the header file @file{unistd.h}.
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun long int sysconf (int @var{parameter})
+@deftypefun {long int} sysconf (int @var{parameter})
 This function is used to inquire about runtime system parameters.  The
 @var{parameter} argument should be one of the @samp{_SC_} symbols listed
 below.
@@ -772,7 +772,7 @@ argument are declared in the header file @file{unistd.h}.
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun long int pathconf (const char *@var{filename}, int @var{parameter})
+@deftypefun {long int} pathconf (const char *@var{filename}, int @var{parameter})
 This function is used to inquire about the limits that apply to
 the file named @var{filename}.
 
@@ -799,7 +799,7 @@ support the @var{parameter} for the specific file.
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun long fpathconf (int @var{filedes}, int @var{parameter})
+@deftypefun {long int} fpathconf (int @var{filedes}, int @var{parameter})
 This is just like @code{pathconf} except that an open file descriptor
 is used to specify the file for which information is requested, instead
 of a file name.
