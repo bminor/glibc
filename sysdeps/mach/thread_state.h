@@ -35,7 +35,7 @@ Cambridge, MA 02139, USA.  */
   ((ts)->SP = (unsigned long int) (stack))
 #else
 #define MACHINE_THREAD_STATE_SET_SP(ts, stack, size) \
-  ((ts)->SP = (unsiged long int) (stack) + (size))
+  ((ts)->SP = (unsigned long int) (stack) + (size))
 #endif
 #endif
 
