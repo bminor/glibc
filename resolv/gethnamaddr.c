@@ -625,7 +625,8 @@ gethostbyname2(name, af)
 struct hostent *
 gethostbyaddr(addr, len, af)
 	const char *addr;	/* XXX should have been def'd as u_char! */
-	int len, af;
+	size_t len;
+	int af;
 {
 	const u_char *uaddr = (const u_char *)addr;
 	static const u_char mapped[] = { 0,0, 0,0, 0,0, 0,0, 0,0, 0xff,0xff };
