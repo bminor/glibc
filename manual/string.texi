@@ -286,9 +286,10 @@ waste a considerable amount of time copying null characters.
 @comment SVID
 @deftypefun {char *} strdup (const char *@var{s})
 This function copies the null-terminated string @var{s} into a newly
-allocated string.  The string is allocated using @code{malloc};
-see @ref{Unconstrained Allocation}.
-@c !!! say returns new string or NULL if can't malloc
+allocated string.  The string is allocated using @code{malloc}; see
+@ref{Unconstrained Allocation}.  If @code{malloc} cannot allocate space
+for the new string, @code{strdup} returns a null pointer.  Otherwise it
+returns a pointer to the new string.
 @end deftypefun
 
 @comment string.h
