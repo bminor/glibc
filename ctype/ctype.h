@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -13,7 +13,7 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 /*
@@ -25,34 +25,36 @@ Cambridge, MA 02139, USA.  */
 #define	_CTYPE_H	1
 #include <features.h>
 
+__BEGIN_DECLS
+
 /* These are all the characteristics of characters.  All the
    interdependencies (such as that an alphabetic is an uppercase or a
    lowercase) are here.  If there get to be more than
    (sizeof (unsigned short int) * CHAR_BIT) distinct characteristics,
    many things must be changed that use `unsigned short int's.  */
 enum
-  {
-    _ISupper	= 1 << 0,		/* UPPERCASE.  */
-    _ISlower	= 1 << 1,		/* lowercase.  */
-    _IScntrl	= 1 << 2,		/* Control character.  */
-    _ISdigit	= 1 << 3,		/* Numeric.  */
-    _ISspace	= 1 << 4,		/* Whitespace.  */
-    _IShex	= 1 << 5,		/* A - F, a - f.  */
-    _ISpunct	= 1 << 6,		/* Punctuation.  */
-    _NOgraph	= 1 << 7,		/* Printing but nongraphical.  */
-    _ISblank	= 1 << 8,		/* Blank (usually SPC and TAB).  */
-    _ISalpha	= _ISupper | _ISlower,	/* Alphabetic.  */
-    _ISalnum	= _ISalpha | _ISdigit,	/* Alphanumeric.  */
-    _ISxdigit	= _ISdigit | _IShex,	/* Hexadecimal numeric.  */
-    _ISgraph	= _ISalnum | _ISpunct,	/* Graphical.  */
-    _ISprint	= _ISgraph | _NOgraph	/* Printing.  */
-  };
+{
+  _ISupper = 1 << 0,		/* UPPERCASE.  */
+  _ISlower = 1 << 1,		/* lowercase.  */
+  _IScntrl = 1 << 2,		/* Control character.  */
+  _ISdigit = 1 << 3,		/* Numeric.  */
+  _ISspace = 1 << 4,		/* Whitespace.  */
+  _IShex = 1 << 5,		/* A - F, a - f.  */
+  _ISpunct = 1 << 6,		/* Punctuation.  */
+  _NOgraph = 1 << 7,		/* Printing but nongraphical.  */
+  _ISblank = 1 << 8,		/* Blank (usually SPC and TAB).  */
+  _ISalpha = _ISupper | _ISlower,	/* Alphabetic.  */
+  _ISalnum = _ISalpha | _ISdigit,	/* Alphanumeric.  */
+  _ISxdigit = _ISdigit | _IShex,/* Hexadecimal numeric.  */
+  _ISgraph = _ISalnum | _ISpunct,	/* Graphical.  */
+  _ISprint = _ISgraph | _NOgraph/* Printing.  */
+};
 
 /* These are defined in localeinfo.c.
    The declarations here must match those in localeinfo.h.  */
-extern CONST unsigned short int *__ctype_b;	/* Characteristics.  */
-extern CONST unsigned char *__ctype_tolower;	/* Case conversions.  */
-extern CONST unsigned char *__ctype_toupper;	/* Case conversions.  */
+extern __const unsigned short int *__ctype_b;	/* Characteristics.  */
+extern __const unsigned char *__ctype_tolower;	/* Case conversions.  */
+extern __const unsigned char *__ctype_toupper;	/* Case conversions.  */
 
 #define	__isctype(c, type)	(__ctype_b[c] & (unsigned short int) type)
 
@@ -62,54 +64,54 @@ extern CONST unsigned char *__ctype_toupper;	/* Case conversions.  */
 #define	__tolower(c)	__ctype_tolower[c]
 #define	__toupper(c)	__ctype_toupper[c]
 
-/* IGNORE(@ This line MUST be broken!  m4 will not change it otherwise. @) */
+/* @ This line MUST be broken!  m4 will not change it otherwise. @ */
 #define	__exctype(name)	\
-  extern int EXFUN(name, (int))
+  extern int name __P ((int))
 
 /* The following names are all functions:
      int isCHARACTERISTIC(int c);
    which return nonzero iff C has CHARACTERISTIC.
    For the meaning of the characteristic names, see the `enum' above.  */
-__exctype(isalnum);
-__exctype(isalpha);
-__exctype(iscntrl);
-__exctype(isdigit);
-__exctype(islower);
-__exctype(isgraph);
-__exctype(isprint);
-__exctype(ispunct);
-__exctype(isspace);
-__exctype(isupper);
-__exctype(isxdigit);
+__exctype (isalnum);
+__exctype (isalpha);
+__exctype (iscntrl);
+__exctype (isdigit);
+__exctype (islower);
+__exctype (isgraph);
+__exctype (isprint);
+__exctype (ispunct);
+__exctype (isspace);
+__exctype (isupper);
+__exctype (isxdigit);
 
 #ifdef	__USE_GNU
-__exctype(isblank);
+__exctype (isblank);
 #endif
 
 
 /* Return the lowercase version of C.  */
-extern int EXFUN(tolower, (int __c));
+extern int tolower __P ((int __c));
 
 /* Return the uppercase version of C.  */
-extern int EXFUN(toupper, (int __c));
+extern int toupper __P ((int __c));
 
 
 #if defined(__USE_SVID) || defined(__USE_MISC)
 
 /* Return nonzero iff C is in the ASCII set
    (i.e., is no more than 7 bits wide).  */
-extern int EXFUN(isascii, (int __c));
+extern int isascii __P ((int __c));
 
 /* Return the part of C that is in the ASCII set
    (i.e., the low-order 7 bits of C).  */
-extern int EXFUN(toascii, (int __c));
+extern int toascii __P ((int __c));
 
-#endif	/* Use SVID or use misc.  */
+#endif /* Use SVID or use misc.  */
 
 #ifdef	__USE_SVID
 /* These are the same as `toupper' and and `tolower'.  */
-__exctype(_toupper);
-__exctype(_tolower);
+__exctype (_toupper);
+__exctype (_tolower);
 #endif
 
 #ifndef	__NO_CTYPE
@@ -137,6 +139,8 @@ __exctype(_tolower);
 #define	toascii(c)	__toascii(c)
 #endif
 
-#endif	/* Not __NO_CTYPE.  */
+#endif /* Not __NO_CTYPE.  */
 
-#endif	/* ctype.h  */
+__END_DECLS
+
+#endif /* ctype.h  */
