@@ -39,7 +39,7 @@ user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host \
 				     default_pager_object \
 				     memory_object_user memory_object_default)\
 		   $(addprefix device/,device device_request device_reply)
-server-interfaces := __exc
+server-interfaces := mach/__exc
 
 routines = $(interface-routines) \
 	   mach_init vm_page_size \
@@ -96,7 +96,7 @@ mach/mach_interface.defs: mach/mach.defs
 	ln $< $@ || cp $< $@
 # There is already a memory_object.h,
 # so memory_object.defs generates memory_object_user.h.
-mach/memory_object_user.defs: mach/amemory_object.defs
+mach/memory_object_user.defs: mach/memory_object.defs
 	ln $< $@ || cp $< $@
 
 # Be sure not to make these with implicit rules from foo.defs.
