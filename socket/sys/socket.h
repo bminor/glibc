@@ -98,6 +98,25 @@ struct sockaddr
     char sa_data[14];		/* Address data.  */
   };
 
+/* This is the type we use for generic socket address arguments.  With GCC 2.6
+   and later, the funky union causes redeclarations or uses with any of the
+   listed types to be allowed without complaint.  */
+#if	(!defined (__GNUC__) || __GNUC__ < 2 || \
+	 (__GNUC__ == 2 && __GNUC_MINOR__ < 6))
+#define	__SOCKADDR_ARG	struct sockaddr *
+#else
+/* Bring these names into being at top-level scope, in case they have not been
+   defined yet.  Add more `struct sockaddr_AF' types here as necessary.  */
+struct sockaddr_in;
+struct sockaddr_un;
+struct sockaddr_ns;
+#define	__SOCKADDR_ARG	union { struct sockaddr *__sa;			      \
+				struct sockaddr_in *__sa_in;		      \
+				struct sockaddr_un *__sa_un;		      \
+				struct sockaddr_ns *__sa_ns;		      \
+			      }
+#endif
+
 
 /* Create a new socket of type TYPE in domain DOMAIN, using
    protocol PROTOCOL.  If PROTOCOL is zero, one is chosen automatically.
@@ -113,22 +132,22 @@ extern int socketpair __P ((int __domain, enum __socket_type __type,
 			    int __protocol, int __fds[2]));
 
 /* Give the socket FD the local address ADDR (which is LEN bytes long).  */
-extern int bind __P ((int __fd, struct sockaddr * __addr, size_t __len));
+extern int bind __P ((int __fd, __SOCKADDR_ARG __addr, size_t __len));
 
 /* Put the local address of FD into *ADDR and its length in *LEN.  */
-extern int getsockname __P ((int __fd, struct sockaddr * __addr,
-			     size_t * __len));
+extern int getsockname __P ((int __fd, __SOCKADDR_ARG __addr,
+			     size_t *__len));
 
 /* Open a connection on socket FD to peer at ADDR (which LEN bytes long).
    For connectionless socket types, just set the default address to send to
    and the only address from which to accept transmissions.
    Return 0 on success, -1 for errors.  */
-extern int connect __P ((int __fd, struct sockaddr * __addr, size_t __len));
+extern int connect __P ((int __fd, __SOCKADDR_ARG __addr, size_t __len));
 
 /* Put the address of the peer connected to socket FD into *ADDR
    (which is *LEN bytes long), and its actual length into *LEN.  */
-extern int getpeername __P ((int __fd, struct sockaddr * __addr,
-			     size_t * __len));
+extern int getpeername __P ((int __fd, __SOCKADDR_ARG __addr,
+			     size_t *__len));
 
 
 /* Bits in the FLAGS argument to `send', `recv', et al.  */
@@ -149,14 +168,14 @@ extern int recv __P ((int __fd, __ptr_t __buf, size_t __n, int __flags));
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
 extern int sendto __P ((int __fd, __ptr_t __buf, size_t __n, int __flags,
-			struct sockaddr * __addr, size_t __addr_len));
+			__SOCKADDR_ARG __addr, size_t __addr_len));
 
 /* Read N bytes into BUF through socket FD.
    If ADDR is not NULL, fill in *ADDR_LEN bytes of it with tha address of
    the sender, and store the actual size of the address in *ADDR_LEN.
    Returns the number of bytes read or -1 for errors.  */
 extern int recvfrom __P ((int __fd, __ptr_t __buf, size_t __n, int __flags,
-			  struct sockaddr * __addr, size_t * __addr_len));
+			  __SOCKADDR_ARG __addr, size_t *__addr_len));
 
 
 
@@ -176,12 +195,12 @@ struct msghdr
 
 /* Send a message described MESSAGE on socket FD.
    Returns the number of bytes sent, or -1 for errors.  */
-extern int sendmsg __P ((int __fd, __const struct msghdr * __message,
+extern int sendmsg __P ((int __fd, __const struct msghdr *__message,
 			 int __flags));
 
 /* Receive a message as described by MESSAGE from socket FD.
    Returns the number of bytes read or -1 for errors.  */
-extern int recvmsg __P ((int __fd, struct msghdr * __message, int __flags));
+extern int recvmsg __P ((int __fd, struct msghdr *__message, int __flags));
 
 
 /* Protocol number used to manipulate socket-level options
@@ -229,7 +248,7 @@ struct linger
    into OPTVAL (which is *OPTLEN bytes long), and set *OPTLEN to the value's
    actual length.  Returns 0 on success, -1 for errors.  */
 extern int getsockopt __P ((int __fd, int __level, int __optname,
-			    __ptr_t __optval, size_t * __optlen));
+			    __ptr_t __optval, size_t *__optlen));
 
 /* Set socket FD's option OPTNAME at protocol level LEVEL
    to *OPTVAL (which is OPTLEN bytes long).
@@ -248,8 +267,8 @@ extern int listen __P ((int __fd, unsigned int __n));
    set *ADDR (which is *ADDR_LEN bytes long) to the address of the connecting
    peer and *ADDR_LEN to the address's actual length, and return the
    new socket's descriptor, or -1 for errors.  */
-extern int accept __P ((int __fd, struct sockaddr * __addr,
-			size_t * __addr_len));
+extern int accept __P ((int __fd, __SOCKADDR_ARG __addr,
+			size_t *__addr_len));
 
 /* Shut down all or part of the connection open on socket FD.
    HOW determines what to shut down:
