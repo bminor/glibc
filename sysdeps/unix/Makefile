@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@ $(common-objpfx)sys/param.h: $(sysincludedir)/sys/param.h $(common-objpfx)sys/
 	-mkdir $(@D:%/=%)
 	(echo '#ifndef _GNU_SYS_PARAM_H';	\
 	 echo '#define _GNU_SYS_PARAM_H 1';	\
+	 echo '#include <endian.h>';		\
 	 awk < $<			\
 	   '/^#define[ 	]*NULL/ { print "#ifndef NULL";	\
 				  print $$0;		\
@@ -73,9 +74,13 @@ ifdef sys/param.h-includes
 $(addprefix $(common-objpfx),$(sys/param.h-includes)): $(common-objpfx)%: \
 						       $(sysincludedir)/%
 	-mkdir $(@D:%/=%)
-# Some of these files sometimes contain conflicting declarations
-# for htons, ntohs, etc.
-	sed '/[ 	]*[hn][sl]to[nh][sl][	 (]*/d' $< > $@-t
+# Some of these files sometimes contain conflicting declarations for htons,
+# ntohs, etc.  They also often contain definitions of *_ENDIAN and
+# BYTE_ORDER, which we define ourselves in <endian.h>.
+	sed -e '/[ 	]*[hn][sl]to[nh][sl][	 (]*/d' \
+	    -e '/^#define[ 	]*[A-Z]*_ENDIAN/d' \
+	    -e '/^#define[ 	]*BYTE_ORDER/d' \
+	    $< > $@-t
 	mv $@-t $@
 endif
 
