@@ -41,7 +41,7 @@ user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     memory_object_default		\
 	            )\
 		   $(addprefix device/,device device_request)
-server-interfaces := device/device_reply mach/exc # mach/__exc
+server-interfaces := device/device_reply mach/exc
 tests := hello
 distribute = Machrules syscalls.awk shortcut.awk
 
