@@ -1,4 +1,4 @@
-@node Language Features, Summary of Library Facilities, System Configuration Limits, Top
+@node Language Features, Library Summary, System Configuration, Top
 @appendix Library Facilities that are Part of the C Language
 
 Some of the facilities implemented by the C library really should be
@@ -684,8 +684,7 @@ long long int} and @code{unsigned long long int}, respectively.
 
 The header file @file{limits.h} also defines some additional constants
 that parameterize various operating system and file system limits.  These
-constants are described in @ref{System Parameters} and @ref{File System
-Parameters}.
+constants are described in @ref{System Configuration}.
 
 @node Floating Type Macros
 @subsection Floating Type Macros

@@ -1,5 +1,5 @@
-@node System Configuration Limits, Language Features, System Information, Top
-@chapter System Configuration Limits
+@node System Configuration, Language Features, System Information, Top
+@chapter System Configuration Parameters
 
 The functions and macros listed in this chapter give information about
 configuration parameters of the operating system---for example, capacity
@@ -171,7 +171,7 @@ or set-group-ID bits set, and that explicitly changing the effective
 user or group IDs back to these values is permitted.  If this option is
 not defined, then if a nonprivileged process changes its effective user
 or group ID to the real user or group ID of the process, it can't change
-it back again.  @xref{User/Group IDs of a Process}.
+it back again.  @xref{Enable/Disable Setuid}.
 @end deftypevr
 
 For the following macros, if the macro is defined in @file{unistd.h},
