@@ -1,5 +1,5 @@
 % texinfo.tex -- TeX macros to handle Texinfo files.
-% $Id: texinfo.tex,v 2.196.2.6 1998/07/22 12:48:07 drepper Exp $
+\def\texinfoversion{1998-09-30}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98
 % Free Software Foundation, Inc.
@@ -27,10 +27,10 @@
 % reports; you can get the latest version from:
 %   ftp://ftp.gnu.org/pub/gnu/texinfo.tex
 %   /home/gd/gnu/doc/texinfo.tex on the GNU machines.
-%   (and all GNU mirrors, see ftp://ftp.gnu.org/pub/gnu/README.mirrors)
+%   (and all GNU mirrors, see http://www.gnu.org/order/ftp.html)
 %   ftp://tug.org/tex/texinfo.tex
 %   ftp://ctan.org/macros/texinfo/texinfo.tex
-%   (and all CTAN mirrors, finger ctan@tug.org for a list).
+%   (and all CTAN mirrors, finger ctan@ctan.org for a list).
 % The texinfo.tex in the texinfo distribution itself could well be out
 % of date, so if that's what you're using, please check.
 % 
@@ -40,7 +40,7 @@
 % 
 % To process a Texinfo manual with TeX, it's most reliable to use the
 % texi2dvi shell script that comes with the distribution.  For simple
-% manuals, you can get away with:
+% manuals, however, you can get away with:
 %   tex foo.texi
 %   texindex foo.??
 %   tex foo.texi
@@ -56,15 +56,12 @@
 % Added by gildea November 1993.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 
-% This automatically updates the version number based on RCS.
-\def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 2.196.2.6 $
-\message{Loading texinfo package [Version \texinfoversion]:}
+\message{Loading texinfo [version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
 % and turn on active characters that we couldn't do earlier because
 % they might have appeared in the input file name.
-\everyjob{\message{[Texinfo version \texinfoversion]}\message{}
+\everyjob{\message{[Texinfo version \texinfoversion]}%
   \catcode`+=\active \catcode`\_=\active}
 
 % Save some parts of plain tex whose names we will redefine.
@@ -343,11 +340,11 @@
 %% Call \inENV within environments (after a \begingroup)
 \newif\ifENV \ENVfalse \def\inENV{\ifENV\relax\else\ENVtrue\fi}
 \def\ENVcheck{%
-\ifENV\errmessage{Still within an environment.  Type Return to continue.}
+\ifENV\errmessage{Still within an environment; press RETURN to continue}
 \endgroup\fi} % This is not perfect, but it should reduce lossage
 
 % @begin foo  is the same as @foo, for now.
-\newhelp\EMsimple{Type <Return> to continue.}
+\newhelp\EMsimple{Press RETURN to continue.}
 
 \outer\def\begin{\parsearg\beginxxx}
 
@@ -959,9 +956,17 @@ where each line of input produces a line of output.}
 
 % @value{foo} gets the text saved in variable foo.
 %
-\def\value{\begingroup
-  \catcode`\-=12 \catcode`\_=12 % Allow - and _ in VAR.
-  \valuexxx}
+{
+  \catcode`\_ = \active
+  %
+  % We might end up with active _ or - characters in the argument if
+  % we're called from @code, as @code{@value{foo-bar_}}.  So \let any
+  % such active characters to their normal equivalents.
+  \gdef\value{\begingroup
+    \catcode`\-=12 \catcode`\_=12
+    \indexbreaks \let_\normalunderscore
+    \valuexxx}
+}
 \def\valuexxx#1{\expandablevalue{#1}\endgroup}
 
 % We have this subroutine so that we can handle at least some @value's
@@ -1190,8 +1195,8 @@ where each line of input produces a line of output.}
 \setfont\ninett\ttshape{9}{1000}
 \setfont\ninettsl\ttslshape{10}{900}
 \setfont\indrm\rmshape{9}{1000}
-\setfont\indit\slshape{9}{1000}
-\let\indsl=\indit
+\setfont\indit\itshape{9}{1000}
+\setfont\indsl\slshape{9}{1000}
 \let\indtt=\ninett
 \let\indttsl=\ninettsl
 \let\indsf=\indrm
@@ -1340,13 +1345,14 @@ where each line of input produces a line of output.}
 % \smartitalic{ARG} outputs arg in italics, followed by an italic correction
 % unless the following character is such as not to need one.
 \def\smartitalicx{\ifx\next,\else\ifx\next-\else\ifx\next.\else\/\fi\fi\fi}
-\def\smartitalic#1{{\sl #1}\futurelet\next\smartitalicx}
+\def\smartslanted#1{{\sl #1}\futurelet\next\smartitalicx}
+\def\smartitalic#1{{\it #1}\futurelet\next\smartitalicx}
 
 \let\i=\smartitalic
-\let\var=\smartitalic
-\let\dfn=\smartitalic
+\let\var=\smartslanted
+\let\dfn=\smartslanted
 \let\emph=\smartitalic
-\let\cite=\smartitalic
+\let\cite=\smartslanted
 
 \def\b#1{{\bf #1}}
 \let\strong=\b
@@ -1413,20 +1419,18 @@ where each line of input produces a line of output.}
 % and arrange explicitly to hyphenate at a dash.
 %  -- rms.
 {
-\catcode`\-=\active
-\catcode`\_=\active
-\catcode`\|=\active
-\global\def\code{\begingroup \catcode`\-=\active \let-\codedash \catcode`\_=\active \let_\codeunder \codex}
-% The following is used by \doprintindex to insure that long function names
-% wrap around.  It is necessary for - and _ to be active before the index is
-% read from the file, as \entry parses the arguments long before \code is
-% ever called.  -- mycroft
-% _ is always active; and it shouldn't be \let = to an _ that is a
-% subscript character anyway. Then, @cindex @samp{_} (for example)
-% fails.  --karl
-\global\def\indexbreaks{%
-  \catcode`\-=\active \let-\realdash
-}
+  \catcode`\-=\active
+  \catcode`\_=\active
+  %
+  \global\def\code{\begingroup
+    \catcode`\-=\active \let-\codedash
+    \catcode`\_=\active \let_\codeunder
+    \codex
+  }
+  %
+  % If we end up with any active - characters when handling the index,
+  % just treat them as a normal -.
+  \global\def\indexbreaks{\catcode`\-=\active \let-\realdash}
 }
 
 \def\realdash{-}
@@ -1834,15 +1838,13 @@ July\or August\or September\or October\or November\or December\fi
     \itemxneedsnegativevskipfalse
   \else
     % The item text fits into the space.  Start a paragraph, so that the
-    % following text (if any) will end up on the same line.  Since that
-    % text will be indented by \tableindent, we make the item text be in
-    % a zero-width box.
+    % following text (if any) will end up on the same line.  
     \noindent
     % Do this with kerns and \unhbox so that if there is a footnote in
     % the item text, it can migrate to the main vertical list and
     % eventually be printed.
     \nobreak\kern-\tableindent
-    \dimen0 = \itemmax  \advance\dimen0 by -\wd0
+    \dimen0 = \itemmax  \advance\dimen0 by \itemmargin \advance\dimen0 by -\wd0
     \unhbox0
     \nobreak\kern\dimen0
     \endgroup
@@ -3990,20 +3992,18 @@ width0pt\relax} \fi
 % outside the @def...
 \dimen2=\leftskip
 \advance\dimen2 by -\defbodyindent
-\dimen3=\rightskip
-\advance\dimen3 by -\defbodyindent
-\noindent        %
+\noindent
 \setbox0=\hbox{\hskip \deflastargmargin{\rm #2}\hskip \deftypemargin}%
 \dimen0=\hsize \advance \dimen0 by -\wd0 % compute size for first line
 \dimen1=\hsize \advance \dimen1 by -\defargsindent %size for continuations
-\parshape 2 0in \dimen0 \defargsindent \dimen1     %
+\parshape 2 0in \dimen0 \defargsindent \dimen1
 % Now output arg 2 ("Function" or some such)
 % ending at \deftypemargin from the right margin,
 % but stuck inside a box of width 0 so it does not interfere with linebreaking
 {% Adjust \hsize to exclude the ambient margins,
 % so that \rightline will obey them.
-\advance \hsize by -\dimen2 \advance \hsize by -\dimen3
-\rlap{\rightline{{\rm #2}\hskip \deftypemargin}}}%
+\advance \hsize by -\dimen2
+\rlap{\rightline{{\rm #2}\hskip -1.25pc }}}%
 % Make all lines underfull and no complaints:
 \tolerance=10000 \hbadness=10000
 \advance\leftskip by -\defbodyindent
@@ -4024,7 +4024,7 @@ width0pt\relax} \fi
 \def#1{\endgraf\endgroup\medbreak}%
 \def#2{\begingroup\obeylines\activeparens\spacesplit#3}%
 \parindent=0in
-\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\advance\leftskip by \defbodyindent
 \exdentamount=\defbodyindent
 \begingroup %
 \catcode 61=\active % 61 is `='
@@ -4042,7 +4042,7 @@ width0pt\relax} \fi
 \def#1{\endgraf\endgroup\medbreak}%
 \def#2##1 {\begingroup\obeylines\activeparens\spacesplit{#3{##1}}}%
 \parindent=0in
-\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\advance\leftskip by \defbodyindent
 \exdentamount=\defbodyindent
 \begingroup\obeylines\activeparens\spacesplit{#3{#4}}}
 
@@ -4060,7 +4060,7 @@ width0pt\relax} \fi
 \def#1{\endgraf\endgroup\medbreak}%
 \def#2##1 ##2 {\begingroup\obeylines\activeparens\spacesplit{#3{##1}{##2}}}%
 \parindent=0in
-\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\advance\leftskip by \defbodyindent
 \exdentamount=\defbodyindent
 \begingroup\obeylines\activeparens\spacesplit{#3{#4}{#5}}}
 
@@ -4072,7 +4072,7 @@ width0pt\relax} \fi
 \def#2##1 ##2 {\def#4{##1}%
 \begingroup\obeylines\activeparens\spacesplit{#3{##2}}}%
 \parindent=0in
-\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\advance\leftskip by \defbodyindent
 \exdentamount=\defbodyindent
 \begingroup\obeylines\activeparens\spacesplit{#3{#5}}}
 
@@ -4087,7 +4087,7 @@ width0pt\relax} \fi
 \def#1{\endgraf\endgroup\medbreak}%
 \def#2{\begingroup\obeylines\spacesplit#3}%
 \parindent=0in
-\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\advance\leftskip by \defbodyindent
 \exdentamount=\defbodyindent
 \begingroup %
 \catcode 61=\active %
@@ -4104,7 +4104,7 @@ width0pt\relax} \fi
   \def#1{\endgraf\endgroup\medbreak}%
   \def#2##1 {\begingroup\obeylines\spacesplit{#3{##1}}}%
   \parindent=0in
-  \advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+  \advance\leftskip by \defbodyindent
   \exdentamount=\defbodyindent
   \begingroup\obeylines
 }
@@ -4149,7 +4149,7 @@ width0pt\relax} \fi
 \def#2##1 ##2 {\def#4{##1}%
 \begingroup\obeylines\spacesplit{#3{##2}}}%
 \parindent=0in
-\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\advance\leftskip by \defbodyindent
 \exdentamount=\defbodyindent
 \begingroup\obeylines\spacesplit{#3{#5}}}
 
@@ -4511,6 +4511,17 @@ width0pt\relax} \fi
   \catcode`\^^M=12
   \usembodybackslash}
 
+\def\macroargctxt{%
+  \catcode`\~=12
+  \catcode`\^=12
+  \catcode`\_=12
+  \catcode`\|=12
+  \catcode`\<=12
+  \catcode`\>=12
+  \catcode`\+=12
+  \catcode`\@=12
+  \catcode`\\=12}
+
 % \mbodybackslash is the definition of \ in @macro bodies.
 % It maps \foo\ => \csname macarg.foo\endcsname => #N 
 % where N is the macro parameter number.
@@ -4607,17 +4618,21 @@ width0pt\relax} \fi
         \noexpand\scanmacro{\temp}}%
     \or % 1
       \expandafter\xdef\csname\the\macname\endcsname{%
+         \bgroup\noexpand\macroargctxt
          \noexpand\braceorline\csname\the\macname xxx\endcsname}%
       \expandafter\xdef\csname\the\macname xxx\endcsname##1{%
-         \noexpand\scanmacro{\temp}}%
+         \egroup\noexpand\scanmacro{\temp}}%
     \else % many
-      \expandafter\xdef\csname\the\macname\endcsname##1{%
+      \expandafter\xdef\csname\the\macname\endcsname{%
+         \bgroup\noexpand\macroargctxt
+         \noexpand\csname\the\macname xx\endcsname}
+      \expandafter\xdef\csname\the\macname xx\endcsname##1{%
           \csname\the\macname xxx\endcsname ##1,}%
       \expandafter\expandafter
       \expandafter\xdef
       \expandafter\expandafter
         \csname\the\macname xxx\endcsname 
-          \paramlist{\noexpand\scanmacro{\temp}}%
+          \paramlist{\egroup\noexpand\scanmacro{\temp}}%
     \fi
   \else
     \ifcase\paramno
@@ -4627,18 +4642,24 @@ width0pt\relax} \fi
         \noexpand\scanmacro{\temp}\egroup}%
     \or % 1
       \expandafter\xdef\csname\the\macname\endcsname{%
+         \bgroup\noexpand\macroargctxt
          \noexpand\braceorline\csname\the\macname xxx\endcsname}%
       \expandafter\xdef\csname\the\macname xxx\endcsname##1{%
+        \egroup
         \noexpand\norecurse{\the\macname}%
         \noexpand\scanmacro{\temp}\egroup}%
     \else % many
-      \expandafter\xdef\csname\the\macname\endcsname##1{%
+      \expandafter\xdef\csname\the\macname\endcsname{%
+         \bgroup\noexpand\macroargctxt
+         \noexpand\csname\the\macname xx\endcsname}
+      \expandafter\xdef\csname\the\macname xx\endcsname##1{%
           \csname\the\macname xxx\endcsname ##1,}%
       \expandafter\expandafter
       \expandafter\xdef
       \expandafter\expandafter
       \csname\the\macname xxx\endcsname
       \paramlist{%
+          \egroup
           \noexpand\norecurse{\the\macname}%
           \noexpand\scanmacro{\temp}\egroup}%
     \fi
@@ -5425,4 +5446,9 @@ width0pt\relax} \fi
 
 @c Local variables:
 @c page-delimiter: "^\\\\message"
+@c update-date-leading-regexp: "def\\texinfoversion{"
+@c update-date-date-regexp: "[-0-9.]+"
+@c update-date-format-string: "%Y-%m-%d"
+@c update-date-trailing-regexp: "}"
+@c eval: (and(load "update-date" t t)(add-hook 'write-file-hooks 'update-date))
 @c End:
