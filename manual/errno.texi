@@ -81,11 +81,12 @@ All the error codes have symbolic names; they are macros defined in
 letter or digit; you should consider names of this form to be
 reserved names.  @xref{Reserved Names}.
 
-@c ??? not always distinct: EAGAIN==EWOULDBLOCK
-The error code values are all positive integers and are all distinct.
-(Since the values are distinct, you can use them as labels in a
-@code{switch} statement, for example.)  Your program should not make any
-other assumptions about the specific values of these symbolic constants.
+The error code values are all positive integers and are all distinct,
+with one exception: @code{EWOULDBLOCK} and @code{EAGAIN} are the same.
+Since the values are distinct, you can use them as labels in a
+@code{switch} statement; just don't use both @code{EWOULDBLOCK} and
+@code{EAGAIN}.  Your program should not make any other assumptions about
+the specific values of these symbolic constants.
 
 The value of @code{errno} doesn't necessarily have to correspond to any
 of these macros, since some library functions might return other error
