@@ -387,6 +387,7 @@ elf_machine_rela (struct link_map *map,
 	  elf_alpha_fix_plt (map, reloc, (Elf64_Addr) reloc_addr, sym_value);
 	}
       else
+	{
 #ifdef RTLD_BOOTSTRAP
 	  /* There is no point calling _dl_sysdep_error, it
 	     almost certainly hasn't been relocated properly.  */
