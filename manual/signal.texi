@@ -1,4 +1,4 @@
-@node Signal Handling, Processes, Non-Local Exits, Top
+@node Signal Handling, Process Startup, Non-Local Exits, Top
 @chapter Signal Handling
 
 @cindex signal

@@ -1,4 +1,4 @@
-@node Job Control, Users and Groups, Processes, Top
+@node Job Control, Users and Groups, Child Processes, Top
 @chapter Job Control
 
 @cindex process groups
