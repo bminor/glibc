@@ -1,8 +1,9 @@
 @node System Information, System Configuration Limits, Users and Groups, Top
 @chapter System Information
 
-This chapter contains information about functions that return 
-information about the particular machine a program is running on.
+This chapter describes functions that return information about the
+particular machine that is in use---the type of hardware, the type of
+software, and the individual machine's name.
 
 @menu
 * Host Identification::         Determining the name of the machine.
@@ -12,19 +13,18 @@ information about the particular machine a program is running on.
 @end menu
 
 
-@node Host Identification, Hardware/Software Type ID,  , System Information
+@node Host Identification
 @section Host Identification
 
-The functions listed in this section access information to identify the
-particular machine that a program is running on.  In the GNU system,
-this information is the default Internet host name and host address of
-the machine; see @ref{Internet Domain}.  These functions are the
-primitives for the @code{hostname} and @code{hostid} shell commands.
+This section explains how to identify the particular machine that your
+program is running on.  The identification of a machine consists of its
+Internet host name and Internet address; see @ref{Internet Domain}.  
+
 @pindex hostname
 @pindex hostid
-
-Prototypes for these functions appear in @file{unistd.h}.
 @pindex unistd.h
+Prototypes for these functions appear in @file{unistd.h}.  The shell
+commands @code{hostname} and @code{hostid} work by calling them.
 
 @comment unistd.h
 @comment BSD
@@ -33,54 +33,59 @@ This function returns the name of the host machine in the array
 @var{name}.  The @var{size} argument specifies the size of this array,
 in bytes.
 
-@strong{Incomplete:}  The size of the host name is limited by a parameter
-@code{MAXHOSTNAMELENGTH}, declared in @file{sys/param.h}.
-@pindex sys/param.h
+The return value is @code{0} on success and @code{-1} on failure.  In
+the GNU C library, @code{gethostname} fails if @var{size} is not large
+enough; then you can try again with a larger array.
 
-The return value is @code{0} on success and @code{-1} on failure.
+@pindex sys/param.h
+On some systems, there is a symbol for the maximum possible host name
+length: @code{MAXHOSTNAMELENGTH}.  It is defined in @file{sys/param.h}.
+But you can't count on this to exist, and it is cleaner to handle
+failure and try again.
 @end deftypefun
 
 @comment unistd.h
 @comment BSD
 @deftypefun int sethostname (const char *@var{name}, size_t @var{length})
 The @code{sethostname} function sets the name of the host machine to
-@var{name}, a string with length @var{length}.  This function can only
-be called by the superuser, and is usually used only at system boot
-time.
+@var{name}, a string with length @var{length}.  Only privileged
+processes are allowed to do this.  Usually it happens just once, at
+system boot time.
 
 The return value is @code{0} on success and @code{-1} on failure.
 @end deftypefun
 
 @comment unistd.h
 @comment BSD
-@deftypefun {long int} gethostid (void)
-This function returns the address of the host machine.
+@deftypefun {long int} gethostid ()
+This function returns the Internet address of the machine the program is
+running on.
 @end deftypefun
 
 @comment unistd.h
 @comment BSD
 @deftypefun int sethostid (long int @var{id})
-The @code{sethostid} function sets the address of the host machine
-to @var{id}.  This function can only be called by the superuser, and
-is usually used only at system boot time.
+The @code{sethostid} function sets the address of the host machine to
+@var{id}.  Only privileged processes are allowed to do this.  Usually it
+happens just once, at system boot time.
 
 @strong{Incomplete:}  Is the return type from this function really 
 @code{void}?  The BSD man page does not document a return value.
 @end deftypefun
 
 
-@node Hardware/Software Type ID,  , Host Identification, System Information
+@node Hardware/Software Type ID
 @section Hardware/Software Type Identification
 
 You can use the @code{uname} function to find out some information about
-the computer system your program is running on.  This function and the
+the type of computer your program is running on.  This function and the
 associated data type are declared in the header file
 @file{sys/utsname.h}.
 @pindex sys/utsname.h
 
 @comment sys/utsname.h
 @comment POSIX.1
-@deftp {struct Type} utsname
+@deftp {Data Type} {struct utsname}
 The @code{utsname} structure is used to hold information returned
 by the @code{uname} function.  It has the following members:
 
@@ -88,11 +93,12 @@ by the @code{uname} function.  It has the following members:
 @item char sysname[]
 This is the name of the operating system implementation.  In the
 GNU library, the value is the string @code{"GNU C Library"}.
+@strong{Incomplete:} That had better not be true.
 
 @item char nodename[]
-This is the name of this node within a communications network.  In the
-GNU library, the value is the same as that returned by
-@code{gethostname}; see @ref{Host Identification}.
+This is the network name of this particular computer.  In the GNU
+library, the value is the same as that returned by @code{gethostname};
+see @ref{Host Identification}.
 
 @item char release[]
 This is the current release level of the operating system implementation.
@@ -104,17 +110,27 @@ system.
 @item char machine[]
 This is a description of the hardware type that the operating system
 is running on.
+
+The possible values for the GNU C library are as follows:
+
+@quotation
+@code{"i386"}, @code{"m68k"}, @code{"sparc"}
+@end quotation
+
+We try to keep these strings' contents the same as the symbols that the
+GNU C compiler defines to indicate the type of machine.
 @end table
 @end deftp
-
 
 @comment sys/utsname.h
 @comment POSIX.1
 @deftypefun int uname (struct utsname *@var{info})
 The @code{uname} function fills in the structure pointed to by
 @var{info} with information about the operating system and host machine.
-A non-negative value is returned on successful completion; in the event
-of an error, @code{-1} is returned.
+A non-negative value indicates that the data was successfully stored.
+@code{-1} as the value indicates an error.
+
+@strong{Incomplete:} What can cause an error in this function?
 @end deftypefun
 
 
