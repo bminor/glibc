@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include <bstring.h>
 #include <fcntl.h>
 
 #ifndef HAVE_GNU_LD
