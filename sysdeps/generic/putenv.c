@@ -22,6 +22,10 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <unistd.h>
 
+#ifndef	HAVE_GNU_LD
+#define	__environ	environ
+#endif
+
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.  */
 int
 DEFUN(putenv, (string), CONST char *string)

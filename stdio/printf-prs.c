@@ -121,7 +121,7 @@ DEFUN(parse_printf_format, (fmt, n, argtypes),
 	    break;
 	  case 'l':
 #ifdef	HAVE_LONGLONG
-	    if (is_long)
+	    if (info.is_long)
 	      /* A double `l' is equivalent to an `L'.  */
 	      info.is_long_double = 1;
 	    else
