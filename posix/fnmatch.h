@@ -25,10 +25,10 @@ extern "C" {
 
 #if defined (__cplusplus) || (defined (__STDC__) && __STDC__)
 #undef	__P
-#define	__P(args)	args
+#define	__P(protos)	protos
 #else /* Not C++ or ANSI C.  */
 #undef	__P
-#define	__P(args)	()
+#define	__P(protos)	()
 /* We can get away without defining `const' here only because in this file
    it is used only inside the prototype for `fnmatch', which is elided in
    non-ANSI C where `const' is problematical.  */

@@ -27,11 +27,11 @@ extern "C"
 #undef	__ptr_t
 #if defined (__cplusplus) || (defined (__STDC__) && __STDC__)
 #undef	__P
-#define	__P(args)	args
+#define	__P(protos)	protos
 #define	__ptr_t	void *
 #else /* Not C++ or ANSI C.  */
 #undef	__P
-#define	__P(args)	()
+#define	__P(protos)	()
 #undef	const
 #define	const
 #define	__ptr_t	char *
