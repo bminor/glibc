@@ -1,4 +1,4 @@
-%define glibcrelease 93
+%define glibcrelease 95
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1265,6 +1265,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Dec 15 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-95
+- export nis_domain_of_r from libnsl.so again which was
+  unintentionally lost
+
 * Wed Dec 15 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-93
 - update from CVS
   - ppc/ppc64 clone without CLONE_THREAD getpid () adjustement
