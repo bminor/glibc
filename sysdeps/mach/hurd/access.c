@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,51 +29,69 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   int dealloc_crdir, dealloc_cwdir;
   int flags;
 
-  /* Set up _hurd_rid_auth.  */
   __mutex_lock (&_hurd_idlock);
-  if (!_hurd_id_valid)
+  if (err = _hurd_check_ids ())
     {
-      if (_hurd_rid_auth != MACH_PORT_NULL)
-	{
-	  __mach_port_deallocate (__mach_task_self (), _hurd_rid_auth);
-	  _hurd_rid_auth = MACH_PORT_NULL;
-	}
-      if (err = __auth_getids (_hurd_auth, &_hurd_id))
-	goto lose;
-
+      __mutex_unlock (&_hurd_idlock);
+      return __hurd_fail (err);
     }
+
+  /* Set up _hurd_rid_auth.  */
   if (_hurd_rid_auth == MACH_PORT_NULL)
     {
-      idblock_t rid;
-      rid = _hurd_id;
-      /* XXX Should keep supplementary ids or not? */
-      rid.uids[0] = rid.ruid;
-      rid.gids[0] = rid.rgid;
-      rid.ruid = _hurd_id.uids[0];
-      rid.rgid = _hurd_id.gids[0];
-      if (err = __auth_makeauth (_hurd_auth, &rid, &_hurd_rid_auth))
+      /* Allocate temporary uid and gid arrays at least
+	 big enough to hold one effective ID.  */
+      const unsigned int nuids = _hurd_nuids < 3 ? 3 : _hurd_nuids;
+      const unsigned int ngids = _hurd_ngids < 3 ? 3 : _hurd_ngids;
+      struct idlist *ruid = alloca (sizeof (uid_t) * _hurd_nuids);
+      struct idlist *rgid = alloca (sizeof (gid_t) * _hurd_ngids);
+
+      /* Copy all of our uids and gids to these arrays.  */
+      memcpy (ruid, _hurd_uid, sizeof (uid_t) * nuids);
+      memcpy (rgid, _hurd_gid, sizeof (gid_t) * ngids);
+
+      /* Make the effective IDs be the real ones.  */
+      ruid.ids[0] = ruid.rid;
+      rgid.ids[0] = rgid.rid;
+
+      /* Create a new auth port using these frobbed IDs.  */
+      if (err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
+				__auth_makeauth (port,
+						 ruid, nuids,
+						 rgid, ngids,
+						 &_hurd_rid_auth)))
 	goto lose;
     }
 
-  crdir = _hurd_port_get (&_hurd_crdir, &dealloc_crdir);
+  crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir);
   err = __io_reauthenticate (crdir);
   if (!err)
     {
       err = __auth_user_authenticate (_hurd_rid_auth, crdir, &rcrdir);
       __mach_port_deallocate (__mach_task_self (), crdir);
     }
-  _hurd_port_free (crdir, &dealloc_crdir);
-  cwdir = _hurd_port_get (&_hurd_cwdir, &dealloc_cwdir);
-  err = __io_reauthenticate (cwdir);
+  _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir, crdir);
+
   if (!err)
     {
-      err = __auth_user_authenticate (_hurd_rid_auth, cwdir, &rcwdir);
-      __mach_port_deallocate (__mach_task_self (), cwdir);
+      cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &dealloc_cwdir);
+      err = __io_reauthenticate (cwdir);
+      if (!err)
+	{
+	  err = __auth_user_authenticate (_hurd_rid_auth, cwdir, &rcwdir);
+	  __mach_port_deallocate (__mach_task_self (), cwdir);
+	}
+      _hurd_port_free (cwdir, &dealloc_cwdir);
     }
+
+  /* We are done with _hurd_rid_auth now.  */
   __mutex_unlock (&_hurd_idlock);
-  _hurd_port_free (cwdir, &dealloc_cwdir);
+
   if (err)
     return __hurd_fail (err);
+
+  /* Now do a path lookup on FILE, using the crdir and cwdir
+     reauthenticated with _hurd_rid_auth.  */
 
   flags = 0;
   if (type & R_OK)
