@@ -59,7 +59,7 @@ DEFUN(__ioctl, (fd, request),
 		_IOT_COUNT2 (type) * (_IOT_TYPE2 (request) << 1)];
     } msg;
   mach_msg_header_t *const m = &msg.header.Head;
-  mach_msg_type_t *t = (mach_msg_type_t *) msg.data;
+  mach_msg_type_t *t = &msg.header.RetCodeType;
   mach_msg_id_t msgid;
   unsigned int reply_size;
 
