@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,21 @@ Cambridge, MA 02139, USA.  */
 #include <fcntl.h>
 #include <hurd.h>
 
+/* Mapping of F_GETFL/F_SETFL flag bits to io protocol functions.  */
+
+struct flag
+  {
+    int flag;
+    error_t (*get) (io_t, int *value);
+    error_t (*mod) (io_t, int value);
+  };
+static const struct flag flags[] =
+  {
+    { O_NONBLOCK, __io_get_nonblock, __io_mod_nonblock },
+    { O_APPEND, __io_get_append, __io_mod_append },
+  };
+
+
 /* Perform file control operations on FD.  */
 int
 DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
@@ -28,15 +43,10 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
   va_list ap;
   int dealloc_dt;
   struct _hurd_fd_user d = _hurd_fd (fd, &dealloc_dt);
-  io_t port, ctty;
-  int dealloc, dealloc_ctty;
   int result;
   
   if (d.d == NULL)
-    {
-      errno = EBADF;
-      return -1;
-    }
+    return __hurd_fail (EBADF);
 
   va_start (ap, cmd);
 
@@ -46,7 +56,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
     case F_SETLK:
     case F_SETLKW:
       __spin_unlock (&d.d->lock);
-      errno = ENOSYS;
+      errno = ENOSYS;		/* XXX */
       result = -1;
       break;
 
@@ -58,62 +68,40 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 
     case F_DUPFD:
       {
-	int fd2 = va_arg (args, int);
-	int flags;
+	/* Duplicate the descriptor.  */
 
-	/* Extract the ports and flags from FD.  */
-	flags = d->flags;
-	ctty = _hurd_port_get (&d->ctty, &dealloc_ctty);
-	port = _hurd_port_locked_get (&d->port, &dealloc); /* Unlocks D.  */
-	
-	if (port == MACH_PORT_NULL)
-	  goto badf;
-	
-	__mutex_lock (&_hurd_dtable_lock);
-	if (fd2 < 0 || fd2 >= _hurd_dtable.size)
+	struct _hurd_fd *new;
+
+	/* Get a new descriptor.
+	   It is unfortunate that D.d must remain locked during this call.  */
+	new = _hurd_alloc_fd (&result, 0);
+	if (new != NULL)
 	  {
-	    errno = EBADF;
-	    fd2 = -1;
-	  }
-	else
-	  {
-	    while (fd2 < _hurd_dtable.size)
-	      {
-		struct _hurd_fd *d2 = &_hurd_dtable.d[fd2];
-		__spin_lock (&d2->port.lock);
-		if (d2->port.port == MACH_PORT_NULL)
-		  {
-		    d2->flags = flags;
-		    _hurd_port_set (&d2->ctty, ctty);
-		    _hurd_port_locked_set (&d2->port, port); /* Unlocks D2.  */
-		    break;
-		  }
-		else
-		  __spin_unlock (&d2->port.lock);
-	      }
-	    if (fd2 == _hurd_dtable.size)
-	      {
-		errno = EMFILE;
-		fd2 = -1;
-	      }
-	  }
-	__mutex_unlock (&_hurd_dtable_lock);
-	
-	if (fd2 >= 0)
-	  {
+	    int dealloc, dealloc_ctty;
+	    int flags = d.d->flags;
+	    io_t ctty = _hurd_port_get (&d.d->ctty, &dealloc_ctty);
+	    io_t port = _hurd_port_locked_get (&d.d->port,
+					       &dealloc); /* Unlocks D.d.  */
+
 	    /* Give the ports each a user ref for the new descriptor.  */
 	    __mach_port_mod_refs (__mach_task_self (), port,
 				  MACH_PORT_RIGHT_SEND, 1);
 	    if (ctty != MACH_PORT_NULL)
 	      __mach_port_mod_refs (__mach_task_self (), ctty,
 				    MACH_PORT_RIGHT_SEND, 1);
+
+	    /* Install the ports and flags in the new descriptor.  */
+	    _hurd_port_set (&new->ctty, ctty);
+	    _hurd_port_locked_set (&new->port, port);
+	    new->flags = flags;
+
+	    if (ctty != MACH_PORT_NULL)
+	      _hurd_port_free (&d->ctty, ctty, &dealloc_ctty);
+	    _hurd_port_free (&d->port, port, &dealloc);
 	  }
-	
-	_hurd_port_free (port, &dealloc);
-	if (ctty != MACH_PORT_NULL)
-	  _hurd_port_free (ctty, &dealloc_ctty);
-	
-	result = fd2;
+	else
+	  result = -1;
+
 	break;
       }
 
@@ -130,37 +118,70 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 
     case F_GETFL:
       {
+	int dealloc;
+	io_t port = _hurd_port_locked_get (d.d, &dealloc); /* Unlocks D.d.  */
 	error_t err;
-	int nonblock, append;
-	port = _hurd_port_locked_get (d.d, &dealloc); /* Unlocks D.d.  */
-	err = __io_get_nonblock (port, &nonblock);
+	unsigned int i;
+	int openstat;
+
+	err = __io_get_openstat (port, &openstat);
+
 	if (!err)
-	  err = __io_get_append (port, &append);
+	  {
+	    switch (openstat & (FS_LOOKUP_READ|FS_LOOKUP_WRITE))
+	      {
+	      case FS_LOOKUP_READ:
+		result = O_RDONLY;
+		break;
+	      case FS_LOOKUP_WRITE:
+		result = O_WRONLY;
+		break;
+	      case FS_LOOKUP_READ|FS_LOOKUP_WRITE:
+		result = O_RDWR;
+		break;
+	      default:
+		result = 0;
+		break;
+	      }
+
+	    for (i = 0; i < sizeof (flags) / sizeof (flags[0]); ++i)
+	      {
+		int value;
+		if (err = (*flags[i].get) (port, &value))
+		  break;
+		if (value)
+		  result |= flags[i].flag;
+	      }
+	  }
+	    
 	_hurd_port_free (port, &dealloc);
+
 	if (err)
 	  {
 	    errno = err;
 	    result = -1;
 	  }
-	else
-	  result = ((nonblock ? O_NONBLOCK : 0) |
-		    (append ? O_APPEND : 0));
 	break;
       }
 
     case F_SETFL:
       {
-	int flags = va_arg (ap, int);
+	int dealloc;
+	const int dflags = d.d->flags;
+	io_t port = _hurd_port_locked_get (d.d, &dealloc); /* Unlocks D.d.  */
 	error_t err;
-	port = _hurd_port_locked_get (d.d, &dealloc); /* Unlocks D.d.  */
-	err = __io_mod_nonblock (port, flags & O_NONBLOCK);
-	if (!err)
-	  err = __io_mod_append (port, flags & O_APPEND);
+	unsigned int i;
+
+	for (i = 0; i < sizeof (flags) / sizeof (flags[0]); ++i)
+	  if (err = (*flags[i].get) (port, dflags & flags[i].flag))
+	    break;
+	    
 	_hurd_port_free (port, &dealloc);
+
 	if (err)
 	  {
-	    result = -1;
 	    errno = err;
+	    result = -1;
 	  }
 	else
 	  result = 0;
@@ -185,7 +206,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	pid_t owner = va_arg (ap, pid_t);
 	error_t err;
 	port = _hurd_port_locked_get (d.d, &dealloc); /* Unlocks D.d.  */
-	if (err = __io_set_owner (port, owner))
+	if (err = __io_mod_owner (port, owner))
 	  {
 	    errno = err;
 	    result = -1;
