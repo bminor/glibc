@@ -349,5 +349,9 @@ ifneq "$(filter -DHAVE_GNU_LD,$(CPPFLAGS))" ""
 +gnu-stabs := yes
 endif
 
+ifneq "$(filter -DHAVE_GNU_AS,$(CPPFLAGS))" ""
+gnu-as := yes
+endif
+
 
 endif # Makeconfig not yet included
