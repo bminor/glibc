@@ -8,10 +8,10 @@ ifeq ($(subdir),misc)
 sysdep_routines += sysctl clone llseek
 
 sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h sys/mtio.h \
-		  sys/module.h sys/io.h sys/klog.h sys/kdaemon.h \
+		  sys/io.h sys/klog.h sys/kdaemon.h \
 		  sys/user.h syscall-list.h sys/sysmacros.h sys/procfs.h \
 		  sys/debugreg.h sys/kd.h sys/soundcard.h sys/vt.h \
-		  sys/quota.h sys/fsuid.h
+		  sys/quota.h sys/fsuid.h sys/prctl.h scsi/sg.h
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscall.h
@@ -56,7 +56,7 @@ ifeq ($(subdir),inet)
 sysdep_headers += netinet/in_systm.h netinet/udp.h \
 		  netinet/if_fddi.h netinet/if_tr.h netinet/igmp.h \
 		  netinet/ip_fw.h netinet/ip_icmp.h netipx/ipx.h \
-		  sys/socketvar.h
+		  sys/socketvar.h net/if_slip.h net/if_packet.h
 endif
 
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
