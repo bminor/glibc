@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -133,6 +133,8 @@ _IO_old_proc_open (fp, command, mode)
     }
   else
     {
+      _IO_close (pipe_fds[0]);
+      _IO_close (pipe_fds[1]);
       __set_errno (EINVAL);
       return NULL;
     }
@@ -141,7 +143,7 @@ _IO_old_proc_open (fp, command, mode)
     {
       int child_std_end = mode[0] == 'r' ? 1 : 0;
       struct _IO_proc_file *p;
-      
+
       _IO_close (parent_end);
       if (child_end != child_std_end)
 	{
