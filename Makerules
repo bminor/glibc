@@ -454,7 +454,7 @@ BUILD_CFLAGS = $(config-defines)
 check: tests
 
 .PHONY: TAGS
-TAGS: distfile $(..)MakeTAGS
+TAGS: distinfo $(..)MakeTAGS
 	$(MAKE) $(addprefix -f ,$^)
 
 .PHONY: echo-headers
