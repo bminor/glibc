@@ -41,10 +41,13 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
   mach_msg_type_number_t tssize = MACHINE_THREAD_STATE_COUNT;
   vm_address_t stack;
   vm_size_t size;
+  int anywhere = 0;
+
+  size = stack_size ? *stack_size ? : STACK_SIZE : STACK_SIZE;
 
   if (stack_base && *stack_base)
     stack = *stack_base;
-  else
+  else if (size == STACK_SIZE)
     {
       /* Cthreads has a bug that makes its stack-probing code fail if
 	 the stack is too low in memory.  It's bad to try and fix it there
@@ -56,15 +59,15 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
 	 here.  (Though perhaps that last sentence (and this one) should
 	 be deleted to maximize the effect.)  */
 #ifdef STACK_GROWTH_DOWN
-      stack = VM_MAX_ADDRESS - STACK_SIZE - __vm_page_size;
+      stack = VM_MAX_ADDRESS - size - __vm_page_size;
 #else
       stack = VM_MIN_ADDRESS;
 #endif
     }
+  else
+    anywhere = 1;
 
-  size = stack_size ? *stack_size ? : STACK_SIZE : STACK_SIZE;
-
-  if (error = __vm_allocate (task, &stack, size + __vm_page_size, 0))
+  if (error = __vm_allocate (task, &stack, size + __vm_page_size, anywhere))
     return error;
 
   if (stack_base)
