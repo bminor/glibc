@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
+
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +17,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <ctype.h>
 #include <limits.h>
 #include <stddef.h>
@@ -39,16 +39,18 @@ unsigned long int
 #else
 long int
 #endif
-DEFUN(strtol, (nptr, endptr, base),
-      CONST char *nptr AND char **endptr AND int base)
+strtol (nptr, endptr, base)
+     const char *nptr;
+     char **endptr;
+     int base;
 {
   int negative;
   register unsigned long int cutoff;
   register unsigned int cutlim;
   register unsigned long int i;
-  register CONST char *s;
+  register const char *s;
   register unsigned char c;
-  CONST char *save;
+  const char *save;
   int overflow;
 
   if (base < 0 || base == 1 || base > 36)
@@ -57,7 +59,7 @@ DEFUN(strtol, (nptr, endptr, base),
   s = nptr;
 
   /* Skip white space.  */
-  while (isspace(*s))
+  while (isspace (*s))
     ++s;
   if (*s == '\0')
     goto noconv;
@@ -76,14 +78,14 @@ DEFUN(strtol, (nptr, endptr, base),
   else
     negative = 0;
 
-  if (base == 16 && s[0] == '0' && toupper(s[1]) == 'X')
+  if (base == 16 && s[0] == '0' && toupper (s[1]) == 'X')
     s += 2;
 
   /* If BASE is zero, figure it out ourselves.  */
   if (base == 0)
     if (*s == '0')
       {
-	if (toupper(s[1]) == 'X')
+	if (toupper (s[1]) == 'X')
 	  {
 	    s += 2;
 	    base = 16;
@@ -104,10 +106,10 @@ DEFUN(strtol, (nptr, endptr, base),
   i = 0;
   for (c = *s; c != '\0'; c = *++s)
     {
-      if (isdigit(c))
+      if (isdigit (c))
 	c -= '0';
-      else if (isalpha(c))
-	c = toupper(c) - 'A' + 10;
+      else if (isalpha (c))
+	c = toupper (c) - 'A' + 10;
       else
 	break;
       if (c >= base)
@@ -135,7 +137,7 @@ DEFUN(strtol, (nptr, endptr, base),
   /* Check for a value that is within the range of
      `unsigned long int', but outside the range of `long int'.  */
   if (i > (negative ?
-	   - (unsigned long int) LONG_MIN : (unsigned long int) LONG_MAX))
+	   -(unsigned long int) LONG_MIN : (unsigned long int) LONG_MAX))
     overflow = 1;
 #endif
 
@@ -150,9 +152,9 @@ DEFUN(strtol, (nptr, endptr, base),
     }
 
   /* Return the result of the appropriate sign.  */
-  return (negative ? - i : i);
+  return (negative ? -i : i);
 
- noconv:
+noconv:
   /* There was no number to convert.  */
   if (endptr != NULL)
     *endptr = (char *) nptr;
