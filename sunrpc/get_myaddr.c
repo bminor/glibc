@@ -42,6 +42,7 @@ static char sccsid[] = "@(#)get_myaddress.c 1.4 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/pmap_prot.h>
 #include <sys/socket.h>
 #include <stdio.h>
+#undef	 _POSIX_SOURCE		/* Ultrix <sys/param.h> needs --roland@gnu */
 #include <sys/param.h>		/* Ultrix needs before net/if --roland@gnu */
 #include <net/if.h>
 #include <sys/ioctl.h>

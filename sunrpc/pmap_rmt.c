@@ -46,6 +46,7 @@ static char sccsid[] = "@(#)pmap_rmt.c 1.21 87/08/27 Copyr 1984 Sun Micro";
 #include <sys/socket.h>
 #include <stdio.h>
 #include <errno.h>
+#undef	 _POSIX_SOURCE		/* Ultrix <sys/param.h> needs --roland@gnu */
 #include <sys/param.h>		/* Ultrix needs before net/if --roland@gnu */
 #include <net/if.h>
 #include <sys/ioctl.h>
