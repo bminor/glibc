@@ -1,5 +1,19 @@
 2000-02-02  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* sysdeps/mach/hurd/readlink.c (__readlink): Don't clobber original
+	LEN value with io_read result; save it and compare them just in case
+	the server bogusly returns more than we asked for.
+	* sysdeps/mach/hurd/recv.c (recv): Likewise for socket_recv.
+	* sysdeps/mach/hurd/recvfrom.c (recvfrom): Likewise.
+	* hurd/fd-read.c (_hurd_fd_read): Likewise for io_read.
+	Initialize NREAD before the RPC.  I think this must only have failed
+	to bomb before because all the servers always return ool data(?).
+
+	* sysdeps/mach/hurd/getsockopt.c (getsockopt): Fix inverted sense of
+	test: *OPTLEN gets BUFLEN iff BUFLEN is lesser.  Move that test out of
+	BUF != OPTVAL condition, since it is a separate issue.  Short-circuit
+	the memcpy and dealloc for BUFLEN==0.
+
 	* hurd/hurdlookup.c (CHECK_ELOOP): New macro does SYMLOOP_MAX check;
 	deallocate *RESULT before returning ELOOP.
 	Don't conditionalize on SYMLOOP_MAX, we always better have one.
