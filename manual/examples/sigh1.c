@@ -3,12 +3,9 @@
 #include <stdlib.h>
 
 /* This flag controls termination of the main loop. */
-
 volatile sig_atomic_t keep_going = 1;
 
-
 /* The signal handler just clears the flag and re-enables itself. */
-
 void 
 catch_alarm (int sig)
 {
@@ -19,20 +16,21 @@ catch_alarm (int sig)
 void 
 do_stuff (void)
 {
-  printf ("Doing stuff while waiting for alarm....\n");
+  puts ("Doing stuff while waiting for alarm....");
 }
 
-main ()
+int
+main (void)
 {
-
   /* Establish a handler for SIGALRM signals. */
   signal (SIGALRM, catch_alarm);
 
-  /* Set an alarm to go off in a little while.  */
+  /* Set an alarm to go off in a little while. */
   alarm (2);
 
   /* Check the flag once in a while to see when to quit. */
   while (keep_going)
     do_stuff ();
-  exit (EXIT_SUCCESS);
+
+  return EXIT_SUCCESS;
 }
