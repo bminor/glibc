@@ -10,9 +10,10 @@
 @set xref-automatic-section-title
 @smallbook
 
-@set EDITION 0.05
-@set VERSION 1.07 Beta
-@set UPDATED 30 August 1993
+@c  I've already told people the printed edition will be 0.06
+@set EDITION 0.06 DRAFT
+@set VERSION 1.09 Beta
+@set UPDATED 14 October 1994
 
 @ifinfo
 This file documents the GNU C library.
@@ -20,7 +21,7 @@ This file documents the GNU C library.
 This is Edition @value{EDITION}, last updated @value{UPDATED},
 of @cite{The GNU C Library Reference Manual}, for Version @value{VERSION}.
 
-Copyright (C) 1993 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -57,7 +58,7 @@ Foundation.
 @sp 2
 @center Sandra Loosemore
 @center with
-@center Roland McGrath, Andrew Oram, and Richard M. Stallman
+@center Richard M. Stallman, Roland McGrath, and Andrew Oram
 @sp 3
 @center Edition @value{EDITION}
 @sp 1
@@ -66,7 +67,7 @@ Foundation.
 @center for version @value{VERSION}
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1993 Free Software Foundation, Inc.
+Copyright @copyright{} 1993, 1994 Free Software Foundation, Inc.
 @sp 2
 Published by the Free Software Foundation @*
 675 Massachusetts Avenue, @*
@@ -962,7 +963,7 @@ Porting the GNU C Library
 @include setjmp.texi
 @include signal.texi
 @include startup.texi
-@include child.texi
+@include process.texi
 @include job.texi
 @include users.texi
 @include sysinfo.texi
