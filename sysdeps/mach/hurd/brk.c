@@ -38,12 +38,20 @@ mutex_t _hurd_brk_lock;
 int
 DEFUN(__brk, (inaddr), PTR inaddr)
 {
+  int ret;
+  __mutex_lock (&_hurd_brk_lock);
+  ret = _hurd_set_brk ((vm_address_t) inaddr);
+  __mutex_unlock (&_hurd_brk_lock);
+  return ret;
+}
+
+int
+_hurd_set_brk (vm_address_t addr)
+{
   error_t err;
   vm_address_t addr = inaddr;
   vm_address_t pagend = round_page (addr);
   vm_address_t pagebrk;
-
-  __mutex_lock (&_hurd_brk_lock);
 
   pagebrk = round_page (_hurd_brk);
   if (pagend <= pagebrk)
@@ -53,13 +61,11 @@ DEFUN(__brk, (inaddr), PTR inaddr)
 	__vm_protect (__mach_task_self (), pagend, pagebrk - pagend,
 		      0, VM_PROT_NONE);
       _hurd_brk = addr;
-      __mutex_unlock (&_hurd_brk_lock);
       return 0;
     }
 
   if (pagend > _hurd_data_end)
     {
-      __mutex_unlock (&_hurd_brk_lock);
       errno = ENOMEM;
       return -1;
     }
@@ -68,12 +74,10 @@ DEFUN(__brk, (inaddr), PTR inaddr)
   if (err = __vm_protect (__mach_task_self (), pagebrk, pagend - pagebrk,
 			  0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE))
     {
-      __mutex_unlock (&_hurd_brk_lock);
       return __hurd_fail (err);
     }
 
   _hurd_brk = addr;
-  __mutex_unlock (&_hurd_brk_lock);
   return 0;
 }
 
