@@ -78,7 +78,7 @@ This is the reference manual for version 0.00 of the GNU C Library.
 					 facilities.
 * Signal Handling::             All about signals; how to send them,
 					 block them, and handle them.
-* Processes Startup::		Writing the beginning and end of your program.
+* Process Startup::		Writing the beginning and end of your program.
 * Child Processes::             How to create processes and run other programs.
 * Job Control::                 All about process groups and sessions.
 * Users and Groups::            How users are identified and classified.
@@ -86,13 +86,13 @@ This is the reference manual for version 0.00 of the GNU C Library.
 * System Information::          Getting information about the
                                          hardware and software configuration
                                          of the machine a program runs on.
-* System Configuration Limits::  Parameters describing operating
+* System Configuration::	Parameters describing operating
 					 system limits.
 
 Appendices
 * Language Features::           C language features provided by the library. 
 
-* Summary of Library Facilities::  A summary showing the syntax, header
+* Library Summary::		A summary showing the syntax, header
                                          file, and derivation of each library
                                          feature.
 * Maintenance::                 How to install and maintain the
@@ -444,59 +444,80 @@ Pipes and FIFOs
 
 Sockets
 
-* Socket Creation and Naming::  Functions for creating and
-                                         initializing sockets.
-* Domains and Protocols::       How to specify the communications
-					 protocol for a socket.
-* Local Domain::            Details about the local (Unix) domain.
-* Internet Domain::         Details about the Internet domain.
-* Types of Sockets::            Different socket types have different
-					 semantics for data transmission.
-* Byte Stream Sockets::  Operations on sockets with connection
-					 state.
-* Datagram Socket Operations::  Operations on datagram sockets.
-* Socket Options::              Miscellaneous low-level socket options.
+* Socket Concepts::		Basic concepts you need to know about.
+* Communication Styles::	Stream communication, datagrams, and others.
+* Socket Addresses::		How socket names (``addresses'') work.
+* File Namespace::		Details about the file namespace.
+* Internet Namespace::		Details about the Internet namespace.
+* Open/Close Sockets::		Creating sockets and destroying them.
+* Connections::			Operations on sockets with connection state.
+* Datagrams::			Operations on datagram sockets.
+* Socket Options::		Miscellaneous low-level socket options.
+* Networks Database::		Accessing the database of network names.
 
-Socket Creation and Naming
+Socket Addresses
 
-* Creating a Socket::           How to open a socket.
-* Closing a Socket::            How to close a socket.
-* Socket Naming::               You must associate a name with a socket
-					 before it can receive data.
-* Socket Pairs::                These are created like pipes.
+* Address Formats::		About @code{struct sockaddr}.
+* Setting Address::		Binding an address to a socket.
+* Reading Address::		Reading the address of a socket.
 
 Internet Domain
 
-* Protocols Database::          Selecting a communications protocol.
-* Internet Socket Naming::      How socket names are specified in the Internet
-                                 domain.
-* Internet Host Addresses::     Hosts are assigned addresses that are numbers.
-* Hosts Database::              A host may also have a symbolic host name.
-* Services Database::           Ports may also have symbolic names.
-* Networks Database::           There is also a database for network names.
-* Byte Order Conversion::       Different hosts may use different byte
-                                 ordering conventions; you need to canonicalize
-                                 host address and port numbers.
-* Internet Socket Example::     Putting it all together.
+* Internet Address Format::     How socket addresses are specified in the
+                                   Internet namespace.
+* Host Addresses::	        All about host addresses of internet host.
+* Protocols Database::		Referring to protocols by name.
+* Services Database::           Ports may have symbolic names.
+* Byte Order::		        Different hosts may use different byte
+                                   ordering conventions; you need to
+                                   canonicalize host address and port number. 
+* Inet Example::	        Putting it all together.
 
-Byte Stream Sockets
+Host Addresses
 
-* Establishing a Connection::   The socket must be connected before it
-                                 can transmit data.
-* Transferring Data::           How to send and receive data.
-* Byte Stream Socket Example::  An example program.
-* Out-of-Band Data::            This is an advanced feature.
+* Abstract Host Addresses::	What a host number consists of.
+* Data type: Host Address Data Type.	Data type for a host number.
+* Functions: Host Address Functions.	Functions to operate on them.
+* Names: Host Names.		Translating host names to host numbers.
 
-Datagram Socket Operations
+Open/Close Sockets
 
-* Transmitting Datagrams::      Functions for sending and receiving messages
-                                 on a datagram socket.
-* Datagram Socket Example::     An example program.
+* Creating a Socket::           How to open a socket.
+* Closing a Socket::            How to close a socket.
+* Socket Pairs::                These are created like pipes.
+
+Connections
+
+* Connecting::			What the client program must do.
+* Listening::			How a server program waits for requests.
+* Accepting Connections::	What the server does when it gets a request.
+* Who is Connected::		Getting the address of the
+				   other side of a connection.
+* Transferring Data::		How to send and receive data.
+* Byte Stream Example::		An example program: a client for communicating
+				   over a byte stream socket
+				   in the Internet namespace.
+* Server Example::		A corresponding server program.
+* Out-of-Band Data::		This is an advanced feature.
+
+Transferring Data
+
+* Sending Data::		Sending data with @code{write}.
+* Receiving Data::		Reading data with @code{read}.
+* Socket Data Options::		Using @code{send} and @code{recv}.
+
+Datagrams
+
+* Sending Datagrams::		Sending packets on a datagram socket.
+* Receiving Datagrams::		Receiving packets on a datagram socket.
+* Datagram Example::		An example program: packets sent over a
+				   datagram stream in the file namespace.
+* Example Receiver::		Another program, that receives those packets.
 
 Socket Options
 
 * Socket Option Functions::     The basic functions for setting and getting
-                                 socket options.
+                                   socket options.
 * Socket-Level Options::        Details of the options at the socket level.
 
 Low-Level Terminal Interface
@@ -584,16 +605,9 @@ Calendar Time
 * Broken-down Time::            Facilities for manipulating local time.
 * Formatting Date and Time::    Converting times to strings.
 * TZ Variable::                 How users specify the time zone.
-* TZ Functions::         Functions to examine or specify the time zone.
+* Time Zone Functions::         Functions to examine or specify the time zone.
 * Time Functions Example::      An example program showing use of some of
 				 the time functions.
-
-Non-Local Exits
-
-* Intro to Non-Local Exits::  An overview of how and when to use
-					 these facilities.
-* Functions for Non-Local Exits::  Details of the interface.
-* Non-Local Exits and Signals::  Portability issues.
 
 Signal Handling
 
@@ -681,53 +695,54 @@ BSD Function to Establish a Handler
 * Blocking in BSD::             BSD Functions for Blocking Signals 
 * Signal Stack::                Using a Separate Signal Stack
 
-Processes
+Process Startup and Termination
 
-* Program Arguments::           Parsing the command-line arguments to
-				 a program.
+* Program Arguments::           Parsing your program's command-line arguments.
 * Environment Variables::       How to access parameters inherited from
 				 a parent process.
 * Program Termination::         How to cause a process to terminate and
 				 return status information to its parent.
-* Creating New Processes::      Running other programs.
 
 Program Arguments
 
-* Argument Syntax Conventions::  By convention, program
-                                                 options are specified by a
-                                                 leading hyphen.
-* Parsing Program Arguments::   The @code{getopt} function.
-* Example Using getopt::  An example of @code{getopt}.
+* Argument Syntax::		By convention, options start with a hyphen.
+* Parsing Options::		The @code{getopt} function.
+* Example of Getopt::		An example of parsing options with @code{getopt}.
+* Long Options::		GNU utilities should accept long-named options.
+				   Here is how to do that.
+* Long Option Example::		An example of using @code{getopt_long}.
 
 Environment Variables
 
-* Environment Access::          How to get and set the values of
-					 environment variables.
-* Standard Environment Variables::  These environment variables have
-					 standard interpretations.
+* Environment Access::		How to get and set the values of
+				   environment variables.
+* Standard Environment::	These environment variables have
+				   standard interpretations.
 
 Program Termination
 
-* Normal Program Termination::  
-* Exit Status::                 Exit Status
-* Cleanups on Exit::            Cleanups on Exit
-* Aborting a Program::          
-* Termination Internals::       Termination Internals
+* Normal Termination::          If a program calls @code{exit}, a
+                                 process terminates normally.
+* Exit Status::                 The @code{exit status} provides information 
+                                 about why the process terminated. 
+* Cleanups on Exit::            A process can run its own cleanup
+                                 functions upon normal termination. 
+* Aborting a Program::          The @code{abort} function causes
+                                 abnormal program termination. 
+* Termination Internals::       What happens when a process terminates.
 
-Creating New Processes
+
+Child Processes
 
 * Running a Command::           The easy way to run another program.
 * Process Creation Concepts::   An overview of the hard way to do it.
 * Process Identification::      How to get the process ID of a process.
 * Creating a Process::          How to fork a child process.
-* Executing a File::            How to get a process to execute another
-				         program.
-* Process Completion::          How to tell when a child process has
-				         completed.
+* Executing a File::            How to make a child execute another program.
+* Process Completion::          How to tell when a child process has completed.
 * Process Completion Status::   How to interpret the status value 
-                                         returned from a child process.
-* BSD wait Functions::  More functions, for backward
-                                         compatibility.
+                                   returned from a child process.
+* BSD wait Functions::		More functions, for backward compatibility.
 * Process Creation Example::    A complete example program.
 
 Job Control
@@ -796,23 +811,32 @@ Group Database
 
 System Information
 
-* Host Identification::         Determining the name of the
-                                                 machine.
-* Hardware/Software Type ID::  Determining the hardware type
-                                                 of the machine and what
-                                                 operating system it is
-                                                 running.
+* Host Identification::         Determining the name of the machine.
+* Hardware/Software Type ID::   Determining the hardware type and
+				   operating system type.
 
 System Configuration Limits
 
-* File System Parameters::      Constants and functions that describe
-				 various file system limits.
-
-* System Parameters::           Constants and functions that describe
-				 various process-related limits.
-
-* String-Valued Parameters::    Constants and functions that describe
-				 string-valued limits.
+* General Limits::		Constants and functions that describe
+				   various process-related limits that have
+				   one uniform value for any given machine.
+* System Options::		Optional POSIX features.
+* Version Supported::		Version numbers of POSIX.1 and POSIX.2.
+* Sysconf::			Getting specific configuration values
+				   of general limits and system options.
+* Minimums::			Minimum values for general limits.
+   
+* Limits for Files::		Size limitations that pertain to individual files.
+				   These can vary between file systems
+				   or even from file to file.
+* Options for Files::		Optional features that some files may support.
+* File Minimums::		Minimum values for file limits.
+* Pathconf::			Getting the limit values for a particular file.
+   
+* Utility Limits::		Capacity limits of some POSIX.2 utility programs.
+* Utility Minimums::		Minimum allowable values of those limits.
+   
+* String Parameters::		Getting the default search path.
 
 Library Facilities that are Part of the C Language
 
@@ -828,29 +852,31 @@ Variadic Functions
 * Why Variadic::                Reasons for making functions take variable arguments.
 * How Variadic::                How to define and call variadic functions.
 * Argument Macros::             Detailed specification of the macros
-			   for accessing variable arguments.
+				   for accessing variable arguments.
 * Variadic Example::            A complete example.
 
 How Variadic Functions are Defined and Used
 
 * Variadic Prototypes::         How to make a prototype for a function
 				   with variable arguments.
-* Receiving Argument Values::   Steps you must follow to access the
+* Receiving Arguments::		Steps you must follow to access the
 				   optional argument values.
 * How Many Arguments::          How to decide whether there are more arguments.
-* Calling Variadic Functions::  Things you need to know about calling
+* Calling Variadics::		Things you need to know about calling
 				   variable arguments functions.
 
 Data Type Measurements
 
-* Integer Type Macros::         Parameters that measure the integer types.
+* Width of Type::		How many bits does an integer type hold?
+* Range of Type::		What are the largest and smallest values
+				  that an integer type can hold?
 * Floating Type Macros::        Parameters that measure the floating point types.
 * Structure Measurement::       Getting measurements on structure types.
 
 Floating Type Macros
 
 * Floating Point Concepts::     Definitions of terminology.
-* Floating-Point Parameters::   Floating-Point Parameters
+* Floating Point Parameters::   Dimensions, limits of floating point types.
 * IEEE Floating Point::         How one common representation is described.
 
 Library Maintenance
@@ -862,9 +888,9 @@ Library Maintenance
                                          you may have with the GNU C library.
 * Porting::                     How to port the GNU C library to
                                          a new machine or operating system.
-* Traditional C Compatibility::  Using the GNU C library with non-ANSI
-                                         C compilers.
-* GNU C Library Contributors::  Contributors to the GNU C Library.
+@c * Traditional C Compatibility::  Using the GNU C library with non-ANSI
+@c                                          C compilers.
+* Contributors::		Contributors to the GNU C Library.
 
 Porting the GNU C Library
 
