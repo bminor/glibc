@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -135,18 +135,29 @@ DEFUN_VOID(__tzset)
       return;
     }
 
+  /* Clear out old state and reset to unnamed GMT.  */
+  memset (tz_rules, 0, sizeof tz_rules);
+  tz_rules[0].name = tz_rules[1].name = (char *) "";
+
   /* Get the standard timezone name.  */
-  tz_rules[0].name = (char *) malloc(strlen(tz) + 1);
+  tz_rules[0].name = (char *) malloc (strlen (tz) + 1);
   if (tz_rules[0].name == NULL)
+    /* Don't set __tzset_run so we will try again.  */
     return;
 
   if (sscanf(tz, "%[^0-9,+-]", tz_rules[0].name) != 1 ||
       (l = strlen(tz_rules[0].name)) < 3)
-    return;
+    {
+      free (tz_rules[0].name);
+      tz_rules[0].name = (char *) "";
+      return;
+    }
 
-  tz_rules[0].name = (char *) realloc((PTR) tz_rules[0].name, l + 1);
-  if (tz_rules[0].name == NULL)
-    return;
+  {
+    char *n = realloc ((PTR) tz_rules[0].name, l + 1);
+    if (n != NULL)
+      tz_rules[0].name = n;
+  }
 
   tz += l;
 
@@ -181,19 +192,23 @@ DEFUN_VOID(__tzset)
     }
 
   /* Get the DST timezone name (if any).  */
-  if (*tz == '\0')
-    tz_rules[1].name = (char *) "";
-  else
+  if (*tz != '\0')
     {
-      tz_rules[1].name = (char *) malloc(strlen(tz) + 1);
-      if (tz_rules[1].name == NULL)
-	return;
-      if (sscanf(tz, "%[^0-9,+-]", tz_rules[1].name) != 1 ||
-	  (l = strlen(tz_rules[1].name)) < 3)
-	return;
-      tz_rules[1].name = (char *) realloc((PTR) tz_rules[1].name, l + 1);
-      if (tz_rules[1].name == NULL)
-	return;
+      char *n = malloc (strlen(tz) + 1);
+      if (n != NULL)
+	{
+	  tz_rules[1].name = n;
+	  if (sscanf(tz, "%[^0-9,+-]", tz_rules[1].name) != 1 ||
+	      (l = strlen(tz_rules[1].name)) < 3)
+	    {
+	      free (n);
+	      tz_rules[1].name = (char *) "";
+	      goto done_names;	/* Punt on name, set up the offsets.  */
+	    }
+	  n = realloc ((PTR) tz_rules[1].name, l + 1);
+	  if (n != NULL)
+	    tz_rules[1].name = n;
+	}
     }
 
   tz += l;
@@ -222,18 +237,13 @@ DEFUN_VOID(__tzset)
     }
   for (l = 0; l < 3; ++l)
     {
-      while (isdigit(*tz))
+      while (isdigit (*tz))
 	++tz;
       if (l < 2 && *tz == ':')
 	++tz;
     }
 
-  /* If no standard or DST offset was given, default to GMT
-     for standard and one hour later than standard for DST.  */
-  if (*tz_rules[0].name == '\0')
-    tz_rules[0].offset = 0L;
-  if (*tz_rules[1].name == '\0')
-    tz_rules[1].offset = tz_rules[0].offset + (60 * 60);
+ done_names:
 
   if (*tz == '\0' || (tz[0] == ',' && tz[1] == '\0'))
     {
@@ -252,7 +262,7 @@ DEFUN_VOID(__tzset)
     {
       register tz_rule *tzr = &tz_rules[whichrule];
       
-      if (*tz != '\0' && *tz == ',')
+      if (*tz == ',')
 	{
 	  ++tz;
 	  if (*tz == '\0')
@@ -260,13 +270,13 @@ DEFUN_VOID(__tzset)
 	}
       
       /* Get the date of the change.  */
-      if (*tz == 'J' || isdigit(*tz))
+      if (*tz == 'J' || isdigit (*tz))
 	{
 	  char *end;
 	  tzr->type = *tz == 'J' ? J1 : J0;
-	  if (tzr->type == J1 && !isdigit(*++tz))
+	  if (tzr->type == J1 && !isdigit (*++tz))
 	    return;
-	  tzr->d = (unsigned short int) strtoul(tz, &end, 10);
+	  tzr->d = (unsigned short int) strtoul (tz, &end, 10);
 	  if (end == tz || tzr->d > 365)
 	    return;
 	  else if (tzr->type == J1 && tzr->d == 0)
@@ -312,10 +322,10 @@ DEFUN_VOID(__tzset)
 	  ++tz;
 	  if (*tz == '\0')
 	    return;
-	  switch (sscanf(tz, "%hu:%hu:%hu", &hh, &mm, &ss))
+	  switch (sscanf (tz, "%hu:%hu:%hu", &hh, &mm, &ss))
 	    {
 	    default:
-	      return;
+	      hh = 2;		/* Default to 2:00 AM.  */
 	    case 1:
 	      mm = 0;
 	    case 2:
