@@ -40,7 +40,7 @@ Cambridge, MA 02139, USA.  */
 /* This is defined as a separate macro so that other sysdep.h files
    can include this one and then redefine DO_CALL.  */
 
-#define DO_CALL(syscall_name, args)
+#define DO_CALL(syscall_name, args)					      \
   lea SYS_ify (syscall_name), %eax;					      \
   /* lcall $7, $0; */							      \
   /* Above loses; GAS bug.  */						      \
