@@ -161,8 +161,8 @@ DEFUN(__tcgetattr, (fd, termios_p),
   termios_p->c_cc[VSTART] = '\021'; /* XON (^Q).  */
   termios_p->c_cc[VSTOP] = '\023'; /* XOFF (^S).  */
   termios_p->c_cc[VSUSP] = '\0'; /* System V release 3 lacks job control.  */
-  termios_p->c_cc[VMIN] = -1;
-  termios_p->c_cc[VTIME] = -1;
+  termios_p->c_cc[VMIN] = buf.c_cc[_SYSV_VMIN];
+  termios_p->c_cc[VTIME] = buf.c_cc[_SYSV_VTIME];
 
   return 0;
 }
