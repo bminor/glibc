@@ -1,1 +1,2 @@
-errnos.awk errlist.awk
+errnos.awk errlist.awk err_hurd.sub
+
