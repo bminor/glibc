@@ -42,7 +42,7 @@ all:
 
 
 # This rule needs to come before the implicit rules in Machrules.
-__%.c: intr_rpc.awk __%_rpc.c
+__%.c: intr_rpc.awk %_rpc.c
 	gawk -v call=__$* -v rpc=__$*_rpc -f $^ > $@-new
 	mv $@-new $@
 # __%_rpc.c is made with mig by Machrules.
@@ -51,9 +51,7 @@ __%.c: intr_rpc.awk __%_rpc.c
 
 include ../mach/Machrules
 
-ifneq (,)
 include hurdintr
-endif
 hurdintr: hurdintr.awk $(user-interfaces:%=%.defs)
 	awk -f $^ varname=intr-calls > $@-new
 	mv $@-new $@
