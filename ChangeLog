@@ -1,3 +1,11 @@
+1998-03-03 23:08  H.J. Lu  <hjl@gnu.org>
+
+	* misc/efgcvt_r.c: Really update from 2.1.
+
+1998-02-07 15:06  H.J. Lu  <hjl@gnu.org>
+
+	* libio/strops.c (_IO_str_seekoff): Handle MODE == 0.
+
 1998-03-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.7.
