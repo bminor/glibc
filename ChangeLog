@@ -1,5 +1,10 @@
 1997-03-19 01:40  Ulrich Drepper  <drepper@cygnus.com>
 
+	* inet/Makefile (headers): Remove netinet/ip.h.
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=inet]
+	(sysdep_headers): Add netinet/ip.h.
+
 	* sysdeps/i386/setjmp.S (__setjmp): Fix fatal bug where 0 argument
 	is placed in wrong place on the stack.
 	Reported by Marc Lehmann <mlehmann@hildesheim.sgh-net.de>.
@@ -7,7 +12,7 @@
 1997-03-18 23:18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/offtime.c (__offtime): Change type of `yg' to long int.
-	Reported by  a sun <asun@zoology.washington.edu>.
+	Reported by a sun <asun@zoology.washington.edu>.
 
 1997-03-18 23:09  a sun  <asun@zoology.washington.edu>
 
