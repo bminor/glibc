@@ -46,7 +46,8 @@ msgport_server (mach_msg_header_t *inp,
     if ((*d->demux) (inp, outp))
       return 1;
 
-  return _S_msg_server (inp, outp);
+  return (_S_exc_server (inp, outp) ||
+	  _S_msg_server (inp, outp));
 }
 
 /* This is the code that the signal thread runs.  */
