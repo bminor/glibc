@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -48,6 +48,13 @@ extern int EXFUN(main, (int argc, char **argv, char **envp));
 static void start1();
 
 #ifndef	HAVE__start
+
+#ifdef __GNUC__
+/* Declare _start with an explicit assembly symbol name of `start'
+   (note no leading underscore).  This is the name vendor crt0.o's
+   tend to use, and thus the name most linkers expect.  */
+void _start (void) asm ("start");
+#endif
 
 /* N.B.: It is important that this be the first function.
    This file is the first thing in the text section.  */
