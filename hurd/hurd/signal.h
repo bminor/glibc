@@ -117,6 +117,19 @@ extern void _hurd_exception2signal (int exception, int code, int subcode,
 extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
 					int signo, int sigcode);
 
+/* Set up STATE to handle signal SIGNO by running HANDLER.  FLAGS is the
+   `sa_flags' member from `struct sigaction'.  If the SA_ONSTACK bit is
+   set, *ALTSTACK describes the alternate signal stack to use.  The handler
+   is passed SIGNO, SIGCODE, and the returned `struct sigcontext' (which
+   resides on the stack the handler will use, and which describes the state
+   of the thread encoded in STATE before running the handler).  */
+
+extern struct sigcontext *_hurd_setup_sighandler (int flags,
+						  __sighandler_t handler,
+						  struct sigaltstack *altstack,
+						  int signo, int sigcode,
+						  void *state);
+
 /* Function run by the signal thread to receive from the signal port.  */
 
 extern void _hurd_msgport_receive (void);
