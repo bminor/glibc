@@ -513,8 +513,8 @@ extern int setgid __P ((__gid_t __gid));
 #ifdef	__USE_BSD
 /* Set the real group ID of the calling process to RGID,
    and the effective group ID of the calling process to EGID.  */
-extern int __setregid __P ((int __rgid, int __egid));
-extern int setregid __P ((int __rgid, int __egid));
+extern int __setregid __P ((__gid_t __rgid, __gid_t __egid));
+extern int setregid __P ((__gid_t __rgid, __gid_t __egid));
 
 #ifdef	__OPTIMIZE__
 #define	setregid(rgid, egid)	__setregid((rgid), (egid))
