@@ -27,7 +27,6 @@ Cambridge, MA 02139, USA.  */
 /* Defined in fopen.c.  */
 extern int EXFUN(__getmode, (CONST char *mode, __io_mode *mptr));
 
-
 /* Open a new stream that will read and/or write from the buffer in
    S, which is of LEN bytes.  If the mode indicates appending, the
    buffer pointer is set to point to the first '\0' in the buffer.
@@ -93,9 +92,14 @@ DEFUN(fmemopen, (s, len, mode),
   stream->__cookie = &stream->__fileno;
 
   if (stream->__mode.__append)
-    while (stream->__bufp < stream->__get_limit &&
-	   *stream->__bufp != '\0')
-      ++stream->__bufp;
+    {
+      char *p = memchr (stream->__bufp, '\0',
+			stream->__get_limit - stream->__bufp);
+      if (p == NULL)
+	stream->__bufp = stream->__get_limit;
+      else
+	stream->bufp = p;
+    }
   else if (stream->__mode.__truncate)
     memset ((PTR) stream->__buffer, 0, len);
 
