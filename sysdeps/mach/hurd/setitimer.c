@@ -116,7 +116,8 @@ static sighandler_t preempt_sigalrm (thread_t thread, int signo, int sigcode);
    Reload the itimer, or disable the itimer.  */
 
 static int
-setitimer_locked (const struct itimerval *new, struct itimerval *old)
+setitimer_locked (const struct itimerval *new, struct itimerval *old,
+		  void *crit)
 {
   struct itimerval newval = *new;
   struct timeval now, remaining, elapsed;
@@ -181,6 +182,7 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old)
       if (__gettimeofday (&now, NULL) < 0)
 	{
 	  __spin_unlock (&_hurd_itimer_lock);
+	  _hurd_critical_section_unlock (crit);
 	  return -1;
 	}
       elapsed = now;
@@ -248,6 +250,7 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old)
     }
 
   __spin_unlock (&_hurd_itimer_lock);
+  _hurd_critical_section_unlock (crit);
 
   if (old != NULL)
     {
@@ -258,6 +261,7 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old)
 
  out:
   __spin_unlock (&_hurd_itimer_lock);
+  _hurd_critical_section_unlock (crit);
   return __hurd_fail (err);
 }
 
@@ -269,6 +273,8 @@ DEFUN(__setitimer, (which, new, old),
       enum __itimer_which which AND
       struct itimerval *new AND struct itimerval *old)
 {
+  void *crit;
+
   switch (which)
     {
     default:
@@ -282,8 +288,9 @@ DEFUN(__setitimer, (which, new, old),
       break;
     }
 
+  crit = _hurd_critical_section_lock ();
   __spin_lock (&_hurd_itimer_lock);
-  return setitimer_locked (new, old);
+  return setitimer_locked (new, old, crit);
 }
 
 static sighandler_t
@@ -299,7 +306,7 @@ preempt_sigalrm (thread_t thread, int signo, int sigcode)
   __spin_lock (&_hurd_itimer_lock);
   it = _hurd_itimerval;
   it.it_value = it.it_interval;
-  setitimer_locked (&it, NULL);
+  setitimer_locked (&it, NULL, NULL);
 
   /* Continue with normal delivery of SIGALRM.  */
   return SIG_DFL;
