@@ -17,14 +17,15 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <syscall.h>
+#define	HAVE_SYSCALLS
 
-/* Not that using a `PASTE' macro loses.  */
+/* Note that using a `PASTE' macro loses.  */
 #ifdef	__STDC__
-#define	SYSCALL__(name,args)	PSEUDO (__##name, name, args)
+#define	SYSCALL__(name, args)	PSEUDO (__##name, name, args)
 #else
-#define	SYSCALL__(name,args)	PSEUDO (__/**/name, name, args)
+#define	SYSCALL__(name, args)	PSEUDO (__/**/name, name, args)
 #endif
-#define	SYSCALL(name,args)	PSEUDO (name, name, args)
+#define	SYSCALL(name, args)	PSEUDO (name, name, args)
 
 /* Machine-dependent sysdep.h files are expected to define the macro
    PSEUDO (function_name, syscall_name) to emit assembly code to define the
@@ -33,4 +34,19 @@ Cambridge, MA 02139, USA.  */
    an instruction such that "MOVE(r1, r0)" works.  ret should be defined
    as the return instruction.  */
 
-#define	HAVE_SYSCALLS
+/* Define a macro we can use to construct the asm name for a C symbol.  */
+#ifdef	NO_UNDERSCORES
+#define	C_SYMBOL_NAME(name)	name
+#else
+#ifdef	__STDC__
+#define	C_SYMBOL_NAME(name)	_##name
+#else
+#define	C_SYMBOL_NAME(name)	_/**/name
+#endif
+#endif
+
+#ifdef __STDC__
+#define SYS_ify(syscall_name) SYS_##syscall_name
+#else
+#define SYS_ify(syscall_name) SYS_/**/syscall_name
+#endif
