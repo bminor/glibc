@@ -142,7 +142,7 @@ Interface}, commonly referred to as POSIX.1.  The primary extensions to
 the ANSI C facilities specified by this standard include file system
 interface primitives (@pxref{File System Interface}), device-specific
 terminal control functions (@pxref{Low-Level Terminal Interface}), and
-process control functions (@pxref{Child Processes}).
+process control functions (@pxref{Processes}).
 
 Some facilities from @cite{IEEE Std 1003.2-1992, the POSIX Shell and
 Utilities standard} (POSIX.2) are also implemented in the GNU library.
@@ -756,7 +756,7 @@ critical sections of your program.
 command-line arguments and environment variables.
 
 @item 
-@ref{Child Processes}, contains information about how to start new processes
+@ref{Processes}, contains information about how to start new processes
 and run programs.
 
 @item
