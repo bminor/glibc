@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -46,6 +46,14 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
       sprintf (buf, "/bin/cat %s", argv[2]);
       in = popen (buf, "r");
     }
+
+  {
+    char name[50];
+    fprintf (out,
+	     "sscanf (\"thompson\", \"%%s\", name) == %d, name == \"%s\"\n",
+	     sscanf ("thompson", "%s", name),
+	     name);
+  }
 
   fputs ("Testing scanf (vfscanf)\n", out);
 

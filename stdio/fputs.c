@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,10 +26,10 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(fputs, (s, stream), CONST char *s AND FILE *stream)
 {
-  register CONST size_t len = strlen(s);
+  register CONST size_t len = strlen (s);
   if (len == 1)
-    return putc(*s, stream) == EOF ? EOF : 0;
-  if (fwrite((PTR) s, len, 1, stream) != 1)
+    return putc (*s, stream) == EOF ? EOF : 0;
+  if (fwrite ((PTR) s, 1, len, stream) != len)
     return EOF;
   return 0;
 }
