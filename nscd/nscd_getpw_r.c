@@ -172,7 +172,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
       retval = 0;
       if (pw_name == NULL)
 	{
-	  ssize_t nbytes = TEMP_FAILURE_RETRY (__read (sock, buffer, total));
+	  ssize_t nbytes = __readall (sock, buffer, total);
 
 	  if (__builtin_expect (nbytes != total, 0))
 	    {
