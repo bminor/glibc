@@ -42,7 +42,7 @@ DEFUN(recv, (fd, buf, n, flags),
 					       &cdata, &clen,
 					       &flags,
 					       n)))
-    return __hurd_fail (err);
+    return __hurd_dfail (fd, err);
 
   __mach_port_deallocate (__mach_task_self (), addrport);
   __vm_deallocate (__mach_task_self (), (vm_address_t) cdata, clen);
