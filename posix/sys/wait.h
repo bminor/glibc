@@ -50,7 +50,7 @@ __BEGIN_DECLS
    With GCC 2, the funky union causes redeclarations with either `int *' or
    `union wait *' to be allowed. */
 
-#if	!defined (__GNUC__) || __GNUC__ < 2
+#if	!defined (__GNUC__) || __GNUC__ < 2 || 1 /* GCC broken as of 2.3.1 */
 #define	__WAIT_STATUS	__ptr_t
 #else
 #define	__WAIT_STATUS	union { union wait *__unionptr; int *__intptr; }
