@@ -19,7 +19,7 @@
 ifeq ($(subdir), misc)
 
 sysdep_headers := $(sysdep_headers) termio.h
-generated := $(generated) termio.h
+generated := $(generated) $(objpfx)termio.h
 
 # termio.h is just like sysv_termio.h except it uses the same names for
 # everything that System V termio does.  sysv_termio.h is necessary to
