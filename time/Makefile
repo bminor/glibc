@@ -49,7 +49,8 @@ endef
 include zonenames
 zonenames := $(subst $(nl), ,$(zonenames))
 
-install-data = $(addprefix zoneinfo/,$(zonenames) \
+install-data = zoneinfo/ \
+	       $(addprefix zoneinfo/,$(zonenames) \
 			   	     $(filter-out /%,$(localtime-file) \
 						     $(posixrules-file)))
 install-others = $(filter /%,$(localtime-file) $(posixrules-file))
@@ -112,7 +113,8 @@ $(objpfx)zic: $(objpfx)scheck.o $(objpfx)ialloc.o $(objpfx)emkdir.o
 $(objpfx)tzfile.o: tzfile.c; $(tz-cc)
 $(objpfx)zic.o: zic.c; $(tz-cc)
 define tz-cc
-$(COMPILE.c) -DTZDIR='"$(datadir)/zoneinfo"' \
+$(COMPILE.c) $(+gcc-nowarn) \
+	     -DTZDIR='"$(datadir)/zoneinfo"' \
 	     -DTZDEFAULT='"$(localtime-file)"' \
 	     -DTZDEFRULES='"$(posixrules-file)"' \
 	     $< $(OUTPUT_OPTION)
