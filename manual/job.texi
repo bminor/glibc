@@ -483,7 +483,7 @@ just to the process itself.)
 
 Finally, each child process should call @code{exec} in the normal way.
 This is also the point at which redirection of the standard input and 
-output channels should be handled.  @xref{Redirecting Input and Output},
+output channels should be handled.  @xref{Duplicating Descriptors},
 for an explanation of how to do this.
 
 Here is the function from the sample shell program that is responsible

@@ -412,8 +412,8 @@ more secure way of determining this information.
 This is the name of the user's login account.  Since the value in the
 environment can be tweaked arbitrarily, this is not the most reliable
 way to identify the user who is running a process; a function like
-@code{getlogin} (@pxref{User Identification}) is better for that
-purpose.
+@code{getlogin} (@pxref{User Identification Functions}) is better for
+that purpose.
 
 @comment RMS says to explay why LOGNAME is better, but I don't know why.
 
