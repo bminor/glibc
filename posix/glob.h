@@ -1,18 +1,17 @@
 /* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
+This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
 published by the Free Software Foundation; either version 2 of the
 License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
+This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
+License along with this library; see the file COPYING.LIB.  If
 not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
@@ -21,18 +20,19 @@ Cambridge, MA 02139, USA.  */
 #define	_GLOB_H	1
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #if defined (__cplusplus) || (defined (__STDC__) && __STDC__)
 #undef	__P
 #define	__P(args)	args
-#else				/* Not C++ or ANSI C.  */
+#else /* Not C++ or ANSI C.  */
 #undef	__P
 #define	__P(args)	()
 #undef	const
 #define	const
-#endif				/* C++ or ANSI C.  */
+#endif /* C++ or ANSI C.  */
 
 /* Bits set in the FLAGS argument to `glob'.  */
 #define	GLOB_ERR	(1 << 0)/* Return on read errors.  */
@@ -56,13 +56,13 @@ extern "C" {
 #define	GLOB_NOMATCH	3	/* No matches found.  */
 
 /* Structure describing a globbing run.  */
-typedef struct
-{
-  int gl_pathc;			/* Count of paths matched by the pattern.  */
-  char **gl_pathv;		/* List of matched pathnames.  */
-  int gl_offs;			/* Slots to reserve in `gl_pathv'.  */
-  int gl_flags;			/* Set to FLAGS, maybe | GLOB_MAGCHAR.  */
-} glob_t;
+  typedef struct
+  {
+    int gl_pathc;		/* Count of paths matched by the pattern.  */
+    char **gl_pathv;		/* List of matched pathnames.  */
+    int gl_offs;		/* Slots to reserve in `gl_pathv'.  */
+    int gl_flags;		/* Set to FLAGS, maybe | GLOB_MAGCHAR.  */
+  } glob_t;
 
 /* Do glob searching for PATTERN, placing results in PGLOB.
    The bits defined above may be set in FLAGS.
@@ -72,15 +72,16 @@ typedef struct
    `glob' returns GLOB_ABEND; if it returns zero, the error is ignored.
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
-extern int glob __P ((const char *__pattern, int __flags,
-		      int (*__errfunc) __P ((const char *, int)),
-		      glob_t * __pglob));
+  extern int glob __P ((const char *__pattern, int __flags,
+			int (*__errfunc) __P ((const char *, int)),
+			glob_t * __pglob));
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
-extern void globfree __P ((glob_t * __pglob));
+  extern void globfree __P ((glob_t * __pglob));
 
 #ifdef	__cplusplus
 }
+
 #endif
 
 #endif /* glob.h  */
