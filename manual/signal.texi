@@ -2011,10 +2011,15 @@ the default is to make them fail with @code{EINTR}.  (The library
 contains alternate versions of the @code{signal} function, and the
 feature test macros determine which one you really call.)  @xref{Feature
 Test Macros}.
+@cindex EINTR, and restarting interrupted primitives
+@cindex restarting interrupted primitives
+@cindex interrupting primitives
+@cindex primitives, interrupting
+@c !!! want to have @cindex system calls @i{see} primitives [no page #]
 
-The primitives affected by this issue are @code{close}, @code{fcntl}
-(operation @code{F_SETLK}), @code{open}, @code{read}, @code{recv},
-@code{recvfrom}, @code{select}, @code{send}, @code{sendto},
+The primitives affected by this issue are @code{accept}, @code{close},
+@code{fcntl} (operation @code{F_SETLK}), @code{open}, @code{read},
+@code{recv}, @code{recvfrom}, @code{select}, @code{send}, @code{sendto},
 @code{tcdrain}, @code{waitpid}, @code{wait}, and @code{write}.
 
 There is one situation where resumption never happens no matter which
