@@ -50,6 +50,7 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
      size_t len;
 {
   int n, i;
+  int left;
 
   if (buf == NULL)
     {
@@ -57,6 +58,7 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
       return -1;
     }
 
+  left = 0;
   if (!ISINF (value) && !ISNAN (value))
     {
       /* OK, the following is not entirely correct.  -0.0 is not handled
@@ -65,18 +67,20 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
       *sign = value < 0.0;
       if (*sign)
 	value = -value;
+
+      if (ndigit < 0)
+	{
+	  /* Rounding to the left of the decimal point. Solaris 2.5.1. */
+	  for (i = ndigit; i < 0; i++)
+	    value *= 0.1;
+
+	  left = ndigit;
+	  ndigit = 0;
+	}
     }
   else
     /* Value is Inf or NaN.  */
     *sign = 0;
-
-  if (ndigit <= 0)
-    {
-      if (len > 0)
-	buf[0] = '\0';
-      *decpt = 0;
-      return 0;
-    }
 
   n = snprintf (buf, len, "%.*" FLOAT_FMT_FLAG "f", ndigit, value);
   if (n < 0)
@@ -97,7 +101,19 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
 	++i;
       while (i < n && !isdigit (buf[i]));
       memmove (&buf[*decpt], &buf[i], n - i);
-      buf[n - (i - *decpt)] = '\0';
+      n -= i - *decpt;
+      buf[n] = '\0';
+    }
+
+  if (left)
+    {
+      *decpt -= left;
+      if (--len > n)
+	{
+	  while (left++ < 0 && len > n)
+	    buf[n++] = '0';
+	  buf [n] = '\0';
+	}
     }
 
   return 0;
@@ -163,6 +179,15 @@ APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
 
   if (APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit - 1, decpt, sign, buf, len))
     return -1;
+
+  if (ndigit <= 0)
+    {
+      if (len > 0)
+	buf[0] = '\0';
+      *decpt = ndigit;
+      return 0;
+    }
+
   *decpt += exponent;
   return 0;
 }
