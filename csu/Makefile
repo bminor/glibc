@@ -75,7 +75,8 @@ $(objpfx)crt%.o: $(objpfx)crt%.S $(objpfx)defs.h
 	$(CC) -c -fPIC -g0 -I$(..) -I$(common-objpfx) -DASSEMBLER $< -o $@
 
 $(objpfx)initfini.s: initfini.c
-	$(CC) -S -fPIC -finhibit-size-directive $(no-exceptions) $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -g0 -S -fPIC -finhibit-size-directive \
+	      $(no-exceptions) $< -o $@
 
 $(objpfx)crti.S: $(objpfx)initfini.s
 	sed -n -e '1,/@HEADER_ENDS/p' \
