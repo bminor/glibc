@@ -34,6 +34,16 @@ static file_t sockdir = MACH_PORT_NULL;
 static file_t *servers;
 static int max_domain;
 
+/* Return a port to the socket server for DOMAIN.
+   Socket servers translate nodes in the directory _SERVERS_SOCKET
+   (canonically /servers/socket).  These naming point nodes are named
+   by the simplest decimal representation of the socket domain number,
+   for example "/servers/socket/3".
+
+   Socket servers are assumed not to change very often.
+   The library keeps all the server socket ports it has ever looked up,
+   and does not look them up in /servers/socket more than once.  */
+
 socket_t
 _hurd_socket_server (int domain)
 {
@@ -67,7 +77,7 @@ _hurd_socket_server (int domain)
   {
     char name[100];
     sprintf (name, "%d", domain);
-    if (err = _HURD_PORT_USE (_hurd_crdir,
+    if (err = _HURD_PORT_USE (&_hurd_crdir,
 			      __hurd_path_lookup (port, sockdir,
 						  name, 0, 0,
 						  &servers[domain])))
