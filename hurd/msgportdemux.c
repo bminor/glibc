@@ -38,13 +38,15 @@ static boolean_t
 msgport_server (mach_msg_header_t *inp,
 		mach_msg_header_t *outp)
 {
+  extern boolean_t _S_msg_server (mach_msg_header_t *inp,
+				  mach_msg_header_t *outp);
   struct demux *d;
 
   for (d = _hurd_msgport_demuxers; d != NULL; d = d->next)
     if ((*d->demux) (inp, outp))
       return 1;
 
-  return __msg_server (inp, outp);
+  return _S_msg_server (inp, outp);
 }
 
 /* This is the code that the signal thread runs.  */
