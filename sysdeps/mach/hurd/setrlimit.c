@@ -17,8 +17,8 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <sys/resource.h>
 #include <hurd.h>
+#include <hurd/resource.h>
 #include <errno.h>
 #include <hurd/fd.h>
 
@@ -34,7 +34,7 @@ DEFUN(setrlimit, (resource, rlimits),
 {
   struct rlimit lim;
 
-  if (rlimits == NULL || resource < 0 || resource >= RLIMIT_NLIMITS)
+  if (rlimits == NULL || (unsigned int) resource >= RLIMIT_NLIMITS)
     {
       errno = EINVAL;
       return -1;
