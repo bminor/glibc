@@ -75,16 +75,9 @@ ifndef libdir
 libdir = $(prefix)/lib
 endif
 
-# Where to install the header files.  There are two sets of header files
-# produced, an ANSI C set and a traditional C set.  ansi-incldir, if
-# defined, is where to install the ANSI C set; trad-incldir, if defined, is
-# where to install the traditional C set.  If you define both, you can
-# install both sets, in different places.
-ifndef ansi-incldir
-ansi-incldir = $(prefix)/include
-endif
-ifndef trad-incldir
-#trad-incldir = $(prefix)/include
+# Where to install the header files.
+ifndef includedir
+includedir = $(prefix)/include
 endif
 
 # Define if the library should install its own <stddef.h>.
