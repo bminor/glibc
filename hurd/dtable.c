@@ -125,44 +125,6 @@ file_t (*_hurd_getdport_fn) (int fd) = get_dtable_port;
 
 #include <hurd/signal.h>
 
-/* Called on fork to install the dtable in NEWTASK.  The dtable lock is
-   held now and was taken before the child was created, copying our memory.
-   Insert send rights for all of the normal io ports for fds, with the same
-   names they have in our task.  We trust that none of the ports in the
-   dtable were be changed while we have been holding the lock, so the port
-   names copied by the child are still valid in our task.  */
-
-static error_t
-fork_parent_dtable (task_t newtask)
-{
-  error_t err;
-  int i;
-
-  err = 0;
-
-  for (i = 0; !err && i < _hurd_dtablesize; ++i)
-    {
-      struct hurd_userlink ulink, ctty_ulink;
-      io_t port = _hurd_port_get (&_hurd_dtable[i]->port, &ulink);
-      io_t ctty = _hurd_port_get (&_hurd_dtable[i]->ctty, &ctty_ulink);
-
-      /* If there is a ctty-special port (it will be in PORT),
-	 insert only the normal io port.  The child will get a fresh
-	 ctty-special port.  */
-      if (ctty != MACH_PORT_NULL)
-	err = __mach_port_insert_right (newtask, ctty, ctty,
-					MACH_MSG_TYPE_COPY_SEND);
-      else if (port != MACH_PORT_NULL)
-	/* There is no ctty-special port; PORT is the normal io port.  */
-	err = __mach_port_insert_right (newtask, port, port,
-					MACH_MSG_TYPE_COPY_SEND);
-
-      _hurd_port_free (&_hurd_dtable[i]->port, &ulink, port);
-      _hurd_port_free (&_hurd_dtable[i]->ctty, &ctty_ulink, ctty);
-    }
-  return err;
-}
-
 /* We are in the child fork; the dtable lock is still held.
    The parent has inserted send rights for all the normal io ports,
    but we must recover ctty-special ports for ourselves.  */
@@ -178,6 +140,7 @@ fork_child_dtable (void)
     {
       struct hurd_fd *d = _hurd_dtable[i];
 
+      /* No other thread is using the send rights in the child task.  */
       d->port.users = d->ctty.users = NULL;
 
       if (d->ctty.port)
@@ -195,7 +158,6 @@ fork_child_dtable (void)
 }
 
 data_set_element (_hurd_fork_locks, _hurd_dtable_lock);
-text_set_element (_hurd_fork_setup_hook, fork_parent_dtable);
 text_set_element (_hurd_fork_child_hook, fork_child_dtable);
 
 /* Called when our process group has changed.  */
