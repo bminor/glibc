@@ -31,10 +31,22 @@ DEFUN(getsockopt, (fd, level, optname, optval, optlen),
       int fd AND int level AND int optname AND
       PTR optval AND size_t *optlen)
 {
-  error_t err = HURD_DPORT_USE (fd, __socket_getopt (port,
-						     level, optname,
-						     optval, optlen));
-  if (err)
+  error_t err;
+  char *buf = optval;
+  unsigned int buflen = *optlen;
+
+  if (err = HURD_DPORT_USE (fd, __socket_getopt (port,
+						 level, optname,
+						 buf, &buflen)))
     return __hurd_dfail (fd, err);
+
+  if (buf != optval)
+    {
+      if (*optlen < buflen)
+	*optlen = buflen;
+      memcpy (optval, buf, *len);
+      __vm_deallocate (__mach_task_self (), (vm_address_t) buf, buflen);
+    }
+
   return 0;
 }
