@@ -76,6 +76,12 @@ struct hurd_sigstate
     /* Not locked.  Used only by this thread, or by the signal thread with
        this thread suspended.  */
     volatile mach_port_t intr_port; /* Port interruptible RPC was sent on.  */
+
+    /* If this is not null, the thread is in sigreturn awaiting delivery of
+       pending signals.  This context (the machine-dependent portions only)
+       will be passed to sigreturn after running the handler for a pending
+       signal, instead of examining the thread state.  */
+    struct sigcontext *context;
   };
 
 /* Linked list of states of all threads whose state has been asked for.  */
@@ -290,7 +296,7 @@ extern void _hurd_siginfo_handler (int);
        mach_msg system call.  The signal handler might do an interruptible    \
        RPC, and clobber intr_port; then it would not be set properly when     \
        we actually did send the RPC, and a later signal wouldn't interrupt    \
-       that RPC.  So, _hurd_run_sighandler saves intr_port in the	      \
+       that RPC.  So, _hurd_setup_sighandler saves intr_port in the	      \
        sigcontext, and sigreturn restores it.  */			      \
     switch (__err = (call))						      \
       {									      \
