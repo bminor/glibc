@@ -196,8 +196,8 @@ tiocsctty (int fd,
   error_t err;
 
   /* Get FD's cttyid port, unless it is already ours.  */
-  err = HURD_DPORT_USE (fd,
-			ctty ? EADDRINUSE : __term_getctty (port, &cttyid));
+  err = HURD_DPORT_USE (fd, ctty != MACH_PORT_NULL ? EADDRINUSE :
+			__term_getctty (port, &cttyid));
   if (err == EADDRINUSE)
     /* FD is already the ctty.  Nothing to do.  */
     return 0;
