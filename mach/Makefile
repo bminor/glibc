@@ -25,7 +25,7 @@ include ../Makeconfig
 
 
 headers = mach_init.h mach.h mach_error.h mach-shortcuts.h \
-	  $(interface-headers) mach/mach.h mach/mig_support.h
+	  $(interface-headers) mach/mach.h mach/mig_support.h mach/error.h
 routines = $(interface-routines) \
 	   $(filter-out syscall_%,$(mach-syscalls)) \
 	   $(addprefix __,$(mach-syscalls)) \
@@ -77,7 +77,8 @@ mach-src-headers := $(wildcard $(foreach dir,mach device mach_debug \
 						     *.defs *.h \
 						     */*.defs */*.h)))
 # Exclude mach/machine/*.  A symlink will be installed for mach/machine.
-mach-headers = $(filter-out mach/machine/%,\
+# Exclude $(headers) for Mach files we have our own versions of.
+mach-headers = $(filter-out mach/machine/% $(headers),\
 			    $(mach-src-headers:$(mach-srcdir)/%=%))
 
 # Don't distribute the Mach headers; they are in the Mach distribution.
