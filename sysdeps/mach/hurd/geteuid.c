@@ -28,31 +28,25 @@ DEFUN_VOID(__geteuid)
   error_t err;
   uid_t euid;
 
-  __mutex_lock (&_hurd_idlock);
+  __mutex_lock (&_hurd_id.lock);
 
   if (err = _hurd_check_ids ())
     {
       errno = err;
       euid = -1;
     }
+  else if (_hurd_id.gen.nuids >= 1)
+    euid = _hurd_id.gen.uids[0];
+  else if (_hurd_id.aux.nuids >= 1)
+    /* We have no effective uids.  Return the real uid.  */
+    euid = _hurd_id.aux.uids[0];
   else
-    switch (_hurd_nuids)
-      {
-      case 0:
-	/* We have not even a real uid.  */
-	errno = XXX;
-	euid = -1;
-	break;
-      case 1:
-      case 2:
-	/* We have no effective uids.  Return the real uid.  */
-	euid = _hurd_uid.rid;
-	break;
-      default:
-	euid = _hurd_uid.ids[0];
-	break;
-      }
+    {
+      /* We do not even have a real uid.  */
+      errno = EIOEIO;		/* XXX */
+      euid = -1;
+    }
 
-  __mutex_unlock (&_hurd_idlock);
+  __mutex_unlock (&_hurd_id.lock);
   return euid;
 }
