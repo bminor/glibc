@@ -1,5 +1,5 @@
 /* Convert a string representation of time to a time value.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -257,14 +257,13 @@ static char *
 #ifdef _LIBC
 internal_function
 #endif
-strptime_internal (buf, format, tm, decided)
-     const char *buf;
-     const char *format;
+strptime_internal (rp, fmt, tm, decided)
+     const char *rp;
+     const char *fmt;
      struct tm *tm;
      enum locale_status *decided;
 {
-  const char *rp;
-  const char *fmt;
+  const char *rp_backup;
   int cnt;
   size_t val;
   int have_I, is_pm;
@@ -273,8 +272,6 @@ strptime_internal (buf, format, tm, decided)
   int have_yday;
   int have_mon, have_mday;
 
-  rp = buf;
-  fmt = format;
   have_I = is_pm = 0;
   century = -1;
   want_century = 0;
@@ -305,6 +302,10 @@ strptime_internal (buf, format, tm, decided)
       /* We need this for handling the `E' modifier.  */
     start_over:
 #endif
+
+      /* Make back up of current processing pointer.  */
+      rp_backup = rp;
+
       switch (*fmt++)
 	{
 	case '%':
@@ -400,6 +401,8 @@ strptime_internal (buf, format, tm, decided)
 		{
 		  if (*decided == loc)
 		    return NULL;
+		  else
+		    rp = rp_backup;
 		}
 	      else
 		{
@@ -443,6 +446,8 @@ strptime_internal (buf, format, tm, decided)
 		{
 		  if (*decided == loc)
 		    return NULL;
+		  else
+		    rp = rp_backup;
 		}
 	      else
 		{
@@ -534,6 +539,8 @@ strptime_internal (buf, format, tm, decided)
 		{
 		  if (*decided == loc)
 		    return NULL;
+		  else
+		    rp = rp_backup;
 		}
 	      else
 		{
@@ -588,6 +595,8 @@ strptime_internal (buf, format, tm, decided)
 		{
 		  if (*decided == loc)
 		    return NULL;
+		  else
+		    rp = rp_backup;
 		}
 	      else
 		{
@@ -671,6 +680,8 @@ strptime_internal (buf, format, tm, decided)
 		    {
 		      if (*decided == loc)
 			return NULL;
+		      else
+			rp = rp_backup;
 		    }
 		  else
 		    {
@@ -707,6 +718,8 @@ strptime_internal (buf, format, tm, decided)
 		    {
 		      if (*decided == loc)
 			return NULL;
+		      else
+			rp = rp_backup;
 		    }
 		  else
 		    {
@@ -731,6 +744,8 @@ strptime_internal (buf, format, tm, decided)
 		    {
 		      if (*decided == loc)
 			return NULL;
+		      else
+			rp = rp_backup;
 		    }
 		  else
 		    {
