@@ -25,6 +25,7 @@ Cambridge, MA 02139, USA.  */
 int
 fexecve (int fd, char *const argv[], char *const envp[])
 {
-  error_t err = HURD_DPORT_USE (fd, _hurd_exec (port, argv, envp));
+  error_t err = HURD_DPORT_USE (fd, _hurd_exec (__mach_task_self (), port,
+						argv, envp));
   return __hurd_fail (err);
 }
