@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,6 @@ DEFUN(__mknod, (path, mode, dev),
       CONST char *path AND mode_t mode AND dev_t dev)
 {
   const char *name;
-  file_t dir = __hurd_path_split (path, &name);
   file_t node;
   error_t err;
   const char *translator;
@@ -47,29 +46,26 @@ DEFUN(__mknod, (path, mode, dev),
       return -1;
     }
 
-  if (err = __dir_lookup (dir, name,
-			  FS_LOOKUP_CREATE|FS_LOOKUP_EXCL|FS_LOOKUP_WRITE,
-			  mode & 0777,
-			  &node))
-    goto lose;
+  node = __path_lookup (path,
+			FS_LOOKUP_CREATE|FS_LOOKUP_EXCL|FS_LOOKUP_WRITE,
+			mode & 0777,
+			&node);
+  if (node == MACH_PORT_NULL)
+    return -1;
 
-  if (err = __io_write (node, &dev, sizeof (dev), &n)) /* XXX */
-    goto lose;
-  if (n != sizeof (dev))
-    {
-      err = POSIX_EIO;
-      goto lose;
-    }
+  err = __file_set_translator (node,
+			       FS_GOAWAY_DONT,
+			       translator, strlen (translator) + 1,
+			       MACH_PORT_NULL);
 
-  err = __dir_set_translator (dir, name, FS_TRANS_EXCL, FS_GOAWAY_DONT,
-			      translator, MACH_PORT_NULL);
+  if (!err)
+    err = __io_write (node, &dev, sizeof (dev), &n);
+  if (!err && n != sizeof (dev))
+    err = EIO;
+
   if (err)
     /* XXX The node still exists.... */
-    goto lose;
+    return __hurd_fail (err);
 
   return 0;
-
- lose:
-  __mach_port_deallocate (__mach_task_self (), dir);
-  return __hurd_fail (err);
 }
