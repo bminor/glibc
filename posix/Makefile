@@ -74,7 +74,7 @@ glob/configure: glob/configure.in
 glob/ChangeLog: ../ChangeLog
 	changelog-extract --regexp 'posix/(glob|fnmatch).*' < $< > $@.new
 	chmod a-w $@.new
-	mv $@.new $@
+	mv -f $@.new $@
 
 %.Z: %
 	compress -c $< > $@-tmp
