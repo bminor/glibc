@@ -60,26 +60,27 @@ extern int errno;
 #define	NULL	0
 #endif
 
-#if	defined (POSIX) || defined (DIRENT) || defined (__GNU_LIBRARY__)
+
+#if	defined (POSIX) || defined (HAVE_DIRENT_H) || defined (__GNU_LIBRARY__)
 #include <dirent.h>
 #ifndef	__GNU_LIBRARY__
 #define D_NAMLEN(d) strlen((d)->d_name)
 #else	/* GNU C library.  */
 #define D_NAMLEN(d) ((d)->d_namlen)
 #endif	/* Not GNU C library.  */
-#else	/* Not POSIX or DIRENT.  */
+#else	/* Not POSIX or HAVE_DIRENT_H.  */
 #define direct dirent
 #define D_NAMLEN(d) ((d)->d_namlen)
-#ifdef	SYSNDIR
+#ifdef	HAVE_SYS_NDIR_H
 #include <sys/ndir.h>
-#endif	/* SYSNDIR */
-#ifdef	SYSDIR
+#endif	/* HAVE_SYS_NDIR_H */
+#ifdef	HAVE_SYS_DIR_H
 #include <sys/dir.h>
-#endif	/* SYSDIR */
-#ifdef NDIR
+#endif	/* HAVE_SYS_DIR_H */
+#ifdef HAVE_NDIR_H
 #include <ndir.h>
-#endif	/* NDIR */
-#endif	/* POSIX or DIRENT or __GNU_LIBRARY__.  */
+#endif	/* HAVE_NDIR_H */
+#endif	/* POSIX or HAVE_DIRENT_H or __GNU_LIBRARY__.  */
 
 #if defined (POSIX) && !defined (__GNU_LIBRARY__)
 /* Posix does not require that the d_ino field be present, and some
