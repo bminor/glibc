@@ -112,6 +112,7 @@ _start (void)
   makevec (args, argslen, argv);
   makevec (env, envlen, __environ);
 
+  __mutex_init (&_hurd_lock);
   for (i = 0; i < portarraysize; ++i)
     switch (i)
       {
@@ -147,16 +148,23 @@ _start (void)
     }
 
   {
+    struct _hurd_sigstate *ss;
     thread_t sigthread;
     mach_port_t oldsig, oldtask;
+    int i;
+    const sigset_t ignored = nints > INIT_SIGIGN ? intarray[INIT_SIGIGN] : 0;
+
+    ss = _hurd_thread_sigstate (__mach_thread_self ());
+    ss->blocked = nints > INIT_SIGMASK ? intarray[INIT_SIGMASK] : 0;
+    __sigemptyset (&ss->pending);
+    for (i = 1; i < NSIG; ++i)
+      ss->actions[i].sa_handler
+	= __sigismember (i, &ignored) ? SIG_IGN : SIG_DFL;
+    __mutex_unlock (&ss->lock);
 
     if (err = __mach_port_allocate (__mach_task_self (),
 				    MACH_PORT_RIGHT_RECEIVE,
 				    &_hurd_sigport))
-      _exit (err);
-    if (err = __mach_port_insert_right (__mach_task_self (),
-					_hurd_sigport,
-					MACH_PORT_RIGHT_MAKE_SEND))
       _exit (err);
 
     if (err = __thread_create (__mach_task_self (), &sigthread))
@@ -165,12 +173,27 @@ _start (void)
       _exit (err);
     __mach_port_deallocate (__mach_task_self (), sigthread);
 
+    /* Make a send right to the signal port.  */
+    if (err = __mach_port_insert_right (__mach_task_self (),
+					_hurd_sigport,
+					MACH_PORT_RIGHT_MAKE_SEND))
+      _exit (err);
+
+    /* Receive exceptions on the signal port.  */
+    __task_set_special_port (__mach_task_self (),
+			     TASK_EXCEPTION,
+			     _hurd_sigport);
+
+    /* Give the proc server our task and signal ports.  */
     __proc_setports (_hurd_proc, _hurd_sigport, __mach_task_self (),
 		     &oldsig, &oldtask);
     if (oldsig != MACH_PORT_NULL)
       __mach_port_deallocate (__mach_task_self (), oldsig);
     if (oldtask != MACH_PORT_NULL)
       __mach_port_deallocate (__mach_task_self (), oldtask);
+
+    /* Free the send right we gave to the proc server.  */
+    __mach_port_deallocate (__mach_task_self (), _hurd_sigport);
   }
 
   /* Tell the proc server where our args and environment are.  */
