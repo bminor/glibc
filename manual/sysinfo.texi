@@ -1,0 +1,115 @@
+@node System Information
+@chapter System Information
+
+This chapter contains information about functions that return 
+information about the particular machine a program is running on.
+
+@menu
+* Host Identification::                         Determining the name of the
+                                                 machine.
+* Hardware/Software Type Identification::       Determining the hardware type
+                                                 of the machine and what
+                                                 operating system it is
+                                                 running.
+@end menu
+
+
+@node Host Identification
+@section Host Identification
+
+The functions listed in this section access information to identify the
+particular machine that a program is running on.  In the GNU system,
+this information is the default Internet host name and host address of
+the machine; @pxref{The Internet Domain}.  These functions are the
+primitives for the @code{hostname} and @code{hostid} shell commands.
+
+Prototypes for these functions appear in @file{<unistd.h>}.
+
+@comment unistd.h
+@comment BSD
+@deftypefun int gethostname (char *@var{name}, size_t @var{size})
+This function returns the name of the host machine in the array
+@var{name}.  The @var{size} argument specifies the size of this array,
+in bytes.
+
+@strong{Incomplete:}  The size of the host name is limited by a parameter
+@code{MAXHOSTNAMELENGTH}, declared in @file{<sys/param.h>}.
+
+The return value is @code{0} on success and @code{-1} on failure.
+@end deftypefun
+
+@comment unistd.h
+@comment BSD
+@deftypefun int sethostname (const char *@var{name}, size_t @var{length})
+The @code{sethostname} function sets the name of the host machine to
+@var{name}, a string with length @var{length}.  This function can only
+be called by the superuser, and is usually used only at system boot
+time.
+
+The return value is @code{0} on success and @code{-1} on failure.
+@end deftypefun
+
+@comment unistd.h
+@comment BSD
+@deftypefun {long int} gethostid (void)
+This function returns the address of the host machine.
+@end deftypefun
+
+@comment unistd.h
+@comment BSD
+@deftypefun int sethostid (long int @var{id})
+The @code{sethostid} function sets the address of the host machine
+to @var{id}.  This function can only be called by the superuser, and
+is usually used only at system boot time.
+
+@strong{Incomplete:}  Is the return type from this function really 
+@code{void}?  The BSD man page does not document a return value.
+@end deftypefun
+
+
+@node Hardware/Software Type Identification
+@section Hardware/Software Type Identification
+
+You can use the @code{uname} function to find out some information about
+the computer system your program is running on.  This function and the
+associated data type are declared in the header file
+@file{<sys/utsname.h>}.
+
+@comment sys/utsname.h
+@comment POSIX.1
+@deftp {Data Type} {struct utsname}
+The @code{utsname} structure is used to hold information returned
+by the @code{uname} function.  It has the following members:
+
+@table @code
+@item {char sysname[]}
+This is the name of the operating system implementation.  In the
+GNU Library, the value is the string @code{"GNU C Library"}.
+@item {char nodename[]}
+This is the name of this node within a communications network.  In the
+GNU Library, the value is the same as that returned by
+@code{gethostname}; @pxref{Host Identification}.
+@item {char release[]}
+This is the current release level of the operating system implementation.
+@item {char version[]}
+This is the current version level within the release of the operating
+system.
+@item {char machine[]}
+This is a description of the hardware type that the operating system
+is running on.
+@end table
+@end deftp
+
+
+@comment sys/utsname.h
+@comment POSIX.1
+@deftypefun int uname (struct utsname *@var{info})
+The @code{uname} function fills in the structure pointed to by
+@var{info} with information about the operating system and host machine.
+A non-negative value is returned on successful completion; in the event
+of an error, @code{-1} is returned.
+@end deftypefun
+
+
+
+
