@@ -35,7 +35,7 @@
 	* sysdeps/unix/sysv/linux/shmat.c (shmat): Add cast to prevent
 	warning.
 
-	* stdlib/seed48_r.c (seed48_r): Incldue limits.h to get definition
+	* stdlib/seed48_r.c (seed48_r): Include limits.h to get definition
 	of USHRT_MAX.
 
 	* locale/localeinfo.h: _nl_current has LC_ALL + 1 elements.
