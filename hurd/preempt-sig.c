@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 int
 hurd_preempt_signals (struct hurd_signal_preempt *preempter,
 		      int signo, int first_code, int last_code,
-		      sighandler_t (*handler) (thread_t, int, int))
+		      sighandler_t (*handler) (thread_t, long int, int))
 {
   if (signo <= 0 || signo >= NSIG)
     {

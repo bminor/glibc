@@ -29,7 +29,8 @@ _S_catch_exception_raise (mach_port_t port,
 			  int code,
 			  int subcode)
 {
-  int signo, sigcode, error;
+  int signo, error;
+  long int sigcode;
   struct hurd_sigstate *ss;
 
   if (task != __mach_task_self ())

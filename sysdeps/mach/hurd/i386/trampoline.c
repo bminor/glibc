@@ -39,7 +39,7 @@ struct mach_msg_trap_args
 
 struct sigcontext *
 _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
-			int signo, int sigcode,
+			int signo, long int sigcode,
 			volatile int rpc_wait,
 			struct machine_thread_all_state *state)
 {
@@ -49,7 +49,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   struct 
     {
       int signo;
-      int sigcode;
+      long int sigcode;
       struct sigcontext *scp;	/* Points to ctx, below.  */
       struct sigcontext *return_scp; /* Same; arg to sigreturn.  */
       struct sigcontext ctx;
@@ -61,8 +61,8 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	 to restore when another signal arrived.  We will just base
 	 our setup on that.  */
       if (_hurdsig_catch_fault (SIGSEGV))
-	assert (_hurdsig_fault_sigcode >= (int) ss->context &&
-		_hurdsig_fault_sigcode < (int) (ss->context + 1));
+	assert (_hurdsig_fault_sigcode >= (long int) ss->context &&
+		_hurdsig_fault_sigcode < (long int) (ss->context + 1));
       else
 	{
 	  memcpy (&state->basic, &ss->context->sc_i386_thread_state,
@@ -105,8 +105,8 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 
   if (_hurdsig_catch_fault (SIGSEGV))
     {
-      assert (_hurdsig_fault_sigcode >= (int) stackframe &&
-	      _hurdsig_fault_sigcode <= (int) (stackframe + 1));
+      assert (_hurdsig_fault_sigcode >= (long int) stackframe &&
+	      _hurdsig_fault_sigcode <= (long int) (stackframe + 1));
       /* We got a fault trying to write the stack frame.
 	 We cannot set up the signal handler.
 	 Returning NULL tells our caller, who will nuke us with a SIGILL.  */
@@ -158,8 +158,8 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 
       if (_hurdsig_catch_fault (SIGSEGV))
 	{
-	  assert (_hurdsig_fault_sigcode >= (int) args &&
-		  _hurdsig_fault_sigcode < (int) (args + 1));
+	  assert (_hurdsig_fault_sigcode >= (long int) args &&
+		  _hurdsig_fault_sigcode < (long int) (args + 1));
 	  /* Faulted accessing ARGS.  Bomb.  */
 	  return NULL;
 	}
@@ -248,8 +248,8 @@ _hurdsig_rcv_interrupted_p (struct machine_thread_all_state *state,
     = (void *) state->basic.eip - sizeof syscall;
 
   if (_hurdsig_catch_fault (SIGSEGV))
-    assert (_hurdsig_fault_sigcode >= (int) pc &&
-	    _hurdsig_fault_sigcode < (int) pc + sizeof syscall);
+    assert (_hurdsig_fault_sigcode >= (long int) pc &&
+	    _hurdsig_fault_sigcode < (long int) pc + sizeof syscall);
   else
     {
       int rcving = (state->basic.eax == MACH_RCV_INTERRUPTED &&
