@@ -1,4 +1,4 @@
-%define glibcrelease 84
+%define glibcrelease 85
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -98,7 +98,7 @@ Prereq: /sbin/install-info
 Obsoletes: libc-debug, libc-headers, libc-devel, linuxthreads-devel
 Obsoletes: glibc-debug
 Prereq: %{name}-headers
-Requires: %{name}-headers = %{version}, %{name} = %{version}
+Requires: %{name}-headers = %{version}-%{release}, %{name} = %{version}
 %ifarch %{ix86}
 # Earlier gcc's had atexit reference in crtendS.o, which does not
 # work with this glibc where atexit is in libc_nonshared.a
@@ -1205,6 +1205,9 @@ rm -f *.filelist*
 
 %files -f headers.filelist headers
 %defattr(-,root,root)
+%ifarch %{nptlarches}
+%{_prefix}/include/nptl
+%endif
 
 %files -f profile.filelist profile
 %defattr(-,root,root)
@@ -1231,7 +1234,6 @@ rm -f *.filelist*
 %ifarch %{nptlarches}
 %files -n nptl-devel
 %defattr(-,root,root)
-%{_prefix}/include/nptl
 %{_prefix}/%{_lib}/nptl
 %endif
 
@@ -1256,6 +1258,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Nov 26 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-85
+- update from CVS
+  - support -v specification in getconf
+  - fix sysconf (_SC_LFS64_CFLAGS) etc.
+  - avoid thread stack aliasing issues on EM64T (#140803)
+- move %{_prefix}/include/nptl headers from nptl-devel
+  to glibc-headers, so that even NPTL specific programs
+  can be built bi-arch without problems
+
 * Wed Nov 24 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-84
 - update from CVS
   - fix memory leak in getaddrinfo if using nscd (#139559)

@@ -91,6 +91,7 @@ tests           += wordexp-test tst-exec tst-spawn
 endif
 others		:= getconf
 install-bin	:= getconf
+install-others	:= $(inst_libexecdir)/getconf
 
 before-compile	:= testcases.h ptestcases.h
 
@@ -101,7 +102,8 @@ generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     bug-regex21-mem bug-regex21.mtrace \
 	     tst-rxspencer-mem tst-rxspencer.mtrace tst-getconf.out \
 	     tst-pcre-mem tst-pcre.mtrace tst-boost-mem tst-boost.mtrace \
-	     bug-ga2.mtrace bug-ga2-mem bug-glob2.mtrace bug-glob2-mem
+	     bug-ga2.mtrace bug-ga2-mem bug-glob2.mtrace bug-glob2-mem \
+	     getconf.speclist
 
 include ../Rules
 
@@ -138,7 +140,7 @@ CFLAGS-waitid.c = -fexceptions
 CFLAGS-waitpid.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-getopt.c = -fexceptions
 CFLAGS-wordexp.c = -fexceptions
-CFLAGS-sysconf.c = -fexceptions
+CFLAGS-sysconf.c = -fexceptions -DGETCONF_DIR='"$(libexecdir)/getconf"'
 CFLAGS-pathconf.c = -fexceptions
 CFLAGS-fpathconf.c = -fexceptions
 CFLAGS-spawn.c = -fexceptions
@@ -147,6 +149,7 @@ CFLAGS-spawni.c = -fexceptions
 CFLAGS-pause.c = -fexceptions
 CFLAGS-glob.c = $(uses-callbacks) -fexceptions
 CFLAGS-glob64.c = $(uses-callbacks) -fexceptions
+CFLAGS-getconf.c = -DGETCONF_DIR='"$(libexecdir)/getconf"'
 
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour
@@ -260,3 +263,17 @@ bug-glob2-ENV = MALLOC_TRACE=$(objpfx)bug-glob2.mtrace
 
 $(objpfx)bug-glob2-mem: $(objpfx)bug-glob2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-glob2.mtrace > $@
+
+$(inst_libexecdir)/getconf: $(objpfx)getconf $(objpfx)getconf.speclist FORCE
+	$(addprefix $(..)./scripts/mkinstalldirs ,\
+		    $(filter-out $(wildcard $@),$@))
+	for spec in `cat $(objpfx)getconf.speclist`; do \
+	  $(INSTALL_PROGRAM) $< $@/$$spec.new; \
+	  mv -f $@/$$spec.new $@/$$spec; \
+	done
+
+$(objpfx)getconf.speclist: getconf.speclist.h
+	$(CC) -E $(CFLAGS) $(CPPFLAGS) $< \
+	  | sed -n -e '/START_OF_STRINGS/,$${/_POSIX_V6_/{s/^[^"]*"//;s/".*$$//;p}}' \
+	  > $@.new
+	mv -f $@.new $@
