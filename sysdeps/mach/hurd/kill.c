@@ -27,7 +27,36 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(__kill, (pid, sig), int pid AND int sig)
 {
-  error_t err = __proc_kill (_hurd_proc, pid, sig);
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  error_t err;
+
+  __mutex_lock (&_hurd_lock);
+
+  if (pid == 0)
+    pid = - _hurd_pgrp;
+
+  if (pid < 0)
+    {
+      /* Send SIG to each process in pgrp (- PID).  */
+      proccoll_t pcoll;
+      err = __proc_pgrp_pcoll (_hurd_proc, - pid, &pcoll);
+      if (!err)
+	{
+	  err = __proc_get_collports (_hurd_proc, pcoll, &ports, &nports);
+	  __mach_port_deallocate (__mach_task_self (), pcoll);
+	}
+    }
+  else
+    {
+      err = __proc_pid2task (_hurd_proc, pid, &refport);
+      if (err)
+	err = __proc_getsidport (_hurd_proc, &refport);
+      if (!err)
+	err = __proc_kill (_hurd_proc, pid, sig);
+      if (refport != MACH_PORT_NULL)
+	__mach_port_deallocate (__mach_task_self (), refport);
+      __mutex_unlock (&_hurd_lock);
+    }
 
   if (err)
     return __hurd_fail (err);
