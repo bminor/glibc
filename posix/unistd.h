@@ -204,6 +204,13 @@ extern int EXFUN(chdir, (CONST char *__path));
    big as necessary.  */
 extern char *EXFUN(getcwd, (char *__buf, size_t __size));
 
+#ifdef	__USE_GNU
+/* Return a malloc'd string containing the current directory name.
+   If the environment variable `PWD' is set, and its value is correct,
+   that value is used.  */
+extern char *EXFUN(get_current_dir_name, (NOARGS));
+#endif
+
 #ifdef	__USE_BSD
 /* Put the absolute pathname of the current working directory in BUF.
    If successful, return BUF.  If not, put an error message in
