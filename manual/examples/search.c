@@ -5,28 +5,29 @@
 /* Define an array of critters to sort. */
 
 struct critter
-{
-  char *name;
-  char *species;
-};
+  {
+    const char *name;
+    const char *species;
+  };
 
-struct critter muppets[]=
-{
-  {"Kermit", "frog"},
-  {"Piggy", "pig"},
-  {"Gonzo", "whatever"},
-  {"Fozzie", "bear"},
-  {"Sam", "eagle"},
-  {"Robin", "frog"},
-  {"Animal", "animal"},
-  {"Camilla", "chicken"},
-  {"Sweetums", "monster"},
-  {"Dr. Strangepork", "pig"},
-  {"Link Hogthrob", "pig"},
-  {"Zoot", "human"},
-  {"Dr. Bunsen Honeydew", "human"},
-  {"Beaker", "human"},
-  {"Swedish Chef", "human"}};
+struct critter muppets[] =
+  {
+    {"Kermit", "frog"},
+    {"Piggy", "pig"},
+    {"Gonzo", "whatever"},
+    {"Fozzie", "bear"},
+    {"Sam", "eagle"},
+    {"Robin", "frog"},
+    {"Animal", "animal"},
+    {"Camilla", "chicken"},
+    {"Sweetums", "monster"},
+    {"Dr. Strangepork", "pig"},
+    {"Link Hogthrob", "pig"},
+    {"Zoot", "human"},
+    {"Dr. Bunsen Honeydew", "human"},
+    {"Beaker", "human"},
+    {"Swedish Chef", "human"}
+  };
 
 int count = sizeof (muppets) / sizeof (struct critter);
 
@@ -54,7 +55,7 @@ print_critter (const struct critter *c)
 /* Do the lookup into the sorted array. */
 
 void 
-find_critter (char *name)
+find_critter (const char *name)
 {
   struct critter target, *result;
   target.name = name;
