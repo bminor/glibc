@@ -557,7 +557,16 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 	  fgetpos (ent->stream, &pos);
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL)
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      if (feof (ent->stream))
+		return NSS_STATUS_NOTFOUND;
+ 	      else
+ 		{
+		  fsetpos (ent->stream, &pos);
+ 		  __set_errno (ERANGE);
+ 		  return NSS_STATUS_TRYAGAIN;
+ 		}
+ 	    }
 
 	  /* Terminate the line for any case.  */
 	  buffer[buflen - 1] = '\0';
@@ -732,6 +741,7 @@ internal_getpwnam_r (const char *name, struct passwd *result, ent_t *ent,
 		return NSS_STATUS_NOTFOUND;
 	      else
 		{
+		  fsetpos (ent->stream, &pos);
 		  __set_errno (ERANGE);
 		  return NSS_STATUS_TRYAGAIN;
 		}
@@ -963,8 +973,17 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	  fgetpos (ent->stream, &pos);
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL)
-	    return NSS_STATUS_NOTFOUND;
-
+	    {
+	      if (feof (ent->stream))
+		return NSS_STATUS_NOTFOUND;
+	      else
+		{
+		  fsetpos (ent->stream, &pos);
+		  __set_errno (ERANGE);
+		  return NSS_STATUS_TRYAGAIN;
+		}
+	    }
+	  
 	  /* Terminate the line for any case.  */
 	  buffer[buflen - 1] = '\0';
 
@@ -1076,7 +1095,12 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	    if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
 	      return NSS_STATUS_NOTFOUND;
 	    else
-	      return status;
+	      {
+		if (status == NSS_STATUS_TRYAGAIN)
+		  /* The parser ran out of space */
+		  fsetpos (ent->stream, &pos);
+		return status;
+	      }
 	}
     }
   return NSS_STATUS_SUCCESS;
