@@ -33,11 +33,11 @@ primitive functions to do each step individually instead.
 * Process Identification::      How to get the process ID of a process.
 * Creating a Process::          How to fork a child process.
 * Executing a File::            How to get a process to execute another
-				         program.
+				 program.
 * Process Completion::          How to tell when a child process has
-				         completed.
+				 completed.
 * Process Completion Status::   How to interpret the status value 
-                                         returned from a child process.
+                                 returned from a child process.
 * BSD Wait Functions::  	More functions, for backward compatibility.
 * Process Creation Example::    A complete example program.
 @end menu
