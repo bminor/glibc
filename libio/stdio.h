@@ -176,7 +176,7 @@ extern int obstack_printf __P ((struct obstack *__obstack, __const char *__fmt,
 				...));
 #endif
 
-#if !defined(__STRICT_ANSI__) || defined(_POSIX_SOURCE)
+#if !defined(__STRICT_ANSI__) || defined(__USE_POSIX)
 extern FILE *fdopen __P ((int, __const char *));
 extern int fileno __P ((FILE*));
 extern FILE* popen __P ((__const char*, __const char*));
