@@ -83,7 +83,7 @@ install-others += $(includedir)/mach/version.h
 $(includedir)/mach/version.h: $(mach-srcdir)/sys/version.h; $(do-install)
 
 # Define mach-syscalls and sysno-*.
-ifneq ($(no_deps),t)
+ifndef inhibit-mach-syscalls
 include $(objpfx)mach-syscalls.mk
 endif
 $(objpfx)mach-syscalls.mk: mach/syscall_sw.h syscalls.awk
