@@ -34,8 +34,8 @@ BEGIN {
     print "";
     print "#ifdef _ERRNO_H\n";
     print "enum __error_t_codes\n{";
-    errno = 0;
     errnoh = 0;
+    maxerrno = 0;
     in_mach_errors = 0;
     in_math = 0;
     edom = erange = "";
@@ -53,21 +53,24 @@ $1 == "@comment" && errnoh == 1 \
   }
 
 errnoh == 2 && $1 == "@deftypevr"  && $2 == "Macro" && $3 == "int" \
-  {
-    e = $4;
+  { ++errnoh; e = $4; next; }
+
+errnoh == 3 && $1 == "@comment" && $2 == "errno" {
+    errno = $3 + 0;
+    if (errno > maxerrno) maxerrno = errno;
     if (e == "EWOULDBLOCK")
       {
 	print "#define EWOULDBLOCK EAGAIN /* Operation would block */";
 	next;
       }
     x = sprintf ("%-40s/*%s */", sprintf ("%-24s%s", "#define\t" e,
-					  "_HURD_ERRNO (" errno+1 ")"),
+					  "_HURD_ERRNO (" errno ")"),
 		 etext);
     if (e == "EDOM")
       edom = x;
     else if (e == "ERANGE")
       erange = x;
-    printf "\t%-16s= _HURD_ERRNO (%d),\n", e, ++errno;
+    printf "\t%-16s= _HURD_ERRNO (%d),\n", e, errno;
     print x;
     next;
   }
@@ -132,7 +135,7 @@ END \
     print "";
     print "};";
     print "";
-    printf "#define\t_HURD_ERRNOS\t%d\n", ++errno;
+    printf "#define\t_HURD_ERRNOS\t%d\n", maxerrno+1;
     print "";
     print "\
 /* User-visible type of error codes.  It is ok to use `int' or\n\

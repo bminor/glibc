@@ -20,6 +20,7 @@
 # @comment errno.h
 # @comment POSIX.1: Function not implemented
 # @deftypevr Macro int ENOSYS
+# @comment errno 78
 
 BEGIN {
     print "/* This file is generated from errno.texi by errlist.awk.  */"
@@ -31,7 +32,7 @@ BEGIN {
     print ""
     print "const char *_sys_errlist[] =";
     print "  {";
-    errno = 0;
+    maxerrno = 0;
     print "    \"Success\","
   }
 $1 == "@comment" && $2 == "errno.h" { errnoh=1; next }
@@ -43,21 +44,32 @@ errnoh == 1 && $1 == "@comment" \
       etext = etext " " $i;
     next;
   }
-errnoh == 2 && $1 == "@deftypevr"  && $2 == "Macro" && $3 == "int" \
+errnoh == 2 && $1 == "@deftypevr" && $2 == "Macro" && $3 == "int" \
   {
-    e = $4;
-    if (e != "EAGAIN")
-      printf "%-40s/* %d = %s */\n", "    \"" etext "\",", ++errno, e;
+    e = $4; errnoh++; next;
+  }
+errnoh == 3 && $1 == "@comment" && $2 == "errno" \
+  {
+    errno = $3 + 0;
+    msgs[errno] = etext;
+    names[errno] = e;
+    if (errno > maxerrno) maxerrno = errno;
     next;
   }
 { errnoh=0 }
 END {
+  for (i = 1; i <= maxerrno; ++i)
+    {
+      if (names[i] == "")
+	print "    \"Reserved error " i "\",";
+      else
+	printf "%-40s/* %d = %s */\n", "    \"" msgs[i] "\",", i, names[i];
+    }
   print "  };";
   print "";
   print "#include <errno.h>";
-  ++errno;
-  printf "#if _HURD_ERRNOS != %d\n", errno;
+  printf "#if _HURD_ERRNOS != %d\n", maxerrno+1;
   print "#error errlist/errnos generation bug";
   print "#endif"
-  printf "const int _sys_nerr = %d;\n", errno;
+  printf "const int _sys_nerr = %d;\n", maxerrno+1;
   }
