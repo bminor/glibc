@@ -72,7 +72,7 @@ distribute = $(minimal-dist)	       					\
 	     library.?? library.??s texinfo.tex summary.texinfo		\
 	     stamp-summary chapters chapters-incl
 
-tar-it = tar chvf $@ $^
+tar-it = tar chovf $@ $^
 
 manual.tar: $(minimal-dist) ; $(tar-it)
 mandist.tar: $(distribute) ; $(tar-it)
