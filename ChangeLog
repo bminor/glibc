@@ -1,3 +1,23 @@
+2000-01-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/alpha/fpu/feholdexcpt.c: Correct return value according to
+	the standard.
+	* sysdeps/alpha/fpu/fesetround.c: Likewise.
+	* sysdeps/arm/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/arm/fpu/fesetround.c: Likewise.
+	* sysdeps/generic/feholdexcpt.c: Likewise.
+	* sysdeps/generic/fesetround.c: Likewise.
+	* sysdeps/i386/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/i386/fpu/fesetround.c: Likewise.
+	* sysdeps/m68k/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/m68k/fpu/fesetround.c: Likewise.
+	* sysdeps/mips/fesetround.c: Likewise.
+	* sysdeps/powerpc/feholdexcpt.c: Likewise.
+	* sysdeps/powerpc/fesetround.c: Likewise.
+	* sysdeps/sparc/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/sparc/fpu/fesetround.c: Likewise.
+	Patch by Miloslav Trmac <mitr@volny.cz>.
+
 2000-01-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* catgets/catgets.c (catopen): Handle NL_CAT_LOCALE correctly.
