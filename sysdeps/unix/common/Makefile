@@ -16,13 +16,13 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-$(objpfx)local_lim.h: $(objpfx)make-local_lim
+$(common-objpfx)local_lim.h: $(common-objpfx)make-local_lim
 	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
-$(objpfx)make-local_lim: $(sysdep_dir)/unix/bsd/make-local_lim.c
+$(common-objpfx)make-local_lim: $(sysdep_dir)/unix/bsd/make-local_lim.c
 	$(native-compile)
 
-before-compile := $(before-compile) $(objpfx)local_lim.h
+before-compile := $(before-compile) $(common-objpfx)local_lim.h
 
 ifeq ($(subdir),posix)
 sysdep_routines := $(sysdep_routines) bsd_getgrp
