@@ -460,11 +460,11 @@ DEFUN(fillbuf, (fp), register FILE *fp)
 
 /* Default I/O and room functions.  */
 
-extern __io_read __stdio_read;
-extern __io_write __stdio_write;
-extern __io_seek __stdio_seek;
-extern __io_close __stdio_close;
-extern __io_fileno __stdio_fileno;
+extern __io_read_fn __stdio_read;
+extern __io_write_fn __stdio_write;
+extern __io_seek_fn __stdio_seek;
+extern __io_close_fn __stdio_close;
+extern __io_fileno_fn __stdio_fileno;
 CONST __io_functions __default_io_functions =
   {
     __stdio_read, __stdio_write, __stdio_seek, __stdio_close, __stdio_fileno
