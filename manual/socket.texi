@@ -747,16 +747,37 @@ host address number as an @code{unsigned long int}.
 
 @comment netinet/in.h
 @comment BSD
-@deftypevr Macro {unsigned long int} INADDR_ANY
+@deftypevr Macro {unsigned long int} INADDR_LOOPBACK
 You can use this constant to stand for ``the address of this machine,''
-instead of finding its actual address.  This special constant saves you
-the trouble of looking up the address of your own machine.  Also, if
-your machine has multiple network addresses on different networks (which
-is not unusual), using @code{INADDR_ANY} permits the system to choose
-whichever address makes communication most efficient.
+instead of finding its actual address.  It is the Internet address
+@samp{127.0.0.1}, which is usually called @samp{localhost}.  This
+special constant saves you the trouble of looking up the address of your
+own machine.  Also, the system usually implements @code{INADDR_LOOPBACK}
+specially, avoiding any network traffic for the case of one machine
+talking to itself.
 @end deftypevr
 
-@c !!! list also INADDR_LOOPBACK, INADDR_NONE, INADDR_BROADCAST
+@comment netinet/in.h
+@comment BSD
+@deftypevr Macro {unsigned long int} INADDR_ANY
+You can use this constant to stand for ``any incoming address,'' when
+binding to an address.  @xref{Setting Address}.  This is the usual
+address to give in the @code{sin_addr} member of @w{@code{struct
+sockaddr_in}} when you want to accept Internet connections.
+@end deftypevr
+
+@comment netinet/in.h
+@comment BSD
+@deftypevr Macro {unsigned long int} INADDR_BROADCAST
+This constant is the address you use to send a broadcast message.
+@c !!! broadcast needs further documented
+@end deftypevr
+
+@comment netinet/in.h
+@comment BSD
+@deftypevr Macro {unsigned long int} INADDR_NONE
+This constant is returned by some functions to indicate an error.
+@end deftypevr
 
 @node Host Address Functions
 @subsubsection Host Address Functions
@@ -770,10 +791,23 @@ local-address-within-network numbers in host byte order.
 
 @comment arpa/inet.h
 @comment BSD
-@deftypefun {unsigned long int} inet_addr (const char *@var{name})
+@deftypefun {int} inet_aton (const char *@var{name}, struct in_addr *@var{addr})
 This function converts the Internet host address @var{name}
-from the standard numbers-and-dots notation into binary data.
-If the input is not valid, @code{inet_addr} returns @code{-1}.
+from the standard numbers-and-dots notation into binary data and stores
+it in the @code{struct in_addr} that @var{addr} points to.
+@code{inet_aton} returns nonzero if the address is valid, zero if not.
+@end deftypefun
+
+@comment arpa/inet.h
+@comment BSD
+@deftypefun {unsigned long int} inet_addr (const char *@var{name})
+This function converts the Internet host address @var{name} from the
+standard numbers-and-dots notation into binary data.  If the input is
+not valid, @code{inet_addr} returns @code{INADDR_NONE}.  This is an
+obsolete interface to @code{inet_aton}, described immediately above; it
+is obsolete because @code{INADDR_NONE} is a valid address
+(255.255.255.255), and @code{inet_aton} provides a cleaner way to
+indicate error return.
 @end deftypefun
 
 @comment arpa/inet.h
