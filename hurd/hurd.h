@@ -497,6 +497,18 @@ extern int openport (io_t port, int flags);
 /* Inform the proc server we have exitted with STATUS, and kill the
    task thoroughly.  This function never returns, no matter what.  */
 extern volatile void _hurd_exit (int status);
+
+/* User-registered handlers for specific `ioctl' requests.  */
+
+struct ioctl_handler
+  {
+    int first_request, last_request; /* Range of handled request values.  */
+
+    int (*handler) (int fd, int request, void *arg);
+
+    struct ioctl_handler *next;	/* Next handler.  */
+  };
+
 
 
 #endif	/* hurd.h */
