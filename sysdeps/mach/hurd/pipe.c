@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +21,10 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <stddef.h>
 #include <hurd.h>
+#include <hurd/fd.h>
 #include <sys/socket.h>
 #include <hurd/socket.h>
+#include <fcntl.h>
 
 /* Create a one-way communication channel (pipe).
    If successul, two file descriptors are stored in FDS;
@@ -65,10 +67,13 @@ DEFUN(__pipe, (fds), int fds[2])
 
   /* Put the sockets into file descriptors.  */
 
-  d1 = _hurd_intern_fd (sock1, 0, 1);
+  d1 = _hurd_intern_fd (sock1, O_IGNORE_CTTY, 1);
   if (d1 < 0)
-    return -1;
-  d2 = _hurd_intern_fd (sock2, 0, 1);
+    {
+      __mach_port_deallocate (__mach_task_self (), sock2);
+      return -1;
+    }
+  d2 = _hurd_intern_fd (sock2, O_IGNORE_CTTY, 1);
   if (d2 < 0)
     {
       err = errno;
