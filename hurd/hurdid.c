@@ -19,49 +19,58 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <gnu-stabs.h>
 
-struct mutex _hurd_idlock;
-int _hurd_id_valid;
-struct idblock _hurd_id;
+struct _hurd_id_data _hurd_id;
 
 static void
 init_id (void)
 {
-  __mutex_init (&_hurd_idlock);
-  _hurd_id_valid = 0;
+  __mutex_init (&_hurd_id.lock);
+  _hurd_id.valid = 0;
 }
 
 text_set_element (__libc_subinit, init_id);
 
-/* Check that _hurd_uid and _hurd_gid are valid and update them if not.
-   Expects _hurd_idlock to be held and does not release it.  */
+/* Check that _hurd_id.{gen,aux} are valid and update them if not.
+   Expects _hurd_id.lock to be held and does not release it.  */
 
 error_t
 _hurd_check_ids (void)
 {
-  if (! _hurd_id_valid)
+  if (! _hurd_id.valid)
     {
       error_t err;
+      inline void dealloc (__typeof (_hurd_id.gen) *p)
+	{
+	  if (p->uids)
+	    {
+	      __vm_deallocate (__mach_task_self (),
+			       (vm_address_t) p->uids,
+			       p->nuids * sizeof (uid_t));
+	      p->uids = NULL;
+	    }
+	  if (p->gids)
+	    {
+	      __vm_deallocate (__mach_task_self (),
+			       (vm_address_t) p->gids,
+			       p->ngids * sizeof (gid_t));
+	      p->gids = NULL;
+	    }
+	}
 
-      if (_hurd_uid)
-	{
-	  __vm_deallocate (__mach_task_self (), _hurd_uid);
-	  _hurd_uid = NULL;
-	}
-      if (_hurd_gid)
-	{
-	  __vm_deallocate (__mach_task_self (), _hurd_gid);
-	  _hurd_gid = NULL;
-	}
+      dealloc (&_hurd_id.gen);
+      dealloc (&_hurd_id.aux);
       if (_hurd_rid_auth)
 	{
 	  __mach_port_deallocate (__mach_task_self (), _hurd_rid_auth);
 	  _hurd_rid_auth = MACH_PORT_NULL;
 	}
 
-      if (err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
-				__auth_getids (port,
-					       &_hurd_uid, &_hurd_nuids,
-					       &_hurd_gid, &_hurd_ngids)))
+      if (err = __USEPORT (AUTH, __auth_getids
+			   (port,
+			    &_hurd_id.gen.uids, &_hurd_id.gen.nuids,
+			    &_hurd_id.aux.uids, &_hurd_id.aux.nuids,
+			    &_hurd_id.gen.gids, &_hurd_id.gen.ngids,
+			    &_hurd_id.aux.gids, &_hurd_id.aux.ngids)))
 	return err;
 
       _hurd_id_valid = 1;
