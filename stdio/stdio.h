@@ -361,7 +361,11 @@ extern int vsprintf __P ((char *__s, __const char *__format,
 			  __gnuc_va_list __arg));
 
 #ifdef	__OPTIMIZE__
-#define	vprintf(fmt, arg)		vfprintf(stdout, (fmt), (arg))
+extern __inline int
+vprintf (const char *__fmt, __gnuc_va_list __arg)
+{
+  return vfprintf (stdout, __fmt, __arg);
+}
 #endif /* Optimizing.  */
 
 #ifdef	__USE_GNU
@@ -410,9 +414,21 @@ extern int vsscanf __P ((__const char *__s, __const char *__format,
 
 
 #ifdef	__OPTIMIZE__
-#define	vfscanf(s, format, arg)	__vfscanf((s), (format), (arg))
-#define	vscanf(format, arg)	__vfscanf(stdin, (format), (arg))
-#define	vsscanf(s, format, arg)	__vsscanf((s), (format), (arg))
+extern __inline int
+vfscanf (FILE *__s, const char *__fmt, __gnuc_va_list __arg)
+{
+  return __vfscanf (__s, __fmt, __arg);
+}
+extern __inline int
+vscanf (const char *__fmt, __gnuc_va_list __arg)
+{
+  return __vfscanf (stdin, __fmt, __arg);
+}
+extern __inline int
+vsscanf (const char *__s, const char *__fmt, __gnuc_va_list __arg)
+{
+  return __vsscanf (__s, __fmt, __arg);
+}
 #endif /* Optimizing.  */
 #endif /* Use GNU.  */
 
@@ -586,11 +602,6 @@ extern char *sys_errlist[];
 extern int _sys_nerr;
 extern char *_sys_errlist[];
 #endif
-
-#ifdef	__USE_MISC
-/* Print a message describing the meaning of the given signal number.  */
-extern void psignal __P ((int __sig, __const char *__s));
-#endif /* Non strict ANSI and not POSIX only.  */
 
 
 #ifdef	__USE_POSIX
