@@ -1,3 +1,22 @@
+1998-05-02  7:06  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/alpha/lshift.s: Correct .prologue usage.
+	* sysdeps/alpha/mul_1.s: Likewise.
+	* sysdeps/alpha/rshift.s: Likewise.
+	* sysdeps/alpha/setjmp.S: Likewise.
+	* sysdeps/alpha/sub_n.s: Likewise.
+	* sysdeps/alpha/submul_1.s: Likewise.
+	* sysdeps/alpha/alphaev5/add_n.s: Likewise.
+	* sysdeps/alpha/alphaev5/lshift.s: Likewise.
+	* sysdeps/alpha/alphaev5/rshift.s: Likewise.
+	* sysdeps/alpha/alphaev5/sub_n.s: Likewise.
+	* sysdeps/alpha/elf/crtbegin.S: Likewise.
+	* sysdeps/alpha/elf/crtend.S: Likewise.
+	* sysdeps/alpha/elf/start.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise.
+
+	* sysdeps/alpha/fpu/e_sqrt.c: Disable custom versions of sqrt.
+
 1998-04-24 13:56  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/socketbits.h: Add #defines for enum values.
