@@ -29,7 +29,7 @@ DEFUN(__fchmod, (fd, mode), int fd AND mode_t mode)
   error_t err;
 
   if (err = _HURD_DPORT_USE (fd, __file_chmod (port, mode)))
-    return __hurd_fail (err);
+    return __hurd_dfail (fd, err);
 
   return 0;
 }
