@@ -39,8 +39,6 @@ routines := brk sbrk sstk ioctl \
 	    __gethstnm gethstnm sethostnam \
 	    __select select \
 	    acct chroot fsync sync reboot \
-	    getdents \
-	    __getdents \
 	    gethostid sethostid \
 	    mknod __mknod \
 	    swapon vhangup mktemp \
@@ -52,7 +50,7 @@ routines := brk sbrk sstk ioctl \
 	    __utimes \
 	    truncate ftruncate \
 	    chflags fchflags \
-	    insremque swab getttyent
+	    insremque getttyent
 aux := data_start progname
 distribute := bsd-compat.c
 install-lib := libbsd-compat.a
