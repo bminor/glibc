@@ -115,7 +115,7 @@ If job control is not supported, then there can be only one process
 group per session, which behaves as if it were always in the foreground.
 The functions for creating additional process groups simply fail with
 the error code @code{ENOSYS}.
-@c !!! no, SIG* macros are not defined on all systems
+
 The macros naming the various job control signals (@pxref{Job Control
 Signals}) are defined even if job control is not supported.  However,
 the system never generates these signals, and attempts to send a job
@@ -144,6 +144,9 @@ calls @code{setsid} to become the leader of a new session.
 @xref{Process Group Functions}.
 
 @c !!! explain how it gets a new one (by opening any terminal)
+@c ??? How you get a controlling terminal is system-dependent.
+@c We should document how this will work in the GNU system when it is decided.
+@c What Unix does is not clean and I don't think GNU should use that.
 
 @node Access to the Terminal, Orphaned Process Groups, Controlling Terminal, Job Control
 @section Access to the Controlling Terminal
@@ -671,8 +674,6 @@ current terminal modes so that it can restore them later if the job is
 continued.  The functions for dealing with terminal modes are
 @code{tcgetattr} and @code{tcsetattr}; these are described in
 @ref{Terminal Modes}.
-@c !!! what about programs like stty that SHOULD frob the modes??
-
 
 Here is the sample shell's function for doing all of this.
 
@@ -1019,12 +1020,12 @@ to job control.
 @subsection Identifying the Controlling Terminal
 @cindex controlling terminal, determining
 
-@c !!! ctermid returns "/dev/tty"; use ttyname to find the real name.
-You can use the @code{ctermid} function to get a file name that
-corresponds to the controlling terminal for the current process.  It is
-not needed often; if you simply wish to open the controlling terminal,
-you need not find out its name; simply open @file{/dev/tty}.  This
-function is declared in the header file @file{stdio.h}.
+You can use the @code{ctermid} function to get a file name that you can
+use to open the controlling terminal.  In the GNU library, it returns
+the same string all the time: @code{"/dev/tty"}.  That is a special
+``magic'' file name that refers to the controlling terminal of the
+current process (if it has one).  The function @code{ctermid} is
+declared in the header file @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
