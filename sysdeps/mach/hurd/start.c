@@ -239,7 +239,11 @@ _start (void)
     {
       argv = envp = NULL;
 
-      if (stack_base < stack_pointer)
+      if (stack_base == 0)
+	/* This is an explicit message that we should
+	   not deallocate the stack at all.  */
+	_hurd_stack_low = _hurd_stack_high = 0;
+      else if (stack_base < stack_pointer)
 	{
 	  /* Stack grows down.  */
 	  _hurd_stack_low = trunc_page (stack_base);
