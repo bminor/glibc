@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <mach/thread_status.h>
 
 static void
-trampoline (void (*handler) (int signo, int sigcode, struct sigcontext *scp)
+trampoline (void (*handler) (int signo, int sigcode, struct sigcontext *scp),
 	    int signo, int sigcode, struct sigcontext *scp)
 {
   (*handler) (signo, sigcode, scp);
