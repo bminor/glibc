@@ -401,9 +401,6 @@ eval "$CPP conftest.c 2>/dev/null" \
 }
 rm -f conftest*
 
-AC_HEADER_EGREP(__gnuc_va_list, stdarg.h, [config_vars="$config_vars
-stdarg.h = # The installed <stdarg.h> defines __gnuc_va_list."])
-
 AC_COMPILE_CHECK([libc-friendly stddef.h],
 [#define __need_size_t
 #define __need_wchar_t
