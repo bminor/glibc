@@ -1,4 +1,4 @@
-# @(#)southamerica	7.18
+# @(#)southamerica	7.23
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -28,7 +28,6 @@
 #	-4:00	AST	ADT	Atlantic
 #	-5:00	AST	ADT	Acre
 #
-# See the `africa' file for time zone naming and abbreviation conventions.
 # Earlier editions of these tables used the North American style (e.g. ARST and
 # ARDT for Argentine Standard and Daylight Time), but the following quote
 # suggests that it's better to use European style (e.g. ART and ARST).
@@ -190,7 +189,7 @@ Zone	America/La_Paz	-4:32:36 -	LMT	1890
 # ending dates, giving them as "estimated date(s) based on previous year".  We
 # infer a rule here from one example, always a dangerous practice....  Yes,
 # they really do switch on Saturday, according to the OAG.
-# "[America/Porto_Acre]" is for the Territory of Acre;
+# "[America/Porto_Acre]" is for the [State] of Acre;
 # "[America/Noronha]" is for Fernando De Noronha.
 
 # From Paul Eggert <eggert@twinsun.com> (1993-11-18):
@@ -243,6 +242,11 @@ Zone	America/La_Paz	-4:32:36 -	LMT	1890
 # Sao Paulo (UTC-3) and Cuiaba (UTC-4) always observed DST.
 # Porto Acre (UTC-5) stopped observing DST in mid-1988.
 
+# From Rodrigo Feher <feher@pobox.com> (1998-01-17):
+# Reading "southamerica" file in timezone 7.55 I've found an
+# error. Line 193 say "Territory of Acre". It is not a territory anymore
+# but a state.
+
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Brazil	1931	only	-	Oct	 3	11:00	1:00	D
 Rule	Brazil	1932	1933	-	Apr	 1	 0:00	0	S
@@ -270,8 +274,25 @@ Rule	Brazil	1992	only	-	Feb	 9	 0:00	0	S
 Rule	Brazil	1993	1995	-	Oct	Sun>=11	 0:00	1:00	D
 Rule	Brazil	1993	only	-	Jan	31	 0:00	0	S
 Rule	Brazil	1994	1995	-	Feb	Sun>=15	 0:00	0	S
-Rule	Brazil	1996	max	-	Feb	Sun>=11	 0:00	0	S
-Rule	Brazil	1996	max	-	Oct	Sun>=1	 0:00	1:00	D
+Rule	Brazil	1996	only	-	Feb	Sun>=11	 0:00	0	S
+Rule	Brazil	1996	only	-	Oct	Sun>=1	 0:00	1:00	D
+# From Daniel C. Sobral <dcs@gns.com.br> (1998-02-12):
+# In 1997, the DS began on October 6. The stated reason was that
+# because international television networks ignored Brazil's policy on DS,
+# they bought the wrong times on satellite for coverage of Pope's visit.
+# This year, the ending date of DS was postponed to March 1
+# to help dealing with the shortages of electric power.
+#
+# From Paul Eggert (1998-02-25):
+# Reference for 1997-10-06 change:
+# <a href="http://churchnet.ucsm.ac.uk/news/files2/news165.htm">
+# Brazil Prepares for Papal Visit
+# </a>,
+# Church Net UK (1997-10-02).
+Rule	Brazil	1997	only	-	Oct	 6	 0:00	1:00	D
+Rule	Brazil	1998	only	-	Mar	 1	 0:00	0	S
+Rule	Brazil	1998	max	-	Oct	Sun>=1	 0:00	1:00	D
+Rule	Brazil	1999	max	-	Feb	Sun>=11	 0:00	0	S
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 #
