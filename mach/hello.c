@@ -33,7 +33,7 @@ main (int argc, char **argv, char **envp)
   FILE *consf;
 
   device = pid2task (-2);
-  err = device_open (device, D_WRITE, "console", consdev);
+  err = device_open (device, D_WRITE, "console", &consdev);
   mach_port_deallocate (mach_task_self (), device);
   if (err)
     exit (err);
