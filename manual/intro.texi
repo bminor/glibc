@@ -607,26 +607,24 @@ compatibility library by passing the @samp{-lbsd-compat} option to the
 compiler or linker.
 @end defvr
 
-We recommend you use @code{_GNU_SOURCE} in new programs.
-If you don't specify the @samp{-ansi} option to GCC and don't define
-any of these macros explicitly, the effect as the same as defining
-@code{_GNU_SOURCE}.
+We recommend you use @code{_GNU_SOURCE} in new programs.  If you don't
+specify the @samp{-ansi} option to GCC and don't define any of these macros
+explicitly, the effect is the same as defining @code{_GNU_SOURCE}.
 
-When you define a feature test macro to request a larger class of
-features, it is harmless to define in addition a feature test macro for
-a subset of those features.  For example, if you define
-@code{_POSIX_C_SOURCE}, then defining @code{_POSIX_SOURCE} as well has
-no effect.  Likewise, if you define @code{_GNU_SOURCE}, then defining
-either @code{_POSIX_SOURCE} or @code{_POSIX_C_SOURCE} or
-@code{_SVID_SOURCE} as well has no effect.
+When you define a feature test macro to request a larger class of features,
+it is harmless to define in addition a feature test macro for a subset of
+those features.  For example, if you define @code{_POSIX_C_SOURCE}, then
+defining @code{_POSIX_SOURCE} as well has no effect.  Likewise, if you
+define @code{_GNU_SOURCE}, then defining either @code{_POSIX_SOURCE} or
+@code{_POSIX_C_SOURCE} or @code{_SVID_SOURCE} as well has no effect.
 
-Note, however, that the features of @code{_BSD_SOURCE} are not a subset
-of any of the other feature test macros supported.  This is because it
-defines BSD features that take precedence over the POSIX features that
-are requested by the other macros.  For this reason, defining
-@code{_BSD_SOURCE} in addition to the other feature test macros does
-have an effect: it causes the BSD features to take priority over the
-conflicting POSIX features.
+Note, however, that the features of @code{_BSD_SOURCE} are not a subset of
+any of the other feature test macros supported.  This is because it defines
+BSD features that take precedence over the POSIX features that are
+requested by the other macros.  For this reason, defining
+@code{_BSD_SOURCE} in addition to the other feature test macros does have
+an effect: it causes the BSD features to take priority over the conflicting
+POSIX features.
 
 @node Roadmap to the Manual,  , Using the Library, Introduction
 @section Roadmap to the Manual
@@ -641,9 +639,12 @@ are reported.
 
 @item 
 @ref{Language Features}, contains information about library support for
-standard parts of the C language, including things like the
-@code{sizeof} operator and the symbolic constant @code{NULL}, and how to
-write functions accepting variable numbers of arguments.
+standard parts of the C language, including things like the @code{sizeof}
+operator and the symbolic constant @code{NULL}, how to write functions
+accepting variable numbers of arguments, and constants describing the
+ranges and other properties of the numerical types.  There is also a simple
+debugging mechanism which allows you to put assertions in your code, and
+have diagnostic messages printed if the tests fail.
 
 @item 
 @ref{Memory Allocation}, describes the GNU library's facilities for
@@ -660,22 +661,6 @@ performing case conversion.
 @ref{String and Array Utilities}, has descriptions of functions for
 manipulating strings (null-terminated character arrays) and general
 byte arrays, including operations such as copying and comparison.
-
-@item 
-@ref{Extended Characters}, contains information about manipulating
-characters and strings using character sets larger than will fit in
-the usual @code{char} data type.  
-
-@item 
-@ref{Locales}, describes how selecting a particular country 
-or language affects the behavior of the library.  For example, the locale
-affects collation sequences for strings and how monetary values are
-formatted.
-
-@item 
-@ref{Searching and Sorting}, contains information about functions
-for searching and sorting arrays.  You can use these functions on any
-kind of array by providing an appropriate comparison function.
 
 @item
 @ref{I/O Overview}, gives an overall look at the input and output
@@ -718,23 +703,44 @@ attributes of a terminal device.  If you want to disable echo of
 characters typed by the user, for example, read this chapter.
 
 @item 
-@ref{Consistency Checking}, contains information about a simple
-debugging mechanism.  You can put assertions in your code, and
-diagnostic messages are printed if the test fails.
-
-@item 
 @ref{Mathematics}, contains information about the math library
 functions.  These include things like random-number generators and
 remainder functions on integers as well as the usual trigonometric and
 exponential functions on floating-point numbers.
 
 @item
+@ref{Low-Level Arithmetic Functions}, describes functions for simple
+arithmetic, analysis of floating-point values, and reading numbers from
+strings.
+
+@item 
+@ref{Searching and Sorting}, contains information about functions
+for searching and sorting arrays.  You can use these functions on any
+kind of array by providing an appropriate comparison function.
+
+@item
+@ref{Pattern Matching}, presents functions for matching regular expressions
+and shell file name patterns, and for expanding words as the shell does.
+
+@item
 @ref{Date and Time}, describes functions for measuring both calendar time
 and CPU time, as well as functions for setting alarms and timers.
 
+@item 
+@ref{Extended Characters}, contains information about manipulating
+characters and strings using character sets larger than will fit in
+the usual @code{char} data type.  
+
+@item 
+@ref{Locales}, describes how selecting a particular country 
+or language affects the behavior of the library.  For example, the locale
+affects collation sequences for strings and how monetary values are
+formatted.
+
 @item
 @ref{Non-Local Exits}, contains descriptions of the @code{setjmp} and
-@code{longjmp} functions.
+@code{longjmp} functions.  These functions provide a facility for
+@code{goto}-like jumps which can jump from one function to another.
 
 @item
 @ref{Signal Handling}, tells you all about signals---what they are,
@@ -742,13 +748,13 @@ how to establish a handler that is called when a particular kind of
 signal is delivered, and how to prevent signals from arriving during
 critical sections of your program.
 
-@item 
-@ref{Child Processes}, contains information about how to start new processes
-and run programs.
-
 @item
 @ref{Process Startup}, tells how your programs can access their
 command-line arguments and environment variables.
+
+@item 
+@ref{Child Processes}, contains information about how to start new processes
+and run programs.
 
 @item
 @ref{Job Control}, describes functions for manipulating process groups.
@@ -764,16 +770,19 @@ about the hardware and software configuration your program is executing
 under.
 
 @item 
-@ref{Range of Type}, contains information about
-parameters that characterize the sizes of integer and floating-point
-types used by the particular C implementation that your program has
-been compiled with.  Most of these parameters are provided for 
-compatibility with ANSI C.
+@ref{System Configuration}, tells you how you can get information about
+various operating system limits.  Most of these parameters are provided for
+compatibility with POSIX.
 
-@item 
-@ref{System Configuration}, tells you how you can get
-information about various operating system limits.  Most of these
-parameters are provided for compatibility with POSIX.
+@item
+@ref{Library Summary}, gives a summary of all the functions, variables, and
+macros in the library, with complete data types and function prototypes,
+and says what standard or system each is derived from.
+
+@item
+@ref{Maintenance}, explains how to build and install the GNU C library on
+your system, how to report any bugs you might find, and how to add new
+functions or port the library to a new system.
 @end itemize
 
 If you already know the name of the facility you are interested in, you
