@@ -181,10 +181,12 @@ struct __stdio_file
    with `__'.  All of these may evaluate their arguments more than once.  */
 
 
-/* Nonzero if STREAM is a valid stream.  */
+/* Nonzero if STREAM is a valid stream.
+   STREAM must be a modifiable lvalue (wow, I got to use that term).
+   See stdio/glue.c for what the confusing bit is about.  */
 #define	__validfp(stream)						      \
   (stream != NULL && ((stream->__magic == _GLUEMAGIC &&			      \
-		       (stream = (FILE *) &((int *) stream)[1])),	      \
+		       (stream = *(FILE **) ((int *) stream)[1])),	      \
 		      (stream->__magic == _IOMAGIC)))			      \
 
 /* Clear the error and EOF indicators of STREAM.  */
