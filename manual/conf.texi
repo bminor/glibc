@@ -943,6 +943,7 @@ The largest text line that the text-oriented POSIX.2 utilities can
 support.  (If you are using the GNU versions of these utilities, then
 there is no actual limit except that imposed by the available virtual
 memory, but there is no way that the library can tell you this.)
+@end deftypevr
 
 @comment limits.h
 @comment POSIX.2
