@@ -40,15 +40,15 @@ struct hurd_userlink
 
 /* Attach LINK to the chain of users at *CHAINP.  */
 
-extern inline struct hurd_userlink *
+extern inline void
 _hurd_userlink_link (struct hurd_userlink **chainp,
-			  struct hurd_userlink *link)
+		     struct hurd_userlink *link)
 {
   link->next = *chainp;
   if (link->next)
     link->next->prevp = &link->next;
   link->prevp = chainp;
-  return link;
+  *chainp = link;
 }
 
 
@@ -60,14 +60,38 @@ _hurd_userlink_link (struct hurd_userlink **chainp,
 extern inline int
 _hurd_userlink_unlink (struct hurd_userlink *link)
 {
+  /* The caller should deallocate the resource he used if his chain has
+     been detached from the cell (and thus has a nil `prevp'), and there is
+     no next link representing another user reference to the same resource. */
   int dealloc = ! link->next && ! link->prevp;
+
   /* Remove our link from the chain of current users.  */
   if (link->prevp)
     *link->prevp = link->next;
   if (link->next)
     link->next->prevp = link->prevp;
+
   return dealloc;
 }
 
+
+/* Clear all users from *CHAINP.  Call this when the resource *CHAINP
+   protects is changing.  If the return value is nonzero, no users are on
+   the chain and the caller should deallocate the resource.  If the return
+   value is zero, someone is still using the resource and they will
+   deallocate it when they are finished.  */
+
+extern inline int
+_hurd_userlink_clear (struct hurd_userlink **chainp)
+{
+  if (*chainp == NULL)
+    return 1;
+
+  /* Detach the chain of current users from the cell.  The last user to
+     remove his link from that chain will deallocate the old resource.  */
+  (*chainp)->prevp = NULL;
+  *chainp = NULL;
+  return 0;
+}
 
 #endif	/* hurd/userlink.h */
