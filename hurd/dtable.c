@@ -88,8 +88,8 @@ init_dtable (void)
 
 text_set_element (__libc_subinit, init_dtable);
 
-/* Allocate a new file descriptor and install PORT in it.
-   FLAGS are as for `open'; only O_NOCTTY is meaningful, but all are saved.
+/* Allocate a new file descriptor and install PORT in it.  FLAGS are as for
+   `open'; only O_IGNORE_CTTY is meaningful, but all are saved.
 
    If the descriptor table is full, set errno, and return -1.
    If DEALLOC is nonzero, deallocate PORT first.  */
@@ -147,12 +147,15 @@ _hurd_port2fd (struct _hurd_fd *d, io_t port, int flags)
 {
   io_t ctty;
   mach_port_t cttyid;
-  int is_ctty = !(flags & O_NOCTTY) && ! __term_getctty (port, &cttyid);
+  int is_ctty = !(flags & O_IGNORE_CTTY) && ! __term_getctty (port, &cttyid);
 
   if (is_ctty)
     {
       /* This port is capable of being a controlling tty.
 	 Is it ours?  */
+      is_ctty &= __USEPORT (CTTYID, port == cttyid);
+      __mach_port_deallocate (__mach_task_self (), cttyid);
+#if 0
       struct _hurd_port *const id = &_hurd_ports[INIT_PORT_CTTYID];
       __spin_lock (&id->lock);
       if (id->port == MACH_PORT_NULL)
@@ -169,6 +172,7 @@ _hurd_port2fd (struct _hurd_fd *d, io_t port, int flags)
 	  __spin_unlock (&id->lock);
 	  __mach_port_deallocate (__mach_task_self (), cttyid);
 	}
+#endif
     }
 
   if (is_ctty && ! __term_become_ctty (port, _hurd_pid, _hurd_pgrp,
