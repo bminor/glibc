@@ -593,7 +593,8 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
 	    break;
 
 	  CTYPE_DATA (_NL_CTYPE_WIDTH,
-		      ctype->width, ctype->plane_size * ctype->plane_cnt);
+		      ctype->width,
+		      (ctype->plane_size * ctype->plane_cnt + 3) ~3ul);
 
 	  CTYPE_DATA (_NL_CTYPE_MB_CUR_MAX,
 		      &ctype->mb_cur_max, sizeof (u_int32_t));
@@ -1641,8 +1642,7 @@ Computing table size for character classes might take a while..."),
   ctype->width = (unsigned char *) xmalloc (width_table_size);
 
   /* Initialize with default width value.  */
-  memset (ctype->width, charset->width_default,
-	  ctype->plane_size * ctype->plane_cnt);
+  memset (ctype->width, charset->width_default, width_table_size);
   if (charset->width_rules != NULL)
     {
       size_t cnt;
