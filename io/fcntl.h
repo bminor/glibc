@@ -101,15 +101,14 @@ __BEGIN_DECLS
 
 /* Do the file control operation described by CMD on FD.
    The remaining arguments are interpreted depending on CMD.  */
-extern int __fcntl __P ((int __fd, int __cmd,...));
+extern int __fcntl __P ((int __fd, int __cmd, ...));
+extern int fcntl __P ((int __fd, int __cmd, ...));
 
 /* Open FILE and return a new file descriptor for it, or -1 on error.
    OFLAG determines the type of access used.  If O_CREAT is on OFLAG,
    the third argument is taken as a `mode_t', the mode of the created file.  */
 extern int __open __P ((__const char *__file, int __oflag,...));
-
-#define	fcntl	__fcntl
-#define	open	__open
+extern int open __P ((__const char *__file, int __oflag,...));
 
 /* Create and open FILE, with mode MODE.
    This takes an `int' MODE argument because that is
@@ -120,7 +119,6 @@ extern int creat __P ((__const char *__file, __mode_t __mode));
 #define	creat(file, m)	__open((file), O_WRONLY|O_CREAT|O_TRUNC, (m))
 #endif /* Optimizing.  */
 
-#define	flock	__flock
 #define	F_RDLCK	__F_RDLCK
 #define	F_WRLCK	__F_WRLCK
 #define	F_UNLCK	__F_UNLCK
