@@ -41,10 +41,15 @@ user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     memory_object_default		\
 	            )\
 		   $(addprefix device/,device device_request)
-# device_reply is giving me headaches because of userprefix
-server-interfaces := # mach/__exc mach/exc
+server-interfaces := device/device_reply mach/exc # mach/__exc
 tests := hello
 distribute = Machrules syscalls.awk shortcut.awk
+
+
+# XXX currently these files are symlinked into mach/ (which should not otherwise exist)
+headers += $(addprefix mach/default_pager_types.,h defs)
+user-interfaces += mach/default_pager
+server-interfaces += mach/default_pager_helper
 
 # Use and install the Mach header files directly out of the Mach kernel source.
 
