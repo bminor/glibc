@@ -20,10 +20,11 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <sys/types.h>
 
 /* Set the effective user ID of the calling process to UID.  */
 int
-DEFUN(seteuid, (uid), int uid)
+DEFUN(seteuid, (uid), uid_t uid)
 {
   auth_t newauth;
   error_t err;
@@ -39,7 +40,7 @@ DEFUN(seteuid, (uid), int uid)
       size_t ngen = _hurd_id.gen.nuids < 1 ? 1 : _hurd_id.gen.nuids;
       uid_t newgen[ngen];
 
-      newgen[0] = euid;
+      newgen[0] = uid;
       memcpy (&newgen[1], _hurd_id.gen.uids, (ngen - 1) * sizeof (uid_t));
 
       err = __USEPORT (AUTH, __auth_makeauth
