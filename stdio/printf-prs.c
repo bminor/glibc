@@ -23,6 +23,10 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <ctype.h>
 
+#ifdef	__GNUC__
+#define	HAVE_LONGLONG
+#endif
+
 extern printf_arginfo_function *__printf_arginfo_table[];
 
 size_t
