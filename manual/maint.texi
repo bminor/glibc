@@ -935,10 +935,10 @@ Sun Microsystems, Inc.
 Mountain View, California  94043
 @end display
 @end quotation
-@end itemize
 
 @item
 The port to SGI machines running Irix 4 (@code{mips-sgi-irix4}) was
 contributed by Tom Quinn.
+@end itemize
 
 @c @bye
