@@ -20,7 +20,9 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Initialize the library data structures from the
-   ints and ports passed to us by the exec server.  */
+   ints and ports passed to us by the exec server.
+
+   PORTARRAY and INTARRAY are vm_deallocate'd.  */
 
 void
 _hurd_init (char **argv,
