@@ -24,7 +24,9 @@ struct _hurd_id_data _hurd_id;
 static void
 init_id (void)
 {
+#ifdef noteven
   __mutex_init (&_hurd_id.lock);
+#endif
   _hurd_id.valid = 0;
 }
 
@@ -59,9 +61,9 @@ _hurd_check_ids (void)
 
       dealloc (&_hurd_id.gen);
       dealloc (&_hurd_id.aux);
-      if (_hurd_rid_auth)
+      if (_hurd_id.rid_auth)
 	{
-	  __mach_port_deallocate (__mach_task_self (), _hurd_rid_auth);
+	  __mach_port_deallocate (__mach_task_self (), _hurd_id.rid_auth);
 	  _hurd_rid_auth = MACH_PORT_NULL;
 	}
 
@@ -73,7 +75,7 @@ _hurd_check_ids (void)
 			    &_hurd_id.aux.gids, &_hurd_id.aux.ngids)))
 	return err;
 
-      _hurd_id_valid = 1;
+      _hurd_id.valid = 1;
     }
 
   return 0;
