@@ -1239,9 +1239,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Oct  6 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-66
+- update from CVS
 - avoid using perl in the spec file, buildrequire sed >= 3.95
   (#127671)
 - export TIMEOUTFACTOR=16
+- fix _JMPBUF_CFA_UNWINDS_ADJ on s390{,x}
 
 * Tue Oct  5 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-65
 - update from CVS
