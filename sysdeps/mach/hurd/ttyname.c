@@ -17,92 +17,22 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <errno.h>
-#include <limits.h>
-#include <stddef.h>
-#include <dirent.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <unistd.h>
-#include <string.h>
-#include <stdlib.h>
 #include <hurd.h>
 #include <hurd/term.h>
 #include <hurd/fd.h>
-
-char *__ttyname = NULL;
 
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
    The returned storage is good only until the next call to this function.  */
 char *
 ttyname (int fd)
 {
-  static const char dev[] = "/dev";
-  DIR *dirstream;
-  struct dirent *d;
   error_t err;
-  mach_port_t fd_cttyid;
-  static char nodename[1024] = "";	/* XXX */
-  char *name;
-  
-  /* Open FILENAME relative to DIR and return nonzero iff its ctty ID port
-     is the same as FD_CTTYID.  */
-  int try (file_t dir, const char *filename)
-    {
-      mach_port_t file, cttyid;
-      if (__USEPORT (CRDIR, __hurd_path_lookup (port, dir, filename, 0, 0,
-						&file)))
-	return 0;		/* Can't open it.  */
-      err = __term_getctty (file, &cttyid);
-      __mach_port_deallocate (__mach_task_self (), file);
-      if (err)
-	return 0;		/* Not a terminal.  */
-      /* We only need to know if CTTYID is the same port as FD_CTTYID,
-	 so deallocating the reference can never hurt.  */
-      __mach_port_deallocate (__mach_task_self (), cttyid);
-      return cttyid == fd_cttyid;
-    }
+  static char nodename[1024];	/* XXX */
 
-  /* Get the ctty ID port of the object we want to find.  */
-  if (err = HURD_DPORT_USE (fd,
-			    (__term_get_nodename (port, nodename),
-			     __term_getctty (port, &fd_cttyid))))
-    return __hurd_fail (err), NULL;
+  nodename[0] = '\0';
+  if (err = HURD_DPORT_USE (fd, __term_get_nodename (port, nodename)))
+    return __hurd_dfail (fd, err), NULL;
 
-  /* If there was a "nodename" set, and it is correct, return that.  */
-  if (nodename[0] != '\0' && __USEPORT (CWDIR, try (port, nodename)))
-    return nodename;
-
-
-  /* Search the "/dev" directory for a file that returns the same ctty ID
-     port that the terminal FD refers to.  */
-
-  dirstream = opendir (dev);
-  if (dirstream == NULL)
-    return NULL;
-
-  name = NULL;
-  while ((d = readdir (dirstream)) != NULL)
-    if (try (dirstream->__port, d->d_name))
-      {
-	if (__ttyname)
-	  free (__ttyname);
-	__ttyname = malloc (sizeof (dev) + 1 + d->d_namlen);
-	if (__ttyname != NULL)
-	  {
-	    memcpy (__ttyname, dev, sizeof (dev) - 1);
-	    __ttyname[sizeof (dev)] = '/';
-	    memcpy (&__ttyname[sizeof (dev) + 1], d->d_name, d->d_namlen + 1);
-	  }
-	name = __ttyname;
-	break;
-      }
-
-  __mach_port_deallocate (__mach_task_self (), fd_cttyid);
-
-  {
-    int save = errno;
-    (void) closedir (dirstream);
-    errno = save;
-    return name;
-  }
+  return nodename;
 }
