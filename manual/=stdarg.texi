@@ -14,7 +14,8 @@ defined in @file{stdarg.h}.
 @pindex stdarg.h
 
 @menu
-* Why Variable Arguments are Used::  
+* Why Variable Arguments are Used::     Using variable arguments can
+                                         save you time and effort.
 * How Variable Arguments are Used::     An overview of the facilities for
 				         receiving variable arguments.
 * Variable Arguments Interface::        Detailed specification of the
