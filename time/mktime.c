@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
@@ -23,6 +23,11 @@
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
+#endif
+
+/* Some systems need this in order to declare localtime_r properly.  */
+#ifndef __EXTENSIONS__
+# define __EXTENSIONS__ 1
 #endif
 
 #ifdef _LIBC
@@ -66,21 +71,26 @@
 # define CHAR_BIT 8
 #endif
 
+/* The extra casts work around common compiler bugs.  */
+#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
+/* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
+   It is necessary at least when t == time_t.  */
+#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
+			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
+#define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
+
 #ifndef INT_MIN
-# define INT_MIN (~0 << (sizeof (int) * CHAR_BIT - 1))
+# define INT_MIN TYPE_MINIMUM (int)
 #endif
 #ifndef INT_MAX
-# define INT_MAX (~0 - INT_MIN)
+# define INT_MAX TYPE_MAXIMUM (int)
 #endif
 
 #ifndef TIME_T_MIN
-/* The outer cast to time_t works around a bug in Cray C 5.0.3.0.  */
-# define TIME_T_MIN ((time_t) \
-		    (0 < (time_t) -1 ? (time_t) 0 \
-		     : ~ (time_t) 0 << (sizeof (time_t) * CHAR_BIT - 1)))
+# define TIME_T_MIN TYPE_MINIMUM (time_t)
 #endif
 #ifndef TIME_T_MAX
-# define TIME_T_MAX (~ (time_t) 0 - TIME_T_MIN)
+# define TIME_T_MAX TYPE_MAXIMUM (time_t)
 #endif
 
 #define TM_YEAR_BASE 1900
@@ -102,6 +112,9 @@ const unsigned short int __mon_yday[2][13] =
     { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 }
   };
 
+static struct tm *ranged_convert __P ((struct tm *(*) __P ((const time_t *,
+							    struct tm *)),
+				       time_t *, struct tm *));
 static time_t ydhms_tm_diff __P ((int, int, int, int, int, const struct tm *));
 time_t __mktime_internal __P ((struct tm *,
 			       struct tm *(*) (const time_t *, struct tm *),
@@ -134,30 +147,36 @@ localtime_r (t, tp)
    measured in seconds, ignoring leap seconds.
    YEAR uses the same numbering as TM->tm_year.
    All values are in range, except possibly YEAR.
+   If TP is null, return a nonzero value.
    If overflow occurs, yield the low order bits of the correct answer.  */
 static time_t
 ydhms_tm_diff (year, yday, hour, min, sec, tp)
      int year, yday, hour, min, sec;
      const struct tm *tp;
 {
-  /* Compute intervening leap days correctly even if year is negative.
-     Take care to avoid int overflow.  time_t overflow is OK, since
-     only the low order bits of the correct time_t answer are needed.
-     Don't convert to time_t until after all divisions are done, since
-     time_t might be unsigned.  */
-  int a4 = (year >> 2) + (TM_YEAR_BASE >> 2) - ! (year & 3);
-  int b4 = (tp->tm_year >> 2) + (TM_YEAR_BASE >> 2) - ! (tp->tm_year & 3);
-  int a100 = a4 / 25 - (a4 % 25 < 0);
-  int b100 = b4 / 25 - (b4 % 25 < 0);
-  int a400 = a100 >> 2;
-  int b400 = b100 >> 2;
-  int intervening_leap_days = (a4 - b4) - (a100 - b100) + (a400 - b400);
-  time_t years = year - (time_t) tp->tm_year;
-  time_t days = (365 * years + intervening_leap_days
-		 + (yday - tp->tm_yday));
-  return (60 * (60 * (24 * days + (hour - tp->tm_hour))
-		+ (min - tp->tm_min))
-	  + (sec - tp->tm_sec));
+  if (!tp)
+    return 1;
+  else
+    {
+      /* Compute intervening leap days correctly even if year is negative.
+	 Take care to avoid int overflow.  time_t overflow is OK, since
+	 only the low order bits of the correct time_t answer are needed.
+	 Don't convert to time_t until after all divisions are done, since
+	 time_t might be unsigned.  */
+      int a4 = (year >> 2) + (TM_YEAR_BASE >> 2) - ! (year & 3);
+      int b4 = (tp->tm_year >> 2) + (TM_YEAR_BASE >> 2) - ! (tp->tm_year & 3);
+      int a100 = a4 / 25 - (a4 % 25 < 0);
+      int b100 = b4 / 25 - (b4 % 25 < 0);
+      int a400 = a100 >> 2;
+      int b400 = b100 >> 2;
+      int intervening_leap_days = (a4 - b4) - (a100 - b100) + (a400 - b400);
+      time_t years = year - (time_t) tp->tm_year;
+      time_t days = (365 * years + intervening_leap_days
+		     + (yday - tp->tm_yday));
+      return (60 * (60 * (24 * days + (hour - tp->tm_hour))
+		    + (min - tp->tm_min))
+	      + (sec - tp->tm_sec));
+    }
 }
 
 
@@ -178,6 +197,54 @@ mktime (tp)
   return __mktime_internal (tp, localtime_r, &localtime_offset);
 }
 
+/* Use CONVERT to convert *T to a broken down time in *TP.
+   If *T is out of range for conversion, adjust it so that
+   it is the nearest in-range value and then convert that.  */
+static struct tm *
+ranged_convert (convert, t, tp)
+     struct tm *(*convert) __P ((const time_t *, struct tm *));
+     time_t *t;
+     struct tm *tp;
+{
+  struct tm *r;
+
+  if (! (r = (*convert) (t, tp)) && *t)
+    {
+      time_t bad = *t;
+      time_t ok = 0;
+      struct tm tm;
+
+      /* BAD is a known unconvertible time_t, and OK is a known good one.
+	 Use binary search to narrow the range between BAD and OK until
+	 they differ by 1.  */
+      while (bad != ok + (bad < 0 ? -1 : 1))
+	{
+	  time_t mid = *t = (bad < 0
+			     ? bad + ((ok - bad) >> 1)
+			     : ok + ((bad - ok) >> 1));
+	  if ((r = (*convert) (t, tp)))
+	    {
+	      tm = *r;
+	      ok = mid;
+	    }
+	  else
+	    bad = mid;
+	}
+
+      if (!r && ok)
+	{
+	  /* The last conversion attempt failed;
+	     revert to the most recent successful attempt.  */
+	  *t = ok;
+	  *tp = tm;
+	  r = tp;
+	}
+    }
+
+  return r;
+}
+
+
 /* Convert *TP to a time_t value, inverting
    the monotonic and mostly-unit-linear conversion function CONVERT.
    Use *OFFSET to keep track of a guess at the offset of the result,
@@ -189,14 +256,14 @@ __mktime_internal (tp, convert, offset)
      struct tm *(*convert) __P ((const time_t *, struct tm *));
      time_t *offset;
 {
-  time_t t, dt, t0;
+  time_t t, dt, t0, t1, t2;
   struct tm tm;
 
   /* The maximum number of probes (calls to CONVERT) should be enough
      to handle any combinations of time zone rule changes, solar time,
-     and leap seconds.  Posix.1 prohibits leap seconds, but some hosts
-     have them anyway.  */
-  int remaining_probes = 4;
+     leap seconds, and oscillations around a spring-forward gap.
+     POSIX.1 prohibits leap seconds, but some hosts have them anyway.  */
+  int remaining_probes = 6;
 
   /* Time requested.  Copy it in case CONVERT modifies *TP; this can
      occur if TP is localtime's returned value and CONVERT is localtime.  */
@@ -242,14 +309,27 @@ __mktime_internal (tp, convert, offset)
   tm.tm_yday = tm.tm_hour = tm.tm_min = tm.tm_sec = 0;
   t0 = ydhms_tm_diff (year, yday, hour, min, sec, &tm);
 
-  for (t = t0 + *offset;
-       (dt = ydhms_tm_diff (year, yday, hour, min, sec, (*convert) (&t, &tm)));
-       t += dt)
-    if (--remaining_probes == 0)
+  for (t = t1 = t2 = t0 + *offset;
+       (dt = ydhms_tm_diff (year, yday, hour, min, sec,
+			    ranged_convert (convert, &t, &tm)));
+       t1 = t2, t2 = t, t += dt)
+    if (t == t1 && t != t2
+	&& (isdst < 0 || tm.tm_isdst < 0
+	    || (isdst != 0) != (tm.tm_isdst != 0)))
+      /* We can't possibly find a match, as we are oscillating
+	 between two values.  The requested time probably falls
+	 within a spring-forward gap of size DT.  Follow the common
+	 practice in this case, which is to return a time that is DT
+	 away from the requested time, preferring a time whose
+	 tm_isdst differs from the requested value.  In practice,
+	 this is more useful than returning -1.  */
+      break;
+    else if (--remaining_probes == 0)
       return -1;
 
-  /* Check whether tm.tm_isdst has the requested value, if any.  */
-  if (0 <= isdst && 0 <= tm.tm_isdst)
+  /* If we have a match, check whether tm.tm_isdst has the requested
+     value, if any.  */
+  if (dt == 0 && 0 <= isdst && 0 <= tm.tm_isdst)
     {
       int dst_diff = (isdst != 0) - (tm.tm_isdst != 0);
       if (dst_diff)
@@ -263,7 +343,7 @@ __mktime_internal (tp, convert, offset)
 	    {
 	      struct tm otm;
 	      if (! (dt = ydhms_tm_diff (year, yday, hour, min, sec,
-					 (*convert) (&ot, &otm))))
+					 ranged_convert (convert, &ot, &otm))))
 		{
 		  t = ot;
 		  tm = otm;
@@ -283,7 +363,8 @@ __mktime_internal (tp, convert, offset)
       /* Adjust time to reflect the tm_sec requested, not the normalized value.
 	 Also, repair any damage from a false match due to a leap second.  */
       t += sec_requested - sec + (sec == 0 && tm.tm_sec == 60);
-      (*convert) (&t, &tm);
+      if (! (*convert) (&t, &tm))
+	return -1;
     }
 #endif
 
@@ -299,7 +380,15 @@ __mktime_internal (tp, convert, offset)
       double dday = 366 * dyear + mday;
       double dsec = 60 * (60 * (24 * dday + hour) + min) + sec_requested;
 
-      if (TIME_T_MAX / 3 - TIME_T_MIN / 3 < (dsec < 0 ? - dsec : dsec))
+      /* On Irix4.0.5 cc, dividing TIME_T_MIN by 3 does not produce
+	 correct results, ie., it erroneously gives a positive value
+	 of 715827882.  Setting a variable first then doing math on it
+	 seems to work.  (ghazi@caip.rutgers.edu) */
+
+      const time_t time_t_max = TIME_T_MAX;
+      const time_t time_t_min = TIME_T_MIN;
+
+      if (time_t_max / 3 - time_t_min / 3 < (dsec < 0 ? - dsec : dsec))
 	return -1;
     }
 
@@ -333,25 +422,28 @@ static void
 print_tm (tp)
      struct tm *tp;
 {
-  printf ("%04d-%02d-%02d %02d:%02d:%02d yday %03d wday %d isdst %d",
-	  tp->tm_year + TM_YEAR_BASE, tp->tm_mon + 1, tp->tm_mday,
-	  tp->tm_hour, tp->tm_min, tp->tm_sec,
-	  tp->tm_yday, tp->tm_wday, tp->tm_isdst);
+  if (tp)
+    printf ("%04d-%02d-%02d %02d:%02d:%02d yday %03d wday %d isdst %d",
+	    tp->tm_year + TM_YEAR_BASE, tp->tm_mon + 1, tp->tm_mday,
+	    tp->tm_hour, tp->tm_min, tp->tm_sec,
+	    tp->tm_yday, tp->tm_wday, tp->tm_isdst);
+  else
+    printf ("0");
 }
 
 static int
-check_result (tk, tmk, tl, tml)
+check_result (tk, tmk, tl, lt)
      time_t tk;
      struct tm tmk;
      time_t tl;
-     struct tm tml;
+     struct tm *lt;
 {
-  if (tk != tl || not_equal_tm (&tmk, &tml))
+  if (tk != tl || !lt || not_equal_tm (&tmk, lt))
     {
       printf ("mktime (");
       print_tm (&tmk);
       printf (")\nyields (");
-      print_tm (&tml);
+      print_tm (lt);
       printf (") == %ld, should be %ld\n", (long) tl, (long) tk);
       return 1;
     }
@@ -366,6 +458,7 @@ main (argc, argv)
 {
   int status = 0;
   struct tm tm, tmk, tml;
+  struct tm *lt;
   time_t tk, tl;
   char trailer;
 
@@ -382,11 +475,16 @@ main (argc, argv)
       tm.tm_isdst = argc == 3 ? -1 : atoi (argv[3]);
       tmk = tm;
       tl = mktime (&tmk);
-      tml = *localtime (&tl);
+      lt = localtime (&tl);
+      if (lt)
+	{
+	  tml = *lt;
+	  lt = &tml;
+	}
       printf ("mktime returns %ld == ", (long) tl);
       print_tm (&tmk);
       printf ("\n");
-      status = check_result (tl, tmk, tl, tml);
+      status = check_result (tl, tmk, tl, lt);
     }
   else if (argc == 4 || (argc == 5 && strcmp (argv[4], "-") == 0))
     {
@@ -397,19 +495,35 @@ main (argc, argv)
       if (argc == 4)
 	for (tl = from; tl <= to; tl += by)
 	  {
-	    tml = *localtime (&tl);
-	    tmk = tml;
-	    tk = mktime (&tmk);
-	    status |= check_result (tk, tmk, tl, tml);
+	    lt = localtime (&tl);
+	    if (lt)
+	      {
+		tmk = tml = *lt;
+		tk = mktime (&tmk);
+		status |= check_result (tk, tmk, tl, tml);
+	      }
+	    else
+	      {
+		printf ("localtime (%ld) yields 0\n", (long) tl);
+		status = 1;
+	      }
 	  }
       else
 	for (tl = from; tl <= to; tl += by)
 	  {
 	    /* Null benchmark.  */
-	    tml = *localtime (&tl);
-	    tmk = tml;
-	    tk = tl;
-	    status |= check_result (tk, tmk, tl, tml);
+	    lt = localtime (&tl);
+	    if (lt)
+	      {
+		tmk = tml = *lt;
+		tk = tl;
+		status |= check_result (tk, tmk, tl, tml);
+	      }
+	    else
+	      {
+		printf ("localtime (%ld) yields 0\n", (long) tl);
+		status = 1;
+	      }
 	  }
     }
   else
@@ -426,6 +540,6 @@ main (argc, argv)
 
 /*
 Local Variables:
-compile-command: "gcc -DDEBUG=1 -Wall -O -g mktime.c -o mktime"
+compile-command: "gcc -DDEBUG -D__EXTENSIONS__ -DHAVE_LIMITS_H -DHAVE_LOCALTIME_R -DSTDC_HEADERS -Wall -W -O -g mktime.c -o mktime"
 End:
 */
