@@ -338,7 +338,7 @@ This function returns the cube root of @var{x}.
 @end deftypefun
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double hypot (double @var{x}, double @var{y})
 The @code{hypot} function returns @code{sqrt (@var{x}*@var{x} +
 @var{y}*@var{y})}.  (This is the length of the hypotenuse of a right
@@ -347,7 +347,7 @@ of the point (@var{x}, @var{y}) from the origin.)
 @end deftypefun
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double cabs (struct @{ double x, y; @} @var{z})
 The @code{cabs} function is similar to @code{hypot}, but the argument
 is specified as a @code{struct} representing a complex number.
@@ -355,7 +355,7 @@ is specified as a @code{struct} representing a complex number.
 
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double expm1 (double @var{x})
 This function returns a value equivalent to @code{exp (@var{x}) - 1}.
 It is computed in a way that is accurate even if the value of @var{x} is
@@ -364,7 +364,7 @@ to subtraction of two numbers that are nearly equal.
 @end deftypefun
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double log1p (double @var{x})
 This function returns a value equivalent to @code{log (1 + @var{x})}.
 It is computed in a way that is accurate even if the value of @var{x} is
@@ -418,14 +418,14 @@ mathematically as @code{sinh (@var{x}) / cosh (@var{x})}.
 @cindex inverse hyperbolic functions
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double asinh (double @var{x})
 This function returns the inverse hyperbolic sine of @var{x}---the
 value whose hyperbolic sine is @var{x}.
 @end deftypefun
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double acosh (double @var{x})
 This function returns the inverse hyperbolic cosine of @var{x}---the
 value whose hyperbolic cosine is @var{x}.  If @var{x} is less than
@@ -433,7 +433,7 @@ value whose hyperbolic cosine is @var{x}.  If @var{x} is less than
 @end deftypefun
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double atanh (double @var{x})
 This function returns the inverse hyperbolic tangent of @var{x}---the
 value whose hyperbolic tangent is @var{x}.  If the absolute value of

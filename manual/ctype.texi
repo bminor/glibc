@@ -181,7 +181,7 @@ is not a printing character).
 
 @cindex ASCII character
 @comment ctype.h
-@comment SVID, GNU
+@comment SVID, BSD
 @deftypefun int isascii (int @var{c})
 Returns true if @var{c} is a 7-bit @code{unsigned char} value that fits
 into the US/UK ASCII character set.
@@ -229,7 +229,7 @@ upper-case letter.  Otherwise @var{c} is returned unchanged.
 @end deftypefun
 
 @comment ctype.h
-@comment SVID, GNU
+@comment SVID, BSD
 @deftypefun int toascii (int @var{c})
 This function converts @var{c} to a 7-bit @code{unsigned char} value
 that fits into the US/UK ASCII character set, by clearing the

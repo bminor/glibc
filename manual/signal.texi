@@ -208,7 +208,7 @@ the names are standardized and fairly uniform.
 The signal names are defined in the header file @file{signal.h}.
 
 @comment signal.h
-@comment GNU
+@comment BSD
 @deftypevr Macro int NSIG
 The value of this symbolic constant is the total number of signals
 defined.  Since the signal numbers are allocated consecutively,
@@ -760,7 +760,7 @@ This function is declared in the header file @file{string.h}.
 @end deftypefun
 
 @comment stdio.h
-@comment GNU
+@comment BSD
 @deftypefun void psignal (int @var{signum}, const char *@var{message})
 This function prints a message describing the signal @var{signum} to the
 standard error output stream @code{stderr}; see @ref{Standard Streams}.

@@ -30,7 +30,7 @@ of 2, but of course they are unlikely to be particularly efficient in
 those cases.
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double copysign (double @var{value}, double @var{sign})
 The @code{copysign} function returns a value whose absolute value is the
 same as that of @var{value}, and whose sign matches that of @var{sign}.
@@ -59,16 +59,14 @@ be used to reassemble floating-point numbers that were taken apart
 by @code{frexp}.)
 @end deftypefun
 
-@c ??? Where does this come from?
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double scalb (double @var{value}, int @var{exponent})
 The @code{scalb} function does the same thing as @code{ldexp}.
 @end deftypefun
 
-@c ??? Where does this come from?
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double logb (double @var{x})
 This function returns the integer part of the base-2 logarithm of
 @var{x}, an integer value represented in type @code{double}.  This is
@@ -113,7 +111,7 @@ integer, returning that value as a @code{double}.
 @end deftypefun
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double rint (double @var{x})
 This function returns the integer nearest @var{x} according to the
 current rounding mode.  @xref{Floating-Point Parameters}, for information
@@ -154,7 +152,7 @@ The @var{denominator} is zero.
 @end deftypefun
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double drem (double @var{numerator}, double @var{denominator})
 This function returns the remainder from dividing @var{numerator} by
 @var{denominator}.  Specifically, the return value is @code{@var{numerator}
@@ -432,28 +430,28 @@ Prototypes for these functions appear in @file{math.h}.
 @pindex math.h
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun int isinf (double @var{x})
 This function returns @code{-1} if @var{x} represents negative infinity,
 @code{1} if @var{x} represents positive infinity, and @code{0} otherwise.
 @end deftypefun
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun int isnan (double @var{x})
 This function returns a nonzero value if @var{x} is a ``not a number''
 value, and zero otherwise.
 @end deftypefun
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun int finite (double @var{x})
 This function returns a nonzero value if @var{x} is finite or a ``not a
 number'' value, and zero otherwise.
 @end deftypefun
 
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double infnan (int @var{error})
 @strong{Incomplete:}  I don't understand what this function does.
 @end deftypefun

@@ -97,7 +97,7 @@ interface is much simpler and easier to use.  But it doesn't offer as
 much flexibility as using the low-level functions directly.
 
 @comment stdio.h
-@comment POSIX.2, SVID, BSD, GNU
+@comment POSIX.2, SVID, BSD
 @deftypefun {FILE *} popen (const char *@var{command}, const char *@var{mode})
 The @code{popen} function is closely related to the @code{system}
 function; see @ref{Running a Command}.  It executes the shell command
@@ -120,7 +120,7 @@ cannot be forked, or if the program cannot be executed.
 @end deftypefun
 
 @comment stdio.h
-@comment POSIX.2, SVID, BSD, GNU
+@comment POSIX.2, SVID, BSD
 @deftypefun int pclose (FILE *@var{stream})
 The @code{pclose} function is used to close a stream created by @code{popen}.
 It waits for the child process to terminate and returns its status value,

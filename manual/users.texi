@@ -800,14 +800,14 @@ of control.  Calling @code{getpwgid} or @code{getpwnam} can also confuse
 the internal state of these functions.
 
 @comment pwd.h
-@comment SVID, GNU
+@comment SVID, BSD
 @deftypefun void setpwent ()
 This function initializes a stream which @code{getpwent} uses to read
 the user database.
 @end deftypefun
 
 @comment pwd.h
-@comment SVID, GNU
+@comment SVID, BSD
 @deftypefun {struct passwd *} getpwent ()
 The @code{getpwent} function reads the next entry from the stream
 initialized by @code{setpwent}.  It returns a pointer to the entry.  The
@@ -817,7 +817,7 @@ wish to save the information.
 @end deftypefun
 
 @comment pwd.h
-@comment SVID, GNU
+@comment SVID, BSD
 @deftypefun void endpwent ()
 This function closes the internal stream used by @code{getpwent}.
 @end deftypefun
@@ -949,14 +949,14 @@ of control.  Calling @code{getgrgid} or @code{getgrnam} can also confuse
 the internal state of these functions.
 
 @comment grp.h
-@comment SVID, GNU
+@comment SVID, BSD
 @deftypefun void setgrent ()
 This function initializes a stream for reading from the group data base.
 You use this stream by calling @code{getgrent}.
 @end deftypefun
 
 @comment grp.h
-@comment SVID, GNU
+@comment SVID, BSD
 @deftypefun {struct group *} getgrent ()
 The @code{getgrent} function reads the next entry from the stream
 initialized by @code{setgrent}.  It returns a pointer to the entry.  The
@@ -966,7 +966,7 @@ wish to save the information.
 @end deftypefun
 
 @comment grp.h
-@comment SVID, GNU
+@comment SVID, BSD
 @deftypefun void endgrent ()
 This function closes the internal stream used by @code{getgrent}.
 @end deftypefun

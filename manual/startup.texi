@@ -758,7 +758,7 @@ the function cannot be registered.
 @end deftypefun
 
 @comment stdlib.h
-@comment GNU
+@comment SunOS
 @deftypefun int on_exit (void (*@var{function})(int @var{status}, void *@var{arg}), void *@var{arg})
 This function is a somewhat more powerful variant of @code{atexit}.  It
 accepts two arguments, a function @var{function} and an arbitrary
@@ -766,8 +766,8 @@ pointer @var{arg}.  At normal program termination, the @var{function} is
 called with two arguments:  the @var{status} value passed to @code{exit},
 and the @var{arg}.
 
-This function is a GNU extension, and may not be supported by other
-implementations.
+This function is included in the GNU C library only for compatibility
+for SunOS, and may not be supported by other implementations.
 @end deftypefun
 
 Here's a trivial program that illustrates the use of @code{exit} and

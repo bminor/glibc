@@ -132,7 +132,7 @@ particular implementation is a constant for all files.
 @end deftypevr
 
 @comment dirent.h
-@comment BSD, GNU
+@comment BSD
 @deftypevr Macro int MAXNAMLEN
 This is the BSD name for @code{NAME_MAX}.
 @end deftypevr
