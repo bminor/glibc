@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,8 @@ Cambridge, MA 02139, USA.  */
 double
 DEFUN(frexp, (value, exp), double value AND int *exp)
 {
-  *exp = (int) __logb(value);
-  return value / ldexp(1.0, *exp);
+  /* Add one to the exponent of the number,
+     so we have one digit before the binary point.  */
+  *exp = (int) __logb (value) + 1;
+  return ldexp (value, - *exp);
 }
