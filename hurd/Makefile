@@ -18,7 +18,7 @@
 
 subdir := hurd
 
-# XXX interfaces headers want to be in hurd/
+interface-header-prefix = hurd/
 headers = hurd.h $(interface-headers)
 
 user-interfaces		:= auth process \
@@ -42,11 +42,11 @@ all:
 
 
 # This rule needs to come before the implicit rules in Machrules.
-__%.c: intr_rpc.awk %_rpc.c
-	awk -f $^ rpc=__$*_rpc > $@-new
+__%.c: intr_rpc.awk __%_rpc.c
+	gawk -v call=__$* -v rpc=__$*_rpc -f $^ > $@-new
 	mv $@-new $@
-# %_rpc.c is made with mig by Machrules.
-__%_rpc.c: %_rpc.c
+# __%_rpc.c is made with mig by Machrules.
+%_rpc.c: __%_rpc.c
 	sed s/MACH_MSG_OPTION_NONE/MACH_SEND_INTERRUPT/ $< > $@
 
 include ../mach/Machrules
