@@ -1,3 +1,183 @@
+1997-04-03 19:24  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/sigset.h (__sigisemptyset): Fix a
+	typo.
+
+1997-04-01 10:11  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=inet]
+	(sysdep_headers): Remove netinet/icmp.h.
+
+1997-04-02 16:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* grp/fgetgrent.c: Don't use fixed buffer length.  Allow dynamic
+	adjustment if the underlying function say it is too small.
+	* pwd/fgetpwent.c: Likewise.
+	* shadow/fgetspent.c: Likewise.
+	* shadow/sgetspent.c: Likewise.
+
+	* grp/fgetgrent_r.c (__fgetgrent_r): If `parse_result' returns -1
+	this means there was not enough room for the gr_mem array.
+
+	* nss/nss_files/files-XXX.c: Leave loop and return error if
+	`parse_result' returns -1.
+
+	* nss/nss_files/files-parse.c (parse_line): Return -1 if parsing
+	of trailing list fails because of low memory.
+	(parse_list): Rewrite.  The logic was completly incorrect since
+	the checks for overflowing the array were not executed when
+	needed.
+
+	* shadow/sgetspent_r.c: Only a return value > 0 from parse_line
+	signals success.
+
+	* nss/getXXbyYY.c: Make sure NULL is returned if we ran out of memory.
+	* nss/getXXent.c: Likewise.
+
+1997-04-02 13:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/errno.texi: Add description of strerror_r.
+
+1997-04-01 19:07  H.J. Lu (hjl@gnu.ai.mit.edu)
+
+	* manual/errno.texi: Add ENOMEDIUM and EMEDIUMTYPE.
+
+1997-04-02 13:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/gnu/errlist.awk: The Texinfo file is named errno.texi.
+
+1997-03-28 20:56  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdlib/stdlib.h: Declare __clearenv.
+
+1997-03-28 18:03  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/s_asinhl.c: Fix Ulrich Dreppers mangling of
+	the last change.
+
+1997-03-28 17:55  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in: Call AC_CANONICAL_BUILD before referencing
+	$build.  Fix test for BUILD_CC.
+
+1997-04-01 14:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/memset.c: Fix typo.
+	* sysdeps/stub/fchmod.c: Fix typo.
+	* sysdeps/stub/fchdir.c: Fix typo.
+	Reported by Fila Kolodny <fila@ibi.com>.
+
+1997-04-01 00:37  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/asm-syntax.h: Define `L' macro to emit correct
+	syntax for local label.
+	* sysdeps/i386/add_n.S: Use correct local label syntax for the
+	binary format.
+	* sysdeps/i386/addmul_1.S: Likewise.
+	* sysdeps/i386/lshift.S: Likewise.
+	* sysdeps/i386/memchr.S: Likewise.
+	* sysdeps/i386/memcmp.S: Likewise.
+	* sysdeps/i386/mul_1.S: Likewise.
+	* sysdeps/i386/rshift.S: Likewise.
+	* sysdeps/i386/stpcpy.S: Likewise.
+	* sysdeps/i386/stpncpy.S: Likewise.
+	* sysdeps/i386/strchr.S: Likewise.
+	* sysdeps/i386/strcspn.S: Likewise.
+	* sysdeps/i386/strlen.S: Likewise.
+	* sysdeps/i386/strpbrk.S: Likewise.
+	* sysdeps/i386/strrchr.S: Likewise.
+	* sysdeps/i386/strspn.S: Likewise.
+	* sysdeps/i386/strtok.S: Likewise.
+	* sysdeps/i386/sub_n.S: Likewise.
+	* sysdeps/i386/submul_1.S: Likewise.
+	* sysdeps/i386/i486/strcat.S: Likewise.
+	* sysdeps/i386/i486/strlen.S: Likewise.
+	* sysdeps/i386/i586/add_n.S: Likewise.
+	* sysdeps/i386/i586/addmul_1.S: Likewise.
+	* sysdeps/i386/i586/lshift.S: Likewise.
+	* sysdeps/i386/i586/memset.S: Likewise.
+	* sysdeps/i386/i586/mul_1.S: Likewise.
+	* sysdeps/i386/i586/rshift.S: Likewise.
+	* sysdeps/i386/i586/strchr.S: Likewise.
+	* sysdeps/i386/i586/strlen.S: Likewise.
+	* sysdeps/i386/i586/sub_n.S: Likewise.
+	* sysdeps/i386/i586/submul_1.S: Likewise.
+
+	* time/africa: Updated from ADO tzdata1997e.
+	* time/antarctica: Likewise.
+	* time/asia: Likewise.
+	* time/australasia: Likewise.
+	* time/europe: Likewise.
+	* time/northamerica: Likewise.
+	* time/southamerica: Likewise.
+	* time/private.h: Updated from ADO tzcode1997d.
+	* time/scheck.c: Likewise.
+
+1997-03-31 02:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/inet_ntoa.c (inet_ntoa): Complete rewrite.  Now uses
+	thread-specific memory in multi-threaded programs.
+
+	* sysdeps/unix/sysv/linux/netatalk/atalk.h: Rename to...
+	* sysdeps/unix/sysv/linux/netatalk/at.h: ...this.
+	Suggested by a sun <asun@zoology.washington.edu>.
+
+1997-03-30 14:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/ip_icmp.h: Add former contents
+	of <netinet/icmp.h>.
+	Patch by a sun <asun@zoology.washington.edu>.
+
+1997-03-29 17:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/bug5.c: Clear LD_LIBRARY_PATH environment variable
+	before using system.
+	* stdio-common/test-popen.c: Clear LD_LIBRARY_PATH environment variable
+	before using popen.
+
+1997-03-27 02:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/rexec.c: Make string parameters `const'.
+	* resolv/netdb.h: Add prototypes for rcmd, rexec, ruserok, and
+	rresvport.
+
+	* posix/glob.h: Add declaration for glob_pattern_p.
+	* posix/glob.c: Rename glob_pattern_p to __glob_pattern_p and
+	make glob_pattern_p a weak alias.  This function is used in other
+	packages (e.g. bash).
+
+	* signal/Makefile (routines): Add sigisempty, sigandset, and
+	sigorset.
+	* signal/signal.h: Add prototypes for sigisempty, sigandset, and
+	sigorset.
+	* signal/sigisempty.c: New file.
+	* signal/sigandset.c: New file.
+	* signal/sigorset.c: New file.
+	* sysdeps/generic/sigset.h: Define __sigisemptyset, __sigandset,
+	and __sigorset.
+	* sysdeps/unix/sysv/linux/sigset.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/netinet/icmp.h: Remove since we have
+	ip_icmp.h.  Reported by HJ Lu.
+
+1997-03-25 03:48  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* grp/grp.h: Include <stddef.h> only once.
+
+1997-03-20 17:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 2.0.3.
+
+1997-03-25 23:09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (BUILD_CFLAGS): Fix reference to config file.
+
+1997-03-26 04:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/glob.c (next_brace_sub): Decrement depth counter when '}'
+	is found.
+	Patch by Dennis Henriksen <opus@flamingo.osrl.dk>.
+
 1997-03-22 04:53  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Net release 2.0.2.
