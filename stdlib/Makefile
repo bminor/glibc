@@ -26,7 +26,7 @@ headers	:= stdlib.h alloca.h
 routines	:=							      \
 	atof atoi atol							      \
 	abort								      \
-	bsearch qsort							      \
+	bsearch qsort msort						      \
 	getenv putenv							      \
 	exit on_exit atexit						      \
 	abs labs							      \
