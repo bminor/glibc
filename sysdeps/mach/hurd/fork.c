@@ -22,6 +22,8 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/signal.h>
 #include <setjmp.h>
 #include "thread_state.h"
+#include <sysdep.h>		/* For stack growth direction.  */
+#include "set-hooks.h"
 
 extern void _hurd_longjmp_thread_state (struct machine_thread_state *,
 					jmp_buf env, int value);
@@ -34,37 +36,21 @@ const struct
     struct mutex *locks[0];
   } _hurd_fork_locks;
 
-struct hook 
-  {
-    size_t n;
-    error_t (*fn[0]) (task_t, process_t);
-  };
-
-static inline error_t
-run_hooks (const struct hook *h, task_t t, process_t p)
-{
-  size_t i;
-  error_t err;
-  for (i = 0; i < h->n; ++i)
-    if (err = (*h->fn[i]) (t, p))
-      return err;
-  return 0;
-}
 
 /* Things that want to be called before we fork, to prepare the parent for
    task_create, when the new child task will inherit our address space.  */
-const struct hook _hurd_fork_prepare_hook;
+DEFINE_HOOK (_hurd_fork_prepare_hook, (void));
 
 /* Things that want to be called when we are forking, with the above all
    locked.  They are passed the task port of the child.  The child process
    is all set up except for doing proc_child, and has no threads yet.  */
-const struct hook _hurd_fork_setup_hook;
+DEFINE_HOOK (_hurd_fork_setup_hook, (void));
 
 /* Things to be run in the child fork.  */
-const struct hook _hurd_fork_child_hook;
+DEFINE_HOOK (_hurd_fork_child_hook, (void));
 
 /* Things to be run in the parent fork.  */
-const struct hook _hurd_fork_parent_hook;
+DEFINE_HOOK (_hurd_fork_parent_hook, (void));
 
 
 /* Clone the calling process, creating an exact copy.
@@ -77,15 +63,16 @@ __fork (void)
   pid_t pid;
   size_t i;
   error_t err;
-
-  HURD_CRITICAL_BEGIN;
+  /* This is volatile to avoid warnings about clobberation from longjmp.  */
+  void *volatile crit = _hurd_critical_section_lock ();
+  thread_t thread_self = __mach_thread_self ();
 
   if (! setjmp (env))
     {
       process_t newproc;
       task_t newtask;
       mach_port_t ports[_hurd_nports];
-      thread_t thread;
+      thread_t thread, sigthread;
       struct machine_thread_state state;
       unsigned int statecount;
       mach_port_t *portnames = NULL;
@@ -94,9 +81,9 @@ __fork (void)
       unsigned int nporttypes = 0;
       thread_t *threads = NULL;
       unsigned int nthreads = 0;
-      thread_t thread_self = __mach_thread_self ();
 
       /* Run things that prepare for forking before we create the task.  */
+      RUN_HOOKS (
       if (err = run_hooks (&_hurd_fork_prepare_hook,
 			   MACH_PORT_NULL, MACH_PORT_NULL))
 	/* XXX what if some of them were done ok? */
@@ -107,19 +94,14 @@ __fork (void)
 	__mutex_lock (_hurd_fork_locks.locks[i]);
 
       newtask = MACH_PORT_NULL;
-      thread = MACH_PORT_NULL;
+      thread = sigthread = MACH_PORT_NULL;
       newproc = MACH_PORT_NULL;
 
-      /* Lock all the port cells for the standard ports and extract the
-         port names.  This ensures the ports won't change between the time
-         we extract the names and the time we fork the new task (which
-         inherits this address space).  We want to insert all the send
-         rights into the child with the same names.  */
+      /* Lock all the port cells for the standard ports while we copy the
+	 address space.  We want to insert all the send rights into the
+	 child with the same names.  */
       for (i = 0; i < _hurd_nports; ++i)
-	{
-	  __spin_lock (&_hurd_ports[i].lock);
-	  ports[i] = _hurd_ports[i].port;
-	}
+	__spin_lock (&_hurd_ports[i].lock);
 
       /* Create the child task.  It will inherit a copy of our memory.  */
       if (err = __task_create (__mach_task_self (), 1, &newtask))
@@ -141,14 +123,22 @@ __fork (void)
       if (err = __task_threads (__mach_task_self (), &threads, &nthreads))
 	goto lose;
 
-      /* Create the child main user thread.  */
-      if (err = __thread_create (newtask, &thread))
+      /* Create the child main user thread and signal thread.  */
+      if ((err = __thread_create (newtask, &thread))
+	  (err = __thread_create (newtask, &sigthread)))
+	goto lose;
+
+      /* Get the child process's proc server port.  We will insert it into
+	 the child with the same name as we use for our own proc server
+	 port; and we will need it to set the child's message port.  */
+      if (err = __proc_task2proc (_hurd_ports[INIT_PORT_PROC].port,
+				  newtask, &newproc))
 	goto lose;
 
       /* Insert all our port rights into the child task.  */
       for (i = 0; i < nportnames; ++i)
 	{
-	  if (MACH_PORT_TYPE (right) & MACH_PORT_TYPE_RECEIVE)
+	  if (MACH_PORT_TYPE (porttypes[i]) & MACH_PORT_TYPE_RECEIVE)
 	    {
 	      /* This is a receive right.  We want to give the child task
 		 its own new receive right under the same name.  */
@@ -156,13 +146,13 @@ __fork (void)
 						   MACH_PORT_RIGHT_RECEIVE,
 						   portnames[i]))
 		goto lose;
-	      if (MACH_PORT_TYPE (right) & MACH_PORT_TYPE_SEND)
+	      if (MACH_PORT_TYPE (porttypes[i]) & MACH_PORT_TYPE_SEND)
 		{
 		  /* Give the child as many send rights for its receive
 		     right as we have for ours.  */
 		  mach_port_urefs_t refs;
 		  mach_port_t port;
-		  mach_port_poly_t poly;
+		  mach_msg_type_name_t poly;
 		  if (err = __mach_port_get_refs (__mach_task_self (),
 						  portnames[i],
 						  MACH_PORT_RIGHT_SEND,
@@ -173,8 +163,22 @@ __fork (void)
 						       MACH_MSG_TYPE_MAKE_SEND,
 						       &port, &poly))
 		    goto lose;
+		  if (portnames[i] == _hurd_msgport)
+		    {
+		      /* We just created a receive right for the child's
+			 message port and are about to insert send rights
+			 for it.  Now, while we happen to have a send right
+			 for it, give it to the proc server.  */
+		      mach_port_t old;
+		      if (err = __proc_setmsgport (newproc, port, &old))
+			goto lose;
+		      if (old != MACH_PORT_NULL)
+			/* XXX what to do here? */
+			__mach_port_deallocate (__mach_task_self (), old);
+		    }
 		  if (err = __mach_port_insert_right (newtask,
 						      portnames[i],
+						      port,
 						      MACH_MSG_TYPE_MOVE_SEND))
 		    goto lose;
 		  if (refs > 1 &&
@@ -184,12 +188,12 @@ __fork (void)
 						   refs - 1)))
 		    goto lose;
 		}
-	      if (MACH_PORT_TYPE (right) & MACH_PORT_TYPE_SEND_ONCE)
+	      if (MACH_PORT_TYPE (porttypes[i]) & MACH_PORT_TYPE_SEND_ONCE)
 		{
 		  /* Give the child a send-once right for its receive right,
 		     since we have one for ours.  */
 		  mach_port_t port;
-		  mach_port_poly_t poly;
+		  mach_msg_type_name_t poly;
 		  if (err = __mach_port_extract_right
 		      (newtask,
 		       portnames[i],
@@ -198,12 +202,12 @@ __fork (void)
 		    goto lose;
 		  if (err = __mach_port_insert_right
 		      (newtask,
-		       portnames[i],
+		       portnames[i], port,
 		       MACH_MSG_TYPE_MOVE_SEND_ONCE))
 		    goto lose;
 		}
 	    }
-	  else if (MACH_PORT_TYPE (right) &
+	  else if (MACH_PORT_TYPE (porttypes[i]) &
 		   (MACH_PORT_TYPE_SEND|MACH_PORT_TYPE_DEAD_NAME))
 	    {
 	      /* This is a send right or a dead name.
@@ -226,8 +230,17 @@ __fork (void)
 		}
 	      else if (portnames[i] == thread_self)
 		/* For the name we use for our own thread port, insert the
-		   thread port for the child main user thread.  */
+		   thread port for the child main user thread.  We have one
+		   extra user reference created at the beginning of this
+		   function, accounted for by mach_port_names (and which
+		   will thus be accounted for in the child below).  This
+		   extra right gets consumed in the child by the store into
+		   _hurd_sigthread in the child fork.  */
 		insert = thread;
+	      else if (portnames[i] == _hurd_msgport_thread)
+		/* For the name we use for our signal thread's thread port,
+		   insert the thread port for the child's signal thread.  */
+		insert = sigthread;
 	      else
 		{
 		  /* Skip the name we use for any of our own thread ports.  */
@@ -269,19 +282,36 @@ __fork (void)
 	__spin_unlock (&_hurd_ports[i].lock);
 
       /* Run things to set other things up in the child task.  */
-      if (err = run_hooks (&_hurd_fork_setup_hook, newtask, newproc))
-	goto lose;
+      RUN_HOOKS (_hurd_fork_setup_hook, ());
 
       /* Register the child with the proc server.  */
       if (err = __USEPORT (PROC, __proc_child (port, newtask)))
 	goto lose;
 
-      /* Set the child thread up to return 1 from the setjmp above.  We
-	 fetch the state before longjmp'ing it so that miscellaneous
+      /* Set the child signal thread up to run the msgport server function
+	 using the same signal thread stack copied from our address space.
+	 We fetch the state before longjmp'ing it so that miscellaneous
 	 registers not affected by longjmp (such as i386 segment registers)
 	 are in their normal default state.  */
       statecount = MACHINE_THREAD_STATE_COUNT;
-      if (err = __thread_get_state (thread, &state, &statecount))
+      if (err = __thread_get_state (thread, MACHINE_THREAD_STATE_FLAVOR,
+				    (int *) &state, &statecount))
+	goto lose;
+#if STACK_GROWTH_UP
+      state.SP = __hurd_sigthread_stack_base;
+#else
+      state.SP = __hurd_sigthread_stack_end;
+#endif      
+      state.PC = (unsigned long int) _hurd_msgport_receive;
+      if (err = __thread_set_state (sigthread, MACHINE_THREAD_STATE_FLAVOR,
+				    (int *) &state, &statecount))
+	goto lose;
+      /* We do not thread_resume SIGTHREAD here because the child
+	 fork needs to do more setup before it can take signals.  */
+
+      /* Set the child user thread up to return 1 from the setjmp above.  */
+      if (err = __thread_get_state (thread, MACHINE_THREAD_STATE_FLAVOR,
+				    (int *) &state, &statecount))
 	goto lose;
       _hurd_longjmp_thread_state (&state, env, 1);
       if (err = __thread_resume (thread))
@@ -300,6 +330,8 @@ __fork (void)
 	}
       if (thread != MACH_PORT_NULL)
 	__mach_port_deallocate (__mach_task_self (), thread);
+      if (sigthread != MACH_PORT_NULL)
+	__mach_port_deallocate (__mach_task_self (), sigthread);
       if (newproc != MACH_PORT_NULL)
 	__mach_port_deallocate (__mach_task_self (), newproc);
       if (thread_self != MACH_PORT_NULL)
@@ -347,6 +379,14 @@ __fork (void)
       /* Run things that want to run in the child task to set up.  */
       err = run_hooks (&_hurd_fork_child_hook, MACH_PORT_NULL, MACH_PORT_NULL);
 
+      /* We are the only thread in this new task, so we will
+	 take the task-global signals.  */
+      _hurd_sigthread = thread_self;
+
+      /* Start the signal thread listening on the message port.  */
+      if (!err)
+	err = __thread_resume (_hurd_msgport_thread);
+
       pid = 0;
     }
 
@@ -356,7 +396,7 @@ __fork (void)
     __mutex_unlock (_hurd_fork_locks.locks[i]);
 
  earlylose:
-  HURD_CRITICAL_END;
+  _hurd_critical_section_unlock (crit);
 
   return err ? __hurd_fail (err) : pid;
 }
