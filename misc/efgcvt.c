@@ -39,7 +39,8 @@ APPEND (FUNC_PREFIX, fcvt) (value, ndigit, decpt, sign)
 {
   static char buf[MAXDIG];
 
-  (void) fcvt_r (value, ndigit, decpt, sign, buf, sizeof buf);
+  (void) APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign,
+				       buf, sizeof buf);
 
   return buf;
 }
@@ -51,7 +52,8 @@ APPEND (FUNC_PREFIX, ecvt) (value, ndigit, decpt, sign)
 {
   static char buf[MAXDIG];
 
-  (void) ecvt_r (value, ndigit, decpt, sign, buf, sizeof buf);
+  (void) APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign,
+				       buf, sizeof buf);
 
   return buf;
 }
