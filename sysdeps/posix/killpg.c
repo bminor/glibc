@@ -33,5 +33,5 @@ DEFUN(killpg, (pgrp, sig), int pgrp AND int sig)
       return -1;
     }
 
-  return __kill(- pgrp, sig);
+  return __kill (- pgrp, sig);
 }
