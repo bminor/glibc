@@ -37,11 +37,10 @@ Cambridge, MA 02139, USA.  */
 /* Structure describing a cell containing a port.
    With the lock held, a user extracts PORT, and sets USER_DEALLOC to point
    to a word in his local storage.  PORT can then safely be used.  When
-   PORT is no longer needed, with the held held, the user examines
+   PORT is no longer needed, with the lock held, the user examines
    USER_DEALLOC.  If it is the same address that user stored there, it
    extracts *USER_DEALLOC, clears USER_DEALLOC to NULL, and releases the
-   lock.  If USER_DEALLOC was set to the user's pointer, and *USER_DEALLOC
-   is set, the user deallocates the port he used.  */
+   lock.  If *USER_DEALLOC is set, the user deallocates the port he used.  */
 struct _hurd_port
   {
     spin_lock_t lock;		/* Locks rest.  */
@@ -105,7 +104,7 @@ _hurd_port_free (struct _hurd_port *port,
     __mach_port_deallocate (__mach_task_self (), used_port);
 }
 
-/* Set *PORT's port to NEWPORT.  PORT is locked. */
+/* Set *PORT's port to NEWPORT.  PORT is locked.  */
 static inline void
 _hurd_port_locked_set (struct _hurd_port *port, mach_port_t newport)
 {
