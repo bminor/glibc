@@ -143,7 +143,12 @@ __hurd_path_lookup_retry (file_t crdir,
 		  int save = errno;
 		  errno = 0;
 		  fd = (int) strtol (retryname, &end, 10);
-		  if (end == NULL || errno)
+		  if (end == NULL || errno || /* Malformed number.  */
+		      /* Check for excess text after the number.  A slash is
+			 valid; it ends the component.  Any other character
+			 before the null is a violation of the protocol by
+			 the server.  */
+		      (*end != '/' && *end != '\0'))
 		    {
 		      errno = save;
 		      goto bad_magic;
@@ -156,7 +161,16 @@ __hurd_path_lookup_retry (file_t crdir,
 		      return err;
 		    }
 		  errno = save;
-		  return 0;
+		  if (*end == '\0')
+		    return 0;
+		  else
+		    {
+		      /* Do a normal retry on the remaining components.  */
+		      startdir = *result;
+		      dealloc_dir = 1;
+		      path = end + 1; /* Skip the slash.  */
+		      break;
+		    }
 		}
 	      else
 		goto bad_magic;
