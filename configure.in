@@ -45,7 +45,7 @@ verbose=
 lose=
 for arg in $*; do
   if [ x$next != x ]; then
-    eval "$next = \$arg"
+    eval "$next=\$arg"
     next=
   else
     case $arg in
@@ -201,7 +201,7 @@ os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
 case "$os" in
 gnu*)
   base_os=mach/hurd ;;
-sunos* | ultrix* | newsos* | dynix* | bsd*)
+osf1* | sunos* | ultrix* | newsos* | dynix* | bsd*)
   base_os=unix/bsd ;;
 linux* | sysv* | isc* | esix* | sco* | minix*)
   base_os=unix/sysv ;;
