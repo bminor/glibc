@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,31 +21,46 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 
 
+/* Defined in fopen.c.  */
+extern int __getmode __P ((const char *, __io_mode *));
+
+
 /* Replace STREAM, opening it on FILENAME.  */
 FILE *
 DEFUN(freopen, (filename, mode, stream),
       CONST char *filename AND CONST char *mode AND register FILE *stream)
 {
-  FILE *head;
+  __io_mode m;
+  PTR cookie;
 
-  if (!__validfp(stream))
+  if (!__getmode (mode, &m))
     {
+      (void) fclose (stream);
       errno = EINVAL;
       return NULL;
     }
 
-  /* Return value explicitly ignored.  */
-  (void) fclose(stream);
+  if (stream->__mode.__write)
+    /* Flush the stream.  */
+    (void) fflush (stream);
 
-  /* Make sure STREAM will be the first one checked.  */
-  head = __stdio_head;
-  __stdio_head = stream;
+  /* Open the file, attempting to preserve the old cookie value.  */
+  cookie = stream->__cookie;
+  if (__stdio_reopen (filename, m, &cookie, stream->__io_funcs.__close))
+    {
+      int save = errno;
+      (void) fclose (stream);
+      errno = save;
+      return NULL;
+    }
 
-  /* This will return either STREAM or NULL.  */
-  stream = fopen(filename, mode);
+  /* Close the stream, first disabling its cookie close function because
+     __stdio_reopen has already dealt with closing the old cookie.  */
+  stream->__io_funcs.__close = NULL;
+  (void) fclose (stream);
 
-  /* Restore the saved value.	*/
-  __stdio_head = head;
+  stream->__cookie = cookie;
+  stream->__mode = m;
 
   return stream;
 }
