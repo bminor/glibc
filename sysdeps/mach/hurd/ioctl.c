@@ -29,11 +29,14 @@ Cambridge, MA 02139, USA.  */
    handlers, one of these lists will contain them.  The other lists are
    handlers built into the library.  The definition of the set comes from
    hurdioctl.c.  */
-extern const struct
+extern struct 
   {
     size_t n;
     struct ioctl_handler *v[0];
-  } _hurd_ioctl_handler_lists;
+  } *const _hurd_ioctl_handlers;
+
+
+#define typesize(type)	(1 << (type))
 
 
 /* Perform the I/O control operation specified by REQUEST on FD.
@@ -54,9 +57,9 @@ DEFUN(__ioctl, (fd, request),
   struct
     {
       mig_reply_header_t header;
-      char data[_IOT_COUNT0 (type) * (_IOT_TYPE0 (request) << 1) +
-		_IOT_COUNT1 (type) * (_IOT_TYPE1 (request) << 1) +
-		_IOT_COUNT2 (type) * (_IOT_TYPE2 (request) << 1)];
+      char data[_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (request)) +
+		_IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (request)) +
+		_IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (request))];
     } msg;
   mach_msg_header_t *const m = &msg.header.Head;
   mach_msg_type_t *t = &msg.header.RetCodeType;
@@ -68,7 +71,7 @@ DEFUN(__ioctl, (fd, request),
   error_t err;
 
 #define io2mach_type(count, type) \
-  ((mach_msg_type_t) { mach_types[type], (type << 1) * 8, count, 1, 0, 0 })
+  ((mach_msg_type_t) { mach_types[type], typesize (type) * 8, count, 1, 0, 0 })
 
   va_list ap;
 
@@ -82,8 +85,8 @@ DEFUN(__ioctl, (fd, request),
     size_t i;
     const struct ioctl_handler *h;
 
-    for (i = 0; i < _hurd_ioctl_handler_lists.n; ++i)
-      for (h = _hurd_ioctl_handler_lists.v[i]; h != NULL; h = h->next)
+    for (i = 0; i < _hurd_ioctl_handlers->n; ++i)
+      for (h = _hurd_ioctl_handlers->v[i]; h != NULL; h = h->next)
 	if (request >= h->first_request && request <= h->last_request)
 	  /* This handler groks REQUEST.  Se lo puntamonos.  */
 	  return (*h->handler) (fd, request, arg);
@@ -97,12 +100,12 @@ DEFUN(__ioctl, (fd, request),
   if (_IOC_INOUT (request) & IOC_IN)
     {
       /* Pack an argument into the message buffer.  */
-      inline void in (unsigned int count, enum __ioctl_datum type)
+      void in (unsigned int count, enum __ioctl_datum type)
 	{
 	  if (count > 0)
 	    {
 	      void *p = &t[1];
-	      const size_t len = count * ((unsigned int) type << 1);
+	      const size_t len = count * typesize ((unsigned int) type);
 	      *t = io2mach_type (count, type);
 	      memcpy (p, arg, len);
 	      arg += len;
@@ -131,15 +134,15 @@ DEFUN(__ioctl, (fd, request),
 	  if (count > 0)
 	    {
 	      /* Add the size of the type and data.  */
-	      reply_size += sizeof (mach_msg_type_t) + (type << 1) * count;
+	      reply_size += sizeof (mach_msg_type_t) + typesize (type) * count;
 	      /* Align it to word size.  */
 	      reply_size += sizeof (mach_msg_type_t) - 1;
 	      reply_size &= ~(sizeof (mach_msg_type_t) - 1);
 	    }
 	}
-      figure_reply (_IOT_COUNT0 (request), _IOT_TYPE0 (request));
-      figure_reply (_IOT_COUNT1 (request), _IOT_TYPE1 (request));
-      figure_reply (_IOT_COUNT2 (request), _IOT_TYPE2 (request));
+      figure_reply (_IOT_COUNT0 (type), _IOT_TYPE0 (type));
+      figure_reply (_IOT_COUNT1 (type), _IOT_TYPE1 (type));
+      figure_reply (_IOT_COUNT2 (type), _IOT_TYPE2 (type));
     }
 
   /* Send the RPC.  */
@@ -204,12 +207,12 @@ DEFUN(__ioctl, (fd, request),
   switch (err)
     {
       /* Unpack the message buffer into the argument location.  */
-      inline int out (unsigned int count, unsigned int type,
-		      void *store, void **update)
+      int out (unsigned int count, unsigned int type,
+	       void *store, void **update)
 	{
 	  if (count > 0)
 	    {
-	      const size_t len = count * (type << 1);
+	      const size_t len = count * typesize (type);
 	      union { mach_msg_type_t t; int i; } ipctype;
 	      ipctype.t = io2mach_type (count, type);
 	      if (*(int *) t != ipctype.i)
@@ -226,9 +229,10 @@ DEFUN(__ioctl, (fd, request),
 
     case 0:
       if (m->msgh_size != reply_size ||
-	  out (_IOT_COUNT0 (type), _IOT_TYPE0 (type), arg, &arg) ||
-	  out (_IOT_COUNT1 (type), _IOT_TYPE1 (type), arg, &arg) ||
-	  out (_IOT_COUNT2 (type), _IOT_TYPE2 (type), arg, &arg))
+	  ((_IOC_INOUT (request) & IOC_OUT) &&
+	   out (_IOT_COUNT0 (type), _IOT_TYPE0 (type), arg, &arg) ||
+	   out (_IOT_COUNT1 (type), _IOT_TYPE1 (type), arg, &arg) ||
+	   out (_IOT_COUNT2 (type), _IOT_TYPE2 (type), arg, &arg)))
 	return __hurd_fail (MIG_TYPE_ERROR);
       return 0;
 
