@@ -1,3 +1,8 @@
+1998-03-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (dl_main): Install link maps for preloaded objects
+	using main_map as loader.
+
 1998-02-23 12:33  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/__longjmp.S: Fix race condition.
