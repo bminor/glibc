@@ -83,8 +83,12 @@ If you use @code{FNM_NOESCAPE}, then @samp{\} is an ordinary character.
 @comment fnmatch.h
 @comment GNU
 @item FNM_LEADING_DIR
-Ignore a trailing sequence of characters starting with a @samp{/}.
-For example, @samp{foo*} matches @samp{foobar/frobozz}.
+Ignore a trailing sequence of characters starting with a @samp{/} in
+@var{string}; that is to say, test whether @var{string} starts with a
+directory name that @var{pattern} matches.
+
+For example, either @samp{foo*} or @samp{foobar} as a pattern would
+match the string @samp{foobar/frobozz} if this flag is set.
 @end table
 
 @node Globbing
