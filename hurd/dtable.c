@@ -30,7 +30,7 @@ Cambridge, MA 02139, USA.  */
 #ifdef noteven
 struct mutex _hurd_dtable_lock;
 #endif
-struct _hurd_dtable _hurd_dtable;
+struct hurd_dtable _hurd_dtable;
 int _hurd_dtable_rlimit;
 struct hurd_userlink *_hurd_dtable_users;
 
@@ -71,7 +71,7 @@ init_dtable (void)
       else
 	{
 	  /* Allocate a new file descriptor structure.  */
-	  struct _hurd_fd *new = malloc (sizeof (struct hurd_fd));
+	  struct hurd_fd *new = malloc (sizeof (struct hurd_fd));
 	  if (new == NULL)
 	    __libc_fatal ("hurd: Can't allocate initial file descriptors\n");
 
@@ -139,7 +139,7 @@ fork_dtable (task_t newtask)
 
   for (i = 0; !err && i < _hurd_dtable.size; ++i)
     {
-      struct _hurd_port_userlink ulink, ctty_ulink;
+      struct hurd_userlink ulink, ctty_ulink;
       io_t port = _hurd_port_get (&_hurd_dtable.d[i].port, &ulink);
       io_t ctty = _hurd_port_get (&_hurd_dtable.d[i].ctty, &ctty_ulink);
 
@@ -174,7 +174,7 @@ reauth_dtable (void)
 
   for (i = 0; i < _hurd_dtable.size; ++i)
     {
-      struct _hurd_fd *const d = _hurd_dtable.d[i];
+      struct hurd_fd *const d = _hurd_dtable.d[i];
       mach_port_t new, newctty;
       
       if (d == NULL)
@@ -223,7 +223,7 @@ rectty_dtable (mach_port_t cttyid)
 
   for (i = 0; i < _hurd_dtable.size; ++i)
     {
-      struct _hurd_fd *const d = _hurd_dtable.d[i];
+      struct hurd_fd *const d = _hurd_dtable.d[i];
       mach_port_t newctty;
 
       if (d == NULL)
