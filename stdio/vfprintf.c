@@ -379,7 +379,7 @@ DEFUN(vfprintf, (s, format, args),
 		prec = 1;
 
 	      /* Put the number in WORK.  */
-	      w = _itoa (num, workend, base, fc == 'X');
+	      w = _itoa (num, workend + 1, base, fc == 'X') - 1;
 	      width -= workend - w;
 	      prec -= workend - w;
 
