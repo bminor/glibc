@@ -665,17 +665,17 @@ for searching and sorting arrays.  You can use these functions on any
 kind of array by providing an appropriate comparison function.
 
 @item
-@ref{Input/Output Overview}, gives an overall look at the input and output
+@ref{I/O Overview}, gives an overall look at the input and output
 facilities in the library, and contains information about basic concepts
 such as file names.
 
 @item
-@ref{Input/Output on Streams}, describes I/O operations involving
+@ref{I/O on Streams}, describes I/O operations involving
 streams (or @code{FILE *} objects).  These are the normal C library
 functions from @file{stdio.h}.
 
 @item
-@ref{Low-Level Input/Output}, contains information about I/O operations
+@ref{Low-Level I/O}, contains information about I/O operations
 on file descriptors.  File descriptors are a lower-level mechanism
 specific to the Unix family of operating systems.
 

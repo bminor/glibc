@@ -22,9 +22,9 @@ In the meantime, you should avoid using these names yourself.
 * Domain and Range Errors::     How overflow conditions and the like
 					 are reported.
 * Not a Number::                Making NANs and testing for NANs.
-* Trigonometric Functions::     Sine, cosine, and tangent.
-* Inverse Trigonometric Functions::  Arc sine, arc cosine, and arc tangent.
-* Exponentiation and Logarithms::  Also includes square root.
+* Trig Functions::     Sine, cosine, and tangent.
+* Inverse Trig Functions::  Arc sine, arc cosine, and arc tangent.
+* Exponents and Logarithms::  Also includes square root.
 * Hyperbolic Functions::        Hyperbolic sine and friends.
 * Pseudo-Random Numbers::       Functions for generating pseudo-random
 					 numbers.
@@ -88,7 +88,7 @@ For more information about floating-point representations and limits,
 @xref{Floating-Point Limits}.  In particular, the macro @code{DBL_MAX}
 might be more appropriate than @code{HUGE_VAL} for many uses.
 
-@node Not a Number, Trigonometric Functions, Domain and Range Errors, Mathematics
+@node Not a Number, Trig Functions, Domain and Range Errors, Mathematics
 @section ``Not a Number'' Values
 @cindex NAN
 @cindex not a number
@@ -117,7 +117,7 @@ a number'' values---that is to say, on all machines that support IEEE
 floating point.
 @end deftypevr
 
-@node Trigonometric Functions, Inverse Trigonometric Functions, Not a Number, Mathematics
+@node Trig Functions, Inverse Trig Functions, Not a Number, Mathematics
 @section Trigonometric Functions
 @cindex trigonometric functions
 
@@ -170,7 +170,7 @@ negative @code{HUGE_VAL}.
 @end deftypefun
 
 
-@node Inverse Trigonometric Functions, Exponentiation and Logarithms, Trigonometric Functions, Mathematics
+@node Inverse Trig Functions, Exponents and Logarithms, Trig Functions, Mathematics
 @section Inverse Trigonometric Functions
 @cindex inverse trigonmetric functions
 
@@ -249,7 +249,7 @@ function is not defined in this case.
 @end deftypefun
 
 
-@node Exponentiation and Logarithms, Hyperbolic Functions, Inverse Trigonometric Functions, Mathematics
+@node Exponents and Logarithms, Hyperbolic Functions, Inverse Trig Functions, Mathematics
 @section Exponentiation and Logarithms
 @cindex exponentiation functions
 @cindex power functions
@@ -371,12 +371,12 @@ It is computed in a way that is accurate even if the value of @var{x} is
 near zero.
 @end deftypefun
 
-@node Hyperbolic Functions, Pseudo-Random Numbers, Exponentiation and Logarithms, Mathematics
+@node Hyperbolic Functions, Pseudo-Random Numbers, Exponents and Logarithms, Mathematics
 @section Hyperbolic Functions
 @cindex hyperbolic functions
 
 The functions in this section are related to the exponential functions;
-see @ref{Exponentiation and Logarithms}.
+see @ref{Exponents and Logarithms}.
 
 @comment math.h
 @comment ANSI
@@ -618,4 +618,4 @@ This function returns the absolute value of the floating-point number
 @end deftypefun
 
 There is also the function @code{cabs} for computing the absolute value
-of a complex number; see @ref{Exponentiation and Logarithms}.
+of a complex number; see @ref{Exponents and Logarithms}.

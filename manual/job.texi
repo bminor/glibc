@@ -234,7 +234,7 @@ back to the shell.
 have been stopped.
 
 @item
-@ref{The Missing Pieces}, discusses other parts of the shell.
+@ref{Missing Pieces}, discusses other parts of the shell.
 @end itemize
 @end iftex
 
@@ -247,7 +247,7 @@ have been stopped.
 * Stopped and Terminated Jobs::  Reporting job status.
 * Continuing Stopped Jobs::     How to continue a stopped job in
 				 the foreground or background.
-* The Missing Pieces::          Other parts of the shell.
+* Missing Pieces::          Other parts of the shell.
 @end menu
 
 @node Data Structures, Initializing the Shell,  , Implementing a Shell
@@ -870,7 +870,7 @@ do_job_notification (void)
 @end example
 
 
-@node Continuing Stopped Jobs, The Missing Pieces, Stopped and Terminated Jobs, Implementing a Shell
+@node Continuing Stopped Jobs, Missing Pieces, Stopped and Terminated Jobs, Implementing a Shell
 @subsection Continuing Stopped Jobs
 
 @cindex stopped jobs, continuing
@@ -923,7 +923,7 @@ continue_job (job *j, int foreground)
 @end example
 
 
-@node The Missing Pieces,  , Continuing Stopped Jobs, Implementing a Shell
+@node Missing Pieces,  , Continuing Stopped Jobs, Implementing a Shell
 @subsection The Missing Pieces
 
 The code extracts for the sample shell included in this chapter are only

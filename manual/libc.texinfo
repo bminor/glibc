@@ -56,9 +56,9 @@ This is the reference manual for version 0.00 of the GNU C Library.
                                          the behavior of library functions.
 * Searching and Sorting::       General searching and sorting
 					 functions.
-* Input/Output Overview::       Introduction to the i/o facilities.
-* Input/Output on Streams::     High-level, portable i/o facilities.
-* Low-Level Input/Output::      Low-level, less portable i/o.
+* I/O Overview::       Introduction to the i/o facilities.
+* I/O on Streams::     High-level, portable i/o facilities.
+* Low-Level I/O::      Low-level, less portable i/o.
 * File System Interface::       Functions for manipulating files.
 * Pipes and FIFOs::             A simple interprocess communication
 					 mechanism.
@@ -178,7 +178,7 @@ Obstacks
 * Preparing to Use Obstacks::   Preparations needed before you can
 					 use obstacks.
 * Allocation in an Obstack::    Allocating objects in an obstack.
-* Freeing Objects in an Obstack::  Freeing objects in an obstack.
+* Freeing Obstack Objects::  Freeing objects in an obstack.
 * Obstack Functions and Macros::  The obstack functions are both
 					 functions and macros.
 * Growing Objects::             Making an object bigger by stages.
@@ -186,7 +186,7 @@ Obstacks
 					 complicated) growing.
 * Status of an Obstack::        Inquiries about the status of an
 					 obstack.
-* Alignment of Data in Obstacks::  Controlling alignment of objects
+* Obstacks Data Alignment::  Controlling alignment of objects
 					 in obstacks.
 * Obstack Chunks::              How obstacks obtain and release chunks.
 					 Efficiency considerations.
@@ -262,12 +262,12 @@ Searching and Sorting
 * Array Sort Function::         The @code{qsort} function.
 * Search/Sort Example::         An example program.
 
-Input/Output Overview
+I/O Overview
 
-* Input/Output Concepts::       Some basic information and terminology.
+* I/O Concepts::       Some basic information and terminology.
 * File Names::                  How to refer to a file.
 
-Input/Output Concepts
+I/O Concepts
 
 * Streams and File Descriptors::  The GNU Library provides two ways
 					 to access the contents of files.
@@ -278,9 +278,9 @@ File Names
 * Directories::                 Directories contain entries for files.
 * File Name Resolution::        A file name specifies how to look up a file.
 * File Name Errors::            Error conditions relating to file names.
-* Portability of File Names::   
+* File Name Portability::   
 
-Input/Output on Streams
+I/O on Streams
 
 * Streams::                     About the data type representing a stream.
 * Standard Streams::            Streams to the standard input and output 
@@ -323,7 +323,7 @@ Formatted Output
 * Other Output Conversions::    Details about formatting of strings,
                                          characters, pointers, and the like.
 * Formatted Output Functions::  Descriptions of the actual functions.
-* Variable Arguments Output Functions::  @code{vprintf} and friends.
+* Variable Arguments Output::  @code{vprintf} and friends.
 * Parsing a Template String::   What kinds of args
                                          does a given template call for?
 
@@ -343,7 +343,7 @@ Formatted Input
 * String Input Conversions::    Details of conversions for reading strings.
 * Other Input Conversions::     Details of miscellaneous other conversions.
 * Formatted Input Functions::   Descriptions of the actual functions.
-* Variable Arguments Input Functions::  @code{vscanf} and friends.
+* Variable Arguments Input::  @code{vscanf} and friends.
 
 Stream Buffering
 
@@ -361,7 +361,7 @@ Programming Your Own Custom Streams
 * Streams and Cookies::         
 * Hook Functions::              
 
-Low-Level Input/Output
+Low-Level I/O
 
 * Opening and Closing Files::   How to open and close file descriptors.
 * I/O Primitives::              Reading and writing data.
@@ -436,11 +436,11 @@ Sockets
                                          initializing sockets.
 * Domains and Protocols::       How to specify the communications
 					 protocol for a socket.
-* The Local Domain::            Details about the local (Unix) domain.
-* The Internet Domain::         Details about the Internet domain.
+* Local Domain::            Details about the local (Unix) domain.
+* Internet Domain::         Details about the Internet domain.
 * Types of Sockets::            Different socket types have different
 					 semantics for data transmission.
-* Byte Stream Socket Operations::  Operations on sockets with connection
+* Byte Stream Sockets::  Operations on sockets with connection
 					 state.
 * Datagram Socket Operations::  Operations on datagram sockets.
 * Socket Options::              Miscellaneous low-level socket options.
@@ -453,7 +453,7 @@ Socket Creation and Naming
 					 before it can receive data.
 * Socket Pairs::                These are created like pipes.
 
-The Internet Domain
+Internet Domain
 
 * Protocols Database::          Selecting a communications protocol.
 * Internet Socket Naming::      How socket names are specified in the Internet
@@ -467,7 +467,7 @@ The Internet Domain
                                  host address and port numbers.
 * Internet Socket Example::     Putting it all together.
 
-Byte Stream Socket Operations
+Byte Stream Sockets
 
 * Establishing a Connection::   The socket must be connected before it
                                  can transmit data.
@@ -523,9 +523,9 @@ Mathematics
 * Domain and Range Errors::     How overflow conditions and the like
 					 are reported.
 * Not a Number::                Making NANs and testing for NANs.
-* Trigonometric Functions::     Sine, cosine, and tangent.
-* Inverse Trigonometric Functions::  Arc sine, arc cosine, and arc tangent.
-* Exponentiation and Logarithms::  Also includes square root.
+* Trig Functions::     Sine, cosine, and tangent.
+* Inverse Trig Functions::  Arc sine, arc cosine, and arc tangent.
+* Exponents and Logarithms::  Also includes square root.
 * Hyperbolic Functions::        Hyperbolic sine and friends.
 * Pseudo-Random Numbers::       Functions for generating pseudo-random
 					 numbers.
@@ -539,7 +539,7 @@ Pseudo-Random Numbers
 Low-Level Arithmetic Functions
 
 * Normalization Functions::     Hacks for radix-2 representations.
-* Rounding and Remainder Functions::  Determinining the integer and
+* Rounding and Remainders::  Determinining the integer and
 					 fractional parts of a float.
 * Integer Division::            Functions for performing integer
 					 division.
@@ -572,16 +572,16 @@ Calendar Time
 * Broken-down Time::            Facilities for manipulating local time.
 * Formatting Date and Time::    Converting times to strings.
 * TZ Variable::                 How users specify the time zone.
-* Time Zone Functions::         Functions to examine or specify the time zone.
+* TZ Functions::         Functions to examine or specify the time zone.
 * Time Functions Example::      An example program showing use of some of
 				 the time functions.
 
 Non-Local Exits
 
-* Introduction to Non-Local Exits::  An overview of how and when to use
+* Intro to Non-Local Exits::  An overview of how and when to use
 					 these facilities.
 * Functions for Non-Local Exits::  Details of the interface.
-* Non-Local Exits and Blocked Signals::  Portability issues.
+* Non-Local Exits and Signals::  Portability issues.
 
 Signal Handling
 
@@ -681,11 +681,11 @@ Processes
 
 Program Arguments
 
-* Program Argument Syntax Conventions::  By convention, program
+* Argument Syntax Conventions::  By convention, program
                                                  options are specified by a
                                                  leading hyphen.
 * Parsing Program Arguments::   The @code{getopt} function.
-* Example of Parsing Program Arguments::  An example of @code{getopt}.
+* Example Using getopt::  An example of @code{getopt}.
 
 Environment Variables
 
@@ -714,7 +714,7 @@ Creating New Processes
 				         completed.
 * Process Completion Status::   How to interpret the status value 
                                          returned from a child process.
-* BSD Process Completion Functions::  More functions, for backward
+* BSD wait Functions::  More functions, for backward
                                          compatibility.
 * Process Creation Example::    A complete example program.
 
@@ -738,7 +738,7 @@ Implementing a Job Control Shell
 * Stopped and Terminated Jobs::  Reporting job status.
 * Continuing Stopped Jobs::     How to continue a stopped job in
 				 the foreground or background.
-* The Missing Pieces::          Other parts of the shell.
+* Missing Pieces::          Other parts of the shell.
 
 Functions for Job Control
 
@@ -786,7 +786,7 @@ System Information
 
 * Host Identification::         Determining the name of the
                                                  machine.
-* Hardware/Software Type Identification::  Determining the hardware type
+* Hardware/Software Type ID::  Determining the hardware type
                                                  of the machine and what
                                                  operating system it is
                                                  running.
@@ -850,9 +850,9 @@ Library Maintenance
                                          you may have with the GNU C library.
 * Porting::                     How to port the GNU C library to
                                          a new machine or operating system.
-* Compatibility with Traditional C::  Using the GNU C library with non-ANSI
+* Traditional C Compatibility::  Using the GNU C library with non-ANSI
                                          C compilers.
-* Contributors to the GNU C Library::  Contributors to the GNU C Library.
+* GNU C Library Contributors::  Contributors to the GNU C Library.
 
 Porting the GNU C Library
 

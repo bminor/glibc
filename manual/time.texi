@@ -217,7 +217,7 @@ date and time values.
 * Broken-down Time::            Facilities for manipulating local time.
 * Formatting Date and Time::    Converting times to strings.
 * TZ Variable::                 How users specify the time zone.
-* Time Zone Functions::         Functions to examine or specify the time zone.
+* TZ Functions::         Functions to examine or specify the time zone.
 * Time Functions Example::      An example program showing use of some of
 				 the time functions.
 @end menu
@@ -479,7 +479,7 @@ information is not available.
 This field describes the time zone that was used to compute this
 broken-down time value; it is the amount you must add to the local time
 in that zone to get GMT, in units of seconds.  The value is like that of
-the variable @code{timezone} (@pxref{Time Zone Functions}).  You can
+the variable @code{timezone} (@pxref{TZ Functions}).  You can
 also think of this as the ``number of seconds west'' of GMT.  The
 @code{tm_gmtoff} field is a GNU library extension.
 
@@ -541,7 +541,7 @@ If the specified broken-down time cannot be represented as a calendar time,
 the contents of @var{brokentime}.
 
 Calling @code{mktime} also sets the variable @code{tzname} with
-information about the current time zone.  @xref{Time Zone Functions}.
+information about the current time zone.  @xref{TZ Functions}.
 @end deftypefun
 
 @node Formatting Date and Time, TZ Variable, Broken-down Time, Calendar Time
@@ -586,7 +586,7 @@ asctime (localtime (@var{time}))
 @end example
 
 @code{ctime} sets the variable @code{tzname}, because @code{localtime}
-does so.  @xref{Time Zone Functions}.
+does so.  @xref{TZ Functions}.
 @end deftypefun
 
 @comment time.h
@@ -691,7 +691,7 @@ repeat the call, providing a bigger array.
 For an example of @code{strftime}, see @ref{Time Functions Example}.
 @end deftypefun
 
-@node TZ Variable, Time Zone Functions, Formatting Date and Time, Calendar Time
+@node TZ Variable, TZ Functions, Formatting Date and Time, Calendar Time
 @subsection Specifying the Time Zone with @code{TZ}
 
 In the GNU system, a user can specify the time zone by means of the
@@ -801,7 +801,7 @@ operation chooses a time zone by default.  Each operating system has its
 own rules for choosing the default time zone, so there is little we can
 say about them.
 
-@node Time Zone Functions, Time Functions Example, TZ Variable, Calendar Time
+@node TZ Functions, Time Functions Example, TZ Variable, Calendar Time
 @subsection Functions and Variables for Time Zones
 
 @comment time.h
@@ -850,7 +850,7 @@ This variable has a nonzero value if the standard U.S. daylight savings
 time rules apply.
 @end deftypevar
 
-@node Time Functions Example,  , Time Zone Functions, Calendar Time
+@node Time Functions Example,  , TZ Functions, Calendar Time
 @subsection Time Functions Example
 
 Here is an example program showing the use of some of the local time and

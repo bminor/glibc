@@ -7,20 +7,20 @@ information about the particular machine a program is running on.
 @menu
 * Host Identification::         Determining the name of the
                                                  machine.
-* Hardware/Software Type Identification::  Determining the hardware type
+* Hardware/Software Type ID::  Determining the hardware type
                                                  of the machine and what
                                                  operating system it is
                                                  running.
 @end menu
 
 
-@node Host Identification, Hardware/Software Type Identification,  , System Information
+@node Host Identification, Hardware/Software Type ID,  , System Information
 @section Host Identification
 
 The functions listed in this section access information to identify the
 particular machine that a program is running on.  In the GNU system,
 this information is the default Internet host name and host address of
-the machine; see @ref{The Internet Domain}.  These functions are the
+the machine; see @ref{Internet Domain}.  These functions are the
 primitives for the @code{hostname} and @code{hostid} shell commands.
 @pindex hostname
 @pindex hostid
@@ -71,7 +71,7 @@ is usually used only at system boot time.
 @end deftypefun
 
 
-@node Hardware/Software Type Identification,  , Host Identification, System Information
+@node Hardware/Software Type ID,  , Host Identification, System Information
 @section Hardware/Software Type Identification
 
 You can use the @code{uname} function to find out some information about

@@ -9,7 +9,7 @@ quantities, algorithms for manipulating floating-point data often need
 to be parameterized in terms of the accuracy of the representation.
 Some of the functions in the C library itself need this information; for
 example, the algorithms for printing and reading floating-point numbers
-(@pxref{Input/Output on Streams}) and for calculating trigonometric and
+(@pxref{I/O on Streams}) and for calculating trigonometric and
 irrational functions (@pxref{Mathematics}) use information about the
 underlying floating-point representation to avoid round-off error and
 loss of accuracy.  User programs that implement numerical analysis

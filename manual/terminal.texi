@@ -8,7 +8,7 @@ change which characters are used for end-of-file, command-line editing,
 sending signals, and similar control functions.
 
 Most of the functions in this chapter operate on file descriptors.
-@xref{Low-Level Input/Output}, for more information about what a file
+@xref{Low-Level I/O}, for more information about what a file
 descriptor is and how to open a file descriptor for a terminal device.
 
 @menu
@@ -64,7 +64,7 @@ isn't associated with a terminal, or the file name cannot be determined.
 Many of the remaining functions in this section refer to the input and
 output queues of a terminal device.  These queues implement a form of
 buffering @emph{within the kernel} independent of the buffering
-implemented by I/O streams (@pxref{Input/Output on Streams}).
+implemented by I/O streams (@pxref{I/O on Streams}).
 
 @cindex terminal input queue
 @cindex typeahead buffer

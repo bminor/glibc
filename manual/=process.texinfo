@@ -60,14 +60,14 @@ arguments are interpreted in the same way (as file names, for example),
 you are usually better off using @code{getopt} to do the parsing.
 
 @menu
-* Program Argument Syntax Conventions::  By convention, program
+* Argument Syntax Conventions::  By convention, program
                                                  options are specified by a
                                                  leading hyphen.
 * Parsing Program Arguments::   The @code{getopt} function.
-* Example of Parsing Program Arguments::  An example of @code{getopt}.
+* Example Using getopt::  An example of @code{getopt}.
 @end menu
 
-@node Program Argument Syntax Conventions, Parsing Program Arguments,  , Program Arguments
+@node Argument Syntax Conventions, Parsing Program Arguments,  , Program Arguments
 @subsection Program Argument Syntax Conventions
 @cindex program argument syntax
 @cindex syntax, for program arguments
@@ -124,7 +124,7 @@ Options may be supplied in any order, or appear multiple times.  The
 interpretation is left up to the particular application program.
 @end itemize
 
-@node Parsing Program Arguments, Example of Parsing Program Arguments, Program Argument Syntax Conventions, Program Arguments
+@node Parsing Program Arguments, Example Using getopt, Argument Syntax Conventions, Program Arguments
 @subsection Parsing Program Arguments
 @cindex program arguments, parsing
 @cindex command arguments, parsing
@@ -207,7 +207,7 @@ option character.  In addition, if the external variable @code{opterr}
 is nonzero, @code{getopt} prints an error message.
 @end deftypefun
 
-@node Example of Parsing Program Arguments,  , Parsing Program Arguments, Program Arguments
+@node Example Using getopt,  , Parsing Program Arguments, Program Arguments
 @subsection Example of Parsing Program Arguments
 
 Here is an example showing how @code{getopt} is typically used.  The
@@ -753,7 +753,7 @@ primitive functions to do each step individually instead.
 				         completed.
 * Process Completion Status::   How to interpret the status value 
                                          returned from a child process.
-* BSD Process Completion Functions::  More functions, for backward
+* BSD wait Functions::  More functions, for backward
                                          compatibility.
 * Process Creation Example::    A complete example program.
 @end menu
@@ -1266,7 +1266,7 @@ sigchld_handler (int signum)
 @end example
 @end deftypefun
 
-@node Process Completion Status, BSD Process Completion Functions, Process Completion, Creating New Processes
+@node Process Completion Status, BSD wait Functions, Process Completion, Creating New Processes
 @subsection Process Completion Status
 
 If the exit status value (@pxref{Program Termination}) of the child
@@ -1325,7 +1325,7 @@ number of the signal that caused the child process to stop.
 @end deftypefn
 
 
-@node BSD Process Completion Functions, Process Creation Example, Process Completion Status, Creating New Processes
+@node BSD wait Functions, Process Creation Example, Process Completion Status, Creating New Processes
 @subsection BSD Process Completion Functions
 
 The GNU library also provides these related facilities for compatibility
@@ -1393,7 +1393,7 @@ structure.
 hasn't been written yet.  Put in a cross-reference here.
 @end deftypefun
 
-@node Process Creation Example,  , BSD Process Completion Functions, Creating New Processes
+@node Process Creation Example,  , BSD wait Functions, Creating New Processes
 @subsection Process Creation Example
 
 Here is an example program showing how you might write a function

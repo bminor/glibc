@@ -8,7 +8,7 @@ fractional parts.  These functions are declared in the header file
 
 @menu
 * Normalization Functions::     Hacks for radix-2 representations.
-* Rounding and Remainder Functions::  Determinining the integer and
+* Rounding and Remainders::  Determinining the integer and
 					 fractional parts of a float.
 * Integer Division::            Functions for performing integer
 					 division.
@@ -17,7 +17,7 @@ fractional parts.  These functions are declared in the header file
 * Predicates on Floats::        Some miscellaneous test functions.
 @end menu
 
-@node Normalization Functions, Rounding and Remainder Functions,  , Arithmetic
+@node Normalization Functions, Rounding and Remainders,  , Arithmetic
 @section Normalization Functions
 @cindex normalization functions (floating-point)
 
@@ -81,7 +81,7 @@ quotient between @code{1} (inclusive) and @code{2} (exclusive).
 @end deftypefun
 
 
-@node Rounding and Remainder Functions, Integer Division, Normalization Functions, Arithmetic
+@node Rounding and Remainders, Integer Division, Normalization Functions, Arithmetic
 @section Rounding and Remainder Functions
 @cindex rounding functions
 @cindex remainder functions
@@ -172,7 +172,7 @@ The @var{denominator} is zero.
 @end deftypefun
 
 
-@node Integer Division, Parsing of Numbers, Rounding and Remainder Functions, Arithmetic
+@node Integer Division, Parsing of Numbers, Rounding and Remainders, Arithmetic
 @section Integer Division
 @cindex integer division functions
 

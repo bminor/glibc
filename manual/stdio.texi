@@ -1,4 +1,4 @@
-@node Input/Output on Streams, Low-Level Input/Output, Input/Output Overview, Top
+@node I/O on Streams, Low-Level I/O, I/O Overview, Top
 @chapter Input/Output on Streams
 
 This chapter describes the functions for creating streams and performing
@@ -34,7 +34,7 @@ useful here.
 * Other Kinds of Streams::      Other Kinds of Streams
 @end menu
 
-@node Streams, Standard Streams,  , Input/Output on Streams
+@node Streams, Standard Streams,  , I/O on Streams
 @section Streams
 
 For historical reasons, the type of the C data structure that represents
@@ -68,7 +68,7 @@ deal only with pointers to these objects (that is, @code{FILE *} values)
 rather than the objects themselves.
 
 
-@node Standard Streams, Opening Streams, Streams, Input/Output on Streams
+@node Standard Streams, Opening Streams, Streams, I/O on Streams
 @section Standard Streams
 @cindex standard streams
 @cindex streams, standard
@@ -115,7 +115,7 @@ provide similar mechanisms, but the details of how to use them can vary.
 It is probably not a good idea to close any of the standard streams.
 
 
-@node Opening Streams, Closing Streams, Standard Streams, Input/Output on Streams
+@node Opening Streams, Closing Streams, Standard Streams, I/O on Streams
 @section Opening Streams
 
 @cindex opening a stream
@@ -239,7 +239,7 @@ in which use of a standard stream for certain purposes is hard-coded.
 @end deftypefun
 
 
-@node Closing Streams, Simple Output, Opening Streams, Input/Output on Streams
+@node Closing Streams, Simple Output, Opening Streams, I/O on Streams
 @section Closing Streams
 
 @cindex closing a stream
@@ -275,7 +275,7 @@ Handling}), open streams might not be closed properly.  Buffered output
 may not be flushed and files may not be complete.  For more information
 on buffering of streams, see @ref{Stream Buffering}.
 
-@node Simple Output, Character Input, Closing Streams, Input/Output on Streams
+@node Simple Output, Character Input, Closing Streams, I/O on Streams
 @section Simple Output by Characters or Lines
 
 @cindex writing to a stream, by characters
@@ -355,7 +355,7 @@ This function writes the word @var{w} (that is, an @code{int}) to
 recommend you use @code{fwrite} instead (@pxref{Block Input/Output}).
 @end deftypefun
 
-@node Character Input, Line Input, Simple Output, Input/Output on Streams
+@node Character Input, Line Input, Simple Output, I/O on Streams
 @section Character Input
 
 @cindex reading from a stream, by characters
@@ -431,7 +431,7 @@ It's provided for compatibility with SVID.  We recommend you use
 @code{fread} instead (@pxref{Block Input/Output}).
 @end deftypefun
 
-@node Line Input, Unreading, Character Input, Input/Output on Streams
+@node Line Input, Unreading, Character Input, I/O on Streams
 @section Line-Oriented Input
 
 Since many programs interpret input on the basis of lines, it's
@@ -528,7 +528,7 @@ The GNU library includes it for compatibility only.  You should
 @strong{always} use @code{fgets} or @code{getline} instead.
 @end deftypefn
 
-@node Unreading, Formatted Output, Line Input, Input/Output on Streams
+@node Unreading, Formatted Output, Line Input, I/O on Streams
 @section Unreading
 @cindex peeking at input
 @cindex unreading characters
@@ -647,7 +647,7 @@ skip_whitespace (FILE *stream)
 @}
 @end example
 
-@node Formatted Output, Customizing Printf, Unreading, Input/Output on Streams
+@node Formatted Output, Customizing Printf, Unreading, I/O on Streams
 @section Formatted Output
 
 @cindex format string, for @code{printf}
@@ -677,7 +677,7 @@ useful for printing error messages, tables of data, and the like.
 * Other Output Conversions::    Details about formatting of strings,
                                          characters, pointers, and the like.
 * Formatted Output Functions::  Descriptions of the actual functions.
-* Variable Arguments Output Functions::  @code{vprintf} and friends.
+* Variable Arguments Output::  @code{vprintf} and friends.
 * Parsing a Template String::   What kinds of args
                                          does a given template call for?
 @end menu
@@ -1196,7 +1196,7 @@ conversion doesn't use an argument, and no flags, field width,
 precision, or type modifiers are permitted.
 
 
-@node Formatted Output Functions, Variable Arguments Output Functions, Other Output Conversions, Formatted Output
+@node Formatted Output Functions, Variable Arguments Output, Other Output Conversions, Formatted Output
 @subsection Formatted Output Functions
 
 This section describes how to call @code{printf} and related functions.
@@ -1308,7 +1308,7 @@ make_message (char *name, char *value)
 @end smallexample
 @end deftypefun
 
-@node Variable Arguments Output Functions, Parsing a Template String, Formatted Output Functions, Formatted Output
+@node Variable Arguments Output, Parsing a Template String, Formatted Output Functions, Formatted Output
 @subsection Variable Arguments Output Functions
 
 The functions @code{vprintf} and friends are provided so that you can
@@ -1417,7 +1417,7 @@ You could call @code{eprintf} like this:
 eprintf ("file `%s' does not exist\n", filename);
 @end example
 
-@node Parsing a Template String,  , Variable Arguments Output Functions, Formatted Output
+@node Parsing a Template String,  , Variable Arguments Output, Formatted Output
 @subsection Parsing a Template String
 @cindex parsing a template string
 
@@ -1555,7 +1555,7 @@ a base type of @code{PA_DOUBLE} to indicate a type of @code{long double}.
 interpreter, showing how one might validate a list of args and then
 call @code{vprintf}.
 
-@node Customizing Printf, Formatted Input, Formatted Output, Input/Output on Streams
+@node Customizing Printf, Formatted Input, Formatted Output, I/O on Streams
 @section Customizing Printf
 @cindex customizing @code{printf}
 @cindex defining new @code{printf} conversions
@@ -1791,7 +1791,7 @@ The output produced by this program looks like:
 |<Widget 0xffeffb7c: mywidget>      |
 @end example
 
-@node Formatted Input, Block Input/Output, Customizing Printf, Input/Output on Streams
+@node Formatted Input, Block Input/Output, Customizing Printf, I/O on Streams
 @section Formatted Input
 
 @cindex formatted input from a stream
@@ -1812,7 +1812,7 @@ reading arbitrary values under the control of a @dfn{format string} or
 * String Input Conversions::    Details of conversions for reading strings.
 * Other Input Conversions::     Details of miscellaneous other conversions.
 * Formatted Input Functions::   Descriptions of the actual functions.
-* Variable Arguments Input Functions::  @code{vscanf} and friends.
+* Variable Arguments Input::  @code{vscanf} and friends.
 @end menu
 
 @node Formatted Input Basics, Input Conversion Syntax,  , Formatted Input
@@ -2208,7 +2208,7 @@ Finally, the @samp{%%} conversion matches a literal @samp{%} character
 in the input stream, without using an argument.  This conversion does
 not permit any flags, field width, or type modifier to be specified.
 
-@node Formatted Input Functions, Variable Arguments Input Functions, Other Input Conversions, Formatted Input
+@node Formatted Input Functions, Variable Arguments Input, Other Input Conversions, Formatted Input
 @subsection Formatted Input Functions
 
 Here are the descriptions of the functions for performing formatted
@@ -2250,14 +2250,14 @@ as an argument to receive a string read under control of the @samp{%s}
 conversion.
 @end deftypefun
 
-@node Variable Arguments Input Functions,  , Formatted Input Functions, Formatted Input
+@node Variable Arguments Input,  , Formatted Input Functions, Formatted Input
 @subsection Variable Arguments Input Functions
 
 The functions @code{vscanf} and friends are provided so that you can
 define your own variadic @code{scanf}-like functions that make use of
 the same internals as the built-in formatted output functions.
 These functions are analogous to the @code{vprintf} series of output
-functions.  @xref{Variable Arguments Output Functions}, for important
+functions.  @xref{Variable Arguments Output}, for important
 information on how to use them.
 
 @strong{Portability Note:} The functions listed in this section are GNU
@@ -2286,7 +2286,7 @@ This is the equivalent of @code{sscanf} with the variable argument list
 specified directly as for @code{vscanf}.
 @end deftypefun
 
-@node Block Input/Output, EOF and Errors, Formatted Input, Input/Output on Streams
+@node Block Input/Output, EOF and Errors, Formatted Input, I/O on Streams
 @section Block Input/Output
 
 This section describes how to do input and output operations on blocks
@@ -2344,7 +2344,7 @@ only if a write error occurs.
 @end deftypefun
 
 
-@node EOF and Errors, Binary Streams, Block Input/Output, Input/Output on Streams
+@node EOF and Errors, Binary Streams, Block Input/Output, I/O on Streams
 @section End-Of-File and Errors
 
 @cindex end of file, on a stream
@@ -2402,9 +2402,9 @@ stream---such as @code{fputc}, @code{printf}, and @code{fflush}---are
 implemented in terms of @code{write}, and all of the @code{errno} error
 conditions defined for @code{write} are meaningful for these functions.
 For more information about the descriptor-level I/O functions, see
-@ref{Low-Level Input/Output}.
+@ref{Low-Level I/O}.
 
-@node Binary Streams, File Positioning, EOF and Errors, Input/Output on Streams
+@node Binary Streams, File Positioning, EOF and Errors, I/O on Streams
 @section Text and Binary Streams
 
 The GNU system and other POSIX-compatible operating systems organize all
@@ -2462,7 +2462,7 @@ get the same kind of stream regardless of whether you ask for binary.
 This stream can handle any file content, and has none of the
 restrictions that text streams sometimes have.
 
-@node File Positioning, Portable Positioning, Binary Streams, Input/Output on Streams
+@node File Positioning, Portable Positioning, Binary Streams, I/O on Streams
 @section File Positioning
 @cindex file positioning on a stream
 @cindex positioning a stream
@@ -2559,7 +2559,7 @@ begining of the file.  It is equivalent to calling @code{fseek} on the
 value is discarded and the error indicator for the stream is reset.
 @end deftypefun
 
-@node Portable Positioning, Stream Buffering, File Positioning, Input/Output on Streams
+@node Portable Positioning, Stream Buffering, File Positioning, I/O on Streams
 @section Portable File-Position Functions
 
 On the GNU system, the file position is truly a character count.  You
@@ -2644,7 +2644,7 @@ of zero.  Otherwise, @code{fsetpos} returns a nonzero value and stores
 an implementation-defined positive value in @code{errno}.
 @end deftypefun
 
-@node Stream Buffering, Temporary Files, Portable Positioning, Input/Output on Streams
+@node Stream Buffering, Temporary Files, Portable Positioning, I/O on Streams
 @section Stream Buffering
 
 @cindex buffering of streams
@@ -2669,7 +2669,7 @@ terminal devices, see @ref{Low-Level Terminal Interface}.
 
 You can bypass the stream buffering facilities altogether by using the
 low-level input and output functions that operate on file descriptors
-instead.  @xref{Low-Level Input/Output}.
+instead.  @xref{Low-Level I/O}.
 
 @menu
 * Buffering Concepts::          Terminology is defined here.
@@ -2905,7 +2905,7 @@ This function is provided for compatibility with old BSD code.  Use
 @end deftypefun
 
 
-@node Temporary Files, Other Kinds of Streams, Stream Buffering, Input/Output on Streams
+@node Temporary Files, Other Kinds of Streams, Stream Buffering, I/O on Streams
 @section Temporary Files
 
 If you need to use a temporary file in your program, you can use the
@@ -3000,7 +3000,7 @@ This function is defined for SVID compatibility.
 This macro is the name of the default directory for temporary files.
 @end deftypevr
 
-@node Other Kinds of Streams,  , Temporary Files, Input/Output on Streams
+@node Other Kinds of Streams,  , Temporary Files, I/O on Streams
 @section Other Kinds of Streams
 
 The GNU library provides ways for you to define additional kinds of

@@ -671,7 +671,7 @@ the padding needed to start each object on a suitable boundary.
 * Preparing to Use Obstacks::   Preparations needed before you can
 					 use obstacks.
 * Allocation in an Obstack::    Allocating objects in an obstack.
-* Freeing Objects in an Obstack::  Freeing objects in an obstack.
+* Freeing Obstack Objects::  Freeing objects in an obstack.
 * Obstack Functions and Macros::  The obstack functions are both
 					 functions and macros.
 * Growing Objects::             Making an object bigger by stages.
@@ -679,7 +679,7 @@ the padding needed to start each object on a suitable boundary.
 					 complicated) growing.
 * Status of an Obstack::        Inquiries about the status of an
 					 obstack.
-* Alignment of Data in Obstacks::  Controlling alignment of objects
+* Obstacks Data Alignment::  Controlling alignment of objects
 					 in obstacks.
 * Obstack Chunks::              How obstacks obtain and release chunks.
 					 Efficiency considerations.
@@ -794,7 +794,7 @@ struct obstack *myobstack_ptr
 obstack_init (myobstack_ptr);
 @end example
 
-@node Allocation in an Obstack, Freeing Objects in an Obstack, Preparing to Use Obstacks, Obstacks
+@node Allocation in an Obstack, Freeing Obstack Objects, Preparing to Use Obstacks, Obstacks
 @subsection Allocation in an Obstack
 @cindex allocation (obstacks)
 
@@ -860,7 +860,7 @@ obstack_savestring (char *addr, size_t size)
 Contrast this with the previous example of @code{savestring} using
 @code{malloc} (@pxref{Basic Allocation}).
 
-@node Freeing Objects in an Obstack, Obstack Functions and Macros, Allocation in an Obstack, Obstacks
+@node Freeing Obstack Objects, Obstack Functions and Macros, Allocation in an Obstack, Obstacks
 @subsection Freeing Objects in an Obstack
 @cindex freeing (obstacks)
 
@@ -892,7 +892,7 @@ the objects in a chunk become free, the obstack library automatically
 frees the chunk (@pxref{Preparing to Use Obstacks}).  Then other
 obstacks, or non-obstack allocation, can reuse the space of the chunk.
 
-@node Obstack Functions and Macros, Growing Objects, Freeing Objects in an Obstack, Obstacks
+@node Obstack Functions and Macros, Growing Objects, Freeing Obstack Objects, Obstacks
 @subsection Obstack Functions and Macros
 @cindex macros
 
@@ -1125,7 +1125,7 @@ add_string (struct obstack *obstack, char *ptr, size_t len)
 @}
 @end example
 
-@node Status of an Obstack, Alignment of Data in Obstacks, Extra Fast Growing Objects, Obstacks
+@node Status of an Obstack, Obstacks Data Alignment, Extra Fast Growing Objects, Obstacks
 @subsection Status of an Obstack
 @cindex obstack status
 @cindex status of obstack
@@ -1167,7 +1167,7 @@ obstack_next_free (@var{obstack_ptr}) - obstack_base (@var{obstack_ptr})
 @end example
 @end deftypefun
 
-@node Alignment of Data in Obstacks, Obstack Chunks, Status of an Obstack, Obstacks
+@node Obstacks Data Alignment, Obstack Chunks, Status of an Obstack, Obstacks
 @subsection Alignment of Data in Obstacks
 @cindex alignment (in obstacks)
 
@@ -1207,7 +1207,7 @@ alignment mask take effect immediately by calling @code{obstack_finish}.
 This will finish a zero-length object and then do proper alignment for
 the next object.
 
-@node Obstack Chunks, Obstacks and Signal Handling, Alignment of Data in Obstacks, Obstacks
+@node Obstack Chunks, Obstacks and Signal Handling, Obstacks Data Alignment, Obstacks
 @subsection Obstack Chunks
 @cindex efficiency of chunks
 @cindex chunks
@@ -1331,7 +1331,7 @@ from @var{address}, followed by a null character at the end.
 
 @item obstack_free (@var{obstack_ptr}, @var{object})
 Free @var{object} (and everything allocated in the specified obstack
-more recently than @var{object}).  @xref{Freeing Objects in an Obstack}.
+more recently than @var{object}).  @xref{Freeing Obstack Objects}.
 
 @item obstack_blank (@var{obstack_ptr}, @var{size})
 Add @var{size} uninitialized bytes to a growing object.
@@ -1372,7 +1372,7 @@ Get the amount of room now available for growing the current object.
 
 @item obstack_alignment_mask (@var{obstack_ptr})
 The mask used for aligning the beginning of an object.  This is an
-lvalue.  @xref{Alignment of Data in Obstacks}.
+lvalue.  @xref{Obstacks Data Alignment}.
 
 @item obstack_chunk_size (@var{obstack_ptr})
 The size for allocating chunks.  This is an lvalue.  @xref{Obstack Chunks}.

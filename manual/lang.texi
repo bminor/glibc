@@ -673,7 +673,7 @@ to take account of  the accuracy of the representation.
 
 Some of the functions in the C library itself need this information; for
 example, the algorithms for printing and reading floating-point numbers
-(@pxref{Input/Output on Streams}) and for calculating trigonometric and
+(@pxref{I/O on Streams}) and for calculating trigonometric and
 irrational functions (@pxref{Mathematics}) use it to avoid round-off
 error and loss of accuracy.  User programs that implement numerical
 analysis techniques also often need this information in order to

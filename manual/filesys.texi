@@ -1,9 +1,9 @@
-@node File System Interface, Pipes and FIFOs, Low-Level Input/Output, Top
+@node File System Interface, Pipes and FIFOs, Low-Level I/O, Top
 @chapter File System Interface
 
 This chapter describes the GNU C library's functions for manipulating
 files.  Unlike the input and output functions described in
-@ref{Input/Output on Streams} and @ref{Low-Level Input/Output}, these
+@ref{I/O on Streams} and @ref{Low-Level I/O}, these
 functions are concerned with operating on the files themselves, rather
 than on their contents.
 
@@ -148,7 +148,7 @@ the directory stream to retrieve these entries, represented as
 @code{struct dirent} objects.  The name of the file for each entry is
 stored in the @code{d_name} member of this structure.  There are obvious
 parallels here to the stream facilities for ordinary files, described in
-@ref{Input/Output on Streams}.
+@ref{I/O on Streams}.
 
 @menu
 * Directory Entries::           Format of one directory entry.
@@ -241,7 +241,7 @@ directory, cannot support any additional open files at the moment.
 
 The @code{DIR} type is typically implemented using a file descriptor,
 and the @code{opendir} function in terms of the @code{open} function.
-@xref{Low-Level Input/Output}.  Directory streams and the underlying
+@xref{Low-Level I/O}.  Directory streams and the underlying
 file descriptors are closed on @code{exec} (@pxref{Executing a File}).
 @end deftypefun
 
@@ -972,7 +972,7 @@ The file named by @var{filename} doesn't exist.
 @deftypefun int fstat (int @var{filedes}, struct stat *@var{buf})
 The @code{fstat} function is like @code{stat}, except that it takes an
 open file descriptor as an argument instead of a file name.
-@xref{Low-Level Input/Output}.
+@xref{Low-Level I/O}.
 
 Like @code{stat}, @code{fstat} returns @code{0} on success and @code{-1}
 on failure.  The following @code{errno} error conditions are defined for
