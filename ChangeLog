@@ -13,7 +13,7 @@
 
 	* elf/Makefile: Undo last change.
 
-	* po/dv.po: Update for 2.0.7.
+	* po/sv.po: Update for 2.0.7.
 
 	* posix/glob.c: Carry over changes from 2.1 which increase the speed
 	and fix some bugs.
