@@ -1,5 +1,8 @@
 2005-02-11  Jakub Jelinek  <jakub@redhat.com>
 
+	* elf/rtld.c (_dl_start): Set bootstrap_map.l_relocated even
+	for already prelinked ld.so.
+
 	* scripts/soversions.awk: Only record first WORDSIZE{32,64}
 	matching line.
 
