@@ -61,7 +61,7 @@ subdir_lib: lib-noranlib
 # They can use "$(objpfx)libfnord.a: $(dep-dummy-lib); $(make-dummy-lib)".
 dep-dummy-lib = $(objpfx)dummy.o
 define make-dummy-lib
-ar cr$(verbose) $@ $<
+$(AR) cr$(verbose) $@ $<
 endef
 $(objpfx)dummy.o:
 	@rm -f $(@:.o=.c)
