@@ -93,7 +93,7 @@ execvp (file, argv)
 	}
 
       len = strlen (file) + 1;
-      name = __alloca (strlen (path) + len);
+      name = __alloca (strlen (path) + len + 1);
       p = path;
       do
 	{
