@@ -21,21 +21,21 @@ Cambridge, MA 02139, USA.  */
 static error_t
 setbootstrap (mach_port_t newport)
 {
-  error_t err;
-  err = __task_set_special_port (__mach_task_self (),
-				 TASK_BOOTSTRAP_PORT,
-				 newport);
-  if (err == 0)
-    /* Consume the reference for NEWPORT when successful.  */
-    __mach_port_deallocate (__mach_task_self (), newport);
-  return err;
+  return __task_set_special_port (__mach_task_self (),
+				  TASK_BOOTSTRAP_PORT,
+				  newport);
 }
+
+extern error_t _hurd_setauth (auth_t);
+extern error_t _hurd_setproc (process_t);
+extern error_t _hurd_setcttyid (mach_port_t);
 
 error_t (*_hurd_ports_setters[INIT_PORT_MAX]) (mach_port_t newport) =
   {
     [INIT_PORT_BOOTSTRAP] = setbootstrap,
     [INIT_PORT_AUTH] = _hurd_setauth,
     [INIT_PORT_PROC] = _hurd_setproc,
+    [INIT_PORT_CTTYID] = _hurd_setcttyid,
   };
 
 
