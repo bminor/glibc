@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -54,21 +54,19 @@ DEFUN(enlarge_buffer, (stream, c),
     {
       /* Enlarge the buffer.  */
       char *newbuf;
+      size_t newsize;
       if (stream->__bufsize * 2 < need)
-	stream->__bufsize = need;
+	newsize  = need;
       else
-	stream->__bufsize *= 2;
-      newbuf = (char *) realloc ((PTR) stream->__buffer, stream->__bufsize);
-      *info->buffer = newbuf;
+	newsize = stream->__bufsize * 2;
+      newbuf = (char *) realloc ((PTR) stream->__buffer, newsize);
       if (newbuf == NULL)
 	{
-	  free ((PTR) stream->__buffer);
-	  stream->__buffer = stream->__bufp
-	    = stream->__put_limit = stream->__get_limit = NULL;
 	  stream->__error = 1;
 	  return;
 	}
-      stream->__buffer = newbuf;
+      *info->buffer = stream->__buffer = newbuf;
+      stream->__bufsize = newsize;
     }
 
   stream->__target = stream->__offset = 0;
