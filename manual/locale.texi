@@ -187,7 +187,7 @@ with @code{setlocale} to set a single locale for all purposes.
 @item LANG
 @vindex LANG
 If this environment variable is defined, its value specifies the locale
-to use for all purposes except as overridden by the variables below.
+to use for all purposes except as overridden by the variables above.
 @end table
 
 @node Setting the Locale, Standard Locales, Locale Categories, Locales
@@ -278,8 +278,9 @@ with_other_locale (char *new_locale,
   old_locale = setlocale (LC_ALL, NULL);
   
   /* @r{Copy the name so it won't be clobbered by @code{setlocale}.} */
-  saved_locale = xmalloc (strlen (old_locale));
-  strcpy (saved_locale, old_locale);
+  saved_locale = strdup (old_locale);
+  if (old_locale == NULL)
+    fatal ("Out of memory");
   
   /* @r{Now change the locale and do some stuff with it.} */
   setlocale (LC_ALL, new_locale);
@@ -319,6 +320,7 @@ to be a good default for the machine on which the program is running.
 Defining and installing named locales is normally a responsibility of
 the system administrator at your site (or the person who installed the
 GNU C library).  Users cannot do this.
+@c !!! when this is implemented in gnu, users will be able to
 @c  @xref{Defining New Locales}, for
 @c information about what this involves.
 
@@ -341,7 +343,7 @@ conventions of the current locale, you can use the function
 
 @comment locale.h
 @comment ANSI
-@deftypefun {struct lconv *} localeconv ()
+@deftypefun {struct lconv *} localeconv (void)
 The @code{localeconv} function returns a pointer to a structure whose
 components contain information about how numeric and monetary values
 should be formatted in the current locale.

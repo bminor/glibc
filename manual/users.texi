@@ -77,6 +77,9 @@ for how to find information about a group ID or group name.
 @cindex effective user ID
 @cindex effective group ID
 
+@c !!! bogus; not single ID.  set of effective group IDs (and, in GNU,
+@c set of effective UIDs) determines privilege.  lying here and then
+@c telling the truth below is confusing.
 At any time, each process has a single user ID and a group ID which
 determine the privileges of the process.  These are collectively called
 the @dfn{persona} of the process, because they determine ``who it is''
@@ -84,7 +87,9 @@ for purposes of access control.  These IDs are also called the
 @dfn{effective user ID} and @dfn{effective group ID} of the process.
 
 Your login shell starts out with a persona which consists of your user
-ID and your default group ID.  In normal circumstances. all your other
+ID and your default group ID.  
+@c !!! also supplementary group IDs.
+In normal circumstances. all your other
 processes inherit these values.
 
 @cindex real user ID
@@ -100,8 +105,8 @@ of a process.  @xref{Why Change Persona}.
 
 @cindex supplementary group IDs
 In addition, a user can belong to multiple groups, so the persona
-includes have @dfn{supplementary group IDs} that also contribute to
-access permission.
+includes @dfn{supplementary group IDs} that also contribute to access
+permission.
 
 For details on how a process's effective user IDs and group IDs affect
 its permission to access files, see @ref{Access Permission}.
@@ -120,7 +125,7 @@ logging in.  (To accomplish this fully, @code{login} must set the real
 user and group IDs as well as its persona.  But this is a special case.)
 
 The more common case of changing persona is when an ordinary user
-programs needs access to a resource that wouldn't ordinarily be
+program needs access to a resource that wouldn't ordinarily be
 accessible to the user actually running it.
 
 For example, you may have a file that is controlled by your program but
@@ -142,7 +147,7 @@ user ID to be that for @code{games}.  In effect, the program must
 adopt the persona of @code{games} so it can write the scores file.
 
 @node How Change Persona
-@section How an Application can Change Persona
+@section How an Application Can Change Persona
 @cindex @code{setuid} programs
 
 The ability to change the persona of a process can be a source of
@@ -154,7 +159,7 @@ You can't arbitrarily set your user ID or group ID to anything you want;
 only privileged processes can do that.  Instead, the normal way for a
 program to change its persona is that it has been set up in advance to
 change to a particular user or group.  This is the function of the suid
-and sgid bits of a file's access mode.
+and sgid bits of a file's access mode.  @xref{Permission Bits}.
 
 When the suid bit of an executable file is set, executing that file
 automatically changes the effective user ID to the user that owns the
@@ -170,6 +175,8 @@ A process can always change its effective user (or group) ID back to its
 real ID.  Programs do this so as to turn off their special privileges
 when they are not needed, which makes for more robustness.
 
+@c !!! talk about _POSIX_SAVED_IDS
+
 @node Reading Persona
 @section Reading the Persona of a Process
 
@@ -184,37 +191,37 @@ facilities, you must include the header files @file{sys/types.h} and
 @comment POSIX.1
 @deftp {Data Type} uid_t
 This is an integer data type used to represent user IDs.  In the GNU
-library, this is an alias for @code{unsigned short int}.
+library, this is an alias for @code{unsigned int}.
 @end deftp
 
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} gid_t
 This is an integer data type used to represent group IDs.  In the GNU
-library, this is an alias for @code{unsigned short int}.
+library, this is an alias for @code{unsigned int}.
 @end deftp
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun uid_t getuid ()
+@deftypefun uid_t getuid (void)
 The @code{getuid} function returns the real user ID of the process.
 @end deftypefun
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun gid_t getgid ()
+@deftypefun gid_t getgid (void)
 The @code{getgid} function returns the real group ID of the process.
 @end deftypefun
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun uid_t geteuid ()
+@deftypefun uid_t geteuid (void)
 The @code{geteuid} function returns the effective user ID of the process.
 @end deftypefun
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun gid_t getegid ()
+@deftypefun gid_t getegid (void)
 The @code{getegid} function returns the effective group ID of the process.
 @end deftypefun
 
@@ -235,16 +242,18 @@ Here's how to use @code{getgroups} to read all the supplementary group
 IDs:
 
 @example
+@group
 gid_t *
 read_all_groups ()
 @{
-  int ngroups = getgroups (0, 0);
+  int ngroups = getgroups (NULL, 0);
   gid_t *groups = (gid_t *) xmalloc (ngroups * sizeof (gid_t));
   int val = getgroups (ngroups, groups);
   if (val < 0)
     return 0;
   return groups;
 @}
+@end group
 @end example
 @end deftypefun
 
@@ -259,14 +268,16 @@ include the header files @file{sys/types.h} and @file{unistd.h}.
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun int setuid (@var{newuid})
+@deftypefun int setuid (uid_t @var{newuid})
 This function sets both the real and effective user ID of the process
 to @var{newuid}, provided that the process has appropriate privileges.
+@c !!! also sets saved-id
 
 If the process is not privileged, then @var{newuid} must either be equal
 to the real user ID or the saved user ID (if the system supports the
 @code{_POSIX_SAVED_IDS} feature).  In this case, @code{setuid} sets only
 the effective user ID and not the real user ID.
+@c !!! xref to discussion of _POSIX_SAVED_IDS
 
 The @code{setuid} function returns a value of @code{0} to indicate
 successful completion, and a value of @code{-1} to indicate an error.
@@ -285,11 +296,12 @@ have permission to change to the specified ID.
 
 @comment unistd.h
 @comment BSD
-@deftypefun int setreuid (int @var{ruid}, int @var{euid})
+@deftypefun int setreuid (uid_t @var{ruid}, uid_t @var{euid})
 This function sets the real user ID of the process to @var{ruid} and
 the effective user ID to @var{euid}.
+@c !!! args can be -1 to mean no change
 
-The @code{setreuid} function exists for compatibility with 4.2 BSD Unix,
+The @code{setreuid} function exists for compatibility with 4.3 BSD Unix,
 which does not support saved IDs.  You can use this function to swap the
 effective and real user IDs of the process.  (Privileged processes are
 not limited to this particular usage.)  If saved IDs are supported, you
@@ -318,9 +330,10 @@ the header files @file{sys/types.h} and @file{unistd.h}.
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun int setgid (@var{newgid})
+@deftypefun int setgid (gid_t @var{newgid})
 This function sets both the real and effective group ID of the process
 to @var{newgid}, provided that the process has appropriate privileges.
+@c !!! also sets saved-id
 
 If the process is not privileged, then @var{newgid} must either be equal
 to the real group ID or the saved group ID.  In this case, @code{setgid}
@@ -332,11 +345,12 @@ as those for @code{setuid}.
 
 @comment unistd.h
 @comment BSD
-@deftypefun int setregid (int @var{rgid}, int @var{egid})
+@deftypefun int setregid (gid_t @var{rgid}, fid_t @var{egid})
 This function sets the real group ID of the process to @var{rgid} and
 the effective group ID to @var{egid}.
+@c !!! args can be -1 to mean no change
 
-The @code{setregid} function is provided for compatibility with 4.2 BSD
+The @code{setregid} function is provided for compatibility with 4.3 BSD
 Unix, which does not support saved IDs.  You can use this function to
 swap the effective and real group IDs of the process.  (Privileged
 processes are not limited to this usage.)  If saved IDs are supported,
@@ -375,6 +389,8 @@ The calling process is not privileged.
 The @code{initgroups} function effectively calls @code{setgroups} to
 set the process's supplementary group IDs to be the normal default for
 the user name @var{user}.  The group ID @var{gid} is also included.
+@c !!! explain that this works by reading the group file looking for
+@c groups USER is a member of.
 @end deftypefun
 
 @node Enable/Disable Setuid
@@ -429,7 +445,7 @@ game program has just started, and its real user ID is @code{jdoe} while
 its effective user ID is @code{games}.  In this state, the game can
 write the scores file.  If it swaps the two uids, the real becomes
 @code{games} and the effective becomes @code{jdoe}; now the program has
-only @code{jdoe} to access.  Another swap brings @code{games} back to
+only @code{jdoe} access.  Another swap brings @code{games} back to
 the effective user ID and restores access to the scores file.
 
 In order to handle both kinds of systems, test for the saved user ID
@@ -440,6 +456,7 @@ feature with a preprocessor conditional, like this:
   setuid (user_user_id);
 #else
   setreuid (geteuid (), getuid ());
+#endif
 @end example
 
 @node Setuid Program Example
@@ -486,13 +503,13 @@ to swap the effective and real user IDs.
 
 /* @r{Save the effective and real UIDs.} */
 
-uid_t euid, ruid;
+static uid_t euid, ruid;
 
 
 /* @r{Restore the effective UID to its original value.} */
 
 void
-do_setuid ()
+do_setuid (void)
 @{
   int status;
 
@@ -508,10 +525,11 @@ do_setuid ()
 @}
 
 
+@group
 /* @r{Set the effective UID to the real UID.} */
 
 void
-undo_setuid ()
+undo_setuid (void)
 @{
   int status;
 
@@ -525,12 +543,12 @@ undo_setuid ()
     exit (status);
     @}
 @}
-
+@end group
 
 /* @r{Main program.} */
 
 int
-main ()
+main (void)
 @{
   /* @r{Save the real and effective user IDs.}  */
   ruid = getuid ();
@@ -563,19 +581,22 @@ record_score (int score)
   stream = fopen (SCORES_FILE, "a");
   undo_setuid ();
 
+@group
   /* @r{Write the score to the file.} */
-  if (stream) @{
-    myname = cuserid (NULL);
-    if (score < 0)
-      fprintf (stream, "%10s: Couldn't lift the caber.\n", myname);
-    else
-      fprintf (stream, "%10s: %d feet.\n", myname, score);
-    fclose (stream);
-    return 0;
+  if (stream)
+    @{
+      myname = cuserid (NULL);
+      if (score < 0)
+        fprintf (stream, "%10s: Couldn't lift the caber.\n", myname);
+      else
+        fprintf (stream, "%10s: %d feet.\n", myname, score);
+      fclose (stream);
+      return 0;
     @}
   else
     return -1;
 @}
+@end group
 @end example
 
 @node Tips for Setuid
@@ -639,8 +660,8 @@ The @code{getlogin} function is declared in @file{unistd.h}, while
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun {char *} getlogin ()
-The @code{getlogin} function returns a pointer to string containing the
+@deftypefun {char *} getlogin (void)
+The @code{getlogin} function returns a pointer to a string containing the
 name of the user logged in on the controlling terminal of the process,
 or a null pointer if this information cannot be determined.  The string
 is statically allocated and might be overwritten on subsequent calls to
@@ -649,7 +670,7 @@ this function or to @code{cuserid}.
 
 @comment stdio.h
 @comment POSIX.1
-@deftypefun {char *} cuserid (@var{string})
+@deftypefun {char *} cuserid (char *@var{string})
 The @code{cuserid} function returns a pointer to a string containing a
 user name associated with the effective ID of the process.  If
 @var{string} is not a null pointer, it should be an array that can hold
@@ -703,7 +724,7 @@ are declared in the header file @file{pwd.h}.
 
 @comment pwd.h
 @comment POSIX.1
-@deftp {struct Type} passwd
+@deftp {Data Type} {struct passwd}
 The @code{passwd} data structure is used to hold information about 
 entries in the system user data base.  It has at least the following members:
 
@@ -774,8 +795,9 @@ This section explains how a program can read the list of all users in
 the system, one user at a time.  The functions described here are
 declared in @file{pwd.h}.
 
+@c !!!! no; this is NOT the recommended way.  use getpwent!
 The recommended way to scan the users is to open the user file and
-then call @code{fgetgrent} for each successive user:
+then call @code{fgetpwent} for each successive user:
 
 @comment pwd.h
 @comment SVID
@@ -794,19 +816,18 @@ Another way to scan all the entries in the group database is with
 is less robust than @code{fgetpwent}, so we provide it only for
 compatibility with SVID.  In particular, these functions are not
 reentrant and are not suitable for use in programs with multiple threads
-of control.  Calling @code{getpwgid} or @code{getpwnam} can also confuse
-the internal state of these functions.
+of control.
 
 @comment pwd.h
 @comment SVID, BSD
-@deftypefun void setpwent ()
+@deftypefun void setpwent (void)
 This function initializes a stream which @code{getpwent} uses to read
 the user database.
 @end deftypefun
 
 @comment pwd.h
 @comment SVID, BSD
-@deftypefun {struct passwd *} getpwent ()
+@deftypefun {struct passwd *} getpwent (void)
 The @code{getpwent} function reads the next entry from the stream
 initialized by @code{setpwent}.  It returns a pointer to the entry.  The
 structure is statically allocated and is rewritten on subsequent calls
@@ -816,7 +837,7 @@ wish to save the information.
 
 @comment pwd.h
 @comment SVID, BSD
-@deftypefun void endpwent ()
+@deftypefun void endpwent (void)
 This function closes the internal stream used by @code{getpwent}.
 @end deftypefun
 
@@ -845,7 +866,7 @@ The function @code{putpwent} is declared in @file{pwd.h}.
 @cindex group database
 @pindex /etc/group
 
-This section describes all about now to search and scan the database of
+This section describes all about how to search and scan the database of
 registered groups.  The database itself is kept in the file
 @file{/etc/group} on most systems, but on some systems a special network
 service provides access to it.
@@ -922,6 +943,7 @@ This section explains how a program can read the list of all groups in
 the system, one group at a time.  The functions described here are
 declared in @file{grp.h}.
 
+@c !!!! no; this is NOT the recommended way.  use getgrent!
 The recommended way to scan the groups is to open the group file and
 then call @code{fgetgrent} for each successive group:
 
@@ -943,19 +965,18 @@ Another way to scan all the entries in the group database is with
 is less robust than @code{fgetgrent}, so we provide it only for
 compatibility with SVID.  In particular, these functions are not
 reentrant and are not suitable for use in programs with multiple threads
-of control.  Calling @code{getgrgid} or @code{getgrnam} can also confuse
-the internal state of these functions.
+of control.
 
 @comment grp.h
 @comment SVID, BSD
-@deftypefun void setgrent ()
+@deftypefun void setgrent (void)
 This function initializes a stream for reading from the group data base.
 You use this stream by calling @code{getgrent}.
 @end deftypefun
 
 @comment grp.h
 @comment SVID, BSD
-@deftypefun {struct group *} getgrent ()
+@deftypefun {struct group *} getgrent (void)
 The @code{getgrent} function reads the next entry from the stream
 initialized by @code{setgrent}.  It returns a pointer to the entry.  The
 structure is statically allocated and is rewritten on subsequent calls
@@ -965,7 +986,7 @@ wish to save the information.
 
 @comment grp.h
 @comment SVID, BSD
-@deftypefun void endgrent ()
+@deftypefun void endgrent (void)
 This function closes the internal stream used by @code{getgrent}.
 @end deftypefun
 
@@ -983,6 +1004,7 @@ the program.
 Here is some output from this program:
 
 @example
+I am Throckmorton Snurd.
 My login name is snurd.
 My uid is 31093.
 My home directory is /home/fsg/snurd.
@@ -990,5 +1012,5 @@ My default shell is /bin/sh.
 My default group is guest (12).
 The members of this group are:
   friedman
-  @dots{}
+  tami
 @end example

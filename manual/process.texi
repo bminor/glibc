@@ -56,7 +56,7 @@ until the subprogram terminates before you can do anything else.
 @pindex sh
 This function executes @var{command} as a shell command.  In the GNU C
 library, it always uses the default shell @code{sh} to run the command.
-In particular, it searching the directories in @code{PATH} to find
+In particular, it searches the directories in @code{PATH} to find
 programs to execute.  The return value is @code{-1} if it wasn't
 possible to create the shell process, and otherwise is the status of the
 shell process.  @xref{Process Completion}, for details on how this
@@ -69,8 +69,9 @@ The @code{system} function is declared in the header file
 
 @strong{Portability Note:} Some C implementations may not have any
 notion of a command processor that can execute other programs.  You can
-determine whether a command processor exists by executing @code{system
-(o)}; if the return value is nonzero, a command processor is available.
+determine whether a command processor exists by executing
+@w{@code{system (NULL)}}; if the return value is nonzero, a command
+processor is available.
 
 The @code{popen} and @code{pclose} functions (@pxref{Pipe to a
 Subprocess}) are closely related to the @code{system} function.  They
@@ -127,9 +128,9 @@ too, instead of returning to the previous process image.
 
 The @code{pid_t} data type represents process IDs.  You can get the
 process ID of a process by calling @code{getpid}.  The function
-@code{getppid} returns the process ID of the parent of the parent of the
-current process (this is also known as the @dfn{parent process ID}).
-Your program should include the header files @file{unistd.h} and
+@code{getppid} returns the process ID of the parent of the current
+process (this is also known as the @dfn{parent process ID}).  Your
+program should include the header files @file{unistd.h} and
 @file{sys/types.h} to use these functions.
 @pindex sys/types.h
 @pindex unistd.h
@@ -143,13 +144,13 @@ of representing a process ID.  In the GNU library, this is an @code{int}.
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun pid_t getpid ()
+@deftypefun pid_t getpid (void)
 The @code{getpid} function returns the process ID of the current process.
 @end deftypefun
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun pid_t getppid ()
+@deftypefun pid_t getppid (void)
 The @code{getppid} function returns the process ID of the parent of the
 current process.
 @end deftypefun
@@ -163,7 +164,7 @@ It is declared in the header file @file{unistd.h}.
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun pid_t fork ()
+@deftypefun pid_t fork (void)
 The @code{fork} function creates a new process.
 
 If the operation is successful, there are then both parent and child
@@ -223,7 +224,7 @@ signals and signal actions from the parent process.)
 
 @comment unistd.h
 @comment BSD
-@deftypefun pid_t vfork ()
+@deftypefun pid_t vfork (void)
 The @code{vfork} function is similar to @code{fork} but more efficient;
 however, there are restrictions you must follow to use it safely.
 
@@ -344,6 +345,7 @@ usual file name syntax errors (@pxref{File Name Errors}), the following
 @item E2BIG
 The combined size of the new program's argument list and environment list
 is larger than @code{ARG_MAX} bytes.
+@c !!! never in GNU; ARG_MAX is unlimited.  Get ENOMEM instead if too big.
 
 @item ENOEXEC
 The specified file can't be executed because it isn't in the right format.
@@ -353,13 +355,15 @@ Executing the specified file requires more storage than is available.
 @end table
 
 If execution of the new file succeeds, it updates the access time field
-of the file as if the file had been opened.  @xref{File Times}, for more
+of the file as if the file had been read.  @xref{File Times}, for more
 details about access times of files.
 
 The point at which the file is closed again is not specified, but
 is at some point before the process exits or before another process
 image is executed.
 
+@c !!! this paragraph suggests that argv and envp keep their addressses
+@c in the new program, which is not true.
 Executing a new process image completely changes the contents of memory,
 except for the arguments and the environment, but many other attributes
 of the process are unchanged:
@@ -418,6 +422,8 @@ it, and these descriptors do survive through @code{exec} (provided that
 they do not have @code{FD_CLOEXEC} set.  The new process image can
 reconnect these to new streams using @code{fdopen} (@pxref{Descriptors
 and Streams}).
+@c !!! this is a bad thing to recommend.  it won't work in GNU, where
+@c fopen doesn't go thru a file descriptor.
 
 @node Process Completion
 @section Process Completion
@@ -486,25 +492,32 @@ An invalid value was provided for the @var{options} argument.
 These symbolic constants are defined as values for the @var{pid} argument
 to the @code{waitpid} function.
 
+@comment Extra blank lines make it look better.
 @table @code
 @item WAIT_ANY
+
 This constant macro (whose value is @code{-1}) specifies that
 @code{waitpid} should return status information about any child process.
+
 
 @item WAIT_MYPGRP
 This constant (with value @code{0}) specifies that @code{waitpid} should
 return status information about any child process in the same process
 group as the calling process.
+@end table
 
 These symbolic constants are defined as flags for the @var{options}
 argument to the @code{waitpid} function.  You can bitwise-OR the flags
 together to obtain a value to use as the argument.
 
+@table @code
 @item WNOHANG
+
 This flag specifies that @code{waitpid} should return immediately
 instead of waiting, if there is no child process ready to be noticed.
 
 @item WUNTRACED
+
 This flag specifies that @code{waitpid} should report the status of any
 child processes that have been stopped as well as those that have
 terminated.
@@ -534,6 +547,7 @@ function is designed to be a handler for @code{SIGCHLD}, the signal that
 indicates that at least one child process has terminated.
 
 @example
+@group
 void
 sigchld_handler (int signum)
 @{
@@ -550,6 +564,7 @@ sigchld_handler (int signum)
     notice_termination (pid, status);
   @}
 @}
+@end group
 @end example
 
 @node Process Completion Status
@@ -574,6 +589,7 @@ normally with @code{exit} or @code{_exit}.
 @deftypefn Macro int WEXITSTATUS (int @var{status})
 If @code{WIFEXITED} is true of @var{status}, this macro returns the
 low-order 8 bits of the exit status value from the child process.
+@xref{Exit Status}.
 @end deftypefn
 
 @comment sys/wait.h
@@ -581,6 +597,7 @@ low-order 8 bits of the exit status value from the child process.
 @deftypefn Macro int WIFSIGNALED (int @var{status})
 This macro returns a non-zero value if the child process terminated
 because it received a signal that was not handled.
+@xref{Signal Handling}.
 @end deftypefn
 
 @comment sys/wait.h
@@ -651,9 +668,9 @@ equivalent macros.
 
 @comment sys/wait.h
 @comment BSD
-@deftypefun pid_t wait3 (union wait *@var{status_ptr}, int @var{options}, struct rusage * @var{usage})
+@deftypefun pid_t wait3 (union wait *@var{status_ptr}, int @var{options}, struct rusage *@var{usage})
 If @var{usage} is a null pointer, this function is equivalent to
-@code{waitpid (-1, @var{status_ptr}, @var{options})}.
+@w{@code{waitpid (-1, @var{status_ptr}, @var{options})}}.
 
 If @var{usage} is not null, @code{wait4} stores usage figures for the
 child process in @code{*@var{rusage}} (but only if the child has
@@ -664,7 +681,7 @@ terminated, not if it has stopped).  @xref{Resource Usage}.
 @comment BSD
 @deftypefun pid_t wait4 (pid_t @var{pid}, union wait *@var{status_ptr}, int @var{options}, struct rusage *@var{usage})
 If @var{usage} is a null pointer, this function is equivalent to
-@code{waitpid (@var{pid}, @var{status_ptr}, @var{options})}.
+@w{@code{waitpid (@var{pid}, @var{status_ptr}, @var{options})}}.
 
 If @var{usage} is not null, @code{wait4} stores usage figures for the
 child process in @code{*@var{rusage}} (but only if the child has
@@ -688,26 +705,28 @@ argument using the equivalent of @samp{sh -c @var{command}}.
 /* @r{Execute the command using this shell program.}  */
 #define SHELL "/bin/sh"
 
+@group
 int 
-my_system (char *command)
+my_system (const char *command)
 @{
   int status;
   pid_t pid;
+@end group
 
-  pid =  fork ();
-  if (pid == 0) @{
-    /* @r{This is the child process.  Execute the shell command.} */
-    execl (SHELL, SHELL, "-c", command, NULL);
-    exit (EXIT_FAILURE);
-  @}
+  pid = fork ();
+  if (pid == 0)
+    @{
+      /* @r{This is the child process.  Execute the shell command.} */
+      execl (SHELL, SHELL, "-c", command, NULL);
+      _exit (EXIT_FAILURE);
+    @}
   else if (pid < 0)
     /* @r{The fork failed.  Report failure.}  */
     status = -1;
-  else @{
+  else
     /* @r{This is the parent process.  Wait for the child to complete.}  */
     if (waitpid (pid, &status, 0) != pid)
       status = -1;
-  @}
   return status;
 @}
 @end example
@@ -728,3 +747,6 @@ process terminate.  Just returning a bad status code with @code{return}
 would leave two processes running the original program.  Instead, the
 right behavior is for the child process to report failure to its parent
 process.  Calling @code{exit} accomplishes this.
+
+@c !!! you want to call _exit instead, to avoid lossage from duplicated
+@c stdio buffers after fork.  explain this situation.

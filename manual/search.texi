@@ -107,14 +107,14 @@ To sort an array using an arbitrary comparison function, use the
 The @var{qsort} function sorts the array @var{array}.  The array contains
 @var{count} elements, each of which is of size @var{size}.
 
-The @var{compare} function is used to compare perform the comparison on
-the array elements.  This function is called with two pointer arguments
-and should return an integer less than, equal to, or greater than zero
+The @var{compare} function is used to perform the comparison on the
+array elements.  This function is called with two pointer arguments and
+should return an integer less than, equal to, or greater than zero
 corresponding to whether its first argument is considered less than,
 equal to, or greater than its second argument.
 
 @cindex stable sorting
-@strong{Warning:} if two objects compare as equal, their order after
+@strong{Warning:} If two objects compare as equal, their order after
 sorting is unpredictable.  That is to say, the sorting is not stable.
 This can make a difference when the comparison considers only part of
 the elements.  Two elements with the same sort key may differ in other

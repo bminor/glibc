@@ -83,12 +83,12 @@ detecting @emph{internal inconsistency}; it is not suitable for
 reporting invalid input or improper usage by @emph{the user} of the
 program.
 
-The information in the diagnostic messages printd by the @code{assert}
-macro is intended to to help you, the programmer, track down the cause
-of a bug, but is not really useful for telling a user of your program
-why his or her input was invalid or why a command could not be carried
-out.  So you can't use @code{assert} to print the error messages for
-these eventualities.
+The information in the diagnostic messages printed by the @code{assert}
+macro is intended to help you, the programmer, track down the cause of a
+bug, but is not really useful for telling a user of your program why his
+or her input was invalid or why a command could not be carried out.  So
+you can't use @code{assert} to print the error messages for these
+eventualities.
 
 What's more, your program should not abort when given invalid input, as
 @code{assert} would do---it should exit with nonzero status (@pxref{Exit
@@ -132,9 +132,10 @@ of arguments, using @file{varargs.h}.
 Ordinary C functions take a fixed number of arguments.  When you define
 a function, you specify the data type for each argument.  Every call to
 the function should supply the expected number of arguments, with types
-that can be converted to the specified ones.  Thus, if the function foo
-is declared with @code{int foo (int, char *);} then you must call it
-with two arguments, a number (any kind will do) and a string pointer.
+that can be converted to the specified ones.  Thus, if the function
+@samp{foo} is declared with @code{int foo (int, char *);} then you must
+call it with two arguments, a number (any kind will do) and a string
+pointer.
 
 But some functions perform operations that can meaningfully accept an
 unlimited number of arguments.
@@ -227,7 +228,7 @@ argument must not be declared @code{register} in the function
 definition.  Furthermore, this argument's type must be
 @dfn{self-promoting}: that is, the default promotions must not change
 its type.  This rules out array and function types, as well as
-@code{float}, @code{char} (whether signed or not) and @code{short}
+@code{float}, @code{char} (whether signed or not) and @w{@code{short int}}
 (whether signed or not).  This is actually an ANSI C requirement.
 
 @node Receiving Arguments
@@ -320,13 +321,14 @@ otherwise use a default value.
 
 A required argument can be used as a pattern to specify both the number
 and types of the optional arguments.  The format string argument to
-@code{printf} is one example of this.
+@code{printf} is one example of this (@pxref{Formatted Output Functions}).
 
 Another possibility is to pass an ``end marker'' value as the last
 optional argument.  For example, for a function that manipulates an
 arbitrary number of pointer arguments, a null pointer might indicate the
 end of the argument list.  (This assumes that a null pointer isn't
-otherwise meaningful to the function.)
+otherwise meaningful to the function.)  The @code{execl} function works
+in just this way; see @ref{Executing a File}.
 
 
 @node Calling Variadics
@@ -362,12 +364,12 @@ have to declare as variadic---for example, @code{open} and
 Since the prototype doesn't specify types for optional arguments, in a
 call to a variadic function the @dfn{default argument promotions} are
 performed on the optional argument values.  This means the objects of
-type @code{char} or @code{short int} (whether signed or not) are
-promoted to either @code{int} or @code{unsigned int}, as appropriate;
-and that objects of type @code{float} are promoted to type
+type @code{char} or @w{@code{short int}} (whether signed or not) are
+promoted to either @code{int} or @w{@code{unsigned int}}, as
+appropriate; and that objects of type @code{float} are promoted to type
 @code{double}.  So, if the caller passes a @code{char} as an optional
-argument, it is promoted to a @code{int}, and the function should get it
-with @code{va_arg (@var{ap}, int)}.
+argument, it is promoted to an @code{int}, and the function should get
+it with @code{va_arg (@var{ap}, int)}.
 
 Conversion of the required arguments is controlled by the function
 prototype in the usual way: the argument expression is converted to the
@@ -425,7 +427,7 @@ use it except for reasons of portability.
 @node Variadic Example
 @subsection Example of a Variadic Function
 
-Here is a complete sample function that accepts variable numbers of
+Here is a complete sample function that accepts a variable number of
 arguments.  The first argument to the function is the count of remaining
 arguments, which are added up and the result returned.  While trivial,
 this function is sufficient to illustrate how to use the variable
@@ -480,9 +482,9 @@ them in a portable fashion.  They are defined in the header file
 This is the signed integer type of the result of subtracting two
 pointers.  For example, with the declaration @code{char *p1, *p2;}, the
 expression @code{p2 - p1} is of type @code{ptrdiff_t}.  This will
-probably be one of the standard signed integer types (@code{short int},
-@code{int} or @code{long int}), but might be a nonstandard type that
-exists only for this purpose.
+probably be one of the standard signed integer types (@w{@code{short
+int}}, @code{int} or @w{@code{long int}}), but might be a nonstandard
+type that exists only for this purpose.
 @end deftp
 
 @comment stddef.h
@@ -498,10 +500,10 @@ this type to specify object sizes.
 arguments or variables that hold the size of an object.
 @end deftp
 
-In the GNU system @code{size_t} is equivalent to one of the types 
-@code{unsigned int} and @code{unsigned long int}.  These types have
-identical properties on the GNU system, and for most purposes, you
-can use them interchangeably.  However, they are distinct as data types, 
+In the GNU system @code{size_t} is equivalent to one of the types
+@w{@code{unsigned int}} and @w{@code{unsigned long int}}.  These types
+have identical properties on the GNU system, and for most purposes, you
+can use them interchangeably.  However, they are distinct as data types,
 which makes a difference in certain contexts.
 
 For example, when you specify the type of a function argument in a
@@ -545,7 +547,7 @@ which give you this information in full detail.
 @cindex type measurements, integer
 
 The most common reason that a program needs to know how many bits are in
-an integer type is for using an array of @code{long} as a bit vector.
+an integer type is for using an array of @code{long int} as a bit vector.
 You can access the bit at index @var{n} with
 
 @example
@@ -554,7 +556,7 @@ vector[@var{n} / LONGBITS] & (1 << (@var{n} % LONGBITS))
 
 @noindent
 provided you define @code{LONGBITS} as the number of bits in a
-@code{long}.
+@code{long int}.
 
 @pindex limits.h
 There is no operator in the C language that can give you the number of
@@ -594,27 +596,32 @@ such macro, for the maximum value; the minimum value is, of course,
 zero.
 
 The values of these macros are all integer constant expressions.  The
-@samp{MAX} and @samp{MIN} macros for @code{char} and @code{short} types
-have values of type @code{int}.  The @samp{MAX} and @samp{MIN} macros
-for the other types have values of the same type described by the
-macro---thus, @code{ULONG_MAX} has type @code{unsigned long int}.
+@samp{MAX} and @samp{MIN} macros for @code{char} and @w{@code{short
+int}} types have values of type @code{int}.  The @samp{MAX} and
+@samp{MIN} macros for the other types have values of the same type
+described by the macro---thus, @code{ULONG_MAX} has type
+@w{@code{unsigned long int}}.
 
+@comment Extra blank lines make it look better.
 @table @code
 @comment limits.h
 @comment ANSI
 @item SCHAR_MIN
-This is the minimum value that can be represented by a @code{signed char}.
+
+This is the minimum value that can be represented by a @w{@code{signed char}}.
 
 @comment limits.h
 @comment ANSI
 @item SCHAR_MAX
 @itemx UCHAR_MAX
-These are the maximum values that can be represented by a @code{signed
-char} and @code{unsigned char}, respectively.
+
+These are the maximum values that can be represented by a
+@w{@code{signed char}} and @w{@code{unsigned char}}, respectively.
 
 @comment limits.h
 @comment ANSI
 @item CHAR_MIN
+
 This is the minimum value that can be represented by a @code{char}.
 It's equal to @code{SCHAR_MIN} if @code{char} is signed, or zero
 otherwise.
@@ -622,6 +629,7 @@ otherwise.
 @comment limits.h
 @comment ANSI
 @item CHAR_MAX
+
 This is the maximum value that can be represented by a @code{char}.
 It's equal to @code{SCHAR_MAX} if @code{char} is signed, or
 @code{UCHAR_MAX} otherwise.
@@ -629,56 +637,65 @@ It's equal to @code{SCHAR_MAX} if @code{char} is signed, or
 @comment limits.h
 @comment ANSI
 @item SHRT_MIN
-This is the minimum value that can be represented by a @code{signed
-short int}.  On most machines that the GNU C library runs on,
+
+This is the minimum value that can be represented by a @w{@code{signed
+short int}}.  On most machines that the GNU C library runs on,
 @code{short} integers are 16-bit quantities.
 
 @comment limits.h
 @comment ANSI
 @item SHRT_MAX
 @itemx USHRT_MAX
-These are the maximum values that can be represented by a @code{signed
-short int} and @code{unsigned short int}, respectively.
+
+These are the maximum values that can be represented by a
+@w{@code{signed short int}} and @w{@code{unsigned short int}},
+respectively.
 
 @comment limits.h
 @comment ANSI
 @item INT_MIN
-This is the minimum value that can be represented by a @code{signed
-int}.  On most machines that the GNU C system runs on, an @code{int} is
+
+This is the minimum value that can be represented by a @w{@code{signed
+int}}.  On most machines that the GNU C system runs on, an @code{int} is
 a 32-bit quantity.
 
 @comment limits.h
 @comment ANSI
 @item INT_MAX
 @itemx UINT_MAX
-These are the maximum values that can be represented by a @code{signed
-int} and @code{unsigned int}, respectively.
+
+These are the maximum values that can be represented by a
+@w{@code{signed int}} and @w{@code{unsigned int}}, respectively.
 
 @comment limits.h
 @comment ANSI
 @item LONG_MIN
-This is the minimum value that can be represented by a @code{signed long
-int}.  On most machines that the GNU C system runs on, @code{long}
+
+This is the minimum value that can be represented by a @w{@code{signed
+long int}}.  On most machines that the GNU C system runs on, @code{long}
 integers are 32-bit quantities, the same size as @code{int}.
 
 @comment limits.h
 @comment ANSI
 @item LONG_MAX
 @itemx ULONG_MAX
-These are the maximum values that can be represented by a @code{signed
-long int} and @code{unsigned long int}, respectively.
+
+These are the maximum values that can be represented by a
+@w{@code{signed long int}} and @code{unsigned long int}, respectively.
 
 @comment limits.h
 @comment GNU
 @item LONG_LONG_MIN
-This is the minimum value that can be represented by a @code{signed long
-long int}.  On most machines that the GNU C system runs on, @code{long
-long} integers are 64-bit quantities.
+
+This is the minimum value that can be represented by a @w{@code{signed
+long long int}}.  On most machines that the GNU C system runs on,
+@w{@code{long long}} integers are 64-bit quantities.
 
 @comment limits.h
 @comment GNU
 @item LONG_LONG_MAX
 @itemx ULONG_LONG_MAX
+
 These are the maximum values that can be represented by a @code{signed
 long long int} and @code{unsigned long long int}, respectively.
 @end table
@@ -907,9 +924,11 @@ This is the number of base-@code{FLT_RADIX} digits in the floating point
 mantissa for the data types @code{double} and @code{long double},
 respectively.
 
+@comment Extra blank lines make it look better.
 @comment float.h
 @comment ANSI
 @item FLT_DIG
+
 This is the number of decimal digits of precision for the @code{float}
 data type.  Technically, if @var{p} and @var{b} are the precision and
 base (respectively) for the representation, then the decimal precision
@@ -925,6 +944,7 @@ ANSI C.
 @comment ANSI
 @item DBL_DIG
 @itemx LDBL_DIG
+
 These are similar to @code{FLT_DIG}, but for the data types
 @code{double} and @code{long double}, respectively.  The values of these
 macros are supposed to be at least @code{10}.
@@ -941,6 +961,7 @@ normalized floating point number of type @code{float}.
 @comment ANSI
 @item DBL_MIN_EXP
 @itemx LDBL_MIN_EXP
+
 These are similar to @code{FLT_MIN_EXP}, but for the data types
 @code{double} and @code{long double}, respectively.
 
@@ -954,6 +975,7 @@ of type @code{float}.  This is supposed to be @code{-37} or even less.
 @comment float.h
 @comment ANSI
 @item DBL_MIN_10_EXP
+@itemx LDBL_MIN_10_EXP
 These are similar to @code{FLT_MIN_10_EXP}, but for the data types
 @code{double} and @code{long double}, respectively.
 
@@ -961,7 +983,7 @@ These are similar to @code{FLT_MIN_10_EXP}, but for the data types
 @comment ANSI
 @item FLT_MAX_EXP
 This is the largest possible exponent value for type @code{float}.  More
-precisely, this is the maximum negative integer such that value
+precisely, this is the maximum positive integer such that value
 @code{FLT_RADIX} raised to this power minus 1 can be represented as a
 floating point number of type @code{float}.
 
@@ -975,7 +997,7 @@ These are similar to @code{FLT_MAX_EXP}, but for the data types
 @comment float.h
 @comment ANSI
 @item FLT_MAX_10_EXP
-This is the maximum negative integer such that @code{10} raised to this
+This is the maximum positive integer such that @code{10} raised to this
 power minus 1 can be represented as a normalized floating point number
 of type @code{float}.  This is supposed to be at least @code{37}.
 
@@ -989,6 +1011,7 @@ These are similar to @code{FLT_MAX_10_EXP}, but for the data types
 @comment float.h
 @comment ANSI
 @item FLT_MAX
+
 The value of this macro is the maximum number representable in type
 @code{float}.  It is supposed to be at least @code{1E+37}.  The value
 has type @code{float}.
@@ -999,6 +1022,7 @@ The smallest representable number is @code{- FLT_MAX}.
 @comment ANSI
 @item DBL_MAX
 @itemx LDBL_MAX
+
 These are similar to @code{FLT_MAX}, but for the data types
 @code{double} and @code{long double}, respectively.  The type of the
 macro's value is the same as the type it describes.
@@ -1006,6 +1030,7 @@ macro's value is the same as the type it describes.
 @comment float.h
 @comment ANSI
 @item FLT_MIN
+
 The value of this macro is the minimum normalized positive floating
 point number that is representable in type @code{float}.  It is supposed
 to be no more than @code{1E-37}.
@@ -1014,6 +1039,7 @@ to be no more than @code{1E-37}.
 @comment ANSI
 @item DBL_MIN
 @itemx LDBL_MIN
+
 These are similar to @code{FLT_MIN}, but for the data types
 @code{double} and @code{long double}, respectively.  The type of the
 macro's value is the same as the type it describes.
@@ -1021,6 +1047,7 @@ macro's value is the same as the type it describes.
 @comment float.h
 @comment ANSI
 @item FLT_EPSILON
+
 This is the minimum positive floating point number of type @code{float}
 such that @code{1.0 + FLT_EPSILON != 1.0} is true.  It's supposed to
 be no greater than @code{1E-5}.
@@ -1029,7 +1056,8 @@ be no greater than @code{1E-5}.
 @comment ANSI
 @item DBL_EPSILON
 @itemx LDBL_EPSILON
-These are similar to @code{FLT_MIN}, but for the data types
+
+These are similar to @code{FLT_EPSILON}, but for the data types
 @code{double} and @code{long double}, respectively.  The type of the
 macro's value is the same as the type it describes.  The values are not
 supposed to be greater than @code{1E-9}.

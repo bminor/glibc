@@ -19,6 +19,7 @@ from a pipe or FIFO file that doesn't have any processes writing to it
 (perhaps because they have all closed the file, or exited), the read
 returns end-of-file.  Writing to a pipe or FIFO that doesn't have a
 reading process is treated as an error condition.
+@c !!! is this really true?  what about SIGPIPE?
 
 Neither pipes nor FIFO special files allow file positioning.  Both
 reading and writing operations happen sequentially; reading from the
@@ -56,6 +57,11 @@ The @code{pipe} function is declared in the header file
 The @code{pipe} function creates a pipe and puts the file descriptors
 for the reading and writing ends of the pipe (respectively) into
 @code{@var{filedes}[0]} and @code{@var{filedes}[1]}.
+@c !!! say something like:
+An easy way to remember which element is which is that file descriptor
+@code{0} is standard input, and file descriptor @code{1} is standard
+output.  You can use @code{@var{filedes}[STDIN_FILENO]} and
+@code{@var{filedes}[STDOUT_FILENO]} to help you remember.
 
 If successful, @code{pipe} returns a value of @code{0}.  On failure,
 @code{-1} is returned.  The following @code{errno} error conditions are
@@ -67,6 +73,9 @@ The process has too many files open.
 
 @item ENFILE
 The system has too many files open.
+@c !!! this will never happen in GNU.  probably should say somewhere (in
+@c EMFILE description in errno.texinfo?) that everything that can get
+@c EMFILE can also get ENFILE in Unix, but not in GNU.
 @end table
 @end deftypefun
 
@@ -127,7 +136,7 @@ It waits for the child process to terminate and returns its status value,
 as for the @code{system} function.
 @end deftypefun
 
-Here is an example showing how to use @code{popen} and @code{popen} to
+Here is an example showing how to use @code{popen} and @code{pclose} to
 filter output through another program, in this case the paging program
 @code{more}.
 

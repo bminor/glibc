@@ -71,7 +71,7 @@ declared in @file{unistd.h}.
 
 @comment fcntl.h
 @comment POSIX.1
-@deftypefun int open (const char *@var{filename}, int @var{flags}, [mode_t @var{mode}])
+@deftypefun int open (const char *@var{filename}, int @var{flags}[, mode_t @var{mode}])
 The @code{open} function creates and returns a new file descriptor
 for the file named by @var{filename}.  Initially, the file position
 indicator for the file is at the beginning of the file.  The argument
@@ -80,7 +80,7 @@ to supply the argument in any case.
 
 The @var{flags} argument controls how the file is to be opened.  This is
 a bit mask; you create the value by the bitwise OR of the appropriate
-parameters.
+parameters (using the @samp{|} operator in C).
 
 The @var{flags} argument must include exactly one of these values to
 specify the file access mode:
@@ -124,7 +124,7 @@ if the specified file already exists.
 @item O_NOCTTY
 @vindex O_NOCTTY
 If @var{filename} names a terminal device, don't make it the controlling
-terminal for the process.  @ref{Job Control} for information about what
+terminal for the process.  @xref{Job Control}, for information about what
 it means to be the controlling terminal.
 
 @item O_NONBLOCK
@@ -312,6 +312,8 @@ Normally, when no input is immediately available, @code{read} waits for
 some input.  But if the @code{O_NONBLOCK} flag is set for the file
 (@pxref{File Status Flags}), @code{read} returns immediately without
 reading any data, and reports this error.
+@c !!! it is EWOULDBLOCK on BSD<4.4; in 4.4, EAGAIN==EWOULDBLOCK, so
+@c testing for EWOULDBLOCK wins.
 
 On some systems, reading a large amount of data from a character special
 file can also fail with @code{EAGAIN} if the kernel cannot find enough
@@ -368,6 +370,7 @@ reports this error.  An example of a situation that might cause the
 process to block on output is writing to a terminal device that supports
 flow control, where output has been suspended by receipt of a STOP
 character.
+@c !!! see comment wrt EAGAIN in read doc above
 
 On some systems, writing a large amount of data from a character special
 file can also fail with @code{EAGAIN} if the kernel cannot find enough
@@ -430,7 +433,7 @@ specifies the position in the file for the next @code{read} or
 on the file position and what it means.
 
 To read the current file position value from a descriptor, use
-@code{lseek (@var{desc}, zero, SEEK_CUR)}.
+@code{lseek (@var{desc}, 0, SEEK_CUR)}.
 
 @cindex file positioning on a file descriptor
 @cindex positioning a file descriptor
@@ -485,6 +488,8 @@ file offset is not valid.
 The @var{filedes} corresponds to a pipe or FIFO, which cannot be positioned.
 (There may be other kinds of files that cannot be positioned either, but
 the behavior is not specified in those cases.)
+
+@c !!! can you also get ENOSPC when extending the file?
 @end table
 
 The @code{lseek} function is the underlying primitive for the
@@ -502,8 +507,8 @@ other.  For example,
 @{
   int d1, d2;
   char buf[4];
-  d1 = open ("foo", O_READ, 0);
-  d2 = open ("foo", O_READ, 0);
+  d1 = open ("foo", O_RDONLY);
+  d2 = open ("foo", O_RDONLY);
   lseek (d1, 1024, SEEK_SET);
   read (d2, buf, 4);
 @}
@@ -523,7 +528,7 @@ reading or writing data, affects all of them alike.  Thus, for example,
 @{
   int d1, d2, d3;
   char buf1[4], buf2[4];
-  d1 = open ("foo", O_READ, 0);
+  d1 = open ("foo", O_RDONLY);
   d2 = dup (d1);
   d3 = dup (d2);
   lseek (d3, 1024, SEEK_SET);
@@ -575,6 +580,8 @@ The return value is the new stream.  If the stream cannot be created
 (for example, if the modes for the file indicated by the file descriptor
 do not permit the access specified by the @var{opentype} argument), a
 null pointer is returned instead.
+@c !!! this failure mode is not detected; the fd is assumed valid (and
+@c there is no easy way to test this anyway)
 @end deftypefun
 
 For an example showing the use of the @code{fdopen} function,
@@ -646,7 +653,8 @@ the stream.
 @menu
 * Linked Channels::	   Dealing with channels sharing a file position.
 * Independent Channels::   Dealing with separately opened, unlinked channels.
-* Cleaning Streams::	   Clean a stream makes it safe to use another channel.
+* Cleaning Streams::	   Cleaning a stream makes it safe to use 
+                            another channel.
 @end menu
 
 @node Linked Channels
@@ -704,9 +712,10 @@ before the new end.  If you want them to output at the end, you must set
 their file positions to end of file, first.  In order to make the
 end-of-file position accurate, you must clean the output channel you
 were using, if it is a stream.
+@c !!! or use append mode
 
 It's impossible for two channels to have separate file pointers for a
-file that doesn't support random access.  Thus, channels reading or
+file that doesn't support random access.  Thus, channels for reading or
 writing such files are always linked, never independent.  Append-type
 channels are also always linked.  For these channels, follow the rules
 for linked channels; see @ref{Linked Channels}.
@@ -804,6 +813,7 @@ The value of this macro is the maximum number of file descriptors that
 a @code{fd_set} object can hold information about.  This is greater
 than or equal to the maximum number of open file descriptors supported
 by the system.
+@c !!! in GNU, # of fds can be unlimited
 @end deftypevr
 
 @comment sys/types.h
@@ -815,16 +825,14 @@ empty set.
 
 @comment sys/types.h
 @comment BSD
-@deftypefn Macro int FD_SET (int @var{filedes}, fd_set *@var{set})
+@deftypefn Macro void FD_SET (int @var{filedes}, fd_set *@var{set})
 This macro adds @var{filedes} to the file descriptor set @var{set}.
-The return value is not useful.
 @end deftypefn
 
 @comment sys/types.h
 @comment BSD
-@deftypefn Macro int FD_CLR (int @var{filedes}, fd_set *@var{set})
+@deftypefn Macro void FD_CLR (int @var{filedes}, fd_set *@var{set})
 This macro removes @var{filedes} from the file descriptor set @var{set}.
-The return value is not useful.
 @end deftypefn
 
 @comment sys/types.h
@@ -864,6 +872,7 @@ The @var{timeout} specifies the maximum time to wait.  If you pass a
 null pointer for this argument, it means to block indefinitely until one
 of the file descriptors is ready.  Otherwise, you should provide the
 time @code{struct timeval} format; see @ref{High-Resolution Calendar}.
+@c !!! Use a timeout of {0,0} to poll without blocking.
 
 The normal return value from @code{select} is the total number of ready file
 descriptors in all of the sets.  Each of the argument sets is overwritten
@@ -906,47 +915,8 @@ timeout period for reading from a file descriptor.  The @code{input_timeout}
 function blocks the calling process until input is available on the
 file descriptor, or until the timeout period expires.
 
-@comment This example is select.c.
 @example
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/time.h>
-
-int 
-input_timeout (int filedes, int seconds)
-@{
-  fd_set set;
-  struct timeval end_time, garbage;
-
-  /* @r{Initialize the file descriptor set.} */
-  FD_ZERO (&set);
-  FD_SET (filedes, &set);
-
-  /* @r{Compute the time to stop waiting.} */
-  gettimeofday (&end_time, &garbage);
-  end_time.tv_sec += time_limit;
-
-  while (1) @{
-    struct timeval timeout;
-    int val;
-
-    /* @r{Calculate time remaining till then.} */
-    gettimeofday (&timeout, &garbage);
-    timeout.tv_sec = end_time.tv_sec - timeout.tv_sec;
-    timeout.tv_usec = end_time.tv_usec - timeout.tv_usec;
-    /* @r{Must propagate carries for proper subtraction.} */
-    if (timeout.tv_usec < 0) @{
-      timeout.tv_usec += 1000000;
-      timeout.tv_sec--;
-    @}
-    /* @r{Return now if wakeup time has been reached.} */
-    if (timeout.tv_sec < 0)
-      return 0;
-
-    /* @r{@code{select} returns 0 if timeout, 1 if input available, -1 if error.} */
-    return TEMP_FAILURE_RETRY (select (FD_SETSIZE, &set, NULL, NULL, &timeout));
-  @}
-@}
+@include select.c.texi
 @end example
 
 There is another example showing the use of @code{select} to multiplex
@@ -1059,6 +1029,8 @@ dup2 (@var{filedes}, @var{old_filedes})
 is equivalent to:
 
 @example
+@c !!! dup2 is guaranteed atomic; this loses if FILEDES is bad.  dup2
+@c would leave OLD_FILEDES open if FILEDES were bad.
 close (@var{old_filedes});
 fcntl (@var{filedes}, F_DUPFD, @var{old_filedes})
 @end example
@@ -1101,6 +1073,10 @@ The @var{next_filedes} argument is invalid.
 @item EMFILE
 There are no more file descriptors available---your program is already
 using the maximum.
+@c !!! in GNU and 4.4, this can be fixed with setrlimit RLIM_OFILES;
+@c xref to there.
+
+@c !!! ENFILE ?
 @end table
 @end deftypevr
 
@@ -1154,16 +1130,6 @@ The symbols in this section are defined in the header file
 
 @comment fcntl.h
 @comment POSIX.1
-@deftypevr Macro int FD_CLOEXEC
-@cindex close-on-exec (file descriptor flag)
-This flag specifies that the file descriptor should be closed when
-an @code{exec} function is invoked; see @ref{Executing a File}.  When
-a file descriptor is allocated (as with @code{open} or @code{dup}),
-this bit is initially cleared on the new file descriptor.
-@end deftypevr
-
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int F_GETFD
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should return the file descriptor flags associated
@@ -1204,6 +1170,17 @@ command.
 The following macro is defined for use as a file descriptor flag with
 the @code{fcntl} function.  The value is an integer constant usable
 as a bit mask value.
+
+@comment fcntl.h
+@comment POSIX.1
+@deftypevr Macro int FD_CLOEXEC
+@cindex close-on-exec (file descriptor flag)
+This flag specifies that the file descriptor should be closed when
+an @code{exec} function is invoked; see @ref{Executing a File}.  When
+a file descriptor is allocated (as with @code{open} or @code{dup}),
+this bit is initially cleared on the new file descriptor, meaning that
+descriptor will survive into the new program after @code{exec}.
+@end deftypevr
 
 If you want to modify the file descriptor flags, you should get the
 current flags with @code{F_GETFD} and modify the value.  Don't assume
@@ -1358,6 +1335,7 @@ here is a function to set or clear the flag @code{O_NONBLOCK} without
 altering any other flags:
 
 @example
+@group
 /* @r{Set the @code{O_NONBLOCK} flag of @var{desc} if @var{value} is nonzero,}
    @r{or clear the flag if @var{value} is 0.}
    @r{Return 0 on success, or -1 on error with @code{errno} set.} */ 
@@ -1366,7 +1344,7 @@ int
 set_nonblock_flag (int desc, int value)
 @{
   int oldflags = fcntl (desc, F_GETFL, 0);
-  /* @r{If reading the flags failed, return error indication now.}
+  /* @r{If reading the flags failed, return error indication now.} */
   if (oldflags < 0)
     return oldflags;
   /* @r{Set just the flag we want to set.} */
@@ -1377,6 +1355,7 @@ set_nonblock_flag (int desc, int value)
   /* @r{Store modified flag word in the descriptor.} */
   return fcntl (desc, F_SETFL, oldflags);
 @}
+@end group
 @end example
 
 @node File Locks
@@ -1427,11 +1406,11 @@ This structure is used with the @code{fcntl} function to describe a file
 lock.  It has these members:
 
 @table @code
-@item short l_type
+@item short int l_type
 Specifies the type of the lock; one of @code{F_RDLCK}, @code{F_WRLCK}, or
 @code{F_UNLCK}.
 
-@item short l_whence
+@item short int l_whence
 This corresponds to the @var{whence} argument to @code{fseek} or
 @code{lseek}, and specifies what the offset is relative to.  Its value
 can be one of @code{SEEK_SET}, @code{SEEK_CUR}, or @code{SEEK_END}.
@@ -1447,7 +1426,7 @@ This specifies the length of the region to be locked.  A value of
 the file.
 
 @item pid_t l_pid
-This is the process ID (@pxref{Process Creation Concepts}) of the
+This field is the process ID (@pxref{Process Creation Concepts}) of the
 process holding the lock.  It is filled in by calling @code{fcntl} with
 the @code{F_GETLK} command, but is ignored when making a lock.
 @end table
@@ -1458,7 +1437,7 @@ the @code{F_GETLK} command, but is ignored when making a lock.
 @deftypevr Macro int F_GETLK
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should get information about a lock.  This command
-requires a third argument of type @code{struct flock *} to be passed
+requires a third argument of type @w{@code{struct flock *}} to be passed
 to @code{fcntl}, so that the form of the call is:
 
 @example
@@ -1502,7 +1481,7 @@ or the file associated with @var{filedes} doesn't support locks.
 @deftypevr Macro int F_SETLK
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should set or clear a lock.  This command requires a
-third argument of type @code{struct flock *} to be passed to
+third argument of type @w{@code{struct flock *}} to be passed to
 @code{fcntl}, so that the form of the call is:
 
 @example
@@ -1522,6 +1501,7 @@ The following @code{errno} error conditions are defined for this
 function:
 
 @table @code
+@c !!! thse two errors mean the same thing???
 @item EACCES
 The lock cannot be set because it is blocked by an existing lock 
 on the file.
@@ -1585,20 +1565,21 @@ member of the @code{flock} structure.  The values are integer constants.
 @comment fcntl.h
 @comment POSIX.1
 @vindex F_RDLCK
-@item Macro int F_RDLCK
+@item F_RDLCK
 This macro is used to specify a read (or shared) lock.
 
 @comment fcntl.h
 @comment POSIX.1
 @vindex F_WRLCK
-@item Macro int F_WRLCK
+@item F_WRLCK
 This macro is used to specify a write (or exclusive) lock.
 
 @comment fcntl.h
 @comment POSIX.1
 @vindex F_UNLCK
-@item Macro int F_UNLCK
+@item F_UNLCK
 This macro is used to specify that the region is unlocked.
+@end table
 
 As an example of a situation where file locking is useful, consider a
 program that can be run simultaneously by several different users, that
@@ -1622,7 +1603,6 @@ that part of the file for writing.
 Remember that file locks are only a @emph{voluntary} protocol for
 controlling access to a file.  There is still potential for access to
 the file by programs that don't use the lock protocol.
-@end table
 
 @node Interrupt Input
 @section Interrupt-Driven Input
@@ -1657,8 +1637,7 @@ actually the foreground process group ID, which you can get using
 The return value is interpreted as a process ID; if negative, its
 absolute value is the process group ID.
 
-The following @code{errno} error conditions are defined for this
-command:
+The following @code{errno} error condition is defined for this command:
 
 @table @code
 @item EBADF

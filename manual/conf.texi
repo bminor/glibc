@@ -49,6 +49,7 @@ parameter in question.  If the system allows different file systems or
 files to have different limits, then the macro is undefined; use
 @code{sysconf} to find out the limit that applies at a particular time
 on a particular machine.  @xref{Sysconf}.
+@c !!! pathconf, not sysconf
 
 Each of these parameters also has another macro, with a name starting
 with @samp{_POSIX}, which gives the lowest value that the limit is
@@ -82,7 +83,7 @@ can have open simultaneously.
 @comment POSIX.1
 @deftypevr Macro int STREAM_MAX
 If defined, the unvarying maximum number of streams that a single
-process can have open simultaneously.
+process can have open simultaneously.  @xref{Opening Streams}.
 @end deftypevr
 
 @cindex limits, time zone name length
@@ -90,6 +91,7 @@ process can have open simultaneously.
 @comment POSIX.1
 @deftypevr Macro int TZNAME_MAX
 If defined, the unvarying maximum length of a time zone name.
+@xref{Time Zone Functions}.
 @end deftypevr
 
 These limit macros are always defined in @file{limits.h}.
@@ -166,12 +168,13 @@ within a session belong to a single process group.  @xref{Job Control}.
 @comment POSIX.1
 @deftypevr Macro int _POSIX_SAVED_IDS
 If this symbol is defined, it indicates that the system remembers the
-effective user and group IDs of an executable file with the set-user-ID
-or set-group-ID bits set, and that explicitly changing the effective
-user or group IDs back to these values is permitted.  If this option is
-not defined, then if a nonprivileged process changes its effective user
-or group ID to the real user or group ID of the process, it can't change
-it back again.  @xref{Enable/Disable Setuid}.
+effective user and group IDs of a process before it executes an
+executable file with the set-user-ID or set-group-ID bits set, and that
+explicitly changing the effective user or group IDs back to these values
+is permitted.  If this option is not defined, then if a nonprivileged
+process changes its effective user or group ID to the real user or group
+ID of the process, it can't change it back again.  @xref{Enable/Disable
+Setuid}.
 @end deftypevr
 
 For the following macros, if the macro is defined in @file{unistd.h},
@@ -209,7 +212,7 @@ library never defines this, because we don't know what the system has.
 @comment POSIX.2
 @deftypevr Macro int _POSIX2_LOCALEDEF
 If this symbol is defined, it indicates that the system has the POSIX.2
-@code{localdef} command.  The GNU C library never defines this, because
+@code{localedef} command.  The GNU C library never defines this, because
 we don't know what the system has.
 @end deftypevr
 
@@ -218,7 +221,7 @@ we don't know what the system has.
 @deftypevr Macro int _POSIX2_SW_DEV
 If this symbol is defined, it indicates that the system has the POSIX.2
 commands @code{ar}, @code{make}, and @code{strip}.  The GNU C library
-always defines this as @code{1}, on the assumption that had to have
+always defines this as @code{1}, on the assumption that you had to have
 @code{ar} and @code{make} to install the library, and it's unlikely that
 @code{strip} would be absent when those are present.
 @end deftypevr
@@ -286,7 +289,7 @@ constants are declared in the header file @file{unistd.h}.
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun long sysconf (int @var{parameter})
+@deftypefun long int sysconf (int @var{parameter})
 This function is used to inquire about runtime system parameters.  The
 @var{parameter} argument should be one of the @samp{_SC_} symbols listed
 below.
@@ -383,7 +386,7 @@ interpret Fortran carriage control.
 @comment unistd.h
 @comment POSIX.2
 @item _SC_2_LOCALEDEF
-Inquire about whether the system has the POSIX.2 @code{localdef}
+Inquire about whether the system has the POSIX.2 @code{localedef}
 command.
 
 @comment unistd.h
@@ -426,7 +429,7 @@ be used in defining the collating sequence for a locale.
 @comment POSIX.2
 @item _SC_EXPR_NEST_MAX
 Inquire about the maximum number of expressions nested within
-parenthesis when using the expr utility.
+parenthesis when using the @code{expr} utility.
 
 @comment unistd.h
 @comment POSIX.2
@@ -456,8 +459,9 @@ macro is not defined.  For example, here is how to test whether job
 control is supported:
 
 @example
+@group
 int
-have_job_control ()
+have_job_control (void)
 @{
 #ifdef _POSIX_JOB_CONTROL
   return 1;
@@ -470,6 +474,7 @@ have_job_control ()
   return value;
 #endif
 @}
+@end group
 @end example
 
 Here is how to get the value of a numeric limit:
@@ -582,7 +587,7 @@ have on @emph{any} POSIX system.  @xref{File Minimums}.
 @comment POSIX.1
 @deftypevr Macro int LINK_MAX
 The uniform system limit (if any) for the number of names for a given
-file.
+file.  @xref{Hard Links}.
 @end deftypevr
 
 @cindex limits, terminal input queue
@@ -590,14 +595,14 @@ file.
 @comment POSIX.1
 @deftypevr Macro int MAX_CANON
 The uniform system limit (if any) for the amount of text in a line of
-input when input editing is enabled.
+input when input editing is enabled.  @xref{Canonical or Not}.
 @end deftypevr
 
 @comment limits.h
 @comment POSIX.1
 @deftypevr Macro int MAX_INPUT
 The uniform system limit (if any) for the total number of characters
-typed ahead as input.
+typed ahead as input.  @xref{I/O Queues}.
 @end deftypevr
 
 @cindex limits, file name length
@@ -618,10 +623,10 @@ is, the argument given to system calls such as @code{open}).
 @comment limits.h
 @comment POSIX.1
 @deftypevr Macro int PIPE_BUF
-The uniform system limit (if any) for the number of bytes that can be written
-atomically to a pipe.  If multiple processes are writing to the same
-pipe simultaneously, output from different processes might be
-interleaved in chunks of this size.
+The uniform system limit (if any) for the number of bytes that can be
+written atomically to a pipe.  If multiple processes are writing to the
+same pipe simultaneously, output from different processes might be
+interleaved in chunks of this size.  @xref{Pipes and FIFOs}.
 @end deftypevr
 
 These are alternative macro names for some of the same information.
@@ -642,7 +647,7 @@ represents the maximum length of a file name string.  It is defined in
 
 Unlike @code{PATH_MAX}, this macro is defined even if there is no actual
 limit imposed.  In such a case, its value is typically a very large
-number.  @strong{This is always the case in the GNU C library.}
+number.  @strong{This is always the case on the GNU system.}
 
 @strong{Usage Note:} Don't use @code{FILENAME_MAX} as the size of an
 array in which to store a file name!  You can't possibly make an array
@@ -657,6 +662,7 @@ operating on files.  Some systems support these options and others do
 not.  Since these options are provided in the kernel, not in the
 library, simply using the GNU C library does not guarantee any of these
 features is supported; it depends on the system you are using.
+@c !!! and can vary between file systems on the same machine.
 
 @pindex unistd.h
 This section describes the macros you can test to determine whether a
@@ -701,12 +707,7 @@ be disabled individually.  @xref{Special Characters}.
 If one of these macros is undefined, that means that the option might be
 in effect for some files and not for others.  To inquire about a
 particular file, call @code{pathconf} or @code{fpathconf}.
-@ifinfo
 @xref{Pathconf}.
-@end ifinfo
-@iftex
-See the following section.
-@end iftex
 
 @node File Minimums
 @section Minimum Values for File System Limits
@@ -767,12 +768,12 @@ When your machine allows different files to have different values for a
 file system parameter, you can use the functions in this section to find
 out the value that applies to any particular file.
 
-These functions and the associated @var{parameter} constants are
-declared in the header file @file{unistd.h}.
+These functions and the associated constants for the @var{parameter}
+argument are declared in the header file @file{unistd.h}.
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun long pathconf (const char *@var{filename}, int @var{parameter})
+@deftypefun long int pathconf (const char *@var{filename}, int @var{parameter})
 This function is used to inquire about the limits that apply to
 the file named @var{filename}.
 
@@ -787,9 +788,8 @@ to indicate the cause of the problem.  So the only way to use this
 function robustly is to store @code{0} into @code{errno} just before
 calling it.
 
-  Besides the usual file name syntax errors
-(@pxref{File Name Errors}), the following error conditions are defined
-for this function:
+Besides the usual file name syntax errors (@pxref{File Name Errors}),
+the following error conditions are defined for this function:
 
 @table @code
 @item EINVAL
@@ -926,7 +926,7 @@ the collating sequence for a locale.
 @comment POSIX.2
 @deftypevr Macro int EXPR_NEST_MAX
 The maximum number of expressions that can be nested within parenthesis
-by the expr utility.
+by the @code{expr} utility.
 @end deftypevr
 
 @comment limits.h
@@ -977,7 +977,7 @@ sequence for a locale.  Its value is @code{2}.
 @comment POSIX.2
 @item _POSIX2_EXPR_NEST_MAX
 The most restrictive limit permitted by POSIX.2 for the maximum number
-of expressions nested within parenthesis when using the expr utility.
+of expressions nested within parenthesis when using the @code{expr} utility.
 Its value is @code{32}.
 
 @comment limits.h
@@ -997,7 +997,7 @@ system with the function @code{confstr}:
 @comment unistd.h
 @comment POSIX.2
 @deftypefun size_t confstr (int @var{parameter}, char *@var{buf}, size_t @var{len})
-This function reads the value of a string-valued system parameters,
+This function reads the value of a string-valued system parameter,
 storing the string into @var{len} bytes of memory space starting at
 @var{buf}.  The @var{parameter} argument should be one of the
 @samp{_CS_} symbols listed below.
@@ -1005,7 +1005,7 @@ storing the string into @var{len} bytes of memory space starting at
 The normal return value from @code{confstr} is the length of the string
 value that you asked for.  If you supply a null pointer for @var{buf},
 then @code{confstr} does not try to store the string; it just returns
-its length.  A value of @code{-1} indicates an error.
+its length.  A value of @code{0} indicates an error.
 
 If the string you asked for is too long for the buffer (that is, longer
 than @code{@var{len} - 1}), then @code{confstr} stores just that much
@@ -1038,16 +1038,20 @@ buffer accordingly, and then call @code{confstr} again to fill the
 buffer, like this:
 
 @example
+@group
 char *
-get_default_path ()
+get_default_path (void)
 @{
-  int len = confstr (_CS_PATH, 0, 0);
-  char *buffer = (char *) malloc (len + 1);
-  int status = confstr (_CS_PATH, buf, len + 1);
+  size_t len = confstr (_CS_PATH, NULL, 0);
+  char *buffer = (char *) xmalloc (len);
 
-  if (status < 0)
-    return 0;
+  if (confstr (_CS_PATH, buf, len + 1) == 0)
+    @{
+      free (buffer);
+      return 0;
+    @}
 
   return buffer;
 @}
+@end group
 @end example

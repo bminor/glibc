@@ -102,6 +102,7 @@ interface provides only simple functions for transferring blocks of
 characters, but the stream interface also provides powerful formatted
 input and output functions (@code{printf} and @code{scanf}) as well as
 functions for character- and line-oriented input and output.
+@c !!! glibc has dprintf, which lets you do printf on an fd.
 
 Since streams are implemented in terms of file descriptors, you can
 extract the file descriptor from a stream and perform low-level
@@ -155,8 +156,8 @@ file position.  But, the file position is still used to control where in
 the file reading is done.
 @cindex append-access files
 
-If you'll think about it, you'll realize that several programs can read
-a given file at the same time.  In order for each program to be able to
+If you think about it, you'll realize that several programs can read a
+given file at the same time.  In order for each program to be able to
 read the file at its own pace, each program must have its own file
 pointer, which is not affected by anything the other programs do.
 
@@ -231,6 +232,7 @@ in @ref{File System Interface}.
 A file name consists of file name components separated by slash
 (@samp{/}) characters.  Multiple successive @samp{/} characters are
 equivalent to a single @samp{/} character.
+@c !!! POSIX.1 does not say foo///bar works; it does in Unix & GNU, though.
 
 @cindex file name resolution
 The process of determining what file a file name refers to is called
@@ -247,6 +249,7 @@ process; otherwise the file name resolution fails.
 If a file name begins with a @samp{/}, the first component in the file
 name is located in the @dfn{root directory} of the process.  Such a file
 name is called an @dfn{absolute file name}.
+@c !!! xref here to chroot 
 
 @cindex relative file name
 Otherwise, the first component in the file name is located in the
@@ -288,6 +291,9 @@ A file name that names a directory may optionally end in a @samp{/}.  You
 can specify a file name of @file{/} to refer to the root directory, but
 you can't have an empty file name.  If you want to refer to the current
 working directory, use a file name of @file{.} or @file{./}.
+@c !!! this is inconsistent with many /s working.  an empty file name
+@c refers to the current directory.  foo///bar works only because of
+@c this.  
 
 Unlike some other operating systems, the GNU system doesn't have any
 built-in support for file types (or extensions) or file versions as part
@@ -325,6 +331,7 @@ component.
 This error is reported when a file referenced as a directory component
 in the file name doesn't exist.  It also is used when an empty file name
 string is supplied.
+@c !!! 2nd sentence is completely false.  an empty file name IS valid! 
 
 @item ENOTDIR
 A file that is referenced as a directory component in the file name

@@ -54,7 +54,7 @@ Prototypes for these functions are declared in the header file
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun {char *} getcwd (char *@var{buffer}, int @var{size})
+@deftypefun {char *} getcwd (char *@var{buffer}, size_t @var{size})
 The @code{getcwd} function returns an absolute file name representing
 the current working directory, storing it in the character array
 @var{buffer} that you provide.  The @var{size} argument is how you tell
@@ -72,7 +72,7 @@ The following @code{errno} error conditions are defined for this function:
 
 @table @code
 @item EINVAL
-The @var{size} argument is less than or equal to zero.
+The @var{size} argument is zero and @var{buffer} is not a null pointer.
 
 @item ERANGE
 The @var{size} argument is less than the length of the working directory
@@ -84,7 +84,7 @@ Permission to read or search a component of the file name was denied.
 @end deftypefun
 
 Here is an example showing how you could implement behavior equivalent
-to GNU's @code{getcwd (0, 0)} using only the standard behavior of
+to GNU's @w{@code{getcwd (NULL, 0)}} using only the standard behavior of
 @code{getcwd}:
 
 @example
@@ -94,14 +94,15 @@ gnu_getcwd ()
   int size = 100;
   char *buffer = (char *) xmalloc (size);
 
-  while (1) @{
-    char *value = getcwd (buffer, size);
-    if (value != 0)
-      return buffer;
-    size *= 2;
-    free (buffer);
-    buffer = (char *) xmalloc (size);
-  @}
+  while (1)
+    @{
+      char *value = getcwd (buffer, size);
+      if (value != 0)
+        return buffer;
+      size *= 2;
+      free (buffer);
+      buffer = (char *) xmalloc (size);
+    @}
 @}
 @end example
 
@@ -128,6 +129,7 @@ The normal, successful return value from @code{chdir} is @code{0}.
 A value of @code{-1} is returned to indicate an error.  The @code{errno}
 error conditions defined for this function are the usual file name
 syntax errors (@pxref{File Name Errors}).
+@c !!! also ENOTDIR
 @end deftypefun
 
 
@@ -138,14 +140,14 @@ syntax errors (@pxref{File Name Errors}).
 @cindex directories, accessing
 
 The facilities described in this section let you read the contents of a
-directory file.  This is useful if you want your program to list the
-files for which it contains entries, perhaps as part of a menu.
+directory file.  This is useful if you want your program to list all the
+files in a directory, perhaps as part of a menu.
 
 @cindex directory stream
 The @code{opendir} function opens a @dfn{directory stream} whose
 elements are directory entries.  You use the @code{readdir} function on
 the directory stream to retrieve these entries, represented as
-@code{struct dirent} objects.  The name of the file for each entry is
+@w{@code{struct dirent}} objects.  The name of the file for each entry is
 stored in the @code{d_name} member of this structure.  There are obvious
 parallels here to the stream facilities for ordinary files, described in
 @ref{I/O on Streams}.
@@ -169,7 +171,7 @@ in the header file @file{dirent.h}.
 
 @comment dirent.h
 @comment POSIX.1
-@deftp {struct Type} dirent
+@deftp {Data Type} {struct dirent}
 This is a structure type used to return information about directory
 entries.  It contains the following members:
 
@@ -177,12 +179,14 @@ entries.  It contains the following members:
 @item char *d_name
 This is the null-terminated file name component.
 
+@c !!! POSIX.1 specifies only d_name member; others are BSD/GNU extensions
 @item ino_t d_fileno
 This is the file serial number.  For BSD compatibility, you can also
 refer to this member as @code{d_ino}.
 
 @item size_t d_namlen
-This is the length of the file name.
+This is the length of the file name, not including the terminating null
+character.
 @end table
 
 This structure may contain additional members in the future.
@@ -261,7 +265,7 @@ returns a pointer to a structure containing information about the file.
 This structure is statically allocated and can be rewritten by a
 subsequent call.
 
-@strong{Portability note:} on some systems, @code{readdir} may not
+@strong{Portability Note:} On some systems, @code{readdir} may not
 return entries for @file{.} and @file{..}.  @xref{File Name Resolution}.
 
 If there are no more entries in the directory or an error is detected,
@@ -301,7 +305,9 @@ the current working directory:
 
 The order in which files appear in a directory tends to be fairly
 random.  A more useful program would sort the entries (perhaps by
-alphabetizing them) before printing them.
+alphabetizing them) before printing them; see @ref{Array Sort Function}
+
+@c !!! not documented: scandir, alphasort
 
 @node Random Access Directory
 @subsection Random Access in a Directory Stream
@@ -518,17 +524,19 @@ readlink_malloc (char *filename)
 @{
   int size = 100;
 
-  while (1) @{
-    char *buffer = (char *) xmalloc (size);
-    int nchars = readlink (filename, buffer, size);
-    if (nchars < size)
-      return readlink;
-    free (buffer);
-    size *= 2;
-  @}
+  while (1)
+    @{
+      char *buffer = (char *) xmalloc (size);
+      int nchars = readlink (filename, buffer, size);
+      if (nchars < size)
+        return buffer;
+      free (buffer);
+      size *= 2;
+    @}
 @}
 @end example
 
+@group
 A value of @code{-1} is returned in case of error.  In addition to the
 usual file name syntax errors (@pxref{File Name Errors}), the following
 @code{errno} error conditions are defined for this function:
@@ -540,6 +548,7 @@ The named file is not a symbolic link.
 @item EIO
 A hardware error occurred while reading or writing data on the disk.
 @end table
+@end group
 @end deftypefun
 
 @node Deleting Files
@@ -599,8 +608,8 @@ file system, and can't be modified.
 @comment stdio.h
 @comment ANSI
 @deftypefun int remove (const char *@var{filename})
-The @code{remove} function another name for @code{unlink}.
-@code{remove} is the ANSI C name, whereas @code{unlink} is the POSIX
+The @code{remove} function is another name for @code{unlink}.
+@code{remove} is the ANSI C name, whereas @code{unlink} is the POSIX.1
 name.  The name @code{remove} is declared in @file{stdio.h}.
 @pindex stdio.h
 @end deftypefun
@@ -691,6 +700,7 @@ A directory named by @var{oldname} or @var{newname} is being used by
 the system in a way that prevents the renaming from working.  For example,
 a directory that is a mount point for a filesystem might have this
 problem.
+@c !!! also any process having the dir as its cwd
 
 @item EEXIST
 The directory @var{newname} isn't empty.
@@ -777,10 +787,9 @@ The parent directory of the directory being created is on a read-only
 file system, and cannot be modified.
 @end table
 
-To use this function, your program should include the header files
-@file{sys/types.h} and @file{sys/stat.h}.
+To use this function, your program should include the header file
+@file{sys/stat.h}.
 @pindex sys/stat.h
-@pindex sys/types.h
 @end deftypefun
 
 @node File Attributes
@@ -831,7 +840,7 @@ in this section.
 
 @comment sys/stat.h
 @comment POSIX.1
-@deftp {struct Type} stat
+@deftp {Data Type} {struct stat}
 The @code{stat} structure type is used to return information about the
 attributes of a file.  It contains at least the following members:
 
@@ -843,13 +852,14 @@ Specifies the mode of the file.  This includes file type information
 
 @item ino_t st_ino
 The file serial number.
+@c !!! explain what it means
 
 @item dev_t st_dev
 Identifies the device containing the file.  The @code{st_ino} and
 @code{st_dev}, taken together, uniquely identify the file.
 
 @item nlink_t st_nlink
-The number of links to the file.  This count keeps track of how many
+The number of hard links to the file.  This count keeps track of how many
 directories have entries for this file.  If the count is ever
 decremented to zero, then the file itself is discarded.  Symbolic links
 are not counted in the total.
@@ -887,7 +897,7 @@ This is the time of the last modification to the attributes of the file.
 This is the fractional part of the time of last modification to the
 attributes of the file.  @xref{File Times}.
 
-@item st_nblocks
+@item unsigned int st_nblocks
 This is the amount of disk space that the file occupies, measured in
 units of 512-byte blocks.
 
@@ -908,7 +918,7 @@ This test is not perfect because a file that is just slightly sparse
 might not be detected as sparse at all.  For practical applications,
 this is not a problem.
 
-@item st_blksize
+@item unsigned int st_blksize
 The optimal block size for reading of writing this file.  You might use
 this size for allocating the buffer space for reading of writing the
 file.
@@ -925,7 +935,7 @@ Here is a list of them.
 @comment POSIX.1
 @deftp {Data Type} mode_t
 This is an integer data type used to represent file modes.  In the
-GNU system, this is equivalent to @code{unsigned short int}.
+GNU system, this is equivalent to @code{unsigned int}.
 @end deftp
 
 @cindex inode number
@@ -941,7 +951,7 @@ In the GNU system, this type is equivalent to @code{unsigned long int}.
 @comment POSIX.1
 @deftp {Data Type} dev_t
 This is an arithmetic data type used to represent file device numbers.
-In the GNU system, this is equivalent to @code{short int}.
+In the GNU system, this is equivalent to @code{int}.
 @end deftp
 
 @comment sys/types.h
@@ -963,7 +973,7 @@ header file @file{sys/stat.h}.
 @comment POSIX.1
 @deftypefun int stat (const char *@var{filename}, struct stat *@var{buf})
 The @code{stat} function returns information about the attributes of the
-file named by @var{filename} in the structure pointed at by @var{buf}.
+file named by @w{@var{filename}} in the structure pointed at by @var{buf}.
 
 If @var{filename} is the name of a symbolic link, the attributes you get
 describe the file that the link points to.  If the link points to a
@@ -1010,7 +1020,7 @@ link, @code{lstat} returns information about the link itself; otherwise,
 @node Testing File Type
 @subsection Testing the Type of a File
 
-The @dfn{file mode}, stored in the @code{st_stat} field of the file
+The @dfn{file mode}, stored in the @code{st_mode} field of the file
 attributes, contains two kinds of information: the file type code, and
 the access permission bits.  This section discusses only the type code,
 which you can use to tell whether the file is a directory, whether it is
@@ -1032,6 +1042,8 @@ All of the symbols listed in this section are defined in the header file
 The following predicate macros test the type of a file, given the value
 @var{m} which is the @code{st_mode} field returned by @code{stat} on
 that file:
+@c !!! it might not be a file; with fstat, could be a non-file socket or
+@c a pipe.
 
 @comment sys/stat.h
 @comment POSIX
@@ -1170,13 +1182,13 @@ Permission}, for the details of how access is decided based on this
 data.
 
 When a file is created, its owner is set from the effective user ID of
-the process that creates it.  The file's group ID may be set from either
-effective group ID of the process, or the group ID of the directory that
-contains the file, depending on the system where the file is stored.
-When you access a remote file system, it behaves according to its own
-rule, not according to the system your program is running on.  Thus,
-your program must be prepared to encounter either kind of behavior, no
-matter what kind of system you run it on.
+the process that creates it (@pxref{Process Persona}).  The file's group
+ID may be set from either effective group ID of the process, or the
+group ID of the directory that contains the file, depending on the
+system where the file is stored.  When you access a remote file system,
+it behaves according to its own rule, not according to the system your
+program is running on.  Thus, your program must be prepared to encounter
+either kind of behavior, no matter what kind of system you run it on.
 
 @pindex chown
 @pindex chgrp
@@ -1251,11 +1263,11 @@ The file resides on a read-only file system.
 @node Permission Bits
 @subsection The Mode Bits for Access Permission
 
-The @dfn{file mode}, stored in the @code{st_stat} field of the file
+The @dfn{file mode}, stored in the @code{st_mode} field of the file
 attributes, contains two kinds of information: the file type code, and
 the access permission bits.  This section discusses only the access
-permission bits, which control who can read or write the file.  For
-information about the file type code, @ref{Testing File Type}.
+permission bits, which control who can read or write the file.
+@xref{Testing File Type}, for information about the file type code.
 
 All of the symbols listed in this section are defined in the header file
 @file{sys/stat.h}.
@@ -1383,6 +1395,7 @@ freed and reused.  If the sticky bit is set on the executable file, the
 system keeps the pages in core for a while as if the program were still
 running.  This is advantageous for a program that is likely to be run
 many times in succession.
+@c !!! obsolete in all modern systems (but ask mib to be sure)
 
 On a directory, the sticky bit gives permission to delete a file in the
 directory if you can write the contents of that file.  Ordinarily, a
@@ -1401,6 +1414,8 @@ guaranteed.
 practice.  It is not only nonportable, it also requires everyone who
 reads your program to remember what the bits mean.  To make your
 program clean, use the symbolic names.
+@c !!! I don't know how useful it is to tell people not to depend on the
+@c values.  0777 is programmed into many brains.
 
 @node Access Permission
 @subsection How Your Access to a File is Decided
@@ -1435,19 +1450,19 @@ must be set.
 The primitive functions for creating files (for example, @code{open} or
 @code{mkdir}) take a @var{mode} argument, which specifies the file
 permissions for the newly created file.  But the specified mode is
-modified by the process's @dfn{file creation mask}, or @dfn{umask}.
+modified by the process's @dfn{file creation mask}, or @dfn{umask},
 before it is used.
 
 The bits that are set in the file creation mask identify permissions
 that are always to be disabled for newly created files.  For example, if
 you set all the ``other'' access bits in the mask, then newly created
 files are not accessible at all to processes in the ``other''
-category, even if the @var{mask} argument specified to the creation 
+category, even if the @var{mode} argument specified to the creation 
 function would permit such access.  In other words, the file creation
 mask is the complement of the ordinary access permissions you want to
 grant.
 
-Programs that create files typically specify a @var{mask} argument that
+Programs that create files typically specify a @var{mode} argument that
 includes all the permissions that make sense for the particular file.
 For an ordinary file, this is typically read and write permission for
 all classes of users.  These permissions are then restricted as
@@ -1487,7 +1502,7 @@ without changing it permanently:
 
 @example
 mode_t
-read_umask ()
+read_umask (void)
 @{
   mask = umask (0);
   umask (mask);
@@ -1502,9 +1517,9 @@ operating system).
 
 @comment sys/stat.h
 @comment GNU
-@deftypefun mode_t getumask ()
+@deftypefun mode_t getumask (void)
 Return the current value of the file creation mask for the current
-process.
+process.  This function is a GNU extension.
 @end deftypefun
 
 @comment sys/stat.h
@@ -1517,6 +1532,9 @@ If the @var{filename} names a symbolic link, @code{chmod} changes the
 permission of the file pointed to by the link, not those of the link
 itself.  There is actually no way to set the mode of a link, which is
 always @code{-1}.
+@c !!! no, it's not.  it is 0777&~umask for umask at time of creation.
+@c better to say the permission bits on a symlink are random and meaningless.
+@c actually, i don't know if the symlink being unreadable matters; ask mib.
 
 This function returns @code{0} if successful and @code{-1} if not.  In
 addition to the usual file name syntax errors (@pxref{File Name
@@ -1671,6 +1689,8 @@ Argument that means, test for existence of the file.
 @node File Times
 @subsection File Times
 
+@c !!!! mib has lots to say about this section.
+
 @cindex file access time
 @cindex file modification time
 @cindex file attribute modification time
@@ -1713,10 +1733,10 @@ need to include the header file @file{utime.h} to use this facility.
 
 @comment time.h
 @comment POSIX.1
-@deftp {struct Type} utimbuf
+@deftp {Data Type} {struct utimbuf}
 The @code{utimbuf} structure is used with the @code{utime} function to
-specify new access and modification times for a file.  It contains at
-least the following members:
+specify new access and modification times for a file.  It contains the
+following members:
 
 @table @code
 @item time_t actime

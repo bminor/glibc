@@ -15,6 +15,7 @@ The behavior of the functions in this chapter is affected by the
 current locale for character classification (@pxref{Locales}).
 This choice of locale selects which multibyte code is used, and also
 controls the meanings and characteristics of wide character codes.
+@c !!! should mention LC_CTYPE symbol here
 
 @menu
 * Extended Char Intro::         Multibyte codes versus wide characters.
@@ -76,8 +77,8 @@ when you read and write data.
 
 If your system supports extended characters, then it supports them both
 as multibyte characters and as wide characters.  The library includes
-functions you can use to convert between the two representations,
-functions described in this chapter.
+functions you can use to convert between the two representations.
+These functions are described in this chapter.
 
 @node Locales and Extended Chars, Multibyte Char Intro, Extended Char Intro, Extended Characters
 @section Locales and Extended Characters
@@ -551,66 +552,72 @@ file_mbstowcs (int input, int output)
   int filled = 0;
   int eof = 0;
 
-  while (!eof) @{
-    int nread;
-    int nwrite;
-    char *inp = buffer;
-    wchar_t outbuf[BUFSIZ];
-    wchar_t *outp = outbuf;
+  while (!eof)
+    @{
+      int nread;
+      int nwrite;
+      char *inp = buffer;
+      wchar_t outbuf[BUFSIZ];
+      wchar_t *outp = outbuf;
 
-    /* @r{Fill up the buffer from the input file.} */
-    nread = read (input, buffer + filled, BUFSIZ);
-    if (nread < 0) @{
-      perror ("read");
-      return 0;
-    @}
-    /* @r{If we reach end of file, make a note to read no more.} */
-    if (nread == 0)
-      eof = 1;
-
-    /* @r{@code{filled} is now the number of bytes in @code{buffer}.} */
-    filled += nread;
-
-    /* @r{Convert those bytes to wide characters--as many as we can.} */
-    while (1) @{
-      int thislen = mbtowc (outp, inp, filled);
-      /* Stop converting at invalid character;
-         this can mean we have read just the first part
-         of a valid character.  */
-      if (thislen == -1)
-        break;
-      /* @r{Treat null character like any other,}
-         @r{but also reset shift state.} */
-      if (thislen == 0) @{
-        thislen = 1;
-        mbtowc (NULL, NULL, 0);
+      /* @r{Fill up the buffer from the input file.
+         @xref{I/O Primitives}.} */
+      nread = read (input, buffer + filled, BUFSIZ);
+      if (nread < 0) @{
+        perror ("read");
+        return 0;
       @}
-      /* @r{Advance past this character.} */
-      inp += thislen;
-      filled -= thislen;
-      outp++;
-    @}
+      /* @r{If we reach end of file, make a note to read no more.} */
+      if (nread == 0)
+        eof = 1;
 
-    /* @r{Write the wide characters we just made.} */
-    nwrite = write (output, outbuf,
-                    (outp - outbuf) * sizeof (wchar_t));
-    if (nwrite < 0) @{
-      perror ("write");
-      return 0;
-    @}
+      /* @r{@code{filled} is now the number of bytes in @code{buffer}.} */
+      filled += nread;
 
-    /* @r{See if we have a @emph{real} invalid character.} */
-    if ((eof && filled > 0) || filled >= MB_CUR_MAX) @{
-      error ("invalid multibyte character");
-      return 0;
-    @}
+      /* @r{Convert those bytes to wide characters--as many as we can.} */
+      while (1)
+        @{
+          int thislen = mbtowc (outp, inp, filled);
+          /* Stop converting at invalid character;
+             this can mean we have read just the first part
+             of a valid character.  */
+          if (thislen == -1)
+            break;
+          /* @r{Treat null character like any other,}
+             @r{but also reset shift state.} */
+          if (thislen == 0) @{
+            thislen = 1;
+            mbtowc (NULL, NULL, 0);
+          @}
+          /* @r{Advance past this character.} */
+          inp += thislen;
+          filled -= thislen;
+          outp++;
+        @}
 
-    /* @r{If any characters must be carried forward,
-       put them at the beginning of @code{buffer}.} */
-    if (filled > 0)
-      memcpy (inp, buffer, filled);
+      /* @r{Write the wide characters we just made.
+         @xref{I/O Primitives}.} */
+      nwrite = write (output, outbuf,
+                      (outp - outbuf) * sizeof (wchar_t));
+      if (nwrite < 0)
+        @{
+          perror ("write");
+          return 0;
+        @}
+
+      /* @r{See if we have a @emph{real} invalid character.} */
+      if ((eof && filled > 0) || filled >= MB_CUR_MAX)
+        @{
+          error ("invalid multibyte character");
+          return 0;
+        @}
+
+      /* @r{If any characters must be carried forward,
+         put them at the beginning of @code{buffer}.} */
+      if (filled > 0)
+        memcpy (inp, buffer, filled);
+      @}
     @}
-  @}
 
   return 1;
 @}
@@ -638,7 +645,7 @@ shift states.
 
 When the multibyte character code in use has shift states, then
 @code{mblen}, @code{mbtowc} and @code{wctomb} must maintain and update
-the current shift state as it scans the string.  To make this work
+the current shift state as they scan the string.  To make this work
 properly, you must follow these rules:
 
 @itemize @bullet
@@ -664,19 +671,21 @@ scan_string (char *s)
   /* @r{Initialize shift state.} */
   mblen (NULL, 0);
 
-  while (1) @{
-    int thischar = mblen (s, length);
-    /* @r{Deal with end of string and invalid characters.} */
-    if (thischar == 0)
-      break;
-    if (thischar == -1) @{
-      error ("invalid multibyte character");
-      break;
+  while (1)
+    @{
+      int thischar = mblen (s, length);
+      /* @r{Deal with end of string and invalid characters.} */
+      if (thischar == 0)
+        break;
+      if (thischar == -1)
+        @{
+          error ("invalid multibyte character");
+          break;
+        @}
+      /* @r{Advance past this character.} */
+      s += thischar;
+      length -= thischar;
     @}
-    /* @r{Advance past this character.} */
-    s += thischar;
-    length -= thischar;
-  @}
 @}
 @end example
 

@@ -18,7 +18,7 @@ of patterns: regular expressions and file-name wildcards.
 
 @pindex fnmatch.h
 This section describes how to match a wildcard pattern against a
-particular string.  The result is a yes or no answer; does the
+particular string.  The result is a yes or no answer: does the
 string fit the pattern or not.  The symbols described here are all
 declared in @file{fnmatch.h}.
 
@@ -142,10 +142,10 @@ the beginning of the vector.
 
 @comment glob.h
 @comment POSIX.2
-@deftypefun int glob (const char *@var{pattern}, int @var{flags}, int (*@var{errfunc}) (), glob_t *@var{vector_ptr})
+@deftypefun int glob (const char *@var{pattern}, int @var{flags}, int (*@var{errfunc}) (const char *@var{filename}, int @var{error-code}), glob_t *@var{vector_ptr})
 The function @code{glob} does globbing using the pattern @var{pattern}
 in the current directory.  It puts the result in a newly allocated
-vector, and store the size and address of this vector into
+vector, and stores the size and address of this vector into
 @code{*@var{vector-ptr}}.  The argument @var{flags} is a combination of
 bit flags; see @ref{Flags for Globbing}, for details of the flags.
 
@@ -242,9 +242,9 @@ this:
 @end example
 
 @noindent
-The argument @var{filename} is the name of the directory at that
-@code{glob} couldn't open or couldn't read, and @var{error-code} is
-the @code{errno} value that was reported to @code{glob}.
+The argument @var{filename} is the name of the directory that
+@code{glob} couldn't open or couldn't read, and @var{error-code} is the
+@code{errno} value that was reported to @code{glob}.
 
 If the error handler function returns nonzero, then @code{glob} gives up
 right away.  Otherwise, it continues.
@@ -282,8 +282,8 @@ mark in the pattern acts like an ordinary character.
 If you use @code{GLOB_NOESCAPE}, then @samp{\} is an ordinary character.
 
 @code{glob} does its work by calling the function @code{fnmatch}
-repeatedly.  @code{glob} handles @code{GLOB_NOESCAPE} by turning on the
-@code{FNM_NOESCAPE} flag when it calls @code{fnmatch}.
+repeatedly.  It handles @code{GLOB_NOESCAPE} by turning on the
+@code{FNM_NOESCAPE} flag in calls to @code{fnmatch}.
 @end table
 
 @node Regular Expressions
@@ -297,6 +297,7 @@ Both interfaces are declared in the header file @file{regex.h}.
 If you define @code{_GNU_SOURCE}, then the GNU functions, structures
 and constants are declared.  Otherwise, only the POSIX names are
 declared.
+@c !!! wrong-- default is GNU
 
 @menu
 * POSIX Regexp Compilation::    Using @code{regcomp} to prepare to match.
@@ -557,6 +558,7 @@ elements are structures of type @code{regmatch_t}.  The first element of
 the array records the part of the string that matched the entire regular
 expression.  Each other element of the array records the beginning and
 end of the part that matched a single parenthetical subexpression.
+@c !!! in this paragraph, [0] is called "first"; see below
 
 @comment regex.h
 @comment POSIX.2
@@ -585,6 +587,7 @@ The @code{regmatch_t} elements correspond to subexpressions
 positionally; the first element records where the first subexpression
 matched, the second element records the second subexpression, and so on.
 The order of the subexpressions is the order in which they begin.
+@c !!! here [1] is called "first"; see above
 
 When you call @code{regexec}, you specify how long the @var{matchptr}
 array is, with the @var{nmatch} argument.  This tells @code{regexec} how
@@ -613,12 +616,12 @@ string @samp{ba}, the parenthetical subexpression is not used.  When
 this happens, @code{regexec} stores @code{-1} in both fields of the
 element for that subexpression.
 
-Sometimes matching the entire regular expression can match can use a
-particular subexpression more than once---for example, when
-@samp{ba\(na\)*} matches the string @samp{bananana}, the parenthetical
-subexpression matches three times.  When this happens, @code{regexec}
-usually stores the offsets of the last part of the string that matched
-the subexpression.  In the case of @samp{bananana}, these offsets are
+Sometimes matching the entire regular expression can match a particular
+subexpression more than once---for example, when @samp{ba\(na\)*}
+matches the string @samp{bananana}, the parenthetical subexpression
+matches three times.  When this happens, @code{regexec} usually stores
+the offsets of the last part of the string that matched the
+subexpression.  In the case of @samp{bananana}, these offsets are
 @code{6} and @code{8}.
 
 But the last match is not always the one that is chosen.  It's more
@@ -650,8 +653,8 @@ free the storage it uses by calling @code{regfree}.
 @comment POSIX.2
 @deftypefun void regfree (regex_t *@var{compiled})
 Calling @code{regfree} frees all the storage that @code{*@var{compiled}}
-points to.  This includes various fields of the @code{regex_t} structure
-that aren't documented in this manual.
+points to.  This includes various internal fields of the @code{regex_t}
+structure that aren't documented in this manual.
 
 @code{regfree} does not free the object @code{*@var{compiled}} itself.
 @end deftypefun
@@ -683,6 +686,17 @@ The return value of @code{regerror} is the minimum length needed to
 store the entire error message.  If this is less than @var{length}, then
 the error message was not truncated, and you can use it.  Otherwise, you
 should call @code{regerror} again with a larger buffer.
+
+@c !!! i wrote this example of how to do it right (i think) -- intro it. -rm
+@example
+char *get_regerror (int errcode, regex_t *compiled)
+@{
+  size_t length = regerror (errcode, compiled, NULL, 0);
+  char *buffer = xmalloc (length);
+  (void) regerror (errcode, compiled, buffer, length);
+  return buffer;
+@}
+@end example
 @end deftypefun
 
 @c !!!! this is not actually in the library....
@@ -772,7 +786,7 @@ done their job by inhibiting the above transformations when appropriate.
 @end enumerate
 
 For the details of these transformations, and how to write the constructs
-that use them, see @cite{The BASH Manual} (to appear).
+that use them, see @w{@cite{The BASH Manual}} (to appear).
 
 @node Calling Wordexp
 @subsection Calling @code{wordexp}
@@ -883,7 +897,7 @@ quoting character is a syntax error.
 Free the storage used for the word-strings and vector that
 @code{*@var{word-vector-ptr}} points to.  This does not free the
 structure @code{*@var{word-vector-ptr}} itself---only the other
-structure pointed to by it.
+data it points to.
 @end deftypefun
 
 @node Flags for Wordexp
@@ -951,45 +965,49 @@ to free the space allocated by @code{wordexp}.
 
 @example
 int
-expand_and_execute (char *program, char *options)
+expand_and_execute (const char *program, const char *options)
 @{
   wordexp_t result;
-  int pid, status;
-  int i;
-  int fail;
+  pid_t pid
+  int status, i;
 
   /* @r{Expand the string for the program to run.}  */
-  fail = wordexp (program, &result, 0);
-  if (fail) @{
-    /* @r{If the error was @code{WRDE_NOSPACE},}
-       @r{then perhaps part of the result was allocated.}  */
-    if (fail == WRDE_NOSPACE)
+  switch (wordexp (program, &result, 0))
+    @{
+    case 0:			/* @r{Successful}.  */
+      break;
+    case WRDE_NOSPACE:
+      /* @r{If the error was @code{WRDE_NOSPACE},}
+         @r{then perhaps part of the result was allocated.}  */
       wordfree (&result);
-    return -1;
-  @}
-
-  /* @r{Expand the strings specified for the arguments.}  */
-  for (i = 0; args[i]; i++) @{
-    fail = wordexp (options, &result, WRDE_APPEND);
-    if (fail) @{
-      wordfree (&result);
+    default:                    /* @r{Some other error.}  */
       return -1;
     @}
-  @}
+
+  /* @r{Expand the strings specified for the arguments.}  */
+  for (i = 0; args[i]; i++)
+    @{
+      if (wordexp (options, &result, WRDE_APPEND))
+        @{
+          wordfree (&result);
+          return -1;
+        @}
+    @}
 
   pid = fork ();
-  if (pid == 0) @{
-    execv (result.we_wordv[0], result.we_wordv);
-    exit (EXIT_FAILURE);
-  @}
+  if (pid == 0)
+    @{
+      /* @r{This is the child process.  Execute the command.} */
+      execv (result.we_wordv[0], result.we_wordv);
+      exit (EXIT_FAILURE);
+    @}
   else if (pid < 0)
     /* @r{The fork failed.  Report failure.}  */
     status = -1;
-  else @{
+  else
     /* @r{This is the parent process.  Wait for the child to complete.}  */
     if (waitpid (pid, &status, 0) != pid)
       status = -1;
-  @}
 
   wordfree (&result);
   return status;

@@ -74,6 +74,7 @@ mysterious at first, but it is actually a common idiom with
 to @code{setjmp} in @code{main} were returning a second time with a value
 of @code{-1}.
 
+@need 250
 So, the general pattern for using @code{setjmp} looks something like:
 
 @example
@@ -103,7 +104,7 @@ identify a specific place to return to.
 
 @comment setjmp.h
 @comment ANSI
-@deftypefun int setjmp (jmp_buf @var{state})
+@deftypefn Macro int setjmp (jmp_buf @var{state})
 When called normally, @code{setjmp} stores information about the
 execution state of the program in @var{state} and returns zero.  If
 @code{longjmp} is later used to perform a non-local exit to this
@@ -127,10 +128,10 @@ present because non-local exits require a fair amount of magic on the
 part of the C compiler and can interact with other parts of the language
 in strange ways.
 
-The @code{setjmp} function may be implemented as a macro without an
-actual function definition, so you shouldn't try to @samp{#undef} it or
-take its address.  In addition, calls to @code{setjmp} are safe in only
-the following contexts:
+The @code{setjmp} function is actually a macro without an actual
+function definition, so you shouldn't try to @samp{#undef} it or take
+its address.  In addition, calls to @code{setjmp} are safe in only the
+following contexts:
 
 @itemize @bullet
 @item
@@ -205,6 +206,8 @@ of blocked signals is saved in @var{state} and will be restored if a
 @comment POSIX.1
 @deftypefun void siglongjmp (sigjmp_buf @var{state}, int @var{value})
 This is similar to @code{longjmp} except for the type of its @var{state}
-argument.
+argument.  If the @code{sigsetjmp} call that set this @var{state} used a
+nonzero @var{savesigs} flag, @code{siglongjmp} also restores the set of
+blocked signals.
 @end deftypefun
 

@@ -64,6 +64,7 @@ end of the interval you want to time, subtract the values, and then divide
 by @code{CLOCKS_PER_SEC} (the number of clock ticks per second), like this:
 
 @example
+@group
 #include <time.h>
 
 clock_t start, end;
@@ -73,6 +74,7 @@ start = clock();
 @dots{} /* @r{Do the work.} */
 end = clock();
 elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+@end group
 @end example
 
 Different computers and operating systems vary wildly in how they keep
@@ -122,7 +124,7 @@ value @code{(clock_t)(-1)}.
 @subsection Detailed Elapsed CPU Time Inquiry
 
 The @code{times} function returns more detailed information about
-elapsed processor time in a @code{struct tms} object.  You should
+elapsed processor time in a @w{@code{struct tms}} object.  You should
 include the header file @file{sys/times.h} to use this facility.
 @pindex sys/times.h
 
@@ -287,11 +289,11 @@ The @code{struct timeval} structure represents a calendar time.  It
 has the following members:
 
 @table @code
-@item long tv_sec
+@item long int tv_sec
 This represents the number of seconds since the epoch.  It is equivalent
 to a normal @code{time_t} value.
 
-@item long tv_usec
+@item long int tv_usec
 This is the fractional second value, represented as the number of
 microseconds.
 
@@ -301,6 +303,7 @@ Some times struct timeval values are user for time intervals.  Then the
 @end table
 @end deftp
 
+@c !!! struct timezone is obsolete and should NEVER, EVER be used.
 @comment sys/time.h
 @comment BSD
 @deftp {Data Type} {struct timezone}
@@ -316,8 +319,8 @@ If nonzero, daylight savings time applies during some part of the year.
 @end table
 @end deftp
 
-It is often necessary to subtract two values of type @code{struct
-timeval}.  Here is the best way to do this.  It works even on some
+It is often necessary to subtract two values of type @w{@code{struct
+timeval}}.  Here is the best way to do this.  It works even on some
 peculiar operating systems where the @code{tv_sec} member has an
 unsigned type.
 
@@ -360,7 +363,18 @@ The @code{gettimeofday} function returns the current date and time in the
 time zone is returned in the structure pointed at @var{tzp}.  If the @var{tzp}
 argument is a null pointer, time zone information is ignored.
 
-The return value is @code{0} on success and @code{-1} on failure.
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error condition is defined for this function:
+
+@table @code
+@item ENOSYS
+@c !!! rms check my writing
+The operating system does not support getting time zone information, and
+@var{tzp} is not a null pointer.  The GNU operating system does not
+support using @w{@code{struct timezone}} to represent time zone
+information.  Use @code{tzname} et al instead.  @strong{Say something
+more helpful here.}
+@end table
 @end deftypefun
 
 @comment sys/time.h
@@ -373,11 +387,15 @@ information is ignored if @var{tzp} is a null pointer.
 You must be a privileged user in order to use @code{settimeofday}.
 
 The return value is @code{0} on success and @code{-1} on failure.  The
-following @code{errno} error condition is defined for this function:
+following @code{errno} error conditions are defined for this function:
 
 @table @code
 @item EPERM
-This process cannot set the host name because it is not privileged.
+This process cannot set the time because it is not privileged.
+
+@item ENOSYS
+The operating system does not support setting time zone information, and
+@var{tzp} is not a null pointer.
 @end table
 @end deftypefun
 
@@ -516,9 +534,6 @@ Greenwich Mean Time (GMT) rather than relative to the local time zone.
 
 Recall that calendar times are @emph{always} expressed in coordinated
 universal time.
-
-If the system doesn't currently know the time, @code{gmtime} returns
-a null pointer.
 @end deftypefun
 
 @comment time.h
@@ -651,12 +666,12 @@ The second as a decimal number.
 The week number of the current year as a decimal number, starting with
 the first Sunday as the first day of the first week.
 
-@item %w
-The day of the week as a decimal number, Sunday being @code{0}.
-
 @item %W
 The week number of the current year as a decimal number, starting with
 the first Monday as the first day of the first week.
+
+@item %w
+The day of the week as a decimal number, Sunday being @code{0}.
 
 @item %x
 The preferred date representation for the current locale, but without the
@@ -688,6 +703,7 @@ characters, the excess characters are discarded.  The return value from
 not including the terminating null character.  If the value equals
 @var{size}, it means that the array @var{s} was too small; you should
 repeat the call, providing a bigger array.
+@c !!! can pass NULL for S to find size to allocate.
 
 For an example of @code{strftime}, see @ref{Time Functions Example}.
 @end deftypefun
@@ -779,6 +795,7 @@ at 2:00am.
 EST+5EDT,M4.1.0/M10.5.0
 @end example
 
+@c !!! this is not true if using the tzfile database
 The schedule of daylight savings time in any particular jurisdiction has
 changed over the years.  To be strictly correct, the conversion of dates
 and times in the past should be based on the schedule that was in effect
@@ -802,12 +819,17 @@ operation chooses a time zone by default.  Each operating system has its
 own rules for choosing the default time zone, so there is little we can
 say about them.
 
+@c !!! this does not vary among operating systems in glibc.  No variable
+@c is like "TZ=:$(prefix)/etc/localtime".  Should describe zic program.
+@c If the name after the : doesn't start with a slash, it is relative to
+@c $(datadir)/zoneinfo.
+
 @node Time Zone Functions
 @subsection Functions and Variables for Time Zones
 
 @comment time.h
 @comment POSIX.1
-@defvar tzname
+@deftypevar char *tzname[2]
 The array @code{tzname} contains two strings, which are the standard
 three-letter names of the pair of time zones (standard and daylight
 savings) that the user has selected.  @code{tzname[0]} is the name of
@@ -815,8 +837,6 @@ the standard time zone (for example, @code{"EST"}), and @code{tzname[1]}
 is the name for the time zone when daylight savings time is in use (for
 example, @code{"EDT"}).  These correspond to the @var{std} and @var{dst}
 strings (respectively) from the @code{TZ} environment variable.
-
-The data type of @code{tzname} is @code{char *[2]}.
 
 The @code{tzname} array is initialized from the @code{TZ} environment
 variable whenever @code{tzset}, @code{ctime}, @code{strftime},
@@ -834,7 +854,7 @@ depend on the time zone.
 @end deftypefun
 
 The following variables are defined for compatibility with System V
-Unix.
+Unix.  These variables are set by calling @code{localtime}.
 
 @comment time.h
 @comment SVID
@@ -1047,9 +1067,10 @@ The function @code{sleep} gives a simple way to make the program wait
 for short periods of time.  If your program doesn't use signals (except
 to terminate), then you can expect @code{sleep} to wait reliably for
 the specified amount of time.  Otherwise, @code{sleep} can return sooner
-if the signal arrives; if you want to wait for a given period regardless
+if a signal arrives; if you want to wait for a given period regardless
 of signals, use @code{select} (@pxref{Waiting for I/O}) and don't
 specify any descriptors to wait for.
+@c !!! select can get EINTR; using SA_RESTART makes sleep win too.
 
 @comment unistd.h
 @comment POSIX.1

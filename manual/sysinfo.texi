@@ -74,9 +74,13 @@ This process cannot set the host name because it is not privileged.
 
 @comment unistd.h
 @comment BSD
-@deftypefun {long int} gethostid ()
+@deftypefun {long int} gethostid (void)
 This function returns the Internet address of the machine the program is
 running on.
+@c !!! this is not necessarily the IP address.  it is whatever was set
+@c with sethostid (or the `hostid' program).  on sun4s, it is an
+@c unchangeable constant that is unique for each machine.
+@c making it the primary IP address is a convention.
 @end deftypefun
 
 @comment unistd.h
@@ -129,6 +133,7 @@ system.
 @item char machine[]
 This is a description of the type of hardware that is in use.
 
+@c !!! this is only true if the operating system has no uname system call.
 The GNU C Library fills in this field based on the configuration name
 that was specified when building and installing the library.  GNU uses a
 three-part name to describe a system configuration; the three parts are
@@ -142,6 +147,8 @@ Since the value in @code{machine} is supposed to describe just the
 hardware, it consists of the first two parts of the configuration name:
 @samp{@var{cpu}-@var{manufacturer}}.
 
+@c !!! this is yet another case where you are losing massively because
+@c you want to have an explicit list.  many others are possible.
 Here is a list of all the possible alternatives:
 
 @quotation
@@ -161,7 +168,3 @@ A non-negative value indicates that the data was successfully stored.
 @code{EFAULT}, which we normally don't mention as it is always a
 possibility.
 @end deftypefun
-
-
-
-

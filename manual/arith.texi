@@ -35,6 +35,7 @@ One noteworthy property of NaNs is that they are not equal to
 themselves.  Thus, @code{x == x} can be 0 if the value of @code{x} is a
 NaN.  In fact, this is the way to test whether a value is a NaN or not:
 if it is not equal to itself, then it is a NaN.
+@c !!! should use isnan
 
 Almost any arithmetic operation in which one argument is a NaN returns
 a NaN.
@@ -110,8 +111,8 @@ These functions are provided for obtaining the @dfn{absolute value} (or
 @dfn{magnitude}) of a number.  The absolute value of a real number
 @var{x} is @var{x} is @var{x} is positive, @minus{}@var{x} if @var{x} is
 negative.  For a complex number @var{z}, whose real part is @var{x} and
-whose imaginary part is @var{y}, the absolute value is @code{sqrt
-(@var{x}*@var{x} + @var{y}*@var{y})}.
+whose imaginary part is @var{y}, the absolute value is @w{@code{sqrt
+(@var{x}*@var{x} + @var{y}*@var{y})}}.
 
 @pindex math.h
 @pindex stdlib.h
@@ -125,7 +126,7 @@ This function returns the absolute value of @var{number}.
 
 Most computers use a two's complement integer representation, in which
 the absolute value of @code{INT_MIN} (the smallest possible @code{int})
-cannot be represented; thus, @code{abs (INT_MIN)} is not defined.
+cannot be represented; thus, @w{@code{abs (INT_MIN)}} is not defined.
 @end deftypefun
 
 @comment stdlib.h
@@ -301,10 +302,10 @@ returns @code{0.5} and stores @code{2.0} into @code{intpart}.
 @deftypefun double fmod (double @var{numerator}, double @var{denominator})
 This function computes the remainder of dividing @var{numerator} by
 @var{denominator}.  Specifically, the return value is
-@code{@var{numerator} - @var{n} * @var{denominator}}, where @var{n} is
-the quotient of @var{numerator} by @var{denominator}, rounded towards
-zero to an integer.  Thus, @code{fmod (6.5, 2.3)} returns @code{1.9},
-which is @code{6.5} minus @code{4.6}.
+@w{@code{@var{numerator} - @var{n} * @var{denominator}}}, where @var{n}
+is the quotient of @var{numerator} divided by @var{denominator}, rounded
+towards zero to an integer.  Thus, @w{@code{fmod (6.5, 2.3)}} returns
+@code{1.9}, which is @code{6.5} minus @code{4.6}.
 
 The result has the same sign as the @var{numerator} and has magnitude
 less than the magnitude of the @var{denominator}.
@@ -582,6 +583,8 @@ An optional plus or minus sign (@samp{+} or @samp{-}).
 @item
 A nonempty sequence of digits optionally containing a decimal-point
 character (@samp{.}).
+@c !!! what the decimal point char is varies with locale;
+@c localeconv()->decimal_point tells you.
 
 @item
 An optional exponent part, consisting of a character @samp{e} or

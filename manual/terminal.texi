@@ -116,6 +116,7 @@ perform editing operations within the current line of text.
 The constants @code{_POSIX_MAX_CANON} and @code{MAX_CANON} parameterize
 the maximum number of bytes which may appear in a single line of
 canonical input.  @xref{Limits for Files}.
+@c !!! mihgt be unlimited in GNU?  ask mib
 
 @cindex noncanonical input processing
 In @dfn{noncanonical input processing} mode, characters are not grouped
@@ -129,8 +130,8 @@ mode is when the program accepts single-character commands or provides
 its own editing facilities.
 
 The choice of canonical or noncanonical input is controlled by the
-@code{ICANON} flag in the @code{c_lflag} member of @code{struct termios}
-(@pxref{Local Modes}).
+@code{ICANON} flag in the @code{c_lflag} member of @code{struct termios}.
+@xref{Local Modes}.
 
 @node Terminal Modes
 @section Terminal Modes
@@ -139,6 +140,7 @@ The choice of canonical or noncanonical input is controlled by the
 This section describes the various terminal attributes that control how
 input and output are done.  The functions, data structures, and symbolic
 constants are all declared in the header file @file{termios.h}.
+@c !!! should mention terminal attributes are distinct from file attributes
 
 @menu
 * Mode Data Types::             The data type @code{struct termios} and
@@ -356,6 +358,7 @@ Here is an example of how to set one flag (@code{ISTRIP}) in the
 data in the structure:
 
 @example
+@group
 int
 set_istrip (int desc, int value)
 @{
@@ -379,6 +382,7 @@ set_istrip (int desc, int value)
    @}
   return 1;
 @}
+@end group
 @end example
 
 @node Input Modes
@@ -516,6 +520,7 @@ until a START character is received.  In this case, the STOP and START
 characters are never passed to the application program.  If this bit is
 not set, then START and STOP can be read as ordinary characters.
 @xref{Start/Stop Characters}.
+@c !!! mention this interferes with using C-s and C-q for programs like emacs
 
 @comment termios.h
 @comment BSD
@@ -528,7 +533,7 @@ character restarts output.
 @comment BSD
 @item IMAXBEL
 If this bit is set, then filling up the terminal input buffer sends a
-bel character (code @code{007}) to the terminal to ring the bell.
+BEL character (code @code{007}) to the terminal to ring the bell.
 @end table
 
 @node Output Modes
@@ -536,7 +541,7 @@ bel character (code @code{007}) to the terminal to ring the bell.
 
 This section describes the terminal flags and fields that control how
 output characters are translated and padded for display.  All of these
-are contained in the @code{c_oflag} member of the @code{struct termios}
+are contained in the @code{c_oflag} member of the @w{@code{struct termios}}
 structure.
 
 The @code{c_oflag} member itself is an integer, and you change the flags
@@ -577,7 +582,7 @@ number of spaces to emulate a tab stop every eight columns.
 @comment termios.h
 @comment BSD
 @deftypevr Macro int ONOEOT
-If this bit is set, discard control-d characters (code @code{004}) on
+If this bit is set, discard @kdb{C-d} characters (code @code{004}) on
 output.  These characters cause many dial-up terminals to disconnect.
 @end deftypevr
 
@@ -613,12 +618,12 @@ If this bit is not set and you call @code{open} without the
 connection is established.
 
 If this bit is not set and a modem disconnect is detected, a
-@code{SIGHUP} signal is sent to the controlling process for the terminal
-(if it has one).  Normally, this causes the process to exit;
+@code{SIGHUP} signal is sent to the controlling process group for the
+terminal (if it has one).  Normally, this causes the process to exit;
 see @ref{Signal Handling}.  Reading from the terminal after a disconnect
-causes an end-of-file condition, and writing causes an
-@code{EIO} error to be returned.  The terminal device must be closed and
-reopened to clear the condition.
+causes an end-of-file condition, and writing causes an @code{EIO} error
+to be returned.  The terminal device must be closed and reopened to
+clear the condition.
 @cindex modem disconnect
 
 @comment termios.h
@@ -658,11 +663,13 @@ input characters are not checked for correct parity.
 @item PARODD
 This bit is only useful if @code{PARENB} is set.  If @code{PARODD} is set,
 odd parity is used, otherwise even parity is used.
+@end table
 
 The control mode flags also includes a field for the number of bits per
 character.  You can use the @code{CSIZE} macro as a mask to extract the
 value, like this: @code{settings.c_cflag & CSIZE}.
 
+@table @code
 @comment termios.h
 @comment POSIX.1
 @vindex CSIZE
@@ -713,6 +720,8 @@ If this bit is set, enable flow control of input based on the RTS wire
 @item MDMBUF
 If this bit is set, enable carrier-based flow control of output.
 @end table
+
+@c !!! BSD also has CIGNORE
 
 @node Local Modes
 @subsection Local Modes
@@ -832,6 +841,7 @@ attempt to write to the terminal.  @xref{Access to the Terminal}.
 The following bits are BSD extensions; the GNU library defines these
 symbols on any system if you ask for them, but the settings of the bits
 have no effect except on BSD systems.
+@c !!! and GNU
 
 @table @code
 @comment termios.h
@@ -882,8 +892,8 @@ While this bit is set, all output is discarded.  @xref{Other Special}.
 @comment BSD
 @vindex NOKERNINFO
 @item NOKERNINFO
-Setting this bit disables handling of the STATUS character.  @xref{Other
-Special}.
+Setting this bit disables handling of the STATUS character.
+@xref{Other Special}.
 
 @comment termios.h
 @comment BSD
@@ -958,6 +968,16 @@ This function stores @var{speed} in @code{*@var{termios_p}} as the input
 speed.  The normal return value is @code{0}; a value of @code{-1}
 indicates an error.  If @var{speed} is not a speed, @code{cfsetospeed}
 returns @code{-1}.
+@end deftypefun
+
+@comment termios.h
+@comment BSD
+@deftypefun int cfsetspeed (struct termios *@var{termios_p}, speed_t @var{speed})
+This function stores @var{speed} in @code{*@var{termios_p}} as both the
+input and output speeds.  The normal return value is @code{0}; a value
+of @code{-1} indicates an error.  If @var{speed} is not a speed,
+@code{cfsetspeed} returns @code{-1}.  This function is an extension in
+4.4 BSD.
 @end deftypefun
 
 @comment termios.h
@@ -1046,6 +1066,20 @@ BSD defines two additional speed symbols as aliases: @code{EXTA} is an
 alias for @code{B19200} and @code{EXTB} is an alias for @code{B38400}.
 These aliases are obsolete.
 
+@deftypefun
+@comment termios.h
+@comment BSD
+@deftypefun int cfmakeraw (struct termios *@var{termios_p})
+@c !!! this is a BSD extension.  it does:
+@example
+  t->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
+  t->c_oflag &= ~OPOST;
+  t->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
+  t->c_cflag &= ~(CSIZE|PARENB);
+  t->c_cflag |= CS8;
+@end example
+@end deftypefun
+
 @node Special Characters
 @subsection Special Characters
 
@@ -1119,6 +1153,9 @@ The EOL character is recognized only in canonical input mode.  It acts
 as a line terminator, just like a newline character.  The EOL character
 is not discarded; it is read as the last character in the input line.
 
+@c !!! example: this is set to ESC by 4.3 csh with "set filec" so it can
+@c complete partial lines without using cbreak or raw mode.
+
 You don't need to use the EOL character to make @key{RET} end a line.
 Just set the ICRNL flag.  In fact, this is the default state of
 affairs.
@@ -1138,6 +1175,7 @@ discarded.  (If the terminal generates multibyte character sequences,
 this may cause more than one byte of input to be discarded.)  This
 cannot be used to erase past the beginning of the current line of text.
 The ERASE character itself is discarded.
+@c !!! mention ECHOE here
 
 Usually, the ERASE character is @key{DEL}.
 @end deftypevr
@@ -1216,6 +1254,8 @@ The LNEXT character is recognized only when @code{IEXTEN} is set.  It
 disables the editing significance of the next character the user types.
 It is the analogue of the @kbd{C-q} command in Emacs.  ``LNEXT'' stands
 for ``literal next.''
+
+The LNEXT character is usually @kbd{C-v}.
 @end deftypevr
 
 @node Signal Characters
@@ -1306,7 +1346,7 @@ Typically, the DSUSP character is @kbd{C-y}.
 @node Start/Stop Characters
 @subsubsection Special Characters for Flow Control
 
-These special characters may active in either canonical or noncanonical
+These special characters may be active in either canonical or noncanonical
 input mode, but their use is controlled by the flags @code{IXON} and
 @code{IXOFF} (@pxref{Input Modes}).
 
@@ -1395,13 +1435,13 @@ to the application program exactly as typed.  It is up to the
 application program to give the user ways to edit the input, if
 appropriate.
 
-noncanonical mode offers special parameters called MIN and TIME for
+Noncanonical mode offers special parameters called MIN and TIME for
 controlling whether and how long to wait for input to be available.  You
 can even use them to avoid ever waiting---to return immediately with
 whatever input is available, or with no input.
 
 The MIN and TIME are stored in elements of the @code{c_cc} array, which
-is a member of the @code{struct termios} structure.  Each element of
+is a member of the @w{@code{struct termios}} structure.  Each element of
 this array has a particular role, and each element has a symbolic
 constant that stands for the index of that element.  @code{VMIN} and
 @code{VMAX} are the names for the indices in the array of the MIN and
@@ -1562,17 +1602,21 @@ queues associated with the terminal file @var{filedes}.  The @var{queue}
 argument specifies which queue(s) to clear, and can be one of the
 following values:
 
+@c Extra blank lines here make it look better.
 @table @code
 @vindex TCIFLUSH
 @item TCIFLUSH
+
 Clear any input data received, but not yet read.
 
 @vindex TCOFLUSH
 @item TCOFLUSH
+
 Clear any output data written, but not yet transmitted.
 
 @vindex TCIOFLUSH
 @item TCIOFLUSH
+
 Clear both queued input and output.
 @end table
 
@@ -1665,6 +1709,7 @@ exiting or terminating with a signal.  It uses the @code{atexit}
 function (@pxref{Cleanups on Exit}) to make sure this is done
 by @code{exit}.
 
+@c !!!! the example doesn't handle any signals!
 The signals handled in the example are the ones that typically occur due
 to actions of the user.  It might be desirable to handle other signals
 such as SIGSEGV that can result from bugs in the program.

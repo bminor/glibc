@@ -37,6 +37,7 @@ over a domain that is only a subset of real numbers.  For example, the
 outside the domain over which it is defined, the function returns
 an unspecified value and sets @code{errno} to @code{EDOM} to indicate
 a @dfn{domain error}.
+@c !!! the "unspecified value" is NAN on ieee754 machines
 
 Some of these functions are defined mathematically to result in a
 complex value over parts of their domains.  The most familiar example of
@@ -51,7 +52,7 @@ be representable as a floating point number.  If magnitude of the
 correct result is too large to be represented, the function sets
 @code{errno} to @code{ERANGE} to indicate a @dfn{range error}, and
 returns a particular very large value (named by the macro
-@code{HUGE_VAL}) or its negation.
+@code{HUGE_VAL}) or its negation (@w{@code{- HUGE_VAL}}).
 
 If the magnitude of the result is too small, a value of zero is returned
 instead.  In this case, @code{errno} might or might not be
@@ -63,6 +64,7 @@ and test @code{errno} afterward.  As a consequence of this use of
 @code{errno}, use of the mathematical functions is not reentrant if you
 check for errors.
 
+@c !!! this isn't always true at the moment....
 None of the mathematical functions ever generates signals as a result of
 domain or range errors.  In particular, this means that you won't see
 @code{SIGFPE} signals generated within these functions.  (@xref{Signal
@@ -254,6 +256,7 @@ different base, it is similar to the @code{log} function.  In fact,
 This is a general exponentiation function, returning @var{base} raised
 to @var{power}.
 
+@need 250
 The following @code{errno} error conditions are defined for this function:
 
 @table @code
@@ -307,7 +310,7 @@ to subtraction of two numbers that are nearly equal.
 @comment math.h
 @comment BSD
 @deftypefun double log1p (double @var{x})
-This function returns a value equivalent to @code{log (1 + @var{x})}.
+This function returns a value equivalent to @w{@code{log (1 + @var{x})}}.
 It is computed in a way that is accurate even if the value of @var{x} is
 near zero.
 @end deftypefun
@@ -323,7 +326,7 @@ see @ref{Exponents and Logarithms}.
 @comment ANSI
 @deftypefun double sinh (double @var{x})
 The @code{sinh} function returns the hyperbolic sine of @var{x}, defined
-mathematically as @code{(exp (@var{x}) - exp (-@var{x}) / 2}.  The
+mathematically as @w{@code{exp (@var{x}) - exp (-@var{x}) / 2}}.  The
 function fails, and sets @code{errno} to @code{ERANGE}, if the value of
 @var{x} is too large; that is, if overflow occurs.
 @end deftypefun
@@ -332,7 +335,7 @@ function fails, and sets @code{errno} to @code{ERANGE}, if the value of
 @comment ANSI
 @deftypefun double cosh (double @var{x})
 The @code{cosh} function returns the hyperbolic cosine of @var{x},
-defined mathematically as @code{(exp (@var{x}) + exp (-@var{x}) / 2}.
+defined mathematically as @w{@code{exp (@var{x}) + exp (-@var{x}) / 2}}.
 The function fails, and sets @code{errno} to @code{ERANGE}, if the value
 of @var{x} is too large; that is, if overflow occurs.
 @end deftypefun
@@ -341,7 +344,7 @@ of @var{x} is too large; that is, if overflow occurs.
 @comment ANSI
 @deftypefun double tanh (double @var{x})
 This function returns the hyperbolic tangent of @var{x}, defined
-mathematically as @code{sinh (@var{x}) / cosh (@var{x})}.
+mathematically as @w{@code{sinh (@var{x}) / cosh (@var{x})}}.
 @end deftypefun
 
 @cindex inverse hyperbolic functions
@@ -395,6 +398,7 @@ The @code{random} and @code{srandom} functions, described in @ref{BSD
 Random}, are derived from BSD.  They use a better random number
 generator (producing numbers that are more random), but are less
 portable.
+@c !!! rand/srand just call random/srandom.  It is the same RNG.
 @end itemize
 
 For both sets of functions, you can get repeatable sequences of numbers
@@ -412,8 +416,7 @@ libraries may produce different sequences of values for the same seed.
 @subsection ANSI C Random Number Functions
 
 This section describes the random number functions that are part of
-the ANSI C standard.  These functions represent the state of the
-random number generator as an @code{int}.
+the ANSI C standard.
 
 To use these facilities, you should include the header file
 @file{stdlib.h} in your program.
@@ -424,8 +427,9 @@ To use these facilities, you should include the header file
 @deftypevr Macro int RAND_MAX
 The value of this macro is an integer constant expression that
 represents the maximum possible value returned by the @code{rand}
-function.  In the GNU library, it is @code{037777777}.  In other
-libraries, it may be as low as @code{32767}.
+function.  In the GNU library, it is @code{037777777}, which is the
+largest signed integer representable in 32 bits.  In other libraries, it
+may be as low as @code{32767}.
 @end deftypevr
 
 @comment stdlib.h
@@ -454,6 +458,7 @@ This section describes a set of random number generation functions that
 are derived from BSD.  The @code{random} function can generate better
 random numbers than @code{rand}, because it maintains more bits of
 internal state.
+@c !!! false
 
 The prototypes for these functions are in @file{stdlib.h}.
 @pindex stdlib.h
@@ -476,12 +481,6 @@ of random numbers.
 To produce truly random numbers (not just pseudo-random), do
 @code{srandom (time (0))}.
 @end deftypefun
-
-Because this random number generator uses more state information than
-will fit in an @code{int}, @code{srandom} does not return a value that
-is useful for saving and restoring the random number state.  Instead,
-you should use the @code{initstate} and @code{setstate} functions to do
-this.
 
 @comment stdlib.h
 @comment BSD

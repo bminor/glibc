@@ -101,7 +101,7 @@ Certain options require an argument.  For example, the @samp{-o} command
 of the @code{ld} command requires an argument---an output file name.
 
 @item
-An option and its argument may or may appear as separate tokens.  (In
+An option and its argument may or may not appear as separate tokens.  (In
 other words, the whitespace separating them is optional.)  Thus,
 @samp{-o foo} and @samp{-ofoo} are equivalent.
 
@@ -133,10 +133,10 @@ interpretation is left up to the particular application program.
 
 @cindex long-named options
 GNU adds @dfn{long options} to these conventions.  Long options consist
-of @samp{--} followed by a name made of alphanumeric characters.  Option
-names are typically one to three words long, with hyphens to separate
-words.  Users can abbreviate the option names as long as the
-abbreviations are unique.
+of @samp{--} followed by a name made of alphanumeric characters and
+dashes.  Option names are typically one to three words long, with
+hyphens to separate words.  Users can abbreviate the option names as
+long as the abbreviations are unique.
 
 To specify an argument for a long option, write
 @samp{--@var{name}=@var{value}}.  This syntax enables a long option to
@@ -207,7 +207,7 @@ string can be followed by a colon (@samp{:}) to indicate that it takes a
 required argument.
 
 If the @var{options} argument string begins with a hyphen (@samp{-}), this
-is treated specially.  It permits arguments without an option to be
+is treated specially.  It permits arguments that are not options to be
 returned as if they were associated with option character @samp{\0}.
 
 The @code{getopt} function returns the option character for the next
@@ -216,7 +216,7 @@ returns @code{-1}.  There may still be more non-option arguments; you
 must compare the external variable @code{optind} against the @var{argv}
 parameter to check this.
 
-If the options has an argument, @code{getopt} returns the argument by
+If the option has an argument, @code{getopt} returns the argument by
 storing it in the varables @var{optarg}.  You don't ordinarily need to
 copy the @code{optarg} string, since it is a pointer into the original
 @var{argv} array, not into a static area that might be overwritten.
@@ -225,7 +225,7 @@ If @code{getopt} finds an option character in @var{argv} that was not
 included in @var{options}, or a missing option argument, it returns
 @samp{?} and sets the external variable @code{optopt} to the actual
 option character.  In addition, if the external variable @code{opterr}
-is nonzero, @code{getopt} prints an error message.
+is nonzero (which is the default), @code{getopt} prints an error message.
 @end deftypefun
 
 @node Example of Getopt
@@ -311,34 +311,35 @@ element containing all zeros.
 The @code{struct option} structure has these fields:
 
 @table @code
-@item name
+@item const char *name
 This field is the name of the option.  It is a string.
 
-@item has_arg
+@item int has_arg
 This field says whether the option takes an argument.  It is an integer,
 and there are three legitimate values: @code{no_argument},
 @code{required_argument} and @code{optional_argument}.
 
-@item flag
-@itemx val
+@item int *flag
+@itemx int val
 These fields control how to report or act on the option when it occurs.
 
-If @code{flag} is zero, then the @code{val} is a value which identifies
-this option.  Often these values are chosen to uniquely identify
-particular long options.
+If @code{flag} is a null pointer, then the @code{val} is a value which
+identifies this option.  Often these values are chosen to uniquely
+identify particular long options.
 
-If @code{flag} is nonzero, it should be the address of an @code{int}
-variable which is the flag for this option.  The value in @code{val} is
-the value to store in the flag to indicate that the option was seen.
+If @code{flag} is not a null pointer, it should be the address of an
+@code{int} variable which is the flag for this option.  The value in
+@code{val} is the value to store in the flag to indicate that the option
+was seen.
 @end table
 @end deftp
 
 @comment getopt.h
 @comment GNU
-@deftypefun int getopt_long (int @var{argc}, char **@var{argv}, const char *@var{short}, struct option *@var{long}, int *@var{indexptr})
+@deftypefun int getopt_long (int @var{argc}, char **@var{argv}, const char *@var{shortopts}, struct option *@var{longopts}, int *@var{indexptr})
 Decode options from the vector @var{argv} (whose length is @var{argc}).
-The argument @var{short} describes the short options to accept, just as
-it does in @code{getopt}.  The argument @var{long} describes the long
+The argument @var{shortopts} describes the short options to accept, just as
+it does in @code{getopt}.  The argument @var{longopts} describes the long
 options to accept (see above).
 
 When @code{getopt_long} encounters a short option, it does the same
@@ -349,31 +350,31 @@ When @code{getopt_long} encounters a long option, it takes actions based
 on the @code{flag} and @code{val} fields of the definition of that
 option.
 
-If @code{flag} is zero, then @code{getopt_long} returns the contents of
-@code{val} to indicate which option it found.  You should arrange
-distinct values in the @code{val} field for options with different
-meanings, so you can decode these values after @code{getopt_long}
-returns.  If the long option is equivalent to a short option, you can
-use the short option's character code in @code{val}.
+If @code{flag} is a null pointer, then @code{getopt_long} returns the
+contents of @code{val} to indicate which option it found.  You should
+arrange distinct values in the @code{val} field for options with
+different meanings, so you can decode these values after
+@code{getopt_long} returns.  If the long option is equivalent to a short
+option, you can use the short option's character code in @code{val}.
 
-If @code{flag} is nonzero, that means this option should just set a flag
-in the program.  The flag is a variable of type @code{int} that you
-define.  Put the address of the flag in the @code{flag} field.  Put in
-the @code{val} field the value you would like this option to store in
-the flag.  In this case, @code{getopt_long} returns @code{0}.
+If @code{flag} is not a null pointer, that means this option should just
+set a flag in the program.  The flag is a variable of type @code{int}
+that you define.  Put the address of the flag in the @code{flag} field.
+Put in the @code{val} field the value you would like this option to
+store in the flag.  In this case, @code{getopt_long} returns @code{0}.
 
 For any long option, @code{getopt_long} tells you the index in the array
-@var{long} of the options definition, by storing it into
+@var{longopts} of the options definition, by storing it into
 @code{*@var{indexptr}}.  You can get the name of the option with
-@code{@var{long}[*@var{indexptr}].name}.  So you can distinguish among
+@code{@var{longopts}[*@var{indexptr}].name}.  So you can distinguish among
 long options either by the values in their @code{val} fields or by their
 indices.  You can also distinguish in this way among long options that
 set flags.
 
 When a long option has an argument, @code{getopt_long} puts the argument
 value in the variable @code{optarg} before returning.  When the option
-has no argument, the value in @code{optarg} is @code{0}.  This is how
-you can tell whether an optional argument was supplied.
+has no argument, the value in @code{optarg} is a null pointer.  This is
+how you can tell whether an optional argument was supplied.
 
 When @code{getopt_long} has no more options to handle, it returns
 @code{-1}, and leaves in the variable @code{optind} the index in
@@ -394,8 +395,8 @@ When @code{getopt_long} has no more options to handle, it returns
 When a program is executed, it receives information about the context in
 which it was invoked in two ways.  The first mechanism uses the
 @var{argv} and @var{argc} arguments to its @code{main} function, and is
-discussed in @ref{Program Arguments}.  The second mechanism is
-uses @dfn{environment variables} and is discussed in this section.
+discussed in @ref{Program Arguments}.  The second mechanism uses
+@dfn{environment variables} and is discussed in this section.
 
 The @var{argv} mechanism is typically used to pass command-line
 arguments specific to the particular program being invoked.  The
@@ -407,6 +408,7 @@ The environment variables discussed in this section are the same
 environment variables that you set using assignments and the
 @code{export} command in the shell.  Programs executed from the shell
 inherit all of the environment variables from the shell.
+@c !!! xref to right part of bash manual when it exists
 
 @cindex environment
 Standard environment variables are used for information about the user's
@@ -447,9 +449,10 @@ The value of an environment variable can be accessed with the
 This function returns a string that is the value of the environment
 variable @var{name}.  You must not modify this string.  In some systems
 not using the GNU library, it might be overwritten by subsequent calls
-to @code{getenv} (but not by any other library function).  If the
-environment variable @var{name} is not defined, the value is a null
-pointer.
+to @code{getenv} (but not by any other library function).
+@c !!! never overwritten on any unix system
+If the environment variable @var{name} is not defined, the value is a
+null pointer.
 @end deftypefun
 
 
@@ -466,6 +469,8 @@ The GNU library provides this function for compatibility with SVID; it
 may not be available in other systems.
 @end deftypefun
 
+@c !!! BSD function setenv
+
 You can deal directly with the underlying representation of environment
 objects to add more variables to the environment (for example, to
 communicate with another program you are about to execute; see
@@ -480,8 +485,7 @@ strings appear in the environment is not significant, but the same
 @var{name} must not appear more than once.  The last element of the
 array is a null pointer.
 
-This variable is not declared in any header file, but if you declare it
-in your own program as @code{extern}, the right thing will happen.
+This variable is declared in the header file @file{unistd.h}.
 
 If you just want to get the value of an environment variable, use
 @code{getenv}.
@@ -496,10 +500,12 @@ that they are always present in the environment; but if these variables
 @emph{are} present, they have these meanings, and that you shouldn't try
 to use these environment variable names for some other purpose.
 
+@comment Extra blank lines make it look better.
 @table @code
 @item HOME
 @cindex HOME environment variable
 @cindex home directory
+
 This is a string representing the user's @dfn{home directory}, or
 initial default working directory.
 
@@ -511,8 +517,10 @@ look up the user's name in the user database (@pxref{User Database}).
 For most purposes, it is better to use @code{HOME}, precisely because
 this lets the user specify the value.
 
+@c !!! also USER
 @item LOGNAME
 @cindex LOGNAME environment variable
+
 This is the name that the user used to log in.  Since the value in the
 environment can be tweaked arbitrarily, this is not a reliable way to
 identify the user who is running a process; a function like
@@ -523,8 +531,9 @@ this lets the user specify the value.
 
 @item PATH
 @cindex PATH environment variable
+
 A @dfn{path} is a sequence of directory names which is used for
-searching for a file.  The variable @var{PATH} holds a path used
+searching for a file.  The variable @code{PATH} holds a path used
 for searching for programs to be run.
 
 The @code{execlp} and @code{execvp} functions (@pxref{Executing a File})
@@ -538,16 +547,18 @@ current directory (@pxref{Working Directory}).
 A typical value for this environment variable might be a string like:
 
 @example
-.:/bin:/etc:/usr/bin:/usr/new/X11:/usr/new:/usr/local:/usr/local/bin
+:/bin:/etc:/usr/bin:/usr/new/X11:/usr/new:/usr/local:/usr/local/bin
 @end example
 
 This means that if the user tries to execute a program named @code{foo},
-the system will look for files named @file{./foo}, @file{/bin/foo},
+the system will look for files named @file{foo}, @file{/bin/foo},
 @file{/etc/foo}, and so on.  The first of these files that exists is
 the one that is executed.
 
+@c !!! also TERMCAP
 @item TERM
 @cindex TERM environment variable
+
 This specifies the kind of terminal that is receiving program output.
 Some programs can make use of this information to take advantage of
 special escape sequences or terminal modes supported by particular kinds
@@ -557,11 +568,13 @@ Manual}) use the @code{TERM} environment variable, for example.
 
 @item TZ
 @cindex TZ environment variable
+
 This specifies the time zone.  @xref{TZ Variable}, for information about
 the format of this string and how it is used.
 
 @item LANG
 @cindex LANG environment variable
+
 This specifies the default locale to use for attribute categories where
 neither @code{LC_ALL} nor the specific environment variable for that
 category is set.  @xref{Locales}, for more information about
@@ -571,6 +584,7 @@ locales.
 @c I doubt this really exists
 @item LC_ALL
 @cindex LC_ALL environment variable
+
 This is similar to the @code{LANG} environment variable.  However, its
 value takes precedence over any values provided for the individual
 attribute category environment variables, or for the @code{LANG}
@@ -579,29 +593,37 @@ environment variable.
 
 @item LC_COLLATE
 @cindex LC_COLLATE environment variable
+
 This specifies what locale to use for string sorting.
 
 @item LC_CTYPE
 @cindex LC_CTYPE environment variable
+
 This specifies what locale to use for character sets and character
 classification.
 
 @item LC_MONETARY
 @cindex LC_MONETARY environment variable
+
 This specifies what locale to use for formatting monetary values.
 
 @item LC_NUMERIC
 @cindex LC_NUMERIC environment variable
+
 This specifies what locale to use for formatting numbers.
 
 @item LC_TIME
 @cindex LC_TIME environment variable
+
 This specifies what locale to use for formatting date/time values.
 
 @item _POSIX_OPTION_ORDER
 @cindex _POSIX_OPTION_ORDER environment variable.
+
 If this environment variable is defined, it suppresses the usual
 reordering of command line arguments by @code{getopt}.  @xref{Argument Syntax}.
+
+@c !!! GNU also has COREFILE, CORESERVER, EXECSERVERS
 @end table
 
 @node Program Termination
@@ -665,7 +687,7 @@ All open streams are closed, writing out any buffered output data.  See
 with the @code{tmpfile} function are removed; see @ref{Temporary Files}.
 
 @item 
-@code{_exit} is called.  @xref{Termination Internals}.
+@code{_exit} is called, terminating the program.  @xref{Termination Internals}.
 @end enumerate
 
 @node Exit Status
@@ -750,7 +772,7 @@ using @code{atexit} or @code{on_exit}.
 
 @comment stdlib.h
 @comment ANSI
-@deftypefun int atexit (void (*@var{function}) ())
+@deftypefun int atexit (void (*@var{function}) (void))
 The @code{atexit} function registers the function @var{function} to be
 called at normal program termination.  The @var{function} is called with
 no arguments.
@@ -776,21 +798,7 @@ Here's a trivial program that illustrates the use of @code{exit} and
 @code{atexit}:
 
 @example
-#include <stdio.h>
-#include <stdlib.h>
-
-void
-bye ()
-@{
-  printf ("Goodbye, cruel world....\n");
-@}
-
-void
-main ()
-@{
-  atexit (bye);
-  exit (EXIT_SUCCESS);
-@}
+@include atexit.c.texi
 @end example
 
 @noindent
@@ -806,7 +814,7 @@ for this function is in @file{stdlib.h}.
 
 @comment stdlib.h
 @comment ANSI
-@deftypefun void abort ()
+@deftypefun void abort (void)
 The @code{abort} function causes abnormal program termination.  This
 does not execute cleanup functions registered with @code{atexit} or
 @code{on_exit}.
@@ -817,10 +825,12 @@ intercept this signal; see @ref{Signal Handling}.
 @end deftypefun
 
 @c Put in by rms.  Don't remove.
+@cartouche
 @strong{Future Change Warning:} Proposed Federal censorship regulations
 may prohibit us from giving you information about the possibility of
 calling this function.  We would be required to say that this is not an
 acceptable way of terminating a program.
+@end cartouche
 
 @node Termination Internals
 @subsection Termination Internals
