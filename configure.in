@@ -150,8 +150,8 @@ AC_PREPARE(features.h)
 changequote(,)
 
 if [ ! "$target" ]; then
-  echo 'No target given.  Trying to guess target...'
   target=`$srcdir/config.guess`
+  test -n "$target" && echo "No target given; guessing target is ${target}."
 fi
 
 if [ "$lose" = yes -o ! "$target" ]; then
@@ -177,8 +177,8 @@ sysdep_dir=$srcdir/sysdeps
 eval "`echo $config | \
        sed 's/^\(.*\)-\(.*\)-\(.*\)$/machine=\1 vendor=\2 os=\3/'`"
 
-# Make sco3.2v4 become sco3.2.4.
-os="`echo $os | sed 's/\([0-9]\)v\([0-9]\)/\1.\2/g'`"
+# Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
+os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
 
 case "$os" in
 gnu*)
