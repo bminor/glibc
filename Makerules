@@ -33,9 +33,12 @@ endif	# subdir
 ifneq	"$(findstring env,$(origin sources))" ""
 sources :=
 endif
-export sources
 
-export headers := $(headers) $(sysdep_headers)
+headers := $(headers) $(sysdep_headers)
+
+ifdef have_export_directive	# kludge for GNU make before 3.63
+export sources headers
+endif
 
 ifneq ($(findstring e,$(MAKEFLAGS)),)
 You must not use the -e flag when building the GNU C library.
@@ -77,8 +80,10 @@ $(+sysdir_pfx)Sysnames:
 	@(echo The GNU C Library has not been configured!	;\
 	  echo Run \`configure\' to configure it before building.\
 	 ) >&2; exit 1
+ifdef have_export_directive	# kludge for GNU make before 3.63
 export sysdirs
 export sysdep_dir
+endif
 
 # Turn the list of sysdep names into a colon-separated list of directories
 # under SYSDEP_DIR (the base directory for sysdep files), and tell Make to
@@ -161,7 +166,9 @@ ARFLAGS := r$(verbose)
 
 override sources	:= $(addsuffix .c,$(routines) $(aux) \
 				          $(sysdep_routines))
+ifdef have_export_directive	# kludge for GNU make before 3.63
 export sysdep_routines
+endif
 
 # This is the list of all object files, gotten by
 # replacing every ".c" in `sources' with a ".o".
