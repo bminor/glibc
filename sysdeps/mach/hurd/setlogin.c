@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <hurd.h>
 
 /* Set the login name returned by `getlogin'.  */
 int
