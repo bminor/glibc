@@ -1,20 +1,20 @@
-/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <alloca.h>
 #include <argz.h>
@@ -49,6 +49,9 @@ static const struct locale_data * *const _nl_current[] =
     [category] = &_nl_current_##category,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
+    /* We need this additional element to simplify the code.  It must
+       simply be != NULL.  */
+    [LC_ALL] = (const struct locale_data **) ~0ul
   };
 
 /* Array indexed by category of pointers to _nl_C_CATEGORY slots.
