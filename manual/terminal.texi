@@ -1,4 +1,4 @@
-@node Low-Level Terminal @deftypevr Macro tcflag_t deftypevr Macro tcflag_t nterface, Mathematics, Sockets, Top
+@node Low-Level Terminal Interface
 @chapter Low-Level Terminal Interface
 
 This chapter describes functions that are specific to terminal devices.
