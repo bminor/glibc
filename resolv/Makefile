@@ -25,7 +25,7 @@ headers	:= netdb.h resolv.h $(wildcard arpa/*.h) sys/bitypes.h
 distribute := ../conf/portability.h
 
 routines := gethnamaddr getnetbyaddr getnetbyname getnetent getnetnamadr \
-	    herror nsap_addr res_comp res_debug res_init res_mkquery
+	    herror nsap_addr res_comp res_debug res_init res_mkquery \
 	    res_query res_send sethostent
 
 include ../Rules
