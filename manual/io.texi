@@ -16,7 +16,7 @@ and output.  Other chapters relating to the GNU I/O facilities are:
 that operate on streams, including formatted input and output.
 
 @item
-@ref{Low-Level Input/Output}, which covers the basic i/o and control
+@ref{Low-Level Input/Output}, which covers the basic I/O and control
 functions on file descriptors.
 
 @item
@@ -52,9 +52,11 @@ called @dfn{opening} the file.  You can open a file for reading, writing,
 or both.
 @cindex opening a file
 
-The connection to an open file is represented as a stream or file
-descriptor.  You pass this as an argument to the functions that do the
-actual read or write operations, to tell them which file to operate on.
+The connection to an open file is represented either as a stream or as a
+file descriptor.  You pass this as an argument to the functions that do
+the actual read or write operations, to tell them which file to operate
+on.  Certain functions expect streams, and others are designed to
+operate on file descriptors.
 
 When you have finished reading to or writing from the file, you can
 terminate the connection by @dfn{closing} the file.  Once you have
@@ -64,7 +66,7 @@ output operations on it.
 @menu
 * Streams and File Descriptors::	The GNU Library provides two ways
 					 to access the contents of files.
-* File Position Indicator::
+* File Position::
 @end menu
 
 @node Streams and File Descriptors
@@ -80,24 +82,25 @@ File descriptors provide a primitive, low-level interface to input and
 output operations.  Both file descriptors and streams can represent a
 connection to a device (such as a terminal), or a pipe or socket for
 communicating with another process, as well as a normal file.  But, if
-you want to do control operations that are specific to one of these
-particular kinds of connections, you must deal with it as a file
-descriptor rather than as a stream.  You must also use file descriptors
-if your program needs to do input or output in special modes, such as
-nonblocking (or polled) input.
+you want to do control operations that are specific to a particular kind
+of device, you must use a file descriptor; there are no facilities to
+use streams in this way.  You must also use file descriptors if your
+program needs to do input or output in special modes, such as
+nonblocking (or polled) input (@pxref{File Status Flags}).
 
 Streams provide a higher-level interface, layered on top of the
 primitive file descriptor facilities.  The stream interface treats all
-kinds of connections in the same way.
+kinds of files pretty much alike---the sole exception being the three
+styles of buffering that you can choose (@pxref{Stream Buffering}).
 
 The main advantage of using the stream interface is that the set of
 functions for performing actual input and output operations (as opposed
 to control operations) on streams is much richer and more powerful than
 the corresponding facilities for file descriptors.  The file descriptor
 interface provides only simple functions for transferring blocks of
-characters, but the stream interface also provides powerful
-formatted input and output functions as well as functions for character-
-and line-oriented input and output.
+characters, but the stream interface also provides powerful formatted
+input and output functions (@code{printf} and @code{scanf}) as well as
+functions for character- and line-oriented input and output.
 
 Since streams are implemented in terms of file descriptors, you can
 extract the file descriptor from a stream and perform low-level
@@ -109,8 +112,8 @@ In general, you should stick with using streams rather than file
 descriptors, unless there is some specific operation you want to do that
 can only be done on a file descriptor.  If you are a beginning
 programmer and aren't sure what functions to use, we suggest that you
-concentrate on the formatted input and output functions
-(@pxref{Formatted Input} and @pxref{Formatted Output}, respectively).
+concentrate on the formatted input functions (@pxref{Formatted Input})
+and formatted output functions (@pxref{Formatted Output}).
 
 If you are concerned about portability of your programs to systems other
 than GNU, you should also be aware that file descriptors are not as
@@ -120,10 +123,10 @@ all, or may only implement a subset of the GNU functions that operate on
 file descriptors.  Most of the file descriptor functions in the GNU
 library are included in the POSIX.1 standard, however.
 
-@node File Position Indicator
-@subsection File Position Indicator
+@node File Position
+@subsection File Position 
 
-One of the attributes of an open file is its @dfn{file position indicator}
+One of the attributes of an open file is its @dfn{file position}
 that keeps track of where in the file the next character is to be read
 or written.  In the GNU system, the file position is simply an integer
 representing the number of bytes from the beginning of the file.
@@ -132,39 +135,51 @@ The file position is normally set to the beginning of the file when it
 is opened, and each time a character is read or written, the file
 position is incremented.  In other words, access to the file is normally
 @dfn{sequential}.
-@cindex file position indicator
+@cindex file position
 @cindex sequential-access files
 
-Some kinds of files permit read or write operations at any position
-within the file; these files are sometimes referred to as
-@dfn{random-access} files.  You can change the file position indicator
-using the @code{fseek} function on a stream (@pxref{File Positioning})
-or the @code{lseek} function on a file descriptor (@pxref{Input and
-Output Primitives}).
+Ordinary files permit read or write operations at any position within
+the file.  Some other kinds of files may also permit this.  Files which
+do permit this are sometimes referred to as @dfn{random-access} files.
+You can change the file position using the @code{fseek} function on a
+stream (@pxref{File Positioning}) or the @code{lseek} function on a file
+descriptor (@pxref{Input and Output Primitives}).  If you try to change
+the file position on a file that doesn't support random access, you get
+an error.
 @cindex random-access files
 
-Typically, streams and file descriptors that correspond to real files on
-a disk and not to interactive devices or pipes to another process can be
-positioned, but there's no guarantee that @emph{any} file can be
-positioned.  If you try to perform a file positioning function on a file
-that doesn't support such operations, it reports failure.
-
-Files that are opened for @dfn{append access} are treated a little
-differently.  Output to such files is @emph{always} appended
-sequentially to the @emph{end} of the file, regardless of the file
-position.  But, the file position indicator is still used to control
-where reading occurs in the file.
+Streams and descriptors that are opened for @dfn{append access} are
+treated specially for output: output to such files is @emph{always}
+appended sequentially to the @emph{end} of the file, regardless of the
+file position.  But, the file position is still used to control where in
+the file reading is done.
 @cindex append-access files
 
+If you'll think about it, you'll realize that several programs can read
+a given file at the same time.  In order for each program to be able to
+read the file at its own pace, each program must have its own file
+pointer, which is not affected by anything the other programs do.
+
+In fact, each opening of  a file creates a separate file position.  
+Thus, if you open a file twice even in the same program, you get two
+streams or descriptors with independent file positions.
+
+By contrast, if you open a descriptor and then duplicate it to get 
+another descriptor, these two descriptors share the same file position:
+changing the file position of one descriptor will affect the other.
 
 @node File Names
 @section File Names
 
 In order to open a connection to a file, or to perform other operations
-such as deleting a file, you need some way to refer to the file.  Files
---- even files that are really entire devices instead of components of a
-device such as a disk --- can be referred to by names that are strings.
-These strings are called @dfn{file names}.
+such as deleting a file, you need some way to refer to the file.  Nearly
+all files have names that are strings---even files which are actually
+devices such as tape drives or terminals.  These strings are called
+@dfn{file names}.  You specify the file name to say which file you want
+to open or operate on.
+
+This section describes the conventions for file names and how the
+operating system works with them.
 @cindex file name
 
 @menu
@@ -179,8 +194,7 @@ These strings are called @dfn{file names}.
 @subsection Directories
 
 In order to understand the syntax of file names, you need to understand
-a little bit about what directories are and how the file system is
-organized.
+how the file system is organized into a hierarchy of directories.
 
 @cindex directory
 @cindex link
@@ -193,27 +207,30 @@ files, not the files themselves.
 
 @cindex file name component
 The name of a file contained in a directory entry is called a @dfn{file
-name component}.  This is distinct from a file name; a file name
-component names the file relative to a directory it is linked to, while
-a file name also indicates which directory contains the file.
+name component}.  In general, a file name consists of a sequence of one
+or more such components, seperated by the slash character (@samp{/}).  A
+file name whih is just one component names a file with respect to its
+directory.  A file name with multiple components names a directory, and
+then a file in that directory, and so on.
 
 Some other documents, such as the POSIX standard, use the term
-@dfn{pathname} for what this manual calls a file name, and either
+@dfn{pathname} for what we call a file name, and either
 @dfn{filename} or @dfn{pathname component} for what this manual calls a
-file name component.  The two sets of terminology can be confusing, but
-we always use ``file name'' and ``file name component'' (or sometimes
-just ``component'', where the context is obvious) in this manual.
+file name component.  We don't use this terminology because a ``path''
+is something completely different (a list of directories to search), and
+we think that ``pathname'' used for something else will confuse users.
+We always use ``file name'' and ``file name component'' (or sometimes
+just ``component'', where the context is obvious) in GNU documentation.
 
 You can find more detailed information about operations on directories
 in @ref{File System Interface}.
 
-
 @node File Name Resolution
 @subsection File Name Resolution
 
-A file name string consists of file name components separated by slash
-(@samp{/}) characters.  (Multiple successive @samp{/} characters are
-treated like a single @samp{/} character.)
+A file name consists of file name components separated by slash
+(@samp{/}) characters.  Multiple successive @samp{/} characters are
+equivalent to a single @samp{/} character.
 
 @cindex file name resolution
 The process of determining what file a file name refers to is called
@@ -299,6 +316,7 @@ of the file name.
 This error is used when either the the total length of a file name is
 greater than @code{PATH_MAX}, or when an individual file name component
 has a length greater than @code{NAME_MAX}.  @xref{File System Parameters}.
+@c ??? Do we really have these limits?
 
 @item ENOENT
 This error is reported when a file referenced as a directory component
@@ -307,7 +325,7 @@ string is supplied.
 
 @item ENOTDIR
 A file that is referenced as a directory component in the file name
-exists, but the file isn't a directory.
+exists, but it isn't a directory.
 @end table
 
 
@@ -337,7 +355,7 @@ by other operating systems.
 @end itemize
 
 The ANSI C standard says very little about file name syntax, only that
-file names are strings.  In addition to the obvious restrictions on the
+file names are strings.  In addition to varying restrictions on the
 length of file names and what characters can validly appear in a file
 name, different operating systems use different conventions and syntax
 for concepts such as structured directories and file types or
@@ -347,8 +365,9 @@ some operating systems and not by others.
 The POSIX.1 standard allows implementations to put additional
 restrictions on file name syntax, concerning what characters are
 permitted in file names and on the length of file name and file name
-component strings.  However, in the GNU system, you do not need to
-worry about these restrictions; any character is permitted in a file
-name string, and there are no limits on the length of file name strings.
+component strings.  However, in the GNU system, you do not need to worry
+about these restrictions; any character except the null character is
+permitted in a file name string, and there are no limits on the length
+of file name strings.
 
 
