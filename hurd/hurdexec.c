@@ -109,14 +109,17 @@ _hurd_exec (task_t task, file_t file,
 
   dtablesize = _hurd_dtable.d ? _hurd_dtable.size : _hurd_init_dtablesize;
 
-  /* Request the exec server to deallocate some ports from us if the exec
-     succeeds.  The init ports and descriptor ports will arrive in the
-     new program's exec_startup message.  If we failed to deallocate
-     them, the new program would have duplicate user references for them.
-     But we cannot deallocate them ourselves, because we must still have
-     them after a failed exec call.  */
-  please_dealloc = __alloca ((_hurd_nports + (2 * dtablesize)
-			     * sizeof (mach_port_t));
+  if (task == __mach_task_self ())
+    /* Request the exec server to deallocate some ports from us if the exec
+       succeeds.  The init ports and descriptor ports will arrive in the
+       new program's exec_startup message.  If we failed to deallocate
+       them, the new program would have duplicate user references for them.
+       But we cannot deallocate them ourselves, because we must still have
+       them after a failed exec call.  */
+    please_dealloc = __alloca ((_hurd_nports + (2 * dtablesize))
+				* sizeof (mach_port_t));
+  else
+    please_dealloc = NULL;
   pdp = please_dealloc;
 
   if (_hurd_dtable.d != NULL)
@@ -131,7 +134,7 @@ _hurd_exec (task_t task, file_t file,
 	{
 	  struct _hurd_fd *const d = _hurd_dtable.d[i];
 	  __spin_lock (&d->port.lock);
-	  if (d->port.port != MACH_PORT_NULL)
+	  if (pdp && d->port.port != MACH_PORT_NULL)
 	    *pdp++ = d->port.port;
 	  if (d->flags & FD_CLOEXEC)
 	    {
@@ -169,28 +172,28 @@ _hurd_exec (task_t task, file_t file,
   /* The information is all set up now.  Try to exec the file.  */
 
   {
-    mach_port_t please_dealloc[_hurd_nports + dtablesize];
-    mach_port_t *p = please_dealloc;
+    if (pdp)
+      {
+	/* Request the exec server to deallocate some ports from us if the exec
+	   succeeds.  The init ports and descriptor ports will arrive in the
+	   new program's exec_startup message.  If we failed to deallocate
+	   them, the new program would have duplicate user references for them.
+	   But we cannot deallocate them ourselves, because we must still have
+	   them after a failed exec call.  */
 
-    /* Request the exec server to deallocate some ports from us if the exec
-       succeeds.  The init ports and descriptor ports will arrive in the
-       new program's exec_startup message.  If we failed to deallocate
-       them, the new program would have duplicate user references for them.
-       But we cannot deallocate them ourselves, because we must still have
-       them after a failed exec call.  */
+	for (i = 0; i < _hurd_nports; ++i)
+	  *pdp++ = ports[i];
+	for (i = 0; i < dtablesize; ++i)
+	  *pdp++ = dtable[i];
+      }
 
-    for (i = 0; i < _hurd_nports; ++i)
-      *p++ = ports[i];
-    for (i = 0; i < dtablesize; ++i)
-      *p++ = dtable[i];
-
-    err = __file_exec (file, __mach_task_self (),
-		       0,
+    err = __file_exec (file, task,
+		       0,	/* No particular flags.  */
 		       args, argslen, env, envlen,
 		       dtable, dtablesize, MACH_MSG_TYPE_COPY_SEND,
 		       ports, _hurd_nports, MACH_MSG_TYPE_COPY_SEND,
 		       ints, INIT_INT_MAX,
-		       please_dealloc, p - please_dealloc,
+		       please_dealloc, pdp - please_dealloc,
 		       NULL, 0);
   }
 
