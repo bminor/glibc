@@ -33,7 +33,9 @@ __BEGIN_DECLS
 /* POSIX Standard approved as IEEE Std 1003.1 as of August, 1988.  */
 #define	_POSIX_VERSION	199009L
 
-#ifdef	__USE_POSIX2
+/* These are not #ifdef __USE_POSIX2 because they are
+   in the theoretically application-owned namespace.  */
+
 #define	_POSIX2_C_VERSION	199912L	/* Invalid until 1003.2 is done.  */
 
 /* If defined, the implementation supports the
@@ -45,13 +47,8 @@ __BEGIN_DECLS
 #define	_POSIX2_C_DEV	1
 
 /* If defined, the implementation supports the
-   FORTRAN Language Development Utilities Option.  */
-#define	_POSIX2_FORT_DEV	1
-
-/* If defined, the implementation supports the
    Software Development Utilities Option.  */
 #define	_POSIX2_SW_DEV	1
-#endif
 
 
 /* Get values of POSIX options:
@@ -353,6 +350,7 @@ enum
   _SC_BC_DIM_MAX,
   _SC_BC_SCALE_MAX,
   _SC_BC_STRING_MAX,
+  _SC_COLL_WEIGHTS_MAX,
   _SC_EQUIV_CLASS_MAX,
   _SC_EXPR_NEST_MAX,
   _SC_LINE_MAX,
@@ -362,7 +360,9 @@ enum
   _SC_2_C_BIND,
   _SC_2_C_DEV,
   _SC_2_FORT_DEV,
-  _SC_2_SW_DEV
+  _SC_2_FORT_RUN,
+  _SC_2_SW_DEV,
+  _SC_2_LOCALEDEF
 };
 
 
