@@ -29,6 +29,7 @@ broadcast messages or for configuring Internet interfaces.
 * Socket Addresses::	How socket names (``addresses'') work.
 * File Namespace::	Details about the file namespace.
 * Internet Namespace::	Details about the Internet namespace.
+* Misc Namespaces::	Other namespaces not documented fully here.
 * Open/Close Sockets::  Creating sockets and destroying them.
 * Connections::		Operations on sockets with connection state.
 * Datagrams::		Operations on datagram sockets.
@@ -307,7 +308,7 @@ corresponding namespace.  Here is a list of address format names:
 @vindex AF_FILE
 This designates the address format that goes with the file namespace.
 (@code{PF_FILE} is the name of that namespace.)  @xref{File Namespace
-Functions}, for information about this address format.
+Details}, for information about this address format.
 
 @comment sys/socket.h
 @comment BSD
@@ -441,9 +442,9 @@ This section describes the details of the file namespace, whose
 symbolic name (required when you create a socket) is @code{PF_FILE}.
 
 @menu
-* Concepts: File Namespace Concepts.
-* Functions: File Namespace Functions.
-* Example: File Socket Example.
+* Concepts: File Namespace Concepts.	What you need to understand.
+* Details: File Namespace Details.	Address format, symbolic names, etc.
+* Example: File Socket Example.		Example of creating a socket.
 @end menu
 
 @node File Namespace Concepts
@@ -477,8 +478,8 @@ do this; see @ref{Deleting Files}.
 The file namespace supports just one protocol for any communication
 style; it is protocol number @code{0}.
 
-@node File Namespace Functions
-@subsection Functions for File Namespace
+@node File Namespace Details
+@subsection Details of File Namespace
 
 @pindex sys/socket.h
 To create a socket in the file namespace, use the constant
@@ -1304,6 +1305,26 @@ structure, given a host name string and a port number:
 @include isockaddr.c.texi
 @end example
 
+@node Misc Namespaces
+@section Other Namespaces
+
+@vindex PF_NS
+@vindex PF_ISO
+@vindex PF_CCITT
+@vindex PF_IMPLINK
+@vindex PF_ROUTE
+Certain other namespaces and associated protocol families are supported
+but not documented yet because they are not often used.  @code{PF_NS}
+refers to the Xerox Network Software protocols.  @code{PF_ISO} stands
+for Open Systems Interconnect.  @code{PF_CCITT} refers to protocols from
+CCITT.  @file{socket.h} defines these symbols and others naming protocols
+not actually implemented.
+
+@code{PF_IMPLINK} is used for communicating between hosts and Internet
+Message Processors.  For information on this, and on @code{PF_ROUTE}, an
+occasionally-used local area routing protocol, see the GNU Hurd Manual
+(to appear in the future).
+
 @node Open/Close Sockets
 @section Opening and Closing Sockets
 
@@ -1512,7 +1533,6 @@ connected socket.
 * Connecting::    	     What the client program must do.
 * Listening::		     How a server program waits for requests.
 * Accepting Connections::    What the server does when it gets a request.
-* Inetd servers::	     How to write a server that inetd runs.
 * Who is Connected::	     Getting the address of the
 				other side of a connection.
 * Transferring Data::        How to send and receive data.
@@ -1606,6 +1626,9 @@ the @code{accept} function (@pxref{Accepting Connections}) to act on a
 request.  The @code{listen} function is not allowed for sockets using
 connectionless communication styles.
 
+You can write a network server that does not even start running until a
+connection to it is requested.  @xref{Inetd Servers}.
+
 In the Internet namespace, there are no special protection mechanisms
 for controlling access to connect to a port; any process on any machine
 can make a connection to your server.  If you want to restrict access to
@@ -1613,8 +1636,8 @@ your server, make it examine the addresses associated with connection
 requests or implement some other handshaking or identification
 protocol.
 
-In the File namespace, the ordinary file protection bits control
-who has access to connect to the socket.
+In the File namespace, the ordinary file protection bits control who has
+access to connect to the socket.
 
 @comment sys/socket.h
 @comment BSD
