@@ -1,3 +1,6 @@
+#include <sysdeps/stub/stdio_init.c>
+#if 0
+
 /* Copyright (C) 1991 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -483,3 +486,5 @@ DEFUN(__stdio_init_stream, (stream), FILE *stream)
   __cookie(stream) = (PTR) m;
   __userbuf(stream) = 1;	/* Tell stdio not to allocate a buffer.  */
 }
+
+#endif /* 0 */
