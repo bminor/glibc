@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
    Contributed by Noel Cragg (noel@cs.oberlin.edu).
 
 This file is part of the GNU C Library.
@@ -18,9 +18,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* #define DEBUG */    /* Define this to have a standalone shell to test
-                        * this implementation of mktime
-                        */
+/* Define this to have a standalone program to test this implementation of
+   mktime.  */
+/* #define DEBUG */
 
 #ifdef HAVE_CONFIG_H
 #if defined (CONFIG_BROKETS)
@@ -125,46 +125,45 @@ dist_tm (t1, t2)
   
 #undef doit
   
-  /* We should also make sure that the sign of DISTANCE is correct --
-   * if DIFF_FLAG is positive, the distance should be positive and
-   * vice versa. */
+  /* We should also make sure that the sign of DISTANCE is correct -- if
+     DIFF_FLAG is positive, the distance should be positive and vice versa. */
   
   distance = (v1 > v2) ? (v1 - v2) : (v2 - v1);
   if (diff_flag < 0)
     distance = -distance;
 
-  if (times_through_search > 20) /* Arbitrary # of calls, but makes
-				    sure we never hang if there's a
-				    problem with this algorithm */
+  if (times_through_search > 20) /* Arbitrary # of calls, but makes sure we
+				    never hang if there's a problem with
+				    this algorithm.  */
     {
       distance = diff_flag;
     }
 
-  /* We need this DIFF_FLAG business because it is forseeable that
-   * the distance may be zero when, in actuality, the two structures
-   * are different.  This is usually the case when the dates are
-   * 366 days apart and one of the years is a leap year. */
+  /* We need this DIFF_FLAG business because it is forseeable that the
+     distance may be zero when, in actuality, the two structures are
+     different.  This is usually the case when the dates are 366 days apart
+     and one of the years is a leap year.  */
 
-  if ((distance == 0) && diff_flag)
+  if (distance == 0 && diff_flag)
     distance = 86400 * diff_flag;
 
   return distance;
 }
       
 
-/* Modified b-search -- make intelligent guesses as to where the time
- * might lie along the timeline, assuming that our target time lies a
- * linear distance (w/o considering time jumps of a particular region).
- *
- * Assume that time does not fluctuate at all along the timeline --
- * e.g., assume that a day will always take 86400 seconds, etc. -- and
- * come up with a hypothetical value for the time_t representation of
- * the struct tm TARGET, in relation to the guess variable -- it should
- * be pretty close! */
+/* Modified b-search -- make intelligent guesses as to where the time might
+   lie along the timeline, assuming that our target time lies a linear
+   distance (w/o considering time jumps of a particular region).
+
+   Assume that time does not fluctuate at all along the timeline -- e.g.,
+   assume that a day will always take 86400 seconds, etc. -- and come up
+   with a hypothetical value for the time_t representation of the struct tm
+   TARGET, in relation to the guess variable -- it should be pretty close! */
 
 static time_t
-search (target)
+search (target, producer)
      struct tm *target;
+     struct tm *(*producer) __P ((const time_t *));
 {
   struct tm *guess_tm;
   time_t guess = 0;
@@ -178,7 +177,7 @@ search (target)
 
       times_through_search++;     
       
-      guess_tm = localtime (&guess);
+      guess_tm = (*producer) (&guess);
       
 #ifdef DEBUG
       if (debugging_enabled)
@@ -198,14 +197,15 @@ search (target)
 }
 
 /* Since this function will call localtime many times (and the user might
- * be passing their `struct tm *' right from localtime, let's make a copy
- * for ourselves and run the search on the copy.
- *
- * Also, we have to normalize the timeptr because it's possible to call mktime
- * with values that are out of range for a specific item (like 30th Feb). */
+   be passing their `struct tm *' right from localtime, let's make a copy
+   for ourselves and run the search on the copy.
+
+   Also, we have to normalize *TIMEPTR because it's possible to call mktime
+   with values that are out of range for a specific item (like Feb 30th). */
 time_t
-mktime (timeptr)
+_mktime_internal (timeptr, producer)
      struct tm *timeptr;
+     struct tm *(*producer) __P ((const time_t *));
 {
   struct tm private_mktime_struct_tm; /* Yes, users can get a ptr to this. */
   struct tm *me;
@@ -254,11 +254,18 @@ mktime (timeptr)
     }
 #endif
 
-  result = search (me);
+  result = search (me, producer);
 
   *timeptr = *me;
 
   return result;
+}
+
+time_t
+mktime (timeptr)
+     struct tm *timeptr;
+{
+  return _mktime_internal (timeptr, localtime);
 }
 
 #ifdef DEBUG
