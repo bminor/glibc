@@ -3395,14 +3395,14 @@ know.
 
 When you create a custom stream, you must specify the cookie pointer,
 and also the four hook functions stored in a structure of type 
-@code{struct cookie_io_functions}.
+@code{cookie_io_functions_t}.
 
 These facilities are declared in @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
 @comment GNU
-@deftp {Data Type} {struct cookie_io_functions}
+@deftp {Data Type} {cookie_io_functions_t}
 This is a structure type that holds the functions that define the 
 communications protocol between the stream and its cookie.  It has
 the following members:
