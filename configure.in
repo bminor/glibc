@@ -235,35 +235,84 @@ if [ ! "$machine_used" -a "$machine" != none ]; then
   exit 1
 fi
 
-# Uniquize the list.
+# We have now validated the configuration.
+
+PWD=`pwd`
+echo Configuring the GNU C library in $PWD
+echo on `hostname` for ${config}.
+
+# Remove the leading slashes.
+sysnames="`echo $sysnames | sed -e 's@^/@@' -e 's@ /@ @g'`"
+
+# Prepend the machine's FPU directory unless --nfp.
+if [ ! "$nfp" -a -d $sysdep_dir/$machine/fpu ]; then
+  sysnames="${machine}/fpu $sysnames"
+fi
+
+# Expand the list of system names into a full list of directories
+# from each element's parent name and Implies file (if present).
+set $sysnames
+while [ $# -gt 0 ]; do
+  name=$1
+  shift
+
+  if [ -f $sysdep_dir/$name/Implies ]; then
+    # Collect more names from the `Implies' file (removing comments).
+    implied="`sed 's/#.*$//' < $sysdep_dir/$name/Implies`"
+  else
+    implied=
+  fi
+
+  # Add NAME to the list of names.
+  names="$names $name"
+
+  # Find the parent of NAME, using the empty string if it has none.
+  parent="`echo $name | sed -n -e '/\//!q' -e 's=/[^/]*$==p'`"
+
+  # Append the names implied by NAME, and NAME's parent (if it has one),
+  # to the list of names to be processed (the argument list).
+  sysnames="`echo $* $implied $parent`"
+  if [ "$sysnames" != "" ]; then
+    set $sysnames
+  fi
+done
+
+# Add the default directories.
+names="$names generic stub"
+
+# Now uniquize the list.
 seen=
-for name in $sysnames; do
+sysnames=
+for name in $names; do
   if echo "$seen" | fgrep -x $name >/dev/null; then
     # Already in the list.
     true;
   else
     # A new one.
     if [ "$seen" = "" ]; then
-      seen="$name"
+      seen="$name" sysnames="$name"
     else
       seen="$seen
 $name"
+      sysnames="$sysnames $name"
     fi
   fi
 done
-sysnames="$seen"
 
-# We have now validated the configuration.
+echo "Using system-dependent file from directories:
+$seen"
 
 # This will get text that should go into config.make.
 config_vars=
 
-changequote([,])
+changequote([,])dnl The world is now safe for m4, and unsafe for shell.
+dnl Be sure to add each macro used here to aclocal.m4 (which see).
 AC_PROG_INSTALL
 AC_PROG_RANLIB
 
 AC_PROG_CC
 AC_PROG_CPP
+
 echo checking for signed size_t type
 echo '#include <stddef.h>
 FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c
@@ -275,36 +324,26 @@ rm -f conftest*
 AC_HEADER_EGREP(__gnuc_va_list, stdarg.h, [config_vars="$config_vars
 stdarg.h = # The installed <stdarg.h> defines __gnuc_va_list."])
 
-# Find out what this system calls `sys_siglist'.
-AC_HAVE_FUNCS(sys_siglist _sys_siglist)
+changequote(,)dnl The world is again safe for shell scripts.
 
-# Find out the name of the table the system's <ctype.h> uses for character
-# classification.  This is used by sysdeps/unix/common/glue-ctype.c.
-AC_HAVE_FUNCS(_ctype_ __ctype_ __ctype _ctype__)
-changequote(,)
-
-sysnames="`echo $sysnames | sed -e 's@^/@@' -e 's@ /@ @g'`"
-
-if [ ! "$nfp" -a -d $sysdep_dir/$machine/fpu ]; then
-  sysnames="${machine}/fpu $sysnames"
-fi
-
-rm -f sysdirs
-echo $sysnames > Sysnames
-
-cat - Sysnames <<END
-Configuring the GNU C Library for \`${config}'.
-Using system-dependent files from directories:
-END
-
-export sysdep_dir
-for dir in `$srcdir/find-sysdirs < Sysnames`; do
-  if [ -r $sysdep_dir/$dir/uname.c -o -r $sysdep_dir/$dir/uname.S ]; then
-    uname=$dir
-    break
+# Iterate over all the sysdep directories we will use, running their
+# configure fragments, and looking for a uname implementation.
+uname=
+for dir in $sysnames; do
+  if test -r $sysdep_dir/$dir/configure; then
+    echo running configure fragment for $dir
+    . $sysdep_dir/$dir/configure
   fi
+  test ! "$uname" && \
+  test -r $sysdep_dir/$dir/uname.c -o -r $sysdep_dir/$dir/uname.S && uname=$dir
 done
-if [ $uname = generic ]; then
+
+# If we will use the generic uname implementation, we must figure out what
+# it will say by examining the system, and write the results in config-name.h.
+if [ "$uname" = generic ]; then
+
+  echo trying to guess OS release and version for uname
+
   kernel_release=
   kernel_version=
 
@@ -395,6 +434,7 @@ fi
   echo "config-machine = ${machine}"
   echo "config-vendor = ${vendor}"
   echo "config-os = ${os}"
+  echo "config-sysdirs = ${sysnames}"
   if [ "$prefix" ]; then
     echo "prefix = ${prefix}"
   fi
@@ -431,9 +471,10 @@ fi
 cat > config.status <<END
 #!/bin/sh
 # This file was generated automatically by configure.  Do not edit.
-# The GNU C library was configured in `pwd` for
+# The GNU C library was configured in $PWD for
 # $system_name as follows:
 $0 $config --srcdir=$srcdir $switches
+# Wrote config.make in $PWD.
 END
 
 if [ $srcdir != . ]; then
@@ -451,9 +492,10 @@ all .DEFAULT:
 	\$(MAKE) -C \$(srcdir) ARCH=$objdir \$@
 END
 
-echo "# Wrote Makefile in `pwd`." >> config.status
+echo "# Wrote Makefile in $PWD." >> config.status
 fi
 chmod a+x config.status
+echo "Write config.status in $PWD."
 
 exit 0
 dnl This gets rid of the random stuff autoconf has stuffed in weird places.
