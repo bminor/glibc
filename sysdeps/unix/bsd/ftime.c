@@ -16,28 +16,22 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef _SYS_TIMEB_H
+#include <sys/timeb.h>
+#include <sys/time.h>
 
-#define _SYS_TIMEB_H	1
-#include <features.h>
+int
+ftime (timebuf)
+     struct timeb *timebuf;
+{
+  struct timeval tv;
+  struct timezone tz;
 
-#define __need_time_t
-#include <time.h>
+  if (__gettimeofday (&tv, &tz) < 0)
+    return -1;
 
-
-/* Structure returned by the `ftime' function.  */
-
-struct timeb
-  {
-    time_t time;		/* Seconds since epoch, as from `time'.  */
-    unsigned short int millitm;	/* Additional milliseconds.  */
-    short int timezone;		/* Minutes west of GMT.  */
-    short int dstflag;		/* Nonzero if Daylight Savings Time used.  */
-  };
-
-/* Fill in TIMEBUF with information about the current time.  */
-
-extern int ftime __P ((struct timeb *__timebuf));
-
-
-#endif	/* sys/timeb.h */
+  timebuf->time = tv.tv_sec;
+  timebuf->millitm = (tv.tv_usec + 999) / 1000;
+  timebuf->timezone = tz.tz_minuteswest;
+  timebuf->dstflag = tz.tz_dsttime;
+  return 0;
+}
