@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/socket.h>
 #include <hurd/socket.h>
 #include <fcntl.h>
+#include <string.h>
 
 /* Await a connection on socket FD.
    When a connection arrives, open a new socket to communicate with it,
@@ -37,7 +38,7 @@ DEFUN(accept, (fd, addr, addr_len),
   socket_t new;
   addr_port_t aport;
   char *buf = (char *) addr;
-  unsigned int buflen = *addr_len;
+  mach_msg_type_number_t buflen = *addr_len;
   int type;
 
   if (err = HURD_DPORT_USE (fd, __socket_accept (port, &new, &aport)))

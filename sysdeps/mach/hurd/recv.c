@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994 Fremach_msg_type_number_t Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/fd.h>
 #include <hurd/socket.h>
+#include <string.h>
 
 /* Read N bytes into BUF from socket FD.
    Returns the number read or -1 for errors.  */
@@ -32,11 +33,11 @@ DEFUN(recv, (fd, buf, n, flags),
   error_t err;
   mach_port_t addrport;
   char *bufp = buf;
-  unsigned int nread = n;
+  mach_msg_type_number_t nread = n;
   mach_port_t *ports;
-  unsigned int nports;
+  mach_msg_type_number_t nports;
   char *cdata = NULL;
-  unsigned int clen = 0;
+  mach_msg_type_number_t clen = 0;
 
   if (err = HURD_DPORT_USE (fd, __socket_recv (port, &addrport,
 					       flags, &bufp, &nread,

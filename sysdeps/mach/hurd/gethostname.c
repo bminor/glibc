@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/port.h>
+#include <string.h>
 
 /* Put the name of the current host in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
@@ -31,7 +32,7 @@ DEFUN(__gethostname, (name, len),
 {
   error_t err;
   char *buf = name;
-  unsigned int buflen = len;
+  mach_msg_type_number_t buflen = len;
   if (err = __USEPORT (PROC, __proc_gethostname (port, &buf, &buflen)))
     return __hurd_fail (err);
   if (buf != name)

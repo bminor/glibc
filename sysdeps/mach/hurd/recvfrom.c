@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/fd.h>
 #include <hurd/socket.h>
+#include <string.h>
 
 /* Read N bytes into BUF through socket FD from peer
    at address ADDR (which is ADDR_LEN bytes long).
@@ -34,11 +35,11 @@ DEFUN(recvfrom, (fd, buf, n, flags, addr, addr_len),
   error_t err;
   mach_port_t addrport;
   char *bufp = buf;
-  unsigned int nread = n;
+  mach_msg_type_number_t nread = n;
   mach_port_t *ports;
-  unsigned int nports;
+  mach_msg_type_number_t nports;
   char *cdata = NULL;
-  unsigned int clen = 0;
+  mach_msg_type_number_t clen = 0;
 
   if (err = HURD_DPORT_USE (fd, __socket_recv (port, &addrport,
 					       flags, &bufp, &nread,
@@ -51,7 +52,7 @@ DEFUN(recvfrom, (fd, buf, n, flags, addr, addr_len),
   /* Get address data for the returned address port.  */
   {
     char *buf = (char *) addr;
-    unsigned int buflen = *addr_len;
+    mach_msg_type_number_t buflen = *addr_len;
     int type;
 
     err = __socket_whatis_address (addrport, &type, &buf, &buflen);

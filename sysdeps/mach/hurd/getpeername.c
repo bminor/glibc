@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/fd.h>
 #include <hurd/socket.h>
+#include <string.h>
 
 /* Put the address of the peer connected to socket FD into *ADDR
    (which is *LEN bytes long), and its actual length into *LEN.  */
@@ -31,7 +32,7 @@ DEFUN(getpeername, (fd, addr, len),
 {
   error_t err;
   char *buf = (char *) addr;
-  unsigned int buflen = *len;
+  mach_msg_type_number_t buflen = *len;
   int type;
   addr_port_t aport;
 

@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/fd.h>
 #include <hurd/socket.h>
+#include <string.h>
 
 /* Put the current value for socket FD's option OPTNAME at protocol level LEVEL
    into OPTVAL (which is *OPTLEN bytes long), and set *OPTLEN to the value's
@@ -33,7 +34,7 @@ DEFUN(getsockopt, (fd, level, optname, optval, optlen),
 {
   error_t err;
   char *buf = optval;
-  unsigned int buflen = *optlen;
+  mach_msg_type_number_t buflen = *optlen;
 
   if (err = HURD_DPORT_USE (fd, __socket_getopt (port,
 						 level, optname,
