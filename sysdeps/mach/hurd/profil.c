@@ -1,21 +1,21 @@
 /* Low-level statistical profiling support function.  Mach/Hurd version.
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -34,9 +34,19 @@ static size_t maxsamples;
 static size_t pc_offset;
 static size_t sample_scale;
 static sampled_pc_seqno_t seqno;
-static struct mutex lock = MUTEX_INITIALIZER;
+static spin_lock_t lock = SPIN_LOCK_INITIALIZER;
 static mach_msg_timeout_t collector_timeout; /* ms between collections.  */
 static int profile_tick;
+
+/* Reply port used by profiler thread */
+static mach_port_t profil_reply_port;
+
+/* Forwards */
+static kern_return_t profil_task_get_sampled_pcs (mach_port_t,
+						  sampled_pc_seqno_t *,
+						  sampled_pc_array_t,
+						  mach_msg_type_number_t *);
+static void fetch_samples (void);
 
 /* Enable statistical profiling, writing samples of the PC into at most
    SIZE bytes of SAMPLE_BUFFER; every processor clock tick while profiling
@@ -87,7 +97,7 @@ update_waiter (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 }
 
 int
-__profile_frequency ()
+__profile_frequency (void)
 {
   return profile_tick;
 }
@@ -97,13 +107,20 @@ profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 {
   error_t err;
 
-  __mutex_lock (&lock);
+  __spin_lock (&lock);
 
   if (scale == 0)
     {
       /* Disable profiling.  */
       int count;
-      __thread_suspend (profile_thread);
+
+      if (profile_thread != MACH_PORT_NULL)
+	__thread_suspend (profile_thread);
+
+      /* Fetch the last set of samples */
+      if (sample_scale)
+	fetch_samples ();
+
       err = __task_disable_pc_sampling (__mach_task_self (), &count);
       sample_scale = 0;
       seqno = 0;
@@ -111,56 +128,101 @@ profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
   else
     err = update_waiter (sample_buffer, size, offset, scale);
 
-  __mutex_unlock (&lock);
+  __spin_unlock (&lock);
 
   return err ? __hurd_fail (err) : 0;
 }
 
+/* Fetch PC samples.  This function must be very careful not to depend
+   on Hurd threadvar variables.  We arrange that by using a special
+   stub arranged for at the end of this file. */
 static void
-profile_waiter (void)
+fetch_samples (void)
 {
   sampled_pc_t pc_samples[MAX_PC_SAMPLES];
   mach_msg_type_number_t nsamples, i;
-  mach_port_t rcv = __mach_reply_port ();
-  mach_msg_header_t msg;
   error_t err;
+
+  nsamples = MAX_PC_SAMPLES;
+
+  err = profil_task_get_sampled_pcs (__mach_task_self (), &seqno,
+				     pc_samples, &nsamples);
+  if (err)
+    {
+      static error_t special_profil_failure;
+      static volatile int a, b, c;
+
+      special_profil_failure = err;
+      a = 1;
+      b = 0;
+      while (1)
+	c = a / b;
+    }
+
+  for (i = 0; i < nsamples; ++i)
+    {
+      /* Do arithmetic in long long to avoid overflow problems. */
+      long long pc_difference = pc_samples[i].pc - pc_offset;
+      size_t idx = ((pc_difference / 2) * sample_scale) / 65536;
+      if (idx < maxsamples)
+	++samples[idx];
+    }
+}
+
+
+/* This function must be very careful not to depend on Hurd threadvar
+   variables.  We arrange that by using special stubs arranged for at the
+   end of this file. */
+static void
+profile_waiter (void)
+{
+  mach_msg_header_t msg;
+  mach_port_t timeout_reply_port;
+
+  profil_reply_port = __mach_reply_port ();
+  timeout_reply_port = __mach_reply_port ();
 
   while (1)
     {
-      __mutex_lock (&lock);
+      __spin_lock (&lock);
 
-      nsamples = sizeof pc_samples / sizeof pc_samples[0];
-      err = __task_get_sampled_pcs (__mach_task_self (), &seqno,
-				    pc_samples, &nsamples);
-      assert_perror (err);
+      fetch_samples ();
 
-      for (i = 0; i < nsamples; ++i)
-	{
-	  size_t idx = (((pc_samples[i].pc - pc_offset) / 2) *
-			sample_scale / 65536);
-	  if (idx < maxsamples)
-	    ++samples[idx];
-	}
-
-      __vm_deallocate (__mach_task_self (),
-		       (vm_address_t) pc_samples,
-		       nsamples * sizeof *pc_samples);
-
-      __mutex_unlock (&lock);
+      __spin_unlock (&lock);
 
       __mach_msg (&msg, MACH_RCV_MSG|MACH_RCV_TIMEOUT, 0, sizeof msg,
-		  rcv, collector_timeout, MACH_PORT_NULL);
+		  timeout_reply_port, collector_timeout, MACH_PORT_NULL);
     }
 }
 
-data_set_element (_hurd_fork_locks, lock);
+/* Fork interaction */
 
+/* Before fork, lock the interlock so that we are in a clean state. */
 static void
-fork_profil (void)
+fork_profil_prepare (void)
+{
+  __spin_lock (&lock);
+}
+text_set_element (_hurd_fork_prepare_hook, fork_profil_prepare);
+
+/* In the parent, unlock the interlock once fork is complete. */
+static void
+fork_profil_parent (void)
+{
+  __spin_unlock (&lock);
+}
+text_set_element (_hurd_fork_parent_hook, fork_profil_parent);
+
+/* In the childs, unlock the interlock, and start a profiling thread up
+   if necessary. */
+static void
+fork_profil_child (void)
 {
   u_short *sb;
   size_t n, o, ss;
   error_t err;
+
+  __spin_unlock (&lock);
 
   if (profile_thread != MACH_PORT_NULL)
     {
@@ -183,4 +245,37 @@ fork_profil (void)
       assert_perror (err);
     }
 }
-text_set_element (_hurd_fork_child_hook, fork_profil);
+text_set_element (_hurd_fork_child_hook, fork_profil_child);
+
+
+
+
+/* Special RPC stubs for profile_waiter are made by including the normal
+   source code, with special CPP state to prevent it from doing the
+   usual thing. */
+
+/* Include these first; then our #define's will take full effect, not
+   being overridden. */
+#include <mach/mig_support.h>
+
+/* This need not do anything; it is always associated with errors, which
+   are fatal in profile_waiter anyhow. */
+#define __mig_put_reply_port(foo)
+
+/* Use our static variable instead of the usual threadvar mechanism for
+   this. */
+#define __mig_get_reply_port() profil_reply_port
+
+/* Make the functions show up as static */
+#define mig_external static
+
+/* Turn off the attempt to generate ld aliasing records. */
+#undef weak_alias
+#define weak_alias(a,b)
+
+/* And change their names to avoid confusing disasters. */
+#define __vm_deallocate_rpc profil_vm_deallocate
+#define __task_get_sampled_pcs profil_task_get_sampled_pcs
+
+/* And include the source code */
+#include <../mach/RPC_task_get_sampled_pcs.c>
