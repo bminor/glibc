@@ -43,7 +43,7 @@ __mig_get_reply_port (void)
 
 /* Called by MiG to deallocate the reply port.  */
 void
-__mig_dealloc_reply_port (void)
+__mig_dealloc_reply_port (mach_port_t arg)
 {
   mach_port_t port;
 
@@ -53,6 +53,14 @@ __mig_dealloc_reply_port (void)
   reply_port = MACH_PORT_NULL;	/* So the mod_refs RPC won't use it.  */
   __mach_port_mod_refs (__mach_task_self (), port,
 			MACH_PORT_RIGHT_RECEIVE, -1);
+}
+
+/* Called by mig interfaces when done with a port.  Used to provide the
+   same interface as needed when a custom allocator is used.  */
+void
+__mig_put_reply_port(mach_port_t port)
+{
+  /* Do nothing.  */
 }
 
 
