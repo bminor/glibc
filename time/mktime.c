@@ -438,7 +438,7 @@ main (argc, argv)
 	{
 	  struct tm *tm = localtime ((time_t *) &q);
 	  if ((q % 10000) == 0) { printf ("%ld\n", q); fflush (stdout); }
-	  if (q != mktime (tm))
+	  if (q != my_mktime (tm))
 	    { printf ("failed for %ld\n", q); fflush (stdout); }
 	}
       
