@@ -881,6 +881,8 @@ module	INTERNAL		EUC-JP//		EUC-JP		1
 
 #	from			to			module		cost
 alias	EUCCN//			EUC-CN//
+alias	GB2312//		EUC-CN//
+alias	csGB2312//		EUC-CN//
 module	EUC-CN//		INTERNAL		EUC-CN		1
 module	INTERNAL		EUC-CN//		EUC-CN		1
 
