@@ -17,7 +17,8 @@
 # Cambridge, MA 02139, USA.
 
 #
-#	Propagated rules for making the GNU C library
+#	Rules for making a subdirectory in the GNU C library.
+#	Each subdirectory Makefile defines some variables and includes this.
 #
 ifneq (,)
 This makefile requires GNU Make.
@@ -79,6 +80,12 @@ $(objpfx)%.out: $(objpfx)% %.input
 $(objpfx)%.out: $(objpfx)%
 	$(dir $<)$(notdir $<) > $@
 endif	# tests
+
+# Because the link above depends on libc.a, which I don't want built
+# automatically, this is necessary. -mib
+ifdef mib_hacks
+others :=
+endif
 
 export others := $(others)
 export tests := $(tests)
