@@ -114,16 +114,10 @@ DEFUN(__stdio_close, (cookie), PTR cookie)
 }
 
 
-/* Open FILENAME with the mode in M.  */
-int
-DEFUN(__stdio_open, (filename, m, cookieptr),
-      CONST char *filename AND __io_mode m AND PTR *cookieptr)
+static inline int
+modeflags (__io_mode m)
 {
-  int flags;
-  file_t port;
-  struct hurd_fd *d;
-
-  flags = 0;
+  int flags = 0;
   if (m.__read)
     flags |= O_READ;
   if (m.__write)
@@ -136,7 +130,19 @@ DEFUN(__stdio_open, (filename, m, cookieptr),
     flags |= O_TRUNC;
   if (m.__exclusive)
     flags |= O_EXCL;
+  return flags;
+}
 
+/* Open FILENAME with the mode in M.  */
+int
+DEFUN(__stdio_open, (filename, m, cookieptr),
+      CONST char *filename AND __io_mode m AND PTR *cookieptr)
+{
+  int flags;
+  file_t port;
+  struct hurd_fd *d;
+
+  flags = modeflags (m);
   port = __path_lookup (filename, flags, 0666 & ~_hurd_umask);
   if (port == MACH_PORT_NULL)
     return -1;
@@ -152,6 +158,45 @@ DEFUN(__stdio_open, (filename, m, cookieptr),
 
   *cookieptr = d;
   return 0;
+}
+
+
+/* Open FILENAME with the mode in M.  Use the same magic cookie
+   already in *COOKIEPTR if possible, closing the old cookie with CLOSEFN.  */
+int
+DEFUN(__stdio_reopen, (filename, m, cookieptr),
+      CONST char *filename AND __io_mode m AND
+      PTR *cookieptr AND __io_close closefn)
+{
+  int flags;
+  file_t port;
+  struct hurd_fd *d;
+
+  if (closefn != __stdio_close)
+    {
+      /* The old cookie is Not Of The Body.
+	 Just close it and do a normal open.  */
+      (*closefn) (*cookieptr);
+      return __stdio_open (filename, m, cookieptr);
+    }
+
+  /* Open a new port on the file.  */
+  flags = modeflags (m);
+  port = __path_lookup (filename, flags, 0666 & ~_hurd_umask);
+
+  /* Install the new port in the same file descriptor slot the old cookie
+     points to.  If opening the file failed, PORT will be MACH_PORT_NULL
+     and installing it in the descriptor will have the effect of closing
+     the old descriptor.  */
+
+  d = *cookieptr;
+  HURD_CRITICAL_BEGIN;
+  __spin_lock (&d->port.lock);
+  _hurd_port2fd (d, port, flags);
+  __spin_unlock (&d->port.lock);
+  HURD_CRITICAL_END;
+
+  return port == MACH_PORT_NULL ? -1 : 0;
 }
 
 
