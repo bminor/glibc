@@ -35,8 +35,10 @@ others	:= ap zdump zic
 tests	:= test_time
 
 tzfiles := africa antarctica asia australasia europe northamerica \
-	   southamerica pacificnew etcetera factory systemv
-distribute := $(distribute) $(tzfiles) leapseconds
+	   southamerica etcetera factory systemv
+# pacificnew doesn't compile; if it is to be used, it should be included in
+# northamerica.
+distribute := $(distribute) $(tzfiles) leapseconds pacificnew
 
 install := zic zdump
 
@@ -62,17 +64,25 @@ $(tzfiles:%=zones-%): zones-%: %
 	(echo 'define $*-zones'						;\
 	 awk '$$1 == "Zone" { print $$2 } $$1 == "Link" { print $$3 }' $^;\
 	 echo 'endef'							;\
-	 echo '$*-zones := $$(subst $$(\\n), ,$$($*-zones))'		;\
+	 echo '$*-zones := $$(subst $$('\\\\n'), ,$$($*-zones))'	;\
 	 echo 'ifdef $*-zones'						;\
-	 echo '$$(addprefix %/,$$($*-zones)): \'			;\
+	 echo '$$(addprefix zoneinfo/%/,$$($*-zones)): \'		;\
 	 echo '$< $$(objpfx)zic leapseconds zoneinfo/'			;\
 	 echo '	$$(tzcompile)'						;\
 	 echo 'endif'							;\
+	 echo 'define zonenames'					;\
+	 echo '$$($*-zones)'						;\
+	 echo 'endef'							;\
+	 echo 'zonenames := $$(subst $$('\\\\n'), ,$$(zonenames))'	;\
 	) > $@
 zonenames: Makefile
 	(for file in $(tzfiles); do	\
 	   echo "include zones-$$file";	\
 	 done) > $@
+
+.PHONY: echo-zonenames
+echo-zonenames: zonenames
+	@echo 'Known zones: $(zonenames)'
 
 # Make all the zoneinfo files.
 .PHONY: zones zoneinfo
@@ -80,12 +90,14 @@ zones: zoneinfo
 zoneinfo: $(foreach file,$(tzfiles),$(addprefix zoneinfo/,$($(file)-zones)))
 
 define tzcompile
-$(word 2,$^) -d zoneinfo -L $(word 3,$^) $<
+$(word 2,$^) -d $(patsubst %/,%,$(word 4,$^)) -L $(word 3,$^) $<
 endef
 
 ifdef localtime
 zoneinfo/localtime: zoneinfo/$(localtime) $(objpfx)zic
 	$(word 2,$^) -d zoneinfo -l $(<:zoneinfo/%=%)
+$(datadir)/zoneinfo/localtime: $(datadir)/zoneinfo/$(localtime) $(objpfx)zic
+	$(word 2,$^) -d $(datadir)/zoneinfo -l $(<:$(datadir)/zoneinfo/%=%)
 zoneinfo: zoneinfo/localtime
 endif
 
