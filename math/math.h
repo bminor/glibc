@@ -39,17 +39,6 @@ __BEGIN_DECLS
 #endif
 
 
-#ifndef	__CONSTVALUE
-#ifdef	__GNUC__
-/* The `const' keyword tells GCC that a function's return value is
-   based solely on its arguments, and there are no side-effects.  */
-#define	__CONSTVALUE	__const
-#else
-#define	__CONSTVALUE
-#endif /* GCC.  */
-#endif /* __CONSTVALUE not defined.  */
-
-
 /* Trigonometric functions.  */
 
 /* Arc cosine of X.  */
