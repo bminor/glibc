@@ -100,12 +100,15 @@ Selects attributes affecting formatting of date and time values;
 @end defvr
 
 @comment locale.h
-@comment GNU?
+@comment GNU
 @defvr Macro LC_RESPONSE
 Selects attributes affecting which string patterns are recognized as
 ``yes'' or ``no'' responses to questions.
 
-@strong{Incomplete:}  Is there an environment variable for this?
+@strong{Incomplete:} This is apparently a feature that was in some early
+draft of the POSIX.2 standard, but it's not listed in draft 11.  Do we
+still support this anyway?  Is there a corresponding environment
+variable?
 @end defvr
 
 The ANSI C standard permits implementations to define additional attribute
