@@ -49,7 +49,7 @@ struct utsname
 
 
 /* Put information about the system in NAME.  */
-extern int uname __P ((struct utsname * __name));
+extern int uname __P ((struct utsname *__name));
 
 
 __END_DECLS
