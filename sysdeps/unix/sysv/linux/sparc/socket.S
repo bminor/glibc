@@ -32,8 +32,12 @@
 
    The .S files for the other calls just #define socket and #include this.  */
 
-.globl P(__,socket)
-ENTRY (P(__,socket))
+#ifndef __socket
+#define __socket P(__,socket)
+#endif
+
+.globl __socket
+ENTRY (__socket)
 	mov SYS_ify(socketcall), %g1    /* System call number */
 
 	/* Use ## so `socket' is a separate token that might be #define'd.  */
@@ -53,6 +57,6 @@ ENTRY (P(__,socket))
 1:
 	ret
 
-PSEUDO_END (P(__,socket))
+PSEUDO_END (__socket)
 
-weak_alias (P(__,socket), socket)
+weak_alias (__socket, socket)
