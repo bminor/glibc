@@ -71,10 +71,10 @@ DEFUN(readdir, (dirp), DIR *dirp)
 	  register struct dirent *d = &dirp->__entry;
 	  register const char *p;
 	  d->d_fileno = (ino_t) dp->d_ino;
-	  /* On some systems the name length does not actually mean much.  */
-	  p = memchr ((PTR) dp->d_name, '\0', D_NAMLEN (dp));
-	  if (p != NULL)
-	    d->d_namlen = p - dp->d_name;
+	  /* On some systems the name length does not actually mean much.
+	     But we always use it as a maximum.  */
+	  p = memchr ((PTR) dp->d_name, '\0', D_NAMLEN (dp) + 1);
+	  d->d_namlen = (p != NULL) ? p - dp->d_name : D_NAMLEN (dp);
 	  memcpy (d->d_name, dp->d_name, d->d_namlen + 1);
 	  return d;
 	}
