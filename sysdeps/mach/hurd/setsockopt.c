@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1998 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(setsockopt, (fd, level, optname, optval, optlen),
       int fd AND int level AND int optname AND
-      PTR optval AND size_t optlen)
+      CONST PTR optval AND size_t optlen)
 {
   error_t err = HURD_DPORT_USE (fd, __socket_setopt (port,
 						     level, optname,
