@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Test if a memory region is wholly unwritable.  Mach version.
+   Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,18 +18,40 @@
    02111-1307 USA.  */
 
 #include <stdlib.h>
+#include <stdint.h>
+#include <mach.h>
 
 /* Return 1 if the whole area PTR .. PTR+SIZE is not writable.
    Return -1 if it is writable.  */
 
 int
-__readonly_area (const void *ptr, size_t size)
+__readonly_area (const char *ptr, size_t size)
 {
-  /* We cannot determine in general whether memory is writable or not.
-     This must be handled in a system-dependent manner.  to not
-     unconditionally break code we need to return here a positive
-     answer.  This disables this security measure but that is the
-     price people have to pay for using systems without a real
-     implementation of this interface.  */
+  vm_address_t region_address = (uintptr_t) ptr;
+  vm_size_t region_length = size;
+  vm_prot_t protection;
+  vm_prot_t max_protection;
+  vm_inherit_t inheritance;
+  boolean_t is_shared;
+  mach_port_t object_name;
+  vm_offset_t offset;
+
+  while (__vm_region (__mach_task_self (),
+		      &region_address, &region_length,
+		      &protection, &max_protection, &inheritance, &is_shared,
+		      &object_name, &offset) == KERN_SUCCESS
+	 && region_address <= (uintptr_t) ptr)
+    {
+      region_address += region_length;
+      if (region_address < (uintptr_t) ptr)
+	continue;
+
+      if (protection & VM_PROT_WRITE)
+	return -1;
+
+      if (region_address - (uintptr_t) ptr >= size)
+	break;
+    }
+
   return 1;
 }

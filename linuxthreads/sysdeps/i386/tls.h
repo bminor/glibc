@@ -120,7 +120,7 @@ typedef struct
 #   define TLS_LOAD_EBX
 #  endif
 
-#  ifndef THREAD_SELF
+#  if !defined IS_IN_linuxthreads && !defined DO_MODIFY_LDT
 #   include "useldt.h"		/* For the structure.  */
 #  endif
 #  if __ASSUME_LDT_WORKS > 0

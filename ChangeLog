@@ -1,3 +1,66 @@
+2004-10-20  Roland McGrath  <roland@redhat.com>
+
+	* manual/errno.texi (Error Codes): Add ENOKEY, EKEYEXPIRED,
+	EKEYREVOKED, EKEYREJECTED.
+	* sysdeps/unix/sysv/linux/Versions (libc: GLIBC_2.3.4): New errlist.
+	* sysdeps/gnu/errlist.c: Regenerated
+
+	* sysdeps/gnu/errlist-compat.awk: Don't bail if Versions gives a count
+	higher than ERR_MAX reports.  Instead, emit a #define ERR_MAX.
+	* sysdeps/gnu/Makefile ($(objpfx)errlist-compat.h): New target.
+	(generated): Add errlist-compat.h.
+	* sysdeps/gnu/errlist.awk: Make output #include <errlist-compat.h> to
+	define ERR_MAX and use that for table size.
+
+2004-10-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add entries for setaltroot,
+	key_add, key_request, and keyctl syscalls.
+	* sysdeps/unix/sysv/linux/Versions: Export them.
+
+2004-10-19  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/readonly-area.c: New file.
+
+2004-10-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Versions [ld, GLIBC_PRIVATE]: Add _dl_debug_state.
+	* elf/dl-debug.c (_dl_debug_state): Add rtld_hidden_def.
+	* sysdeps/generic/ldsodefs.h (_dl_debug_state): Don't mark as
+	hidden but use rtld_hidden_proto.
+
+2004-10-19  Alfred M. Szmidt  <ams@gnu.org>
+
+	* sysdeps/generic/readonly-area.c (__readonly_str): Renamed to ...
+	(__readonly_area): ... this.
+
+2004-10-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/strcpy_chk.c (__strcpy_chk): Speed up by checking
+	destlen only every 4 bytes.
+
+2004-10-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getent.c (hosts_keys): Let inet_pton decide whether the
+	string is an address or not.
+
+2004-10-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-addr.c (_dl_addr): Don't look at STT_TLS symbols.
+	Use DL_SYMBOL_ADDRESS to set dli_saddr.
+
+	* debug/Makefile (catchsegv): Prefix $LIB with a backslash.
+
+2004-10-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* debug/Makefile ($(objpfx)catchsegv): To support multilib
+	platforms, use $LIB in path to slibdir.
+
+2004-10-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* debug/catchsegv.sh: Update copyright year.
+	Use mktemp to create segv_output file.
+
 2004-10-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/features.h (__USE_FORTIFY_LEVEL): Enable even with

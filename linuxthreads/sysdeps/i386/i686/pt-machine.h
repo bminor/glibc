@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    i686 version.
-   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
