@@ -61,18 +61,23 @@ try-sysdeps := $(foreach dir,$(..)sysdeps/stub $(..)sysdeps/generic,\
 foo:=$(shell echo 'try-sysdeps=$(try-sysdeps)'>&2)
 +sysdeps := $(wildcard $(try-sysdeps))
 foo:=$(shell echo 'stub/generic +sysdeps=$(+sysdeps)'>&2)
-+sysdeps := $(notdir $(+sysdeps))	# Get just the file names.
++sysdep-names := $(sort $(notdir $(+sysdeps)))
+foo:=$(shell echo '+sysdep-names=$(+sysdep-names)' >&2)
+
 # Now find all the sysdep versions of those files.
 +sysdeps := $(wildcard $(foreach dir,$(sysdep_dirs) $(source_dirs),\
-				 $(addprefix $(dir)/,$(+sysdeps))))
+				 $(addprefix $(dir)/, \
+					     $(+sysdep-names) \
+					     $(+sysdep-names:.c=.s) \
+					     $(+sysdep-names:.c=.S) \
+				  )))
+
 
 # Source and header files to go in the distribution tar file.
 
 .S.s := $(wildcard $(sources:.c=.S) $(sources:.c=.s))
 sources := $(filter-out $(addsuffix .c,$(basename $(.S.s))),$(sources)) $(.S.s)
 
-+sysdep-names := $(sort $(notdir $(+sysdeps)))
-foo:=$(shell echo '+sysdep-names=$(+sysdep-names)' >&2)
 +out := $(patsubst %.S,%.c,$(+sysdep-names:.s=.c)) \
 	$(addsuffix .c,$(sysdep_routines)) \
 	$(+subdir-nodist)
