@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ Cambridge, MA 02139, USA.  */
    children; otherwise don't.  */
 pid_t
 DEFUN(__wait3, (stat_loc, options, usage),
-      union wait *stat_loc AND int options AND struct rusage *usage)
+      __WAIT_STATUS stat_loc AND int options AND struct rusage *usage)
 {
   if (usage != NULL)
     {
