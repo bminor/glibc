@@ -87,7 +87,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
      given with no list, it enables all the add-on packages it finds.
      If you do not wish to use some add-on package that you have
      present in your source tree, give this option a list of the
-     add-ons that you *do* want used, like this:
+     add-ons that you _do_ want used, like this:
      `--enable-add-ons=crypt,linuxthreads'
 
 `--with-binutils=DIRECTORY'
@@ -157,10 +157,11 @@ Those indicate that something is really wrong.
 
    The compilation process takes several hours even on fast hardware.
 Expect at least two hours for the default configuration on i586 for
-Linux.  For Hurd times are much longer.  Except for EGCS 1.1 (and later
-versions of EGCS), all supported versions of GCC have a problem which
-causes them to take several minutes to compile certain files in the
-iconvdata directory.  Do not panic if the compiler appears to hang.
+Linux.  For Hurd times are much longer.  Except for EGCS 1.1 and GCC
+2.95 (and later versions of GCC), all supported versions of GCC have a
+problem which causes them to take several minutes to compile certain
+files in the iconvdata directory.  Do not panic if the compiler appears
+to hang.
 
    If you want to run a parallel make, you can't just give `make' the
 `-j' option, because it won't be passed down to the sub-makes.
@@ -268,12 +269,13 @@ build the GNU C library:
      bugs which only show up in big projects like GNU `libc'.  Version
      3.76.1 seems OK but some people have reported problems.
 
-   * EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1
+   * EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1, 2.95, 2.95.1
 
      The GNU C library can only be compiled with the GNU C compiler
      family.  As of the 2.1 release, EGCS 1.0.3 or higher is required.
      GCC 2.8.1 can also be used (but see the FAQ for reasons why you
-     might not want to).  Earlier versions simply are too buggy.
+     might not want to).  Earlier versions simply are too buggy.  As of
+     this writing, GCC 2.95.1 is the compiler we advise to use.
 
      You can use whatever compiler you like to compile programs that
      use GNU libc, but be aware that both GCC 2.7 and 2.8 have bugs in
@@ -320,6 +322,7 @@ build the GNU C library:
 
      Perl is not required, but it is used if present to test the
      installation.  We may decide to use it elsewhere in the future.
+
 
 If you change any of the `configure.in' files you will also need
 
@@ -427,7 +430,7 @@ installed there.
 library on your system against the new library for the sake of new code,
 but keep the old libraries around for old binaries to use.  This is
 complicated and difficult.  Consult the Glibc2 HOWTO at
-`http://www.imaxx.net/~thrytis/glibc' for details.
+<http://www.imaxx.net/~thrytis/glibc> for details.
 
    You cannot use `nscd' with 2.0 kernels, due to bugs in the
 kernel-side thread support.  `nscd' happens to hit these bugs
@@ -445,7 +448,7 @@ remain unfixed for all eternity, if not longer.
    It is a good idea to check first that the problem was not reported
 before.  Bugs are documented in two places: The file `BUGS' describes a
 number of well known bugs and the bug tracking system has a WWW
-interface at `http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl'.  The
+interface at <http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl>.  The
 WWW interface gives you access to open and closed reports.  The closed
 reports normally include a patch or a hint on solving the problem.
 
