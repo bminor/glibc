@@ -1,5 +1,5 @@
 /* Guts of both `select' and `poll' for Hurd.
-   Copyright (C) 1991,92,93,94,95,96,97,98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ _hurd_select (int nfds,
       mach_port_t io_port;
       int type;
       mach_port_t reply_port;
-    } d[nfds];
+    } *d;
   sigset_t oset;
 
   if (sigmask && __sigprocmask (SIG_SETMASK, sigmask, &oset))
@@ -72,6 +72,8 @@ _hurd_select (int nfds,
 	 We do a first pass that reads the user's array before taking
 	 any locks.  The second pass then only touches our own stack,
 	 and gets the port references.  */
+
+      d = __alloca (nfds * sizeof d[0]);
 
       for (i = 0; i < nfds; ++i)
 	if (pollfds[i].fd >= 0)
@@ -149,8 +151,14 @@ _hurd_select (int nfds,
       HURD_CRITICAL_BEGIN;
       __mutex_lock (&_hurd_dtable_lock);
 
-      if (nfds > _hurd_dtablesize)
+      if ((unsigned int) nfds > _hurd_dtablesize)
 	nfds = _hurd_dtablesize;
+
+      /* This allocation must be here so we can cap NFDS
+	 to a reasonable bound beforehand.  Some callers
+	 might give us huge values for NFDS, and we would
+	 try an unreasonable stack allocation.  */
+      d = __alloca (nfds * sizeof d[0]);
 
       /* Collect the ports for interesting FDs.  */
       firstfd = lastfd = -1;
