@@ -80,7 +80,7 @@ extern void EXFUN(rewinddir, (DIR *__dirp));
 
 #ifndef	MAXNAMLEN
 /* Get the definitions of the POSIX.1 limits.  */
-#include <posix1_limits.h>
+#include <posix1_lim.h>
 
 /* `MAXNAMLEN' is the BSD name for what POSIX calls `NAME_MAX'.  */
 #ifdef	NAME_MAX
