@@ -1,3 +1,9 @@
+/* Extensions for GNU date that are still missing here:
+   -
+   _
+   e
+*/
+
 /* Copyright (C) 1991 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -138,9 +144,17 @@ DEFUN(strftime, (s, maxsize, format, tp),
       ++f;
       switch (*f)
 	{
+	case '\0':
 	case '%':
 	  add(1, *p = *f);
 	  break;
+	case 'n':		/* GNU extension.  */
+	  add (1, *p = '\n');
+	  break;
+	case 't':		/* GNU extenstion.  */
+	  add (1, *p = '\t');
+	  break;
+
 	case 'a':
 	  cpy(aw_len, a_wkday);
 	  break;
@@ -209,6 +223,25 @@ DEFUN(strftime, (s, maxsize, format, tp),
 	case 'Z':
 	  cpy(zonelen, zone);
 	  break;
+
+	  /* GNU extensions.  */
+	case 'r':
+	  subfmt = "%I:%M:%S %p";
+	  goto subformat;
+	case 'R':
+	  subfmt = "%H:%M";
+	  goto subformat;
+	case 'T':
+	  subfmt = "%H:%M:%S";
+	  goto subformat;
+	case 'D':
+	  subfmt = "%m/%d/%y";
+	  goto subformat;
+
+	case 'e':		/* %d, but blank-padded.  */
+	  /* XXX */
+	  break;
+
 	default:
 	  /* Bad format.  */
 	  break;
