@@ -1,3 +1,9 @@
+2002-01-26  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/debugreg.h: New file.
+
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Add arch_prctl call.
+
 2002-01-18  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/configure.in
