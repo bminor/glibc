@@ -35,8 +35,6 @@ static struct mutex reauth_lock;
 int
 __setauth (auth_t new)
 {
-  error_t err;
-  auth_t old;
   int d;
   mach_port_t newport;
   void (**fn) (auth_t);
@@ -58,7 +56,7 @@ __setauth (auth_t new)
   __mutex_lock (&_hurd_id.lock);
   _hurd_port_set (&_hurd_ports[INIT_PORT_AUTH], new);
   _hurd_id.valid = 0;
-  if (hurd_id.rid_auth)
+  if (_hurd_id.rid_auth)
     {
       __mach_port_deallocate (__mach_task_self (), _hurd_id.rid_auth);
       _hurd_id.rid_auth = MACH_PORT_NULL;
