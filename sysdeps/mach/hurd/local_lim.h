@@ -26,7 +26,15 @@ Cambridge, MA 02139, USA.  */
    POSIX.1 requires that we define NGROUPS_MAX (though none of the others
    is required).  GNU allows any number of supplementary groups,
    dynamically allocated.  So we pick a number which seems vaguely
-   suitable, and `sysconf' will return a number at least as large.
-   XXX is this the desireable thing?  */
+   suitable, and `sysconf' will return a number at least as large.  */
    
-#define NGROUPS_MAX	64
+#define NGROUPS_MAX	256
+
+/* The maximum number of symbolic links that are allowed in a single file
+   name resolution.  When a further link is encountered, the call returns
+   ELOOP.  This name is a GNU extension; POSIX.1 has no such limit, and BSD
+   calls it MAXSYMLINKS in <sys/param.h>.  */
+
+#ifdef __USE_BSD
+#define	SYMLINK_MAX	8
+#endif
