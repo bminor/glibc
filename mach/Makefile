@@ -28,8 +28,8 @@ headers = mach_init.h mach.h mach_error.h mach-shortcuts.h \
 	  $(interface-headers) mach/mach.h mach/mig_support.h mach/error.h \
 	  $(lock-headers) machine-sp.h
 distribute = thread_state.h
-lock = spin-solid spin-lock spin-syms
-lock-headers = lock-intern.h machine-lock.h mutex.h spin-lock.h
+lock = spin-solid spin-lock spin-syms mutex-solid
+lock-headers = lock-intern.h machine-lock.h spin-lock.h
 routines = $(filter-out syscall_%,$(mach-syscalls)) \
 	   $(addprefix __,$(mach-syscalls)) \
 	   $(mach-shortcuts) $(addprefix __,$(mach-shortcuts)) \
