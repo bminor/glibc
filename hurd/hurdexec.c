@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <hurd.h>
 #include <hurd/fd.h>
+#include <hurd/signal.h>
 
 /* Overlay TASK, executing FILE with arguments ARGV and environment ENVP.
    If TASK == mach_task_self (), some ports are dealloc'd by the exec server.
@@ -37,11 +38,11 @@ _hurd_exec (task_t task, file_t file,
   size_t argslen, envlen;
   int ints[INIT_INT_MAX];
   mach_port_t ports[_hurd_nports];
-  struct _hurd_port_userlink ulink_ports[_hurd_nports];
-  file_t *dtable;
+  struct hurd_userlink ulink_ports[_hurd_nports];
+  file_t *dtable, *dtable_ctty;
   int dtablesize;
-  struct _hurd_port **dtable_cells, **dtable_ctty_cells;
-  struct _hurd_port_userlink *ulink_dtable, *ulink_dtable_ctty;
+  struct hurd_port **dtable_cells, **dtable_ctty_cells;
+  struct hurd_userlink *ulink_dtable, *ulink_dtable_ctty;
   int i;
   char *const *p;
   struct _hurd_sigstate *ss;
