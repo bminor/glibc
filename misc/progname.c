@@ -16,7 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifdef	__GNU_STAB__
+#ifdef	HAVE_GNU_LD
 
 #include <ansidecl.h>
 #include <string.h>
@@ -37,5 +37,7 @@ DEFUN(set_progname, (argc, argv, envp),
   else
     program_invocation_short_name = p + 1;
 }
+
+text_set_element (__libc_subinit, set_progname);
 
 #endif
