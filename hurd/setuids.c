@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Set the uid set for the current user to UIDS (N of them).  */
 int
-DEFUN(seteuids, (n, uids), size_t n AND CONST gid_t *uids)
+setuids (int n, const uid_t *uids)
 {
   error_t err;
   auth_t newauth;
