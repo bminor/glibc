@@ -880,11 +880,6 @@ Conversions}, for details.
 Print an integer as an unsigned decimal number.  @xref{Integer
 Conversions}, for details.
 
-@item @samp{%Z}
-Print an integer as an unsigned decimal number, assuming it was passed
-with type @code{size_t}.  @xref{Integer Conversions}, for details.
-This is a GNU extension.
-
 @item @samp{%x}, @samp{%X}
 Print an integer as an unsigned hexadecimal number.  @samp{%x} uses
 lower-case letters and @samp{%X} uses upper-case.  @xref{Integer
@@ -939,7 +934,7 @@ simply ignored; this is sometimes useful.
 @subsection Integer Conversions
 
 This section describes the options for the @samp{%d}, @samp{%i},
-@samp{%o}, @samp{%u}, @samp{%x}, @samp{%X}, and @samp{%Z} conversion
+@samp{%o}, @samp{%u}, @samp{%x}, and @samp{%X} conversion
 specifications.  These conversions print integers in various formats.
 
 The @samp{%d} and @samp{%i} conversion specifications both print an
@@ -947,8 +942,7 @@ The @samp{%d} and @samp{%i} conversion specifications both print an
 @samp{%u}, and @samp{%x} print the argument as an unsigned octal,
 decimal, or hexadecimal number (respectively).  The @samp{%X} conversion
 specification is just like @samp{%x} except that it uses the characters
-@samp{ABCDEF} as digits instead of @samp{abcdef}.  @samp{%Z} is like
-@samp{%u} but expects an argument of type @code{size_t}.
+@samp{ABCDEF} as digits instead of @samp{abcdef}.
 
 The following flags are meaningful:
 
@@ -1014,11 +1008,10 @@ int}, as appropriate.
 Specifies that the argument is a @code{long long int}.  (This type is
 an extension supported by the GNU C compiler.  On systems that don't
 support extra-long integers, this is the same as @code{long int}.)
-@end table
 
-The modifiers for argument type are not applicable to @samp{%Z}, since
-the sole purpose of @samp{%Z} is to specify the data type
-@code{size_t}.
+@item Z
+Specifies that the argument is a @code{size_t}.  This is a GNU extension.
+@end table
 
 Here is an example.  Using the template string:
 
