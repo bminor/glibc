@@ -342,8 +342,10 @@ objects objs: $(objects)
 # files in $(install-lib) matching `lib%.a' are ranlib'd after installation
 # unless they also appear in $(non-lib.a).  $(install-data) are installed
 # as they are into $(datadir).  $(headers) are installed as they are in
-# $(includedir).  $(install-others) are absolute path names of files to
-# install; rules to install them are defined elsewhere.
+# $(includedir).  $(install-bin) and $(install-sbin) are installed from the
+# object directory into $(bindir) and $(sbindir), respectively.
+# $(install-others) are absolute path names of files to install; rules to
+# install them are defined elsewhere.
 
 define do-install
 $(make-target-directory)
@@ -376,8 +378,13 @@ $(libdir)/lib$(libprefix)c.a: libobjs subdir_install
 	$(RANLIB) $@
 endif
 
-ifdef install
-$(addprefix $(bindir)/,$(install)): $(bindir)/%: $(objpfx)%
+ifdef install-bin
+$(addprefix $(bindir)/,$(install-bin)): $(bindir)/%: $(objpfx)%
+	$(make-target-directory)
+	$(INSTALL_PROGRAM) $< $@
+endif
+ifdef install-sbin
+$(addprefix $(sbindir)/,$(install-sbin)): $(sbindir)/%: $(objpfx)%
 	$(make-target-directory)
 	$(INSTALL_PROGRAM) $< $@
 endif

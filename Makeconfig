@@ -143,7 +143,7 @@ endif
 # Where to install machine-independent data files.
 # These are the timezone database, and eventually the locale database.
 ifndef datadir
-datadir = $(prefix)/lib
+datadir = $(prefix)/share
 endif
 
 # Where to install the timezone data files (which are machine-independent).
@@ -156,6 +156,11 @@ ifndef bindir
 bindir = $(exec_prefix)/bin
 endif
 
+# Where to install administrative programs.
+ifndef sbindir
+sbindir = $(exec_prefix)/sbin
+endif
+
 # Where to install the Info files.
 ifndef infodir
 infodir = $(prefix)/info
@@ -163,8 +168,8 @@ endif
 
 # Where to install default configuration files.  These include the local
 # timezone specification and network data base files.
-ifndef etcdir
-etcdir = $(prefix)/etc
+ifndef sysconfdir
+sysconfdir = $(prefix)/etc
 endif
 
 # What timezone should be the installed default (e.g., US/Eastern).

@@ -42,7 +42,7 @@ tzfiles := africa antarctica asia australasia europe northamerica \
 # northamerica.
 distribute := $(distribute) $(tzfiles) leapseconds pacificnew
 
-install := zic zdump
+install-sbin := zic zdump
 
 include ../Makeconfig	# Get objpfx defined so we can use it below.
 

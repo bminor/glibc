@@ -52,7 +52,7 @@ rpcsvc = bootparam.x nlm_prot.x rstat.x \
 	 yppasswd.x klm_prot.x rex.x sm_inter.x mount.x \
 	 rnusers.x spray.x nfs_prot.x rquota.x yp.x
 install-others = $(includedir)/rpcsvc/bootparam_prot.h \
-		 $(etcdir)/rpc
+		 $(sysconfdir)/rpc
 generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c)
 
 routines := auth_none auth_unix authuxprot bindrsvprt \
@@ -65,7 +65,8 @@ routines := auth_none auth_unix authuxprot bindrsvprt \
 	    xdr_rec xdr_ref xdr_stdio
 
 install-lib := librpcsvc.a
-install := rpcgen rpcinfo portmap
+install-bin := rpcgen
+install-sbin := rpcinfo portmap
 rpcsvc-objs = $(rpcsvc:%.x=x%.o)
 rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o
@@ -94,10 +95,10 @@ $(includedir)/rpcsvc/bootparam_prot.h: $(includedir)/rpcsvc/bootparam.h
 	-$(do-install)
 
 # Install the rpc data base file.
-$(etcdir)/rpc: etc.rpc
+$(sysconfdir)/rpc: etc.rpc
 	$(do-install)
 
-defines := $(defines) -D_PATH_RPC='"$(etcdir)/rpc"'
+defines := $(defines) -D_PATH_RPC='"$(sysconfdir)/rpc"'
 
 # Build the `rpcsvc' library of XDR functions.
 

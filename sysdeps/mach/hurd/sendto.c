@@ -47,7 +47,8 @@ DEFUN(sendto, (fd, buf, n, flags, addr, addr_len),
 			      /* Send the data.  */
 			      err = __socket_send (port, aport,
 						   flags, buf, n,
-						   NULL, 0, NULL,
+						   NULL,
+						   MACH_MSG_TYPE_COPY_SEND, 0,
 						   NULL, 0, &wrote);
 			      __mach_port_deallocate (__mach_task_self (),
 						      aport);
