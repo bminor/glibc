@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,14 @@ _S_add_auth (mach_port_t me,
   error_t err;
   auth_t newauth;
 
-  if (err = __USEPORT (AUTH, __auth_combine (port, addauth, &newauth)))
+  if (err = __USEPORT (AUTH,
+		       __auth_makeauth (port,
+					&addauth, 1, MACH_MSG_TYPE_MOVE_SEND,
+					NULL, 0,
+					NULL, 0,
+					NULL, 0,
+					NULL, 0,
+					&newauth)))
     return err;
 
   /* XXX clobbers errno. Need per-thread errno. */
@@ -45,7 +52,6 @@ _S_add_auth (mach_port_t me,
   if (err)
     return errno;
 
-  __mach_port_deallocate (__mach_task_self (), addauth);
   return 0;
 }
 
@@ -100,6 +106,7 @@ _S_del_auth (mach_port_t me,
 
       err = __USEPORT (AUTH, __auth_makeauth
 		       (port,
+			NULL, 0, MACH_MSG_TYPE_COPY_SEND,
 			newu, nu,
 			_hurd_id.aux.uids, _hurd_id.aux.nuids,
 			newg, ng,
