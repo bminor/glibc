@@ -106,7 +106,13 @@ $(foreach if,$(user-interfaces),$($(if)-calls:%=$(objpfx)RPC_%.o))): \
 
 $(user-interfaces:%=$(objpfx)%.ustamp): intr-rpc.awk
 
-$(objpfx)faultexc.c: $(mach-srcdir)/mach/exc.defs
-	$(MIG) $(MIGFLAGS) -prefix _hurdsig_fault_ -server $@ \
-	       -sheader /dev/null -user /dev/null -header /dev/null
-generated += faultexc.c
+$(objpfx)fault%.c $(objpfx)fault%.h: $(mach-srcdir)/mach/%.defs
+	$(MIG) $(MIGFLAGS) -prefix _hurdsig_fault_ \
+	       -server $(@:.h=.c) -sheader $(@:.c=.h) \
+	       -user /dev/null -header /dev/null \
+	       $<
+generated += faultexc.c faultexc.h
+
+# We need this static dependency to get faultexc.h generated the first time.
+$(objpfx)hurdfault.o $(objpfx)hurdfault.d: \
+	$(objpfx)faultexc.h $(objpfx)faultexc.c
