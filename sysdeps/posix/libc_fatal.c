@@ -29,10 +29,10 @@ DEFUN(__libc_fatal, (message), CONST char *message)
 
   while (len > 0)
     {
-      register int count = __write (STDERR_FILENO, msg, len);
+      register int count = __write (STDERR_FILENO, message, len);
       if (count > 0)
 	{
-	  msg += count;
+	  message += count;
 	  len -= count;
 	}
       else if (count < 0
