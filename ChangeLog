@@ -1,3 +1,17 @@
+1997-05-25 09:51  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/i386/elf/start.S: Change local label "nofini"
+	to ".Lnofini".
+
+	* sysdeps/i386/i386-mcount.S: Use GOT, instead of GOTOFF.
+
+1997-05-25 20:19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/zic.c: Update from tzcode1997e.
+
+	* sysvipc/sys/ipc.h: Print warning if _XOPEN_SOURCE and _SVID_SOURCE
+	are not defined.
+
 1997-05-24 17:45  H.J. Lu  <hjl@gnu.ai.mit.edu>
 
 	* gmon/gmon.c (_mcleanup): Free tostruct array allocated in
