@@ -1283,6 +1283,12 @@ make_message (char *name, char *value)
 In practice, it is often easier just to use @code{asprintf}, below.
 @end deftypefun
 
+@node Dynamic Output
+@subsection Dynamically Allocating Formatted Output
+
+The functions in this section do formatted output and place the results
+in dynamically allocated memory.
+
 @comment stdio.h
 @comment GNU
 @deftypefun int asprintf (char **@var{ptr}, const char *@var{template}, @dots{})
@@ -1307,6 +1313,16 @@ make_message (char *name, char *value)
   return result;
 @}
 @end smallexample
+@end deftypefun
+
+@comment stdio.h
+@comment GNU
+@deftypefun int obstack_printf (struct obstack *@var{obstack}, const char *@var{template}, @dots{})
+This function is similar to @code{asprintf}, except that it uses the
+obstack @var{obstack} to allocate the space.
+
+@c ??? How do you find the address and size of the object?
+@c ??? Does this finish the object?
 @end deftypefun
 
 @node Variable Arguments Output, Parsing a Template String, Formatted Output Functions, Formatted Output
@@ -1388,6 +1404,14 @@ specified directly as for @code{vprintf}.
 @deftypefun int vasprintf (char **@var{ptr}, const char *@var{template}, va_list @var{ap})
 The @code{vasprintf} function is the equivalent of @code{asprintf} with the
 variable argument list specified directly as for @code{vprintf}.
+@end deftypefun
+
+@comment stdio.h
+@comment GNU
+@deftypefun int obstack_printf (struct obstack *@var{obstack}, const char *@var{template}, var_list @var{ap})
+The @code{obstack_printf} function is the equivalent of
+@code{obstack_printf} with the variable argument list specified directly
+as for @code{vprintf}.
 @end deftypefun
 
 Here's an example showing how you might use @code{vfprintf}.  This is a
@@ -3027,13 +3051,14 @@ specific to GNU.  Other systems or C implementations might or might not
 provide equivalent functionality.
 
 @menu
-* String Streams::              These functions allow you to do I/O to
+* String Streams::              Streams that get data from or put data in 
                                  a string or memory buffer.
-* Custom Streams::              Streams you can define with an arbitrary
+* Obstack Streams::		Streams that store data in an obstack.
+* Custom Streams::              Defining your own streams with an arbitrary
                                  input data source and/or output data sink.
 @end menu
 
-@node String Streams, Custom Streams,  , Other Kinds of Streams
+@node String Streams
 @subsection String Streams
 @cindex stream, for I/O to a string
 @cindex string stream
@@ -3129,7 +3154,54 @@ buf = `hello', size = 5
 buf = `hello, world', size = 12
 @end example
 
-@node Custom Streams,  , String Streams, Other Kinds of Streams
+@node Obstack Streams
+@subsection Obstack Streams
+
+You can open an output stream that puts it data in an obstack.
+
+@comment stdio.h
+@comment GNU
+@deftypefun {FILE *} open_obstack_stream (struct obstack *@var{obstack})
+This function opens a stream for writing data into the obstack @var{obstack}.
+This starts an object in the obstack and makes it grow as data is written.
+
+Calling @code{fflush} on this stream updates the current size of the
+object to match the amount of data that has been written.  After a call
+to @code{fflush}, you can examine the object temporarily.
+
+To make the object permanent, close the stream, and then
+@code{obstack_finish} to finalize the object and get its address.
+
+But how do you find out how long the object is?  You can get the length
+in bytes by calling @code{obstack_object_size} (@pxref{Status of an
+Obstack}), or you can null-terminate the object like this:
+
+@example
+obstack_1grow (@var{obstack}, 0);
+@end example
+
+Whichever one you do, you must do it @emph{before} calling
+@code{obstack_finish}.  (You can do both if you wish.)
+@end deftypefun
+
+Here is a sample function that uses @code{open_obstack_stream}:
+
+@example
+char *
+make_message_string (char *a, int b, char *c)
+@{
+  FILE *stream = open_obstack_stream (&message_obstack);
+  output_task (stream);
+  fprintf (stream, ": ");
+  fprintf (stream, a, b);
+  fprintf (stream, "\n");
+  fclose (stream);
+  obstack_1grow (&message_obstack, 0);
+  return obstack_finish (&message_obstack);
+@}
+@end example
+
+@node Custom Streams
 @subsection Programming Your Own Custom Streams
 @cindex custom streams
 @cindex programming your own streams
