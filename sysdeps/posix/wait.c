@@ -19,13 +19,11 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <sys/wait.h>
 
-#undef	wait
-
 
 /* Wait for a child to die.  When one does, put its status in *STAT_LOC
    and return its process ID.  For errors, return (pid_t) -1.  */
 __pid_t
-DEFUN(wait, (stat_loc), __WAIT_STATUS stat_loc)
+DEFUN(__wait, (stat_loc), __WAIT_STATUS stat_loc)
 {
   return __waitpid(WAIT_ANY, (int *) stat_loc, 0);
 }
