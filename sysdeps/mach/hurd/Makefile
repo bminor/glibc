@@ -94,7 +94,9 @@ hurd = $(..)sysdeps/mach/hurd
 $(hurd)/errnos.h: $(objpfx)stamp-errnos ;
 $(objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 		       $(mach-srcdir)/mach/message.h \
-		       $(mach-srcdir)/mach/kern_return.h
+		       $(mach-srcdir)/mach/kern_return.h \
+		       $(mach-srcdir)/mach/mig_errors.h \
+		       $(mach-srcdir)/device/device_types.h
 	gawk -f $^ > $(hurd)/errnos.h-tmp
 	./$(..)move-if-change $(hurd)/errnos.h-tmp $(hurd)/errnos.h
 	touch $@
