@@ -20,7 +20,6 @@ ifeq	($(subdir),math)
 ifndef	math-twiddled
 
 elided-routines := $(elided-routines) acos asin cos sin hypot
-routines := $(filter-out acos asin cos sin hypot,$(routines))
 sysdep_routines := $(sysdep_routines) sincos asincos exp__E log__L
 
 math-twiddled := t
