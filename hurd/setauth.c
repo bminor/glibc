@@ -37,7 +37,6 @@ __setauth (auth_t new)
 {
   int d;
   mach_port_t newport;
-  void (*const *fn) (auth_t);
 
   /* Give the new send right a user reference.
      This is a good way to check that it is valid.  */
