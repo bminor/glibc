@@ -50,7 +50,7 @@ mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   switch (flags & MAP_TYPE)
     {
     default:
-      return (caddr_t) __hurd_fail (EINVAL);
+      return (caddr_t) (long int) __hurd_fail (EINVAL);
 
     case MAP_ANON:
       memobj = MACH_PORT_NULL;
@@ -60,7 +60,7 @@ mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
       {
 	mach_port_t robj, wobj;
 	if (err = HURD_DPORT_USE (fd, __io_map (port, &robj, &wobj)))
-	  return (caddr_t) __hurd_dfail (fd, err);
+	  return (caddr_t) (long int) __hurd_dfail (fd, err);
 	switch (prot & (PROT_READ|PROT_WRITE))
 	  {
 	  case PROT_READ:
@@ -78,7 +78,8 @@ mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	    else
 	      {
 		__mach_port_deallocate (__mach_task_self (), wobj);
-		return (caddr_t) __hurd_fail (EGRATUITOUS); /* XXX */
+		return ((caddr_t) (long int)
+			__hurd_fail (EGRATUITOUS)); /* XXX */
 	      }
 	    break;
 	  }
@@ -99,6 +100,6 @@ mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   if (memobj != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), memobj);
 
-  return err ? (caddr_t) __hurd_fail (err) : (caddr_t) mapaddr;
+  return err ? (caddr_t) (long int) __hurd_fail (err) : (caddr_t) mapaddr;
 }
 	
