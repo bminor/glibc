@@ -136,16 +136,28 @@ $(objpfx)make_errlist: $(sysdep_dir)/unix/make_errlist.c
 
 endif
 
-ifeq ($(wildcard $(sysincludedir)/syscall.h),)
+# The syscall code assumes a file <syscall.h> that defines macros
+# `SYS_call' for syscall `call'.  Variations on this I have seen include:
+# it's in <sys/syscall.h>;
+# it's in <sys.s>;
+# it defines `CALL' instead of `SYS_call'.
 
-# Some systems have <syscall.h>, some <sys/syscall.h>.
+# Find a file that might have these.
+syscall.h := $(firstword $(wildcard $(addprefix $(sysincludedir)/,
+						syscall.h sys/syscall.h \
+						sys.s sys/sys.s \
+						sys.S sys/sys.S)))
+ifdef syscall.h
 
-syscall.h := $(wildcard $(sysincludedir)/sys/syscall.h)
-
-ifdef	syscall.h
+# Transmogrify any of several formats of the file into the one we want.
 $(common-objpfx)syscall.h: $(syscall.h)
-	echo '#include <$(syscall.h:$(sysincludedir)/%=%)>' > $@
+	tr '[A-Z]' '[a-z]' < $< | \
+	sed -e 's/\<sys_//' \
+	    -e 's/^#define[ 	]*\([a-z0-9_]*\)[ 	]*/#define SYS_\1 /' \
+	    -e '/^#define/!d'
+	> $@-tmp
+	mv $@-tmp $@
+
 before-compile := $(before-compile) $(common-objpfx)syscall.h
-endif
 
 endif
