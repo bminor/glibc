@@ -39,6 +39,8 @@ __setrlimit (resource, rlimits)
      enum __rlimit_resource resource;
      const struct rlimit *rlimits;
 {
+  struct rlimit rlimits_small;
+
 #ifdef __NR_ugetrlimit
   if (! no_new_getrlimit)
     {
@@ -55,10 +57,10 @@ __setrlimit (resource, rlimits)
 
   /* We might have to correct the limits values.  Since the old values
      were signed the new values are too large.  */
-  rlimits->rlim_cur = MIN ((unsigned long int) rlimits->rlim_cur,
-			   RLIM_INFINITY >> 2);
-  rlimits->rlim_max = MIN ((unsigned long int) rlimits->rlim_max,
-			   RLIM_INFINITY >> 2);
+  rlimits_small.rlim_cur = MIN ((unsigned long int) rlimits->rlim_cur,
+				RLIM_INFINITY >> 2);
+  rlimits_small.rlim_max = MIN ((unsigned long int) rlimits->rlim_max,
+				RLIM_INFINITY >> 2);
 
   /* Fall back on the old system call.  */
   return INLINE_SYSCALL (setrlimit, 2, resource, rlimits);
