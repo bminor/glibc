@@ -118,7 +118,8 @@ install: subdir_install
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 install: install-symblolic-link
-install-symblolic-link:
+.PHONY: install-symblolic-link
+install-symblolic-link: subdir_install
 	$(symbolic-link-prog) $(symbolic-link-list)
 
 install:
