@@ -1,8 +1,13 @@
-/* This file is generated from errno.texinfo by sys_errlist.awk. */
+/* This file is generated from errno.texi by errlist.awk.  */
+
+#ifndef HAVE_GNU_LD
+#define _sys_nerr sys_nerr
+#define _sys_errlist sys_errlist
+#endif
 
 const char *_sys_errlist[] =
   {
-    "Success,"
+    "Success",
     "Operation not permitted",          /* 1 = EPERM */
     "No such file or directory",        /* 2 = ENOENT */
     "No such process",                  /* 3 = ESRCH */
@@ -37,46 +42,52 @@ const char *_sys_errlist[] =
     "Broken pipe",                      /* 32 = EPIPE */
     "Numerical argument out of domain", /* 33 = EDOM */
     "Numerical result out of range",    /* 34 = ERANGE */
-    "Resource temporarily unavailable", /* 35 = EAGAIN */
-    "Operation would block",            /* 36 = EWOULDBLOCK */
-    "Operation now in progress",        /* 37 = EINPROGRESS */
-    "Operation already in progress",    /* 38 = EALREADY */
-    "Socket operation on non-socket",   /* 39 = ENOTSOCK */
-    "Destination address required",     /* 40 = EDESTADDRREQ */
-    "Message too long",                 /* 41 = EMSGSIZE */
-    "Protocol wrong type for socket",   /* 42 = EPROTOTYPE */
-    "Protocol not available",           /* 43 = ENOPROTOOPT */
-    "Protocol not supported",           /* 44 = EPROTONOSUPPORT */
-    "Socket type not supported",        /* 45 = ESOCKTNOSUPPORT */
-    "Operation not supported",          /* 46 = EOPNOTSUPP */
-    "Protocol family not supported",    /* 47 = EPFNOSUPPORT */
-    "Address family not supported by protocol family",/* 48 = EAFNOSUPPORT */
-    "Address already in use",           /* 49 = EADDRINUSE */
-    "Can't assign requested address",   /* 50 = EADDRNOTAVAIL */
-    "Network is down",                  /* 51 = ENETDOWN */
-    "Network is unreachable",           /* 52 = ENETUNREACH */
-    "Network dropped connection on reset",/* 53 = ENETRESET */
-    "Software caused connection abort", /* 54 = ECONNABORTED */
-    "Connection reset by peer",         /* 55 = ECONNRESET */
-    "No buffer space available",        /* 56 = ENOBUFS */
-    "Socket is already connected",      /* 57 = EISCONN */
-    "Socket is not connected",          /* 58 = ENOTCONN */
-    "Can't send after socket shutdown", /* 59 = ESHUTDOWN */
-    "Connection timed out",             /* 60 = ETIMEDOUT */
-    "Connection refused",               /* 61 = ECONNREFUSED */
-    "Too many levels of symbolic links",/* 62 = ELOOP */
-    "File name too long",               /* 63 = ENAMETOOLONG */
-    "Host is down",                     /* 64 = EHOSTDOWN */
-    "No route to host",                 /* 65 = EHOSTUNREACH */
-    "Directory not empty",              /* 66 = ENOTEMPTY */
-    "Too many users",                   /* 67 = EUSERS */
-    "Disc quota exceeded",              /* 68 = EDQUOT */
-    "Stale NFS file handle",            /* 69 = ESTALE */
-    "Too many levels of remote in path",/* 70 = EREMOTE */
-    "No locks available",               /* 71 = ENOLCK */
-    "Function not implemented",         /* 72 = ENOSYS */
+    "Operation would block",            /* 35 = EWOULDBLOCK */
+    "Operation now in progress",        /* 36 = EINPROGRESS */
+    "Operation already in progress",    /* 37 = EALREADY */
+    "Socket operation on non-socket",   /* 38 = ENOTSOCK */
+    "Destination address required",     /* 39 = EDESTADDRREQ */
+    "Message too long",                 /* 40 = EMSGSIZE */
+    "Protocol wrong type for socket",   /* 41 = EPROTOTYPE */
+    "Protocol not available",           /* 42 = ENOPROTOOPT */
+    "Protocol not supported",           /* 43 = EPROTONOSUPPORT */
+    "Socket type not supported",        /* 44 = ESOCKTNOSUPPORT */
+    "Operation not supported",          /* 45 = EOPNOTSUPP */
+    "Protocol family not supported",    /* 46 = EPFNOSUPPORT */
+    "Address family not supported by protocol family",/* 47 = EAFNOSUPPORT */
+    "Address already in use",           /* 48 = EADDRINUSE */
+    "Can't assign requested address",   /* 49 = EADDRNOTAVAIL */
+    "Network is down",                  /* 50 = ENETDOWN */
+    "Network is unreachable",           /* 51 = ENETUNREACH */
+    "Network dropped connection on reset",/* 52 = ENETRESET */
+    "Software caused connection abort", /* 53 = ECONNABORTED */
+    "Connection reset by peer",         /* 54 = ECONNRESET */
+    "No buffer space available",        /* 55 = ENOBUFS */
+    "Socket is already connected",      /* 56 = EISCONN */
+    "Socket is not connected",          /* 57 = ENOTCONN */
+    "Can't send after socket shutdown", /* 58 = ESHUTDOWN */
+    "Connection timed out",             /* 59 = ETIMEDOUT */
+    "Connection refused",               /* 60 = ECONNREFUSED */
+    "Too many levels of symbolic links",/* 61 = ELOOP */
+    "File name too long",               /* 62 = ENAMETOOLONG */
+    "Host is down",                     /* 63 = EHOSTDOWN */
+    "No route to host",                 /* 64 = EHOSTUNREACH */
+    "Directory not empty",              /* 65 = ENOTEMPTY */
+    "Too many users",                   /* 66 = EUSERS */
+    "Disc quota exceeded",              /* 67 = EDQUOT */
+    "Stale NFS file handle",            /* 68 = ESTALE */
+    "Too many levels of remote in path",/* 69 = EREMOTE */
+    "No locks available",               /* 70 = ENOLCK */
+    "Function not implemented",         /* 71 = ENOSYS */
+    "Inappropriate operation for background process",/* 72 = EBACKGROUND */
     "?",                                /* 73 = ED */
-    "Gratuitous error",                 /* 74 = EGRATUITOUS */
+    "You really blew it this time",     /* 74 = EGREGIOUS */
+    "Computer bought the farm",         /* 75 = EIEIO */
+    "Gratuitous error",                 /* 76 = EGRATUITOUS */
   };
 
-const int _sys_nerr = 74;
+#include <errno.h>
+#if _HURD_ERRNOS != 77
+#error errlist/errnos generation bug
+#endif
+const int _sys_nerr = 77;
