@@ -32,12 +32,12 @@ __BEGIN_DECLS
 
 /* The group structure.	 */
 struct group
-{
-  char *gr_name;		/* Group name.	*/
-  char *gr_passwd;		/* Password.	*/
-  __gid_t gr_gid;		/* Group ID.	*/
-  char **gr_mem;		/* Member list.	*/
-};
+  {
+    char *gr_name;		/* Group name.	*/
+    char *gr_passwd;		/* Password.	*/
+    __gid_t gr_gid;		/* Group ID.	*/
+    char **gr_mem;		/* Member list.	*/
+  };
 
 
 #if defined(__USE_SVID) || defined(__USE_GNU)

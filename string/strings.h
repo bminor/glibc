@@ -18,4 +18,15 @@ Cambridge, MA 02139, USA.  */
 
 /* Compatibility with BSD string(3).  */
 
+#ifndef	_STRINGS_H
+
+#define	_STRINGS_H	1
+#include <features.h>
+
+
+#ifndef	_STRING_H
 #include <string.h>
+#endif	/* string.h  */
+
+
+#endif	/* strings.h  */
