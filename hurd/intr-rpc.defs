@@ -1,0 +1,8 @@
+/* Redefine the macro used to declare all interruptible RPCs.
+   We rename the MiG-generated function to CALL_intr_rpc and
+   give it the option to return on an interrupted message send.  */
+
+#define INTR_ROUTINE(name, args) \
+msgoption MACH_SEND_INTERRUPT;\
+routine name##_intr_rpc args;\
+msgoption;
