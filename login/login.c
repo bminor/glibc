@@ -23,7 +23,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <utmp.h>
-
+
+
 /* Return the result of ttyname in the buffer pointed to by TTY, which should
    be of length BUF_LEN.  If it is too long to fit in this buffer, a
    sufficiently long buffer is allocated using malloc, and returned in TTY.
@@ -65,7 +66,6 @@ tty_name (int fd, char **tty, size_t buf_len)
 	  __set_errno (ENOMEM);
 	  break;
 	}
-
       buf = new_buf;
     }
 
@@ -115,7 +115,7 @@ login (const struct utmp *ut)
       strncpy (copy.ut_line, ttyp, UT_LINESIZE);
 
       /* Tell that we want to use the UTMP file.  */
-      if (utmpname (_PATH_UTMP) != 0)
+      if (utmpname (_PATH_UTMP) == 0)
 	{
 	  struct utmp *old;
 
@@ -137,20 +137,5 @@ login (const struct utmp *ut)
     }
 
   /* Update the WTMP file.  Here we have to add a new entry.  */
-  if (utmpname (_PATH_WTMP) != 0)
-    {
-      struct utmp *up;
-
-      /* Open the WTMP file.  */
-      setutent ();
-
-      /* Position at end of file.  */
-      while (! getutent_r (&utbuf, &up));
-
-      /* Write the new entry.  */
-      pututline (&copy);
-
-      /* Close WTMP file.  */
-      endutent ();
-    }
+  updwtmp (_PATH_WTMP, &copy);
 }
