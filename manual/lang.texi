@@ -565,8 +565,8 @@ this type to specify object sizes.
 arguments or variables that hold the size of an object.
 @end deftp
 
-In the GNU system @code{size_t} is equivalent to one of the types
-@w{@code{unsigned int}} and @w{@code{unsigned long int}}.  These types
+In the GNU system @code{size_t} is equivalent to either
+@w{@code{unsigned int}} or @w{@code{unsigned long int}}.  These types
 have identical properties on the GNU system, and for most purposes, you
 can use them interchangeably.  However, they are distinct as data types,
 which makes a difference in certain contexts.
@@ -735,8 +735,8 @@ a 32-bit quantity.
 @comment ANSI
 @itemx UINT_MAX
 
-These are the maximum values that can be represented by a
-@w{@code{signed int}} and @w{@code{unsigned int}}, respectively.
+These are the maximum values that can be represented by, respectively,
+the type @w{@code{signed int}} and the type @w{@code{unsigned int}}.
 
 @comment limits.h
 @comment ANSI

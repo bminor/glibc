@@ -343,8 +343,8 @@ of @var{x} is too large; that is, if overflow occurs.
 @comment math.h
 @comment ANSI
 @deftypefun double tanh (double @var{x})
-This function returns the hyperbolic tangent of @var{x}, defined
-mathematically as @w{@code{sinh (@var{x}) / cosh (@var{x})}}.
+This function returns the hyperbolic tangent of @var{x}, whose 
+mathematical definition is @w{@code{sinh (@var{x}) / cosh (@var{x})}}.
 @end deftypefun
 
 @cindex inverse hyperbolic functions

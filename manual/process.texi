@@ -670,10 +670,10 @@ equivalent macros.
 @comment sys/wait.h
 @comment BSD
 @deftypefun pid_t wait3 (union wait *@var{status_ptr}, int @var{options}, struct rusage *@var{usage})
-If @var{usage} is a null pointer, this function is equivalent to
+If @var{usage} is a null pointer, @code{wait3} is equivalent to
 @w{@code{waitpid (-1, @var{status_ptr}, @var{options})}}.
 
-If @var{usage} is not null, @code{wait4} stores usage figures for the
+If @var{usage} is not null, @code{wait3} stores usage figures for the
 child process in @code{*@var{rusage}} (but only if the child has
 terminated, not if it has stopped).  @xref{Resource Usage}.
 @end deftypefun
@@ -681,7 +681,7 @@ terminated, not if it has stopped).  @xref{Resource Usage}.
 @comment sys/wait.h
 @comment BSD
 @deftypefun pid_t wait4 (pid_t @var{pid}, union wait *@var{status_ptr}, int @var{options}, struct rusage *@var{usage})
-If @var{usage} is a null pointer, this function is equivalent to
+If @var{usage} is a null pointer, @code{wait4} is equivalent to
 @w{@code{waitpid (@var{pid}, @var{status_ptr}, @var{options})}}.
 
 If @var{usage} is not null, @code{wait4} stores usage figures for the

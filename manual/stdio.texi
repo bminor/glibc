@@ -3375,7 +3375,7 @@ You can move the file position of an obstack stream with @code{fseek}
 the data written fills the intervening space with zeros.
 
 To make the object permanent, update the obstack with @code{fflush}, and
-then @code{obstack_finish} to finalize the object and get its address.
+then use @code{obstack_finish} to finalize the object and get its address.
 The following write to the stream starts a new object in the obstack,
 and later writes add to that object until you do another @code{fflush}
 and @code{obstack_finish}.

@@ -87,8 +87,8 @@ Ignore a trailing sequence of characters starting with a @samp{/} in
 @var{string}; that is to say, test whether @var{string} starts with a
 directory name that @var{pattern} matches.
 
-For example, either @samp{foo*} or @samp{foobar} as a pattern would
-match the string @samp{foobar/frobozz} if this flag is set.
+If this flag is set, either @samp{foo*} or @samp{foobar} as a pattern
+would match the string @samp{foobar/frobozz}.
 @end table
 
 @node Globbing
@@ -292,7 +292,7 @@ mark in the pattern acts like an ordinary character.
 If you use @code{GLOB_NOESCAPE}, then @samp{\} is an ordinary character.
 
 @code{glob} does its work by calling the function @code{fnmatch}
-repeatedly.  It handles @code{GLOB_NOESCAPE} by turning on the
+repeatedly.  It handles the flag @code{GLOB_NOESCAPE} by turning on the
 @code{FNM_NOESCAPE} flag in calls to @code{fnmatch}.
 @end table
 

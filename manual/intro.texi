@@ -344,9 +344,15 @@ the @samp{#undef} preprocessor directive, unless otherwise stated
 explicitly in the description of that facility.
 @end itemize
 
-For example, suppose the header file @file{stdlib.h} declares the
-function @code{abs} with @w{@samp{extern int abs(int i);}} and also
-provides a macro definition for @code{abs}.  Then, in:
+For example, suppose the header file @file{stdlib.h} declares a function
+named @code{abs} with
+
+@example
+extern int abs (int);
+@end example
+
+@noindent
+and also provides a macro definition for @code{abs}.  Then, in:
 
 @example
 #include <stdlib.h>
