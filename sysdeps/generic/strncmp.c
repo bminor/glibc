@@ -36,20 +36,20 @@ DEFUN(strncmp, (s1, s2, n),
       size_t n4 = n >> 2;
       do
 	{
-	  c1 = *s1++;
-	  c2 = *s2++;
+	  c1 = (unsigned char) *s1++;
+	  c2 = (unsigned char) *s2++;
 	  if (c1 == '\0' || c1 != c2)
 	    return c1 - c2;
-	  c1 = *s1++;
-	  c2 = *s2++;
+	  c1 = (unsigned char) *s1++;
+	  c2 = (unsigned char) *s2++;
 	  if (c1 == '\0' || c1 != c2)
 	    return c1 - c2;
-	  c1 = *s1++;
-	  c2 = *s2++;
+	  c1 = (unsigned char) *s1++;
+	  c2 = (unsigned char) *s2++;
 	  if (c1 == '\0' || c1 != c2)
 	    return c1 - c2;
-	  c1 = *s1++;
-	  c2 = *s2++;
+	  c1 = (unsigned char) *s1++;
+	  c2 = (unsigned char) *s2++;
 	  if (c1 == '\0' || c1 != c2)
 	    return c1 - c2;
 	} while (--n4 > 0);
@@ -58,8 +58,8 @@ DEFUN(strncmp, (s1, s2, n),
 
   while (n > 0)
     {
-      c1 = *s1++;
-      c2 = *s2++;
+      c1 = (unsigned char) *s1++;
+      c2 = (unsigned char) *s2++;
       if (c1 == '\0' || c1 != c2)
 	return c1 - c2;
       n--;

@@ -17,12 +17,5 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdeps/generic/memcopy.h>
-
-#ifdef	__GNUC__
-/* Use double-word loads and stores.  */
-#undef	op_t
-#define	op_t	unsigned long long int
-#endif
-
 #undef	reg_char
 #define	reg_char	int

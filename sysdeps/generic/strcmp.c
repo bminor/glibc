@@ -32,8 +32,8 @@ DEFUN(strcmp, (p1, p2), CONST char *p1 AND CONST char *p2)
 
   do
     {
-      c1 = *s1++;
-      c2 = *s2++;
+      c1 = (unsigned char) *s1++;
+      c2 = (unsigned char) *s2++;
       if (c1 == '\0')
 	return c1 - c2;
     }
