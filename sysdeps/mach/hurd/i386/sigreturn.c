@@ -81,7 +81,7 @@ __sigreturn (struct sigcontext *scp)
   if (scp->sc_fpused)
     {
   /* XXX should restore FPU state here XXX roland needs 387 manual */
-      abort ();
+  /*    abort (); */
     }
 
   {
