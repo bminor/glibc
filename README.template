@@ -1,10 +1,12 @@
 This directory contains the version VERSION test release of the GNU C Library.
 Some bugs surely remain.
 
-As of this release, the GNU C library has been ported to only three machines:
-sparcs and Sun 3s running SunOS 4.1, and HP 300s running 4.3 BSD.  Porting
-the library is not hard.  If you are interested in doing a port, please
-get on the mailing list bug-glibc-request@prep.ai.mit.edu
+As of this release, the GNU C library has been ported to: sparcs and Sun 3s
+running SunOS 4.1, HP 300s running 4.3 BSD, and MIPS DECStations running
+Ultrix 4.2.  The port to the i386 running either System V, SVR4, or BSD, is
+mostly complete but has not been well tested.  Porting the library is not
+hard.  If you are interested in doing a port, please get on the mailing
+list bug-glibc-request@prep.ai.mit.edu
 
 See the file INSTALL for how to configure, build, install, and port the GNU
 C library.
