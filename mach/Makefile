@@ -21,7 +21,8 @@ subdir := mach
 distribute = Machrules interface.awk mach-syscalls.awk # $(interfaces:%=%.defs)
 
 interface-header-prefix = mach/
-headers = mach.h mach_init.h \
+headers = mach_init.h \
+	  $(nope mach.h) \
 	  $(addprefix mach/,$(mach-headers)) \
 	  $(interface-headers)
 
@@ -36,16 +37,15 @@ mach-headers := host_info.h kern_return.h \
 		thread_status.h thread_switch.h time_value.h \
 		vm_attributes.h vm_inherit.h vm_prot.h \
 		vm_statistics.h
-endif
 
 user-interfaces := mach_interface mach_port mach_host \
 		   device device_request device_reply \
 		   default_pager_object \
 		   memory_object_user memory_object_default
 server-interfaces := __exc
+endif
 
-routines = $(interface-routines) 
-foo =\
+routines = $(interface-routines) \
 	   mach_init mach_init_syms \
 	   mig_strncpy mig_support msg \
 	   mach_msg_destroy mach_msg_server mach_msg_server_timeout \
@@ -60,6 +60,7 @@ all:
 
 # Define mach-syscalls and sysno-*.
 include mach-syscalls.mk
+dont_distribute := syscall_sw.h
 mach-syscalls.mk: syscall_sw.h mach-syscalls.awk
 	sed -n -e '/STANDALONE/,$$d' \
 	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),[0-9]*)$$/\1 \2/p' \
@@ -89,6 +90,8 @@ include Machrules
 interface-routines := $(filter-out %_rpc,$(interface-routines)) \
 		      $(foreach call,$(mach-shortcuts),\
 				__$(call) $(call) __syscall_$(call))
+dont_distribute := $(dont_distribute) \
+		   $(interface-routines:%=%.c) $(interface-headers)
 
 include ../Rules
 
@@ -102,4 +105,6 @@ memory_object_user.defs: memory_object.defs
 	ln -s $< $@ || cp $< $@
 
 # Be sure not to make these with implicit rules from foo.defs.
-#$(mach-headers): ;
+ifdef mach-headers
+$(mach-headers): ;
+endif
