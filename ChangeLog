@@ -1,5 +1,8 @@
 2000-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/libm-ieee754/s_modfl.c: Correct handling of arguments
+	with exponent >31 and < 63 (PR libc/1548).
+
 	* time/strptime.c: Change buffer handling to fix recursive calls
 	with locales (PR libc/1546).
 
