@@ -77,8 +77,7 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 					      no-libc.a bin lib		\
 					      data headers others)
 
-headers := features.h errno.h sys/errno.h errnos.h limits.h \
-	   $(stddef.h) $(stdarg.h)
+headers := features.h errno.h sys/errno.h errnos.h limits.h $(stddef.h)
 
 echo-headers: subdir_echo-headers
 
