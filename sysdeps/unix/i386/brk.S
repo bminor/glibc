@@ -25,14 +25,15 @@ Cambridge, MA 02139, USA.  */
 .data
 .globl ___curbrk
 ___curbrk:
-#ifdef	__GNU_STAB__
-	.long ___end
+#ifdef	HAVE_GNU_LD
+	.long __end
 #else
 	.long _end
 #endif
 
 .text
 SYSCALL__ (brk)
+	movl 4(%esp), %eax
 	movl %eax, ___curbrk
 	xorl %eax, %eax
 	ret
