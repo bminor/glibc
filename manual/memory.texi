@@ -1604,7 +1604,7 @@ extensions.
 
 @comment malloc.h
 @comment GNU
-@deftypefun {void *} r_alloc (void **@var{handleptr}, int @var{size})
+@deftypefun {void *} r_alloc (void **@var{handleptr}, size_t @var{size})
 This function allocates a relocatable block of size @var{size}.  It
 stores the block's address in @code{*@var{handleptr}} and returns
 a non-null pointer to indicate success.
@@ -1624,7 +1624,7 @@ block any more.
 
 @comment malloc.h
 @comment GNU
-@deftypefun {void *} r_re_alloc (void **@var{handleptr}, int @var{size})
+@deftypefun {void *} r_re_alloc (void **@var{handleptr}, size_t @var{size})
 The function @code{r_re_alloc} adjusts the size of the block that
 @code{*@var{handleptr}} points to, making it @var{size} bytes long.  It
 stores the address of the resized block in @code{*@var{handleptr}} and
