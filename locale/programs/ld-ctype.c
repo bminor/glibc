@@ -185,7 +185,7 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
     = (u_int32_t *) xcalloc (sizeof (unsigned long int),
 			     ctype->class_collection_max);
   memset (ctype->class_collection256, '\0',
-	  sizeof (unsigned long int) * 256);
+	  sizeof (ctype->class_collection256[0]) * 256);
   ctype->class_collection_act = 256;
 
   /* Fill character map information.  */
