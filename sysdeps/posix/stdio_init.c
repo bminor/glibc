@@ -29,7 +29,7 @@ Cambridge, MA 02139, USA.  */
 void
 DEFUN(__stdio_init_stream, (stream), FILE *stream)
 {
-  register CONST int fd = *(int *) stream->__cookie;
+  register CONST int fd = (int) stream->__cookie;
   struct stat statb;
 
   if (stream->__buffer != NULL || stream->__userbuf)
