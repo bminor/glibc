@@ -1,3 +1,9 @@
+1999-09-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in: Fix make version test for make 3.77.95 and later
+	versions.
+	Based on a patch by Paul D. Smith <psmith@baynetworks.com>.
+
 1999-09-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/wchar.h (WCHAR_MIN, WCHAR_MAX): Use all-numeric values.
