@@ -47,7 +47,7 @@ distribute = Machrules syscalls.awk shortcut.awk
 
 
 # XXX currently these files have been copied into mach/ (which should not
-# otherwise exist).  Eventually should snarf them from sysutils/bootstrap.
+# otherwise exist).  They will supposedly disappear in the future.
 headers += $(addprefix mach/default_pager_types.,h defs)
 user-interfaces += mach/default_pager
 server-interfaces += mach/default_pager_helper
@@ -93,7 +93,7 @@ $(objpfx)mach-syscalls.mk: mach/syscall_sw.h syscalls.awk
 	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),[0-9]*)$$/\1 \2/p' \
 	< $< | awk -f $(word 2,$^) > $@-new
 	mv $@-new $@
-generated += mach-syscalls.mk
+generated += $(objpfx)mach-syscalls.mk
 
 ifndef mach-syscalls
 # We cannot make the deps properly until we know how to make the system
@@ -108,8 +108,8 @@ $(mach-syscalls:%=$(objpfx)%.c): $(objpfx)%.c:
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*)') > $@-new
 	mv $@-new $@
-generated += $(mach-syscalls:%=__%.S) \
-	     $(mach-syscalls:%=%.c)
+generated += $(mach-syscalls:%=$(objpfx)__%.S) \
+	     $(mach-syscalls:%=$(objpfx)%.c)
 endif	# mach-syscalls
 
 mach-shortcuts := $(patsubst syscall_%,%,$(filter syscall_%,$(mach-syscalls)))
@@ -141,7 +141,7 @@ $(mach-shortcuts:%=$(objpfx)%.c): $(objpfx)%.c:
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*)') > $@-new
 	mv $@-new $@
-generated += $(mach-shortcuts:%=%.c)
+generated += $(mach-shortcuts:%=$(objpfx)%.c)
 endif	# mach-shortcuts
 
 # Generate mach-shortcuts.h, which will contain the prototypes for the
@@ -155,7 +155,7 @@ $(objpfx)mach-shortcuts.h: $(objpfx)mach/mach_interface.h \
 	| grep '^/\* Routine [a-z0-9_]*_rpc \*/' \
 	| sed 's/_rpc//g' | tr @ \\012 > $@-new
 	mv $@-new $@
-generated += mach-shortcuts.h
+generated += $(objpfx)mach-shortcuts.h
 
 before-compile += $(objpfx)mach-shortcuts.h
 
