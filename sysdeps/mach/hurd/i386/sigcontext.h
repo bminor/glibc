@@ -32,32 +32,33 @@ struct sigcontext
   
   /* All following members are machine-dependent.  */
 
-  /* Segment registers (not used).  */
+  /* Segment registers.  */
   int sc_gs;
   int sc_fs;
   int sc_es;
   int sc_ds;
   int sc_ss;
   
-  /* "General" registers.  */
+  /* "General" registers.  These members are in the order that the i386
+     `pushad' and `popad' instructions use (`popad' ignores %esp).  */
   int sc_edi;
   int sc_esi;
   int sc_ebp;
-  int sc_esp;			/* not used */
+  int sc_esp;			/* Not used; sc_uesp is used instead.  */
   int sc_ebx;
   int sc_edx;
   int sc_ecx;
   int sc_eax;
   
-  int sc_trapno;		/* not used */
-  int sc_err;			/* not used */
+  int sc_trapno;		/* Not used.  */
+  int sc_err;			/* Not used.  */
   
-  int sc_eip;			/* instruction pointer */
+  int sc_eip;			/* Instruction pointer.  */
    
-  int sc_cs;			/* not used */
+  int sc_cs;			/* Not used.  */
   
-  int sc_efl;			/* flags */
-  int sc_uesp;			/* THIS stack pointer is used */
+  int sc_efl;			/* Processor flags.  */
+  int sc_uesp;			/* This stack pointer is used.  */
 };
 
 
