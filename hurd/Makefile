@@ -30,16 +30,16 @@ distribute := intr_rpc.awk hurdintr.awk
 user-interfaces		:= $(addprefix hurd/,\
 				       auth process startup msg \
 				       exec core interrupt \
-				       fs fsys io term) # socket 
+				       fs fsys io term socket )
 server-interfaces	:= hurd/msg
 
 routines = $(interface-routines) \
 	   hurdid hurdpath hurdpid hurdports \
 	   __setauth setauth \
+	   __pid2task __task2pid pid2task task2pid \
 	   getuids setuids getumask fchroot \
 	   dtable __getdport getdport openport setdtsz \
-#	   hurdsig hurdmsg hurdsock hurdauth
-#	   __pid2task __task2pid pid2task task2pid \
+#	   hurdsig hurdmsg hurdsock hurdauth \
 	   privports \
 	   msgportdemux startsig \
 	   fopenport __fopenport \
