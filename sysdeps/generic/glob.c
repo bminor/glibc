@@ -883,8 +883,7 @@ glob (pattern, flags, errfunc, pglob)
 
 	  old_pathc = pglob->gl_pathc;
 	  status = glob_in_dir (filename, dirs.gl_pathv[i],
-				((flags | GLOB_APPEND)
-				 & ~(GLOB_NOCHECK | GLOB_ERR)),
+				((flags | GLOB_APPEND) & ~GLOB_NOCHECK),
 				errfunc, pglob);
 	  if (status == GLOB_NOMATCH)
 	    /* No matches in this directory.  Try the next.  */
@@ -1226,38 +1225,39 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
   int save;
 
   meta = __glob_pattern_p (pattern, !(flags & GLOB_NOESCAPE));
-  if (meta == 0)
+  if (meta == 0 && (flags & (GLOB_NOCHECK|GLOB_NOMAGIC)))
     {
-      if (flags & (GLOB_NOCHECK|GLOB_NOMAGIC))
-	/* We need not do any tests.  The PATTERN contains no meta
-	   characters and we must not return an error therefore the
-	   result will always contain exactly one name.  */
-	flags |= GLOB_NOCHECK;
-      else
-	{
-	  /* Since we use the normal file functions we can also use stat()
-	     to verify the file is there.  */
-	  struct stat st;
-	  size_t patlen = strlen (pattern);
-	  size_t dirlen = strlen (directory);
-	  char *fullname = (char *) __alloca (dirlen + 1 + patlen + 1);
+      /* We need not do any tests.  The PATTERN contains no meta
+	 characters and we must not return an error therefore the
+	 result will always contain exactly one name.  */
+      flags |= GLOB_NOCHECK;
+      nfound = 0;
+    }
+  else if (meta == 0 &&
+	   ((flags & GLOB_NOESCAPE) || strchr(pattern, '\\') == NULL))
+    {
+      /* Since we use the normal file functions we can also use stat()
+	 to verify the file is there.  */
+      struct stat st;
+      size_t patlen = strlen (pattern);
+      size_t dirlen = strlen (directory);
+      char *fullname = (char *) __alloca (dirlen + 1 + patlen + 1);
 
 # ifdef HAVE_MEMPCPY
-	  mempcpy (mempcpy (mempcpy (fullname, directory, dirlen),
-			    "/", 1),
-		   pattern, patlen + 1);
+      mempcpy (mempcpy (mempcpy (fullname, directory, dirlen),
+			"/", 1),
+	       pattern, patlen + 1);
 # else
-	  memcpy (fullname, directory, dirlen);
-	  fullname[dirlen] = '/';
-	  memcpy (&fullname[dirlen + 1], pattern, patlen + 1);
+      memcpy (fullname, directory, dirlen);
+      fullname[dirlen] = '/';
+      memcpy (&fullname[dirlen + 1], pattern, patlen + 1);
 # endif
-	  if (((flags & GLOB_ALTDIRFUNC)
-	       ? (*pglob->gl_stat) (fullname, &st)
-	       : __stat (fullname, &st)) == 0)
-	    /* We found this file to be existing.  Now tell the rest
-	       of the function to copy this name into the result.  */
-	    flags |= GLOB_NOCHECK;
-	}
+      if (((flags & GLOB_ALTDIRFUNC)
+	   ? (*pglob->gl_stat) (fullname, &st)
+	   : __stat (fullname, &st)) == 0)
+	/* We found this file to be existing.  Now tell the rest
+	   of the function to copy this name into the result.  */
+	flags |= GLOB_NOCHECK;
 
       nfound = 0;
     }
