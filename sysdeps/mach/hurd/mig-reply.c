@@ -56,18 +56,19 @@ __mig_dealloc_reply_port (void)
 }
 
 
-/* Called at startup with CPROC == NULL.  When per-thread variables are set
-   up, this is called again with CPROC a non-null value.  */
+/* Called at startup with STACK == NULL.  When per-thread variables are set
+   up, this is called again with STACK set to the new stack being switched
+   to, where per-thread variables should be set up.  */
 void
-__mig_init (void *cproc)
+__mig_init (void *stack)
 {
-  GETPORT;
-  
-  use_threadvar = cproc != 0;
+  use_threadvar = stack != 0;
 
   if (use_threadvar)
     {
       /* Recycle the reply port used before multithreading was enabled.  */
+      mach_port_t *portloc = (mach_port_t *)
+	__hurd_threadvar_location_from_sp (_HURD_THREADVAR_MIG_REPLY, stack);
       *portloc = global_reply_port;
       global_reply_port = MACH_PORT_NULL;
     }
