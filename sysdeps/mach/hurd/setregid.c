@@ -48,7 +48,7 @@ __setregid (gid_t rgid, gid_t egid)
       memcpy (&newaux[1], _hurd_id.aux.gids, (naux - 1) * sizeof (gid_t));
 
       err = __USEPORT (AUTH, __auth_makeauth
-		       (port, NULL, 0, MACH_MSG_TYPE_COPY_SEND,
+		       (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
 			_hurd_id.gen.gids, _hurd_id.gen.ngids,
 			_hurd_id.aux.gids, _hurd_id.aux.ngids,
 			newgen, ngen,
