@@ -276,7 +276,7 @@ DEFUN(vfprintf, (s, format, args),
 
       /* Check for type modifiers.  */
       is_short = is_long = is_long_double = 0;
-      while (*f == 'h' || *f == 'l' || *f == 'L')
+      while (*f == 'h' || *f == 'l' || *f == 'L' || *f == 'q')
 	switch (*f++)
 	  {
 	  case 'h':
@@ -305,6 +305,15 @@ DEFUN(vfprintf, (s, format, args),
 	    is_longlong = sizeof(size_t) > sizeof(unsigned long int);
 #endif
 	    is_long = sizeof(size_t) > sizeof(unsigned int);
+	    break;
+
+	  case 'q':
+	    /* 4.4 uses this for long long.  */
+#ifdef	HAVE_LONGLONG
+	    is_longlong = 1;
+#else
+	    is_long = 1;
+#endif
 	    break;
 	  }
 
