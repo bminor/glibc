@@ -24,14 +24,16 @@ all:
 include ../Makeconfig
 
 
-headers = hurd.h $(addprefix hurd/,fd.h id.h port.h signal.h userlink.h) \
-	  $(interface-headers)
+headers = hurd.h $(interface-headers) \
+	  $(addprefix hurd/,fd.h id.h port.h signal.h userlink.h threadvar.h)
+
 distribute := intr_rpc.awk hurdintr.awk
 
 # The RPC interfaces go in a separate library.
 interface-library := libhurduser.a
 user-interfaces		:= $(addprefix hurd/,\
-				       auth process startup msg msg_reply \
+				       auth process startup \
+				       msg msg_reply msg_request \
 				       exec core interrupt \
 				       fs fsys io term socket )
 server-interfaces	:= hurd/msg
