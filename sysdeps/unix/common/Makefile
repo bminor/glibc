@@ -16,16 +16,6 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-$(common-objpfx)local_lim.h: $(common-objpfx)mk-local_lim
-	$(dir $<)$(notdir $<) > $@-t
-	mv $@-t $@
-$(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/common/mk-local_lim.c
-	$(native-compile)
-
-before-compile := $(before-compile) $(common-objpfx)local_lim.h
-generated := $(generated) \
-	     $(common-objpfx)local_lim.h $(common-objpfx)mk-local_lim
-
 ifeq ($(subdir),posix)
 sysdep_routines := $(sysdep_routines) bsd_getgrp
 endif
