@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <libc-lock.h>
-
+#include <errno.h>
 #include "nsswitch.h"
 
 /*******************************************************************\
