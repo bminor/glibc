@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -80,21 +80,9 @@ $(+sysdir_pfx)Sysnames:
 export sysdirs := $(sysdirs)
 export sysdep_dir := $(sysdep_dir)
 
-# Turn the list of sysdep names into a colon-separated list of directories
-# under SYSDEP_DIR (the base directory for sysdep files), and tell Make to
-# search for C and header files in those directories.
 +sysdep_dirs := $(addprefix $(sysdep_dir)/,$(sysdirs))
 ifdef objdir
 +sysdep_dirs := $(objdir) $(+sysdep_dirs)
-endif
-sysdep_path := $(subst $+ ,:,$(+sysdep_dirs))
-ifeq (,)
-override VPATH := $(sysdep_path)
-else
-vpath %.c $(sysdep_path)
-vpath %.S $(sysdep_path)
-vpath %.s $(sysdep_path)
-vpath %.h $(sysdep_path)
 endif
 
 # Add -I switches to get the right sysdep directories.
@@ -102,6 +90,11 @@ endif
 +includes := $(+includes) $(+sysdep-includes)
 
 # Include any system-specific makefiles.
+# Also generate an ordered list of implicit rules which find the source
+# files in each sysdep directory.  The old method was to use vpath to
+# search all the sysdep directories.  However, that had the problem that a
+# .S file in a later directory would be chosen over a .c file in an earlier
+# directory, which does not preserve the desired sysdeps ordering behavior.
 
 ifeq ($(wildcard $(+sysdir_pfx)sysd-Makefile),)
 # Don't do deps until this exists, because it might change the sources list.
@@ -115,6 +108,12 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)sysdirs
 	   if [ -r $(..)$$file ]; then					      \
 	     echo include "\$$(..)$$file";				      \
 	   else true;							      \
+	   echo "\$$(objpfx)%.o: $$dir/%.S \$$(before-compile); \
+		\$$(compile-command.S)";				      \
+	   echo "\$$(objpfx)%.o: $$dir/%.s \$$(before-compile); \
+		\$$(compile-command.s)";				      \
+	   echo "\$$(objpfx)%.o: $$dir/%.c \$$(before-compile); \
+		\$$(compile-command.c)";				      \
 	   fi;								      \
 	 done) > $@
 
@@ -157,14 +156,19 @@ override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
 
 # The order of these rules is important.
 
-ifndef .S-rule # Bletch.
-$(objpfx)%.o: %.S $(before-compile)
-	$(compile.S) $(OUTPUT_OPTION)
+$(objpfx)%.o: %.S $(before-compile); $(compile-command.S)
+$(objpfx)%.o: %.s $(before-compile); $(compile-command.s)
+$(objpfx)%.o: %.c $(before-compile); $(compile-command.c)
+
+ifndef compile-command.S
+compile-command.S = $(compile.S) $(OUTPUT_OPTION)
 endif
-$(objpfx)%.o: %.s $(before-compile)
-	$(COMPILE.s) $< $(OUTPUT_OPTION)
-$(objpfx)%.o: %.c $(before-compile)
-	$(compile.c) $(OUTPUT_OPTION)
+ifndef compile-command.s
+compile-command.s = $(COMPILE.s) $< $(OUTPUT_OPTION)
+endif
+ifndef compile-command.c
+compile-command.c = $(compile.c) $(OUTPUT_OPTION)
+endif
 
 ifeq ($(notdir $(firstword $(CC))),gcc)
 # GCC can grok options after the file name.
