@@ -25,7 +25,7 @@ subdir	:= login
 headers	:= utmp.h utmpbits.h lastlog.h pty.h
 
 routines := getutent getutent_r getutid getutline getutid_r getutline_r \
-	    utmp_file utmp_db updwtmp
+	    utmp_file updwtmp utmpname
 
 distribute := utmp-private.h
 
