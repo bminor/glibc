@@ -1918,8 +1918,10 @@ less than @code{25}.
 @comment SVID
 @deftypefun {char *} tempnam (const char *@var{dir}, const char *@var{prefix})
 This function generates a unique temporary filename.  If @var{prefix} is
-not a null pointer, up to five characters of this string are used as
-a prefix for the file name.
+not a null pointer, up to five characters of this string are used as a
+prefix for the file name.  The return value is a string newly allocated
+with @code{malloc}; you should release its storage with @code{free} when
+it is no longer needed.
 
 The directory prefix for the temporary file name is determined by testing
 each of the following, in sequence.  The directory must exist and be
