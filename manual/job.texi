@@ -153,8 +153,8 @@ calls @code{setsid} to become the leader of a new session.
 @cindex controlling terminal, access to
 
 Processes in the foreground job of a controlling terminal have
-unrestricted access to that terminal; bacground proesses do not.  This
-section describes in more details what happens when a process in a
+unrestricted access to that terminal; background proesses do not.  This
+section describes in more detail what happens when a process in a
 background job tries to access its controlling terminal.
 
 @cindex @code{SIGTTIN}, from background job
@@ -306,7 +306,7 @@ objects.
 
 @example
 @group
-/* @r{Find the active job with the indicated pgid.}  */
+/* @r{Find the active job with the indicated @var{pgid}.}  */
 job *
 find_job (pid_t pgid)
 @{
@@ -327,7 +327,7 @@ job_is_stopped (job *j)
   process *p;
   
   for (p = j->first_process; p; p = p->next)
-    if (!p->completed  && !p->stopped)
+    if (!p->completed && !p->stopped)
       return 0;
   return 1;
 @}
@@ -529,40 +529,43 @@ launch_process (process *p, pid_t pgid,
 @{
   pid_t pid;
 
-  if (shell_is_interactive) @{
-  
-    /* @r{Put the process into the process group and give the process group}
-       @r{the terminal, if appropriate.}
-       @r{This has to be done both by the shell and in the individual}
-       @r{child processes because of potential race conditions.}  */
-    pid = getpid ();
-    if (pgid == 0) pgid = pid;
-    setpgid (pid, pgid);
-    if (foreground)
-      tcsetpgrp (shell_terminal, pgid);
-  
-    /* @r{Set the handling for job control signals back to the default.}  */
-    signal (SIGINT, SIG_DFL);
-    signal (SIGQUIT, SIG_DFL);
-    signal (SIGTSTP, SIG_DFL);
-    signal (SIGTTIN, SIG_DFL);
-    signal (SIGTTOU, SIG_DFL);
-    signal (SIGCHLD, SIG_DFL);
-  @}
+  if (shell_is_interactive)
+    @{
+      /* @r{Put the process into the process group and give the process group}
+         @r{the terminal, if appropriate.}
+         @r{This has to be done both by the shell and in the individual}
+         @r{child processes because of potential race conditions.}  */
+      pid = getpid ();
+      if (pgid == 0) pgid = pid;
+      setpgid (pid, pgid);
+      if (foreground)
+        tcsetpgrp (shell_terminal, pgid);
+
+      /* @r{Set the handling for job control signals back to the default.}  */
+      signal (SIGINT, SIG_DFL);
+      signal (SIGQUIT, SIG_DFL);
+      signal (SIGTSTP, SIG_DFL);
+      signal (SIGTTIN, SIG_DFL);
+      signal (SIGTTOU, SIG_DFL);
+      signal (SIGCHLD, SIG_DFL);
+    @}
 
   /* @r{Set the standard input/output channels of the new process.}  */
-  if (infile != STDIN_FILENO) @{
-    dup2 (infile, STDIN_FILENO);
-    close (infile);
-  @}
-  if (outfile != STDOUT_FILENO) @{
-    dup2 (outfile, STDOUT_FILENO);
-    close (outfile);
-  @}
-  if (errfile != STDERR_FILENO) @{
-    dup2 (errfile, STDERR_FILENO);
-    close (errfile);
-  @}    
+  if (infile != STDIN_FILENO)
+    @{
+      dup2 (infile, STDIN_FILENO);
+      close (infile);
+    @}
+  if (outfile != STDOUT_FILENO)
+    @{
+      dup2 (outfile, STDOUT_FILENO);
+      close (outfile);
+    @}
+  if (errfile != STDERR_FILENO)
+    @{
+      dup2 (errfile, STDERR_FILENO);
+      close (errfile);
+    @}    
   
   /* @r{Exec the new process.  Make sure we exit.}  */ 
   execvp (p->argv[0], p->argv);
@@ -590,49 +593,51 @@ launch_job (job *j, int foreground)
   int mypipe[2], infile, outfile;
   
   infile = j->stdin;
-  for (p = j->first_process; p; p = p->next) @{
-    
-    /* @r{Set up pipes, if necessary.}  */
-    if (p->next) @{
-      if (pipe (mypipe) < 0) @{
-        perror ("pipe");
-        exit (1);
-      @}
-      outfile = mypipe[1];
+  for (p = j->first_process; p; p = p->next)
+    @{
+      /* @r{Set up pipes, if necessary.}  */
+      if (p->next)
+        @{
+          if (pipe (mypipe) < 0)
+            @{
+              perror ("pipe");
+              exit (1);
+            @}
+          outfile = mypipe[1];
+        @}
+      else
+        outfile = j->stdout;
+
+      /* @r{Fork the child processes.}  */
+      pid = fork ();
+      if (pid == 0)
+        /* @r{This is the child process.}  */
+        launch_process (p, j->pgid, infile, outfile, j->stderr, foreground);
+      else if (pid < 0)
+        @{
+          /* @r{The fork failed.}  */
+          perror ("fork");
+          exit (1);
+        @}
+      else
+        @{
+          /* @r{This is the parent process.}  */
+          p->pid = pid;
+          if (shell_is_interactive)
+            @{
+              if (!j->pgid)
+                j->pgid = pid;
+              setpgid (pid, j->pgid);
+            @}
+        @}
+
+      /* @r{Clean up after pipes.}  */
+      if (infile != j->stdin)
+        close (infile);
+      if (outfile != j->stdout)
+        close (outfile);
+      infile = mypipe[0];
     @}
-    else
-      outfile = j->stdout;
-    
-    /* @r{Fork the child processes.}  */
-    pid = fork ();
-    if (pid == 0)
-      /* @r{This is the child process.}  */
-      launch_process (p, j->pgid, infile, outfile, j->stderr, foreground);
-    else if (pid < 0)
-      @{
-        /* @r{The fork failed.}  */
-        perror ("fork");
-        exit (1);
-      @}
-    else
-      @{
-        /* @r{This is the parent process.}  */
-        p->pid = pid;
-        if (shell_is_interactive)
-          @{
-            if (!j->pgid)
-              j->pgid = pid;
-            setpgid (pid, j->pgid);
-          @}
-      @}
-    
-    /* @r{Clean up after pipes.}  */
-    if (infile != j->stdin)
-      close (infile);
-    if (outfile != j->stdout)
-      close (outfile);
-    infile = mypipe[0];
-  @}
   
   format_job_info (j, "launched");
 
