@@ -46,13 +46,22 @@ routines = hurdid hurdpath hurdpid hurdports \
 	   msgportdemux \
 	   fopenport __fopenport \
 	   vpprintf \
-	   $(sig) $(dtable)
+	   $(sig) $(dtable) $(inlines)
 sig	= hurdsig siginfo init-fault msging-p hurd-raise \
 	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport setdtsz \
 	  fd-read fd-write
+inlines = $(addprefix inline-,fd port signal userlink)
+omit-deps += $(inlines)
 aux := hurdsyms hurdinit # hurdmsg
+
+# The files inline-*.c contain the real-function definition of the
+# functions defined with `extern inline' in hurd/*.h.
+$(objpfx)inline-%.c: hurd/%.h
+	(echo '#define _EXTERN_INLINE /* Define the real function. */';\
+	 echo '#include "$<"') > $@-tmp
+	mv $@-tmp $@
 
 # Get the proper definition of `hurd-srcdir'.
 include ../sysdeps/mach/hurd/Makefile
