@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,83 +26,156 @@ int
 DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 {
   va_list ap;
-
-  __mutex_lock (&_hurd_dtable_lock);
-
-  if (fd < 0 || fd >= _hurd_dtable.size ||
-      _hurd_dtable.d[fd].server == MACH_PORT_NULL)
+  struct _hurd_port *p = _hurd_dport (fd);
+  io_t port;
+  int dealloc;
+  int result;
+  
+  if (p == NULL)
     {
-      __mutex_unlock (&_hurd_dtable_lock);
+      errno = EBADF;
+      return -1;
+    }
+  if (p->port == MACH_PORT_NULL)
+    {
+      __spin_unlock (&p->lock);
       errno = EBADF;
       return -1;
     }
 
+  va_start (ap, cmd);
+
   switch (cmd)
     {
+    case F_GETLK:
+    case F_SETLK:
+    case F_SETLKW:
+      errno = ENOSYS;
+      result = -1;
+      break;
+
+    default:
+      errno = EINVAL;
+      result = -1;
+      break;
+
     case F_DUPFD:
       {
 	int new;
-	va_start (ap, cmd);
-	new = va_arg (ap, int);
-	va_end (ap);
-	if (new < 0 || fd >= _hurd_dtable.size)
+	__typeof (_hurd_dtable.d[fd]) old;
+	old = _hurd_dtable.d[fd];
+	_hurd_dtable.d[fd].user_dealloc = &dealloc;
+	__spin_unlock (&_hurd_dtable.d[fd].user_dealloc);
+	port = _hurd_port_locked_get (p, &dealloc);
+	__mutex_lock (&hurd_dtable_lock);
+	for (new = va_arg (ap, int); new < _hurd_dtable.size; ++new)
 	  {
-	    __mutex_unlock (&_hurd_dtable_lock);
-	    errno = EBADF;
-	    return -1;
+	    __typeof (&_hurd_dtable.d[new]) d = &_hurd_dtable.d[new];
+	    __spin_lock (&d->port.lock);
+	    if (d->port.port == MACH_PORT_NULL)
+	      {
+		*d = old;
+		d->port.user_dealloc = NULL;
+		__spin_unlock (&d->port.lock);
+		__mutex_unlock (&hurd_dtable_lock);
+		result = new;
+		if (!dealloc)
+		  __mach_port_mod_refs (__mach_task_self (), old.port.port,
+					MACH_PORT_RIGHT_SEND, 1);
+		goto win;
+	      }
+	    __spin_unlock (&d->port.lock);
 	  }
-	while (new < _hurd_dtable.size)
-	  if (_hurd_dtable.d[new].server == MACH_PORT_NULL)
-	    {
-	      if (__mach_port_mod_refs (__mach_task_self (),
-					_hurd_dtable.d[fd].server,
-					MACH_PORT_RIGHT_SEND,
-					1))
-		{
-		  __mutex_unlock (&_hurd_dtable_lock);
-		  errno = EBADF;
-		  return -1;
-		}
-	      _hurd_dtable.d[new] = _hurd_dtable.d[fd];
-	      __mutex_unlock (&_hurd_dtable_lock);
-	      return new;
-	    }
-	  else
-	    ++new;
-	__mutex_unlock (&_hurd_dtable_lock);
+	__mutex_unlock (&hurd_dtable_lock);
 	errno = EMFILE;
-	return -1;
+	result = -1;
+      win:
+	break;
       }
 
     case F_GETFD:
       {
-	const int flags = _hurd_dtable.d[fd].flags;
-	__mutex_unlock (&_hurd_dtable_lock);
-	return flags;
+	result = _hurd_dtable.d[fd].flags;
+	__spin_unlock (&_hurd_dtable.d[fd].lock);
+	break;
       }
 
     case F_SETFD:
+      _hurd_dtable.d[fd].flags = va_arg (ap, int);
+      __spin_unlock (&_hurd_dtable.d[fd].lock);
+      result = 0;
+      break;
+
+    case F_GETFL:
       {
-	int flags;
-	va_start (ap, cmd);
-	flags = va_arg (ap, int);
-	va_end (ap);
-	_hurd_dtable.d[fd].flags = flags;
-	__mutex_unlock (&_hurd_dtable_lock);
-	return 0;
+	error_t err;
+	int nonblock, append;
+	port = _hurd_port_locked_get (p, &dealloc);
+	err = __io_get_nonblock (port, &nonblock);
+	if (!err)
+	  err = __io_get_append (port, &append);
+	_hurd_port_free (port, &dealloc);
+	if (err)
+	  {
+	    errno = err;
+	    result = -1;
+	  }
+	else
+	  result = ((nonblock ? O_NONBLOCK : 0) |
+		    (append ? O_APPEND : 0));
+	break;
       }
 
-    case F_GETFL:		/* XXX io_get_flags */
-    case F_SETFL:		/* XXX io_set_flags */
-    case F_SETLK:
-    case F_SETLKW:
-    case F_GETOWN:
-    case F_SETOWN:
-      /* XXX */
+    case F_SETFL:
+      {
+	int flags = va_arg (ap, int);
+	error_t err;
+	port = _hurd_port_locked_get (p, &dealloc);
+	err = __io_mod_nonblock (port, flags & O_NONBLOCK);
+	if (!err)
+	  err = __io_mod_append (port, flags & O_APPEND);
+	_hurd_port_free (port, &dealloc);
+	if (err)
+	  {
+	    result = -1;
+	    errno = err;
+	  }
+	else
+	  result = 0;
+	break;
+      }
 
-    default:
-      __mutex_unlock (&_hurd_dtable_lock);
-      errno = EINVAL;
-      return -1;
+    case F_GETOWN:
+      {
+	error_t err;
+	port = _hurd_port_locked_get (p, &dealloc);
+	if (err = __io_get_owner (port, &result))
+	  {
+	    errno = err;
+	    result = -1;
+	  }
+	_hurd_port_free (port, &dealloc);
+	break;
+      }
+
+    case F_SETOWN:
+      {
+	pid_t owner = va_arg (ap, pid_t);
+	error_t err;
+	port = _hurd_port_locked_get (p, &dealloc);
+	if (err = __io_set_owner (port, owner))
+	  {
+	    errno = err;
+	    result = -1;
+	  }
+	else
+	  result = 0;
+	_hurd_port_free (port, &dealloc);
+	break;
+      }
     }
+
+  va_end (ap);
+
+  return result;
 }
