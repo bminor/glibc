@@ -77,11 +77,12 @@ __yp_bind (const char *domain, dom_binding **ypdb)
   if (ysd == NULL)
     {
       is_new = 1;
-      ysd = (dom_binding *) malloc (sizeof *ysd);
-      memset (ysd, '\0', sizeof *ysd);
+      ysd = (dom_binding *) calloc (1, sizeof *ysd);
       ysd->dom_socket = -1;
       ysd->dom_vers = -1;
     }
+  else
+    ysd->dom_client = NULL;
 
   try = 0;
 
@@ -260,11 +261,12 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
       use_ypbindlist = FALSE;
     }
   else
-    {
-      __yp_unbind (ydb);
-      free (ydb);
-      ydb = NULL;
-    }
+    if (ydb != NULL)
+      {
+	__yp_unbind (ydb);
+	free (ydb);
+	ydb = NULL;
+      }
 
   return result;
 }
