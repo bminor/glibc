@@ -1,3 +1,8 @@
+1999-12-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/longlong.h (__sparc_v9__): Use %rDIGIT instead of %DIGIT
+	where appropriate.
+
 1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* malloc/Versions: Export __libc_freeres for GLIBC_2.1.
