@@ -92,7 +92,7 @@ else
 $(objpfx)munch-init.c: munch.awk munch-tmpl.c $(+subdir_inits)
 	awk -f $< subdirs='$(+init_subdirs)' $(word 2,$^) > $@-t
 	mv $@-t $@
-generated := $(generated) $(objpfx)munch-init.c
+generated := $(generated) munch-init.c
 endif
 
 aux	:= sysdep $(+init) version start
@@ -186,7 +186,7 @@ $(all-subdirs-targets):
 parent-mostlyclean: common-mostlyclean # common-mostlyclean is in Makerules.
 	-rm -f $(libc.a) $(addprefix $(objpfx),$(install-lib))
 parent-clean: parent-mostlyclean common-clean
-	-rm -f $(common-generated)
+	-rm -f $(addprefix $(common-objpfx),$(common-generated))
 	-rm -f $(addprefix $(+sysdir_pfx),sysd-Makefile sysd-dirs sysdirs)
 
 clean: parent-clean
@@ -233,7 +233,7 @@ distribute  := README INSTALL NOTES COPYING.LIB COPYING ChangeLog NEWS	\
 	       munch-tmpl.c munch.awk gnu-stabs.h sysdep.h install.sh
 
 export distribute := $(strip $(distribute))
-export generated := $(generated) $(objpfx)stubs.h
+export generated := $(generated) stubs.h
 
 .PHONY: dist
 dist: Make-dist $(distribute)
