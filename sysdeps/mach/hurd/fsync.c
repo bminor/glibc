@@ -26,17 +26,14 @@ int
 DEFUN(fsync, (fd), int fd)
 {
   error_t err;
+  file_t server;
   __mutex_lock (&_hurd_dtable.lock);
-  if (fd < 0 || fd >= _hurd_dtable.size ||
-      _hurd_dtable.d[fd].server == MACH_PORT_NULL)
-    {
-      __mutex_unlock (&_hurd_dtable.lock);
-      errno = EBADF;
-      return -1;
-    }
-  err = __file_sync (_hurd_dtable.d[fd].server);
+  server = _hurd_dport (fd);
+  if (server == MACH_PORT_NULL)
+    return -1;
   __mutex_unlock (&_hurd_dtable.lock);
-  if (err)
+
+  if (err = __file_sync (server))
     return __hurd_fail (err);
   return 0;
 }
