@@ -147,10 +147,10 @@ __MATHCALL (fmod,, (_Mdouble_ __x, _Mdouble_ __y));
 
 /* Return 0 if VALUE is finite or NaN, +1 if it
    is +Infinity, -1 if it is -Infinity.  */
-__MATHDECL (int, isinf,, (_Mdouble_ __value));
+__MATHDECL (int,isinf,, (_Mdouble_ __value));
 
 /* Return nonzero if VALUE is finite and not NaN.  */
-__MATHDECL (int, finite,, (_Mdouble_ __value));
+__MATHDECL (int,finite,, (_Mdouble_ __value));
 
 /* Deal with an infinite or NaN result.
    If ERROR is ERANGE, result is +Inf;
@@ -186,10 +186,10 @@ __MATHCALL (significand,, (_Mdouble_ __x));
 #if defined(__USE_MISC) || defined(__USE_XOPEN)
 
 /* Return nonzero if VALUE is not a number.  */
-__MATHDECL (int, isnan,, (_Mdouble_ __value));
+__MATHDECL (int,isnan,, (_Mdouble_ __value));
 
 /* Return the binary exponent of X, which must be nonzero.  */
-__MATHDECL (int, ilogb,, (_Mdouble_ __x));
+__MATHDECL (int,ilogb,, (_Mdouble_ __x));
 
 /* Return `sqrt(X*X + Y*Y)'.  */
 __MATHCALL (hypot,, (_Mdouble_ __x, _Mdouble_ __y));
@@ -207,8 +207,6 @@ __MATHCALL (y0,, (_Mdouble_));
 __MATHCALL (y1,, (_Mdouble_));
 __MATHCALL (yn,, (int, _Mdouble_));
 
-/* This variable is used by `gamma' and `lgamma'.  */
-extern int signgam;
 
 #ifdef __USE_MISC
 
