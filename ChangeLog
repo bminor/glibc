@@ -1,3 +1,36 @@
+2000-02-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* ctype/ctype-info.c (__ctype32_tolower, __ctype32_toupper): New
+	variables.
+	* locale/langinfo.h: Add _NL_CTYPE_TOUPPER32_EB,
+	_NL_CTYPE_TOLOWER32_EB, _NL_CTYPE_TOUPPER32_EL, and
+	_NL_CTYPE_TOLOWER32_EL.
+	* locale/C-ctype.c: Add initializers for new elements.
+	* locale/lc-ctype.c: Initialize __ctype32_toupper and
+	__ctype32_tolower.
+	* locale/programs/linereader.c (get_symname): Start looking for
+	numeric value at the right position.
+	* locale/programs/charset.c (charset_new_char): Remove third parameter.
+	* locale/programs/charset.h (charset_new_char): Likewise.
+	* locale/programs/charmap.c (parse_charmap): Update charset_new_char
+	call.
+	* locale/programs/ld-ctype.c: Many many changes to generate wide
+	character classification and mapping tables correctly.
+	* locale/programs/locales.h: Update prototypes of ctype_class_from,
+	ctype_class_to, ctype_map_from, and ctype_map_to.
+	* locale/programs/locfile.c (locfile_read): Initialize
+	locfile->repertoire.  Pass repertoire to ctype_class_from,
+	ctype_class_to, ctype_map_from, and ctype_map_to calls.
+	* locale/programs/locfile.h (struct localedef_t): Add repertoire
+	element.
+	* locale/programs/repertoire.c (repertoire_find_value): New function.
+	(repertoire_read): Remove third parameter from charset_new_char call.
+	* locale/programs/repertoire.h (repertoire_find_value): Declare.
+	* wctype/wcfuncs.c: Use __ctype32_tolower and __ctype32_toupper.
+	* wctype/wcfuncs_l.c: Likewise.
+
+	* locale/nl_langinfo.h: Add casts to prevent warnings.
+
 2000-02-09  Andreas Jaeger  <aj@suse.de>
 
 	* time/strptime.c (strptime_internal): Fix pointer dereference.
