@@ -1606,17 +1606,14 @@ following values:
 @table @code
 @vindex TCIFLUSH
 @item TCIFLUSH
-
 Clear any input data received, but not yet read.
 
 @vindex TCOFLUSH
 @item TCOFLUSH
-
 Clear any output data written, but not yet transmitted.
 
 @vindex TCIOFLUSH
 @item TCIOFLUSH
-
 Clear both queued input and output.
 @end table
 

@@ -496,10 +496,8 @@ to the @code{waitpid} function.
 @comment Extra blank lines make it look better.
 @table @code
 @item WAIT_ANY
-
 This constant macro (whose value is @code{-1}) specifies that
 @code{waitpid} should return status information about any child process.
-
 
 @item WAIT_MYPGRP
 This constant (with value @code{0}) specifies that @code{waitpid} should
@@ -513,12 +511,10 @@ together to obtain a value to use as the argument.
 
 @table @code
 @item WNOHANG
-
 This flag specifies that @code{waitpid} should return immediately
 instead of waiting, if there is no child process ready to be noticed.
 
 @item WUNTRACED
-
 This flag specifies that @code{waitpid} should report the status of any
 child processes that have been stopped as well as those that have
 terminated.

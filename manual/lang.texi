@@ -672,7 +672,6 @@ described by the macro---thus, @code{ULONG_MAX} has type
 @comment limits.h
 @comment ANSI
 @item SCHAR_MIN
-
 This is the minimum value that can be represented by a @w{@code{signed char}}.
 
 @comment limits.h
@@ -681,14 +680,12 @@ This is the minimum value that can be represented by a @w{@code{signed char}}.
 @comment limits.h
 @comment ANSI
 @itemx UCHAR_MAX
-
 These are the maximum values that can be represented by a
 @w{@code{signed char}} and @w{@code{unsigned char}}, respectively.
 
 @comment limits.h
 @comment ANSI
 @item CHAR_MIN
-
 This is the minimum value that can be represented by a @code{char}.
 It's equal to @code{SCHAR_MIN} if @code{char} is signed, or zero
 otherwise.
@@ -696,7 +693,6 @@ otherwise.
 @comment limits.h
 @comment ANSI
 @item CHAR_MAX
-
 This is the maximum value that can be represented by a @code{char}.
 It's equal to @code{SCHAR_MAX} if @code{char} is signed, or
 @code{UCHAR_MAX} otherwise.
@@ -704,7 +700,6 @@ It's equal to @code{SCHAR_MAX} if @code{char} is signed, or
 @comment limits.h
 @comment ANSI
 @item SHRT_MIN
-
 This is the minimum value that can be represented by a @w{@code{signed
 short int}}.  On most machines that the GNU C library runs on,
 @code{short} integers are 16-bit quantities.
@@ -715,7 +710,6 @@ short int}}.  On most machines that the GNU C library runs on,
 @comment limits.h
 @comment ANSI
 @itemx USHRT_MAX
-
 These are the maximum values that can be represented by a
 @w{@code{signed short int}} and @w{@code{unsigned short int}},
 respectively.
@@ -723,7 +717,6 @@ respectively.
 @comment limits.h
 @comment ANSI
 @item INT_MIN
-
 This is the minimum value that can be represented by a @w{@code{signed
 int}}.  On most machines that the GNU C system runs on, an @code{int} is
 a 32-bit quantity.
@@ -734,14 +727,12 @@ a 32-bit quantity.
 @comment limits.h
 @comment ANSI
 @itemx UINT_MAX
-
 These are the maximum values that can be represented by, respectively,
 the type @w{@code{signed int}} and the type @w{@code{unsigned int}}.
 
 @comment limits.h
 @comment ANSI
 @item LONG_MIN
-
 This is the minimum value that can be represented by a @w{@code{signed
 long int}}.  On most machines that the GNU C system runs on, @code{long}
 integers are 32-bit quantities, the same size as @code{int}.
@@ -752,14 +743,12 @@ integers are 32-bit quantities, the same size as @code{int}.
 @comment limits.h
 @comment ANSI
 @itemx ULONG_MAX
-
 These are the maximum values that can be represented by a
 @w{@code{signed long int}} and @code{unsigned long int}, respectively.
 
 @comment limits.h
 @comment GNU
 @item LONG_LONG_MIN
-
 This is the minimum value that can be represented by a @w{@code{signed
 long long int}}.  On most machines that the GNU C system runs on,
 @w{@code{long long}} integers are 64-bit quantities.
@@ -770,14 +759,12 @@ long long int}}.  On most machines that the GNU C system runs on,
 @comment limits.h
 @comment ANSI
 @itemx ULONG_LONG_MAX
-
 These are the maximum values that can be represented by a @code{signed
 long long int} and @code{unsigned long long int}, respectively.
 
 @comment limits.h
 @comment GNU
 @item WCHAR_MAX
-
 This is the maximum value that can be represented by a @code{wchar_t}.
 @xref{Wide Char Intro}.
 @end table
@@ -1012,7 +999,6 @@ respectively.
 @comment float.h
 @comment ANSI
 @item FLT_DIG
-
 This is the number of decimal digits of precision for the @code{float}
 data type.  Technically, if @var{p} and @var{b} are the precision and
 base (respectively) for the representation, then the decimal precision
@@ -1028,7 +1014,6 @@ ANSI C.
 @comment ANSI
 @item DBL_DIG
 @itemx LDBL_DIG
-
 These are similar to @code{FLT_DIG}, but for the data types
 @code{double} and @code{long double}, respectively.  The values of these
 macros are supposed to be at least @code{10}.
@@ -1045,7 +1030,6 @@ normalized floating point number of type @code{float}.
 @comment ANSI
 @item DBL_MIN_EXP
 @itemx LDBL_MIN_EXP
-
 These are similar to @code{FLT_MIN_EXP}, but for the data types
 @code{double} and @code{long double}, respectively.
 
@@ -1095,7 +1079,6 @@ These are similar to @code{FLT_MAX_10_EXP}, but for the data types
 @comment float.h
 @comment ANSI
 @item FLT_MAX
-
 The value of this macro is the maximum number representable in type
 @code{float}.  It is supposed to be at least @code{1E+37}.  The value
 has type @code{float}.
@@ -1106,7 +1089,6 @@ The smallest representable number is @code{- FLT_MAX}.
 @comment ANSI
 @item DBL_MAX
 @itemx LDBL_MAX
-
 These are similar to @code{FLT_MAX}, but for the data types
 @code{double} and @code{long double}, respectively.  The type of the
 macro's value is the same as the type it describes.
@@ -1114,7 +1096,6 @@ macro's value is the same as the type it describes.
 @comment float.h
 @comment ANSI
 @item FLT_MIN
-
 The value of this macro is the minimum normalized positive floating
 point number that is representable in type @code{float}.  It is supposed
 to be no more than @code{1E-37}.
@@ -1123,7 +1104,6 @@ to be no more than @code{1E-37}.
 @comment ANSI
 @item DBL_MIN
 @itemx LDBL_MIN
-
 These are similar to @code{FLT_MIN}, but for the data types
 @code{double} and @code{long double}, respectively.  The type of the
 macro's value is the same as the type it describes.
@@ -1131,7 +1111,6 @@ macro's value is the same as the type it describes.
 @comment float.h
 @comment ANSI
 @item FLT_EPSILON
-
 This is the minimum positive floating point number of type @code{float}
 such that @code{1.0 + FLT_EPSILON != 1.0} is true.  It's supposed to
 be no greater than @code{1E-5}.
@@ -1140,7 +1119,6 @@ be no greater than @code{1E-5}.
 @comment ANSI
 @item DBL_EPSILON
 @itemx LDBL_EPSILON
-
 These are similar to @code{FLT_EPSILON}, but for the data types
 @code{double} and @code{long double}, respectively.  The type of the
 macro's value is the same as the type it describes.  The values are not
