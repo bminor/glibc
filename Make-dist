@@ -158,7 +158,7 @@ dist.tar: $(tardir) $(+tsrcs)
 de-..: dist.tar
 	tar xf $< -C /tmp
 	tar cf $< -C /tmp $(tardir)
-	-rm -fr /tmp/$(tardir)
+	-rm -fr /tmp/$(tardir) &
 
 README: README.template version.c
 	-rm -f $@
