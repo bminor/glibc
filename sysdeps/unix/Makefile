@@ -81,7 +81,9 @@ $(common-objpfx)param.h.dep: $(common-objpfx)param.h.c \
 	      -e 's@^@sys/param.h-includes := $$(sys/param.h-includes) @'
 
 # Get the generated definition of sys/param.h-includes.
+ifndef no_deps
 include $(common-objpfx)param.h.dep
+endif
 
 # Don't preempt our own headers. 
 sys/param.h-includes := \
