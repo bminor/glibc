@@ -1,3 +1,13 @@
+1999-12-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/Makefile: Add rules for
+	oldgetrlimit and oldsetrlimit.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add oldgetrlimit and
+	oldsetrlimit.
+	* sysdeps/unix/sysv/linux/Makefile: Move oldgetrlimit and
+	oldsetrlimit rules into 32-bit arch subdirs.
+	* sysdeps/unix/sysv/linux/syscalls.list: Likewise.
+
 1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_db.c: Correctly transfer last patch from 2.2 branch.
