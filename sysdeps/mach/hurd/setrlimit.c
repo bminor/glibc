@@ -27,11 +27,15 @@ int
 DEFUN(setrlimit, (resource, rlimits),
       enum __rlimit_resource resource AND struct rlimit *rlimits)
 {
+  struct rlimit lim;
+
   if (rlimits == NULL)
     {
       errno = EINVAL;
       return -1;
     }
+
+  lim = *rlimits;
 
   switch (resource)
     {
@@ -40,17 +44,25 @@ DEFUN(setrlimit, (resource, rlimits),
       return -1;
 
     case RLIMIT_CORE:
-      _hurd_core_limit = rlimits->rlim_cur;
+      _hurd_core_limit = lim.rlim_cur;
       return 0;
 
     case RLIMIT_DATA:
-      return _hurd_set_data_limit (rlimits);
+      return _hurd_set_data_limit (&lim);
 
     case RLIMIT_CPU:
     case RLIMIT_FSIZE:
     case RLIMIT_STACK:
     case RLIMIT_RSS:
+    case RLIMIT_NPROC:
+    case RLIMIT_MEMLOCK:
       errno = ENOSYS;
       return -1;
+
+    case RLIMIT_OFILE:
+      __mutex_lock (&_hurd_dtable_lock);
+      _hurd_dtable_rlimit = lim.rlim_cur; /* XXX open descriptors? */
+      __mutex_unlock (&_hurd_dtable_lock);
+      return 0;
     }
 }
