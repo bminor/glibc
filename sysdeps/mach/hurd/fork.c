@@ -314,9 +314,13 @@ __fork (void)
 			 (vm_address_t) porttypes,
 			 nporttypes * sizeof (*porttypes));
       if (threads)
-	__vm_deallocate (__mach_task_self (),
-			 (vm_address_t) threads,
-			 nthreads * sizeof (*threads));
+	{
+	  for (i = 0; i < nthreads; ++i)
+	    __mach_port_deallocate (__mach_task_self (), threads[i]);
+	  __vm_deallocate (__mach_task_self (),
+			   (vm_address_t) threads,
+			   nthreads * sizeof (*threads));
+	}
 
       /* Run things that want to run in the parent to restore it to
 	 normality.  Usually prepare hooks and parent hooks are
