@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +16,18 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <setjmp.h>
 
 
 /* Save the current program position in ENV and return 0.  */
 int
-DEFUN(__setjmp, (env), jmp_buf env)
+__sigsetjmp (jmp_buf env, int savemask)
 {
-  errno = ENOSYS;
+  /* Save the signal mask if requested.  */
+  __sigjmp_save (env, savemask);
 
+  errno = ENOSYS;
   /* No way to signal failure.	*/
   return 0;
 }
@@ -36,6 +37,6 @@ DEFUN(__setjmp, (env), jmp_buf env)
 
 #include <gnu-stabs.h>
 
-stub_warning(__setjmp);
+stub_warning(__sigsetjmp);
 
 #endif	/* GNU stabs.  */

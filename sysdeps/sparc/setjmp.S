@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,9 +20,11 @@ Cambridge, MA 02139, USA.  */
 
 /* NOTE: This code depends on the definition of `__jmp_buf' in <jmp_buf.h>.  */
 
-ENTRY (__setjmp)
+ENTRY (__sigsetjmp)
 	/* Save our return PC and SP.  */
 	st %o7, [%o0]
 	st %sp, [%o0 + 4]
-	retl
-	clr %o0
+	/* Save the signal mask if requested.  We do this as a tail-call
+	   for simplicity; it always returns zero.  */
+	jmp C_SYMBOL_NAME (__sigjmp_save)
+	nop
