@@ -50,7 +50,7 @@ commit-merge:
 	cd ..; cvs -Q commit -m"Updated to $(snapshot-id)"
 
 glibc.spec: glibc.spec.in ../version.h branch.mk
-	(echo '%define glibcdate $(snapshot-name);' \
+	(echo '%define glibcdate $(snapshot-name)'; \
 	 sed -n '/VERSION/s/^.*"\([^"]*\)"$/%define glibcversion \1/p' \
 	     ../version.h; \
 	 cat $<) > $@.new
