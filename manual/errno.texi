@@ -550,7 +550,9 @@ protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
 @comment errno.h
 @comment BSD: Destination address required
 @deftypevr Macro int EDESTADDRREQ
-No destination address was supplied on a socket operation that needed one.
+No default destination address was set for the socket.  You get this
+error when you try to transmit data over a connectionless socket,
+without first specifying a destination for the data with @code{connect}.
 @end deftypevr
 
 @comment errno.h
