@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <time.h>
 
-/* Defined in offtime.c.  */
+/* Defined in mktime.c.  */
 extern CONST unsigned short int __mon_lengths[2][12];
 
 #define NOID
@@ -75,7 +75,7 @@ typedef struct
 /* tz_rules[0] is standard, tz_rules[1] is daylight.  */
 static tz_rule tz_rules[2];
 
-static int tzset_run = 0;
+int __tzset_run = 0;
 
 /* Interpret the TZ envariable.  */
 void
@@ -100,7 +100,7 @@ DEFUN_VOID(__tzset)
       __tzfile_read(tz + 1);
       if (__use_tzfile)
 	{
-	  tzset_run = 1;
+	  __tzset_run = 1;
 	  return;
 	}
       else
@@ -131,7 +131,7 @@ DEFUN_VOID(__tzset)
 	  tz_rules[0].change = tz_rules[1].change = (time_t) -1;
 	  tz_rules[0].computed_for = tz_rules[1].computed_for = 0;
 	}
-      tzset_run = 1;
+      __tzset_run = 1;
       return;
     }
 
@@ -241,7 +241,10 @@ DEFUN_VOID(__tzset)
       __tzfile_default (tz_rules[0].name, tz_rules[1].name,
 			tz_rules[0].offset, tz_rules[1].offset);
       if (__use_tzfile)
-	return;
+	{
+	  __tzset_run = 1;
+	  return;
+	}
     }
 
   /* Figure out the standard <-> DST rules.  */
@@ -336,7 +339,7 @@ DEFUN_VOID(__tzset)
       tzr->computed_for = -1;
     }
 
-  tzset_run = 1;
+  __tzset_run = 1;
 }
 
 /* Figure out the exact time (as a time_t) in YEAR
@@ -348,9 +351,6 @@ DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
 {
   register time_t t;
   int y;
-
-  /* Turn tm_year into actual year.  */
-  year += 1900;
 
   if (year != -1 && rule->computed_for == year)
     /* Operations on times in 1969 will be slower.  Oh well.  */
@@ -429,16 +429,13 @@ DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
    Return nonzero on success, zero on failure.  */
 int
 DEFUN(__tz_compute, (timer, tm),
-      time_t timer AND struct tm tm)
+      time_t timer AND const struct tm *tm)
 {
-  if (!tzset_run)
-    __tzset();
+  if (! __tzset_run)
+    __tzset ();
 
-  if (__use_tzfile)
-    return __tzfile_compute(timer, tm);
-
-  if (!compute_change(&tz_rules[0], tm.tm_year) ||
-      !compute_change(&tz_rules[1], tm.tm_year))
+  if (! compute_change (&tz_rules[0], 1900 + tm->tm_year) ||
+      ! compute_change (&tz_rules[1], 1900 + tm->tm_year))
     return 0;
 
   __daylight = timer >= tz_rules[0].change && timer < tz_rules[1].change;
