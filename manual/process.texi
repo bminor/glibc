@@ -583,7 +583,7 @@ These macros are defined in the header file @file{sys/wait.h}.
 @comment sys/wait.h
 @comment POSIX.1
 @deftypefn Macro int WIFEXITED (int @var{status})
-This macro returns a non-zero value if the child process terminated
+This macro returns a nonzero value if the child process terminated
 normally with @code{exit} or @code{_exit}.
 @end deftypefn
 
@@ -598,7 +598,7 @@ low-order 8 bits of the exit status value from the child process.
 @comment sys/wait.h
 @comment POSIX.1
 @deftypefn Macro int WIFSIGNALED (int @var{status})
-This macro returns a non-zero value if the child process terminated
+This macro returns a nonzero value if the child process terminated
 because it received a signal that was not handled.
 @xref{Signal Handling}.
 @end deftypefn
@@ -613,14 +613,14 @@ signal number of the signal that terminated the child process.
 @comment sys/wait.h
 @comment BSD
 @deftypefn Macro int WCOREDUMP (int @var{status})
-This macro returns a non-zero value if the child process terminated
+This macro returns a nonzero value if the child process terminated
 and produced a core dump.
 @end deftypefn
 
 @comment sys/wait.h
 @comment POSIX.1
 @deftypefn Macro int WIFSTOPPED (int @var{status})
-This macro returns a non-zero value if the child process is stopped.
+This macro returns a nonzero value if the child process is stopped.
 @end deftypefn
 
 @comment sys/wait.h

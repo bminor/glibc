@@ -851,7 +851,7 @@ This function closes the internal stream used by @code{getpwent}.
 @deftypefun int putpwent (const struct passwd *@var{p}, FILE *@var{stream})
 This function writes the user entry @code{*@var{p}} to the stream
 @var{stream}, in the format used for the standard user database
-file.  The return value is zero on success and non-zero on failure.
+file.  The return value is zero on success and nonzero on failure.
 
 This function exists for compatibility with SVID.  We recommend that you
 avoid using it, because it makes sense only on the assumption that the
