@@ -52,12 +52,20 @@ ifneq (mach,$(subdir))
 # Subdirectories other than mach/ might use the generated Mach headers.
 # So make sure we get a chance to run in mach/ to make them before all else.
 
+ifdef objpfx
+mach-objpfx = $(objpfx)
+else
+objpfx = $(..)mach
+endif
+
 # These are all the generated files that <mach.h> includes.
-mach-before-compile := $(common-objpfx)mach-shortcuts.h \
-		       $(patsubst %,$(common-objpfx)mach/mach_%.h,\
+mach-before-compile := $(mach-objpfx)mach-shortcuts.h \
+		       $(patsubst %,$(mach-objpfx)mach/mach_%.h,\
 				  interface port host)
 
-$(patsubst %.h,%.%,$(mach-before-compile)): # Run only if one doesn't exist.
+# This patsubst generates patterns like `m%h-shortcuts.h', which are damn
+# likely to match just the corresponding particular file we want.
+$(patsubst mach%,m\%h%,$(mach-before-compile)): # Run only if doesn't exist.
 	@echo '+++ mach generation for $@: $^ ($?)'
 	$(MAKE) -C $(..)mach generated no_deps=t
 
