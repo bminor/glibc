@@ -319,9 +319,14 @@ while [ $# -gt 0 ]; do
   # Find the parent of NAME, using the empty string if it has none.
   parent="`echo $name | sed -n -e '/\//!q' -e 's=/[^/]*$==p'`"
 
-  # Append the names implied by NAME, and NAME's parent (if it has one),
-  # to the list of names to be processed (the argument list).
-  sysnames="`echo $* $implied $parent`"
+  # Add the names implied by NAME, and NAME's parent (if it has one), to
+  # the list of names to be processed (the argument list).  We prepend the
+  # implied names to the list and append the parent.  We want implied
+  # directories to come before further directories inferred from the
+  # configuration components; this ensures that for sysv4, unix/common
+  # (implied by unix/sysv/sysv4) comes before unix/sysv (in ostry (here $*)
+  # after sysv4).
+  sysnames="`echo $implied $* $parent`"
   if [ "$sysnames" != "" ]; then
     set $sysnames
   fi
