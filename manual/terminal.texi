@@ -4,8 +4,8 @@
 This chapter describes functions that are specific to terminal devices.
 You can use these functions to do things like turn off input echoing;
 set serial line characteristics such as baud rate and flow control; and
-change which characters are used to indicate end-of-file, erase, and 
-similar control functions.
+change which characters are used for end-of-file, command-line editing,
+sending signals, and similar control functions.
 
 Most of the functions in this chapter operate on file descriptors.
 @xref{Low-Level Input/Output}, for more information about what a file
@@ -48,11 +48,10 @@ Identification}.
 @comment POSIX.1
 @deftypefun {char *} ttyname (int @var{filedes})
 If the file descriptor @var{filedes} is associated with a terminal
-device, the @code{ttyname} function returns a pointer to a 
-statically-allocated, null-terminated string containing the file name
-of the terminal file.  A null pointer is returned instead if the
-file descriptor isn't associated with a terminal, or the file name cannot
-be determined.
+device, the @code{ttyname} function returns a pointer to a
+statically-allocated, null-terminated string containing the file name of
+the terminal file.  The value is a null pointer if the file descriptor
+isn't associated with a terminal, or the file name cannot be determined.
 @end deftypefun
 
 Prototypes for both @code{isatty} and @code{ttyname} are declared in
@@ -65,39 +64,41 @@ the header file @file{unistd.h}.
 
 Many of the remaining functions in this section refer to the input and
 output queues of a terminal device.  These queues implement a form of
-buffering that is distinct from buffering implemented by stream data
-structures.
+buffering @emph{within the kernel} independent of the buffering
+implemented by stream data structures.
 
 @cindex terminal input queue
 @cindex typeahead buffer
 The @dfn{terminal input queue} is also sometimes referred to as its
 @dfn{typeahead buffer}.  It contains characters that have been received
-from the terminal device, but not yet read by any process.  
+from the terminal, but not yet read by any process.  
 
-The size of the terminal's input queue is specified by the
-@code{_POSIX_MAX_INPUT} and @code{MAX_INPUT} parameters; @pxref{File
+The size of the terminal's input queue is described by the
+@code{_POSIX_MAX_INPUT} and @code{MAX_INPUT} parameters; see @ref{File
 System Parameters}.  If input flow control is enabled by setting the
 @code{IXOFF} input mode bit (@pxref{Input Modes}), the terminal driver
-transmits STOP and START characters to prevent the queue from
-overflowing.  Otherwise, input may be lost.
+transmits STOP and START characters to the terminal when necessary to
+prevent the queue from overflowing.  Otherwise, input may be lost if it
+comes in too fast.
 
 @cindex terminal output queue
 The @dfn{terminal output queue} is similar; it contains characters that
-have been written, but not yet transmitted to the terminal device.  If
-ouput flow control is enabled by setting the @code{IXON} input mode bit
-(@pxref{Input Modes}), the terminal driver uses START and STOP
-characters received to control when queued output can be transmitted.
+have been written by processes, but not yet transmitted to the terminal.
+If ouput flow control is enabled by setting the @code{IXON} input mode
+bit (@pxref{Input Modes}), the terminal driver obeys STOP and STOP
+characters sent by the terminal to stop and restart transmission of
+output.
 
-Flushing the terminal input queue causes any characters that have been
-received but not yet read to be discarded.  Similarly, flushing the
-terminal output queue causes any characters that have been written but
-not yet transmitted to be discarded.
+@dfn{Flushing} the terminal input queue means discarding any characters
+that have been received but not yet read.  Similarly, flushing the
+terminal output queue means discarding any characters that have been
+written but not yet transmitted.
 
 @node Terminal Modes
 @section Terminal Modes
 
-This section describes the various terminal attributes that you can
-inquire about and change.  The functions, data structures, and symbolic
+This section describes the various terminal attributes that control how
+input and output are done.  The functions, data structures, and symbolic
 constants are all declared in the header file @file{termios.h}.
 @pindex termios.h
 
@@ -123,27 +124,27 @@ discussed in more detail below.
 
 @comment termios.h
 @comment POSIX.1
-@deftp {struct Type} termios
+@deftp {Data Type} {struct termios}
 Structures of type @code{termios} are used with the @code{tcgetattr}
 and @code{tcsetattr} functions to describe terminal attributes.  The
 structure includes at least the following members:
 
 @table @code
 @item tcflag_t c_iflag
-A bit mask specifying input modes; @pxref{Input Modes}.
+A bit mask specifying input modes; see @ref{Input Modes}.
 
 @item tcflag_t c_oflag
-A bit mask specifying output modes; @pxref{Output Modes}.
+A bit mask specifying output modes; see @ref{Output Modes}.
 
 @item tcflag_t c_cflag
-A bit mask specifying control modes; @pxref{Control Modes}.
+A bit mask specifying control modes; see @ref{Control Modes}.
 
 @item tcflag_t c_lflag
-A bit mask specifying local modes; @pxref{Local Modes}.
+A bit mask specifying local modes; see @ref{Local Modes}.
 
 @item cc_t c_cc[NCCS]
 An array specifying which characters are associated with various
-control functions; @pxref{Special Characters}.
+control functions; see @ref{Special Characters}.
 @end table
 
 The @code{termios} structure also contains components which encode baud
@@ -183,17 +184,17 @@ descriptor for the same terminal that you use to read from it in
 single-character, non-echoed mode.  Instead, you have to explicitly
 switch the terminal back and forth between the two modes.
 
-When you want to set terminal attributes, you should generally call
+When you set terminal attributes, you should generally call
 @code{tcgetattr} first to get the current attributes of the particular
 terminal device and then modify only those attributes that you are
-really interested in.  
+really interested in.
 
-It's a bad idea to simply initialize a @code{termios} structure to an
-arbitrary set of attributes and pass it directly to @code{tcsetattr}.
-In addition to the problems of choosing values for all of the flags and
+It's a bad idea to simply initialize a @code{termios} structure to a
+chosen set of attributes and pass it directly to @code{tcsetattr}.  In
+addition to the problems of choosing values for all of the flags and
 parameters that are reasonable for a particular terminal device, the
-implementation might support additional attributes, and it's best just
-to leave those alone.
+implementation might support additional attributes, and your program
+should not alter them.
 
 For the same reasons, you should avoid blindly copying attributes from
 one terminal device to another.
@@ -201,7 +202,7 @@ one terminal device to another.
 @comment termios.h
 @comment POSIX.1
 @deftypefun int tcgetattr (int @var{filedes}, struct termios *@var{termios_p})
-This function is used to inquire about the attributes of the terminal
+This function is used to examine the attributes of the terminal
 device with file descriptor @var{filedes}.  The attributes are returned
 in the structure pointed at by @var{termios_p}.
 
@@ -225,18 +226,21 @@ This function sets the attributes of the terminal device with file
 descriptor @var{filedes}.  The new attributes are taken from the
 structure pointed at by @var{termios_p}.
 
-The @var{when} argument specifies when the change is to be applied, and
-optional actions to perform at the same time.  It can be one of the
-following values:
+The @var{when} argument specifies how to deal with input and output
+already queued.  It can be one of the following values:
 
 @table @code
+@vindex TCSANOW
 @item TCSANOW
 Make the change immediately.
 
+@vindex TCSADRAIN
 @item TCSADRAIN
-Make the change after all queued output has been written.  You should
-use this option when changing parameters that affect output.
+Make the change after waiting until all queued output has been written.
+You should usually use this option when changing parameters that affect
+output.
 
+@vindex TCSAFLUSH
 @item TCSAFLUSH
 This is like @code{TCSADRAIN}, but also discards any queued input.
 @end table
@@ -270,39 +274,79 @@ to @code{tcsetattr}:
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int TCSANOW
+@table @code
+@vindex TCSANOW
+@item TCSANOW
 Make the change to the terminal attributes immediately.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int TCSADRAIN
+@vindex TCSADRAIN
+@item TCSADRAIN
 Make the change to the terminal attributes after queued output has been
 transmitted.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int TCSAFLUSH
+@vindex TCSAFLUSH
+@item TCSAFLUSH
 Make the change to the terminal attributes after queued output has been
 completed, also flushing any queued input in the typeahead buffer.
-@end deftypevr
+@end table
 
 
 @node Input Modes
 @subsection Input Modes
 
-This section describes the flags for the @code{c_iflag} member of the
-@code{termios} structure.  These flags generally control fairly low-level
-aspects of input processing.
+This section describes the terminal attribute of flags that control
+fairly low-level aspects of input processing: handling of parity errors,
+break signals, flow control, and @key{RET} and @key{LFD} characters.
+
+All of these flags are bits in the @code{c_iflag} member of the
+@code{termios} structure.  The member is an integer, and you change
+flags using the operators @code{&}, @code{|} and @code{^}.
+
+It is not a good idea to set the entire @code{c_iflag} member as a
+whole.  Instead, you should alter only the flags whose values matter in
+your program, leaving any other flags unchanged.  Your program may be
+run years from now, on systems that support flags not listed here.  For
+example:
+
+@example
+int
+set_istrip (int desc, int value)
+@{
+  struct termios settings;
+  int result;
+
+  result = tcgetattr (desc, &settings);
+  if (result < 0)
+    @{
+      perror ("error in tcgetattr");
+      return 0;
+    @}
+  settings.c_iflag &= ~ISTRIP;
+  if (value)
+    settings.c_iflag |= ISTRIP;
+  result = tcgetattr (desc, &settings);
+  if (result < 0)
+    @{
+      perror ("error in tcgetattr");
+      return;
+   @}
+  return 1;
+@}
+@end example
 
 The values of each of the following macros are bitwise distinct constants.
 You can specify the value for the @code{c_iflag} member as the bitwise
 OR of the desired flags.
 
+@table @code
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int INPCK
+@vindex INPCK
+@item INPCK
 @cindex parity checking
 If this bit is set, input parity checking is enabled.  If it is not set,
 no checking at all is done for parity errors on input; the
@@ -310,7 +354,7 @@ characters are simply passed through to the application.
 
 Parity checking on input processing is independent of whether parity
 detection and generation on the underlying terminal hardware is enabled;
-@pxref{Control Modes}.  For example, you could clear the @code{INPCK}
+see @ref{Control Modes}.  For example, you could clear the @code{INPCK}
 input mode flag and set the @code{PARENB} control mode flag to ignore
 parity errors on input, but still generate parity on output.
 
@@ -318,49 +362,51 @@ If this bit is set, what happens when a parity error is detected depends
 on whether the @code{IGNPAR} or @code{PARMRK} bits are set.  If neither
 of these bits are set, a byte with a parity error is passed to the
 application as a @code{'\0'} character.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int IGNPAR
+@vindex IGNPAR
+@item IGNPAR
 If this bit is set, any byte with a framing or parity error is ignored.
 This is only useful if @code{INPCK} is also set.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int PARMRK
+@vindex PARMRK
+@item PARMRK
 If this bit is set and @code{IGNPAR} is not set, a byte with a framing
 or parity error is prefixed with the characters @code{'\377'} and
 @code{'\0'} before being passed to the application.  This is only useful
 if @code{INPCK} is also set.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int ISTRIP
+@vindex ISTRIP
+@item ISTRIP
 If this bit is set, valid input bytes are stripped to seven bits;
-otherwise, all eight bits are processed.
+otherwise, all eight bits are available for programs to read.
 
 If both @code{ISTRIP} and @code{PARMRK} are set, an input byte of 
 @code{'\377'} is passed to the application as a two-byte sequence
 @code{'\377'}, @code{'\377'}.
-@end deftypevr
+
+@c ??? Is this right?
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int IGNBRK
+@vindex IGNBRK
+@item IGNBRK
 If this bit is set, break conditions are ignored.
 
 @cindex break condition, detecting
 A @dfn{break condition} is defined in the context of asynchronous
 serial data transmission as a series of zero-value bits longer than a
 single byte.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int BRKINT
+@vindex BRKINT
+@item BRKINT
 If this bit is set and @code{IGNBRK} is not set, a break condition
 causes input and output queues on the terminal to be flushed and a
 @code{SIGINT} signal is sent to any foreground process group associated
@@ -370,63 +416,66 @@ If neither @code{BRKINT} nor @code{IGNBRK} are set, a break condition is
 passed to the application as a single @code{'\0'} character if
 @code{PARMRK} is not set, or otherwise as a three-character sequence 
 @code{'\377'}, @code{'\0'}, @code{'\0'}.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int IGNCR
+@vindex IGNCR
+@item IGNCR
 If this bit is set, carriage return characters (@code{'\r'}) are
-discarded on input.
-@end deftypevr
+discarded on input.  Discarding carriage return may be useful on
+terminals that send both carriage return and linefeed when you type the
+@key{RET} key.
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int ICRNL
+@vindex ICRNL
+@item ICRNL
 If this bit is set and @code{IGNCR} is not set, carriage return characters
 (@code{'\r'}) received as input are passed to the application as newline
 characters (@code{'\n'}).
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int INLCR
+@vindex INLCR
+@item INLCR
 If this bit is set, newline characters (@code{'\n'}) received as input
 are passed to the application as carriage return characters (@code{'\r'}).
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int IXOFF
+@vindex IXOFF
+@item IXOFF
 If this bit is set, start/stop control on input is enabled.  In other
-words, STOP and START characters are transmitted as necessary to
-prevent input being received faster than the input queue is emptied by
-calls to @code{read}.  It's assumed that the actual terminal hardware
-that is generating the data being read responds to a STOP character
-by suspending data transmission, and to a START character by resuming
-transmission.  @xref{Special Characters}.
-@end deftypevr
+words, the computer sends STOP and START characters as necessary to
+prevent input from coming in faster than programs are reading it.  It's
+assumed that the actual terminal hardware that is generating the input
+data being read responds to a STOP character by suspending data
+transmission, and to a START character by resuming transmission.
+@xref{Special Characters}.
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int IXON
+@vindex IXON
+@item IXON
 If this bit is set, start/stop control on output is enabled.  In other
-words, if a STOP character is received as input, output is suspended
+words, if the computer receives a STOP character, it suspends output
 until a START character is received.  In this case, the STOP and START
-characters are never passed to the application.  If this bit is not set,
-then START and STOP can be read as ordinary characters.
+characters are never passed to the application program.  If this bit is
+not set, then START and STOP can be read as ordinary characters.
 @xref{Special Characters}.
-@end deftypevr
+@end table
 
 @node Output Modes
 @subsection Output Modes
 
-This section describes the flags for the @code{c_oflag} member of the
-@code{termios} structure.  These flags generally control fairly low-level
-aspects of output processing.
+This section describes the terminal flags and fields that control how
+output characters are translated and padded for display.  All of these
+are contained in the @code{c_oflag} member of the @code{termios}
+structure.  The @code{c_iflag} member itself is an integer, and you
+change the flags and fields using the operators @code{&}, @code{|}, and
+@code{^}.
 
-The values of each of the following macros are bitwise distinct constants.
-You can specify the value for the @code{c_oflag} member as the bitwise
-OR of the desired flags.
+@c ??? need to copy some other text here and write an example program.
 
 @comment termios.h
 @comment POSIX.1
@@ -439,25 +488,28 @@ carriage return and linefeed pairs.
 If this bit isn't set, the characters are transmitted as-is.
 @end deftypevr
 
+@c ??? Add here the flags and fields libc actually supports.
+
 @node Control Modes
 @subsection Control Modes
 
-This section describes the flags for the @code{c_cflag} member of the
-@code{termios} structure.  These flags control parameters usually
-associated with asynchronous serial data transmission.  These flags may
-not make sense for other kinds of terminal ports (such as a network
-connection pseudo-terminal).
+This section describes the terminal flags and fields that control
+parameters usually associated with asynchronous serial data
+transmission.  These flags may not make sense for other kinds of
+terminal ports (such as a network connection pseudo-terminal).  All of
+these are contained in the @code{c_cflag} member of the @code{termios}
+structure.  The @code{c_cflag} member itself is an integer, and you
+change the flags and fields using the operators @code{&}, @code{|}, and
+@code{^}.
 
-The values of each of the following macros are bitwise distinct
-constants.  You can specify the value for the @code{c_cflag} member as
-the bitwise OR of the desired flags.
-
+@table @code
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int CLOCAL
+@vindex CLOCAL
+@item CLOCAL
 If this bit is set, it indicates that the terminal is connected
-``locally'' and that the modem status lines (carrier detect) should be
-ignored.
+``locally'' and that the modem status lines (such as carrier detect)
+should be ignored.
 @cindex modem status lines
 @cindex carrier detect
 
@@ -468,245 +520,228 @@ connection is established.
 If this bit is not set and a modem disconnect is detected, a
 @code{SIGHUP} signal is sent to the controlling process for the terminal
 (if it has one).  Normally, this causes the process to exit;
-@pxref{Signal Handling}.  Reading from the terminal after a disconnect
+see @ref{Signal Handling}.  Reading from the terminal after a disconnect
 causes an end-of-file condition, and writing causes an
-@code{EIO} error to be returned.  The terminal file must be closed and
+@code{EIO} error to be returned.  The terminal device must be closed and
 reopened to clear the condition.
 @cindex modem disconnect
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int HUPCL
+@vindex HUPCL
+@item HUPCL
 If this bit is set, a modem disconnect is generated when all processes
-that have the terminal port open have either closed the file or exited.
-@end deftypevr
+that have the terminal device open have either closed the file or exited.
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int CREAD
-If this bit is set, input can be read from the terminal.  Otherwise, no
-characters can be read.
-@end deftypevr
+@vindex CREAD
+@item CREAD
+If this bit is set, input can be read from the terminal.  Otherwise,
+input is not permitted.
+
+@c ??? What happens if a program tries to do input anyway?
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int CSTOPB
+@vindex CSTOPB
+@item CSTOPB
 If this bit is set, two stop bits are used.  Otherwise, only one stop bit
 is used.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int PARENB
+@vindex PARENB
+@item PARENB
 If this bit is set, generation and detection of a parity bit are enabled.
 @xref{Input Modes}, for information on how input parity errors are handled.
 
-If this bit is not set, no parity bit is added.
-@end deftypevr
+If this bit is not set, no parity bit is added to output characters, and input characters are not checked for correct parity.
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int PARODD
+@vindex PARODD
+@item PARODD
 This bit is only useful if @code{PARENB} is set.  If @code{PARODD} is set,
 odd parity is used, otherwise even parity is used.
-@end deftypevr
 
 The control mode flags also includes a field for the number of bits per
 character.  You can use the @code{CSIZE} macro as a mask to extract the
-value.
+value, like this: @code{settings.c_cflag & CSIZE}.
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int CSIZE
+@vindex CSIZE
+@item CSIZE
 This is a mask for the number of bits per character.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int CS5
+@vindex CS5
+@item CS5
 This specifies five bits per byte.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int CS6
+@vindex CS6
+@item CS6
 This specifies six bits per byte.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int CS7
+@vindex CS7
+@item CS7
 This specifies seven bits per byte.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int CS8
+@vindex CS8
+@item CS8
 This specifies eight bits per byte.
-@end deftypevr
+@end table
 
-@node Baud Rate
-@subsection Baud Rate
+@node Line Speed
+@subsection Line Speed
+@cindex line speed
+@cindex baud rate
+@cindex terminal line speed
+@cindex terminal line speed
 
-The baud rate specification is related to the terminal control modes
-(@pxref{Control Modes}), but is manipulated by means of a functional
-interface.  The way that the baud rate is represented in the
-@code{termios} structure is not specified.
+The terminal line speed tells the computer how fast to read and write
+data on the terminal.
 
-Baud rates are not specified directly as numbers, not only because they
-might not be represented that way in the @code{termios} structure, but
-also because only a fairly small subset of baud rates can be recognized
-by terminal hardware devices.
+If the terminal is connected to a real serial line, the terminal speed
+you specify actually controls the line---if it doesn't match the
+terminal's own idea of the speed, communication does not work.  Real
+serial ports accept only certain standard speeds.  Also, particular
+hardware may not support even all the standard speeds.  Specifying a
+speed of zero hangs up a dialup connection and turns off modem control
+signals.
 
-@strong{Incomplete:}  RMS says that it should be possible to simply pass
-the baud rate value instead of one of these constants.  However, the library
-is not implemented that way now.
+If the terminal is not a real serial line (for example, if it is a
+network connection), then the line speed won't really affect data
+transmission speed, but some programs will use it to determine the
+amount of padding needed.  It's best to specify a line speed value that
+matches the actual speed of the actual terminal.
+
+There are actually two line speeds for each terminal, one for input and
+one for output.  You can set them independently, but most often
+terminals use the same speed for both directions.
+
+The speed values are stored in the @code{struct termios} structure, but
+you should use the functions in this section to read and store them;
+don't try to access them in the @code{struct termios} structure
+directly.
+
+You can use the following functions to inquire about and modify the
+speeds stored in a @code{termios} structure.
 
 @comment termios.h
 @comment POSIX.1
 @deftp {Data Type} speed_t
-The @code{speed_t} type is an unsigned integer data type used to represent
-baud rates.
+The @code{speed_t} type is an unsigned integer data type used to
+represent line speeds.
 @end deftp
-
-You can use these constants as baud rate values.
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B0
-Hang up; turns off the modem control lines.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B50
-50 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B75
-75 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B110
-110 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B134
-134.5 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B150
-150 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B200
-200 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B300
-300 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B600
-600 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B1200
-1200 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B1800
-1800 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B2400
-2400 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B4800
-4800 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B9600
-9600 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B19200
-19200 baud.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int B38400
-38400 baud.
-@end deftypevr
-
-You can use the following functions to inquire about and modify the
-baud rates in a @code{termios} structure.
 
 @comment termios.h
 @comment POSIX.1
 @deftypefun speed_t cfgetospeed (const struct termios *@var{termios_p})
-This function returns the output baud rate stored in the structure
-pointed at by @var{termios_p}.
-@end deftypefun
-
-@comment termios.h
-@comment POSIX.1
-@deftypefun int cfsetospeed (struct termios *@var{termios_p}, speed_t @var{speed})
-This function sets the output baud rate stored in the structure pointed
-at by @var{termios_p} to @var{speed}.  The normal return value is
-@code{0}; a value of @code{-1} indicates an error.  If you try to set
-an invalid baud rate, it might be detected by @code{cfsetospeed} or
-@code{tcsetattr} or both.
+This function returns the output line speed stored in the structure
+@code{*@var{termios_p}}.
 @end deftypefun
 
 @comment termios.h
 @comment POSIX.1
 @deftypefun speed_t cfgetispeed (const struct termios *@var{termios_p})
-This function returns the input baud rate stored in the structure
-pointed at by @var{termios_p}.
+This function returns the input line speed stored in the structure
+@code{*@var{termios_p}}.
+@end deftypefun
+
+@comment termios.h
+@comment POSIX.1
+@deftypefun int cfsetospeed (struct termios *@var{termios_p}, speed_t @var{speed})
+This function stores @var{speed} in @code{*@var{termios_p}} as the output
+speed.  The normal return value is @code{0}; a value of @code{-1}
+indicates an error.  If @var{speed} is not a speed, @code{cfsetospeed}
+returns @code{-1}.
 @end deftypefun
 
 @comment termios.h
 @comment POSIX.1
 @deftypefun int cfsetispeed (struct termios *@var{termios_p}, speed_t @var{speed})
-This function sets the input baud rate stored in the structure pointed
-at by @var{termios_p} to @var{speed}.  The normal return value is
-@code{0}; a value of @code{-1} indicates an error.  If you try to set
-an invalid baud rate, it might be detected by @code{cfsetispeed} or
-@code{tcsetattr} or both.
+This function stores @var{speed} in @code{*@var{termios_p}} as the input
+speed.  The normal return value is @code{0}; a value of @code{-1}
+indicates an error.  If @var{speed} is not a speed, @code{cfsetospeed}
+returns @code{-1}.
 @end deftypefun
 
-Like the other terminal control modes, specifying a baud rate might or
-might not make sense for particular terminal devices.
+@strong{Portability note:} With other libraries, @code{cfsetospeed} and
+@code{cfsetispeed} might return success for an invalid speed, but
+@code{tcsetattr} would return @code{-1}.
+
+@strong{Portability note:} In the GNU library, the functions below
+accept speeds measured in baud as input, and return speed values
+measured in baud.  Other libraries require speeds to be indicated by
+special codes.  For POSIX.1 portability, you must use one of the
+following symbols to represent the speed; their precise numeric values
+are system-dependent, but each name has a fixed meaning: @code{B110}
+stands for 110 baud, @code{B300} for 300 baud, and so on.  There is no
+portable way to represent any speed but these, but these are all the
+speeds that most serial lines can support.
+
+@comment termios.h
+@comment POSIX.1
+@vindex B0
+@comment termios.h
+@comment POSIX.1
+@vindex B50
+@comment termios.h
+@comment POSIX.1
+@vindex B75
+@comment termios.h
+@comment POSIX.1
+@vindex B110
+@comment termios.h
+@comment POSIX.1
+@vindex B134
+@comment termios.h
+@comment POSIX.1
+@vindex B150
+@comment termios.h
+@comment POSIX.1
+@vindex B200
+@comment termios.h
+@comment POSIX.1
+@vindex B300
+@comment termios.h
+@comment POSIX.1
+@vindex B600
+@comment termios.h
+@comment POSIX.1
+@vindex B1200
+@comment termios.h
+@comment POSIX.1
+@vindex B1800
+@comment termios.h
+@comment POSIX.1
+@vindex B2400
+@comment termios.h
+@comment POSIX.1
+@vindex B4800
+@comment termios.h
+@comment POSIX.1
+@vindex B9600
+@comment termios.h
+@comment POSIX.1
+@vindex B19200
+@comment termios.h
+@comment POSIX.1
+@vindex B38400
+@example
+B0  B50  B75  B110  B134  B150  B200
+B300  B600  B1200  B1800  B2400  B4800
+B9600  B19200  B38400
+@end example
 
 @node Local Modes
 @subsection Local Modes
@@ -717,78 +752,82 @@ aspects of input processing than the input modes flags described in
 @ref{Input Modes}, such as echoing and whether the various control 
 characters (@pxref{Special Characters}) are applied.
 
-There are two general ways in which input is processed.
+There are two general alternatives for how input is processed.
 
 @cindex canonical input processing
 In @dfn{canonical input processing} mode, terminal input is processed in
 lines terminated by newline (@code{'\n'}), EOF, or EOL characters;
-@pxref{Special Characters}.  No input can be read until an entire line
+see @ref{Special Characters}.  No input can be read until an entire line
 has been typed by the user, and the @code{read} function (@pxref{I/O
 Primitives}) returns at most a single line of input, no matter how many
 bytes are requested.
-
-The constants @code{_POSIX_MAX_CANON} and @code{MAX_CANON} parameterize
-the maximum number of bytes which may appear in a single line.  
-@xref{File System Parameters}.
 
 In canonical input mode, the ERASE and KILL characters are interpreted
 specially to perform editing operations within the current line of text.
 @xref{Special Characters}.
 
+The constants @code{_POSIX_MAX_CANON} and @code{MAX_CANON} parameterize
+the maximum number of bytes which may appear in a single line of
+canonical input.  @xref{File System Parameters}.
+
 @cindex non-canonical input processing
 In @dfn{non-canonical input processing} mode, characters are not grouped
-into lines, and ERASE and KILL processing are not performed.  The
+into lines, and ERASE and KILL processing is not performed.  The
 granularity with which bytes are read in non-canonical input mode is
-controlled by the MIN and TIME characters.  @xref{Special Characters}.
+controlled by the MIN and TIME settings.  @xref{Special Characters}.
 
 The values of each of the following macros are bitwise distinct
 constants.  You can specify the value for the @code{c_iflag} member as
 the bitwise OR of the desired flags.
 
+@table @code
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int ICANON
-If set, this bit enables canonical input processing mode.  Otherwise,
+@vindex ICANON
+@item ICANON
+This bit, if set, enables canonical input processing mode.  Otherwise,
 input is processed in non-canonical mode.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int ECHO
+@vindex ECHO
+@item ECHO
 If this bit is set, echoing of input characters back to the terminal
 is enabled.
 @cindex echo of terminal input
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int ECHOE
+@vindex ECHOE
+@item ECHOE
 If this bit is set and the @code{ICANON} bit is also set, then the ERASE
 character is echoed by erasing the last character in the current line
 from the terminal display.  This bit only controls the echoing behavior;
-the @code{ICANON} bit controls actual recognition of the ERASE character.
-@end deftypevr
+the @code{ICANON} bit controls actual recognition of the ERASE character
+and erasure of input.
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int ECHOK
+@vindex ECHOK
+@item ECHOK
 If this bit is set and the @code{ICANON} bit is also set, then the
 KILL character is echoed either by erasing the current line, or by
 writing a newline character.  This bit only controls the echoing behavior;
-the @code{ICANON} bit controls actual recognition of the KILL character.
-@end deftypevr
+the @code{ICANON} bit controls actual recognition of the KILL character
+and erasure of input.
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int ECHONL
+@vindex ECHONL
+@item ECHONL
 If this bit is set and the @code{ICANON} bit is also set, then the
 newline (@code{'\n'}) character is echoed even if the @code{ECHO} bit
 is not set.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int ISIG
+@vindex ISIG
+@item ISIG
 This bit controls whether the INTR, QUIT, and SUSP characters are
 recognized.  The functions associated with these characters are performed
 if and only if this bit is set.  Being in canonical or non-canonical
@@ -798,42 +837,38 @@ You should use caution when disabling recognition of these characters.
 Programs that cannot be interrupted interactively are very
 user-unfriendly.  If you clear this bit, your program should provide
 some alternate interface that allows the user to interactively send the
-signals associated with these characters.
+signals associated with these characters, or to escape from the program.
 @cindex interactive signals, from terminal
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int IEXTEN
+@vindex IEXTEN
+@item IEXTEN
 This bit is similar to @code{ISIG}, but controls implementation-defined
 special characters.  If it is set, it might override the default behavior
 for the @code{ICANON} and @code{ISIG} local mode flags, and the @code{IXON}
 and @code{IXOFF} input mode flags.
-@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int NOFLSH
+@vindex NOFLSH
+@item NOFLSH
 Normally, the INTR, QUIT, and SUSP characters cause input and output
-queues for the terminal to be flushed.  If this bit is set, the flush
-is not performed.
-@end deftypevr
+queues for the terminal to be cleared.  If this bit is set, the queues
+are not cleared.
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int TOSTOP
-If this bit is set and the implementation supports job control, then
+@vindex TOSTOP
+@item TOSTOP
+If this bit is set and the system supports job control, then
 @code{SIGTTOU} signals are generated by background processes that
-attempt to write to the terminal.  @xref{Access to the Controlling Terminal}.
-@end deftypevr
+attempt to write to the terminal.  @xref{Access to the Controlling
+Terminal}.
+@end table
 
 @node Special Characters
 @subsection Special Characters
-
-@strong{Incomplete:} RMS suggests that the names of these characters not
-be in all caps.  The POSIX standard does use all caps for these, though,
-and I'm too lazy to track down all the references to them right now
-anyway.
 
 The terminal driver recognizes a number of special characters which
 perform various control functions.  These include the INTR character
@@ -850,11 +885,10 @@ corresponding characters that perform these functions.
 Some of these characters are only recognized if specific local mode flags
 are set.  @xref{Local Modes}, for more information.
 
-If the implementation supports @code{_POSIX_VDISABLE} for the terminal,
+If the system supports @code{_POSIX_VDISABLE} for the terminal,
 you can also disable each of these functions individually by setting
 the corresponding array element to @code{_POSIX_VDISABLE}.  
 @xref{File System Parameters}, for more information about this parameter.
-
 
 @comment termios.h
 @comment POSIX.1
@@ -873,8 +907,9 @@ constants.
 @comment POSIX.1
 @deftypevr Macro int VEOF
 @cindex EOF character
-This is the subscript for the EOF character in the special control character
-array.
+This is the subscript for the EOF character in the special control
+character array.  @code{@var{structure}.c_cc[VEOF]} holds the character
+itself.
 
 The EOF character is recognized only in canonical input mode.  It acts
 as a line terminator in the same way as a newline character, but if the
@@ -889,11 +924,13 @@ Usually, the EOF character is @kbd{C-d}.
 @comment POSIX.1
 @deftypevr Macro int VEOL
 @cindex EOL character
-This is the subscript for the EOL character in the special control character
-array.
+This is the subscript for the EOL character in the special control
+character array.  @code{@var{structure}.c_cc[VEOL]} holds the character
+itself.
 
 The EOL character is recognized only in canonical input mode.  It acts
-as a line terminator, just like a newline character.
+as a line terminator, just like a newline character.  The EOL character
+is not discarded; it is read as the last character in the input line.
 
 @strong{Incomplete:}  Is this usually a carriage return?
 @end deftypevr
@@ -902,8 +939,9 @@ as a line terminator, just like a newline character.
 @comment POSIX.1
 @deftypevr Macro int VERASE
 @cindex ERASE character
-This is the subscript for the ERASE character in the special control character
-array.
+This is the subscript for the ERASE character in the special control
+character array.  @code{@var{structure}.c_cc[VERASE]} holds the
+character itself.
 
 The ERASE character is recognized only in canonical input mode.  When
 the user types the erase character, the previous character typed is
@@ -912,19 +950,20 @@ this may cause more than one byte of input to be discarded.)  This
 cannot be used to erase past the beginning of the current line of text.
 The ERASE character itself is discarded.
 
-Usually, the ERASE character is delete.
+Usually, the ERASE character is @key{DEL}.
 @end deftypevr
 
 @comment termios.h
 @comment POSIX.1
 @deftypevr Macro int VKILL
 @cindex KILL character
-This is the subscript for the KILL character in the special control character
-array.
+This is the subscript for the KILL character in the special control
+character array.  @code{@var{structure}.c_cc[VKILL]} holds the character
+itself.
 
 The KILL character is recognized only in canonical input mode.  When the
 user types the kill character, the entire contents of the current line
-of input are discarded.  The @code{KILL} character itself is discarded.
+of input are discarded.  The kill character itself is discarded too.
 
 The KILL character is usually @kbd{C-u}.
 @end deftypevr
@@ -934,14 +973,15 @@ The KILL character is usually @kbd{C-u}.
 @deftypevr Macro int VINTR
 @cindex INTR character
 @cindex interrupt character
-This is the subscript for the INTR character in the special control character
-array.
+This is the subscript for the INTR character in the special control
+character array.  @code{@var{structure}.c_cc[VINTR]} holds the character
+itself.
 
 The INTR (interrupt) character is recognized only if the @code{ISIG}
-local mode flag is set.  It causes a @code{SIGINT} signal to be sent
-to all processes in the foreground job associated with the terminal.
-@xref{Signal Handling}, for more information about signals.  The
-INTR character itself is discarded.
+local mode flag is set.  It causes a @code{SIGINT} signal to be sent to
+all processes in the foreground job associated with the terminal.
+@xref{Signal Handling}, for more information about signals.  The INTR
+character itself is then discarded.
 
 Typically, the INTR character is @kbd{C-c}.
 @end deftypevr
@@ -950,14 +990,15 @@ Typically, the INTR character is @kbd{C-c}.
 @comment POSIX.1
 @deftypevr Macro int VQUIT
 @cindex QUIT character
-This is the subscript for the QUIT character in the special control character
-array.
+This is the subscript for the QUIT character in the special control
+character array.  @code{@var{structure}.c_cc[VQUIT]} holds the character
+itself.
 
 The QUIT character is recognized only if the @code{ISIG} local mode flag
 is set.  It causes a @code{SIGQUIT} signal to be sent to all processes
 in the foreground job associated with the terminal.  @xref{Signal
 Handling}, for more information about signals.  The QUIT character
-itself is discarded.
+itself is then discarded.
 
 Typically, the QUIT character is @kbd{C-\}.
 @end deftypevr
@@ -967,15 +1008,16 @@ Typically, the QUIT character is @kbd{C-\}.
 @deftypevr Macro int VSUSP
 @cindex SUSP character
 @cindex suspend character
-This is the subscript for the SUSP character in the special control character
-array.
+This is the subscript for the SUSP character in the special control
+character array.  @code{@var{structure}.c_cc[VSUSP]} holds the character
+itself.
 
 The SUSP (suspend) character is recognized only if the implementation
 supports job control (@pxref{Job Control}) and the @code{ISIG} local
 mode flag is set.  It causes a @code{SIGTSTP} signal to be sent to all
 processes in the foreground job associated with the terminal.
 @xref{Signal Handling}, for more information about signals.  The SUSP
-character itself is discarded.
+character itself is then discarded.
 
 Typically, the SUSP character is @kbd{C-z}.
 @end deftypevr
@@ -984,13 +1026,15 @@ Typically, the SUSP character is @kbd{C-z}.
 @comment POSIX.1
 @deftypevr Macro int VSTART
 @cindex START character
-This is the subscript for the START character in the special control character
-array.
+This is the subscript for the START character in the special control
+character array.  @code{@var{structure}.c_cc[VSTART]} holds the
+character itself.
 
 The START character is used to support the @code{IXON} and @code{IXOFF}
 input modes.  If @code{IXON} is set, receiving a START character resumes
-suspended output; the START character itself is discarded.  If @code{IXOFF}
-is set, the system may also transmit START characters.
+suspended output; the START character itself is discarded.  If
+@code{IXOFF} is set, the system may also transmit START characters to
+the terminal.
 
 The usual value for the START character is @kbd{C-q}.  You may not be
 able to change this value.
@@ -1000,99 +1044,118 @@ able to change this value.
 @comment POSIX.1
 @deftypevr Macro int VSTOP
 @cindex STOP character
-This is the subscript for the STOP character in the special control character
-array.
+This is the subscript for the STOP character in the special control
+character array.  @code{@var{structure}.c_cc[VSTOP]} holds the character
+itself.
 
 The STOP character is used to support the @code{IXON} and @code{IXOFF}
 input modes.  If @code{IXON} is set, receiving a STOP character causes
 output to be suspended; the STOP character itself is discarded.  If
-@code{IXOFF} is set, the system may also transmit STOP characters to
-prevent its input queue from overflowing.
+@code{IXOFF} is set, the system may also transmit STOP characters to the
+terminal, to prevent the input queue from overflowing.
 
 The usual value for the STOP character is @kbd{C-s}.  You may not be
 able to change this value.
 @end deftypevr
 
+@node Non-canonical Input
+@section Non-Canonical Input
+
+In non-canonical input mode, the special characters such as ERASE and
+INTR are ignored.  All input characters are treated alike: they are
+returned as input to the user program.  The system facilities for the
+user to edit input and raise signals are disabled in non-canonical mode.
+It is up to the application program to provide the user with ways of
+doing these things, if appropriate.
+
+Non-canonical mode does have special features for controlling whether
+and how long to wait for input to be available.  You can even use them
+to avoid ever waiting---to return immediately with whatever input is
+available, or with no input.
+
 @comment termios.h
 @comment POSIX.1
 @deftypevr Macro int VMIN
-@cindex MIN character
-This is the subscript for the MIN character in the special control character
+@cindex MIN termios slot
+This is the subscript for the MIN slot in the special control character
 array.
 
-The MIN character is only meaningful in non-canonical input mode; it
-represents the minimum number of bytes to return in a single call to
-@code{read}.  It interacts with the TIME character to determine the
-granularity with which input from the terminal is passed to the
-application program.
-
-There are four possible cases:
-
-@itemize @bullet
-@item 
-Both MIN and TIME are zero.
-
-This is the degenerate case.  The number of bytes returned is the
-minimum of the number requested or the number currently available
-without waiting.  If no input is immediately available, @code{read}
-returns a value of zero.
-
-@item
-MIN is zero but TIME has a nonzero value.
-
-This waits for up to the specified amount of time for input to
-become available; the availability of a single byte is enough to satisfy
-the read request and cause @code{read} to return.  The maximum number of
-bytes returned is the number requested.  If no input is available before
-the timer expires, @code{read} returns a value of zero.
-
-@item
-TIME is zero but MIN has a zero value.
-
-This causes the process to block until at least MIN bytes are available
-to be read, or a signal is received. 
-
-@strong{Incomplete:}  What happens if the number of bytes requested by
-a particular call to @code{read} is less than MIN?  Does @code{read}
-block until MIN bytes are available, or does it return as soon as it
-has read the number requested?
-
-@item
-Both TIME and MIN are nonzero.
-
-In this case, @code{read} blocks until at least one byte is available.
-A total of up to MIN bytes are received as long as subsequent
-bytes are received within the specified TIME of the preceeding byte.
-If the timer expires, the bytes received so far are returned.
-
-@strong{Incomplete:}  What happens if the number of bytes requested by
-a particular call to @code{read} is less than MIN?
-@end itemize
+The MIN slot is only meaningful in non-canonical input mode; it
+specifies the minimum number of bytes that must be available in the
+input queue in order for @code{read} to return.  It interacts with the
+TIME slot to determine the condition for @code{read} on the terminal to
+return.
 @end deftypevr
 
 @comment termios.h
 @comment POSIX.1
 @deftypevr Macro int VTIME
-@cindex TIME character
-This is the subscript for the TIME character in the special control character
+@cindex TIME termios slot
+This is the subscript for the TIME slot in the special control character
 array.
 
-The TIME character is only meaningful in non-canonical input mode; it is
-used as a timer with a resolution 0.1 seconds.  It interacts with the
-TIME character to determine the granularity with which input from the
-terminal is passed to the application program, as described above.
+The TIME slot is only meaningful in non-canonical input mode; it
+specifies how long to wait for input before returning, in units of 0.1
+seconds.  It interacts with the MIN slot to determine the condition for
+@code{read} on the terminal to return.
 @end deftypevr
 
+There are four possible cases for non-canonical input:
+
+@itemize @bullet
+@item 
+Both MIN and TIME are zero.
+
+In this case, @code{read} always returns immediately with as many
+characters as are available in the queue, up to the number requested.
+If no input is immediately available, @code{read} returns a value of
+zero.
+
+@item
+MIN is zero but TIME has a nonzero value.
+
+In this case, @code{read} waits for time TIME for input to become
+available; the availability of a single byte is enough to satisfy the
+read request and cause @code{read} to return.  When it returns, it
+returns as many characters as are available, up to the number requested.
+If no input is available before the timer expires, @code{read} returns a
+value of zero.
+
+@item
+TIME is zero but MIN has a nonzero value.
+
+In this case, @code{read} waits until at least MIN bytes are available
+in the queue.  At that time, @code{read} returns as many characters as
+are available, up to the number requested.  @code{read} can return more
+than MIN characters if more than MIN happen to be in the queue.
+
+@item
+Both TIME and MIN are nonzero.
+
+In this case, TIME specifies how long to wait after each input character
+to see if more input arrives.  @code{read} keeps waiting until either
+MIN bytes have arrived, or TIME elapses with no further input.
+
+@code{read} can return no input if TIME elapses before the first input
+character arrives.  @code{read} can return more than MIN characters if
+more than MIN happen to be in the queue.
+@end itemize
+
+What happens if MIN is 50 and you ask to read just 10 bytes?
+Normally, @code{read} waits until there are 50 bytes in the buffer (or,
+more generally, the wait condition described above is satisfied), and
+then reads 10 of them, leaving the other 40 buffered in the operating
+system for a subsequent call to @code{read}.
 
 @node Line Control Functions
 @section Line Control Functions
 @cindex terminal line control functions
 
 These functions perform miscellanous control actions on terminal
-devices.  If any of these functions are called from a background process
-on its controlling terminal, normally all processes in the process group
-are sent a @code{SIGTTOU} signal, in the same way as if output were
-being written to the terminal.  The exception is if the calling process
+devices.  As regards terminal access, they are treated like doing
+output: if any of these functions is used by a background process on its
+controlling terminal, normally all processes in the process group are
+sent a @code{SIGTTOU} signal.  The exception is if the calling process
 itself is ignoring or blocking @code{SIGTTOU} signals, in which case the
 operation is performed and no signal is sent.  @xref{Job Control}.
 
@@ -1104,10 +1167,10 @@ This function generates a break condition by transmitting a stream of
 zero bits on the terminal associated with the file descriptor
 @var{filedes}.  The duration of the break is controlled by the
 @var{duration} argument.  If zero, the duration is between 0.25 and 0.5
-seconds.  Nonzero values are interpreted in an implementation-specific way.
+seconds.  The meaning of a nonzero value depends on the operating system.
 
-This function probably won't do anything useful if the terminal is not
-an asynchronous serial data port.
+This function does nothing if the terminal is not an asynchronous serial
+data port.
 
 The return value is normally zero.  In the event of an error, a value
 of @code{-1} is returned.  The following @code{errno} error conditions
@@ -1128,7 +1191,7 @@ The @var{filedes} is not associated with a terminal device.
 @comment termios.h
 @comment POSIX.1
 @deftypefun int tcdrain (int @var{filedes})
-The @code{tcdrain} function blocks the calling process until all queued
+The @code{tcdrain} function waits until all queued
 output to the terminal @var{filedes} has been transmitted.
 
 The return value is normally zero.  In the event of an error, a value
@@ -1148,25 +1211,28 @@ The operation was interrupted by delivery of a signal.
 @end deftypefun
 
 
-@cindex flushing terminal input queue
-@cindex terminal input queue, flushing
+@cindex clearing terminal input queue
+@cindex terminal input queue, clearing
 @comment termios.h
 @comment POSIX.1
 @deftypefun int tcflush (int @var{filedes}, int @var{queue})
-The @code{tcflush} function is used to flush the input and/or output
+The @code{tcflush} function is used to clear the input and/or output
 queues associated with the terminal file @var{filedes}.  The @var{queue}
-argument specifies which queue(s) to flush, and can be one of the
+argument specifies which queue(s) to clear, and can be one of the
 following values:
 
 @table @code
+@vindex TCIFLUSH
 @item TCIFLUSH
-Flush any input data received, but not yet read.
+Clear any input data received, but not yet read.
 
+@vindex TCOFLUSH
 @item TCOFLUSH
-Flush any output data written, but not yet transmitted.
+Clear any output data written, but not yet transmitted.
 
+@vindex TCIOFLUSH
 @item TCIOFLUSH
-Flush both queued input and output.
+Clear both queued input and output.
 @end table
 
 The return value is normally zero.  In the event of an error, a value
@@ -1183,30 +1249,13 @@ The @var{filedes} is not associated with a terminal device.
 @item EINVAL
 A bad value was supplied as the @var{queue} argument.
 @end table
+
+It is unfortunate that this function is named @code{tcflush}, because
+the term ``flush'' is normally used for quite another operation---waiting
+until all output is transmitted---and using it for discarding input or
+output would be confusing.  Unfortunately, the name @code{tcflush} comes
+from POSIX and we cannot change it.
 @end deftypefun
-
-The following macros define symbolic constants for use as the @var{queue}
-argument to @code{tcflush}:
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int TCIFLUSH
-This specifies that the terminal input queue should be flushed.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int TCOFLUSH
-This specifies that the terminal output queue should be flushed.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int TCIOFLUSH
-This specifies that both the terminal input queue and the terminal
-output queue should be flushed.
-@end deftypevr
-
 
 @cindex flow control, terminal
 @cindex terminal flow control
@@ -1220,20 +1269,24 @@ The @var{action} argument specifies what operation to perform, and can
 be one of the following values:
 
 @table @code
+@vindex TCOOFF
 @item TCOOFF
 Suspend transmission of output.
 
+@vindex TCOON
 @item TCOON
 Restart transmission of output.
 
+@vindex TCIOFF
 @item TCIOFF
 Transmit a STOP character.
 
+@vindex TCION
 @item TCION
 Transmit a START character.
 @end table
 
-For more information about the STOP and START characters, @pxref{Special
+For more information about the STOP and START characters, see @ref{Special
 Characters}.
 
 The return value is normally zero.  In the event of an error, a value
@@ -1241,43 +1294,19 @@ of @code{-1} is returned.  The following @code{errno} error conditions
 are defined for this function:
 
 @table @code
+@vindex EBADF
 @item EBADF
 The @var{filedes} is not a valid file descriptor.
 
+@vindex ENOTTY
 @item ENOTTY
 The @var{filedes} is not associated with a terminal device.
 
+@vindex EINVAL
 @item EINVAL
 A bad value was supplied as the @var{action} argument.
 @end table
 @end deftypefun
-
-The following symbolic constants are defined for use as the @var{action}
-argument to @code{tcflow}:
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int TCOOFF
-The action is to suspend transmission of output.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int TCOON
-The action is to resume transmission of output.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int TCIOFF
-The action is to send a STOP character.
-@end deftypevr
-
-@comment termios.h
-@comment POSIX.1
-@deftypevr Macro int TCION
-The action is to send a START character.
-@end deftypevr
 
 
 @node Terminal Control Example
@@ -1297,12 +1326,15 @@ echo.
 
 struct termios saved_attributes;
 
-void reset_input_mode (void)
+void
+reset_input_mode (void)
 @{
   tcsetattr (STDIN_FILENO, TCSANOW, &saved_attributes);
+  signal (SIGCONT, set_input_mode);
 @}
   
-void set_input_mode (void)
+void 
+set_input_mode (void)
 @{
   struct termios tattr;
   char *name;
@@ -1326,11 +1358,34 @@ void set_input_mode (void)
   tcsetattr (STDIN_FILENO, TCSAFLUSH, &tattr);
 @}
 
-void main (void)
+/* @r{Handle @code{SIGCONT}.} */
+void
+resumed (int sig)
+@{
+  set_intput_mode ();
+@}
+
+/* @r{Handle signals that take the terminal away.} */
+void
+handler (int sig)
+@{
+  reset_input_mode ();
+  signal (sig, SIG_DFL);
+  /* @r{Make the same signal happen, with no handler.} */
+  raise (sig);
+  signal (sig, handler);
+@}
+
+void
+main (void)
 @{
   char c;
 
   set_input_mode ();
+  signal (SIGTERM, handler);
+  signal (SIGHUP, handler);
+  signal (SIGINT, handler);
+  signal (SIGQUIT, handler);
   @dots{}
   read (STDIN_FILENO, &c, 1);
   @dots{}
@@ -1339,17 +1394,16 @@ void main (void)
 @end example
 
 This program is careful to restore the original terminal modes before
-exiting.  It uses the @code{atexit} function (@pxref{Normal Program
-Termination}) to cause a function that does this to be called when
-the program exits normally.
+exiting or terminating with a signal.  It uses the @code{atexit}
+function (@pxref{Normal Program Termination}) to make sure this is done
+by @code{exit}.
 
-To be even more careful, it's also a good idea to establish handlers for
-signals such as @code{SIGABRT} and @code{SIGINT} that do this same
-cleanup before exiting the program.  That way, even if the program exits
-abnormally, it leaves the terminal in a usable state.  @xref{Signal
-Handling}, for more information about signals and handlers.
+The signals handled in the example are the ones that typically occur due
+to actions of the user.  It might be desirable to handle other signals
+such as SIGSEGV that can result from bugs in the program.
 
-The shell is supposed to take care of resetting the terminal modes
-when a process is stopped or continued; @pxref{Job Control}.  But some
-existing shells do not actually do this, so your program may need to
-establish handlers for job control signals that reset terminal modes.
+The shell is supposed to take care of resetting the terminal modes when
+a process is stopped or continued; see @ref{Job Control}.  But some
+existing shells do not actually do this, so you may wish to establish
+handlers for job control signals that reset terminal modes.  The above
+example does so.
