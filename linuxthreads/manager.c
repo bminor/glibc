@@ -289,9 +289,12 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
     }
   else
     {
+      stacksize = STACK_SIZE - pagesize;
+      if (attr != NULL)
+        stacksize = MIN (stacksize, roundup(attr->__stacksize, pagesize));
       /* Allocate space for stack and thread descriptor at default address */
       new_thread = default_new_thread;
-      new_thread_bottom = (char *) new_thread - STACK_SIZE;
+      new_thread_bottom = (char *) (new_thread + 1) - stacksize;
       if (mmap((caddr_t)((char *)(new_thread + 1) - INITIAL_STACK_SIZE),
                INITIAL_STACK_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC,
                MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED | MAP_GROWSDOWN,
@@ -300,14 +303,10 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
         return -1;
       /* We manage to get a stack.  Now see whether we need a guard
          and allocate it if necessary.  Notice that the default
-         attributes (stack_size = STACK_SIZE - pagesize and
-         guardsize = pagesize) do not need a guard page, since
-         the RLIMIT_STACK soft limit prevents stacks from
-         running into one another. */
-      if (attr == NULL ||
-          attr->__guardsize == 0 ||
-          (attr->__guardsize == pagesize &&
-           attr->__stacksize == STACK_SIZE - pagesize))
+         attributes (stack_size = STACK_SIZE - pagesize) do not need
+	 a guard page, since the RLIMIT_STACK soft limit prevents stacks
+	 from running into one another. */
+      if (stacksize == STACK_SIZE - pagesize)
         {
           /* We don't need a guard page. */
           guardaddr = NULL;
@@ -316,11 +315,8 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       else
         {
           /* Put a bad page at the bottom of the stack */
-          stacksize = roundup(attr->__stacksize, pagesize);
-          if (stacksize >= STACK_SIZE - pagesize)
-            stacksize = STACK_SIZE - pagesize;
-          guardaddr = (void *)new_thread - stacksize;
           guardsize = attr->__guardsize;
+          guardaddr = (void *)new_thread_bottom - guardsize;
           if (mmap ((caddr_t) guardaddr, guardsize, 0, MAP_FIXED, -1, 0)
               == MAP_FAILED)
             {
@@ -515,7 +511,7 @@ static void pthread_free(pthread_descr th)
   /* One fewer threads in __pthread_handles */
   __pthread_handles_num--;
 
-  /* Destroy read lock list, and list of free read lock structures. 
+  /* Destroy read lock list, and list of free read lock structures.
      If the former is not empty, it means the thread exited while
      holding read locks! */
 
