@@ -244,7 +244,7 @@ extern __const __int32_t *__ctype_toupper; /* Case conversions.  */
 # define towlower(wc) \
   (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
    ? (wint_t) __ctype_tolower[wc] : towlower (wc))
-# define towuppert(wc) \
+# define towupper(wc) \
   (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
    ? (wint_t) __ctype_toupper[wc] : towupper (wc))
 
