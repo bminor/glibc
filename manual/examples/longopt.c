@@ -13,19 +13,19 @@ main (argc, argv)
   while (1)
     {
       static struct option long_options[] =
-      {
-	/* These options set a flag.  */
-	{"verbose", 0, &verbose_flag, 1},
-	{"brief", 0, &verbose_flag, 0},
-	/* These options don't set a flag.
-	   We distinguish them by their indices.  */
-	{"add", 1, 0, 0},
-	{"append", 0, 0, 0},
-	{"delete", 1, 0, 0},
-	{"create", 0, 0, 0},
-	{"file", 1, 0, 0},
-	{0, 0, 0, 0}
-      };
+	{
+	  /* These options set a flag.  */
+	  {"verbose", 0, &verbose_flag, 1},
+	  {"brief", 0, &verbose_flag, 0},
+	  /* These options don't set a flag.
+	     We distinguish them by their indices.  */
+	  {"add", 1, 0, 0},
+	  {"append", 0, 0, 0},
+	  {"delete", 1, 0, 0},
+	  {"create", 0, 0, 0},
+	  {"file", 1, 0, 0},
+	  {0, 0, 0, 0}
+	};
       /* @code{getopt_long} stores the option index here.  */
       int option_index = 0;
 
@@ -33,7 +33,7 @@ main (argc, argv)
 		       long_options, &option_index);
 
       /* Detect the end of the options.  */
-      if (c == EOF)
+      if (c == -1)
 	break;
 
       switch (c)
@@ -49,11 +49,11 @@ main (argc, argv)
 	  break;
 
 	case 'a':
-	  printf ("option -a\n");
+	  puts ("option -a\n");
 	  break;
 
 	case 'b':
-	  printf ("option -b\n");
+	  puts ("option -b\n");
 	  break;
 
 	case 'c':
@@ -77,7 +77,7 @@ main (argc, argv)
      and @samp{--brief} as they are encountered,
      we report the final status resulting from them.  */
   if (verbose_flag)
-    printf ("verbose flag is set\n");
+    puts ("verbose flag is set");
 
   /* Print any remaining command line arguments (not options).  */
   if (optind < argc)
@@ -85,7 +85,7 @@ main (argc, argv)
       printf ("non-option ARGV-elements: ");
       while (optind < argc)
 	printf ("%s ", argv[optind++]);
-      printf ("\n");
+      putchar ('\n');
     }
 
   exit (0);

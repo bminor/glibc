@@ -1,3 +1,4 @@
+/*@group*/
 #include <unistd.h>
 #include <stdio.h>
 
@@ -11,8 +12,10 @@ main (int argc, char **argv)
   int c;
 
   opterr = 0;
+/*@end group*/
 
-  while ((c = getopt (argc, argv, "abc:")) >= 0)
+/*@group*/
+  while ((c = getopt (argc, argv, "abc:")) != -1)
     switch (c)
       {
       case 'a':
@@ -31,14 +34,17 @@ main (int argc, char **argv)
           fprintf (stderr,
                    "Unknown option character `\\x%x'.\n",
                    optopt);
-        return -1;
+        return 1;
       default:
         abort ();
       }
+/*@end group*/
 
+/*@group*/
   printf ("aflag = %d, bflag = %d, cvalue = %s\n", aflag, bflag, cvalue);
 
   for (index = optind; index < argc; index++)
     printf ("Non-option argument %s\n", argv[index]);
   return 0;
 }
+/*@end group*/
