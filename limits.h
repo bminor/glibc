@@ -27,11 +27,11 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef	__USE_POSIX
 /* POSIX adds things to <limits.h>.  */
-#include <posix1_limits.h>
+#include <posix1_lim.h>
 #endif
 
 #ifdef	__USE_POSIX2
-#include <posix2_limits.h>
+#include <posix2_lim.h>
 #endif
 
 /* These assume 8-bit `char's, 16-bit `short int's,
