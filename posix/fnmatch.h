@@ -41,7 +41,7 @@ extern "C" {
 #if !defined (_POSIX_C_SOURCE) || _POSIX_C_SOURCE < 2 || defined (_GNU_SOURCE)
 #define	FNM_FILE_NAME	FNM_PATHNAME /* Preferred GNU name.  */
 #define	FNM_LEADING_DIR	(1 << 3) /* Ignore `/...' after a match.  */
-#define	FMN_CASEFOLD	(1 << 4) /* Compare without regard to case.  */
+#define	FNM_CASEFOLD	(1 << 4) /* Compare without regard to case.  */
 #endif
 
 /* Value returned by `fnmatch' if STRING does not match PATTERN.  */
