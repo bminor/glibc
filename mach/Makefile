@@ -38,7 +38,8 @@ mach-headers := host_info.h kern_return.h \
 user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host \
 				     default_pager_object \
 				     memory_object_user memory_object_default)\
-		   $(addprefix device/,device device_request device_reply)
+		   $(addprefix device/,device device_request)
+# device_reply is giving me headaches because of userprefix
 server-interfaces := mach/__exc
 
 routines = $(interface-routines) \
@@ -55,15 +56,15 @@ all:
 
 
 # Define mach-syscalls and sysno-*.
-include mach-syscalls.mk
-mach-syscalls.mk: syscall_sw.h syscalls.awk
+include $(objpfx)mach-syscalls.mk
+$(objpfx)mach-syscalls.mk: syscall_sw.h syscalls.awk
 	sed -n -e '/STANDALONE/,$$d' \
 	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),[0-9]*)$$/\1 \2/p' \
 	< $< | awk -f $(word 2,$^) > $@-new		      
 	mv $@-new $@
 
 ifdef mach-syscalls
-$(mach-syscalls:%=__%.S): __%.S: mach-syscalls.mk
+$(mach-syscalls:%=$(objpfx)__%.S): $(objpfx)__%.S: mach-syscalls.mk
 	(echo '#include <sysdep.h>'; \
 	 echo 'SYSCALL_TRAP (__$*, $(sysno-$*))') > $@
 endif
