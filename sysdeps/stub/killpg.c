@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
    If PGRP is zero, send SIG to all processes in
    the current process's process group.  */
 int
-DEFUN(killpg, (pgrp, sig), pid_t pgrp AND int sig)
+DEFUN(killpg, (pgrp, sig), __pid_t pgrp AND int sig)
 {
   errno = ENOSYS;
   return -1;
