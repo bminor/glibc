@@ -49,12 +49,12 @@ The @code{FILE} type is declared in the header file @file{stdio.h}.
 @comment stdio.h
 @comment ANSI
 @deftp {Data Type} FILE
-This is the data type is used to represent stream objects.  A
-@code{FILE} object holds all of the internal state information about the
-connection to the associated file, including such things as the file
-position indicator and buffering information.  Each stream also has
-error and end-of-file status indicators that can be tested with the
-@code{ferror} and @code{feof} functions; see @ref{EOF and Errors}.
+This is the data type used to represent stream objects.  A @code{FILE}
+object holds all of the internal state information about the connection
+to the associated file, including such things as the file position
+indicator and buffering information.  Each stream also has error and
+end-of-file status indicators that can be tested with the @code{ferror}
+and @code{feof} functions; see @ref{EOF and Errors}.
 @end deftp
 
 @code{FILE} objects are allocated and managed internally by the
@@ -74,34 +74,31 @@ three predefined streams open and available for use.  These represent
 the ``standard'' input and output channels that have been established
 for the process.
 
-@c !!! in glibc, these are variables that you can set.  i.e., freopen is
-@c obsolete because you can do "fclose(stdout);stdout=fopen(...);"
-
 These streams are declared in the header file @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
-@deftypevr Macro {FILE *} stdin
+@deftypevar {FILE *} stdin
 The @dfn{standard input} stream, which is the normal source of input for the
 program.
-@end deftypevr
+@end deftypevar
 @cindex standard input stream
 
 @comment stdio.h
 @comment ANSI
-@deftypevr Macro {FILE *} stdout
+@deftypevar {FILE *} stdout
 The @dfn{standard output} stream, which is used for normal output from
 the program.
-@end deftypevr
+@end deftypevar
 @cindex standard output stream
 
 @comment stdio.h
 @comment ANSI
-@deftypevr Macro {FILE *} stderr
+@deftypevar {FILE *} stderr
 The @dfn{standard error} stream, which is used for error messages and
 diagnostics issued by the program.
-@end deftypevr
+@end deftypevar
 @cindex standard error stream
 
 In the GNU system, you can specify what files or processes correspond to
@@ -110,8 +107,18 @@ shell.  (The primitives shells use to implement these facilities are
 described in @ref{File System Interface}.)  Most other operating systems
 provide similar mechanisms, but the details of how to use them can vary.
 
-It is probably not a good idea to close any of the standard streams.
-But you can use @code{freopen} to get te effect of closing one and
+In the GNU C library, @code{stdin}, @code{stdout}, and @code{stderr} are
+normal variables which you can set just like any others.  For example, to redirect
+the standard output to a file, you could do:
+
+@smallexample
+fclose (stdout);
+stdout = fopen ("standard-output-file", "w");
+@end smallexample
+
+Note however, that in other systems @code{stdin}, @code{stdout}, and
+@code{stderr} are macros that you cannot assign to in the normal way.
+But you can use @code{freopen} to get the effect of closing one and
 reopening it.  @xref{Opening Streams}.
 
 @node Opening Streams
@@ -145,35 +152,35 @@ Open the file for writing only.  If the file already exists, it is
 truncated to zero length.  Otherwise a new file is created.
 
 @item a
-Open file for append access; that is, writing at the end of file only.
+Open a file for append access; that is, writing at the end of file only.
 If the file already exists, its initial contents are unchanged and
 output to the stream is appended to the end of the file.
 Otherwise, a new, empty file is created.
 
 @item r+
-Open existing file for both reading and writing.  The initial contents
+Open an existing file for both reading and writing.  The initial contents
 of the file are unchanged and the initial file position is at the
 beginning of the file.
 
 @item w+
-Open file for both reading and writing.  If the file already exists, it
+Open a file for both reading and writing.  If the file already exists, it
 is truncated to zero length.  Otherwise, a new file is created.
 
 @item a+
 Open or create file for both reading and appending.  If the file exists,
-its initial contents are unchanged.  Otherwise, a new file is
-created.  The initial file position for reading might be at either
-the beginning or end of the file, but output is always appended
-to the end of the file.
+its initial contents are unchanged.  Otherwise, a new file is created.
+The initial file position for reading is at the beginning of the file,
+but output is always appended to the end of the file.
 @end table
 
-@c !!! this paragraph is false in glibc; "getc(fp);putc('x',fp);" works fine.
 As you can see, @samp{+} requests a stream that can do both input and
-output.  When using such a stream, you must call @code{fflush}
-(@pxref{Stream Buffering}) or a file positioning function such as
-@code{fseek} (@pxref{File Positioning}) when switching from reading to
-writing or vice versa.  Otherwise, internal buffers might not be emptied
-properly.
+output.  The ANSI standard says that when using such a stream, you must
+call @code{fflush} (@pxref{Stream Buffering}) or a file positioning
+function such as @code{fseek} (@pxref{File Positioning}) when switching
+from reading to writing or vice versa.  Otherwise, internal buffers
+might not be emptied properly.  The GNU C library does not have this
+limitation; you can do arbitrary reading and writing operations on a
+stream in whatever order.
 
 The GNU C library defines one additional character for use in
 @var{opentype}: the character @samp{x} insists on creating a new
@@ -226,10 +233,12 @@ and associated with the same stream object @var{stream}.
 If the operation fails, a null pointer is returned; otherwise,
 @code{freopen} returns @var{stream}.
 
-The main use of @code{freopen} is to connect a standard stream such as
-@code{stdin} with a file of your own choice.  This is useful in programs
-in which use of a standard stream for certain purposes is hard-coded.
-@c !!! can do stdout=... in glibc
+@code{freopen} has traditionally been used to connect a standard stream
+such as @code{stdin} with a file of your own choice.  This is useful in
+programs in which use of a standard stream for certain purposes is
+hard-coded.  In the GNU C library, you can simply close the standard
+streams and open new ones with @code{fopen}.  But other systems lack
+this ability, so using @code{freopen} is more portable.
 @end deftypefun
 
 
@@ -239,7 +248,7 @@ in which use of a standard stream for certain purposes is hard-coded.
 @cindex closing a stream
 When a stream is closed with @code{fclose}, the connection between the
 stream and the file is cancelled.  After you have closed a stream, you
-cannot perform any additional operations on it any more.
+cannot perform any additional operations on it.
 
 @comment stdio.h
 @comment ANSI
@@ -333,6 +342,13 @@ outputs the text @samp{Are you hungry?} followed by a newline.
 The @code{puts} function writes the string @var{s} to the stream
 @code{stdout} followed by a newline.  The terminating null character of
 the string is not written.
+
+@code{puts} is the most convenient function for printing simple
+messages.  For example:
+
+@smallexample
+puts ("This is a message.");
+@end smallexample
 @end deftypefun
 
 @comment stdio.h
@@ -380,32 +396,33 @@ as the value of the @var{stream} argument.
 
 Here is an example of a function that does input using @code{fgetc}.  It
 would work just as well using @code{getc} instead, or using
-@code{getchar ()} instead of @code{fgetc (stdin)}.
+@code{getchar ()} instead of @w{@code{fgetc (stdin)}}.
 
 @smallexample
 int
 y_or_n_p (const char *question)
 @{
   fputs (question, stdout);
-  while (1) @{
-    int c, answer;
-    /* @r{Write a space to separate answer from question.} */
-    fputc (' ', stdout);
-    /* @r{Read the first character of the line.}
-       @r{This should be the answer character, but might not be.} */
-    c = tolower (fgetc (stdin));
-    answer = c;
-    /* @r{Discard rest of input line.} */
-    while (c != '\n')
-      c = fgetc (stdin);
-    /* @r{Obey the answer if it was valid.} */
-    if (answer == 'y')
-      return 1;
-    if (answer == 'n')
-      return 0;
-    /* @r{Answer was invalid: ask for valid answer.} */
-    fputs ("Please answer y or n:", stdout);
-  @}
+  while (1)
+    @{
+      int c, answer;
+      /* @r{Write a space to separate answer from question.} */
+      fputc (' ', stdout);
+      /* @r{Read the first character of the line.}
+         @r{This should be the answer character, but might not be.} */
+      c = tolower (fgetc (stdin));
+      answer = c;
+      /* @r{Discard rest of input line.} */
+      while (c != '\n')
+        c = fgetc (stdin);
+      /* @r{Obey the answer if it was valid.} */
+      if (answer == 'y')
+        return 1;
+      if (answer == 'n')
+        return 0;
+      /* @r{Answer was invalid: ask for valid answer.} */
+      fputs ("Please answer y or n:", stdout);
+    @}
 @}
 @end smallexample
 
@@ -442,15 +459,17 @@ This function reads an entire line from @var{stream}, storing the text
 and storing the buffer address in @code{*@var{lineptr}}.
 
 Before calling @code{getline}, you should place in @code{*@var{lineptr}}
-the address of a buffer @code{*@var{n}} bytes long.  If this buffer is
-long enough to hold the line, @code{getline} stores the line in this
-buffer.  Otherwise, @code{getline} makes the buffer bigger using
-@code{realloc}, storing the new buffer address back in
-@code{*@var{lineptr}} and the increased size back in @code{*@var{n}}.
+the address of a buffer @code{*@var{n}} bytes long, allocated with
+@code{malloc}.  If this buffer is long enough to hold the line,
+@code{getline} stores the line in this buffer.  Otherwise,
+@code{getline} makes the buffer bigger using @code{realloc}, storing the
+new buffer address back in @code{*@var{lineptr}} and the increased size
+back in @code{*@var{n}}.
+@xref{Unconstrained Allocation}.
 
 If you set @code{*@var{lineptr}} to a null pointer, and @code{*@var{n}}
 to zero, before the call, then @code{getline} allocates the initial
-buffer for you.
+buffer for you by calling @code{malloc}.
 
 In either case, when @code{getline} returns,  @code{*@var{lineptr}} is
 a @code{char *} which points to the text of the line.
@@ -478,6 +497,17 @@ reading until it sees that character (or end of file).
 The text is stored in @var{lineptr}, including the delimiter character
 and a terminating null.  Like @code{getline}, @code{getdelim} makes
 @var{lineptr} bigger if it isn't big enough.
+
+@code{getline} is in fact implemented in terms of @code{getdelim}, just
+like this:
+
+@smallexample
+ssize_t
+getline (char **lineptr, size_t *n, FILE *stream)
+@{
+  return getdelim (lineptr, n, '\n', stream);
+@}
+@end smallexample
 @end deftypefun
 
 @comment stdio.h
@@ -591,7 +621,7 @@ so that the next input characters will be @samp{9} and @samp{b}.
 @subsection Using @code{ungetc} To Do Unreading
  
 The function to unread a character is called @code{ungetc}, because it
-reverses the action of @code{fgetc}.
+reverses the action of @code{getc}.
 
 @comment stdio.h
 @comment ANSI
@@ -601,7 +631,7 @@ input stream @var{stream}.  So the next input from @var{stream} will
 read @var{c} before anything else.
 
 If @var{c} is @code{EOF}, @code{ungetc} does nothing and just returns
-@code{EOF}.  This lets call @code{ungetc} with the return value of
+@code{EOF}.  This lets you call @code{ungetc} with the return value of
 @code{getc} without needing to check for an error from @code{getc}.
 
 The character that you push back doesn't have to be the same as the last
@@ -635,14 +665,15 @@ the next read operation on the stream.
 
 @smallexample
 #include <stdio.h>
+#include <ctype.h>
 
 void
 skip_whitespace (FILE *stream)
 @{
   int c;
   do
-    /* @r{No need to check for @code{EOF} because it is not
-       @code{isspace}, and @code{ungetc} ignores @code{EOF}.}  */
+    /* @r{No need to check for @code{EOF} because it is not}
+       @r{@code{isspace}, and @code{ungetc} ignores @code{EOF}.}  */
     c = getc (stream);
   while (isspace (c));
   ungetc (c, stream);
@@ -761,9 +792,9 @@ a template string.
 The conversion specifications in a @code{printf} template string have
 the general form:
 
-@smallexample
+@example
 % @var{flags} @var{width} @r{[} . @var{precision} @r{]} @var{type} @var{conversion}
-@end smallexample
+@end example
 
 For example, in the conversion specifier @samp{%-10.8ld}, the @samp{-}
 is a flag, @samp{10} specifies the field width, the precision is
@@ -888,6 +919,7 @@ Note that this conversion specification never produces any output.
 
 @item @samp{%m}
 Print the string corresponding to the value of @code{errno}.
+(This is a GNU extension.)
 @xref{Other Output Conversions}.
 
 @item @samp{%%}
@@ -941,7 +973,7 @@ For the @samp{%o} conversion, this forces the leading digit to be
 to the result.  This doesn't do anything useful for the @samp{%d},
 @samp{%i}, or @samp{%u} conversions.  Using this flag produces output
 which can be parsed by the @code{strtoul} function (@pxref{Parsing of
-Integers}) and @code{scanf} with the @code{%i} conversion
+Integers}) and @code{scanf} with the @samp{%i} conversion
 (@pxref{Numeric Input Conversions}).
 
 @item @samp{0}
@@ -990,7 +1022,7 @@ the sole purpose of @samp{%Z} is to specify the data type
 Here is an example.  Using the template string:
 
 @smallexample
-|%5d|%-5d|%+5d|%+-5d|% 5d|%05d|%5.0d|%5.2d|%d|\n"
+"|%5d|%-5d|%+5d|%+-5d|% 5d|%05d|%5.0d|%5.2d|%d|\n"
 @end smallexample
 
 @noindent
@@ -1142,12 +1174,13 @@ printf ("%c%c%c%c%c", 'h', 'e', 'l', 'l', 'o');
 prints @samp{hello}.
 
 The @samp{%s} conversion prints a string.  The corresponding argument
-must be of type @code{char *}.  A precision can be specified to indicate
-the maximum number of characters to write; otherwise characters in the
-string up to but not including the terminating null character are
-written to the output stream.  The @samp{-} flag can be used to specify
-left-justification in the field, but no other flags or type modifiers
-are defined for this conversion.  For example:
+must be of type @code{char *} (or @code{const char *}).  A precision can
+be specified to indicate the maximum number of characters to write;
+otherwise characters in the string up to but not including the
+terminating null character are written to the output stream.  The
+@samp{-} flag can be used to specify left-justification in the field,
+but no other flags or type modifiers are defined for this conversion.
+For example:
 
 @smallexample
 printf ("%3s%-6s", "no", "where");
@@ -1293,9 +1326,10 @@ produce.  The trailing null character is counted towards this limit, so
 you should allocate at least @var{size} characters for the string @var{s}.
 
 The return value is the number of characters stored, not including the
-terminating null.  If this value equals @var{size}, then there was not
-enough space in @var{s} for all the output.  You should try again with a
-bigger output string.  Here is an example of doing this:
+terminating null.  If this value equals @code{@var{size} - 1}, then
+there was not enough space in @var{s} for all the output.  You should
+try again with a bigger output string.  Here is an example of doing
+this:
 
 @smallexample
 @group
@@ -1307,6 +1341,8 @@ make_message (char *name, char *value)
   /* @r{Guess we need no more than 100 chars of space.} */
   int size = 100;
   char *buffer = (char *) xmalloc (size);
+@end group
+@group
   while (1)
     @{
       /* @r{Try to print in the allocated space.} */
@@ -1343,7 +1379,7 @@ buffer you allocate in advance.  The @var{ptr} argument should be the
 address of a @code{char *} object, and @code{asprintf} stores a pointer
 to the newly allocated string at that location.
 
-Here is how to use @code{asprint} to get the same result as the
+Here is how to use @code{asprintf} to get the same result as the
 @code{snprintf} example, but more easily:
 
 @smallexample
@@ -1407,10 +1443,10 @@ arguments again through that pointer.  Calling @code{vprintf} does not
 destroy the argument list of your function, merely the particular
 pointer that you passed to it.
 
-The GNU library does not have such restrictions.  You can safely
-continue to fetch arguments from a @code{va_list} pointer after passing
-it to @code{vprintf}, and @code{va_end} is a no-op.  (Note, however,
-that subsequent @code{va_arg} calls will fetch the same arguments which
+GNU C does not have such restrictions.  You can safely continue to fetch
+arguments from a @code{va_list} pointer after passing it to
+@code{vprintf}, and @code{va_end} is a no-op.  (Note, however, that
+subsequent @code{va_arg} calls will fetch the same arguments which
 @code{vprintf} previously used.)
 
 Prototypes for these functions are declared in @file{stdio.h}.
@@ -1656,54 +1692,56 @@ perhaps others which are not valid here).
 int
 validate_args (char *format, int nargs, OBJECT *args)
 @{
-  int nelts = 20;
   int *argtypes;
   int nwanted;
 
-  /* @r{Get the information about the arguments.}  */
-  while (1) @{
-    argtypes = (int *) alloca (nelts * sizeof (int));
-    nwanted = parse_printf_format (string, nelts, argtypes);
-    if (nwanted <= nelts)
-      break;
-    nelts *= 2;
-  @}
+  /* @r{Get the information about the arguments.}
+     @r{Each conversion specification must be at least two characters}
+     @r{long, so there cannot be more specifications than half the}
+     @r{length of the string.}  */
+
+  argtypes = (int *) alloca (strlen (format) / 2 * sizeof (int));
+  nwanted = parse_printf_format (string, nelts, argtypes);
 
   /* @r{Check the number of arguments.}  */
-  if (nwanted > nargs) @{
-    error ("too few arguments (at least %d required)", nwanted);
-    return 0;
-  @}
+  if (nwanted > nargs)
+    @{
+      error ("too few arguments (at least %d required)", nwanted);
+      return 0;
+    @}
     
   /* @r{Check the C type wanted for each argument}
      @r{and see if the object given is suitable.}  */
-  for (i = 0; i < nwanted; i++) @{
-    int wanted;
+  for (i = 0; i < nwanted; i++)
+    @{
+      int wanted;
 
-    if (argtypes[i] & PA_FLAG_PTR)
-      wanted = STRUCTURE;
-    else
-      switch (argtypes[i] & ~PA_FLAG_MASK) @{
-      case PA_INT:
-      case PA_FLOAT:
-      case PA_DOUBLE:
-        wanted = NUMBER;
-        break;
-      case PA_CHAR:
-        wanted = CHAR;
-        break;
-      case PA_STRING:
-        wanted = STRING;
-        break;
-      case PA_POINTER:
+      if (argtypes[i] & PA_FLAG_PTR)
         wanted = STRUCTURE;
-        break;
-      @}
-    if (TYPE (args[i]) != wanted) @{
-      error ("type mismatch for arg number %d", i);
-      return 0;
+      else
+        switch (argtypes[i] & ~PA_FLAG_MASK)
+          @{
+          case PA_INT:
+          case PA_FLOAT:
+          case PA_DOUBLE:
+            wanted = NUMBER;
+            break;
+          case PA_CHAR:
+            wanted = CHAR;
+            break;
+          case PA_STRING:
+            wanted = STRING;
+            break;
+          case PA_POINTER:
+            wanted = STRUCTURE;
+            break;
+          @}
+      if (TYPE (args[i]) != wanted)
+        @{
+          error ("type mismatch for arg number %d", i);
+          return 0;
+        @}
     @}
-  @}
   return 1;
 @}
 @end smallexample
@@ -1788,7 +1826,7 @@ written by other people could break if you do this.
 @subsection Conversion Specifier Options
 
 If you define a meaning for @samp{%q}, what if the template contains
-@samp{%+Sq} or @samp{%-#q}?  To implement a sensible meaning for these,
+@samp{%+23q} or @samp{%-#q}?  To implement a sensible meaning for these,
 the handler when called needs to be able to get the options specified in
 the template.
 
@@ -1892,9 +1930,9 @@ means of @code{va_arg (@var{type}, *ap_pointer)}.
 function to update its own @code{va_list} variable to account for the
 arguments that your handler processes.  @xref{Variadic Functions}.)
 
-The return value from your handler function should be the number of
-argument values that it processes from the variable argument list.  You
-can also return a value of @code{-1} to indicate an error.
+Your handler function should return a value just like @code{printf}
+does: it should return the number of characters it has written, or a
+negative value to indicate an error.
 
 @comment printf.h
 @comment GNU
@@ -1915,9 +1953,9 @@ int @var{function} (const struct printf_info *info,
 @end smallexample
 
 The return value from the function should be the number of arguments the
-conversion expects, up to a maximum of @var{n}.  The function should
-also fill in the @var{argtypes} array with information about the types
-of each of these arguments.  This information is encoded using the
+conversion expects.  The function should also fill in no more than
+@var{n} elements of the @var{argtypes} array with information about the
+types of each of these arguments.  This information is encoded using the
 various @samp{PA_} macros.  (You will notice that this is the same
 calling convention @code{parse_printf_format} itself uses.)
 
@@ -2029,10 +2067,11 @@ to use them properly.  Another reason is that it is difficult to recover
 from a matching error.
 
 If you are trying to read input that doesn't match a single, fixed
-pattern, you may be better off using a tool such as Bison to generate a
-parser, rather than using @code{scanf}.  For more information about
-this, see @ref{Top, Bison, Bison, bison.info, The Bison Reference
-Manual}.
+pattern, you may be better off using a tool such as Flex to generate a
+lexical scanner, or Bison to generate a parser, rather than using
+@code{scanf}.  For more information about this, see @ref{Top, Flex,
+Flex, flex.info, Flex: The Lexical Scanner Generator} and @ref{Top,
+Bison, Bison, bison.info, The Bison Reference Manual}.
 
 @node Input Conversion Syntax
 @subsection Input Conversion Syntax
@@ -2076,6 +2115,7 @@ successful assignments.
 @item
 An optional flag character @samp{a} (valid with string conversions only)
 which requests allocation of a buffer long enough to store the string in.
+(This is a GNU extension.)
 @xref{Dynamic String Input}.
 
 @item
@@ -2085,7 +2125,7 @@ this maximum is reached or when a non-matching character is found,
 whichever happens first.  Most conversions discard initial whitespace
 characters (those that don't are explicitly documented), and these
 discarded characters don't count towards the maximum field width.
-Most input conversions store a null character to mark the end of the
+String input conversions store a null character to mark the end of the
 input; the maximum field width does not include this terminator.
 @cindex maximum field width (@code{scanf})
 
@@ -2393,8 +2433,10 @@ This section describes the miscellaneous input conversions.
 
 The @samp{%p} conversion is used to read a pointer value.  It recognizes
 the same syntax as is used by the @samp{%p} output conversion for
-@code{printf}.  The corresponding argument should be of type @code{void **};
-that is, the address of a place to store a pointer.
+@code{printf} (@pxref{Other Output Conversions}); that is, a hexadecimal
+number just as the @samp{%x} conversion accepts.  The corresponding
+argument should be of type @code{void **}; that is, the address of a
+place to store a pointer.
 
 The resulting pointer value is not guaranteed to be valid if it was not
 originally written during the same program execution that reads it in.

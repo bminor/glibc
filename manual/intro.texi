@@ -16,7 +16,7 @@ operating system, and extensions specific to the GNU system.
 The purpose of this manual is to tell you how to use the facilities
 of the GNU library.  We have mentioned which features belong to which
 standards to help you identify things that are potentially nonportable
-to other systems.  But the emphasis on this manual is not on strict
+to other systems.  But the emphasis in this manual is not on strict
 portability.
 
 @menu
@@ -115,7 +115,7 @@ to write programs to work portably under multiple C dialects, but does
 not aim for completeness.
 
 @node POSIX, Berkeley Unix, ANSI C, Standards and Portability
-@subsection @sc{posix} (The Portable Operating System Interface)
+@subsection POSIX (The Portable Operating System Interface)
 @cindex POSIX
 @cindex POSIX.1
 @cindex IEEE Std 1003.1
@@ -127,27 +127,27 @@ standards, known more formally as the @dfn{Portable Operating System
 Interface for Computer Environments}.  POSIX is derived mostly from
 various versions of the Unix operating system.
 
-The library facilities specified by the POSIX standard are a superset of
-those required by ANSI C; POSIX specifies additional features for ANSI C
-functions, as well as specifying new additional functions.  In general,
-the additional requirements and functionality defined by the POSIX
-standard are aimed at providing lower-level support for a particular
-kind of operating system environment, rather than general programming
-language support which can run in many diverse operating system
-environments.@refill
+The library facilities specified by the POSIX standards are a superset
+of those required by ANSI C; POSIX specifies additional features for
+ANSI C functions, as well as specifying new additional functions.  In
+general, the additional requirements and functionality defined by the
+POSIX standards are aimed at providing lower-level support for a
+particular kind of operating system environment, rather than general
+programming language support which can run in many diverse operating
+system environments.@refill
 
 The GNU C library implements all of the functions specified in
-@cite{IEEE Std 1003.1-1988, the POSIX System Application Program
+@cite{IEEE Std 1003.1-1990, the POSIX System Application Program
 Interface}, commonly referred to as POSIX.1.  The primary extensions to
 the ANSI C facilities specified by this standard include file system
 interface primitives (@pxref{File System Interface}), device-specific
 terminal control functions (@pxref{Low-Level Terminal Interface}), and
 process control functions (@pxref{Child Processes}).
 
-Some facilities from draft 11 of @cite{IEEE Std 1003.2, the POSIX Shell
-and Utilities standard} (POSIX.2) are also implemented in the GNU
-library.  These include utilities for dealing with regular expressions
-and other pattern matching facilities (@pxref{Pattern Matching}).
+Some facilities from @cite{IEEE Std 1003.2-1992, the POSIX Shell and
+Utilities standard} (POSIX.2) are also implemented in the GNU library.
+These include utilities for dealing with regular expressions and other
+pattern matching facilities (@pxref{Pattern Matching}).
 
 @comment Roland sez:
 @comment The GNU C library as it stands conforms to 1003.2 draft 11, which
@@ -166,22 +166,24 @@ and other pattern matching facilities (@pxref{Pattern Matching}).
 @node Berkeley Unix, SVID, POSIX, Standards and Portability
 @subsection Berkeley Unix
 @cindex BSD Unix
-@cindex 4.x BSD Unix
+@cindex 4.@var{n} BSD Unix
 @cindex Berkeley Unix
 @cindex SunOS
 @cindex Unix, Berkeley
 
-The GNU C library defines facilities from some other versions of Unix,
-specifically from the 4.2 BSD and 4.3 BSD Unix systems (also known as
-@dfn{Berkeley Unix}) and from @dfn{SunOS} (a popular 4.2 BSD derivative
-that includes some Unix System V functionality).  
+The GNU C library defines facilities from some versions of Unix which
+are not formally standardized, specifically from the 4.2 BSD, 4.3 BSD,
+and 4.4 BSD Unix systems (also known as @dfn{Berkeley Unix}) and from
+@dfn{SunOS} (a popular 4.2 BSD derivative that includes some Unix System
+V functionality).  These systems support most of the ANSI and POSIX
+facilities, and 4.4 BSD and newer releases of SunOS in fact support them all.
 
 The BSD facilities include symbolic links (@pxref{Symbolic Links}), the
 @code{select} function (@pxref{Waiting for I/O}), the BSD signal
 functions (@pxref{BSD Signal Handling}), and sockets (@pxref{Sockets}).
 
 @node SVID,  , Berkeley Unix, Standards and Portability
-@subsection @sc{svid} (The System V Interface Description)
+@subsection SVID (The System V Interface Description)
 @cindex SVID
 @cindex System V Unix
 @cindex Unix, System V
@@ -197,9 +199,7 @@ SunOS) which include these facilities.  However, many of the more
 obscure and less generally useful facilities required by the SVID are
 not included.  (In fact, Unix System V itself does not provide them all.)
 
-@strong{Incomplete:}  Are there any particular System V facilities that
-ought to be mentioned specifically here?
-
+@c !!! mention sysv ipc/shmem when it is there.
 
 
 @node Using the Library, Roadmap to the Manual, Standards and Portability, Introduction
@@ -325,9 +325,9 @@ function call.
 Taking the address of a library function works even if it is also
 defined as a macro.  This is because, in this context, the name of the
 function isn't followed by the left parenthesis that is syntactically
-necessary to recognize the  a macro call.
+necessary to recognize a macro call.
 
-You might occasionally want to avoid using the a macro definition of a
+You might occasionally want to avoid using the macro definition of a
 function---perhaps to make your program easier to debug.  There are
 two ways you can do this:
 
@@ -386,7 +386,7 @@ just makes your program slower.
 The names of all library types, macros, variables and functions that
 come from the ANSI C standard are reserved unconditionally; your program
 @strong{may not} redefine these names.  All other library names are
-reserved if your programs explicitly includes the header file that
+reserved if your program explicitly includes the header file that
 defines or declares them.  There are several reasons for these
 restrictions:
 
@@ -447,7 +447,7 @@ used for additional macros specifying locale attributes.
 @item
 Names of all existing mathematics functions (@pxref{Mathematics})
 suffixed with @samp{f} or @samp{l} are reserved for corresponding
-functions that operate on @code{float} or @code{long double} arguments,
+functions that operate on @code{float} and @code{long double} arguments,
 respectively.
 
 @item
@@ -530,9 +530,12 @@ features by defining one or more of the feature macros.
 for more information about GCC options.@refill
 
 You should define these macros by using @samp{#define} preprocessor
-directives at the top of your source code files.  You could also use 
-the @samp{-D} option to GCC, but it's better if you make the source
-files indicate their own meaning in a self-contained way.
+directives at the top of your source code files.  These directives
+@emph{must} come before any @code{#include} of a system header file.  It
+is best to make them the very first thing in the file, preceded only by
+comments.  You could also use the @samp{-D} option to GCC, but it's
+better if you make the source files indicate their own meaning in a
+self-contained way.
 
 @comment (none)
 @comment POSIX.1
@@ -602,9 +605,10 @@ sequence of definitions:
 #define _SVID_SOURCE
 @end smallexample
 
-Note that if you do this, you may need to link your program with the BSD
+Note that if you do this, you must link your program with the BSD
 compatibility library by passing the @samp{-lbsd-compat} option to the
-compiler or linker.
+compiler or linker.  @strong{Note:} If you forget to do this, you may
+get very strange errors at run time.
 @end defvr
 
 We recommend you use @code{_GNU_SOURCE} in new programs.  If you don't
@@ -694,8 +698,7 @@ communication between processes sharing a common file system.
 @ref{Sockets}, describes a more complicated interprocess communication
 mechanism that allows processes running on different machines to
 communicate over a network.  This chapter also contains information about
-Internet host addressing and how to use the system network databases,
-such as @file{/etc/hosts}.
+Internet host addressing and how to use the system network databases.
 
 @item
 @ref{Low-Level Terminal Interface}, describes how you can change the
@@ -789,4 +792,6 @@ If you already know the name of the facility you are interested in, you
 can look it up in @ref{Library Summary}.  This gives you a summary of
 its syntax and a pointer to where you can find a more detailed
 description.  This appendix is particularly useful if you just want to
-verify the order and type of arguments to a function, for example.
+verify the order and type of arguments to a function, for example.  It
+also tells you what standard or system each function, variable, or macro
+is derived from.

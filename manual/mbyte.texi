@@ -38,7 +38,7 @@ You can represent extended characters in either of two ways:
 
 @itemize @bullet
 @item
-As @dfn{Multibyte characters} which can be embedded in an ordinary
+As @dfn{multibyte characters} which can be embedded in an ordinary
 string, an array of @code{char} objects.  Their advantage is that many
 programs and operating systems can handle occasional multibyte
 characters scattered among ordinary ASCII characters, without any
@@ -431,10 +431,10 @@ can use @code{mblen} to find this out.
 @comment stdlib.h
 @comment ANSI
 @deftypefun int mblen (const char *@var{string}, size_t @var{size})
-The @code{mblen} function with non-null @var{string} returns the number
-of bytes that make up the multibyte character beginning at @var{string},
-never examining more than @var{size} bytes.  (The idea is to supply
-for @var{size} the number of bytes of data you have in hand.)
+The @code{mblen} function with a non-null @var{string} argument returns
+the number of bytes that make up the multibyte character beginning at
+@var{string}, never examining more than @var{size} bytes.  (The idea is
+to supply for @var{size} the number of bytes of data you have in hand.)
 
 The return value of @code{mblen} distinguishes three possibilities: the
 first @var{size} bytes at @var{string} start with valid multibyte
@@ -563,10 +563,11 @@ file_mbstowcs (int input, int output)
 
       /* @r{Fill up the buffer from the input file.}  */
       nread = read (input, buffer + filled, BUFSIZ);
-      if (nread < 0) @{
-        perror ("read");
-        return 0;
-      @}
+      if (nread < 0)
+        @{
+          perror ("read");
+          return 0;
+        @}
       /* @r{If we reach end of file, make a note to read no more.} */
       if (nread == 0)
         eof = 1;
@@ -611,8 +612,8 @@ file_mbstowcs (int input, int output)
           return 0;
         @}
 
-      /* @r{If any characters must be carried forward,
-         put them at the beginning of @code{buffer}.} */
+      /* @r{If any characters must be carried forward,}
+         @r{put them at the beginning of @code{buffer}.} */
       if (filled > 0)
         memcpy (inp, buffer, filled);
       @}

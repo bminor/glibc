@@ -53,7 +53,7 @@ The collating sequence for the local language and character set
 (@pxref{Collation Functions}).
 
 @item
-Formatting of numbers and currency amounts.
+Formatting of numbers and currency amounts (@pxref{Numeric Formatting}).
 
 @item
 Formatting of dates and times (@pxref{Formatting Date and Time}).
@@ -102,7 +102,7 @@ locales will exist, except for one standard locale called @samp{C} or
 
 @cindex combining locales
 A user also has the option of specifying different locales for different
-purposes---in effect, choosing a mixture of two locales.
+purposes---in effect, choosing a mixture of multiple locales.
 
 For example, the user might specify the locale @samp{espana-castellano}
 for most purposes, but specify the locale @samp{usa-english} for
@@ -138,8 +138,9 @@ and @code{strxfrm}); see @ref{Collation Functions}.
 @comment ANSI
 @item LC_CTYPE
 @vindex LC_CTYPE
-This category applies to classification and conversion of characters;
-see @ref{Character Handling}.
+This category applies to classification and conversion of characters,
+and to multibyte and wide characters;
+see @ref{Character Handling} and @ref{Extended Characters}.
 
 @comment locale.h
 @comment ANSI
@@ -313,8 +314,8 @@ This is the standard POSIX locale.  Currently, it is an alias for the
 standard C locale.
 
 @item ""
-The empty name stands for a site-specific default locale.  It's supposed
-to be a good default for the machine on which the program is running.
+The empty name says to select a locale based on environment variables.
+@xref{Locale Categories}.
 @end table
 
 Defining and installing named locales is normally a responsibility of

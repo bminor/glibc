@@ -211,12 +211,13 @@ behavior of this function is undefined if the two arrays @var{to} and
 The value returned by @code{memcpy} is the value of @var{to}.
 
 Here is an example of how you might use @code{memcpy} to copy the
-contents of a @code{struct}:
+contents of an array:
 
 @smallexample
-struct foo *old, *new;
+struct foo *oldarray, *newarray;
+int arraysize;
 @dots{}
-memcpy (new, old, sizeof(struct foo));
+memcpy (new, old, arraysize * sizeof (struct foo));
 @end smallexample
 @end deftypefun
 
@@ -388,7 +389,9 @@ arguments are not in the same order.
 @deftypefun {void *} bzero (void *@var{block}, size_t @var{size})
 This is a partially obsolete alternative for @code{memset}, derived from
 BSD.  Note that it is not as general as @code{memset}, because the only
-value it can store is zero.
+value it can store is zero.  Some machines have special instructions for
+zeroing memory, so @code{bzero} might be more efficient than
+@code{memset}.
 @end deftypefun
 
 @node String/Array Comparison, Collation Functions, Copying and Concatenation, String and Array Utilities
@@ -752,6 +755,12 @@ specifying a null character as the value of the @var{c} argument.
 @end deftypefun
 
 @comment string.h
+@comment BSD
+@deftypefun {char *} index (const char *@var{string}, int @var{c})
+@code{index} is another name for @code{strchr}; they are exactly the same.
+@end deftypefun
+
+@comment string.h
 @comment ANSI
 @deftypefun {char *} strrchr (const char *@var{string}, int @var{c})
 The function @code{strrchr} is like @code{strchr}, except that it searches
@@ -763,6 +772,12 @@ For example,
 strrchr ("hello, world", 'l')
     @result{} "ld"
 @end smallexample
+@end deftypefun
+
+@comment string.h
+@comment BSD
+@deftypefun {char *} rindex (const char *@var{string}, int @var{c})
+@code{rindex} is another name for @code{strrchr}; they are exactly the same.
 @end deftypefun
 
 @comment string.h

@@ -38,19 +38,12 @@ numbers of type @code{double}:
 int
 compare_doubles (const double *a, const double *b)
 @{
-  double temp = *a - *b;
-  if (temp > 0)
-    return 1;
-  else if (temp < 0)
-    return -1;
-  else
-    return 0;
+  return (int) (*a - *b);
 @}
 @end smallexample
 
 The header file @file{stdlib.h} defines a name for the data type of
-comparison functions.  This is a GNU extension and thus defined only if
-you request the GNU extensions.
+comparison functions.  This type is a GNU extension.
 
 @comment stdlib.h
 @comment GNU
@@ -75,7 +68,7 @@ the header file @file{stdlib.h}.
 @deftypefun {void *} bsearch (const void *@var{key}, const void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
 The @code{bsearch} function searches the sorted array @var{array} for an object
 that is equivalent to @var{key}.  The array contains @var{count} elements,
-each of which is of size @var{size}.
+each of which is of size @var{size} bytes.  
 
 The @var{compare} function is used to perform the comparison.  This
 function is called with two pointer arguments and should return an
@@ -140,7 +133,7 @@ Functions}):
 @end smallexample
 
 The @code{qsort} function derives its name from the fact that it was
-originally implemented using the algorithm ``quick sort''.
+originally implemented using the ``quick sort'' algorithm.
 @end deftypefun
 
 @node Search/Sort Example,  , Array Sort Function, Searching and Sorting
@@ -160,6 +153,22 @@ Then, we can look up individual objects based on their names.
 The output from this program looks like:
 
 @smallexample
+Kermit, the frog
+Piggy, the pig
+Gonzo, the whatever
+Fozzie, the bear
+Sam, the eagle
+Robin, the frog
+Animal, the animal
+Camilla, the chicken
+Sweetums, the monster
+Dr. Strangepork, the pig
+Link Hogthrob, the pig
+Zoot, the human
+Dr. Bunsen Honeydew, the human
+Beaker, the human
+Swedish Chef, the human
+
 Animal, the animal
 Beaker, the human
 Camilla, the chicken
@@ -175,7 +184,6 @@ Sam, the eagle
 Swedish Chef, the human
 Sweetums, the monster
 Zoot, the human
-
 
 Kermit, the frog
 Gonzo, the whatever

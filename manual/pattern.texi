@@ -1,8 +1,10 @@
 @node Pattern Matching, I/O Overview, Searching and Sorting, Top
 @chapter Pattern Matching
 
-The GNU C Library provides pattern matching facilities for two kinds
-of patterns: regular expressions and file-name wildcards.
+The GNU C Library provides pattern matching facilities for two kinds of
+patterns: regular expressions and file-name wildcards.  The library also
+provides a facility for expanding variable and command references and
+parsing text into words in the way the shell does.
 
 @menu
 * Wildcard Matching::    Matching a wildcard pattern against a single string.
@@ -66,8 +68,10 @@ Treat the @samp{.} character specially if it appears at the beginning of
 cannot match @samp{.} as the first character of @var{string}.
 
 If you set both @code{FNM_PERIOD} and @code{FNM_FILE_NAME}, then the
-special treatment applies to @samp{.} following @samp{/} as well as
-to @samp{.} at the beginning of @var{string}.
+special treatment applies to @samp{.} following @samp{/} as well as to
+@samp{.} at the beginning of @var{string}.  (The shell uses the
+@code{FNM_PERIOD} and @code{FNM_FILE_NAME} falgs together for matching
+file names.)
 
 @comment fnmatch.h
 @comment POSIX.2
@@ -137,7 +141,7 @@ records both the address of the word vector and its size.
 The number of elements in the vector.
 
 @item gl_pathv
-The address of the vector.  This field has type @code{char **}.
+The address of the vector.  This field has type @w{@code{char **}}.
 
 @item gl_offs
 The offset of the first real element of the vector, from its nominal
@@ -161,7 +165,7 @@ the beginning of the vector.
 The function @code{glob} does globbing using the pattern @var{pattern}
 in the current directory.  It puts the result in a newly allocated
 vector, and stores the size and address of this vector into
-@code{*@var{vector-ptr}}.  The argument @var{flags} is a combination of
+@code{*@var{vector_ptr}}.  The argument @var{flags} is a combination of
 bit flags; see @ref{Flags for Globbing}, for details of the flags.
 
 The result of globbing is a sequence of file names.  The function
@@ -172,7 +176,7 @@ This vector is called the @dfn{word vector}.
 
 To return this vector, @code{glob} stores both its address and its
 length (number of elements, not counting the terminating null pointer)
-into @code{*@var{vector-ptr}}.
+into @code{*@var{vector_ptr}}.
 
 Normally, @code{glob} sorts the file names alphabetically before 
 returning them.  You can turn this off with the flag @code{GLOB_NOSORT}
@@ -191,6 +195,13 @@ of these error codes:
 There was an error opening a directory, and you used the flag
 @code{GLOB_ERR} or your specified @var{errfunc} returned a nonzero
 value.
+@iftex
+See below
+@end iftex
+@ifinfo
+@xref{Flags for Globbing},
+@end ifinfo
+for an explanation of the @code{GLOB_ERR} flag and @var{errfunc}.
 
 @comment glob.h
 @comment POSIX.2
@@ -207,7 +218,7 @@ It was impossible to allocate memory to hold the result.
 @end table
 
 In the event of an error, @code{glob} stores information in
-@code{*@var{vector-ptr}} about all the matches it has found so far.
+@code{*@var{vector_ptr}} about all the matches it has found so far.
 @end deftypefun
 
 @node Flags for Globbing
@@ -215,7 +226,7 @@ In the event of an error, @code{glob} stores information in
 
 This section describes the flags that you can specify in the 
 @var{flags} argument to @code{glob}.  Choose the flags you want,
-and combine them with the C operator @code{|}.
+and combine them with the C bitwise OR operator @code{|}.
 
 @table @code
 @comment glob.h
@@ -229,6 +240,12 @@ In order for appending to work, you must not modify the contents of the
 word vector structure between calls to @code{glob}.  And, if you set
 @code{GLOB_DOOFFS} in the first call to @code{glob}, you must also
 set it when you append to the results.
+
+Note that the pointer stored in @code{gl_pathv} may no longer be valid
+after you call @code{glob} the second time, because @code{glob} might
+have relocated the vector.  So always fetch @code{gl_pathv} from the
+@code{glob_t} structure after each @code{glob} call; @strong{never} save
+the pointer across calls.
 
 @comment glob.h
 @comment POSIX.2
@@ -246,11 +263,11 @@ fully.  Such difficulties might include a directory in which you don't
 have the requisite access.  Normally, @code{glob} tries its best to keep
 on going despite any errors, reading whatever directories it can.
 
-You can exercise even more control than this by specifying an error-handler
-function @var{errfunc} when you call @code{glob}.  If @var{errfunc} is
-nonzero, then @code{glob} doesn't give up right away when it can't read
-a directory; instead, it calls @var{errfunc} with two arguments, like
-this:
+You can exercise even more control than this by specifying an
+error-handler function @var{errfunc} when you call @code{glob}.  If
+@var{errfunc} is not a null pointer, then @code{glob} doesn't give up
+right away when it can't read a directory; instead, it calls
+@var{errfunc} with two arguments, like this:
 
 @smallexample
 (*@var{errfunc}) (@var{filename}, @var{error-code})
@@ -309,10 +326,9 @@ expressions.  One is the standard POSIX.2 interface, and the other is
 what the GNU system has had for many years.
 
 Both interfaces are declared in the header file @file{regex.h}.
-If you define @code{_GNU_SOURCE}, then the GNU functions, structures
-and constants are declared.  Otherwise, only the POSIX names are
-declared.
-@c !!! wrong-- default is GNU
+If you define @w{@code{_POSIX_C_SOURCE}}, then only the POSIX.2
+functions, structures, and constants are declared.
+@c !!! we only document the POSIX.2 interface here!!
 
 @menu
 * POSIX Regexp Compilation::    Using @code{regcomp} to prepare to match.
@@ -459,7 +475,7 @@ One of the endpoints in a range expression was invalid.
 @comment regex.h
 @comment POSIX.2
 @item REG_ESPACE
-@code{regcomp} or @code{regexec} ran out of memory.
+@code{regcomp} ran out of memory.
 @end table
 
 @node Flags for POSIX Regexps
@@ -559,7 +575,7 @@ The pattern didn't match the string.  This isn't really an error.
 @comment regex.h
 @comment POSIX.2
 @item REG_ESPACE
-@code{regcomp} or @code{regexec} ran out of memory.
+@code{regexec} ran out of memory.
 @end table
 
 @node Regexp Subexpressions
@@ -569,10 +585,10 @@ When @code{regexec} matches parenthetical subexpressions of
 @var{pattern}, it records which parts of @var{string} they match.  It
 returns that information by storing the offsets into an array whose
 elements are structures of type @code{regmatch_t}.  The first element of
-the array records the part of the string that matched the entire regular
-expression.  Each other element of the array records the beginning and
-end of the part that matched a single parenthetical subexpression.
-@c !!! in this paragraph, [0] is called "first"; see below
+the array (index @code{0}) records the part of the string that matched
+the entire regular expression.  Each other element of the array records
+the beginning and end of the part that matched a single parenthetical
+subexpression.
 
 @comment regex.h
 @comment POSIX.2
@@ -598,10 +614,10 @@ The fields of @code{regmatch_t} have type @code{regoff_t}.
 @end deftp
 
 The @code{regmatch_t} elements correspond to subexpressions
-positionally; the first element records where the first subexpression
-matched, the second element records the second subexpression, and so on.
-The order of the subexpressions is the order in which they begin.
-@c !!! here [1] is called "first"; see above
+positionally; the first element (index @code{1}) records where the first
+subexpression matched, the second element records the second
+subexpression, and so on.  The order of the subexpressions is the order
+in which they begin.
 
 When you call @code{regexec}, you specify how long the @var{matchptr}
 array is, with the @var{nmatch} argument.  This tells @code{regexec} how
@@ -643,7 +659,7 @@ accurate to say that the last @emph{opportunity} to match is the one
 that takes precedence.  What this means is that when one subexpression
 appears within another, then the results reported for the inner
 subexpression reflect whatever happened on the last match of the outer
-subexpression.  For an example, consider @samp{\(ba\(na\)*s \)} matching
+subexpression.  For an example, consider @samp{\(ba\(na\)*s \)*} matching
 the string @samp{bananas bas }.  The last time the inner expression
 actually matches is near the end of the first word.  But it is 
 @emph{considered} again in the second word, and fails to match there.
@@ -827,7 +843,7 @@ records both the address of the word vector and its size.
 The number of elements in the vector.
 
 @item we_wordv
-The address of the vector.  This field has type @code{char **}.
+The address of the vector.  This field has type @w{@code{char **}}.
 
 @item we_offs
 The offset of the first real element of the vector, from its nominal
@@ -956,6 +972,10 @@ report an error.
 Reuse a word vector made by a previous call to @code{wordexp}.
 Instead of allocating a new vector of words, this call to @code{wordexp}
 will use the vector that already exists (making it larger if necessary).
+
+Note that the vector may move, so it is not safe to save an old pointer
+and use it again after calling @code{wordexp}.  You must fetch
+@code{we_pathv} anew after each call.
 
 @comment wordexp.h
 @comment POSIX.2

@@ -29,7 +29,7 @@ and ownership.
 communication facilities.
 
 @item
-@ref{Sockets}, covering a more complicated interprocess communication
+@ref{Sockets}, which covers a more complicated interprocess communication
 facility with support for networking.
 
 @item
@@ -128,10 +128,11 @@ library are included in the POSIX.1 standard, however.
 @node File Position,  , Streams and File Descriptors, I/O Concepts
 @subsection File Position 
 
-One of the attributes of an open file is its @dfn{file position}
-that keeps track of where in the file the next character is to be read
-or written.  In the GNU system, the file position is simply an integer
-representing the number of bytes from the beginning of the file.
+One of the attributes of an open file is its @dfn{file position} that
+keeps track of where in the file the next character is to be read or
+written.  In the GNU system, and all POSIX.1 systems, the file position
+is simply an integer representing the number of bytes from the beginning
+of the file.
 
 The file position is normally set to the beginning of the file when it
 is opened, and each time a character is read or written, the file
@@ -146,7 +147,8 @@ do permit this are sometimes referred to as @dfn{random-access} files.
 You can change the file position using the @code{fseek} function on a
 stream (@pxref{File Positioning}) or the @code{lseek} function on a file
 descriptor (@pxref{I/O Primitives}).  If you try to change the file
-position on a file that doesn't support random access, you get an error.
+position on a file that doesn't support random access, you get the
+@code{ESPIPE} error.
 @cindex random-access files
 
 Streams and descriptors that are opened for @dfn{append access} are
@@ -247,8 +249,9 @@ process; otherwise the file name resolution fails.
 @cindex root directory
 @cindex absolute file name
 If a file name begins with a @samp{/}, the first component in the file
-name is located in the @dfn{root directory} of the process.  Such a file
-name is called an @dfn{absolute file name}.
+name is located in the @dfn{root directory} of the process (usually all
+processes on the system have the same root directory).  Such a file name
+is called an @dfn{absolute file name}.
 @c !!! xref here to chroot, if we ever document chroot. -rm
 @c ??? I don't like the idea of encouraging smoking--rms.
 @c !!! What the hell is that bad pun supposed to mean?  I don't get it.  -rm
@@ -264,7 +267,9 @@ have special meanings.  Every directory has entries for these file name
 components.  The file name component @file{.} refers to the directory
 itself, while the file name component @file{..} refers to its
 @dfn{parent directory} (the directory that contains the link for the
-directory in question).
+directory in question).  As a special case, @file{..} in the root
+directory refers to the root directory itself, since it has no parent;
+thus @file{/..} is the same as @file{/}.
 
 Here are some examples of file names:
 
@@ -331,11 +336,18 @@ component.
 
 @item ENOENT
 This error is reported when a file referenced as a directory component
-in the file name doesn't exist.
+in the file name doesn't exist, or when a component is a symbolic link
+whose target file does not exist.  @xref{Symbolic Links}.
 
 @item ENOTDIR
 A file that is referenced as a directory component in the file name
 exists, but it isn't a directory.
+
+@item ELOOP
+Too many symbolic links were resolved while trying to look up the file
+name.  The system has an arbitrary limit on the number of symbolic links
+that may be resolved in looking up a single file name, as a primitive
+way to detect loops.  @xref{Symbolic Links}.
 @end table
 
 

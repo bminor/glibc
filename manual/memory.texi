@@ -1,3 +1,6 @@
+@comment !!! describe mmap et al (here?)
+@c !!! doc brk/sbrk
+
 @node Memory Allocation, Character Handling, Error Reporting, Top
 @chapter Memory Allocation
 @cindex memory allocation
@@ -226,7 +229,7 @@ savestring (const char *ptr, size_t len)
 @{
   register char *value = (char *) xmalloc (len + 1);
   memcpy (value, ptr, len);
-  value[len] = 0;
+  value[len] = '\0';
   return value;
 @}
 @end smallexample
@@ -332,6 +335,12 @@ may find it necessary to copy the block to a new address where more free
 space is available.  The value of @code{realloc} is the new address of the
 block.  If the block needs to be moved, @code{realloc} copies the old
 contents.
+
+If you pass a null pointer for @var{ptr}, @code{realloc} behaves just
+like @samp{malloc (@var{newsize})}.  This can be convenient, but beware
+that older implementations (before ANSI C) may not support this
+behavior, and will probably crash when @code{realloc} is passed a null
+pointer.
 @end deftypefun
 
 Like @code{malloc}, @code{realloc} may return a null pointer if no
@@ -407,6 +416,7 @@ blocks whose sizes are powers of two.  It keeps separate pools for each
 power of two.  This holds for sizes up to a page size.  Therefore, if
 you are free to choose the size of a small block in order to make
 @code{malloc} more efficient, make it a power of two.
+@c !!! xref getpagesize
 
 Once a page is split up for a particular block size, it can't be reused
 for another size unless all the blocks in it are freed.  In many
@@ -443,7 +453,7 @@ however---BSD does not provide any way to free such blocks.
 
 @comment malloc.h stdlib.h
 @comment BSD
-@deftypefun {void *} memalign (size_t @var{size}, int @var{boundary})
+@deftypefun {void *} memalign (size_t @var{size}, size_t @var{boundary})
 The @code{memalign} function allocates a block of @var{size} bytes whose
 address is a multiple of @var{boundary}.  The @var{boundary} must be a
 power of two!  The function @code{memalign} works by calling
@@ -455,7 +465,16 @@ address within the block that is on the specified boundary.
 @comment BSD
 @deftypefun {void *} valloc (size_t @var{size})
 Using @code{valloc} is like using @code{memalign} and passing the page size
-as the value of the second argument.
+as the value of the second argument.  It is implemented like this:
+
+@smallexample
+void *
+valloc (size_t size)
+@{
+  return memalign (size, getpagesize ());
+@}
+@end smallexample
+@c !!! xref getpagesize
 @end deftypefun
 
 @node Heap Consistency Checking
@@ -471,7 +490,7 @@ declared in @file{malloc.h}.
 
 @comment malloc.h
 @comment GNU
-@deftypefun void mcheck (void (*@var{abortfn}) (void))
+@deftypefun int mcheck (void (*@var{abortfn}) (void))
 Calling @code{mcheck} tells @code{malloc} to perform occasional
 consistency checks.  These will catch things such as writing
 past the end of a block that was allocated with @code{malloc}.
@@ -486,7 +505,8 @@ case.  The function returns @code{-1} if you call it too late, and
 @code{0} otherwise (when it is successful).
 
 The easiest way to arrange to call @code{mcheck} early enough is to use
-the option @samp{-lmcheck} when you link your program.
+the option @samp{-lmcheck} when you link your program; then you don't
+need to modify your program source at all.
 @end deftypefun
 
 @node Hooks for Malloc
@@ -591,7 +611,7 @@ storage allocator.  It contains the following members:
 
 @table @code
 @item size_t bytes_total
-This is the total size of memory managed by malloc, in bytes.
+This is the total size of memory managed by @code{malloc}, in bytes.
 
 @item size_t chunks_used
 This is the number of chunks in use.  (The storage allocator internally
@@ -642,14 +662,14 @@ Allocate a block of @var{count} * @var{eltsize} bytes using
 Space}.
 
 @item void *valloc (size_t @var{size})
-Allocate a block @var{size} bytes, starting on a page boundary.
+Allocate a block of @var{size} bytes, starting on a page boundary.
 @xref{Aligned Memory Blocks}.
 
 @item void *memalign (size_t @var{size}, size_t @var{boundary})
-Allocate a block @var{size} bytes, starting on an address that is a
+Allocate a block of @var{size} bytes, starting on an address that is a
 multiple of @var{boundary}.  @xref{Aligned Memory Blocks}.
 
-@item void mcheck (void (*@var{abortfn}) (void))
+@item int mcheck (void (*@var{abortfn}) (void))
 Tell @code{malloc} to perform occasional consistency checks on
 dynamically allocated memory, and to call @var{abortfn} when an
 inconsistency is found.  @xref{Heap Consistency Checking}.
@@ -663,8 +683,8 @@ A pointer to a function that @code{realloc} uses whenever it is called.
 @item void (*__free_hook) (void *@var{ptr})
 A pointer to a function that @code{free} uses whenever it is called.
 
-@item void struct mstats mstats (void)
-Read information about the current dynamic memory usage.
+@item struct mstats mstats (void)
+Return information about the current dynamic memory usage.
 @xref{Statistics of Malloc}.
 @end table
 
@@ -823,7 +843,7 @@ requires you to specify an @var{obstack_ptr} as the first argument.
 @end deftypefun
 
 For example, here is a function that allocates a copy of a string @var{str}
-in a specific obstack, which is the variable @code{string_obstack}:
+in a specific obstack, which is in the variable @code{string_obstack}:
 
 @smallexample
 struct obstack string_obstack;
@@ -1543,14 +1563,13 @@ several reasons:
 @itemize @bullet
 @item
 A variable size array's space is freed at the end of the scope of the
-name of the array.  The space allocated with @code{alloca} usually
+name of the array.  The space allocated with @code{alloca}
 remains until the end of the function.
 
 @item
 It is possible to use @code{alloca} within a loop, allocating an
 additional block on each iteration.  This is impossible with
-variable-sized arrays.  On the other hand, this is also slightly
-unclean.
+variable-sized arrays.
 @end itemize
 
 @strong{Note:} If you mix use of @code{alloca} and variable-sized arrays
@@ -1650,12 +1669,13 @@ and does not modify @code{*@var{handleptr}}.
 
 @pindex malloc.c
 You can ask for warnings as the program approaches running out of memory
-space, by calling @code{memory_warnings}.  This is a GNU extension
-declared in @file{malloc.h}.
+space, by calling @code{memory_warnings}.  This tells @code{malloc} to
+check memory usage every time it asks for more memory from the operating
+system.  This is a GNU extension declared in @file{malloc.h}.
 
 @comment malloc.h
 @comment GNU
-@deftypefun void memory_warnings (void *@var{start}, void (*@var{warn_func}) (char *))
+@deftypefun void memory_warnings (void *@var{start}, void (*@var{warn_func}) (const char *))
 Call this function to request warnings for nearing exhaustion of virtual
 memory.
 
