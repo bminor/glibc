@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,10 +28,10 @@ DEFUN(rename, (old, new), CONST char *old AND CONST char *new)
   file_t olddir, newdir;
   const char *oldname, *newname;
 
-  olddir = __hurd_path_split (old, &oldname);
+  olddir = __path_split (old, &oldname);
   if (olddir == MACH_PORT_NULL)
     return -1;
-  newdir = __hurd_path_split (new, &newname);
+  newdir = __path_split (new, &newname);
   if (newdir == MACH_PORT_NULL)
     {
        __mach_port_deallocate (__mach_task_self (), olddir);
