@@ -32,6 +32,12 @@ __BEGIN_DECLS
 #define	__need_NULL
 #include <stddef.h>
 
+#define	__need___va_list
+#include <stdarg.h>
+#ifndef	____va_list_defined
+#define	__va_list	__ptr_t
+#endif
+
 #include <gnu/types.h>
 #endif /* Don't need FILE.  */
 #undef	__need_FILE
@@ -334,18 +340,19 @@ extern void setlinebuf __P ((FILE * __stream));
 
 
 /* Write formatted output to STREAM.  */
-extern int fprintf __P ((FILE * __stream, __const char *__format,...));
+extern int fprintf __P ((FILE * __stream, __const char *__format, ...));
 /* Write formatted output to stdout.  */
-extern int printf __P ((__const char *__format,...));
+extern int printf __P ((__const char *__format, ...));
 /* Write formatted output to S.  */
-extern int sprintf __P ((char *__s, __const char *__format,...));
+extern int sprintf __P ((char *__s, __const char *__format, ...));
 
 /* Write formatted output to S from argument list ARG.  */
-extern int vfprintf __P ((FILE * __s, __const char *__format, __ptr_t __arg));
+extern int vfprintf __P ((FILE * __s, __const char *__format,
+			  __va_list __arg));
 /* Write formatted output to stdout from argument list ARG.  */
 extern int vprintf __P ((__const char *__format, __ptr_t __arg));
 /* Write formatted output to S from argument list ARG.  */
-extern int vsprintf __P ((char *__s, __const char *__format, __ptr_t __arg));
+extern int vsprintf __P ((char *__s, __const char *__format, __va_list __arg));
 
 #ifdef	__OPTIMIZE__
 #define	vprintf(fmt, arg)		vfprintf(stdout, (fmt), (arg))
@@ -354,44 +361,44 @@ extern int vsprintf __P ((char *__s, __const char *__format, __ptr_t __arg));
 #ifdef	__USE_GNU
 /* Maximum chars of output to write in MAXLEN.  */
 extern int snprintf __P ((char *__s, size_t __maxlen,
-			  __const char *__format,...));
+			  __const char *__format, ...));
 
 extern int vsnprintf __P ((char *__s, size_t __maxlen,
-			   __const char *__format, __ptr_t __arg));
+			   __const char *__format, __va_list __arg));
 
 /* Write formatted output to a string dynamically allocated with `malloc'.
-   Store the address of the string in *__ptr_t.  */
-extern int vasprintf __P ((char **__ptr, __const char *__f, __ptr_t __arg));
-extern int asprintf __P ((char **__ptr, __const char *__fmt,...));
+   Store the address of the string in *PTR.  */
+extern int vasprintf __P ((char **__ptr, __const char *__f, __va_list __arg));
+extern int asprintf __P ((char **__ptr, __const char *__fmt, ...));
 
 /* Write formatted output to a file descriptor.  */
-extern int vdprintf __P ((int __fd, __const char *__fmt, __ptr_t __arg));
-extern int dprintf __P ((int __fd, __const char *__fmt,...));
+extern int vdprintf __P ((int __fd, __const char *__fmt, __va_list __arg));
+extern int dprintf __P ((int __fd, __const char *__fmt, ...));
 #endif
 
 
 /* Read formatted input from STREAM.  */
-extern int fscanf __P ((FILE * __stream, __const char *__format,...));
+extern int fscanf __P ((FILE * __stream, __const char *__format, ...));
 /* Read formatted input from stdin.  */
-extern int scanf __P ((__const char *__format,...));
+extern int scanf __P ((__const char *__format, ...));
 /* Read formatted input from S.  */
-extern int sscanf __P ((__const char *__s, __const char *__format,...));
+extern int sscanf __P ((__const char *__s, __const char *__format, ...));
 
 #ifdef	__USE_GNU
 /* Read formatted input from S into argument list ARG.  */
 extern int __vfscanf __P ((FILE * __s, __const char *__format,
-			   __ptr_t __arg));
+			   __va_list __arg));
 extern int vfscanf __P ((FILE * __s, __const char *__format,
-			 __ptr_t __arg));
+			 __va_list __arg));
 
 /* Read formatted input from stdin into argument list ARG.  */
-extern int vscanf __P ((__const char *__format, __ptr_t __arg));
+extern int vscanf __P ((__const char *__format, __va_list __arg));
 
 /* Read formatted input from S into argument list ARG.  */
 extern int __vsscanf __P ((__const char *__s, __const char *__format,
-			   __ptr_t __arg));
+			   __va_list __arg));
 extern int vsscanf __P ((__const char *__s, __const char *__format,
-			 __ptr_t __arg));
+			 __va_list __arg));
 
 
 #ifdef	__OPTIMIZE__
