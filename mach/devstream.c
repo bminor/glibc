@@ -163,7 +163,7 @@ mach_open_devstream (mach_port_t dev, const char *mode)
 
   stream->__room_funcs.__input = input;
   stream->__room_funcs.__output = output;
-  stream->__io_funcs.__close = (__io_close) device_close;
+  stream->__io_funcs.__close = (__io_close_fn *) device_close;
   stream->__seen = 1;
 
   return stream;
