@@ -171,9 +171,9 @@ struct _hurd_dtable
 
     struct _hurd_fd *d;
   };
+extern struct mutex _hurd_dtable_lock; /* Locks next two.  */
 extern struct _hurd_dtable _hurd_dtable;
-
-extern struct mutex _hurd_dtable_lock; /* Locks _hurd_dtable.  */
+extern int _hurd_dtable_rlimit;
 
 /* If not NULL, pointed-to word is set when _hurd_dtable.d changes.
    User who set `user_dealloc' should free the _hurd_dtable.d value
