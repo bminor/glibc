@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    x86-64 version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _PT_MACHINE_H
+#define _PT_MACHINE_H   1
+
 #include <stddef.h>	/* For offsetof.  */
 #include <stdlib.h>	/* For abort().  */
 #include <asm/prctl.h>
@@ -26,6 +29,9 @@
 #ifndef PT_EI
 # define PT_EI extern inline
 #endif
+
+extern long int testandset (int *spinlock);
+extern int __compare_and_swap (long int *p, long int oldval, long int newval);
 
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
@@ -40,7 +46,7 @@ testandset (int *spinlock)
   long int ret;
 
   __asm__ __volatile__ (
-	"xchgq %0, %1"
+	"xchgl %k0, %1"
 	: "=r"(ret), "=m"(*spinlock)
 	: "0"(1), "m"(*spinlock)
 	: "memory");
@@ -65,7 +71,6 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
   return ret;
 }
 
-
 /* Return the thread descriptor for the current thread.
 
    The contained asm must *not* be marked volatile since otherwise
@@ -75,7 +80,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 #define THREAD_SELF \
 ({									      \
   register pthread_descr __self;					      \
-  __asm__ ("movq %%gs:%c1,%0" : "=r" (__self)				      \
+  __asm__ ("movq %%fs:%c1,%0" : "=r" (__self)				      \
 	   : "i" (offsetof (struct _pthread_descr_struct,		      \
 			    p_header.data.self)));			      \
   __self;								      \
@@ -87,7 +92,7 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 /* Initialize the thread-unique value.  */
 #define INIT_THREAD_SELF(descr, nr) \
 {									      \
-  if (__arch_prctl (ARCH_SET_GS, descr) != 0)				      \
+  if (__arch_prctl (ARCH_SET_FS, (unsigned long)descr) != 0)		      \
     abort ();								      \
 }
 
@@ -96,15 +101,16 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 ({									      \
   __typeof__ (descr->member) __value;					      \
   if (sizeof (__value) == 1)						      \
-    __asm__ __volatile__ ("movb %%gs:%P2,%b0"				      \
+    __asm__ __volatile__ ("movb %%fs:%P2,%b0"				      \
 			  : "=q" (__value)				      \
 			  : "0" (0),					      \
 			    "i" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
   else if (sizeof (__value) == 4)					      \
-    __asm__ __volatile__ ("movl %%gs:%P1,%0"				      \
+    __asm__ __volatile__ ("movl %%fs:%P2,%k0"				      \
 			  : "=r" (__value)				      \
-			  : "i" (offsetof (struct _pthread_descr_struct,      \
+			  : "0" (0),					      \
+			    "i" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
   else									      \
     {									      \
@@ -112,7 +118,7 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 	/* There should not be any value with a size other than 1, 4 or 8.  */\
 	abort ();							      \
 									      \
-      __asm__ __volatile__ ("movq %%gs:%P1,%0"				      \
+      __asm__ __volatile__ ("movq %%fs:%P1,%0"				      \
 			    : "=r" (__value)				      \
 			    : "i" (offsetof (struct _pthread_descr_struct,    \
 					     member)));			      \
@@ -125,15 +131,16 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 ({									      \
   __typeof__ (descr->member) __value;					      \
   if (sizeof (__value) == 1)						      \
-    __asm__ __volatile__ ("movb %%gs:(%2),%b0"				      \
+    __asm__ __volatile__ ("movb %%fs:(%2),%b0"				      \
 			  : "=q" (__value)				      \
 			  : "0" (0),					      \
 			    "r" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
   else if (sizeof (__value) == 4)					      \
-    __asm__ __volatile__ ("movl %%gs:(%1),%0"				      \
+    __asm__ __volatile__ ("movl %%fs:(%2),%k0"				      \
 			  : "=r" (__value)				      \
-			  : "r" (offsetof (struct _pthread_descr_struct,      \
+			  : "0" (0),					      \
+			    "r" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
   else									      \
     {									      \
@@ -141,7 +148,7 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 	/* There should not be any value with a size other than 1, 4 or 8.  */\
 	abort ();							      \
 									      \
-      __asm__ __volatile__ ("movq %%gs:(%1),%0"				      \
+      __asm__ __volatile__ ("movq %%fs:(%1),%0"				      \
 			    : "=r" (__value)				      \
 			    : "r" (offsetof (struct _pthread_descr_struct,    \
 					     member)));			      \
@@ -154,12 +161,12 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 ({									      \
   __typeof__ (descr->member) __value = (value);				      \
   if (sizeof (__value) == 1)						      \
-    __asm__ __volatile__ ("movb %0,%%gs:%P1" :				      \
+    __asm__ __volatile__ ("movb %0,%%fs:%P1" :				      \
 			  : "q" (__value),				      \
 			    "i" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
   else if (sizeof (__value) == 4)					      \
-    __asm__ __volatile__ ("movl %0,%%gs:%P1" :				      \
+    __asm__ __volatile__ ("movl %k0,%%fs:%P1" :				      \
 			  : "r" (__value),				      \
 			    "i" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
@@ -169,7 +176,7 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 	/* There should not be any value with a size other than 1, 4 or 8.  */\
 	abort ();							      \
 									      \
-      __asm__ __volatile__ ("movq %0,%%gs:%P1" :			      \
+      __asm__ __volatile__ ("movq %0,%%fs:%P1" :			      \
 			    : "r" (__value),				      \
 			      "i" (offsetof (struct _pthread_descr_struct,    \
 					     member)));			      \
@@ -181,12 +188,12 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 ({									      \
   __typeof__ (descr->member) __value = (value);				      \
   if (sizeof (__value) == 1)						      \
-    __asm__ __volatile__ ("movb %0,%%gs:(%1)" :				      \
+    __asm__ __volatile__ ("movb %0,%%fs:(%1)" :				      \
 			  : "q" (__value),				      \
 			    "r" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
   else if (sizeof (__value) == 4)					      \
-    __asm__ __volatile__ ("movl %0,%%gs:(%1)" :				      \
+    __asm__ __volatile__ ("movl %k0,%%fs:(%1)" :			      \
 			  : "r" (__value),				      \
 			    "r" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
@@ -196,7 +203,7 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 	/* There should not be any value with a size other than 1, 4 or 8.  */\
 	abort ();							      \
 									      \
-      __asm__ __volatile__ ("movq %0,%%gs:(%1)"	:			      \
+      __asm__ __volatile__ ("movq %0,%%fs:(%1)"	:			      \
 			    : "r" (__value),				      \
 			      "r" (offsetof (struct _pthread_descr_struct,    \
 					     member)));			      \
@@ -208,3 +215,5 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 
 /* Maximum size of the stack if the rlimit is unlimited.  */
 #define ARCH_STACK_MAX_SIZE	32*1024*1024
+
+#endif /* pt-machine.h */

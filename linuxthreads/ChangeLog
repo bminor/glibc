@@ -1,3 +1,10 @@
+2002-08-23  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/pt-machine.h: Use %fs instead of %gs
+	as thread specific register.
+	(testandset): Fix inline asm.
+	(THREAD_GETMEM): Fix inline asm.
+
 2002-05-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h (pthread_create): Rename first
