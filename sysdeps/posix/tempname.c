@@ -157,7 +157,7 @@ DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr, streamptr),
 			   % (sizeof (letters) - 1)],
 		   letters[(*idx / ((sizeof (letters) - 1) *
 				    (sizeof (letters) - 1)))
-			   % (sizeof (letters) - 1)],
+			   % (sizeof (letters) - 1)]
 		   ) != (int) len)
 	return NULL;
 
