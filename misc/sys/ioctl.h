@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -51,8 +51,7 @@ struct ltchars
   };
 #endif
 
-#if	defined(TIOCGETP) || defined(TIOCSETP)
-/* Type of ARG for TIOCGETP and TIOCSETP requests.  */
+/* Type of ARG for TIOCGETP and TIOCSETP requests (and gtty and stty).  */
 struct sgttyb
   {
     char sg_ispeed;	/* Input speed.  */
@@ -61,7 +60,6 @@ struct sgttyb
     char sg_kill;	/* Kill character.  */
     short int sg_flags;	/* Mode flags.  */
   };
-#endif
 
 #if	defined(TIOCGWINSZ) || defined(TIOCSWINSZ)
 /* Type of ARG for TIOCGWINSZ and TIOCSWINSZ requests.  */
