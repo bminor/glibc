@@ -19,22 +19,49 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
-#include <hurd.h>
+#include <hurd/fd.h>
+#include <fcntl.h>
+
+/* Defined in fopen.c.  */
+extern int EXFUN(__getmode, (CONST char *mode, __io_mode *mptr));
 
 /* Open a new stream on a given system file descriptor.  */
 FILE *
 DEFUN(fdopen, (fd, mode), int fd AND CONST char *mode)
 {
-  FILE *f;
-  file_t file = __getdport (fd);
-  /* XXX This differs from Unix behavior if fd
-     gets closed and reopened (or dup2'd).
-     Check POSIX.1 requirements. */
-  if (file == MACH_PORT_NULL)
+  FILE *stream;
+  __io_mode m;
+  struct hurd_fd *d;
+  error_t err;
+  int openmodes;
+
+  if (!__getmode (mode, &m))
     return NULL;
-  f = __fopenport (file, mode);
-  if (f == NULL)
-    __mach_port_deallocate (__mach_task_self (), file);
-  /* fopenport consumes the reference.  */
-  return f;
+
+  d = _hurd_fd_get (fd);
+  if (d == NULL)
+    {
+      errno = EBADF;
+      return NULL;
+    }
+
+  if (err = HURD_FD_PORT_USE (d, __io_get_openmodes (port, &openmodes)))
+    return __hurd_dfail (fd, err);
+
+  /* Check the access mode.  */
+  if ((m.__read && !(openmodes & O_READ)) ||
+      (m.__write && !(openmodes & O_WRITE)))
+    {
+      errno = EBADF;
+      return NULL;
+    }
+
+  stream = __newstream ();
+  if (stream == NULL)
+    return NULL;
+
+  stream->__cookie = d;
+  stream->__mode = m;
+
+  return stream;
 }
