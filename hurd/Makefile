@@ -25,7 +25,8 @@ include ../Makeconfig
 
 
 headers = hurd.h $(interface-headers) \
-	  $(addprefix hurd/,fd.h id.h port.h signal.h userlink.h threadvar.h)
+	  $(addprefix hurd/,fd.h id.h port.h signal.h userlink.h \
+		            resource.h threadvar.h)
 
 distribute := intr_rpc.awk hurdintr.awk
 
@@ -38,7 +39,7 @@ user-interfaces		:= $(addprefix hurd/,\
 				       fs fsys io term socket )
 server-interfaces	:= hurd/msg
 
-routines = hurdid hurdpath hurdpid hurdports \
+routines = hurdid hurdpath hurdpid hurdports hurdrlimit \
 	   hurdexec \
 	   __setauth setauth \
 	   __pid2task __task2pid pid2task task2pid \
