@@ -30,12 +30,15 @@
 ENTRY(__clone)
 	.frame	sp,0,ra,0
 #ifdef PROF
+	ldgp	$29,0($27)
 	.set noat
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
 	.set at
-#endif
 	.prologue 1
+#else
+	.prologue 0
+#endif
 
 	/* Sanity check arguments.  */
 	ldiq	v0,EINVAL
@@ -60,8 +63,10 @@ ENTRY(__clone)
 
 	/* Something bad happened -- no child created */
 $error:
+#ifndef PROF
 	br	gp,1f
 1:	ldgp	gp,0(gp)
+#endif
 	jmp	zero,__syscall_error
 
 	END(__clone)
