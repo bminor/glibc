@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/socket.h>
 #include <hurd.h>
+#include <hurd/socket.h>
+#include <hurd/fd.h>
 
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
@@ -33,18 +35,25 @@ DEFUN(sendto, (fd, buf, n, flags, addr, addr_len),
   int wrote;
 
   /* Get an address port for the desired destination address.  */
-  if (err = HURD_DPORT_USE (fd, __socket_create_address (port,
+  err = HURD_DPORT_USE (fd,
+			({
+			  err = __socket_create_address (port,
 							 addr->sa_family,
-							 addr, len,
-							 &aport, 1)))
-    return __hurd_dfail (fd, err);
-
-  /* Send the data.  */
-  err = HURD_DPORT_USE (fd, __socket_send (port, aport,
-					   flags, buf, n,
-					   NULL, 0, NULL,
-					   NULL, 0, &wrote));
-  __mach_port_deallocate (__mach_task_self (), aport);
+							 (char *) addr,
+							 addr_len,
+							 &aport, 1);
+			  if (! err)
+			    {
+			      /* Send the data.  */
+			      err = __socket_send (port, aport,
+						   flags, buf, n,
+						   NULL, 0, NULL,
+						   NULL, 0, &wrote);
+			      __mach_port_deallocate (__mach_task_self (),
+						      aport);
+			    }
+			  err;
+			}));
 
   return err ? __hurd_dfail (fd, err) : wrote;
 }
