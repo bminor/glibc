@@ -17,18 +17,29 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef	_SIGSET_H
-#define	_SIGSET_H	1
+#ifndef	_SIGSET_H_types
+#define	_SIGSET_H_types	1
 
 typedef int __sig_atomic_t;
 
-/* Return a mask that includes SIG only.
-   The cast to `sigset_t' avoids overflow
-   if `sigset_t' is wider than `int'.  */
-#define	__sigmask(sig)	(((__sigset_t) 1) << ((sig) - 1))
-
 /* A `sigset_t' has a bit for each signal.  */
 typedef unsigned long int __sigset_t;
+
+#endif
+
+
+/* We only want to define these functions if <signal.h> was actually
+   included; otherwise we were included just to define the types.  Since we
+   are namespace-clean, it wouldn't hurt to define extra macros.  But
+   trouble can be caused by functions being defined (e.g., any global
+   register vars declared later will cause compilation errors).  */
+
+#if !defined (_SIGSET_H_fns) && defined (_SIGNAL_H)
+#define _SIGSET_H_fns 1
+
+/* Return a mask that includes SIG only.  The cast to `sigset_t' avoids
+   overflow if `sigset_t' is wider than `int'.  */
+#define	__sigmask(sig)	(((__sigset_t) 1) << ((sig) - 1))
 
 #define	__sigemptyset(set)	((*(set) = 0L), 0)
 #define	__sigfillset(set)	((*(set) = -1L), 0)
@@ -42,19 +53,20 @@ typedef unsigned long int __sigset_t;
 #ifndef _EXTERN_INLINE
 #define _EXTERN_INLINE extern __inline
 #endif
-#define __SIGSETFN(NAME, BODY) \
-_EXTERN_INLINE int
-__##NAME (__sigset_t *__set, int __sig)
-{
-  __sigset_t __mask = __sigmask (sig);
-  return __mask ? (BODY) : (NAME) (__set, __sig);
-}
+#define __SIGSETFN(NAME, BODY, CONST)					      \
+  _EXTERN_INLINE int							      \
+  __##NAME (CONST __sigset_t *__set, int __sig)				      \
+  {									      \
+    extern int NAME (CONST __sigset_t *, int);				      \
+    __sigset_t __mask = __sigmask (__sig);				      \
+    return __mask ? (BODY) : (NAME) (__set, __sig);			      \
+  }
 
-__SIGSETFN (sigismember, (*__set & __mask) ? 1 : 0)
-__SIGSETFN (sigaddset, ((*__set |= __mask), 0))
-__SIGSETFN (sigdelset, ((*__set &= ~__mask), 0))
+__SIGSETFN (sigismember, (*__set & __mask) ? 1 : 0, __const)
+__SIGSETFN (sigaddset, ((*__set |= __mask), 0), )
+__SIGSETFN (sigdelset, ((*__set &= ~__mask), 0), )
 
 #undef __SIGSETFN
 
 
-#endif /* sigset.h  */
+#endif /* ! _SIGSET_H_fns.  */
