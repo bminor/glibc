@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,13 +20,14 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
+#include <hurd.h>
 
 /* Change the protections of FILE to MODE.  */
 int
 DEFUN(__chmod, (file, mode), CONST char *file AND mode_t mode)
 {
   error_t err;
-  file_t port = __hurd_path_lookup (file, 0, 0);
+  file_t port = __path_lookup (file, 0, 0);
   if (port == MACH_PORT_NULL)
     return -1;
   err = __file_chmod (port, mode);
