@@ -1,3 +1,8 @@
+2005-02-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (dlmain): If LD_TRACE_PRELINKING, clear l_relocated flag
+	before relocating ld.so again.
+
 2005-02-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* debug/chk_fail.c (__chk_fail): Add a while (1) loop around
