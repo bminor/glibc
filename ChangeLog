@@ -1,3 +1,7 @@
+1999-06-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/libm-test.c: Update from mainline branch.
+
 1999-06-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* malloc/malloc.c: Introduce local variable __libc_getpagesize to
@@ -23,7 +27,7 @@
 
 	* sysdeps/libm-ieee754/e_j0.c (__ieee754_y0): Fix array indices.
 	Patch by mhagger@dera.gov.uk [PR libc/1145].
- 
+
 	* math/libm-test.c (y1_test): New tests.
 	(y0_test): Likewise.
 	(j1_test): Likewise.
