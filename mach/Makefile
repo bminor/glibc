@@ -78,7 +78,8 @@ ifndef mach-shortcuts
 # Forget about mach_interface.defs for this run.  On the next run,
 # $(mach-shortcuts) will be set, and that will change how
 # mach_interface.defs is processed: it will get the -D flags below.
-user-interfaces := $(filter-out mach/mach_interface mach/mach_port,\
+user-interfaces := $(filter-out mach/mach_interface
+				mach/mach_port mach/mach_host,\
 				$(user-interfaces))
 endif
 
