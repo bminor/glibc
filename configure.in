@@ -192,7 +192,7 @@ os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
 # Expand the configuration machine name into a subdirectory by architecture
 # type and particular chip.
 case "$machine" in
-i[34]86)
+i[345]86)
   machine=i386/$machine ;;
 sparc[6789])
   machine=sparc/$machine ;;
