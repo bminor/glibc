@@ -1,3 +1,13 @@
+2000-03-24  Scott Bambrough  <scottb@netwinder.org>
+
+	* sysdeps/arm/fpu/fpu_control.h: Define _FPU_MASK_IM, _FPU_MASK_ZM,
+	_FPU_MASK_OM, _FPU_MASK_UM, _FPU_MASK_PM, _FPU_MASK_DM, _FPU_DEFAULT,
+	and _FPU_IEEE.  Change _FPU_RESERVED.
+
+2000-03-24  Scott Bambrough  <scottb@netwinder.org>
+
+	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h: New file.
+
 2000-03-24  Geoff Clare  <gwc@unisoft.com>
 
 	* stdlib/strfmon.c: Corrected problems with missing signs and
