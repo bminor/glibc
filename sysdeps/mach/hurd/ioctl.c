@@ -34,8 +34,8 @@ const struct
 /* Perform the I/O control operation specified by REQUEST on FD.
    The actual type and use of ARG and the return value depend on REQUEST.  */
 int
-DEFUN(__ioctl, (fd, request, arg),
-      int fd AND int request AND PTR arg)
+DEFUN(__ioctl, (fd, request),
+      int fd AND int request DOTS)
 {
   /* Map individual type fields to Mach IPC types.  */
   static const int mach_types[] =
@@ -44,7 +44,7 @@ DEFUN(__ioctl, (fd, request, arg),
 
   /* Message buffer.  */
   char msg[sizeof (mach_msg_header_t) +	/* Header.  */
-	   sizeof (mach_msg_type_t) + 4	/* Return code.  */
+	   sizeof (mach_msg_type_t) + 4 + /* Return code.  */
 	   3 * (sizeof (mach_msg_type_t) + (4 * 32))]; /* Argument data.  */
   mach_msg_header_t *m = (mach_msg_header_t *) msg;
   mach_msg_type_t *t = (mach_msg_type_t *) &m[1];
