@@ -57,34 +57,55 @@ These locale attribute categories are defined as preprocessor
 macros in @file{<locale.h>}.  The value of each of these macros
 is an integer constant expression.
 
+@comment locale.h
+@comment ANSI
 @defvr Macro LC_ALL
 Selects all attributes.
 @end defvr
 
+@comment locale.h
+@comment ANSI
 @defvr Macro LC_COLLATE
 Selects attributes affecting the collation sequence (functions @code{strcoll}
 and @code{strxfrm}; @pxref{Collation Functions}.
 @end defvr
 
+@comment locale.h
+@comment ANSI
 @defvr Macro LC_CTYPE
 Selects attributes affecting classification and conversion of characters;
 @pxref{Character Handling}.
 @end defvr
 
+@comment locale.h
+@comment ANSI
 @defvr Macro LC_MONETARY
 Selects attributes affecting how monetary values should be formatted,
 returned by the @code{localeconv} function; @pxref{Numeric and Monetary
 Formatting}.
 @end defvr
 
+@comment locale.h
+@comment ANSI
 @defvr Macro LC_NUMERIC
 Selects attributes affecting formatting of numeric values;
 @pxref{Numeric and Monetary Formatting}.
 @end defvr
 
+@comment locale.h
+@comment ANSI
 @defvr Macro LC_TIME
 Selects attributes affecting formatting of date and time values;
 @pxref{Formatting Date and Time}.
+@end defvr
+
+@comment locale.h
+@comment GNU?
+@defvr Macro LC_RESPONSE
+Selects attributes affecting which string patterns are recognized as
+``yes'' or ``no'' responses to questions.
+
+@strong{Incomplete:}  Is there an environment variable for this?
 @end defvr
 
 The ANSI C standard permits implementations to define additional attribute
@@ -166,6 +187,8 @@ To actually change attributes of the current locale, use the
 @code{setlocale} function.  The prototype for this function is declared
 in the header file @file{<locale.h>}.
 
+@comment locale.h
+@comment ANSI
 @deftypefun {char *} setlocale (int @var{category}, const char *@var{locale})
 The function @code{setlocale} sets the current locale to use the attributes in
 category @var{category} from the locale named @var{locale}.
@@ -244,6 +267,8 @@ this purpose.  The prototype for this function is in the header file
 @cindex monetary value formatting
 @cindex numeric value formatting
 
+@comment locale.h
+@comment ANSI
 @deftypefun {struct lconv *} localeconv (void)
 The @code{localeconv} function returns a pointer to a structure whose
 components contain information about how numeric and monetary values
@@ -257,6 +282,8 @@ guaranteed that no other function in the library overwrites its
 contents.
 @end deftypefun
 
+@comment locale.h
+@comment ANSI
 @deftp {Data Type} {struct lconv}
 This structure type contains information which defines rules for how
 numeric and monetary values should be formatted.  It has at least the

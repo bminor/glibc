@@ -13,6 +13,7 @@ section describes how you can do such @dfn{non-local jumps}.
 * Introduction to Non-Local Jumps::	An overview of how and when to use
 					 these facilities.
 * Functions for Non-Local Jumps::	Details of the interface.
+* Non-Local Jumps and Blocked Signals::	Portability issues.
 @end menu
 
 @node Introduction to Non-Local Jumps
@@ -105,17 +106,23 @@ Here are the details on the functions and data structures used for
 performing non-local jumps.  These facilities are declared in
 @file{<setjmp.h>}.
 
+@comment setjmp.h
+@comment ANSI
 @deftp {Data Type} jmp_buf
 Objects of type @code{jmp_buf} hold all of the state information which
 must be restored when performing a non-local jump.
 @end deftp
 
+@comment setjmp.h
+@comment ANSI
 @deftypefun int setjmp (jmp_buf @var{env})
 When called normally, @code{setjmp} stores the calling environment in
 @var{env} and returns zero.  If @code{longjmp} is later used to perform
 a non-local jump to this @var{env}, @code{setjmp} returns a nonzero value.
 @end deftypefun
 
+@comment setjmp.h
+@comment ANSI
 @deftypefun void longjmp (jmp_buf @var{env}, int @var{value}) 
 This function restores current execution to the environment saved in
 @var{env}, and continues execution from the call to @code{setjmp} that
@@ -175,28 +182,42 @@ function containing the @code{setjmp} call that have been changed since
 the call to @code{setjmp} are indeterminate, unless you have declared
 them with the @code{volatile} qualifier.
 
-The functions @code{setjmp} and @code{longjmp} do nothing to save and
-restore the set of blocked signals; @pxref{Blocking Signals}.  There are,
-however, analogous functions, @code{sigsetjmp} and @code{siglongjmp},
-that do save and restore this information.
+@node Non-Local Jumps and Blocked Signals
+@section Non-Local Jumps and Blocked Signals
 
+In BSD Unix systems, @code{setjmp} and @code{longjmp} also save and
+restore the set of blocked signals; @pxref{Blocking Signals}.  However,
+the POSIX.1 standard requires @code{setjmp} and @code{longjmp} not to
+change the set of blocked signals, and provides an additional pair of
+functions (@code{sigsetjmp} and @code{sigsetjmp}) to get the BSD
+behavior.
+
+The behavior of @code{setjmp} and @code{longjmp} in the GNU Library is
+controlled by feature test macros; @pxref{Feature Test Macros}.  The
+default in the GNU system is the BSD behavior rather than the POSIX.1
+behavior.
+
+The facilities in this section are declared in the header file
+@file{<setjmp.h>}.
+
+@comment setjmp.h
+@comment POSIX.1
 @deftp {Data Type} sigjmp_buf
 This is similar to @code{jmp_buf}, except that it can also store state
 information about the set of blocked signals.
 @end deftp
 
+@comment setjmp.h
+@comment POSIX.1
 @deftypefun int sigsetjmp (sigjmp_buf @var{env}, int @var{savesigs})
 This is similar to @code{setjmp}.  If @var{savesigs} is nonzero, the set
 of blocked signals is saved in @var{env} and will be restored if a
 @code{siglongjmp} is later performed with this @var{env}.
 @end deftypefun
 
+@comment setjmp.h
+@comment POSIX.1
 @deftypefun void siglongjmp (sigjmp_buf @var{env}, int @var{value})
 This is similar to @code{longjmp} except for the type of its @var{env}
 argument.
 @end deftypefun
-
-@strong{Portability Note:}  The @code{sigsetjmp} and @code{siglongjmp}
-functions are specified by the POSIX.1 standard.  But you can expect the
-@code{setjmp} and @code{longjmp} functions to be available in any ANSI
-C environment.

@@ -36,6 +36,8 @@ You can obtain more detailed information about error conditions by
 examining the error code in the stored in the variable @code{errno}.
 This variable is declared in the header file @file{<errno.h>}.
 
+@comment errno.h
+@comment ANSI
 @deftypevr {Variable} {volatile int} errno
 The variable @code{errno} contains the system error number.  You can
 change the value of @code{errno}.
@@ -125,182 +127,509 @@ open_sesame (char *name)
 These macros are defined in the header file @file{<errno.h>}.  All of
 them expand into integer constant values.
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro E2BIG
 Argument list too long; used when the arguments passed to a new program
 being executed with one of the @code{exec} functions (@pxref{Executing a
 File}) are too large.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EACCES
 Permission denied; the file permissions do not allow the attempted access.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro ADDRINUSE
+The socket address is already in use.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro ADDRNOTAVAIL
+The requested socket address is not available; for example, it isn't
+on the same machine.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro EAFNOSUPPORT
+The address family is not supported; it is inconsistent with the
+protocol being used on the socket.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EAGAIN
 Resource temporarily unavailable; things might work if you try again
 later.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro EALREADY
+An operation is already in progress on an object that has non-blocking
+mode selected.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EBADF
 Bad file descriptor; the file might have been closed or perhaps you are
 trying to read to a file open only for writing (or vice versa).
 @end defvr
 
+@comment errno.h
+@comment GNU
+@defvr Macro EBADMSG
+@strong{Incomplete:}  Who knows?
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EBUSY
 Resource busy; a system resource that can't be shared is already in use.
 For example, if you try to delete a file that is the root of a currently
 mounted filesystem, you get this error.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ECHILD
 There are no child processes.  This error happens on operations that are
 supposed to manipulate child processes, when there aren't any processes
 to manipulate.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro ECONNABORTED
+Something happened on your host machine to abort the network connection.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro ECONNREFUSED
+The target machine refused to allow the network connection (typically because
+it is not running the appropriate service).
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro ECONNRESET
+The network connection was closed, such as by the remote machine rebooting.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EDEADLK
 Deadlock avoided; allocating a system resource would have resulted in
 a deadlock situation.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr EDESTADDRREQ
+The destination address was not supplied on a socket operation.
+@end defvr
+
+@comment errno.h
+@comment ANSI
 @defvr Macro EDOM
 Domain error; used by mathematical functions when an argument value does
 not fall into the domain over which the function is defined.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro EDQUOT
+The user's disk quota was exceeded.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EEXIST
 File exists; an existing file was specified in a context where it only
 makes sense to specify a new file.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EFAULT
 Bad address; an invalid pointer was detected.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EFBIG
 File too big; the size of a file would be larger than allowed by the system.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro EHOSTDOWN
+The destination host for a network connection is down.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro EHOSTUNREACH
+The destination host for a network connection is not reachable.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro EIDRM
+A message queue identifier has been removed and is no longer valid.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro EINPROGRESS
+An operation that cannot complete immediately was initiated on an object
+that has non-blocking mode selected.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EINTR
 Interrupted function call; an asynchronous signal occured and was handled
 during the execution of the call.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EINVAL
 Invalid argument.  This is used to indicate all sorts of random problems
 with passing the wrong argument to a library function.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EIO
 Input/output error; usually used for physical read or write errors.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro EISCONN
+The socket is already connected.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EISDIR
 File is a directory; it can't be written to like an ordinary file.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro ELOOP
+Too many levels of symbolic links were encountered in looking up a file name.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EMFILE
 The process has too many files open and can't open any more.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EMLINK
 Too many links; the link count of a single file is too large.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro EMSGSIZE
+The size of a message sent on a socket was larger than the supported
+maximum size.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ENAMETOOLONG
 Filename too long.  
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro ENETDOWN
+A socket operation failed because the network was down.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro ENETRESET
+The network connection was reset because the remote host crashed.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro ENETUNREACH
+A socket operation failed because the network was unreachable.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ENFILE
 There are too many files open in the entire system.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro ENOBUFS
+No internal buffer space available for an operation on a pipe or socket.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ENODEV
 No such device.  This a ``file doesn't exist'' error, but is
 used only when the file is expected to represent a device, like a
 block special file for a disk.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ENOENT
 No such file or directory.  This is a ``file doesn't exist'' error
 for ordinary files that are referenced in contexts where they are
 expected to already exist.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ENOEXEC
 Invalid executable file format.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ENOLCK
 No locks available.  This is used by the file locking facilities;
 @pxref{File Locks}.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ENOMEM
 Not enough memory available.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro ENOMSG
+There is no message of the specified type available immediately, and
+blocking was not desired.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro ENOPROTOOPT
+An option is not specified by this socket protocol.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ENOSPC
 No space left on device; write operation on a file failed because the
 device is full.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ENOSYS
 Function not implemented.  Some functions have commands or options defined
 that might not be supported in all implementations, and this is the kind
 of error you get if you request them and they aren't there.
 @end defvr
 
-@defvr Macro ENOTDIR
-A file existed but wasn't a directory, where a directory was expected.
+@comment errno.h
+@comment BSD
+@defvr Macro ENOTBLK
+A file that isn't a block special file was given in a situation that
+requires one.  For example, trying to mount an ordinary file as a file
+system will give this error.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro ENOTCONN
+The socket is not connected to anything.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
+@defvr Macro ENOTDIR
+A file that isn't a directory was given in a situation that requires
+one.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro ENOTSOCK
+A file that isn't a socket was given in a situation that requires one.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ENOTEMPTY
 Directory not empty, where an empty directory was expected.  Typically,
 used when you are trying to remove a directory.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ENOTTY
 Inappropriate I/O control operation, such as trying to set terminal
 modes on an ordinary file.
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ENXIO
 No such device or address.  Typically, this means that a file
 representing a device has been installed incorrectly, and the
 system can't find the right kind of device driver for it.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro EOPNOTSUPP
+The socket operation is not supported.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EPERM
 Operation not permitted; only the owner of the file (or other resource)
 or processes with special privileges can perform the operation.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro EPFNOSUPPORT
+The protocol family is not supported.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EPIPE
 Broken pipe; there is no process reading from the other end of a pipe.
 @end defvr
 
+@comment errno.h
+@comment GNU
+@defvr Macro EPROCLIM
+@strong{Incomplete:} Who knows?
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro EPROTONOSUPPORT
+The socket protocol is not supported.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro EPROTOTYPE
+The protocol specified on a socket does not support the given socket type.
+@end defvr
+
+@comment errno.h
+@comment ANSI
 @defvr Macro ERANGE
 Range error; used by mathematical functions when the result value is
 not representable because of overflow or underflow.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro EREMOTE
+An attempt was made to NFS-mount a remote file system with a file name that
+already specifies an NFS-mounted file.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EROFS
 An attempt was made to modify a file on a read-only file system.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro ESHUTDOWN
+The socket has already been shut down.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro ESOCKTNOSUPPORT
+The socket type is not supported.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ESPIPE
 Invalid seek operation (such as on a pipe).
 @end defvr
 
+@comment errno.h
+@comment POSIX.1
 @defvr Macro ESRCH
 There is no such process that matches the specified process ID.
 @end defvr
 
+@comment errno.h
+@comment BSD
+@defvr Macro ESTALE
+The NFS file handle is stale; the file on the file server has been deleted.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro ETIMEDOUT
+The operation on a socket failed because no response was received
+during the timeout period.
+@end defvr
+
+@comment errno.h
+@comment GNU
+@defvr Macro ETOOMANYREFS
+@strong{Incomplete:} Who knows?
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro ETXTBSY
+An attempt to execute a file that is currently open for writing, or
+write to a file that is currently being executed.  (The name stands
+for ``text file busy''.)
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro EUSERS
+The file quota system is confused because there are too many users.
+@end defvr
+
+@comment errno.h
+@comment BSD
+@defvr Macro EWOULDBLOCK
+An operation that would block was attempted on an object that has
+non-blocking mode selected.
+@end defvr
+
+@comment errno.h
+@comment POSIX.1
 @defvr Macro EXDEV
 Improper link, such as to a file on another file system.
 @end defvr
-
-@strong{Incomplete:}  Are there any additional macros we want to document?
 
 
 @node Error Messages
@@ -312,6 +641,8 @@ function, declared in @file{<string.h>}, returns the error message as a
 string; and the @code{perror} function, declared in @file{<stdio.h>},
 can be used to print the error message.@refill
 
+@comment string.h
+@comment ANSI
 @deftypefun {char *} strerror (int @var{errnum})
 The @code{strerror} function maps the error code (@pxref{Error
 Reporting}) specified by the @var{errnum} argument to a descriptive
@@ -323,6 +654,8 @@ overwritten.  (But it's guaranteed that no library function ever calls
 @code{strerror} behind your back.)
 @end deftypefun
 
+@comment string.h
+@comment ANSI
 @deftypefun void perror (const char *@var{message})
 This function is used to print an error message to the stream
 @code{stderr}; @pxref{Standard Streams}.

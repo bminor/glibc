@@ -16,78 +16,108 @@ Macros representing the minimum and maximum limits of the integer types
 are defined in the header file @file{<limits.h>}.  The values of these
 macros are all integer constant expressions.
 
+@comment limits.h
+@comment ANSI
 @defvr Macro CHAR_BIT
 This is the number of bits in a @code{char}, usually eight.
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro SCHAR_MIN
 This is the minimum value that can be represented by a @code{signed char}.
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro SCHAR_MAX
 This is the maximum value that can be represented by a @code{signed char}.
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro UCHAR_MAX
 This is the maximum value that can be represented by a @code{unsigned char}.
 (The minimum value of an @code{unsigned char} is zero.)
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro CHAR_MIN
 This is the minimum value that can be represented by a @code{char}.
 It's equal to @code{SCHAR_MIN} if @code{char} is signed, or zero if
 not.
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro CHAR_MAX
 This is the maximum value that can be represented by a @code{char}.
 It's equal to @code{SCHAR_MAX} if @code{char} is signed, or
 @code{UCHAR_MAX} if not.
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro SHRT_MIN
 This is the minimum value that can be represented by a @code{signed
 short int}.  On most machines that the GNU C system runs on, @code{short}
 integers are 16-bit quantities.
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro SHRT_MAX
 This is the maximum value that can be represented by a @code{signed
 short int}.
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro USHRT_MAX
 This is the maximum value that can be represented by an @code{unsigned
 short int}.  (The minimum value of an @code{unsigned short int} is zero.)
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro INT_MIN
 This is the minimum value that can be represented by a @code{signed
 int}.  On most machines that the GNU C system runs on, an @code{int} is
 a 32-bit quantity.
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro INT_MAX
 This is the maximum value that can be represented by a @code{signed
 int}.
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro UINT_MAX
 This is the maximum value that can be represented by an @code{unsigned
 int}.  (The minimum value of an @code{unsigned int} is zero.)
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro LONG_MIN
 This is the minimum value that can be represented by a @code{signed long
 int}.  On most machines that the GNU C system runs on, @code{long}
 integers are 32-bit quantities, the same size as @code{int}.
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro LONG_MAX
 This is the maximum value that can be represented by a @code{signed long
 int}.
 @end defvr
 
+@comment limits.h
+@comment ANSI
 @defvr Macro ULONG_MAX
 This is the maximum value that can be represented by an @code{unsigned
 long int}.  (The minimum value of an @code{unsigned long int} is zero.)
