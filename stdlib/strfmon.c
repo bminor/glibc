@@ -1,5 +1,5 @@
 /* Formatting a monetary value according to the current locale.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Jochen Hein <Jochen.Hein@informatik.TU-Clausthal.de>, 1996.
@@ -185,7 +185,8 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 		  va_end (ap);
 		  return -1;
 		}
-	      n_sign_posn = 5;	/* This is a else unused value.  */
+	      p_sign_posn = 0;
+	      n_sign_posn = 0;
 	      continue;
 	    case '!':			/* Don't print the currency symbol.  */
 	      print_curr_symbol = 0;
@@ -198,6 +199,13 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	    }
 	  break;
 	}
+
+      /* If not specified by the format string now find the values for
+	 the format specification.  */
+      if (p_sign_posn == -1)
+	p_sign_posn = *_NL_CURRENT (LC_MONETARY, P_SIGN_POSN);
+      if (n_sign_posn == -1)
+	n_sign_posn = *_NL_CURRENT (LC_MONETARY, N_SIGN_POSN);
 
       if (isdigit (*fmt))
 	{
@@ -322,13 +330,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	    sign_char = '-';
 	  cs_precedes = *_NL_CURRENT (LC_MONETARY, N_CS_PRECEDES);
 	  sep_by_space = *_NL_CURRENT (LC_MONETARY, N_SEP_BY_SPACE);
-	  /* If the '(' flag is not given use the sign position from
-	     the current locale.  */
-	  if (n_sign_posn == -1)
-	    sign_posn = *_NL_CURRENT (LC_MONETARY, N_SIGN_POSN);
-	  else
-	    /* This means use parentheses.  */
-	    sign_posn = 0;
+	  sign_posn = n_sign_posn;
 	}
       else
 	{
@@ -339,13 +341,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	    sign_char = ' ';
 	  cs_precedes = *_NL_CURRENT (LC_MONETARY, P_CS_PRECEDES);
 	  sep_by_space = *_NL_CURRENT (LC_MONETARY, P_SEP_BY_SPACE);
-	  if (n_sign_posn == -1)
-	    sign_posn = *_NL_CURRENT (LC_MONETARY, P_SIGN_POSN);
-	  else
-	    /* Here we don't set SIGN_POSN to 0 because we don'want to
-	       print <SP> instead of the braces and this is what the
-	       value 5 means.  */
-	    sign_posn = 5;
+	  sign_posn = p_sign_posn;
 	}
 
       /* Set default values for unspecified information.  */
@@ -365,9 +361,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
       startp = dest;		/* Remember start so we can compute length.  */
 
       if (sign_posn == 0)
-	out_char (left_paren);
-      if (sign_posn == 5)	/* This is for positive number and ( flag.  */
-	out_char (' ');
+	out_char (is_negative ? left_paren : ' ');
 
       if (cs_precedes)
 	{
@@ -476,9 +470,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	  }
 
       if (sign_posn == 0)
-	out_char (right_paren);
-      if (sign_posn == 5)
-	out_char (' ');		/* This is for positive number and ( flag.  */
+	out_char (is_negative ? right_paren : ' ');
 
       /* Now test whether the output width is filled.  */
       if (dest - startp < width)
