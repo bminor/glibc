@@ -1,5 +1,9 @@
 1999-07-06  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Update for some more
+	motherboards.
+	Patch by Jay Estabrook.
+
 	* sysdeps/unix/sysv/linux/configure.in: Don't test for libc4 in
 	ldd for SPARC.
 	* /sysdeps/unix/sysv/linux/sparc/ldd-rewrite.sed: New file.
