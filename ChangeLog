@@ -1,3 +1,9 @@
+1999-12-21  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/getrlimit.c: Only put versions on
+	exported symbols.
+	* sysdeps/unix/sysv/linux/i386/setrlimit.c: Likewise.
+
 1999-12-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/netdb.h: Remove getnodebyname declaration (PR libc/1494).
