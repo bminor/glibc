@@ -26,6 +26,9 @@ Cambridge, MA 02139, USA.  */
 #error "Must have `_GNU_SOURCE' feature test macro to use this file"
 #endif
 
+#define __need_NULL
+#include <stddef.h>
+
 #include <mach/mach_types.h>
 #include <mach/port.h>
 #include <mach/message.h>
@@ -273,7 +276,7 @@ struct hurd_signal_preempt
     struct hurd_signal_preempt *next; /* Next handler on the chain. */
   };
 
-extern struct hurd_signal_preempt _hurd_signal_preempt[NSIG];
+extern struct hurd_signal_preempt *_hurd_signal_preempt[NSIG];
 extern struct mutex _hurd_signal_preempt_lock;
 
 /* Initialize PREEMPTER with the information given and stick it in the
@@ -289,8 +292,8 @@ hurd_preempt_signals (struct hurd_signal_preempt *preempter,
       errno = EINVAL;
       return -1;
     }
-  preempter->first_code = first_code;
-  preempter->last_code = last_code;
+  preempter->first = first_code;
+  preempter->last = last_code;
   preempter->handler = handler;
   __mutex_lock (&_hurd_signal_preempt_lock);
   preempter->next = _hurd_signal_preempt[signo];
@@ -320,6 +323,7 @@ hurd_unpreempt_signals (struct hurd_signal_preempt *preempter, int signo)
 	return 0;
       }
   _hurd_signal_preempt[signo] = preempter;
+  __mutex_unlock (&_hurd_signal_preempt_lock);
   errno = ENOENT;
   return -1;
 }
