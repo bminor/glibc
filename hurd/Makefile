@@ -37,8 +37,9 @@ routines = __pid2task __task2pid pid2task task2pid \
 	   getuids getumask \
 	   dead_recv \
 	   fopenport __fopenport \
+	   vpprintf \
 	   $(interface-routines)
-aux := hurdsyms
+aux := hurdinit hurdsyms
 
 all:
 
