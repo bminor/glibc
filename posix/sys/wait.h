@@ -77,9 +77,7 @@ union __wait
 /* This is the type of the argument to `wait'.
    With GCC v2, this will be a strange union.  */
 
-/* @This line MUST be split!  m4 will not change it otherwise.@  */
-#define	__WAIT_STATUS	\
-  __ptr_t
+#define	__WAIT_STATUS	__ptr_t
 
 #else /* Don't use BSD.  */
 
