@@ -529,7 +529,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 
   {
     char text[] = "This,is,a,test";
-    char *list = text, *token = NULL;
+    char *list = text;
     it = "strsep";
     check (!strcmp ("This", strsep (&list, ",")), 1);
     check (!strcmp ("is", strsep (&list, ",")), 2);
