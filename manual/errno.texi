@@ -651,6 +651,17 @@ of error you get if you request them and they are not supported.
 @end deftypevr
 
 @comment errno.h
+@comment GNU: Inappropriate operation for background process
+@deftypevr Macro int EBACKGROUND
+In the GNU system, servers supporting the @code{term} protocol return
+this error for certain operations when the caller is not in the
+foreground process group of the terminal.  Users do not usually see this
+error because functions such as @code{read} and @code{write} translate
+it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
+for information on process groups and these signals.
+@end deftypevr
+
+@comment errno.h
 @comment GNU: ?
 @deftypevr Macro int ED
 The experienced user will know what is wrong.
