@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <limits.h>
 #include <hurd.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 
 /* Read the contents of the symbolic link PATH into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
