@@ -37,7 +37,7 @@ Cambridge, MA 02139, USA.  */
   ta 0;									      \
   bcc 1f;								      \
   sethi %hi(syscall_error), %g1;					      \
-  jmp %g1 + %lo(syscall_error);						      \
+  jmp %g1 + %lo(syscall_error);	nop;					      \
 1:
 
 #define	ret		retl; nop
