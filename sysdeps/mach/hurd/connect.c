@@ -31,18 +31,17 @@ int
 DEFUN(connect, (fd, addr, len),
       int fd AND struct sockaddr *addr AND size_t len)
 {
-  error_t err = HURD_DPORT_USE
-    (fd,
-     ({
-       addr_port_t aport;
-       err = __socket_create_address (port, addr, len, &aport, 0);
-       if (!err)
-	 {
-	   err = __socket_connect (port, aport);
-	   __mach_port_deallocate (__mach_task_self (), aport);
-	 }
-       err;
-     }));
+  error_t err;
+  addr_port_t aport;
+
+  if (err = HURD_DPORT_USE (fd, __socket_create_address (port,
+							 addr->sa_family,
+							 addr, len,
+							 &aport, 0)))
+    return __hurd_dfail (fd, err);
+
+  err = __socket_connect (port, aport);
+  __mach_port_deallocate (__mach_task_self (), aport);
 
   return err ? __hurd_dfail (fd, err) : 0;
 }
