@@ -214,9 +214,10 @@ Locks}.
 @deftypevr Macro int FOPEN_MAX
 The value of this macro is an integer constant expression that
 represents the minimum number of streams that the implementation
-guarantees can be open simultaneously.  The value of this constant is at
-least eight, which includes the three standard streams @code{stdin},
-@code{stdout}, and @code{stderr}.
+guarantees can be open simultaneously.  You might be able to open more
+than this many streams, but that is not guaranteed.  The value of this
+constant is at least eight, which includes the three standard streams
+@code{stdin}, @code{stdout}, and @code{stderr}.
 @end deftypevr
 
 @comment stdio.h
