@@ -25,7 +25,7 @@ $(objpfx)errnos.h: $(objpfx)make-errnos
 	mv $@-tmp $@
 
 $(objpfx)make-errnos: $(objpfx)make-errnos.c
-	$(CC) $< -o $@
+	cd $(objdir); $(CC) $(<:$(objpfx)%=%) -o $(@:$(objpfx)%=%)
 
 $(objpfx)make-errnos.c: $(sysdep_dir)/unix/errnos-tmpl.c \
 			$(sysdep_dir)/unix/errnos.awk $(objpfx)errnos
@@ -61,7 +61,7 @@ $(objpfx)ioctls.h: $(objpfx)make-ioctls
 	mv $@-tmp $@
 
 $(objpfx)make-ioctls: $(objpfx)make-ioctls.c
-	$(CC) $< -o $@
+	cd $(objdir); $(CC) $(<:$(objpfx)%=%) -o $(@:$(objpfx)%=%)
 
 $(objpfx)make-ioctls.c: $(sysdep_dir)/unix/ioctls-tmpl.c \
 			$(sysdep_dir)/unix/ioctls.awk $(objpfx)ioctls
@@ -81,6 +81,6 @@ $(objpfx)errlist.c: $(objpfx)make_errlist
 	mv $@-tmp $@
 
 $(objpfx)make_errlist: $(sysdep_dir)/unix/make_errlist.c
-	$(CC) $< -o $@
+	cd $(objdir); $(CC) ../$< -o $(@:$(objpfx)%=%)
 
 endif
