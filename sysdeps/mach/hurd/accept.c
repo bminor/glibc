@@ -45,5 +45,5 @@ DEFUN(accept, (fd, addr, addr_len),
       return __hurd_fail (err);
     }
 
-  return _hurd_dalloc (new, 0);
+  return _hurd_dalloc (new, MACH_PORT_NULL, 0);
 }
