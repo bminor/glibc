@@ -1,3 +1,12 @@
+1997-05-25 00:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/__math.h (logb): Fix thinko, reverse output
+	values.
+	Reported by Andreas Jaeger <aj@arthur.rhein-neckar.de>.
+
+	* sunrpc/svc.c (svc_register): Change type of protocol parameter to
+	u_long.
+
 1997-05-22 05:40  Richard Henderson  <rth@tamu.edu>
 
 	* sysdeps/alpha/dl-machine.h (elf_machine_runtime_setup): If we are
