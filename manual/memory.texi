@@ -1039,6 +1039,11 @@ obstack_free (obstack_ptr, obstack_finish (obstack_ptr));
 @noindent
 This has no effect if no object was growing.
 
+@cindex shrinking objects
+You can use @code{obstack_blank} with a negative size argument to make
+the current object smaller.  Just don't try to shrink it beyond zero
+length---there's no telling what would happen if you do that.
+
 @node Extra Fast Growing Objects
 @subsection Extra Fast Growing Objects
 @cindex efficiency and obstacks
