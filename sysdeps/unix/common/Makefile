@@ -16,11 +16,12 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
+ifndef inhibit-glue
 ifeq ($(subdir),ctype)
 
 sysdep_routines := $(sysdep_routines) ctype-glue
 
-generated := $(generated) $(objpfx)glue-ctype $(objpfx)ctype-glue.c
+generated := $(generated) glue-ctype ctype-glue.c
 
 $(objpfx)ctype-glue.c: $(objpfx)glue-ctype
 	@rm -f $@
@@ -30,4 +31,5 @@ $(objpfx)ctype-glue.c: $(objpfx)glue-ctype
 $(objpfx)glue-ctype: $(sysdep_dir)/unix/common/glue-ctype.c
 	$(native-compile)
 
+endif
 endif

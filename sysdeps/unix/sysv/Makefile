@@ -1,4 +1,4 @@
-# Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 ifeq ($(subdir), misc)
 
 sysdep_headers := $(sysdep_headers) termio.h
-generated := $(generated) $(objpfx)termio.h
+generated := $(generated) termio.h
 
 # termio.h is just like sysv_termio.h except it uses the same names for
 # everything that System V termio does.  sysv_termio.h is necessary to
