@@ -1,3 +1,15 @@
+1999-08-19  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/i386/intr-msg.h (INTR_MSG_TRAP): Mark OPTION and
+	TIMEOUT as outputs of the asm to indicate that the signal thread
+	might mutate them.
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): Short circuit to plain
+	mach_msg if only sending or only receiving (i.e., not an RPC).  When
+	making an RPC that might get interrupted, save OPTION and the portion
+	of the message buffer that gets clobbered by an EINTR reply message,
+	and properly restore them before attempting to retry the request
+	message send.
+
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/execve.c: New file.  This version terminates
