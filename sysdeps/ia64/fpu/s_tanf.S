@@ -1,7 +1,7 @@
 .file "tancotf.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -47,6 +47,7 @@
 // 11/25/02 Added explicit completer on fnorm
 // 02/10/03 Reordered header: .section, .global, .proc, .align
 // 04/17/03 Eliminated redundant stop bits
+// 03/31/05 Reformatted delimiters between data tables
 //
 // APIs
 //==============================================================
@@ -246,6 +247,7 @@ LOCAL_LIBM_ENTRY(cotf)
 ;;
 
 LOCAL_LIBM_END(cotf)
+
 
 GLOBAL_IEEE754_ENTRY(tanf)
 
@@ -548,6 +550,7 @@ Return_From_Huges:
 ;;
 
 GLOBAL_IEEE754_END(tanf)
+
 
 LOCAL_LIBM_ENTRY(__libm_callout)
 Huge_Argument:

@@ -1,7 +1,7 @@
 .file "exp.s"
 
 
-// Copyright (c) 2000 - 2002, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -52,6 +52,8 @@
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 09/07/02 Force inexact flag
 // 11/15/02 Split underflow path into zero/nonzero; eliminated fma in main path
+// 05/30/03 Set inexact flag on unmasked overflow/underflow
+// 03/31/05 Reformatted delimiters between data tables
 
 // API
 //==============================================================
@@ -602,7 +604,7 @@ EXP_CERTAIN_OVERFLOW:
 }
 { .mfb
       mov             GR_Parameter_TAG = 14
-      fma.d.s0        FR_RESULT = fTmp, fTmp, f0    // Set I,O and +INF result
+      fma.d.s0        FR_RESULT = fTmp, fTmp, fTmp    // Set I,O and +INF result
       br.cond.sptk    __libm_error_region
 }
 ;;
@@ -685,6 +687,13 @@ EXP_CERTAIN_UNDERFLOW:
 }
 ;;
 
+{ .mfi
+      nop.m           0
+      fmerge.se       fTmp = fTmp, fLn2_by_128_lo // Small with signif lsb 1
+      nop.i           0
+}
+;;
+      
 { .mfb
       nop.m           0
       fma.d.s0        f8 = fTmp, fTmp, f0 // Set I,U, tiny (+0.0) result
@@ -729,6 +738,7 @@ EXP_UNDERFLOW_ZERO:
 ;;
 
 GLOBAL_IEEE754_END(exp)
+
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
