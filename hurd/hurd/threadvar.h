@@ -80,5 +80,18 @@ __hurd_errno_location (void)
 /* XXX to go in errno.h after #include <hurd/ptv.h>: */
 #define errno	(*__hurd_errno_location ())
 
+/* XXX to go in hurd/signal.h: */
+_EXTERN_INLINE struct hurd_sigstate *
+_hurd_self_sigstate (void)
+{
+  struct hurd_sigstate **location =
+    (struct hurd_sigstate **) __hurd_ptv_location (_HURD_PTV_SIGSTATE);
+  if (*location)
+    __mutex_lock ((*location)->lock);
+  else
+    *location = _hurd_thread_sigstate (__mach_thread_self ()); /* cthread_self? */
+  return *location;
+}
+
 
 #endif	/* hurd/ptv.h */
