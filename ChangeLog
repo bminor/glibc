@@ -1,3 +1,19 @@
+2000-01-02  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/generic/bits/mathdef.h: Test __USE_ISOC9X not
+	__USE_ISOC99.
+
+1999-12-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/llseek.c: Emit link time warning for
+	llseek.
+        Requested by Michael Deutschmann <michael@talamasca.wkpowerlink.com>.
+
+1999-12-14  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/scsi/scsi.h: Add new defines from Linux
+	2.3.32.
+
 1999-12-29  Geoffrey Keating  <geoffk@cygnus.com>
 
 	* sysdeps/powerpc/dl-machine.c: Many minor formatting changes.
