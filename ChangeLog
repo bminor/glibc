@@ -1,3 +1,8 @@
+2000-01-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/bits/string2.h (__strndup, strndup): Remove optimization.
+	__strndup is not exported.
+
 2000-01-23  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sysdeps/unix/sysv/linux/i386/getrlimit.c: Removed.
