@@ -98,17 +98,11 @@ please let me know.
 	  `who', show incorrect information about the (number of)
 	  users on my system.  Why?''
 
-[Q28]	``After upgrading to a glibc 2.1 with symbol versioning I get
-	  errors about undefined symbols.  What went wrong?''
+[Q28]	This space left intentionally unanswered.
 
 [Q29]	``I don't include any kernel header myself but still the
 	  compiler complains about type redeclarations of types in the
 	  kernel headers.''
-
-[Q30]	``When I start the program XXX after upgrading the library
-	  I get
-	    XXX: Symbol `_sys_errlist' has different size in shared object, consider re-linking
-	  Why?  What to do?''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -124,9 +118,6 @@ in the future are:
 	i[3456]86-*-linux-gnu	Linux-2.0 on Intel
 	m68k-*-linux-gnu	Linux-2.0 on Motorola 680x0
 	alpha-*-linux-gnu	Linux-2.0 on DEC Alpha
-	powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
-	sparc-*-linux-gnu	Linux-2.0 on SPARC
-	sparc64-*-linux-gnu	Linux-2.0 on UltraSPARC
 
 Other Linux platforms are also on the way to be supported but I need
 some success reports first.
@@ -168,6 +159,10 @@ other make program has the needed functionality.
 
 Versions before 3.74 have bugs which prevent correct execution so you
 should upgrade to the latest version before starting the compilation.
+
+We recommend version GNU make version 3.75.  Versions 3.76 and
+3.76.1 are known to have bugs which only show up in big projects like
+GNU libc.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -331,10 +326,6 @@ incompatibilities:
        syscall name:	wrapper name:	declaring header file:
        -------------	-------------	----------------------
        bdflush		bdflush		<sys/kdaemon.h>
-       create_module	create_module	<sys/module.h>
-       delete_module	delete_module	<sys/module.h>
-       get_kernel_syms	get_kernel_syms	<sys/module.h>
-       init_module	init_module	<sys/module.h>
        syslog		ksyslog_ctl	<sys/klog.h>
 
 * lpd: Older versions of lpd depend on a routine called _validuser().
@@ -367,9 +358,6 @@ so reading the files written by functions from the one library cannot
 be read by functions from the other library.  Sorry, but this is what
 a major release is for.  It's better to have a cut now than having no
 means to support the new techniques later.
-
-{MK} There is however a (partial) solution for this problem.  Please
-take a look at the file `README.utmpd'.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -748,22 +736,7 @@ symlink that you have in place before you install glibc.  However,
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-[Q28]	``After upgrading to a glibc 2.1 with symbol versioning I get
-	  errors about undefined symbols.  What went wrong?''
-
-[A28] {AJ} In a versioned libc a lot of symbols are now local that
-have been global symbols in previous versions. When defining a extern
-variable both in a user program and extern in the libc the links
-resolves this to only one reference - the one in the library. The
-problem is caused by either wrong program code or tools. In no case
-the global variables from libc should be used by any program. Since
-these reference are now local, you might see a message like:
-
-"msgfmt: error in loading shared libraries: : undefined symbol: _nl_domain_bindings"
-
-The only way to fix this is to recompile your program. Sorry, that's
-the price you might have to pay once for quite a number of advantages
-with symbol versioning.
+[Q28]	This space left intentionally free.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -771,37 +744,15 @@ with symbol versioning.
 	  compiler complains about type redeclarations of types in the
 	  kernel headers.''
 
-[A29] {UD} The kernel headers before Linux 2.1.61 don't work correctly with
-glibc since they pollute the name space in a not acceptable way.  Compiling
-C programs is possible in most cases but especially C++ programs have (due
-to the change of the name lookups for `struct's) problem.  One prominent
-example is `struct fd_set'.
+[A29] {UD} The kernel headers before Linux 2.1.61 (and Linux
+2.0.32) don't work correctly with glibc since they pollute the name
+space in a not acceptable way.  Compiling C programs is possible in
+most cases but especially C++ programs have (due to the change of the
+name lookups for `struct's) problem.  One prominent example is `struct
+fd_set'.
 
-There might be some more problems left but 2.1.61 fixes some of the known
-ones.  See the BUGS file for other known problems.
-
-
-~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-[Q30]	``When I start the program XXX after upgrading the library
-	  I get
-	    XXX: Symbol `_sys_errlist' has different size in shared object, consider re-linking
-	  Why?  What to do?''
-
-[A30] {UD} As the message says, relink the binary.  The problem is that
-very few symbols from the library can change in size and there is no way
-to avoid this.  _sys_errlist is a good example.  Occasionally there are
-new error numbers added to the kernel and this must be reflected at user
-level.
-
-But this does not mean all programs are doomed once such a change is
-necessary.  Such symbols should normally not be used at all.  There are
-mechanisms to avoid using them.  In the case of _sys_errlist, there is the
-strerror() function which should _always_ be used instead.  So the correct
-fix is to rewrite that part of the application.
-
-In some situations (especially when testing a new library release) it might
-be possible that such a symbol size change slipped in though it must not
-happen.  So in case of doubt report such a warning message as a problem.
+There might be some more problems left but 2.1.61/2.0.32 fixes some of
+the known ones.  See the BUGS file for other known problems.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

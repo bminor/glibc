@@ -1,3 +1,125 @@
+1997-12-10 00:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules (compile.S, COMPILE.S, COMPILE.s): Use $(ASFLAGS-*)
+	variable as well.
+
+	* locale/C-ctype.c: Correct data for isw* functions.
+	* locale/programs/ld-ctype.c: Write 32bit char classes in correct
+	byte order.
+	* wctype/test_wctype.c: Add test for isw* functions.
+	* wctype/wctype.c: Return value with expected byte order.
+
+	* sysdeps/alpha/__math.h: Remove cabs definition.
+	* sysdeps/libm-ieee754/w_cabs.c [NO_LONG_DOUBLE]: Correct cabsl.
+
+	* sysdeps/posix/sysv_signal.c: Define sysv_signal as weak alias.
+
+	* sysdeps/unix/inet/syscalls.list: Define socket syscalls with
+	__libc_* names.
+
+	* sysdeps/unix/sysv/linux/Dist: Add scsi/sg.h, net/if_packet.h,
+	net/if_slip.h, and sys/prctl.h.  Remove sys/module.h.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=misc] (sysdep_headers):
+	Remove sys/module.h.  Add sys/prctl.h and scsi/sg.h.
+	[$(subdir)=inet] (sysdep_headers): Add net/if_slip.h, net/if_packet.h.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add prctl.
+
+	* sysdeps/unix/sysv/linux/sys/module.h: Removed.
+
+1997-11-14 03:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/accept.S: Add __libc_accept as alias.
+	* sysdeps/unix/sysv/linux/send.S: Likewise.
+	* sysdeps/unix/sysv/linux/recvfrom.S: Likewise.
+	* sysdeps/unix/sysv/linux/recvmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/sendmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/recv.S: Likewise.
+	* sysdeps/unix/sysv/linux/sendto.S: Likewise.
+	* sysdeps/unix/sysv/linux/connect.S: Likewise.
+
+1997-12-07 15:49  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_compat/compat-grp.c: If buffer is to small, set the file
+	handle for /etc/group back in some more cases.
+	* nis/nss_compat/compat-pwd.c: If buffer is to small, set the file
+	handle for /etc/passwd back in some more cases.
+	* nis/nss_compat/compat-spwd.c: If buffer is to small, set the file
+	handle for /etc/shadow back in some more cases.
+
+1997-12-06 17:00  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/posix/sigblock.c (__sigblock): Don't check int mask
+	beyound its size.
+	* sysdeps/posix/sigsetmask.c (__sigsetmask): Ditto.
+	* sysdeps/posix/sigvec.c (convert_mask, __sigvec): Ditto.
+
+1997-11-30 21:57  Richard Henderson  <rth@cygnus.com>
+
+	Alpha changes for EGCS:
+	* config.h.in (ASM_ALPHA_NG_SYMBOL_PREFIX): New entry.
+	* configure.in (libc_cv_gcc_alpha_ng_prefix): New check.
+	* sysdeps/alpha/dl-machine.h (_dl_runtime_resolve): Care for prefix.
+	(_start): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/init-first.h: Likewise.
+
+	* sysdeps/alpha/Makefile: Backport setjmp/longjmp rewrite.
+	* sysdeps/alpha/__longjmp.S: Likewise.
+	* sysdeps/alpha/bsd-_setjmp.S: Likewise.
+	* sysdeps/alpha/bsd-setjmp.S: Likewise.
+	* sysdeps/alpha/jmp_buf.h: Likewise.
+	* sysdeps/alpha/setjmp.S: Likewise.
+	* sysdeps/alpha/__longjmp.c: Removed.
+	* sysdeps/alpha/setjmp_aux.c: Removed.
+
+1997-12-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/socketbits.h: Add AF_* and PF_
+	constants from Linux headers.  Pointed out by
+	csmall@scooter.o.i.net. [PR libc/369]
+
+1997-12-03 20:40  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* grp/initgroups.c: Increase buffer if it is too small.
+
+1997-12-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sys/mman.h (MAP_FAILED): Add
+	constant. Suggested by Petter Reinholdtsen <pere@sleeper.link.no>
+	[PR libc/367].
+
+1997-11-30 06:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/sys/wait.h (__WAIT_INT): Don't use complex version with
+	__typeof for C++ since this fails for class members.
+	Reported by Neal Becker <neal@ctd.comsat.com>.
+
+1997-11-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sys/module.h: Remove file. It's
+	incompatible with Linux 2.1.x. Packages using modules
+	(e.g. modutils) should/do provide their own version. Suggested by
+	Richard Henderson.
+
+	* sysdeps/unix/sysv/linux/Dist: Remove sys/module.h
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers)
+	[$(subdir)=socket]: Remove sys/module.h.
+
+1997-11-26  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/clnt_udp.c (clntudp_call): Rename cu_wait from timeout to
+	not shadow the variable in the outer scope. Carry over from glibc 2.1.
+
+1997-11-21 21:33  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/w_cabs.c: Add __cabs_complexl definition.
+
+1997-11-20 16:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/malloc.c (malloc_update_mallinfo): Initialize struct for
+	return value.
+
 1997-11-19 23:50  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Update from 2.1 version.
