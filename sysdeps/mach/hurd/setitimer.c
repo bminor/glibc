@@ -23,7 +23,6 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/signal.h>
 #include <hurd/msg_request.h>
-#include <mutex.h>
 #include <mach/message.h>
 
 /* XXX Temporary cheezoid implementation of ITIMER_REAL/SIGALRM.  */
