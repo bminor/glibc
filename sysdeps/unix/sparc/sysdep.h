@@ -18,17 +18,10 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdeps/unix/sysdep.h>
 
-#ifdef	__STDC__
 #define	ENTRY(name)							      \
   .global C_SYMBOL_NAME(name);						      \
   .align 2;								      \
-  C_SYMBOL_NAME(name)##:
-#else
-#define	ENTRY(name)							      \
-  .global C_SYMBOL_NAME(name);						      \
-  .align 2;								      \
-  C_SYMBOL_NAME(name)/**/:
-#endif
+  C_LABEL(name)
 
 #define	PSEUDO(name, syscall_name, args)				      \
   ENTRY (name)								      \
