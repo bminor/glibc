@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
   int dealloc, dealloc_ctty;
 
   /* Extract the ports and flags from FD.  */
-  d = _hurd_fd (fd, &dealloc_dt);
+  d = _hurd_fd (fd, &dealloc_dt); /* Locks D.d.  */
   if (d.d == NULL)
     {
     badf:
@@ -53,6 +53,14 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
     }
   else
     {
+      /* Give the ports each a user ref for the new descriptor.  */
+      __mach_port_mod_refs (__mach_task_self (), port,
+			    MACH_PORT_RIGHT_SEND, 1);
+      if (ctty != MACH_PORT_NULL)
+	__mach_port_mod_refs (__mach_task_self (), ctty,
+			      MACH_PORT_RIGHT_SEND, 1);
+
+      /* Install the ports and flags in the new descriptor slot.  */
       d2 = &_hurd_dtable.d[fd2];
       __spin_lock (&d2->port.lock);
       d2->flags = flags;
@@ -61,19 +69,9 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
     }
   __mutex_unlock (&_hurd_dtable_lock);
 
-  if (fd2 >= 0)
-    {
-      /* Give the ports each a user ref for the new descriptor.  */
-      __mach_port_mod_refs (__mach_task_self (), port,
-			    MACH_PORT_RIGHT_SEND, 1);
-      if (ctty != MACH_PORT_NULL)
-	__mach_port_mod_refs (__mach_task_self (), ctty,
-			      MACH_PORT_RIGHT_SEND, 1);
-    }
-
-  _hurd_port_free (&d.d->port, port, &dealloc);
+  _hurd_port_free (&d.d->port, &dealloc, port);
   if (ctty != MACH_PORT_NULL)
-    _hurd_port_free (&d.d->ctty, ctty, &dealloc_ctty);
+    _hurd_port_free (&d.d->ctty, &dealloc_ctty, port);
 
   _hurd_fd_done (d, &dealloc_dt);
 
