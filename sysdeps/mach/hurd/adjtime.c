@@ -30,7 +30,7 @@ DEFUN(__adjtime, (delta, olddelta),
       CONST struct timeval *delta AND
       struct timeval *olddelta)
 {
-  error_t err = __host_adjust_time (_hurd_host_priv_port (), delta, olddelta);
+  error_t err = __host_adjust_time (__pid2task (-1), delta, olddelta);
   if (err)
     return __hurd_fail (err);
   return 0;
