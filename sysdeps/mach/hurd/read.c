@@ -38,6 +38,9 @@ DEFUN(__read, (fd, buf, nbytes),
        err = __io_read (port, &data, &nread, -1, nbytes);
        if (ctty != MACH_PORT_NULL && err == EBACKGROUND)
 	 {
+#if 1
+	   abort ();
+#else
 	   struct _hurd_sigstate *ss
 	     = _hurd_thread_sigstate (__mach_thread_self ());
 	   if (_hurd_orphaned ||
@@ -59,6 +62,7 @@ DEFUN(__read, (fd, buf, nbytes),
 	       else
 		 err = EINTR;	/* XXX Is this right? */
 	     }
+#endif
 	 }
      }));
 
