@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,20 +28,23 @@ Cambridge, MA 02139, USA.  */
 char *
 DEFUN(asctime, (tp), CONST struct tm *tp)
 {
-  static char result[26];
+  static const char format[] = "%.3s %.3s %2d %.2d:%.2d:%.2d %d\n";
+  static char result[	         3+1+ 3+1+20+1+20+1+20+1+20+1+20+1 + 1];
 
   if (tp == NULL)
     {
       errno = EINVAL;
-      return(NULL);
+      return NULL;
     }
+  
+  if (sprintf (result, format,
+	       (tp->tm_wday < 0 || tp->tm_wday >= 7 ?
+		"???" : _time_info->abbrev_wkday[tp->tm_wday])
+	       (tp->tm_mon < 0 || tp->tm_mon >= 12 ?
+		"???" : _time_info->abbrev_month[tp->tm_mon]),
+	       tp->tm_mday, tp->tm_hour, tp->tm_min,
+	       tp->tm_sec, 1900 + tp->tm_year) < 25)
+    return NULL;
 
-  if (sprintf(result, "%.3s %.3s %2d %.2d:%.2d:%.2d %d\n",
-	      _time_info->abbrev_wkday[tp->tm_wday],
-	      _time_info->abbrev_month[tp->tm_mon],
-	      tp->tm_mday, tp->tm_hour, tp->tm_min,
-	      tp->tm_sec, 1900 + tp->tm_year) != sizeof(result) - 1)
-    return(NULL);
-
-  return(result);
+  return result;
 }
