@@ -22,7 +22,11 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 
 
-/* Defined in stdio/sys_siglist.c.  */
+#ifndef	HAVE_GNU_LD
+#define	_sys_siglist	sys_siglist
+#endif
+
+/* Defined in , 1992siglist.c.  */
 extern CONST char *CONST _sys_siglist[];
 
 
