@@ -96,7 +96,7 @@ DEFUN(__stdio_seek, (cookie, pos, whence),
   if (! fd)
     return __hurd_fail (EBADF);
   __spin_lock (&fd->port.lock);
-  err = HURD_FD_USE (fd, __io_seek (port, *pos, whence, pos));
+  err = HURD_FD_PORT_USE (fd, __io_seek (port, *pos, whence, pos));
   return err ? fd_fail (fd, err) : 0;
 }
 
