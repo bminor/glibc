@@ -1,3 +1,9 @@
+2002-04-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h (LOC): Don't paste
+	in a token.
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/sysdep.h (LOC): Likewise.
+
 2002-04-08  Andreas Jaeger  <aj@suse.de>
 
 	* elf/cache.c (print_entry): Support x86-64.
