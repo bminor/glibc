@@ -97,6 +97,8 @@ _hurd_init (int flags, char **argv,
   RUN_HOOK (_hurd_subinit, ());
 }
 
+#include <hurd/signal.h>
+
 /* The user can do "int _hide_arguments = 1;" to make
    sure the arguments are never visible with `ps'.  */
 int _hide_arguments, _hide_environment;
@@ -115,23 +117,20 @@ _hurd_proc_init (char **argv)
   struct hurd_userlink ulink;
   process_t procserver;
 
-#ifdef notyet
   /* Initialize the signal code; Mach exceptions will become signals.  */
   _hurdsig_init ();
-#endif
 
   /* The signal thread is now prepared to receive messages.
      It is safe to give the port to the proc server.  */
 
   procserver = _hurd_port_get (&_hurd_ports[INIT_PORT_PROC], &ulink);
 
-#ifdef notyet
   /* Give the proc server our message port.  */
   __proc_setmsgport (procserver, _hurd_msgport, &oldmsg);
   if (oldmsg != MACH_PORT_NULL)
+    /* XXX handle old msgs! */
     /* Deallocate the old msg port we replaced.  */
     __mach_port_deallocate (__mach_task_self (), oldmsg);
-#endif
 
   /* Tell the proc server where our args and environment are.  */
   __proc_setprocargs (procserver,
@@ -140,10 +139,8 @@ _hurd_proc_init (char **argv)
 
   _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], &ulink, procserver);
 
-#ifdef notyet
   /* Initialize proc server-assisted fault recovery for the signal thread.  */
   _hurdsig_fault_init ();
-#endif
 
   /* Call other things which want to do some initialization.  These are not
      on the _hurd_subinit hook because things there assume that things done
