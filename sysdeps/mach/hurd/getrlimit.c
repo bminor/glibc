@@ -30,15 +30,15 @@ DEFUN(getrlimit, (resource, rlimits),
 {
   struct rlimit lim;
 
-  if (rlimits == NULL || resource < 0 || resource >= RLIMIT_NLIMITS)
+  if (rlimits == NULL || (unsigned int) resource >= RLIMIT_NLIMITS)
     {
       errno = EINVAL;
       return -1;
     }
 
   lim = *rlimits;
-  if (lim->rlim_cur > lim->rlim_max)
-    lim->rlim_cur = lim->rlim_max;
+  if (lim.rlim_cur > lim.rlim_max)
+    lim.rlim_cur = lim.rlim_max;
 
   __mutex_lock (&_hurd_rlimit_lock);
   _hurd_rlimits[resource] = lim;
