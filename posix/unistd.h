@@ -616,6 +616,19 @@ extern int lockf __P ((int __fd, int __cmd, __off_t __len));
 #endif /* Use misc and F_LOCK not already defined.  */
 
 
+#ifdef __USE_GNU
+
+/* Evaluate EXPRESSION, and repeat as long as it returns -1 with `errno'
+   set to EINTR.  */
+
+#define TEMP_FAILURE_RETRY(expression) \
+  ({ long int __result;							      \
+       do __result = (long int) (expression);				      \
+       while (__result == -1L && errno == EINTR);			      \
+       __result; })
+          
+#endif
+
 __END_DECLS
 
 #endif /* unistd.h  */
