@@ -8,8 +8,9 @@ and the total number of elements.
 
 @menu
 * Comparison Functions::        Defining how to compare two objects.
-				Since the sort and search facilities are
-				general, you have to specify the ordering.
+				 Since the sort and search facilities
+                                 are general, you have to specify the
+                                 ordering. 
 * Array Search Function::       The @code{bsearch} function.
 * Array Sort Function::         The @code{qsort} function.
 * Search/Sort Example::         An example program.
