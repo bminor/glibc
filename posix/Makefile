@@ -24,7 +24,7 @@ subdir	:= posix
 headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	\
 	   glob.h wordexp.h fnmatch.h gnu/types.h getopt.h		\
 	   posix1_lim.h posix2_lim.h posix_opt.h local_lim.h tar.h	\
-	   utsnamelen.h confname.h waitflags.h waitstatus.h
+	   utsnamelen.h confname.h waitflags.h waitstatus.h sys/unistd.h
 
 distribute := confstr.h
 
