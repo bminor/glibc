@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,14 +28,16 @@ DEFUN(__write, (fd, buf, nbytes),
   error_t err;
   size_t wrote;
 
-  data = buf;
-!!  _HURD_DPORT_USE
+  _HURD_DPORT_USE
     (fd,
      ({
      call:
        err = __io_write (port, buf, nbytes, -1, &wrote);
        if (ctty != MACH_PORT_NULL && err == EBACKGROUND)
 	 {
+#if 1
+	   abort ();
+#else
 	   struct _hurd_sigstate *ss
 	     = _hurd_thread_sigstate (__mach_thread_self ());
 	   if (_hurd_orphaned ||
@@ -56,6 +58,7 @@ DEFUN(__write, (fd, buf, nbytes),
 	       else
 		 err = EINTR;	/* XXX Is this right? */
 	     }
+#endif
 	 }
      }));
 
