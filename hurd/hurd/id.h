@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #define	_HURD_ID_H	1
 #include <features.h>
 
-#include <mutex.h>
+#include <cthreads.h>		/* For `struct mutex'.  */
 
 /* Structure describing authorization data for the process.  */
 

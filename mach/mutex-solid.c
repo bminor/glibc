@@ -40,3 +40,11 @@ __mutex_unlock_solid (void *lock)
     (*_cthread_mutex_unlock_routine) (lock);
 }
 
+void
+__mutex_init (void *lock)
+{
+  /* This happens to be name space-safe because it is a macro.
+     It invokes only spin_lock_init, which is a macro for __spin_lock_init;
+     and cthread_queue_init, which is a macro for some simple code.  */
+  mutex_init ((struct mutex *) lock);
+}
