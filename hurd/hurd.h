@@ -35,7 +35,6 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/process.h>
 #include <hurd/fs.h>
 #include <hurd/io.h>
-#include <hurd/msg.h>
 
 /* Get `struct hurd_port' and related definitions implementing lightweight
    user references for ports.  These are used pervasively throughout the C
@@ -95,10 +94,6 @@ extern vm_address_t _hurd_data_end;
 /* This mutex locks _hurd_brk and _hurd_data_end.  */
 
 extern struct mutex _hurd_brk_lock;
-
-/* Set the data resource limit (RLIM_DATA).  */
-
-extern int _hurd_set_data_limit (const struct rlimit *);
 
 /* Set the data break to NEWBRK; _hurd_brk_lock must
    be held, and is released on return.  */
