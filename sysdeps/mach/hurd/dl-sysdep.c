@@ -53,7 +53,9 @@ int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 /* This variable containts the lowest stack address ever used.  */
 void *__libc_stack_end;
 unsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
-
+#if HP_TIMING_AVAIL
+hp_timing_t _dl_cpuclock_offset;
+#endif
 
 struct hurd_startup_data *_dl_hurd_data;
 
@@ -237,6 +239,10 @@ unfmh();			/* XXX */
 
   /* Initialize frequently used global variable.  */
   _dl_pagesize = __getpagesize ();
+
+#if HP_TIMING_AVAIL
+  HP_TIMING_NOW (_dl_cpuclock_offset);
+#endif
 
 fmh();				/* XXX */
 
