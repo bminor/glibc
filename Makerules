@@ -115,24 +115,12 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)sysdirs
 		\$$(compile-command.s)";				      \
 	   echo "\$$(objpfx)%.o: $$dir/%.c \$$(before-compile); \
 		\$$(compile-command.c)";				      \
-	   if [ $$dir = stub ]; then					      \
-	     echo "	$$(after-stub-compile)";			      \
-	   fi;								      \
 	 done) > $@
-
-# This command is run after compiling a source file from sysdeps/stub.
-# We accumulate in $(objpfx)stubs a list of all the functions which are
-# stubs in this configuration.  The parent Makefile uses this file to
-# create `stubs.h'.
-define after-stub-compile
-sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
-    $< >> $(objpfx)stubs
-endef
 
 # Maximize efficiency by minimizing the number of rules.
 .SUFFIXES:	# Clear the suffix list.
 # Add the suffixes we use.
-.SUFFIXES: .a .o .S .s .c .h .dep .m4
+.SUFFIXES: .a .o .S .s .c .h .dep
 
 # Generic rule for making directories.
 %/:
@@ -349,12 +337,26 @@ echo-headers:
 	@echo $(headers)
 
 
+# Produce a file `stub-$(subdir)' which contains `#define __stub_FUNCTION'
+# for each function which is a stub.  We grovel over all the .dep files
+# looking for references to source files in sysdeps/stub.  Then we grovel
+# over each referenced source file to see what stub function it defines.
+
+ifdef +depfiles
+.PHONY: stubs # The parent Makefile calls this target.
+stubs: $(common-objpfx)stub-$(subdir)
+$(common-objpfx)stub-$(subdir): $(+depfiles)
+	sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' > $@T \
+	    `sed -n 's/^.*\($(sysdep_dir)/stub/[a-z0-9_]*\.c\).*$$/\1/p' $^`
+	mv $@T $@
+endif
+
 ifdef gpl2lgpl
 ifneq (,$(wildcard /home/gd/gnu/lib/ChangeLog))
 # Snarf from the master source and frob the copying notice.
 $(gpl2lgpl): %: $(..)gpl2lgpl.sed /home/gd/gnu/lib/%
 	sed -f $^ > $@-tmp
-# So I don't edit them my mistake.
+# So I don't edit them by mistake.
 	chmod a-w $@-tmp
 	mv -f $@-tmp $@
 endif
