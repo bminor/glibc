@@ -1,3 +1,19 @@
+2000-01-05  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/lseek64.c (__libc_lseek64): Renamed from __lseek64.
+	(__lseek64, lseek64): Make these weak aliases for __libc_lseek64.
+	* sysdeps/mach/hurd/lseek.c (__libc_lseek): Renamed from __lseek.
+	(__lseek, lseek): Make these weak aliases for __libc_lseek.
+	* sysdeps/mach/hurd/fcntl.c (__libc_fcntl): Renamed from __fcntl.
+	(__fcntl, fcntl): Make these weak aliases for __libc_fcntl.
+	* sysdeps/mach/hurd/open.c (__libc_open): Renamed from __open.
+	(__open, open): Make these weak aliases for __libc_open.
+
+	* sysdeps/generic/bits/socket.h (enum __socket_type): Remove
+	trailing comma.
+	(anonymous enum for MSG_*): Likewise.
+	(anonymous enum for SO_*): Likewise.
+
 2000-01-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/texinfo.tex: Updated from latest official version.
