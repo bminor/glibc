@@ -210,6 +210,7 @@ DEFUN(memcmp_not_common_alignment, (srcp1, srcp2, len),
       if (res != 0)
 	return res;
 
+    do0:
       srcp1 += 4 * OPSIZ;
       srcp2 += 4 * OPSIZ;
       len -= 4;
