@@ -1,3 +1,8 @@
+1999-12-20  Andreas Jaeger  <aj@suse.de>
+
+	* pthread.c (pthread_initialize): Move getrlimit call after
+	setting of errno.
+
 1999-12-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/pt-machine.h: Move stack_pointer definition to the
