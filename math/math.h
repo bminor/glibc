@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -147,7 +147,7 @@ extern __CONSTVALUE int EXFUN(__isinf, (double __value));
 /* Return nonzero if VALUE is not a number.  */
 extern __CONSTVALUE int EXFUN(__isnan, (double __value));
 
-/* Return nonzero if VALUE is finite (or NaN).  */
+/* Return nonzero if VALUE is finite and not NaN.  */
 extern __CONSTVALUE int EXFUN(__finite, (double __value));
 #ifdef	__OPTIMIZE__
 #define	__finite(value)	(!__isinf(value))
