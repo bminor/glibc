@@ -124,7 +124,7 @@ __MATH_INLINE double
 tan (double __x)
 {
   register double __value;
-  register double __value2 __attribute__ ((unused));
+  register double __value2 __attribute__ ((__unused__));
   __asm __volatile__
     ("fptan"
      : "=t" (__value2), "=u" (__value) : "0" (__x));
