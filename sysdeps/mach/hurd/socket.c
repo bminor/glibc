@@ -32,12 +32,25 @@ DEFUN(socket, (domain, type, protocol),
       int domain AND enum __socket_type type AND int protocol)
 {
   error_t err;
-  socket_t sock, server = _hurd_socket_server (domain);
+  socket_t sock, server;
 
+  /* Find the socket server for DOMAIN.  */
+  server = _hurd_socket_server (domain, 0);
   if (server == MACH_PORT_NULL)
     return -1;
 
-  if (err = __socket_create (server, type, protocol, &sock))
+  err = __socket_create (server, type, protocol, &sock);
+  if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED)
+    {
+      /* On the first use of the socket server during the operation,
+	 allow for the old server port dying.  */
+      server = _hurd_socket_server (domain, 1);
+      if (server == MACH_PORT_NULL)
+	return -1;
+      err = __socket_create (server, type, protocol, &sock);
+    }
+
+  if (err)
     return __hurd_fail (err);
 
   return _hurd_intern_fd (sock, O_IGNORE_CTTY, 1);

@@ -41,13 +41,23 @@ DEFUN(__pipe, (fds), int fds[2])
     return __hurd_fail (EINVAL);
 
   /* Find the local domain socket server.  */
-  server = _hurd_socket_server (PF_LOCAL);
+  server = _hurd_socket_server (PF_LOCAL, 0);
   if (server == MACH_PORT_NULL)
     return -1;
 
   /* Create two local domain sockets and connect them together.  */
 
-  if (err = __socket_create (server, SOCK_STREAM, 0, &sock1))
+  err = __socket_create (server, SOCK_STREAM, 0, &sock1);
+  if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED)
+    {
+      /* On the first use of the socket server during the operation,
+	 allow for the old server port dying.  */
+      server = _hurd_socket_server (PF_LOCAL, 1);
+      if (server == MACH_PORT_NULL)
+	return -1;
+      err = __socket_create (server, SOCK_STREAM, 0, &sock1);
+    }
+  if (err)
     return __hurd_fail (err);
   if (err = __socket_create (server, SOCK_STREAM, 0, &sock2))
     {
