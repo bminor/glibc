@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,3 @@
 #define ERR_REMAP(n) (err_get_code (n))
 
 #include <sysdeps/gnu/errlist.c>
-
-/* Oblige programs that use sys_nerr, but don't use sys_errlist. */
-weak_alias (_hurd_nerr, sys_nerr)
-weak_alias (_hurd_nerr, _sys_nerr)
