@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>
    and Doug Lea <dl@cs.oswego.edu>, 1996.
@@ -1507,7 +1507,7 @@ static unsigned long max_mmapped_mem = 0;
 #endif
 
 /* Already initialized? */
-int __malloc_initialized = 0;
+int __malloc_initialized = -1;
 
 
 /* Initialization routine. */
@@ -1529,8 +1529,8 @@ ptmalloc_init __MALLOC_P((void))
   const char* s;
 #endif
 
-  if(__malloc_initialized) return;
-  __malloc_initialized = 1;
+  if(__malloc_initialized >= 0) return;
+  __malloc_initialized = 0;
 #if defined(_LIBC) || defined(MALLOC_HOOKS)
   /* With some threads implementations, creating thread-specific data
      or initializing a mutex may call malloc() itself.  Provide a
@@ -1570,6 +1570,7 @@ ptmalloc_init __MALLOC_P((void))
   if(__malloc_initialize_hook != NULL)
     (*__malloc_initialize_hook)();
 #endif
+  __malloc_initialized = 1;
 }
 
 #if defined(_LIBC) || defined(MALLOC_HOOKS)
