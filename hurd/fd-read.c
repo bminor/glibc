@@ -21,8 +21,8 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/fd.h>
 
-ssize_t
-_hurd_fd_read (struct hurd_fd *fd, void *buf, size_t nbytes)
+error_t
+_hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes)
 {
   error_t err;
   char *data;
@@ -33,7 +33,7 @@ _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t nbytes)
     (fd,
      ({
      call:
-       err = __io_read (port, &data, &nread, -1, nbytes);
+       err = __io_read (port, &data, &nread, -1, *nbytes);
        if (ctty != MACH_PORT_NULL && err == EBACKGROUND)
 	 {
 #if 1
@@ -66,7 +66,7 @@ _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t nbytes)
      }));
 
   if (err)
-    return __hurd_dfail (fd, err);
+    return err;
 
   if (data != buf)
     {
@@ -74,5 +74,6 @@ _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t nbytes)
       __vm_deallocate (__mach_task_self (), (vm_address_t) data, nread);
     }
 
-  return nread;
+  *nbytes = nread;
+  return 0;
 }
