@@ -87,8 +87,9 @@ useful form of interprocess communication.
 
 @item
 An attempt to perform an I/O operation that cannot be done.  Examples
-are reading from a pipe that has no writer (@pxref{Pipes}), and reading
-or writing to a terminal in certain situations (@pxref{Job Control}).
+are reading from a pipe that has no writer (@pxref{Pipes and FIFOs}),
+and reading or writing to a terminal in certain situations (@pxref{Job
+Control}).
 @end itemize
 
 Each of these kinds of events (excepting explicit calls to @code{kill}
