@@ -1,3 +1,8 @@
+1998-03-13 17:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/strsep.c: Correct handling of separators after
+	last non-separator.
+
 1998-03-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/fpu/__math.h (atan2): Take over code from glibc
