@@ -2,7 +2,7 @@
    
 #include <math.h>		/* Done first so we can #undef.  */
 #include <endian.h>
-#ifdef	__LITTLE_ENDIAN
+#if	__BYTE_ORDER == __LITTLE_ENDIAN
 #undef national
 #define national
 #endif
