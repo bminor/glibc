@@ -18,7 +18,9 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
+#include <hurd/fd.h>
 #include <sys/ioctl.h>
+#include <gnu-stabs.h>
 
 /* Symbol set of ioctl handler lists.  This definition is here so that when
    __ioctl refers to it, we will link in fionread et al (below).  */
@@ -29,32 +31,139 @@ const struct
     struct ioctl_handler *v[0];
   } _hurd_ioctl_handler_lists;
 
+#include <fcntl.h>
+
 /* Find out how many bytes may be read from FD without blocking.  */
 
 static int
-fionread (int fd,
-	  int request,		/* Always FIONREAD.  */
-	  void *arg)
+fioctl (int fd,
+	int request,
+	int *arg)
 {
   error_t err;
-  int amount;
 
-  if (err = HURD_DPORT_USE (fd, __io_readable (port, &amount)))
-    return __hurd_fail (err);
+  *(volatile int *) arg = *arg;
 
-  *(int *) arg = amount;
-  return 0;
+  switch (request)
+    {
+    default:
+      err = EGRATUITOUS;
+      break;
+
+    case FIONREAD:
+      err = HURD_DPORT_USE (fd, __io_readable (port, arg));
+      break;
+
+    case FIONBIO:
+      err = HURD_DPORT_USE (fd, (*arg ?
+				 __io_set_some_openmodes :
+				 __io_clear_some_openmodes)
+			    (port, O_NONBLOCK));
+      break;
+
+    case FIOASYNC:
+      err = HURD_DPORT_USE (fd, (*arg ?
+				 __io_set_some_openmodes :
+				 __io_clear_some_openmodes)
+			    (port, O_ASYNC));
+      break;
+
+    case FIOSETOWN:
+      err = HURD_DPORT_USE (fd, __io_mod_owner (port, *arg));
+      break;
+
+    case FIOGETOWN:
+      err = HURD_DPORT_USE (fd, __io_get_owner (port, arg));
+      break;
+    }
+
+  return err ? __hurd_fail (err) : 0;
 }
 
-_HURD_HANDLE_IOCTL (fionread, FIONREAD);
+_HURD_HANDLE_IOCTLS (fioctl, FIOGETOWN, FIONREAD);
+
+
+static int
+fioclex (int fd,
+	 int request)
+{
+  int flag;
+
+  switch (request)
+    {
+    default:
+      return __hurd_fail (EGRATUITOUS);
+    case FIOCLEX:
+      flag = FD_CLOEXEC;
+      break;
+    case FIONCLEX:
+      flag = 0;
+      break;
+    }
+
+  return __fcntl (fd, F_SETFD, flag);
+}
+_HURD_HANDLE_IOCTLS (fioclex, FIOCLEX, FIONCLEX);
 
+#include <hurd/term.h>
+
+static void
+rectty_dtable (mach_port_t cttyid)
+{
+  int i;
+  
+  HURD_CRITICAL_BEGIN;
+  __mutex_lock (&_hurd_dtable_lock);
+
+  for (i = 0; i < _hurd_dtable.size; ++i)
+    {
+      struct hurd_fd *const d = _hurd_dtable.d[i];
+      mach_port_t newctty;
+
+      if (d == NULL)
+	/* Nothing to do for an unused descriptor cell.  */
+	continue;
+
+      if (cttyid == MACH_PORT_NULL)
+	/* We now have no controlling tty at all.  */
+	newctty = MACH_PORT_NULL;
+      else
+	HURD_PORT_USE (&d->port,
+		       ({ mach_port_t id;
+			  /* Get the io object's cttyid port.  */
+			  if (! __term_getctty (port, &id))
+			    {
+			      if (id == cttyid && /* Is it ours?  */
+				  /* Get the ctty io port.  */
+				  __term_become_ctty (port, _hurd_pid,
+						      _hurd_pgrp,
+						      _hurd_msgport,
+						      &newctty))
+				/* XXX it is our ctty but the call failed? */
+				newctty = MACH_PORT_NULL;
+			      __mach_port_deallocate
+				(__mach_task_self (), (mach_port_t) id);
+			    }
+			  else
+			    newctty = MACH_PORT_NULL;
+			  0;
+			}));
+
+      /* Install the new ctty port.  */
+      _hurd_port_set (&d->ctty, newctty);
+    }
+
+  __mutex_unlock (&_hurd_dtable_lock);
+  HURD_CRITICAL_END;
+}
+
+
 /* Make FD be the controlling terminal.
    This function is called for `ioctl (fd, TCIOSCTTY)'.  */
 
 static int
 tiocsctty (int fd,
-	   int request,		/* Always TCIOSCTTY.  */
-	   void *arg)		/* Not used.  */
+	   int request)		/* Always TIOCSCTTY.  */
 {
   mach_port_t cttyid;
   error_t err;
@@ -82,8 +191,7 @@ _HURD_HANDLE_IOCTL (tiocsctty, TIOCSCTTY);
 
 static int
 tiocnotty (int fd,
-	   int request,		/* Always TIOCNOTTY.  */
-	   void *arg)		/* Not used.  */
+	   int request)		/* Always TIOCNOTTY.  */
 {
   mach_port_t fd_cttyid;
   error_t err;
@@ -94,7 +202,7 @@ tiocnotty (int fd,
   if (__USEPORT (CTTYID, port != fd_cttyid))
     err = EINVAL;
 
-  __mach_port_deallocate (__mach_task_+self (), fd_cttyid);
+  __mach_port_deallocate (__mach_task_self (), fd_cttyid);
 
   if (err)
     return __hurd_fail (err);
