@@ -22,6 +22,10 @@ Cambridge, MA 02139, USA.  */
 
 #ifndef	_STDIO_H
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
 #if	!defined(__need_FILE)
 #define	_STDIO_H	1
 #include <features.h>
@@ -580,5 +584,9 @@ extern char *EXFUN(cuserid, (char *__s));
 #endif
 
 #endif	/* <stdio.h> included.  */
+
+#ifdef	__cplusplus
+}
+#endif
 
 #endif	/* stdio.h  */
