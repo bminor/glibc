@@ -43,7 +43,8 @@ endif
 ifdef	subdir
 all-headers = $(headers)
 else
-+distinfo := $(shell MAKEFLAGS= MFLAGS= $(MAKE) -s no_deps=t echo-distinfo)
++distinfo := $(shell MAKEFLAGS= MFLAGS= $(MAKE) MAKELEVEL=0 \
+						-s no_deps=t echo-distinfo)
 all-headers := $(patsubst +header+%,%,$(filter +header+%,$(+distinfo)))
 +subdir-nodist := $(patsubst +nodist+%,%,$(filter +nodist+%,$(+distinfo)))
 +subdir-headers := $(filter-out $(headers),$(all-headers))
