@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -38,9 +38,5 @@ routines	:=							      \
 
 distribute	:= exit.h
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv
-
-$(objpfx)testsort.input: /usr/dict/words
-	cp $< $@
-generated := $(objpfx)testsort.input
 
 include ../Rules
