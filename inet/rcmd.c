@@ -60,6 +60,7 @@ static char sccsid[] = "@(#)rcmd.c	8.3 (Berkeley) 3/26/94";
 int __ivaliduser __P ((FILE *, u_int32_t, const char *, const char *));
 static int __ivaliduser2 __P ((FILE *, u_int32_t, const char *, const char *,
 			       const char *));
+int iruserok (u_int32_t raddr, int superuser, const char *ruser, *luser);
 
 
 int
