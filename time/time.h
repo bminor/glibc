@@ -83,6 +83,8 @@ struct tm
     int tm_wday;	/* Day of week.	[0-6] */
     int tm_yday;	/* Days in year.[0-365]	*/
     int tm_isdst;	/* DST.		[-1/0/1]*/
+    long int tm_gmtoff;	/* Seconds west of UTC.  */
+    CONST char *tm_zone;/* Timezone abbreviation.  */
   };
 #endif	/* <time.h> included.  */
 
