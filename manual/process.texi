@@ -1,5 +1,5 @@
-@node Child Processes, Job Control, Process Startup, Top
-@chapter Child Processes
+@node Processes
+@chapter Processes
 
 @cindex process
 @dfn{Processes} are the primitive units for allocation of system
@@ -98,8 +98,8 @@ are freed.
 @cindex parent process
 Processes are created with the @code{fork} system call (so the operation
 of creating a new process is sometimes called @dfn{forking} a process).
-The @dfn{child process} created by @code{fork} is an exact clone of the
-original @dfn{parent process}, except that it has its own process ID.
+The @dfn{child process} created by @code{fork} is a copy of the original
+@dfn{parent process}, except that it has its own process ID.
 
 After forking a child process, both the parent and child processes
 continue to execute normally.  If you want your program to wait for a
@@ -201,7 +201,9 @@ parent process.
 The child process gets its own copies of the parent process's open file
 descriptors.  Subsequently changing attributes of the file descriptors
 in the parent process won't affect the file descriptors in the child,
-and vice versa.  @xref{Control Operations}.
+and vice versa.  @xref{Control Operations}.  However, the file position
+associated with each descriptor is shared by both processes;
+@pxref{File Position}.
 
 @item
 The elapsed processor times for the child process are set to zero;
@@ -209,6 +211,7 @@ see @ref{Processor Time}.
 
 @item
 The child doesn't inherit file locks set by the parent process.
+@c !!! flock locks shared
 @xref{Control Operations}.
 
 @item
@@ -225,15 +228,16 @@ signals and signal actions from the parent process.)
 @comment unistd.h
 @comment BSD
 @deftypefun pid_t vfork (void)
-The @code{vfork} function is similar to @code{fork} but more efficient;
-however, there are restrictions you must follow to use it safely.
+The @code{vfork} function is similar to @code{fork} but on systems it
+is more efficient; however, there are restrictions you must follow to
+use it safely.
 
-While @code{fork} makes a complete copy of the calling process's address
-space and allows both the parent and child to execute independently,
-@code{vfork} does not make this copy.  Instead, the child process
-created with @code{vfork} shares its parent's address space until it calls
-one of the @code{exec} functions.  In the meantime, the parent process
-suspends execution.
+While @code{fork} makes a complete copy of the calling process's
+address space and allows both the parent and child to execute
+independently, @code{vfork} does not make this copy.  Instead, the
+child process created with @code{vfork} shares its parent's address
+space until it calls exits or one of the @code{exec} functions.  In the
+meantime, the parent process suspends execution.
 
 You must be very careful not to allow the child process created with
 @code{vfork} to modify any global data or even local variables shared
@@ -384,7 +388,10 @@ Persona}.
 Pending alarms.  @xref{Setting an Alarm}.
 
 @item
-Current working directory and root directory.  @xref{Working Directory}.
+Current working directory and root directory.  @xref{Working
+Directory}.  In the GNU system, the root directory is not copied when
+executing a setuid program; instead the system default root directory
+is used for the new program.
 
 @item
 File mode creation mask.  @xref{Setting Permissions}.
@@ -420,12 +427,9 @@ because they are located in the memory of the process itself.  The new
 process image has no streams except those it creates afresh.  Each of
 the streams in the pre-@code{exec} process image has a descriptor inside
 it, and these descriptors do survive through @code{exec} (provided that
-they do not have @code{FD_CLOEXEC} set.  The new process image can
+they do not have @code{FD_CLOEXEC} set).  The new process image can
 reconnect these to new streams using @code{fdopen} (@pxref{Descriptors
 and Streams}).
-@c ??? this is a bad thing to recommend.  it won't work in GNU, where
-@c fopen doesn't go thru a file descriptor.
-@c ??? I think Posix.1 requires this to work -- rms.
 
 @node Process Completion
 @section Process Completion
