@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,11 +23,10 @@ Cambridge, MA 02139, USA.  */
 #ifndef HAVE_GNU_LD
 #define _sys_errlist sys_errlist
 #define _sys_nerr sys_nerr
-#endif
-
-/* Defined in sys_errlist.c.  */
+#else
 extern CONST char *CONST _sys_errlist[];
 extern CONST int _sys_nerr;
+#endif
 
 /* Print a line on stderr consisting of the text in S, a colon, a space,
    a message describing the meaning of the contents of `errno' and a newline.
