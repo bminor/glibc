@@ -1,4 +1,4 @@
-# Copyright (C) 1991 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -43,3 +43,9 @@ $(addprefix $(objpfx),$(divrem:%=%.S)): divrem.m4
 	mv $@-tmp $@
 
 endif	# gnulib
+
+ifeq ($(subdir),uf-crypt)
+
+crypt := crypt.sparc # Use uf-crypt/crypt.sparc.S.
+
+endif # uf-crypt
