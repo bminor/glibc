@@ -117,6 +117,10 @@ install: subdir_install
 # Ignore the error if we cannot update /etc/ld.so.cache.
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
+install: install-symblolic-link
+install-symblolic-link:
+	$(symbolic-link-prog) $(symbolic-link-list)
+
 install:
 	-test ! -x $(common-objpfx)elf/ldconfig || \
 	  $(common-objpfx)elf/ldconfig -d $(inst_slibdir) $(inst_libdir)
