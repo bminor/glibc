@@ -18,7 +18,7 @@
 
 subdir := mach
 
-distribute = Machrules interface.awk syscalls.awk # $(interfaces:%=%.defs)
+distribute = Machrules interface.awk syscalls.awk shortcut.awk
 
 headers = mach_init.h mach.h \
 	  $(addprefix mach/,$(mach-headers)) \
@@ -57,29 +57,42 @@ all:
 
 # Define mach-syscalls and sysno-*.
 include $(objpfx)mach-syscalls.mk
-$(objpfx)mach-syscalls.mk: syscall_sw.h syscalls.awk
-	sed -n -e '/STANDALONE/,$$d' \
+$(objpfx)mach-syscalls.mk: mach/syscall_sw.h syscalls.awk
+# Go kludges!!!
+	sed -n -e '/Unix server implement them/,$$d' \
 	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),[0-9]*)$$/\1 \2/p' \
 	< $< | awk -f $(word 2,$^) > $@-new		      
 	mv $@-new $@
+clean-extras := $(clean-extras) $(objpfx)mach-syscalls.mk
 
 ifdef mach-syscalls
 $(mach-syscalls:%=$(objpfx)__%.S): $(objpfx)__%.S: mach-syscalls.mk
 	(echo '#include <sysdep.h>'; \
 	 echo 'SYSCALL_TRAP (__$*, $(sysno-$*))') > $@
+clean-extras := $(clean-extras) $(mach-syscalls:%=$(objpfx)__%.S)
 endif
 
 mach-shortcuts := $(patsubst syscall_%,%,$(filter syscall_%,$(mach-syscalls)))
 
+ifndef mach-shortcuts
+# Forget about mach_interface.defs for this run.  On the next run,
+# $(mach-shortcuts) will be set, and that will change how
+# mach_interface.defs is processed: it will get the -D flags below.
+user-interfaces := $(filter-out mach/mach_interface mach/mach_port,\
+				$(user-interfaces))
+endif
+
 # Make the MiG stubs for $(mach-shortcuts) be CALL_rpc.
 migdefines := $(migdefines) \
 	      $(foreach call,$(mach-shortcuts),-D$(call)=$(call)_rpc)
+mach/mach_interface.uh mach/mach_port.uh: mach-syscalls.mk
 
-# This rule needs to come before the implicit rules in Machrules.
-__%.c: shortcut.awk __%_rpc.c
+ifdef mach-shortcuts
+$(mach-shortcuts:%=__%.c): __%.c: shortcut.awk __%_rpc.c
 	gawk -v call=__$* -v rpc=__$*_rpc -v syscall=__syscall_$* \
 	     -f $^ > $@-new
 	mv $@-new $@
+endif
 
 include Machrules
 
