@@ -41,11 +41,15 @@ error_t
 _S_set_init_port (mach_port_t msgport, mach_port_t auth,
 		  int which, mach_port_t port)
 {
+  error_t err;
+
   AUTHCHECK;
 
-  /* This function consumes a user reference for the PORT send right,
-     if it is successful.  */
-  return _hurd_ports_set (which, port);
+  err = _hurd_ports_set (which, port);
+  if (err == 0)
+    __mach_port_deallocate (__mach_task_self (), port);
+
+  return 0;
 }
 
 error_t
@@ -92,9 +96,12 @@ _S_set_init_ports (mach_port_t msgport, mach_port_t auth,
   AUTHCHECK;
 
   for (i = 0; i < _hurd_nports; ++i)
-    /* This function consumes a user reference for the send right.  */
-    if (err = _hurd_ports_set (i, ports[i]))
-      return err;
+    {
+      if (err = _hurd_ports_set (i, ports[i]))
+	return err;
+      else
+	__mach_port_deallocate (__mach_task_self (), ports[i]);
+    }
 
   return 0;
 }
@@ -265,9 +272,12 @@ _S_get_fd (mach_port_t msgport, mach_port_t auth,
 {
   AUTHCHECK;
 
+  /* This creates a new user reference for the send right.
+     Our reply message will move that reference to the caller.  */
   *result = __getdport (which);
   if (*result == MACH_PORT_NULL)
     return errno;
+
   return 0;
 }
 
@@ -277,6 +287,7 @@ _S_set_fd (mach_port_t msgport, mach_port_t auth,
 {
   AUTHCHECK;
 
+  /* We consume the reference if successful.  */
   return HURD_FD_USE (which, (_hurd_port2fd (descriptor, port, 0), 0));
 }
 
@@ -292,6 +303,7 @@ _S_get_env_variable (mach_port_t msgport,
   if (value == NULL)
     return ENOENT;
 
+  /* XXX this pointer might become invalid */
   *data = value;
   *datalen = strlen (value);
   return 0;
@@ -313,11 +325,36 @@ _S_set_env_variable (mach_port_t msgport, mach_port_t auth,
 
 error_t
 _S_get_environment (mach_port_t msgport,
-		    char **data, unsigned int *datalen)
+		    char **data, unsigned int *datalen,
+		    int *dealloc)
 {
-  int envc;
-  char **envp;
+  /* Pack the environment into an array with nulls separating elements.  */
+  if (__environ != NULL)
+    {
+      char *ap, **p;
+      size_t envlen = 0;
 
+      for (p = __environ; *p != NULL; ++p)
+	envlen += strlen (*p) + 1;
+
+      if (envlen > *datalen)
+	{
+	  if (__vm_allocate (__mach_task_self (),
+			     (vm_address_t *) data, envlen, 1))
+	    return ENOMEM;
+	  *dealloc = 1;
+	}
+
+      ap = *data;
+      for (p = envp; *p != NULL; ++p)
+	ap = __memccpy (ap, *p, '\0', ULONG_MAX);
+
+      *datalen = envlen;
+    }
+  else
+    *datalen = 0;
+
+  return 0;
 }
 
 error_t
