@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 # error "Never use <bits/ipc.h> directly; include <sys/ipc.h> instead."
 #endif
 
-#include <sys/types.h>
+#include <bits/types.h>
 
 /* Mode bits for `msgget', `semget', and `shmget'.  */
 #define IPC_CREAT	01000		/* Create key if key does not exist. */
@@ -31,7 +31,9 @@
 #define IPC_RMID	0		/* Remove identifier.  */
 #define IPC_SET		1		/* Set `ipc_perm' options.  */
 #define IPC_STAT	2		/* Get `ipc_perm' options.  */
-#define IPC_INFO	3		/* See ipcs.  */
+#ifdef __USE_GNU
+# define IPC_INFO	3		/* See ipcs.  */
+#endif
 
 /* Special key values.  */
 #define IPC_PRIVATE	((__key_t) 0)	/* Private key.  */
