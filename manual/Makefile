@@ -74,10 +74,11 @@ $(objpfx)%.c.texi: examples/%.c
 	mv $@.new $@
 
 
-minimal-dist = COPYING.LIB summary.awk Makefile move-if-change		\
+minimal-dist = COPYING.LIB summary.awk move-if-change			\
 	       libc.texinfo $(chapters)					\
 	       $(patsubst %.c.texi,examples/%.c,			\
 			  $(filter-out summary.texi,$(chapters-incl)))
+doc-only-dist = Makefile mkinstalldirs
 distribute = $(minimal-dist)	       					\
 	     $(patsubst examples/%.c,%.c.texi,$(filter examples/%.c,	\
 			$(minimal-dist)))				\
@@ -87,15 +88,15 @@ export distribute := $(distribute)
 
 tar-it = tar chovf $@ $^
 
-manual.tar: $(minimal-dist) ; $(tar-it)
-mandist.tar: $(distribute) ; $(tar-it)
+manual.tar: $(doc-only-dist) $(minimal-dist) ; $(tar-it)
+mandist.tar: $(doc-only-dist) $(distribute) ; $(tar-it)
 
 edition := $(shell sed -n 's/^@set EDITION \(.*\)$$/\1/p' libc.texinfo)
 
-glibc-doc-$(edition).tar: $(distribute)
+glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 	@rm -f glibc-doc-$(edition)
 	ln -s . glibc-doc-$(edition)
-	tar chvf $@ $(addprefix glibc-doc-$(edition)/,$^)
+	tar chovf $@ $(addprefix glibc-doc-$(edition)/,$^)
 	rm -f glibc-doc-$(edition)
 
 %.Z: %
@@ -118,7 +119,7 @@ realclean: clean
 				     summary.texi stamp-summary \
 				     *.c.texi)
 
-.PHONY: install subdir_install
+.PHONY: install subdir_install installdirs
 subdir_install: install
 install: $(infodir)/libc.info
 
@@ -136,12 +137,15 @@ ifndef INSTALL
 INSTALL = install
 endif
 
-$(infodir)/libc.info: $(objpfx)libc.info
+$(infodir)/libc.info: $(objpfx)libc.info installdirs
 	for file in $<*; do \
 	  name=`basename $$file`; \
 	  $(INSTALL_DATA) $$file \
 	    `echo $@ | sed "s,$(<F)\$$,$$name,"`; \
 	done
+
+installdirs: $(firstword $(wildcard mkinstalldirs ../mkinstalldirs))
+	$(dir $<)$(notdir $<) $(infodir)
 
 .PHONY: dist
 dist: glibc-doc-$(edition).tar.z
