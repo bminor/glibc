@@ -80,7 +80,12 @@ The value of @code{errno} doesn't necessarily have to correspond to any
 of these macros, since some library functions might return other error
 codes of their own for other situations.  The only values that are
 guaranteed to be meaningful for a particular library function are the
-ones that this manual explicitly lists for that function.
+ones that this manual lists for that function.
+
+Almost any system call can return @code{EFAULT} if it is given an
+invalid pointer as an argument.  Since this could only happen as a
+result of a bug in your program, this manual saves space by not
+mentioning @code{EFAULT} in the descriptions of individual functions.
 
 @node Error Codes, Error Messages, Checking for Errors, Error Reporting
 @section Error Codes
