@@ -59,5 +59,9 @@ sysdep_headers += netinet/in_systm.h netinet/udp.h \
 		  sys/socketvar.h net/if_slip.h net/if_packet.h
 endif
 
+ifeq ($(subdir),nis)
+CFLAGS-ypclnt.c = -DUSE_BINDINGDIR=1
+endif
+
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
 inhibit-glue = yes
