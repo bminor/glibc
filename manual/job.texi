@@ -60,7 +60,7 @@ and you can't move it out of that process group again.
 Usually, new sessions are created by the system login program, and the
 session leader is the process running the user's default shell.
 
-@cindex
+@cindex controlling terminal
 A shell that supports job control must also implement a protocol for
 allocating its @dfn{controlling terminal} to a particular process group.
 Without such a protocol, there might be multiple jobs trying to read
@@ -91,6 +91,7 @@ For more information about I/O to the controlling terminal,
 
 @node Support for Job Control
 @section Support for Job Control
+@cindex job control, support for
 
 Support for job control is an optional feature of POSIX.  If an
 implementation doesn't support job control, then there can be only one
@@ -150,12 +151,14 @@ called an @dfn{orphaned process group}.
 
 @node Access to the Controlling Terminal
 @section Access to the Controlling Terminal
+@cindex controlling terminal, access to
 
 Only processes in the foreground job of a controlling terminal have
 unrestricted access to that terminal.  This section describes in
 more details what happens when a process in a background job tries
 to access its controlling terminal.
 
+@cindex @code{SIGTTIN}, from background job
 When a process in a background job tries to read from its controlling
 terminal, the process group is usually sent a @code{SIGTTIN} signal.
 This normally causes all of the processes in that group to stop.
@@ -163,6 +166,7 @@ However, if the reading process is ignoring or blocking this signal, or
 is a member of an orphaned process group, then @code{read} fails
 with a @code{EIO} error instead.
 
+@cindex @code{SIGTTOU}, from background job
 Similarly, when a process in a background job tries to write to its
 controlling terminal, the process group is normally sent a
 @code{SIGTTOU} signal.  However, the behavior is modified by the
@@ -243,7 +247,6 @@ holds information about a single subprocess.  Here are the relevant
 data structure declarations:
 
 @example
-
 /* @r{A Program is a single process.} */
 
 typedef struct program @{
@@ -326,6 +329,7 @@ int job_is_completed (Job *j)
 @node Initializing the Shell
 @subsection Initializing the Shell
 
+@cindex subshell
 There can only be a single shell performing job control at any one time
 within a single session.  When a shell program that normally performs
 job control is started, it has to be careful in case it has been invoked
@@ -350,6 +354,7 @@ wait for the user to tell the shell to do this.  If the job is continued
 again, it should repeat the check and stop itself again if it is still
 not in the foreground.
 
+@cindex job control, enabling
 Once the subshell is running as a foreground job in its parent shell, it
 can enable its own job control.  It does this by calling @code{setpgid}
 to put itself into its own process group, and then calling
@@ -443,6 +448,7 @@ by calling @code{setpgid}.  The first process in the job becomes its
 @dfn{process group leader}, and its process ID becomes the @dfn{process
 group ID} for the job.
 
+@cindex race conditions, relating to job control
 The shell should also call @code{setpgid} to put each of its child
 processes into the new process group.  This is because there is a
 potential timing problem: each child process must be put in the process
@@ -466,6 +472,7 @@ processes it creates also ignore these signals by inheritance.  This is
 definitely undesirable, so each child process should explicitly set the
 actions for these signals back to @code{SIG_DFL} as it is forked.
 
+@cindex stop signals, handling of
 (Applications also have a responsibility not to mess up the handling of
 stop signals.  In general, an application should assume that it inherits
 the correct handling of these signals from the shell.  Some applications
@@ -612,6 +619,7 @@ Now let's consider what actions must be taken by the shell when it
 launches a job into the foreground, and how this differs from what
 must be done when a background job is launched.
 
+@cindex foreground job, launching
 When a foreground job is launched, the shell must first give it access
 to the controlling terminal by calling @code{tcsetpgrp}.  Then, the
 shell should wait for processes in that process group to terminate or
@@ -665,6 +673,7 @@ void put_job_in_foreground (Job *j, int cont)
 @}
 @end example
 
+@cindex background job, launching
 If the process group is launched as a background job, the shell should
 remain in the foreground itself and continue to read commands from
 the terminal.  
@@ -689,6 +698,8 @@ void put_job_in_background (Job *j, int cont)
 @node Stopped and Terminated Jobs
 @subsection Stopped and Terminated Jobs
 
+@cindex stopped jobs, detecting
+@cindex terminated jobs, detecting
 When a foreground process is launched, the shell must block until all of
 the processes in that job have either terminated or stopped.  It can do
 this by calling the @code{waitpid} function.  The @code{WUNTRACED}
@@ -701,6 +712,7 @@ calling @code{waitpid} with the @code{WNOHANG} option.  A good place to
 put a such a check for terminated and stopped jobs is just before
 prompting for a new command.
 
+@cindex @code{SIGCHLD}, handling of
 You can also receive asynchronous notification that there is status
 information available for a child process by establishing a handler for
 @code{SIGCHLD} signals.
@@ -856,6 +868,7 @@ stopped explicitly by sending them a stop signal.  And, the terminal
 driver stops the current foreground process when the user types the
 SUSP character (usually @kbd{C-z}).
 
+@cindex stopped jobs, continuing
 The shell can continue a stopped job by sending a @code{SIGCONT} signal
 to its process group.  If the job is being continued in the foreground,
 the shell should first invoke @code{tcsetgrp} first to give the job
