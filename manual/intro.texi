@@ -590,6 +590,21 @@ If you don't specify the @samp{-ansi} option to GCC and don't define
 any of these macros explicitly, the effect as the same as defining
 @code{_GNU_SOURCE}.
 
+When you define a feature test macro to request a larger class of
+features, it is harmless to define in addition a feature test macro for
+a subset of those features.  For example, if you define
+@code{_POSIX_C_SOURCE}, then defining @code{_POSIX_SOURCE} as well has
+no effect.  Likewise, if you define @code{_GNU_SOURCE}, then defining
+either @code{_POSIX_SOURCE} or @code{_POSIX_C_SOURCE} or
+@code{_SVID_SOURCE} as well has no effect.
+
+Note, however, that the features of @code{_BSD_SOURCE} are not a subset
+of any of the other feature test macros supported.  This is because it
+defines BSD features that take precedence over the POSIX features that
+are requested by the other macros.  For this reason, defining
+@code{_BSD_SOURCE} in addition to the other feature test macros does
+have an effect: it causes the BSD features to take priority over the
+conflicting POSIX features.
 
 @node Roadmap to the Manual, Error Reporting, Using the Library, Top
 @section Roadmap to the Manual
