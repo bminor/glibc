@@ -1,5 +1,5 @@
 /* stdio on a Mach device port.
-   Translates \n to \r\n on output.
+   Translates \n to \r\n on output, echos input.
 
 Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
@@ -48,14 +48,20 @@ input (FILE *f)
   f->__eof = 0;
 
   nread = to_read;
-  if (err = device_read_inband ((device_t) f->__cookie, 0, f->__target,
-				to_read, buffer, &nread))
+  err = device_read_inband ((device_t) f->__cookie, 0, f->__target,
+			    to_read, buffer, &nread);
+
+  if (err)
     {
       f->__error = 1;
       f->__bufp = f->__get_limit = f->__put_limit = f->__buffer;
       errno = err;
       return EOF;
     }
+
+  /* Echo it back.  */
+  err = device_write_inband ((device_t) f->__cookie, 0, f->__target,
+			     buffer, nread, (int *) &to_read);
 
   if (f->__buffer == NULL)
     return (unsigned char) c;
