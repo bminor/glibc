@@ -86,6 +86,10 @@ static const char sccsid[] = "@(#)mutex.c	10.48 (Sleepycat) 5/23/98";
 #include "sparc.gcc"
 #endif
 
+#ifdef HAVE_ASSEM_ALPHA_GCC
+#include "alpha.gcc"
+#endif
+
 #ifdef HAVE_ASSEM_UTS4_CC
 #define TSL_INIT(x)
 #define TSL_SET(x)	(!uts_lock(x, 1))
