@@ -61,6 +61,7 @@ $(inlines:%=$(objpfx)%.c): $(objpfx)inline-%.c:
 	(echo '#define _EXTERN_INLINE /* Define the real function. */';\
 	 echo '#include "hurd/$*.h"') > $@-tmp
 	mv $@-tmp $@
+generated += $(inlines:%=%.c)
 
 # Get the proper definition of `hurd-srcdir'.
 include ../sysdeps/mach/hurd/Makefile
