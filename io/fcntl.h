@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 #define	_FCNTL_H	1
 #include <features.h>
 
-#include <gnu/fcntl.h>
+#include <fcntlbits.h>
 #include <filebits.h>
 
 
