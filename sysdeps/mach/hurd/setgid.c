@@ -51,7 +51,7 @@ DEFUN(__setgid, (gid), gid_t gid)
 	      (_hurd_id.aux.ngids - 1) * sizeof (gid_t));
 
       err = __USEPORT (AUTH, __auth_makeauth
-		       (port, NULL, 0,
+		       (port, NULL, 0, MACH_MSG_TYPE_COPY_SEND,
 			_hurd_id.gen.uids, _hurd_id.gen.nuids,
 			_hurd_id.aux.uids, _hurd_id.aux.nuids,
 			newgen, 1 + _hurd_id.gen.ngids,
