@@ -29,11 +29,6 @@ mode_t _hurd_umask;
 
 void _hurd_proc_init (char **argv);
 
-#ifdef MIB_HACKS
-struct _hurd_dtable _hurd_dtable;
-const struct _hurd_dtable_resizes _hurd_dtable_resizes;
-#endif
-
 /* Initialize the library data structures from the
    ints and ports passed to us by the exec server.
 
