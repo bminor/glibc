@@ -42,6 +42,8 @@ DEFUN(strchr, (s, c), CONST char *s AND int c)
        ++char_ptr)
     if (*char_ptr == c)
       return (PTR) char_ptr;
+    else if (*char_ptr == '\0')
+      return NULL;
 
   /* All these elucidatory comments refer to 4-byte longwords,
      but the theory applies equally well to 8-byte longwords.  */
