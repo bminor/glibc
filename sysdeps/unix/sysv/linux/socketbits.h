@@ -86,8 +86,19 @@ enum __socket_type
 #define	AF_INET6	PF_INET6
 #define	AF_MAX		PF_MAX
 
-/* Raw IP packet level.  */
+/* Socket level values.  Others are defined in the appropriate headers.
+
+   XXX These definitions also should go into the appropriate headers as
+   far as they are available.  */
+#define SOL_IPV6        41
+#define SOL_ICMPV6	58
 #define SOL_RAW		255
+#define SOL_AX25        257
+#define SOL_ATALK	258
+#define SOL_NETROM	259
+#define SOL_ROSE	260
+#define SOL_DECNET	261
+#define SOL_X25		262
 
 /* Maximum queue length specifiable by listen.  */
 #define SOMAXCONN	128
@@ -119,13 +130,13 @@ enum
 struct msghdr
   {
     __ptr_t msg_name;		/* Address to send to/receive from.  */
-    socklen_t msg_namelen;		/* Length of address data.  */
+    socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
-    int msg_iovlen;		/* Number of elements in the vector.  */
+    size_t msg_iovlen;		/* Number of elements in the vector.  */
 
     __ptr_t msg_control;	/* Ancillary data (eg BSD filedesc passing). */
-    socklen_t msg_controllen;	/* Ancillary data buffer length.  */
+    size_t msg_controllen;	/* Ancillary data buffer length.  */
 
     int msg_flags;		/* Flags on received message.  */
   };
@@ -133,7 +144,7 @@ struct msghdr
 /* Structure used for storage of ancillary data object information.  */
 struct cmsghdr
   {
-    socklen_t cmsg_len;		/* Length of data in cmsg_data plus length
+    size_t cmsg_len;		/* Length of data in cmsg_data plus length
 				   of cmsghdr structure.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
@@ -150,7 +161,7 @@ struct cmsghdr
 #endif
 #define CMSG_NXTHDR(mhdr, cmsg) __cmsg_nxthdr (mhdr, cmsg)
 #define CMSG_FIRSTHDR(mhdr) \
-  ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)			      \
+  ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)		      \
    ? (struct cmsghdr *) (mhdr)->msg_control : (struct cmsghdr *) NULL)
 
 
@@ -175,6 +186,16 @@ __cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg)
     return NULL;
   return (struct cmsghdr *) __p;
 }
+
+/* Socket level message types.  This must match the definitions in
+   <linux/socket.h>.  */
+enum
+  {
+    SCM_RIGHTS = 0x01,         /* Data array contains access rights.  */
+#define SCM_RIGHTS SCM_RIGHTS
+    __SCM_CREDENTIALS = 0x02,  /* Data array is `struct ucred'.  */
+    __SCM_CONNECT = 0x03       /* Data array is `struct scm_connect'.  */
+  };
 
 
 /* Get socket manipulation related informations from kernel headers.  */
