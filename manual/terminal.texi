@@ -179,7 +179,7 @@ A bit mask specifying output modes; see @ref{Output Modes}.
 A bit mask specifying control modes; see @ref{Control Modes}.
 
 @item tcflag_t c_lflag
-A bit mask specifying local modes; see @ref{Local Modes}.
+A bit mask specifying flags for local modes; see @ref{Local Modes}.
 
 @item cc_t c_cc[NCCS]
 An array specifying which characters are associated with various
