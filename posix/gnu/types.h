@@ -44,7 +44,11 @@ typedef unsigned short int __nlink_t;	/* Type of file link counts.  */
 typedef long int __off_t;	/* Type of file sizes and offsets.  */
 typedef int __pid_t;		/* Type of process identifications.  */
 typedef int __ssize_t;		/* Type of a byte count, or error.  */
+#ifdef	__GNUC__
+typedef unsigned long long int __fsid_t; /* Type of file system IDs.  */
+#else
 typedef __quad __fsid_t;	/* Type of file system IDs.  */
+#endif
 
 /* Everythin' else.  */
 typedef long int __daddr_t;	/* The type of a disk address.  */
