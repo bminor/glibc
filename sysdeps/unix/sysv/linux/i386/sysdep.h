@@ -154,9 +154,17 @@ __i686.get_pc_thunk.reg:						      \
   movl SYSCALL_ERROR_ERRNO@GOTNTPOFF(%ecx), %ecx;			      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
-  movl %edx, %gs:0(%ecx);						      \
+  SYSCALL_ERROR_HANDLER_TLS_STORE (%edx, %ecx);				      \
   orl $-1, %eax;							      \
   jmp L(pseudo_end);
+#   ifndef NO_TLS_DIRECT_SEG_REFS
+#    define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
+  movl src, %gs:(destoff)
+#   else
+#    define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
+  addl %gs:0, destoff;							      \
+  movl src, (destoff)
+#   endif
 #  else
 #   define SYSCALL_ERROR_HANDLER					      \
 0:pushl %ebx;								      \
