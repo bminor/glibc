@@ -124,9 +124,6 @@ __kill (pid_t pid, int sig)
 
   _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], &dealloc_proc, proc);
 
-  if (refport != MACH_PORT_NULL)
-    __mach_port_deallocate (__mach_task_self (), refport); /* XXX */
-
   if (ports != &oneport)
     __vm_deallocate (__mach_task_self (),
 		     (vm_address_t) ports, nports * sizeof (ports[0]));
