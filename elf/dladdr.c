@@ -43,16 +43,13 @@ dladdr (void *address, Dl_info *info)
       size_t n = match->l_phnum;
       if (n > 0)
 	{
-	  if (n > 0)
-	    {
-	      do
-		--n;
-	      while (match->l_phdr[n].p_type != PT_LOAD);
-	      if (addr >= (match->l_addr +
-			   match->l_phdr[n].p_vaddr + match->l_phdr[n].p_memsz))
-		/* Off the end of the highest-addressed shared object.  */
-		return 0;
-	    }
+	  do
+	    --n;
+	  while (match->l_phdr[n].p_type != PT_LOAD);
+	  if (addr >= (match->l_addr +
+		       match->l_phdr[n].p_vaddr + match->l_phdr[n].p_memsz))
+	    /* Off the end of the highest-addressed shared object.  */
+	    return 0;
 	}
     }
   else
