@@ -141,7 +141,7 @@ $(objpfx)dummy.dep:
 $(objpfx)%.o: $(objpfx)%.S $(before-compile); $(compile-command.S)
 $(objpfx)%.dep: $(objpfx)%.S $(before-compile); $(+make-deps)
 $(objpfx)%.o: $(objpfx)%.s $(before-compile); $(compile-command.s)
-$(objpfx)%.dep: $(objpfx).s $(objpfx)dummy.dep; $(make-dummy-dep)
+$(objpfx)%.dep: $(objpfx)%.s $(objpfx)dummy.dep; $(make-dummy-dep)
 $(objpfx)%.o: $(objpfx)%.c $(before-compile); $(compile-command.c)
 $(objpfx)%.dep: $(objpfx)%.c $(before-compile); $(+make-deps)
 
@@ -368,6 +368,7 @@ endif
 
 ifdef install
 $(addprefix $(bindir)/,$(install)): $(bindir)/%: $(objpfx)%
+	$(make-target-directory)
 	$(INSTALL) $< $@
 endif
 ifdef install-lib
