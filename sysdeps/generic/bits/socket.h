@@ -133,17 +133,17 @@ struct sockaddr
 /* Structure large enough to hold any socket address (with the historical
    exception of AF_UNIX).  We reserve 128 bytes.  */
 #if ULONG_MAX > 0xffffffff
-# define __ss_align	__uint64_t
+# define __ss_aligntype	__uint64_t
 #else
-# define __ss_align	__uint32_t
+# define __ss_aligntype	__uint32_t
 #endif
 #define _SS_SIZE	128
-#define _SS_PADSIZE	(_SS_SIZE - (2 * sizeof (__ss_align)))
+#define _SS_PADSIZE	(_SS_SIZE - (2 * sizeof (__ss_aligntype)))
 
 struct sockaddr_storage
   {
     __SOCKADDR_COMMON (__ss_);	/* Address family, etc.  */
-    __ss_align __ss_align;	/* Force desired alignment.  */
+    __ss_aligntype __ss_align;	/* Force desired alignment.  */
     char __ss_padding[_SS_PADSIZE];
   };
 
