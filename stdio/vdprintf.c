@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -37,8 +37,7 @@ DEFUN(vdprintf, (d, format, arg),
   memset ((PTR) &f, 0, sizeof(f));
   f.__magic = _IOMAGIC;
   f.__mode.__write = 1;
-  f.__fileno = d;
-  f.__cookie = (PTR) &f.__fileno;
+  f.__cookie = (PTR) d;
   f.__room_funcs = __default_room_functions;
   f.__io_funcs = __default_io_functions;
   f.__seen = 1;
