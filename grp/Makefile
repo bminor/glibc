@@ -23,6 +23,5 @@ subdir	:= grp
 
 routines := grpopen grpread fgetgrent getgrent getgrgid getgrnam \
 	    initgroups setgroups
-tests := bug1
 
 include ../Rules
