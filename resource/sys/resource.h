@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -13,7 +13,7 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #ifndef	_SYS_RESOURCE_H
@@ -77,11 +77,16 @@ int setrlimit __P ((enum __rlimit_resource __resource,
 
 /* Whose usage statistics do you want?  */
 enum __rusage_who
+/* The macro definitions are necessary because some programs want
+   to test for operating system features with #ifdef RUSAGE_SELF.
+   In ANSI C the reflexive definition is a no-op.  */
   {
     /* The calling process.  */
     RUSAGE_SELF = 0,
+#define	RUSAGE_SELF	RUSAGE_SELF
     /* All of its terminated child processes.  */
     RUSAGE_CHILDREN = -1,
+#define	RUSAGE_CHILDREN	RUSAGE_CHILDREN
   };
 
 #include <sys/time.h>		/* For `struct timeval'.  */
