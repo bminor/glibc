@@ -387,7 +387,7 @@ arguments are not in the same order.
 @comment BSD
 @deftypefun {void *} bzero (void *@var{block}, size_t @var{size})
 This is a partially obsolete alternative for @code{memset}, derived from
-BSD.  Note that it is not as general as @code{bmemset}, because the only
+BSD.  Note that it is not as general as @code{memset}, because the only
 value it can store is zero.
 @end deftypefun
 
@@ -768,11 +768,11 @@ strrchr ("hello, world", 'l')
 @comment string.h
 @comment ANSI
 @deftypefun {char *} strstr (const char *@var{haystack}, const char *@var{needle})
-This is like @code{strchr}, except that it searches @var{needle} for a
-substring @var{haystack} rather than just a single character.  It
-returns a pointer into the string @var{needle} that is the first
+This is like @code{strchr}, except that it searches @var{haystack} for a
+substring @var{needle} rather than just a single character.  It
+returns a pointer into the string @var{haystack} that is the first
 character of the substring, or a null pointer if no match was found.  If
-@var{haystack} is an empty string, the function returns @var{needle}.
+@var{needle} is an empty string, the function returns @var{haystack}.
 
 For example,
 @example
