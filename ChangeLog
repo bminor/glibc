@@ -1,5 +1,8 @@
 2005-03-05  Jakub Jelinek  <jakub@redhat.com>
 
+	* Makerules ($(inst_libdir)/libc.so): Use $(slibdir) instead of
+	$(inst_slibdir) in AS_NEEDED directive.
+
 	* include/bits/unistd.h: New file.
 	* include/bits/socket2.h: New file.
 
