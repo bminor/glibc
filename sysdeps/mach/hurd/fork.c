@@ -109,6 +109,10 @@ __fork (void)
       if (err = __task_create (__mach_task_self (), 1, &newtask))
 	goto lose;
 
+      /* Get the PID of the child from the proc server.  */
+      if (err = __USEPORT (PROC, __proc_task2pid (port, newtask, &pid)))
+	goto lose;
+      
       /* Fetch the names of all ports used in this task.  */
       if (err = __mach_port_names (__mach_task_self (),
 				   &portnames, &nportnames,
@@ -423,11 +427,10 @@ __fork (void)
       if (err = __thread_set_state (thread, MACHINE_THREAD_STATE_FLAVOR,
 				    (int *) &state, statecount))
 	goto lose;
-      if (err = __thread_resume (thread))
-	goto lose;
 
-      /* Get the PID of the child from the proc server.  */
-      err = __USEPORT (PROC, __proc_task2pid (port, newtask, &pid));
+      /* This must be the last thing we do; we can't assume that the
+	 child will remain alive for even a moment once we do this. */
+      err = __thread_resume (thread);
 
     lose:
       if (ports_locked)
