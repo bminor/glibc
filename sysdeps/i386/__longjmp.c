@@ -43,13 +43,25 @@ REGS;
    setjmp call there to return VAL, or 1 if VAL is 0.  */
 __NORETURN
 void
-DEFUN(__longjmp, (env, val), CONST jmp_buf env AND int val)
+DEFUN(__longjmp, (env, val),
+      CONST jmp_buf env AND
+      int val)
 {
-#define	REG(xx)	xx = (long int) env[0].__##xx
+  /* We specify explicit registers because, when not optimizing,
+     the compiler will generate code that uses the frame pointer
+     after it's been munged.  */
+
+  register CONST __typeof (env[0]) *e asm ("cx");
+  register int v asm ("dx");
+
+  e = env;
+  v = val;
+
+#define	REG(xx)	xx = (long int) e->__##xx
   REGS;
 
-  ax = val == 0 ? 1 : val;
-  asm volatile ("jmp %*%0" : : "g" (env[0].__pc));
+  ax = v == 0 ? 1 : v;
+  asm volatile ("jmp %*%0" : : "g" (e->__pc));
 
   /* NOTREACHED */
   abort ();
