@@ -1,4 +1,4 @@
-%define glibcrelease 56
+%define glibcrelease 57
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -186,6 +186,7 @@ Summary: A Name Service Caching Daemon (nscd).
 Group: System Environment/Daemons
 Conflicts: kernel < 2.2.0
 Requires: libselinux >= 1.17.10-1
+Conflicts: selinux-policy-targeted < 1.17.20
 Prereq: /sbin/chkconfig, /usr/sbin/useradd, /usr/sbin/userdel, sh-utils
 Autoreq: true
 
@@ -1238,6 +1239,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sat Sep 25 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-57
+- update from CVS
+
 * Wed Sep 22 2004 Roland McGrath <roland@redhat.com> 2.3.3-56
 - migrated CVS to fedora-branch in sources.redhat.com glibc repository
   - source tarballs renamed

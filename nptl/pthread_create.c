@@ -227,11 +227,6 @@ start_thread (void *arg)
 
   struct pthread *pd = (struct pthread *) arg;
 
-  /* Get the lock the parent locked to force synchronization.  */
-  lll_lock (pd->lock);
-  /* And give it up right away.  */
-  lll_unlock (pd->lock);
-
 #if HP_TIMING_AVAIL
   /* Remember the time when the thread was started.  */
   hp_timing_t now;
@@ -256,6 +251,18 @@ start_thread (void *arg)
     {
       /* Store the new cleanup handler info.  */
       THREAD_SETMEM (pd, cleanup_jmp_buf, &unwind_buf);
+
+      if (__builtin_expect (pd->stopped_start, 0))
+	{
+	  int oldtype = CANCEL_ASYNC ();
+
+	  /* Get the lock the parent locked to force synchronization.  */
+	  lll_lock (pd->lock);
+	  /* And give it up right away.  */
+	  lll_unlock (pd->lock);
+
+	  CANCEL_RESET (oldtype);
+	}
 
       /* Run the code the user provided.  */
 #ifdef CALL_THREAD_FCT
@@ -443,13 +450,19 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   /* Pass the descriptor to the caller.  */
   *newthread = (pthread_t) pd;
 
+  /* Remember whether the thread is detached or not.  In case of an
+     error we have to free the stacks of non-detached stillborn
+     threads.  */
+  bool is_detached = IS_DETACHED (pd);
+
   /* Start the thread.  */
   err = create_thread (pd, iattr, STACK_VARIABLES_ARGS);
   if (err != 0)
     {
     errout:
       /* Something went wrong.  Free the resources.  */
-      __deallocate_stack (pd);
+      if (!is_detached)
+	__deallocate_stack (pd);
       return err;
     }
 

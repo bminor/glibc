@@ -1,4 +1,93 @@
+2004-09-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/setuid.c (__setuid): Remove second
+	result declaration.
+
+2004-09-22  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Adjust whitespace.
+
+2004-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/daemon.c (daemon): Don't succeed if /dev/null cannot be
+	opened.
+
+	* nis/ypclnt.c (do_ypcall): Add one missing unlock.  Simplify the
+	code a bit.
+
+	* misc/daemon.c (daemon): Define errno in case /dev/null is not
+	the correct device.
+
+	* nis/ypclnt.c (yp_bind_file): Optimize a bit.  Minimal cleanups.
+
+2004-09-23  Andreas Jaeger  <aj@suse.de>
+
+	* locale/weight.h (findidx): Remove static, it's not supported
+	anymore with GCC 4.0 in a block scope.
+	* locale/weightwc.h (findidx): Likewise.
+	* posix/regcomp.c (seek_collating_symbol_entry): Likewise.
+	(lookup_collation_sequence_value): Likewise.
+	(build_range_exp): Likewise.
+	(build_collating_symbol): Likewise.
+	* iconv/iconvconfig.c (write_output): Likewise.
+	* elf/do-rel.h (elf_dynamic_do_rel): Likewise.
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela_relative): Remove
+	static, add always_inline attribute.
+	(elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Make static dependend
+	on !RESOLVE so that it's not defined in local scope.
+
+2004-09-23  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sysdep.h (INTERNAL_SYSCALL_NCS): Define.
+
+2004-09-23  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/sys/mount.h: Sync MS_RMT_MASK flag
+	and BLK* ioctls with linux kernel headers.
+
+2004-09-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/bits/dlfcn.h: Add RTLD_DEEPBIND.
+	* elf/dl-object.c (_dl_new_object): Add new parameter mode.  If mode
+	has RTLD_DEEPBIND set add local searchlist before global scope.
+	* sysdeps/generic/ldsodefs.h (_dl_new_object): Adjust prototype.
+	* elf/rtld.c: Adjust callers of _dl_new_object.
+	* elf/dl-load.c: Likewise.
+	(_dl_map_object_from_fd): If RTLD_DEEPBIND is used, don't do anything
+	for DF_SYMBOLIC.
+	* elf/dl-open.c (dl_open_writer): Pass RTLD_DEEPBIND flag on to
+	_dl_map_object_deps.
+	* elf/tst-deep1.c: New file.
+	* elf/tst-deep1mod1.c: New file.
+	* elf/tst-deep1mod2.c: New file.
+	* elf/tst-deep1mod3.c: New file.
+	* elf/Makefile: Add rules to build and run new tests.
+
+	* elf/dl-deps.c: Pretty printing.
+
+2004-09-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/alpha/sysdep.h (inline_syscall[0-6]): Change name
+	argument to numbers from syscall names.
+	(INLINE_SYSCALL1): Pass __NR_##name to inline_syscall##nr.
+	(INTERNAL_SYSCALL_NCS): Renamed from...
+	(INTERNAL_SYSCALL_1): ... this.  Use INTERNAL_SYSCALL_NCS.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h
+	(INTERNAL_SYSCALL_NCS): Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
+	(INTERNAL_SYSCALL_NCS): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (inline_syscall[0-6]):
+	Change name argument to numbers from syscall names.
+	(INLINE_SYSCALL, INTERNAL_SYSCALL): Adjust.
+	(INTERNAL_SYSCALL_NCS): Define.
+
 2004-09-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (malloc_printerr): Use syslog if writev failed.
 
 	* string/string.h: Add __nonnull annotations.
 	* stdlib/stdlib.h: Likewise.

@@ -61,21 +61,30 @@ daemon(nochdir, noclose)
 	if (!nochdir)
 		(void)__chdir("/");
 
-	if (!noclose
-	    && (fd = open_not_cancel(_PATH_DEVNULL, O_RDWR, 0)) != -1) {
+	if (!noclose) {
 		struct stat64 st;
 
-		if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) == 0
-		    && __builtin_expect (S_ISCHR (st.st_mode), 1) != 0
+		if ((fd = open_not_cancel(_PATH_DEVNULL, O_RDWR, 0)) != -1
+		    && (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0)
+			== 0)) {
+			if (__builtin_expect (S_ISCHR (st.st_mode), 1) != 0
 #if defined DEV_NULL_MAJOR && defined DEV_NULL_MINOR
-		    && st.st_rdev == makedev (DEV_NULL_MAJOR, DEV_NULL_MINOR)
+			    && (st.st_rdev
+				== makedev (DEV_NULL_MAJOR, DEV_NULL_MINOR))
 #endif
-		    ) {
-			(void)__dup2(fd, STDIN_FILENO);
-			(void)__dup2(fd, STDOUT_FILENO);
-			(void)__dup2(fd, STDERR_FILENO);
-			if (fd > 2)
-				(void)__close (fd);
+			    ) {
+				(void)__dup2(fd, STDIN_FILENO);
+				(void)__dup2(fd, STDOUT_FILENO);
+				(void)__dup2(fd, STDERR_FILENO);
+				if (fd > 2)
+					(void)__close (fd);
+			} else {
+				/* We must set an errno value since no
+				   function call actually failed.  */
+				close_not_cancel_no_status (fd);
+				__set_errno (ENODEV);
+				return -1;
+			}
 		} else {
 			close_not_cancel_no_status (fd);
 			return -1;
