@@ -840,9 +840,12 @@ for i in $RPM_BUILD_ROOT%{_prefix}/bin/{xtrace,memusage}; do
 done
 
 grep '%{_prefix}/%{_lib}/lib.*_p\.a' < rpm.filelist > profile.filelist || :
-egrep "(%{_prefix}/include)|(%{_infodir})" < rpm.filelist |
-	grep -v %{_prefix}/include/nptl |
-	grep -v %{_infodir}/dir > devel.filelist
+grep '%{_infodir}' < rpm.filelist | grep -v '%{_infodir}/dir' > devel.filelist
+grep '%{_prefix}/include/gnu/stubs-[3264]\.h' < rpm.filelist >> devel.filelist
+
+grep '%{_prefix}/include' < rpm.filelist |
+	egrep -v '%{_prefix}/include/(nptl|gnu/stubs-[3264]+\.h)' \
+		> headers.filelist
 
 mv rpm.filelist rpm.filelist.full
 grep -v '%{_prefix}/%{_lib}/lib.*_p.a' rpm.filelist.full |
@@ -852,10 +855,6 @@ grep '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist >> devel.filelist
 grep '%{_prefix}/%{_lib}/.*\.o' < rpm.filelist >> devel.filelist
 grep '%{_prefix}/%{_lib}/lib.*\.so' < rpm.filelist >> devel.filelist
 grep '%{_mandir}' < rpm.filelist >> devel.filelist
-
-grep '%{_prefix}/include' < devel.filelist > headers.filelist
-grep -v '%{_prefix}/include' < devel.filelist > devel.filelist.tmp
-mv -f devel.filelist.tmp devel.filelist
 
 mv rpm.filelist rpm.filelist.full
 grep -v '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist.full |
@@ -1637,7 +1636,7 @@ rm -f *.filelist*
 - update from CVS
   - fix BZ #151, #362, #381, #407
   - fdim fix for +inf/+inf (BZ #376)
- 
+
 * Sun Sep 26 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-58
 - update from CVS
   - vasprintf fix (BZ #346)
