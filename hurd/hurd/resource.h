@@ -20,10 +20,19 @@ Cambridge, MA 02139, USA.  */
 #ifndef _HURD_RESOURCE_H
 #define _HURD_RESOURCE_H
 
+#include <sys/types.h>
 #include <sys/resource.h>
 
 /* This array contains the current resource limits for the process.  */
 extern struct rlimit _hurd_rlimits[RLIM_NLIMITS];
 extern struct mutex _hurd_rlimit_lock; /* Locks _hurd_rlimits.  */
+
+
+/* Helper function for getpriority and setpriority.
+   Maps FUNCTION over all the processes specified by WHICH and WHO.
+   Returns FUNCTION's result the first time it returns nonzero.
+   If FUNCTION never returns nonzero, this returns zero.  */
+extern error_t _hurd_priority_which_map (enum __priority_which which, int who,
+					 error_t (*function) (pid_t));
 
 #endif
