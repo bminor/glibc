@@ -668,9 +668,9 @@ rm -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libpthread.so
 sed "s| /%{_lib}/| /%{_lib}/$SubDir/|" $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/libc.so \
   > $RPM_BUILD_ROOT/%{_lib}/tls/libc.so
 ln -sf /%{_lib}/tls/libc.so $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libc.so
-sed "s|^GROUP (.*)|GROUP ( /%{_lib}/$SubDir/"`basename $RPM_BUILD_ROOT/%{_lib}/libpthread.so.*`' %{_prefix}/%{_lib}/nptl/libpthread_nonshared.a )|' \
+sed "s|^GROUP (.*)|GROUP ( /%{_lib}/$SubDir/"`basename $RPM_BUILD_ROOT/%{_lib}/libpthread.so.*`' %{_prefix}/%{_lib}/libpthread_nonshared.a )|' \
   $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/libc.so \
-  > $RPM_BUILD_ROOT%{_lib}/tls/libpthread.so
+  > $RPM_BUILD_ROOT/%{_lib}/tls/libpthread.so
 ln -sf /%{_lib}/tls/libpthread.so $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libpthread.so
 %ifarch %{rtkaioarches}
 ln -sf /%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed 's/librt-/librtkaio-/'` \
@@ -690,7 +690,9 @@ pushd $RPM_BUILD_ROOT/nptl%{_prefix}/include
     if ! [ -f $RPM_BUILD_ROOT%{_prefix}/include/$i ] \
        || ! cmp -s $i $RPM_BUILD_ROOT%{_prefix}/include/$i; then
       mkdir -p $RPM_BUILD_ROOT%{_prefix}/include/linuxthreads/`dirname $i`
-      cp -a $RPM_BUILD_ROOT%{_prefix}/include/{,linuxthreads/}$i
+      if [ -f $RPM_BUILD_ROOT%{_prefix}/include/$i ]; then
+        cp -a $RPM_BUILD_ROOT%{_prefix}/include/{,linuxthreads/}$i
+      fi
       cp -a $i $RPM_BUILD_ROOT%{_prefix}/include/$i
     fi
   done
@@ -937,7 +939,7 @@ cp linuxthreads/FAQ.html documentation/FAQ-threads.html
 cp -r linuxthreads/Examples documentation/examples.threads
 cp crypt/README.ufc-crypt documentation/README.ufc-crypt
 cp timezone/README documentation/README.timezone
-cp ChangeLog* documentation
+cp ChangeLog{,.14,.15} documentation
 gzip -9n documentation/ChangeLog*
 
 %ifarch s390x
@@ -1247,7 +1249,7 @@ rm -f *.filelist*
 %files -f headers.filelist headers
 %defattr(-,root,root)
 %ifarch %{nptlarches}
-%{_prefix}/include/nptl
+%{_prefix}/include/linuxthreads
 %endif
 
 %files -f profile.filelist profile
@@ -1299,7 +1301,7 @@ rm -f *.filelist*
 %endif
 
 %changelog
-* Fri Apr  1 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-19
+* Sat Apr  2 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-19
 - update from CVS
   - fix nextafterl and several other libm routines on ia64
   - fix initgroups (BZ#661)
@@ -1309,6 +1311,8 @@ rm -f *.filelist*
   against LinuxThreads
 - package /usr/lib/debug/%{_lib}/tls/i{5,6}86 symlinks in
   i386 glibc-debuginfo
+- limit number of ChangeLog* files in glibc-common %%doc
+  to last 2.5 years of changes only to save space
 
 * Fri Mar 25 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-18
 - fix build on 64-bit arches with new GCC
