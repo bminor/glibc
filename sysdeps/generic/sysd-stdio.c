@@ -32,14 +32,14 @@ int
 DEFUN(__stdio_read, (cookie, buf, n),
       PTR cookie AND register char *buf AND register size_t n)
 {
+  CONST int fd = (int) cookie;
 #if	defined (EINTR) && defined (EINTR_REPEAT)
-  CONST int fd = *(int *) cookie;
   int save = errno;
   int nread;
 
  try:;
   errno = 0;
-  nread = __read(fd, buf, (int) n);
+  nread = __read (fd, buf, (int) n);
   if (nread < 0)
     {
       if (errno == EINTR)
@@ -50,7 +50,7 @@ DEFUN(__stdio_read, (cookie, buf, n),
   return nread;
 
 #else	/* No EINTR.  */
-  return __read(*(int *) cookie, buf, (int) n);
+  return __read (fd, buf, n);
 #endif
 }
 
@@ -60,7 +60,7 @@ int
 DEFUN(__stdio_write, (cookie, buf, n),
       PTR cookie AND register CONST char *buf AND register size_t n)
 {
-  CONST int fd = *(int *) cookie;
+  CONST int fd = (int) cookie;
   register size_t written = 0;
 
   while (n > 0)
@@ -93,7 +93,7 @@ DEFUN(__stdio_seek, (cookie, pos, whence),
       PTR cookie AND fpos_t *pos AND int whence)
 {
   off_t new;
-  new = __lseek(*(int *) cookie, (off_t) *pos, whence);
+  new = __lseek ((int) cookie, (off_t) *pos, whence);
   if (new < 0)
     return 1;
   *pos = (fpos_t) new;
@@ -105,15 +105,25 @@ DEFUN(__stdio_seek, (cookie, pos, whence),
 int
 DEFUN(__stdio_close, (cookie), PTR cookie)
 {
-  return __close(*(int *) cookie);
+  return __close ((int) cookie);
+}
+
+/* Return the POSIX.1 file descriptor associated with COOKIE,
+   or -1 for errors.  If COOKIE does not relate to any POSIX.1 file
+   descriptor, this should return -1 with errno set to EOPNOTSUPP.  */
+int
+DEFUN(__stdio_fileno, (cookie), PTR cookie)
+{
+  return (int) cookie;
 }
 
 
 /* Open the given file with the mode given in the __io_mode argument.  */
-PTR
-DEFUN(__stdio_open, (filename, m, fdptr),
-      CONST char *filename AND __io_mode m AND int *fdptr)
+int
+DEFUN(__stdio_open, (filename, m, cookieptr),
+      CONST char *filename AND __io_mode m AND PTR *cookieptr)
 {
+  int fd;
   int mode;
 
   if (m.__read && m.__write)
@@ -129,11 +139,14 @@ DEFUN(__stdio_open, (filename, m, fdptr),
     mode |= O_TRUNC;
 
   if (m.__create)
-    *fdptr = __open(filename, mode | O_CREAT,
-		    S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
+    fd = __open (filename, mode | O_CREAT,
+		 S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
   else
-    *fdptr = __open(filename, mode);
+    fd = __open (filename, mode);
 
-  return NULL;
+  if (fd < 0)
+    return -1;
 
+  *cookieptr = (PTR) fd;
+  return 0;
 }
