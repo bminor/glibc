@@ -71,6 +71,8 @@ please let me know.
 	  object, consider re-linking
 	Why?  What should I do?
 2.16	What do I need for C++ development?
+2.17	Programs using libc have their messages translated, but other
+	behavior is not localized (e.g. collating order); why?
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -649,6 +651,22 @@ problem.
 If you're upgrading from glibc 2.0.x to 2.1 you have to recompile
 libstc++ since the library compiled for 2.0 is not compatible due to the new
 Large File Support (LFS) in version 2.1.
+
+
+2.17	Programs using libc have their messages translated, but other
+	behavior is not localized (e.g. collating order); why?
+
+{ZW} Translated messages are automatically installed, but the locale
+database that controls other behaviors is not.  You need to run
+localedef to install this database, after you have run `make
+install'.  For example, to set up the French Canadian locale, simply
+issue the command
+
+    localedef -i fr_CA -f ISO-8859-1 fr_CA
+
+Please see localedata/README in the source tree for further details.
+You only get the locale database if the localedata add-on is installed
+when building the GNU C library.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
