@@ -32,9 +32,12 @@ FILE *__stdio_head = NULL;
 static void
 init_stdio (void)
 {
-  inline FILE *init (int fd)
+  inline void init (FILE **streamptr, int fd)
     {
-      FILE *s = __newstream ();
+      /* We want to use the existing FILE object if one has been allocated.
+	 (This will only be the case if our image came from something like
+	 Emacs's unexec, where we were called in the first run.)  */
+      FILE *s = *streamptr ?: __newstream ();
       struct hurd_fd *d = _hurd_fd_get (fd);
       if (d == NULL)
 	/* There is no file descriptor allocated.  We want the standard
@@ -44,12 +47,14 @@ init_stdio (void)
 	   stream.  Operations will fail until ports are installed in the
 	   file descriptor.  */
 	d = _hurd_alloc_fd (NULL, fd);
-      __spin_unlock (&d->port.lock);
-      s->__cookie = d;
-      return s;
+      if (d)
+	__spin_unlock (&d->port.lock);
+      if (s)
+	s->__cookie = d;
+      *streamptr = s;
     }
 #define S(NAME, FD, MODE) \
-  (NAME = init (FD))->__mode.__##MODE = 1;
+  init (&NAME, FD); if (NAME) NAME->__mode.__##MODE = 1;
 
   S (stdin, STDIN_FILENO, read);
   S (stdout, STDOUT_FILENO, write);
@@ -57,7 +62,8 @@ init_stdio (void)
 
 #undef S
 
-  stderr->__userbuf = 1;	/* stderr is always unbuffered.  */
+  if (stderr)
+    stderr->__userbuf = 1;	/* stderr is always unbuffered.  */
 
   (void) &init_stdio;		/* Avoid "defined but not used" warning.  */
 }
