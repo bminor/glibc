@@ -678,6 +678,8 @@ This is the minimum value that can be represented by a @w{@code{signed char}}.
 @comment limits.h
 @comment ANSI
 @item SCHAR_MAX
+@comment limits.h
+@comment ANSI
 @itemx UCHAR_MAX
 
 These are the maximum values that can be represented by a
@@ -710,6 +712,8 @@ short int}}.  On most machines that the GNU C library runs on,
 @comment limits.h
 @comment ANSI
 @item SHRT_MAX
+@comment limits.h
+@comment ANSI
 @itemx USHRT_MAX
 
 These are the maximum values that can be represented by a
@@ -727,6 +731,8 @@ a 32-bit quantity.
 @comment limits.h
 @comment ANSI
 @item INT_MAX
+@comment limits.h
+@comment ANSI
 @itemx UINT_MAX
 
 These are the maximum values that can be represented by a
@@ -743,6 +749,8 @@ integers are 32-bit quantities, the same size as @code{int}.
 @comment limits.h
 @comment ANSI
 @item LONG_MAX
+@comment limits.h
+@comment ANSI
 @itemx ULONG_MAX
 
 These are the maximum values that can be represented by a
@@ -759,10 +767,18 @@ long long int}}.  On most machines that the GNU C system runs on,
 @comment limits.h
 @comment GNU
 @item LONG_LONG_MAX
+@comment limits.h
+@comment ANSI
 @itemx ULONG_LONG_MAX
 
 These are the maximum values that can be represented by a @code{signed
 long long int} and @code{unsigned long long int}, respectively.
+
+@comment limits.h
+@comment GNU
+@item WCHAR_MAX
+
+This is the maximum value that can be represented by a @code{wchar_t}.
 @end table
 
 The header file @file{limits.h} also defines some additional constants
