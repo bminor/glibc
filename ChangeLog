@@ -1,3 +1,28 @@
+1997-04-21 16:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Net release 2.0.3.
+
+1997-04-21 13:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/seed48_r.c: Also reset `a' and `c' to default values.
+	* stdlib/srand48_r.c: Likewise.
+
+1997-04-21 13:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/arith.texi: Add description for INFINITY, _Imaginary_I,
+	fpclassify & friends, and complex number operations.
+	Update various other math functions for ISO C 9X.
+	* manual/math.texi: Update various entries for ISO C 9X.
+	Add description for complex number functions.
+	Add description of rand48 function family.
+	* manual/string.h: Add description of a64l and l64a.
+
+	* math/cmathcalls.h: Fix typo.
+
+	* stdlib/a64l.c: Pretty printing.
+
+	* stdlib/seed48_r.c: Also reset `a' and `c' to default values.
+	* stdlib/srand48_r.c: Likewise.
 1997-04-20 01:28  Richard Henderson  <rth@tamu.edu>
 
 	* rellns-sh: Handle files in the same directory correctly.
