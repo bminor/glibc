@@ -5,8 +5,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.0.3\n"
-"POT-Creation-Date: 1997-03-30 19:08+0200\n"
+"Project-Id-Version: libc 2.0.5\n"
+"POT-Creation-Date: 1997-08-21 04:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+DIST\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgstr ""
 msgid "   program vers proto   port\n"
 msgstr ""
 
-#: time/zic.c:419
+#: time/zic.c:421
 #, c-format
 msgid " (rule from \"%s\", line %d)"
 msgstr ""
@@ -43,22 +43,22 @@ msgstr ""
 msgid " done\n"
 msgstr ""
 
-#: time/zic.c:416
+#: time/zic.c:418
 #, c-format
 msgid "\"%s\", line %d: %s"
 msgstr ""
 
-#: time/zic.c:943
+#: time/zic.c:947
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr ""
 
-#: time/zic.c:951
+#: time/zic.c:955
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr ""
 
-#: time/zic.c:754
+#: time/zic.c:758
 #, c-format
 msgid "%s in ruleless zone"
 msgstr ""
@@ -78,7 +78,7 @@ msgstr ""
 msgid "%s%sUnknown signal %d\n"
 msgstr ""
 
-#: time/zic.c:2172
+#: time/zic.c:2185
 #, c-format
 msgid "%s: %d did not sign extend correctly\n"
 msgstr ""
@@ -88,42 +88,42 @@ msgstr ""
 msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
 msgstr ""
 
-#: time/zic.c:1443
+#: time/zic.c:1456
 #, c-format
 msgid "%s: Can't create %s: %s\n"
 msgstr ""
 
-#: time/zic.c:2150
+#: time/zic.c:2163
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr ""
 
-#: time/zic.c:608
+#: time/zic.c:610
 #, c-format
 msgid "%s: Can't link from %s to %s: %s\n"
 msgstr ""
 
-#: time/zic.c:780
+#: time/zic.c:784
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr ""
 
-#: time/zic.c:1433
+#: time/zic.c:1446
 #, c-format
 msgid "%s: Can't remove %s: %s\n"
 msgstr ""
 
-#: time/zic.c:849
+#: time/zic.c:853
 #, c-format
 msgid "%s: Error closing %s: %s\n"
 msgstr ""
 
-#: time/zic.c:842
+#: time/zic.c:846
 #, c-format
 msgid "%s: Error reading %s\n"
 msgstr ""
 
-#: time/zic.c:1507
+#: time/zic.c:1520
 #, c-format
 msgid "%s: Error writing %s\n"
 msgstr ""
@@ -133,42 +133,42 @@ msgstr ""
 msgid "%s: Error writing standard output "
 msgstr ""
 
-#: time/zic.c:827
+#: time/zic.c:831
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s\n"
 msgstr ""
 
-#: time/zic.c:357
+#: time/zic.c:359
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr ""
 
-#: time/zic.c:522
+#: time/zic.c:524
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr ""
 
-#: time/zic.c:482
+#: time/zic.c:484
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr ""
 
-#: time/zic.c:492
+#: time/zic.c:494
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr ""
 
-#: time/zic.c:502
+#: time/zic.c:504
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr ""
 
-#: time/zic.c:512
+#: time/zic.c:514
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr ""
 
-#: time/zic.c:1872
+#: time/zic.c:1885
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr ""
@@ -223,7 +223,7 @@ msgstr ""
 msgid "%s: option requires an argument -- %c\n"
 msgstr ""
 
-#: time/zic.c:834 time/zic.c:1246 time/zic.c:1266
+#: time/zic.c:838 time/zic.c:1251 time/zic.c:1275
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr ""
@@ -243,7 +243,7 @@ msgstr ""
 msgid "%s: unrecognized option `--%s'\n"
 msgstr ""
 
-#: time/zic.c:441
+#: time/zic.c:443
 #, c-format
 msgid ""
 "%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d "
@@ -537,7 +537,7 @@ msgstr ""
 msgid "Continued"
 msgstr ""
 
-#: catgets/gencat.c:169 db/makedb.c:120 locale/programs/locale.c:187
+#: catgets/gencat.c:169 db/makedb.c:120 locale/programs/locale.c:191
 #: locale/programs/localedef.c:180
 #, c-format
 msgid ""
@@ -791,11 +791,11 @@ msgstr ""
 msgid "Invalid argument"
 msgstr ""
 
-#: posix/regex.c:960
+#: posix/regex.c:978
 msgid "Invalid back reference"
 msgstr ""
 
-#: posix/regex.c:958
+#: posix/regex.c:976
 msgid "Invalid character class name"
 msgstr ""
 
@@ -807,11 +807,11 @@ msgstr ""
 msgid "Invalid client verifier"
 msgstr ""
 
-#: posix/regex.c:957
+#: posix/regex.c:975
 msgid "Invalid collation character"
 msgstr ""
 
-#: posix/regex.c:964
+#: posix/regex.c:982
 msgid "Invalid content of \\{\\}"
 msgstr ""
 
@@ -832,15 +832,15 @@ msgstr ""
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr ""
 
-#: posix/regex.c:967
+#: posix/regex.c:985
 msgid "Invalid preceding regular expression"
 msgstr ""
 
-#: posix/regex.c:965
+#: posix/regex.c:983
 msgid "Invalid range end"
 msgstr ""
 
-#: posix/regex.c:956
+#: posix/regex.c:974
 msgid "Invalid regular expression"
 msgstr ""
 
@@ -911,7 +911,7 @@ msgstr ""
 msgid "Machine is not on the network"
 msgstr ""
 
-#: posix/regex.c:966
+#: posix/regex.c:984
 msgid "Memory exhausted"
 msgstr ""
 
@@ -1000,7 +1000,7 @@ msgstr ""
 msgid "No locks available"
 msgstr ""
 
-#: posix/regex.c:955
+#: posix/regex.c:973
 msgid "No match"
 msgstr ""
 
@@ -1012,7 +1012,7 @@ msgstr ""
 msgid "No more records in map database"
 msgstr ""
 
-#: posix/regex.c:5324
+#: posix/regex.c:5434
 msgid "No previous regular expression"
 msgstr ""
 
@@ -1080,7 +1080,7 @@ msgstr ""
 msgid "Object is remote"
 msgstr ""
 
-#: time/zic.c:1966
+#: time/zic.c:1979
 msgid "Odd number of quotation marks"
 msgstr ""
 
@@ -1150,7 +1150,7 @@ msgstr ""
 msgid "Power failure"
 msgstr ""
 
-#: posix/regex.c:968
+#: posix/regex.c:986
 msgid "Premature end of regular expression"
 msgstr ""
 
@@ -1313,7 +1313,7 @@ msgstr ""
 msgid "Read-only file system"
 msgstr ""
 
-#: posix/regex.c:969
+#: posix/regex.c:987
 msgid "Regular expression too big"
 msgstr ""
 
@@ -1329,8 +1329,8 @@ msgstr ""
 msgid "Remove password or make file unreadable by others."
 msgstr ""
 
-#: catgets/gencat.c:224 db/makedb.c:227 locale/programs/locale.c:257
-#: locale/programs/localedef.c:412
+#: catgets/gencat.c:224 db/makedb.c:227 locale/programs/locale.c:262
+#: locale/programs/localedef.c:415
 msgid "Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"
 msgstr ""
 
@@ -1467,7 +1467,7 @@ msgstr ""
 msgid "Structure needs cleaning"
 msgstr ""
 
-#: nis/ypclnt.c:689 nis/ypclnt.c:763 posix/regex.c:954
+#: nis/ypclnt.c:689 nis/ypclnt.c:763 posix/regex.c:972
 #: stdio-common/../sysdeps/gnu/errlist.c:7
 msgid "Success"
 msgstr ""
@@ -1551,7 +1551,7 @@ msgstr ""
 msgid "Trace/breakpoint trap"
 msgstr ""
 
-#: posix/regex.c:959
+#: posix/regex.c:977
 msgid "Trailing backslash"
 msgstr ""
 
@@ -1576,8 +1576,8 @@ msgstr ""
 msgid "Transport endpoint is not connected"
 msgstr ""
 
-#: catgets/gencat.c:208 db/makedb.c:209 locale/programs/locale.c:241
-#: locale/programs/localedef.c:393
+#: catgets/gencat.c:208 db/makedb.c:209 locale/programs/locale.c:246
+#: locale/programs/localedef.c:396
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr ""
@@ -1626,19 +1626,19 @@ msgstr ""
 msgid "Unknown ypbind error"
 msgstr ""
 
-#: posix/regex.c:962
+#: posix/regex.c:980
 msgid "Unmatched ( or \\("
 msgstr ""
 
-#: posix/regex.c:970
+#: posix/regex.c:988
 msgid "Unmatched ) or \\)"
 msgstr ""
 
-#: posix/regex.c:961
+#: posix/regex.c:979
 msgid "Unmatched [ or [^"
 msgstr ""
 
-#: posix/regex.c:963
+#: posix/regex.c:981
 msgid "Unmatched \\{"
 msgstr ""
 
@@ -1658,7 +1658,8 @@ msgid ""
 "Usage: %s [OPTION]... -o OUTPUT-FILE [INPUT-FILE]...\n"
 "       %s [OPTION]... [OUTPUT-FILE [INPUT-FILE]...]\n"
 "Mandatory arguments to long options are mandatory for short options too.\n"
-"  -H, --header        create C header file containing symbol definitions\n"
+"  -H, --header=NAME   create C header file NAME containing symbol "
+"definitions\n"
 "  -h, --help          display this help and exit\n"
 "      --new           do not use existing catalog, force new output file\n"
 "  -o, --output=NAME   write output to file NAME\n"
@@ -1683,7 +1684,7 @@ msgid ""
 "If INPUT-FILE is -, input is read from standard input.\n"
 msgstr ""
 
-#: locale/programs/localedef.c:397
+#: locale/programs/localedef.c:400
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... name\n"
@@ -1702,7 +1703,7 @@ msgid ""
 "                       locale files  : %s\n"
 msgstr ""
 
-#: locale/programs/locale.c:245
+#: locale/programs/locale.c:250
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... name\n"
@@ -1745,7 +1746,7 @@ msgstr ""
 msgid "Virtual timer expired"
 msgstr ""
 
-#: time/zic.c:1871
+#: time/zic.c:1884
 msgid "Wild result from command execution"
 msgstr ""
 
@@ -1754,7 +1755,7 @@ msgstr ""
 msgid "Window changed"
 msgstr ""
 
-#: catgets/gencat.c:174 db/makedb.c:125 locale/programs/locale.c:192
+#: catgets/gencat.c:174 db/makedb.c:125 locale/programs/locale.c:196
 #: locale/programs/localedef.c:185
 #, c-format
 msgid "Written by %s.\n"
@@ -1782,7 +1783,7 @@ msgstr ""
 msgid "You really blew it this time"
 msgstr ""
 
-#: time/zic.c:1048
+#: time/zic.c:1052
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
 
@@ -1831,11 +1832,11 @@ msgstr ""
 msgid "bad argument"
 msgstr ""
 
-#: time/zic.c:1170
+#: time/zic.c:1174
 msgid "blank FROM field on Link line"
 msgstr ""
 
-#: time/zic.c:1174
+#: time/zic.c:1178
 msgid "blank TO field on Link line"
 msgstr ""
 
@@ -1859,7 +1860,7 @@ msgstr ""
 msgid "cache_set: victim not found"
 msgstr ""
 
-#: time/zic.c:1698
+#: time/zic.c:1711
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 
@@ -1868,7 +1869,7 @@ msgstr ""
 msgid "can't reassign procedure number %d\n"
 msgstr ""
 
-#: locale/programs/localedef.c:291
+#: locale/programs/localedef.c:294
 #, c-format
 msgid "cannot `stat' locale file `%s'"
 msgstr ""
@@ -1907,7 +1908,7 @@ msgstr ""
 msgid "cannot open output file `%s'"
 msgstr ""
 
-#: locale/programs/locfile.c:1008
+#: locale/programs/locfile.c:1020
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
 msgstr ""
@@ -1916,27 +1917,27 @@ msgstr ""
 msgid "cannot process order specification"
 msgstr ""
 
-#: locale/programs/locale.c:304
+#: locale/programs/locale.c:444
 #, c-format
 msgid "cannot read character map directory `%s'"
 msgstr ""
 
-#: locale/programs/locale.c:279
+#: locale/programs/locale.c:301
 #, c-format
 msgid "cannot read locale directory `%s'"
 msgstr ""
 
-#: locale/programs/localedef.c:313
+#: locale/programs/localedef.c:316
 #, c-format
 msgid "cannot read locale file `%s'"
 msgstr ""
 
-#: locale/programs/localedef.c:338
+#: locale/programs/localedef.c:341
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr ""
 
-#: locale/programs/localedef.c:381
+#: locale/programs/localedef.c:384
 msgid "category data requested more than once: should not happen"
 msgstr ""
 
@@ -2053,7 +2054,7 @@ msgstr ""
 msgid "duplicate set definition"
 msgstr ""
 
-#: time/zic.c:963
+#: time/zic.c:967
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr ""
@@ -2102,11 +2103,11 @@ msgstr ""
 msgid "expect string argument for `copy'"
 msgstr ""
 
-#: time/zic.c:854
+#: time/zic.c:858
 msgid "expected continuation line not found"
 msgstr ""
 
-#: locale/programs/locfile.c:1032
+#: locale/programs/locfile.c:1044
 #, c-format
 msgid "failure while writing data for category `%s'"
 msgstr ""
@@ -2159,11 +2160,11 @@ msgstr ""
 msgid "get_myaddress: ioctl (get interface configuration)"
 msgstr ""
 
-#: time/zic.c:1147
+#: time/zic.c:1151
 msgid "illegal CORRECTION field on Leap line"
 msgstr ""
 
-#: time/zic.c:1151
+#: time/zic.c:1155
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr ""
 
@@ -2224,19 +2225,19 @@ msgstr ""
 msgid "incorrectly formatted file"
 msgstr ""
 
-#: time/zic.c:811
+#: time/zic.c:815
 msgid "input line of unknown type"
 msgstr ""
 
-#: time/zic.c:1760
+#: time/zic.c:1773
 msgid "internal error - addtype called with bad isdst"
 msgstr ""
 
-#: time/zic.c:1768
+#: time/zic.c:1781
 msgid "internal error - addtype called with bad ttisgmt"
 msgstr ""
 
-#: time/zic.c:1764
+#: time/zic.c:1777
 msgid "internal error - addtype called with bad ttisstd"
 msgstr ""
 
@@ -2245,43 +2246,43 @@ msgstr ""
 msgid "internal error in %s, line %u"
 msgstr ""
 
-#: time/zic.c:1019
+#: time/zic.c:1023
 msgid "invalid GMT offset"
 msgstr ""
 
-#: time/zic.c:1022
+#: time/zic.c:1026
 msgid "invalid abbreviation format"
 msgstr ""
 
-#: time/zic.c:1112 time/zic.c:1313 time/zic.c:1327
+#: time/zic.c:1116 time/zic.c:1326 time/zic.c:1340
 msgid "invalid day of month"
 msgstr ""
 
-#: time/zic.c:1270
+#: time/zic.c:1279
 msgid "invalid ending year"
 msgstr ""
 
-#: time/zic.c:1084
+#: time/zic.c:1088
 msgid "invalid leaping year"
 msgstr ""
 
-#: time/zic.c:1099 time/zic.c:1202
+#: time/zic.c:1103 time/zic.c:1206
 msgid "invalid month name"
 msgstr ""
 
-#: time/zic.c:918
+#: time/zic.c:922
 msgid "invalid saved time"
 msgstr ""
 
-#: time/zic.c:1250
+#: time/zic.c:1255
 msgid "invalid starting year"
 msgstr ""
 
-#: time/zic.c:1128 time/zic.c:1230
+#: time/zic.c:1132 time/zic.c:1235
 msgid "invalid time of day"
 msgstr ""
 
-#: time/zic.c:1318
+#: time/zic.c:1331
 msgid "invalid weekday name"
 msgstr ""
 
@@ -2293,11 +2294,11 @@ msgstr ""
 msgid "line before ellipsis does not contain definition for character constant"
 msgstr ""
 
-#: time/zic.c:791
+#: time/zic.c:795
 msgid "line too long"
 msgstr ""
 
-#: locale/programs/localedef.c:285
+#: locale/programs/localedef.c:288
 #, c-format
 msgid "locale file `%s', used in `copy' statement, not found"
 msgstr ""
@@ -2316,12 +2317,12 @@ msgstr ""
 
 #: locale/programs/ld-collate.c:167 locale/programs/ld-collate.c:173
 #: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1442
-#: locale/programs/ld-collate.c:1471 locale/programs/locfile.c:962
+#: locale/programs/ld-collate.c:1471 locale/programs/locfile.c:974
 #: locale/programs/xmalloc.c:68 posix/getconf.c:250
 msgid "memory exhausted"
 msgstr ""
 
-#: malloc/obstack.c:462
+#: malloc/obstack.c:466
 msgid "memory exhausted\n"
 msgstr ""
 
@@ -2339,7 +2340,7 @@ msgstr ""
 msgid "missing era name in string %d in `era' field in category `%s'"
 msgstr ""
 
-#: time/zic.c:913
+#: time/zic.c:917
 msgid "nameless rule"
 msgstr ""
 
@@ -2353,7 +2354,7 @@ msgstr ""
 msgid "no correct regular expression for field `%s' in category `%s': %s"
 msgstr ""
 
-#: time/zic.c:2086
+#: time/zic.c:2099
 msgid "no day in month matches rule"
 msgstr ""
 
@@ -2365,7 +2366,7 @@ msgstr ""
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr ""
 
-#: locale/programs/localedef.c:344
+#: locale/programs/localedef.c:347
 msgid "no output file produced because warning were issued"
 msgstr ""
 
@@ -2427,7 +2428,7 @@ msgstr ""
 msgid "registerrpc: out of memory\n"
 msgstr ""
 
-#: time/zic.c:1821
+#: time/zic.c:1834
 msgid "repeated leap second moment"
 msgstr ""
 
@@ -2459,7 +2460,7 @@ msgstr ""
 msgid "rpcinfo: can't contact portmapper: "
 msgstr ""
 
-#: time/zic.c:704 time/zic.c:706
+#: time/zic.c:708 time/zic.c:710
 msgid "same rule name in multiple files"
 msgstr ""
 
@@ -2480,7 +2481,7 @@ msgid ""
 "specification of sorting weight for collation symbol does not make sense"
 msgstr ""
 
-#: time/zic.c:775
+#: time/zic.c:779
 msgid "standard input"
 msgstr ""
 
@@ -2493,13 +2494,25 @@ msgstr ""
 msgid "starting date is illegal in string %d in `era' field in category `%s'"
 msgstr ""
 
-#: time/zic.c:1274
+#: time/zic.c:1287
 msgid "starting year greater than ending year"
+msgstr ""
+
+#: time/zic.c:1261 time/zic.c:1285
+msgid "starting year too high to be represented"
+msgstr ""
+
+#: time/zic.c:1259 time/zic.c:1283
+msgid "starting year too low to be represented"
 msgstr ""
 
 #: locale/programs/ld-time.c:330
 #, c-format
 msgid "stopping date is illegal in string %d in `era' field in category `%s'"
+msgstr ""
+
+#: sunrpc/svc_run.c:81
+msgid "svc_run: - select failed"
 msgstr ""
 
 #: sunrpc/svc_tcp.c:201 sunrpc/svc_tcp.c:206
@@ -2634,11 +2647,11 @@ msgstr ""
 msgid "this is the first definition"
 msgstr ""
 
-#: time/zic.c:1117
+#: time/zic.c:1121
 msgid "time before zero"
 msgstr ""
 
-#: time/zic.c:1125 time/zic.c:1986 time/zic.c:2005
+#: time/zic.c:1129 time/zic.c:1999 time/zic.c:2018
 msgid "time overflow"
 msgstr ""
 
@@ -2654,15 +2667,15 @@ msgstr ""
 msgid "too many character classes defined"
 msgstr ""
 
-#: time/zic.c:1815
+#: time/zic.c:1828
 msgid "too many leap seconds"
 msgstr ""
 
-#: time/zic.c:1787
+#: time/zic.c:1800
 msgid "too many local time types"
 msgstr ""
 
-#: time/zic.c:1741
+#: time/zic.c:1754
 msgid "too many transitions?!"
 msgstr ""
 
@@ -2670,7 +2683,7 @@ msgstr ""
 msgid "too many weights"
 msgstr ""
 
-#: time/zic.c:2109
+#: time/zic.c:2122
 msgid "too many, or too long, time zone abbreviations"
 msgstr ""
 
@@ -2687,7 +2700,7 @@ msgstr ""
 msgid "two lines in a row containing `...' are not allowed"
 msgstr ""
 
-#: time/zic.c:1281
+#: time/zic.c:1294
 msgid "typed single year"
 msgstr ""
 
@@ -2727,7 +2740,7 @@ msgstr ""
 msgid "unknown symbol `%.*s': line ignored"
 msgstr ""
 
-#: time/zic.c:747
+#: time/zic.c:751
 msgid "unruly zone"
 msgstr ""
 
@@ -2751,7 +2764,7 @@ msgstr ""
 msgid "upper limit in range is not smaller then lower limit"
 msgstr ""
 
-#: time/zic.c:2052
+#: time/zic.c:2065
 msgid "use of 2/29 in non leap-year"
 msgstr ""
 
@@ -2795,12 +2808,16 @@ msgstr ""
 msgid "values for field `%s' in category `%s' must not be zero"
 msgstr ""
 
-#: login/utmp_file.c:84
+#: login/utmp_file.c:76
 msgid "while opening UTMP file"
 msgstr ""
 
 #: catgets/gencat.c:989
 msgid "while opening old catalog file"
+msgstr ""
+
+#: locale/programs/locale.c:341
+msgid "while preparing output"
 msgstr ""
 
 #: db/makedb.c:354
@@ -2815,23 +2832,23 @@ msgstr ""
 msgid "wrong number of arguments"
 msgstr ""
 
-#: time/zic.c:1075
+#: time/zic.c:1079
 msgid "wrong number of fields on Leap line"
 msgstr ""
 
-#: time/zic.c:1166
+#: time/zic.c:1170
 msgid "wrong number of fields on Link line"
 msgstr ""
 
-#: time/zic.c:909
+#: time/zic.c:913
 msgid "wrong number of fields on Rule line"
 msgstr ""
 
-#: time/zic.c:979
+#: time/zic.c:983
 msgid "wrong number of fields on Zone continuation line"
 msgstr ""
 
-#: time/zic.c:937
+#: time/zic.c:941
 msgid "wrong number of fields on Zone line"
 msgstr ""
 
