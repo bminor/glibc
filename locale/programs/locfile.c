@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -282,7 +282,8 @@ argument to `%s' must be a single character"),
 		    error (4, 0,
 			   _("no repertoire map specified: cannot proceed"));
 
-		  repertoire = repertoire_read (repertoiremap);
+		  result->repertoire = repertoire
+		    = repertoire_read (repertoiremap);
 		  if (repertoire == NULL)
 		    /* This is also fatal.  */
 		    error (4, errno, _("cannot read repertoire map `%s'"),
@@ -300,7 +301,8 @@ argument to `%s' must be a single character"),
 		    error (4, 0,
 			   _("no repertoire map specified: cannot proceed"));
 
-		  repertoire = repertoire_read (repertoiremap);
+		  result->repertoire = repertoire
+		    = repertoire_read (repertoiremap);
 		  if (repertoire == NULL)
 		    /* This is also fatal.  */
 		    error (4, errno, _("cannot read repertoire map `%s'"),
@@ -318,7 +320,8 @@ argument to `%s' must be a single character"),
 		    error (4, 0,
 			   _("no repertoire map specified: cannot proceed"));
 
-		  repertoire = repertoire_read (repertoiremap);
+		  result->repertoire = repertoire
+		    = repertoire_read (repertoiremap);
 		  if (repertoire == NULL)
 		    /* This is also fatal.  */
 		    error (4, errno, _("cannot read repertoire map `%s'"),
@@ -336,7 +339,8 @@ argument to `%s' must be a single character"),
 		    error (4, 0,
 			   _("no repertoire map specified: cannot proceed"));
 
-		  repertoire = repertoire_read (repertoiremap);
+		  result->repertoire = repertoire
+		    = repertoire_read (repertoiremap);
 		  if (repertoire == NULL)
 		    /* This is also fatal.  */
 		    error (4, errno, _("cannot read repertoire map `%s'"),
@@ -354,7 +358,8 @@ argument to `%s' must be a single character"),
 		    error (4, 0,
 			   _("no repertoire map specified: cannot proceed"));
 
-		  repertoire = repertoire_read (repertoiremap);
+		  result->repertoire = repertoire
+		    = repertoire_read (repertoiremap);
 		  if (repertoire == NULL)
 		    /* This is also fatal.  */
 		    error (4, errno, _("cannot read repertoire map `%s'"),
@@ -372,7 +377,8 @@ argument to `%s' must be a single character"),
 		    error (4, 0,
 			   _("no repertoire map specified: cannot proceed"));
 
-		  repertoire = repertoire_read (repertoiremap);
+		  result->repertoire = repertoire
+		    = repertoire_read (repertoiremap);
 		  if (repertoire == NULL)
 		    /* This is also fatal.  */
 		    error (4, errno, _("cannot read repertoire map `%s'"),
@@ -495,7 +501,7 @@ syntax error in character class definition"));
 		}
 
 	      /* Lookup value for token and write into array.  */
-	      ctype_class_from (ldfile, result, arg, charset);
+	      ctype_class_from (ldfile, result, arg, charset, repertoire);
 
 	      arg = lr_token (ldfile, charset);
 	      if (arg->tok == tok_semicolon)
@@ -515,7 +521,7 @@ syntax error in character class definition"));
 		    goto bad_charclass;
 
 		  /* Write range starting at LAST to ARG->VAL.  */
-		  ctype_class_to (ldfile, result, arg, charset);
+		  ctype_class_to (ldfile, result, arg, charset, repertoire);
 
 		  arg = lr_token (ldfile, charset);
 		  if (arg->tok == tok_semicolon)
@@ -554,7 +560,7 @@ syntax error in character conversion definition"));
 		}
 
 	      /* Lookup arg and assign to FROM.  */
-	      ctype_map_from (ldfile, result, now, charset);
+	      ctype_map_from (ldfile, result, now, charset, repertoire);
 
 	      now = lr_token (ldfile, charset);
 	      if (now->tok != tok_comma)
@@ -565,7 +571,7 @@ syntax error in character conversion definition"));
 		goto bad_charconv;
 
 	      /* Lookup arg and assign to TO.  */
-	      ctype_map_to (ldfile, result, now, charset);
+	      ctype_map_to (ldfile, result, now, charset, repertoire);
 
 	      now = lr_token (ldfile, charset);
 	      if (now->tok != tok_close_brace)
