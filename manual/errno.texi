@@ -129,274 +129,30 @@ can't occur on the GNU system, but they can occur using the GNU library
 on other systems.
 @pindex errno.h
 
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int E2BIG
-Argument list too long; used when the arguments passed to a new program
-being executed with one of the @code{exec} functions (@pxref{Executing a
-File}) are too large.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int EACCES
-Permission denied; the file permissions do not allow the attempted access.
-@end deftypevr
 
 @comment errno.h
 @comment BSD
-@deftypevr Macro int EADDRINUSE
-The socket address is already in use.  @xref{Socket Naming}.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int EADDRNOTAVAIL
-The requested socket address is not available; for example, you tried
-to give a socket a name that doesn't match the local host name.
-@xref{Socket Naming}.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int EAFNOSUPPORT
-The address family specified for a socket is not supported; it is
-inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int EAGAIN
-Resource temporarily unavailable; the call might work if you try again
-later.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int EALREADY
-An operation is already in progress on an object that has non-blocking
-mode selected.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int EBADF
-Bad file descriptor; the file might have been closed or perhaps you are
-trying to read to a file open only for writing (or vice versa).
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int EBUSY
-Resource busy; a system resource that can't be shared is already in use.
-For example, if you try to delete a file that is the root of a currently
-mounted filesystem, you get this error.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int ECHILD
-There are no child processes.  This error happens on operations that are
-supposed to manipulate child processes, when there aren't any processes
-to manipulate.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ECONNABORTED
-A network connection was aborted locally.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ECONNREFUSED
-A remote host refused to allow the network connection (typically because
-it is not running the appropriate service).
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ECONNRESET
-A network connection was closed, such as by the remote machine rebooting.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int EDEADLK
-Deadlock avoided; allocating a system resource would have resulted in
-a deadlock situation.  For an example, @xref{File Locks}.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int EDESTADDRREQ
-No destination address was supplied on a socket operation.
-@end deftypevr
-
-@comment errno.h
-@comment ANSI
-@deftypevr Macro int EDOM
-Domain error; used by mathematical functions when an argument value does
-not fall into the domain over which the function is defined.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int EDQUOT
-The user's disk quota was exceeded.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int EEXIST
-File exists; an existing file was specified in a context where it only
-makes sense to specify a new file.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int EFAULT
-Bad address; an invalid pointer was detected.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int EFBIG
-File too big; the size of a file would be larger than allowed by the system.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int EHOSTDOWN
-The remote host for a network connection is down.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int EHOSTUNREACH
-The remote host for a network connection is not reachable.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int EIDRM
+@deftypevr Macro int EIDRM      @c ????
 A message queue identifier has been removed and is no longer valid.
 @end deftypevr
 
 @comment errno.h
 @comment BSD
-@deftypevr Macro int EINPROGRESS
-An operation that cannot complete immediately was initiated on an object
-that has non-blocking mode selected.
+@deftypevr Macro int ENOMSG     @c ???
+There is no message of the specified type available immediately, and
+blocking was not desired.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
-@deftypevr Macro int EINTR
-Interrupted function call; an asynchronous signal occured and prevented
-completion of the call.  When this happens, you should try the call
-again.
+@deftypevr Macro int EPERM      @c 1 Operation not permitted
+Operation not permitted; only the owner of the file (or other resource)
+or processes with special privileges can perform the operation.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
-@deftypevr Macro int EINVAL
-Invalid argument.  This is used to indicate various kinds of problems
-with passing the wrong argument to a library function.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int EIO
-Input/output error; usually used for physical read or write errors.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int EISCONN
-You tried to connect a socket that is already connected.
-@xref{Establishing a Connection}.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int EISDIR
-File is a directory; it can't be written to like an ordinary file.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ELOOP
-Too many levels of symbolic links were encountered in looking up a file name.
-Maybe there is a circular reference.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int EMFILE
-The process has too many files open and can't open any more.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int EMLINK
-Too many links; the link count of a single file is too large.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int EMSGSIZE
-The size of a message sent on a socket was larger than the supported
-maximum size.  
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int ENAMETOOLONG
-Filename too long.  
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ENETDOWN
-A socket operation failed because the network was down.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ENETRESET
-The network connection was reset because the remote host crashed.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ENETUNREACH
-A socket operation failed because the network was unreachable.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int ENFILE
-There are too many files open in the entire system.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ENOBUFS
-No internal buffer space available for an operation on a pipe or socket.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int ENODEV
-No such device.  This a ``file doesn't exist'' error, but is
-used only when the file is expected to represent a device, like a
-block special file for a disk.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int ENOENT
+@deftypevr Macro int ENOENT     @c 2 No such file or directory
 No such file or directory.  This is a ``file doesn't exist'' error
 for ordinary files that are referenced in contexts where they are
 expected to already exist.
@@ -404,226 +160,492 @@ expected to already exist.
 
 @comment errno.h
 @comment POSIX.1
-@deftypevr Macro int ENOEXEC
-Invalid executable file format.  This condition is detected by the
-@code{exec} functions; @pxref{Executing a File}.
+@deftypevr Macro int ESRCH      @c 3 No such process
+There is no such process that matches the specified process ID.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
-@deftypevr Macro int ENOLCK
-No locks available.  This is used by the file locking facilities;
-@pxref{File Locks}.
+@deftypevr Macro int EINTR      @c 4 Interrupted system call
+Interrupted function call; an asynchronous signal occured and prevented
+completion of the call.  When this happens, you should try the call
+again.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
-@deftypevr Macro int ENOMEM
-Not enough memory available.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ENOMSG
-There is no message of the specified type available immediately, and
-blocking was not desired.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ENOPROTOOPT
-You specified a socket option that doesn't make sense for the
-particular protocol being used by the socket.  @xref{Socket Options}.
+@deftypevr Macro int EIO        @c 5 Input/output error
+Input/output error; usually used for physical read or write errors.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
-@deftypevr Macro int ENOSPC
-No space left on device; write operation on a file failed because the
-device is full.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int ENOSYS
-Function not implemented.  Some functions have commands or options defined
-that might not be supported in all implementations, and this is the kind
-of error you get if you request them and they aren't there.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ENOTBLK
-A file that isn't a block special file was given in a situation that
-requires one.  For example, trying to mount an ordinary file as a file
-system will give this error.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ENOTCONN
-The socket is not connected to anything.  You get this message when you
-try to transmit data over a socket, without first specifying a destination
-for the data.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int ENOTDIR
-A file that isn't a directory was given in a situation that requires
-one.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ENOTSOCK
-A file that isn't a socket was given in a situation that requires one.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int ENOTEMPTY
-Directory not empty, where an empty directory was expected.  Typically,
-this error occurs when you are trying to remove a directory.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int ENOTTY
-Inappropriate I/O control operation, such as trying to set terminal
-modes on an ordinary file.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int ENXIO
+@deftypevr Macro int ENXIO      @c 6 Device not configured
 No such device or address.  Typically, this means that a file
 representing a device has been installed incorrectly, and the
 system can't find the right kind of device driver for it.
 @end deftypevr
 
 @comment errno.h
-@comment BSD
-@deftypevr Macro int EOPNOTSUPP
-The socket operation you requested is not supported.  Some socket functions
-don't make sense for all types of sockets, and others may not be implemented
-for all communications protocols.
+@comment POSIX.1
+@deftypevr Macro int E2BIG      @c 7 Argument list too long
+Argument list too long; used when the arguments passed to a new program
+being executed with one of the @code{exec} functions (@pxref{Executing a
+File}) are too large.  This condition never arises in the GNU system.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
-@deftypevr Macro int EPERM
-Operation not permitted; only the owner of the file (or other resource)
-or processes with special privileges can perform the operation.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int EPFNOSUPPORT
-The socket communications protocol family you requested is not supported.
+@deftypevr Macro int ENOEXEC    @c 8 Exec format error
+Invalid executable file format.  This condition is detected by the
+@code{exec} functions; @pxref{Executing a File}.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
-@deftypevr Macro int EPIPE
+@deftypevr Macro int EBADF      @c 9 Bad file descriptor
+Bad file descriptor; the file might have been closed or perhaps you are
+trying to read to a file open only for writing (or vice versa).
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int ECHILD     @c 10 No child processes
+There are no child processes.  This error happens on operations that are
+supposed to manipulate child processes, when there aren't any processes
+to manipulate.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EDEADLK    @c 11 Resource deadlock avoided
+Deadlock avoided; allocating a system resource would have resulted in
+a deadlock situation.  For an example, @xref{File Locks}.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int ENOMEM     @c 12 Cannot allocate memory
+Not enough memory available.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EACCES     @c 13 Permission denied
+Permission denied; the file permissions do not allow the attempted access.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EFAULT     @c 14 Bad address
+Bad address; an invalid pointer was detected.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int ENOTBLK    @c 15 Block device required
+A file that isn't a block special file was given in a situation that
+requires one.  For example, trying to mount an ordinary file as a file
+system will give this error.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EBUSY      @c 16 Device busy
+Resource busy; a system resource that can't be shared is already in use.
+For example, if you try to delete a file that is the root of a currently
+mounted filesystem, you get this error.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EEXIST     @c 17 File exists
+File exists; an existing file was specified in a context where it only
+makes sense to specify a new file.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EXDEV      @c 18 Invalid cross-device link
+An attempt to make an improper link across file systems was detected.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int ENODEV     @c 19 Operation not supported by device
+No such device.  This a ``file doesn't exist'' error, but is
+used only when the file is expected to represent a device, like a
+block special file for a disk.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int ENOTDIR    @c 20 Not a directory
+A file that isn't a directory was given in a situation that requires
+one.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EISDIR     @c 21 Is a directory
+File is a directory; it can't be written to like an ordinary file.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EINVAL     @c 22 Invalid argument
+Invalid argument.  This is used to indicate various kinds of problems
+with passing the wrong argument to a library function.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int ENFILE     @c 23 Too many open files in system
+There are too many files open in the entire system.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EMFILE     @c 24 Too many open files
+The process has too many files open and can't open any more.
+@c In GNU, use setdtablesize.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int ENOTTY     @c 25 Inappropriate ioctl for device
+Inappropriate I/O control operation, such as trying to set terminal
+modes on an ordinary file.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int ETXTBSY    @c 26 Text file busy
+An attempt to execute a file that is currently open for writing, or
+write to a file that is currently being executed.  (The name stands
+for ``text file busy''.)  This is not an error in the GNU system; the
+text is copied as necessary.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EFBIG      @c 27 File too large
+File too big; the size of a file would be larger than allowed by the system.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int ENOSPC     @c 28 No space left on device
+No space left on device; write operation on a file failed because the
+device is full.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int ESPIPE     @c 29 Illegal seek
+Invalid seek operation (such as on a pipe).
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EROFS      @c 30 Read-only file system
+An attempt was made to modify a file on a read-only file system.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EMLINK     @c 31 Too many links
+Too many links; the link count of a single file is too large.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EPIPE      @c 32 Broken pipe
 Broken pipe; there is no process reading from the other end of a pipe.
 @end deftypevr
 
 @comment errno.h
+@comment ANSI
+@deftypevr Macro int EDOM       @c 33 Numerical argument out of domain
+Domain error; used by mathematical functions when an argument value does
+not fall into the domain over which the function is defined.
+@end deftypevr
+
+@comment errno.h
+@comment ANSI
+@deftypevr Macro int ERANGE     @c 34 Numerical result out of range
+Range error; used by mathematical functions when the result value is
+not representable because of overflow or underflow.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int EAGAIN     @c 35 Resource temporarily unavailable
+Resource temporarily unavailable; the call might work if you try again
+later.
+@end deftypevr
+
+@comment errno.h
 @comment BSD
-@deftypevr Macro int EPROTONOSUPPORT
+@deftypevr Macro int EWOULDBLOCK @c EAGAIN Operation would block
+An operation that would block was attempted on an object that has
+non-blocking mode selected.
+
+@strong{Portability Note:} In 4.4BSD and GNU, @code{EWOULDBLOCK} and
+@code{EAGAIN} are the same.  Earlier versions of BSD (@pxref{Berkeley
+Unix}) have two distinct codes, and use @code{EWOULDBLOCK} to indicate
+an i/o operation that would block on an object with non-blocking mode
+set, and @code{EAGAIN} for other kinds of errors.@refill
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EINPROGRESS @c 36 Operation now in progress
+An operation that cannot complete immediately was initiated on an object
+that has non-blocking mode selected.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EALREADY   @c 37 Operation already in progress
+An operation is already in progress on an object that has non-blocking
+mode selected.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int ENOTSOCK   @c 38 Socket operation on non-socket
+A file that isn't a socket was given in a situation that requires one.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EDESTADDRREQ @c 39 Destination address required
+No destination address was supplied on a socket operation.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EMSGSIZE   @c 40 Message too long
+The size of a message sent on a socket was larger than the supported
+maximum size.  
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EPROTOTYPE @c 41 Protocol wrong type for socket
+The socket type does not support the requested communications protocol.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int ENOPROTOOPT @c 42 Protocol not available
+You specified a socket option that doesn't make sense for the
+particular protocol being used by the socket.  @xref{Socket Options}.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EPROTONOSUPPORT @c 43 Protocol not supported
 The socket domain does not support the requested communications protocol.
 @xref{Creating a Socket}.
 @end deftypevr
 
 @comment errno.h
 @comment BSD
-@deftypevr Macro int EPROTOTYPE
-The socket type does not support the requested communications protocol.
-@end deftypevr
-
-@comment errno.h
-@comment ANSI
-@deftypevr Macro int ERANGE
-Range error; used by mathematical functions when the result value is
-not representable because of overflow or underflow.
+@deftypevr Macro int ESOCKTNOSUPPORT @c 44 Socket type not supported
+The socket type is not supported.
 @end deftypevr
 
 @comment errno.h
 @comment BSD
-@deftypevr Macro int EREMOTE
-An attempt was made to NFS-mount a remote file system with a file name that
-already specifies an NFS-mounted file.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int EROFS
-An attempt was made to modify a file on a read-only file system.
+@deftypevr Macro int EOPNOTSUPP @c 45 Operation not supported
+The operation you requested is not supported.  Some socket functions
+don't make sense for all types of sockets, and others may not be implemented
+for all communications protocols.
 @end deftypevr
 
 @comment errno.h
 @comment BSD
-@deftypevr Macro int ESHUTDOWN
+@deftypevr Macro int EPFNOSUPPORT @c 46 Protocol family not supported
+The socket communications protocol family you requested is not supported.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EAFNOSUPPORT @c 47 Address family not supported by protocol family
+The address family specified for a socket is not supported; it is
+inconsistent with the protocol being used on the socket.  @xref{Sockets}.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EADDRINUSE @c 48 Address already in use
+The socket address is already in use.  @xref{Socket Naming}.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EADDRNOTAVAIL @c 49 Can't assign requested address
+The requested socket address is not available; for example, you tried
+to give a socket a name that doesn't match the local host name.
+@xref{Socket Naming}.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int ENETDOWN   @c 50 Network is down
+A socket operation failed because the network was down.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int ENETUNREACH @c 51 Network is unreachable
+A socket operation failed because the network was unreachable.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int ENETRESET  @c 52 Network dropped connection on reset
+The network connection was reset because the remote host crashed.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int ECONNABORTED @c 53 Software caused connection abort
+A network connection was aborted locally.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int ECONNRESET @c 54 Connection reset by peer
+A network connection was closed, such as by the remote machine rebooting.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int ENOBUFS    @c 55 No buffer space available
+No internal buffer space available for an operation on a pipe or socket.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EISCONN    @c 56 Socket is already connected
+You tried to connect a socket that is already connected.
+@xref{Establishing a Connection}.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int ENOTCONN   @c 57 Socket is not connected
+The socket is not connected to anything.  You get this message when you
+try to transmit data over a socket, without first specifying a destination
+for the data.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int ESHUTDOWN  @c 58 Can't send after socket shutdown
 The socket has already been shut down.
 @end deftypevr
 
 @comment errno.h
 @comment BSD
-@deftypevr Macro int ESOCKTNOSUPPORT
-The socket type is not supported.
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int ESPIPE
-Invalid seek operation (such as on a pipe).
-@end deftypevr
-
-@comment errno.h
-@comment POSIX.1
-@deftypevr Macro int ESRCH
-There is no such process that matches the specified process ID.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ESTALE
-The NFS file handle is stale; the file on the file server has been deleted.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ETIMEDOUT
+@deftypevr Macro int ETIMEDOUT  @c 60 Connection timed out
 The operation on a socket failed because no response was received
 during the timeout period.
 @end deftypevr
 
 @comment errno.h
 @comment BSD
-@deftypevr Macro int ETXTBSY
-An attempt to execute a file that is currently open for writing, or
-write to a file that is currently being executed.  (The name stands
-for ``text file busy''.)
+@deftypevr Macro int ECONNREFUSED @c 61 Connection refused
+A remote host refused to allow the network connection (typically because
+it is not running the appropriate service).
 @end deftypevr
 
 @comment errno.h
 @comment BSD
-@deftypevr Macro int EUSERS
+@deftypevr Macro int ELOOP      @c 62 Too many levels of symbolic links
+Too many levels of symbolic links were encountered in looking up a file name.
+Maybe there is a circular reference.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int ENAMETOOLONG @c 63 File name too long
+Filename too long (longer than @code{PATH_MAX};
+@pxref{File System Parameters}).@refill
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EHOSTDOWN  @c 64 Host is down
+The remote host for a network connection is down.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EHOSTUNREACH @c 65 No route to host
+The remote host for a network connection is not reachable.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int ENOTEMPTY  @c 66 Directory not empty
+Directory not empty, where an empty directory was expected.  Typically,
+this error occurs when you are trying to remove a directory.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EUSERS     @c 68 Too many users
 The file quota system is confused because there are too many users.
 @end deftypevr
 
 @comment errno.h
 @comment BSD
-@deftypevr Macro int EWOULDBLOCK
-An operation that would block was attempted on an object that has
-non-blocking mode selected.
+@deftypevr Macro int EDQUOT     @c 69 Disc quota exceeded
+The user's disk quota was exceeded.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int ESTALE     @c 70 Stale NFS file handle
+The NFS file handle is stale; the file on the file server has been deleted.
+@end deftypevr
+
+@comment errno.h
+@comment BSD
+@deftypevr Macro int EREMOTE    @c 71 Too many levels of remote in path
+An attempt was made to NFS-mount a remote file system with a file name that
+already specifies an NFS-mounted file.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
-@deftypevr Macro int EXDEV
-An attempt to make an improper link across file systems was detected.
+@deftypevr Macro int ENOLCK     @c 77 No locks available
+No locks available.  This is used by the file locking facilities;
+@pxref{File Locks}.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1
+@deftypevr Macro int ENOSYS     @c 78 Function not implemented
+Function not implemented.  Some functions have commands or options defined
+that might not be supported in all implementations, and this is the kind
+of error you get if you request them and they aren't there.
+@end deftypevr
+
+@comment errno.h
+@comment GNU
+@deftypevr Macro int ED         @c 100 ?
+The experienced user will know what is wrong.
+@end deftypevr
+
+@comment errno.h
+@comment GNU
+@deftypevr Macro int EGRATUITOUS @c 101 Gratuitous error
+This error code has no purpose.
 @end deftypevr
 
 
