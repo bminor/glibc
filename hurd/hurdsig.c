@@ -375,6 +375,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
   struct hurd_signal_preempt *pe;
   sighandler_t (*preempt) (thread_t, int, int) = NULL;
   sigset_t pending;
+  int ss_suspended;
 
   /* Reply to this sig_post message.  */
   inline void reply ()
@@ -419,9 +420,79 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
        If it returns SIG_DFL, we run the normal handler;
        otherwise we use the handler it returns.  */
     handler = (*preempt) (ss->thread, signo, sigcode);
-  if (handler == SIG_DFL)
+
+  ss_suspended = 0;
+
+  if (handler != SIG_DFL)
+    /* Run the preemption-provided handler.  */
+    act = handle;
+  else
     {
+      /* No preemption.  Do normal handling.  */
+
       handler = ss->actions[signo].sa_handler;
+
+      if (handler == SIG_DFL)
+	/* Figure out the default action for this signal.  */
+	switch (signo)
+	  {
+	  case 0:
+	    /* A sig_post msg with SIGNO==0 is sent to
+	       tell us to check for pending signals.  */
+	    act = ignore;
+	    break;
+
+	  case SIGTTIN:
+	  case SIGTTOU:
+	  case SIGSTOP:
+	  case SIGTSTP:
+	    act = stop;
+	    break;
+
+	  case SIGCONT:
+	  case SIGIO:
+	  case SIGURG:
+	  case SIGCHLD:
+	  case SIGWINCH:
+	    act = ignore;
+	    break;
+
+	  case SIGQUIT:
+	  case SIGILL:
+	  case SIGTRAP:
+	  case SIGIOT:
+	  case SIGEMT:
+	  case SIGFPE:
+	  case SIGBUS:
+	  case SIGSEGV:
+	  case SIGSYS:
+	    act = core;
+	    break;
+
+	  case SIGINFO:
+	    if (_hurd_pgrp == _hurd_pid)
+	      {
+		/* We are the process group leader.  Since there is no
+		   user-specified handler for SIGINFO, we use a default one
+		   which prints something interesting.  We use the normal
+		   handler mechanism instead of just doing it here to avoid
+		   the signal thread faulting or blocking in this
+		   potentially hairy operation.  */
+		act = handle;
+		handler = _hurd_siginfo_handler;
+	      }
+	    else
+	      act = ignore;
+	    break;
+
+	  default:
+	    act = term;
+	    break;
+	  }
+      else if (handler == SIG_IGN)
+	act = ignore;
+      else
+	act = handle;
 
       if (sigmask (signo) & STOPSIGS)
 	/* Stop signals clear a pending SIGCONT even if they
@@ -444,7 +515,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	      assert (! err);
 	      for (i = 0; i < nthreads; ++i)
 		{
-		  if (threads[i] != _hurd_msgport_thread)
+		  if (threads[i] != _hurd_msgport_thread &&
+		      (act != handle || threads[i] != ss->thread))
 		    __thread_resume (threads[i]);
 		  __mach_port_deallocate (__mach_task_self (), threads[i]);
 		}
@@ -452,71 +524,11 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 			       (vm_address_t) threads,
 			       nthreads * sizeof *threads);
 	      _hurd_stopped = 0;
+	      /* The thread that will run the handler is already suspended.  */
+	      ss_suspended = 1;
 	    }
 	}
     }
-
-  if (handler == SIG_DFL)
-    /* Figure out the default action for this signal.  */
-    switch (signo)
-      {
-      case 0:
-	/* A sig_post msg with SIGNO==0 is sent to
-	   tell us to check for pending signals.  */
-	act = ignore;
-	break;
-
-      case SIGTTIN:
-      case SIGTTOU:
-      case SIGSTOP:
-      case SIGTSTP:
-	act = stop;
-	break;
-
-      case SIGCONT:
-      case SIGIO:
-      case SIGURG:
-      case SIGCHLD:
-      case SIGWINCH:
-	act = ignore;
-	break;
-
-      case SIGQUIT:
-      case SIGILL:
-      case SIGTRAP:
-      case SIGIOT:
-      case SIGEMT:
-      case SIGFPE:
-      case SIGBUS:
-      case SIGSEGV:
-      case SIGSYS:
-	act = core;
-	break;
-
-      case SIGINFO:
-	if (_hurd_pgrp == _hurd_pid)
-	  {
-	    /* We are the process group leader.  Since there is no
-	       user-specified handler for SIGINFO, we use a default one
-	       which prints something interesting.  We use the normal
-	       handler mechanism instead of just doing it here to avoid the
-	       signal thread faulting or blocking in this potentially hairy
-	       operation.  */
-	    act = handle;
-	    handler = _hurd_siginfo_handler;
-	  }
-	else
-	  act = ignore;
-	break;
-
-      default:
-	act = term;
-	break;
-      }
-  else if (handler == SIG_IGN)
-    act = ignore;
-  else
-    act = handle;
 
   if (_hurd_orphaned && act == stop &&
       (signo & (__sigmask (SIGTTIN) | __sigmask (SIGTTOU) |
@@ -600,7 +612,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	int wait_for_reply;
 
 	/* Stop the thread and abort its pending RPC operations.  */
-	__thread_suspend (ss->thread);
+	if (! ss_suspended)
+	  __thread_suspend (ss->thread);
 	wait_for_reply = abort_rpcs (ss, signo, &thread_state,
 				     &reply_port, reply_port_type);
 
