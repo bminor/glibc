@@ -5,6 +5,11 @@
 
 2005-01-27  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #731]
+	* stdlib/tst-fmtmsg.c: Include stdlib.h.
+
+2005-01-27  Jakub Jelinek  <jakub@redhat.com>
+
 	* posix/execvp.c: Include stdbool.h.
 
 2005-01-26  Ulrich Drepper  <drepper@redhat.com>
@@ -17,6 +22,29 @@
 
 	[BZ #671]
 	* sysdeps/generic/syslog.c [NO_SIGPIPE]: Protect sigpipe_handler decl.
+
+2005-01-25  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #731]
+	* stdlib/fmtmsg.c (addseverity): Remove new_string variable.
+	(free_mem): Don't free string.
+	* stdlib/tst-fmtmsg.c: Include string.h.
+	(main): Add some more tests.
+
+2005-01-25  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #736]
+	* timezone/asia: Update from tzdata2005c.
+	* timezone/backward: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+
+	[BZ #736]
+	* timezone/private.h: Update from tzcode2005c.
+	* timezone/tzfile.h: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
 
 2005-01-24  Ulrich Drepper  <drepper@redhat.com>
 
@@ -97,19 +125,6 @@
 	[BZ #734]
 	* sysdeps/unix/rewinddir.c: Reset filepos.
 	* dirent/tst-seekdir.c: Check telldir value after calling rewinddir.
-
-2005-01-27  Jakub Jelinek  <jakub@redhat.com>
-
-	[BZ #731]
-	* stdlib/tst-fmtmsg.c: Include stdlib.h.
-
-2005-01-25  Jakub Jelinek  <jakub@redhat.com>
-
-	[BZ #731]
-	* stdlib/fmtmsg.c (addseverity): Remove new_string variable.
-	(free_mem): Don't free string.
-	* stdlib/tst-fmtmsg.c: Include string.h.
-	(main): Add some more tests.
 
 2005-01-14  Ulrich Drepper  <drepper@redhat.com>
 
