@@ -33,7 +33,7 @@ FUNC (___longjmp)
 
 	/* if (%o1 == 0) %o1 = 1; */
 	tst %o1
-	bz,a 0f
+	be,a 0f
 	mov 1, %o1
 
 0:	retl
