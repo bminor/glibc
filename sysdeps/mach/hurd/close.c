@@ -27,18 +27,24 @@ int
 DEFUN(__close, (fd), int fd)
 {
   struct hurd_userlink ulink;
-  struct hurd_fd_user d = _hurd_fd_get (fd, &ulink);
+  struct hurd_fd_user d;
+
+  HURD_CRITICAL_BEGIN;
+  d = _hurd_fd_get (fd, &ulink);
+
+  if (d.d != NULL)
+    {
+      /* Clear the descriptor's port cells.
+	 This deallocates the ports if noone else is still using them.  */
+
+      _hurd_port_set (&d.d->ctty, MACH_PORT_NULL);
+      _hurd_port_locked_set (&d.d->port, MACH_PORT_NULL);
+    }
+
+  _hurd_fd_free (d, &ulink);
+  HURD_CRITICAL_END;
 
   if (d.d == NULL)
     return __hurd_fail (EBADF);
-
-  /* Clear the descriptor's port cells.
-     This deallocates the ports if noone else is still using them.  */
-
-  _hurd_port_set (&d.d->ctty, MACH_PORT_NULL);
-  _hurd_port_locked_set (&d.d->port, MACH_PORT_NULL);
-
-  _hurd_fd_free (d, &ulink);
-
   return 0;
 }
