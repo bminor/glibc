@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -43,7 +43,13 @@ DO(name, value)
       puts(ifEmath);
     }
 
-  printf("#define %s %d\n", name, value);
+  if (!strcmp (name, "EWOULDBLOCK"))
+    {
+      puts ("#define EWOULDBLOCK EAGAIN /* Translated in glibc. */");
+      name = "EWOULDBLOCK_sys /* Value actually returned by kernel. */";
+    }
+
+  printf ("#define %s %d\n", name, value);
 
   if (is_Emath)
     {
