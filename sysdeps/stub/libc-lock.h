@@ -17,8 +17,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _LIBC_LOCK_H
-#define _LIBC_LOCK_H 1
+#ifndef _BITS_LIBC_LOCK_H
+#define _BITS_LIBC_LOCK_H 1
 
 
 /* Define a lock variable NAME with storage class CLASS.  The lock must be
@@ -70,6 +70,20 @@
 /* Unlock the recursive named lock variable.  */
 #define __libc_lock_unlock_recursive(NAME)
 
+
+/* Define once control variable.  */
+#define __libc_once_define(NAME) int NAME = 0
+
+/* Call handler iff the first call.  */
+#define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
+  do {									      \
+    if ((ONCE_CONTROL) == 0) {						      \
+      INIT_FUNCTION ();							      \
+      (ONCE_CONTROL) = 1;						      \
+    }									      \
+  } while (0)
+
+
 /* Start critical region with cleanup.  */
 #define __libc_cleanup_region_start(FCT, ARG)
 
@@ -80,4 +94,16 @@
 /* We need portable names for some of the functions.  */
 #define __libc_mutex_unlock
 
-#endif	/* libc-lock.h */
+/* Type for key of thread specific data.  */
+typedef int __libc_key_t;
+
+/* Create key for thread specific data.  */
+#define __libc_key_create(KEY,DEST) -1
+
+/* Set thread-specific data associated with KEY to VAL.  */
+#define __libc_setspecific(KEY,VAL) -1
+
+/* Get thread-specific data associated with KEY.  */
+#define __libc_getspecific(KEY) 0
+
+#endif	/* bits/libc-lock.h */

@@ -205,13 +205,13 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
   /* `-a' requests the names of all available locales.  */
   if (do_all != 0)
     {
-      setlocale (LC_ALL, "");
+      setlocale (LC_COLLATE, "");
       write_locales ();
       exit (EXIT_SUCCESS);
     }
 
   /* `m' requests the names of all available charmaps.  The names can be
-     used for the -f argument to localedef(3).  */
+     used for the -f argument to localedef(1).  */
   if (do_charmaps != 0)
     {
       write_charmaps ();
@@ -509,6 +509,25 @@ show_locale_vars (void)
 }
 
 
+/* Some of the "string" we print contain non-printable characters.  We
+   encode them here.  */
+static void
+print_escaped (const char *string)
+{
+  const unsigned char *ch;
+
+  ch = string;
+  while ('\0' != *ch)
+    {
+      if (isprint (*ch))
+	putchar (*ch);
+      else
+	printf("<0x%02x>", *ch);
+      ++ch;
+    }
+}
+
+
 /* Show the information request for NAME.  */
 static void
 show_info (const char *name)
@@ -523,9 +542,11 @@ show_info (const char *name)
       switch (item->value_type)
 	{
 	case string:
-	  printf ("%s%s%s", show_keyword_name ? "\"" : "",
-		  nl_langinfo (item->item_id) ? : "",
-		  show_keyword_name ? "\"" : "");
+	  if (show_keyword_name)
+	    putchar ('"');
+	  print_escaped (nl_langinfo (item->item_id) ? : "");
+	  if (show_keyword_name)
+	    putchar ('"');
 	  break;
 	case stringarray:
 	  {
@@ -538,11 +559,14 @@ show_info (const char *name)
 	    for (cnt = 0; cnt < item->max - 1; ++cnt)
 	      {
 		val = nl_langinfo (item->item_id + cnt);
-		printf ("%s;", val ? : "");
+		if (val != NULL)
+		  print_escaped (val);
+		putchar (';');
 	      }
 
 	    val = nl_langinfo (item->item_id + cnt);
-	    printf ("%s", val ? : "");
+	    if (val != NULL)
+	      print_escaped (val);
 
 	    if (show_keyword_name)
 	      putchar ('"');

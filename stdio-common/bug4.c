@@ -14,7 +14,7 @@ DEFUN(main, (argc, argv),
   FILE *f;
   int i;
   char buffer[31];
-  const char filename[] = "/tmp/bugtest";
+  const char filename[] = "/tmp/bug4.test";
 
   while ((i = getopt (argc, argv, "rw")) != -1)
     switch (i)

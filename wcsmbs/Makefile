@@ -34,6 +34,8 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcscoll wcsxfrm \
 	    wcwidth wcswidth
 
+tests := tst-wcstof
+
 include ../Rules
 
 CFLAGS-wcwidth.c = -I../wctype

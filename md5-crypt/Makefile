@@ -32,6 +32,11 @@ extra-libs-others := $(extra-libs)
 
 md5-routines := crypt-entry md5-crypt md5
 libcrypt-routines := $(md5-routines)
+libcrypt-map := libcrypt.map
+
+onlymd5-routines := onlymd5-entry md5-crypt md5
+distribute += onlymd5-entry.c
+extra-objs := onlymd5-entry.o
 
 include ../Makeconfig
 
@@ -40,6 +45,8 @@ rpath-link := $(common-objpfx)md5-crypt:$(rpath-link)
 ifeq ($(crypt-in-libc),yes)
 routines += $(libcrypt-routines)
 endif
+
+$(objpfx)md5test: $(objpfx)md5.o
 
 include ../Rules
 
@@ -60,7 +67,7 @@ endif
 
 define o-iterator-doit
 $(objpfx)$(patsubst %,$(libtype$o),md5crypt): \
-  $(md5-routines:%=$(objpfx)%$o); $$(build-extra-lib)
+  $(onlymd5-routines:%=$(objpfx)%$o); $$(build-extra-lib)
 endef
 object-suffixes-left = $(object-suffixes)
 include $(patsubst %,$(..)o-iterator.mk,$(object-suffixes))
@@ -69,3 +76,4 @@ include $(patsubst %,$(..)o-iterator.mk,$(object-suffixes))
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.
 $(objpfx)libcrypt.so: $(common-objpfx)libc.so
+$(objpfx)libmd5crypt.so: $(common-objpfx)libc.so

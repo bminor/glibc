@@ -26,7 +26,6 @@
 
 /* Get implementation for some internal functions.  */
 #include "../resolv/mapv4v6addr.h"
-#include "../resolv/mapv4v6hostent.h"
 
 
 #define ENTNAME		hostent
@@ -51,13 +50,7 @@ LINE_PARSER
    STRING_FIELD (addr, isspace, 1);
 
    /* Parse address.  */
-   if ((_res.options & RES_USE_INET6)
-       && inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
-     {
-       result->h_addrtype = AF_INET6;
-       result->h_length = IN6ADDRSZ;
-     }
-   else if (inet_pton (AF_INET, addr, entdata->host_addr) > 0)
+   if (inet_pton (AF_INET, addr, entdata->host_addr) > 0)
      {
        if (_res.options & RES_USE_INET6)
 	 {
@@ -72,6 +65,11 @@ LINE_PARSER
 	   result->h_length = INADDRSZ;
 	 }
      }
+   else if (inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
+     {
+       result->h_addrtype = AF_INET6;
+       result->h_length = IN6ADDRSZ;
+     }
    else
      /* Illegal address: ignore line.  */
      return 0;
@@ -81,22 +79,18 @@ LINE_PARSER
    entdata->h_addr_ptrs[1] = NULL;
    result->h_addr_list = entdata->h_addr_ptrs;
 
-   /* If we need the host entry in IPv6 form change it now.  */
-   if (_res.options & RES_USE_INET6)
-     {
-       char *bufptr = data->linebuffer;
-       int buflen = (char *) data + datalen - bufptr;
-       map_v4v6_hostent (result, &bufptr, &buflen);
-     }
-
    STRING_FIELD (result->h_name, isspace, 1);
  })
 
 #include "files-XXX.c"
 
 DB_LOOKUP (hostbyname, ,,
-	   LOOKUP_NAME (h_name, h_aliases),
-	   const char *name)
+	   {
+	     if (result->h_addrtype != ((_res.options & RES_USE_INET6)
+					? AF_INET6 : AF_INET))
+	       continue;
+	     LOOKUP_NAME (h_name, h_aliases)
+	   }, const char *name)
 
 DB_LOOKUP (hostbyname2, ,,
 	   {

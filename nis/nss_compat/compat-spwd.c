@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -19,6 +19,7 @@
 
 #include <nss.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <ctype.h>
 #include <netdb.h>
 #include <shadow.h>
@@ -147,6 +148,26 @@ internal_setspent (ent_t *ent)
 
       if (ent->stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+      else
+	{
+	  /* We have to make sure the file is  `closed on exec'.  */
+	  int result, flags;
+
+	  result = flags = fcntl (fileno (ent->stream), F_GETFD, 0);
+	  if (result >= 0)
+	    {
+	      flags |= FD_CLOEXEC;
+	      result = fcntl (fileno (ent->stream), F_SETFD, flags);
+	    }
+	  if (result < 0)
+	    {
+	      /* Something went wrong.  Close the stream and return a
+		 failure.  */
+	      fclose (ent->stream);
+	      ent->stream = NULL;
+	      status = NSS_STATUS_UNAVAIL;
+	    }
+	}
     }
   else
     rewind (ent->stream);

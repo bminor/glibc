@@ -1,5 +1,5 @@
 /* Formatting a monetary value according to the current locale.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Jochen Hein <Jochen.Hein@informatik.TU-Clausthal.de>, 1996.
@@ -151,6 +151,13 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	    {
 	    case '=':			/* Set fill character.  */
 	      pad = *++fmt;
+	      if (pad == '\0')
+		{
+		  /* Premature EOS.  */
+		  __set_errno (EINVAL);
+		  va_end (ap);
+		  return -1;
+		}
 	      continue;
 	    case '^':			/* Don't group digits.  */
 	      group = 0;

@@ -1,20 +1,20 @@
-/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <sys/types.h>
 #include <sys/mman.h>
@@ -98,7 +98,7 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 		__mach_port_deallocate (__mach_task_self (), memobj);
 	      }
 	    else if (wobj == MACH_PORT_NULL && /* Not writable by mapping.  */
-		     (flags & (MAP_COPY|MAP_PRIVATE)))
+		     !(flags & MAP_SHARED))
 	      /* The file can only be mapped for reading.  Since we are
 		 making a private mapping, we will never try to write the
 		 object anyway, so we don't care.  */
@@ -106,8 +106,7 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	    else
 	      {
 		__mach_port_deallocate (__mach_task_self (), wobj);
-		return ((caddr_t) (long int)
-			__hurd_fail (EGRATUITOUS)); /* XXX */
+		return (caddr_t) (long int) __hurd_fail (EACCES);
 	      }
 	    break;
 	  }
@@ -154,4 +153,3 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 }
 
 weak_alias (__mmap, mmap)
-

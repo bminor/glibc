@@ -23,11 +23,13 @@ export subdir := $(subdir)
 
 # We need GNU awk for the xtract-typefun script.
 GAWK = gawk
+# Allow override
+INSTALL_INFO = install-info
 
 .PHONY: all dvi info
 all: dvi info
 dvi: libc.dvi
-info: libc.info
+info: libc.info dir-add.info
 
 # Get glibc's configuration info.
 ifneq (,$(wildcard ../Makeconfig))
@@ -66,8 +68,11 @@ stamp-summary: summary.awk $(chapters) $(chapters-incl)
 # Generate a file which can be added to the `dir' content to provide direct
 # access to the documentation of the function, variables, and other
 # definitions.
-dir-add.texi: xtract-typefun.awk $(chapters)
-	$(GAWK) -f $^ | sort > $@.new;
+dir-add.texi: xtract-typefun.awk $(chapters) $(chapters-incl)
+	(echo "@dircategory GNU C library functions";			\
+	 echo "@direntry";						\
+	 $(GAWK) -f $^ | sort;						\
+	 echo "@end direntry";) > $@.new
 	mv -f $@.new $@
 
 # Generate Texinfo files from the C source for the example programs.
@@ -75,7 +80,7 @@ dir-add.texi: xtract-typefun.awk $(chapters)
 	sed -e 's,[{}],@&,g'				\
 	    -e 's,/\*\(@.*\)\*/,\1,g'			\
 	    -e 's,/\*  *,/* @r{,g' -e 's,  *\*/,} */,'	\
-	    -e 's/\(@[a-z][a-z]*\)@{\([^}]*\)@}/\1{\2}/'\
+	    -e 's/\(@[a-z][a-z]*\)@{\([^}]*\)@}/\1{\2}/g'\
 	    $< | expand > $@.new
 	mv -f $@.new $@
 
@@ -89,7 +94,7 @@ distribute = $(minimal-dist)	       					\
 			$(minimal-dist)))				\
 	     libc.info* libc.?? libc.??s texinfo.tex summary.texi	\
 	     stamp-summary chapters chapters-incl			\
-	     xtract-typefun.awk
+	     xtract-typefun.awk dir-add.texi dir-add.info dir
 export distribute := $(distribute)
 
 tar-it = tar chovf $@ $^
@@ -118,18 +123,23 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 
 .PHONY: mostlyclean distclean realclean clean
 mostlyclean:
-	-rm -f libc.dvi libc.info*
+	-rm -f libc.dvi libc.info* dir-add.info
 clean: mostlyclean
 distclean: clean
 indices = cp fn pg tp vr ky
 realclean: distclean
 	-rm -f chapters chapters-incl summary.texi stamp-summary *.c.texi
 	-rm -f $(foreach index,$(indices),libc.$(index) libc.$(index)s)
-	-rm -f libc.log libc.aux libc.toc
+	-rm -f libc.log libc.aux libc.toc dir-add.texi
 
 .PHONY: install subdir_install installdirs install-data
 install-data subdir_install: install
-install: $(inst_infodir)/libc.info
+install: $(inst_infodir)/libc.info dir-add.info
+	@if $(SHELL) -c '$(INSTALL_INFO) --version' >/dev/null 2>&1; then \
+	  test -f $(inst_infodir)/dir || cp dir $(inst_infodir);\
+	 $(INSTALL_INFO) --info-dir=$(inst_infodir) $(inst_infodir)/libc.info;\
+	 $(INSTALL_INFO) --info-dir=$(inst_infodir) dir-add.info;\
+	else : ; fi
 # Catchall implicit rule for other installation targets from the parent.
 install-%: ;
 

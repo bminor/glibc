@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -42,7 +42,7 @@ tty_name (int fd, char **tty, size_t buf_len)
 	{
 	  rv = ttyname_r (fd, buf, buf_len);
 
-	  if (rv < 0 || memchr (buf, '\0', buf_len))
+	  if (rv != 0 || memchr (buf, '\0', buf_len))
 	    /* We either got an error, or we succeeded and the
 	       returned name fit in the buffer.  */
 	    break;
@@ -65,6 +65,8 @@ tty_name (int fd, char **tty, size_t buf_len)
 	  __set_errno (ENOMEM);
 	  break;
 	}
+
+      buf = new_buf;
     }
 
   if (rv == 0)

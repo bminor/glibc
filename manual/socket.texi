@@ -128,6 +128,28 @@ protocol} which you can request by specifying 0 as the protocol
 number.  And that's what you should normally do---use the default.
 @end itemize
 
+Throughout the following description at various places
+variables/parameters to denote sizes are required.  And here the trouble
+starts.  In the first implementations the type of these variables was
+simply @code{int}.  This type was on almost all machines of this time 32
+bits wide and so a de-factor standard required 32 bit variables.  This
+is important since references to variables of this type are passed to
+the kernel.
+
+But now the POSIX people came and unified the interface with their words
+"all size values are of type @code{size_t}".  But on 64 bit machines
+@code{size_t} is 64 bits wide and so variable references are not anymore
+possible.
+
+A solution provides the Unix98 specification which finally introduces a
+type @code{socklen_t}.  This type is used in all of the cases in
+previously changed to use @code{size_t}.  The only requirement of this
+type is that it is an unsigned type of at least 32 bits.  Therefore,
+implementations which require references to 32 bit variables be passed
+can be as happy as implementations which right from the start of 64 bit
+values.
+
+
 @node Communication Styles
 @section Communication Styles
 
@@ -323,7 +345,13 @@ This is a synonym for @code{AF_FILE}, for compatibility.
 @vindex AF_INET
 This designates the address format that goes with the Internet
 namespace.  (@code{PF_INET} is the name of that namespace.)
-@xref{Internet Address Format}.
+@xref{Internet Address Formats}.
+
+@comment sys/socket.h
+@comment IPv6 Basic API
+@item AF_INET6
+This is similar to @code{AF_INET}, but refers to the IPv6 protocol.
+(@code{PF_INET6} is the name of the corresponding namespace.)
 
 @comment sys/socket.h
 @comment BSD
@@ -352,7 +380,7 @@ For examples of use, see @ref{File Namespace}, or see @ref{Inet Example}.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int bind (int @var{socket}, struct sockaddr *@var{addr}, size_t @var{length})
+@deftypefun int bind (int @var{socket}, struct sockaddr *@var{addr}, socklen_t @var{length})
 The @code{bind} function assigns an address to the socket
 @var{socket}.  The @var{addr} and @var{length} arguments specify the
 address; the detailed format of the address depends on the namespace.
@@ -400,7 +428,7 @@ Internet socket.  The prototype for this function is in the header file
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int getsockname (int @var{socket}, struct sockaddr *@var{addr}, size_t *@var{length-ptr})
+@deftypefun int getsockname (int @var{socket}, struct sockaddr *@var{addr}, socklen_t *@var{length-ptr})
 The @code{getsockname} function returns information about the
 address of the socket @var{socket} in the locations specified by the
 @var{addr} and @var{length-ptr} arguments.  Note that the
@@ -566,7 +594,7 @@ A socket address for the Internet namespace includes the following components:
 @item
 The address of the machine you want to connect to.  Internet addresses
 can be specified in several ways; these are discussed in @ref{Internet
-Address Format}, @ref{Host Addresses}, and @ref{Host Names}.
+Address Formats}, @ref{Host Addresses}, and @ref{Host Names}.
 
 @item
 A port number for that machine.  @xref{Ports}.
@@ -577,7 +605,7 @@ canonical format called @dfn{network byte order}.  @xref{Byte Order},
 for information about this.
 
 @menu
-* Internet Address Format::     How socket addresses are specified in the
+* Internet Address Formats::    How socket addresses are specified in the
                                  Internet namespace.
 * Host Addresses::	        All about host addresses of internet host.
 * Protocols Database::		Referring to protocols by name.
@@ -589,16 +617,17 @@ for information about this.
 * Inet Example::	        Putting it all together.
 @end menu
 
-@node Internet Address Format
-@subsection Internet Socket Address Format
+@node Internet Address Formats
+@subsection Internet Socket Address Formats
 
-In the Internet namespace, a socket address consists of a host address
+In the Internet namespace, for both IPv4 (@code{AF_INET}) and IPv6
+(@code{AF_INET6}), a socket address consists of a host address
 and a port on that host.  In addition, the protocol you choose serves
 effectively as a part of the address because local port numbers are
 meaningful only within a particular protocol.
 
-The data type for representing socket addresses in the Internet namespace
-is defined in the header file @file{netinet/in.h}.
+The data types for representing socket addresses in the Internet namespace
+are defined in the header file @file{netinet/in.h}.
 @pindex netinet/in.h
 
 @comment netinet/in.h
@@ -627,13 +656,39 @@ When you call @code{bind} or @code{getsockname}, you should specify
 @code{sizeof (struct sockaddr_in)} as the @var{length} parameter if
 you are using an Internet namespace socket address.
 
+@deftp {Data Type} {struct sockaddr_in6}
+This is the data type used to represent socket addresses in the IPv6
+namespace.  It has the following members:
+
+@table @code
+@item short int sin6_family
+This identifies the address family or format of the socket address.
+You should store the value of @code{AF_INET6} in this member.
+@xref{Socket Addresses}.
+
+@item struct in6_addr sin6_addr
+This is the IPv6 address of the host machine.  @xref{Host
+Addresses}, and @ref{Host Names}, for how to get a value to store
+here.
+
+@item uint32_t sin6_flowinfo
+This is a currently unimplemented field.
+
+@item uint16_t sin6_port
+This is the port number.  @xref{Ports}.
+
+@end table
+@end deftp
+
 @node Host Addresses
 @subsection Host Addresses
 
 Each computer on the Internet has one or more @dfn{Internet addresses},
 numbers which identify that computer among all those on the Internet.
-Users typically write numeric host addresses as sequences of four
-numbers, separated by periods, as in @samp{128.52.46.32}.
+Users typically write IPv4 numeric host addresses as sequences of four
+numbers, separated by periods, as in @samp{128.52.46.32}, and IPv6
+numeric host addresses as sequences of up to eight numbers seperated by
+colons, as in @samp{5f03:1200:836f:c100::1}.
 
 Each computer also has one or more @dfn{host names}, which are strings
 of words separated by periods, as in @samp{churchy.gnu.ai.mit.edu}.
@@ -659,6 +714,9 @@ numeric address it stands for.
 Each computer on the Internet has one or more Internet addresses,
 numbers which identify that computer among all those on the Internet.
 @end ifinfo
+
+@c I think this whole section could possibly be removed.  It is slightly
+@c misleading these days.
 
 @cindex network number
 @cindex local network address number
@@ -747,7 +805,7 @@ host address number as an @code{unsigned long int}.
 
 @comment netinet/in.h
 @comment BSD
-@deftypevr Macro {unsigned long int} INADDR_LOOPBACK
+@deftypevr Macro {unsigned int} INADDR_LOOPBACK
 You can use this constant to stand for ``the address of this machine,''
 instead of finding its actual address.  It is the Internet address
 @samp{127.0.0.1}, which is usually called @samp{localhost}.  This
@@ -759,7 +817,7 @@ talking to itself.
 
 @comment netinet/in.h
 @comment BSD
-@deftypevr Macro {unsigned long int} INADDR_ANY
+@deftypevr Macro {unsigned int} INADDR_ANY
 You can use this constant to stand for ``any incoming address,'' when
 binding to an address.  @xref{Setting Address}.  This is the usual
 address to give in the @code{sin_addr} member of @w{@code{struct
@@ -768,15 +826,40 @@ sockaddr_in}} when you want to accept Internet connections.
 
 @comment netinet/in.h
 @comment BSD
-@deftypevr Macro {unsigned long int} INADDR_BROADCAST
+@deftypevr Macro {unsigned int} INADDR_BROADCAST
 This constant is the address you use to send a broadcast message.
 @c !!! broadcast needs further documented
 @end deftypevr
 
 @comment netinet/in.h
 @comment BSD
-@deftypevr Macro {unsigned long int} INADDR_NONE
+@deftypevr Macro {unsigned int} INADDR_NONE
 This constant is returned by some functions to indicate an error.
+@end deftypevr
+
+@comment netinet/in.h
+@comment IPv6 basic API
+@deftp {Data Type} {struct in6_addr}
+This data type is used to store an IPv6 address.  It stores 128 bits of
+data, which can be accessed (via a union) in a variety of ways.
+@end deftp
+
+@comment netinet/in.h
+@comment IPv6 basic API
+@deftypevr Constant {struct in6_addr} in6addr_loopback.
+This constant is the IPv6 address @samp{::1}, the loopback address.  See
+above for a description of what this means.  The macro
+@code{IN6ADDR_LOOPBACK_INIT} is provided to allow you to initialise your
+own variables to this value.
+@end deftypevr
+
+@comment netinet/in.h
+@comment IPv6 basic API
+@deftypevr Constant {struct in6_addr} in6addr_any
+This constant is the IPv6 address @samp{::}, the unspecified address.  See
+above for a description of what this means.  The macro
+@code{IN6ADDR_ANY_INIT} is provided to allow you to initialise your
+own variables to this value.
 @end deftypevr
 
 @node Host Address Functions
@@ -791,7 +874,7 @@ local-address-within-network numbers in host byte order.
 
 @comment arpa/inet.h
 @comment BSD
-@deftypefun {int} inet_aton (const char *@var{name}, struct in_addr *@var{addr})
+@deftypefun int inet_aton (const char *@var{name}, struct in_addr *@var{addr})
 This function converts the Internet host address @var{name}
 from the standard numbers-and-dots notation into binary data and stores
 it in the @code{struct in_addr} that @var{addr} points to.
@@ -826,6 +909,10 @@ string in the standard numbers-and-dots notation.  The return value is
 a pointer into a statically-allocated buffer.  Subsequent calls will
 overwrite the same buffer, so you should copy the string if you need
 to save it.
+
+In multi-threaded programs each thread has an own statically-allocated
+buffer.  But still subsequent calls of @code{inet_ntoa} in the same
+thread will overwrite the result of the last call.
 @end deftypefun
 
 @comment arpa/inet.h
@@ -848,6 +935,28 @@ Internet host address @var{addr}.
 @deftypefun int inet_netof (struct in_addr @var{addr})
 This function returns the network number part of the Internet host
 address @var{addr}.
+@end deftypefun
+
+@comment arpa/inet.h
+@comment IPv6 basic API
+@deftypefun int inet_pton (int @var{af}, const char *@var{cp}, void *@var{buf})
+This function converts an Internet address (either IPv4 or IPv6) from
+presentation (textual) to network (binary) format.  @var{af} should be
+either @code{AF_INET} or @code{AF_INET6}, as appropriate for the type of
+address being converted.  @var{cp} is a pointer to the input string, and
+@var{buf} is a pointer to a buffer for the result.  It is the caller's
+responsibility to make sure the buffer is large enough.
+@end deftypefun
+
+@comment arpa/inet.h
+@comment IPv6 basic API
+@deftypefun {char *} inet_ntop (int @var{af}, const void *@var{cp}, char *@var{buf}, size_t @var{len})
+This function converts an Internet address (either IPv4 or IPv6) from
+network (binary) to presentation (textual) form.  @var{af} should be
+either @code{AF_INET} or @code{AF_INET6}, as appropriate.  @var{cp} is a
+pointer to the address to be converted.  @var{buf} should be a pointer
+to a buffer to hold the result, and @var{len} is the length of this
+buffer.  The return value from the function will be this buffer address.
 @end deftypefun
 
 @node Host Names
@@ -887,11 +996,12 @@ These are alternative names for the host, represented as a null-terminated
 vector of strings.
 
 @item int h_addrtype
-This is the host address type; in practice, its value is always
-@code{AF_INET}.  In principle other kinds of addresses could be
-represented in the data base as well as Internet addresses; if this were
-done, you might find a value in this field other than @code{AF_INET}.
-@xref{Socket Addresses}.
+This is the host address type; in practice, its value is always either
+@code{AF_INET} or @code{AF_INET6}, with the latter being used for IPv6
+hosts.  In principle other kinds of addresses could be represented in
+the data base as well as Internet addresses; if this were done, you
+might find a value in this field other than @code{AF_INET} or
+@code{AF_INET6}.  @xref{Socket Addresses}.
 
 @item int h_length
 This is the length, in bytes, of each address.
@@ -913,16 +1023,26 @@ implicit assumption that you can convert this to a @code{struct in_addr} or
 an @code{unsigned long int}.  Host addresses in a @code{struct hostent}
 structure are always given in network byte order; see @ref{Byte Order}.
 
-You can use @code{gethostbyname} or @code{gethostbyaddr} to search the
-hosts database for information about a particular host.  The information
-is returned in a statically-allocated structure; you must copy the
-information if you need to save it across calls.
+You can use @code{gethostbyname}, @code{gethostbyname2} or
+@code{gethostbyaddr} to search the hosts database for information about
+a particular host.  The information is returned in a
+statically-allocated structure; you must copy the information if you
+need to save it across calls.  You can also use @code{getaddrinfo} and
+@code{getnameinfo} to obtain this information.
 
 @comment netdb.h
 @comment BSD
 @deftypefun {struct hostent *} gethostbyname (const char *@var{name})
 The @code{gethostbyname} function returns information about the host
 named @var{name}.  If the lookup fails, it returns a null pointer.
+@end deftypefun
+
+@comment netdb.h
+@comment IPv6 Basic API
+@deftypefun {struct hostent *} gethostbyname2 (const char *@var{name}, int @var{af})
+The @code{gethostbyname2} function is like @code{gethostbyname}, but
+allows the caller to specify the desired address family (e.g.@:
+@code{AF_INET} or @code{AF_INET6}) for the result.
 @end deftypefun
 
 @comment netdb.h
@@ -1590,7 +1710,7 @@ program must do, using the @code{connect} function, which is declared in
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int connect (int @var{socket}, struct sockaddr *@var{addr}, size_t @var{length})
+@deftypefun int connect (int @var{socket}, struct sockaddr *@var{addr}, socklen_t @var{length})
 The @code{connect} function initiates a connection from the socket
 with file descriptor @var{socket} to the socket whose address is
 specified by the @var{addr} and @var{length} arguments.  (This socket
@@ -1735,7 +1855,7 @@ queue.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int accept (int @var{socket}, struct sockaddr *@var{addr}, size_t *@var{length-ptr})
+@deftypefun int accept (int @var{socket}, struct sockaddr *@var{addr}, socklen_t *@var{length-ptr})
 This function is used to accept a connection request on the server
 socket @var{socket}.
 
@@ -2229,7 +2349,7 @@ more information about the @code{connect} function.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int sendto (int @var{socket}, void *@var{buffer}. size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, size_t @var{length})
+@deftypefun int sendto (int @var{socket}, void *@var{buffer}. size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, socklen_t @var{length})
 The @code{sendto} function transmits the data in the @var{buffer}
 through the socket @var{socket} to the destination address specified
 by the @var{addr} and @var{length} arguments.  The @var{size} argument
@@ -2258,7 +2378,7 @@ also tells you where it was sent from.  This function is declared in
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int recvfrom (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, size_t *@var{length-ptr})
+@deftypefun int recvfrom (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, socklen_t *@var{length-ptr})
 The @code{recvfrom} function reads one packet from the socket
 @var{socket} into the buffer @var{buffer}.  The @var{size} argument
 specifies the maximum number of bytes to be read.
@@ -2485,7 +2605,7 @@ They are declared in @file{sys/socket.h}.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int getsockopt (int @var{socket}, int @var{level}, int @var{optname}, void *@var{optval}, size_t *@var{optlen-ptr})
+@deftypefun int getsockopt (int @var{socket}, int @var{level}, int @var{optname}, void *@var{optval}, socklen_t *@var{optlen-ptr})
 The @code{getsockopt} function gets information about the value of
 option @var{optname} at level @var{level} for socket @var{socket}.
 
@@ -2515,7 +2635,7 @@ The @var{optname} doesn't make sense for the given @var{level}.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int setsockopt (int @var{socket}, int @var{level}, int @var{optname}, void *@var{optval}, size_t @var{optlen})
+@deftypefun int setsockopt (int @var{socket}, int @var{level}, int @var{optname}, void *@var{optval}, socklen_t @var{optlen})
 This function is used to set the socket option @var{optname} at level
 @var{level} for socket @var{socket}.  The value of the option is passed
 in the buffer @var{optval}, which has size @var{optlen}.

@@ -22,7 +22,7 @@
    These macros tell it to produce the `float' version, `wcstof'.  */
 
 #define	FLOAT		float
-#define	FLT		LDBL
+#define	FLT		FLT
 #define	STRTOF		wcstof
 #define	MPN2FLOAT	__mpn_construct_float
 #define	FLOAT_HUGE_VAL	HUGE_VALf

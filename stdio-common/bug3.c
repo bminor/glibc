@@ -7,7 +7,7 @@ DEFUN_VOID(main)
 {
   FILE *f;
   int i;
-  const char filename[] = "/tmp/bugtest";
+  const char filename[] = "/tmp/bug3.test";
 
   f = fopen(filename, "w+");
   for (i=0; i<9000; i++)

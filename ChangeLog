@@ -1,3 +1,471 @@
+1997-08-04 15:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/localedef.c (main): Set bit in avail for those
+	categories which are successfully read.
+	* locale/programs/locfile.c (check_all_categories): Don't check
+	categories if they are not available.
+	(write_all_categories): Don't write categories if they are not
+	available.
+
+	* socket/sys/socket.h (bind, getsockname, connect, sendto, recvfrom,
+	getsockopt, setsockopt, accept): Change size argument to type
+	socklen_t.
+	Pretty print.
+	* manual/socket.texi: Describe socklen_t and change prototypes of
+	socket functions to use socklen_t.
+	* sysdeps/generic/bits/socket.h: Define socklen_t.
+	(struct msghdr): Correct types to use socklen_t.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Likewise.
+
+	* stdio-common/printf_fp.c (__printf_fp): Correct rounding of numbers
+	1.0 < x < 8.0.
+	* stdio-common/tfformat.c: Add new tests for above bug.
+
+	* termios/cfsetspeed.c: Rewrite loop to do what it shall do.
+
+	* wcsmbs/Makefile (tests): Add tst-wcstof.
+	* wcsmbs/tst-wcstof.c: New file.
+	* wcsmbs/wcstof.c (FLT): Define as FLT.
+
+1997-08-02 01:57  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/ptrace.c: Don't set errno in error
+	case since the __syscall_ptrace call already did this.
+	Reported by Philip Gladstone <philip@talon.raptor.com>.
+
+1997-07-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sys/fsuid.h: Change include
+	<gnu/types.h> to <sys/types.h>.
+
+1997-08-01 23:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/locale.c (print_escaped): New function.
+	(show_info): Use print_escaped if strings can control unprintable
+	characters.
+	Patch by Jochen Hein <jochen.hein@delphi.central.de>.
+
+1997-07-31  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* md5-crypt/Makefile (extra-objs): Add onlymd5-crypt.o for
+	dependencies.
+
+1997-07-28 23:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_compat/compat-grp.c (internal_setgrent): Set FD_CLOEXEC
+	for stream on input file.
+	* nis/nss_compat/compat-pwd.c (internal_setpwent): Likewise.
+	* nis/nss_compat/compat-spwd.c (internal_setspent): Likewise.
+	* nss/nss_db/db-XXX.c (internal_setent): Likewise.
+	* nss/nss_db/db-alias.c (internal_setent): Likewise.
+	* nss/nss_db/db-netgrp.c (internal_setent): Likewise.
+	* nss/nss_files/files-XXX.c (internal_setent): Likewise.
+	* nss/nss_files/files-alias.c (internal_setent): Likewise.
+	* nss/nss_files/files-netgrp.c (internal_setent): Likewise.
+
+1997-07-23 05:10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/fsuid.h: New file.
+	Provided by Michael Deutschmann <ldeutsch@mail.netshop.net>.
+	* sysdeps/unix/sysv/linux/Makefile (headers): Add sys/fsuid.h.
+	* sysdeps/unix/sysv/linux/Dist: Add sys/fsuid.h.
+
+1997-07-19 22:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/africa: Update from tzdata1997g.
+	* time/asia: Likewise.
+	* time/australasia: Likewise.
+	* time/europe: Likewise.
+	* time/iso3166.tab: Likewise.
+	* time/zone.tab: Likewise.
+	* time/private.h: Update from tzcode1997f.
+	* time/scheck.c: Likewise.
+
+1997-07-17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* include/gnu-versions.h (_GNU_OBSTACK_INTERFACE_VERSION):
+	Synchronize with malloc/obstack.c.
+
+1997-07-15  Marcus G. Daniels  <marcus@cathcart.sysc.pdx.edu>
+
+	* manual/Makefile (INSTALL_INFO): Introduce variable to override
+	path to install-info for systems like Debian that have an
+	install-info with a different command line interface from the
+	canonical GNU texinfo version.
+
+1997-06-22  Paul Eggert  <eggert@twinsun.com>
+
+	* time/strftime.c (strftime): Use tm_zone if available, even if _LIBC.
+
+	* time/tzfile.c (__tzstring): New decl.
+	(__tzfile_read, __tzfile_default): Set __tzname to permanent strings.
+	(__tzfile_default): First two args are now const char *.
+
+	* time/tzset.c (__tzstring): New function.
+	(tz_rule): Name is now const char *.
+	(struct tzstring_head): New type.
+	(tzstring_list, tzstring_last_buffer_size): New static vars.
+	(__tzset_internal): Time zone names are now permanent, not temporary.
+
+1997-07-12 18:47  Ulrich Drepper  <drepper@cygnus.com>
+
+	* assert/assert.h [!NDEBUG] (assert, assert_perror): Don't use ||
+	and && in tests to allow use in C++ code which overloads these
+	operators.  Reported by Istvan Marko <istvan@cmdmail.amd.com>.
+
+1997-07-12 17:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/login.c (tty_name): Test return value of ttyname_r for !=
+	0, not < 0.
+	* misc/ttyslot.c (ttyslot): Test return value of ttyname_r for ==
+	0, not >= 0.
+	* sysdeps/unix/getlogin.c (getlogin): Test return value of
+	ttyname_r for != 0.
+	* sysdeps/unix/getlogin_r.c (getlogin_r): Likewise.
+
+1997-07-11 03:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/inet_ntoa.c: Prevent looking for thread data key if we found
+	one.
+
+	* signal/sigandset.c: Include stddef.h to get NULL defined.
+	* signal/sigisempty.c: Likewise.
+	* signal/sigorset.c: Likewise.
+
+1997-07-09 07:19  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* posix/execvp.c (execvp): Handle ESTALE.
+
+1997-07-09 08:16  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libio/fileops.c (_IO_file_underflow): Adjust pointers
+	before calling _IO_SYSREAD ().
+
+1997-07-08 13:59  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strftime.c (spaces, zeroes): Handle broken SGI compiler.
+	Patch by Richard Stallman <rms@gnu.ai.mit.edu>.
+
+1997-07-08 02:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/lockf.c (lockf): Clear fl before using.
+	Patch by sr@adb.fr.
+
+	* libio/strops.c: Correctly handle _IO_write_end.
+
+	* nss/nss_files/files-netgrp.c (_nss_netgroup_parseline): Don't
+	panic if setnetgrent wasn't called before, return error.
+	Patch by Thorsten Kukuk <kukuk@uni-paderborn.de>.
+
+	* time/mktime.c: Define localtime_r function as my_mktime_localtime_r
+	if locally defined.
+	* time/strftime.c: Define localtime_r function as my_ftime_localtime_r
+	if locally defined.
+	Define tm_diff function as ftime_tm_diff if locally defined.
+	Reported by Richard Stallman <rms@gnu.ai.mit.edu>.
+
+1997-07-04 18:04  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* stdlib/tst-strtol.c: Don't assume cpp takes ~0UL as long
+	in cc1.  Cpp in gcc doesn't do it.
+
+1997-07-05 11:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/login.c (tty_name): Use newly allocated buffer.
+	Patch by Jaakko Hyvätti <jaakko.hyvatti@iki.fi>.
+
+	* time/asctime.c: Never translate week and month name according
+	to LC_TIME.  Patch by Paul Eggert <eggert@twinsun.com>.
+
+1997-06-28 20:52  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add getresgid and
+	setresgid.
+
+1997-06-27 02:17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add quotactl.
+	Reported by a sun.
+
+1997-06-26 14:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strftime.c: Don't define `memcpy' macro if HAVE_MEMCPY is
+	defined.  Reported by Akim Demaille <demaille@inf.enst.fr>.
+
+1997-06-23 23:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/math.h: Add warning about use of M_* constants.
+	Pretty print.
+
+1997-06-21 02:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/locale.c: Correct comment.
+
+	* po/ko.po: Update.
+
+1997-06-20 02:35  a sun  <asun@zoology.washington.edu>
+
+	* sysdeps/unix/sysv/linux/netipx/ipx.h: Don't use kernel header.
+
+1997-06-19 19:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/rcmd.c: Correct a few typos.  Reported by Erik Troan.
+
+	* manual/Makefile (distribute): Add dir.
+	* manual/dir: New file.
+
+1997-06-19 07:37  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* time/tzfile.c (__tzfile_read): Store getc () return in int.
+
+1997-06-18  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* string/Makefile (routines): Add argz-replace.
+
+1997-06-12  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* string/argz.h (__argz_replace, argz_replace): New declarations.
+	* string/argz-replace.c: New file.
+
+1997-06-18 00:11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/vfscanf.c (inchar, ungetc): Don't count EOF as
+	character read in/put back.
+	* stdio-common/tstscanf.c: Add test case for this.
+
+1997-06-18 12:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/Makefile (install): Make sure `dir' file exists if we use
+	install-info.
+
+1997-06-17 19:32  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/Makefile (info): Depend on dir-add.info.
+
+1997-06-17 00:26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/stub/e_acoshl.c: Set errno to ENOSYS.
+	* sysdeps/stub/e_acosl.c: Likewise.
+	* sysdeps/stub/e_asinl.c: Likewise.
+	* sysdeps/stub/e_atan2l.c: Likewise.
+	* sysdeps/stub/e_expl.c: Likewise.
+	* sysdeps/stub/e_fmodl.c: Likewise.
+	* sysdeps/stub/e_j0l.c: Likewise.
+	* sysdeps/stub/e_j1l.c: Likewise.
+	* sysdeps/stub/e_jnl.c: Likewise.
+	* sysdeps/stub/e_lgammal_r.c: Likewise.
+	* sysdeps/stub/e_log10l.c: Likewise.
+	* sysdeps/stub/e_logl.c: Likewise.
+	* sysdeps/stub/e_powl.c: Likewise.
+	* sysdeps/stub/e_rem_pio2l.c: Likewise.
+	* sysdeps/stub/e_sqrtl.c: Likewise.
+	* sysdeps/stub/k_cosl.c: Likewise.
+	* sysdeps/stub/k_rem_pio2l.c: Likewise.
+	* sysdeps/stub/k_sinl.c: Likewise.
+	* sysdeps/stub/k_tanl.c: Likewise.
+	* sysdeps/stub/s_atanl.c: Likewise.
+	* sysdeps/stub/s_erfl.c: Likewise.
+	* sysdeps/stub/s_expm1l.c: Likewise.
+	* sysdeps/stub/s_log1pl.c: Likewise.
+
+1997-06-16 03:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/k_standard.c: Undo change of Tue Aug 6
+	01:13:56 1996.
+
+1997-06-15 00:43  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/s_asinh.S: Handle +-Inf and NaN correctly.
+	* sysdeps/libm-i387/s_asinhf.S: Likewise.
+	* sysdeps/libm-i387/s_asinhl.S: Likewise.
+	* sysdeps/libm-i387/s_nearbyint.S: Correctly leave function.
+	* sysdeps/libm-i387/s_nearbyintf.S: Likewise.
+	* sysdeps/libm-i387/s_nearbyintl.S: Likewise.
+
+1997-06-12 21:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (manual/dir-add.info): New rule.
+
+	* inet/arpa/tftp.h (struct tftphdr): Change type of tu_block to
+	`unsigned short'.
+
+	* manual/Makefile (dir-add.texi): Also emit wrapper text for
+	info/install-info.
+	(distribute): Add dir-add.texi and dir-add.info.
+	(mostlyclean): Add dir-add.info.
+	(realclean): Add dir-add.texi.
+	(install): Add entries in `dir' file using install-info.
+
+	* manual/libc.texinfo: Add @dircategory and @direntry text.
+	Reported by Miles Bader <miles@gnu.ai.mit.edu>.
+
+1997-06-12 12:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/__math.h (__M_SQRT2): Define here since we
+	cannot rely on M_SQRT2 being defined.  (log1p): Use __M_SQRT2 not
+	M_SQRT2.
+	* math/math.h (_Mldbl): Define even if M_* constants are not
+	defined.
+	Reported by corsepiu@faw.uni-ulm.de.
+
+1997-06-12 03:08  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* nss/getXXbyYY_r.c (do_weak_alias): Remove extra parentheses.
+
+1997-06-11 13:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/regexp.h (compile): Allow use of macro INIT for variable
+	declaration.  Add documentation for INIT.
+	Reported by Robert Bihlmeyer <robbe@orcus.priv.at>.
+
+1997-06-11 10:47  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h: Add two new hardware types.
+
+1997-06-05 23:10  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/Dist: Remove netatalk/atalk.h and
+	netinet/icmp.h, add netatalk/at.h.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Remove termios.h.
+	* sysdeps/unix/sysv/linux/sparc/Dist: Remove start.c.
+
+1997-06-05 13:43  Fila Kolodny  <fila@filapc.ibi.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add netipx/ipx.h.
+
+1997-06-05 17:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/argz-addsep.c: Correct weak alias.
+	Reported by Ben Pfaff <pfaffben@pilot.msu.edu>.
+
+	* locale/setlocale.c (setlocale): Free variable with locale path
+	before returning.
+	(setname): Don't test for _nl_current[category] being NULL before
+	freeing.
+	Reported by Ben Pfaff <pfaffben@pilot.msu.edu>.
+
+1997-06-03 23:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/Makefile: Make tzselect depend on config.make.
+
+1997-06-01 12:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/gnu/types.h (__fd_mask): Change
+	type to `unsigned long int'.
+	Patch by Richard Henderson <richard@twiddle.rth.home>.
+
+1997-05-30 17:34  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/nss_files/files-hosts.c: Delete inclusion of
+	"../resolv/mapv4v6hostent.h".
+
+1997-05-31 02:33  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/libio.h: Define bits for libg++-2.8.
+
+1997-05-30 09:50  Richard Henderson  <rth@tamu.edu>
+
+	* manual/maint.texi: ECOFF hasn't been tested in ages and I don't
+	plan on doing so ever again.  Don't say alpha-linuxecoff is known
+	to work.
+
+	* sysdeps/alpha/Makefile: Temporarily turn on -mieee globally.  This
+	will last until I figure out how to build a parallel libm_ieee.
+
+	* sysdeps/alpha/fpu/fpu_control.h: Update copyright.  Change default
+	FP mode to round to nearest, no exceptions as for Intel.
+	* sysdeps/unix/sysv/linux/alpha/setfpucw.c: Add copyright.
+	(rdfpcr): Use excb rather than trapb.  Be more efficient about
+	getting at the fpcr.
+	(wrfpcr): Likewise.
+	(__setfpucw): Reformat.
+
+	* sysdeps/unix/alpha/sysdep.S: Tiny cleanups.
+	* sysdeps/unix/sysv/linux/alpha/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/brk.S: Don't use jmp macro to make
+	sure the stack frame is released the very instruction before the
+	real jump out.
+	* sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/gnu/types.h: Undef some bits we may
+	have gotten from <linux/posix_types.h>.
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Add definition for Miata.
+
+1997-05-29 13:59  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (manual/dir-add.texi): Force execution.
+
+1997-05-29 13:55  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdlib/strfmon.c: Don't run past EOS after `='.
+
+1997-05-29 12:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	Update resolver code to bind-4.9.6-T1A.
+	* resolv/Banner: Update.
+	* nss/digits_dots.c: Adapt text address matching to T1A.
+	* nss/nss_files/files-hosts.c: Always use inet_pton.
+	* resolv/base64.c (b64_pton): Follow T1A but don't use this code since
+	it would lead to warnings.
+	* resolv/gethnamaddr.c (getanswer): Test host name for maximal length
+	at several places.
+	* resolv/inet_net_pton.c (inet_net_pton_ipv4): Correct typo in comment.
+	* resolv/res_comp.c (dn_expand): Check for overflow.
+	(dn_comp): Likewise.
+	* resolv/res_debug.c (precsize_aton): Better implementation.
+	* resolv/res_init.c (res_init): Make `buf' of size MAXDNAME.
+	* resolv/res_send.c (res_send): Check for overflow in descriptor set.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Test host name for maximal
+	length at several places.
+
+1997-05-28 21:56  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/net/ppp_defs.h: Include <time.h> for
+	time_t.
+
+	* login/pty.h: Include <ioctl-types.h> for definition of struct
+	winsize.
+
+1997-05-28 22:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strptime.c (strptime_internal, case 'Y'): Restrict year
+	number to four digits and to representable range for 4 byte time_t
+	values.
+	Patch by H.J. Lu <hjl@lucon.org>.
+
+1997-07-16  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/mmap.c (__mmap): Check for !MAP_SHARED rather
+	than MAP_COPY|MAP_PRIVATE, since those values are defined wierdly.
+	Return EACCES rather than EGRATUITOUS if a R/W request isn't writable.
+
+1997-07-05 11:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/login.c (tty_name): Use newly allocated buffer.
+	Patch by Jaakko Hyvätti <jaakko.hyvatti@iki.fi>.
+
+	* time/asctime.c: Never translate week and month name according
+	to LC_TIME.  Patch by Paul Eggert <eggert@twinsun.com>.
+
+1997-07-01 16:40  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c: Include <hurd/id.h>.
+	(reauth_proc): Call proc_setowner appropriately too.
+
+1997-05-29 14:02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sys/ttydefaults.h (CEOL, CSTATUS): Use
+	correct value for _POSIX_VDISABLE.
+
+1997-05-06 13:25  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* stdio-common/bug3.c: use /tmp/bug3.test for concurrency.
+
+	* stdio-common/bug4.c: use /tmp/bug4.test for concurrency.
+
 1997-05-26 23:29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Net release 2.0.4.

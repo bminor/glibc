@@ -27,6 +27,8 @@ __BEGIN_DECLS
 #define	__need_size_t
 #include <stddef.h>
 
+/* Type for length arguments in socket calls.  */
+typedef unsigned int socklen_t;
 
 /* Types of sockets.  */
 enum __socket_type
@@ -143,13 +145,15 @@ enum
 struct msghdr
   {
     __ptr_t msg_name;		/* Address to send to/receive from.  */
-    size_t msg_namelen;		/* Length of address data.  */
+    socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
-    size_t msg_iovlen;		/* Number of elements in the vector.  */
+    int msg_iovlen;		/* Number of elements in the vector.  */
 
     __ptr_t msg_accrights;	/* Access rights information.  */
-    size_t msg_accrightslen;	/* Length of access rights information.  */
+    socklen_t msg_accrightslen;	/* Length of access rights information.  */
+
+    int msg_flags;		/* Flags in received message.  */
   };
 
 

@@ -99,6 +99,11 @@
 #else
 # define MAXPACKET	1024
 #endif
+/* As per RFC 1034 and 1035 a host name cannot exceed 255 octets in length.  */
+#ifdef MAXHOSTNAMELEN
+# undef MAXHOSTNAMELEN
+#endif
+#define MAXHOSTNAMELEN 256
 
 static const char AskedForGot[] = "\
 gethostby*.getanswer: asked for \"%s\", got \"%s\"";
@@ -197,8 +202,8 @@ _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
   int size, n, status;
 
   if (af == AF_INET6 && len == IN6ADDRSZ &&
-      (bcmp (uaddr, mapped, sizeof mapped) == 0
-       || bcmp (uaddr, tunnelled, sizeof tunnelled) == 0))
+      (memcmp (uaddr, mapped, sizeof mapped) == 0
+       || memcmp (uaddr, tunnelled, sizeof tunnelled) == 0))
     {
       /* Unmap. */
       addr += sizeof mapped;
@@ -260,7 +265,7 @@ _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
 
   result->h_addrtype = af;
   result->h_length = len;
-  bcopy (addr, host_data->host_addr, len);
+  memcpy (host_data->host_addr, addr, len);
   host_data->h_addr_ptrs[0] = (char *) host_data->host_addr;
   host_data->h_addr_ptrs[1] = NULL;
   if (af == AF_INET && (_res.options & RES_USE_INET6))
@@ -342,6 +347,11 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
        * (i.e., with the succeeding search-domain tacked on).
        */
       n = strlen (bp) + 1;             /* for the \0 */
+      if (n >= MAXHOSTNAMELEN)
+	{
+	  __set_h_errno (NO_RECOVERY);
+	  return NSS_STATUS_TRYAGAIN;
+	}
       result->h_name = bp;
       bp += n;
       linebuflen -= n;
@@ -396,11 +406,16 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  /* Store alias.  */
 	  *ap++ = bp;
 	  n = strlen (bp) + 1;		/* For the \0.  */
+	  if (n >= MAXHOSTNAMELEN)
+	    {
+	      ++had_error;
+	      continue;
+	    }
 	  bp += n;
 	  linebuflen -= n;
 	  /* Get canonical name.  */
 	  n = strlen (tbuf) + 1;	/* For the \0.  */
-	  if (n > buflen)
+	  if ((size_t) n > buflen || n >= MAXHOSTNAMELEN)
 	    {
 	      ++had_error;
 	      continue;
@@ -423,7 +438,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  cp += n;
 	  /* Get canonical name. */
 	  n = strlen (tbuf) + 1;   /* For the \0.  */
-	  if (n > buflen)
+	  if ((size_t) n > buflen || n >= MAXHOSTNAMELEN)
 	    {
 	      ++had_error;
 	      continue;
@@ -469,6 +484,11 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  if (n != -1)
 	    {
 	      n = strlen (bp) + 1;	/* for the \0 */
+	      if (n >= MAXHOSTNAMELEN)
+		{
+		  ++had_error;
+		  break;
+		}
 	      bp += n;
 	      linebuflen -= n;
 	    }
@@ -478,6 +498,11 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  if (_res.options & RES_USE_INET6)
 	    {
 	      n = strlen (bp) + 1;	/* for the \0 */
+	      if (n >= MAXHOSTNAMELEN)
+		{
+		  ++had_error;
+		  break;
+		}
 	      bp += n;
 	      linebuflen -= n;
 	      map_v4v6_hostent (result, &bp, &linebuflen);
@@ -520,7 +545,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      cp += n;
 	      continue;
 	    }
-	  bcopy (cp, *hap++ = bp, n);
+	  memcpy (*hap++ = bp, cp, n);
 	  bp += n;
 	  cp += n;
 	  linebuflen -= n;
@@ -549,8 +574,8 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       if (result->h_name == NULL)
 	{
 	  n = strlen (qname) + 1;	/* For the \0.  */
-	  if (n > linebuflen)
-	    goto try_again;
+	  if (n > linebuflen || n >= MAXHOSTNAMELEN)
+	    goto no_recovery;
 	  strcpy (bp, qname);		/* Cannot overflow.  */
 	  result->h_name = bp;
 	  bp += n;
@@ -562,7 +587,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       *h_errnop = NETDB_SUCCESS;
       return NSS_STATUS_SUCCESS;
     }
-try_again:
-  *h_errnop = TRY_AGAIN;
+ no_recovery:
+  *h_errnop = NO_RECOVERY;
   return NSS_STATUS_TRYAGAIN;
 }

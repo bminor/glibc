@@ -123,6 +123,12 @@ static void addrsort __P((char **, int));
 #define	MAXPACKET	1024
 #endif
 
+/* As per RFC 1034 and 1035 a host name cannot exceed 255 octets in length.  */
+#ifdef MAXHOSTNAMELEN
+# undef MAXHOSTNAMELEN
+#endif
+#define MAXHOSTNAMELEN 256
+
 typedef union {
     HEADER hdr;
     u_char buf[MAXPACKET];
@@ -212,6 +218,10 @@ getanswer(answer, anslen, qname, qtype)
 		 * (i.e., with the succeeding search-domain tacked on).
 		 */
 		n = strlen(bp) + 1;		/* for the \0 */
+		if (n >= MAXHOSTNAMELEN) {
+			__set_h_errno (NO_RECOVERY);
+			return (NULL);
+		}
 		host.h_name = bp;
 		bp += n;
 		buflen -= n;
@@ -256,11 +266,15 @@ getanswer(answer, anslen, qname, qtype)
 			/* Store alias. */
 			*ap++ = bp;
 			n = strlen(bp) + 1;	/* for the \0 */
+			if (n >= MAXHOSTNAMELEN) {
+				had_error++;
+				continue;
+			}
 			bp += n;
 			buflen -= n;
 			/* Get canonical name. */
 			n = strlen(tbuf) + 1;	/* for the \0 */
-			if (n > buflen) {
+			if (n > buflen || n >= MAXHOSTNAMELEN) {
 				had_error++;
 				continue;
 			}
@@ -272,14 +286,14 @@ getanswer(answer, anslen, qname, qtype)
 		}
 		if (qtype == T_PTR && type == T_CNAME) {
 			n = dn_expand(answer->buf, eom, cp, tbuf, sizeof tbuf);
-			if ((n < 0) || !res_hnok(tbuf)) {
+			if (n < 0 || !res_hnok(tbuf)) {
 				had_error++;
 				continue;
 			}
 			cp += n;
 			/* Get canonical name. */
 			n = strlen(tbuf) + 1;	/* for the \0 */
-			if (n > buflen) {
+			if (n > buflen || n >= MAXHOSTNAMELEN) {
 				had_error++;
 				continue;
 			}
@@ -320,6 +334,10 @@ getanswer(answer, anslen, qname, qtype)
 				n = -1;
 			if (n != -1) {
 				n = strlen(bp) + 1;	/* for the \0 */
+				if (n >= MAXHOSTNAMELEN) {
+					had_error++;
+					break;
+				}
 				bp += n;
 				buflen -= n;
 			}
@@ -328,6 +346,10 @@ getanswer(answer, anslen, qname, qtype)
 			host.h_name = bp;
 			if (_res.options & RES_USE_INET6) {
 				n = strlen(bp) + 1;	/* for the \0 */
+				if (n >= MAXHOSTNAMELEN) {
+					had_error++;
+					break;
+				}
 				bp += n;
 				buflen -= n;
 				map_v4v6_hostent(&host, &bp, &buflen);
@@ -395,8 +417,8 @@ getanswer(answer, anslen, qname, qtype)
 # endif /*RESOLVSORT*/
 		if (!host.h_name) {
 			n = strlen(qname) + 1;	/* for the \0 */
-			if (n > buflen)
-				goto try_again;
+			if (n > buflen || n >= MAXHOSTNAMELEN)
+				goto no_recovery;
 			strcpy(bp, qname);
 			host.h_name = bp;
 			bp += n;
@@ -407,8 +429,8 @@ getanswer(answer, anslen, qname, qtype)
 		__set_h_errno (NETDB_SUCCESS);
 		return (&host);
 	}
- try_again:
-	__set_h_errno (TRY_AGAIN);
+ no_recovery:
+	__set_h_errno (NO_RECOVERY);
 	return (NULL);
 }
 
@@ -508,12 +530,11 @@ gethostbyname2(name, af)
 			if (!isdigit(*cp) && *cp != '.')
 				break;
                }
-	if (isxdigit(name[0]) || name[0] == ':')
+	if ((isxdigit(name[0]) && strchr(name, ':') != NULL) ||
+	    name[0] == ':')
 		for (cp = name;; ++cp) {
 			if (!*cp) {
 				if (*--cp == '.')
-					break;
-				if (!strchr (name, ':'))
 					break;
 				/*
 				 * All-IPv6-legal, no dot at the end.
@@ -719,8 +740,7 @@ _gethtent()
 	if (!(cp = strpbrk(p, " \t")))
 		goto again;
 	*cp++ = '\0';
-	if ((_res.options & RES_USE_INET6) &&
-	    inet_pton(AF_INET6, p, host_addr) > 0) {
+	if (inet_pton(AF_INET6, p, host_addr) > 0) {
 		af = AF_INET6;
 		len = IN6ADDRSZ;
 	} else if (inet_pton(AF_INET, p, host_addr) > 0) {
@@ -757,12 +777,6 @@ _gethtent()
 			*cp++ = '\0';
 	}
 	*q = NULL;
-	if (_res.options & RES_USE_INET6) {
-		char *bp = hostbuf;
-		int buflen = sizeof hostbuf;
-
-		map_v4v6_hostent(&host, &bp, &buflen);
-	}
 	__set_h_errno (NETDB_SUCCESS);
 	return (&host);
 }

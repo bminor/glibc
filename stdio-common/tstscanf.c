@@ -140,5 +140,39 @@ main (int argc, char **argv)
   if (out != stdout)
     pclose (out);
 
+  fputs ("Test 3:\n", out);
+  {
+    int res, val, n;
+
+    res = sscanf ("-242", "%3o%n", &val, &n);
+    printf ("res = %d, val = %d, n = %d\n", res, val, n);
+    if (res != 1 || val != -20 || n != 3)
+      return 1;
+  }
+
+  fputs ("Test 4:\n", out);
+  {
+    double a = 0, b = 0;
+    int res, n;
+
+    res = sscanf ("1234567", "%3lg%3lg%n", &a, &b, &n);
+    printf ("res = %d, a = %g, b = %g, n = %d\n", res, a, b, n);
+
+    if (res != 2 || a != 123 || b != 456 || n != 6)
+      return 1;
+
+    res = sscanf ("0", "%lg", &a);
+    printf ("res = %d, a = %g\n", res, a);
+
+    if (res != 1 || a != 0)
+      exit (EXIT_FAILURE);
+
+    res = sscanf ("1e3", "%lg%n", &a, &n);
+    printf ("res = %d, a = %g, n = %d\n", res, a, n);
+
+    if (res != 1 || a != 1000 || n != 3)
+      exit (EXIT_FAILURE);
+  }
+
   exit(EXIT_SUCCESS);
 }

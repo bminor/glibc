@@ -36,7 +36,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   swab strfry memfrob memmem				\
 		   $(addprefix argz-,append count create ctsep next	\
 			             delete extract insert stringify	\
-				     addsep)				\
+				     addsep replace)			\
 		   envz basename
 
 tests		:= tester testcopy test-ffs tst-strlen stratcliff

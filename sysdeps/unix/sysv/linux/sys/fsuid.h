@@ -1,6 +1,5 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by David Mosberger <davidm@azstarnet.com>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,45 +16,21 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
+#ifndef _SYS_FSUID_H
+#define _SYS_FSUID_H	1
 
-#define GSI_IEEE_FP_CONTROL	45
+#include <features.h>
+#include <sys/types.h>
 
-	.text
+__BEGIN_DECLS
 
-LEAF(__ieee_get_fp_control, 16)
-#ifdef PROF
-	ldgp	gp, 0(pv)
-	lda	sp, -16(sp)
-	.set noat
-	lda	AT, _mcount
-	jsr	AT, (AT), _mcount
-	.set at
-	.prologue 1
-#else
-	lda	sp, -16(sp)
-	.prologue 0
-#endif
+/* Change uid used for file access control to UID, without affecting
+   other priveledges (such as who can send signals at the process).  */
+extern int setfsuid __P ((__uid_t __uid));
 
-	mov	sp, a1
-	ldi	a0, GSI_IEEE_FP_CONTROL
-	ldi	v0, __NR_osf_getsysinfo
-	call_pal PAL_callsys
-	bne	a3, $error
+/* Ditto for group id. */
+extern int setfsgid __P ((__gid_t __gid));
 
-	ldq	v0, 0(sp)
-	lda	sp, 16(sp)
-	ret
+__END_DECLS
 
-$error:	lda	sp, 16(sp)
-#ifndef PROF
-	br	gp, 1f
-1:	ldgp	gp, 0(gp)
-#endif
-	lda	pv, __syscall_error
-	lda	sp, 16(sp)
-	jmp	zero, (pv), __syscall_error
-
-	END(__ieee_get_fp_control)
-
-weak_alias (__ieee_get_fp_control, ieee_get_fp_control)
+#endif /* fsuid.h */

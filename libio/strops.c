@@ -88,7 +88,7 @@ DEFUN(_IO_str_init_static, (fp, ptr, size, pstart),
   if (pstart)
     {
       fp->_IO_write_ptr = pstart;
-      fp->_IO_write_end = ptr+size;
+      fp->_IO_write_end = ptr + size;
       fp->_IO_read_end = pstart;
     }
   else
@@ -193,7 +193,7 @@ _IO_ssize_t
 DEFUN(_IO_str_count, (fp),
       register _IO_FILE *fp)
 {
-  return (fp->_IO_write_ptr > fp->_IO_read_end ? fp->_IO_write_ptr
+  return (fp->_IO_write_end > fp->_IO_read_end ? fp->_IO_write_end
 	  : fp->_IO_read_end)
     - fp->_IO_read_base;
 }

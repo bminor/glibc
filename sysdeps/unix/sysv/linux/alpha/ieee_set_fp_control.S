@@ -43,15 +43,17 @@ LEAF(__ieee_set_fp_control, 16)
 
 	lda	sp, 16(sp)
 
-	bne	a3, error
+	bne	a3, $error
 	ret
 
-error:
+$error:
 #ifndef PROF
 	br	gp, 1f
 1:	ldgp	gp, 0(gp)
 #endif
-	jmp	zero, __syscall_error
+	lda	pv, __syscall_error
+	lda	sp, 16(sp)
+	jmp	zero, (pv), __syscall_error
 
 	END(__ieee_set_fp_control)
 
