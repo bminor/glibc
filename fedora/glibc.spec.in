@@ -459,6 +459,7 @@ cat > asm/errno.h <<EOF
 #define EKEYREVOKED	(ENOKEY + 2)	/* Key has been revoked */
 #define EKEYREJECTED	(ENOKEY + 3)	/* Key was rejected by service */
 #endif
+#endif
 EOF
 
 %ifnarch %{ix86} alpha alphaev6 sparc sparcv9
