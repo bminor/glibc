@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 /* Read the contents of the symbolic link PATH into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
-int
+ssize_t
 DEFUN(__readlink, (path, buf, len),
       CONST char *path AND char *buf AND size_t len)
 {
@@ -40,11 +40,9 @@ DEFUN(__readlink, (path, buf, len),
   while (len > 0)
     {
       char *s = p;
-      size_t nread = len;
-      err = __io_read (file, &s, &nread);
-      if (err)
-	break;
-      if (nread == 0)
+      size_t nread;
+      err = __io_read (file, &s, &nread, p - buf, len);
+      if (err || nread == 0)
 	break;
       if (s != p)
 	{
