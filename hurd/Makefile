@@ -31,7 +31,7 @@ user-interfaces		:= $(addprefix hurd/,\
 				       auth process msg \
 				       exec core interrupt \
 				       fs fsys io startup) # socket term
-server-interfaces	:= # hurd/__misc
+server-interfaces	:= hurd/msg
 
 routines = $(interface-routines) \
 	   hurdauth hurdid hurdpath hurdpid hurdports \
