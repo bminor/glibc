@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,14 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <time.h>
 
 
-/* How many days are in each month.  */
-CONST unsigned short int __mon_lengths[2][12] =
-  {
-    /* Normal years.  */
-    { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
-    /* Leap years.  */
-    { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
-  };
+/* Defined in mktime.c.  */
+extern CONST unsigned short int __mon_lengths[2][12];
 
 #define	SECS_PER_HOUR	(60 * 60)
 #define	SECS_PER_DAY	(SECS_PER_HOUR * 24)
