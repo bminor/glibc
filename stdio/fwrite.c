@@ -62,11 +62,17 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
   default_func
     = stream->__room_funcs.__output == __default_room_functions.__output;
 
-  if (__stdio_check_offset (stream) == EOF)
-    {
-      stream->__error = 1;
-      goto done;
-    }
+  {
+    int save = errno;
+
+    if (__stdio_check_offset (stream) == EOF && errno != ESPIPE)
+      {
+	stream->__error = 1;
+	goto done;
+      }
+
+    errno = save;
+  }
 
   if (stream->__buffer == NULL && default_func &&
       stream->__offset == stream->__target)
@@ -81,8 +87,11 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
       if (count > 0)
 	{
 	  written += count;
-	  stream->__offset += count;
-	  stream->__target = stream->__offset;
+	  if (stream->__offset != -1)
+	    {
+	      stream->__offset += count;
+	      stream->__target = stream->__offset;
+	    }
 	  to_write -= count;
 	  p += count;
 	}
