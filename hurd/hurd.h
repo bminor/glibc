@@ -54,7 +54,7 @@ struct _hurd_port
      int __dealloc;							      \
      const mach_port_t port = _hurd_port_get (__p, &__dealloc);		      \
      __typeof(expr) __result = (expr);					      \
-     _hurd_port_free (__p, &__dealloc);					      \
+     _hurd_port_free (__p, &__dealloc, port);				      \
      __result; })
 
 /* Initialize *PORT to INIT.  */
@@ -131,7 +131,8 @@ _hurd_port_set (struct _hurd_port *port, mach_port_t newport)
 }
 
 /* Basic ports and info, initialized by startup.  */
-extern struct _hurd_port _hurd_ports[INIT_PORT_MAX];
+extern struct _hurd_port *_hurd_ports;
+extern unsigned int _hurd_nports;
 extern volatile mode_t _hurd_umask;
 
 extern vm_address_t _hurd_stack_low, _hurd_stack_high; /* Not locked.  */
@@ -168,8 +169,9 @@ extern void _hurd_port2fd (struct _hurd_fd *fd, io_t port, int flags);
    If DEALLOC is nonzero, deallocate PORT first.  */
 extern int _hurd_intern_fd (io_t port, int flags, int dealloc);
 
-/* Allocate a new file descriptor and return it, locked.  */
-extern struct _hurd_fd *_hurd_alloc_fd (int *fd_ptr);
+/* Allocate a new file descriptor and return it, locked.
+   The new descriptor will not be less than FIRST_FD.  */
+extern struct _hurd_fd *_hurd_alloc_fd (int *fd_ptr, int first_fd);
 
 
 struct _hurd_dtable
@@ -284,9 +286,9 @@ _hurd_fd_done (struct _hurd_fd_user d, int *dealloc)
 	 io_t ctty = _hurd_port_locked_get (&__d.d->ctty, &__dealloc_ctty);   \
 	 __typeof (expr) __result;					      \
 	 __result = (expr);						      \
-	 _hurd_port_free (&__d.d->port, port, &__dealloc);		      \
+	 _hurd_port_free (&__d.d->port, &__dealloc, port);		      \
 	 if (ctty != MACH_PORT_NULL)					      \
-	   _hurd_port_free (&__d.d->ctty, ctty, &__dealloc_ctty);	      \
+	   _hurd_port_free (&__d.d->ctty, &__dealloc_ctty, port);	      \
 	 _hurd_fd_done (__d, &__dealloc_dt);				      \
 	 __result;							      \
        }								      \
@@ -324,7 +326,8 @@ extern struct mutex _hurd_pid_lock; /* Locks above.  */
 /* User and group IDs.  */
 extern mutex_t _hurd_idlock;
 extern int _hurd_id_valid;	/* If _hurd_uid and _hurd_gid are valid.  */
-extern struct idlist _hurd_uid, _hurd_gid;
+extern struct idlist *_hurd_uid, *_hurd_gid;
+extern unsigned int _hurd_nuids, _hurd_ngids;
 extern auth_t _hurd_rid_auth;	/* Cache used by access.  */
 
 
