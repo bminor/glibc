@@ -36,6 +36,9 @@ Cambridge, MA 02139, USA.  */
 #include <signal.h>
 #include <errno.h>
 
+#include <mutex.h>
+#include <lock-intern.h>
+
 
 /* Per-thread signal state.  */
 
@@ -45,9 +48,7 @@ struct hurd_sigstate
     thread_t thread;
     struct hurd_sigstate *next; /* Linked-list of thread sigstates.  */
 
-#ifdef noteven
     struct mutex lock;		/* Locks the rest of this structure.  */
-#endif
     sigset_t blocked;
     sigset_t pending;
     struct sigaction actions[NSIG];
@@ -160,6 +161,7 @@ extern void _hurd_siginfo_handler (int);
 
 
 #ifdef notyet
+
 /* Perform interruptible RPC CALL on PORT.
    The args in CALL should be constant or local variable refs.
    They may be evaluated many times, and must not change.
@@ -279,10 +281,15 @@ struct hurd_signal_preempt
 extern struct hurd_signal_preempt *_hurd_signal_preempt[NSIG];
 extern struct mutex _hurd_signal_preempt_lock;
 
+
+#ifndef _EXTERN_INLINE
+#define _EXTERN_INLINE extern __inline
+#endif
+
 /* Initialize PREEMPTER with the information given and stick it in the
    chain of preempters for SIGNO.  */
 
-extern inline int
+_EXTERN_INLINE int
 hurd_preempt_signals (struct hurd_signal_preempt *preempter,
 		      int signo, int first_code, int last_code,
 		      sighandler_t (*handler) (thread_t, int, int))
@@ -304,7 +311,7 @@ hurd_preempt_signals (struct hurd_signal_preempt *preempter,
 
 /* Remove PREEMPTER from the chain for SIGNO.  */
 
-extern inline int
+_EXTERN_INLINE int
 hurd_unpreempt_signals (struct hurd_signal_preempt *preempter, int signo)
 {
   struct hurd_signal_preempt *p, *lastp;
