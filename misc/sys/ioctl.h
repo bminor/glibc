@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,12 @@ __BEGIN_DECLS
 /* Get the list of `ioctl' requests and related constants.  */
 #include <ioctls.h>
 
+/* On a Unix system, the system <sys/ioctl.h> probably defines some of the
+   symbols we define in <sys/ttydefaults.h> (usually with the same values).
+   The code to generate <ioctls.h> has omitted these symbols to avoid the
+   conflict, but a Unix program expects <sys/ioctl.h> to define them, so we
+   must include <sys/ttydefaults.h> here.  */
+#include <sys/ttydefaults.h>
 
 #if	defined(TIOCGETC) || defined(TIOCSETC)
 /* Type of ARG for TIOCGETC and TIOCSETC requests.  */
@@ -100,9 +106,10 @@ struct ttysize
 #endif
 
 /* Perform the I/O control operation specified by REQUEST on FD.
-   The actual type and use of ARG and the return value depend on REQUEST.  */
-extern int __ioctl __P ((int __fd, int __request, __ptr_t __arg));
-extern int ioctl __P ((int __fd, int __request, __ptr_t __arg));
+   One argument may follow; its presence and type depend on REQUEST.
+   Return value depends on REQUEST.  Usually -1 indicates error.  */
+extern int __ioctl __P ((int __fd, int __request, ...));
+extern int ioctl __P ((int __fd, int __request, ...));
 
 __END_DECLS
 
