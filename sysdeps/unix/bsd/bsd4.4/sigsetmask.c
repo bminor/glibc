@@ -1,1 +1,1 @@
-#include <sysdeps/posix/__sigsetmask.c>
+#include <sysdeps/posix/__sigstmsk.c>
