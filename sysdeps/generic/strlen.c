@@ -30,7 +30,7 @@ DEFUN(strlen, (str), CONST char *str)
 {
   CONST char *char_ptr;
   CONST unsigned long int *longword_ptr;
-  unsigned long int longword, magic_bits;
+  unsigned long int longword, magic_bits, himagic, lomagic;
 
   /* Handle the first few characters by reading one character at a time.
      Do this until STR is aligned on a 4-byte border.  */
@@ -50,6 +50,9 @@ DEFUN(strlen, (str), CONST char *str)
      The 1-bits make sure that carries propagate to the next 0-bit.
      The 0-bits provide holes for carries to fall into.  */
   magic_bits = 0x7efefeff;
+
+  himagic = 0x80808080;
+  lomagic = 0x01010101;
 
   /* Instead of the traditional loop which tests each character,
      we will test a longword at a time.  The tricky part is testing
@@ -85,9 +88,12 @@ DEFUN(strlen, (str), CONST char *str)
 	 So it ignores everything except 128's, when they're aligned
 	 properly.  */
 
-      /* Add MAGIC_BITS to LONGWORD.  */
       longword = *longword_ptr++;
-      if ((((longword + magic_bits)
+
+      if (
+#if 0
+	  /* Add MAGIC_BITS to LONGWORD.  */
+	  (((longword + magic_bits)
 
 	    /* Set those bits that were unchanged by the addition.  */
 	    ^ ~longword)
@@ -95,7 +101,11 @@ DEFUN(strlen, (str), CONST char *str)
 	   /* Look at only the hole bits.  If any of the hole bits
 	      are unchanged, most likely one of the bytes was a
 	      zero.  */
-	   & ~magic_bits) != 0)
+	   & ~magic_bits)
+#else
+	  ((longword - lomagic) & himagic)
+#endif
+	  != 0)
 	{
 	  /* Which of the bytes was the zero?  If none of them were, it was
 	     a misfire; continue the search.  */
