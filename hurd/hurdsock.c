@@ -25,10 +25,9 @@ Cambridge, MA 02139, USA.  */
 #include <gnu-stabs.h>
 #include <stdio.h>
 #include "stdio/_itoa.h"
+#include <mutex.h>
 
-#ifdef noteven
 static struct mutex lock = MUTEX_INITIALIZER;
-#endif
 
 static file_t *servers;
 static int max_domain;
