@@ -322,6 +322,7 @@ $(patsubst %,\%(%),$(notdir $(objects))): $(objpfx)stamp-$(subdir) ;
 $(objpfx)stamp-$(subdir): $(objects)
 #	$(+libc_lock_open)
 ifdef objdir
+	printenv; : XXX
 	cd $(objdir); $(AR) cru$(verbose) libc.a $(patsubst $(objpfx)%,%,$^)
 else
 	$(AR) cru$(verbose) $(..)libc.a $^
@@ -420,7 +421,9 @@ endif	# headers
 .PHONY: install-bin-nosubdir install-lib-nosubdir \
 	install-data-nosubdir install-headers-nosubdir
 install-bin-nosubdir: $(addprefix $(bindir)/,$(install))
-install-lib-nosubdir: $(addprefix $(libdir)/,$(install-lib))
+install-lib-nosubdir: $(addprefix $(libdir)/,\
+		       $(patsubst lib%.a,lib$(libprefix)%.a,$(install-lib.a)) \
+		       $(addprefix $(libprefix),$(install-lib-non.a)))
 install-data-nosubdir: $(addprefix $(datadir)/,$(install-data))
 install-headers-nosubdir: $(addprefix $(includedir)/,$(headers))
 install-others-nosubdir: $(install-others)
