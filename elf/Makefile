@@ -83,7 +83,8 @@ distribute	:= rtld-Rules \
 		   tst-array2dep.c tst-piemod1.c \
 		   tst-execstack-mod.c tst-dlmodcount.c \
 		   check-textrel.c dl-sysdep.h test-dlopenrpathmod.c \
-		   tst-deep1mod1.c tst-deep1mod2.c tst-deep1mod3.c
+		   tst-deep1mod1.c tst-deep1mod2.c tst-deep1mod3.c \
+		   unload3mod1.c unload3mod2.c unload3mod3.c unload3mod4.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -154,7 +155,8 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-align \
 	 tst-align2 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount \
-	 tst-dlopenrpath tst-deep1 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3
+	 tst-dlopenrpath tst-deep1 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
+	 unload3 tst-global1
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
@@ -189,7 +191,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-alignmod tst-alignmod2 \
 		$(modules-execstack-$(have-z-execstack)) \
 		tst-dlopenrpathmod tst-deep1mod1 tst-deep1mod2 tst-deep1mod3 \
-		tst-dlmopen1mod
+		tst-dlmopen1mod \
+		unload3mod1 unload3mod2 unload3mod3 unload3mod4
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep
 endif
@@ -421,6 +424,9 @@ $(objpfx)reldep8mod3.so: $(objpfx)reldep8mod1.so $(objpfx)reldep8mod2.so
 $(objpfx)nodel2mod3.so: $(objpfx)nodel2mod1.so $(objpfx)nodel2mod2.so
 $(objpfx)reldep9mod2.so: $(objpfx)reldep9mod1.so
 $(objpfx)reldep9mod3.so: $(objpfx)reldep9mod1.so $(objpfx)reldep9mod2.so
+$(objpfx)unload3mod1.so: $(objpfx)unload3mod3.so
+$(objpfx)unload3mod2.so: $(objpfx)unload3mod3.so
+$(objpfx)unload3mod3.so: $(objpfx)unload3mod4.so
 
 LDFLAGS-tst-tlsmod5.so = -nostdlib
 LDFLAGS-tst-tlsmod6.so = -nostdlib
@@ -460,6 +466,7 @@ circlemod3.so-no-z-defs = yes
 circlemod3a.so-no-z-defs = yes
 reldep8mod2.so-no-z-defs = yes
 reldep9mod1.so-no-z-defs = yes
+unload3mod4.so-no-z-defs = yes
 
 # filtmod1.so has a special rule
 $(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os
@@ -676,6 +683,10 @@ $(objpfx)tst-align: $(libdl)
 $(objpfx)tst-align.out: $(objpfx)tst-alignmod.so
 $(objpfx)tst-align2: $(objpfx)tst-alignmod2.so
 
+$(objpfx)unload3: $(libdl)
+$(objpfx)unload3.out: $(objpfx)unload3mod1.so $(objpfx)unload3mod2.so \
+		      $(objpfx)unload3mod3.so $(objpfx)unload3mod4.so
+
 ifdef libdl
 $(objpfx)tst-tls9-static: $(common-objpfx)dlfcn/libdl.a
 $(objpfx)tst-tls9-static.out: $(objpfx)tst-tlsmod5.so $(objpfx)tst-tlsmod6.so
@@ -779,3 +790,6 @@ $(objpfx)tst-dlmopen2.out: $(objpfx)tst-dlmopen1mod.so
 
 $(objpfx)tst-dlmopen3: $(libdl)
 $(objpfx)tst-dlmopen3.out: $(objpfx)tst-dlmopen1mod.so
+
+$(objpfx)tst-global1: $(libdl)
+$(objpfx)tst-global1.out: $(objpfx)testobj6.so $(objpfx)testobj2.so
