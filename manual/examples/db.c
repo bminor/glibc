@@ -22,6 +22,7 @@ main (void)
     }
 
   /* Print the information. */
+  printf ("I am %s.\n", my_passwd->pw_gecos);
   printf ("My login name is %s.\n", my_passwd->pw_name);
   printf ("My uid is %d.\n", (int) (my_passwd->pw_uid));
   printf ("My home directory is %s.\n", my_passwd->pw_dir);
