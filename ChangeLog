@@ -1,5 +1,8 @@
 2000-05-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/stdio.h: Make fseeko and ftello prototypes available is
+	__USE_LARGEFILE.  Patch by Paul Eggert <eggert@twinsun.com>.
+
 	* po/gl.po: Update from translation team.
 
 2000-04-18  H.J. Lu  <hjl@gnu.org>
