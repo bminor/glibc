@@ -31,6 +31,7 @@ __sleep (unsigned int seconds)
 {
   time_t before, after;
   mach_port_t recv;
+  unsigned int slept;
 
   recv = __mach_reply_port ();
 
@@ -40,6 +41,7 @@ __sleep (unsigned int seconds)
   after = time ((time_t *) NULL);
   __mach_port_destroy (__mach_task_self (), recv);
 
-  return seconds - (after - before);
+  slept = after - before;
+  return (slept <= seconds ? seconds - slept : 0);
 }
 weak_alias (__sleep, sleep)
