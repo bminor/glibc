@@ -30,19 +30,278 @@ control their attributes.
 
 @node Program Argument Parsing
 @section Program Argument Parsing
+@cindex program arguments
+@cindex command line arguments
 
-@strong{Incomplete:}  Put the description of the POSIX.2 @code{getopt}
-function here.
+@cindex main function
+When your C program starts, it begins by executing the function called
+@code{main}.  You can define @code{main} either to take no arguments,
+or to take two arguments that represent the command line arguments
+to the program, like this:
 
+@example
+int main (int @var{argc}, char *@var{argv}[])
+@end example
+
+@cindex argc (program argument count)
+@cindex argv (program argument vector)
+The value of the @var{argc} argument is the number of command line
+arguments.  The @var{argv} argument is a vector of pointers to
+@code{char}; sometimes it is also declared as @samp{char **@var{argv}}.
+The elements of @var{argv} are the command line argument strings.  These
+correspond to the whitespace-separated tokens typed by the user to the
+shell in invoking the program.  By convention, @samp{@var{argv}[0]} is
+the program name, and @samp{@var{argv}[@var{argc}]} is a null pointer.
+
+If the syntax for the command line arguments to your program is simple
+enough, you can simply pick the arguments off from @var{argv} by hand.
+But unless your program takes a fixed number of arguments, or all of the
+arguments are interpreted in the same way (as file names, for example),
+you are usually better off using @code{getopt} to do the parsing.
+
+@menu
+* Command Argument Syntax Conventions::
+* The @code{getopt} Function::
+* Example of @code{getopt}::
+@end menu
+
+@node Command Argument Syntax Conventions
+@subsection Command Argument Syntax Conventions
+
+The @code{getopt} function supports the usual Unix conventions for
+command line argument syntax:
+
+@itemize @bullet
+@item
+Arguments that specify command options are identified by a leading
+hyphen delimiter (@samp{-}).
+
+@item
+Multiple options may follow a hyphen delimiter in a single token.
+
+@item
+Option names are single alphanumeric (as for @code{isalnum};
+@pxref{Classification of Characters}) characters.
+
+@item
+Options may accept an argument; the argument is usually required.
+(Optional arguments can lead to ambiguous interpretations of command
+syntax.)
+
+@item
+An option and its argument may or may appear as separate tokens.  (In
+other words, the whitespace separating them is optional.)
+
+@item
+Options typically precede other non-option arguments.
+
+The implementation of @code{getopt} in the GNU C Library normally makes
+it appear as if all the option arguments were specified before all the
+non-option arguments for the purposes of parsing, even if the user of
+your program intermixed option and non-option arguments.  It does this
+by reordering the elements of the @var{argv} array.  This behavior is
+nonstandard; if you want to suppress it, define the
+@code{_POSIX_OPTION_ORDER} environment variable.  @xref{Standard
+Environment Variables}.
+
+@item
+The option @samp{--} is interpreted to mean that no further options are
+present; any following arguments are treated as non-option arguments,
+even if they begin with the hyphen delimiter.
+
+@item
+A token consisting of a single hyphen character is interpreted as an
+ordinary non-option argument.  By convention, it is used to specify
+input from or output to the standard input and output channels.
+
+@item
+Options may be supplied in any order, or appear multiple times.  The
+interpretation is left up to the particular application program.
+@end itemize
+
+@node The @code{getopt} Function
+@subsection The @code{getopt} Function
+
+Here are the details about how to call the @code{getopt} function.  To
+use this facility, your program must include the header file
+@file{<unistd.h>}.
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevar int opterr
+If the value of this variable is nonzero, then @code{getopt} will
+print an error message to the standard error channel if it encounters
+an unknown option character or an option with a missing required argument.
+This is the default behavior.  If you set this variable to zero, these
+messages will be suppressed.
+@end deftypevar
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevar int optopt
+When @code{getopt} encounters an unknown option character or an option
+with a missing required argument, it stores that option character in
+this variable.  You can use this for providing your own diagnostic
+messages.
+@end deftypevar
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevar int optind
+This variable is set by @code{getopt} to the index of the next element
+of the @var{argv} array to be processed.  Once @code{getopt} has found
+all of the option arguments, you can use this variable to determine
+where the remaining non-option arguments begin.  The initial value of
+this variable is @code{1}.
+@end deftypevar
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevar {char *} optarg
+This variable is set by @code{getopt} to point at the value of the
+option argument, for those options that accept arguments.
+@end deftypevar
+
+@comment unistd.h
+@comment POSIX.2
+@deftypefun int getopt (int @var{argc}, char **@var{argv}, const char *{options})
+The @code{getopt} function gets the next option argument from the argument
+list specified by the @var{argv} and @var{argc} arguments.
+
+The @var{options} argument is a string that specifies the option characters
+that are valid for this program.  An option character in this string can
+be followed by a colon (@samp{:}) to indicate that it takes a required
+argument, or by two colons to indicate that it takes an optional argument.
+The external variable @var{optarg} is used to return a pointer to the
+argument.  You don't ordinarily need to copy this string, since it is
+a pointer into the original @var{argv} array, not into a static area
+that might be overwritten.
+
+If the @var{options} argument string begins with a hyphen (@samp{-}), this
+is treated specially.  It permits arguments without an option to be
+returned as if they were associated with option character @code{'\0'}.
+
+The @code{getopt} function returns the option character for the next
+command line option.  When no more option arguments are available, it
+returns @code{-1}.  There may still be more non-option arguments; you
+must compare the external variable @code{optind} against the @var{argv}
+parameter to check this.
+
+If @code{getopt} finds an option character in @var{argv} that was not
+included in @var{options}, or a missing option argument, it returns
+@code{'?'} and sets the external variable @code{optopt} to the actual
+option character.  In addition, if the external variable @code{opterr}
+has a nonzero value, @code{getopt} prints an error message.
+@end deftypefun
+
+@node Example of @code{getopt}
+@subsection Example of @code{getopt}
+
+Here is an example showing how @code{getopt} is typically used.  The
+key points to notice are:
+
+@itemize @bullet
+@item
+Normally, @code{getopt} is called in a loop that terminates when it
+returns @code{-1}, indicating no more options are specified.
+
+@item
+A @code{switch} statement is used to dispatch on the return value from
+@code{getopt}.  In typical use, each case just sets a variable that
+is used later in the program.
+
+@item
+A second loop is used to process the remaining non-option arguments.
+@end itemize
+
+@example
+#include <unistd.h>
+#include <stdio.h>
+
+int main (int argc, char **argv)
+@{
+  int aflag = 0;
+  int bflag = 0;
+  char *cvalue = NULL;
+  int index;
+  int c;
+
+  while ((c = getopt (argc, argv, "abc:")) >= 0)
+    switch (c) @{
+    case 'a':
+      aflag = 1;
+      break;
+    case 'b':
+      bflag = 1;
+      break;
+    case 'c':
+      cvalue = optarg;
+      break;
+    case '?':
+      fprintf (stderr, "Unknown option %c.\n", optopt);
+      return -1;
+    default:
+      fprintf (stderr, "This should never happen!\n");
+      return -1;
+    @}
+
+  printf ("aflag = %d, bflag = %d, cvalue = %s\n", aflag, bflag, cvalue);
+
+  for (index = optind; index < argc; index++)
+    printf ("Non-option argument %s\n", argv[index]);
+  return 0;
+@}
+@end example
+
+Here are some examples showing what this program prints with different
+combinations of arguments:
+
+@example
+% testopt
+aflag = 0, bflag = 0, cvalue = (null)
+
+% testopt -a -b
+aflag = 1, bflag = 1, cvalue = (null)
+
+% testopt -ab
+aflag = 1, bflag = 1, cvalue = (null)
+
+% testopt -c foo
+aflag = 0, bflag = 0, cvalue = foo
+
+% testopt -cfoo
+aflag = 0, bflag = 0, cvalue = foo
+
+% testopt arg1
+aflag = 0, bflag = 0, cvalue = (null)
+Non-option argument arg1
+
+% testopt -a arg1
+aflag = 1, bflag = 0, cvalue = (null)
+Non-option argument arg1
+
+% testopt -c foo arg1
+aflag = 0, bflag = 0, cvalue = foo
+Non-option argument arg1
+
+% testopt -a -- -b
+aflag = 1, bflag = 0, cvalue = (null)
+Non-option argument -b
+
+% testopt -a -
+aflag = 1, bflag = 0, cvalue = (null)
+Non-option argument -
+@end example
 
 @node Environment Variables
 @section Environment Variables
 
 @cindex environment variable
-When a program is executed, it receives information about the context
-in which it was invoked in two ways.  The first mechanism is 
-the @var{argv} and @var{argc} arguments to its @code{main} function,
-and the second mechanism is by means of @dfn{environment variables}.
+When a program is executed, it receives information about the context in
+which it was invoked in two ways.  The first mechanism is the @var{argv}
+and @var{argc} arguments to its @code{main} function, as discussed in
+@ref{Program Argument Parsing}.  The second mechanism is by means of
+@dfn{environment variables}, discussed in this section.
 
 The @var{argv} mechanism is typically used to pass information that is
 specific to the particular program being invoked.  Typically, programs
@@ -228,6 +487,12 @@ attribute category.
 @cindex LC_TIME environment variable
 This specifies what locale to use, corresponding to the @code{LC_TIME}
 attribute category.
+
+@item _POSIX_OPTION_ORDER
+@cindex _POSIX_OPTION_ORDER environment variable.
+If this environment variable is defined, it suppresses the usual
+reordering of command line arguments by @code{getopt}.  @xref{Command
+Argument Syntax Conventions}.
 @end table
 
 @node Program Termination
@@ -815,12 +1080,13 @@ child process whose process ID is @var{pid}.  Normally, the calling
 process is suspended until the child process makes status information
 available by terminating.
 
-Other values for the @var{pid} argument have special interpretations.
-A value of @code{-1} requests status information for any child process;
-a value of @code{0} requests information for any child process in the
-same process group as the calling process; and any other negative value
-requests information for any child process whose process group ID is the
-absolute value of that number.  
+Other values for the @var{pid} argument have special interpretations.  A
+value of @code{-1} or @code{WAIT_ANY} requests status information for
+any child process; a value of @code{0} or @code{WAIT_MYPGRP} requests
+information for any child process in the same process group as the
+calling process; and any other negative value requests information for
+any child process whose process group ID is the absolute value of that
+number.
 
 If status information for a child process is available immediately, this
 function returns immediately without waiting.  If more than one child
@@ -858,8 +1124,26 @@ An invalid value was provided for the @var{options} argument.
 @end table
 @end deftypefun
 
+These symbolic constants are defined as values for the @var{pid} argument
+to the @code{waitpid} function.
+
+@comment sys/wait.h
+@comment BSD
+@defvr {Macro} WAIT_ANY
+This macro has value @code{-1} and specifies that @code{waitpid} should
+return status information about any child process.
+@end defvr
+
+@comment sys/wait.h
+@comment BSD
+@defvr {Macro} WAIT_MYPGRP
+This macro has value @code{0} and specifies that @code{waitpid} should
+return status information about any child process in the same process
+group as the calling process.
+@end defvr
+
 These symbolic constants are defined as flags for the @var{options}
-argument to the @code{wait} function.
+argument to the @code{waitpid} function.
 
 @comment sys/wait.h
 @comment POSIX.1
@@ -930,6 +1214,13 @@ It returns the number of the signal that terminated the child process.
 @end deftypefn
 
 @comment sys/wait.h
+@comment BSD
+@deftypefn Macro int WCOREDUMP (int @var{status})
+This macro returns a non-zero value if the child process terminated
+and produced a core dump.
+@end deftypefn
+
+@comment sys/wait.h
 @comment POSIX.1
 @deftypefn Macro int WIFSTOPPED (int @var{status})
 This macro returns a non-zero value if the child process is stopped.
@@ -943,6 +1234,7 @@ returns the number of the signal that caused the child process to stop.
 @end deftypefn
 
 
+
 The GNU Library also provides these related facilities for compatibility
 with BSD Unix.  BSD uses the @code{union wait} data type to represent
 status values rather than an @code{int}.  The two representations are
@@ -954,10 +1246,25 @@ defined so that they will work on either kind of object, and the
 @comment sys/wait.h
 @comment BSD
 @deftp {Data Type} {union wait}
-This data type represents program termination status values.
+This data type represents program termination status values.  It has
+the following members:
 
-@strong{Incomplete:}  The header file has some definitions for the members
-of this union.  Do they need to be documented?
+@table @code
+@item int w_termsig
+This member is equivalent to the @code{WTERMSIG} macro.
+
+@item int w_coredump
+This member is equivalent to the @code{WCOREDUMP} macro.
+
+@item int w_retcode
+This member is equivalent to the @code{WEXISTATUS} macro.
+
+@item int w_stopsig
+This member is equivalent to the @code{WSTOPSIG} macro.
+@end table
+
+Instead of accessing these members directly, you should use the
+equivalent macros.
 @end deftp
 
 @comment sys/wait.h
