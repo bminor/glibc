@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -13,12 +13,14 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #ifndef	_FNMATCH_H
 
 #define	_FNMATCH_H	1
+
+__BEGIN_DECLS
 
 /* Bits set in the FLAGS argument to `fnmatch'.  */
 #define	FNM_PATHNAME	(1 << 0)/* No wildcard can ever match `/'.  */
@@ -31,7 +33,9 @@ Cambridge, MA 02139, USA.  */
 
 /* Match STRING against the filename pattern PATTERN,
    returning zero if it matches, FNM_NOMATCH if not.  */
-extern int EXFUN(fnmatch, (CONST char *__pattern, CONST char *__string,
-			   int __flags));
+extern int fnmatch __P ((__const char *__pattern, __const char *__string,
+			 int __flags));
 
-#endif	/* fnmatch.h */
+__END_DECLS
+
+#endif /* fnmatch.h */
