@@ -1,4 +1,4 @@
-%define glibcrelease 2.fc3.4
+%define glibcrelease 2.fc3.5
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1270,6 +1270,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sat Mar 19 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-2.fc3.5
+- better fix for the dlclose bug (#145810, #150414)
+
 * Thu Mar  3 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-2.fc3.4
 - fix dlclose (#145810)
 - clear padding in gconv-modules.cache (#146614, BZ#776)

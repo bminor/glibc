@@ -23,9 +23,96 @@
 #include <ldsodefs.h>
 
 
+void
+internal_function
+_dl_sort_fini (struct link_map *l, struct link_map **maps, size_t nmaps,
+	       char *used, Lmid_t ns)
+{
+  if (ns == LM_ID_BASE)
+    /* The main executable always comes first.  */
+    l = l->l_next;
+
+  for (; l != NULL; l = l->l_next)
+    /* Do not handle ld.so in secondary namespaces and object which
+       are not removed.  */
+    if (l == l->l_real && l->l_idx != -1)
+      {
+	/* Find the place in the 'maps' array.  */
+	unsigned int j;
+	for (j = ns == LM_ID_BASE ? 1 : 0; maps[j] != l; ++j)
+	  assert (j < nmaps);
+
+	/* Find all object for which the current one is a dependency
+	   and move the found object (if necessary) in front.  */
+	for (unsigned int k = j + 1; k < nmaps; ++k)
+	  {
+	    struct link_map **runp = maps[k]->l_initfini;
+	    if (runp != NULL)
+	      {
+		while (*runp != NULL)
+		  if (*runp == l)
+		    {
+		      struct link_map *here = maps[k];
+
+		      /* Move it now.  */
+		      memmove (&maps[j] + 1,
+			       &maps[j], (k - j) * sizeof (struct link_map *));
+		      maps[j] = here;
+
+		      if (used != NULL)
+			{
+			  char here_used = used[k];
+
+			  memmove (&used[j] + 1,
+				   &used[j], (k - j) * sizeof (char));
+			  used[j] = here_used;
+			}
+
+		      ++j;
+
+		      break;
+		    }
+		  else
+		    ++runp;
+	      }
+
+	    if (__builtin_expect (maps[k]->l_reldeps != NULL, 0))
+	      {
+		unsigned int m = maps[k]->l_reldepsact;
+		struct link_map **relmaps = maps[k]->l_reldeps;
+
+		while (m-- > 0)
+		  {
+		    if (relmaps[m] == l)
+		      {
+			struct link_map *here = maps[k];
+
+			/* Move it now.  */
+			memmove (&maps[j] + 1,
+				 &maps[j],
+				 (k - j) * sizeof (struct link_map *));
+			maps[j] = here;
+
+			if (used != NULL)
+			  {
+			    char here_used = used[k];
+
+			    memmove (&used[j] + 1,
+				     &used[j], (k - j) * sizeof (char));
+			    used[j] = here_used;
+			  }
+
+			break;
+		      }
+		  }
+	      }
+	  }
+      }
+}
+
+#if !defined SHARED || defined IS_IN_rtld
 /* Type of the constructor functions.  */
 typedef void (*fini_t) (void);
-
 
 void
 internal_function
@@ -48,16 +135,16 @@ _dl_fini (void)
   /* We run the destructors of the main namespaces last.  As for the
      other namespaces, we pick run the destructors in them in reverse
      order of the namespace ID.  */
-  for (Lmid_t cnt = DL_NNS - 1; cnt >= 0; --cnt)
+  for (Lmid_t ns = DL_NNS - 1; ns >= 0; --ns)
     {
       /* Protect against concurrent loads and unloads.  */
       __rtld_lock_lock_recursive (GL(dl_load_lock));
 
-      unsigned int nloaded = GL(dl_ns)[cnt]._ns_nloaded;
+      unsigned int nloaded = GL(dl_ns)[ns]._ns_nloaded;
 
       /* XXX Could it be (in static binaries) that there is no object
 	 loaded?  */
-      assert (cnt != LM_ID_BASE || nloaded > 0);
+      assert (ns != LM_ID_BASE || nloaded > 0);
 
       /* Now we can allocate an array to hold all the pointers and copy
 	 the pointers in.  */
@@ -76,86 +163,27 @@ _dl_fini (void)
 
       unsigned int i;
       struct link_map *l;
-      for (l = GL(dl_ns)[cnt]._ns_loaded, i = 0; l != NULL; l = l->l_next)
+      for (l = GL(dl_ns)[ns]._ns_loaded, i = 0; l != NULL; l = l->l_next)
 	/* Do not handle ld.so in secondary namespaces.  */
 	if (l == l->l_real)
 	  {
 	    assert (i < nloaded);
 
-	    maps[i++] = l;
+	    maps[i] = l;
+	    l->l_idx = i;
+	    ++i;
 
-	    /* Bump l_opencount of all objects so that they are not
-	       dlclose()ed from underneath us.  */
-	    ++l->l_opencount;
+	    /* Bump l_direct_opencount of all objects so that they are
+	       not dlclose()ed from underneath us.  */
+	    ++l->l_direct_opencount;
 	  }
-      assert (cnt != LM_ID_BASE || i == nloaded);
-      assert (cnt == LM_ID_BASE || i == nloaded || i == nloaded - 1);
+      assert (ns != LM_ID_BASE || i == nloaded);
+      assert (ns == LM_ID_BASE || i == nloaded || i == nloaded - 1);
       unsigned int nmaps = i;
 
       if (nmaps != 0)
-	{
-	  /* Now we have to do the sorting.  */
-	  l = GL(dl_ns)[cnt]._ns_loaded;
-	  if (cnt == LM_ID_BASE)
-	    /* The main executable always comes first.  */
-	    l = l->l_next;
-	  for (; l != NULL; l = l->l_next)
-	    /* Do not handle ld.so in secondary namespaces.  */
-	    if (l == l->l_real)
-	      {
-		/* Find the place in the 'maps' array.  */
-		unsigned int j;
-		for (j = cnt == LM_ID_BASE ? 1 : 0; maps[j] != l; ++j)
-		  assert (j < nmaps);
-
-		/* Find all object for which the current one is a dependency
-		   and move the found object (if necessary) in front.  */
-		for (unsigned int k = j + 1; k < nmaps; ++k)
-		  {
-		    struct link_map **runp = maps[k]->l_initfini;
-		    if (runp != NULL)
-		      {
-			while (*runp != NULL)
-			  if (*runp == l)
-			    {
-			      struct link_map *here = maps[k];
-
-			      /* Move it now.  */
-			      memmove (&maps[j] + 1,
-				       &maps[j],
-				       (k - j) * sizeof (struct link_map *));
-			      maps[j++] = here;
-
-			      break;
-			    }
-			  else
-			    ++runp;
-		      }
-
-		    if (__builtin_expect (maps[k]->l_reldeps != NULL, 0))
-		      {
-			unsigned int m = maps[k]->l_reldepsact;
-			struct link_map **relmaps = maps[k]->l_reldeps;
-
-			while (m-- > 0)
-			  {
-			    if (relmaps[m] == l)
-			      {
-				struct link_map *here = maps[k];
-
-				/* Move it now.  */
-				memmove (&maps[j] + 1,
-					 &maps[j],
-					 (k - j) * sizeof (struct link_map *));
-				maps[j] = here;
-
-				break;
-			      }
-			  }
-		      }
-		  }
-	      }
-	}
+	/* Now we have to do the sorting.  */
+	_dl_sort_fini (GL(dl_ns)[ns]._ns_loaded, maps, nmaps, NULL, ns);
 
       /* We do not rely on the linked list of loaded object anymore from
 	 this point on.  We have our own list here (maps).  The various
@@ -191,7 +219,7 @@ _dl_fini (void)
 				    0))
 		_dl_debug_printf ("\ncalling fini: %s [%lu]\n\n",
 				  l->l_name[0] ? l->l_name : rtld_progname,
-				  cnt);
+				  ns);
 
 	      /* First see whether an array is given.  */
 	      if (l->l_info[DT_FINI_ARRAY] != NULL)
@@ -211,14 +239,17 @@ _dl_fini (void)
 	    }
 
 	  /* Correct the previous increment.  */
-	  --l->l_opencount;
+	  --l->l_direct_opencount;
 	}
     }
 
+#ifdef SHARED
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
     _dl_debug_printf ("\nruntime linker statistics:\n"
 		      "           final number of relocations: %lu\n"
 		      "final number of relocations from cache: %lu\n",
 		      GL(dl_num_relocations),
 		      GL(dl_num_cache_relocations));
+#endif
 }
+#endif

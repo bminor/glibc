@@ -177,7 +177,7 @@ struct link_map
     Elf_Symndx l_nbuckets;
     const Elf_Symndx *l_buckets, *l_chain;
 
-    unsigned int l_opencount;	/* Counter for direct and indirect usage.  */
+    unsigned int l_dummy_opencount;  /* Used to be l_opencount, now unused.  */
     unsigned int l_direct_opencount; /* Reference count for dlopen/dlclose.  */
     enum			/* Where this object came from.  */
       {
@@ -199,6 +199,8 @@ struct link_map
 				       should be called on this link map
 				       when relocation finishes.  */
     unsigned int l_used:1;	/* Nonzero if the DSO is used.  */
+    unsigned int l_removed:1;	/* Nozero if the object cannot be used anymore
+				   since it is removed.  */
     /* Array with version names.  */
     unsigned int l_nversions;
     struct r_found_version *l_versions;
@@ -255,7 +257,7 @@ struct link_map
     ElfW(Word) l_flags;
 
     /* Temporarily used in `dl_close'.  */
-    unsigned int l_idx;
+    int l_idx;
 
     struct link_map_machine l_mach;
 
