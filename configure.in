@@ -186,7 +186,9 @@ while test $# -gt 0; do
   names="$names $name"
 
   # Find the parent of NAME, using the empty string if it has none.
+changequote(,)dnl
   parent="`echo $name | sed -n -e '/\//!q' -e 's=/[^/]*$==p'`"
+changequote([,])dnl
 
   # Add the names implied by NAME, and NAME's parent (if it has one), to
   # the list of names to be processed (the argument list).  We prepend the
