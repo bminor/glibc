@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/port.h>
 
 
-/* File descriptor structure.  */
+/* Structure representing a file descriptor.  */
 
 struct hurd_fd
   {
@@ -56,7 +56,7 @@ struct hurd_dtable
 extern struct hurd_dtable _hurd_dtable;
 
 /* If not NULL, points to the chain of users of `_hurd_dtable'.
-   See <hurd/port.h>.  */
+   See <hurd/userlink.h>.  */
 
 extern struct hurd_userlink *_hurd_dtable_users;
 
@@ -83,7 +83,6 @@ _hurd_dtable_get (struct hurd_userlink *ulink)
 }
 
 
-
 /* Function to deallocate a descriptor table's `struct hurd_fd' array.
    This is expected to be either `free' or a null pointer.  */
 
@@ -101,13 +100,6 @@ _hurd_dtable_free (struct hurd_dtable dtable,
   __mutex_unlock (&_hurd_dtable_lock);
   if (dealloc && _hurd_dtable_deallocate)
     (*_hurd_dtable_deallocate) (dtable.d);
-    
-    /* _hurd_dtable_resizes is a symbol set.
-       setrlimit.c gives it one element: free.
-       If setrlimit is not linked in, *DEALLOC
-       will never get set, so we will never get here.
-       This hair avoids linking in free if we don't need it.  */
-    (*_hurd_dtable_resizes.free) (dtable.d);
 }
 
 
@@ -157,7 +149,7 @@ _hurd_fd_done (struct hurd_fd_user d, int *dealloc)
 {
   _hurd_dtable_done (d.dtable, dealloc);
 }
-
+
 
 extern io_t __getdport (int);
 extern io_t getdport (int);
@@ -243,6 +235,45 @@ extern struct hurd_fd *_hurd_alloc_fd (int *fd_ptr, int first_fd);
        }								      \
       __result;								      \
    })									      \
+
+/* User-registered handlers for specific `ioctl' requests.  */
+
+#define	__need___va_list
+#include <stdarg.h>
+
+/* Structure that records an ioctl handler.  */
+
+struct ioctl_handler
+  {
+    int first_request, last_request; /* Range of handled request values.  */
+
+    int (*handler) (int fd, int request, __gnuc_va_list);
+
+    struct ioctl_handler *next;	/* Next handler.  */
+  };
+
+
+/* Register HANDLER to handle ioctls with REQUEST values between
+   FIRST_REQUEST and LAST_REQUEST inclusive.  Returns zero if successful.
+   Return nonzero and sets `errno' for an error.  */
+
+extern int hurd_register_ioctl_handler (int first_request, int last_request,
+					int (*handler) (int fd, int request,
+							__gnuc_va_list));
+
+
+/* Define a library-internal handler for ioctl commands
+   between FIRST and LAST inclusive.  */
+
+#define	_HURD_HANDLE_IOCTLS(handler, first, last)			      \
+  static const struct ioctl_handler handler##_ioctl_handler =		      \
+    { first, last, handler, NULL };					      \
+  text_set_element (_hurd_ioctl_handler_lists, ##handler##_ioctl_handler)
+
+/* Define a library-internal handler for a single ioctl command.  */
+
+#define _HURD_HANDLE_IOCTL(handler, ioctl) \
+  _HURD_HANDLE_IOCTLS (handler, (ioctl), (ioctl))
 
 
 #endif	/* hurd/fd.h */
