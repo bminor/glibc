@@ -14,9 +14,9 @@
                                          you may have with the GNU C library.
 * Porting::                     How to port the GNU C library to
                                          a new machine or operating system.
-* Compatibility with Traditional C::  Using the GNU C library with non-ANSI
+* Traditional C Compatibility::  Using the GNU C library with non-ANSI
                                          C compilers.
-* Contributors to the GNU C Library::  Contributors to the GNU C Library.
+* GNU C Library Contributors::  Contributors to the GNU C Library.
 @end menu
 
 
@@ -121,7 +121,7 @@ other problems with installation, use, or the documentation, please
 report those as well.
 
 
-@node Porting, Compatibility with Traditional C, Reporting Bugs, Maintenance
+@node Porting, Traditional C Compatibility, Reporting Bugs, Maintenance
 @appendixsec Porting the GNU C Library
 
 The GNU C library is written to be easily portable to a variety of
@@ -414,7 +414,7 @@ kept; they should not affect the source tree itself.  The files
 generated are: @file{ioctls.h}, @file{errnos.h}, @file{sys/param.h},
 and @file{errlist.c} (for the @file{stdio} section of the library).
 
-@node Compatibility with Traditional C, Contributors to the GNU C Library, Porting, Maintenance
+@node Traditional C Compatibility, GNU C Library Contributors, Porting, Maintenance
 @appendixsec Compatibility with Traditional C
 
 Although the GNU C library implements the ANSI C library facilities,
@@ -439,7 +439,7 @@ implementations.  This means you may need to make changes to your
 program in order to get it to compile.
 
 
-@node Contributors to the GNU C Library,  , Compatibility with Traditional C, Maintenance
+@node GNU C Library Contributors,  , Traditional C Compatibility, Maintenance
 @appendixsec Contributors to the GNU C Library
 
 The GNU C library was written almost entirely by Roland McGrath.
