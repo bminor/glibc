@@ -319,10 +319,10 @@ to be a good default for the machine on which the program is running.
 
 Defining and installing named locales is normally a responsibility of
 the system administrator at your site (or the person who installed the
-GNU C library).  Users cannot do this.
-@c !!! when this is implemented in gnu, users will be able to
-@c  @xref{Defining New Locales}, for
-@c information about what this involves.
+GNU C library).  Some systems may allow users to create locales, but
+we don't discuss that here.
+@c ??? If we give the GNU system that capability, this place will have
+@c ??? to be changed.
 
 If your program needs to use something other than the @samp{C} locale,
 it will be more portable if you use the whatever locale the user
