@@ -60,7 +60,7 @@ struct rpcdata {
 static	struct rpcent *interpret();
 struct	hostent *gethostent();
 char	*inet_ntoa();
-static	char *index();
+extern	char *index();		/* Changed from static by roland@gnu */
 
 static char RPCDB[] = "/etc/rpc";
 
