@@ -22,20 +22,6 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <stdarg.h>
 
-/* Mapping of F_GETFL/F_SETFL flag bits to io protocol functions.  */
-
-struct flag
-  {
-    int flag;
-    error_t (*get) (io_t, int *value);
-    error_t (*mod) (io_t, int value);
-  };
-static const struct flag flags[] =
-  {
-    { O_NONBLOCK, __io_get_nonblock, __io_mod_nonblock },
-    { O_APPEND, __io_get_append, __io_mod_append },
-  };
-
 
 /* Perform file control operations on FD.  */
 int
@@ -53,19 +39,13 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 
   switch (cmd)
     {
-    case F_GETLK:
-    case F_SETLK:
-    case F_SETLKW:
-      __spin_unlock (&d.d->lock);
-      errno = ENOSYS;		/* XXX */
-      result = -1;
-      break;
-
     default:
       __spin_unlock (&d.d->lock);
       errno = EINVAL;
       result = -1;
       break;
+
+      /* First the descriptor-based commands, which do no RPCs.  */
 
     case F_DUPFD:
       {
@@ -117,58 +97,40 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
       result = 0;
       break;
 
+
+      /* Now the real io operations, done by RPCs to io servers.  */
+
+    case F_GETLK:
+    case F_SETLK:
+    case F_SETLKW:
+      {
+	struct flock *fl = va_arg (ap, struct flock *);
+	__spin_unlock (&d.d->lock);
+	errno = ENOSYS;		/* XXX mib needs to implement io rpcs.  */
+	result = -1;
+	break;
+      }
+
     case F_GETFL:
       {
 	int dealloc;
 	io_t port = _hurd_port_locked_get (d.d, &dealloc); /* Unlocks D.d.  */
 	error_t err;
 	unsigned int i;
-	int openstat;
 
-	err = __io_get_openstat (port, &openstat);
+	err = __io_get_openmodes (port, &result);
 
-	if (!err)
-	  {
-	    switch (openstat & (FS_LOOKUP_READ|FS_LOOKUP_WRITE))
-	      {
-	      case FS_LOOKUP_READ:
-		result = O_RDONLY;
-		break;
-	      case FS_LOOKUP_WRITE:
-		result = O_WRONLY;
-		break;
-	      case FS_LOOKUP_READ|FS_LOOKUP_WRITE:
-		result = O_RDWR;
-		break;
-	      default:
-		result = 0;
-		break;
-	      }
-
-	    for (i = 0; i < sizeof (flags) / sizeof (flags[0]); ++i)
-	      {
-		int value;
-		if (err = (*flags[i].get) (port, &value))
-		  break;
-		if (value)
-		  result |= flags[i].flag;
-	      }
-	  }
-	    
 	_hurd_port_free (port, &dealloc);
 
 	if (err)
-	  {
-	    errno = err;
-	    result = -1;
-	  }
+	  result = __hurd_fail (err);
 	break;
       }
 
     case F_SETFL:
       {
+	const int flags = va_arg (ap, int);
 	int dealloc;
-	const int dflags = d.d->flags;
 	io_t port = _hurd_port_locked_get (d.d, &dealloc); /* Unlocks D.d.  */
 	error_t err;
 	unsigned int i;
@@ -179,13 +141,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	    
 	_hurd_port_free (port, &dealloc);
 
-	if (err)
-	  {
-	    errno = err;
-	    result = -1;
-	  }
-	else
-	  result = 0;
+	result = err ? __hurd_fail (err) : 0;
 	break;
       }
 
@@ -194,10 +150,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	error_t err;
 	port = _hurd_port_locked_get (d.d, &dealloc); /* Unlocks D.d.  */
 	if (err = __io_get_owner (port, &result))
-	  {
-	    errno = err;
-	    result = -1;
-	  }
+	  result = __hurd_fail (err);
 	_hurd_port_free (port, &dealloc);
 	break;
       }
@@ -208,10 +161,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	error_t err;
 	port = _hurd_port_locked_get (d.d, &dealloc); /* Unlocks D.d.  */
 	if (err = __io_mod_owner (port, owner))
-	  {
-	    errno = err;
-	    result = -1;
-	  }
+	  result = __hurd_fail (err);
 	else
 	  result = 0;
 	_hurd_port_free (port, &dealloc);
