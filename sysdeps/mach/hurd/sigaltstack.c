@@ -49,7 +49,7 @@ DEFUN(sigaltstack, (ss, oss),
 
   if (oss != NULL)
     *oss = s->sigaltstack;
-  if (ss != NULL)
+  if (argss != NULL)
     s->sigaltstack = ss;
   __mutex_unlock (&s->lock);
 
