@@ -17,7 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
-#include "hurd/msg_server.h"
+#include <hurd/msg_server.h>
 
 
 #define AUTHCHECK \
