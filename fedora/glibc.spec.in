@@ -1,4 +1,4 @@
-%define glibcrelease 18
+%define glibcrelease 19
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -97,10 +97,10 @@ Conflicts: texinfo < 3.11
 # Need AS_NEEDED directive
 Conflicts: binutils < 2.15.94.0.2-1
 Prereq: /sbin/install-info
-Obsoletes: libc-debug, libc-headers, libc-devel, linuxthreads-devel
-Obsoletes: glibc-debug
+Obsoletes: libc-debug, libc-headers, libc-devel
+Obsoletes: glibc-debug, nptl-devel
 Prereq: %{name}-headers
-Requires: %{name}-headers = %{version}-%{release}, %{name} = %{version}
+Requires: %{name}-headers = %{version}-%{release}, %{name} = %{version}-%{release}
 %ifarch %{ix86}
 # Earlier gcc's had atexit reference in crtendS.o, which does not
 # work with this glibc where atexit is in libc_nonshared.a
@@ -128,9 +128,9 @@ Provides: %{name}-headers(%{_target_cpu})
 # have to be installed, not i386 ones.
 Obsoletes: %{name}-headers(i386)
 %endif
-Obsoletes: libc-debug, libc-headers, libc-devel, linuxthreads-devel
+Obsoletes: libc-debug, libc-headers, libc-devel
 Prereq: kernel-headers
-Requires: kernel-headers >= 2.2.1, %{name} = %{version}
+Requires: kernel-headers >= 2.2.1, %{name} = %{version}-%{release}
 Autoreq: true
 
 %description headers
@@ -144,16 +144,18 @@ executables.
 Install glibc-headers if you are going to develop programs which will
 use the standard C libraries.
 
-%package -n nptl-devel
-Summary: Header files and static libraries for development using NPTL library.
+%ifarch %{nptlarches}
+%package -n linuxthreads-devel
+Summary: Header files and static libraries for development using LinuxThreads library.
 Group: Development/Libraries
 Requires: glibc-devel = %{version}-%{release}
 Autoreq: true
 
-%description -n nptl-devel
-The nptl-devel package contains the header and object files necessary
-for developing programs which use the NPTL library (and either need
-NPTL specific header files or want to link against NPTL statically).
+%description -n linuxthreads-devel
+The linuxthreads-devel package contains the header and object files necessary
+for developing programs which can use the LinuxThreads library (normally
+newly linked programs will work only with NPTL).
+%endif
 
 %package profile
 Summary: The GNU libc libraries, including support for gprof profiling.
@@ -653,30 +655,43 @@ ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` $RPM_BUILD_ROOT/%{_lib}/$Su
 cp -a ${Pthreads}_db/libthread_db.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so`
 ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db.so.*`
 
-mkdir -p $RPM_BUILD_ROOT%{_prefix}/%{_lib}/nptl
+mkdir -p $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads
+mv -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/{libc,libpthread,libpthread_nonshared,librt}.a \
+  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/
 cp -a libc.a nptl/libpthread.a nptl/libpthread_nonshared.a rt/librt.a \
-  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/nptl/
-sed "s| /%{_lib}/| /%{_lib}/$SubDir/|" $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libc.so \
-  > $RPM_BUILD_ROOT%{_prefix}/%{_lib}/nptl/libc.so
+  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/
+mv -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libc.so \
+  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/
+sed "s|/libpthread_nonshared.a|/linuxthreads&|" $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libpthread.so \
+  > $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/libpthread.so
+rm -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libpthread.so
+sed "s| /%{_lib}/| /%{_lib}/$SubDir/|" $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/libc.so \
+  > $RPM_BUILD_ROOT/%{_lib}/tls/libc.so
+ln -sf /%{_lib}/tls/libc.so $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libc.so
 sed "s|^GROUP (.*)|GROUP ( /%{_lib}/$SubDir/"`basename $RPM_BUILD_ROOT/%{_lib}/libpthread.so.*`' %{_prefix}/%{_lib}/nptl/libpthread_nonshared.a )|' \
-  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libc.so \
-  > $RPM_BUILD_ROOT%{_prefix}/%{_lib}/nptl/libpthread.so
+  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/libc.so \
+  > $RPM_BUILD_ROOT%{_lib}/tls/libpthread.so
+ln -sf /%{_lib}/tls/libpthread.so $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libpthread.so
 %ifarch %{rtkaioarches}
 ln -sf /%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed 's/librt-/librtkaio-/'` \
-  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/nptl/librt.so
+  $RPM_BUILD_ROOT/%{_lib}/tls/librt.so
 %else
 ln -sf /%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` \
-  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/nptl/librt.so
+  $RPM_BUILD_ROOT/%{_lib}/tls/librt.so
 %endif
-strip -g $RPM_BUILD_ROOT%{_prefix}/%{_lib}/nptl/*.a
-mkdir -p $RPM_BUILD_ROOT/nptl $RPM_BUILD_ROOT%{_prefix}/include/nptl
+ln -sf /%{_lib}/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` \
+  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/librt.so
+ln -sf /%{_lib}/tls/librt.so $RPM_BUILD_ROOT%{_prefix}/%{_lib}/librt.so
+strip -g $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/*.a
+mkdir -p $RPM_BUILD_ROOT/nptl $RPM_BUILD_ROOT%{_prefix}/include/linuxthreads
 make -j1 install_root=$RPM_BUILD_ROOT/nptl install-headers PARALLELMFLAGS=-s
 pushd $RPM_BUILD_ROOT/nptl%{_prefix}/include
   for i in `find . -type f`; do
     if ! [ -f $RPM_BUILD_ROOT%{_prefix}/include/$i ] \
        || ! cmp -s $i $RPM_BUILD_ROOT%{_prefix}/include/$i; then
-      mkdir -p $RPM_BUILD_ROOT%{_prefix}/include/nptl/`dirname $i`
-      cp -a $i $RPM_BUILD_ROOT%{_prefix}/include/nptl/$i
+      mkdir -p $RPM_BUILD_ROOT%{_prefix}/include/linuxthreads/`dirname $i`
+      cp -a $RPM_BUILD_ROOT%{_prefix}/include/{,linuxthreads/}$i
+      cp -a $i $RPM_BUILD_ROOT%{_prefix}/include/$i
     fi
   done
 popd
@@ -849,7 +864,7 @@ grep '%{_infodir}' < rpm.filelist | grep -v '%{_infodir}/dir' > devel.filelist
 grep '%{_prefix}/include/gnu/stubs-[32164]\+\.h' < rpm.filelist >> devel.filelist || :
 
 grep '%{_prefix}/include' < rpm.filelist |
-	egrep -v '%{_prefix}/include/(nptl|gnu/stubs-[32164]+\.h)' \
+	egrep -v '%{_prefix}/include/(linuxthreads|gnu/stubs-[32164]+\.h)' \
 		> headers.filelist
 
 mv rpm.filelist rpm.filelist.full
@@ -865,7 +880,7 @@ mv rpm.filelist rpm.filelist.full
 grep -v '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist.full |
 	grep -v '%{_prefix}/%{_lib}/.*\.o' |
 	grep -v '%{_prefix}/%{_lib}/lib.*\.so'|
-	grep -v '%{_prefix}/%{_lib}/nptl' |
+	grep -v '%{_prefix}/%{_lib}/linuxthreads' |
 	grep -v '%{_mandir}' |
 	grep -v 'nscd' > rpm.filelist
 
@@ -1103,6 +1118,15 @@ cat $blf $cblf | LC_ALL=C sort -u > debuginfo.filelist
 echo '/usr/src/debug/%{glibcsrcdir}' >> debuginfo.filelist
 %endif
 
+%ifarch i386
+%ifarch %{nptlarches}
+ln -sf i486 $RPM_BUILD_ROOT/usr/lib/debug/%{_lib}/tls/i586
+ln -sf i486 $RPM_BUILD_ROOT/usr/lib/debug/%{_lib}/tls/i686
+echo /usr/lib/debug/%{_lib}/tls/i586 >> debuginfo.filelist
+echo /usr/lib/debug/%{_lib}/tls/i686 >> debuginfo.filelist
+%endif
+%endif
+
 [ "x$save_trace" = xyes ] && set -x
 
 %endif
@@ -1249,9 +1273,9 @@ rm -f *.filelist*
 %endif
 
 %ifarch %{nptlarches}
-%files -n nptl-devel
+%files -n linuxthreads-devel
 %defattr(-,root,root)
-%{_prefix}/%{_lib}/nptl
+%{_prefix}/%{_lib}/linuxthreads
 %endif
 
 %if "%{_enable_debug_packages}" == "1"
@@ -1275,6 +1299,17 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Apr  1 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-19
+- update from CVS
+  - fix nextafterl and several other libm routines on ia64
+  - fix initgroups (BZ#661)
+- kill nptl-devel subpackage, add linuxthreads-devel,
+  compile and link by default against NPTL and only with
+  -I/usr/include/linuxthreads -L/usr/%{_lib}/linuxthreads
+  against LinuxThreads
+- package /usr/lib/debug/%{_lib}/tls/i{5,6}86 symlinks in
+  i386 glibc-debuginfo
+
 * Fri Mar 25 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-18
 - fix build on 64-bit arches with new GCC
 
