@@ -56,3 +56,10 @@ Cambridge, MA 02139, USA.  */
 #if !defined (STACK_GROWTH_UP) && !defined (STACK_GROWTH_DOWN)
 #error stack direction unspecified
 #endif
+
+/* Used by some assembly code.  */
+#ifdef NO_UNDERSCORES
+#define C_SYMBOL_NAME(name)	name
+#else
+#define C_SYMBOL_NAME(name)	_##name
+#endif
