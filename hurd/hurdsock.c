@@ -28,7 +28,7 @@ Cambridge, MA 02139, USA.  */
 #include <cthreads.h>		/* For `struct mutex'.  */
 #include "hurdmalloc.h"		/* XXX */
 
-static struct mutex lock = MUTEX_INITIALIZER;
+static struct mutex lock;
 
 static file_t *servers;
 static int max_domain;
@@ -53,29 +53,36 @@ _hurd_socket_server (int domain)
 
   if (domain > max_domain)
     {
+      error_t save = errno;
       file_t *new = realloc (servers, (domain + 1) * sizeof (file_t));
-      if (new == NULL)
+      if (new != NULL)
 	{
-	  server = MACH_PORT_NULL;
-	  goto out;
+	  while (max_domain < domain)
+	    new[max_domain++] = MACH_PORT_NULL;
+	  servers = new;
 	}
-      while (max_domain < domain)
-	new[max_domain++] = MACH_PORT_NULL;
-      servers = new;
+      else
+	/* No space to cache the port; we will just fetch it anew below.  */
+	errno = save;
     }
 
-  {
-    char name[sizeof (_SERVERS_SOCKET) + 100];
-    char *np = &name[sizeof (name)];
-    *--np = '\0';
-    np = _itoa (domain, np, 10, 0);
-    *--np = '/';
-    np -= sizeof (_SERVERS_SOCKET) - 1;
-    memcpy (np, _SERVERS_SOCKET, sizeof (_SERVERS_SOCKET) - 1);
-    server = servers[domain] = __path_lookup (np, 0, 0);
-  }
+  if (domain > max_domain || servers[domain] == MACH_PORT_NULL)
+    {
+      char name[sizeof (_SERVERS_SOCKET) + 100];
+      char *np = &name[sizeof (name)];
+      *--np = '\0';
+      np = _itoa (domain, np, 10, 0);
+      *--np = '/';
+      np -= sizeof (_SERVERS_SOCKET) - 1;
+      memcpy (np, _SERVERS_SOCKET, sizeof (_SERVERS_SOCKET) - 1);
+      server = __path_lookup (np, 0, 0);
+      if (domain <= max_domain)
+	servers[domain] = server;
+    }
+  else
+    server = servers[domain];
 
-  if (errno == ENOENT)
+  if (server == MACH_PORT_NULL && errno == ENOENT)
     /* If the server node is absent, we don't support that protocol.  */
     errno = EPFNOSUPPORT;
 
@@ -85,3 +92,19 @@ _hurd_socket_server (int domain)
 
   return server;
 }
+
+#include <gnu-stabs.h>
+
+static void
+init (void)
+{
+  size_t i;
+
+  __mutex_init (&lock);
+
+  for (i = 0; i < max_domain; ++i)
+    servers[i] = MACH_PORT_NULL;
+
+  (void) &init;			/* Avoid "defined but not used" warning.  */
+}
+text_set_element (_hurd_preinit_hook, init);
