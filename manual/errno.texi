@@ -674,7 +674,7 @@ You did @strong{what}?
 
 @comment errno.h
 @comment GNU: Computer bought the farm
-@deftypevr Macro int EIOEIO
+@deftypevr Macro int EIEIO
 Go home and have a glass of warm, dairy-fresh milk.
 
 @comment errno.h
