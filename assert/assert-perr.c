@@ -39,7 +39,7 @@ __assert_perror_fail (int errnum,
 #endif
 
   /* Print the message.  */
-  (void) fprintf (stderr, "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+  (void) fprintf (stderr, "%s%s%s:%u: %s%sUnexpected error: %s.\n",
 		  __assert_program_name ? __assert_program_name : "",
 		  __assert_program_name ? ": " : "",
 		  file, line,
