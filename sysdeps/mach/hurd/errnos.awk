@@ -24,21 +24,21 @@ BEGIN {
     print "";
     print "#ifdef _ERRNO_H";
   }
-$1 == "@deftypevr" && $5 == "@c" {
-    if ($4 == "EDOM" || $4 == "ERANGE")
+$1 == "@comment" && $2 == "###errno:" {
+    if ($3 == "EDOM" || $3 == "ERANGE")
       {
         print "#endif /* <errno.h> included.  */";
 	print "#if (!defined (__Emath_defined) && \\\n     (defined (_ERRNO_H) || defined (__need_Emath)))";
       }
-     s = "#define\t" $4
+     s = "#define\t" $3
      l = 24 - length (s);
      while (l-- > 0)
        s = s " "
-     printf "%s%d\t/* ", s, $6;
-     for (i = 7; i <= NF; ++i)
+     printf "%s%d\t/* ", s, $4;
+     for (i = 5; i <= NF; ++i)
        printf "%s ", $i
      print "*/"
-    if ($4 == "EDOM" || $4 == "ERANGE")
+    if ($3 == "EDOM" || $3 == "ERANGE")
       {
         print "#endif /* Emath not defined and <errno.h> included or need Emath.  */";
 	print "#ifdef _ERRNO_H"
