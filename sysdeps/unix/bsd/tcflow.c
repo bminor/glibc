@@ -1,0 +1,76 @@
+/* Copyright (C) 1991 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
+
+#include <ansidecl.h>
+#include <errno.h>
+#include <stddef.h>
+#include <termios.h>
+#include <unistd.h>
+
+#undef	B0
+#undef	B50
+#undef	B75
+#undef	B110
+#undef	B134
+#undef	B150
+#undef	B200
+#undef	B300
+#undef	B600
+#undef	B1200
+#undef	B1800
+#undef	B2400
+#undef	B4800
+#undef	B9600
+#undef	B19200
+#undef	B38400
+#undef	ECHO
+#undef	TOSTOP
+#undef	NOFLSH
+#include <sys/ioctl.h>
+
+/* Suspend or restart transmission on FD.  */
+int
+DEFUN(tcflow, (fd, action), int fd AND int action)
+{
+  switch (action)
+    {
+    case TCOOFF:
+      return __ioctl(fd, TIOCSTOP, (PTR) NULL);
+    case TCOON:
+      return __ioctl(fd, TIOCSTART, (PTR) NULL);
+
+    case TCIOFF:
+    case TCION:
+      {
+	/* This just writes the START or STOP character with
+	   `write'.  Is there another way to do this?  */
+	struct termios attr;
+	char c;
+	if (tcgetattr(fd, &attr) < 0)
+	  return -1;
+	c = attr.c_cc[action == TCIOFF ? VSTOP : VSTART];
+	if (write(fd, &c, 1) < 1)
+	  return -1;
+	return 0;
+      }
+
+    default:
+      errno = EINVAL;
+      return -1;
+    }
+}
