@@ -7,6 +7,7 @@ scsi/sg.h
 siglist.h
 sysctl.c
 termio.h
+umount.S
 net/ethernet.h
 net/if.h
 net/if_arp.h
