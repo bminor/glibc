@@ -144,7 +144,7 @@ DEFUN_VOID(__tzset)
     tz_rules[0].offset = *tz++ == '-' ? 1L : -1L;
   else
     tz_rules[0].offset = -1L;
-  switch (sscanf(tz, "%hu:%hu:%hu", &hh, &mm, &ss))
+  switch (sscanf (tz, "%hu:%hu:%hu", &hh, &mm, &ss))
     {
     default:
       return;
@@ -189,34 +189,29 @@ DEFUN_VOID(__tzset)
     tz_rules[1].offset = *tz++ == '-' ? 1L : -1L;
   else
     tz_rules[1].offset = -1L;
-  if (*tz != '\0')
+
+  switch (sscanf (tz, "%hu:%hu:%hu", &hh, &mm, &ss))
     {
-      switch (sscanf(tz, "%hu:%hu:%hu", &hh, &mm, &ss))
-	{
-	default:
-	  hh = 0;
-	case 1:
-	  mm = 0;
-	case 2:
-	  ss = 0;
-	case 3:
-	  break;
-	}
-      tz_rules[1].offset *= (min(ss, 59) + (min(mm, 59) * 60) +
-			     (min(hh, 12) * (60 * 60)));
-      for (l = 0; l < 3; ++l)
-	{
-	  while (isdigit(*tz))
-	    ++tz;
-	  if (l < 2 && *tz == ':')
-	    ++tz;
-	}
-    }
-  else
-    {
+    default:
       /* Default to one hour later than standard time.  */
-      tz_rules[1].offset *= abs(tz_rules[0].offset);
-      tz_rules[1].offset += 60 * 60;
+      tz_rules[1].offset *= abs (tz_rules[0].offset);
+      hh = 1;
+
+    case 1:
+      mm = 0;
+    case 2:
+      ss = 0;
+    case 3:
+      break;
+    }
+  tz_rules[1].offset *= (min(ss, 59) + (min(mm, 59) * 60) +
+			 (min(hh, 12) * (60 * 60)));
+  for (l = 0; l < 3; ++l)
+    {
+      while (isdigit(*tz))
+	++tz;
+      if (l < 2 && *tz == ':')
+	++tz;
     }
 
   /* If no standard or DST offset was given, default to GMT
@@ -257,12 +252,14 @@ DEFUN_VOID(__tzset)
 	}
       else if (*tz == 'M')
 	{
+	  int n;
 	  tzr->type = M;
-	  if (sscanf(tz, "M%hu.%hu.%hu", &tzr->m, &tzr->n, &tzr->d) != 3)
+	  if (sscanf (tz, "M%hu.%hu.%hu%n",
+		      &tzr->m, &tzr->n, &tzr->d, &n) != 3 ||
+	      tzr->m < 1 || tzr->m > 12 ||
+	      tzr->n < 1 || tzr->n > 5 || tzr->d > 6)
 	    return;
-	  else if (tzr->m < 1 || tzr->m > 12 || tzr->n < 1 ||
-		   tzr->n > 5 || tzr->d > 6)
-	    return;
+	  tz += n;
 	}
       else if (*tz == '\0')
 	{
@@ -270,13 +267,13 @@ DEFUN_VOID(__tzset)
 	  tzr->type = M;
 	  if (tzr == &tz_rules[0])
 	    {
-	      tzr->m = 3;
+	      tzr->m = 4;
 	      tzr->n = 1;
 	      tzr->d = 0;
 	    }
 	  else
 	    {
-	      tzr->m = 8;
+	      tzr->m = 10;
 	      tzr->n = 5;
 	      tzr->d = 0;
 	    }
