@@ -1,4 +1,4 @@
-# @(#)australasia	7.19
+# @(#)australasia	7.20
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -52,7 +52,7 @@ Rule	AS	1987	max	-	Oct	lastSun	2:00	1:00	-
 Rule	AS	1972	only	-	Feb	27	3:00	0	-
 Rule	AS	1973	1985	-	Mar	Sun>=1	3:00	0	-
 Rule	AS	1986	1989	-	Mar	Sun>=15	3:00	0	-
-Rule	AS	1990	max	even	Mar	Sun>=22	3:00	0	-
+Rule	AS	1990	max	even	Mar	Sun>=18	3:00	0	-
 Rule	AS	1990	max	odd	Mar	Sun>=1	3:00	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Australia/Adelaide	9:14:20 -	LMT	1895 Feb
@@ -181,7 +181,7 @@ Zone	Pacific/Guam	 9:39:00 -	LMT	1901		# Agana
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Pacific/Tarawa	 11:32:04 -	LMT	1901		# Bairiki
 			 12:00	-	NZST
-Zone Pacific/Enderbury	-12:35:40 -	LMT	1901
+Zone Pacific/Enderbury	-11:24:20 -	LMT	1901
 			-12:00	-	KJT	1979 Oct
 			-11:00	-	SST
 Zone Pacific/Kiritimati	-10:29:20 -	LMT	1901
@@ -330,7 +330,7 @@ Zone	Pacific/Wake	11:06:28 -	LMT	1901
 
 # Wallis and Futuna
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone	Pacific/Wallis	11:44:40 -	LMT	1901
+Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 			12:00	-	NZST
 
 # Western Samoa
@@ -344,11 +344,19 @@ Zone	Pacific/Wallis	11:44:40 -	LMT	1901
 # go ahead and edit the file (and please send any changes to
 # tz@elsie.nci.nih.gov for general use in the future).
 
-# From Paul Eggert <eggert@twinsun.com> (November 18, 1993):
+# From Paul Eggert <eggert@twinsun.com> (August 18, 1994):
 # A good source for time zone historical data outside the U.S. is
 # Thomas G. Shanks, The International Atlas (3rd edition),
 # San Diego: ACS Publications, Inc. (1991).
-# Except where noted below, it is the source for the data above.
+# Except where noted, it is the source for the data above.
+#
+# Another source occasionally used is Edward W. Whitman, World Time Differences,
+# Whitman Publishing Co, 2 Niagara Av, Ealing, London (undated), which
+# I found in the UCLA library.
+#
+# A reliable and entertaining source about time zones is
+# Derek Howse, Greenwich time and the discovery of the longitude,
+# Oxford University Press (1980).
 #
 # I invented the abbreviations marked `*' in the following table;
 # the rest are from earlier versions of this file, or from other sources.
@@ -547,6 +555,16 @@ Zone	Pacific/Wallis	11:44:40 -	LMT	1901
 # numbered year (from 1990).  That's when the Adelaide Festival
 # is on...
 
+# From Robert Elz (March 16, 1992, 00:57:07 +1000):
+# DST didn't end in Adelaide today (yesterday)....
+# But whether it's "4th Sunday" or "2nd last Sunday" I have no idea whatever...
+# (it's just as likely to be "the Sunday we pick for this year"...).
+
+# From Bradley White (April 11, 1994):
+# If Sun, 15 March, 1992 was at +1030 as kre asserts, but yet Sun, 20 March,
+# 1994 was at +0930 as John Connolly's customer seems to assert, then I can
+# only conclude that the actual rule is more complicated....
+
 # Australia/Tasmania
 
 # From Bradley White (March 4, 1991):
@@ -706,6 +724,12 @@ Zone	Pacific/Wallis	11:44:40 -	LMT	1901
 
 ###############################################################################
 
+# Fiji
+
+# Howse writes (p 162) that in 1879 the British governor of Fiji
+# enacted an ordinance standardizing the islands on +12:00.
+# Perhaps it didn't take.  We go with Shanks's more precise date in 1915.
+
 # Kwajalein
 
 # In comp.risks 14.87 (26 August 1993), Peter Neumann writes:
@@ -713,3 +737,10 @@ Zone	Pacific/Wallis	11:44:40 -	LMT	1901
 # August 20, 1993.  Thursday night at midnight Kwajalein switched sides with
 # respect to the International Date Line, to rejoin its fellow islands,
 # going from 11:59 p.m. Thursday to 12:00 m. Saturday in a blink.
+
+# Pacific Islands Trust Territories
+
+# Howse writes (p 162) ``The Spaniards, on the other hand, reached the
+# Philippines and the Ladrones from America,'' and implies that the Ladrones
+# (now called the Marianas) kept American date for quite some time.
+# Ignore this for now, as we have no hard data.  See also Asia/Manila.

@@ -1,10 +1,10 @@
-# @(#)asia	7.10
+# @(#)asia	7.11
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
 # tz@elsie.nci.nih.gov for general use in the future).
 
-# From Paul Eggert <eggert@twinsun.com> (November 18, 1993):
+# From Paul Eggert <eggert@twinsun.com> (August 18, 1994):
 #
 # A good source for time zone historical data outside the U.S. is
 # Thomas G. Shanks, The International Atlas (3rd edition),
@@ -14,6 +14,10 @@
 # Another source occasionally used is Edward W. Whitman, World Time Differences,
 # Whitman Publishing Co, 2 Niagara Av, Ealing, London (undated), which
 # I found in the UCLA library.
+#
+# A reliable and entertaining source about time zones is
+# Derek Howse, Greenwich time and the discovery of the longitude,
+# Oxford University Press (1980).
 #
 # I invented the abbreviations marked `*' in the following table;
 # the rest are from earlier versions of this file, or from other sources.
@@ -287,7 +291,7 @@ Zone	Asia/Calcutta	5:53:28 -	LMT	1880
 			5:30	-	IST	1942 Sep
 			5:30	1:00	IST	1945 Oct 15
 			5:30	-	IST
-# The following are like India/Calcutta:
+# The following are like Asia/Calcutta:
 #	Andaman Is
 #	Lakshadweep (Laccadive, Minicoy and Amindivi Is)
 #	Nicobar Is
@@ -509,11 +513,9 @@ Zone	Asia/Amman	2:23:44 -	LMT	1931
 			2:00	Jordan	EET%s
 
 # Kazakhstan
-# From Paul Eggert <eggert@twinsun.com> (November 18, 1993):
-# Before 1993, Almaty was known by its Russian name ``Alma-Ata''.
 # From Shanks (1991):
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone	Asia/Almaty	5:07:48 -	LMT	1924 May  2
+Zone	Asia/Alma-Ata	5:07:48 -	LMT	1924 May  2
 			5:00	-	TSK	1957 Mar
 			6:00	Russia	TS%s
 
@@ -673,6 +675,8 @@ Zone	Asia/Gaza	2:17:52	-	LMT	1900 Oct
 # This will undoubtedly change soon.
 
 # Philippines
+# Howse writes (p 162) that until 1844 the Philippines kept American date.
+# The rest of this data is from Shanks.
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Phil	1899	only	-	May	11	0:00	0	S
 Rule	Phil	1936	only	-	Nov	1	0:00	1:00	D
@@ -682,7 +686,8 @@ Rule	Phil	1954	only	-	Jul	1	0:00	0	S
 Rule	Phil	1978	only	-	Mar	22	0:00	1:00	D
 Rule	Phil	1978	only	-	Sep	21	0:00	0	S
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone	Asia/Manila	8:04:00 -	LMT	1899 May 11
+Zone	Asia/Manila	-15:56:00 -	LMT	1844
+			8:04:00 -	LMT	1899 May 11
 			8:00	Phil	P%sT	1942 May
 			9:00	-	JST	1944 Nov
 			8:00	Phil	P%sT

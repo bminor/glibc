@@ -1,9 +1,14 @@
-# @(#)northamerica	7.10
+# @(#)northamerica	7.11
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
 # tz@elsie.nci.nih.gov for general use in the future).
+
+# From Paul Eggert <eggert@twinsun.com> (August 17, 1994):
+# A reliable and entertaining source about time zones is
+# Derek Howse, Greenwich time and the discovery of the longitude,
+# Oxford University Press (1980).
 
 ###############################################################################
 
@@ -106,6 +111,11 @@ Rule	US	1987	max	-	Apr	Sun>=1	2:00	1:00	D
 #	Samoa standard time
 # The law doesn't give abbreviations.
 
+# From Paul Eggert <eggert@twinsun.com> (August 16, 1994):
+# Howse writes that Alaska switched from the Julian to the Gregorian calendar,
+# and from east-of-GMT to west-of-GMT days, in 1867 when the US purchased it
+# from Russia.  We don't have this data pinned down yet, though.
+
 # Easy stuff first--including Alaska, where we ignore history (since we
 # can't tell if we should give Yukon time or Alaska-Hawaii time for "old"
 # times).
@@ -148,8 +158,14 @@ Zone America/Detroit	-5:00	US	E%sT	1968
 			-5:00	US	E%sT
 
 # Samoa just changes names.  No DST, per Naval Observatory.
+#
+# Howse writes that in 1879 the King of Samoa decided to change
+# ``the date in his kingdom from the Antipodean to the American system,
+# ordaining -- by a masterpiece of diplomatic flattery -- that
+# the Fourth of July should be celebrated twice in that year.''
 
-Zone Pacific/Samoa	-11:22:48 -	LMT	1911
+Zone Pacific/Samoa	 12:37:12 -	LMT	1879 Jul  5
+			-11:22:48 -	LMT	1911
 			-11:30	-	SST	1950
 			-11:00	-	NST	1967 Apr	# N=Nome
 			-11:00	-	BST	1983 Nov 30	# B=Bering
