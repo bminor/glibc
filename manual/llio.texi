@@ -86,14 +86,20 @@ The @var{flags} argument must include exactly one of these values to
 specify the file access mode:
 
 @table @code
+@comment fcntl.h
+@comment POSIX.1
 @item O_RDONLY
 @vindex O_RDONLY
 Open the file for read access.
 
+@comment fcntl.h
+@comment POSIX.1
 @item O_WRONLY
 @vindex O_WRONLY
 Open the file for write access.
 
+@comment fcntl.h
+@comment POSIX.1
 @item O_RDWR
 @vindex O_RDWR
 Open the file for both reading and writing.
@@ -103,6 +109,8 @@ The @var{flags} argument can also include any combination of these
 flags:
 
 @table @code
+@comment fcntl.h
+@comment POSIX.1
 @item O_APPEND
 @vindex O_APPEND
 @cindex append mode (file status flag)
@@ -116,17 +124,23 @@ the file, extending it, regardless of the current file position.
 If set, the file will be created if it doesn't already exist.
 @cindex create on open (file status flag)
 
+@comment fcntl.h
+@comment POSIX.1
 @item O_EXCL
 @vindex O_EXCL
 If both @code{O_CREAT} and @code{O_EXCL} are set, then @code{open} fails
 if the specified file already exists.
 
+@comment fcntl.h
+@comment POSIX.1
 @item O_NOCTTY
 @vindex O_NOCTTY
 If @var{filename} names a terminal device, don't make it the controlling
 terminal for the process.  @xref{Job Control}, for information about what
 it means to be the controlling terminal.
 
+@comment fcntl.h
+@comment POSIX.1
 @item O_NONBLOCK
 @vindex O_NONBLOCK
 @cindex non-blocking mode (file status flag)
@@ -141,6 +155,8 @@ permits them to return immediately with a failure status if there is no
 input immediately available (@code{read}), or if the output can't be
 written immediately (@code{write}).
 
+@comment fcntl.h
+@comment POSIX.1
 @item O_TRUNC
 @vindex O_TRUNC
 If the file exists and is opened for write access, truncate it to zero
@@ -560,6 +576,21 @@ character.
 This is an arithmetic data type used to represent file sizes.
 In the GNU system, this is equivalent to @code{fpos_t} or @code{long int}.
 @end deftp
+
+These three aliases for the @samp{SEEK_@dots{}} constants exist for the
+sake of compatibility with older BSD systems.  They are defined in two
+different header files: @file{fcntl.h} and @file{sys/file.h}.
+
+@table @code
+@item L_SET
+An alias for @code{SEEK_SET}.
+
+@item L_INCR
+An alias for @code{SEEK_CUR}.
+
+@item L_XTND
+An alias for @code{SEEK_END}.
+@end table
 
 @node Descriptors and Streams
 @section Descriptors and Streams
@@ -1340,8 +1371,6 @@ status flag value to produce a value representing the file access mode.
 The mode will be @code{O_RDONLY}, @code{O_WRONLY}, or @code{O_RDWR}.
 @end deftypevr
 
-@comment fcntl.h
-@comment POSIX.1
 @table @code
 @item O_RDONLY
 Open the file for read access.
