@@ -1,3 +1,8 @@
+1999-07-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* internals.h: Align _pthread_descr_struct to 32 bytes.
+	Reported by Tim Hockin <thockin@cobaltnet.com>, close PR libc/1206.
+
 1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c (pthread_handle_create): Free mmap region after stack
