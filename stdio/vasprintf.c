@@ -57,7 +57,7 @@ DEFUN(enlarge_buffer, (stream, c),
    allocated with malloc and stored in *STRING_PTR.  */
 int
 DEFUN(vasprintf, (string_ptr, format, args),
-      char **string_ptr AND CONST char *format AND va_list args)
+      char **string_ptr AND CONST char *format AND PTR args)
 {
   FILE f;
   int done;
