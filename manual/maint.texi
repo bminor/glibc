@@ -63,7 +63,7 @@ the GNU C compiler, so you may need to compile the library with GCC.
 (In fact, all of the existing complete ports require GCC.)  If possible,
 you should use the GNU linker, GNU @code{ld}, when linking programs with
 the GNU C library.  If you are going to use GNU @code{ld}, be sure to
-specify @samp{-D__GNU_STAB__} in @file{Makeconfig}.@refill
+specify @samp{-DHAVE_GNU_LD} in @file{Makeconfig}.@refill
 
 To build the library and header files, type @code{make}.  This will
 produce a lot of output, some of which looks like errors from
