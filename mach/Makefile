@@ -18,40 +18,14 @@
 
 subdir := mach
 
-distribute = Machrules syscalls.awk shortcut.awk
+all:
+
+# Some things below (but before including Rules) use configuration variables.
+include ../Makeconfig
+
 
 headers = mach_init.h mach.h mach-shortcuts.h \
 	  $(interface-headers)
-generated = mach-shortcuts.h
-
-
-# Install the Mach header files directly out of the Mach kernel source.
-# If we were configured with `--with-mach=DIR', then config.make sets
-# mach-srcdir to DIR.  Otherwise guess we are in a big source tree.
-ifndef mach-srcdir
-mach-srcdir = ../../mach
-endif
-
-# When compiling, use the Mach header files directly from the kernel sources.
-includes += -I$(mach-srcdir)
-
-mach-src-headers := $(wildcard $(addprefix $(mach-srcdir)/mach/,\
-					   *.defs *.h
-					   */*.defs */*.h))
-mach-headers = $(filter-out mach/machine/%,\
-			    $(mach-src-headers:$(mach-srcdir)/%=%))
-install-others += $(addprefix $(includedir),$(mach-headers))
-$(includedir)/mach/%: $(mach-srcdir)/%; $(do-install)
-
-
-user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
-				     memory_object_user			\
-				     memory_object_default		\
-	            )\
-		   $(addprefix device/,device device_request)
-# device_reply is giving me headaches because of userprefix
-server-interfaces := # mach/__exc mach/exc
-
 routines = $(interface-routines) \
 	   $(filter-out syscall_%,$(mach-syscalls)) \
 	   $(addprefix __,$(mach-syscalls)) \
@@ -62,14 +36,52 @@ routines = $(interface-routines) \
 	   msg_destroy msg_server msg_server_t \
 	   __msg_dest __msg_server \
 	   devstream
-
+user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
+				     memory_object_user			\
+				     memory_object_default		\
+	            )\
+		   $(addprefix device/,device device_request)
+# device_reply is giving me headaches because of userprefix
+server-interfaces := # mach/__exc mach/exc
 tests := hello
+distribute = Machrules syscalls.awk shortcut.awk
+
+# Use and install the Mach header files directly out of the Mach kernel source.
 
 
-all:
+# If we were configured with `--with-mach=DIR', then config.make sets
+# mach-srcdir to DIR.  Otherwise guess we are in a big source tree.
+ifndef mach-srcdir
+mach-srcdir = ../../mach
+endif
 
-include ../Makeconfig	# To get objpfx defined.
+# When compiling, use the Mach header files directly from the kernel sources.
+includes += -I$(mach-srcdir)
 
+# Find the MiG defs files in the kernel source.
+vpath %.defs $(mach-srcdir)
+vpath mach/%.h $(mach-srcdir)
+
+# Install all .h and .defs files we find in the kernel's mach/ and device/
+# directories and their subdirectories (in MK82, max one level deep).
+# XXX really want all from device?
+mach-src-headers := $(wildcard $(foreach dir,mach device,\
+					 $(addprefix $(mach-srcdir)/$(dir)/,\
+						     *.defs *.h \
+						     */*.defs */*.h)))
+# Exclude mach/machine/*.  A symlink will be installed for mach/machine.
+mach-headers = $(filter-out mach/machine/%,\
+			    $(mach-src-headers:$(mach-srcdir)/%=%))
+install-others += $(addprefix $(includedir),$(mach-headers))
+$(includedir)/mach/%: $(mach-srcdir)/mach/%; $(do-install)
+$(includedir)/device/%: $(mach-srcdir)/device/%; $(do-install)
+
+# Make a symlink for mach/machine in the installed include directory.
+install-others += $(includedir)/mach/machine
+$(includedir)/mach/machine: $(common-objpfx)config.make
+# XXX Ask mib about what best to do for this.
+	cd $(@D); ln -s $(config-machine) $(@F)
+
 # Define mach-syscalls and sysno-*.
 ifneq ($(no_deps),t)
 include $(objpfx)mach-syscalls.mk
@@ -142,10 +154,10 @@ $(objpfx)mach-shortcuts.h: $(objpfx)mach/mach_interface.h \
 	| grep '^/\* Routine [a-z0-9_]*_rpc \*/' \
 	| sed 's/_rpc//g' | tr @ \\012 > $@-new
 	mv $@-new $@
+generated += mach-shortcuts.h
 
 before-compile += $(objpfx)mach-shortcuts.h
-
-
+
 include Machrules
 include ../Rules
 
@@ -157,7 +169,7 @@ mach/mach_interface.defs: mach/mach.defs
 # so memory_object.defs generates memory_object_user.h.
 mach/memory_object_user.defs: mach/memory_object.defs
 	ln $< $@ || cp $< $@
-generated += mach/mach.defs mach/memory_object_user.defs
+generated += mach/mach_interface.defs mach/memory_object_user.defs
 
 # Be sure not to make these with implicit rules from foo.defs.
 mach.h mach/memory_object.h: ;
