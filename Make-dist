@@ -16,10 +16,6 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-ifndef objpfx
-You must use the parent or subdirectory Makefile, not this one directly.
-endif
-
 dist:
 
 ifdef subdir
