@@ -100,7 +100,7 @@ categories: errors, external events, and explicit requests.
 
 An error means that a program has done something invalid and cannot
 continue execution.  But not all kinds of errors generate signals---in
-fact, most do not.  For example, opening a nonexistant file is an error,
+fact, most do not.  For example, opening a nonexistent file is an error,
 but it does not raise a signal; instead, @code{open} returns @code{-1}.
 In general, errors that are necessarily associated with certain library
 functions are reported by returning a value that indicates an error.
