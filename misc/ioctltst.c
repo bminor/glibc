@@ -40,7 +40,7 @@ main()
 
   /* use ioctl() to get the interface configuration list */
   {
-    struct ifconf ifc;
+    static struct ifconf ifc;	/* init to 0 */
     
     ioctl_result = ioctl(sock, SIOCGIFCONF, (char *) &ifc);
 
