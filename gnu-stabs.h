@@ -34,9 +34,9 @@ Cambridge, MA 02139, USA.  */
   symbol_alias (_name, name);
 
 #ifdef NO_UNDERSCORES
-#define __SYMBOL_PREFIX "_"
-#else
 #define __SYMBOL_PREFIX
+#else
+#define __SYMBOL_PREFIX "_"
 #endif
 
 /* Make references to ALIAS refer to SYMBOL.  */
