@@ -190,7 +190,7 @@ $(glibc-targets):
 # Create stamp files if they don't exist, so the parent makefile's rules for
 # updating the library archives are happy with us, and never think we have
 # changed the library.
-lib: $(foreach o,$(object-suffixes),$(objpfx)stamp$o-$(subdir))
+lib: $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o-$(subdir))
 stubs: $(common-objpfx)stub-manual
 $(common-objpfx)stub-manual ../po/manual.pot $(objpfx)stamp%-$(subdir):
 	$(make-target-directory)
