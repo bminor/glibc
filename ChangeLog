@@ -1,3 +1,9 @@
+1999-07-27  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/Makefile [stdio-common]: Set inhibit-siglist.
+	(The code this disables is entirely gone in the main branch,
+	so this change does not need to be propagated from the 2.1 branch.)
+
 1999-07-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Only return information
