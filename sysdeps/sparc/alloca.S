@@ -22,6 +22,10 @@ Cambridge, MA 02139, USA.  */
    arguments which it makes relocatable symbols but seem always to be
    the constant 96; I have no idea what they are for.  */
 
+#ifndef NO_UNDERSCORES
+#define __builtin_alloca ___builtin_alloca
+#endif
+
 FUNC (__builtin_alloca)
 	sub %sp, %o0, %sp	/* Push some stack space.  */
 	retl			/* Return; the returned buffer leaves 96 */
