@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for GNU.
-Copyright (C) 1993 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -61,24 +61,25 @@ Cambridge, MA 02139, USA.  */
    returned by `fcntl' with the F_GETFL command.  */
 
 #define	O_APPEND	0x0100	/* Writes always append to the file.  */
+#ifdef __USE_BSD
 #define	O_ASYNC		0x0200	/* Send SIGIO to owner when data is ready.  */
 #define	O_FSYNC		0x0400	/* Synchronous writes.  */
 #define	O_SYNC		O_FSYNC
+#endif
 #ifdef __USE_GNU
 #define	O_NOATIME	0x0800	/* Don't set access time on read (owner).  */
 #endif
 
 
 /* The name O_NONBLOCK is unfortunately overloaded; it is both a file name
-   translation flag and a file status flag.  O_NDELAY is the deprecated BSD
-   name for the same flag, overloaded in the same way.
+   translation flag and an I/O operating mode.  O_NDELAY is the deprecated
+   BSD name for the same flag, overloaded in the same way.
 
-   When used in `dir_lookup' (and consequently `open',
-   `hurd_file_name_lookup', or `file_name_lookup'), O_NONBLOCK says the
-   open should return immediately instead of blocking for any significant
-   length of time (e.g., to wait for carrier detect on a serial line).  It
-   is also saved as a file status flag, and after open has the following
-   meaning.
+   When used in `dir_lookup' (and consequently `open', `hurd_file_name_lookup',
+   or `file_name_lookup'), O_NONBLOCK says the open should return immediately
+   instead of blocking for any significant length of time (e.g., to wait
+   for carrier detect on a serial line).  It is also saved as an I/O
+   operating mode, and after open has the following meaning.
 
    When used in `io_*_openmodes' (and consequently `fcntl' with the F_SETFL
    command), the O_NONBLOCK flag means to do nonblocking i/o: any i/o
