@@ -19,7 +19,7 @@ Handling}) in order to understand this material presented in this
 chapter.
 
 @menu
-* Concepts of Job Control ::    Concepts of Job Control
+* Concepts of Job Control::     Jobs can be controlled by a shell.
 * Job Control is Optional::     Not all POSIX systems support job control.
 * Controlling Terminal::        How a process gets its controlling terminal.
 * Access to the Terminal::      How processes share the controlling terminal.
@@ -28,7 +28,7 @@ chapter.
 * Functions for Job Control::   Functions to control process groups.
 @end menu
 
-@node Concepts of Job Control , Job Control is Optional,  , Job Control
+@node Concepts of Job Control, Job Control is Optional,  , Job Control
 @section Concepts of Job Control
 
 @cindex shell
@@ -39,13 +39,13 @@ programs specified by those commands.  It can do this using the
 (@pxref{Executing a File}) functions.
 
 A single command may run just one process---but often one command uses
-several processes.  If you use the @samp{|} operator in a shall command,
+several processes.  If you use the @samp{|} operator in a shell command,
 you explicitly request several programs in their own processes.  But
 even if you run just one program, it can use multiple processes
 internally.  For example, a single compilation command such as @samp{cc
 -c foo.c} typically uses four processes (though normally only two at any
 given time).  If you run Make, its job is to run other programs in
-seperate processes.
+separate processes.
 
 The processes belonging to a single command are called a @dfn{process
 group} or @dfn{job}.  This is so that you can operate on all of them at
