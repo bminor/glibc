@@ -16,24 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
-#include <unistd.h>
+#include <sysdep.h>
 
-/* Increment the scheduling priority of the calling process by INCR.
-   The superuser may use a negative INCR to decrement the priority.  */
-int
-DEFUN(nice, (incr), int incr)
-{
-  errno = ENOSYS;
-  return -1;
-}
-
-
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning (nice);
-
-#endif	/* GNU stabs.  */
+SYSCALL (nice, 1)
+	ret

@@ -19,21 +19,27 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/resource.h>
 
 /* Increment the scheduling priority of the calling process by INCR.
    The superuser may use a negative INCR to decrement the priority.  */
 int
 DEFUN(nice, (incr), int incr)
 {
-  errno = ENOSYS;
-  return -1;
+  int save;
+  int prio;
+
+  /* -1 is a valid priority, so we use errno to check for an error.  */
+  save = errno;
+  errno = 0;
+  prio = getpriority (PRIO_PROCESS, 0);
+  if (prio == -1)
+    {
+      if (errno != 0)
+	return -1;
+      else
+	errno = save;
+    }
+
+  return setpriority (PRIO_PROCESS, 0, prio + incr);
 }
-
-
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning (nice);
-
-#endif	/* GNU stabs.  */
