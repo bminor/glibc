@@ -424,11 +424,6 @@ DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
 }
 
 
-/* Maximum length of a timezone name.  __tz_compute keeps this up to date
-   (never decreasing it) when ! __use_tzfile.
-   tzfile.c keeps it up to date when __use_tzfile.  */
-long int __tzname_max;
-
 /* Figure out the correct timezone for *TIMER and TM (which must be the same)
    and set `__tzname', `__timezone', and `__daylight' accordingly.
    Return nonzero on success, zero on failure.  */
@@ -449,14 +444,28 @@ DEFUN(__tz_compute, (timer, tm),
   __tzname[1] = (char *) tz_rules[1].name;
 
   {
-    /* Keep __tzname_max up to date.  */
+    /* Keep __tzname_cur_max up to date.  */
     size_t len0 = strlen (__tzname[0]);
     size_t len1 = strlen (__tzname[1]);
-    if (len0 > __tzname_max)
-      __tzname_max = len0;
-    if (len1 > __tzname_max)
-      __tzname_max = len1;
+    if (len0 > __tzname_cur_max)
+      __tzname_cur_max = len0;
+    if (len1 > __tzname_cur_max)
+      __tzname_cur_max = len1;
   }
 
   return 1;
+}
+
+/* Maximum length of a timezone name.  __tz_compute keeps this up to date
+   (never decreasing it) when ! __use_tzfile.
+   tzfile.c keeps it up to date when __use_tzfile.  */
+long int __tzname_cur_max;
+
+long int
+DEFUN_VOID(__tzname_max)
+{
+  if (! __tzset_run)
+    __tzset ();
+
+  return __tzname_cur_max;
 }
