@@ -53,7 +53,7 @@ interface-includes := $(foreach if,$(user-interfaces),$(if).ir)
 ifndef no_deps
 include $(interface-includes)
 endif
-generated := $(generated) $(interface-includes)
+generated += $(interface-includes)
 endif
 
 # %.ir defines a variable `%-calls', which lists the RPCs defined by
@@ -120,7 +120,10 @@ interface-headers := $(user-interfaces:%=%.h) $(server-interfaces:%=%_server.h)
 # and don't distribute them.
 mach-generated := $(interface-routines:%=%.c) \
 		  $(interface-headers:%=%.h %.uh %.__h)
-generated := $(generated) $(mach-generated)
+generated += $(mach-generated)
 
 # These are needed to generate the dependencies.
-before-compile := $(before-compile) $(interface-headers)
+before-compile += $(interface-headers)
+
+# Don't let these be intermediate files and get removed.
+$(interface-headers) :
