@@ -26,7 +26,7 @@ include ../Makeconfig
 
 headers = hurd.h $(addprefix hurd/,fd.h id.h port.h signal.h userlink.h) \
 	  $(interface-headers)
-distribute := intr_rpc.awk hurdintr.awk thread_state.h
+distribute := intr_rpc.awk hurdintr.awk
 
 user-interfaces		:= $(addprefix hurd/,\
 				       auth process startup msg msg_reply \
@@ -46,7 +46,7 @@ routines = $(interface-routines) \
 	   $(XXX fopenport __fopenport) \
 	   vpprintf \
 	   $(sig) $(dtable)
-sig	= hurdsig siginfo setup-thread init-fault msging-p hurd-raise \
+sig	= hurdsig siginfo init-fault msging-p hurd-raise \
 	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport setdtsz
