@@ -1,4 +1,4 @@
-# Copyright (C) 1992 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,8 +26,6 @@ aux	:= $(aux) exp__E log__L
 math-twiddled := t
 endif
 
-bsdmath_dirs := $(bsdmath_dirs) common common_source
-
 endif
 
 ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bytesex.h))))" \
@@ -41,6 +39,7 @@ $(common-objpfx)det_endian: $(sysdep_dir)/generic/det_endian.c
 	$(native-compile)
 
 before-compile := $(before-compile) $(common-objpfx)bytesex.h
+generated := $(generated) $(common-objpfx)bytesex.h $(common-objpfx)det_endian
 
 endif
 
@@ -55,6 +54,8 @@ $(objpfx)siglist.c: $(objpfx)make_siglist
 
 $(objpfx)make_siglist: $(sysdep_dir)/generic/make_siglist.c
 	$(native-compile)
+
+generated := $(generated) $(objpfx)make_siglist $(objpfx)siglist.c
 endif
 
 endif
