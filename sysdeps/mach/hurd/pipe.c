@@ -82,6 +82,6 @@ DEFUN(__pipe, (fds), int fds[2])
     }
 
   fds[0] = d1;
-  fds[2] = d2;
+  fds[1] = d2;
   return 0;
 }
