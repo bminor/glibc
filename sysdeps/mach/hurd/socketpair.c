@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/socket.h>
 #include <hurd/fd.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 /* Create two new sockets, of type TYPE in domain DOMAIN and using
    protocol PROTOCOL, which are connected to each other, and put file
