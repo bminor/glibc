@@ -1828,8 +1828,8 @@ control the special I/O modes.  For example, you can specify the
 to control inclusion of routing information on output.
 
 @menu
-* Sending Data::		Sending data with @code{write}.
-* Receiving Data::		Reading data with @code{read}.
+* Sending Data::		Sending data with @code{send}.
+* Receiving Data::		Reading data with @code{recv}.
 * Socket Data Options::		Using @code{send} and @code{recv}.
 @end menu
 
