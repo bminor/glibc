@@ -1,3 +1,8 @@
+2000-03-14  Andreas Jaeger  <aj@suse.de>
+
+	* locale/localeconv.c (localeconv): Fix typo.
+	Reported by Andre Charbonneau <andrec@corel.com>.
+
 2000-03-03  Andreas Jaeger  <aj@suse.de>
 
 	* sunrpc/xdr.c (xdr_hyper): Correctly handle lower half of llp.
