@@ -50,9 +50,7 @@ define nl	# This is needed by *.ir.
 endef
 ifdef user-interfaces
 *.ir := $(addprefix $(objpfx),$(foreach if,$(user-interfaces),$(if).ir))
-ifndef no_deps
 include $(*.ir)
-endif
 ifneq "$(*.ir)" "$(wildcard $(*.ir))"
 # If any .ir file is missing, we will be unable to make all the deps.
 no_deps=t
@@ -84,6 +82,7 @@ $(objpfx)%.ir: $(objpfx)%.uh $(objpfx)%.h
 vpath Machrules ../mach	# Find ourselves.
 
 define generate-user-calls
+@echo '+++ generating $< calls for $@: $^ ($?)'
 $(MIG) $< $(MIGFLAGS) \
        -prefix __ -i $(objpfx)__ \
        -server /dev/null -user /dev/null -header /dev/null
@@ -143,7 +142,7 @@ interface-headers := $(user-interfaces:%=%.h) \
 # and don't distribute them.
 mach-generated = $(interface-routines:%=%.c) \
 		 $(foreach h,$(interface-headers:%.h=%),$h.h $h.uh $h.__h)
-generated += $(mach-generated)
+generated += $(addprefix $(objpfx),$(mach-generated))
 
 # These are needed to generate the dependencies.
 before-compile += $(interface-headers:%=$(objpfx)%)
