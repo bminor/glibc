@@ -19,7 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 
 /* Allocate a new file descriptor and install PORT in it.  FLAGS are as for
-   `open'; only O_IGNORE_CTTY is meaningful, but all are saved.
+   `open'; only O_IGNORE_CTTY is meaningful.
 
    If the descriptor table is full, set errno, and return -1.
    If DEALLOC is nonzero, deallocate PORT first.  */
