@@ -1,3 +1,9 @@
+2000-01-03  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/bits/string.h (_HAVE_STRING_ARCH_mempcpy): Define.
+
+	* sysdeps/arm/fpu/bits/mathdef.h: New file.
+
 2000-01-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/bits/string2.h (__strsep_g): Don't handle empty __S special.
