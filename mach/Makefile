@@ -52,6 +52,9 @@ distribute = Machrules syscalls.awk shortcut.awk
 headers += $(addprefix mach/default_pager_types.,h defs)
 user-interfaces += mach/default_pager
 server-interfaces += mach/default_pager_helper
+
+# Clear any environment	value.
+generated =
 
 # Get the proper definition of `mach-srcdir'.
 include ../sysdeps/mach/Makefile
