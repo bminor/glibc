@@ -42,14 +42,17 @@ static char sccsid[] = "@(#)fstab.c	8.1 (Berkeley) 6/4/93";
 #include <string.h>
 #include <unistd.h>
 
+#ifndef EFTYPE
+#define EFTYPE EINVAL
+#endif
+
 static FILE *_fs_fp;
 static struct fstab _fs_fstab;
 
 static error __P((int));
-static fstabscan __P((void));
 
-static
-fstabscan()
+static void
+fstabscan __P((void))
 {
 	register char *cp;
 #define	MAXLINELENGTH	1024
