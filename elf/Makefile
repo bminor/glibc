@@ -36,7 +36,7 @@ elide-routines.so = $(dl-routines) dl-support enbl-secure
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c \
-		  dl-envvars.h
+		  dl-envvars.h sln.c
 
 extra-libs	 = libdl
 extra-libs-others = $(extra-libs)
