@@ -34,6 +34,8 @@ DEFUN(__execve, (path, argv, envp),
   size_t argslen, envlen;
   int ints[INIT_INT_MAX];
   mach_port_t ports[INIT_PORT_MAX];
+  int dealloc_ports[INIT_PORT_MAX];
+  struct _hurd_port *port_cells[INIT_PORT_MAX];
   file_t *dtable;
   int dtablesize;
   int i;
@@ -64,17 +66,49 @@ DEFUN(__execve, (path, argv, envp),
   for (p = envp; *p != NULL; ++p)
     ap = __memccpy (ap, *p, '\0', UINT_MAX);
 
-  __mutex_lock (&_hurd_lock);
-  ports[INIT_PORT_CCDIR] = _hurd_ccdir;
-  ports[INIT_PORT_CWDIR] = _hurd_cwdir;
-  ports[INIT_PORT_CRDIR] = _hurd_crdir;
-  ports[INIT_PORT_AUTH] = _hurd_auth;
-  ports[INIT_PORT_PROC] = _hurd_proc;
-  ints[INIT_UMASK] = _hurd_umask;
-  ints[INIT_CTTY_FSTYPE] = _hurd_ctty_fstype;
-  ints[INIT_CTTY_FSID1] = _hurd_ctty_fsid.val[0];
-  ints[INIT_CTTY_FSID2] = _hurd_ctty_fsid.val[1];
-  ints[INIT_CTTY_FILEID] = _hurd_ctty_fileid;
+#define	port(idx, cell)							      \
+      case idx:								      \
+	port_cells[i] = &cell;						      \
+	ports[i] = _hurd_port_get (&cell, &dealloc_ports[i]);		      \
+	break
+  for (i = 0; i < INIT_PORT_MAX; ++i)
+    switch (i)
+      {
+	port (INIT_PORT_CCDIR, _hurd_ccdir);
+	port (INIT_PORT_CWDIR, _hurd_cwdir);
+	port (INIT_PORT_CRDIR, _hurd_crdir);
+	port (INIT_PORT_AUTH, _hurd_auth);
+	port (INIT_PORT_PROC, _hurd_proc);
+      default:
+	port_cells[i] = NULL;
+	break;
+      }
+  for (i = 0; i < INIT_PORT_MAX; ++i)
+    switch (i)
+      {
+      case INIT_UMASK:
+	ints[i] = _hurd_umask;
+	break;
+      case INIT_CTTY_FSTYPE:
+	ints[i] = _hurd_ctty_fstype;
+	break;
+      case INIT_CTTY_FSID1:
+	ints[i] = _hurd_ctty_fsid.val[0];
+	break;
+      case INIT_CTTY_FSID2:
+	ints[i] = _hurd_ctty_fsid.val[1];
+	break;
+      case INIT_CTTY_FILEID:
+	ints[i] = _hurd_ctty_fileid;
+	break;
+
+      case INIT_SIGMASK:
+      case INIT_SIGIGN:
+	break;
+
+      default:
+	ints[i] = 0;
+      }
 
   ss = _hurd_thread_sigstate (__mach_thread_self ());
   ints[INIT_SIGMASK] = ss->blocked;
@@ -121,6 +155,11 @@ DEFUN(__execve, (path, argv, envp),
   /* We must hold the dtable lock while doing the file_exec to avoid
      the dtable entries being deallocated before we send them.  */
   __mutex_unlock (&_hurd_dtable_lock);
+
+  for (i = 0; i < INIT_PORT_MAX; ++i)
+    if (port_cells[i] != NULL)
+      _hurd_port_free (ports_cells[i], ports[i], dealloc_ports[i]);
+
   if (err)
     return __hurd_fail (err);
 
