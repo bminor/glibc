@@ -46,7 +46,7 @@ endif	# ! hurd-srcdir-computed
 ifdef in-Makerules
 
 # For the time being, elide directories where nothing at all works.
-subdirs := $(filter-out socket inet sunrpc termios,$(subdirs)) # XXX
+subdirs := $(filter-out socket inet sunrpc termios manual,$(subdirs)) # XXX
 
 # Look for header files in hurd/ under the top-level library source directory.
 includes += -I$(..)hurd
