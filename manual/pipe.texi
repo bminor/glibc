@@ -29,9 +29,10 @@ beginning of the file and writing at the end.
 * Pipe to a Subprocess::        Using a pipe to communicate with a
 				 child process.
 * FIFO Special Files::          Making a FIFO special file.
+* Pipe Atomicity::		When pipe (or FIFO) I/O is atomic.
 @end menu
 
-@node Creating a Pipe, Pipe to a Subprocess,  , Pipes and FIFOs
+@node Creating a Pipe
 @section Creating a Pipe
 @cindex creating a pipe
 @cindex opening a pipe
@@ -78,8 +79,7 @@ read by the child process.
 @include pipe.c.texi
 @end example
 
-
-@node Pipe to a Subprocess, FIFO Special Files, Creating a Pipe, Pipes and FIFOs
+@node Pipe to a Subprocess
 @section Pipe to a Subprocess
 @cindex creating a pipe to a subprocess
 @cindex pipe to a subprocess
@@ -135,7 +135,7 @@ filter output through another program, in this case the paging program
 @include popen.c.texi
 @end example
 
-@node FIFO Special Files,  , Pipe to a Subprocess, Pipes and FIFOs
+@node FIFO Special Files
 @section FIFO Special Files
 @cindex creating a FIFO special file
 @cindex interprocess communication, with FIFO
@@ -181,4 +181,19 @@ system.
 @end table
 @end deftypefun
 
+@node Pipe Atomicity
+@section Atomicity of Pipe I/O
 
+Reading or writing pipe data is @dfn{atomic} if the size of data written
+is less than @code{PIPE_BUF}.  This means that the data transfer seems
+to be an instantaneous unit, in that nothing else in the system can
+observe a state in which it is partially complete.  Atomic I/O may not
+begin right away (it may need to wait for buffer space or for data), but
+once it does begin, it finishes immediately.
+
+Reading or writing a larger amount of data may not be atomic; for
+example, output data from other processes sharing the descriptor may be
+interspersed.
+
+@xref{Limits for Files}, for information about the @code{PIPE_BUF}
+parameter.
