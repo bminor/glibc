@@ -1,3 +1,9 @@
+2004-12-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/clone2.S (__clone2): Add support for
+	NPTL where the PID is stored at userlevel and needs to be reset when
+	CLONE_THREAD is not used.
+
 2004-12-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c (process_envvars): Don't consider LD_SHOW_AUXV
