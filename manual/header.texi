@@ -8,7 +8,7 @@ you where in the manual you can find more information about how to use
 it.
 
 @table @code
-@comment summary.texinfo is generated from the other texinfo files.
+@comment summary.texi is generated from the other Texinfo files.
 @comment See the Makefile and summary.awk for the details.
-@include summary.texinfo
+@include summary.texi
 @end table
