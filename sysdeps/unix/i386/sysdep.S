@@ -35,7 +35,7 @@ syscall_error:
 	   EWOULDBLOCK_sys is the original number.  */
 	cmpl $EWOULDBLOCK_sys, %eax /* Is it the old EWOULDBLOCK?  */
 	jne notb		/* Branch if not.  */
-	move $EAGAIN, %eax	/* Yes; translate it to EAGAIN.  */
+	movl $EAGAIN, %eax	/* Yes; translate it to EAGAIN.  */
 #endif
 notb:	movl %eax, C_SYMBOL_NAME(errno)
 	movl $-1, %eax
