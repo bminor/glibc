@@ -50,21 +50,26 @@ __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
   #error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
 #endif
 
-  if (*expt == 0)
+  if (u.ieee.exponent == 0)
     {
       /* A biased exponent of zero is a special case.
 	 Either it is a zero or it is a denormal number.  */
       if (res_ptr[0] == 0 && res_ptr[n - 1] == 0)
 	/* It's zero.  Just one limb records that.  */
 	return 1;
-      else
-	/* It is a denormal number, meaning it has no implicit leading
-	   one bit, and its exponent is in fact the format minimum.  */
-	  *expt = -1022;
+
+      /* It is a denormal number, meaning it has no implicit leading
+	 one bit, and its exponent is in fact the format minimum.  */
+      *expt = -1021;
+#if N == 2
+      if (res_ptr[1] == 0)
+	/* No point in using an extra high-order limb that is zero.  */
+	return 1;
+#endif
     }
   else
     /* Add the implicit leading one bit for a normalized number.  */
     res_ptr[N - 1] |= 1 << (52 - ((N - 1) * BITS_PER_MP_LIMB);
 
-  return n;
+  return N;
 }
