@@ -1,5 +1,8 @@
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* wcsmbs/wcrtomb.c: Compute result correctly for successful call
+	with s == NULL.
+
 	* wcsmbs/mbsrtowcs.c: Compute return value correctly after change
 	in gconv function.
 
