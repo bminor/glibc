@@ -356,7 +356,7 @@ DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
 
   if (rule->type == M)
     {
-      /* Defined in _offtime.c.  */
+      /* Defined in offtime.c.  */
       extern CONST unsigned short int __mon_lengths[2][12];
       unsigned short int ml = __mon_lengths[__isleap(tbuf.tm_year)][m - 1];
       tbuf.tm_mon = m - 1;
