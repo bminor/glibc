@@ -26,15 +26,20 @@ typedef unsigned char __u_char;
 typedef unsigned short __u_short;
 typedef unsigned int __u_int;
 typedef unsigned long __u_long;
+#ifdef __GNUC__
+typedef unsigned long long int __u_quad_t;
+typedef long long int __quad_t;
+typedef __quad_t *__qaddr_t;
+#else
 typedef struct
 {
   long val[2];
-} __quad;
+} __quad_t;
 typedef struct
 {
   __u_long val[2];
-} __u_quad;
-
+} __u_quad_t;
+#endif
 typedef int __dev_t;		/* Type of device numbers.  */
 typedef unsigned int __uid_t;	/* Type of user identifications.  */
 typedef unsigned int __gid_t;	/* Type of group identifications.  */
@@ -44,11 +49,7 @@ typedef unsigned short int __nlink_t; /* Type of file link counts.  */
 typedef long int __off_t;	/* Type of file sizes and offsets.  */
 typedef int __pid_t;		/* Type of process identifications.  */
 typedef int __ssize_t;		/* Type of a byte count, or error.  */
-#ifdef	__GNUC__
-typedef unsigned long long int __fsid_t; /* Type of file system IDs.  */
-#else
-typedef __quad __fsid_t;	/* Type of file system IDs.  */
-#endif
+typedef __u_quad_t __fsid_t;	/* Type of file system IDs.  */
 
 /* Everythin' else.  */
 typedef long int __daddr_t;	/* The type of a disk address.  */

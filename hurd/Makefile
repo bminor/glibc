@@ -101,4 +101,7 @@ rm -f $(objpfx)tmp_$${call}.c;
 endef
 transform-user-stub-output = tmpi
 
+$(foreach if,$(user-interfaces),$($(if)-calls:%=$(objpfx)RPC_%.o))): \
+	hurd/signal.h
+
 $(user-interfaces:%=$(objpfx)%.ustamp): intr-rpc.awk

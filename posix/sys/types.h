@@ -34,8 +34,8 @@ __BEGIN_DECLS
 #define u_short __u_short
 #define u_int __u_int
 #define u_long __u_long
-#define quad __quad
-#define u_quad __u_quad
+#define quad_t __quad_t
+#define u_quad_t __u_quad_t
 #define	fsid_t __fsid_t
 #endif
 

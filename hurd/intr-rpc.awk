@@ -5,7 +5,7 @@ BEGIN \
     nprotolines=0; proto=0;
     args=""; echo=1; isintr=0;
     intrcall = "__hurd_intr_rpc_" call;
-    print "#include <hurd.h>";
+    print "#include <hurd/signal.h>";
   }
 
 $NF == intrcall { isintr=1; }

@@ -29,16 +29,35 @@ __BEGIN_DECLS
    microsecond but also has a range of years.  */
 struct timeval
   {
-    int tv_sec;		/* Seconds.  */
-    int tv_usec;	/* Microseconds.  */
+    int tv_sec;			/* Seconds.  */
+    int tv_usec;		/* Microseconds.  */
   };
+
+/* POSIX.4 structure for a time value.  This is like a `struct timeval' but
+   has nanoseconds instead of microseconds.  */
+struct timespec
+  {
+    long int ts_sec;		/* Seconds.  */
+    long int ts_nsec;		/* Nanoseconds.  */
+  };
+
+/* Macros for converting between `struct timeval' and `struct timespec'.  */
+#define TIMEVAL_TO_TIMESPEC(tv, ts) {                                   \
+        (ts)->ts_sec = (tv)->tv_sec;                                    \
+        (ts)->ts_nsec = (tv)->tv_usec * 1000;                           \
+}
+#define TIMESPEC_TO_TIMEVAL(tv, ts) {                                   \
+        (tv)->tv_sec = (ts)->ts_sec;                                    \
+        (tv)->tv_usec = (ts)->ts_nsec / 1000;                           \
+}
+
 
 /* Structure crudely representing a timezone.
    This is obsolete and should never be used.  */
 struct timezone
   {
-    int tz_minuteswest;	/* Minutes west of GMT.  */
-    int tz_dsttime;	/* Nonzero if DST is ever in effect.  */
+    int tz_minuteswest;		/* Minutes west of GMT.  */
+    int tz_dsttime;		/* Nonzero if DST is ever in effect.  */
   };
 
 /* Get the current time of day and timezone information,
