@@ -25,6 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>		/* For stack growth direction.  */
 #include "set-hooks.h"
 #include <assert.h>
+#include "hurdmalloc.h"		/* XXX */
 
 extern void _hurd_longjmp_thread_state (struct machine_thread_state *,
 					jmp_buf env, int value);
