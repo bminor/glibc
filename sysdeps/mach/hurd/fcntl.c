@@ -19,7 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <hurd.h>
+#include <hurd/fd.h>
 #include <stdarg.h>
 
 
@@ -28,8 +28,8 @@ int
 DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 {
   va_list ap;
-  int dealloc_dt;
-  struct _hurd_fd_user d = _hurd_fd (fd, &dealloc_dt);
+  struct hurd_userlink dtable_ulink;
+  struct hurd_fd_user d = _hurd_fd_get (fd, &dtable_ulink);
   int result;
   
   if (d.d == NULL)
@@ -39,7 +39,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 
   switch (cmd)
     {
-    default:
+    default:			/* Bad command.  */
       __spin_unlock (&d.d->lock);
       errno = EINVAL;
       result = -1;
@@ -47,23 +47,26 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 
       /* First the descriptor-based commands, which do no RPCs.  */
 
-    case F_DUPFD:
+    case F_DUPFD:		/* Duplicate the file descriptor.  */
       {
-	/* Duplicate the descriptor.  */
+	struct hurd_fd *new;
+	io_t port, ctty;
+	struct hurd_userlink ulink, ctty_ulink;
+	int flags;
 
-	struct _hurd_fd *new;
+	/* Extract the ports and flags from the file descriptor.  */
+	flags = d.d->flags;
+	ctty = _hurd_port_get (&d.d->ctty, &ctty_ulink);
+	port = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
 
-	/* Get a new descriptor.
-	   It is unfortunate that D.d must remain locked during this call.  */
-	new = _hurd_alloc_fd (&result, 0);
-	if (new != NULL)
+	/* Get a new file descriptor.  The third argument to __fcntl is the
+	   minimum file descriptor number for it.  */
+	new = _hurd_alloc_fd (&result, va_arg (int));
+	if (new == NULL)
+	  /* _hurd_alloc_fd has set errno.  */
+	  result = -1;
+	else
 	  {
-	    struct _hurd_port_userlink ulink, ctty_ulink;
-	    int flags = d.d->flags;
-	    io_t ctty = _hurd_port_get (&d.d->ctty, &ctty_ulink);
-	    io_t port = _hurd_port_locked_get (&d.d->port,
-					       &ulink); /* Unlocks D.d.  */
-
 	    /* Give the ports each a user ref for the new descriptor.  */
 	    __mach_port_mod_refs (__mach_task_self (), port,
 				  MACH_PORT_RIGHT_SEND, 1);
@@ -72,26 +75,26 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 				    MACH_PORT_RIGHT_SEND, 1);
 
 	    /* Install the ports and flags in the new descriptor.  */
-	    _hurd_port_set (&new->ctty, ctty);
-	    _hurd_port_locked_set (&new->port, port);
-	    new->flags = flags;
-
 	    if (ctty != MACH_PORT_NULL)
-	      _hurd_port_free (&d.d->ctty, &ctty_ulink, ctty);
-	    _hurd_port_free (&d.d->port, &ulink, port);
+	      _hurd_port_set (&new->ctty, ctty);
+	    _hurd_port_locked_set (&new->port, port);
+	    /* Duplication clears the FD_CLOEXEC flag.  */
+	    new->flags = flags & ~FD_CLOEXEC;
 	  }
-	else
-	  result = -1;
+
+	_hurd_port_free (&d.d->port, &ulink, port);
+	if (ctty != MACH_PORT_NULL)
+	  _hurd_port_free (&d.d->ctty, &ctty_ulink, port);
 
 	break;
       }
 
-    case F_GETFD:
+    case F_GETFD:		/* Get descriptor flags.  */
       result = d.d->flags;
       __spin_unlock (&d.d->lock);
       break;
 
-    case F_SETFD:
+    case F_SETFD:		/* Set descriptor flags.  */
       d.d->flags = va_arg (ap, int);
       __spin_unlock (&d.d->lock);
       result = 0;
@@ -111,9 +114,9 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	break;
       }
 
-    case F_GETFL:
+    case F_GETFL:		/* Get per-open flags.  */
       {
-	struct _hurd_port_userlink ulink;
+	struct hurd_userlink ulink;
 	io_t port
 	  = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */ 
 	error_t err;
@@ -127,10 +130,10 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	break;
       }
 
-    case F_SETFL:
+    case F_SETFL:		/* Set per-open flags.  */
       {
 	const int flags = va_arg (ap, int);
-	struct _hurd_port_userlink ulink;
+	struct hurd_userlink ulink;
 	io_t port
 	  = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
 	error_t err;
@@ -143,9 +146,9 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	break;
       }
 
-    case F_GETOWN:
+    case F_GETOWN:		/* Get owner.  */
       {
-	struct _hurd_port_userlink ulink;
+	struct hurd_userlink ulink;
 	error_t err;
 	io_t port
 	  = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
@@ -155,11 +158,11 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	break;
       }
 
-    case F_SETOWN:
+    case F_SETOWN:		/* Set owner.  */
       {
 	pid_t owner = va_arg (ap, pid_t);
 	error_t err;
-	struct _hurd_port_userlink ulink;
+	struct hurd_userlink ulink;
 	io_t port
 	  = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
 	err = __io_mod_owner (port, owner);
@@ -169,7 +172,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
       }
     }
 
-  _hurd_fd_done (d, &dealloc_dt);
+  _hurd_fd_free (d, &dtable_ulink);
 
   va_end (ap);
 
