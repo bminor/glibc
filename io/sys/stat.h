@@ -13,7 +13,7 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 /*
@@ -24,6 +24,8 @@ Cambridge, MA 02139, USA.  */
 
 #define	_SYS_STAT_H	1
 #include <features.h>
+
+__BEGIN_DECLS
 
 #include <statbuf.h>
 
@@ -56,11 +58,11 @@ Cambridge, MA 02139, USA.  */
 
 /* Protection bits.  */
 
-#define	S_ISUID __S_ISUID/* Set user ID on execution.  */
-#define	S_ISGID	__S_ISGID/* Set group ID on execution.  */
+#define	S_ISUID __S_ISUID	/* Set user ID on execution.  */
+#define	S_ISGID	__S_ISGID	/* Set group ID on execution.  */
 
 #if defined(__USE_BSD) || defined(__USE_MISC)
-#define	S_ISVTX	__S_ISVTX/* Save swapped text after use (sticky bit).  */
+#define	S_ISVTX	__S_ISVTX	/* Save swapped text after use (sticky bit).  */
 #endif
 
 #define	S_IRUSR	__S_IREAD	/* Read by owner.  */
@@ -89,61 +91,63 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Get file attributes for FILE and put them in BUF.  */
-extern int EXFUN(__stat, (CONST char *__file, struct stat *__buf));
-extern int EXFUN(stat, (CONST char *__file, struct stat *__buf));
+extern int __stat __P ((__const char *__file, struct stat * __buf));
+extern int stat __P ((__const char *__file, struct stat * __buf));
 
 /* Get file attributes for the file, device, pipe, or socket
    that file descriptor FD is open on and put them in BUF.  */
-extern int EXFUN(__fstat, (int __fd, struct stat *__buf));
-extern int EXFUN(fstat, (int __fd, struct stat *__buf));
+extern int __fstat __P ((int __fd, struct stat * __buf));
+extern int fstat __P ((int __fd, struct stat * __buf));
 
 /* Get file attributes about FILE and put them in BUF.
    If FILE is a symbolic link, do not follow it.  */
-extern int EXFUN(__lstat, (CONST char *__file, struct stat *__buf));
+extern int __lstat __P ((__const char *__file, struct stat * __buf));
 #ifdef	__USE_BSD
-extern int EXFUN(lstat, (CONST char *__file, struct stat *__buf));
+extern int lstat __P ((__const char *__file, struct stat * __buf));
 #endif
 
 /* Set file access permissions for FILE to MODE.
    This takes an `int' MODE argument because that
    is what `mode_t's get widened to.  */
-extern int EXFUN(__chmod, (CONST char *__file, __mode_t __mode));
-extern int EXFUN(chmod, (CONST char *__file, __mode_t __mode));
+extern int __chmod __P ((__const char *__file, __mode_t __mode));
+extern int chmod __P ((__const char *__file, __mode_t __mode));
 
 /* Set file access permissions of the file FD is open on to MODE.  */
-extern int EXFUN(__fchmod, (int __fd, __mode_t __mode));
+extern int __fchmod __P ((int __fd, __mode_t __mode));
 #ifdef	__USE_BSD
-extern int EXFUN(__fchmod, (int __fd, __mode_t __mode));
+extern int fchmod __P ((int __fd, __mode_t __mode));
 #endif
 
 
 /* Set the file creation mask of the current process to MASK,
    and return the old creation mask.  */
-extern __mode_t EXFUN(__umask, (__mode_t __mask));
-extern __mode_t EXFUN(umask, (__mode_t __mask));
+extern __mode_t __umask __P ((__mode_t __mask));
+extern __mode_t umask __P ((__mode_t __mask));
 
 #ifdef	__USE_GNU
 /* Get the current `umask' value without changing it.
    This function is only available under the GNU Hurd.  */
-extern __mode_t EXFUN(getumask, (NOARGS));
+extern __mode_t getumask __P ((void));
 #endif
 
 /* Create a new directory named PATH, with permission bits MODE.  */
-extern int EXFUN(__mkdir, (CONST char *__path, __mode_t __mode));
-extern int EXFUN(mkdir, (CONST char *__path, __mode_t __mode));
+extern int __mkdir __P ((__const char *__path, __mode_t __mode));
+extern int mkdir __P ((__const char *__path, __mode_t __mode));
 
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
    device numbers with the `makedev' macro above).  */
-extern int EXFUN(__mknod, (CONST char *__path,
-			   __mode_t __mode, __dev_t __dev));
-#if	defined(__USE_MISC) || defined(__USE_BSD)
-extern int EXFUN(mknod, (CONST char *__path,
+extern int __mknod __P ((__const char *__path,
 			 __mode_t __mode, __dev_t __dev));
+#if	defined(__USE_MISC) || defined(__USE_BSD)
+extern int mknod __P ((__const char *__path,
+		       __mode_t __mode, __dev_t __dev));
 #endif
 
 
 /* Create a new FIFO named PATH, with permission bits MODE.  */
-extern int EXFUN(mkfifo, (CONST char *__path, __mode_t __mode));
+extern int mkfifo __P ((__const char *__path, __mode_t __mode));
 
-#endif	/* sys/stat.h  */
+__END_DECLS
+
+#endif /* sys/stat.h  */
