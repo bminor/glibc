@@ -225,7 +225,7 @@ The blank slots contain null pointers.
 @comment POSIX.2
 @item GLOB_ERR
 Give up right away and report an error if there is any difficulty
-reading the directories must be read in order to expand @var{pattern}
+reading the directories that must be read in order to expand @var{pattern}
 fully.  Such difficulties might include a directory in which you don't
 have the requisite access.  Normally, @code{glob} tries its best to keep
 on going despite any errors, reading whatever directories it can.
@@ -817,10 +817,10 @@ the flags.
 
 You shouldn't use any of the characters @samp{|&;<>} in the string
 @var{words} unless they are quoted; likewise for newline.  If you use
-these characters unquoted, you will get unpredictable results.  Don't
-use parentheses or braces unless they are quoted or part of a word
-expansion construct.  If you use quotation characters @samp{'"`}, they
-should come in pairs that balance.
+these characters unquoted, you will get the @code{WRDE_BADCHAR} error
+code.  Don't use parentheses or braces unless they are quoted or part of
+a word expansion construct.  If you use quotation characters @samp{'"`},
+they should come in pairs that balance.
 
 The results of word expansion are a sequence of words.  The function
 @code{wordexp} allocates a string for each resulting word, then
