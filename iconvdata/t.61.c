@@ -1,5 +1,5 @@
 /* Generic conversion to and from T.61.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -365,7 +365,7 @@ static const char from_ucs4[][2] =
 
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"T.61//"
+#define CHARSET_NAME		"T.61-8BIT//"
 #define FROM_LOOP		from_t_61
 #define TO_LOOP			to_t_61
 #define DEFINE_INIT		1
