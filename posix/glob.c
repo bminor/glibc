@@ -222,7 +222,12 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
 
   if (filename[0] == '\0' && dirlen > 1)
     /* "pattern/".  Expand "pattern", appending slashes.  */
-    return glob(dirname, flags|GLOB_MARK, errfunc, pglob);
+    {
+      int ret = glob (dirname, flags|GLOB_MARK, errfunc, pglob);
+      if (ret == 0)
+	pglob->gl_flags = (pglob->gl_flags &~ GLOB_MARK) | (flags & GLOB_MARK);
+      return ret;
+    }
 
   if (!(flags & GLOB_APPEND))
     {
@@ -232,7 +237,7 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
 
   oldcount = pglob->gl_pathc;
 
-  if (glob_pattern_p(dirname, !(flags & GLOB_NOESCAPE)))
+  if (glob_pattern_p (dirname, !(flags & GLOB_NOESCAPE)))
     {
       /* The directory name contains metacharacters, so we
 	 have to glob for the directory, and then glob for
@@ -240,9 +245,9 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
       glob_t dirs;
       register int i;
 
-      status = glob(dirname, ((flags & (GLOB_ERR|GLOB_NOCHECK|GLOB_NOESCAPE)) |
-			      GLOB_NOSORT),
-		    errfunc, &dirs);
+      status = glob (dirname, ((flags & (GLOB_ERR|GLOB_NOCHECK|GLOB_NOESCAPE))|
+			       GLOB_NOSORT),
+		     errfunc, &dirs);
       if (status != 0)
 	return status;
 
@@ -268,9 +273,9 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
 #endif	/* SHELL.  */
 
 	  oldcount = pglob->gl_pathc;
-	  status = glob_in_dir(filename, dirs.gl_pathv[i],
-			       (flags | GLOB_APPEND) & ~GLOB_NOCHECK,
-			       errfunc, pglob);
+	  status = glob_in_dir (filename, dirs.gl_pathv[i],
+				(flags | GLOB_APPEND) & ~GLOB_NOCHECK,
+				errfunc, pglob);
 	  if (status == GLOB_NOMATCH)
 	    /* No matches in this directory.  Try the next.  */
 	    continue;
@@ -292,6 +297,8 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
 	      return GLOB_NOSPACE;
 	    }
 	}
+
+      flags |= GLOB_MAGCHAR;
 
       if (pglob->gl_pathc == oldcount)
 	/* No matches.  */
@@ -321,6 +328,7 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
 		pglob->gl_pathv[pglob->gl_pathc++] = NULL;
 
 	    pglob->gl_pathv[pglob->gl_pathc++] = patcopy;
+	    pglob->gl_flags = flags;
 	    return 0;
 	  }
 	else
@@ -328,28 +336,28 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
     }
   else
     {
-      status = glob_in_dir(filename, dirname, flags, errfunc, pglob);
+      status = glob_in_dir (filename, dirname, flags, errfunc, pglob);
       if (status != 0)
 	return status;
 
       if (dirlen > 0)
 	{
 	  /* Stick the directory on the front of each name.  */
-	  if (prefix_array(dirname,
-			   &pglob->gl_pathv[oldcount],
-			   pglob->gl_pathc - oldcount))
+	  if (prefix_array (dirname,
+			    &pglob->gl_pathv[oldcount],
+			    pglob->gl_pathc - oldcount))
 	    {
 	      globfree (pglob);
 	      return GLOB_NOSPACE;
 	    }
 	}
+
+      if (!(flags & GLOB_NOSORT))
+	qsort ((PTR) &pglob->gl_pathv[oldcount], pglob->gl_pathc - oldcount,
+	       sizeof(char *), collated_compare);
+
+      return 0;
     }
-
-  if (!(flags & GLOB_NOSORT))
-    qsort((PTR) &pglob->gl_pathv[oldcount], pglob->gl_pathc - oldcount,
-	  sizeof(char *), collated_compare);
-
-  return 0;
 }
 
 
@@ -480,6 +488,7 @@ DEFUN(glob_in_dir, (pattern, directory, flags, errfunc, pglob),
     }
   else
     {
+      flags |= GLOB_MAGCHAR;
       stream = opendir(directory);
       if (stream == NULL)
 	{
@@ -542,6 +551,8 @@ DEFUN(glob_in_dir, (pattern, directory, flags, errfunc, pglob),
   for (; names != NULL; names = names->next)
     pglob->gl_pathv[pglob->gl_pathc++] = names->name;
   pglob->gl_pathv[pglob->gl_pathc] = NULL;
+
+  pglob->gl_flags = flags;
 
   if (stream != NULL)
     {
