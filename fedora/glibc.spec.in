@@ -12,7 +12,7 @@ Version: %{glibcversion}
 Release: %{glibcrelease}
 Copyright: LGPL
 Group: System Environment/Libraries
-Source0: %{name}-%{version}-%{glibcdate}.tar.bz2
+Source0: %{name}-%{glibcdate}.tar.bz2
 Source1: %{name}-fedora-%{glibcdate}.tar.bz2
 Patch0: %{name}-fedora.patch
 Patch1: %{name}-nptl-check.patch
