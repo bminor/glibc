@@ -62,6 +62,9 @@ DEFUN(fgets, (s, n, stream), char *s AND size_t n AND register FILE *stream)
 	}
     }
 
+  /* Leave space for the null.  */
+  --n;
+
   while (n > 0)
     {
       size_t i;
