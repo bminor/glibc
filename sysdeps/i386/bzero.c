@@ -1,6 +1,6 @@
 /* bzero -- set a block of memory to zero.
    For Intel 80x86, x>=3.
-   Copyright (C) 1991 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,8 @@ Cambridge, MA 02139, USA.  */
 #include <memcopy.h>
 
 #undef	bzero
+
+#ifdef	__GNUC__
 
 void
 DEFUN(bzero, (dstpp, len),
@@ -71,3 +73,7 @@ DEFUN(bzero, (dstpp, len),
 	       "0" (dstp), "c" (len), "a" (x) :
 	       "cx");
 }
+
+#else
+#include <sysdeps/generic/bzero.c>
+#endif
