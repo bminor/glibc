@@ -26,10 +26,17 @@ Cambridge, MA 02139, USA.  */
 char *
 DEFUN(_strerror_internal, (errnum, buf), int errnum AND char buf[1024])
 {
-  const int system = err_get_system (errnum);
-  const int sub = err_get_sub (errnum);
-  const int code = err_get_code (errnum);
+  int system; 
+  int sub;
+  int code;
   const struct error_system *es;
+  extern void __mach_error_map_compat (int *);
+
+  __mach_error_map_compat (&errnum);
+
+  system = err_get_system (errnum);
+  sub = err_get_sub (errnum);
+  code = err_get_code (errnum);
 
   if (system > err_max_system)
     {
