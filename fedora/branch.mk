@@ -5,3 +5,4 @@ DIST_BRANCH := FC-3
 COLLECTION := dist-fc3-updates-candidate
 fedora-2_3-sync-date := 2005-02-26 01:41 UTC
 fedora-2_3-sync-tag := fedora-glibc-2_3-20050226T0141
+releases-url := ftp://sources.redhat.com/pub/glibc/releases

@@ -12,7 +12,6 @@ Version: %{glibcversion}
 Release: %{glibcrelease}
 License: LGPL
 Group: System Environment/Libraries
-%define glibcsrcdir %{glibcname}-%{glibcdate}
 Source0: %{glibcsrcdir}.tar.bz2
 Source1: %{glibcname}-fedora-%{glibcdate}.tar.bz2
 Patch0: %{glibcname}-fedora.patch
