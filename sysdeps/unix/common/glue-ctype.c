@@ -1,5 +1,9 @@
 #include <ctype.h>
 
+#ifdef ultrix
+#define _ctype_ _ctype__
+#endif
+
 main ()
 {
   int i;
