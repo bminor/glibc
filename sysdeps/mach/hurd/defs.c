@@ -32,9 +32,24 @@ FILE *__stdio_head = NULL;
 static void
 init_stdio (void)
 {
+  inline FILE *init (int fd)
+    {
+      FILE *s = __newstream ();
+      struct hurd_fd *d = _hurd_fd_get (fd);
+      if (d == NULL)
+	/* There is no file descriptor allocated.  We want the standard
+	   streams to always refer to their standard file descriptors, even
+	   if those descriptors are not set up until later.  So allocate
+	   the descriptor structure with no ports and store it in the
+	   stream.  Operations will fail until ports are installed in the
+	   file descriptor.  */
+	d = _hurd_alloc_fd (NULL, fd);
+      __spin_unlock (&d->port.lock);
+      s->__cookie = d;
+      return s;
+    }
 #define S(NAME, FD, MODE) \
-  (NAME = __newstream ())->__cookie = _hurd_fd_get (FD); \
-  NAME->__mode.__##MODE = 1;
+  (NAME = init (FD))->__mode.__##MODE = 1;
 
   S (stdin, STDIN_FILENO, read);
   S (stdout, STDOUT_FILENO, write);
