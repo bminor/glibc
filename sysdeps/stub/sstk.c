@@ -17,6 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
+#include <errno.h>
 
 /* Increase the size of the stack by INCREMENT,
    and return the address of the bottom of the stack.  */
