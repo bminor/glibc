@@ -1,4 +1,4 @@
-%define glibcrelease 16
+%define glibcrelease 17
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1275,6 +1275,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Mar 24 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-17
+- update from CVS
+  - fix LD_AUDIT in LinuxThreads ld.so
+  - fix calloc with M_PERTURB
+  - fix error handling in pthread_create with PTHREAD_EXPLICIT_SCHED
+    on ppc*/ia64/alpha/mips (BZ#801)
+  - fix a typo in WINDOWS-31J charmap (#151739)
+  - fix NIS ypprot_err (#151469)
+
 * Sun Mar 20 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-16
 - fix pread with -D_FILE_OFFSET_BITS=64 (#151573)
 

@@ -1,3 +1,57 @@
+2005-03-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/ypclnt.c (yp_2_yperr): Revert 2004-11-30 patch.
+	(ypprot_err): Use yp_2_yperr table also for YP_NODOM .. YP_NOMORE.
+
+2005-03-22  Roland McGrath  <roland@redhat.com>
+
+	* locale/setlocale.c: Comment typo.
+
+	* scripts/versions.awk: No errors for GLIBC_PRIVATE.
+
+	* Versions.def (libdl, librt): Add GLIBC_2.3.4 version.
+
+	* scripts/versions.awk: Print all errors and die at the end.
+	Use library name in versions array keys.
+
+2005-03-22  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* elf/elf.h (PT_ARM_EXIDX): New macro.
+
+2005-03-21  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/xdr_stdio.c (xdrstdio_getlong, xdrstdio_putlong):
+	Convert correctly between long/int on 64bit big-endian.
+
+2005-03-21  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/ia64/_mcount.S: Newer kernels don't like register-frames
+	with more than 8 output registers.  Fix this by passing original
+	ar.pfs to _mcount_ret_helper via r3.
+
+2005-03-15  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #786]
+	* sysdeps/generic/dl-tls.c (_dl_next_tls_modid): Handle
+	GL(dl_tls_static_nelem) == GL(dl_tls_max_dtv_idx).
+	* elf/Makefile: Add rules to build and run tst-tls15.
+	* elf/tst-tls15.c: New test.
+	* elf/tst-tlsmod15a.c: New file.
+	* elf/tst-tlsmod15b.c: New file.
+
+2005-03-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (dl_main): Always call init_tls if we have audit modules.
+
+2005-03-20  Alfred M. Szmidt  <ams@gnu.org>
+
+	* elf/dl-open.c (dl_open_worker): Fix typo.
+
+2005-03-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (public_cALLOc): We cannot skip the memory
+	clearing if perturb_byte != 0.
+
 2005-03-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/bits/unistd.h (pread) [__USE_FILE_OFFSET64]: Use __off64_t
@@ -6,6 +60,24 @@
 	* debug/tst-lfschk1.c: New test.
 	* debug/tst-lfschk2.c: New test.
 	* debug/tst-lfschk3.c: New test.
+
+2005-02-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/termios.h (CMSPAR): Define.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Add __USE_MISC
+	and __USE_XOPEN guards to match linux/bits/termios.h.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Likewise.
+	(CMSPAR): Define.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+
+2005-02-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ia64/elf/initfini.c: Add local _init and _fini labels.
+
+2005-02-27  Denis Barbier  <barbier@debian.org>
+
+	[BZ #38]
+	* locale/iso-4217.def: Add CSD currency.
 
 2005-03-19  Ulrich Drepper  <drepper@redhat.com>
 
