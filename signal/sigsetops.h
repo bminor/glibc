@@ -32,10 +32,5 @@ Cambridge, MA 02139, USA.  */
 #undef	sigaddset
 #undef	sigdelset
 #undef	sigismember
-#undef	__sigemptyset
-#undef	__sigfillset
-#undef	__sigaddset
-#undef	__sigdelset
-#undef	__sigismember
 
 #include <gnu-stabs.h>
