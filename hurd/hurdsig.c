@@ -611,7 +611,7 @@ _hurdsig_fault_init (void)
 				 sigexc,
 				 _hurd_msgport, MACH_MSG_TYPE_COPY_SEND,
 				 HURD_THREAD_STATE_FLAVOR,
-				 state, HURD_THREAD_STATE_COUNT)))
+				 (int *) &state, HURD_THREAD_STATE_COUNT)))
     __libc_fatal ("hurd: proc won't handle signal thread exceptions\n");
 }
 				/* XXXX */
