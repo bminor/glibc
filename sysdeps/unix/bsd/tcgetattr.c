@@ -53,8 +53,8 @@ DEFUN(__tcgetattr, (fd, termios_p),
       __ioctl(fd, TIOCLGET, &local) < 0)
     return -1;
 
-  termios_p->__ispeed = __bsd_speeds[buf.sg_ispeed];
-  termios_p->__ospeed = __bsd_speeds[buf.sg_ospeed];
+  termios_p->__ispeed = __bsd_speeds[(unsigned char) buf.sg_ispeed];
+  termios_p->__ospeed = __bsd_speeds[(unsigned char) buf.sg_ospeed];
 
   termios_p->c_iflag = 0;
   termios_p->c_oflag = 0;
