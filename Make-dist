@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -188,6 +188,7 @@ configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
 
 dist: $(tardir).tar.gz
+	rm $(..)glibc-$(version)
 
 subdir_dist: dist.tar
 dist.tar: README $(tardir) $(+tsrcs)
@@ -201,9 +202,11 @@ $(tardir).tar: dist.tar subdir_dist
 
 %.Z: %
 	compress -c $< > $@
+	rm $<
 
 %.gz: %
 	gzip -9 -v -c $< > $@
+	rm $<
 
 foo:=$(shell echo subdirs=$(subdirs) >&2)
 dist-subdirs := $(addprefix dist-,$(subdirs)) # dist-manual
