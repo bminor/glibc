@@ -1,3 +1,18 @@
+1999-12-14  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/ypclnt.c: Correct handling of cached client handles.
+	* nis/nss_compat/compat-grp.c: Make sure errno is always set correct.
+	* nis/nss_compat/compat-initgroups.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/nss_nis/nis-alias.c: Likewise.
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-netgrp.c: Likewise.
+	* nis/nss_nis/nis-publickey.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise. Also use services.byservicename.
+	Map if available, optimize query if name/port and protocol is known.
+
 1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/bits/resource.h: Don't depend on the
