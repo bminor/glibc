@@ -101,8 +101,8 @@ weak_extern (__cache_line_size)
    mapped somewhere else.  */
 
 ElfW(Addr)
-__elf_preferred_address(struct link_map *loader, size_t maplength,
-			ElfW(Addr) mapstartpref)
+__elf_preferred_address (struct link_map *loader, size_t maplength,
+			 ElfW(Addr) mapstartpref)
 {
   ElfW(Addr) low, high;
   struct link_map *l;
@@ -343,8 +343,8 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 }
 
 Elf32_Addr
-__elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
-			Elf32_Addr *reloc_addr, Elf32_Addr finaladdr)
+__elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
+			 Elf32_Addr *reloc_addr, Elf32_Addr finaladdr)
 {
   Elf32_Sword delta = finaladdr - (Elf32_Word) reloc_addr;
   if (delta << 6 >> 6 == delta)

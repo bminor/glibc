@@ -1,4 +1,4 @@
-%define glibcrelease 68
+%define glibcrelease 69
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1239,6 +1239,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Oct 18 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-69
+- update from CVS
+  - object size checking support (-D_FORTIFY_SOURCE={1,2})
+
 * Thu Oct 14 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-68
 - update from CVS
   - support for namespaces in the dynamic linker

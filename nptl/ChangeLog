@@ -1,3 +1,8 @@
+2004-10-14  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/tcb-offsets.sym (thread_offsetof): Redefine to
+	make gcc4 happy.
+
 2004-10-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/jmp-unwind.c: Include pthreadP.h instead
@@ -27,8 +32,6 @@
 	* tst-clock1.c: Change #ifdef to #if defined.
 	* tst-clock2.c: Likewise.
 	* tst-cond11.c: Likewise.
-
-2004-10-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/timer_create.c (timer_create): Use
 	defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0 instead of

@@ -1,3 +1,242 @@
+2004-10-06  Maciej W. Rozycki  <macro@mips.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
+	(__SYSCALL_CLOBBERS): Add "memory".
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h
+	(__SYSCALL_CLOBBERS): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h
+	(__SYSCALL_CLOBBERS): Likewise.
+
+2004-10-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/libc-symbols.h: Define libresolv_hidden_proto and friends.
+	* include/resolv.h: Add libresolv_hidden_proto for symbols defined,
+	used, and exported in libresolv.
+	* resolv/base64.c: Add libresolv_hidden_def.
+	* resolv/gethnamaddr.c: Likewise.
+	* resolv/ns_name.c: Likewise.
+	* resolv/ns_netint.c: Likewise.
+	* resolv/res_comp.c: Likewise.
+	* resolv/res_data.c: Likewise.
+	* resolv/res_debug.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+	* resolv/res_query.c: Likewise.
+	* resolv/res_send.c: Likewise.
+
+2004-10-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-minimal.c (__chk_fail): New.  Add rtld_hidden_def.
+	* sysdeps/unix/sysv/linux/readonly-area.c: New file.
+	* sysdeps/i386/i686/memmove.S (__memmove_chk): Add checking
+	routine.
+	* sysdeps/i386/i686/memcpy.S (__memcpy_chk): Likewise.
+	* sysdeps/i386/i686/mempcpy.S (__mempcpy_chk): Likewise.
+	* sysdeps/i386/i686/memset.S (__memset_chk): Likewise.
+	* sysdeps/i386/i686/memmove-chk.S: New file.
+	* sysdeps/i386/i686/memcpy-chk.S: Likewise.
+	* sysdeps/i386/i686/mempcpy-chk.S: Likewise.
+	* sysdeps/i386/i686/memset-chk.S: Likewise.
+	* sysdeps/generic/strcat-chk.c (__strcat_chk): Don't __chk_fail
+	if exactly fitting into buffer.
+	* sysdeps/generic/strncat-chk.c (__strncat_chk): Likewise.
+	* sysdeps/generic/readonly-area.c: New file.
+	* sysdeps/generic/strncpy-chk.c (__strncpy_chk): Only test
+	destlen once.
+	* sysdeps/x86_64/memset.S (__memset_chk): Add checking routine.
+	* sysdeps/x86_64/memcpy.S (__memcpy_chk): Likewise.
+	* sysdeps/x86_64/mempcpy.S (__memcpy_chk): Define to __mempcpy_chk.
+	* sysdeps/x86_64/memcpy-chk.S: New file.
+	* sysdeps/x86_64/mempcpy-chk.S: Likewise.
+	* sysdeps/x86_64/memset-chk.S: Likewise.
+	* sysdeps/x86_64/strcpy-chk.S: Likewise.
+	* sysdeps/x86_64/stpcpy-chk.S: Likewise.
+	* argp/argp-xinl.c (__OPTIMIZE__): Define to 1 instead of nothing.
+	* argp/argp-fs-xinl.c (__OPTIMIZE__): Likewise.
+	* debug/tst-chk1.c: New test.
+	* debug/tst-chk2.c: Likewise.
+	* debug/tst-chk3.c: Likewise.
+	* debug/test-strcpy_chk.c: Likewise.
+	* debug/test-stpcpy_chk.c: Likewise.
+	* debug/vsprintf_chk.c (__vsprintf_chk): If flags > 0, request
+	_IO_FLAGS2_CHECK_PERCENT_N.  Add libc_hidden_def.
+	* debug/Makefile (routines): Add printf_chk, fprintf_chk, vprintf_chk,
+	vfprintf_chk, gets_chk and readonly-area.
+	(CFLAGS-*_chk.c): Set.
+	(tests): Add tst-chk1, tst-chk2, tst-chk3, test-strcpy_chk and
+	test-stpcpy_chk.
+	* debug/vprintf_chk.c: New file.
+	* debug/printf_chk.c: Likewise.
+	* debug/vfprintf_chk.c: Likewise.
+	* debug/fprintf_chk.c: Likewise.
+	* debug/gets_chk.c: Likewise.
+	* debug/chk_fail.c (__chk_fail): Add libc_hidden_def.
+	* debug/snprintf_chk.c (__snprintf_chk): Fix order of arguments
+	passed to __vsnprintf_chk.
+	* debug/Versions (libc): Export __printf_chk, __fprintf_chk,
+	__vprintf_chk, __vfprintf_chk and __gets_chk @GLIBC_2.3.4.
+	* debug/vsnprintf_chk.c (__vsnprintf_chk): Don't call
+	__vsnprintf, instead create a temporary file with
+	_IO_strn_jumps jumptable.  If flags > 0, request
+	_IO_FLAGS2_CHECK_PERCENT_N.  Add libc_hidden_def.
+	* libio/Makefile (headers): Add bits/stdio2.h.
+	* libio/stdio.h: Include <bits/stdio2.h> if __USE_FORTIFY_LEVEL.
+	(sprintf, snprintf, vsprintf, vsnprintf): Remove defines.
+	* libio/strfile.h (_IO_strnfile): New type.
+	(_IO_strn_jumps): New extern.
+	* libio/vsnprintf.c (_IO_strnfile): Remove.
+	(_IO_strn_jumps): Remove static.
+	* libio/bits/stdio2.h: New file.
+	* libio/vswprintf.c (_IO_strnfile): Rename type to...
+	(_IO_wstrnfile): ...this.  Adjust all uses.
+	* libio/libio.h (_IO_FLAGS2_CHECK_PERCENT_N): Define.
+	* stdio-common/vfprintf.c (STR_LEN): Define.
+	(vfprintf): Add readonly_format variable.
+	Handle _IO_FLAGS2_CHECK_PERCENT_N.
+	(buffered_vfprintf): Copy _flags2.
+	* include/stdio.h (__sprintf_chk, __snprintf_chk, __vsprintf_chk,
+	__vsnprintf_chk, __printf_chk, __fprintf_chk, __vprintf_chk,
+	__vfprintf_chk): New prototypes.
+	(__vsprintf_chk, __vsnprintf_chk): Add libc_hidden_proto.
+	* include/string.h (__memcpy_chk, __memmove_chk, __mempcpy_chk,
+	__memset_chk, __strcpy_chk, __stpcpy_chk, __strncpy_chk, __strcat_chk,
+	__strncat_chk): New prototypes.
+	* include/bits/string3.h: New file.
+	* include/sys/cdefs.h (__chk_fail): Add libc_hidden_proto
+	and rtld_hidden_proto.
+	* string/Makefile (headers): Add bits/string3.h.
+	* string/bits/string3.h (bcopy, bzero): New defines.
+	(memset, memcpy, memmove, strcpy, strncpy, strcat, strncat): Change
+	macros so that inlines are used only if unknown destination size
+	or side-effects in destination argument.
+	(mempcpy, stpcpy): Likewise.  Protect with #ifdef __USE_GNU.
+
+2004-09-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* debug/Makefile (routines): Add *_chk.
+	* debug/Versions (libc): Export __chk_fail, __memcpy_chk,
+	__memmove_chk, __mempcpy_chk, __memset_chk, __stpcpy_chk,
+	__strcat_chk, __strcpy_chk, __strncat_chk, __strncpy_chk,
+	__sprintf_chk, __vsprintf_chk, __snprintf_chk, __vsnprintf_chk
+	@GLIBC_2.3.4.
+	* debug/chk_fail.c: New file.
+	* debug/snprintf_chk.c: Likewise.
+	* debug/sprintf_chk.c: Likewise.
+	* debug/vsnprintf_chk.c: Likewise.
+	* debug/vsprintf_chk.c: Likewise.
+	* include/features.h (_FORTIFY_SOURCE): Document, handle.
+	(__USE_FORTIFY_LEVEL): Define.
+	(__GNUC_PREREQ): Move to earlier location.
+	* include/sys/cdefs.h (__chk_fail): New prototype.
+	* libio/bits/stdio.h (sprintf, vsprintf, snprintf, vsnprintf):
+	Define if __USE_FORTIFY_LEVEL.
+	* misc/sys/cdefs.h (__bos, __bos0): Define.
+	* string/string.h: Include <bits/string3.h> if __USE_FORTIFY_LEVEL.
+	* bits/string/string3.h: New header.
+	* sysdeps/generic/memcpy_chk.c: New file.
+	* sysdeps/generic/memmove_chk.c: Likewise.
+	* sysdeps/generic/mempcpy_chk.c: Likewise.
+	* sysdeps/generic/memset_chk.c: Likewise.
+	* sysdeps/generic/stpcpy_chk.c: Likewise.
+	* sysdeps/generic/strcat_chk.c: Likewise.
+	* sysdeps/generic/strcpy_chk.c: Likewise.
+	* sysdeps/generic/strncat_chk.c: Likewise.
+	* sysdeps/generic/strncpy_chk.c: Likewise.
+
+2004-10-17  Roland McGrath  <roland@frob.com>
+
+	* manual/memory.texi (Page Lock Functions): Typo fix.
+	Reported by Carlos Maziero <maziero@ppgia.pucpr.br>
+
+2004-10-16  Alfred M. Szmidt  <ams@kemisten.nu>
+
+	* sysdeps/mach/hurd/Makefile (link-libc-static): Use
+	`$(static-gnulib') instead of `$(gnulib)'.
+
+2004-10-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/rpc_clntout.c: Avoid including rcsid into binary.
+	* sunrpc/rpc_cout.c: Likewise.
+	* sunrpc/rpc_hout.c: Likewise.
+	* sunrpc/rpc_main.c: Likewise.
+	* sunrpc/rpc_parse.c: Likewise.
+	* sunrpc/rpc_sample.c: Likewise.
+	* sunrpc/rpc_scan.c: Likewise.
+	* sunrpc/rpc_svcout.c: Likewise.
+	* sunrpc/rpc_tblout.c: Likewise.
+	* sunrpc/rpc_util.c: Likewise.
+
+2004-10-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (PUSHARGS_6, DOARGS_6,
+	POPARGS_6, _PUSHARGS_6, _DOARGS_6, _POPARGS_6): Define.
+	* sysdeps/unix/sysv/linux/i386/syscall.S (syscall): Handle 6 argument
+	syscalls.
+
+2004-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.h (_PATH_NSCD_PASSWD_DB): Move to /var/db.
+	(_PATH_NSCD_GROUP_DB): Likewise.
+	(_PATH_NSCD_HOSTS_DB): Likewise.
+	(_PATH_NSCD_XYZ_DB_TMP): New #define, point to /var/run.
+	* nscd/connections.c (nscd_init): Non-persistent database files
+	are created with the _PATH_NSCD_XYZ_DB_TMP path.
+	* nscd/nscd.init: Create /var/db/nscd if necessary.
+
+2004-10-15  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/register-dump.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/sigcontextinfo.h (SIGCONTEXT): Add
+	_code argument, pass sigcontext by pointer.
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_PC, GET_FRAME, GET_STACK): Expect ctx as pointer.
+
+2004-10-14  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative, elf_machine_lazy_rel): Mark auto
+	instead of static.
+
+	* sysdeps/unix/sysv/linux/adjtime.c (ADJTIME): Use prototype
+	style definition.
+	* sysdeps/unix/sysv/linux/alpha/adjtime.c (ADJTIME): If
+	__ASSUME_TIMEVAL64, define __adjtime directly rather than
+	via strong_alias.
+
+2004-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/Makefile: When using compilers without -fpie support, also
+	link with -lselinux if necessary.
+	Patch by Arkadiusz Miskiewicz <arekm@pld-linux.org>.
+
+	* nscd/connections.c (nscd_init): Remove file if not persistent
+	and not shared.  Patch by Jerome Borsboom <j.borsboom@erasmusmc.nl>.
+
+2004-10-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Handle
+	defined __NR_setresuid32 && !defined __NR_setresuid.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: Handle
+	defined __NR_setresgid32 && !defined __NR_setresgid.
+
+	* sysdeps/sparc/fpu/bits/mathinline.h (__signbitf, __signbit,
+	__signbitl, sqrtf, sqrt, sqrtl, fdim, fdimf): Use __NTH macro.
+
+	* sysdeps/generic/errno-loc.c: Don't undef #errno
+	if RTLD_PRIVATE_ERRNO.
+	* include/errno.h (__errno_location): If RTLD_PRIVATE_ERRNO,
+	add attribute_hidden.
+
+	* dlfcn/dlinfo.c (dlinfo_doit): Replace iteration over GL(dl_loaded)
+	chain with iteration over all namespaces' _ns_loaded chains.
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__elf_preferred_address):
+	Likewise.
+	* sysdeps/mips/dl-machine.h (elf_machine_runtime_link_map): Likewise.
+
+	* elf/rtld.c (_dl_start): Fix one last dl_loaded.
+	* elf/dl-load.c (_dl_map_object_from_fd): Avoid definition of
+	label when it is not needed.
+	* elf/dl-close.c (_dl_close): Typo: & -> &&.
+
 2004-10-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/segfault.c: Include alloca.h and stdint.h.
