@@ -1,3 +1,8 @@
+2002-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/charmap.c (charmap_read): If the charmap doesn't
+	define a code_set_name provide one based on the filename.
+
 2001-12-28  Andreas Jaeger  <aj@suse.de>
 
 	* time/mktime.c (__mktime_internal): Check for year < 70
