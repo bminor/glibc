@@ -44,6 +44,7 @@ DEFUN(sleep, (seconds), unsigned int seconds)
   time_t before, after;
   sigset_t set, oset;
   struct sigaction act, oact;
+  int save = errno;
 
   if (seconds == 0)
     return 0;
@@ -91,7 +92,14 @@ DEFUN(sleep, (seconds), unsigned int seconds)
   /* Restore the user's alarm if we have not already past it.
      If we have, be sure to turn off the alarm in case a signal
      other than SIGALRM was what woke us up.  */
-  alarm (remaining > slept ? remaining - slept : 0);
+  (void) alarm (remaining > slept ? remaining - slept : 0);
+
+  /* Restore the original signal mask.  */
+  (void) sigprocmask (SIG_SETMASK, &oset, (sigset_t *) NULL);
+
+  /* Restore the `errno' value we started with.
+     Some of the calls we made might have failed, but we didn't care.  */
+  errno = save;
 
   return slept > seconds ? 0 : seconds - slept;
 }
