@@ -44,6 +44,12 @@ enum __rlimit_resource
      resident set size will be more likely to have physical memory
      taken from them.  */
   RLIMIT_RSS,
+  /* Locked-in-memory address space.  */
+  RLIMIT_MEMLOCK,
+  /* Number of processes,  */
+  RLIMIT_NPROC,
+  /* Number of open files.  */
+  RLIMIT_OFILE,
 
   RLIM_NLIMITS
 };
