@@ -57,6 +57,8 @@ _hurd_setup_sighandler (int flags,
     {
       sigsp = sigaltstack->ss_sp + sigaltstack->ss_size;
       sigaltstack->ss_flags |= SA_ONSTACK;
+      /* XXX need to set up base of new stack for
+	 per-thread variables, cthreads.  */
     }
   else
     sigsp = (char *) ts->uesp;
