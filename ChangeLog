@@ -1,3 +1,9 @@
+2002-08-02  Roland McGrath  <roland@redhat.com>
+
+	* posix/bits/posix1_lim.h (SSIZE_MAX): Define to LONG_MAX, not INT_MAX.
+	On 32-bit platforms they are the same; on 64-bit platforms ssize_t
+	matches long int, not int.
+
 2002-08-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr_r): Adapt
