@@ -240,7 +240,7 @@ extern void _hurd_port2fd (struct hurd_fd *fd, io_t port, int flags);
 
 /* Allocate a new file descriptor and install PORT in it (doing any
    appropriate ctty magic); consumes a user reference on PORT.  FLAGS are
-   as for `open'; only O_NOCTTY is meaningful, but all are saved.
+   as for `open'; only O_IGNORE_CTTY is meaningful, but all are saved.
 
    If the descriptor table is full, set errno, and return -1.
    If DEALLOC is nonzero, deallocate PORT first.  */
