@@ -29,6 +29,6 @@ ENTRY (__wait3)
 	je syscall_error
 	mov 4(%esp), %ecx	/* Status pointer.  */
 	orl %ecx, %ecx		/* Is it nil?  */
-	je			/* Yup; return.  */
+	je 1f			/* Yup; return.  */
 	mov %edx, 0(%ecx)	/* Non-nil; store the status in it.  */
 1:	ret
