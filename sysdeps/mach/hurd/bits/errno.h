@@ -305,10 +305,12 @@ typedef enum __error_t_codes error_t;
 #define __error_t_defined	1
 #endif
 
-/* errno is a per-thread variable.  */
-#include <hurd/threadvar.h>
-#define errno	(*__hurd_errno_location ())
-#define __set_errno(val) errno = (val)
+/* Return the current thread's location for `errno'.
+   The syntax of this function allows redeclarations like `int errno'.  */
+extern int *__errno_location (void) __THROW __attribute__ ((__const__));
+
+#define errno			(*__errno_location ())
+#define __set_errno(val)	(errno = (val))
 
 #endif /* <errno.h> included.  */
 
