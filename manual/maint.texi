@@ -37,11 +37,11 @@ conventional GNU name for your system configuration---for example,
 Porting GNU CC}, for a full description of standard GNU configuration
 names.
 
-The GNU C Library currently supports the following configurations, and
-no others:
+The GNU C Library currently supports configurations that match the
+following patterns:
 
 @example
-sparc-sun-sunos4.1
+sparc-sun-sunos4.@var{n}
 m68k-hp-bsd4.3
 mips-dec-ultrix4.2
 @end example
@@ -50,7 +50,7 @@ While no other configurations are supported, there are handy aliases for
 these few.  (These aliases work in other GNU software as well.)
 
 @example
-sun4-sunos4.1
+sun4-sunos4.@var{n}
 hp320-bsd4.3
 decstation-ultrix
 @end example
@@ -59,7 +59,7 @@ Here are some options that you should specify (if appropriate) when
 you run @code{configure}:
 
 @table @samp
-@item -have-gnu-ld
+@item -with-gnu-ld
 Use this option if you plan to use GNU ld to link programs with the GNU
 C Library.  (we strongly recommend that you do.)
 
