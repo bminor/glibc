@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 /* Things in the library which want to be run when the auth port changes.  */
 DEFINE_HOOK (_hurd_reauth_hook, (auth_t new_auth));
 
-#include <mutex.h>
+#include <cthreads.h>
 static struct mutex reauth_lock = MUTEX_INITIALIZER;
 
 
