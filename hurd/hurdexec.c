@@ -135,7 +135,7 @@ _hurd_exec (task_t task, file_t file,
   /* Pack up the descriptor table to give the new program.  */
   __mutex_lock (&_hurd_dtable_lock);
 
-  dtablesize = _hurd_dtable.d ? _hurd_dtable.size : _hurd_init_dtablesize;
+  dtablesize = _hurd_dtable ? _hurd_dtablesize : _hurd_init_dtablesize;
 
   if (task == __mach_task_self ())
     /* Request the exec server to deallocate some ports from us if the exec
@@ -150,7 +150,7 @@ _hurd_exec (task_t task, file_t file,
     please_dealloc = NULL;
   pdp = please_dealloc;
 
-  if (_hurd_dtable.d != NULL)
+  if (_hurd_dtable != NULL)
     {
       dtable = __alloca (dtablesize * sizeof (dtable[0]));
       dtable_ctty = __alloca (dtablesize * sizeof (dtable[0]));
@@ -160,7 +160,7 @@ _hurd_exec (task_t task, file_t file,
       dtable_ctty_cells = __alloca (dtablesize * sizeof (dtable_cells[0]));
       for (i = 0; i < dtablesize; ++i)
 	{
-	  struct hurd_fd *const d = _hurd_dtable.d[i];
+	  struct hurd_fd *const d = _hurd_dtable[i];
 	  if (d == NULL)
 	    {
 	      dtable[i] = MACH_PORT_NULL;
