@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <stdio.h>
 #include <obstack.h>
+#include <stdarg.h>
 
 FILE *obstack_stream __P ((struct obstack *));
 
@@ -49,16 +50,10 @@ DEFUN(grow, (stream, c), FILE *stream AND int c)
   stream->__put_limit = stream->__buffer + stream->__bufsize;
 }
 
-FILE *
-open_obstack_stream (obstack)
-     struct obstack *obstack;
+static void
+DEFUN(init_obstream, (stream, obstack),
+      FILE *stream AND struct obstack *obstack)
 {
-  register FILE *stream;
-
-  stream = __newstream ();
-  if (stream == NULL)
-    return NULL;
-
   stream->__mode.__write = 1;
   stream->__mode.__read = 1;
 
@@ -84,4 +79,40 @@ open_obstack_stream (obstack)
      The first read attempt will call grow, which will do all the work.  */
 
   return stream;
+}
+
+FILE *
+open_obstack_stream (obstack)
+     struct obstack *obstack;
+{
+  register FILE *stream;
+
+  stream = __newstream ();
+  if (stream == NULL)
+    return NULL;
+
+  init_obstream (stream, obstack);
+  return stream;
+}
+
+int
+DEFUN(obstack_vprintf, (obstack, format, args),
+      struct obstack *obstack AND const char *format AND va_list args)
+{
+  FILE f;
+  memset (&f, 0, sizeof (f));
+  init_obstream (&f, obstack);
+  return vfprintf (&f, format, args);
+}
+
+int
+DEFUN(obstack_printf, (obstack, format),
+      struct obstack *obstack AND const char *format DOTS)
+{
+  int result;
+  va_list ap;
+  va_start (ap, format);
+  result = obstack_vprintf (obstack, format, ap);
+  va_end (ap);
+  return result;
 }
