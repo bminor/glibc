@@ -20,5 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 ENTRY (setjmp)
-	jmp C_SYMBOL_NAME (__sigsetjmp)
+	sethi %hi(C_SYMBOL_NAME (__sigsetjmp)), %g1
+	or %lo(C_SYMBOL_NAME (__sigsetjmp)), %g1, %g1
+	jmp %g1
 	mov %g0, %o1		/* Pass second argument of zero.  */
