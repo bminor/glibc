@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -142,7 +142,7 @@ _IO_new_file_close_it (fp)
 
   _IO_un_link (fp);
   fp->_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;
-  fp->_fileno = EOF;
+  fp->_fileno = -1;
   fp->_offset = _IO_pos_BAD;
 
   return close_status ? close_status : write_status;
