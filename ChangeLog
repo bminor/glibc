@@ -11,6 +11,9 @@
 
 2004-10-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-open.c (_dl_open): Don't allow explicitly opening a DSO
+	into an empty namespace.
+
 	* elf/dl-fini.c (_dl_fini): Fix search for map in maps array.
 	Reverse order of namespaces.
 	* elf/Makefile: Add rules to build and run tst-dlmopen3.
