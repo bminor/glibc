@@ -25,6 +25,10 @@ Cambridge, MA 02139, USA.  */
 #define	_STDLIB_H	1
 #include <features.h>
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
 /* Get size_t, wchar_t and NULL from <stddef.h>.  */
 #define	__need_size_t
 #define	__need_wchar_t
@@ -274,5 +278,9 @@ extern size_t EXFUN(mbstowcs, (wchar_t *__pwcs, CONST char *__s, size_t __n));
 /* Convert a wide char string to multibyte string.  */
 extern size_t EXFUN(wcstombs, (char *__s, CONST wchar_t *__pwcs, size_t __n));
 
+
+#ifdef	__cplusplus
+}
+#endif
 
 #endif	/* stdlib.h  */
