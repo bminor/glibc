@@ -108,27 +108,32 @@ DEFUN(__tzfile_read, (file), CONST char *file)
   num_types = (size_t) uc2ul(tzhead.tzh_typecnt);
   chars = (size_t) uc2ul(tzhead.tzh_charcnt);
   num_leaps = (size_t) uc2ul(tzhead.tzh_leapcnt);
-#if 0
   num_isstd = (size_t) uc2ul(tzhead.tzh_ttisstdcnt);
-#else
-  num_isstd = 0;
-#endif
 
-  transitions = (time_t *) malloc(num_transitions * sizeof(time_t));
-  if (transitions == NULL)
-    goto lose;
-  type_idxs = (unsigned char *) malloc(num_transitions);
-  if (type_idxs == NULL)
-    goto lose;
-  types = (struct ttinfo *) malloc(num_types * sizeof(struct ttinfo));
-  if (types == NULL)
-    goto lose;
-  zone_names = (char *) malloc(chars);
-  if (zone_names == NULL)
-    goto lose;
-  if (num_leaps != 0)
+  if (num_transitions > 0)
     {
-      leaps = (struct leap *) malloc(num_leaps * sizeof(struct leap));
+      transitions = (time_t *) malloc (num_transitions * sizeof(time_t));
+      if (transitions == NULL)
+	goto lose;
+      type_idxs = (unsigned char *) malloc (num_transitions);
+      if (type_idxs == NULL)
+	goto lose;
+    }
+  if (num_types > 0)
+    {
+      types = (struct ttinfo *) malloc (num_types * sizeof (struct ttinfo));
+      if (types == NULL)
+	goto lose;
+    }
+  if (chars > 0)
+    {
+      zone_names = (char *) malloc (chars);
+      if (zone_names == NULL)
+	goto lose;
+    }
+  if (num_leaps > 0)
+    {
+      leaps = (struct leap *) malloc (num_leaps * sizeof (struct leap));
       if (leaps == NULL)
 	goto lose;
     }
@@ -204,9 +209,10 @@ DEFUN(__tzfile_compute, (timer, tm), time_t timer AND struct tm tm)
       i = 1;
       while (i < num_transitions && transitions[i] < timer)
 	++i;
+      --i;
     }
 
-  info = &types[type_idxs[i - 1]];
+  info = &types[type_idxs[i]];
   __daylight = info->isdst;
   __timezone = info->offset;
   for (i = 0; i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
