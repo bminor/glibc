@@ -1,3 +1,16 @@
+2002-01-11  Martin Schwidefsky <schwidefsky@de.ibm.com>
+
+     * sysdeps/unix/sysv/linux/configure.in (libc_cv_gcc_unwind_find_fde):
+     Set for s390 and s390x architectures.
+     (arch_minimum_kernel): Set for s390 and s390x.
+     * sysdeps/unix/sysv/linux/s390/brk.c (__brk): Correct inline
+     assembly contraints.
+     * sysdeps/unix/sysv/linux/s390/profil-counter.h: Move/copy to ...
+     * sysdeps/unix/sysv/linux/s390/s390-32/profil-counter.h: ... here,
+     remove high order bit from the program counter.
+     * sysdeps/unix/sysv/linux/s390/s390-64/profil-counter.h: ... and here.
+     * sysdeps/unix/sysv/linux/s390/s390-64/Makefile: Add framestate.
+
 2002-01-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/alpha/fpu/e_sqrt.c (__ieee754_sqrt): Don't use multi-line
