@@ -28,18 +28,9 @@ DEFUN(__wait4, (pid, stat_loc, options, usage),
 {
   pid_t dead;
   error_t err;
-  if (options & WNOHANG)
-    {
-      __mutex_lock (&_hurd_lock);
-      err = __proc_wait (_hurd_proc, pid, stat_loc, options, usage, &dead);
-      __mutex_unlock (&_hurd_lock);
-    }
-  else
-    {
-      process_t proc = _hurd_getport (&_hurd_proc, &_hurd_lock);
-      err = __proc_wait (proc, pid, stat_loc, options, usage, &dead);
-      __mach_port_deallocate (__mach_task_self (), proc);
-    }
+
+  err = _HURD_PORT_USE (&_hurd_proc, __proc_wait (port, pid, stat_loc,
+						  options, usage, &dead));
   if (err)
     return __hurd_fail (err);
   return dead;
