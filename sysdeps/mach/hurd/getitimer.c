@@ -45,9 +45,9 @@ subtract_timeval (struct timeval *from, const struct timeval *subtract)
    Return 0 on success, -1 on errors.  */
 int
 DEFUN(__getitimer, (which, value),
-      enum __itimer_which __which AND struct itimerval *value)
+      enum __itimer_which which AND struct itimerval *value)
 {
-  struct itimerval timer;
+  struct itimerval val;
   struct timeval elapsed;
 
   switch (which)
