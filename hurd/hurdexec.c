@@ -25,10 +25,12 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/fd.h>
 
-/* Replace the current process, executing FILE with arguments ARGV and
-   environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
+/* Overlay TASK, executing FILE with arguments ARGV and environment ENVP.
+   If TASK == mach_task_self (), some ports are dealloc'd by the exec server.
+   ARGV and ENVP are terminated by NULL pointers.  */
 error_t
-_hurd_exec (file_t file, char *const argv[], char *const envp[])
+_hurd_exec (task_t task, file_t file, 
+	    char *const argv[], char *const envp[])
 {
   error_t err;
   char *args, *env, *ap;
@@ -38,8 +40,8 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
   struct _hurd_port_userlink ulink_ports[_hurd_nports];
   file_t *dtable;
   int dtablesize;
-  struct _hurd_port **dtable_cells;
-  struct _hurd_port_userlink *ulink_dtable;
+  struct _hurd_port **dtable_cells, **dtable_ctty_cells;
+  struct _hurd_port_userlink *ulink_dtable, *ulink_dtable_ctty;
   int i;
   char *const *p;
   struct _hurd_sigstate *ss;
@@ -107,6 +109,12 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
 
   dtablesize = _hurd_dtable.d ? _hurd_dtable.size : _hurd_init_dtablesize;
 
+  /* Request the exec server to deallocate some ports from us if the exec
+     succeeds.  The init ports and descriptor ports will arrive in the
+     new program's exec_startup message.  If we failed to deallocate
+     them, the new program would have duplicate user references for them.
+     But we cannot deallocate them ourselves, because we must still have
+     them after a failed exec call.  */
   please_dealloc = __alloca ((_hurd_nports + (2 * dtablesize)
 			     * sizeof (mach_port_t));
   pdp = please_dealloc;
@@ -114,13 +122,15 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
   if (_hurd_dtable.d != NULL)
     {
       dtable = __alloca (dtablesize * sizeof (dtable[0]));
+      dtable_ctty = __alloca (dtablesize * sizeof (dtable[0]));
       ulink_dtable = __alloca (dtablesize * sizeof (ulink_dtable[0]));
       dtable_cells = __alloca (dtablesize * sizeof (dtable_cells[0]));
+      ulink_dtable_ctty = __alloca (dtablesize * sizeof (ulink_dtable[0]));
+      dtable_ctty_cells = __alloca (dtablesize * sizeof (dtable_cells[0]));
       for (i = 0; i < dtablesize; ++i)
 	{
 	  struct _hurd_fd *const d = _hurd_dtable.d[i];
 	  __spin_lock (&d->port.lock);
-	  __spin_lock (&d->ctty.lock);
 	  if (d->port.port != MACH_PORT_NULL)
 	    *pdp++ = d->port.port;
 	  if (d->flags & FD_CLOEXEC)
