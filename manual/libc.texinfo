@@ -166,7 +166,7 @@ Indices
 @node Type Index
 @unnumbered Type Index
 @printindex tp
-
+ 
 @node Function Index
 @unnumbered Function and Macro Index
 @printindex fn
