@@ -48,6 +48,7 @@ main()
 #endif
 	 );
 
+  puts ("#define __need_FOPEN_MAX	1");
   puts ("#endif\n");
 
   /* POSIX does not require that OPEN_MAX and PATH_MAX be defined, so
@@ -56,7 +57,7 @@ main()
      FILENAME_MAX be defined, however.  */
 
   puts ("#if defined __need_FOPEN_MAX && !defined __defined_FOPEN_MAX");
-  puts ("# define __defined_FOPEN_MAX");
+  puts ("#define __defined_FOPEN_MAX");
   printf("#define FOPEN_MAX %u\n",
 #ifdef	OPEN_MAX
 
