@@ -1,3 +1,9 @@
+2000-02-09  Andreas Jaeger  <aj@suse.de>
+
+	* time/strptime.c (strptime_internal): Fix pointer dereference.
+	Patch by Juergen Heinzl <juergen@monocerus.demon.co.uk>, closes PR
+	libc/1591.
+
 2000-02-08  Andreas Jaeger  <aj@suse.de>
 
 	* locale/programs/locale.c (write_locales): Fix handling of
