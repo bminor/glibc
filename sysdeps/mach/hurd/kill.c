@@ -61,7 +61,7 @@ __kill (pid_t pid, int sig)
 				({ err = __proc_pid2task (proc, pid,
 							  &refport);
 				   if (err)
-				   err = __proc_getsidport (proc, &refport);
+				     err = __proc_getsidport (proc, &refport);
 				   err; }),
 				__sig_post (msgport, sig, refport));
       if (! err)
