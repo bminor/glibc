@@ -1,5 +1,5 @@
 glibc-*.tar.bz2
 glibc-*.src.rpm
-glibc-fedora.patch
+glibc-*fedora.patch
 glibc.spec
 update.log
