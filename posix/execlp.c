@@ -25,14 +25,15 @@ Cambridge, MA 02139, USA.  */
    it contains no slashes, with all arguments after FILE until a
    NULL pointer and environment from `environ'.  */
 int
-DEFUN(execlp, (file), CONST char *file DOTS)
+DEFUN(execlp, (file), CONST char *file AND CONST char *arg DOTS)
 {
   CONST char *argv[1024];
   register unsigned int i;
   va_list args;
 
   va_start(args, file);
-  i = 0;
+  argv[0] = arg;
+  i = 1;
   do
     {
       argv[i] = va_arg(args, CONST char *);
