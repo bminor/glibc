@@ -1,5 +1,11 @@
 1999-12-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/pread.c: Define __libc_* variant for
+	cancelation wrapper.
+	* sysdeps/unix/sysv/linux/powerpc/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite64.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/resource.h: Remove inclusion
 	of <asm/resource.h>.
 	* sysdeps/unix/sysv/linux/mips/bits/resource.h: Likewise.
