@@ -26,7 +26,11 @@ Cambridge, MA 02139, USA.  */
 #include <limits.h>
 #endif
 
-/* Generate local_limits.h from <sys/param.h> values for BSD.  */
+#ifdef HAVE_SYS_LIMITS_H
+#include <sys/limits.h>
+#endif
+
+/* Generate local_lim.h from the values defined in the system's headers.  */
 
 struct param
   {
@@ -64,7 +68,6 @@ static struct param params[] =
 #ifdef OPEN_MAX
     { "OPEN_MAX", OPEN_MAX },
 #endif
-!!!
 
 #if !defined (MAX_CANON) && defined (CANBSIZ)
 #define MAX_CANON CANBSIZ
@@ -93,17 +96,21 @@ static struct param params[] =
 int
 main()
 {
-  extern char *ctime();
-  extern time_t time();
-  time_t now = time((time_t *) NULL);
+  extern char *ctime ();
+  extern time_t time ();
+  time_t now = time ((time_t *) NULL);
   register struct param *p;
 
-  printf("\
+  if (! params[0].name)
+    /* We have no information to give, so let the caller know.  */
+    exit (1);
+
+  printf ("\
 /* Implementation-specific limits.\n\
-   Generated at %.25s.  */\n\n", ctime(&now));
+   Generated at %.25s.  */\n\n", ctime (&now));
 
   for (p = params; p->name != NULL; ++p)
-    printf("#define %s %d\n", p->name, p->value);
+    printf ("#define %s %d\n", p->name, p->value);
 
-  exit(0);
+  exit (0);
 }
