@@ -33,7 +33,7 @@ __BEGIN_DECLS
 /* Directory entry structure.
 
    This structure is laid out identically to the `struct direct' that
-   represents directory entries in the GNU Hurd and in BSD Unix (and
+   represents directory entries in the GNU Hurd and in BSD 4.4 (and
    incidentally, on disk in the Berkeley fast file system).  The `readdir'
    implementations for GNU and BSD know this; you must change them if you
    change this structure.  */
@@ -54,7 +54,7 @@ struct dirent
 #endif
 
 #ifdef __USE_BSD
-/* File types fo `d_type'.  */
+/* File types for `d_type'.  */
 enum
   {
     DT_UNKNOWN = 0,
