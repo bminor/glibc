@@ -69,10 +69,12 @@ DEFUN(__getitimer, (which, value),
 
   /* Extract the current timer setting; and the time it was set, so we can
      calculate the time elapsed so far.  */
+  HURD_CRITICAL_BEGIN;
   __spin_lock (&_hurd_itimer_lock);
   val = _hurd_itimerval;
   subtract_timeval (&elapsed, &_hurd_itimer_started);
   __spin_unlock (&_hurd_itimer_lock);
+  HURD_CRITICAL_END;
 
   if ((val.it_value.tv_sec | val.it_value.tv_usec) != 0)
     {

@@ -35,7 +35,7 @@ DEFUN(__readlink, (path, buf, len),
   char mybuf[2048], *transp = mybuf;
   unsigned int translen = sizeof (mybuf);
 
-  file = __path_lookup (path, O_READ|O_NOTRANS, 0);
+  file = __path_lookup (path, O_NOTRANS, 0);
   if (file == MACH_PORT_NULL)
     return -1;
 

@@ -25,6 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include <mach.h>
 #include <hurd/userlink.h>
 #include <spin-lock.h>
+#include <hurd/signal.h>
 
 
 /* Structure describing a cell containing a port.  With the lock held, a
@@ -90,8 +91,12 @@ _EXTERN_INLINE mach_port_t
 _hurd_port_get (struct hurd_port *port,
 		struct hurd_userlink *link)
 {
+  mach_port_t result;
+  HURD_CRITICAL_BEGIN;
   __spin_lock (&port->lock);
-  return _hurd_port_locked_get (port, link);
+  result = _hurd_port_locked_get (port, link);
+  HURD_CRITICAL_END;
+  return result;
 }
 
 
@@ -108,9 +113,11 @@ _hurd_port_free (struct hurd_port *port,
        it does not link us on the users chain, since there is
        no shared resource.  */
     return;
+  HURD_CRITICAL_BEGIN;
   __spin_lock (&port->lock);
   dealloc = _hurd_userlink_unlink (link);
   __spin_unlock (&port->lock);
+  HURD_CRITICAL_END;
   if (dealloc)
     __mach_port_deallocate (__mach_task_self (), used_port);
 }
@@ -135,8 +142,10 @@ _hurd_port_locked_set (struct hurd_port *port, mach_port_t newport)
 _EXTERN_INLINE void
 _hurd_port_set (struct hurd_port *port, mach_port_t newport)
 {
+  HURD_CRITICAL_BEGIN;
   __spin_lock (&port->lock);
-  return _hurd_port_locked_set (port, newport);
+  _hurd_port_locked_set (port, newport);
+  HURD_CRITICAL_END;
 }
 
 

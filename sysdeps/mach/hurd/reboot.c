@@ -28,20 +28,21 @@ DEFUN(reboot, (howto), int howto)
 {
   error_t err;
   startup_t init;
+  mach_port_t hostpriv, devmaster;
+
+  if (err = __USEPORT (PROC, __proc_getprivports (port,
+						  &hostpriv, &devmaster)))
+    return __hurd_fail (err);
+  __mach_port_deallocate (__mach_task_self (), devmaster);
 
   err = __USEPORT (PROC, __proc_getmsgport (port, 1, &init));
   if (!err)
     {
-      task_t refport = __pid2task (1);
-      if (refport != MACH_PORT_NULL)
-	{
-	  err = __startup_reboot (init, refport, howto);
-	  __mach_port_deallocate (__mach_task_self (), refport);
-	}
+      err = __startup_reboot (init, hostpriv, howto);
       __mach_port_deallocate (__mach_task_self (), init);
-      if (refport == MACH_PORT_NULL)
-	return -1;
     }
+
+  __mach_port_deallocate (__mach_task_self (), hostpriv);
 
   if (err)
     return __hurd_fail (err);

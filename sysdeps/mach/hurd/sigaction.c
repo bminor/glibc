@@ -45,6 +45,7 @@ DEFUN(__sigaction, (sig, act, oact),
     a = *act;
 
   ss = _hurd_self_sigstate ();
+  ss->critical_section = 1;
 
   if (act != NULL && sig == SIGCHLD)
     /* Inform the proc server whether or not it should send us SIGCHLD for
@@ -58,6 +59,7 @@ DEFUN(__sigaction, (sig, act, oact),
   if (act != NULL)
     ss->actions[sig] = a;
 
+  ss->critical_section = 0;
   __mutex_unlock (&ss->lock);
 
   if (oact != NULL)

@@ -29,6 +29,7 @@ DEFUN_VOID(__getegid)
   error_t err;
   gid_t egid;
 
+  HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_id.lock);
 
   if (err = _hurd_check_ids ())
@@ -49,5 +50,7 @@ DEFUN_VOID(__getegid)
     }
 
   __mutex_unlock (&_hurd_id.lock);
+  HURD_CRITICAL_END;
+
   return egid;
 }

@@ -67,8 +67,8 @@ errnoh == 2 && $1 == "@deftypevr"  && $2 == "Macro" && $3 == "int" \
       edom = x;
     else if (e == "ERANGE")
       erange = x;
-    printf "%-40s/*%s */\n", sprintf ("%-24s%s", "#define\t" e, e), etext;
     printf "\t%-16s= _HURD_ERRNO (%d),\n", e, ++errno;
+    print x;
     next;
   }
 { errnoh=0 }
