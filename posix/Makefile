@@ -72,7 +72,7 @@ glob/configure: glob/configure.in
 	autoconf $(ACFLAGS)
 
 glob/ChangeLog: ../ChangeLog
-	changelog-extract --regexp '(glob|fnmatch)\.[ch]' < $@ > $@.new
+	changelog-extract --regexp 'posix/(glob|fnmatch).*' < $< > $@.new
 	chmod a-w $@.new
 	mv $@.new $@
 
