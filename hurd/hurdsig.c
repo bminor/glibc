@@ -70,6 +70,7 @@ _hurd_thread_sigstate (thread_t thread)
 #include <setjmp.h>
 #include <fcntl.h>
 #include <sys/wait.h>
+#include <thread_state.h>
 
 jmp_buf _hurd_sigthread_fault_env;
 
@@ -229,7 +230,7 @@ abort_all_rpcs (int signo, void *state)
 /* Deliver a signal.
    SS->lock is held on entry and released before return.  */
 void
-_hurd_internal_post_signal (struct _hurd_sigstate *ss,
+_hurd_internal_post_signal (struct hurd_sigstate *ss,
 			    int signo,
 			    int sigcode)
 {
@@ -321,9 +322,6 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
       ss->sigcodes[signo] = sigcode;
       act = ignore;
     }
-
-  if (restore_blocked != NULL)
-    ss->blocked = *restore_blocked;
 
   /* Perform the chosen action for the signal.  */
   switch (act)
@@ -488,15 +486,17 @@ _S_sig_post (mach_port_t me,
 	   Someday we could implement some reasonable scheme for
 	   authorizing SIGIO and SIGURG signals properly.  */
 
-	int dealloc_dt;
+	struct hurd_userlink dtable_ulink;
+	struct hurd_dtable dt = _hurd_dtable_get (&dtable_ulink);
 	int d;
-	struct _hurd_dtable dt = _hurd_dtable_use (&dealloc_dt);
 	for (d = 0; d >= 0 && d < dt.size; ++d)
 	  {
-	    struct _hurd_port_userlink ulink;
+	    struct hurd_userlink ulink;
 	    io_t port;
 	    mach_port_t asyncid;
-	    port = _hurd_port_locked_get (&dt.d[d].port, &ulink);
+	    if (dt.d[d] == NULL)
+	      continue;
+	    port = _hurd_port_locked_get (&dt.d[d]->port, &ulink);
 	    if (! __io_get_icky_async_id (port, &asyncid))
 	      {
 		if (refport == asyncid)
@@ -504,9 +504,9 @@ _S_sig_post (mach_port_t me,
 		  d = -1;
 		__mach_port_deallocate (__mach_task_self (), asyncid);
 	      }
-	    _hurd_port_free (&dt.d[d].port, &ulink, port);
+	    _hurd_port_free (&dt.d[d]->port, &ulink, port);
 	  }
-	_hurd_dtable_done (dt, &dealloc_dt);
+	_hurd_dtable_free (dt, &dtable_ulink);
 	/* If we found a lucky winner, we've set D to -1 in the loop.  */
 	if (d < 0)
 	  goto win;
@@ -588,14 +588,14 @@ _hurdsig_fault_init (void)
 {
   error_t err;
   mach_port_t sigexc;
-  int state[_hurd_thread_state_count];
+  struct hurd_thread_state state;
 
   if (err = __mach_port_allocate (__mach_task_self (),
 				  MACH_PORT_RIGHT_RECEIVE, &sigexc))
     __libc_fatal ("hurd: Can't create receive right for signal thread exc\n");
 
   /* Set up STATE with a thread state that will longjmp immediately.  */
-  _hurd_initialize_fault_recovery_state (state);
+  _hurd_initialize_fault_recovery_state (&state);
 
   __thread_set_special_port (_hurd_msgport_thread,
 			     THREAD_EXCEPTION_PORT, sigexc);
