@@ -137,10 +137,10 @@ struct in_addr
 #endif
 
 /* Defines for Multicast INADDR.  */
-#define INADDR_UNSPEC_GROUP	((uint32_t) 0xe0000000U)      /* 224.0.0.0 */
-#define INADDR_ALLHOSTS_GROUP	((uint32_t) 0xe0000001U)      /* 224.0.0.1 */
-#define INADDR_ALLRTRS_GROUP    ((uint32_t) 0xe0000002U)      /* 224.0.0.2 */
-#define INADDR_MAX_LOCAL_GROUP  ((uint32_t) 0xe00000ffU)      /* 224.0.0.255 */
+#define INADDR_UNSPEC_GROUP	((u_int32_t) 0xe0000000U)     /* 224.0.0.0 */
+#define INADDR_ALLHOSTS_GROUP	((u_int32_t) 0xe0000001U)     /* 224.0.0.1 */
+#define INADDR_ALLRTRS_GROUP    ((u_int32_t) 0xe0000002U)     /* 224.0.0.2 */
+#define INADDR_MAX_LOCAL_GROUP  ((u_int32_t) 0xe00000ffU)     /* 224.0.0.255 */
 
 
 /* Get the definition of the macro to define the common sockaddr members.  */
