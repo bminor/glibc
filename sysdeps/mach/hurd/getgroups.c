@@ -27,26 +27,22 @@ __getgroups (int n, gid_t *gidset)
   error_t err;
   int ngids;
 
-  __mutex_lock (&_hurd_idlock);
+  __mutex_lock (&_hurd_id.lock);
 
   if (err = _hurd_check_ids ())
     {
-      __mutex_unlock (&_hurd_idlock);
+      __mutex_unlock (&_hurd_id.lock);
       return __hurd_fail (err);
     }
 
-  if (_hurd_ngids <= 2)
-    /* The first two are the real and saved-set gids.  */
-    ngids = 0;
-  else
-    ngids = _hurd_ngids - 2;
+  ngids = _hurd_id.gen.ngids;
 
   if (n != 0)
     {
       /* Copy the gids onto stack storage and then release the idlock.  */
       gid_t gids[ngids];
-      memcpy (gids, _hurd_gid->ids, sizeof (gids));
-      __mutex_unlock (&_hurd_idlock);
+      memcpy (gids, _hurd_id.gen.gids, sizeof (gids));
+      __mutex_unlock (&_hurd_id.lock);
 
       /* Now that the lock is released, we can safely copy the
 	 group set into the user's array, which might fault.  */
