@@ -185,7 +185,7 @@ endif
 # other than there, so the zoneinfo directory contains only universal data,
 # localizing the configuration data elsewhere.
 ifndef localtime-file
-localtime-file = $(etcdir)/localtime
+localtime-file = $(sysconfdir)/localtime
 endif
 
 # What timezone's DST rules should be used when a POSIX-style TZ
