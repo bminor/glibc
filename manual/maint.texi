@@ -54,9 +54,9 @@ Now edit the file @file{Makeconfig} to set the compilation parameters,
 and what directories to install the library and header files in.  See
 the comments in @file{Makeconfig} for the details.  If you are building
 for several machines, you can put just the values specific to a
-particular machine in a file called file{Makeconfig} in the object
+particular machine in a file called @file{Makeconfig} in the object
 directory for that machine (for example, @file{sun4/Makeconfig}).  This
-should @emph{not} be an editted copy of @file{Makeconfig}.  Make a new
+should @emph{not} be an edited copy of @file{Makeconfig}.  Make a new
 file containing just the variables in @file{Makeconfig} that you want to
 set specially for the particular machine.  These values will override
 the values defined in @file{Makeconfig}.@refill
