@@ -1,3 +1,11 @@
+2002-03-02  Andreas Schwab  <schwab@suse.de>
+
+	* stdio-common/vfprintf.c (process_arg): Fix decimal format with
+	'h' flag and positional arg.
+	* stdio-common/tst-printf.c (rfg3): New function to test
+	positional arguments.
+	(main): Fix some warnings.
+
 2002-02-25  Paul Eggert  <eggert@twinsun.com>
 
 	* timezone/Makefile (tzbases): Move systemv from here...
