@@ -16,20 +16,36 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef HAVE_SYSCALLS
 #include <sysdeps/unix/sysdep.h>
+
+/* Define a macro we can use to construct the asm name for a C symbol.  */
+#ifdef	NO_UNDERSCORES
+#define	C_SYMBOL_NAME(name)	name
+#else
+#ifdef	__STDC__
+#define	C_SYMBOL_NAME(name)	_##name
+#else
+#define	C_SYMBOL_NAME(name)	_/**/name
+#endif
 #endif
 
 #ifdef	__STDC__
 #define	ENTRY(name)							      \
-  .globl _##name;							      \
+  .globl C_SYMBOL_NAME(name);						      \
   .align 4;								      \
-  _##name##:
+  C_SYMBOL_NAME(name)##:
 #else
 #define	ENTRY(name)							      \
-  .globl _/**/name;							      \
+  .globl C_SYMBOL_NAME(name);						      \
   .align 4;								      \
-  _/**/name/**/:
+  C_SYMBOL_NAME(name)/**/:
+#endif
+
+#ifdef	NO_UNDERSCORES
+/* Since C identifiers are not normally prefixed with an underscore
+   on this system, the asm identifier `syscall_error' intrudes on the
+   C name space.  Make sure we use an innocuous name.  */
+#define	syscall_error	__syscall_error
 #endif
 
 #ifdef	__STDC__
