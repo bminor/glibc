@@ -18,61 +18,79 @@
 
 subdir := mach
 
-distribute = Machrules interface.awk # $(interfaces:%=%.defs)
+distribute = Machrules interface.awk mach-syscalls.awk # $(interfaces:%=%.defs)
 
-headers = mach_init.h \
-	  $(addprefix mach/,\
-		      	    host_info.h kern_return.h \
-			    mach_param.h mach_types.h \
-			    memory_object.h \
-			    message.h mig_errors.h msg_type.h \
-			    policy.h port.h processor_info.h \
-			    std_types.h task_info.h task_special_ports.h \
-			    thread_info.h thread_special_ports.h \
-			    thread_status.h thread_switch.h time_value.h \
-			    vm_attributes.h vm_inherit.h vm_prot.h \
-			    vm_statistics.h)
+interface-header-prefix = mach/
+headers = mach.h mach_init.h \
+	  $(addprefix mach/,$(mach-headers)) \
+	  $(interface-headers)
 
 ifneq (,)
-user-interfaces		:= mach_interface mach_port \
-			   mach_host mach_debug \
-			   device device_request device_reply \
-			   default_pager_object \
-			   memory_object_user \
-			   memory_object_default
-server-interfaces	:= __exc
+mach-headers := host_info.h kern_return.h \
+		mach_param.h mach_types.h \
+		memory_object.h \
+		message.h mig_errors.h msg_type.h \
+		policy.h port.h processor_info.h \
+		std_types.h task_info.h task_special_ports.h \
+		thread_info.h thread_special_ports.h \
+		thread_status.h thread_switch.h time_value.h \
+		vm_attributes.h vm_inherit.h vm_prot.h \
+		vm_statistics.h
 endif
 
-user-interfaces = foobar
-server-interfaces = foobar __foobar
+user-interfaces := mach_interface mach_port mach_host \
+		   device device_request device_reply \
+		   default_pager_object \
+		   memory_object_user memory_object_default
+server-interfaces := __exc
+
+routines = $(interface-routines) 
+foo =\
+	   mach_init mach_init_syms \
+	   mig_strncpy mig_support msg \
+	   mach_msg_destroy mach_msg_server mach_msg_server_timeout \
+	   __mach_msg_destroy __mach_msg_server \
+	   devstream
+
+tests := hello
+
+
+all:
+
+
+# Define mach-syscalls and sysno-*.
+include mach-syscalls.mk
+mach-syscalls.mk: syscall_sw.h mach-syscalls.awk
+	sed -n -e '/STANDALONE/,$$d' \
+	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),[0-9]*)$$/\1 \2/p' \
+	< $< | awk -f $(word 2,$^) > $@-new		      
+	mv $@-new $@
+
+ifdef mach-syscalls
+$(mach-syscalls:%=__%.S): __%.S: mach-syscalls.mk
+	(echo '#include <sysdep.h>'; \
+	 echo 'SYSCALL_TRAP (__$*, $(sysno-$*))') > $@
+endif
+
+mach-shortcuts := $(patsubst syscall_%,%,$(filter syscall_%,$(mach-syscalls)))
+
+# Make the MiG stubs for $(mach-shortcuts) be CALL_rpc.
+migdefines := $(migdefines) \
+	      $(foreach call,$(mach-shortcuts),-D$(call)=$(call)_rpc)
+
+# This rule needs to come before the implicit rules in Machrules.
+__%.c: shortcut.awk __%_rpc.c
+	gawk -v call=__$* -v rpc=__$*_rpc -v syscall=__syscall_$* \
+	     -f $^ > $@-new
+	mv $@-new $@
 
 include Machrules
 
-routines = $(interface-routines)
-headers = $(interface-headers)
-ifneq (,)
-routines := mach_init mach_init_syms \
-	    mig_strncpy mig_support msg \
-	    mach_traps mach_syscalls mach_shortcuts \
-	    mach_msg_destroy mach_msg_server mach_msg_server_timeout \
-	    __mach_msg_destroy __mach_msg_server \
-	    devstream
-tests := hello
-endif
+interface-routines := $(filter-out %_rpc,$(interface-routines)) \
+		      $(foreach call,$(mach-shortcuts),\
+				__$(call) $(call) __syscall_$(call))
 
 include ../Rules
-
-
-include mach-shortcuts
-mach-shortcuts: mach_shortcuts.h
-	(echo 'mach-shortcuts := ' \\ ; \
-	 sed -n 's/SHORTCUT[^(]*(\([^,]*\),.*$$/  \1 '\\\\'/p' < $<) > $@
-
-# Make the MiG stubs for $(mach-shortcuts) be mig_foo.
-ifneq (,)
-migdefines := $(migdefines) \
-	      $(foreach call,$(mach-shortcuts),-D$(call)=mig_$(call))
-endif
 
 
 # There is already a mach.h, so mach.defs generates mach_interface.h.
@@ -82,3 +100,6 @@ mach_interface.defs: mach.defs
 # so memory_object.defs generates memory_object_user.h.
 memory_object_user.defs: memory_object.defs
 	ln -s $< $@ || cp $< $@
+
+# Be sure not to make these with implicit rules from foo.defs.
+#$(mach-headers): ;
