@@ -47,7 +47,7 @@ DEFUN(fdopen, (fd, mode), int fd AND CONST char *mode)
     }
 
   if (err = HURD_FD_PORT_USE (d, __io_get_openmodes (port, &openmodes)))
-    return __hurd_dfail (fd, err);
+    return __hurd_dfail (fd, err), NULL;
 
   /* Check the access mode.  */
   if ((m.__read && !(openmodes & O_READ)) ||

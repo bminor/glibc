@@ -58,7 +58,7 @@ aux	:= errlist siglist defs syms-stdio glue mp_clz_tab
 distribute = $(mpn-headers) mpn-copy.mk _itoa.h
 
 tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
-	 bug1 bug2 bug3 bug4 bug5 bug6 temptest tst-fileno
+	 bug1 bug2 bug3 bug4 bug5 bug6 temptest tst-fileno xbug
 
 
 include ../Rules
