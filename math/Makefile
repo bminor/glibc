@@ -28,14 +28,31 @@ routines := acos asin atan cos sin tan cosh sinh tanh exp fabs ldexp	\
 	    log log10 floor sqrt fmod frexp pow atan2 ceil modf		\
 	    isinf isnan finite infnan copysign scalb drem logb		\
 	    __isinf __isnan __finite __infnan __copysign __scalb __drem __logb\
-	    rint hypot cabs cbrt expm1 log1p acosh asinh atanh 
+	    __rint rint hypot cabs cbrt __expm1 expm1 log1p acosh asinh atanh 
+install := libm.a
 
 
 include ../Rules
 
 
+$(objpfx)libm.a:
+	$(AR) c$(verbose) $@
+
 # Other dirs to look for source files (for dist).
 source_dirs = $(filter-out unused,$(shell find bsd -type d -print))
+
+include $(objpfx)BSDmath-files
+$(objpfx)BSDmath-files:
+	(echo define +ansideclificate-bsd;				\
+	 echo "(echo '#include <ansidecl.h>';				\
+	        echo '#include \"\$$<\"') > \$$@-tmp;			\
+		mv \$$@-tmp \$$@";					\
+	 echo endef;			    				\
+	 for dir in $(source_dirs); do					\
+	   echo "\$$(objpfx)%.c: $${dir}/%.c;\$$(+ansideclificate-bsd)";\
+	 done) > $@-tmp
+	mv $@-tmp $@
+
 
 ifdef bsdmath_dirs
 
@@ -60,9 +77,11 @@ ifdef +bsdfiles
 # Filter these out of the list of BSD files.
 +bsdfiles := $(filter-out $(addprefix %/,$(+sysdeps)),$(+bsdfiles))
 
+ifdef +bsdfiles
 # Assert that all the BSD C sources exist in the object directory,
 # so VPATH will find them there first.
 $(addprefix $(objpfx),$(notdir $(+bsdfiles))):
+endif
 
 # See how easy this would be in make v4?
 ifneq (,)
@@ -74,18 +93,6 @@ $(objpfx)%.c: bsd/$(dir)/%.c
 endef
 $(bsd-files)
 endif
-
-include $(objpfx)BSDmath-files
-$(objpfx)BSDmath-files: Makefile $(+bsdfiles)
-	(echo define +ansideclificate-bsd;				\
-	 echo "(echo '#include <ansidecl.h>';				\
-	        echo '#include \"\$$<\"') > \$$@-tmp;			\
-		mv \$$@-tmp \$$@";					\
-	 echo endef;			    				\
-	 for dir in $(bsdmath_dirs); do					\
-	   echo "\$$(objpfx)%.c: bsd/$${dir}/%.c;\$$(+ansideclificate-bsd)";\
-	 done) > $@-tmp
-	mv $@-tmp $@
 
 ifneq ($(findstring gcc,$(CC)),)
 # Disable GCC warnings for grody BSD code.
