@@ -1,8 +1,6 @@
 @node Mathematics
 @chapter Mathematics
 
-@c this file contains only the node Mathematics.  The node Arithmetic is
-@c located in math-arithmetic.texinfo.  --mew
 This chapter contains information about functions for performing
 mathematical computations, such as trigonometric functions.  Most of
 these functions have prototypes declared in the header file
