@@ -77,7 +77,7 @@ distribute := rpc_util.h rpc_parse.h rpc_scan.h $(rpcgen-objs:.o=.c) etc.rpc
 others := portmap rpcinfo
 
 # Sun's code is not too clean.
-override +gccwarn :=
+override +gccwarn := -w
 
 include ../Rules
 
