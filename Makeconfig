@@ -224,17 +224,13 @@ endif
 # The program that makes Emacs-style TAGS files.
 ETAGS	:= etags -T
 
-# Define this variable if and only if you are using version 3.63 or later
-# of GNU make.  Not having it defined will make building the TAGS files not
-# work, but should not cause any other problems.  If you define this with
-# an older version of GNU make, you will get syntax errors from make.
-#have_export_directive = yes
-.NOEXPORT: # This tells older versions of GNU make not to export all variables.
-
 ####
 #### End of configuration variables.
 ####
 
+# This tells some versions of GNU make before 3.63 not to export all variables.
+.NOEXPORT:
+
 # We want to echo the commands we're running without
 # umpteem zillion filenames along with it (we use `...' instead)
 # but we don't want this echoing done when the user has said
