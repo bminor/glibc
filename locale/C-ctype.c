@@ -370,13 +370,12 @@ const struct locale_data _nl_C_LC_CTYPE =
     { word: 1 },
     { string: "ANSI_X3.4-1968" },
 #if BYTE_ORDER == LITTLE_ENDIAN
-    { string: NULL },
+    { string: NULL }, { string: NULL },
 #endif
     { string: (const char *) (_nl_C_LC_CTYPE_toupper + 128) },
-    { string: NULL },
     { string: (const char *) (_nl_C_LC_CTYPE_tolower + 128) }
 #if BYTE_ORDER == BIG_ENDIAN
-    , { string: NULL }
+    , { string: NULL }, { string: NULL }
 #endif
   }
 };
