@@ -48,7 +48,7 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
   
   for (;;)
     {
-      err = __dir_pathtrans (startdir, (char *)path, flags, mode,
+      err = __dir_pathtrans (startdir, (char *) path, flags, mode,
 			     &doretry, retryname, result);
 
       if (dealloc_dir)
@@ -59,7 +59,18 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
       switch (doretry)
 	{
 	case FS_RETRY_NONE:
-	  return 0;
+	  /* We got a successful translation.  Now apply any
+	     open-time action flags we were passed.  */
+	  if (flags & O_EXLOCK)
+	    ;			/* XXX */
+	  if (!err && (flags & O_SHLOCK))
+	    ;			/* XXX */
+	  if (!err && (flags & O_TRUNC))
+	    err = __file_truncate (*result, 0);
+
+	  if (err)
+	    __mach_port_deallocate (__mach_task_self (), *result);
+	  return err;
 	  
 	case FS_RETRY_REAUTH:
 	  __io_reauthenticate (*result, _hurd_pid);
@@ -90,6 +101,7 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
 	      dealloc_dir = 1;
 	      path = retryname;
 	    }
+	  break;
 
 	/* case FS_RETRY_MAGICAL: XXX */
 	}
