@@ -21,29 +21,29 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <termios.h>
 
-#undef	B0
-#undef	B50
-#undef	B75
-#undef	B110
-#undef	B134
-#undef	B150
-#undef	B200
-#undef	B300
-#undef	B600
-#undef	B1200
-#undef	B1800
-#undef	B2400
-#undef	B4800
-#undef	B9600
-#undef	B19200
-#undef	B38400
-#undef	ECHO
-#undef	TOSTOP
-#undef	NOFLSH
-#include <sys/ioctl.h>
+#include "bsdtty.h"
 
 
-static int EXFUN(translate_speed, (speed_t speed, char *speed_ptr));
+CONST speed_t __bsd_speeds[] =
+  {
+    0,
+    50,
+    75,
+    110,
+    134,
+    150,
+    200,
+    300,
+    600,
+    1200,
+    1800,
+    2400,
+    4800,
+    9600,
+    19200,
+    38400,
+  };
+
 
 /* Set the state of FD to *TERMIOS_P.  */
 int
@@ -57,6 +57,7 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
 #ifdef	TIOCGETX
   int extra;
 #endif
+  size_t i;
 
   if (__ioctl(fd, TIOCGETP, &buf) < 0 ||
       __ioctl(fd, TIOCGETC, &tchars) < 0 ||
@@ -82,23 +83,26 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
       break;
     case TCSAFLUSH:
       if (tcflush(fd, TCIFLUSH) < 0)
-	return(-1);
+	return -1;
       break;
     default:
       errno = EINVAL;
       return -1;
     }
 
-  if (!translate_speed(termios_p->__ospeed, &buf.sg_ospeed) ||
-      !translate_speed(termios_p->__ispeed == 0 ?
-		       termios_p->__ospeed : termios_p->__ispeed,
-		       &buf.sg_ispeed))
+  buf.sg_ispeed = buf.sg_ospeed = -1;
+  for (i = 0; i <= sizeof (__bsd_speeds) / sizeof (__bsd_speeds[0]); ++i)
+    {
+      if (__bsd_speeds[i] == termios_p->__ispeed)
+	buf.sg_ispeed = i;
+      if (__bsd_speeds[i] == termios_p->__ospeed)
+	buf.sg_ospeed = i;
+    }
+  if (buf.sg_ispeed == -1 || buf.sg_ospeed == -1)
     {
       errno = EINVAL;
       return -1;
     }
-  buf.sg_ispeed = termios_p->__ispeed;
-  buf.sg_ospeed = termios_p->__ospeed;
 
   buf.sg_flags &= ~(CBREAK|RAW);
   if (!(termios_p->c_lflag & ICANON))
@@ -179,65 +183,4 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
       __ioctl(fd, TIOCLSET, &local) < 0)
     return -1;
   return 0;
-}
-
-
-/* Translate SPEED into a `struct sgttyb' speed value.  */
-static int
-DEFUN(translate_speed, (speed, speed_ptr),
-      speed_t speed AND char *speed_ptr)
-{
-  switch (speed)
-    {
-    case _B0:
-      *speed_ptr = B0;
-      return 1;
-    case _B50:
-      *speed_ptr = B50;
-      return 1;
-    case _B75:
-      *speed_ptr = B75;
-      return 1;
-    case _B110:
-      *speed_ptr = B110;
-      return 1;
-    case _B134:
-      *speed_ptr = B134;
-      return 1;
-    case _B150:
-      *speed_ptr = B150;
-      return 1;
-    case _B200:
-      *speed_ptr = B200;
-      return 1;
-    case _B300:
-      *speed_ptr = B300;
-      return 1;
-    case _B600:
-      *speed_ptr = B600;
-      return 1;
-    case _B1200:
-      *speed_ptr = B1200;
-      return 1;
-    case _B1800:
-      *speed_ptr = B1800;
-      return 1;
-    case _B2400:
-      *speed_ptr = B2400;
-      return 1;
-    case _B4800:
-      *speed_ptr = B4800;
-      return 1;
-    case _B9600:
-      *speed_ptr = B9600;
-      return 1;
-    case _B19200:
-      *speed_ptr = B19200;
-      return 1;
-    case _B38400:
-      *speed_ptr = B38400;
-      return 1;
-    default:
-      return 0;
-    }
 }
