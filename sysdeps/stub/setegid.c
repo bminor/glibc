@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Set the effective group ID of the calling process to GID.  */
 int
-DEFUN(setegid, (gid), int gid)
+DEFUN(setegid, (gid), __gid_t gid)
 {
   errno = ENOSYS;
   return -1;
