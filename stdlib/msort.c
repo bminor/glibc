@@ -12,7 +12,7 @@
    : memcpy (dst, src, s))
 
 static void
-DEFUN(msort_with_tmp, (b, n, s, t),
+DEFUN(msort_with_tmp, (b, n, s, cmp, t),
       PTR b AND size_t n AND size_t s AND __compar_fn_t cmp AND char *t)
 {
   char *tmp;
@@ -54,7 +54,7 @@ DEFUN(msort_with_tmp, (b, n, s, t),
 }
 
 void
-DEFUN(msort, (b, n, s),
+DEFUN(msort, (b, n, s, cmp),
       PTR b AND size_t n AND size_t s AND __compar_fn_t cmp)
 {
   msort_with_tmp (b, n, s, cmp, __alloca (n * s));
