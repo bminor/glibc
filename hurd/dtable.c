@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <gnu-stabs.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <fcntl.h>
 #include <limits.h>
 
 
@@ -43,9 +45,9 @@ init_dtable (void)
   _hurd_dtable_user_dealloc = NULL;
 
   /* The initial size of the descriptor table is that of the passed-in
-     table, rounded up to a multiple of OPEN_MAX descriptors.  */
+     table, rounded up to a multiple of STREAM_MAX descriptors.  */
   _hurd_dtable.size
-    = (_hurd_init_dtablesize + OPEN_MAX - 1) / OPEN_MAX * OPEN_MAX;
+    = (_hurd_init_dtablesize + STREAM_MAX - 1) / STREAM_MAX * STREAM_MAX;
   _hurd_dtable_rlimit = _hurd_dtable.size;
 
   _hurd_dtable.d = malloc (_hurd_dtable.size * sizeof (*_hurd_dtable.d));
@@ -65,7 +67,7 @@ init_dtable (void)
   /* Clear out the initial descriptor table.
      Everything must use _hurd_dtable now.  */
   __vm_deallocate (__mach_task_self (),
-		   _hurd_init_dtable,
+		   (vm_address_t) _hurd_init_dtable,
 		   _hurd_init_dtablesize * sizeof (_hurd_init_dtable[0]));
   _hurd_init_dtable = NULL;
   _hurd_init_dtablesize = 0;
@@ -218,18 +220,18 @@ fork_dtable (task_t newtask)
   for (i = 0; !err && i < _hurd_dtable.size; ++i)
     {
       int dealloc, dealloc_ctty;
-      io_t port = _HURD_PORT_USE (&_hurd_dtable.d[i].port, &dealloc);
-      io_t ctty = _HURD_PORT_USE (&_hurd_dtable.d[i].ctty, &dealloc_ctty);
+      io_t port = _hurd_port_get (&_hurd_dtable.d[i].port, &dealloc);
+      io_t ctty = _hurd_port_get (&_hurd_dtable.d[i].ctty, &dealloc_ctty);
 
       if (port != MACH_PORT_NULL)
 	err = __mach_port_insert_right (newtask, port, port,
-					MACH_PORT_COPY_SEND);
+					MACH_PORT_TYPE_COPY_SEND);
       if (!err && ctty != MACH_PORT_NULL)
 	err = __mach_port_insert_right (newtask, ctty, ctty,
-					MACH_PORT_COPY_SEND);
+					MACH_PORT_TYPE_COPY_SEND);
 
-      _hurd_port_free (port, &dealloc);
-      _hurd_port_free (ctty, &dealloc_ctty);
+      _hurd_port_free (&_hurd_dtable.d[i].port, &dealloc, port);
+      _hurd_port_free (&_hurd_dtable.d[i].ctty, &dealloc_ctty, ctty);
 
       /* XXX for each fd with a cntlmap, reauth and re-map_cntl.  */
     }
@@ -251,18 +253,17 @@ reauth_dtable (void)
 
   for (d = 0; d < _hurd_dtable.size; ++d)
     {
-      struct _hurd_fd *const d = &hurd_dtable.d[d];
+      struct _hurd_fd *const d = &_hurd_dtable.d[d];
       mach_port_t new, newctty;
       
       /* Take the descriptor cell's lock.  */
       __spin_lock (&cell->port.lock);
       
       /* Reauthenticate the descriptor's port.  */
-      if (cell->port.port != MACH_PORT_NULL &&
-	  ! __io_reauthenticate (cell->port.port) &&
-	  ! _HURD_PORT_USE (&_hurd_auth,
-			    __auth_user_authenticate (port,
-						      cell->port.port, &new)))
+      if (d->port.port != MACH_PORT_NULL &&
+	  ! __io_reauthenticate (d->port.port) &&
+	  ! __USEPORT (AUTH, __auth_user_authenticate (port,
+						       d->port.port, &new)))
 	{
 	  /* Replace the port in the descriptor cell
 	     with the newly reauthenticated port.  */
@@ -273,9 +274,9 @@ reauth_dtable (void)
 				__auth_user_authenticate (port,
 							  cell->ctty.port,
 							  &newctty)))
-	    _hurd_port_set (&cell->ctty, newctty);
+	    _hurd_port_set (&d->ctty, newctty);
 
-	  _hurd_port_locked_set (&cell->port, new);
+	  _hurd_port_locked_set (&d->port, new);
 	}
       else
 	/* Lost.  Leave this descriptor cell alone.  */
@@ -296,7 +297,7 @@ rectty_dtable (mach_port_t cttyid)
 
   for (d = 0; d < _hurd_dtable.size; ++d)
     {
-      struct _hurd_fd *const d = &hurd_dtable.d[d];
+      struct _hurd_fd *const d = &_hurd_dtable.d[d];
       mach_port_t newctty;
 
       if (cttyid == MACH_PORT_NULL)
@@ -312,7 +313,7 @@ rectty_dtable (mach_port_t cttyid)
 				   /* Get the ctty io port.  */
 				   __term_become_ctty (port, _hurd_pid,
 						       _hurd_pgrp,
-						       _hurd_sigport,
+						       _hurd_msgport,
 						       &newctty))
 				 /* XXX it is our ctty but the call failed? */
 				 newctty = MACH_PORT_NULL;
@@ -320,6 +321,7 @@ rectty_dtable (mach_port_t cttyid)
 			     }
 			   else
 			     newctty = MACH_PORT_NULL;
+			   0;
 			 }));
 
       /* Install the new ctty port.  */
@@ -343,21 +345,20 @@ tiocstty (int fd,
   error_t err;
   int i;
 
-  if (d.cell == NULL)
-    return __hurd_dfail (fd, EBADF);
-
   /* Get FD's cttyid port, unless it is already ours.  */
   err = _HURD_DPORT_USE (fd,
-			 ctty ? EADDRINUSE : __term_getctty (dport, &cttyid));
+			 ctty ? EADDRINUSE : __term_getctty (port, &cttyid));
   if (err == EADDRINUSE)
     /* FD is already the ctty.  Nothing to do.  */
     return 0;
+  else if (err)
+    return err;
 
   /* Make it our own.  */
   _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], cttyid); /* Consumes ref.  */
 
   /* Reset all the ctty ports in all the descriptors.  */
-  _HURD_PORT_USE (&_hurd_ports[INIT_PORT_CTTYID], rectty_dtable (port));
+  _HURD_PORT_USE (&_hurd_ports[INIT_PORT_CTTYID], (rectty_dtable (port), 0));
 }
 _HURD_HANDLE_IOCTL (tiocstty, TIOCSTTY);
 
@@ -375,6 +376,8 @@ tiocnoctty (int fd,
 
   /* Reset all the ctty ports in all the descriptors.  */
   _HURD_PORT_USE (&_hurd_ports[INIT_PORT_CTTYID],
-		  rectty_dtable (MACH_PORT_NULL));
+		  (rectty_dtable (MACH_PORT_NULL), 0));
+
+  return 0;
 }
 _HURD_HANDLE_IOCTL (tiocnotty, TIOCNOTTY);
