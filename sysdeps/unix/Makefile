@@ -157,9 +157,9 @@ ifdef syscall.h
 # Transmogrify any of several formats of the file into the one we want.
 $(common-objpfx)syscall.h: $(syscall.h)
 	tr '[A-Z]' '[a-z]' < $< | \
-	sed -e 's/\<sys_//' \
+	sed -e 's/[ 	]sys_/ /' \
 	    -e 's/^#define[ 	]*\([a-z0-9_]*\)[ 	]*/#define SYS_\1 /' \
-	    -e 's/\<sys_/SYS_/' \
+	    -e 's/[ 	]sys_/ SYS_/' \
 	    -e '/^#/!d' \
 	> $@-tmp
 	mv $@-tmp $@
