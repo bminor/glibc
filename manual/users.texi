@@ -235,7 +235,8 @@ the total number of supplementary group IDs, then @code{getgroups}
 returns a value of @code{-1} and @code{errno} is set to @code{EINVAL}.
 
 If @var{count} is zero, then @code{getgroups} just returns the total
-number of supplementary group IDs.
+number of supplementary group IDs.  On systems that do not support
+supplementary groups, this will always be zero.
 
 Here's how to use @code{getgroups} to read all the supplementary group
 IDs:
