@@ -298,7 +298,7 @@ see @ref{Unconstrained Allocation}.
 @deftypefun {char *} stpcpy (char *@var{to}, const char *@var{from})
 This function is like @code{strcpy}, except that it returns a pointer to
 the end of the string @var{to} (that is, the address of the terminating
-null pointer) rather than the beginning.
+null character) rather than the beginning.
 
 For example, this program uses @code{stpcpy} to concatenate @samp{foo}
 and @samp{bar} to produce @samp{foobar}, which it then prints.
