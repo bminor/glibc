@@ -59,9 +59,9 @@ m88k)
   machine=m88k/m88100 ;;
 m88???)
   machine=m88k/$machine ;;
-mips|r2000)
-  machine=mips/r3000 ;;
-r[34]000)
+mips64*)
+  machine=mips/mips64/$machine ;;
+mips*)
   machine=mips/$machine ;;
 esac
 
