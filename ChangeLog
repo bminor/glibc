@@ -1,3 +1,47 @@
+2004-12-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Add support
+	for pid caching in nptl.
+
+2004-12-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Add support
+	for pid caching in nptl.
+
+2004-10-18  Maciej W. Rozycki  <macro@mips.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h (__cmsg_nxthdr): Use
+	__NTH instead of __THROW in the inline definition.
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h (_test_and_set): Likewise.
+
+	* sysdeps/mips/bits/dlfcn.h (RTLD_DEEPBIND): New macro.
+
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h
+	(PROT_GROWSDOWN, PROT_GROWSUP): New macros.
+
+2004-10-06  Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/powerpc/powerpc64/ppc-mcount.S (PROF): Don't undef.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/brk.S: Invoke CALL_MOUNT.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S: Likewise.
+
+2004-10-19  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/hooks.c (mem2chunk_check, top_check): Handle
+	non-contiguous arena.  Reported by Michael Dalton
+	<mwdalton@stanford.edu> [BZ #457].  Add further checks for top chunk.
+
+2004-12-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/posix/sysconf.c (__sysconf_check_spec): Remove leading
+	underscore from GETCONF_DIR filenames.
+
 2004-12-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/de.po: Update from translation team.
