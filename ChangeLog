@@ -1,3 +1,23 @@
+2002-03-14  Roland McGrath  <roland@frob.com>
+
+	* Makerules ($(common-objpfx)Versions.v.i): Depend on abi-versions.h.
+
+	* Makeconfig (%.v.i, %.v): New implicit rules.
+	(preprocess-versions): Variable removed.
+	($(common-objpfx)shlib-versions.v.i): New target giving just the
+	shlib-versions input files as dependencies.
+	($(common-objpfx)soversions.i): Depend on that instead of the input
+	files.  Use it as input instead of using a pipeline.
+	(postclean-generated): Append soversions.i, shlib-versions.v, and
+	shlib-versions.v.i here.
+	* Makerules ($(common-objpfx)Versions.def.v.i): New target giving just
+	the Versions.def input files as dependencies.
+	($(common-objpfx)Versions.v.i): Likewise for Versions files.
+	($(common-objpfx)Versions.all): Depend on that instead of the input
+	files.  Use it as input instead of using a pipeline.
+	($(common-objpfx)sysd-versions): Likewise with Versions.v.i.
+	(postclean-generated): Append those .v and .v.i files here.
+
 2002-03-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/tst-printf.sh: Adjust for last change in tst-printf.c.
@@ -29,7 +49,7 @@
 	(tz_compute): Likewise.  Don't handle southern hemisphere here.
 	(__tz_convert): But here.
 
-2002-03-11  Jakub Jelinek  <jakub@redhat.com> 
+2002-03-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc64/configure.in: New file.
 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_load_address): Fix
