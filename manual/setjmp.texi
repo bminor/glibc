@@ -30,8 +30,8 @@ phases all have to explicitly deal with error situations initially
 detected by nested calls.
 
 (On the other hand, if each of these phases has to do a substantial
-amount of cleanup when it exits --- such as closing files, deallocating
-buffers or other data structures, and the like --- then it can be more
+amount of cleanup when it exits---such as closing files, deallocating
+buffers or other data structures, and the like---then it can be more
 appropriate to do a normal return and have each phase do its own
 cleanup, because a non-local exit would bypass the intervening phases and
 their associated cleanup code entirely.  Alternatively, you could use a
@@ -190,14 +190,14 @@ them @code{volatile}.
 @section Non-Local Exits and Blocked Signals
 
 In BSD Unix systems, @code{setjmp} and @code{longjmp} also save and
-restore the set of blocked signals; @pxref{Blocking Signals}.  However,
+restore the set of blocked signals; see @ref{Blocking Signals}.  However,
 the POSIX.1 standard requires @code{setjmp} and @code{longjmp} not to
 change the set of blocked signals, and provides an additional pair of
 functions (@code{sigsetjmp} and @code{sigsetjmp}) to get the BSD
 behavior.
 
 The behavior of @code{setjmp} and @code{longjmp} in the GNU library is
-controlled by feature test macros; @pxref{Feature Test Macros}.  The
+controlled by feature test macros; see @ref{Feature Test Macros}.  The
 default in the GNU system is the POSIX.1 behavior rather than the BSD
 behavior.
 
