@@ -1,3 +1,13 @@
+1999-11-13  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h: Sync with
+	header files from other architectures.
+	* sysdeps/unix/sysv/linux/sparc/bits/signum.h: Add SIGPWR define
+	from current kernel headers.
+
+	* sunrpc/key_call.c: Use /usr/etc/keyenvoy only if we don't have
+	SO_PASSCRED defined.
+
 1999-11-12  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nss_nisplus/nisplus-publickey.c: Check for snprintf return value.
