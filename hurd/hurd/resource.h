@@ -28,11 +28,21 @@ extern struct rlimit _hurd_rlimits[RLIM_NLIMITS];
 extern struct mutex _hurd_rlimit_lock; /* Locks _hurd_rlimits.  */
 
 
-/* Helper function for getpriority and setpriority.
-   Maps FUNCTION over all the processes specified by WHICH and WHO.
-   Returns FUNCTION's result the first time it returns nonzero.
-   If FUNCTION never returns nonzero, this returns zero.  */
+/* Helper function for getpriority and setpriority.  Maps FN over all the
+   processes specified by WHICH and WHO.  PI is non-null if a
+   proc_getprocinfo was already done; FN may use *PI arbitrarily, it is
+   reset on the next call.  Returns FN's result the first time it returns
+   nonzero.  If FN never returns nonzero, this returns zero.  */
 extern error_t _hurd_priority_which_map (enum __priority_which which, int who,
-					 error_t (*function) (pid_t));
+					 error_t (*fn) (pid_t pid,
+							struct procinfo *pi));
+
+/* Convert between Mach priority values and the priority
+   values used by getpriority, setpriority, and nice.  */
+#define MACH_PRIORITY_TO_NICE(prio) (2 * ((prio) - 12))
+#define NICE_TO_MACH_PRIORITY(nice) (12 + ((nice) / 2))
+
+
+
 
 #endif
