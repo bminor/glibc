@@ -127,7 +127,7 @@ extern int EXFUN(access, (CONST char *__name, int __type));
    beginning of the file (if WHENCE is SEEK_SET),
    the current position (if WHENCE is SEEK_CUR),
    or the end of the file (if WHENCE is SEEK_END).
-   Return the old file position.  */
+   Return the new file position.  */
 extern __off_t EXFUN(__lseek, (int __fd, __off_t __offset, int __whence));
 extern __off_t EXFUN(lseek, (int __fd, __off_t __offset, int __whence));
 
