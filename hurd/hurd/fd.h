@@ -40,30 +40,11 @@ struct hurd_fd
   };
 
 
-/* Structure representing a file descriptor table.  */
-
-struct hurd_dtable
-  {
-    int size;			/* Number of elts in `d' array.  */
-
-    /* Uses of individual descriptors are not locked.  It is up to the user
-       to synchronize descriptor operations on a single descriptor.  */
-    struct hurd_fd **d;
-  };
-
 /* Current file descriptor table.  */
 
-extern struct hurd_dtable _hurd_dtable;
-
-/* If not NULL, points to the chain of users of `_hurd_dtable'.
-   See <hurd/userlink.h>.  */
-
-extern struct hurd_userlink *_hurd_dtable_users;
-
-extern int _hurd_dtable_rlimit;	/* RLIM_OFILES: number of file descriptors.  */
-
-/* This locks _hurd_dtable, _hurd_dtable_users, and _hurd_dtable_rlimit.  */
-extern struct mutex _hurd_dtable_lock;
+extern int _hurd_dtablesize;
+extern struct hurd_fd **_hurd_dtable;
+extern struct mutex _hurd_dtable_lock; /* Locks those two variables.  */
 
 #include <hurd/signal.h>
 #include <lock-intern.h>
@@ -72,120 +53,50 @@ extern struct mutex _hurd_dtable_lock;
 #define _EXTERN_INLINE extern __inline
 #endif
 
-/* Get a descriptor table structure to use.
-   Pass this structure and ULINK to _hurd_dtable_free when done.  */
-
-_EXTERN_INLINE struct hurd_dtable
-_hurd_dtable_get (struct hurd_userlink *ulink)
-{
-  struct hurd_dtable dtable;
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_dtable_lock);
-  _hurd_userlink_link (&_hurd_dtable_users, ulink);
-  dtable = _hurd_dtable;
-  __mutex_unlock (&_hurd_dtable_lock);
-  HURD_CRITICAL_END;
-  return dtable;
-}
-
-
-/* Function to deallocate a descriptor table's `struct hurd_fd' array.
-   This is expected to be either `free' or a null pointer.  */
-
-extern void (*_hurd_dtable_deallocate) (void *);
-
-/* Free a reference gotten with `DTABLE = _hurd_dtable_get (ULINK);' */
-
-_EXTERN_INLINE void
-_hurd_dtable_free (struct hurd_dtable dtable,
-		   struct hurd_userlink *ulink)
-{
-  int dealloc;
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_dtable_lock);
-  dealloc = _hurd_userlink_unlink (ulink);
-  __mutex_unlock (&_hurd_dtable_lock);
-  HURD_CRITICAL_END;
-  if (dealloc && _hurd_dtable_deallocate)
-    (*_hurd_dtable_deallocate) (dtable.d);
-}
-
-
-/* Return the descriptor cell for FD in DTABLE, locked.
+/* Returns the descriptor cell for FD, locked.
    If FD is invalid or unused, return NULL.  */
 
 _EXTERN_INLINE struct hurd_fd *
-_hurd_dtable_fd (int fd, struct hurd_dtable dtable)
+_hurd_fd_get (int fd)
 {
-  if (fd < 0 || fd >= dtable.size)
-    return NULL;
+  struct hurd_fd *descriptor;
+  HURD_CRITICAL_BEGIN;
+  __mutex_lock (&_hurd_dtable_lock);
+  if (fd < 0 || fd >= _hurd_dtablesize)
+    descriptor = NULL;
   else
     {
-      struct hurd_fd *cell = dtable.d[fd];
+      struct hurd_fd *cell = _hurd_dtable[fd];
       if (cell == NULL)
 	/* No descriptor allocated at this index.  */
-	return NULL;
-      __spin_lock (&cell->port.lock);
-      if (cell->port.port == MACH_PORT_NULL)
+	descriptor = NULL;
+      else
 	{
-	  /* The descriptor at this index has no port in it.
-	     This happens if it existed before but was closed.  */
-	  __spin_unlock (&cell->port.lock);
-	  return NULL;
+	  __spin_lock (&cell->port.lock);
+	  if (cell->port.port == MACH_PORT_NULL)
+	    {
+	      /* The descriptor at this index has no port in it.
+		 This happens if it existed before but was closed.  */
+	      __spin_unlock (&cell->port.lock);
+	      descriptor = NULL;
+	    }
+	  else
+	    descriptor = cell;
 	}
-      return cell;
     }
-}
-
-struct hurd_fd_user
-  {
-    struct hurd_dtable dtable;
-    struct hurd_fd *d;
-  };
-
-/* Returns the descriptor cell for FD, locked.  The passed ULINK structure
-   and returned structure hold onto the descriptor table to it doesn't move
-   while you might be using a pointer into it.  */
-
-_EXTERN_INLINE struct hurd_fd_user
-_hurd_fd_get (int fd, struct hurd_userlink *ulink)
-{
-  struct hurd_fd_user d;
-  d.dtable = _hurd_dtable_get (ulink);
-  d.d = _hurd_dtable_fd (fd, d.dtable);
-  if (d.d == NULL)
-    _hurd_dtable_free (d.dtable, ulink);
-  return d;
-}
-
-/* Free a reference gotten with `D = _hurd_fd_get (FD, ULINK);'.
-   The descriptor cell D.d should be unlocked before calling this function.  */
-
-_EXTERN_INLINE void
-_hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
-{
-  _hurd_dtable_free (d.dtable, ulink);
+  __mutex_unlock (&_hurd_dtable_lock);
+  HURD_CRITICAL_END;
+  return descriptor;
 }
 
 
 /* Evaluate EXPR with the variable `descriptor' bound to a pointer to the
-   locked file descriptor structure for FD.  */
+   locked file descriptor structure for FD.  EXPR should unlock the
+   descriptor when it is finished.  */
 
 #define	HURD_FD_USE(fd, expr)						      \
-  ({ struct hurd_userlink __dt_ulink;					      \
-     error_t __result;							      \
-     HURD_CRITICAL_BEGIN;						      \
-     struct hurd_fd_user __d = _hurd_fd_get (fd, &__dt_ulink);		      \
-     if (__d.d == NULL)							      \
-       __result = EBADF;						      \
-     else								      \
-       {								      \
-	 struct hurd_fd *const descriptor = __d.d;			      \
-	 __result = (expr);						      \
-	 _hurd_fd_free (__d, &__dt_ulink);				      \
-       }								      \
-     HURD_CRITICAL_END;							      \
-     __result; })
+  ({ struct hurd_fd *const descriptor = _hurd_fd_get (fd);		      \
+     descriptor == NULL ? EBADF : (expr); })
 
 /* Evaluate EXPR with the variable `port' bound to the port to FD,
    and `ctty' bound to the ctty port.  */
@@ -193,7 +104,8 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
 #define HURD_DPORT_USE(fd, expr) \
   HURD_FD_USE ((fd), HURD_FD_PORT_USE (descriptor, (expr)))
 
-/* Likewise, but FD is a pointer to the locked file descriptor structure.  */
+/* Likewise, but FD is a pointer to the locked file descriptor structure.
+   It is unlocked on return.  */
 
 #define	HURD_FD_PORT_USE(fd, expr)					      \
   ({ error_t __result;							      \
@@ -209,6 +121,24 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
 
 #include <errno.h>
 
+/* Check if ERR should generate a signal.
+   Returns the signal to take, or zero if none.  */
+
+_EXTERN_INLINE error_t
+_hurd_fd_error_signal (error_t err)
+{
+  switch (err)
+    {
+    case MACH_SEND_INVALID_DEST: /* The server has disappeared!  */
+      return SIGLOST;
+    case EPIPE:
+      return SIGPIPE;
+    default:
+      /* Having a default case avoids -Wenum-switch warnings.  */
+      return 0;
+    }
+}
+
 /* Handle an error from an RPC on a file descriptor's port.  You should
    always use this function to handle errors from RPCs made on file
    descriptor ports.  Some errors are translated into signals.  */   
@@ -216,18 +146,9 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
 _EXTERN_INLINE error_t
 _hurd_fd_error (int fd, error_t err)
 {
-  switch (err)
-    {
-    case MACH_SEND_INVALID_DEST: /* The server has disappeared!  */
-      _hurd_raise_signal (NULL, SIGLOST, fd);
-      break;
-    case EPIPE:
-      _hurd_raise_signal (NULL, SIGPIPE, fd);
-      break;
-    default:
-      /* Having a default case avoids -Wenum-switch warnings.  */
-      break;
-    }
+  int signo = _hurd_fd_error_signal (err);
+  if (signo)
+    _hurd_raise_signal (NULL, signo, fd);
   return err;
 }
 
@@ -267,6 +188,11 @@ extern struct hurd_fd *_hurd_alloc_fd (int *fd_ptr, int first_fd);
 
 extern struct hurd_fd *_hurd_new_fd (io_t port, io_t ctty);
 
+/* Close a file descriptor, making it available for future reallocation.
+   FD should be locked, and is unlocked on return.  */
+
+extern error_t _hurd_fd_close (struct hurd_fd *fd);
+
 /* Read and write data from a file descriptor; just like `read' and `write'.
    If successful, stores the amount actually read or written in *NBYTES.  */
 
@@ -301,12 +227,14 @@ extern int hurd_register_ioctl_handler (int first_request, int last_request,
 							__gnuc_va_list));
 
 
-/* Define a library-internal handler for ioctl commands
-   between FIRST and LAST inclusive.  */
+/* Define a library-internal handler for ioctl commands between FIRST and
+   LAST inclusive.  The last element gratuitously references HANDLER to
+   avoid `defined but not used' warnings.  */
 
 #define	_HURD_HANDLE_IOCTLS(handler, first, last)			      \
   static const struct ioctl_handler handler##_ioctl_handler =		      \
-    { first, last, handler, NULL };					      \
+    { (first), (last), (int (*) (int, int, __gnuc_va_list)) (handler),	      \
+	(void *) &(handler) - (void *) &(handler) };			      \
   text_set_element (_hurd_ioctl_handler_lists, ##handler##_ioctl_handler)
 
 /* Define a library-internal handler for a single ioctl command.  */
