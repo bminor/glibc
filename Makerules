@@ -148,7 +148,7 @@ $(objpfx)%.dep: $(objpfx)%.c $(before-compile); $(+make-deps)
 # be suppressed.
 ifdef inhibit-sysdep-asm
 define open-check-inhibit-asm
-case $$dir in $(subst $(empty) ,|,$(inhibit-sysdep-asm))) ;; *)
+case $$sysdir in $(subst $(empty) ,|,$(inhibit-sysdep-asm))) ;; *)
 endef
 close-check-inhibit-asm = ;; esac
 endif
@@ -158,8 +158,8 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 			  $(wildcard $(foreach dir,$(sysdirs),\
 					       $(sysdep_dir)/$(dir)/Makefile))
 	-@rm -f $@T
-	(for dir in $(sysdirs); do		   			      \
-	   dir="\$$(sysdep_dir)/$$dir";					      \
+	(for sysdir in $(sysdirs); do		   			      \
+	   dir="\$$(sysdep_dir)/$$sysdir";				      \
 	   $(open-check-inhibit-asm) \
 	   echo "\$$(objpfx)%.o: $$dir/%.S \$$(before-compile); \
 		\$$(compile-command.S)";				      \
