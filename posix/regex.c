@@ -1,6 +1,6 @@
 /* Extended regular expression matching and search library,
    version 0.12.
-   (Implements POSIX draft P10003.2/D11.2, except for
+   (Implements POSIX draft P1003.2/D11.2, except for some of the
    internationalization features.)
 
    Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
@@ -40,6 +40,13 @@
 #else
 /* We need this for `regex.h', and perhaps for the Emacs include files.  */
 #include <sys/types.h>
+#endif
+
+/* For platform which support the ISO C amendement 1 functionality we
+   support user defined character classes.  */
+#if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
+# include <wctype.h>
+# include <wchar.h>
 #endif
 
 /* This is for other GNU distributions with internationalized messages.  */
@@ -618,6 +625,7 @@ print_partial_compiled_pattern (start, end)
     unsigned char *end;
 {
   int mcnt, mcnt2;
+  unsigned char *p1;
   unsigned char *p = start;
   unsigned char *pend = end;
 
@@ -759,20 +767,23 @@ print_partial_compiled_pattern (start, end)
 
         case succeed_n:
           extract_number_and_incr (&mcnt, &p);
+	  p1 = p + mcnt;
           extract_number_and_incr (&mcnt2, &p);
-	  printf ("/succeed_n to %d, %d times", p + mcnt - start, mcnt2);
+	  printf ("/succeed_n to %d, %d times", p1 - start, mcnt2);
           break;
 
         case jump_n:
           extract_number_and_incr (&mcnt, &p);
+	  p1 = p + mcnt;
           extract_number_and_incr (&mcnt2, &p);
-	  printf ("/jump_n to %d, %d times", p + mcnt - start, mcnt2);
+	  printf ("/jump_n to %d, %d times", p1 - start, mcnt2);
           break;
 
         case set_number_at:
           extract_number_and_incr (&mcnt, &p);
+	  p1 = p + mcnt;
           extract_number_and_incr (&mcnt2, &p);
-	  printf ("/set_number_at location %d to %d", p + mcnt - start, mcnt2);
+	  printf ("/set_number_at location %d to %d", p1 - start, mcnt2);
           break;
 
         case wordbound:
@@ -850,7 +861,8 @@ print_compiled_pattern (bufp)
   unsigned char *buffer = bufp->buffer;
 
   print_partial_compiled_pattern (buffer, buffer + bufp->used);
-  printf ("%d bytes used/%d bytes allocated.\n", bufp->used, bufp->allocated);
+  printf ("%ld bytes used/%ld bytes allocated.\n",
+	  bufp->used, bufp->allocated);
 
   if (bufp->fastmap_accurate && bufp->fastmap)
     {
@@ -865,7 +877,7 @@ print_compiled_pattern (bufp)
   printf ("no_sub: %d\t", bufp->no_sub);
   printf ("not_bol: %d\t", bufp->not_bol);
   printf ("not_eol: %d\t", bufp->not_eol);
-  printf ("syntax: %d\n", bufp->syntax);
+  printf ("syntax: %lx\n", bufp->syntax);
   /* Perhaps we should print the translate table?  */
 }
 
@@ -878,7 +890,7 @@ print_double_string (where, string1, size1, string2, size2)
     int size1;
     int size2;
 {
-  unsigned this_char;
+  int this_char;
 
   if (where == NULL)
     printf ("(null)");
@@ -941,6 +953,12 @@ re_set_syntax (syntax)
   reg_syntax_t ret = re_syntax_options;
 
   re_syntax_options = syntax;
+#ifdef DEBUG
+  if (syntax & RE_DEBUG)
+    debug = 1;
+  else if (debug) /* was on but now is not */
+    debug = 0;
+#endif /* DEBUG */
   return ret;
 }
 
@@ -1021,22 +1039,24 @@ static const char *re_error_msgid[] =
 #endif
 
 /* Roughly the maximum number of failure points on the stack.  Would be
-   exactly that if always used MAX_FAILURE_SPACE each time we failed.
+   exactly that if always used MAX_FAILURE_ITEMS items each time we failed.
    This is a variable only so users of regex can assign to it; we never
    change it ourselves.  */
 
 #ifdef INT_IS_16BIT
 
 #if defined (MATCH_MAY_ALLOCATE)
-long re_max_failures = 4000;
+/* 4400 was enough to cause a crash on Alpha OSF/1,
+   whose default stack limit is 2mb.  */
+long int re_max_failures = 4000;
 #else
-long re_max_failures = 2000;
+long int re_max_failures = 2000;
 #endif
 
 union fail_stack_elt
 {
   unsigned char *pointer;
-  long integer;
+  long int integer;
 };
 
 typedef union fail_stack_elt fail_stack_elt_t;
@@ -1044,8 +1064,8 @@ typedef union fail_stack_elt fail_stack_elt_t;
 typedef struct
 {
   fail_stack_elt_t *stack;
-  unsigned long size;
-  unsigned long avail;                 /* Offset of next open position.  */
+  unsigned long int size;
+  unsigned long int avail;		/* Offset of next open position.  */
 } fail_stack_type;
 
 #else /* not INT_IS_16BIT */
@@ -1053,7 +1073,7 @@ typedef struct
 #if defined (MATCH_MAY_ALLOCATE)
 /* 4400 was enough to cause a crash on Alpha OSF/1,
    whose default stack limit is 2mb.  */
-int re_max_failures = 4000;
+int re_max_failures = 20000;
 #else
 int re_max_failures = 2000;
 #endif
@@ -1245,7 +1265,7 @@ typedef struct
     DEBUG_PRINT2 ("  Pushing high active reg: %d\n", highest_active_reg);\
     PUSH_FAILURE_INT (highest_active_reg);				\
 									\
-    DEBUG_PRINT2 ("  Pushing pattern 0x%x: ", pattern_place);		\
+    DEBUG_PRINT2 ("  Pushing pattern 0x%x:\n", pattern_place);		\
     DEBUG_PRINT_COMPILED_PATTERN (bufp, pattern_place, pend);		\
     PUSH_FAILURE_POINTER (pattern_place);				\
 									\
@@ -1329,7 +1349,7 @@ typedef struct
   DEBUG_PRINT1 ("'\n");							\
 									\
   pat = (unsigned char *) POP_FAILURE_POINTER ();			\
-  DEBUG_PRINT2 ("  Popping pattern 0x%x: ", pat);			\
+  DEBUG_PRINT2 ("  Popping pattern 0x%x:\n", pat);			\
   DEBUG_PRINT_COMPILED_PATTERN (bufp, pat, pend);			\
 									\
   /* Restore register info.  */						\
@@ -1548,7 +1568,7 @@ static reg_errcode_t compile_range _RE_ARGS ((const char **p_ptr,
    MSC and drop MAX_BUF_SIZE a bit.  Otherwise you may end up
    reallocating to 0 bytes.  Such thing is not going to work too well.
    You have been warned!!  */
-#ifdef _MSC_VER
+#if defined(_MSC_VER)  && !defined(WIN32)
 /* Microsoft C 16-bit versions limit malloc to approx 65512 bytes.
    The REALLOC define eliminates a flurry of conversion warnings,
    but is not required. */
@@ -1656,15 +1676,29 @@ typedef struct
        } 								\
     }
 
-#define CHAR_CLASS_MAX_LENGTH  6 /* Namely, `xdigit'.  */
+#if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
+/* The GNU C library provides support for user-defined character classes
+   and the functions from ISO C amendement 1.  */
+# ifdef CHARCLASS_NAME_MAX
+#  define CHAR_CLASS_MAX_LENGTH CHARCLASS_NAME_MAX
+# else
+/* This shouldn't happen but some implementation might still have this
+   problem.  Use a reasonable default value.  */
+#  define CHAR_CLASS_MAX_LENGTH 256
+# endif
 
-#define IS_CHAR_CLASS(string)						\
+# define IS_CHAR_CLASS(string) wctype (string)
+#else
+# define CHAR_CLASS_MAX_LENGTH  6 /* Namely, `xdigit'.  */
+
+# define IS_CHAR_CLASS(string)						\
    (STREQ (string, "alpha") || STREQ (string, "upper")			\
     || STREQ (string, "lower") || STREQ (string, "digit")		\
     || STREQ (string, "alnum") || STREQ (string, "xdigit")		\
     || STREQ (string, "space") || STREQ (string, "print")		\
     || STREQ (string, "punct") || STREQ (string, "graph")		\
     || STREQ (string, "cntrl") || STREQ (string, "blank"))
+#endif
 
 #ifndef MATCH_MAY_ALLOCATE
 
@@ -2142,6 +2176,34 @@ regex_compile (pattern, size, syntax, bufp)
                        the leading `:' and `[' (but set bits for them).  */
                     if (c == ':' && *p == ']')
                       {
+#if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
+                        boolean is_lower = STREQ (str, "lower");
+                        boolean is_upper = STREQ (str, "upper");
+			wctype_t wt;
+                        int ch;
+
+			wt = wctype (str);
+			if (wt == 0)
+			  FREE_STACK_RETURN (REG_ECTYPE);
+
+                        /* Throw away the ] at the end of the character
+                           class.  */
+                        PATFETCH (c);
+
+                        if (p == pend) FREE_STACK_RETURN (REG_EBRACK);
+
+                        for (ch = 0; ch < 1 << BYTEWIDTH; ++ch)
+			  {
+			    if (iswctype (btowc (ch), wt))
+			      SET_LIST_BIT (ch);
+
+			    if (translate && (is_upper || is_lower)
+				&& (ISUPPER (ch) || ISLOWER (ch)))
+			      SET_LIST_BIT (ch);
+			  }
+
+                        had_char_class = true;
+#else
                         int ch;
                         boolean is_alnum = STREQ (str, "alnum");
                         boolean is_alpha = STREQ (str, "alpha");
@@ -2189,6 +2251,7 @@ regex_compile (pattern, size, syntax, bufp)
 			      SET_LIST_BIT (ch);
                           }
                         had_char_class = true;
+#endif	/* libc || wctype.h */
                       }
                     else
                       {
@@ -3546,12 +3609,14 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
            : (d) == string2 - 1 ? *(end1 - 1) : *(d))			\
    == Sword)
 
+/* Disabled due to a compiler bug -- see comment at case wordbound */
+#if 0
 /* Test if the character before D and the one at D differ with respect
    to being word-constituent.  */
 #define AT_WORD_BOUNDARY(d)						\
   (AT_STRINGS_BEG (d) || AT_STRINGS_END (d)				\
    || WORDCHAR_P (d - 1) != WORDCHAR_P (d))
-
+#endif
 
 /* Free everything we malloc.  */
 #ifdef MATCH_MAY_ALLOCATE
@@ -3882,7 +3947,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
       dend = end_match_2;
     }
 
-  DEBUG_PRINT1 ("The compiled pattern is: ");
+  DEBUG_PRINT1 ("The compiled pattern is:\n");
   DEBUG_PRINT_COMPILED_PATTERN (bufp, p, pend);
   DEBUG_PRINT1 ("The string to match is: `");
   DEBUG_PRINT_DOUBLE_STRING (d, string1, size1, string2, size2);
@@ -3893,7 +3958,11 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
      fails at this starting point in the input data.  */
   for (;;)
     {
+#ifdef _LIBC
+      DEBUG_PRINT2 ("\n%p: ", p);
+#else
       DEBUG_PRINT2 ("\n0x%x: ", p);
+#endif
 
       if (p == pend)
 	{ /* End of pattern means we might have succeeded.  */
@@ -4472,7 +4541,11 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
           DEBUG_PRINT1 ("EXECUTING on_failure_keep_string_jump");
 
           EXTRACT_NUMBER_AND_INCR (mcnt, p);
+#ifdef _LIBC
+          DEBUG_PRINT3 (" %d (to %p):\n", mcnt, p + mcnt);
+#else
           DEBUG_PRINT3 (" %d (to 0x%x):\n", mcnt, p + mcnt);
+#endif
 
           PUSH_FAILURE_POINT (p + mcnt, NULL, -2);
           break;
@@ -4495,7 +4568,11 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
           DEBUG_PRINT1 ("EXECUTING on_failure_jump");
 
           EXTRACT_NUMBER_AND_INCR (mcnt, p);
+#ifdef _LIBC
+          DEBUG_PRINT3 (" %d (to %p)", mcnt, p + mcnt);
+#else
           DEBUG_PRINT3 (" %d (to 0x%x)", mcnt, p + mcnt);
+#endif
 
           /* If this on_failure_jump comes right before a group (i.e.,
              the original * applied to a group), save the information
@@ -4708,16 +4785,26 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
                                dummy_low_reg, dummy_high_reg,
                                reg_dummy, reg_dummy, reg_info_dummy);
           }
-          /* Note fall through.  */
+	  /* Note fall through.  */
 
+	unconditional_jump:
+#ifdef _LIBC
+	  DEBUG_PRINT2 ("\n%p: ", p);
+#else
+	  DEBUG_PRINT2 ("\n0x%x: ", p);
+#endif
+          /* Note fall through.  */
 
         /* Unconditionally jump (without popping any failure points).  */
         case jump:
-	unconditional_jump:
 	  EXTRACT_NUMBER_AND_INCR (mcnt, p);	/* Get the amount to jump.  */
           DEBUG_PRINT2 ("EXECUTING jump %d ", mcnt);
 	  p += mcnt;				/* Do the jump.  */
+#ifdef _LIBC
+          DEBUG_PRINT2 ("(to %p).\n", p);
+#else
           DEBUG_PRINT2 ("(to 0x%x).\n", p);
+#endif
 	  break;
 
 
@@ -4766,11 +4853,19 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
                mcnt--;
 	       p += 2;
                STORE_NUMBER_AND_INCR (p, mcnt);
-               DEBUG_PRINT3 ("  Setting 0x%x to %d.\n", p, mcnt);
+#ifdef _LIBC
+               DEBUG_PRINT3 ("  Setting %p to %d.\n", p - 2, mcnt);
+#else
+               DEBUG_PRINT3 ("  Setting 0x%x to %d.\n", p - 2, mcnt);
+#endif
             }
 	  else if (mcnt == 0)
             {
+#ifdef _LIBC
+              DEBUG_PRINT2 ("  Setting two bytes from %p to no_op.\n", p+2);
+#else
               DEBUG_PRINT2 ("  Setting two bytes from 0x%x to no_op.\n", p+2);
+#endif
 	      p[2] = (unsigned char) no_op;
               p[3] = (unsigned char) no_op;
               goto on_failure;
@@ -4786,6 +4881,11 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
             {
                mcnt--;
                STORE_NUMBER (p + 2, mcnt);
+#ifdef _LIBC
+               DEBUG_PRINT3 ("  Setting %p to %d.\n", p + 2, mcnt);
+#else
+               DEBUG_PRINT3 ("  Setting 0x%x to %d.\n", p + 2, mcnt);
+#endif
 	       goto unconditional_jump;
             }
           /* If don't have to jump any more, skip over the rest of command.  */
@@ -4800,7 +4900,11 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
             EXTRACT_NUMBER_AND_INCR (mcnt, p);
             p1 = p + mcnt;
             EXTRACT_NUMBER_AND_INCR (mcnt, p);
+#ifdef _LIBC
+            DEBUG_PRINT3 ("  Setting %p to %d.\n", p1, mcnt);
+#else
             DEBUG_PRINT3 ("  Setting 0x%x to %d.\n", p1, mcnt);
+#endif
 	    STORE_NUMBER (p1, mcnt);
             break;
           }
@@ -5312,7 +5416,13 @@ re_compile_pattern (pattern, length, bufp)
 /* BSD has one and only one pattern buffer.  */
 static struct re_pattern_buffer re_comp_buf;
 
-char * weak_function
+char *
+#ifdef _LIBC
+/* Make these definitions weak in libc, so POSIX programs can redefine
+   these names if they don't use our functions, and still use
+   regcomp/regexec below without link errors.  */
+weak_function
+#endif
 re_comp (s)
     const char *s;
 {
@@ -5353,7 +5463,10 @@ re_comp (s)
 }
 
 
-int weak_function
+int
+#ifdef _LIBC
+weak_function
+#endif
 re_exec (s)
     const char *s;
 {
