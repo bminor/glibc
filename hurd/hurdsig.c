@@ -17,6 +17,8 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <gnu-stabs.h>
 
 struct mutex _hurd_siglock;
@@ -48,7 +50,9 @@ _hurd_thread_sigstate (thread_t thread)
       if (ss == NULL)
 	__libc_fatal ("hurd: Can't allocate thread sigstate\n");
       ss->thread = thread;
+#ifdef noteve
       __mutex_init (&ss->lock);
+#endif
       ss->next = _hurd_sigstates;
       _hurd_sigstates = ss;
     }
@@ -58,6 +62,12 @@ _hurd_thread_sigstate (thread_t thread)
 }
 
 #include <hurd/core.h>
+#include <hurd/paths.h>
+#include <setjmp.h>
+#include <fcntl.h>
+#include <sys/wait.h>
+
+jmp_buf _hurd_sigthread_fault_env;
 
 /* Limit on size of core files.  */
 int _hurd_core_limit;
@@ -95,14 +105,12 @@ write_corefile (int signo, int sigcode)
     {
       name = getenv ("COREFILE");
       if (name != NULL)
-	file = __path_lookup (name, FS_LOOKUP_WRITE|FS_LOOKUP_CREATE,
-			      0666 & ~_hurd_umask);
+	file = __path_lookup (name, O_WRONLY|O_CREAT, 0666 & ~_hurd_umask);
     }
   if (name == NULL || file == MACH_PORT_NULL)
     {
-      name = "core";
-      file = __path_lookup (name, FS_LOOKUP_WRITE|FS_LOOKUP_CREATE,
-			    0666 & ~_hurd_umask);
+      name = (char *) "core";
+      file = __path_lookup (name, O_WRONLY|O_CREAT, 0666 & ~_hurd_umask);
     }
 
   if (file == MACH_PORT_NULL)
@@ -115,7 +123,7 @@ write_corefile (int signo, int sigcode)
     {
       target = getenv ("GNUTARGET");
       /* Fault now if TARGET is a bogus string.  */
-      (void) strlen (target)
+      (void) strlen (target);
     }
 
   err = __core_dump_task (coreserver,
@@ -126,9 +134,9 @@ write_corefile (int signo, int sigcode)
   __mach_port_deallocate (__mach_task_self (), coreserver);
   if (!err && _hurd_core_limit != RLIM_INFINITY)
     {
-      io_statbuf_t stb;
+      struct stat stb;
       err = __io_stat (file, &stb);
-      if (!err && stb.stb_size > _hurd_core_limit)
+      if (!err && stb.st_size > _hurd_core_limit)
 	err = EFBIG;
     }
   __mach_port_deallocate (__mach_task_self (), file);
@@ -170,14 +178,14 @@ abort_rpcs (struct _hurd_sigstate *ss, int signo, void *state)
 	    } msg;
 	  kern_return_t err;
 
-	  msg.header.msgh_request_port = ss->intr_port;
-	  msg.header.msgh_reply_port = __mach_reply_port ();
+	  msg.header.msgh_remote_port = ss->intr_port;
+	  msg.header.msgh_local_port = __mach_reply_port ();
 	  msg.header.msgh_seqno = 0;
 	  msg.header.msgh_id = 33000; /* interrupt_operation XXX */
 	  err = __mach_msg (&msg.header,
 			    MACH_SEND_MSG|MACH_RCV_MSG|MACH_RCV_TIMEOUT,
 			    sizeof (msg.header), sizeof (msg),
-			    msg.header.msgh_reply_port,
+			    msg.header.msgh_local_port,
 			    _hurd_interrupt_timeout,
 			    MACH_PORT_NULL);
 	  if (err != MACH_MSG_SUCCESS)
@@ -210,14 +218,14 @@ abort_all_rpcs (int signo, void *state)
 {
   thread_t me = __mach_thread_self ();
   thread_t *threads;
-  size_t nthreads, i;
+  mach_msg_type_number_t nthreads, i;
 
   __task_threads (__mach_task_self (), &threads, &nthreads);
   for (i = 0; i < nthreads; ++i)
     {
       if (threads[i] != me)
 	{
-	  struct _hurd_sigstate *ss = _hurd_thread_sigstate (*nthreads);
+	  struct _hurd_sigstate *ss = _hurd_thread_sigstate (threads[i]);
 	  abort_rpcs (ss, signo, state);
 	  __mutex_unlock (&ss->lock);
 	}
@@ -235,7 +243,7 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 			    sigset_t *restore_blocked)
 {
   char thread_state[_hurd_thread_state_count];
-  enum { stop, ignore, core, term } act;
+  enum { stop, ignore, core, term, handle } act;
 
   if (ss->actions[signo].sa_handler == SIG_DFL)
     switch (signo)
@@ -302,10 +310,10 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
     }
 
   /* Handle receipt of a blocked signal.  */
-  if ((__sigismember (signo, &ss->blocked) && act != ignore) ||
+  if ((__sigismember (&ss->blocked, signo) && act != ignore) ||
       (signo != SIGKILL && _hurd_stopped))
     {
-      __sigaddmember (signo, &ss->pending);
+      __sigaddset (&ss->pending, signo);
       /* Save the code to be given to the handler when SIGNO is unblocked.  */
       ss->sigcodes[signo] = sigcode;
       act = ignore;
@@ -317,27 +325,28 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
   switch (act)
     {
     case stop:
-      _HURD_PORT_USE
-	(&_hurd_proc,
-	 ({
-	   /* Hold the siglock while stopping other threads to be
-	      sure it is not held by another thread afterwards.  */
-	   __mutex_unlock (&ss->lock);
-	   __mutex_lock (&_hurd_siglock);
-	   __proc_dostop (port, __mach_thread_self ());
-	   __mutex_unlock (&_hurd_siglock);
-	   abort_all_rpcs (signo, thread_state);
-	   __proc_markstop (port, signo);
-	 }));
+      __USEPORT (PROC,
+		 ({
+		   /* Hold the siglock while stopping other threads to be
+		      sure it is not held by another thread afterwards.  */
+		   __mutex_unlock (&ss->lock);
+		   __mutex_lock (&_hurd_siglock);
+		   __proc_dostop (port, __mach_thread_self ());
+		   __mutex_unlock (&_hurd_siglock);
+		   abort_all_rpcs (signo, thread_state);
+		   __proc_mark_stop (port, signo);
+		 }));
       _hurd_stopped = 1;
 
+#ifdef noteven
       __mutex_lock (&ss->lock);
       if (ss->suspended)
 	/* There is a sigsuspend waiting.  Tell it to wake up.  */
 	__condition_signal (&ss->arrived);
       else
 	__mutex_unlock (&ss->lock);
-	
+#endif
+
       return;
 
     case ignore:
@@ -370,23 +379,25 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
      otherwise we are stopped or dead by now.  We still hold SS->lock.
      Check for pending signals, and loop to post them.  */
   for (signo = 1; signo < NSIG; ++signo)
-    if (__sigismember (signo, &ss->pending))
+    if (__sigismember (&ss->pending, signo))
       {
-	__sigdelmember (signo, &ss->pending);
+	__sigdelset (&ss->pending, signo);
 	_hurd_internal_post_signal (ss, signo, ss->sigcodes[signo], NULL);
 	return;
       }
 
+#ifdef noteven
   if (ss->suspended)
     /* There is a sigsuspend waiting.  Tell it to wake up.  */
     __condition_signal (&ss->arrived);
   else
     __mutex_unlock (&ss->lock);
+#endif
 }
 
 /* Sent when someone wants us to get a signal.  */
 error_t
-_S_sig_post (sigthread_t me,
+_S_sig_post (mach_port_t me,
 	     mig_reply_port_t reply,
 	     int signo,
 	     mach_port_t refport)
