@@ -172,7 +172,7 @@ gnu*)
   os=mach/hurd ;;
 sunos* | ultrix* | newsos* | dynix | bsd*)
   base_os=unix/bsd ;;
-linux* | sysv* | isc* | esix* | sco*)
+linux* | sysv* | isc* | esix* | sco* | minix*)
   base_os=unix/sysv ;;
 esac
 
