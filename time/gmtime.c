@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,15 +18,16 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <stddef.h>
-#undef	__OPTIMIZE__	/* Avoid inline `gmtime' function.  */
 #include <time.h>
-
-#undef	gmtime
-
 
 /* Return the `struct tm' representation of *T in UTC.	*/
 struct tm *
 DEFUN(gmtime, (t), CONST time_t *t)
 {
-  return __offtime(t, 0L);
+  struct tm *tp = __offtime (t, 0L);
+
+  tp->tm_gmtoff = 0L;
+  tp->tm_zone = "GMT";
+
+  return tp;
 }
