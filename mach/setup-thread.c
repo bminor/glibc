@@ -38,6 +38,6 @@ _hurd_setup_thread (task_t task, thread_t thread, void *pc)
   ts.PC = (int) pc;
   ts.SP = stack + STACK_SIZE;
 
-  return __thread_set_state (thread, HURD_THREAD_STATE,
+  return __thread_set_state (thread, HURD_THREAD_STATE_FLAVOR,
 			     (int *) &ts, tssize);
 }
