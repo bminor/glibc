@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -13,7 +13,7 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 /*
@@ -25,6 +25,8 @@ Cambridge, MA 02139, USA.  */
 #define	_SYS_TYPES_H	1
 #include <features.h>
 
+__BEGIN_DECLS
+
 #include <gnu/types.h>
 
 #ifdef	__USE_BSD
@@ -34,6 +36,7 @@ Cambridge, MA 02139, USA.  */
 #define u_long __u_long
 #define quad __quad
 #define u_quad __u_quad
+#define	fsid_t __fsid_t
 #endif
 
 #define dev_t __dev_t
@@ -76,13 +79,15 @@ Cambridge, MA 02139, USA.  */
    (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out
    after waiting the interval specified therein.  Returns the number of ready
    descriptors, or -1 for errors.  */
-extern int EXFUN(__select, (int __nfds, __fd_set *__readfds,
-			    __fd_set *__writefds, __fd_set *__exceptfds,
-			    struct __timeval *__timeout));
+extern int __select __P ((int __nfds, __fd_set * __readfds,
+			  __fd_set * __writefds, __fd_set * __exceptfds,
+			  struct __timeval * __timeout));
 
 #ifdef	__USE_BSD
 #define	select	__select
-#endif	/* Use BSD.  */
+#endif /* Use BSD.  */
 
 
-#endif	/* sys/types.h */
+__END_DECLS
+
+#endif /* sys/types.h */
