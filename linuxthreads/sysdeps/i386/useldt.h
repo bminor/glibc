@@ -1,6 +1,6 @@
 /* Special definitions for ix86 machine using segment register based
    thread descriptor.
-   Copyright (C) 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>.
 
@@ -18,6 +18,9 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.	*/
+
+#ifndef __USELDT_H
+#define __USELDT_H 1
 
 #ifndef __ASSEMBLER__
 #include <stddef.h>	/* For offsetof.  */
@@ -311,4 +314,6 @@ extern int __have_no_set_thread_area;
 
 /* Maximum size of the stack if the rlimit is unlimited.  */
 #define ARCH_STACK_MAX_SIZE	8*1024*1024
+#endif
+
 #endif

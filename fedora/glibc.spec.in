@@ -1241,6 +1241,10 @@ rm -f *.filelist*
 %changelog
 * Sat Sep 25 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-57
 - update from CVS
+  - fix setuid in LD_ASSUME_KERNEL=2.2.5 libc (#133558)
+  - fix nis locking (#132204)
+  - RTLD_DEEPBIND support
+  - fix pthread_create bugs (BZ #401, #405)
 
 * Wed Sep 22 2004 Roland McGrath <roland@redhat.com> 2.3.3-56
 - migrated CVS to fedora-branch in sources.redhat.com glibc repository
