@@ -1,6 +1,6 @@
 /* BSD-compatible versions of functions where BSD and POSIX.1 conflict.
 
-Copyright (C) 1991 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#define	__FAVOR_BSD
+#define	_BSD_SOURCE
 
 #include <ansidecl.h>
 #include <sys/types.h>
@@ -39,5 +39,5 @@ DEFUN(setjmp, (env), jmp_buf env)
 }
 
 #undef	longjmp
-function_alias(longjmp, siglongjmp, void, (env, val),
-	       DEFUN(longjmp, (env, val), jmp_buf env AND int val))
+function_alias_void(longjmp, siglongjmp, void, (env, val),
+		    DEFUN(longjmp, (env, val), jmp_buf env AND int val))
