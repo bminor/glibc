@@ -6,7 +6,7 @@
 @comment %**end of header (This is for running Texinfo on a region.)
 
 @ifinfo
-This file documents the GNU C Library.
+This file documents the GNU C library.
 
 Copyright (C) 1990 Free Software Foundation, Inc.
 
@@ -47,11 +47,14 @@ Overview
 				 derived from various standards.
 * Using the Library::		How to use the library facilities in
 				 your programs.
+* Roadmap to the Manual::       A short description of the contents of
+                                 each chapter of this manual.
 
 Contents of the Library
 * Error Reporting::			How the GNU Library functions report
 					 error conditions.
-* Common Definitions::			<stddef.h>.
+* Common Definitions::			Things like @code{sizeof} and
+                                         @code{NULL}.
 * Variable Argument Facilities::	How to process variable-length
 					 argument lists.
 * Memory Allocation::			Your program can allocate memory
@@ -62,7 +65,8 @@ Contents of the Library
 * String and Array Utilities::		Utilities for copying and comparing
 					 strings and arrays.
 * Extended Characters::			Support for extended character sets.
-* Localization::			<locale.h>
+* Localization::			The country and language can affect
+                                         the behavior of library functions.
 * Searching and Sorting::		General searching and sorting
 					 functions.
 * Input/Output Overview::		Introduction to the i/o facilities.
@@ -110,8 +114,8 @@ Appendices
 Indices
 * Concept Index::	Index of concepts and names.
 * Type Index::		Index of types and type qualifiers.
-* Function Index::	Index of functions and macros.
-* Variable Index::	Index of variables and constant macros.
+* Function Index::	Index of functions and function-like macros.
+* Variable Index::	Index of variables and variable-like macros.
 * File Index::		Index of programs and files.
 @end menu
 

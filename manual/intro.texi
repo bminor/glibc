@@ -8,7 +8,7 @@ in a standard @dfn{library}, which you compile and link with your
 programs.
 @cindex library
 
-The GNU C Library, described in this document, defines all of the
+The GNU C library, described in this document, defines all of the
 library functions that are specified by the ANSI C standard, as well as
 additional features specific to POSIX and other derivatives of the Unix
 operating system, and extensions specific to the GNU system.
@@ -29,7 +29,7 @@ concepts.  Specifically, familiarity with ANSI standard C
 (@pxref{ANSI C}), rather than ``traditional'' pre-ANSI C dialects, is
 assumed.
 
-The GNU C Library includes several @dfn{header files}, each of which
+The GNU C library includes several @dfn{header files}, each of which
 provides definitions and declarations for a group of related facilities;
 this information is used by the C compiler when processing your program.
 For example, the header file @file{stdio.h} declares facilities for
@@ -39,7 +39,7 @@ generally follows the same division as the header files.
 
 If you are reading this manual for the first time, you should read all
 of the introductory material and skim the remaining chapters.  There are
-a @emph{lot} of functions in the GNU C Library and it's not realistic to
+a @emph{lot} of functions in the GNU C library and it's not realistic to
 expect that you will be able to remember exactly @emph{how} to use each
 and every one of them.  It's more important to become generally familiar
 with the kinds of facilities that the library provides, so that when you
@@ -53,7 +53,7 @@ specific information about them.
 @cindex standards
 
 This section discusses the various standards and other sources that the
-GNU C Library is based upon.  These sources include the ANSI C and
+GNU C library is based upon.  These sources include the ANSI C and
 POSIX standards, and the System V and Berkeley Unix implementations.
 
 The primary focus of this manual is to tell you how to make effective
@@ -79,10 +79,10 @@ For information about what standards specify what features,
 @subsection ANSI C
 @cindex ANSI C
 
-The GNU C Library is compatible with the C standard adopted by the
+The GNU C library is compatible with the C standard adopted by the
 American National Standards Institute (ANSI): @cite{American National
 Standard X3.159-1989 --- ``ANSI C''}.  The header files and library
-facilities that make up the GNU Library are a superset of those
+facilities that make up the GNU library are a superset of those
 specified by the ANSI C standard.
 
 @pindex gcc
@@ -99,7 +99,7 @@ by the library implementation, and the GNU extensions violate these
 limitations.  @xref{Reserved Names}, for more information about these
 restrictions.
 
-The GNU C Library specifically does @emph{not} attempt to provide
+The GNU C library specifically does @emph{not} attempt to provide
 backward compatibility with library facilities from older,
 ``traditional'' C dialects.  Likewise, this document does not attempt to
 give you complete details on the differences between ANSI C and older
@@ -119,7 +119,7 @@ portability problems.
 @cindex IEEE Std 1003.2
 @cindex 1003.2 (IEEE Std)
 
-The GNU Library is also compatible with the IEEE @dfn{POSIX} family of
+The GNU library is also compatible with the IEEE @dfn{POSIX} family of
 standards, known more formally as the @dfn{Portable Operating System
 Interface for Computer Environments}.  POSIX is derived mostly from
 various versions of the Unix operating system.
@@ -133,7 +133,7 @@ lower-level support for a particular kind of operating system
 environment, rather than general programming language support which can
 run in many diverse operating system environments.@refill
 
-The GNU C Library implements all of the functions specified in
+The GNU C library implements all of the functions specified in
 @cite{IEEE Std 1003.1-1988, the POSIX System Application Program
 Interface}, commonly referred to as POSIX.1.  The primary extensions to
 the ANSI C facilities specified by this standard include file system
@@ -143,14 +143,14 @@ process control functions (@pxref{Processes}).
 
 Some facilities from draft 11 of @cite{IEEE Std 1003.2, the POSIX Shell
 and Utilities standard} (POSIX.2) are also implemented in the GNU
-Library.  These include utilities for dealing with regular expressions
+library.  These include utilities for dealing with regular expressions
 and other pattern matching facilities.
 
 @strong{Incomplete:}  Put in some cross-references when all of this
 material has been incorporated.
 
 @comment Roland sez:
-@comment The GNU C Library as it stands conforms to 1003.2 draft 11, which
+@comment The GNU C library as it stands conforms to 1003.2 draft 11, which
 @comment specifies:
 @comment 
 @comment Several new macros in <limits.h>.
@@ -171,13 +171,13 @@ material has been incorporated.
 @cindex Berkeley Unix
 @cindex SunOS
 
-The GNU C Library defines facilities from some other versions of Unix,
+The GNU C library defines facilities from some other versions of Unix,
 specifically from the 4.2 BSD and 4.3 BSD Unix systems (also known as
 @dfn{Berkeley Unix}) and from @dfn{SunOS} (a popular 4.2 BSD derivative
 that includes some Unix System V functionality).  
 
 There is no standard for the Berkeley and Sun Unices, but the GNU C
-Library provides some features borrowed from these systems for the sake
+library provides some features borrowed from these systems for the sake
 of compatibility.
 
 @strong{Incomplete:} Are there any particular Berkeley/SunOS facilities
@@ -194,7 +194,7 @@ The @dfn{System V Interface Description} (SVID) is a document describing
 the AT&T Unix System V operating system.  It is to some extent a
 superset of the POSIX standard (@pxref{POSIX}).
 
-The GNU C Library defines some of the facilities required by the SVID
+The GNU C library defines some of the facilities required by the SVID
 that are not also required by the ANSI or POSIX standards, for
 compatibility with AT&T Unix System V and other Unix systems (such as
 SunOS) which include these facilities.  However, many of the more
@@ -210,7 +210,7 @@ ought to be mentioned specifically here?
 @section Using the Library
 
 This section describes some of the practical issues involved in using
-the GNU C Library.
+the GNU C library.
 
 @menu
 * Header Files::	How to include the header files in your programs.
@@ -240,7 +240,7 @@ variable or says what a function does.)
 @cindex definition
 @cindex declaration
 
-In order to use the facilities in the GNU C Library, you should be sure
+In order to use the facilities in the GNU C library, you should be sure
 that your program source files include the appropriate header files.
 This is so that the compiler has declarations of these facilities
 available and can correctly process references to them.  Once your
@@ -268,7 +268,7 @@ between the different parts of your particular application, while
 is typically used to include a header file @file{file.h} that contains
 definitions and declarations for a standard library, that is normally
 installed in a standard place by your system administrator.  You should
-use this second form for the C Library header files.
+use this second form for the C library header files.
 
 Typically, @samp{#include} directives are placed at the top of the C
 source file, before any other code.  If you begin your source files with
@@ -279,7 +279,7 @@ For more information about the use of header files and @samp{#include}
 directives, @pxref{Header Files,,, cpp.texinfo, The GNU C Preprocessor
 Manual}.@refill
 
-The GNU C Library provides several header files, each of which contains
+The GNU C library provides several header files, each of which contains
 the type and macro definitions and variable and function declarations
 for a group of related facilities.  This means that your programs may
 need to include several header files, depending on exactly which
@@ -289,7 +289,7 @@ Note that some header files from the library might implicitly include
 other header files from the library.  However, as a matter of
 programming style, you should not rely on this; it is better to
 explicitly include all the header files required for the library
-facilities you are using.  The GNU C Library header files have been
+facilities you are using.  The GNU C library header files have been
 written in such a way that it doesn't matter if a header file is
 accidentally included more than once; there is no problem with
 definitions and declarations in the header file being repeated.
@@ -597,3 +597,159 @@ We recommend you use @code{_GNU_SOURCE} in new programs.
 If you don't specify the @samp{-ansi} option to GCC and don't define
 any of these macros explicitly, the effect as the same as defining
 @code{_GNU_SOURCE}.
+
+
+@node Roadmap to the Manual
+@section Roadmap to the Manual
+
+Here is an overview of the contents of the remaining chapters of
+this manual.
+
+@itemize @bullet
+@item 
+@ref{Error Reporting}, describes how errors detected by the library
+are reported.
+
+@item 
+@ref{Common Definitions}, contains information about library support
+for standard parts of the C language, including things like the @code{sizeof}
+operator and the symbolic constant @code{NULL}.
+
+@item
+@ref{Variable Argument Facilities}, tells you how you can access non-required
+function arguments.  This is also a standard part of the C language.
+
+@item 
+@ref{Memory Allocation}, describes the GNU library's facilities for
+dynamic allocation of storage.  If you do not know in advance how much
+storage your program needs, you can allocate it dynamically instead,
+and manipulate it via pointers.
+
+@item 
+@ref{Character Handling}, contains information about character
+classification functions (such as @code{isspace}) and functions for
+performing case conversion.
+
+@item 
+@ref{String and Array Utilities}, has descriptions of functions for
+manipulating strings (null-terminated character arrays) and general
+byte arrays, including operations such as copying and comparison.
+
+@item 
+@ref{Extended Characters}, contains information about manipulating
+characters and strings using character sets larger than will fit in
+the usual @code{char} data type.  
+
+@item 
+@ref{Localization}, describes how selecting a particular country 
+or language affects the behavior of the library.  For example, the locale
+affects collation sequences for strings and how monetary values are
+formatted.
+
+@item 
+@ref{Searching and Sorting}, contains information about functions
+for searching and sorting arrays.  You can use these functions on any
+kind of array by providing an appropriate comparison function.
+
+@item
+@ref{Input/Output Overview}, gives an overall look at the input and output
+facilities in the library, and contains information about basic concepts
+such as file names.
+
+@item
+@ref{Input/Output on Streams}, describes i/o operations involving
+streams (or @code{FILE *} objects).  These are the normal C library
+functions from @file{stdio.h}.
+
+@item
+@ref{Low-Level Input/Output}, contains information about i/o operations
+on file descriptors.  File descriptors are a lower-level mechanism
+specific to the Unix family of operating systems.
+
+@item
+@ref{File System Interface}, has descriptions of operations on entire
+files, such as functions for deleting and renaming them and for creating
+new directories.  This chapter also contains information about how you
+can access the attributes of a file, such as its owner and file protection
+modes.
+
+@item
+@ref{Pipes and FIFOs}, contains information about simple interprocess
+communication mechanisms.  Pipes allow communication between two related
+processes (such as between a parent and child), while FIFOs allow
+communication between processes sharing a common file system.
+
+@item
+@ref{Sockets}, describes a more complicated interprocess communication
+mechanism that allows processes running on different machines to
+communicate over a network.  This chapter also contains information about
+Internet host addressing and how to use the system network databases,
+such as @file{/etc/hosts}.
+
+@item
+@ref{Low-Level Terminal Interface}, describes how you can change the
+attributes of a terminal device.  If you want to disable echo of
+characters typed by the user, for example, read this chapter.
+
+@item 
+@ref{Diagnostics}, contains information about a simple debugging
+mechanism.  You can put assertions in your code, and diagnostic
+messages are printed if the test fails.
+
+@item 
+@ref{Mathematics}, contains information about the math library
+functions.  These include things like random-number generators and
+remainder functions on integers as well as the usual trigonometric and
+exponential functions on floating-point numbers.
+
+@item
+@ref{Date and Time}, describes functions for measuring both calendar time
+and CPU time, as well as functions for setting alarms and timers.
+
+@item
+@ref{Non-Local Exits}, contains descriptions of the @code{setjmp} and
+@code{longjmp} functions.
+
+@item
+@ref{Signal Handling}, tells you all about signals --- what they are,
+how to establish a handler that is called when a particular kind of
+signal is delivered, and how to prevent signals from arriving during
+critical sections of your program.
+
+@item 
+@ref{Processes}, contains information about how to start new processes
+and run programs.  This chapter also tells you how your programs can
+access their command-line arguments and environment variables.
+
+@item
+@ref{Job Control}, describes functions for manipulating process groups.
+This material is probably only of interest if you are writing a shell.
+
+@item
+@ref{System Databases}, tells you how to access the system user (or password)
+and group databases.
+
+@item
+@ref{System Information}, describes functions for getting information
+about the hardware and software configuration your program is executing
+under.
+
+@item 
+@ref{Representation Limits}, contains information about
+parameters that characterize the sizes of integer and floating-point
+types used by the particular C implementation that your program has
+been compiled with.  Most of these parameters are provided for 
+compatibility with ANSI C.
+
+@item 
+@ref{System Configuration Limits}, tells you how you can get
+information about various operating system limits.  Most of these
+parameters are provided for compatibility with POSIX.
+@end itemize
+
+If you already know the name of the facility you are interested in,
+you can look it up in @ref{Summary of Library Facilities}.  This gives
+you a summary of its syntax and a pointer to where you can find a more
+detailed description.  This appendix is particularly useful if you
+just want to verify the order and type of arguments to a function,
+for example.
