@@ -95,7 +95,7 @@ information on how to do this.
 
 Being able to restrict the library to include only ANSI C features is
 important because ANSI C puts limitations on what names can be defined
-by the library implementation, and the GNU extensions violate these
+by the library implementation, and the GNU extensions don't fit these
 limitations.  @xref{Reserved Names}, for more information about these
 restrictions.
 
@@ -123,13 +123,13 @@ Interface for Computer Environments}.  POSIX is derived mostly from
 various versions of the Unix operating system.
 
 The library facilities specified by the POSIX standard are a superset of
-those required by ANSI C; POSIX requires some specific behaviors for
-ANSI C features that ANSI C leaves explicitly vague, as well as
-specifying new features.  In general, the additional requirements and
-functionality defined by the POSIX standard are aimed at providing
-lower-level support for a particular kind of operating system
-environment, rather than general programming language support which can
-run in many diverse operating system environments.@refill
+those required by ANSI C; POSIX specifies additional features for ANSI C
+functions, as well as specifying new additional functions.  In general,
+the additional requirements and functionality defined by the POSIX
+standard are aimed at providing lower-level support for a particular
+kind of operating system environment, rather than general programming
+language support which can run in many diverse operating system
+environments.@refill
 
 The GNU C library implements all of the functions specified in
 @cite{IEEE Std 1003.1-1988, the POSIX System Application Program
@@ -174,10 +174,6 @@ specifically from the 4.2 BSD and 4.3 BSD Unix systems (also known as
 @dfn{Berkeley Unix}) and from @dfn{SunOS} (a popular 4.2 BSD derivative
 that includes some Unix System V functionality).  
 
-There is no standard for the Berkeley and Sun Unices, but the GNU C
-library provides some features borrowed from these systems for the sake
-of compatibility.
-
 @strong{Incomplete:} Are there any particular Berkeley/SunOS facilities
 that ought to be mentioned specifically here?
 
@@ -194,7 +190,7 @@ superset of the POSIX standard (@pxref{POSIX}).
 
 The GNU C library defines some of the facilities required by the SVID
 that are not also required by the ANSI or POSIX standards, for
-compatibility with AT&T Unix System V and other Unix systems (such as
+compatibility with  System V Unix and other Unix systems (such as
 SunOS) which include these facilities.  However, many of the more
 obscure and less generally useful facilities required by the SVID are
 not included.  (In fact, Unix System V itself does not provide them all.)
@@ -224,7 +220,7 @@ the GNU C library.
 @cindex header files
 
 Libraries for use by C programs really consist of two parts: @dfn{header
-files} that define types and macros, and declare variables and
+files} that define types and macros and declare variables and
 functions; and the actual library or @dfn{archive} that contains the
 definitions of the variables and functions.
 
@@ -250,7 +246,7 @@ Header files are included into a program source file by the
 forms of this directive:
 
 @example
-#include "file.h"
+#include "@var{file.h}"
 @end example
 
 @noindent 
@@ -268,10 +264,15 @@ definitions and declarations for a standard library, that is normally
 installed in a standard place by your system administrator.  You should
 use this second form for the C library header files.
 
+For more information about the use of header files and @samp{#include}
+directives, @pxref{Header Files,,, cpp.texinfo, The GNU C Preprocessor
+Manual}.@refill
+
 Typically, @samp{#include} directives are placed at the top of the C
 source file, before any other code.  If you begin your source files with
 some comments explaining what the code in the file does (a good idea),
-put the @samp{#include} directives immediately afterwards.
+put the @samp{#include} directives immediately afterwards, following the
+feature test macro definition (@pxref{Feature Test Macros}).
 
 For more information about the use of header files and @samp{#include}
 directives, @pxref{Header Files,,, cpp.texinfo, The GNU C Preprocessor
@@ -283,29 +284,28 @@ for a group of related facilities.  This means that your programs may
 need to include several header files, depending on exactly which
 facilities you are using.
 
-Note that some header files from the library might implicitly include
-other header files from the library.  However, as a matter of
-programming style, you should not rely on this; it is better to
-explicitly include all the header files required for the library
-facilities you are using.  The GNU C library header files have been
-written in such a way that it doesn't matter if a header file is
-accidentally included more than once; there is no problem with
-definitions and declarations in the header file being repeated.
-Likewise, if your program needs to include multiple header files, the
-order in which they are included doesn't matter.
+Some library header files include other library header files
+automatically.  However, as a matter of programming style, you should
+not rely on this; it is better to explicitly include all the header
+files required for the library facilities you are using.  The GNU C
+library header files have been written in such a way that it doesn't
+matter if a header file is accidentally included more than once;
+including a header file a second time has no effect.  Likewise, if your
+program needs to include multiple header files, the order in which they
+are included doesn't matter.
 
 @strong{Compatibility Note:} Inclusion of standard header files in any
-order and any number of times is required to work correctly in any
-conforming ANSI C implementation.  However, this has traditionally not
-been the case in many older C implementations.
+order and any number of times works in any ANSI C implementation.
+However, this has traditionally not been the case in many older C
+implementations.
 
 Strictly speaking, you don't @emph{have to} include a header file to use
 a function it declares; you could declare the function explicitly
-yourself, according to its documented declaration.  But it is usually
-better to include the header file because it may define types and macros
-that are not otherwise available and because it may define more
-efficient macro replacements for some functions.  It is also a sure way
-to have the correct declaration.
+yourself, according to the specifications in this manual.  But it is
+usually better to include the header file because it may define types
+and macros that are not otherwise available and because it may define
+more efficient macro replacements for some functions.  It is also a sure
+way to have the correct declaration.
 
 @node Macro Definitions
 @subsection Macro Definitions of Functions
@@ -315,7 +315,7 @@ to have the correct declaration.
 
 If we describe something as a function in this manual, it may have a
 macro definition as well.  This normally has no efect on how your
-program runs -- the macro definition does the same thing as the function
+program runs---the macro definition does the same thing as the function
 would.  In particular, macro equivalents for library functions evaluate
 arguments exactly once, in the same way that a function call would.  The
 main reason for these macro definitions is that sometimes they can
@@ -377,14 +377,15 @@ just makes your program slower.
 @cindex reserved names
 @cindex name space
 
-The names of all types, macros, variables and functions that are part of 
-the GNU library are reserved; your programs @strong{may not} redefine
-these names.  There are several reasons for this restriction:
+The names of all library types, macros, variables and functions that
+come from the ANSI C standard are reserved unconditionally; your program
+@strong{may not} redefine these names.  All other library names are
+reserved if your programs explicitly includes the header file that
+defines are declares them. There are several reasons for these
+restrictions:
 
 @itemize @bullet
 @item
-It avoids confusion over whether you're getting your own definition of a
-function or one from the standard library when you make a function call.
 Other people reading your code could get very confused if you were using
 a function named @code{exit} to do something completely different from
 what the standard @code{exit} function does, for example.  Preventing
@@ -407,32 +408,26 @@ implementationally it might be easier for the compiler to treat these as
 built-in parts of the language.
 @end itemize
 
-Names of identifiers in the GNU library that are part of the ANSI C
-standard are always reserved; you cannot redefine them, even if your
-program does not include the header files that define them.  However,
-all other names are treated as reserved only if your program explicitly
-includes the header file that defines them.
-
-In addition to all the names that have actual definitions documented,
-all external identifiers (global functions and variables) that begin
-with an underscore (@samp{_}) and all other identifiers that begin with
-either two underscores or an underscore followed by a capital letter are
+In addition to the names documented in this manual, all external
+identifiers (global functions and variables) that begin with an
+underscore (@samp{_}) and all other identifiers that begin with either
+two underscores or an underscore followed by a capital letter are
 reserved names.  This is so that functions, variables, and macros
 internal to the workings of the C library or the compiler can be defined
 without intruding on the name space of user programs, and without the
 possibility of a user program redefining names used internally in the
 implementation of the library.
 
-There are also some further classes of identifiers that are reserved for
-future extensions to the C language.  While using these names for your
-own purposes right now might not cause a problem, it does leave open the
-possibility of compatibility problems with future versions of the C
-standard, so you should avoid these names.
+Some additional classes of identifier names are reserved for future
+extensions to the C language.  While using these names for your own
+purposes right now might not cause a problem, this raises the
+possibility of conflict with future versions of the C standard, so you
+should avoid these names.
 
 @itemize @bullet
 @item 
 Names beginning with a capital @samp{E} followed a digit or uppercase
-letter may be used for additional error constants.  @xref{Error
+letter may be used for additional error code names.  @xref{Error
 Reporting}.
 
 @item
@@ -501,7 +496,7 @@ and @samp{SA_}.
 @pindex signal.h
 
 @item
-The header file @file{sys/stat.h} reserves names prefixed with @samp{st_}
+The header file @file{stat.h} reserves names prefixed with @samp{st_}
 and @samp{S_}.
 @pindex sys/stat.h
 
@@ -539,7 +534,7 @@ files indicate their own meaning in a self-contained way.
 @comment POSIX.1
 @defvr Macro _POSIX_SOURCE
 If you define this macro, then the functionality from the POSIX.1
-standard (IEEE Standard 1003.1) is made available, as well as all of the
+standard (IEEE Standard 1003.1) is available, as well as all of the
 ANSI C facilities.
 @end defvr
 

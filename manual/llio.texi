@@ -195,7 +195,7 @@ is equivalent to
 @example
 open (@var{filename}, O_WRONLY | O_CREAT | O_TRUNC, @var{mode})
 @end example
-@end deftypefun
+@end deftypefn
 
 @comment unistd.h
 @comment POSIX.1
@@ -754,7 +754,7 @@ The normal return value from @code{select} is the total number of ready file
 descriptors in all of the sets.  Each of the argument sets is overwritten
 with information about the descriptors that are ready for the corresponding
 operation.  Thus, to see if a particular descriptor @var{desc} has input,
-use @code{FD_ISSET (@var{desc}, @var{read_fds}) after @code{select} returns.
+use @code{FD_ISSET (@var{desc}, @var{read_fds})} after @code{select} returns.
 
 If @code{select} returns because the timeout period expires, it returns
 a value of zero.

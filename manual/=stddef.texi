@@ -30,17 +30,21 @@ objects of arbitrary sizes accept arguments of this type to specify
 object sizes.
 @end deftp
 
-As a general concern with derived data types such as these, you need to
-be careful either to consistently declare variables and function
-prototypes that can receive values of these types with the derived
-types, or else to use an explicit cast on the value.  For example, you
-shouldn't use @code{size_t} interchangably either with @code{unsigned
-int} or @code{unsigned long int}, since it might be either one of those.
-This is a particular problem when passing values to functions for which
-there is no prototype declared in scope, since the default argument
-promotions can differ from implementation to implementation.  Another
-problem is that there aren't any constants in @file{limits.h} to tell
-you what the minimum and maximum values for these data types are.
+In the GNU system @code{size_t} is equivalent to one of the types 
+@code{unsigned int} and @code{unsigned long int}.  These types have
+identical properties on the GNU system, and for most purposes, you
+can use them interchangeably.  However, they are distinct types, 
+and in certain contexts, you may not treat them as identical.  For
+example, when you specify the type of a function argument in a 
+function prototype, it makes a difference which one you use.  If
+the system header files declare @code{malloc} with an argument
+of type @code{size_t} and you declare @code{malloc} with an argument
+of type @code{unsigned int}, you will get a compilation error if
+@code{size_t} happens to be @code{unsigned long int} on your system.
+To avoid any possibility of error, when a function argument is
+supposed to have type @code{size_t}, always write the type as
+@code{size_t}, and make no assumptions about what that type might
+actually be.
 
 @strong{Compatibility Note:}  Types such as @code{size_t} are new
 features of ANSI C.  Older, pre-ANSI C implementations have

@@ -7,11 +7,10 @@
 
 ANSI C defines a syntax as part of the kernel language for specifying
 functions that take a variable number or type of arguments.  (Such
-functions are also referred to as @dfn{variadic argument functions}, or
-simply @dfn{variadic functions}.)  However, the kernel language provides
-no mechanism for actually accessing non-required arguments; instead,
-you use the variable arguments macros defined in
-@file{stdarg.h}.
+functions are also referred to as @dfn{variadic functions}.)  However,
+the kernel language provides no mechanism for actually accessing
+non-required arguments; instead, you use the variable arguments macros
+defined in @file{stdarg.h}.
 @pindex stdarg.h
 
 @menu
@@ -26,13 +25,13 @@ you use the variable arguments macros defined in
 @node Why Variable Arguments are Used
 @section Why Variable Arguments are Used
 
-Most C functions take a fixed number of arguments.  When you declare or
-define a function, you also supply a specific data type for each 
-argument.  Calls to the function with the wrong number or type of 
-arguments cause compile-time error messages.
+Most C functions take a fixed number of arguments.  When you define a
+function, you also supply a specific data type for each argument.
+Every call to the function should supply the same number and type of
+arguments as specified in the function definition.
 
-On the other hand, sometimes a function performs an operation that makes
-sense no matter how many arguments it is called with.  
+On the other hand, sometimes a function performs an operation that can
+meaningfully accept an unlimited number of arguments.  
 
 For example, consider a function that joins its arguments into a linked
 list.  It makes sense to connect any number of arguments together into a
@@ -80,37 +79,40 @@ function can accept additional arguments of unspecified type by putting
 @samp{@dots{}} at the end of the arguments.  For example,
 
 @example
-int func (const char *a, int b, @dots{})
+int 
+func (const char *a, int b, @dots{})
+@{
+  @dots{}
+@}	
 @end example
 
 @noindent
-begins a definition of a function @code{func} which returns an
+outlines a definition of a function @code{func} which returns an
 @code{int} and takes at least two arguments, the first two being a
 @code{const char *} and an @code{int}.@refill
 
 An obscure restriction placed by the ANSI C standard is that the last
 required argument must not be declared @code{register} in the function
 definition.  Furthermore, this argument must not be of a function or
-array type, or of a type that is not compatible with the type that
-results after application of the default argument promotions --- for
-example, a @code{char} or @code{short int} (whether signed or not) or
-a @code{float}.
+array type, and may not be, for example, a @code{char} or @code{short
+int} (whether signed or not) or a @code{float}.
 
 @strong{Compatibility Note:} Many older C dialects provide a similar,
-but incompatible, mechanism for defining variadic arguments functions.
-In particular, the @samp{@dots{}} syntax is a new feature of ANSI C.
+but incompatible, mechanism for defining functions with variable numbers
+of arguments.  In particular, the @samp{@dots{}} syntax is a new feature
+of ANSI C.
 
 
 @node Receiving the Argument Values
 @subsection Receiving the Argument Values
 
-Inside the definition of a variadic arguments function, you can access
-the optional arguments using a set of macros.  The process consists of
-three steps:
+Inside the definition of a variadic function, to access the optional
+arguments with the following three step process:
 
 @enumerate
 @item
-You initialize a variable of type @code{va_list} using @code{va_start}.
+You initialize an argument pointer variable of type @code{va_list} using
+@code{va_start}.
 
 @item
 You access the optional arguments by successive calls to @code{va_arg}.
@@ -140,14 +142,13 @@ values if you try to access too many arguments.
 
 There is no general way for a function to determine the number and type
 of the actual values that were passed as optional arguments.  Typically,
-the value of one of the required arguments is used to decide when to
-stop fetching more optional arguments.  It is up to you to define an
-appropriate calling convention for each function, and write all calls
-accordingly.
+the value of one of the required arguments is used to tell the function
+this information.  It is up to you to define an appropriate calling
+convention for each function, and write all calls accordingly.
 
 One calling convention is to make one of the required arguments be an
-explicit argument count.  This works if all of the optional arguments
-are of the same type.
+explicit argument count.  This convention is usable if all of the
+optional arguments are of the same type.
 
 A required argument can be used as a pattern to specify both the number
 and types of the optional arguments.  The format template string
@@ -169,13 +170,14 @@ pointer isn't otherwise meaningful to the function.
 @node Calling Variadic Functions
 @subsection Calling Variadic Functions
 
-Functions that are @emph{defined} to be variadic also be @emph{declared}
-to be variadic using a function prototype in the scope of all calls to
-it.  This is because C compilers might use a different internal function
-call protocol for variadic functions than for functions that take a
-fixed number and type of arguments.  If the compiler can't determine in
-advance that the function being called is variadic, it may end up trying
-to call it incorrectly and your program won't work.
+Functions that are @emph{defined} to be variadic must also be
+@emph{declared} to be variadic using a function prototype in the scope
+of all calls to it.  This is because C compilers might use a different
+internal function call protocol for variadic functions than for
+functions that take a fixed number and type of arguments.  If the
+compiler can't determine in advance that the function being called is
+variadic, it may end up trying to call it incorrectly and your program
+won't work.
 @cindex function prototypes
 @cindex prototypes for variadic functions
 @cindex variadic functions need prototypes
@@ -183,12 +185,12 @@ to call it incorrectly and your program won't work.
 Since the prototype doesn't specify types for optional arguments, in a
 call to a variadic function the @dfn{default argument promotions} are
 performed on the optional argument values.  This means the objects of
-type @code{char} or @code{short int} are promoted to either @code{int}
-or @code{unsigned int}, as appropriate; and that objects of type
-@code{float} are promoted to type @code{double}.  So, if the caller
-passes a @code{char} as an optional argument, it is promoted to a
-@code{int}, and the function should get it with @code{va_arg (@var{ap},
-int)}.
+type @code{char} or @code{short int} (whether signed or not) are
+promoted to either @code{int} or @code{unsigned int}, as appropriate;
+and that objects of type @code{float} are promoted to type
+@code{double}.  So, if the caller passes a @code{char} as an optional
+argument, it is promoted to a @code{int}, and the function should get it
+with @code{va_arg (@var{ap}, int)}.
 
 Promotions of the required arguments are determined by the function
 prototype in the usual way (as if by assignment to the types of the
@@ -206,17 +208,15 @@ These macros are defined in the header file @file{stdarg.h}.
 @comment stdarg.h
 @comment ANSI
 @deftp {Data Type} va_list
-The type @code{va_list} is used to represent a list of an
-unknown number of arguments of unknown types.@refill
+The type @code{va_list} is used for argument pointer variables.
 @end deftp
 
 @comment stdarg.h
 @comment ANSI
 @deftypefn {Macro} void va_start (va_list @var{ap}, @var{last_required})
-This macro initializes the variable @var{ap} to hold the list of
-optional arguments supplied to the function; @var{last_required} must be
-the last required argument parameter to the function.  Initially, @var{ap}
-``points to'' the first optional argument.
+This macro initialized the argument pointer variable @var{ap} to point
+to the first of the optional arguments of the current function;
+@var{last_required} must be the last required argument to the function.
 @end deftypefn
 
 @comment stdarg.h
@@ -224,6 +224,8 @@ the last required argument parameter to the function.  Initially, @var{ap}
 @deftypefn {Macro} @var{type} va_arg (va_list @var{ap}, @var{type})
 The @code{va_arg} macro returns the value of the next optional argument,
 and changes the internal state of @var{ap} to move past this argument.
+Thus, successive uses of @code{va_arg} return successive optional 
+arguments.
 The type of the value returned by @code{va_arg} is the @var{type}
 specified in the call.  
 
@@ -236,7 +238,7 @@ default argument promotions apply to optional arguments.)
 @comment ANSI
 @deftypefn {Macro} void va_end (va_list @var{ap})
 This ends the use of @var{ap}.  After a @code{va_end} call, further
-@code{va_arg} calls with the same @var{ap} will not work.  You should invoke
+@code{va_arg} calls with the same @var{ap} may not work.  You should invoke
 @code{va_end} before returning from the function in which @code{va_start}
 was invoked with the same @var{ap} argument.
 
@@ -249,11 +251,11 @@ use it except for reasons of portability.
 @node Example of Variable Arguments
 @section Example of Variable Arguments
 
-Here is a full example of a function using these macros.  The first 
-argument to the function is the count of remaining arguments, which
-are added up and the result returned.  (This is obviously a rather
-pointless function, but it serves to illustrate the way the variable
-arguments facility is commonly used.)
+Here is a complete sample function that accepts variable numbers of
+arguments.  The first argument to the function is the count of remaining
+arguments, which are added up and the result returned.  (This is
+obviously a rather pointless function, but it serves to illustrate the
+way the variable arguments facility is commonly used.)
 
 @comment Yes, this example has been tested.
 
