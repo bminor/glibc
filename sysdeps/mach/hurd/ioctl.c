@@ -53,22 +53,22 @@ DEFUN(__ioctl, (fd, request),
   mach_msg_header_t *m = (mach_msg_header_t *) msg;
   mach_msg_type_t *t = (mach_msg_type_t *) &m[1];
   mach_msg_id_t msgid;
+  unsigned int type;
 
   void *arg;
 
-  union __ioctl r;
   error_t err;
 
 #define io2mach_type(count, type) \
   ((mach_msg_type_t) { mach_types[type], (type << 1) * 8, count, 1, 0, 0 })
 
   /* Pack an argument into the message buffer.  */
-  inline void in (unsigned int count, unsigned int type)
+  inline void in (unsigned int count, enum __ioctl_datum type)
     {
       if (count > 0)
 	{
 	  void *const p = &t[1];
-	  const size_t len = count * (type << 1);
+	  const size_t len = count * ((unsigned int) type << 1);
 	  *t = io2mach_type (count, type);
 	  memcpy (p, arg, len);
 	  arg += len;
@@ -117,13 +117,14 @@ DEFUN(__ioctl, (fd, request),
   
 
   /* Pack the argument data.  */
-  r.__i = request;
+  msgid = (100000 +
+	   ((_IOC_GROUP (request) << 2) * 1000) + _IOC_COMMAND (request));
 
-  msgid = 100000 + ((r.__s.group << 2) * 1000) + r.__s.command;
+  type = _IOC_TYPE (request);
 
-  in (r.__t.count0, r.__t.type0);
-  in (r.__t.count1, r.__t.type1);
-  in (r.__t.count2, r.__t.type2);
+  in (_IOT_COUNT0 (type), _IOT_TYPE0 (type));
+  in (_IOT_COUNT1 (type), _IOT_TYPE1 (type));
+  in (_IOT_COUNT2 (type), _IOT_TYPE2 (type));
 
   err = HURD_DPORT_USE
     (fd,
@@ -176,9 +177,9 @@ DEFUN(__ioctl, (fd, request),
   switch (err)
     {
     case 0:
-      if (out (r.__t.count0, r.__t.type0, arg, &arg) ||
-	  out (r.__t.count1, r.__t.type2, arg, &arg) ||
-	  out (r.__t.count2, r.__t.type2, arg, &arg))
+      if (out (_IOT_COUNT0 (type), _IOT_TYPE0 (type), arg, &arg) ||
+	  out (_IOT_COUNT1 (type), _IOT_TYPE1 (type), arg, &arg) ||
+	  out (_IOT_COUNT2 (type), _IOT_TYPE2 (type), arg, &arg))
 	return __hurd_fail (MIG_TYPE_ERROR);
       return 0;
 
