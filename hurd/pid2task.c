@@ -26,11 +26,6 @@ __pid2task (pid_t pid)
 
   err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
 			__proc_pid2task (port, pid, &task));
-  if (err)
-    {
-      errno = err;
-      return MACH_PORT_NULL;
-    }
-  else
-    return task;
+
+  return err ? (__hurd_fail (err), MACH_PORT_NULL) : task;
 }
