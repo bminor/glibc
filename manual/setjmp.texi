@@ -59,25 +59,7 @@ statement.
 Here is how the example program described above might be set up:  
 
 @example
-#include <setjmp.h>
-#include <stdio.h>
-
-jmp_buf main_loop;
-
-void abort_to_main_loop (void)
-@{
-  longjmp (main_loop, -1);
-@}
-
-main ()
-@{
-  extern void do_command (void);
-  while (1)
-    if (setjmp (main_loop))
-      printf ("Back at main loop....\n");
-    else
-      do_command ();
-@}
+@include setjmp.c.texi
 @end example
 
 The function @code{abort_to_main_loop} causes an immediate transfer of

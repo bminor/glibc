@@ -296,24 +296,7 @@ Here's a simple program that prints the names of the files in
 the current working directory:
 
 @example
-#include <stddef.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <dirent.h>
-
-main ()
-@{   
-  DIR *dp;
-  struct dirent *ep;
-
-  if (dp = opendir ("./")) @{
-    while (ep = readdir (dp))
-      puts (ep->d_name);
-    closedir (dp);
-    @}
-  else
-    perror ("couldn't open working directory");
-@}
+@include dir.c.texi
 @end example
 
 The order in which files appear in a directory tends to be fairly

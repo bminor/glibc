@@ -228,47 +228,7 @@ A second loop is used to process the remaining non-option arguments.
 @end itemize
 
 @example
-#include <unistd.h>
-#include <stdio.h>
-
-int
-main (int argc, char **argv)
-@{
-  int aflag = 0;
-  int bflag = 0;
-  char *cvalue = NULL;
-  int index;
-  int c;
-  opterr = 0;
-
-  while ((c = getopt (argc, argv, "abc:")) >= 0)
-    switch (c) @{
-    case 'a':
-      aflag = 1;
-      break;
-    case 'b':
-      bflag = 1;
-      break;
-    case 'c':
-      cvalue = optarg;
-      break;
-    case '?':
-      if (isprint (optopt))
-	fprintf (stderr, "Unknown option %c.\n", optopt);
-      else
-        fprintf (stderr, "Unknown option character `\\x%x'", optopt);
-      return -1;
-    default:
-      abort ();
-      return -1;
-    @}
-
-  printf ("aflag = %d, bflag = %d, cvalue = %s\n", aflag, bflag, cvalue);
-
-  for (index = optind; index < argc; index++)
-    printf ("Non-option argument %s\n", argv[index]);
-  return 0;
-@}
+@include testopt.c.texi
 @end example
 
 Here are some examples showing what this program prints with different

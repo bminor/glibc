@@ -907,7 +907,8 @@ termination_handler (int signum)
     unlink (p->name);
 @}
 
-main ()
+int
+main (void)
 @{
   @dots{}
   if (signal (SIGINT, termination_handler) == SIG_IGN)
@@ -1078,7 +1079,8 @@ termination_handler (int signum)
     unlink (p->name);
 @}
 
-main ()
+int
+main (void)
 @{
   @dots{}
   struct sigaction new_action, old_action;
@@ -1288,38 +1290,7 @@ This technique is useful because it allows the iteration in progress
 when the signal arrives to complete before the loop exits.
 
 @example
-#include <signal.h>
-#include <stdlib.h>
-
-/* @r{This flag controls termination of the main loop.} */
-
-volatile sig_atomic_t keep_going = 1;
-
-/* @r{The signal handler just clears the flag and re-enables itself.}
-   @r{Actually, for this program re-enabling the handler isn't necessary,}
-   @r{since only one alarm signal has to be caught in order to cause it}
-   @r{to terminate.} */
-
-void
-catch_alarm (int sig)
-@{
-  keep_going = 0;
-  signal (sig, catch_alarm);
-@}
-
-main (void)
-@{
-  /* @r{Establish a handler for @code{SIGALRM} signals.} */
-  signal (SIGALRM, catch_alarm);
-
-  /* @r{Set an alarm to go off in a little while.}  */
-  alarm (2);
-
-  /* @r{Check the flag once in a while to see when to quit.} */
-  while (keep_going)
-    do_stuff ();
-  exit (EXIT_SUCCESS);
-@}      
+@include sigh1.c.texi
 @end example
 
 @node Termination in Handler, Longjmp in Handler, Handler Returns, Defining Handlers
@@ -1566,7 +1537,7 @@ interrupts.
 #include <signal.h>
 #include <stdio.h>
 
-struct two_words @{int a,b;@}
+struct two_words @{int a, b;@}
 struct two_words memory;
 
 void
@@ -1576,17 +1547,18 @@ handler(int signum)
    alarm (1);
 @}
 
-void
+int
 main ()
 @{
    static struct two_words zeros=@{0,0@}, ones=@{1,1@};
    signal (SIGALRM, handler);
    memory = zeros;
    alarm (1);
-   while (1) @{
-      memory = zeros;
-      memory = ones;
-   @}
+   while (1)
+     @{
+       memory = zeros;
+       memory = ones;
+     @}
 @}
 @end example
 
@@ -1667,11 +1639,11 @@ before stopping.  You might set this up like this:
 @example
 #include <signal.h>
 
-/* @r{When a stop signal arrives, set the action back to the default}
- * @r{and then resend the signal after doing cleanup actions.}
- */
+/* @r{When a stop signal arrives, set the action back to the default
+   and then resend the signal after doing cleanup actions.} */
 
-void tstp_handler (int sig)
+void
+tstp_handler (int sig)
 @{
   signal (SIGTSTP, SIG_DFL);
   /* @r{Do cleanup actions here.} */
@@ -1679,18 +1651,18 @@ void tstp_handler (int sig)
   raise (SIGTSTP);
 @}
 
-/* @r{When the process is continued again, restore the signal handler.}
- */
+/* @r{When the process is continued again, restore the signal handler.} */
 
-void cont_handler (int sig)
+void
+cont_handler (int sig)
 @{
   signal (SIGCONT, cont_handler);
   signal (SIGTSTP, tstp_handler);
 @}
 
-/* @r{Enable both handlers during program initialization.}
- */
+/* @r{Enable both handlers during program initialization.} */
 
+int
 main (void)
 @{
   signal (SIGCONT, cont_handler);
@@ -1857,65 +1829,7 @@ the parent when it is ready by sending it a @code{SIGUSR1} signal, using
 the @code{kill} function.
 
 @example
-#include <signal.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <unistd.h>
-
-/* @r{When a @code{SIGUSR1} signal arrives, set this variable.}  */
-
-volatile sig_atomic_t usr_interrupt = 0;
-
-void
-synch_signal (int sig)
-@{
-  usr_interrupt = 1;
-@}
-
-
-/* @r{The child process executes this function.}  */
-
-void
-child_function ()
-@{
-  /* @r{Perform initialization.} */
-  printf ("I'm here!!!  My pid is %d.\n", getpid ());
-
-  /* @r{Let parent know you're done.} */
-  kill (getppid (), SIGUSR1);  
-
-  /* @r{Continue with execution.} */
-  printf ("Bye, now....\n");
-  exit (0);
-@}
-
-
-void 
-main ()
-@{
-  struct sigaction usr_action;
-  sigset_t block_mask;
-  pid_t child_id;
-
-  /* @r{Establish the signal handler.} */
-  sigfillset (&block_mask);
-  usr_action.sa_handler = synch_signal;
-  usr_action.sa_mask = block_mask;
-  usr_action.sa_flags = 0;
-  sigaction (SIGUSR1, &usr_action, NULL);
-
-  /* @r{Create the child process.} */
-  if ((child_id = fork ()) == 0)
-    child_function ();  /* @r{Does not return} */
-
-  /* @r{Busy wait for child to send a signal.} */
-  while (!usr_interrupt)
-    sleep(1);
-
-  /* @r{Now continue execution.} */
-  printf ("That's all, folks!\n");
-  exit (0);
-@}
+@include sigusr.c.texi
 @end example
 
 Most of the time, the signal is delivered during a @code{sleep}, and
@@ -2179,8 +2093,8 @@ meantime by wrapping the critical part of the code with calls to
 /* @r{This variable is set by the SIGALRM signal handler.} */
 volatile sig_atomic_t flag = 0;
 
-void
-main ()
+int
+main (void)
 @{
   sigset_t block_alarm;
 
@@ -2190,18 +2104,19 @@ main ()
   sigemptyset (&block_alarm);
   sigaddset (&block_alarm, SIGALRM);
 
-  while (1) @{
+  while (1)
+    @{
+      /* @r{Check if a signal has arrived; if so, reset the flag.} */
+      sigprocmask (SIG_BLOCK, &block_alarm, NULL);
+      if (flag)
+        @{
+          @var{actions-if-not-arrived}
+          flag = 0;
+        @}
+      sigprocmask (SIG_UNBLOCK, &block_alarm, NULL);
 
-    /* @r{Check if a signal has arrived; if so, reset the flag.} */
-    sigprocmask (SIG_BLOCK, &block_alarm, NULL);
-    if (flag) @{
-      @var{actions-if-not-arrived}
-      flag = 0;
-      @}
-    sigprocmask (SIG_UNBLOCK, &block_alarm, NULL);
-
-    @dots{}
-  @}
+      @dots{}
+    @}
 @}
 @end example
 
@@ -2666,7 +2581,7 @@ calls should return with a @code{EINTR} error status.
 @end deftypevr
 
 @comment signal.h
-@comment BSD
+@comment Sun
 @deftypevr Macro int SV_RESETHAND
 If this bit is set in the @code{sv_flags} field of a @code{sigvec}
 structure, it means to reset the action for the signal back to

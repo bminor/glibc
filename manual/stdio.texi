@@ -1780,58 +1780,7 @@ structure.  The @samp{%W} conversion supports the minimum field width and
 left-justification options, but ignores everything else.
 
 @example
-#include <stdio.h>
-#include <printf.h>
-#include <stdarg.h>
-
-struct widget 
-@{
-  char *name;
-  @dots{}
-@};
-
-int
-print_widget (FILE *stream, const struct printf_info *info,
-              va_list *app)
-@{
-  struct widget *w;
-  char *buffer;
-  int padding_amount, i;
-
-  /* @r{Fetch the widget to be printed.} */
-  w = va_arg (*app, struct widget *);
-  /* @r{Format the output into a string.} */
-  padding_amount
-    = (info->width -
-       asprintf (&buffer, "<Widget %p: %s>", w, w->name));
-
-  /* @r{Pad to the minimum field width and print to the stream.} */
-  if (!info->left)
-    for (i = 0; i < padding_amount; i++) fputc (' ', stream);
-  fputs (buffer, stream);
-  if (info->left)
-    for (i = 0; i < padding_amount; i++) fputc (' ', stream);
-
-  /* @r{Clean up and return.} */
-  free (buffer);
-  return 1;
-@}
-
-void
-main (void)
-@{
-  /* @r{Make a widget to print.} */
-  struct widget mywidget;
-  mywidget.name = "mywidget";
-
-  /* @r{Register the print function for widgets.} */
-  register_printf_function ('W', print_widget, NULL);
-
-  /* @r{Now print the widget.} */
-  printf ("|%W|\n", &mywidget);
-  printf ("|%35W|\n", &mywidget);
-  printf ("|%-35W|\n", &mywidget);
-@}
+@include rprintf.c.texi
 @end example
 
 The output produced by this program looks like:
@@ -3126,21 +3075,7 @@ Here is an example of using @code{fmemopen} to create a stream for
 reading from a string:
 
 @example
-#include <stdio.h>
-
-static char buffer[] = "foobar";
-
-void
-main (void)
-@{
-  int ch;
-  FILE *stream;
-
-  stream = fmemopen (buffer, strlen(buffer), "r");
-  while ((ch = fgetc (stream)) != EOF)
-    printf ("Got %c\n", ch);
-  fclose (stream);
-@}
+@include memopen.c.texi
 @end example
 
 This program produces the following output:
@@ -3175,23 +3110,7 @@ is @emph{not} included in the size value stored at @var{sizeloc}.
 Here is an example of using @code{open_memstream}:
 
 @example
-#include <stdio.h>
-
-void
-main (void)
-@{
-  char *bp;
-  size_t size;
-  FILE *stream;
-
-  stream = open_memstream (&bp, &size);
-  fprintf (stream, "hello");
-  fflush (stream);
-  printf ("buf = `%s', size = %d\n", bp, size);
-  fprintf (stream, ", world");
-  fclose (stream);
-  printf ("buf = `%s', size = %d\n", bp, size);
-@}
+@include memstream.c.texi
 @end example
 
 This program produces the following output:

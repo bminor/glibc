@@ -504,8 +504,8 @@ undo_setuid ()
 
 /* @r{Main program.} */
 
-void
-main ()
+int
+main (void)
 @{
   /* @r{Save the real and effective user IDs.}  */
   ruid = getuid ();
@@ -952,52 +952,7 @@ functions.  The program prints some information about the user running
 the program.
 
 @example
-#include <grp.h>
-#include <pwd.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdlib.h>
-
-void
-main ()
-@{
-  uid_t me;
-  struct passwd *my_passwd;
-  struct group *my_group;
-  char **members;
-
-  /* @r{Get information about the user ID.} */
-  me = getuid ();
-  my_passwd = getpwuid (me);
-  if (!my_passwd) @{
-    printf ("Couldn't find out about user %d.\n", me);
-    exit (EXIT_FAILURE);
-    @}
-
-  /* @r{Print the information.} */
-  printf ("My login name is %s.\n", my_passwd->pw_name);
-  printf ("My uid is %d.\n", my_passwd->pw_uid);
-  printf ("My home directory is %s.\n", my_passwd->pw_dir);
-  printf ("My default shell is %s.\n", my_passwd->pw_shell);
-
-  /* @r{Get information about the default group ID.} */
-  my_group = getgrgid (my_passwd->pw_gid);
-  if (!my_group) @{
-    printf ("Couldn't find out about group %d.\n",
-            my_passwd->pw_gid);
-    exit (EXIT_FAILURE);
-    @}
-
-  /* @r{Print the information.} */
-  printf ("My default group is %s (%d).\n",
-	  my_group->gr_name, my_passwd->pw_gid);
-  printf ("The members of this group are:\n");
-  members = my_group->gr_mem;
-  while (*members)
-    printf ("  %s\n", *members++);
-
-  exit (EXIT_SUCCESS);
-@}
+@include db.c.texi
 @end example
 
 Here is some output from this program:

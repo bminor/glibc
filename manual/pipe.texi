@@ -75,67 +75,7 @@ a child process.  The parent process writes data to the pipe, which is
 read by the child process.
 
 @example
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-/* @r{Read characters from the pipe and echo them to stdout.}  */
-
-void 
-read_from_pipe (int file)
-@{
-  FILE *stream;
-  int c;
-  stream = fdopen (file, "r");
-  while ((c = fgetc (stream)) != EOF)
-    putchar (c);
-  fclose (stream);
-@}
-
-/* @r{Write some random text to the pipe.} */
-
-void 
-write_to_pipe (int file)
-@{
-  FILE *stream;
-  stream = fdopen (file, "w");
-  fprintf (stream, "hello, world!\n");
-  fprintf (stream, "goodbye, world!\n");
-  fclose (stream);
-@}
-
-
-void
-main (void)
-@{
-  pid_t pid;
-  int mypipe[2];
-
-  /* @r{Create the pipe.} */
-  if (pipe (mypipe)) @{
-    perror ("pipe failed");
-    exit (EXIT_FAILURE);
-    @}
-
-  /* @r{Create the child process.} */
-  pid = fork ();
-  if (pid == (pid_t) 0) @{
-    /* @r{This is the child process.} */
-    read_from_pipe (mypipe[0]);
-    exit (EXIT_SUCCESS);
-    @}
-  else if (pid < (pid_t) 0) @{
-    /* @r{The fork failed.} */
-    perror ("fork failed");
-    exit (EXIT_FAILURE);
-    @}
-  else @{
-    /* @r{This is the parent process.} */
-    write_to_pipe (mypipe[1]);
-    exit (EXIT_SUCCESS);
-    @}
-@}
+@include pipe.c.texi
 @end example
 
 
@@ -192,27 +132,8 @@ filter output through another program, in this case the paging program
 @code{more}.
 
 @example
-#include <stdio.h>
-#include <stdlib.h>
-
-void 
-main (void)
-@{
-  FILE *output;
-
-  output = popen ("more", "w");
-  if (!output) @{
-    perror ("popen failed, running `more'");
-    exit (EXIT_FAILURE);
-    @}
-  @dots{}
-  fprintf (output, @dots{});
-  @dots{}
-  pclose (output);
-  exit (EXIT_SUCCESS);
-@}
+@include popen.c.texi
 @end example
-
 
 @node FIFO Special Files,  , Pipe to a Subprocess, Pipes and FIFOs
 @section FIFO Special Files
