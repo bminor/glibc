@@ -209,7 +209,8 @@ realclean distclean: parent-clean
 # Subroutine of distclean and realclean.
 distclean-1: subdir_$(distclean-1)
 	-rm -f $(config-generated)
-	-rm -f $(addprefix $(objpfx),config.status config.make)
+	-rm -f $(addprefix $(objpfx),config.status cache.cache)
+	-rm -f $(addprefix $(objpfx),config.make config-name.h)
 ifdef objdir
 	-rm -f $(objpfx)Makefile
 endif
