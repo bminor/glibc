@@ -136,7 +136,8 @@ _hurd_critical_section_lock (void)
   /* Set the critical section flag so no later call will try to
      take the sigstate lock while we already have it locked.  */
   ss->critical_section = 1;
-  /* Return  */
+  /* Return our sigstate pointer; this will be passed to
+     _hurd_critical_section_unlock to clear the critical section flag. */
   return ss;
 }
 
