@@ -57,9 +57,9 @@ export subdirs := $(subdirs)	# Benign, useless in GNU make before 3.63.
 
 
 # These are the targets that are made by making them in each subdirectory.
-+subdir_targets	:= subdir_lib objects objs others mostlyclean subdir_clean\
-		   tests subdir_lint.out 	\
-		   subdir_echo-headers subdir_echo-distinfo subdir_install
++subdir_targets	:= subdir_lib objects objs others mostlyclean		\
+		   subdir_clean tests subdir_lint.out subdir_install	\
+		   subdir_echo-headers subdir_echo-distinfo 
 
 headers := features.h stubs.h errno.h sys/errno.h errnos.h limits.h \
 	   $(stddef.h) $(stdarg.h)
@@ -101,7 +101,7 @@ $(objpfx)Mcrt1.o:
 	$(COMPILE.c) $(objpfx)Mcrt1.c $(OUTPUT_OPTION)
 	rm -f $(objpfx)Mcrt1.c
 
-$(libc.a): subdir_lib
+lib-noranlib: subdir_lib
 
 
 $(objpfx)sysd-dirs: $(+sysdir_pfx)config.make
