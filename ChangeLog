@@ -1,3 +1,8 @@
+2002-02-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/rtime.c (rtime): Change type of thetime to uint32_t.
+	Reported by Walter Harms <WHarms@bfs.de>.
+
 2002-02-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/da.po: Update from translation team.
