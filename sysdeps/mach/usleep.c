@@ -32,7 +32,7 @@ DEFUN(usleep, (useconds), unsigned int useconds)
 
   if (__gettimeofday (&before, NULL) < 0)
     return useconds;
-  (void) __mach_msg (NULL, MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
+  (void) __mach_msg (NULL, MACH_RCV_MSG|MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
 		     0, 0, recv, (useconds + 999) / 1000, MACH_PORT_NULL);
   if (__gettimeofday (&after, NULL) < 0)
     return 0;
