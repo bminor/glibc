@@ -811,9 +811,6 @@ may be normalized even if its fraction is less than @code{1/@var{b}}.)
 @node Floating Point Parameters
 @subsubsection Floating Point Parameters
 
-@strong{Incomplete:}  This section needs some more concrete examples
-of what these parameters mean and how to use them in a program.
-
 @pindex float.h
 These macro definitions can be accessed by including the header file
 @file{float.h} in your program.
@@ -861,18 +858,45 @@ Rounding is towards negative infinity.
 Any other value represents a machine-dependent nonstandard rounding
 mode.
 
+On most machines, the value is @code{1}, in accord with the IEEE
+standard for floating point.
+
+Here is a table showing how certain values round for each possible value
+of @code{FLT_ROUNDS}, if the other aspects of the representation match
+the IEEE single-precision standard.
+
+@example
+                 0       1              2              3
+ 1.00000003     1.0     1.0            1.00000012     1.0
+ 1.00000007     1.0     1.00000012     1.00000012     1.0
+-1.00000003    -1.0    -1.0           -1.0           -1.00000012
+-1.00000007    -1.0    -1.00000012    -1.0           -1.00000012
+@end example
+
 @comment float.h
 @comment ANSI
 @item FLT_RADIX
 This is the value of the base, or radix, of exponent representation.
 This is guaranteed to be a constant expression, unlike the other macros
-described in this section.
+described in this section.  The value is 2 on all machines we know of
+except the IBM 360 and derivatives.
 
 @comment float.h
 @comment ANSI
 @item FLT_MANT_DIG
 This is the number of base-@code{FLT_RADIX} digits in the floating point
-mantissa for the @code{float} data type.
+mantissa for the @code{float} data type.  The following expression
+yields @code{1.0} (even though mathematically it should not) due to the
+limited number of mantissa digits:
+
+@example
+float radix = FLT_RADIX;
+
+1.0f + 1.0f / radix / radix / @dots{} / radix
+@end example
+
+@noindent
+where @code{radix} appears @code{FLT_MANT_DIG} times.
 
 @comment float.h
 @comment ANSI
