@@ -57,5 +57,25 @@ void
 DEFUN(msort, (b, n, s, cmp),
       PTR b AND size_t n AND size_t s AND __compar_fn_t cmp)
 {
-  msort_with_tmp (b, n, s, cmp, __alloca (n * s));
+  CONST size_t size = n * s;
+
+  if (size < 1024)
+    /* The temporary array is small, so put it on the stack.  */
+    msort_with_tmp (b, n, s, cmp, __alloca (size));
+  else
+    {
+      /* It's somewhat large, so malloc it.  */
+      int save = errno;
+      char *tmp = malloc (size);
+      if (tmp == NULL)
+	/* Couldn't get space, so use the slower algorithm
+	   that doesn't need a temporary array.  */
+	qsort (b, n, s, cmp);
+      else
+	{
+	  msort_with_tmp (b, n, s, cmp, tmp);
+	  free (tmp);
+	}
+      errno = save;
+    }
 }
