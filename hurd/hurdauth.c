@@ -17,10 +17,21 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
+#include "hurd/msg_server.h"
+
+int
+_hurd_refport_secure_p (mach_port_t ref)
+{
+  if (ref == __mach_task_self ())
+    return 1;
+  if (__USEPORT (AUTH, ref == port))
+    return 1;
+  return 0;
+}
 
 error_t
-__add_auth (mach_port_t me,
-	    auth_t addauth)
+_S_add_auth (mach_port_t me,
+	     auth_t addauth)
 {
   error_t err;
   auth_t newauth;
@@ -39,10 +50,10 @@ __add_auth (mach_port_t me,
 }
 
 error_t
-__del_auth (mach_port_t me,
-	    task_t task,
-	    uid_t *uids, mach_msg_type_number_t nuids,
-	    gid_t *gids, mach_msg_type_number_t ngids)
+_S_del_auth (mach_port_t me,
+	     task_t task,
+	     uid_t *uids, mach_msg_type_number_t nuids,
+	     gid_t *gids, mach_msg_type_number_t ngids)
 {
   error_t err;
   auth_t newauth;
