@@ -263,9 +263,9 @@ CONST unsigned short int __ctype_b_C[] =
     _IScntrl,
     _IScntrl,
   };
-CONST unsigned char __ctype_tolower_C[] =
+CONST short int __ctype_tolower_C[] =
   {
-    '\377',
+    -1,
     '\000',
     '\001',
     '\002',
@@ -523,9 +523,9 @@ CONST unsigned char __ctype_tolower_C[] =
     '\376',
     '\377',
   };
-CONST unsigned char __ctype_toupper_C[] =
+CONST short int __ctype_toupper_C[] =
   {
-    '\377',
+    -1,
     '\000',
     '\001',
     '\002',
@@ -788,6 +788,6 @@ CONST unsigned char __ctype_toupper_C[] =
 CONST struct ctype_ctype_info __ctype_ctype_C =
   {
     (unsigned short int *) __ctype_b_C,
-    (unsigned char *) __ctype_tolower_C,
-    (unsigned char *) __ctype_toupper_C
+    (short int *) __ctype_tolower_C,
+    (short int *) __ctype_toupper_C
   };
