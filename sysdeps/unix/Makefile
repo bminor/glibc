@@ -53,10 +53,7 @@ $(common-objpfx)param.h.dep: $(common-objpfx)param.h.c \
 	      -e 's@\\$$@@'			\
 	      -e 's@^@sys/param.h-includes := $$(sys/param.h-includes) @'
 
-ifeq ($(subdir),misc)
-
-# Install system headers the system sys/param.h uses.
-
+# Get the generated definition of sys/param.h-includes.
 include $(common-objpfx)param.h.dep
 
 # Don't preempt our own headers. 
@@ -66,8 +63,9 @@ sys/param.h-includes := \
 				     $(sys/param.h-includes)))),\
 	       $(sys/param.h-includes))
 
-sysdep_headers := $(sysdep_headers) $(sys/param.h-includes)
-generated := $(generated) $(sys/param.h-includes)
+
+.PHONY: sys/param.h-includes
+sys/param.h-includes: $(addprefix $(common-objpfx),$(sys/param.h-includes))
 
 ifdef sys/param.h-includes
 # Copy the system files to $(common-objdir).
@@ -77,12 +75,19 @@ $(addprefix $(common-objpfx),$(sys/param.h-includes)): $(common-objpfx)%: \
 # Some of these files sometimes contain conflicting declarations for htons,
 # ntohs, etc.  They also often contain definitions of *_ENDIAN and
 # BYTE_ORDER, which we define ourselves in <endian.h>.
-	sed -e '/[ 	]*[hn][sl]to[nh][sl][	 (]*/d' \
+	sed -e '/[ 	]*[hn]to[nh][sl][	 (]*/d' \
 	    -e '/^#define[ 	]*[A-Z]*_ENDIAN/d' \
 	    -e '/^#define[ 	]*BYTE_ORDER/d' \
 	    $< > $@-t
 	mv $@-t $@
 endif
+
+ifeq ($(subdir),misc)
+
+# Install system headers the system sys/param.h uses.
+
+sysdep_headers := $(sysdep_headers) $(sys/param.h-includes)
+generated := $(generated) $(sys/param.h-includes)
 
 endif # misc
 
