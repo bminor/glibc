@@ -1,3 +1,14 @@
+1998-01-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/nss_files/files-network.c: Correct order of parameters for
+	getnetbyaddr.
+	(LINE_PARSER): Set n_addrtype to AF_INET.
+
+1998-01-25 19:24   Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Let GLOB_DAT
+	and JMP_SLOT see the relocation addend.
+
 1997-12-28 19:22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (RELEASE): Set to "production".
