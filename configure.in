@@ -743,7 +743,7 @@ cat > conftest.c <<\EOF
 foo () { }
 EOF
 dnl
-if AC_TRY_COMMAND([${CC-cc} -S conftest.c -o - | fgrep '$foo..ng' > /dev/null]);
+if AC_TRY_COMMAND([${CC-cc} -S conftest.c -o - | fgrep "\$foo..ng" > /dev/null]);
 then
   libc_cv_gcc_alpha_ng_prefix=yes
 else
