@@ -361,9 +361,12 @@ and the value is @code{CHAR_MAX}, it means that the current locale has
 no value for that parameter.
 
 @menu
-* General Numeric::             
-* Currency Symbol::             
-* Sign of Money Amount::        
+* General Numeric::             Parameters for formatting numbers and
+                                 currency amounts.
+* Currency Symbol::             How to print the symbol that identifies an
+                                 amount of money (e.g. @samp{$}).
+* Sign of Money Amount::        How to print the (positive or negative) sign
+                                 for a monetary amount, if one exists.
 @end menu
 
 @node General Numeric, Currency Symbol,  , Numeric Formatting
@@ -529,7 +532,7 @@ only to the @code{currency_symbol}---that the @code{int_curr_symbol}
 contains any appropriate separator, so you should never print an
 additional space.
 
-based on what we know now, we recommend you ignore these members when
+Based on what we know now, we recommend you ignore these members when
 printing international currency symbols, and print no extra space.
 @end table
 
