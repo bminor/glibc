@@ -64,11 +64,29 @@ typedef struct
 
 /* Functions to do I/O and file management for a stream.  */
 
+/* Read NBYTES bytes from COOKIE into a buffer pointed to by BUF.
+   Return number of bytes read.  */
 typedef __ssize_t EXFUN(__io_read, (PTR __cookie, char *__buf,
 				    size_t __nbytes));
+
+/* Write N bytes pointed to by BUF to COOKIE.  Write all N bytes
+   unless there is an error.  Return number of bytes written, or -1 if
+   there is an error without writing anything.  If the file has been
+   opened for append (__mode.__append set), then set the file pointer
+   to the end of the file and then do the write; if not, just write at
+   the current file pointer.  */
 typedef __ssize_t EXFUN(__io_write, (PTR __cookie, CONST char *__buf,
 				     size_t __n));
+
+/* Move COOKIE's file position to *POS bytes from the
+   beginning of the file (if W is SEEK_SET),
+   the current position (if W is SEEK_CUR),
+   or the end of the file (if W is SEEK_END).
+   Set *POS to the new file position.
+   Returns zero if successful, nonzero if not.  */
 typedef int EXFUN(__io_seek, (PTR __cookie, fpos_t *__pos, int __w));
+
+/* Close COOKIE.  */
 typedef int EXFUN(__io_close, (PTR __cookie));
 
 /* Low level interface, independent of FILE representation.  */
