@@ -19,7 +19,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <string.h>
 
-char *__progname = "";
+char *__progname = (char *) "";
 
 void
 __init_misc (argc, argv, envp)
