@@ -28,7 +28,16 @@ int
 _hurd_intern_fd (io_t port, int flags, int dealloc)
 {
   int fd;
-  struct hurd_fd *d = _hurd_alloc_fd (&fd, 0);
+  struct hurd_fd *d;
+
+  HURD_CRITICAL_BEGIN;
+  d = _hurd_alloc_fd (&fd, 0);
+  if (d != NULL)
+    {
+      _hurd_port2fd (d, port, flags);
+      __spin_unlock (&d->port.lock);
+    }
+  HURD_CRITICAL_END;
 
   if (d == NULL)
     {
@@ -37,7 +46,5 @@ _hurd_intern_fd (io_t port, int flags, int dealloc)
       return -1;
     }
 
-  _hurd_port2fd (d, port, flags);
-  __spin_unlock (&d->port.lock);
   return fd;
 }
