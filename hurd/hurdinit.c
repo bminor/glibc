@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/port.h>
 #include "set-hooks.h"
+#include "hurdmalloc.h"		/* XXX */
 
 
 struct hurd_port *_hurd_ports;
