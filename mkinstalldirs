@@ -1,0 +1,32 @@
+#!/bin/sh
+# Make directory hierarchy. 
+# Written by Noah Friedman <friedman@prep.ai.mit.edu>
+# Public domain.
+
+defaultIFS=' 	
+'
+IFS="${IFS-${defaultIFS}}"
+
+for file in ${1+"$@"} ; do 
+   oIFS="${IFS}"; IFS='/'; set - ${file}; IFS="${oIFS}"
+   test ".${1}" = "." && shift
+
+   case "${file}" in 
+    /* ) pathcomp='/' ;;
+    * )  pathcomp=''  ;;
+   esac
+
+   while test $# -ne 0 ; do
+     pathcomp="${pathcomp}${1}"
+     shift
+
+     if test ! -d "${pathcomp}"; then
+        echo "mkdir $pathcomp" 1>&2
+        mkdir "${pathcomp}"
+     fi
+
+     pathcomp="${pathcomp}/"
+   done
+done
+
+# eof
