@@ -64,9 +64,7 @@ extern __const unsigned char *__ctype_toupper;	/* Case conversions.  */
 #define	__tolower(c)	__ctype_tolower[c]
 #define	__toupper(c)	__ctype_toupper[c]
 
-/* @ This line MUST be broken!  m4 will not change it otherwise. @ */
-#define	__exctype(name)	\
-  extern int name __P ((int))
+#define	__exctype(name)	extern int name __P ((int))
 
 /* The following names are all functions:
      int isCHARACTERISTIC(int c);
