@@ -39,11 +39,11 @@ DEFUN_VOID(__getgid)
     {
       /* We have no real gid.  */
       errno = XXX;
-      egid = -1;
+      rgid = -1;
     }
   else
-    egid = _hurd_gid.rid;
+    rgid = _hurd_gid.rid;
 
   __mutex_unlock (&_hurd_idlock);
-  return egid;
+  return rgid;
 }
