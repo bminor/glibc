@@ -562,10 +562,18 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 		{
 	 	  FLOAT retval;
 
-		  /* Overflow or underflow.  */
-		  __set_errno (ERANGE);
-		  retval = (exp_negative ? 0.0 :
-			    negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL);
+		  /* We have to take care for special situation: a joker
+		     might have written "0.0e100000" which is in fact
+		     zero.  */
+		  if (lead_zero == -1)
+		    retval = !negative ? 0.0 : -0.0;
+		  else
+		    {
+		      /* Overflow or underflow.  */
+		      __set_errno (ERANGE);
+		      retval = (exp_negative ? 0.0 :
+				negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL);
+		    }
 
 		  /* Accept all following digits as part of the exponent.  */
 		  do
@@ -606,7 +614,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
     *endptr = (STRING_TYPE *) cp;
 
   if (dig_no == 0)
-    return 0.0;
+    return !negative ? 0.0 : -0.0;
 
   if (lead_zero)
     {
