@@ -15,7 +15,7 @@ main (void)
 {
   while (1)
     if (setjmp (main_loop))
-      printf ("Back at main loop....\n");
+      puts ("Back at main loop....");
     else
       do_command ();
 }
@@ -25,7 +25,7 @@ void
 do_command (void)
 {
   char buffer[128];
-  if (fgets (buffer, 128, stdin))
+  if (fgets (buffer, 128, stdin) == NULL)
     abort_to_main_loop (-1);
   else
     exit (EXIT_SUCCESS);
