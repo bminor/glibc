@@ -1,0 +1,18 @@
+--- libc/sysdeps/unix/sysv/linux/powerpc/kernel-features.h.jj	2003-01-30 05:24:37.000000000 -0500
++++ libc/sysdeps/unix/sysv/linux/powerpc/kernel-features.h	2003-09-23 18:28:07.000000000 -0400
+@@ -0,0 +1,15 @@
++/* In RHEL3, we can assume the shipped kernel, which is 2.4.21.  */
++#include_next <kernel-features.h>
++
++#if !defined __ASSUME_NEW_PRCTL_SYSCALL && defined __powerpc__
++# define __ASSUME_NEW_PRCTL_SYSCALL		1
++#endif
++
++#if !defined __ASSUME_FIXED_CLONE_SYSCALL && defined __powerpc__ \
++    && !defined __powerpc64__
++# define __ASSUME_FIXED_CLONE_SYSCALL		1
++#endif
++
++#if !defined __ASSUME_NEW_RT_SIGRETURN_SYSCALL && defined __powerpc64__
++# define __ASSUME_NEW_RT_SIGRETURN_SYSCALL	1
++#endif

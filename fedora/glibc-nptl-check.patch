@@ -1,0 +1,48 @@
+--- libc/sysdeps/unix/sysv/linux/dl-osinfo.h.jj	2002-12-10 09:09:24.000000000 -0500
++++ libc/sysdeps/unix/sysv/linux/dl-osinfo.h	2003-05-20 17:05:37.000000000 -0400
+@@ -22,6 +22,7 @@
+ #include <sys/sysctl.h>
+ #include <sys/utsname.h>
+ #include "kernel-features.h"
++#include <sysdep.h>
+ 
+ #ifndef MIN
+ # define MIN(a,b) (((a)<(b))?(a):(b))
+@@ -37,8 +38,29 @@ dl_fatal (const char *str)
+   _dl_dprintf (2, str);
+   _exit (1);
+ }
+-#endif
+ 
++static inline void
++__attribute__ ((always_inline))
++dl_redhat_nptl_check (const char *cp)
++{
++  cp = strchr (cp, 'n');
++  if (__builtin_expect (cp == NULL || cp[1] != 'p'
++			|| cp[2] != 't' || cp[3] != 'l', 0)
++      && GLRO(dl_osversion) < 0x20545
++      && GLRO(dl_osversion) > 0x20413)
++    {
++#ifdef __NR_set_tid_address
++      INTERNAL_SYSCALL_DECL (err);
++      int ret;
++      ret = INTERNAL_SYSCALL (set_tid_address, err, 1, NULL);
++      if (INTERNAL_SYSCALL_ERROR_P (ret, err))
++#endif
++	GLRO(dl_osversion) = 0x20413;
++    }
++}
++#else
++#define dl_redhat_nptl_check(cp)
++#endif
+ 
+ #define DL_SYSDEP_OSCHECK(FATAL) \
+   do {									      \
+@@ -105,5 +127,6 @@ dl_fatal (const char *str)
+ 	  FATAL ("FATAL: kernel too old\n");				      \
+ 									      \
+ 	GLRO(dl_osversion) = version;					      \
++	dl_redhat_nptl_check (cp);					      \
+       }									      \
+   } while (0)

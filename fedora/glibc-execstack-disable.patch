@@ -1,0 +1,65 @@
+--- libc/config.make.in.jj	Wed Sep 24 05:39:06 2003
++++ libc/config.make.in	Wed Sep 24 17:03:11 2003
+@@ -42,7 +42,7 @@ have-z-nodelete = @libc_cv_z_nodelete@
+ have-z-nodlopen = @libc_cv_z_nodlopen@
+ have-z-initfirst = @libc_cv_z_initfirst@
+ have-z-combreloc = @libc_cv_z_combreloc@
+-have-z-execstack = @libc_cv_z_execstack@
++have-z-execstack = no
+ have-initfini = @libc_cv_have_initfini@
+ have-Bgroup = @libc_cv_Bgroup@
+ need-nopic-initfini = @nopic_initfini@
+--- libc/linuxthreads/sysdeps/unix/sysv/linux/dl-execstack.c.jj	Thu Apr 11 10:25:15 2002
++++ libc/linuxthreads/sysdeps/unix/sysv/linux/dl-execstack.c	Wed Sep 24 17:45:40 2003
+@@ -0,0 +1 @@
++#include <sysdeps/generic/dl-execstack.c>
+--- libc/elf/rtld.c.jj	Wed Sep 24 05:39:07 2003
++++ libc/elf/rtld.c	Wed Sep 24 17:52:43 2003
+@@ -764,6 +764,7 @@ of this helper program; chances are you 
+ 	 load the program below unless it has a PT_GNU_STACK indicating
+ 	 nonexecutable stack is ok.  */
+ 
++      if (0)
+       for (ph = phdr; ph < &phdr[phnum]; ++ph)
+ 	if (ph->p_type == PT_GNU_STACK)
+ 	  {
+@@ -929,7 +930,7 @@ of this helper program; chances are you 
+ 	break;
+ #endif
+       case PT_GNU_STACK:
+-	GL(dl_stack_flags) = ph->p_flags;
++//	GL(dl_stack_flags) = ph->p_flags;
+ 	break;
+       }
+ #ifdef USE_TLS
+--- libc/elf/dl-support.c.jj	Wed Sep 24 06:22:50 2003
++++ libc/elf/dl-support.c	Wed Sep 24 17:54:05 2003
+@@ -281,7 +281,7 @@ _dl_non_dynamic_init (void)
+ #endif
+ 
+   /* Scan for a program header telling us the stack is nonexecutable.  */
+-  if (_dl_phdr != NULL)
++  if (0 && _dl_phdr != NULL)
+     for (uint_fast16_t i = 0; i < _dl_phnum; ++i)
+       if (_dl_phdr[i].p_type == PT_GNU_STACK)
+ 	{
+--- libc/elf/dl-load.c.jj	2003-09-24 05:34:10.000000000 -0400
++++ libc/elf/dl-load.c	2003-09-24 18:10:41.000000000 -0400
+@@ -1063,7 +1063,7 @@ cannot allocate TLS data structures for 
+ 	  break;
+ 
+ 	case PT_GNU_STACK:
+-	  stack_flags = ph->p_flags;
++//	  stack_flags = ph->p_flags;
+ 	  break;
+ 	}
+ 
+@@ -1341,7 +1341,7 @@ cannot allocate TLS data structures for 
+   l->l_dev = st.st_dev;
+   l->l_ino = st.st_ino;
+ 
+-  if (__builtin_expect ((stack_flags &~ GL(dl_stack_flags)) & PF_X, 0))
++  if (0 && __builtin_expect ((stack_flags &~ GL(dl_stack_flags)) & PF_X, 0))
+     {
+       /* The stack is presently not executable, but this module
+ 	 requires that it be executable.  */
