@@ -16,7 +16,6 @@ semget		-	semget		3	__semget	semget
 semctl		-	semctl		4	__semctl	semctl
 
 osf_sigprocmask	-	osf_sigprocmask	2	__osf_sigprocmask
-s_sigaction	sigaction osf_sigaction	3	__syscall_sigaction
 getpeername	-	getpeername	3	__getpeername	getpeername
 getpriority	-	getpriority	2	__getpriority	getpriority
 mmap		-	mmap		6	__mmap		mmap
@@ -28,8 +27,6 @@ statfs		-	statfs		2	__statfs	statfs
 sys_ustat	ustat	ustat		2	__syscall_ustat
 sys_mknod	xmknod	mknod		3	__syscall_mknod
 
-# override select.S in parent directory:
-select		-	select		5	__select	select
 accept		-	accept		3	__libc_accept	__accept accept
 bind		-	bind		3	__bind		bind
 connect		-	connect		3	__libc_connect	__connect connect
@@ -52,3 +49,14 @@ sysctl		-	_sysctl		6	sysctl
 # access pci space protected from machine checks:
 pciconfig_read	EXTRA	pciconfig_read	5	pciconfig_read
 pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write
+
+# make sure we get the tv32 versions of these syscalls:
+select		-	osf_select	5	__select	select
+gettimeofday	-	osf_gettimeofday 2	__gettimeofday	gettimeofday
+settimeofday	-	osf_settimeofday 2	__settimeofday	settimeofday
+getitimer	-	osf_getitimer	2	__getitimer	getitimer
+setitimer	-	osf_setitimer	3	__setitimer	setitimer
+utimes		-	osf_utimes	2	__utimes	utimes
+getrusage	-	osf_getrusage	2	__getrusage	getrusage
+wait4		-	osf_wait4	4	__wait4		wait4
+adjtimex	-	old_adjtimex	1	__adjtimex	adjtimex
