@@ -49,8 +49,8 @@ DEFUN(__sigaction, (sig, act, oact),
     /* Inform the proc server whether or not it should send us SIGCHLD for
        stopped children.  We do this with SS->lock held so that no SIGCHLD
        can arrive in the middle and be of indeterminate status.  */
-    __USEPORT (PROC, __proc_mark_nostopchild (port,
-					      a.sa_flags & SA_NOCLDSTOP));
+    __USEPORT (PROC,
+	       __proc_mod_stopchild (port, !(a.sa_flags & SA_NOCLDSTOP)));
 
   old = ss->actions[sig];
 
