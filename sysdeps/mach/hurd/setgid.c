@@ -47,7 +47,7 @@ DEFUN(__setgid, (gid), gid_t gid)
     if (_hurd_id.gids[i] == gid)
       {
 	/* We already have this gid.  Swap it with gids[0]
-	   so getgid will return it.  */
+	   so getegid will return it.  */
 	_hurd_id.gids[i] = _hurd_id.gids[0];
 	break;
       }
