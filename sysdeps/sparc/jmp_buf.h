@@ -3,7 +3,7 @@
 typedef struct
   {
     /* Return PC (register o7).  */
-    PTR __pc;
+    __ptr_t __pc;
     /* Saved FP.  */
-    PTR __fp;
+    __ptr_t __fp;
   } __jmp_buf[1];
