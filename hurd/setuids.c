@@ -16,6 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#ifndef MIB_HACKS
 #include <hurd.h>
 
 /* Set the uid set for the current user to UIDS (N of them).  */
@@ -54,3 +55,4 @@ setuids (int n, const uid_t *uids)
   __mach_port_deallocate (__mach_task_self (), newauth);
   return err;
 }
+#endif
