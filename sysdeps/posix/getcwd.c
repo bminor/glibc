@@ -38,6 +38,12 @@ Cambridge, MA 02139, USA.  */
 char *
 DEFUN(getcwd, (buf, size), char *buf AND size_t size)
 {
+  static CONST char dots[]
+    = "../../../../../../../../../../../../../../../../../../../../../../../\
+../../../../../../../../../../../../../../../../../../../../../../../../../../\
+../../../../../../../../../../../../../../../../../../../../../../../../../..";
+  CONST char *dotp, *dotlist;
+  size_t dotsize;
   dev_t rootdev, thisdev;
   ino_t rootino, thisino;
   char path[PATH_MAX + 1];
@@ -53,16 +59,19 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
   pathp = &path[sizeof(path)];
   *--pathp = '\0';
 
-  if (stat(".", &st) < 0)
+  if (stat (".", &st) < 0)
     return NULL;
   thisdev = st.st_dev;
   thisino = st.st_ino;
 
-  if (stat("/", &st) < 0)
+  if (stat ("/", &st) < 0)
     return NULL;
   rootdev = st.st_dev;
   rootino = st.st_ino;
 
+  dotsize = sizeof (dots) - 1;
+  dotp = &dots[sizeof (dots)];
+  dotlist = dots;
   while (!(thisdev == rootdev && thisino == rootino))
     {
       register DIR *dirstream;
@@ -71,44 +80,63 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
       ino_t dotino;
       char mount_point;
 
-      /* Move up a directory.  */
-      if (chdir("..") < 0)
+      /* Look at the parent directory.  */
+      if (dotp == dotlist)
 	{
-	  if (pathp != &path[sizeof(path) - 1])
+	  /* My, what a deep directory tree you have, Grandma.  */
+	  char *new;
+	  if (dotlist == dots)
 	    {
-	      /* Try to get back to the original directory.
-		 This is the only place where this is possible.  */
-	      int save = errno;
-	      (void) chdir (pathp);
-	      errno = save;
+	      new = malloc (dotsize * 2 + 1);
+	      if (new == NULL)
+		return NULL;
+	      memcpy (new, dots, dotsize);
 	    }
-	  return NULL;
+	  else
+	    {
+	      new = realloc ((PTR) dotlist, dotsize * 2 + 1);
+	      if (new == NULL)
+		goto lose;
+	    }
+	  memcpy (&new[dotsize], new, dotsize);
+	  dotp = &new[dotsize];
+	  dotsize *= 2;
+	  new[dotsize] = '\0';
+	  dotlist = new;
 	}
 
+      dotp -= 3;
+
       /* Figure out if this directory is a mount point.  */
-      if (stat(".", &st) < 0)
-	return NULL;
+      if (stat (dotp, &st) < 0)
+	goto lose;
       dotdev = st.st_dev;
       dotino = st.st_ino;
       mount_point = dotdev != thisdev;
 
       /* Search for the last directory.  */
-      dirstream = opendir(".");
+      dirstream = opendir (dotp);
       if (dirstream == NULL)
-	return NULL;
-      while ((d = readdir(dirstream)) != NULL)
+	goto lose;
+      while ((d = readdir (dirstream)) != NULL)
 	{
 	  if (d->d_name[0] == '.' &&
 	      (d->d_namlen == 1 || (d->d_namlen == 2 && d->d_name[1] == '.')))
 	    continue;
 	  if (mount_point || d->d_fileno == thisino)
 	    {
-	      if (stat(d->d_name, &st) < 0)
+	      char *name = __alloca (dotlist + dotsize - dotp +
+				     1 + d->d_namlen + 1);
+	      memcpy (name, dotp, dotlist + dotsize - dotp);
+	      name[dotlist + dotsize - dotp] = '/';
+	      memcpy (&name[dotlist + dotsize - dotp + 1],
+		      d->d_name, d->d_namlen + 1);
+	      if (stat (name, &st) < 0)
 		{
 		  int save = errno;
-		  (void) closedir(dirstream);
+		  (void) closedir (dirstream);
 		  errno = save;
-		  return NULL;
+		  goto lose;
 		}
 	      if (st.st_dev == thisdev && st.st_ino == thisino)
 		break;
@@ -117,16 +145,16 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
       if (d == NULL)
 	{
 	  int save = errno;
-	  (void) closedir(dirstream);
+	  (void) closedir (dirstream);
 	  errno = save;
-	  return NULL;
+	  goto lose;
 	}
       else
 	{
 	  pathp -= d->d_namlen;
-	  (void) memcpy(pathp, d->d_name, d->d_namlen);
+	  (void) memcpy (pathp, d->d_name, d->d_namlen);
 	  *--pathp = '/';
-	  (void) closedir(dirstream);
+	  (void) closedir (dirstream);
 	}
 
       thisdev = dotdev;
@@ -136,8 +164,8 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
   if (pathp == &path[sizeof(path) - 1])
     *--pathp = '/';
 
-  if (chdir(pathp) < 0)
-    return NULL;
+  if (dotlist != dots)
+    free ((PTR) dotlist);
 
   {
     size_t len = &path[sizeof(path)] - pathp;
@@ -158,4 +186,9 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
   }
 
   return buf;
+
+ lose:
+  if (dotlist != dots)
+    free ((PTR) dotlist);
+  return NULL;
 }
