@@ -23,7 +23,7 @@
 #define LOOKUP_TYPE	struct hostent
 #define FUNCTION_NAME	gethostbyaddr
 #define DATABASE_NAME	hosts
-#define ADD_PARAMS	const char *addr, int len, int type
+#define ADD_PARAMS	const char *addr, size_t len, int type
 #define ADD_VARIABLES	addr, len, type
 #define NEED_H_ERRNO	1
 #define NEED__RES	1
