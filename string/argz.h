@@ -142,7 +142,7 @@ __argz_next (char *__argz, size_t __argz_len, __const char *__entry)
       if (__entry < __argz + __argz_len)
 	__entry = strchr (__entry, '\0') + 1;
 
-      return __entry >= __argz + __argz_len ? NULL : (char *) __entry;
+      return __entry >= __argz + __argz_len ? (char *) NULL : (char *) __entry;
     }
   else
     return __argz_len > 0 ? __argz : 0;
