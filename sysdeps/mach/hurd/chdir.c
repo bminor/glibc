@@ -30,4 +30,10 @@ DEFUN(__chdir, (path), CONST char *path)
 
   if (err = __hurd_path_lookup (path, 0, 0, &cwdir))
     return __hurd_fail (err);
+
+  old = _hurd_cwdir;
+  _hurd_cwdir = cwdir;
+  __mach_port_deallocate (__mach_task_self (), old);
+
+  return 0;
 }
