@@ -26,7 +26,7 @@ endif
 before-compile := $(before-compile) $(common-objpfx)sys/param.h
 
 $(common-objpfx)sys/param.h: $(sysincludedir)/sys/param.h $(common-objpfx)sys/
-	-mkdir $(dir $@)
+	-mkdir $(@D:%/=%)
 	(echo '#ifndef _GNU_SYS_PARAM_H';	\
 	 echo '#define _GNU_SYS_PARAM_H 1';	\
 	 awk < $<			\
