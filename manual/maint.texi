@@ -682,12 +682,12 @@ redistribute these changes.
 The @file{tar.h} header file was written by David J. MacKenzie.
 
 @item
-The port to the MIPS DECStation was contributed by Brendan Kehoe and Ian
-Lance Taylor.
+The port to the MIPS DECStation running Ultrix 4 was contributed by
+Brendan Kehoe and Ian Lance Taylor.
 
 @item
 The DES encryption function @code{crypt} and related functions were
-donated by Michael Glad.
+contributed by Michael Glad.
 
 @item
 The @code{ftw} function was contributed by Ian Lance Taylor.
