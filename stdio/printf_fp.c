@@ -34,6 +34,12 @@ Cambridge, MA 02139, USA.  */
 
 #include <printf.h>
 
+#if DEBUG
+#define MPN_DUMP(x,y,z) mpn_dump(x,y,z)
+#else
+#define MPN_DUMP(x,y,z)
+#endif
+
 #define	outchar(x)							      \
   do									      \
     {									      \
@@ -149,6 +155,10 @@ DEFUN(__printf_fp, (s, info, args),
       if (cy != 0)
 	r10[r10size++] = cy;
 
+      MPN_DUMP ("r", r, rsize);
+      MPN_DUMP ("r10", r10, r10size);
+      MPN_DUMP ("scale", scale, scalesize);
+
       /* Compute tmp = R10 / scale  and  R10 = R10 % scale.  */
       count_leading_zeros (cnt, scale[scalesize - 1]);
       if (cnt != 0)
@@ -160,16 +170,25 @@ DEFUN(__printf_fp, (s, info, args),
 	  if (cy != 0)
 	    r10[r10size++] = cy;
 	  high_qlimb = __mpn_divmod (tmp, r10, r10size, norm_scale, scalesize);
-	  __mpn_rshift (r10, r10, scalesize, cnt);
+	  tmp[r10size - scalesize] = high_qlimb;
+	  r10size = scalesize;
+	  __mpn_rshift (r10, r10, r10size, cnt);
 	}
       else
-	high_qlimb = __mpn_divmod (tmp, r10, r10size, scale, scalesize);
+	{
+	  high_qlimb = __mpn_divmod (tmp, r10, r10size, scale, scalesize);
+	  tmp[r10size - scalesize] = high_qlimb;
+	  r10size = scalesize;
+	}
 
-      if (high_qlimb == 0)
-	high_qlimb = tmp[r10size - scalesize - 1];
+      MPN_DUMP ("high_qlimb", &high_qlimb, 1);
+      MPN_DUMP ("r10", r10, r10size);
+
+      /* We should have a quotient < 10.  It might be stored */
+      high_qlimb = tmp[0];
       digit = '0' + high_qlimb;
 
-      r10size = __mpn_normal_size (r10, scalesize);
+      r10size = __mpn_normal_size (r10, r10size);
 
       MPN_ASSIGN (r, r10);
       cy = __mpn_lshift (r2, r, rsize, 1);
@@ -183,26 +202,35 @@ DEFUN(__printf_fp, (s, info, args),
       cy = __mpn_mul_1 (hierr, hierr, hierrsize, 10);
       if (cy)
 	hierr[hierrsize++] = cy;
-      
+
       low = MPN_LT (r2, loerr);
 
       /* tmp = scale2 - hierr; */
-      cy = __mpn_sub (tmp, scale2, scale2size, hierr, hierrsize);
-      tmpsize = scale2size;
-      if (cy)
-	tmpsize = -1;		/* kludge */
-
-      if (r2size > tmpsize)
+      if (scale2size < hierrsize)
 	high = 1;
       else
 	{
-	  high = __mpn_cmp (r2, tmp, r2size);
-	  high = roundup ? (high >= 0) : (high > 0);
+	  cy = __mpn_sub (tmp, scale2, scale2size, hierr, hierrsize);
+	  tmpsize = scale2size;
+	  high = cy || (roundup ? MPN_GE (r2, tmp) : MPN_GT (r2, tmp));
 	}
-      
+
       if (low || high || k == cutoff)
 	{
-	  if ((high && !low) || MPN_GT (r2, scale))
+	  /* This is confusing, since the text and the code in Steele's and
+	     White's paper are contradictory.  Problem numbers:
+	     printf("%20.15e\n", <1/2^106>) is printed as
+	     1.232595164407830e-32 (instead of 1.232595164407831e-32)
+	     if we obey the description in the text;
+	     1/2^330 is badly misprinted if we obey the code.  */
+	  if (high && !low)
+	    ++digit;
+#define OBEY_TEXT 1
+#if OBEY_TEXT
+	  else if (high && low && MPN_GT (r2, scale))
+#else
+	  else if (high == low && MPN_GT (r2, scale))
+#endif
 	    ++digit;
 	  return 1;
 	}
@@ -347,7 +375,8 @@ DEFUN(__printf_fp, (s, info, args),
 	      cy = __mpn_lshift (r + (e - p) / BITS_PER_MP_LIMB, f, fsize,
 				 (e - p) % BITS_PER_MP_LIMB);
 	      rsize = fsize + (e - p) / BITS_PER_MP_LIMB;
-	      r[rsize++] = cy;
+	      if (cy)
+		r[rsize++] = cy;
 	    }
 
 	  MPN_POW2 (scale, 0);
@@ -374,11 +403,16 @@ DEFUN(__printf_fp, (s, info, args),
 	{
 	  /* Account for unequal gaps.  */
 	  cy = __mpn_lshift (hierr, hierr, hierrsize, 1);
-	  if (cy) abort ();
+	  if (cy)
+	    hierr[hierrsize++] = cy;
+
 	  cy = __mpn_lshift (r, r, rsize, 1);
-	  if (cy) abort ();
+	  if (cy)
+	    r[rsize++] = cy;
+
 	  cy = __mpn_lshift (scale, scale, scalesize, 1);
-	  if (cy) abort ();
+	  if (cy)
+	    scale[scalesize++] = cy;
 	}
 
       /* scale10 = ceil (scale / 10.0).  */
@@ -437,9 +471,9 @@ DEFUN(__printf_fp, (s, info, args),
 
 	  /* while (r2 + hierr >= 2 * scale) */
 	  cy = __mpn_lshift (scale2, scale, scalesize, 1);
-	  if (cy)
-	    abort ();
 	  scale2size = scalesize;
+	  if (cy)
+	    scale2[scale2size++] = cy;
 	  while (MPN_GE (tmp, scale2))
 	    {
 	      cy = __mpn_mul_1 (scale, scale, scalesize, 10);
@@ -489,12 +523,12 @@ DEFUN(__printf_fp, (s, info, args),
 
 	    if (MPN_GT (y, loerr))
 	      MPN_ASSIGN (loerr, y);
-	    if (MPN_GT (y, hierr))
+	    if (MPN_GE (y, hierr))
 	      {
 		MPN_ASSIGN (hierr, y);
 		roundup = 1;
 		/* Recalculate: tmp = r2 + hierr */
-		if (r2size >= hierrsize)
+		if (r2size > hierrsize)
 		  {
 		    cy = __mpn_add (tmp, r2, r2size, hierr, hierrsize);
 		    tmpsize = r2size;
@@ -504,8 +538,8 @@ DEFUN(__printf_fp, (s, info, args),
 		    cy = __mpn_add (tmp, hierr, hierrsize, r2, r2size);
 		    tmpsize = hierrsize;
 		  }
-		if (cy)
-		  abort ();
+		if (cy != 0)
+		  tmp[tmpsize++] = cy;
 	      }
 	  }			/* End CutOffAdjust.  */
 
@@ -656,4 +690,18 @@ DEFUN(__printf_fp, (s, info, args),
       outchar (' ');
 
   return done;
+}
+
+static mpn_dump (str, p, size)
+     char *str;
+     mp_limb *p;
+     mp_size_t size;
+{
+  printf ("%s = ", str);
+  while (size != 0)
+    {
+      size--;
+      printf ("%08lX", p[size]);
+    }
+  printf ("\n");
 }
