@@ -27,3 +27,8 @@ Cambridge, MA 02139, USA.  */
 #define HURD_THREAD_STATE_COUNT		<machine>_THREAD_STATE_COUNT
 
 #define hurd_thread_state <machine>_thread_state
+
+/* Define these to the member names in `struct <machine>_thread_state'
+   for the PC and stack pointer.  */
+#define PC ?
+#define SP ?
