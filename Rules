@@ -28,7 +28,9 @@ include ../Makeconfig
 ifndef	subdir
 Each subdirectory makefile must define the `subdir' variable.
 endif
+ifdef have_export_directive	# kludge for GNU make before 3.63
 export subdir
+endif
 
 # This is the default target; it makes the library.
 .PHONY: all
@@ -73,7 +75,9 @@ $(objpfx)%.out: $(objpfx)%
 	$(dir $<)$(notdir $<) > $@
 endif	# tests
 
+ifdef have_export_directive	# kludge for GNU make before 3.63
 export others tests
+endif
 
 # This removes everything that can be regenerated
 # except for the object files and the object-file library members.
@@ -104,7 +108,9 @@ subdir_install: install
 subdir_TAGS: TAGS
 
 # Make the distribution tarfile for the parent makefile.
+ifdef have_export_directive	# kludge for GNU make before 3.63
 export distribute dont_distribute
+endif
 .PHONY: subdir_dist dist
 subdir_dist: dist
 dist: ../Make-dist
