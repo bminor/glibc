@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 
 int
-DEFUN(__seteuid, (uid), uid_t uid)
+DEFUN(seteuid, (uid), uid_t uid)
 {
   return __setreuid (-1, uid);
 }

@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 
 int
-DEFUN(__setrgid, (gid), gid_t gid)
+DEFUN(setrgid, (gid), gid_t gid)
 {
   return __setregid (gid, -1);
 }
