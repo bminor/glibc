@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,12 +31,17 @@ DEFUN(set_progname, (argc, argv, envp),
 {
   char *p;
 
-  program_invocation_name = argv[0];
-  p = strrchr (argv[0], '/');
-  if (p == NULL)
-    program_invocation_short_name = argv[0];
+  if (argv && argv[0])
+    {
+      program_invocation_name = argv[0];
+      p = strrchr (argv[0], '/');
+      if (p == NULL)
+	program_invocation_short_name = argv[0];
+      else
+	program_invocation_short_name = p + 1;
+    }
   else
-    program_invocation_short_name = p + 1;
+    program_invocation_name = program_invocation_short_name = 0;
 
   (void) &set_progname;		/* Avoid "defined but not used" warning.  */
 }
