@@ -1304,9 +1304,9 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 		{
 		  if (! l->l_addr)
 		    l->l_addr = ph->p_vaddr;
-		  else if (ph->p_vaddr + ph->p_memsz >= l->l_map_end)
+		  if (ph->p_vaddr + ph->p_memsz >= l->l_map_end)
 		    l->l_map_end = ph->p_vaddr + ph->p_memsz;
-		  else if ((ph->p_flags & PF_X)
+		  if ((ph->p_flags & PF_X)
 			   && ph->p_vaddr + ph->p_memsz >= l->l_text_end)
 		    l->l_text_end = ph->p_vaddr + ph->p_memsz;
 		}
