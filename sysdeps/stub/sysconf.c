@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <time.h>
+#include <limits.h>
 
 
 /* Get the value of the system variable NAME.  */
@@ -30,6 +32,13 @@ DEFUN(__sysconf, (name), int name)
     default:
       errno = EINVAL;
       return -1;
+
+    case _SC_TZNAME_MAX:
+#ifdef TZNAME_MAX
+      return __tzname_max > TZNAME_MAX ? __tzname_max : TZNAME_MAX;
+#else
+      return __tzname_max;
+#endif
 
     case _SC_ARG_MAX:
     case _SC_CHILD_MAX:
