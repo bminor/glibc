@@ -34,7 +34,7 @@ DEFUN(setlocale, (category, name), int category AND CONST char *name)
 {
   /* Braindead implementation until I finish the fancy one.  */
 
-  if (name == NULL || name[0] = '\0')
+  if (name == NULL || name[0] == '\0')
     return (char *) "C";
 
   if (!strcmp(name, "C") || !strcmp(name, "POSIX"))
