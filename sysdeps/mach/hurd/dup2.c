@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <hurd.h>
 #include <hurd/fd.h>
 
 
