@@ -40,7 +40,7 @@ _hurd_init (char **argv,
 	_hurd_port_init (&_hurd_##lower, portarray[i]); \
 	break
 
-	  /* Install the standard ports in their cells.  */
+	/* Install the standard ports in their cells.  */
 	initport (CCDIR, ccdir);
 	initport (CWDIR, cwdir);
 	initport (CRDIR, crdir);
