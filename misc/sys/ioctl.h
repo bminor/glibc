@@ -104,11 +104,6 @@ struct ttysize
 extern int __ioctl __P ((int __fd, int __request, __ptr_t __arg));
 extern int ioctl __P ((int __fd, int __request, __ptr_t __arg));
 
-#ifdef	__OPTIMIZE__
-#define	ioctl(fd, request, arg)	__ioctl((fd), (request), (arg))
-#endif
-
-
 __END_DECLS
 
 #endif /* sys/ioctl.h */
