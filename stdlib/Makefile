@@ -37,7 +37,7 @@ routines	:=							      \
 	system
 
 distribute	:= exit.h
-tests		:= tst-strtol tst-strtod testmb testrand testsort
+tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv
 
 $(objpfx)testsort.input: /usr/dict/words
 	cp $< $@
