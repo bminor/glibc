@@ -1,3 +1,8 @@
+2004-10-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/features.h (__USE_FORTIFY_LEVEL): Enable even with
+	Red Hat gcc4 4.0.0 and above.
+
 2004-10-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/arena.c (ptmalloc_init): Don't use brk if dlopened

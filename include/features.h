@@ -262,7 +262,9 @@
 # define __USE_REENTRANT	1
 #endif
 
-#if _FORTIFY_SOURCE > 0 && __GNUC_PREREQ (4, 1) && __OPTIMIZE__ > 0
+#if _FORTIFY_SOURCE > 0 && __OPTIMIZE__ > 0 \
+    && (__GNUC_PREREQ (4, 1) \
+        || (defined __GNUC_RH_RELEASE__ && __GNUC_PREREQ (4, 0)))
 # if _FORTIFY_SOURCE == 1
 #  define __USE_FORTIFY_LEVEL 1
 # elif _FORTIFY_SOURCE > 1
