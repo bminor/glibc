@@ -27,6 +27,8 @@ DEFUN(fdopen, (fd, mode), int fd AND CONST char *mode)
 {
   FILE *f;
   file_t file = __getdport (fd);
+  /* XXX This differs from Unix behavior if fd
+     gets closed and reopened (or dup2'd).  */
   if (file == MACH_PORT_NULL)
     return NULL;
   f = __fopenport (file, mode);
