@@ -30,7 +30,7 @@ routines	:= offtime asctime clock ctime difftime gmtime	\
 		   __gettod settod adjtime getitmr \
 		   __getitmr __adjtime __settod \
 		   __setitmr tzset gettod setitmr \
-		   stime
+		   stime dysize timegm timelocal
 aux		:= syms-time
 
 others	:= ap zdump zic
