@@ -28,8 +28,9 @@ Cambridge, MA 02139, USA.  */
    send SIG to all processes in the current process's process group.
    If PID is < -1, send SIG to all processes in process group - PID.  */
 int
-__kill (pid_t pid, int sig)
+__kill (pid_t pid, int arg_sig)
 {
+  int sig = arg_sig;		/* XXX work around gcc bug */
   int delivered = 0;		/* Set when we deliver any signal.  */
   error_t err;
   mach_port_t proc;
@@ -76,16 +77,17 @@ __kill (pid_t pid, int sig)
   if (pid <= 0)
     {
       /* Send SIG to each process in pgrp (- PID).  */
-      mach_msg_type_number_t npids, i;
-      pid_t *pids;
+      pid_t pidbuf[10], *pids = pidbuf;
+      mach_msg_type_number_t i, npids = sizeof (pidbuf) / sizeof (pidbuf[0]);
       
       err = __proc_getpgrppids (proc, - pid, &pids, &npids);
       if (!err)
 	{
 	  for (i = 0; i < npids; ++i)
 	    kill_pid (pids[i]);
-	  __vm_deallocate (__mach_task_self (),
-			   (vm_address_t) pids, npids * sizeof (pids[0]));
+	  if (pids != pidbuf)
+	    __vm_deallocate (__mach_task_self (),
+			     (vm_address_t) pids, npids * sizeof (pids[0]));
 	}
     }
   else
