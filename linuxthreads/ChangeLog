@@ -1,3 +1,9 @@
+2000-08-10  Andreas Jaeger  <aj@suse.de>
+
+	* mutex.c (__pthread_mutex_unlock): Move setting of mutex owner
+	into critical section.
+	Patch by Juergen Kreileder <jk@blackdown.de>.
+
 2000-07-31  Andreas Jaeger  <aj@suse.de>
 
 	* mutex.c (__pthread_mutex_trylock): Only set mutex owner if we

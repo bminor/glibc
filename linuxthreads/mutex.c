@@ -109,8 +109,8 @@ int __pthread_mutex_unlock(pthread_mutex_t * mutex)
 {
   switch (mutex->__m_kind) {
   case PTHREAD_MUTEX_FAST_NP:
-    __pthread_unlock(&mutex->__m_lock);
     mutex->__m_owner = NULL;
+    __pthread_unlock(&mutex->__m_lock);
     return 0;
   case PTHREAD_MUTEX_RECURSIVE_NP:
     if (mutex->__m_count > 0) {
