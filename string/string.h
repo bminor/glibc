@@ -25,6 +25,10 @@ Cambridge, MA 02139, USA.  */
 #define	_STRING_H	1
 #include <features.h>
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
 /* Get size_t and NULL from <stddef.h>.  */
 #define	__need_size_t
 #define	__need_NULL
@@ -133,6 +137,10 @@ extern char *EXFUN(strsignal, (int __sig));
 
 /* Copy SRC to DEST, returning the address of the terminating '\0' in DEST.  */
 extern char *EXFUN(stpcpy, (char *__dest, CONST char *__src));
+#endif
+
+#ifdef	__cplusplus
+}
 #endif
 
 #endif	/* string.h  */
