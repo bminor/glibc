@@ -121,8 +121,7 @@ get_dtable_port (int fd)
     return dport;
 }
 
-/* text_set_element (_hurd_getdport_fn, get_dtable_port); */
-file_t (*_hurd_getdport_fn) (int fd) = get_dtable_port;	/* XXX */
+file_t (*_hurd_getdport_fn) (int fd) = get_dtable_port;
 
 #include <hurd/signal.h>
 
@@ -359,19 +358,19 @@ tiocsctty (int fd,
   error_t err;
 
   /* Get FD's cttyid port, unless it is already ours.  */
-  err = _HURD_DPORT_USE (fd,
-			 ctty ? EADDRINUSE : __term_getctty (port, &cttyid));
+  err = HURD_DPORT_USE (fd,
+			ctty ? EADDRINUSE : __term_getctty (port, &cttyid));
   if (err == EADDRINUSE)
     /* FD is already the ctty.  Nothing to do.  */
     return 0;
   else if (err)
-    return err;
+    return __hurd_fail (err);
 
   /* Make it our own.  */
   _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], cttyid); /* Consumes ref.  */
 
   /* Reset all the ctty ports in all the descriptors.  */
-  _HURD_PORT_USE (&_hurd_ports[INIT_PORT_CTTYID], (rectty_dtable (port), 0));
+  __USEPORT (CTTYID, (rectty_dtable (port), 0));
 
   return 0;
 }
@@ -384,14 +383,26 @@ tiocnotty (int fd,
 	   int request,		/* Always TIOCNOTTY.  */
 	   void *arg)		/* Not used.  */
 {
-  /* XXX should verify that FD is ctty and return EINVAL? */
+  mach_port_t fd_cttyid;
+  error_t err;
+
+  if (err = HURD_DPORT_USE (fd, __term_getctty (port, &fd_cttyid)))
+    return __hurd_fail (err);
+
+  if (__USEPORT (CTTYID, port != fd_cttyid))
+    err = EINVAL;
+
+  __mach_port_deallocate (__mach_task_+self (), fd_cttyid);
+
+  if (err)
+    return __hurd_fail (err);
 
   /* Clear our cttyid port cell.  */
   _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], MACH_PORT_NULL);
 
   /* Reset all the ctty ports in all the descriptors.  */
-  _HURD_PORT_USE (&_hurd_ports[INIT_PORT_CTTYID],
-		  (rectty_dtable (MACH_PORT_NULL), 0));
+				
+  __USEPORT (CTTYID, (rectty_dtable (MACH_PORT_NULL), 0));
 
   return 0;
 }
