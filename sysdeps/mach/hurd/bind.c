@@ -22,6 +22,11 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/fd.h>
 #include <hurd/socket.h>
+#include <hurd/paths.h>
+#include <fcntl.h>
+#include <stddef.h>
+#include <hurd/ifsock.h>
+#include <sys/un.h>
 
 /* Give the socket FD the local address ADDR (which is LEN bytes long).  */
 int
@@ -44,7 +49,7 @@ DEFUN(bind, (fd, addr, len),
 	return -1;
       
       /* Create a new, unlinked node in the target directory.  */
-      err = __dir_mkfile (dir, O_CREAT|O_EXCL, 0666 & ~_hurd_umask, &node);
+      err = __dir_mkfile (dir, O_CREAT, 0666 & ~_hurd_umask, &node);
 
       if (! err)
 	{
