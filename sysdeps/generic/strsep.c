@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1996, 1998 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ __strsep (char **stringp, const char *delim)
   char *begin, *end;
 
   begin = *stringp;
-  if (! begin || *begin == '\0')
+  if (begin == NULL)
     return NULL;
 
   /* Find the end of the token.  */
