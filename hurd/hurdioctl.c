@@ -115,9 +115,9 @@ rectty_dtable (mach_port_t cttyid)
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
 
-  for (i = 0; i < _hurd_dtable.size; ++i)
+  for (i = 0; i < _hurd_dtablesize; ++i)
     {
-      struct hurd_fd *const d = _hurd_dtable.d[i];
+      struct hurd_fd *const d = _hurd_dtable[i];
       mach_port_t newctty;
 
       if (d == NULL)
