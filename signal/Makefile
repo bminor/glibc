@@ -21,7 +21,7 @@
 #
 subdir	:= signal
 
-headers	:= signal.h signum.h sys/signal.h gnu/signal.h sigcontext.h
+headers	:= signal.h sys/signal.h signum.h sigcontext.h sigaction.h sigset.h
 
 routines	:= signal raise killpg \
 		   sigaction sigproc kill \
