@@ -41,6 +41,10 @@ ifneq	"$(findstring env,$(origin headers))" ""
 headers :=
 endif
 
+ifneq	"$(findstring env,$(origin generated))" ""
+generated :=
+endif
+
 ifeq "$(strip $(headers))" ""
 ifneq "$(wildcard $(subdir).h)" ""
 override headers := $(subdir).h
