@@ -165,16 +165,16 @@ is_dst (const char *start, const char *name, const char *str, size_t cmplen,
   size_t len;
 
   if (strncmp (name, str, cmplen) == 0)
-    len = cmplen + 1;
+    len = cmplen;
   else if (strncmp (name, str + 1, cmplen - 2) == 0
 	   && (name[cmplen - 2] == '\0' || name[cmplen - 2] == '/'
 	       || (is_path && name[cmplen - 2] == ':')))
-    len = cmplen - 1;
+    len = cmplen - 2;
   else
     return 0;
 
   if (__builtin_expect (secure, 0)
-      && ((name[len - 1] != '\0' && (!is_path || name[len - 1] != ':'))
+      && ((name[len] != '\0' && (!is_path || name[len] != ':'))
 	  || (name != start + 1 && (!is_path || name[-2] != ':'))))
     return 0;
 
