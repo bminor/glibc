@@ -1790,17 +1790,17 @@ The function to register a new output conversion is
 
 @comment printf.h
 @comment GNU
-@deftypefun int register_printf_function (int @var{spec}, printf_function @var{handler_function}, printf_arginfo_function @var{arginfo_function})
+@deftypefun int register_printf_function (int @var{spec}, printf_function @var{handler-function}, printf_arginfo_function @var{arginfo-function})
 This function defines the conversion specifier character @var{spec}.
 Thus, if @var{spec} is @code{'q'}, it defines the conversion @samp{%q}.
 
-The @var{handler_function} is the function called by @code{printf} and
+The @var{handler-function} is the function called by @code{printf} and
 friends when this conversion appears in a template string.
 @xref{Defining the Output Handler}, for information about how to define
 a function to pass as this argument.  If you specify a null pointer, any
 existing handler function for @var{spec} is removed.
 
-The @var{arginfo_function} is the function called by
+The @var{arginfo-function} is the function called by
 @code{parse_printf_format} when this conversion appears in a
 template string.  @xref{Parsing a Template String}, for information
 about this.
@@ -1825,7 +1825,7 @@ If you define a meaning for @samp{%q}, what if the template contains
 the handler when called needs to be able to get the options specified in
 the template.
 
-Both the @var{handler_function} and @var{arginfo_function} arguments
+Both the @var{handler-function} and @var{arginfo-function} arguments
 to @code{register_printf_function} accept an argument of type
 @code{struct printf_info}, which contains information about the options
 appearing in an instance of the conversion specifier.  This data type
@@ -1937,7 +1937,7 @@ This is the data type that a handler function should have.
 
 If you are going to use @code{parse_printf_format} in your
 application, you should also define a function to pass as the
-@var{arginfo_function} argument for each new conversion you install with
+@var{arginfo-function} argument for each new conversion you install with
 @code{register_printf_function}. 
 
 You should define these functions with a prototype like:
@@ -3428,9 +3428,9 @@ closed.
 
 @comment stdio.h
 @comment GNU
-@deftypefun {FILE *} fopencookie (void *@var{cookie}, const char *@var{opentype}, cookie_io_functions_t @var{io_functions})
+@deftypefun {FILE *} fopencookie (void *@var{cookie}, const char *@var{opentype}, cookie_io_functions_t @var{io-functions})
 This function actually creates the stream for communicating with the
-@var{cookie} using the functions in the @var{io_functions} argument.
+@var{cookie} using the functions in the @var{io-functions} argument.
 The @var{opentype} argument is interpreted as for @code{fopen};
 see @ref{Opening Streams}.  (But note that the ``truncate on
 open'' option is ignored.)  The new stream is fully buffered.

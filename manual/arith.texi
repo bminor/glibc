@@ -286,13 +286,13 @@ you explicit select another.
 
 @comment math.h
 @comment ANSI
-@deftypefun double modf (double @var{value}, double *@var{integer_part})
+@deftypefun double modf (double @var{value}, double *@var{integer-part})
 This function breaks the argument @var{value} into an integer part and a
 fractional part (between @code{-1} and @code{1}, exclusive).  Their sum
 equals @var{value}.  Each of the parts has the same sign as @var{value},
 so the rounding of the integer part is towards zero.
 
-@code{modf} stores the integer part in @code{*@var{integer_part}}, and
+@code{modf} stores the integer part in @code{*@var{integer-part}}, and
 returns the fractional part.  For example, @code{modf (2.5, &intpart)}
 returns @code{0.5} and stores @code{2.0} into @code{intpart}.
 @end deftypefun

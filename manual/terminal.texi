@@ -228,10 +228,10 @@ array.
 
 @comment termios.h
 @comment POSIX.1
-@deftypefun int tcgetattr (int @var{filedes}, struct termios *@var{termios_p})
+@deftypefun int tcgetattr (int @var{filedes}, struct termios *@var{termios-p})
 This function is used to examine the attributes of the terminal
 device with file descriptor @var{filedes}.  The attributes are returned
-in the structure that @var{termios_p} points to.
+in the structure that @var{termios-p} points to.
 
 If successful, @code{tcgetattr} returns @code{0}.  A return value of @code{-1}
 indicates an error.  The following @code{errno} error conditions are
@@ -248,10 +248,10 @@ The @var{filedes} is not associated with a terminal.
 
 @comment termios.h
 @comment POSIX.1
-@deftypefun int tcsetattr (int @var{filedes}, int @var{when}, const struct termios *@var{termios_p})
+@deftypefun int tcsetattr (int @var{filedes}, int @var{when}, const struct termios *@var{termios-p})
 This function sets the attributes of the terminal device with file
 descriptor @var{filedes}.  The new attributes are taken from the
-structure that @var{termios_p} points to.
+structure that @var{termios-p} points to.
 
 The @var{when} argument specifies how to deal with input and output
 already queued.  It can be one of the following values:
@@ -306,7 +306,7 @@ The @var{filedes} is not associated with a terminal.
 
 @item EINVAL
 Either the value of the @code{when} argument is not valid, or there is
-something wrong with the data in the @var{termios_p} argument.
+something wrong with the data in the @var{termios-p} argument.
 @end table
 @end deftypefun
 
@@ -939,22 +939,22 @@ store them:
 
 @comment termios.h
 @comment POSIX.1
-@deftypefun speed_t cfgetospeed (const struct termios *@var{termios_p})
+@deftypefun speed_t cfgetospeed (const struct termios *@var{termios-p})
 This function returns the output line speed stored in the structure
-@code{*@var{termios_p}}.
+@code{*@var{termios-p}}.
 @end deftypefun
 
 @comment termios.h
 @comment POSIX.1
-@deftypefun speed_t cfgetispeed (const struct termios *@var{termios_p})
+@deftypefun speed_t cfgetispeed (const struct termios *@var{termios-p})
 This function returns the input line speed stored in the structure
-@code{*@var{termios_p}}.
+@code{*@var{termios-p}}.
 @end deftypefun
 
 @comment termios.h
 @comment POSIX.1
-@deftypefun int cfsetospeed (struct termios *@var{termios_p}, speed_t @var{speed})
-This function stores @var{speed} in @code{*@var{termios_p}} as the output
+@deftypefun int cfsetospeed (struct termios *@var{termios-p}, speed_t @var{speed})
+This function stores @var{speed} in @code{*@var{termios-p}} as the output
 speed.  The normal return value is @code{0}; a value of @code{-1}
 indicates an error.  If @var{speed} is not a speed, @code{cfsetospeed}
 returns @code{-1}.
@@ -962,8 +962,8 @@ returns @code{-1}.
 
 @comment termios.h
 @comment POSIX.1
-@deftypefun int cfsetispeed (struct termios *@var{termios_p}, speed_t @var{speed})
-This function stores @var{speed} in @code{*@var{termios_p}} as the input
+@deftypefun int cfsetispeed (struct termios *@var{termios-p}, speed_t @var{speed})
+This function stores @var{speed} in @code{*@var{termios-p}} as the input
 speed.  The normal return value is @code{0}; a value of @code{-1}
 indicates an error.  If @var{speed} is not a speed, @code{cfsetospeed}
 returns @code{-1}.
@@ -971,8 +971,8 @@ returns @code{-1}.
 
 @comment termios.h
 @comment BSD
-@deftypefun int cfsetspeed (struct termios *@var{termios_p}, speed_t @var{speed})
-This function stores @var{speed} in @code{*@var{termios_p}} as both the
+@deftypefun int cfsetspeed (struct termios *@var{termios-p}, speed_t @var{speed})
+This function stores @var{speed} in @code{*@var{termios-p}} as both the
 input and output speeds.  The normal return value is @code{0}; a value
 of @code{-1} indicates an error.  If @var{speed} is not a speed,
 @code{cfsetspeed} returns @code{-1}.  This function is an extension in
@@ -1067,16 +1067,16 @@ These aliases are obsolete.
 
 @comment termios.h
 @comment BSD
-@deftypefun int cfmakeraw (struct termios *@var{termios_p})
-This function provides an easy way to set up @code{*@var{termios_p}} for
+@deftypefun int cfmakeraw (struct termios *@var{termios-p})
+This function provides an easy way to set up @code{*@var{termios-p}} for
 what has traditionally been called ``raw mode'' in BSD.  It does exactly this:
 @smallexample
-  @var{termios_p}->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP
+  @var{termios-p}->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP
                   |INLCR|IGNCR|ICRNL|IXON);
-  @var{termios_p}->c_oflag &= ~OPOST;
-  @var{termios_p}->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
-  @var{termios_p}->c_cflag &= ~(CSIZE|PARENB);
-  @var{termios_p}->c_cflag |= CS8;
+  @var{termios-p}->c_oflag &= ~OPOST;
+  @var{termios-p}->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
+  @var{termios-p}->c_cflag &= ~(CSIZE|PARENB);
+  @var{termios-p}->c_cflag |= CS8;
 @end smallexample
 @end deftypefun
 

@@ -896,15 +896,15 @@ Next, here is the description of the @code{select} function itself.
 
 @comment sys/types.h
 @comment BSD
-@deftypefun int select (int @var{nfds}, fd_set *@var{read_fds}, fd_set *@var{write_fds}, fd_set *@var{except_fds}, struct timeval *@var{timeout})
+@deftypefun int select (int @var{nfds}, fd_set *@var{read-fds}, fd_set *@var{write-fds}, fd_set *@var{except-fds}, struct timeval *@var{timeout})
 The @code{select} function blocks the calling process until there is
 activity on any of the specified sets of file descriptors, or until the
 timeout period has expired.
 
-The file descriptors specified by the @var{read_fds} argument are
-checked to see if they are ready for reading; the @var{write_fds} file
+The file descriptors specified by the @var{read-fds} argument are
+checked to see if they are ready for reading; the @var{write-fds} file
 descriptors are checked to see if they are ready for writing; and the
-@var{except_fds} file descriptors are checked for exceptional
+@var{except-fds} file descriptors are checked for exceptional
 conditions.  You can pass a null pointer for any of these arguments if
 you are not interested in checking for that kind of condition.
 
@@ -930,7 +930,7 @@ The normal return value from @code{select} is the total number of ready file
 descriptors in all of the sets.  Each of the argument sets is overwritten
 with information about the descriptors that are ready for the corresponding
 operation.  Thus, to see if a particular descriptor @var{desc} has input,
-use @code{FD_ISSET (@var{desc}, @var{read_fds})} after @code{select} returns.
+use @code{FD_ISSET (@var{desc}, @var{read-fds})} after @code{select} returns.
 
 If @code{select} returns because the timeout period expires, it returns
 a value of zero.
@@ -1107,10 +1107,10 @@ copy the file descriptor given as the first argument.
 The form of the call in this case is:
 
 @smallexample
-fcntl (@var{old}, F_DUPFD, @var{next_filedes})
+fcntl (@var{old}, F_DUPFD, @var{next-filedes})
 @end smallexample
 
-The @var{next_filedes} argument is of type @code{int} and specifies that
+The @var{next-filedes} argument is of type @code{int} and specifies that
 the file descriptor returned should be the next available one greater
 than or equal to this value.
 
@@ -1124,7 +1124,7 @@ this command:
 The @var{old} argument is invalid.
 
 @item EINVAL
-The @var{next_filedes} argument is invalid.
+The @var{next-filedes} argument is invalid.
 
 @item EMFILE
 There are no more file descriptors available---your program is already
@@ -1218,7 +1218,7 @@ specify that it should set the file descriptor flags associated with the
 specify the new flags, so the form of the call is:
 
 @smallexample
-fcntl (@var{filedes}, F_SETFD, @var{new_flags})
+fcntl (@var{filedes}, F_SETFD, @var{new-flags})
 @end smallexample
 
 The normal return value from @code{fcntl} with this command is an
@@ -1327,7 +1327,7 @@ the file status flags for the open file corresponding to the
 argument to specify the new flags, so the call looks like this:
 
 @smallexample
-fcntl (@var{filedes}, F_SETFL, @var{new_flags})
+fcntl (@var{filedes}, F_SETFL, @var{new-flags})
 @end smallexample
 
 You can't change the access mode for the file in this way; that is,

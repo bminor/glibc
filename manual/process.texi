@@ -1,4 +1,4 @@
-@node Child Processes, Job Control, Process Startup, Top
+@node Child Processes, Jo- Control, Process Startup, Top
 @chapter Child Processes
 
 @cindex process
@@ -440,7 +440,7 @@ are declared in the header file @file{sys/wait.h}.
 
 @comment sys/wait.h
 @comment POSIX.1
-@deftypefun pid_t waitpid (pid_t @var{pid}, int *@var{status_ptr}, int @var{options})
+@deftypefun pid_t waitpid (pid_t @var{pid}, int *@var{status-ptr}, int @var{options})
 The @code{waitpid} function is used to request status information from a
 child process whose process ID is @var{pid}.  Normally, the calling
 process is suspended until the child process makes status information
@@ -469,7 +469,7 @@ and the @code{WUNTRACED} flag to request status information from stopped
 processes as well as processes that have terminated.
 
 The status information from the child process is stored in the object
-that @var{status_ptr} points to, unless @var{status_ptr} is a null pointer.
+that @var{status-ptr} points to, unless @var{status-ptr} is a null pointer.
 
 The return value is normally the process ID of the child process whose
 status is reported.  If the @code{WNOHANG} option was specified and no
@@ -527,7 +527,7 @@ terminated.
 
 @comment sys/wait.h
 @comment POSIX.1
-@deftypefun pid_t wait (int *@var{status_ptr})
+@deftypefun pid_t wait (int *@var{status-ptr})
 This is a simplified version of @code{waitpid}, and is used to wait
 until any one child process terminates.  The call:
 
@@ -641,7 +641,7 @@ status values rather than an @code{int}.  The two representations are
 actually interchangeable; they describe the same bit patterns.  The GNU
 C Library defines macros such as @code{WEXITSTATUS} so that they will
 work on either kind of object, and the @code{wait} function is defined
-to accept either type of pointer as its @var{status_ptr} argument.
+to accept either type of pointer as its @var{status-ptr} argument.
 
 These functions are declared in @file{sys/wait.h}.
 @pindex sys/wait.h
@@ -676,9 +676,9 @@ equivalent macros.
 
 @comment sys/wait.h
 @comment BSD
-@deftypefun pid_t wait3 (union wait *@var{status_ptr}, int @var{options}, struct rusage *@var{usage})
+@deftypefun pid_t wait3 (union wait *@var{status-ptr}, int @var{options}, struct rusage *@var{usage})
 If @var{usage} is a null pointer, @code{wait3} is equivalent to
-@code{waitpid (-1, @var{status_ptr}, @var{options})}.
+@code{waitpid (-1, @var{status-ptr}, @var{options})}.
 
 If @var{usage} is not null, @code{wait3} stores usage figures for the
 child process in @code{*@var{rusage}} (but only if the child has
@@ -687,9 +687,9 @@ terminated, not if it has stopped).  @xref{Resource Usage}.
 
 @comment sys/wait.h
 @comment BSD
-@deftypefun pid_t wait4 (pid_t @var{pid}, union wait *@var{status_ptr}, int @var{options}, struct rusage *@var{usage})
+@deftypefun pid_t wait4 (pid_t @var{pid}, union wait *@var{status-ptr}, int @var{options}, struct rusage *@var{usage})
 If @var{usage} is a null pointer, @code{wait4} is equivalent to
-@code{waitpid (@var{pid}, @var{status_ptr}, @var{options})}.
+@code{waitpid (@var{pid}, @var{status-ptr}, @var{options})}.
 
 If @var{usage} is not null, @code{wait4} stores usage figures for the
 child process in @code{*@var{rusage}} (but only if the child has

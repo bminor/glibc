@@ -1082,17 +1082,17 @@ the signal.  These are described in more detail in @ref{Flags for Sigaction}.
 
 @comment signal.h
 @comment POSIX.1
-@deftypefun int sigaction (int @var{signum}, const struct sigaction *@var{action}, struct sigaction *@var{old_action})
+@deftypefun int sigaction (int @var{signum}, const struct sigaction *@var{action}, struct sigaction *@var{old-action})
 The @var{action} argument is used to set up a new action for the signal
-@var{signum}, while the @var{old_action} argument is used to return
+@var{signum}, while the @var{old-action} argument is used to return
 information about the action previously associated with this symbol.
-(In other words, @var{old_action} has the same purpose as the
+(In other words, @var{old-action} has the same purpose as the
 @code{signal} function's return value---you can check to see what the
 old action in effect for the signal was, and restore it later if you
 want.)
 
-Either @var{action} or @var{old_action} can be a null pointer.  If
-@var{old_action} is a null pointer, this simply suppresses the return
+Either @var{action} or @var{old-action} can be a null pointer.  If
+@var{old-action} is a null pointer, this simply suppresses the return
 of information about the old action.  If @var{action} is a null pointer,
 the action associated with the signal @var{signum} is unchanged; this
 allows you to inquire about how a signal is being handled without changing
@@ -3055,11 +3055,11 @@ structure, it means to reset the action for the signal back to
 
 @comment signal.h
 @comment BSD
-@deftypefun int sigvec (int @var{signum}, const struct sigvec *@var{action},struct sigvec *@var{old_action})
+@deftypefun int sigvec (int @var{signum}, const struct sigvec *@var{action},struct sigvec *@var{old-action})
 This function is the equivalent of @code{sigaction} (@pxref{Advanced Signal
 Handling}); it installs the action @var{action} for the signal @var{signum},
 returning information about the previous action in effect for that signal
-in @var{old_action}.
+in @var{old-action}.
 @end deftypefun
 
 @comment signal.h

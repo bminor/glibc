@@ -161,11 +161,11 @@ the beginning of the vector.
 
 @comment glob.h
 @comment POSIX.2
-@deftypefun int glob (const char *@var{pattern}, int @var{flags}, int (*@var{errfunc}) (const char *@var{filename}, int @var{error-code}), glob_t *@var{vector_ptr})
+@deftypefun int glob (const char *@var{pattern}, int @var{flags}, int (*@var{errfunc}) (const char *@var{filename}, int @var{error-code}), glob_t *@var{vector-ptr})
 The function @code{glob} does globbing using the pattern @var{pattern}
 in the current directory.  It puts the result in a newly allocated
 vector, and stores the size and address of this vector into
-@code{*@var{vector_ptr}}.  The argument @var{flags} is a combination of
+@code{*@var{vector-ptr}}.  The argument @var{flags} is a combination of
 bit flags; see @ref{Flags for Globbing}, for details of the flags.
 
 The result of globbing is a sequence of file names.  The function
@@ -176,7 +176,7 @@ This vector is called the @dfn{word vector}.
 
 To return this vector, @code{glob} stores both its address and its
 length (number of elements, not counting the terminating null pointer)
-into @code{*@var{vector_ptr}}.
+into @code{*@var{vector-ptr}}.
 
 Normally, @code{glob} sorts the file names alphabetically before 
 returning them.  You can turn this off with the flag @code{GLOB_NOSORT}
@@ -218,7 +218,7 @@ It was impossible to allocate memory to hold the result.
 @end table
 
 In the event of an error, @code{glob} stores information in
-@code{*@var{vector_ptr}} about all the matches it has found so far.
+@code{*@var{vector-ptr}} about all the matches it has found so far.
 @end deftypefun
 
 @node Flags for Globbing
@@ -499,7 +499,7 @@ Ignore case when matching letters.
 @comment regex.h
 @comment POSIX.2
 @item REG_NOSUB
-Don't bother storing the contents of the @var{matches_ptr} array.
+Don't bother storing the contents of the @var{matches-ptr} array.
 
 @comment regex.h
 @comment POSIX.2

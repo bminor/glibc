@@ -802,8 +802,8 @@ as an obstack, it must initialize the obstack by calling
 
 @comment obstack.h
 @comment GNU
-@deftypefun int obstack_init (struct obstack *@var{obstack_ptr})
-Initialize obstack @var{obstack_ptr} for allocation of objects.  This
+@deftypefun int obstack_init (struct obstack *@var{obstack-ptr})
+Initialize obstack @var{obstack-ptr} for allocation of objects.  This
 function calls the obstack's @code{obstack_chunk_alloc} function.  It
 returns 0 if @code{obstack_chunk_alloc} returns a null pointer, meaning
 that it is out of memory.  Otherwise, it returns 1.  If you supply an
@@ -841,12 +841,12 @@ The most direct way to allocate an object in an obstack is with
 
 @comment obstack.h
 @comment GNU
-@deftypefun {void *} obstack_alloc (struct obstack *@var{obstack_ptr}, size_t @var{size})
+@deftypefun {void *} obstack_alloc (struct obstack *@var{obstack-ptr}, size_t @var{size})
 This allocates an uninitialized block of @var{size} bytes in an obstack
-and returns its address.  Here @var{obstack_ptr} specifies which obstack
+and returns its address.  Here @var{obstack-ptr} specifies which obstack
 to allocate the block in; it is the address of the @code{struct obstack}
 object which represents the obstack.  Each obstack function or macro
-requires you to specify an @var{obstack_ptr} as the first argument.
+requires you to specify an @var{obstack-ptr} as the first argument.
 
 This function calls the obstack's @code{obstack_chunk_alloc} function if
 it needs to allocate a new chunk of memory; it returns a null pointer if
@@ -879,7 +879,7 @@ To allocate a block with specified contents, use the function
 
 @comment obstack.h
 @comment GNU
-@deftypefun {void *} obstack_copy (struct obstack *@var{obstack_ptr}, void *@var{address}, size_t @var{size})
+@deftypefun {void *} obstack_copy (struct obstack *@var{obstack-ptr}, void *@var{address}, size_t @var{size})
 This allocates a block and initializes it by copying @var{size}
 bytes of data starting at @var{address}.  It can return a null pointer
 under the same conditions as @code{obstack_alloc}.
@@ -887,7 +887,7 @@ under the same conditions as @code{obstack_alloc}.
 
 @comment obstack.h
 @comment GNU
-@deftypefun {void *} obstack_copy0 (struct obstack *@var{obstack_ptr}, void *@var{address}, size_t @var{size})
+@deftypefun {void *} obstack_copy0 (struct obstack *@var{obstack-ptr}, void *@var{address}, size_t @var{size})
 Like @code{obstack_copy}, but appends an extra byte containing a null
 character.  This extra byte is not counted in the argument @var{size}.
 @end deftypefun
@@ -919,7 +919,7 @@ in the same obstack.
 
 @comment obstack.h
 @comment GNU
-@deftypefun void obstack_free (struct obstack *@var{obstack_ptr}, void *@var{object})
+@deftypefun void obstack_free (struct obstack *@var{obstack-ptr}, void *@var{object})
 If @var{object} is a null pointer, everything allocated in the obstack
 is freed.  Otherwise, @var{object} must be the address of an object
 allocated in the obstack.  Then @var{object} is freed, along with
@@ -1024,14 +1024,14 @@ already added to the growing object will become part of the other object.
 
 @comment obstack.h
 @comment GNU
-@deftypefun void obstack_blank (struct obstack *@var{obstack_ptr}, size_t @var{size})
+@deftypefun void obstack_blank (struct obstack *@var{obstack-ptr}, size_t @var{size})
 The most basic function for adding to a growing object is
 @code{obstack_blank}, which adds space without initializing it.
 @end deftypefun
 
 @comment obstack.h
 @comment GNU
-@deftypefun void obstack_grow (struct obstack *@var{obstack_ptr}, void *@var{data}, size_t @var{size})
+@deftypefun void obstack_grow (struct obstack *@var{obstack-ptr}, void *@var{data}, size_t @var{size})
 To add a block of initialized space, use @code{obstack_grow}, which is
 the growing-object analogue of @code{obstack_copy}.  It adds @var{size}
 bytes of data to the growing object, copying the contents from
@@ -1040,7 +1040,7 @@ bytes of data to the growing object, copying the contents from
 
 @comment obstack.h
 @comment GNU
-@deftypefun void obstack_grow0 (struct obstack *@var{obstack_ptr}, void *@var{data}, size_t @var{size})
+@deftypefun void obstack_grow0 (struct obstack *@var{obstack-ptr}, void *@var{data}, size_t @var{size})
 This is the growing-object analogue of @code{obstack_copy0}.  It adds
 @var{size} bytes copied from @var{data}, followed by an additional null
 character.
@@ -1048,14 +1048,14 @@ character.
 
 @comment obstack.h
 @comment GNU
-@deftypefun void obstack_1grow (struct obstack *@var{obstack_ptr}, char @var{c})
+@deftypefun void obstack_1grow (struct obstack *@var{obstack-ptr}, char @var{c})
 To add one character at a time, use the function @code{obstack_1grow}.
 It adds a single byte containing @var{c} to the growing object.
 @end deftypefun
 
 @comment obstack.h
 @comment GNU
-@deftypefun {void *} obstack_finish (struct obstack *@var{obstack_ptr})
+@deftypefun {void *} obstack_finish (struct obstack *@var{obstack-ptr})
 When you are finished growing the object, use the function
 @code{obstack_finish} to close it off and return its final address.
 
@@ -1074,7 +1074,7 @@ declared as follows:
 
 @comment obstack.h
 @comment GNU
-@deftypefun size_t obstack_object_size (struct obstack *@var{obstack_ptr})
+@deftypefun size_t obstack_object_size (struct obstack *@var{obstack-ptr})
 This function returns the current size of the growing object, in bytes.
 Remember to call this function @emph{before} finishing the object.
 After it is finished, @code{obstack_object_size} will return zero.
@@ -1117,7 +1117,7 @@ in the current chunk.  It is declared as follows:
 
 @comment obstack.h
 @comment GNU
-@deftypefun size_t obstack_room (struct obstack *@var{obstack_ptr})
+@deftypefun size_t obstack_room (struct obstack *@var{obstack-ptr})
 This returns the number of bytes that can be added safely to the current
 growing object (or to an object about to be started) in obstack
 @var{obstack} using the fast growth functions.
@@ -1128,16 +1128,16 @@ for adding data to a growing object:
 
 @comment obstack.h
 @comment GNU
-@deftypefun void obstack_1grow_fast (struct obstack *@var{obstack_ptr}, char @var{c})
+@deftypefun void obstack_1grow_fast (struct obstack *@var{obstack-ptr}, char @var{c})
 The function @code{obstack_1grow_fast} adds one byte containing the
-character @var{c} to the growing object in obstack @var{obstack_ptr}.
+character @var{c} to the growing object in obstack @var{obstack-ptr}.
 @end deftypefun
 
 @comment obstack.h
 @comment GNU
-@deftypefun void obstack_blank_fast (struct obstack *@var{obstack_ptr}, size_t @var{size})
+@deftypefun void obstack_blank_fast (struct obstack *@var{obstack-ptr}, size_t @var{size})
 The function @code{obstack_blank_fast} adds @var{size} bytes to the
-growing object in obstack @var{obstack_ptr} without initializing them.
+growing object in obstack @var{obstack-ptr} without initializing them.
 @end deftypefun
 
 When you check for space using @code{obstack_room} and there is not
@@ -1189,9 +1189,9 @@ still growing it.
 
 @comment obstack.h
 @comment GNU
-@deftypefun {void *} obstack_base (struct obstack *@var{obstack_ptr})
+@deftypefun {void *} obstack_base (struct obstack *@var{obstack-ptr})
 This function returns the tentative address of the beginning of the
-currently growing object in @var{obstack_ptr}.  If you finish the object
+currently growing object in @var{obstack-ptr}.  If you finish the object
 immediately, it will have that address.  If you make it larger first, it
 may outgrow the current chunk---then its address will change!
 
@@ -1202,21 +1202,21 @@ chunk).
 
 @comment obstack.h
 @comment GNU
-@deftypefun {void *} obstack_next_free (struct obstack *@var{obstack_ptr})
+@deftypefun {void *} obstack_next_free (struct obstack *@var{obstack-ptr})
 This function returns the address of the first free byte in the current
-chunk of obstack @var{obstack_ptr}.  This is the end of the currently
+chunk of obstack @var{obstack-ptr}.  This is the end of the currently
 growing object.  If no object is growing, @code{obstack_next_free}
 returns the same value as @code{obstack_base}.
 @end deftypefun
 
 @comment obstack.h
 @comment GNU
-@deftypefun size_t obstack_object_size (struct obstack *@var{obstack_ptr})
+@deftypefun size_t obstack_object_size (struct obstack *@var{obstack-ptr})
 This function returns the size in bytes of the currently growing object.
 This is equivalent to
 
 @smallexample
-obstack_next_free (@var{obstack_ptr}) - obstack_base (@var{obstack_ptr})
+obstack_next_free (@var{obstack-ptr}) - obstack_base (@var{obstack-ptr})
 @end smallexample
 @end deftypefun
 
@@ -1234,7 +1234,7 @@ this:
 
 @comment obstack.h
 @comment GNU
-@deftypefn Macro int obstack_alignment_mask (struct obstack *@var{obstack_ptr})
+@deftypefn Macro int obstack_alignment_mask (struct obstack *@var{obstack-ptr})
 The value is a bit mask; a bit that is 1 indicates that the corresponding
 bit in the address of an object should be 0.  The mask value should be one
 less than a power of 2; the effect is that all object addresses are
@@ -1299,7 +1299,7 @@ not to waste too much memory in the portion of the last chunk not yet used.
 
 @comment obstack.h
 @comment GNU
-@deftypefn Macro size_t obstack_chunk_size (struct obstack *@var{obstack_ptr})
+@deftypefn Macro size_t obstack_chunk_size (struct obstack *@var{obstack-ptr})
 This returns the chunk size of the given obstack.
 @end deftypefn
 
@@ -1312,8 +1312,8 @@ allocating many objects whose size is comparable to the chunk size.  Here
 is how to do so cleanly:
 
 @smallexample
-if (obstack_chunk_size (obstack_ptr) < @var{new_chunk_size})
-  obstack_chunk_size (obstack_ptr) = @var{new_chunk_size};
+if (obstack_chunk_size (obstack_ptr) < @var{new-chunk-size})
+  obstack_chunk_size (obstack_ptr) = @var{new-chunk-size};
 @end smallexample
 
 @node Summary of Obstacks
@@ -1324,75 +1324,75 @@ takes the address of an obstack (@code{struct obstack *}) as its first
 argument.
 
 @table @code
-@item void obstack_init (struct obstack *@var{obstack_ptr})
+@item void obstack_init (struct obstack *@var{obstack-ptr})
 Initialize use of an obstack.  @xref{Creating Obstacks}.
 
-@item void *obstack_alloc (struct obstack *@var{obstack_ptr}, size_t @var{size})
+@item void *obstack_alloc (struct obstack *@var{obstack-ptr}, size_t @var{size})
 Allocate an object of @var{size} uninitialized bytes.
 @xref{Allocation in an Obstack}.
 
-@item void *obstack_copy (struct obstack *@var{obstack_ptr}, void *@var{address}, size_t @var{size})
+@item void *obstack_copy (struct obstack *@var{obstack-ptr}, void *@var{address}, size_t @var{size})
 Allocate an object of @var{size} bytes, with contents copied from
 @var{address}.  @xref{Allocation in an Obstack}.
 
-@item void *obstack_copy0 (struct obstack *@var{obstack_ptr}, void *@var{address}, size_t @var{size})
+@item void *obstack_copy0 (struct obstack *@var{obstack-ptr}, void *@var{address}, size_t @var{size})
 Allocate an object of @var{size}+1 bytes, with @var{size} of them copied
 from @var{address}, followed by a null character at the end.
 @xref{Allocation in an Obstack}.
 
-@item void obstack_free (struct obstack *@var{obstack_ptr}, void *@var{object})
+@item void obstack_free (struct obstack *@var{obstack-ptr}, void *@var{object})
 Free @var{object} (and everything allocated in the specified obstack
 more recently than @var{object}).  @xref{Freeing Obstack Objects}.
 
-@item void obstack_blank (struct obstack *@var{obstack_ptr}, size_t @var{size})
+@item void obstack_blank (struct obstack *@var{obstack-ptr}, size_t @var{size})
 Add @var{size} uninitialized bytes to a growing object.
 @xref{Growing Objects}.
 
-@item void obstack_grow (struct obstack *@var{obstack_ptr}, void *@var{address}, size_t @var{size})
+@item void obstack_grow (struct obstack *@var{obstack-ptr}, void *@var{address}, size_t @var{size})
 Add @var{size} bytes, copied from @var{address}, to a growing object.
 @xref{Growing Objects}.
 
-@item void obstack_grow0 (struct obstack *@var{obstack_ptr}, void *@var{address}, size_t @var{size})
+@item void obstack_grow0 (struct obstack *@var{obstack-ptr}, void *@var{address}, size_t @var{size})
 Add @var{size} bytes, copied from @var{address}, to a growing object,
 and then add another byte containing a null character.  @xref{Growing
 Objects}.
 
-@item void obstack_1grow (struct obstack *@var{obstack_ptr}, char @var{data_char})
-Add one byte containing @var{data_char} to a growing object.
+@item void obstack_1grow (struct obstack *@var{obstack-ptr}, char @var{data-char})
+Add one byte containing @var{data-char} to a growing object.
 @xref{Growing Objects}.
 
-@item void *obstack_finish (struct obstack *@var{obstack_ptr})
+@item void *obstack_finish (struct obstack *@var{obstack-ptr})
 Finalize the object that is growing and return its permanent address.
 @xref{Growing Objects}.
 
-@item size_t obstack_object_size (struct obstack *@var{obstack_ptr})
+@item size_t obstack_object_size (struct obstack *@var{obstack-ptr})
 Get the current size of the currently growing object.  @xref{Growing
 Objects}.
 
-@item void obstack_blank_fast (struct obstack *@var{obstack_ptr}, size_t @var{size})
+@item void obstack_blank_fast (struct obstack *@var{obstack-ptr}, size_t @var{size})
 Add @var{size} uninitialized bytes to a growing object without checking
 that there is enough room.  @xref{Extra Fast Growing}.
 
-@item void obstack_1grow_fast (struct obstack *@var{obstack_ptr}, char @var{data_char})
-Add one byte containing @var{data_char} to a growing object without
+@item void obstack_1grow_fast (struct obstack *@var{obstack-ptr}, char @var{data-char})
+Add one byte containing @var{data-char} to a growing object without
 checking that there is enough room.  @xref{Extra Fast Growing}.
 
-@item size_t obstack_room (struct obstack *@var{obstack_ptr})
+@item size_t obstack_room (struct obstack *@var{obstack-ptr})
 Get the amount of room now available for growing the current object.
 @xref{Extra Fast Growing}.
 
-@item int obstack_alignment_mask (struct obstack *@var{obstack_ptr})
+@item int obstack_alignment_mask (struct obstack *@var{obstack-ptr})
 The mask used for aligning the beginning of an object.  This is an
 lvalue.  @xref{Obstacks Data Alignment}.
 
-@item size_t obstack_chunk_size (struct obstack *@var{obstack_ptr})
+@item size_t obstack_chunk_size (struct obstack *@var{obstack-ptr})
 The size for allocating chunks.  This is an lvalue.  @xref{Obstack Chunks}.
 
-@item void *obstack_base (struct obstack *@var{obstack_ptr})
+@item void *obstack_base (struct obstack *@var{obstack-ptr})
 Tentative starting address of the currently growing object.
 @xref{Status of an Obstack}.
 
-@item void *obstack_next_free (struct obstack *@var{obstack_ptr})
+@item void *obstack_next_free (struct obstack *@var{obstack-ptr})
 Address just after the end of the currently growing object.
 @xref{Status of an Obstack}.
 @end table
@@ -1688,7 +1688,7 @@ system.  This is a GNU extension declared in @file{malloc.h}.
 
 @comment malloc.h
 @comment GNU
-@deftypefun void memory_warnings (void *@var{start}, void (*@var{warn_func}) (const char *))
+@deftypefun void memory_warnings (void *@var{start}, void (*@var{warn-func}) (const char *))
 Call this function to request warnings for nearing exhaustion of virtual
 memory.
 
@@ -1698,7 +1698,7 @@ limit of data space, to determine the fraction of available memory in
 use.  If you supply zero for @var{start}, then a default value is used
 which is right in most circumstances.
 
-For @var{warn_func}, supply a function that @code{malloc} can call to
+For @var{warn-func}, supply a function that @code{malloc} can call to
 warn you.  It is called with a string (a warning message) as argument.
 Normally it ought to display the string for the user to read.
 @end deftypefun

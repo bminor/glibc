@@ -379,7 +379,7 @@ Some other socket is already using the specified address.
 @item EINVAL
 The socket @var{socket} already has an address.
 
-@item EACCESS
+@item EACCES
 You do not have permission to access the requested address.  (In the
 Internet domain, only the super-user is allowed to specify a port number
 in the range 0 through @code{IPPORT_RESERVED} minus one; see
@@ -400,11 +400,11 @@ Internet socket.  The prototype for this function is in the header file
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int getsockname (int @var{socket}, struct sockaddr *@var{addr}, size_t *@var{length_ptr})
+@deftypefun int getsockname (int @var{socket}, struct sockaddr *@var{addr}, size_t *@var{length-ptr})
 The @code{getsockname} function returns information about the
 address of the socket @var{socket} in the locations specified by the
-@var{addr} and @var{length_ptr} arguments.  Note that the
-@var{length_ptr} is a pointer; you should initialize it to be the
+@var{addr} and @var{length-ptr} arguments.  Note that the
+@var{length-ptr} is a pointer; you should initialize it to be the
 allocation size of @var{addr}, and on return it contains the actual
 size of the address data.
 
@@ -1726,7 +1726,7 @@ queue.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int accept (int @var{socket}, struct sockaddr *@var{addr}, size_t *@var{length_ptr})
+@deftypefun int accept (int @var{socket}, struct sockaddr *@var{addr}, size_t *@var{length-ptr})
 This function is used to accept a connection request on the server
 socket @var{socket}.
 
@@ -1736,7 +1736,7 @@ unless the socket @var{socket} has nonblocking mode set.  (You can use
 socket.)  @xref{File Status Flags}, for information about nonblocking
 mode.
 
-The @var{addr} and @var{length_ptr} arguments are used to return
+The @var{addr} and @var{length-ptr} arguments are used to return
 information about the name of the client socket that initiated the
 connection.  @xref{Socket Addresses}, for information about the format
 of the information.
@@ -1778,11 +1778,11 @@ connectionless communication styles.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int getpeername (int @var{socket}, struct sockaddr *@var{addr}, size_t *@var{length_ptr})
+@deftypefun int getpeername (int @var{socket}, struct sockaddr *@var{addr}, size_t *@var{length-ptr})
 The @code{getpeername} function returns the address of the socket that
 @var{socket} is connected to; it stores the address in the memory space
-specified by @var{addr} and @var{length_ptr}.  It stores the length of
-the address in @code{*@var{length_ptr}}.
+specified by @var{addr} and @var{length-ptr}.  It stores the length of
+the address in @code{*@var{length-ptr}}.
 
 @xref{Socket Addresses}, for information about the format of the
 address.  In some operating systems, @code{getpeername} works only for
@@ -2249,7 +2249,7 @@ also tells you where it was sent from.  This function is declared in
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int recvfrom (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, size_t *@var{length_ptr})
+@deftypefun int recvfrom (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, size_t *@var{length-ptr})
 The @code{recvfrom} function reads one packet from the socket
 @var{socket} into the buffer @var{buffer}.  The @var{size} argument
 specifies the maximum number of bytes to be read.
@@ -2259,7 +2259,7 @@ If the packet is longer than @var{size} bytes, then you get the first
 There's no way to read the rest of the packet.  Thus, when you use a
 packet protocol, you must always know how long a packet to expect.
 
-The @var{addr} and @var{length_ptr} arguments are used to return the
+The @var{addr} and @var{length-ptr} arguments are used to return the
 address where the packet came from.  @xref{Socket Addresses}.  For a
 socket in the file domain, the address information won't be meaningful,
 since you can't read the address of such a socket (@pxref{File
@@ -2476,12 +2476,12 @@ They are declared in @file{sys/socket.h}.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int getsockopt (int @var{socket}, int @var{level}, int @var{optname}, void *@var{optval}, size_t *@var{optlen_ptr})
+@deftypefun int getsockopt (int @var{socket}, int @var{level}, int @var{optname}, void *@var{optval}, size_t *@var{optlen-ptr})
 The @code{getsockopt} function gets information about the value of
 option @var{optname} at level @var{level} for socket @var{socket}.
 
 The option value is stored in a buffer that @var{optval} points to.
-Before the call, you should supply in @code{*@var{optlen_ptr}} the
+Before the call, you should supply in @code{*@var{optlen-ptr}} the
 size of this buffer; on return, it contains the number of bytes of
 information actually stored in the buffer.
 

@@ -391,10 +391,10 @@ The type @code{va_list} is used for argument pointer variables.
 
 @comment stdarg.h
 @comment ANSI
-@deftypefn {Macro} void va_start (va_list @var{ap}, @var{last_required})
+@deftypefn {Macro} void va_start (va_list @var{ap}, @var{last-required})
 This macro initializes the argument pointer variable @var{ap} to point
 to the first of the optional arguments of the current function;
-@var{last_required} must be the last required argument to the function.
+@var{last-required} must be the last required argument to the function.
 
 @xref{Old Varargs}, for an alternate definition of @code{va_start}
 found in the header file @file{varargs.h}.
