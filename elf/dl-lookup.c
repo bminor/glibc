@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -162,7 +162,7 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
       (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK))
     {
       /* We could find no value for a strong reference.  */
-      const char msg[] = "undefined symbol: ";
+      static const char msg[] = "undefined symbol: ";
       const size_t len = strlen (undef_name);
       char buf[sizeof msg + len];
       memcpy (buf, msg, sizeof msg - 1);
@@ -205,6 +205,18 @@ _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
 		     (*scope)->l_dupsearchlist, 0, (*scope)->l_ndupsearchlist,
 		     reference_name, skip_map, flags))
 	break;
+
+  if (current_value.s == NULL &&
+      (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK))
+    {
+      /* We could find no value for a strong reference.  */
+      static const char msg[] = "undefined symbol: ";
+      const size_t len = strlen (undef_name);
+      char buf[sizeof msg + len];
+      memcpy (buf, msg, sizeof msg - 1);
+      memcpy (&buf[sizeof msg - 1], undef_name, len + 1);
+      _dl_signal_error (0, reference_name, buf);
+    }
 
   *ref = current_value.s;
   return current_value.a;
