@@ -23,9 +23,9 @@ dont_distribute := $(dont_distribute) sys/param.h	# Generated.
 
 endif
 
-before-compile := $(before-compile) $(objpfx)sys/param.h
+before-compile := $(before-compile) $(common-objpfx)sys/param.h
 
-$(objpfx)sys/param.h: $(sysincludedir)/sys/param.h 
+$(common-objpfx)sys/param.h: $(sysincludedir)/sys/param.h 
 	-mkdir $(dir $@)
 	(echo '#ifndef _GNU_SYS_PARAM_H';	\
 	 echo '#define _GNU_SYS_PARAM_H 1';	\
@@ -39,10 +39,11 @@ $(objpfx)sys/param.h: $(sysincludedir)/sys/param.h
 	 echo '#endif	/* sys/param.h */') > $@-tmp
 	mv $@-tmp $@
 
-$(objpfx)param.h.c: $(sysincludedir)/sys/param.h
+$(common-objpfx)param.h.c: $(sysincludedir)/sys/param.h
 	rm -f $@
 	cp $< $@
-$(objpfx)param.h.dep: $(objpfx)param.h.c $(sysdep_dir)/unix/Makefile
+$(common-objpfx)param.h.dep: $(common-objpfx)param.h.c \
+			     $(sysdep_dir)/unix/Makefile
 	$(+mkdep) -I$(sysincludedir) $<		\
 	| sed > $@				\
 	      -e 's@^.*:@@'			\
@@ -55,19 +56,20 @@ ifeq ($(subdir),misc)
 
 # Install system headers the system sys/param.h uses.
 
-include $(objpfx)param.h.dep
+include $(common-objpfx)param.h.dep
 
 # Don't preempt our own headers. 
 sys/param.h-includes := \
   $(filter-out $(wildcard $(addprefix $(..),$(sys/param.h-includes))),\
 	       $(sys/param.h-includes))
 
-headers := $(headers) $(sys/param.h-includes)
+sysdep_headers := $(sysdep_headers) $(sys/param.h-includes)
 dont_distribute := $(dont_distribute) $(sys/param.h-includes)	# Generated.
 
 ifdef sys/param.h-includes
-# Copy the system files to $(objdir).
-$(addprefix $(objpfx),$(sys/param.h-includes)): $(objpfx)%: $(sysincludedir)/%
+# Copy the system files to $(common-objdir).
+$(addprefix $(common-objpfx),$(sys/param.h-includes)): $(common-objpfx)%: \
+						       $(sysincludedir)/%
 	-mkdir $(dir $@)
 	cp $< $@
 endif
@@ -78,43 +80,45 @@ ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/errnos.h))))" \
      "$(sysdep_dir)/stub/"
 # These need to exist before any compiling is done,
 # so cpp doesn't instead find the stub versions.
-before-compile := $(before-compile) $(objpfx)errnos.h 
+before-compile := $(before-compile) $(common-objpfx)errnos.h 
 
-$(objpfx)errnos.h: $(objpfx)make-errnos
+$(common-objpfx)errnos.h: $(common-objpfx)make-errnos
 	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 
-$(objpfx)make-errnos: $(objpfx)make-errnos.c
-	cd $(objdir); $(CC) $(<:$(objpfx)%=%) -o $(@:$(objpfx)%=%)
+$(common-objpfx)make-errnos: $(common-objpfx)make-errnos.c
+	$(common-objdir-compile)
 
-$(objpfx)make-errnos.c: $(sysdep_dir)/unix/errnos-tmpl.c \
-			$(sysdep_dir)/unix/errnos.awk $(objpfx)errnos
+$(common-objpfx)make-errnos.c: $(sysdep_dir)/unix/errnos-tmpl.c \
+			$(sysdep_dir)/unix/errnos.awk $(common-objpfx)errnos
 	awk -f $(word 2,$^) errnos="`tr '\012' ' ' < $(word 3,$^)`" $< > $@-tmp
 	mv $@-tmp $@
 
-$(objpfx)errnos: $(wildcard $(sysincludedir)/errno.h	\
-			    $(sysincludedir)/sys/errno.h)
+$(common-objpfx)errnos: $(wildcard $(sysincludedir)/errno.h	\
+				   $(sysincludedir)/sys/errno.h)
 	cat $^ | sed -n 's/^#define[ 	]*\(E[A-Z0-9]*\)[ 	]*[0-9][0-9]*[	]*.*$$/\1/p' > $@-tmp
 	mv $@-tmp $@
 endif
 
 ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/ioctls.h))))" \
      "$(sysdep_dir)/stub/"
-before-compile := $(before-compile) $(objpfx)ioctls.h
+before-compile := $(before-compile) $(common-objpfx)ioctls.h
 
-$(objpfx)ioctls.h: $(objpfx)make-ioctls
+$(common-objpfx)ioctls.h: $(common-objpfx)make-ioctls
 	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 
-$(objpfx)make-ioctls: $(objpfx)make-ioctls.c
-	cd $(objdir); $(CC) $(<:$(objpfx)%=%) -o $(@:$(objpfx)%=%)
+$(common-objpfx)make-ioctls: $(common-objpfx)make-ioctls.c
+	$(common-objdir-compile)
 
-$(objpfx)make-ioctls.c: $(sysdep_dir)/unix/ioctls-tmpl.c \
-			$(sysdep_dir)/unix/ioctls.awk $(objpfx)ioctls
+$(common-objpfx)make-ioctls.c: $(sysdep_dir)/unix/ioctls-tmpl.c \
+			       $(sysdep_dir)/unix/ioctls.awk \
+			       $(common-objpfx)ioctls
 	awk -f $(word 2,$^) requests="`cat $(word 3,$^)`" $< > $@-tmp
 	mv $@-tmp $@
 
-$(objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls $(sysincludedir)/sys/ioctl.h
+$(common-objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls \
+			$(sysincludedir)/sys/ioctl.h
 	$(dir $<)$(notdir $<) $(word 2,$^) | tr '\012' ' ' > $@-tmp
 	mv $@-tmp $@
 endif
@@ -139,9 +143,9 @@ ifeq ($(wildcard $(sysincludedir)/syscall.h),)
 syscall.h := $(wildcard $(sysincludedir)/sys/syscall.h)
 
 ifdef	syscall.h
-$(objpfx)syscall.h: $(syscall.h)
+$(common-objpfx)syscall.h: $(syscall.h)
 	echo '#include <$(syscall.h:$(sysincludedir)/%=%)>' > $@
-before-compile := $(before-compile) $(objpfx)syscall.h
+before-compile := $(before-compile) $(common-objpfx)syscall.h
 endif
 
 endif
