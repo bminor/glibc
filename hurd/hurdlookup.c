@@ -94,12 +94,12 @@ __hurd_file_name_lookup_retry (file_t crdir,
 	  {
 	    mach_port_t ref = __mach_reply_port ();
 	    err = __io_reauthenticate (*result,
-				       ref, MACH_MSG_TYPE_MAKE_SEND_ONCE);
+				       ref, MACH_MSG_TYPE_MAKE_SEND);
 	    if (! err)
 	      err = __USEPORT
 		(AUTH, __auth_user_authenticate (port, *result,
 						 ref,
-						 MACH_MSG_TYPE_MAKE_SEND_ONCE,
+						 MACH_MSG_TYPE_MAKE_SEND,
 						 &newpt));
 	    __mach_port_destroy (__mach_task_self (), ref);
 	  }
@@ -238,13 +238,13 @@ __hurd_file_name_lookup_retry (file_t crdir,
 			    err = __io_reauthenticate
 			      (unauth,
 			       ref,
-			       MACH_MSG_TYPE_MAKE_SEND_ONCE);
+			       MACH_MSG_TYPE_MAKE_SEND);
 			    if (! err)
 			      err = __USEPORT
 				(AUTH, __auth_user_authenticate
 				 (port,
 				  unauth,
-				  ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+				  ref, MACH_MSG_TYPE_MAKE_SEND,
 				  result));
 			    __mach_port_deallocate (__mach_task_self (),
 						    unauth);
