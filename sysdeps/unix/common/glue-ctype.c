@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,9 @@ Cambridge, MA 02139, USA.  */
    This order is important for some systems.  */
 #ifdef	HAVE__CTYPE__
 #define	TABLE	_ctype__
+#endif
+#if !defined(TABLE) && defined(HAVE__CTYPE)
+#define TABLE   _ctype
 #endif
 #if !defined(TABLE) && defined(HAVE__CTYPE_)
 #define	TABLE	_ctype_
