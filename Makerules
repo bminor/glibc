@@ -107,13 +107,13 @@ override CPPFLAGS := $(strip $(filter-out $(+sysdep-includes),$(CPPFLAGS)) \
 
 # Include any system-specific makefiles.
 
-ifeq ($(wildcard $(+sysdir_pfx)sysdep-Makefile),)
+ifeq ($(wildcard $(+sysdir_pfx)sysd-Makefile),)
 # Don't do deps until this exists, because it might change the sources list.
 no_deps=t
 endif
 
-include $(+sysdir_pfx)sysdep-Makefile
-$(+sysdir_pfx)sysdep-Makefile: $(+sysdir_pfx)sysdirs
+include $(+sysdir_pfx)sysd-Makefile
+$(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)sysdirs
 	(for dir in `cat $<`; do					      \
 	   file=sysdeps/$$dir/Makefile;					      \
 	   if [ -r $(..)$$file ]; then					      \
