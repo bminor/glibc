@@ -1,11 +1,11 @@
-GNU C Library NEWS -- history of user-visible changes.  1997-11-15
+GNU C Library NEWS -- history of user-visible changes.  1998-03-04
 
-Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports using the `glibcbug' script to
 <bugs@gnu.org>.  Questions and suggestions should be send to
-<bug-glibc@prep.ai.mit.edu>.
+<bug-glibc@gnu.org>.
 
 Version 2.0.7
 

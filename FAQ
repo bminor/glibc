@@ -134,8 +134,8 @@ you are really interested in porting it, contact
 GNU CC are used to increase portability and speed.
 
 GNU CC is found, like all other GNU packages, on
-	ftp://prep.ai.mit.edu/pub/gnu
-and the many mirror sites.  prep is always overloaded, so try to find
+	ftp://ftp.gnu.org/pub/gnu
+and the many mirror sites.  ftp.gnu.org is always overloaded, so try to find
 a local mirror first.
 
 You always should try to use the latest official release.  Older
@@ -177,7 +177,7 @@ ftp://ftp.yggdrasil.com/private/hjl
 
 * GNU gettext.  This package contains the tools needed to construct
   `message catalog' files containing translated versions of system
-  messages. See ftp://prep.ai.mit.edu/pub/gnu or better any mirror
+  messages. See ftp://ftp.gnu.org/pub/gnu or better any mirror
   site.  (We distribute compiled message catalogs, but they may not be
   updated in patches.)
 
@@ -845,7 +845,7 @@ siginterrupt().
 	or higher is required for this script'.  What can I do?
 
 {UD} You have to get the specified autoconf version (or a later one)
-from your favorite mirror of prep.ai.mit.edu.
+from your favorite mirror of ftp.gnu.org.
 
 
 4.2.	When I try to compile code which uses IPv6 headers and

@@ -1,3 +1,55 @@
+1998-03-04 12:43  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/texinfo.tex: Updated.
+
+1998-03-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/maint.texi: Change prep.ai.mit.edu to {ftp}.gnu.org.
+
+1998-02-24 08:10  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/alpha/sysdep.S (_errno): Add in addition to __errno.
+
+1998-02-24 09:40  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/ldd.sh.in: Add compatibility for broken old shells.
+	* elf/ldd.bash.in: Likewise.
+
+1998-03-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/rpc/auth.h: More prototype cleanups.
+	* sunrpc/rpc/xdr.h: Likewise.
+
+1998-02-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nsswitch.c (__nss_lookup): Return 1 if this was the last
+	module.
+
+	* nss/getXXent_r.c: If no more module is found don't try to call
+	setXXent functions but leave unsuccessfully.
+
+1998-02-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/stdlib.h (struct drand48_data): Leave X to user macros
+	and use x for member name.
+	Reported by Daniel Lyddy <daniell@cs.berkeley.edu>.
+
+	* stdlib/drand48.c: Change according to member name change.
+	* stdlib/drand48_r.c: Likewise.
+	* stdlib/lcong48_r.c: Likewise.
+	* stdlib/lrand48.c: Likewise.
+	* stdlib/lrand48_r.c: Likewise.
+	* stdlib/mrand48.c: Likewise.
+	* stdlib/mrand48_r.c: Likewise.
+	* stdlib/seed48.c: Likewise.
+	* stdlib/seed48_r.c: Likewise.
+	* stdlib/srand48_r.c: Likewise.
+
+1998-02-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Don't mark lchown as
+	extra syscall.
+
 1998-03-03 23:08  H.J. Lu  <hjl@gnu.org>
 
 	* misc/efgcvt_r.c: Really update from 2.1.
