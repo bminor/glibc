@@ -210,7 +210,7 @@ endif
 
 # Default flags to pass the C compiler.
 ifndef default_cflags
-+default_cflags := -g
+default_cflags := -g
 endif
 
 # Flags to pass the C compiler when assembling preprocessed assembly code
@@ -286,7 +286,7 @@ endif	# +cflags
 
 # If none of the above worked, default to "-g".
 ifeq	"$(strip $(+cflags))" ""
-+cflags	:= $(+default_cflags)
++cflags	:= $(default_cflags)
 endif	# $(+cflags) == ""
 
 # If using gcc, add flags that only it will grok.
