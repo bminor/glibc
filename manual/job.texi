@@ -1052,7 +1052,13 @@ Unix, and one from the POSIX.1 standard.  The feature test macros you
 have selected (@pxref{Feature Test Macros}) determine which definition
 you get.  Specifically, you get the BSD version if you define
 @code{_BSD_SOURCE}; otherwise, you get the POSIX version if you define
-@code{_POSIX_SOURCE} or @code{_GNU_SOURCE}.
+@code{_POSIX_SOURCE} or @code{_GNU_SOURCE}.  Programs written for old
+BSD systems will not include @file{unistd.h}, which defines
+@code{getpgrp} specially under @code{_BSD_SOURCE}.  You must link such
+programs with the @code{-lbsd-compat} option to get the BSD definition.@refill
+@findex -lbsd-compat
+@findex bsd-compat
+@cindex BSD compatibility library
 
 @comment unistd.h
 @comment POSIX.1
