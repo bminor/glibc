@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -490,26 +490,32 @@ DEFUN(__flshfp, (fp, c),
 
   if (!flush_only || fp->__bufp > fp->__buffer)
     {
-      if (fp->__linebuf && fp->__bufp > fp->__buffer)
-	/* This is a line-buffered stream, so its put-limit is
-	   set to the beginning of the buffer in order to force
-	   a __flshfp call on each putc.  We undo this hack here
-	   (by setting the limit to the end of the buffer) to simplify
-	   the interface with the output-room function.
-	   However, we must make sure we don't do this if there isn't
-	   actually anything in the buffer, because in that case we
-	   want to give the output-room function a chance to prime
-	   the stream for writing in whatever fashion turns it on.  */
+      if (fp->__linebuf_active && fp->__bufp > fp->__buffer)
+	/* This is an active line-buffered stream, so its put-limit is set
+	   to the beginning of the buffer in order to force a __flshfp call
+	   on each putc (see below).  We undo this hack here (by setting
+	   the limit to the end of the buffer) to simplify the interface
+	   with the output-room function.  However, we must make sure we
+	   don't do this if there isn't actually anything in the buffer,
+	   because in that case we want to give the output-room function a
+	   chance to prime the stream for writing in whatever fashion turns
+	   it on.  */
 	fp->__put_limit = fp->__buffer + fp->__bufsize;
 
       /* Make room in the buffer.  */
-      (*fp->__room_funcs.__output)(fp, flush_only ? EOF : (unsigned char) c);
+      (*fp->__room_funcs.__output) (fp, flush_only ? EOF : (unsigned char) c);
 
       if (fp->__linebuf)
-	/* Set the end pointer to the beginning of the buffer,
-	   so the next `putc' call will force a call to this function
-	   (see comment above about line-buffered streams).  */
-	fp->__put_limit = fp->__buffer;
+	{
+	  /* This is a line-buffered stream, and it is now ready to do
+	     some output.  We call this an "active line-buffered stream".
+	     We set the put_limit to the beginning of the buffer,
+	     so the next `putc' call will force a call to this function.
+	     Setting the linebuf_active flag tells the code above
+	     (on the next call) to undo this hackery.  */
+	  fp->__put_limit = fp->__buffer;
+	  fp->__linebuf_active = 1;
+	}
     }
 
   if (ferror (fp))
@@ -552,9 +558,18 @@ DEFUN(__fillbf, (fp), register FILE *fp)
     {
       register FILE *f;
       for (f = __stdio_head; f != NULL; f = f->__next)
-	if (__validfp(f) && f->__linebuf && f->__mode.__write &&
-	    f->__put_limit > f->__buffer)
-	  (void) __flshfp(f, EOF);
+	if (__validfp (f) && f->__linebuf && f->__mode.__write)
+	  (void) __flshfp (f, EOF);
+    }
+
+  /* Note we must do this after flushing all line-buffered
+     streams, or else __flshfp would undo it!  */
+  if (fp->__linebuf_active)
+    {
+      /* This is an active line-buffered stream, meaning it is in the midst
+	 of writing, but has a bogus put_limit.  Restore it to normality.  */
+      fp->__put_limit = fp->__buffer + fp->__bufsize;
+      fp->__linebuf_active = 0;
     }
 
   /* We want the beginning of the buffer to now
@@ -568,7 +583,7 @@ DEFUN(__fillbf, (fp), register FILE *fp)
       if (fp->__room_funcs.__output == NULL)
 	fp->__error = 1;
       else
-	(*fp->__room_funcs.__output)(fp, EOF);
+	(*fp->__room_funcs.__output) (fp, EOF);
     }
 
   fp->__target = new_target;
@@ -608,14 +623,4 @@ DEFUN(__invalidate, (stream), register FILE *stream)
 
   /* Restore the deceased's link.  */
   stream->__next = next;
-}
-
-
-/* Abort with an error message.  */
-__NORETURN
-void
-DEFUN(__libc_fatal, (message), CONST char *message)
-{
-  __stdio_errmsg(message, strlen(message));
-  abort();
 }
