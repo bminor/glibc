@@ -265,7 +265,8 @@ This function is similar to @code{strcpy} but always copies exactly
 @var{size} characters into @var{to}.
 
 If the length of @var{from} is more than @var{size}, then @code{strncpy}
-copies just the first @var{size} characters.
+copies just the first @var{size} characters.  Note that in this case
+there is no null terminator written into @var{to}.
 
 If the length of @var{from} is less than @var{size}, then @code{strncpy}
 copies all of @var{from}, followed by enough null characters to add up
