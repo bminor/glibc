@@ -134,13 +134,25 @@ Some of the machine-dependent code for some machines uses extensions in
 the GNU C compiler, so you may need to compile the library with GCC.
 (In fact, all of the existing complete ports require GCC.)
 
-To build the library and header files, type @code{make}.  This will
-produce a lot of output, some of which looks like errors from
-@code{make} (but isn't).  Look for error messages from @code{make}
-containing @samp{***}.  Those indicate that something is really wrong.
-Using the @samp{-w} option to @code{make} may make the output easier to
-understand (this option tells @code{make} to print messages telling you
-what subdirectories it is working on).@refill
+The current release of the C library contains some header files that the
+compiler normally provides: @file{stddef.h}, @file{stdarg.h}, and
+several files with names of the form @file{va-@var{machine}.h}.  The
+versions of these files that came with older releases of GCC do not work
+properly with the GNU C library.  The @file{stddef.h} file in release
+2.2 and later of GCC is correct.  If you have a new enough release of
+GCC, use its version instead of the C library's.  To do this, put the
+line @w{@samp{override stddef.h =}} in @file{configparms}.  The other
+files are corrected in release 2.3 and later of GCC.  If you have a new
+enough release of GCC, use its files instead of the C library's.  To do
+this, put the line @w{samp{override stdarg.h =}} in @file{configparms}.
+
+To build the library, type @code{make lib}.  This will produce a lot of
+output, some of which looks like errors from @code{make} (but isn't).
+Look for error messages from @code{make} containing @samp{***}.  Those
+indicate that something is really wrong.  Using the @samp{-w} option to
+@code{make} may make the output easier to understand (this option tells
+@code{make} to print messages telling you what subdirectories it is
+working on).@refill
 
 To install the library and header files, type @code{make install}, after
 setting the installation directories in @file{configparms}.  This will
