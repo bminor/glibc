@@ -52,12 +52,12 @@ routines = hurdid hurdpath hurdpid hurdports \
 sig	= hurdsig siginfo init-fault msging-p hurd-raise preempt-sig \
 	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
-	  __getdport getdport openport setdtsz \
-	  fd-read fd-write hurdioctl
+	  __getdport getdport openport \
+	  fd-close fd-read fd-write hurdioctl
 inlines = $(addprefix inline-,fd port signal userlink threadvar)
 aux := hurdsyms hurdinit msgstub # hurdmsg
 
-# The files inline-*.c contain the real-function definition of the
+# The files inline-*.c contain the real-function definitions of the
 # functions defined with `extern inline' in hurd/*.h.
 $(inlines:%=$(objpfx)%.c): $(objpfx)inline-%.c: 
 	(echo '#define _EXTERN_INLINE /* Define the real function. */';\
