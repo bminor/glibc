@@ -16,24 +16,29 @@ DEFUN_VOID(main)
 
   me = getuid ();
   my_passwd = getpwuid (me);
+  if (my_passwd == NULL)
+    perror ("getpwuid");
+  else
+    {
+      printf ("My login name is %s.\n", my_passwd->pw_name);
+      printf ("My uid is %d.\n", (int)(my_passwd->pw_uid));
+      printf ("My home directory is %s.\n", my_passwd->pw_dir);
+      printf ("My default shell is %s.\n", my_passwd->pw_shell);
 
-  printf ("My login name is %s.\n", my_passwd->pw_name);
-  printf ("My uid is %d.\n", (int)(my_passwd->pw_uid));
-  printf ("My home directory is %s.\n", my_passwd->pw_dir);
-  printf ("My default shell is %s.\n", my_passwd->pw_shell);
-
-  my_group = getgrgid (my_passwd->pw_gid);
-  if (!my_group) {
-    printf ("Couldn't find out about group %d.\n", (int)(my_passwd->pw_gid));
-    exit (EXIT_FAILURE);
+      my_group = getgrgid (my_passwd->pw_gid);
+      if (my_group == NULL)
+	perror ("getgrgid");
+      else
+	{
+	  printf ("My default group is %s (%d).\n",
+		  my_group->gr_name, (int)(my_passwd->pw_gid));
+	  printf ("The members of this group are:\n");
+	  for (members = my_group->gr_mem; *members != NULL; ++members)
+	    printf ("  %s\n", *members);
+	}
     }
 
-  printf ("My default group is %s (%d).\n",
-	  my_group->gr_name, (int)(my_passwd->pw_gid));
-  printf ("The members of this group are:\n");
-  for (members = my_group->gr_mem; *members != NULL; ++members)
-    printf ("  %s\n", *members);
-  exit (EXIT_SUCCESS);
+  exit (my_passwd && my_group ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 

@@ -1,2 +1,2 @@
-../../math/bsd/ieee/support.c
+support.c
 ieee754.h

@@ -39,7 +39,8 @@ DEFUN(enlarge_buffer, (stream, c),
     /* Record how much has actually been written into the buffer.  */
     *info->bufsize = stream->__bufp - stream->__buffer;
 
-  if (stream->__target > *info->bufsize)
+  if (stream->__target != -1
+      && stream->__target > *info->bufsize)
     /* Our target (where the buffer maps to) is always zero except when
        the user just did a SEEK_END fseek.  If he sought within the
        buffer, we need do nothing and will zero the target below.  If he
