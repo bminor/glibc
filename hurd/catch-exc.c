@@ -29,14 +29,31 @@ _S_catch_exception_raise (mach_port_t port,
 			  int code,
 			  int subcode)
 {
-  int signo, sigcode;
+  int signo, sigcode, error;
+  struct hurd_sigstate *ss;
 
   /* Call the machine-dependent function to translate the Mach exception
      codes into a signal number and subcode.  */
-  _hurd_exception2signal (exception, code, subcode, &signo, &sigcode);
+  _hurd_exception2signal (exception, code, subcode,
+			  &signo, &sigcode, &error);
+
+  /* Find the sigstate structure for the faulting thread.  */
+  __mutex_lock (&_hurd_siglock);
+  for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
+    if (ss->thread == thread)
+      break;
+  if (ss == NULL)
+    ss = _hurd_thread_sigstate (thread); /* Allocate a fresh one.  */
+
+  if (__mutex_lock_locked (&ss->lock))
+    /* Oops.  The thread faulted with its sigstate lock held.
+       Bad scene.  What to do?  */
+    ;				/* XXX */
+  else
+    __mutex_lock (&ss->lock);
 
   /* Post the signal.  */
-  _hurd_internal_post_signal (_hurd_thread_sigstate (thread), signo, sigcode,
+  _hurd_internal_post_signal (ss, signo, sigcode, error,
 			      MACH_PORT_NULL, MACH_MSG_TYPE_PORT_SEND);
 
   return KERN_SUCCESS;
