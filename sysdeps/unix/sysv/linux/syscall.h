@@ -111,5 +111,12 @@
 #define SYS_lstat		107
 #define SYS_fstat		108
 #define SYS_uname		109
+#define SYS_iopl		110
+#define SYS_vhangup		111
+#define SYS_idle		112
+#define SYS_vm86		113
+#define SYS_wait4		114
+#define SYS_swapoff		115
+
 
 #endif	/* syscall.h */
