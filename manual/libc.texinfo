@@ -937,7 +937,6 @@ Porting the GNU C Library
 
 @comment Includes of the appendices.
 @include lang.texi
-@include summary.texi
 @include header.texi
 @include maint.texi
 
