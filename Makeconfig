@@ -31,10 +31,6 @@ ifdef subdir
 .. := ../
 endif
 
-#
-#	These are the configuration variables.
-#
-
 # You can put variables that are specific to a configuration in the file
 # Makeconfig in the object directory for that configuration.  Variables
 # that do not vary between different configurations at your site can be
@@ -63,6 +59,10 @@ ifneq ($(wildcard $(objdir)/Makeconfig),)
 include $(objdir)/Makeconfig
 endif
 endif
+
+#
+#	These are the configuration variables.
+#
 
 
 # Common prefix for all installation directories.
@@ -116,6 +116,22 @@ endif
 # pathname, it is relative to $(datadir)/zoneinfo.
 ifndef localtime-file
 localtime-file = localtime
+endif
+
+# What timezone's DST rules should be used when a POSIX-style TZ
+# environment variable doesn't specify any rules.  For 1003.1 compliance
+# this timezone must use rules that are as U.S. federal law defines DST.
+# Run `make -C time echo-zonenames' to see a list of available zone names.
+# This setting can be changed with `zic -p TIMEZONE' at any time.
+ifndef posixrules
+posixrules = US/Eastern
+endif
+
+# Where to install the "posixrules" timezone file; this is file
+# whose contents $(posixrules) specifies.  If this is a relative
+# pathname, it is relative to $(datadir)/zoneinfo.
+ifndef posixrules-file
+posixrules-file = posixrules
 endif
 
 
