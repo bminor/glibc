@@ -226,7 +226,7 @@ If INPUT-FILE is -, input is read from standard input.\n"),
 	      program_invocation_name, program_invocation_name,
 	      program_invocation_name);
       fputs (gettext ("\
-Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
+Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"),
 	     stdout);
     }
 

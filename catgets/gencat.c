@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -222,7 +222,7 @@ If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n\
 is -, output is written to standard output.\n"),
 	      program_invocation_name, program_invocation_name);
       fputs (gettext ("\
-Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
+Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"),
 	     stdout);
     }
 

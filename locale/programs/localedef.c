@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -413,7 +413,7 @@ System's directory for character maps: %s\n\
                        locale files  : %s\n"),
 	      program_invocation_name, CHARMAP_PATH, LOCALE_PATH);
       fputs (gettext ("\
-Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
+Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"),
 	     stdout);
     }
 
