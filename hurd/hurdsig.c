@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <gnu-stabs.h>
 #include <hurd.h>
 #include <hurd/signal.h>
-#include <mutex.h>
+#include <cthreads.h>		/* For `struct mutex'.  */
 
 struct mutex _hurd_siglock = MUTEX_INITIALIZER;
 int _hurd_stopped;
