@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
   struct _hurd_fd_user d;
   struct _hurd_fd *d2;
   io_t port, ctty;
-  int dealloc, dealloc_ctty;
+  struct _hurd_port_userlink ulink, ctty_ulink;
   int flags;
 
   /* Extract the ports and flags from FD.  */
@@ -43,8 +43,8 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
       return -1;
     }
   flags = d.d->flags;
-  ctty = _hurd_port_get (&d.d->ctty, &dealloc_ctty);
-  port = _hurd_port_locked_get (&d.d->port, &dealloc); /* Unlocks D.d.  */
+  ctty = _hurd_port_get (&d.d->ctty, &ctty_ulink);
+  port = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
 
   __mutex_lock (&_hurd_dtable_lock);
   if (fd2 < 0 || fd2 >= _hurd_dtable.size)
@@ -70,9 +70,9 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
     }
   __mutex_unlock (&_hurd_dtable_lock);
 
-  _hurd_port_free (&d.d->port, &dealloc, port);
+  _hurd_port_free (&d.d->port, &ulink, port);
   if (ctty != MACH_PORT_NULL)
-    _hurd_port_free (&d.d->ctty, &dealloc_ctty, port);
+    _hurd_port_free (&d.d->ctty, &ctty_ulink, port);
 
   _hurd_fd_done (d, &dealloc_dt);
 
