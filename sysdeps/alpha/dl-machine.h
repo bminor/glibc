@@ -379,35 +379,24 @@ elf_machine_rela (struct link_map *map,
       sym_value = sym ? loadbase + sym->st_value : 0;
       sym_value += reloc->r_addend;
 
-      if (r_info == R_ALPHA_GLOB_DAT)
+      if (r_info == R_ALPHA_GLOB_DAT || r_info == R_ALPHA_REFQUAD)
 	*reloc_addr = sym_value;
       else if (r_info == R_ALPHA_JMP_SLOT)
 	{
 	  *reloc_addr = sym_value;
 	  elf_alpha_fix_plt (map, reloc, (Elf64_Addr) reloc_addr, sym_value);
 	}
-      else if (r_info == R_ALPHA_REFQUAD)
-	{
-	  sym_value += *reloc_addr;
-#ifndef RTLD_BOOTSTRAP
-	  if (map == &_dl_rtld_map)
-	    {
-	      /* Undo the relocation done here during bootstrapping.
-		 Now we will relocate anew, possibly using a binding
-		 found in the user program or a loaded library rather
-		 than the dynamic linker's built-in definitions used
-		 while loading those libraries.  */
-	      const Elf64_Sym *const dlsymtab
-		= (void *)(map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
-	      sym_value -= map->l_addr;
-	      sym_value -= dlsymtab[ELF64_R_SYM(reloc->r_info)].st_value;
-	      sym_value -= reloc->r_addend;
-	    }
-#endif
-	  *reloc_addr = sym_value;
-	}
       else
-	assert (! "unexpected dynamic reloc type");
+#ifdef RTLD_BOOTSTRAP
+	  /* There is no point calling _dl_sysdep_error, it
+	     almost certainly hasn't been relocated properly.  */
+	  asm ("halt");
+#else
+	  extern char **_dl_argv;
+	  _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
+			    ": Unknown relocation type\n", NULL);
+#endif
+	}
     }
 }
 
