@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/id.h>
+#include <string.h>
 
 int
 __setreuid (uid_t ruid, uid_t euid)

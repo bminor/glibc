@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <hurd.h>
 #include <hurd/id.h>
+#include <string.h>
 
 /* Set the group ID of the calling process to UID.
    If the calling process is the super-user, the real

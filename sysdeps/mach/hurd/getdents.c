@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <hurd.h>
 #include <hurd/fd.h>
+#include <string.h>
 
 ssize_t
 DEFUN(__getdirentries, (fd, buf, nbytes, basep),

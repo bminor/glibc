@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/id.h>
+#include <string.h>
 
 int
 __getgroups (int n, gid_t *gidset)

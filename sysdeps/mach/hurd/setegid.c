@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <sys/types.h>
 #include <hurd/id.h>
+#include <string.h>
 
 /* Set the effective user ID of the calling process to GID.  */
 int

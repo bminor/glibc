@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/paths.h>
 #include <fcntl.h>
 #include "stdio/_itoa.h"
+#include <string.h>
 
 /* Temporary hack; this belongs in a header file, probably types.h. */
 #define major(x) ((int)(((unsigned) (x) >> 8) & 0xff))

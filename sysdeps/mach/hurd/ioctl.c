@@ -25,6 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdarg.h>
 #include <mach/notify.h>
 #include <assert.h>
+#include <string.h>
 
 /* Symbol set of ioctl handler lists.  If there are user-registered
    handlers, one of these lists will contain them.  The other lists are
