@@ -1,3 +1,9 @@
+2005-03-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #776]
+	* iconv/iconvconfig.c: Fix comment for the output file.
+	(write_output): Clear padding in header.
+
 2005-03-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-close.c (_dl_close): Don't try to set up new searchpath if the
