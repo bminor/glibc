@@ -128,7 +128,6 @@ _hurd_proc_init (char **argv)
   /* Give the proc server our message port.  */
   __proc_setmsgport (procserver, _hurd_msgport, &oldmsg);
   if (oldmsg != MACH_PORT_NULL)
-    /* XXX handle old msgs! */
     /* Deallocate the old msg port we replaced.  */
     __mach_port_deallocate (__mach_task_self (), oldmsg);
 
