@@ -1,5 +1,5 @@
 /* stdio on a Mach device port.
-   Translates \n to \r on output.
+   Translates \n to \r\n on output.
 
 Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
@@ -67,46 +67,48 @@ input (FILE *f)
 static void
 output (FILE *f, int c)
 {
-  kern_return_t err;
-  size_t to_write;
-  int wrote;
-  char *p;
+  void write_some (const char *p, size_t to_write)
+    {
+      kern_return_t err;
+      int wrote;
+      while (to_write > 0)
+	{
+	  if (err = device_write_inband ((device_t) f->__cookie, 0,
+					 f->__target, p, to_write, &wrote))
+	    {
+	      errno = err;
+	      f->__error = 1;
+	      break;
+	    }
+	  p += wrote;
+	  to_write -= wrote;
+	  f->__target += wrote;
+	}
+    }
+  void write_crlf (void)
+    {
+      static const char crlf[] = "\r\n";
+      write_some (crlf, 2);
+    }
 
   if (f->__buffer == NULL)
     {
       /* The stream is unbuffered.  */
 
-      if (c != EOF)
+      if (c == '\n')
+	write_crlf ();
+      else if (c != EOF)
 	{
-	  char buf[2];
-	  size_t n;
-	  if (c == '\n')
-	    {
-	      buf[0] = '\r';
-	      buf[1] = '\n';
-	      n = 2;
-	    }
-	  else
-	    {
-	      buf[0] = (unsigned char) c;
-	      n = 1;
-	    }
-
-	  if ((err = device_write_inband ((device_t) f->__cookie, 0,
-					  f->__target, buf, n, &wrote)) ||
-	      wrote != n)
-	    {
-	      errno = err;
-	      f->__error = 1;
-	    }
-
-	  f->__target += n;
+	  char cc = (unsigned char) c;
+	  write_some (&cc, 1);
 	}
+
       return;
     }
 
   if (f->__put_limit == f->__buffer)
     {
+      /* Prime the stream for writing.  */
       f->__put_limit = f->__buffer + f->__bufsize;
       f->__bufp = f->__buffer;
       if (c != EOF)
@@ -116,51 +118,37 @@ output (FILE *f, int c)
 	}
     }
 
-  to_write = f->__bufp - f->__buffer;
-  p = f->__buffer;
-  while (1)
-    {
-      char *p2 = memchr (p, '\n', to_write);
-      if (p2 == NULL)
-	break;
-      *p2++ = '\r';
-      to_write -= p2 - p;
-      p = p2;
-    }
+  {
+    /* Search for newlines (LFs) in the buffer.  */
 
-  to_write = f->__bufp - f->__buffer;
-  p = f->__buffer;
-  while (to_write > 0)
-    {
-      if (err = device_write_inband ((device_t) f->__cookie, 0, f->__target,
-				     p, to_write, &wrote))
-	{
-	  errno = EIO;
-	  f->__error = 1;
-	  break;
-	}
-      p += wrote;
-      to_write -= wrote;
-      f->__target += wrote;
-    }
+    char *start = f->__buffer, *p = start;
+
+    while (!ferror (f) && (p = memchr (p, '\n', f->__bufp - start)))
+      {
+	/* Found one.  Replace it with a CR and write out through that CR.  */
+
+	*p = '\r';
+	write_some (start, p + 1 - start);
+
+	/* Change it back to an LF; the next iteration will write it out
+	   first thing.  Start the next searching iteration one char later.  */
+
+	start = p;
+	*p++ = '\n';
+      }
+
+    /* Write the remainder of the buffer.  */
+
+    if (!ferror (f))
+      write_some (start, f->__bufp - start);
+  }
 
   f->__bufp = f->__buffer;
 
   if (c != EOF && !ferror (f))
     {
       if (f->__linebuf && (unsigned char) c == '\n')
-	{
-	  static const char crlf[] = "\r\n";
-	  if ((err = device_write_inband ((device_t) f->__cookie, 0,
-					  f->__target, crlf, 2, &wrote)) ||
-	      wrote != 2)
-	    {
-	      errno = EIO;
-	      f->__error = 1;
-	    }
-	  else
-	    f->__target += 2;
-	}
+	write_crlf ();
       else
 	*f->__bufp++ = (unsigned char) c;
     }
