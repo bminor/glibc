@@ -1,0 +1,78 @@
+# Rules for MiG interfaces that want to go into the C library.
+
+# Copyright (C) 1991 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License
+# as published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+all:
+
+interface-routines := $(user-interfaces:%=%_user) \
+		      $(server-interfaces:%=%_server)
+interface-headers := $(addsuffix .h,$(interface-headers))
+interface-routines := $(interface-routines) \
+		      $(addsuffix -syms,$(interface-routines))
+dont_distribute := $(dont_distribute) \
+		   $(addsuffix .h,$(interface-routines)) \
+		   $(addsuffix .c,$(interface-routines))	# Generated.
+
+
+ifdef	MIG_DEFS_PATH
+vpath %.defs $(MIG_DEFS_PATH)
+endif
+
+MIG = mig
+migdefines := -DMACH_IPC_COMPAT=0 -DSTANDALONE -DTypeCheck=0 \
+	      $(foreach call,$(mach-shortcuts),-D$(call)=mig_$(call))
+MIGFLAGS = -subrprefix __ -prefix __ $(migdefines)
+
+ifneq ($(no_deps),t)
+include $(..)mach/mach-shortcuts
+endif
+$(..)mach/mach-shortcuts: $(..)mach/mach_shortcuts.h
+	(echo 'mach-shortcuts := ' \\ ; \
+	 sed -n 's/SHORTCUT[^(]*(\([^,]*\),.*$$/  \1 \\/p' < $<) > $@
+
+.SUFFIXES: .defs .migh .__h
+
+%_user.c %.migh: %.defs
+	$(MIG) $(MIGFLAGS) -server /dev/null -user $@ -header $*.migh $<
+
+%_server.c %.migh: %.defs
+	$(MIG) $(MIGFLAGS) -user /dev/null -server $@ -sheader $*.migh $<
+
+%.__h: %.migh
+	sed -n 's/^kern_return_t *__\([a-zA-Z0-9_]*\)$$/#define \1 __\1/' \
+	< $< > $@
+
+%.h: %.migh %.__h
+# The last line of foo.migh is "#endif /* foo.h */"
+	(sed '$$d' < $<; cat $(word 2,$^); tail -1 $<) > $@
+
+# Foo.	XXX
+CPP = /usr/local/lib/gcc-cpp
+define defs-mkdep
+$(CPP) -M $(MIGFLAGS) $< | sed 's/$<.o/$@ $(@:.dep=.o)/' > $@
+endef
+%_user.dep: %.defs
+	$(defs-mkdep)
+%_server.dep: %.defs
+	$(defs-mkdep)
+
+%-syms.c: %.c
+	(echo '#include <gnu-stabs.h>';
+	 sed -n 's/^mig_external kern_return_t __\([a-zA-Z0-9_]*\)$/\
+symbol_alias (__\1, \1)/p' < $<) > $@
