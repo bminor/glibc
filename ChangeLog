@@ -1,3 +1,7 @@
+1999-10-16  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/bits/in.h: Added struct in_pktinfo.
+
 1999-10-14  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/sleep.c (__sleep): Optimize for zero
