@@ -1,3 +1,36 @@
+1998-04-09 17:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Make-dist: Remove link and .tar file.
+
+1998-03-26 15:20  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* inet/rcmd.c (iruserok): Remain setuid to the local user
+	while .rhosts is actually read, to make .rhosts-over-NFS work
+	(PR libc/524).  Use iruserfopen() for security checks on both
+	hosts.equiv and .rhosts.  General cleanup.
+	(iruserfopen): New function, performs careful checking on
+	hosts.equiv/.rhosts files.  Disallows all the old forbidden
+	stuff plus hard links to files.
+
+1998-04-06 13:54  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig (libtypes): Use object-suffixes-for-libc instead of
+	object-suffixes.
+
+1998-03-30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules ($(objpfx)stamp.So-$(subdir)): Move inside conditional
+	for objects.
+
+	* manual/Makefile (lib): Use object-suffixes-for-libc instead of
+	object-suffixes.
+	* Makefile (parent-mostlyclean): Likewise.
+	* rpm/Makefile (install-lib): Likewise.
+
+1998-04-04 09:52  H.J. Lu  <hjl@gnu.org>
+
+	* Makeconfig (CPPFLAGS-.So): Add -DPIC.
+
 1998-04-04  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/locfile.c (locfile_read): Fix typo.
@@ -201,8 +234,8 @@
 	LD_LIBRARY_PATH envvar and let user overwrite the value using new
 	--library-path option.
 
-	* elf/dl-load.c (_dl_map_object): Don't get LD_LIBRARY_PATH
-	envvar, use global variable _dl_library_path.
+	* elf/dl-load.c (_dl_map_object): Use LD_LIBRARY_PATH envvar if
+	global variable _dl_library_path is not set.
 
 	* Makeconfig: Use --library-path option instead of LD_LIBRARY_PATH
 	envvar.
