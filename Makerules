@@ -136,6 +136,21 @@ endef
 $(objpfx)dummy.dep:
 	echo '# .s files cannot contain includes, so they need no deps.' > $@
 
+# It matters that this set of rules, for compiling from sources in
+# the current directory (the $srcdir/$subdir) come before the
+# generated sysdep rules in included from sysd-rules below.  When
+# compiling in the source tree, generated sources go into the current
+# directory, and those should be chosen before any sources in sysdeps.
+$(objpfx)%.o: %.S $(before-compile); $(compile-command.S)
+$(objpfx)%.dep: %.S $(before-compile); $(+make-deps)
+$(objpfx)%.o: %.s $(before-compile); $(compile-command.s)
+$(objpfx)%.dep: %.s; $(make-dummy-dep)
+$(objpfx)%.o: %.c $(before-compile); $(compile-command.c)
+$(objpfx)%.dep: %.c $(before-compile); $(+make-deps)
+
+# Omit the objpfx rules when building in the source tree, because
+# objpfx is empty and so these rules just override the ones above.
+ifdef objpfx
 # Define first rules to find the source files in $(objpfx).
 # Generated source files will end up there.
 $(objpfx)%.o: $(objpfx)%.S $(before-compile); $(compile-command.S)
@@ -144,6 +159,7 @@ $(objpfx)%.o: $(objpfx)%.s $(before-compile); $(compile-command.s)
 $(objpfx)%.dep: $(objpfx)%.s $(objpfx)dummy.dep; $(make-dummy-dep)
 $(objpfx)%.o: $(objpfx)%.c $(before-compile); $(compile-command.c)
 $(objpfx)%.dep: $(objpfx)%.c $(before-compile); $(+make-deps)
+endif
 
 # System-dependent makefiles can put in `inhibit-sysdep-asm' wildcard
 # patterns matching sysdep directories whose assembly source files should
@@ -177,15 +193,6 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 		\$$(+make-deps)";					      \
 	 done) > $@T
 	mv $@T $@
-
-# The order of these rules is important.
-
-$(objpfx)%.o: %.S $(before-compile); $(compile-command.S)
-$(objpfx)%.dep: %.S $(before-compile); $(+make-deps)
-$(objpfx)%.o: %.s $(before-compile); $(compile-command.s)
-$(objpfx)%.dep: %.s; $(make-dummy-dep)
-$(objpfx)%.o: %.c $(before-compile); $(compile-command.c)
-$(objpfx)%.dep: %.c $(before-compile); $(+make-deps)
 
 ifndef compile-command.S
 compile-command.S = $(compile.S) $(OUTPUT_OPTION)
@@ -362,14 +369,14 @@ endif
 # should install libc.a; this way "make install" in a subdir is guaranteed
 # to install everything it changes.
 ifdef objects
-install: $(libdir)/libc.a
+install: $(libdir)/lib$(libprefix)c.a
 # We avoid depending on lib-noranlib because that makes the parent make
 # subdir_lib in all the subdirs, when the make install run they do will
 # update the library anyway.  Running ranlib after installing makes the
 # __.SYMDEF time stamp up to date, which avoids messages from some linkers.
 # Depending on subdir_install gets all the subdirs to update the library,
 # and is optimal for `make install' at top level.
-$(libdir)/libc.a: libobjs ar-it subdir_install
+$(libdir)/lib$(libprefix)c.a: libobjs ar-it subdir_install
 	$(make-target-directory)
 	$(INSTALL_DATA) $(libc.a) $@
 	$(RANLIB) $@
@@ -381,7 +388,14 @@ $(addprefix $(bindir)/,$(install)): $(bindir)/%: $(objpfx)%
 	$(INSTALL_PROGRAM) $< $@
 endif
 ifdef install-lib
-$(addprefix $(libdir)/,$(install-lib)): $(libdir)/%: $(objpfx)%;$(do-install)
+install-lib.a := $(filter lib%.a,$(install-lib))
+install-lib-non.a := $(filter-out lib%.a,$(install-lib))
+$(addprefix $(libdir)/$(libprefix),$(install-lib-non.a)): \
+  $(libdir)/$(libprefix)%: $(objpfx)%
+	$(do-install)
+$(install-lib.a:lib%.a=$(libdir)lib$(libprefix)%.a): \
+  $(libdir)lib$(libprefix)%.a: $(objpfx)lib%.a
+	$(do-install)
 endif
 ifdef install-data
 $(addprefix $(datadir)/,$(install-data)): $(datadir)/%: %;$(do-install)
