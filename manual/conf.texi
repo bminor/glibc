@@ -428,7 +428,7 @@ be used in defining the collating sequence for a locale.
 @comment POSIX.2
 @item _SC_EXPR_NEST_MAX
 Inquire about the maximum number of expressions nested within
-parenthesis when using the @code{expr} utility.
+parentheses when using the @code{expr} utility.
 
 @comment unistd.h
 @comment POSIX.2
@@ -507,8 +507,8 @@ system you are using can go that far.
 @item _POSIX_ARG_MAX
 The value of this macro is the most restrictive limit permitted by POSIX
 for the maximum combined length of the @var{argv} and @var{environ}
-arguments that can be passed to the @code{exec} functions.  The value is
-always @code{4096}.
+arguments that can be passed to the @code{exec} functions.
+Its value is @code{4096}.
 
 @comment limits.h
 @comment POSIX.1
@@ -788,7 +788,7 @@ function robustly is to store @code{0} into @code{errno} just before
 calling it.
 
 Besides the usual file name syntax errors (@pxref{File Name Errors}),
-the following error conditions are defined for this function:
+the following error condition is defined for this function:
 
 @table @code
 @item EINVAL
@@ -1047,7 +1047,7 @@ get_default_path (void)
   if (confstr (_CS_PATH, buf, len + 1) == 0)
     @{
       free (buffer);
-      return 0;
+      return NULL;
     @}
 
   return buffer;
