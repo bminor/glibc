@@ -143,7 +143,7 @@ endif
 # it defines `CALL' instead of `SYS_call'.
 
 # Find a file that might have these.
-syscall.h := $(firstword $(wildcard $(addprefix $(sysincludedir)/,
+syscall.h := $(firstword $(wildcard $(addprefix $(sysincludedir)/, \
 						syscall.h sys/syscall.h \
 						sys.s sys/sys.s \
 						sys.S sys/sys.S)))
@@ -154,7 +154,7 @@ $(common-objpfx)syscall.h: $(syscall.h)
 	tr '[A-Z]' '[a-z]' < $< | \
 	sed -e 's/\<sys_//' \
 	    -e 's/^#define[ 	]*\([a-z0-9_]*\)[ 	]*/#define SYS_\1 /' \
-	    -e '/^#define/!d'
+	    -e '/^#define/!d' \
 	> $@-tmp
 	mv $@-tmp $@
 
