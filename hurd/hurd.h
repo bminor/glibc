@@ -37,12 +37,6 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/io.h>
 #include <hurd/msg.h>
 
-#define __spin_lock(lockaddr) /* no-op XXX */
-#define __spin_unlock(lockaddr) /* no-op XXX */
-
-#define __mutex_lock(lockaddr) /* no-op XXX */
-#define __mutex_unlock(lockaddr) /* no-op XXX */
-
 /* Get `struct hurd_port' and related definitions implementing lightweight
    user references for ports.  These are used pervasively throughout the C
    library; this is here to avoid putting it in nearly every source file.  */
@@ -84,9 +78,7 @@ extern mach_msg_type_number_t _hurd_init_dtablesize;
 
 extern pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 extern int _hurd_orphaned;
-#ifdef noteven
 extern struct mutex _hurd_pid_lock; /* Locks above.  */
-#endif
 
 /* Unix `data break', for brk and sbrk.
    If brk and sbrk are not used, this info will not be initialized or used.  */
@@ -102,9 +94,7 @@ extern vm_address_t _hurd_data_end;
 
 /* This mutex locks _hurd_brk and _hurd_data_end.  */
 
-#ifdef noteven
 extern struct mutex _hurd_brk_lock;
-#endif
 
 /* Set the data resource limit (RLIM_DATA).  */
 
