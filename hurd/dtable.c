@@ -150,9 +150,8 @@ fork_child_dtable (void)
 	  /* There was a ctty-special port in the parent.
 	     We need to get one for ourselves too.  */
 	  __mach_port_deallocate (__mach_task_self (), d->port.port);
-	  err = __term_become_ctty (d->ctty.port,
-				    _hurd_pid, _hurd_pgrp, _hurd_msgport,
-				    &d->port.port);
+	  err = __term_open_ctty (d->ctty.port, _hurd_pid, _hurd_pgrp,
+				  &d->port.port);
 	  if (err)
 	    {
 	      d->port.port = d->ctty.port;
@@ -198,8 +197,7 @@ ctty_new_pgrp (void)
 	  /* This fd has a ctty-special port.  We need a new one, to tell
              the io server of our different process group.  */
 	  io_t new;
-	  if (! __term_become_ctty (ctty, _hurd_pid, _hurd_pgrp, _hurd_msgport,
-				    &new))
+	  if (! __term_open_ctty (ctty, _hurd_pid, _hurd_pgrp, &new))
 	    _hurd_port_set (&d->port, new);
 	}
 
