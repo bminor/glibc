@@ -95,11 +95,11 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 
   flags = 0;
   if (type & R_OK)
-    flags |= FS_LOOKUP_READ;
+    flags |= O_READ;
   if (type & W_OK)
-    flags |= FS_LOOKUP_WRITE;
+    flags |= O_WRITE;
   if (type & X_OK)
-    flags |= FS_LOOKUP_EXECUTE;
+    flags |= O_EXEC;
 
   err = __hurd_path_lookup (rcrdir, rcwdir, file, flags, 0, &io);
   __mach_port_deallocate (__mach_task_self (), rcrdir);
