@@ -28,6 +28,7 @@
 #include <sys/types.h>
 #include <atomic.h>
 #include <nscd-types.h>
+#include <sys/uio.h>
 
 
 /* Version number of the daemon interface */
@@ -308,5 +309,14 @@ extern const struct datahead *__nscd_cache_search (request_type type,
 						   const char *key,
 						   size_t keylen,
 						   const struct mapped_database *mapped);
+
+/* Wrappers around read, readv and write that only read/write less than LEN
+   bytes on error or EOF.  */
+extern ssize_t __readall (int fd, void *buf, size_t len)
+  attribute_hidden;
+extern ssize_t __readvall (int fd, const struct iovec *iov, int iovcnt)
+  attribute_hidden;
+extern ssize_t writeall (int fd, const void *buf, size_t len)
+  attribute_hidden;
 
 #endif /* nscd.h */

@@ -728,7 +728,7 @@ extern int ttyslot (void) __THROW;
 extern int link (__const char *__from, __const char *__to)
      __THROW __nonnull ((1, 2));
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 /* Make a symbolic link to FROM named TO.  */
 extern int symlink (__const char *__from, __const char *__to)
      __THROW __nonnull ((1, 2));

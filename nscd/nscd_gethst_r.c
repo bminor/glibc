@@ -218,6 +218,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 						   ? INADDRSZ : IN6ADDRSZ)))
 	{
 	no_room:
+	  *h_errnop = NETDB_INTERNAL;
 	  __set_errno (ERANGE);
 	  retval = ERANGE;
 	  goto out_close;
@@ -298,8 +299,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	      ++n;
 	    }
 
-	  if ((size_t) TEMP_FAILURE_RETRY (__readv (sock, vec, n))
-	      != total_len)
+	  if ((size_t) __readvall (sock, vec, n) != total_len)
 	    goto out_close;
 	}
       else
@@ -328,9 +328,8 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       /* And finally read the aliases.  */
       if (addr_list == NULL)
 	{
-	  if ((size_t) TEMP_FAILURE_RETRY (__read (sock,
-						   resultbuf->h_aliases[0],
-						   total_len)) == total_len)
+	  if ((size_t) __readall (sock, resultbuf->h_aliases[0], total_len)
+	      == total_len)
 	    {
 	      retval = 0;
 	      *result = resultbuf;

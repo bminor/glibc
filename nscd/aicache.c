@@ -365,7 +365,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		     wait.  */
 		  assert (fd != -1);
 
-		  TEMP_FAILURE_RETRY (write (fd, &dataset->resp, total));
+		  writeall (fd, &dataset->resp, total);
 		}
 
 	      goto out;

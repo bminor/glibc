@@ -1,3 +1,93 @@
+2005-02-23  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #719]
+	* elf/Makefile: Run tst-tls9-static again.
+
+2005-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #719]
+	* sysdeps/generic/libc-tls.c (static_dtv): Size the same as the
+	slotinfo array.
+	(__libc_setup_tls): Initialize length of DTV based on array length.
+	* elf/dl-load.c: Revert last change.
+	* sysdeps/generic/dl-tls.c: Revert last change.
+
+	* posix/Makefile (tests): Add tst-execvp1, tst-execvp2, tst-execlp1,
+	tst-execlp2, tst-execv1, tst-execv2, tst-execl1, tst-execl2,
+	tst-execve1, tst-execve2, tst-execle1, and tst-execle2.
+	* posix/tst-execl1.c: New file.
+	* posix/tst-execl2.c: New file.
+	* posix/tst-execle1.c: New file.
+	* posix/tst-execle2.c: New file.
+	* posix/tst-execlp1.c: New file.
+	* posix/tst-execlp2.c: New file.
+	* posix/tst-execv1.c: New file.
+	* posix/tst-execv2.c: New file.
+	* posix/tst-execve1.c: New file.
+	* posix/tst-execve2.c: New file.
+	* posix/tst-execvp1.c: New file.
+	* posix/tst-execvp2.c: New file.
+
+2005-02-22  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #769]
+	* nscd/nscd-client.h: Include sys/uio.h.
+	(__readall, __readvall, writeall): New prototypes.
+	* nscd/connections.c (writeall): New function.
+	(handle_request): Use it.
+	* nscd/aicache.c (addhstaiX): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nscd/hstcache.c (cache_addhst): Likewise.
+	* nscd/grpcache.c (cache_addgr): Likewise.
+	* nscd/pwdcache.c (cache_addpw): Likewise.
+	* nscd/nscd_helper.c (__readall, __readvall): New functions.
+	* nscd/nscd_getai.c (__nscd_getai): Use them.
+	* nscd/nscd_getpw_r.c (__nscd_getpw_r): Likewise.
+	* nscd/nscd_getgr_r.c (__nscd_getgr_r): Likewise.
+	* nscd/nscd_gethst_r.c (__nscd_gethst_r): Likewise.
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Likewise.
+
+2005-02-22  Andreas Schwab  <schwab@suse.de>
+
+	* posix/execvp.c (execvp): Fix invalid free.
+
+2005-02-21  Alan Modra <amodra@bigpond.net.au>
+
+	[BZ #719]
+	* elf/dl-reloc.c (_dl_nothread_init_static_tls): Assert that dtv
+	array index is within bounds.
+
+2005-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #719]
+	* elf/dl-load.c: Do not allow PT_TLS in modules loaded in statically
+	linked code.
+	* sysdeps/generic/dl-tls.c [!SHARED]: Don't build _dl_next_tls_modid.
+	* elf/Makefile: Remove rules to build and run tst-tls9-static.
+
+	[BZ #719]
+	* elf/dl-reloc.c (_dl_nothread_init_static_tls): Avoid using
+	THREAD_DTV multiple times, this minimally reduces code size on
+	some archs.
+
+2005-02-21  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #768]
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Set *h_errnop to
+	NETDB_INTERNAL if buffer is too small.
+
+	[BZ #768]
+	* nscd/hstcache.c (INCR): Remove.
+	(addhstbyX): Double buflen in each iteration rather than add INCR.
+	* nscd/grpcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+
+2005-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #767]
+	* posix/unistd.h: symlink and readlink are unconditionally
+	available in the 2001 spec.
+
 2004-07-23  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #284]
@@ -20,7 +110,7 @@
 
 2005-02-07  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/dl-load.c (_dl_map_object_from_fd): Makre sure registers are
+	* elf/dl-load.c (_dl_map_object_from_fd): Make sure registers are
 	set correctly.
 
 2005-01-07  Jakub Jelinek  <jakub@redhat.com>
@@ -178,7 +268,7 @@
 	stack.
 	* posix/execle.c: Likewise.
 	* posix/execlp.c: Likewise.
-	* posix/execlp.c: Likewise.
+	* posix/execvp.c: Likewise.
 	(script_execute): Removed.
 	(allocate_scripts_argv): New function.  Called at most once to
 	allocate memory, not every time a script is run.  Adjust caller.
