@@ -42,12 +42,12 @@ distribute := $(distribute) $(tzfiles) leapseconds pacificnew
 
 install := zic zdump
 
-define \n
+define nl
 
 
 endef
 include zonenames
-zonenames := $(subst $(\n), ,$(zonenames))
+zonenames := $(subst $(nl), ,$(zonenames))
 
 include ../Makeconfig
 ifdef localtime
@@ -67,7 +67,7 @@ $(tzfiles:%=zones-%): zones-%: %
 	(echo 'define $*-zones'						;\
 	 awk '$$1 == "Zone" { print $$2 } $$1 == "Link" { print $$3 }' $^;\
 	 echo 'endef'							;\
-	 echo '$*-zones := $$(subst $$('\\\\n'), ,$$($*-zones))'	;\
+	 echo '$*-zones := $$(subst $$(nl), ,$$($*-zones))'		;\
 	 echo 'ifdef $*-zones'						;\
 	 echo '$$(addprefix zoneinfo/%/,$$($*-zones)): \'		;\
 	 echo '$< $$(objpfx)zic leapseconds zoneinfo/'			;\
@@ -76,7 +76,7 @@ $(tzfiles:%=zones-%): zones-%: %
 	 echo 'define zonenames'					;\
 	 echo '$$($*-zones)'						;\
 	 echo 'endef'							;\
-	 echo 'zonenames := $$(subst $$('\\\\n'), ,$$(zonenames))'	;\
+	 echo 'zonenames := $$(subst $$(nl), ,$$(zonenames))'		;\
 	) > $@
 zonenames: Makefile
 	(for file in $(tzfiles); do	\
