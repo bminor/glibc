@@ -82,8 +82,8 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
 	  /* Fall through.  */
 
 	case FS_RETRY_NORMAL:
-#ifdef SYMLINK_MAX
-	  if (nloops++ >= SYMLINK_MAX)
+#ifdef SYMLOOP_MAX
+	  if (nloops++ >= SYMLOOP_MAX)
 	    return ELOOP;
 #endif
 
