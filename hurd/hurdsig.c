@@ -426,7 +426,7 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state, int live)
       }
 }
 
-struct hurd_signal_preemptor *_hurdsig_preemptors;
+struct hurd_signal_preemptor *_hurdsig_preemptors = 0;
 sigset_t _hurdsig_preempted_set;
 
 /* XXX temporary to deal with spelling fix */
@@ -1194,7 +1194,7 @@ _hurdsig_init (void)
   err = __thread_create (__mach_task_self (), &_hurd_msgport_thread);
   assert_perror (err);
 
-  stacksize = __vm_page_size * 4; /* Small stack for signal thread.  */
+  stacksize = __vm_page_size * 8; /* Small stack for signal thread.  */
   err = __mach_setup_thread (__mach_task_self (), _hurd_msgport_thread,
 			     _hurd_msgport_receive,
 			     (vm_address_t *) &__hurd_sigthread_stack_base,
