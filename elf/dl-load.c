@@ -190,7 +190,7 @@ _dl_dst_count (const char *name, int is_path)
 
   do
     {
-      size_t len = 1;
+      size_t len;
 
       /* $ORIGIN is not expanded for SUID/GUID programs (except if it
 	 is $ORIGIN alone) and it must always appear first in path.
@@ -198,9 +198,10 @@ _dl_dst_count (const char *name, int is_path)
 	 Note that it is no bug that the string in the second and
 	 fourth `strncmp' call is longer than the sequence which is
 	 actually tested.  */
-      if ((len = is_dst (start, name + 1, "{ORIGIN}", 8, is_path,
+      ++name;
+      if ((len = is_dst (start, name, "{ORIGIN}", 8, is_path,
 			 __libc_enable_secure)) != 0
-	  || ((len = is_dst (start, name + 1, "{PLATFORM}", 10, is_path, 0))
+	  || ((len = is_dst (start, name, "{PLATFORM}", 10, is_path, 0))
 	      != 0))
 	++cnt;
 
@@ -230,15 +231,16 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
       if (__builtin_expect (*name == '$', 0))
 	{
 	  const char *repl = NULL;
-	  size_t len = 1;
+	  size_t len;
 
 	  /* Note that it is no bug that the string in the second and
 	     fourth `strncmp' call is longer than the sequence which
 	     is actually tested.  */
-	  if ((len = is_dst (start, name + 1, "{ORIGIN}", 8, is_path,
+	  ++name;
+	  if ((len = is_dst (start, name, "{ORIGIN}", 8, is_path,
 			     __libc_enable_secure)) != 0)
 	    repl = l->l_origin;
-	  else if ((len = is_dst (start, name + 1, "{PLATFORM}", 10, is_path,
+	  else if ((len = is_dst (start, name, "{PLATFORM}", 10, is_path,
 				  0)) != 0)
 	    repl = _dl_platform;
 
@@ -258,7 +260,7 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	    }
 	  else
 	    /* No DST we recognize.  */
-	    *wp++ = *name++;
+	    *wp++ = '$';
 	}
       else
 	{
