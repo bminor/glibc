@@ -48,7 +48,11 @@ DEFUN(enlarge_buffer, (stream, c),
        up to the target address.  */
     need = stream->__target;
   else
-    need = *info->bufsize + (c == EOF ? 0 : 1);
+    need = *info->bufsize;
+
+  /* We always need an extra character in the buffer.  Either we are
+     writing C, or we are flushing and need to write a NUL terminator.  */
+  ++need;
 
   if (stream->__bufsize < need)
     {
@@ -56,7 +60,7 @@ DEFUN(enlarge_buffer, (stream, c),
       char *newbuf;
       size_t newsize;
       if (stream->__bufsize * 2 < need)
-	newsize  = need;
+	newsize = need;
       else
 	newsize = stream->__bufsize * 2;
       newbuf = (char *) realloc ((PTR) stream->__buffer, newsize);
@@ -73,9 +77,7 @@ DEFUN(enlarge_buffer, (stream, c),
   stream->__get_limit = stream->__bufp = stream->__buffer + *info->bufsize;
   stream->__put_limit = stream->__buffer + stream->__bufsize;
 
-  need -= stream->__bufp - stream->__buffer;
-  if (c != EOF)
-    --need;
+  need -= stream->__bufp - stream->__buffer + 1;
   if (need > 0)
     {
       /* We are extending the buffer after an fseek; zero-fill new space.  */
