@@ -1,3 +1,8 @@
+2002-04-14  Wolfram Gloger  <wg@malloc.de>
+
+	* tests-mbwc/tst_types.h: Increase MONSIZE.
+	* tests-mbwc/tst_strfmon.c: Fail test if buffer too small.
+
 2002-04-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/es_ES: Define int_frac_digits and frac_digits as 2.
