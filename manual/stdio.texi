@@ -10,27 +10,30 @@ representing a communications channel to a file, device, or process.
 useful here.
 
 @menu
-* Streams::                     About the data type representing a stream.
-* Standard Streams::            Streams to the standard input and output 
-                                 devices are created for you.
-* Opening and Closing Streams:: How to create a stream to talk to a file.
-* Character Output::            Unformatted output by characters and lines.
-* Character Input::             Unformatted input by characters and lines.
-* Unreading::                   Peeking ahead/pushing back input just read.
-* Formatted Output::            @code{printf} and related functions.
-* Customizing Printf::          You can define new conversion specifiers for
-                                 @code{printf} and friends.
-* Formatted Input::             @code{scanf} and related functions.
-* Block Input/Output::          Input and output operations on blocks of data.
-* End-Of-File and Errors::      How you can tell if an I/O error happens.
-* Text and Binary Streams::     Some systems distinguish between text files
-                                 and binary files.
-* File Positioning::            About random-access streams.
-* Portable Positioning::        Random access on peculiar ANSI C systems.
-* Stream Buffering::            How to control buffering of streams.
-* Temporary Files::             How to open a temporary file.
-* Other Kinds of Streams::      How you can open additional kinds of
-                                 streams.
+* Streams::             About the data type representing a stream.
+* Standard Streams::    Streams to the standard input and output 
+                         devices are created for you.
+* Opening Streams::	How to create a stream to talk to a file.
+* Closing Streams::	Close a stream when you are finished with it.
+* Simple Output::       Unformatted output by characters and lines.
+* Character Input::     Unformatted input by characters and words.
+* Line Input::		Reading a line or a record from a stream.
+* Unreading::           Peeking ahead/pushing back input just read.
+* Formatted Output::    @code{printf} and related functions.
+* Customizing Printf::  You can define new conversion specifiers for
+                         @code{printf} and friends.
+* Formatted Input::     @code{scanf} and related functions.
+* Block Input/Output::  Input and output operations on blocks of data.
+* EOF and Errors::      How you can tell if an I/O error happens.
+* Binary Streams::      Some systems distinguish between text files
+                         and binary files.
+* File Positioning::    About random-access streams.
+* Portable Positioning::Random access on peculiar ANSI C systems.
+* Stream Buffering::    How to control buffering of streams.
+* Temporary Files::     How to open a temporary file.
+* Other Streams::       How you can open additional kinds of streams,
+			 including streams that store data in a string,
+			 and your own custom streams.
 @end menu
 
 @node Streams
@@ -114,18 +117,13 @@ provide similar mechanisms, but the details of how to use them can vary.
 It is probably not a good idea to close any of the standard streams.
 
 
-@node Opening and Closing Streams
-@section Opening and Closing Streams
+@node Opening Streams
+@section Opening Streams
 
 @cindex opening a stream
 Opening a file with the @code{fopen} function creates a new stream and
 establishes a connection between the stream and a file.  This may
 involve creating a new file.  
-
-@cindex closing a stream
-When a stream is closed with @code{fclose}, the connection between the
-stream and the file is cancelled.  After you have closed a stream, you
-cannot perform any additional operations on it any more.
 
 The functions in this section are declared in the header file
 @file{stdio.h}.
@@ -225,32 +223,6 @@ least eight, which includes the three standard streams @code{stdin},
 
 @comment stdio.h
 @comment ANSI
-@deftypefun int fclose (FILE *@var{stream})
-This function causes @var{stream} to be closed and the connection to
-the corresponding file to be broken.  Any buffered output is written
-and any buffered input is discarded.  The @code{fclose} function returns
-a value of @code{0} if the file was closed successfully, and @code{EOF}
-if an error was detected. 
-
-It is important to check for errors when you call @code{fclose} to close
-an output stream, because real, everyday errors can be detected at this
-time.  For example, when @code{fclose} writes the remaining buffered
-output, it might get an error because the disk is full.  Even if you you
-know the buffer is empty, errors can still occur when closing a file if
-you are using NFS.
-@end deftypefun
-
-If the @code{main} function to your program returns, or if you call the
-@code{exit} function (@pxref{Normal Program Termination}), all open
-streams are automatically closed properly.  If your program terminates
-in any other manner, such as by calling the @code{abort} function
-(@pxref{Aborting a Program}) or from a fatal signal (@pxref{Signal
-Handling}), open streams might not be closed properly.  Buffered output
-may not be flushed and files may not be complete.  For more information
-on buffering of streams, see @ref{Stream Buffering}.
-
-@comment stdio.h
-@comment ANSI
 @deftypefun {FILE *} freopen (const char *@var{filename}, const char *@var{opentype}, FILE *@var{stream})
 This function is like a combination of @code{fclose} and @code{fopen}.
 It first closes the stream referred to by @var{stream}, ignoring any
@@ -269,8 +241,44 @@ in which use of a standard stream for certain purposes is hard-coded.
 @end deftypefun
 
 
-@node Character Output
-@section Character Output
+@node Closing Streams
+@section Closing Streams
+
+@cindex closing a stream
+When a stream is closed with @code{fclose}, the connection between the
+stream and the file is cancelled.  After you have closed a stream, you
+cannot perform any additional operations on it any more.
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int fclose (FILE *@var{stream})
+This function causes @var{stream} to be closed and the connection to
+the corresponding file to be broken.  Any buffered output is written
+and any buffered input is discarded.  The @code{fclose} function returns
+a value of @code{0} if the file was closed successfully, and @code{EOF}
+if an error was detected. 
+
+It is important to check for errors when you call @code{fclose} to close
+an output stream, because real, everyday errors can be detected at this
+time.  For example, when @code{fclose} writes the remaining buffered
+output, it might get an error because the disk is full.  Even if you you
+know the buffer is empty, errors can still occur when closing a file if
+you are using NFS.
+
+The function @code{fclose} is declared in @file{stdio.h}.
+@end deftypefun
+
+If the @code{main} function to your program returns, or if you call the
+@code{exit} function (@pxref{Normal Program Termination}), all open
+streams are automatically closed properly.  If your program terminates
+in any other manner, such as by calling the @code{abort} function
+(@pxref{Aborting a Program}) or from a fatal signal (@pxref{Signal
+Handling}), open streams might not be closed properly.  Buffered output
+may not be flushed and files may not be complete.  For more information
+on buffering of streams, see @ref{Stream Buffering}.
+
+@node Simple Output
+@section Simple Output by Characters or Lines
 
 @cindex writing to a stream, by characters
 This section describes functions for performing character- and
@@ -418,6 +426,31 @@ y_or_n_p (const char *question)
 @end example
 
 @comment stdio.h
+@comment SVID
+@deftypefun int getw (FILE *@var{stream})
+This function reads a word (that is, an @code{int}) from @var{stream}.
+It's provided for compatibility with SVID.  We recommend you use
+@code{fread} instead (@pxref{Block Input/Output}).
+@end deftypefun
+
+@node Line Input
+@section Line-Oriented Input
+
+Since many programs interpret input on the basis of lines, it's
+convenient to have functions to read a line of text from a stream.
+
+Standard C has functions to do this, but they aren't very safe: null
+characters and even (for @code{gets}) long lines can confuse them.  So
+the GNU library provides the nonstandard @code{getline} function that
+makes it easy to read lines reliably.
+
+Another GNU extension, @code{getdelim}, generalizes @code{getline}.  It
+reads a delimited record, defined as everything through the next
+occurrence of a specified delimeter character.
+
+All these functions are declared in @file{stdio.h}.
+
+@comment stdio.h
 @comment GNU
 @deftypefun ssize_t getline (char **@var{lineptr}, size_t *@var{n}, FILE *@var{stream})
 This function reads an entire line from @var{stream}, storing the text
@@ -439,10 +472,24 @@ read (including the newline, but not including the terminating null).
 This value enables you to distinguish null characters that are part of
 the line from the null character inserted as a terminator.
 
-This function is a GNU extension.
+This function is a GNU extension, but it is the recommended way to read
+lines from a stream.  The alternative standard functions are unreliable.
 
 If an error occurs or end of file is reached, @code{getline} returns
 @code{-1}.
+@end deftypefun
+
+@comment stdio.h
+@comment GNU
+@deftypefun ssize_t getdelim (char **@var{lineptr}, size_t *@var{n}, int @var{delimiter}, FILE *@var{stream})
+This function is like @code{getline} except that the character which
+tells it to stop reading is not necessarily newline.  The argument
+@var{delimeter} specifies the delimeter character; @code{getdelim} keeps
+reading until it sees that character (or end of file).
+
+The text is stored in @var{lineptr}, including the delimeter character
+and a terminating null.  Like @code{getline}, @code{getline} makes
+@var{lineptr} bigger if it isn't big enough.
 @end deftypefun
 
 @comment stdio.h
@@ -482,14 +529,6 @@ because it provides no protection against overflowing the string @var{s}.
 The GNU library includes it for compatibility only.  You should 
 @strong{always} use @code{fgets} or @code{getline} instead.
 @end deftypefn
-
-@comment stdio.h
-@comment SVID
-@deftypefun int getw (FILE *@var{stream})
-This function reads a word (that is, an @code{int}) from @var{stream}.
-It's provided for compatibility with SVID.  We recommend you use
-@code{fread} instead (@pxref{Block Input/Output}).
-@end deftypefun
 
 @node Unreading
 @section Unreading
@@ -2358,7 +2397,7 @@ only if a write error occurs.
 @end deftypefun
 
 
-@node End-Of-File and Errors
+@node EOF and Errors
 @section End-Of-File and Errors
 
 @cindex end of file, on a stream
@@ -2418,7 +2457,7 @@ conditions defined for @code{write} are meaningful for these functions.
 For more information about the descriptor-level I/O functions, see
 @ref{Low-Level Input/Output}.
 
-@node Text and Binary Streams
+@node Binary Streams
 @section Text and Binary Streams
 
 The GNU system and other POSIX-compatible operating systems organize all
