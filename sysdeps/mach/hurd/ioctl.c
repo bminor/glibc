@@ -35,7 +35,7 @@ const struct
    The actual type and use of ARG and the return value depend on REQUEST.  */
 int
 DEFUN(__ioctl, (fd, request),
-      int fd AND int request DOTS)
+      int fd AND unsigned long int request DOTS)
 {
   /* Map individual type fields to Mach IPC types.  */
   static const int mach_types[] =
@@ -54,8 +54,7 @@ DEFUN(__ioctl, (fd, request),
   error_t err;
 
 #define io2mach_type(count, type) \
-  ((mach_msg_type_t)
-   { mach_types[type], (type << 1) * 8, count, 1, 0, 0 })
+  ((mach_msg_type_t) { mach_types[type], (type << 1) * 8, count, 1, 0, 0 })
 
   /* Pack an argument into the message buffer.  */
   inline void in (unsigned int count, unsigned int type)
@@ -91,6 +90,13 @@ DEFUN(__ioctl, (fd, request),
       return 0;
     }
 
+  va_list ap;
+  void *arg;
+
+  va_start (ap, request);
+  arg = va_arg (ap, void *);
+  va_end (ap);
+
   {
     /* Check for a registered handler for REQUEST.  */
 
@@ -106,13 +112,13 @@ DEFUN(__ioctl, (fd, request),
   
 
   /* Pack the argument data.  */
-  r.i = request;
+  r.__i = request;
 
-  msgid = 100000 + ((r.s.group << 2) * 1000) + r.s.command;
+  msgid = 100000 + ((r.__s.group << 2) * 1000) + r.__s.command;
 
-  in (r.s.count0, r.s.type0);
-  in (r.s.count1, r.s.type1);
-  in (r.s.count2, r.s.type2);
+  in (r.__s.count0, r.__s.type0);
+  in (r.__s.count1, r.__s.type1);
+  in (r.__s.count2, r.__s.type2);
 
   err = _HURD_DPORT_USE
     (fd,
@@ -151,9 +157,9 @@ DEFUN(__ioctl, (fd, request),
 
   t = (mach_msg_type_t) &m[1];
   if (out (1, _IOTS (sizeof (error_t)), &err, NULL) ||
-      out (r.s.count0, r.s.type0, arg, &arg) ||
-      out (r.s.count1, r.s.type2, arg, &arg) ||
-      out (r.s.count2, r.s.type2, arg, &arg))
+      out (r.__s.count0, r.__s.type0, arg, &arg) ||
+      out (r.__s.count1, r.__s.type2, arg, &arg) ||
+      out (r.__s.count2, r.__s.type2, arg, &arg))
     return __hurd_fail (MIG_TYPE_ERROR);
 
   if (err)
