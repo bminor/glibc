@@ -46,30 +46,38 @@ extern int main (int argc, char **argv, char **envp);
 void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
 void (*_cthread_exit_routine) (int status);
 
+
+/* These are for communication from _start to start1,
+   where we cannot use the stack for anything.  */
+static int start_argc;
+static char **start_argv;
+
+/* _start calls this on the new stack.  */
+static volatile void
+start1 (void)
+{
+  __libc_init (start_argc, start_argv, __environ);
+
+  (_cthread_exit_routine != NULL ? *_cthread_exit_routine : exit)
+    (main (start_argc, start_argv, __environ));
+
+  /* Should never get here.  */
+  LOSE;
+}
+
+
 void
 _start (void)
 {
-  register int argc;
-  register char **argv;
-
-#ifndef SNARF_ARGS
-#error SNARF_ARGS not defined by sysdeps/mach/MACHINE/sysdep.h
-#endif
-  SNARF_ARGS (argc, argv, __environ);
+  SNARF_ARGS (start_argc, start_argv, __environ);
 
   __mach_init ();
 
   if (_cthread_init_routine != NULL)
-#ifndef	SET_SP
-#error SET_SP not defined by sysdeps/mach/MACHINE/sysdep.h
-#endif
-    SET_SP ((*_cthread_init_routine) ());
-
-  __libc_init (argc, argv, __environ);
-
-  (_cthread_exit_routine != NULL ? *_cthread_exit_routine : exit)
-    (main (argc, argv, __environ));
+    CALL_WITH_SP (start1, (*_cthread_init_routine) ());
+  else
+    start1 ();
 
   /* Should never get here.  */
-  _exit (-1);
+  LOSE;
 }
