@@ -114,7 +114,9 @@ _dl_nothread_init_static_tls (struct link_map *map)
 # endif
 
   /* Fill in the DTV slot so that a later LD/GD access will find it.  */
-  THREAD_DTV ()[map->l_tls_modid].pointer = dest;
+  dtv_t *dtv = THREAD_DTV ();
+  assert (map->l_tls_modid <= dtv[-1].counter);
+  dtv[map->l_tls_modid].pointer = dest;
 
   /* Initialize the memory.  */
   memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
