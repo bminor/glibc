@@ -1,0 +1,30 @@
+ 
+echo $ac_n "checking for i386_io_perm_modify in mach_i386.defs""... $ac_c" 1>&6
+echo "configure:4: checking for i386_io_perm_modify in mach_i386.defs" >&5
+if eval "test \"`echo '$''{'libc_cv_mach_i386_ioports'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 9 "configure"
+#include "confdefs.h"
+#include <mach/i386/mach_i386.defs>
+EOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  egrep "i386_io_perm_modify" >/dev/null 2>&1; then
+  rm -rf conftest*
+  libc_cv_mach_i386_ioports=yes
+else
+  rm -rf conftest*
+  libc_cv_mach_i386_ioports=no
+fi
+rm -f conftest*
+
+fi
+
+echo "$ac_t""$libc_cv_mach_i386_ioports" 1>&6
+if test $libc_cv_mach_i386_ioports = yes; then
+  cat >> confdefs.h <<\EOF
+#define HAVE_I386_IO_PERM_MODIFY 1
+EOF
+
+fi
