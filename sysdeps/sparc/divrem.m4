@@ -34,35 +34,35 @@
  *  one bit at a time.
  */
 
-define(N, `4')
-define(WORDSIZE, `32')
-define(TOPBITS, eval(WORDSIZE - N*((WORDSIZE-1)/N)))
+define(N, `4')dnl
+define(WORDSIZE, `32')dnl
+define(TOPBITS, eval(WORDSIZE - N*((WORDSIZE-1)/N)))dnl
+dnl
+define(dividend, `%o0')dnl
+define(divisor, `%o1')dnl
+define(Q, `%o2')dnl
+define(R, `%o3')dnl
+define(ITER, `%o4')dnl
+define(V, `%o5')dnl
+dnl
+dnl m4 reminder: ifelse(a,b,c,d) => if a is b, then c, else d
+define(T, `%g1')dnl
+define(SC, `%g7')dnl
+ifelse(S, `true', `define(SIGN, `%g6')')dnl
 
-define(dividend, `%o0')
-define(divisor, `%o1')
-define(Q, `%o2')
-define(R, `%o3')
-define(ITER, `%o4')
-define(V, `%o5')
-
-/* m4 reminder: ifelse(a,b,c,d) => if a is b, then c, else d */
-define(T, `%g1')
-define(SC, `%g7')
-ifelse(S, `true', `define(SIGN, `%g6')')
-
-/*
- * This is the recursive definition for developing quotient digits.
- *
- * Parameters:
- *  $1	the current depth, 1 <= $1 <= N
- *  $2	the current accumulation of quotient bits
- *  N	max depth
- *
- * We add a new bit to $2 and either recurse or insert the bits in
- * the quotient.  R, Q, and V are inputs and outputs as defined above;
- * the condition codes are expected to reflect the input R, and are
- * modified to reflect the output R.
- */
+dnl
+dnl This is the recursive definition for developing quotient digits.
+dnl
+dnl Parameters:
+dnl  $1	the current depth, 1 <= $1 <= N
+dnl  $2	the current accumulation of quotient bits
+dnl  N	max depth
+dnl
+dnl We add a new bit to $2 and either recurse or insert the bits in
+dnl the quotient.  R, Q, and V are inputs and outputs as defined above;
+dnl the condition codes are expected to reflect the input R, and are
+dnl modified to reflect the output R.
+dnl
 define(DEVELOP_QUOTIENT_BITS,
 `	! depth $1, accumulated bits $2
 	bl	L.$1.eval(2^N+$2)
@@ -80,7 +80,7 @@ L.$1.eval(2^N+$2):
 	`	b	9f
 		add	Q, ($2*2-1), Q
 	', `	DEVELOP_QUOTIENT_BITS(incr($1), `eval(2*$2-1)')')
-	ifelse($1, 1, `9:')')
+	ifelse($1, 1, `9:')')dnl
 
 #include "DEFS.h"
 #include <machine/trap.h>
