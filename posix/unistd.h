@@ -590,6 +590,24 @@ extern int syscall __P ((int __sysno, ...));
 #endif	/* Use misc.  */
 
 
+#if defined (__USE_MISC) && !defined (F_LOCK)
+/* NOTE: These declarations also appear in <fcntl.h>; be sure to keep both
+   files consistent.  Some systems have them there and some here, and some
+   software depends on the macros being defined without including both.  */
+
+/* `lockf' is a simpler interface to the locking facilities of `fcntl'.
+   LEN is always relative to the current file position.
+   The CMD argument is one of the following.  */
+
+#define F_ULOCK 0       /* Unlock a previously locked region.  */
+#define F_LOCK  1       /* Lock a region for exclusive use.  */ 
+#define F_TLOCK 2       /* Test and lock a region for exclusive use.  */
+#define F_TEST  3       /* Test a region for other processes locks.  */
+
+extern int lockf __P ((int __fd, int __cmd, __off_t __len));
+#endif /* Use misc and F_LOCK not already defined.  */
+
+
 __END_DECLS
 
 #endif /* unistd.h  */
