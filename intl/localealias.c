@@ -1,5 +1,5 @@
 /* localealias.c -- handle aliases for locale names
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
 
 This file is part of the GNU C Library.  Its master source is NOT part of
 the C library, however.  The master source lives in /gd/gnu/lib.
@@ -229,6 +229,19 @@ read_alias_file (fname, fname_len)
 	/* EOF reached.  */
 	break;
 
+      /* Possibly not the whole line fits into the buffer.  Ignore
+	 the rest of the line.  */
+      if (strchr (buf, '\n') == NULL)
+	{
+	  char altbuf[BUFSIZ];
+	  do
+	    if (fgets (altbuf, sizeof altbuf, fp) == NULL)
+	      /* Make sure the inner loop will be left.  The outer loop
+		 will exit at the `feof' test.  */
+	      break;
+	  while (strchr (altbuf, '\n') == NULL);
+	}
+
       cp = buf;
       /* Ignore leading white space.  */
       while (isspace (cp[0]))
@@ -295,17 +308,6 @@ read_alias_file (fname, fname_len)
 	      ++nmap;
 	      ++added;
 	    }
-	}
-
-      /* Possibly not the whole line fits into the buffer.  Ignore
-	 the rest of the line.  */
-      while (strchr (cp, '\n') == NULL)
-	{
-	  cp = buf;
-	  if (fgets (buf, BUFSIZ, fp) == NULL)
-	    /* Make sure the inner loop will be left.  The outer loop
-	       will exit at the `feof' test.  */
-	    *cp = '\n';
 	}
     }
 
