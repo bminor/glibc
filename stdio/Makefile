@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -46,12 +46,12 @@ routines	:=							      \
 	fclose fflush							      \
 	remove rename							      \
 	memstream obstream						      \
-	internals sysd-stdio pipestream stdio_init
+	internals sysd-stdio pipestream stdio_init libc_fatal
 routines := $(strip $(routines))
 aux	:= errlist siglist defs syms-stdio glue
 
-tests := tst-printf tstscanf test_rdwr test-popen tstgetln \
-	 bug1 bug2 bug3 bug4 bug5 bug6 test-fseek
+tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
+	 bug1 bug2 bug3 bug4 bug5 bug6 bug7
 
 
 include ../Rules
