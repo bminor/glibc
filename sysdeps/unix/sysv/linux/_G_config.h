@@ -6,7 +6,7 @@
 
 /* Define types for libio in terms of the standard internal type names.  */
 
-#include <bits/types.h>
+#include <gnu/types.h>
 #define __need_size_t
 #define __need_wint_t
 #include <stddef.h>
