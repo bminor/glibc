@@ -1,3 +1,32 @@
+1997-12-24 22:04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Fix type.  Correct check for available add-ons.
+
+	* limits.h: Always define MB_LEN_MAX.
+
+	* nis/nss_nis/nis-ethers.c: Correct handling of overflow.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+
+	* sysdeps/posix/mk-stdiolim.c: Define FOPEN_MAX also when included
+	directly.
+
+	* sysdeps/unix/sysv/linux/sys/msq_buf.h: Fix typo.
+
+	* sysdeps/unix/sysv/linux/alpha/net/route.h: New file.
+
+1997-12-20 13:50  Richard Henderson  <rth@cygnus.com>
+
+	* posix/sched.h: timespec is in <time.h>.
+
+	* sysdeps/unix/sysv/linux/sys/kd.h: Don't redefine _LINUX_TYPES_H.
+
 1997-12-21 22:09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* xopen_lim.h: Include stdio_lim.h to get definition of FOPEN_MAX.
