@@ -162,7 +162,7 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
 /* Evaluate EXPR with the variable `port' bound to the port to FD,
    and `ctty' bound to the ctty port.  */
    
-#define	_HURD_DPORT_USE(fd, expr)					      \
+#define	HURD_DPORT_USE(fd, expr)					      \
   ({ struct hurd_userlink __dt_ulink;					      \
      error_t __result;							      \
      struct hurd_fd_user __d = _hurd_fd_get (fd, &__dt_ulink);		      \
@@ -177,7 +177,7 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
 	 _hurd_port_free (&__d.d->port, &__ulink, port);		      \
 	 if (ctty != MACH_PORT_NULL)					      \
 	   _hurd_port_free (&__d.d->ctty, &__ctty_ulink, ctty);		      \
-	 _hurd_fd_free (__d, &__dealloc_dt);				      \
+	 _hurd_fd_free (__d, &__dt_ulink);				      \
        }								      \
       __result;								      \
    })									      \
@@ -233,9 +233,17 @@ extern void _hurd_port2fd (struct hurd_fd *fd, io_t port, int flags);
 
 extern int _hurd_intern_fd (io_t port, int flags, int dealloc);
 
-/* Allocate a new file descriptor and return it, locked.
-   The new descriptor will not be less than FIRST_FD.  */
+/* Allocate a new file descriptor in the table and return it, locked.  The
+   new descriptor number will be no less than FIRST_FD.  If the table is
+   full, set errno to EMFILE and return NULL.  If FIRST_FD is negative or
+   bigger than the size of the table, set errno to EINVAL and return NULL. */
+
 extern struct hurd_fd *_hurd_alloc_fd (int *fd_ptr, int first_fd);
+
+/* Allocate a new file descriptor structure and initialize its port cells
+   with PORT and CTTY.  (This does not affect the descriptor table.)  */
+
+extern struct hurd_fd *_hurd_new_fd (io_t port, io_t ctty);
 
 /* User-registered handlers for specific `ioctl' requests.  */
 
