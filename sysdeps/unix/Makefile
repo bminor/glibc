@@ -157,7 +157,7 @@ $(common-objpfx)syscall.h: $(syscall.h)
 	tr '[A-Z]' '[a-z]' < $< | \
 	sed -e 's/\<sys_//' \
 	    -e 's/^#define[ 	]*\([a-z0-9_]*\)[ 	]*/#define SYS_\1 /' \
-	    -e '/^#define/!d' \
+	    -e '/^#/!d' \
 	> $@-tmp
 	mv $@-tmp $@
 
