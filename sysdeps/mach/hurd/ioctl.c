@@ -87,7 +87,7 @@ DEFUN(__ioctl, (fd, request),
 	  if (*(int *) t != ipctype.i)
 	    return 1;
 	  ++t;
-	  memcpy (t, store, len);
+	  memcpy (store, t, len);
 	  if (update != NULL)
 	    *update += len;
 	  t = (void *) t + ((len + sizeof (*t) - 1) / sizeof (*t) * sizeof *t);
@@ -132,9 +132,8 @@ DEFUN(__ioctl, (fd, request),
        m->msgh_local_port = __mig_get_reply_port ();
        m->msgh_seqno = 0;
        m->msgh_id = msgid;
-#if 0
-       m->msgh_bits = ?;	/* XXX */
-#endif
+       m->msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_COPY_SEND,
+				      MACH_MSG_TYPE_MAKE_SEND_ONCE);
 #ifdef notyet
        HURD_EINTR_RPC (port, __mach_msg (m, MACH_SEND_MSG|MACH_RCV_MSG,
 					 m->msgh_size, sizeof (msg),
@@ -162,9 +161,12 @@ DEFUN(__ioctl, (fd, request),
     return __hurd_fail (m->msgh_id == MACH_NOTIFY_SEND_ONCE ?
 			MIG_SERVER_DIED : MIG_REPLY_MISMATCH);
 
-  if ((m->msgh_bits & MACH_MSGH_BITS_COMPLEX) || /* XXX ? */
+  if ((m->msgh_bits & MACH_MSGH_BITS_COMPLEX) || /* Allow no ports or VM.  */
       m->msgh_size != (char *) t - msg)
-    return __hurd_fail (MIG_TYPE_ERROR);
+    {
+      __mach_msg_destroy (m);	/* XXX ? Deallocate gratuitous resources.  */
+      return __hurd_fail (MIG_TYPE_ERROR);
+    }
 
   t = (mach_msg_type_t *) &m[1];
   if (out (1, _IOTS (sizeof (error_t)), &err, NULL) ||
