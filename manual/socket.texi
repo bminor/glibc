@@ -1795,10 +1795,11 @@ to control inclusing of routing information on output.
 
 @pindex sys/socket.h
 The @code{send} function is declared in the header file
-@file{sys/socket.h}.  If your @var{flags} argument is zero, you can
-just as well use @code{write} instead of @code{send}; see @ref{I/O
-Primitives}.  If the socket is not connected, you get a @code{SIGPIPE}
-signal for any use of @code{send} or @code{write}.
+@file{sys/socket.h}.  If your @var{flags} argument is zero, you can just
+as well use @code{write} instead of @code{send}; see @ref{I/O
+Primitives}.  If the socket was connected but the connection has broken,
+you get a @code{SIGPIPE} signal for any use of @code{send} or
+@code{write}.
 
 @comment sys/socket.h
 @comment BSD
@@ -1839,6 +1840,15 @@ completed.)
 
 @item ENOBUFS
 There is not enough internal buffer space available.
+
+@item ENOTCONN
+You never connected this socket.
+
+@item EPIPE
+This socket was connected but the connection is now broken.  In this
+case, @code{send} generates a @code{SIGPIPE} signal first; if that
+signal is ignored or blocked, or if its handler returns, then
+@code{send}f fails with @code{EPIPE}.
 @end table
 @end deftypefun
 
@@ -1876,6 +1886,9 @@ to be read.)
 @item EINTR
 The operation was interrupted by a signal before any data was read.
 @xref{Interrupted Primitives}.
+
+@item ENOTCONN
+You never connected this socket.
 @end table
 @end deftypefun
 
