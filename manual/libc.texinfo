@@ -639,7 +639,7 @@ Standard Signals
 * Asynchronous I/O Signals::    Used to indicate input is available.
 * Job Control Signals::         Signals used to support job control.
 * Miscellaneous Signals::       Miscellaneous Signals
-* Other Signals::               Implementations can support other signals.
+* Nonstandard Signals::         Implementations can support other signals.
 * Signal Messages::             Printing a message describing a signal.
 
 Specifying Signal Actions
