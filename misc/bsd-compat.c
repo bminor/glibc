@@ -31,13 +31,6 @@ Cambridge, MA 02139, USA.  */
 function_alias(getpgrp, __getpgrp, pid_t, (pid),
 	       DEFUN(getpgrp, (pid), pid_t pid))
 
-#undef	setjmp
-int
-DEFUN(setjmp, (env), jmp_buf env)
-{
-  return sigsetjmp (env, 1);
-}
-
 #undef	longjmp
 function_alias_void(longjmp, siglongjmp, (env, val),
 		    DEFUN(longjmp, (env, val), CONST jmp_buf env AND int val))
