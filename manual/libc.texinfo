@@ -11,9 +11,9 @@
 @smallbook
 
 @c  I've already told people the printed edition will be 0.06
-@set EDITION 0.06 DRAFT
+@set EDITION 0.06
 @set VERSION 1.09 Beta
-@set UPDATED 24 October 1994
+@set UPDATED 23 December 1994
 @set ISBN 1-882114-53-1
 
 @ifinfo
@@ -43,8 +43,6 @@ derived work is distributed under the terms of a permission notice
 identical to this one.
 
 Permission is granted to copy and distribute translations of this manual
-into another language, under the above conditions for modified versions,
-except that the text of the translations of the section entitled ``GNU
 Library General Public License'' must be approved for accuracy by the
 Foundation.
 @end ifinfo
