@@ -1,3 +1,16 @@
+2001-11-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/pt-machine.h: Use %gs as thread specific
+	register.
+	(THREAD_SELF): New.
+	(INIT_THREAD_SELF): New.
+	(THREAD_GETMEM): New.
+	(THREAD_GETMEM_NC):
+	(THREAD_SETMEM): New.
+	(THREAD_SETMEM_NC): New.
+	(FLOATING_STACKS): Define.
+	(ARCH_STACK_MAX_SIZE): Define.
+
 2001-12-13  Andreas Schwab  <schwab@suse.de>
 
 	* specific.c (pthread_key_delete): Don't contact the thread
@@ -23,7 +36,7 @@
 	(__pthread_manager): Handle new REQ_FOR_EACH_THREAD request.
 	* specific.c (struct pthread_key_delete_helper_args): New type.
 	(pthread_key_delete_helper): New static function.
-	(pthread_key_delete): Use the new thread manager 
+	(pthread_key_delete): Use the new thread manager
 	REQ_FOR_EACH_THREAD function to iterate over the threads and set
 	the delete key slot to a null value in each thread.
 	* Examples/ex18.c: New test.

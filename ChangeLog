@@ -1,3 +1,8 @@
+2001-11-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/Versions: Add arch_prctl.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Add arch_prctl call.
+
 2001-12-13  Andreas Schwab  <schwab@suse.de>
 
 	* stdio-common/vfprintf.c (process_string_arg): Correctly handle
