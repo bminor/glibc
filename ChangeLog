@@ -1,6 +1,20 @@
+1997-12-28 19:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (RELEASE): Set to "production".
+
+	* po/nl.po: Updated.
+	* po/es.po: Updated.
+
+	* sysdeps/posix/mk-stdiolim.c: Correctly handle inclusion by stdio.h.
+
+1997-12-28 17:13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/ypclnt.c (__yp_bind): Make sure socket is closed.
+	Patch by Thorsten Kukuk <kukuk@weber.uni-paderborn.de>.
+
 1997-12-24 22:04  Ulrich Drepper  <drepper@cygnus.com>
 
-	* configure.in: Fix type.  Correct check for available add-ons.
+	* configure.in: Fix typo.  Correct check for available add-ons.
 
 	* limits.h: Always define MB_LEN_MAX.
 

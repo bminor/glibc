@@ -1,35 +1,25 @@
-# Dutch messages for GNU libc.
+# Dutch messages dor GNU libc.
 # Copyright (C) 1996 Free Software Foundation, Inc.
 # Erick Branderhorst <branderh@debian.org>, 1996.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.0\n"
-"POT-Creation-Date: 1996-09-08  3:45\n"
+"Project-Id-Version: libc 2.0.5\n"
+"POT-Creation-Date: 1997-08-21 04:13+0200\n"
 "PO-Revision-Date: 1996-09-17 14:30 MET DST\n"
-"Last-Translator: Erick Branderhorst <branderh@debian.org>\n"
+"Last-Translator: Erick Branderhorst <Erick.Branderhorst@asml.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: sunrpc/rpc_main.c:80
-#, c-format
-msgid "       %s [-c | -h | -l | -m] [-o outfile] [infile]\n"
-msgstr "       %s [-c | -h | -l | -m] [-o uitvoerbestand] [invoerbestand]\n"
-
-#: sunrpc/rpc_main.c:83
-#, c-format
-msgid "       %s [-s udp|tcp]* [-o outfile] [infile]\n"
-msgstr "       %s [-s udp|tcp]* [-o uitvoerbestand] [invoerbestand]\n"
-
 #: sunrpc/rpcinfo.c:612
 msgid "       rpcinfo -b prognum versnum\n"
-msgstr "       rpcinfo -b programanummer versienummer\n"
+msgstr "       rpcinfo -b programma nummer versienummer\n"
 
 #: sunrpc/rpcinfo.c:613
 msgid "       rpcinfo -d prognum versnum\n"
-msgstr "       rpcinfo -d programanummer versienummer\n"
+msgstr "       rpcinfo -d programmanummer versienummer\n"
 
 #: sunrpc/rpcinfo.c:611
 msgid "       rpcinfo -p [ host ]\n"
@@ -37,62 +27,58 @@ msgstr "       rpcinfo -p [ host ]\n"
 
 #: sunrpc/rpcinfo.c:610
 msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
-msgstr "       rpcinfo [ -n poortnummer ] -t host programanummer [ versienummer ]\n"
+msgstr ""
+"       rpcinfo [ -n poortnummer ] -t host programmanummer [ versienummer ]\n"
 
 #: sunrpc/rpcinfo.c:517
 msgid "   program vers proto   port\n"
 msgstr "   program vers proto   port\n"
 
-#: time/zic.c:425
+#: time/zic.c:421
 #, c-format
 msgid " (rule from \"%s\", line %d)"
 msgstr " (voorwaarde uit \"%s\", regel %d)"
 
-#: locale/programs/ld-collate.c:360 locale/programs/ld-ctype.c:1233
+#: locale/programs/ld-collate.c:363 locale/programs/ld-ctype.c:1242
 msgid " done\n"
 msgstr " klaar\n"
 
-#: time/zic.c:422
+#: time/zic.c:418
 #, c-format
 msgid "\"%s\", line %d: %s"
 msgstr "\"%s\", regel %d: %s"
 
-#: time/zic.c:946
+#: time/zic.c:947
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "\"Zone %s\" regel en -l optie gaan niet samen"
 
-#: time/zic.c:954
+#: time/zic.c:955
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "\"Zone %s\" regel en -p optie gaan niet samen"
 
-#: time/zic.c:759
+#: time/zic.c:758
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s in regelloze zone"
 
-#: assert/assert.c:48
+#: assert/assert.c:46
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sAssertie `%s' faalde.\n"
 
-#: assert/assert-perr.c:46
+#: assert/assert-perr.c:47
 #, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sOnverwachte fout: %s.\n"
 
-#: stdio-common/psignal.c:48
+#: stdio-common/psignal.c:47
 #, c-format
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sOnbekend signaal %d\n"
 
-#: sunrpc/rpc_util.c:258
-#, c-format
-msgid "%s, line %d: "
-msgstr "%s, regel %d: "
-
-#: time/zic.c:2140
+#: time/zic.c:2185
 #, c-format
 msgid "%s: %d did not sign extend correctly\n"
 msgstr "%s: %d heeft `extend' niet juist gesigneerd\n"
@@ -102,17 +88,17 @@ msgstr "%s: %d heeft `extend' niet juist gesigneerd\n"
 msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
 msgstr "%s: <mb_cur_max> moet groter zijn dan <mb_cur_min>\n"
 
-#: time/zic.c:1431
+#: time/zic.c:1456
 #, c-format
 msgid "%s: Can't create %s: %s\n"
 msgstr "%s: Kan %s niet aanmaken: %s\n"
 
-#: time/zic.c:2119
+#: time/zic.c:2163
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr "%s: Kan directory %s niet aanmaken: %s\n"
 
-#: time/zic.c:613
+#: time/zic.c:610
 #, c-format
 msgid "%s: Can't link from %s to %s: %s\n"
 msgstr "%s: Kan niet verwijzing van %s naar %s: %s\n"
@@ -122,7 +108,12 @@ msgstr "%s: Kan niet verwijzing van %s naar %s: %s\n"
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Kan %s niet openen: %s\n"
 
-#: time/zic.c:852
+#: time/zic.c:1446
+#, fuzzy, c-format
+msgid "%s: Can't remove %s: %s\n"
+msgstr "%s: Kan %s niet aanmaken: %s\n"
+
+#: time/zic.c:853
 #, c-format
 msgid "%s: Error closing %s: %s\n"
 msgstr "%s: Fout bij sluiten %s: %s\n"
@@ -132,12 +123,12 @@ msgstr "%s: Fout bij sluiten %s: %s\n"
 msgid "%s: Error reading %s\n"
 msgstr "%s: Fout bij lezen %s\n"
 
-#: time/zic.c:1495
+#: time/zic.c:1520
 #, c-format
 msgid "%s: Error writing %s\n"
 msgstr "%s: Fout bij schrijven %s\n"
 
-#: time/zdump.c:258
+#: time/zdump.c:266
 #, c-format
 msgid "%s: Error writing standard output "
 msgstr "%s: Fout bij schrijven standaarduitvoer "
@@ -147,87 +138,92 @@ msgstr "%s: Fout bij schrijven standaarduitvoer "
 msgid "%s: Leap line in non leap seconds file %s\n"
 msgstr "%s: Schrikkelregel in niet schrikkelseconde bestand %s (FIXME)\n"
 
-#: time/zic.c:362
+#: time/zic.c:359
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Niet meer geheugen beschikbaar: %s\n"
 
-#: time/zic.c:528
+#: time/zic.c:524
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Meer dan een -L optie gegeven\n"
 
-#: time/zic.c:488
+#: time/zic.c:484
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Meer dan een -d optie gegeven\n"
 
-#: time/zic.c:498
+#: time/zic.c:494
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Meer dan een -l optie gegeven\n"
 
-#: time/zic.c:508
+#: time/zic.c:504
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Meer dan een -p optie gegeven\n"
 
-#: time/zic.c:518
+#: time/zic.c:514
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: Meer dan een -y optie gegeven\n"
 
-#: time/zic.c:1846
+#: time/zic.c:1885
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: commando was '%s', resultaat was %d\n"
 
-#: locale/programs/charmap.c:593 locale/programs/locfile.c:878
+#: locale/programs/charmap.c:593 locale/programs/locfile.c:900
 #, c-format
 msgid "%s: error in state machine"
 msgstr "%s: fout in state machine"
 
-#: posix/getopt.c:686
+#: posix/getopt.c:783
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: onjuiste optie -- %c\n"
 
-#: posix/getopt.c:689
+#: posix/getopt.c:786
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: onjuiste optie -- %c\n"
 
-#: posix/getopt.c:610
+#: posix/getopt.c:707
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: optie `%c%s' staat geen argument toe\n"
 
-#: posix/getopt.c:581
+#: posix/getopt.c:678
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: optie `%s' is ambiguous\n"
 
-#: posix/getopt.c:627
+#: posix/getopt.c:724 posix/getopt.c:897
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: optie `%s' vereist een argument\n"
 
-#: posix/getopt.c:605
+#: posix/getopt.c:702
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: optie `--%s' staat geen argument toe\n"
 
-#: posix/getopt.c:725
+#: posix/getopt.c:881
+#, fuzzy, c-format
+msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgstr "%s: optie `--%s' staat geen argument toe\n"
+
+#: posix/getopt.c:863
+#, fuzzy, c-format
+msgid "%s: option `-W %s' is ambiguous\n"
+msgstr "%s: optie `%s' is ambiguous\n"
+
+#: posix/getopt.c:816 posix/getopt.c:946
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: optie vereist een argument -- %c\n"
 
-#: sunrpc/rpc_main.c:146
-#, c-format
-msgid "%s: output would overwrite %s\n"
-msgstr "%s: uitvoer zal %s overschrijven\n"
-
-#: time/zic.c:838 time/zic.c:1249 time/zic.c:1269
+#: time/zic.c:838 time/zic.c:1251 time/zic.c:1275
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: paniek: Onjuiste `l_value' %d\n"
@@ -237,22 +233,17 @@ msgstr "%s: paniek: Onjuiste `l_value' %d\n"
 msgid "%s: premature end of file"
 msgstr "%s: voorbarig einde van bestand"
 
-#: sunrpc/rpc_main.c:152
-#, c-format
-msgid "%s: unable to open "
-msgstr "%s: niet in staat te openen "
-
-#: posix/getopt.c:660
+#: posix/getopt.c:757
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: onbekende optie `%c%s'\n"
 
-#: posix/getopt.c:656
+#: posix/getopt.c:753
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: onbekende optie `--%s'\n"
 
-#: time/zic.c:447
+#: time/zic.c:443
 #, c-format
 msgid ""
 "%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d "
@@ -263,7 +254,7 @@ msgstr ""
 "[ -l lokale tijd ] [ -p posixregels ] [ -d directory ]\n"
 "[ -L schrikkelseconden ] [ -y jaartype ] [ bestandsnaam ... ]\n"
 
-#: time/zdump.c:165
+#: time/zdump.c:174
 #, c-format
 msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr "%s: gebruik is %s [ -v ] [ -c afbreken ] zonenaam ...\n"
@@ -277,7 +268,7 @@ msgstr "(onbekende authenticatie (FIXME) fout - %d)"
 msgid "(unknown)"
 msgstr "(onbekend)"
 
-#: catgets/gencat.c:244
+#: catgets/gencat.c:254
 msgid "*standard input*"
 msgstr "*standaardinvoer*"
 
@@ -285,19 +276,19 @@ msgstr "*standaardinvoer*"
 msgid ".lib section in a.out corrupted"
 msgstr ".lib deel in a.out corrupt"
 
-#: inet/rcmd.c:325
+#: inet/rcmd.c:363
 msgid ".rhosts fstat failed"
 msgstr ".rhosts fstat faalde"
 
-#: inet/rcmd.c:321
+#: inet/rcmd.c:359
 msgid ".rhosts lstat failed"
 msgstr ".rhosts lstat faalde"
 
-#: inet/rcmd.c:323
+#: inet/rcmd.c:361
 msgid ".rhosts not regular file"
 msgstr ".rhosts is geen gewoon bestand"
 
-#: inet/rcmd.c:329
+#: inet/rcmd.c:367
 msgid ".rhosts writeable by other than owner"
 msgstr ".rhosts overschrijfbaar door anderen dan de eigenaar"
 
@@ -310,12 +301,12 @@ msgstr "; low versie = %lu, high versie = %lu (FIXME)"
 msgid "; why = "
 msgstr "; waarom = "
 
-#: locale/programs/ld-ctype.c:325
+#: locale/programs/ld-ctype.c:331
 #, c-format
 msgid "<SP> character must not be in class `%s'"
 msgstr "<SP> karakter mag geen onderdeel zijn van klasse `%s'"
 
-#: locale/programs/ld-ctype.c:316
+#: locale/programs/ld-ctype.c:321
 #, c-format
 msgid "<SP> character not in class `%s'"
 msgstr "<SP> karakter geen onderdeel van klasse `%s'"
@@ -325,6 +316,10 @@ msgstr "<SP> karakter geen onderdeel van klasse `%s'"
 #. TRANS @c Don't change it.
 #: stdio-common/../sysdeps/gnu/errlist.c:591
 msgid "?"
+msgstr ""
+
+#: sysdeps/unix/sysv/linux/siglist.h:27
+msgid "Aborted"
 msgstr ""
 
 #: stdio-common/../sysdeps/gnu/errlist.c:762
@@ -342,10 +337,12 @@ msgstr "Address is al in gebruik"
 msgid "Address family not supported by protocol"
 msgstr "Adres familie niet ondersteund door protocol"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:714
+#: stdio-common/../sysdeps/gnu/errlist.c:730
 msgid "Advertise error"
 msgstr "Advertise (FIXME) fout"
 
+#: stdio-common/../sysdeps/unix/siglist.c:43
+#: sysdeps/unix/sysv/linux/siglist.h:33
 msgid "Alarm clock"
 msgstr "Alarmklok"
 
@@ -383,9 +380,20 @@ msgstr "Onjuist adres"
 msgid "Bad file descriptor"
 msgstr "Onjuiste bestandsbeschrijver"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:682
+#: stdio-common/../sysdeps/gnu/errlist.c:718
 msgid "Bad font file format"
 msgstr "Onjuist lettertype bestandsformaat"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:610
+#, fuzzy
+msgid "Bad message"
+msgstr "Geen data melding"
+
+#: stdio-common/../sysdeps/unix/siglist.c:41
+#: sysdeps/unix/sysv/linux/siglist.h:56
+#, fuzzy
+msgid "Bad system call"
+msgstr "Onderbroken systeemaanroep (FIXME)"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
@@ -394,7 +402,7 @@ msgstr "Onjuist lettertype bestandsformaat"
 msgid "Block device required"
 msgstr "Blokapparaat vereist"
 
-#: sunrpc/pmap_rmt.c:335
+#: sunrpc/pmap_rmt.c:338
 msgid "Broadcast select problem"
 msgstr "Broadcast selectie probleem (FIXME)"
 
@@ -404,18 +412,41 @@ msgstr "Broadcast selectie probleem (FIXME)"
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
 #: stdio-common/../sysdeps/gnu/errlist.c:222
+#: stdio-common/../sysdeps/unix/siglist.c:42
+#: sysdeps/unix/sysv/linux/siglist.h:32
 msgid "Broken pipe"
 msgstr "Onderbroken pijp"
 
+#: stdio-common/../sysdeps/unix/siglist.c:39
+#: sysdeps/unix/sysv/linux/siglist.h:30
 msgid "Bus error"
 msgstr "Bus fout"
 
+#: sysdeps/unix/sysv/linux/siglist.h:43
 msgid "CPU time limit exceeded"
 msgstr "CPU tijdlimiet overschreden"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:758
 msgid "Can not access a needed shared library"
-msgstr "Kan geen toegang verkrijgen tot benodigde gezamelijk bibliotheekbestand"
+msgstr ""
+"Kan geen toegang verkrijgen tot benodigde gezamelijk bibliotheekbestand"
+
+#: nis/ypclnt.c:695
+msgid "Can't bind to server which serves this domain"
+msgstr ""
+
+#: nis/ypclnt.c:707
+#, fuzzy
+msgid "Can't communicate with portmapper"
+msgstr "rpcinfo: kan geen kontakt krijgen met portmapper"
+
+#: nis/ypclnt.c:709
+msgid "Can't communicate with ypbind"
+msgstr ""
+
+#: nis/ypclnt.c:711
+msgid "Can't communicate with ypserv"
+msgstr ""
 
 #. TRANS No memory available.  The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
@@ -430,7 +461,7 @@ msgstr "Kan geen geheugen aanspreken"
 msgid "Cannot assign requested address"
 msgstr "Kan gevraagde adres niet toewijzen"
 
-#: sunrpc/pmap_rmt.c:253
+#: sunrpc/pmap_rmt.c:255
 msgid "Cannot create socket for broadcast rpc"
 msgstr "Kan geen `socket' maken voor `broadcast' rpc"
 
@@ -438,7 +469,7 @@ msgstr "Kan geen `socket' maken voor `broadcast' rpc"
 msgid "Cannot exec a shared library directly"
 msgstr "Kan geen gezamelijke bibliotheek rechtstreeks uitvoeren"
 
-#: sunrpc/pmap_rmt.c:347
+#: sunrpc/pmap_rmt.c:350
 msgid "Cannot receive reply to broadcast"
 msgstr "Kan geen antwoord ontvangen om te zenden"
 
@@ -451,18 +482,20 @@ msgstr "Kan service niet registreren"
 msgid "Cannot send after transport endpoint shutdown"
 msgstr "Kan niet zenden na transport eindpunt `shutdown'"
 
-#: sunrpc/pmap_rmt.c:311
+#: sunrpc/pmap_rmt.c:313
 msgid "Cannot send broadcast packet"
 msgstr "Kan broadcast pakket niet verzenden"
 
-#: sunrpc/pmap_rmt.c:259
+#: sunrpc/pmap_rmt.c:261
 msgid "Cannot set socket option SO_BROADCAST"
 msgstr "Kan socket optie SO_BROADCAST niet instellen"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:622
+#: stdio-common/../sysdeps/gnu/errlist.c:658
 msgid "Channel number out of range"
 msgstr "Kanaal nummer buiten domein"
 
+#: stdio-common/../sysdeps/unix/siglist.c:49
+#: sysdeps/unix/sysv/linux/siglist.h:39
 msgid "Child exited"
 msgstr "Kind is er mee opgehouden (FIXME)"
 
@@ -470,7 +503,7 @@ msgstr "Kind is er mee opgehouden (FIXME)"
 msgid "Client credential too weak"
 msgstr "Klant credential is te zwak (FIXME)"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:722
+#: stdio-common/../sysdeps/gnu/errlist.c:738
 msgid "Communication error on send"
 msgstr "Communicatie fout bij zenden"
 
@@ -479,11 +512,11 @@ msgstr "Communicatie fout bij zenden"
 msgid "Computer bought the farm"
 msgstr "Computer heeft de boerderij gekocht"
 
-#: locale/programs/ld-ctype.c:1196
+#: locale/programs/ld-ctype.c:1204
 msgid "Computing table size for character classes might take a while..."
 msgstr "Berekenen tabelgrootte voor karakterklassen kan even duren..."
 
-#: locale/programs/ld-collate.c:327
+#: locale/programs/ld-collate.c:329
 msgid "Computing table size for collation information might take a while..."
 msgstr "Berekenen tabelgrootte voor collation informatie kan even duren..."
 
@@ -491,7 +524,7 @@ msgstr "Berekenen tabelgrootte voor collation informatie kan even duren..."
 #. TRANS it is not running the requested service).
 #: stdio-common/../sysdeps/gnu/errlist.c:439
 msgid "Connection refused"
-msgstr "Connectie gewijgerd"
+msgstr "Connectie geweigerd"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
@@ -506,8 +539,32 @@ msgstr "Connectie reset door `peer'"
 msgid "Connection timed out"
 msgstr "Connectie timed out"
 
+#: stdio-common/../sysdeps/unix/siglist.c:48
+#: sysdeps/unix/sysv/linux/siglist.h:38
 msgid "Continued"
 msgstr "Gecontinueerd"
+
+#: catgets/gencat.c:169 db/makedb.c:120 locale/programs/locale.c:191
+#: locale/programs/localedef.c:180
+#, c-format
+msgid ""
+"Copyright (C) %s Free Software Foundation, Inc.\n"
+"This is free software; see the source for copying conditions.  There is NO\n"
+"warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
+msgstr ""
+"Kopierecht (C) %s Free Software Foundation, Inc.\n"
+"Dit is vrije programmatuur; zie de bron-code voor copieervoorwaarden.\n"
+"Er is GEEN garantie; zelfs niet voor VERKOOPBAARHEID of GESCHIKTHEID\n"
+"VOOR EEN BEPAALD DOEL.\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:53
+#, fuzzy
+msgid "Cputime limit exceeded"
+msgstr "CPU tijdlimiet overschreden"
+
+#: nis/ypclnt.c:721
+msgid "Database is busy"
+msgstr "Database is bezig"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
@@ -516,7 +573,7 @@ msgstr "Gecontinueerd"
 msgid "Destination address required"
 msgstr "Bestemmingsadres vereist"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:686
+#: stdio-common/../sysdeps/gnu/errlist.c:638
 msgid "Device not a stream"
 msgstr "Apparaat is geen `stream'"
 
@@ -547,20 +604,31 @@ msgstr "Directory niet leeg"
 msgid "Disc quota exceeded"
 msgstr "Schijf quota overschreden"
 
+#: nis/ypclnt.c:767
+#, fuzzy
+msgid "Domain not bound"
+msgstr "portmap kan niet bind (FIXME)"
+
+#: stdio-common/../sysdeps/unix/siglist.c:36
+#: sysdeps/unix/sysv/linux/siglist.h:53
+#, fuzzy
+msgid "EMT trap"
+msgstr "IOT trap (FIXME)"
+
 #: sunrpc/clnt_perr.c:254
 #, c-format
 msgid "Error %d"
 msgstr "Fout %d"
 
-#: string/../sysdeps/mach/_strerror.c:43
+#: string/../sysdeps/mach/_strerror.c:52
 msgid "Error in unknown error system: "
 msgstr "Fout in onbekende fout systeem (FIXME): "
 
-#: inet/ruserpass.c:156
+#: inet/ruserpass.c:161
 msgid "Error: .netrc file is readable by others."
 msgstr "Fout: .netrc bestand is leesbaar voor anderen."
 
-#: stdio-common/../sysdeps/gnu/errlist.c:662
+#: stdio-common/../sysdeps/gnu/errlist.c:698
 msgid "Exchange full"
 msgstr "Uitwisseling vol"
 
@@ -570,7 +638,7 @@ msgstr "Uitwisseling vol"
 msgid "Exec format error"
 msgstr "Exec formaat fout"
 
-#: locale/programs/localedef.c:207
+#: locale/programs/localedef.c:216
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr "FATAAL: systeem heeft `_POSIX2_LOCALEDEF' niet gedefinieerd"
 
@@ -588,7 +656,7 @@ msgstr "Bestandsbeschrijver in slechte staat"
 msgid "File exists"
 msgstr "Bestand bestaat"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:678
+#: stdio-common/../sysdeps/gnu/errlist.c:714
 msgid "File locking deadlock error"
 msgstr "Bestandsafscherming deadlock fout"
 
@@ -599,6 +667,7 @@ msgstr "Bestandsafscherming deadlock fout"
 msgid "File name too long"
 msgstr "Bestandsnaam te lang"
 
+#: sysdeps/unix/sysv/linux/siglist.h:44
 msgid "File size limit exceeded"
 msgstr "Bestandsgrootte limiet overschreden"
 
@@ -607,6 +676,13 @@ msgstr "Bestandsgrootte limiet overschreden"
 msgid "File too large"
 msgstr "Bestand te groot"
 
+#: stdio-common/../sysdeps/unix/siglist.c:54
+#, fuzzy
+msgid "Filesize limit exceeded"
+msgstr "Bestandsgrootte limiet overschreden"
+
+#: stdio-common/../sysdeps/unix/siglist.c:37
+#: sysdeps/unix/sysv/linux/siglist.h:28
 msgid "Floating point exception"
 msgstr "Drijvende punt exceptie"
 
@@ -622,6 +698,8 @@ msgstr "Functie niet geimplementeerd"
 msgid "Gratuitous error"
 msgstr "Gratuitous (FIXME) fout"
 
+#: stdio-common/../sysdeps/unix/siglist.c:30
+#: sysdeps/unix/sysv/linux/siglist.h:22
 msgid "Hangup"
 msgstr "Ophangen"
 
@@ -634,17 +712,26 @@ msgstr "`Host' is `down'"
 msgid "Host name lookup failure"
 msgstr "Host naam opzoek fout (FIXME)"
 
+#: stdio-common/../sysdeps/unix/siglist.c:52
+#: sysdeps/unix/sysv/linux/siglist.h:42
 msgid "I/O possible"
 msgstr "I/O mogelijk"
 
+#: stdio-common/../sysdeps/unix/siglist.c:35
 msgid "IOT trap"
 msgstr "IOT trap (FIXME)"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:618
+#: stdio-common/../sysdeps/gnu/errlist.c:614
 msgid "Identifier removed"
 msgstr "Identifier verwijderd"
 
+#: sysdeps/unix/sysv/linux/siglist.h:25
 msgid "Illegal Instruction"
+msgstr "Verkeerde instructie"
+
+#: stdio-common/../sysdeps/unix/siglist.c:33
+#, fuzzy
+msgid "Illegal instruction"
 msgstr "Verkeerde instructie"
 
 #. TRANS Invalid seek operation (such as on a pipe).
@@ -677,15 +764,32 @@ msgstr "Ongeschikte `ioctl' voor apparaat"
 msgid "Inappropriate operation for background process"
 msgstr "Ongeschikte operatie voor achtergrond proces"
 
+#: sysdeps/unix/sysv/linux/siglist.h:62
+#, fuzzy
+msgid "Information request"
+msgstr "Ongeldige vraag code"
+
 #. TRANS Input/output error; usually used for physical read or write errors.
 #: stdio-common/../sysdeps/gnu/errlist.c:40
 msgid "Input/output error"
 msgstr "Invoer/uitvoer fout"
 
+#: nis/ypclnt.c:701
+#, fuzzy
+msgid "Internal NIS error"
+msgstr "Resolver interne fout"
+
+#: nis/ypclnt.c:765
+#, fuzzy
+msgid "Internal ypbind error"
+msgstr "Stromen pijp fout"
+
+#: stdio-common/../sysdeps/unix/siglist.c:31
+#: sysdeps/unix/sysv/linux/siglist.h:23
 msgid "Interrupt"
 msgstr "Interrupt"
 
-#. TRANS Interrupted function call; an asynchronous signal occured and prevented
+#. TRANS Interrupted function call; an asynchronous signal occurred and prevented
 #. TRANS completion of the call.  When this happens, you should try the call
 #. TRANS again.
 #. TRANS
@@ -696,7 +800,7 @@ msgstr "Interrupt"
 msgid "Interrupted system call"
 msgstr "Onderbroken systeemaanroep (FIXME)"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:610
+#: stdio-common/../sysdeps/gnu/errlist.c:654
 msgid "Interrupted system call should be restarted"
 msgstr "Onderbroken systeemaanroep moet opnieuw gestart worden"
 
@@ -706,11 +810,11 @@ msgstr "Onderbroken systeemaanroep moet opnieuw gestart worden"
 msgid "Invalid argument"
 msgstr "Onjuist argument"
 
-#: posix/regex.c:946
+#: posix/regex.c:978
 msgid "Invalid back reference"
 msgstr "Onjuiste `back reference' (FIXME)"
 
-#: posix/regex.c:944
+#: posix/regex.c:976
 msgid "Invalid character class name"
 msgstr "Onjuiste karakterklassenaam"
 
@@ -722,11 +826,11 @@ msgstr "Onjuiste klant credential (FIXME)"
 msgid "Invalid client verifier"
 msgstr "Ongeldige klant verifier (FIXME)"
 
-#: posix/regex.c:943
+#: posix/regex.c:975
 msgid "Invalid collation character"
 msgstr "Ongeldig collatie karakter (FIXME)"
 
-#: posix/regex.c:950
+#: posix/regex.c:982
 msgid "Invalid content of \\{\\}"
 msgstr "Ongeldige inhoud van \\{\\}"
 
@@ -737,7 +841,7 @@ msgstr "Ongeldige inhoud van \\{\\}"
 msgid "Invalid cross-device link"
 msgstr "Ongeldige cross-device verwijzing"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:654
+#: stdio-common/../sysdeps/gnu/errlist.c:690
 msgid "Invalid exchange"
 msgstr "Onjuiste uitwisseling"
 
@@ -747,23 +851,23 @@ msgstr "Onjuiste uitwisseling"
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Ongeldig of incompleet multibyte of wide karakter"
 
-#: posix/regex.c:953
+#: posix/regex.c:985
 msgid "Invalid preceding regular expression"
 msgstr "Ongeldige voorafgaande reguliere expressie"
 
-#: posix/regex.c:951
+#: posix/regex.c:983
 msgid "Invalid range end"
 msgstr "Onjuist bereik einde"
 
-#: posix/regex.c:942
+#: posix/regex.c:974
 msgid "Invalid regular expression"
 msgstr "Onjuiste reguliere expressie"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:670
+#: stdio-common/../sysdeps/gnu/errlist.c:706
 msgid "Invalid request code"
 msgstr "Ongeldige vraag code"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:658
+#: stdio-common/../sysdeps/gnu/errlist.c:694
 msgid "Invalid request descriptor"
 msgstr "Onjuiste vraag beschrijver"
 
@@ -771,7 +875,7 @@ msgstr "Onjuiste vraag beschrijver"
 msgid "Invalid server verifier"
 msgstr "Onjuiste `server' verifier (FIXME)"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:674
+#: stdio-common/../sysdeps/gnu/errlist.c:710
 msgid "Invalid slot"
 msgstr "Onjuist slot"
 
@@ -785,38 +889,48 @@ msgstr "Is een directory"
 msgid "Is a named type file"
 msgstr "Is een benoemd bestandstype"
 
+#: stdio-common/../sysdeps/unix/siglist.c:38
+#: sysdeps/unix/sysv/linux/siglist.h:29
 msgid "Killed"
 msgstr "Gedood"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:650
+#: stdio-common/../sysdeps/gnu/errlist.c:686
 msgid "Level 2 halted"
 msgstr "Nivo 2 gestopt"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:626
+#: stdio-common/../sysdeps/gnu/errlist.c:662
 msgid "Level 2 not synchronized"
 msgstr "Nivo 2 niet gesyncrhoniseerd"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:630
+#: stdio-common/../sysdeps/gnu/errlist.c:666
 msgid "Level 3 halted"
 msgstr "Nivo 3 gestopt"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:634
+#: stdio-common/../sysdeps/gnu/errlist.c:670
 msgid "Level 3 reset"
 msgstr "Nivo 3 reset"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:710
+#: stdio-common/../sysdeps/gnu/errlist.c:626
 msgid "Link has been severed"
-msgstr ""
+msgstr "Verwijzing is onderbroken"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:638
+#: stdio-common/../sysdeps/gnu/errlist.c:674
 msgid "Link number out of range"
 msgstr "Verwijzingsnummer buiten bereik"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:702
+#: nis/ypclnt.c:713
+msgid "Local domain name not set"
+msgstr "Lokale domeinnaam niet ingesteld"
+
+#: nis/ypclnt.c:703
+msgid "Local resource allocation failure"
+msgstr "Lokale `resource' toewijzingsfout"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:722
 msgid "Machine is not on the network"
 msgstr "Machine is niet aangesloten op het netwerk"
 
-#: posix/regex.c:952
+#: posix/regex.c:984
 msgid "Memory exhausted"
 msgstr "Geheugen opgebruikt"
 
@@ -826,9 +940,17 @@ msgstr "Geheugen opgebruikt"
 msgid "Message too long"
 msgstr "Melding te lang"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:730
+#: stdio-common/../sysdeps/gnu/errlist.c:618
 msgid "Multihop attempted"
 msgstr "Multihop geprobeerd"
+
+#: nis/ypclnt.c:717
+msgid "NIS client/server version mismatch - can't supply service"
+msgstr "NIS klant/server versie verschillend - kan geen diensten bieden"
+
+#: nis/ypclnt.c:715
+msgid "NIS map data base is bad"
+msgstr "NIS map database is niet ok"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:746
 msgid "Name not unique on network"
@@ -855,7 +977,7 @@ msgstr "Netwerk is `down'"
 msgid "Network is unreachable"
 msgstr "Netwerk is onbereikbaar"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:646
+#: stdio-common/../sysdeps/gnu/errlist.c:682
 msgid "No CSI structure available"
 msgstr "Geen CSI structuur beschikbaar"
 
@@ -867,7 +989,7 @@ msgstr "Geen XENIX semaphoren beschikbaar"
 msgid "No address associated with name"
 msgstr "Geen adres geassocieerd met naam"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:666
+#: stdio-common/../sysdeps/gnu/errlist.c:702
 msgid "No anode"
 msgstr "Geen anode"
 
@@ -885,7 +1007,7 @@ msgstr "Geen bufferruimte beschikbaar"
 msgid "No child processes"
 msgstr "Geen kindprocessen (FIXME)"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:690
+#: stdio-common/../sysdeps/gnu/errlist.c:622
 msgid "No data available"
 msgstr "Geen data beschikbaar"
 
@@ -897,15 +1019,20 @@ msgstr "Geen data beschikbaar"
 msgid "No locks available"
 msgstr "Geen sloten beschikbaar"
 
-#: posix/regex.c:941
+#: posix/regex.c:973
 msgid "No match"
 msgstr "Geen overeenkomst"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:614
+#: stdio-common/../sysdeps/gnu/errlist.c:630
 msgid "No message of desired type"
 msgstr "Geen melding van gewenst type"
 
-#: posix/regex.c:5202
+#: nis/ypclnt.c:705
+#, fuzzy
+msgid "No more records in map database"
+msgstr "bij lezen database"
+
+#: posix/regex.c:5434
 msgid "No previous regular expression"
 msgstr "Geen vorige reguliere expressie"
 
@@ -931,6 +1058,14 @@ msgstr "Geen ruimte meer op apparaat"
 msgid "No such file or directory"
 msgstr "Onbekend bestand of directory"
 
+#: nis/ypclnt.c:699
+msgid "No such key in map"
+msgstr "Niet zo'n sleutel in map"
+
+#: nis/ypclnt.c:697
+msgid "No such map in server's domain"
+msgstr "Niet zo'n map in server's domein"
+
 #. TRANS No process matches the specified process ID.
 #: stdio-common/../sysdeps/gnu/errlist.c:24
 msgid "No such process"
@@ -939,10 +1074,6 @@ msgstr "Onbekend proces"
 #: stdio-common/../sysdeps/gnu/errlist.c:786
 msgid "Not a XENIX named type file"
 msgstr "Geen XENIX benoemd type bestand"
-
-#: stdio-common/../sysdeps/gnu/errlist.c:738
-msgid "Not a data message"
-msgstr "Geen data melding"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
 #: stdio-common/../sysdeps/gnu/errlist.c:140
@@ -969,7 +1100,7 @@ msgstr "Numeriek resultaat is buiten domein"
 msgid "Object is remote"
 msgstr "Object is niet lokaal"
 
-#: time/zic.c:1940
+#: time/zic.c:1979
 msgid "Odd number of quotation marks"
 msgstr "Oneven aantal quotes"
 
@@ -1022,34 +1153,37 @@ msgstr "Ingreep in voorbereiding"
 msgid "Operation would block"
 msgstr "Operatie zou blokeren"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:698
+#: stdio-common/../sysdeps/gnu/errlist.c:634
 msgid "Out of streams resources"
 msgstr "Geen streams resources meer"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:706
+#: stdio-common/../sysdeps/gnu/errlist.c:726
 msgid "Package not installed"
 msgstr "Pakket niet geïnstalleerd"
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: stdio-common/../sysdeps/gnu/errlist.c:96
+#: nis/ypclnt.c:719 stdio-common/../sysdeps/gnu/errlist.c:96
 msgid "Permission denied"
 msgstr "Toegang geweigerd"
 
+#: sysdeps/unix/sysv/linux/siglist.h:64
 msgid "Power failure"
 msgstr "Elektrische voeding faald"
 
-#: posix/regex.c:954
+#: posix/regex.c:986
 msgid "Premature end of regular expression"
 msgstr "Prematuur einde van reguliere expressie"
 
+#: stdio-common/../sysdeps/unix/siglist.c:56
+#: sysdeps/unix/sysv/linux/siglist.h:46
 msgid "Profiling timer expired"
 msgstr "Profiling timer verlopen (FIMXE)"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:642
+#: stdio-common/../sysdeps/gnu/errlist.c:678
 msgid "Protocol driver not attached"
 msgstr "Protocol driver niet aangesloten"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:726
+#: stdio-common/../sysdeps/gnu/errlist.c:646
 msgid "Protocol error"
 msgstr "Protocol fout"
 
@@ -1076,27 +1210,33 @@ msgstr "Protocol niet ondersteund"
 msgid "Protocol wrong type for socket"
 msgstr "Protocol verkeerd type voor socket (FIXME)"
 
+#: stdio-common/../sysdeps/unix/siglist.c:32
+#: sysdeps/unix/sysv/linux/siglist.h:24
 msgid "Quit"
 msgstr "Stop"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:734
+#: stdio-common/../sysdeps/gnu/errlist.c:742
 msgid "RFS specific error"
 msgstr "RFS specifieke fout"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:527
 msgid "RPC bad procedure for program"
-msgstr "RPC verkeerde procedure voor programa"
+msgstr "RPC verkeerde procedure voor programma"
+
+#: nis/ypclnt.c:693
+msgid "RPC failure on NIS operation"
+msgstr "RPC fout bij NIS actie"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:517
 msgid "RPC program not available"
-msgstr "RPC programa niet beschikbaar"
+msgstr "RPC programma niet beschikbaar"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:522
 msgid "RPC program version wrong"
-msgstr "RPC programa versie onjuist"
+msgstr "RPC programma versie onjuist"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:507
@@ -1142,15 +1282,15 @@ msgstr "RPC: Procedure niet beschikbaar"
 
 #: sunrpc/clnt_perr.c:197
 msgid "RPC: Program not registered"
-msgstr "RPC: Programa niet geregistreerd"
+msgstr "RPC: Programma niet geregistreerd"
 
 #: sunrpc/clnt_perr.c:181
 msgid "RPC: Program unavailable"
-msgstr "RPC: Programa niet beschikbaar"
+msgstr "RPC: Programma niet beschikbaar"
 
 #: sunrpc/clnt_perr.c:183
 msgid "RPC: Program/version mismatch"
-msgstr "RPC: Programa/versie niet overeenkomstig"
+msgstr "RPC: Programma/versie niet overeenkomstig"
 
 #: sunrpc/clnt_perr.c:189
 msgid "RPC: Remote system error"
@@ -1184,12 +1324,16 @@ msgstr "RPC: Onbekende host"
 msgid "RPC: Unknown protocol"
 msgstr "RPC: Onbekend protocol"
 
+#: elf/dlsym.c:49
+msgid "RTLD_NEXT used in code not dynamically loaded"
+msgstr "RTLD_NEXT gebruikt in niet dynamisch geladen code"
+
 #. TRANS An attempt was made to modify something on a read-only file system.
 #: stdio-common/../sysdeps/gnu/errlist.c:206
 msgid "Read-only file system"
 msgstr "Read-only bestandssysteem (FIXME)"
 
-#: posix/regex.c:955
+#: posix/regex.c:987
 msgid "Regular expression too big"
 msgstr "Reguliere expressie te groot"
 
@@ -1201,15 +1345,24 @@ msgstr "Remote I/O fout"
 msgid "Remote address changed"
 msgstr "Op-afstand adres gewijzigd"
 
-#: inet/ruserpass.c:157
+#: inet/ruserpass.c:162
 msgid "Remove password or make file unreadable by others."
 msgstr "Verwijder wachtwoord of maak bestand onleesbaar voor anderen."
+
+#: catgets/gencat.c:224 db/makedb.c:227 locale/programs/locale.c:262
+#: locale/programs/localedef.c:415
+msgid "Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"
+msgstr "Meld fouten met het `glibcbug' script aan <bugs@gnu.ai.mit.edu>.\n"
+
+#: nis/ypclnt.c:691
+msgid "Request arguments bad"
+msgstr "Verkeerde verzoek argumenten"
 
 #: resolv/herror.c:73
 msgid "Resolver Error 0 (no error)"
 msgstr "Resolver Fout 0 (geen fout)"
 
-#: resolv/herror.c:115
+#: resolv/herror.c:117
 msgid "Resolver internal error"
 msgstr "Resolver interne fout"
 
@@ -1220,6 +1373,10 @@ msgstr "Resolver interne fout"
 #: stdio-common/../sysdeps/gnu/errlist.c:85
 msgid "Resource deadlock avoided"
 msgstr "Resource dood lock vermeden (FIXME)"
+
+#: stdio-common/../sysdeps/unix/siglist.c:58
+msgid "Resource lost"
+msgstr "Resource kwijt"
 
 #. TRANS Resource temporarily unavailable; the call might work if you try again
 #. TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
@@ -1254,6 +1411,8 @@ msgstr "Resource dood lock vermeden (FIXME)"
 msgid "Resource temporarily unavailable"
 msgstr "Resource tijdelijk niet beschikbaar"
 
+#: stdio-common/../sysdeps/unix/siglist.c:40
+#: sysdeps/unix/sysv/linux/siglist.h:31
 msgid "Segmentation fault"
 msgstr "Segmentatie fout"
 
@@ -1264,6 +1423,10 @@ msgstr "Server rejected credential (FIXME)"
 #: sunrpc/clnt_perr.c:284
 msgid "Server rejected verifier"
 msgstr "Server rejected verifier (FIXME)"
+
+#: stdio-common/../sysdeps/unix/siglist.c:29
+msgid "Signal 0"
+msgstr "Signaal 0"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
 #: stdio-common/../sysdeps/gnu/errlist.c:299
@@ -1280,9 +1443,14 @@ msgstr "Socket type niet ondersteund"
 msgid "Software caused connection abort"
 msgstr "Software veroorzaakte afbreken verbinding"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:718
+#: stdio-common/../sysdeps/gnu/errlist.c:734
 msgid "Srmount error"
 msgstr "Srmount fout"
+
+#: sysdeps/unix/sysv/linux/siglist.h:59
+#, fuzzy
+msgid "Stack fault"
+msgstr "Segmentatie fout"
 
 #. TRANS Stale NFS file handle.  This indicates an internal confusion in the NFS
 #. TRANS system which is due to file system rearrangements on the server host.
@@ -1292,15 +1460,23 @@ msgstr "Srmount fout"
 msgid "Stale NFS file handle"
 msgstr "Stale NFS file handle (FIMXE)"
 
+#: stdio-common/../sysdeps/unix/siglist.c:47
+#: sysdeps/unix/sysv/linux/siglist.h:37
 msgid "Stopped"
 msgstr "Gestopt"
 
+#: stdio-common/../sysdeps/unix/siglist.c:46
+#: sysdeps/unix/sysv/linux/siglist.h:36
 msgid "Stopped (signal)"
 msgstr "Gestopt (signaal)"
 
+#: stdio-common/../sysdeps/unix/siglist.c:50
+#: sysdeps/unix/sysv/linux/siglist.h:40
 msgid "Stopped (tty input)"
 msgstr "Gestopt (tty invoer)"
 
+#: stdio-common/../sysdeps/unix/siglist.c:51
+#: sysdeps/unix/sysv/linux/siglist.h:41
 msgid "Stopped (tty output)"
 msgstr "Gestopt (tty uitvoer)"
 
@@ -1312,10 +1488,17 @@ msgstr "Stromen pijp fout"
 msgid "Structure needs cleaning"
 msgstr "Struktuur heeft schoonmaak nodig"
 
-#: posix/regex.c:940 stdio-common/../sysdeps/gnu/errlist.c:7
+#: nis/ypclnt.c:689 nis/ypclnt.c:763 posix/regex.c:972
+#: stdio-common/../sysdeps/gnu/errlist.c:7
 msgid "Success"
 msgstr "Succes"
 
+#: nis/ypclnt.c:769
+msgid "System resource allocation failure"
+msgstr "Systeem resource toewijzings fout"
+
+#: stdio-common/../sysdeps/unix/siglist.c:44
+#: sysdeps/unix/sysv/linux/siglist.h:34
 msgid "Terminated"
 msgstr "Getermineerd"
 
@@ -1328,7 +1511,7 @@ msgstr "Getermineerd"
 msgid "Text file busy"
 msgstr "Tekstbestand in gebruik"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:694
+#: stdio-common/../sysdeps/gnu/errlist.c:650
 msgid "Timer expired"
 msgstr "Timer afgelopen"
 
@@ -1381,10 +1564,16 @@ msgstr "Te veel referenties: kan splice niet doen"
 msgid "Too many users"
 msgstr "Te veel gebruikers"
 
+#: stdio-common/../sysdeps/unix/siglist.c:34
+#, fuzzy
+msgid "Trace/BPT trap"
+msgstr "Trace/breakpoint trap (FIXME)"
+
+#: sysdeps/unix/sysv/linux/siglist.h:26
 msgid "Trace/breakpoint trap"
 msgstr "Trace/breakpoint trap (FIXME)"
 
-#: posix/regex.c:945
+#: posix/regex.c:977
 msgid "Trailing backslash"
 msgstr "Trailing backslash (FIXME)"
 
@@ -1409,24 +1598,29 @@ msgstr "Er is al verbinding met het transport eindpunt"
 msgid "Transport endpoint is not connected"
 msgstr "Er is geen verbinding met het transport eindpunt"
 
-#: catgets/gencat.c:202 db/makedb.c:197 locale/programs/locale.c:234
-#: locale/programs/localedef.c:383
+#: catgets/gencat.c:208 db/makedb.c:209 locale/programs/locale.c:246
+#: locale/programs/localedef.c:396
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Probeer `%s --help' voor meer informatie.\n"
 
-#: inet/rcmd.c:118
+#: inet/rcmd.c:137
 #, c-format
 msgid "Trying %s...\n"
 msgstr "Probeer %s...\n"
 
-#: inet/ruserpass.c:241
+#: inet/ruserpass.c:246
 #, c-format
 msgid "Unknown .netrc keyword %s"
 msgstr "Onbekend .netrc sleutelwoord %s"
 
-#: string/../sysdeps/generic/_strerror.c:36
-#: string/../sysdeps/mach/_strerror.c:58
+#: nis/ypclnt.c:723
+#, fuzzy
+msgid "Unknown NIS error code"
+msgstr "Onbekende fout "
+
+#: string/../sysdeps/generic/_strerror.c:44
+#: string/../sysdeps/mach/_strerror.c:67
 msgid "Unknown error "
 msgstr "Onbekende fout "
 
@@ -1434,7 +1628,7 @@ msgstr "Onbekende fout "
 msgid "Unknown host"
 msgstr "Onbekende host"
 
-#: resolv/herror.c:118
+#: resolv/herror.c:120
 msgid "Unknown resolver error"
 msgstr "Onbekende resolver fout (FIXME)"
 
@@ -1442,53 +1636,60 @@ msgstr "Onbekende resolver fout (FIXME)"
 msgid "Unknown server error"
 msgstr "Onbekende server fout (FIXME)"
 
-#: string/strsignal.c:40
+#: string/strsignal.c:41
 #, c-format
 msgid "Unknown signal %d"
 msgstr "Onbekend signaal %d"
 
-#: misc/error.c:92
+#: misc/error.c:100
 msgid "Unknown system error"
 msgstr "Onbekende systeem fout"
 
-#: posix/regex.c:948
+#: nis/ypclnt.c:771
+#, fuzzy
+msgid "Unknown ypbind error"
+msgstr "Onbekende fout "
+
+#: posix/regex.c:980
 msgid "Unmatched ( or \\("
 msgstr "Niet corresponderende ( of \\("
 
-#: posix/regex.c:956
+#: posix/regex.c:988
 msgid "Unmatched ) or \\)"
 msgstr "Niet corresponderende ) of \\)"
 
-#: posix/regex.c:947
+#: posix/regex.c:979
 msgid "Unmatched [ or [^"
 msgstr "Niet corresponderende [ of [^"
 
-#: posix/regex.c:949
+#: posix/regex.c:981
 msgid "Unmatched \\{"
 msgstr "Niet corresponderende \\{"
 
-#: posix/getconf.c:184
+#: posix/getconf.c:260
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "Onbekende variabele `%s'"
 
+#: stdio-common/../sysdeps/unix/siglist.c:45
+#: sysdeps/unix/sysv/linux/siglist.h:35
 msgid "Urgent I/O condition"
 msgstr "Dringende I/O conditie"
 
-#: catgets/gencat.c:205
-#, c-format
+#: catgets/gencat.c:212
+#, fuzzy, c-format
 msgid ""
 "Usage: %s [OPTION]... -o OUTPUT-FILE [INPUT-FILE]...\n"
 "       %s [OPTION]... [OUTPUT-FILE [INPUT-FILE]...]\n"
 "Mandatory arguments to long options are mandatory for short options too.\n"
-"  -H, --header        create C header file containing symbol definitions\n"
+"  -H, --header=NAME   create C header file NAME containing symbol "
+"definitions\n"
 "  -h, --help          display this help and exit\n"
 "      --new           do not use existing catalog, force new output file\n"
 "  -o, --output=NAME   write output to file NAME\n"
 "  -V, --version       output version information and exit\n"
 "If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
-"Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"
 msgstr ""
 "Gebruik: %s [OPTIE]... -o UITVOER-BESTAND [INVOER-BESTAND]...\n"
 "         %s [OPTIE]... [UITVOER-BESTAND [INVOER-BESTAND]...]\n"
@@ -1502,8 +1703,8 @@ msgstr ""
 "UITVOER-BESTAND\n"
 "is -, schrijf uitvoer naar standaarduitvoer.\n"
 
-#: db/makedb.c:200
-#, c-format
+#: db/makedb.c:213
+#, fuzzy, c-format
 msgid ""
 "Usage: %s [OPTION]... INPUT-FILE OUTPUT-FILE\n"
 "       %s [OPTION]... -o OUTPUT-FILE INPUT-FILE\n"
@@ -1516,7 +1717,6 @@ msgid ""
 "  -u, --undo          print content of database file, one entry a line\n"
 "  -V, --version       output version information and exit\n"
 "If INPUT-FILE is -, input is read from standard input.\n"
-"Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"
 msgstr ""
 "Gebruik: %s [OPTIE]... INVOER-BESTAND UITVOER-BESTAND\n"
 "         %s [OPTIE]... -o UITVOER-BESTAND [INVOER-BESTAND]\n"
@@ -1530,8 +1730,8 @@ msgstr ""
 "Als INVOER-BESTAND is -, lees invoer uit standardinvoer.\n"
 "Meld fouten via <bug-glibc@prep.ai.mit.edu>.\n"
 
-#: locale/programs/localedef.c:386
-#, c-format
+#: locale/programs/localedef.c:400
+#, fuzzy, c-format
 msgid ""
 "Usage: %s [OPTION]... name\n"
 "Mandatory arguments to long options are mandatory for short options too.\n"
@@ -1547,15 +1747,17 @@ msgid ""
 "\n"
 "System's directory for character maps: %s\n"
 "                       locale files  : %s\n"
-"Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"
 msgstr ""
 "Aanroep: %s [OPTIE]... naam\n"
 "Verplichte argumenten bij lange opties zijn ook verplicht bij korte opties.\n"
-"  -c, --force               maak uitvoer zelfs als waarschuwing werden gegeven\n"
+"  -c, --force               maak uitvoer zelfs als waarschuwing werden "
+"gegeven\n"
 "  -h, --help                toon hulptekst en beëindig programma\n"
-"  -f, --charmap=BESTAND     symbolische karakternamen gedefinieerd in BESTAND\n"
+"  -f, --charmap=BESTAND     symbolische karakternamen gedefinieerd in "
+"BESTAND\n"
 "  -i, --inputfile=BESTAND   bron definities zijn gevonden in BESTAND\n"
-"  -u, --code-set-name=NAAM  specificeer codeset voor mappen ISO 10646 elementen\n"
+"  -u, --code-set-name=NAAM  specificeer codeset voor mappen ISO 10646 "
+"elementen\n"
 "  -v, --verbose             toon meer meldigen\n"
 "  -V, --version             toon versie-informatie en beëindig programma\n"
 "      --posix               volg de POSIX afspraken\n"
@@ -1564,8 +1766,8 @@ msgstr ""
 "                         locale bestanden: %s\n"
 "Meld fouten aan <bug-glibc@prep.ai.mit.edu>.\n"
 
-#: locale/programs/locale.c:237
-#, c-format
+#: locale/programs/locale.c:250
+#, fuzzy, c-format
 msgid ""
 "Usage: %s [OPTION]... name\n"
 "Mandatory arguments to long options are mandatory for short options too.\n"
@@ -1577,7 +1779,6 @@ msgid ""
 "\n"
 "  -c, --category-name   write names of selected categories\n"
 "  -k, --keyword-name    write names of selected keywords\n"
-"Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"
 msgstr ""
 "Aanroep: %s [OPTIE]... naam\n"
 "Verplichte argumenten bij lange opties zijn ook verplicht bij korte opties.\n"
@@ -1591,7 +1792,7 @@ msgstr ""
 "  -k, --keyword-name    toon namen van geselecteerde sleutelwoorden\n"
 "Meld fouten aan <bug-glibc@prep.ai.mit.edu>.\n"
 
-#: posix/getconf.c:131
+#: posix/getconf.c:200
 #, c-format
 msgid "Usage: %s variable_name [pathname]\n"
 msgstr "Gebruik: %s variabele_naam [padnaam]\n"
@@ -1601,229 +1802,254 @@ msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
 msgstr ""
 "Gebruik: rpcinfo [ -n portnummer ] -u host prognummer [ versienummer ]\n"
 
+#: stdio-common/../sysdeps/unix/siglist.c:59
+#: sysdeps/unix/sysv/linux/siglist.h:48
 msgid "User defined signal 1"
 msgstr "Gebruiker gedefinieerd signaal 1"
 
+#: stdio-common/../sysdeps/unix/siglist.c:60
+#: sysdeps/unix/sysv/linux/siglist.h:49
 msgid "User defined signal 2"
 msgstr "Gebruiker gedefinieerd signaal 2"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:742
+#: stdio-common/../sysdeps/gnu/errlist.c:642
 msgid "Value too large for defined data type"
 msgstr "Waarde te groot voor gedefinieerd data type"
 
+#: stdio-common/../sysdeps/unix/siglist.c:55
+#: sysdeps/unix/sysv/linux/siglist.h:45
 msgid "Virtual timer expired"
 msgstr "Virtuele timer afgelopen (FIXME)"
 
-#: time/zic.c:1845
+#: time/zic.c:1884
 msgid "Wild result from command execution"
 msgstr "Wild resultaat afkomstig uit commando uitvoer"
 
+#: stdio-common/../sysdeps/unix/siglist.c:57
+#: sysdeps/unix/sysv/linux/siglist.h:47
 msgid "Window changed"
 msgstr "Venster veranderd"
+
+#: catgets/gencat.c:174 db/makedb.c:125 locale/programs/locale.c:196
+#: locale/programs/localedef.c:185
+#, c-format
+msgid "Written by %s.\n"
+msgstr "Geschreven door %s.\n"
+
+#: nis/ypclnt.c:142
+msgid "YPBINDPROC_DOMAIN: Internal error\n"
+msgstr "YPBINDPROC_DOMAIN: Intere fout\n"
+
+#: nis/ypclnt.c:146
+#, c-format
+msgid "YPBINDPROC_DOMAIN: No server for domain %s\n"
+msgstr "YPBINDPROC_DOMAIN: Geen server voor domein %s\n"
+
+#: nis/ypclnt.c:150
+msgid "YPBINDPROC_DOMAIN: Resource allocation failure\n"
+msgstr "YPBINDPROC_DOMAIN: Resource toewijzings fout\n"
+
+#: nis/ypclnt.c:154
+msgid "YPBINDPROC_DOMAIN: Unknown error\n"
+msgstr "YPBINDPROC_DOMAIN: Onbekende fout\n"
 
 #. TRANS You did @strong{what}?
 #: stdio-common/../sysdeps/gnu/errlist.c:596
 msgid "You really blew it this time"
 msgstr "Deze keer heb je het echt goed verknalt"
 
-#: time/zic.c:1051
+#: time/zic.c:1052
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
 "Zone continuatie regel einde tijd is niet an einde tijd van voorgaande regel"
 
-#: locale/programs/charmap.c:397 locale/programs/locfile.c:341
+#: locale/programs/charmap.c:397 locale/programs/locfile.c:363
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr "`%1$s' definitie eindigt niet met `END %1$s'"
 
-#: locale/programs/ld-monetary.c:358 locale/programs/ld-numeric.c:190
+#: locale/programs/ld-monetary.c:359 locale/programs/ld-numeric.c:190
 #, c-format
 msgid "`-1' must be last entry in `%s' field in `%s' category"
 msgstr "`-1' moet de laatste ingang zijn `%s' veld in `%s' categorie"
 
-#: locale/programs/ld-collate.c:1651
+#: locale/programs/ld-collate.c:1655
 msgid "`...' must only be used in `...' and `UNDEFINED' entries"
 msgstr "`...' mag alleen gebruikt worden `...' en `UNDEFINED' ingangen"
 
-#: locale/programs/locfile.c:538
+#: locale/programs/locfile.c:560
 msgid "`from' expected after first argument to `collating-element'"
 msgstr "verwacht `from' na eerste argument (??)to `collating-element'"
 
-#: locale/programs/ld-collate.c:1108
+#: locale/programs/ld-collate.c:1112
 msgid ""
 "`from' string in collation element declaration contains unknown character"
-msgstr "`from' string in vergelijkende element declaratie bevat onbekend karakter"
+msgstr ""
+"`from' string in vergelijkende element declaratie bevat onbekend karakter"
 
 #: locale/programs/charmap.c:267
 #, c-format
 msgid "argument to <%s> must be a single character"
 msgstr "argument van <%s> moet één karakter zijn"
 
-#: locale/programs/locfile.c:215
+#: locale/programs/locfile.c:237
 #, c-format
 msgid "argument to `%s' must be a single character"
 msgstr "argument van `%s' moet één karakter zijn"
 
-#: sunrpc/rpc_parse.c:326
-msgid "array declaration expected"
-msgstr "verwachte array declaratie"
-
-#: sunrpc/auth_unix.c:314
+#: sunrpc/auth_unix.c:323
 msgid "auth_none.c - Fatal marshalling problem"
-msgstr ""
+msgstr "auth_none.c - Fataal marshalling probleem"
 
-#: inet/rcmd.c:327
+#: inet/rcmd.c:365
 msgid "bad .rhosts owner"
 msgstr "onjuiste .rhosts eigenaar"
 
-#: locale/programs/charmap.c:212 locale/programs/locfile.c:209
+#: locale/programs/charmap.c:212 locale/programs/locfile.c:231
 msgid "bad argument"
 msgstr "onjuist argument"
 
-#: time/zic.c:1173
+#: time/zic.c:1174
 msgid "blank FROM field on Link line"
 msgstr "leeg FROM veld op `Link' regel"
 
-#: time/zic.c:1177
+#: time/zic.c:1178
 msgid "blank TO field on Link line"
 msgstr "leeg TO veld op `Link' regel"
 
-#: malloc/mcheck.c:189
+#: malloc/mcheck.c:191
 msgid "block freed twice"
 msgstr "blok is twee keer vrijgegeven"
 
-#: malloc/mcheck.c:192
+#: malloc/mcheck.c:194
 msgid "bogus mcheck_status, library is buggy"
 msgstr "bogus mcheck_status, bibliotheek is maar zozo"
 
-#: sunrpc/pmap_rmt.c:177
+#: sunrpc/pmap_rmt.c:179
 msgid "broadcast: ioctl (get interface configuration)"
-msgstr ""
+msgstr "broadcast: ioctl (verkrijg interface configuratie)"
 
-#: sunrpc/pmap_rmt.c:184
+#: sunrpc/pmap_rmt.c:186
 msgid "broadcast: ioctl (get interface flags)"
-msgstr ""
+msgstr "broadcast: ioctl (verkrijg interface vlaggen)"
 
-#: sunrpc/svc_udp.c:398
+#: sunrpc/svc_udp.c:402
 msgid "cache_set: victim not found"
 msgstr "cache_set: slachtoffer niet gevonden"
 
-#: time/zic.c:1686
-msgid "can't determine time zone abbrevation to use just after until time"
-msgstr "kan afkorting tijdzone (te gebruiken na tijdsaanduiding) niet achterhalen"
+#: time/zic.c:1711
+#, fuzzy
+msgid "can't determine time zone abbreviation to use just after until time"
+msgstr ""
+"kan afkorting tijdzone (te gebruiken na tijdsaanduiding) niet achterhalen"
 
 #: sunrpc/svc_simple.c:64
 #, c-format
 msgid "can't reassign procedure number %d\n"
 msgstr "kan procedure nummer %d niet opnieuw toewijzen\n"
 
-#: locale/programs/localedef.c:281
+#: locale/programs/localedef.c:294
 #, c-format
 msgid "cannot `stat' locale file `%s'"
 msgstr "kan niet `stat' locale bestand `%s'"
 
-#: locale/programs/ld-collate.c:1313
+#: locale/programs/ld-collate.c:1317
 #, c-format
 msgid "cannot insert collation element `%.*s'"
 msgstr "kan collation element `%.*s' niet invoegen"
 
-#: locale/programs/ld-collate.c:1492 locale/programs/ld-collate.c:1497
+#: locale/programs/ld-collate.c:1496 locale/programs/ld-collate.c:1501
 msgid "cannot insert into result table"
 msgstr "kan niet invoegen in resultaat tabel"
 
-#: locale/programs/ld-collate.c:1165 locale/programs/ld-collate.c:1207
+#: locale/programs/ld-collate.c:1169 locale/programs/ld-collate.c:1211
 #, c-format
 msgid "cannot insert new collating symbol definition: %s"
 msgstr "kan geen nieuw vergelijking symbool definitie invoegen: %s"
 
-#: db/makedb.c:149
+#: db/makedb.c:161
 #, c-format
 msgid "cannot open database file `%s': %s"
 msgstr "kan database bestand `%s' niet openen: %s"
 
-#: catgets/gencat.c:250 db/makedb.c:168
+#: catgets/gencat.c:260 db/makedb.c:180
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "kan invoerbestand `%s' niet openen"
 
-#: locale/programs/localedef.c:215
+#: locale/programs/localedef.c:224
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr "kan locale definitie bestand `%s' niet openen"
 
-#: catgets/gencat.c:755 catgets/gencat.c:796 db/makedb.c:177
+#: catgets/gencat.c:765 catgets/gencat.c:806 db/makedb.c:189
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "kan uitvoerbestand `%s' niet openen"
 
-#: locale/programs/locfile.c:986
+#: locale/programs/locfile.c:1020
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
 msgstr "kan uitvoerbestand `%s' niet openen voor categorie `%s'"
 
-#: locale/programs/ld-collate.c:1359
+#: locale/programs/ld-collate.c:1363
 msgid "cannot process order specification"
 msgstr "kan de gespecificeerde volgorde niet afhandelen"
 
-#: locale/programs/locale.c:293
+#: locale/programs/locale.c:444
 #, c-format
 msgid "cannot read character map directory `%s'"
 msgstr "kan karakter map directory `%s' niet lezen"
 
-#: locale/programs/locale.c:268
+#: locale/programs/locale.c:301
 #, c-format
 msgid "cannot read locale directory `%s'"
 msgstr "kan locale directory `%s' niet lezen"
 
-#: locale/programs/localedef.c:303
+#: locale/programs/localedef.c:316
 #, c-format
 msgid "cannot read locale file `%s'"
 msgstr "kan locale bestand `%s' niet lezen"
 
-#: locale/programs/localedef.c:328
+#: locale/programs/localedef.c:341
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr "kan uitvoer niet schrijven naar `%s'"
 
-#: locale/programs/localedef.c:371
+#: locale/programs/localedef.c:384
 msgid "category data requested more than once: should not happen"
 msgstr "categorie data meer dan eens gevraagd: zou niet mogen gebeuren"
 
-#: locale/programs/ld-ctype.c:264
+#: locale/programs/ld-ctype.c:266
 #, c-format
 msgid "character %s'%s' in class `%s' must be in class `%s'"
 msgstr "karakter %s'%s' in klasse `%s' hoort in klasse `%s'"
 
-#: locale/programs/ld-ctype.c:288
+#: locale/programs/ld-ctype.c:291
 #, c-format
 msgid "character %s'%s' in class `%s' must not be in class `%s'"
 msgstr "karakter %s'%s' in klasse `%s' hoort niet in klasse `%s'"
 
-#: locale/programs/ld-ctype.c:309
+#: locale/programs/ld-ctype.c:313
 msgid "character <SP> not defined in character map"
 msgstr "karakter <SP> niet gedefinieerd in karaktermap"
 
-#: locale/programs/ld-ctype.c:1140
-#, c-format
-msgid "character `%c' not defined while needed as default value"
-msgstr "karakter `%c' niet gedefinieerd maar nodig als standaard waarde"
-
-#: locale/programs/ld-ctype.c:938 locale/programs/ld-ctype.c:1001
-#: locale/programs/ld-ctype.c:1009 locale/programs/ld-ctype.c:1017
-#: locale/programs/ld-ctype.c:1025 locale/programs/ld-ctype.c:1033
-#: locale/programs/ld-ctype.c:1041 locale/programs/ld-ctype.c:1067
-#: locale/programs/ld-ctype.c:1075 locale/programs/ld-ctype.c:1113
-#: locale/programs/ld-ctype.c:1151
+#: locale/programs/ld-ctype.c:944 locale/programs/ld-ctype.c:1007
+#: locale/programs/ld-ctype.c:1015 locale/programs/ld-ctype.c:1023
+#: locale/programs/ld-ctype.c:1031 locale/programs/ld-ctype.c:1039
+#: locale/programs/ld-ctype.c:1047 locale/programs/ld-ctype.c:1073
+#: locale/programs/ld-ctype.c:1081 locale/programs/ld-ctype.c:1119
+#: locale/programs/ld-ctype.c:1146 locale/programs/ld-ctype.c:1157
 #, c-format
 msgid "character `%s' not defined while needed as default value"
 msgstr "karakter `%s' niet gedefinieerd maar nodig als standaard waarde"
 
-#: locale/programs/ld-ctype.c:800
+#: locale/programs/ld-ctype.c:806
 #, c-format
 msgid "character class `%s' already defined"
 msgstr "karakterklasse `%s' is al gedefinieerd"
 
-#: locale/programs/ld-ctype.c:832
+#: locale/programs/ld-ctype.c:838
 #, c-format
 msgid "character map `%s' already defined"
 msgstr "karaktermap `%s' is al gedefinieerd"
@@ -1835,42 +2061,31 @@ msgstr "karaktermapbestand `%s' niet gevonden"
 
 #: sunrpc/clnt_raw.c:106
 msgid "clnt_raw.c - Fatal header serialization error."
-msgstr ""
+msgstr "clnt_raw.c - Fataal header serializatie fout."
 
-#: locale/programs/ld-collate.c:1328
+#: locale/programs/ld-collate.c:1332
 #, c-format
 msgid "collation element `%.*s' appears more than once: ignore line"
-msgstr ""
+msgstr "vergelijkings element `%.*s' komt meer dan eens voor: negeer regel"
 
-#: locale/programs/ld-collate.c:1346
-msgid "collation symbol `.*s' appears more than once: ignore line"
-msgstr ""
+#: locale/programs/ld-collate.c:1350
+#, c-format
+msgid "collation symbol `%.*s' appears more than once: ignore line"
+msgstr "vergelijkings symbool `%.*s' komt meer dan eens voor: negeer regel"
 
-#: locale/programs/locfile.c:522
+#: locale/programs/locfile.c:544
 #, c-format
 msgid "collation symbol expected after `%s'"
-msgstr ""
+msgstr "vergelijkings symbool verwacht na `%s'"
 
-#: inet/rcmd.c:112
+#: inet/rcmd.c:130
 #, c-format
 msgid "connect to address %s: "
 msgstr "verbinding maken naar adres %s: "
 
-#: sunrpc/rpc_scan.c:109
-msgid "constant or identifier expected"
-msgstr "verwacht konstante of identifier (FIXME)"
-
 #: sunrpc/svc_simple.c:70
 msgid "couldn't create an rpc server\n"
 msgstr "kan geen rpc server aanmaken\n"
-
-#: sunrpc/portmap.c:121
-msgid "couldn't do tcp_create\n"
-msgstr "kan niet tcp_create doen\n"
-
-#: sunrpc/portmap.c:99
-msgid "couldn't do udp_create\n"
-msgstr "kan niet udp_create doen\n"
 
 #: sunrpc/svc_simple.c:77
 #, c-format
@@ -1882,110 +2097,105 @@ msgstr "kan programma %d versie %d niet registreren\n"
 msgid "default character map file `%s' not found"
 msgstr "standaard karaktermapbestand `%s' niet gevonden"
 
-#: sunrpc/rpc_parse.c:77
-msgid "definition keyword expected"
-msgstr "verwacht definitie keyword"
+#: locale/programs/ld-time.c:154
+#, c-format
+msgid ""
+"direction flag in string %d in `era' field in category `%s' is not '+' nor "
+"'-'"
+msgstr "richtingsvlag in string %d in `era' veld in categorie `%s' is niet '+' noch '-'"
+
+#: locale/programs/ld-time.c:164
+#, c-format
+msgid ""
+"direction flag in string %d in `era' field in category `%s' is not a single "
+"character"
+msgstr "richtingsvlag in string %d in `era' veld in categorie `%s' is niet a enkel karakter"
 
 #: locale/programs/charset.c:87 locale/programs/charset.c:132
 #, c-format
 msgid "duplicate character name `%s'"
 msgstr "dubbele karakternaam `%s'"
 
-#: locale/programs/ld-collate.c:1140
+#: locale/programs/ld-collate.c:1144
 msgid "duplicate collating element definition"
 msgstr "dubbele collating element definitie"
 
-#: locale/programs/ld-collate.c:1286
+#: locale/programs/ld-collate.c:1290
 #, c-format
 msgid "duplicate definition for character `%.*s'"
 msgstr "dubbele definietie voor karakter `%.*s'"
 
-#: db/makedb.c:295
+#: db/makedb.c:311
 msgid "duplicate key"
 msgstr "dubbele sleutel"
 
-#: catgets/gencat.c:369
+#: catgets/gencat.c:379
 msgid "duplicate set definition"
 msgstr "tweede set definitie"
 
-#: time/zic.c:966
+#: time/zic.c:967
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr "dubbele zonenaam %s (bestand \"%s\", regel %d)"
 
-#: catgets/gencat.c:532
+#: catgets/gencat.c:542
 msgid "duplicated message identifier"
 msgstr "gedupliceerde meldings identifier"
 
-#: catgets/gencat.c:505
+#: catgets/gencat.c:515
 msgid "duplicated message number"
 msgstr "gedupliceerd meldingnummer"
 
-#: locale/programs/ld-collate.c:1695
+#: locale/programs/ld-collate.c:1699
 msgid "empty weight name: line ignored"
 msgstr "lege gewicht naam: regel genegeerd"
 
-#: sunrpc/svc_udp.c:344
+#: sunrpc/svc_udp.c:348
 msgid "enablecache: cache already enabled"
 msgstr "enablecache: cache is al mogelijk"
 
-#: sunrpc/svc_udp.c:349
+#: sunrpc/svc_udp.c:353
 msgid "enablecache: could not allocate cache"
-msgstr ""
+msgstr "enablecache: kan geen cache alloceren"
 
-#: sunrpc/svc_udp.c:356
+#: sunrpc/svc_udp.c:360
 msgid "enablecache: could not allocate cache data"
-msgstr ""
+msgstr "enablecache: kan geen cache data alloceren"
 
-#: sunrpc/svc_udp.c:362
+#: sunrpc/svc_udp.c:366
 msgid "enablecache: could not allocate cache fifo"
-msgstr ""
+msgstr "enablecache: kan geen cache fifo alloceren"
 
-#: locale/programs/ld-collate.c:1418
+#: locale/programs/ld-collate.c:1422
 msgid "end point of ellipsis range is bigger then start"
-msgstr ""
+msgstr "eindpunt van ellipsis bereik is groter dan startpunt"
 
-#: locale/programs/ld-collate.c:1148
+#: locale/programs/ld-collate.c:1152
 msgid "error while inserting collation element into hash table"
-msgstr ""
+msgstr "fout tijdens invoegen vergelijkings element in hash tabel"
 
-#: locale/programs/ld-collate.c:1160
+#: locale/programs/ld-collate.c:1164
 msgid "error while inserting to hash table"
 msgstr "fout tijdens bij invoegen in hash tabel"
 
-#: locale/programs/locfile.c:465
+#: locale/programs/locfile.c:487
 msgid "expect string argument for `copy'"
 msgstr "verwacht string argument voor `copy'"
 
-#: sunrpc/rpc_util.c:300
-#, c-format
-msgid "expected '%s'"
-msgstr "verwachte '%s'"
-
-#: sunrpc/rpc_util.c:312
-#, c-format
-msgid "expected '%s' or '%s'"
-msgstr "verwachte '%s' of '%s'"
-
-#: sunrpc/rpc_util.c:325
-#, c-format
-msgid "expected '%s', '%s' or '%s'"
-msgstr "verwachte '%s', '%s' of '%s'"
-
-#: time/zic.c:857
+#: time/zic.c:858
 msgid "expected continuation line not found"
 msgstr "verwachte continuation regel niet gevonden (FIXME)"
 
-#: sunrpc/rpc_parse.c:384
-msgid "expected type specifier"
-msgstr "verwachte type specificatie"
-
-#: locale/programs/locfile.c:1010
+#: locale/programs/locfile.c:1044
 #, c-format
 msgid "failure while writing data for category `%s'"
 msgstr "gefaald bij schrijven data voor categorie `%s'"
 
-#: locale/programs/ld-monetary.c:154 locale/programs/ld-numeric.c:95
+#: nis/ypclnt.c:187
+msgid "fcntl: F_SETFD"
+msgstr "fcntl: F_SETFD"
+
+#: locale/programs/ld-monetary.c:155 locale/programs/ld-numeric.c:95
 #, c-format
 msgid "field `%s' in category `%s' not defined"
 msgstr "veld `%s' uit categorie `%s' niet gedefinieerd"
@@ -1995,41 +2205,56 @@ msgstr "veld `%s' uit categorie `%s' niet gedefinieerd"
 msgid "field `%s' in category `%s' undefined"
 msgstr "veld `%s' uit category `%s' ongedefinieerd"
 
-#: locale/programs/locfile.c:547
+#: locale/programs/locfile.c:569
 msgid "from-value of `collating-element' must be a string"
-msgstr ""
+msgstr "van-waarde van `collating-element' moet een string zijn"
 
 #: locale/programs/linereader.c:328
 msgid "garbage at end of character code specification"
 msgstr "rommel aan het einde van de karakter code specificatie"
 
 #: locale/programs/linereader.c:214
-msgid "garbage at end of digit"
+#, fuzzy
+msgid "garbage at end of number"
 msgstr "rommel aan het einde van digit"
+
+#: locale/programs/ld-time.c:183
+#, c-format
+msgid ""
+"garbage at end of offset value in string %d in `era' field in category `%s'"
+msgstr "rommel aan einde van offset waarde in string %d in `era' veld in categorie `%s'"
+
+#: locale/programs/ld-time.c:238
+#, c-format
+msgid ""
+"garbage at end of starting date in string %d in `era' field in category `%s'"
+msgstr "rommel aan einde van begin datum in %d in `era' veld in categorie `%s'"
+
+#: locale/programs/ld-time.c:311
+#, c-format
+msgid ""
+"garbage at end of stopping date in string %d in `era' field in category `%s'"
+msgstr "rommel aan einde van eind datum in string %d in `era' veld in categorie `%s'"
 
 #: sunrpc/get_myaddr.c:73
 msgid "get_myaddress: ioctl (get interface configuration)"
 msgstr "get_myaddress: ioctl (haal interface configuratie op)"
 
-#: time/zic.c:1150
+#: time/zic.c:1151
 msgid "illegal CORRECTION field on Leap line"
 msgstr "ongeldige CORRECTION veld op schrikkel regel"
 
-#: time/zic.c:1154
+#: time/zic.c:1155
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "ongeldig Rolling/Stationary veld op schrikkelregel"
 
-#: locale/programs/ld-collate.c:1766
+#: locale/programs/ld-collate.c:1770
 msgid "illegal character constant in string"
 msgstr "ongeldige karakterkonstante in string"
 
-#: sunrpc/rpc_scan.c:281
-msgid "illegal character in file: "
-msgstr "ongeldig karakter in bestand: "
-
-#: locale/programs/ld-collate.c:1115
+#: locale/programs/ld-collate.c:1119
 msgid "illegal collation element"
-msgstr ""
+msgstr "ongelding vergelijkings element"
 
 #: locale/programs/charmap.c:196
 msgid "illegal definition"
@@ -2047,25 +2272,36 @@ msgstr "ongeldige escape reeks aan het einde van string"
 msgid "illegal names for character range"
 msgstr "ongeldige namen voor karakter range"
 
-#: sunrpc/rpc_parse.c:146
-msgid "illegal result type"
-msgstr "ongeldig resultaat type"
+#: locale/programs/ld-time.c:176
+#, c-format
+msgid "illegal number for offset in string %d in `era' field in category `%s'"
+msgstr "ongeldig nummer voor offset in string %d in `era' veld in categorie `%s'"
 
-#: catgets/gencat.c:342 catgets/gencat.c:419
+#: catgets/gencat.c:352 catgets/gencat.c:429
 msgid "illegal set number"
 msgstr "ongeldig set nummer"
 
-#: locale/programs/ld-ctype.c:806
+#: locale/programs/ld-time.c:230
+#, c-format
+msgid "illegal starting date in string %d in `era' field in category `%s'"
+msgstr "ongeldig begin datum in string %d in `era' veld in categorie `%s'"
+
+#: locale/programs/ld-time.c:303
+#, c-format
+msgid "illegal stopping date in string %d in `era' field in category `%s'"
+msgstr "ongeldige eind datum in string %d in `era' veld in categorie `%s'"
+
+#: locale/programs/ld-ctype.c:812
 #, c-format
 msgid "implementation limit: no more than %d character classes allowed"
 msgstr "implementatielimiet: niet meer dan %d karakterklassen toegestaan"
 
-#: locale/programs/ld-ctype.c:838
+#: locale/programs/ld-ctype.c:844
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr "implementatielimiet: niet meer dan %d karaktermappen toegestaan"
 
-#: db/makedb.c:151
+#: db/makedb.c:163
 msgid "incorrectly formatted file"
 msgstr "onjuist geformateerd bestand"
 
@@ -2073,68 +2309,68 @@ msgstr "onjuist geformateerd bestand"
 msgid "input line of unknown type"
 msgstr "invoer regel van onbekend type"
 
-#: time/zic.c:1734
+#: time/zic.c:1773
 msgid "internal error - addtype called with bad isdst"
 msgstr "interne fout - `addtype' aangeroepen met onjuiste `isdst'"
 
-#: time/zic.c:1742
+#: time/zic.c:1781
 msgid "internal error - addtype called with bad ttisgmt"
 msgstr "interne fout - `addtype' aangeroepen met onjuiste `ttisgmt'"
 
-#: time/zic.c:1738
+#: time/zic.c:1777
 msgid "internal error - addtype called with bad ttisstd"
 msgstr "interne fout - `addtype' aangeroepen met onjuiste `ttisstd'"
 
-#: locale/programs/ld-ctype.c:300
+#: locale/programs/ld-ctype.c:304
 #, c-format
 msgid "internal error in %s, line %u"
 msgstr "interne fout in %s, regel %u"
 
-#: time/zic.c:1022
+#: time/zic.c:1023
 msgid "invalid GMT offset"
 msgstr "onjuiste GMT offset"
 
-#: time/zic.c:1025
+#: time/zic.c:1026
 msgid "invalid abbreviation format"
 msgstr "onjuist afkortingsformaat"
 
-#: time/zic.c:1115 time/zic.c:1314 time/zic.c:1328
+#: time/zic.c:1116 time/zic.c:1326 time/zic.c:1340
 msgid "invalid day of month"
 msgstr "ongeldige dag van de maand"
 
-#: time/zic.c:1273
+#: time/zic.c:1279
 msgid "invalid ending year"
 msgstr "ongeldig ending jaar (FIXME)"
 
-#: time/zic.c:1087
+#: time/zic.c:1088
 msgid "invalid leaping year"
 msgstr "ongeldig schrikkeljaar"
 
-#: time/zic.c:1102 time/zic.c:1205
+#: time/zic.c:1103 time/zic.c:1206
 msgid "invalid month name"
 msgstr "ongeldige maandnaam"
 
-#: time/zic.c:921
+#: time/zic.c:922
 msgid "invalid saved time"
 msgstr "ongeldig bewaarde tijd"
 
-#: time/zic.c:1253
+#: time/zic.c:1255
 msgid "invalid starting year"
 msgstr "ongeldig starting jaar (FIXME)"
 
-#: time/zic.c:1131 time/zic.c:1233
+#: time/zic.c:1132 time/zic.c:1235
 msgid "invalid time of day"
 msgstr "ongeldige tijd van de dag"
 
-#: time/zic.c:1319
+#: time/zic.c:1331
 msgid "invalid weekday name"
 msgstr "ongeldig naam voor weekdag"
 
-#: locale/programs/ld-collate.c:1411
+#: locale/programs/ld-collate.c:1415
 msgid "line after ellipsis must contain character definition"
 msgstr "regel na ellipsis moet een karakter definitie bevatten"
 
-#: locale/programs/ld-collate.c:1390
+#: locale/programs/ld-collate.c:1394
 msgid "line before ellipsis does not contain definition for character constant"
 msgstr "regel voor ellipsis bevat geen konstante karakter definitie"
 
@@ -2142,35 +2378,50 @@ msgstr "regel voor ellipsis bevat geen konstante karakter definitie"
 msgid "line too long"
 msgstr "regel te lang"
 
-#: locale/programs/localedef.c:275
+#: locale/programs/localedef.c:288
 #, c-format
 msgid "locale file `%s', used in `copy' statement, not found"
 msgstr "locale bestand `%s', gebruikt in `copy' statement, niet gevonden"
 
-#: catgets/gencat.c:600
+#: catgets/gencat.c:610
 msgid "malformed line ignored"
 msgstr "verkeerde regel genegeerd"
 
-#: malloc/mcheck.c:183
+#: malloc/mcheck.c:185
 msgid "memory clobbered before allocated block"
 msgstr "geheugen clobbered voordat blok gereserveerd was (FIXME)"
 
-#: malloc/mcheck.c:186
+#: malloc/mcheck.c:188
 msgid "memory clobbered past end of allocated block"
 msgstr "geheugen `clobbered' na het einde van een gealloceerd blok"
 
 #: locale/programs/ld-collate.c:167 locale/programs/ld-collate.c:173
-#: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1438
-#: locale/programs/ld-collate.c:1467 locale/programs/locfile.c:940
-#: locale/programs/xmalloc.c:64 posix/getconf.c:174
+#: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1442
+#: locale/programs/ld-collate.c:1471 locale/programs/locfile.c:974
+#: locale/programs/xmalloc.c:68 posix/getconf.c:250
 msgid "memory exhausted"
 msgstr "geen geheugen meer beschikbaar"
 
-#: malloc/mcheck.c:180
+#: malloc/obstack.c:466
+#, fuzzy
+msgid "memory exhausted\n"
+msgstr "geen geheugen meer beschikbaar"
+
+#: malloc/mcheck.c:182
 msgid "memory is consistent, library is buggy"
 msgstr "geheugen is consistent, bibliotheek is buggy"
 
-#: time/zic.c:916
+#: locale/programs/ld-time.c:350
+#, c-format
+msgid "missing era format in string %d in `era' field in category `%s'"
+msgstr ""
+
+#: locale/programs/ld-time.c:339
+#, c-format
+msgid "missing era name in string %d in `era' field in category `%s'"
+msgstr ""
+
+#: time/zic.c:917
 msgid "nameless rule"
 msgstr "naamloze regel"
 
@@ -2179,28 +2430,25 @@ msgstr "naamloze regel"
 msgid "never registered prog %d\n"
 msgstr "nooit geregistreerd programma %d\n"
 
-#: sunrpc/rpc_parse.c:305 sunrpc/rpc_parse.c:313
-msgid "no array-of-pointer declarations -- use typedef"
-msgstr "geen array-of-pointer declaraties -- gebruik typedef"
-
 #: locale/programs/ld-messages.c:95 locale/programs/ld-messages.c:116
 #, c-format
 msgid "no correct regular expression for field `%s' in category `%s': %s"
 msgstr "geen correct reguliere expressie voor veld `%s' in category `%s': %s"
 
-#: time/zic.c:2060
+#: time/zic.c:2099
 msgid "no day in month matches rule"
 msgstr "geen enkele dag van de maand voldoet aan voorwaarde"
 
-#: locale/programs/ld-collate.c:259
+#: locale/programs/ld-collate.c:260
 msgid "no definition of `UNDEFINED'"
 msgstr "geen definitie van `UNDEFINED'"
 
-#: locale/programs/locfile.c:479
+#: locale/programs/locfile.c:501
 msgid "no other keyword shall be specified when `copy' is used"
-msgstr "geen ander sleutelwoord mag worden gespecificeerd wanneer `copy' is gebruikt"
+msgstr ""
+"geen ander sleutelwoord mag worden gespecificeerd wanneer `copy' is gebruikt"
 
-#: locale/programs/localedef.c:334
+#: locale/programs/localedef.c:347
 msgid "no output file produced because warning were issued"
 msgstr "geen uitvoer bestand gemaakt omdat waarschuwingen zijn gegeven"
 
@@ -2223,23 +2471,7 @@ msgstr "geen gewicht gedefinieerd voor symbool `%s'"
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
 msgstr "alleen WIDTH definities zijn toegestaan na de CHARMAP definitie"
 
-#: sunrpc/portmap.c:451
-msgid "portmap CALLIT: cannot fork.\n"
-msgstr "portmap CALLIT: kan niet `fork'en.\n"
-
-#: sunrpc/portmap.c:94 sunrpc/portmap.c:116
-msgid "portmap cannot bind"
-msgstr "portmap kan niet bind (FIXME)"
-
-#: sunrpc/portmap.c:86 sunrpc/portmap.c:112
-msgid "portmap cannot create socket"
-msgstr "portmap kan geen socket aanmaken"
-
-#: sunrpc/rpc_scan.c:456 sunrpc/rpc_scan.c:464
-msgid "preprocessor error"
-msgstr "voorbewerkingsfout"
-
-#: db/makedb.c:311
+#: db/makedb.c:327
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "problemem tijdens lezen `%s'"
@@ -2260,25 +2492,25 @@ msgstr "programma %lu versie %lu is niet beschikbaar\n"
 msgid "program %lu version %lu ready and waiting\n"
 msgstr "programma %lu versie %lu klaar en wacht\n"
 
-#: inet/rcmd.c:154
-#, c-format
-msgid "rcmd: select (setting up stderr): %s\n"
+#: inet/rcmd.c:172
+#, fuzzy, c-format
+msgid "rcmd: select (setting up stderr): %m\n"
 msgstr "rcmd: selecteer (setting up stderr): %s (FIMXE)\n"
 
-#: inet/rcmd.c:86
+#: inet/rcmd.c:104
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: Alle ports in gebruik\n"
 
-#: inet/rcmd.c:141
-#, c-format
-msgid "rcmd: write (setting up stderr): %s\n"
+#: inet/rcmd.c:160
+#, fuzzy, c-format
+msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: schrijf (setting up stderr): %s (FIXME)\n"
 
 #: sunrpc/svc_simple.c:83
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: geen geheugen meer beschikbaar\n"
 
-#: time/zic.c:1795
+#: time/zic.c:1834
 msgid "repeated leap second moment"
 msgstr "herhalend schrikkelseconde moment"
 
@@ -2295,7 +2527,8 @@ msgstr "rpcinfo: %s is onbekende service\n"
 #: sunrpc/rpcinfo.c:600
 #, c-format
 msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
-msgstr "rpcinfo: Kan geen registratie verwijderen voor programma %s versie %s\n"
+msgstr ""
+"rpcinfo: Kan geen registratie verwijderen voor programma %s versie %s\n"
 
 #: sunrpc/rpcinfo.c:576
 #, c-format
@@ -2310,68 +2543,87 @@ msgstr "rpcinfo: kan geen kontakt krijgen met portmapper"
 msgid "rpcinfo: can't contact portmapper: "
 msgstr "rpcinfo: kan geen kontakt krijgen met portmapper: "
 
-#: sunrpc/portmap.c:137
-msgid "run_svc returned unexpectedly\n"
-msgstr "run_svc kwam onverwacht terug (FIXME)\n"
-
-#: time/zic.c:709 time/zic.c:711
+#: time/zic.c:708 time/zic.c:710
 msgid "same rule name in multiple files"
 msgstr "zelfde regel naam in meerdere bestanden"
 
-#: inet/rcmd.c:158
+#: inet/rcmd.c:175
 msgid "select: protocol failure in circuit setup\n"
 msgstr "select: protocol mislukt in opstart circuit\n"
 
-#: inet/rcmd.c:176
-msgid "socket: protocol failure in circuit setup.\n"
+#: inet/rcmd.c:193
+#, fuzzy
+msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: protocol mislukt in opstart circuit.\n"
 
-#: locale/programs/locfile.c:600
+#: locale/programs/locfile.c:622
 msgid "sorting order `forward' and `backward' are mutually exclusive"
 msgstr "sorteervolgorde `forward' en `backward' zijn niet eenduidig"
 
-#: locale/programs/ld-collate.c:1567 locale/programs/ld-collate.c:1613
+#: locale/programs/ld-collate.c:1571 locale/programs/ld-collate.c:1617
 msgid ""
 "specification of sorting weight for collation symbol does not make sense"
 msgstr "specificatie van sorteergewich voor collation symbool heeft geen zin"
 
-#: time/zic.c:780
+#: time/zic.c:779
 msgid "standard input"
 msgstr "standaardinvoer"
 
-#: time/zdump.c:260
+#: time/zdump.c:268
 msgid "standard output"
 msgstr "standaarduitvoer"
 
-#: time/zic.c:1277
+#: locale/programs/ld-time.c:257
+#, c-format
+msgid "starting date is illegal in string %d in `era' field in category `%s'"
+msgstr ""
+
+#: time/zic.c:1287
 msgid "starting year greater than ending year"
 msgstr "beginjaar is groter dan eindejaar"
 
-#: sunrpc/svc_tcp.c:199 sunrpc/svc_tcp.c:204
+#: time/zic.c:1261 time/zic.c:1285
+msgid "starting year too high to be represented"
+msgstr ""
+
+#: time/zic.c:1259 time/zic.c:1283
+msgid "starting year too low to be represented"
+msgstr ""
+
+#: locale/programs/ld-time.c:330
+#, c-format
+msgid "stopping date is illegal in string %d in `era' field in category `%s'"
+msgstr ""
+
+#: sunrpc/svc_run.c:81
+msgid "svc_run: - select failed"
+msgstr ""
+
+#: sunrpc/svc_tcp.c:201 sunrpc/svc_tcp.c:206
 msgid "svc_tcp: makefd_xprt: out of memory\n"
 msgstr "svc_tcp: makefd_xprt: geen geheugen meer\n"
 
-#: sunrpc/svc_tcp.c:147
+#: sunrpc/svc_tcp.c:149
 msgid "svctcp_.c - cannot getsockname or listen"
 msgstr "svctcp_.c - `getsockname' of `listen' lukken niet"
 
-#: sunrpc/svc_tcp.c:134
+#: sunrpc/svc_tcp.c:136
 msgid "svctcp_.c - udp socket creation problem"
 msgstr "svctcp_.c - udp socket aanmaak probleem"
 
-#: sunrpc/svc_tcp.c:154 sunrpc/svc_tcp.c:161
+#: sunrpc/svc_tcp.c:156 sunrpc/svc_tcp.c:163
 msgid "svctcp_create: out of memory\n"
 msgstr "svctcp_create: geen geheugen meer beschikbaar\n"
 
-#: sunrpc/svc_udp.c:119
+#: sunrpc/svc_udp.c:123
 msgid "svcudp_create - cannot getsockname"
 msgstr "svcudp_create - `getsockname' lukt niet"
 
-#: sunrpc/svc_udp.c:107
+#: sunrpc/svc_udp.c:111
 msgid "svcudp_create: socket creation problem"
 msgstr "svcudp_create: socket aanmaak probleem"
 
-#: locale/programs/ld-collate.c:1190
+#: locale/programs/ld-collate.c:1194
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates element "
@@ -2380,7 +2632,7 @@ msgstr ""
 "symbool voor multikarakter vergelijkings element `%.*s' dupliceerd\n"
 "element definitie"
 
-#: locale/programs/ld-collate.c:1063
+#: locale/programs/ld-collate.c:1067
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates other element "
@@ -2389,7 +2641,7 @@ msgstr ""
 "symbool voor multikarakter vergelijkings element `%.*s' dupliceert\n"
 "andere element definities"
 
-#: locale/programs/ld-collate.c:1199
+#: locale/programs/ld-collate.c:1203
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates other symbol "
@@ -2398,14 +2650,14 @@ msgstr ""
 "symbool voor multikarakter vergelijkings element `%.*s' dupliceert\n"
 "andere symbool definitie"
 
-#: locale/programs/ld-collate.c:1072
+#: locale/programs/ld-collate.c:1076
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates symbol "
 "definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1054 locale/programs/ld-collate.c:1181
+#: locale/programs/ld-collate.c:1058 locale/programs/ld-collate.c:1185
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates symbolic name "
@@ -2420,51 +2672,51 @@ msgstr ""
 msgid "syntax error in %s definition: %s"
 msgstr "syntactische fout in %s definitie: %s"
 
-#: locale/programs/locfile.c:620
+#: locale/programs/locfile.c:642
 msgid "syntax error in `order_start' directive"
 msgstr "syntactische fout in `order_start' directief"
 
-#: locale/programs/locfile.c:362
+#: locale/programs/locfile.c:384
 msgid "syntax error in character class definition"
 msgstr "syntactische fout in karakter klasse definitie"
 
-#: locale/programs/locfile.c:420
+#: locale/programs/locfile.c:442
 msgid "syntax error in character conversion definition"
 msgstr "syntactische fout in karakter conversie definitie"
 
-#: locale/programs/locfile.c:662
+#: locale/programs/locfile.c:684
 msgid "syntax error in collating order definition"
 msgstr "syntactische fout in collating volgorde definitie"
 
-#: locale/programs/locfile.c:512
+#: locale/programs/locfile.c:534
 msgid "syntax error in collation definition"
 msgstr ""
 
-#: locale/programs/locfile.c:335
+#: locale/programs/locfile.c:357
 msgid "syntax error in definition of LC_CTYPE category"
 msgstr "syntactische fout in definitie van LC_CTYPE category"
 
-#: locale/programs/locfile.c:278
+#: locale/programs/locfile.c:300
 msgid "syntax error in definition of new character class"
 msgstr "syntactische fout in definitie van nieuwe karakterklasse"
 
-#: locale/programs/locfile.c:288
+#: locale/programs/locfile.c:310
 msgid "syntax error in definition of new character map"
 msgstr "syntactische fout in definitie van nieuwe karaktermap"
 
-#: locale/programs/locfile.c:873
+#: locale/programs/locfile.c:895
 msgid "syntax error in message locale definition"
 msgstr "syntactische fout in melding locale definitie"
 
-#: locale/programs/locfile.c:784
+#: locale/programs/locfile.c:806
 msgid "syntax error in monetary locale definition"
 msgstr "syntactische fout in monetaire locale definitie"
 
-#: locale/programs/locfile.c:811
+#: locale/programs/locfile.c:833
 msgid "syntax error in numeric locale definition"
 msgstr "syntactische fout in numerieke locale definitie"
 
-#: locale/programs/locfile.c:722
+#: locale/programs/locfile.c:744
 msgid "syntax error in order specification"
 msgstr "syntactische fout in volgorde specificatie"
 
@@ -2473,23 +2725,23 @@ msgstr "syntactische fout in volgorde specificatie"
 msgid "syntax error in prolog: %s"
 msgstr "syntactische fout in prolog: %s"
 
-#: locale/programs/locfile.c:849
+#: locale/programs/locfile.c:871
 msgid "syntax error in time locale definition"
 msgstr "syntactische fout in tijd locale definitie"
 
-#: locale/programs/locfile.c:255
+#: locale/programs/locfile.c:277
 msgid "syntax error: not inside a locale definition section"
 msgstr "syntactische fout: niet in een locale definitie deel"
 
-#: catgets/gencat.c:371 catgets/gencat.c:507 catgets/gencat.c:534
+#: catgets/gencat.c:381 catgets/gencat.c:517 catgets/gencat.c:544
 msgid "this is the first definition"
 msgstr "dit is de eerste definitie"
 
-#: time/zic.c:1120
+#: time/zic.c:1121
 msgid "time before zero"
 msgstr "tijd voor nul"
 
-#: time/zic.c:1128 time/zic.c:1960 time/zic.c:1979
+#: time/zic.c:1129 time/zic.c:1999 time/zic.c:2018
 msgid "time overflow"
 msgstr "tijd overflow"
 
@@ -2505,27 +2757,23 @@ msgstr "te veel bytes in karaktercodering"
 msgid "too many character classes defined"
 msgstr "te veel karakterklassen gedefinieerd"
 
-#: sunrpc/rpc_util.c:285
-msgid "too many files!\n"
-msgstr "te veel bestanden!\n"
-
-#: time/zic.c:1789
+#: time/zic.c:1828
 msgid "too many leap seconds"
 msgstr "te veel schrikkelseconden"
 
-#: time/zic.c:1761
+#: time/zic.c:1800
 msgid "too many local time types"
 msgstr "te veel lokale tijd typen"
 
-#: time/zic.c:1715
+#: time/zic.c:1754
 msgid "too many transitions?!"
 msgstr "te veel overgangen?!"
 
-#: locale/programs/ld-collate.c:1622
+#: locale/programs/ld-collate.c:1626
 msgid "too many weights"
 msgstr "te veel gewichten"
 
-#: time/zic.c:2083
+#: time/zic.c:2122
 msgid "too many, or too long, time zone abbreviations"
 msgstr "te veel, of te lange, tijdzone afkortingen"
 
@@ -2538,13 +2786,17 @@ msgstr "rommel aan het einde van de regel"
 msgid "trouble replying to prog %d\n"
 msgstr "moeite met antwoorden naar programma %d\n"
 
-#: locale/programs/ld-collate.c:1382
+#: locale/programs/ld-collate.c:1386
 msgid "two lines in a row containing `...' are not allowed"
 msgstr "twee regels in een rij bevattende `...' zijn niet toegestaan"
 
-#: time/zic.c:1284
+#: time/zic.c:1294
 msgid "typed single year"
 msgstr "typed enkel jaar (FIMXE)"
+
+#: posix/getconf.c:239
+msgid "undefined"
+msgstr ""
 
 #: locale/programs/charmap.c:617 locale/programs/charmap.c:628
 #, c-format
@@ -2553,38 +2805,36 @@ msgstr "onbekend karakter `%s'"
 
 #: locale/programs/ld-messages.c:193 locale/programs/ld-messages.c:204
 #: locale/programs/ld-messages.c:215 locale/programs/ld-messages.c:226
+#: locale/programs/ld-time.c:698
 #, c-format
 msgid "unknown character in field `%s' of category `%s'"
 msgstr "onbekend karakter in veld `%s' uit category `%s'"
 
-#: locale/programs/locfile.c:585
+#: locale/programs/locfile.c:607
 msgid "unknown collation directive"
 msgstr ""
 
-#: catgets/gencat.c:468
+#: catgets/gencat.c:478
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "onbekende richtlijn `%s': regel genegeerd (FIXME)"
 
-#: catgets/gencat.c:447
+#: catgets/gencat.c:457
 #, c-format
 msgid "unknown set `%s'"
 msgstr "onbekende set `%s'"
 
-msgid "unknown signal"
-msgstr "onbekend signaal"
-
-#: locale/programs/ld-collate.c:1366 locale/programs/ld-collate.c:1557
-#: locale/programs/ld-collate.c:1731
+#: locale/programs/ld-collate.c:1370 locale/programs/ld-collate.c:1561
+#: locale/programs/ld-collate.c:1735
 #, c-format
 msgid "unknown symbol `%.*s': line ignored"
 msgstr "onbekend symbool `%.*s': regel genegeerd"
 
-#: time/zic.c:752
+#: time/zic.c:751
 msgid "unruly zone"
 msgstr "regelloze zone"
 
-#: catgets/gencat.c:952
+#: catgets/gencat.c:962
 msgid "unterminated message"
 msgstr "niet getermineerde melding"
 
@@ -2592,15 +2842,11 @@ msgstr "niet getermineerde melding"
 msgid "unterminated string"
 msgstr "niet getermineerde string"
 
-#: sunrpc/rpc_scan.c:319
-msgid "unterminated string constant"
-msgstr "niet getermineerde string konstante"
-
 #: locale/programs/linereader.c:385
 msgid "unterminated symbolic name"
 msgstr "niet getermineerde symbolische naam"
 
-#: locale/programs/ld-collate.c:1684
+#: locale/programs/ld-collate.c:1688
 msgid "unterminated weight name"
 msgstr "niet getermineerde gewichtnaam"
 
@@ -2608,12 +2854,7 @@ msgstr "niet getermineerde gewichtnaam"
 msgid "upper limit in range is not smaller then lower limit"
 msgstr "grootste limiet in bereik is niet kleiner dan kleinste limiet"
 
-#: sunrpc/rpc_main.c:78
-#, c-format
-msgid "usage: %s infile\n"
-msgstr "gebruik: %s invoerbestand\n"
-
-#: time/zic.c:2026
+#: time/zic.c:2065
 msgid "use of 2/29 in non leap-year"
 msgstr "gebruik van 29 februari in niet schrikkeljaar"
 
@@ -2627,16 +2868,17 @@ msgstr "waarde voor %s moet een integer zijn"
 msgid "value for <%s> must lie between 1 and 4"
 msgstr "waarde voor <%s> moet tussen 1 en 4 liggen"
 
-#: locale/programs/ld-monetary.c:148 locale/programs/ld-numeric.c:89
+#: locale/programs/ld-monetary.c:149 locale/programs/ld-numeric.c:89
 #, c-format
 msgid "value for field `%s' in category `%s' must not be the empty string"
 msgstr "waarde voor veld `%s' in categorie `%s' mag geen lege string zijn"
 
 #: locale/programs/charmap.c:245
 msgid "value of <mb_cur_max> must be greater than the value of <mb_cur_min>"
-msgstr "waarde van <mb_cur_max> moet groter zijn dan de waarde van <mb_cur_min>"
+msgstr ""
+"waarde van <mb_cur_max> moet groter zijn dan de waarde van <mb_cur_min>"
 
-#: locale/programs/ld-monetary.c:138
+#: locale/programs/ld-monetary.c:139
 msgid ""
 "value of field `int_curr_symbol' in category `LC_MONETARY' does not "
 "correspond to a valid name in ISO 4217"
@@ -2651,60 +2893,149 @@ msgstr ""
 "de lengte van waarde van veld `int_curr_symbol' in categorie\n"
 "`LC_MONETARY' is niet juist"
 
-#: locale/programs/ld-monetary.c:370 locale/programs/ld-numeric.c:199
+#: locale/programs/ld-monetary.c:371 locale/programs/ld-numeric.c:199
 #, c-format
 msgid "values for field `%s' in category `%s' must be smaller than 127"
 msgstr "waarden voor veld `%s' uit categorie `%s' moeten kleiner zijn dan 127"
 
-#: locale/programs/ld-monetary.c:366
+#: locale/programs/ld-monetary.c:367
 #, c-format
 msgid "values for field `%s' in category `%s' must not be zero"
 msgstr "waarden voor veld `%s' uit categorie `%s' mogen geen nul zijn"
 
-#: sunrpc/rpc_parse.c:330
-msgid "variable-length array declaration expected"
-msgstr "verwachte variabelelengte `array' declaratie"
-
-#: sunrpc/rpc_parse.c:370
-msgid "voids allowed only inside union and program definitions"
-msgstr "voids enkel toegestaan in union en programma definities"
-
-#: login/setutent_r.c:47
+#: login/utmp_file.c:76
 msgid "while opening UTMP file"
 msgstr "bij openen UTMP bestand"
 
-#: catgets/gencat.c:979
+#: catgets/gencat.c:989
 msgid "while opening old catalog file"
 msgstr "bij openen oud catalogusbestand"
 
-#: db/makedb.c:338
+#: locale/programs/locale.c:341
+#, fuzzy
+msgid "while preparing output"
+msgstr "bij lezen database"
+
+#: db/makedb.c:354
 msgid "while reading database"
 msgstr "bij lezen database"
 
-#: db/makedb.c:300
+#: db/makedb.c:316
 msgid "while writing data base file"
 msgstr "bij schrijven databasebestand"
 
-#: db/makedb.c:130
+#: db/makedb.c:142
 msgid "wrong number of arguments"
 msgstr "onjuist aantal argumenten"
 
-#: time/zic.c:1078
+#: time/zic.c:1079
 msgid "wrong number of fields on Leap line"
 msgstr "onjuist aantal velden op schrikkelregel"
 
-#: time/zic.c:1169
+#: time/zic.c:1170
 msgid "wrong number of fields on Link line"
 msgstr "onjuist aantal velden op `Link' regel"
 
-#: time/zic.c:912
+#: time/zic.c:913
 msgid "wrong number of fields on Rule line"
 msgstr "onjuist aantal velden op `Rule' regel"
 
-#: time/zic.c:982
+#: time/zic.c:983
 msgid "wrong number of fields on Zone continuation line"
 msgstr "onjuist aantal velden op `Zone' continuation regel (FIXME)"
 
-#: time/zic.c:940
+#: time/zic.c:941
 msgid "wrong number of fields on Zone line"
 msgstr "onjuist aantal velden op `Zone' regel"
+
+#: nis/ypclnt.c:811
+msgid "yp_update: cannot convert host to netname\n"
+msgstr ""
+
+#: nis/ypclnt.c:823
+msgid "yp_update: cannot get server address\n"
+msgstr ""
+
+#~ msgid "       %s [-c | -h | -l | -m] [-o outfile] [infile]\n"
+#~ msgstr "       %s [-c | -h | -l | -m] [-o uitvoerbestand] [invoerbestand]\n"
+
+#~ msgid "       %s [-s udp|tcp]* [-o outfile] [infile]\n"
+#~ msgstr "       %s [-s udp|tcp]* [-o uitvoerbestand] [invoerbestand]\n"
+
+#~ msgid "%s, line %d: "
+#~ msgstr "%s, regel %d: "
+
+#~ msgid "%s: output would overwrite %s\n"
+#~ msgstr "%s: uitvoer zal %s overschrijven\n"
+
+#~ msgid "%s: unable to open "
+#~ msgstr "%s: niet in staat te openen "
+
+#~ msgid "array declaration expected"
+#~ msgstr "verwachte array declaratie"
+
+#~ msgid "character `%c' not defined while needed as default value"
+#~ msgstr "karakter `%c' niet gedefinieerd maar nodig als standaard waarde"
+
+#~ msgid "constant or identifier expected"
+#~ msgstr "verwacht konstante of identifier (FIXME)"
+
+#~ msgid "couldn't do tcp_create\n"
+#~ msgstr "kan niet tcp_create doen\n"
+
+#~ msgid "couldn't do udp_create\n"
+#~ msgstr "kan niet udp_create doen\n"
+
+#~ msgid "definition keyword expected"
+#~ msgstr "verwacht definitie keyword"
+
+#~ msgid "expected '%s'"
+#~ msgstr "verwachte '%s'"
+
+#~ msgid "expected '%s' or '%s'"
+#~ msgstr "verwachte '%s' of '%s'"
+
+#~ msgid "expected '%s', '%s' or '%s'"
+#~ msgstr "verwachte '%s', '%s' of '%s'"
+
+#~ msgid "expected type specifier"
+#~ msgstr "verwachte type specificatie"
+
+#~ msgid "illegal character in file: "
+#~ msgstr "ongeldig karakter in bestand: "
+
+#~ msgid "illegal result type"
+#~ msgstr "ongeldig resultaat type"
+
+#~ msgid "no array-of-pointer declarations -- use typedef"
+#~ msgstr "geen array-of-pointer declaraties -- gebruik typedef"
+
+#~ msgid "portmap CALLIT: cannot fork.\n"
+#~ msgstr "portmap CALLIT: kan niet `fork'en.\n"
+
+#~ msgid "portmap cannot create socket"
+#~ msgstr "portmap kan geen socket aanmaken"
+
+#~ msgid "preprocessor error"
+#~ msgstr "voorbewerkingsfout"
+
+#~ msgid "run_svc returned unexpectedly\n"
+#~ msgstr "run_svc kwam onverwacht terug (FIXME)\n"
+
+#~ msgid "too many files!\n"
+#~ msgstr "te veel bestanden!\n"
+
+#~ msgid "unknown signal"
+#~ msgstr "onbekend signaal"
+
+#~ msgid "unterminated string constant"
+#~ msgstr "niet getermineerde string konstante"
+
+#~ msgid "usage: %s infile\n"
+#~ msgstr "gebruik: %s invoerbestand\n"
+
+#~ msgid "variable-length array declaration expected"
+#~ msgstr "verwachte variabelelengte `array' declaratie"
+
+#~ msgid "voids allowed only inside union and program definitions"
+#~ msgstr "voids enkel toegestaan in union en programma definities"

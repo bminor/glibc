@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1997/12/24 21:37:17 drepper>
+Time-stamp: <1997-12-28T12:54:55+0100 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -65,6 +65,9 @@ Severity: [  *] to [***]
 [  *]  setlocale() leaks memory.  This becomes only a problem if a program
        calls this function very often which normally is not the case.  The
        problem is fixed for glibc 2.1.
+
+[  *]  Using the NSS modules from statically linked programs sometimes
+       fails (for very large entries).  The problem is fixed in glibc 2.1.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Ulrich Drepper
