@@ -25,15 +25,20 @@ of a process, to terminate its process, and to receive information
 @section Program Arguments
 @cindex program arguments
 @cindex command line arguments
+@cindex arguments, to program
 
+@cindex program startup
+@cindex startup of program
+@cindex invocation of program
 @cindex @code{main} function
+@findex main
 The system starts a C program by calling the function @code{main}.  It
 is up to you to write a function named @code{main}---otherwise, you
 won't even be able to link your program without errors.
 
-You can define @code{main} either to take no arguments, or to take two
-arguments that represent the command line arguments to the program, like
-this:
+In ANSI C you can define @code{main} either to take no arguments, or to
+take two arguments that represent the command line arguments to the
+program, like this:
 
 @smallexample
 int main (int @var{argc}, char *@var{argv}[])
@@ -64,6 +69,17 @@ enough, you can simply pick the arguments off from @var{argv} by hand.
 But unless your program takes a fixed number of arguments, or all of the
 arguments are interpreted in the same way (as file names, for example),
 you are usually better off using @code{getopt} to do the parsing.
+
+@c !!! does posix allow envp?
+In Unix systems you can define @code{main} a third way, using three arguments:
+
+@smallexample
+int main (int @var{argc}, char *@var{argv}[], char *@var{envp})
+@end smallexample
+
+The first two arguments are just the same.  The third argument
+@var{envp} gives the process's environment; it is the same as the value
+of @code{environ}.  @xref{Environment Variables}.
 
 @menu
 * Argument Syntax::       By convention, options start with a hyphen.
@@ -405,7 +421,7 @@ The @var{argv} mechanism is typically used to pass command-line
 arguments specific to the particular program being invoked.  The
 environment, on the other hand, keeps track of information that is
 shared by many programs, changes infrequently, and that is less
-frequently accessed.
+frequently used.
 
 The environment variables discussed in this section are the same
 environment variables that you set using assignments and the
@@ -493,14 +509,19 @@ If you just want to get the value of an environment variable, use
 @code{getenv}.
 @end deftypevar
 
+@c !!! posix?
+Unix systems, and the GNU system, pass the initial value of
+@code{environ} as the third argument to @code{main}.
+@xref{Program Arguments}.
+
 @node Standard Environment
 @subsection Standard Environment Variables
 @cindex standard environment variables
 
 These environment variables have standard meanings.  This doesn't mean
 that they are always present in the environment; but if these variables
-@emph{are} present, they have these meanings, and that you shouldn't try
-to use these environment variable names for some other purpose.
+@emph{are} present, they have these meanings.  You shouldn't try to use
+these environment variable names for some other purpose.
 
 @comment Extra blank lines make it look better.
 @table @code
@@ -857,6 +878,8 @@ following things happen:
 @itemize @bullet
 @item
 All open file descriptors in the process are closed.  @xref{Low-Level I/O}.
+Note that streams are not flushed automatically when the process
+terminates; @xref{I/O on Streams}.
 
 @item
 The low-order 8 bits of the return status code are saved to be reported
@@ -865,7 +888,8 @@ back to the parent process via @code{wait} or @code{waitpid}; see
 
 @item
 Any child processes of the process being terminated are assigned a new
-parent process.  (This is the @code{init} process, with process ID 1.)
+parent process.  (On most systems, including GNU, this is the @code{init}
+process, with process ID 1.)
 
 @item
 A @code{SIGCHLD} signal is sent to the parent process.

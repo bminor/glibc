@@ -88,8 +88,9 @@ that are executing without such access to the terminal are called
 @dfn{background jobs}.
 
 @cindex stopped job
-If a background job needs to read from or write to its controlling
-terminal, it is @dfn{stopped} by the terminal driver.  The user can stop
+If a background job needs to read from its controlling
+terminal, it is @dfn{stopped} by the terminal driver; if the
+@code{TOSTOP} mode is set, likewise for writing.  The user can stop
 a foreground job by typing the SUSP character (@pxref{Special
 Characters}) and a program can stop any job by sending it a
 @code{SIGSTOP} signal.  It's the responsibility of the shell to notice
@@ -194,9 +195,7 @@ the old session are still trying to use that terminal.
 
 To prevent problems, process groups that continue running even after the
 session leader has terminated are marked as @dfn{orphaned process
-groups}.  Processes in an orphaned process group cannot read from or
-write to the controlling terminal.  Attempts to do so will fail with an
-@code{EIO} error.
+groups}.
 
 When a process group becomes an orphan, its processes are sent a
 @code{SIGHUP} signal.  Ordinarily, this causes the processes to
@@ -1029,8 +1028,11 @@ You can use the @code{ctermid} function to get a file name that you can
 use to open the controlling terminal.  In the GNU library, it returns
 the same string all the time: @code{"/dev/tty"}.  That is a special
 ``magic'' file name that refers to the controlling terminal of the
-current process (if it has one).  The function @code{ctermid} is
-declared in the header file @file{stdio.h}.
+current process (if it has one).  To find the name of the specific
+terminal device, use @code{ttyname}; @pxref{Is it a Terminal}.
+
+The function @code{ctermid} is declared in the header file
+@file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h

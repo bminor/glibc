@@ -18,7 +18,10 @@ software, and the individual machine's name.
 
 This section explains how to identify the particular machine that your
 program is running on.  The identification of a machine consists of its
-Internet host name and Internet address; see @ref{Internet Namespace}.  
+Internet host name and Internet address; see @ref{Internet Namespace}.
+The host name should always be a fully qualified domain name, like
+@w{@samp{crispy-wheats-n-chicken.ai.mit.edu}}, not a simple name like
+just @w{@samp{crispy-wheats-n-chicken}}.
 
 @pindex hostname
 @pindex hostid
@@ -77,7 +80,7 @@ This process cannot set the host name because it is not privileged.
 @deftypefun {long int} gethostid (void)
 This function returns the ``host ID'' of the machine the program is
 running on.  By convention, this is usually the primary Internet address
-of that machine, converted to a @w{@code{long int}}.  But on some
+of that machine, converted to a @w{@code{long int}}.  However, some
 systems it is a meaningless but unique number which is hard-coded for
 each machine.
 @end deftypefun

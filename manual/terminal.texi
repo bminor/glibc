@@ -79,8 +79,10 @@ for Files}.  If input flow control is enabled by setting the
 @code{IXOFF} input mode bit (@pxref{Input Modes}), the terminal driver
 transmits STOP and START characters to the terminal when necessary to
 prevent the queue from overflowing.  Otherwise, input may be lost if it
-comes in too fast from the terminal.  (This is unlikely if you are
-typing the input by hand!)
+comes in too fast from the terminal.  In canonical mode, all input stays
+in the queue until a newline character is received, so the terminal
+input queue can fill up when you type a very long line.
+@xref{Canonical or Not}.
 
 @cindex terminal output queue
 The @dfn{terminal output queue} is like the input queue, but for output;
@@ -109,8 +111,8 @@ the @code{read} function (@pxref{I/O Primitives}) returns at most a
 single line of input, no matter how many bytes are requested.
 
 In canonical input mode, the operating system provides input editing
-facilities: the ERASE and KILL characters are interpreted specially to
-perform editing operations within the current line of text.
+facilities: some characters are interpreted specially to perform editing
+operations within the current line of text, such as ERASE and KILL.
 @xref{Editing Characters}.
 
 The constants @code{_POSIX_MAX_CANON} and @code{MAX_CANON} parameterize
@@ -283,7 +285,8 @@ This is like @code{TCSADRAIN}, but also discards any queued input.
 @vindex TCSASOFT
 This is a flag bit that you can add to any of the above alternatives.
 Its meaning is to inhibit alteration of the state of the terminal
-hardware.  It is a BSD extension; it has no effect on non-BSD systems.
+hardware.  It is a BSD extension; it is only supported on BSD systems
+and the GNU system.
 @end table
 
 If this function is called from a background process on its controlling
@@ -613,8 +616,8 @@ should be ignored.
 @cindex modem status lines
 @cindex carrier detect
 
-If this bit is not set and you call @code{open} without the
-@code{O_NONBLOCK} flag set, @code{open} blocks until a modem
+On many systems if this bit is not set and you call @code{open} without
+the @code{O_NONBLOCK} flag set, @code{open} blocks until a modem
 connection is established.
 
 If this bit is not set and a modem disconnect is detected, a
@@ -1065,21 +1068,6 @@ BSD defines two additional speed symbols as aliases: @code{EXTA} is an
 alias for @code{B19200} and @code{EXTB} is an alias for @code{B38400}.
 These aliases are obsolete.
 
-@comment termios.h
-@comment BSD
-@deftypefun int cfmakeraw (struct termios *@var{termios-p})
-This function provides an easy way to set up @code{*@var{termios-p}} for
-what has traditionally been called ``raw mode'' in BSD.  It does exactly this:
-@smallexample
-  @var{termios-p}->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP
-                  |INLCR|IGNCR|ICRNL|IXON);
-  @var{termios-p}->c_oflag &= ~OPOST;
-  @var{termios-p}->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
-  @var{termios-p}->c_cflag &= ~(CSIZE|PARENB);
-  @var{termios-p}->c_cflag |= CS8;
-@end smallexample
-@end deftypefun
-
 @node Special Characters
 @subsection Special Characters
 
@@ -1336,7 +1324,7 @@ The DSUSP (suspend) character is recognized only if the implementation
 supports job control (@pxref{Job Control}).  It sends a @code{SIGTSTP}
 signal, like the SUSP character, but not right away---only when the
 program tries to read it as input.  Not all systems with job control
-support DSUSP; only BSD systems.
+support DSUSP; only BSD-compatible systems (including the GNU system).
 
 @xref{Signal Handling}, for more information about signals.
 
@@ -1361,8 +1349,9 @@ character itself.
 The START character is used to support the @code{IXON} and @code{IXOFF}
 input modes.  If @code{IXON} is set, receiving a START character resumes
 suspended output; the START character itself is discarded.  If
-@code{IXOFF} is set, the system may also transmit START characters to
-the terminal.
+@code{IXANY} is set, receiving any character at all resumes suspended
+output.  @code{IXOFF} is set, the system may also transmit START
+characters to the terminal.
 
 The usual value for the START character is @kbd{C-q}.  You may not be
 able to change this value---the hardware may insist on using @kbd{C-q}
@@ -1405,7 +1394,8 @@ itself.
 The DISCARD character is recognized only when @code{IEXTEN} is set.  Its
 effect is to toggle the discard-output flag.  When this flag is set, all
 program output is discarded.  Setting the flag also discards all output
-currently in the output buffer.
+currently in the output buffer.  Typing any other character resets the
+flag.
 @end deftypevr
 
 @comment termios.h
@@ -1526,6 +1516,25 @@ problem because the MIN and TIME slots are used only in noncanonical
 input and the EOF and EOL slots are used only in canonical input, but it
 isn't very clean.  The GNU library allocates separate slots for these
 uses.
+
+@comment termios.h
+@comment BSD
+@deftypefun int cfmakeraw (struct termios *@var{termios-p})
+This function provides an easy way to set up @code{*@var{termios-p}} for
+what has traditionally been called ``raw mode'' in BSD.  This uses
+noncanonical input, and turns off most processing to give an unmodified
+channel to the terminal.
+
+It does exactly this:
+@smallexample
+  @var{termios-p}->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP
+                                |INLCR|IGNCR|ICRNL|IXON);
+  @var{termios-p}->c_oflag &= ~OPOST;
+  @var{termios-p}->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
+  @var{termios-p}->c_cflag &= ~(CSIZE|PARENB);
+  @var{termios-p}->c_cflag |= CS8;
+@end smallexample
+@end deftypefun
 
 @node Line Control
 @section Line Control Functions
