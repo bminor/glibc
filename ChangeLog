@@ -1,3 +1,8 @@
+1999-12-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/gb2312.c: Update mapping of GB 0x212c from latest
+	Unicode tables.
+
 1999-12-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add
