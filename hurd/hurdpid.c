@@ -17,6 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
+#include <gnu-stabs.h>
 
 struct mutex _hurd_pid_lock;
 pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
@@ -40,12 +41,19 @@ text_set_element (__libc_subinit, init_pids);
 
 error_t
 _S_proc_newids (mach_port_t me,
+		task_t task,
 		pid_t ppid, pid_t pgrp, int orphaned)
 {
+  if (task != __mach_task_self ())
+    return EPERM;
+
+  __mach_port_deallocate (__mach_task_self (), task);
+
   __mutex_lock (&_hurd_pid_lock);
   _hurd_ppid = ppid;
   _hurd_pgrp = pgrp;
   _hurd_orphaned = orphaned;
   __mutex_unlock (&_hurd_pid_lock);
+
   return 0;
 }
