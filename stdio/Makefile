@@ -42,7 +42,7 @@ routines	:=							      \
 	fgets gets fputs puts						      \
 	getdelim getline __getdelim __getline				      \
 	perror psignal							      \
-	tmpfile tmpnam tempnam						      \
+	tmpfile tmpnam tempnam tempname					      \
 	fclose fflush							      \
 	remove rename							      \
 	memstream obstream						      \
