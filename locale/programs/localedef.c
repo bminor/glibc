@@ -70,6 +70,8 @@ int posix_conformance;
 /* If not zero give a lot more messages.  */
 int verbose;
 
+/* If not zero don't print warnings.  */
+int be_quiet;
 
 
 /* Long options.  */
@@ -81,6 +83,7 @@ static const struct option long_options[] =
   { "force", no_argument, NULL, 'c' },
   { "inputfile", required_argument, NULL, 'i' },
   { "posix", no_argument, &posix_conformance, 1 },
+  { "quiet", no_argument, &be_quiet, 1 },
   { "verbose", no_argument, &verbose, 1},
   { "version", no_argument, NULL, 'V' },
   { NULL, 0, NULL, 0 }
