@@ -135,7 +135,7 @@ of the GNU C Library.
 * Signal Handling::             All about signals; how to send them,
                                  block them, and handle them.
 * Process Startup::             Writing the beginning and end of your program.
-* Child Processes::             How to create processes and run other programs.
+* Processes::                   How to create processes and run other programs.
 * Job Control::                 All about process groups and sessions.
 * Users and Groups::            How users are identified and classified.
 * System Information::          Getting information about the
