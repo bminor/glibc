@@ -375,6 +375,9 @@ for dir in $sysnames; do echo "	$dir"; done
 
 changequote([,])dnl The world is now safe for m4, and unsafe for shell.
 dnl Be sure to add each macro used here to aclocal.m4 (which see).
+
+dnl Without this hack, AC_PROG_INSTALL will expand ${srcdir} in the name.
+define([AC_PROG_INSTALL_INSTALL_SH], ['$(..)install.sh -c'])
 AC_PROG_INSTALL
 AC_PROG_RANLIB
 
