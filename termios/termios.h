@@ -259,4 +259,8 @@ extern int EXFUN(tcflush, (int __fd, int __queue_selector));
 extern int EXFUN(tcflow, (int __fd, int __action));
 
 
+#ifdef __USE_BSD
+#include <sys/ttydefaults.h>
+#endif
+
 #endif	/* termios.h  */
