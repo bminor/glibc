@@ -54,7 +54,7 @@ routines := brk sbrk sstk ioctl \
 	    insremque getttyent getusersh getpass ttyslot \
 	    syslog syscall \
 	    mmap munmap mprotect msync madvise
-aux := data_start progname
+aux := data_start progname init-misc
 distribute := bsd-compat.c
 extra-objs := bsd-compat.o
 install-lib := libbsd-compat.a libg.a
