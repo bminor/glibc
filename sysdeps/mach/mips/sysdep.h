@@ -16,9 +16,11 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#define MOVE(x,y)	movl x , y
+#define MOVE(x,y)	move y , x
 
-#define LOSE asm volatile ("hlt")
+#if 0
+#define LOSE asm volatile ("1: b 1b")
+#endif
 
 #define SNARF_ARGS(argc, argv, envp)					      \
   do									      \
@@ -26,7 +28,7 @@ Cambridge, MA 02139, USA.  */
       int *entry_sp;							      \
       register char **p;						      \
 									      \
-      asm ("leal 4(%%ebp), %0" : "=r" (entry_sp));			      \
+      asm ("addu %0,$30,4" : "=r" (entry_sp));				      \
 									      \
       argc = *entry_sp;							      \
       argv = (char **) (entry_sp + 1);					      \
@@ -39,9 +41,29 @@ Cambridge, MA 02139, USA.  */
     } while (0)
 
 #define CALL_WITH_SP(fn, sp) \
-  asm volatile ("movl %0, %%esp; jmp %1" : : \
-		"g" (sp), "m" (*(long int *) (fn)) : "%esp")
+  ({ register int __fn = fn, __sp = (int) sp; \
+     asm volatile ("move $sp,%0; j %1" : : "r" (__sp), "r" (__fn));})
 
 #define STACK_GROWTH_DOWN
+
+#ifdef P40
+#include <syscall.h>
+
+#define SYSCALL(name, args)	\
+  .globl syscall_error;	\
+  kernel_trap(name,SYS_##name,args);	\
+  beq $1,$0,1f;	\
+  j syscall_error;	\
+1:
+
+#define SYSCALL__(name, args)	\
+  .globl syscall_error;	\
+  kernel_trap(__##name,SYS_##name,args);	\
+  beq $1,$0,1f;	\
+  j syscall_error;	\
+1:
+
+#define ret	j ra; nop
+#endif
 
 #include_next <sysdep.h>

@@ -1,4 +1,4 @@
-/* Machine-specific definition for spin locks.  i386 version.
+/* Machine-specific definition for spin locks.  MIPS version.
 Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -38,20 +38,27 @@ typedef __volatile int __spin_lock_t;
 _EXTERN_INLINE void
 __spin_unlock (__spin_lock_t *__lock)
 {
-   register int __unlocked;
-   __asm__ __volatile ("xchgl %0, %1"
-		       : "=&r" (__unlocked), "=m" (*__lock) : "0" (0));
+  *__lock = 0;
 }
 
 /* Try to lock LOCK; return nonzero if we locked it, zero if another has.  */
 
 _EXTERN_INLINE int
-__spin_try_lock (__spin_lock_t *__lock)
+__spin_try_lock (register __spin_lock_t *__lock)
 {
-  register int __locked;
-  __asm__ __volatile ("xchgl %0, %1"
-		      : "=&r" (__locked), "=m" (*__lock) : "0" (1));
-  return !__locked;
+  register int __rtn;
+  __asm__ __volatile (".set noreorder");
+#if 0
+  __asm__ __volatile ("lw %0,0(%1)": "=r" (__rtn) : "r" (__lock));
+  __asm__ __volatile ("sw %0,0(%0)": : "r" (__lock));
+  __asm__ __volatile ("xor %0,%1,%0": "=r" (__rtn) : "r" (__lock));
+#else
+  /* Use the Mach microkernel's emulated TAS pseudo-instruction.  */
+  register int __rtn __asm__ ("a0");
+  __asm__ __volatile (".word 0xf ! %0 " : "=r" (__rtn) : "0" (__lock));
+#endif
+  __asm__ __volatile (".set reorder");
+  return __rtn ^ (int) __lock;
 }
 
 /* Return nonzero if LOCK is locked.  */

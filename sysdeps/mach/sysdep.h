@@ -16,6 +16,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+/* Get the Mach definitions of ENTRY and kernel_trap.  */
+#include <mach/machine/syscall_sw.h>
+
 /* This is invoked by things run when there is random lossage, before they
    try to do anything else.  Just to be safe, deallocate the reply port so
    bogons arriving on it don't foul up future RPCs.  */
@@ -28,12 +31,6 @@ Cambridge, MA 02139, USA.  */
 #ifndef ENTRY
 #define ENTRY(name)
 #error ENTRY not defined by sysdeps/mach/MACHINE/sysdep.h
-#endif
-
-/* Define a C function called NAME which does system call NUMBER.  */
-#ifndef SYSCALL_TRAP
-#define SYSCALL_TRAP(name, number)
-#error SYSCALL_TRAP not defined by sysdeps/mach/MACHINE/sysdep.h
 #endif
 
 /* Set variables ARGC, ARGV, and ENVP for the arguments
@@ -55,7 +52,7 @@ Cambridge, MA 02139, USA.  */
    similar which will cause the process to die in a characteristic
    way suggesting a bug.  */
 #ifndef LOSE
-#define	LOSE	__task_terminate (__mach_task_self ())
+#define	LOSE	({ volatile int zero = 0; zero / zero; })
 #endif
 
 /* One of these should be defined to specify the stack direction.  */
