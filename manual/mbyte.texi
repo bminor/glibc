@@ -350,8 +350,8 @@ The @code{mbstowcs} (``multibyte string to wide character string'')
 function converts the null-terminated string of multibyte characters
 @var{string} to an array of wide character codes, storing not more than
 @var{size} wide characters into the array beginning at @var{wstring}.
-The terminating null character counts towards the @var{size}, so if
-@var{size} is less than the actual number of character codes in
+The terminating null character counts towards the size, so if @var{size}
+is less than the actual number of wide characters resulting from
 @var{string}, no terminating null character is stored.
 
 The conversion of characters from @var{string} begins in the initial
@@ -359,8 +359,9 @@ shift state.
 
 If an invalid multibyte character sequence is found, this function
 returns a value of @code{-1}.  Otherwise, it returns the number of wide
-characters stored in the array @var{wstring} (not including the
-terminating null character).
+characters stored in the array @var{wstring}.  This number does not
+include the terminating null character, which is present if the number
+is less than @var{size}.
 
 Here is an example showing how to convert a string of multibyte
 characters, allocating enough space for the result.
@@ -386,17 +387,20 @@ mbstowcs_alloc (char *string)
 @deftypefun size_t wcstombs (char *@var{string}, const wchar_t @var{wstring}, size_t @var{size})
 The @code{wcstombs} (``wide character string to multibyte string'')
 function converts the null-terminated wide character array @var{wstring}
-into a string of multibyte characters, storing not more than @var{size}
-bytes into the string beginning at @var{string}.  The terminating null
-character counts towards the @var{size}, so if @var{size} is less than
-the actual number of character codes in @var{wstring}, no terminating
-null character is stored.  The conversion of characters to
-@var{string} begins in the initial shift state.
+into a string containing multibyte characters, storing not more than
+@var{size} bytes starting at @var{string}, followed by a terminating
+null character if there is room.  The conversion of characters begins in
+the initial shift state.
+
+The terminating null character counts towards the size, so if @var{size}
+is less than or equal to the number of bytes needed in @var{wstring}, no
+terminating null character is stored.
 
 If a code that does not correspond to a valid multibyte character is
 found, this function returns a value of @code{-1}.  Otherwise, the
-return value is the number of bytes stored in the array @var{string}
-(not including the terminating null character).
+return value is the number of bytes stored in the array @var{string}.
+This number does not include the terminating null character, which is
+present if the number is less than @var{size}.
 @end deftypefun
 
 @node Length of Char
