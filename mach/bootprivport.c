@@ -17,10 +17,11 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <mach.h>
-#include <mach/kernel_boot.h>
+#include <mach/kernel-boot.h>
 
 kern_return_t
-__mach_get_priv_ports (host_priv_t *host_priv_ptr, device_t *device_master_ptr)
+__mach_get_priv_ports (mach_port_t *host_priv_ptr,
+		       mach_port_t *device_master_ptr)
 {
   kern_return_t err;
   mach_port_t bootstrap;
