@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -88,6 +88,8 @@ extern void rewinddir __P ((DIR * __dirp));
 #endif
 
 #include <gnu/types.h>
+#define __need_size_t
+#include <stddef.h>
 
 /* Seek to position POS on DIRP.  */
 extern void seekdir __P ((DIR * __dirp, __off_t __pos));
