@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ DEFUN(tempnam, (dir, pfx), CONST char *dir AND CONST char *pfx)
 {
   size_t len;
   register char *s;
-  register char *t = __stdio_gen_tempname(dir, pfx, 1, &len);
+  register char *t = __stdio_gen_tempname(dir, pfx, 1, &len, (FILE **) NULL);
 
   if (t == NULL)
     return NULL;

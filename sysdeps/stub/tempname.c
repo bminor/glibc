@@ -29,7 +29,8 @@ Cambridge, MA 02139, USA.  */
 char *
 DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr),
       CONST char *dir AND CONST char *pfx AND
-      int dir_search AND size_t *lenptr)
+      int dir_search AND size_t *lenptr AND
+      FILE **streamptr)
 {
   *lenptr = 0;
   errno = ENOSYS;

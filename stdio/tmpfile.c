@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,18 +27,17 @@ Cambridge, MA 02139, USA.  */
 FILE *
 DEFUN_VOID(tmpfile)
 {
-  register char *filename;
-  register FILE *f;
+  char *filename;
+  FILE *f;
 
-  filename = __stdio_gen_tempname((char *) NULL, "tmpf", 0, (size_t *) NULL);
+  filename = __stdio_gen_tempname ((char *) NULL, "tmpf", 0,
+				   (size_t *) NULL, &f);
   if (filename == NULL)
-    return NULL;
-  f = fopen(filename, "w+b");
-  if (f == NULL)
     return NULL;
 
   /* Note that this relies on the Unix semantics that
      a file is not really removed until it is closed.  */
-  (void) remove(filename);
+  (void) remove (filename);
+
   return f;
 }

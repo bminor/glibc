@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ DEFUN(tmpnam, (s), register char *s)
 {
   register char *t = __stdio_gen_tempname((CONST char *) NULL,
 					  (CONST char *) NULL, 0,
-					  (size_t *) NULL);
+					  (size_t *) NULL, (FILE **) NULL);
 
   if (t == NULL)
     return NULL;
