@@ -1,3 +1,9 @@
+1998-02-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/getXXent_r.c: Include <errno.h>
+
+	* nss/getXXbyYY_r.c: Include <errno.h>.
+
 1998-02-02 00:17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/getXXbyYY_r.c: Correct handling of TRYAGAIN error when buffer
