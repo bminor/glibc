@@ -1,5 +1,17 @@
 #include <sys/types.h>
 #include <sys/param.h>
+
+/* On SunOS 4.1, <sys/ioctl.h> and <sys/termios.h> define some symbols
+   with different values, but <sys/termios.h> defines some ioctl symbols
+   not in <sys/ioctl.h>, so we need it.  Our <sys/ioctl.h> should define
+   them with the values from Sun's <sys/ioctl.h>, not <sys/termios.h>.
+   So we include <sys/termios.h> and let <sys/ioctl.h> redefine things.
+   This produces some spurious warnings.  */
+
+#ifdef HAVE_SYS_TERMIOS_H
+#include <sys/termios.h>
+#endif
+
 #include <sys/ioctl.h>
 
 #ifdef	SIOCGIFCONF
