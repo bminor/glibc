@@ -39,6 +39,7 @@ $(addprefix $(objpfx),$(divrem:%=%.S)): divrem.m4
 	(echo "define(NAME,\`.$(+divrem-NAME)')\
 	       define(OP,\`$(+divrem-OP-$(+divrem-NAME))')\
 	       define(S,\`$(+divrem-S-$(+divrem-NAME))')"; \
-	 cat $<) | m4 > $@
+	 cat $<) | m4 > $@-tmp
+	mv $@-tmp $@
 
 endif	# gnulib
