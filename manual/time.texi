@@ -6,7 +6,7 @@ This chapter describes functions for manipulating dates and times,
 including functions for determining what the current time is and
 conversion between different time representations.
 
-The time functions fall into two main categories:
+The time functions fall into three main categories:
 
 @itemize @bullet
 @item 
@@ -16,12 +16,16 @@ Time}.
 @item
 Functions for measuring absolute clock or calendar time are discussed in
 @ref{Calendar and Local Time}.
+
+@item
+Functions for setting alarms and timers are discussed in @ref{Setting
+an Alarm}.
 @end itemize
 
 @menu
 * Processor Time::		Measures processor time used by a program.
 * Calendar and Local Time::	Manipulation of ``real'' dates and times.
-* Other Time Functions::	Pointers to related functions.
+* Setting an Alarm::            Sending a signal after a specified time.
 @end menu
 
 @node Processor Time
@@ -796,20 +800,170 @@ The time is 01:02 PM.
 @end example
 
 
-@node Other Time Functions
-@section Other Time Functions
+@node Setting an Alarm
+@section Setting an Alarm
 
-In addition to the functions described in this chapter, the GNU Library
-contains some other related functions that manipulate time values.
+The @code{alarm} and @code{setitimer} functions provide a mechanism for
+a process to interrupt itself at some future time.  They do this by
+setting a timer; when the timer expires, a signal is sent to the
+process.
 
-Files have an associated modification and access time.  The functions for
-accessing these timestamps are described in @ref{File Attributes}.
+@cindex interval timer
+Each process has three independent interval timers available:
 
-A process has a set of alarm timers associated with it; when the timer
-expires, an alarm signal is sent to the process.  @xref{Setting an Alarm},
-for information about how to schedule an alarm.
+@itemize @bullet
+@item 
+A real-time timer that counts clock time.  This timer sends a
+@code{SIGALRM} signal to the process when it expires.
+@cindex real-time timer
 
-Related to this, you can also schedule an alarm and then put your
-process to sleep until it expires.  @xref{Waiting for a Signal}, for
-information on how to do this.
+@item 
+A virtual timer that counts CPU time used by the process.  This timer
+sends a @code{SIGVTALRM} signal to the process when it expires.
+@cindex virtual timer
 
+@item 
+A profiling timer that counts both CPU time used by the process, and CPU
+time spent in system calls on behalf of the process.  This timer sends a
+@code{SIGPROF} signal to the process when it expires.
+@cindex profiling timer
+@end itemize
+
+You can only have one timer of each kind set at any given time.  If you
+set a timer that has not yet expired, that timer is simply reset to the
+new value.
+
+For more information about the alarm signals, @xref{Alarm Signals}.
+You should usually establish a handler for the appropriate alarm signal
+using @code{signal} or @code{sigaction} before issuing a call to
+@code{setitimer} or @code{alarm}.  Otherwise, your program will probably
+be terminated, since that is the default action for the alarm signals.
+@xref{Signal Handling}.
+
+The @code{setitimer} function is the primary means for setting an alarm.
+This facility is declared in the header file @file{<sys/time.h>}.  The
+@code{alarm} function, declared in @file{<unistd.h>}, provides a somewhat
+simpler interface for setting the real-time timer.
+
+@comment sys/time.h
+@comment BSD
+@deftp {Data Type} {struct itimerval}
+This structure is used to specify when a timer should expire.  It contains
+the following members:
+@table @code
+@item struct timeval it_interval
+This is the interval between successive timer interrupts.  If zero, the
+alarm will only be sent once.
+
+@item struct timeval it_value
+This is the interval to the first timer interrupt.  If zero, the alarm is
+disabled.
+@end table
+
+The @code{struct timeval} data type is described in @ref{High-Resolution
+Calendar}.
+@end deftp
+
+@comment sys/time.h
+@comment BSD
+@deftypefun int setitimer (int @var{which}, struct itimerval *@var{old}, struct itimerval *@var{new})
+The @code{setitimer} function sets the timer specified by @var{which} 
+according to @var{new}.  The @var{which} argument can have a value of
+@code{ITIMER_REAL}, @code{ITIMER_VIRTUAL}, or @code{ITIMER_PROF}.
+
+If @var{old} is not a null pointer, @code{setitimer} returns information
+about any previous unexpired timer of the same kind in the structure it
+points to.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EINVAL
+The timer interval was too large.
+@end table
+@end deftypefun
+
+@comment sys/time.h
+@comment BSD
+@deftypefun int getitimer (int @var{which}, struct itimerval *@var{old})
+The @code{getitimer} function stores information about the timer specified
+by @var{which} in the structure pointed at by @var{old}.
+
+The return value and error conditions are the same as for @code{setitimer}.
+@end deftypefun
+
+@comment sys/time.h
+@comment BSD
+@defvr Macro ITIMER_REAL
+This macro can be used as the @var{which} argument to the
+@code{setitimer} and @code{getitimer} functions to specify the real-time
+timer.
+@end defvr
+
+@comment sys/time.h
+@comment BSD
+@defvr Macro ITIMER_VIRTUAL
+This macro can be used as the @var{which} argument to the
+@code{setitimer} and @code{getitimer} functions to specify the virtual
+timer.
+@end defvr
+
+@comment sys/time.h
+@comment BSD
+@defvr Macro ITIMER_PROF
+This macro can be used as the @var{which} argument to the
+@code{setitimer} and @code{getitimer} functions to specify the profiling
+timer.
+@end defvr
+
+@strong{Incomplete:}  In @file{<sys/time.h>}, the @var{which} argument
+is given as an @code{enum}.  Does it matter?
+
+@comment unistd.h
+@comment POSIX.1
+@deftypefun {unsigned int} alarm (unsigned int @var{seconds})
+The @code{alarm} function sets the real-time timer to expire in
+@var{seconds} seconds.  If you want to cancel any existing alarm, you
+can do this by calling @code{alarm} with a @var{seconds} argument of
+zero.
+
+The return value indicates how many seconds remain before the previous
+alarm would have been sent.  If there is no previous alarm, @code{alarm}
+returns zero.
+@end deftypefun
+
+The @code{alarm} function could be defined in terms of @code{setitimer}
+similar to:
+
+@example
+unsigned int alarm (unsigned int seconds)
+@{
+  struct itimerval old, new;
+  new.it_interval.tv_usec = 0;
+  new.it_interval.tv_sec = 0;
+  new.it_value.tv_usec = 0;
+  new.it_value.tv_sec = (long int) seconds;
+  if (setitimer (ITIMER_REAL, &new, &old) < 0)
+    return 0;
+  else
+    return old.it_value.tv_sec;
+@}
+@end example
+
+There is an example showing the use of the @code{alarm} function in
+@ref{Signal Handler Example}.
+
+If you simply want your process to go to sleep until the alarm signal
+arrives, it may be more appropriate to use the @code{sleep} function.
+@xref{Waiting for a Signal}.
+
+You shouldn't count on the signal arriving precisely when the timer
+expires.  In a multiprocessing environment there is typically some
+amount of delay involved.
+
+@strong{Portability Note:} The @code{setitimer} and @code{getitimer}
+functions are derived from BSD Unix, while the @code{alarm} function is
+specified by the POSIX.1 standard.  The advantage of @code{setitimer}
+over @code{alarm} is that it lets you specify time intervals with a
+finer granularity.
