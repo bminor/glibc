@@ -1,4 +1,5 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Absolute value of floating point number.
+   Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +17,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <asm/vsyscall.h>
-#include <time.h>
-#include <sys/time.h>
+#include <sysdep.h>
 
-/* Return the current time as a `time_t' and also put it in *T if T is
-   not NULL.  Time is represented as seconds from Jan 1 00:00:00 1970.  */
-time_t
-time (time_t *t)
-{
-  /* We're using a virtual syscall here.  */
-  time_t (*__vtime)(time_t * time)
-    = (time_t (*)(time_t *)) VSYSCALL_ADDR (__NR_vtime);
-
-  return __vtime (t);
-}
+       .text
+ENTRY(__fabsl)
+       fldt    8(%rsp)
+       fabs
+       ret
+END(__fabsl)
+weak_alias (__fabsl, fabsl)
