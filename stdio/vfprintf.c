@@ -69,7 +69,7 @@ extern printf_function **__printf_function_table;
 
 int
 DEFUN(vfprintf, (s, format, args),
-      register FILE *s AND CONST char *format AND PTR argptr)
+      register FILE *s AND CONST char *format AND va_list argptr)
 {
   va_list args = (va_list) argptr;
 
