@@ -19,12 +19,14 @@
 subdir := hurd
 
 interface-header-prefix = hurd/
-headers = hurd.h $(interface-headers)
+headers = hurd.h # $(interface-headers)
 
+ifneq (,)
 user-interfaces		:= auth process \
 			   exec core interrupt \
 			   fs io socket term
 server-interfaces	:= misc
+endif
 
 routines = __pid2task __task2pid pid2task task2pid \
 	   __setauth setauth hurdports \
@@ -51,7 +53,9 @@ __%.c: intr_rpc.awk %_rpc.c
 
 include ../mach/Machrules
 
+ifdef user-interfaces
 include hurdintr
+endif
 hurdintr: hurdintr.awk $(user-interfaces:%=%.defs)
 	awk -f $^ varname=intr-calls > $@-new
 	mv $@-new $@
@@ -61,5 +65,8 @@ migdefines := $(migdefines) $(foreach call,$(intr-calls),-D$(call)=$(call)_rpc)
 
 interface-routines := $(filter-out %_rpc,$(interface-routines)) \
 		      $(intr-calls:%=__% %)
+dont_distribute = $(interface-routines:%=%.c) $(interface-headers)
+
+distribute := intr_rpc.awk hurdintr.awk
 
 include ../Rules
