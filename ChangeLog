@@ -1,3 +1,7 @@
+1998-08-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* glibcbug.in: Use mktemp to generate temporary files.
+
 1998-08-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/Dist: Add umount.S.
