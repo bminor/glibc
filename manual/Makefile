@@ -18,12 +18,17 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-subdir := manual
+export subdir := manual
 
 .PHONY: all dvi info
 all: dvi info
 dvi: libc.dvi
 info: libc.info
+
+# Get glibc's configuration info.
+ifneq (,$(wildcard ../Makeconfig))
+include ../Makeconfig
+endif
 
 # Set chapters and chapters-incl.
 include $(objpfx)chapters
@@ -37,7 +42,7 @@ $(objpfx)chapters-incl: $(chapters)
 endif
 
 define find-includes
-(echo '$@ :=' \\	;\
+(echo '$(@F) :=' \\	;\
  awk '$$1 == "@include" { print $$2 " \\" }' $^) > $@.new
 mv $@.new $@
 endef
@@ -73,6 +78,7 @@ distribute = $(minimal-dist)	       					\
 			$(minimal-dist)))				\
 	     libc.?? libc.??s texinfo.tex summary.texi			\
 	     stamp-summary chapters chapters-incl
+export distribute := $(distribute)
 
 tar-it = tar chovf $@ $^
 
@@ -97,10 +103,44 @@ glibc-doc-$(edition).tar: $(distribute)
 	uuencode $< < $< > $@.new
 	mv $@.new $@
 
+.PHONY: mostlyclean distclean realclean clean subdir_clean
+subdir_clean: clean
+distclean clean: mostlyclean
+mostlyclean:
+	-rm -f $(addprefix $(objpfx),libc.dvi libc.info*)
+realclean: clean
+	-rm -f $(addprefix $(objpfx),chapters chapters-incl \
+				     summary.texi stamp-summary \
+				     *.c.texi)
+
+.PHONY: install subdir_install
+subdir_install: install
+install: $(infodir)/libc.info
+
+ifndef infodir
+infodir = $(prefix)/info
+endif
+ifndef prefix
+prefix = /usr/local
+endif
+
+ifndef INSTALL_DATA
+INSTALL_DATA = $(INSTALL) -m 644
+endif
+ifndef INSTALL
+INSTALL = install
+endif
+
+$(infodir)/libc.info: $(objpfx)libc.info
+	for file in $<*; do \
+	  $(INSTALL_DATA) $$file \
+	    `echo $@ | sed "s,libc\\.info\$$,$$file,"`; \
+	done
+
 .PHONY: dist
 dist: glibc-doc-$(edition).tar.z
 
-ifneq (,)
+ifneq (,$(wildcard ../Make-dist))
 dist: ../Make-dist
 	$(MAKE) -f $< $(Make-dist-args)
 endif
@@ -110,3 +150,10 @@ ETAGS = etags -T
 endif
 TAGS: $(minimal-dist)
 	$(ETAGS) -o $@ $^
+
+# These are targets that each glibc subdirectory is expected to understand.
+# ../Rules defines them for code subdirectories; for us, they are no-ops.
+glibc-targets	:= subdir_lib objects objs others tests subdir_lint.out \
+		   subdir_echo-headers subdir_echo-distinfo
+.PHONY: $(glibc-targets)
+$(glibc-targets):
