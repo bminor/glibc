@@ -40,7 +40,7 @@ $(objpfx)libm.a:
 	$(AR) cr$(verbose) $@
 
 # Other dirs to look for source files (for dist).
-source_dirs = $(filter-out unused,$(shell find bsd -type d -print))
+export source_dirs = $(filter-out unused,$(shell find bsd -type d -print))
 
 include $(objpfx)BSDmath-files
 $(objpfx)BSDmath-files:
