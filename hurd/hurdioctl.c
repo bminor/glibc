@@ -56,7 +56,12 @@ fioctl (int fd,
       break;
 
     case FIONREAD:
-      err = HURD_DPORT_USE (fd, __io_readable (port, arg));
+      {
+	mach_msg_type_number_t navail;
+	err = HURD_DPORT_USE (fd, __io_readable (port, &navail));
+	if (!err)
+	  *arg = (int) navail;
+      }
       break;
 
     case FIONBIO:
