@@ -183,6 +183,11 @@ ifeq (hurd, $(subdir))
 sysdep_routines += cthreads
 endif
 
+ifeq (stdio-common, $(subdir))
+# Just disable the auto generation in sysdeps/generic
+inhibit-siglist := yes
+endif
+
 ifeq (posix, $(subdir))
 sysdep_routines += clk_tck
 endif
