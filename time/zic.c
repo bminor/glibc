@@ -601,10 +601,23 @@ const char * const	tofile;
 	if (!itsdir(toname))
 		(void) remove(toname);
 	if (link(fromname, toname) != 0) {
-		if (mkdirs(toname) != 0)
-			(void) exit(EXIT_FAILURE);
-		if (link(fromname, toname) != 0) {
-			const char *e = strerror(errno);
+		int failure = errno;
+		if (failure == ENOENT)
+			if (mkdirs(toname) != 0)
+				failure = errno;
+			else if (link(fromname, toname) == 0)
+				failure = 0;
+			else
+				failure = errno;
+#ifndef MISSING_SYMLINK
+		if (failure == EXDEV)
+			if (symlink(fromname, toname) != 0)
+				failure = errno;
+			else
+				failure = 0;
+#endif
+ 		if (failure) {
+ 			const char *e = strerror(failure);
 
 			(void) fprintf(stderr,
 				_("%s: Can't link from %s to %s: %s\n"),
