@@ -75,13 +75,15 @@ from the terminal but not yet read by any process.
 
 The size of the terminal's input queue is described by the
 @code{_POSIX_MAX_INPUT} and @code{MAX_INPUT} parameters; see @ref{Limits
-for Files}.  If input flow control is enabled by setting the
-@code{IXOFF} input mode bit (@pxref{Input Modes}), the terminal driver
-transmits STOP and START characters to the terminal when necessary to
-prevent the queue from overflowing.  Otherwise, input may be lost if it
-comes in too fast from the terminal.  In canonical mode, all input stays
-in the queue until a newline character is received, so the terminal
-input queue can fill up when you type a very long line.
+for Files}.  You are guaranteed a queue size of at least
+@code{MAX_INPUT}, but the queue might be larger, and might even
+dynamically change size.  If input flow control is enabled by setting
+the @code{IXOFF} input mode bit (@pxref{Input Modes}), the terminal
+driver transmits STOP and START characters to the terminal when
+necessary to prevent the queue from overflowing.  Otherwise, input may
+be lost if it comes in too fast from the terminal.  In canonical mode,
+all input stays in the queue until a newline character is received, so
+the terminal input queue can fill up when you type a very long line.
 @xref{Canonical or Not}.
 
 @cindex terminal output queue
@@ -117,8 +119,9 @@ operations within the current line of text, such as ERASE and KILL.
 
 The constants @code{_POSIX_MAX_CANON} and @code{MAX_CANON} parameterize
 the maximum number of bytes which may appear in a single line of
-canonical input.  @xref{Limits for Files}.
-@c !!! mihgt be unlimited in GNU?  ask mib
+canonical input.  @xref{Limits for Files}.  You are guaranteed a maximum
+line length of at least @code{MAX_CANON} bytes, but the maximum might be
+larger, and might even dynamically change size.
 
 @cindex noncanonical input processing
 In @dfn{noncanonical input processing} mode, characters are not grouped
