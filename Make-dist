@@ -137,9 +137,13 @@ subdirs := $(filter-out crypt,$(subdirs))
 .PHONY: dist
 # N.B.: The order in which these are done matters (so don't use -j).
 MAKEFLAGS = -j1	  # I wonder if that works.
-dist: dist.tar subdir_dist de-.. dist.tar.Z crypt.tar.Z
+dist: dist.tar subdir_dist de-.. dist.tar.Z \
+      $(tardir).tar.Z $(tardir)-crypt.tar.Z
 
-crypt.tar.Z: crypt/crypt.tar.Z
+$(tardir).tar.Z: dist.tar.Z
+	ln $< $@
+
+$(tardir)-crypt.tar.Z: crypt/crypt.tar.Z
 	ln $< $@
 crypt/%:
 	$(MAKE) -C $(@D) $(@F)
