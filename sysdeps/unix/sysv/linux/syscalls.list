@@ -27,6 +27,7 @@ mremap		EXTRA	mremap		4	__mremap	mremap
 munlock		EXTRA	munlock		2	__munlock	munlock
 munlockall	EXTRA	munlockall	0	__munlockall	munlockall
 nanosleep	-	nanosleep	2	__libc_nanosleep	__nanosleep nanosleep
+nfsservctl	EXTRA	nfsservctl	3	nfsservctl
 pause		-	pause		0	__libc_pause	pause
 personality	init-first personality	1	__personality	personality
 pipe		-	pipe		1	__pipe		pipe
