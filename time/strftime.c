@@ -1,10 +1,9 @@
 /* Extensions for GNU date that are still missing here:
    -
    _
-   e
 */
 
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -154,98 +153,135 @@ DEFUN(strftime, (s, maxsize, format, tp),
 	case '%':
 	  add(1, *p = *f);
 	  break;
-	case 'n':		/* GNU extension.  */
-	  add (1, *p = '\n');
-	  break;
-	case 't':		/* GNU extenstion.  */
-	  add (1, *p = '\t');
-	  break;
 
 	case 'a':
 	  cpy(aw_len, a_wkday);
 	  break;
+
 	case 'A':
 	  cpy(wkday_len, f_wkday);
 	  break;
+
 	case 'b':
+	case 'h':		/* GNU extension.  */
 	  cpy(am_len, a_month);
 	  break;
+
 	case 'B':
 	  cpy(month_len, f_month);
 	  break;
+
 	case 'c':
 	  subfmt = _time_info->date_time;
-	subformat:;
+	subformat:
 	  {
-	    size_t len = strftime(p, maxsize - i, subfmt, tp);
+	    size_t len = strftime (p, maxsize - i, subfmt, tp);
 	    add(len, );
 	  }
 	  break;
-	case 'd':
-	  fmt(2, (p, "%.2d", tp->tm_mday));
-	  break;
-	case 'H':
-	  fmt(2, (p, "%.2d", tp->tm_hour));
-	  break;
-	case 'I':
-	  fmt(2, (p, "%.2d", hour12));
-	  break;
-	case 'j':
-	  fmt(3, (p, "%.3d", tp->tm_yday));
-	  break;
-	case 'm':
-	  fmt(2, (p, "%.2d", tp->tm_mon + 1));
-	  break;
-	case 'M':
-	  fmt(2, (p, "%.2d", tp->tm_min));
-	  break;
-	case 'p':
-	  cpy(ap_len, ampm);
-	  break;
-	case 'S':
-	  fmt(2, (p, "%.2d", tp->tm_sec));
-	  break;
-	case 'U':
-	  fmt(2, (p, "%.2u", y_week0));
-	  break;
-	case 'w':
-	  fmt(2, (p, "%.2d", tp->tm_wday));
-	  break;
-	case 'W':
-	  fmt(2, (p, "%.2u", y_week1));
-	  break;
-	case 'x':
-	  subfmt = _time_info->date;
-	  goto subformat;
-	case 'X':
-	  subfmt = _time_info->time;
-	  goto subformat;
-	case 'y':
-	  fmt(2, (p, "%.2d", tp->tm_year));
-	  break;
-	case 'Y':
-	  fmt(4, (p, "%.4d", 1900 + tp->tm_year));
-	  break;
-	case 'Z':
-	  cpy(zonelen, zone);
+
+	case 'C':
+	  fmt (2, (p, "%.2d", (1900 + tp->tm_year) / 100));
 	  break;
 
-	  /* GNU extensions.  */
-	case 'r':
-	  subfmt = "%I:%M:%S %p";
-	  goto subformat;
-	case 'R':
-	  subfmt = "%H:%M";
-	  goto subformat;
-	case 'T':
-	  subfmt = "%H:%M:%S";
-	  goto subformat;
-	case 'D':
+	case 'D':		/* GNU extension.  */
 	  subfmt = "%m/%d/%y";
 	  goto subformat;
 
-	case 'e':		/* %d, but blank-padded.  */
-	  /* XXX */
+	case 'd':
+	  fmt(2, (p, "%.2d", tp->tm_mday));
+	  break;
+
+	case 'e':		/* GNU extension: %d, but blank-padded.  */
+	  fmt(2, (p, "%2d", tp->tm_mday));
+	  break;
+
+	case 'H':
+	  fmt(2, (p, "%.2d", tp->tm_hour));
+	  break;
+
+	case 'I':
+	  fmt(2, (p, "%.2d", hour12));
+	  break;
+
+	case 'k':		/* GNU extension.  */
+	  fmt(2, (p, "%2d", tp->tm_hour));
+	  break;
+
+	case 'l':		/* GNU extension.  */
+	  fmt(2, (p, "%2d", hour12));
+	  break;
+
+	case 'j':
+	  fmt(3, (p, "%.3d", tp->tm_yday));
+	  break;
+
+	case 'M':
+	  fmt(2, (p, "%.2d", tp->tm_min));
+	  break;
+
+	case 'm':
+	  fmt(2, (p, "%.2d", tp->tm_mon + 1));
+	  break;
+
+	case 'n':		/* GNU extension.  */
+	  add (1, *p = '\n');
+	  break;
+
+	case 'p':
+	  cpy(ap_len, ampm);
+	  break;
+
+	case 'R':		/* GNU extension.  */
+	  subfmt = "%H:%M";
+	  goto subformat;
+
+	case 'r':		/* GNU extension.  */
+	  subfmt = "%I:%M:%S %p";
+	  goto subformat;
+
+	case 'S':
+	  fmt(2, (p, "%.2d", tp->tm_sec));
+	  break;
+
+	case 'T':		/* GNU extenstion.  */
+	  subfmt = "%H:%M:%S";
+	  goto subformat;
+
+	case 't':		/* GNU extenstion.  */
+	  add (1, *p = '\t');
+	  break;
+
+	case 'U':
+	  fmt(2, (p, "%.2u", y_week0));
+	  break;
+
+	case 'W':
+	  fmt(2, (p, "%.2u", y_week1));
+	  break;
+
+	case 'w':
+	  fmt(2, (p, "%.2d", tp->tm_wday));
+	  break;
+
+	case 'X':
+	  subfmt = _time_info->time;
+	  goto subformat;
+
+	case 'x':
+	  subfmt = _time_info->date;
+	  goto subformat;
+
+	case 'Y':
+	  fmt(4, (p, "%.4d", 1900 + tp->tm_year));
+	  break;
+
+	case 'y':
+	  fmt(2, (p, "%.2d", tp->tm_year));
+	  break;
+
+	case 'Z':
+	  cpy(zonelen, zone);
 	  break;
 
 	default:
@@ -256,5 +292,5 @@ DEFUN(strftime, (s, maxsize, format, tp),
 
   if (p != NULL)
     *p = '\0';
-  return(i);
+  return i;
 }
