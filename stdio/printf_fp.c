@@ -51,8 +51,10 @@ Cambridge, MA 02139, USA.  */
  #error "FLT_RADIX != 2.  Write your own __printf_fp."
 #endif
 
+#undef alloca			/* gmp-impl.h defines it again.  */
 #include "gmp.h"
 #include "gmp-impl.h"
+#include "longlong.h"
 
 #ifndef NDEBUG
 static void mpn_dump (const char *str, mp_limb *p, mp_size_t size);
