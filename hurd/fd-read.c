@@ -20,13 +20,14 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/fd.h>
+#include <string.h>
 
 error_t
 _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes)
 {
   error_t err;
   char *data;
-  mach_msg_type_size_t nread;
+  mach_msg_type_number_t nread;
 
   data = buf;
   err = HURD_FD_PORT_USE
