@@ -1,3 +1,317 @@
+1998-01-26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/vfprintf.c (process_arg): Fix printing of octal
+	zero in alternate form with precision of zero, which must produce
+	"0".  Add braces to avoid ambiguous `else'.
+
+1998-01-19 15:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/charset.c (insert_char): Correctly insert value
+	of eliipsis expression.
+
+1997-11-04 03:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strfmon.c: Fix numerous bugs in formatting.
+
+1998-01-30 23:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/strsignal.c: Regard signal number NSIG as illegal.
+	* sysdeps/unix/sysv/linux/siglist.c: Define array with only NSIG
+	members.
+
+1998-01-30 22:12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)==nis]: Define
+	CFLAGS-ypclnt.c to -DUSE_BINDINGDIR=1.
+
+1998-01-30  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/ypclnt.c: Try at first to use the binding file from ypbind
+	before using RPC.
+
+1998-01-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/memory.texi (Heap Consistency Checking): mcheck is
+	declared in <mcheck.h>.
+	Suggested by Jochen Voss <voss@mathematik.uni-kl.de> [PR libc/438]
+
+	* malloc/Makefile (headers): Add mcheck.h.
+	(distribute): Remove mcheck.h.
+
+1998-01-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/generic/memmem.c (memmem): An empty needle is at the
+	beginning of haystack.
+
+1998-01-30  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_nis/nis-hosts.c: Convert hostname to lowercase for NIS query.
+
+1998-01-30 19:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/utmp_file.c (pututline_file): Don't always report success
+	if similar entry is found.  Patch by Mark M. Kettenis.
+
+1998-01-30 12:05  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/bits/ioctls.h: Include a copy of the
+	kernel's network ioctls, rather than using <linux/sockios.h> to
+	get them.  This way we are sure of maintaining compatibility if
+	the kernel interface should change.
+
+1998-01-30 15:52  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Dist: Add netrose/rose.h.
+
+1998-01-25 19:54  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/unix/sysv/linux/netrose/rose.h: New file.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Install it.
+
+1998-01-30 15:52  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Dist: Add netrose/rose.h.
+
+1998-01-29 02:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-open.c (_dl_open): Make sure the variable `reloc' is
+	really kept as a variable.  Patch by Richard Henderson,
+	reported by Jakub Jelinek <jj@sunsite.ms.mff.cuni.cz>.
+
+1998-01-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* assert/assert.h (assert_perror): Correct test for errnum.  Patch
+	by uch@nop.or.jp. [PR libc/437]
+
+1998-01-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/socketbits.h: Define _LINUX_TYPES_H to
+	prevent use of kernel headers.
+	Patch by Richard Henderson.
+
+1998-01-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* pwd/fgetpwent_r.c (__fgetpwent_r): Correctly handle buffer
+	overflow while reading line with fgets.
+	* grp/fgetgrent_r.c (__fgetgrent_r): Likewise.
+
+1998-01-27 00:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/gnu/types.h (__ipc_pid_t): Change to
+	unsigned short, not short.
+	Reported by Andreas Jaeger.
+
+1998-01-26 00:57  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_compat/compat-grp.c: Correctly handle buffer overflow while
+	reading line with fgets.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nss/nss_files/files-XXX.c: Likewise.
+	* nss/nss_files/files-alias.c: Likewise.
+	* shadow/fgetspent_r.c: Likewise.
+
+1998-01-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* time/zic.c (dolink): Use symlink if hard link failed with EXDEV.
+	Patch by Ulrich Drepper. [PR libc/413]
+
+1998-01-24 15:13  Ulrich Drepper  <drepper@happy.cygnus.com>
+
+	* nss/db-Makefile: Handle empty and comment lines better.
+	($(VAR_DB)/services.db): Generate entries with missing protocol
+	value.
+
+1998-01-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/nsswitch.c (__nss_configure_lookup): Correct test for early
+	exit of loop.
+
+1998-01-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/nss_files/files-service.c (getservbyport): Allow proto == NULL.
+	(getservbyname): Allow proto == NULL.
+	Pointed out by David N. Welton <davidw@ecglaf.cks.com>.
+	[PR libc/430].
+
+	* string/strerror_r.c (__strerror_r): Fix description of
+	function.
+	* sysdeps/mach/_strerror.c (_strerror_internal): Fix handling of
+	unknown error in presense of small buffer.
+	* sysdeps/generic/_strerror.c: Likewise.
+	Pointed out by Jonas Bagge <jonas@bagge.se>.
+
+1998-01-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* nss/nss_files/files-parse.c (LOOKUP_NAME_CASE): Use __strcasecmp
+	instead of strcasecmp.
+	* nss/nss_files/files-alias.c (get_next_alias): Likewise.
+
+1998-01-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* locale/langinfo.h: Add defines.
+	* dirent/dirent.h: Add defines for DT_*.
+
+	* sysdeps/generic/confname.h: Add defines for _CS_PATH and
+	_PC_VDISABLE.
+	Suggested by Roland McGrath.
+
+1997-09-04 13:19  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/alpha/w_sqrt.S: Removed.
+	* sysdeps/alpha/fpu/e_sqrt.c: New.  Obey -mieee and -mieee-with-inexact
+	and build a version that is as fast as possible given the constraint.
+	[PR libc/423].
+
+1998-01-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/gethostid.c (gethostid): Correct
+	handling of enlarging buffers (clear errno).
+	* sunrpc/clnt_simp.c (callrpc): Likewise.
+	* sunrpc/getrpcport.c (getrpcport): Likewise.
+	* sunrpc/clnt_gen.c (clnt_create): Likewise.
+	* shadow/fgetspent.c (fgetspent): Likewise.
+	* shadow/sgetspent.c (sgetspent): Likewise.
+	* pwd/fgetpwent.c (fgetpwent): Likewise.
+	* nss/getXXent.c (GETFUNC_NAME): Likewise.
+	* nss/getXXbyYY.c (FUNCTION_NAME): Likewise.
+	* inet/rexec.c (rexec): Likewise.
+	* inet/rcmd.c (rcmd): Likewise.
+	(ruserok): Likewise.
+	(__icheckhost): Likewise.
+	* grp/initgroups.c (initgroups): Likewise
+	* grp/fgetgrent.c (fgetgrent): Likewise.
+	Based on patches by Cristian Gafton <gafton@redhat.com>.
+
+1998-01-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/getXXbyYY_r.c: Fix NSS_STATUS_TRYAGAIN handling.
+	* nss/getXXent_r.c: Likewise.
+	Patches by Cristian Gafton <gafton@redhat.com>.
+
+1998-01-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* nss/nss_db/db-alias.c (_nss_db_getaliasent_r): Don't include
+	terminating null in key size.
+
+1998-01-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/mbyte.texi (Wide String Conversion): Fix declaration of
+	wcstombs.  Pointed out by Jochen Voss <voss@mathematik.uni-kl.de>.
+	[PR libc/417].
+
+	* sysdeps/i386/fpu/__math.h: Change sgn to __sgn.  Suggested
+	by Jochen Voss <voss@mathematik.uni-kl.de>.
+	[PR libc/415].
+
+	* manual/time.texi (Priority): Correct description of
+	PRIO_MAX.  Pointed out by Jochen Voss <voss@mathematik.uni-kl.de>.
+	[PR libc/416].
+
+	* sysdeps/i386/fpu/__math.h: Correct test for buggy gccs.
+
+1998-01-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/alpha/Dist: Add net/route.h.
+
+1998-01-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* nss/nss_files/files-service.c: Fix allocation size to include
+	length of PROTO.
+
+	* nss/nss_db/db-XXX.c (lookup): Always set errno and h_errno if
+	applicable.  Fix return value and error checking.
+	(CONCAT(_nss_db_get,ENTNAME_r)): Loop around to skip over
+	unparsable lines.
+	(DB_LOOKUP): Allocate space for terminating null byte.
+	[PR libc/404]
+
+	* nss/db-Makefile ($(VAR_DB)/passwd.db): Don't handle duplicate
+	uids specially.
+
+	* db2/makedb.c (process_input): Continue processing if a duplicate
+	key is encountered.
+
+1998-01-12  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/nss_files/files-alias.c (get_next_alias): Do mail alias
+	lookups ignoring case.
+	* nss/nss_files/files-network.c: Do network lookups ignoring
+	case.
+	* nss/nss_files/files-hosts.c: Do hostname lookups ignoring
+	case.
+	* nss/nss_files/files-parse.c (LOOKUP_NAME_CASE): New macro for
+	case insensitive comparing.
+	Patches by Cristian Gafton <gafton@redhat.com>.
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Update from glibc
+	2.1 for newer kernels (osf_sigaction).  Suggested by Cristian Gafton
+	<gafton@redhat.com>.
+
+1998-01-09  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/net/if.h: Add IFF_*defines.  Suggested
+	by Roland McGrath. [PR libc/395]
+
+1998-01-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/arith.texi (Parsing of Integers): Correct description of
+	strtoul.  Pointed out by Scott Snyder <snyder@fnald0.fnal.gov>.
+	[PR libc/396]
+
+1998-01-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* signals.c (sigwait): Correct loop initilization and end
+	test. Patch by Khimenko Victor <khim@sch57.msk.ru>.
+
+1998-01-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Define the
+	cancelable socket functions as __libc_xxx with __xxx as weak
+	alias.
+
+	* sysdeps/unix/sysv/linux/m68k/socket.S: Allow __socket to be
+	redefined.
+	* sysdeps/unix/sysv/linux/i386/socket.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/accept.S: Make __libc_xxx the main name
+	and __xxx a weak alias.
+	* sysdeps/unix/sysv/linux/connect.S: Likewise.
+	* sysdeps/unix/sysv/linux/recv.S: Likewise.
+	* sysdeps/unix/sysv/linux/recvfrom.S: Likewise.
+	* sysdeps/unix/sysv/linux/recvmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/send.S: Likewise.
+	* sysdeps/unix/sysv/linux/sendmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/sendto.S: Likewise.
+	[PR libc/391]
+
+1998-01-03 20:47  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* configure.in: Fix --enable-add-ons code.
+
+1998-01-01 13:52  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (dl_main): Correct parsing of ld.so.preload file.
+	Patch by David Engel <david@sw.ods.com>.
+
+	* configure.in: Fix another typo in --enable-add-ons code.
+
+1997-12-30 14:14  Matthias Urlichs  <urlichs@noris.de>
+
+	* misc/lsearch.c (lsearch): Return a pointer to the new element
+	if one was "allocated".
+
+1997-12-26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* string/strsignal.c: Don't zap the last character of the "Unknown
+	signal" message.
+
+1997-11-20 18:02  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libio/iofgets.c (_IO_fgets): Return an error only if there
+	is a new error.
+	* libio/iogets.c (_IO_gets): Ditto.
+
 1998-01-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* nss/nss_files/files-network.c: Correct order of parameters for
