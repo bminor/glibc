@@ -9,25 +9,24 @@ DEFUN(compare, (a, b), CONST PTR a AND CONST PTR b)
   return strcmp (*(char **) a, *(char **) b);
 }
 
+
 int
 DEFUN_VOID(main)
 {
-  static char *lines[500];
-  static size_t lens[500];
-  size_t i;
+  char bufs[20][500];
+  char *lines[500];
+  size_t lens[500];
+  size_t i, j;
 
-  i = 0;
-  while (i < 500 && getline (&lines[i], &lens[500], stdin) > 0)
-    ++i;
-  if (i < 500)
-    lines[i] = NULL;
+  srandom (1);
 
-  while (--i > 0)
+  for (i = 0; i < 500; ++i)
     {
-      size_t swap = random () % i;
-      char *line = lines[swap];
-      lines[swap] = lines[i];
-      lines[i] = line;
+      lens[i] = random() % 19;
+      lines[i] = bufs[i];
+      for (j = 0; j < lens[i]; ++j)
+	lines[i][j] = random() % 26 + 'a';
+      lines[i][j] = '\0';
     }
 
   qsort (lines, 500, sizeof (char *), compare);
