@@ -25,6 +25,7 @@ Cambridge, MA 02139, USA.  */
 
 struct _hurd_dtable _hurd_dtable;
 struct mutex _hurd_dtable_lock;
+int _hurd_dtable_rlimit;
 int *_hurd_dtable_user_dealloc;
 
 const struct _hurd_dtable_resizes _hurd_dtable_resizes;
@@ -45,6 +46,7 @@ init_dtable (void)
      table, rounded up to a multiple of OPEN_MAX descriptors.  */
   _hurd_dtable.size
     = (_hurd_init_dtablesize + OPEN_MAX - 1) / OPEN_MAX * OPEN_MAX;
+  _hurd_dtable_rlimit = _hurd_dtable.size;
 
   _hurd_dtable.d = malloc (_hurd_dtable.size * sizeof (*_hurd_dtable.d));
   if (_hurd_dtable.d == NULL)
