@@ -33,5 +33,6 @@ Cambridge, MA 02139, USA.  */
 #define	EBADF	6
 #define	ENOMEM	7
 #define	EACCES	8
+#define ENFILE  9
+#define EMFILE  10
 #endif
-
