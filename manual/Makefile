@@ -53,7 +53,7 @@ libc.dvi: texinfo.tex
 
 # Generate the summary from the Texinfo source files for each chapter.
 summary.texi: stamp-summary ;
-stamp-summary: summary.awk $(chapters)
+stamp-summary: summary.awk $(chapters) $(chapters-incl)
 	awk -f $^ \
 	| sort -df +1 -2 | tr '\014' '\012' > summary-tmp
 	./move-if-change summary-tmp summary.texi
