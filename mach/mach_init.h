@@ -1,5 +1,5 @@
 /* Declarations and macros for the basic Mach things set at startup.
-Copyright (C) 1993 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,6 @@ extern mach_port_t __mach_task_self_;
 /* Kernel page size.  */
 extern vm_size_t __vm_page_size;
 extern vm_size_t vm_page_size;
-#define	vm_page_size	__vm_page_size /* XXX ? */
 
 /* Round the address X up to a page boundary.  */
 #define round_page(x)	\
