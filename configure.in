@@ -1,194 +1,49 @@
-dnl Autoconf sets the quotes to [ and ], which hoses shell commands.
-dnl We get rid of the quotes altogether, and turn them on for AC_*.
-changequote(,)dnl
-#! /bin/sh
-
-# Configuration script for the GNU C Library.
-dnl You can ignore the following line if you are reading this sentence.
-# DO NOT EDIT!  This script is generated from configure.in; edit that instead.
-
-# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
-# This file is part of the GNU C Library.
-
-# The GNU C Library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Library General Public License as
-# published by the Free Software Foundation; either version 2 of the
-# License, or (at your option) any later version.
-
-# The GNU C Library is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Library General Public License for more details.
-
-# You should have received a copy of the GNU Library General Public
-# License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-# Cambridge, MA 02139, USA.
-
-#
-#	Configure the GNU C Library.
-#
-
-prog="`basename $0`"
-
-# All the standard GNU configure options are accepted but only
-# --nfp, --with-gnu-ld, and --with-gnu-as are meaningful.
-nfp=
-gnu_ld=
-gnu_as=
-prefix=
-exec_prefix=
-verbose=
-
-next=
-lose=
-for arg in $*; do
-  if [ x$next != x ]; then
-    eval "$next=\$arg"
-    next=
-  else
-    case $arg in
-    -srcdir=* | --srcdir=* | --srcdi=* | --srcd=* | --src=* | --sr=* | --s=*)
-       srcdir=`echo $arg | sed 's/-*s[a-z]*=//'`
-       ;;
-    -srcdir | --srcdir | --srcdi | --srcd | --src | --sr | --s)
-       next=srcdir
-       ;;
-    -target | --target | --targe | --targ | --tar | --ta | --t)
-       next=target
-       ;;
-    -target=* | --target=* | --targe=* | --targ=* | --tar=* | --ta=* | --t=*)
-       target=`echo $arg | sed 's/-*t[a-z]*=//'`
-       ;; 
-
-    -with-gnu-ld | --with-gnu-ld | --with-gnu-l)
-       gnu_ld=--with-gnu-ld
-       ;;
-
-    -gas | --gas | --ga | --g | -with-gnu-as | --with-gnu-as | -with-gnu-a)
-       gnu_as=--with-gnu-as
-       ;;
-
-    -nfp | --nfp | --nf | --n)
-       nfp=--nfp
-       ;;
-
-    -with-* | --with-*)
-      # For `--with-foo=bar', do "with_foo='bar'".
-      # For `--with-fnord', do "with_fnord=yes".
-      # These variables may be examined by sysdep configure fragments.
-      eval `echo "$arg" | sed '{s/^-*//;s/-/_/g
-s/^\([^=]*\)=\(.*\)$/\1='\''\2'\''/;s/^\([^=]*\)$/\1=yes/;}'`
-      ;;
-
-    -x | --x)
-      ;; # ignored
-
-    # For backward compatibility, also recognize exact --exec_prefix.
-    -exec-prefix=* | --exec_prefix=* | --exec-prefix=* | --exec-prefi=* | --exec-pref=* | --exec-pre=* | --exec-pr=* | --exec-p=* | --exec-=* | --exec=* | --exe=* | --ex=* | --e=*)
-       exec_prefix=`echo $arg | sed 's/[-a-z_]*=//'`
-       ;;
-    -exec-prefix | --exec_prefix | --exec-prefix | --exec-prefi | --exec-pref | --exec-pre | --exec-pr | --exec-p | --exec- | --exec | --exe | --ex | --e)
-       next=exec_prefix
-       ;;
-
-    -prefix=* | --prefix=* | --prefi=* | --pref=* | --pre=* | --pr=* | --p=*)
-       prefix=`echo $arg | sed 's/[-a-z_]*=//'`
-       ;;
-    -prefix | --prefix | --prefi | --pref | --pre | --pr | --p)
-       next=prefix
-       ;;
-
-    -v | -verbose | --verbose | --verbos | --verbo | --verb | --ver | --ve | --v)
-      # Autoconf-generated code below will test this.
-      verbose=yes
-      ;;
-
-    -*)
-       echo "Invalid option \`$arg'" 1>&2
-       lose=yes
-       ;;
-    *)
-       if [ ! "$target" ]; then
-	 target=$arg
-       else
-	 lose=yes
-       fi
-       ;;
-    esac
-  fi
-done
-
-# NEXT will be set iff we have seen an option that wants an arg, but no arg.
-if [ "$next" ]; then
-  echo "$0: the \`--${next}' option requires an argument" >&2
-  lose=yes
-fi
-
-dnl This deals with setting srcdir if it needs to be set.
-changequote([,])
-AC_PREPARE(features.h)
-AC_LANG_C
-changequote(,)
-
-# Decanonicalize srcdir so we can tell when we are configuring in srcdir.
-if [ "`(cd ${srcdir}; pwd)`" = "`pwd`" ]; then
-  srcdir=.
-fi
-
-if [ ! "$target" ]; then
-  target=`$srcdir/config.guess`
-  test -n "$target" && echo "No target given; guessing target is ${target}."
-fi
-
-if [ "$lose" = yes -o ! "$target" ]; then
-  echo "\
-Usage: $prog [--srcdir=DIR] [--prefix=DIR] [--exec-prefix=DIR]
-	     [--nfp] [--with-gnu-ld] [--with-gnu-as] TARGET" >&2
-  if [ -r config.status ]; then
-    cat config.status >&2
-  fi
-  exit 1
-fi
-
-# Done parsing the arguments.
+dnl Process this file with autoconf to produce a configure script.
+AC_REVISION([$Id$])
+AC_PREREQ(2.1)dnl		dnl Minimum Autoconf version required.
+AC_INIT(features.h)
 
 # This will get text that should go into config.make.
 config_vars=
 
 # Check for a --with-gmp argument and set gmp-srcdir in config.make.
+AC_ARG_WITH(gmp, dnl
+  --with-gmp=DIRECTORY	  find GMP source code in DIRECTORY (not needed),
+	    [dnl
 case "$with_gmp" in
-yes) echo "$prog: --with-gmp requires an argument; use --with-gmp=DIRECTORY"
-     exit 1 ;;
-'') ;;
+yes) AC_MSG_ERROR(--with-gmp requires an argument; use --with-gmp=DIRECTORY) ;;
+''|no) ;;
 *) config_vars="$config_vars
-gmp-srcdir = $with_gmp" ;;
+gmp-srcdir = $withval" ;;
 esac
+])
 
-# Canonicalize the configuration name.
-config=`$srcdir/config.sub $target`
-if [ ! "$config" ]; then
-  # config.sub has written an error message.
-  exit 1
-fi
+AC_ARG_WITH(gnu-binutils, dnl
+  --with-gnu-binutils	  if using GNU binutils (as and ld),
+	    gnu_binutils=yes, gnu_binutils=no)
+AC_ARG_WITH(gnu-ld, dnl
+  --with-gnu-ld		  if using GNU ld (in the binutils package),
+	    gnu_ld=yes, gnu_ld=no)
+AC_ARG_WITH(gnu-as, dnl
+  --with-gnu-as		  if using GNU as (in the binutils package),
+	    gnu_as=yes, gnu_as=no)
+test $gnu_binutils = yes && gnu_as=yes gnu_ld=yes
 
-sysdep_dir=$srcdir/sysdeps
-
-# machine-vendor-os
-eval "`echo $config | \
-       sed 's/^\(.*\)-\(.*\)-\(.*\)$/\
-config_machine=\1 config_vendor=\2 config_os=\3/'`"
-
+AC_CANONICAL_HOST
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
 # $machine, $vendor, and $os, and changes them whenever convenient.
+config_machine=$host_cpu config_vendor=$host_vendor config_os=$host_os
+
+sysdep_dir=$srcdir/sysdeps
+AC_MSG_CHECKING(sysdep dirs)
+AC_CACHE_VAL(libc_cv_sysdirs, [dnl
 machine=$config_machine
 vendor=$config_vendor
 os=$config_os
 
-# Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
-os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
-
+dnl We need to use [ and ] for other purposes for a while now.
+changequote(,)dnl
 # Expand the configuration machine name into a subdirectory by architecture
 # type and particular chip.
 case "$machine" in
@@ -210,6 +65,9 @@ r[34]000)
   machine=mips/$machine ;;
 esac
 
+# Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
+os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
+
 case "$os" in
 gnu*)
   base_os=mach/hurd ;;
@@ -223,30 +81,31 @@ solaris[2-9]*)
   base_os=unix/sysv/sysv4 ;;
 none)
   base_os=standalone ;;
+*)
+  base_os='' ;;
 esac
 
 case "$os:$base_os" in
-gnu* | linux* | bsd4.4* | *:bsd4.4)
-  gnu_ld=--with-gnu-ld
-  gnu_as=--with-gnu-as
+gnu* | linux* | bsd4.4* | *:unix/bsd/bsd4.4)
+  gnu_ld=yes gnu_as=yes
 esac
 
 # For sunos4.1.1, try sunos4.1.1, then sunos4.1, then sunos4, then sunos.
 tail=$os
 ostry=$os
-while o=`echo $tail | sed 's/\.[^.]*$//'`; [ $o != $tail ]; do
+while o=`echo $tail | sed 's/\.[^.]*$//'`; test $o != $tail; do
   ostry="$ostry /$o"
   tail=$o
 done  
 o=`echo $tail | sed 's/[0-9]*$//'`
-if [ $o != $tail ]; then
+if test $o != $tail; then
   ostry="$ostry /$o"
 fi
 
 # For unix/sysv/sysv4, try unix/sysv/sysv4, then unix/sysv, then unix.
 base=
 tail=$base_os
-while b=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; [ "$b" ]; do
+while b=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$b"; do
   set $b
   base="$base /$1"
   tail="$2"
@@ -255,11 +114,14 @@ done
 # For sparc/sparc9, try sparc/sparc9 and then sparc.
 mach=
 tail=$machine
-while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; [ "$m" ]; do
+while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
   set $m
   mach="$mach /$1"
   tail="$2"
 done
+
+dnl We are done with glob and regexp uses of [ and ]; return to autoconf.
+changequote([,])dnl
 
 # Find what sysdep directories exist.
 sysnames=
@@ -269,10 +131,10 @@ for b in $base ''; do
       for o in /$ostry ''; do
 	for m in $mach ''; do
 	  try="$m0$b$v$o$m"
-	  if [ -d $sysdep_dir$try ]; then
+	  if test -d $sysdep_dir$try; then
 	    sysnames="$sysnames $try"
-	    [ "$o" -o "$b" ] && os_used=t
-	    [ "$m" -o "$m0" ] && machine_used=t
+	    { test -n "$o" || test -n "$b" } && os_used=t
+	    { test -n "$m" || test -n "$m0" } && machine_used=t
 	  fi
 	done
       done
@@ -280,29 +142,23 @@ for b in $base ''; do
   done
 done
 
-if [ ! "$os_used" -a "$os" != none ]; then
-  echo Operating system $os is not supported. >&2
-  exit 1
+if test -z "$os_used" && test "$os" != none; then
+  AC_MSG_ERROR(Operating system $os is not supported.)
 fi
-if [ ! "$machine_used" -a "$machine" != none ]; then
-  echo The $machine is not supported. >&2
-  exit 1
+if test -z "$machine_used" && test "$machine" != none; then
+  AC_MSG_ERROR(The $machine is not supported.)
 fi
 
 # We have now validated the configuration.
 
-PWD=`pwd`
-echo Configuring the GNU C library in $PWD
-echo on `(hostname || uname -n) 2>/dev/null | sed 1q` for ${config}.
-
 # Remove the leading slashes.
 sysnames="`echo $sysnames | sed -e 's@^/@@' -e 's@ /@ @g'`"
 
-# Prepend the machine's FPU directory unless --nfp.
-if [ ! "$nfp" ]; then
+# Prepend the machine's FPU directory unless --without-fp.
+if test "$with_fp" = no; then
   fpu_dirs=
   for m in $mach; do
-    if [ -d $sysdep_dir$m/fpu ]; then
+    if test -d $sysdep_dir$m/fpu; then
       fpu_dirs="$fpu_dirs $m/fpu"
     fi
   done
@@ -312,11 +168,11 @@ fi
 # Expand the list of system names into a full list of directories
 # from each element's parent name and Implies file (if present).
 set $sysnames
-while [ $# -gt 0 ]; do
+while test $# -gt 0; do
   name=$1
   shift
 
-  if [ -f $sysdep_dir/$name/Implies ]; then
+  if test -f $sysdep_dir/$name/Implies; then
     # Collect more names from the `Implies' file (removing comments).
     implied="`sed 's/#.*$//' < $sysdep_dir/$name/Implies`"
     for x in $implied; do
@@ -340,9 +196,7 @@ while [ $# -gt 0 ]; do
   # (implied by unix/sysv/sysv4) comes before unix/sysv (in ostry (here $*)
   # after sysv4).
   sysnames="`echo $implied $* $parent`"
-  if [ "$sysnames" != "" ]; then
-    set $sysnames
-  fi
+  test -n "$sysnames" && set $sysnames
 done
 
 # Add the default directories.
@@ -357,7 +211,7 @@ for name in $names; do
     true;
   else
     # A new one.
-    if [ "$seen" = "" ]; then
+    if test -z "$seen"; then
       seen="$name" sysnames="$name"
     else
       seen="$seen
@@ -366,38 +220,43 @@ $name"
     fi
   fi
 done
-
-echo Using system-dependent files from directories:
-for dir in $sysnames; do echo "	$dir"; done
-
-changequote([,])dnl The world is now safe for m4, and unsafe for shell.
-dnl Be sure to add each macro used here to aclocal.m4 (which see).
+libc_cv_sysdirs="$sysnames"])
+AC_SUBST(sysnames) sysnames="$libc_cv_sysdirs"
+AC_MSG_RESULT(${sysnames})
 
 AC_PROG_INSTALL
-[if [ "$INSTALL" = "${srcdir}/install.sh" ]; then
+if test "$INSTALL" = "${srcdir}/install.sh"; then
   # The makefiles need to use a different form to find it in $srcdir.
   INSTALL='$(..)./install.sh'
-fi]
-AC_PROG_RANLIB
+fi
 
+AC_PROG_RANLIB
 AC_PROG_CC
 AC_PROG_CPP
 
-echo checking for signed size_t type
+AC_MSG_CHECKING(signed size_t type)
+AC_CACHE_VAL(libc_cv_signed_size_t, [dnl
 echo '#include <stddef.h>
 FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c
-eval "$CPP conftest.c 2>/dev/null" \
-| grep '^FOOBAR.*unsigned.*FOOBAR$' >/dev/null \
-|| {
-  dnl Do this by hand instead of AC_DEFINE so we can use -U to avoid warnings.
-  DEFS="$DEFS -U__SIZE_TYPE__ -D__SIZE_TYPE__=unsigned"
-  (echo '#undef __SIZE_TYPE__';
-   echo '#define __SIZE_TYPE__ unsigned') >> confdefs.h
-  test -n "$verbose" && echo '	using unsigned int for size_t'
-}
-rm -f conftest*
+if eval "$ac_cpp conftest.c 2>/dev/null" \
+| grep '^FOOBAR.*unsigned.*FOOBAR$' >/dev/null; then
+  libc_cv_signed_size_t=no
+else
+  libc_cv_signed_size_t=yes
+fi
+rm -f conftest*])
+AC_MSG_RESULT($libc_cv_signed_size_t)
+if test $libc_cv_signed_size_t = yes; then
+  dnl Do this by hand instead of AC_DEFINE so can add #undef to avoid warnings.
+  cat >> confdefs.h <<\EOF
+#undef __SIZE_TYPE__
+#define __SIZE_TYPE__ unsigned
+EOF
+fi
 
-AC_COMPILE_CHECK([libc-friendly stddef.h],
+AC_MSG_CHECKING(libc-friendly stddef.h)
+AC_CACHE_VAL(libc_cv_friendly_stddef, [dnl
+AC_TRY_COMPILE(dnl
 [#define __need_size_t
 #define __need_wchar_t
 #include <stddef.h>
@@ -407,25 +266,33 @@ AC_COMPILE_CHECK([libc-friendly stddef.h],
 #error stddef.h ignored __need_*
 #endif
 if (&size == NULL || &wchar == NULL) abort ();],
-[config_vars="$config_vars
+               libc_cv_friendly_stddef=yes,
+               libc_cv_friendly_stddef=no)])
+AC_MSG_RESULT($libc_cv_friendly_stddef)
+if test $libc_cv_friendly_stddef = yes; then
+  config_vars="$config_vars
 stddef.h = # The installed <stddef.h> seems to be libc-friendly."
-test -n "$verbose" && echo '	installed stddef.h looks friendly'])
+fi
 
-changequote(,)dnl The world is again safe for shell scripts.
-
-echo 'checking for need to use -P to assemble .S files'
+AC_MSG_CHECKING(whether we need to use -P to assemble .S files)
+AC_CACHE_VAL(libc_cv_need_minus_P, [dnl
 cat > conftest.S <<EOF
 #include "confdefs.h"
 /* Nothing whatsoever.  */
 EOF
-${CC-cc} $CFLAGS -c conftest.S 2>/dev/null || {
+if ${CC-cc} $CFLAGS -c conftest.S 2>/dev/null; then
+  libc_cv_need_minus_P=no
+else
+  libc_cv_need_minus_P=yes
+fi
+rm -f conftest*])
+AC_MSG_RESULT($libc_cv_need_minus_P)
+if test $libc_cv_need_minus_P = yes; then
   config_vars="$config_vars
 asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
-  test -n "$verbose" && echo '	using -P flag'
-}
-rm -f conftest*
+fi
 
-# Iterate over all the sysdep directories we will use, running their
+[# Iterate over all the sysdep directories we will use, running their
 # configure fragments, and looking for a uname implementation.
 uname=
 for dir in $sysnames; do
@@ -433,152 +300,80 @@ for dir in $sysnames; do
     echo running configure fragment for $dir
     . $sysdep_dir/$dir/configure
   fi
-  test ! "$uname" && \
-  test -r $sysdep_dir/$dir/uname.c -o -r $sysdep_dir/$dir/uname.S && uname=$dir
+  if test -z "$uname"; then
+    { test -r $sysdep_dir/$dir/uname.c || test -r $sysdep_dir/$dir/uname.S } &&
+    uname=$dir
+  fi
 done
+]dnl
 
 # If we will use the generic uname implementation, we must figure out what
 # it will say by examining the system, and write the results in config-name.h.
-if [ "$uname" = generic ]; then
+if test "$uname" = generic; then
 
-  echo trying to guess OS release and version for uname
-
-  kernel_release=
-  kernel_version=
-
-  if [ ! "$release" -o ! "$version" ]; then
-    if [ -r /vmunix ]; then
+changequote(,)dnl
+  uname_sysname=`echo $config_os | sed 's/[0-9.]*$//'`
+changequote([,])dnl
+  if test $uname_sysname != $config_os; then
+    config_release=`echo $config_os | sed s/$uname_sysname//`
+  fi
+dnl
+AC_DEFUN(LIBC_KERNEL_ID, [dnl
+    if test -r /vmunix; then
       kernel_id=`strings /vmunix | grep UNIX`
-    elif [ -r /dynix ]; then
+    elif test -r /dynix; then
       kernel_id=`strings /dynix | grep DYNIX`
     else
       kernel_id=
     fi
-    if [ "$kernel_id" ]; then
-      kernel_release=`echo "$kernel_id" | sed 's/^[^0-9.]*\([0-9.]*\).*$/\1/'`
-      kernel_version=`echo "$kernel_id" | sed 's/^[^#]*#\([0-9]*\).*$/\1/'`
-    fi
-  fi
+])dnl
 
-  sysname=`echo $os | sed 's/[0-9.]*$//'`
-  if [ $sysname != $os ]; then
-    config_release=`echo $os | sed s/$sysname//`
-  fi
-
-  if [ "$release" ]; then
-    # All is well.
-    true
-  elif [ x`echo "$config_release" | sed "s/^$kernel_release//"` \
-	 != x$config_release ]; then
+  AC_MSG_CHECKING(OS release for uname)
+  AC_CACHE_VAL(libc_cv_uname_release, [dnl
+AC_REQUIRE([LIBC_KERNEL_ID])dnl
+changequote(,)dnl
+  kernel_release=`echo "$kernel_id" | sed 's/^[^0-9.]*\([0-9.]*\).*$/\1/'`
+changequote([,])dnl
+  if test x`echo "$config_release" | sed "s/^$kernel_release//"` \
+	 != x$config_release; then
     # The configuration release is a substring of the kernel release.
-    release=$kernel_release
-  elif [ x$config_release != x ]; then
-    release=$config_release
-  elif [ x$kernel_release != x ]; then
-    release=$kernel_release
+    libc_cv_uname_release=$kernel_release
+  elif test x$config_release != x; then
+    libc_cv_uname_release=$config_release
+  elif test x$kernel_release != x; then
+    libc_cv_uname_release=$kernel_release
   else
-    cat <<END
-I don't know what release of $sysname you are using.  Please enter the
-release number now.  This information is used only for the \`uname' function,
-so it is not critical.
-END
-    read release
-    if [ ! "$release" ]; then
-      release=unknown
-    fi
-  fi
+    libc_cv_uname_release=unknown
+  fi])
+  AC_MSG_RESULT($libc_cv_uname_release)
+  uname_release="$libc_cv_uname_release"
 
-  if [ "$version" ]; then
-    # All is well.
-    true
-  elif [ ! "$kernel_version" ]; then
-    cat <<END
-I don't know what version of $sysname $release you are using.  Please enter
-the version number now.  This information is used only for the uname
-function, so it is not critical.
-END
-    read version
-    if [ ! "$version" ]; then
-      version=unknown
-    fi
+  AC_MSG_CHECKING(OS version for uname)
+  AC_CACHE_VAL(libc_cv_uname_version, [dnl
+AC_REQUIRE([LIBC_KERNEL_ID])dnl
+changequote(,)dnl
+  kernel_version=`echo "$kernel_id" | sed 's/^[^#]*#\([0-9]*\).*$/\1/'`
+changequote([,])dnl
+  if test -n "$kernel_version"; then
+    libc_cv_uname_version="$kernel_version"
   else
-    version=$kernel_version
-  fi
+    libc_cv_uname_version=unknown
+  fi])
+  AC_MSG_RESULT($libc_cv_uname_version)
+  uname_version="$libc_cv_uname_version"
 
-  cat > config-name.h <<END
-/* This file was generated automatically by configure.  Do not edit.
-   This is used by the generic uname function.  */
-#define UNAME_SYSNAME "${sysname}"
-#define UNAME_RELEASE "${release}"
-#define UNAME_VERSION "${version}"
-#define UNAME_MACHINE "${config_machine}-${config_vendor}"
-END
-
-  system_name="$sysname $release version $version on $vendor $machine"
+AC_SUBST(uname_sysname) AC_SUBST(uname_release) AC_SUBST(uname_version)dnl
+  config_uname=config-name.h:config-name.in
 else
-  # Not generic uname.  We don't need config-name.h at all.
-  system_name=$config
+  # For non-generic uname, we don't need to create config-name.h at all.
+  config_uname=
 fi
 
-if [ "$gnu_ld" ]; then
-  DEFS="$DEFS -DHAVE_GNU_LD"
+if test $gnu_ld = yes; then
+  AC_DEFINE(HAVE_GNU_LD)
 fi
-if [ "$gnu_as" ]; then
-  DEFS="$DEFS -DHAVE_GNU_AS"
-fi
-
-(
-  echo '# This file was generated automatically by configure.  Do not edit.'
-  echo '# Put configuration parameters in configparms instead.'
-  echo "config-machine = ${config_machine}"
-  echo "config-vendor = ${config_vendor}"
-  echo "config-os = ${config_os}"
-  echo "config-sysdirs = ${sysnames}"
-  if [ "$prefix" ]; then
-    echo "prefix = ${prefix}"
-  fi
-  if [ "$exec_prefix" ]; then
-    echo "exec_prefix = ${exec_prefix}"
-  fi
-  echo "config-defines = ${DEFS}"
-  for var in INSTALL INSTALL_PROGRAM INSTALL_DATA RANLIB; do
-    eval "echo \"${var} = \${$var}\""
-  done
-  echo "$config_vars"
-) > config.make
-echo "Wrote config.make in $PWD."
-
-if [ $srcdir != . ]; then
-  if [ $srcdir = .. ]; then
-    cwd=`pwd`
-    objdir=`basename $cwd`
-  else
-    objdir=`pwd`
-  fi
-  cat > Makefile <<END
-# This file was generated automatically by configure.  Do not edit.
-srcdir = $srcdir
-
-all .DEFAULT:
-	\$(MAKE) -C \$(srcdir) objdir=\`pwd\` \$@
-END
-
-echo "Wrote Makefile in $PWD."
+if test $gnu_as = yes; then
+  AC_DEFINE(HAVE_GNU_AS)
 fi
 
-cat > config.status <<END
-#!/bin/sh
-# This file was generated automatically by configure.  Do not edit.
-# The GNU C library was configured in $PWD for
-# $system_name as follows:
-release=$release version=$version $0 $configure_args \$*
-END
-chmod a+x config.status
-echo "Wrote config.status in $PWD."
-
-exit 0
-dnl This gets rid of the random stuff autoconf has stuffed in weird places.
-divert(-1)dnl AC_This is here so I can search for `AC_' to find the frobs.
-dnl Local Variables:
-dnl compile-command: "autoconf"
-dnl End:
+AC_OUTPUT(config.make ${config_uname}, , [echo '$config_vars' >> config.make])

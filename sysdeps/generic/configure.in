@@ -1,8 +1,7 @@
+sinclude(./aclocal.m4)dnl
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 
-changequote(,)
-if [ ! "$inhibit_glue" ]; then
-changequote([,])
+if test -z "$inhibit_glue"; then
 # For signame.c, used in make_siglist.
-AC_HAVE_FUNCS(psignal)
+AC_CHECK_FUNCS(psignal)
 fi
