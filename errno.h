@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ __BEGIN_DECLS
 #include <errnos.h>
 
 /* Declare the `errno' variable.  */
-extern __volatile int errno;
+extern int errno;
 
 #ifdef __USE_GNU
 /* The full and simple forms of the name with which the program was
