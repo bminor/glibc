@@ -104,12 +104,15 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 	uuencode $< < $< > $@.new
 	mv -f $@.new $@
 
-.PHONY: mostlyclean distclean realclean clean subdir_clean
-subdir_clean: clean
-distclean clean: mostlyclean
+# The parent makefile sometimes invokes us with targets `subdir_REAL-TARGET'.
+subdir_%: % ;
+
+.PHONY: mostlyclean distclean realclean clean
 mostlyclean:
 	-rm -f libc.dvi libc.info*
-realclean: clean
+clean: mostlyclean
+distclean: clean
+realclean: distclean
 	-rm -f chapters chapters-incl summary.texi stamp-summary *.c.texi
 	-rm -f libc.cp libc.cps libc.fn libc.fns libc.pg libc.pgs \
 	       libc.tp libc.tps libc.vr libc.vrs libc.log libc.aux libc.toc
