@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,12 +21,6 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <unistd.h>
 #include <hurd.h>
-
-extern const struct
-  {
-    int set;
-    struct _hurd_dtable *dtable;
-  } _hurd_dtable_set;
 
 /* Replace the current process, executing PATH with arguments ARGV and
    environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
@@ -56,7 +50,7 @@ DEFUN(__execve, (path, argv, envp),
   p = argv;
   while (*p != NULL)
     argslen += strlen (*p++) + 1;
-  args = alloca (argslen);
+  args = __alloca (argslen);
   ap = args;
   for (p = argv; *p != NULL; ++p)
     ap = __memccpy (ap, *p, '\0', UINT_MAX);
@@ -65,11 +59,12 @@ DEFUN(__execve, (path, argv, envp),
   p = envp;
   while (*p != NULL)
     envlen += strlen (*p++) + 1;
-  env = alloca (envlen);
+  env = __alloca (envlen);
   ap = env;
   for (p = envp; *p != NULL; ++p)
     ap = __memccpy (ap, *p, '\0', UINT_MAX);
 
+  __mutex_lock (&_hurd_lock);
   ports[INIT_PORT_CCDIR] = _hurd_ccdir;
   ports[INIT_PORT_CWDIR] = _hurd_cwdir;
   ports[INIT_PORT_CRDIR] = _hurd_crdir;
@@ -100,16 +95,16 @@ DEFUN(__execve, (path, argv, envp),
       flags = 0;
     }
   
-  if (_hurd_dtable_set.set)
+  __mutex_lock (&_hurd_dtable_lock);
+  if (_hurd_dtable.d != NULL)
     {
-      __mutex_lock (&_hurd_dtable_set.dtable->lock);
-      dtablesize = _hurd_dtable_set.dtable->size;
-      dtable = alloca (dtablesize * sizeof (file_t));
+      dtablesize = _hurd_dtable.size;
+      dtable = __alloca (dtablesize * sizeof (file_t));
       for (i = 0; i < dtablesize; ++i)
-	if (_hurd_dtable_set.dtable->d[i].flags & FD_CLOEXEC)
+	if (_hurd_dtable.d[i].flags & FD_CLOEXEC)
 	  dtable[i] = MACH_PORT_NULL;
 	else
-	  dtable[i] = _hurd_dtable_set.dtable->d[i].server;
+	  dtable[i] = _hurd_dtable.d[i].server;
     }
   else
     {
@@ -123,10 +118,9 @@ DEFUN(__execve, (path, argv, envp),
 		     ints, INIT_INT_MAX,
 		     ports, INIT_PORT_MAX,
 		     flags);
-  if (_hurd_dtable_set.set)
-    /* We must hold the dtable lock while doing the file_exec to avoid
-       the dtable entries being deallocated before we send them.  */
-    __mutex_unlock (&_hurd_dtable_set.dtable->lock);
+  /* We must hold the dtable lock while doing the file_exec to avoid
+     the dtable entries being deallocated before we send them.  */
+  __mutex_unlock (&_hurd_dtable_lock);
   if (err)
     return __hurd_fail (err);
 
