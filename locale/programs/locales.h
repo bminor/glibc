@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -114,9 +114,11 @@ void ctype_class_start (struct linereader *lr, struct localedef_t *locale,
 			enum token_t tok, const char *name,
 			struct charset_t *charset);
 void ctype_class_from (struct linereader *lr, struct localedef_t *locale,
-		       struct token *code, struct charset_t *charset);
+		       struct token *code, struct charset_t *charset,
+		       struct repertoire_t *repertoire);
 void ctype_class_to (struct linereader *lr, struct localedef_t *locale,
-		     struct token *code, struct charset_t *charset);
+		     struct token *code, struct charset_t *charset,
+		     struct repertoire_t *repertoire);
 void ctype_class_end (struct linereader *lr, struct localedef_t *locale);
 
 int ctype_is_charconv (struct linereader *lr, struct localedef_t *locale,
@@ -128,9 +130,11 @@ void ctype_map_start (struct linereader *lr, struct localedef_t *locale,
 		      enum token_t tok, const char *name,
 		      struct charset_t *charset);
 void ctype_map_from (struct linereader *lr, struct localedef_t *locale,
-		     struct token *code, struct charset_t *charset);
+		     struct token *code, struct charset_t *charset,
+		     struct repertoire_t *repertoire);
 void ctype_map_to (struct linereader *lr, struct localedef_t *locale,
-		   struct token *code, struct charset_t *charset);
+		   struct token *code, struct charset_t *charset,
+		   struct repertoire_t *repertoire);
 void ctype_map_end (struct linereader *lr, struct localedef_t *locale);
 
 
