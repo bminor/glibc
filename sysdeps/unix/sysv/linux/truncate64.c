@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 
 #ifdef __NR_truncate64
 /* The variable is shared between all wrappers around *truncate64 calls.  */
-int have_no_truncate64;
+int __have_no_truncate64;
 
 extern int __syscall_truncate64 (int fd, int high_length, int low_length);
 
@@ -36,7 +36,7 @@ truncate64 (path, length)
      const char *path;
      off64_t length;
 {
-  if (! have_no_truncate64)
+  if (! __have_no_truncate64)
     {
       unsigned int low = length & 0xffffffff;
       unsigned int high = length >> 32;
@@ -48,7 +48,7 @@ truncate64 (path, length)
 	return result;
 
       __set_errno (saved_errno);
-      have_no_truncate64 = 1;
+      __have_no_truncate64 = 1;
     }
 
   if ((off_t) length != length)
