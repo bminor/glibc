@@ -17,6 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
+#include <errno.h>
 #include <math.h>
 
 /* Return the remainder of X/Y.  */
@@ -24,5 +25,6 @@ double
 DEFUN(__drem, (x, y),
       double x AND double y)
 {
+  errno = ENOSYS;
   return 0.0;
 }

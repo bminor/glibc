@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,32 +17,13 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <errno.h>
 #include <math.h>
-#include <float.h>
-#include "ieee754.h"
+#include <errno.h>
 
-/* Deal with an infinite or NaN result.
-   If ERROR is ERANGE, result is +Inf;
-   if ERROR is - ERANGE, result is -Inf;
-   otherwise result is NaN.
-   This will set `errno' to either ERANGE or EDOM,
-   and may return an infinity or NaN, or may do something else.  */
+/* Return the base 2 signed integral exponent of X.  */
 double
-DEFUN(__infnan, (error), int error)
+DEFUN(__logb, (x), double x)
 {
-  switch (error)
-    {
-    case ERANGE:
-      errno = ERANGE;
-      return HUGE_VAL;
-
-    case - ERANGE:
-      errno = ERANGE;
-      return - HUGE_VAL;
-
-    default:
-      errno = EDOM;
-      return NAN;
-    }
+  errno = ENOSYS;
+  return 0.0;
 }
