@@ -42,7 +42,7 @@ _hurd_fd_write (struct hurd_fd *fd, const void *buf, size_t *nbytes)
   err = HURD_FD_PORT_USE
     (fd,
      ({
-       const io_t ioport = (noctty && ctty != MACH_PORT_NULL) ? ctty : port;
+       const io_t ioport = (!noctty && ctty != MACH_PORT_NULL) ? ctty : port;
        do
 	 {
 	   err = __io_write (ioport, buf, *nbytes, -1, &wrote);
