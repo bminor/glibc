@@ -1,3 +1,8 @@
+1999-07-13  Andreas Schwab  <schwab@suse.de>
+
+	* elf/dl-runtime.c (fixup, profile_fixup): Call alloca to prevent
+	inlining.  Fixes PR libc/1198.
+
 1999-07-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/strptime.c (get_number): Handle number parsing more
