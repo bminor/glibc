@@ -25,19 +25,19 @@ union ieee754_double
     /* This is the IEEE 754 double-precision format.  */
     struct
       {
-#ifdef	__BIG_ENDIAN
+#if	__BYTE_ORDER == __BIG_ENDIAN
 	unsigned int negative:1;
 	unsigned int exponent:11;
 	/* Together these comprise the mantissa.  */
 	unsigned int mantissa0:20;
 	unsigned int mantissa1:32;
-#endif
-#ifdef	__LITTLE_ENDIAN
+#endif				/* Big endian.  */
+#if	__BYTE_ORDER == __LITTLE_ENDIAN
 	/* Together these comprise the mantissa.  */
 	unsigned int mantissa1:32;
 	unsigned int mantissa0:20;
 	unsigned int exponent:11;
 	unsigned int negative:1;
-#endif
+#endif				/* Little endian.  */
       } ieee;
   };
