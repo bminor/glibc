@@ -1,3 +1,8 @@
+2004-12-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/getconf.c (main): Skip over initial underscore in
+	$libexecdir/getconf/default symlink target.
+
 2004-11-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/strtod_l.c (INTERNAL (__STRTOF)): If densize > 2
