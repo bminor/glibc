@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,9 @@ DEFUN(__link, (from, to), CONST char *from AND CONST char *to)
   if (oldfile == MACH_PORT_NULL)
     return -1;
 
+  /* The file_getlinknode RPC returns the port that should be passed to
+     the receiving filesystem (the one containing TODIR) in dir_link.  */
+
   err = __file_getlinknode (oldfile, &linknode);
   if (err == EOPNOTSUPP)
     linknode = oldfile;
@@ -41,6 +44,21 @@ DEFUN(__link, (from, to), CONST char *from AND CONST char *to)
     __mach_port_deallocate (__mach_task_self (), oldfile);
   if (err)
     return __hurd_fail (err);
+
+  if (linknode != oldfile)
+    {
+      /* When file_getlinknode gives us a new port, we need to
+         reauthenticate it before we can use it in dir_link.  */
+      file_t authed_linknode;
+      err = __io_reauthenticate (linknode);
+      if (!err)
+	err = __USEPORT (AUTH, __auth_user_authenticate (port, linknode,
+							 &authed_linknode));
+      __mach_port_deallocate (__mach_task_self (), linknode);
+      if (err)
+	return __hurd_fail (err);
+      linknode = authed_linknode;
+    }
 
   todir = __path_split (to, &toname);
   if (todir != MACH_PORT_NULL)
