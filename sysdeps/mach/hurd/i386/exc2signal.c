@@ -36,8 +36,6 @@ _hurd_exception2signal (int exception, int code, int subcode,
       break;
       
     case EXC_BAD_ACCESS:
-      /* XXX detect copy of mapped I/O region and handle differently. */
-
       if (code == KERN_PROTECTION_FAILURE)
 	*signo = SIGSEGV;
       else
