@@ -46,5 +46,5 @@ included or need Emath.  */";
   }
 END
   {
-    print "#endif /* <errno.h included.  */"
+    print "#endif /* <errno.h> included.  */"
   }
