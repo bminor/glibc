@@ -1,0 +1,3 @@
+errnos-tmpl.c errnos.awk
+ioctls-tmpl.c ioctls.awk snarf-ioctls
+make_errlist.c make_siglist.c 
