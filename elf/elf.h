@@ -1,5 +1,5 @@
 /* This file defines standard ELF types, structures, and macros.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ian Lance Taylor <ian@cygnus.com>.
 
@@ -632,6 +632,7 @@ typedef struct
 #define R_68K_GLOB_DAT	20		/* Create GOT entry */
 #define R_68K_JMP_SLOT	21		/* Create PLT entry */
 #define R_68K_RELATIVE	22		/* Adjust by program base */
+#define R_68K_NUM	23
 
 /* Intel 80386 specific definitions.  */
 
@@ -648,6 +649,7 @@ typedef struct
 #define R_386_RELATIVE	8		/* Adjust by program base */
 #define R_386_GOTOFF	9		/* 32 bit offset to GOT */
 #define R_386_GOTPC	10		/* 32 bit PC relative offset to GOT */
+#define R_386_NUM	11
 
 /* SUN SPARC specific definitions.  */
 
@@ -677,6 +679,7 @@ typedef struct
 #define R_SPARC_JMP_SLOT 21		/* Create PLT entry */
 #define R_SPARC_RELATIVE 22		/* Adjust by program base */
 #define R_SPARC_UA32	23		/* Direct 32 bit unaligned */
+#define R_SPARC_NUM	24
 
 /* MIPS R3000 specific definitions.  */
 
@@ -757,6 +760,7 @@ typedef struct
 #define R_MIPS_PC16	10		/* PC relative 16 bit */
 #define R_MIPS_CALL16	11		/* 16 bit GOT entry for function */
 #define R_MIPS_GPREL32	12		/* GP relative 32 bit */
+#define R_MIPS_NUM	13
 
 /* Legal values for p_type field of Elf32_Phdr.  */
 
@@ -866,6 +870,7 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ALPHA_GLOB_DAT	25	/* Create GOT entry */
 #define R_ALPHA_JMP_SLOT	26	/* Create PLT entry */
 #define R_ALPHA_RELATIVE	27	/* Adjust by program base */
+#define R_ALPHA_NUM		28
 
 __END_DECLS
 
