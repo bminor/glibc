@@ -47,7 +47,6 @@ __sigreturn (register const struct sigcontext *scp)
   ss->blocked = scp->sc_mask;
   ss->sigstack.ss_onstack = scp->sc_onstack;
   ss->intr_port = scp->sc_intr_port;
-  ss->intr_is_wait = scp->sc_intr_is_wait;
   __mutex_unlock (&ss->lock);
 
   /* Switch to the target stack, and pop the state off it.  */
