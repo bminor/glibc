@@ -21,47 +21,49 @@ Cambridge, MA 02139, USA.  */
 int
 __sigreturn (register const struct sigcontext *scp)
 {
-  error_t err;
-  struct i386_thread_state ts;
-  sturct _hurd_sigstate *ss;
+  struct _hurd_sigstate *ss;
+  register int *usp asm ("%eax");
 
   if (scp == NULL)
     {
       errno = EINVAL;
       return -1;
     }
-  else
-    *(volatile const struct sigcontext *) scp;
+
+  /* Push the flags and registers onto the stack we're returning to.  */
+  usp = (int *) scp->sc_uesp;
+  *--usp = scp->sc_eip;
+  *--usp = scp->sc_efl;
+  /* Segment registers??? XXX */
+  *--usp = scp->sc_edi;
+  *--usp = scp->sc_esi;
+  *--usp = scp->sc_ebp;
+  *--usp = scp->sc_ebx;
+  *--usp = scp->sc_edx;
+  *--usp = scp->sc_ecx;
+  *--usp = scp->sc_eax;
 
   ss = _hurd_thread_sigstate (__mach_thread_self ());
   ss->blocked = scp->sc_mask;
   ss->sigstack.ss_onstack = scp->sc_onstack;
+  ss->intr_port = scp->sc_intr_port;
+  ss->intr_is_wait = scp->sc_intr_is_wait;
   __mutex_unlock (&ss->lock);
 
-  /* There is no way to restore all the registers and condition codes
-     with user-level code.  We must have the microkernel do it for us.  */
-
-  /* Segment registers??? XXX */
-  ts.edi = scp->sc_edi;
-  ts.esi = scp->sc_esi;
-  ts.ebp = scp->sc_ebp;
-
-  ts.ebx = scp->sc_ebx;
-  ts.edx = scp->sc_edx;
-  ts.ecx = scp->sc_ecx;
-  ts.eax = scp->sc_eax;
-  
-  ts.eip = scp->sc_eip;
-  ts.uesp = scp->sc_uesp;
-  ts.efl = scp->sc_efl;
-
-  if (err = __thread_set_state (__mach_thread_self (), i386_THREAD_STATE,
-				(int *) &ts, i386_THREAD_STATE_COUNT))
-    {
-      errno = EIO;		/* XXX ? */
-      return -1;
-    }
+  /* Switch to the target stack, and pop the state off it.  */
+  asm volatile ("movl %0, %%esp\n"
+		"popl %%eax\n"
+		"popl %%ecx\n"
+		"popl %%edx\n"
+		"popl %%ebx\n"
+		"popl %%ebp\n"
+		"popl %%esi\n"
+		"popl %%edi\n"
+		"popf\n"
+		"ret"
+		: /* No outputs.  */
+		: "g" (usp));
 
   /* NOTREACHED */
-  return 0;
+  return -1;
 }
