@@ -1,3 +1,14 @@
+1999-08-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/getdirentries.c: Copy over missing patches
+	from mainline.
+
+	* elf/rtld.c (_dl_start): Add missing declaration of cnt.
+
+1999-08-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* dirent/dirent.h: Fix typo in last change.
+
 1999-08-19  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/i386/intr-msg.h (INTR_MSG_TRAP): Mark OPTION and
