@@ -16,8 +16,8 @@ on-branch = $(filter-out HEAD,$(glibc-base))
 snapshot-date := $($(glibc-branch)-sync-date)
 snapshot-name := $(shell date -u -d '$(snapshot-date)' $(snapshot-name-fmt))
 
-tar-name := glibc-$(subst _,.,$(patsubst glibc-%-branch,%,\
-					 $(filter-out HEAD,$(glibc-base))))
+tar-name := glibc$(subst _,.,$(patsubst glibc-%-branch,-%,\
+					$(filter-out HEAD,$(glibc-base))))
 select-snapshot = -r '$($(glibc-branch)-sync-tag)'
 snapshot-id = $($(glibc-branch)-sync-tag)
 
