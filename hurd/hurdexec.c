@@ -30,7 +30,6 @@ error_t
 _hurd_exec (file_t file, char *const argv[], char *const envp[])
 {
   error_t err;
-  file_t file;
   char *args, *env, *ap;
   size_t argslen, envlen;
   int ints[INIT_INT_MAX];
@@ -43,10 +42,6 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
   int i;
   char *const *p;
   struct _hurd_sigstate *ss;
-
-  /* Get a port to the file we want to execute.  */
-  if (err = _hurd_path_lookup (path, O_EXEC, 0, &file))
-    return err;
 
   /* Pack the arguments into an array with nulls separating the elements.  */
   argslen = 0;
