@@ -15,15 +15,16 @@ License along with this library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <glob.h>
-#include <fnmatch.h>
-
 #ifdef	SHELL
 #include "config.h"
 #endif
 
+#include <glob.h>
+#include <fnmatch.h>
+
 #include <errno.h>
-#ifdef	__GNU_LIBRARY__
+
+#ifdef	STDC_HEADERS
 #include <stddef.h>
 #endif
 
@@ -31,80 +32,104 @@ Cambridge, MA 02139, USA.  */
 extern int errno;
 #endif
 
-#if defined (USGr3) && !defined (DIRENT)
-#define DIRENT
-#endif /* USGr3 and not DIRENT.  */
-#if defined (Xenix) && !defined (SYSNDIR)
-#define SYSNDIR
-#endif /* Xenix and not SYSNDIR.  */
-
-#if defined (POSIX) || defined (DIRENT) || defined (__GNU_LIBRARY__)
-#ifdef	USG
-#include <sys/types.h>
-#endif
-#include <dirent.h>
-#else
-#if	defined (USG) && !defined (sgi)
-#ifdef SYSNDIR
-#include <sys/ndir.h>
-#else /* not SYSNDIR */
-#include "ndir.h"
-#endif /* SYSNDIR */
-#else /* not USG */
-#include <sys/types.h>
-#include <sys/dir.h>
-#endif /* USG */
-#undef	dirent
-#define	dirent	direct
-#endif /* POSIX or DIRENT or __GNU_LIBRARY__ */
-
-#if	defined(__GNU_LIBRARY__) || !defined(POSIX) && !defined(USG)
-#define	D_NAMLEN(d)	((d)->d_namlen)
-#else
-#define	D_NAMLEN(d)	strlen((d)->d_name)
-#endif
-
 #ifndef	NULL
 #define	NULL	0
 #endif
 
-#if defined(POSIX) && !defined(__GNU_LIBRARY__)
+#if defined (USGr3) && !defined (DIRENT)
+#define DIRENT
+#endif /* USGr3 */
+#if defined (Xenix) && !defined (SYSNDIR)
+#define SYSNDIR
+#endif /* Xenix */
+
+#if defined (POSIX) || defined (DIRENT) || defined (__GNU_LIBRARY__)
+#include <dirent.h>
+#define direct dirent
+#ifndef	__GNU_LIBRARY__
+#define D_NAMLEN(d) strlen((d)->d_name)
+#else
+#define D_NAMLEN(d) ((d)->d_namlen)
+#endif
+#else /* not POSIX or DIRENT */
+#define D_NAMLEN(d) ((d)->d_namlen)
+#if defined (USG) && !defined (sgi)
+#if defined (SYSNDIR)
+#include <sys/ndir.h>
+#else /* SYSNDIR */
+#include "ndir.h"
+#endif /* not SYSNDIR */
+#else /* not USG */
+#include <sys/dir.h>
+#endif /* USG */
+#endif /* POSIX or DIRENT or __GNU_LIBRARY__ */
+
+#if defined (POSIX) && !defined (__GNU_LIBRARY__)
 /* Posix does not require that the d_ino field be present, and some
    systems do not provide it. */
 #define REAL_DIR_ENTRY(dp) 1
 #else
-#define REAL_DIR_ENTRY(dp)	((dp)->d_ino != 0)
-#endif
+#define REAL_DIR_ENTRY(dp) (dp->d_ino != 0)
+#endif /* POSIX */
 
-#if	defined(__GNU_LIBRARY__) || defined(POSIX)
+#ifdef	HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 
-#if defined (STDC_HEADERS) || defined (__GNU_LIBRARY__)
-
+#if	(defined (STDC_HEADERS) || defined (__GNU_LIBRARY__) \
+	 || defined (POSIX))
 #include <stdlib.h>
 #include <string.h>
-
-#define STDC_STRINGS
-
-#else /* Not STDC_HEADERS and not __GNU_LIBRARY__.  */
+#define	ANSI_STRING
+#else	/* No standard headers.  */
 
 #ifdef	USG
-#include <string.h>
-#ifndef	POSIX
-#include <memory.h>
-#endif /* Not POSIX.  */
-#define STDC_STRINGS
-#else /* Not USG.  */
-#ifdef	NeXT
-#include <string.h>
-#else /* Not NeXT.  */
-#include <strings.h>
-#endif /* NeXT.  */
-/* Declaring bcopy causes errors on systems whose declarations are different.
-   If the declaration is omitted, everything works fine.  */
-#endif /* Not USG.  */
 
+#include <string.h>
+#ifdef	NEED_MEMORY_H
+#include <memory.h>
+#endif
+#define	ANSI_STRING
+
+#else	/* Not USG.  */
+
+#ifdef	NeXT
+
+#include <string.h>
+
+#else	/* Not NeXT.  */
+
+#include <strings.h>
+
+#ifndef	bcmp
+extern int bcmp ();
+#endif
+#ifndef	bzero
+extern void bzero ();
+#endif
+#ifndef	bcopy
+extern void bcopy ();
+#endif
+
+#endif	/* NeXT. */
+
+#endif	/* USG.  */
+
+extern char *malloc (), *realloc ();
+extern void free ();
+
+#endif	/* Standard headers.  */
+
+#ifdef	ANSI_STRING
+#define	index(s, c)	strchr((s), (c))
+#define	rindex(s, c)	strrchr((s), (c))
+
+#define bcmp(s1, s2, n)	memcmp ((s1), (s2), (n))
+#define bzero(s, n)	memset ((s), 0, (n))
+#define bcopy(s, d, n)	memcpy ((d), (s), (n))
+#endif
+#undef	ANSI_STRING
+
 extern char *malloc ();
 extern char *realloc ();
 extern void free ();
@@ -139,15 +164,16 @@ my_realloc (p, n)
 
 #if	!defined(__alloca) && !defined(__GNU_LIBRARY__)
 
-#ifdef __GNUC__
-#define alloca __builtin_alloca
-#else /* Not GCC.  */
-#ifdef	sparc
+#ifdef	__GNUC__
+#undef	alloca
+#define	alloca(n)	__builtin_alloca (n)
+#else	/* Not GCC.  */
+#if	defined (sparc) || defined (HAVE_ALLOCA_H)
 #include <alloca.h>
-#else /* Not sparc.  */
+#else	/* Not sparc or HAVE_ALLOCA_H.  */
 extern char *alloca ();
-#endif /* sparc.  */
-#endif /* GCC.  */
+#endif	/* sparc or HAVE_ALLOCA_H.  */
+#endif	/* GCC.  */
 
 #define	__alloca	alloca
 
