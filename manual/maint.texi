@@ -179,9 +179,19 @@ indicate that something is really wrong.  Using the @samp{-w} option to
 @code{make} to print messages telling you what subdirectories it is
 working on).@refill
 
-To install the library and header files, type @code{make install}, after
-setting the installation directories in @file{configparms}.  This will
-build things if necessary, before installing them.@refill
+To build and run some test programs which exercise some of the library
+facilities, type @code{make tests}.  This will produce several files
+with names like @file{@var{program}.out}.
+
+To format the @cite{GNU C Library Reference Manual} for printing, type
+@w{@code{make dvi}}.  To format the Info version of the manual for on
+line reading with @kbd{C-h i} in Emacs or with the @code{info} program,
+type @w{@code{make info}}.
+
+To install the library and header files, and the Info files of the
+manual, type @code{make install}, after setting the installation
+directories in @file{configparms}.  This will build things if necessary,
+before installing them.@refill
 
 @node Reporting Bugs
 @appendixsec Reporting Bugs
