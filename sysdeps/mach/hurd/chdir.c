@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,26 +17,20 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <errno.h>
-#include <stddef.h>
 #include <unistd.h>
+#include <hurd.h>
 
 /* Change the current directory to PATH.  */
 int
 DEFUN(__chdir, (path), CONST char *path)
 {
-  error_t err;
-  file_t old, cwdir;
+  file_t cwdir;
 
-  cwdir = __hurd_path_lookup (path, FS_LOOKUP_EXECUTE, 0);
+  cwdir = __path_lookup (path, FS_LOOKUP_EXECUTE, 0);
   if (cwdir == MACH_PORT_NULL)
     return -1;
 
-  __mutex_lock (&_hurd_lock);
-  old = _hurd_cwdir;
-  _hurd_cwdir = cwdir;
-  __mutex_unlock (&_hurd_lock);
-  __mach_port_deallocate (__mach_task_self (), old);
+  _hurd_port_set (&_hurd_cwdir, cwdir);
 
   return 0;
 }
