@@ -30,6 +30,7 @@ routines := brk sbrk sstk ioctl \
 	    readv writev \
 	    setreuid setregid \
 	    __setreuid __setregid \
+	    seteuid setegid \
 	    getpgsz \
 	    __getpgsz \
 	    getdtsz \
