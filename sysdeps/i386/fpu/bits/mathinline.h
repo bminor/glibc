@@ -1,5 +1,5 @@
 /* Inline math functions for i387.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by John C. Bowman <bowman@math.ualberta.ca>, 1995.
 
@@ -110,23 +110,29 @@
 	__result; })
 # endif	/* __i686__ */
 
+/* The gcc, version 2.7 or below, has problems with all this inlining
+   code.  So disable it for this version of the compiler.  */
+# if (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 7))
 /* Test for negative number.  Used in the signbit() macro.  */
 __MATH_INLINE int
 __signbitf (float __x)
 {
-  union { float __f; int __i; } __u = { __f: __x }; return __u.__i < 0;
+  __extension__ union { float __f; int __i; } __u = { __f: __x };
+  return __u.__i < 0;
 }
 __MATH_INLINE int
 __signbit (double __x)
 {
-  union { double __d; int __i[2]; } __u = { __d: __x }; return __u.__i[1] < 0;
+  __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
+  return __u.__i[1] < 0;
 }
 __MATH_INLINE int
 __signbitl (long double __x)
 {
-  union { long double __l; int __i[3]; } __u = { __l: __x };
+  __extension__ union { long double __l; int __i[3]; } __u = { __l: __x };
   return (__u.__i[2] & 0x8000) != 0;
 }
+# endif
 #endif
 
 
