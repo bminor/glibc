@@ -58,7 +58,7 @@ DEFUN(sigsuspend, (set), CONST sigset_t *set)
     __sig_post (_hurd_msgport, 0, __mach_task_self ());
 
   /* Wait for the signal thread's message.  */
-  __mach_msg (msg, MACH_RCV_MSG, 0, sizeof (msg), wait,
+  __mach_msg (&msg, MACH_RCV_MSG, 0, sizeof (msg), wait,
 	      MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
   __mach_port_destroy (__mach_task_self (), wait);
 
