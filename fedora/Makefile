@@ -63,8 +63,7 @@ spec-tag = $(subst .,_,$(spec-nvr))
 tag: glibc.spec
 	cd ..; cvs -Q tag -c $(tag-prefix)$(spec-tag)
 
-$(tar-name)-$(snapshot-name)-$(glibc-branch).patch: makepatch.awk glibc.spec \
-						    FORCE
+$(tar-name)-$(glibc-branch).patch: makepatch.awk glibc.spec FORCE
 	(cd ..; cvs -q diff -upN \
 		    $(select-snapshot) -r $(tag-prefix)$(spec-tag)) | \
 	awk -v OLDVER=$(tar-name)-$(snapshot-name) \
@@ -93,7 +92,7 @@ $(tar-name)-$(snapshot-name).tar.bz2: Makefile branch.mk
 
 archives = $(tar-name)-$(snapshot-name).tar.bz2 \
 	   $(tar-name)-$(glibc-branch)-$(snapshot-name).tar.bz2 \
-	   $(tar-name)-$(snapshot-name)-$(glibc-branch).patch
+	   $(tar-name)-$(glibc-branch).patch
 finish_archive: $(archives)
 
 archive: glibc.spec

@@ -14,7 +14,7 @@ Copyright: LGPL
 Group: System Environment/Libraries
 Source0: %{name}-%{glibcdate}.tar.bz2
 Source1: %{name}-fedora-%{glibcdate}.tar.bz2
-Patch0: %{name}-%{glibcdate}-fedora.patch
+Patch0: %{name}-fedora.patch
 Patch1: %{name}-nptl-check.patch
 Patch2: %{name}-ppc-assume.patch
 Patch3: %{name}-execstack-disable.patch
