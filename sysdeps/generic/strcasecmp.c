@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <ctype.h>
 
-
 /* Compare S1 and S2, ignoring case, returning less than, equal to or
    greater than zero if S1 is lexiographically less than,
    equal to or greater than S2.  */
@@ -36,16 +35,12 @@ DEFUN(strcasecmp, (s1, s2), CONST char *s1 AND CONST char *s2)
 
   do
     {
-      c1 = tolower(*p1++);
-      c2 = tolower(*p2++);
-      if (c1 != c2)
+      c1 = tolower (*p1++);
+      c2 = tolower (*p2++);
+      if (c1 == '\0')
 	break;
     }
-  while (c1 != '\0');
+  while (c1 == c2);
 
-  if (c1 == '\0')
-    return -1;
-  else if (c2 == '\0')
-    return 1;
   return c1 - c2;
 }

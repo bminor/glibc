@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -33,19 +33,14 @@ DEFUN(bsearch, (key, base, nmemb, size, compar),
   register int comparison;
 
   l = 0;
-  u = nmemb - 1;
-  while (l <= u)
+  u = nmemb;
+  while (l < u)
     {
       idx = (l + u) / 2;
       p = (PTR) (((CONST char *) base) + (idx * size));
       comparison = (*compar)(key, p);
-      /* Don't make U negative because it will wrap around.  */
       if (comparison < 0)
-	{
-	  if (idx == 0)
-	    break;
-	  u = idx - 1;
-	}
+	u = idx;
       else if (comparison > 0)
 	l = idx + 1;
       else
