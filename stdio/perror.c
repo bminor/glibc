@@ -23,9 +23,6 @@ Cambridge, MA 02139, USA.  */
 #ifndef HAVE_GNU_LD
 #define _sys_errlist sys_errlist
 #define _sys_nerr sys_nerr
-#else
-extern CONST char *CONST _sys_errlist[];
-extern CONST int _sys_nerr;
 #endif
 
 /* Print a line on stderr consisting of the text in S, a colon, a space,
