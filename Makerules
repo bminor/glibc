@@ -47,36 +47,13 @@ endif
 ifndef +included-Makeconfig
 include $(..)Makeconfig
 endif
-
-# In make v4, we'll be able to really do this right (or something like that).
-ifeq (,)
-up-one = $(patsubst %/,%,$(dir $0))
-parents-of = $(foreach x,$0,$(notdir $x) \
-			      $(ifeq $(dir $x),./,$(parents-of $(up-one $x))))
-# Finish this someday....
-endif
+
+# `configure' writes a definition of `config-sysdirs' in `config.make'.
+sysdirs = $(config-sysdirs)
 
 +sysdir_pfx = $(common-objpfx)
 
-# Right now, however, we do it with shell scripts and lots of strangeness.
 sysdep_dir := $(..)sysdeps
-ifndef sysdirs
-include $(+sysdir_pfx)sysdirs
-define \n
-
-
-endef
-sysdirs := $(subst $(\n), ,$(sysdirs))
-endif
-$(+sysdir_pfx)sysdirs: $(+sysdir_pfx)Sysnames $(..)find-sysdirs
-	(echo define sysdirs; \
-	 sysdep_dir=$(sysdep_dir) \
-	   $(dir $(word 2,$^))$(notdir $(word 2,$^)) < $<; \
-	 echo endef) > $@
-$(+sysdir_pfx)Sysnames:
-	@(echo The GNU C Library has not been configured!	;\
-	  echo Run \`configure\' to configure it before building.\
-	 ) >&2; exit 1
 export sysdirs := $(sysdirs)
 export sysdep_dir := $(sysdep_dir)
 
@@ -110,8 +87,8 @@ $(objpfx)%.o: $(objpfx)%.c $(before-compile); $(compile-command.c)
 $(objpfx)%.dep: $(objpfx)%.c $(before-compile); $(+make-deps)
 
 include $(+sysdir_pfx)sysd-Makefile
-$(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)sysdirs $(..)Makerules
-	(for dir in `sed -e 1d -e '$$d' $<`; do	   			      \
+$(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules
+	(for dir in $(sysdirs); do		   			      \
 	   file=sysdeps/$$dir/Makefile;					      \
 	   if [ -f $(..)$$file ]; then					      \
 	     echo include "\$$(..)$$file";				      \
