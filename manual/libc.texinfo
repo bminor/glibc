@@ -1,4 +1,4 @@
-\input /gd/gnu/texinfo2/texinfo	@c -*- Texinfo -*-
+\input texinfo                  @c -*- Texinfo -*-
 @comment %**start of header (This is for running Texinfo on a region.)
 @setfilename library.info
 @settitle The GNU C Library
