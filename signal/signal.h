@@ -34,7 +34,6 @@ __BEGIN_DECLS
 
 #include <gnu/types.h>
 #include <sigset.h>		/* __sigset_t, __sig_atomic_t.  */
-#include <signum.h>
 
 #if	!defined(__sig_atomic_t_defined) &&	\
   (defined(_SIGNAL_H) || defined(__need_sig_atomic_t))
@@ -45,6 +44,8 @@ typedef __sig_atomic_t sig_atomic_t;
 #undef	__need_sig_atomic_t
 
 #ifdef	_SIGNAL_H
+
+#include <signum.h>
 
 /* Type of a signal handler.  */
 typedef void (*__sighandler_t) __P ((int));

@@ -165,7 +165,7 @@ $(common-objpfx)ioctls.h: $(common-objpfx)make-ioctls
 ioctl-includes := sys/termios.h net/nit.h
 ioctl-includes := $(wildcard $(addprefix $(sysincludedir)/,$(ioctl-includes)))
 make-ioctls-CFLAGS := $(subst /,_,$(subst .,_,\
-			$(patsubst $(sysincludedir)/%,HAVE_%,\
+			$(patsubst $(sysincludedir)/%,-DHAVE_%,\
 				   $(ioctl-includes))))
 
 $(common-objpfx)make-ioctls: $(common-objpfx)make-ioctls.c
