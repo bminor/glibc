@@ -39,8 +39,7 @@ $(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/mk-local_lim.c
 	$(CC) $(native-CFLAGS) $(local_lim-CFLAGS) $$cwd/$< -o $(@F)
 
 before-compile := $(before-compile) $(common-objpfx)local_lim.h
-common-generated := $(common-generated) \
-		    $(common-objpfx)local_lim.h $(common-objpfx)mk-local_lim
+common-generated := $(common-generated) local_lim.h mk-local_lim
 
 endif
 
@@ -111,8 +110,8 @@ $(addprefix $(common-objpfx),$(sys/param.h-includes)): $(common-objpfx)%: \
 	mv $@-t $@
 endif
 
-common-generated := $(common-generated) $(addprefix $(common-objpfx),\
-		    sys/param.h $(sys/param.h-includes) param.h.c param.h.dep)
+common-generated := $(common-generated) \
+		    sys/param.h $(sys/param.h-includes) param.h.c param.h.dep
 
 
 ifeq ($(subdir),misc)
@@ -149,8 +148,8 @@ $(common-objpfx)errnos: $(wildcard $(sysincludedir)/errno.h	\
 	cat $^ | sed -n 's/^#define[ 	]*\(E[A-Z0-9][A-Z0-9]*\)[ 	].*$$/\1/p' > $@-tmp
 	mv $@-tmp $@
 
-common-generated := $(common-generated) $(addprefix $(common-objpfx),\
-		    errnos.h errnos make-errnos make-errnos.c)
+common-generated := $(common-generated) \
+		    errnos.h errnos make-errnos make-errnos.c
 endif
 
 ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
@@ -201,8 +200,8 @@ $(common-objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls \
 	| sort | uniq | tr '\012' ' ' > $@-tmp
 	mv $@-tmp $@
 
-common-generated := $(common-generated) $(addprefix $(common-objpfx),\
-		    ioctls.h ioctls make-ioctls make-ioctls.c)
+common-generated := $(common-generated) \
+		    ioctls.h ioctls make-ioctls make-ioctls.c
 endif
 
 ifeq ($(subdir),stdio)
@@ -218,7 +217,7 @@ $(objpfx)errlist.c: $(objpfx)make_errlist
 $(objpfx)make_errlist: $(sysdep_dir)/unix/make_errlist.c
 	$(native-compile)
 
-generated := $(generated) $(addprefix $(objpfx),make_errlist errlist.c)
+generated := $(generated) make_errlist errlist.c
 
 endif
 endif # stdio
@@ -257,7 +256,7 @@ $(common-objpfx)syscall.h: $(syscall.h)
 	mv $@-tmp $@
 
 before-compile := $(before-compile) $(common-objpfx)syscall.h
-common-generated := $(common-generated) $(common-objpfx)syscall.h
+common-generated := $(common-generated) syscall.h
 
 endif
 
