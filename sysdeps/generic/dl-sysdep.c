@@ -233,7 +233,7 @@ unsetenv (const char *name)
   const size_t len = strlen (name);
   char **ep;
 
-  for (ep = __environ; *ep != NULL; ++ep)
+  for (ep = _environ; *ep != NULL; ++ep)
     if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
       {
 	/* Found it.  Remove this pointer by moving later ones back.  */
