@@ -29,12 +29,12 @@ Cambridge, MA 02139, USA.  */
 #define minor(x) ((int)((x) & 0xff))
 
 
-/* Create a device file named PATH, with permission and special bits MODE
+/* Create a device file named FILE_NAME, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
    device numbers with the `makedev' macro above).  */
 int
-DEFUN(__mknod, (path, mode, dev),
-      CONST char *path AND mode_t mode AND dev_t dev)
+DEFUN(__mknod, (file_name, mode, dev),
+      CONST char *file_name AND mode_t mode AND dev_t dev)
 {
   error_t err;
   file_t dir, node;

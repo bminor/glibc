@@ -24,9 +24,9 @@ Cambridge, MA 02139, USA.  */
 #include <fcntl.h>
 #include <hurd/port.h>
 
-/* Change the current root to PATH.  */
+/* Change the current root to FILE_NAME.  */
 int
-DEFUN(chroot, (path), CONST char *path)
+DEFUN(chroot, (file_name), CONST char *file_name)
 {
   file_t file, dir;
   error_t err;
