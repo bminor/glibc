@@ -34,7 +34,7 @@ struct hurd_dtable _hurd_dtable;
 int _hurd_dtable_rlimit;
 struct hurd_userlink *_hurd_dtable_users;
 
-const struct _hurd_dtable_resizes _hurd_dtable_resizes;
+void (*_hurd_dtable_deallocate) (void *);
 
 
 /* Initialize the file descriptor table at startup.  */
@@ -109,11 +109,10 @@ static file_t
 get_dtable_port (int fd)
 {
   file_t dport;
-  int err = _HURD_DPORT_USE (fd,
-			     __mach_port_mod_refs (__mach_task_self (),
-						   (dport = port),
-						   MACH_PORT_RIGHT_SEND,
-						   1));
+  int err = HURD_DPORT_USE (fd, __mach_port_mod_refs (__mach_task_self (),
+						      (dport = port),
+						      MACH_PORT_RIGHT_SEND,
+						      1));
   if (err)
     {
       errno = err;
@@ -234,26 +233,26 @@ rectty_dtable (mach_port_t cttyid)
 	/* We now have no controlling tty at all.  */
 	newctty = MACH_PORT_NULL;
       else
-	_HURD_PORT_USE (&d->port,
-			({ mach_port_t id;
-			   /* Get the io object's cttyid port.  */
-			   if (! __term_getctty (port, &id))
-			     {
-			       if (id == cttyid && /* Is it ours?  */
-				   /* Get the ctty io port.  */
-				   __term_become_ctty (port, _hurd_pid,
-						       _hurd_pgrp,
-						       _hurd_msgport,
-						       &newctty))
-				 /* XXX it is our ctty but the call failed? */
-				 newctty = MACH_PORT_NULL;
-			       __mach_port_deallocate
-				 (__mach_task_self (), (mach_port_t) id);
-			     }
-			   else
-			     newctty = MACH_PORT_NULL;
-			   0;
-			 }));
+	HURD_PORT_USE (&d->port,
+		       ({ mach_port_t id;
+			  /* Get the io object's cttyid port.  */
+			  if (! __term_getctty (port, &id))
+			    {
+			      if (id == cttyid && /* Is it ours?  */
+				  /* Get the ctty io port.  */
+				  __term_become_ctty (port, _hurd_pid,
+						      _hurd_pgrp,
+						      _hurd_msgport,
+						      &newctty))
+				/* XXX it is our ctty but the call failed? */
+				newctty = MACH_PORT_NULL;
+			      __mach_port_deallocate
+				(__mach_task_self (), (mach_port_t) id);
+			    }
+			  else
+			    newctty = MACH_PORT_NULL;
+			  0;
+			}));
 
       /* Install the new ctty port.  */
       _hurd_port_set (&d->ctty, newctty);
