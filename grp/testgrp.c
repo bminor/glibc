@@ -4,8 +4,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-void main (void)
+int
+DEFUN_VOID(main)
 {
   uid_t me;
   struct passwd *my_passwd;
@@ -29,11 +31,8 @@ void main (void)
   printf ("My default group is %s (%d).\n",
 	  my_group->gr_name, (int)(my_passwd->pw_gid));
   printf ("The members of this group are:\n");
-  members = my_group->gr_mem;
-  while (members) {
-    printf ("  %s\n", *(members));
-    members++;
-    }
+  for (members = my_group->gr_mem; *members != NULL; ++members)
+    printf ("  %s\n", *members);
   exit (EXIT_SUCCESS);
 }
 
