@@ -154,6 +154,9 @@ DEFUN(ftw, (dir, func, descriptors),
 {
   DIR **dirs;
   size_t len;
+#ifndef PATH_MAX
+#define PATH_MAX 1024		/* XXX */
+#endif
   char buf[PATH_MAX + 1];
   struct stat s;
   int flag, ret;
