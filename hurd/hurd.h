@@ -203,6 +203,10 @@ extern void _hurd_init (int flags, char **argv,
 
 extern void _hurd_proc_init (char **argv);
 
+/* Give THREAD a stack and set it to run at PC when resumed.  */
+error_t _hurd_setup_thread (task_t task, thread_t thread, void *pc);
+
+
 /* Return the socket server for sockaddr domain DOMAIN.  */
 
 extern socket_t _hurd_socket_server (int domain);
