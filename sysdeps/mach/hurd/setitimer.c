@@ -24,10 +24,11 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/signal.h>
 #include <hurd/msg_request.h>
 #include <mutex.h>
+#include <mach/message.h>
 
 /* XXX Temporary cheezoid implementation of ITIMER_REAL/SIGALRM.  */
 
-struct mutex _hurd_itimer_lock = MUTEX_INITIALIZER;
+spin_lock_t _hurd_itimer_lock = SPIN_LOCK_INITIALIZER;
 struct itimerval _hurd_itimerval; /* Current state of the timer.  */
 mach_port_t _hurd_itimer_port;	/* Port the timer thread blocks on.  */
 thread_t _hurd_itimer_thread;	/* Thread waiting for timeout.  */
@@ -118,8 +119,9 @@ static int
 setitimer_locked (const struct itimerval *new, struct itimerval *old)
 {
   struct itimerval newval = *new;
-  struct timeval now, remaining;
+  struct timeval now, remaining, elapsed;
   struct timeval old_interval;
+  error_t err;
 
   inline void kill_itimer_thread (void)
     {
@@ -136,7 +138,7 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old)
 
       if (_hurd_signal_preempt[SIGALRM] == NULL)
 	{
-	  static _hurd_signal_preempt preempt =
+	  static struct hurd_signal_preempt preempt =
 	    { preempt_sigalrm, 0, 0, NULL };
 	  _hurd_signal_preempt[SIGALRM] = &preempt;
 	}
@@ -165,7 +167,6 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old)
 					 &_hurd_itimer_thread_stack_base,
 					 &_hurd_itimer_thread_stack_size))
 	    {
-	    stillborn:
 	      __thread_terminate (_hurd_itimer_thread);
 	      _hurd_itimer_thread = MACH_PORT_NULL;	  
 	      goto out;
@@ -179,7 +180,7 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old)
       /* Calculate how much time is remaining for the pending alarm.  */
       if (__gettimeofday (&now, NULL) < 0)
 	{
-	  __mutex_unlock (&_hurd_itimer_lock);
+	  __spin_unlock (&_hurd_itimer_lock);
 	  return -1;
 	}
       elapsed = now;
@@ -224,8 +225,8 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old)
 	}
     }
   /* See if the timeout changed.  If so, we must alert the itimer thread.  */
-  else if (remaining.it_value.tv_sec != new->it_value.tv_sec ||
-	   remaining.it_value.tv_usec != new->it_value.tv_usec)
+  else if (remaining.tv_sec != new->it_value.tv_sec ||
+	   remaining.tv_usec != new->it_value.tv_usec)
     {
       /* The timeout value is changing.  Tell the itimer thread to
 	 reexamine it and start counting down.  If the itimer thread is
@@ -246,7 +247,7 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old)
       _hurd_itimer_thread_suspended = 0;
     }
 
-  __mutex_unlock (&_hurd_itimer_lock);
+  __spin_unlock (&_hurd_itimer_lock);
 
   if (old != NULL)
     {
@@ -256,7 +257,7 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old)
   return 0;
 
  out:
-  __mutex_unlock (&_hurd_itimer_lock);
+  __spin_unlock (&_hurd_itimer_lock);
   return __hurd_fail (err);
 }
 
@@ -281,7 +282,7 @@ DEFUN(__setitimer, (which, new, old),
       break;
     }
 
-  __mutex_lock (&_hurd_itimer_lock);
+  __spin_lock (&_hurd_itimer_lock);
   return setitimer_locked (new, old);
 }
 
@@ -295,7 +296,7 @@ preempt_sigalrm (thread_t thread, int signo, int sigcode)
     return SIG_DFL;
 
   /* Either reload or disable the itimer.  */
-  __mutex_lock (&_hurd_itimer_lock);
+  __spin_lock (&_hurd_itimer_lock);
   it = _hurd_itimerval;
   it.it_value = it.it_interval;
   setitimer_locked (&it, NULL);
