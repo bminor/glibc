@@ -87,8 +87,9 @@ sysdep_headers := $(sysdep_headers) sys/param.h $(sys/param.h-includes)
 
 endif # misc
 
-ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/errnos.h))))" \
-     "$(sysdep_dir)/stub/"
+ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
+	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/errnos.h))))))
+
 # These need to exist before any compiling is done,
 # so cpp doesn't instead find the stub versions.
 before-compile := $(before-compile) $(common-objpfx)errnos.h 
@@ -114,16 +115,22 @@ generated := $(generated) $(addprefix $(common-objpfx),\
 	     errnos.h errnos make-errnos make-errnos.c)
 endif
 
-ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/ioctls.h))))" \
-     "$(sysdep_dir)/stub/"
+ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
+	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/ioctls.h))))))
+
 before-compile := $(before-compile) $(common-objpfx)ioctls.h
 
 $(common-objpfx)ioctls.h: $(common-objpfx)make-ioctls
 	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 
+sys/termios.h := $(wildcard $(sysincludedir)/sys/termios.h)
+ifneq (,$(strip $(sys/termios.h)))
+make-ioctls-CFLAGS := -DHAVE_SYS_TERMIOS_H
+endif
 $(common-objpfx)make-ioctls: $(common-objpfx)make-ioctls.c
-	$(common-objdir-compile)
+	cd $(@D); $(CC) $(native-CFLAGS) $(make-ioctls-CFLAGS) \
+			$(<:$(common-objpfx)%=%) -o $(@F)
 
 $(common-objpfx)make-ioctls.c: $(sysdep_dir)/unix/ioctls-tmpl.c \
 			       $(sysdep_dir)/unix/ioctls.awk \
@@ -131,9 +138,28 @@ $(common-objpfx)make-ioctls.c: $(sysdep_dir)/unix/ioctls-tmpl.c \
 	awk -f $(word 2,$^) requests="`cat $(word 3,$^)`" $< > $@T
 	mv $@T $@
 
+
+termbits.h := $(firstword $(wildcard $(+sysdep_dirs:%=%/termbits.h)))
+ifeq ($(termbits.h),$(sysdep_dir)/generic/termbits.h)
+termbits.h := # Ignore the generic version.
+endif
+
+# If there is a system-specific <termbits.h> file, we want to omit all the
+# symbols it defines from ioctls.  Otherwise, both ioctls.h and termbits.h
+# would define them.  The system-specific <termbits.h> file presumably
+# defines them with the same values as we find from the system's headers.
+# We also want to omit from ioctls the symbols defined in our own
+# <sys/ttydefaults.h>, to avoid multiple definition conflicts.
+# We use snarf-ioctls on these files to find what symbols we want to omit.
+# Then we turn this into a big alternation for egrep.  
+
 $(common-objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls \
-			$(sysincludedir)/sys/ioctl.h
-	$(dir $<)$(notdir $<) $(word 2,$^) | tr '\012' ' ' > $@-tmp
+			$(sysincludedir)/sys/ioctl.h $(sys/termios.h)
+	$(dir $<)$(notdir $<) $(filter-out $<,$^) \
+	| egrep -v "^(`$(dir $<)$(notdir $<) \
+		   	$(termbits.h) $(..)termios/sys/ttydefaults.h \
+		    | tr '\012' '|' | sed 's/|$$//'`)$$"\
+	| sort | uniq | tr '\012' ' ' > $@-tmp
 	mv $@-tmp $@
 
 generated := $(generated) $(addprefix $(common-objpfx),\
@@ -155,8 +181,8 @@ generated := $(generated) $(addprefix $(objpfx),make_errlist errlist.c)
 
 endif
 
-ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/syscall.h))))" \
-     "$(sysdep_dir)/stub/"
+ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
+	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/syscall.h))))))
 
 # The syscall code assumes a file <syscall.h> that defines macros
 # `SYS_call' for syscall `call'.  Variations on this I have seen include:
