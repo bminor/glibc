@@ -75,7 +75,8 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
        buffer-flushing function, so we just do a straight write.  */
     {
       int count = (stream->__io_funcs.__write == NULL ? to_write :
-		   (*stream->__io_funcs.__write) (stream->__cookie, p,
+		   (*stream->__io_funcs.__write) (stream->__cookie,
+						  (CONST char *) p,
 						  to_write));
       if (count > 0)
 	{
