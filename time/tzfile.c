@@ -271,8 +271,7 @@ __tzfile_read (const char *file)
      We choose the offsets in the types of each flavor that are
      transitioned to earliest in time.  */
   __tzname[1] = NULL;
-  for (i = 0; i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
-       ++i)
+  for (i = 0; i < num_types; ++i)
     __tzname[types[i].isdst] = __tzstring (&zone_names[types[i].idx]);
   if (__tzname[1] == NULL)
     __tzname[1] = __tzname[0];
@@ -425,10 +424,8 @@ __tzfile_compute (time_t timer, int use_localtime,
       __daylight = rule_stdoff != rule_dstoff;
       __timezone = -rule_stdoff;
       __tzname[1] = NULL;
-      for (i = 0;
-	   i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
-	   ++i)
-	__tzname[types[i].isdst] = &zone_names[types[i].idx];
+      for (i = 0; i < num_types; ++i)
+	__tzname[types[i].isdst] = __tzstring (&zone_names[types[i].idx]);
       if (__tzname[1] == NULL)
 	/* There is no daylight saving time.  */
 	__tzname[1] = __tzname[0];
