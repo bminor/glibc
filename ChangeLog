@@ -1,5 +1,9 @@
 1998-08-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dl-close.c (_dl_close): Update _dl_loaded if the first
+	object on the list is removed.
+	Reported by HJ Lu [PR libc/770].
+
 	* io/sys/stat.h (ALLPERMS): Fix type (S_ISTXT -> S_ISVTX).
 	Reported by Rob.Hagopian@vu.union.edu [PR libc/763].
 
