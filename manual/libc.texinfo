@@ -35,7 +35,7 @@ Copyright @copyright{} 1992 Free Software Foundation, Inc.
 
 @ifinfo
 @node Top
-@chapter Main Menu
+@top Main Menu
 This is the reference manual for version 0.00 of the GNU C Library.
 @end ifinfo
 
@@ -65,7 +65,7 @@ Contents of the Library
 * String and Array Utilities::		Utilities for copying and comparing
 					 strings and arrays.
 * Extended Characters::			Support for extended character sets.
-* Localization::			The country and language can affect
+* Locales::				The country and language can affect
                                          the behavior of library functions.
 * Searching and Sorting::		General searching and sorting
 					 functions.
@@ -80,8 +80,10 @@ Contents of the Library
 					 for networking.
 * Low-Level Terminal Interface::	How to change the characteristics
 					 of a terminal device.
-* Diagnostics::				A helpful debugging facility.
-* Mathematics::				Math functions.
+* Consistency Checking::		A helpful debugging facility.
+* Mathematics::				Math functions (transcendental,
+					  random numbers, abs value).
+* Arithmetic::				Low-level arithmetic functions.
 * Date and Time::			Functions for getting the date and
 					 time, and conversion between formats.
 * Non-Local Exits::			The @code{setjmp} and @code{longjmp}
