@@ -22,5 +22,6 @@ Cambridge, MA 02139, USA.  */
 
 #undef	longjmp
 
+__NORETURN
 function_alias_void(longjmp, __longjmp, (env, val),
 		    DEFUN(longjmp, (env, val), CONST jmp_buf env AND int val))
