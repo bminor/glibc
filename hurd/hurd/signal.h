@@ -105,7 +105,7 @@ _hurd_self_sigstate (void)
   struct hurd_sigstate **location =
     (void *) __hurd_threadvar_location (_HURD_THREADVAR_SIGSTATE);
   if (*location)
-    __mutex_lock (&*(location)->lock);
+    __mutex_lock (&(*location)->lock);
   else
     *location = _hurd_thread_sigstate (__mach_thread_self ());
   return *location;
