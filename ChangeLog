@@ -1,3 +1,24 @@
+1999-07-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/setenv.c: Describe problem.
+
+	* malloc/malloc.c (request2size): Also set errno if failing.
+
+	* malloc/malloc.c (request2size): Take care of overflow in
+	addition.
+
+	* sysdeps/posix/getcwd.c: Correct last patch.  Handle getcwd
+	(NULL, != 0) correctly.
+
+	* sysdeps/posix/getcwd.c: When resizing buffer make sure new size
+	is large enough.
+
+1999-07-07  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/getpt.c: Check that /dev/pts is mounted.
+	(_PATH_DEVPTS, DEVPTS_SUPER_MAGIC): New definitions.
+	(_PATH_DEVPTMX): Use _PATH_DEV.
+
 1999-07-02  Tim Waugh  <tim@cyberelk.demon.co.uk>
 
 	* posix/wordexp-test.c: Revert bogus 'unset IFS' change.  It
