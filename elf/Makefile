@@ -57,7 +57,6 @@ install-bin	= ldd
 endif
 
 extra-objs	+= sln.o
-install-rootsbin = sln
 
 $(objpfx)sln: $(objpfx)sln.o
 	$(CC) -nostdlib -nostartfiles -o $@ $(sysdep-LDFLAGS) -static	      \
@@ -68,7 +67,7 @@ $(objpfx)sln: $(objpfx)sln.o
 
 ifeq (yes,$(has-ldconfig))
 extra-objs	+= ldconfig.o
-install-rootsbin += ldconfig
+install-rootsbin = ldconfig
 
 $(objpfx)ldconfig: $(objpfx)ldconfig.o
 	$(CC) -nostdlib -nostartfiles -o $@ $(sysdep-LDFLAGS) -static	      \
