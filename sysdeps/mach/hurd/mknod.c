@@ -53,7 +53,7 @@ DEFUN(__mknod, (path, mode, dev),
 			  &node))
     goto lose;
 
-  if (err = __io_write (node, dev, sizeof (dev), &n))
+  if (err = __io_write (node, &dev, sizeof (dev), &n)) /* XXX */
     goto lose;
   if (n != sizeof (dev))
     {
@@ -63,10 +63,9 @@ DEFUN(__mknod, (path, mode, dev),
 
   err = __dir_set_translator (dir, name, FS_TRANS_EXCL, FS_GOAWAY_DONT,
 			      translator, MACH_PORT_NULL);
-  __mach_port_deallocate (__mach_task_self (), dir);
   if (err)
     /* XXX The node still exists.... */
-    return __hurd_fail (err);
+    goto lose;
 
   return 0;
 
