@@ -70,40 +70,6 @@ DEFUN(__ioctl, (fd, request),
 #define io2mach_type(count, type) \
   ((mach_msg_type_t) { mach_types[type], (type << 1) * 8, count, 1, 0, 0 })
 
-  /* Pack an argument into the message buffer.  */
-  inline void in (unsigned int count, enum __ioctl_datum type)
-    {
-      if (count > 0)
-	{
-	  void *const p = &t[1];
-	  const size_t len = count * ((unsigned int) type << 1);
-	  *t = io2mach_type (count, type);
-	  memcpy (p, arg, len);
-	  arg += len;
-	  t = p + ((len + sizeof (*t) - 1) / sizeof (*t) * sizeof (*t));
-	}
-    }
-
-  /* Unpack the message buffer into the argument location.  */
-  inline int out (unsigned int count, unsigned int type,
-		  void *store, void **update)
-    {
-      if (count > 0)
-	{
-	  const size_t len = count * (type << 1);
-	  union { mach_msg_type_t t; int i; } ipctype;
-	  ipctype.t = io2mach_type (count, type);
-	  if (*(int *) t != ipctype.i)
-	    return 1;
-	  ++t;
-	  memcpy (store, t, len);
-	  if (update != NULL)
-	    *update += len;
-	  t = (void *) t + ((len + sizeof (*t) - 1) / sizeof (*t) * sizeof *t);
-	}
-      return 0;
-    }
-
   va_list ap;
 
   va_start (ap, request);
@@ -130,6 +96,23 @@ DEFUN(__ioctl, (fd, request),
 
   if (_IOC_INOUT (request) & IOC_IN)
     {
+      /* Pack an argument into the message buffer.  */
+      inline void in (unsigned int count, enum __ioctl_datum type)
+	{
+	  if (count > 0)
+	    {
+	      void *p = &t[1];
+	      const size_t len = count * ((unsigned int) type << 1);
+	      *t = io2mach_type (count, type);
+	      memcpy (p, arg, len);
+	      arg += len;
+	      p += len;
+	      p = (void *) (((unsigned long int) p + sizeof (*t) - 1)
+			    & ~(sizeof (*t) - 1));
+	      t = p;
+	    }
+	}
+
       /* Pack the argument data.  */
       in (_IOT_COUNT0 (type), _IOT_TYPE0 (type));
       in (_IOT_COUNT1 (type), _IOT_TYPE1 (type));
@@ -220,6 +203,27 @@ DEFUN(__ioctl, (fd, request),
   t = (mach_msg_type_t *) msg.data;
   switch (err)
     {
+      /* Unpack the message buffer into the argument location.  */
+      inline int out (unsigned int count, unsigned int type,
+		      void *store, void **update)
+	{
+	  if (count > 0)
+	    {
+	      const size_t len = count * (type << 1);
+	      union { mach_msg_type_t t; int i; } ipctype;
+	      ipctype.t = io2mach_type (count, type);
+	      if (*(int *) t != ipctype.i)
+		return 1;
+	      ++t;
+	      memcpy (store, t, len);
+	      if (update != NULL)
+		*update += len;
+	      t = (void *) (((unsigned long int) t + len + sizeof (*t) - 1)
+			    & ~(sizeof (*t) - 1));
+	    }
+	  return 0;
+	}
+
     case 0:
       if (m->msgh_size != reply_size ||
 	  out (_IOT_COUNT0 (type), _IOT_TYPE0 (type), arg, &arg) ||
