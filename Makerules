@@ -220,8 +220,8 @@ endef
 # Temporary until I get a better solution.
 .PHONY: ar-it
 ar-it: $(objects)
-#	$(+libc_lock_open)
 ifdef objects
+#	$(+libc_lock_open)
 ifdef objdir
 	cd $(objdir); $(AR) cru$(verbose) libc.a $(patsubst $(objpfx)%,%,$^)
 else
@@ -250,7 +250,7 @@ do-install = $(INSTALL_DATA) $< $@
 # to install everything it changes.
 ifdef objects
 install: $(libdir)/libc.a
-$(libdir)/libc.a: $(libc.a); $(do-install)
+$(libdir)/libc.a: $(libc.a) installdirs; $(do-install)
 endif
 
 ifdef install
