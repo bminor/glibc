@@ -61,8 +61,8 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	 to restore when another signal arrived.  We will just base
 	 our setup on that.  */
       if (_hurdsig_catch_fault (SIGSEGV))
-	assert (_hurdsig_fault_sigcode >= ss->context &&
-		_hurdsig_fault_sigcode < ss->context + 1);
+	assert (_hurdsig_fault_sigcode >= (int) ss->context &&
+		_hurdsig_fault_sigcode < (int) (ss->context + 1));
       else
 	{
 	  memcpy (&state->basic, &ss->context->sc_i386_thread_state,
@@ -244,8 +244,8 @@ _hurdsig_rcv_interrupted_p (struct machine_thread_all_state *state,
 			    mach_port_t *port)
 {
   static const unsigned char syscall[] = { 0x9a, 0, 0, 0, 0, 7, 0 };
-  const unsigned char *pc = (void *) state->basic.eip;
-  pc -= sizeof syscall;
+  const unsigned char *volatile pc
+    = (void *) state->basic.eip - sizeof syscall;
 
   if (_hurdsig_catch_fault (SIGSEGV))
     assert (_hurdsig_fault_sigcode >= (int) pc &&
