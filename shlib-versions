@@ -57,7 +57,7 @@ hppa.*-.*-.*		libc=6			GLIBC_2.2
 # libmachuser.so.1 corresponds to mach/*.defs as of Utah's UK22 release.
 .*-.*-gnu-gnu.*		libmachuser=1
 
-# libhurduser.so.0.3 corresponds to hurd/*.defs as of XXX June 2002.
+# libhurduser.so.0.3 corresponds to hurd/*.defs as of 11 June 2002.
 .*-.*-gnu-gnu.*		libhurduser=0.3
 
 %ifndef USE_IN_LIBIO
