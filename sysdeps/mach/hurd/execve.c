@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -120,6 +120,7 @@ DEFUN(__execve, (path, argv, envp),
 
   ss = _hurd_thread_sigstate (__mach_thread_self ());
   ints[INIT_SIGMASK] = ss->blocked;
+  ints[INIT_SIGPENDING] = ss->pending;
   ints[INIT_SIGIGN] = 0;
   for (i = 1; i < NSIG; ++i)
     if (ss->actions[i].sa_handler == SIG_IGN)
