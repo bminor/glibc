@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -41,24 +41,23 @@ unsigned int
 DEFUN(sleep, (seconds), unsigned int seconds)
 {
   unsigned int remaining, slept;
-  void EXFUN((*handler), (int sig));
+  __sighandler_t handler;
   time_t before, after;
 
-  handler = signal(SIGALRM, sleep_handler);
+  handler = signal (SIGALRM, sleep_handler);
   if (handler == SIG_ERR)
     return seconds;
 
-  before = time((time_t *) NULL);
-  remaining = alarm(seconds);
-  after = time((time_t *) NULL);
+  before = time ((time_t *) NULL);
+  remaining = alarm (seconds);
+  (void) pause ();
+  after = time ((time_t *) NULL);
 
-  (void) pause();
+  (void) signal (SIGALRM, handler);
 
-  (void) signal(SIGALRM, handler);
-
-  slept = (after - before) / 1000;
+  slept = after - before;
   if (remaining > slept)
-    alarm(remaining - slept);
+    alarm (remaining - slept);
 
-  return slept;
+  return (slept > seconds ? 0 : seconds - slept);
 }
