@@ -44,7 +44,7 @@ extern void __libc_init (int argc, char **argv, char **envp);
 extern int main (int argc, char **argv, char **envp);
 
 void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
-void (*_cthread_exit_routine) (int status);
+__NORETURN void (*_cthread_exit_routine) (int status);
 
 static int split_args (char *, size_t, char **);
 
