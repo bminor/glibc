@@ -57,7 +57,8 @@ DEFUN(__ioctl, (fd, request),
   struct
     {
       mig_reply_header_t header;
-      char data[_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type)) +
+      char data[3 * sizeof (mach_msg_type_t) +
+		_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type)) +
 		_IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type)) +
 		_IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (type))];
     } msg;
