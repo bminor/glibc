@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ DEFUN(__mkdir, (path, mode), CONST char *path AND mode_t mode)
 {
   error_t err;
   const char *name;
-  file_t parent = __path_split (path, &name);
+  file_t parent = __path_split (path, (char *) &name);
   if (parent == MACH_PORT_NULL)
     return -1;
   err = __dir_mkdir (parent, name, mode);
