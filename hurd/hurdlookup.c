@@ -34,6 +34,9 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
 
   startdir = path[0] == '/' ? crdir : cwdir;
 
+  while (path[0] == '/')
+    path++;
+
   if (err = __dir_pathtrans (startdir, path, flags, mode,
 			     &doretry, retryname, result))
     return err;
