@@ -146,6 +146,25 @@ extern error_t hurd_path_lookup (file_t crdir, file_t cwdir,
 				 int flags, mode_t mode,
 				 file_t *port);
 
+/* Process the values returned by `dir_pathtrans' et al, and loop doing
+   `dir_pathtrans' calls until one returns FS_RETRY_NONE.  CRDIR is the
+   root directory used for things like symlinks to absolute file names; the
+   other arguments should be those just passed to and/or returned from
+   `dir_pathtrans', `fsys_getroot', or `file_invoke_translator'.  This
+   function consumes the reference in *RESULT even if it returns an error.  */
+
+extern error_t __hurd_path_lookup_retry (file_t crdir,
+					 enum retry_type doretry,
+					 char retryname[1024],
+					 int flags, mode_t mode,
+					 file_t *result);
+extern error_t hurd_path_lookup_retry (file_t crdir,
+				       enum retry_type doretry,
+				       char retryname[1024],
+				       int flags, mode_t mode,
+				       file_t *result);
+
+
 /* Split FILE into a directory and a name within the directory.  The
    directory lookup uses the current root and working directory.  If
    successful, stores in *NAME a pointer into FILE where the name
@@ -163,8 +182,21 @@ extern file_t path_split (const char *file, char **name);
 extern file_t __path_lookup (const char *file, int flags, mode_t mode);
 extern file_t path_lookup (const char *file, int flags, mode_t mode);
 
+/* Invoke any translator set on the node FILE represents, and return in
+   *TRANSLATED a port to the translated node.  FLAGS are as for
+   `dir_pathtrans' et al, but the returned port will not necessarily have
+   any more access rights than FILE does.  */
 
-/* Open a file descriptor on a port.  FLAGS are as for `open'.  */
+extern error_t __hurd_invoke_translator (file_t file, int flags,
+					 file_t *translated);
+extern error_t hurd_invoke_translator (file_t file, int flags,
+				       file_t *translated);
+
+
+/* Open a file descriptor on a port.  FLAGS are as for `open'; flags
+   affected by io_set_openmodes are not changed by this.  If successful,
+   this consumes a user reference for PORT (which will be deallocated on
+   close).  */
 
 extern int openport (io_t port, int flags);
 

@@ -62,7 +62,7 @@ DEFUN(bind, (fd, addr, len),
 				       MACH_MSG_TYPE_COPY_SEND);
 	  if (! err)
 	    /* Get a port to the ifsock translator.  */
-	    err = __file_invoke_translator (node, &ifsock); /* XXX */
+	    err = __hurd_invoke_translator (node, 0, &ifsock);
 	  if (! err)
 	    /* Get the address port.  */
 	    err = __ifsock_getsockaddr (ifsock, &aport);
