@@ -36,7 +36,8 @@ _S_catch_exception_raise (mach_port_t port,
   _hurd_exception2signal (exception, code, subcode, &signo, &sigcode);
 
   /* Post the signal.  */
-  _hurd_internal_post_signal (_hurd_thread_sigstate (thread), signo, sigcode);
+  _hurd_internal_post_signal (_hurd_thread_sigstate (thread), signo, sigcode,
+			      MACH_PORT_NULL);
 
   return KERN_SUCCESS;
 }
