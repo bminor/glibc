@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+1/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,12 +27,15 @@ __getgroups (int n, gid_t *gidset)
 {
   error_t err;
   int ngids;
+  void *crit;
 
+  crit = _hurd_critical_section_lock ();
   __mutex_lock (&_hurd_id.lock);
 
   if (err = _hurd_check_ids ())
     {
       __mutex_unlock (&_hurd_id.lock);
+      _hurd_critical_section_unlock (crit);
       return __hurd_fail (err);
     }
 
@@ -44,6 +47,7 @@ __getgroups (int n, gid_t *gidset)
       gid_t gids[ngids];
       memcpy (gids, _hurd_id.gen.gids, sizeof (gids));
       __mutex_unlock (&_hurd_id.lock);
+      _hurd_critical_section_unlock (crit);
 
       /* Now that the lock is released, we can safely copy the
 	 group set into the user's array, which might fault.  */
@@ -52,7 +56,10 @@ __getgroups (int n, gid_t *gidset)
       memcpy (gidset, gids, ngids * sizeof (gid_t));
     }
   else
-    __mutex_unlock (&_hurd_id.lock);
+    {
+      __mutex_unlock (&_hurd_id.lock);
+      _hurd_critical_section_unlock (crit);
+    }
 
   return ngids;
 }
