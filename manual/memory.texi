@@ -244,7 +244,7 @@ contents of another block.  If you have already allocated a block and
 discover you want it to be bigger, use @code{realloc} (@pxref{Changing
 Block Size}).
 
-@node Freeing After Malloc
+@node Freeing after Malloc
 @subsection Freeing Memory Allocated with @code{malloc}
 @cindex freeing memory allocated with @code{malloc}
 @cindex heap, freeing memory from
