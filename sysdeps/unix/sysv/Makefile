@@ -18,7 +18,7 @@
 
 ifeq ($(subdir),io)
 
-sysdep_routines := $(sysdep-routines) sys_stat sys_fstat \
+sysdep_routines := $(sysdep_routines) sys_stat sys_fstat \
 		   __utssys
 
 endif
@@ -28,12 +28,11 @@ ifeq ($(subdir), misc)
 sysdep_headers := $(sysdep_headers) termio.h
 dont_distribute := $(dont_distribute) termio.h		# Generated.
 
-# termio.h is just like sysv_termio.h except it uses the same
-# names for everything that System V termio does.  sysv_termio.h
-# is necessary to including in __tcgetatr.c, etc., because
-# some of the names in termio.h conflict with termios.h
-# The C library doesn't actually use termio.h, but we generate
-# it for those application programs which use it.
+# termio.h is just like sysv_termio.h except it uses the same names for
+# everything that System V termio does.  sysv_termio.h is necessary to
+# include in __tcgetatr.c et al, because some of the names in termio.h
+# conflict with termios.h.  The C library doesn't actually use termio.h,
+# but we generate it for those application programs which use it.
 $(objpfx)termio.h: $(..)sysdeps/unix/sysv/sysv_termio.h
 	sed < $< > $@-tmp			\
 	    -e 's/_SYSV_//'			\
