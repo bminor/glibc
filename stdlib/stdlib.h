@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -537,7 +537,7 @@ extern char *__secure_getenv __P ((__const char *__name));
 /* The SVID says this is in <stdio.h>, but this seems a better place.	*/
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.
    If there is no `=', remove NAME from the environment.  */
-extern int putenv __P ((__const char *__string));
+extern int putenv __P ((char *__string));
 #endif
 
 #ifdef	__USE_BSD
