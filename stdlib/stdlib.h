@@ -34,9 +34,8 @@ Cambridge, MA 02139, USA.  */
 #define	__need_Emath
 #include <errno.h>
 
-/* Get HUGE_VAL (returned by strtod on overflow) from <float.h>.  */
-#define	__need_HUGE_VAL
-#include <float.h>
+/* Get machine-dependent HUGE_VAL value (returned on overflow).  */
+#include <huge_val.h>
 
 
 /* Returned by `div'.  */
