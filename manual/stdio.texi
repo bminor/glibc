@@ -458,8 +458,10 @@ long enough to hold the line, @code{getline} stores the line in this
 buffer.  Otherwise, @code{getline} makes the buffer bigger using
 @code{realloc}, storing the new buffer address back in
 @code{*@var{lineptr}} and the increased size back in @code{*@var{n}}.
+
 If you set @code{*@var{lineptr}} to a null pointer, and @code{*@var{n}}
-to zero, @code{getline} will allocate the initial buffer for you.
+to zero, before the call, then @code{getline} allocates the initial
+buffer for you.
 
 In either case, when @code{getline} returns,  @code{*@var{lineptr}} is
 a @code{char *} which points to the text of the line.
