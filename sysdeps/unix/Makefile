@@ -36,7 +36,7 @@ $(common-objpfx)local_lim.h: $(common-objpfx)mk-local_lim
 	if $(dir $<)$(notdir $<) > $@-t; then mv $@-t $@; else XXX; fi
 $(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/mk-local_lim.c
 	cwd=`pwd`; cd $(@D); \
-	$(CC) $(native-CFLAGS) $(local_lim-CFLAGS) $$cwd/$< -o $(@F)
+	$(BUILD_CC) $(BUILD_CFLAGS) $(local_lim-CFLAGS) $$cwd/$< -o $(@F)
 
 before-compile := $(before-compile) $(common-objpfx)local_lim.h
 common-generated := $(common-generated) local_lim.h mk-local_lim
@@ -169,7 +169,7 @@ make-ioctls-CFLAGS := $(subst /,_,$(subst .,_,\
 				   $(ioctl-includes))))
 
 $(common-objpfx)make-ioctls: $(common-objpfx)make-ioctls.c
-	cd $(@D); $(CC) $(native-CFLAGS) $(make-ioctls-CFLAGS) \
+	cd $(@D); $(BUILD_CC) $(BUILD_CFLAGS) $(make-ioctls-CFLAGS) \
 			$(<:$(common-objpfx)%=%) -o $(@F)
 
 $(common-objpfx)make-ioctls.c: $(sysdep_dir)/unix/ioctls-tmpl.c \
