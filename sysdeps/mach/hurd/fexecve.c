@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 
 /* Execute the file FD refers to, overlaying the running program image.  */
-   
+
 int
 fexecve (int fd, char *const argv[], char *const envp[])
 {
