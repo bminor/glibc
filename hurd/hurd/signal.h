@@ -250,6 +250,79 @@ extern void _hurd_siginfo_handler (int);
 	       __err != MIG_SERVER_DIED);				      \
     __err;								      \
 })
+
+/* Some other parts of the library need to preempt signals, to detect
+   errors that should not result in a POSIX signal.  For example, when
+   some mapped region of memory is used, an extraneous SIGSEGV might be
+   generated when the mapping server returns an error for a page fault.  */
+
+struct hurd_signal_preempt
+  {
+    /* Function to examine a thread receiving a given signal.  The handler
+       is called even for blocked signals.  This function is run in the
+       signal thread, with THREAD's sigstate locked; it should be as simple
+       and robust as possible.  THREAD is the thread which is about to
+       receive the signal.  SIGNO and SIGCODE would be passed to the normal
+       handler.
+
+       If the return value is SIG_DFL, normal signal processing continues.
+       If it is SIG_IGN, the signal is ignored.
+       Any other value is used in place of the normal handler.  */
+    sighandler_t (*handler) (thread_t thread, int signo, int sigcode);
+    int first, last;		/* Range of sigcodes this handler wants.  */
+    struct hurd_signal_preempt *next; /* Next handler on the chain. */
+  };
+
+extern struct hurd_signal_preempt _hurd_signal_preempt[NSIG];
+extern struct mutex _hurd_signal_preempt_lock;
+
+/* Initialize PREEMPTER with the information given and stick it in the
+   chain of preempters for SIGNO.  */
+
+extern inline int
+hurd_preempt_signals (struct hurd_signal_preempt *preempter,
+		      int signo, int first_code, int last_code,
+		      sighandler_t (*handler) (thread_t, int, int))
+{
+  if (signo <= 0 || signo >= NSIG)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+  preempter->first_code = first_code;
+  preempter->last_code = last_code;
+  preempter->handler = handler;
+  __mutex_lock (&_hurd_signal_preempt_lock);
+  preempter->next = _hurd_signal_preempt[signo];
+  _hurd_signal_preempt[signo] = preempter;
+  __mutex_unlock (&_hurd_signal_preempt_lock);
+  return 0;
+}
+
+/* Remove PREEMPTER from the chain for SIGNO.  */
+
+extern inline int
+hurd_unpreempt_signals (struct hurd_signal_preempt *preempter, int signo)
+{
+  struct hurd_signal_preempt *p, *lastp;
+  if (signo <= 0 || signo >= NSIG)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+  __mutex_lock (&_hurd_signal_preempt_lock);
+  for (p = _hurd_signal_preempt[signo], lastp = NULL;
+       p != NULL; lastp = p, p = p->next)
+    if (p == preempter)
+      {
+	(lastp == NULL ? _hurd_signal_preempt[signo] : lastp->next) = p->next;
+	__mutex_unlock (&_hurd_signal_preempt_lock);
+	return 0;
+      }
+  _hurd_signal_preempt[signo] = preempter;
+  errno = ENOENT;
+  return -1;
+}
 
 
 #endif	/* hurd/signal.h */
