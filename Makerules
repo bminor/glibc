@@ -119,6 +119,7 @@ $(+sysdir_pfx)sysdep-Makefile: $(+sysdir_pfx)sysdirs
 	   file=sysdeps/$$dir/Makefile;					      \
 	   if [ -r $(..)$$file ]; then					      \
 	     echo include "\$$(..)$$file";				      \
+	   else true;							      \
 	   fi;								      \
 	 done) > $@
 
