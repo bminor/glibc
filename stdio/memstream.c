@@ -95,7 +95,7 @@ DEFUN(open_memstream, (bufloc, sizeloc),
       return NULL;
     }
 
-  stream = fmemopen ((char *) NULL, BUFSIZ, "w+");
+  stream = fmemopen ((char *) NULL, BUFSIZ, "w");
   if (stream == NULL)
     return NULL;
 
