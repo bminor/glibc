@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ char *
 DEFUN(ttyname, (fd), int fd)
 {
   static char dev[] = "/dev";
-  char name[PATH_MAX];
+  char name[NAME_MAX];
   char *CONST np = &name[sizeof(dev)];
   struct stat st;
   dev_t mydev;
@@ -65,7 +65,7 @@ DEFUN(ttyname, (fd), int fd)
 	(void) memcpy(np, d->d_name, d->d_namlen + 1);
 	if (stat(name, &st) == 0 && st.st_dev == mydev)
 	  {
-	    static char result[PATH_MAX];
+	    static char result[sizeof (dev) + NAME_MAX];
 	    (void) memcpy(result, name, (np - name) + d->d_namlen + 1);
 	    (void) closedir(dirstream);
 	    __ttyname = result;
