@@ -16,8 +16,8 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <hurd.h>
 #include <mach/exc_server.h>
+#include <hurd/signal.h>
 
 /* Called by the microkernel when a thread gets an exception.  */
 
@@ -36,8 +36,7 @@ _S_catch_exception_raise (mach_port_t port,
   _hurd_exception2signal (exception, code, subcode, &signo, &sigcode);
 
   /* Post the signal.  */
-  _hurd_internal_post_signal (_hurd_thread_sigstate (thread),
-			      signo, sigcode, NULL);
+  _hurd_internal_post_signal (_hurd_thread_sigstate (thread), signo, sigcode);
 
   return KERN_SUCCESS;
 }
