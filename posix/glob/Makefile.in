@@ -18,8 +18,9 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-srcdir = @srcdir@
-VPATH = $(srcdir)
+# Ultrix 2.2 make doesn't expand the value of VPATH.
+VPATH = @srcdir@
+srcdir = $(VPATH)
 
 CPPFLAGS = @DEFS@
 
