@@ -35,3 +35,5 @@ struct machine_thread_all_state
     struct i386_thread_state basic;
     struct i386_float_state fpu;
   };
+
+#include_next <thread_state.h>
