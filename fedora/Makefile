@@ -25,7 +25,6 @@ snapshot-id = $($(glibc-branch)-sync-tag)
 update:
 	now=`date -u $(snapshot-date-fmt)`; \
 	name=`date -u -d "$$now" $(snapshot-name-fmt)`; \
-	old="$(tag-prefix)$(tar-name)-$(snapshot-name)"; \
 	new="$(tag-prefix)$(tar-name)-$$name"; \
 	cvs -Q rtag $(if $(on-branch),-r $(glibc-base),-D "$$now") $$new libc;\
 	(echo '# This file is updated automatically by Makefile.'; \
@@ -34,7 +33,8 @@ update:
 	 echo "$(glibc-branch)-sync-date := $$now"; \
 	 echo "$(glibc-branch)-sync-tag := $$new"; \
 	) > branch.mk; \
-	cd ..; (set -x; cvs -q update -d -P -j"$$old" -j"$$new") \
+	cd ..; (set -x; cvs -q update -d -P \
+			    -j'$($(glibc-branch)-sync-tag)' -j"$$new") \
 		   2>&1 | tee fedora/update.log
 
 commit-merge:
