@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <stddef.h>
 #include <unistd.h>
-
+#include <hurd.h>
 
 /* Remove the directory PATH.  */
 int
@@ -28,7 +28,7 @@ DEFUN(__rmdir, (path), CONST char *path)
 {
   error_t err;
   const char *name;
-  file_t parent = __hurd_path_split (path, &name);
+  file_t parent = __path_split (path, &name);
   if (parent == MACH_PORT_NULL)
     return -1;
   err = __dir_rmdir (parent, name);
