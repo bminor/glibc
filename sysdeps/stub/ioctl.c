@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
    The actual type and use of ARG and the return value depend on REQUEST.  */
 int
 DEFUN(__ioctl, (fd, request, arg),
-      int fd AND int request AND int arg)
+      int fd AND int request AND PTR arg)
 {
   errno = ENOSYS;
   return -1;
@@ -32,7 +32,7 @@ DEFUN(__ioctl, (fd, request, arg),
 
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 
