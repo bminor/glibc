@@ -49,7 +49,8 @@ routines = $(interface-routines) \
 sig	= hurdsig siginfo init-fault msging-p hurd-raise \
 	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
-	  __getdport getdport openport setdtsz
+	  __getdport getdport openport setdtsz \
+	  fd-read fd-write
 aux := hurdsyms hurdinit # hurdmsg
 
 # Get the proper definition of `hurd-srcdir'.
