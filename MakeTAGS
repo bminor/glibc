@@ -41,15 +41,17 @@ endif	# No tags_sources
 
 sysdep-dirs := $(addprefix $(sysdep_dir)/,$(sysdirs))
 
+ifndef sysdep_dirs
+# Find all sysdep directories.
+sysdep_dirs := $(shell find $(..)sysdeps -type d ! -name RCS -print)
+endif
+
 # Find all sysdep dirs there are, but putting the ones
 # we are configured to use first and preserving their order.
 all-dirs := $(objdir) \
 	    $(sysdep-dirs) \
 	    $(source_dirs) \
-	    $(filter-out $(sysdep-dirs),\
-			 $(patsubst ./%,%,\
-				    $(shell find $(sysdep_dir) -type d -print)\
-			  ))
+	    $(filter-out $(sysdep-dirs),$(sysdep_dirs))
 
 # Find all the subdirs there are, but putting the ones
 # we are configured to use first and preserving their order.
