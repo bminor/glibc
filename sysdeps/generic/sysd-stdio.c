@@ -32,7 +32,26 @@ int
 DEFUN(__stdio_read, (cookie, buf, n),
       PTR cookie AND register char *buf AND register size_t n)
 {
-  return __read (*(int *) cookie, buf, (int) n);
+#if	defined (EINTR) && defined (EINTR_REPEAT)
+  CONST int fd = *(int *) cookie;
+  int save = errno;
+  int nread;
+
+ try:;
+  errno = 0;
+  nread = __read(fd, buf, (int) n);
+  if (nread < 0)
+    {
+      if (errno == EINTR)
+	goto try;
+      return -1;
+    }
+  errno = save;
+  return nread;
+
+#else	/* No EINTR.  */
+  return __read(*(int *) cookie, buf, (int) n);
+#endif
 }
 
 
@@ -53,7 +72,11 @@ DEFUN(__stdio_write, (cookie, buf, n),
 	  written += count;
 	  n -= count;
 	}
-      else if (count < 0)
+      else if (count < 0
+#if	defined (EINTR) && defined (EINTR_REPEAT)
+	       && errno != EINTR
+#endif
+	       )
 	/* Write error.  */
 	return -1;
     }
@@ -128,7 +151,11 @@ DEFUN(__stdio_errmsg, (msg, len), CONST char *msg AND size_t len)
 	  msg += count;
 	  len -= count;
 	}
-      else if (count < 0)
+      else if (count < 0
+#if	defined (EINTR) && defined (EINTR_REPEAT)
+	       && errno != EINTR
+#endif
+	       )
 	break;
     }
 }
@@ -139,18 +166,16 @@ static int
 DEFUN(diraccess, (dir), CONST char *dir)
 {
   struct stat buf;
-  return __stat(dir, &buf) == 0 && S_ISDIR(buf.st_mode);
+  return __stat (dir, &buf) == 0 && S_ISDIR (buf.st_mode);
 }
 
 /* Return nonzero if FILE exists.  */
 static int
 DEFUN(exists, (file), CONST char *file)
 {
-  int fd = __open(file, O_RDONLY);
-  if (fd < 0)
-    return 0;
-  (void) __close(fd);
-  return 1;
+  /* We can stat the file even if we can't read its data.  */
+  struct stat st;
+  return __stat (file, &st) == 0;
 }
 
 
@@ -247,15 +272,21 @@ DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr),
       if (sprintf(buf, "%.*s/%.*s%.5d%.3s", (int) dlen, dir, (int) plen,
 		  pfx, pid % 100000, info->buf) != (int) len)
 	return NULL;
-      if (!exists(buf))
-	break;
+
+      /* Always return a unique string.  */
       ++info->i;
 
-      if (info->i > sizeof(letters) - 2)
+      if (!exists (buf))
+	break;
+
+      if (info->i > sizeof (letters) - 2)
 	{
 	  info->i = 0;
 	  if (info->s == &info->buf[2])
-	    return NULL;
+	    {
+	      errno = EEXIST;
+	      return NULL;
+	    }
 	  ++info->s;
 	}
     }
