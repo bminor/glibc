@@ -91,8 +91,7 @@ _dl_map_object_deps (struct link_map *map,
 				      trace_mode);
 	      }
 	    char *errstring;
-	    const char *objname;
-	    if (! _dl_catch_error (&errstring, &objname, openaux))
+	    if (! _dl_catch_error (&errstring, openaux))
 	      /* The auxiliary object is actually there.  Use it as
 		 the first search element, even before MAP itself.  */
 	      preload (aux);
