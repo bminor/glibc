@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/wait.h>
 #include <errno.h>
 #include <hurd.h>
+#include <hurd/port.h>
 
 pid_t
 __wait4 (pid_t pid, __WAIT_STATUS_DEFN stat_loc,
@@ -29,9 +30,8 @@ __wait4 (pid_t pid, __WAIT_STATUS_DEFN stat_loc,
   pid_t dead;
   error_t err;
 
-  err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
-			__proc_wait (port, pid, options, stat_loc,
-				     usage, &dead));
+  err = __USEPORT (PROC, __proc_wait (port, pid, options, stat_loc,
+				      usage, &dead));
 
   return err ? (pid_t) __hurd_fail (err) : dead;
 }
