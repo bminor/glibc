@@ -55,10 +55,15 @@ __setauth (auth_t new)
   __mutex_lock (&reauth_lock);
 
   /* Install the new port in the cell.  */
-  __mutex_lock (&_hurd_idlock);
+  __mutex_lock (&_hurd_id.lock);
   _hurd_port_set (&_hurd_ports[INIT_PORT_AUTH], new);
-  _hurd_id_valid = 0;
-  __mutex_unlock (&_hurd_idlock);
+  _hurd_id.valid = 0;
+  if (hurd_id.rid_auth)
+    {
+      __mach_port_deallocate (__mach_task_self (), _hurd_id.rid_auth);
+      _hurd_id.rid_auth = MACH_PORT_NULL;
+    }
+  __mutex_unlock (&_hurd_id.lock);
 
   if (_hurd_init_dtable != NULL)
     /* We just have the simple table we got at startup.
@@ -79,15 +84,15 @@ __setauth (auth_t new)
 	    }
 	}
 
-  if (_HURD_PORT_USE (&_hurd_crdir,
-		      ! __io_reauthenticate (port) &&
-		      ! __auth_user_authenticate (new, port, &newport)))
-    _hurd_port_set (&_hurd_crdir, newport);
+  if (__USEPORT (CRDIR,
+		 ! __io_reauthenticate (port) &&
+		 ! __auth_user_authenticate (new, port, &newport)))
+    _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], newport);
 
-  if (_HURD_PORT_USE (&_hurd_cwdir,
-		      ! __io_reauthenticate (port) &&
-		      ! __auth_user_authenticate (new, port, &newport)))
-    _hurd_port_set (&_hurd_cwdir, newport);
+  if (__USEPORT (CWDIR,
+		 ! __io_reauthenticate (port) &&
+		 ! __auth_user_authenticate (new, port, &newport)))
+    _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], newport);
 
   /* Run things which want to do reauthorization stuff.  */
   for (fn = _hurd_reauth_hook.fn; *fn != NULL; ++fn)
