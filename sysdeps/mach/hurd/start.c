@@ -24,6 +24,8 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/exec.h>
 #include <sysdep.h>
 #include <hurd/threadvar.h>
+#include "set-hooks.h"
+#include "hurdmalloc.h"		/* XXX */
 
 /* The first piece of initialized data.  */
 int __data_start = 0;
@@ -44,6 +46,10 @@ vm_address_t _hurd_stack_base;
 vm_size_t _hurd_stack_size;
 
 char **__environ;
+
+/* Things that want to be run before _hurd_init or much anything else.
+   Importantly, these are called before anything tries to use malloc.  */
+DEFINE_HOOK (_hurd_preinit_hook, (void));
 
 extern void __mach_init (void);
 extern void __libc_init (int argc, char **argv, char **envp);
@@ -181,15 +187,20 @@ start1 (void)
 		       _hurd_stack_base, _hurd_stack_size);
   }
 
+  RUN_HOOK (_hurd_preinit_hook, ());
+
   if (__hurd_threadvar_stack_mask == 0)
     {
       /* We are not using cthreads, so we will have just a single allocated
 	 area for the per-thread variables of the main user thread.  */
+      unsigned long int i;
       __hurd_threadvar_stack_offset
-	= (unsigned long int) calloc (__hurd_threadvar_max, /* Zero-filled.  */
+	= (unsigned long int) malloc (__hurd_threadvar_max *
 				      sizeof (unsigned long int));
       if (__hurd_threadvar_stack_offset == 0)
 	__libc_fatal ("Can't allocate single-threaded per-thread variables.");
+      for (i = 0; i < __hurd_threadvar_max; ++i)
+	((unsigned long int *) __hurd_threadvar_stack_offset)[i] = 0;
     }
 
 
