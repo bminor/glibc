@@ -31,7 +31,6 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 #define	PSEUDO(name, syscall_name, args)				      \
-  .text;								      \
   .globl syscall_error;							      \
   ENTRY (name)								      \
   DO_CALL (syscall_name, args);						      \
