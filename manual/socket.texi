@@ -15,10 +15,10 @@ communicating with other machines; @code{telnet}, @code{rlogin},
 @code{ftp}, @code{talk}, and the other familiar network programs use
 sockets.
 
-Not all operating systems support sockets.  The GNU library provides
-the header file @file{sys/socket.h} on all systems, and the socket
-functions always exist, but if the system does not really support
-sockets, these functions always fail.
+Not all operating systems support sockets.  In the GNU library, the
+header file @file{sys/socket.h} exists regardless of the operating
+system, and the socket functions always exist, but if the system does
+not really support sockets, these functions always fail.
 
 @strong{Incomplete:} We do not currently document the facilities for
 broadcast messages or for configuring Internet interfaces.
@@ -1438,7 +1438,7 @@ way.  Socket pairs are created with the @code{socketpair} function,
 declared in @file{sys/socket.h}.  A socket pair is much like a pipe; the
 main difference is that the socket pair is bidirectional, whereas the
 pipe has one input-only end and one output-only end (@pxref{Pipes and
-Fifos}).
+FIFOs}).
 
 @comment sys/socket.h
 @comment BSD
@@ -1726,7 +1726,7 @@ The @code{getpeername} function returns the address of the socket that
 specified by @var{addr} and @var{length_ptr}.  It stores the length of
 the address in @code{*@var{length_ptr}}.
 
-@xref{Socket Addressing}, for information about the format of the
+@xref{Socket Addresses}, for information about the format of the
 address.  In some operating systems, @code{getpeername} works only for
 sockets in the Internet domain.
 
