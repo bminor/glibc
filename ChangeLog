@@ -1,3 +1,8 @@
+1998-03-10 19:43  Matthias Urlichs <urlichs@noris.de>
+
+	* sysdeps/unix/readdir_r.c: Zero out *result on EOF.
+	* manual/filesys/texi: Document this.
+
 1998-03-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/posix/mkstemp.c (mkstemp): Open temporary file mode
