@@ -458,14 +458,19 @@ extern char *EXFUN(gets, (char *__s));
    NULL), pointing to *N characters of space.  It is realloc'd as
    necessary.  Returns the number of characters read (not including the
    null terminator), or -1 on error or EOF.  */
+ssize_t EXFUN(__getdelim, (char **lineptr, size_t *n,
+			   int delimiter, FILE *stream));
 ssize_t EXFUN(getdelim, (char **lineptr, size_t *n,
 			 int delimiter, FILE *stream));
 
 /* Like `getdelim', but reads up to a newline.  */
+ssize_t EXFUN(__getline, (char **lineptr, size_t *n, FILE *stream));
 ssize_t EXFUN(getline, (char **lineptr, size_t *n, FILE *stream));
 
 #ifdef	__OPTIMIZE__
-#define	getline(lineptr, n, stream) getdelim ((lineptr), (n), '\n', (stream))
+#define	getdelim(l, n, d, s)	__getdelim ((l), (n), (d), (s))
+#define	getline(l, n, s)	__getline ((l), (n), (s))
+#define	__getline(l, n, stream) __getdelim ((l), (n), '\n', (stream))
 #endif	/* Optimizing.  */
 #endif
 
