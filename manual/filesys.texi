@@ -352,6 +352,9 @@ successfully.  In this case a pointer to the result is returned in
 the function returns @code{-1}.  The @code{errno} variable is set like
 described for @code{readdir}.
 
+If there are no more directory entries, @code{readdir_r}'s return value is
+@code{0}, and *@var{result} is set to @code{NULL}.
+
 @strong{Portability Note:} On some systems, @code{readdir_r} may not
 return a terminated string as the file name even if no @code{d_reclen}
 element is available in @code{struct dirent} and the file name as the
