@@ -35,7 +35,6 @@ Cambridge, MA 02139, USA.  */
   REG (sp)
 
 #define REG(xx) register long int xx asm (#xx)
-REG (ax);
 REGS;
 #undef	REG
 
@@ -52,16 +51,15 @@ DEFUN(__longjmp, (env, val),
      after it's been munged.  */
 
   register CONST __typeof (env[0]) *e asm ("cx");
-  register int v asm ("dx");
+  register int v asm ("ax");
 
   e = env;
-  v = val;
+  v = val == 0 ? 1 : val;
 
 #define	REG(xx)	xx = (long int) e->__##xx
   REGS;
 
-  ax = v == 0 ? 1 : v;
-  asm volatile ("jmp %*%0" : : "g" (e->__pc));
+  asm volatile ("jmp %*%0" : : "g" (e->__pc), "a" (v));
 
   /* NOTREACHED */
   abort ();
