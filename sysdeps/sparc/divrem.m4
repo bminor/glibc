@@ -65,7 +65,7 @@ dnl modified to reflect the output R.
 dnl
 define(DEVELOP_QUOTIENT_BITS,
 `	! depth $1, accumulated bits $2
-	bl	L.$1.eval(2^N+$2)
+	bl	L.$1.eval(2**N+$2)
 	srl	V,1,V
 	! remainder is positive
 	subcc	R,V,R
@@ -73,7 +73,7 @@ define(DEVELOP_QUOTIENT_BITS,
 	`	b	9f
 		add	Q, ($2*2+1), Q
 	', `	DEVELOP_QUOTIENT_BITS(incr($1), `eval(2*$2+1)')')
-L.$1.eval(2^N+$2):
+L.$1.eval(2**N+$2):
 	! remainder is negative
 	addcc	R,V,R
 	ifelse($1, N,
@@ -125,7 +125,7 @@ ifelse(S, `true',
 	blu	Lnot_really_big
 	clr	ITER
 
-	! `Here the dividend is >= 2^(31-N) or so.  We must be careful here,
+	! `Here the dividend is >= 2**(31-N) or so.  We must be careful here,
 	! as our usual N-at-a-shot divide step will cause overflow and havoc.
 	! The number of bits in the result here is N*ITER+SC, where SC <= N.
 	! Compute ITER in an unorthodox manner: know we need to shift V into
