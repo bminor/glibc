@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -169,11 +169,18 @@ $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 
 ifeq (yes,$(build-shared))
 $(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so $(+force)
-	$(do-install-program)
+	$(make-target-directory)
+	$(INSTALL_PROGRAM) $< $@.new
 
 $(inst_slibdir)/$(rtld-installed-name): \
-  $(inst_slibdir)/$(rtld-version-installed-name)
-	$(make-shlib-link)
+  $(inst_slibdir)/$(rtld-version-installed-name) \
+  $(inst_slibdir)/libc-$(version).so
+	rm -f $@ $<
+	$(symbolic-link-prog) $<.new $@
+	ln $<.new $<
+	rm -f $@
+	$(symbolic-link-prog) $(<F) $@
+	rm -f $<.new
 
 # Special target called by parent to install just the dynamic linker.
 .PHONY: ldso_install
