@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/paths.h>
+#include <fcntl.h>
 
 /* Make a link to FROM called TO.  */
 int
