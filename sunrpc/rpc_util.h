@@ -38,7 +38,7 @@ extern char *malloc();
 #define alloc(size)		malloc((unsigned)(size))
 #define ALLOC(object)   (object *) malloc(sizeof(object))
 
-extern char *sprintf();
+/* extern char *sprintf(); --roland@gnu */
 
 #define s_print	(void) sprintf
 #define f_print (void) fprintf
