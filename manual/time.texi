@@ -82,20 +82,28 @@ to @code{double}, as in the example above, makes sure that operations
 such as arithmetic and printing work properly and consistently no matter
 what the underlying representation is.
 
+@comment time.h
+@comment ANSI
 @defvr Macro CLOCKS_PER_SEC
 The value of this macro is the number of clock ticks per second measured
 by the @code{clock} function.
 @end defvr
 
+@comment time.h
+@comment POSIX.1
 @defvr Macro CLK_TCK
 This is an obsolete name for @code{CLOCKS_PER_SEC}.  
 @end defvr
 
+@comment time.h
+@comment ANSI
 @deftp {Data Type} clock_t
 This is the type of the value returned by the @code{clock} function.
 Values of type @code{clock_t} are in units of clock ticks.
 @end deftp
 
+@comment time.h
+@comment ANSI
 @deftypefun clock_t clock (void)
 This function returns the elapsed processor time.  The base time is
 arbitrary but doesn't change within a single process.  If the processor
@@ -111,6 +119,8 @@ The @code{times} function returns more detailed information about
 elapsed processor time in a @code{struct tms} object.  You should
 include the header file @file{<sys/times.h>} to use this facility.
 
+@comment sys/times.h
+@comment POSIX.1
 @deftp {Data Type} {struct tms}
 The @code{tms} structure is used to return information about process
 times.  It contains at least the following members:
@@ -142,6 +152,8 @@ relative to the time when the process was created; @pxref{Creating a
 Process}.
 @end deftp
 
+@comment sys/times.h
+@comment POSIX.1
 @deftypefun clock_t times (struct tms *@var{buffer})
 The @code{times} function stores the processor time information for
 the calling process in @var{buffer}.
@@ -211,6 +223,8 @@ calendar time, and the functions which operate on calendar time objects.
 These facilities are declared in the header file @file{<time.h>}.
 
 @cindex epoch
+@comment time.h
+@comment ANSI
 @deftp {Data Type} time_t
 This is the data type used to represent calendar time.  In the GNU C
 Library and other POSIX-compliant implementations, @code{time_t} is
@@ -223,6 +237,8 @@ In other systems, @code{time_t} might be either an integer or
 floating-point type.
 @end deftp
 
+@comment time.h
+@comment ANSI
 @deftypefun double difftime (time_t @var{time1}, time_t @var{time0})
 The @code{difftime} function returns the number of seconds elapsed
 between time @var{time1} and time @var{time0}, as a value of type
@@ -233,6 +249,8 @@ other systems, the @code{time_t} data type might use some other encoding
 where subtraction doesn't work directly.
 @end deftypefun
 
+@comment time.h
+@comment ANSI
 @deftypefun time_t time (time_t *@var{result})
 The @code{time} function returns the current time as an value of type
 @code{time_t}.  If the argument @var{result} is not a null pointer, the
@@ -253,6 +271,8 @@ representing calendar times to a higher resolution than one second.  The
 functions and the associated data types described in this section are
 declared in @file{<sys/time.h>}.
 
+@comment sys/time.h
+@comment BSD
 @deftp {Data Type} {struct timeval}
 The @code{struct timeval} structure represents a calendar time.  It
 has the following members:
@@ -271,6 +291,8 @@ also negative?
 @end table
 @end deftp
 
+@comment sys/time.h
+@comment BSD
 @deftp {Data Type} {struct timezone}
 The @code{struct timezone} structure is used to hold minimal information
 about the local time zone.  It has the following members:
@@ -284,6 +306,8 @@ If nonzero, daylight savings time applies during some part of the year.
 @end table
 @end deftp
 
+@comment sys/time.h
+@comment BSD
 @deftypefun int gettimeofday (struct timeval *@var{tp}, struct timezone *@var{tzp})
 The @code{gettimeofday} function returns the current date and time in the
 @code{struct timeval} structure indicated by @var{tp}.  Information about the
@@ -293,6 +317,8 @@ argument is a null pointer, time zone information is ignored.
 The return value is @code{0} on success and @code{-1} on failure.
 @end deftypefun
 
+@comment sys/time.h
+@comment BSD
 @deftypefun int settimeofday (const struct timeval *@var{tp}, const struct timezone *@var{tzp})
 The @code{settimeofday} function sets the current date and time
 according to the arguments.  As for @code{gettimeofday}, time zone
@@ -309,6 +335,8 @@ You do not have privilege to set the time.
 @end table
 @end deftypefun
 
+@comment sys/time.h
+@comment BSD
 @deftypefun int adjtime (const struct timeval *@var{delta}, struct timeval *@var{olddelta})
 This function speeds up or slows down the system clock in order to make
 small adjustments in the current time.  This ensures that the time
@@ -352,6 +380,8 @@ formatting or printing date and time values.  It is easier to perform
 comparisons and arithmetic on time values in one of the other
 representations.  Plus, the other representations are more compact.
 
+@comment time.h
+@comment ANSI
 @deftp {Data Type} {struct tm}
 This is the data type used to represent local time.  The structure
 contains at least the following members, which can appear in any order:
@@ -397,6 +427,8 @@ available.
 @end table
 @end deftp
 
+@comment time.h
+@comment ANSI
 @deftypefun {struct tm *} localtime (const time_t *@var{time})
 The @code{localtime} function converts the calendar time pointed to by
 @var{time} to local time representation, expressed relative to the
@@ -408,6 +440,8 @@ functions.  (But no other library function overwrites the contents of
 this object.)
 @end deftypefun
 
+@comment time.h
+@comment ANSI
 @deftypefun {struct tm *} gmtime (const time_t *@var{time})
 This function is similar to @code{localtime}, except that the local time
 is expressed as Coordinated Universal Time (UTC) --- that is, as
@@ -416,6 +450,8 @@ If the implementation can't figure out where the local time zone is
 relative to GMT, this function returns a null pointer.
 @end deftypefun
 
+@comment time.h
+@comment ANSI
 @deftypefun time_t mktime (struct tm *@var{localtime})
 The @code{mktime} function is used to convert a local time structure
 to a calendar time representation.  It also ``normalizes'' the contents
@@ -440,6 +476,8 @@ of @code{(time_t)(-1)} and does not modify the contents of @var{localtime}.
 The functions described in this section format time values as strings.
 These functions are declared in the header file @file{<time.h>}.
 
+@comment time.h
+@comment ANSI
 @deftypefun {char *} asctime (const struct tm *@var{localtime})
 The @code{asctime} function writes the local time value pointed at
 by @var{localtime} into a string in a standard format:
@@ -461,6 +499,8 @@ overwritten by subsequent calls to any of the date and time functions.
 string.)
 @end deftypefun
 
+@comment time.h
+@comment ANSI
 @deftypefun {char *} ctime (const time_t *@var{time})
 The @code{ctime} function is similar to @code{asctime}, except that
 the time value is specified in calendar time (rather than local time)
@@ -471,6 +511,8 @@ asctime (localtime (@var{time}))
 @end example
 @end deftypefun
 
+@comment time.h
+@comment ANSI
 @deftypefun size_t strftime (char *@var{s}, size_t @var{size}, const char *@var{template}, const struct tm *@var{localtime})
 
 This function is similar to the @code{sprintf} function
@@ -668,6 +710,8 @@ just assumes the current rules have always been in effect.
 If the @code{TZ} environment variable does not have a value, the time
 zone is determined in an implementation-specific way.
 
+@comment time.h
+@comment POSIX.1
 @deftypevar {char **} tzname
 This variable is a two-element array of strings that represent the
 designations for the standard (element @code{0}) and summer (element
@@ -679,6 +723,8 @@ variable whenever @code{tzset}, @code{ctime}, @code{strftime},
 @code{mktime}, or @code{localtime} are called.
 @end deftypevar
 
+@comment time.h
+@comment POSIX.1
 @deftypefun void tzset (void)
 The @code{tzset} function initializes the @code{tzname} variable from
 the value of the @code{TZ} environment variable.  
@@ -687,12 +733,16 @@ the value of the @code{TZ} environment variable.
 The following variables are defined for compatibility with System V
 Unix.
 
+@comment time.h
+@comment SVID
 @deftypevar {long int} timezone
 This contains the difference between GMT and local standard time, in
 seconds.  For example, in the U.S. Eastern time zone, the value is
 @code{5*60*60}.
 @end deftypevar
 
+@comment time.h
+@comment SVID
 @deftypevar {int} daylight
 This variable has a nonzero value if the standard U.S. daylight savings
 time rules apply.
