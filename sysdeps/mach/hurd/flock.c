@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 /* Apply or remove an advisory lock, according to OPERATION,
    on the file FD refers to.  */
 int
-DEFUN(flock, (fd, operation),
+DEFUN(__flock, (fd, operation),
       int fd AND int operation)
 {
   error_t err;
