@@ -36,6 +36,7 @@ DEFUN(__stdio_read, (cookie, buf, n),
   error_t err;
   char *bufp = buf;
 
+  nread = n;
   if (err = __io_read ((io_t) cookie, &bufp, &nread, -1, n))
     return __hurd_fail (err);
 
