@@ -42,7 +42,7 @@ DEFUN(__stdio_write, (cookie, buf, n),
 }
 
 /* Move COOKIE's file position *POS bytes, according to WHENCE.
-   The current file position is stored in *POS.
+   The new file position is stored in *POS.
    Returns zero if successful, nonzero if not.  */
 int
 DEFUN(__stdio_seek, (cookie, pos, whence),
