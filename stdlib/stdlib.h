@@ -82,11 +82,14 @@ extern long int strtol __P ((__const char *__nptr, char **__endptr,
 extern unsigned long int strtoul __P ((__const char *__nptr,
 				       char **__endptr, int __base));
 
-#ifdef	__OPTIMIZE__
-#define	atof(nptr)	strtod((nptr), (char **) NULL)
-#define	atoi(nptr)	((int) atol(nptr))
-#define	atol(nptr)	strtol((nptr), (char **) NULL, 10)
-#endif /* Optimizing.  */
+#if defined (__OPTIMIZE__) && __GNUC__ >= 2
+extern __inline double atof (__const char *__nptr)
+{ return strtod(__nptr, (char **) NULL); }
+extern __inline int atoi (__const char *__nptr)
+{ return (int) strtol (__nptr, (char **) NULL, 10); }
+extern __inline long int atol (__const char *__nptr)
+{ return strtol (__nptr, (char **) NULL, 10); }
+#endif /* Optimizing GCC >=2.  */
 
 
 /* Return a random integer between 0 and RAND_MAX inclusive.  */
@@ -119,6 +122,18 @@ extern void srandom __P ((unsigned int __seed));
 extern __ptr_t initstate __P ((unsigned int __seed, __ptr_t __statebuf,
 			       size_t __statelen));
 extern __ptr_t setstate __P ((__ptr_t __statebuf));
+
+#if defined (__OPTIMIZE__) && __GNUC__ >= 2
+extern __inline long int random (void)
+{ return __random(); }
+extern __inline void srandom (unsigned int __seed)
+{ __srandom(__seed); }
+extern __inline __ptr_t initstate (unsigned int __seed,
+				   __ptr_t __statebuf, size_t __statelen)
+{ return __initstate (__seed, __statebuf, __statelen); }
+extern __inline __ptr_t setstate (__ptr_t __statebuf)
+{ return __setstate (__statebuf); }
+#endif /* Optimizing GCC >=2.  */
 #endif /* Use BSD.  */
 
 
@@ -239,9 +254,10 @@ extern int mbtowc __P ((wchar_t * __pwc, __const char *__s, size_t __n));
    by WCHAR in S, returning its length.  */
 extern int wctomb __P ((char *__s, wchar_t __wchar));
 
-#ifdef	__OPTIMIZE__
-#define	mblen(s, n)	mbtowc((wchar_t *) NULL, (s), (n))
-#endif /* Optimizing.  */
+#if defined (__OPTIMIZE__) && __GNUC__ >= 2
+extern __inline int mblen (__const char *__s, size_t __n)
+{ return mbtowc ((wchar_t *) NULL, __s, __n); }
+#endif /* Optimizing GCC >=2.  */
 
 
 /* Convert a multibyte string to a wide char string.  */
