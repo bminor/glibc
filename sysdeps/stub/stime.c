@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <time.h>
+#include <stddef.h>
 
 /* Set the system clock to *WHEN.  */
 

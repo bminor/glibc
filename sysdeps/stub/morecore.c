@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,8 +26,8 @@ Cambridge, MA 02139, USA.  */
 /* Allocate INCREMENT more bytes of data space,
    and return the start of data space, or NULL on errors.
    If INCREMENT is negative, shrink data space.  */
-PTR
-DEFUN(__default_morecore, (increment), long int increment)
+__ptr_t
+DEFUN(__default_morecore, (increment), ptrdiff_t increment)
 {
   errno = ENOSYS;
   return NULL;
