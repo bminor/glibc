@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/resource.h>
 #include <hurd.h>
+#include <mutex.h>
 #include <gnu-stabs.h>
 
 
@@ -38,9 +39,7 @@ vm_address_t _hurd_brk;
 /* The RLIM_DATA resource limit on bytes of data space.  */
 long int _hurd_brk_limit;
 
-#ifdef noteven
 struct mutex _hurd_brk_lock;
-#endif
 
 /* Set the end of the process's data space to INADDR.
    Return 0 if successful, -1 if not.  */
@@ -96,9 +95,7 @@ init_brk (void)
   extern char _end;
   vm_address_t pagend;
 
-#ifdef noteven
   __mutex_init (&_hurd_brk_lock);
-#endif
 
   _hurd_brk = (vm_address_t) &_end;
 
