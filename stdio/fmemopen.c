@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -64,6 +64,8 @@ DEFUN(fmemopen, (s, len, mode),
   stream->__io_funcs.__close = NULL;
   /* Can't seek outside the buffer.  */
   stream->__io_funcs.__seek = NULL;
+  /* There is no associated file descriptor to fetch.  */
+  stream->__io_funcs.__fileno = NULL
 
   stream->__seen = 1;
 
@@ -88,8 +90,7 @@ DEFUN(fmemopen, (s, len, mode),
 			 (stream->__mode.__read ? stream->__bufsize : 0));
   stream->__put_limit = (stream->__buffer +
 			 (stream->__mode.__write ? stream->__bufsize : 0));
-  stream->__fileno = -1;
-  stream->__cookie = &stream->__fileno;
+  stream->__cookie = NULL;
 
   if (stream->__mode.__append)
     {
