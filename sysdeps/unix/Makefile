@@ -136,7 +136,7 @@ ifeq ($(wildcard $(sysincludedir)/syscall.h),)
 
 # Some systems have <syscall.h>, some <sys/syscall.h>.
 
-syscall.h := $(patsubst $(sysincludedir)/%,%,
+syscall.h := $(patsubst $(sysincludedir)/%,%,	\
 			$(wildcard $(sysincludedir)/sys/syscall.h))
 
 ifdef	syscall.h
