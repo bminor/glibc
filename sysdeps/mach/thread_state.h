@@ -25,6 +25,9 @@ Cambridge, MA 02139, USA.  */
 /* These functions are of use in machine-dependent signal trampoline
    implementations.  */
 
+#include <string.h>		/* size_t, memcpy */
+#include <mach/mach_interface.h> /* __thread_get_state */
+
 static inline int
 machine_get_state (thread_t thread, struct machine_thread_all_state *state,
 		   int flavor, void *stateptr, void *scpptr, size_t size)
