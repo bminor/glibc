@@ -27,31 +27,39 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
 		    file_t *result)
 {
   error_t err;
-  file_t startdir;
-
   enum retry_type doretry;
   char retryname[1024];		/* XXX string_t LOSES! */
+  file_t startdir;
+
+  startdir = path[0] == '/' ? crdir : cwdir;
+
+  if (err = __dir_pathtrans (startdir, path, flags, mode,
+			     &doretry, retryname, result))
+    return err;
+
+  return __hurd_path_lookup_retry (crdir, doretry, retryname, flags, mode,
+				   result);
+}
+
+error_t
+__hurd_path_lookup_retry (file_t crdir,
+			  enum retry_type doretry,
+			  char retryname[1024],
+			  int flags, mode_t mode,
+			  file_t *result)
+{
+  error_t err;
+  file_t startdir;
   file_t newpt;
+  char *path;
   int dealloc_dir;
   int nloops;
-
-  if (*path == '/')
-    {
-      startdir = crdir;
-      while (*path == '/')
-	++path;
-    }
-  else
-    startdir = cwdir;
 
   dealloc_dir = 0;
   nloops = 0;
   
-  for (;;)
+  while (1)
     {
-      err = __dir_pathtrans (startdir, (char *) path, flags, mode,
-			     &doretry, retryname, result);
-
       if (dealloc_dir)
 	__mach_port_deallocate (__mach_task_self (), startdir);
       if (err)
@@ -74,10 +82,14 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
 	  return err;
 	  
 	case FS_RETRY_REAUTH:
-	  __io_reauthenticate (*result, _hurd_pid);
-	  __USEPORT (AUTH, __auth_user_authenticate (port, *result, _hurd_pid,
-						     &newpt));
+	  err = __io_reauthenticate (*result, _hurd_pid);
+	  if (! err)
+	    err = __USEPORT (AUTH, __auth_user_authenticate (port, *result,
+							     _hurd_pid,
+							     &newpt));
 	  __mach_port_deallocate (__mach_task_self (), *result);
+	  if (err)
+	    return err;
 	  *result = newpt;
 	  /* Fall through.  */
 
@@ -87,25 +99,89 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
 	    return ELOOP;
 #endif
 
-	  if (retryname[0] == '/')
-	    {
-	      startdir = crdir;
-	      dealloc_dir = 0;
-	      path = retryname;
-	      do
-		++path;
-	      while (*path == '/');
-	    }
-	  else
-	    {
-	      startdir = *result;
-	      dealloc_dir = 1;
-	      path = retryname;
-	    }
+	  startdir = *result;
+	  dealloc_dir = 1;
+	  path = retryname;
 	  break;
 
-	/* case FS_RETRY_MAGICAL: XXX */
+	case FS_RETRY_MAGICAL:
+	  switch (retryname[0])
+	    {
+	    case '/':
+	      startdir = crdir;
+	      dealloc_dir = 0;
+	      if (*result != MACH_PORT_NULL)
+		__mach_port_deallocate (__mach_task_self (), *result);
+	      path = &retryname[1];
+	      break;
+
+	    case 'f':
+	      if (retryname[1] == 'd' && retryname[2] == '/')
+		{
+		  int fd;
+		  char *end;
+		  int save = errno;
+		  errno = 0;
+		  fd = (int) strtol (retryname, 10, &end);
+		  if (end == NULL || errno)
+		    {
+		      errno = save;
+		      goto bad_magic;
+		    }
+		  *result = __getdport (fd);
+		  if (*result == MACH_PORT_NULL)
+		    {
+		      error_t err = errno;
+		      errno = save;
+		      return err;
+		    }
+		  errno = save;
+		  return 0;
+		}
+	      else
+		goto bad_magic;
+	      break;
+
+	    case 'm':
+	      if (retryname[1] == 'a' && retryname[2] == 'c' &&
+		  retryname[3] == 'h' && retryname[4] == 't' &&
+		  retryname[5] == 'y' && retryname[6] == 'p' &&
+		  retryname[7] == 'e')
+		{
+		  error_t err;
+		  struct host_basic_info hostinfo;
+		  unsigned int hostinfocnt = HOST_BASIC_INFO_COUNT;
+		  char *p;
+		  if (err = __host_info (host, HOST_BASIC_INFO,
+					 &hostinfo, &hostinfocnt))
+		    return err;
+		  if (hostinfocnt != HOST_BASIC_INFO_COUNT)
+		    return EGRATUITOUS;
+		  p = _itoa (hostinfo.cpu_subtype, &retryname[8], 10, 0);
+		  *--p = '/';
+		  p = _itoa (hostinfo.cpu_type, &retryname[8], 10, 0);
+		  if (p < retryname)
+		    abort ();	/* XXX write this right if this ever happens */
+		  if (p > retryname)
+		    strcpy (retryname, p);
+		  startdir = *result;
+		  dealloc_dir = 1;
+		}
+	      else
+		goto bad_magic;
+	      break;
+
+	    default:
+	    bad_magic:
+	      return EGRATUITOUS;
+	    }
+
+	default:
+	  return EGRATUITOUS;
 	}
+
+      err = __dir_pathtrans (startdir, path, flags, mode,
+			     &doretry, retryname, result);
     }
 }
 
