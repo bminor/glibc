@@ -108,7 +108,7 @@ struct in_addr
 #define	IN_CLASSB_NET		0xffff0000
 #define	IN_CLASSB_NSHIFT	16
 #define	IN_CLASSB_HOST		(0xffffffff & ~IN_CLASSB_NET)
-#define	IN_CLASSA_MAX		65536
+#define	IN_CLASSB_MAX		65536
 
 #define	IN_CLASSC(a)		((((long int) (a)) & 0xc0000000) == 0xc0000000)
 #define	IN_CLASSC_NET		0xffffff00
