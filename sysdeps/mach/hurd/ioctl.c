@@ -112,7 +112,7 @@ DEFUN(__ioctl, (fd, request, arg),
       break;
     case MACH_SEND_INVALID_REPLY:
     case MACH_RCV_INVALID_NAME:
-      __mig_dealloc_reply-port ();
+      __mig_dealloc_reply_port ();
     default:
       return __hurd_fail (err);
     }
@@ -121,7 +121,7 @@ DEFUN(__ioctl, (fd, request, arg),
     return __hurd_fail (m->msgh_id == MACH_NOTIFY_SEND_ONCE ?
 			MIG_SERVER_DIED : MIG_REPLY_MISMATCH);
 
-  if ((m->msgh_bits  & MACH_MSGH_BITS_COMPLEX) ||
+  if ((m->msgh_bits & MACH_MSGH_BITS_COMPLEX) ||
       m->msgh_size != (char *) t - msg)
     return __hurd_fail (MIG_TYPE_ERROR);
 
