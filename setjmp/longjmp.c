@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +16,22 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <gnu-stabs.h>
+#include <stddef.h>
 #include <setjmp.h>
+#include <signal.h>
 
-#undef	longjmp
 
-#ifndef HAVE_GNU_LD
+/* Set the signal mask to the one specified in ENV, and jump
+   to the position specified in ENV, causing the setjmp
+   call there to return VAL, or 1 if VAL is 0.  */
 __NORETURN
-#endif
-function_alias_void(longjmp, __longjmp, (env, val),
-		    DEFUN(longjmp, (env, val), CONST jmp_buf env AND int val))
+void
+longjmp (const sigjmp_buf env, int val)
+{
+  if (env[0].__mask_was_saved)
+    /* Restore the saved signal mask.  */
+    (void) sigprocmask (SIG_SETMASK, &env[0].__saved_mask, (sigset_t *) NULL);
+
+  /* Call the machine-dependent function to restore machine state.  */
+  __longjmp (env[0].__jmpbuf, val ?: 1);
+}
