@@ -25,35 +25,17 @@
   was introduced.  The new chown now follows symlinks - the old chown and the
   new lchown do not follow symlinks.
   The new lchown function has the same number as the old chown had and the
-  new chown has a new number.  When compiling with headers from Linux > 2.1.8x
-  it's impossible to run this libc with older kernels.  In these cases libc
-  has therefore to route calls to chown to the old chown function.
+  new chown has a new number.  To preserve compatibility with old glibc 2.0
+  versions we always call the syscall with the old semantic.
 */
 
 extern int __syscall_chown (const char *__file,
 			    uid_t __owner, gid_t __group);
 #ifdef __NR_lchown
 /* running under Linux 2.0 or < 2.1.8x */
-static int __libc_old_chown;
-
-
 int
 __chown (const char *file, uid_t owner, gid_t group)
 {
-  int result;
-
-  if (!__libc_old_chown)
-    {
-      int saved_errno = errno;
-      result = __syscall_chown (file, owner, group);
-
-      if (result >= 0 || errno != ENOSYS)
-	return result;
-
-      __set_errno (saved_errno);
-      __libc_old_chown = 1;
-    }
-
   return __lchown (file, owner, group);
 }
 #else
