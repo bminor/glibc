@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,9 +29,9 @@ DEFUN(__wait4, (pid, stat_loc, options, usage),
   pid_t dead;
   error_t err;
 
-  err = _HURD_PORT_USE (&_hurd_proc, __proc_wait (port, pid, stat_loc,
-						  options, usage, &dead));
-  if (err)
-    return __hurd_fail (err);
-  return dead;
+  err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
+			__proc_wait (port, pid, stat_loc,
+				     options, usage, &dead));
+
+  return err ? (pid_t) __hurd_fail (err) : dead;
 }
