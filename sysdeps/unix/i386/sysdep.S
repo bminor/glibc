@@ -34,9 +34,9 @@ syscall_error:
 	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
 	   EWOULDBLOCK_sys is the original number.  */
 	cmpl %eax, $EWOULDBLOCK_sys /* Is it the old EWOULDBLOCK?  */
-	jne 0f			/* Branch if not.  */
+	jne notb			/* Branch if not.  */
 	move $EAGAIN, %eax	/* Yes; translate it to EAGAIN.  */
 #endif
-0:	movl %eax, C_SYMBOL_NAME(errno)
+notb:	movl %eax, C_SYMBOL_NAME(errno)
 	movl $-1, %eax
 	ret
