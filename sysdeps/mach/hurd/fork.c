@@ -87,6 +87,15 @@ __fork (void)
       mach_port_t ports[_hurd_nports];
       thread_t thread;
       struct machine_thread_state state;
+      mach_port_t *portnames = NULL;
+      unsigned int nportnames = 0;
+      mach_port_type_t *porttypes = NULL;
+      unsigned int nporttypes = 0;
+      struct translate
+	{
+	  mach_port_t 
+	}
+
 
       /* Run things that prepare for forking before we create the task.  */
       if (err = run_hooks (&_hurd_fork_prepare_hook,
@@ -117,44 +126,118 @@ __fork (void)
       if (err = __task_create (__mach_task_self (), 1, &newtask))
 	goto lose;
 
+      /* Fetch the names of all ports used in this task.  */
+      if (err = __mach_port_names (__mach_task_self (),
+				   &portnames, &nportnames,
+				   &porttypes, &nporttypes))
+	goto lose;
+      if (nportnames != nporttypes)
+	{
+	  err = EGRATUITOUS;
+	  goto lose;
+	}
+
+      /* Insert all our port rights into the child task.  */
+      for (i = 0; i < nportnames; ++i)
+	{
+	  if (MACH_PORT_TYPE (right) & MACH_PORT_TYPE_RECEIVE)
+	    {
+	      /* This is a receive right.  We want to give the child task
+		 its own new receive right under the same name.  */
+	      if (err = __mach_port_allocate_name (newtask,
+						   MACH_PORT_RIGHT_RECEIVE,
+						   portnames[i]))
+		goto lose;
+	      if (MACH_PORT_TYPE (right) & MACH_PORT_TYPE_SEND)
+		{
+		  /* Give the child as many send rights for its receive
+		     right as we have for ours.  */
+		  mach_port_urefs_t refs;
+		  mach_port_t port;
+		  mach_port_poly_t poly;
+		  if (err = __mach_port_get_refs (__mach_task_self (),
+						  portnames[i],
+						  MACH_PORT_RIGHT_SEND,
+						  &refs))
+		    goto lose;
+		  if (err = __mach_port_extract_right (newtask,
+						       portnames[i],
+						       MACH_MSG_TYPE_MAKE_SEND,
+						       &port, &poly))
+		    goto lose;
+		  if (err = __mach_port_insert_right (newtask,
+						      portnames[i],
+						      MACH_MSG_TYPE_MOVE_SEND))
+		    goto lose;
+		  if (refs > 1 &&
+		      (err = __mach_port_mod_refs (newtask,
+						   portnames[i],
+						   MACH_PORT_RIGHT_SEND,
+						   refs - 1)))
+		    goto lose;
+		}
+	      if (MACH_PORT_TYPE (right) & MACH_PORT_TYPE_SEND_ONCE)
+		{
+		  /* Give the child a send-once right for its receive right,
+		     since we have one for ours.  */
+		  mach_port_t port;
+		  mach_port_poly_t poly;
+		  if (err = __mach_port_extract_right
+		      (newtask,
+		       portnames[i],
+		       MACH_MSG_TYPE_MAKE_SEND_ONCE,
+		       &port, &poly))
+		    goto lose;
+		  if (err = __mach_port_insert_right
+		      (newtask,
+		       portnames[i],
+		       MACH_MSG_TYPE_MOVE_SEND_ONCE))
+		    goto lose;
+		}
+	    }
+	  else if (MACH_PORT_TYPE (right) &
+		   (MACH_PORT_TYPE_SEND|MACH_PORT_TYPE_DEAD_NAME))
+	    {
+	      /* This is a send right or a dead name.
+		 Give the child as many references for it as we have.  */
+	      mach_port_urefs_t refs;
+	      mach_port_t insert;
+	      if (portnames[i] == __mach_task_self ())
+		insert = newtask;
+	      else if (portnames[i] == _hurd_ports[INIT_PORT_PROC].port)
+		{
+		  /* Get the proc server port for the new task.  */
+		  if (err = __USEPORT (PROC, __proc_task2proc (port, newtask,
+							       &insert)))
+		    goto lose;
+		}
+	      else if (portnames[i] == _hurd_msgport_thread)
+		continue;
+	      else
+		insert = portnames[i];
+	      if (err = __mach_port_get_refs (__mach_task_self (),
+					      portnames[i],
+					      MACH_PORT_RIGHT_SEND,
+					      &refs))
+		goto lose;
+	      if (err = __mach_port_insert_right (newtask,
+						  portnames[i],
+						  insert,
+						  MACH_MSG_TYPE_COPY_SEND))
+		goto lose;
+	      if (refs > 1 &&
+		  (err = __mach_port_mod_refs (newtask,
+					       portnames[i],
+					       MACH_PORT_RIGHT_SEND,
+					       refs - 1)))
+		goto lose;
+	    }
+	}
+
       /* Unlock the standard port cells.  The child must unlock its own
 	 copies too.  */
       for (i = 0; i < _hurd_nports; ++i)
 	__spin_unlock (&_hurd_ports[i].lock);
-
-      /* Insert the ports used by the library into the child task.  */
-
-      /* Copy the standard ports into the child task,
-	 with the names that were the standard ports' names
-	 in the parent task at the time the child task was created.  */
-      for (i = 0; i < _hurd_nports; ++i)
-	{
-	  if (i == INIT_PORT_PROC)
-	    {
-	      /* Get the proc server port for the new task.  */
-	      if (err = __USEPORT (PROC,
-				   __proc_task2proc (port, newtask, &newproc)))
-		goto lose;
-	      err = __mach_port_insert_right (newtask, ports[i], newproc,
-					      MACH_MSG_TYPE_COPY_SEND);
-	    }
-	  else
-	    err = HURD_PORT_USE
-	      (&_hurd_ports[i],
-	       __mach_port_insert_right (newtask, ports[i], port,
-					 MACH_MSG_TYPE_COPY_SEND));
-	  if (err)
-	    goto lose;
-	}
-
-      /* If we have a real dtable, the hooks will be taking care of it.
-	 If not, copy the ports in the initial dtable.  */
-      if (_hurd_init_dtable != NULL)
-	for (i = 0; i < _hurd_init_dtablesize; ++i)
-	  if (err = __mach_port_insert_right (newtask, _hurd_init_dtable[i],
-					      _hurd_init_dtable[i],
-					      MACH_MSG_TYPE_COPY_SEND))
-	    goto lose;
 
       /* Run things to set other things up in the child task.  */
       if (err = run_hooks (&_hurd_fork_setup_hook, newtask, newproc))
@@ -188,6 +271,15 @@ __fork (void)
 	__mach_port_deallocate (__mach_task_self (), thread);
       if (newproc != MACH_PORT_NULL)
 	__mach_port_deallocate (__mach_task_self (), newproc);
+
+      if (portnames)
+	__vm_deallocate (__mach_task_self (),
+			 (vm_address_t) portnames,
+			 nportnames * sizeof (*portnames));
+      if (porttypes)
+	__vm_deallocate (__mach_task_self (),
+			 (vm_address_t) porttypes,
+			 nporttypes * sizeof (*porttypes));
 
       /* Run things that want to run in the parent to restore it to
 	 normality.  Usually prepare hooks and parent hooks are
