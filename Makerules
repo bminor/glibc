@@ -35,9 +35,6 @@ sources :=
 endif
 export sources
 
-ifneq	"$(findstring env,$(origin headers))" ""
-headers :=
-endif
 export headers
 
 
