@@ -31,13 +31,20 @@ DEFUN(__adjtime, (delta, olddelta),
       struct timeval *olddelta)
 {
   error_t err;
-  mach_port_t hostpriv;
+  mach_port_t hostpriv, devmaster;
 
-  hostpriv = __pid2task (-1);	/* XXX */
-  if (hostpriv == MACH_PORT_NULL)
-    return -1;
-  err = __host_adjust_time (hostpriv, delta, olddelta);
+  if (err = __USEPORT (PROC, __proc_getprivports (port,
+						  &hostpriv, &devmaster)))
+    return __hurd_fail (err);
+  __mach_port_deallocate (__mach_task_self (), devmaster);
+
+  err = __host_adjust_time (hostpriv,
+			    /* `time_value_t' and `struct timeval' are in
+                               fact identical with the names changed.  */
+			    *(time_value_t *) delta,
+			    (time_value_t *) olddelta);
   __mach_port_deallocate (__mach_task_self (), hostpriv);
+
   if (err)
     return __hurd_fail (err);
   return 0;
