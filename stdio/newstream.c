@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -33,18 +33,19 @@ DEFUN_VOID(__newstream)
   register FILE *stream;
 
   stream = __stdio_head;
-  while (__validfp(stream))
+  while (__validfp (stream))
     stream = stream->__next;
   if (stream == NULL)
     {
       /* None to reuse.  */
-      stream = (FILE *) malloc(sizeof(FILE));
+      stream = (FILE *) malloc (sizeof (FILE));
       if (stream == NULL)
 	return NULL;
-      stream->__next = NULL;
+      stream->__next = __stdio_head;
+      __stdio_head = stream;
     }
 
-  __invalidate(stream);
+  __invalidate (stream);
   stream->__magic = _IOMAGIC;
   stream->__offset = (fpos_t) -1;
   stream->__target = (fpos_t) -1;
