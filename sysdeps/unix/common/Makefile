@@ -38,7 +38,7 @@ $(objpfx)ctype-glue.c: $(objpfx)glue-ctype
 	mv $@-tmp $@
 
 $(objpfx)glue-ctype: $(sysdep_dir)/unix/bsd/glue-ctype.c
-	cd $(objdir); $(CC) ../$< -o $(@:$(objpfx)%=%)
+	cd $(objdir); $(CC) $< -o $(@:$(objpfx)%=%)
 
 endif
 
@@ -51,6 +51,6 @@ $(objpfx)siglist.c: $(objpfx)make_siglist
 	mv $@-tmp $@
 
 $(objpfx)make_siglist: $(sysdep_dir)/unix/bsd/make_siglist.c
-	cd $(objdir); $(CC) ../$< -o $(@:$(objpfx)%=%)
+	cd $(objdir); $(CC) $< -o $(@:$(objpfx)%=%)
 
 endif
