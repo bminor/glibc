@@ -314,6 +314,7 @@
 extern "C" {
 #endif
 
+#include <errno.h>
 #include <stdio.h>    /* needed for malloc_stats */
 
 
@@ -822,6 +823,10 @@ do {                                                                          \
    computed. */
 
 
+/* Macro to set errno.  */
+#ifndef __set_errno
+# define __set_errno(val) errno = (val)
+#endif
 
 /* On some platforms we can compile internal, not exported functions better.
    Let the environment provide a macro and define it to be empty if it
@@ -1263,8 +1268,10 @@ static void      free_atfork();
 
 #define request2size(req, nb) \
  ((nb = (req) + (SIZE_SZ + MALLOC_ALIGN_MASK)),\
-  ((long)nb <= 0 ? 1 : ((nb < (MINSIZE + MALLOC_ALIGN_MASK) ? (nb = MINSIZE) :\
-                         (nb &= ~MALLOC_ALIGN_MASK)), 0)))
+  ((long)nb <= 0 || nb < (INTERNAL_SIZE_T) (req) \
+   ? (__set_errno (ENOMEM), 1) \
+   : ((nb < (MINSIZE + MALLOC_ALIGN_MASK) \
+	   ? (nb = MINSIZE) : (nb &= ~MALLOC_ALIGN_MASK)), 0)))
 
 /* Check if m has acceptable alignment */
 
