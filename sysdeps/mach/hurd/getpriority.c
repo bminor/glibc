@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,8 @@ DEFUN(getpriority, (which, who),
       enum __priority_which which AND int who)
 {
   int prio;
-  error_t err = __proc_getpriority (_hurd_proc, which, who, &prio);
+  error_t err = _HURD_PORT_USE (&_hurd_proc,
+				__proc_getpriority (port, which, who, &prio));
   if (err)
     return __hurd_fail (err);
   return prio;
