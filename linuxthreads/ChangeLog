@@ -1,3 +1,9 @@
+2000-07-31  Andreas Jaeger  <aj@suse.de>
+
+	* mutex.c (__pthread_mutex_trylock): Only set mutex owner if we
+	really own it.
+	Patch by Kevin B. Hendricks" <khendricks@ivey.uwo.ca>.
+
 2000-04-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* signals.c (sigaction): Fix return value for the case SIG is one

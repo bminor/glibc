@@ -50,7 +50,8 @@ int __pthread_mutex_trylock(pthread_mutex_t * mutex)
   switch(mutex->__m_kind) {
   case PTHREAD_MUTEX_FAST_NP:
     retcode = __pthread_trylock(&mutex->__m_lock);
-    mutex->__m_owner = thread_self();
+    if (retcode == 0)
+      mutex->__m_owner = thread_self();
     return retcode;
   case PTHREAD_MUTEX_RECURSIVE_NP:
     self = thread_self();
