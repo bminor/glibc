@@ -1622,16 +1622,16 @@ If this bit is set, it indicates that the base type is modified with
 
 @comment printf.h
 @comment GNU
-@item PA_FLAG_LONGLONG
-@vindex PA_FLAG_LONGLONG
+@item PA_FLAG_LONG_LONG
+@vindex PA_FLAG_LONG_LONG
 If this bit is set, it indicates that the base type is modified with
 @code{long long}.  (This corresponds to the @samp{L} type modifier.)
 
 @comment printf.h
 @comment GNU
-@item PA_FLAG_LONGDOUBLE
-@vindex PA_FLAG_LONGDOUBLE
-This is a synonym for @code{PA_FLAG_LONGLONG}, used by convention with
+@item PA_FLAG_LONG_DOUBLE
+@vindex PA_FLAG_LONG_DOUBLE
+This is a synonym for @code{PA_FLAG_LONG_LONG}, used by convention with
 a base type of @code{PA_DOUBLE} to indicate a type of @code{long double}.
 @end table
 
