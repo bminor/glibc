@@ -1,5 +1,5 @@
 /* `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
-   Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1995, 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,6 +37,7 @@ enum
     _PC_NO_TRUNC,
 #define	_PC_NO_TRUNC			_PC_NO_TRUNC
     _PC_VDISABLE,
+#define _PC_VDISABLE			_PC_VDISABLE
     _PC_SYNC_IO,
 #define	_PC_SYNC_IO			_PC_SYNC_IO
     _PC_ASYNC_IO,
@@ -321,5 +322,6 @@ enum
 enum
   {
     _CS_PATH			/* The default search path.  */
+#define _CS_PATH			_CS_PATH
   };
 #endif
