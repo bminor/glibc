@@ -141,6 +141,7 @@ libc {
     _hurd_self_sigstate;
 
     # Same for these "quasi-internal" functions
+    _hurd_port_init;
     _hurd_port_set;
 
     # internal symbols used by other libraries (e.g. librt)
