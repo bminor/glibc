@@ -1,3 +1,22 @@
+1998-03-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	Put the static-only routines in a separate library.
+	* Makeconfig (libtype.So, CFLAGS-.So, CPPFLAGS-.So,
+	object-suffixes-for-libc): New variables.
+	(all-object-suffixes): Add .So.
+	(link-libc): Link against libc_nonshared.a instead of libc.a.
+	Remove explicit reference to the dynamic linker.
+	* Rules: Remove handling of static-only-routines.
+	* Makerules: Handle them here instead.  Use
+	$(object-suffixes-for-libc) instead of $(object-suffixes) when
+	dealing with libc routines.
+	($(objpfx)%.So): New rules for static-only routines.
+	(elide-routines.So): Elide all routines except static-only routines.
+	($(objpfx)stamp.So-$(subdir)): Special rule for when
+	static-only-routines is empty.
+	($(inst_libdir)/libc.so): Use libc_nonshared.a instead of
+	libc.a.  Remove explicit reference to the dynamic linker.
+
 1998-03-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/maint.texi (Reporting Bugs): Change
