@@ -126,8 +126,8 @@ The largest number of repetitions you are guaranteed is allowed in the
 construct @samp{\@{@var{min},@var{max}\@}} in a regular expression.
 
 The value of this macro is actually a lower bound for the maximum.  That
-is, you can count on being able to have that many supplementary group
-IDs, but a particular machine might let you have even more.  You can use
+is, you can count on being able to have that many repetitions, but a
+particular machine might let you have even more.  You can use
 @code{sysconf} to see whether a particular machine will let you have
 more (@pxref{Sysconf}).  And even the value that @code{sysconf} tells
 you is just a lower bound---larger values might work.
