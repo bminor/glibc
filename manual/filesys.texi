@@ -17,7 +17,7 @@ access permissions and modification times.
 				 file names.
 * Accessing Directories::	Finding out what files a directory
 				 contains.
-* Alternate Names::             Adding alternate names to a file.
+* Directory Entries::           Adding alternate names to a file.
 * Symbolic Links::              A file that ``points to'' a file name.
 * Deleting Files::              How to delete a file, and what that means.
 * Renaming Files::              Changing a file's name.
@@ -154,7 +154,7 @@ parallels here to the stream facilities for ordinary files, described in
 * Directory Entries::            Format of one directory entry.
 * Opening a Directory::          How to open a directory stream.
 * Reading/Closing Directory::    How to read directory entries from the stream.
-* Simple Directory Stream::      A very simple directory listing program.
+* Simple Directory Lister::      A very simple directory listing program.
 * Random Access Directory::      Rereading part of the directory
                                   already read with the same stream.
 @end menu
