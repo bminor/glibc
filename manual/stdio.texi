@@ -3351,7 +3351,7 @@ buf = `hello', size = 5
 buf = `hello, world', size = 12
 @end example
 
-@group
+@c @group  Invalid outside @example.
 @node Obstack Streams
 @subsection Obstack Streams
 
@@ -3364,7 +3364,7 @@ You can open an output stream that puts it data in an obstack.
 This function opens a stream for writing data into the obstack @var{obstack}.
 This starts an object in the obstack and makes it grow as data is
 written (@pxref{Growing Objects}).
-@end group
+@c @end group  Doubly invalid because not nested right.
 
 Calling @code{fflush} on this stream updates the current size of the
 object to match the amount of data that has been written.  After a call
