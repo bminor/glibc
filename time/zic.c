@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.19";
+static char	elsieid[] = "@(#)zic.c	7.21";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -120,8 +120,10 @@ static int		errors;
 static const char *	filename;
 static int		leapcnt;
 static int		linenum;
+static int		max_int;
 static time_t		max_time;
 static int		max_year;
+static int		min_int;
 static time_t		min_time;
 static int		min_year;
 static int		noise;
@@ -502,7 +504,7 @@ char *	argv[];
 		** Find the next non-continuation zone entry.
 		*/
 		for (j = i + 1; j < nzones && zones[j].z_name == NULL; ++j)
-			;
+			continue;
 		outzone(&zones[i], j - i);
 	}
 	/*
@@ -565,9 +567,10 @@ static void
 setboundaries()
 {
 	register time_t	bit;
+	register int bii;
 
 	for (bit = 1; bit > 0; bit <<= 1)
-		;
+		continue;
 	if (bit == 0) {		/* time_t is an unsigned type */
 		tt_signed = FALSE;
 		min_time = 0;
@@ -585,6 +588,11 @@ setboundaries()
 	}
 	min_year = TM_YEAR_BASE + gmtime(&min_time)->tm_year;
 	max_year = TM_YEAR_BASE + gmtime(&max_time)->tm_year;
+
+	for (bii = 1; bii > 0; bii <<= 1)
+		continue;
+	min_int = bii;
+	max_int = -1 - bii;
 }
 
 static int
@@ -1129,10 +1137,10 @@ char * const			timep;
 	cp = loyearp;
 	if ((lp = byword(cp, begin_years)) != NULL) switch ((int) lp->l_value) {
 		case YR_MINIMUM:
-			rp->r_loyear = min_year;
+			rp->r_loyear = min_int;
 			break;
 		case YR_MAXIMUM:
-			rp->r_loyear = max_year;
+			rp->r_loyear = max_int;
 			break;
 		default:	/* "cannot happen" */
 			(void) fprintf(stderr,
@@ -1146,10 +1154,10 @@ char * const			timep;
 	cp = hiyearp;
 	if ((lp = byword(cp, end_years)) != NULL) switch ((int) lp->l_value) {
 		case YR_MINIMUM:
-			rp->r_hiyear = min_year;
+			rp->r_hiyear = min_int;
 			break;
 		case YR_MAXIMUM:
-			rp->r_hiyear = max_year;
+			rp->r_hiyear = max_int;
 			break;
 		case YR_ONLY:
 			rp->r_hiyear = rp->r_loyear;
@@ -1778,6 +1786,10 @@ register const int			wantedy;
 	register long	dayoff;			/* with a nod to Margaret O. */
 	register time_t	t;
 
+	if (wantedy == min_int)
+		return min_time;
+	if (wantedy == max_int)
+		return max_time;
 	dayoff = 0;
 	m = TM_JANUARY;
 	y = EPOCH_YEAR;
