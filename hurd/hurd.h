@@ -212,6 +212,7 @@ extern socket_t _hurd_socket_server (int domain);
    If PID is < -1, send SIG to all processes in process group - PID.
    SIG and REFPORT are passed along in the request message.  */
 
+extern error_t _hurd_sig_post (pid_t pid, int sig, mach_port_t refport);
 extern error_t hurd_sig_post (pid_t pid, int sig, mach_port_t refport);
 
 /* Fetch the host privileged port and device master port from the proc
