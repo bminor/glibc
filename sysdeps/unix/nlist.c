@@ -1,4 +1,4 @@
-/* Copyright (C) 1990 Free Software Foundation, Inc.
+/* Copyright (C) 1991 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -73,8 +73,8 @@ DEFUN(nlist, (file, nl),
       register struct nlist *nlp;
       for (nlp = nl; nlp->n_un.n_name != NULL; ++nlp)
 	if (!strcmp(nlp->n_un.n_name,
-		    &string_table[sizeof(string_table_size) +
-				  symbols[i].n_un.n_strx]))
+		    &string_table[symbols[i].n_un.n_strx -
+				  sizeof(string_table_size)]))
 	  {
 	    char *CONST name = nlp->n_un.n_name;
 	    *nlp = symbols[i];
