@@ -1265,7 +1265,7 @@ rm -f *.filelist*
 %endif
 
 %changelog
-* Wed Dec 15 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-95
+* Wed Dec 15 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-96
 - update from CVS
   - fix i686 __USE_STRING_INLINES strncat
   - make sure ppc/ppc64 maintain correct stack alignment
