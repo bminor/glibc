@@ -65,6 +65,7 @@ extern int errno;
 #include "ndir.h"
 #endif /* not SYSNDIR */
 #else /* not USG */
+#include <sys/types.h>
 #include <sys/dir.h>
 #endif /* USG */
 #endif /* POSIX or DIRENT or __GNU_LIBRARY__ */
