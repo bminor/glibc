@@ -17,8 +17,8 @@
 # Cambridge, MA 02139, USA.
 
 $(common-objpfx)local_lim.h: $(common-objpfx)mk-local_lim
-	$(dir $<)$(notdir $<) > $@-tmp
-	mv $@-tmp $@
+	$(dir $<)$(notdir $<) > $@-tm
+	mv $@-t $@
 $(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/bsd/mk-local_lim.c
 	$(native-compile)
 
@@ -34,8 +34,8 @@ sysdep_routines := $(sysdep_routines) ctype-glue
 
 $(objpfx)ctype-glue.c: $(objpfx)glue-ctype
 	@rm -f $@
-	$(dir $<)$(notdir $<) > $@-tmp
-	mv $@-tmp $@
+	$(dir $<)$(notdir $<) > $@-t
+	mv $@-t $@
 
 $(objpfx)glue-ctype: $(sysdep_dir)/unix/bsd/glue-ctype.c
 	$(native-compile)
