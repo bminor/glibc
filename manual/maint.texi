@@ -51,9 +51,11 @@ m68k-hp-bsd4.3
 m68k-sun-sunos4.@var{n}
 m68k-sony-newsos
 mips-dec-ultrix4.@var{n}
-i386-bsd4.3
-i386-sysv
-i386-sysv4
+i386-@var{anything}-bsd4.3
+i386-@var{anything}-sysv
+i386-@var{anything}-sysv4
+i386-@var{anything}-sco3.2v2
+i386-@var{anything}-sco3.2v4
 i386-sequent-bsd
 @end example
 
@@ -68,6 +70,8 @@ sun3-sunos4.@var{n} sun3
 news
 decstation
 i386-svr4
+i386-sco
+i386-sco3.2v4
 i386-sequent-dynix
 @end example
 
