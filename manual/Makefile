@@ -31,13 +31,13 @@ include ../Makeconfig
 endif
 
 # Set chapters and chapters-incl.
-include $(objpfx)chapters
-$(objpfx)chapters: libc.texinfo
+include chapters
+chapters: libc.texinfo
 	$(find-includes)
 chapters := $(filter-out summary.texi,$(chapters))
 ifdef chapters
-include $(objpfx)chapters-incl
-$(objpfx)chapters-incl: $(chapters)
+include chapters-incl
+chapters-incl: $(chapters)
 	$(find-includes)
 endif
 
@@ -47,25 +47,20 @@ define find-includes
 mv $@.new $@
 endef
 
-$(objpfx)libc.dvi $(objpfx)libc.info: $(chapters) summary.texi $(chapters-incl)
-$(objpfx)libc.dvi: texinfo.tex
-
-$(objpfx)%.info: %.texinfo
-	$(MAKEINFO) $< -o $@
-$(objpfx)%.dvi: %.texinfo
-	$(TEXI2DVI) $<
+libc.dvi libc.info: $(chapters) summary.texi $(chapters-incl)
+libc.dvi: texinfo.tex
 
 # Generate the summary from the Texinfo source files for each chapter.
-$(objpfx)summary.texi: stamp-summary ;
-$(objpfx)stamp-summary: summary.awk $(chapters)
+summary.texi: stamp-summary ;
+stamp-summary: summary.awk $(chapters)
 	awk -f $^ \
 	| sort +1 -2 | tr '\014' '\012' > summary-tmp
-	./move-if-change summary-tmp $(objpfx)summary.texi
+	./move-if-change summary-tmp summary.texi
 # touch is broken on our machines.  Sigh.
 	date > $@
 
 # Generate Texinfo files from the C source for the example programs.
-$(objpfx)%.c.texi: examples/%.c
+%.c.texi: examples/%.c
 	sed -e 's,[{}],@&,g'				\
 	    -e 's,/\*\(@.*\)\*/,\1,g'			\
 	    -e 's,/\*  *,/* @r{,g' -e 's,  *\*/,} */,'	\
@@ -112,11 +107,9 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 subdir_clean: clean
 distclean clean: mostlyclean
 mostlyclean:
-	-rm -f $(addprefix $(objpfx),libc.dvi libc.info*)
+	-rm -f libc.dvi libc.info*
 realclean: clean
-	-rm -f $(addprefix $(objpfx),chapters chapters-incl \
-				     summary.texi stamp-summary \
-				     *.c.texi)
+	-rm -f chapters chapters-incl summary.texi stamp-summary *.c.texi
 
 .PHONY: install subdir_install installdirs
 subdir_install: install
@@ -136,11 +129,11 @@ ifndef INSTALL
 INSTALL = install
 endif
 
-$(infodir)/libc.info: $(objpfx)libc.info installdirs
+$(infodir)/libc.info: libc.info installdirs
 	for file in $<*; do \
 	  name=`basename $$file`; \
 	  $(INSTALL_DATA) $$file \
-	    `echo $@ | sed "s,$(<F)\$$,$$name,"`; \
+	    `echo $@ | sed "s,$<\$$,$$name,"`; \
 	done
 
 installdirs: $(firstword $(wildcard mkinstalldirs ../mkinstalldirs))
