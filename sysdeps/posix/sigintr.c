@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <stddef.h>
 #include <signal.h>
+#include <errno.h>
 
 /* If INTERRUPT is nonzero, make signal SIG interrupt system calls
    (causing them to fail with EINTR); if INTERRUPT is zero, make system
@@ -27,6 +28,7 @@ int
 DEFUN(siginterrupt, (sig, interrupt),
       int sig AND int interrupt)
 {
+#ifdef	SA_RESTART
   extern sigset_t _sigintr;	/* Defined in signal.c.  */
   struct sigaction action;
 
@@ -48,4 +50,8 @@ DEFUN(siginterrupt, (sig, interrupt),
     return -1;
 
   return 0;
+#else
+  errno = ENOSYS;
+  return -1;
+#endif
 }

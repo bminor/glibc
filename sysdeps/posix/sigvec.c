@@ -101,8 +101,8 @@ DEFUN(__sigvec, (sig, vec, ovec),
 #else
 	      errno = ENOSYS;
 	      return -1;
-	    }
 #endif
+	    }
 #ifdef SA_RESTART
 	  if (!(vec->sv_flags & SV_INTERRUPT))
 	    n->sa_flags |= SA_RESTART;
