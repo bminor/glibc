@@ -22,7 +22,8 @@ Cambridge, MA 02139, USA.  */
 #define	_FCNTLBITS_H	1
 
 
-/* File access modes for `open' and `fcntl'.
+/* File access modes for `open', `fcntl', `dir_pathtrans',
+   `hurd_path_lookup', and `path_lookup'.  */
 
    In GNU, read and write are bits (unlike BSD).  */
 #ifdef __USE_GNU
