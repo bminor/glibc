@@ -26,15 +26,13 @@ facility.
 @node Checking for Errors
 @section Checking for Errors
 
-Most library functions return a special value to indicate that 
-they have failed.  This is often a value of @code{-1}, a null pointer,
-or a constant such as @code{EOF} that is defined for that purpose.
-But such a return value simply tells you that an error has occurred
-and doesn't tell you anything about exactly what went wrong.
-
-You can obtain more detailed information about error conditions by
-examining the error code in the stored in the variable @code{errno}.
-This variable is declared in the header file @file{<errno.h>}.
+Most library functions return a special value to indicate that they have
+failed.  This is often a value of @code{-1}, a null pointer, or a
+constant such as @code{EOF} that is defined for that purpose.  But this
+a return value tells you only that an error has occurred.  To find out
+what went wrong, you need to look at the error code stored in the
+variable @code{errno}.  This variable is declared in the header file
+@file{<errno.h>}.
 
 @comment errno.h
 @comment ANSI
@@ -44,39 +42,38 @@ change the value of @code{errno}.
 
 Since @code{errno} is declared @code{volatile}, it might be changed
 asynchronously by a signal handler; @pxref{Defining a Signal Handler}.
-However, a properly written signal handler restores the value of
-@code{errno} before returning, so you generally do not need to worry
-about this possibility in ordinary code.
+However, a properly written signal handler saves and restores the value
+of @code{errno}, so you generally do not need to worry about this
+possibility in ordinary code.
 
-The initial value of @code{errno} at program startup is zero.  It is
-guaranteed never to be set to zero by any library function.  Many
+The initial value of @code{errno} at program startup is zero.  Many
 library functions are guaranteed to set it to certain nonzero values
-when they encounter certain kinds of errors.  These error conditions
-are listed for each function.
+when they encounter certain kinds of errors.  These error conditions are
+listed for each function.  No library funciton ever stores zero in
+@code{errno}.
 @end deftypevr
 
 @strong{Portability Note:} ANSI C specifies @code{errno} as a
 ``modifiable lvalue'' rather than as a variable, permitting it to be
 implemented as a macro.  For example, its expansion might involve a
-function call, like @code{*_errno()}.  But in the GNU system,
+function call, like @code{*_errno ()}.  But in the GNU system,
 @code{errno} really is a variable.
 
 There are a few library functions, like @code{sqrt} and @code{atan},
 that return a perfectly legitimate value in case of an error, but also
 set @code{errno}.  For these functions, if you want to check to see
 whether an error occurred, the recommended method is to set @code{errno}
-to zero before calling the function, and then check its value before
-calling any other library function.
+to zero before calling the function, and then check its value afterward.
 
-Many macros providing symbolic names for error numbers are defined.
-(These macros are listed in @ref{Error Codes}.)  All of these have names
-that begin with @code{E} and an upper-case letter or a digit, and you
-should consider names of this form to be reserved names.
+All the error codes have symbolic names, macros defined in
+@file{<errno.h>}.  The names start with @samp{E} and an upper-case
+letter or digit, and you should consider names of this form to be
+reserved names.  @xref{Reserved Names}.
 
-You usually don't have to worry about the specific values of these
-symbolic constants.  They are all guaranteed to be positive integers and
-all unique.  (Since the values are unique, you can use them as labels in
-a @code{switch} statement, for example.)
+The error code values are all positive integers and all distinct.
+(Since the values are distinct, you can use them as labels in a
+@code{switch} statement, for example.)  Your program should not make any
+other assumptions about the specific values of these symbolic constants.
 
 The value of @code{errno} doesn't necessarily have to correspond to any
 of these macros, since implementations might define additional error
@@ -84,12 +81,12 @@ codes of their own for other situations.  The only values that are
 guaranteed to be meaningful for a particular library function are the
 ones that this manual explicitly lists for that function.
 
-Here is an example showing how failure to open a file correctly might be
-handled.  The function @code{open_sesame} tries to open the named file
+Here is an example showing how to handle failure to open a file
+correctly.  The function @code{open_sesame} tries to open the named file
 for reading and returns a stream if successful.  The @code{fopen}
 library function returns a null pointer if it couldn't open the file for
-some reason.  In that situation, an appropriate error message is
-constructed using the @code{strerror} function, and the program exits.
+some reason.  In that situation, this example constructs an appropriate
+error message using the @code{strerror} function, and the program exits.
 If we were going to make some other library calls before passing the
 error code to @code{strerror}, we'd have to save it in a local variable
 instead, because those other library functions might overwrite
@@ -112,7 +109,7 @@ open_sesame (char *name)
   stream = fopen (name, "r");
   if (!stream) @{
     fprintf (stderr, "%s: Couldn't open file %s; %s\n",
-      program_name, name, strerror (errno));
+             program_name, name, strerror (errno));
     exit (EXIT_FAILURE);
     @}
   else
@@ -125,7 +122,9 @@ open_sesame (char *name)
 @section Error Codes
 
 These macros are defined in the header file @file{<errno.h>}.  All of
-them expand into integer constant values.
+them expand into integer constant values.  Some of these error codes
+can't occur on the GNU system, but they can occur using the GNU library
+on other systems.
 
 @comment errno.h
 @comment POSIX.1
@@ -143,28 +142,29 @@ Permission denied; the file permissions do not allow the attempted access.
 
 @comment errno.h
 @comment BSD
-@defvr Macro ADDRINUSE
-The socket address is already in use.
+@defvr Macro EADDRINUSE
+The socket address is already in use.  @xref{Socket Naming}.
 @end defvr
 
 @comment errno.h
 @comment BSD
-@defvr Macro ADDRNOTAVAIL
-The requested socket address is not available; for example, it isn't
-on the same machine.
+@defvr Macro EADDRNOTAVAIL
+The requested socket address is not available; for example, you tried
+to give a socket a name that doesn't match the local host name.
+@xref{Socket Naming}.
 @end defvr
 
 @comment errno.h
 @comment BSD
 @defvr Macro EAFNOSUPPORT
-The address family is not supported; it is inconsistent with the
-protocol being used on the socket.
+The address family specified for a socket is not supported; it is
+inconsistent with the protocol being used on the socket.  @xref{Sockets}.
 @end defvr
 
 @comment errno.h
 @comment POSIX.1
 @defvr Macro EAGAIN
-Resource temporarily unavailable; things might work if you try again
+Resource temporarily unavailable; the call might work if you try again
 later.
 @end defvr
 
@@ -201,33 +201,33 @@ to manipulate.
 @comment errno.h
 @comment BSD
 @defvr Macro ECONNABORTED
-Something happened on your host machine to abort the network connection.
+A network connection was aborted locally.
 @end defvr
 
 @comment errno.h
 @comment BSD
 @defvr Macro ECONNREFUSED
-The target machine refused to allow the network connection (typically because
+A remote host refused to allow the network connection (typically because
 it is not running the appropriate service).
 @end defvr
 
 @comment errno.h
 @comment BSD
 @defvr Macro ECONNRESET
-The network connection was closed, such as by the remote machine rebooting.
+A network connection was closed, such as by the remote machine rebooting.
 @end defvr
 
 @comment errno.h
 @comment POSIX.1
 @defvr Macro EDEADLK
 Deadlock avoided; allocating a system resource would have resulted in
-a deadlock situation.
+a deadlock situation.  For an example, @xref{File Locks}.
 @end defvr
 
 @comment errno.h
 @comment BSD
-@defvr EDESTADDRREQ
-The destination address was not supplied on a socket operation.
+@defvr Macro EDESTADDRREQ
+No destination address was supplied on a socket operation.
 @end defvr
 
 @comment errno.h
@@ -265,13 +265,13 @@ File too big; the size of a file would be larger than allowed by the system.
 @comment errno.h
 @comment BSD
 @defvr Macro EHOSTDOWN
-The destination host for a network connection is down.
+The remote host for a network connection is down.
 @end defvr
 
 @comment errno.h
 @comment BSD
 @defvr Macro EHOSTUNREACH
-The destination host for a network connection is not reachable.
+The remote host for a network connection is not reachable.
 @end defvr
 
 @comment errno.h
@@ -290,14 +290,15 @@ that has non-blocking mode selected.
 @comment errno.h
 @comment POSIX.1
 @defvr Macro EINTR
-Interrupted function call; an asynchronous signal occured and was handled
-during the execution of the call.
+Interrupted function call; an asynchronous signal occured and prevented
+completion of the call.  When this happens, you should try the call
+again.
 @end defvr
 
 @comment errno.h
 @comment POSIX.1
 @defvr Macro EINVAL
-Invalid argument.  This is used to indicate all sorts of random problems
+Invalid argument.  This is used to indicate various kinds of problems
 with passing the wrong argument to a library function.
 @end defvr
 
@@ -310,7 +311,8 @@ Input/output error; usually used for physical read or write errors.
 @comment errno.h
 @comment BSD
 @defvr Macro EISCONN
-The socket is already connected.
+You tried to connect a socket that is already connected.
+@xref{Establishing a Connection}.
 @end defvr
 
 @comment errno.h
@@ -323,6 +325,7 @@ File is a directory; it can't be written to like an ordinary file.
 @comment BSD
 @defvr Macro ELOOP
 Too many levels of symbolic links were encountered in looking up a file name.
+Maybe there is a circular reference.
 @end defvr
 
 @comment errno.h
@@ -341,7 +344,7 @@ Too many links; the link count of a single file is too large.
 @comment BSD
 @defvr Macro EMSGSIZE
 The size of a message sent on a socket was larger than the supported
-maximum size.
+maximum size.  
 @end defvr
 
 @comment errno.h
@@ -399,7 +402,8 @@ expected to already exist.
 @comment errno.h
 @comment POSIX.1
 @defvr Macro ENOEXEC
-Invalid executable file format.
+Invalid executable file format.  This condition is detected by the
+@code{exec} functions; @pxref{Executing a File}.
 @end defvr
 
 @comment errno.h
@@ -425,7 +429,8 @@ blocking was not desired.
 @comment errno.h
 @comment BSD
 @defvr Macro ENOPROTOOPT
-An option is not specified by this socket protocol.
+You specified a socket option that doesn't make sense for the
+particular protocol being used by the socket.  @xref{Socket Options}.
 @end defvr
 
 @comment errno.h
@@ -454,7 +459,9 @@ system will give this error.
 @comment errno.h
 @comment BSD
 @defvr Macro ENOTCONN
-The socket is not connected to anything.
+The socket is not connected to anything.  You get this message when you
+try to transmit data over a socket, without first specifying a destination
+for the data.
 @end defvr
 
 @comment errno.h
@@ -474,7 +481,7 @@ A file that isn't a socket was given in a situation that requires one.
 @comment POSIX.1
 @defvr Macro ENOTEMPTY
 Directory not empty, where an empty directory was expected.  Typically,
-used when you are trying to remove a directory.
+this error occurs when you are trying to remove a directory.
 @end defvr
 
 @comment errno.h
@@ -495,7 +502,9 @@ system can't find the right kind of device driver for it.
 @comment errno.h
 @comment BSD
 @defvr Macro EOPNOTSUPP
-The socket operation is not supported.
+The socket operation you requested is not supported.  Some socket functions
+don't make sense for all types of sockets, and others may not be implemented
+for all communications protocols.
 @end defvr
 
 @comment errno.h
@@ -508,7 +517,7 @@ or processes with special privileges can perform the operation.
 @comment errno.h
 @comment BSD
 @defvr Macro EPFNOSUPPORT
-The protocol family is not supported.
+The socket communications protocol family you requested is not supported.
 @end defvr
 
 @comment errno.h
@@ -520,13 +529,14 @@ Broken pipe; there is no process reading from the other end of a pipe.
 @comment errno.h
 @comment BSD
 @defvr Macro EPROTONOSUPPORT
-The socket protocol is not supported.
+The socket domain does not support the requested communications protocol.
+@xref{Creating a Socket}.
 @end defvr
 
 @comment errno.h
 @comment BSD
 @defvr Macro EPROTOTYPE
-The protocol specified on a socket does not support the given socket type.
+The socket type does not support the requested communications protocol.
 @end defvr
 
 @comment errno.h
@@ -610,7 +620,7 @@ non-blocking mode selected.
 @comment errno.h
 @comment POSIX.1
 @defvr Macro EXDEV
-Improper link, such as to a file on another file system.
+An attempt to make an improper link across file systems was detected.
 @end defvr
 
 
@@ -621,14 +631,14 @@ The library contains a couple of other useful functions to produce error
 messages corresponding to values of @code{errno}.  The @code{strerror}
 function, declared in @file{<string.h>}, returns the error message as a
 string; and the @code{perror} function, declared in @file{<stdio.h>},
-can be used to print the error message.@refill
+prints the error message.@refill
 
 @comment string.h
 @comment ANSI
 @deftypefun {char *} strerror (int @var{errnum})
 The @code{strerror} function maps the error code (@pxref{Error
 Reporting}) specified by the @var{errnum} argument to a descriptive
-error message string.  A pointer to the string is returned.
+error message string.  The return value is a pointer to this string.
 
 You should not modify the string returned by @code{strerror}.  Also, if
 you make subsequent calls to @code{strerror}, the string might be
@@ -639,8 +649,8 @@ overwritten.  (But it's guaranteed that no library function ever calls
 @comment string.h
 @comment ANSI
 @deftypefun void perror (const char *@var{message})
-This function is used to print an error message to the stream
-@code{stderr}; @pxref{Standard Streams}.
+This function prints an error message to the stream @code{stderr};
+@pxref{Standard Streams}.
 
 If you call @code{perror} with a @var{message} that is either a null
 pointer or an empty string, @code{perror} just prints the error message 

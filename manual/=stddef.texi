@@ -35,18 +35,17 @@ be careful either to consistently declare variables and function
 prototypes that can receive values of these types with the derived
 types, or else to use an explicit cast on the value.  For example, you
 shouldn't use @code{size_t} interchangably either with @code{unsigned
-int} or @code{unsigned long int}, since it might be either; this is a
-particular problem when passing values to functions for which there is
-no prototype declared in scope, since the default argument promotions
-can differ from implementation to implementation.  Another problem is
-that there aren't any constants in @file{<limits.h>} to tell you what
-the minimum and maximum values for these data types are.
+int} or @code{unsigned long int}, since it might be either one of those.
+This is a particular problem when passing values to functions for which
+there is no prototype declared in scope, since the default argument
+promotions can differ from implementation to implementation.  Another
+problem is that there aren't any constants in @file{<limits.h>} to tell
+you what the minimum and maximum values for these data types are.
 
 @strong{Compatibility Note:}  Types such as @code{size_t} are new
 features of ANSI C.  Older, pre-ANSI C implementations have
-traditionally used @code{unsigned int} for representing object sizes,
-@code{int} for pointer subtraction results, and don't have any notion
-at all of wide characters.
+traditionally used @code{unsigned int} for representing object sizes
+and @code{int} for pointer subtraction results.
 
 @comment stddef.h
 @comment ANSI
@@ -61,12 +60,9 @@ constant more evident.
 
 When passing a null pointer as an argument to a function for which there
 is no prototype declaration in scope, you should explicitly cast
-@code{NULL} or @code{0} into a pointer of the appropriate type.  (This
-is because, in some implementations, pointers to different types of
-objects might have different sizes.)  For example, to pass a null
-pointer to a function expecting a pointer to @code{int}, you should use
-@code{((int *) NULL)} or @code{((int *) 0)}.
-@refill
+@code{NULL} or @code{0} into a pointer of the appropriate type.  Again,
+this is because the default argument promotions may not do the right
+thing.
 @end defvr
 
 @comment stddef.h
@@ -74,8 +70,8 @@ pointer to a function expecting a pointer to @code{int}, you should use
 @deftypefn {Macro} size_t offsetof (@var{type}, @var{member})
 This expands to a integer constant expression that is the offset of the
 structure member named @var{member} in a @code{struct} of type
-@var{type}.  For example, @code{offsetof (struct s, elem)} is the offset,
-in bytes, of the member @code{elem} in a @code{struct s}.  This macro
-cannot be used to determine the offset of a bit field.
-@refill
+@var{type}.  For example, @code{offsetof (struct s, elem)} is the
+offset, in bytes, of the member @code{elem} in a @code{struct s}.  This
+macro won't work if @var{member} is a bit field; you get an error from
+the C compiler in that case.
 @end deftypefn
