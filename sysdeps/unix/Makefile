@@ -179,7 +179,7 @@ $(common-objpfx)syscall.h: $(syscall.h)
 	    -e 's/[ 	]sys_/ SYS_/' \
 	    -e '/^#/!d' \
 	    -e '/^#ident/d' \
-	    -e 's-\(/\*[^*]*\)$-\1\*/-' \
+	    -e 's-\(/\*[^*]*\)$$-\1\*/-' \
 	> $@-tmp
 	mv $@-tmp $@
 
