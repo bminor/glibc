@@ -359,7 +359,7 @@ DEFUN(vfprintf, (s, format, args),
 
 	    base = 16;
 
-	  unsigned_number:;
+	  unsigned_number:
 	    /* Unsigned number of base BASE.  */
 
 	    if (is_longlong)
@@ -371,9 +371,11 @@ DEFUN(vfprintf, (s, format, args),
 	    else
 	      castarg(num, int, unsigned short int);
 
-	    is_neg = 0;
+	    /* ANSI only specifies the `+' and
+	       ` ' flags for signed conversions.  */
+	    is_neg = showsign = space = 0;
 
-	  number:;
+	  number:
 	    /* Number of base BASE.  */
 	    {
 	      char work[BUFSIZ];
@@ -534,15 +536,15 @@ DEFUN(vfprintf, (s, format, args),
 		  static CONST char nil[] = "(nil)";
 		  register CONST char *p;
 
-		  width -= sizeof(nil) - 1;
-		  if (left)
-		    while (width-- > 0)
-		      outchar(' ');
-		  for (p = nil; *p != '\0'; ++p)
-		    outchar(*p);
+		  width -= sizeof (nil) - 1;
 		  if (!left)
 		    while (width-- > 0)
-		      outchar(' ');
+		      outchar (' ');
+		  for (p = nil; *p != '\0'; ++p)
+		    outchar (*p);
+		  if (left)
+		    while (width-- > 0)
+		      outchar (' ');
 		}
 	    }
 	    break;
