@@ -17,8 +17,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <hurd.h>
+#include <hurd/signal.h>
 #include <mach/thread_status.h>
+#include <string.h>
 
 extern jmp_buf _hurd_sigthread_fault_env;
 
