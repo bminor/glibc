@@ -19,9 +19,9 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <gnu-stabs.h>
 
-mutex_t _hurd_idlock;
+struct mutex _hurd_idlock;
 int _hurd_id_valid;
-idblock_t _hurd_id;
+struct idblock _hurd_id;
 
 static void
 init_id (void)
