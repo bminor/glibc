@@ -1,3 +1,29 @@
+1998-10-07 10:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Dist: Remove sys/debugreg.h.
+	* sysdeps/unix/sysv/linux/i386/Dist: Add sys/debugreg.h.
+	* sysdeps/unix/sysv/linux/i386/sys/debugreg.h: New file.
+	* sysdeps/unix/sysv/linux/sys/debugreg.h: Removed.
+
+1998-10-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/getcwd.c (__getcwd): Use temporary variable to
+	store result of realloc instead of using BUF.
+
+1998-10-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* misc/sgtty.h (_SGTTY_H): Correct spelling.
+	Reported by Rouben Rostamian <rostamian@umbc.edu> [PR libc/817].
+
+1998-10-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/memory.texi (Obstacks): Document
+	obstack_alloc_failed_handler usage.
+
+	* malloc/obstack.h: Enhance comment about
+	obstack_alloc_failed_handler usage.
+	* malloc/obstack.c: Likewise.
+
 1998-10-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/dl-machine.h (RTLD_START): Fix clearing startup
