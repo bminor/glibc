@@ -2481,22 +2481,6 @@
 	* string/string.h: Add __nonnull annotations.
 	* stdlib/stdlib.h: Likewise.
 
-2004-09-20  Jakub Jelinek  <jakub@redhat.com>
-
-	* sysdeps/unix/alpha/sysdep.h (inline_syscall[0-6]): Change name
-	argument to numbers from syscall names.
-	(INLINE_SYSCALL1): Pass __NR_##name to inline_syscall##nr.
-	(INTERNAL_SYSCALL_NCS): Renamed from...
-	(INTERNAL_SYSCALL_1): ... this.  Use INTERNAL_SYSCALL_NCS.
-	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h
-	(INTERNAL_SYSCALL_NCS): Define.
-	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
-	(INTERNAL_SYSCALL_NCS): Likewise.
-	* sysdeps/unix/sysv/linux/sparc/sysdep.h (inline_syscall[0-6]):
-	Change name argument to numbers from syscall names.
-	(INLINE_SYSCALL, INTERNAL_SYSCALL): Adjust.
-	(INTERNAL_SYSCALL_NCS): Define.
-
 2004-09-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h (DO_INLINE_SYSCALL):
@@ -3398,22 +3382,6 @@
 
 	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Initialize
 	status to NSS_STATUS_UNAVAIL.
-
-2004-08-19  Jakub Jelinek  <jakub@redhat.com>
-
-	* sysdeps/powerpc/powerpc64/configure.in: New file.
-	* sysdeps/powerpc/powerpc64/configure: Rebuilt.
-	* config.h.in (USE_PPC64_OVERLAPPING_OPD): Add.
-	* configure.in (HAVE_ASM_GLOBAL_DOT_NAME): Remove.
-	* configure: Rebuilt.
-	* sysdeps/powerpc/powerpc64/sysdep.h: Formatting.
-	(OPD_ENT, BODY_LABEL, ENTRY_1, ENTRY_2, END_2, DOT_PREFIX,
-	BODY_PREFIX): Define.
-	(ENTRY, DOT_LABEL, END, TRACEBACK, END_GEN_TB, EALIGN): Support
-	HAVE_ASM_GLOBAL_DOT_NAME or no dot symbols,
-	USE_PPC64_OVERLAPPING_OPD or never overlapping .opd entries.
-	* sysdeps/powerpc/powerpc64/dl-machine.h: Include sysdep.h.
-	(TRAMPOLINE_TEMPLATE, RTLD_START): Use the new sysdep.h macros.
 
 2004-08-19  Ulrich Drepper  <drepper@redhat.com>
 
