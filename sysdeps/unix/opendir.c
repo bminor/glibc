@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,8 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <bsddir.h>
+
+#include "direct.h"		/* This file defines `struct direct'.  */
 
 /* Open a directory stream on NAME.  */
 DIR *
@@ -41,27 +42,29 @@ DEFUN(opendir, (name), CONST char *name)
     return NULL;
 
   if (fcntl (fd, F_SETFD, FD_CLOEXEC) < 0)
-    return NULL;
+    goto lose;
 
-  dirp = (DIR *) malloc(sizeof(DIR) + NAME_MAX);
+  dirp = (DIR *) malloc (sizeof (DIR) + NAME_MAX);
   if (dirp == NULL)
+  lose:
     {
       int save = errno;
-      (void) __close(fd);
+      (void) __close (fd);
       errno = save;
       return NULL;
     }
 
-  if (__fstat(fd, &statbuf) < 0 || statbuf.st_blksize < sizeof(struct direct))
-    dirp->__allocation = sizeof(struct direct);
+  if (__fstat (fd, &statbuf) < 0 ||
+      statbuf.st_blksize < sizeof (struct direct))
+    dirp->__allocation = sizeof (struct direct);
   else
     dirp->__allocation = statbuf.st_blksize;
-  dirp->__data = (char *) malloc(dirp->__allocation);
+  dirp->__data = (char *) malloc (dirp->__allocation);
   if (dirp->__data == NULL)
     {
       int save = errno;
-      free((PTR) dirp);
-      (void) __close(fd);
+      free ((PTR) dirp);
+      (void) __close (fd);
       errno = save;
       return NULL;
     }
