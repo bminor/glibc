@@ -38,6 +38,8 @@ Cambridge, MA 02139, USA.  */
 #define	STRINGIFY(arg)	"arg"
 #endif
 
+#define EVALLED_STRINGIFY(x)	STRINGIFY (x)
+
 main ()
 {
 #ifdef TABLE
@@ -45,10 +47,10 @@ main ()
   int i;
 
   puts ("#include <ansidecl.h>");
-  printf ("CONST char %s[] =\n  {\n", STRINGIFY (TABLE));
+  printf ("CONST char %s[] =\n  {\n", EVALLED_STRINGIFY (TABLE));
 
   for (i = -1; i < 256; ++i)
-    printf ("    %u,\n", (unsigned int) ((TABLE+1)[i]));
+    printf ("    %d,\n", (int) ((TABLE+1)[i]));
 
   puts ("  };");
 
@@ -56,7 +58,7 @@ main ()
 
   puts ("/* I don't know what the ctype table is called on this system.");
   puts ("   If there is a table, and you want the ctype glue to work,");
-  puts ("   edit configure.in and sysdeps/unix/common/glue-ctype.c");
+  puts ("   edit configure.in and glue-ctype.c in sysdeps/unix/common/");
   puts ("   to check for the right name.  */");
 
 #endif
