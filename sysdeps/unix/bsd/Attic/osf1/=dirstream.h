@@ -33,7 +33,7 @@ typedef struct
     size_t __size;		/* Total valid data in the block.  */
     char *__data;		/* Directory block.  */
 
-    size_t __allocation;	/* Space allocated for the block.  */
+    int __allocation;		/* Space allocated for the block.  */
 
     int __data_len;		/* Size of __data.  */
     long __dd_seek;		/* OSF/1 magic cookie returned by getdents. */
