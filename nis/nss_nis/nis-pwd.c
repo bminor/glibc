@@ -249,7 +249,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
       char *endp, *tmp;
       size_t restlen;
 
-      if (encrypted != NULL
+      if (encrypted == NULL
 	  || (endp = strchr (++encrypted, ':')) == NULL
 	  || (p = strchr (p + 1, ':')) == NULL)
 	{
@@ -348,7 +348,7 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
       char *endp, *tmp;
       size_t restlen;
 
-      if (encrypted != NULL
+      if (encrypted == NULL
 	  || (endp = strchr (++encrypted, ':')) == NULL
 	  || (p = strchr (p + 1, ':')) == NULL)
 	{
