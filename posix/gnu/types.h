@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -38,9 +38,9 @@ typedef struct
 typedef int __dev_t;		/* Type of device numbers.  */
 typedef unsigned int __uid_t;	/* Type of user identifications.  */
 typedef unsigned int __gid_t;	/* Type of group identifications.  */
-typedef unsigned long int __ino_t;	/* Type of file serial numbers.  */
+typedef unsigned int __ino_t;	/* Type of file serial numbers.  */
 typedef unsigned int __mode_t;	/* Type of file attribute bitmasks.  */
-typedef unsigned short int __nlink_t;	/* Type of file link counts.  */
+typedef unsigned short int __nlink_t; /* Type of file link counts.  */
 typedef long int __off_t;	/* Type of file sizes and offsets.  */
 typedef int __pid_t;		/* Type of process identifications.  */
 typedef int __ssize_t;		/* Type of a byte count, or error.  */
