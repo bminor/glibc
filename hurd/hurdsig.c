@@ -22,6 +22,8 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/signal.h>
 #include <cthreads.h>		/* For `struct mutex'.  */
+#include <string.h>
+#include "hurdmalloc.h"		/* XXX */
 
 struct mutex _hurd_siglock = MUTEX_INITIALIZER;
 int _hurd_stopped;
@@ -48,9 +50,10 @@ _hurd_thread_sigstate (thread_t thread)
       break;
   if (ss == NULL)
     {
-      ss = calloc (1, sizeof (*ss)); /* Zero-initialized.  */
+      ss = malloc (sizeof (*ss));
       if (ss == NULL)
 	__libc_fatal ("hurd: Can't allocate thread sigstate\n");
+      memset (ss, 0, sizeof (*ss));
       ss->thread = thread;
       __mutex_init (&ss->lock);
       ss->next = _hurd_sigstates;
