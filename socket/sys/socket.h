@@ -42,7 +42,8 @@ enum __socket_type
 
 /* Protocol families.  */
 #define	PF_UNSPEC	0	/* Unspecified.  */
-#define	PF_UNIX		1	/* Local to host (pipes and unix-domain).  */
+#define	PF_FILE		1	/* Local to host (pipes and file-domain).  */
+#define	PF_UNIX		PF_FILE	/* BSD name for PF_FILE.  */
 #define	PF_INET		2	/* IP protocol family.  */
 #define	PF_IMPLINK	3	/* ARPAnet IMP protocol.  */
 #define	PF_PUP		4	/* PUP protocols.  */
@@ -65,6 +66,7 @@ enum __socket_type
 
 /* Address families.  */
 #define	AF_UNSPEC	PF_UNSPEC
+#define	AF_FILE		PF_FILE
 #define	AF_UNIX		PF_UNIX
 #define	AF_INET		PF_INET
 #define	AF_IMPLINK	PF_IMPLINK
@@ -89,10 +91,10 @@ enum __socket_type
 
 /* Structure describing a generic socket address.  */
 struct sockaddr
-{
-  unsigned short int sa_family;	/* Address family.  */
-  char sa_data[14];		/* Address data.  */
-};
+  {
+    unsigned short int sa_family; /* Address family.  */
+    char sa_data[14];		/* Address data.  */
+  };
 
 
 /* Create a new socket of type TYPE in domain DOMAIN, using
@@ -129,11 +131,11 @@ extern int getpeername __P ((int __fd, struct sockaddr * __addr,
 
 /* Bits in the FLAGS argument to `send', `recv', et al.  */
 enum
-{
-  MSG_OOB = 1,			/* Process out-of-band data.  */
-  MSG_PEEK = 2,			/* Peek at incoming messages.  */
-  MSG_DONTROUTE = 4,		/* Don't use local routing.  */
-};
+  {
+    MSG_OOB = 1,		/* Process out-of-band data.  */
+    MSG_PEEK = 2,		/* Peek at incoming messages.  */
+    MSG_DONTROUTE = 4,		/* Don't use local routing.  */
+  };
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 extern int send __P ((int __fd, __ptr_t __buf, size_t __n, int __flags));
@@ -159,16 +161,16 @@ extern int recvfrom __P ((int __fd, __ptr_t __buf, size_t __n, int __flags,
 /* Structure describing messages sent by
    `sendmsg' and received by `recvmsg'.  */
 struct msghdr
-{
-  __ptr_t msg_name;		/* Address to send to/receive from.  */
-  size_t msg_namelen;		/* Length of address data.  */
+  {
+    __ptr_t msg_name;		/* Address to send to/receive from.  */
+    size_t msg_namelen;		/* Length of address data.  */
 
-  struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
-  size_t msg_iovlen;		/* Number of elements in the vector.  */
+    struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
+    size_t msg_iovlen;		/* Number of elements in the vector.  */
 
-  __ptr_t msg_accrights;	/* Access rights information.  */
-  size_t msg_accrightslen;	/* Length of access rights information.  */
-};
+    __ptr_t msg_accrights;	/* Access rights information.  */
+    size_t msg_accrightslen;	/* Length of access rights information.  */
+  };
 
 /* Send a message described MESSAGE on socket FD.
    Returns the number of bytes sent, or -1 for errors.  */
@@ -186,38 +188,38 @@ extern int recvmsg __P ((int __fd, struct msghdr * __message, int __flags));
 
 /* Socket-level options for `getsockopt' and `setsockopt'.  */
 enum
-{
-  SO_DEBUG = 0x0001,		/* Record debugging information.  */
-  SO_ACCEPTCONN = 0x0002,	/* Accept connections on socket.  */
-  SO_REUSEADDR = 0x0004,	/* Allow reuse of local addresses.  */
-  SO_KEEPALIVE = 0x0008,	/* Keep connections alive and send
+  {
+    SO_DEBUG = 0x0001,		/* Record debugging information.  */
+    SO_ACCEPTCONN = 0x0002,	/* Accept connections on socket.  */
+    SO_REUSEADDR = 0x0004,	/* Allow reuse of local addresses.  */
+    SO_KEEPALIVE = 0x0008,	/* Keep connections alive and send
 				   SIGPIPE when they die.  */
-  SO_DONTROUTE = 0x0010,	/* Don't do local routing.  */
-  SO_BROADCAST = 0x0020,	/* Allow transmission of
+    SO_DONTROUTE = 0x0010,	/* Don't do local routing.  */
+    SO_BROADCAST = 0x0020,	/* Allow transmission of
 				   broadcast messages.  */
-  SO_USELOOPBACK = 0x0040,	/* Use the software loopback to avoid
+    SO_USELOOPBACK = 0x0040,	/* Use the software loopback to avoid
 				   hardware use when possible.  */
-  SO_LINGER = 0x0080,		/* Block on close of a reliable
+    SO_LINGER = 0x0080,		/* Block on close of a reliable
 				   socket to transmit pending data.  */
-  SO_OOBINLINE = 0x0100,	/* Receive out-of-band data in-band.  */
+    SO_OOBINLINE = 0x0100,	/* Receive out-of-band data in-band.  */
 
-  SO_SNDBUF = 0x1001,		/* Send buffer size.  */
-  SO_RCVBUF = 0x1002,		/* Receive buffer.  */
-  SO_SNDLOWAT = 0x1003,		/* Send low-water mark.  */
-  SO_RCVLOWAT = 0x1004,		/* Receive low-water mark.  */
-  SO_SNDTIMEO = 0x1005,		/* Send timeout.  */
-  SO_RCVTIMEO = 0x1006,		/* Receive timeout.  */
+    SO_SNDBUF = 0x1001,		/* Send buffer size.  */
+    SO_RCVBUF = 0x1002,		/* Receive buffer.  */
+    SO_SNDLOWAT = 0x1003,	/* Send low-water mark.  */
+    SO_RCVLOWAT = 0x1004,	/* Receive low-water mark.  */
+    SO_SNDTIMEO = 0x1005,	/* Send timeout.  */
+    SO_RCVTIMEO = 0x1006,	/* Receive timeout.  */
 
-  SO_ERROR = 0x1007,		/* Get and clear error status.  */
-  SO_TYPE = 0x1008,		/* Get socket type.  */
-};
+    SO_ERROR = 0x1007,		/* Get and clear error status.  */
+    SO_TYPE = 0x1008,		/* Get socket type.  */
+  };
 
 /* Structure used to manipulate the SO_LINGER option.  */
 struct linger
-{
-  int l_onoff;			/* Nonzero to linger on close.  */
-  int l_linger;			/* Time to linger.  */
-};
+  {
+    int l_onoff;		/* Nonzero to linger on close.  */
+    int l_linger;		/* Time to linger.  */
+  };
 
 
 /* Put the current value for socket FD's option OPTNAME at protocol level LEVEL
