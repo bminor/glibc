@@ -41,8 +41,8 @@ typedef unsigned long int __sigset_t;
    overflow if `sigset_t' is wider than `int'.  */
 #define	__sigmask(sig)	(((__sigset_t) 1) << ((sig) - 1))
 
-#define	__sigemptyset(set)	((*(set) = 0L), 0)
-#define	__sigfillset(set)	((*(set) = -1L), 0)
+#define	__sigemptyset(set)	((*(set) = (__sigset_t) 0), 0)
+#define	__sigfillset(set)	((*(set) = ~(__sigset_t) 0), 0)
 
 /* These functions must check for a bogus signal number.  We detect it by a
    zero sigmask, since a number too low or too high will have shifted the 1
@@ -57,9 +57,16 @@ typedef unsigned long int __sigset_t;
   _EXTERN_INLINE int							      \
   __##NAME (CONST __sigset_t *__set, int __sig)				      \
   {									      \
-    extern int raise (int);						      \
-    __sigset_t __mask = __sigmask (__sig);				      \
-    return __mask ? (BODY) : raise (-1);				      \
+    if (__sig < 1 || __sig > sizeof (__sigset_t) * 8)			      \
+      {									      \
+	extern int raise (int);						      \
+	return raise (-1);						      \
+      }									      \
+    else								      \
+      {									      \
+	__sigset_t __mask = __sigmask (__sig);				      \
+	return BODY;							      \
+      }									      \
   }
 
 __SIGSETFN (sigismember, (*__set & __mask) ? 1 : 0, __const)
