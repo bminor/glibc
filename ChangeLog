@@ -1,5 +1,10 @@
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* dirent/dirent.h: Redirect getdirentries to getdirentries64 if
+	compiled with _FILE_OFFSET_BITS=64.
+
+1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/generic/setenv.c (__add_to_environ): Initialize ep
 	after we have the lock.
 
