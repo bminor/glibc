@@ -127,7 +127,7 @@ subdirs := $(filter-out crypt,$(subdirs))
 				      $(addsuffix /$(file),$(sysdep_dirs)))) \
 		 $(+sysdep-dist)
 
-+tsrcs := $(distribute) $(+tsrcs) $(+sysdep-tsrcs)
++tsrcs := $(+tsrcs) $(+sysdep-tsrcs)
 
 .PHONY: dist
 # N.B.: The order in which these are done matters (so don't use -j).
