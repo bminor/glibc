@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,8 @@ DEFUN(memmem, (needle, needle_len,
     return (PTR) &((CONST char *) haystack)[needle_len - 1];
 
   for (begin = &((CONST char *) haystack)[needle_len - 1];
-       begin < haystack_end; ++begin)
+       begin < (CONST char *) haystack + haystack_len;
+       ++begin)
     if (!memcmp ((PTR) begin, needle, needle_len))
       return (PTR) begin;
 
