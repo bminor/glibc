@@ -175,6 +175,8 @@ _IO_new_file_close_it (fp)
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   else
     {
+      if (_IO_have_wbackup (fp))
+	_IO_free_wbackup_area (fp);
       _IO_wsetb (fp, NULL, NULL, 0);
       _IO_wsetg (fp, NULL, NULL, NULL);
       _IO_wsetp (fp, NULL, NULL);

@@ -65,6 +65,7 @@ _IO_new_fclose (fp)
     status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
   _IO_FINISH (fp);
   _IO_funlockfile (fp);
+  _IO_cleanup_region_end (0);
   if (fp->_mode > 0)
     {
 #if _LIBC
@@ -76,9 +77,11 @@ _IO_new_fclose (fp)
       __gconv_release_step (cc->__cd_out.__cd.__steps);
 #endif
     }
-  _IO_cleanup_region_end (0);
-  if (_IO_have_backup (fp))
-    _IO_free_backup_area (fp);
+  else
+    {
+      if (_IO_have_backup (fp))
+	_IO_free_backup_area (fp);
+    }
   if (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr)
     {
       fp->_IO_file_flags = 0;
