@@ -182,7 +182,7 @@ DEFUN(_IO_str_underflow, (fp),
       fp->_IO_write_ptr = fp->_IO_write_end;
     }
   if (fp->_IO_read_ptr < fp->_IO_read_end)
-    return *fp->_IO_read_ptr;
+    return *((unsigned char *) fp->_IO_read_ptr);
   else
     return EOF;
 }
