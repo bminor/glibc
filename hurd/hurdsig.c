@@ -22,10 +22,9 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/signal.h>
 #include <hurd/msg_reply.h>	/* For __sig_post_reply.  */
+#include <mutex.h>
 
-#ifdef noteven
-struct mutex _hurd_siglock;
-#endif
+struct mutex _hurd_siglock = MUTEX_INITIALIZER;
 int _hurd_stopped;
 
 /* Port that receives signals and other miscellaneous messages.  */
@@ -54,9 +53,7 @@ _hurd_thread_sigstate (thread_t thread)
       if (ss == NULL)
 	__libc_fatal ("hurd: Can't allocate thread sigstate\n");
       ss->thread = thread;
-#ifdef noteve
       __mutex_init (&ss->lock);
-#endif
       ss->next = _hurd_sigstates;
       _hurd_sigstates = ss;
     }
@@ -233,9 +230,7 @@ abort_all_rpcs (int signo, void *state)
 
 
 struct hurd_signal_preempt *_hurd_signal_preempt[NSIG];
-#ifdef noteven
 struct mutex _hurd_signal_preempt_lock;
-#endif
 
 /* Deliver a signal.
    SS->lock is held on entry and released before return.  */
@@ -448,10 +443,10 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 #ifdef noteven
   if (ss->suspended)
     /* There is a sigsuspend waiting.  Tell it to wake up.  */
-    __condition_signal (&ss->arrived);
+    __condition_signal (&ss->arrived, &ss->lock);
   else
-    __mutex_unlock (&ss->lock);
 #endif
+    __mutex_unlock (&ss->lock);
 }
 
 /* Implement the sig_post RPC from <hurd/msg.defs>;
@@ -584,10 +579,6 @@ _hurdsig_init (void)
 
   if (_hurd_msgport == MACH_PORT_NULL)
     {
-#ifdef noteven
-      __mutex_init (&_hurd_siglock); /* Initialize the signal lock.  */
-#endif
-
       if (err = __mach_port_allocate (__mach_task_self (),
 				      MACH_PORT_RIGHT_RECEIVE,
 				      &_hurd_msgport))
