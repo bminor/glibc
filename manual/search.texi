@@ -7,9 +7,12 @@ applied as an argument, along with the size of the objects in the array
 and the total number of elements.
 
 @menu
-* Array Search Function::		The @code{bsearch} function.
-* Array Sort Function::			The @code{qsort} function.
-* Searching and Sorting Example::	An example program.
+* Comparison Functions::    Defining how to compare two objects.
+				Since the sort and search facilities are
+				general, you have to specify the ordering.
+* Array Search Function::   The @code{bsearch} function.
+* Array Sort Function::	    The @code{qsort} function.
+* Search/Sort Example::     An example program.
 @end menu
 
 @node Comparison Functions
@@ -66,7 +69,7 @@ the header file @file{stdlib.h}.
 
 @comment stdlib.h
 @comment ANSI
-@deftypefun {void *} bsearch (const void *@var{key}, const void *@var{array}, size_t @var{count}, size_t @var{size}, compare_fn_t @var{compare})
+@deftypefun {void *} bsearch (const void *@var{key}, const void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
 The @code{bsearch} function searches the sorted array @var{array} for an object
 that is equivalent to @var{key}.  The array contains @var{count} elements,
 each of which is of size @var{size}.
@@ -99,7 +102,7 @@ To sort an array using an arbitrary comparison function, use the
 
 @comment stdlib.h
 @comment ANSI
-@deftypefun void qsort (void *@var{array}, size_t @var{count}, size_t @var{size}, compare_fn_t @var{compare})
+@deftypefun void qsort (void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
 The @var{qsort} function sorts the array @var{array}.  The array contains
 @var{count} elements, each of which is of size @var{size}.
 
@@ -137,8 +140,7 @@ The @code{qsort} function derives its name from the fact that it was
 originally implemented using the algorithm ``quick sort''.
 @end deftypefun
 
-
-@node Searching and Sorting Example
+@node Search/Sort Example
 @section Searching and Sorting Example
 
 Here is an example showing the use of @code{qsort} and @code{bsearch}
@@ -159,30 +161,32 @@ struct critter @{
   char *species;
   @};
 
-/* @r{Initialize the array in an order which is not properly sorted.}  */
+/* @r{Initialize the array, but not properly sorted.}  */
 
-struct critter muppets[] = @{@{"Kermit", "frog"@},
-                            @{"Piggy", "pig"@},
-                            @{"Gonzo", "whatever"@},
-                            @{"Fozzie", "bear"@},
-                            @{"Sam", "eagle"@},
-                            @{"Robin", "frog"@},
-                            @{"Animal", "animal"@},
-                            @{"Camilla", "chicken"@},
-                            @{"Sweetums", "monster"@},
-                            @{"Dr. Strangepork", "pig"@},
-                            @{"Link Hogthrob", "pig"@},
-                            @{"Zoot", "human"@},
-                            @{"Dr. Bunsen Honeydew", "human"@},
-                            @{"Beaker", "human"@},
-                            @{"Swedish Chef", "human"@}@};
+struct critter muppets[]
+  = @{@{"Kermit", "frog"@},
+     @{"Piggy", "pig"@},
+     @{"Gonzo", "whatever"@},
+     @{"Fozzie", "bear"@},
+     @{"Sam", "eagle"@},
+     @{"Robin", "frog"@},
+     @{"Animal", "animal"@},
+     @{"Camilla", "chicken"@},
+     @{"Sweetums", "monster"@},
+     @{"Dr. Strangepork", "pig"@},
+     @{"Link Hogthrob", "pig"@},
+     @{"Zoot", "human"@},
+     @{"Dr. Bunsen Honeydew", "human"@},
+     @{"Beaker", "human"@},
+     @{"Swedish Chef", "human"@}@};
 
 int count = sizeof(muppets) / sizeof(struct critter);
 
-/* @r{This is the comparison function used for sorting and searching.} */
+/* @r{This is the comparison function for sorting and searching.} */
 
 int
-critter_cmp (const struct critter *c1, const struct critter *c2)
+critter_cmp (const struct critter *c1,
+             const struct critter *c2)
 @{
   return strcmp (c1->name, c2->name);
 @}
@@ -202,7 +206,8 @@ find_critter (char *name)
 @{
   struct critter target, *result;
   target.name = name;
-  result = bsearch (&target, muppets, count, sizeof(struct critter),
+  result = bsearch (&target, muppets, count,
+                    sizeof (struct critter),
                     critter_cmp);
   if (result)
     print_critter (result);
@@ -217,7 +222,8 @@ main (void)
 @{
   int i;
   
-  qsort (muppets, count, sizeof(struct critter), critter_cmp);
+  qsort (muppets, count,
+         sizeof (struct critter), critter_cmp);
 
   for (i=0; i<count; i++)
     print_critter (&muppets[i]);
