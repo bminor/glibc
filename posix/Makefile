@@ -61,8 +61,6 @@ glob.tar: glob/COPYING.LIB glob/Makefile \
 	  glob/fnmatch.h glob/glob.h glob/fnmatch.c glob/glob.c	  
 	tar ch$(verbose)f $@ $^
 glob/%.c: %.c
-	$(..)ansidecl -trad $< | indent -stdin -gnu > $@-tmp
-	mv $@-tmp $@
+	ln -s ../$< $@
 glob/%.h: %.h
-	$(..)ansidecl -trad $< | indent -stdin -gnu > $@-tmp
-	mv $@-tmp $@
+	ln -s ../$< $@
