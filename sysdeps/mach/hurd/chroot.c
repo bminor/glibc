@@ -28,24 +28,18 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(chroot, (path), CONST char *path)
 {
-  file_t crdir;
+  file_t file, dir;
   error_t err;
-  struct stat st;
 
-  crdir = __path_lookup (path, O_EXEC, 0);
-  if (crdir == MACH_PORT_NULL)
+  file = __path_lookup (path, O_EXEC, 0);
+  if (file == MACH_PORT_NULL)
     return -1;
-
-  err = __io_stat (crdir, &st);
-  if (! err && ! S_ISDIR (st.st_mode))
-    err = ENOTDIR;
+  err = __USEPORT (CRDIR, __hurd_path_lookup (port, file, "",
+					      O_EXEC, 0, &dir));
+  __mach_port_deallocate (__mach_task_self (), file);
   if (err)
-    {
-      __mach_port_deallocate (__mach_task_self (), crdir);
-      return __hurd_fail (err);
-    }
+    return __hurd_fail (err);
 
   _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], crdir);
-
   return 0;
 }
