@@ -157,9 +157,11 @@ ifndef localtime
 localtime = Factory
 endif
 
-# Where to install the "localtime" timezone file; this is the file
-# whose contents $(localtime) specifies.  If this is a relative
-# pathname, it is relative to $(datadir)/zoneinfo.
+# Where to install the "localtime" timezone file; this is the file whose
+# contents $(localtime) specifies.  If this is a relative pathname, it is
+# relative to $(datadir)/zoneinfo.  It is a good idea to put this somewhere
+# other than there, so the zoneinfo directory contains only universal data,
+# localizing the configuration data elsewhere.
 ifndef localtime-file
 localtime-file = $(prefix)/etc/localtime
 endif
