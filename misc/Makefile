@@ -23,7 +23,7 @@
 subdir	:= misc
 
 headers	:= sys/uio.h sys/ioctl.h sys/ptrace.h ioctls.h sys/file.h	\
-	   a.out.h nlist.h sgtty.h sys/dir.h
+	   a.out.h nlist.h stab.h stab.def sgtty.h sys/dir.h
 
 routines := brk sbrk sstk ioctl \
 	    __brk __sbrk __ioctl \
