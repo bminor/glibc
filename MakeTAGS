@@ -1,6 +1,6 @@
 # Make the TAGS files.
 
-# Copyright (C) 1992, 1994, 1995, 1996, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1992, 94, 95, 96, 98, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ tags_sources = $(all-sources) $(all-headers) $(all-dist)
 endif	# ctype
 endif	# No tags_sources
 
-sysdep-dirs := $(full-config-sysdirs)
+sysdep-dirs := $(full_config_sysdirs)
 
 ifndef sysdep_dirs
 # Find all sysdep directories.
