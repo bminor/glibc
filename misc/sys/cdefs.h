@@ -1,0 +1,71 @@
+/* Copyright (C) 1992 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
+
+#ifndef	_SYS_CDEFS_H
+
+#define	_SYS_CDEFS_H	1
+#include <features.h>
+
+#ifdef __GNUC__
+
+#define	__P(args)	args	/* GCC can always grok prototypes.  */
+
+#else	/* Not GCC.  */
+
+#define	__inline		/* No inline functions.  */
+
+#if (defined (__STDC__) && __STDC__) || defined (__cplusplus)
+
+#define	__P(args)	args
+#define	__const		const
+#define	__signed	signed
+#define	__volatile	volatile
+
+#else	/* Not ANSI C or C++.  */
+
+#define	__P(args)	()	/* No prototypes.  */
+#define	__const			/* No ANSI C keywords.  */
+#define	__signed
+#define	__volatile
+
+#endif	/* ANSI C or C++.  */
+
+#endif	/* GCC.  */
+
+/* For these things, GCC behaves the ANSI way normally,
+   and the non-ANSI way under -traditional.  */
+
+#if defined (__STDC__) && __STDC__
+
+#define	__CONCAT(x,y)	x ## y
+#define	__STRING(x)	#x
+
+typedef void *__ptr_t;
+typedef long double __long_double_t;
+
+#else
+
+#define	__CONCAT(x,y)	x/**/y
+#define	__STRING(x)	"x"
+
+typedef char *__ptr_t;
+typedef double __long_double_t;
+
+#endif
+
+#endif	 /* sys/cdefs.h */
