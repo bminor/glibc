@@ -145,6 +145,7 @@ de-..: dist.tar
 	-rm -fr /tmp/$(tardir)
 
 README: README.template version.c
+	-rm -f $@
 	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
 # Make it unwritable so I won't change it by mistake.
 	chmod a-w $@
