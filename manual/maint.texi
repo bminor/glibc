@@ -30,10 +30,7 @@ library without it.  @strong{Really.}@refill
 
 To configure the GNU C library for your system, run the script
 @file{configure} with @code{sh}.  You must give as an argument to the
-script a word describing your system.  If you give no argument, the
-script gives you a list of systems it knows about.  Note that it will
-list several systems for which there are not actually working ports of
-the library.
+script a word describing your system, such as @samp{sun4} or @samp{hp300}.
 
 By default, the @file{configure} script will set things up to build
 things into a subdirectory of the library source directory whose name is
