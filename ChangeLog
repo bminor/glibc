@@ -1,3 +1,10 @@
+2002-04-03  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/ia64/dl-machine.h (TRAMPOLINE_TEMPLATE): Add unwind info.
+	(RTLD_START): Ditto.
+	(__ia64_init_bootstrap_fdesc_table): Insert stop bit to avoid RAW
+	dependency violation.
+
 2002-04-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* time/mktime.c (__mktime_internal): Move check for year < 70 below
