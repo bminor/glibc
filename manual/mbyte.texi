@@ -11,11 +11,11 @@ chapter describes how to use these mechanisms, and the functions for
 converting between them.
 @cindex extended character sets
 
-The behavior of the functions in this chapter is affected by the
-current locale for character classification (@pxref{Locales}).
-This choice of locale selects which multibyte code is used, and also
-controls the meanings and characteristics of wide character codes.
-@c !!! should mention LC_CTYPE symbol here
+The behavior of the functions in this chapter is affected by the current
+locale for character classification---the @code{LC_CTYPE} category; see
+@ref{Locale Categories}.  This choice of locale selects which multibyte
+code is used, and also controls the meanings and characteristics of wide
+character codes.
 
 @menu
 * Extended Char Intro::         Multibyte codes versus wide characters.
