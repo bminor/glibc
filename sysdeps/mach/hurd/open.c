@@ -102,7 +102,6 @@ DEFUN(__open, (file, oflag), CONST char *file AND int oflag DOTS)
 	      _hurd_ctty_fileid = stb.stb_file_id;
 	    }
 	}
-      err = 0;			/* None of these block success.  */
     }
 
   _hurd_dtable.d[fd].server = port;
