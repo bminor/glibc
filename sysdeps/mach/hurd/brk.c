@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -93,7 +93,7 @@ init_brk (void)
 
   __mutex_init (&_hurd_brk_lock);
 
-  _hurd_brk = &_end;
+  _hurd_brk = (vm_address_t) &_end;
 
   pagend = round_page (&_end);
 
