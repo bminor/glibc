@@ -1,3 +1,97 @@
+1999-07-01  Cristian Gafton  <gafton@redhat.com>
+
+	* time/strptime.c (strptime): Initialize the tm struct first to avoid
+	returning bogus results on incomplete data.
+	(strptime_internal): day_of_the_week() requres bith tm_mon and
+	tm_mday to be initializaed.
+	Computer them first if they are not given.
+	(strptime_internal): (have_mon, have_mday): New variables.
+
+1999-07-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* inet/rcmd.c (__icheckhost): Fix typo in last patch.
+
+1999-07-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* wcsmbs/wcschr.c (wcschr): Fix last patch: Add missing semicolon.
+	* wcsmbs/wcsrchr.c (wcsrchr): Likewise.
+
+1999-07-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* posix/wordexp.c (parse_tilde): Handle failing call to
+	get.*_r functions correctly for non-existing entry.
+	* sysdeps/posix/cuserid.c (cuserid): Likewise.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet_serv): Likewise.
+
+1999-06-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/gethostid.c: Handle failing call to
+	getxxbyYY_r functions correctly for non-existing entry.
+	* sunrpc/getrpcport.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* inet/rexec.c: Likewise.
+	* sunrpc/clnt_gen.c: Likewise.
+	* inet/rcmd.c: Likewise.
+	* sysdeps/generic/glob.c: Likewise.
+
+1999-06-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* inet/rcmd.c (__icheckhost): Test for gethostbyname_r result
+	correctly.
+
+1999-06-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/arith.texi (System V Number Conversion): Fix the
+	description which confused pointer and value to pointer.
+	Reported by Andries.Brouwer@cwi.nl.
+
+1999-06-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* pwd/getpw.c (__getpw): Check for NULL result pointer.
+
+1999-06-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/users.texi (Lookup User): Document POSIX return
+	semantics for getpwuid_r and getgrgid_r.
+
+	* manual/socket.texi (Host Names): Document that the result
+	pointer is null in case of error or host not found and fix a
+	typo.  Give a small example.
+
+1999-06-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* pwd/getpw.c: Add warning since no buffer size is given and
+	therefore no overrun tests are possible.
+
+1999-06-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* pwd/pwd.h: Add getpw prototype declaration.
+
+1999-06-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/wcsrchr.c: Fix handling of L'\0' parameter.
+	* wcsmbs/wcschr.c: Likewise.
+
+1999-06-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/gethostid.c: Test for gethostbyname_r
+	function correctly.
+
+	* sunrpc/getrpcport.c: Test for gethostbyname_r function
+	correctly.
+
+	* sunrpc/clnt_simp.c: Test for gethostbyname_r function correctly.
+
+	* sunrpc/clnt_gen.c: Test for gethostbyname_r and getprotobyname_r
+	functions correctly.
+
+	* inet/rexec.c (rexec): Test for gethostbyname_r result correctly.
+
+	* inet/rcmd.c: Test for gethostbyname_r result correctly.  Optimize
+	file reading a bit.
+
+	* sysdeps/generic/glob.c: Test for getpwnam_r result correctly.
+
 1999-06-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/libm-ieee754/e_gamma_r.c: Initialize *signgamp for NaN
