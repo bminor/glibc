@@ -118,6 +118,8 @@ respects.
 If you want the effect of a stable sort, you can get this result by
 writing the comparison function so that, lacking other reason
 distinguish between two elements, it compares them by their addresses.
+Note that doing this may make the sorting algorithm less efficient, so
+do it only if necessary.
 
 Here is a simple example of sorting an array of doubles in numerical
 order, using the comparison function defined above (@pxref{Comparison
