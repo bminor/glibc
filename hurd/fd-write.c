@@ -29,8 +29,7 @@ _hurd_fd_write (struct hurd_fd *fd, const void *buf, size_t *nbytes)
   int noctty;
 
 #ifdef notyet
-  struct _hurd_sigstate *ss
-    = _hurd_thread_sigstate (__mach_thread_self ());
+  struct _hurd_sigstate *ss = _hurd_self_sigstate ();
 
   /* Don't use the ctty io port if we are orphaned, or are blocking or
      ignoring SIGTTOU.  */
