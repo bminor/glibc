@@ -50,7 +50,8 @@ struct __flock
     short int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
     __off_t l_start;	/* Offset where the lock begins.  */
     __off_t l_len;	/* Size of the locked area; zero means until EOF.  */
-    __pid_t l_pid;	/* Process holding the lock.  */
+    short int l_sysid;
+    short int l_pid;	/* Process holding the lock.  */
   };
 
 #define	__F_RDLCK	1	/* Read lock.  */
