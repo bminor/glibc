@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,5 +30,10 @@ struct direct
     unsigned short int d_reclen;
     char d_name[NAME_MAX + 1];
   };
+
+#include <stddef.h>
+
+#define D_NAMLEN(d) \
+  ((d)->d_reclen - offsetof (struct direct, d_name))
 
 #endif
