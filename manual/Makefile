@@ -50,6 +50,11 @@ endef
 $(objpfx)libc.dvi $(objpfx)libc.info: $(chapters) summary.texi $(chapters-incl)
 $(objpfx)libc.dvi: texinfo.tex
 
+$(objpfx)%.info: %.texinfo
+	$(MAKEINFO) $< -o $@
+$(objpfx)%.dvi: %.texinfo
+	$(TEXI2DVI) $<
+
 # Generate the summary from the Texinfo source files for each chapter.
 $(objpfx)summary.texi: stamp-summary ;
 $(objpfx)stamp-summary: summary.awk $(chapters)
@@ -133,8 +138,9 @@ endif
 
 $(infodir)/libc.info: $(objpfx)libc.info
 	for file in $<*; do \
+	  name=`basename $$file`; \
 	  $(INSTALL_DATA) $$file \
-	    `echo $@ | sed "s,libc\\.info\$$,$$file,"`; \
+	    `echo $@ | sed "s,$(<F)\$$,$$name,"`; \
 	done
 
 .PHONY: dist
@@ -154,9 +160,14 @@ TAGS: $(minimal-dist)
 # These are targets that each glibc subdirectory is expected to understand.
 # ../Rules defines them for code subdirectories; for us, they are no-ops.
 glibc-targets	:= subdir_lib objects objs others tests subdir_lint.out \
-		   subdir_echo-headers subdir_echo-distinfo
+		   subdir_echo-headers subdir_echo-distinfo stubs
 .PHONY: $(glibc-targets)
 $(glibc-targets):
+
+stubs: $(common-objpfx)stub-manual
+$(common-objpfx)stub-manual:
+	cp /dev/null $@
+
 
 # Get rid of these variables if they came from the parent.
 routines =
