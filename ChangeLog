@@ -1,3 +1,8 @@
+2002-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-reloc.c (_dl_relocate_object): Use _dl_debug_printf
+	instead of _dl_printf for debugging info output.
+
 2002-02-01  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/mips/atomicity.h (exchange_and_add): Use branch

@@ -1,3 +1,12 @@
+2002-02-01  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/mips/pspinlock.c (__pthread_spin_lock): Use a
+	different register in the delayed slot.  Use branch likely.
+
+	* sysdeps/mips/pt-machine.h (testandset): Call _test_and_set.
+	(__compare_and_swap): Return 0 only when failed to compare. Use
+	branch likely.
+
 2002-01-16  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
      * sysdeps/s390/s390-32/pt-machine.h (MEMORY_BARRIER): Define.
