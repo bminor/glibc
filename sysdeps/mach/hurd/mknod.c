@@ -80,7 +80,7 @@ DEFUN(__mknod, (file_name, mode, dev),
       bp = _itoa (major (dev), bp, 10, 0);
       memcpy (bp - len, translator, len);
       translator = bp - len;
-      len = bp + len - translator;
+      len = buf + sizeof (buf) - translator;
     }
   
   dir = __file_name_split (file_name, &name);
