@@ -23,6 +23,10 @@ VPATH = $(srcdir)
 
 CPPFLAGS = @DEFS@
 
+# How the invoke ar.
+AR = ar
+ARFLAGS = rv
+
 # How to invoke ranlib.
 RANLIB = ranlib
 # Test to use to see whether ranlib exists on the system.
@@ -32,7 +36,7 @@ RANLIB_TEST = [ -f /usr/bin/ranlib -o -f /bin/ranlib ]
 all: libglob.a
 
 libglob.a: glob.o fnmatch.o
-	ar rv $@ glob.o fnmatch.o
+	$(AR) $(ARFLAGS) $@ glob.o fnmatch.o
 	-if $(RANLIB_TEST) ; then $(RANLIB) $@; else true; fi
 
 glob.o: $(srcdir)/glob.h $(srcdir)/fnmatch.h
