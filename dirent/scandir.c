@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -73,10 +73,13 @@ DEFUN(scandir, (dir, namelist, select, cmp),
 
   if (errno != 0)
     {
+      save = errno;
       (void) closedir (dp);
+      errno = save;
       return -1;
     }
 
+  (void) closedir (dp);
   errno = save;
 
   /* Sort the list if we have a comparison function to sort with.  */
