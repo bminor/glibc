@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,23 +31,21 @@ DEFUN(fseek, (stream, offset, whence),
 {
   long int o;
 
-  if (!__validfp(stream))
+  if (!__validfp (stream))
     {
       errno = EINVAL;
       return EOF;
     }
 
+  /* We are moving the file position, so we are no longer at EOF.  */
   stream->__eof = 0;
 
-  if (stream->__put_limit > stream->__buffer)
-    {
-      /* Write out the pending data.  */
-      if (__flshfp(stream, EOF) == EOF)
-	return EOF;
-    }
+  /* Write out any pending data.  */
+  if (__flshfp (stream, EOF) == EOF)
+    return EOF;
 
   /* Make sure we know the current offset info.  */
-  if (__stdio_check_offset(stream) == EOF)
+  if (__stdio_check_offset (stream) == EOF)
     return EOF;
 
   if (stream->__pushed_back)
@@ -79,8 +77,8 @@ DEFUN(fseek, (stream, offset, whence),
       else
 	{
 	  fpos_t pos = (fpos_t) o;
-	  if ((*stream->__io_funcs.__seek)(stream->__cookie, &pos,
-					   SEEK_END) < 0)
+	  if ((*stream->__io_funcs.__seek)
+	      (stream->__cookie, &pos, SEEK_END) < 0)
 	    {
 	      if (errno == ESPIPE)
 		stream->__io_funcs.__seek = NULL;
@@ -156,6 +154,10 @@ DEFUN(fseek, (stream, offset, whence),
      The next i/o will force a call to the input/output room function.  */
   stream->__bufp
     = stream->__get_limit = stream->__put_limit = stream->__buffer;
+
+  /* Make sure __flshfp doesn't think the put_limit is at the beginning
+     of the buffer because of line-buffering magic.  */
+  stream->__linebuf_active = 0;
 
   /* If there is no seek function, seeks always fail.  */
   if (stream->__io_funcs.__seek == NULL)
