@@ -100,6 +100,12 @@ _start (void)
   /* Basic Mach initialization, must be done before RPCs can be done.  */
   __mach_init ();
 
+  /* Run things that want to do initialization as soon as possible.  We do
+     this before exec_startup so that no out of line data arrives and
+     clutters up the address space before brk initialization.  */
+
+  RUN_HOOK (_hurd_preinit_hook, ());
+
   if (err = __task_get_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
 				     &in_bootstrap))
     LOSE;
@@ -186,8 +192,6 @@ start1 (void)
       __vm_deallocate (__mach_task_self (),
 		       _hurd_stack_base, _hurd_stack_size);
   }
-
-  RUN_HOOK (_hurd_preinit_hook, ());
 
   if (__hurd_threadvar_stack_mask == 0)
     {
