@@ -779,7 +779,7 @@ The @code{sigaction} function is declared in @file{<signal.h>}.
 
 @comment signal.h
 @comment POSIX.1
-@deftp {Data Type} {struct sigaction}
+@deftp {struct Type} sigaction
 Structures of type @code{sigaction} are used to specify signal actions
 for the @code{sigaction} function.  It contains at least the following
 members:
@@ -2122,7 +2122,7 @@ specifies a mask that includes all the job-control stop signals.
 
 @comment signal.h
 @comment BSD
-@deftp {Data Type} {struct sigvec}
+@deftp {struct Type} sigvec
 This data type is the equivalent of @code{struct sigaction}
 (@pxref{Advanced Signal Handling}); it is used to specify signal actions
 to the @code{sigvec} function.  It contains the following members:
@@ -2219,7 +2219,7 @@ interrupted.
 
 @comment signal.h
 @comment BSD
-@deftp {Data Type} {struct sigstack}
+@deftp {struct Type} sigstack
 This structure describes a signal stack.  It contains the following members:
 
 @table @code

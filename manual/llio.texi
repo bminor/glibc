@@ -1075,7 +1075,7 @@ in the header file @file{<fcntl.h>}.
 
 @comment fcntl.h
 @comment POSIX.1
-@deftp {Data Type} {struct flock}
+@deftp {struct Type} flock
 This structure is used with the @code{fcntl} function to describe a file
 lock.  It has these members:
 

@@ -1292,7 +1292,7 @@ These functions are declared in @file{<sys/wait.h>}.
 
 @comment sys/wait.h
 @comment BSD
-@deftp {Data Type} {union wait}
+@deftp {union Type} wait
 This data type represents program termination status values.  It has
 the following members:
 

@@ -119,7 +119,7 @@ discussed in more detail below.
 
 @comment termios.h
 @comment POSIX.1
-@deftp {Data Type} {struct termios}
+@deftp {struct Type} termios
 Structures of type @code{termios} are used with the @code{tcgetattr}
 and @code{tcsetattr} functions to describe terminal attributes.  The
 structure includes at least the following members:

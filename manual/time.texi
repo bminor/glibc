@@ -125,7 +125,7 @@ include the header file @file{<sys/times.h>} to use this facility.
 
 @comment sys/times.h
 @comment POSIX.1
-@deftp {Data Type} {struct tms}
+@deftp {struct Type} tms
 The @code{tms} structure is used to return information about process
 times.  It contains at least the following members:
 
@@ -277,7 +277,7 @@ declared in @file{<sys/time.h>}.
 
 @comment sys/time.h
 @comment BSD
-@deftp {Data Type} {struct timeval}
+@deftp {struct Type} timeval
 The @code{struct timeval} structure represents a calendar time.  It
 has the following members:
 
@@ -297,7 +297,7 @@ also negative?
 
 @comment sys/time.h
 @comment BSD
-@deftp {Data Type} {struct timezone}
+@deftp {struct Type} timezone
 The @code{struct timezone} structure is used to hold minimal information
 about the local time zone.  It has the following members:
 
@@ -386,7 +386,7 @@ representations.  Plus, the other representations are more compact.
 
 @comment time.h
 @comment ANSI
-@deftp {Data Type} {struct tm}
+@deftp {struct Type} tm
 This is the data type used to represent local time.  The structure
 contains at least the following members, which can appear in any order:
 
@@ -847,7 +847,7 @@ simpler interface for setting the real-time timer.
 
 @comment sys/time.h
 @comment BSD
-@deftp {Data Type} {struct itimerval}
+@deftp {struct Type} itimerval
 This structure is used to specify when a timer should expire.  It contains
 the following members:
 @table @code

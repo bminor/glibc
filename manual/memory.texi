@@ -553,7 +553,7 @@ its associated data type are declared in @file{<malloc.h>}.
 
 @comment malloc.h
 @comment GNU
-@deftp {Data Type} {struct mstats}
+@deftp {struct Type} mstats
 This structure type is used to return information about the dynamic
 storage allocator.  It contains the following members:
 
@@ -675,7 +675,7 @@ file @file{<obstack.h>}.
 
 @comment obstack.h
 @comment GNU
-@deftp {Data Type} {struct obstack}
+@deftp {struct Type} obstack
 An obstack is represented by a data structure of type @code{struct
 obstack}.  This structure has a small fixed size; it records the status
 of the obstack and how to find the space in which objects are allocated.

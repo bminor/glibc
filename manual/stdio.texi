@@ -1163,7 +1163,7 @@ is declared in the header file @file{<printf.h>}.
 
 @comment printf.h
 @comment GNU
-@deftp {Data Type} {struct printf_info}
+@deftp {struct Type} printf_info
 This structure is used to pass information about the options appearing
 in an instance of a conversion specifier in a @code{printf} format
 template to the handler and arginfo functions for that specifier.  It

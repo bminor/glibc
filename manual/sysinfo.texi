@@ -77,7 +77,7 @@ associated data type are declared in the header file
 
 @comment sys/utsname.h
 @comment POSIX.1
-@deftp {Data Type} {struct utsname}
+@deftp {struct Type} utsname
 The @code{utsname} structure is used to hold information returned
 by the @code{uname} function.  It has the following members:
 
