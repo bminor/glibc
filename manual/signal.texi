@@ -3121,19 +3121,105 @@ signals is restored.
 @node Signal Stack
 @subsection Using a Separate Signal Stack
 
-@c ??? Can we do better than recommending a magic constant size?
 A signal stack is a special area of memory to be used as the execution
 stack during signal handlers.  It should be fairly large, to avoid any
-danger that it will overflow in turn---we recommend at least 16,000
-bytes.  You can use @code{malloc} to allocate the space for the stack.
-Then call @code{sigstack} to tell the system to use that space for the
-signal stack.
+danger that it will overflow in turn; the macro @code{SIGSTKSZ} is
+defined to a canonical size for signal stacks.  You can use
+@code{malloc} to allocate the space for the stack.  Then call
+@code{sigaltstack} or @code{sigstack} to tell the system to use that
+space for the signal stack.
 
 You don't need to write signal handlers differently in order to use a
 signal stack.  Switching from one stack to the other happens
 automatically.  However, some debuggers on some machines may get
 confused if you examine a stack trace while a handler that uses the
 signal stack is running.
+
+There are two interfaces for telling the system to use a separate signal
+stack.  @code{sigstack} is the older interface, which comes from 4.2
+BSD.  @code{sigaltstack} is the newer interface, and comes from 4.4
+BSD.  The @code{sigaltstack} interface has the advantage that it does
+not require your program to know which direction the stack grows, which
+depends on the specific machine and operating system.
+
+@comment signal.h
+@comment BSD
+@deftp {Data Type} {struct sigaltstack}
+This structure describes a signal stack.  It contains the following members:
+
+@table @code
+@item void *ss_sp
+This points to the base of the signal stack.
+
+@item size_t ss_size
+This is the size (in bytes) of the signal stack which @samp{ss_sp} points to.
+You should set this to however much space you allocated for the stack.
+
+There are two macros defined in @file{signal.h} that you should use in
+calculating this size:
+
+@vtable @code
+@item SIGSTKSZ
+This is the canonical size for a signal stack.  It is judged to be
+sufficient for normal uses.
+
+@item MINSIGSTKSZ
+This is the amount of signal stack space the operating system needs just
+to implement signal delivery.  The size of a signal stack @strong{must}
+be greater than this.
+
+For most cases, just using @code{SIGSTKSZ} for @code{ss_size} is
+sufficient.  But if you know how much stack space your program's signal
+handlers will need, you may want to use a different size.  In this case,
+you should allocate @code{MINSIGSTKSZ} additional bytes for the signal
+stack and increase @code{ss_size} accordinly.
+@end vtable
+
+@item int ss_flags
+This field contains the bitwise @sc{or} of these flags:
+
+@vtable @code
+@item SA_DISABLE
+This tells the system that it should not use the signal stack.
+
+@item SA_ONSTACK
+This is set by the system, and indicates that the signal stack is
+currently in use.  If this bit is not set, then signals will be
+delivered on the normal user stack.
+@end vtable
+@end table
+@end deftp
+
+@comment signal.h
+@comment BSD
+@deftypefun int sigaltstack (const struct sigaltstack *@var{stack}, struct sigaltstack *@var{oldstack})
+The @code{sigaltstack} function specifies an alternate stack for use
+during signal handling.  When a signal is received by the process and
+its action indicates that the signal stack is used, the system arranges
+a switch to the currently installed signal stack while the handler for
+that signal is executed.
+
+If @var{oldstack} is not a null pointer, information about the currently
+installed signal stack is returned in the location it points to.  If
+@var{stack} is not a null pointer, then this is installed as the new
+stack for use by signal handlers.
+
+The return value is @code{0} on success and @code{-1} on failure.  If
+@code{sigaltstack} fails, it sets @code{errno} to one of these values:
+
+@table @code
+@item
+@item EINVAL
+You tried to disable a stack that was in fact currently in use.
+
+@item ENOMEM
+The size of the alternate stack was too small.  
+It must be greater than @code{MINSIGSTKSZ}.
+@end table
+@end deftypefun
+
+Here is the older @code{sigstack} interface.  You should use
+@code{sigaltstack} instead on systems that have it.
 
 @comment signal.h
 @comment BSD
@@ -3142,7 +3228,9 @@ This structure describes a signal stack.  It contains the following members:
 
 @table @code
 @item void *ss_sp
-This is the stack pointer.
+This is the stack pointer.  If the stack grows downwards on your
+machine, this should point to the top of the area you allocated.  If the
+stack grows upwards, it should point to the bottom.
 
 @item int ss_onstack
 This field is true if the process is currently using this stack.
@@ -3163,7 +3251,5 @@ installed signal stack is returned in the location it points to.  If
 @var{stack} is not a null pointer, then this is installed as the new
 stack for use by signal handlers.
 
-The return value is @code{0} on success and @code{1} on failure.
+The return value is @code{0} on success and @code{-1} on failure.
 @end deftypefun
-
-@c !!! 4.4 and GNU has a better interface: sigaltstack
