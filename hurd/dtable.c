@@ -125,6 +125,8 @@ get_dtable_port (int fd)
 /* text_set_element (_hurd_getdport_fn, get_dtable_port); */
 file_t (*_hurd_getdport_fn) (int fd) = get_dtable_port;	/* XXX */
 
+#include <hurd/signal.h>
+
 /* Called on fork to install the dtable in NEWTASK.  The dtable lock is
    held now and was taken before the child was created, copying our memory.
    Insert send rights for all of the normal io ports for fds, with the same
@@ -157,8 +159,8 @@ fork_parent_dtable (task_t newtask)
 	err = __mach_port_insert_right (newtask, port, port,
 					MACH_MSG_TYPE_COPY_SEND);
 
-      _hurd_port_free (&_hurd_dtable.d[i].port, &ulink, port);
-      _hurd_port_free (&_hurd_dtable.d[i].ctty, &ctty_ulink, ctty);
+      _hurd_port_free (&_hurd_dtable.d[i]->port, &ulink, port);
+      _hurd_port_free (&_hurd_dtable.d[i]->ctty, &ctty_ulink, ctty);
     }
   return err;
 }
@@ -178,7 +180,7 @@ fork_child_dtable (void)
     {
       struct hurd_fd *d = _hurd_dtable.d[i];
 
-      d->port.userlink = d->ctty.userlink = NULL;
+      d->port.users = d->ctty.users = NULL;
 
       if (d->ctty.port)
 	/* There was a ctty-special port in the parent.
@@ -212,7 +214,6 @@ ctty_new_pgrp (void)
       struct hurd_fd *const d = _hurd_dtable.d[i];
       struct hurd_userlink ulink, ctty_ulink;
       io_t port, ctty;
-      mach_port_t newctty;
 
       if (d == NULL)
 	/* Nothing to do for an unused descriptor cell.  */
