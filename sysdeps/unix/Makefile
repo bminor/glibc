@@ -207,6 +207,8 @@ generated := $(generated) $(addprefix $(common-objpfx),\
 endif
 
 ifeq ($(subdir),stdio)
+ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
+	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/errlist.c))))))
 
 before-compile: $(objpfx)errlist.c
 $(objpfx)errlist.c: $(objpfx)make_errlist
@@ -220,6 +222,7 @@ $(objpfx)make_errlist: $(sysdep_dir)/unix/make_errlist.c
 generated := $(generated) $(addprefix $(objpfx),make_errlist errlist.c)
 
 endif
+endif # stdio
 
 ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/syscall.h))))))
