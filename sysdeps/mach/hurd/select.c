@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 #include <gnu-stabs.h>
 
-#define SELECT_DONE_MSGID 23016	/* XXX */
+#define SELECT_DONE_MSGID 23020	/* XXX */
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
@@ -52,13 +52,6 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
     *(volatile fd_set *) writefds = *writefds;
   if (exceptfds != NULL)
     *(volatile fd_set *) exceptfds = *exceptfds;
-
-  if (timeout != NULL && timeout->tv_sec == 0 && timeout->tv_usec == 0)
-    /* We just want to poll, so we don't need a receive right.  */
-    port = MACH_PORT_NULL;
-  else
-    /* Get a port to receive the io_select_done message on.  */
-    port = __mach_reply_port ();
 
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
@@ -102,6 +95,13 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   if (i < nfds)
     return -1;
 
+  if (timeout != NULL && timeout->tv_sec == 0 && timeout->tv_usec == 0)
+    /* We just want to poll, so we don't need a receive right.  */
+    port = MACH_PORT_NULL;
+  else
+    /* Get a port to receive the io_select_done message on.  */
+    port = __mach_reply_port ();
+
   /* Send them all io_select calls.  */
   got = 0;
   err = 0;
@@ -123,20 +123,32 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
       /* Now wait for select_done messages on PORT,
 	 timing out as appropriate.  */
 
-      struct
+      union
 	{
 	  mach_msg_header_t head;
-	  mach_msg_type_t result_type;
-	  int result;
-	  mach_msg_type_t tag_type;
-	  int tag;
+	  struct
+	    {
+	      mach_msg_header_t head;
+	      mach_msg_type_t result_type;
+	      int result;
+	      mach_msg_type_t tag_type;
+	      int tag;
+	    } request;
+	  struct
+	    {
+	      mach_msg_header_t head;
+	      mach_msg_type_t err_type;
+	      error_t err;
+	    } reply;
 	} msg;
       const mach_msg_timeout_t to = (timeout != NULL ?
 				     (timeout->tv_sec * 1000 +
 				      timeout->tv_usec / 1000) :
 				     0);
       mach_msg_option_t options = (timeout == NULL ? 0 : MACH_RCV_TIMEOUT);
-      while ((err = __mach_msg (&msg, MACH_RCV_MSG | options, 0, sizeof (msg),
+      while ((err = __mach_msg (&msg.head,
+				MACH_RCV_MSG | options,
+				sizeof (msg.reply), sizeof (msg.request),
 				port, to, MACH_PORT_NULL)) == MACH_MSG_SUCCESS)
 	{
 	  /* We got a message.  Decode it.  */
@@ -144,10 +156,10 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	    { MACH_MSG_TYPE_INTEGER_32, 32, 1, 1, 0, 0 };
 	  if (msg.head.msgh_id == SELECT_DONE_MSGID &&
 	      !(msg.head.msgh_bits & MACH_MSGH_BITS_COMPLEX) &&
-	      *(int *) &msg.result_type == *(int *) &inttype &&
-	      *(int *) &msg.tag_type == *(int *) &inttype &&
-	      (msg.result & (SELECT_READ|SELECT_WRITE|SELECT_URG)) &&
-	      msg.tag >= 0 && msg.tag < nfds)
+	      *(int *) &msg.request.result_type == *(int *) &inttype &&
+	      *(int *) &msg.request.tag_type == *(int *) &inttype &&
+	      (msg.request.result & (SELECT_READ|SELECT_WRITE|SELECT_URG)) &&
+	      msg.request.tag >= 0 && msg.request.tag < nfds)
 	    {
 	      /* This is a winning io_select_done message!
 		 Record the readiness it indicates and send a reply.  */
@@ -160,18 +172,22 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	      if (msg.head.msgh_remote_port != MACH_PORT_NULL)
 		{
 		  msg.head.msgh_id += 100;
-		  msg.result_type = inttype;
-		  msg.result = 0;
-		  /* When we loop below, send this reply message
-		     in the same operation that polls for another
-		     io_select_done request message.  */
+		  msg.reply.err_type = inttype;
+		  msg.reply.err = 0;
+		  /* When we loop below, send this reply message in the
+		     same operation that polls for another io_select_done
+		     request message.  */
 		  options |= MACH_SEND_MSG;
+		  /* The reply message has no reply port of its own.  */
+		  msg.head.msgh_bits &= ~MACH_MSGH_BITS_LOCAL_MASK;
+		  msg.head.msgh_local_port = MACH_PORT_NULL;
 		}
 	    }
 	  else
 	    {
 	      /* Randomness.  */
 	      __mach_msg_destroy (msg);
+	      continue;
 	    }
 
 	  /* Poll for another message.  */
