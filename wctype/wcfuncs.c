@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1998 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,17 +25,17 @@ Boston, MA 02111-1307, USA.  */
 #define	func(name, type) \
   int name (wc) wint_t wc; { return iswctype (wc, type); }
 
-func (iswalnum, _ISalnum)
-func (iswalpha, _ISalpha)
-func (iswcntrl, _IScntrl)
-func (iswdigit, _ISdigit)
-func (iswlower, _ISlower)
-func (iswgraph, _ISgraph)
-func (iswprint, _ISprint)
-func (iswpunct, _ISpunct)
-func (iswspace, _ISspace)
-func (iswupper, _ISupper)
-func (iswxdigit, _ISxdigit)
+func (iswalnum, _ISwalnum)
+func (iswalpha, _ISwalpha)
+func (iswcntrl, _ISwcntrl)
+func (iswdigit, _ISwdigit)
+func (iswlower, _ISwlower)
+func (iswgraph, _ISwgraph)
+func (iswprint, _ISwprint)
+func (iswpunct, _ISwpunct)
+func (iswspace, _ISwspace)
+func (iswupper, _ISwupper)
+func (iswxdigit, _ISwxdigit)
 
 wint_t
 towlower (wc)
