@@ -18,17 +18,17 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <mach.h>
 #include <device/device.h>
 #include <errno.h>
+#include <stdio.h>
 
 extern FILE *mach_open_devstream (device_t dev);
 
 int
 main (void)
 {
-  error_t err;
+  kern_return_t err;
   mach_port_t device, consdev;
   FILE *consf;
 
