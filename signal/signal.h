@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -76,6 +76,11 @@ extern int raise __P ((int __sig));
 extern __sighandler_t ssignal __P ((int __sig, __sighandler_t __handler));
 extern int gsignal __P ((int __sig));
 #endif /* Use SVID.  */
+
+#ifdef	__USE_MISC
+/* Print a message describing the meaning of the given signal number.  */
+extern void psignal __P ((int __sig, __const char *__s));
+#endif /* Use misc.  */
 
 
 /* Block signals in MASK, returning the old mask.  */
