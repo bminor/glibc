@@ -146,6 +146,37 @@ files are corrected in release 2.3 and later of GCC.  If you have a new
 enough release of GCC, use its files instead of the C library's.  To do
 this, put the line @w{samp{override stdarg.h =}} in @file{configparms}.
 
+There is a potential problem with the @code{size_t} type and versions of
+GCC prior to release 2.4.  ANSI C requires that @code{size_t} always be
+an unsigned type.  For compatibility with existing systems' header
+files, GCC defines @code{size_t} in @file{stddef.h} to be whatever type
+the system's @file{sys/types.h} defines it to be.  Most Unix systems
+that define @code{size_t} in @file{sys/types.h}, define it to be a
+signed type.  Some code in the library depends on @code{size_t} being an
+unsigned type, and will not work correctly if it is signed.
+
+The GNU C library code which expects @code{size_t} to be unsigned is
+correct.  The definition of @code{size_t} as a signed type is incorrect.
+We plan that in version 2.4, GCC will always define @code{size_t} as an
+unsigned type, and the @file{fixincludes} script will massage the
+system's @file{sys/types.h} so as not to conflict with this.
+
+In the meantime, the way to work around this problem is to tell GCC
+explicitly to use an unsigned type for @code{size_t} when you compile
+the GNU C library.  You can do this by compiling with
+``-D__SIZE_TYPE__=unsigned long int'', or by putting that switch into
+the GCC @file{specs} file.  When you do this, the current version of GCC
+will give you the annoying warning:
+
+@example
+*Initialization*:1: warning: `__SIZE_TYPE__' redefined
+@end example
+
+@noindent
+It is safe to ignore this warning.  Version 2.3 of GCC is supposed to
+fix this bug (the spurious warning---the type of @code{size_t} will not
+be fixed until 2.4).
+
 To build the library, type @code{make lib}.  This will produce a lot of
 output, some of which looks like errors from @code{make} (but isn't).
 Look for error messages from @code{make} containing @samp{***}.  Those
