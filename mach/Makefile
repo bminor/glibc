@@ -73,7 +73,7 @@ $(objpfx)mach-syscalls.mk: mach/syscall_sw.h syscalls.awk
 clean-extras := $(clean-extras) $(objpfx)mach-syscalls.mk
 
 ifdef mach-syscalls
-$(mach-syscalls:%=$(objpfx)__%.S): $(objpfx)__%.S: mach-syscalls.mk
+$(mach-syscalls:%=$(objpfx)__%.S): $(objpfx)__%.S: $(objpfx)mach-syscalls.mk
 	(echo '#include <sysdep.h>'; \
 	 echo 'SYSCALL_TRAP (__$*, $(sysno-$*))') > $@-new
 	 mv $@-new $@
@@ -100,7 +100,7 @@ endif
 # Make the MiG stubs for $(mach-shortcuts) be CALL_rpc.
 migdefines := $(migdefines) \
 	      $(foreach call,$(mach-shortcuts),-D$(call)=$(call)_rpc)
-mach/mach_interface.uh mach/mach_port.uh: mach-syscalls.mk
+mach/mach_interface.uh mach/mach_port.uh: $(objpfx)mach-syscalls.mk
 
 ifdef mach-shortcuts
 $(mach-shortcuts:%=__%.c): __%.c: shortcut.awk __%_rpc.c
