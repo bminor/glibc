@@ -36,6 +36,7 @@ DEFUN(setgroups, (n, groups), size_t n AND CONST gid_t *groups)
   for (i = 0; i < n; ++i)
     new[i] = groups[i];
 
+  HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_id.lock);
   err = _hurd_check_ids ();
   if (! err)
@@ -50,6 +51,7 @@ DEFUN(setgroups, (n, groups), size_t n AND CONST gid_t *groups)
 					&newauth));
     }
   __mutex_unlock (&_hurd_id.lock);
+  HURD_CRITICAL_END;
 
   if (err)
     return __hurd_fail (err);
