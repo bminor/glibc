@@ -64,27 +64,30 @@ __BEGIN_DECLS
 
 
 #ifdef	__USE_BSD
+
 #define	FD_SETSIZE	__FD_SETSIZE
 #define	fd_set		__fd_set
 #define	FD_ZERO(set)	__FD_ZERO(set)
 #define	FD_SET(d, set)	__FD_SET((d), (set))
 #define	FD_CLR(d, set)	__FD_CLR((d), (set))
 #define	FD_ISSET(d, set)__FD_ISSET((d), (set))
-#endif
 
-#include <gnu/time.h>
+/* This being here makes the `select' prototype valid whether or not
+   we have already included <sys/time.h> to define `struct timeval'.  */
+struct timeval;
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
    (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out
    after waiting the interval specified therein.  Returns the number of ready
    descriptors, or -1 for errors.  */
-extern int __select __P ((int __nfds, __fd_set * __readfds,
-			  __fd_set * __writefds, __fd_set * __exceptfds,
-			  struct __timeval * __timeout));
+extern int __select __P ((int __nfds, __fd_set *__readfds,
+			  __fd_set *__writefds, __fd_set *__exceptfds,
+			  struct timeval *__timeout));
+extern int select __P ((int __nfds, __fd_set *__readfds,
+			__fd_set *__writefds, __fd_set *__exceptfds,
+			struct timeval *__timeout));
 
-#ifdef	__USE_BSD
-#define	select	__select
 #endif /* Use BSD.  */
 
 
