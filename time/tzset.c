@@ -342,6 +342,20 @@ DEFUN_VOID(__tzset)
   __tzset_run = 1;
 }
 
+/* Maximum length of a timezone name.  __tz_compute keeps this up to date
+   (never decreasing it) when ! __use_tzfile.
+   tzfile.c keeps it up to date when __use_tzfile.  */
+long int __tzname_cur_max;
+
+long int
+DEFUN_VOID(__tzname_max)
+{
+  if (! __tzset_run)
+    __tzset ();
+
+  return __tzname_cur_max;
+}
+
 /* Figure out the exact time (as a time_t) in YEAR
    when the change described by RULE will occur and
    put it in RULE->change, saving YEAR in RULE->computed_for.
@@ -454,18 +468,4 @@ DEFUN(__tz_compute, (timer, tm),
   }
 
   return 1;
-}
-
-/* Maximum length of a timezone name.  __tz_compute keeps this up to date
-   (never decreasing it) when ! __use_tzfile.
-   tzfile.c keeps it up to date when __use_tzfile.  */
-long int __tzname_cur_max;
-
-long int
-DEFUN_VOID(__tzname_max)
-{
-  if (! __tzset_run)
-    __tzset ();
-
-  return __tzname_cur_max;
 }
