@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/types.h>
 #include <hurd.h>
+#include <hurd/fd.h>
 
 ssize_t
 DEFUN(__getdirentries, (fd, buf, nbytes, basep),
@@ -33,9 +34,9 @@ DEFUN(__getdirentries, (fd, buf, nbytes, basep),
   *(volatile off_t *) basep = *basep;
 
   amount = nbytes;
-  err = _HURD_DPORT_USE (fd,
-			 __dir_readdir (port, buf, &amount, *basep,
-					basep, nbytes));
+  err = HURD_DPORT_USE (fd,
+			__dir_readdir (port, buf, &amount, *basep,
+				       basep, nbytes));
   if (err)
     return __hurd_dfail (fd, err);
 
