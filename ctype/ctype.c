@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -41,11 +41,17 @@ func(isxdigit, _ISxdigit)
 int
 DEFUN(tolower, (c), int c)
 {
-  return __tolower(c);
+  if ((unsigned char) c != c)
+    return c;
+  else
+    return __tolower (c);
 }
 
 int
 DEFUN(toupper, (c), int c)
 {
-  return __toupper(c);
+  if ((unsigned char) c != c)
+    return c;
+  else
+    return __toupper (c);
 }
