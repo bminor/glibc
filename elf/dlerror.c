@@ -1,5 +1,5 @@
 /* dlerror -- Return error detail for failing <dlfcn.h> functions.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,13 +25,11 @@
 
 static int last_errcode;
 static char *last_errstring;
-static const char *last_object_name;
 
 char *
 dlerror (void)
 {
   static char *buf;
-  char *ret;
 
   if (buf)
     {
@@ -42,25 +40,22 @@ dlerror (void)
   if (! last_errstring)
     return NULL;
 
-  if (last_errcode == 0 && ! last_object_name)
-    ret = (char *) last_errstring;
-  else if (last_errcode == 0)
-    ret = (asprintf (&buf, "%s: %s", last_object_name, last_errstring) == -1
-	   ? NULL : buf);
-  else if (! last_object_name)
-    ret = (asprintf (&buf, "%s: %s",
-		     last_errstring, strerror (last_errcode)) == -1
-	   ? NULL : buf);
+  if (last_errcode == 0)
+    buf = last_errstring;
   else
-    ret = (asprintf (&buf, "%s: %s: %s",
-		     last_object_name, last_errstring,
-		     strerror (last_errcode)) == -1
-	   ? NULL : buf);
+    {
+      if (asprintf (&buf, "%s: %s",
+		    last_errstring, strerror (last_errcode)) == -1)
+	buf = NULL;
+
+      /* We don't need the error string anymore.  */
+      free (last_errstring);
+    }
 
   /* Reset the error indicator.  */
-  free (last_errstring);
   last_errstring = NULL;
-  return ret;
+
+  return buf;
 }
 
 int
@@ -71,7 +66,6 @@ _dlerror_run (void (*operate) (void))
        happen if `dlerror' was not run after an error was found.  */
     free (last_errstring);
 
-  last_errcode = _dl_catch_error (&last_errstring, &last_object_name,
-				  operate);
+  last_errcode = _dl_catch_error (&last_errstring, operate);
   return last_errstring != NULL;
 }
