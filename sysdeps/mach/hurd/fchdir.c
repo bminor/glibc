@@ -29,7 +29,7 @@ DEFUN(fchdir, (fd), int fd)
   error_t err;
   file_t cwdir;
 
-  if (err = _HURD_DPORT_USE (fd,
+!!  if (err = _HURD_DPORT_USE (fd,
 			     __mach_port_mod_refs (__mach_task_self (),
 						   (cwdir = port),
 						   MACH_PORT_RIGHT_SEND, 1)))
