@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -53,6 +53,7 @@ DEFUN(__sysconf, (name), int name)
 
     case _SC_CLK_TCK:
       return 60;
+
     case _SC_NGROUPS_MAX:
 #ifdef	NGROUPS_MAX
       return NGROUPS_MAX;
@@ -67,7 +68,11 @@ DEFUN(__sysconf, (name), int name)
       return FOPEN_MAX;
 
     case _SC_TZNAME_MAX:
-      return __tzname_max ();
+#ifdef TZNAME_MAX
+      return __tzname_max > TZNAME_MAX ? __tzname_max : TZNAME_MAX;
+#else
+      return __tzname_max;
+#endif
 
     case _SC_JOB_CONTROL:
 #ifdef	_POSIX_JOB_CONTROL
