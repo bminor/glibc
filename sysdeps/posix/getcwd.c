@@ -48,7 +48,6 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
   ino_t rootino, thisino;
   char *path;
   register char *pathp;
-  size_t pathlen;
   struct stat st;
 
 if (size == 0)
