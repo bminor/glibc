@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 
 #define PC eip
 #define SP uesp
+#define SYSRETURN eax
 
 struct machine_thread_all_state
   {
