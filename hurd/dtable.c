@@ -33,7 +33,6 @@ Cambridge, MA 02139, USA.  */
 struct mutex _hurd_dtable_lock;
 struct hurd_fd **_hurd_dtable;
 int _hurd_dtablesize;
-int _hurd_dtable_rlimit;	/* Resource limit on open descriptors.  */
 
 
 DEFINE_HOOK (_hurd_fd_subinit, (void));
@@ -50,14 +49,6 @@ init_dtable (void)
   /* The initial size of the descriptor table is that of the passed-in
      table.  It will be expanded as necessary up to _hurd_dtable_rlimit.  */
   _hurd_dtablesize = _hurd_init_dtablesize;
-
-  /* In lieu of a real resource limit value inherited from the parent
-     (XXX), compute a reasonable seeming limit: the size the passed-in
-     table, rounded up to a multiple of FOPEN_MAX descriptors.  */
-  _hurd_dtable_rlimit
-    = (_hurd_init_dtablesize + FOPEN_MAX - 1) / FOPEN_MAX * FOPEN_MAX;
-  if (_hurd_dtable_rlimit == 0)
-    _hurd_dtable_rlimit = FOPEN_MAX;
 
   /* Allocate the vector of pointers.  */
   _hurd_dtable = malloc (_hurd_dtablesize * sizeof (*_hurd_dtable));
