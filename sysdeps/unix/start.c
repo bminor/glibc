@@ -64,7 +64,7 @@ DEFUN_VOID(_start)
   start1();
 }
 
-#ifdef	HAVE_GNU_LD
+#if !defined (NO_UNDERSCORES) && defined (HAVE_GNU_LD) && !defined (__GNUC__)
 /* Make an alias called `start' (no leading underscore,
    so it can't conflict with C symbols) for `_start'.  */
 asm(".stabs \"start\",11,0,0,0");
