@@ -72,7 +72,7 @@ library.  This section gives you an overview of these standards, so that
 you will know what they are when they are mentioned in other parts of
 the manual.
 
-@xref{Summary of Library Facilities} for information about what
+@xref{Library Summary}, for information about what
 standards specify what features.
 
 @menu
@@ -146,15 +146,12 @@ Interface}, commonly referred to as POSIX.1.  The primary extensions to
 the ANSI C facilities specified by this standard include file system
 interface primitives (@pxref{File System Interface}), device-specific
 terminal control functions (@pxref{Low-Level Terminal Interface}), and
-process control functions (@pxref{Processes}).
+process control functions (@pxref{Child Processes}).
 
 Some facilities from draft 11 of @cite{IEEE Std 1003.2, the POSIX Shell
 and Utilities standard} (POSIX.2) are also implemented in the GNU
 library.  These include utilities for dealing with regular expressions
-and other pattern matching facilities.
-
-@strong{Incomplete:}  Put in some cross-references when all of this
-material has been incorporated.
+and other pattern matching facilities (@pxref{Pattern Matching}).
 
 @comment Roland sez:
 @comment The GNU C library as it stands conforms to 1003.2 draft 11, which
@@ -412,7 +409,7 @@ were allowed, those other functions would not work properly.
 It allows the compiler to do whatever special optimizations it pleases
 on calls to these functions, without the possibility that they may have
 been redefined by the user.  Some library facilities, such as those for
-dealing with variadic arguments (@pxref{Variable Argument Facilities})
+dealing with variadic arguments (@pxref{Variadic Functions})
 and non-local exits (@pxref{Non-Local Exits}), actually require a
 considerable amount of cooperation on the part of the C compiler, and
 implementationally it might be easier for the compiler to treat these as
@@ -628,13 +625,10 @@ this manual.
 are reported.
 
 @item 
-@ref{Common Definitions}, contains information about library support
-for standard parts of the C language, including things like the @code{sizeof}
-operator and the symbolic constant @code{NULL}.
-
-@item
-@ref{Variable Argument Facilities}, tells you how you can access non-required
-function arguments.  This is also a standard part of the C language.
+@ref{Language Features}, contains information about library support for
+standard parts of the C language, including things like the
+@code{sizeof} operator and the symbolic constant @code{NULL}, and how to
+write functions accepting variable numbers of arguments.
 
 @item 
 @ref{Memory Allocation}, describes the GNU library's facilities for
@@ -734,17 +728,20 @@ signal is delivered, and how to prevent signals from arriving during
 critical sections of your program.
 
 @item 
-@ref{Processes}, contains information about how to start new processes
-and run programs.  This chapter also tells you how your programs can
-access their command-line arguments and environment variables.
+@ref{Child Processes}, contains information about how to start new processes
+and run programs.
+
+@item
+@ref{Process Startup}, tells how your programs can access their
+command-line arguments and environment variables.
 
 @item
 @ref{Job Control}, describes functions for manipulating process groups.
 This material is probably only of interest if you are writing a shell.
 
 @item
-@ref{System Databases}, tells you how to access the system user (or password)
-and group databases.
+@ref{Users Database}, and @ref{Group Database}, tell you how to access
+the system user and group databases.
 
 @item
 @ref{System Information}, describes functions for getting information
@@ -752,21 +749,20 @@ about the hardware and software configuration your program is executing
 under.
 
 @item 
-@ref{Representation Limits}, contains information about
+@ref{Range of Type}, contains information about
 parameters that characterize the sizes of integer and floating-point
 types used by the particular C implementation that your program has
 been compiled with.  Most of these parameters are provided for 
 compatibility with ANSI C.
 
 @item 
-@ref{System Configuration Limits}, tells you how you can get
+@ref{System Configuration}, tells you how you can get
 information about various operating system limits.  Most of these
 parameters are provided for compatibility with POSIX.
 @end itemize
 
-If you already know the name of the facility you are interested in,
-you can look it up in @ref{Summary of Library Facilities}.  This gives
-you a summary of its syntax and a pointer to where you can find a more
-detailed description.  This appendix is particularly useful if you
-just want to verify the order and type of arguments to a function,
-for example.
+If you already know the name of the facility you are interested in, you
+can look it up in @ref{Library Summary}.  This gives you a summary of
+its syntax and a pointer to where you can find a more detailed
+description.  This appendix is particularly useful if you just want to
+verify the order and type of arguments to a function, for example.

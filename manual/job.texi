@@ -14,7 +14,7 @@ ignore the material in this chapter unless you are writing a shell or
 login program.
 
 You need to be familiar with concepts relating to process creation
-(@pxref{Creating New Processes}), signal handling (@pxref{Signal
+(@pxref{Process Creation Concepts}) and signal handling (@pxref{Signal
 Handling}) in order to understand this material presented in this
 chapter.
 
@@ -109,7 +109,7 @@ support job control, but if you are using the GNU library on some other
 system, that system may not support job control itself.
 
 You can use the @code{_POSIX_JOB_CONTROL} macro to test at compile-time
-whether the system supports job control.  @xref{System Parameters}.
+whether the system supports job control.  @xref{System Options}.
 
 If job control is not supported, then there can be only one process
 group per session, which behaves as if it were always in the foreground.
@@ -446,7 +446,7 @@ its controlling terminal, it can launch jobs in response to commands
 typed by the user.
 
 To create the processes in a process group, you use the same @code{fork}
-and @code{exec} functions described in @ref{Creating New Processes}.
+and @code{exec} functions described in @ref{Process Creation Concepts}.
 Since there are multiple child processes involved, though, things are a
 little more complicated and you must be careful to do things in the
 right order.  Otherwise, nasty race conditions can result.

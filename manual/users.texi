@@ -279,8 +279,7 @@ The value of the @var{newuid} argument is invalid.
 
 @item EPERM
 The process does not have the appropriate privileges; you do not
-have permission to change to the specified ID.  @xref{Controlling Process
-Privileges}.
+have permission to change to the specified ID.
 @end table
 @end deftypefun
 
@@ -304,8 +303,7 @@ function:
 @table @code
 @item EPERM
 The process does not have the appropriate privileges; you do not
-have permission to change to the specified ID.  @xref{Controlling Process
-Privileges}.
+have permission to change to the specified ID.
 @end table
 @end deftypefun
 
@@ -670,8 +668,8 @@ store a user name.
 
 These functions let your program identify positively the user who is
 running or the user who logged in this session.  (These can differ when
-setuid programs are involved; @xref{Controlling Access Privileges}.)
-The user cannot do anything to fool these functions.
+setuid programs are involved; @xref{Process Persona}.)  The user cannot
+do anything to fool these functions.
 
 For most purposes, it is more useful to use the environment variable
 @code{LOGNAME} to find out who the user is.  This is more flexible
