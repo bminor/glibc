@@ -85,11 +85,6 @@ none)
   base_os='' ;;
 esac
 
-case "$os:$base_os" in
-gnu* | linux* | bsd4.4* | *:unix/bsd/bsd4.4)
-  gnu_ld=yes gnu_as=yes
-esac
-
 # For sunos4.1.1, try sunos4.1.1, then sunos4.1, then sunos4, then sunos.
 tail=$os
 ostry=$os
@@ -225,6 +220,11 @@ done
 libc_cv_sysdirs="$sysnames"])
 AC_SUBST(sysnames) sysnames="$libc_cv_sysdirs"
 AC_MSG_RESULT(${sysnames})
+
+case "$host_os" in
+gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
+  gnu_ld=yes gnu_as=yes
+esac
 
 AC_PROG_INSTALL
 if test "$INSTALL" = "${srcdir}/install-sh"; then
