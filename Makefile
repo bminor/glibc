@@ -69,8 +69,9 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 
 
 # These are the targets that are made by making them in each subdirectory.
-+subdir_targets	:= subdir_lib objects objs others mostlyclean		\
-		   subdir_clean tests subdir_lint.out 			\
++subdir_targets	:= subdir_lib objects objs others subdir_mostlyclean	\
+		   subdir_clean subdir_distclean subdir_realclean	\
+		   tests subdir_lint.out				\
 		   subdir_echo-headers subdir_echo-distinfo		\
 		   subdir_install $(addprefix install-,			\
 					      no-libc.a bin lib		\
@@ -177,22 +178,38 @@ $(all-subdirs-targets):
 
 .PHONY: $(+subdir_targets) $(all-subdirs-targets)
 
-# This clobbers everything that can be regenerated.
-.PHONY: clean realclean distclean
-realclean: distclean
-clean:
-	-rm -f $(objects) $(+depfiles) munch-init.c $(objpfx)depend-
-	-rm -f $(libc.a) $(addprefix $(objpfx),$(install-lib)) core TAGS
+# Targets to clean things up to various degrees.
+
+.PHONY: clean realclean distclean distclean-1 parent-clean parent-mostlyclean
+
+# Subroutines of all cleaning targets.
+parent-mostlyclean: common-mostlyclean # common-mostlyclean is in Makerules.
+	-rm -f $(libc.a) $(addprefix $(objpfx),$(install-lib))
+parent-clean: parent-mostlyclean common-clean
 	-rm -f $(addprefix $(+sysdir_pfx),sysd-Makefile sysd-dirs sysdirs)
+
+clean: parent-clean
 # This is done this way rather than having `subdir_clean' be a
 # dependency of this target so that libc.a will be removed before the
 # subdirectories are dealt with and so they won't try to remove object
 # files from it when it's going to be removed anyway.
 	@$(MAKE) subdir_clean no_deps=t
+mostlyclean: parent-mostlyclean
+	@$(MAKE) subdir_mostlyclean no_deps=t
 
-distclean: clean
-	-rm -f $(addprefix $(objpfx),config.status config.make \
-				     sysd-Makefile sysd-dirs)
+# The realclean target is just like distclean for the parent, but we want
+# the subdirs to know the difference in case they care.
+realclean distclean: parent-clean
+# This is done this way rather than having `subdir_distclean' be a
+# dependency of this target so that libc.a will be removed before the
+# subdirectories are dealt with and so they won't try to remove object
+# files from it when it's going to be removed anyway.
+	@$(MAKE) distclean-1 no_deps=t distclean-1=$@
+
+# Subroutine of distclean and realclean.
+distclean-1: subdir_$(distclean-1)
+	-rm -f $(config-generated)
+	-rm -f $(addprefix $(objpfx),config.status config.make)
 ifdef objdir
 	-rm -f $(objpfx)Makefile
 endif
