@@ -1,3 +1,8 @@
+1998-05-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/loadlocale.c (_nl_load_locale): Don't allow too small
+	files crash the program.
+
 1998-05-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* resolv/res_send.c: Security fixes from bind 4.9.7-REL.
