@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -130,6 +130,13 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   while (no_more == 0)
     {
       status = (*fct) (ADD_VARIABLES, resbuf, buffer, buflen H_ERRNO_VAR);
+      if (status == NSS_STATUS_TRYAGAIN)
+	{
+	  /* XXX This is very wrong but there is no fast soluation in sight.
+	     Give the previous module a chance to complete it's
+	     operation before errno will be reset by the next call */
+	  break;
+	}
 
       no_more = __nss_next (&nip, REENTRANT_NAME_STRING,
 			    (void **) &fct, status, 0);
