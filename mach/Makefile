@@ -163,13 +163,12 @@ include ../Rules
 
 
 # There is already a mach.h, so mach.defs generates mach_interface.h.
-mach/mach_interface.defs: mach/mach.defs
-	ln $< $@ || cp $< $@
+$(objpfx)mach/mach_interface.uh: mach/mach.defs; $(mig.uh)
+$(objpfx)mach/mach_interface.__h: mach/mach.defs; $(mig.__h)
 # There is already a memory_object.h,
 # so memory_object.defs generates memory_object_user.h.
-mach/memory_object_user.defs: mach/memory_object.defs
-	ln $< $@ || cp $< $@
-generated += mach/mach_interface.defs mach/memory_object_user.defs
+$(objpfx)mach/memory_object_user.uh: mach/memory_object.defs; $(mig.uh)
+$(objpfx)mach/memory_object_user.__h: mach/memory_object.defs; $(mig.__h)
 
 # Be sure not to make these with implicit rules from foo.defs.
 mach.h mach/memory_object.h: ;
