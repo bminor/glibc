@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -20,6 +20,7 @@
 #ifndef _REPERTOIREMAP_H
 #define _REPERTOIREMAP_H	1
 
+#include <stdint.h>
 #include <obstack.h>
 
 #include "simple-hash.h"
@@ -33,6 +34,10 @@ struct repertoire_t
 
 
 /* Prototypes for repertoire map handling functions.  */
-struct repertoire_t *repertoire_read (const char *filename);
+extern struct repertoire_t *repertoire_read (const char *filename);
+
+/* Find value for name in repertoire map.  */
+extern uint32_t repertoire_find_value (const hash_table *repertoire,
+				       const char *name, size_t len);
 
 #endif /* repertoiremap.h */
