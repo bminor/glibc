@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <hurd/port.h>
 
 /* Get the process group ID of process PID.  */
 int
@@ -36,8 +37,7 @@ DEFUN(__getpgrp, (pid), pid_t pid)
       err = 0;
     }
   else
-    err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
-			  __proc_getpgrp (port, pid, &pgrp));
+    err = __USEPORT (PROC, __proc_getpgrp (port, pid, &pgrp));
 
   __mutex_unlock (&_hurd_pid_lock);
 
