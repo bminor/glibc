@@ -1,6 +1,5 @@
 @node Users and Groups, System Information, Job Control, Top
 @chapter Users and Groups
-@cindex persona
 
 Every user who can log in on the system is identified by a unique number
 called the @dfn{user ID}.  Each process has an effective user ID which
@@ -25,29 +24,33 @@ database of all the defined groups.  There are library functions you
 can use to examine these databases.
 
 @menu
-* User and Group IDs::          Each user has a unique numeric ID; likewise for groups.
+* User and Group IDs::          Each user has a unique numeric ID;
+				 likewise for groups.
 * Process Persona::             The user IDs and group IDs of a process.
 * Why Change Persona::          Why a program might need to change
-			 its user and/or group IDs.
-* How Change Persona::          Restrictions on changing the user and group IDs.
-* Reading Persona::             How to examine the process's user and group IDs.
-* Setting User ID::             
-* Setting Groups::              
-* Enable/Disable Setuid::       
-* Setuid Program Example::      Setuid Program Example
-* Tips for Setuid::             
+				 its user and/or group IDs.
+* How Change Persona::          Changing the user and group IDs.
+* Reading Persona::             How to examine the user and group IDs.
+
+* Setting User ID::             Functions for setting the user ID.
+* Setting Groups::              Functions for setting the group IDs.
+
+* Enable/Disable Setuid::       Turning setuid access on and off.
+* Setuid Program Example::      The pertinent parts of one sample program.
+* Tips for Setuid::             How to avoid granting unlimited access.
+
 * Who Logged In::               Getting the name of the user who logged in,
-			 or of the real user ID of the current process.
+				 or of the real user ID of the current process.
 
 * User Database::               Functions and data structures for
-                         accessing the user database.
+                        	 accessing the user database.
 * Group Database::              Functions and data structures for
-                         accessing the group database.
+                        	 accessing the group database.
 * Database Example::            Example program showing use of database
-			 inquiry functions.
+				 inquiry functions.
 @end menu
 
-@node User and Group IDs, Process Persona,  , Users and Groups
+@node User and Group IDs
 @section User and Group IDs
 
 @cindex login name
@@ -68,11 +71,12 @@ not accessible to users who are not a member of that group.  Each group
 has a @dfn{group name} and @dfn{group ID}.  @xref{Group Database},
 for how to find information about a group ID or group name.
 
-@node Process Persona, Why Change Persona, User and Group IDs, Users and Groups
+@node Process Persona
 @section The Persona of a Process
-
+@cindex persona
 @cindex effective user ID
 @cindex effective group ID
+
 At any time, each process has a single user ID and a group ID which
 determine the privileges of the process.  These are collectively called
 the @dfn{persona} of the process, because they determine ``who it is''
@@ -92,7 +96,7 @@ control, so we do not consider them part of the persona.  But they are
 also important.
 
 Both the real and effective user ID can be changed during the lifetime
-of a process.  @xref{Changing Persona}.
+of a process.  @xref{Why Change Persona}.
 
 @cindex supplementary group IDs
 In addition, a user can belong to multiple groups, so the persona
@@ -105,15 +109,15 @@ its permission to access files, see @ref{Access Permission}.
 The user ID of a process also controls permissions for sending signals
 using the @code{kill} function.  @xref{Signaling Another Process}.
 
-@node Why Change Persona, How Change Persona, Process Persona, Users and Groups
+@node Why Change Persona
 @section Why Change the Persona of a Process?
 
 The most obvious situation where it is necessary for a process to change
 its user and/or group IDs is the @code{login} program.  When
 @code{login} starts running, its user ID is @code{root}.  Its job is to
 start a shell whose user and group IDs are those of the user who is
-logging in.  In fact, @code{login} must set the real user and group IDs
-as well as its persona.  But this is a special case.
+logging in.  (To accomplish this fully, @code{login} must set the real
+user and group IDs as well as its persona.  But this is a special case.)
 
 The more common case of changing persona is when an ordinary user
 programs needs access to a resource that wouldn't ordinarily be
@@ -131,13 +135,13 @@ program itself needs to be able to update this file no matter who is
 running it, but if users can write the file without going through the
 game, they can give themselves any scores they like.  Some people
 consider this undesirable, or even reprehensible.  It can be prevented
-by creating a new user ID and login name (say, @samp{games}) to own the
+by creating a new user ID and login name (say, @code{games}) to own the
 scores file, and make the file writable only by this user.  Then, when
 the game program wants to update this file, it can change its effective
-user ID to be that for @samp{games}.  In effect, the program must
-adopt the persona of @samp{games} so it can write the scores file.
+user ID to be that for @code{games}.  In effect, the program must
+adopt the persona of @code{games} so it can write the scores file.
 
-@node How Change Persona, Reading Persona, Why Change Persona, Users and Groups
+@node How Change Persona
 @section How an Application can Change Persona
 @cindex @code{setuid} programs
 
@@ -146,8 +150,8 @@ unintentional privacy violations, or even intentional abuse.  Because of
 the potential for problems, changing persona is restricted to special
 circumstances.
 
-You can't just arbitrarily set your user ID or group ID to anything you
-want; only privileged users can do that.  Instead, the normal way for a
+You can't arbitrarily set your user ID or group ID to anything you want;
+only privileged processes can do that.  Instead, the normal way for a
 program to change its persona is that it has been set up in advance to
 change to a particular user or group.  This is the function of the suid
 and sgid bits of a file's access mode.
@@ -166,7 +170,7 @@ A process can always change its effective user (or group) ID back to its
 real ID.  Programs do this so as to turn off their special privileges
 when they are not needed, which makes for more robustness.
 
-@node Reading Persona, Setting User ID, How Change Persona, Users and Groups
+@node Reading Persona
 @section Reading the Persona of a Process
 
 Here are detailed descriptions of the functions for reading the user and
@@ -244,12 +248,12 @@ read_all_groups ()
 @end example
 @end deftypefun
 
-@node Setting User ID, Setting Groups, Reading Persona, Users and Groups
+@node Setting User ID
 @section Setting the User ID
 
-This section describes the functions for altering the user ID
-of a process.  To use these facilities, you must include the header
-files @file{sys/types.h} and @file{unistd.h}.
+This section describes the functions for altering the user ID (real
+and/or effective) of a process.  To use these facilities, you must
+include the header files @file{sys/types.h} and @file{unistd.h}.
 @pindex unistd.h
 @pindex sys/types.h
 
@@ -260,9 +264,9 @@ This function sets both the real and effective user ID of the process
 to @var{newuid}, provided that the process has appropriate privileges.
 
 If the process is not privileged, then @var{newuid} must either be equal
-to the real user ID or the saved user ID (but only if the system
-supports the @code{_POSIX_SAVED_IDS} feature).  In this case,
-@code{setuid} sets only the effective user ID and not the real user ID.
+to the real user ID or the saved user ID (if the system supports the
+@code{_POSIX_SAVED_IDS} feature).  In this case, @code{setuid} sets only
+the effective user ID and not the real user ID.
 
 The @code{setuid} function returns a value of @code{0} to indicate
 successful completion, and a value of @code{-1} to indicate an error.
@@ -286,11 +290,12 @@ Privileges}.
 This function sets the real user ID of the process to @var{ruid} and
 the effective user ID to @var{euid}.
 
-The @code{setreuid} function is provided for compatibility with 4.2 BSD
-Unix, which does not support saved IDs.  You can use this function to
-swap the effective and real user IDs of the process.  (Privileged users
-can make other changes as well.)  If saved IDs are supported, you should
-use that feature instead of this function.
+The @code{setreuid} function exists for compatibility with 4.2 BSD Unix,
+which does not support saved IDs.  You can use this function to swap the
+effective and real user IDs of the process.  (Privileged processes are
+not limited to this particular usage.)  If saved IDs are supported, you
+should use that feature instead of this function.  @xref{Enable/Disable
+Setuid}.
 
 The return value is @code{0} on success and @code{-1} on failure.
 The following @code{errno} error conditions are defined for this
@@ -304,8 +309,14 @@ Privileges}.
 @end table
 @end deftypefun
 
-@node Setting Groups, Enable/Disable Setuid, Setting User ID, Users and Groups
+@node Setting Groups
 @section Setting the Group IDs
+
+This section describes the functions for altering the group IDs (real
+and effective) of a process.  To use these facilities, you must include
+the header files @file{sys/types.h} and @file{unistd.h}.
+@pindex unistd.h
+@pindex sys/types.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -321,7 +332,6 @@ The return values and error conditions for @code{setgid} are the same
 as those for @code{setuid}.
 @end deftypefun
 
-
 @comment unistd.h
 @comment BSD
 @deftypefun int setregid (int @var{rgid}, int @var{egid})
@@ -330,9 +340,10 @@ the effective group ID to @var{egid}.
 
 The @code{setregid} function is provided for compatibility with 4.2 BSD
 Unix, which does not support saved IDs.  You can use this function to
-swap the effective and real group IDs of the process.  (Privileged users
-can make other changes.)  If saved IDs are supported, you should make use 
-of that feature instead of using this function.
+swap the effective and real group IDs of the process.  (Privileged
+processes are not limited to this usage.)  If saved IDs are supported,
+you should use that feature instead of using this function.
+@xref{Enable/Disable Setuid}.
 
 The return values and error conditions for @code{setregid} are the same
 as those for @code{setreuid}.
@@ -368,32 +379,18 @@ set the process's supplementary group IDs to be the normal default for
 the user name @var{user}.  The group ID @var{gid} is also included.
 @end deftypefun
 
-@node Enable/Disable Setuid, Setuid Program Example, Setting Groups, Users and Groups
-@section Turning Setuid Access On and Off
+@node Enable/Disable Setuid
+@section Enabling and Disabling Setuid Access
 
-You can use @code{setreuid} to swap the real and effective user IDs of
-the process, as follows:
+A typical setuid program does not need its special access all of the
+time.  It's a good idea to turn off this access when it isn't needed,
+so it can't possibly give unintended access.
 
-@example
-setreuid (geteuid (), getuid ());
-@end example
-
-@noindent
-This special case is always allowed---it cannot fail.  A @code{setuid}
-program can use this to turn its special access on and off.  For
-example, suppose a game program has just started, and its real user ID
-is @code{jdoe} while its effective user ID is @code{games}.  In this
-state, the game can write the scores file.  If it swaps the two uids,
-the real becomes @code{games} and the effective becomes @code{jdoe}; now
-the program has only @code{jdoe} to access.  Another swap brings
-@code{games} back to the effective user ID and restores access to the
-scores file.
-
-If the system supports the saved user ID feature, you can accomplish 
-the same job with @code{setuid}.  When the game program starts, its
-real user ID is @code{jdoe}, its effective user ID is @code{games}, and
-its saved user ID is also @code{games}.  The program should record both
-user ID values once at the beginning, like this:
+If the system supports the saved user ID feature, you can accomplish
+this with @code{setuid}.  When the game program starts, its real user ID
+is @code{jdoe}, its effective user ID is @code{games}, and its saved
+user ID is also @code{games}.  The program should record both user ID
+values once at the beginning, like this:
 
 @example
 user_user_id = getuid ();
@@ -414,10 +411,40 @@ setuid (game_user_id);
 @end example
 
 @noindent
-Throughout the process, the real user ID remains @code{jdoe} and the 
-saved user ID remains @code{games}.
+Throughout this process, the real user ID remains @code{jdoe} and the
+saved user ID remains @code{games}, so the program can always set its
+effective user ID to either one.
 
-@node Setuid Program Example, Tips for Setuid, Enable/Disable Setuid, Users and Groups
+On other systems that don't support the saved user ID feature, you can
+turn setuid access on and off by using @code{setreuid} to swap the real
+and effective user IDs of the process, as follows:
+
+@example
+setreuid (geteuid (), getuid ());
+@end example
+
+@noindent
+This special case is always allowed---it cannot fail.
+
+Why does this have the effect of toggling the setuid access?  Suppose a
+game program has just started, and its real user ID is @code{jdoe} while
+its effective user ID is @code{games}.  In this state, the game can
+write the scores file.  If it swaps the two uids, the real becomes
+@code{games} and the effective becomes @code{jdoe}; now the program has
+only @code{jdoe} to access.  Another swap brings @code{games} back to
+the effective user ID and restores access to the scores file.
+
+In order to handle both kinds of systems, test for the saved user ID
+feature with a preprocessor conditional, like this:
+
+@example
+#ifdef _POSIX_SAVED_IDS
+  setuid (user_user_id);
+#else
+  setreuid (geteuid (), getuid ());
+@end example
+
+@node Setuid Program Example
 @section Setuid Program Example
 
 Here's an example showing how to set up a program that changes its
@@ -428,7 +455,7 @@ manipulates a file @file{scores} that should be writable only by the game
 program itself.  The program assumes that its executable
 file will be installed with the set-user-ID bit set and owned by the
 same user as the @file{scores} file.  Typically, a system
-administrator will set up an account like @samp{games} for this purpose.
+administrator will set up an account like @code{games} for this purpose.
 
 The executable file is given mode @code{4755}, so that doing an 
 @samp{ls -l} on it produces output like:
@@ -505,7 +532,7 @@ undo_setuid ()
 /* @r{Main program.} */
 
 int
-main (void)
+main ()
 @{
   /* @r{Save the real and effective user IDs.}  */
   ruid = getuid ();
@@ -553,7 +580,7 @@ record_score (int score)
 @}
 @end example
 
-@node Tips for Setuid, Who Logged In, Setuid Program Example, Users and Groups
+@node Tips for Setuid
 @section Tips for Writing Setuid Programs
 
 It is easy for setuid programs to give the user access that isn't 
@@ -564,7 +591,7 @@ minimizing its consequences when it does occur:
 @itemize @bullet
 @item
 Don't have @code{setuid} programs with privileged user IDs such as
-@samp{root} unless it is absolutely necessary.  If the resource is
+@code{root} unless it is absolutely necessary.  If the resource is
 specific to your particular program, it's better to define a new,
 nonprivileged user ID or group ID just to manage that resource.
 
@@ -597,7 +624,7 @@ would ordinarily have permission to access those files.  You can use the
 uses the real user and group IDs, rather than the effective IDs.
 @end itemize
 
-@node Who Logged In, User Database, Tips for Setuid, Users and Groups
+@node Who Logged In
 @section Identifying Who Logged In
 @cindex login name, determining
 @cindex user ID, determining
@@ -605,7 +632,7 @@ uses the real user and group IDs, rather than the effective IDs.
 You can use the functions listed in this section to determine the login
 name of the user who is running a process, and the name of the user who
 logged in the current session.  See also the function @code{getuid} and
-friends (@pxref{User and Group ID Functions}).
+friends (@pxref{Reading Persona}).
 
 The @code{getlogin} function is declared in @file{unistd.h}, while
 @code{cuserid} and @code{L_cuserid} are declared in @file{stdio.h}.
@@ -649,9 +676,9 @@ The user cannot do anything to fool these functions.
 For most purposes, it is more useful to use the environment variable
 @code{LOGNAME} to find out who the user is.  This is more flexible
 precisely because the user can set @code{LOGNAME} arbitrarily.
-@xref{Environment Variables}.
+@xref{Standard Environment}.
 
-@node User Database, Group Database, Who Logged In, Users and Groups
+@node User Database
 @section User Database
 @cindex user database
 @cindex password database
@@ -663,13 +690,13 @@ registered users.  The database itself is kept in the file
 network server gives access to it.
 
 @menu
-* User Data Structure::         
-* Lookup User::                 
-* Scanning All Users::          Scanning the List of All Users
-* Writing a User Entry::        
+* User Data Structure::         What each user record contains.
+* Lookup User::                 How to look for a particular user.
+* Scanning All Users::          Scanning the list of all users, one by one.
+* Writing a User Entry::        How a program can rewrite a user's record.
 @end menu
 
-@node User Data Structure, Lookup User,  , User Database
+@node User Data Structure
 @subsection The Data Structure that Describes a User
 
 The functions and data structures for accessing the system user database
@@ -710,7 +737,7 @@ be used.
 @end table
 @end deftp
 
-@node Lookup User, Scanning All Users, User Data Structure, User Database
+@node Lookup User
 @subsection Looking Up One User
 @cindex converting user ID to user name
 @cindex converting user name to user ID
@@ -741,7 +768,7 @@ This structure may be overwritten on subsequent calls to
 A null pointer value indicates there is no user named @var{name}.
 @end deftypefun
 
-@node Scanning All Users, Writing a User Entry, Lookup User, User Database
+@node Scanning All Users
 @subsection Scanning the List of All Users
 @cindex scanning the user list
 
@@ -795,7 +822,7 @@ wish to save the information.
 This function closes the internal stream used by @code{getpwent}.
 @end deftypefun
 
-@node Writing a User Entry,  , Scanning All Users, User Database
+@node Writing a User Entry
 @subsection Writing a User Entry
 
 @comment pwd.h
@@ -815,7 +842,7 @@ would inevitably leave out much of the important information.
 The function @code{putpwent} is declared in @file{pwd.h}.
 @end deftypefun
 
-@node Group Database, Database Example, User Database, Users and Groups
+@node Group Database
 @section Group Database
 @cindex group database
 @pindex /etc/group
@@ -826,12 +853,12 @@ registered groups.  The database itself is kept in the file
 service provides access to it.
 
 @menu
-* Group Data Structure::        
-* Lookup Group::                
-* Scanning All Groups::         Scanning the List of All Groups
+* Group Data Structure::        What each group record contains.
+* Lookup Group::                How to look for a particular group.
+* Scanning All Groups::         Scanning the list of all groups.
 @end menu
 
-@node Group Data Structure, Lookup Group,  , Group Database
+@node Group Data Structure
 @subsection The Data Structure for a Group
 
 The functions and data structures for accessing the system group
@@ -858,7 +885,7 @@ null pointer.
 @end table
 @end deftp
 
-@node Lookup Group, Scanning All Groups, Group Data Structure, Group Database
+@node Lookup Group
 @subsection Looking Up One Group
 @cindex converting group name to group ID
 @cindex converting group ID to group name
@@ -889,7 +916,7 @@ This structure may be overwritten by subsequent calls to
 A null pointer indicates there is no group named @var{name}.
 @end deftypefun
 
-@node Scanning All Groups,  , Lookup Group, Group Database
+@node Scanning All Groups
 @subsection Scanning the List of All Groups
 @cindex scanning the group list
 
@@ -944,7 +971,7 @@ wish to save the information.
 This function closes the internal stream used by @code{getgrent}.
 @end deftypefun
 
-@node Database Example,  , Group Database, Users and Groups
+@node Database Example
 @section User and Group Database Example
 
 Here is an example program showing the use of the system database inquiry
