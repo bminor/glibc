@@ -507,7 +507,6 @@ to use these environment variable names for some other purpose.
 @item HOME
 @cindex HOME environment variable
 @cindex home directory
-
 This is a string representing the user's @dfn{home directory}, or
 initial default working directory.
 
@@ -522,7 +521,6 @@ this lets the user specify the value.
 @c !!! also USER
 @item LOGNAME
 @cindex LOGNAME environment variable
-
 This is the name that the user used to log in.  Since the value in the
 environment can be tweaked arbitrarily, this is not a reliable way to
 identify the user who is running a process; a function like
@@ -533,7 +531,6 @@ this lets the user specify the value.
 
 @item PATH
 @cindex PATH environment variable
-
 A @dfn{path} is a sequence of directory names which is used for
 searching for a file.  The variable @code{PATH} holds a path used
 for searching for programs to be run.
@@ -560,7 +557,6 @@ the one that is executed.
 @c !!! also TERMCAP
 @item TERM
 @cindex TERM environment variable
-
 This specifies the kind of terminal that is receiving program output.
 Some programs can make use of this information to take advantage of
 special escape sequences or terminal modes supported by particular kinds
@@ -570,13 +566,11 @@ Manual}) use the @code{TERM} environment variable, for example.
 
 @item TZ
 @cindex TZ environment variable
-
 This specifies the time zone.  @xref{TZ Variable}, for information about
 the format of this string and how it is used.
 
 @item LANG
 @cindex LANG environment variable
-
 This specifies the default locale to use for attribute categories where
 neither @code{LC_ALL} nor the specific environment variable for that
 category is set.  @xref{Locales}, for more information about
@@ -586,7 +580,6 @@ locales.
 @c I doubt this really exists
 @item LC_ALL
 @cindex LC_ALL environment variable
-
 This is similar to the @code{LANG} environment variable.  However, its
 value takes precedence over any values provided for the individual
 attribute category environment variables, or for the @code{LANG}
@@ -595,33 +588,27 @@ environment variable.
 
 @item LC_COLLATE
 @cindex LC_COLLATE environment variable
-
 This specifies what locale to use for string sorting.
 
 @item LC_CTYPE
 @cindex LC_CTYPE environment variable
-
 This specifies what locale to use for character sets and character
 classification.
 
 @item LC_MONETARY
 @cindex LC_MONETARY environment variable
-
 This specifies what locale to use for formatting monetary values.
 
 @item LC_NUMERIC
 @cindex LC_NUMERIC environment variable
-
 This specifies what locale to use for formatting numbers.
 
 @item LC_TIME
 @cindex LC_TIME environment variable
-
 This specifies what locale to use for formatting date/time values.
 
 @item _POSIX_OPTION_ORDER
 @cindex _POSIX_OPTION_ORDER environment variable.
-
 If this environment variable is defined, it suppresses the usual
 reordering of command line arguments by @code{getopt}.  @xref{Argument Syntax}.
 
