@@ -130,7 +130,7 @@ getcwd (char *buf, size_t size)
       off_t dirpos;
 
       /* Look at the parent directory.  */
-      if (err = __hurd_path_lookup (crdir, parent, "..", O_EXEC, 0, &newp))
+      if (err = __hurd_path_lookup (crdir, parent, "..", O_READ, 0, &newp))
 	goto lose;
       __mach_port_deallocate (__mach_task_self (), parent);
       parent = newp;
