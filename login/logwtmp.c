@@ -17,53 +17,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
 #include <string.h>
+#include <sys/time.h>
+#include <time.h>
 #include <unistd.h>
 #include <utmp.h>
-#include <sys/file.h>
-#include <sys/stat.h>
 
-void
-updwtmp (const char *wtmp_file, const struct utmp *ut)
-{
-  struct stat st;
-  size_t written;
-  int fd;
-
-  /* Open WTMP file.  */
-  fd = __open (wtmp_file, O_WRONLY | O_APPEND);
-  if (fd < 0)
-      return;
-
-  /* Try to lock the file.  */
-  if (__flock (fd, LOCK_EX | LOCK_NB) < 0 && errno != ENOSYS)
-    {
-      /* Oh, oh.  The file is already locked.  Wait a bit and try again.  */
-      sleep (1);
-
-      /* This time we ignore the error.  */
-      __flock (fd, LOCK_EX | LOCK_NB);
-    }
-
-  /* Remember original size of log file: */
-  if (__fstat (fd, &st) < 0)
-    goto done;
-
-  /* Write the entry.  If we can't write all the bytes, reset the file
-     size back to the original size.  That way, no partial entries
-     will remain.  */
-  written = __write (fd, ut, sizeof (struct utmp));
-  if (written > 0 && written != sizeof (struct utmp))
-    ftruncate (fd, st.st_size);
-
-done:
-  /* And unlock the file.  */
-  __flock (fd, LOCK_UN);
-
-  /* Close WTMP file.  */
-  __close (fd);
-}
 
 void
 logwtmp (const char *line, const char *name, const char *host)
@@ -90,5 +49,5 @@ logwtmp (const char *line, const char *name, const char *host)
   time (&ut.ut_time);
 #endif
 
-  updwtmp(_PATH_WTMP, &ut);
+  updwtmp (_PATH_WTMP, &ut);
 }
