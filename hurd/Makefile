@@ -64,6 +64,10 @@ $(inlines:%=$(objpfx)%.c): $(objpfx)inline-%.c:
 	 echo '#include "hurd/$*.h"') > $@-tmp
 	mv $@-tmp $@
 generated += $(inlines:%=%.c)
+
+# XXX this is a temporary hack; see hurdmalloc.h
+routines += hurdmalloc
+distribute += hurdmalloc.h
 
 # Get the proper definition of `hurd-srcdir'.
 include ../sysdeps/mach/hurd/Makefile
