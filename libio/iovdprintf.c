@@ -51,11 +51,10 @@ _IO_vdprintf (d, format, arg)
       _IO_un_link (&tmpfil.file);
       return EOF;
     }
-  tmpfil.file._flags &= ~_IO_DELETE_DONT_CLOSE;
-
   tmpfil.file._IO_file_flags =
-    _IO_mask_flags (&tmpfil.file, _IO_NO_READS,
-		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
+    (_IO_mask_flags (&tmpfil.file, _IO_NO_READS,
+		     _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING)
+     | _IO_DELETE_DONT_CLOSE);
 
   done = _IO_vfprintf (&tmpfil.file, format, arg);
 
