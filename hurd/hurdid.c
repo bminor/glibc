@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,3 +31,41 @@ init_id (void)
 }
 
 text_set_element (__libc_subinit, init_id);
+
+/* Check that _hurd_uid and _hurd_gid are valid and update them if not.
+   Expects _hurd_idlock to be held and does not release it.  */
+
+error_t
+_hurd_check_ids (void)
+{
+  if (! _hurd_id_valid)
+    {
+      error_t err;
+
+      if (_hurd_uid)
+	{
+	  __vm_deallocate (__mach_task_self (), _hurd_uid);
+	  _hurd_uid = NULL;
+	}
+      if (_hurd_gid)
+	{
+	  __vm_deallocate (__mach_task_self (), _hurd_gid);
+	  _hurd_gid = NULL;
+	}
+      if (_hurd_rid_auth)
+	{
+	  __mach_port_deallocate (__mach_task_self (), _hurd_rid_auth);
+	  _hurd_rid_auth = MACH_PORT_NULL;
+	}
+
+      if (err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
+				__auth_getids (port,
+					       &_hurd_uid, &_hurd_nuids,
+					       &_hurd_gid, &_hurd_ngids)))
+	return err;
+
+      _hurd_id_valid = 1;
+    }
+
+  return 0;
+}
