@@ -96,6 +96,7 @@ __BEGIN_DECLS
 #endif
 
 #define	__need_size_t
+#define __need_NULL
 #include <stddef.h>
 
 
