@@ -1,3 +1,8 @@
+2001-12-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getloadavg.c (getloadavg): Always use C
+	locale to parse /proc/loadavg.
+
 2001-12-22  Roland McGrath  <roland@frob.com>
 
 	* hurd/Versions (libc: GLIBC_2.2.5): Add _hurd_port_set,
