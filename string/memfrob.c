@@ -13,32 +13,20 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef	_ALLOCA_H
-#define	_ALLOCA_H	1
-#include <features.h>
+#include <ansidecl.h>
+#include <string.h>
 
-#define	__need_size_t
-#include <stddef.h>
+PTR
+DEFUN(memfrob, (s, n),
+      PTR s AND size_t n)
+{
+  register char *p = (char *) s;
 
-__BEGIN_DECLS
+  while (n-- > 0)
+    *p++ ^= 42;
 
-/* Remove any previous definitions.  */
-#undef	__alloca
-#undef	alloca
-
-/* Allocate a block that will be freed when the calling function exits.  */
-extern __ptr_t __alloca __P ((size_t __size));
-extern __ptr_t alloca __P ((size_t __size));
-
-#ifdef	__GNUC__
-#define	__alloca(size)	__builtin_alloca(size)
-#endif /* GCC.  */
-
-#define	alloca(size)	__alloca(size)
-
-__END_DECLS
-
-#endif /* alloca.h */
+  return s;
+}

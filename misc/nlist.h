@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -13,7 +13,7 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #ifndef	_NLIST_H
@@ -21,16 +21,18 @@ Cambridge, MA 02139, USA.  */
 #define	_NLIST_H	1
 #include <features.h>
 
+__BEGIN_DECLS
 
 /* Structure describing a symbol-table entry.  */
 struct nlist
-  {
-    char *n_name;
-    unsigned char n_type;
-    char n_other;
-    short int n_desc;
-    unsigned long int n_value;
-  };
+{
+  char *n_name;
+  unsigned char n_type;
+  char n_other;
+  short int n_desc;
+  unsigned long int n_value;
+};
+
 #define	N_NLIST_DECLARED
 #include <a.out.h>
 
@@ -38,7 +40,9 @@ struct nlist
 /* Search the executable FILE for symbols matching those in NL,
    which is terminated by an element with a NULL `n_un.n_name' member,
    and fill in the elements of NL.  */
-extern int EXFUN(nlist, (CONST char *__file, struct nlist *__nl));
+extern int nlist __P ((__const char *__file, struct nlist * __nl));
 
 
-#endif	/* nlist.h  */
+__END_DECLS
+
+#endif /* nlist.h  */

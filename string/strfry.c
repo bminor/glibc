@@ -29,14 +29,14 @@ DEFUN(strfry, (string), char *string)
 
   if (!init)
     {
-      srandom (time ((time_t *) NULL));
+      srand (time ((time_t *) NULL));
       init = 1;
     }
 
   len = strlen (string);
   for (i = 0; i < len; ++i)
     {
-      size_t j = random () % len;
+      size_t j = rand () % len;
       char c = string[i];
       string[i] = string[j];
       string[j] = c;
