@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/resource.h>
 #include <hurd.h>
+#include <gnu-stabs.h>
 
 
 /* Up to the page including this address is allocated from the kernel.
@@ -99,6 +100,8 @@ init_brk (void)
 	_hurd_data_end = pagend;
     }
 }
+
+text_set_element (__libc_subinit, init_brk);
 
 
 int
