@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>
    and Doug Lea <dl@cs.oswego.edu>, 1996.
@@ -4899,9 +4899,9 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
 {
   void *mem;
 
-  /* Test whether the SIZE argument is valid.  It must be a power of
-     two multiple of sizeof (void *).  */
-  if (size % sizeof (void *) != 0 || (size & (size - 1)) != 0)
+  /* Test whether the ALIGNMENT argument is valid.  It must be a power
+     of two multiple of sizeof (void *).  */
+  if (alignment % sizeof (void *) != 0 || (alignment & (alignment - 1)) != 0)
     return EINVAL;
 
   mem = __libc_memalign (alignment, size);
