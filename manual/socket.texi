@@ -1336,7 +1336,7 @@ Here is another example, showing how you can fill in a @code{sockaddr_in}
 structure, given a host name string and a port number:
 
 @example
-@include isockadr.c.texi
+@include isockad.c.texi
 @end example
 
 @node Misc Namespaces
