@@ -18,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <dirent.h>
-#include <stdlib.h>
+#include <string.h>
 
 int
 DEFUN(alphasort, (a, b),
