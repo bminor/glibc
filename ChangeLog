@@ -1,5 +1,7 @@
 1997-08-16 21:33  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/mach/hurd/Dist: Add cthreads.c.
+
 	* catgets/gencat.c (usage): Fix help text.
 
 	Update of UTMP interface.
