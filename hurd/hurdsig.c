@@ -41,6 +41,19 @@ thread_t _hurd_sigthread;
 
 /* Linked-list of per-thread signal state.  */
 struct hurd_sigstate *_hurd_sigstates;
+
+static void
+default_sigaction (struct sigaction actions[NSIG])
+{
+  int signo;
+
+  __sigemptyset (&actions[0].sa_mask);
+  actions[0].sa_flags = SA_RESTART;
+  actions[0].sa_handler = SIG_DFL;
+
+  for (signo = 1; signo < NSIG; ++i)
+    actions[signo] = actions[0];
+}
 
 struct hurd_sigstate *
 _hurd_thread_sigstate (thread_t thread)
@@ -55,9 +68,40 @@ _hurd_thread_sigstate (thread_t thread)
       ss = malloc (sizeof (*ss));
       if (ss == NULL)
 	__libc_fatal ("hurd: Can't allocate thread sigstate\n");
-      memset (ss, 0, sizeof (*ss));
       ss->thread = thread;
       __mutex_init (&ss->lock);
+
+      /* Initialze default state.  */
+      __sigemptyset (&ss->blocked);
+      __sigemptyset (&ss->pending);
+      memset (&ss->sigaltstack, 0, sizeof (ss->sigaltstack));
+      ss->suspended = 0;
+#ifdef noteven
+      __condition_init (&ss->arrived);
+#endif
+      ss->intr_port = MACH_PORT_NULL;
+      ss->context = NULL;
+
+      /* Initialize the sigaction vector from the default signal receiving
+	 thread's state, and its from the system defaults.  */
+      if (thread == _hurd_sigthread)
+	default_sigaction (&ss->actions);
+      else
+	{
+	  struct hurd_sigstate *s;
+	  for (s = _hurd_sigstates; s != NULL; s = s->next)
+	    if (s->thread == _hurd_sigthread)
+	      break;
+	  if (s)
+	    {
+	      __mutex_lock (&s->lock);
+	      memcpy (ss->actions, s->actions, sizeof (s->actions));
+	      __mutex_unlock (&s->lock);
+	    }
+	  else
+	    default_sigaction (&ss->actions);
+	}
+
       ss->next = _hurd_sigstates;
       _hurd_sigstates = ss;
     }
