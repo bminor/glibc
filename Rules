@@ -128,13 +128,14 @@ subdir_install: install-no-libc.a lib-noranlib stubs
 subdir_TAGS: TAGS
 
 # Make the distribution tarfile for the parent makefile.
-export distribute := $(distribute)
-export dont_distribute := $(dont_distribute)
-export generated := $(generated)
 .PHONY: subdir_dist dist
 subdir_dist: dist
 dist: ../Make-dist
-	$(MAKE) -f $< $(Make-dist-args)
+	$(MAKE) -f $< \
+		'distribute := $(distribute)' \
+		'dont_distribute := $(dont_distribute)' \
+		'generated := $(generated)' \
+		$(Make-dist-args)
 
 # Convenient target to update all the generated source files.
 .PHONY: generated
