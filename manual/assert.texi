@@ -1,0 +1,52 @@
+@node Diagnostics
+@chapter Diagnostics --- @file{<assert.h>}
+@pindex <assert.h>
+@cindex diagnostics
+@cindex assertions
+
+When you're writing a program, it's often a good idea to put in checks
+at strategic places for ``impossible'' errors or violations of basic
+assumptions.  These kinds of checks are helpful in debugging problems
+with the interfaces between different parts of the program, for example.
+The @code{assert} macro, defined in the header file @file{<assert.h>},
+provides a convenient way to cause program termination with some
+debugging information about where in the program such an error was
+detected.
+
+The @code{assert} facility is really oriented more towards debugging
+than towards providing general handling for errors detected by your
+program.  When your program is debugged, you can disable the error
+checks performed by the @code{assert} macro without actually changing
+the program source code by recompiling it with the preprocessor symbol
+@code{NDEBUG} defined, but it is not usually a good idea to globally
+disable all error checks on user input to the program in this way.
+Also, the information in the diagnostic messages provided by the
+@code{assert} macro is intended to to help you, the programmer, track
+down the source of a bug, but is not really useful in telling a user of
+your program what he or she did wrong.
+@vindex NDEBUG
+
+@deftypefn Macro void assert (int @var{expression})
+If the preprocessor macro @code{NDEBUG} is defined before
+@file{<assert.h>} is included, the @code{assert} macro is defined in
+such a way that it does absolutely nothing.  Even the argument
+expression @var{expression} is not evaluated, so you should avoid
+calling @code{assert} with arguments that involve side effects.
+Something like @code{assert(++i > 0);} is a bad idea because @code{i}
+will not be incremented if @code{NDEBUG} is defined.@refill
+
+If @code{NDEBUG} is not defined, @code{assert} tests the value of
+@var{expression}.  If it is false (zero), @code{assert} prints a message
+of the form:
+
+@example
+@file{@var{file}}:@var{nnn}: Assertion `@var{expression}' failed.
+@end example
+
+@noindent
+on the standard error stream @code{stderr} (@pxref{Standard Streams})
+and then aborts program execution via the @code{abort} function
+(@pxref{Aborting a Program}).  The filename and line number are taken
+from the C preprocessor macros @code{__FILE__} and @code{__LINE__} and
+specify where the call to @code{assert} was made from.@refill
+@end deftypefn

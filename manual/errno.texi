@@ -1,0 +1,352 @@
+@node Error Reporting
+@chapter Error Reporting
+@pindex <errno.h>
+@cindex error reporting
+@cindex reporting errors
+@cindex error codes
+@cindex status codes
+
+Many functions in the GNU C Library detect and report error conditions,
+and sometimes your programs need to check for these error conditions.
+For example, if your program needs to open an input file, you should
+make sure that the file was actually opened correctly before trying to
+read from it, and print an error message or take other appropriate
+action if the call to the library function failed.
+
+This chapter describes how the error reporting facility works.  Your
+program should include the header file @file{<errno.h>} to use this
+facility.
+
+@menu
+* Checking for Errors::	How errors are reported.
+* Error Codes::		Symbolic names for error codes.
+* Error Messages::	Mapping error codes onto error messages.
+@end menu
+
+@node Checking for Errors
+@section Checking for Errors
+
+Most library functions return a special value to indicate that 
+they have failed.  This is often a value of @code{-1}, a null pointer,
+or a constant such as @code{EOF} that is defined for that purpose.
+But such a return value simply tells you that an error has occurred
+and doesn't tell you anything about exactly what went wrong.
+
+You can obtain more detailed information about error conditions by
+examining the error code in the stored in the variable @code{errno}.
+This variable is declared in the header file @file{<errno.h>}.
+
+@deftypevr {Variable} {volatile int} errno
+The variable @code{errno} contains the system error number.  You can
+change the value of @code{errno}.
+
+Since @code{errno} is declared @code{volatile}, it might be changed
+asynchronously by a signal handler; @pxref{Defining a Signal Handler}.
+However, a properly written signal handler restores the value of
+@code{errno} before returning, so you generally do not need to worry
+about this possibility in ordinary code.
+
+The initial value of @code{errno} at program startup is zero.  It is
+guaranteed never to be set to zero by any library function.  Many
+library functions are guaranteed to set it to certain nonzero values
+when they encounter certain kinds of errors.  These error conditions
+are listed for each function.
+@end deftypevr
+
+@strong{Portability Note:} ANSI C specifies @code{errno} as a
+``modifiable lvalue'' rather than as a variable, permitting it to be
+implemented as a macro.  For example, its expansion might involve a
+function call, like @code{*_errno()}.  But in the GNU system,
+@code{errno} really is a variable.
+
+There are a few library functions, like @code{sqrt} and @code{atan},
+that return a perfectly legitimate value in case of an error, but also
+set @code{errno}.  For these functions, if you want to check to see
+whether an error occurred, the recommended method is to set @code{errno}
+to zero before calling the function, and then check its value before
+calling any other library function.
+
+Many macros providing symbolic names for error numbers are defined.
+(These macros are listed in @ref{Error Codes}.)  All of these have names
+that begin with @code{E} and an upper-case letter or a digit, and you
+should consider names of this form to be reserved names.
+
+You usually don't have to worry about the specific values of these
+symbolic constants.  They are all guaranteed to be positive integers and
+all unique.  (Since the values are unique, you can use them as labels in
+a @code{switch} statement, for example.)
+
+The value of @code{errno} doesn't necessarily have to correspond to any
+of these macros, since implementations might define additional error
+codes of their own for other situations.  The only values that are
+guaranteed to be meaningful for a particular library function are the
+ones that this manual explicitly lists for that function.
+
+Here is an example showing how failure to open a file correctly might be
+handled.  The function @code{open_sesame} tries to open the named file
+for reading and returns a stream if successful.  The @code{fopen}
+library function returns a null pointer if it couldn't open the file for
+some reason.  In that situation, an appropriate error message is
+constructed using the @code{strerror} function, and the program exits.
+If we were going to make some other library calls before passing the
+error code to @code{strerror}, we'd have to save it in a local variable
+instead, because those other library functions might overwrite
+@code{errno} in the meantime.
+
+@example
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+extern char *program_name;
+
+FILE *
+open_sesame (char *name)
+@{ 
+  FILE *stream;
+
+  errno = 0;                     
+  stream = fopen (name, "r");
+  if (!stream) @{
+    fprintf (stderr, "%s: Couldn't open file %s; %s\n",
+      program_name, name, strerror (errno));
+    exit (EXIT_FAILURE);
+    @}
+  else
+    return stream;
+@}
+@end example
+
+
+@node Error Codes
+@section Error Codes
+
+These macros are defined in the header file @file{<errno.h>}.  All of
+them expand into integer constant values.
+
+@defvr Macro E2BIG
+Argument list too long; used when the arguments passed to a new program
+being executed with one of the @code{exec} functions (@pxref{Executing a
+File}) are too large.
+@end defvr
+
+@defvr Macro EACCES
+Permission denied; the file permissions do not allow the attempted access.
+@end defvr
+
+@defvr Macro EAGAIN
+Resource temporarily unavailable; things might work if you try again
+later.
+@end defvr
+
+@defvr Macro EBADF
+Bad file descriptor; the file might have been closed or perhaps you are
+trying to read to a file open only for writing (or vice versa).
+@end defvr
+
+@defvr Macro EBUSY
+Resource busy; a system resource that can't be shared is already in use.
+For example, if you try to delete a file that is the root of a currently
+mounted filesystem, you get this error.
+@end defvr
+
+@defvr Macro ECHILD
+There are no child processes.  This error happens on operations that are
+supposed to manipulate child processes, when there aren't any processes
+to manipulate.
+@end defvr
+
+@defvr Macro EDEADLK
+Deadlock avoided; allocating a system resource would have resulted in
+a deadlock situation.
+@end defvr
+
+@defvr Macro EDOM
+Domain error; used by mathematical functions when an argument value does
+not fall into the domain over which the function is defined.
+@end defvr
+
+@defvr Macro EEXIST
+File exists; an existing file was specified in a context where it only
+makes sense to specify a new file.
+@end defvr
+
+@defvr Macro EFAULT
+Bad address; an invalid pointer was detected.
+@end defvr
+
+@defvr Macro EFBIG
+File too big; the size of a file would be larger than allowed by the system.
+@end defvr
+
+@defvr Macro EINTR
+Interrupted function call; an asynchronous signal occured and was handled
+during the execution of the call.
+@end defvr
+
+@defvr Macro EINVAL
+Invalid argument.  This is used to indicate all sorts of random problems
+with passing the wrong argument to a library function.
+@end defvr
+
+@defvr Macro EIO
+Input/output error; usually used for physical read or write errors.
+@end defvr
+
+@defvr Macro EISDIR
+File is a directory; it can't be written to like an ordinary file.
+@end defvr
+
+@defvr Macro EMFILE
+The process has too many files open and can't open any more.
+@end defvr
+
+@defvr Macro EMLINK
+Too many links; the link count of a single file is too large.
+@end defvr
+
+@defvr Macro ENAMETOOLONG
+Filename too long.  
+@end defvr
+
+@defvr Macro ENFILE
+There are too many files open in the entire system.
+@end defvr
+
+@defvr Macro ENODEV
+No such device.  This a ``file doesn't exist'' error, but is
+used only when the file is expected to represent a device, like a
+block special file for a disk.
+@end defvr
+
+@defvr Macro ENOENT
+No such file or directory.  This is a ``file doesn't exist'' error
+for ordinary files that are referenced in contexts where they are
+expected to already exist.
+@end defvr
+
+@defvr Macro ENOEXEC
+Invalid executable file format.
+@end defvr
+
+@defvr Macro ENOLCK
+No locks available.  This is used by the file locking facilities;
+@pxref{File Locks}.
+@end defvr
+
+@defvr Macro ENOMEM
+Not enough memory available.
+@end defvr
+
+@defvr Macro ENOSPC
+No space left on device; write operation on a file failed because the
+device is full.
+@end defvr
+
+@defvr Macro ENOSYS
+Function not implemented.  Some functions have commands or options defined
+that might not be supported in all implementations, and this is the kind
+of error you get if you request them and they aren't there.
+@end defvr
+
+@defvr Macro ENOTDIR
+A file existed but wasn't a directory, where a directory was expected.
+@end defvr
+
+@defvr Macro ENOTEMPTY
+Directory not empty, where an empty directory was expected.  Typically,
+used when you are trying to remove a directory.
+@end defvr
+
+@defvr Macro ENOTTY
+Inappropriate I/O control operation, such as trying to set terminal
+modes on an ordinary file.
+@end defvr
+
+@defvr Macro ENXIO
+No such device or address.  Typically, this means that a file
+representing a device has been installed incorrectly, and the
+system can't find the right kind of device driver for it.
+@end defvr
+
+@defvr Macro EPERM
+Operation not permitted; only the owner of the file (or other resource)
+or processes with special privileges can perform the operation.
+@end defvr
+
+@defvr Macro EPIPE
+Broken pipe; there is no process reading from the other end of a pipe.
+@end defvr
+
+@defvr Macro ERANGE
+Range error; used by mathematical functions when the result value is
+not representable because of overflow or underflow.
+@end defvr
+
+@defvr Macro EROFS
+An attempt was made to modify a file on a read-only file system.
+@end defvr
+
+@defvr Macro ESPIPE
+Invalid seek operation (such as on a pipe).
+@end defvr
+
+@defvr Macro ESRCH
+There is no such process that matches the specified process ID.
+@end defvr
+
+@defvr Macro EXDEV
+Improper link, such as to a file on another file system.
+@end defvr
+
+@strong{Incomplete:}  Are there any additional macros we want to document?
+
+
+@node Error Messages
+@section Error Messages
+
+The library contains a couple of other useful functions to produce error
+messages corresponding to values of @code{errno}.  The @code{strerror}
+function, declared in @file{<string.h>}, returns the error message as a
+string; and the @code{perror} function, declared in @file{<stdio.h>},
+can be used to print the error message.@refill
+
+@deftypefun {char *} strerror (int @var{errnum})
+The @code{strerror} function maps the error code (@pxref{Error
+Reporting}) specified by the @var{errnum} argument to a descriptive
+error message string.  A pointer to the string is returned.
+
+You should not modify the string returned by @code{strerror}.  Also, if
+you make subsequent calls to @code{strerror}, the string might be
+overwritten.  (But it's guaranteed that no library function ever calls
+@code{strerror} behind your back.)
+@end deftypefun
+
+@deftypefun void perror (const char *@var{message})
+This function is used to print an error message to the stream
+@code{stderr}; @pxref{Standard Streams}.
+
+If you call @code{perror} with a @var{message} that is either a null
+pointer or an empty string, @code{perror} just prints the error message 
+corresponding to @code{errno}, adding a trailing newline.
+
+If you supply a non-null @var{message} argument, then @code{perror}
+prefixes its output with this string.  It adds a colon and a space 
+character to separate the @var{message} from the error string corresponding
+to @code{errno}.
+@end deftypefun
+
+The exact error messages used by @code{strerror} and @code{perror} vary
+from system to system (but all implementations use the same set of
+messages for both functions).  On the GNU system, the messages are
+fairly short; there are no multi-line messages or embedded newlines.
+Each error message begins with a capital letter and does not include any
+terminating punctuation.
+
+There is an example showing the use of @code{strerror} in @ref{Checking
+for Errors}.
+
+@strong{Compatibility Note:}  The @code{strerror} function is a new
+feature of ANSI C.  Many older C systems do not support this function
+yet.

@@ -1,0 +1,1159 @@
+@node Low-Level Terminal Interface
+@chapter Low-Level Terminal Interface
+
+This chapter describes functions that are specific to terminal devices.
+You can use these functions to do things like turn off input echoing;
+set serial line characteristics such as baud rate and flow control; and
+change which characters are used to indicate end-of-file, erase, and 
+similar control functions.
+
+Most of the functions in this chapter operate on file descriptors.
+@xref{Low-Level Input/Output}, for more information about what a file
+descriptor is and how to open a file descriptor for a terminal device.
+
+@menu
+* Terminal Identification::	How to determine if a file is a terminal
+				 device, and what its name is.
+* Input and Output Queues::	About flow control and typeahead.
+* Terminal Modes::		How to inquire about and modify input and
+				 output processing modes and other terminal
+				 settings.
+* Line Control Functions::	Sending break sequences, flushing buffered
+				 input and output, and the like.
+* Terminal Control Example::	How to read single characters without echo.
+@end menu
+
+@node Terminal Identification
+@section Terminal Identification
+
+The functions described in this chapter only work on files that
+correspond to terminal devices.  You can find out whether a file
+descriptor is associated with a terminal by using the @code{isatty}
+function.
+
+@deftypefun int isatty (int @var{filedes})
+This function returns @code{1} if @var{filedes} is a file descriptor
+associated with an open terminal device, and @code{0} otherwise.
+@end deftypefun
+
+If a file descriptor is associated with a terminal, you can get its
+associated file name using the @code{ttyname} function.  See also the
+@code{ctermid} function, described in @ref{Controlling Terminal
+Identification}.
+
+@deftypefun {char *} ttyname (int @var{filedes})
+If the file descriptor @var{filedes} is associated with a terminal
+device, the @code{ttyname} function returns a pointer to a 
+statically-allocated, null-terminated string containing the file name
+of the terminal file.  A null pointer is returned instead if the
+file descriptor isn't associated with a terminal, or the file name cannot
+be determined.
+@end deftypefun
+
+Prototypes for both @code{isatty} and @code{ttyname} are declared in
+the header file @file{<unistd.h>}.
+
+
+@node Input and Output Queues
+@section Input and Output Queues
+
+Many of the remaining functions in this section refer to the input and
+output queues of a terminal device.  These queues implement a form of
+buffering that is distinct from buffering implemented by stream data
+structures.
+
+@cindex terminal input queue
+@cindex typeahead buffer
+The @dfn{terminal input queue} is also sometimes referred to as its
+@dfn{typeahead buffer}.  It contains characters that have been received
+from the terminal device, but not yet read by any process.  
+
+The size of the terminal's input queue is specified by the
+@code{_POSIX_MAX_INPUT} and @code{MAX_INPUT} parameters; @pxref{File
+System Parameters}.  If input flow control is enabled by setting the
+@code{IXOFF} input mode bit (@pxref{Input Modes}), the terminal driver
+transmits STOP and START characters to prevent the queue from
+overflowing.  Otherwise, input may be lost.
+
+@cindex terminal output queue
+The @dfn{terminal output queue} is similar; it contains characters that
+have been written, but not yet transmitted to the terminal device.  If
+ouput flow control is enabled by setting the @code{IXON} input mode bit
+(@pxref{Input Modes}), the terminal driver uses START and STOP
+characters received to control when queued output can be transmitted.
+
+Flushing the terminal input queue causes any characters that have been
+received but not yet read to be discarded.  Similarly, flushing the
+terminal output queue causes any characters that have been written but
+not yet transmitted to be discarded.
+
+@node Terminal Modes
+@section Terminal Modes
+
+This section describes the various terminal attributes that you can
+inquire about and change.  The functions, data structures, and symbolic
+constants are all declared in the header file @file{<termios.h>}.
+
+@menu
+* Terminal Mode Functions::	Descriptions of the functions and data
+				 structures.
+* Input Modes::			Flags controlling low-level input modes.
+* Output Modes::		Flags controlling low-level output modes.
+* Control Modes::		Flags controlling serial port behavior.
+* Baud Rate::			How to set the baud rate on the serial port.
+* Local Modes::			Flags controlling high-level input modes.
+* Special Characters::		Characters that have special meanings, and
+				 how to change them.
+@end menu
+
+@node Terminal Mode Functions
+@subsection Terminal Mode Functions
+
+Objects of type @code{struct termios} are used to represent terminal
+attributes.  Details about the values of each of its components are
+discussed in more detail below.
+
+@deftp {Data Type} {struct termios}
+Structures of type @code{termios} are used with the @code{tcgetattr}
+and @code{tcsetattr} functions to describe terminal attributes.  The
+structure includes at least the following members:
+
+@table @code
+@item tcflag_t c_iflag
+A bit mask specifying input modes; @pxref{Input Modes}.
+
+@item tcflag_t c_oflag
+A bit mask specifying output modes; @pxref{Output Modes}.
+
+@item tcflag_t c_cflag
+A bit mask specifying control modes; @pxref{Control Modes}.
+
+@item tcflag_t c_lflag
+A bit mask specifying local modes; @pxref{Local Modes}.
+
+@item cc_t c_cc[NCCS]
+An array specifying which characters are associated with various
+control functions; @pxref{Special Characters}.
+@end table
+
+The @code{termios} structure also contains components which encode baud
+rate information, but the representation is not specified.  @xref{Baud
+Rate}, for information on how baud rates are specified.
+@end deftp
+
+@deftp {Data Type} tcflag_t
+This is an unsigned integer type used to represent the various
+bit masks for terminal flags.
+@end deftp
+
+@deftp {Data Type} cc_t
+This is an unsigned integer type used to represent characters associated
+with various terminal control functions.
+@end deftp
+
+Although @code{tcgetattr} and @code{tcsetattr} specify the terminal
+device as a file descriptor, the attributes are those of the terminal
+device itself and not of the file descriptor.  This means that the
+effects of changing terminal attributes are persistent; if another
+process opens the terminal file later on, it will see the changed
+attributes even though it doesn't have anything to do with the open file
+descriptor you originally specified in changing the attributes.
+
+Similarly, if a single process has multiple or duplicated file
+descriptors for the same terminal device, changing the terminal
+attributes affects input and output to all of these file
+descriptors.  This means, for example, that you can't open one file
+descriptor or stream to read from a terminal in the normal
+line-buffered, echoed mode; and simultaneously have another file
+descriptor for the same terminal that you use to read from it in
+single-character, non-echoed mode.  Instead, you have to explicitly
+switch the terminal back and forth between the two modes.
+
+When you want to set terminal attributes, you should generally call
+@code{tcgetattr} first to get the current attributes of the particular
+terminal device and then modify only those attributes that you are
+really interested in.  
+
+It's a bad idea to simply initialize a @code{termios} structure to an
+arbitrary set of attributes and pass it directly to @code{tcsetattr}.
+In addition to the problems of choosing values for all of the flags and
+parameters that are reasonable for a particular terminal device, the
+implementation might support additional attributes, and it's best just
+to leave those alone.
+
+For the same reasons, you should avoid blindly copying attributes from
+one terminal device to another.
+
+@deftypefun int tcgetattr (int @var{filedes}, struct termios *@var{termios_p})
+This function is used to inquire about the attributes of the terminal
+device with file descriptor @var{filedes}.  The attributes are returned
+in the structure pointed at by @var{termios_p}.
+
+If successful, @code{tcgetattr} returns @code{0}.  A return value of @code{-1}
+indicates an error.  The following @code{errno} error conditions are
+defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item ENOTTY
+The @var{filedes} is not associated with a terminal.
+@end table
+@end deftypefun
+
+@deftypefun int tcsetattr (int @var{filedes}, int @var{when}, const struct termios *@var{termios_p})
+This function sets the attributes of the terminal device with file
+descriptor @var{filedes}.  The new attributes are taken from the
+structure pointed at by @var{termios_p}.
+
+The @var{when} argument specifies when the change is to be applied, and
+optional actions to perform at the same time.  It can be one of the
+following values:
+
+@table @code
+@item TCSANOW
+Make the change immediately.
+
+@item TCSADRAIN
+Make the change after all queued output has been written.  You should
+use this option when changing parameters that affect output.
+
+@item TCSAFLUSH
+This is like @code{TCSADRAIN}, but also discards any queued input.
+@end table
+
+If this function is called from a background process on its controlling
+terminal, normally all processes in the process group are sent a
+@code{SIGTTOU} signal, in the same way as if the process were trying to
+write to the terminal.  The exception is if the calling process itself
+is ignoring or blocking @code{SIGTTOU} signals, in which case the
+operation is performed and no signal is sent.  @xref{Job Control}.
+
+If successful, @code{tcsetattr} returns @code{0}.  A return value of
+@code{-1} indicates an error.  The following @code{errno} error
+conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item ENOTTY
+The @var{filedes} is not associated with a terminal.
+
+@item EINVAL
+Either the value of the @code{when} argument is not valid, or there is
+something wrong with the data in the @var{termios_p} argument.
+@end table
+@end deftypefun
+
+These symbolic constants are defined for use as the @var{when} argument
+to @code{tcsetattr}:
+
+@defvr Macro TCSANOW
+Make the change to the terminal attributes immediately.
+@end defvr
+
+@defvr Macro TCSADRAIN
+Make the change to the terminal attributes after queued output has been
+transmitted.
+@end defvr
+
+@defvr Macro TCSAFLUSH
+Make the change to the terminal attributes after queued output has been
+completed, also flushing any queued input in the typeahead buffer.
+@end defvr
+
+
+@node Input Modes
+@subsection Input Modes
+
+This section describes the flags for the @code{c_iflag} member of the
+@code{termios} structure.  These flags generally control fairly low-level
+aspects of input processing.
+
+The values of each of the following macros are bitwise distinct constants.
+You can specify the value for the @code{c_iflag} member as the bitwise
+OR of the desired flags.
+
+@defvr Macro INPCK
+@cindex parity checking
+If this bit is set, input parity checking is enabled.  If it is not set,
+no checking at all is done for parity errors on input; the
+characters are simply passed through to the application.
+
+Parity checking on input processing is independent of whether parity
+detection and generation on the underlying terminal hardware is enabled;
+@pxref{Control Modes}.  For example, you could clear the @code{INPCK}
+input mode flag and set the @code{PARENB} control mode flag to ignore
+parity errors on input, but still generate parity on output.
+
+If this bit is set, what happens when a parity error is detected depends
+on whether the @code{IGNPAR} or @code{PARMRK} bits are set.  If neither
+of these bits are set, a byte with a parity error is passed to the
+application as a @code{'\0'} character.
+@end defvr
+
+@defvr Macro IGNPAR
+If this bit is set, any byte with a framing or parity error is ignored.
+This is only useful if @code{INPCK} is also set.
+@end defvr
+
+@defvr Macro PARMRK
+If this bit is set and @code{IGNPAR} is not set, a byte with a framing
+or parity error is prefixed with the characters @code{'\377'} and
+@code{'\0'} before being passed to the application.  This is only useful
+if @code{INPCK} is also set.
+@end defvr
+
+@defvr Macro ISTRIP
+If this bit is set, valid input bytes are stripped to seven bits;
+otherwise, all eight bits are processed.
+
+If both @code{ISTRIP} and @code{PARMRK} are set, an input byte of 
+@code{'\377'} is passed to the application as a two-byte sequence
+@code{'\377'}, @code{'\377'}.
+@end defvr
+
+@defvr Macro IGNBRK
+If this bit is set, break conditions are ignored.
+
+@cindex break condition
+@cindex break condition, detecting
+A @dfn{break condition} is defined in the context of asynchronous
+serial data transmission as a series of zero-value bits longer than a
+single byte.
+@end defvr
+
+@defvr Macro BRKINT
+If this bit is set and @code{IGNBRK} is not set, a break condition
+causes input and output queues on the terminal to be flushed and a
+@code{SIGINT} signal is sent to any foreground process group associated
+with the terminal.
+
+If neither @code{BRKINT} nor @code{IGNBRK} are set, a break condition is
+passed to the application as a single @code{'\0'} character if
+@code{PARMRK} is not set, or otherwise as a three-character sequence 
+@code{'\377'}, @code{'\0'}, @code{'\0'}.
+@end defvr
+
+@defvr Macro IGNCR
+If this bit is set, carriage return characters (@code{'\r'}) are
+discarded on input.
+@end defvr
+
+@defvr Macro ICRNL
+If this bit is set and @code{IGNCR} is not set, carriage return characters
+(@code{'\r'}) received as input are passed to the application as newline
+characters (@code{'\n'}).
+@end defvr
+
+@defvr Macro INLCR
+If this bit is set, newline characters (@code{'\n'}) received as input
+are passed to the application as carriage return characters (@code{'\r'}).
+@end defvr
+
+@defvr Macro IXOFF
+If this bit is set, start/stop control on input is enabled.  In other
+words, STOP and START characters are transmitted as necessary to
+prevent input being received faster than the input queue is emptied by
+calls to @code{read}.  It's assumed that the actual terminal hardware
+that is generating the data being read responds to a STOP character
+by suspending data transmission, and to a START character by resuming
+transmission.  @xref{Special Characters}.
+@end defvr
+
+@defvr Macro IXON
+If this bit is set, start/stop control on output is enabled.  In other
+words, if a STOP character is received as input, output is suspended
+until a START character is received.  In this case, the STOP and START
+characters are never passed to the application.  If this bit is not set,
+then START and STOP can be read as ordinary characters.
+@xref{Special Characters}.
+@end defvr
+
+@node Output Modes
+@subsection Output Modes
+
+This section describes the flags for the @code{c_oflag} member of the
+@code{termios} structure.  These flags generally control fairly low-level
+aspects of output processing.
+
+The values of each of the following macros are bitwise distinct constants.
+You can specify the value for the @code{c_oflag} member as the bitwise
+OR of the desired flags.
+
+@defvr Macro OPOST
+If this bit is set, output data is processed in some unspecified way so
+that it is displayed appropriately on the terminal device.  This
+typically includes mapping newline characters (@code{'\n'}) onto
+carriage return and linefeed pairs.
+
+If this bit isn't set, the characters are transmitted as-is.
+@end defvr
+
+@node Control Modes
+@subsection Control Modes
+
+This section describes the flags for the @code{c_cflag} member of the
+@code{termios} structure.  These flags control parameters usually
+associated with asynchronous serial data transmission.  These flags may
+not make sense for other kinds of terminal ports (such as a network
+connection pseudo-terminal).
+
+The values of each of the following macros are bitwise distinct
+constants.  You can specify the value for the @code{c_cflag} member as
+the bitwise OR of the desired flags.
+
+@defvr Macro CLOCAL
+If this bit is set, it indicates that the terminal is connected
+``locally'' and that the modem status lines (carrier detect) should be
+ignored.
+@cindex modem status lines
+@cindex carrier detect
+
+If this bit is not set and you call @code{open} without the
+@code{O_NONBLOCK} flag set, @code{open} blocks until a modem
+connection is established.
+
+If this bit is not set and a modem disconnect is detected, a
+@code{SIGHUP} signal is sent to the controlling process for the terminal
+(if it has one).  Normally, this causes the process to exit;
+@pxref{Signal Handling}.  Reading from the terminal after a disconnect
+causes an end-of-file condition, and writing causes an
+@code{EIO} error to be returned.  The terminal file must be closed and
+reopened to clear the condition.
+@cindex modem disconnect
+@end defvr
+
+@defvr Macro HUPCL
+If this bit is set, a modem disconnect is generated when all processes
+that have the terminal port open have either closed the file or exited.
+@end defvr
+
+@defvr Macro CREAD
+If this bit is set, input can be read from the terminal.  Otherwise, no
+characters can be read.
+@end defvr
+
+@defvr Macro CSTOPB
+If this bit is set, two stop bits are used.  Otherwise, only one stop bit
+is used.
+@end defvr
+
+@defvr Macro PARENB
+If this bit is set, generation and detection of a parity bit are enabled.
+@xref{Input Modes}, for information on how input parity errors are handled.
+
+If this bit is not set, no parity bit is added.
+@end defvr
+
+@defvr Macro PARODD
+This bit is only useful if @code{PARENB} is set.  If @code{PARODD} is set,
+odd parity is used, otherwise even parity is used.
+@end defvr
+
+The control mode flags also includes a field for the number of bits per
+character.  You can use the @code{CSIZE} macro as a mask to extract the
+value.
+
+@defvr Macro CSIZE
+This is a mask for the number of bits per character.
+@end defvr
+
+@defvr Macro CS5
+This specifies five bits per byte.
+@end defvr
+
+@defvr Macro CS6
+This specifies six bits per byte.
+@end defvr
+
+@defvr Macro CS7
+This specifies seven bits per byte.
+@end defvr
+
+@defvr Macro CS8
+This specifies eight bits per byte.
+@end defvr
+
+@node Baud Rate
+@subsection Baud Rate
+
+The baud rate specification is related to the terminal control modes
+(@pxref{Control Modes}), but is manipulated by means of a functional
+interface.  The way that the baud rate is represented in the
+@code{termios} structure is not specified.
+
+Baud rates are not specified directly as numbers, not only because they
+might not be represented that way in the @code{termios} structure, but
+also because only a fairly small subset of baud rates can be recognized
+by terminal hardware devices.
+
+@strong{Incomplete:}  RMS says that it should be possible to simply pass
+the baud rate value instead of one of these constants.  However, the library
+is not implemented that way now.
+
+@deftp {Data Type} speed_t
+The @code{speed_t} type is an unsigned integer data type used to represent
+baud rates.
+@end deftp
+
+You can use these constants as baud rate values.
+
+@defvr Macro B0
+Hang up; turns off the modem control lines.
+@end defvr
+
+@defvr Macro B50
+50 baud.
+@end defvr
+
+@defvr Macro B75
+75 baud.
+@end defvr
+
+@defvr Macro B110
+110 baud.
+@end defvr
+
+@defvr Macro B134
+134.5 baud.
+@end defvr
+
+@defvr Macro B150
+150 baud.
+@end defvr
+
+@defvr Macro B200
+200 baud.
+@end defvr
+
+@defvr Macro B300
+300 baud.
+@end defvr
+
+@defvr Macro B600
+600 baud.
+@end defvr
+
+@defvr Macro B1200
+1200 baud.
+@end defvr
+
+@defvr Macro B1800
+1800 baud.
+@end defvr
+
+@defvr Macro B2400
+2400 baud.
+@end defvr
+
+@defvr Macro B4800
+4800 baud.
+@end defvr
+
+@defvr Macro B9600
+9600 baud.
+@end defvr
+
+@defvr Macro B19200
+19200 baud.
+@end defvr
+
+@defvr Macro B38400
+38400 baud.
+@end defvr
+
+You can use the following functions to inquire about and modify the
+baud rates in a @code{termios} structure.
+
+@deftypefun speed_t cfgetospeed (const struct termios *@var{termios_p})
+This function returns the output baud rate stored in the structure
+pointed at by @var{termios_p}.
+@end deftypefun
+
+@deftypefun int cfsetospeed (struct termios *@var{termios_p}, speed_t @var{speed})
+This function sets the output baud rate stored in the structure pointed
+at by @var{termios_p} to @var{speed}.  The normal return value is
+@code{0}; a value of @code{-1} indicates an error.  If you try to set
+an invalid baud rate, it might be detected by @code{cfsetospeed} or
+@code{tcsetattr} or both.
+@end deftypefun
+
+@deftypefun speed_t cfgetispeed (const struct termios *@var{termios_p})
+This function returns the input baud rate stored in the structure
+pointed at by @var{termios_p}.
+@end deftypefun
+
+@deftypefun int cfsetispeed (struct termios *@var{termios_p}, speed_t @var{speed})
+This function sets the input baud rate stored in the structure pointed
+at by @var{termios_p} to @var{speed}.  The normal return value is
+@code{0}; a value of @code{-1} indicates an error.  If you try to set
+an invalid baud rate, it might be detected by @code{cfsetispeed} or
+@code{tcsetattr} or both.
+@end deftypefun
+
+Like the other terminal control modes, specifying a baud rate might or
+might not make sense for particular terminal devices.
+
+@node Local Modes
+@subsection Local Modes
+
+This section describes the flags for the @code{c_lflag} member of the
+@code{termios} structure.  These flags generally control higher-level
+aspects of input processing than the input modes flags described in
+@ref{Input Modes}, such as echoing and whether the various control 
+characters (@pxref{Special Characters}) are applied.
+
+There are two general ways in which input is processed.
+
+@cindex canonical input processing
+In @dfn{canonical input processing} mode, terminal input is processed in
+lines terminated by newline (@code{'\n'}), EOF, or EOL characters;
+@pxref{Special Characters}.  No input can be read until an entire line
+has been typed by the user, and the @code{read} function (@pxref{Input
+and Output Primitives}) returns at most a single line of input, no
+matter how many bytes are requested.
+
+The constants @code{_POSIX_MAX_CANON} and @code{MAX_CANON} parameterize
+the maximum number of bytes which may appear in a single line.  
+@xref{File System Parameters}.
+
+In canonical input mode, the ERASE and KILL characters are interpreted
+specially to perform editing operations within the current line of text.
+@xref{Special Characters}.
+
+@cindex non-canonical input processing
+In @dfn{non-canonical input processing} mode, characters are not grouped
+into lines, and ERASE and KILL processing are not performed.  The
+granularity with which bytes are read in non-canonical input mode is
+controlled by the MIN and TIME characters.  @xref{Special Characters}.
+
+The values of each of the following macros are bitwise distinct
+constants.  You can specify the value for the @code{c_iflag} member as
+the bitwise OR of the desired flags.
+
+@defvr Macro ICANON
+If set, this bit enables canonical input processing mode.  Otherwise,
+input is processed in non-canonical mode.
+@end defvr
+
+@defvr Macro ECHO
+If this bit is set, echoing of input characters back to the terminal
+is enabled.
+@end defvr
+
+@defvr Macro ECHOE
+If this bit is set and the @code{ICANON} bit is also set, then the ERASE
+character is echoed by erasing the last character in the current line
+from the terminal display.  This bit only controls the echoing behavior;
+the @code{ICANON} bit controls actual recognition of the ERASE character.
+@end defvr
+
+@defvr Macro ECHOK
+If this bit is set and the @code{ICANON} bit is also set, then the
+KILL character is echoed either by erasing the current line, or by
+writing a newline character.  This bit only controls the echoing behavior;
+the @code{ICANON} bit controls actual recognition of the KILL character.
+@end defvr
+
+@defvr Macro ECHONL
+If this bit is set and the @code{ICANON} bit is also set, then the
+newline (@code{'\n'}) character is echoed even if the @code{ECHO} bit
+is not set.
+@end defvr
+
+@defvr Macro ISIG
+This bit controls whether the INTR, QUIT, and SUSP characters are
+recognized.  The functions associated with these characters are performed
+if and only if this bit is set.  Being in canonical or non-canonical
+input mode has no affect on the interpretation of these characters.
+@end defvr
+
+@defvr Macro IEXTEN
+This bit is similar to @code{ISIG}, but controls implementation-defined
+special characters.  If it is set, it might override the default behavior
+for the @code{ICANON} and @code{ISIG} local mode flags, and the @code{IXON}
+and @code{IXOFF} input mode flags.
+@end defvr
+
+@defvr Macro NOFLSH
+Normally, the INTR, QUIT, and SUSP characters cause input and output
+queues for the terminal to be flushed.  If this bit is set, the flush
+is not performed.
+@end defvr
+
+@defvr Macro TOSTOP
+If this bit is set and the implementation supports job control, then
+@code{SIGTTOU} signals are generated by background processes that
+attempt to write to the terminal.  @xref{Job Control and the Terminal Driver}.
+@end defvr
+
+@node Special Characters
+@subsection Special Characters
+
+The terminal driver recognizes a number of special characters which
+perform various control functions.  These include the INTR character
+(normally @kbd{C-c}) for sending a @code{SIGINT} signal, the ERASE
+character (usually either backspace or rubout) for editing input,
+and the like.
+
+The mapping of functions to characters is specified in the
+@code{termios} structure as the @code{c_cc} member.  This is an array;
+there are symbolic constants defined for each of the control functions
+which are used as array subscripts, and the elements of the array are
+corresponding characters that perform these functions.
+
+Some of these characters are only recognized if specific local mode flags
+are set.  @xref{Local Modes}, for more information.
+
+If the implementation supports @code{_POSIX_VDISABLE} for the terminal,
+you can also disable each of these functions individually by setting
+the corresponding array element to @code{_POSIX_VDISABLE}.  
+@xref{File System Parameters}, for more information about this parameter.
+
+@defvr Macro NCCS
+The value of this macro is the number of array elements in the
+@code{c_cc} member of the @code{termios} structure.  The value is
+implementation-dependent.
+@end defvr
+
+Each of the following macros has a distinct value, except that the
+@code{VMIN} and @code{VTIME} macros (which are used only in
+non-canonical mode) can share values with @code{VEOF} and @code{VEOL}
+(which are used only in canonical mode).  The values are all integer
+constants.
+
+@defvr Macro VEOF
+@cindex EOF character
+This is the subscript for the EOF character in the special control character
+array.
+
+The EOF character is recognized only in canonical input mode.  It acts
+as a line terminator in the same way as a newline character, but if the
+EOF character is typed at the beginning of a line it causes @code{read}
+to return a byte count of zero, indicating end-of-file.  The EOF
+character itself is discarded.
+
+Usually, the EOF character is @kbd{C-c}.
+@end defvr
+
+@defvr Macro VEOL
+@cindex EOL character
+This is the subscript for the EOL character in the special control character
+array.
+
+The EOL character is recognized only in canonical input mode.  It acts
+as a line terminator, just like a newline character.
+
+@strong{Incomplete:}  Is this usually a carriage return?
+@end defvr
+
+@defvr Macro VERASE
+@cindex ERASE character
+This is the subscript for the ERASE character in the special control character
+array.
+
+The ERASE character is recognized only in canonical input mode.  When
+the user types the erase character, the previous character typed is
+discarded.  (If the terminal generates multibyte character sequences,
+this may cause more than one byte of input to be discarded.)  This
+cannot be used to erase past the beginning of the current line of text.
+The ERASE character itself is discarded.
+
+Usually, the ERASE character is either backspace or rubout.
+@end defvr
+
+@defvr Macro VKILL
+@cindex KILL character
+This is the subscript for the KILL character in the special control character
+array.
+
+The KILL character is recognized only in canonical input mode.  When the
+user types the kill character, the entire contents of the current line
+of input are discarded.  The @code{KILL} character itself is discarded.
+
+The KILL character is usually @kbd{C-u}.
+@end defvr
+
+@defvr Macro VINTR
+@cindex INTR character
+@cindex interrupt character
+This is the subscript for the INTR character in the special control character
+array.
+
+The INTR (interrupt) character is recognized only if the @code{ISIG}
+local mode flag is set.  It causes a @code{SIGINT} signal to be sent
+to all processes in the foreground job associated with the terminal.
+@xref{Signal Handling}, for more information about signals.  The
+INTR character itself is discarded.
+
+Typically, the INTR character is set to be @kbd{C-c}.
+@end defvr
+
+@defvr Macro VQUIT
+@cindex QUIT character
+This is the subscript for the QUIT character in the special control character
+array.
+
+The QUIT character is recognized only if the @code{ISIG} local mode flag
+is set.  It causes a @code{SIGQUIT} signal to be sent to all processes
+in the foreground job associated with the terminal.  @xref{Signal
+Handling}, for more information about signals.  The QUIT character
+itself is discarded.
+
+Typically, the QUIT character is set to be @kbd{C-\}.
+@end defvr
+
+@defvr Macro VSUSP
+@cindex SUSP character
+@cindex suspend character
+This is the subscript for the SUSP character in the special control character
+array.
+
+The SUSP (suspend) character is recognized only if the implementation
+supports job control (@pxref{Job Control}) and the @code{ISIG} local
+mode flag is set.  It causes a @code{SIGTSTP} signal to be sent to all
+processes in the foreground job associated with the terminal.
+@xref{Signal Handling}, for more information about signals.  The SUSP
+character itself is discarded.
+
+Typically, the SUSP character is set to be @kbd{C-z}.
+@end defvr
+
+@defvr Macro VSTART
+@cindex START character
+This is the subscript for the START character in the special control character
+array.
+
+The START character is used to support the @code{IXON} and @code{IXOFF}
+input modes.  If @code{IXON} is set, receiving a START character resumes
+suspended output; the START character itself is discarded.  If @code{IXOFF}
+is set, the system may also transmit START characters.
+
+The usual value for the START character is @kbd{C-q}.  You may not be
+able to change this value.
+@end defvr
+
+@defvr Macro VSTOP
+@cindex STOP character
+This is the subscript for the STOP character in the special control character
+array.
+
+The STOP character is used to support the @code{IXON} and @code{IXOFF}
+input modes.  If @code{IXON} is set, receiving a STOP character causes
+output to be suspended; the STOP character itself is discarded.  If
+@code{IXOFF} is set, the system may also transmit STOP characters to
+prevent its input queue from overflowing.
+
+The usual value for the STOP character is @kbd{C-s}.  You may not be
+able to change this value.
+@end defvr
+
+@defvr Macro VMIN
+@cindex MIN character
+This is the subscript for the MIN character in the special control character
+array.
+
+The MIN character is only meaningful in non-canonical input mode; it
+represents the minimum number of bytes to return in a single call to
+@code{read}.  It interacts with the TIME character to determine the
+granularity with which input from the terminal is passed to the
+application program.
+
+There are four possible cases:
+
+@itemize @bullet
+@item 
+Both MIN and TIME are zero.
+
+This is the degenerate case.  The number of bytes returned is the
+minimum of the number requested or the number currently available
+without waiting.  If no input is immediately available, @code{read}
+returns a value of zero.
+
+@item
+MIN is zero but TIME has a nonzero value.
+
+This waits for up to the specified amount of time for input to
+become available; the availability of a single byte is enough to satisfy
+the read request and cause @code{read} to return.  The maximum number of
+bytes returned is the number requested.  If no input is available before
+the timer expires, @code{read} returns a value of zero.
+
+@item
+TIME is zero but MIN has a zero value.
+
+This causes the process to block until at least MIN bytes are available
+to be read, or a signal is received. 
+
+@strong{Incomplete:}  What happens if the number of bytes requested by
+a particular call to @code{read} is less than MIN?  Does @code{read}
+block until MIN bytes are available, or does it return as soon as it
+has read the number requested?
+
+@item
+Both TIME and MIN are nonzero.
+
+In this case, @code{read} blocks until at least one byte is available.
+A total of up to MIN bytes are received as long as subsequent
+bytes are received within the specified TIME of the preceeding byte.
+If the timer expires, the bytes received so far are returned.
+
+@strong{Incomplete:}  What happens if the number of bytes requested by
+a particular call to @code{read} is less than MIN?
+@end itemize
+@end defvr
+
+@defvr Macro VTIME
+@cindex TIME character
+This is the subscript for the TIME character in the special control character
+array.
+
+The TIME character is only meaningful in non-canonical input mode; it is
+used as a timer with a resolution 0.1 seconds.  It interacts with the
+TIME character to determine the granularity with which input from the
+terminal is passed to the application program, as described above.
+@end defvr
+
+
+@node Line Control Functions
+@section Line Control Functions
+
+These functions perform miscellanous control actions on terminal
+devices.  If any of these functions are called from a background process
+on its controlling terminal, normally all processes in the process group
+are sent a @code{SIGTTOU} signal, in the same way as if output were
+being written to the terminal.  The exception is if the calling process
+itself is ignoring or blocking @code{SIGTTOU} signals, in which case the
+operation is performed and no signal is sent.  @xref{Job Control}.
+
+@cindex break condition, generating
+@deftypefun int tcsendbreak (int @var{filedes}, int @var{duration})
+This function generates a break condition by transmitting a stream of
+zero bits on the terminal associated with the file descriptor
+@var{filedes}.  The duration of the break is controlled by the
+@var{duration} argument.  If zero, the duration is between 0.25 and 0.5
+seconds.  Nonzero values are interpreted in an implementation-specific way.
+
+This function probably won't do anything useful if the terminal is not
+an asynchronous serial data port.
+
+The return value is normally zero.  In the event of an error, a value
+of @code{-1} is returned.  The following @code{errno} error conditions
+are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} is not a valid file descriptor.
+
+@item ENOTTY
+The @var{filedes} is not associated with a terminal device.
+@end table
+@end deftypefun
+
+@deftypefun int tcdrain (int @var{filedes})
+The @code{tcdrain} function blocks the calling process until all queued
+output to the terminal @var{filedes} has been transmitted.
+
+The return value is normally zero.  In the event of an error, a value
+of @code{-1} is returned.  The following @code{errno} error conditions
+are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} is not a valid file descriptor.
+
+@item ENOTTY
+The @var{filedes} is not associated with a terminal device.
+
+@item EINTR
+The operation was interrupted by delivery of a signal.
+@end table
+@end deftypefun
+
+
+@deftypefun int tcflush (int @var{filedes}, int @var{queue})
+The @code{tcflush} function is used to flush the input and/or output
+queues associated with the terminal file @var{filedes}.  The @var{queue}
+argument specifies which queue(s) to flush, and can be one of the
+following values:
+
+@table @code
+@item TCIFLUSH
+Flush any input data received, but not yet read.
+
+@item TCOFLUSH
+Flush any output data written, but not yet transmitted.
+
+@item TCIOFLUSH
+Flush both queued input and output.
+@end table
+
+The return value is normally zero.  In the event of an error, a value
+of @code{-1} is returned.  The following @code{errno} error conditions
+are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} is not a valid file descriptor.
+
+@item ENOTTY
+The @var{filedes} is not associated with a terminal device.
+
+@item EINVAL
+A bad value was supplied as the @var{queue} argument.
+@end table
+@end deftypefun
+
+The following macros define symbolic constants for use as the @var{queue}
+argument to @code{tcflush}:
+
+@defvr Macro TCIFLUSH
+This specifies that the terminal input queue should be flushed.
+@end defvr
+
+@defvr Macro TCOFLUSH
+This specifies that the terminal output queue should be flushed.
+@end defvr
+
+@defvr Macro TCIOFLUSH
+This specifies that both the terminal input queue and the terminal
+output queue should be flushed.
+@end defvr
+
+
+@deftypefun int tcflow (int @var{filedes}, int @var{action})
+The @code{tcflow} function is used to perform operations relating to
+XON/XOFF flow control on the terminal file specified by @var{filedes}.
+
+The @var{action} argument specifies what operation to perform, and can
+be one of the following values:
+
+@table @code
+@item TCOOFF
+Suspend transmission of output.
+
+@item TCOON
+Restart transmission of output.
+
+@item TCIOFF
+Transmit a STOP character.
+
+@item TCION
+Transmit a START character.
+@end table
+
+For more information about the STOP and START characters, @pxref{Special
+Characters}.
+
+The return value is normally zero.  In the event of an error, a value
+of @code{-1} is returned.  The following @code{errno} error conditions
+are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} is not a valid file descriptor.
+
+@item ENOTTY
+The @var{filedes} is not associated with a terminal device.
+
+@item EINVAL
+A bad value was supplied as the @var{action} argument.
+@end table
+@end deftypefun
+
+The following symbolic constants are defined for use as the @var{action}
+argument to @code{tcflow}:
+
+@defvr Macro TCOOFF
+The action is to suspend transmission of output.
+@end defvr
+
+@defvr Macro TCOON
+The action is to resume transmission of output.
+@end defvr
+
+@defvr Macro TCIOFF
+The action is to send a STOP character.
+@end defvr
+
+@defvr Macro TCION
+The action is to send a START character.
+@end defvr
+
+
+@node Terminal Control Example
+@section Terminal Control Example
+
+Here is an example program that shows how you can set up a terminal
+device to read single characters in non-canonical input mode, without
+echo.
+
+@example
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <termios.h>
+
+/* @r{Use this variable to remember original terminal attributes.} */
+
+struct termios saved_attributes;
+
+void reset_input_mode (void)
+@{
+  tcsetattr (STDIN_FILENO, TCSANOW, &saved_attributes);
+@}
+  
+void set_input_mode (void)
+@{
+  struct termios tattr;
+  char *name;
+
+  /* @r{Make sure stdin is a terminal.} */
+  if (!isatty (STDIN_FILENO)) @{
+    fprintf (stderr, "Not a terminal.\n");
+    exit (EXIT_FAILURE);
+    @}
+
+  /* @r{Save the terminal attributes so we can restore them later.} */
+  tcgetattr (STDIN_FILENO, &saved_attributes);
+  atexit (reset_input_mode);
+
+  /* @r{Set the funny terminal modes.} */
+  tcgetattr (STDIN_FILENO, &tattr);
+  tattr.c_lflag = tattr.c_lflag & (~ICANON);   /* @r{Clear ICANON.} */
+  tattr.c_lflag = tattr.c_lflag & (~ECHO);     /* @r{Clear ECHO.} */
+  tattr.c_cc[VMIN] = 1;
+  tattr.c_cc[VTIME] = 0;
+  tcsetattr (STDIN_FILENO, TCSAFLUSH, &tattr);
+@}
+
+void main (void)
+@{
+  char c;
+
+  set_input_mode ();
+  @dots{}
+  read (STDIN_FILENO, &c, 1);
+  @dots{}
+  exit (EXIT_SUCCESS);
+@}
+@end example
+
+This program is careful to restore the original terminal modes before
+exiting.  It uses the @code{atexit} function (@pxref{Normal Program
+Termination}) to cause a function that does this to be called when
+the program exits normally.
+
+To be even more careful, it's also a good idea to establish handlers for
+signals such as @code{SIGABRT} and @code{SIGINT} that do this same
+cleanup before exiting the program.  That way, even if the program exits
+abnormally, it leaves the terminal in a usable state.  @xref{Signal
+Handling}, for more information about signals and handlers.
+
+The shell is supposed to take care of resetting the terminal modes
+when a process is stopped or continued; @pxref{Job Control}.  But some
+existing shells do not actually do this, so your program may need to
+establish handlers for job control signals that reset terminal modes.

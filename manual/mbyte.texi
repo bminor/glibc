@@ -1,0 +1,235 @@
+@node Extended Characters
+@chapter Extended Characters
+
+@strong{Incomplete:}  This section needs some examples.  Does the library
+now support any multbyte character sets, so I can test them?
+
+A number of languages use character sets that are larger than the range
+of values that can be stored in objects of type @code{char}.  Japanese
+and Chinese are probably the most familiar examples.
+
+The GNU C Library includes support for two mechanisms for dealing with
+extended character sets: multibyte characters and wide characters.  This
+chapter describes how to use these mechanisms, and the functions for
+converting between them.
+@cindex extended character sets
+
+@menu
+* Introduction to Extended Characters::	How extended character sets are
+					 are encoded.
+* Wide Character Type::			The @code{wchar_t} data type.
+* Multibyte Character Length::		Determining how many bytes make up
+					 a character.
+* Conversion of Extended Characters::	Conversion between multibyte and wide
+					 character representations.
+* Conversion of Extended Strings::	Conversion between multibyte and wide
+					 string representations.
+@end menu
+
+
+@node Introduction to Extended Characters
+@section Introduction to Extended Characters
+
+You can represent extended characters in either of two ways:
+
+@itemize @bullet
+@item
+@dfn{Multibyte characters} can be embedded in an array of @code{char}
+objects.  The way multibyte characters are marked depends on the
+particular encoding scheme and character set, but typically this is done
+by including special characters that act as shift markers in the string.
+It is possible that the string might contain @dfn{shift state}
+information, so that the interpretation of codes within the string is
+sensitive to the surrounding context, instead of having each extended
+character marked individually.
+@cindex multibyte characters
+@cindex shift state
+
+@item
+The @dfn{wide character} data type, @code{wchar_t}, has a range large
+enough to hold any character code.  Strings of extended characters can
+be represented as arrays of @code{wchar_t} objects.
+@cindex wide characters
+@end itemize
+
+Typically, you use the multibyte character representation as part of the
+external program interface, such as reading or writing text to files.
+However, it's usually easier to perform internal manipulations on
+strings containing extended characters on arrays of @code{wchar_t}
+objects, since the uniform representation makes it easier to step
+through the characters in the string, determine the length of the
+string, perform mapping operations, and the like.  The functions
+described in this section are provided to perform the conversions
+between the two representations.
+
+@cindex code, character
+@cindex character code
+In this chapter, the term @dfn{code} is used to refer to a single
+extended character object to emphasize the distinction from the
+@code{char} data type.  A character code can be represented either
+as a @code{wchar_t} value or as a multibyte character sequence.
+
+In both representations, a value of zero represents the null character
+and is used as a string terminator.
+
+The behavior of the functions in this chapter is affected by the
+@code{LC_CTYPE} attributes of the current locale (@pxref{Localization}).
+If you change these attributes, the internal shift state maintained by
+these functions can become confused, so it's not a good idea to change
+the locale while you are in the middle of processing a string.
+
+@strong{Incomplete:}  There should be a statement here about what 
+functions that operate on strings deal with multibyte strings correctly.
+For example, @code{printf} and friends do, but what about multibyte
+strings as file names, etc?
+
+@node Wide Character Type
+@section Wide Character Type
+
+The @code{wchar_t} data type is defined in the header file
+@file{<stddef.h>}.
+
+@deftp {Data Type} wchar_t
+This is the ``wide character'' type, an integer type whose range is
+large enough to represent all distinct values in any extended character
+set in the supported locales.  @xref{Localization}, for more information
+about locales, and @pxref{Extended Characters} to see how this type is
+used.@refill
+@end deftp
+
+
+@node Multibyte Character Length
+@section Multibyte Character Length
+
+To determine the length of the next multibyte character sequence in
+a string, use the @code{mblen} function.
+
+The @code{mblen} function and @code{MB_CUR_MAX} macro are declared in the
+header file @file{<stdlib.h>}.  The @code{MB_LEN_MAX} macro is declared
+in @file{<limits.h>}.
+
+@deftypefun int mblen (const char *@var{string}, size_t @var{size})
+The @code{mblen} function returns the number of bytes that make up the
+first multibyte character beginning at @var{string}; at most @var{size}
+bytes are examined.  If @var{string} does not begin with a valid
+multibyte character sequence, the return value is @code{-1}; @code{0} is
+returned if it is an empty string (that is, a string beginning with a
+null character).
+
+This function internally maintains information about the current shift
+state.  In order to initialize this state information, you should call
+@code{mblen} with a @var{string} argument that is a null pointer before
+beginning to step through a string.  In this case, the return value is
+nonzero if multibyte characters have state-dependent encodings, and zero
+otherwise.
+
+No library function calls @code{mblen}, so you don't have to worry about
+the shift state getting changed behind your back.
+@end deftypefun
+
+@defvr Macro MB_LEN_MAX
+This is the maximum length of a multibyte character for any supported
+locale.
+@end defvr
+
+@defvr Macro MB_CUR_MAX
+This macro expands into a (possibly non-constant) positive integer
+expression that is the maximum number of bytes in a multibyte character
+in the current locale.  The value is never greater than @code{MB_LEN_MAX}.
+@end defvr
+
+
+@node Conversion of Extended Characters
+@section Conversion of Extended Characters
+
+You can convert multibyte characters to wide characters with the
+@code{mbtowc} function.  The @code{wctomb} function does the reverse.
+These functions are declared in @file{<stdlib.h>}.
+
+@deftypefun int mbtowc (wchar_t *@var{result}, const char *@var{string}, size_t @var{size})
+The @code{mbtowc} (``multibyte to wide character'') function converts
+the first multibyte character beginning at @var{string} to its
+corresponding wide character code; at most @var{size} bytes are
+examined.  If @var{result} is not a null pointer, the resulting code is
+stored in the @code{wchar_t} object it points to.  The return value is
+the number of bytes that make up the multibyte character.  If
+@var{string} does not begin with a valid multibyte character sequence,
+@code{-1} is returned; @code{0} is returned if it is an empty string
+(that is, a string beginning with a null character).
+
+This function internally maintains information about the current shift
+state.  In order to initialize this state information, you should call
+@code{mbtowc} with a @var{string} argument that is a null pointer before
+beginning to step through a string.  In this case, the return value is
+nonzero if multibyte characters have state-dependent encodings, and zero
+otherwise.
+
+No library function calls @code{mbtowc}, so you don't have to worry about
+the shift state getting changed behind your back.
+@end deftypefun
+
+@deftypefun int wctomb (char *@var{string}, wchar_t @var{wchar})
+The @code{wctomb} (``wide character to multibyte'') function converts
+the wide character code @var{wchar} to its corresponding multibyte
+character sequence, and stores the result in the character array
+@var{string}.  At most @code{MB_CUR_MAX} characters are stored.  The
+return value is the number of bytes stored, or @code{-1} if @var{wchar} cannot
+be represented as a multibyte character sequence.
+
+This function internally maintains information about the current shift
+state.  In order to initialize this state information, you should call
+@code{wctomb} with a @var{string} argument that is a null pointer before
+beginning to step through a string.  With a null @var{string} argument,
+the return value is nonzero if multibyte characters have state-dependent
+encodings, and zero otherwise.
+
+Calling this function with a @var{wchar} argument of zero when
+@var{string} is not a null pointer also has the side-effect of returning
+the @code{wctomb} function to its initial shift state.
+
+No library function calls @code{wctomb}, so you don't have to worry about
+the shift state getting changed behind your back.
+@end deftypefun
+
+
+@node Conversion of Extended Strings
+@section Conversion of Extended Strings
+
+The @code{mbstowcs} function converts a string of multibyte characters
+to a wide character array.  The @code{wcstombs} function does the
+reverse.  These functions are declared in the header file
+@file{<stdlib.h>}.
+
+@deftypefun size_t mbstowcs (wchar_t *@var{wstring}, const char *@var{string}, size_t @var{size})
+The @code{mbstowcs} (``multibyte string to wide character string'')
+function converts the null-terminated string of multibyte characters
+@var{string} to an array of wide character codes, storing not more than
+@var{size} wide characters into the array beginning at @var{wstring}.
+The terminating null character counts towards the @var{size}, so if
+@var{size} is less than the actual number of character codes in
+@var{string}, no terminating null character is stored.
+
+The conversion of characters from @var{string} begins in the initial
+shift state.
+
+If an invalid multibyte character sequence is found, this function
+returns a value of @code{-1}.  Otherwise, it returns the number of wide
+characters stored in the array @var{wstring} (not including the
+terminating null character).
+@end deftypefun
+
+@deftypefun size_t wcstombs (char *@var{string}, const wchar_t @var{wstring}, size_t @var{size})
+The @code{wcstombs} (``wide character string to multibyte string'')
+function converts the null-terminated wide character array @var{wstring}
+into a string of multibyte characters, storing not more than @var{size}
+bytes into the string beginning at @var{string}.  The terminating null
+character counts towards the @var{size}, so if @var{size} is less than
+the actual number of character codes in @var{wstring}, no terminating
+null character is stored.  The conversion of characters to
+@var{string} begins in the initial shift state.
+
+If a code that does not correspond to a valid multibyte character is
+found, this function returns a value of @code{-1}.  Otherwise, the
+return value is the number of bytes stored in the array @var{string}
+(not including the terminating null character).
+@end deftypefun

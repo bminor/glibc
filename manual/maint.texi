@@ -1,0 +1,119 @@
+@node Maintenance
+@appendix Library Maintenance
+
+@menu
+* Installation::	How to configure, compile and install
+			 the GNU C library.
+* Bugs::		How to report bugs (if you want to get them fixed) and
+			 other troubles you may have with the GNU C Library.
+
+* ansidecl::		ANSI and traditional C compatibility.
+* Locale Writing::	Locale information writing.
+* Contributors::	Contributors to the GNU C Library.
+
+@end menu
+@node Installation
+@appendixsec How to Install the GNU C Library
+@cindex installation
+
+Installation of the GNU C Library is relatively simple.
+
+You will need the latest version of GNU @code{make}.
+If you do not have GNU @code{make}, life will be more difficult.
+For the time being, you're on your own.  Good luck.
+The author recommends porting GNU @code{make} to your system over trying
+to install the GNU C Library without it.  @strong{Really.}@refill
+
+To configure the GNU C Library for your system, run the script
+@file{config.libc} with @code{sh}.  You must give as an argument to the
+script a word describing your system.  If you give no argument, you will
+get a list of systems the script knows about.
+
+The configuration process will take a little while and print out a slew
+of messages telling you what it's doing.  These will probably not be
+very interesting to read, but you'll have nothing better to do while
+waiting for it to finish.
+
+If the configuration is successful, it will say @samp{Successfully
+configured}.  If the configuration failed, it will say @samp{Failed in
+configuration}.  If the configuration fails, something's wrong.  Figure
+out what it is and fix it or report it as a bug (@pxref{Bugs}).@refill
+
+After successful configuration, simply run @code{make} to make the
+library and related things.  If all goes well, you will end up with the
+library archive in the file @file{libc.a}, ANSI C versions of the header
+files in the @file{ansi/} subdirectory, and traditional C versions of
+the header files in the @file{trad/} subdirectory.  Install these in
+appropriate places.
+
+@node Bugs
+@appendixsec Reporting Bugs
+
+There are probably bugs in the GNU C Library.  If you report them,
+they will get fixed.  If you don't, noone will ever know about them
+and they will remain unfixed for all eternity, if not longer.
+
+To report a bug, first you must find it.  Hopefully, this will be
+the hard part.  Once you've found a bug, make sure it's really a
+bug.  A good way to do this is to see if the GNU C Library behaves
+the same way some other C library does.  If so, probably you are
+wrong and the libraries are right.  If not, one of the libraries is
+probably wrong.
+
+Once you're sure you've found a bug, try to narrow it down to the
+smallest test case that reproduces the problem.  In the case of a C
+library, you really only need to narrow it down to one library
+function call, if possible.  This should not be too difficult.
+
+The final step when you have a simple test case is to report the
+bug.  When reporting a bug, send your test case, the results you
+got, the results you expected, what you think the problem might be
+(if you've thought of anything), your system type, and the version
+of the GNU C Library which you are using.
+
+If you are not sure how a function should behave, and this manual
+doesn't tell you, it's a bug in the documentation.  Report that too!
+
+If you think you have found some way in which the GNU C Library does not
+conform to the ANSI and POSIX standards (@pxref{Standards and
+Portability}), that is definitely a bug.  Report it!@refill
+
+Send bug reports to Internet address @samp{bug-gnu-lib?@@prep.ai.mit.edu}
+or UUCP path @samp{mit-eddie!prep.ai.mit.edu!bug-gnu-lib?}.  If you have
+other problems with installation, use, or the documentation, please
+report those as well.
+
+@node ansidecl
+@appendixsec Compatibility Between ANSI C and Traditional C
+
+@node Locale Writing
+@appendixsec Writing Locale Information Structures
+
+
+@node Contributors,
+@appendixsec Contributors to the GNU C Library
+
+The GNU C Library was written almost entirely by Roland McGrath.
+Some parts of the library were contributed by other people.
+
+@itemize @bullet
+@item
+The @code{getopt} function was written by Richard Stallman
+and reworked by Roland McGrath.
+
+@item
+The random number generation functions @code{random}, @code{srandom},
+@code{setstate} and @code{initstate}, which are also the basis for the
+@code{rand} and @code{srand} functions, were written by Earl T. Cohen
+for the University of California at Berkeley and are copyrighted by the
+Regents of the University of California.  They have undergone minor
+changes to fit into the GNU C Library and to be ANSI conformant, but the
+functional code is Berkeley's.@refill
+
+@item
+The @code{qsort} function was written by Douglas C. Schmidt.
+
+@item
+The memory allocation functions @code{malloc}, @code{realloc} and
+@code{free} and related code were written by Michael J. Haertel.
+@end itemize

@@ -1,0 +1,1923 @@
+@node Signal Handling
+@chapter Signal Handling
+@pindex <signal.h>
+
+@cindex signals
+@dfn{Signals} are used by the operating system to abort or report
+information about exceptional situations to an executing program.  The
+GNU C Library defines a variety of signals to handle program errors and
+other system events that affect the behavior of your program.  Most of
+these events make it inadvisable or impossible for the program to
+proceed as usual, and therefore normally cause the operating system to
+abort the program.
+
+If you can anticipate the events that cause signals, you can trap them
+and override their default effects.  You can write a signal handler and
+tell the operating system to run it when a particular signal arrives.
+Finally, you can send a signal to another process, so that a parent
+process can abort a child, or two related processes can communicate and
+synchronize.
+
+@menu
+* Signal Concepts::		Introduction to the signal facilities.
+* Signal Names::		What the standard signals are and when
+				 they happen.
+* Specifying Signal Actions::	How to override the default behavior
+				 for a signal.
+* Defining a Signal Handler::	How to write a signal handler function.
+* Generating Signals::     	How to send a signal to a process.
+* Blocking Signals::		Making the system hold signals temporarily.
+* Waiting for a Signal::	Suspending your program until a signal arrives.
+@end menu
+
+
+@node Signal Concepts
+@section Signal Concepts
+
+A signal can be considered a software interrupt.  If anything happens
+during program execution that could make normal continuation a bad idea,
+the operating system sends a signal.  Common events that generate
+signals include:
+
+@itemize @bullet
+@item
+A program error such as dividing by zero or issuing an address outside
+the valid range.
+
+@item
+A user request to interrupt or terminate the program.  Most environments
+are set up to let a user suspend the program by typing @kbd{C-z}, or
+terminate it with @kbd{C-c}.  Whatever key sequence is used, the
+operating system sends the proper signal to interrupt the process.
+
+@item
+An event in the system that affects the program.  For instance, if a
+process that was reading data from a pipe terminates, the operating
+system sends a signal to the process that is writing to the other end of
+the pipe.
+
+@item
+A @code{kill} call from another process.  Signals are a limited but
+useful form of interprocess communication.
+@end itemize
+
+There are different kinds of signals defined to indicate each of these
+situations.  These are described in more detail in @ref{Signal Names}.
+
+The default action taken by a process when it receives most signals is
+to terminate the process.  You can also tell the process to ignore the
+signal, or tell it to call a function you provide when the signal is
+delivered.  In the latter case, it is said that the signal is
+@dfn{trapped} or @dfn{caught} by the handler.  For more details about
+how to specify actions to take when a signal arrives, @pxref{Specifying
+Signal Actions}.
+@cindex trapping signals
+@cindex catching signals
+
+When a process is terminated by a signal, its parent process can
+determine this by examining the termination status code reported by the
+@code{wait} or @code{waitpid} functions.  (This is discussed in more
+detail in @ref{Process Completion}.)  If a program you run from a shell
+is terminated by a signal, the shell typically provides some kind of
+error message.
+
+When a signal is @dfn{generated}, it is normally @dfn{delivered} to the
+process immediately.  However, you can @dfn{block} or delay delivery of
+signals.  If the action for a particular signal is something other than
+to ignore it, when a signal of that type is generated it remains
+@dfn{pending} until it is either unblocked (in which case it will be
+delivered to the process) or its action is set to be ignored (causing it
+to be discarded).  Signals that are ignored may be discarded immediately
+if they are blocked.  The facilities for controlling blocking of signals
+are discussed in @ref{Blocking Signals}.
+@cindex generation of signals
+@cindex delivery of signals
+@cindex pending signals
+@cindex blocked signals
+
+@node Signal Names
+@section Signal Names
+
+Symbolic constants naming the various kinds of signals are defined in
+the header file @file{<signal.h>}.  This section describes what conditions
+these signals are used for.
+
+The value of each of the macros that defines a signal is a positive
+integer constant.
+
+@menu
+* Program Error Signals::	Used to report serious program errors.
+* Termination Signals::		Used to interrupt and/or terminate the program.
+* Alarm Signals::		Used to indicate expiration of timers.
+* Miscellanous Signals::	Used to report various random conditions.
+* Job Control Signals:: 	Signals used to support job control.
+* Other Signals::		Implementations can support other signals.
+@end menu
+
+@node Program Error Signals
+@subsection Program Error Signals
+
+The following signals are generated when a serious program error is
+detected by the operating system or the computer itself.  In general,
+all of these signals are indications that your program is seriously
+broken in some way, and there's usually not much you can do to recover
+from these conditions.
+
+The default action for all of these signals is to cause the process to
+terminate.  If you block or ignore these signals or establish a handler
+for them that returns normally, your program will probably break
+horribly unless the signals were generated by @code{raise} or
+@code{kill} instead of a real program bug.
+
+@defvr Macro SIGFPE
+The @code{SIGFPE} signal reports a fatal arithmetic error.  Although
+the name is derived from ``floating-point exception'', this signal
+actually covers all arithmetic errors.  Typical exceptions include division
+by zero and overflow.  If your program gets mixed up and stores integer
+data in a location which is then used in a floating-point operation, you
+often get an ``invalid operation'' exception, because the processor
+cannot recognize the data as a floating-point number.
+@cindex exception
+@cindex floating-point exception
+
+Floating-point exceptions are a complicated subject because there are
+many types of exceptions with subtly different meanings, and the
+@code{SIGFPE} signal doesn't distinguish between them.  The @cite{IEEE
+Standard for Binary Floating-Point Arithmetic (ANSI/IEEE Std 754-1985)}
+defines various floating-point exceptions and requires conforming
+computer systems to report their occurrences.  However, this standard
+does not specify how the exceptions are reported, or what kinds of
+handling and control the operating system can offer to the programmer.
+If you're writing a library of numeric routines that has to be able to
+trap and deal with the different kinds of exceptions intelligently,
+you'll have to look at the documentation for your specific computer and
+operating system to find out how.
+@end defvr
+
+@defvr Macro SIGILL
+The name of this signal is derived from ``illegal instruction''; it
+means your program is trying to execute garbage or a privileged
+instruction.  This can either be because the executable file is
+corrupted, or because you are trying to execute data.  Some popular ways
+of getting into the latter situation are by passing an invalid object
+where a pointer to a function was expected, or by writing past the end
+of an automatic array (or similar problems with pointers to automatic
+variables) and corrupting control information on the stack, like a
+return address from a function call.
+@end defvr
+@cindex illegal instruction
+
+@defvr Macro SIGSEGV
+This signal is generated when a program tries to read or write outside
+the memory that is allocated for it.  (Actually, the signals only occur
+when the program goes far enough outside to be detected by the system's
+memory protection mechanism.)  The name is an abbreviation for ``segmentation
+violation''.
+
+The most common way of getting a @code{SIGSEGV} condition is by
+dereferencing a null or uninitialized pointer.  Another popular way of
+getting into a @code{SIGSEGV} situation is when you use a pointer to
+step through an array, but fail to check for the end of the array.
+@end defvr
+@cindex segment violation
+
+@comment this is a GNU extension.
+@defvr Macro SIGBUS
+This signal is generated when an invalid pointer is dereferenced.  Like
+@code{SIGSEGV}, this signal is typically the result of dereferencing a
+null or uninitialized pointer.  The difference between the two is that
+@code{SIGSEGV} indicates an illegal access to valid memory, while
+@code{SIGBUS} indicates an access to an invalid address.
+
+The name of this signal is an abbreviation for ``bus error''.
+@end defvr
+
+
+@node Termination Signals
+@subsection Termination Signals
+
+These signals are all used to tell a process to terminate, in one way
+or another.  They have different names because they're used for slightly
+different purposes, and you might want to establish different actions
+for each one.
+
+The (obvious) default action for all of these signals is to cause the
+process to terminate.
+
+@defvr Macro SIGABRT
+This signal is used to indicate abnormal program termination.  The
+@code{abort} function (@xref{Aborting a Program}) uses this signal.
+@end defvr
+@cindex abort signal
+
+@defvr Macro SIGHUP
+The @code{SIGHUP} (``hang-up'') signal is used to report that the user's
+terminal is disconnected, perhaps because the cable was pulled out or
+the telephone connection was broken.  For more information about this,
+@pxref{Control Modes}.
+
+This signal is also used to report the termination of the controlling
+process on a terminal to jobs associated with that session.  For more
+information, @pxref{Process Termination Details}.
+@end defvr
+@cindex hangup signal
+
+@defvr Macro SIGINT
+The @code{SIGINT} (``program interrupt'') signal is sent when the user
+wants to abort the program by pressing @kbd{C-c}, or whatever equivalent
+is recognized by the terminal as the INTR character.  @xref{Special
+Characters}, for information about terminal driver support.
+
+You might want to establish a handler for this signal in order to make
+your program terminate cleanly, performing whatever tidying-up actions
+are appropriate first.  For example, you might want to write out state
+information to a file, release locks on resources, and the like.
+@end defvr
+@cindex interrupt signal
+
+@defvr Macro SIGQUIT
+The @code{SIGQUIT} signal is similar to @code{SIGINT}, except that it's
+controlled by a different key --- the QUIT character, usually @kbd{C-\}
+--- and typically produces a core dump.  @xref{Special Characters}, for
+information about terminal driver support.
+@end defvr
+@cindex quit signal
+
+@defvr Macro SIGKILL
+The @code{SIGKILL} signal is used to cause immediate program termination.
+It cannot be caught or ignored, and is therefore always fatal.  It is
+also not possible to block this signal.
+@end defvr
+@cindex kill signal
+
+@defvr Macro SIGTERM
+The @code{SIGTERM} signal is a generic signal used to cause program
+termination.  Unlike @code{SIGKILL}, this signal can be blocked, caught,
+or ignored.
+@end defvr
+@cindex termination signal
+
+
+@node Alarm Signals
+@subsection Alarm Signals
+
+These signals are used to indicate the expiration of timers.
+@xref{Setting an Alarm}, for information about functions that cause
+these signals to be sent.
+
+The default behavior for these signals is to cause program termination.
+If you simply want an alarm to wake up your process, though, this is not
+very useful.  So, if you want to use these signals you should provide a
+signal handler for them.
+
+@defvr Macro SIGALRM
+This signal is typically used to indicate expiration of a timer that
+measures real or clock time.  It is used by the @code{alarm} function,
+for example.
+@end defvr
+@cindex alarm signal
+
+@comment This is derived from BSD.
+@defvr Macro SIGVTALRM
+This signal is typically used to indicate expiration of a timer that
+measures CPU time used by the current process.  The name is an abbreviation
+for ``virtual alarm''.
+@end defvr
+
+@comment This is derived from BSD.
+@defvr Macro SIGPROF
+This signal is typically used to indicate expiration of a profiling timer.
+@end defvr
+
+
+@node Miscellaneous Signals
+@subsection Miscellaneous Signals
+
+These signals are used to report various other conditions.  The default
+action for all of them is to cause the process to terminate.
+
+@defvr Macro SIGPIPE
+If you use pipes, you have to design your application so that one
+process has opened the pipe for reading before another starts writing.
+If the reading process never starts, or terminates unexpectedly, a write
+to the pipe causes the writing process to receive a @code{SIGPIPE}
+signal.
+
+This signal is really for the benefit of the @code{write} function, and
+you usually have no reason to trap it.  Instead, the writing process
+should always check the return value of the @code{write} call anyway,
+which catches this problem well as many others.  @xref{Low-Level
+Input/Output}, for more information about the @code{write} function.
+
+Pipes are discussed in more detail in @ref{Pipes and FIFOs}.
+@end defvr
+@cindex pipe signal
+@cindex broken pipe signal
+
+@defvr Macro SIGUSR1
+@end defvr
+@defvr Macro SIGUSR2
+The @code{SIGUSR1} and @code{SIGUSR2} signals are set aside for you to
+use any way you want.  They're useful for interprocess communication.
+Since these signals are normally fatal, you should write a signal handler
+to catch them and take the appropriate actions.
+
+There is an example showing the use of @code{SIGUSR1} and @code{SIGUSR2}
+in @ref{Signaling Another Process}.
+@end defvr
+@cindex user signals
+
+@node Job Control Signals
+@subsection Job Control Signals
+
+These signals are used to support job control.  If the implementation
+doesn't support job control, then these macros are defined but the
+signals themselves can't be raised or caught.
+
+You should generally leave these signals alone unless you really
+understand how job control works.  Go read about job control before
+you mess with them; @pxref{Job Control}.
+
+@defvr Macro SIGCHLD
+This signal is sent to a parent process whenever one of its child
+processes terminates or stops.
+
+The default behavior for this signal is for it to be ignored.  If
+you establish a handler for this signal while there are child processes
+that have terminated but not reported their status via @code{wait} or
+@code{waitpid} (@pxref{Process Completion}), it's unspecified whether
+your new handler applies to those processes or not.
+@end defvr
+@cindex child process signal
+
+@defvr Macro SIGCONT
+The @code{SIGCONT} signal is used to tell a stopped process to continue.
+The default behavior for this signal is to make the process continue if
+it is stopped, and for it to be ignored otherwise.
+@end defvr
+@cindex continue signal
+
+@defvr Macro SIGSTOP
+The @code{SIGSTOP} signal stops the process.  It cannot be caught or
+ignored.
+@end defvr
+@cindex stop signals
+
+@defvr Macro SIGTSTP
+The @code{SIGTSTP} signal is an interactive stop signal.  Unlike
+@code{SIGSTOP}, this signal can be caught or ignored.  Typically, you
+trap this signal only if you have a special need to leave files or
+system tables in a secure state when a process is stopped.
+
+This signal is generated when the user types the SUSP character
+(normally @kbd{C-z}).  For more information about terminal driver
+support, @pxref{Special Characters}.
+@end defvr
+
+@defvr Macro SIGTTIN
+A process cannot read from the the user's terminal while it is running 
+as a background job.  When any process in a background job tries to
+read from the terminal, all of the processes in the job are sent a
+@code{SIGTTIN} signal.  The default action for this signal is to
+stop the process.  For more information about how this interacts with
+the terminal driver, @pxref{Access to the Controlling Terminal}.
+@end defvr
+
+@defvr Macro SIGTTOU
+This is similar to @code{SIGTTIN}, but is used when a process in a
+background job attempts to write to the terminal.  Again, the default
+action is to stop the process.
+@end defvr
+
+While a process is stopped, no more signals can be delivered to it until
+it is continued, except @code{SIGKILL} signals and (obviously)
+@code{SIGCONT} signals.  The @code{SIGKILL} signal always causes
+termination of the process and can't be blocked or ignored.  You can
+block or ignore @code{SIGCONT}, but it always causes the process to
+be continued anyway if it is stopped.  Sending a @code{SIGCONT} signal
+to a process causes any pending stop signals for that process to be
+discarded.  Likewise, any pending @code{SIGCONT} signals for a process
+are discarded when it receives a stop signal.
+
+The default action for a process that is a member of an orphaned
+process group (@pxref{Process Termination Details}) that receives a
+@code{SIGTSTP}, @code{SIGTTIN}, or @code{SIGTTOU} signal is not to stop
+the process.  This makes sense; if a process is stopped by one of these
+signals, it must be continued by the shell, and if a process group has
+been orphaned, that means there's no shell around to continue the
+processes.  Instead, the signal might be ignored, or the operating
+system might turn the stop signal into another signal like @code{SIGHUP}.
+
+@node Other Signals
+@subsection Other Signals
+
+Individual operating systems might support additional signals.  The ANSI
+C standard reserves identifiers beginning with @samp{SIG} followed by an
+uppercase letter for the names of signals.  You should consult the
+documentation or header files for your particular operating system to
+find out about the specific signals it supports.
+
+For example, some implementations support extra signals which correspond
+to hardware traps.  Some other kinds of signals commonly supported are
+used to implement different kinds of timers, limits on CPU time or file
+system usage, asynchronous changes to terminal configuration, and the
+like.  And, an implementation might define some signal names that are
+just synonyms for other signals.
+
+You can generally assume that the default action (or the action set up
+by the shell) for implementation-defined signals is reasonable, and not
+worry about them yourself.  In fact, it's really a bad idea to ignore or
+block signals you don't know anything about, or try to establish some
+catch-all handler to take care of all random signals delivered to your
+program.
+
+
+@node Specifying Signal Actions
+@section Specifying Signal Actions
+@cindex signal actions
+
+The simplest way to change the default action for a signal is to use the
+@code{signal} function.  The GNU Library also implements the more
+complicated @code{sigaction} facility.  This section describes both
+facilities and gives suggestions on which to use when.
+
+@menu
+* Basic Signal Handling::	The simple @code{signal} function.
+* Advanced Signal Handling::	The more powerful @code{sigaction} function.
+* Sigaction Function Example::	An example of using the sigaction function.
+* Sigaction Flags::		Specifying options for signal handling.
+* Initial Signal Actions::	How programs inherit signal actions.
+@end menu
+
+@node Basic Signal Handling
+@subsection Basic Signal Handling
+
+The @code{signal} function provides a simple interface for establishing
+an action for a particular signal.  The function and associated macros
+are declared in the header file @file{<signal.h>}.
+
+@deftp {Data Type} __sighandler_t
+This is the type of signal handler functions.  Signal handlers take one
+integer argument specifying the signal number, and have return type
+@code{void}.  So, you should define handler functions like:
+
+@example
+void @var{handler} (int @var{signum})
+@end example
+@end deftp
+
+@deftypefun __sighandler_t signal (int @var{signum}, __sighandler_t @var{action})
+The @code{signal} function establishes @var{action} as the action for
+the signal @var{signum}.
+
+The first argument, @var{signum}, identifies the signal whose behavior you
+want to control, and should be one of the signal names listed in
+@ref{Signal Names}.  
+
+The second argument, @var{action}, is a pointer to the function you want
+to install as its handler.  This can be one of the following:
+
+@itemize @bullet
+@item 
+@code{SIG_DFL}, to specify the default action for the particular signal.
+The default actions are as described in @ref{Signal Names}.
+
+If you set the action for a signal to @code{SIG_DFL} and the default
+action is to ignore that signal, then any pending signals of that type
+are discarded (even if they are still blocked).
+@cindex default action for a signal
+
+@item
+@code{SIG_IGN}, to specify that the signal should be ignored.
+
+It's not really a good idea to ignore most kinds of signals.  For one
+thing, you cannot specify that the @code{SIGKILL} or @code{SIGSTOP}
+signals should be ignored at all.  While you can have your program
+ignore program error signals like @code{SIGSEGV}, doing so is not going
+to fix the bug in your program.  And, it is usually considered very
+user-unfriendly to ignore interactive signals like @code{SIGINT},
+@code{SIGQUIT}, and @code{SIGTSTP}.
+@cindex ignore action for a signal
+
+As an alternative to ignoring a signal completely, it might make more
+sense to block it temporarily.  @xref{Blocking Signals}.
+
+@item 
+A pointer to a function you write yourself.  For more information about
+defining signal handler functions, @pxref{Defining a Signal Handler}.
+@end itemize
+
+The @code{signal} function normally returns the action for the specified
+@var{signum} that was previously in effect.  You can save this value and
+restore it later by calling @code{signal} again.
+
+If @code{signal} can't honor the request (perhaps because the
+implementation doesn't support the signal, or the signal can't be
+caught), it returns @code{SIG_ERR} instead, and sets @code{errno} to a
+positive value.
+@end deftypefun
+
+@defvr Macro SIG_DFL
+The value of this macro is an object of the appropriate type for use as
+the @var{action} argument to the @code{signal} function.  It tells the
+system to use the default handling for the signal.
+@end defvr
+
+@defvr Macro SIG_IGN
+The value of this macro is an object of the appropriate type for use as
+the @var{action} argument to the @code{signal} function.  It tells the
+system to ignore the signal.
+@end defvr
+
+@defvr Macro SIG_ERR
+The value of this macro is an object of the appropriate type for the
+return value from the @code{signal} function.  It is used as the return
+value from @code{signal} when an error is detected.
+@end defvr
+
+Implementations might define additional macros for built-in signal
+actions that are suitable as a @var{action} argument to @code{signal},
+besides @code{SIG_IGN} and @code{SIG_DFL}.  Identifiers whose names
+begin with @samp{SIG_} followed by an uppercase letter are reserved for
+this purpose.
+
+Here's a simple example of using the @code{signal} function.  The
+following code causes @code{SIGALRM} signals to be ignored, so that the
+program can complete some critical operation that shouldn't be
+interrupted by receipt of an alarm signal.  The variable
+@code{old_action} stores whatever handler was in effect at the time.  At
+the end of the operation, the program restores this handler.
+
+@example
+#include <signal.h>
+
+void (*old_action)(int sig);
+
+old_action = signal (SIGALRM, SIG_IGN);  /* @r{Ignore alarms.} */
+/* critical operations here */
+signal (SIGALRM, old_action);            /* @r{Allow alarms again.} */
+@end example
+
+
+@node Advanced Signal Handling
+@subsection Advanced Signal Handling
+
+The @code{sigaction} function has the same basic effect as
+@code{signal}: to specify how a signal should be handled by the process.
+However, @code{sigaction} offers more control and information, at the
+expense of more complexity.
+
+This function is declared in @file{<signal.h>}.
+
+@deftp {Data Type} {struct sigaction}
+Structures of type @code{sigaction} are used to specify signal actions
+for the @code{sigaction} function.  It contains at least the following
+members:
+
+@table @code
+@item void (*sa_handler)(int)
+This is used in the same way as the @var{action} argument to the
+@code{signal} function.  The value can be @code{SIG_DFL},
+@code{SIG_IGN}, or a function pointer.  @xref{Basic Signal Handling}.
+
+@item sigset_t sa_mask
+This specifies a set of signals to be blocked while the handler runs.
+This is explained later in this document; @pxref{Blocking Signals in a
+Handler}.
+
+@item int sa_flags
+This is used to specify various flags which can affect the behavior of 
+the signal.  These are described in more detail in @ref{Sigaction Flags}.
+@end table
+@end deftp
+
+@deftypefun int sigaction (int @var{signum}, const struct sigaction @var{*action}, struct sigaction @var{*old_action})
+The @var{action} argument is used to set up a new action for the signal
+@var{signum}, while the @var{old_action} argument is used to return
+information about the action previously associated with this symbol.
+(In other words, @var{old_action} has the same purpose as the
+@code{signal} function's return value --- you can check to see what the
+old action in effect for the signal was, and restore it later if you
+want.)
+
+Either @var{action} or @var{old_action} can be a null pointer.  If
+@var{old_action} is a null pointer, this simply suppresses the return
+of information about the old action.  If @var{action} is a null pointer,
+the action associated with the signal @var{signum} is unchanged; this
+allows you to inquire about how a signal is being handled without changing
+that handling.
+
+The return value from @code{sigaction} is zero if it succeeds, and
+@code{-1} on failure.  The following @code{errno} error conditions are
+defined for this function:
+
+@table @code
+@item EINVAL
+The @var{signum} argument is not valid, or you are trying to
+trap or ignore @code{SIGKILL} or @code{SIGSTOP}.
+@end table
+@end deftypefun
+
+It's possible to use both the @code{signal} and @code{sigaction}
+functions within a single program, but you have to be careful because
+they can interact in slightly strange ways.
+
+In particular, since the @code{sigaction} function specifies more
+information than the @code{signal} function, the return value from
+@code{signal} might not be usable to restore an action originally
+established by @code{sigaction}.
+
+You can rely on the old action structure returned by @code{sigaction}
+being restorable by another call to @code{sigaction}, even if the action
+was originally established by @code{signal}.  However, the function
+returned as the @code{sa_handler} member of this structure might not be
+the same as the @var{action} function specified as an argument to
+@code{signal}, and might not be usable by itself as an argument to
+@code{signal}.
+
+So, you're better off using one or the other of the mechanisms
+consistently within a single program.  
+
+@strong{Portability Note:} The basic @code{signal} function is a feature
+of ANSI C, while @code{sigaction} is part of the POSIX.1 standard.  If
+you are concerned about portability to non-POSIX systems, then you
+should use the @code{signal} function instead.
+
+@node Sigaction Function Example
+@subsection Sigaction Function Example
+
+In @ref{Basic Signal Handling}, this short example was used to illustrate
+the use of the @code{signal} function to cause @code{SIGABRT} signals
+to be ignored temporarily:
+
+@example
+void (*old_action)(int sig);
+
+old_action = signal (SIGALRM, SIG_IGN);  /* @r{Ignore alarms.} */
+/* @r{Critical operations here.} */
+signal (SIGALRM, old_action);            /* @r{Allow alarms again.} */
+@end example
+
+Now let's see how the same thing is done with the @code{sigaction}
+function:
+
+@example
+struct sigaction new_action, old_action;
+sigset_t block_mask;
+
+/* @r{Set up the structure to specify the new action.} */
+sigfillset (&block_mask);
+
+new_action.sa_handler = SIG_IGN;
+new_action.sa_mask = block_mask;
+new_action.sa_flags = 0;
+
+sigaction (SIGABRT, &new_action, &old_action);
+/* @r{Critical actions here.} */
+sigaction (SIGABRT, &old_action, NULL);
+@end example
+
+The activities on @code{block_mask} are described later; @pxref{Blocking
+Signals}.  The program just loads the @code{new_action} structure with
+the desired parameters and passes it in the @code{sigaction} call.
+
+In the first call to @code{sigaction}, we want to save the existing
+action for the signal, so it can be restored later.  So a pointer to the
+@code{old_action} structure is passed as the third argument.  On the
+second call, we don't need any information returned about the existing
+action, so a null pointer is passed instead.
+
+Here is another example.  It retrieves information about the current
+action for @code{SIGINT} without changing that action.
+
+@example
+struct sigaction query_action;
+
+if (sigaction (SIGINT, NULL, &query_action) < 0)
+  /* @r{@code{sigaction} returns -1 in case of error} */ 
+else if (query_action.sa_handler == SIG_DFL)
+  /* @r{@code{SIGINT} is handled in the default, fatal manner} */
+else if (query_action.sa_handler == SIG_IGN)
+  /* @r{@code{SIGINT} is ignored} */
+else
+  /* @r{A programmer-defined signal handler is in effect} */
+@end example
+
+@node Sigaction Flags
+@subsection Sigaction Flags
+
+This @code{sa_flags} member of the @code{sigaction} structure is a
+catch-all for special features.  Most of the time, you can simply assign
+a value of @code{0} to this field.
+
+The value of @code{sa_flags} is interpreted as a bit mask.  Thus, you
+can choose the flags you want to have set for some reason, OR those
+flags together, and assign them to the @code{sa_flags} member of your
+@code{sigaction} structure.
+
+These macros are defined in the header file @file{<signal.h>}.
+
+@defvr Macro SA_NOCLDSTOP
+The value of this macro is an integer constant that can be used as a
+flag for @code{sa_flags} when setting up an action for the
+@code{SIGCHLD} signal.  When the flag is set, the system delivers the
+signal for a terminated child process but not for one that is stopped.
+By default, @code{SIGCHLD} is delivered for both terminated children and
+stopped children.
+@end defvr
+
+@comment this is a BSD extension
+@defvr Macro SA_ONSTACK
+If this flag is set, the system delivers the signal to the process on
+the signal stack.
+
+@strong{Incomplete:}  This is specified with the @code{sigstack} function.
+@end defvr
+
+@comment this is a BSD extension
+@defvr Macro SA_RESTART
+If this flag is set, system calls interrupted by a signal return with
+an @code{EINTR} error instead of restarting.
+@end defvr
+
+
+
+@node Initial Signal Actions
+@subsection Initial Signal Actions
+
+When a new process is created (@pxref{Creating a Process}), it inherits
+handling of signals from its parent process.  However, when you load a
+new process image using the @code{exec} function (@pxref{Executing a
+File}), any signals that you've defined your own handlers for revert to
+their @code{SIG_DFL} handling.  (If you think about it a little, this
+makes sense; the handler functions from the old program are specific to
+that program, and aren't even present in the address space of the new
+program image.)  Of course, the new program can establish its own
+handlers.
+
+When a program is run by a shell, the shell normally sets the initial
+actions for the child process to @code{SIG_DFL} or @code{SIG_IGN}, as
+appropriate.  It's a good idea to check to make sure that the shell has
+not set up an initial action of @code{SIG_IGN} before you establish your
+own signal handlers.
+
+
+@node Defining a Signal Handler
+@section Defining a Signal Handler
+
+This section describes how to write a signal handler function that can
+be established with the @code{signal} or @code{sigaction} functions.
+
+A signal handler is just a function that you compile together with the
+rest of the program.  Instead of directly invoking the function, you use
+@code{signal} or @code{sigaction} to tell the operating system to call
+it when a signal arrives.  This is known as @dfn{enabling} or
+@dfn{arming} the handler.
+@cindex enabling a signal handler
+@cindex arming a signal handler
+@cindex signal handler function
+
+You need to take special care in writing handler functions because they
+can be called asynchronously.  That is, a handler might be called at any
+point in the program, unpredictably.  If two signals arrive during a
+very short interval, the operating system might even restart the handler
+while it is handling the first signal!  This section describes what your
+handler should do, and what you should avoid.
+
+@menu
+* Signal Handler Example::		An example.
+* Handling Multiple Signals::		What happens if another signal arrives
+				 	 when your handler function is running.
+* Restrictions on Handler Functions::   What handlers can and can't do.
+@end menu
+
+@node Signal Handler Example
+@subsection Signal Handler Example
+
+There are two basic strategies you can use in signal handler functions:
+
+@itemize @bullet
+@item
+You can have the handler function note that the signal arrived by
+tweaking some global data structures, and then return normally.
+
+@item
+You can have the handler function terminate the program or transfer
+control to a point where it can recover from the error.
+@end itemize
+
+Handlers which return normally are usually only useful for signals such
+as @code{SIGALRM} and other interprocess communication signals.  This
+isn't a reliable technique for handling program error signals like
+@code{SIGFPE} and @code{SIGSEGV}, because the behavior of the program
+when the handler function returns is not defined after a program error.
+
+Typically, a handler that returns normally tweaks some global data
+structures that are examined synchronously from time to time during
+normal execution of the program.
+
+Here is a simple example of such a program.  It executes the body of
+the loop until it has noticed that a @code{SIGALRM} signal has arrived.
+This technique is useful because it allows the iteration in progress
+when the signal arrives to complete before the program exits.
+
+@example
+#include <signal.h>
+#include <stdlib.h>
+
+/* @r{This flag controls termination of the main loop.} */
+
+volatile sig_atomic_t keep_going = 1;
+
+
+/* @r{The signal handler just clears the flag and re-enables itself.}
+ * @r{Actually, for this program re-enabling the handler isn't necessary,}
+ * @r{since only one alarm signal has to be caught in order to cause it}
+ * @r{to terminate.}
+ */
+
+void catch_alarm (int sig)
+@{
+  keep_going = 0;
+  signal (sig, catch_alarm);
+@}
+
+main (void)
+@{
+  
+  /* @r{Establish a handler for @code{SIGALRM} signals.} */
+  signal (SIGALRM, catch_alarm);
+
+  /* @r{Set an alarm to go off in a little while.}  */
+  alarm (2);
+
+  /* @r{Check the flag once in a while to see when to quit.} */
+  while (keep_going)
+    do_stuff ();
+  exit (EXIT_SUCCESS);
+@}      
+@end example
+
+Handler functions that cause a nonlocal transfer of control or program
+termination are typically used to cause orderly cleanup or recovery from
+program error signals and interactive interrupts.
+
+Process termination within a handler is typically performed by resending
+the signal.  For example, GNU Emacs sets up a handler for most fatal
+signals that looks something like:
+
+@example
+int fatal_error_in_progress = 0;
+
+void fatal_error_signal (int sig)
+@{
+
+  /* @r{Immediately set the action for this signal back to the default.}
+   * @r{This will prevent the handler from being invoked recursively if}
+   * @r{another fatal signal happens while the handler is executing.}
+   */
+  signal (sig, SIG_DFL);
+
+  /* @r{Since this handler is established for more than one kind of signal, }
+   * @r{it might still get invoked recursively by delivery of some other kind}
+   * @r{of signal.  Use a static variable to keep track of that.}
+   */
+
+  if (fatal_error_in_progress)
+    raise (sig);
+  fatal_error_in_progress = 1;
+
+  /* @r{Now do the clean up actions:}
+   * @r{- reset terminal modes}
+   * @r{- kill child processes}
+   * @r{- auto save buffers being edited}
+   * @r{- remove lock files}
+   */
+  @dots{}
+
+  /* @r{Now resend the signal.  Since we set the handling for it back to}
+   * @r{its default, this will cause the program to terminate.  We could}
+   * @r{just call exit() or abort() here, but resending the signal will}
+   * @r{set the return status from the process correctly.}
+   */
+  raise (sig);
+@}
+@end example
+
+You can do a nonlocal transfer of control out of a signal handler using
+the @code{setjmp} and @code{longjmp} facilities (@pxref{Non-Local
+Jumps}).  However, if you do this, you must take care in setting up the
+return point.  For example, if you want to make sure that global data
+structures are in a consistent state after doing a @code{longjmp} out of
+a signal handler, you must either re-initialize them or else ensure that
+your signal handler won't be invoked while they are in an inconsistent
+state by blocking signals around the critical sections of your program.
+@xref{Blocking Signals}.
+
+@node Handling Multiple Signals
+@subsection Handling Multiple Signals
+
+What happens if another signal arrives when your signal handler function
+is running?
+
+In the GNU system, when a handler for a particular signal is invoked,
+that signal is blocked until the handler returns.  That means that if
+two signals of the same kind arrive close together, the second one will
+be held until the first has been handled.
+
+However, your handler can still be interrupted by delivery of another
+kind of signal.  To avoid this, you can use the @code{sa_mask} member of
+the action structure passed to @code{sigaction} to explicitly specify
+which signals should be blocked while the signal handler runs.  These
+signals are in addition to the signal for which the handler was invoked,
+and any other signals that are normally blocked by the process.
+@xref{Blocking Signals in a Handler}.
+
+If more than one signal of the same type is delivered to your process
+before your signal handler has a chance to be invoked at all, your
+handler may only be invoked once, as if only a single signal had
+arrived.  This situation can arise when the signal is blocked, or in a
+multiprocessing environment where the system is busy running some other
+processes while the signals are delivered.  This means, for example,
+that you cannot reliably use a signal handler to count signals.
+
+@strong{Portability Note:} In System V Unix, handlers established with
+@code{signal} behave somewhat differently.  Before calling the handler
+function, the action for the signal is set back to @code{SIG_DFL}.  This
+means that the handler must re-enable itself before exiting and do any
+signal blocking explicitly.  It also means that there is still a
+possibility that another signal could arrive in the moment before you've
+had a chance to alter the handling of the signal.  The ANSI C standard
+permits this behavior, but you do not need to worry about this if you
+are using only the GNU system.
+
+
+@node Restrictions on Handler Functions
+@subsection Restrictions on Handler Functions
+
+Handler functions usually don't do very much.  The recommended behavior
+is to just have the handler set an external variable that the program
+checks regularly, and leave all serious work to the program.  This is
+because the handler can be called at asynchronously, at unpredictable
+times --- perhaps in the middle of a system call, or even between the
+beginning and the end of a floating-point operation that requires
+multiple instructions.  The data structures being manipulated might
+therefore be in an inconsistent state when the handler function is 
+invoked.
+
+This means you have to be very careful about what you do in a signal
+handler.
+
+@itemize @bullet
+@item
+Do not call any functions, including those from the standard libraries,
+unless you are sure they are @dfn{reentrant} with respect to signals.
+@cindex reentrant functions
+
+The most usual reason why a function fails to be reentrant is the use of
+static or global data structures.  As an example of what can go wrong,
+suppose that the sample program prints a message through a @code{printf}
+call in the signal handler.  Suppose also that @code{printf} and
+@code{fprintf} share some common internal data structures, and that the
+main program was in the middle of an @code{fprintf} call when the signal
+was delivered.  Both the signal handler's message and the program's data
+could end up getting corrupted.
+
+The following functions from the GNU C Library are guaranteed to be
+reentrant:
+
+@example
+Put the table here!
+@end example
+
+@item
+If your handler calls any library functions that can modify the value of
+@code{errno}, it should save and restore the original value of
+@code{errno} before returning normally.  This prevents errors that
+occur within the signal handler from being confused with errors from
+system calls at the point the program is interrupted to run the handler.
+
+@item
+If your handler needs to access any global variables from your program,
+those variables must be declared @code{volatile}.  This tells the 
+compiler that the value of the variable might change asynchronously,
+and keeps it from making some kinds of optimizations that would be
+invalidated by such modifications.
+
+@item
+The only data type that can be accessed as an atomic operation is the
+@code{sig_atomic_t} type.  Accesses to other kinds of objects might be
+interruptible by a signal; the data might be in an inconsistent state
+when the handler function is called.  There are similar problems if your
+handler uses a set of variables which are supposed to be updated
+together.
+
+The way you can get around this problem is by blocking all signals that
+have handlers that might access the variables around all the parts of
+the program that manipulate the variables, including in the handlers
+themselves.  @xref{Blocking Signals}, for information on how to do this.
+@end itemize
+
+@deftp {Data Type} sig_atomic_t
+This is an integer data type.  It identifies a type of object that can
+be accessed as an atomic entity, even in the presence of asynchronous
+interrupts.
+@end deftp
+
+
+@node Generating Signals
+@section Generating Signals
+
+Besides signals that are generated as a result of a hardware trap or
+interrupt, your program can explicitly send signals to itself or to
+another process.
+
+@menu
+* Raising a Signal::		Send yourself any desired signal.
+* Setting an Alarm::		Send yourself SIGALRM after a specified time.
+* Signaling Another Process::	Send a signal to another process.
+@end menu
+
+
+@node Raising a Signal
+@subsection Raising a Signal
+
+A process can send itself a signal with the @code{raise} function.
+This function is declared in @file{<signal.h>}.
+
+@deftypefun int raise (int @var{signum})
+The @code{raise} function sends the signal @var{signum} to the calling
+process.  It returns zero if successful and a nonzero value if it fails.
+About the only reason for failure would be if the value of @var{signum}
+is invalid.
+@end deftypefun
+
+One convenient use for @code{raise} is to reproduce the default behavior
+of a signal that you have trapped.  For instance, suppose a user of your
+program types the SUSP character (usually @kbd{C-z}; @pxref{Special
+Characters}) to send it an interactive stop stop signal
+(@code{SIGTSTP}), and you want to clean up some internal data buffers
+before stopping.  You might set this up like:
+
+@example
+#include <signal.h>
+
+/* @r{When a stop signal arrives, set the action back to the default}
+ * @r{and then resend the signal after doing cleanup actions.}
+ */
+
+void tstp_handler (int sig)
+@{
+  signal (SIGTSTP, SIG_DFL);
+  /* @r{Do cleanup actions here.} */
+  @dots{}
+  raise (SIGTSTP);
+@}
+
+/* @r{When the process is continued again, restore the signal handler.}
+ */
+
+void cont_handler (int sig)
+@{
+  signal (SIGCONT, cont_handler);
+  signal (SIGTSTP, tstp_handler);
+@}
+
+/* @r{Enable both handlers during program initialization.}
+ */
+
+main (void)
+@{
+  signal (SIGCONT, cont_handler);
+  signal (SIGTSTP, tstp_handler);
+  @dots{}
+@}
+@end example
+
+
+@node Setting an Alarm
+@subsection Setting an Alarm
+
+The @code{alarm} and @code{setitimer} functions provide a mechanism for
+a process to interrupt itself at some future time.
+
+@cindex interval timer
+Each process has three interval timers available to it:
+
+@itemize @bullet
+@item 
+A real-time timer that counts clock time.  This timer sends a @code{SIGALRM}
+signal to the process when it expires.
+@cindex real-time timer
+
+@item 
+A virtual timer that counts CPU time used by the process.  This timer
+sends a @code{SIGVTALRM} signal to the process when it expires.
+@cindex virtual timer
+
+@item 
+A profiling timer that counts both CPU time used by the process,
+and CPU time spent in system calls on behalf of the process.
+This timer sends a @code{SIGPROF} signal to the process when it expires.
+@cindex profiling timer
+@end itemize
+
+The @code{setitimer} function is the primary means for setting an alarm.
+This facility is declared in the header file @file{<sys/time.h>}.  The
+@code{alarm} function, declared in @file{<unistd.h>}, provides a somewhat
+simpler interface for setting the real-time timer.
+
+@deftp {Data Type} {struct itimerval}
+This structure is used to specify when a timer should expire.  It contains
+the following members:
+@table @code
+@item struct timeval it_interval
+This is the interval between successive timer interrupts.  If zero, the
+alarm will only be sent once.
+
+@item struct timeval it_value
+This is the interval to the first timer interrupt.  If zero, the alarm is
+disabled.
+@end table
+
+The @code{struct timeval} data type is described in @ref{High-Resolution
+Calendar}.
+@end deftp
+
+@deftypefun int setitimer (int @var{which}, struct itimerval *@var{old}, struct itimerval *@var{new})
+The @code{setitimer} function sets the timer specified by @var{which} 
+according to @var{new}.  The @var{which} argument can have a value of
+@code{ITIMER_REAL}, @code{ITIMER_VIRTUAL}, or @code{ITIMER_PROF}.
+
+If @var{old} is not a null pointer, @code{setitimer} returns information
+about any previous unexpired timer of the same kind in the structure it
+points to.  You can only have one timer of each kind set at any given
+time.  When you set a timer that has not yet expired, that timer is
+simply reset to the new value.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EINVAL
+The timer interval was too large.
+@end table
+@end deftypefun
+
+@deftypefun int getitimer (int @var{which}, struct itimerval *@var{old})
+The @code{getitimer} function stores information about the timer specified
+by @var{which} in the structure pointed at by @var{old}.
+
+The return value and error conditions are the same as for @code{setitimer}.
+@end deftypefun
+
+@defvr Macro ITIMER_REAL
+This macro can be used as the @var{which} argument to the
+@code{setitimer} and @code{getitimer} functions to specify the real-time
+timer.
+@end defvr
+
+@defvr Macro ITIMER_VIRTUAL
+This macro can be used as the @var{which} argument to the
+@code{setitimer} and @code{getitimer} functions to specify the virtual
+timer.
+@end defvr
+
+@defvr Macro ITIMER_PROF
+This macro can be used as the @var{which} argument to the
+@code{setitimer} and @code{getitimer} functions to specify the profiling
+timer.
+@end defvr
+
+@strong{Incomplete:}  In @file{<sys/time.h>}, the @var{which} argument
+is given as an @code{enum}.  Does it matter?
+
+@deftypefun {unsigned int} alarm (unsigned int @var{seconds})
+The @code{alarm} function sets the real-time timer to expire in
+@var{seconds} seconds.  If you want to cancel any existing alarm, you
+can do this by calling @code{alarm} with a @var{seconds} argument of
+zero.
+
+The return value indicates how many seconds remain before the previous
+alarm would have been sent.  If there is no previous alarm, @code{alarm}
+returns zero.
+@end deftypefun
+
+The @code{alarm} function could be defined in terms of @code{setitimer}
+similar to:
+
+@example
+unsigned int alarm (unsigned int seconds)
+@{
+  struct itimerval old, new;
+  new.it_interval.tv_usec = 0;
+  new.it_interval.tv_sec = 0;
+  new.it_value.tv_usec = 0;
+  new.it_value.tv_sec = (long int) seconds;
+  if (setitimer (ITIMER_REAL, &new, &old) < 0)
+    return 0;
+  else
+    return old.it_value.tv_sec;
+@}
+@end example
+
+There is an example showing the use of the @code{alarm} function in
+@ref{Signal Handler Example}.
+
+You should usually establish a handler for the appropriate alarm signal
+using @code{signal} or @code{sigaction} before issuing a call to
+@code{setitimer} or @code{alarm}.  Otherwise, your program will probably
+be terminated, since that is the default action for the alarm signals.
+
+If you simply want your process to go to sleep until the alarm signal
+arrives, it may be more appropriate to use the @code{sleep} function.
+@xref{Waiting for a Signal}.
+
+You shouldn't count on the signal arriving precisely when the timer
+expires.  In a multiprocessing environment there is typically some
+amount of delay involved.
+
+@strong{Portability Note:} The @code{setitimer} and @code{getitimer}
+functions are derived from BSD Unix, while the @code{alarm} function is
+specified by the POSIX.1 standard.  The advantage of @code{setitimer}
+over @code{alarm} is that it lets you specify time intervals with a
+finer granularity.
+
+@node Signaling Another Process
+@subsection Signaling Another Process
+
+The @code{kill} function can be used to send a signal to another process.
+In spite of its name, it can be used for a lot of things other than
+causing a process to terminate.  Some examples of situations where you
+might want to send signals between processes are:
+
+@itemize @bullet
+@item
+A parent process starts a child to perform a task --- perhaps having the
+child running an infinite loop --- and then terminates the child when
+the task is no longer needed.
+
+@item
+A process executes as part of a group, and needs to terminate or notify
+the other processes in the group when an error or other event occurs.
+
+@item
+Two processes need to synchronize while working together.
+@end itemize
+
+This section assumes that you know a little bit about how processes
+work.  For more information on this subject, @pxref{Processes}.
+
+The @code{kill} function is declared in @file{<signal.h>}.
+
+@deftypefun int kill (pid_t @var{pid}, int @var{signum})
+The @code{kill} function sends the signal @var{signum} to the process
+or process group specified by @var{pid}.  Besides the signals listed in
+@ref{Signal Names}, @var{signum} can also have a value of zero to
+check the validity of the @var{pid}.
+
+The @var{pid} specifies the process or process group to receive the
+signal:
+
+@table @code
+@item @var{pid} > 0
+The process whose identifier is @var{pid}.
+
+@item @var{pid} == 0
+All processes in the same process group as the sender.  The sender
+itself does not receive the signal.
+
+@item @var{pid} < -1
+The process group whose identifier is the absolute value of
+@var{pid}.
+
+@item @var{pid} == -1
+If the process is privileged, send the signal to all processes except
+for some special system processes.  Otherwise, send the signal to all
+processes with the same effective user ID.
+@end table
+
+If @code{kill} is used by a process to send a signal to itself, and the
+signal is not blocked, then @code{kill} delivers at least one signal
+(which might be some other pending unblocked signal instead of the
+signal @var{signum}) to that process before it returns.
+
+The return value from @code{kill} is zero if the signal can be sent
+successfully.  Otherwise, no signal is sent, and a value of @code{-1} is
+returned.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EINVAL
+The @var{signum} argument is an invalid or unsupported number.
+
+@item EPERM
+You do not have the privilege to send a signal to the process or any of
+the processes in the process group named by @var{pid}.
+
+@item ESCRH
+The @var{pid} argument does not refer to an existing process or group.
+@end table
+@end deftypefun
+
+There are restrictions on permissions that prevent you from using
+@code{kill} to send signals to any random process.  In typical use,
+@code{kill} is used to pass signals between parent, child, and sibling
+processes, and in these situations you don't have to worry too much
+about getting the appropriate permissions to send signals.  The
+restrictions on who can send signals to process are intended to prevent
+antisocial behavior like arbitrarily killing off processes belonging to
+another user.
+
+Whether a process has permission to send a signal to another process
+is determined by the user IDs of the two processes.  This concept is
+discussed in detail in @ref{User/Group IDs of a Process}.
+
+Generally, for a process to be able to send a signal to another process,
+either the sending process must belong to a privileged user (like
+@samp{root}), or the real or effective user ID of the sending process
+must match the real or effective user ID of the receiving process.  If
+the receiving process has changed its effective user ID from the
+set-user-ID mode bit on its process image file, then the owner of the
+process image file is used in place of its current effective user ID.
+In some implementations, a parent process might be able to send signals
+to a child process even if the user ID's don't match, and other
+implementations might enforce other restrictions.
+
+The @code{SIGCONT} signal is a special case.  It can be sent if the
+sender is part of the same session as the receiver, regardless of
+user IDs.
+
+As a simple example of @code{kill}, the call:
+
+@example
+kill (getpid (), @var{sig})
+@end example
+
+@noindent
+has the same effect as:
+
+@example
+raise (@var{sig})
+@end example
+
+Here is a longer example showing how signals can be used for
+interprocess communication.  This is what the @code{SIGUSR1} and
+@code{SIGUSR2} signals are provided for.  Since these signals are fatal
+by default, the process that is supposed to receive them must trap them
+through @code{signal} or @code{sigaction}.
+
+In this example, a parent process forks a child process and then waits
+for the child to complete its initialization.  The child process tells
+the parent when it is ready by sending it a @code{SIGUSR1} signal, using
+the @code{kill} function.
+
+@example
+#include <signal.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+/* @r{When a @code{SIGUSR1} signal arrives, set this variable.}
+ */
+
+volatile sig_atomic_t usr_interrupt = 0;
+
+void synch_signal (int sig)
+@{
+  usr_interrupt = 1;
+@}
+
+
+/* @r{The child process executes this function.}
+ */
+
+void child_function (void)
+@{
+  /* @r{Perform initialization.} */
+  printf ("I'm here!!!  My pid is %d.\n", (int)getpid());
+
+  /* @r{Let parent know you're done.} */
+  kill (getppid (), SIGUSR1);  
+
+  /* @r{Continue with execution.} */
+  printf ("Bye, now....\n");
+  exit (0);
+@}
+
+
+void main (void)
+@{
+  struct sigaction usr_action;
+  sigset_t block_mask;
+  pid_t child_id;
+
+  /* @r{Establish the signal handler.} */
+  sigfillset (&block_mask);
+  usr_action.sa_handler = synch_signal;
+  usr_action.sa_mask = block_mask;
+  usr_action.sa_flags = 0;
+  sigaction (SIGUSR1, &usr_action, NULL);
+
+  /* @r{Create the child process.} */
+  if ((child_id = fork ()) == 0)
+    child_function ();  /* @r{Does not return} */
+
+  /* @r{Busy wait for child to send a signal.} */
+  while (!usr_interrupt) @{@}
+
+  /* @r{Now continue execution.} */
+  printf ("That's all, folks!\n");
+  exit (0);
+@}
+@end example
+
+Using a busy wait, as this program does, is not really a good idea.
+There is an example in @ref{Waiting for a Signal} that shows you how
+you can make a program block until a signal arrives.
+
+@node Blocking Signals
+@section Blocking Signals
+
+Blocking a signal means telling the operating system to hold it and
+deliver it later.  Generally, a program does not block signals
+indefinitely --- it might as well ignore them by setting their actions
+to @code{SIG_IGN}.  But it is useful to block signals briefly, to
+prevent them from interrupting sensitive operations.  For instance:
+
+@itemize @bullet
+@item
+You can use the @code{sigprocmask} function to block signals while you
+modify global variables that are also modified by the handlers for these 
+signals.
+
+@item
+You can set @code{sa_mask} in your @code{sigaction} call so that the
+signal handler can run without being interrupted.
+@end itemize
+
+@strong{Incomplete:} There should be some mention of the old BSD
+@code{sigblock} (etc.) facilities here.  Maybe in another section?
+
+@menu
+* Signal Sets::				How to specify which signals to block.
+* Process Signal Mask::			Blocking delivery of signals to your
+					 process during normal execution.
+* Blocking Signals in a Handler::	Blocking additional signals while a
+					 handler is being run.
+* Checking for Pending Signals::	How to tell if there are signals
+					 waiting to be delivered.
+@end menu
+
+@node Signal Sets
+@subsection Signal Sets
+
+All of the signal blocking functions use a data structure called a
+@dfn{signal set} to specify what signals are affected.  Thus, every
+activity involves two stages: creating the signal set, and then passing
+it as an argument to some function that does what you want.
+@cindex signal set
+
+These facilities are declared in the header file @file{<signal.h>}.
+
+@deftp {Data Type} sigset_t
+The @code{sigset_t} data type is used to represent signal sets.
+Internally, it may be implemented as either an integer or structure
+type.  A bitmask representation is typical, but you're better off using
+the various functions described in this section to initialize, change,
+and retrieve information from @code{sigset_t} objects, than trying to
+manipulate them directly.
+@end deftp
+
+There are two ways to set up your signal set.  You can initially specify
+it to be empty (no signals blocked) and then add specified signals.  Or
+you can specify it to be full (all signals blocked, except those that
+cannot be trapped at all) and then delete specified signals.  You do
+have to call one or the other of these functions to initialize a signal
+set object, though.  You can't just set all the signals explicitly
+because the @code{sigset_t} object might include some other information
+(like a version field) that needs to be initialized as well.
+
+@deftypefun int sigemptyset (sigset_t *@var{set})
+This function is used to initialize the signal set @var{set} to 
+exclude all of the defined signals.  The return value is @code{0} if
+successful, and @code{-1} if the function fails (but there's really
+no reason for it to fail).
+@end deftypefun
+
+@deftypefun int sigfillset (sigset_t *@var{set})
+This function is used to initialize the signal set @var{set} to include
+all of the defined signals.  Again, the return value is @code{0} on
+success and @code{-1} on failure.
+@end deftypefun
+
+@deftypefun int sigaddset (sigset_t *@var{set}, int @var{signum})
+This function adds the signal @var{signum} to the signal set @var{set}.
+The return value is @code{0} on success and @code{-1} on failure.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EINVAL
+The @var{signum} argument doesn't specify a valid signal.
+@end table
+@end deftypefun
+
+@deftypefun int sigdelset (sigset_t *@var{set}, int @var{signum})
+This function removes the signal @var{signum} from the signal set
+@var{set}.  The return value and error conditions are the same as for
+@code{sigaddset}.
+@end deftypefun
+
+Finally, there is this predicate function:
+
+@deftypefun int sigismember (const sigset_t *@var{set}, int @var{signum})
+The @code{sigismember} function tests whether the signal @var{signum} is
+a member of the signal set @var{set}.  It returns @code{1} if the signal
+is in the set, @code{0} if not, and @code{-1} if there is an error.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EINVAL
+The @var{signum} argument doesn't specify a valid signal.
+@end table
+@end deftypefun
+
+
+@node Process Signal Mask
+@subsection Process Signal Mask
+
+The collection of signals that are currently blocked is called the
+@dfn{signal mask}.  Each process has its own signal mask.  When you
+create a new process (@pxref{Creating New Processes}), it inherits
+its parent's mask.
+@cindex signal mask
+
+The prototype for the @code{sigprocmask} function is in @file{<signal.h>}.
+
+@deftypefun int sigprocmask (int @var{how}, const sigset_t *@var{set}, sigset_t *@var{oldset})
+The @code{sigprocmask} function is used to examine or change the calling
+process's signal mask.  The @var{how} argument determines how the signal
+set is changed, and must be one of the following values:
+
+@table @code
+@item SIG_BLOCK
+Add the signals in @var{set} to the existing mask.  In other words, the
+new mask is the union of the existing mask and @var{set}.
+
+@item SIG_UNBLOCK
+Remove the signals in @var{set} from the existing mask.
+
+@item SIG_SETMASK
+Use @var{set} for the mask; ignore current contents of the mask.
+@end table
+
+The last argument, @var{oldset}, is used to return information about the
+old process signal mask.  If you just want to change the mask without
+looking at it, pass a null pointer as the @var{oldset} argument.
+Similarly, if you want to know what's in the mask without changing it,
+pass a null pointer for @var{set} (in this case the @var{how} argument
+is not significant).  The @var{oldset} is particularly useful if you
+want to remember the original set of blocked signals in order to restore
+it later.  (Since the signal mask is inherited over @code{fork} and
+@code{exec} calls, you can't predict what its contents are when your
+program starts running.)
+
+If invoking @code{sigprocmask} causes any pending signals to be
+unblocked, at least one of those signals is delivered to the
+process before @code{sigprocmask} returns.  The order in which pending
+signals are delivered is not specified, but you can set up a hierarchy
+by making multiple calls to unblock signals in sequence, while leaving
+the others blocked.
+
+The @code{sigprocmask} function returns @code{0} if successful, and @code{-1}
+to indicate an error.  The following @code{errno} error conditions are
+defined for this function:
+
+@table @code
+@item EINVAL
+The @var{how} argument is invalid.
+@end table
+
+You can't block the @code{SIGKILL} and @code{SIGSTOP} signals, but
+if the signal set includes these, @code{sigprocmask} just ignores
+them instead of returning an error status.
+
+Remember, too, that blocking program error signals such as @code{SIGFPE}
+usually doesn't do anything useful for signals generated by an actual
+program error (as opposed to signals sent with @code{raise} or
+@code{kill}).
+@end deftypefun
+
+@defvr Macro SIG_BLOCK
+The value of this macro is an integer suitable for use as the @var{how}
+argument to @code{sigprocmask}, to specify that the process signal mask
+should be set to the union of the specified set with the current process
+signal mask.
+@end defvr
+
+@defvr Macro SIG_UNBLOCK
+The value of this macro is an integer suitable for use as the @var{how}
+argument to @code{sigprocmask}, to specify that the signals in the
+specified set should be removed from the current process signal mask.
+@end defvr
+
+@defvr Macro SIG_SETMASK
+The value of this macro is an integer suitable for use as the @var{how}
+argument to @code{sigprocmask}, to specify that the process signal mask
+should be set to the specified signal set.
+@end defvr
+
+Temporary blocking of signals with @code{sigprocmask} is primarily
+useful when you want to lock out interrupts during critical parts
+of your code.  One example of this kind of situation is where you
+are accessing data that is shared with a signal handler.
+
+As described in @ref{Defining a Signal Handler}, the most reliable way
+to have your program deal with a signal is to create an external,
+@code{volatile} variable and make your signal handler change its value.
+The problem arises when your program needs to access or modify this
+variable.  Even if you check the variable to see whether a signal has
+arrived immediately before you set it, another signal might still arrive
+in the meantime, and you will never know it was there.  You can avoid
+this problem by blocking the signal during the time you are performing
+the check and modification.
+
+A related situation is where you have several variables or variables of
+types other than @code{sig_atomic_t} that are being manipulated by one
+or more signal handlers.  In this kind of situation, you want to be sure
+that operations on this data are performed as a complete unit.  You can
+implement a locking protocol for the data by temporarily blocking the
+signals that might otherwise cause the data to be modified.
+
+Now for a simple example.  Suppose you establish a handler for
+@code{SIGALRM} signals that sets a flag whenever a signal arrives, and
+your main program checks this flag from time to time and then resets it.
+You can prevent additional @code{SIGALRM} signals from arriving in the
+meantime by wrapping the critical part of the code with calls to
+@code{sigprocmask}, like this:
+
+@example
+/* @r{This variable is set by the SIGALRM signal handler.} */
+volatile sig_atomic_t flag = 0;
+
+/* @r{Declare and initialize the signal mask.} */
+sigset_t block_alarm;
+@dots{}
+sigemptyset (&block_alarm);
+sigaddset (&block_alarm, SIGALRM);
+
+/* @r{Check if a signal has arrived; if so, reset the flag.} */
+sigprocmask (SIG_BLOCK, &block_alarm, NULL);
+if (flag) @{
+  @dots{}
+  flag = 0;
+  @}
+sigprocmask (SIG_UNBLOCK, &block_alarm, NULL);
+@end example
+
+@node Blocking Signals in a Handler
+@subsection Blocking Signals in a Handler
+
+When a signal handler is invoked, you usually want to let it run to
+completion before another signal arrives.  Thus, from the moment the
+handler starts until the moment it finishes, you want to block signals
+that might confuse it or corrupt its data.
+
+When a handler function is invoked on a signal, that signal is
+automatically blocked (in addition to any other signals that are already
+in the process's signal mask) during the time the handler is running.
+If you set up a handler for @code{SIGTSTP}, for instance, then the
+arrival of that signal forces further @code{SIGTSTP} signals to wait
+during the execution of the handler.
+
+You can temporarily block additional signals when the handler is running
+by using the @code{sa_mask} member of the @code{sigaction} structure.
+
+Here is an example:
+
+@example
+#include <signal.h>
+#include <stddef.h>
+
+struct sigaction setup_action;
+sigset_t block_mask;
+void catch_stop ();
+
+/* @r{Block all terminal-generated signals while handler runs.} */
+sigemptyset (&block_mask);
+sigaddset (&block_mask, SIGINT);
+sigaddset (&block_mask, SIGQUIT);
+sigaddset (&block_mask, SIGTSTP);
+setup_action.sa_handler = catch_stop;
+setup_action.sa_mask = block_mask;
+setup_action.sa_flags = 0;
+sigaction (SIGTSTP, &setup_action, NULL);
+@end example
+
+You cannot remove signals from the process's current mask using this
+mechanism.  However, you can make calls to @code{sigprocmask} within
+your handler to put any mask you want in place.  In any case, when the
+handler returns, the system restores the mask that was in place before
+the handler ran.
+
+
+@node Checking for Pending Signals
+@subsection Checking for Pending Signals
+
+You can find out which signals are pending at any time by calling
+@code{sigpending}.  This function is declared in @file{<signal.h>}.
+
+@deftypefun int sigpending (sigset_t *@var{set})
+The @code{sigpending} function stores information about pending signals
+in @var{set}.  If there is a pending signal that is blocked from delivery,
+then that signal is a member of the returned set.  (You can test
+for membership using @code{sigismember}; @pxref{Signal Sets}.)
+
+The return value is @code{0} if successful, and @code{-1} on failure.
+@end deftypefun
+
+
+Here is an example.
+
+@example
+#include <signal.h>
+#include <stddef.h>
+
+sigset_t base_mask, waiting_mask;
+
+sigemptyset (&base_mask);
+sigaddset (&base_mask, SIGINT);
+sigaddset (&base_mask, SIGTSTP);
+
+/* @r{Block user interrupts while doing other processing.} */
+sigprocmask (SIG_SETMASK, &base_mask, NULL); 
+@dots{}
+
+/* @r{After a while, check to see whether any signals are pending.} */
+sigpending (&waiting_mask);
+if (sigismember (&waiting_mask, SIGINT)) @{
+  /* @r{User has tried to kill the process.} */
+  @}
+else if (sigismember (&waiting_mask, SIGTSTP)) @{
+  /* @r{User has tried to stop the process.} */
+  @}
+@end example
+
+Remember that if there is a particular signal pending for your process,
+additional signals of that same type that arrive in the meantime might
+be discarded.  For example, if a @code{SIGINT} signal is pending when
+another @code{SIGINT} signal arrives, your program will probably only
+see one of them when you unblock this signal.
+
+
+@node Waiting for a Signal
+@section Waiting for a Signal
+
+If your program is driven by external events, or uses signals for
+synchronization, there are times you might want to suspend execution
+until a signal arrives.  Waiting by blocking the process or suspending
+its execution is better than doing a busy wait because it frees system
+resources for use by other processes.  
+
+The @code{pause} and @code{sleep} functions are declared in the header
+file @file{<unistd.h>}, while @code{sigsuspend} is declared in
+@file{<signal.h>}.
+
+@deftypefun int pause (void)
+The @code{pause} function suspends program execution until a signal
+arrives whose action is either to execute a handler function, or to
+terminate the process.
+
+If the signal causes a handler function to be executed, then @code{pause}
+returns.  This is considered an unsuccessful return (since ``successful''
+behavior would be to suspend the program forever), so the return value
+is @code{-1}.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EINTR
+The function was interrupted by delivery of a signal.
+@end table
+
+If the signal causes program termination, @code{pause} doesn't return
+(obviously).
+@end deftypefun
+
+If you only want your program to delay execution for a limited period of
+time (as opposed to indefinitely), you can use the @code{sleep} function
+instead of @code{pause}.  A common situation is using @code{sleep} in a
+loop, to make the process ``wake up'' periodically to perform some
+actions.
+
+@deftypefun {unsigned int} sleep (unsigned int @var{seconds})
+The @code{sleep} function is like @code{pause}, except that execution
+is suspended only for the amount of time specified by the @var{seconds}
+argument instead of indefinitely.  
+
+The @code{sleep} function might be implemented using an alarm;
+@pxref{Setting an Alarm}.  If another @code{SIGALRM} signal arrives
+during the time the process is sleeping, strange things can happen.  If
+@code{SIGALRM} signals are being ignored or blocked when @code{sleep} is
+called, the process might wake up anyway.  If @code{SIGALRM} signals are
+not being ignored or blocked, the action taken when a @code{SIGARLM}
+signal arrives might be just to cause @code{sleep} to return instead of
+the normal action associated with the signal.  And, if @code{sleep} is
+interrupted by delivery of a signal whose handler messes with
+@code{SIGALRM} signals, things can really get confused.  In short, avoid
+messing with @code{SIGALRM} directly if you use @code{sleep}.
+
+If @code{sleep} function returns because the requested time has
+elapsed, it returns a value of zero.  If it returns because of delivery
+of a signal, its return value is the remaining time in the sleep period.
+@end deftypefun
+
+Watch out for checking to see whether a signal has been reported and
+then calling @code{pause} to wait for a signal if it hasn't arrived yet.
+The signal might actually arrive in between the two operations and your
+program will never wake up.  A better solution is to use
+@code{sigprocmask} to block signals while you check to see if a signal
+has arrived yet, and then use @code{sigsuspend} to both restore the
+original signal mask and suspend execution in one uninterruptable
+operation.
+
+@deftypefun int sigsuspend (const sigset_t *@var{set})
+This function replaces the process's signal mask with @var{set} and then
+suspends the process until a signal is delivered whose action is either
+to terminate the process or invoke a signal handling function.  In other
+words, the program is effectively suspended until one of the signals that
+is not a member of @var{set} arrives.
+
+If the process is woken up by deliver of a signal that invokes a handler
+function, and the handler function returns, then @code{sigsuspend} also
+returns.  It sets the process's signal mask back to what it was when
+@code{sigsuspend} was called.  
+
+The return value and error conditions are the same as for @code{pause}.
+@end deftypefun
+
+As an example of how these functions might be used, let's reconsider the
+program presented in @ref{Signaling Another Process}.  As originally
+written, this program does a busy wait for a @code{SIGUSR1} signal to
+arrive by sitting in a tight loop, checking a variable that is set by
+the signal handler, like this:
+
+@example
+while (!usr_interrupt) @{@}
+@end example
+
+Doing a busy wait is not really a good idea, since it wastes system 
+resources that could better be used by another process.  Having the
+process block until the signal arrives would be much better.
+
+Naively, one might expect to rewrite this loop instead as simply:
+
+@example
+while (!usr_interrupt)
+  pause ();
+@end example
+
+@noindent
+But this has a bug: the signal could arrive after the variable
+@code{usr_interrupt} is checked, but before the call to @code{pause}.
+In this case, the process would never wake up again.
+
+To avoid this problem, you can use a combination of @code{sigprocmask}
+and @code{sigsuspend}, like this:
+
+@example
+sigset_t mask, oldmask;
+
+@dots{}
+
+/* @r{Set up the mask of signals to temporarily block.} */ 
+sigemptyset (&mask); 
+sigaddset (&mask, SIGUSR1);
+
+@dots{}
+
+/* @r{Wait for a signal to arrive.} */
+sigprocmask (SIG_BLOCK, &mask, &oldmask);
+while (!usr_interrupt)
+  sigsuspend (&oldmask);
+sigprocmask (SIG_UNBLOCK, &mask, NULL);
+@end example
+
+This last piece of code is a little tricky.  The key point to remember
+here is that when @code{sigsuspend} returns, it resets the process's
+signal mask to be what it was when it was called --- in this case, the
+@code{SIGUSR1} signal is still blocked.  That is why there is a second
+call to @code{sigprocmask} necessary to explicitly unblock this signal
+after the loop completes.
+
+One other point: you may be wondering why the @code{while} loop is
+necessary at all, since the program is apparently only waiting for one
+@code{SIGUSR1} signal.  The answer is that the mask passed to
+@code{sigsuspend} permits the process to be woken up by the delivery of
+other kinds of signals, as well --- for example, job control signals.
+If the process is woken up by a signal that doesn't set
+@code{usr_interrupt}, it just suspends itself again until the ``right''
+kind of signal eventually arrives.

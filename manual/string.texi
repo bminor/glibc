@@ -1,0 +1,661 @@
+@node String and Array Utilities
+@chapter String and Array Utilities
+@pindex <string.h>
+
+Operations on strings (or arrays of characters) are an important part of
+many programs.  The GNU C library provides an extensive set of string
+utility functions, including functions for copying, concatenating,
+comparing, and searching strings.  Many of these functions can also
+operate on arbitrary regions of storage; for example, the @code{memcpy}
+function can be used to copy the contents of any kind of array.  
+
+While it's fairly common for beginning C programmers to unwittingly
+``reinvent the wheel'' by duplicating this functionality in their own
+code, it pays to become familiar with the library functions and to make
+use of them, since this offers benefits in maintenance, efficiency, and
+portability.  For instance, you could easily compare one string to
+another in two lines of C code.  But if you use the built-in
+@code{strcmp} function, you're less likely to introduce bugs into your
+program.  And, since these library functions are typically highly
+optimized, your program may run faster too.
+
+@menu
+* Representation of Strings::	Introduction to basic concepts.
+* String/Array Conventions::	Whether to use a string function or an
+				 arbitrary array function.
+* String Length::		Determining the length of a string.
+* Copying and Concatenation::	Functions to copy the contents of strings
+				 and arrays.
+* String/Array Comparison::	Functions for byte-wise and character-wise
+				 comparison.
+* Collation Functions::		Functions for collating strings.
+* Search Functions::		Searching for a specific element or substring.
+* Finding Tokens in a String::  Splitting a string into tokens by looking
+				 for delimiters.
+@end menu
+
+@node Representation of Strings
+@section Representation of Strings
+
+This section is a quick summary of string concepts for beginning C
+programmers.  It describes how character strings are represented in C
+and some common pitfalls.  If you are already familiar with this
+material, you can skip this section.
+
+@cindex string
+@cindex null character
+A @dfn{string} is an array of @code{char} objects.  Since arrays and
+pointers are equivalent in C, strings are usually declared to be of type
+@code{char *}.  By convention, a @dfn{null character}, @code{'\0'},
+marks the end of a string.  For example, in testing to see whether the
+@code{char *} @var{p} points to a null character marking the end of a
+string, you can write @code{!*@var{p}} or @code{*@var{p} == '\0'}.
+
+A null character is quite different conceptually from a null pointer,
+although both are equivalent to an integer @code{0} in the appropriate
+context.
+
+Declaring a variable of type @code{char *} allocates storage only for a
+pointer to a string, not for the string itself.  If you declare a string
+as a @code{char *}, make sure that there is actually a character array
+allocated for it to point to, and that the pointer is actually
+initialized to point at the array.  Otherwise, you can get into big
+trouble by accessing random memory locations.  You can allocate storage
+for a string either by defining a character array variable, by
+allocating memory dynamically using a library function like
+@code{malloc} (@pxref{Storage Management Functions}), or by means of a
+string literal.
+
+@cindex string literal
+@dfn{String literals} appear in C program source as strings of
+characters between double-quote characters (@samp{"}).  In ANSI C,
+string literals can also be formed by @dfn{string concatenation}:
+@code{"a" "b"} is the same as @code{"ab"}.  Modification of string
+literals is not allowed by the GNU C compiler, because literals
+are placed in read-only storage.
+
+String variables that are declared to be @code{const} cannot be modified
+either.  It's generally good style to declare non-modifiable strings to
+be of type @code{const char *}, since this allows the C compiler to
+detect accidental modifications as well as providing some amount of
+documentation about what your program intends to do with the string.
+
+The amount of memory allocated for the character array may extend past
+the null character that normally marks the end of the string.  In this
+document, the term @dfn{allocated size} is carefully used to refer to
+the total amount of memory allocated for the string, while the term
+@dfn{length} refers to the number of characters up to (but not including)
+the terminating null character.
+@cindex length of string
+@cindex allocated size of string
+@cindex size of string
+@cindex string length
+@cindex string allocation
+
+A notorious source of program bugs is trying to put more characters in a
+string than fit in its allocated size.  When writing code that
+extends strings or moves characters into a pre-allocated array, you
+should be very careful to keep track of the size of the array and make
+explicit checks for overflow.  Many of the library functions @emph{do
+not} do this for you!  Remember also that you need to allocate an extra
+byte to hold the null character that marks the end of the string.
+
+@node String/Array Conventions
+@section String/Array Conventions
+
+This chapter describes both functions that work on arbitrary arrays or
+blocks of memory, and functions that are specific to null-terminated
+arrays of characters.
+
+Functions that operate on arbitrary blocks of memory have names
+beginning with @samp{mem} (such as @code{memcpy}) and invariably take an
+argument which specifies the size (in bytes) of the block of memory to
+operate on.  The array arguments and return values for these functions
+have type @code{void *}, and as a matter of style, the elements of these
+arrays are referred to as ``bytes''.  You can pass any kind of pointer
+to these functions, and the @code{sizeof} operator is useful in
+computing the value for the size argument.
+
+In contrast, functions that operate specifically on strings have names
+beginning with @samp{str} (such as @code{strcpy}) and look for a null
+character to terminate the string instead of requiring an explicit size
+argument to be passed.  The array arguments and return values for these
+functions have type @code{char *}, and the array elements are referred
+to as ``characters''.
+
+In many cases, there are both @samp{mem} and @samp{str} versions of a
+function.  The one that is more appropriate to use depends on the exact
+situation.  When your program is manipulating arbitrary arrays or blocks of
+storage, then you should always use the @samp{mem} functions.  On the
+other hand, when you are manipulating null-terminated strings it is
+usually more convenient to use the @samp{str} functions, unless you
+already know the length of the string in advance.
+
+@node String Length
+@section String Length
+
+You can get the length of a string using the @code{strlen} function.
+This function is declared in the header file @file{<string.h>}.
+
+@deftypefun size_t strlen (const char *@var{s})
+The @code{strlen} function returns the length of the null-terminated
+string @var{s}.  (In other words, it returns the offset of the terminating
+null character within the array.)
+
+For example,
+@example
+strlen ("hello, world")
+    @result{} 12
+@end example
+
+The @code{strlen} function returns the length of a string, not its
+allocation size.  You can get the allocation size of the character array
+that holds a string using the @code{sizeof} operator:
+
+@example
+char string[32] = "hello, world"; 
+sizeof (string)
+    @result{} 32
+strlen (string)
+    @result{} 12
+@end example
+@end deftypefun
+
+@node Copying and Concatenation
+@section Copying and Concatenation
+
+You can use the functions described in this section to copy the contents
+of strings and arrays, or to append the contents of one string to
+another.  These functions are declared in the header file
+@file{<string.h>}.
+@cindex copying strings
+@cindex string copy functions
+
+A helpful way to remember the ordering of the arguments to the functions
+in this section is that it corresponds to an assignment expression, with
+the destination array specified to the left of the source array.  All
+of these functions return the address of the destination array.
+
+Some of these functions might not work properly if the source and
+destination arrays overlap.  For example, if the beginning of the
+destination array overlaps the end of the source array, the original
+contents of that part of the source array may get overwritten before it
+is copied.  Even worse, in the case of the string functions, the null
+character marking the end of the string may be lost, and the copy
+function might get stuck in a loop trashing all the memory allocated to
+your program.
+
+Any functions that have problems copying between overlapping arrays are
+explicitly identified in this manual.  In addition to functions in this
+section, there are a few others like @code{sprintf} and @code{scanf}.
+
+@deftypefun {void *} memcpy (void *@var{to}, const void *@var{from}, size_t @var{size})
+The @code{memcpy} function copies @var{size} bytes from the object
+beginning at @var{from} into the object beginning at @var{to}.  The
+behavior of this function is undefined if the two arrays @var{to} and
+@var{from} overlap; use @code{memmove} instead if overlapping is possible.
+
+The value returned by @code{memcpy} is the value of @var{to}.
+
+Here is an example of how you might use @code{memcpy} to copy the
+contents of a @code{struct}:
+
+@example
+struct foo *old, *new;
+@dots{}
+memcpy (new, old, sizeof(struct foo));
+@end example
+@end deftypefun
+
+@deftypefun {void *} memmove (void *@var{to}, const void *@var{from}, size_t @var{size})
+The @code{memmove} function is just like @code{memcpy}, except that it works
+even if the objects @var{to} and @var{from} overlap.  However, since 
+@code{memmove} needs to make an intermediate copy into a temporary area,
+it can be less efficient than @code{memcpy}.
+@end deftypefun
+
+@deftypefun {void *} memset (void *@var{a}, int @var{c}, size_t @var{size})
+This function copies the value of @var{c} (converted to an @code{unsigned
+char}) into each of the first @var{size} bytes of the object beginning at
+@var{a}.  It returns the value of @var{a}.
+@end deftypefun
+
+@deftypefun {char *} strcpy (char *@var{to}, const char *@var{from})
+This copies characters from the string @var{from} (up to and including the
+terminating null character) into the string @var{to}.  Like
+@code{memcpy}, this function can fail if the strings overlap.  The
+return value is the value of @var{to}.
+@end deftypefun
+
+@deftypefun {char *} strncpy (char *@var{to}, const char *@var{from}, size_t @var{size})
+This function is similar to @code{strcpy} except that no more than @var{size}
+characters are copied.  If the length of @var{from} is less than @var{size} 
+characters, then the end of @var{to} is filled with null characters until
+@var{size} characters in all have been written.  
+
+The behavior is undefined if the strings overlap.
+
+Unless you know in advance that the length of @var{from} is less than the
+allocation size of @var{from}, using @code{strncpy} as opposed to
+@code{strcpy} can avoid bugs relating to writing past the end of a
+string.
+@end deftypefun
+
+@deftypefun {char *} strcat (char *@var{to}, const char *@var{from})
+The @code{strcat} function is similar to @code{strcpy}, except that the
+characters from @var{from} are concatenated or appended to the end of
+@var{to}, instead of overwriting it.  That is, the first character from
+@var{from} overwrites the null character marking the end of @var{to}.  
+
+This function can fail if the strings overlap.
+@end deftypefun
+
+@deftypefun {char *} strncat (char *@var{to}, const char *@var{from}, size_t @var{size})
+This function is like @code{strcat} except that not more than @var{size}
+characters from @var{from} are appended to the end of @var{to}.  A single
+null character is also always appended to @var{to}, so the total
+allocated size of @var{to} must be at least @code{@var{size} + 1} bytes
+longer than its initial length.
+@end deftypefun
+
+Here is an example showing the use of @code{strncpy} and @code{strncat}.
+Notice how, in the call to @code{strncat}, the @var{size} parameter
+is computed to avoid overflowing the character array @code{buffer}.
+
+@example
+#include <string.h>
+#include <stdio.h>
+
+#define SIZE 10
+
+static char buffer[SIZE];
+
+main ()
+@{
+  strncpy (buffer, "hello", SIZE);
+  printf ("%s\n", buffer);
+  strncat (buffer, ", world", SIZE - strlen (buffer) - 1);
+  printf ("%s\n", buffer);
+@}
+@end example
+
+@noindent
+The output produced by this program looks like:
+
+@example
+hello
+hello, wo
+@end example
+
+@node String/Array Comparison
+@section String/Array Comparison
+
+You can use the functions in this section to perform comparisons on the
+contents of strings and arrays.  As well as checking for equality, these
+functions can also be used as the ordering functions for sorting
+operations.  @xref{Searching and Sorting}, for an example of this.
+
+Unlike most comparison operations in C, the string comparison functions
+return a nonzero value if the strings are @emph{not} equivalent rather
+than if they are.  The sign of the value indicates the relative ordering
+of the first characters in the strings that are not equivalent:  a
+negative value indicates that the first string is ``less'' than the
+second, while a positive value indicates that the first string is 
+``greater''.
+@cindex comparing strings
+@cindex string comparison
+
+If you are only interested in using these functions as predicates, you
+might find it helpful to hide them behind a macro definition, like this:
+
+@example
+#define str_eq(s1,s2)  (!strcmp ((s1),(s2)))
+@end example
+
+All of these functions are declared in the header file @file{<string.h>}.
+
+@deftypefun int memcmp (const void *@var{a1}, const void *@var{a2}, size_t @var{size})
+The function @code{memcmp} compares the @var{size} bytes of memory
+beginning at @var{a1} against the @var{size} bytes of memory beginning at
+@var{a1}.  The value returned has the same sign as the difference
+between the first pair of bytes (interpreted as @code{unsigned
+char} objects) that differ.
+@end deftypefun
+
+On arbitrary arrays, the @code{memcmp} function is mostly useful for
+testing equality.  It usually isn't meaningful to do byte-wise ordering
+comparisons on arrays of things other than bytes.  For example, a
+byte-wise comparison on the bytes that make up floating-point numbers
+isn't likely to tell you anything about the relationship between the
+values of the floating-point numbers.
+
+You should also be careful about using @code{memcmp} to compare objects
+that can contain ``holes'', such as the padding inserted into structure
+objects to enforce alignment requirements, extra space at the end of
+unions, and extra characters at the ends of strings whose length is less
+than their allocated size.  The contents of these ``holes'' are
+indeterminate and may cause strange behavior when performing byte-wise
+comparisons.  In some cases, it may be more appropriate to perform an
+explicit component-wise comparison.
+
+For example, given a structure type definition like:
+
+@example
+struct foo @{
+  unsigned char tag;
+  union @{
+    double f;
+    long i;
+    char *p;
+    @} value;
+  @};
+@end example
+
+@noindent
+you are better off writing a specialized comparison function to compare
+@code{struct foo} objects instead of comparing them with @code{memcmp}.
+
+@deftypefun int strcmp (const char *@var{s1}, const char *@var{s2})
+The @code{strcmp} function compares the string @var{s1} against @var{s2},
+returning a value that has the same sign as the difference between
+the first pair of characters (interpreted as @code{unsigned char} objects)
+that are not the same.
+
+A consequence of the ordering used by @code{strcmp} is that if @var{s1}
+is an initial substring of @var{s2}, then @var{s1} is considered to be
+``less than'' @var{s2}.
+@end deftypefun
+
+@deftypefun int strncmp (const char *@var{s1}, const char *@var{s2}, size_t @var{size})
+This function is the similar to @code{strcmp}, except that no more than
+@var{size} characters are compared.  In other words, if the two strings are
+the same in their first @var{size} characters, the return value is zero.
+@end deftypefun
+
+Here are some examples showing the use of @code{strcmp} and @code{strncmp}.
+These examples assume the use of the ASCII character set.  (If some
+other character set --- say, EBCDIC --- is used instead, then the glyphs
+are associated with different numeric codes, and the return values
+and ordering may differ.)
+
+@example
+strcmp ("hello", "hello")
+    @result{} 0    /* @r{These two strings are the same.} */
+strcmp ("hello", "Hello")
+    @result{} 32   /* @r{Comparisons are case-sensitive.} */
+strcmp ("hello", "world")
+    @result{} -15  /* @r{The character @code{'h'} comes before @code{'w'}.} */
+strcmp ("hello", "hello, world")
+    @result{} -44  /* @r{Comparing a null character against a comma.} */
+strncmp ("hello", "hello, world"", 5)
+    @result{} 0    /* @r{The initial 5 characters are the same.} */
+strncmp ("hello, world", "hello, stupid world!!!", 5)
+    @result{} 0    /* @r{The initial 5 characters are the same.} */
+@end example
+
+
+@node Collation Functions
+@section Collation Functions
+
+@cindex collating strings
+@cindex string collation
+
+In some locales, the conventions for lexicographic ordering differ from
+the strict numeric ordering of character codes.  For example, in Spanish
+most glyphs with diacritical marks such as accents are not considered
+distinct letters for the purposes of collation.  On the other hand, the
+two-character sequence @samp{ll} is treated as a single letter that is
+collated immediately after @samp{l}.
+
+You can use the functions @code{strcoll} and @code{strxfrm} (declared in
+the header file @file{<string.h>}) to compare strings using a collation
+ordering appropriate for the current locale.  The exact ordering
+conventions used by these functions are determined by the
+@code{LC_COLLATE} category; @pxref{Localization}.
+
+@strong{Incomplete:} I believe that in the standard C locale, the
+collation sequence for @code{strcoll} is the same as that for
+@code{strcmp}.  I'm not sure if the ANSI C standard specifies this or
+if that's just the way we've implemented it.
+
+Effectively, the way these functions work is by applying a mapping to
+transform the glyphs in a string to an array of codes that reflects the
+collation ordering appropriate to the current locale.
+The function @code{strcoll} performs this mapping implicitly,
+while @code{strxfrm} can be used to perform the mapping explicitly.  If
+you are making multiple comparisons using the same string or set of
+strings, it is likely to be more efficient to use @code{strxfrm} to
+transform the strings once and then do the comparisons on the
+transformed strings with @code{strcmp}, instead of passing the
+untransformed strings to @code{strcoll}.
+
+@deftypefun int strcoll (const char *@var{s1}, const char *@var{s2})
+The @code{strcoll} function is similar to @code{strcmp} but uses the
+current locale's collation ordering, determined by the @code{LC_COLLATE}
+category.
+@end deftypefun
+
+@deftypefun size_t strxfrm (char *@var{to}, const char *@var{from}, size_t @var{size})
+The function @code{strxfrm} applies the collation transformation
+determined by the @code{LC_COLLATE} category of the current locale to
+the string @var{from}, and stores the transformed string in @var{to}.  Up
+to @var{size} characters (including a terminating null character) are
+stored.  
+
+The behavior is undefined if the strings @var{to} and @var{from}
+overlap; @pxref{Copying and Concatenation}.
+
+The length of the entire transformed string @var{to} is returned.  This
+value is not affected by the value of @var{size}, and might be more or
+less than the length of the original string @var{from}.
+
+If @var{size} is zero, @var{to} is permitted to be a null pointer.  In
+this case, @code{strxfrm} simply returns the number of characters that
+would be the length of the transformed string.  This is useful for
+determining what size string to allocate.
+@end deftypefun
+
+The string collation functions are most typically used in conjunction
+with sorting.  For example, you could use the @code{strcoll} function as
+the comparison function in conjunction with the @code{qsort} function;
+@pxref{Searching and Sorting}.  Alternatively, since sorting usually
+involves doing multiple comparisons, you could set up your data
+structures so that the key field in the objects being sorted is a 
+string produced by @code{strxfrm}.
+
+@strong{Incomplete:} An example is probably appropriate here.
+
+@strong{Compatibility Note:}  The string collation functions are a new
+feature of ANSI C.  Older C dialects have no equivalent feature.
+
+@node Search Functions
+@section Search Functions
+
+This section describes library functions which perform various kinds
+of searching operations on strings and arrays.  These functions are
+declared in the header file @file{<string.h>}.
+@cindex searching strings
+@cindex string search functions
+
+@deftypefun {void *} memchr (const void *@var{a}, int @var{c}, size_t @var{size})
+This function finds the first occurrence of the byte @var{c} (converted to an
+@code{unsigned char}) in the initial @var{size} bytes of the object beginning
+at @var{a}.  A pointer to the located byte is returned, or a null pointer
+if no match was found.
+@end deftypefun
+
+@deftypefun {char *} strchr (const char *@var{s}, int @var{c})
+The @code{strchr} function finds the first occurrence of the character
+@var{c} (converted to a @code{char}) in the null-terminated string
+beginning at @var{s}.  A pointer to the located character is returned, or
+a null pointer if no match was found.
+
+For example,
+@example
+strchr ("hello, world", 'l')
+    @result{} "llo, world"
+strchr ("hello, world", '?')
+    @result{} NULL
+@end example    
+
+The terminating null character is considered to be part of the string,
+so you can use this function get a pointer to the end of a string by
+specifying a null character as the value of the @var{c} argument.
+@end deftypefun
+
+@deftypefun {char *} strrchr (const char *@var{s}, int @var{c})
+The function @code{strrchr} is like @code{strchr}, except that it searches
+backwards from the end of the string @var{s} (instead of forwards
+from the front).
+
+For example,
+@example
+strrchr ("hello, world", 'l')
+    @result{} "ld"
+@end example
+@end deftypefun
+
+@deftypefun {char *} strstr (const char *@var{s1}, const char *@var{s2})
+This is like @code{strchr}, except that it searches @var{s1} for a
+substring @var{s2} rather than just a single character.  It returns a
+pointer into the string @var{s1} that is the first character of the
+substring, or a null pointer if no match was found.  If @var{s2} is an
+empty string, the function returns @var{s1}.
+
+For example,
+@example
+strstr ("hello, world", "l")
+    @result{} "llo, world"
+strstr ("hello, world", "wo")
+    @result{} "world"
+@end example
+@end deftypefun
+
+
+@deftypefun size_t strspn (const char *@var{s1}, const char *@var{s2})
+The @code{strspn} (``string span'') function returns the length of the
+initial substring of @var{s1} that consists entirely of characters that
+are members of the set specified by the string @var{s2}.  The order
+of the characters in @var{s2} is not important.
+
+For example,
+@example
+strspn ("hello, world", "abcdefghijklmnopqrstuvwxyz")
+    @result{} 5
+@end example
+@end deftypefun
+
+@deftypefun size_t strcspn (const char *@var{s1}, const char *@var{s2})
+The @code{strcspn} (``string complement span'') function returns the length
+of the initial substring of @var{s1} that consists entirely of characters
+that are @emph{not} members of the set specified by the string @var{s2}.
+(In other words, it returns the offset of the first character in @var{s1}
+that is a member of the set @var{s2}.)
+
+For example,
+@example
+strcspn ("hello, world", " \t\n,.;!?")
+    @result{} 5
+@end example
+@end deftypefun
+
+@deftypefun {char *} strpbrk (const char *@var{s1}, const char *@var{s2})
+The @code{strpbrk} (``string pointer break'') function is related to
+@code{strcspn}, except that it returns a pointer to the first character
+in @var{s1} that is a member of the set @var{s2} instead of the length
+of the initial substring.  It returns a null pointer if no such character
+from @var{s2} is found.
+
+For example,
+@example
+strpbrk ("hello, world", " \t\n,.;!?")
+    @result{} ", world"
+@end example
+@end deftypefun
+
+@node Finding Tokens in a String
+@section Finding Tokens in a String
+
+@cindex tokenizing strings
+@cindex breaking a string into tokens
+@cindex finding tokens in a string
+It's fairly common for programs to have a need to do some simple kinds
+of lexical analysis and parsing, such as splitting a command string up
+into tokens.  You can do this with the @code{strtok} function, declared
+in the header file @file{<string.h>}.
+
+@deftypefun {char *} strtok (char *@var{s1}, const char *@var{s2})
+A string can be split into tokens by making a series of calls to the
+function @code{strtok}.
+
+The string to be split up is passed as the @var{s1} argument on the
+first call only.  The @code{strtok} function uses this to set up some
+internal state information.  Subsequent calls to get additional tokens
+from the same string are indicated by passing a null pointer as the
+@var{s1} argument.  Calling @code{strtok} with another non-null @var{s1}
+argument reinitializes the state information.  It is guaranteed that no
+other library function ever calls @code{strtok} behind your back (which
+would mess up this internal state information).
+
+The @var{s2} argument is a string that specifies a set of delimiters
+that may surround the token being extracted.  All the initial characters
+that are members of this set are discarded.  The first character that is
+@emph{not} a member of this set of delimiters marks the beginning of the
+next token.  The end of the token is found by looking for the next
+character that is a member of the delimiter set.  This character in the
+original string @var{s1} is overwritten by a null character, and the
+pointer to the beginning of the token in @var{s1} is returned.
+
+On the next call to @code{strtok}, the searching begins at the next
+character beyond the one that marked the end of the previous token.
+Note that the set of delimiters @var{s2} do not have to be the same on
+every call in a series of calls to @code{strtok}.
+
+If the end of the string @var{s1} is reached, or if the remainder of
+string consists only of delimiter characters, @code{strtok} returns
+a null pointer.
+@end deftypefun
+
+Here is a simple example showing the use of @code{strtok}.
+
+@comment Yes, this example has been tested.
+
+@example
+#include <string.h>
+#include <stddef.h>
+
+@dots{}
+
+char string[] = "words separated by spaces -- and, punctuation!";
+const char delimiters[] = " .,;:!-";
+char *token;
+
+@dots{}
+
+token = strtok (string, delimiters);  /* token => "words" */
+token = strtok (NULL, delimiters);    /* token => "separated" */
+token = strtok (NULL, delimiters);    /* token => "by" */
+token = strtok (NULL, delimiters);    /* token => "spaces" */
+token = strtok (NULL, delimiters);    /* token => "and" */
+token = strtok (NULL, delimiters);    /* token => "punctuation" */
+token = strtok (NULL, delimiters);    /* token => NULL */
+@end example
+
+Using @code{strtok} is often a bad idea, for two reasons:
+
+@itemize @bullet
+@item
+It's not reentrant.  @xref{Restrictions on Handler Functions}, for
+a discussion of where and why reentrancy is important.
+
+@item
+It won't work if the string is a constant.  For example, in the program
+above we were very careful to pass it a string variable rather than a
+string literal.  Even on non-constant strings, the destructive
+modification of the string by @code{strtok} can cause unexpected
+behavior if your program has multiple pointers to the same string.
+To some extent, passing a copy of the string (made with @code{strcpy},
+for example) can address this problem.
+@end itemize
+
+

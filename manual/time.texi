@@ -1,0 +1,765 @@
+@node Date and Time
+@chapter Date and Time
+@pindex <time.h>
+
+This chapter describes functions for manipulating dates and times,
+including functions for determining what the current time is and
+conversion between different time representations.
+
+The time functions fall into two main categories:
+
+@itemize @bullet
+@item 
+Functions for measuring elapsed CPU time are discussed in @ref{Processor
+Time}.
+
+@item
+Functions for measuring absolute clock or calendar time are discussed in
+@ref{Calendar and Local Time}.
+@end itemize
+
+@menu
+* Processor Time::		Measures processor time used by a program.
+* Calendar and Local Time::	Manipulation of ``real'' dates and times.
+* Other Time Functions::	Pointers to related functions.
+@end menu
+
+@node Processor Time
+@section Processor Time
+
+If you're trying to optimize your program or measure its efficiency,
+it's very useful to be able to know how much @dfn{processor time} or
+@dfn{CPU time} it has used at any given point.  Processor time is
+different from actual wall clock time because it doesn't include any
+time spent waiting for resources being used by other processes in a
+multitasking environment.  Processor time is represented by the data
+type @code{clock_t}, and is given as a number of @dfn{clock ticks}
+relative to an arbitrary base time marking the beginning of a single
+program invocation.
+@cindex CPU time
+@cindex processor time
+@cindex clock ticks
+
+@menu
+* Basic Elapsed CPU Time Inquiry::	The @code{clock} function.
+* Detailed Elapsed CPU Time Inquiry::	The @code{times} function.
+@end menu
+
+@node Basic Elapsed CPU Time Inquiry
+@subsection Basic Elapsed CPU Time Inquiry
+
+To get the elapsed CPU time used by a process, you can use the
+@code{clock} function.  This facility is declared in the header file
+@file{<time.h>}.
+
+In typical usage, you call the @code{clock} function at the beginning
+and end of the interval you want to time, subtract the values, and then
+divide by @code{CLOCKS_PER_SEC} (the number of clock ticks per second),
+like:
+
+@example
+#include <time.h>
+
+clock_t start, end;
+double elapsed;
+
+start = clock();
+@dots{}
+end = clock();
+elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+@end example
+
+Different computers and operating systems vary wildly in how they keep
+track of processor time.  It's common for the internal processor clock
+to have a resolution somewhere between hundredths and millionths of a
+second.
+
+In the GNU system, @code{clock_t} is equivalent to @code{long int} and
+@code{CLOCKS_PER_SEC} is an integer value.  But in other systems, both
+@code{clock_t} and the type of the macro @code{CLOCKS_PER_SEC} can be
+either integer or floating-point types.  Casting processor time values
+to @code{double}, as in the example above, makes sure that operations
+such as arithmetic and printing work properly and consistently no matter
+what the underlying representation is.
+
+@defvr Macro CLOCKS_PER_SEC
+The value of this macro is the number of clock ticks per second measured
+by the @code{clock} function.
+@end defvr
+
+@defvr Macro CLK_TCK
+This is an obsolete name for @code{CLOCKS_PER_SEC}.  
+@end defvr
+
+@deftp {Data Type} clock_t
+This is the type of the value returned by the @code{clock} function.
+Values of type @code{clock_t} are in units of clock ticks.
+@end deftp
+
+@deftypefun clock_t clock (void)
+This function returns the elapsed processor time.  The base time is
+arbitrary but doesn't change within a single process.  If the processor
+time is not available or cannot be represented, @code{clock} returns the
+value @code{(clock_t)(-1)}.
+@end deftypefun
+
+
+@node Detailed Elapsed CPU Time Inquiry
+@subsection Detailed Elapsed CPU Time Inquiry
+
+The @code{times} function returns more detailed information about
+elapsed processor time in a @code{struct tms} object.  You should
+include the header file @file{<sys/times.h>} to use this facility.
+
+@deftp {Data Type} {struct tms}
+The @code{tms} structure is used to return information about process
+times.  It contains at least the following members:
+
+@table @code
+@item clock_t tms_utime
+This is the CPU time used in executing the instructions of the calling
+process.
+
+@item clock_t tms_stime
+This is the CPU time used by the system on behalf of the calling process.
+
+@item clock_t tms_cutime
+This is the sum of the @code{tms_utime}s and @code{tms_cutime}s of all
+terminated child processes of the calling process, whose status has been
+reported to the parent process by @code{wait} or @code{waitpid};
+@pxref{Process Completion}.  In other words, it represents the total
+CPU time used in executing the instructions of all the child processes
+of the calling process.
+
+@item clock_t tms_cstime
+This is similar to @code{tms_cutime}, but represents the total
+CPU time used by the system on behalf of all the child processes of the
+calling process.
+@end table
+
+All of the times are given in clock ticks.  These are absolute values
+relative to the time when the process was created; @pxref{Creating a
+Process}.
+@end deftp
+
+@deftypefun clock_t times (struct tms *@var{buffer})
+The @code{times} function stores the processor time information for
+the calling process in @var{buffer}.
+
+The return value is the elapsed real time relative to an arbitrary base.
+The base is a constant within a particular process, and typically
+represents the time since system start-up.  A value of
+@code{(clock_t)(-1)} is returned to indicate failure.
+@end deftypefun
+
+@strong{Portability Note:} The @code{clock} function described in
+@ref{Basic Elapsed CPU Time Inquiry}, is specified by the ANSI C
+standard.  The @code{times} function is a feature of POSIX.1.  In the
+GNU system, the value returned by the @code{clock} function is
+equivalent to the sum of the @code{tms_utime} and @code{tms_stime}
+fields returned by @code{times}.
+
+@node Calendar and Local Time
+@section Calendar and Local Time
+
+This section describes facilities for keeping track of dates and times
+according to the Gregorian calendar.
+@cindex Gregorian calendar
+
+There are three representations for date and time information:
+
+@itemize @bullet
+@item 
+@dfn{Calendar time} (the @code{time_t} data type) is a compact internal
+representation, typically giving the number of seconds elapsed since
+some implementation-specific base time.
+
+@cindex calendar time
+
+@item
+There is also a @dfn{high-resolution time} representation (the
+@code{struct timeval} data type) that includes fractions of a second.
+This time representation is used instead of calendar time when greater
+precision is required.
+@cindex high-resolution time
+
+@item
+@dfn{Local time} or @dfn{broken-down time} (the @code{struct
+tm} data type) represents the date and time as a set of components
+specifying the year, month, and so on, for a specific time zone.
+This time representation is usually used in conjunction with formatting
+date and time values.
+@cindex local time
+@cindex broken-down time
+@end itemize
+
+@menu
+* Calendar Time::		Facilities for manipulating calendar time.
+* High-Resolution Calendar::	A time representation with greater precision.
+* Local Time::			Facilities for manipulating local time.
+* Formatting Date and Time::	Converting times to strings.
+* Time Zone::			How to specify the time zone.
+* Time Functions Example::	An example program showing use of some of
+				 the time functions.
+@end menu
+
+@node Calendar Time
+@subsection Calendar Time
+
+This section describes the @code{time_t} data type for representing
+calendar time, and the functions which operate on calendar time objects.
+These facilities are declared in the header file @file{<time.h>}.
+
+@cindex epoch
+@deftp {Data Type} time_t
+This is the data type used to represent calendar time.  In the GNU C
+Library and other POSIX-compliant implementations, @code{time_t} is
+equivalent to @code{long int}.  When interpreted as an absolute time
+value, it represents the number of seconds elapsed since 00:00:00 on
+January 1, 1970, Coordinated Universal Time.  (This date is sometimes
+referred to as the @dfn{epoch}.)
+
+In other systems, @code{time_t} might be either an integer or
+floating-point type.
+@end deftp
+
+@deftypefun double difftime (time_t @var{time1}, time_t @var{time0})
+The @code{difftime} function returns the number of seconds elapsed
+between time @var{time1} and time @var{time0}, as a value of type
+@code{double}.  
+
+In the GNU system, you can simply subtract @code{time_t} values.  But on
+other systems, the @code{time_t} data type might use some other encoding
+where subtraction doesn't work directly.
+@end deftypefun
+
+@deftypefun time_t time (time_t *@var{result})
+The @code{time} function returns the current time as an value of type
+@code{time_t}.  If the argument @var{result} is not a null pointer, the
+time value is also stored in the object it points to.  If the calendar 
+time is not available, the value @code{(time_t)(-1)} is returned.
+@end deftypefun
+
+
+@node High-Resolution Calendar
+@subsection High-Resolution Calendar
+
+The @code{time_t} data type used to represent calendar times has a 
+resolution of only one second.  Sometimes, this is not enough to 
+accurately represent time values.
+
+So, the GNU C Library also contains functions which are capable of
+representing calendar times to a higher resolution than one second.  The
+functions and the associated data types described in this section are
+declared in @file{<sys/time.h>}.
+
+@deftp {Data Type} {struct timeval}
+The @code{struct timeval} structure represents a calendar time.  It
+has the following members:
+
+@table @code
+@item long tv_sec
+This represents the number of seconds since the epoch.  It is equivalent
+to a normal @code{time_t} value.
+
+@item long tv_usec
+This is the fractional second value, represented as the number of
+microseconds.
+
+@strong{Incomplete:}  For a negative time value, is the fractional part
+also negative?
+@end table
+@end deftp
+
+@deftp {Data Type} {struct timezone}
+The @code{struct timezone} structure is used to hold minimal information
+about the local time zone.  It has the following members:
+
+@table @code
+@item int tz_minuteswest
+This is the number of minutes west of GMT.
+
+@item int tz_dsttime
+If nonzero, daylight savings time applies during some part of the year.
+@end table
+@end deftp
+
+@deftypefun int gettimeofday (struct timeval *@var{tp}, struct timezone *@var{tzp})
+The @code{gettimeofday} function returns the current date and time in the
+@code{struct timeval} structure indicated by @var{tp}.  Information about the
+time zone is returned in the structure pointed at @var{tzp}.  If the @var{tzp}
+argument is a null pointer, time zone information is ignored.
+
+The return value is @code{0} on success and @code{-1} on failure.
+@end deftypefun
+
+@deftypefun int settimeofday (const struct timeval *@var{tp}, const struct timezone *@var{tzp})
+The @code{settimeofday} function sets the current date and time
+according to the arguments.  As for @code{gettimeofday}, time zone
+information is ignored if @var{tzp} is a null pointer.
+
+You must be a privileged user in order to use @code{settimeofday}.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error condition is defined for this function:
+
+@table @code
+@item EPERM
+You do not have privilege to set the time.
+@end table
+@end deftypefun
+
+@deftypefun int adjtime (const struct timeval *@var{delta}, struct timeval *@var{olddelta})
+This function speeds up or slows down the system clock in order to make
+small adjustments in the current time.  This ensures that the time
+reported by the system clock is always monotonically increasing, which
+might not happen if you simply set the current time.
+
+The @var{delta} argument specifies a relative adjustment to be made to
+the current time.  If negative, the system clock is slowed down for a
+while until it has lost this much time.  If positive, the system clock
+is speeded up for a while.
+
+If the @var{olddelta} argument is not a null pointer, the @code{adjtime}
+function returns information about any previous time adjustment that
+has not yet completed.
+
+This function is typically used to synchronize the clocks of computers
+in a local network.  You must be a privileged user to use it.
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error condition is defined for this function:
+
+@table @code
+@item EPERM
+You do not have privilege to set the time.
+@end table
+@end deftypefun
+
+@strong{Portability Note:}  The @code{gettimeofday}, @code{settimeofday},
+and @code{adjtime} functions are provided for compatibility with BSD.  
+
+
+@node Local Time
+@subsection Local Time
+
+This section describe functions which operate on local time objects, and
+functions for converting between local time and calendar time
+representations.  These facilities are declared in the header file
+@file{<time.h>}.
+
+The local time representation is usually used in conjunction with
+formatting or printing date and time values.  It is easier to perform
+comparisons and arithmetic on time values in one of the other
+representations.  Plus, the other representations are more compact.
+
+@deftp {Data Type} {struct tm}
+This is the data type used to represent local time.  The structure
+contains at least the following members, which can appear in any order:
+
+@table @code
+@item int tm_sec
+This is the number of seconds after the minute, normally in the range
+0 to 59.  (The actual upper limit is 61, to allow for ``leap seconds''.)
+@cindex leap second
+
+@item int tm_min
+This is the number of minutes after the hour, in the range @code{0} to
+@code{59}.
+
+@item int tm_hour
+This is the number of hours past midnight, in the range @code{0} to
+@code{23}.
+
+@item int tm_mday
+This is the day of the month, in the range @code{1} to @code{31}.
+
+@item int tm_mon
+This is the number of months since January, in the range @code{0} to
+@code{11}.
+
+@item int tm_year
+This is the number of years since 1900.
+
+@item int tm_wday
+This is the number of days since Sunday, in the range @code{0} to @code{6}.
+
+@item int tm_yday
+This is the number of days since January 1, in the range @code{0} to
+@code{365}.
+
+@item int tm_isdst
+This is a flag that indicates whether Daylight Saving Time (or summer
+time) is in effect.  The value is true if Daylight Saving Time is in
+effect, zero if it is not, and negative if the information is not
+available.
+@cindex Daylight Saving Time
+@cindex summer time
+@end table
+@end deftp
+
+@deftypefun {struct tm *} localtime (const time_t *@var{time})
+The @code{localtime} function converts the calendar time pointed to by
+@var{time} to local time representation, expressed relative to the
+local time zone.
+
+The return value is a pointer to a static local time structure, which
+might be overwritten by subsequent calls to any of the date and time
+functions.  (But no other library function overwrites the contents of
+this object.)
+@end deftypefun
+
+@deftypefun {struct tm *} gmtime (const time_t *@var{time})
+This function is similar to @code{localtime}, except that the local time
+is expressed as Coordinated Universal Time (UTC) --- that is, as
+Greenwich Mean Time (GMT) rather than relative to the local time zone.
+If the implementation can't figure out where the local time zone is
+relative to GMT, this function returns a null pointer.
+@end deftypefun
+
+@deftypefun time_t mktime (struct tm *@var{localtime})
+The @code{mktime} function is used to convert a local time structure
+to a calendar time representation.  It also ``normalizes'' the contents
+of the local time structure, and can be used to determine the day of
+week and day of year if the other date and time components are known.
+
+The initial contents of the @code{tm_wday} and @code{tm_yday} members of
+the local time structure pointed to by @var{localtime} are discarded.
+The values of the other components are used to compute the calendar
+time; it's permissible for these components to have unnormalized values
+outside of their normal ranges.  Finally, the components of the
+@var{localtime} structure (including the @code{tm_wday} and
+@code{tm_yday}) are adjusted.
+
+If the calendar time cannot be represented, @code{mktime} returns a value
+of @code{(time_t)(-1)} and does not modify the contents of @var{localtime}.
+@end deftypefun
+
+@node Formatting Date and Time
+@subsection Formatting Date and Time
+
+The functions described in this section format time values as strings.
+These functions are declared in the header file @file{<time.h>}.
+
+@deftypefun {char *} asctime (const struct tm *@var{localtime})
+The @code{asctime} function writes the local time value pointed at
+by @var{localtime} into a string in a standard format:
+
+@example
+"Tue May 21 13:46:22 1991\n"
+@end example
+
+The abbreviations for the days of week are: @code{Mon}, @code{Tue},
+@code{Wed}, @code{Thu}, @code{Fri}, and @code{Sat}.
+
+The abbreviations for the months are: @code{Jan}, @code{Feb},
+@code{Mar}, @code{Apr}, @code{May}, @code{Jun}, @code{Jul}, @code{Aug},
+@code{Sep}, @code{Oct}, @code{Nov}, and @code{Dec}.
+
+The return value points to a statically allocated string, which might be
+overwritten by subsequent calls to any of the date and time functions.
+(But no other library function overwrites the contents of this
+string.)
+@end deftypefun
+
+@deftypefun {char *} ctime (const time_t *@var{time})
+The @code{ctime} function is similar to @code{asctime}, except that
+the time value is specified in calendar time (rather than local time)
+format.  It is equivalent to
+
+@example
+asctime (localtime (@var{time}))
+@end example
+@end deftypefun
+
+@deftypefun size_t strftime (char *@var{s}, size_t @var{size}, const char *@var{template}, const struct tm *@var{localtime})
+
+This function is similar to the @code{sprintf} function
+(@pxref{Formatted Input}), but the conversion specifications that
+can appear in the format template @var{template} are specialized for
+printing components of the date and time @var{localtime} according
+to the @code{LC_TIME} attributes of the current locale.
+
+Ordinary characters appearing in the @var{template} are copied to the
+output string @var{s}; this can include multibyte character sequences.
+Conversion specifiers are introduced by a @samp{%} character, and are
+replaced in the output string as follows:
+
+@table @code
+@item %a
+The abbreviated weekday name for the locale.
+
+@item %A
+The full weekday name for the locale.
+
+@item %b
+The abbreviated month name for the locale.
+
+@item %B
+The full month name for the locale.
+
+@item %c
+The date and time representation appropriate for the locale.
+
+@item %d
+The day of the month as a decimal number (range @code{01} to @code{31}).
+
+@item %H
+The hour as a decimal number, using a 24-hour clock (range @code{00} to
+@code{23}).
+
+@item %I
+The hour as a decimal number, using a 12-hour clock (range @code{01} to
+@code{12}).
+
+@item %j
+The day of the year as a decimal number (range @code{001} to @code{366}).
+
+@item %m
+The month as a decimal number (range @code{01} to @code{12}).
+
+@item %M
+The minute as a decimal number.
+
+@item %p
+The equivalent of AM/PM deisgnations associated with a 12-hour clock in
+the locale.
+
+@item %S
+The second as a decimal number.
+
+@item %U
+The week number of the current year as a decimal number, starting with
+the first Sunday as the first day of the first week.
+
+@item %w
+The weekday as a decimal number, Sunday being @code{0}.
+
+@item %W
+The week number of the current year as a decimal number, starting with
+the first Monday as the first day of the first week.
+
+@item %x
+The appropriate date representation for the locale.
+
+@item %X
+The appropriate time representation for the locale.
+
+@item %y
+The year as a decimal number, but without a century (range @code{00} to
+@code{99}).
+
+@item %Y
+The year as a decimal number, including the century.
+
+@item %Z
+The time zone or name or abbreviation (empty if the time zone can't be
+determined).
+
+@item %%
+A literal @samp{%} character.
+@end table
+
+The @code{size} parameter can be used to specify the maximum number of
+characters to be stored in the array @var{s}, including the terminating
+null character.  The return value from @code{strftime} is the number of
+characters placed in the array @var{s}, not including the terminating
+null character.
+
+If copying takes place between objects that overlap, the behavior is
+undefined.
+@end deftypefun
+
+
+@node Time Zone
+@subsection Time Zone
+
+The GNU system provides additional utilities for specifying the time
+zone by means of the @code{TZ} environment variable.  For information
+about how to set environment variables, @pxref{Environment Variables}.
+The functions for accessing the time zone are declared in
+@file{<time.h>}.
+
+The value of the @code{TZ} variable can be of one of three formats.  The
+first form is
+
+@example
+:@var{characters}
+@end example
+
+where the @var{characters} have an implementation-dependent interpretation.
+
+@strong{Incomplete:} Roland says that the characters are interpreted as
+a name of a file, but the implementation of this feature isn't really
+finished yet.
+
+The second format is used when there is no Daylight Saving Time (or summer
+time) in the local time zone:
+
+@example
+@r{@var{std} @var{offset}}
+@end example
+
+The @var{std} string specifies the name of the time zone.  It must be
+three or more characters long and must not contain a leading colon or
+embedded digits, commas, or plus or minus signs.  There is no space
+character separating the time zone name from the @var{offset}, so these
+restrictions are necessary to parse the specification correctly.
+
+The @var{offset} specifies the time value one must add to the local time
+to get a Coordinated Universal Time value.  It has syntax like
+[@code{+}|@code{-}]@var{hh}[@code{:}@var{mm}[@code{:}@var{ss}]].  This
+is positive if the local time zone is west of the Prime Meridian and
+negative if it is east.  The hour must be between @code{0} and
+@code{24}, and the minute and seconds between @code{0} and @code{59}.
+
+The third format is used is when there is Daylight Saving Time:
+
+@example
+@r{@var{std} @var{offset} @var{dst} [@var{offset}]@code{,}@var{start}[@code{/}@var{time}]@code{,}@var{end}[@code{/}@var{time}]}
+@end example
+
+The initial @var{std} and @var{offset} specify the standard time zone,
+as described above.  The @var{dst} string and @var{offset} specify the
+name and offset for the summer time zone; if the @var{offset} is
+omitted, it defaults to one hour ahead of standard time.
+
+The remainder of the specification describes when summer time is in
+effect.  The @code{start} field is when summer time goes into effect
+and the @code{end} field is when the change is made back to standard
+time.  The following formats are recognized for these fields:
+
+@table @code
+@item {J@var{n}}
+This specifies the Julian day, with @var{n} between @code{1} and @code{365}.
+February 29 is never counted, even in leap years.
+
+@item @var{n}
+This specifies the Julian day, with @var{n} between @code{0} and @code{365}.
+February 29 is counted in leap years.
+
+@item {M@var{m}.@var{w}.@var{d}}
+This specifies day @var{d} of week @var{w} of month @var{m}.  The day
+@var{d} must be between @code{0} (Sunday) and @code{6}.  The week
+@var{w} must be between @code{1} and @code{5}; week @code{1} is the
+first week in which day @var{d} occurs, and week @code{5} specifies the
+@emph{last} @var{d} day in the month.  The month @var{m} should be
+between @code{1} and @code{12}.
+@end table
+
+The @var{time} fields specify when, in the local time currently in
+effect, the change to the other time occurs.  If omitted, the default is
+@code{02:00:00}.
+
+For example, here is how one would specify the Eastern time zone in the
+United States.  The normal offset from GMT is 5 hours; since this is
+west of the prime meridian, the sign is positive.  Summer time begins on
+the first Sunday in April at 2:00am, and ends on the last Sunday in
+October at 2:00am.
+
+@example
+EST+5EDT,M4.1.0/M10.5.0
+@end example
+
+@strong{Incomplete:} It looks to me like this format for describing a time
+zone has problems with historical dates, since the rules for when daylight
+savings time are in effect have changed from time to time.  I guess it
+just assumes the current rules have always been in effect.
+
+If the @code{TZ} environment variable does not have a value, the time
+zone is determined in an implementation-specific way.
+
+@deftypevar {char **} tzname
+This variable is a two-element array of strings that represent the
+designations for the standard (element @code{0}) and summer (element
+@code{1}) time zones.  These correspond to the @var{std} and @var{dst}
+strings (respectively) from the @code{TZ} environment variable.
+
+The @code{tzname} array is initialized from the @code{TZ} environment
+variable whenever @code{tzset}, @code{ctime}, @code{strftime},
+@code{mktime}, or @code{localtime} are called.
+@end deftypevar
+
+@deftypefun void tzset (void)
+The @code{tzset} function initializes the @code{tzname} variable from
+the value of the @code{TZ} environment variable.  
+@end deftypefun
+
+The following variables are defined for compatibility with System V
+Unix.
+
+@deftypevar {long int} timezone
+This contains the difference between GMT and local standard time, in
+seconds.  For example, in the U.S. Eastern time zone, the value is
+@code{5*60*60}.
+@end deftypevar
+
+@deftypevar {int} daylight
+This variable has a nonzero value if the standard U.S. daylight savings
+time rules apply.
+@end deftypevar
+
+@strong{Incomplete:}  All of these different mechanisms for specifying
+time zones and daylight savings time are confusing.  How do they really
+interact?  What do we recommend that people do?
+
+@node Time Functions Example
+@subsection Time Functions Example
+
+Here is an example program showing the use of some of the local time and
+calendar time functions.
+
+@example
+#include <time.h>
+#include <stdio.h>
+
+#define SIZE 256
+
+void main (void)
+@{
+  char buffer[SIZE];
+  time_t curtime;
+  struct tm *loctime;
+
+  /* @r{Get the current time.} */
+  curtime = time (NULL);
+
+  /* @r{Convert it to local time representation.} */
+  loctime = localtime (&curtime);
+
+  /* @r{Print out the date and time in the standard format.} */
+  fputs (asctime (loctime), stdout);
+
+  /* @r{Print it out in a nice format.} */
+  strftime (buffer, SIZE, "Today is %A, %B %d.\n", loctime);
+  fputs (buffer, stdout);
+  strftime (buffer, SIZE, "The time is %I:%M %p.\n", loctime);
+  fputs (buffer, stdout);
+@}
+@end example
+
+It produces output like this:
+
+@example
+Wed Jul 31 13:02:36 1991
+Today is Wednesday, July 31.
+The time is 01:02 PM.
+@end example
+
+
+@node Other Time Functions
+@section Other Time Functions
+
+In addition to the functions described in this chapter, the GNU Library
+contains some other related functions that manipulate time values.
+
+Files have an associated modification and access time.  The functions for
+accessing these timestamps are described in @ref{File Attributes}.
+
+A process has a set of alarm timers associated with it; when the timer
+expires, an alarm signal is sent to the process.  @xref{Setting an Alarm},
+for information about how to schedule an alarm.
+
+Related to this, you can also schedule an alarm and then put your
+process to sleep until it expires.  @xref{Waiting for a Signal}, for
+information on how to do this.
+

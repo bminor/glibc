@@ -1,0 +1,534 @@
+@node Introduction
+@chapter Introduction
+
+The C language provides no built-in facilities for performing such
+common operations as input/output, memory management, string
+manipulation, and the like.  Instead, these facilities are defined
+in a standard @dfn{library}, which you compile and link with your
+programs.
+@cindex library
+
+The GNU C Library, described in this document, defines all of the
+library functions that are specified by the ANSI C standard, as well as
+additional features specific to POSIX and other derivatives of the Unix
+operating system, and extensions specific to the GNU system.
+
+The purpose of this manual is to tell you how to use the facilities
+of the GNU library.  We have mentioned which features belong to which
+standards to help you identify things that are potentially nonportable
+to other systems.  But the emphasis on this manual is not on strict
+portability.
+
+
+@node Getting Started
+@section Getting Started
+
+This manual is written with the assumption that you are at least
+somewhat familiar with the C programming language and basic programming
+concepts.  Specifically, familiarity with ANSI standard C
+(@pxref{ANSI C}), rather than ``traditional'' pre-ANSI C dialects, is
+assumed.
+
+The GNU C Library includes several @dfn{header files}, each of which
+provides definitions and declarations for a group of related facilities;
+this information is used by the C compiler when processing your program.
+For example, the header file @file{<stdio.h>} declares facilities for
+performing input and output, and the header file @file{<string.h>}
+declares string processing utilities.  The organization of this manual
+generally follows the same division as the header files.
+
+If you are reading this manual for the first time, you should read all
+of the introductory material and skim the remaining chapters.  There are
+a @emph{lot} of functions in the GNU C Library and it's not realistic to
+expect that you will be able to remember exactly @emph{how} to use each
+and every one of them.  It's more important to become generally familiar
+with the kinds of facilities that the library provides, so that when you
+are writing your programs you can recognize @emph{when} to make use of
+library functions, and @emph{where} in this manual you can find more
+specific information about them.
+
+
+@node Standards and Portability
+@section Standards and Portability
+@cindex standards
+
+This section discusses the various standards and other sources that the
+GNU C Library is based upon.  These sources include the ANSI C and
+POSIX standards, and the System V and Berkeley Unix implementations.
+
+The primary focus of this manual is to tell you how to make effective
+use of the GNU library facilities.  But if you are concerned about
+making your programs compatible with these standards, or portable to
+operating systems other than GNU, this can affect how you use the
+library.  This section gives you an overview of these standards, so that
+you will know what they are when they are mentioned in other parts of
+the manual.
+
+For information about what standards specify what features, 
+@pxref{Header File Contents}.  
+
+@menu
+* ANSI C::			The American National Standard for the
+				 C programming language.  
+* POSIX::			The IEEE 1003 standards for operating systems.
+* SVID::			The System V Interface Description.  
+* Other Sources::		Other Unix implementations.
+@end menu
+
+@node ANSI C
+@subsection ANSI C
+@cindex ANSI C
+
+The GNU C Library is compatible with the C standard adopted by the
+American National Standards Institute (ANSI): @cite{American National
+Standard X3.159-1989 --- ``ANSI C''}.  The header files and library
+facilities that make up the GNU Library are a superset of those
+specified by the ANSI C standard.
+
+@pindex GNU C compiler
+@pindex GCC, the GNU C compiler
+If you are concerned about strict adherence to the ANSI C standard, you
+should use the @samp{-ansi} option when you compile your programs with
+the GNU C compiler.  This tells the compiler to define @emph{only} ANSI
+standard features from the library header files, unless you explicitly
+ask for additional features.  @xref{Feature Test Macros}, for
+information on how to do this.
+
+Being able to restrict the library to include only ANSI C features is
+important because ANSI C puts limitations on what names can be defined
+by the library implementation, and the GNU extensions violate these
+limitations.  @xref{Reserved Names}, for more information about these
+restrictions.
+
+The GNU C Library specifically does @emph{not} attempt to provide
+backward compatibility with library facilities from older,
+``traditional'' C dialects.  Likewise, this document does not attempt to
+give you complete details on the differences between ANSI C and older
+dialects, or on how to write your programs in such a way that they
+work portably under multiple C dialects.  However, in many areas where
+ANSI C has diverged significantly from older C dialects, this manual
+includes compatibility notes simply to warn you to beware of potential
+portability problems.
+
+@node POSIX
+@subsection POSIX (The Portable Operating System Interface)
+@cindex POSIX
+@cindex POSIX.1
+@cindex IEEE Std 1003.1
+@cindex 1003.1 (IEEE Std)
+@cindex POSIX.2
+@cindex IEEE Std 1003.2
+@cindex 1003.2 (IEEE Std)
+
+The GNU Library is also compatible with the IEEE @dfn{POSIX} family of
+standards, known more formally as the @dfn{Portable Operating System
+Interface for Computer Environments}.  POSIX is derived mostly from
+various versions of the Unix operating system.
+
+The library facilities specified by the POSIX standard are a superset of
+those required by ANSI C; POSIX requires some specific behaviors for
+ANSI C features that ANSI C leaves explicitly vague, as well as
+specifying new features.  In general, the additional requirements and
+functionality defined by the POSIX standard are aimed at providing
+lower-level support for a particular kind of operating system
+environment, rather than general programming language support which can
+run in many diverse operating system environments.@refill
+
+The GNU C Library implements all of the functions specified in
+@cite{IEEE Std 1003.1-1988, the POSIX System Application Program
+Interface}, commonly referred to as POSIX.1.  The primary extensions to
+the ANSI C facilities specified by this standard include file system
+interface primitives (@pxref{File System Interface}), device-specific
+terminal control functions (@pxref{Low-Level Terminal Interface}), and
+process control functions (@pxref{Processes}).
+
+Some facilities from draft 11 of @cite{IEEE Std 1003.2, the POSIX Shell
+and Utilities standard} (POSIX.2) are also implemented in the GNU
+Library.  These include utilities for dealing with regular expressions
+and other pattern matching facilities.
+
+@strong{Incomplete:}  Put in some cross-references when all of this
+material has been incorporated.
+
+@comment Roland sez:
+@comment The GNU C Library as it stands conforms to 1003.2 draft 11, which
+@comment specifies:
+@comment 
+@comment Several new macros in <limits.h>.
+@comment popen, pclose
+@comment <regex.h> (which is not yet fully implemented--wait on this)
+@comment fnmatch
+@comment getopt
+@comment <glob.h>
+@comment <wordexp.h> (not yet implemented)
+@comment confstr
+
+
+@node SVID
+@subsection SVID (The System V Interface Description)
+@cindex SVID
+@cindex System V
+@cindex Unix System V
+
+The @dfn{System V Interface Description} (SVID) is a document describing
+the AT&T Unix System V operating system.  It is to some extent a
+superset of the POSIX standard (@pxref{POSIX}).
+
+The GNU C Library defines some of the facilities required by the SVID
+that are not also required by the ANSI or POSIX standards, for
+compatibility with AT&T Unix System V and other Unix systems (such as
+SunOS) which include these facilities.  However, many of the more
+obscure and less generally useful facilities required by the SVID are
+not included.  (In fact, Unix System V itself does not provide them all.)
+
+@strong{Incomplete:}  Are there any particular System V facilities that
+ought to be mentioned specifically here?
+
+@node Other Sources
+@subsection Other Sources
+@cindex BSD Unix
+@cindex 4.2 BSD Unix
+@cindex 4.3 BSD Unix
+@cindex Berkeley Unix
+@cindex SunOS
+
+The GNU C Library defines facilities from some other versions of Unix,
+specifically from the 4.2 BSD and 4.3 BSD Unix systems (also known as
+@dfn{Berkeley Unix}) and from @dfn{SunOS} (a popular 4.2 BSD derivative
+that includes some Unix System V functionality).  
+
+There is no standard for the Berkeley and Sun Unices, but the GNU C
+Library provides some features borrowed from these systems for the sake
+of compatibility.
+
+@strong{Incomplete:} Are there any particular Berkeley/SunOS facilities
+that ought to be mentioned specifically here?
+
+
+@node Using the Library
+@section Using the Library
+
+This section describes some of the practical issues involved in using
+the GNU C Library.
+
+@menu
+* Header Files::	How to include the header files in your programs.
+* Macro Definitions::	Some functions in the library may really be 
+			 implemented as macros.
+* Reserved Names::	The C standard reserves some names for the library,
+			 and some for users.
+* Feature Test Macros:: How to control what names are defined.
+@end menu
+
+@node Header Files
+@subsection Header Files
+@cindex header files
+
+Libraries for use by C programs really consist of two parts: @dfn{header
+files} that define types and macros, and declare variables and
+functions; and the actual library or @dfn{archive} that contains the
+definitions of the variables and functions.
+
+(Recall that in C, a @dfn{declaration} merely provides information that
+a function or variable exists and gives its type.  For a function
+declaration, information about the types of its arguments might be
+provided as well.  The purpose of declarations are to allow the compiler
+to correctly process references to the declared variables and functions.
+A @dfn{definition}, on the other hand, actually allocates storage for a
+variable or says what a function does.)
+@cindex definition
+@cindex declaration
+
+In order to use the facilities in the GNU C Library, you should be sure
+that your program source files include the appropriate header files.
+This is so that the compiler has declarations of these facilities
+available and can correctly process references to them.  Once your
+program has been compiled, the linker resolves these references to
+the actual definitions provided in the archive file.
+
+@findex #include
+
+Header files are included into a program source file by the
+@samp{#include} preprocessor directive.  The C language supports two
+forms of this directive:
+
+@example
+#include "file.h"
+@end example
+
+@noindent 
+is typically used to include a header file @file{file.h} that you write
+yourself that contains definitions and declarations about the interfaces
+between the different parts of your particular application, while
+
+@example
+#include <file.h>
+@end example
+
+@noindent
+is typically used to include a header file @file{file.h} that contains
+definitions and declarations for a standard library, that is normally
+installed in a standard place by your system administrator.  You should
+use this second form for the C Library header files.
+
+Typically, @samp{#include} directives are placed at the top of the C
+source file, before any other code.  If you begin your source files with
+some comments explaining what the code in the file does (a good idea),
+then put the @samp{#include} directives immediately afterwards.
+
+For more information about the use of header files and @samp{#include}
+directives, @pxref{Header Files,,, cpp.texinfo, The GNU C Preprocessor
+Manual}.@refill
+
+The GNU C Library provides several header files, each of which contains
+the type and macro definitions and variable and function declarations
+for a group of related facilities.  This means that your programs may
+need to include several header files, depending on exactly which
+facilities you are using.
+
+Note that some header files from the library might implicitly include
+other header files from the library.  However, as a matter of
+programming style, you should not rely on this; it is better to
+explicitly include all the header files required for the library
+facilities you are using.  The GNU C Library header files have been
+written in such a way that it doesn't matter if a header file is
+accidentally included more than once; there is no problem with
+definitions and declarations in the header file being repeated.
+Likewise, if your program needs to include multiple header files, the
+order in which they are included doesn't matter.
+
+@strong{Compatibility Note:} Inclusion of standard header files in any
+order and any number of times is required to work correctly in any
+conforming ANSI C implementation.  However, this has traditionally not
+been the case in many older C implementations.
+
+Strictly speaking, you don't @emph{have to} include a header file to use
+a function it declares; you could declare the function explicitly
+yourself, according to its documented declaration.  But it is usually
+better to include the header file because it may define types and macros
+that are not otherwise available and because it may define more
+efficient macro replacements for some functions.  It is also a sure way
+to have the correct declaration.
+
+@node Macro Definitions
+@subsection Macro Definitions of Functions
+@findex #undef
+@cindex superseding function declarations with macros
+@cindex removing macros that supersede function declarations
+@cindex undefining macros that supersede function declarations
+
+If we describe something as a function in this manual, it may
+have a macro definition as well.  On the other hand, if we
+describe it as a macro, then it is @emph{only} a macro.
+
+You normally have no reason to care whether a macro or function
+definition is used in your program --- they both have the same effect.
+In particular, macro definitions evaluate arguments exactly once, in the
+same way that a function call would.  The main reason for these macro
+definitions is that sometimes they can produce an inline expansion that
+is considerably faster than an actual function call.
+
+Taking the address of a library function works even if it is also
+defined as a macro.  This is because, in this context, the name of the
+function isn't followed by the left parenthesis that is syntactically
+necessary to recognize it as a macro call.
+
+You might occasionally want to suppress a macro definition of a
+function.  For example, doing so might make your program easier to
+debug.  There are two ways you can do this:
+
+@itemize @bullet
+@item 
+You can locally suppress a macro definition by enclosing the name of the
+function in parentheses.  This works because the name of the function
+doesn't appear in a syntactic context where it is recognizable as a
+macro call.
+
+@item
+You can globally suppress any macro definition by using the @samp{#undef}
+preprocessor directive, unless it is explicitly stated otherwise in the
+description of that facility.
+@end itemize
+
+For example, suppose the header file @file{<stdlib.h>} declares the
+function @code{abs} with @samp{extern int abs(int i);} and also provides
+a macro definition for @code{abs}.  Then, in
+
+@example
+#include <stdlib.h>
+int f (int *i) @{ return (abs (++*i)); @}
+@end example
+
+@noindent
+the reference to @code{abs} might refer to either a macro or a function.
+On the other hand, in each of the following examples, the reference is
+to a function and not a macro.
+
+@example
+#include <stdlib.h>
+int g (int *i) @{ return ((abs)(++*i)); @}
+
+#undef abs
+int h (int *i) @{ return (abs (++*i)); @}
+@end example
+
+Since preprocessor macro definitions that supersede a function behave in
+exactly the same way as the actual function version, there is usually no
+need for any of these methods.  In fact, removing macro definitions is
+usually counterproductive, because doing so prevents your program from
+taking advantage of the more efficient macro definitions.
+
+@node Reserved Names
+@subsection Reserved Names
+@cindex reserved names
+@cindex name space
+
+The ANSI C standard specifies that the names of all types, macros,
+variables and functions that are part of the standard library are
+reserved names.  This means that your programs @strong{may not} redefine
+these names, even if they don't include the header files that make the
+definitions and declarations.  The POSIX standard makes similar
+restrictions about the names it defines.
+
+There are at least the following reasons for these restrictions:
+
+@itemize @bullet
+@item
+It avoids confusion over whether you're getting your own definition of a
+function or one from the standard library when you make a function call.
+Other people reading your code could get very confused if you were using
+a function named @code{exit} to do something completely different from
+what the standard @code{exit} function does, for example.  Preventing
+this situation helps to make your programs easier to understand and
+contributes to modularity and maintainability.
+
+@item
+It avoids the possibility of a user accidentally redefining a library
+function that is called by other library functions.  If redefinition
+were allowed, those other functions would not work properly.
+
+@item
+It allows the compiler to do whatever special optimizations it pleases
+on calls to these functions, without the possibility that they may have
+been redefined by the user.  Some library facilities, such as those for
+dealing with variadic arguments (@pxref{Variable Argument Facilities})
+and non-local jumps (@pxref{Non-Local Jumps}), actually require a
+considerable amount of cooperation on the part of the C compiler, and
+implementationally it might be easier for the compiler to treat these as
+built-in parts of the language.
+@end itemize
+
+In addition to all the names that have actual definitions documented,
+all external identifiers (global functions and variables) that begin
+with an underscore (@samp{_}) and all other identifiers that begin with
+either two underscores or an underscore followed by a capital letter are
+reserved names.  This is so that functions, variables, and macros
+internal to the workings of the C library or the compiler or specific to
+the implementation and nonstandard can be defined without intruding on
+the name space of user programs, and without the possibility of a user
+program redefining names used internally in the implementation of the
+library.
+
+There are also some further classes of identifiers that are reserved for
+future extensions to the C language.  While using these names for your
+own purposes right now might not cause a problem, it does leave open the
+possibility of compatibility problems with future versions of the C
+standard, so you should avoid these names.
+
+@itemize @bullet
+@item 
+Names beginning with a capital @samp{E} followed a digit or uppercase
+letter may be used for additional error constants.  @xref{Error
+Reporting}.
+
+@item
+Names that begin with either @samp{is} or @samp{to} followed by a
+lowercase letter may be used for additional character testing and
+conversion functions.  @xref{Character Handling}.
+
+@item
+Names that begin with @samp{LC_} followed by an uppercase letter may be
+used for additional macros specifying locale attributes.
+@xref{Localization}.
+
+@item
+Names of all existing mathematics functions (@pxref{Mathematics})
+suffixed with @samp{f} or @samp{l} are reserved for corresponding
+functions that operate on @code{float} or @code{long double} arguments
+(respectively).
+
+@item
+Names that begin with @samp{SIG} followed by an uppercase letter are
+reserved for additional signal names.  @xref{Signal Names}.
+
+@item
+Names that begin with @samp{SIG_} followed by an uppercase letter are
+reserved for additional signal actions.  @xref{Basic Signal Handling}.
+
+@item
+Names beginning with @samp{str}, @samp{mem}, or @samp{wcs} followed by a
+lowercase letter are reserved for additional string and array functions.
+@xref{String and Array Utilities}.
+@end itemize
+
+@strong{Incomplete:}  The POSIX.1 rules are even more complicated.  See
+table 2-2.
+
+
+@node Feature Test Macros
+@subsection Feature Test Macros
+
+@cindex feature test macros
+The exact set of features that is made available when you compile a file
+is controlled by which @dfn{feature test macros} you define.
+
+If you compile your programs using @samp{gcc -ansi}, you get only
+the ANSI C library features, unless you explicitly request additional
+features by defining one or more of the feature macros.
+@xref{Options,,, gcc.info, The GNU CC Manual}, for more information
+about GCC options.@refill
+
+You should define these macros by using @samp{#define} preprocessor
+directives at the top of your source code files.  You could also use 
+the @samp{-D} option to GCC, but it's better if you make the source
+files indicate their own meaning in a self-contained way.
+
+@defvr Macro _POSIX_SOURCE
+If this macro is defined, then the functionality from the POSIX.1
+standard (IEEE Standard 1003.1) is made available, as well as all of the
+ANSI C facilities.
+@end defvr
+
+@defvr Macro _POSIX_C_SOURCE
+If this macro is defined and has a value of @code{1}, then the
+functionality from the POSIX.1 standard (IEEE Standard 1003.1) is made
+available.  If this macro is defined and has a value of @code{2}, then
+both the functionality from the POSIX.1 standard and the functionality
+from the POSIX.2 standard (IEEE Standard 1003.2) are made available.
+This is in addition to the ANSI C facilities.
+@end defvr
+
+@defvr Macro _BSD_SOURCE
+If this macro is defined, functionality derived from 4.3 BSD Unix is
+included as well as the ANSI C, POSIX.1, and POSIX.2 material.
+
+Some of the features derived from 4.3 BSD Unix conflict with the
+corresponding features specified by the POSIX.1 standard.  If this
+macro is defined, the 4.3 BSD definitions take precedence over the
+POSIX definitions.
+@end defvr
+
+@defvr Macro _SVID_SOURCE
+If this macro is defined, functionality derived from SVID is
+included as well as the ANSI C, POSIX.1, and POSIX.2 material.
+@end defvr
+
+@defvr Macro _GNU_SOURCE
+If this macro is defined, everything is included: ANSI C, POSIX.1,
+POSIX.2, BSD, SVID, and GNU extensions.  Again, the BSD definitions
+take precedence over the POSIX definitions where there are conflicts.
+@end defvr
+
+If you don't specify the @samp{-ansi} option to GCC and don't define
+any of these macros explicitly, the effect as the same as defining
+@code{_GNU_SOURCE}.

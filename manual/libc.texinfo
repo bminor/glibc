@@ -1,0 +1,166 @@
+\input /gd/gnu/doc/texinfo	@c -*- Texinfo -*-
+@comment %**start of header (This is for running Texinfo on a region.)
+@setfilename library.info
+@settitle The GNU C Library
+@setchapternewpage odd
+@comment %**end of header (This is for running Texinfo on a region.)
+
+@ifinfo
+This file documents the GNU C Library.
+
+Copyright (C) 1990 Free Software Foundation, Inc.
+
+This will be free information when it is finished, but isn't finished yet.
+@end ifinfo
+
+@setchapternewpage odd
+
+@titlepage
+@center @titlefont{The GNU C Library}
+@sp 2
+@center Sandra Loosemore
+@center Roland McGrath
+@center Andrew Oram
+@sp 3
+@center last updated May 6, 1991
+@sp 1
+@center for version 0.00
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1991 Free Software Foundation, Inc.
+@end titlepage
+@page
+
+@node Top
+
+@ifinfo
+@chapter Main Menu
+This is the documentation for the GNU C Library.
+@end ifinfo
+
+@menu
+Overview
+* Introduction::		Purpose of the GNU C Library.
+* Getting Started::		How this document is organized.
+* Standards and Portability::	The functionality in the GNU C Library is
+				 derived from various standards.
+* Using the Library::		How to use the library facilities in
+				 your programs.
+
+Contents of the Library
+* Error Reporting::			How the GNU Library functions report
+					 error conditions.
+* Integer Representation Limits::	Parameters describing integer data
+					 types.
+* Floating-Point Limits::		Parameters describing floating-point
+					 data types.
+* Common Definitions::			<stddef.h>.
+* Variable Argument Facilities::	How to process variable-length
+					 argument lists.
+* Memory Allocation::			Your program can allocate memory
+					 dynamically and manipulate it via
+					 pointers.
+* Character Handling::			Character testing and conversion
+					 functions.
+* String and Array Utilities::		Utilities for copying and comparing
+					 strings and arrays.
+* Extended Characters::			Support for extended character sets.
+* Localization::			<locale.h>
+* Searching and Sorting::		General searching and sorting
+					 functions.
+* Input/Output Overview::		Introduction to the i/o facilities.
+* Input/Output on Streams::		High-level, portable i/o facilities.
+* Low-Level Input/Output::		Low-level, less portable i/o.
+* File System Interface::		Functions for manipulating files.
+* Pipes and FIFOs::			A simple interprocess communication
+					 mechanism.
+* Sockets::				A more complicated interprocess
+					 communication mechanism, with support
+					 for networking.
+* Low-Level Terminal Interface::	How to change the characteristics
+					 of a terminal device.
+* Diagnostics::				A helpful debugging facility.
+* Mathematics::				Math functions.
+* Date and Time::			Functions for getting the date and
+					 time, and conversion between formats.
+* Non-Local Jumps::			The @code{setjmp} and @code{longjmp}
+					 facilities.
+* Signal Handling::			All about signals; how to send them,
+					 block them, and handle them.
+* Processes::				How to create processes and run other
+					 programs.
+* Job Control::				All about process groups and sessions.
+* System Databases::			About the system user and group
+					 databases.
+* Archive Format::			The format of @code{tar} files.
+
+Appendices
+* Header File Contents::	A complete list of what facilities are
+				 declared in each header file.
+* Maintenance::			How to install and maintain the GNU C Library.
+* Copying::			The GNU General Public License says
+				 how you can copy and share the GNU C Library.
+
+Indices
+* Concept Index::	Index of concepts and names.
+* Type Index::		Index of types and type qualifiers.
+* Function Index::	Index of functions and macros.
+* Variable Index::	Index of variables and constant macros.
+* File Index::		Index of programs and files.
+@end menu
+
+@include intro.texinfo
+@include errno.texinfo
+@include limits.texinfo
+@include float.texinfo
+@include stddef.texinfo
+@include stdarg.texinfo
+@include memory.texinfo
+@include ctype.texinfo
+@include string.texinfo
+@include mbyte.texinfo
+@include locale.texinfo
+@include search.texinfo
+@include io.texinfo
+@include stdio.texinfo
+@include llio.texinfo
+@include filesys.texinfo
+@include pipe.texinfo
+@include socket.texinfo
+@include terminal.texinfo
+@include assert.texinfo
+@include math.texinfo
+@include time.texinfo
+@include setjmp.texinfo
+@include signal.texinfo
+@include process.texinfo
+@include job.texinfo
+@include database.texinfo
+@include archive.texinfo
+
+@include header.texinfo
+@include maint.texinfo
+@include copying.texinfo
+
+@node Concept Index
+@unnumbered Concept Index
+@printindex cp
+
+@node Type Index
+@unnumbered Type Index
+@printindex tp
+
+@node Function Index
+@unnumbered Function and Macro Index
+@printindex fn
+
+@node Variable Index
+@unnumbered Variable and Constant Macro Index
+@printindex vr
+
+@node File Index
+@unnumbered Program and File Index
+@printindex pg
+
+@contents
+@bye

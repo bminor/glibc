@@ -1,0 +1,2383 @@
+@node Input/Output on Streams
+@chapter Input/Output on Streams
+@pindex <stdio.h>
+
+This chapter describes the functions for creating streams and performing
+input and output operations on them.  As discussed in @ref{Input/Output
+Overview}, a stream is a fairly abstract, high-level concept
+representing a communications channel to a file, device, or process.
+
+@menu
+* Streams::			About the data type representing a stream.
+* Standard Streams::		Streams to the standard input and output 
+				 devices are created for you.
+* End-Of-File and Errors::	How you can tell if an i/o error happens.
+* Opening and Closing Streams::	How to create a stream to talk to a file.
+* Formatted Output::		@code{printf} and related functions.
+* Formatted Input::		@code{scanf} and related functions.
+* Character Output::		Unformatted output by characters and lines.
+* Character Input::		Unformatted input by characters and lines.
+* Block Input/Output::		Input and output operations on blocks of data.
+* File Positioning::		About random-access streams.
+* Text and Binary Streams::	Some systems distinguish between text files
+				 and binary files.
+* Stream Buffering::		How to control buffering of streams.
+* Temporary Files::		How to open a temporary file.
+* Other Kinds of Streams::	How you can open additional kinds of
+				 streams.
+@end menu
+
+@node Streams
+@section Streams
+
+For historical reasons, the type of the C data structure that represents
+a stream is called @code{FILE} rather than ``stream''.  Since most of
+the library functions deal with objects of type @code{FILE *}, sometimes
+the term @dfn{file pointer} is also used to mean ``stream''.  This leads
+to unfortunate confusion over terminology in many books on C.  This
+manual, however, is careful to use the terms ``file'' and ``stream''
+only in the technical sense.
+@cindex file pointer
+
+The @code{FILE} type is declared in the header file @file{<stdio.h>}.
+
+@deftp {Data Type} FILE
+This is the data type is used to represent stream objects.  A
+@code{FILE} object holds all of the internal state information about the
+connection to the associated file, including such things as the file
+position indicator and buffering information.  Each stream also has
+error and end-of-file status indicators that can be tested with the
+@code{ferror} and @code{feof} functions; @pxref{End-Of-File and Errors}.
+@end deftp
+
+@code{FILE} objects are allocated and managed internally by the
+input/output library functions.  Don't try to create your own objects of
+type @code{FILE}.  Instead, let the library do it.  Your programs should
+deal only with pointers to these objects (that is, @code{FILE *} values)
+rather than the objects themselves.
+
+
+@node Standard Streams
+@section Standard Streams
+
+When the @code{main} function of your program is invoked, it already has
+some predefined streams open and available for use.  These represent the
+``standard'' input and output channels that have been established for
+the process.
+
+These streams are declared in the header file @file{<stdio.h>}.
+
+@defvr {Macro} stdin
+This macro expands into an expression of type @code{FILE *} that
+represents the @dfn{standard input} stream, the normal source of input
+for the program.
+@end defvr
+@cindex standard input
+
+@defvr {Macro} stdout
+This macro expands into an expression of type @code{FILE *} that
+represents the @dfn{standard output} stream, the destination for normal
+output from the program.
+@end defvr
+
+@defvr {Macro} stderr
+This macro expands into an expression of type @code{FILE *} that
+represents the @dfn{standard error} stream, the destination for error
+and diagnostic messages issued by the program.
+@end defvr
+
+In the GNU system, you can specify what files or processes correspond to
+these streams using the pipe and redirection facilities provided by the
+shell.  (The primitives for implementating these facilities are
+described in @ref{File System Interface}.)  Most other operating systems
+provide similar mechanisms, but the details of how to use them can vary.
+
+It is probably not a good idea to close any of these streams.
+
+@node End-Of-File and Errors
+@section End-Of-File and Errors
+
+Many of the functions described in this chapter return the value of the
+macro @code{EOF} to indicate unsuccessful completion of the operation.
+Since @code{EOF} is used to report both end-of-file and random errors,
+it's often better to use the @code{feof} function to check explicitly
+for end-of-file and @code{ferror} to check for errors.  These functions
+check indicators that are part of the internal state of the stream
+object, that are set if the appropriate condition was detected by a
+previous i/o operation on that stream.
+
+These facilities are declared in the header file @file{<stdio.h>}.
+
+@defvr {Macro} EOF
+This macro expands to an integer constant expression that is returned
+by a number of functions to indicate an end-of-file condition, or some
+other error situation.  The value of this constant is always a negative
+number; in the GNU system, its value is @code{-1}.
+@end defvr
+
+@deftypefun void clearerr (FILE *@var{stream})
+This function resets the end-of-file and error indicators for the
+stream @var{stream}.
+
+The file positioning functions (@pxref{File Positioning}) also reset the
+end-of-file indicator for the stream.
+@end deftypefun
+
+@deftypefun int feof (FILE *@var{stream})
+The @code{feof} function returns nonzero if and only if the end-of-file
+indicator for the stream @var{stream} is set.
+@end deftypefun
+
+@deftypefun int ferror (FILE *@var{stream})
+The @code{ferror} function returns nonzero if and only if the error
+indicator for the stream @var{stream} is set, indicating that an error
+has occurred on a previous operation on the stream.
+@end deftypefun
+
+In addition to setting the error indicator associated with the stream,
+the functions that operate on streams also set @code{errno} in the same
+way as the corresponding low-level functions that operate on file
+descriptors.  For example, all of the functions that perform output to a
+stream --- such as @code{fputc}, @code{printf}, and @code{fflush} ---
+behave as if they were implemented in terms of @code{write}, and all of
+the @code{errno} error conditions defined for @code{write} are
+meaningful for these functions.
+
+For more information about the functions that operate on file
+descriptors, @pxref{Low-Level Input/Output}.
+
+
+@node Opening and Closing Streams
+@section Opening and Closing Streams
+
+Opening a file with the @code{fopen} function creates a new stream and
+establishes a connection between the stream and a file.  This may
+involve creating a new file.  
+
+When a stream is closed with @code{fclose}, the connection between the
+stream and the file is removed.  After you have closed a stream, you
+cannot perform any additional operations on it any more.
+
+The functions in this section are declared in the header file
+@file{<stdio.h>}.
+
+@deftypefun {FILE *} fopen (const char *@var{filename}, const char *@var{opentype})
+The @code{fopen} function opens the file named by the string
+@var{filename}, and returns a pointer to a stream that is associated
+with it.
+
+The @var{opentype} argument is a string that controls how the file is
+opened and specifies attributes of the resulting stream.  It must begin
+with one of the following sequences of characters:
+
+@table @code
+@item "r"
+Open existing file for reading only.
+
+@item "w"
+Open file for writing only.  If the file already exists, it is truncated
+to zero length.  Otherwise a new file is created.
+
+@item "a"
+Open file for append access; that is, writing at the end of file only.
+If the file already exists, its initial contents are unchanged and
+output to the stream is appended to the end of the file.
+Otherwise, a new, empty file is created.
+
+@item "r+"
+Open existing file for both reading and writing.  The initial contents
+of the file are unchanged and the initial file position is at the
+beginning of the file.
+
+@item "w+"
+Open file for both reading and writing.  If the file already exists, it
+is truncated to zero length.  Otherwise, a new file is created.
+
+@item "a+"
+Open or create file for both reading and appending.  If the file exists,
+its initial contents are unchanged.  Otherwise, a new file is
+created.  The initial file position for reading might be at either
+the beginning or end of the file, but output is always appended
+to the end of the file.
+@end table
+
+Any of the above sequences can also be followed by a character @samp{b}
+to indicate that a binary (rather than text) stream should be created;
+@pxref{Text and Binary Streams}.  If both @samp{+} and @samp{b} are
+specified, they can appear in either order.  For example, @code{"r+b"}
+and @code{"rb+"} are equivalent; they both specify an existing binary
+file being opened for both read and write access.
+
+When a file is opened with the @samp{+} option for both reading and
+writing, you must call either @code{fflush} (@pxref{Stream Buffering})
+or a file positioning function such as @code{fseek} (@pxref{File
+Positioning}) when switching back and forth between read and write
+operations.  Otherwise, internal buffers might not be emptied properly.
+
+Additional characters that follow these sequences specify other
+implementation-specific file or stream attributes.
+
+The GNU C Library defines only one additional attribute: if the
+character @samp{x} is given, this specifies exclusive use of a new file.
+This is equivalent to the @code{O_EXCL} option to the @code{open}
+function (@pxref{File Status Flags}).  Any other characters are simply
+ignored.
+
+Other systems may define other character sequences to specify things
+like a record size or access control specification.
+
+If the open fails, @code{fopen} returns a null pointer.
+@end deftypefun
+
+You can have multiple streams (or file descriptors) pointing to the same
+file open at the same time.  If you do only input, this works fine, but
+you can get unpredictable results if you are writing to the file.  The
+file locking facilities can be useful in this context; @pxref{File
+Locks}.
+
+
+@defvr {Macro} FOPEN_MAX
+The value of this macro is an integer constant expression that
+represents the minimum number of streams that the implementation
+guarantees can be open simultaneously.  The value of this constant is at
+least eight, which includes the three standard streams @code{stdin},
+@code{stdout}, and @code{stderr}.
+@end defvr
+
+@deftypefun int fclose (FILE *@var{stream})
+This function causes @var{stream} to be closed and the connection to
+the corresponding file to be broken.  Any buffered output is written
+and any buffered input is discarded.  The @code{fclose} function returns
+a value of @code{0} if the file was closed successfully, and @code{EOF}
+if an error was detected.
+@end deftypefun
+
+If the @code{main} function to your program returns, or if you call the
+@code{exit} function (@pxref{Normal Program Termination}), all open
+streams are automatically closed properly.  If your program terminates
+in any other manner, such as by calling the @code{abort} function
+(@pxref{Aborting a Program}) or from a fatal signal (@pxref{Signal
+Handling}), open streams might not be closed properly.  Buffered output
+may not be flushed and files may not be complete.  For more information
+on buffering of streams, @pxref{Stream Buffering}.
+
+@deftypefun {FILE *} freopen (const char *@var{filename}, const char *@var{opentype}, FILE *@var{stream})
+This function is like a combination of @code{fclose} and @code{fopen}.
+It first closes the stream referred to by @var{stream}, ignoring any
+errors that are detected in the process.  Then the file named by
+@var{filename} is opened with mode @var{opentype} as for @code{fopen}, and
+associated with the same stream object @var{stream}.  If the operation
+fails, a null pointer is returned; otherwise, @code{freopen} returns
+@var{stream}.
+@end deftypefun
+
+
+@node Formatted Output
+@section Formatted Output
+
+@cindex format string, for @code{printf}
+@cindex template, for @code{printf}
+@cindex formatted output
+The functions described in this section (@code{printf} and related
+functions) provide a convenient way to perform formatted output.  You
+call @code{printf} with a @dfn{format string} or @dfn{template} that
+specifies how to print the values of the remaining arguments.
+
+Unless your program is a filter that specifically performs line- or
+character-oriented processing, using @code{printf} or one of the other
+related functions described in this section is almost always the easiest
+and most concise way to handle program output.  These functions are
+especially useful for printing messages, tables of data, and the like.
+
+@menu
+* Formatted Output Basics::	Some examples to get you started.
+* Output Conversion Syntax::	General syntax of conversion specifications.
+* Table of Output Conversions::	Summary of output conversions and what they do.
+* Integer Conversions::		Details about formatting of integers.
+* Floating-Point Conversions::	Details about formatting of floating-point
+				 numbers.
+* Other Output Conversions::	Details about formatting of strings,
+				 characters, pointers, and the like.
+* Formatted Output Functions::	Descriptions of the actual functions.
+* Defining New Conversions::	You can define new conversion specifiers for
+				 @code{printf} and friends.
+@end menu
+
+@node Formatted Output Basics
+@subsection Formatted Output Basics
+
+The @code{printf} function can be used to print any number of arguments.
+The format template string argument you supply in a call provides
+information not only about the number of additional arguments, but also
+about their types and what style should be used for printing them.
+
+Ordinary characters in the template string are simply written to the
+output stream as-is, while @dfn{conversion specifications} introduced by
+a @samp{%} character in the template cause subsequent arguments to be
+formatted and written to the output stream.  For example,
+@cindex conversion specifications (printf)
+
+@example
+int pct = 37;
+char filename[] = "foo.txt";
+printf ("Processing of %s is %d%% finished.\nPlease be patient.\n",
+        filename, pct);
+@end example
+
+@noindent
+produces output like
+
+@example
+Processing of foo.txt is 37% finished.
+Please be patient.
+@end example
+
+This example shows the use of the @samp{%d} conversion to specify that
+an @code{int} argument should be printed in decimal notation, the
+@samp{%s} conversion to specify printing of a string argument, and
+the @samp{%%} conversion to print a literal @samp{%} character.
+
+There are also conversions for printing an integer argument as an
+unsigned value in octal, decimal, or hexadecimal radix (@samp{%o},
+@samp{%u}, or @samp{%x}, respectively); or as a character value
+(@samp{%c}).
+
+Floating-point numbers can be printed in normal, fixed-point notation
+using the @samp{%f} conversion or in exponential notation using the
+@samp{%e} conversion.  The @samp{%g} conversion uses either @samp{%e}
+or @samp{%f} format, depending on what is more appropriate for the
+magnitude of the particular number.
+
+The syntax of conversion specifications actually permits you to put a
+bunch of options between the @samp{%} and the character that indicates
+which conversion to apply.  These options modify the ordinary behavior
+of the conversion.  For example, most conversion specifications permit
+you to specify a minimum field width and a flag indicating whether you
+want the result left- or right-justified within the field.
+
+The specific flags and modifiers that are permitted and their
+interpretation vary depending on the particular conversion.  They're all
+described in more detail in the following sections.  Don't worry if this
+all seems excessively complicated at first; you can almost always get
+reasonable free-format output without using any of the modifiers at all.
+The modifiers are mostly used to make the output look ``prettier'' in
+tables.
+
+@node Output Conversion Syntax
+@subsection Output Conversion Syntax
+
+This section provides details about the precise syntax of conversion
+specifications that can appear in a @code{printf} format template
+string.
+
+Characters in the format template string that are not part of a
+conversion specification are printed as-is to the output stream.
+Multibyte character sequences (@pxref{Extended Characters}) are permitted in
+a format template string.
+
+The conversion specifications in a @code{printf} format template have
+the general form:
+
+@example
+% @var{flags} @var{width} . @var{precision} @var{type} @var{conversion}
+@end example
+
+For example, in the conversion specifier @samp{%-10.8ld}, the @samp{-}
+is a flag, @samp{10} specifies the field width, the precision is
+@samp{8}, the letter @samp{l} is a type modifier, and @samp{d} specifies
+the conversion style.  (What this particular type specifier says is to
+print a @code{long int} argument in decimal notation, with a minimum of
+8 digits left-justified in a field at least 10 characters wide.)
+
+More specifically, output conversion specifications consist of an
+initial @samp{%} character followed in sequence by:
+
+@itemize @bullet
+@item 
+Zero or more @dfn{flag characters} that modify the normal behavior of
+the conversion specification.
+@cindex flag character (printf)
+
+@item 
+An optional decimal integer specifying the @dfn{minimum field width}.
+If the normal conversion produces fewer characters than this, the field
+is padded with spaces to the specified width.  This is a @emph{minimum}
+value; if the normal conversion produces more characters than this, the
+field is @emph{not} truncated.  Normally, the output is right-justified
+within the field.
+@cindex minimum field width (printf)
+
+@item 
+An optional @dfn{precision} to specify the number of digits to be
+written for the numeric conversions.  If the precision is specified, it
+consists of a period (@samp{.}) followed optionally by a decimal integer
+(which defaults to zero if omitted).
+@cindex precision (printf)
+
+@item
+An optional @dfn{type modifier character}, which is used to specify the
+data type of the corresponding argument if it differs from the default
+type.  (For example, the integer conversions assume a type of @code{int},
+but you can use the same conversions with a type modifier to print
+@code{long int} or @code{short int} objects.)
+@cindex type modifier character (printf)
+
+@item
+A character that specifies the conversion to be applied.
+@end itemize
+
+The exact options that are permitted and how they are interpreted vary 
+between the different conversion specifiers.  See the descriptions of the
+individual conversions for information about the particular options that
+they use.
+
+@node Table of Output Conversions
+@subsection Table of Output Conversions
+
+Here is a table summarizing what all the different conversions do:
+
+@table @asis
+@item @samp{%d}, @samp{%i}
+Print an integer as a signed decimal number.  @xref{Integer
+Conversions}, for details on all the options.
+
+@item @samp{%o}
+Print an integer as an unsigned octal number.  @xref{Integer
+Conversions}, for details on all the options.
+
+@item @samp{%u}
+Print an integer as an unsigned decimal number.  @xref{Integer
+Conversions}, for details on all the options.
+
+@item @samp{%x}, @samp{%X}
+Print an integer as an unsigned hexadecimal number.  @xref{Integer
+Conversions}, for details on all the options.
+
+@item @samp{%f}
+Print a floating-point number in normal (fixed-point) notation.
+@xref{Floating-Point Conversions}, for details on all the options.
+
+@item @samp{%e}, @samp{%E}
+Print a floating-point number in exponential notation.
+@xref{Floating-Point Conversions}, for details on all the options.
+
+@item @samp{%g}, @samp{%G}
+Print a floating-point number in either normal or exponential notation,
+whichever is more appropriate for its magnitude.  @xref{Floating-Point
+Conversions}, for details on all the options.
+
+@item @samp{%c}
+Print a single character.  @xref{Other Output Conversions}.
+
+@item @samp{%s}
+Print a string).  @xref{Other Output Conversions}.
+
+@item @samp{%p}
+Print the value of a pointer.  @xref{Other Output Conversions}.
+
+@item @samp{%n}
+Get the number of characters printed so far.  @xref{Other Output Conversions}.
+
+@item @samp{%%}
+Print a literal @samp{%} character.  @xref{Other Output Conversions}.
+@end table
+
+@strong{Incomplete:} There also seems to be a @samp{Z} conversion for
+printing a @code{size_t} value in decimal notation.  Is this something
+we want to publicize?
+
+If the syntax of a conversion specification is invalid, the behavior is
+undefined.  If there aren't enough function arguments provided to supply
+values for all the conversion specifications in the format template, or
+if the arguments are not of the correct types, the behavior is also
+undefined.  On the other hand, if you supply more arguments than
+conversion specifications, the extra argument values are simply ignored;
+but this is not really a good style to use.
+
+@node Integer Conversions
+@subsection Integer Conversions
+
+This section describes the options for the @samp{%d}, @samp{%i},
+@samp{%o}, @samp{%u}, @samp{%x}, and @samp{%X} conversion
+specifications.  These conversions print integers in various formats.
+
+The @samp{%d} and @samp{%i} conversion specifications both print an
+@code{int} argument as a signed decimal number; while @samp{%o},
+@samp{%u}, and @samp{%x} print the argument as an unsigned octal,
+decimal, or hexadecimal number (respectively).  The @samp{%X} conversion
+specification is just like @samp{%x} except that it uses the characters
+@samp{ABCDEF} as digits instead of @samp{abcdef}.
+
+The following flags can be provided:
+
+@table @asis
+@item @samp{-}
+Left-justify the result in the field (instead of the normal
+right-justification).
+
+@item @samp{+}
+For the signed @samp{%d} and @samp{%i} conversions, always include a
+plus or minus sign in the result.
+
+@item @samp{ }
+For the signed @samp{%d} and @samp{%i} conversions, if the result
+doesn't start with a plus or minus sign, prefix it with a space
+character instead.  Since the @samp{+} flag ensures that the result
+includes a sign, this flag is ignored if you supply both of them.
+
+@item @samp{#}
+For the @samp{%o} conversion, this forces the leading digit to be @samp{0},
+as if by increasing the precision.  For @samp{%x} or @samp{%X}, this
+prefixes a leading @samp{0x} or @samp{0X} (respectively) to the result.
+This doesn't do anything useful for the @samp{%d}, @samp{%i}, or @samp{%u}
+conversions.
+
+@item @samp{0}
+Pad the field with zeros instead of spaces.  The zeros are placed after
+any indication of sign or base.  This flag is ignored if the @samp{-}
+flag is also specified, or if a precision is specified.
+@end table
+
+If a precision is supplied, it specifies the minimum number of digits to
+appear; leading zeros are produced if necessary.  The precision defaults
+to @code{1}.  If you convert a value of zero with a precision of zero,
+then no characters at all are produced.
+
+Without a type modifier, the corresponding argument is treated as an
+@code{int} (for the signed conversions @samp{%i} and @samp{%d}) or
+@code{unsigned int} (for the unsigned conversions @samp{%o}, @samp{%u},
+@samp{%x}, and @samp{%X}).  Recall that since @code{printf} and friends
+are variadic, optional @code{char} and @code{short} arguments are
+already upgraded to @code{int} by the default argument promotions.
+
+@table @samp
+@item h
+Specifies that the argument is a @code{short int} or @code{unsigned
+short int}, as appropriate.  A @code{short} argument is converted to an
+@code{int} or @code{unsigned int} by the default argument promotions
+anyway, but the @samp{h} modifier says to convert it back to a
+@code{short} again.
+
+@item l
+Specifies that the argument is a @code{long int} or @code{unsigned long
+int}, as appropriate.  
+
+@item L
+Specifies that the argument is a @code{long long int}.  (This type is
+an extension supported by the GNU C compiler.  On systems that don't
+support extra-long integers, this is the same as @code{long int}.)
+@end table
+
+For example, using the format string:
+
+@example
+|%5d|%-5d|%+5d|% 5d|%05d|%5.0d|%5.2d|%d|\n"
+@end example
+
+@noindent
+to print numbers using the different options for the @samp{%d}
+conversion gives results like:
+
+@example
+|    0|0    |   +0|    0|00000|     |   00|0|
+|    1|1    |   +1|    1|00001|    1|   01|1|
+|   -1|-1   |   -1|   -1|-0001|   -1|  -01|-1|
+|100000|100000|+100000| 100000|100000|100000|100000|100000|
+@end example
+
+In particular, notice what happens in the last case where the number
+is too large to fit in the minimum field width specified.
+
+Here are some more examples showing how unsigned integers print under
+various format options, using the format string:
+
+@example
+"|%5u|%5o|%5x|%5X|%#5o|%#5x|%#5X|%#10.8x|\n"
+@end example
+
+@example
+|    0|    0|    0|    0|    0|  0x0|  0X0|0x00000000|
+|    1|    1|    1|    1|   01|  0x1|  0X1|0x00000001|
+|100000|303240|186a0|186A0|0303240|0x186a0|0X186A0|0x000186a0|
+@end example
+
+
+@node Floating-Point Conversions
+@subsection Floating-Point Conversions
+
+This section discusses the conversion specifications for formatting
+floating-point numbers: the @samp{%f}, @samp{%e}, @samp{%E},
+@samp{%g}, and @samp{%G} conversions.
+
+The @samp{%f} conversion prints its argument in fixed-point notation,
+producing output of the form
+[@code{-}]@var{ddd}@code{.}@var{ddd},
+where the number of digits following the decimal point is controlled
+by the precision.
+
+The @samp{%e} conversion prints its argument in exponential notation,
+producing output of the form
+[@code{-}]@var{d}@code{.}@var{ddd}@code{e}[@code{+}|@code{-}]@var{dd}.
+Again, the number of digits following the decimal point is controlled by
+the precision.  The exponent always contains at least two digits.  The
+@samp{%E} conversion is similar but the exponent is marked with the letter
+@samp{E} instead of @samp{e}.
+
+The @samp{%g} and @samp{%G} conversions print the argument in the style
+of @samp{%e} or @samp{%E} (respectively) if the exponent would be less
+than -4 or greater than or equal to the precision.  Trailing zeros are
+removed from the fractional portion of the result and a decimal-point
+character appears only if it is followed by a digit.
+
+The following flags can be used to modify the behavior:
+
+@table @asis
+@item @samp{-}
+Left-justify the result in the field.  Normally the result is
+right-justified.
+
+@item @samp{+}
+Always include a plus or minus sign in the result.
+
+@item @samp{ }
+If the result doesn't start with a plus or minus sign, prefix it with a
+space instead.  Since the @samp{+} flag ensures that the result includes
+a sign, this flag is ignored if you supply both of them.
+
+@item @samp{#}
+Specifies that the result should always include a decimal point, even
+if no digits follow it.  For the @samp{%g} and @samp{%G} conversions,
+this also forces trailing zeros after the decimal point to be left
+in place where they would otherwise be removed.
+
+@item @samp{0}
+Pad the field with zeros instead of spaces; the zeros are placed
+after any sign.  This flag is ignored if the @samp{-} flag is also
+specified.
+@end table
+
+The precision specifies how many digits follow the decimal-point
+character for the @samp{%f}, @samp{%e}, and @samp{%E} conversions.  For
+these conversions, the default is @code{6}.  If the precision is
+explicitly @code{0}, this has the rather strange effect of suppressing
+the decimal point character entirely!  For the @samp{%g} and @samp{%G}
+conversions, the precision specifies how many significant digits to
+print; if @code{0} or not specified, it is treated like a value of
+@code{1}.
+
+Without a type modifier, the floating-point conversions use an argument
+of type @code{double}.  (By the default argument conversions, any
+@code{float} arguments are automatically promoted to @code{double}.)
+The following type modifier is supported:
+
+@table @samp
+@item L
+An uppercase @samp{L} specifies that the argument is a @code{long
+double}.
+@end table
+
+Here are some examples showing how numbers print using the various
+floating-point conversions.  All of the numbers were printed using
+the format string:
+
+@example
+"|%12.4f|%12.4e|%12.4g|\n"
+@end example
+
+Here is the output:
+
+@example
+|      0.0000|  0.0000e+00|           0|
+|      1.0000|  1.0000e+00|           1|
+|     -1.0000| -1.0000e+00|          -1|
+|    100.0000|  1.0000e+02|         100|
+|   1000.0000|  1.0000e+03|        1000|
+|  10000.0000|  1.0000e+04|       1e+04|
+|  12345.0000|  1.2345e+04|   1.234e+04|
+| 100000.0000|  1.0000e+05|       1e+05|
+| 123456.0000|  1.2346e+05|   1.234e+05|
+@end example
+
+Notice how the @samp{%g} conversion drops trailing zeros.
+
+@node Other Output Conversions
+@subsection Other Output Conversions
+
+This section describes miscellaneous conversions for @code{printf}.
+
+The @samp{%c} conversion prints a single character.  The @code{int}
+argument is first converted to an @code{unsigned char}.  The @samp{-}
+flag can be used to specify left-justification in the field, but no
+other flags are defined, and no precision or type modifier can be given.
+
+The @samp{%s} conversion prints a string.  The corresponding argument
+must be of type @code{char *}.  A precision can be specified to indicate
+the maximum number of characters to write; otherwise characters in the
+string up to but not including the terminating null character are
+written to the output stream.  The @samp{-} flag can be used to specify
+left-justification in the field, but no other flags or type modifiers
+are defined for this conversion.
+
+If you accidentally pass a null pointer as the argument for a @samp{%s}
+conversion, the GNU library will print it as @samp{(null)}.  This is more
+because this is such a common program bug than because you ought to depend
+on this behavior in normal use, however.
+
+The @samp{%p} conversion prints a pointer value.  The corresponding
+argument must be of type @code{void *}.
+
+In the GNU system, non-null pointers are printed as unsigned integers,
+as if a @samp{%#x} conversion were used.  Null pointers print as
+@samp{(nil)}.  (Pointers might print differently in other systems.)
+
+Again, you can supply the @samp{-} flag with the @samp{%p} conversion to
+specify left-justification but no other flags, precision, or type
+modifiers are defined.
+
+The @samp{%n} conversion is unlike any of the other output conversions.
+It uses an argument which must be a pointer to an @code{int}, but
+instead of printing anything it stores the number of characters printed
+so far by this call at that location.  The @samp{h} and @samp{l} type
+modifiers are permitted to specify that the argument is of type
+@code{short int *} or @code{long int *} instead of @code{int *}, but no
+flags, field width, or precision are permitted.
+
+For example,
+
+@example
+int nchar;
+printf ("%d %s%n\n", 3, "bears", &nchar);
+@end  example
+
+@noindent
+prints:
+
+@example
+3 bears
+@end example
+
+@noindent
+and sets @code{nchar} to @code{7}.
+
+
+The @samp{%%} conversion prints a literal @samp{%} character.  This
+conversion doesn't use an argument, and no flags, field width,
+precision, or type modifiers are permitted.
+
+
+@node Formatted Output Functions
+@subsection Formatted Output Functions
+
+This section describes how to call @code{printf} and related functions.
+Prototypes for these functions are in the header file @file{<stdio.h>}.
+
+@deftypefun int printf (const char *@var{template}, @dots{})
+The @code{printf} function prints the optional arguments under the
+control of the format template @var{template} to the stream
+@code{stdout}.  It returns the number of characters printed, or a
+negative value if there was an output error.
+@end deftypefun
+
+@deftypefun int fprintf (FILE *@var{stream}, const char *@var{template}, @dots{})
+This function is just like @code{printf}, except that the output is
+written to the stream @var{stream} instead of @code{stdout}.
+@end deftypefun
+
+@deftypefun int sprintf (char *@var{s}, const char *@var{template}, @dots{})
+This is like @code{printf}, except that the output is stored in the character
+array @var{s} instead of written to a stream.  A null character is written
+to mark the end of the string.
+
+The @code{sprintf} function returns the number of characters stored in
+the array @var{s}, not including the terminating null character.
+
+The behavior of this function is undefined if copying takes place
+between objects that overlap --- for example, if @var{s} is also given
+as an argument to be printed under control of the @samp{%s} conversion.
+@xref{Copying and Concatenation}.
+
+@strong{Warning:} The @code{sprintf} function can be @strong{dangerous}
+because it can potentially output more characters than will fit in the
+allocation size of the string.  Remember that the field width given in a
+conversion specification is only a @emph{minimum} value.  The
+@code{snprintf} function lets you specify the maximum number of
+characters to produce.
+@end deftypefun
+
+@comment This is a GNU extension.
+@deftypefun int snprintf (char *@var{s}, size_t @var{size}, const char *@var{template}, @dots{})
+The @code{snprintf} function is similar to @code{sprintf}, except that
+the @var{size} argument specifies the maximum number of characters to
+produce.  The trailing null character is counted towards this limit, so
+the largest value you should specify is the allocation size of the array
+@var{s}.
+@end deftypefun
+
+@comment This is a GNU extension.
+@deftypefun int asprintf (char **@var{ptr}, const char *@var{template}, @dots{})
+This function is similar to @code{sprintf}, except that it dynamically
+allocates a string (as with @code{malloc}; @pxref{wherever}) to hold the
+output, instead of putting the output in a buffer you allocate in
+advance.  The @var{ptr} argument should be the address of a @code{char
+*} object, and @code{asprintf} stores a pointer to the newly allocated
+string at that location.
+@end deftypefun
+
+@deftypefun int vprintf (const char *@var{template}, va_list @var{ap})
+This function is similar to @code{printf} except that, instead of taking
+a variable number of arguments directly, it takes an argument list
+pointer @var{ap}.  Before calling @code{vprintf}, you @emph{must} call
+@code{va_start} (@pxref{Variable Argument Facilities}) to initialize
+@var{ap}, and you @emph{may} call @code{va_arg} to skip over some of the
+initial arguments.  The @code{vprintf} function does not invoke the
+@code{va_end} macro, but further calls to @code{va_arg} with @var{ap}
+are not permitted once @code{vprintf} returns.
+
+The functions @code{vprintf} and friends are provided so that you can
+define your own variadic @code{printf}-like functions that make use of
+the same internals as the built-in formatted output functions.  Since
+the C language does not have an operator similar to the Lisp
+@code{apply} function that permits a function call (as opposed to a
+function definition) with a non-constant number of arguments, there's
+simply no way for one variadic function to pass the tail of its argument
+list to another variadic function; the second function has to be defined
+in such a way that it takes a @code{va_list} argument instead.
+@end deftypefun
+
+@deftypefun int vfprintf (FILE *@var{stream}, const char *@var{template}, va_list @var{ap})
+This is the equivalent of @code{fprintf} with the variable argument list
+specified directly as for @code{vprintf}.
+@end deftypefun
+
+@deftypefun int vsprintf (char *@var{s}, const char *@var{template}, va_list @var{ap})
+This is the equivalent of @code{sprintf} with the variable argument list
+specified directly as for @code{vprintf}.
+@end deftypefun
+
+@comment This is a GNU extension.
+@deftypefun int vsnprintf (char *@var{s}, size_t @var{size}, const char *@var{template}, va_list @var{ap})
+This is the equivalent of @code{snprintf} with the variable argument list
+specified directly as for @code{vprintf}.
+@end deftypefun
+
+@comment This is a GNU extension.
+@deftypefun int vasprintf (char **@var{ptr}, const char *@var{template}, va_list @var{ap})
+The @code{vasprintf} function is the equivalent of @code{asprintf} with the
+variable argument list specified directly as for @code{vprintf}.
+@end deftypefun
+
+@ignore
+@comment The design of functions is kind of broken and they may go away.
+@comment Their purpose is supposedly to allow an interpreter to check for
+@comment the right number of arguments.
+
+@comment This is a GNU extension.
+@deftypefun int vflprintf (FILE *@var{stream}, size_t @var{n}, const char *@var{template}, va_list @var{ap})
+This is similar to @code{vfprintf}, but no more than @var{n} format
+conversions from @var{template} are processed.  You can give a value of
+zero for @var{n} to indicate that there is no limit.
+@end deftypefun
+
+@strong{Incomplete:}  What exactly happens when the limit is exceeded?
+Does this really refer to the number of format conversions, or to the
+number of additional arguments?  (E.g., does @samp{%%} count?)
+
+@comment This is a GNU extension.
+@deftypefun int vslnprintf (char *@var{s}, size_t @var{n}, size_t @var{size}, const char *@var{template}, va_list @var{ap})
+This is similar to @code{vsnprintf}, but no more than @var{n} format
+conversions from @var{template} are processed, as for @code{vflprintf}.
+@end deftypefun
+@end ignore
+
+@strong{Portability Note:} Of the functions listed in this section, only
+@code{printf}, @code{fprintf}, @code{sprintf}, @code{vprintf},
+@code{vfprintf}, and @code{vsprintf} are included in ANSI C.  The other
+functions are all specific to the GNU system.
+
+Here's an example showing how you might use @code{vfprintf}.  This is a
+function that prints error messages to the stream @code{stderr}, along
+with a prefix indicating the name of the program.
+
+@example
+#include <stdio.h>
+#include <stdarg.h>
+
+void eprintf (char *template, ...)
+@{
+  va_list ap;
+  extern char *program_name;
+
+  fprintf (stderr, "%s: ", program_name);
+  va_start (ap, count);
+  vfprintf (stderr, template, ap);
+  va_end (ap);
+@}
+@end example
+
+@noindent
+You could call this function like:
+
+@example
+eprintf ("The file %s does not exist.\n", filename);
+@end example
+
+
+
+@node Defining New Conversions
+@subsection Defining New Conversions
+
+The GNU C Library lets you define new conversion specifiers for 
+@code{printf} format templates.  To do this, you must include the
+header file @file{<printf.h>} in your program.
+
+@deftp {Data Type} {struct printf_info}
+This structure is used to pass information about the options appearing
+in an instance of a conversion specifier in a @code{printf} format template
+to the handler function for that specifier.  It contains the following
+fields:
+
+@table @code
+@item int prec
+This is the precision.  The value is @code{-1} if no precision was specified.
+
+@item int width
+This is the minimum field width.  The value is @code{0} if no width was
+specified.
+
+@item char spec
+This is the conversion specifier character.  It's stored in the structure
+so that you can register the same handler function for multiple characters,
+but still have a way to tell them apart when the handler function is called.
+
+@item unsigned int is_long_double
+This is a boolean that is true if the @samp{L} type modifier was specified.
+
+@item unsigned int is_short
+This is a boolean that is true if the @samp{h} type modifier was specified.
+
+@item unsigned int is_long
+This is a boolean that is true if the @samp{l} type modifier was specified.
+
+@item unsigned int alt
+This is a boolean that is true if the @samp{#} flag was specified.
+
+@item unsigned int space
+This is a boolean that is true if the @samp{ } flag was specified.
+
+@item unsigned int left
+This is a boolean that is true if the @samp{-} flag was specified.
+
+@item unsigned int showsign
+This is a boolean that is true if the @samp{+} flag was specified.
+
+@item char pad
+This is the character to use for padding the output to the minimum field
+width.  The value is @code{'0'} if the @samp{0} flag was specified, and
+@code{' '} otherwise.
+@end table
+@end deftp
+
+@deftp {Data Type} printf_function
+This type is used to describe handler functions for conversion specifiers.
+
+You should define your handler functions with a prototype like:
+
+@example
+int @var{function} (FILE *@var{stream}, const struct printf_info *@var{info},
+                    va_list *@var{app})
+@end example
+
+The @var{stream} argument passed to the handler function is the stream to
+which it should write output.
+
+The @var{info} argument is a pointer to a structure that contains
+information about the various options that were included with the
+conversion in the format template string.  You should not modify this
+structure inside your handler function.
+
+The @var{app} argument is used to pass the tail of the variable argument
+list containing the values to be printed to your handler.  Unlike most
+other functions that can be passed an explicit variable argument list,
+this is a @emph{pointer} to a @code{va_list}, rather than the
+@code{va_list} itself.  (Basically, passing a pointer here allows the
+function that calls your handler function to update its own @code{va_list}
+variable to account for the arguments that your handler processes.)
+@xref{Variable Argument Facilities}.
+
+The return value from your handler function should be the number of argument
+values that it processes from the variable argument list.  You can also
+return a value of @code{-1} to indicate an error.
+@end deftp
+
+@deftypefun int register_printf_function (int @var{spec}, printf_function @var{function})
+This function defines the conversion specifier character @var{spec} to
+have a handler @var{function}.  You can also specify a null pointer as
+the @var{function} argument to remove any existing handler function for
+the character.
+
+The return value is @code{0} on success, and @code{-1} on failure.
+
+You can redefine the standard output conversions, but this is probably
+not a good idea because of the potential for confusion.  Library routines
+written by other people could break if you do this.
+@end deftypefun
+
+Here is an example showing how to define a @code{printf} handler function.
+This program defines a data structure called a @code{Widget} and 
+defines the @samp{%W} conversion to print information about @code{Widget *}
+arguments, including the pointer value and the name stored in the data
+structure.  The @samp{%W} conversion supports the minimum field width and
+left-justification options, but ignores everything else.
+
+@example
+#include <stdio.h>
+#include <printf.h>
+#include <stdarg.h>
+
+typedef struct widget @{
+    char *name;
+    @dots{}
+@} Widget;
+
+
+int print_widget (FILE *stream, const struct printf_info *info,
+		  va_list *app)
+@{
+  Widget *w;
+  char *buffer;
+  int fill, i;
+
+  /* @r{Format the output into a string.} */
+  w = va_arg (*app, Widget *);
+  fill = info->width -
+      asprintf (&buffer, "<Widget %p: %s>", w, w->name);
+
+  /* @r{Pad to the minimum field width and print to the stream.} */
+  if (!info->left)
+    for (i=0; i<fill; i++) fputc (' ', stream);
+  fputs (buffer, stream);
+  if (info->left)
+    for (i=0; i<fill; i++) fputc (' ', stream);
+
+  /* @r{Clean up and return.} */
+  free (buffer);
+  return 1;
+@}
+
+
+void main (void)
+@{
+
+  /* @r{Make a widget to print.} */
+  Widget mywidget;
+  mywidget.name = "mywidget";
+
+  /* @r{Register the print function for widgets.} */
+  register_printf_function ('W', print_widget);
+
+  /* @r{Now print the widget.} */
+  printf ("|%W|\n", &mywidget);
+  printf ("|%35W|\n", &mywidget);
+  printf ("|%-35W|\n", &mywidget);
+@}
+@end example
+
+The output produced by this program looks like:
+
+@example
+|<Widget 0xffeffb7c: mywidget>|
+|      <Widget 0xffeffb7c: mywidget>|
+|<Widget 0xffeffb7c: mywidget>      |
+@end example
+
+@strong{Portability Note:} The ability to extend the syntax of
+@code{printf} format templates is a GNU extension.  ANSI standard C has
+nothing similar.
+
+@node Formatted Input
+@section Formatted Input
+
+@cindex formatted input
+@cindex format string, for @code{scanf}
+@cindex template, for @code{scanf}
+The functions described in this section (@code{scanf} and related
+functions) provide facilities for formatted input analogous to the
+formatted output facilities.  These functions provide a mechanism for
+reading arbitrary values under the control of a @dfn{format string} or
+@dfn{template}.
+
+@menu
+* Formatted Input Basics::      Some basics to get you started.
+* Input Conversion Syntax::	Syntax of conversion specifications.
+* Table of Input Conversions::	Summary of input conversions and what they do.
+* Numeric Input Conversions::	Details of conversions for reading numbers.
+* String Input Conversions::	Details of conversions for reading strings.
+* Other Input Conversions::	Details of miscellaneous other conversions.
+* Formatted Input Functions::	Descriptions of the actual functions.
+@end menu
+
+@node Formatted Input Basics
+@subsection Formatted Input Basics
+
+Calls to @code{scanf} are superficially similar to calls to
+@code{printf} in that arbitrary arguments are read under the control of
+a format template string.  While the syntax of the conversion
+specifications in the template is very similar to that for
+@code{printf}, the interpretation of the template is oriented more
+towards free-format input and simple pattern matching, rather than
+fixed-field formatting.  For example, most @code{scanf} conversions skip
+over any amount of ``white space'' (including spaces, tabs, newlines) in
+the input file, and there is no concept of precision for the numeric
+input conversions as there is for the corresponding output conversions.
+Ordinary, non-whitespace characters in the template are expected to
+match characters in the input stream exactly, but a matching failure is
+distinct from an input error on the stream.
+
+Another area of difference between @code{scanf} and @code{printf} is
+that you must remember to supply pointers rather than immediate values
+as the optional arguments to @code{scanf}; the values that are read are
+stored in the objects that the pointers point to.  Even experienced
+programmers tend to forget this occasionally, so if your program is
+getting strange errors that seem to be related to @code{scanf}, you
+might want to doublecheck this.
+
+When a @dfn{matching failure} occurs, @code{scanf} returns immediately,
+leaving the first non-matching character as the next character to be
+read from the stream.  The normal return value from @code{scanf} is the
+number of values that were assigned, so you can use this to determine if
+a matching error happened before all the expected values were read.
+@cindex matching failure, in @code{scanf}
+
+The @code{scanf} function is typically used to do things like reading
+in the contents of tables.  For example, here is a function that uses
+@code{scanf} to initialize an array of @code{double}s:
+
+@example
+void readarray (double *array, int n)
+@{
+  int i;
+  for (i=0; i<n; i++)
+    if (scanf (" %lf", &(array[i])) != 1)
+      input_failure ();
+@}
+@end example
+
+If you are trying to read input that doesn't match a single, fixed
+pattern, you may be better off using a tool such as Bison to generate
+a parser, rather than using @code{scanf}.  For more information about
+this, see @cite{The Bison Reference Manual}.
+
+
+@node Input Conversion Syntax
+@subsection Input Conversion Syntax
+
+A @code{scanf} format template is a string that contains ordinary
+multibyte characters and conversion specifications introduced by a
+@samp{%} character.
+
+Any whitespace character (as defined by the @code{isspace} function;
+@pxref{Classification of Characters}) in the template causes any number
+of whitespace characters in the input stream to be read and discarded.
+The whitespace characters that are matched need not be exactly the same
+whitespace characters that appear in the format template.
+
+Other characters in the format template that are not part of conversion
+specifications must match characters in the input stream exactly; if
+this is not the case, a matching failure occurs.
+
+The conversion specifications in a @code{scanf} format template
+have the general form:
+
+@example
+% @var{flags} @var{width} @var{type} @var{conversion}
+@end example
+
+More specifically, input conversion specifications consist of an initial
+@samp{%} character followed in sequence by:
+
+@itemize @bullet
+@item
+An optional @dfn{flag character} @samp{*}, which causes assignment to be
+suppressed.  If this flag appears, input is read from the stream and
+matched against the conversion specification in the usual way, but no
+optional argument is used, no assignment takes place, and the count
+of successful assignments is not incremented.
+@cindex flag character (scanf)
+
+@item
+An optional decimal integer that specifies the @dfn{maximum field
+width}.  Reading of characters from the input stream stops either when
+this maximum is reached or when a non-matching character is found,
+whichever happens first.  Most conversions discard initial whitespace
+characters (those that don't are explicitly documented), and these
+discarded characters don't count towards the maximum field width.
+@cindex maximum field width (scanf)
+
+@item
+An optional @dfn{type modifier character}.  For example, you can
+specify a type modifier of @samp{l} with integer conversions such as
+@samp{%d} to specify that the argument is a pointer to a @code{long int}
+rather than a pointer to an @code{int}.
+@cindex type modifier character (scanf)
+
+@item
+A character that specifies the conversion to be applied.
+@end itemize
+
+The exact options that are permitted and how they are interpreted vary 
+between the different conversion specifiers.  See the descriptions of the
+individual conversions for information about the particular options that
+they use.
+
+@node Table of Input Conversions
+@subsection Table of Input Conversions
+
+Here is a table that summarizes the various conversion specifications:
+
+@table @asis
+@item @samp{%d}
+Matches an optionally signed integer in decimal radix; @pxref{Numeric
+Input Conversions}.
+
+@item @samp{%i}
+Matches an optionally signed integer in any of the formats that the C
+language defines for specifying an integer constant.  @xref{Numeric
+Input Conversions}.
+
+@item @samp{%o}
+Matches an unsigned integer in octal radix; @pxref{Numeric
+Input Conversions}.
+
+@item @samp{%u}
+Matches an unsigned integer in decimal radix; @pxref{Numeric
+Input Conversions}.
+
+@item @samp{%x}, @samp{%X}
+Matches an unsigned integer in hexadecimal radix; @pxref{Numeric
+Input Conversions}.
+
+@item @samp{%e}, @samp{%f}, @samp{%g}, @samp{%E}, @samp{%G}
+Matches an optionally signed floating-point number; @pxref{Numeric Input
+Conversions}.
+
+@item @samp{%s}
+Matches a string of non-whitespace characters.  @xref{String Input
+Conversions}.
+
+@item @samp{%[}
+Matches a string of characters that belong to a set.  @xref{String Input
+Conversions}.
+
+@item @samp{%c}
+Matches a string of one or more characters; the number of characters
+read is controlled by the maximum field width given for the conversion.
+@xref{String Input Conversions}.
+
+@item @samp{%p}
+Matches a pointer value in the same implementation-defined format used
+by the @samp{%p} output conversion for @code{printf}.  @xref{Other Input
+Conversions}.
+
+@item @samp{%n}
+This conversion doesn't read any characters; it produces the number of
+characters read so far by this call.  @xref{Other Input Conversions}.
+
+@item @samp{%%}
+This matches a literal @samp{%} character in the input stream.  No
+corresponding argument is used.  @xref{Other Input Conversions}.
+@end table
+
+If the syntax of a conversion specification is invalid, the behavior is
+undefined.  If there aren't enough function arguments provided to supply
+addresses for all the conversion specifications in the format template
+that perform assignments, or if the arguments are not of the correct
+types, the behavior is also undefined.  On the other hand, if there are
+extra arguments, their values are simply ignored.
+
+@node Numeric Input Conversions
+@subsection Numeric Input Conversions
+
+This section describes the @code{scanf} conversions for reading numeric
+values.
+
+The @samp{%d} conversion matches an optionally signed integer in decimal
+radix.  The syntax that is recognized is the same as that for the
+@code{strtol} function (@pxref{Parsing of Integers}) with the value
+@code{10} for the @var{base} argument.
+
+The @samp{%i} conversion matches an optionally signed integer in any of
+the formats that the C language defines for specifying an integer
+constant.  The syntax that is recognized is the same as that for the
+@code{strtol} function (@pxref{Parsing of Integers}) with the value
+@code{0} for the @var{base} argument.
+
+For example, any of the strings @samp{10}, @samp{0xa}, or @samp{012}
+could be read in as integers under the @samp{%i} conversion.  Each of
+these specifies a number with decimal value @code{10}.
+
+The @samp{%o}, @samp{%u}, and @samp{%x} conversions match unsigned
+integers in octal, decimal, and hexadecimal radices, respectively.  The
+syntax that is recognized is the same as that for the @code{strtoul}
+function (@pxref{Parsing of Integers}) with the appropriate value
+(@code{8}, @code{10}, or @code{16}) for the @var{base} argument.
+
+The @samp{%X} conversion is identical to the @samp{%x} conversion.  They
+both permit either uppercase or lowercase letters to be used as digits.
+
+The default type of the corresponding argument for the @code{%d} and
+@code{%i} conversions is @code{int *}, and @code{unsigned int *} for the
+other integer conversions.  You can use the following type modifiers to
+specify other sizes of integer:
+
+@table @samp
+@item h
+Specifies that the argument is a @code{short int *} or @code{unsigned
+short int *}.
+
+@item l
+Specifies that the argument is a @code{long int *} or @code{unsigned
+long int *}.
+
+@item L
+Specifies that the argument is a @code{long lont int *} or @code{unsigned long long int *}.  (The @code{long long} type is an extension supported by the
+GNU C compiler.  For systems that don't provide extra-long integers, this
+is the same as @code{long int}.)
+@end table
+
+All of the @samp{%e}, @samp{%f}, @samp{%g}, @samp{%E}, and @samp{%G}
+input conversions are interchangable.  They all match an optionally
+signed floating point number, in the same syntax as for the
+@code{strtod} function (@pxref{Parsing of Floats}).
+
+For the floating-point input conversions, the default argument type is
+@code{float *}.  (This is different from the corresponding output
+conversions, where the default type is @code{double}; remember that
+@code{float} arguments to @code{printf} are converted to @code{double}
+by the default argument promotions, but @code{float *} arguments are
+not promoted to @code{double *}.)  You can specify other sizes of float
+using these type modifiers:
+
+@table @samp
+@item l
+Specifies that the argument is of type @code{double *}.
+
+@item L
+Specifies that the argument is of type @code{long double *}.
+@end table
+
+@node String Input Conversions
+@subsection String Input Conversions
+
+This section describes the @code{scanf} input conversions for reading
+string and character values: @samp{%s}, @samp{%[}, and @samp{%c}.  
+
+The corresponding argument for all of these conversions should be of
+type @code{char *}.  Make sure that the allocation size of the array
+that the argument points to is large enough to hold all the characters
+and the null character which is added to mark the end of the string.
+You can specify a field width to limit the number of characters read.
+
+The @samp{%c} conversion is the simplest.  It matches a fixed-sized
+string of characters.  The number of characters read is controlled by
+the maximum field width.  If you don't supply a field width, then only
+one character is read.  Note that this conversion doesn't append a null
+character to the end of the string it reads.  It also does not skip over
+initial whitespace characters.
+
+The @samp{%s} conversion matches a string of non-whitespace characters.
+Unlike @samp{%c}, this conversion does skip over initial whitespace and
+does mark the end of the string with a null character.  If you do not
+specify a field width for @samp{%s}, then the number of characters read
+is limited only by where the next whitespace character appears.
+
+For example, reading the input:
+
+@example
+ hello, world
+@end example
+
+@noindent
+with the conversion @samp{%10c} produces @code{" hello, wo"}, but
+reading the same input with the conversion @samp{%10s} produces
+@code{"hello,"}.
+
+The @samp{%s} conversion effectively reads in characters that belong to
+the set of non-whitespace characters.  To read in characters that belong
+to an arbitrary set, you can use the @samp{%[} conversion.  The
+characters which make up the set are specified immediately following the
+@samp{[} character, up to a matching @samp{]} character.  As special
+cases:
+
+@itemize @bullet
+@item 
+If a cirumflex character @samp{^} immediately follows the
+initial @samp{[}, then the set that is used for matching is the
+@emph{complement} of the set of characters that are explicitly listed.
+
+@item 
+A literal @samp{]} character can be specified as the first character
+of the set.
+
+@item 
+An embedded @samp{-} character (that is, one that is not the first or
+last character of the set) is used to specify a range of characters.
+@end itemize
+
+The @samp{%[} conversion does not skip over initial whitespace
+characters.
+
+Here are some examples of @samp{%[} conversions and what they mean.
+
+@table @samp
+@item %[1234567890]
+Matches a string of digits.
+
+@item %[][]
+Matches a string of square brackets.
+
+@item %[^ \f\n\r\t\v]
+Matches a string that doesn't contain any of the standard whitespace
+characters.  This is slightly different from @samp{%s}, because if the
+input begins with a whitespace character, @samp{%[} will report a
+matching failure while @samp{%s} will simply discard the initial
+whitespace.
+
+@item %[a-z] 
+Matches a string of lowercase characters.
+@end table
+
+
+@node Other Input Conversions
+@subsection Other Input Conversions
+
+This section describes the miscellaneous input conversions.
+
+The @samp{%p} conversion is used to read a pointer value.  It recognizes
+the same syntax as is used by the @samp{%p} output conversion for
+@code{printf}.  The corresponding argument should be of type @code{void **};
+that is, the address of a pointer.
+
+The resulting pointer value is not guaranteed to be valid if it was not
+originally written during the same program execution that reads it in.
+
+The @samp{%n} conversion produces the number of characters read so far
+by this call.  The corresponding argument should be of type @code{int *}.
+This conversion works in the same way as the @samp{%n} conversion for
+@code{printf}; @pxref{Other Output Conversions}, for an example.
+
+The @samp{%n} conversion is the only mechanism for determining the
+success of literal matches or conversions with suppressed assignments.
+
+Finally, the @samp{%%} conversion matches a literal @samp{%} character
+in the input stream, without using an argument.  This conversion does
+not permit any flags, field width, or type modifier to be specified.
+
+@node Formatted Input Functions
+@subsection Formatted Input Functions
+
+Here are the descriptions of the functions for performing formatted
+input.
+Prototypes for these functions are in the header file @file{<stdio.h>}.
+
+@deftypefun int scanf (const char *@var{template}, @dots{})
+The @code{scanf} function reads formatted input from the stream
+@code{stdin} under the control of the format template @var{template}.
+The optional arguments are pointers to the places which receive the
+resulting values.
+
+The return value is normally the number of successful assignments.  If
+an end-of-file condition is detected before any matches are performed
+(including matches against whitespace and literal characters in the
+template), then @code{EOF} is returned.
+@end deftypefun
+
+@deftypefun int fscanf (FILE *@var{stream}, const char *@var{template}, @dots{})
+This function is just like @code{scanf}, except that the input is read
+from the stream @var{stream} instead of @code{stdin}.
+@end deftypefun
+
+@deftypefun int sscanf (const char *@var{s}, const char *@var{template}, @dots{})
+This is like @code{scanf}, except that the characters are taken from the
+null-terminated string @var{s} instead of read from a stream.  Reaching
+the end of the string is treated as an end-of-file condition.
+
+The behavior of this function is undefined if copying takes place
+between objects that overlap --- for example, if @var{s} is also given
+as an argument to receive a string read under control of the @samp{%s}
+conversion.
+@end deftypefun
+
+@comment This is a GNU extension.
+@deftypefun int vscanf (const char *@var{template}, va_list @var{ap})
+This function is similar to @code{scanf} except that, instead of taking
+a variable number of arguments directly, it takes an argument list
+pointer @var{ap}.  Before calling @code{vscanf}, you @emph{must} call
+@code{va_start} (@pxref{Variable Argument Facilities}) to initialize
+@var{ap}, and you @emph{may} call @code{va_arg} to skip over some of the
+initial arguments.  The @code{vscanf} function does not invoke the
+@code{va_end} macro, but further calls to @code{va_arg} with @var{ap}
+are not permitted once @code{vscanf} returns.
+
+The @code{vscanf} function is typically used to do input in the same
+kinds of situations as where @code{vprintf} is used to do output.
+@xref{Formatted Output Functions}.
+@end deftypefun
+
+@comment This is a GNU extension.
+@deftypefun int vfscanf (FILE *@var{stream}, const char *@var{template}, va_list @var{ap})
+This is the equivalent of @code{fscanf} with the variable argument list
+specified directly as for @code{vscanf}.
+@end deftypefun
+
+@comment This is a GNU extension.
+@deftypefun int vsscanf (const char *@var{s}, const char *@var{template}, va_list @var{ap})
+This is the equivalent of @code{sscanf} with the variable argument list
+specified directly as for @code{vscanf}.
+@end deftypefun
+
+@strong{Portability Note:} Of the functions listed in this section, only
+@code{scanf}, @code{fscanf}, and @code{sscanf} are included in ANSI C.
+The @code{vscanf}, @code{vfscanf}, and @code{vsscanf} functions are
+GNU extensions.
+
+@node Character Output
+@section Character Output
+
+This section describes functions for performing character- and
+line-oriented output.  Largely for historical compatibility, there are
+several variants of these functions, but as a matter of style (and for
+simplicity!) it's suggested that you stick with using @code{fputc} and
+@code{fputs}.
+
+These functions are declared in the header file @file{<stdio.h>}.
+
+@deftypefun int fputc (int @var{c}, FILE *@var{stream})
+The @code{fputc} function converts the character @var{c} to type
+@code{unsigned char}, and writes it to the stream @var{stream}.  
+@code{EOF} is returned if a write error occurs; otherwise the
+character @var{c} is returned.
+@end deftypefun
+
+@deftypefun int putc (int @var{c}, FILE *@var{stream})
+This is just like @code{fputc}, except that it is permissible (and
+typical) for it to be implemented as a macro that evaluates the
+@var{stream} argument more than once.  (Of course, @code{fputc} can be
+implemented as a macro too, but only in such a way that it doesn't
+evaluate its arguments more than once.)
+@end deftypefun
+
+@deftypefun int putchar (int @var{c})
+The @code{putchar} function is equivalent to @code{fputc} with
+@code{stdout} as the value of the @var{stream} argument.
+@end deftypefun
+
+@deftypefun int fputs (const char *@var{s}, FILE *@var{stream})
+The function @code{fputs} writes the string @var{s} to the stream
+@var{stream}.  The terminating null character is not written.
+This function does @emph{not} add a newline character, either.
+
+This function returns @code{EOF} if a write error occurs, and otherwise
+a non-negative value.
+@end deftypefun
+
+@deftypefun int puts (const char *@var{s})
+The @code{puts} function writes the string @var{s} to the stream
+@code{stdout}.  The terminating null character is not written, but
+a newline character is appended to the output; this differs from
+@code{fputs}, which does not add a newline.
+@end deftypefun
+
+
+@node Character Input
+@section Character Input
+
+This section describes functions for performing character- and
+line-oriented input.  Again, there are several variants of these
+functions, some of which are considered obsolete stylistically.
+It's suggested that you stick with @code{fgetc}, @code{fgets}, and
+maybe @code{ungetc}.
+
+These functions are declared in the header file @file{<stdio.h>}.
+
+@deftypefun int fgetc (FILE *@var{stream})
+This function reads the next character as an @code{unsigned char} from
+the stream @var{stream} and returns its value, converted to an
+@code{int}.  If an end-of-file condition or read error occurs,
+@code{EOF} is returned instead.
+@end deftypefun
+
+@deftypefun int getc (FILE *@var{stream})
+This is just like @code{fgetc}, except that it is permissible (and typical)
+for it to be implemented as a macro that evaluates the @var{stream}
+argument more than once.
+@end deftypefun
+
+@deftypefun int getchar ()
+The @code{getchar} function is equivalent to @code{fgetc} with @code{stdin}
+as the value of the @var{stream} argument.
+@end deftypefun
+
+@deftypefun int ungetc (int @var{c}, FILE *@var{stream})
+The @code{ungetc} function is provided to support a limited form of
+input lookahead.  The character @var{c} (which must not be @code{EOF})
+is ``pushed back'' onto the input stream @var{stream}, where it can be
+read back in again.
+
+The character that you push back doesn't have to be the same as the last
+character that was actually read from the stream.  In fact, it isn't
+necessary to actually read any characters from the stream before
+unreading them with @code{ungetc}!
+
+The GNU C Library only supports one character of pushback.  Other
+systems might let you push back multiple characters; in such
+implementations, reading from the stream retrieves the characters in the
+reverse order that they were pushed.
+
+Pushing back characters doesn't alter the file; only the internal
+buffering for the stream is affected.  If a file positioning function
+(such as @code{fseek} or @code{rewind}; @pxref{File Positioning}) is
+called, any unread pushed-back characters are discarded.
+
+If the stream is at end-of-file when a character is pushed back, the
+end-of-file indicator for the stream is cleared.
+@end deftypefun
+
+Here is an example showing the use of @code{getc} and @code{ungetc}
+to skip over whitespace characters.  The first non-whitespace character
+read is pushed back, so it can be seen again on the next read operation
+on the stream.
+
+@example
+#include <stdio.h>
+
+void skip_whitespace (FILE *stream)
+@{
+  int c;
+  do @{
+    c = getc (stream);
+    if (c == EOF) return;
+  @} while (isspace (c));
+  ungetc (c, stream);
+@}
+@end example
+
+
+@deftypefun {char *} fgets (char *@var{s}, int @var{count}, FILE *@var{stream})
+The @code{fgets} function reads characters from the stream @var{stream}
+up to and including a newline character and stores them in the string
+@var{s}.  At most, one less than @var{count} characters will be read;
+since a null character is added to mark the end of the string,
+@var{count} effectively specifies the minimum allocation size for the
+string @var{s}.
+
+In the event of an end-of-file condition, if no characters have yet been
+read, then the contents of the array @var{s} are unchanged and a null
+pointer is returned.  A null pointer is also returned if a read error
+occurs.  Otherwise, the return value is the pointer @var{s}.
+@end deftypefun
+
+@deftypefun {char *} gets (char *@var{s})
+The function @code{gets} reads characters from the stream @code{stdin}
+up to the next newline character, and stores them in the string @var{s}.
+The newline character is discarded (note that this differs from the
+behavior of @code{fgets}, which copies the newline character into the
+string).
+
+@strong{Warning:}  The @code{gets} function is @strong{very dangerous} 
+because it provides no protection against overflowing the string @var{s}.
+The GNU Library includes it for compatibility only.  You should 
+@strong{always} use @code{fgets} instead.
+@end deftypefun
+
+
+@node Block Input/Output
+@section Block Input/Output
+
+This section describes how to do input and output operations on blocks
+of data.  You can use these functions to read and write binary data, as
+well as to read and write text in fixed-size blocks instead of by
+characters or lines.
+@cindex binary input/output
+@cindex block input/output
+
+Binary files are typically used to read and write blocks of data in the
+same format as is used to represent the data in a running program.  In
+other words, arbitrary blocks of memory --- not just character or string
+objects --- can be written to a binary file, and meaningfully read in
+again under the same implementation.
+
+Storing data in binary form is often considerably more efficient than
+using the formatted i/o functions.  Also, for floating-point numbers,
+the binary form avoids possible loss of precision in the conversion
+process.  On the other hand, binary files can't be examined or modified
+easily using many standard file utilities (such as text editors), and
+are not portable between different implementations of the language, or
+different kinds of computers.
+
+These functions are declared in @file{<stdio.h>}.
+
+@deftypefun size_t fread (void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
+This function reads up to @var{count} objects of size @var{size} into
+the array @var{data}, from the stream @var{stream}.  It returns the
+number of objects actually read, which might be less than @var{count} if
+a read error or end-of-file occurs.  This function returns a value of
+zero (and doesn't read anything) if either @var{size} or @var{count} is
+zero.
+@end deftypefun
+
+@deftypefun size_t fwrite (const void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
+This function writes up to @var{count} objects of size @var{size} from
+the array @var{data}, to the stream @var{stream}.  The return value is
+the number of objects actually written, which is less than @var{count}
+only if a write error occurs.
+@end deftypefun
+
+
+
+@node File Positioning
+@section File Positioning
+
+You can use the functions in this section to inquire about or modify the
+file position indicator associated with a stream; @pxref{Input/Output
+Concepts}.  In the GNU system, the file position indicator is the number of
+bytes from the beginning of the file.
+
+The functions and macros listed in this section are declared in the
+header file @file{<stdio.h>}.
+
+@deftypefun {long int} ftell (FILE *@var{stream})
+This function returns the current file position of the stream
+@var{stream}.
+
+This function can fail if the stream doesn't support file positioning,
+or if the file position can't be represented in a @code{long int}, and
+possibly for other reasons as well.  If a failure occurs, a value of
+@code{-1} is returned.
+@end deftypefun
+
+@deftypefun int fseek (FILE *@var{stream}, long int @var{offset}, int @var{whence})
+The @code{fseek} function is used to change the file position of the
+stream @var{stream}.  The value of @var{whence} must be one of the
+constants @code{SEEK_SET}, @code{SEEK_CUR}, or @code{SEEK_END}, to
+indicate whether the @var{offset} is relative to the beginning of the
+file, the current file position, or the end of the file, respectively.
+
+This function returns a value of zero if the operation was successful,
+and a nonzero value to indicate failure.  A successful call also clears
+any end-of-file condition on the @var{stream} and discards any characters
+that were ``pushed back'' by the use of @code{ungetc}.
+@end deftypefun
+
+@strong{Portability Note:}  In systems that are not POSIX-compliant,
+@code{ftell} and @code{fseek} only work reliably on binary streams.
+@xref{Text and Binary Streams}.  
+
+The following symbolic constants are defined for use as the @var{whence}
+argument to @code{fseek}.  They are also used with the @code{lseek}
+function (@pxref{Input and Output Primitives}) and to specify offsets
+for file locks (@pxref{Control Operations on Files}).
+
+@defvr {Macro} SEEK_SET
+This macro expands into an integer constant expression that can be used
+as the @var{whence} argument to the @code{fseek} function, to
+specify that the offset provided is relative to the beginning of the
+file.
+@end defvr
+
+@defvr {Macro} SEEK_CUR
+This macro expands into an integer constant expression that can be used
+as the @var{whence} argument to the @code{fseek} function, to
+specify that the offset provided is relative to the currrent file
+position.
+@end defvr
+
+@defvr {Macro} SEEK_END
+This macro expands into an integer constant expression that can be used
+as the @var{whence} argument to the @code{fseek} function, to
+specify that the offset provided is relative to the end of the file.
+@end defvr
+
+@deftypefun void rewind (FILE *@var{stream})
+The @code{rewind} function positions the stream @var{stream} at the
+begining of the file.  It is equivalent to calling @code{fseek} on the
+@var{stream} with an @var{offset} argument of @code{0L} and a
+@var{whence} argument of @code{SEEK_SET}, except that the return
+value is discarded and the error indicator for the stream is reset.
+@end deftypefun
+
+
+@node Text and Binary Streams
+@section Text and Binary Streams
+
+The GNU system and other POSIX-compatible operating systems organize all
+files as uniform sequences of characters.  However, some other systems
+make a distinction between files containing text and files containing
+binary data, and the input and output facilities provided by ANSI C are
+general enough to support this distinction.  This section contains
+information you need to know if you are concerned about making your
+programs portable to non-POSIX systems.
+
+@cindex text stream
+@cindex binary stream
+In ANSI C, a file can be opened as either a @dfn{text stream} or as a
+@dfn{binary stream}.  You indicate that you want a binary stream by
+specifying the @samp{b} modifier in the @var{opentype} argument to
+@code{fopen}; @pxref{Opening and Closing Streams}.  Without this option,
+@code{fopen} opens the file as a text stream.
+
+There are three areas where the two kinds of streams differ:
+
+@itemize @bullet
+@item
+A text stream is divided into @dfn{lines} which are terminated by
+newline (@code{'\n'}) characters, while a binary stream is simply a long
+series of characters.  A text stream must be able to handle lines up to
+254 characters long (including the terminating newline character).
+@cindex lines (in a file)
+
+@item
+A text stream can (portably) consist only of printing
+characters, horizontal tab characters, and newlines; while any character
+object can be written to or read from a binary stream.
+
+@item
+Space characters that are written immediately preceeding a newline
+character in a text stream may disappear when the file is read in again.
+
+@item
+More generally, there need not be a one-to-one mapping between
+characters that are read from or written to a text stream, and the
+characters in the actual file.
+@end itemize
+
+A consequence of this last point is that file positions for text streams
+may not be representable as a character offset from the beginning of the
+file.  On some systems, for example, the file position must encode both
+a record offset within the file, and a character offset within the
+record.
+
+The specific restrictions that result from this are:
+
+@itemize @bullet
+@item
+The @code{long int} value that @code{fseek} and @code{ftell} use to
+represent the file position indicator may not be able to encode a
+sufficient range of values to handle large files.
+
+@item
+The only guaranteed property of the value returned from @code{ftell} on
+a text stream is that it can be used as the @var{offset} argument in a
+call to @code{fseek} to represent the same file position.
+
+@item 
+In a call to @code{fseek} on a text stream, either the @var{offset} must
+either be zero; or @var{whence} must be @code{SEEK_SET} and the
+@var{offset} must be the result of an earlier call to @code{ftell} on
+the same @var{stream}.
+
+@item
+A @var{whence} value of @code{SEEK_END} in a call to @code{fseek} may
+not work on binary streams.
+
+@item
+The value of the file position indicator of a text stream is undefined
+while there are characters that have been pushed back with @code{ungetc}
+that haven't been read or discarded.  @xref{Character Input}.
+@end itemize
+
+To get around the problems with @code{ftell} and @code{fseek}, you can
+use the functions @code{fgetpos} and @code{fsetpos} instead.  These
+functions represent the file position as a @code{fpos_t} object, with
+an implementation-dependent internal representation.
+
+Prototypes for these functions are declared in the header file
+@file{<stdio.h>}.
+
+@deftp {Data Type} fpos_t
+This is the type of an object that can encode information about the
+file position of a stream, for use by the functions @code{fgetpos} and
+@code{fsetpos}.
+
+In the GNU system, @code{fpos_t} is equivalent to @code{off_t} or
+@code{long int}.  In other systems, it might have a different internal
+representation.
+@end deftp
+
+@deftypefun int fgetpos (FILE *@var{stream}, fpos_t *@var{position})
+This function stores the value of the file position indicator for the
+stream @var{stream} in the @code{fpos_t} object pointed to by
+@var{position}.  If successful, @code{fgetpos} returns zero; otherwise
+it returns a nonzero value and stores an implementation-defined positive
+value in @code{errno}.
+@end deftypefun
+
+@deftypefun int fsetpos (FILE *@var{stream}, const fpos_t @var{position})
+This function sets the file position indicator for the stream @var{stream}
+to the position @var{position}, which must have been set by a previous
+call to @code{fgetpos} on the same stream.  If successful, @code{fsetpos}
+clears the end-of-file indicator on the stream, discards any characters
+that were ``pushed back'' by the use of @code{ungetc}, and returns a value
+of zero.  Otherwise, @code{fsetpos} returns a nonzero value and stores
+an implementation-defined positive value in @code{errno}.
+@end deftypefun
+
+@node Stream Buffering
+@section Stream Buffering
+
+@cindex buffering of streams
+Characters that are written to a stream are normally accumulated and
+transmitted asynchronously to the file in a block, instead of appearing
+as soon as they are output by the application program.  Similarly,
+streams often retrieve input from the host environment in blocks rather
+than on a character-by-character basis.  This is called @dfn{buffering}.
+
+If you are writing programs that do interactive input and output using
+streams, you need to understand how buffering works when you design the
+user interface to your program.  Otherwise, you might find that output
+(such as progress or prompt messages) doesn't appear when you intended
+it to, or that input typed by the user is made available by lines
+instead of by single characters, or see other unexpected behavior.  
+
+This section deals only with controlling when characters are transmitted
+between the stream and the file or device, and @emph{not} with how
+things like echoing, flow control, and the like are handled on specific
+classes of devices.  For information on common control operations on
+terminal devices, @pxref{Low-Level Terminal Interface}.
+
+You can also bypass the stream buffering facilities altogether by using
+the low-level input and output functions that operate on file descriptors
+instead.  @xref{Low-Level Input/Output}.
+
+@menu
+* Buffering Concepts::		Terminology is defined here.
+* Flushing Buffers::		How to ensure that output buffers are flushed.
+* Controlling Buffering::	How to specify what kind of buffering to use.
+@end menu
+
+@node Buffering Concepts
+@subsection Buffering Concepts
+
+There are three different kinds of buffering strategies:
+
+@itemize @bullet
+@item
+Characters written to or read from an @dfn{unbuffered} stream are
+transmitted individually to or from the file as soon as possible.
+@cindex unbuffered stream
+
+@item
+Characters written to or read from a @dfn{line buffered} stream are
+transmitted to or from the file in blocks when a newline character is
+encountered.
+@cindex line buffered stream
+
+@item
+Characters written to or read from a @dfn{fully buffered} stream are
+transmitted to or from the file in blocks of arbitrary size.
+@cindex fully buffered stream
+@end itemize
+
+@strong{Incomplete:}  What is the default buffering behavior in the 
+GNU system?
+
+You can explicitly set the buffering strategy used by a stream.
+
+When a stream corresponding to an interactive device (such as a
+terminal) is opened, its default behavior is to be either unbuffered or
+line buffered.
+
+This means that when your program writes messages to an interactive
+device that end in a newline, they'll always show up immediately.
+Output that doesn't end in a newline might or might not show up
+immediately, and if it matters you should flush buffered output
+explicitly with @code{fflush}, as described in @ref{Flushing Buffers}.
+
+For input, if an interactive stream is line-buffered, users of your
+program will probably be able to use whatever basic input editing
+facilities are normally provided by the host operating system (such as
+being able to correct typing mistakes with rubout or backspace), but
+you'll have to design your program so that it expects to look for
+newline characters to terminate input.  If an interactive stream is
+unbuffered, it might be appropriate for your program to provide its own
+input editing facilities.
+
+@strong{Incomplete:}  I don't think changing the buffering on a stream
+in the GNU system messes with input modes on a terminal device, does it?
+
+@node Flushing Buffers
+@subsection Flushing Buffers
+
+@cindex flushing a stream
+@dfn{Flushing} output on a buffered stream causes any accumulated
+characters to be transmitted to the file.  You can flush
+buffers explicitly with the @code{fflush} function, but there are many
+circumstances when buffered output is flushed automatically:
+
+@itemize @bullet
+@item
+Output buffers are flushed when they are full.
+
+@item
+On a line buffered stream, writing a newline causes output on
+that stream to be flushed.  
+
+@item
+Performing a read operation on an unbuffered stream (or on a line
+buffered stream when it needs to do actual input) causes accumulated
+output on all open streams to be flushed.
+
+@item
+Closing a stream causes accumulated output on that stream to be flushed
+first.
+
+@item
+On normal program exit, output is flushed as part of closing all open
+streams.
+@end itemize
+
+The prototype for @code{fflush} is in the header file @file{<stdio.h>}.
+
+@deftypefun int fflush (FILE *@var{stream})
+This function causes any buffered output on @var{stream} to be delivered
+to the file.  If @var{stream} is a null pointer, then
+@code{fflush} causes buffered output on @emph{all} open output streams
+to be flushed.
+
+This function returns @code{EOF} if a write error occurs, or zero
+otherwise.
+@end deftypefun
+
+@strong{Compatibility Note:} Some brain-damaged operating systems have
+been known to be so thoroughly fixated on line-oriented input and output
+that flushing a line-buffered stream causes a newline to be written!
+Fortunately, this ``feature'' seems to be becoming less common.  You do
+not need to worry about this in the GNU system.
+
+
+@node Controlling Buffering
+@subsection Controlling Buffering
+
+After opening a stream (but before any other operations have been
+performed on it), you can explicitly specify what kind of buffering you
+want it to have using the @code{setvbuf} function.
+@cindex buffering, specifying
+
+Implementations are not required to actually support changes in the
+buffering mode, and requests to do so may simply fail.
+
+@strong{Incomplete:} Does the GNU system support all the buffering modes
+on all kinds of files?  If not, what are the restrictions?
+
+The facilities listed in this section are declared in the header
+file @file{<stdio.h>}.
+
+@deftypefun int setvbuf (FILE *@var{stream}, char *@var{buf}, int @var{mode}, size_t @var{size})
+This function is used to specify that the stream @var{stream} should
+have the buffering mode @var{mode}, which can be either @code{_IOFBF}
+(for full buffering), @code{_IOLBF} (for line buffering), or
+@code{_IONBF} (for unbuffered input/output).
+
+If you want a buffer for the stream to be allocated automatically, you
+can specify a null pointer as the @var{buf} argument.  Otherwise,
+@var{buf} should be a character array that can hold at least @var{size}
+characters.
+
+The extent of the array you pass as the @var{buf} argument should be at
+least as great as the open stream; you should usually either allocate it
+statically, or @code{malloc} (@pxref{wherever}) the buffer.  Using an
+automatic array is not a good idea unless you close the file before
+exiting the block that declares the array.
+
+The contents of the array are indeterminate as long as the stream is
+open.  You shouldn't try to access the values in the array while you are
+using it for buffering.
+
+The @code{setvbuf} function returns zero on success, or a nonzero value
+if the value of @var{mode} is not valid or if the request could not
+be honored.
+@end deftypefun
+
+@defvr {Macro} _IOFBF
+The value of this macro is an integer constant expression that can be
+used as the @var{mode} argument to the @code{setvbuf} function to
+specify that the stream should be fully buffered.
+@end defvr
+
+@defvr {Macro} _IOLBF
+The value of this macro is an integer constant expression that can be
+used as the @var{mode} argument to the @code{setvbuf} function to
+specify that the stream should be line buffered.
+@end defvr
+
+@defvr {Macro} _IONBF
+The value of this macro is an integer constant expression that can be
+used as the @var{mode} argument to the @code{setvbuf} function to
+specify that the stream should be unbuffered.
+@end defvr
+
+@defvr {Macro} BUFSIZ
+The value of this macro is an integer constant expression that is an
+appropriate (but implementation-defined) value for the @var{size}
+argument to @code{setvbuf}.  This value is guaranteed to be at least
+@code{256}.
+
+Sometimes people also use @code{BUFSIZ} as the allocation size of
+buffers used for related purposes, such as strings used to receive a
+line of input with @code{fgets} (@pxref{Character Input}).
+@end defvr
+
+@deftypefun void setbuf (FILE *@var{stream}, char *@var{buf})
+If @var{buf} is a null pointer, the effect of this function is
+equivalent to calling @code{setvbuf} with a @var{mode} argument of
+@code{_IONBF}.  Otherwise, it is equivalent to calling @code{setvbuf}
+with a @var{mode} of @code{_IOFBF} and a @var{size} argument of
+@code{BUFSIZ}.
+
+The @code{setbuf} function is provided for compatibility with old code;
+using @code{setvbuf} instead is a more modern style.
+@end deftypefun
+
+@comment This is a BSD extension.
+@deftypefun void setbuffer (FILE *@var{stream}, char *@var{buf}, size_t @var{size})
+If @var{buf} is a null pointer, this function makes @var{stream} unbuffered.
+Otherwise, it makes @var{stream} fully buffered using that array as the
+buffer.  The @var{size} argument specifies the length of the array.
+
+This function is provided for compatibility with old BSD code.  Use
+@code{setvbuf} instead.
+@end deftypefun
+
+@comment This is a BSD extension.
+@deftypefun void setlinebuf (FILE *@var{stream})
+This function makes @var{stream} be line-buffered, using an
+automatically-allocated buffer.
+
+This function is provided for compatibility with old BSD code.  Use
+@code{setvbuf} instead.
+@end deftypefun
+
+
+@node Temporary Files
+@section Temporary Files
+
+If you need to use a temporary file in your program, you can use the
+@code{tmpfile} function to do this.  Or, you can use the @code{tmpnam}
+function to get the name of a temporary file and then open it in the
+usual way with @code{fopen}.
+
+These facilities are declared in the header file @file{<stdio.h>}.
+
+@deftypefun {FILE *} tmpfile (void)
+This function creates a temporary binary file for update mode, as if by
+calling @code{fopen} with mode @code{"wb+"}.  The file is removed 
+automatically when it is closed or when the program terminates normally
+(but not if the program terminates abnormally).
+@end deftypefun
+
+
+@deftypefun {char *} tmpnam (char *@var{result})
+This function constructs and returns a file name that is a valid file
+name and that does not name any existing file.  If the @var{result}
+argument is a null pointer, the return value is a pointer to an internal
+static string, which might be modified by subsequent calls.  Otherwise,
+the @var{result} argument should be a pointer to an array of at least
+@code{L_tmpnam} characters, and the result is written into that array.
+@end deftypefun
+
+@defvr {Macro} L_tmpnam
+The value of this macro is an integer constant expression that represents
+the minimum allocation size of a string large enough to hold the
+file name generated by the @code{tmpnam} function.
+@end defvr
+
+@defvr {Macro} TMP_MAX
+The value of this macro is an integer constant expression that represents
+the minimum number of unique file names that can be generated by
+the @code{tmpnam} function.  The value of this macro is guaranteed to
+be at least @code{25}.
+@end defvr
+
+
+@node Other Kinds of Streams
+@section Other Kinds of Streams
+
+The GNU Library provides ways for you to define additional kinds of
+streams that do not necessarily correspond to an open file.
+
+One such type of stream takes input from or writes output to a string.
+These kinds of streams are used internally to implement the
+@code{sprintf} and @code{sscanf} functions.  You can also create such a
+stream explicitly, using the functions described in @ref{String Streams}.
+
+More generally, you can define streams that do input/output to arbitrary
+objects using a function protocol.  This protocol is discussed in 
+@ref{Generalized Streams}.
+
+@strong{Portability Note:} The facilities described in this chapter are
+specific to GNU.  Other systems or C implementations might or might not
+provide equivalent functionality.
+
+@menu
+* String Streams::
+* Generalized Streams::
+@end menu
+
+@node String Streams
+@subsection String Streams
+
+@cindex stream, for i/o to a string
+@cindex string stream
+@strong{Incomplete:} This section needs more work.  It's not clear to me
+right now whether these streams treat the buffer as a string or as an
+arbitrary array, and this will affect the presentation of this material.
+
+These facilities are declared in @file{<stdio.h>}.
+
+@deftypefun {FILE *} fmemopen (char *@var{s}, size_t @var{size}, const char *@var{opentype})
+@end deftypefun
+
+@deftypefun {FILE *} open_memstream (char **@var{ptr})
+@end deftypefun
+
+
+@node Generalized Streams
+@subsection Generalized Streams
+
+This section describes how you can make a stream that gets input from an
+arbitrary data source or writes output to an arbitrary data sink.  We
+refer to this source or sink as a @dfn{cookie}.  The cookie is specified
+as a pointer value (a @code{void *}), but the cookie can point to any
+kind of object that you want to use to keep track of state information
+for the stream.
+@cindex cookie, for generalized streams
+@cindex generalized streams
+
+The protocol for transferring data to or from the cookie is defined by
+a set of functions.  You provide appropriate definitions for these 
+functions, and store them in an @code{__io_functions} data structure.
+
+These facilities are declared in @file{<stdio.h>}.
+
+@deftp {Data Type} __io_functions
+This is a structure type that holds the functions that define the 
+communications protocol between the stream and its cookie.  It has
+the following members:
+
+@table @code
+@item __io_read *__read
+This is the function that reads data from the cookie.  If the value is a
+null pointer, then read operations will always return @code{EOF}.
+
+@item __io_write *__write
+This is the function that writes data to the cookie.  If the value is a
+null pointer, then data written to the stream is discarded.
+
+@item __io_seek *__seek
+This is the function that performs the equivalent of file positioning
+on the cookie.  If the value is a null pointer, calls to @code{fseek}
+on this stream return an @code{ESPIPE} error.
+
+@item __io_close *__close
+This function performs any appropriate cleanup on the cookie when closing
+the stream.
+
+@strong{Incomplete:}  Is a null pointer valid here?
+@end table
+@end deftp
+
+Here are more details on how you should define the individual functions
+stored in this structure.
+
+@deftp {Data Type} __io_read
+You should define the function to read data from the cookie as:
+
+@example
+int @var{function} (void *@var{cookie}, void *@var{buffer}, size_t @var{size})
+@end example
+
+This is very similar to the @code{read} function; @pxref{Input and
+Output Primitives}.  Your function should transfer up to @var{size}
+bytes into the @var{buffer}, and return the number of bytes read.
+You can return a value of @code{-1} to indicate an error.
+@end deftp
+
+@deftp {Data Type} __io_write
+You should define the function to write data to the cookie as:
+
+@example
+int @var{function} (void *@var{cookie}, const void *@var{buffer}, size_t @var{size})
+@end example
+
+This is very similar to the @code{write} function; @pxref{Input and
+Output Primitives}.  Your function should transfer up to @var{size}
+bytes from the buffer, and return the number of bytes written.  You can
+return a value of @code{-1} to indicate an error.
+@end deftp
+
+@deftp {Data Type} __io_seek
+You should define the function to perform seek operations on the cookie as:
+
+@example
+int @var{function} (void *@var{cookie}, fpos_t *@var{position}, int @var{whence})
+@end example
+
+For this function, the @code{position} and @code{whence} arguments are
+interpreted as for @code{fgetpos}; @pxref{Text and Binary Streams}.
+Remember that in the GNU system, @code{fpos_t} is equivalent to
+@code{off_t} or @code{long int}, and simply represents the number of
+bytes from the beginning of the file.
+
+After doing the seek operation, your function should store the resulting 
+file position relative to the beginning of the file in @var{position}.
+Your function should return a value of @code{0} on success and @code{-1}
+to indicate an error.
+@end deftp
+
+@deftp {Data Type} __io_close
+You should define the function to do cleanup operations on the cookie
+appropriate for closing the stream as:
+
+@example
+int @var{function} (void *@var{cookie})
+@end example
+
+Your function should return @code{-1} to indicate an error, and @code{0}
+otherwise.
+@end deftp
+
+@deftypevar __io_functions __default_io_functions
+@strong{Incomplete:}  These are supposed to be the ``default'' set of
+functions, but I have no idea what that means.
+@end deftypevar
+
+@deftypefun {FILE *} fopencookie (void *@var{cookie}, const char *@var{opentype}, __io_functions @var{io_functions})
+This function actually creates the stream for communicating with the
+@var{cookie} using the functions in the @var{io_functions} argument.
+The @var{opentype} argument is interpreted as for @code{fopen};
+@pxref{Opening and Closing Streams}.
+
+@strong{Incomplete:} I'm not sure how this handles things like the
+``truncate on open'' parts of the @var{opentype} specification.
+
+@strong{Incomplete:} What is the default buffering mode for the newly
+created stream?
+
+The @code{fopencookie} function returns the newly created stream, or a null
+pointer in case of an error.
+@end deftypefun
+
+@strong{Incomplete:}  Roland says:
+
+@quotation
+There is another set of functions one can give a stream, the
+input-room and output-room functions.  These functions must
+understand stdio internals.  To describe how to use these
+functions, you also need to document lots of how stdio works
+internally (which isn't relevant for other uses of stdio).
+Perhaps I can write an interface spec from which you can write
+good documentation.  But it's pretty complex and deals with lots
+of nitty-gritty details.  I think it might be better to let this
+wait until the rest of the manual is more done and polished.
+@end quotation
+
+@strong{Incomplete:}  This section could use an example.

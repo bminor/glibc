@@ -1,0 +1,1565 @@
+@node File System Interface
+@chapter File System Interface
+
+This chapter describes the GNU C Library's functions for manipulating
+files.  Unlike the input and output functions described in
+@ref{Input/Output on Streams} and @ref{Low-Level Input/Output}, these
+functions are concerned with operating on the files themselves, rather
+than on their contents.
+
+Among the facilities described in this chapter are functions for
+examining or modifying directories, and functions for inquiring about or
+setting file attributes, such as access modes and modification times.
+
+@menu
+* Working Directory::			This is used to resolve relative
+					 file names.
+* Accessing Directories::		Finding out what files a directory
+					 contains.
+* Adding Links::			Adding entries to a directory.
+* Removing and Renaming Files::		Removing entries from a directory.
+* Making and Removing Directories::	Functions for adding and removing
+					 the directories themselves.
+* File Attributes::			Attributes of individual files.
+* File System Parameters::		Constants and functions that describe
+					 various file system limits.
+@end menu
+
+@node Working Directory
+@section Working Directory
+
+@cindex current working directory
+@cindex working directory
+@cindex change working directory
+Each process has associated with it a directory, called its @dfn{current
+working directory} or simply @dfn{working directory}, that is used in
+the resolution of relative file names (@pxref{File Name Resolution}).
+
+When you log in to the computer and begin a new session, your working
+directory is initially set to the home directory associated with your
+login account in the system user database.  You can inquire about any
+user's home directory using the @code{getpwuid} or @code{getpwnam}
+functions; @pxref{User Database}.
+
+You can change the working directory using shell commands like
+@samp{cd}.  The functions described in this section are the primitives
+used by those commands for examining and changing the working directory.
+
+Prototypes for these functions are declared in the header file
+@file{<unistd.h>}.
+
+@deftypefun {char *} getcwd (char *@var{buffer}, int @var{size})
+The @code{getcwd} function returns an absolute file name representing
+the current working directory in the character array @var{buffer}.
+The @var{size} argument specifies the allocation size of the array.
+
+The return value is @var{buffer} on success and a null pointer on failure.
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EINVAL
+The @var{size} argument is less than or equal to zero.
+
+@item ERANGE
+The @var{size} argument is less than the length of the file name.
+You need to allocate a bigger array to hold the result.
+
+@item EACCES
+Permission to read or search a component of the file name was denied.
+@end table
+@end deftypefun
+
+@deftypefun int chdir (const char *@var{filename})
+This function is used to set the process's working directory to
+@var{filename}.
+
+The normal, successful return value from @code{chdir} is @code{0}.
+A value of @code{-1} is returned to indicate an error.  The @code{errno}
+error conditions defined for this function are the usual file name
+syntax errors (@pxref{File Name Errors}).
+@end deftypefun
+
+
+@node Accessing Directories
+@section Accessing Directories
+
+The facilities described in this section let you read the contents of a
+directory file.  This is useful if you want your program to list the
+files for which it contains entries, perhaps as part of a menu.
+
+Here's a trivial example program that prints the names of the files in
+the current working directory:
+
+@example
+#include <stddef.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <dirent.h>
+
+main ()
+@{   
+  DIR *dp;
+  struct dirent *ep;
+
+  if (dp = opendir ("./")) @{
+    while (ep = readdir (dp))
+      puts (ep->d_name);
+    (void) closedir (dp);
+    @}
+  else
+    puts ("Couldn't open the directory.");
+@}
+@end example
+
+@cindex directory stream
+There are obvious parallels here to the facilities for manipulating
+ordinary files, described in @ref{Input/Output on Streams}.  The
+@code{opendir} function opens a @dfn{directory stream} whose elements
+are directory entries.  You use the @code{readdir} function on the
+directory stream to retrieve these entries, represented as @code{struct
+dirent} objects.  The name of the file for each entry is stored in the
+@code{d_name} member of this structure.
+
+The order in which files appear in a directory tends to be fairly
+random.  A more useful program would sort the entries (perhaps by
+alphabetizing them) before printing them.
+
+These facilities are declared in the header file @file{<dirent.h>}.
+
+@deftp {Data Type} {struct dirent}
+This is a structure type used to return information about directory
+entries.  It contains the following member:
+
+@table @code
+@item char *d_name
+This is the null-terminated file name component.
+@end table
+
+This structure contains other members too, to identify the actual
+file that the directory entry names.  But you don't need to know about
+these, because you can find the file by referring to its name instead.
+
+Attributes such as file size, modification times, and the like are
+associated with the file itself, not its directory entry.  @xref{File
+Attributes}.
+@end deftp
+
+@deftp {Data Type} DIR
+The @code{DIR} data type represents a directory stream.  
+@end deftp
+
+You shouldn't ever have to allocate objects of the @code{struct dirent}
+or @code{DIR} data types, since the directory access functions do
+that for you.  Instead, you should just allocate pointers to them.
+
+@deftypefun {DIR *} opendir (const char *@var{dirname})
+The @code{opendir} function is used to open a directory stream for
+reading the directory whose file name is @var{dirname}.  The stream
+(a @code{DIR *} value) is returned.
+
+If the operation is not successful, this function returns a null pointer.
+In addition to the usual file name syntax errors (@pxref{File Name Errors}),
+the following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EACCES
+Read permission is denied for the directory named by @code{dirname}.
+
+@item EMFILE
+The process has too many files open.
+
+@item ENFILE
+The system has too many files open.
+@end table
+
+The @code{DIR} type is typically implemented using a file descriptor,
+and the @code{opendir} function in terms of the @code{open} function.
+@xref{Low-Level Input/Output}.  Directory streams and the underlying
+file descriptors are closed on @code{exec} (@pxref{Executing a File}).
+@end deftypefun
+
+@deftypefun {struct dirent *} readdir (DIR *@var{dirstream})
+This function reads the next entry from the directory.  It normally
+returns a pointer to a structure containing information about the file.
+This structure is statically allocated and can be rewritten by a
+subsequent call.
+
+The @code{readdir} may or may not return entries for @file{.} and @file{..}.
+@xref{File Name Resolution}.
+
+If there are no more entries in the directory or an error is detected,
+@code{readdir} returns a null pointer.  The following @code{errno} error
+conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{dirstream} argument is not valid.
+@end table
+@end deftypefun
+
+@deftypefun void rewinddir (DIR *@var{dirstream})
+The @code{rewinddir} function is used to reinitialize the directory
+stream @var{dirstream}, so that if you call @code{readdir} it
+returns information about the first entry in the directory again.  This
+function also notices if files have been added or removed to the
+directory since it was opened with @code{opendir}.  (Entries for these
+files might or might not be returned by @code{readdir} if they were
+added or removed since you last called @code{opendir} or
+@code{rewinddir}.)
+@end deftypefun
+
+@deftypefun int closedir (DIR *@var{dirstream})
+This function closes the directory stream @var{dirstream}.  It returns
+@code{0} on success and @code{-1} on failure.  
+
+The following @code{errno} error conditions are defined for this
+function:
+
+@table @code
+@item EBADF
+The @var{dirstream} argument is not valid.
+@end table
+@end deftypefun
+
+@node Adding Links
+@section Adding Links
+
+@cindex adding directory links
+@cindex linking a file to a directory
+The most obvious way to add an entry to a directory is to create a new
+file, for example using @code{fopen} (@pxref{Opening and Closing
+Streams}) or @code{open} (@pxref{Opening and Closing Files}).  But you
+can also add additional directory entries for an existing file using the
+@code{link} or @code{symlink} functions.  These functions are the
+primitives for the @code{ln} shell command.
+
+
+@menu
+* Hard Links::		Making a hard link to a file.
+* Symbolic Links::	Making a soft or symbolic link to a file.
+@end menu
+
+@node Hard Links
+@subsection Hard Links
+
+@cindex hard link
+The @code{link} function makes what is called a @dfn{hard link}.  A hard
+link is indistinguishible from the initial directory entry for the file.
+Creating a new link to a file does not copy the contents of the file; it
+simply makes a new name by which the file can be known.  The file is
+also still known by all of its old names.
+
+Because of the possibility of links across branches, the organization of
+the file system is not a strict hierarchy or tree.
+
+The prototype for the @code{link} function is declared in the header
+file @file{<unistd.h>}.
+
+@deftypefun int link (const char *@var{oldname}, const char *@var{newname})
+The @code{link} function makes a new link to the existing file named by
+@var{oldname}, under the new name @var{newname}.
+
+This function returns a value of @code{0} if it is successful and
+@code{-1} on failure.  In addition to the usual file name syntax errors
+(@pxref{File Name Errors}) for both @var{oldname} and @var{newname}, the
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EACESS
+The directory in which the new link is to be written is not writable.
+Some implementations also require that the existing file be accessible
+by the caller, and use this error to report failure for that reason.
+
+@item EEXIST
+There is already a file named @var{newname}.  If you want to replace
+this link with a new link, you must remove the old link explicitly first.
+
+@item EMLINK
+There are already too many links to the file named by @var{oldname}.
+(The maximum number of links to a file is @code{LINK_MAX}; 
+@pxref{File System Parameters}.)
+
+@item ENOENT
+The file named by @var{oldname} doesn't exist.  You can't make a link to
+a file that doesn't exist.
+
+@item ENOSPC
+The directory or file system that would contain the new link is ``full''
+and cannot be extended.
+
+@item EPERM
+Some implementations only allow privileged users to make links to
+directories, and others prohibit this operation entirely.  This error
+is used to report the problem.
+
+@item EROFS
+The directory containing the new link can't be modified because it's on
+a read-only file system.
+
+@item EXDEV
+Some implementations don't allow you to make links across file systems.
+This error is used to report the problem.
+@end table
+@end deftypefun
+
+@strong{Incomplete:}  What does GNU do with the implementation-specific
+behavior?
+
+
+@node Symbolic Links
+@subsection Symbolic Links
+
+@cindex soft link
+@cindex symbolic link
+The GNU system also supports @dfn{soft links} or @dfn{symbolic links}.
+While a hard link is essentially a pointer to a file, a symbolic link is
+a pointer to a file name.  Unlike hard links, symbolic links can be made
+to directories or across file systems.
+
+A symbolic link is actually a special kind of file.  If you pass the
+name of a symbolic link to the @code{open} (@pxref{Opening and Closing
+Files}) and @code{stat} (@pxref{File Attributes}) functions, they behave
+as if the operation were performed on the file the link points to.
+However, other operations (such as deleting the file) operate on the
+link itself.
+
+Making a symbolic link to a file does not increase its link count.  This
+means that it is possible to delete the file under its original name and
+leave the link pointing to a nonexistent file.  @xref{File Attributes}.
+
+Prototypes for the functions listed in this section are in
+@file{<unistd.h>}.
+
+@deftypefun int symlink (const char *@var{oldname}, const char *@var{newname})
+The @code{symlink} function makes a symbolic link to @var{oldname} named
+@var{newname}.
+
+The normal return value from @code{symlink} is @code{0}.  A return value
+of @code{-1} indicates an error.  In addition to the usual file name
+syntax errors (@pxref{File Name Errors}), the following @code{errno}
+error conditions are defined for this function:
+
+@table @code
+@item EEXIST
+There is already an existing file named @var{newname}.
+
+@item EROFS
+The file @var{newname} would exist on a read-only file system.
+
+@item ENOSPC
+The directory or file system cannot be extended to make the new link.
+
+@item EIO
+An I/O error occurred.
+
+@item EFAULT
+An invalid pointer argument was passed.
+@ignore
+
+@comment not sure about these
+@item ELOOP
+There are too many levels of indirection.  This can be the result of
+circular symbolic links to directories.
+
+@item EDQUOT
+The new link can't be created because the user's disk quota has been
+exceeded.
+@end ignore
+@end table
+@end deftypefun
+
+@deftypefun int readlink (const char *@var{filename}, char *@var{buffer}, size_t @var{size})
+The @code{readlink} function gets the value of the symbolic link
+@var{filename}.  The file name that the link points to is copied into
+@var{buffer}.  This file name string is @emph{not} null-terminated;
+@code{readlink} normally returns the number of characters copied.  The
+@var{size} argument specifies the maximum number of characters to copy,
+usually the allocation size of @var{buffer}.
+
+A value of @code{-1} is returned in case of error.  In addition to the
+usual file name syntax errors (@pxref{File Name Errors}), the following
+@code{errno} error conditions are defined for this function:
+
+@table @code
+@item EINVAL
+The named file is not a symbolic link.
+
+@item EIO
+An I/O error occurred.
+
+@item EFAULT
+An invalid pointer was passed as an argument.
+@ignore
+
+@comment not sure about these
+@item ELOOP
+There are too many levels of indirection.  This can be the result of
+circular symbolic links to directories.
+@end ignore
+@end table
+@end deftypefun
+
+@strong{Portability Note:}  The @code{symlink} and @code{readlink}
+functions are provided for compatibility with BSD.
+
+@node Removing and Renaming Files
+@section Removing and Renaming Files
+
+You can remove a file with the @code{unlink} or @code{remove} functions,
+or give it another name with the @code{rename} function.
+
+Prototypes for @code{remove} and @code{rename} are in the header file
+@file{<stdio.h>}.  The prototype for @code{unlink} is in
+@file{<unistd.h>}.
+
+@cindex removing directory links
+@cindex unlinking a file from a directory
+@deftypefun int unlink (const char *@var{filename})
+The @code{unlink} function removes the link named by the @var{filename}.
+If there are no other links to the file, the file itself is also
+removed.  (Actually, if any process has the file open when it is
+unlinked, the file is simply marked for deletion and the removal is
+postponed until everybody has closed the file.)
+
+This function returns @code{0} on successful completion, and @code{-1}
+on error.  In addition to the usual file name syntax errors
+(@pxref{File Name Errors}), the following @code{errno} error conditions are 
+defined for this function:
+
+@table @code
+@item EACCESS
+Write permission is denied for the directory from which the file is to be
+removed.
+
+@item EBUSY
+This error indicates that the file is being used by the system in such a
+way that it can't be unlinked.  Examples of situations where you might
+see this error are if the file name specifies the root directory or a
+mount point for a file system.
+
+@item ENOENT
+The file being unlinked doesn't exist.
+
+@item EPERM
+Some implementations don't allow you to use @code{unlink} on directories,
+and others only permit privileged users to do this.  This error is used
+to indicate the problem.  You should use @code{rmdir} to delete directories
+instead.
+
+@item EROFS
+The directory from which the file is to be unlinked is on a read-only
+file system, and can't be modified.
+@end table
+@end deftypefun
+
+@cindex removing a file
+@deftypefun int remove (const char *@var{filename})
+The @code{remove} function is equivalent to @code{unlink}: it causes the
+file named by @var{filename} to be removed.
+@end deftypefun
+
+@cindex renaming a file
+@deftypefun int rename (const char *@var{oldname}, const char *@var{newname})
+The @code{rename} function makes the file currently named by
+@var{oldname} be called @var{newname} instead.
+
+If both @var{oldname} and @var{newname} are links referring to the exact
+same file, nothing is done.
+
+If the @var{oldname} is not a directory, then any existing file named
+@var{newname} is removed during the renaming operation.  The @var{newname}
+must not be a directory itself in this case.
+
+If the @var{oldname} is a directory, then either @var{newname} must not
+exist or it must name a directory that is empty.  In the second case,
+the existing file named @var{newname} is removed first.  The
+@var{newname} can't live in a directory of the directory @code{oldname}
+that is being renamed.
+
+If @code{rename} fails, it returns @code{-1}.  In addition to the usual
+file name syntax errors (@pxref{File Name Errors}), the following
+@code{errno} error conditions are defined for this function:
+
+@table @code
+@item EACCES
+One of the directories containing @var{newname} or @var{oldname}
+refuses write permission; or @var{newname} and @var{oldname} are
+directories and write permission is refused for one of them.
+
+@item EBUSY
+A directory named by @var{oldname} or @var{newname} is being used by
+the system in a way that prevents the renaming from working.  For example,
+a directory that is a mount point for a filesystem might have this
+problem.
+
+@item EEXIST
+The directory @var{newname} isn't empty.
+
+@item ENOTEMPTY
+The directory @var{newname} isn't empty.
+
+@item EINVAL
+The @var{oldname} is a directory that contains @var{newname}.
+
+@item EISDIR
+The @var{newname} names a directory, but the @var{oldname} doesn't.
+
+@item EMLINK
+The parent directory of @var{newname} would have too many links.
+
+@item ENOENT
+The file named by @var{oldname} doesn't exist.
+
+@item ENOSPC
+The directory that would contain the @var{newname} can't be extended.
+
+@item EROFS
+The operation would involve writing to a directory on a read-only file
+system.
+
+@item EXDEV
+The two file names @var{newname} and @var{oldnames} are on different
+file systems, and the implementation can't rename files across file systems.
+@end table
+@end deftypefun
+
+@strong{Portability Note:} The ANSI C standard includes the
+@code{remove} and @code{rename} functions, but says very little about
+their behavior.  The POSIX.1 standard defines @code{remove} as a synonym
+for @code{unlink} and also specifies the behavior for @code{rename}
+defined here.
+
+@node Making and Removing Directories
+@section Making and Removing Directories
+
+Directories are created and removed with the @code{mkdir} and
+@code{rmdir} functions, respectively.  (There are shell commands with
+the same names that do these operations, too.)
+
+@deftypefun int mkdir (const char *@var{filename}, mode_t @var{mode})
+The @code{mkdir} function creates a new, empty directory whose name is
+@var{filename}.
+
+The @var{mode} specifies the file permissions for the new directory
+file.  @xref{Assigning File Permissions}, for more information about
+this.
+
+A return value of @code{0} indicates successful completion, and
+@code{-1} indicates failure.  In addition to the usual file name syntax
+errors (@pxref{File Name Errors}), the following @code{errno} error
+conditions are defined for this function:
+
+@table @code
+@item EACCES
+Write permission is denied for the directory in which the file is to be
+added.
+
+@item EEXIST
+The named file already exists.
+
+@item EMLINK
+The parent directory has too many links.
+
+@item ENOSPC
+The file system doesn't have enough room to create the new directory.
+
+@item EROFS
+The parent directory of the directory being created is on a read-only
+file system, and cannot be modified.
+@end table
+
+To use this function, your program should include the header files
+@file{<sys/types.h>} and @file{<sys/stat.h>}.
+@end deftypefun
+
+@deftypefun int rmdir (const char *@var{filename})
+The @code{rmdir} function removes a directory.  The directory must
+be empty before it can be removed; in other words, it can only contain
+entries for @file{.} and @file {..}.
+
+The other effects of this function are like those of @code{unlink};
+@pxref{Removing and Renaming Files}.  There are two additional
+@code{errno} error conditions defined for @code{rmdir}:
+
+@table @code
+@item EEXIST
+The directory is not empty.
+
+@item ENOTEMPTY
+The directory is not empty.
+@end table
+
+The prototype for this function is declared in the header file
+@file{<unistd.h>}.
+@end deftypefun
+
+
+@node File Attributes
+@section File Attributes
+
+When you issue an @samp{ls -l} shell command on a file, it gives you
+information about the size of the file, who owns it, when it was last
+modified, and the like.  This kind of information is associated with the
+file itself and not a particular directory entry for it.  
+
+This section contains information about how you can inquire about and
+modify these attributes of files.
+
+@menu
+* File Attribute Inquiry::	Getting information about a file.
+* File Modes::			How information about who can access a file
+				 is stored.
+* Permission to Access a File::	How to find out if your process can access
+				 a file.
+* Assigning File Permissions::	How permissions for new files are assigned,
+				 and how to change them.
+* File Ownership::		How ownership for new files is determined,
+				 and how to change it.
+* File Times::			About the time attributes of a file.
+@end menu
+
+@node File Attribute Inquiry
+@subsection File Attribute Inquiry
+
+@cindex status of a file
+@cindex file status
+@cindex attributes of a file
+@cindex file attributes
+You can inquire about the attributes or @dfn{status} of a file using the
+@code{stat} or @code{fstat} functions.  These functions return the
+information in a @code{struct stat} object.  This structure and the
+related macros are defined in the header file @file{<sys/stat.h>}.
+The types of some of its component members are defined in the header
+files @file{<sys/types.h>} and @file{<time.h>}.
+
+@deftp {Data Type} struct stat
+The @code{stat} structure type is used to return information about the
+attributes of a file.  It contains at least the following members:
+
+@table @code
+@item mode_t st_mode
+Specifies the mode of the file.  @xref{File Modes}.
+
+@item ino_t st_ino
+The file serial number.
+
+@item dev_t st_dev
+Identifies the device containing the file.  The @code{st_ino} and
+@code{st_dev}, taken together, uniquely identify the file.
+
+@item nlink_t st_nlink
+The number of links to the file.  This count keeps track of how many
+directories have entries for this file.  If the count is ever
+decremented to zero, then the file itself is discarded.  Symbolic links
+are not counted in the total.
+
+@item uid_t st_uid
+The user ID of the file's owner.  @xref{File Ownership}.
+
+@item gid_t st_gid
+The group ID of the file's owner.  @xref{File Ownership}.
+
+@item off_t st_size
+This specifies the size of a regular file in bytes.  For files that
+are really devices and the like, this field isn't usually meaningful.
+
+@item time_t st_atime
+This is the last access time for the file.  @xref{File Times}.
+
+@item unsigned long int st_atime_usec
+This is the fractional part of the last access time for the file.
+@xref{File Times}.
+
+@item time_t st_mtime
+This is the time of the last modification to the contents of the file.
+@xref{File Times}.
+
+@item unsigned long int st_mtime_usec
+This is the fractional part of the time of last modification to the
+contents of the file.  @xref{File Times}.
+
+@item time_t st_ctime
+This is the time of the last modification to the attributes of the file.
+@xref{File Times}.
+
+@item unsigned long int st_ctime_usec
+This is the fractional part of the time of last modification to the
+attributes of the file.  @xref{File Times}.
+@end table
+@end deftp
+
+@deftp {Data Type} mode_t
+This is an integer data type used to represent file modes.  In the
+GNU system, this is equivalent to @code{unsigned short int}.
+@xref{File Modes}.
+@end deftp
+
+@cindex inode number
+@deftp {Data Type} ino_t
+This is an arithmetic data type used to represent file serial numbers.
+(In Unix jargon, these are sometimes called @dfn{inode numbers}.)
+In the GNU system, this type is equivalent to @code{unsigned long int}.
+@end deftp
+
+@deftp {Data Type} dev_t
+This is an arithmetic data type used to represent file device numbers.
+In the GNU system, this is equivalent to @code{short int}.
+@end deftp
+
+@deftp {Data Type} nlink_t
+This is an arithmetic data type used to represent file link counts.
+In the GNU system, this is equivalent to @code{unsigned short int}.
+@end deftp
+
+Here is the description of the @code{stat} function itself.
+
+@deftypefun int stat (const char *@var{filename}, struct stat *@var{buf})
+The @code{stat} function returns information about the attributes of the
+file named by @var{filename} in the structure pointed at by @var{buf}.
+
+The return value is @code{0} if the operation is successful, and @code{-1}
+on failure.  In addition to the usual file name syntax errors
+(@pxref{File Name Errors}, the following @code{errno} error conditions
+are defined for this function:
+
+@table @code
+@item ENOENT
+The file named by @var{filename} doesn't exist.
+@end table
+@end deftypefun
+
+@deftypefun int fstat (int @var{filedes}, struct stat *@var{buf})
+The @code{fstat} function is like @code{stat}, except that it takes an
+open file descriptor as an argument instead of a file name.
+@xref{Low-Level Input/Output}.
+
+Like @code{stat}, a value of @code{0} is returned on success and @code{-1}
+on failure.  The following @code{errno} error conditions are defined
+for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+@end table
+@end deftypefun
+
+@deftypefun int lstat (const char *@var{filename}, struct stat *@var{buf})
+The @code{lstat} function is like @code{stat}, except that it does not
+follow symbolic links.  @xref{Symbolic Links}.  This function is provided
+for compatibility with BSD.
+@end deftypefun
+
+
+@node File Modes
+@subsection File Modes
+
+@cindex file mode
+@cindex mode, of a file
+The @dfn{mode} of a file encodes both information to identify the format
+of the file, and information about the access permissions granted by the
+owner of the file.  The mode is represented as the bitwise OR of the
+individual flags.
+
+All of the macros and constants listed in this section are defined in
+the header file @file{<sys/stat.h>}.
+
+The following macros test the format encoded in the file mode.
+
+@deftypefn Macro int S_ISDIR (mode_t @var{m})
+This macro returns true if the file is a directory.
+@end deftypefn
+
+@deftypefn Macro int S_ISCHR (mode_t @var{m})
+This macro returns true if the file is a character special file (a
+device like a terminal).
+@end deftypefn
+
+@deftypefn Macro int S_ISBLK (mode_t @var{m})
+This macro returns true if the file is a block special file (a device
+like a disk).
+@end deftypefn
+
+@deftypefn Macro int S_ISREG (mode_t @var{m})
+This macro returns true if the file is a regular file.
+@end deftypefn
+
+@deftypefn Macro int S_ISFIFO (mode_t @var{m})
+This macro returns true if the file is a FIFO special file, or a pipe.
+@xref{Pipes and FIFOs}.
+@end deftypefn
+
+@deftypefn Macro int S_ISLNK (mode_t @var{m})
+This macro returns true if the file is a symbolic link.  @xref{Symbolic
+Links}.
+@end deftypefn
+
+@deftypefn Macro int S_ISSOCK (mode_t @var{m})
+This macro returns true if the file is a socket.  @xref{Sockets}.
+@end deftypefn
+
+Alternatively, you can bitwise AND the mode with @code{S_IFMT} to
+extract the file format part, and compare the result to the appropriate
+file format constant.  For example,
+
+@example
+S_ISCHR (@var{mode})
+@end example
+
+is equivalent to:
+
+@example
+(@var{mode} & S_IFMT) == S_IFCHR
+@end example
+
+@defvr Macro S_IFMT
+This is a bit mask used to extract the file format portion of a mode value.
+@end defvr
+
+These are the constants for the different file format values:
+
+@defvr Macro S_IFDIR
+This macro represents the value of the file format for a directory file.
+@end defvr
+
+@defvr Macro S_IFCHR
+This macro represents the value of the file format for a character-oriented
+device file.
+@end defvr
+
+@defvr Macro S_IFBLK
+This macro represents the value of the file format for a block-oriented
+device file.
+@end defvr
+
+@defvr Macro S_IFREG
+This macro represents the value of the file format for a regular file.
+@end defvr
+
+@defvr Macro S_IFLNK
+This macro represents the value of the file format for a symbolic link.
+@end defvr
+
+@defvr Macro S_IFSOCK
+This macro represents the value of the file format for a socket.
+@end defvr
+
+@defvr Macro S_IFIFO
+This macro represents the value of the file format for a FIFO or pipe.
+@end defvr
+
+
+@cindex file permission bits
+These symbolic constants are defined for referring to the @dfn{file
+permission bits} part of the file mode.
+
+@defvr {Macro} S_IRUSR
+Read permission bit for the owner of the file.
+@end defvr
+
+@defvr {Macro} S_IWUSR
+Write permission bit for the owner of the file.
+@end defvr
+
+@defvr {Macro} S_IXUSR
+Execute (for ordinary files) or search (for directories) permission bit
+for the owner of the file.
+@end defvr
+
+@defvr {Macro} S_IRWXU
+This is equivalent to @samp{(S_IRUSR | S_IWUSR | S_IXUSR)}.
+@end defvr
+
+
+@defvr {Macro} S_IREAD
+This is a synonym for @code{S_IRUSR}, provided for compatibility with
+old BSD code.  Use @code{S_IRUSR} instead.
+@end defvr
+
+@defvr {Macro} S_IWRITE
+This is a synonym for @code{S_IWUSR}, provided for compatibility with
+old BSD code.  Use @code{S_IWUSR} instead.
+@end defvr
+
+@defvr {Macro} S_IEXEC
+This is a synonym for @code{S_IXUSR}, provided for compatibility with
+old BSD code.  Use @code{S_IXUSR} instead.
+@end defvr
+
+
+@defvr {Macro} S_IRGRP
+Read permission bit for the group owner of the file.
+@end defvr
+
+@defvr {Macro} S_IWGRP
+Write permission bit for the group owner of the file.
+@end defvr
+
+@defvr {Macro} S_IXGRP
+Execute or search permission bit for the group owner of the file.
+@end defvr
+
+@defvr {Macro} S_IRWXG
+This is equivalent to @samp{(S_IRGRP | S_IWGRP | S_IXGRP)}.
+@end defvr
+
+
+@defvr {Macro} S_IROTH
+Read permission bit for other users.
+@end defvr
+
+@defvr {Macro} S_IWOTH
+Write permission bit for other users.
+@end defvr
+
+@defvr {Macro} S_IXOTH
+Execute or search permission bit for other users.
+@end defvr
+
+@defvr {Macro} S_IRWXO
+This is equivalent to @samp{(S_IROTH | S_IWOTH | S_IXOTH)}.
+@end defvr
+
+
+@defvr {Macro} S_ISUID
+This is the set-user-ID on execute bit.  @xref{User/Group IDs of a Process}.
+@end defvr
+
+@defvr {Macro} S_ISGID
+This is the set-group-ID on execute bit.  @xref{User/Group IDs of a Process}.
+@end defvr
+
+@cindex sticky bit
+@defvr {Macro} S_ISVTX
+This is the @dfn{sticky} bit.  On executables, this bit inhibits swapping.
+On directories, this allows deletion of files in the directory only by
+users who have write permission on the specific file (not anybody who has
+write permission on the directory).
+@end defvr
+
+On most systems, you can also specify the file permission bits as
+an octal number using the following bit assignments:
+
+@table @code
+@item 4000
+@code{S_ISUID}, set-user-ID on execute
+
+@item 2000
+@code{S_ISGID}, set-group-ID on execute
+
+@item 1000
+@code{S_ISVTX}, sticky bit
+
+@item 0400
+@code{S_IRUSR}, read by owner
+
+@item 0200
+@code{S_IWUSR}, write by owner
+
+@item 0100
+@code{S_IXUSR}, execute/search by owner
+
+@item 0040
+@code{S_IRGRP}, read by group
+
+@item 0020
+@code{S_IWGRP}, write by group
+
+@item 0010
+@code{S_IXGRP}, execute/search by group
+
+@item 0004
+@code{S_IROTH}, read by other
+
+@item 0002
+@code{S_IWOTH}, write by other
+
+@item 0001
+@code{S_IXOTH}, execute/search by other
+@end table
+
+So, for example, a mode of @code{644} permits the owner to read and
+write the file, and gives only read access to the group and other users.
+
+Referring to file modes by numbers is a convenient shorthand, provided
+that you can remember what the numbers mean.  Using the symbolic
+constants instead can make your program easier to read, though, as well
+as making it more robust in case it is ever ported to a system that uses
+different bit assignments for the various permissions.
+
+@node Permission to Access a File
+@subsection Permission to Access a File
+@cindex permission to access a file
+
+The determination of whether a process has permission to access a file
+are made based on the effective user and group IDs of the process, and
+its supplementary group IDs.  These concepts are discussed in detail in
+@ref{User/Group IDs of a Process}.
+
+If the effective user ID of the process matches the owner user ID of the
+file, then permissions for read, write, and execute/search are
+controlled by the corresponding ``user'' (or ``owner'') bits.  Likewise,
+if any of the effective group ID or supplementary group IDs of the
+process match the group owner ID of the file, then permissions are
+controlled by the ``group'' bits.  Otherwise, permissions are controlled
+by the ``other'' bits.  
+
+Privileged users, like @samp{root}, can access any file, regardless of
+its file permission bits.  As a special case, for a file to be
+executable by a privileged user, at least one of its execute bits must
+be set.
+
+Some systems might support additional file security mechanisms (like
+access control lists) that further restrict file access.  Consult the
+documentation for your specific operating system, or your local system
+administrator, to find out about this.
+
+You can check whether a file is accessible to your process using the
+@code{access} function.  This function is declared in @file{<unistd.h>}.
+
+@deftypefun int access (const char *@var{filename}, int @var{how})
+The @code{access} function checks to see whether the file named by
+@var{filename} can be accessed in the way specified by the @var{how}
+argument.  The @var{how} argument either can be the bitwise OR of the
+flags @code{R_OK}, @code{W_OK}, @code{X_OK}, or the existence test
+@code{F_OK}.
+
+This function uses the @emph{real} user and group ID's of the calling
+process, rather than the @emph{effective} ID's, to check for access
+permission.  This means that, even if you use the function from a
+@code{setuid} or @code{setgid} program (@pxref{User/Group IDs of a
+Process}), it gives information relative to the user who is really
+running the program.
+
+The return value is @code{0} if the access is permitted, and @code{-1}
+otherwise.  (In other words, treated as a predicate function,
+@code{access} returns true if the requested access is denied.)  In
+addition to the usual file name syntax errors (@pxref{File Name Errors}),
+the following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EACCES
+The access specified by @var{how} is denied.
+
+@item ENOENT
+The file doesn't exist.
+
+@item EROFS
+Write permission was requested for a file on a read-only file system.
+@end table
+@end deftypefun
+
+These macros are defined in the header file @file{<unistd.h>} for use
+as the @var{how} argument to the @code{access} function.  The values
+are integer constants.
+
+@defvr Macro R_OK
+Test for read permission.
+@end defvr
+
+@defvr Macro W_OK
+Test for write permission.
+@end defvr
+
+@defvr Macro X_OK
+Test for execute/search permission.
+@end defvr
+
+@defvr Macro F_OK
+Test for existence of the file.
+@end defvr
+
+@node Assigning File Permissions
+@subsection Assigning File Permissions
+
+@cindex file creation mask
+@cindex umask
+The primitive functions for creating files (for example, @code{open} or
+@code{mkdir}) are defined to take a @var{mode} argument, which specifies
+the file permissions for the newly created file.  But this mode is
+modified by the process's @dfn{file creation mask}, or @dfn{umask}.
+
+The bits that are set in the file creation mask identify permissions
+that are always to be disabled for newly created files.  For example, if
+you set all the ``other'' access bits in the mask, then newly created
+files are not accessible at all to processes in the ``other''
+category, even if the @var{mask} argument specified to the creation 
+function would permit such access.  In other words, the file creation
+mask is the complement of the ordinary access permissions you want to
+grant.
+
+Programs that create files typically specify a @var{mask} argument that
+includes all the permissions that make sense for the particular file.
+For an ordinary file, this is typically read and write permission for
+all classes of users.  These permissions are then restricted as
+specified by the individual user's own file creation mask.
+
+You normally don't need to worry about the file creation mask, and it's
+an especially bad idea for a program to arbitrarily change the file
+creation mask.  In normal use, the file creation mask is initialized in
+the user's login shell, and inherited by all subprocesses.
+
+The @code{umask} function is the primitive for the shell command of
+the same name.
+
+The file creation mask only applies to permissions for newly created
+files.  You can change the file permissions of an existing file without
+regard to the file creation mask using @code{chmod}.  Again, this is the
+primitive for the shell command of the same name.
+
+These functions are declared in @file{<sys/stat.h>}.
+
+@deftypefun mode_t umask (mode_t @var{mask})
+The @code{umask} function sets the process's file creation mask to 
+@var{mask}, and returns the previous value of the mask.
+@end deftypefun
+
+@deftypefun int chmod (const char *@var{filename}, mode_t @var{mode})
+The @code{chmod} function sets the file protection bits for the file named
+by @var{filename} to @var{mode}.
+
+This function returns @code{0} if successful and @code{-1} if not.
+In addition to the usual file name syntax errors (@pxref{File Name Errors}),
+the following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item ENOENT
+The named file doesn't exist.
+
+@item EPERM
+Either the effective user ID of the calling process must be the same
+as the owner of the file, or the calling process must be privileged.
+This error is used to report this problem.
+
+@item EROFS
+The file resides on a read-only file system.
+@end table
+@end deftypefun
+
+@node File Ownership
+@subsection File Ownership
+
+When a file is created, its owner user ID is set to be the same as the
+effective user ID of the process that creates it.  Its group owner ID
+may either be the effective group ID of the process, or the group ID of
+the directory that contains the file.
+
+You can change the owner and/or group owner of an existing file using
+the @code{chown} function.  This is the primitive for the @code{chown}
+and @code{chgrp} shell commands.
+
+The prototype for this function is declared in @file{<unistd.h>}.
+
+@deftypefun int chown (const char *@var{filename}, uid_t @var{owner}, gid_t @var{group})
+The @code{chown} function changes the owner of the file @var{filename} to
+@var{owner}, and its group owner to @var{group}.
+
+Changing the owner of the file usually clears the set-user-ID and
+set-group-ID bits of the file's permissions.  (This is because those
+bits may not be appropriate for the new owner.)  The other file
+permission bits are not changed.
+
+The return value is @code{0} on success and @code{-1} on failure.
+In addition to the usual file name syntax errors (@pxref{File Name Errors}), 
+the following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EPERM
+You don't have privilege to change the file ownership.  In order to
+change the ownership of a file, either the effective user ID of the
+calling process must match the original owner of the file, or the
+calling process must be privileged.  In addition, some implementations
+allow nonprivileged users only to change the group owner of the file;
+@pxref{File System Parameters}, for information about the
+@code{_POSIX_CHOWN_RESTRICTED} macro.
+
+@strong{Incomplete:}  What does the GNU system do?
+
+@item EROFS
+The file is on a read-only file system.
+@end table
+@end deftypefun
+
+@node File Times
+@subsection File Times
+
+@cindex file access time
+@cindex file modification time
+@cindex file attribute modification time
+Each file has three timestamps associated with it:  its access time,
+its modification time, and its attribute modification time.  These
+correspond to the @code{st_atime}, @code{st_mtime}, and @code{st_ctime}
+members of the @code{stat} structure; @pxref{File Attributes}.  
+
+All of these times are represented in calendar time format, as
+@code{time_t} objects.  This data type is defined in @file{<time.h>}.
+For more information about representation and manipulation of time
+values, @pxref{Calendar and Local Time}.
+
+When a file is created, all three timestamps for that file are set to
+the current time.  In addition, the attribute change time and
+modification time fields of the directory that contains the new entry
+are updated.
+
+Adding a new directory link with the @code{link} function updates the
+attribute change time field of the file being linked, and both the
+attribute change time and modification time fields of the directory.
+These same fields are affected if a file is unlinked with @code{unlink},
+@code{remove}, or @code{rmdir}.  Renaming a file with @code{rename}
+affects only the attribute change time and modification time fields of
+the two parent directories involved, and not the times for the file
+being renamed.
+
+Changing attributes of a file (for example, with @code{chmod}) updates
+its attribute change time field.
+
+When an existing file is opened, its attribute change time and
+modification time fields are updated.  Reading from a file updates its
+access time attribute, and writing updates its modification time.
+
+You can also change the timestamps of a file explicitly using the
+@code{utime} function.  You need to include the header file
+@file{<utime.h>} to use this facility.
+
+@deftp {Data Type} {struct utimbuf}
+The @code{utimbuf} structure is used with the @code{utime} function to
+specify new access and modification times for a file.  It contains at
+least the following members:
+
+@table @code
+@item time_t actime
+This is the access time for the file.
+
+@item time_t modtime
+This is the modification time for the file.
+@end table
+@end deftp
+
+@deftypefun int utime (const char *@var{filename}, const struct utimbuf *@var{times})
+This function is used to modify the file times associated with the file
+named @var{filename}.
+
+If @var{times} is a null pointer, then the access and modification times
+of the file are set to the current time.  Otherwise, they are set to the
+values from the @code{actime} and @code{modtime} members (respectively)
+of the @code{utimbuf} structure pointed at by @var{times}.  
+
+The attribute modification time for the file is set to the current time
+in either case (since changing its timestamps is itself a modification
+of the file attributes).
+
+The @code{utime} function returns @code{0} if successful and @code{-1}
+on failure.  In addition to the usual file name syntax errors
+(@pxref{File Name Errors}), the following @code{errno} error conditions
+are defined for this function:
+
+@table @code
+@item EACCES
+There is a permission problem in the case where a null pointer was
+passed as the @var{times} argument.  In order to update the timestamp on
+the file, you must either be the owner of the file, have write
+permission on the file, or be a privileged user.
+
+@item ENOENT
+The file doesn't exist.
+
+@item EPERM
+If the @var{times} argument is not a null pointer, you must either be
+the owner of the file or be a privileged user.  This error is used to
+report the problem.
+
+@item EROFS
+The file lives on a read-only file system.
+@end table
+@end deftypefun
+
+For each of the three time fields, there is also an additional structure
+member that holds the fractional part of the time value.  These are the
+@code{st_atime_usec}, @code{st_mtime_usec}, and @code{st_ctime_usec}
+members.
+
+The fractional time value is given in microseconds and corresponds to
+the @code{tv_usec} field of a @code{timeval} structure;
+@pxref{High-Resolution Calendar}.
+
+The @code{utimes} function is like @code{utime}, but also lets you specify
+the fractional part of the file times.  The prototype for this function is
+in the header file @file{<sys/time.h>}.
+
+@deftypefun int utimes (const char *@var{filename}, struct timeval @var{tvp}[2])
+This function sets the file access and modification times for the file
+named by @var{filename}.  The new file access time is specified by
+@code{@var{tvp}[0]}, and the new modification time by
+@code{@var{tvp}[1]}.
+
+The return values and error conditions are the same as for the @code{utime}
+function.
+@end deftypefun
+
+
+@strong{Portability Note:}  The @code{utimes} function is provided for
+compatibility with BSD.  The POSIX.1 standard specifies only the @code{utime}
+function.
+
+@node File System Parameters
+@section File System Parameters
+
+The POSIX.1 standard specifies a number of symbolic constants that
+represent the values for certain limits related to the file system, such
+as the maximum length of a file name component.  However, some of these
+limits might not really be constants in a given implementation.  For
+example, in a nonhomogeneous networked environment, files mounted from
+different hosts might be subject to different sets of limitations.
+
+In order to deal with the problem of variable limits, for most of these
+parameters there is one symbolic constant that defines the most
+restrictive limit permissible by the POSIX standard.  If the actual
+limit placed by a particular implementation for that parameter is a
+constant, then it defines another constant to represent it.  Otherwise,
+the actual limit that applies to a particular file can be requested at
+runtime by calling @code{pathconf} or @code{fpathconf}.
+
+Except for @code{FILENAME_MAX}, which is defined in @file{<stdio.h>},
+definitions for the following symbolic constants appear in the header
+file @file{<limits.h>}.  All of these macros expand into integer
+constant values.
+
+@strong{Incomplete:}  What does the GNU system do?
+
+@defvr Macro _POSIX_LINK_MAX
+This macro represents the most restrictive limit permitted by POSIX
+for the maximum value of a file's link count.  The value of this
+constant is @code{8}.
+@end defvr
+
+@defvr Macro LINK_MAX
+This is the actual implementation limit corresponding to
+@code{_POSIX_LINK_MAX}, but is defined only if the limit for the
+particular implementation is constant for all files.
+@end defvr
+
+@defvr Macro _POSIX_MAX_CANON
+This macro represents the most restrictive limit permitted by POSIX
+for the maximum number of bytes in a canonical input line from a
+terminal device.  The value of this constant is @code{255}.
+@end defvr
+
+@defvr Macro MAX_CANON
+This is the actual implementation limit corresponding to
+@code{_POSIX_MAX_CANON}, but is defined only if the limit for the
+particular implementation is constant for all files.
+@end defvr
+
+@defvr Macro _POSIX_MAX_INPUT
+This macro represents the most restrictive limit permitted by POSIX for
+the maximum number of bytes in a terminal device input queue (or
+typeahead buffer).  @xref{Input Modes}.  The value of this constant is
+@code{255}.
+@end defvr
+
+@defvr Macro MAX_INPUT
+This is the actual implementation limit corresponding to
+@code{_POSIX_MAX_INPUT}, but is defined only if the limit for the
+particular implementation is a constant for all files.
+@end defvr
+
+@defvr Macro _POSIX_NAME_MAX
+This macro represents the most restrictive limit permitted by POSIX for
+the maximum number of bytes in a file name component.  The value of this
+constant is @code{14}.
+@end defvr
+
+@defvr Macro NAME_MAX
+This is the actual implementation limit corresponding to
+@code{_POSIX_NAME_MAX}, but is defined only if the limit for the
+particular implementation is a constant for all files.
+@end defvr
+
+@defvr Macro _POSIX_PATH_MAX
+This macro represents the most restrictive limit permitted by POSIX for
+the maximum number of bytes in a file name.  The value of this constant
+is @code{255}.
+@end defvr
+
+@defvr Macro PATH_MAX
+This is the actual implementation limit corresponding to
+@code{_POSIX_PATH_MAX}, but is defined only if the limit for the
+particular implementation is a constant for all files.
+@end defvr
+
+@defvr {Macro} FILENAME_MAX 
+The value of this macro is an integer constant expression that
+represents the maximum length of a file name string.
+
+Unlike @code{PATH_MAX}, this macro is defined even if there is no actual
+limit imposed.  In such a case, its value is typically a very large
+number.  Don't try to use @code{FILENAME_MAX} as the size of an array in
+which to store a file name!  Use dynamic allocation (@pxref{wherever})
+instead.
+@end defvr
+
+@defvr Macro _POSIX_PIPE_BUF
+This macro represents the most restrictive limit permitted by POSIX for
+the maximum number of bytes that can be written atomically to a pipe.
+If multiple processes are writing to the same pipe simultaneously,
+output from different processes might appear in interleaved chunks of
+this size.  The value of this constant is @code{512}.
+@end defvr
+
+@defvr Macro _PIPE_BUF
+This is the actual implementation limit corresponding to
+@code{_POSIX_PIPE_BUF}, but is defined only if the limit for the
+particular implementation is a constant for all pipes and FIFO files.
+@end defvr
+
+
+There are also these macros which may be defined in @file{<unistd.h>} to
+describe additional characteristics of the file system.  If any of these
+macros are not defined at all, then the corresponding parameter depends
+on the file to which it is applied, and you must use the @code{pathconf}
+function at runtime to determine the parameter value.  If the value is
+defined to be @code{-1}, then the option does not apply to any file.
+Otherwise, the option applies to all files.
+
+@defvr Macro _POSIX_CHOWN_RESTRICTED
+If this option is enabled, the @code{chown} function is restricted so
+that the only changes permitted to nonprivileged processes is to change 
+the group owner of a file to either be the effective group ID of the
+process, or one of its supplementary group IDs.  @xref{File Ownership}.
+@end defvr
+
+@defvr Macro _POSIX_NO_TRUNC
+If this option is enabled, file name components longer than @code{NAME_MAX}
+generate an @code{ENAMETOOLONG} error.  Otherwise, file name components
+that are too long are silently truncated.
+@end defvr
+
+@defvr Macro _POSIX_VDISABLE
+This option is only meaningful for files that are terminal devices.
+If it is enabled, then handling for special control characters can
+be disabled individually.  @xref{Special Characters}.
+@end defvr
+
+For each of the above parameters, if the value is not a constant
+for all files, you can request the value that applies to a particular
+file using the @code{pathconf} or @code{fpathconf}.  These functions 
+and the associated @var{parameter} constants are declared in the
+header file @file{<unistd.h>}.
+
+@deftypefun long pathconf (const char *@var{filename}, int @var{parameter})
+This function is used to inquire about the limits that apply to
+the file named @var{filename}.
+
+The @var{parameter} argument can be one of the following:
+
+@table @code
+@item _PC_LINK_MAX
+Return the value corresponding to @code{LINK_MAX}.
+
+@item _PC_MAX_CANON
+Return the value corresponding to @code{MAX_CANON}.  The file must be a
+terminal device.
+
+@item _PC_MAX_INPUT
+Return the value corresponding to @code{MAX_INPUT}.  The file must be a
+terminal device.
+
+@item _PC_NAME_MAX
+Return the value corresponding to @code{NAME_MAX}.  The file must be a
+directory, and the value applies to all files in the directory.
+
+@item _PC_PATH_MAX
+Return the value corresponding to @code{PATH_MAX}.  The file must be a
+directory, and the value returned reflects the maximum length of a
+relative file name with that file name as the working directory.
+
+@item _PC_PIPE_BUF
+Return the value corresponding to @code{PIPE_BUF}.  If the file is
+a pipe or FIFO special file, the value refers to the file itself; otherwise,
+it must be a directory, and the value refers to any FIFO files in that
+directory.
+
+@item _PC_CHOWN_RESTRICTED
+Return the value corresponding to @code{_POSIX_CHOWN_RESTRICTED}.
+If the file is a directory, the value is for any files entered in that
+directory, not the directory itself.
+
+@item _PC_NO_TRUNC
+Return the value corresponding to @code{_POSIX_NO_TRUNC}.  The file
+must be a directory and the value applies to all files in the directory.
+
+@item _PC_VDISABLE
+Return the value corresponding to @code{_POSIX_VDISABLE}.  The file
+must be a terminal device.
+@end table
+
+The normal return value from @code{pathconf} is the value you requested.
+A value of @code{-1} is returned both if the implementation does not
+impose a limit, and in case of an error.  In the former case, @code{errno}
+is not set, while in the latter case, @code{errno} is set to indicate
+the cause of the problem.  Besides the usual file name syntax errors
+(@pxref{File Name Errors}), the following error conditions are defined
+for this function:
+
+@table @code
+@item EINVAL
+The value of @var{parameter} is invalid, or the implementation doesn't
+support the @var{parameter} for the specific file.
+@end table
+@end deftypefun
+
+@deftypefun long fpathconf (int @var{filedes}, int @var{parameter})
+This is just like @code{pathconf} except that an open file descriptor
+is used to specify the file for which information is requested, instead
+of a file name.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item EINVAL
+The value of @var{parameter} is invalid, or the implementation doesn't
+support the @var{parameter} for the specific file.
+@end table
+@end deftypefun
+
+These symbolic constants are defined for use as the @var{parameter}
+argument to @code{pathconf} and @code{fpathconf}.  The values are
+all integer constants.
+
+@defvr Macro _PC_LINK_MAX
+Inquire about the parameter corresponding to @code{LINK_MAX}.
+@end defvr
+
+@defvr Macro _PC_MAX_CANON
+Inquire about the parameter corresponding to @code{MAX_CANON}.
+@end defvr
+
+@defvr Macro _PC_MAX_INPUT
+Inquire about the parameter corresponding to @code{MAX_INPUT}.
+@end defvr
+
+@defvr Macro _PC_NAME_MAX
+Inquire about the parameter corresponding to @code{NAME_MAX}.
+@end defvr
+
+@defvr Macro _PC_PATH_MAX
+Inquire about the parameter corresponding to @code{PATH_MAX}.
+@end defvr
+
+@defvr Macro _PC_PIPE_BUF
+Inquire about the parameter corresponding to @code{PIPE_BUF}.
+@end defvr
+
+@defvr Macro _PC_CHOWN_RESTRICTED
+Inquire about the parameter corresponding to @code{_POSIX_CHOWN_RESTRICTED}.
+@end defvr
+
+@defvr Macro _PC_NO_TRUNC
+Inquire about the parameter corresponding to @code{_POSIX_NO_TRUNC}.
+@end defvr
+
+@defvr Macro _PC_VDISABLE
+Inquire about the parameter corresponding to @code{_POSIX_VDISABLE}.
+@end defvr

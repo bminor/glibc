@@ -1,0 +1,181 @@
+
+@node Memory Allocation
+@chapter Memory Allocation
+
+This section describes utilities for explicit allocation and
+deallocation of objects during program execution, and functions
+for management of heap storage.
+
+@strong{Incomplete:}  This section needs some examples.
+
+@menu
+* Explicit Management of Storage::	Why these functions are useful.
+* Storage Management Terminology::	Definitions of terminology about
+					 extent and allocation.
+* Alignment and Contiguity::		Restrictions on alignment of objects
+					 and contiguity.
+* Storage Management Functions::	All the gory details.
+@end menu
+
+@node Explicit Management of Storage
+@subsection  Explicit Management of Storage
+
+Often, when you write a program, you don't know in advance how many
+objects it will have to deal with, or how big they are.  For example, if
+you are writing a program that manipulates a database read in from a
+file, you may not know how many entries are in the database until you
+have read all the way through to the end of the file.  As another
+example, many engineering analysis programs use matrices or arrays whose
+total size can vary by several orders of magnitude, depending on the
+complexity of the particular problem being solved.
+
+One way to approach this problem is to write your program so that it
+defines large fixed-size arrays, big enough to hold the largest
+``reasonable'' amount of data you expect to process.  But this is not
+really a satisfactory solution; you may end up wasting a lot of storage
+if your guess was too large, and your program can fail unnecessarily if
+your guess was too small.
+
+A better solution, when the amount of storage your program needs can
+determined only when it actually executes, is to explicitly allocate the
+exact amount of storage at execution time.  This storage can be referred
+to using pointers in your program.  In the database example, you might
+allocate an object for each record in the database using the
+@code{malloc} function, and link them together via pointers into a
+linked list.  In the engineering analysis example, the sizes of the
+arrays required can typically be computed from the parameters included
+in the input data; the @code{calloc} function is provided for allocating
+arrays.
+@cindex allocation of storage
+
+Once you are finished using an object you have explicitly allocated in
+this way, you should be sure to deallocate it again using the
+@code{free} function.  Otherwise you will find that your program has a
+``memory leak'' and uses up more and more storage the longer it
+executes, even though the amount of storage it is actually referencing
+at any given time remains more or less constant.
+@cindex deallocation of storage
+@cindex freeing storage
+@cindex memory leak
+
+
+@node Storage Management Terminology
+@subsection Storage Management Terminology
+
+The @dfn{extent} of an object refers to the period of time in which it
+is valid to reference it.  (This is different from @dfn{scope}, which
+refers to the lexical region of your program where you can reference
+the name of the object.)  C programs deal with objects that have three
+different kinds of extents:
+
+@itemize @bullet
+@item
+The extent of objects defined at top-level, or objects with the
+@code{static} storage class defined in a block, is the entire time that
+the program is running.  These objects are said to be @dfn{statically
+allocated}.
+@cindex static allocation
+@cindex allocation, static
+
+@item
+The extent of objects defined within a block with the @code{auto} storage
+class begins when the block is entered and ends when the block is
+exited.  (This is sometimes called @dfn{dynamic extent}.)  These
+objects are said to be @dfn{stack allocated}; although it might not
+actually be implemented this way, you can think of storage for these
+objects as being allocated on a stack which is popped when the block
+is exited.
+@cindex stack allocation
+@cindex allocation, stack
+
+@item
+The extent of objects that are allocated and deallocated explicitly
+begins when they are allocated, and ends when they are deallocated.
+These objects are said to be @dfn{heap allocated}.  Again, the actual
+implementation might differ, but a good mental picture is that
+allocation of an object grabs some storage from a heap, and deallocating
+the object throws it back into the heap again.
+@cindex heap allocation
+@cindex allocation, heap
+@end itemize
+
+@node Alignment and Contiguity
+@subsection Alignment and Contiguity
+
+Rather than requesting allocation of a specific kind of object, the
+model used in C is that you request a specific amount of storage that
+can hold any kind of object that will fit in that amount of room.  The
+pointer returned by the allocation function is then usually converted to
+the appropriate type with a cast operator.  The @code{sizeof} operator
+is very useful in this connection for determining how much storage an
+object of a particular type requires.
+
+Although some types of objects in many C implementations have more
+restrictive alignment requirements than others, the storage that is
+allocated by @code{malloc} is guaranteed to be aligned according to the
+most restrictive requirements for the particular implementation.
+Nothing is guaranteed about the order and contiguity of successively
+allocated blocks of storage, however, or about the initial contents of
+the newly allocated storage.
+
+If it isn't possible to allocate the amount of storage you request, the
+allocation function will return a null pointer.  It's considered good
+practice always to check this.  In fact, instead of using functions like
+@code{malloc} directly whenever you need to allocate storage, it's
+usually a good idea to write a function to do the allocation for each
+particular kind of object, and use your function instead.  Your
+allocation function can not only check to make sure the storage was
+successfully allocated, but can also perform any initialization of the
+object that is appropriate for the particular data type.
+
+Once you have deallocated an object, it is a very bad idea to try to
+reference its contents any more.  The storage might be reused for other
+newly allocated objects, or possibly even removed from the address space
+of your program in such a way that an access causes an immediate memory
+access fault.  It is also a very bad idea to try to call @code{free}
+with a pointer that was not originally returned by @code{malloc},
+@code{calloc}, or @code{realloc}.
+
+@node Storage Management Functions
+@subsection Storage Management Functions
+
+Here are descriptions of the functions for allocation and deallocation
+of heap storage.
+
+@deftypefun {void *} malloc (size_t @var{size})
+This function allocates a block of storage to hold an object @var{size}
+bytes long, and returns a pointer to it.  A null pointer is returned if
+the allocation fails.
+@end deftypefun
+
+@deftypefun {void *} calloc (size_t @var{count}, size_t @var{size})
+This function allocates a block of storage for an array of @var{count}
+elements, each @var{size} bytes long, and returns a pointer to it.  A
+null pointer is returned if the allocation fails.
+@end deftypefun
+
+@deftypefun {void *} realloc (void *@var{object}, size_t @var{size})
+The @code{realloc} function is used to change the size of a previously
+allocated block of storage beginning at @var{object}.
+
+If the new size @var{size} is larger than the old size of the block, it
+may be necessary to allocate a new block of storage instead of simply
+extending the existing block.  In this case, the old contents are copied
+into the new block and the old storage is deallocated.  The contents of
+the newly allocated part of the block are not initialized.
+
+The @code{realloc} function returns a pointer to the (possibly moved)
+block of storage.  If the request fails, a null pointer is returned and
+the @var{object} is not deallocated or modified.
+
+A null pointer can also be specified for the @var{object} argument, in
+which case this function behaves just like @code{malloc}.
+@end deftypefun
+
+@deftypefun void free (void *@var{object})
+The @code{free} function deallocates the block of storage beginning at
+@var{object}, which must have been previously allocated by a call to
+@code{malloc}, @code{calloc}, or @code{realloc}, and not deallocated
+by a previous call to @code{free}.  The @var{argument} may also be
+a null pointer, in which case no action is performed.
+@end deftypefun

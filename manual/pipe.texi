@@ -1,0 +1,230 @@
+@node Pipes and FIFOs
+@chapter Pipes and FIFOs
+
+@cindex pipe
+A @dfn{pipe} is a mechanism for interprocess communication; data written
+to the pipe by one process can be read by another process.  The data
+is handled in a first-in, first-out (FIFO) order.
+
+@cindex FIFO special file
+A @dfn{FIFO special file} is similar to a pipe, but instead of being an
+anonymous, temporary connection, a FIFO is an ordinary file with a name.
+
+A pipe or FIFO has to be open at both ends simultaneously.  If you read
+from a pipe or FIFO file that doesn't have any processes writing to it
+(perhaps because they have all closed the file, or exited), the read
+returns end-of-file.  Writing to a pipe or FIFO that doesn't have a
+reading process is treated as an error condition.
+
+Neither pipes nor FIFO special files allow file positioning.  Both
+reading and writing operations happen sequentially; reading from the
+beginning of the file and writing at the end.
+
+@menu
+* Creating a Pipe::		Making a pipe with the @code{pipe} function.
+* Pipe to a Subprocess::	Using a pipe to communicate with a
+				 child process.
+* FIFO Special Files::		Making a FIFO special file.
+@end menu
+
+@node Creating a Pipe
+@section Creating a Pipe
+
+The primitive for creating a pipe is the @code{pipe} function.  This
+creates both the reading and writing ends of the pipe.  It is not very
+useful for a single process to use a pipe to talk to itself.  In typical
+use, a process creates a pipe just before it forks one or more child
+processes (@pxref{Creating a Process}).  The pipe is then used for
+communication either between the parent or child processes, or between
+two sibling processes.
+
+The @code{pipe} function is declared in the header file
+@file{<unistd.h>}.
+
+@deftypefun int pipe (int @var{filedes}[2])
+The @code{pipe} function creates a pipe and puts the file descriptors
+for the reading and writing ends of the pipe (respectively) into
+@code{@var{filedes}[0]} and @code{@var{filedes}[1]}.
+
+If successful, @code{pipe} returns a value of @code{0}.  On failure,
+@code{-1} is returned.  The following @code{errno} error conditions are
+defined for this function:
+
+@table @code
+@item EMFILE
+The process has too many files open.
+
+@item ENFILE
+The system has too many files open.
+@end table
+@end deftypefun
+
+Here is an example of a simple program that creates a pipe.  This program
+uses the @code{fork} function (@pxref{Creating a Process}) to create
+a child process.  The parent process writes data to the pipe, which is
+read by the child process.
+
+@example
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+/* @r{Read characters from the pipe and echo them to stdout.}  */
+
+void read_from_pipe (int file)
+@{
+  FILE *stream;
+  int c;
+  stream = fdopen (file, "r");
+  while ((c = fgetc (stream)) != EOF)
+    putchar (c);
+  fclose (stream);
+@}
+
+/* @r{Write some random text to the pipe.} */
+
+void write_to_pipe (int file)
+@{
+  FILE *stream;
+  stream = fdopen (file, "w");
+  fprintf (stream, "hello, world!\n");
+  fprintf (stream, "goodbye, world!\n");
+  fclose (stream);
+@}
+
+
+void main (void)
+@{
+  pid_t pid;
+  int mypipe[2];
+
+  /* @r{Create the pipe.} */
+  if (pipe (mypipe)) @{
+    fprintf (stderr, "Pipe failed.\n");
+    exit (EXIT_FAILURE);
+    @}
+
+  /* @r{Create the child process.} */
+  pid = fork ();
+  if (pid == (pid_t) 0) @{
+    /* @r{This is the child process.} */
+    read_from_pipe (mypipe[0]);
+    exit (EXIT_SUCCESS);
+    @}
+  else if (pid < (pid_t) 0) @{
+    /* @r{The fork failed.} */
+    fprintf (stderr, "Fork failed.\n");
+    exit (EXIT_FAILURE);
+    @}
+  else @{
+    /* @r{This is the parent process.} */
+    write_to_pipe (mypipe[1]);
+    exit (EXIT_SUCCESS);
+    @}
+@}
+@end example
+
+@node Pipe to a Subprocess
+@section Pipe to a Subprocess
+
+A common use of pipes is to send data to or receive data from a program
+being run as subprocess.  One way of doing this is by using a combination of
+@code{pipe} (to create the pipe), @code{fork} (to create the subprocess),
+@code{dup2} (to force the subprocess to use the pipe as its standard input
+or output channel), and @code{exec} (to execute the new program).  Or,
+you can use @code{popen} and @code{pclose}.
+
+The advantage of using @code{popen} and @code{pclose} is that the
+interface is much simpler and easier to use.  But it doesn't offer as
+much flexibility as using the low-level functions directly.
+
+@deftypefun {FILE *} popen (const char *@var{command}, const char *@var{mode})
+The @code{popen} function is closely related to the @code{system}
+function; @pxref{Running a Command}.  It executes the shell command
+@var{command} as a subprocess.  However, instead of waiting for the
+command to complete, it creates a pipe to the subprocess and returns a
+stream that corresponds to that pipe.
+
+If you specify a @var{mode} argument of @code{"r"}, you can read from the 
+stream to retrieve data from the standard output channel of the subprocess.
+The subprocess inherits its standard input channel from the parent process.
+
+Similarly, if you specify a @var{mode} argument of @code{"w"}, you can
+write to the stream to send data to the standard input channel of the
+subprocess.  The subprocess inherits its standard output channel from
+the parent process.
+
+In the event of an error, @code{popen} returns a null pointer.  This
+might happen if the pipe or stream cannot be created, if the subprocess
+cannot be forked, or if the program cannot be executed.
+@end deftypefun
+
+@deftypefun int pclose (FILE *@var{stream})
+The @code{pclose} function is used to close a stream created by @code{popen}.
+It waits for the child process to terminate and returns its status value,
+as for the @code{system} function.
+@end deftypefun
+
+Here is an example showing how to use @code{popen} and @code{popen} to
+filter output through another program, in this case the paging program
+@code{more}.
+
+@example
+#include <stdio.h>
+#include <stdlib.h>
+
+void main (void)
+@{
+  FILE *output;
+
+  output = popen ("more", "w");
+  if (!output) {
+    fprintf (stderr, "Could not run more.\n");
+    exit (EXIT_FAILURE);
+    }
+  @dots{}
+  fprintf (output, @dots{});
+  @dots{}
+  pclose (output);
+  exit (EXIT_SUCCESS);
+@}
+@end example
+
+
+@node FIFO Special Files
+@section FIFO Special Files
+
+The @code{mkfifo} function is declared in the header file
+@file{<sys/stat.h>}.
+
+@deftypefun int mkfifo (const char *@var{filename}, mode_t @var{mode})
+The @code{mkfifo} function makes a FIFO special file with name
+@var{filename}.  The @var{mode} argument is used to set the file's
+permissions; @pxref{Assigning File Permissions}.
+
+The normal, successful return value from @code{mkfifo} is @code{0}.  In
+the case of an error, @code{-1} is returned.  In addition to the usual
+file name syntax errors (@pxref{File Name Errors}), the following
+@code{errno} error conditions are defined for this function:
+
+@table @code
+@item EEXIST
+The named file already exists.
+
+@item ENOSPC
+The directory or file system cannot be extended.
+
+@item EROFS
+The directory that would contain the file resides on a read-only file
+system.
+@end table
+@end deftypefun
+
+Once a FIFO special file has been created, any process can open it for
+reading or writing, in the same way as an ordinary file.  However, it
+has to be open at both ends simultaneously before you can proceed to do
+any input or output operations on it.  Opening a FIFO for reading 
+normally blocks until some other process opens the same FIFO for writing,
+and vice versa.
+

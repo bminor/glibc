@@ -1,0 +1,657 @@
+@node Mathematics
+@chapter Mathematics --- @file{<math.h>}
+@pindex <math.h>
+
+This chapter contains information about functions for performing
+mathematical computations, such as trigonometric functions.  Most
+of these functions have prototypes declared in the header file
+@file{<math.h>}.
+
+@strong{Incomplete:}  This chapter doesn't have any examples.
+
+@menu
+* Domain and Range Errors::		How overflow conditions and the like
+					 are reported.
+* Trigonometric Functions::		Sine, cosine, and tangent.
+* Inverse Trigonometric Functions::	Arc sine, arc cosine, and arc tangent.
+* Exponentiation and Logarithms::	Also includes square root.
+* Hyperbolic Functions::		Hyperbolic sine and friends.
+* Normalization Functions::		Hacks for radix-2 representations.
+* Rounding and Remainder Functions::	Determinining the integer and
+					 fractional parts of a float.
+* Pseudo-Random Numbers::		Functions for generating pseudo-random
+					 numbers.
+* Integer Division::			Functions for performing integer
+					 division.
+* Absolute Value::			Absolute value functions.
+* Parsing of Numbers::			Functions for ``reading'' numbers
+					 from strings.
+@end menu
+
+@node Domain and Range Errors
+@section Domain and Range Errors
+
+@cindex domain error
+Many of the functions listed in this chapter are defined mathematically
+over a domain that is only a subset of real numbers.  For example, the
+@code{acos} function is defined over the domain between @code{-1} and
+@code{1}.  If you pass an argument to one of these functions that is
+outside the domain over which it is defined, the function returns
+an unspecified value and sets @code{errno} to @code{EDOM} to indicate
+a @dfn{domain error}.
+
+Some of these functions are defined mathematically to result in a
+complex value over parts of their domains.  The most familiar example of
+this is taking the square root of a negative number.  Since the C
+language has no support for complex numbers, this is treated like a
+domain error.
+
+@cindex range error
+A related problem is that the mathematical result of a function may not
+be representable as a floating point number.  If magnitude of the result
+is too large to be represented, the value of the macro @code{HUGE_VAL}
+is returned (with the appropriate sign), and @code{errno} is set to
+@code{ERANGE} to indicate a @dfn{range error}.  If the magnitude of the
+result is too small, a value of zero is returned instead.  In the case
+of underflow, @code{errno} might or might not be set to @code{ERANGE}.
+
+None of these functions ever generate externally visible exceptions
+as a result of domain or range errors.  In particular, this means that
+you won't see @code{SIGFPE} signals generated within these functions.
+@xref{Signal Handling}, for more information about signals.
+
+All of the functions that operate on floating-point numbers accept
+arguments and return results of type @code{double}.  In future revisions
+of the ANSI C standard, additional functions may be added that operate
+on @code{float} and @code{long double} values.  For example, @code{cosf}
+and @code{cosl} would be versions of the @code{cos} function that
+operate on @code{float} and @code{long double} arguments, respectively.
+In the meantime, you should avoid using these names yourself.
+@xref{Reserved Names}.
+
+@defvr Macro HUGE_VAL
+This macro expands into a (possibly non-constant) expression of type
+@code{double} representing a very large positive number.  This is
+typically either the largest representable floating-point number, or a
+value indicating infinity if the floating-point representation has one.
+(The IEEE floating-point does have such a reserved value.)
+
+The value of this macro is used as the return value from various 
+mathematical functions in overflow situations.
+@end defvr
+
+For more information about floating-point representations and limits,
+@xref{Floating-Point Limits}.  In particular, the macro @code{DBL_MAX}
+might be more appropriate than @code{HUGE_VAL} for many uses.
+
+
+@node Trigonometric Functions
+@section Trigonometric Functions
+
+@strong{Incomplete:}  What font convention should be used for things
+like ``pi'' and ``e''?
+
+These are the familiar @code{sin}, @code{cos}, and @code{tan} functions.
+The arguments to all of these functions are specified in radians; recall
+that pi radians is equivalent to 180 degrees.  
+
+@cindex pi (trigonometric constant)
+The math library doesn't define a symbolic constant for pi, but you can
+define your own if you need one:
+
+@example
+#define PI 3.14159265358979323846264338327
+@end example
+
+@noindent
+You can also compute the value of pi with the expression @samp{acos (-1.0)}.
+
+
+@deftypefun double sin (double @var{x})
+This function returns the sine of @var{x}, which is given in radians.
+The return value is in the range @code{-1} to @code{1}.
+@end deftypefun
+
+@deftypefun double cos (double @var{x})
+This function returns the cosine of @var{x}, which is given in radians.
+The return value is in the range @code{-1} to @code{1}.
+@end deftypefun
+
+@deftypefun double tan (double @var{x})
+This function returns the tangent of @var{x}, which is given in radians.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item ERANGE
+Mathematically, the tangent function has singularities at odd multiples of
+pi/2.  If the argument @var{x} is too close to one of these singularities,
+@code{tan} sets this error condition and returns either positive or
+negative @code{HUGE_VAL}.
+@end table
+@end deftypefun
+
+
+@node Inverse Trigonometric Functions
+@section Inverse Trigonometric Functions
+
+These are the usual arc sine, arc cosine, and arc tangent functions.
+
+@deftypefun double asin (double @var{x})
+This function computes the arc sine of @var{x}.  The return value is
+given in radians and is in the range -pi/2 to pi/2 (inclusive).
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EDOM
+The argument @var{x} is out of range.  The arc sine function is defined
+mathematically only over the domain -1 to 1.
+@end table
+@end deftypefun
+
+@deftypefun double acos (double @var{x})
+This function computes the arc cosine of @var{x}.  The return value is
+given in radians and is in the range 0 to pi (inclusive).
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EDOM
+The argument @var{x} is out of range.  The arc cosine function is defined
+mathematically only over the domain -1 to 1.
+@end table
+@end deftypefun
+
+
+@deftypefun double atan (double @var{x})
+This function returns the arc tangent of @var{x}.  The return value is
+given in radians and is in the range -pi/2 to pi/2 (inclusive).
+@end deftypefun
+
+@deftypefun double atan2 (double @var{y}, double @var{x})
+This is the two argument arc tangent function.  It is similar to computing
+the arc tangent of @var{y}/@var{x}, except that the signs of both arguments
+are used to determine the quadrant of the result, and @var{x} is
+permitted to be zero.  The return value is given in radians and is in
+the range -pi to pi (inclusive).
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EDOM
+Both the @var{x} and @var{y} arguments are zero; the value of the
+function is not defined in this case.
+@end table
+@end deftypefun
+
+
+@node Exponentiation and Logarithms
+@section Exponentiation and Logarithms
+
+@deftypefun double exp (double @var{x})
+The @code{exp} function returns the value of e (the base of natural
+logarithms) raised to power @var{x}.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item ERANGE
+The magnitude of the result is too large to be representable.
+@end table
+@end deftypefun
+
+@deftypefun double log (double @var{x})
+This function returns the natural logarithm of @var{x}.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EDOM
+The log function is defined mathematically to return a non-complex
+result only on positive arguments.  This error is used to report a
+negative argument @var{x}.
+
+@item ERANGE
+The result of the function on an argument of zero is not defined.
+@end table
+@end deftypefun
+
+@deftypefun double log10 (double @var{x})
+This function returns the base-10 logarithm of @var{x}.  Except for the
+different base, it is similar to the @code{log} function.
+@end deftypefun
+
+@deftypefun double pow (double @var{base}, double @var{power})
+This is a general exponentiation function, returning @var{base} raised
+to @var{power}.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EDOM
+The argument @var{base} is negative and @var{power} is not an integral
+value.  Mathematically, the result would be a complex number in this case.
+
+@item ERANGE
+An underflow or overflow condition was detected in the result.
+@end table
+@end deftypefun
+
+@deftypefun double sqrt (double @var{x})
+This function returns the nonnegative square root of @var{x}.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EDOM
+The argument @var{x} is negative.  Mathematically, the square root would
+be a complex number.
+@end table
+@end deftypefun
+
+
+
+@node Hyperbolic Functions
+@section Hyperbolic Functions
+
+The functions in this section are related to the exponential and
+functions; @pxref{Exponentiation and Logarithms}.
+
+@deftypefun double sinh (double @var{x})
+The @code{sinh} function returns the hyperbolic sine of @var{x}.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item ERANGE
+The value of the argument @var{x} is too large; an overflow condition
+was detected.
+@end table
+@end deftypefun
+
+@deftypefun double cosh (double @var{x})
+The @code{cosh} function returns the hyperbolic cosine of @var{x}.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item ERANGE
+The value of the argument @var{x} is too large; an overflow condition
+was detected.
+@end table
+@end deftypefun
+
+@deftypefun double tanh (double @var{x})
+This function returns the hyperbolic tangent of @var{x}.
+@end deftypefun
+
+
+@node Normalization Functions
+@section Normalization Functions
+
+The functions described in this section are primarily provided as a way
+to efficiently perform certain low-level manipulations on floating point
+numbers that are represented internally using a binary radix;
+@pxref{Floating-Point Representation}.  These functions are required to
+have equivalent behavior even if the representation does not use a radix
+of 2, but of course they are unlikely to be particularly efficient in
+those cases.
+
+@deftypefun double frexp (double @var{value}, int *@var{exponent})
+The @code{frexp} function is used to normalize the number @var{value}.
+
+If the argument @var{value} is not zero, the return value is a
+floating-point number with magnitude in the range 1/2 (inclusive) to 1
+(exclusive).  The corresponding exponent is stored in the location
+pointed at by @var{exponent}; the return value multiplied by 2 raised to
+this exponent is equal to the original number @var{value}.
+
+If @var{value} is zero, then both parts of the result are zero.
+@end deftypefun
+
+@deftypefun double ldexp (dobule @var{value}, int @var{exponent})
+This function returns the result of multiplying the floating-point
+number @var{value} by 2 raised to the power @var{exponent}.  (It can
+be used to reassemble floating-point numbers that were taken apart
+by @code{frexp}.)
+@end deftypefun
+
+
+@node Rounding and Remainder Functions
+@section Rounding and Remainder Functions
+
+The functions listed here perform operations such as rounding, 
+truncation, and remainder computation.
+
+You can also convert floating-point numbers to integers simply by
+casting them to @code{int}.  This discards the fractional part,
+effectively rounding towards zero.  However, this only works if the
+result can actually be represented as an @code{int} --- for very large
+numbers, the result is undefined.  The functions listed here return the
+result as a @code{double} instead to get around this problem.
+
+@deftypefun double ceil (double @var{x})
+The @code{ceil} function rounds @var{x} upwards to the nearest integer,
+returning that value as a @code{double}.
+@end deftypefun
+
+@deftypefun double floor (double @var{x})
+The @code{ceil} function rounds @var{x} downwards to the nearest
+integer, returning that value as a @code{double}.
+@end deftypefun
+
+@deftypefun double modf (double @var{value}, double *@var{integer_part})
+This function breaks the argument @var{value} into an integer part and a
+fractional part.  Each of the parts has the same sign as the original
+@var{value}, so the rounding of the integer part is towards zero.  The
+integer part is stored at the location pointed at by @var{integer_part},
+and the fractional part is returned.
+@end deftypefun
+
+
+@deftypefun double fmod (double @var{numerator}, double @var{denominator})
+This function computes the remainder from dividing @var{numerator} by
+@var{denominator}.  The result has the same sign as the @var{numerator}
+and has magnitude less than the magnitude of the @var{denominator}.
+(Recall that the built-in @samp{%} operator isn't defined on
+floating-point values.)
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EDOM
+The @var{denominator} is zero.
+@end table
+@end deftypefun
+
+
+@node Pseudo-Random Numbers
+@section Pseudo-Random Numbers
+
+This section describes the standard facilities for generating a series
+of pseudo-random numbers.  The numbers generated by the @code{rand}
+function are not required to be truly random; typically, the sequences
+repeat periodically, with the period being a function of the number
+of bits in the @dfn{seed} or initial state.
+@cindex random numbers
+@cindex pseudo-random numbers
+@cindex seed (for random numbers)
+
+Within a single implementation, you can get the same series of numbers
+by specifying the same initial seed value with the @code{srand}
+function.  However, the actual algorithm used to generate such a series
+is implementation-dependent.  Therefore, your program cannot use these
+facilities if you want to get reproducible behavior across multiple
+implementations.
+
+To use these facilities, you should include the header file
+@file{<stdlib.h>} in your program.
+
+@defvr Macro RAND_MAX
+The value of this macro is an integer constant expression that
+represents the maximum possible value returned by the @code{rand}
+function.  It is guaranteed to be at least @code{32767}.
+@end defvr
+
+@deftypefun int rand (void)
+The @code{rand} function returns the next pseudo-random number in the
+series.  The value is in the range from @code{0} to @code{RAND_MAX}.
+@end deftypefun
+
+@deftypefun void srand (unsigned int @var{seed})
+This function establishes @var{seed} as the seed for a new series of
+pseudo-random numbers.  If @code{rand} is called before a seed has been
+established with @code{srand}, it is equivalent to having specified an
+initial seed value of @code{1}.
+@end deftypefun
+
+
+@node Integer Division
+@section Integer Division
+
+This section describes functions for performing integer division.
+To use these facilities, you should include the header file
+@file{<stdlib.h>} in your program.
+
+These functions are not necessarily equivalent to the division performed
+by the built-in @code{/} and @code{%} operators.  While the built-in
+division operator is permitted to round in either direction if the
+quotient is negative, the @code{div} and @code{ldiv} functions are
+required to round towards zero.  It is also required that these
+functions return a result such that @code{quot*@var{denominator} + rem}
+be equal to @var{numerator}.
+
+@deftp {Data Type} div_t
+This is a structure type used to hold the result returned by the @code{div}
+function.  It has the following members:
+
+@table @code
+@item {int quot}
+The quotient from the division.
+
+@item {int rem}
+The remainder from the division.
+@end table
+@end deftp
+
+@deftypefun div_t div (int @var{numerator}, int @var{denominator})
+This function @code{div} computes the quotient and remainder from
+the division of @var{numerator} by @var{denominator}, returning the
+result in a structure of type @code{div_t}.
+
+If the result cannot be represented (as in a division by zero), the
+behavior is undefined.
+@end deftypefun
+
+
+@deftp {Data Type} ldiv_t
+This is a structure type used to hold the result returned by the @code{ldiv}
+function.  It has the following members:
+
+@table @code
+@item {long int quot}
+The quotient from the division.
+
+@item {long int rem}
+The remainder from the division.
+@end table
+
+(This is identical to the type @code{div_t} except that the components
+are of type @code{long int} rather than @code{int}.)
+@end deftp
+
+@deftypefun ldiv_t ldiv (long int @var{numerator}, long int @var{denominator})
+The @code{ldiv} function is similar to @code{div}, except that the
+arguments are of type @code{long int} and the result is returned as a
+structure of type @code{ldiv}.
+@end deftypefun
+
+
+@node Absolute Value
+@section Absolute Value
+
+These functions are provided for obtaining the absolute value of
+integer values.  Prototypes for @code{abs} and @code{abs} are declared
+in @file{<stdlib.h>}; @code{fabs} is declared in @file{<math.h>}.
+
+@deftypefun int abs (int @var{number})
+This function returns the absolute value (or magnitude) of @var{number}.
+In a two's complement integer representation, the absolute value of
+@code{INT_MIN} (the smallest possible @code{int}) cannot be represented;
+in this case, the behavior of @code{abs} is undefined.
+@end deftypefun
+
+@deftypefun {long int} labs (long int @var{number})
+This is similar to @code{abs}, except that both the argument and result
+are of type @code{long int} rather than @code{int}.
+@end deftypefun
+
+@deftypefun double fabs (double @var{number})
+This function returns the absolute value of the floating-point number
+@var{number}.
+@end deftypefun
+
+@node Parsing of Numbers
+@section Parsing of Numbers
+@cindex parsing of numbers
+@cindex string conversion
+@cindex number syntax
+
+This section describes functions for ``reading'' integer and
+floating-point numbers from a string.  In many cases, it is more
+appropriate to use @code{sscanf} or one of the related functions;
+@pxref{Formatted Input}.  The syntax recognized by the formatted input
+functions for the numeric conversions is exactly the same as the syntax
+recognized by the functions described in this section.
+
+These functions are declared in @file{<stdlib.h>}.
+
+@menu
+* Parsing of Integers::		Functions for conversion of integer values.
+* Parsing of Floats::		Functions for conversion of floating-point
+				 values.
+@end menu
+
+@node Parsing of Integers
+@subsection Parsing of Integers
+@cindex parsing of integers
+
+@deftypefun {long int} strtol (const char *@var{string}, char **@var{tailptr}, int @var{base})
+The @code{strtol} (``string-to-long'') function converts the initial
+part of @var{string} to a signed integer, which is returned as a value
+of type @code{long int}.  
+
+This function attempts to decompose @var{string} as follows:
+
+@itemize @bullet
+@item 
+A (possibly empty) sequence of whitespace characters, as determined by
+the @code{isspace} function (@pxref{Classification of Characters}).
+These are discarded.
+
+@item 
+An optional plus or minus sign (@samp{+} or @samp{-}).
+
+@item 
+A nonempty sequence of digits in the radix specified by @var{base}.  If
+@var{base} is zero, decimal radix is assumed unless the series of digits
+begins with @samp{0} (specifying octal radix), or @samp{0x} or @samp{0X}
+(specifying hexadecimal radix); in other words, the same syntax that is
+used for integer constants in the C language is recognized.  Otherwise
+@var{base} must have a value between @code{2} and @code{35}.  If
+@var{base} is @code{16}, the digits may optionally be preceeded by
+@samp{0x} or @samp{0X}.
+
+@item 
+Any remaining characters in the string.  If @var{tailptr} is not a null
+pointer, a pointer to this tail of the string is stored in the object
+it points to.
+@end itemize
+
+If the string is empty, contains only whitespace, or does not contain an
+initial substring that has the expected syntax for an integer in the
+specified @var{base}, no conversion is performed.  In this case,
+@code{strtol} returns a value of zero and the value returned in
+@var{tailptr} is the value of @var{string}.
+
+In a locale other than the standard @code{"C"} locale, this function
+may recognize additional implementation-dependent syntax.
+
+If the string has valid syntax for an integer but the value is not
+representable because of overflow, @code{strtol} returns either
+@code{LONG_MAX} or @code{LONG_MIN} (@pxref{Integer Representation
+Limits}), as appropriate for the sign of the value.
+
+The following @code{errno} error conditions are defined for this
+function:
+
+@table @code
+@item ERANGE
+An overflow condition was detected.
+@end table
+@end deftypefun
+
+@deftypefun {unsigned long int} strtoul (const char *@var{string}, char **@var{tailptr}, int @var{base})
+The @code{strtoul} (``string-to-unsigned-long'') function is similar to
+@code{strtol} except that it returns its value as an object of type
+@code{unsigned long int}.  The value returned in case of overflow is
+@code{ULONG_MAX} (@pxref{Integer Representation Limits}).
+@end deftypefun
+
+@deftypefun {long int} atol (const char *@var{string})
+This function is similar to the @code{strtol} function with a @var{base}
+argument of @code{10}, except that it need not detect overflow errors.
+The @code{atol} function is provided mostly for compatibility with
+existing code; using @code{strtol} is considered better style.
+@end deftypefun
+
+@deftypefun int atoi (const char *@var{string})
+This function is similar to the @code{atol} function, except that
+returns its value as an @code{int} rather than @code{long int}.  The
+@code{atoi} function is also considered obsolete; use @code{strtol}
+instead.
+@end deftypefun
+
+
+@node Parsing of Floats
+@subsection Parsing of Floats
+
+@deftypefun double strtod (const char *@var{string}, char **@var{tailptr})
+The @code{strtod} (``string-to-double'') function converts the initial
+part of @var{string} to a floating-point number, which is returned as a
+value of type @code{double}.  
+
+This function attempts to decompose @var{string} as follows:
+
+@itemize @bullet
+@item 
+A (possibly empty) sequence of whitespace characters, as determined
+by the @code{isspace} function.  These are discarded.
+
+@item
+An optional plus or minus sign (@samp{+} or @samp{-}).
+
+@item
+A nonempty sequence of digits optionally containing a decimal-point
+character (@samp{.}).
+
+@item
+An optional exponent part, consisting of a character @samp{e} or
+@samp{E}, an optional sign, and a sequence of digits.
+
+@item
+Any remaining characters in the string.  If @var{tailptr} is not a null
+pointer, a pointer to this tail of the string is stored in the object it
+points to.
+@end itemize
+
+If the string is empty, contains only whitespace, or does not contain
+an initial substring that has the expected syntax for a floating-point
+number, no conversion is performed.  In this case, @code{strtod} returns
+a value of zero and the value returned in @var{tailptr} is the value of
+@var{string}.
+
+In a locale other than the standard @code{"C"} locale, this function
+may recognize additional implementation-dependent syntax.
+
+If the string has valid syntax for a floating-point number but the value
+is not representable because of overflow, @code{strtod} returns either
+positive or negative @code{HUGE_VAL} (@pxref{Mathematics}), depending on
+the sign of the value.  Similarly, if the value is not representable
+because of underflow, @code{strtod} returns zero.
+
+The following @code{errno} error conditions are defined for this
+function:
+
+@table @code
+@item ERANGE
+An overflow or underflow condition was detected.
+@end table
+@end deftypefun
+
+@deftypefun double atof (const char *@var{string})
+This function is similar to the @code{strtod} function, except that it
+need not detect overflow and underflow errors.  The @code{atof} function
+is provided mostly for compatibility with existing code; using
+@code{strtod} is considered better style.
+@end deftypefun
+
