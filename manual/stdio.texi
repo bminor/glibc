@@ -1181,6 +1181,9 @@ is equivalent to:
 fprintf (stderr, "can't open `%s': %s\n", filename, strerror (errno));
 @end example
 
+@noindent
+The @samp{%m} conversion is a GNU C library extension.
+
 The @samp{%p} conversion prints a pointer value.  The corresponding
 argument must be of type @code{void *}.  In practice, you can use any
 type of pointer.
