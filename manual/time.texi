@@ -377,7 +377,7 @@ following @code{errno} error condition is defined for this function:
 
 @table @code
 @item EPERM
-You do not have privilege to set the time.
+This process cannot set the host name because it is not privileged.
 @end table
 @end deftypefun
 
