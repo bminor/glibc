@@ -73,7 +73,7 @@ errnoh == 2 && $1 == "@deftypevr"  && $2 == "Macro" && $3 == "int" \
   }
 { errnoh=0 }
 
-NF == 3 && $1 == "#define" && $2 == "MACH_MSG_SUCCESS" \
+NF == 3 && $1 == "#define" && $2 == "MACH_SEND_IN_PROGRESS" \
   {
     in_mach_errors = 1;
     print "\n\t/* Errors from <mach/message.h>.  */";
@@ -82,6 +82,7 @@ NF == 3 && $1 == "#define" && $2 == "KERN_SUCCESS" \
   {
     in_mach_errors = 1;
     print "\n\t/* Errors from <mach/kern_return.h>.  */";
+    next;
   }
 
 in_mach_errors && $2 == "MACH_IPC_COMPAT" \
@@ -93,6 +94,38 @@ in_mach_errors == 1 && NF == 3 && $1 == "#define" \
   {
     printf "\t%-32s= %s,\n", "E" $2, $3;
   }
+
+$1 == "#define" && $2 == "_MACH_MIG_ERRORS_H_" \
+  {
+    in_mig_errors = 1;
+    print "\n\t/* Errors from <mach/mig_errors.h>.  */";
+    next;
+  }
+in_mig_errors && $1 == "#endif" && $3 == "_MACH_MIG_ERRORS_H_" \
+  {
+    in_mig_errors = 0;
+  }
+
+(in_mig_errors && $1 == "#define" && $3 <= -300) || \
+(in_device_errors && $1 == "#define") \
+  {
+    printf "%-32s", sprintf ("\t%-24s= %s,", "E" $2, $3);
+    for (i = 4; i <= NF; ++i)
+      printf " %s", $i;
+    printf "\n";
+  }
+
+$1 == "#define" && $2 == "D_SUCCESS" \
+  {
+    in_device_errors = 1;
+    print "\n\t/* Errors from <device/device_types.h>.  */";
+    next;
+  }
+in_device_errors && $1 == "#endif" \
+  {
+    in_device_errors = 0;
+  }
+
 
 END \
   {
