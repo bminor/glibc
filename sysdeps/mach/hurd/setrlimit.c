@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ DEFUN(setrlimit, (resource, rlimits),
 
     case RLIMIT_CORE:
       _hurd_core_limit = rlimits->rlim_cur;
-      break;
+      return 0;
 
     case RLIMIT_DATA:
       return _hurd_set_data_limit (rlimits);
@@ -53,6 +53,4 @@ DEFUN(setrlimit, (resource, rlimits),
       errno = ENOSYS;
       return -1;
     }
-
-  return 0;
 }
