@@ -1,3 +1,7 @@
+1999-10-11  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/unix/sysv/linux/configure.in: Fix typo.
+
 1999-10-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/xpg_basename.c (__xpg_basename): Don't return pointer to
