@@ -1,6 +1,6 @@
 /* ffs -- find first set bit in a word, counted from least significant end.
    For Intel 80x86, x>=3.
-   Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ DEFUN(ffs, (x), int x)
        "bsfl %2,%1\n"		/* Count low bits in X and store in %1.  */
        "jz nonzero\n"		/* Jump if OK, i.e. X was non-zero.  */
        "leal 1(%3),%0\n"	/* Return bsfl-result plus one on %0.  */
-       "nonzero:" : "=a" (cnt), "=r" (tmp) : "rm" (x), "1" (tmp));
+       "nonzero:" : "=&a" (cnt), "=r" (tmp) : "rm" (x), "1" (tmp));
 
   return cnt;
 }
