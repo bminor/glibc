@@ -19,13 +19,21 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/fd.h>
 #include <stdlib.h>
 
-/* Allocate a new file descriptor and return it, locked.
-   The new descriptor number will be no less than FIRST_FD.
-   If the table is full, set errno and return NULL.  */
+/* Allocate a new file descriptor and return it, locked.  The new
+   descriptor number will be no less than FIRST_FD.  If the table is full,
+   set errno to EMFILE and return NULL.  If FIRST_FD is negative or bigger
+   than the size of the table, set errno to EINVAL and return NULL.  */
+
 struct hurd_fd *
 _hurd_alloc_fd (int *fd, const int first_fd)
 {
   int i;
+
+  if (first_fd < 0)
+    {
+      errno = EINVAL;
+      return NULL;
+    }
 
   __mutex_lock (&_hurd_dtable_lock);
 
@@ -34,18 +42,15 @@ _hurd_alloc_fd (int *fd, const int first_fd)
       struct hurd_fd *d = &_hurd_dtable.d[i];
       if (d == NULL)
 	{
-	  /* Allocate a new descriptor structure for this slot.  */
-	  d = malloc (sizeof (struct hurd_fd));
+	  /* Allocate a new descriptor structure for this slot,
+	     initializing its port cells to nil.  The test below will catch
+	     and return this descriptor cell after locking it.  */
+	  d = _hurd_new_fd (MACH_PORT_NULL, MACH_PORT_NULL);
 	  if (d == NULL)
 	    {
 	      __mutex_unlock (&hurd_dtable_lock);
 	      return NULL;
 	    }
-
-	  /* Initialize the port cells.  The test below will catch and
-	     return this descriptor cell after locking it.  */
-	  _hurd_port_init (&d->port, MACH_PORT_NULL);
-	  _hurd_port_init (&d->ctty, MACH_PORT_NULL);
 	}
 
       __spin_lock (&d->port.lock);
@@ -60,8 +65,9 @@ _hurd_alloc_fd (int *fd, const int first_fd)
 	__spin_unlock (&d->port.lock);
     }
 
+  errno = first_fd < _hurd_dtable.size ? EMFILE : EINVAL;
+
   __mutex_unlock (&hurd_dtable_lock);
 
-  errno = EMFILE;
   return NULL;
 }
