@@ -1,5 +1,7 @@
 1998-03-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/generic/pty.c (openpty): Allow the use of more ptys.
+
 	* catgets/Makefile (CPPFLAGS): Change NLSPATH to also examine
 	directory index by only the language.
 
