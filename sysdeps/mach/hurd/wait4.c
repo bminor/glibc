@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 
 pid_t
 DEFUN(__wait4, (pid, stat_loc, options, usage),
-      pid_t pid AND union wait *stat_loc AND int options AND PTR usage)
+      pid_t pid AND int *stat_loc AND int options AND struct rusage *usage)
 {
   pid_t dead;
   error_t err;
