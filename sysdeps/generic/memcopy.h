@@ -1,5 +1,5 @@
 /* memcopy.h -- definitions for memory copy functions.  Generic C version.
-   Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,7 @@ Cambridge, MA 02139, USA.  */
    exhaustive in the sense that I tried all alignment and length
    combinations, with and without overlap.  */
 
+#include <sys/cdefs.h>
 #include <endian.h>
 
 /* The macros defined in this file are:
@@ -109,8 +110,8 @@ typedef unsigned char byte;
    the assumption that DST_BP is aligned on an OPSIZ multiple.  If
    not all bytes could be easily copied, store remaining number of bytes
    in NBYTES_LEFT, otherwise store 0.  */
-extern void EXFUN(_wordcopy_fwd_aligned, (long int, long int, size_t));
-extern void EXFUN(_wordcopy_fwd_dest_aligned, (long int, long int, size_t));
+extern void _wordcopy_fwd_aligned __P ((long int, long int, size_t));
+extern void _wordcopy_fwd_dest_aligned __P ((long int, long int, size_t));
 #define WORD_COPY_FWD(dst_bp, src_bp, nbytes_left, nbytes)		      \
   do									      \
     {									      \
@@ -129,8 +130,8 @@ extern void EXFUN(_wordcopy_fwd_dest_aligned, (long int, long int, size_t));
    DST_END_PTR is aligned on an OPSIZ multiple.  If not all bytes could be
    easily copied, store remaining number of bytes in NBYTES_REMAINING,
    otherwise store 0.  */
-extern void EXFUN(_wordcopy_bwd_aligned, (long int, long int, size_t));
-extern void EXFUN(_wordcopy_bwd_dest_aligned, (long int, long int, size_t));
+extern void _wordcopy_bwd_aligned __P ((long int, long int, size_t));
+extern void _wordcopy_bwd_dest_aligned __P ((long int, long int, size_t));
 #define WORD_COPY_BWD(dst_ep, src_ep, nbytes_left, nbytes)		      \
   do									      \
     {									      \
