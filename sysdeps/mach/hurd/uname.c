@@ -23,16 +23,9 @@ Cambridge, MA 02139, USA.  */
 int
 uname (struct utsname *uname)
 {
-  startup_t init;
   error_t err;
 
-  /* init is the repository of system version information.  */
-  if (err = __USEPORT (PROC, __proc_getmsgport (port, 1, &init)))
-    return __hurd_fail (err);
-
-  err = __startup_uname (init, uname); /* Ask it.  */
-
-  __mach_port_deallocate (__mach_task_self (), init);
+  err = __USEPORT (PROC, __proc_uname (port, uname));
 
   return err ? __hurd_fail (err) : 0;
 }
