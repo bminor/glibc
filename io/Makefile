@@ -21,7 +21,7 @@
 #
 subdir	:= io
 
-headers := statbuf.h gnu/stat.h fcntlbits.h filebits.h fcntl.h utime.h
+headers := statbuf.h sys/stat.h fcntlbits.h filebits.h fcntl.h utime.h
 
 routines :=								      \
 	utime								      \
