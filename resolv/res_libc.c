@@ -25,6 +25,7 @@
 #include <arpa/nameser.h>
 #include <resolv.h>
 #include <libc-lock.h>
+#include <sys/stat.h>
 
 extern unsigned long long int __res_initstamp attribute_hidden;
 /* We have atomic increment operations on 64-bit platforms.  */
@@ -87,12 +88,34 @@ res_init(void) {
 	return (__res_vinit(&_res, 1));
 }
 
+static time_t resconf_mtime;
+__libc_lock_define_initialized (static, resconf_mtime_lock);
+
+/* Check if the modification time of resolv.conf has changed.
+   If so, have all threads re-initialize their resolver states */
+static void
+__res_check_resconf (void)
+{
+	struct stat statbuf;
+	if (stat (_PATH_RESCONF, &statbuf) == 0) {
+		__libc_lock_lock (resconf_mtime_lock);
+		if (statbuf.st_mtime != resconf_mtime) {
+			resconf_mtime = statbuf.st_mtime;
+			atomicinclock (lock);
+			atomicinc (__res_initstamp);
+			atomicincunlock (lock);
+		}
+		__libc_lock_unlock (resconf_mtime_lock);
+	}
+}
+
 /* Initialize resp if RES_INIT is not yet set or if res_init in some other
    thread requested re-initializing.  */
 int
 __res_maybe_init (res_state resp, int preinit)
 {
 	if (resp->options & RES_INIT) {
+		__res_check_resconf ();
 		if (__res_initstamp != resp->_u._ext.initstamp) {
 			if (resp->nscount > 0)
 				__res_iclose (resp, true);
