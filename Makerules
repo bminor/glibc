@@ -121,7 +121,72 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules
 	   echo "\$$(objpfx)%.dep: $$dir/%.c \$$(before-compile); \
 		\$$(+make-deps)";					      \
 	 done) > $@
-
+
+# The order of these rules is important.
+
+$(objpfx)%.o: %.S $(before-compile); $(compile-command.S)
+$(objpfx)%.dep: %.S $(before-compile); $(+make-deps)
+$(objpfx)%.o: %.s $(before-compile); $(compile-command.s)
+$(objpfx)%.dep: %.s; $(make-dummy-dep)
+$(objpfx)%.o: %.c $(before-compile); $(compile-command.c)
+$(objpfx)%.dep: %.c $(before-compile); $(+make-deps)
+
+ifndef compile-command.S
+compile-command.S = $(compile.S) $(OUTPUT_OPTION)
+endif
+ifndef compile-command.s
+compile-command.s = $(COMPILE.s) $< $(OUTPUT_OPTION)
+endif
+ifndef compile-command.c
+compile-command.c = $(compile.c) $(OUTPUT_OPTION)
+endif
+
+ifeq ($(notdir $(firstword $(CC))),gcc)
+# GCC can grok options after the file name, and it looks nicer that way.
+compile.S = $(CC) $< -c $(CPPFLAGS) $(asm-CPPFLAGS)
+compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
+else
+compile.S = $(COMPILE.S) $(asm-CPPFLAGS) $<
+compile.c = $(COMPILE.c) $<
+endif
+
+ifndef OUTPUT_OPTION
+ifdef objpfx
+# We need this for the output to go in the right place.  It will default to
+# empty if make was configured to work with a cc that can't grok -c and -o
+# together.  You can't compile the C library with such a compiler.
+OUTPUT_OPTION = -o $@
+endif
+endif
+
+S-CPPFLAGS = $(asm-CPPFLAGS)
++make-deps = $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
+	     sed $(sed-remove-objpfx) -e 's,$*\.o,$(@:.dep=.o) $@,' > $@
+ifneq (,$(objpfx))
+sed-remove-objpfx = -e 's@$(subst @,\@,$(objpfx))@$$(objpfx)@g'
+endif
+
++depfiles := $(strip $(sources:.c=.dep) $(addsuffix .dep,$(others) $(tests)))
++depfiles := $(addprefix $(objpfx),$(+depfiles))
+
+$(objpfx)depend-$(subdir): Makefile
+ifdef +depfiles
+# This used to simply use $(+depfiles) on the command line, but that tended
+# to overflow the arg limit on USG systems.  Since `sources' is in the
+# environment anyway, we do some shell processing on it instead.
+	for file in $(patsubst %,%.dep,$(others) $(tests)) \
+		    `echo $${sources} | sed 's/\.c/.dep/g'`; do \
+	  echo "include \$$(objpfx)$$file";	\
+	done > $@
+else
+	cp /dev/null $@
+endif
+
+ifneq ($(no_deps),t)
+# Include the generated dependencies of the sources in this directory.
+include $(objpfx)depend-$(subdir)
+endif
+
 # Maximize efficiency by minimizing the number of rules.
 .SUFFIXES:	# Clear the suffix list.
 # Add the suffixes we use.
@@ -158,40 +223,6 @@ export sysdep_routines := $(sysdep_routines)
 # This is the list of all object files, gotten by
 # replacing every ".c" in `sources' with a ".o".
 override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
-
-# The order of these rules is important.
-
-$(objpfx)%.o: %.S $(before-compile); $(compile-command.S)
-$(objpfx)%.o: %.s $(before-compile); $(compile-command.s)
-$(objpfx)%.o: %.c $(before-compile); $(compile-command.c)
-
-ifndef compile-command.S
-compile-command.S = $(compile.S) $(OUTPUT_OPTION)
-endif
-ifndef compile-command.s
-compile-command.s = $(COMPILE.s) $< $(OUTPUT_OPTION)
-endif
-ifndef compile-command.c
-compile-command.c = $(compile.c) $(OUTPUT_OPTION)
-endif
-
-ifeq ($(notdir $(firstword $(CC))),gcc)
-# GCC can grok options after the file name.
-compile.S = $(CC) $< -c $(CPPFLAGS) $(asm-CPPFLAGS)
-compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
-else
-compile.S = $(COMPILE.S) $(asm-CPPFLAGS) $<
-compile.c = $(COMPILE.c) $<
-endif
-
-ifndef OUTPUT_OPTION
-ifdef objpfx
-# We need this for the output to go in the right place.  It will default to
-# empty if make was configured to work with a cc that can't grok -c and -o
-# together.  You can't compile the C library with such a compiler.
-OUTPUT_OPTION = -o $@
-endif
-endif
 
 # This makes all the object files in the parent library archive.
 
@@ -281,50 +312,6 @@ install: install-no-libc.a
 $(+install): installdirs
 installdirs: $(..)mkinstalldirs
 	$(dir $<)$(notdir $<) $(sort $(dir $(+install)))
-
-S-CPPFLAGS = $(asm-CPPFLAGS)
-+make-deps = $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
-	     sed $(sed-remove-objpfx) -e 's,$*\.o,$(@:.dep=.o) $@,' > $@
-ifneq (,$(objpfx))
-sed-remove-objpfx = -e 's,$(objpfx),$$(objpfx),g'
-endif
-
-# N.B.: The order of these two rules is important.
-$(objpfx)%.dep: %.S $(before-compile)
-	$(+make-deps)
-$(objpfx)%.dep: %.c $(before-compile)
-	$(+make-deps)
-$(objpfx)%.dep: %.s
-	$(make-dummy-dep)
-
-+depfiles := $(strip $(sources:.c=.dep) $(addsuffix .dep,$(others) $(tests)))
-+depfiles := $(addprefix $(objpfx),$(+depfiles))
-
-$(objpfx)depend-$(subdir): Makefile
-ifdef +depfiles
-# This used to simply use $(+depfiles) on the command line, but that tended
-# to overflow the arg limit on USG systems.  Since `sources' is in the
-# environment anyway, we do some shell processing on it instead.
-	for file in $(patsubst %,%.dep,$(others) $(tests)) \
-		    `echo $${sources} | sed 's/\.c/.dep/g'`; do \
-	  echo "include \$$(objpfx)$$file";	\
-	done > $@
-else
-	cp /dev/null $@
-endif
-
-ifneq ($(no_deps),t)
-# Include the generated dependencies of the sources in this directory.
-ifdef have.make.that.groks.multiple.includes
-# Avoid the extra file and waiting for it, since we can.
-+depfiles := $(strip $(+depfiles))
-ifdef +depfiles
-include $(+depfiles)
-endif
-else
-include $(objpfx)depend-$(subdir)
-endif
-endif
 
 # Command to compile $< in $(objdir) using the native libraries.
 native-compile = cwd=`pwd`; cd $(@D); $(CC) $(native-CFLAGS) \
