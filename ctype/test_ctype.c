@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,10 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <stdlib.h>
 
+#define ISLOWER(c) ('a' <= (c) && (c) <= 'z')
+#define TOUPPER(c) (ISLOWER(c) ? 'A' + ((c) - 'a') : (c))
+#define XOR(e,f) (((e) && !(f)) || (!(e) && (f)))
+
 #ifdef	__GNUC__
 __inline
 #endif
@@ -39,41 +43,50 @@ int
 DEFUN(main, (argc, argv), int argc AND char **argv)
 {
   register unsigned short int c;
+  int lose = 0;
 
-  for (c = 0; c <= UCHAR_MAX; ++c) {
-    print_char(c);
-    if (isascii(c))
-      fputs(" isascii", stdout);
-    if (isalnum(c))
-      fputs(" isalnum", stdout);
-    if (isalpha(c))
-      fputs(" isalpha", stdout);
-    if (iscntrl(c))
-      fputs(" iscntrl", stdout);
-    if (isdigit(c))
-      fputs(" isdigit", stdout);
-    if (isgraph(c))
-      fputs(" isgraph", stdout);
-    if (islower(c))
-      fputs(" islower", stdout);
-    if (isprint(c))
-      fputs(" isprint", stdout);
-    if (ispunct(c))
-      fputs(" ispunct", stdout);
-    if (isspace(c))
-      fputs(" isspace", stdout);
-    if (isupper(c))
-      fputs(" isupper", stdout);
-    if (isxdigit(c))
-      fputs(" isxdigit", stdout);
-    if (isblank(c))
-      fputs(" isblank", stdout);
-    fputs("; lower = ", stdout);
-    print_char(tolower(c));
-    fputs("; upper = ", stdout);
-    print_char(toupper(c));
-    putchar('\n');
-  }
+  for (c = 0; c <= UCHAR_MAX; ++c)
+    {
+      print_char (c);
 
-  exit(EXIT_SUCCESS);
+      if (XOR (islower (c), ISLOWER (c)) || toupper (c) != TOUPPER (c))
+	{
+	  fputs (" BOGUS", stdout);
+	  ++lose;
+	}
+
+      if (isascii(c))
+	fputs(" isascii", stdout);
+      if (isalnum(c))
+	fputs(" isalnum", stdout);
+      if (isalpha(c))
+	fputs(" isalpha", stdout);
+      if (iscntrl(c))
+	fputs(" iscntrl", stdout);
+      if (isdigit(c))
+	fputs(" isdigit", stdout);
+      if (isgraph(c))
+	fputs(" isgraph", stdout);
+      if (islower(c))
+	fputs(" islower", stdout);
+      if (isprint(c))
+	fputs(" isprint", stdout);
+      if (ispunct(c))
+	fputs(" ispunct", stdout);
+      if (isspace(c))
+	fputs(" isspace", stdout);
+      if (isupper(c))
+	fputs(" isupper", stdout);
+      if (isxdigit(c))
+	fputs(" isxdigit", stdout);
+      if (isblank(c))
+	fputs(" isblank", stdout);
+      fputs("; lower = ", stdout);
+      print_char(tolower(c));
+      fputs("; upper = ", stdout);
+      print_char(toupper(c));
+      putchar('\n');
+    }
+
+  exit (lose ? EXIT_FAILURE : EXIT_SUCCESS);
 }
