@@ -36,14 +36,14 @@ server-interfaces	:= hurd/msg
 
 routines = $(interface-routines) \
 	   hurdid hurdpath hurdpid hurdports \
-	   hurdexec fexecve \
+	   $(XXX hurdexec) fexecve \
 	   __setauth setauth \
 	   __pid2task __task2pid pid2task task2pid \
 	   getuids setuids getumask fchroot \
 	   hurdsock hurdauth \
 	   privports \
 	   msgportdemux \
-#	   fopenport __fopenport \
+	   $(XXX fopenport __fopenport) \
 	   vpprintf \
 	   $(sig) $(dtable)
 sig	= hurdsig startsig init-fault msging_p hurd-raise \
