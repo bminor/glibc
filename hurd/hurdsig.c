@@ -391,16 +391,23 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       if (ss->suspended != MACH_PORT_NULL)
 	{
 	  /* There is a sigsuspend waiting.  Tell it to wake up.  */
+	  error_t err;
 	  mach_msg_header_t msg;
+	  err = __mach_port_insert_right (__mach_task_self (),
+					  ss->suspended, ss->suspended,
+					  MACH_MSG_TYPE_MAKE_SEND);
+	  assert (err == KERN_SUCCESS);
 	  msg.msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_MOVE_SEND, 0);
 	  msg.msgh_remote_port = ss->suspended;
 	  msg.msgh_local_port = MACH_PORT_NULL;
 	  /* These values do not matter.  */
-	  msg.msgh_id = 0x8675309; /* Jenny, Jenny.  */
+	  msg.msgh_id = 8675309; /* Jenny, Jenny.  */
 	  msg.msgh_seqno = 17;	/* Random.  */
 	  ss->suspended = MACH_PORT_NULL;
-	  __mach_msg (&msg, MACH_SEND_MSG, sizeof msg, 0,
-		      MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
+	  err = __mach_msg (&msg, MACH_SEND_MSG, sizeof msg, 0,
+			    MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE,
+			    MACH_PORT_NULL);
+	  assert (err == MACH_MSG_SUCCESS);
 	}
       __mutex_unlock (&ss->lock);
     }
