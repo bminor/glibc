@@ -4,6 +4,9 @@ ifndef mach-srcdir
 mach-srcdir = ../../mach
 endif
 
+# Look for header files in mach/ under the top-level library source directory.
+includes += -I$(..)mach
+
 # When compiling, use the Mach header files directly from the kernel sources.
 includes += -I$(mach-srcdir)
 
