@@ -676,8 +676,8 @@ Standard Signals
 * Alarm Signals::               Used to indicate expiration of timers.
 * Asynchronous I/O Signals::    Used to indicate input is available.
 * Job Control Signals::         Signals used to support job control.
-* Miscellaneous Signals::       Miscellaneous Signals
-* Nonstandard Signals::         Implementations can support other signals.
+* Operation Error Signals::     Used to report operational system errors.
+* Miscellaneous Signals::       Miscellaneous Signals.
 * Signal Messages::             Printing a message describing a signal.
 
 Specifying Signal Actions
