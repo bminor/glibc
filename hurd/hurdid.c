@@ -40,6 +40,7 @@ _hurd_check_ids (void)
 			       p->nuids * sizeof (uid_t));
 	      p->uids = NULL;
 	    }
+	  p->nuids = 0;
 	  if (p->gids)
 	    {
 	      __vm_deallocate (__mach_task_self (),
@@ -47,6 +48,7 @@ _hurd_check_ids (void)
 			       p->ngids * sizeof (gid_t));
 	      p->gids = NULL;
 	    }
+	  p->ngids = 0;
 	}
 
       error_t err;
