@@ -232,12 +232,15 @@ distribute  := README INSTALL NOTES COPYING.LIB COPYING ChangeLog NEWS	\
 	       configure configure.in aclocal.m4 config.sub config.guess\
 	       munch-tmpl.c munch.awk gnu-stabs.h sysdep.h install.sh
 
-export distribute := $(strip $(distribute))
-export generated := $(generated) stubs.h
+distribute := $(strip $(distribute))
+generated := $(generated) stubs.h
 
 .PHONY: dist
 dist: Make-dist $(distribute)
-	$(MAKE) -f $< no_deps=t $(Make-dist-args)
+	$(MAKE) -f $< no_deps=t \
+		'distribute=$(distribute)' \
+		'generated=$(generated)' \
+		$(Make-dist-args)
 
 README: README.template version.c ; # Make-dist should update README.
 
