@@ -26,17 +26,19 @@ Cambridge, MA 02139, USA.  */
 extern FILE *mach_open_devstream (device_t dev);
 
 int
-main (int argc, char **argv, char **envp)
+main (void)
 {
   error_t err;
   mach_port_t device, consdev;
   FILE *consf;
 
-  device = pid2task (-2);
+  err = get_privileged_ports (NULL, &device);
+  if (err)
+    _exit (err);
   err = device_open (device, D_WRITE, "console", &consdev);
   mach_port_deallocate (mach_task_self (), device);
   if (err)
-    exit (err);
+    _exit (err);
 
   consf = mach_open_devstream (consdev);
   if (consf == NULL)
