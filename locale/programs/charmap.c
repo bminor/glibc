@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -445,7 +445,6 @@ argument to <%s> must be a single character"),
 	    lr_error (cmfile, _("too many bytes in character encoding"));
 	  else
 	    charset_new_char (cmfile, &result->char_table,
-			      now->val.charcode.nbytes,
 			      now->val.charcode.val, from_name, to_name);
 
 	  /* Ignore trailing comment silently.  */
