@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 {
   error_t err;
   file_t crdir, cwdir, rcrdir, rcwdir, io;
-  int dealloc_crdir, dealloc_cwdir;
+  struct _hurd_port_userlink crdir_ulink, cwdir_ulink;
   int flags;
 
   __mutex_lock (&_hurd_id.lock);
@@ -62,7 +62,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 	goto lose;
     }
 
-  crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir);
+  crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink);
   err = __io_reauthenticate (crdir, _hurd_pid);
   if (!err)
     {
@@ -70,11 +70,11 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 				      crdir, _hurd_pid, &rcrdir);
       __mach_port_deallocate (__mach_task_self (), crdir);
     }
-  _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir, crdir);
+  _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink, crdir);
 
   if (!err)
     {
-      cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &dealloc_cwdir);
+      cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink);
       err = __io_reauthenticate (cwdir, _hurd_pid);
       if (!err)
 	{
@@ -82,7 +82,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 					  cwdir, _hurd_pid, &rcwdir);
 	  __mach_port_deallocate (__mach_task_self (), cwdir);
 	}
-      _hurd_port_free (&_hurd_ports[INIT_PORT_CWDIR], &dealloc_cwdir, cwdir);
+      _hurd_port_free (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink, cwdir);
     }
 
   /* We are done with _hurd_rid_auth now.  */
