@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/paths.h>
 #include <fcntl.h>
+#include "stdio/_itoa.h"
 
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
@@ -32,33 +33,58 @@ DEFUN(__mknod, (path, mode, dev),
 {
   file_t node;
   error_t err;
+  char buf[100], *bp;
   const char *translator;
-  unsigned int n;
+  size_t len;
 
   if (S_ISCHR (mode))
-    translator = _HURD_CHRDEV;
+    {
+      translator = _HURD_CHRDEV;
+      len = sizeof (_HURD_CHRDEV);
+    }
   else if (S_ISBLK (mode))
-    translator = _HURD_BLKDEV;
+    {
+      translator = _HURD_BLKDEV;
+      len = sizeof (_HURD_BLKDEV);
+    }
   else if (S_ISFIFO (mode))
-    translator = _HURD_FIFO;
+    {
+      translator = _HURD_FIFO;
+      len = sizeof (_HURD_FIFO);
+    }
   else
     {
       errno = EINVAL;
       return -1;
     }
+  
+  if (translator != _HURD_FIFO)
+    {
+      /* We set the translator to "ifmt\0major\0minor\0", where IFMT
+	 depends on the S_IFMT bits of our MODE argument, and MAJOR and
+	 MINOR are ASCII decimal (octal or hex would do as well)
+	 representations of our arguments.  Thus the convention is that
+	 CHRDEV and BLKDEV translators are invoked with two non-switch
+	 arguments, giving the major and minor device numbers in %i format. */
 
+      bp = buf + sizeof (buf);
+      *--bp = '\0';
+      bp = _itoa (minor (dev), bp, 10, 0);
+      *--bp = '\0';
+      bp = _itoa (major (dev), bp, 10, 0);
+      *--bp = '\0';
+      memcpy (bp - len, translator, len);
+      translator = buf;
+      len += buf + sizeof (buf) - bp;
+    }
+
+  
   node = __path_lookup (path, O_WRITE|O_CREAT|O_EXCL, mode & 0777);
   if (node == MACH_PORT_NULL)
     return -1;
 
   err = __file_set_translator (node, FS_TRANS_EXCL, 0,
-			       translator, strlen (translator) + 1,
-			       MACH_PORT_NULL);
-
-  if (!err)
-    err = __io_write (node, (void *) &dev, sizeof (dev), -1, &n);
-  if (!err && n != sizeof (dev))
-    err = EIO;
+			       translator, len, MACH_PORT_NULL);
 
   if (err)
     /* XXX The node still exists.... */
