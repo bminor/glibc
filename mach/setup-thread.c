@@ -43,7 +43,7 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc)
      be deleted to maximize the effect.)  */
   stack = VM_MAX_ADDRESS - STACK_SIZE - __vm_page_size;
 
-  if (error = __vm_allocate (task, &stack, STACK_SIZE + __vm_page_size, 1))
+  if (error = __vm_allocate (task, &stack, STACK_SIZE + __vm_page_size, 0))
     return error;
 
   /* Create a red zone */
