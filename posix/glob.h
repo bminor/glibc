@@ -74,10 +74,10 @@ typedef struct
    Otherwise, `glob' returns zero.  */
 extern int glob __P ((const char *__pattern, int __flags,
 		      int (*__errfunc) __P ((const char *, int)),
-		      glob_t * __pglob));
+		      glob_t *__pglob));
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
-extern void globfree __P ((glob_t * __pglob));
+extern void globfree __P ((glob_t *__pglob));
 
 #ifdef	__cplusplus
 }
