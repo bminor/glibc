@@ -1,3 +1,8 @@
+1999-10-11  Cristian Gafton  <gafton@redhat.com> 
+ 
+        * sysdeps/unix/sysv/linux/alpha/bits/sigaction.h: Declare
+	SA_SIGINFO.
+ 
 1999-10-11  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/unix/sysv/linux/configure.in: Fix typo.
