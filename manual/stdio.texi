@@ -678,7 +678,8 @@ useful for printing error messages, tables of data, and the like.
 * Other Output Conversions::    Details about formatting of strings,
                                  characters, pointers, and the like.
 * Formatted Output Functions::  Descriptions of the actual functions.
-* Variable Arguments Output::    @code{vprintf} and friends.
+* Dynamic Output::		Functions that allocate memory for the output.
+* Variable Arguments Output::   @code{vprintf} and friends.
 * Parsing a Template String::   What kinds of args does a given template
                                  call for? 
 @end menu
