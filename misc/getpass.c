@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,19 +20,39 @@ Cambridge, MA 02139, USA.  */
 #include <termios.h>
 #include <unistd.h>
 
+/* It is desireable to use this bit on systems that have it.
+   The only bit of terminal state we want to twiddle is echoing, which is
+   done in software; there is no need to change the state of the terminal
+   hardware.  */
+
+#ifndef TCSASOFT
+#define TCSASOFT 0
+#endif
+
 char *
 getpass (prompt)
      const char *prompt;
 {
-  FILE *in;
+  FILE *in, *out;
   struct termios t;
   int echo_off;
   static char *buf = NULL;
   static size_t bufsize = 0;
+  ssize_t nread;
+
+  /* Try to write to and read from the terminal if we can.
+     If we can't open the terminal, use stderr and stdin.  */
 
   in = fopen ("/dev/tty", "w+");
   if (in == NULL)
-    in = stdin;
+    {
+      in = stdin;
+      out = stderr;
+    }
+  else
+    out = in;
+
+  /* Turn echoing off if it is on now.  */
 
   if (tcgetattr (fileno (in), &t) == 0)
     {
@@ -48,16 +68,24 @@ getpass (prompt)
   else
     echo_off = 0;
 
-  fputs (prompt, in == stdin ? stderr : in);
-  fflush (in == stdin ? stderr : in);
+  /* Write the prompt.  */
+  fputs (prompt, out);
+  fflush (out);
 
-  if (__getline (&buf, &bufsize, in) < 0 && buf != NULL)
+  /* Read the password.  */
+  nread = __getline (&buf, &bufsize, in);
+  if (nread < 0 && buf != NULL)
     buf[0] = '\0';
+  else if (buf[nread - 1] == '\n')
+    /* Remove the newline.  */
+    buf[nread] = '\0';
 
+  /* Restore echoing.  */
   if (echo_off)
     (void) tcsetattr (fileno (in), TCSAFLUSH|TCSASOFT, &t);
 
   if (in != stdin)
+    /* We opened the terminal; now close it.  */
     fclose (in);
 
   return buf;
