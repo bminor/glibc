@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
+#include <sys/types.h>
 #include <hurd.h>
 #include <fcntl.h>
 
@@ -27,11 +28,11 @@ Cambridge, MA 02139, USA.  */
 
 /* Read up to N chars into BUF from COOKIE.
    Return how many chars were read, 0 for EOF or -1 for error.  */
-int
+ssize_t
 DEFUN(__stdio_read, (cookie, buf, n),
       PTR cookie AND register char *buf AND register size_t n)
 {
-  size_t nread;
+  unsigned int nread;
   error_t err;
   char *bufp = buf;
 
@@ -50,11 +51,11 @@ DEFUN(__stdio_read, (cookie, buf, n),
 
 /* Write up to N chars from BUF to COOKIE.
    Return how many chars were written or -1 for error.  */
-int
+ssize_t
 DEFUN(__stdio_write, (cookie, buf, n),
       PTR cookie AND register CONST char *buf AND register size_t n)
 {
-  size_t wrote;
+  unsigned int wrote;
   error_t err;
 
   if (err = __io_write ((io_t) cookie, buf, n, -1, &wrote))
@@ -70,7 +71,7 @@ int
 DEFUN(__stdio_seek, (cookie, pos, whence),
       PTR cookie AND fpos_t *pos AND int whence)
 {
-  error_t error = __file_seek ((file_t) cookie, *pos, whence, pos);
+  error_t error = __io_seek ((file_t) cookie, *pos, whence, pos);
   if (error)
     return __hurd_fail (error);
   return 0;
@@ -94,7 +95,6 @@ int
 DEFUN(__stdio_open, (filename, m, cookieptr),
       CONST char *filename AND __io_mode m AND PTR *cookieptr)
 {
-  error_t error;
   int flags;
   file_t port;
 
@@ -126,7 +126,7 @@ void
 DEFUN(__stdio_errmsg, (msg, len), CONST char *msg AND size_t len)
 {
   io_t server;
-  size_t wrote;
+  unsigned int wrote;
 
   server = __getdport (2);
   __io_write (server, msg, len, -1, &wrote);
