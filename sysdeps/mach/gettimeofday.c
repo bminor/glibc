@@ -28,17 +28,18 @@ int
 DEFUN(__gettimeofday, (tv, tz),
       struct timeval *tv AND struct timezone *tz)
 {
-  error_t err = __host_get_time (__mach_host_self (), tv);
-  if (err)
+  kern_return_t err;
+
+  if (tz != NULL)
+    {
+      errno = ENOSYS;
+      return -1;
+    }
+
+  if (err = __host_get_time (__mach_host_self (), (time_value_t *) tv))
     {
       errno = err;
       return -1;
-    }
-  if (tz != NULL)
-    {
-      /* Lose.  */
-      tz->tz_minuteswest = 0;
-      tz->tz_dsttime = 0;
     }
   return 0;
 }
