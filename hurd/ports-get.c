@@ -28,8 +28,8 @@ getbootstrap (mach_port_t *result)
 
 error_t (*_hurd_ports_getters[INIT_PORT_MAX]) (mach_port_t *result) =
   {
-    [INIT_PORT_BOOTSTRAP] = getbootstrap
-  }
+    [INIT_PORT_BOOTSTRAP] = getbootstrap,
+  };
 
 error_t
 _hurd_ports_get (int which, mach_port_t *result)
