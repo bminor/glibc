@@ -207,7 +207,7 @@ extern void _hurd_siginfo_handler (int);
    either of these cases, we retry the entire operation, discarding the old
    message and reference ports and fetch them anew.  */
 
-#define _HURD_MSGPORT_RPC(fetch_msgport_expr, fetch_refport_expr, rpc_expr)   \
+#define HURD_MSGPORT_RPC(fetch_msgport_expr, fetch_refport_expr, rpc_expr)   \
 ({									      \
     error_t __err;							      \
     mach_port_t msgport, refport = MACH_PORT_NULL;			      \
