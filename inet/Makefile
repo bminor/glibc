@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,22 +21,14 @@
 #
 subdir	:= inet
 
-headers	:= netdb.h resolv.h \
-	   netinet/in.h  \
-	   sys/bitypes.h \
-	   $(wildcard arpa/*.h protocols/*.h)
-distribute := ../conf/portability.h
+headers	:= netinet/in.h $(wildcard arpa/*.h protocols/*.h)
 
 routines := ntohl ntohs htonl htons		\
 	    inet_addr inet_lnaof inet_mkadr	\
 	    inet_netof inet_ntoa inet_net	\
-	    getnetbyad getnetbynm getnetent	\
 	    getproto getprtent getprtname	\
 	    getsrvbynm getsrvbypt getservent	\
-	    res_comp res_debug res_init res_mkqry res_query res_send	\
-	    gethstnmad sethostent	    \
 	    rcmd rexec
-aux	 := herror
 
 # No warnings about losing BSD code.
 override +gccwarn := -w
