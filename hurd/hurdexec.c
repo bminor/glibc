@@ -114,7 +114,7 @@ _hurd_exec (task_t task, file_t file,
 	ints[i] = 0;
       }
 
-  ss = _hurd_thread_sigstate (__mach_thread_self ());
+  ss = _hurd_self_sigstate ();
   ints[INIT_SIGMASK] = ss->blocked;
   ints[INIT_SIGPENDING] = ss->pending;
   ints[INIT_SIGIGN] = 0;
