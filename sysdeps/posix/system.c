@@ -62,10 +62,10 @@ DEFUN(system, (line), register CONST char *line)
 
 #ifndef WAITPID_CANNOT_BLOCK_SIGCHLD
 
-/* SCO 3.2v4 has a bug where `waitpid' will never return if SIGCHLD is blocked.
-   This 
-   They have acknowledged that this is a bug but I have not seen nor heard
-   of any forthcoming fix.  
+/* SCO 3.2v4 has a bug where `waitpid' will never return if SIGCHLD is
+   blocked.  This makes it impossible for `system' to be implemented in
+   compliance with POSIX.2-1992.  They have acknowledged that this is a bug
+   but I have not seen nor heard of any forthcoming fix.  */
 
   __sigemptyset (&block);
   __sigaddset (&block, SIGCHLD);
