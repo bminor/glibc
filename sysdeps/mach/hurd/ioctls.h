@@ -39,27 +39,27 @@ union __ioctl
 	enum { IOC_8, IOC_16, IOC_32 } type0:2, type1:2, type2:2;
 	unsigned int count0:5, count1:5, count2:3;
 	unsigned int group:4, command:7;
-      } t;
+      } __t;
     /* We use this structure to construct and insert type information.  */
     struct
       {
 	enum __ioctl_dir inout:2;
 	unsigned int type:19;
 	unsigned int group:4, command:7;
-      } s;
+      } __s;
     /* We use the plain integer to pass around.  */
-    int i;
+    int __i;
   };
 
 /* Construct an ioctl from all the broken-out fields.  */
 #define	_IOCT(inout, group, num, t0, c0, t1, c1, t2, c2)		      \
   (((union __ioctl)							      \
-    { t: { (inout), (t0), (t1), (t2), (c0), (c1), (c2),			      \
-	     ((group) - 'a') >> 2, (num) } }).i)
+    { __t: { (inout), (t0), (t1), (t2), (c0), (c1), (c2),		      \
+	       ((group) - 'a') >> 2, (num) } }).i)
 
 /* Construct an ioctl from constructed type plus other fields.  */
 #define	_IOC(inout, group, num, type) \
-  (((union __ioctl) { s: { (inout), (type), (group), (num) } }).__i)
+  (((union __ioctl) { __s: { (inout), (type), (group), (num) } }).__i)
 
 /* Standard flavors of ioctls.
    _IOT_foobar is defined either in this file,
