@@ -1,3 +1,13 @@
+2002-04-20  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/iso-2002-kr.c (MAX_NEEDED_FROM): Set to 4.
+	(BODY for FROM_LOOP): Fix comparisons between inptr and inend.
+
+2002-04-20  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/johab.c (BODY for FROM_LOOP): Change type of i, m, f,
+	to avoid gcc warning.
+
 2002-04-22  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/ldconfig.h: New.
