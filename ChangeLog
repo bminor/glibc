@@ -174,6 +174,11 @@
 	* sysdeps/unix/sysv/linux/sparc/sparc64/oldgetrlimit64.c: Removed.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/oldsetrlimit64.c: Removed.
 
+1999-12-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/strsep.c: If delim string has only one character
+	don't run over end of string.
+
 1999-12-15  Andreas Schwab  <schwab@suse.de>
 
 	* rt/aio.h: Fix typo.  Reported by Kurt Garloff
