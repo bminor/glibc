@@ -1,5 +1,5 @@
 det_endian.c
-../../math/bsd/common/mathimpl.h
+../../math/bsd/common_source/mathimpl.h
 ../../math/bsd/common/trig.h
 ../../math/bsd/sys/stdc.h
 ../../math/bsd/common/sincos.c
