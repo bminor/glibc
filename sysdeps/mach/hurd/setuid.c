@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <hurd.h>
 
 /* Set the user ID of the calling process to UID.
    If the calling process is the super-user, the real
@@ -28,55 +30,39 @@ int
 DEFUN(__setuid, (uid), uid_t uid)
 {
   auth_t newauth;
-  int i;
+  error_t err;
 
   __mutex_lock (&_hurd_idlock);
-  if (!_hurd_id_valid)
+  err = _hurd_check_ids ();
+
+  if (!err)
     {
-      error_t err = _HURD_PORT_USE (&_hurd_auth,
-				    __auth_getids (port, &_hurd_id));
-      if (err)
-	{
-	  __mutex_unlock (&_hurd_idlock);
-	  return __hurd_fail (err);
-	}
-      _hurd_id_valid = 1;
+      /* Make a new auth handle which has UID as the real uid,
+	 and as the first element in the list of effective uids.  */
+
+      uid_t newgen[_hurd_id.gen.nuids + 1];
+      uid_t newaux[_hurd_id.aux.nuids];
+      
+      newgen[0] = uid;
+      memcpy (&newgen[1], _hurd_id.gen.uids,
+	      _hurd_id.gen.nuids * sizeof (uid_t));
+      newaux[0] = uid;
+      memcpy (&newaux[1], _hurd_id.aux.uids,
+	      (_hurd_id.aux.nuids - 1) * sizeof (uid_t));
+
+      err = __USEPORT (AUTH, __auth_makeauth
+		       (port,
+			_hurd_id.gen.uids, _hurd_id.gen.nuids,
+			_hurd_id.aux.uids, _hurd_id.aux.nuids,
+			newgen, 1 + _hurd_id.gen.nuids,
+			newaux, _hurd_id.aux.nuids));
     }
-
-  for (i = 0; i < _hurd_id.nuids; ++i)
-    if (_hurd_id.uids[i] == uid)
-      {
-	/* We already have this uid.  Swap it with uids[0]
-	   so geteuid will return it.  */
-	_hurd_id.uids[i] = _hurd_id.uids[0];
-	break;
-      }
-
-  if (i == _hurd_id.nuids)
-    {
-      if (_hurd_id.nuids == sizeof (_hurd_id.uids) / sizeof (_hurd_id.uids[0]))
-	{
-	  __mutex_unlock (&_hurd_idlock);
-	  errno = ENOMEM;	/* ? */
-	  return -1;
-	}
-      else
-	{
-	  _hurd_id.uids[_hurd_id.nuids++] = _hurd_id.uids[0];
-	  _hurd_id.uids[0] = uid;
-	}
-    }
-
-  _hurd_id.ruid = _hurd_id.uids[0];
-
-  err = _HURD_PORT_USE (&_hurd_auth,
-			__auth_makeauth (port, &_hurd_id, &newauth));
-  _hurd_id_valid = 0;
-  __mutex_unlock (&_hurd_idlock);
+  __mutex_unlock (&_hurd_id.lock);
 
   if (err)
     return __hurd_fail (err);
 
+  /* Install the new handle and reauthenticate everything.  */
   err = __setauth (newauth);
   __mach_port_deallocate (__mach_task_self (), newauth);
   return err;
