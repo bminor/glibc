@@ -1,3 +1,8 @@
+1999-08-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/res_send.c (res_send): Don't test file descriptor for
+	range, we use poll now.  [PR libc/1240]
+
 1999-08-05  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (O_RSYNC, O_DSYNC):
