@@ -42,7 +42,9 @@ Library General Public License'' must be approved for accuracy by the
 Foundation.
 @end ifinfo
 
+@iftex
 @shorttitlepage The GNU C Library Reference Manual
+@end iftex
 @titlepage
 @center @titlefont{The GNU C Library}
 @sp 1
