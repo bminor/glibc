@@ -22,19 +22,19 @@ Cambridge, MA 02139, USA.  */
 
 #ifndef	_SIGNAL_H
 
+__BEGIN_DECLS
+
 #if	!defined(__need_sig_atomic_t) && !defined(__need_sigset_t)
 #define	_SIGNAL_H	1
 #include <features.h>
-
-__BEGIN_DECLS
-
 #endif
-
-#include <gnu/types.h>
-#include <gnu/signal.h>
 
 #define	 __need_size_t
 #include <stddef.h>
+
+#include <gnu/types.h>
+#include <sigset.h>		/* __sigset_t, __sig_atomic_t.  */
+#include <signum.h>
 
 #if	!defined(__sig_atomic_t_defined) &&	\
   (defined(_SIGNAL_H) || defined(__need_sig_atomic_t))
@@ -46,6 +46,9 @@ typedef __sig_atomic_t sig_atomic_t;
 
 #ifdef	_SIGNAL_H
 
+/* Type of a signal handler.  */
+typedef void (*__sighandler_t) __P ((int));
+
 /* Set the handler for the signal SIG to HANDLER,
    returning the old handler, or SIG_ERR on error.  */
 extern __sighandler_t signal __P ((int __sig, __sighandler_t __handler));
@@ -56,9 +59,6 @@ extern __sighandler_t signal __P ((int __sig, __sighandler_t __handler));
 extern int __kill __P ((__pid_t __pid, int __sig));
 #ifdef	__USE_POSIX
 extern int kill __P ((int __pid, int __sig));
-#ifdef	__OPTIMIZE__
-#define	kill(pid, sig)	__kill((pid), (sig))
-#endif /* Optimizing.  */
 #endif /* Use POSIX.  */
 
 #ifdef	__USE_BSD
@@ -75,12 +75,6 @@ extern int raise __P ((int __sig));
 /* SVID names for the same things.  */
 extern __sighandler_t ssignal __P ((int __sig, __sighandler_t __handler));
 extern int gsignal __P ((int __sig));
-
-#ifdef	__OPTIMIZE__
-#define	gsignal(sig)		raise(sig)
-#define	ssignal(sig, handler)	signal((sig), (handler))
-#endif /* Optimizing.  */
-
 #endif /* Use SVID.  */
 
 
@@ -100,10 +94,6 @@ extern int __sigpause __P ((int __mask));
 extern int sigblock __P ((int __mask));
 extern int sigsetmask __P ((int __mask));
 extern int sigpause __P ((int __mask));
-
-#define	sigblock	__sigblock
-#define	sigsetmask	__sigsetmask
-#define	sigpause	__sigpause
 #endif /* Use BSD.  */
 
 
@@ -112,7 +102,7 @@ extern int sigpause __P ((int __mask));
 #endif
 
 #ifdef	__USE_GNU
-#define	sighandler_t	__sighandler_t
+typedef __sighandler_t sighandler_t;
 #endif
 
 #endif /* <signal.h> included.  */
@@ -122,7 +112,7 @@ extern int sigpause __P ((int __mask));
 
 #if	!defined(__sigset_t_defined) &&	\
    (defined(_SIGNAL_H) || defined(__need_sigset_t))
-#define	sigset_t	__sigset_t
+typedef __sigset_t sigset_t;
 #define	__sigset_t_defined	1
 #endif /* `sigset_t' not defined and <signal.h> or need `sigset_t'.  */
 #undef	__need_sigset_t
@@ -130,24 +120,34 @@ extern int sigpause __P ((int __mask));
 #ifdef	_SIGNAL_H
 
 /* Clear all signals from SET.  */
-extern int sigemptyset __P ((sigset_t * __set));
+extern int sigemptyset __P ((sigset_t *__set));
 
 /* Set all signals in SET.  */
-extern int sigfillset __P ((sigset_t * __set));
+extern int sigfillset __P ((sigset_t *__set));
 
 /* Add SIGNO to SET.  */
-extern int sigaddset __P ((sigset_t * __set, int __signo));
+extern int sigaddset __P ((sigset_t *__set, int __signo));
 
 /* Remove SIGNO from SET.  */
-extern int sigdelset __P ((sigset_t * __set, int __signo));
+extern int sigdelset __P ((sigset_t *__set, int __signo));
 
 /* Return 1 if SIGNO is in SET, 0 if not.  */
-extern int sigismember __P ((__const sigset_t * __set, int signo));
+extern int sigismember __P ((__const sigset_t *__set, int signo));
+
+#ifdef	__OPTIMIZE__
+/* <sigset.h> defines the __ versions as macros that do the work.  */
+#define	sigemptyset(set)	__sigemptyset(set)
+#define	sigfillset(set)		__sigfillset(set)
+#define	sigaddset(set, signo)	__sigaddset(set, signo)
+#define	sigdelset(set, signo)	__sigdelset(set, signo)
+#define	sigismember(set, signo)	__sigismember(set, signo)
+#endif
 
 /* Get and/or change the set of blocked signals.  */
-extern int __sigprocmask __P ((int __how, __const sigset_t * __set,
-			       sigset_t * __oset));
-extern int sigprocmask __P ((int __how, sigset_t * __set, sigset_t * __oset));
+extern int __sigprocmask __P ((int __how,
+			       __const sigset_t *__set, sigset_t *__oset));
+extern int sigprocmask __P ((int __how,
+			     __const sigset_t *__set, sigset_t *__oset));
 
 /* Values for the HOW argument to `sigprocmask'.  */
 #define	SIG_BLOCK	1	/* Block signals.  */
@@ -157,9 +157,13 @@ extern int sigprocmask __P ((int __how, sigset_t * __set, sigset_t * __oset));
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
-extern int sigsuspend __P ((__const sigset_t * __set));
+extern int sigsuspend __P ((__const sigset_t *__set));
 
-/* Bits the in `sa_flags' field of a `struct sigaction'.  */
+/* Get the system-specific definitions of
+   `struct sigaction' and the `__SA_*' constants.  */
+#include <sigaction.h>
+
+/* Bits in the `sa_flags' field of a `struct sigaction'.  */
 #ifdef	__USE_BSD
 #define	SA_ONSTACK	__SA_ONSTACK	/* Take signal on signal stack.  */
 #define	SA_RESTART	__SA_RESTART	/* No syscall restart on sig ret.  */
@@ -168,23 +172,13 @@ extern int sigsuspend __P ((__const sigset_t * __set));
 #define	SA_NOCLDSTOP	__SA_NOCLDSTOP	/* No SIGCHLD when children stop.  */
 
 /* Get and/or set the action for signal SIG.  */
-extern int __sigaction __P ((int __sig, __const struct __sigaction * __act,
-			     struct __sigaction * __oact));
-extern int sigaction __P ((int __sig, __const struct __sigaction * __act,
-			   struct __sigaction * __oact));
-
-#define	sigaction	__sigaction
+extern int __sigaction __P ((int __sig, __const struct __sigaction *__act,
+			     struct __sigaction *__oact));
+extern int sigaction __P ((int __sig, __const struct __sigaction *__act,
+			   struct __sigaction *__oact));
 
 /* Put in SET all signals that are blocked and waiting to be delivered.  */
-extern int sigpending __P ((sigset_t * __set));
-
-#define	sigemptyset	__sigemptyset
-#define	sigfillset	__sigfillset
-#define	sigaddset	__sigaddset
-#define	sigdelset	__sigdelset
-#define	sigismember	__sigismember
-#define	sigprocmask	__sigprocmask
-#define	sigaction	__sigaction
+extern int sigpending __P ((sigset_t *__set));
 
 #endif /* <signal.h> included.  */
 
@@ -193,14 +187,14 @@ extern int sigpending __P ((sigset_t * __set));
 #if	defined(_SIGNAL_H) && defined(__USE_BSD)
 
 /* Structure passed to `sigvec'.  */
-struct __sigvec
-{
-  __sighandler_t sv_handler;	/* Signal handler.  */
-  int sv_mask;			/* Mask of signals to be blocked.  */
+struct sigvec
+  {
+    __sighandler_t sv_handler;	/* Signal handler.  */
+    int sv_mask;		/* Mask of signals to be blocked.  */
 
-  int sv_flags;			/* Flags (see below).  */
-#define	sv_onstack	sv_flags/* 4.2 BSD compatibility.  */
-};
+    int sv_flags;		/* Flags (see below).  */
+#define	sv_onstack	sv_flags /* 4.2 BSD compatibility.  */
+  };
 
 /* Bits in `sv_flags'.  */
 #define	SV_ONSTACK	(1 << 0)/* Take the signal on the signal stack.  */
@@ -213,11 +207,10 @@ struct __sigvec
    If the SV_RESETHAND bit is set in `sv_flags', the handler for SIG will be
    reset to SIG_DFL before `sv_handler' is entered.  If OVEC is non-NULL,
    it is filled in with the old information for SIG.  */
-extern int __sigvec __P ((int __sig, __const struct __sigvec * __vec,
-			  struct __sigvec * __ovec));
-extern int sigvec __P ((int __sig, __const struct __sigvec * __vec,
-			struct __sigvec * __ovec));
-#define	sigvec	__sigvec
+extern int __sigvec __P ((int __sig, __const struct sigvec *__vec,
+			  struct sigvec *__ovec));
+extern int sigvec __P ((int __sig, __const struct sigvec *__vec,
+			struct sigvec *__ovec));
 
 
 /* If INTERRUPT is nonzero, make signal SIG interrupt system calls
@@ -228,38 +221,36 @@ extern int siginterrupt __P ((int __sig, int __interrupt));
 
 /* Structure describing a signal stack.  */
 struct sigstack
-{
-  __ptr_t ss_sp;		/* Signal stack pointer.  */
-  int ss_onstack;		/* Nonzero if executing on this stack.  */
-};
+  {
+    __ptr_t ss_sp;		/* Signal stack pointer.  */
+    int ss_onstack;		/* Nonzero if executing on this stack.  */
+  };
 
 /* Run signals handlers on the stack specified by SS (if not NULL).
    If OSS is not NULL, it is filled in with the old signal stack status.  */
-extern int sigstack __P ((__const struct sigstack * __ss,
-			  struct sigstack * __oss));
+extern int sigstack __P ((__const struct sigstack *__ss,
+			  struct sigstack *__oss));
 
 /* Alternate interface.  */
 struct sigaltstack
-{
-  __ptr_t ss_sp;
-  size_t ss_size;
-  int ss_flags;
-};
+  {
+    __ptr_t ss_sp;
+    size_t ss_size;
+    int ss_flags;
+  };
 
-extern int sigaltstack __P ((__const struct sigaltstack * __ss,
-			     struct sigaltstack * __oss));
+extern int sigaltstack __P ((__const struct sigaltstack *__ss,
+			     struct sigaltstack *__oss));
 
 /* Get machine-dependent `struct sigcontext' and signal subcodes.  */
 #include <sigcontext.h>
 
 /* Restore the state saved in SCP.  */
-extern int __sigreturn __P ((__const struct sigcontext * __scp));
-extern int sigreturn __P ((__const struct sigcontext * __scp));
-#define	sigreturn	__sigreturn
-
-
-__END_DECLS
+extern int __sigreturn __P ((__const struct sigcontext *__scp));
+extern int sigreturn __P ((__const struct sigcontext *__scp));
 
 #endif /* signal.h included and use BSD.  */
+
+__END_DECLS
 
 #endif /* signal.h  */
