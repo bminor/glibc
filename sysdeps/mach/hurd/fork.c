@@ -66,7 +66,7 @@ DEFUN_VOID(__fork)
   jmp_buf env;
   pid_t pid;
 
-  if (!setjmp (env))
+  if (! setjmp (env))
     {
       error_t err;
       process_t newproc;
