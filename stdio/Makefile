@@ -106,4 +106,6 @@ copy-mpn: $(mpn-stuff)
 clean-mpn:
 	rm -f $(mpn-stuff)
 
+dist: copy-mpn
+
 endif
