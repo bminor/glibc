@@ -189,8 +189,16 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
   buf.c_cc[_SYSV_VQUIT] = termios_p->c_cc[VQUIT];
   buf.c_cc[_SYSV_VERASE] = termios_p->c_cc[VERASE];
   buf.c_cc[_SYSV_VKILL] = termios_p->c_cc[VKILL];
-  buf.c_cc[_SYSV_VEOF] = termios_p->c_cc[VEOF];
-  buf.c_cc[_SYSV_VEOL] = termios_p->c_cc[VEOL];
+  if (buf.c_lflag & _SYSV_ICANON)
+    {
+      buf.c_cc[_SYSV_VEOF] = termios_p->c_cc[VEOF];
+      buf.c_cc[_SYSV_VEOL] = termios_p->c_cc[VEOL];
+    }
+  else
+    {
+      buf.c_cc[_SYSV_VMIN] = termios_p->c_cc[VMIN];
+      buf.c_cc[_SYSV_VTIME] = termios_p->c_cc[VTIME];
+    }
   buf.c_cc[_SYSV_VEOL2] = termios_p->c_cc[VEOL2];
 
   if (__ioctl (fd, ioctl_function, &buf) < 0)
