@@ -1,3 +1,8 @@
+2005-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Makre sure registers are
+	set correctly.
+
 2005-01-07  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #738]
@@ -12,6 +17,10 @@
 	Load MSR as a doubleword.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
 	(__novec_swapcontext, __swapcontext): Likewise.
+
+2005-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (check_consistency): Define.
 
 2005-02-07  Jakub Jelinek  <jakub@redhat.com>
 
