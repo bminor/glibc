@@ -50,7 +50,7 @@ routines := brk sbrk sstk ioctl \
 	    __utimes \
 	    truncate ftruncate \
 	    chflags fchflags \
-	    insremque # getttyent
+	    insremque getttyent
 aux := data_start progname
 distribute := bsd-compat.c
 install-lib := libbsd-compat.a
