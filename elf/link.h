@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -224,8 +224,8 @@ extern int _dlerror_run (void (*operate) (void));
    LOADER's DT_RPATH is used in searching for NAME.
    If the object is already opened, returns its existing map.  */
 extern struct link_map *_dl_map_object (struct link_map *loader,
-					const char *name, int type,
-					int trace_mode);
+					const char *name, int preloaded,
+					int type, int trace_mode);
 
 /* Call _dl_map_object on the dependencies of MAP, and set up
    MAP->l_searchlist.  PRELOADS points to a vector of NPRELOADS previously
