@@ -65,24 +65,30 @@ Cambridge, MA 02139, USA.  */
 #define __need_NULL
 #include <stddef.h>
 
+#include <sys/types.h>
+#include <signal.h>
+#include <endian.h>
+#include <limits.h>
+#ifdef notyet
+#include <ufs/param.h>
+#endif
+
+
 /* What versions of BSD we are compatible with.  */
 #define	BSD	199103		/* March, 1991 system version (year & month) */
 #define BSD4_3	1
 #define BSD4_4	0.5
 
-#include <sys/types.h>
-
-#include <limits.h>
 
 /* BSD names for some <limits.h> values.  */
 #define	NGROUPS		NGROUPS_MAX
 #define	MAXSYMLINKS	SYMLINK_MAX
 #define	CANBSIZ		MAX_CANON /* XXX ? */
 
-#include <signal.h>
-#include <endian.h>
+/* Magical constants.  */
+#define	NOGROUP	65535		/* Marker for empty group set member.  */
+#define	NODEV	((dev_t) -1)	/* Non-existent device.  */
 
-#define	NODEV		((dev_t) -1) /* Non-existent device.  */
 
 /* Bit map related macros.  */
 #define	setbit(a,i)	((a)[(i)/NBBY] |= 1<<((i)%NBBY))
@@ -111,9 +117,5 @@ Cambridge, MA 02139, USA.  */
 
 #define	FSHIFT	11		/* Bits to right of fixed binary point.  */
 #define FSCALE	(1<<FSHIFT)
-
-#ifdef notyet
-#include <ufs/param.h>
-#endif
 
 #endif	 /* sys/param.h */
