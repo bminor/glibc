@@ -1095,7 +1095,7 @@ is explicitly @code{0}, this suppresses the decimal point character
 entirely.  For the @samp{%g} and @samp{%G} conversions, the precision
 specifies how many significant digits to print.  Significant digits are
 the first digit before the decimal point, and all the digits after it.
-If the precision @code{0} or not specified for @smap{%g} or @samp{%G},
+If the precision @code{0} or not specified for @samp{%g} or @samp{%G},
 it is treated like a value of @code{1}.  If the value being printed
 cannot be expressed precisely in the specified number of digits, the
 value is rounded to the nearest number that fits.
