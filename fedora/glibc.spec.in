@@ -1,4 +1,4 @@
-%define glibcrelease 71
+%define glibcrelease 72
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -299,14 +299,6 @@ cat > asm/unistd.h <<EOF
 #ifndef __NR_waitid
 #define __NR_waitid		284
 #endif
-#ifndef __NR_setaltroot
-#define __NR_setaltroot		285
-#endif
-#ifndef __NR_add_key
-#define __NR_add_key		286
-#define __NR_request_key	287
-#define __NR_keyctl		288
-#endif
 %endif
 %ifarch ia64
 #ifndef __NR_timer_create
@@ -327,9 +319,6 @@ cat > asm/unistd.h <<EOF
 #define __NR_mq_timedreceive		1265
 #define __NR_mq_notify			1266
 #define __NR_mq_getsetattr		1267
-#endif
-#ifndef __NR_setaltroot
-#define __NR_setaltroot			1270
 #endif
 %endif
 %ifarch ppc
@@ -440,25 +429,6 @@ cat > asm/unistd.h <<EOF
 #define __NR_waitid		247
 #endif
 %endif
-#endif
-EOF
-cat > asm/errno.h <<EOF
-#ifndef _HACK_ASM_ERRNO_H
-#include_next <asm/errno.h>
-#ifndef ENOKEY
-%ifarch alpha alphaev6
-#define ENOKEY		131		/* Required key not available */
-%endif
-%ifarch sparc sparcv9 sparc64
-#define ENOKEY		127		/* Required key not available */
-%endif
-%ifnarch alpha alphaev6 sparc sparcv9 sparc64
-#define ENOKEY		125		/* Required key not available */
-%endif
-#define EKEYEXPIRED	(ENOKEY + 1)	/* Key has expired */
-#define EKEYREVOKED	(ENOKEY + 2)	/* Key has been revoked */
-#define EKEYREJECTED	(ENOKEY + 3)	/* Key was rejected by service */
-#endif
 #endif
 EOF
 
@@ -1286,6 +1256,11 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Oct 21 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-72
+- back out setaltroot and key{_add,_request,ctl} addition
+- fix severe x86-64 symbol versioning regressions that breaks
+  e.g. java binaries
+
 * Wed Oct 20 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-71
 - update from CVS
   - fix minor catchsegv temp file handling vulnerability
