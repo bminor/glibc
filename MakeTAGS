@@ -72,6 +72,9 @@ TAGS: $(tags_sources)
 ifdef subdir
 ifdef tags_sources
 	$(ETAGS) -o $@ $^
+else
+# No sources.  Create a dummy file. 
+	touch $@
 endif # tags_sources
 else # parent
 TAGS: subdir_TAGS
