@@ -510,36 +510,59 @@ identical @file{sunos4.1.1} and @file{sunos4.1.2} directories,
 @file{configure} tries successively less specific operating system names
 by removing trailing suffixes starting with a period.
 
-Here is the complete list of directories that would be tried for the
-configuration @samp{sparc-sun-sunos4.1}:
+As an example, here is the complete list of directories that would be
+tried for the configuration @w{@samp{sparc-sun-sunos4.1}} (without the
+@w{@samp{--nfp}} option):
 
 @example
-@group
 sparc/fpu
 unix/bsd/sun/sunos4.1/sparc
 unix/bsd/sun/sunos4.1
 unix/bsd/sun/sunos4/sparc
 unix/bsd/sun/sunos4
+unix/bsd/sun/sunos/sparc
+unix/bsd/sun/sunos
 unix/bsd/sun/sparc
 unix/bsd/sun
 unix/bsd/sunos4.1/sparc
 unix/bsd/sunos4.1
 unix/bsd/sunos4/sparc
 unix/bsd/sunos4
+unix/bsd/sunos/sparc
+unix/bsd/sunos
 unix/bsd/sparc
 unix/bsd
+unix/sun/sunos4.1/sparc
+unix/sun/sunos4.1
+unix/sun/sunos4/sparc
+unix/sun/sunos4
+unix/sun/sunos/sparc
+unix/sun/sunos
+unix/sun/sparc
+unix/sun
+unix/sunos4.1/sparc
+unix/sunos4.1
+unix/sunos4/sparc
+unix/sunos4
+unix/sunos/sparc
+unix/sunos
+unix/sparc
+unix
 sun/sunos4.1/sparc
 sun/sunos4.1
 sun/sunos4/sparc
 sun/sunos4
+sun/sunos/sparc
+sun/sunos
 sun/sparc
 sun
 sunos4.1/sparc
 sunos4.1
 sunos4/sparc
 sunos4
+sunos/sparc
+sunos
 sparc
-@end group
 @end example
 
 Different machine architectures are generally at the top level of the
