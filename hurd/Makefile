@@ -106,10 +106,10 @@ hurdintr: hurdintr.awk $(user-interfaces:%=%.defs)
 	mv $@-new $@
 
 # Make the INTR user stubs be defined as CALL_rpc.
-migdefines := $(migdefines) $(foreach call,$(intr-calls),-D$(call)=$(call)_rpc)
+migdefines += $(foreach call,$(intr-calls),-D$(call)=$(call)_rpc)
 
 interface-routines := $(filter-out %_rpc,$(interface-routines)) \
-		      $(intr-calls:%=__% %)
+		      $(intr-calls:%=__%) $(intr-calls)
 endif
 
 include ../Rules
