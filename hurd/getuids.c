@@ -18,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 #include <hurd/id.h>
-
+#include <string.h>
 
 int
 __getuids (int n, uid_t *uidset)
