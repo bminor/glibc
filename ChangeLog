@@ -1,9 +1,15 @@
+2000-01-08  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/setitimer.c (quantize_timeval): New function.
+	(setitimer_locked): Use it to quantize the timer values.  Use
+	quantized timer values to check if the timeout changed.
+
 1999-12-21  Andreas Schwab  <schwab@suse.de>
 
 	* include/unistd.h: Declare __libc_lseek.
 
 1999-12-19  Andreas Jaeger  <aj@suse.de>
-        
+
         * include/fcntl.h: Declare __libc_fcntl.
 
 	* include/unistd.h: Move __libc_open and __libc_open64 to ...
