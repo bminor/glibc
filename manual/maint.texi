@@ -15,6 +15,11 @@
 @end menu
 
 
+@c Uncomment the @setfilename to format the `INSTALL' file for the
+@c distribution.  I make the file with texinfo-format-region on a region
+@c from here to the end of this node.
+@c @setfilename ../INSTALL
+
 @node How to Install the GNU C Library
 @appendixsec How to Install the GNU C Library
 @cindex installing the library
@@ -29,32 +34,51 @@ library without it.  @strong{Really.}@refill
 To configure the GNU C library for your system, run the script
 @file{configure} with @code{sh}.  You must give as an argument to the
 script a word describing your system.  If you give no argument, the
-script gives you a list of systems it knows about.
+script gives you a list of systems it knows about.  Note that it will
+list several systems for which there are not actually working ports of
+the library.
 
-The configuration process takes a little while and prints out a slew of
-messages telling you what it's doing.  These are probably not very
-interesting to read, but you'll have nothing better to do while waiting
-for it to finish.
+By default, the @file{configure} script will set things up to build
+things into a subdirectory of the library source directory whose name is
+the name of the system you configure for.  For example,
+@w{@samp{configure sun4}} creates and uses a directory called
+@file{sun4}.  If you give a second argument to @file{configure}, that is
+used as the directory name instead.@refill
 
-If the configuration is successful, it will say @samp{Successfully
-configured}.  If the configuration fails it will say @samp{Failed in
-configuration}; you must then figure out the source of the problem and
-either fix it or report it as a bug (@pxref{Reporting Bugs}).@refill
+You can build for several machines from the same source directory, by
+specifying the subdirectory that @file{configure} created when you
+configured for that machine in the @code{make} variable @samp{ARCH}.
+For example, use @samp{make ARCH=sun4}, or put @samp{ARCH=sun4} in your
+environment.  If you don't specify a value for @samp{ARCH}, the variable
+@samp{machine} is used if defined; otherwise @code{make} will build for
+the configuration most recently configured for.
 
-After successful configuration, simply run @code{make} to make the
-library and related things.  If all goes well, you will end up with the
-library archive in the file @file{libc.a}, ANSI C versions of the header
-files in the @file{ansi/} subdirectory, and traditional C versions of
-the header files in the @file{trad/} subdirectory.  Install the archive
-and the header files in appropriate places.
+Now edit the file @file{Makeconfig} to set the compilation parameters,
+and what directories to install the library and header files in.  See
+the comments in @file{Makeconfig} for the details.  If you are building
+for several machines, you can put values specific to a particular
+machine in a file called @file{Makeconfig} in the object directory for
+that machine (for example, @file{sun4/Makeconfig}).@refill
 
-@strong{Incomplete:} This section needs to give more details on what
-those ``appropriate places'' are.  What are the default places to
-install things, so that users need not tell the compiler and linker
-explicitly where to search for these files?  If you install them
-someplace else, what options should you tell users to use so that the
-compiler and linker will find the files?
+Some of the machine-dependent code for some machines uses extensions in
+the GNU C compiler, so you may need to compile the library with GCC.
+(In fact, all of the existing complete ports require GCC.)  If possible,
+you should use the GNU linker, GNU @code{ld}, when linking programs with
+the GNU C library.  If you are going to use GNU @code{ld}, be sure to
+specify @samp{-D__GNU_STAB__} in @file{Makeconfig}.@refill
 
+To build the library and header files, type @code{make}.  This will
+produce a lot of output, some of which looks like errors from
+@code{make} (but isn't).  Look for error messages from @code{make}
+containing @samp{***}.  Those indicate that something is really wrong.
+Using the @samp{-w} option to @code{make} may make the output easier to
+understand (this option tells @code{make} to print messages telling you
+what subdirectories it is working on).
+
+To install the library and header files, type @code{make install}, after
+setting the installation directories in @file{Makeconfig} (or
+@file{@var{machine}/Makeconfig}).  This will build things if necessary,
+before installing them.@refill
 
 @node Reporting Bugs
 @appendixsec Reporting Bugs
@@ -89,8 +113,8 @@ If you think you have found some way in which the GNU C library does not
 conform to the ANSI and POSIX standards (@pxref{Standards and
 Portability}), that is definitely a bug.  Report it!@refill
 
-Send bug reports to Internet address @samp{bug-gnu-lib?@@prep.ai.mit.edu}
-or UUCP path @samp{mit-eddie!prep.ai.mit.edu!bug-gnu-lib?}.  If you have
+Send bug reports to Internet address @samp{bug-gnu-libc@@prep.ai.mit.edu}
+or UUCP path @samp{mit-eddie!prep.ai.mit.edu!bug-gnu-libc}.  If you have
 other problems with installation, use, or the documentation, please
 report those as well.
 
@@ -138,8 +162,8 @@ Some parts of the library were contributed by other people.
 
 @itemize @bullet
 @item
-The @code{getopt} function was written by Richard Stallman
-and reworked by Roland McGrath.
+The @code{getopt} and related functions were written by
+Richard Stallman, David J. MacKenzie, and Roland McGrath.
 
 @item
 The random number generation functions @code{random}, @code{srandom},
@@ -151,9 +175,17 @@ changes to fit into the GNU C library and to fit the ANSI C standard,
 but the functional code is Berkeley's.@refill
 
 @item
+The math functions are taken from BSD 4.3-Reno, and are copyrighted by
+the Regents of the University of California at Berkeley.
+
+@item
 The @code{qsort} function was written by Douglas C. Schmidt.
 
 @item
 The memory allocation functions @code{malloc}, @code{realloc} and
 @code{free} and related code were written by Michael J. Haertel.
+
+@item
+Fast implementations of many of the string functions (@code{memcpy},
+@code{strlen}, etc.) were written by Torbjorn Granlund.
 @end itemize
