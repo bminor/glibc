@@ -1,3 +1,13 @@
+2000-01-05  Andreas Schwab  <schwab@suse.de>
+
+	* iconv/iconv_prog.c (process_block): Add cast to avoid warning.
+
+2000-01-05  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/sys/io.h: Follow change from
+	glibc 2.2 and don't include <asm/io.h>.
+	* sysdeps/unix/sysv/linux/sys/io.h: Likewise.
+
 2000-01-05  Andreas Jaeger  <aj@suse.de>
 
 	* intl/locale.alias: Add lithunian entry.
