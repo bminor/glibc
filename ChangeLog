@@ -1,5 +1,18 @@
 1999-06-23  Ulrich Drepper  <drepper@cygnus.com>
 
+	* manual/arith.texi: Document restriction of ndigit parameter of
+	ecvt and friends.
+	* misc/efgcvt.c: Define NDIGIT_MAX.
+	(gcvt): Limit precision in sprintf call to NDIGIT_MAX.
+	Do not dynamically allocate the static buffers.  They are small enough.
+	* misc/efgcvt_r.c: Define NDIGIT_MAX.
+	(fcvt_r): Limit precision in snprintf call to NDIGIT_MAX.
+	* misc/qefgcvt.c: Define NDIGIT_MAX.
+	* misc/qefgcvt_r.c: Likewise.
+	* misc/tst-efgcvt.c (special): Add test for large ndigit parameter.
+
+1999-06-23  Ulrich Drepper  <drepper@cygnus.com>
+
 	* stdio/fputc.c: Don't define alias if fputc is defined as a
 	macro.
 	* stdio/putc.c: Define weak alias here since it is not done
