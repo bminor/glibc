@@ -23,7 +23,7 @@ subdir	:= time
 
 headers	:= time.h sys/time.h
 distribute := tzfile.h private.h scheck.c ialloc.c emkdir.c yearistype
-extra-objs = scheck.o ialloc.o emkdir.o zonenames $(tzfiles:%=zones-%)
+extra-objs = scheck.o ialloc.o emkdir.o zonenames $(tzfiles:%=z.-%)
 
 routines	:= offtime asctime clock ctime difftime gmtime	\
 		   localtime mktime strftime time __tzset tzfile \
@@ -66,7 +66,7 @@ install-others = $(addprefix $(zonedir)/,$(zonenames)) \
 
 include ../Rules
 
-$(tzfiles:%=$(objpfx)zones-%): $(objpfx)zones-%: % Makefile
+$(tzfiles:%=$(objpfx)z.%): $(objpfx)z.%: % Makefile
 # Kludge alert: we use an implicit rule (in what we are generating here)
 # because that is the only way to tell Make that the one command builds all
 # the files.
@@ -84,7 +84,7 @@ $(tzfiles:%=$(objpfx)zones-%): $(objpfx)zones-%: % Makefile
 	mv $@.new $@
 $(objpfx)zonenames: Makefile
 	(for file in $(tzfiles); do \
-	   echo "include \$$(objpfx)zones-$$file"; \
+	   echo "include \$$(objpfx)z.$$file"; \
 	 done) > $@.new
 	mv $@.new $@
 
