@@ -20,7 +20,11 @@ Cambridge, MA 02139, USA.  */
 
 #define	_HURD_H	1
 
-/* #define	_GNU_SOURCE		XXX why did I want this here? */
+/* This is here because this file includes some other headers
+   and expects some non-ANSI, non-POSIX symbols to be defined.  */
+#ifndef _GNU_SOURCE
+#define	_GNU_SOURCE
+#endif
 #include <features.h>
 
 
@@ -360,9 +364,6 @@ __hurd_dfail (int fd, error_t err)
 /* Return the socket server for sockaddr domain DOMAIN.  */
 extern socket_t _hurd_socket_server (int domain);
 
-/* Return a receive right which will not be sent to.  */
-extern mach_port_t _hurd_dead_recv (void);
-
 
 /* Current process IDs.  */
 extern pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
@@ -411,17 +412,18 @@ extern int _hurd_set_brk (vm_address_t newbrk);
 /* Resource limit on core file size.  Enforced by hurdsig.c.  */
 extern int _hurd_core_limit;
 
-#ifdef notyet
-
 #include <signal.h>
 
 /* Per-thread signal state.  */
 struct _hurd_sigstate
   {
+    /* XXX should be in cthread variable (?) */
     thread_t thread;
     struct _hurd_sigstate *next; /* Linked-list of thread sigstates.  */
 
+#ifdef noteven
     struct mutex lock;		/* Locks the rest of this structure.  */
+#endif
     sigset_t blocked;
     sigset_t pending;
     struct sigaction actions[NSIG];
@@ -429,7 +431,9 @@ struct _hurd_sigstate
     int sigcodes[NSIG];		/* Codes for pending signals.  */
 
     int suspended;		/* If nonzero, sig_post signals `arrived'.  */
+#ifdef noteven
     struct condition arrived;
+#endif
 
 #if 0
     int vforked;		/* Nonzero if this thread is a vfork child.  */
@@ -473,6 +477,7 @@ extern void _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 extern void _hurd_msgport_receive (void);
 
 
+#ifdef notyet
 /* Perform interruptible RPC CALL on PORT.
    The args in CALL should be constant or local variable refs.
    They may be evaluated many times, and must not change.
@@ -567,7 +572,6 @@ extern void _hurd_msgport_receive (void);
     __err;								      \
 })
 
-
 /* Calls to get and set basic ports.  */
 extern process_t getproc (void);
 extern file_t getccdir (void), getcwdir (void), getcrdir (void);
@@ -650,5 +654,6 @@ struct ioctl_handler
 /* Define a library-internal handler for a single ioctl command.  */
 #define _HURD_HANDLE_IOCTL(handler, ioctl) \
   _HURD_HANDLE_IOCTLS (handler, (ioctl), (ioctl))
+
 
 #endif	/* hurd.h */
