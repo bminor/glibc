@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,13 +18,17 @@
 
 #define	__NO_WCTYPE
 #include <wctype.h>
-#include <ctype.h>	/* For __ctype_tolower and __ctype_toupper.  */
+#include <stdint.h>
 
 #include "cname-lookup.h"
 
 /* If the program is compiled without optimization the following declaration
    is not visible in the header.   */
 extern unsigned int *__ctype32_b;
+
+/* These are not exported.  */
+extern const uint32_t *__ctype32_toupper;
+extern const uint32_t *__ctype32_tolower;
 
 /* Provide real-function versions of all the wctype macros.  */
 
@@ -76,7 +80,7 @@ wint_t
     /* Character is not known.  Default action is to simply return it.  */
     return wc;
 
-  return (wint_t) __ctype_tolower[idx];
+  return (wint_t) __ctype32_tolower[idx];
 }
 
 wint_t
@@ -90,5 +94,5 @@ wint_t
     /* Character is not known.  Default action is to simply return it.  */
     return wc;
 
-  return (wint_t) __ctype_toupper[idx];
+  return (wint_t) __ctype32_toupper[idx];
 }
