@@ -1,3 +1,8 @@
+1999-08-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (__finite): Mark constant as
+	unsigned to avoid warning.  [PR libc/1271].
+
 1999-07-25  Jakub Jelinek   <jj@ultra.linux.cz>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/types.h: Define always __qaddr_t.
