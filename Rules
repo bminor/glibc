@@ -101,7 +101,7 @@ subdir_echo-headers: echo-headers
 subdir_echo-distinfo:
 	@echo $(addprefix +header+,$(headers)) \
 	      $(addprefix +nodist+,$(generated))
-
+
 .PHONY: subdir_install
 subdir_install: install-no-libc.a
 
@@ -115,3 +115,7 @@ export generated := $(generated)
 subdir_dist: dist
 dist: ../Make-dist
 	$(MAKE) -f $< $(Make-dist-args)
+
+# Convenient target to update all the generated source files.
+.PHONY: generated
+generated: $(generated)
