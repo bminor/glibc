@@ -1,5 +1,3 @@
-/* -*- C -*- */
-
 SYSCALL (mach_msg_trap, -25,
 	 mach_msg_return_t,
 	 (msg, option, send_size,
