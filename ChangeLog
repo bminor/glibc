@@ -1,3 +1,17 @@
+2001-01-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (process_envvars): Place output files for profiling
+	in SUID binaries in /var/profile.
+
+	* elf/dl-load.c (_dl_map_object): Don't look in cache for
+	preloading in SUID binaries.
+
+	* elf/dl-profile.c (_dl_start_profile): Open the output file with
+	O_NOFOLLOW if possible.
+
+	* sysdeps/generic/segfault.c (install_handler): Check output file
+	name with access().
+
 2000-09-10  David S. Miller  <davem@redhat.com>
 
 	* sysdeps/sparc/sparc32/__longjmp.S (__longjmp): Correct %fp
