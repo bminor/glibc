@@ -29,7 +29,7 @@ __setregid (gid_t rgid, gid_t egid)
   auth_t newauth;
   error_t err;
 
-  __mutex_lock (&_hurd_idlock);
+  __mutex_lock (&_hurd_id.lock);
   err = _hurd_check_ids ();
 
   if (!err)
