@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,9 @@ DEFUN(system, (line), register CONST char *line)
   int status, save;
   pid_t pid;
   struct sigaction sa, intr, quit;
+#ifndef WAITPID_CANNOT_BLOCK_SIGCHLD
   sigset_t block, omask;
+#endif
 
   if (line == NULL)
     return 1;
@@ -58,22 +60,33 @@ DEFUN(system, (line), register CONST char *line)
       return -1;
     }
 
+#ifndef WAITPID_CANNOT_BLOCK_SIGCHLD
+
+/* SCO 3.2v4 has a bug where `waitpid' will never return if SIGCHLD is blocked.
+   This 
+   They have acknowledged that this is a bug but I have not seen nor heard
+   of any forthcoming fix.  
+
   __sigemptyset (&block);
   __sigaddset (&block, SIGCHLD);
   save = errno;
-  if (__sigprocmask(SIG_BLOCK, &block, &omask) < 0)
+  if (__sigprocmask (SIG_BLOCK, &block, &omask) < 0)
     {
       if (errno == ENOSYS)
 	errno = save;
       else
 	{
 	  save = errno;
-	  (void) __sigaction(SIGINT, &intr, (struct sigaction *) NULL);
-	  (void) __sigaction(SIGQUIT, &quit, (struct sigaction *) NULL);
+	  (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
+	  (void) __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
 	  errno = save;
 	  return -1;
 	}
     }
+#define UNBLOCK	__sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL)
+#else
+#define UNBLOCK 0
+#endif
 
   pid = __vfork ();
   if (pid == (pid_t) 0)
@@ -88,7 +101,7 @@ DEFUN(system, (line), register CONST char *line)
       /* Restore the signals.  */
       (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
       (void) __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
-      (void) __sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL);
+      (void) UNBLOCK;
 
       /* Exec the shell.  */
       (void) __execve (SHELL_PATH, (char *CONST *) new_argv, __environ);
@@ -120,7 +133,7 @@ DEFUN(system, (line), register CONST char *line)
   save = errno;
   if ((__sigaction (SIGINT, &intr, (struct sigaction *) NULL) |
        __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL) |
-       __sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL)) != 0)
+       UNBLOCK) != 0)
     {
       if (errno == ENOSYS)
 	errno = save;
