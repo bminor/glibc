@@ -857,7 +857,7 @@ The second argument to the @code{fcntl} function is a command that
 specifies which operation to perform.  The function and macros that name
 various flags that are used with it are declared in the header file
 @file{fcntl.h}.  (Many of these flags are also used by the @code{open}
-function; @pxref{Opening and Closing Files}.)
+function; see @ref{Opening and Closing Files}.)
 @pindex fcntl.h
 
 @comment fcntl.h
