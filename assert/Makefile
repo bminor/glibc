@@ -21,6 +21,6 @@
 #
 subdir	:= assert
 
-routines := assert assert-perror
+routines := assert assert-perr
 
 include ../Rules
