@@ -1,3 +1,7 @@
+1999-09-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strptime.c [!_LIBC] (__mon_yday): Fix typo in definition.
+
 1999-09-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nis/nss_nisplus/nisplus-parser.c (_nss_nisplus_parse_grent): Do
