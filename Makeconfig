@@ -365,6 +365,9 @@ else
 link-extra-libs = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).a)
 endif
 endif
+
+link-libc-static = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
+
 ifndef gnulib
 gnulib := -lgcc
 endif
