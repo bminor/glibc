@@ -20,7 +20,7 @@
 
 2005-02-07  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/dl-load.c (_dl_map_object_from_fd): Makre sure registers are
+	* elf/dl-load.c (_dl_map_object_from_fd): Make sure registers are
 	set correctly.
 
 2005-01-07  Jakub Jelinek  <jakub@redhat.com>
