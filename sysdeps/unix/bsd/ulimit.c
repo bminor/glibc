@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ extern char _etext;
        can open.
    Returns -1 on errors.  */
 long int
-DEFUN(__ulimit, (cmd, newlimit),
+DEFUN(ulimit, (cmd, newlimit),
       int cmd AND long int newlimit)
 {
   int status;
