@@ -18,12 +18,13 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <errno.h>
+#include <hurd.h>
 
 /* The first piece of initialized data.  */
 int __data_start = 0;
 
 process_t _hurd_proc;
-file_t _hurd_ccdir, _hurd_cwdir, _hurd_crdir, _hurd_auth;
+file_t _hurd_ccdir, _hurd_cwdir, _hurd_crdir;
 mode_t _hurd_umask;
 int _hurd_ctty_fstype;
 fsid_t _hurd_ctty_fsid;
