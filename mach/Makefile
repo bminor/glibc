@@ -114,7 +114,7 @@ endif
 $(objpfx)mach-syscalls.mk: mach/syscall_sw.h syscalls.awk
 # Go kludges!!!
 	sed -n -e '/Unix server implement them/,$$d' \
-	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),[0-9]*)$$/\1 \2/p' \
+	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),\([0-9]*\))$$/\1 \2 \3/p'\
 	< $< | awk -f $(word 2,$^) > $@-new
 	mv $@-new $@
 generated += mach-syscalls.mk
@@ -126,7 +126,7 @@ no_deps=t
 else
 $(mach-syscalls:%=$(objpfx)__%.S): $(objpfx)__%.S: $(objpfx)mach-syscalls.mk
 	(echo '#include <sysdep.h>'; \
-	 echo 'SYSCALL_TRAP (__$*, $(sysno-$*))') > $@-new
+	 echo 'kernel_trap(__$*,$(sysno-$*),$(nargs-$*))') > $@-new
 	 mv $@-new $@
 $(mach-syscalls:%=$(objpfx)%.c): $(objpfx)%.c: Makefile
 	(echo '#include <gnu-stabs.h>'; \
@@ -136,14 +136,19 @@ generated += $(mach-syscalls:%=__%.S) \
 	     $(mach-syscalls:%=%.c)
 endif	# mach-syscalls
 
-mach-shortcuts := $(patsubst syscall_%,%,$(filter syscall_%,$(mach-syscalls)))
+# XXX MK85 has some new syscall_* traps that don't seem to correspond to RPCs.
+mach-shortcuts := $(patsubst syscall_%,%,\
+			     $(filter syscall_vm_% syscall_task_% \
+				      syscall_mach_port_% syscall_thread_%,\
+				      $(mach-syscalls)))
 
 ifndef mach-shortcuts
 # Forget about mach_interface.defs for this run.  On the next run,
 # $(mach-shortcuts) will be set, and that will change how
 # mach_interface.defs is processed: it will get the -D flags below.
 user-interfaces := $(filter-out mach/mach_interface \
-				mach/mach_port mach/mach_host,\
+				mach/mach_port mach/mach_host \
+				device/device_request,\
 				$(user-interfaces))
 endif
 

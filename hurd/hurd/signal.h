@@ -259,6 +259,7 @@ extern void _hurd_siginfo_handler (int);
     error_t __err;							      \
     struct hurd_sigstate *__ss = _hurd_self_sigstate ();		      \
     __mutex_unlock (&__ss->lock); /* Lock not needed.  */		      \
+    __do_call:								      \
     /* Tell the signal thread that we are doing an interruptible RPC on	      \
        this port.  If we get a signal and should return EINTR, the signal     \
        thread will set this variable to MACH_PORT_NULL.  The RPC might	      \
@@ -271,7 +272,6 @@ extern void _hurd_siginfo_handler (int);
        we actually did send the RPC, and a later signal wouldn't interrupt    \
        that RPC.  So, _hurd_run_sighandler saves intr_port in the	      \
        sigcontext, and sigreturn restores it.  */			      \
-    __do_call:								      \
     switch (__err = (call))						      \
       {									      \
       case EINTR:		/* RPC went out and was interrupted.  */      \
@@ -285,6 +285,7 @@ extern void _hurd_siginfo_handler (int);
 	   so the signal thread destroyed the reply port.  */		      \
 	__err = EINTR;							      \
 	break;								      \
+      default:			/* Quiet -Wenum.  */			      \
       }									      \
     __ss->intr_port = MACH_PORT_NULL;					      \
     __err;								      \
