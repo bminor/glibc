@@ -43,7 +43,7 @@ DEFUN(setgroups, (n, groups), size_t n AND CONST gid_t *groups)
     {
       /* Get a new auth port using those IDs.  */
       err = __USEPORT (AUTH,
-		       __auth_makeauth (port, NULL, 0, 0,
+		       __auth_makeauth (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
 					_hurd_id.gen.uids, _hurd_id.gen.nuids,
 					_hurd_id.aux.uids, _hurd_id.aux.nuids,
 					new, n,
