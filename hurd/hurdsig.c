@@ -413,16 +413,21 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 		 }));
       _hurd_stopped = 1;
 
-#ifdef noteven
       __mutex_lock (&ss->lock);
       if (ss->suspended)
-	/* There is a sigsuspend waiting.  Tell it to wake up.  */
-	__condition_signal (&ss->arrived);
+	{
+	  /* There is a sigsuspend waiting.  Tell it to wake up.  */
+	  ss->suspended = 0;
+#ifdef noteven
+	  __condition_signal (&ss->arrived);
+#else
+	  __mutex_unlock (&ss->lock);
+#endif
+	}
       else
 	__mutex_unlock (&ss->lock);
-#endif
 
-      return;
+      break;
 
     case ignore:
       /* Nobody cares about this signal.  */
@@ -499,12 +504,17 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
   if (! check_pending (ss))
     {
       /* No more signals pending; SS->lock is still locked.  */
-#ifdef noteven
       if (ss->suspended)
-	/* There is a sigsuspend waiting.  Tell it to wake up.  */
-	__condition_signal (&ss->arrived, &ss->lock);
-      else
+	{
+	  /* There is a sigsuspend waiting.  Tell it to wake up.  */
+	  ss->suspended = 0;
+#ifdef noteven
+	  __condition_signal (&ss->arrived);
+#else
+	  __mutex_unlock (&ss->lock);
 #endif
+	}
+      else
 	__mutex_unlock (&ss->lock);
     }
 
@@ -845,5 +855,7 @@ hurdsig_fork_child (void)
 
   /* Set up proc server-assisted fault recovery for the signal thread.  */
   _hurdsig_fault_init ();
+
+  return 0;
 }
 text_set_element (_hurd_fork_child_hook, hurdsig_fork_child);
