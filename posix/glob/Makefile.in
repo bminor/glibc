@@ -23,10 +23,12 @@ VPATH = @srcdir@
 # This must repeat the value, because configure will remove `VPATH = .'.
 srcdir = @srcdir@
 
-CPPFLAGS = @DEFS@
+CC = @CC@
+CPPFLAGS = @CPPFLAGS@
+CFLAGS = @CFLAGS@
 
-# How the invoke ar.
-AR = ar
+# How to invoke ar.
+AR = @AR@
 ARFLAGS = rv
 
 # How to invoke ranlib.
