@@ -35,6 +35,7 @@ Cambridge, MA 02139, USA.  */
 #define	F_SETFD		__F_SETFD	/* Set file descriptor flags.  */
 #define	F_GETFL		__F_GETFL	/* Get file status flags.  */
 #define	F_SETFL		__F_SETFL	/* Set file status flags.  */
+#define	F_GETLK		__F_GETLK	/* Get record locking info.  */
 #define	F_SETLK		__F_SETLK	/* Set record locking info.  */
 #define	F_SETLKW	__F_SETLKW	/* Set record locking, block.  */
 
