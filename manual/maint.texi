@@ -212,6 +212,7 @@ before installing them.@refill
 @node Reporting Bugs
 @appendixsec Reporting Bugs
 @cindex reporting bugs
+@cindex bugs, reporting
 
 There are probably bugs in the GNU C library.  There are certainly
 errors and omissions in this manual.  If you report them, they will get
