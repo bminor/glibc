@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,34 +21,44 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <string.h>
 
-/* Get a newline-terminated string of not more than
-   N - 1 characters from `stream' and put it in S.  */
+/* Reads characters from STREAM into S, until either a newline character
+   is read, N - 1 characters have been read, or EOF is seen.  Returns
+   the newline, unlike gets.  Finishes by appending a null character and
+   returning S.  If EOF is seen before any characters have been written
+   to S, the function returns NULL without appending the null character.
+   If there is a file error, always return NULL.  */
 char *
 DEFUN(fgets, (s, n, stream), char *s AND size_t n AND register FILE *stream)
 {
   register char *p = s;
 
-  if (!__validfp(stream))
+  if (!__validfp(stream) || s == NULL || n == 0)
     {
       errno = EINVAL;
       return NULL;
     }
 
-  if (s == NULL || n == 0 || ferror(stream))
+  if (ferror (stream))
     return NULL;
 
   if (stream->__buffer == NULL && stream->__userbuf)
     {
       /* Unbuffered stream.  Not much optimization to do.  */
-      register int c;
-      while (--n > 0 && (c = getc(stream)) != EOF) 
+      register int c = 0;
+      while (--n > 0 && (c = getc (stream)) != EOF) 
 	if ((*p++ = c) == '\n')
 	  break;
+      if (c == EOF)
+	return NULL;
       *p = '\0';
       return s;
     }
 
-  if (!stream->__seen || stream->__buffer == NULL || stream->__pushed_back)
+  /* Leave space for the null.  */
+  --n;
+
+  if (n > 0 &&
+      !stream->__seen || stream->__buffer == NULL || stream->__pushed_back)
     {
       /* Do one with getc to allocate a buffer.  */
       int c = getc (stream);
@@ -60,10 +70,9 @@ DEFUN(fgets, (s, n, stream), char *s AND size_t n AND register FILE *stream)
 	  *p = '\0';
 	  return s;
 	}
+      else
+	--n;
     }
-
-  /* Leave space for the null.  */
-  --n;
 
   while (n > 0)
     {
@@ -74,21 +83,22 @@ DEFUN(fgets, (s, n, stream), char *s AND size_t n AND register FILE *stream)
       if (i == 0)
 	{
 	  /* Refill the buffer.  */
-	  int c = __fillbf(stream);
+	  int c = __fillbf (stream);
 	  if (c == EOF)
-	    break; 
+	    break;
 	  *p++ = c;
 	  if (c == '\n')
 	    {
 	      *p = '\0';
 	      return s;
 	    }
+	  i = stream->__get_limit - stream->__bufp;	
 	}
 
       if (i > n)
 	i = n;
 
-      found = (char *) __memccpy((PTR) p, stream->__bufp, '\n', i);
+      found = (char *) __memccpy ((PTR) p, stream->__bufp, '\n', i);
 
       if (found != NULL)
 	{
@@ -102,6 +112,7 @@ DEFUN(fgets, (s, n, stream), char *s AND size_t n AND register FILE *stream)
       p += i;
     }
 
-  *p = '\0';
-  return (p == s || ferror(stream)) ? NULL : s;
+  if (p > s)
+    *p = '\0';
+  return ferror (stream) ? NULL : s;
 }
