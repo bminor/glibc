@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
    Returns 0 on success, -1 on errors.  */
 int
 DEFUN(__setitimer, (which, new, old),
-      enum __itimer_which __which AND
+      enum __itimer_which which AND
       struct itimerval *new AND struct itimerval *old)
 {
   if (new == NULL)

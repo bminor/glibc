@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,6 @@ Cambridge, MA 02139, USA.  */
 unsigned int
 DEFUN(alarm, (seconds), unsigned int seconds)
 {
-  unsigned int old_seconds;
   struct itimerval old, new;
 
   new.it_interval.tv_usec = 0;
@@ -40,13 +39,5 @@ DEFUN(alarm, (seconds), unsigned int seconds)
   if (__setitimer(ITIMER_REAL, &new, &old) < 0)
     return 0;
 
-  old_seconds = old.it_value.tv_sec;
-  if (old.it_value.tv_usec > 0 && old_seconds == 0)
-    /* Make sure we don't return zero (which says that
-       there is no alarm at all) if there is an alarm set
-       to go off in less than half a second.  */
-    ++old_seconds;
-  else
-    old_seconds += old.it_value.tv_usec / 1000000;
-  return old_seconds;
+  return (old.it_value.tv_sec + (old.it_value.tv_usec + 999999) / 1000000);
 }
