@@ -63,6 +63,12 @@ vpath %.defs $(hurd-srcdir)
 hurd-headers := $(patsubst $(hurd-srcdir)/%,%,\
 			   $(wildcard $(addprefix $(hurd-srcdir)/hurd/,\
 						  *.defs *.h)))
+
+# Don't distribute the Hurd headers; they are in the Hurd distribution.
+dont_distribute = $(hurd-headers)
+
+# DO NOT try to remake these in any way!!!
+$(addprefix $(hurd-srcdir)/,$(hurd-headers)) : ;
 install-others += $(addprefix $(includedir)/,$(hurd-headers))
 $(includedir)/hurd/%: $(hurd-srcdir)/hurd/%; $(do-install)
 
