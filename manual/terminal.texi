@@ -290,6 +290,10 @@ This is a flag bit that you can add to any of the above alternatives.
 Its meaning is to inhibit alteration of the state of the terminal
 hardware.  It is a BSD extension; it is only supported on BSD systems
 and the GNU system.
+
+Using @code{TCSASOFT} is exactly the same as setting the @code{CIGNORE}
+bit in the @code{c_cflag} member of the structure @var{termios-p} points
+to.  @xref{Control Modes}, for a description of @code{CIGNORE}.
 @end table
 
 If this function is called from a background process on its controlling
@@ -739,11 +743,17 @@ If this bit is set, enable carrier-based flow control of output.
 @comment termios.h
 @comment BSD
 @deftypevr Macro tcflag_t CIGNORE
-If this bit is set, it says to ignore the @code{c_cflag} member
-entirely.  This is only meaningful in a call to @code{tcsetattr}; it can
-be useful if you want to set all the software modes in the other
-members, but leave the hardware details in @code{c_cflag} unchanged.
-This bit is never set in the structure set by @code{tcgetattr}.
+If this bit is set, it says to ignore the control modes and line speed
+values entirely.  This is only meaningful in a call to @code{tcsetattr}.
+
+The @code{c_cflag} member and the line speed values returned by
+@code{cfgetispeed} and @code{cfgetospeed} will be unaffected by the
+call.  @code{CIGNORE} is useful if you want to set all the software
+modes in the other members, but leave the hardware details in
+@code{c_cflag} unchanged.  (This is how the @code{TCSASOFT} flag to
+@code{tcsettattr} works.)
+
+This bit is never set in the structure filled in by @code{tcgetattr}.
 @end deftypevr
 
 @node Local Modes
