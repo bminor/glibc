@@ -295,12 +295,12 @@ if test $libc_cv_need_minus_P = yes; then
 asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
 fi
 
-[# Iterate over all the sysdep directories we will use, running their
+# Iterate over all the sysdep directories we will use, running their
 # configure fragments, and looking for a uname implementation.
 uname=
 for dir in $sysnames; do
   if test -r $sysdep_dir/$dir/configure; then
-    echo running configure fragment for $dir
+    AC_MSG_RESULT(running configure fragment for $dir)
     . $sysdep_dir/$dir/configure
   fi
   if test -z "$uname"; then
@@ -308,7 +308,6 @@ for dir in $sysnames; do
     uname=$dir
   fi
 done
-]dnl
 
 # If we will use the generic uname implementation, we must figure out what
 # it will say by examining the system, and write the results in config-name.h.
@@ -379,4 +378,11 @@ if test $gnu_as = yes; then
   AC_DEFINE(HAVE_GNU_AS)
 fi
 
-AC_OUTPUT(config.make ${config_uname}, , [echo '$config_vars' >> config.make])
+if test "`(cd $srcdir; pwd)`" = "`pwd`"; then
+  config_makefile=
+else
+  config_makefile=Makefile
+fi
+
+AC_OUTPUT(config.make ${config_makefile} ${config_uname}, ,
+          [echo '$config_vars' >> config.make])
