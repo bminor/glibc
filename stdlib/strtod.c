@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +40,6 @@ DEFUN(strtod, (nptr, endptr), CONST char *nptr AND char **endptr)
 
   int got_dot;		/* Found a decimal point.  */
   int got_digit;	/* Seen any digits.  */
-  int nonzero;		/* Seen any nonzero digits.  */
 
   /* The exponent of the number.  */
   long int exponent;
@@ -69,16 +68,12 @@ DEFUN(strtod, (nptr, endptr), CONST char *nptr AND char **endptr)
   num = 0.0;
   got_dot = 0;
   got_digit = 0;
-  nonzero = 0;
   exponent = 0;
   for (;; ++s)
     {
       if (isdigit (*s))
 	{
 	  got_digit = 1;
-
-	  if (*s != '0')
-	    nonzero = 1;
 
 	  /* Make sure that multiplication by 10 will not overflow.  */
 	  if (num > DBL_MAX * 0.1)
@@ -119,27 +114,29 @@ DEFUN(strtod, (nptr, endptr), CONST char *nptr AND char **endptr)
       errno = 0;
       ++s;
       exp = strtol(s, &end, 10);
-      if (end == s)
+      if (errno == ERANGE)
 	{
-	  if (errno == ERANGE)
-	    {
-	      /* The exponent overflowed a `long int'.  It is probably a safe
-		 assumption that an exponent that cannot be represented by
-		 a `long int' exceeds the limits of a `double'.  */
-	      if (exp < 0)
-		goto underflow;
-	      else
-		goto overflow;
-	    }
+	  /* The exponent overflowed a `long int'.  It is probably a safe
+	     assumption that an exponent that cannot be represented by
+	     a `long int' exceeds the limits of a `double'.  */
+	  if (endptr != NULL)
+	    *endptr = end;
+	  if (exp < 0)
+	    goto underflow;
 	  else
-	    /* There was no exponent.  Reset END to point to
-	       the 'e' or 'E', so *ENDPTR will be set there.  */
-	    end = (char *) s - 1;
+	    goto overflow;
 	}
+      else if (end == s)
+	/* There was no exponent.  Reset END to point to
+	   the 'e' or 'E', so *ENDPTR will be set there.  */
+	end = (char *) s - 1;
       errno = save;
       s = end;
       exponent += exp;
     }
+
+  if (endptr != NULL)
+    *endptr = (char *) s;
 
   if (num == 0.0)
     return 0.0;
@@ -154,32 +151,27 @@ DEFUN(strtod, (nptr, endptr), CONST char *nptr AND char **endptr)
     }
   else if (exponent > 0)
     {
-      if (num > DBL_MAX * pow(10.0, (double) exponent))
+      if (num > DBL_MAX * pow(10.0, (double) -exponent))
 	goto overflow;
     }
 
   num *= pow(10.0, (double) exponent);
 
-  /* Set *ENDPTR and return the result.  */
-  if (endptr != NULL)
-    *endptr = (char *) s;
   return num * sign;
 
-overflow:;
+ overflow:
   /* Return an overflow error.  */
-  if (endptr != NULL)
-    *endptr = (char *) nptr;
   errno = ERANGE;
   return HUGE_VAL * sign;
 
-underflow:;
+ underflow:
   /* Return an underflow error.  */
   if (endptr != NULL)
     *endptr = (char *) nptr;
   errno = ERANGE;
   return 0.0;
 
-noconv:;
+ noconv:
   /* There was no number.  */
   if (endptr != NULL)
     *endptr = (char *) nptr;
