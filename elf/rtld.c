@@ -51,6 +51,7 @@ static void print_unresolved (const char *errstring, const char *objname);
 int _dl_argc;
 char **_dl_argv;
 const char *_dl_rpath;
+const char *_dl_library_path;
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
@@ -151,6 +152,7 @@ dl_main (const ElfW(Phdr) *phdr,
   char *file;
 
   mode = getenv ("LD_TRACE_LOADED_OBJECTS") != NULL ? trace : normal;
+  _dl_library_path = getenv ("LD_LIBRARY_PATH");
 
   /* LAZY is determined by the parameters --datadeps and --function-deps
      if we trace the binary.  */
@@ -233,6 +235,14 @@ of this helper program; chances are you did not intend to run this program.\n",
 	    ++_dl_skip_args;
 	    --_dl_argc;
 	    ++_dl_argv;
+	  }
+	else if (! strcmp (_dl_argv[1], "--library-path")
+		 && _dl_argc > 2)
+	  {
+	    _dl_library_path = _dl_argv[2];
+	    _dl_skip_args += 2;
+	    _dl_argc -= 2;
+	    _dl_argv += 2;
 	  }
 	else
 	  break;
