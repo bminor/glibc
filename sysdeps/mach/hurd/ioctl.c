@@ -127,8 +127,8 @@ DEFUN(__ioctl, (fd, request),
     (fd,
      ({
        m->msgh_size = (char *) t - msg;
-       m->msgh_request_port = port;
-       m->msgh_reply_port = __mig_reply_port ();
+       m->msgh_remote_port = port;
+       m->msgh_local_port = __mig_reply_port ();
        m->msgh_seqno = 0;
        m->msgh_id = msgid;
 #if 0
@@ -136,7 +136,7 @@ DEFUN(__ioctl, (fd, request),
 #endif
        _HURD_EINTR_RPC (port, __mach_msg (m, MACH_SEND_MSG|MACH_RCV_MSG,
 					  m->msgh_size, sizeof (msg),
-					  m->msgh_reply_port,
+					  m->msgh_local_port,
 					  MACH_MSG_TIMEOUT_NONE,
 					  MACH_PORT_NULL));
      }));
