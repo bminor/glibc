@@ -1,3 +1,15 @@
+2000-03-24  Geoff Clare  <gwc@unisoft.com>
+
+	* stdlib/strfmon.c: Corrected problems with missing signs and
+	missing or extra spaces; allow for sign strings longer than
+	one character; add padding to ensure positive and negative
+	formats are aligned when a left precision is used.
+
+2000-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/random_r.c (__setstate_r): Allow RNGs of type 4.
+	Patch by John Mizel <John.Mizel@msdw.com>.
+
 2000-03-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* db2/os/os_dir.c (__os_dirlist): Close directory if out of
