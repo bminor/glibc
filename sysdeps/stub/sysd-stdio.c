@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -73,14 +73,6 @@ DEFUN(__stdio_open, (filename, m, fdptr),
   errno = ENOSYS;
   *fdptr = -1;
   return NULL;
-}
-
-
-/* Write a message to the error output.
-   Try hard to make it really get out.  */
-void
-DEFUN(__stdio_errmsg, (msg, len), CONST char *msg AND size_t len)
-{
 }
 
 
