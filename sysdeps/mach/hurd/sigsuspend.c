@@ -29,7 +29,6 @@ DEFUN(sigsuspend, (set), CONST sigset_t *set)
 {
   struct _hurd_sigstate *ss;
   sigset_t omask, pending;
-  int sig;
 
   if (set != NULL)
     /* Crash before locking.  */
@@ -42,7 +41,9 @@ DEFUN(sigsuspend, (set), CONST sigset_t *set)
 
   ss->suspended = 1;
   while ((pending = ss->pending & ~ss->blocked) == 0)
+#ifdef noteven
     __condition_wait (&ss->arrived, &ss->lock);
+#endif
   ss->suspended = 0;
   __mutex_unlock (&ss->lock);
 
