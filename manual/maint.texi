@@ -510,4 +510,7 @@ any improvements or extensions that they make and grant Carnegie Mellon
 the rights to redistribute these changes.
 @end display
 
+@item
+The @file{tar.h} header file was written by David J. MacKenzie.
+
 @end itemize
