@@ -66,6 +66,9 @@ DEFUN(readdir, (dirp), DIR *dirp)
 	  register struct dirent *d = &dirp->__entry;
 	  d->d_fileno = (ino_t) dp->d_ino;
 	  d->d_namlen = (size_t) D_NAMLEN (dp);
+	  /* On some systems the name length does not actually mean much.  */
+	  while (dp->d_name[d->d_namlen - 1] == '\0')
+	    --d->d_namlen;
 	  (void) strncpy (d->d_name, dp->d_name, d->d_namlen + 1);
 	  return d;
 	}
