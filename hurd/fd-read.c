@@ -67,7 +67,7 @@ _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes)
 		   __mutex_unlock (&ss->lock);
 		 }
 	     }
-	 } while (err != EBACKGROUND);
+	 } while (err == EBACKGROUND);
        err;
      }));
 
