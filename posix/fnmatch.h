@@ -29,8 +29,9 @@ extern "C" {
 #else /* Not C++ or ANSI C.  */
 #undef	__P
 #define	__P(args)	()
-#undef	const
-#define	const
+/* We can get away without defining `const' here only because in this file
+   it is used only inside the prototype for `fnmatch', which is elided in
+   non-ANSI C where `const' is problematical.  */
 #endif /* C++ or ANSI C.  */
 
 /* Bits set in the FLAGS argument to `fnmatch'.  */
