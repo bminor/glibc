@@ -34,7 +34,8 @@ _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes)
      ({
        do
 	 {
-	   err = __io_read (port, &data, &nread, -1, *nbytes);
+	   err = __io_read (ctty != MACH_PORT_NULL ? ctty : port,
+			    &data, &nread, -1, *nbytes);
 	   if (ctty != MACH_PORT_NULL && err == EBACKGROUND)
 	     {
 	       /* We are a background job and tried to read from the tty.
