@@ -140,10 +140,9 @@ rectty_dtable (mach_port_t cttyid)
 			    {
 			      if (id == cttyid && /* Is it ours?  */
 				  /* Get the ctty io port.  */
-				  __term_become_ctty (port, _hurd_pid,
-						      _hurd_pgrp,
-						      _hurd_msgport,
-						      &newctty))
+				  __term_open_ctty (port,
+						    _hurd_pid, _hurd_pgrp,
+						    &newctty))
 				/* XXX it is our ctty but the call failed? */
 				newctty = MACH_PORT_NULL;
 			      __mach_port_deallocate
