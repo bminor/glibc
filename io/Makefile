@@ -42,5 +42,6 @@ routines :=								      \
 routines	:= $(sort $(foreach f,$(routines),$f $(f:__%=%)))
 
 others		:= pwd
+tests		:= test-utime
 
 include ../Rules
