@@ -28,43 +28,15 @@ Cambridge, MA 02139, USA.  */
 __BEGIN_DECLS
 
 #include <gnu/types.h>
-#include <gnu/wait.h>
 
-
-#define	WNOHANG		__WNOHANG
-#define	WUNTRACED	__WUNTRACED
-
-
-/* Encoding of the status word.  */
-
-#include <endian.h>
+/* This will define the `W*' macros for the flag
+   bits to `waitpid', `wait3', and `wait4'.  */
+#include <waitflags.h>
 
 #ifdef	__USE_BSD
-union __wait
-{
-#ifdef	__LITTLE_ENDIAN
-  struct
-  {
-    unsigned int __w_termsig:7;
-    unsigned int __w_coredump:1;
-    unsigned int __w_retcode:8;
-    unsigned int:16;
-  } __wait_status;
-#else /* Big endian.  */
-  struct
-  {
-    unsigned int:16;
-    unsigned int __w_retcode:8;
-    unsigned int __w_coredump:1;
-    unsigned int __w_termsig:7;
-  } __wait_status;
-#endif /* Little endian.  */
-};
 
-#define	w_termsig	__wait_status.__w_termsig
-#define	w_coredump	__wait_status.__w_coredump
-#define	w_retcode	__wait_status.__w_retcode
-#define	w_stopsig	w_retcode
+/* Lots of hair to allow traditional BSD use of `union wait'
+   as well as POSIX.1 use of `int' for the status word.  */
 
 #ifdef	__GNUC__
 #define	__WAIT_INT(status)						      \
@@ -75,17 +47,24 @@ union __wait
 #endif
 
 /* This is the type of the argument to `wait'.
-   With GCC v2, this will be a strange union.  */
+   With GCC 2, the funky union causes redeclarations with either `int *' or
+   `union wait *' to be allowed. */
 
+#if	!defined (__GNUC__) || __GNUC__ < 2
 #define	__WAIT_STATUS	__ptr_t
+#else
+#define	__WAIT_STATUS	union { union wait *__unionptr; int *__intptr; }
+#endif
 
 #else /* Don't use BSD.  */
 
 #define	__WAIT_INT(status)	(status)
-
-#define	__WAIT_STATUS	int *
+#define	__WAIT_STATUS		int *
 
 #endif /* Use BSD.  */
+
+/* This will define all the `__W*' macros.  */
+#include <waitstatus.h>
 
 #define	WEXITSTATUS(status)	__WEXITSTATUS(__WAIT_INT(status))
 #define	WTERMSIG(status)	__WTERMSIG(__WAIT_INT(status))
@@ -126,7 +105,11 @@ extern __pid_t wait __P ((__WAIT_STATUS __stat_loc));
    set in OPTIONS, return status for stopped children; otherwise don't.  */
 extern __pid_t __waitpid __P ((__pid_t __pid, int *__stat_loc,
 			       int __options));
+extern __pid_t waitpid __P ((__pid_t __pid, int *__stat_loc,
+			     int __options));
 #ifdef	__USE_BSD
+/* This being here makes the prototypes valid whether or not
+   we have already included <sys/resource.h> to define `struct rusage'.  */
 struct rusage;
 
 /* Wait for a child to exit.  When one does, put its status in *STAT_LOC and
@@ -134,18 +117,17 @@ struct rusage;
    nil, store information about the child's resource usage there.  If the
    WUNTRACED bit is set in OPTIONS, return status for stopped children;
    otherwise don't.  */
-extern __pid_t __wait3 __P ((union __wait * __stat_loc,
+extern __pid_t __wait3 __P ((__WAIT_STATUS __stat_loc,
 			     int __options, struct rusage * __usage));
-#define	wait3	__wait3
+extern __pid_t wait3 __P ((__WAIT_STATUS __stat_loc,
+			   int __options, struct rusage * __usage));
 
 /* PID is like waitpid.  Other args are like wait3.  */
-extern __pid_t __wait4 __P ((__pid_t __pid, union __wait * __stat_loc,
-			     int __options, struct rusage * __usage));
-#define	wait4	__wait4
+extern __pid_t __wait4 __P ((__pid_t __pid, __WAIT_STATUS __stat_loc,
+			     int __options, struct rusage *__usage));
+extern __pid_t wait4 __P ((__pid_t __pid, __WAIT_STATUS __stat_loc,
+			   int __options, struct rusage *__usage));
 #endif /* Use BSD.  */
-
-#define	waitpid	__waitpid
-#define	wait	__wait
 
 
 __END_DECLS
