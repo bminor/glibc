@@ -58,7 +58,7 @@ others: $(addprefix $(objpfx),$(others))
 tests: $(tests:%=$(objpfx)%.out)
 
 ifneq "$(strip $(others) $(tests))" ""
-$(addprefix $(objpfx),$(others) $(tests)): %: %.o lib
+$(addprefix $(objpfx),$(others) $(tests)): %: %.o $(libc.a)
 	$(+link)
 endif
 
