@@ -245,8 +245,11 @@ export sysdep_routines := $(sysdep_routines)
 # replacing every ".c" in `sources' with a ".o".
 override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
 
-+depfiles := $(strip $(sources:.c=.dep) $(addsuffix .dep,$(others) $(tests)))
-+depfiles := $(addprefix $(objpfx),$(+depfiles))
++depfiles := $(strip $(sources:.c=.dep) $(extra-objs:.o=.dep) \
+		     $(addsuffix .dep,$(others) $(tests)))
++depfiles := $(addprefix $(objpfx),\
+			 $(filter-out $(addsuffix.dep,$(omit-deps)),\
+				      $(+depfiles)))
 
 $(objpfx)depend-$(subdir): Makefile
 ifdef +depfiles
@@ -308,7 +311,8 @@ lib-noranlib: libobjs
 # in $(objects).  This is the only way to define a rule that updates many
 # targets at once with one sequence of commands.
 ifdef objects
-$(patsubst %,\%(%),$(notdir $(objects))): $(objects)
+$(patsubst %,\%(%),$(notdir $(objects))): $(objpfx)stamp-$(subdir) ;
+$(objpfx)stamp-$(subdir): $(objects)
 #	$(+libc_lock_open)
 ifdef objdir
 	cd $(objdir); $(AR) cru$(verbose) libc.a $(patsubst $(objpfx)%,%,$^)
@@ -316,10 +320,10 @@ else
 	$(AR) cru$(verbose) $(..)libc.a $^
 endif
 #	$(+libc_lock_close)
+	touch $@
 endif
 
-# We depend on lib-noranlib because in the parent it depends on subdir_lib.
-$(libc.a)(__.SYMDEF): lib-noranlib
+$(libc.a)(__.SYMDEF): $(+libobjs)
 	$(RANLIB) $@
 
 define +libc_lock_open
@@ -461,7 +465,7 @@ mostlyclean: common-mostlyclean
 common-mostlyclean:
 	-rm -f $(addprefix $(objpfx),$(tests) $(others) \
 				     $(addsuffix .o,$(tests) $(others)))
-	-rm -f $(objects) $(addprefix $(objpfx),$(extra-objs))
+	-rm -f $(objects) $(addprefix $(objpfx),$(extra-objs) stamp-$(subdir))
 	-rm -f core TAGS
 
 # Also remove the dependencies and generated source files.
