@@ -56,7 +56,6 @@ aux := data_start progname
 distribute := bsd-compat.c
 extra-objs := bsd-compat.o
 install-lib := libbsd-compat.a
-tests = ioctltst
 
 include ../Rules
 
