@@ -75,7 +75,7 @@ _hurd_socket_server (int domain)
       *--np = '/';
       np -= sizeof (_SERVERS_SOCKET) - 1;
       memcpy (np, _SERVERS_SOCKET, sizeof (_SERVERS_SOCKET) - 1);
-      server = __path_lookup (np, 0, 0);
+      server = __file_name_lookup (np, 0, 0);
       if (domain <= max_domain)
 	servers[domain] = server;
     }

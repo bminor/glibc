@@ -99,7 +99,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   /* Now do a path lookup on FILE, using the crdir and cwdir
      reauthenticated with _hurd_id.rid_auth.  */
 
-  err = __hurd_path_lookup (rcrdir, rcwdir, file, 0, 0, &io);
+  err = __hurd_file_name_lookup (rcrdir, rcwdir, file, 0, 0, &io);
   __mach_port_deallocate (__mach_task_self (), rcrdir);
   __mach_port_deallocate (__mach_task_self (), rcwdir);
   if (err)

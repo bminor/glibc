@@ -37,7 +37,7 @@ DEFUN(opendir, (name), CONST char *name)
   DIR *dirp;
   file_t port;
 
-  port = __path_lookup (name, O_RDONLY, 0);
+  port = __file_name_lookup (name, O_RDONLY, 0);
   if (port == MACH_PORT_NULL)
     return NULL;
 

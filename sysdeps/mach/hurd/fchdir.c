@@ -33,8 +33,8 @@ DEFUN(fchdir, (fd), int fd)
   err = __USEPORT (CRDIR,
 		   ({ file_t crdir = port;
 		      HURD_DPORT_USE (fd,
-				      __hurd_path_lookup (crdir, port, "",
-							  0, 0, &cwdir));
+				      __hurd_file_name_lookup (crdir, port, "",
+							       0, 0, &cwdir));
 		    }));
 
   if (err)

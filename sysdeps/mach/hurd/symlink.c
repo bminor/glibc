@@ -38,7 +38,7 @@ DEFUN(__symlink, (from, to), CONST char *from AND CONST char *to)
   memcpy (buf, _HURD_SYMLINK, sizeof (_HURD_SYMLINK));
   memcpy (&buf[sizeof (_HURD_SYMLINK)], from, len);
 
-  dir = __path_split (to, &name);
+  dir = __file_name_split (to, &name);
   if (dir == MACH_PORT_NULL)
     return -1;
 

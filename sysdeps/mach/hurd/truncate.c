@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ DEFUN(truncate, (path, length),
       CONST char *path AND off_t length)
 {
   error_t err;
-  file_t file = __path_lookup (path, O_WRITE, 0);
+  file_t file = __file_name_lookup (file_name, O_WRITE, 0);
 
   if (file == MACH_PORT_NULL)
     return -1;

@@ -28,10 +28,10 @@ DEFUN(rename, (old, new), CONST char *old AND CONST char *new)
   file_t olddir, newdir;
   const char *oldname, *newname;
 
-  olddir = __path_split (old, (char **) &oldname);
+  olddir = __file_name_split (old, (char **) &oldname);
   if (olddir == MACH_PORT_NULL)
     return -1;
-  newdir = __path_split (new, (char **) &newname);
+  newdir = __file_name_split (new, (char **) &newname);
   if (newdir == MACH_PORT_NULL)
     {
        __mach_port_deallocate (__mach_task_self (), olddir);

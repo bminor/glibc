@@ -30,7 +30,7 @@ DEFUN(__link, (from, to), CONST char *from AND CONST char *to)
   file_t oldfile, linknode, todir;
   char *toname;
 
-  oldfile = __path_lookup (from, 0, 0);
+  oldfile = __file_name_lookup (from, 0, 0);
   if (oldfile == MACH_PORT_NULL)
     return -1;
 
@@ -42,7 +42,7 @@ DEFUN(__link, (from, to), CONST char *from AND CONST char *to)
   if (err)
     return __hurd_fail (err);
 
-  todir = __path_split (to, &toname);
+  todir = __file_name_split (to, &toname);
   if (todir != MACH_PORT_NULL)
     {
       err = __dir_link (linknode, todir, toname);

@@ -31,7 +31,7 @@ DEFUN(__unlink, (name), CONST char *name)
   file_t dir;
   CONST char *file;
 
-  dir = __path_split (name, (char **) &file);
+  dir = __file_name_split (name, (char **) &file);
   if (dir == MACH_PORT_NULL)
     return -1;
 

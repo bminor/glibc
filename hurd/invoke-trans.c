@@ -29,8 +29,9 @@ __hurd_invoke_translator (file_t file, int flags, file_t *newport)
   err = __file_invoke_translator (file, flags, &doretry, retryname, newport);
 
   if (! err)
-    err = __USEPORT (CRDIR, __hurd_path_lookup_retry (port, doretry, retryname,
-						      flags, 0, newport));
+    err = __USEPORT (CRDIR, __hurd_file_name_lookup_retry (port,
+							   doretry, retryname,
+							   flags, 0, newport));
 
   return err;
 }

@@ -84,7 +84,7 @@ DEFUN(__mknod, (path, mode, dev),
       len += buf + sizeof (buf) - bp;
     }
   
-  dir = __path_split (path, &name);
+  dir = __file_name_split (file_name, &name);
   if (dir == MACH_PORT_NULL)
     return -1;
 

@@ -27,7 +27,7 @@ int
 DEFUN(__lstat, (file, buf), CONST char *file AND struct stat *buf)
 {
   error_t err;
-  file_t port = __path_lookup (file, O_NOLINK, 0);
+  file_t port = __file_name_lookup (file, O_NOLINK, 0);
   if (port == MACH_PORT_NULL)
     return -1;
   err = __io_stat (port, buf);

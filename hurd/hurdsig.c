@@ -147,9 +147,9 @@ write_corefile (int signo, int sigcode, int sigerror)
   coreserver = MACH_PORT_NULL;
   name = _hurdsig_getenv ("CORESERVER");
   if (name != NULL)
-    coreserver = __path_lookup (name, 0, 0);
+    coreserver = __file_name_lookup (name, 0, 0);
   if (coreserver == MACH_PORT_NULL)
-    coreserver = __path_lookup (_SERVERS_CORE, 0, 0);
+    coreserver = __file_name_lookup (_SERVERS_CORE, 0, 0);
   if (coreserver == MACH_PORT_NULL)
     return 0;
 
@@ -157,7 +157,7 @@ write_corefile (int signo, int sigcode, int sigerror)
   name = _hurdsig_getenv ("COREFILE");
   if (name == NULL)
     name = "core";
-  coredir = __path_split (name, (char **) &name);
+  coredir = __file_name_split (name, (char **) &name);
   if (coredir == MACH_PORT_NULL)
     return 0;
   /* Create the new file, but don't link it into the directory yet.  */

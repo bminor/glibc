@@ -143,7 +143,7 @@ DEFUN(__stdio_open, (filename, m, cookieptr),
   struct hurd_fd *d;
 
   flags = modeflags (m);
-  port = __path_lookup (filename, flags, 0666 & ~_hurd_umask);
+  port = __file_name_lookup (filename, flags, 0666 & ~_hurd_umask);
   if (port == MACH_PORT_NULL)
     return -1;
 
@@ -182,7 +182,7 @@ DEFUN(__stdio_reopen, (filename, m, cookieptr),
 
   /* Open a new port on the file.  */
   flags = modeflags (m);
-  port = __path_lookup (filename, flags, 0666 & ~_hurd_umask);
+  port = __file_name_lookup (filename, flags, 0666 & ~_hurd_umask);
 
   /* Install the new port in the same file descriptor slot the old cookie
      points to.  If opening the file failed, PORT will be MACH_PORT_NULL

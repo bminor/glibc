@@ -31,11 +31,11 @@ DEFUN(chroot, (path), CONST char *path)
   file_t file, dir;
   error_t err;
 
-  file = __path_lookup (path, O_EXEC, 0);
+  file = __file_name_lookup (file_name, O_EXEC, 0);
   if (file == MACH_PORT_NULL)
     return -1;
-  err = __USEPORT (CRDIR, __hurd_path_lookup (port, file, "",
-					      O_EXEC, 0, &dir));
+  err = __USEPORT (CRDIR, __hurd_file_name_lookup (port, file, "",
+						   O_EXEC, 0, &dir));
   __mach_port_deallocate (__mach_task_self (), file);
   if (err)
     return __hurd_fail (err);

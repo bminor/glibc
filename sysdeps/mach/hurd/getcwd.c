@@ -130,7 +130,7 @@ getcwd (char *buf, size_t size)
       int direntry, nentries;
 
       /* Look at the parent directory.  */
-      if (err = __hurd_path_lookup (crdir, parent, "..", O_READ, 0, &newp))
+      if (err = __hurd_file_name_lookup (crdir, parent, "..", O_READ, 0, &newp))
 	goto lose;
       __mach_port_deallocate (__mach_task_self (), parent);
       parent = newp;
@@ -185,8 +185,8 @@ getcwd (char *buf, size_t size)
 	      if (mount_point || d->d_ino == thisino)
 		{
 		  file_t try;
-		  if (err = __hurd_path_lookup (crdir, parent, d->d_name,
-						O_NOLINK, 0, &try))
+		  if (err = __hurd_file_name_lookup (crdir, parent, d->d_name,
+						     O_NOLINK, 0, &try))
 		    goto lose;
 		  err = __io_stat (try, &st);
 		  __mach_port_deallocate (__mach_task_self (), try);
@@ -204,7 +204,7 @@ getcwd (char *buf, size_t size)
 	{
 	  /* Prepend the directory name just discovered.  */
 
-	  if (pathp - path < d->d_namlen + 1)
+	  if (pathp - file_name < d->d_namlen + 1)
 	    {
 	      if (buf != NULL)
 		{
@@ -214,14 +214,14 @@ getcwd (char *buf, size_t size)
 	      else
 		{
 		  size *= 2;
-		  buf = realloc (path, size);
+		  buf = realloc (file_name, size);
 		  if (buf == NULL)
 		    {
-		      free (path);
+		      free (file_name);
 		      return NULL;
 		    }
-		  pathp = &buf[pathp - path];
-		  path = buf;
+		  pathp = &buf[pathp - file_name];
+		  file_name = buf;
 		}
 	    }
 	  pathp -= d->d_namlen;
@@ -235,14 +235,14 @@ getcwd (char *buf, size_t size)
       thisino = dotino;
     }
 
-  if (pathp == &path[size - 1])
+  if (pathp == &file_name[size - 1])
     /* We found nothing and got all the way to the root.
        So the root is our current directory.  */
     *--pathp = '/';
 
-  memmove (path, pathp, path + size - pathp);
+  memmove (file_name, pathp, file_name + size - pathp);
   cleanup ();
-  return path;
+  return file_name;
 
  lose:
   cleanup ();

@@ -129,44 +129,44 @@ extern int __setauth (auth_t), setauth (auth_t);
    uses CRDIR for the root directory and CWDIR for the current directory.
    Returns zero on success or an error code.  */
 
-extern error_t __hurd_path_split (file_t crdir, file_t cwdir,
-				  const char *file,
-				  file_t *dir, char **name);
-extern error_t hurd_path_split (file_t crdir, file_t cwdir,
-				const char *file,
-				file_t *dir, char **name);
+extern error_t __hurd_file_name_split (file_t crdir, file_t cwdir,
+				       const char *file,
+				       file_t *dir, char **name);
+extern error_t hurd_file_name_split (file_t crdir, file_t cwdir,
+				     const char *file,
+				     file_t *dir, char **name);
 
 /* Open a port to FILE with the given FLAGS and MODE (see <fcntl.h>).
    The file lookup uses CRDIR for the root directory and CWDIR for the
    current directory.  If successful, returns zero and store the port
    to FILE in *PORT; otherwise returns an error code. */
 
-extern error_t __hurd_path_lookup (file_t crdir, file_t cwdir,
-				   const char *file,
-				   int flags, mode_t mode,
-				   file_t *port);
-extern error_t hurd_path_lookup (file_t crdir, file_t cwdir,
-				 const char *filename,
-				 int flags, mode_t mode,
-				 file_t *port);
+extern error_t __hurd_file_name_lookup (file_t crdir, file_t cwdir,
+					const char *file,
+					int flags, mode_t mode,
+					file_t *port);
+extern error_t hurd_file_name_lookup (file_t crdir, file_t cwdir,
+				      const char *filename,
+				      int flags, mode_t mode,
+				      file_t *port);
 
-/* Process the values returned by `dir_pathtrans' et al, and loop doing
-   `dir_pathtrans' calls until one returns FS_RETRY_NONE.  CRDIR is the
+/* Process the values returned by `dir_lookup' et al, and loop doing
+   `dir_lookup' calls until one returns FS_RETRY_NONE.  CRDIR is the
    root directory used for things like symlinks to absolute file names; the
    other arguments should be those just passed to and/or returned from
-   `dir_pathtrans', `fsys_getroot', or `file_invoke_translator'.  This
+   `dir_lookup', `fsys_getroot', or `file_invoke_translator'.  This
    function consumes the reference in *RESULT even if it returns an error.  */
 
-extern error_t __hurd_path_lookup_retry (file_t crdir,
-					 enum retry_type doretry,
-					 char retryname[1024],
-					 int flags, mode_t mode,
-					 file_t *result);
-extern error_t hurd_path_lookup_retry (file_t crdir,
-				       enum retry_type doretry,
-				       char retryname[1024],
-				       int flags, mode_t mode,
-				       file_t *result);
+extern error_t __hurd_file_name_lookup_retry (file_t crdir,
+					      enum retry_type doretry,
+					      char retryname[1024],
+					      int flags, mode_t mode,
+					      file_t *result);
+extern error_t hurd_file_name_lookup_retry (file_t crdir,
+					    enum retry_type doretry,
+					    char retryname[1024],
+					    int flags, mode_t mode,
+					    file_t *result);
 
 
 /* Split FILE into a directory and a name within the directory.  The
@@ -175,20 +175,20 @@ extern error_t hurd_path_lookup_retry (file_t crdir,
    within directory begins and returns a port to the directory;
    otherwise sets `errno' and returns MACH_PORT_NULL.  */
 
-extern file_t __path_split (const char *file, char **name);
-extern file_t path_split (const char *file, char **name);
+extern file_t __file_name_split (const char *file, char **name);
+extern file_t file_name_split (const char *file, char **name);
 
 /* Open a port to FILE with the given FLAGS and MODE (see <fcntl.h>).
    The file lookup uses the current root and working directory.
    Returns a port to the file if successful; otherwise sets `errno'
    and returns MACH_PORT_NULL.  */
 
-extern file_t __path_lookup (const char *file, int flags, mode_t mode);
-extern file_t path_lookup (const char *file, int flags, mode_t mode);
+extern file_t __file_name_lookup (const char *file, int flags, mode_t mode);
+extern file_t file_name_lookup (const char *file, int flags, mode_t mode);
 
 /* Invoke any translator set on the node FILE represents, and return in
    *TRANSLATED a port to the translated node.  FLAGS are as for
-   `dir_pathtrans' et al, but the returned port will not necessarily have
+   `dir_lookup' et al, but the returned port will not necessarily have
    any more access rights than FILE does.  */
 
 extern error_t __hurd_invoke_translator (file_t file, int flags,

@@ -28,7 +28,7 @@ DEFUN(__execve, (path, argv, envp),
       CONST char *path AND char *CONST argv[] AND char *CONST envp[])
 {
   error_t err;
-  file_t file = __path_lookup (path, O_EXEC, 0);
+  file_t file = __file_name_lookup (file_name, O_EXEC, 0);
 
   if (file == MACH_PORT_NULL)
     return -1;

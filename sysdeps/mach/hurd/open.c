@@ -41,7 +41,7 @@ DEFUN(__open, (file, oflag), CONST char *file AND int oflag DOTS)
   else
     mode = 0;
 
-  port = __path_lookup (file, oflag, mode);
+  port = __file_name_lookup (file, oflag, mode);
   if (port == MACH_PORT_NULL)
     return -1;
 

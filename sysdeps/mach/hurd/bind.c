@@ -45,7 +45,7 @@ DEFUN(bind, (fd, addr, len),
       file_t dir, node;
       char name[len - offsetof (struct sockaddr_un, sun_path)], *n;
       strncpy (name, unaddr->sun_path, sizeof name);
-      dir = __path_split (name, &n);
+      dir = __file_name_split (name, &n);
       if (dir == MACH_PORT_NULL)
 	return -1;
       

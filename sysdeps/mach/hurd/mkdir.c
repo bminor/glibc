@@ -28,7 +28,7 @@ DEFUN(__mkdir, (path, mode), CONST char *path AND mode_t mode)
 {
   error_t err;
   const char *name;
-  file_t parent = __path_split (path, (char **) &name);
+  file_t parent = __file_name_split (file_name, (char **) &name);
   if (parent == MACH_PORT_NULL)
     return -1;
   err = __dir_mkdir (parent, name, mode);
