@@ -560,8 +560,7 @@ file_mbstowcs (int input, int output)
       wchar_t outbuf[BUFSIZ];
       wchar_t *outp = outbuf;
 
-      /* @r{Fill up the buffer from the input file.
-         @xref{I/O Primitives}.} */
+      /* @r{Fill up the buffer from the input file.}  */
       nread = read (input, buffer + filled, BUFSIZ);
       if (nread < 0) @{
         perror ("read");
@@ -595,8 +594,7 @@ file_mbstowcs (int input, int output)
           outp++;
         @}
 
-      /* @r{Write the wide characters we just made.
-         @xref{I/O Primitives}.} */
+      /* @r{Write the wide characters we just made.}  */
       nwrite = write (output, outbuf,
                       (outp - outbuf) * sizeof (wchar_t));
       if (nwrite < 0)
