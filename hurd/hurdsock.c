@@ -1,6 +1,6 @@
 /* _hurd_socket_server - Find the server for a socket domain.
 
-Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,12 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 #include <sys/socket.h>
+#include <stdlib.h>
+#include <hurd/paths.h>
 #include <gnu-stabs.h>
+#include <stdio.h>
 
+#ifdef noteven
 static struct mutex lock;
 static void
 init_sock (void)
@@ -29,6 +33,7 @@ init_sock (void)
   __mutex_init (&lock);
 }
 text_set_element (__libc_subinit, init_sock);
+#endif
 
 static file_t *servers;
 static int max_domain;
@@ -46,8 +51,6 @@ static int max_domain;
 socket_t
 _hurd_socket_server (int domain)
 {
-  error_t err;
-
   __mutex_lock (&lock);
 
   if (domain > max_domain)
