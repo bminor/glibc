@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+#include <malloc.h>
 
 /* Prints the time in the form "hh:mm ?M", where ? is A or P.
    A simple test for strftime().  */
@@ -29,6 +29,8 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 {
   char buf[20];
   time_t t;
+
+  mcheck (NULL);
 
   if (argc != 1)
     fprintf(stderr, "Usage: %s\n", argv[0]);
