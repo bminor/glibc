@@ -1,3 +1,10 @@
+2004-12-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S (__clone): Add support for
+	NPTL where the PID is stored at userlevel and needs to be reset when
+	CLONE_THREAD is not used.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S (__clone): Likewise.
+
 2004-12-15  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ia64/dl-machine.h (elf_machine_rela): Mark auto instead
