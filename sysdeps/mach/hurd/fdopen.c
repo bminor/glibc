@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <hurd/fd.h>
 #include <fcntl.h>
+#include <hurd/io.h>
 
 /* Defined in fopen.c.  */
 extern int EXFUN(__getmode, (CONST char *mode, __io_mode *mptr));
