@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -433,9 +433,8 @@ _S_sig_post (sigthread_t me,
     case SIGIO:
     case SIGURG:
       {
-	/* Any io server for a file descriptor with the O_ASYNC flag
-	   set 
-
+	/* Any io object a file descriptor refers to might send us
+	   one of these signals using its async ID port for REFPORT.  */
 	int dealloc_dt;
 	int d;
 	struct _hurd_dtable dt = _hurd_dtable_use (&dealloc_dt);
@@ -443,17 +442,14 @@ _S_sig_post (sigthread_t me,
 	  {
 	    int dealloc;
 	    io_t port;
+	    mach_port_t asyncid;
 	    port = _hurd_port_locked_get (&d->d[d].port, &dealloc);
-	    if (flags & O_ASYNC)
+	    if (! __io_get_icky_async_id (port, &asyncid))
 	      {
-		mach_port_t asyncid;
-		if (! __io_get_icky_async_id (port, &asyncid))
-		  {
-		    if (refport == asyncid)
-		      /* Break out of the loop on the next iteration.  */
-		      d = -1;
-		    __mach_port_deallocate (__mach_task_self (), asyncid);
-		  }
+		if (refport == asyncid)
+		  /* Break out of the loop on the next iteration.  */
+		  d = -1;
+		__mach_port_deallocate (__mach_task_self (), asyncid);
 	      }
 	    _hurd_port_free (&d->d[d].port, &dealloc, port);
 	  }
