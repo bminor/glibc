@@ -21,6 +21,6 @@ subdir := resource
 headers	  := sys/resource.h sys/vlimit.h sys/vtimes.h
 
 routines := getrlimit setrlimit getrusage ulimit vlimit vtimes \
-	    getprio setprio __getrusag
+	    getprio setprio __getrusag nice
 
 include ../Rules
