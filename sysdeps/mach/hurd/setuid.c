@@ -47,7 +47,7 @@ DEFUN(__setuid, (uid), uid_t uid)
     if (_hurd_id.uids[i] == uid)
       {
 	/* We already have this uid.  Swap it with uids[0]
-	   so getuid will return it.  */
+	   so geteuid will return it.  */
 	_hurd_id.uids[i] = _hurd_id.uids[0];
 	break;
       }
