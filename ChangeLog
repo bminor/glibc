@@ -1,3 +1,7 @@
+2002-07-08  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/elf/initfini.c (__asm__): Call call_gmon_start.
+
 2002-07-02  Andreas Schwab  <schwab@suse.de>
 
 	* resolv/nss_dns/dns-network.c (getanswer_r): Reduce linebuflen
