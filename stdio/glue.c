@@ -36,7 +36,7 @@ typedef union
     struct
       {
 	int magic;
-	FILE *stream;
+	FILE **streamp;
       } glue;
     struct _iobuf
       {
@@ -52,9 +52,9 @@ typedef union
 /* These are the Unix stdio's stdin, stdout, and stderr.  */
 unix_FILE _iob[] =
   {
-    { { _GLUEMAGIC, stdin, } },
-    { { _GLUEMAGIC, stdout, } },
-    { { _GLUEMAGIC, stderr, } },
+    { { _GLUEMAGIC, &stdin, } },
+    { { _GLUEMAGIC, &stdout, } },
+    { { _GLUEMAGIC, &stderr, } },
   };
 
 /* Called by the Unix stdio `getc' macro.  */
@@ -65,10 +65,10 @@ DEFUN(_filbuf, (file), unix_FILE *file)
   switch (++file->glue.magic)
     {
     case _GLUEMAGIC:
-      return getc(file->glue.stream);
+      return getc (*file->glue.streamp);
 
     case  _IOMAGIC:
-      return getc((FILE *) file);
+      return getc ((FILE *) file);
 
     default:
       errno = EINVAL;
@@ -85,10 +85,10 @@ DEFUN(_flsbuf, (c, file),
   switch (++file->glue.magic)
     {
     case _GLUEMAGIC:
-      return putc(c, file->glue.stream);
+      return putc (c, *file->glue.streamp);
 
     case  _IOMAGIC:
-      return putc(c, (FILE *) file);
+      return putc (c, (FILE *) file);
 
     default:
       errno = EINVAL;
