@@ -155,6 +155,7 @@ Indices
 @include maint.texinfo
 
 @node Copying, Concept Index, Maintenance, Top
+@set lgpl-appendix
 @include lgpl.texinfo
 
 @node Concept Index
