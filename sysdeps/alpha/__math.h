@@ -1,5 +1,5 @@
 /* Inline math functions for Alpha.
-Copyright (C) 1996 Free Software Foundation, Inc.
+Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by David Mosberger-Tang.
 
@@ -40,14 +40,5 @@ atan (double __x)
   extern double __atan2 (double, double);
   return __atan2 (__x, 1.0);
 }
-
-#ifdef __USE_MISC
-extern __inline double
-cabs (struct __cabs_complex __z)
-{
-  extern double __hypot (double, double);
-  return __hypot(__z.x, __z.y);
-}
-#endif
 
 #endif
