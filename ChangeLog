@@ -1,3 +1,12 @@
+1999-10-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/gbk.c: Fix names which are different in 2.2.
+
+1999-10-12  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/sigaction.h: Update to match
+	generic Linux version.
+
 1999-10-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile: Add support for gbk.
