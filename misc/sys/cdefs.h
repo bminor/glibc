@@ -21,6 +21,9 @@ Cambridge, MA 02139, USA.  */
 #define	_SYS_CDEFS_H	1
 #include <features.h>
 
+/* Some user header file might have defined this before.  */
+#undef	__P
+
 #ifdef __GNUC__
 
 #define	__P(args)	args	/* GCC can always grok prototypes.  */
