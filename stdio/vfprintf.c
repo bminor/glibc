@@ -457,11 +457,11 @@ DEFUN(vfprintf, (s, format, args),
 	  case 'c':
 	    /* Character.  */
 	    nextarg(num, int);
-	    if (left)
+	    if (!left)
 	      while (--width > 0)
 		outchar(' ');
 	    outchar((unsigned char) num);
-	    if (!left)
+	    if (left)
 	      while (--width > 0)
 		outchar(' ');
 	    break;
