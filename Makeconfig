@@ -339,8 +339,7 @@ ifeq (yes,$(build-shared))
 # run the linked programs.
 link-libc = -Wl,-rpath-link=$(rpath-link) \
 	    $(common-objpfx)libc.so$(libc.so-version) \
-	    $(elfobjdir)/$(rtld-installed-name) \
-	    $(common-objpfx)libc.a $(gnulib)
+	    $(common-objpfx)$(patsubst %,$(libtype.So),c) $(gnulib)
 # Choose the default search path for the dynamic linker based on
 # where we will install libraries.
 ifneq ($(libdir),$(slibdir))
@@ -487,7 +486,7 @@ endif
 # to pass different flags for each flavor.
 libtypes = $(foreach o,$(object-suffixes),$(libtype$o))
 object-suffixes := .o
-all-object-suffixes := .o .so .po .go
+all-object-suffixes := .o .so .po .go .So
 libtype.o := lib%.a
 ifeq (yes,$(build-shared))
 # Under --enable-shared, we will build a shared library of PIC objects.
@@ -514,6 +513,19 @@ CFLAGS-.go = -g
 CFLAGS-.o = -g0 -O99 -fomit-frame-pointer
 CFLAGS-.so += $(CFLAGS-.o)
 libtype.go = lib%_g.a
+endif
+
+object-suffixes-for-libc := $(object-suffixes)
+
+ifeq ($(build-shared),yes)
+# Special library that contains the static-only routines for libc.
+object-suffixes-for-libc += .So
+# Must build the routines as PIC, though, because they can end up in (users')
+# shared objects.  We don't want to use CFLAGS-so because users may, for
+# example, make that processor-specific.
+CFLAGS-.So = $(CFLAGS-.o) -fPIC -fno-common
+CPPFLAGS-.So = $(CPPFLAGS-.o)
+libtype.So = lib%_nonshared.a
 endif
 
 
