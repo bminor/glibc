@@ -31,31 +31,30 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
   if (command == NULL || mode == NULL || (*mode != 'r' && *mode != 'w'))
     {
       errno = EINVAL;
-      return(NULL);
+      return NULL;
     }
 
   errno = ENOSYS;
-  return(NULL);
+  return NULL;
 }
 
 /* Close a stream opened by popen and return its status.
    Returns -1 if the stream was not opened by popen.  */
- */
 int
 DEFUN(pclose, (stream), register FILE *stream)
 {
   if (!__validfp(stream) || !__ispipe(stream))
     {
       errno = EINVAL;
-      return(-1);
+      return -1;
     }
 
   errno = ENOSYS;
-  return(-1);
+  return -1;
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 
