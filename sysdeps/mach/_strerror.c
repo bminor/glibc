@@ -62,7 +62,8 @@ _strerror_internal (int errnum, char *buf, size_t buflen)
 
       /* Now construct the result while taking care for the destination
 	 buffer size.  */
-      q = __mempcpy (buf, unk, MIN (unklen, buflen));
+      q = memcpy (buf, unk, MIN (unklen, buflen));
+      q += MIN (unklen, buflen);
       if (unklen < buflen)
 	__stpncpy (q, p, buflen - unklen);
 
@@ -93,11 +94,13 @@ _strerror_internal (int errnum, char *buf, size_t buflen)
 
       /* Now construct the result while taking care for the destination
 	 buffer size.  */
-      q = __mempcpy (buf, unk, MIN (unklen, buflen));
+      q = memcpy (buf, unk, MIN (unklen, buflen));
+      q += MIN (unklen, buflen);
       if (unklen < buflen)
 	{
-	  q = __mempcpy (q, es->subsystem[sub].subsys_name,
-			 MIN (len, buflen - unklen));
+	  q = memcpy (q, es->subsystem[sub].subsys_name,
+		      MIN (len, buflen - unklen));
+	  q += MIN (len, buflen - unklen);
 	  if (unklen + len < buflen)
 	    {
 	      *q++ = ' ';
