@@ -1,5 +1,8 @@
 2004-10-05  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: Include dl-sysdep.h.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/sysconf.c: Include hp-timing.h.
 	(__sysconf): Return -1 for _SC_CPUTIME or _SC_THREAD_CPUTIME if
 	!HP_TIMING_AVAIL.

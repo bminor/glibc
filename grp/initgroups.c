@@ -73,7 +73,7 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
   /* Start is one, because we have the first group as parameter.  */
   long int start = 1;
 
-  *groupsp[0] = group;
+  (*groupsp)[0] = group;
 
   if (__nss_group_database != NULL)
     {
@@ -86,6 +86,8 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
 
   while (! no_more)
     {
+      long int prev_start = start;
+
       fct = __nss_lookup_function (nip, "initgroups_dyn");
 
       if (fct == NULL)
@@ -99,6 +101,21 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
       else
 	status = DL_CALL_FCT (fct, (user, group, &start, size, groupsp,
 				    limit, &errno));
+
+      /* Remove duplicates.  */
+      long int cnt = prev_start;
+      while (cnt < start)
+	{
+	  long int inner;
+	  for (inner = 0; inner < prev_start; ++inner)
+	    if ((*groupsp)[inner] == (*groups)[cnt])
+	      break;
+
+	  if (inner < prev_start)
+	    ++cnt;
+	  else
+	    (*groupsp)[cnt] = (*groupsp)[--start];
+	}
 
       /* This is really only for debugging.  */
       if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
