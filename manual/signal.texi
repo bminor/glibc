@@ -708,10 +708,13 @@ signals for a process are discarded when it receives a stop signal.
 When a process in an orphaned process group (@pxref{Orphaned Process
 Groups}) receives a @code{SIGTSTP}, @code{SIGTTIN}, or @code{SIGTTOU}
 signal and does not handle it, the process does not stop.  Stopping the
-process would be unreasonable since there would be no way to continue
-it.  What happens instead depends on the operating system you are
-using.  Some systems may do nothing; others may deliver another signal
-instead, such as @code{SIGKILL} or @code{SIGHUP}.
+process would probably not be very useful, since there is no shell
+program that will notice it stop and allow the user to continue it.
+What happens instead depends on the operating system you are using.
+Some systems may do nothing; others may deliver another signal instead,
+such as @code{SIGKILL} or @code{SIGHUP}.  In the GNU system, the process
+dies with @code{SIGKILL}; this avoids the problem of many stopped,
+orphaned processes lying around the system.
 
 @ignore
 On the GNU system, it is possible to reattach to the orphaned process
