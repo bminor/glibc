@@ -114,9 +114,11 @@ realclean: clean
 	-rm -f libc.cp libc.cps libc.fn libc.fns libc.pg libc.pgs \
 	       libc.tp libc.tps libc.vr libc.vrs libc.log libc.aux libc.toc
 
-.PHONY: install subdir_install installdirs
-subdir_install: install
+.PHONY: install subdir_install installdirs install-data
+install-data subdir_install: install
 install: $(infodir)/libc.info
+# Catchall implicit rule for other installation targets from the parent.
+install-%: ;
 
 ifndef infodir
 infodir = $(prefix)/info
