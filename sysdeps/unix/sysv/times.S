@@ -18,5 +18,5 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-SYSCALL____ (times)
+SYSCALL__ (times)
 	ret
