@@ -52,7 +52,6 @@ oom (void)
 # endif
 
 
-
 size_t
 internal_function
 _dl_next_tls_modid (void)
@@ -98,7 +97,6 @@ _dl_next_tls_modid (void)
 	  /* The new index must indeed be exactly one higher than the
 	     previous high.  */
 	  assert (result == GL(dl_tls_max_dtv_idx) + 1);
-
 	  /* There is no gap anymore.  */
 	  GL(dl_tls_dtv_gaps) = false;
 
@@ -109,14 +107,15 @@ _dl_next_tls_modid (void)
     {
       /* No gaps, allocate a new entry.  */
     nogaps:
+
       result = ++GL(dl_tls_max_dtv_idx);
     }
 
   return result;
 }
 
-# ifdef SHARED
 
+# ifdef SHARED
 void
 internal_function
 _dl_determine_tlsoffset (void)

@@ -204,7 +204,7 @@ extern void _dl_reloc_overflow (struct link_map *map,
    LOADADDR is the load address of the object; INFO is an array indexed
    by DT_* of the .dynamic section info.  */
 
-inline void
+auto inline void __attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
 		  void *const reloc_addr_arg)
@@ -298,7 +298,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     }
 }
 
-static inline void
+auto inline void __attribute__ ((always_inline))
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 			   void *const reloc_addr_arg)
 {
@@ -306,7 +306,7 @@ elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
   *reloc_addr = l_addr + reloc->r_addend;
 }
 
-static inline void
+auto inline void __attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
