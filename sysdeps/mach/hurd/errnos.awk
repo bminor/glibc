@@ -107,8 +107,9 @@ in_mach_errors == 1 && NF == 3 && $1 == "#define" \
 END \
   {
     print "";
-    printf "\t_HURD_ERRNOS = %d\n", ++errno;
     print "};";
+    print "";
+    printf "#define\t_HURD_ERRNOS\t%d\n", ++errno;
     print "";
     print "#endif /* <errno.h> included.  */";
   }
