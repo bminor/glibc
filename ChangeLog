@@ -1,3 +1,8 @@
+2002-04-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/glob.c (glob): Don't pass GLOB_NOMAGIC flag to
+	glob_in_dir [PR libc/3385].
+
 2002-04-28  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/i386/sys/io.h: New file.
