@@ -353,11 +353,11 @@ LDFLAGS	:= -g
 endif
 
 
-ifneq "$(filter -DHAVE_GNU_LD,$(CPPFLAGS))" ""
+ifneq "$(filter -DHAVE_GNU_LD -DHAVE_GNU_LD=1,$(CPPFLAGS))" ""
 +gnu-stabs := yes
 endif
 
-ifneq "$(filter -DHAVE_GNU_AS,$(CPPFLAGS))" ""
+ifneq "$(filter -DHAVE_GNU_AS -DHAVE_GNU_AS=1,$(CPPFLAGS))" ""
 gnu-as := yes
 endif
 
