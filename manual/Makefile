@@ -33,12 +33,28 @@ define \n
 endef
 chapters := $(subst $(\n), ,$(chapters))
 
-library.dvi library.info: $(chapters) summary.texinfo texinfo.tex
+library.dvi library.info: $(chapters) summary.texinfo
+library.dvi: texinfo.tex
 
 summary.texinfo: summary.awk $(chapters)
 	awk -f $^ \
 	| sort +1 -2 | tr '\014' '\012' > $@.new
 	mv $@.new $@
+
+%.c.texi: examples/%.c
+	sed -e 's,[{}],@&,g'				\
+	    -e 's,/\* *\(.*\) *\*/,/* @r{\1} */,'	\
+	    -e 's/\(@[a-z]*\)@{\([^}]*\)@}/\1{\2}/'	\
+	    $< > $@.new
+	mv $@.new $@
+
+ifdef chapters
+include chapters-incl
+chapters-incl: $(chapters)
+	(echo library.dvi library.info: \\	;\
+	 grep '^@include' $^ | awk '{ print $$2 " \\" }') > $@.new
+	mv $@.new $@
+endif
 
 ifeq (,)
 headers :=
