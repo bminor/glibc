@@ -99,7 +99,7 @@ DEFUN(__drem, (x, y),
 	  if (x >= b)
 	    x -= y;
 	}
-      ux.ieee.negative = negative;
+      ux.ieee.negative ^= negative;
       return x;
     }
 }
