@@ -1,3 +1,26 @@
+1999-12-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/ucontext.h: New file.
+
+1999-12-20  Andreas Schwab  <schwab@suse.de>
+
+	* manual/install.texi (Running make install): Clearify that
+	install_root should be an absolute file name.
+
+1999-12-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv.c (__gconv): Deal with outbuf being NULL.
+
+	* iconv/iconv.c (iconv): Allow omitting output buffer if no input
+	buffer is given to place conversion descriptor in initial state.
+	* iconvdata/gconv-modules: Correct aliases CSPC850MULTILINGUAL and
+	CSPC862LATINHEBREW.
+	* iconvdata/gconv-modules: Add aliases GB2312 and csGB2312
+	(according to IANA registry).
+	Reported by Bruno Haible <haible@ilog.fr>.
+
+	* iconvdata/johab.c: Correct completely broken conversion to JOHAB.
+
 1999-12-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/langinfo.h: Always define CODESET.
