@@ -16,27 +16,6 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-# These need to exist before any compiling is done,
-# so cpp doesn't instead find the stub versions.
-before-compile := $(before-compile) $(objpfx)errnos.h $(objpfx)ioctls.h
-
-$(objpfx)errnos.h: $(objpfx)make-errnos
-	$(dir $<)$(notdir $<) > $@-tmp
-	mv $@-tmp $@
-
-$(objpfx)make-errnos: $(objpfx)make-errnos.c
-	cd $(objdir); $(CC) $(<:$(objpfx)%=%) -o $(@:$(objpfx)%=%)
-
-$(objpfx)make-errnos.c: $(sysdep_dir)/unix/errnos-tmpl.c \
-			$(sysdep_dir)/unix/errnos.awk $(objpfx)errnos
-	awk -f $(word 2,$^) errnos="`tr '\012' ' ' < $(word 3,$^)`" $< > $@-tmp
-	mv $@-tmp $@
-
-$(objpfx)errnos: $(wildcard $(sysincludedir)/errno.h	\
-			    $(sysincludedir)/sys/errno.h)
-	cat $^ | sed -n 's/^#define[ 	]*\(E[A-Z0-9]*\)[ 	]*[0-9][0-9]*[	]*.*$$/\1/p' > $@-tmp
-	mv $@-tmp $@
-
 ifeq ($(subdir),misc)
 
 sysdep_headers := $(sysdep_headers) sys/param.h
@@ -94,6 +73,34 @@ $(addprefix $(objpfx),$(sys/param.h-includes)): $(objpfx)%: $(sysincludedir)/%
 endif
 
 endif # misc
+
+ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/errnos.h))))" \
+     "$(sysdep_dir)/stub/"
+# These need to exist before any compiling is done,
+# so cpp doesn't instead find the stub versions.
+before-compile := $(before-compile) $(objpfx)errnos.h 
+
+$(objpfx)errnos.h: $(objpfx)make-errnos
+	$(dir $<)$(notdir $<) > $@-tmp
+	mv $@-tmp $@
+
+$(objpfx)make-errnos: $(objpfx)make-errnos.c
+	cd $(objdir); $(CC) $(<:$(objpfx)%=%) -o $(@:$(objpfx)%=%)
+
+$(objpfx)make-errnos.c: $(sysdep_dir)/unix/errnos-tmpl.c \
+			$(sysdep_dir)/unix/errnos.awk $(objpfx)errnos
+	awk -f $(word 2,$^) errnos="`tr '\012' ' ' < $(word 3,$^)`" $< > $@-tmp
+	mv $@-tmp $@
+
+$(objpfx)errnos: $(wildcard $(sysincludedir)/errno.h	\
+			    $(sysincludedir)/sys/errno.h)
+	cat $^ | sed -n 's/^#define[ 	]*\(E[A-Z0-9]*\)[ 	]*[0-9][0-9]*[	]*.*$$/\1/p' > $@-tmp
+	mv $@-tmp $@
+endif
+
+ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/ioctls.h))))" \
+     "$(sysdep_dir)/stub/"
+before-compile := $(before-compile) $(objpfx)ioctls.h
 
 $(objpfx)ioctls.h: $(objpfx)make-ioctls
 	$(dir $<)$(notdir $<) > $@-tmp
@@ -110,7 +117,8 @@ $(objpfx)make-ioctls.c: $(sysdep_dir)/unix/ioctls-tmpl.c \
 $(objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls $(sysincludedir)/sys/ioctl.h
 	$(dir $<)$(notdir $<) $(word 2,$^) | tr '\012' ' ' > $@-tmp
 	mv $@-tmp $@
-
+endif
+
 ifeq ($(subdir),stdio)
 
 before-compile: $(objpfx)errlist.c
