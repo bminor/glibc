@@ -38,11 +38,14 @@ libglob.a: glob.o fnmatch.o
 	$(AR) $(ARFLAGS) $@ glob.o fnmatch.o
 	$(RANLIB) $@
 
-glob.o: $(srcdir)/glob.h $(srcdir)/fnmatch.h
-fnmatch.o: $(srcdir)/fnmatch.h
+# For some reason, Unix make wants the dependencies on the source files.
+# Otherwise it refuses to use an implicit rule!
+# And, get this: it doesn't work to use $(srcdir)/foo.c!!
+glob.o: $(srcdir)/glob.h $(srcdir)/fnmatch.h glob.c
+fnmatch.o: $(srcdir)/fnmatch.h fnmatch.c
 
 .c.o:
-	$(CC) $(CFLAGS) $(CPPFLAGS) -I. -I$(srcdir) -c $< $(OUTPUT_OPTION)
+	$(CC) -I. -I$(srcdir) -c $(CPPFLAGS) $(CFLAGS) $< $(OUTPUT_OPTION)
 
 .PHONY: clean realclean glob-clean glob-realclean
 clean glob-clean:
