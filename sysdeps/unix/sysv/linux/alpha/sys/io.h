@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_IO_H
-
 #define	_SYS_IO_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
@@ -63,6 +63,13 @@ extern int pciconfig_write __P ((unsigned long int __bus,
 				 unsigned long int __off,
 				 unsigned long int __len,
 				 unsigned char *__buf));
+/* Userspace declarations.  */
+extern unsigned int inb __P ((unsigned long __port));
+extern unsigned int inw __P ((unsigned long __port));
+extern unsigned int inl __P ((unsigned long __port));
+extern void outb __P ((unsigned char __b, unsigned long __port));
+extern void outw __P ((unsigned short __w, unsigned long __port));
+extern void outl __P ((unsigned int __l, unsigned long __port));
 
 __END_DECLS
 
