@@ -61,7 +61,7 @@ foo:=$(shell echo 'IS THIS WORKING??? all-headers=$(all-headers)' >&2)
 
 # Find all sysdep sources and headers.
 +maybe-sysdeps := $(sources) $(sources:.c=.s) $(sources:.c=.S) $(all-headers) \
-		  $(filter %.c %.S %.s %.h,$(distribute))
+		  $(filter %.c %.S %.s %.h %.sub,$(distribute))
 foo:=$(shell echo '+maybe-sysdeps=$(+maybe-sysdeps)'>&2)
 # Find all the files that have a stub or generic version.
 try-sysdeps := $(foreach dir,$(..)sysdeps/stub $(..)sysdeps/generic,\
