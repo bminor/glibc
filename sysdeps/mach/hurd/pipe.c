@@ -56,10 +56,18 @@ DEFUN(__pipe, (fds), int fds[2])
   __socket_shutdown (sock1, 1);
   __socket_shutdown (sock2, 0);
 
-  d1 = _hurd_dalloc (sock1, 0);
-  d2 = _hurd_dalloc (sock2, 0);
-  if (d1 < 0 || d2 < 0)
-    return -1;
+  d1 = _hurd_dalloc (sock1, MACH_PORT_NULL, 0);
+  if (d1 < 0)
+    {
+      __mach_port_deallocate (__mach_task_self (), sock2);
+      return -1;
+    }
+  d2 = _hurd_dalloc (sock2, MACH_PORT_NULL, 0);
+  if (d2 < 0)
+    {
+      (void) close (d1);
+      return __hurd_fail (EMFILE);
+    }
 
   fds[0] = d1;
   fds[2] = d2;
