@@ -56,7 +56,7 @@ extern "C"
 #define	GLOB_NOMATCH	3	/* No matches found.  */
 
 /* Structure describing a globbing run.  */
-  typedef struct
+typedef struct
   {
     int gl_pathc;		/* Count of paths matched by the pattern.  */
     char **gl_pathv;		/* List of matched pathnames.  */
@@ -72,16 +72,15 @@ extern "C"
    `glob' returns GLOB_ABEND; if it returns zero, the error is ignored.
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
-  extern int glob __P ((const char *__pattern, int __flags,
-			int (*__errfunc) __P ((const char *, int)),
-			glob_t * __pglob));
+extern int glob __P ((const char *__pattern, int __flags,
+		      int (*__errfunc) __P ((const char *, int)),
+		      glob_t * __pglob));
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
-  extern void globfree __P ((glob_t * __pglob));
+extern void globfree __P ((glob_t * __pglob));
 
 #ifdef	__cplusplus
 }
-
 #endif
 
 #endif /* glob.h  */
