@@ -35,7 +35,7 @@ struct printf_info
 {
   int prec;			/* Precision.  */
   int width;			/* Width.  */
-  char spec;			/* Format letter.  */
+  unsigned char spec;		/* Format letter.  */
   unsigned int is_long_double:1;/* L flag.  */
   unsigned int is_short:1;	/* h flag.  */
   unsigned int is_long:1;	/* l flag.  */
