@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -50,7 +50,7 @@ routines = $(interface-routines) \
 	   $(addprefix __,$(mach-syscalls)) \
 	   $(mach-shortcuts) $(addprefix __,$(mach-shortcuts)) \
 	   mach_init vm_page_size \
-	   mig_strncpy __mig_strncpy __bcopy __msg msg \
+	   mig_strncpy __mig_strncpy __msg msg \
 	   mig_support mig_support_syms \
 	   msg_destroy msg_server msg_server_t \
 	   __msg_destroy __msg_server \
