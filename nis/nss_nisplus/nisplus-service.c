@@ -347,7 +347,7 @@ _nss_nisplus_getservbyname_r (const char *name, const char *protocol,
 }
 
 enum nss_status
-_nss_nisplus_getservbyport_r (const int number, const char *protocol,
+_nss_nisplus_getservbyport_r (const int port, const char *protocol,
 			      struct servent *serv,
 			      char *buffer, size_t buflen, int *errnop)
 {
@@ -371,7 +371,7 @@ _nss_nisplus_getservbyport_r (const int number, const char *protocol,
       char buf[60 + strlen (protocol) + tablename_len];
 
       sprintf (buf, "[port=%d,proto=%s],%s",
-	       number, protocol, tablename_val);
+	       port, protocol, tablename_val);
 
       result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
