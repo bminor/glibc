@@ -146,29 +146,34 @@ foo:=$(shell echo '+sysdep-dist=$(+sysdep-dist)' >&2)
 
 subdirs := $(filter-out crypt,$(subdirs))
 
-+sysdep-tsrcs := $(wildcard $(foreach file,Makefile Implies,\
++sysdep-tsrcs := $(wildcard $(foreach file,Makefile Implies \
+				           configure configure.in,\
 				      $(addsuffix /$(file),$(sysdep_dirs)))) \
 		 $(+sysdep-dist)
 
 +tsrcs := $(+tsrcs) $(+sysdep-tsrcs)
 
+%/configure: %/configure.in
+	autoconf $(ACFLAGS)
+
 .PHONY: dist
 # N.B.: The order in which these are done matters (so don't use -j).
 MAKEFLAGS = -j1	  # I wonder if that works.
-dist: dist.tar subdir_dist de-.. dist.tar.Z \
-      $(tardir).tar.Z $(tardir)-crypt.tar.Z
+dist: dist.tar subdir_dist de-.. dist.tar.z \
+      $(tardir).tar.z $(tardir)-crypt.tar.z
 
-$(tardir).tar.Z: dist.tar.Z
+$(tardir).tar.z: dist.tar.z
 	ln $< $@
 
-$(tardir)-crypt.tar.Z: crypt/crypt.tar.Z
+$(tardir)-crypt.tar.z: crypt/crypt.tar.z
 	ln $< $@
 crypt/%: FORCE
 	$(MAKE) -C $(@D) $(@F)
 FORCE:
 
 dist.tar: $(tardir) $(+tsrcs)
-	tar ch$(verbose)f $@ $(addprefix $(tardir)/,$(filter-out $(tardir),$^))
+	tar cho$(verbose)f $@ \
+			   $(addprefix $(tardir)/,$(filter-out $(tardir),$^))
 
 de-..: dist.tar
 	tar xf $< -C /tmp
@@ -177,6 +182,9 @@ de-..: dist.tar
 
 %.Z: %
 	compress -c $< > $@
+
+%.z: %
+	gzip -9 -c $< > $@
 
 foo:=$(shell echo 'subdirs=$(subdirs)' >&2)
 dist-subdirs := $(addprefix dist-,$(subdirs)) # dist-manual
