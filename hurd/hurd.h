@@ -142,8 +142,8 @@ extern ino_t _hurd_ctty_fileid;
 
 extern vm_address_t _hurd_stack_low, _hurd_stack_high; /* Not locked.  */
 
-extern thread_t _hurd_sigport_thread;
-extern mach_port_t _hurd_sigport; /* Locked by _hurd_siglock.  */
+extern thread_t _hurd_msgport_thread;
+extern mach_port_t _hurd_msgport; /* Locked by _hurd_siglock.  */
 
 /* Not locked.  If we are using a real dtable,
    these are turned into that and then cleared at startup.
@@ -418,7 +418,7 @@ extern void _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 					sigset_t *restore_blocked);
 
 /* Function run by the signal thread to receive from the signal port.  */
-extern void _hurd_sigport_receive (void);
+extern void _hurd_msgport_receive (void);
 
 
 /* Perform interruptible RPC CALL on PORT.
