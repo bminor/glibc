@@ -215,7 +215,7 @@
 
 	* string/bits/string2.h (__strsep): Help gcc optimizing string access.
 
-	* sysdeps/generic/mathdef.h: Protect definitions for math.h
+	* sysdeps/generic/bits/mathdef.h: Protect definitions for math.h
 	against double inclusion.
 	* sysdeps/alpha/fpu/bits/mathdef.h: Likewise.
 	* sysdeps/i386/fpu/bits/mathdef.h: Likewise.

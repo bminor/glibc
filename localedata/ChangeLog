@@ -1,6 +1,13 @@
+1999-12-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/en_BW: New file.
+	* locale/en_ZW: New file.
+	Contributed by Schalk W. Cronjé <schalkc@ntaba.co.za>.
+
 1999-12-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/af_ZA: New file.
+	Contributed by Schalk W. Cronjé <schalkc@ntaba.co.za>.
 
 1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
