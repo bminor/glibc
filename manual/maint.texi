@@ -35,7 +35,11 @@ conventional GNU name for your system configuration---for example,
 @samp{sparc-sun-sunos4.1}, for a Sun 4 running Sunos 4.1.
 @xref{Installation, Installation, Installing GNU CC, gcc.info, Using and
 Porting GNU CC}, for a full description of standard GNU configuration
-names.
+names.  If you omit the configuration name, @file{configure} will try to
+guess one for you by inspecting the system it is running on.  It may or
+may not be able to come up with a guess, and the its guess might be
+wrong.  @file{configure} will tell you the canonical name of the chosen
+configuration before proceeding.
 
 The GNU C Library currently supports configurations that match the
 following patterns:
