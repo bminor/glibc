@@ -564,7 +564,7 @@ f  o  o  b  a  r
 @noindent
 so the next input character will be @samp{b}.
 
-@group
+@c @group   Invalid outside @example
 If instead of reading @samp{b} you unread the letter @samp{o}, you get a
 situation like this:
 
@@ -577,9 +577,9 @@ f  o  o  b  a  r
 
 @noindent
 so that the next input characters will be @samp{o} and @samp{b}.
-@end group
+@c @end group
 
-@group
+@c @group
 If you unread @samp{9} instead of @samp{o}, you get this situation:
 
 @example
@@ -591,7 +591,7 @@ f  o  o  b  a  r
 
 @noindent
 so that the next input characters will be @samp{9} and @samp{b}.
-@end group
+@c @end group
 
 @node How Unread
 @subsection Using @code{ungetc} To Do Unreading
