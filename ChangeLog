@@ -1,3 +1,10 @@
+1999-09-17  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/port2fd.c (_hurd_port2fd): Never change CTTYID port.
+
+	* sysdeps/mach/hurd/setsid.c (__setsid): Fix return type -> pid_t.
+	Return _hurd_pgrp instead of 0.
+
 1999-09-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/getdate.c (__getdate_r): Pass correct year to check_mday.
