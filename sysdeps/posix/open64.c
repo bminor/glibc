@@ -24,7 +24,7 @@
 int
 __libc_open64 (const char *file, int oflag, ...)
 {
-  int mode = ;
+  int mode = 0;
 
   if (oflag & O_CREAT)
     {
