@@ -34,35 +34,43 @@ __BEGIN_DECLS
    many things must be changed that use `unsigned short int's.  */
 enum
 {
-  _ISupper = 1 << 0,		/* UPPERCASE.  */
-  _ISlower = 1 << 1,		/* lowercase.  */
-  _IScntrl = 1 << 2,		/* Control character.  */
-  _ISdigit = 1 << 3,		/* Numeric.  */
-  _ISspace = 1 << 4,		/* Whitespace.  */
-  _IShex = 1 << 5,		/* A - F, a - f.  */
-  _ISpunct = 1 << 6,		/* Punctuation.  */
-  _NOgraph = 1 << 7,		/* Printing but nongraphical.  */
-  _ISblank = 1 << 8,		/* Blank (usually SPC and TAB).  */
-  _ISalpha = _ISupper | _ISlower,	/* Alphabetic.  */
+  _ISupper = 1 << 0,			/* UPPERCASE.  */
+  _ISlower = 1 << 1,			/* lowercase.  */
+  _IScntrl = 1 << 2,			/* Control character.  */
+  _ISdigit = 1 << 3,			/* Numeric.  */
+  _ISspace = 1 << 4,			/* Whitespace.  */
+  _IShex = 1 << 5,			/* A - F, a - f.  */
+  _ISpunct = 1 << 6,			/* Punctuation.  */
+  _NOgraph = 1 << 7,			/* Printing but nongraphical.  */
+  _ISblank = 1 << 8,			/* Blank (usually SPC and TAB).  */
+  _ISalpha = _ISupper | _ISlower, 	/* Alphabetic.  */
   _ISalnum = _ISalpha | _ISdigit,	/* Alphanumeric.  */
-  _ISxdigit = _ISdigit | _IShex,/* Hexadecimal numeric.  */
+  _ISxdigit = _ISdigit | _IShex,	/* Hexadecimal numeric.  */
   _ISgraph = _ISalnum | _ISpunct,	/* Graphical.  */
-  _ISprint = _ISgraph | _NOgraph/* Printing.  */
+  _ISprint = _ISgraph | _NOgraph	/* Printing.  */
 };
 
 /* These are defined in localeinfo.c.
-   The declarations here must match those in localeinfo.h.  */
+   The declarations here must match those in localeinfo.h.
+
+   These point to the second element ([1]) of arrays of size (UCHAR_MAX + 1).
+   EOF is -1, so [EOF] is the first element of the original array.
+   ANSI requires that the ctype functions work for `unsigned char' values
+   and for EOF.  The case conversion arrays are of `short int's rather than
+   `unsigned char's because tolower (EOF) must be EOF, which doesn't fit
+   into an `unsigned char'.  */
 extern __const unsigned short int *__ctype_b;	/* Characteristics.  */
-extern __const unsigned char *__ctype_tolower;	/* Case conversions.  */
-extern __const unsigned char *__ctype_toupper;	/* Case conversions.  */
+extern __const short int *__ctype_tolower;	/* Case conversions.  */
+extern __const short int *__ctype_toupper;	/* Case conversions.  */
 
-#define	__isctype(c, type)	(__ctype_b[c] & (unsigned short int) type)
+#define	__isctype(c, type) \
+  ((__ctype_b[(int) (c)] & (unsigned short int) type) != 0)
 
-#define	__isascii(c)	(((c) & (1 << 7)) == 0)
-#define	__toascii(c)	((c) & 0x7f)
+#define	__isascii(c)	(((c) & (1 << 7)) == 0)	/* If high bit is set.  */
+#define	__toascii(c)	((c) & 0x7f) /* Mask off high bit.  */
 
-#define	__tolower(c)	__ctype_tolower[c]
-#define	__toupper(c)	__ctype_toupper[c]
+#define	__tolower(c)	((int) __ctype_tolower[(int) (c)])
+#define	__toupper(c)	((int) __ctype_toupper[(int) (c)])
 
 #define	__exctype(name)	extern int name __P ((int))
 
@@ -129,25 +137,8 @@ __exctype (_tolower);
 #define	isblank(c)	__isctype((c), _ISblank)
 #endif
 
-#ifdef	__GNUC__
-extern __inline int
-tolower (int __c)
-{
-  if ((unsigned char) __c != __c)
-    return __c;
-  else
-    return __tolower (__c);
-}
-
-extern __inline int
-toupper (int __c)
-{
-  if ((unsigned char) __c != __c)
-    return __c;
-  else
-    return __toupper (__c);
-}
-#endif	/* GCC.  */
+#define	tolower(c)	__tolower(c)
+#define	toupper(c)	__toupper(c)
 
 #if defined(__USE_SVID) || defined(__USE_MISC)
 #define	isascii(c)	__isascii(c)
