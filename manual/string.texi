@@ -1,4 +1,4 @@
-@node String and Array Ut-lities, Extended Characters, Character Handling, Top
+@node String and Array Utilities, Extended Characters, Character Handling, Top
 @chapter String and Array Utilities
 
 Operations on strings (or arrays of characters) are an important part of
