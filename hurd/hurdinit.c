@@ -35,7 +35,7 @@ void _hurd_proc_init (char **argv);
    PORTARRAY and INTARRAY are vm_deallocate'd.  */
 
 void
-_hurd_init (char **argv,
+_hurd_init (int flags, char **argv,
 	    mach_port_t *portarray, size_t portarraysize,
 	    int *intarray, size_t intarraysize)
 {
@@ -80,6 +80,12 @@ _hurd_init (char **argv,
   __vm_deallocate (__mach_task_self (),
 		   (vm_address_t) portarray,
 		   portarraysize * sizeof (mach_port_t));
+
+  if (flags & EXEC_SECURE)
+    /* XXX if secure exec, elide environment variables
+       which the library uses and could be security holes.
+       CORESERVER, COREFILE
+       */ ;
 }
 
 /* The user can do "int _hide_arguments = 1;" to make
