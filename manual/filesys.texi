@@ -398,7 +398,11 @@ this link with a new link, you must remove the old link explicitly first.
 There are already too many links to the file named by @var{oldname}.
 (The maximum number of links to a file is @code{LINK_MAX}; see
 @ref{Limits for Files}.)
-@c Can this really happen in GNU?
+
+Well-designed file systems never report this error, because they permit
+more links than your disk could possibly hold.  However, you must still
+take account of the possibility of this error, as it could result from
+network access to a file system on another machine.
 
 @item ENOENT
 The file named by @var{oldname} doesn't exist.  You can't make a link to
@@ -703,10 +707,10 @@ The @var{newname} names a directory, but the @var{oldname} doesn't.
 @item EMLINK
 The parent directory of @var{newname} would have too many links.
 
-Well-designed file systems never report this error, because they have no
-limitation on the number of names a file can have.  However, you must
-still take account of the possibility of this error, as it could result
-from network access to a file system on another machine.
+Well-designed file systems never report this error, because they permit
+more links than your disk could possibly hold.  However, you must still
+take account of the possibility of this error, as it could result from
+network access to a file system on another machine.
 
 @item ENOENT
 The file named by @var{oldname} doesn't exist.
@@ -760,10 +764,10 @@ A file named @var{filename} already exists.
 @item EMLINK
 The parent directory has too many links.
 
-Well-designed file systems never report this error, because they have no
-limitation on the number of names a file can have.  However, you must
-still take account of the possibility of this error, as it could result
-from network access to a file system on another machine.
+Well-designed file systems never report this error, because they permit
+more links than your disk could possibly hold.  However, you must still
+take account of the possibility of this error, as it could result from
+network access to a file system on another machine.
 
 @item ENOSPC
 The file system doesn't have enough room to create the new directory.
