@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,21 +28,20 @@ Cambridge, MA 02139, USA.  */
 /* Execute PATH with all arguments after PATH until
    a NULL pointer and environment from `environ'.  */
 int
-DEFUN(execl, (path), CONST char *path AND CONST char *arg DOTS)
+DEFUN(execl, (path), CONST char *path DOTS)
 {
   CONST char *argv[1024];
   register unsigned int i;
   va_list args;
 
-  va_start(args, path);
-  argv[0] = arg;
-  i = 1;
+  va_start (args, path);
+  i = 0;
   do
     {
-      argv[i] = va_arg(args, CONST char *);
+      argv[i] = va_arg (args, CONST char *);
     } while (argv[i++] != NULL);
 
-  va_end(args);
+  va_end (args);
 
-  return __execve(path, (char *CONST *) argv, __environ);
+  return __execve (path, (char *CONST *) argv, __environ);
 }
