@@ -548,7 +548,7 @@ an integer type is for using an array of @code{long} as a bit vector.
 You can access the bit at index @var{n} with
 
 @example
-vector[@var{n} / LONGBITS} & (1 << (@var{n} % LONGBITS))
+vector[@var{n} / LONGBITS] & (1 << (@var{n} % LONGBITS))
 @end example
 
 @noindent
@@ -838,7 +838,7 @@ principle GNU C actually satisfies the ANSI C requirements only if the
 target machine is suitable.  In practice, all the machines currently
 supported are suitable.
 
-@itemize @bullet
+@table @code
 @comment float.h
 @comment ANSI
 @item FLT_ROUNDS
@@ -1009,7 +1009,7 @@ These are similar to @code{FLT_MIN}, but for the data types
 @code{double} and @code{long double}, respectively.  The type of the
 macro's value is the same as the type it describes.  The values are not
 supposed to be greater than @code{1E-9}.
-@end itemize
+@end table
 
 @node IEEE Floating Point
 @subsubsection IEEE Floating Point
