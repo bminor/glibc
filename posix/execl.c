@@ -28,19 +28,20 @@ Cambridge, MA 02139, USA.  */
 /* Execute PATH with all arguments after PATH until
    a NULL pointer and environment from `environ'.  */
 int
-DEFUN(execl, (path), CONST char *path DOTS)
+DEFUN(execl, (path, arg), CONST char *path AND CONST char *arg DOTS)
 {
   CONST char *argv[1024];
   register unsigned int i;
   va_list args;
 
-  va_start (args, path);
-  i = 0;
+  argv[0] = arg;
+
+  va_start (args, arg);
+  i = 1;
   do
     {
       argv[i] = va_arg (args, CONST char *);
     } while (argv[i++] != NULL);
-
   va_end (args);
 
   return __execve (path, (char *CONST *) argv, __environ);
