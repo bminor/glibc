@@ -1,4 +1,4 @@
-%define glibcrelease 3
+%define glibcrelease 4
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1270,6 +1270,21 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Jan  6 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-4
+- update from CVS
+  - fix IA-32 stack alignment for LinuxThreads thread functions
+  and functions passed to clone(2) directly
+  - fix ecvt{,_r} on denormals (#143279)
+  - fix __tls_get_addr typo
+  - fix rounding in IA-64 alarm (#143710)
+  - don't reinitialize __environ in __libc_start_main, so that
+    effects of setenv/putenv done in DSO initializers are preserved
+    (#144037, IT#57403)
+  - fix fmemopen
+  - fix vDSO l_map_end and l_text_end values
+  - IA64 libm update (#142494)
+- fix ppc rint/ceil etc. (BZ#602)
+
 * Tue Dec 21 2004 Jakub Jelinek <jakub@redhat.com> 2.3.4-3
 - rebuilt
 
