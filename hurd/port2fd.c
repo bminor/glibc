@@ -31,7 +31,6 @@ _hurd_port2fd (struct _hurd_fd *d, io_t port, int flags)
 	 Is it ours?  */
       is_ctty &= __USEPORT (CTTYID, port == cttyid);
       __mach_port_deallocate (__mach_task_self (), cttyid);
-#if 0
       struct _hurd_port *const id = &_hurd_ports[INIT_PORT_CTTYID];
       __spin_lock (&id->lock);
       if (id->port == MACH_PORT_NULL)
@@ -48,7 +47,6 @@ _hurd_port2fd (struct _hurd_fd *d, io_t port, int flags)
 	  __spin_unlock (&id->lock);
 	  __mach_port_deallocate (__mach_task_self (), cttyid);
 	}
-#endif
     }
 
   if (is_ctty && ! __term_become_ctty (port, _hurd_pid, _hurd_pgrp,
@@ -66,5 +64,5 @@ _hurd_port2fd (struct _hurd_fd *d, io_t port, int flags)
     /* No ctty magic happening here.  */
     ctty = MACH_PORT_NULL;
 
-  _hurd_port_set (&d->ctty, ctty);
+  _hurd_port_locked_set (&d->ctty, ctty);
 }
