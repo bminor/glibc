@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,15 +27,12 @@ uname (struct utsname *uname)
   error_t err;
 
   /* init is the repository of system version information.  */
-  if (err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
-			    __proc_getmsgport (port, 1, &init)))
+  if (err = __USEPORT (PROC, __proc_getmsgport (port, 1, &init)))
     return __hurd_fail (err);
 
-  err = __startup_uname (uname); /* Ask it.  */
+  err = __startup_uname (init, uname); /* Ask it.  */
 
   __mach_port_deallocate (__mach_task_self (), init);
 
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+  return err ? __hurd_fail (err) : 0;
 }
