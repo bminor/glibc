@@ -20,20 +20,26 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/time.h>
 
-/* Set the system clock to *WHEN.  */
-
+/* Set the current time of day and timezone information.
+   This call is restricted to the super-user.  */
 int
-DEFUN(stime, (when), CONST time_t *when)
+DEFUN(__settimeofday, (tv, tz),
+      CONST struct timeval *tv AND CONST struct timezone *tz)
 {
-  struct timeval tv;
+  time_t when;
 
-  if (when == NULL)
+  if (tv == NULL)
     {
       errno = EINVAL;
       return -1;
     }
 
-  tv.tv_sec = *when;
-  tv.tv_usec = 0;
-  return __settimeofday (&tv, (struct timezone *) 0);
+  if (tz != NULL || tv->tv_usec % 1000000 != 0)
+    {
+      errno = ENOSYS;
+      return -1;
+    }
+
+  when = tv->tv_sec + (tv->tv_usec / 1000000);
+  return stime (&when);
 }

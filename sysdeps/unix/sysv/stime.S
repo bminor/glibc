@@ -16,24 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
-#include <sys/time.h>
+#include <sysdep.h>
 
-/* Set the system clock to *WHEN.  */
-
-int
-DEFUN(stime, (when), CONST time_t *when)
-{
-  struct timeval tv;
-
-  if (when == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  tv.tv_sec = *when;
-  tv.tv_usec = 0;
-  return __settimeofday (&tv, (struct timezone *) 0);
-}
+SYSCALL (stime, 1)
+	ret
