@@ -35,7 +35,12 @@ vm_address_t _hurd_data_end;
    Pages beyond the one containing this address allow no access.  */
 vm_address_t _hurd_brk;
 
+/* The RLIM_DATA resource limit on bytes of data space.  */
+long int _hurd_brk_limit;
+
+#ifdef noteven
 struct mutex _hurd_brk_lock;
+#endif
 
 /* Set the end of the process's data space to INADDR.
    Return 0 if successful, -1 if not.  */
@@ -91,7 +96,9 @@ init_brk (void)
   extern char _end;
   vm_address_t pagend;
 
+#ifdef noteven
   __mutex_init (&_hurd_brk_lock);
+#endif
 
   _hurd_brk = (vm_address_t) &_end;
 
@@ -109,13 +116,14 @@ init_brk (void)
 	_hurd_data_end = pagend;
     }
 }
+#ifdef HAVE_GNU_LD
 text_set_element (__libc_subinit, init_brk);
+#endif
 
 
 int
 _hurd_set_data_limit (const struct rlimit *lim)
 {
-  error_t err;
   vm_address_t end = round_page (lim->rlim_max);
 
   if (lim->rlim_cur > lim->rlim_max)
