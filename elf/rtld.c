@@ -143,6 +143,7 @@ _dl_start (void *arg)
 {
   struct link_map bootstrap_map;
   hp_timing_t start_time;
+  size_t cnt;
 
   /* This #define produces dynamic linking inline functions for
      bootstrap relocation instead of general-purpose relocation.  */
