@@ -37,16 +37,16 @@ DEFUN(fseek, (stream, offset, whence),
       return EOF;
     }
 
-  /* We are moving the file position, so we are no longer at EOF.  */
-  stream->__eof = 0;
-
   /* Write out any pending data.  */
-  if (__flshfp (stream, EOF) == EOF)
+  if (stream->__mode.__write && __flshfp (stream, EOF) == EOF)
     return EOF;
 
   /* Make sure we know the current offset info.  */
   if (__stdio_check_offset (stream) == EOF)
     return EOF;
+
+  /* We are moving the file position, so we are no longer at EOF.  */
+  stream->__eof = 0;
 
   if (stream->__pushed_back)
     {
