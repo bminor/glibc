@@ -26,7 +26,7 @@ will follow the conventions preferred by the user.
 * Locale Categories::           Different purposes for which you can
                                  select a locale. 
 * Setting the Locale::          How a program specifies the locale
-                                 library functions. 
+                                 with library functions. 
 * Standard Locales::            Locale names available on all systems.
 * Numeric Formatting::          How to format numbers according to the
                                  chosen locale. 
@@ -317,8 +317,9 @@ to be a good default for the machine on which the program is running.
 
 Defining and installing named locales is normally a responsibility of
 the system administrator at your site (or the person who installed the
-GNU C library).  Users cannot do this.  @xref{Defining New Locales}, for
-information about what this involves.
+GNU C library).  Users cannot do this.
+@c  @xref{Defining New Locales}, for
+@c information about what this involves.
 
 If your program needs to use something other than the @samp{C} locale,
 it will be more portable if you use the whatever locale the user
