@@ -819,6 +819,11 @@ attempt to write to the terminal.  @xref{Access to the Controlling Terminal}.
 @node Special Characters
 @subsection Special Characters
 
+@strong{Incomplete:} RMS suggests that the names of these characters not
+be in all caps.  The POSIX standard does use all caps for these, though,
+and I'm too lazy to track down all the references to them right now
+anyway.
+
 The terminal driver recognizes a number of special characters which
 perform various control functions.  These include the INTR character
 (normally @kbd{C-c}) for sending a @code{SIGINT} signal, the ERASE
@@ -843,8 +848,7 @@ the corresponding array element to @code{_POSIX_VDISABLE}.
 @comment POSIX.1
 @defvr Macro NCCS
 The value of this macro is the number of array elements in the
-@code{c_cc} member of the @code{termios} structure.  The value is
-implementation-dependent.
+@code{c_cc} member of the @code{termios} structure.
 @end defvr
 
 Each of the following macros has a distinct value, except that the
@@ -866,7 +870,7 @@ EOF character is typed at the beginning of a line it causes @code{read}
 to return a byte count of zero, indicating end-of-file.  The EOF
 character itself is discarded.
 
-Usually, the EOF character is @kbd{C-c}.
+Usually, the EOF character is @kbd{C-d}.
 @end defvr
 
 @comment termios.h
@@ -896,7 +900,7 @@ this may cause more than one byte of input to be discarded.)  This
 cannot be used to erase past the beginning of the current line of text.
 The ERASE character itself is discarded.
 
-Usually, the ERASE character is either backspace or rubout.
+Usually, the ERASE character is delete.
 @end defvr
 
 @comment termios.h
@@ -927,7 +931,7 @@ to all processes in the foreground job associated with the terminal.
 @xref{Signal Handling}, for more information about signals.  The
 INTR character itself is discarded.
 
-Typically, the INTR character is set to be @kbd{C-c}.
+Typically, the INTR character is @kbd{C-c}.
 @end defvr
 
 @comment termios.h
@@ -943,7 +947,7 @@ in the foreground job associated with the terminal.  @xref{Signal
 Handling}, for more information about signals.  The QUIT character
 itself is discarded.
 
-Typically, the QUIT character is set to be @kbd{C-\}.
+Typically, the QUIT character is @kbd{C-\}.
 @end defvr
 
 @comment termios.h
@@ -961,7 +965,7 @@ processes in the foreground job associated with the terminal.
 @xref{Signal Handling}, for more information about signals.  The SUSP
 character itself is discarded.
 
-Typically, the SUSP character is set to be @kbd{C-z}.
+Typically, the SUSP character is @kbd{C-z}.
 @end defvr
 
 @comment termios.h

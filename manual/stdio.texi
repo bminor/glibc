@@ -7,17 +7,22 @@ input and output operations on them.  As discussed in @ref{Input/Output
 Overview}, a stream is a fairly abstract, high-level concept
 representing a communications channel to a file, device, or process.
 
+@strong{Incomplete:}  RMS suggests that a short example might be
+useful here.
+
 @menu
 * Streams::			About the data type representing a stream.
 * Standard Streams::		Streams to the standard input and output 
 				 devices are created for you.
-* End-Of-File and Errors::	How you can tell if an i/o error happens.
 * Opening and Closing Streams::	How to create a stream to talk to a file.
-* Formatted Output::		@code{printf} and related functions.
-* Formatted Input::		@code{scanf} and related functions.
 * Character Output::		Unformatted output by characters and lines.
 * Character Input::		Unformatted input by characters and lines.
+* Formatted Output::		@code{printf} and related functions.
+* Customizing @code{printf}::	You can define new conversion specifiers for
+				 @code{printf} and friends.
+* Formatted Input::		@code{scanf} and related functions.
 * Block Input/Output::		Input and output operations on blocks of data.
+* End-Of-File and Errors::	How you can tell if an i/o error happens.
 * File Positioning::		About random-access streams.
 * Text and Binary Streams::	Some systems distinguish between text files
 				 and binary files.
@@ -101,66 +106,6 @@ described in @ref{File System Interface}.)  Most other operating systems
 provide similar mechanisms, but the details of how to use them can vary.
 
 It is probably not a good idea to close any of these streams.
-
-@node End-Of-File and Errors
-@section End-Of-File and Errors
-
-Many of the functions described in this chapter return the value of the
-macro @code{EOF} to indicate unsuccessful completion of the operation.
-Since @code{EOF} is used to report both end-of-file and random errors,
-it's often better to use the @code{feof} function to check explicitly
-for end-of-file and @code{ferror} to check for errors.  These functions
-check indicators that are part of the internal state of the stream
-object, that are set if the appropriate condition was detected by a
-previous i/o operation on that stream.
-
-These facilities are declared in the header file @file{<stdio.h>}.
-
-@comment stdio.h
-@comment ANSI
-@defvr {Macro} EOF
-This macro expands to an integer constant expression that is returned
-by a number of functions to indicate an end-of-file condition, or some
-other error situation.  The value of this constant is always a negative
-number; in the GNU system, its value is @code{-1}.
-@end defvr
-
-@comment stdio.h
-@comment ANSI
-@deftypefun void clearerr (FILE *@var{stream})
-This function resets the end-of-file and error indicators for the
-stream @var{stream}.
-
-The file positioning functions (@pxref{File Positioning}) also reset the
-end-of-file indicator for the stream.
-@end deftypefun
-
-@comment stdio.h
-@comment ANSI
-@deftypefun int feof (FILE *@var{stream})
-The @code{feof} function returns nonzero if and only if the end-of-file
-indicator for the stream @var{stream} is set.
-@end deftypefun
-
-@comment stdio.h
-@comment ANSI
-@deftypefun int ferror (FILE *@var{stream})
-The @code{ferror} function returns nonzero if and only if the error
-indicator for the stream @var{stream} is set, indicating that an error
-has occurred on a previous operation on the stream.
-@end deftypefun
-
-In addition to setting the error indicator associated with the stream,
-the functions that operate on streams also set @code{errno} in the same
-way as the corresponding low-level functions that operate on file
-descriptors.  For example, all of the functions that perform output to a
-stream --- such as @code{fputc}, @code{printf}, and @code{fflush} ---
-behave as if they were implemented in terms of @code{write}, and all of
-the @code{errno} error conditions defined for @code{write} are
-meaningful for these functions.
-
-For more information about the functions that operate on file
-descriptors, @pxref{Low-Level Input/Output}.
 
 
 @node Opening and Closing Streams
@@ -296,6 +241,191 @@ fails, a null pointer is returned; otherwise, @code{freopen} returns
 @end deftypefun
 
 
+@node Character Output
+@section Character Output
+
+This section describes functions for performing character- and
+line-oriented output.  Largely for historical compatibility, there are
+several variants of these functions, but as a matter of style (and for
+simplicity!) it's suggested that you stick with using @code{fputc} and
+@code{fputs}, and perhaps @code{putc} and @code{putchar}.
+
+These functions are declared in the header file @file{<stdio.h>}.
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int fputc (int @var{c}, FILE *@var{stream})
+The @code{fputc} function converts the character @var{c} to type
+@code{unsigned char}, and writes it to the stream @var{stream}.  
+@code{EOF} is returned if a write error occurs; otherwise the
+character @var{c} is returned.
+@end deftypefun
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int putc (int @var{c}, FILE *@var{stream})
+This is just like @code{fputc}, except that it is permissible (and
+typical) for it to be implemented as a macro that evaluates the
+@var{stream} argument more than once.  (Of course, @code{fputc} can be
+implemented as a macro too, but only in such a way that it doesn't
+evaluate its arguments more than once.)
+@end deftypefun
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int putchar (int @var{c})
+The @code{putchar} function is equivalent to @code{fputc} with
+@code{stdout} as the value of the @var{stream} argument.
+@end deftypefun
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int fputs (const char *@var{s}, FILE *@var{stream})
+The function @code{fputs} writes the string @var{s} to the stream
+@var{stream}.  The terminating null character is not written.
+This function does @emph{not} add a newline character, either.
+
+This function returns @code{EOF} if a write error occurs, and otherwise
+a non-negative value.
+@end deftypefun
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int puts (const char *@var{s})
+The @code{puts} function writes the string @var{s} to the stream
+@code{stdout}.  The terminating null character is not written, but
+a newline character is appended to the output; this differs from
+@code{fputs}, which does not add a newline.
+@end deftypefun
+
+@comment stdio.h
+@comment SVID
+@deftypefun int putw (int @var{w}, FILE *@var{stream})
+This function writes the word @var{w} (that is, an @code{int}) to
+@var{stream}.  It's provided for compatibility with SVID.
+@end deftypefun
+
+@node Character Input
+@section Character Input
+
+This section describes functions for performing character- and
+line-oriented input.  Again, there are several variants of these
+functions, some of which are considered obsolete stylistically.
+It's suggested that you stick with @code{fgetc}, @code{fgets}, and
+maybe @code{ungetc}, @code{getc}, and @code{getchar}.
+
+These functions are declared in the header file @file{<stdio.h>}.
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int fgetc (FILE *@var{stream})
+This function reads the next character as an @code{unsigned char} from
+the stream @var{stream} and returns its value, converted to an
+@code{int}.  If an end-of-file condition or read error occurs,
+@code{EOF} is returned instead.
+@end deftypefun
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int getc (FILE *@var{stream})
+This is just like @code{fgetc}, except that it is permissible (and typical)
+for it to be implemented as a macro that evaluates the @var{stream}
+argument more than once.
+@end deftypefun
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int getchar (void)
+The @code{getchar} function is equivalent to @code{fgetc} with @code{stdin}
+as the value of the @var{stream} argument.
+@end deftypefun
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int ungetc (int @var{c}, FILE *@var{stream})
+The @code{ungetc} function is provided to support a limited form of
+input lookahead.  The character @var{c} (which must not be @code{EOF})
+is ``pushed back'' onto the input stream @var{stream}, where it can be
+read back in again.
+
+The character that you push back doesn't have to be the same as the last
+character that was actually read from the stream.  In fact, it isn't
+necessary to actually read any characters from the stream before
+unreading them with @code{ungetc}!
+
+The GNU C Library only supports one character of pushback.  Other
+systems might let you push back multiple characters; in such
+implementations, reading from the stream retrieves the characters in the
+reverse order that they were pushed.
+
+Pushing back characters doesn't alter the file; only the internal
+buffering for the stream is affected.  If a file positioning function
+(such as @code{fseek} or @code{rewind}; @pxref{File Positioning}) is
+called, any unread pushed-back characters are discarded.
+
+If the stream is at end-of-file when a character is pushed back, the
+end-of-file indicator for the stream is cleared.
+@end deftypefun
+
+Here is an example showing the use of @code{getc} and @code{ungetc}
+to skip over whitespace characters.  The first non-whitespace character
+read is pushed back, so it can be seen again on the next read operation
+on the stream.
+
+@example
+#include <stdio.h>
+
+void skip_whitespace (FILE *stream)
+@{
+  int c;
+  do @{
+    c = getc (stream);
+    if (c == EOF) return;
+  @} while (isspace (c));
+  ungetc (c, stream);
+@}
+@end example
+
+
+@comment stdio.h
+@comment ANSI
+@deftypefun {char *} fgets (char *@var{s}, int @var{count}, FILE *@var{stream})
+The @code{fgets} function reads characters from the stream @var{stream}
+up to and including a newline character and stores them in the string
+@var{s}.  At most, one less than @var{count} characters will be read;
+since a null character is added to mark the end of the string,
+@var{count} effectively specifies the minimum allocation size for the
+string @var{s}.
+
+In the event of an end-of-file condition, if no characters have yet been
+read, then the contents of the array @var{s} are unchanged and a null
+pointer is returned.  A null pointer is also returned if a read error
+occurs.  Otherwise, the return value is the pointer @var{s}.
+@end deftypefun
+
+@comment stdio.h
+@comment ANSI
+@deftypefun {char *} gets (char *@var{s})
+The function @code{gets} reads characters from the stream @code{stdin}
+up to the next newline character, and stores them in the string @var{s}.
+The newline character is discarded (note that this differs from the
+behavior of @code{fgets}, which copies the newline character into the
+string).
+
+@strong{Warning:}  The @code{gets} function is @strong{very dangerous} 
+because it provides no protection against overflowing the string @var{s}.
+The GNU Library includes it for compatibility only.  You should 
+@strong{always} use @code{fgets} instead.
+@end deftypefun
+
+@comment stdio.h
+@comment SVID
+@deftypefun int getw (FILE *@var{stream})
+This function reads a word (that is, an @code{int}) from @var{stream}.
+It's provided for compatibility with SVID.
+@end deftypefun
+
+
 @node Formatted Output
 @section Formatted Output
 
@@ -314,17 +444,18 @@ and most concise way to handle program output.  These functions are
 especially useful for printing messages, tables of data, and the like.
 
 @menu
-* Formatted Output Basics::	Some examples to get you started.
-* Output Conversion Syntax::	General syntax of conversion specifications.
-* Table of Output Conversions::	Summary of output conversions and what they do.
-* Integer Conversions::		Details about formatting of integers.
-* Floating-Point Conversions::	Details about formatting of floating-point
-				 numbers.
-* Other Output Conversions::	Details about formatting of strings,
-				 characters, pointers, and the like.
-* Formatted Output Functions::	Descriptions of the actual functions.
-* Defining New Conversions::	You can define new conversion specifiers for
-				 @code{printf} and friends.
+* Formatted Output Basics::	        Some examples to get you started.
+* Output Conversion Syntax::	        General syntax of conversion
+                                         specifications.
+* Table of Output Conversions::	        Summary of output conversions and
+                                         what they do.
+* Integer Conversions::		        Details about formatting of integers.
+* Floating-Point Conversions::	        Details about formatting of
+                                         floating-point numbers.
+* Other Output Conversions::	        Details about formatting of strings,
+				         characters, pointers, and the like.
+* Formatted Output Functions::  	Descriptions of the actual functions.
+* Variable Arguments Output Functions:: More functions.
 @end menu
 
 @node Formatted Output Basics
@@ -841,8 +972,8 @@ as an argument to be printed under control of the @samp{%s} conversion.
 
 @strong{Warning:} The @code{sprintf} function can be @strong{dangerous}
 because it can potentially output more characters than will fit in the
-allocation size of the string.  Remember that the field width given in a
-conversion specification is only a @emph{minimum} value.  The
+allocation size of the string @var{s}.  Remember that the field width
+given in a conversion specification is only a @emph{minimum} value.  The
 @code{snprintf} function lets you specify the maximum number of
 characters to produce.
 @end deftypefun
@@ -857,6 +988,8 @@ the largest value you should specify is the allocation size of the array
 @var{s}.
 @end deftypefun
 
+@strong{Incomplete:}  RMS suggests putting an example here.
+
 @comment stdio.h
 @comment GNU
 @deftypefun int asprintf (char **@var{ptr}, const char *@var{template}, @dots{})
@@ -868,17 +1001,10 @@ address of a @code{char *} object, and @code{asprintf} stores a pointer
 to the newly allocated string at that location.
 @end deftypefun
 
-@comment stdio.h
-@comment ANSI
-@deftypefun int vprintf (const char *@var{template}, va_list @var{ap})
-This function is similar to @code{printf} except that, instead of taking
-a variable number of arguments directly, it takes an argument list
-pointer @var{ap}.  Before calling @code{vprintf}, you @emph{must} call
-@code{va_start} (@pxref{Variable Argument Facilities}) to initialize
-@var{ap}, and you @emph{may} call @code{va_arg} to skip over some of the
-initial arguments.  The @code{vprintf} function does not invoke the
-@code{va_end} macro, but further calls to @code{va_arg} with @var{ap}
-are not permitted once @code{vprintf} returns.
+@strong{Incomplete:}  RMS suggests putting an example here.
+
+@node Variable Arguments Output Functions
+@subsection Variable Arguments Output Functions
 
 The functions @code{vprintf} and friends are provided so that you can
 define your own variadic @code{printf}-like functions that make use of
@@ -889,6 +1015,24 @@ function definition) with a non-constant number of arguments, there's
 simply no way for one variadic function to pass the tail of its argument
 list to another variadic function; the second function has to be defined
 in such a way that it takes a @code{va_list} argument instead.
+
+Before calling @code{vprintf} or the other functions listed in this
+section, you @emph{must} call @code{va_start} (@pxref{Variable Argument
+Facilities}) to initialize @var{ap}, and you @emph{may} call
+@code{va_arg} to skip over some of the initial arguments.  The
+@code{vprintf} function does not invoke the @code{va_end} macro, but
+further calls to @code{va_arg} with @var{ap} are not permitted once
+@code{vprintf} returns.
+
+Prototypes for these functions are declared in @file{<stdio.h>}.
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int vprintf (const char *@var{template}, va_list @var{ap})
+This function is similar to @code{printf} except that, instead of taking
+a variable number of arguments directly, it takes an argument list
+pointer @var{ap}.
+
 @end deftypefun
 
 @comment stdio.h
@@ -919,11 +1063,6 @@ The @code{vasprintf} function is the equivalent of @code{asprintf} with the
 variable argument list specified directly as for @code{vprintf}.
 @end deftypefun
 
-@strong{Portability Note:} Of the functions listed in this section, only
-@code{printf}, @code{fprintf}, @code{sprintf}, @code{vprintf},
-@code{vfprintf}, and @code{vsprintf} are included in ANSI C.  The other
-functions are all specific to the GNU system.
-
 Here's an example showing how you might use @code{vfprintf}.  This is a
 function that prints error messages to the stream @code{stderr}, along
 with a prefix indicating the name of the program.
@@ -951,18 +1090,40 @@ You could call this function like:
 eprintf ("The file %s does not exist.\n", filename);
 @end example
 
-
-
-@node Defining New Conversions
-@subsection Defining New Conversions
+@node Customizing @code{printf}
+@section Customizing @code{printf}
 
 The GNU C Library lets you define new conversion specifiers for 
 @code{printf} format templates.  To do this, you must include the
 header file @file{<printf.h>} in your program.
 
+The way you do this is by registering the conversion with
+@code{register_printf_function}; @pxref{Registering New Conversions}.
+One of the arguments you pass to this function is a pointer to a handler
+function that produces the actual output; @pxref{Defining the Output Handler},
+for information on how to write this function.  
+
+You can also install a function that just returns information about the
+number and type of arguments expected by the conversion specifier.
+@xref{Parsing a Format Template}, for information about this.
+
+@menu
+* Registering New Conversions::
+* Conversion Specifier Options::
+* Defining the Output Handler::
+* Parsing a Format Template::
+* @code{printf} Extension Example::
+@end menu
+
+@strong{Portability Note:} The ability to extend the syntax of
+@code{printf} format templates is a GNU extension.  ANSI standard C has
+nothing similar.
+
+@node Registering New Conversions
+@subsection Registering New Conversions
+
 The function to register a new conversion is
-@code{register_printf_function}.  Its arguments are discussed in more
-detail below.
+@code{register_printf_function}, declared in @file{<printf.h>}.
 
 @comment printf.h
 @comment GNU
@@ -970,16 +1131,19 @@ detail below.
 This function defines the conversion specifier character @var{spec}.
 
 The @var{handler_function} is the function called by @code{printf} and
-friends when this conversion appears in a format template string.  If
-you specify a null pointer, any existing handler function for @var{spec}
-is removed.
+friends when this conversion appears in a format template string.
+@xref{Defining the Output Handler}, for information about how to define
+a function to pass as this argument.  If you specify a null pointer, any
+existing handler function for @var{spec} is removed.
 
 The @var{arginfo_function} is the function called by
 @code{parse_printf_format} when this conversion appears in a format
-template string.  Normally, you install both functions for a conversion
-at the same time, but if you are never going to call
-@code{parse_printf_format}, you do not need to define an arginfo
-function.
+template string.  @xref{Parsing a Format Template}, for information
+about this.
+
+Normally, you install both functions for a conversion at the same time,
+but if you are never going to call @code{parse_printf_format}, you do
+not need to define an arginfo function.
 
 The return value is @code{0} on success, and @code{-1} on failure.
 
@@ -988,10 +1152,14 @@ not a good idea because of the potential for confusion.  Library routines
 written by other people could break if you do this.
 @end deftypefun
 
+@node Conversion Specifier Options
+@subsection Conversion Specifier Options
+
 Both the @var{handler_function} and @var{arginfo_function} arguments
 to @code{register_printf_function} accept an argument of type
 @code{struct print_info}, which contains information about the options
-appearing in an instance of the conversion specifier.
+appearing in an instance of the conversion specifier.  This data type
+is declared in the header file @file{<printf.h>}.
 
 @comment printf.h
 @comment GNU
@@ -1050,6 +1218,10 @@ width.  The value is @code{'0'} if the @samp{0} flag was specified, and
 @end table
 @end deftp
 
+
+@node Defining the Output Handler
+@subsection Defining the Output Handler
+
 Now let's look at how to define the handler and arginfo functions
 which are passed as arguments to @code{register_printf_function}.
 
@@ -1086,6 +1258,34 @@ The return value from your handler function should be the number of
 argument values that it processes from the variable argument list.  You
 can also return a value of @code{-1} to indicate an error.
 @end deftp
+
+
+@node Parsing a Format Template
+@subsection Parsing a Format Template
+
+You can use the function @code{parse_printf_format} to obtain information
+about the number and types of arguments that are expected by a format
+template.  This function is primarily intended for performing error checking
+on calls to @code{printf} and related functions from within applications
+such as interpreters.
+
+@comment printf.h
+@comment GNU
+@deftypefun size_t parse_printf_format (const char *@var{template}, size_t @var{n}, int *@var{argtypes})
+This function returns information about the number and types of arguments
+expected by the @code{printf} format template @var{template}.  
+
+The @var{n} argument specifies the maximum number of arguments.  The
+allocation size of the array @var{argtypes} should be at least this many
+elements.  The return value is the actual number of arguments expected,
+and the array is filled in with information about their types.  This
+information is encoded using the various @samp{PA_} macros, listed below.
+@end deftypefun
+
+If you have are going to use @code{parse_printf_format} in your
+application, you should also define a function to pass as the
+@var{arginfo_function} argument for each new conversion you install with
+@code{register_printf_function}. 
 
 @comment printf.h
 @comment GNU
@@ -1203,21 +1403,8 @@ This is a synonym for @code{PA_FLAG_LONGLONG}, used by convention with
 a base type of @code{PA_FLOAT} to indicate a type of @code{long double}.
 @end defvr
 
-
-@comment printf.h
-@comment GNU
-@deftypefun size_t parse_printf_format (const char *@var{template}, size_t @var{n}, int *@var{argtypes})
-This function returns information about the number and types of arguments
-expected by the @code{printf} format template @var{template}.  It is primarily
-intended for doing error checking on calls to @code{printf} and related
-functions from within applications such as interpreters.
-
-The @var{n} argument specifies the maximum number of arguments.  The
-allocation size of the array @var{argtypes} should be at least this many
-elements.  The return value is the actual number of arguments expected,
-and the array is filled in with information about their types.  This
-information is encoded using the various @samp{PA_} macros.
-@end deftypefun
+@node @code{printf} Extension Example
+@subsection @code{printf} Extension Example
 
 Here is an example showing how to define a @code{printf} handler function.
 This program defines a data structure called a @code{Widget} and 
@@ -1287,10 +1474,6 @@ The output produced by this program looks like:
 |<Widget 0xffeffb7c: mywidget>      |
 @end example
 
-@strong{Portability Note:} The ability to extend the syntax of
-@code{printf} format templates is a GNU extension.  ANSI standard C has
-nothing similar.
-
 @node Formatted Input
 @section Formatted Input
 
@@ -1358,6 +1541,11 @@ void readarray (double *array, int n)
       input_failure ();
 @}
 @end example
+
+The formatted input functions are not used as frequently as the
+formatted output functions.  Partly, this is because it takes some care
+to use them properly.  Another reason is that it is difficult to recover
+from a matching error.
 
 If you are trying to read input that doesn't match a single, fixed
 pattern, you may be better off using a tool such as Bison to generate
@@ -1643,6 +1831,13 @@ whitespace.
 Matches a string of lowercase characters.
 @end table
 
+The @samp{%s} and @samp{%[} conversions are potentially
+@strong{dangerous} because they can overflow the allocation size of the
+argument string.  You should @strong{always} specify a maximum field
+width with the @samp{%s} and @samp{%[} conversions to prevent this from
+happening (but then you will probably get a matching error instead if
+the input string is too long).
+
 
 @node Other Input Conversions
 @subsection Other Input Conversions
@@ -1746,191 +1941,6 @@ specified directly as for @code{vscanf}.
 The @code{vscanf}, @code{vfscanf}, and @code{vsscanf} functions are
 GNU extensions.
 
-@node Character Output
-@section Character Output
-
-This section describes functions for performing character- and
-line-oriented output.  Largely for historical compatibility, there are
-several variants of these functions, but as a matter of style (and for
-simplicity!) it's suggested that you stick with using @code{fputc} and
-@code{fputs}.
-
-These functions are declared in the header file @file{<stdio.h>}.
-
-@comment stdio.h
-@comment ANSI
-@deftypefun int fputc (int @var{c}, FILE *@var{stream})
-The @code{fputc} function converts the character @var{c} to type
-@code{unsigned char}, and writes it to the stream @var{stream}.  
-@code{EOF} is returned if a write error occurs; otherwise the
-character @var{c} is returned.
-@end deftypefun
-
-@comment stdio.h
-@comment ANSI
-@deftypefun int putc (int @var{c}, FILE *@var{stream})
-This is just like @code{fputc}, except that it is permissible (and
-typical) for it to be implemented as a macro that evaluates the
-@var{stream} argument more than once.  (Of course, @code{fputc} can be
-implemented as a macro too, but only in such a way that it doesn't
-evaluate its arguments more than once.)
-@end deftypefun
-
-@comment stdio.h
-@comment ANSI
-@deftypefun int putchar (int @var{c})
-The @code{putchar} function is equivalent to @code{fputc} with
-@code{stdout} as the value of the @var{stream} argument.
-@end deftypefun
-
-@comment stdio.h
-@comment ANSI
-@deftypefun int fputs (const char *@var{s}, FILE *@var{stream})
-The function @code{fputs} writes the string @var{s} to the stream
-@var{stream}.  The terminating null character is not written.
-This function does @emph{not} add a newline character, either.
-
-This function returns @code{EOF} if a write error occurs, and otherwise
-a non-negative value.
-@end deftypefun
-
-@comment stdio.h
-@comment ANSI
-@deftypefun int puts (const char *@var{s})
-The @code{puts} function writes the string @var{s} to the stream
-@code{stdout}.  The terminating null character is not written, but
-a newline character is appended to the output; this differs from
-@code{fputs}, which does not add a newline.
-@end deftypefun
-
-@comment stdio.h
-@comment SVID
-@deftypefun int putw (int @var{w}, FILE *@var{stream})
-This function writes the word @var{w} (that is, an @code{int}) to
-@var{stream}.  It's provided for compatibility with SVID.
-@end deftypefun
-
-@node Character Input
-@section Character Input
-
-This section describes functions for performing character- and
-line-oriented input.  Again, there are several variants of these
-functions, some of which are considered obsolete stylistically.
-It's suggested that you stick with @code{fgetc}, @code{fgets}, and
-maybe @code{ungetc}.
-
-These functions are declared in the header file @file{<stdio.h>}.
-
-@comment stdio.h
-@comment ANSI
-@deftypefun int fgetc (FILE *@var{stream})
-This function reads the next character as an @code{unsigned char} from
-the stream @var{stream} and returns its value, converted to an
-@code{int}.  If an end-of-file condition or read error occurs,
-@code{EOF} is returned instead.
-@end deftypefun
-
-@comment stdio.h
-@comment ANSI
-@deftypefun int getc (FILE *@var{stream})
-This is just like @code{fgetc}, except that it is permissible (and typical)
-for it to be implemented as a macro that evaluates the @var{stream}
-argument more than once.
-@end deftypefun
-
-@comment stdio.h
-@comment ANSI
-@deftypefun int getchar (void)
-The @code{getchar} function is equivalent to @code{fgetc} with @code{stdin}
-as the value of the @var{stream} argument.
-@end deftypefun
-
-@comment stdio.h
-@comment ANSI
-@deftypefun int ungetc (int @var{c}, FILE *@var{stream})
-The @code{ungetc} function is provided to support a limited form of
-input lookahead.  The character @var{c} (which must not be @code{EOF})
-is ``pushed back'' onto the input stream @var{stream}, where it can be
-read back in again.
-
-The character that you push back doesn't have to be the same as the last
-character that was actually read from the stream.  In fact, it isn't
-necessary to actually read any characters from the stream before
-unreading them with @code{ungetc}!
-
-The GNU C Library only supports one character of pushback.  Other
-systems might let you push back multiple characters; in such
-implementations, reading from the stream retrieves the characters in the
-reverse order that they were pushed.
-
-Pushing back characters doesn't alter the file; only the internal
-buffering for the stream is affected.  If a file positioning function
-(such as @code{fseek} or @code{rewind}; @pxref{File Positioning}) is
-called, any unread pushed-back characters are discarded.
-
-If the stream is at end-of-file when a character is pushed back, the
-end-of-file indicator for the stream is cleared.
-@end deftypefun
-
-Here is an example showing the use of @code{getc} and @code{ungetc}
-to skip over whitespace characters.  The first non-whitespace character
-read is pushed back, so it can be seen again on the next read operation
-on the stream.
-
-@example
-#include <stdio.h>
-
-void skip_whitespace (FILE *stream)
-@{
-  int c;
-  do @{
-    c = getc (stream);
-    if (c == EOF) return;
-  @} while (isspace (c));
-  ungetc (c, stream);
-@}
-@end example
-
-
-@comment stdio.h
-@comment ANSI
-@deftypefun {char *} fgets (char *@var{s}, int @var{count}, FILE *@var{stream})
-The @code{fgets} function reads characters from the stream @var{stream}
-up to and including a newline character and stores them in the string
-@var{s}.  At most, one less than @var{count} characters will be read;
-since a null character is added to mark the end of the string,
-@var{count} effectively specifies the minimum allocation size for the
-string @var{s}.
-
-In the event of an end-of-file condition, if no characters have yet been
-read, then the contents of the array @var{s} are unchanged and a null
-pointer is returned.  A null pointer is also returned if a read error
-occurs.  Otherwise, the return value is the pointer @var{s}.
-@end deftypefun
-
-@comment stdio.h
-@comment ANSI
-@deftypefun {char *} gets (char *@var{s})
-The function @code{gets} reads characters from the stream @code{stdin}
-up to the next newline character, and stores them in the string @var{s}.
-The newline character is discarded (note that this differs from the
-behavior of @code{fgets}, which copies the newline character into the
-string).
-
-@strong{Warning:}  The @code{gets} function is @strong{very dangerous} 
-because it provides no protection against overflowing the string @var{s}.
-The GNU Library includes it for compatibility only.  You should 
-@strong{always} use @code{fgets} instead.
-@end deftypefun
-
-@comment stdio.h
-@comment SVID
-@deftypefun int getw (FILE *@var{stream})
-This function reads a word (that is, an @code{int}) from @var{stream}.
-It's provided for compatibility with SVID.
-@end deftypefun
-
-
 @node Block Input/Output
 @section Block Input/Output
 
@@ -1977,6 +1987,67 @@ the number of objects actually written, which is less than @var{count}
 only if a write error occurs.
 @end deftypefun
 
+
+
+@node End-Of-File and Errors
+@section End-Of-File and Errors
+
+Many of the functions described in this chapter return the value of the
+macro @code{EOF} to indicate unsuccessful completion of the operation.
+Since @code{EOF} is used to report both end-of-file and random errors,
+it's often better to use the @code{feof} function to check explicitly
+for end-of-file and @code{ferror} to check for errors.  These functions
+check indicators that are part of the internal state of the stream
+object, that are set if the appropriate condition was detected by a
+previous i/o operation on that stream.
+
+These facilities are declared in the header file @file{<stdio.h>}.
+
+@comment stdio.h
+@comment ANSI
+@defvr {Macro} EOF
+This macro expands to an integer constant expression that is returned
+by a number of functions to indicate an end-of-file condition, or some
+other error situation.  The value of this constant is always a negative
+number; in the GNU system, its value is @code{-1}.
+@end defvr
+
+@comment stdio.h
+@comment ANSI
+@deftypefun void clearerr (FILE *@var{stream})
+This function resets the end-of-file and error indicators for the
+stream @var{stream}.
+
+The file positioning functions (@pxref{File Positioning}) also reset the
+end-of-file indicator for the stream.
+@end deftypefun
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int feof (FILE *@var{stream})
+The @code{feof} function returns nonzero if and only if the end-of-file
+indicator for the stream @var{stream} is set.
+@end deftypefun
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int ferror (FILE *@var{stream})
+The @code{ferror} function returns nonzero if and only if the error
+indicator for the stream @var{stream} is set, indicating that an error
+has occurred on a previous operation on the stream.
+@end deftypefun
+
+In addition to setting the error indicator associated with the stream,
+the functions that operate on streams also set @code{errno} in the same
+way as the corresponding low-level functions that operate on file
+descriptors.  For example, all of the functions that perform output to a
+stream --- such as @code{fputc}, @code{printf}, and @code{fflush} ---
+behave as if they were implemented in terms of @code{write}, and all of
+the @code{errno} error conditions defined for @code{write} are
+meaningful for these functions.
+
+For more information about the functions that operate on file
+descriptors, @pxref{Low-Level Input/Output}.
 
 
 @node File Positioning

@@ -17,7 +17,6 @@ converting between them.
 @menu
 * Introduction to Extended Characters::	How extended character sets are
 					 are encoded.
-* Wide Character Type::			The @code{wchar_t} data type.
 * Multibyte Character Length::		Determining how many bytes make up
 					 a character.
 * Conversion of Extended Characters::	Conversion between multibyte and wide
@@ -72,20 +71,6 @@ as a @code{wchar_t} value or as a multibyte character sequence.
 In both representations, a value of zero represents the null character
 and is used as a string terminator.
 
-The behavior of the functions in this chapter is affected by the
-@code{LC_CTYPE} attributes of the current locale (@pxref{Localization}).
-If you change these attributes, the internal shift state maintained by
-these functions can become confused, so it's not a good idea to change
-the locale while you are in the middle of processing a string.
-
-@strong{Incomplete:}  There should be a statement here about what 
-functions that operate on strings deal with multibyte strings correctly.
-For example, @code{printf} and friends do, but what about multibyte
-strings as file names, etc?
-
-@node Wide Character Type
-@section Wide Character Type
-
 The @code{wchar_t} data type is defined in the header file
 @file{<stddef.h>}.
 
@@ -99,12 +84,26 @@ about locales, and @pxref{Extended Characters} to see how this type is
 used.@refill
 @end deftp
 
+The behavior of the functions in this chapter is affected by the
+@code{LC_CTYPE} attributes of the current locale (@pxref{Localization}).
+If you change these attributes, the internal shift state maintained by
+these functions can become confused, so it's not a good idea to change
+the locale while you are in the middle of processing a string.
+
+@strong{Incomplete:}  There should be a statement here about what 
+functions that operate on strings deal with multibyte strings correctly.
+For example, @code{printf} and friends do, but what about multibyte
+strings as file names, etc?
+
+
 
 @node Multibyte Character Length
 @section Multibyte Character Length
 
-To determine the length of the next multibyte character sequence in
-a string, use the @code{mblen} function.
+If you are stepping through character codes in a string that contains
+multibyte character sequences, you need to know how many bytes each
+character code occupies.  To determine the length of the next multibyte
+character sequence in a string, use the @code{mblen} function.
 
 The @code{mblen} function and @code{MB_CUR_MAX} macro are declared in the
 header file @file{<stdlib.h>}.  The @code{MB_LEN_MAX} macro is declared

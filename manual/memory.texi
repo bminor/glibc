@@ -130,7 +130,7 @@ or smaller at any time, and free the blocks in any order (or never).
 					 bigger or smaller.
 * Allocating Cleared Space::		Use @code{calloc} to allocate a
 					 block and clear it.
-* Efficient use of @code{malloc}::	Efficiency considerations in use of
+* Efficiency Considerations::	Efficiency considerations in use of
 					 these functions.
 * Allocation with Specified Alignment::	Allocating specially aligned memory:
 					 @code{memalign} and @code{valloc}.
@@ -385,26 +385,23 @@ combination of other features that are more often used.  It is a historical
 holdover that is not quite obsolete.
 
 
-@node Efficient Use of @code{malloc}
-@subsection Efficient Use of @code{malloc}
+@node Efficiency Considerations
+@subsection Efficiency Considerations
 @cindex efficiency and @code{malloc}
 
 @strong{Incomplete:}  This material may be inaccurate.
 
 To make the best use of @code{malloc}, it helps to know that @code{malloc}
 always dispenses memory in units of powers of two.  It keeps separate pools
-for each power of two.  In addition, it needs four bytes before the
-beginning of each block for record-keeping.
+for each power of two.
 
-Therefore, when you call @code{malloc} with argument @var{n}, the amount of
-space actually used up is the smallest power of two not less than @var{n} +
-4.  If you are free to choose the size of a block in order to make
-@code{malloc} more efficient, make it four less than a power of two.
+Therefore, if you are free to choose the size of a block in order to make
+@code{malloc} more efficient, make it a power of two.
 
-In addition, the pools for different powers of two remain separate forever;
-a block of 28 bytes (32 minus 4) can never be split into two blocks of 12
-bytes (16 minus 4).  So it is good if you manage to use blocks of the same
-size for as many different purposes as possible.
+The pools for different powers of two remain separate forever; a block
+of 32 bytes can never be split into two blocks of 16 bytes.  So it is
+good if you manage to use blocks of the same size for as many different
+purposes as possible.
 
 @node Allocation with Specified Alignment
 @subsection Allocation with Specified Alignment
@@ -450,19 +447,18 @@ in @file{<malloc.h>}.
 @comment malloc.h
 @comment GNU
 @deftypefun void mcheck (void (*@var{abortfn}) (void))
-Calling @code{mcheck} tells @code{malloc} to perform consistency checks
-on the heap, which will catch things such as writing past the end of 
-a @code{malloc}ed block.  
+Calling @code{mcheck} tells @code{malloc} to perform occasional
+consistency checks on the heap.  These will catch things such as writing
+past the end of a @code{malloc}ed block.
 
 The @var{abortfn} argument is the function to call when an inconsistency
-is found.  If you supply a null pointer, the @code{abort} function will
-be used.
+is found.  If you supply a null pointer, the @code{abort} function is
+used.
 @end deftypefun
 
 Since other library functions (such as the standard i/o functions) may
 call @code{malloc}, you should do @code{mcheck} before anything else in
-your program.  In the GNU system, linking with @samp{-lmcheck} will do
-this automatically.
+your program.  To do this automatically, link with @samp{-lmcheck}.
 
 @node Storage Allocation Hooks
 @subsection Storage Allocation Hooks
@@ -507,7 +503,7 @@ void @var{function} (void *@var{ptr})
 You must make sure that the function you install as a hook for one of
 these functions does not call that function recursively without restoring
 the old value of the hook first!  Otherwise, your program will get stuck
-in an infinite loop.
+in an infinite recursion.
 
 Here is an example showing how to use @code{__malloc_hook} properly.  It
 installs a function that prints out information every time @code{malloc}
@@ -558,10 +554,10 @@ storage allocator.  It contains the following members:
 This is the total size of the heap, in bytes.
 
 @item size_t chunks_used
-This is the number of chunks in use.  Remember that the
-storage allocator internally gets chunks of memory from the operating
-system, and them carves them up to satisfy individual @code{malloc}
-requests.
+This is the number of chunks in use.  (The storage allocator internally
+gets chunks of memory from the operating system, and them carves them up
+to satisfy individual @code{malloc} requests; @pxref{Efficiency
+Considerations}.)
 
 @item size_t bytes_used
 This is the number of bytes in use.
@@ -622,10 +618,11 @@ multiple of @var{boundary}.  @xref{Allocation with Specified Alignment}.
 @cindex obstacks
 
 @strong{Incomplete:}  Obstacks are not now part of the GNU C Library.
+You must specify @samp{-lobstack} when linking to use these functions.
 
 @strong{Incomplete:} The functions in this section take @code{int}
-arguments for sizes.  For consistency, these should all be made
-@code{size_t} instead.
+arguments for sizes.  For consistency, these should all be documented
+as @code{size_t} instead.
 
 An @dfn{obstack} is a pool of memory containing a stack of objects.  You
 can create any number of separate obstacks, and then allocate objects in
@@ -826,7 +823,7 @@ Each source file in which you plan to use the obstack functions
 must include the header file @file{obstack.h}, like this:
 
 @example
-#include "obstack.h"
+#include <obstack.h>
 @end example
 
 @findex obstack_chunk_alloc

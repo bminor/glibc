@@ -170,7 +170,6 @@ These strings are called @dfn{file names}.
 @menu
 * Directories::			Directories contain entries for files.
 * File Name Resolution::	A file name specifies how to look up a file.
-* Restrictions on File Names::	
 * File Name Errors::		Error conditions relating to file names.
 * Portability of File Names::
 @end menu
@@ -273,56 +272,12 @@ can specify a file name of @file{/} to refer to the root directory, but
 you can't have an empty file name.  If you want to refer to the current
 working directory, use a file name of @file{.} or @file{./}.
 
-
-@node Restrictions on File Names
-@subsection Restrictions on File Names
-
-Individual file name components of a file name string may not be longer
-than @code{NAME_MAX} characters.  The GNU system always flags names that
-are too long as an error condition, but other implementations might just
-quietly truncate the name instead.
-
-In addition, the total size of a file name string (including its
-terminating null character) can be at most @code{PATH_MAX} characters.
-@xref{File System Parameters}.
-
-Upper- and lower-case characters are considered distinct in file names.
-Portable file name components can contain only the letters @samp{a}
-through @samp{z} and @samp{A} through @samp{Z}; the digits @samp{0}
-through @samp{9}; and the characters @samp{.} (period), @samp{_}
-(underscore), and @samp{-} (hyphen).  A hyphen can't be used as the
-first character of a portable file name component.
-
-For example, the following file name components are all portable:
-
-@example
-"foo.text"
-"version.13.notes"
-"README-FIRST"
-@end example
-
-@noindent
-but these file name components are not:
-
-@example
-"-delete-me"
-"vmshost::[LUSER]LOGIN.COM"
-@end example
-
-Of course, most POSIX implementations are much less restrictive than
-this about what characters can appear in file name components, but
-different implementations might support different extensions.
-
-@strong{Incomplete:}  What should I say about the GNU system in this
-respect?
-
 Unlike some other operating systems, the GNU system doesn't have any
 built-in support for file types (or extensions) or file versions as part
 of its file name syntax.  Many programs and utilities use conventions
 for file names --- for example, files containing C source code usually
 have names suffixed with @samp{.c} --- but there is nothing in the file
 system itself that enforces this kind of convention.
-
 
 @node File Name Errors
 @subsection File Name Errors
@@ -360,9 +315,8 @@ exists, but the file isn't a directory.
 @subsection Portability of File Names
 
 The rules for the syntax of file names discussed in @ref{File Names},
-are the rules normally used by the GNU system and by other operating
-systems that are compatible with the POSIX.1 standard.  However, other
-operating systems may use other conventions.
+are the rules normally used by the GNU system and by other POSIX
+systems.  However, other operating systems may use other conventions.
 
 There are two reasons why it can be important for you to be aware of
 file name portability issues:
@@ -389,4 +343,12 @@ name, different operating systems use different conventions and syntax
 for concepts such as structured directories and file types or
 extensions.  Some concepts such as file versions might be supported in
 some operating systems and not by others.
+
+The POSIX.1 standard allows implementations to put additional
+restrictions on file name syntax, concerning what characters are
+permitted in file names and on the length of file name and file name
+component strings.  However, in the GNU system, you do not need to
+worry about these restrictions; any character is permitted in a file
+name string, and there are no limits on the length of file name strings.
+
 

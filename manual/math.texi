@@ -662,8 +662,9 @@ by the built-in @code{/} and @code{%} operators.  While the built-in
 division operator is permitted to round in either direction if the
 quotient is negative, the @code{div} and @code{ldiv} functions are
 required to round towards zero.  It is also required that these
-functions return a result such that @code{quot*@var{denominator} + rem}
-be equal to @var{numerator}.
+functions return a result @var{r} such that
+@code{@var{r}.quot*@var{denominator} + @var{r}.rem} be equal to
+@var{numerator}.
 
 @comment stdlib.h
 @comment ANSI
