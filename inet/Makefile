@@ -27,13 +27,13 @@ headers	:= inet-cvt.h netdb.h resolv.h \
 	   protocols/talkd.h protocols/timed.h
 
 routines := ntohl ntohs htonl htons		\
-	    inet_addr inet_lnaof inet_makeaddr	\
-	    inet_netof inet_ntoa inet_network	\
-	    getnetbyaddr getnetbyname getnetent	\
-	    getproto getprotoent getprotoname	\
-	    getservbyname getservbyport getservent	\
-	    res_comp res_debug res_init res_mkquery res_query res_send	\
-	    gethostnamadr sethostent	    \
+	    inet_addr inet_lnaof inet_mkadr	\
+	    inet_netof inet_ntoa inet_net	\
+	    getnetbyad getnetbynm getnetent	\
+	    getproto getprtent getprtname	\
+	    getsrvbynm getsrvbypt getservent	\
+	    res_comp res_debug res_init res_mkqry res_query res_send	\
+	    gethstnmad sethostent	    \
 	    rcmd rexec ruserpass
 aux	 := herror
 
