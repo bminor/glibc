@@ -49,7 +49,7 @@ ifeq	"$(filter $(objpfx)siglist.c,$(before-compile))" ""
 before-compile := $(before-compile) $(objpfx)siglist.c
 $(objpfx)siglist.c: $(objpfx)make_siglist
 	@rm -f $@
-	$< > $@-tmp
+	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 
 $(objpfx)make_siglist: $(sysdep_dir)/generic/make_siglist.c
