@@ -44,6 +44,9 @@ DEFUN(__execve, (path, argv, envp),
   int dtablesize;
   int i;
   char *const *p;
+  task_t task;
+  int flags;
+  struct _hurd_sigstate *ss;
 
   file = __hurd_path_lookup (path, FS_LOOKUP_EXECUTE, 0);
   if (file == MACH_PORT_NULL)
@@ -78,16 +81,24 @@ DEFUN(__execve, (path, argv, envp),
   ints[INIT_CTTY_FSID2] = _hurd_ctty_fsid.val[1];
   ints[INIT_CTTY_FILEID] = _hurd_ctty_fileid;
 
-  {
-    struct _hurd_sigstate *ss = _hurd_thread_sigstate (__mach_thread_self ());
-    int i;
-    ints[INIT_SIGMASK] = ss->blocked;
-    ints[INIT_SIGIGN] = 0;
-    for (i = 1; i < NSIG; ++i)
-      if (ss->actions[i].sa_handler == SIG_IGN)
-	ints[INIT_SIGIGN] |= __sigmask (i);
-    __mutex_unlock (&ss->lock);
-  }
+  ss = _hurd_thread_sigstate (__mach_thread_self ());
+  ints[INIT_SIGMASK] = ss->blocked;
+  ints[INIT_SIGIGN] = 0;
+  for (i = 1; i < NSIG; ++i)
+    if (ss->actions[i].sa_handler == SIG_IGN)
+      ints[INIT_SIGIGN] |= __sigmask (i);
+
+  if (ss->vforked)
+    {
+      /* This thread is vfork'd.  */
+      task = MACH_PORT_NULL;
+      flags = FS_EXEC_NEWTASK;
+    }
+  else
+    {
+      task = __mach_task_self ();
+      flags = 0;
+    }
   
   if (_hurd_dtable_set.set)
     {
@@ -103,18 +114,23 @@ DEFUN(__execve, (path, argv, envp),
       dtablesize = _hurd_init_dtablesize;
     }
 
-  err = __file_exec (file, __mach_task_self (),
+  err = __file_exec (file, task,
 		     args, argslen, env, envlen,
 		     dtable, dtablesize,
 		     ints, INIT_INT_MAX,
 		     ports, INIT_PORT_MAX,
-		     0);
+		     flags);
   if (_hurd_dtable_set.set)
     /* We must hold the dtable lock while doing the file_exec to avoid
        the dtable entries being deallocated before we send them.  */
     __mutex_unlock (&_hurd_dtable_set.dtable->lock);
   if (err)
     return __hurd_fail (err);
+
+  if (ss->vforked)
+    longjmp (ss->vfork_saved.continuation, 1);
+
+  __mutex_unlock (&ss->lock);
 
   /* That's interesting.  */
   return 0;
