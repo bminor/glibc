@@ -1,1 +1,1 @@
-bsd_getgrp.S glue-ctype.c
+glue-ctype.c
