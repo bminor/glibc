@@ -55,15 +55,7 @@ _hurd_port2fd (struct hurd_fd *d, io_t port, int flags)
 	}
     }
 
-  if (is_ctty && ! __term_open_ctty (port, _hurd_pid, _hurd_pgrp, &ctty))
-    {
-      /* Operations on CTTY return EBACKGROUND when we are not a
-	 foreground user of the tty.  */
-      mach_port_t tmp = port;
-      port = ctty;
-      ctty = tmp;
-    }
-  else
+  if (!is_ctty || __term_open_ctty (port, _hurd_pid, _hurd_pgrp, &ctty) != 0)
     /* XXX if IS_CTTY, then this port is our ctty, but we are
        not doing ctty style i/o because term_become_ctty barfed.
        What to do?  */
