@@ -465,11 +465,19 @@ machine-independent makefiles in the main source tree.
 This file is a shell script fragment to be run at configuration time.
 The top-level @file{configure} script uses the shell @code{.} command to
 read the @file{configure} file in each system-dependent directory
-chosen.  The @file{configure} files are usually generated from
-@file{configure.in} files using Autoconf.  A system-dependent
-@file{configure} script will usually add things to the shell variables
-@samp{DEFS} and @samp{config_vars}; see the top-level @file{configure}
-script for details.
+chosen, in order.  The @file{configure} files are often generated from
+@file{configure.in} files using Autoconf.
+
+A system-dependent @file{configure} script will usually add things to
+the shell variables @samp{DEFS} and @samp{config_vars}; see the
+top-level @file{configure} script for details.  The script can check for
+@w{@samp{--with-@var{package}}} options that were passed to the
+top-level @file{configure}.  For an option
+@w{@samp{--with-@var{package}=var{@value}}} @file{configure} sets the
+shell variable @w{@samp{with_@var{package}}} (with any dashes in
+@var{package} converted to underscores) to @var{value}; if the option is
+just @w{@samp{--with-@var{package}}} (no argument), then it sets
+@w{@samp{with_@var{package}}} to @samp{yes}.
 
 @item configure.in
 
@@ -478,7 +486,7 @@ This file is an Autoconf input fragment to be processed into the file
 autoconf.info, Autoconf: Generating Automatic Configuration Scripts},
 for a description of Autoconf.  You should write either @file{configure}
 or @file{configure.in}, but not both.  The first line of
-@file{configure} should invoke the @code{m4} macro
+@file{configure.in} should invoke the @code{m4} macro
 @samp{GLIBC_PROVIDES}.  This macro does several @code{AC_PROVIDE} calls
 for Autoconf macros which are used by the top-level @file{configure}
 script; without this, those macros might be invoked again unnecessarily
