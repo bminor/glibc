@@ -65,10 +65,12 @@ routines := auth_none auth_unix authuxprot bindrsvprt \
 	    svc_tcp svc_udp xdr xdr_array xdr_float xdr_mem \
 	    xdr_rec xdr_ref xdr_stdio
 
+install-lib := librpcsvc.a
 install := rpcgen rpcinfo portmap
+rpcsvc-objs = $(rpcsvc:%.x=x%.o)
 rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o
-extra-objs = $(rpcgen-objs)
+extra-objs = $(rpcgen-objs) $(rpcsvc-objs)
 # These headers are part of rpcgen.
 distribute := rpc_util.h rpc_parse.h rpc_scan.h $(rpcgen-objs:.o=.c) etc.rpc
 
@@ -100,3 +102,19 @@ $(etcdir)/rpc: etc.rpc
 	$(do-install)
 
 defines := $(defines) -D_PATH_RPC='"$(etcdir)/rpc"'
+
+# Build the `rpcsvc' library of XDR functions.
+
+$(objpfx)librpcsvc.a: $(rpcsvc:%.x=$(objpfx)x%.o)
+# This library is small enough that it's simplest to recreate the archive
+# from scratch each time.
+	rm -f $@
+ifdef objdir
+	cd $(objdir); $(AR) cq$(verbose) $@ $(^:$(objpfx)%=%)
+else
+	$(AR) cq$(verbose) $@ $^
+endif
+	$(RANLIB) $@
+
+$(objpfx)x%.o: rpcsvc/%.x $(objpfx)rpcgen
+	$(rpcgen-cmd) -c $< -o $@
