@@ -21,10 +21,10 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 
 static int
-DEFUN(check, (name, stream, fd), CONST char *name FILE *stream AND int fd)
+DEFUN(check, (name, stream, fd), CONST char *name AND FILE *stream AND int fd)
 {
   int sfd = fileno (stream);
-  printf ("(fileno (%s) = %d) %c= %d\n", name, sfd == fd ? '=' : '!', fd);
+  printf ("(fileno (%s) = %d) %c= %d\n", name, sfd, sfd == fd ? '=' : '!', fd);
   return sfd != fd;
 }
 

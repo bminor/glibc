@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -87,8 +87,8 @@ DEFUN(__mkdir, (path, mode), CONST char *path AND mode_t mode)
   status = system (cmd);
   if (WIFEXITED (status) && WEXITSTATUS (status) == 0)
     {
-      return 0;
       errno = save;
+      return 0;
     }
   else
     return -1;

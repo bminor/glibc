@@ -81,6 +81,7 @@ __BEGIN_DECLS
 #define	WIFSTOPPED(status)	__WIFSTOPPED(__WAIT_INT(status))
 
 #ifdef	__USE_BSD
+#define	WCOREFLAG		__WCOREFLAG
 #define	WCOREDUMP(status)	__WCOREDUMP(__WAIT_INT(status))
 #define	W_EXITCODE(ret, sig)	__W_EXITCODE(ret, sig)
 #define	W_STOPCODE(sig)		__W_STOPCODE(sig)

@@ -1,5 +1,5 @@
 /* Definitions of status bits for `wait' et al.
-Copyright (C) 1992 Free Software Foundation, Inc.
+Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -47,11 +47,12 @@ Cambridge, MA 02139, USA.  */
 #define	__WIFSTOPPED(status)	(((status) & 0xff) == 0x7f)
 
 /* Nonzero if STATUS indicates the child dumped core.  */
-#define	__WCOREDUMP(status)	((status) & 0200)
+#define	__WCOREDUMP(status)	((status) & __WCOREFLAG)
 
 /* Macros for constructing status values.  */
 #define	__W_EXITCODE(ret, sig)	((ret) << 8 | (sig))
 #define	__W_STOPCODE(sig)	((sig) << 8 | 0x7f)
+#define	__WCOREFLAG		0x80
 
 
 #ifdef	__USE_BSD
