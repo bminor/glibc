@@ -252,6 +252,15 @@ changequote([,])
 AC_PROG_INSTALL
 AC_PROG_RANLIB
 
+AC_PROG_CC
+AC_PROG_CPP
+echo checking for signed size_t type
+echo '#include <stddef.h>
+FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c
+$CPP conftest.c 2>/dev/null | grep '^FOOBAR.*unsigned.*FOOBAR$' \
+|| AC_DEFINE([__SIZE_TYPE__],[unsigned long int])
+rm -f conftest*
+
 # Find out what this system calls `sys_siglist'.
 AC_HAVE_FUNCS(sys_siglist _sys_siglist)
 
