@@ -22,6 +22,9 @@ Cambridge, MA 02139, USA.  */
 #if !defined (SYS_execve) && defined (SYS_exece)
 #define SYS_execve	SYS_exece
 #endif
+#if !defined (SYS_execve) && defined (SYS_exec)
+#define SYS_execve	SYS_exec
+#endif
 
 SYSCALL__ (execve, 3)
 	ret
