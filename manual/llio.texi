@@ -735,8 +735,8 @@ file, each channel has its own file position.  These are called
 
 The system handles each channel independently.  Most of the time, this
 is quite predictable and natural (especially for input): each channel
-can read or write sequentially at its own place in the file.
-The precautions you should take are these:
+can read or write sequentially at its own place in the file.  However,
+if some of the channels are streams, you must take these precautions:
 
 @itemize @bullet
 @item
