@@ -1,3 +1,30 @@
+1998-07-04 10:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/tzfile.c (__tzfile_read): Correct setting of __tzname array
+	values.
+	(__tzfile_compute): Correct setting of __tzname array values.
+
+1998-07-07 12:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/res_comp.c: Prevent warning.
+
+1998-07-06 12:04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_nis/nis-pwd.c (internal_nis_getpwent_r): Handle adjunct
+	password scheme.
+	(_nss_nis_getpwnam_r): Likewise.
+	(_nss_nis_getpwuid_r): Likewise.
+
+1998-07-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/in.h: Use u_int32_t instead of
+	uint32_t.
+
+1998-07-06 17:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c: Fix problem with empty LD_PRELOAD value.
+	Patch by David Engel.
+
 1998-07-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/rcmd.c (iruserok): Initialize hostf.
@@ -13,6 +40,14 @@
 
 	* stdlib/strtod.c (str_to_mpn): Fix extending of n array which
 	only should happen for cy != 0.
+
+1998-06-15 14:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/svc_tcp.c (readtcp): Also listen to all the other connections
+	and process incoming data.
+	* sunrpc/xdr_rec.c (set_input_fragment): Only recognize zero length
+	fragments as invalid.
+	Patches by Thorsten Kukuk <kukuk@weber.uni-paderborn.de>.
 
 1998-06-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
