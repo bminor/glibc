@@ -77,8 +77,8 @@ do
   unix_srcdir=common
   eval "unix_syscall=`echo $unix_function | \
 		       sed -e '/^__/s/^__//' \
-			   -e 's@/\(.*\)$@ unix_srcname=\1@' \
-			   -e 's@=\(.*\)$@ unix_srcdir=\1@'`"
+			   -e 's@=\(.*\)$@ unix_srcdir=\1@' \
+			   -e 's@/\(.*\)$@ unix_srcname=\1@'`"
   test -z "$unix_srcname" && unix_srcname=$unix_function
 
   unix_implementor=none
