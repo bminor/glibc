@@ -20,14 +20,14 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <stdio.h>
 #include <fcntl.h>
-
+#incllude <string.h>
 
 /* Read up to N chars into BUF from COOKIE.
    Return how many chars were read, 0 for EOF or -1 for error.  */
 static ssize_t
 readio (void *cookie, char *buf, size_t n)
 {
-  unsigned int nread;
+  mach_msg_type_number_t nread;
   error_t err;
   char *bufp = buf;
 
@@ -50,7 +50,7 @@ readio (void *cookie, char *buf, size_t n)
 static ssize_t
 writeio (void *cookie, const char *buf, size_t n)
 {
-  unsigned int wrote;
+  mach_msg_type_number_t wrote;
   error_t err;
 
   if (err = __io_write ((io_t) cookie, buf, n, -1, &wrote))
