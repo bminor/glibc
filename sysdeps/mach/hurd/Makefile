@@ -74,9 +74,15 @@ ifeq (,$(filter mach hurd,$(subdir)))
 # (But we don't want to do this in mach/, because hurd/ needs some things
 # there, and we know mach/ doesn't need anything from hurd/.)
 
+ifdef objpfx
+hurd-objpfx = $(objpfx)hurd/
+else
+hurd-objpfx = $(..)hurd/
+endif
+
 # These are all the generated headers that <hurd.h> includes.
-before-compile += $(patsubst %,$(common-objpfx)hurd/%.h,io fs process)
-$(patsubst %,$(common-objpfx)hurd/%.%,io fs process):
+before-compile += $(patsubst %,$(hurd-objpfx)hurd/%.h,io fs process)
+$(patsubst %,$(hurd-objpfx)hurd/%.%,io fs process):
 	$(MAKE) -C $(..)hurd generated no_deps=t
 endif
 
