@@ -13,7 +13,7 @@
 @c  I've already told people the printed edition will be 0.06
 @set EDITION 0.06 DRAFT
 @set VERSION 1.09 Beta
-@set UPDATED 18 October 1994
+@set UPDATED 24 October 1994
 @set ISBN 1-882114-53-1
 
 @ifinfo
@@ -659,9 +659,9 @@ Signal Handling
 * Generating Signals::          How to send a signal to a process.
 * Blocking Signals::            Making the system hold signals temporarily.
 * Waiting for a Signal::        Suspending your program until a signal arrives.
+* Signal Stack::                Using a Separate Signal Stack
 * BSD Signal Handling::         Additional functions for backward
                                  compatibility with BSD.
-* BSD Handler::                 BSD Function to Establish a Handler
 
 Basic Concepts of Signals
 
@@ -727,12 +727,8 @@ Waiting for a Signal
 
 BSD Signal Handling
 
-* POSIX vs BSD::                Comparison of BSD and POSIX signal functions.
-
-BSD Function to Establish a Handler
-
+* BSD Handler::                 BSD Function to Establish a Handler.
 * Blocking in BSD::             BSD Functions for Blocking Signals 
-* Signal Stack::                Using a Separate Signal Stack
 
 Process Startup and Termination
 
