@@ -40,7 +40,7 @@ text_set_element (_hurd_fork_child_hook, init_pids);
 
 DEFINE_HOOK (_hurd_pgrp_changed_hook, (pid_t));
  
-error_t
+kern_return_t
 _S_proc_newids (mach_port_t me,
 		task_t task,
 		pid_t ppid, pid_t pgrp, int orphaned)
