@@ -783,6 +783,8 @@ vector, @code{wordexp} uses a special data type, @code{wordexp_t}, which
 is a structure.  You pass @code{wordexp} the address of the structure,
 and it fills in the structure's fields to tell you about the results.
 
+@comment wordexp.h
+@comment POSIX.2
 @deftp {Data Type} {wordexp_t}
 This data type holds a pointer to a word vector.  More precisely, it
 records both the address of the word vector and its size.
@@ -810,6 +812,8 @@ the beginning of the vector.
 @end table
 @end deftp
 
+@comment wordexp.h
+@comment POSIX.2
 @deftypefun int wordexp (const char *@var{words}, wordexp_t *@var{word-vector-ptr}, int @var{flags})
 Perform word expansion on the string @var{words}, putting the result in
 a newly allocated vector, and store the size and address of this vector
@@ -871,6 +875,8 @@ quoting character is a syntax error.
 @end table
 @end deftypefun
 
+@comment wordexp.h
+@comment POSIX.2
 @deftypefun void wordfree (wordexp_t *@var{word-vector-ptr})
 Free the storage used for the word-strings and vector that
 @code{*@var{word-vector-ptr}} points to.  This does not free the
