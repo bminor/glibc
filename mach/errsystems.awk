@@ -4,7 +4,7 @@ BEGIN {
   nsubs = split(subsys, subs);
   while (nsubs > 0) printf "#include \"%s\"\n", subs[nsubs--];
   print "\n\n\
-static struct error_system __mach_error_systems[err_max_system + 1] =";
+const struct error_system __mach_error_systems[err_max_system + 1] =";
   print "  {";
 }
 /^static.*err_[a-z0-9A-Z_]+_sub *\[/ {
