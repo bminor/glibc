@@ -21,13 +21,10 @@ Cambridge, MA 02139, USA.  */
 #define	_FNMATCH_H	1
 
 /* Bits set in the FLAGS argument to `fnmatch'.  */
-enum
-  {
-    FNM_PATHNAME= (1 << 0),	/* No wildcard can ever match `/'.  */
-    FNM_NOESCAPE= (1 << 1),	/* Backslashes don't quote special chars.  */
-    FNM_PERIOD	= (1 << 2),	/* Leading `.' is matched only explicitly.  */
-    __FNM_FLAGS	= (FNM_PATHNAME|FNM_NOESCAPE|FNM_PERIOD)
-  };
+#define	FNM_PATHNAME	(1 << 0)/* No wildcard can ever match `/'.  */
+#define	FNM_NOESCAPE	(1 << 1)/* Backslashes don't quote special chars.  */
+#define	FNM_PERIOD	(1 << 2)/* Leading `.' is matched only explicitly.  */
+#define	__FNM_FLAGS	(FNM_PATHNAME|FNM_NOESCAPE|FNM_PERIOD)
 
 /* Value returned by `fnmatch' if STRING does not match PATTERN.  */
 #define	FNM_NOMATCH	1
