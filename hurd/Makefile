@@ -35,7 +35,6 @@ user-interfaces		:= $(addprefix hurd/,\
 				       exec core interrupt \
 				       fs fsys io term socket )
 server-interfaces	:= hurd/msg
-server-MIGFLAGS		:= -DMSG_SREPLYPORT# Work around mig bug; see msg.defs.
 
 routines = hurdid hurdpath hurdpid hurdports \
 	   hurdexec \
