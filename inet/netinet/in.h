@@ -1,9 +1,9 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 1, or (at your option)
+the Free Software Foundation; either version 2, or (at your option)
 any later version.
 
 The GNU C Library is distributed in the hope that it will be useful,
@@ -147,10 +147,26 @@ struct sockaddr_in
   };
 
 
-/* Options for use with `getsockopt' and `setsockopt' at the IP level.  */
-#define	IP_OPTIONS	1	/* IP per-packet options.  */
-#define	IP_HDRINCL	2	/* Raw packet header option.  */
+/* Options for use with `getsockopt' and `setsockopt' at the IP level.
+   The first word in the comment at the right is the data type used;
+   "bool" means a boolean value stored in an `int'.  */
+#define	IP_OPTIONS	1	/* ip_opts; IP per-packet options.  */
+#define	IP_HDRINCL	2	/* int; Header is included with data.  */
+#define	IP_TOS		3	/* int; IP type of service and precedence.  */
+#define	IP_TTL		4	/* int; IP time to live.  */
+#define	IP_RECVOPTS	5	/* bool; Receive all IP options w/datagram.  */
+#define	IP_RECVRETOPTS	6	/* bool; Receive IP options for response.  */
+#define	IP_RECVDSTADDR	7	/* bool; Receive IP dst addr w/datagram.  */
+#define	IP_RETOPTS	8	/* ip_opts; Set/get IP per-packet options.  */
 
+/* Structure used to describe IP options for IP_OPTIONS and IP_RETOPTS.
+   The `ip_dst' field is used for the first-hop gateway when using a
+   source route (this gets put into the header proper).  */
+struct ip_opts 
+  {
+    struct in_addr ip_dst;	/* First hop; zero without source route.  */
+    char ip_opts[40];		/* Actually variable in size.  */
+  };
 
 /* Get number representation conversion macros.  */
 #include <inet-cvt.h>
