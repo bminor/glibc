@@ -55,7 +55,7 @@ DEFUN(__read, (fd, buf, nbytes),
 	       const int restart = ss->actions[SIGTTIN].sa_flags & SA_RESTART;
 	       __sigaddmember (SIGTTIN, &ss->pending);
 	       __mutex_unlock (&ss->lock);
-	       /* XXX How do I get the sigthread to deliver the signal? */
+	       /* XXX deliver pending signals */
 	       if (restart)
 		 goto call;
 	       else
