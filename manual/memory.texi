@@ -1639,12 +1639,12 @@ and does not modify @code{*@var{handleptr}}.
 @cindex memory usage warnings
 @cindex warnings of memory almost full
 
-@pindex stdlib.h
+@pindex malloc.c
 You can ask for warnings as the program approaches running out of memory
 space, by calling @code{memory_warnings}.  This is a GNU extension
-declared in @file{stdlib.h}.
+declared in @file{malloc.h}.
 
-@comment stdlib.h
+@comment malloc.h
 @comment GNU
 @deftypefun void memory_warnings (void *@var{start}, void (*@var{warn_func}) (char *))
 Call this function to request warnings for nearing exhaustion of virtual
@@ -1653,13 +1653,12 @@ memory.
 The argument @var{start} says where data space begins, in memory.  The
 allocator compares this against the last address used and against the
 limit of data space, to determine the fraction of available memory in
-use.  if you supply zero for @var{start}, then a default value is used
+use.  If you supply zero for @var{start}, then a default value is used
 which is right in most circumstances.
 
-For @var{warn_func}, supply a function that the relocating allocator can
-call to warn you.  It is called with a string (a warning message) as
-argument.  Normally it ought to display the string for the user to
-read.
+For @var{warn_func}, supply a function that @code{malloc} can call to
+warn you.  It is called with a string (a warning message) as argument.
+Normally it ought to display the string for the user to read.
 @end deftypefun
 
 The warnings come when memory becomes 75% full, when it becomes 85%
