@@ -28,15 +28,14 @@ Cambridge, MA 02139, USA.  */
    send SIG to all processes in the current process's process group.
    If PID is < -1, send SIG to all processes in process group - PID.  */
 int
-__kill (pid_t pid, int arg_sig)
+__kill (pid_t pid, int sig)
 {
-  int sig = arg_sig;		/* XXX work around gcc bug */
   int delivered = 0;		/* Set when we deliver any signal.  */
   error_t err;
   mach_port_t proc;
   struct hurd_userlink ulink;
 
-  void kill_pid (pid_t pid) /* Kill one PID.  */
+  inline void kill_pid (pid_t pid) /* Kill one PID.  */
     {
       /* SIGKILL is not delivered as a normal signal.
 	 Sending SIGKILL to a process means to terminate its task.  */
