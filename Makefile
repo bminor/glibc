@@ -183,17 +183,14 @@ distribute  := README INSTALL NOTES COPYING.LIB COPYING ChangeLog NEWS	\
 	       munch-tmpl.c munch.awk gnu-stabs.h sysdep.h
 
 export distribute := $(strip $(distribute))
-export generated := $(generated)
+export generated := $(generated) $(objpfx)stubs.h
 
 .PHONY: dist
 dist: Make-dist $(distribute)
 	$(MAKE) -f $< no_deps=t $(Make-dist-args)
 
-README: README.template version.c
-	-rm -f $@
-	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
-# Make it unwritable so I won't change it by mistake.
-	chmod 444 $@
+README: Make-dist README.template
+	$(MAKE) -f $^
 
 INSTALL: manual/maint.texi
 	makeinfo --no-validate --no-warn --no-headers $< -o $@
