@@ -11,9 +11,9 @@ init_sockaddr (struct sockaddr_in *name,
   struct hostent *hostinfo;
 
   name->sin_family = AF_INET;
-  name->sin_port = htons (PORT);
-  hostinfo = gethostbyname (SERVERHOST);
-  if (!hostinfo) 
+  name->sin_port = htons (port);
+  hostinfo = gethostbyname (serverhost);
+  if (hostinfo == NULL) 
     {
       fprintf (stderr, "Unknown host %s.\n", hostname);
       exit (EXIT_FAILURE);
