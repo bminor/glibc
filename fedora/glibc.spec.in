@@ -12,10 +12,10 @@ Version: %{glibcversion}
 Release: %{glibcrelease}
 License: LGPL
 Group: System Environment/Libraries
-%define glibcsrcdir %{name}-%{glibcdate}
+%define glibcsrcdir %{glibcname}-%{glibcdate}
 Source0: %{glibcsrcdir}.tar.bz2
-Source1: %{name}-fedora-%{glibcdate}.tar.bz2
-Patch0: %{name}-fedora.patch
+Source1: %{glibcname}-fedora-%{glibcdate}.tar.bz2
+Patch0: %{glibcname}-fedora.patch
 Patch1: %{name}-nptl-check.patch
 Patch2: %{name}-ppc-assume.patch
 Patch3: %{name}-ia64-lib64.patch
