@@ -36,11 +36,6 @@ all:
 
 include ../Makeconfig
 
-# Where to find interface definition files.
-ifdef	MIG_DEFS_PATH
-vpath %.defs $(MIG_DEFS_PATH)
-endif
-
 ifndef MIG
 MIG = mig
 endif
@@ -54,21 +49,24 @@ define nl	# This is needed by *.ir.
 
 endef
 ifdef user-interfaces
-include $(user-interfaces:%=%.ir)
+interface-includes := $(foreach if,$(user-interfaces),$(if).ir)
+include $(interface-includes)
+clean-extras := $(clean-extras) $(interface-includes)
 endif
 
 # %.ir defines a variable `%-calls', which lists the RPCs defined by
-# %.defs, and a rule to build $(%-calls:%=__%.c) from %.defs.  We use the
-# kludgificacious method of defining a pattern rule to build files matching
-# patterns we are pretty damn sure will only match the particular files we
-# have in mind.
+# %.defs, and a rule to build $(%-calls:%=__$(%-userprefix)%.c) from
+# %.defs, where $(%-userprefix) is the user prefix given in %.defs.  We use
+# the kludgificacious method of defining a pattern rule to build files
+# matching patterns we are pretty damn sure will only match the particular
+# files we have in mind.
 %.ir: %.uh Machrules
 	(echo 'define $*-calls'					;\
 	 awk '/^kern_return_t/ { print $$2 }' $<		;\
 	 echo 'endef'						;\
 	 echo '$*-calls := $$(subst $$(nl), ,$$($*-calls))'	;\
-	 echo '$$($*-calls:%=__%%c): $*.defs'			;\
-	 echo '	$$(MIG) $$< $$(MIGFLAGS) -prefix __ -i ./__'	 \
+	 echo '$$($*-calls:%=_\%%.c): $*.defs'			;\
+	 echo '	$$(MIG) $$< $$(MIGFLAGS) -prefix __ -i ./__'	\
 	) > $@-new
 	mv $@-new $@
 vpath Machrules ../mach	# Find ourselves.
@@ -97,16 +95,26 @@ __%_server.c __%_server.h: %.defs
 	(sed '$$d' $<; tail +2 $(word 2,$^)) > $@-new
 	mv $@-new $@
 
-%.c: __%.c
+if-calls.c := $(foreach if,$(user-interfaces),$($(if)-calls:%=%.c))
+ifdef if-calls.c
+$(if-calls.c): %.c:
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*)') > $@-new
 	mv $@-new $@
+endif
 
 interface-routines := $(foreach if,$(user-interfaces),		\
 				$($(if)-calls)			\
 				$(addprefix __,$($(if)-calls)))	\
 		      $(server-interfaces:%=%_server)
 interface-headers := $(user-interfaces:%=%.h) $(server-interfaces:%=%_server.h)
+
+# Remove the generated user stub source and header files,
+# and don't distribute them.
+mach-generated := $(interface-routines:%=%.c) \
+		  $(interface-headers:%=%.h %.uh)
+clean-extras := $(clean-extras) $(mach-generated)
+dont_distribute := $(dont_distribute) $(mach-generated)
 
 # These are needed to generate the dependencies.
 before-compile := $(before-compile) $(interface-headers)
