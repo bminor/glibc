@@ -1,3 +1,8 @@
+1999-09-05  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdprio.c (_hurd_priority_which_map): If WHO is zero default
+	it to getpid () for PRIO_PROCESS, geteuid () for PRIO_USER.
+
 1999-09-03  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Rename strong name for
