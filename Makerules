@@ -285,6 +285,7 @@ endif
 +install := $(addprefix $(libdir)/,$(install-lib))	\
 	    $(addprefix $(datadir)/,$(install-data))	\
 	    $(addprefix $(bindir)/,$(install))
+headers := $(strip $(headers))
 ifdef headers
 ifdef ansi-incldir
 $(addprefix $(ansi-incldir)/,$(headers)): \
