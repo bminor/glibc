@@ -62,6 +62,12 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
   default_func
     = stream->__room_funcs.__output == __default_room_functions.__output;
 
+  if (__stdio_check_offset (stream) == EOF)
+    {
+      stream->__error = 1;
+      goto done;
+    }
+
   if (stream->__buffer == NULL && default_func &&
       stream->__offset == stream->__target)
   write_through:
