@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
 /* Read formatted input from stdin according to the format
    string in FORMAT, using the argument list in ARG.  */
 int
-DEFUN(vscanf, (format, arg), CONST char *format AND va_list arg)
+DEFUN(vscanf, (format, arg), CONST char *format AND PTR arg)
 {
   return vfscanf (stdin, format, arg);
 }
