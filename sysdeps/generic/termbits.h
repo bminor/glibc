@@ -1,4 +1,5 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* termios type and macro definitions.  4.4 BSD/generic GNU version.
+Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -156,26 +157,6 @@ struct termios
 
   /* Input and output baud rates.  */
   speed_t __ispeed, __ospeed;
-#define	B0	0		/* Hang up.  */
-#define	B50	50		/* 50 baud.  */
-#define	B75	75		/* 75 baud.  */
-#define	B110	110		/* 110 baud.  */
-#define	B134	134		/* 134.5 baud.  */
-#define	B150	150		/* 150 baud.  */
-#define	B200	200		/* 200 baud.  */
-#define	B300	300		/* 300 baud.  */
-#define	B600	600		/* 600 baud.  */
-#define	B1200	1200		/* 1200 baud.  */
-#define	B1800	1800		/* 1800 baud.  */
-#define	B2400	2400		/* 2400 baud.  */
-#define	B4800	4800		/* 4800 baud.  */
-#define	B9600	9600		/* 9600 baud.  */
-#define	B19200	19200		/* 19200 baud.  */
-#define	B38400	38400		/* 38400 baud.  */
-#ifdef	__USE_BSD
-#define	EXTA	19200
-#define	EXTB	38400
-#endif
 };
 
 #define _IOT_termios /* Hurd ioctl type field.  */ \
