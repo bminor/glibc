@@ -21,10 +21,10 @@ Cambridge, MA 02139, USA.  */
 #include <time.h>
 #include <sys/time.h>
 
-static clock_t
 #ifdef	__GNUC__
 __inline
 #endif
+static clock_t
 DEFUN(timeval_to_clock_t, (tv), CONST struct timeval *tv)
 {
   return (clock_t) ((tv->tv_sec * CLK_TCK) +

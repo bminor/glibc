@@ -114,7 +114,7 @@ ic(sqrt2, 1.4142135623730951455E0,     0, 1.6A09E667F3BCD)
 double log1p(x)
 double x;
 {
-	const static double zero=0.0, negone= -1.0, one=1.0, 
+	static const double zero=0.0, negone= -1.0, one=1.0, 
 		      half=1.0/2.0, small=1.0E-20;   /* 1+small == 1 */
 	double z,s,t,c;
 	int k;

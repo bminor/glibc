@@ -110,7 +110,7 @@ ic(q2, 9.9176615021572857300E-4, -10, 1.03FC4CB8C98E8)
 double exp__E(x,c)
 double x,c;
 {
-	const static double zero=0.0, one=1.0, half=1.0/2.0, small=1.0E-19;
+	static const double zero=0.0, one=1.0, half=1.0/2.0, small=1.0E-19;
 	double z,p,q,xp,xh,w;
 	if(copysign(x,one)>small) {
            z = x*x  ;

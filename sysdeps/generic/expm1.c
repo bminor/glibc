@@ -108,7 +108,7 @@ ic(invln2, 1.4426950408889633870E0,     0, 1.71547652B82FE)
 double expm1(x)
 double x;
 {
-	const static double one=1.0, half=1.0/2.0; 
+	static const double one=1.0, half=1.0/2.0; 
 	double  z,hi,lo,c;
 	int k;
 #if defined(vax)||defined(tahoe)

@@ -84,7 +84,7 @@ double asinh(x)
 double x;
 {	
 	double t,s;
-	const static double	small=1.0E-10,	/* fl(1+small*small) == 1 */
+	static const double	small=1.0E-10,	/* fl(1+small*small) == 1 */
 				big  =1.0E20,	/* fl(1+big) == big */
 				one  =1.0   ;	
 

@@ -104,7 +104,7 @@
     * We define "vccast" if this needs doing.
     */
 #  define vc(name, value, x1,x2,x3,x4, bexp, xval) \
-	const static long cat3(name,,x)[] = {cat3t(0x,x1,x2), cat3t(0x,x3,x4)};
+	static const long cat3(name,,x)[] = {cat3t(0x,x1,x2), cat3t(0x,x3,x4)};
 
 #  define ic(name, value, bexp, xval) ;
 
@@ -115,7 +115,7 @@
 #  define vc(name, value, x1,x2,x3,x4, bexp, xval) ;
 
 #  define ic(name, value, bexp, xval) \
-	const static double name = value;
+	static const double name = value;
 
 #endif	/* defined(vax)||defined(tahoe) */
 

@@ -107,7 +107,7 @@ ic(sqrt2, 1.4142135623730951455E0,     0, 1.6A09E667F3BCD)
 double log(x)
 double x;
 {
-	const static double zero=0.0, negone= -1.0, half=1.0/2.0;
+	static const double zero=0.0, negone= -1.0, half=1.0/2.0;
 	double s,z,t;
 	int k,n;
 
