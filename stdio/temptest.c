@@ -1,3 +1,6 @@
+#include <ansidecl.h>
+#include <stdio.h>
+
 main ()
 {
   char *fn;
