@@ -1,3 +1,14 @@
+2002-01-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/fpu/e_sqrt.c (__ieee754_sqrt): Don't use multi-line
+	string literals.
+	(__full_ieee754_sqrt): Add __attribute_used__.
+
+2002-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/group_member.c (__group_member): Also check
+	groups[0] [PR libc/2781].
+
 2001-12-02  Roland McGrath  <roland@frob.com>
 
 	* mach/Makefile, mach/Machrules: Move comments out of \ continuations.
