@@ -35,6 +35,14 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   mach_port_t port;
   int got;
 
+  /* If we're going to bomb, do it before we acquire any locks.  */
+  if (readfds != NULL)
+    *(volatile fd_set *) readfds;
+  if (writefds != NULL)
+    *(volatile fd_set *) writefds;
+  if (exceptfds != NULL)
+    *(volatile fd_set *) exceptfds;
+
   __mutex_lock (&_hurd_dtable.lock);
 
   if (nfds > _hurd_dtable.size)
@@ -67,22 +75,27 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 				     &result);
 	  if (result & (SELECT_READ|SELECT_WRITE|SELECT_URG))
 	    {
-	      if (readfds != NULL && (result & SELECT_READ))
-		FD_SET (i, readfds);
-	      else
-		FD_CLR (i, writefds);
-	      if (writefds != NULL && (result & SELECT_WRITE))
-		FD_SET (i, writefds);
-	      else
-		FD_CLR (i, writefds);
-	      if (exceptfds != NULL && (result & SELECT_URG))
-		FD_SET (i, exceptfds);
-	      else
-		FD_CLR (i, exceptfds);
+	      if (readfds != NULL)
+		if (result & SELECT_READ)
+		  FD_SET (i, readfds);
+		else
+		  FD_CLR (i, readfds);
+	      if (writefds != NULL)
+		if (result & SELECT_WRITE)
+		  FD_SET (i, writefds);
+		else
+		  FD_CLR (i, writefds);
+	      if (exceptfds != NULL)
+		if (result & SELECT_URG)
+		  FD_SET (i, exceptfds);
+		else
+		  FD_CLR (i, exceptfds);
 	      ++got;
 	    }
 	}
     }
+
+  /* XXX Need to lock those fds so they don't change before select is done.  */
 
   __mutex_unlock (&_hurd_dtable.lock);
 
@@ -116,18 +129,21 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 		(msg.result & (SELECT_READ|SELECT_WRITE|SELECT_URG)) &&
 		msg.tag >= 0 && msg.tag < nfds)
 	      {
-		if (readfds != NULL && (msg.result & SELECT_READ))
-		  FD_SET (msg.tag, readfds);
-		else
-		  FD_CLR (msg.tag, writefds);
-		if (writefds != NULL && (msg.result & SELECT_WRITE))
-		  FD_SET (msg.tag, writefds);
-		else
-		  FD_CLR (msg.tag, writefds);
-		if (exceptfds != NULL && (msg.result & SELECT_URG))
-		  FD_SET (msg.tag, exceptfds);
-		else
-		  FD_CLR (msg.tag, exceptfds);
+		if (readfds != NULL)
+		  if (msg.result & SELECT_READ)
+		    FD_SET (msg.tag, readfds);
+		  else
+		    FD_CLR (msg.tag, readfds);
+		if (writefds != NULL)
+		  if (msg.result & SELECT_WRITE)
+		    FD_SET (msg.tag, writefds);
+		  else
+		    FD_CLR (msg.tag, writefds);
+		if (exceptfds != NULL)
+		  if (msg.result & SELECT_URG)
+		    FD_SET (msg.tag, exceptfds);
+		  else
+		    FD_CLR (msg.tag, exceptfds);
 		++got;
 		if (msg.msgh_remote_port != MACH_PORT_NULL)
 		  {
