@@ -321,6 +321,7 @@ fork_itimer (void)
   struct itimerval it;
 
   __spin_lock (&_hurd_itimer_lock);
+  _hurd_itimer_thread = MACH_PORT_NULL;
   it = _hurd_itimerval;
   it.it_value = it.it_interval;
 

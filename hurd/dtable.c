@@ -141,6 +141,8 @@ fork_child_dtable (void)
   for (i = 0; !err && i < _hurd_dtablesize; ++i)
     {
       struct hurd_fd *d = _hurd_dtable[i];
+      if (d == NULL)
+	continue;
 
       /* No other thread is using the send rights in the child task.  */
       d->port.users = d->ctty.users = NULL;
