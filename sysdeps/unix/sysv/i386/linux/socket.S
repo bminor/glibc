@@ -20,6 +20,14 @@ Cambridge, MA 02139, USA.  */
 
 .globl syscall_error
 
+/* The socket-oriented system calls are handled unusally in Linux.
+   They are all gated through the single `socketcall' system call number.
+   `socketcall' takes two arguments: the first is the subcode, specifying
+   which socket function is being called; and the second is a pointer to
+   the arguments to specific function.
+
+   The .S files for the other calls just #define socket and #include this.  */
+
 ENTRY (socket)
 
 	/* Save registers.  */
@@ -39,7 +47,7 @@ ENTRY (socket)
 	popl %ecx
 	popl %ebx
 
-	/* Check for error.  */
+	/* %eax is < 0 if there was an error.  */
 	testl %eax, %eax
 	jl syscall_error
 
