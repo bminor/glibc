@@ -17,7 +17,7 @@
 # Cambridge, MA 02139, USA.
 
 $(common-objpfx)local_lim.h: $(common-objpfx)mk-local_lim
-	$(dir $<)$(notdir $<) > $@-tm
+	$(dir $<)$(notdir $<) > $@-t
 	mv $@-t $@
 $(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/bsd/mk-local_lim.c
 	$(native-compile)
