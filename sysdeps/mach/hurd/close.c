@@ -25,22 +25,37 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(__close, (fd), int fd)
 {
-  file_t server;
+  struct _hurd_fd *d;
+  io_t port, ctty;
 
   __mutex_lock (&_hurd_dtable_lock);
-  if (fd < 0 || fd >= _hurd_dtable.size ||
-      _hurd_dtable.d[fd].server == MACH_PORT_NULL)
+  if (fd < 0 || fd >= _hurd_dtable.size)
     {
       __mutex_unlock (&_hurd_dtable_lock);
       errno = EBADF;
       return -1;
     }
 
-  server = _hurd_dtable.d[fd].server;
-  _hurd_dtable.d[fd].server = MACH_PORT_NULL;
-  /* ctty? XXX */
+  d = &_hurd_dtable.d[fd];
+  __spin_lock (d->port);
+  port = d->port.port;
+  ctty = d->ctty.port;
+  d->port.port = d->ctty.port = MACH_PORT_NULL;
+  d->port.user_dealloc = d->ctty.user_dealloc = NULL;
+  d->flags = 0;
+  __spin_unlock (&d->port);
+
   __mutex_unlock (&_hurd_dtable_lock);
 
-  __mach_port_deallocate (__mach_task_self (), server);
+  if (port == MACH_PORT_NULL)
+    {
+      errno = EBADF;
+      return -1;
+    }
+
+  __mach_port_deallocate (__mach_task_self (), port);
+  if (ctty != MACH_PORT_NULL)
+    __mach_port_deallocate (__mach_task_self (), ctty);
+
   return 0;
 }
