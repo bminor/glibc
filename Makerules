@@ -171,12 +171,21 @@ override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
 
 ifndef .S-rule # Bletch.
 $(objpfx)%.o: %.S $(before-compile)
-	$(COMPILE.S) $< $(OUTPUT_OPTION)
+	$(compile.S) $(OUTPUT_OPTION)
 endif
 $(objpfx)%.o: %.s $(before-compile)
 	$(COMPILE.s) $< $(OUTPUT_OPTION)
 $(objpfx)%.o: %.c $(before-compile)
-	$(COMPILE.c) $< $(OUTPUT_OPTION)
+	$(compile.c) $(OUTPUT_OPTION)
+
+ifeq ($(notdir $(firstword $(CC))),gcc)
+# GCC can grok options after the file name.
+compile.S = $(CC) $< -c $(CPPFLAGS)
+compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
+else
+compile.S = $(COMPILE.S) $<
+compile.c = $(COMPILE.c) $<
+endif
 
 # This makes all the object files in the parent library archive.
 
