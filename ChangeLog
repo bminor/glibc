@@ -1,3 +1,8 @@
+1999-08-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/malloc.c (ptmalloc_init): Don't use variables to set
+	thresholds for SUID binaries.  [PR libc/1277]  
+
 1999-08-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/install.texi (Running make install): Give examples for
