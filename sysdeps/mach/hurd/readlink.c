@@ -52,11 +52,13 @@ DEFUN(__readlink, (file_name, buf, len),
   else
     {
       /* This is a symlink; its translator is "/hurd/symlink\0target\0".  */
-      if (len > translen - sizeof (_HURD_SYMLINK))
-	len = translen - sizeof (_HURD_SYMLINK);
-      if (transp[translen - 1] == '\0')
-	/* Remove the null terminator.  */
-	--len;
+      if (len >= translen - sizeof (_HURD_SYMLINK))
+	{
+	  len = translen - sizeof (_HURD_SYMLINK);
+	  if (transp[translen - 1] == '\0')
+	    /* Remove the null terminator.  */
+	    --len;
+	}
       if (buf == NULL)
 	/* This call is just to find out how large a buffer is required.  */
 	len = translen - sizeof (_HURD_SYMLINK) - 1;
