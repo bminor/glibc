@@ -740,8 +740,9 @@ redistribute these changes.
 The @file{tar.h} header file was written by David J. MacKenzie.
 
 @item
-The port to the MIPS DECStation running Ultrix 4 was contributed by
-Brendan Kehoe and Ian Lance Taylor.
+The port to the MIPS DECStation running Ultrix 4
+(@code{mips-dec-ultrix4})
+was contributed by Brendan Kehoe and Ian Lance Taylor.
 
 @item
 The DES encryption function @code{crypt} and related functions were
@@ -755,6 +756,10 @@ The code to support SunOS shared libraries was contributed by Tom Quinn.
 
 @item
 The @code{mktime} function was contributed by Noel Cragg.
+
+@item
+The port to the Sequent Symmetry running Dynix version 3
+(@code{i386-sequent-bsd}) was contributed by Jason Merrill.
 @end itemize
 
 @c @bye
