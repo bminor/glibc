@@ -1,4 +1,4 @@
-@node System Information, Representation Limits, Users and Groups, Top
+@node System Information, System Configuration Limits, Users and Groups, Top
 @chapter System Information
 
 This chapter contains information about functions that return 
