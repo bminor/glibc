@@ -20,6 +20,10 @@ Cambridge, MA 02139, USA.  */
 #ifndef _MACHINE_SP_H
 #define _MACHINE_SP_H
 
+#ifndef _EXTERN_INLINE
+#define _EXTERN_INLINE extern __inline
+#endif
+
 /* Return the current stack pointer.  */
 
 _EXTERN_INLINE void *
