@@ -1,5 +1,5 @@
 /* Error handling for runtime dynamic linker.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,6 @@
 struct catch
   {
     char *errstring;		/* Error detail filled in here.  */
-    const char *objname;
     jmp_buf env;		/* longjmp here on error.  */
   };
 
@@ -56,11 +55,18 @@ _dl_signal_error (int errcode,
       /* We are inside _dl_catch_error.  Return to it.  We have to
 	 duplicate the error string since it might be allocated on the
 	 stack.  */
-      size_t len = strlen (errstring) + 1;
-      catch->errstring = malloc (len);
+      size_t objname_len = objname ? strlen (objname) + 2 : 0;
+      size_t errstring_len = strlen (errstring) + 1;
+      catch->errstring = malloc (objname_len + errstring_len);
       if (catch->errstring != NULL)
-	memcpy (catch->errstring, errstring, len);
-      catch->objname = objname;
+	{
+	  if (objname_len > 0)
+	    {
+	      memcpy (catch->errstring, objname, objname_len - 2);
+	      memcpy (catch->errstring + objname_len - 2, ": ", 2);
+	    }
+	  memcpy (catch->errstring + objname_len, errstring, errstring_len);
+	}
       longjmp (catch->env, errcode ?: -1);
     }
   else if (receiver)
@@ -84,11 +90,10 @@ _dl_signal_error (int errcode,
 
 int
 _dl_catch_error (char **errstring,
-		 const char **objname,
 		 void (*operate) (void))
 {
   int errcode;
-  struct catch *old, c = { errstring: NULL, objname: NULL };
+  struct catch *old, c = { errstring: NULL };
   /* We need not handle `receiver' since setting a `catch' is handle
      before it.  */
 
@@ -100,14 +105,12 @@ _dl_catch_error (char **errstring,
       (*operate) ();
       catch = old;
       *errstring = NULL;
-      *objname = NULL;
       return 0;
     }
 
   /* We get here only if we longjmp'd out of OPERATE.  */
   catch = old;
   *errstring = c.errstring;
-  *objname = c.objname;
   return errcode == -1 ? 0 : errcode;
 }
 
