@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -69,11 +69,15 @@ Cambridge, MA 02139, USA.  */
   asm(".stabs \"_" #set "\",23,0,0,_" #symbol)
 #define	data_set_element(set, symbol)	\
   asm(".stabs \"_" #set "\",25,0,0,_" #symbol)
+#define	bss_set_element(set, symbol)	\
+  asm(".stabs \"_" #set "\",27,0,0,_" #symbol)
 #else
 #define	text_set_element(set, symbol)	\
   asm(".stabs \"_/**/set\",23,0,0,_/**/symbol")
 #define	data_set_element(set, symbol)	\
   asm(".stabs \"_/**/set\",25,0,0,_/**/symbol")
+#define	bss_set_element(set, symbol)	\
+  asm(".stabs \"_/**/set\",27,0,0,_/**/symbol")
 #endif
 
 #else	/* No GNU stabs.  */
