@@ -1,3 +1,14 @@
+2002-09-30  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Store 4 bytes into errno, not 8 bytes.
+
+2002-09-29  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/x86_64/sysdep.S: Store 32 bits at errno, not 64 bits.
+	AFAICT, it was just blind luck that the word following errno in .bss
+	was just alignment padding and not some other variable to be clobbered.
+
 2002-09-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/zh_CN.po: New file.
