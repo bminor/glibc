@@ -21,7 +21,13 @@ $(objpfx)stdio_lim.h: $(objpfx)mk-stdiolim
 	mv $@-tmp $@
 
 vpath %.h $(..)
-$(objpfx)mk-stdiolim.o: posix1_lim.h local_lim.h
+
+# The point of this is to not use -W options to gcc.
+$(objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
+			posix1_lim.h local_lim.h
+	cwd=`pwd`; cd $(objdir); $(CC) $(CPPFLAGS) \
+	  $$cwd/$< -o $(@:$(objpfx)%=%)
+
 
 ifeq ($(subdir),posix)
 dont_distribute := $(dont_distribute) stdio_lim.h # Generated.
