@@ -1,7 +1,12 @@
+1997-03-22 04:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Net release 2.0.2.
+
 1997-03-22 04:37  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/termbits.h (OXTABS): Define as alias for
 	XTABS.
+	* sysdeps/unix/sysv/linux/alpha/termbits.h (OXTABS): Likewise.
 	* termios/sys/ttydefaults.h: Partly revert patch by Andreas Schwab
 	of Sun Dec 15 16:33:44 1996.
 	Proposed by Thomas Bushnell <thomas@gnu.ai.mit.edu>.
