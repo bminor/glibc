@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sys/timeb.h>
 #include <sys/time.h>
+#include <errno.h>
 
 int
 ftime (timebuf)

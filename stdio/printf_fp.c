@@ -319,6 +319,9 @@ DEFUN(__printf_fp, (s, info, args),
     {
       if (fpnum != 0)
 	{
+	  if (is_neg)
+	    fpnum = - fpnum;
+
 	  if (fpnum < 1e-4)
 	    type = 'e';
 	  else

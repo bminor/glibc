@@ -87,7 +87,7 @@ xdr_float(xdrs, fp)
 	register XDR *xdrs;
 	register float *fp;
 {
-#if !defined(mc68000) && !defined(sparc)
+#ifdef vax
 	struct ieee_single is;
 	struct vax_single vs, *vsp;
 	struct sgl_limits *lim;
@@ -96,7 +96,7 @@ xdr_float(xdrs, fp)
 	switch (xdrs->x_op) {
 
 	case XDR_ENCODE:
-#if defined(mc68000) || defined(sparc)
+#ifndef vax
 		return (XDR_PUTLONG(xdrs, (long *)fp));
 #else
 		vs = *((struct vax_single *)fp);
@@ -118,7 +118,7 @@ xdr_float(xdrs, fp)
 #endif
 
 	case XDR_DECODE:
-#if defined(mc68000) || defined(sparc)
+#ifndef vax
 		return (XDR_GETLONG(xdrs, (long *)fp));
 #else
 		vsp = (struct vax_single *)fp;
