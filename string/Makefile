@@ -21,7 +21,7 @@
 #
 subdir	:= string
 
-headers	:= string.h strings.h bstring.h memory.h
+headers	:= string.h strings.h bstring.h memory.h endian.h
 
 routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
 		   strerror strlen strncat strncmp strncpy strpbrk	\
