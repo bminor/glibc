@@ -34,7 +34,7 @@ __BEGIN_DECLS
 
 #define	__need___va_list
 #include <stdarg.h>
-#ifndef	____va_list_defined
+#ifndef	__GNUC_VA_LIST
 #define	__gnuc_va_list	__ptr_t
 #endif
 
