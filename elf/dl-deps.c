@@ -552,6 +552,10 @@ _dl_map_object_deps (struct link_map *map,
 			     (k - j) * sizeof (struct link_map *));
 		    map->l_initfini[j] = here;
 
+		    /* Don't insert further matches before the last
+		       entry moved to the front.  */
+		    ++j;
+
 		    break;
 		  }
 	    }
