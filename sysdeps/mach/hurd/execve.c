@@ -38,16 +38,20 @@ DEFUN(__execve, (path, argv, envp),
   struct _hurd_port *port_cells[INIT_PORT_MAX];
   file_t *dtable;
   int dtablesize;
+  struct _hurd_port *dtable_cells;
+  int *dealloc_dtable;
   int i;
   char *const *p;
   task_t task;
   int flags;
   struct _hurd_sigstate *ss;
 
-  file = __hurd_path_lookup (path, FS_LOOKUP_EXECUTE, 0);
+  /* Get a port to the file we want to execute.  */
+  file = __path_lookup (path, FS_LOOKUP_EXECUTE, 0);
   if (file == MACH_PORT_NULL)
     return -1;
 
+  /* Pack the arguments into an array with nulls separating the elements.  */
   argslen = 0;
   p = argv;
   while (*p != NULL)
@@ -55,8 +59,9 @@ DEFUN(__execve, (path, argv, envp),
   args = __alloca (argslen);
   ap = args;
   for (p = argv; *p != NULL; ++p)
-    ap = __memccpy (ap, *p, '\0', UINT_MAX);
+    ap = __memccpy (ap, *p, '\0', ULONG_MAX);
 
+  /* Pack the environment into an array with nulls separating the elements.  */
   envlen = 0;
   p = envp;
   while (*p != NULL)
@@ -64,8 +69,9 @@ DEFUN(__execve, (path, argv, envp),
   env = __alloca (envlen);
   ap = env;
   for (p = envp; *p != NULL; ++p)
-    ap = __memccpy (ap, *p, '\0', UINT_MAX);
+    ap = __memccpy (ap, *p, '\0', ULONG_MAX);
 
+  /* Load up the ports to give to the new program.  */
 #define	port(idx, cell)							      \
       case idx:								      \
 	port_cells[i] = &cell;						      \
@@ -83,7 +89,9 @@ DEFUN(__execve, (path, argv, envp),
 	port_cells[i] = NULL;
 	break;
       }
-  for (i = 0; i < INIT_PORT_MAX; ++i)
+
+  /* Load up the ints to give the new program.  */
+  for (i = 0; i < INIT_INT_MAX; ++i)
     switch (i)
       {
       case INIT_UMASK:
@@ -117,33 +125,68 @@ DEFUN(__execve, (path, argv, envp),
     if (ss->actions[i].sa_handler == SIG_IGN)
       ints[INIT_SIGIGN] |= __sigmask (i);
 
+  /* We hold the sigstate lock until the exec has failed so that no signal
+     can arrive between when we pack the blocked and ignored signals, and
+     when the exec actually happens.  A signal handler could change what
+     signals are blocked and ignored.  Either the change will be reflected
+     in the exec, or the signal will never be delivered.  */
+
+#if 0
   if (ss->vforked)
     {
       /* This thread is vfork'd.  */
       task = MACH_PORT_NULL;
-      flags = FS_EXEC_NEWTASK;
+      flags = EXEC_NEWTASK;
     }
   else
+#endif
     {
       task = __mach_task_self ();
       flags = 0;
     }
   
+  /* Pack up the descriptor table to give the new program.  */
   __mutex_lock (&_hurd_dtable_lock);
   if (_hurd_dtable.d != NULL)
     {
       dtablesize = _hurd_dtable.size;
-      dtable = __alloca (dtablesize * sizeof (file_t));
+      dtable = __alloca (dtablesize * sizeof (dtable[0]));
+      dealloc_dtable = __alloca (dtablesize * sizeof (dealloc_dtable[0]));
+      dtable_cells = __alloca (dtablesize * sizeof (dealloc_cells[0]));
       for (i = 0; i < dtablesize; ++i)
-	if (_hurd_dtable.d[i].flags & FD_CLOEXEC)
-	  dtable[i] = MACH_PORT_NULL;
-	else
-	  dtable[i] = _hurd_dtable.d[i].server;
+	{
+	  struct _hurd_fd *const = &_hurd_dtable.d[i];
+	  __spin_lock (&d->port.lock);
+	  if (d->flags & FD_CLOEXEC)
+	    {
+	      dtable[i] = MACH_PORT_NULL;
+	      __spin_unlock (&d->port.lock);
+	    }
+	  else
+	    {
+	      /* If this is a descriptor to our controlling tty,
+		 we want to give the normal port, not the foreground port.  */
+	      dtable[i] = _hurd_port_get (&d->ctty, &dealloc_dtable[i]);
+	      if (dtable[i] == MACH_PORT_NULL)
+		{
+		  dtable[i] = _hurd_port_locked_get (&d->port,
+						     &dealloc_dtable[i]);
+		  dtable_cells[i] = &d->port;
+		}
+	      else
+		{
+		  __spin_unlock (&d->port.lock);
+		  dtable_cells[i] = &d->ctty;
+		}
+	    }
+	}
     }
   else
     {
       dtable = _hurd_init_dtable;
       dtablesize = _hurd_init_dtablesize;
+      dealloc_dtable = NULL;
+      dealloc_cells = NULL;
     }
 
   err = __file_exec (file, task,
@@ -152,21 +195,26 @@ DEFUN(__execve, (path, argv, envp),
 		     ints, INIT_INT_MAX,
 		     ports, INIT_PORT_MAX,
 		     flags);
-  /* We must hold the dtable lock while doing the file_exec to avoid
-     the dtable entries being deallocated before we send them.  */
-  __mutex_unlock (&_hurd_dtable_lock);
+
+  /* Safe to let signals happen now.  */
+  __mutex_unlock (&ss->lock);
 
   for (i = 0; i < INIT_PORT_MAX; ++i)
     if (port_cells[i] != NULL)
-      _hurd_port_free (ports_cells[i], ports[i], dealloc_ports[i]);
+      _hurd_port_free (ports_cells[i], ports[i], &dealloc_ports[i]);
+
+  if (dealloc_dtable != NULL)
+    for (i = 0; i < dtablesize; ++i)
+      if (dtable[i] != MACH_PORT_NULL)
+	_hurd_port_free (dtable_cells[i], dtable[i], &dealloc_dtable[i]);
+
+#if 0
+  if (ss->vforked)
+    longjmp (ss->vfork_saved.continuation, 1);
+#endif
 
   if (err)
     return __hurd_fail (err);
-
-  if (ss->vforked)
-    longjmp (ss->vfork_saved.continuation, 1);
-
-  __mutex_unlock (&ss->lock);
 
   /* That's interesting.  */
   return 0;
