@@ -97,8 +97,7 @@ endif
 include Machrules
 
 interface-routines := $(filter-out %_rpc,$(interface-routines)) \
-		      $(foreach call,$(mach-shortcuts),\
-				__$(call) $(call) __syscall_$(call))
+		      $(mach-shortcuts:%=__syscall_%)
 dont_distribute := $(dont_distribute) \
 		   $(interface-routines:%=%.c) $(interface-headers)
 
