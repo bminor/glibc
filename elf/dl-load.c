@@ -149,6 +149,7 @@ local_strdup (const char *s)
 size_t
 _dl_dst_count (const char *name, int is_path)
 {
+  const char* const start = name;
   size_t cnt = 0;
 
   do
@@ -186,6 +187,7 @@ char *
 _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 		    int is_path)
 {
+  const char* const start = name;
   char *last_elem, *wp;
 
   /* Now fill the result path.  While copying over the string we keep
