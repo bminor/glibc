@@ -109,7 +109,8 @@ timer_thread (void)
 }
 
 /* Forward declaration.  */
-static sighandler_t preempt_sigalrm (thread_t thread, int signo, int sigcode);
+static sighandler_t preempt_sigalrm (thread_t thread, int signo,
+				     long int sigcode, int sigerror);
 
 /* Called before any normal SIGALRM signal is delivered.
    Reload the itimer, or disable the itimer.  */
@@ -293,7 +294,7 @@ DEFUN(__setitimer, (which, new, old),
 }
 
 static sighandler_t
-preempt_sigalrm (thread_t thread, int signo, int sigcode)
+preempt_sigalrm (thread_t thread, int signo, long int sigcode, int sigerror)
 {
   struct itimerval it;
 
