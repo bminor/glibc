@@ -20,17 +20,26 @@ Cambridge, MA 02139, USA.  */
 
 #define	_HURD_H	1
 
-#define	_GNU_SOURCE
+/* #define	_GNU_SOURCE		XXX why did I want this here? */
 #include <features.h>
 
+
+/* Get types, macros, constants and function declarations
+   for all Mach microkernel interaction.  */
 #include <mach.h>
+
+/* Get types and constants necessary for Hurd interfaces.  */
 #include <hurd/hurd_types.h>
+
+/* Get MiG stub declarations for commonly used Hurd interfaces.  */
 #include <hurd/process.h>
 #include <hurd/fs.h>
 #include <hurd/io.h>
-#include <errno.h>
 
+#include <errno.h>
 #define	__hurd_fail(err)	(errno = (err), -1)
+
+#ifdef noteven
 
 /* Lightweight user references for ports.  */
 
@@ -452,6 +461,9 @@ extern void _hurd_msgport_receive (void);
 
 #endif /* notyet */
 
+
+#endif /* noteven */
+
 /* Calls to get and set basic ports.  */
 extern process_t getproc (void);
 extern file_t getccdir (void), getcwdir (void), getcrdir (void);
@@ -461,7 +473,6 @@ extern int setcwdir (file_t), setcrdir (file_t);
 
 /* Does reauth with the proc server and fd io servers.  */
 extern int __setauth (auth_t), setauth (auth_t);
-#define	setauth	__setauth	/* XXX */
 
 
 extern error_t __hurd_path_split (file_t crdir, file_t cwdir,
@@ -470,7 +481,6 @@ extern error_t __hurd_path_split (file_t crdir, file_t cwdir,
 extern error_t hurd_path_split (file_t crdir, file_t cwdir,
 				const char *file,
 				file_t *dir, const char **name);
-#define	hurd_path_split	__hurd_path_split /* XXX */
 extern error_t __hurd_path_lookup (file_t crdir, file_t cwdir,
 				   const char *file,
 				   int flags, mode_t mode,
@@ -479,17 +489,14 @@ extern error_t hurd_path_lookup (file_t crdir, file_t cwdir,
 				 const char *file,
 				 int flags, mode_t mode,
 				 file_t *file);
-#define	hurd_path_lookup __hurd_path_lookup /* XXX */
 
 /* Returns a port to the directory, and sets *NAME to the file name.  */
 extern file_t __path_split (const char *file, const char **name);
 extern file_t path_split (const char *file, const char **name);
-#define	path_split	__path_split
 
 /* Looks up FILE with the given FLAGS and MODE (as for dir_pathtrans).  */
 extern file_t __path_lookup (const char *file, int flags, mode_t mode);
 extern file_t path_lookup (const char *file, int flags, mode_t mode);
-#define path_lookup __path_lookup /* XXX */
 
 /* Open a file descriptor on a port.  */
 extern int openport (io_t port, int flags);
