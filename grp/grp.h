@@ -72,8 +72,7 @@ extern struct group *EXFUN(getgrent, (NOARGS));
 extern struct group *EXFUN(fgetgrent, (FILE *__stream));
 #endif
 
-/* Search for an entry with a matching group ID.
-   This takes an `int' because that is what `gid_t's get widened to.  */
+/* Search for an entry with a matching group ID.  */
 extern struct group *EXFUN(getgrgid, (__gid_t __gid));
 
 /* Search for an entry with a matching group name.  */
