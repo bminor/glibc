@@ -1,3 +1,8 @@
+2000-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Add entry for
+	Nautilus.  Patch by Soohoon Lee <soohoon.lee@alpha-processor.com>.
+
 2000-03-07  H.J. Lu  <hjl@gnu.org>
 
 	* locale/C-ctype.c (_nl_C_LC_CTYPE): Fix the initializer order
