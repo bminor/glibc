@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include "thread_state.h"
 #include <assert.h>
 #include <errno.h>
-#include <hurd/fault.h>
+#include "hurdfault.h"
 
      
 struct mach_msg_trap_args
