@@ -129,6 +129,6 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 	  }
       }
 
-  fprintf(stderr, "%s: Unrecognized variable `%s'", program, argv[1]);
+  fprintf(stderr, "%s: Unrecognized variable `%s'\n", program, argv[1]);
   exit(2);
 }
