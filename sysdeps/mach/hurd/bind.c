@@ -27,6 +27,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <hurd/ifsock.h>
 #include <sys/un.h>
+#include <string.h>
 
 /* Give the socket FD the local address ADDR (which is LEN bytes long).  */
 int
@@ -77,11 +78,11 @@ DEFUN(bind, (fd, addr, len),
 	return __hurd_fail (err);
     }
   else
-    aport = MACH_PORT_NULL;
+    err = EIEIO;
 
   err = HURD_DPORT_USE (fd,
 			({
-			  if (aport == MACH_PORT_NULL)
+			  if (err)
 			    err = __socket_create_address (port,
 							   addr->sa_family,
 							   (char *) addr, len,
