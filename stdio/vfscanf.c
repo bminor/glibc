@@ -162,7 +162,7 @@ DEFUN(__vfscanf, (s, format, arg),
 
       /* Check for type modifiers.  */
       is_short = is_long = is_long_double = malloc_string = 0;
-      while (*f == 'h' || *f == 'l' || *f == 'L' || *f == 'a')
+      while (*f == 'h' || *f == 'l' || *f == 'L' || *f == 'a' || *f == 'q')
 	switch (*f++)
 	  {
 	  case 'h':
@@ -177,6 +177,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	      /* int's are long int's.  */
 	      is_long = 1;
 	    break;
+	  case 'q':
 	  case 'L':
 	    /* double's are long double's, and int's are long long int's.  */
 	    is_long_double = 1;
