@@ -51,7 +51,7 @@ routines := $(strip $(routines))
 aux	:= errlist siglist defs syms-stdio glue
 
 tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
-	 bug1 bug2 bug3 bug4 bug5 bug6 bug7
+	 bug1 bug2 bug3 bug4 bug5 bug6
 
 
 include ../Rules
