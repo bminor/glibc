@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 #include <hurd/signal.h>
+#include <mach/exception.h>
 
 /* Translate the Mach exception codes, as received in an `exception_raise' RPC,
    into a signal number and signal subcode.  */
