@@ -266,7 +266,9 @@ _hurd_internal_post_signal (reply_port_t reply,
     act = ignore;
   else
     act = handle;
-  if (_hurd_orphaned && (signo == SIGTTIN || signo == SIGTTOU) && act == stop)
+  if (_hurd_orphaned &&
+      (signo == SIGTTIN || signo == SIGTTOU || signo == SIGTSTP) &&
+      act == stop)
     {
       sigcode = signo;
       signo = SIGKILL;
