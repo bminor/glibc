@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
-   device numbers with the `makedev' macro above).  */i
+   device numbers with the `makedev' macro above).  */
 int
 DEFUN(__mknod, (path, mode, dev),
       CONST char *path AND int mode AND int dev)
@@ -32,7 +32,7 @@ DEFUN(__mknod, (path, mode, dev),
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 
