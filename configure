@@ -676,7 +676,7 @@ fi
 
 if test $omitfp = yes; then
   echo "*** Not all versions of GCC compile code correctly when the"
-  echo "*** -fomit-frame-pointer version is used.  You are on your own"
+  echo "*** -fomit-frame-pointer option is used.  You are on your own"
   echo "*** if you use it."
 fi
 
@@ -685,7 +685,7 @@ if test "${enable_add_ons+set}" = set; then
   enableval="$enable_add_ons"
   case "$enableval" in
     yes) add_ons=`echo $srcdir/*/configure | \
-		  sed -e "s!$srcdir/!!g" -e 's!/configure!!g'`;;
+		  sed -e "s!^$srcdir/!!" -e 's!/configure$!!'`;;
     *) add_ons=`echo "$enableval" | sed 's/,/ /g'`;;
    esac
 else
