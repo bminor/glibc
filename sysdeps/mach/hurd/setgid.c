@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 
 /* Set the group ID of the calling process to UID.
-   If the calling process is the super-group, the real
+   If the calling process is the super-user, the real
    and effective group IDs, and the saved set-group-ID to UID;
    if not, the effective group ID is set to GID.  */
 int
@@ -29,46 +29,23 @@ DEFUN(__setgid, (gid), gid_t gid)
 {
   auth_t newauth;
   int i;
+  error_t err;
 
   __mutex_lock (&_hurd_idlock);
-  if (!_hurd_id_valid)
-    {
-      error_t err = _HURD_PORT_USE (&_hurd_auth,
-				    __auth_getids (port, &_hurd_id));
-      if (err)
-	{
-	  __mutex_unlock (&_hurd_idlock);
-	  return __hurd_fail (err);
-	}
-      _hurd_id_valid = 1;
-    }
+  err = _hurd_check_ids ();
 
-  for (i = 0; i < _hurd_id.ngroups; ++i)
-    if (_hurd_id.gids[i] == gid)
+  for (i = 0; i < _hurd_ngids - 2; ++i)
+    if (_hurd_gid->ids[i] == gid)
       {
-	/* We already have this gid.  Swap it with gids[0]
-	   so getegid will return it.  */
-	_hurd_id.gids[i] = _hurd_id.gids[0];
+	/* We already have this gid.
+	   Swap it with gids[0] so getegid will return it.  */
+	_hurd_gid->ids[i] = _hurd_gid->ids[0];
 	break;
       }
 
-  if (i == _hurd_id.ngroups)
-    {
-      if (_hurd_id.ngroups == (sizeof (_hurd_id.gids) /
-			       sizeof (_hurd_id.gids[0])))
-	{
-	  __mutex_unlock (&_hurd_idlock);
-	  errno = ENOMEM;	/* XXX ? */
-	  return -1;
-	}
-      else
-	{
-	  _hurd_id.gids[_hurd_id.ngroups++] = _hurd_id.gids[0];
-	  _hurd_id.gids[0] = gid;
-	}
-    }
+  /* XXX unfinished */
 
-  _hurd_id.rgid = _hurd_id.gids[0];
+  _hurd_gid->rid = gid;
 
   err = _HURD_PORT_USE (&_hurd_auth,
 			__auth_makeauth (port, &_hurd_id, &newauth));
