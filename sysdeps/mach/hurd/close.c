@@ -28,7 +28,6 @@ DEFUN(__close, (fd), int fd)
   file_t server;
 
   __mutex_lock (&_hurd_dtable.lock);
-
   if (fd < 0 || fd >= _hurd_dtable.size ||
       _hurd_dtable.d[fd].server == MACH_PORT_NULL)
     {
