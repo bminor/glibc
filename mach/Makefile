@@ -18,7 +18,7 @@
 
 subdir := mach
 
-distribute = Machrules interface.awk mach-syscalls.awk # $(interfaces:%=%.defs)
+distribute = Machrules interface.awk syscalls.awk # $(interfaces:%=%.defs)
 
 interface-header-prefix = mach/
 headers = mach_init.h \
