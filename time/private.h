@@ -4,7 +4,7 @@
 
 /*
 ** This file is in the public domain, so clarified as of
-** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov).
+** 1996-06-05 by Arthur David Olson (arthur_david_olson@nih.gov).
 */
 
 /*
@@ -21,7 +21,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	privatehid[] = "@(#)private.h	7.43";
+static char	privatehid[] = "@(#)private.h	7.45";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -171,6 +171,18 @@ extern int	unlink P((const char * filename));
 #ifndef errno
 extern int errno;
 #endif /* !defined errno */
+
+/*
+** Private function declarations.
+*/
+char *	icalloc P((int nelem, int elsize));
+char *	icatalloc P((char * old, const char * const new));
+char *	icpyalloc P((const char * const string));
+char *	imalloc P((const int n));
+void *	irealloc P((void * const pointer, const int size));
+void	icfree P((char * const pointer));
+void	ifree P((char * const pointer));
+char *	scheck P((const char * const string, const char * const format));
 
 /*
 ** Finally, some convenience items.
