@@ -39,7 +39,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   else
     name = *argv;
 
-  (void) sprintf(filename, "%s.test", name);
+  (void) sprintf(filename, "/tmp/%s.test", name);
 
   f = fopen(filename, "w+");
   if (f == NULL)
