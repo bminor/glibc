@@ -136,6 +136,9 @@ $(objpfx)make_errlist: $(sysdep_dir)/unix/make_errlist.c
 
 endif
 
+ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/syscall.h))))" \
+     "$(sysdep_dir)/stub/"
+
 # The syscall code assumes a file <syscall.h> that defines macros
 # `SYS_call' for syscall `call'.  Variations on this I have seen include:
 # it's in <sys/syscall.h>;
@@ -159,5 +162,7 @@ $(common-objpfx)syscall.h: $(syscall.h)
 	mv $@-tmp $@
 
 before-compile := $(before-compile) $(common-objpfx)syscall.h
+
+endif
 
 endif
