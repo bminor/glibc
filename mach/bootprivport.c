@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ __mach_get_priv_ports (mach_port_t *host_priv_ptr,
 
   /* We cannot simply use a MiG-generated user stub to do this,
      because the return message does not contain a return code datum.  */
-  reply = mach_reply_port ();
+  reply = __mach_reply_port ();
   msg.hdr.msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_COPY_SEND,
 				      MACH_MSG_TYPE_MAKE_SEND_ONCE);
   msg.hdr.msgh_size = 0;
@@ -47,10 +47,10 @@ __mach_get_priv_ports (mach_port_t *host_priv_ptr,
   msg.hdr.msgh_local_port = reply;
   msg.hdr.msgh_kind = MACH_MSGH_KIND_NORMAL;
   msg.hdr.msgh_id = 999999;
-  err = mach_msg (&msg.hdr,
-		  MACH_SEND_MSG|MACH_RCV_MSG|MACH_RCV_TIMEOUT,
-		  sizeof (msg.hdr), sizeof (msg), reply,
-		  500, MACH_PORT_NULL);
+  err = __mach_msg (&msg.hdr,
+		    MACH_SEND_MSG|MACH_RCV_MSG|MACH_RCV_TIMEOUT,
+		    sizeof (msg.hdr), sizeof (msg), reply,
+		    500, MACH_PORT_NULL); /* XXX timeout is arbitrary */
   mach_port_deallocate (mach_task_self (), bootstrap);
   mach_port_deallocate (mach_task_self (), reply);
 
