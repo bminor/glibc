@@ -125,7 +125,7 @@ ENTRY(__novec_swapcontext)
   stfd  fp26,(SIGCONTEXT_FP_REGS+(PT_R26*8))(r3)
   stfd  fp27,(SIGCONTEXT_FP_REGS+(PT_R27*8))(r3)
   stfd  fp28,(SIGCONTEXT_FP_REGS+(PT_R28*8))(r3)
-  stfd  fp29,(SIGCONTEXT_GP_REGS+(PT_R29*8))(r3)
+  stfd  fp29,(SIGCONTEXT_FP_REGS+(PT_R29*8))(r3)
   mffs  fp0
   stfd  fp30,(SIGCONTEXT_FP_REGS+(PT_R30*8))(r3)
   stfd  fp31,(SIGCONTEXT_FP_REGS+(PT_R31*8))(r3)
@@ -386,7 +386,7 @@ ENTRY(__swapcontext)
   stfd  fp26,(SIGCONTEXT_FP_REGS+(PT_R26*8))(r3)
   stfd  fp27,(SIGCONTEXT_FP_REGS+(PT_R27*8))(r3)
   stfd  fp28,(SIGCONTEXT_FP_REGS+(PT_R28*8))(r3)
-  stfd  fp29,(SIGCONTEXT_GP_REGS+(PT_R29*8))(r3)
+  stfd  fp29,(SIGCONTEXT_FP_REGS+(PT_R29*8))(r3)
   mffs  fp0
   stfd  fp30,(SIGCONTEXT_FP_REGS+(PT_R30*8))(r3)
   stfd  fp31,(SIGCONTEXT_FP_REGS+(PT_R31*8))(r3)
@@ -401,12 +401,12 @@ ENTRY(__swapcontext)
 #endif
   la    r10,(SIGCONTEXT_V_RESERVE+8)(r3)
   la    r9,(SIGCONTEXT_V_RESERVE+24)(r3)
-  
+
   andis.  r8,r8,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 
   clrrdi  r10,r10,4
   beq   L(has_no_vec)
-  
+
   clrrdi  r9,r9,4
   mr    r8,r10	/* Capture *v_regs value in r5.  */
 
@@ -493,7 +493,7 @@ ENTRY(__swapcontext)
   mfvscr  v0
   mfspr r0,VRSAVE
   stvx  v0,0,r10
-  stw   r0,0(9)
+  stw   r0,0(r9)
 
 L(has_no_vec):
 /*

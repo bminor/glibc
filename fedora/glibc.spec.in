@@ -1,4 +1,4 @@
-%define glibcrelease 96
+%define glibcrelease 97
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1265,6 +1265,11 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Dec 17 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-97
+- update from CVS
+  - fix ppc64 getcontext and swapcontext (BZ#610)
+  - sparc/sparc64 fixes
+
 * Wed Dec 15 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-96
 - update from CVS
   - fix i686 __USE_STRING_INLINES strncat

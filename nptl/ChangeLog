@@ -1,3 +1,15 @@
+2004-12-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/bits/local_lim.h: New file.
+	Increased PTHREAD_STACK_MIN.
+
+	* tst-context1.c (stacks): Use bigger stack size.
+
+2004-12-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: New file.
+	* sysdeps/sparc/tcb-offsets.sym: Add TID.
+
 2004-12-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S: New file.
