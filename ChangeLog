@@ -1,3 +1,16 @@
+1998-09-10 11:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/tzfile.c (__tzfile_read): Handle case when there are no
+	transitions.
+	* time/tzset.c (tzset_internal): Set __timezone before returning.
+
+1998-09-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/res_init.c (res_init): Initialize _res.nscount and
+	_res.nsaddr.sin_port differently for the can when no loopback is
+	available to allow immediate timeout in non-networking environments.
+	Patch by Cristian Gafton <gafton@redhat.com>.
+
 1998-08-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-close.c (_dl_close): Update _dl_loaded if the first

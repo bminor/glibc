@@ -76,7 +76,7 @@ please let me know.
 2.18.	I have killed ypbind to stop using NIS, but glibc
         continues using NIS.
 2.19.	Under Linux/Alpha, I always get "do_ypcall: clnt_call:
-       RPC: Unable to receive; errno = Connection refused" when using NIS.
+	RPC: Unable to receive; errno = Connection refused" when using NIS.
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -178,6 +178,10 @@ releases are known to have bugs that prevent a successful compilation.
 
 For alpha-linux you need at least GNU binutils 2.8.1.0.18 available from
 ftp://ftp.yggdrasil.com/private/hjl
+
+{AJ} Please don't use binutils 2.7.  That release contains some bugs which
+might make it neccessary that you've got to recompile all your glibc2
+binaries when upgrading the GNU C library.
 
 
 1.5.	Do I need some more things to compile GNU C Library?
