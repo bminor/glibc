@@ -20,7 +20,19 @@ Cambridge, MA 02139, USA.  */
 
 #define	_GLOB_H	1
 
-__BEGIN_DECLS
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
+#if defined (__cplusplus) || (defined (__STDC__) && __STDC__)
+#undef	__P
+#define	__P(args)	args
+#else				/* Not C++ or ANSI C.  */
+#undef	__P
+#define	__P(args)	()
+#undef	const
+#define	const
+#endif				/* C++ or ANSI C.  */
 
 /* Bits set in the FLAGS argument to `glob'.  */
 #define	GLOB_ERR	(1 << 0)/* Return on read errors.  */
@@ -60,13 +72,15 @@ typedef struct
    `glob' returns GLOB_ABEND; if it returns zero, the error is ignored.
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
-extern int glob __P ((__const char *__pattern, int __flags,
-		      int (*__errfunc) __P ((__const char *, int)),
+extern int glob __P ((const char *__pattern, int __flags,
+		      int (*__errfunc) __P ((const char *, int)),
 		      glob_t * __pglob));
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
-     extern void globfree __P ((glob_t * __pglob));
+extern void globfree __P ((glob_t * __pglob));
 
-__END_DECLS
+#ifdef	__cplusplus
+}
+#endif
 
 #endif /* glob.h  */
