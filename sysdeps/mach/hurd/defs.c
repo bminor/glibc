@@ -35,8 +35,11 @@ init_stdio (void)
 {
   /* XXX temp hack */
   stdin = __fopenport (__getdport (STDIN_FILENO), "r");
+  setlinebuf (stdin);
   stdout = __fopenport (__getdport (STDOUT_FILENO), "w");
+  setlinebuf (stdout);
   stderr = __fopenport (__getdport (STDERR_FILENO), "w");
+  setbuffer (stderr, 0, 0);
 }
 text_set_element (__libc_subinit, init_stdio);
 
