@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,10 @@ DEFUN(wctomb, (s, wchar), register char *s AND wchar_t wchar)
   if (wchar == (wchar_t) '\0')
     {
       _mb_shift = 0;
-      return 0;
+      /* See ANSI 4.4.1.1, line 21.  */
+      if (s != NULL)
+	*s = '\0';
+      return 1;
     }
   else if (mb == NULL)
     return -1;
