@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +30,12 @@ __BEGIN_DECLS
 /* Get the system-dependent definitions of `struct termios', `tcflag_t',
    `cc_t', `speed_t', and all the macros specifying the flag bits.  */
 #include <termbits.h>
+
+#ifdef __USE_BSD
+/* Compare a character C to a value VAL from the `c_cc' array in a
+   `struct termios'.  If VAL is _POSIX_VDISABLE, no character can match it.  */
+#define	CCEQ(val, c)	((c) == (val) && (val) != _POSIX_VDISABLE)
+#endif
 
 /* Return the output baud rate stored in *TERMIOS_P.  */
 extern speed_t cfgetospeed __P ((__const struct termios *__termios_p));
