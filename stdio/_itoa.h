@@ -23,10 +23,15 @@ Cambridge, MA 02139, USA.  */
 
 extern const char _itoa_lower_digits[], _itoa_upper_digits[];
 
-extern char *_itoa (unsigned long int value, char *buflim,
-		    unsigned int base, int upper_case);
+/* Convert VALUE into ASCII in base BASE (2..36).
+   Write backwards starting the character just before BUFLIM.
+   Return the address of the first (left-to-right) character in the number.
+   Use upper case letters iff UPPER_CASE is nonzero.  */
 
-#ifdef __GNUC__
+extern char *_itoa __P ((unsigned long int value, char *buflim,
+			 unsigned int base, int upper_case));
+
+#if defined (__GNUC__) && defined (__OPTIMIZE__)
 extern __inline char *
 _itoa (unsigned long int value, char *buflim,
        unsigned int base, int upper_case)
@@ -39,7 +44,7 @@ _itoa (unsigned long int value, char *buflim,
   while (value > 0)
     {
       *--bp = digits[value % base];
-      num /= base;
+      value /= base;
     }
 
   return bp;
