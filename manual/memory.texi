@@ -1597,12 +1597,12 @@ block---not a convenient mode of operation.  @xref{Nonreentrancy}.
 @node Using Relocator
 @subsection Allocating and Freeing Relocatable Blocks
 
-@pindex ralloc.h
+@pindex malloc.h
 In the descriptions below, @var{handleptr} designates the address of the
-handle.  All the functions are declared in @file{ralloc.h}; all are GNU
+handle.  All the functions are declared in @file{malloc.h}; all are GNU
 extensions.
 
-@comment ralloc.h
+@comment malloc.h
 @comment GNU
 @deftypefun {void *} r_alloc (void **@var{handleptr}, int @var{size})
 This function allocates a relocatable block of size @var{size}.  It
@@ -1613,7 +1613,7 @@ If @code{r_alloc} can't get the space needed, it stores a null pointer
 in @code{*@var{handleptr}}, and returns a null pointer.
 @end deftypefun
 
-@comment ralloc.h
+@comment malloc.h
 @comment GNU
 @deftypefun void r_alloc_free (void **@var{handleptr})
 This function is the way to free a relocatable block.  It frees the
@@ -1622,7 +1622,7 @@ in @code{*@var{handleptr}} to show it doesn't point to an allocated
 block any more.
 @end deftypefun
 
-@comment ralloc.h
+@comment malloc.h
 @comment GNU
 @deftypefun {void *} r_re_alloc (void **@var{handleptr}, int @var{size})
 The function @code{r_re_alloc} adjusts the size of the block that
