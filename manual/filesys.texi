@@ -1439,20 +1439,43 @@ This is the set-group-ID on execute bit, usually 02000.
 @vindex S_ISVTX
 This is the @dfn{sticky} bit, usually 01000.
 
-On an executable file, it modifies the swapping policies of the system.
-Normally, when a program terminates, its pages in core are immediately
-freed and reused.  If the sticky bit is set on the executable file, the
-system keeps the pages in core for a while as if the program were still
-running.  This is advantageous for a program that is likely to be run
-many times in succession.
-@c !!! obsolete in all modern systems (but ask mib to be sure)
+On a directory, it gives permission to delete a file in the directory
+only if you own that file.  Ordinarily, a user either can delete all the
+files in the directory or cannot delete any of them (based on whether
+the user has write permission for the directory).  The same restriction
+applies---you must both have write permission for the directory and own
+the file you want to delete.  The one exception is that the owner of the
+directory can delete any file in the directory, no matter who owns it
+(provided the owner has given himself write permission for the
+directory).  This is commonly used for the @file{/tmp} directory, where
+anyone may create files, but not delete files created by other users.
 
-On a directory, the sticky bit gives permission to delete a file in the
-directory only if you own that file.  Ordinarily, a user either can
-delete all the files in the directory or cannot delete any of them
-(based on whether the user has write permission for the directory).
-This is commonly used for the @file{/tmp} directory, where anyone may
-create files, but not delete files created by other users.
+Originally the sticky bit on an executable file modified the swapping
+policies of the system.  Normally, when a program terminated, its pages
+in core were immediately freed and reused.  If the sticky bit was set on
+the executable file, the system kept the pages in core for a while as if
+the program were still running.  This was advantageous for a program
+likely to be run many times in succession.  This usage is obsolete in
+modern systems.  When a program terminates, its pages always remain in
+core as long as there is no shortage of memory in the system.  When the
+program is next run, its pages will still be in core if no shortage
+arose since the last run.
+
+On some modern systems where the sticky bit has no useful meaning for an
+executable file, you cannot set the bit at all for a non-directory.
+If you try, @code{chmod} fails with @code{EFTYPE}; 
+@pxref{Assigning File Permissions}.
+
+Some systems (particularly SunOS) have yet another use for the sticky
+bit.  If the sticky bit is set on a file that is @emph{not} executable,
+it means the opposite: never cache the pages of this file at all.  The
+main use of this is for the files on an NFS server machine which are
+used as the swap area of diskless client machines.  The idea is that the
+pages of the file will be cached in the client's memory, so it is a
+waste of the server's memory to cache them a second time.  In this use
+the sticky bit also says that the filesystem may fail to record the
+file's modification time onto disk reliably (the idea being that noone
+cares for a swap file).
 @end table
 
 The actual bit values of the symbols are listed in the table above
@@ -1596,6 +1619,17 @@ the process) or a privileged user can change them.
 
 @item EROFS
 The file resides on a read-only file system.
+
+@item EFTYPE
+@var{mode} has the @code{S_ISVTX} bit (the ``sticky bit'') set,
+and the named file is not a directory.  Some systems do not allow setting the
+sticky bit on non-directory files, and some do (and only some of those
+assign a useful meaning to the bit for non-directory files).
+
+You only get @code{EFTYPE} on systems where the sticky bit has no useful
+meaning for non-directory files, so it is always safe to just clear the
+bit in @var{mode} and call @code{chmod} again.  @xref{Permission Bits},
+for full details on the sticky bit.
 @end table
 @end deftypefun
 
