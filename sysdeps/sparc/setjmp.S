@@ -21,10 +21,11 @@ Cambridge, MA 02139, USA.  */
 /* NOTE: This code depends on the definition of `__jmp_buf' in <jmp_buf.h>.  */
 
 ENTRY (__sigsetjmp)
-	/* Save our return PC and SP.  */
+	/* Save our return PC and SP (second store in the jmp delay slot).  */
 	st %o7, [%o0]
-	st %sp, [%o0 + 4]
 	/* Save the signal mask if requested.  We do this as a tail-call
 	   for simplicity; it always returns zero.  */
-	jmp C_SYMBOL_NAME (__sigjmp_save)
-	nop
+	sethi %hi(C_SYMBOL_NAME (__sigjmp_save)), %g1
+	or %lo(C_SYMBOL_NAME (__sigjmp_save)), %g1, %g1
+	jmp %g1
+	st %sp, [%o0 + 4]
