@@ -1,3 +1,9 @@
+1999-07-21  Andreas Schwab  <schwab@suse.de>
+
+	* libio/fileops.c (_IO_new_file_underflow): Set error indicator
+	when reading from write-only stream.
+	* libio/oldfileops.c (_IO_old_file_underflow): Likewise.
+
 1999-07-20  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/_strerror.c: Include <libintl.h>.
