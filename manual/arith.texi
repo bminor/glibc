@@ -87,11 +87,16 @@ number'' value, and zero otherwise.
 @comment math.h
 @comment BSD
 @deftypefun double infnan (int @var{error})
-This function is provided for compatibility with BSD.  Its argument
-is an error code, @code{EDOM} or @code{ERANGE}; its value
-is what a mathematical function should return if it fails with that
-error code.  @code{-ERANGE} is also acceptable as an argument, and
-corresponds to @code{-HUGE_VAL} as a value.
+This function is provided for compatibility with BSD.  The other
+mathematical functions use @code{infnan} to decide what to return on
+occasion of an error.  Its argument is an error code, @code{EDOM} or
+@code{ERANGE}; @code{infnan} returns a suitable value to indicate this
+with.  @code{-ERANGE} is also acceptable as an argument, and corresponds
+to @code{-HUGE_VAL} as a value.
+
+In the BSD library, on certain machines, @code{infnan} raises a fatal
+signal in all cases.  The GNU library does not do likewise, because that
+does not fit the ANSI C specification.
 @end deftypefun
 
 @strong{Portability Note:} The functions listed in this section are BSD
