@@ -7,7 +7,7 @@ int
 DEFUN_VOID(main)
 {
   CONST char str[] = "123.456";
-  double x,y,z,h,li,lr,a,lrr;
+  double x,h,li,lr,a,lrr;
 
   x = atof (str);
 	
