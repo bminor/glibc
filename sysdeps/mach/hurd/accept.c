@@ -35,14 +35,14 @@ DEFUN(accept, (fd, addr, addr_len),
   int d;
   error_t err = _HURD_DPORT_USE (fd, __socket_accept (port, &new, &aport));
   if (err)
-    return __hurd_fail (err);
+    return __hurd_dfail (fd, err);
   if (addr != NULL)
     err = __socket_whatis_address (aport, addr, addr_len);
   __mach_port_deallocate (__mach_task_self (), aport);
   if (err)
     {
       __mach_port_deallocate (__mach_task_self (), new);
-      return __hurd_fail (err);
+      return __hurd_dfail (fd, err);
     }
 
   return _hurd_dalloc (new, MACH_PORT_NULL, 0);
