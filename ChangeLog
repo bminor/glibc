@@ -1,3 +1,8 @@
+2002-07-27  Roland McGrath  <roland@frob.com>
+
+	* mach/Makefile ($(objpfx)mach-syscalls.mk): Use <mach/syscall_sw.h>
+	instead of <sysdep.h> to find kernel_trap list.
+
 2002-07-19  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurdsig.c (_hurdsig_getenv): Always return null if
