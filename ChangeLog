@@ -1,5 +1,8 @@
 1997-03-19 01:40  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Make-dist ($(tardir).tar): Prefer writing temporary file to
+	$TMPDIR is available.  The default is /tmp.
+
 	* inet/Makefile (headers): Remove netinet/ip.h.
 
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=inet]
