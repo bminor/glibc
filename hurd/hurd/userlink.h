@@ -41,9 +41,14 @@ struct hurd_userlink
   };
 
 
+#ifndef _EXTERN_INLINE
+#define _EXTERN_INLINE extern __inline
+#endif
+
+
 /* Attach LINK to the chain of users at *CHAINP.  */
 
-extern inline void
+_EXTERN_INLINE void
 _hurd_userlink_link (struct hurd_userlink **chainp,
 		     struct hurd_userlink *link)
 {
@@ -60,7 +65,7 @@ _hurd_userlink_link (struct hurd_userlink **chainp,
    the chain it's on.  If the return value is zero, then someone else is
    still using the resource.  */
 
-extern inline int
+_EXTERN_INLINE int
 _hurd_userlink_unlink (struct hurd_userlink *link)
 {
   /* The caller should deallocate the resource he used if his chain has
@@ -84,7 +89,7 @@ _hurd_userlink_unlink (struct hurd_userlink *link)
    value is zero, someone is still using the resource and they will
    deallocate it when they are finished.  */
 
-extern inline int
+_EXTERN_INLINE int
 _hurd_userlink_clear (struct hurd_userlink **chainp)
 {
   if (*chainp == NULL)
