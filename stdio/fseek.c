@@ -135,6 +135,13 @@ DEFUN(fseek, (stream, offset, whence),
       break;
     }
 
+  if (o < 0)
+    {
+      /* Negative file position is meaningless.  */
+      errno = EINVAL;
+      return -1;
+    }
+
   /* O is now an absolute position, the new target.  */
   stream->__target = o;
 
