@@ -1,3 +1,9 @@
+2002-07-12  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/generic/backtrace.c (FIRST_FRAME_POINTER): New macro.
+	(__backtrace): Use it.
+	* sysdeps/arm/frame.h (FIRST_FRAME_POINTER): Define.  [PR libc/2632]
+
 2002-07-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_hconf.c (_res_hconf_init): Move code into new
