@@ -225,17 +225,20 @@ abort_thread (struct hurd_sigstate *ss, struct machine_thread_all_state *state,
 static mach_port_t *
 interrupted_reply_port_location (struct machine_thread_all_state *thread_state)
 {
-  mach_port_t *portloc;
-
-  if (setjmp (_hurd_sigthread_fault_env))
-    /* Faulted trying to read the stack.  */
-    return NULL;
-
-  portloc = (mach_port_t *) __hurd_threadvar_location_from_sp
+  mach_port_t *portloc = (mach_port_t *) __hurd_threadvar_location_from_sp
     (_HURD_THREADVAR_MIG_REPLY, (void *) thread_state->basic.SP);
+
+  if (_hurdsig_catch_fault (SIGSEGV))
+    {
+      assert (_hurdsig_fault_sigcode == (int) portloc);
+      /* Faulted trying to read the stack.  */
+      return NULL;
+    }
 
   /* Fault now if this pointer is bogus.  */
   *(volatile mach_port_t *) portloc = *portloc;
+
+  _hurdsig_end_catch_fault ();
 
   return portloc;
 }
@@ -916,7 +919,7 @@ text_set_element (__hurd_reauth_hook, reauth_proc);
 const char *
 _hurdsig_getenv (const char *variable)
 {
-  if (setjmp (_hurd_sigthread_fault_env))
+  if (_hurdsig_catch_fault (SIGSEGV))
     /* We bombed in getenv.  */
     return NULL;
   else
@@ -924,6 +927,7 @@ _hurdsig_getenv (const char *variable)
       const char *value = getenv (variable);
       /* Fault now if VALUE is a bogus string.  */
       (void) strlen (value);
+      _hurdsig_end_catch_fault ();
       return value;
     }
 }
