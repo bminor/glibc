@@ -868,7 +868,7 @@ seconds.  For example, in the U.S. Eastern time zone, the value is
 
 @comment time.h
 @comment SVID
-@deftypevar {int} daylight
+@deftypevar int daylight
 This variable has a nonzero value if the standard U.S. daylight savings
 time rules apply.
 @end deftypevar
