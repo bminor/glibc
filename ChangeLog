@@ -1,8 +1,9 @@
 1999-06-25  Roland McGrath  <roland@baalperazim.frob.com>
 
-	* hurd.h, hurd/fd.h, hurd/port.h, hurd/signal.h, hurd/threadvar.h,
-	hurd/userlink.h: Instead of _EXTERN_INLINE, use a macro specific to
-	each file, _HURD_FD_H_EXTERN_INLINE and the like.
+	* hurd.h, hurd/hurd/fd.h, hurd/hurd/port.h, hurd/hurd/signal.h,
+	hurd/hurd/threadvar.h, hurd/hurd/userlink.h: Instead of
+	_EXTERN_INLINE, use a macro specific to each file,
+	_HURD_FD_H_EXTERN_INLINE and the like.
 	* hurd/Makefile (inline-headers): New variable.
 	(routines): Remove hurdinline.  Add $(inlines).
 	(inlines): New variable.
