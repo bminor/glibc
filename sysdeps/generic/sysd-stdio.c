@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -148,5 +148,42 @@ DEFUN(__stdio_open, (filename, m, cookieptr),
     return -1;
 
   *cookieptr = (PTR) fd;
+  return 0;
+}
+
+
+/* Open FILENAME with the mode in M.  Use the same magic cookie
+   already in *COOKIEPTR if possible, closing the old cookie with CLOSEFN.  */
+int
+DEFUN(__stdio_reopen, (filename, m, cookieptr),
+      CONST char *filename AND __io_mode m AND
+      PTR *cookieptr AND __io_close closefn)
+{
+  PTR newcookie;
+
+  /* We leave the old descriptor open while we open the file.
+     That way ``freopen ("/dev/stdin", "r", stdin)'' works.  */
+
+  if (__stdio_open (filename, m, &newcookie))
+    {
+      if (errno == ENFILE || errno == EMFILE)
+	{
+	  /* We are out of file descriptors.  Try closing the old one and
+	     retrying the open.  */
+	  (void) (*closefn) (*cookieptr);
+	  if (__stdio_open (filename, m, &newcookie))
+	    return -1;
+	}
+    }
+
+  if (newcookie != *cookieptr)
+    {
+      if (closefn != __stdio_close ||
+	  /* Try to move the descriptor to the desired one.  */
+	  __dup2 ((int) newcookie, (int) *cookieptr) < 0)
+	/* Didn't work.  Give the caller the new cookie.  */
+	*cookieptr = newcookie;
+    }
+
   return 0;
 }
