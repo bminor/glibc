@@ -37,6 +37,6 @@ routines	:=							      \
 	system
 
 distribute	:= exit.h
-tests		:= test-strtol test-strtod
+tests		:= tst-strtol tst-strtod
 
 include ../Rules
