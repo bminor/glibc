@@ -376,20 +376,22 @@ endif
 ifdef install-data
 $(addprefix $(datadir)/,$(install-data)): $(datadir)/%: %;$(do-install)
 endif
-+install := $(addprefix $(libdir)/,$(install-lib))	\
-	    $(addprefix $(datadir)/,$(install-data))	\
-	    $(addprefix $(bindir)/,$(install))		\
-	    $(install-others)
 headers := $(strip $(headers))
 ifdef headers
 $(addprefix $(includedir)/,$(headers)): \
 	$(includedir)/%: %;$(do-install)
-+install := $(+install) $(addprefix $(includedir)/,$(headers))
 endif	# headers
-+install := $(filter-out $(addprefix %/,$(no-install)),$(+install))
+
+.PHONY: install-bin install-lib install-data install-headers
+install-bin: $(addprefix $(bindir)/,$(install))
+install-lib: $(addprefix $(libdir)/,$(install-lib))
+install-data: $(addprefix $(datadir)/,$(install-data))
+install-headers: $(addprefix $(includedir)/,$(headers))
+install-others: $(install-others)
 
 .PHONY: install installdirs install-no-libc.a
-install-no-libc.a: $(+install)
+install-no-libc.a: install-headers install-data install-bin \
+		   install-lib install-others 
 install: install-no-libc.a
 installdirs: $(..)mkinstalldirs
 	$(dir $<)$(notdir $<) $(sort $(dir $(+install)))
