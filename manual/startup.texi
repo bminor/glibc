@@ -69,8 +69,10 @@ you are usually better off using @code{getopt} to do the parsing.
 @menu
 * Argument Syntax::       By convention, options start with a hyphen.
 * Parsing Options::       The @code{getopt} function.
+* Example of Getopt:: 	  An example of parsing options with @code{getopt}.
 * Long Options::	  GNU suggests utilities accept long-named options.
-* Example Using getopt::  An example of @code{getopt}.
+			    Here is how to do that.
+* Long Option Example::   An example of using @code{getopt_long}.
 @end menu
 
 @node Argument Syntax
@@ -227,16 +229,8 @@ option character.  In addition, if the external variable @code{opterr}
 is nonzero, @code{getopt} prints an error message.
 @end deftypefun
 
-@node Long Option Parsing
-@subsection Long Option Parsing
-
-@comment getopt.h
-@comment GNU
-@deftypefun getopt_long (int @var{argc}, char **@var{argv}, const char *@var{options}, struct option *@var{longopts}, int *@var{longindex})
-@end deftypefun
-
-@node Example Using getopt
-@subsection Example of Parsing Program Arguments
+@node Example of Getopt
+@subsection Example of Parsing Arguments with @code{getopt}
 
 Here is an example showing how @code{getopt} is typically used.  The
 key points to notice are:
@@ -297,6 +291,101 @@ Non-option argument -b
 % testopt -a -
 aflag = 1, bflag = 0, cvalue = (null)
 Non-option argument -
+@end example
+
+@node Long Options
+@subsection Parsing Long Options
+
+To accept GNU-style long options as well as single-character options,
+use the function @code{getopt_long} instead of @code{getopt}.  You
+should do this in every program that uses options, for it takes little
+extra work and helps beginners remember how to use the program.
+
+@comment getopt.h
+@comment GNU
+@deftp {Data Type} {struct option}
+This structure describes a single long option name for the sake of
+@code{getopt_long}.  The argument @var{longopts} must be an array of
+these structures, one for each long option.  Terminate the array with an
+element containing all zeros.
+
+The @code{struct option} structure has these fields:
+
+@table @code
+@item name
+This field is the name of the option.  It is a string.
+
+@item has_arg
+This field says whether the option takes an argument.  It is an integer,
+and there are three legitimate values: @code{no_argument},
+@code{required_argument} and @code{optional_argument}.
+
+@item flag
+@itemx val
+These fields control how to report or act on the option when it occurs.
+
+If @code{flag} is zero, then the @code{val} is a value which identifies
+this option.  Often these values are chosen to uniquely identify
+particular long options.
+
+If @code{flag} is nonzero, it should be the address of an @code{int}
+variable which is the flag for this option.  The value in @code{val} is
+the value to store in the flag to indicate that the option was seen.
+@end table
+@end deftp
+
+@comment getopt.h
+@comment GNU
+@deftypefun getopt_long (int @var{argc}, char **@var{argv}, const char *@var{short}, struct option *@var{long}, int *@var{indexptr})
+Decode options from the vector @var{argv} (whose length is @var{argc}).
+The argument @var{short} describes the short options to accept, just as
+it does in @code{getopt}.  The argument @var{long} describes the long
+options to accept (see above).
+
+When @code{getopt_long} encounters a short option, it does the same
+thing that @code{getopt} would do: it returns the character code for the
+option, and stores the options argument (if it has one) in @code{optarg}.
+
+When @code{getopt_long} encounters a long option, it takes actions based
+on the @code{flag} and @code{val} fields of the definition of that
+option.
+
+If @code{flag} is zero, then @code{getopt_long} returns the contents of
+@code{val} to indicate which option it found.  You should arrange
+distinct values in the @code{val} field for options with different
+meanings, so you can decode these values after @code{getopt_long}
+returns.  If the long option is equivalent to a short option, you can
+use the short option's character code in @code{val}.
+
+If @code{flag} is nonzero, that means this option should just set a flag
+in the program.  The flag is a variable of type @code{int} that you
+define.  Put the address of the flag in the @code{flag} field.  Put in
+the @code{val} field the value you would like this option to store in
+the flag.  In this case, @code{getopt_long} returns @code{0}.
+
+For any long option, @code{getopt_long} tells you the index in the array
+@var{long} of the options definition, by storing it into
+@code{*@var{indexptr}}.  You can get the name of the option with
+@code{@var{long}[*@var{indexptr}].name}.  So you can distinguish among
+long options either by the values in their @code{val} fields or by their
+indices.  You can also distinguish in this way among long options that
+set flags.
+
+When a long option has an argument, @code{getopt_long} puts the argument
+value in the variable @code{optarg} before returning.  When the option
+has no argument, the value in @code{optarg} is @code{0}.  This is how
+you can tell whether an optional argument was supplied.
+
+When @code{getopt_long} has no more options to handle, it returns
+@code{-1}, and leaves in the variable @code{optind} the index in
+@var{argv} of the next remaining argument.
+@end deftypefun
+
+@node Long Option Example
+@subsection Example of Parsing Long Options
+
+@example
+@include longopts.c.texi
 @end example
 
 @node Environment Variables
