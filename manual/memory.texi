@@ -139,8 +139,6 @@ or smaller at any time, and free the blocks in any order (or never).
 					 programs that use @code{malloc}.
 * Storage Allocation Statistics::	Getting information about how much
 					 memory your program is using.
-* @code{malloc} and Signal Handlers::	None of these functions can be used
-					 in signal handlers.
 * Summary of @code{malloc} and Related Functions::         Malloc Summary.
 @end menu
 
@@ -585,29 +583,6 @@ This function returns information about the current dynamic memory usage
 in a structure of type @code{struct mstats}.
 @end deftypefun
 
-
-@node @code{malloc} and Signal Handlers
-@subsection @code{malloc} and Signal Handlers
-@cindex signals and @code{malloc}
-
-@strong{Incomplete:}  This material may be inaccurate.
-
-It is safe to call @code{malloc} from a signal handler if you are using
-the GNU implementation of @code{malloc}.  The other functions that do
-allocation alone are also safe: @code{calloc}, @code{valloc} and
-@code{memalign}.
-
-But this is not a standard feature; most other implementations of
-@code{malloc} are not safe to call from signal handlers.
-
-It is not safe to call @code{free} from a signal handler.  Because
-@code{realloc} can use @code{free}, it is not safe to call
-@code{realloc} either.  If you were to do this, serious unreproduceable
-bugs would occur if ever a signal arrives while @code{malloc} is running
-and @code{free} is called while @code{malloc} is half-done.@refill
-
-In a multi-threaded program, if two threads simultaneously use @code{malloc}
-or the related functions, unpredictable results may ensue.
 
 @node Summary of @code{malloc} and Related Functions
 @subsection Summary of @code{malloc} and Related Functions
