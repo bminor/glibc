@@ -20,25 +20,22 @@ $(objpfx)stdio_lim.h: $(objpfx)mk-stdiolim
 	$(dir $<)$(notdir $<) > $@-t
 	mv $@-t $@
 
-# I wish I knew why this was here, or that I wasn't so sure everything
-# would break if I removed it.
-vpath %.h $(..)
-
 ifdef subdir
 objdir-CPPFLAGS = $(CPPFLAGS) # Already has appropriate `..'s.
 else
 objdir-CPPFLAGS = $(patsubst -I/..//%,-I/%,$(CPPFLAGS:-I%=-I../%))
 endif
 # Turn into a version that works when cd'd into $(objdir).
-cded-objdir-CPPFLAGS = $(patsubst -I$$cwd//%,-I/%,$(CPPFLAGS:-I%=-I$$cwd/%))
+cded-objdir-CPPFLAGS = $(patsubst -I$$cwd//%,-I/%,\
+				  $(patsubst -I%,-I$$cwd/%,$(CPPFLAGS)))
 # The point of this is to not use -W options to gcc.
 $(objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
 			posix1_lim.h local_lim.h
 	cwd=`pwd`; cd $(objdir); $(CC) $(cded-objdir-CPPFLAGS) \
-	  $$cwd/$< -o $(@:$(objpfx)%=%)
+	  $$cwd/$< -o $(patsubst $(objpfx)%,%,$@)
 
 
 ifeq ($(subdir),posix)
-generated := $(generated) stdio_lim.h
-before-compile := $(before-compile) stdio_lim.h
+generated := $(generated) $(common-objpfx)stdio_lim.h
+before-compile := $(before-compile) $(common-objpfx)stdio_lim.h
 endif
