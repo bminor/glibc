@@ -67,11 +67,8 @@ struct hurd_sigstate
       } pending_data[NSIG];
 
     /* If `suspended' is set when this thread gets a signal,
-       the signal thread clears it and then signals `arrived'.  */
-    int suspended;
-#ifdef noteven
-    struct condition arrived;
-#endif
+       the signal thread sends an empty message to it.  */
+    mach_port_t suspended;
 
     /* Not locked.  Used only by this thread, or by the signal thread with
        this thread suspended.  */
