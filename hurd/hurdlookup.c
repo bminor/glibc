@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include "stdio/_itoa.h"
 #include <hurd/term.h>
 
+
 /* Translate the error from dir_pathtrans into the error the user sees.  */
 static inline error_t
 pathtrans_error (error_t error)
@@ -90,11 +91,18 @@ __hurd_path_lookup_retry (file_t crdir,
       switch (doretry)
 	{
 	case FS_RETRY_REAUTH:
-	  err = __io_reauthenticate (*result, _hurd_pid);
-	  if (! err)
-	    err = __USEPORT (AUTH, __auth_user_authenticate (port, *result,
-							     _hurd_pid,
-							     &newpt));
+	  {
+	    mach_port_t ref = __mach_reply_port ();
+	    err = __io_reauthenticate (*result,
+				       ref, MACH_MSG_TYPE_MAKE_SEND_ONCE);
+	    if (! err)
+	      err = __USEPORT
+		(AUTH, __auth_user_authenticate (port, *result,
+						 ref,
+						 MACH_MSG_TYPE_MAKE_SEND_ONCE,
+						 &newpt));
+	    __mach_port_destroy (__mach_task_self (), ref);
+	  }
 	  __mach_port_deallocate (__mach_task_self (), *result);
 	  if (err)
 	    return err;
@@ -110,7 +118,6 @@ __hurd_path_lookup_retry (file_t crdir,
 	  /* An empty RETRYNAME indicates we have the final port.  */
 	  if (retryname[0] == '\0')
 	    {
-	    case FS_RETRY_NONE:	/* XXX going away XXX */
 	      /* We got a successful translation.  Now apply any open-time
 		 action flags we were passed.  */
 	      if (flags & O_EXLOCK)
@@ -227,15 +234,21 @@ __hurd_path_lookup_retry (file_t crdir,
 								   &unauth));
 			if (! err)
 			  {
-			    err = __io_reauthenticate (unauth, _hurd_pid);
+			    mach_port_t ref = __mach_reply_port ();
+			    err = __io_reauthenticate
+			      (unauth,
+			       ref,
+			       MACH_MSG_TYPE_MAKE_SEND_ONCE);
 			    if (! err)
 			      err = __USEPORT
-				(AUTH, __auth_user_authenticate (port,
-								 unauth,
-								 _hurd_pid,
-								 result));
+				(AUTH, __auth_user_authenticate
+				 (port,
+				  unauth,
+				  ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+				  result));
 			    __mach_port_deallocate (__mach_task_self (),
 						    unauth);
+			    __mach_port_destroy (__mach_task_self (), ref);
 			  }
 			return err;
 		      }
