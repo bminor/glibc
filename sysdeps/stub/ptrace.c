@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <sys/ptrace.h>
+#include <sys/types.h>
 
 /* Perform process tracing functions.  REQUEST is one of the values
    in <sys/ptrace.h>, and determines the action to be taken.
@@ -30,7 +31,7 @@ Cambridge, MA 02139, USA.  */
      pid_t PID, void *ADDR, int DATA, void *ADDR2
    after PID.  */
 int
-DEFUN(ptrace, (request), enum __ptrace_request DOTS)
+DEFUN(ptrace, (request), enum __ptrace_request request DOTS)
 {
   pid_t pid;
   PTR addr, addr2;
@@ -93,7 +94,7 @@ DEFUN(ptrace, (request), enum __ptrace_request DOTS)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 
