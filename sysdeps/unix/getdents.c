@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,30 +17,17 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <errno.h>
 #include <stddef.h>
-#include <stdlib.h>
-#include <dirent.h>
+#include <errno.h>
+#include <sys/types.h>
 #include <unistd.h>
 
-/* Close the directory stream DIRP.
-   Return 0 if successful, -1 if not.  */
 int
-DEFUN(closedir, (dirp), DIR *dirp)
+DEFUN(__getdirentries, (fd, buf, nbytes, basep),
+      int fd AND char *buf AND size_t nbytes AND off_t *basep)
 {
-  int fd;
+  if (basep)
+    *basep = __lseek (fd, (off_t) 0, SEEK_CUR);
 
-  if (dirp == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  fd = dirp->__fd;
-
-  free ((PTR) dirp->__data);
-  free ((PTR) dirp);
-
-  return __close (fd);
+  return __read (fd, buf, nbytes);
 }
-

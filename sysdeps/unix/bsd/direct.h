@@ -9,3 +9,5 @@ struct direct
     unsigned short int d_namlen;
     char d_name[MAXNAMLEN + 1];
   };
+
+#define D_NAMLEN(d) ((d)->d_namlen)
