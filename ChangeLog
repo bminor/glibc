@@ -1,5 +1,17 @@
 1999-08-23  Andreas Schwab  <schwab@suse.de>
 
+	* sysdeps/unix/sysv/linux/m68k/sigcontextinfo.h: Define
+	SIGCONTEXT_EXTRA_ARGS.
+	* sysdeps/unix/sysv/linux/i386/sigcontextinfo.h: Likewise.
+	* sysdeps/generic/sigcontextinfo.h: Likewise.
+	* sysdeps/mach/hurd/i386/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigcontextinfo.h: Likewise.
+
+1999-08-23  Andreas Schwab  <schwab@suse.de>
+
 	* posix/regex.c (re_match_2_internal): Correct check for charset
 	after exactn in loop.
 
