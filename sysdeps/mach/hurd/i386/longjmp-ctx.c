@@ -30,5 +30,5 @@ _hurd_longjmp_sigcontext (struct sigcontext *scp, jmp_buf env, int retval)
   scp->sc_ebp = env[0].__bp;
   scp->sc_uesp = env[0].__sp;
   scp->sc_eip = env[0].__pc;
-  scp->sc_eax = retval;
+  scp->sc_eax = retval == 0 ? 1 : val;
 }
