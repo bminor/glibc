@@ -26,8 +26,8 @@
 /*
  * HISTORY
  * $Log$
- * Revision 1.1  1992/10/06 18:29:53  roland
- * Initial revision
+ * Revision 1.2  1993/11/18 10:13:58  roland
+ * Formerly ../mach/errorlib.h.~2~
  *
  * Revision 2.3  92/03/31  15:18:52  rpd
  * 	Added KERN_DEVICE_MOD for device errors.
@@ -81,6 +81,7 @@ struct error_system {
 	struct error_subsystem	* subsystem;
 };
 
+#define errors __mach_error_systems
 extern	struct error_system 	errors[err_max_system+1];
 
 #define	errlib_count(s)		(sizeof(s)/sizeof(s[0]))
