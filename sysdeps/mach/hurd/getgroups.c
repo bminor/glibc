@@ -52,7 +52,7 @@ __getgroups (int n, gid_t *gidset)
       memcpy (gidset, gids, ngids * sizeof (gid_t));
     }
   else
-    __mutex_unlock (&_hurd_idlock);
+    __mutex_unlock (&_hurd_id.lock);
 
   return ngids;
 }
