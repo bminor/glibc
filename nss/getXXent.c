@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,7 +70,7 @@ GETFUNC_NAME (void)
   static size_t buffer_size;
   static LOOKUP_TYPE resbuf;
   LOOKUP_TYPE *result;
-  int save;
+  int save, save_errno;
 
   /* Get lock.  */
   __libc_lock_lock (lock);
@@ -80,6 +80,9 @@ GETFUNC_NAME (void)
       buffer_size = BUFLEN;
       buffer = malloc (buffer_size);
     }
+
+  /* We don't want to pass errno == 0 or errno == ERANGE back */
+  save_errno = errno;
 
   while (buffer != NULL
 	 && INTERNAL (REENTRANT_GETNAME) (&resbuf, buffer, buffer_size, &result
@@ -91,6 +94,7 @@ GETFUNC_NAME (void)
     {
       char *new_buf;
       buffer_size += BUFLEN;
+      __set_errno (0);
       new_buf = realloc (buffer, buffer_size);
       if (new_buf == NULL)
 	{
@@ -102,6 +106,9 @@ GETFUNC_NAME (void)
 	}
       buffer = new_buf;
     }
+
+  if (errno == 0)
+    __set_errno (save_errno);
 
   if (buffer == NULL)
     result = NULL;

@@ -63,6 +63,7 @@ callrpc(host, prognum, versnum, procnum, inproc, in, outproc, out)
 	enum clnt_stat clnt_stat;
 	struct hostent hostbuf, *hp;
 	struct timeval timeout, tottimeout;
+	int save_errno;
 
 	if (crp == 0) {
 		crp = (struct callrpc_private *)calloc(1, sizeof (*crp));
@@ -96,6 +97,8 @@ callrpc(host, prognum, versnum, procnum, inproc, in, outproc, out)
 
 		buflen = 1024;
 		buffer = __alloca (buflen);
+		save_errno = errno;
+
 		while (__gethostbyname_r (host, &hostbuf, buffer, buflen,
 					  &hp, &herr) < 0)
 		  if (herr != NETDB_INTERNAL || errno != ERANGE)
@@ -105,7 +108,11 @@ callrpc(host, prognum, versnum, procnum, inproc, in, outproc, out)
 		      /* Enlarge the buffer.  */
 		      buflen *= 2;
 		      buffer = __alloca (buflen);
+		      __set_errno (0);
 		    }
+
+		if (errno == 0)
+		  __set_errno (save_errno);
 
 		timeout.tv_usec = 0;
 		timeout.tv_sec = 5;

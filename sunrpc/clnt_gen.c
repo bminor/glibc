@@ -63,9 +63,11 @@ clnt_create(hostname, prog, vers, proto)
 	struct timeval tv;
 	CLIENT *client;
 	int herr;
+	int save_errno;
 
 	hstbuflen = 1024;
 	hsttmpbuf = __alloca (hstbuflen);
+	save_errno = errno;
 	while (__gethostbyname_r (hostname, &hostbuf, hsttmpbuf, hstbuflen,
 				  &h, &herr) < 0)
 	  if (herr != NETDB_INTERNAL || errno != ERANGE)
@@ -78,7 +80,11 @@ clnt_create(hostname, prog, vers, proto)
 	      /* Enlarge the buffer.  */
 	      hstbuflen *= 2;
 	      hsttmpbuf = __alloca (hstbuflen);
+	      __set_errno (0);
 	    }
+
+	if (errno == 0)
+	  __set_errno (save_errno);
 
 	if (h->h_addrtype != AF_INET) {
 		/*
@@ -108,6 +114,7 @@ clnt_create(hostname, prog, vers, proto)
 	      /* Enlarge the buffer.  */
 	      prtbuflen *= 2;
 	      prttmpbuf = __alloca (prtbuflen);
+	      __set_errno (0);
 	    }
 
 	sock = RPC_ANYSOCK;

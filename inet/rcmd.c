@@ -74,11 +74,14 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 	int s, lport, timo;
 	char c;
 	int herr;
+	int save_errno;
 
 	pid = getpid();
 
 	hstbuflen = 1024;
 	tmphstbuf = __alloca (hstbuflen);
+	save_errno = errno;
+
 	while (__gethostbyname_r (*ahost, &hostbuf, tmphstbuf, hstbuflen,
 				  &hp, &herr) < 0)
 	  if (herr != NETDB_INTERNAL || errno != ERANGE)
@@ -92,8 +95,10 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 	      /* Enlarge the buffer.  */
 	      hstbuflen *= 2;
 	      tmphstbuf = __alloca (hstbuflen);
+	      __set_errno (0);
 	    }
 
+	__set_errno (save_errno);
 	*ahost = hp->h_name;
 	oldmask = sigblock(sigmask(SIGURG));
 	for (timo = 1, lport = IPPORT_RESERVED - 1;;) {
@@ -264,9 +269,11 @@ ruserok(rhost, superuser, ruser, luser)
 	u_int32_t addr;
 	char **ap;
 	int herr;
+	int save_errno;
 
 	buflen = 1024;
 	buffer = __alloca (buflen);
+	save_errno = errno;
 
 	while (__gethostbyname_r (rhost, &hostbuf, buffer, buflen, &hp, &herr)
 	       < 0)
@@ -277,7 +284,10 @@ ruserok(rhost, superuser, ruser, luser)
 	      /* Enlarge the buffer.  */
 	      buflen *= 2;
 	      buffer = __alloca (buflen);
+	      __set_errno (0);
 	    }
+
+	__set_errno (save_errno);
 
 	for (ap = hp->h_addr_list; *ap; ++ap) {
 		bcopy(*ap, &addr, sizeof(addr));
@@ -436,6 +446,7 @@ __icheckhost(raddr, lhost)
 	register u_int32_t laddr;
 	register char **pp;
 	int herr;
+	int save_errno;
 
 	/* Try for raw ip address first. */
 	if (isdigit(*lhost) && (int32_t)(laddr = inet_addr(lhost)) != -1)
@@ -444,6 +455,8 @@ __icheckhost(raddr, lhost)
 	/* Better be a hostname. */
 	buflen = 1024;
 	buffer = __alloca (buflen);
+	save_errno = errno;
+
 	while (__gethostbyname_r (lhost, &hostbuf, buffer, buflen, &hp, &herr)
 	       < 0)
 	  if (herr != NETDB_INTERNAL || errno != ERANGE)
@@ -453,7 +466,10 @@ __icheckhost(raddr, lhost)
 	      /* Enlarge the buffer.  */
 	      buflen *= 2;
 	      buffer = __alloca (buflen);
+	      __set_errno (0);
 	    }
+
+	__set_errno (save_errno);
 
 	/* Spin through ip addresses. */
 	for (pp = hp->h_addr_list; *pp; ++pp)

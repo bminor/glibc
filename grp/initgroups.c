@@ -1,4 +1,4 @@
-/* Copyright (C) 1989, 1991, 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1989, 91, 93, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,6 +47,7 @@ initgroups (user, group)
   size_t ngroups;
   gid_t *groups;
   int status;
+  int save_errno;
 #ifdef NGROUPS_MAX
 # define limit NGROUPS_MAX
 
@@ -68,6 +69,7 @@ initgroups (user, group)
 
   n = 0;
   groups[n++] = group;
+  save_errno = errno;
 
   do
     {
@@ -76,6 +78,7 @@ initgroups (user, group)
 	{
 	  buflen *= 2;
 	  tmpbuf = __alloca (buflen);
+	  __set_errno (0);
 	}
 
       if (status == 0 && g->gr_gid != group)
@@ -108,6 +111,7 @@ initgroups (user, group)
   while (status == 0);
 
 done:
+  __set_errno (save_errno);
   endgrent ();
 
   return setgroups (n, groups);

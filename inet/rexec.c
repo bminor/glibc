@@ -64,9 +64,12 @@ rexec(ahost, rport, name, pass, cmd, fd2p)
 	int s, timo = 1, s3;
 	char c;
 	int herr;
+	int save_errno;
 
 	hstbuflen = 1024;
 	hsttmpbuf = __alloca (hstbuflen);
+	save_errno = errno;
+
 	while (__gethostbyname_r (*ahost, &hostbuf, hsttmpbuf, hstbuflen,
 				  &hp, &herr) < 0)
 	  if (herr != NETDB_INTERNAL || errno != ERANGE)
@@ -80,8 +83,10 @@ rexec(ahost, rport, name, pass, cmd, fd2p)
 	      /* Enlarge the buffer.  */
 	      hstbuflen *= 2;
 	      hsttmpbuf = __alloca (hstbuflen);
+	      __set_errno (0);
 	    }
 
+	__set_errno (save_errno);
 	*ahost = hp->h_name;
 	ruserpass(hp->h_name, &name, &pass);
 retry:

@@ -51,9 +51,12 @@ getrpcport(host, prognum, versnum, proto)
 	size_t buflen;
 	char *buffer;
 	int herr;
+	int save_errno;
 
 	buflen = 1024;
 	buffer = __alloca (buflen);
+	save_errno = errno;
+
 	while (__gethostbyname_r (host, &hostbuf, buffer, buflen, &hp, &herr)
 	       < 0)
 	  if (herr != NETDB_INTERNAL || errno != ERANGE)
@@ -63,8 +66,10 @@ getrpcport(host, prognum, versnum, proto)
 	      /* Enlarge the buffer.  */
 	      buflen *= 2;
 	      buffer = __alloca (buflen);
+	      __set_errno (0);
 	    }
 
+	__set_errno (save_errno);
 	bcopy(hp->h_addr, (char *) &addr.sin_addr, hp->h_length);
 	addr.sin_family = AF_INET;
 	addr.sin_port =  0;
