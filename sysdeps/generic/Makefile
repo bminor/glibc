@@ -33,14 +33,14 @@ endif
 ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/endian.h))))" \
      "$(sysdep_dir)/stub/"
 
-$(objpfx)endian.h: $(objpfx)det_endian
+$(common-objpfx)endian.h: $(common-objpfx)det_endian
 	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 
-$(objpfx)det_endian: $(sysdep_dir)/generic/det_endian.c
+$(common-objpfx)det_endian: $(sysdep_dir)/generic/det_endian.c
 	$(native-compile)
 
-before-compile := $(before-compile) $(objpfx)endian.h
+before-compile := $(before-compile) $(common-objpfx)endian.h
 
 endif
 
