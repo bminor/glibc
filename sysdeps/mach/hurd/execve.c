@@ -41,11 +41,10 @@ DEFUN(__execve, (path, argv, envp),
   int dealloc_ports[_hurd_nports];
   file_t *dtable;
   int dtablesize;
-  struct _hurd_port *dtable_cells;
-  int *dealloc_dtable;
+  struct _hurd_port **dtable_cells;
+  int *dealloc_dtable, *dealloc_cells;
   int i;
   char *const *p;
-  task_t task;
   struct _hurd_sigstate *ss;
 
   /* Get a port to the file we want to execute.  */
@@ -171,8 +170,8 @@ DEFUN(__execve, (path, argv, envp),
     err = __file_exec (file, __mach_task_self (),
 		       0,
 		       args, argslen, env, envlen,
-		       dtable, dtablesize,
-		       ports, _hurd_nports,
+		       dtable, dtablesize, MACH_MSG_TYPE_COPY_SEND,
+		       ports, _hurd_nports, MACH_MSG_TYPE_COPY_SEND,
 		       ints, INIT_INT_MAX,
 		       please_dealloc, _hurd_nports + dtablesize,
 		       NULL, 0);
@@ -189,7 +188,7 @@ DEFUN(__execve, (path, argv, envp),
     /* Release references to the file descriptor ports.  */
     for (i = 0; i < dtablesize; ++i)
       if (dtable[i] != MACH_PORT_NULL)
-	_hurd_port_free (dtable_cells[i], dtable[i], &dealloc_dtable[i]);
+	_hurd_port_free (dtable[i], &dealloc_dtable[i], dtable_cells[i]);
 
   if (err)
     return __hurd_fail (err);
