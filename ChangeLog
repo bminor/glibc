@@ -1,3 +1,7 @@
+1998-03-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-close.c (_dl_close): Correct and simplify unmapping.
+
 1998-03-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/pty.c (openpty): Allow the use of more ptys.
