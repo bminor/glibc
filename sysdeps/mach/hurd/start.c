@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 /* The first piece of initialized data.  */
 int __data_start = 0;
 
+struct _hurd_port *_hurd_ports;
 mode_t _hurd_umask;
 
 mach_port_t *_hurd_init_dtable;
@@ -41,19 +42,18 @@ extern void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
 extern void (*_cthread_exit_routine) (int status);
 
 #ifndef	SET_SP
-#error "Machine-dependent cthread startup code needs to exist."
+#error SET_SP not defined by sysdep.h
 #endif
 
 #ifndef	GET_STACK
-#error "Machine-dependent stack startup code needs to exist."
+#error GET_STACK not defined by sysdep.h
 #endif
 
 #ifndef LOSE
 #define	LOSE	__task_terminate (__mach_task_self ())
 #endif
 
-static int count (char *, size_t);
-static void makevec (char *, size_t, char **);
+static int split_args (char *, size_t, char **);
 
 /* Entry point.  The exec server started the initial thread in our task with
    this spot the PC, and a stack that is presumably big enough.
@@ -81,10 +81,15 @@ _start (void)
   __mach_init ();
 
   if (_cthread_init_routine != NULL)
-    {				/* XXXXXXXXXXXXXXXXXXXXXXXX */
+    {
+      /* Do cthreads initialization, and move to using its new stack.  */
       void *newsp = (*_cthread_init_routine) ();
+
       SET_SP (newsp);
+
       if (newsp < _hurd_stack_low || newsp > _hurd_stack_high)
+	/* The new stack pointer does not intersect with the
+	   stack the exec server set up for us, so free that stack.  */
 	__vm_deallocate (__mach_task_self (),
 			 _hurd_stack_low,
 			 _hurd_stack_high - _hurd_stack_low);
@@ -96,21 +101,27 @@ _start (void)
 
   if (in_bootstrap != MACH_PORT_NULL)
     {
-      err = __exec_startup (in_bootstrap,
-			    &flags,
-			    &args, &argslen, &env, &envlen,
-			    &_hurd_init_dtable, &_hurd_init_dtablesize,
-			    &portarray, &portarraysize,
-			    &intarray, &intarraysize);
+      /* Call the exec server on our bootstrap port and
+	 get all our standard information from it.  */
+      err = _hurd_exec_startup (in_bootstrap,
+				&flags,
+				&args, &argslen, &env, &envlen,
+				&_hurd_init_dtable, &_hurd_init_dtablesize,
+				&portarray, &portarraysize,
+				&intarray, &intarraysize);
       __mach_port_deallocate (__mach_task_self (), in_bootstrap);
     }
 
   if (err || in_bootstrap == MACH_PORT_NULL)
     {
-      static char *noargs = NULL, *noenv = NULL;
-      argc = 0;
-      argv = &noargs;
-      __environ = &noenv;
+      /* Either we have no bootstrap port, or the RPC to the exec server
+	 failed.  Set our variables to have empty information.  This is
+	 the same thing _hurd_exec_startup would have done if the kernel
+	 answered instead of the exec server.  */
+
+      flags = 0;
+      args = env = 0;
+      argslen = envlen = 0;
       _hurd_init_dtable = NULL;
       _hurd_init_dtablesize = 0;
       portarray = NULL;
@@ -118,29 +129,49 @@ _start (void)
       intarray = NULL;
       intarraysize = 0;
     }
-  else
+
+  /* Turn the block of null-separated strings we were passed for the
+     arguments and environment into vectors of pointers to strings.  */
+      
+  if (! args)
     {
-      /* Turn the block of null-separated strings we were passed for the
-	 arguments and environment into vectors of pointers to strings.  */
-      
-      argc = count (args, argslen);
-      envc = count (env, envlen);
-      
+      /* No arguments passed; set argv to { NULL }.  */
+      argc = 0;
+      argv = (char **) &args;
+    }
+  else
+    argc = split_args (args, argslen, NULL) + 1;
+
+  if (! env)
+    {
+      /* No environment passed; set __environ to { NULL }.  */
+      envc = 0;
+      __environ = (char **) &env;
+    }
+  else
+    envc = split_args (env, envlen, NULL) + 1;
+
+  if (argc + envc > 0)
+    {
+      /* There were some arguments or environment.
+	 Allocate space for the vectors of pointers and fill them in.  */
+
       if (err = __vm_allocate (__mach_task_self (),
-			       &argv, round_page ((argc + 1 + envc + 1) *
+			       &argv, round_page ((argc + envc) *
 						  sizeof (char *)),
 			       1))
 	__libc_fatal ("hurd: Can't allocate space for argv and environ\n");
       __environ = &argv[argc + 1];
       
-      makevec (args, argslen, argv);
-      makevec (env, envlen, __environ);
+      split_args (args, argslen, argv);
+      split_args (env, envlen, __environ);
     }
 
-  /* Initialize library data structures, start signal processing, etc.  */
-  _hurd_init (argv,
-	      portarray, portarraysize,
-	      intarray, intarraysize);
+  if (portarray || intarray)
+    /* Initialize library data structures, start signal processing, etc.  */
+    _hurd_init (argv,
+		portarray, portarraysize,
+		intarray, intarraysize);
 
 
   /* Random library initialization.  */
@@ -153,29 +184,7 @@ _start (void)
 }
 
 static int
-count (char *args, size_t argslen)
-{
-  char *p = args;
-  size_t n = argslen;
-  int argc;
-  while (n > 0)
-    {
-      char *end = memchr (p, '\0', n);
-
-      ++argc;
-
-      if (end == NULL)
-	/* The last argument is unterminated.  */
-	break;
-
-      n -= end + 1 - p;
-      p = end + 1;
-    }
-  return argc;
-}
-
-static void
-makevec (char *args, size_t argslen, char **argv)
+split_args (char *args, size_t argslen, char **argv)
 {
   char *p = args;
   size_t n = argslen;
@@ -185,7 +194,9 @@ makevec (char *args, size_t argslen, char **argv)
     {
       char *end = memchr (p, '\0', n);
 
-      argv[argc++] = p;
+      if (argv)
+	argv[argc] = p;
+      ++argc;
 
       if (end == NULL)
 	/* The last argument is unterminated.  */
@@ -195,52 +206,7 @@ makevec (char *args, size_t argslen, char **argv)
       p = end + 1;
     }
 
-  argv[argc] = NULL;
-}
-
-/* Initialize the library data structures from the
-   ints and ports passed to us by the exec server.
-
-   PORTARRAY and INTARRAY are vm_deallocate'd.  */
-
-void
-_hurd_init (char **argv,
-	    mach_port_t *portarray, size_t portarraysize,
-	    int *intarray, size_t intarraysize)
-{
-  int i;
-
-  _hurd_ports = malloc (portarraysize * sizeof (*_hurd_ports));
-  if (_hurd_ports == NULL)
-    __libc_fatal ("Can't allocate _hurd_ports\n");
-
-  /* See what ports we were passed.  */
-  for (i = 0; i < portarraysize; ++i)
-    {
-      _hurd_port_init (&_hurd_ports[i], portarray[i]);
-      switch (i)
-	{
-	case INIT_PORT_PROC:
-	  /* Tell the proc server we exist.  */
-	  _hurd_proc_init (argv);
-	  break;
-
-	case INIT_PORT_BOOTSTRAP:
-	  /* When the user asks for the bootstrap port,
-	     he will get the one the exec server passed us.  */
-	  __task_set_special_port (__mach_task_self (),
-				   TASK_BOOTSTRAP_PORT, portarray[i]);
-	  break;
-	}
-    }
-
-  if (intarraysize > INIT_UMASK)
-    _hurd_umask = intarray[INIT_UMASK] & 0777;
-  else
-    _hurd_umask = 0022;		/* XXX */
-
-  /* All done with init ints and ports.  */
-  __vm_deallocate (__mach_task_self (), intarray, nints * sizeof (int));
-  __vm_deallocate (__mach_task_self (),
-		   portarray, nports * sizeof (mach_port_t));
+  if (argv)
+    argv[argc] = NULL;
+  return argc;
 }
