@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -157,14 +157,14 @@ typedef __sighandler_t sig_t;
 #endif /* <signal.h> included.  */
 
 
-#ifdef __USE_POSIX
-
 #if !defined __sigset_t_defined \
-    && (defined _SIGNAL_H  || defined __need_sigset_t)
+    && ((defined __USE_POSIX && defined _SIGNAL_H) || defined __need_sigset_t)
 typedef __sigset_t sigset_t;
 #define	__sigset_t_defined	1
 #endif /* `sigset_t' not defined and <signal.h> or need `sigset_t'.  */
 #undef __need_sigset_t
+
+#ifdef __USE_POSIX
 
 #ifdef _SIGNAL_H
 
