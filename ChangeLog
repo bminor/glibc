@@ -1,3 +1,15 @@
+2004-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #284]
+	* include/features.h (_POSIX_SOURCE, _POSIX_C_SOURCE): Define
+	if _XOPEN_SOURCE >= 500 even if __STRICT_ANSI__ is defined.
+
+2005-02-11  Barry deFrese  <bddebian@comcast.net>
+
+	[BZ #722]
+	* sysdeps/mach/hurd/setresgid.c: Use weak_alias.
+	* sysdeps/mach/hurd/setresuid.c: Likewise.
+
 2005-02-09  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #710]

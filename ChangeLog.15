@@ -3687,12 +3687,6 @@
 
 	* iconvdata/testdata/ISO-2022-JP-3: Regenerated.
 
-2004-07-23  Jakub Jelinek  <jakub@redhat.com>
-
-	[BZ #284]
-	* include/features.h (_POSIX_SOURCE, _POSIX_C_SOURCE): Define
-	if _XOPEN_SOURCE >= 500 even if __STRICT_ANSI__ is defined.
-
 2004-08-10  Alfred M. Szmidt  <ams@kemisten.nu>
 
 	* sysdeps/generic/bits/in.h (struct ip_mreq): Remove definition.
