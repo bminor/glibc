@@ -1,3 +1,8 @@
+2000-01-09  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't attempt name
+	resolution if the hints included AI_NUMERICHOST.
+
 2000-01-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/mmap64.S: Fix code generated if
