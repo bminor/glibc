@@ -90,7 +90,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
       else
 	result = inbuf - (const unsigned char *) s;
     }
-  else if (status == __GCONV_INCOMPLETE_INPUT)
+  else if (status == GCONV_INCOMPLETE_INPUT)
     result = (size_t) -2;
   else
     {

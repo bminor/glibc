@@ -71,7 +71,7 @@ __mbsrtowcs (dst, src, len, ps)
 						     &data, &inbuf, srcend,
 						     &result, 0);
 
-	  result += (wchar_t *) data.__outbuf - buf;
+	  result += (wchar_t *) data.outbuf - buf;
 	}
       while (status == GCONV_FULL_OUTPUT);
 
@@ -102,7 +102,7 @@ __mbsrtowcs (dst, src, len, ps)
 						 (const unsigned char **) src,
 						 srcend, &result, 0);
 
-      result = (wchar_t *) data.__outbuf - dst;
+      result = (wchar_t *) data.outbuf - dst;
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */
