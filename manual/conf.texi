@@ -275,7 +275,7 @@ particular machine.  The function and the associated @var{parameter}
 constants are declared in the header file @file{unistd.h}.
 
 @menu
-* Sysconf Definiton::         Detailed specifications of @code{sysconf}.
+* Sysconf Definition::        Detailed specifications of @code{sysconf}.
 * Constants for Sysconf::     The list of parameters @code{sysconf} can read.
 * Examples of Sysconf::       How to use @code{sysconf} and the parameter
 				 macros properly together.
