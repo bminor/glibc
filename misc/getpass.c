@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -78,7 +78,7 @@ getpass (prompt)
     buf[0] = '\0';
   else if (buf[nread - 1] == '\n')
     /* Remove the newline.  */
-    buf[nread] = '\0';
+    buf[nread - 1] = '\0';
 
   /* Restore echoing.  */
   if (echo_off)
