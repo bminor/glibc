@@ -28,10 +28,11 @@ endif
 # Turn into a version that works when cd'd into $(objdir).
 cded-objdir-CPPFLAGS = $(patsubst -I$$cwd//%,-I/%,\
 				  $(patsubst -I%,-I$$cwd/%,$(CPPFLAGS)))
-# The point of this is to not use -W options to gcc.
+# $(native-CFLAGS) needs to come last because it contains unwanted -Is.
 $(common-objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
 			     posix1_lim.h local_lim.h
-	cwd=`pwd`; cd $(common-objdir); $(CC) $(cded-objdir-CPPFLAGS) \
+	cwd=`pwd`; cd $(common-objdir); \
+	$(HOST_CC) $(cded-objdir-CPPFLAGS) $(native-CFLAGS) \
 	  $$cwd/$< -o $(patsubst $(common-objpfx)%,%,$@)
 
 
