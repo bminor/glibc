@@ -317,6 +317,9 @@ define common-objdir-compile
 cd $(@D); $(CC) $(native-CFLAGS) $(<:$(common-objpfx)%=%) -o $(@F)
 endef
 
+# We always want to use configuration -D switches.
+native-CFLAGS = $(config-defines)
+
 # Support the GNU standard name for this target.
 .PHONY: check
 check: tests
