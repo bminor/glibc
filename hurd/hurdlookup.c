@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -70,8 +70,10 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
 	  /* Fall through.  */
 
 	case FS_RETRY_NORMAL:
-	  if (nloops++ >= MAXSYMLINKS)
+#ifdef SYMLINK_MAX
+	  if (nloops++ >= SYMLINK_MAX)
 	    return ELOOP;
+#endif
 
 	  if (retryname[0] == '/')
 	    {
