@@ -1,5 +1,8 @@
 2000-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* time/strptime.c: Change buffer handling to fix recursive calls
+	with locales (PR libc/1546).
+
 	* stdlib/strfmon.c: Don't report an eror if final NUL is at the
 	end of the buffer.  Set errno correctly if floating-point number
 	would overflow buffer.
