@@ -34,3 +34,9 @@ $(objpfx)termio.h: $(..)sysdeps/unix/sysv/sysv_termio.h
 	mv $@-tmp $@
 
 endif
+
+ifeq ($(subdir),dirent)
+
+sysdep_routines := $(sysdep_routines) sys_getdents
+
+endif
