@@ -163,7 +163,7 @@ __path_lookup (const char *path, int flags, mode_t mode)
 {
   error_t err;
   file_t result, crdir, cwdir;
-  struct _hurd_port_userlink crdir_ulink, cwdir_ulink;
+  struct hurd_userlink crdir_ulink, cwdir_ulink;
 
   crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink);
   cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink);
@@ -187,7 +187,7 @@ __path_split (const char *path, char **name)
 {
   error_t err;
   file_t dir, crdir, cwdir;
-  struct _hurd_port_userlink crdir_ulink, cwdir_ulink;
+  struct hurd_userlink crdir_ulink, cwdir_ulink;
 
   crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink);
   cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink);
