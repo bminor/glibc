@@ -34,13 +34,14 @@ DEFUN(strcasecmp, (s1, s2), CONST char *s1 AND CONST char *s2)
   if (p1 == p2)
     return 0;
 
-  while (*p1 != '\0')
+  do
     {
       c1 = tolower(*p1++);
       c2 = tolower(*p2++);
       if (c1 != c2)
 	break;
     }
+  while (c1 != '\0');
 
   if (c1 == '\0')
     return -1;
