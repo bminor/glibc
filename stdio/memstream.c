@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct memstream_info
   {
@@ -105,7 +106,7 @@ DEFUN(seek, (cookie, pos, whence),
     case SEEK_END:
       /* Return the position relative to the end of the object.
 	 fseek has just flushed us, so the info is consistent.  */
-      *pos += ((struct memstream_info *) cookie)->bufsize;
+      *pos += *((struct memstream_info *) cookie)->bufsize;
       return 0;
 
     default:
