@@ -79,6 +79,12 @@ pattern @samp{\?} matches only the string @samp{?}, because the question
 mark in the pattern acts like an ordinary character.
 
 If you use @code{FNM_NOESCAPE}, then @samp{\} is an ordinary character.
+
+@comment fnmatch.h
+@comment GNU
+@item FNM_LEADING_DIR
+Ignore a trailing sequence of characters starting with a @samp{/}.
+For example, @samp{foo*} matches @samp{foobar/frobozz}.
 @end table
 
 @node Globbing
