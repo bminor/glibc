@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -93,7 +93,7 @@ DEFUN(__sigvec, (sig, vec, ovec),
 	  if (convert_mask(&n->sa_mask, vec->sv_mask) < 0)
 	    return -1;
 	  n->sa_flags = (((vec->sv_flags & SV_ONSTACK) ? SA_ONSTACK : 0) |
-			 (!(vec->sv_flags & SV_INTERRUPT) ? SA_ONSTACK : 0));
+			 (!(vec->sv_flags & SV_INTERRUPT) ? SA_RESTART : 0));
 	}
 
       if (__sigaction(sig, n, &old) < 0)
