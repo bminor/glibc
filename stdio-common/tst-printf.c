@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 98 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -132,6 +132,7 @@ main (int argc, char *argv[])
   static char shortstr[] = "Hi, Z.";
   static char longstr[] = "Good morning, Doctor Chandra.  This is Hal.  \
 I am ready for my first lesson today.";
+  int result = 0;
 
   fmtchk("%.4x");
   fmtchk("%04x");
@@ -231,18 +232,25 @@ I am ready for my first lesson today.";
     printf("%.17f\n",(1.0/x/10.0+1.0)*x-x);
   }
 
+  {
+    char buf[10];
+    int ret = snprintf (buf, 1, "%d", 123);
+    printf ("snprintf (buf, 1, \"%%d\", 123) = %d\n", ret);
+    if (ret != -1)
+      abort ();
+  }
+
   puts ("--- Should be no further output. ---");
   rfg1 ();
   rfg2 ();
 
   {
     char buf[200];
-    int result;
 
     sprintf(buf,"%*s%*s%*s",-1,"one",-20,"two",-30,"three");
 
-    result = strcmp (buf,
-		     "onetwo                 three                         ");
+    result |= strcmp (buf,
+		      "onetwo                 three                         ");
 
     puts (result != 0 ? "Test failed!" : "Test ok.");
     return result != 0;
