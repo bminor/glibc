@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,13 +20,15 @@ Cambridge, MA 02139, USA.  */
 
 .globl syscall_error
 ENTRY (__wait3)
-	movl 8(%esp), %ecx
-	movl 12(%esp), %edx
+	mov 8(%esp), %ecx	/* Flags.  */
+	mov 12(%esp), %edx	/* rusage pointer.  */
+	lea SYS_wait, %eax	/* Load the syscall number.  */
 	pushl $0xdf; popf	/* Set all the condition codes.  */
-	lcall $7, $0
+        /* lcall $7, $0 */
+	.byte 0x9a, 0, 0, 0, 0, 7, 0 /* Above loses; GAS bug.  */
 	je syscall_error
-	movl 4(%esp), %ecx
-	orl %ecx, %ecx
-	je 1f
-	movl %edx, (%ecx)
+	mov 4(%esp), %ecx	/* Status pointer.  */
+	orl %ecx, %ecx		/* Is it nil?  */
+	je			/* Yup; return.  */
+	mov %edx, 0(%ecx)	/* Non-nil; store the status in it.  */
 1:	ret
