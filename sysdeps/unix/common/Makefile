@@ -24,7 +24,7 @@ ifeq ($(subdir),ctype)
 
 sysdep_routines := $(sysdep_routines) ctype-glue
 
-generated := $(generated) $(objpfx)glue-ctype $(objpfx)glue-ctype.c
+generated := $(generated) $(objpfx)glue-ctype $(objpfx)ctype-glue.c
 
 $(objpfx)ctype-glue.c: $(objpfx)glue-ctype
 	@rm -f $@
