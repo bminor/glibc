@@ -34,12 +34,14 @@ main (void)
   pid_t pid;
   int mypipe[2];
 
+/*@group*/
   /* Create the pipe. */
   if (pipe (mypipe))
     {
       fprintf (stderr, "Pipe failed.\n");
       return EXIT_FAILURE;
     }
+/*@end group*/
 
   /* Create the child process. */
   pid = fork ();
