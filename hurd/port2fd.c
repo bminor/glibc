@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 #include <hurd/fd.h>
+#include <hurd/signal.h>
 #include <hurd/term.h>
 #include <fcntl.h>
 
