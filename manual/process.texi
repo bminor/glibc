@@ -331,7 +331,7 @@ The size of the argument list and environment list taken together must
 not be greater than @code{ARG_MAX} bytes.  @xref{General Limits}.  In
 the GNU system, the size (which compares against @code{ARG_MAX})
 includes, for each string, the number of characters in the string, plus
-the size of a @code{char *}, plus one, rounded up to a multiple of' the
+the size of a @code{char *}, plus one, rounded up to a multiple of the
 size of a @code{char *}.  Other systems may have somewhat different
 rules for counting.
 
@@ -528,14 +528,14 @@ terminated.
 @comment POSIX.1
 @deftypefun pid_t wait (int *@var{status_ptr})
 This is a simplified version of @code{waitpid}, and is used to wait
-until any one child process terminates.
+until any one child process terminates.  The call:
 
 @example
 wait (&status)
 @end example
 
 @noindent
-is equivalent to:
+is exactly equivalent to:
 
 @example
 waitpid (-1, &status, 0)
@@ -554,16 +554,18 @@ sigchld_handler (int signum)
 @{
   int pid;
   int status;
-  while (1) @{
-    pid = waitpid (WAIT_ANY, &status, WNOHANG);
-    if (pid < 0) @{
-      perror ("waitpid");
-      break;
+  while (1)
+    @{
+      pid = waitpid (WAIT_ANY, &status, WNOHANG);
+      if (pid < 0)
+        @{
+          perror ("waitpid");
+          break;
+        @}
+      if (pid == 0)
+        break;
+      notice_termination (pid, status);
     @}
-    if (pid == 0)
-      break;
-    notice_termination (pid, status);
-  @}
 @}
 @end group
 @end example
