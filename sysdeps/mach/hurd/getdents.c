@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,14 +27,15 @@ DEFUN(__getdirentries, (fd, buf, nbytes, basep),
       int fd AND PTR buf AND size_t nbytes AND off_t *basep)
 {
   error_t err;
-  int amount;
+  mach_msg_type_number_t amount;
 
   /* Fault before taking any locks.  */
   *(volatile off_t *) basep = *basep;
 
+  amount = nbytes;
   err = _HURD_DPORT_USE (fd,
-			 __dir_readdir (port, buf, nbytes, *basep,
-					basep, &amount));
+			 __dir_readdir (port, buf, &amount, *basep,
+					basep, nbytes));
   if (err)
     return __hurd_dfail (fd, err);
 
