@@ -22,10 +22,6 @@ Cambridge, MA 02139, USA.  */
 #define	SYS_brk	17
 #endif
 
-#ifndef	HAVE_GNU_LD
-#define	_end	end
-#endif
-
 #ifndef C_SYMBOL_NAME
 #define	C_SYMBOL_NAME(name)	_##name
 #endif
@@ -33,7 +29,11 @@ Cambridge, MA 02139, USA.  */
 .data
 .global C_SYMBOL_NAME(__curbrk)
 C_SYMBOL_NAME(__curbrk):
-	.long _end
+#ifdef	HAVE_GNU_LD
+	.long C_SYMBOL_NAME(_end)
+#else
+	.long C_SYMBOL_NAME(end)
+#endif
 
 .text
 .global C_SYMBOL_NAME(__brk)
