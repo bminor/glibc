@@ -112,6 +112,9 @@ DEFUN_VOID(__fork)
 	    /* Make the thread in the new task do a longjmp to ENV.  */
 	    err = _hurd_thread_longjmp (new, env, 1);
 	  if (!err && t == _hurd_sigport_thread)
+	    /* Give the thread port for the sigport thread the
+	       same name in the child, so its copy of _hurd_sigport_thread
+	       will be right.  */
 	    err = __mach_port_insert_right (newtask, t, new,
 					    MACH_PORT_COPY_SEND);
 
@@ -132,12 +135,13 @@ DEFUN_VOID(__fork)
 	err = __task_resume (newtask);
 
       if (!err)
-	err = __proc_task2pid (_hurd_proc, newtask, &child));
+	err = __proc_task2pid (_hurd_proc, newtask, &child);
 
     lose:
       if (newtask != MACH_PORT_NULL)
 	{
-	  __task_terminate (newtask);
+	  if (err)
+	    __task_terminate (newtask);
 	  __mach_port_deallocate (__mach_task_self (), newtask);
 	}
       if (sigport != MACH_PORT_NULL)
