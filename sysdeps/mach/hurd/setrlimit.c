@@ -23,8 +23,6 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/fd.h>
 
 
-extern _hurd_core_limit, _hurd_dtable_rlimit; /* XXX */
-
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
