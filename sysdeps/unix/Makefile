@@ -73,7 +73,10 @@ ifdef sys/param.h-includes
 $(addprefix $(common-objpfx),$(sys/param.h-includes)): $(common-objpfx)%: \
 						       $(sysincludedir)/%
 	-mkdir $(dir $@)
-	cp $< $@
+# Some of these files sometimes contain conflicting declarations
+# for htons, ntohs, etc.
+	sed '/[ 	]*[hn][sl]to[nh][sl][	 (]*/d' $< > $@-tmp
+	mv $@-tmp $@
 endif
 
 endif # misc
