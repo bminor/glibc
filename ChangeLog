@@ -1,3 +1,8 @@
+2002-07-06  Bruno Haible  <bruno@clisp.org>
+
+	* sysdeps/unix/sysv/linux/bits/statvfs.h (ST_NODIRATIME): Set to
+	2048.
+
 2002-07-08  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/elf/initfini.c (__asm__): Call call_gmon_start.
