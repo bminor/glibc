@@ -22,10 +22,15 @@ $(objpfx)stdio_lim.h: $(objpfx)mk-stdiolim
 
 vpath %.h $(..)
 
+ifdef subdir
+objdir-CPPFLAGS = $(CPPFLAGS) # Already has appropriate `..'s.
+else
+objdir-CPPFLAGS = $(patsubst -I%,-I../%,$(patsubst -I/%,-I//%))
+endif
 # The point of this is to not use -W options to gcc.
 $(objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
 			posix1_lim.h local_lim.h
-	cwd=`pwd`; cd $(objdir); $(CC) $(CPPFLAGS) \
+	cwd=`pwd`; cd $(objdir); $(CC) $(objdir-CPPFLAGS) \
 	  $$cwd/$< -o $(@:$(objpfx)%=%)
 
 
