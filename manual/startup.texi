@@ -14,8 +14,7 @@ of a process, to terminate its process, and to receive information
 (arguments and the environment) from the parent process.
 
 @menu
-* Program Arguments::           Parsing the command-line arguments to
-				 a program.
+* Program Arguments::           Parsing your program's command-line arguments.
 * Environment Variables::       How to access parameters inherited from
 				 a parent process.
 * Program Termination::         How to cause a process to terminate and
@@ -517,8 +516,7 @@ this lets the user specify the value.
 This is the name that the user used to log in.  Since the value in the
 environment can be tweaked arbitrarily, this is not a reliable way to
 identify the user who is running a process; a function like
-@code{getlogin} (@pxref{Identifying Who Logged In}) is better for
-that purpose.
+@code{getlogin} (@pxref{Who Logged In}) is better for that purpose.
 
 For most purposes, it is better to use @code{LOGNAME}, precisely because
 this lets the user specify the value.
