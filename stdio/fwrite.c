@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,20 +28,20 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
       CONST PTR ptr AND size_t size AND
       size_t nmemb AND register FILE *stream)
 {
-  register CONST char *p = (CONST char *) ptr;
+  register CONST unsigned char *p = (CONST unsigned char *) ptr;
   register size_t to_write = size * nmemb;
   register size_t written = 0;
   int newlinep;
   size_t buffer_space;
   char default_func;
 
-  if (!__validfp(stream) || !stream->__mode.__write)
+  if (!__validfp (stream) || !stream->__mode.__write)
     {
       errno = EINVAL;
       return 0;
     }
 
-  if (ferror(stream))
+  if (ferror (stream))
     return 0;
   if (p == NULL || to_write == 0)
     return 0;
@@ -51,7 +51,7 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
       /* This stream has never been seen before.
 	 Calling __flshfp will give it a buffer
 	 and I/O functions if it needs them.  */
-      if (__flshfp(stream, *p++) == EOF)
+      if (__flshfp (stream, *p++) == EOF)
 	return 0;
       if (--to_write == 0)
 	return 1;
@@ -75,8 +75,8 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
        buffer-flushing function, so we just do a straight write.  */
     {
       int count = (stream->__io_funcs.__write == NULL ? to_write :
-		   (*stream->__io_funcs.__write)(stream->__cookie, p,
-						 to_write));
+		   (*stream->__io_funcs.__write) (stream->__cookie, p,
+						  to_write));
       if (count > 0)
 	{
 	  written += count;
@@ -95,7 +95,7 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
   buffer_space = stream->__bufsize - (stream->__bufp - stream->__buffer);
 
   newlinep = (stream->__linebuf &&
-	      memchr((CONST PTR) p, '\n', to_write) != NULL);
+	      memchr ((CONST PTR) p, '\n', to_write) != NULL);
 
   if (newlinep && stream->__bufp == stream->__buffer &&
       stream->__offset == stream->__target)
@@ -109,7 +109,7 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
 	 We can't do much better than putc.  */
       while (to_write-- > 0)
 	{
-	  if (__flshfp(stream, *p++) == EOF)
+	  if (__flshfp (stream, *p++) == EOF)
 	    break;
 	  else
 	    ++written;
@@ -137,7 +137,7 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
 	    *stream->__bufp++ = *p++;
 	else
 	  {
-	    memcpy((PTR) stream->__bufp, (PTR) p, n);
+	    memcpy ((PTR) stream->__bufp, (PTR) p, n);
 	    stream->__bufp += n;
 	    p += n;
 	  }
@@ -145,7 +145,7 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
 	if (buffer_space == 0 || (to_write == 0 && newlinep))
 	  {
 	    /* We've filled the buffer, so flush it.  */
-	    if (fflush(stream) == EOF)
+	    if (fflush (stream) == EOF)
 	      break;
 	  }
       }
@@ -156,7 +156,7 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
       if (stream->__bufp != stream->__buffer)
 	{
 	  /* There are characters in the buffer.  Flush them.  */
-	  if (__flshfp(stream, EOF) == EOF)
+	  if (__flshfp (stream, EOF) == EOF)
 	    goto done;
 	}
 
