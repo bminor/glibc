@@ -29,8 +29,8 @@ __BEGIN_DECLS
    microsecond but also has a range of years.  */
 struct timeval
   {
-    long int tv_sec;	/* Seconds.  */
-    long int tv_usec;	/* Microseconds.  */
+    int tv_sec;		/* Seconds.  */
+    int tv_usec;	/* Microseconds.  */
   };
 
 /* Structure crudely representing a timezone.
