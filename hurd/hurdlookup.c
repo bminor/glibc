@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <string.h>
 #include <limits.h>
+#include <fcntl.h>
 
 error_t
 __hurd_path_lookup (file_t crdir, file_t cwdir,
