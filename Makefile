@@ -53,6 +53,13 @@ subdirs		:= $(strip $(+ansi_dirs) $(+posix_dirs) $(+other_dirs) \
 			   $(sysdep-subdirs))
 export subdirs := $(subdirs)	# Benign, useless in GNU make before 3.63.
 
+# The mach and hurd subdirectories have many generated header files which
+# the much of rest of the library depends on, so it is best to build them
+# first (and mach before hurd, at that).  The before-compile additions in
+# sysdeps/{mach,hurd}/Makefile should make it reliably work for these files
+# not to exist when making in other directories, but it will be slower that
+# way with more somewhat expensive `make' invocations.
+subdirs	:= $(filter mach hurd,$(subdirs)) $(filter-out mach hurd,$(subdirs))
 
 # All initialization source files.
 +subdir_inits	:= $(wildcard $(foreach dir,$(subdirs),$(dir)/init-$(dir).c))
