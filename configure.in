@@ -7,7 +7,7 @@ changequote(,)dnl
 dnl You can ignore the following line if you are reading this sentence.
 # DO NOT EDIT!  This script is generated from configure.in; edit that instead.
 
-# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -286,7 +286,7 @@ sysnames=
 for b in $base ''; do
   for v in /$vendor ''; do
     for o in /$ostry ''; do
-      for m in /$mach ''; do
+      for m in $mach ''; do
         if [ -d $sysdep_dir$b$v$o$m ]; then
           sysnames="$sysnames $b$v$o$m"
 	  [ "$o" -o "$b" ] && os_used=t
