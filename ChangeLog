@@ -1,3 +1,8 @@
+2002-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_dst_count): Fix possible endless loop.
+	(_dl_dst_substitute): Likewise.
+
 2002-01-18  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* locale/program/ld-collate.c (collate_finish): Assign a wide
