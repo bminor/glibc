@@ -44,15 +44,15 @@ __BEGIN_DECLS
    and can declare the float versions `namef' and `__namef'.  */
 
 #define __MATHCALL(function,suffix, args)	\
-  __MATHDECL (_Mdouble_, function,suffix, args)
+  __MATHDECL (_Mdouble_,function,suffix, args)
 #define __MATHDECL(type, function,suffix, args) \
   __MATHDECL_1(type, function,suffix, args); \
-  __MATHDECL_1(type, __##function,suffix, args)
+  __MATHDECL_1(type, __CONCAT(__,function),suffix, args)
 #define __MATHDECL_1(type, function,suffix, args) \
   extern type __MATH_PRECNAME(function,suffix) args
 
 #define _Mdouble_ 		double
-#define __MATH_PRECNAME(name,r)	name##r
+#define __MATH_PRECNAME(name,r)	__CONCAT(name,r)
 #include <mathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
@@ -67,7 +67,11 @@ __BEGIN_DECLS
 #define _Mfloat_		float
 #endif
 #define _Mdouble_ 		_Mfloat_
+#ifdef __STDC__
 #define __MATH_PRECNAME(name,r)	name##f##r
+#else
+#define __MATH_PRECNAME(name,r) name/**/f/**/r
+#endif
 #include <mathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
@@ -79,12 +83,22 @@ __BEGIN_DECLS
 #define _Mlong_double_		long double
 #endif
 #define _Mdouble_ 		_Mlong_double_
+#ifdef __STDC__
 #define __MATH_PRECNAME(name,r)	name##l##r
+#else
+#define __MATH_PRECNAME(name,r) name/**/l/**/r
+#endif
 #include <mathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 
 #endif	/* Use misc.  */
+
+
+#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC9X
+/* This variable is used by `gamma' and `lgamma'.  */
+extern int signgam;
+#endif
 
 
 #ifdef	__USE_MISC
@@ -99,13 +113,17 @@ extern _LIB_VERSION_TYPE _LIB_VERSION;
 #endif
 
 
-#if defined __USE_SVID && !defined __cplusplus
+#ifdef __USE_SVID
 /* In SVID error handling, `matherr' is called with this description
    of the exceptional condition.
 
    We have a problem when using C++ since `exception' is reserved in
    C++.  */
+#ifdef __cplusplus
+struct __exception
+#else
 struct exception
+#endif
   {
     int type;
     char *name;
@@ -114,8 +132,13 @@ struct exception
     double retval;
   };
 
+#ifdef __cplusplus
+extern int __matherr __P ((struct __exception *));
+extern int matherr __P ((struct __exception *));
+#else
 extern int __matherr __P ((struct exception *));
 extern int matherr __P ((struct exception *));
+#endif
 
 #define X_TLOSS		1.41484755040568800000e+16
 
@@ -131,7 +154,15 @@ extern int matherr __P ((struct exception *));
 #define HUGE		FLT_MAX
 #include <float.h>		/* Defines FLT_MAX.  */
 
-#endif	/* SVID && !C++ */
+#else  /* !SVID */
+
+#ifdef __USE_XOPEN
+/* X/Open wants another strange constant.  */
+#define MAXFLOAT       FLT_MAX
+#include <float.h>
+#endif
+
+#endif /* SVID */
 
 
 #ifdef __USE_BSD
@@ -164,7 +195,8 @@ extern int matherr __P ((struct exception *));
 
 
 /* Get machine-dependent inline versions (if there are any).  */
-#if defined (__NO_MATH_INLINES) || defined (__OPTIMIZE__)
+#if (!defined __NO_MATH_INLINES && defined __OPTIMIZE__) \
+    || defined __LIBC_M81_MATH_INLINES
 #include <__math.h>
 #endif
 
