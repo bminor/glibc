@@ -1,3 +1,8 @@
+2000-01-02  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/ioperm.c: Use sysctl by preference
+ 	to obtain port mapping information.  Avoid use of mprotect.
+
 2000-01-03  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/generic/dl-sysdep.c: Initialize __libc_multiple_libcs,
