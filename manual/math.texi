@@ -7,6 +7,15 @@ of these functions have prototypes declared in the header file
 @file{math.h}.
 @pindex math.h
 
+All of the functions that operate on floating-point numbers accept
+arguments and return results of type @code{double}.  In future revisions
+of the ANSI C standard, additional functions may be added that operate
+on @code{float} and @code{long double} values.  For example, @code{cosf}
+and @code{cosl} would be versions of the @code{cos} function that
+operate on @code{float} and @code{long double} arguments, respectively.
+In the meantime, you should avoid using these names yourself.
+@xref{Reserved Names}.
+
 @strong{Incomplete:}  This chapter doesn't have any examples.
 
 @menu
@@ -16,17 +25,9 @@ of these functions have prototypes declared in the header file
 * Inverse Trigonometric Functions::	Arc sine, arc cosine, and arc tangent.
 * Exponentiation and Logarithms::	Also includes square root.
 * Hyperbolic Functions::		Hyperbolic sine and friends.
-* Normalization Functions::		Hacks for radix-2 representations.
-* Rounding and Remainder Functions::	Determinining the integer and
-					 fractional parts of a float.
 * Pseudo-Random Numbers::		Functions for generating pseudo-random
 					 numbers.
-* Integer Division::			Functions for performing integer
-					 division.
 * Absolute Value::			Absolute value functions.
-* Predicates on Floats::		Some miscellaneous test functions.
-* Parsing of Numbers::			Functions for ``reading'' numbers
-					 from strings.
 @end menu
 
 @node Domain and Range Errors
@@ -44,40 +45,39 @@ a @dfn{domain error}.
 Some of these functions are defined mathematically to result in a
 complex value over parts of their domains.  The most familiar example of
 this is taking the square root of a negative number.  Since the C
-language has no support for complex numbers, this is treated like a
+language has no support for complex numbers, this is considered a
 domain error.
 
 @cindex range error
 A related problem is that the mathematical result of a function may not
-be representable as a floating point number.  If magnitude of the result
-is too large to be represented, the value of the macro @code{HUGE_VAL}
-is returned (with the appropriate sign), and @code{errno} is set to
-@code{ERANGE} to indicate a @dfn{range error}.  If the magnitude of the
-result is too small, a value of zero is returned instead.  In the case
-of underflow, @code{errno} might or might not be set to @code{ERANGE}.
+be representable as a floating point number.  If magnitude of the
+correct result is too large to be represented, the function sets
+@code{errno} to @code{ERANGE} to indicate a @dfn{range error}, and
+returns a particular very large value (named by the macro
+@code{HUGE_VAL}) or its negation.
 
-None of these functions ever generate externally visible exceptions
-as a result of domain or range errors.  In particular, this means that
-you won't see @code{SIGFPE} signals generated within these functions.
-@xref{Signal Handling}, for more information about signals.
+If the magnitude of the result is too small, a value of zero is returned
+instead.  In this case, @code{errno} might or might not be
+set to @code{ERANGE}.
 
-All of the functions that operate on floating-point numbers accept
-arguments and return results of type @code{double}.  In future revisions
-of the ANSI C standard, additional functions may be added that operate
-on @code{float} and @code{long double} values.  For example, @code{cosf}
-and @code{cosl} would be versions of the @code{cos} function that
-operate on @code{float} and @code{long double} arguments, respectively.
-In the meantime, you should avoid using these names yourself.
-@xref{Reserved Names}.
+None of the mathematical functions ever generates signals as a result of
+domain or range errors.  In particular, this means that you won't see
+@code{SIGFPE} signals generated within these functions.  (@xref{Signal
+Handling}, for more information about signals.)
+
+The only completely reliable way to check for domain and range errors is
+to set @code{errno} to @code{0} before you call the mathematical function 
+and test @code{errno} afterward.  As a consequence of this use of 
+@code{errno}, use of the mathematical functions is not reentrant if you
+check for errors.
 
 @comment math.h
 @comment ANSI
 @deftypevr Macro double HUGE_VAL
-This macro expands into a (possibly non-constant) expression
-representing a very large positive number.  This is
-typically either the largest representable floating-point number, or a
-value indicating infinity if the floating-point representation has one.
-(The IEEE floating-point does have such a reserved value.)
+This macro expands into an expression of type @code{double} representing
+a particular very large number.  On machines that use IEEE floating
+point format, the value is ``infinity''.  On other machines, it's
+typically the largest positive number that can be represented.
 
 The value of this macro is used as the return value from various 
 mathematical functions in overflow situations.
@@ -92,12 +92,9 @@ might be more appropriate than @code{HUGE_VAL} for many uses.
 @section Trigonometric Functions
 @cindex trignometric functions
 
-@strong{Incomplete:}  What font convention should be used for things
-like ``pi'' and ``e''?
-
 These are the familiar @code{sin}, @code{cos}, and @code{tan} functions.
-The arguments to all of these functions are specified in radians; recall
-that pi radians is equivalent to 180 degrees.  
+The arguments to all of these functions are in units of radians; recall
+that pi radians equals 180 degrees.
 
 @cindex pi (trigonometric constant)
 The math library doesn't define a symbolic constant for pi, but you can
@@ -108,27 +105,29 @@ define your own if you need one:
 @end example
 
 @noindent
-You can also compute the value of pi with the expression @samp{acos (-1.0)}.
+You can also compute the value of pi with the expression @code{acos
+(-1.0)}.
 
 
 @comment math.h
 @comment ANSI
 @deftypefun double sin (double @var{x})
-This function returns the sine of @var{x}, which is given in radians.
-The return value is in the range @code{-1} to @code{1}.
+This function returns the sine of @var{x}, where @var{x} is given in
+radians.  The return value is in the range @code{-1} to @code{1}.
 @end deftypefun
 
 @comment math.h
 @comment ANSI
 @deftypefun double cos (double @var{x})
-This function returns the cosine of @var{x}, which is given in radians.
-The return value is in the range @code{-1} to @code{1}.
+This function returns the cosine of @var{x}, where @var{x} is given in
+radians.  The return value is in the range @code{-1} to @code{1}.
 @end deftypefun
 
 @comment math.h
 @comment ANSI
 @deftypefun double tan (double @var{x})
-This function returns the tangent of @var{x}, which is given in radians.
+This function returns the tangent of @var{x}, where @var{x} is given in
+radians.
 
 The following @code{errno} error conditions are defined for this function:
 
@@ -146,35 +145,41 @@ negative @code{HUGE_VAL}.
 @section Inverse Trigonometric Functions
 @cindex inverse trigonmetric functions
 
-These are the usual arc sine, arc cosine, and arc tangent functions.
+These are the usual arc sine, arc cosine and arc tangent functions,
+which are the inverses of the sine, cosine and tangent functions,
+respectively.
 
 @comment math.h
 @comment ANSI
 @deftypefun double asin (double @var{x})
-This function computes the arc sine of @var{x}.  The return value is
-given in radians and is in the range -pi/2 to pi/2 (inclusive).
+This function computes the arc sine of @var{x}---that is, the value whose
+sine is @var{x}.  The value is in units of radians.  Mathematically,
+there are infinitely many such values; the one actually returned is the
+one between @code{-pi/2} and @code{pi/2} (inclusive).
 
 The following @code{errno} error conditions are defined for this function:
 
 @table @code
 @item EDOM
 The argument @var{x} is out of range.  The arc sine function is defined
-mathematically only over the domain -1 to 1.
+mathematically only over the domain @code{-1} to @code{1}.
 @end table
 @end deftypefun
 
 @comment math.h
 @comment ANSI
 @deftypefun double acos (double @var{x})
-This function computes the arc cosine of @var{x}.  The return value is
-given in radians and is in the range 0 to pi (inclusive).
+This function computes the arc cosine of @var{x}---that is, the value
+whose cosine is @var{x}.  The value is in units of radians.
+Mathematically, there are infinitely many such values; the one actually
+returned is the one between @code{0} and @code{pi} (inclusive).
 
 The following @code{errno} error conditions are defined for this function:
 
 @table @code
 @item EDOM
 The argument @var{x} is out of range.  The arc cosine function is defined
-mathematically only over the domain -1 to 1.
+mathematically only over the domain @code{-1} to @code{1}.
 @end table
 @end deftypefun
 
@@ -182,9 +187,11 @@ mathematically only over the domain -1 to 1.
 @comment math.h
 @comment ANSI
 @deftypefun double atan (double @var{x})
-This function returns the arc tangent of @var{x}.  The return value is
-given in radians and is in the range -pi/2 to pi/2 (inclusive).
-@end deftypefun
+This function computes the arc tangent of @var{x}---that is, the value
+whose tangent is @var{x}.  The value is in units of radians.
+Mathematically, there are infinitely many such values; the one actually
+returned is the one between @code{-pi/2} and @code{pi/2}
+(inclusive).
 
 @comment math.h
 @comment ANSI
@@ -193,7 +200,14 @@ This is the two argument arc tangent function.  It is similar to computing
 the arc tangent of @var{y}/@var{x}, except that the signs of both arguments
 are used to determine the quadrant of the result, and @var{x} is
 permitted to be zero.  The return value is given in radians and is in
-the range -pi to pi (inclusive).
+the range @code{-pi} to @code{pi}, inclusive.
+
+If @var{x} and @var{y} are coordinates of a point in the plane,
+@code{atan2} returns the signed angle between the line from the origin
+to that point and the x-axis.  Thus, @code{atan2} is useful for
+converting Cartesian coordinates to polar coordinates.  (To compute the
+radial coordinate, use @code{hypot}; see @ref{Exponentiation and
+Logarithms}.)
 
 The following @code{errno} error conditions are defined for this function:
 
@@ -228,7 +242,9 @@ The magnitude of the result is too large to be representable.
 @comment math.h
 @comment ANSI
 @deftypefun double log (double @var{x})
-This function returns the natural logarithm of @var{x}.
+This function returns the natural logarithm of @var{x}.  @code{exp (log
+(@var{x})) equals @var{x}, exactly in mathematics and approximately in
+C.
 
 The following @code{errno} error conditions are defined for this function:
 
@@ -247,7 +263,8 @@ The result of the function on an argument of zero is not defined.
 @comment ANSI
 @deftypefun double log10 (double @var{x})
 This function returns the base-10 logarithm of @var{x}.  Except for the
-different base, it is similar to the @code{log} function.
+different base, it is similar to the @code{log} function.  In fact,
+@code{log10 (@var{x})} equals @code{log (@var{x}) / log (10)}.
 @end deftypefun
 
 @comment math.h
@@ -311,33 +328,33 @@ is specified as a @code{struct} representing a complex number.
 @comment GNU
 @deftypefun double expm1 (double @var{x})
 This function returns a value equivalent to @code{exp (@var{x}) - 1}.
-It is computed in a way that is accurate even if the value of @var{x}
-is very small.
+It is computed in a way that is accurate even if the value of @var{x} is
+near zero---a case where @code{exp (@var{x}) - 1} would be inaccurate due
+to subtraction of two numbers that are nearly equal.
 @end deftypefun
-
 
 @comment math.h
 @comment GNU
 @deftypefun double log1p (double @var{x})
 This function returns a value equivalent to @code{log (1 + @var{x})}.
-It is computed in a way that is accurate even if the value of @var{x}
-is very small.
+It is computed in a way that is accurate even if the value of @var{x} is
+near zero.
 @end deftypefun
-
-
 
 @node Hyperbolic Functions
 @section Hyperbolic Functions
 @cindex hyperbolic functions
 
-The functions in this section are related to the exponential and
-functions; @pxref{Exponentiation and Logarithms}.
+The functions in this section are related to the exponential functions;
+see @ref{Exponentiation and Logarithms}.
 
 @comment math.h
 @comment ANSI
 @deftypefun double sinh (double @var{x})
-The @code{sinh} function returns the hyperbolic sine of @var{x}.  The
-following @code{errno} error conditions are defined for this function:
+The @code{sinh} function returns the hyperbolic sine of @var{x}, defined
+mathematically as @code{(exp (@var{x}) - exp (-@var{x}) / 2}.
+The following @code{errno} error conditions are defined for this
+function:
 
 @table @code
 @item ERANGE
@@ -349,8 +366,10 @@ was detected.
 @comment math.h
 @comment ANSI
 @deftypefun double cosh (double @var{x})
-The @code{cosh} function returns the hyperbolic cosine of @var{x}.  The
-following @code{errno} error conditions are defined for this function:
+The @code{cosh} function returns the hyperbolic cosine of @var{x},
+defined mathematically as @code{(exp (@var{x}) + exp (-@var{x}) /
+2}.  The following @code{errno} error conditions are defined for this
+function:
 
 @table @code
 @item ERANGE
@@ -362,7 +381,8 @@ was detected.
 @comment math.h
 @comment ANSI
 @deftypefun double tanh (double @var{x})
-This function returns the hyperbolic tangent of @var{x}.
+This function returns the hyperbolic tangent of @var{x}, defined
+mathematically as @code{sinh (@var{x}) / cosh (@var{x})}.
 @end deftypefun
 
 @cindex inverse hyperbolic functions
@@ -370,169 +390,26 @@ This function returns the hyperbolic tangent of @var{x}.
 @comment math.h
 @comment GNU
 @deftypefun double asinh (double @var{x})
-This function returns the inverse hyperbolic cosine of @var{x}.
+This function returns the inverse hyperbolic sine of @var{x}---the
+value whose hyperbolic sine is @var{x}.
 @end deftypefun
 
 @comment math.h
 @comment GNU
 @deftypefun double acosh (double @var{x})
-This function returns the inverse hyperbolic cosine of @var{x}.  If
-the argument is less than @code{1}, @code{acosh} returns @code{HUGE_VAL}.
+This function returns the inverse hyperbolic cosine of @var{x}---the
+value whose hyperbolic cosine is @var{x}.  If @var{x} is less than
+@code{1}, @code{acosh} returns @code{HUGE_VAL}.
 @end deftypefun
 
 @comment math.h
 @comment GNU
 @deftypefun double atanh (double @var{x})
-This function returns the inverse hyperbolic cosine of @var{x}.  If
-the absolute value of the argument is greater than or equal to @code{1},
-@code{atanh} returns @code{HUGE_VAL}.
+This function returns the inverse hyperbolic tangent of @var{x}---the
+value whose hyperbolic tangent is @var{x}.  If the absolute value of
+@var{x} is greater than or equal to @code{1}, @code{atanh} returns
+@code{HUGE_VAL}.
 @end deftypefun
-
-
-@node Normalization Functions
-@section Normalization Functions
-@cindex normalization functions (floating-point)
-
-The functions described in this section are primarily provided as a way
-to efficiently perform certain low-level manipulations on floating point
-numbers that are represented internally using a binary radix;
-@pxref{Floating-Point Representation}.  These functions are required to
-have equivalent behavior even if the representation does not use a radix
-of 2, but of course they are unlikely to be particularly efficient in
-those cases.
-
-@comment math.h
-@comment GNU
-@deftypefun double copysign (double @var{value}, double @var{sign})
-The @code{copysign} function returns a value whose absolute value is the
-same as that of @var{value}, and whose sign matches that of @var{sign}.
-@end deftypefun
-
-@comment math.h
-@comment ANSI
-@deftypefun double frexp (double @var{value}, int *@var{exponent})
-The @code{frexp} function is used to normalize the number @var{value}.
-
-If the argument @var{value} is not zero, the return value is a
-floating-point number with magnitude in the range 1/2 (inclusive) to 1
-(exclusive).  The corresponding exponent is stored in the location
-pointed at by @var{exponent}; the return value multiplied by 2 raised to
-this exponent is equal to the original number @var{value}.
-
-If @var{value} is zero, then both parts of the result are zero.
-@end deftypefun
-
-@comment math.h
-@comment ANSI
-@deftypefun double ldexp (double @var{value}, int @var{exponent})
-This function returns the result of multiplying the floating-point
-number @var{value} by 2 raised to the power @var{exponent}.  (It can
-be used to reassemble floating-point numbers that were taken apart
-by @code{frexp}.)
-@end deftypefun
-
-@comment math.h
-@comment GNU
-@deftypefun double scalb (double @var{value}, int @var{exponent})
-The @code{scalb} function does the same thing as @code{ldexp}.
-@end deftypefun
-
-@comment math.h
-@comment GNU
-@deftypefun double logb (double @var{x})
-This function returns the base-2 exponent of @var{x}, an integer value
-converted to a @code{double}.  The return value is such that dividing
-the absolute value of @var{x} by @code{2} raised to this power is
-greater than or equal to @code{1}, but less than @code{2}.
-
-@strong{Incomplete:}  What happens if @var{x} is zero?
-@end deftypefun
-
-
-@node Rounding and Remainder Functions
-@section Rounding and Remainder Functions
-@cindex rounding functions
-@cindex remainder functions
-@cindex converting floats to integers
-
-The functions listed here perform operations such as rounding, 
-truncation, and remainder computation.
-
-You can also convert floating-point numbers to integers simply by
-casting them to @code{int}.  This discards the fractional part,
-effectively rounding towards zero.  However, this only works if the
-result can actually be represented as an @code{int} --- for very large
-numbers, the result is undefined.  The functions listed here return the
-result as a @code{double} instead to get around this problem.
-
-@comment math.h
-@comment ANSI
-@deftypefun double ceil (double @var{x})
-The @code{ceil} function rounds @var{x} upwards to the nearest integer,
-returning that value as a @code{double}.
-@end deftypefun
-
-@comment math.h
-@comment ANSI
-@deftypefun double floor (double @var{x})
-The @code{ceil} function rounds @var{x} downwards to the nearest
-integer, returning that value as a @code{double}.
-@end deftypefun
-
-@comment math.h
-@comment GNU
-@deftypefun double rint (double @var{x})
-This function returns the integer nearest @var{x} according to the
-current rounding mode.  @xref{Floating-Point Parameters}, for information
-about the @code{FLT_ROUNDS} macro.
-@end deftypefun
-
-@comment math.h
-@comment ANSI
-@deftypefun double modf (double @var{value}, double *@var{integer_part})
-This function breaks the argument @var{value} into an integer part and a
-fractional part.  Each of the parts has the same sign as the original
-@var{value}, so the rounding of the integer part is towards zero.  The
-integer part is stored at the location pointed at by @var{integer_part},
-and the fractional part is returned.
-@end deftypefun
-
-
-@comment math.h
-@comment ANSI
-@deftypefun double fmod (double @var{numerator}, double @var{denominator})
-This function computes the remainder from dividing @var{numerator} by
-@var{denominator}.  The result has the same sign as the @var{numerator}
-and has magnitude less than the magnitude of the @var{denominator}.
-(Recall that the built-in @samp{%} operator isn't defined on
-floating-point values.)
-
-The following @code{errno} error conditions are defined for this function:
-
-@table @code
-@item EDOM
-The @var{denominator} is zero.
-@end table
-@end deftypefun
-
-@comment math.h
-@comment GNU
-@deftypefun double drem (double @var{numerator}, double @var{denominator})
-This function returns the remainder from dividing @var{numerator} by
-@var{denominator}.  Specifically, the return value is @code{@var{numerator}
-- @var{n} * @var{denominator}}, where @var{n} is the integer closest to
-the exact quotient of @var{numerator} and @var{denominator}.  The absolute
-value of the result is less than or equal to one half the absolute value
-of the @var{denominator}.
-
-The following @code{errno} error conditions are defined for this function:
-
-@table @code
-@item EDOM
-The @var{denominator} is zero.
-@end table
-@end deftypefun
-
 
 @node Pseudo-Random Numbers
 @section Pseudo-Random Numbers
@@ -563,9 +440,8 @@ is less portable.
 
 For both sets of functions, you can get repeatable sequences of numbers
 within a single implementation on a single machine type by specifying
-the same initial seed value for the random number generator.  However,
-the actual algorithm used to generate the random number series may be
-implementation-dependent or implementation-dependent.
+the same initial seed value for the random number generator.  Other C
+libraries may produce different sequences of values for the same seed.
 
 
 @menu
@@ -589,7 +465,8 @@ To use these facilities, you should include the header file
 @deftypevr Macro int RAND_MAX
 The value of this macro is an integer constant expression that
 represents the maximum possible value returned by the @code{rand}
-function.  It is guaranteed to be at least @code{32767}.
+function.  In the GNU library, it is @code{037777777}.  In other
+libraries, it may be as low as @code{32767}.
 @end deftypevr
 
 @comment stdlib.h
@@ -603,9 +480,12 @@ series.  The value is in the range from @code{0} to @code{RAND_MAX}.
 @comment ANSI
 @deftypefun void srand (unsigned int @var{seed})
 This function establishes @var{seed} as the seed for a new series of
-pseudo-random numbers.  If @code{rand} is called before a seed has been
-established with @code{srand}, it is equivalent to having specified an
-initial seed value of @code{1}.
+pseudo-random numbers.  If you call @code{rand} before a seed has been
+established with @code{srand}, it uses the value @code{1} as a default
+seed.
+
+To produce truly random numbers (not just pseudo-random), do @code{srand
+(time (0))}.
 @end deftypefun
 
 @node BSD Random Number Functions
@@ -621,7 +501,7 @@ The prototypes for these functions are in @file{stdlib.h}.
 
 @comment stdlib.h
 @comment BSD
-@deftypefun long int random (void)
+@deftypefun {long int} random (void)
 This function returns the next pseudo-random number in the sequence.
 The range of values returned is from @code{0} to @code{RAND_MAX}.
 @end deftypefun
@@ -630,8 +510,12 @@ The range of values returned is from @code{0} to @code{RAND_MAX}.
 @comment BSD
 @deftypefun void srandom (unsigned int @var{seed})
 The @code{srandom} function sets the seed for the current random number
-state to @var{seed}.  If you supply a @var{seed} value of @code{1}, this
-will cause @code{random} to reproduce the default set of random numbers.
+state based on the integer @var{seed}.  If you supply a @var{seed} value
+of @code{1}, this will cause @code{random} to reproduce the default set
+of random numbers.
+
+To produce truly random numbers (not just pseudo-random), do
+@code{srandom (time (0))}.
 @end deftypefun
 
 Because this random number generator uses more state information than
@@ -644,12 +528,14 @@ this.
 @comment BSD
 @deftypefun {void *} initstate (unsigned int @var{seed}, void *@var{state}, size_t @var{size})
 The @code{initstate} function is used to initialize the random number
-generator state.  The @var{state} is an array of @var{size} bytes, used to
-hold the state information.  The size must be at least 8 bytes, and optimal
-sizes are 8, 16, 32, 64, 128, and 256.  The bigger the @var{state} array,
-the better.
+generator state.  The argument @var{state} is an array of @var{size}
+bytes, used to hold the state information.  The size must be at least 8
+bytes, and optimal sizes are 8, 16, 32, 64, 128, and 256.  The bigger
+the @var{state} array, the better.
 
 The return value is the previous value of the state information array.
+You can use this value later as an argument to @code{setstate} to
+restore that state.
 @end deftypefun
 
 @comment stdlib.h
@@ -660,29 +546,241 @@ information @var{state}.  The argument must have been the result of
 a previous call to @var{initstate} or @var{setstate}.  
 
 The return value is the previous value of the state information array.
+You can use thise value later as an argument to @code{setstate} to
+restore that state.
+@end deftypefun
+
+@node Absolute Value
+@section Absolute Value
+@cindex absolute value functions
+
+These functions are provided for obtaining the @dfn{absolute value} (or
+@dfn{magnitude}) of a number.  The absolute value of @var{x} is @var{x}
+is @var{x} is positive, @minus{}@var{x} if @var{x} is negative.
+
+Prototypes for @code{abs} and @code{abs} are declared in
+@file{stdlib.h}; @code{fabs} is declared in @file{math.h}.
+@pindex math.h
+@pindex stdlib.h
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun int abs (int @var{number})
+This function returns the absolute value of @var{number}.
+
+Most computers use a two's complement integer representation, in which
+the absolute value of @code{INT_MIN} (the smallest possible @code{int})
+cannot be represented; thus, @code{abs (INT_MIN)} is not defined.
+@end deftypefun
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun {long int} labs (long int @var{number})
+This is similar to @code{abs}, except that both the argument and result
+are of type @code{long int} rather than @code{int}.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double fabs (double @var{number})
+This function returns the absolute value of the floating-point number
+@var{number}.
+@end deftypefun
+
+There is also the function @code{cabs} for computing the absolute value
+of a complex number; see @ref{Exponentiation and Logarithms}.
+
+@node Arithmetic
+@chapter Low-Level Arithmetic Functions
+
+This chapter contains information about functions for doing basic
+arithmetic operations, such as splitting a float into its integer and
+fractional parts.  These functions are declared in the header file
+@file{math.h}.
+
+@menu
+* Normalization Functions::		Hacks for radix-2 representations.
+* Rounding and Remainder Functions::	Determinining the integer and
+					 fractional parts of a float.
+* Integer Division::			Functions for performing integer
+					 division.
+* Parsing of Numbers::			Functions for ``reading'' numbers
+					 from strings.
+* Predicates on Floats::		Some miscellaneous test functions.
+@end menu
+
+@node Normalization Functions
+@section Normalization Functions
+@cindex normalization functions (floating-point)
+
+The functions described in this section are primarily provided as a way
+to efficiently perform certain low-level manipulations on floating point
+numbers that are represented internally using a binary radix;
+see @ref{Floating-Point Representation}.  These functions are required to
+have equivalent behavior even if the representation does not use a radix
+of 2, but of course they are unlikely to be particularly efficient in
+those cases.
+
+@comment math.h
+@comment GNU
+@deftypefun double copysign (double @var{value}, double @var{sign})
+The @code{copysign} function returns a value whose absolute value is the
+same as that of @var{value}, and whose sign matches that of @var{sign}.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double frexp (double @var{value}, int *@var{exponent})
+The @code{frexp} function is used to normalize the number @var{value}.
+
+If the argument @var{value} is not zero, the return value is a
+floating-point number with magnitude in the range 1/2 (inclusive) to 1
+(exclusive).  The corresponding exponent is stored in the location
+pointed at by @var{exponent}; the return value multiplied by 2 raised to
+this exponent would equal the original number @var{value}.
+
+If @var{value} is zero, then both parts of the result are zero.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double ldexp (double @var{value}, int @var{exponent})
+This function returns the result of multiplying the floating-point
+number @var{value} by 2 raised to the power @var{exponent}.  (It can
+be used to reassemble floating-point numbers that were taken apart
+by @code{frexp}.)
+@end deftypefun
+
+@c ??? Where does this come from?
+@comment math.h
+@comment GNU
+@deftypefun double scalb (double @var{value}, int @var{exponent})
+The @code{scalb} function does the same thing as @code{ldexp}.
+@end deftypefun
+
+@c ??? Where does this come from?
+@comment math.h
+@comment GNU
+@deftypefun double logb (double @var{x})
+This function returns the integer part of the base-2 logarithm of
+@var{x}, an integer value represented in type @code{double}.  This is
+the highest integer power of @code{2} contained in @var{x}.
+
+When @code{2} raised to this power is divided into @var{x}, it gives a
+quotient between @code{1} (inclusive) and @code{2} (exclusive).
+
+@strong{Incomplete:}  What happens if @var{x} is zero?
 @end deftypefun
 
 
+@node Rounding and Remainder Functions
+@section Rounding and Remainder Functions
+@cindex rounding functions
+@cindex remainder functions
+@cindex converting floats to integers
 
+The functions listed here perform operations such as rounding,
+truncation, and remainder in division of floating point numbers.  Some
+of these functions convert floating point numbers to integer values.
+
+You can also convert floating-point numbers to integers simply by
+casting them to @code{int}.  This discards the fractional part,
+effectively rounding towards zero.  However, this only works if the
+result can actually be represented as an @code{int}---for very large
+numbers, this is impossible.  The functions listed here return the
+result as a @code{double} instead to get around this problem.
+
+@comment math.h
+@comment ANSI
+@deftypefun double ceil (double @var{x})
+The @code{ceil} function rounds @var{x} upwards to the nearest integer,
+returning that value as a @code{double}.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double floor (double @var{x})
+The @code{ceil} function rounds @var{x} downwards to the nearest
+integer, returning that value as a @code{double}.
+@end deftypefun
+
+@comment math.h
+@comment GNU
+@deftypefun double rint (double @var{x})
+This function returns the integer nearest @var{x} according to the
+current rounding mode.  @xref{Floating-Point Parameters}, for information
+about the @code{FLT_ROUNDS} macro.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double modf (double @var{value}, double *@var{integer_part})
+This function breaks the argument @var{value} into an integer part and a
+fractional part (between @code{-1} and @code{1}, exclusive).  The
+integer part is stored at the location pointed at by @var{integer_part},
+and the fractional part is returned.  Their sum equals @var{value}.
+Each of the parts has the same sign as @var{value}, so the rounding of
+the integer part is towards zero.
+@end deftypefun
+
+
+@comment math.h
+@comment ANSI
+@deftypefun double fmod (double @var{numerator}, double @var{denominator})
+This function computes the remainder from dividing @var{numerator} by
+@var{denominator}.  Specifically, the return value is
+@code{@var{numerator} - @var{n} * @var{denominator}}, where @var{n} is
+the quotient of @var{numerator} by @var{denominator}, rounded down to
+the next lower integer.
+
+The result has the same sign as the @var{numerator} and has magnitude
+less than the magnitude of the @var{denominator}.  (Recall that the
+built-in @samp{%} operator isn't defined on floating-point values.)
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EDOM
+The @var{denominator} is zero.
+@end table
+@end deftypefun
+
+@comment math.h
+@comment GNU
+@deftypefun double drem (double @var{numerator}, double @var{denominator})
+This function returns the remainder from dividing @var{numerator} by
+@var{denominator}.  Specifically, the return value is @code{@var{numerator}
+- @var{n} * @var{denominator}}, where @var{n} is the integer closest to
+the exact quotient of @var{numerator} and @var{denominator}.  The absolute
+value of the result is less than or equal to one half the absolute value
+of the @var{denominator}.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EDOM
+The @var{denominator} is zero.
+@end table
+@end deftypefun
 
 
 @node Integer Division
 @section Integer Division
 @cindex integer division functions
 
-This section describes functions for performing integer division.
+This section describes functions for performing integer division.  These
+functions are redundant in the GNU C library, since in GNU C the @samp{/}
+operator always rounds towards zero.  But in other C implementations,
+@samp{/} may round differently with negative arguments.  @code{div} and
+@code{ldiv} are useful because they specify how to round the quotient.
+
+These functions are specified to return a result @var{r} such that
+@code{@var{r}.quot*@var{denominator} + @var{r}.rem} equals
+@var{numerator}.
+
 To use these facilities, you should include the header file
 @file{stdlib.h} in your program.
 @pindex stdlib.h
-
-These functions are not necessarily equivalent to the division performed
-by the built-in @code{/} and @code{%} operators.  While the built-in
-division operator is permitted to round in either direction if the
-quotient is negative, the @code{div} and @code{ldiv} functions are
-required to round towards zero.  It is also required that these
-functions return a result @var{r} such that
-@code{@var{r}.quot*@var{denominator} + @var{r}.rem} be equal to
-@var{numerator}.
 
 @comment stdlib.h
 @comment ANSI
@@ -738,81 +836,6 @@ structure of type @code{ldiv}.
 @end deftypefun
 
 
-@node Absolute Value
-@section Absolute Value
-@cindex absolute value functions
-
-These functions are provided for obtaining the absolute value of
-integer values.  Prototypes for @code{abs} and @code{abs} are declared
-in @file{stdlib.h}; @code{fabs} is declared in @file{math.h}.
-@pindex math.h
-@pindex stdlib.h
-
-@comment stdlib.h
-@comment ANSI
-@deftypefun int abs (int @var{number})
-This function returns the absolute value (or magnitude) of @var{number}.
-In a two's complement integer representation, the absolute value of
-@code{INT_MIN} (the smallest possible @code{int}) cannot be represented;
-in this case, the behavior of @code{abs} is undefined.
-@end deftypefun
-
-@comment stdlib.h
-@comment ANSI
-@deftypefun {long int} labs (long int @var{number})
-This is similar to @code{abs}, except that both the argument and result
-are of type @code{long int} rather than @code{int}.
-@end deftypefun
-
-@comment math.h
-@comment ANSI
-@deftypefun double fabs (double @var{number})
-This function returns the absolute value of the floating-point number
-@var{number}.
-@end deftypefun
-
-There is also the function @code{cabs} for computing the absolute value
-of a complex number; @pxref{Exponentiation and Logarithms}.
-
-
-@node Predicates on Floats
-@section Predicates on Floats
-@cindex predicates on floats
-
-This section describes some miscellaneous test functions on doubles.
-Prototypes for these functions appear in @file{math.h}.
-@pindex math.h
-
-@comment math.h
-@comment GNU
-@deftypefun int isinf (double @var{x})
-This function returns @code{-1} if @var{x} represents negative infinity,
-@code{1} if @var{x} represents positive infinity, and @code{0} otherwise.
-@end deftypefun
-
-@comment math.h
-@comment GNU
-@deftypefun int isnan (double @var{x})
-This function returns a nonzero value if @var{x} is the ``not a number''
-value, and zero otherwise.
-@end deftypefun
-
-@comment math.h
-@comment GNU
-@deftypefun int finite (double @var{x})
-This function returns a nonzero value if @var{x} is finite or the ``not
-a number'' value, and zero otherwise.
-@end deftypefun
-
-@comment math.h
-@comment GNU
-@deftypefun double infnan (int @var{error})
-@strong{Incomplete:}  I don't understand what this function does.
-@end deftypefun
-
-@strong{Portability Note:} The functions listed in this section are GNU
-extensions.
-
 @node Parsing of Numbers
 @section Parsing of Numbers
 @cindex parsing numbers (in formatted input)
@@ -823,7 +846,7 @@ extensions.
 This section describes functions for ``reading'' integer and
 floating-point numbers from a string.  In many cases, it is more
 appropriate to use @code{sscanf} or one of the related functions;
-@pxref{Formatted Input}.  The syntax recognized by the formatted input
+see @ref{Formatted Input}.  The syntax recognized by the formatted input
 functions for the numeric conversions is exactly the same as the syntax
 recognized by the functions described in this section.
 
@@ -869,15 +892,15 @@ used for integer constants in the C language is recognized.  Otherwise
 
 @item 
 Any remaining characters in the string.  If @var{tailptr} is not a null
-pointer, a pointer to this tail of the string is stored in the object
-it points to.
+pointer, a pointer to this tail of the string is stored in
+@code{*@var{tailptr}}.
 @end itemize
 
 If the string is empty, contains only whitespace, or does not contain an
 initial substring that has the expected syntax for an integer in the
 specified @var{base}, no conversion is performed.  In this case,
 @code{strtol} returns a value of zero and the value returned in
-@var{tailptr} is the value of @var{string}.
+@code{*@var{tailptr}} is the value of @var{string}.
 
 In a locale other than the standard @code{"C"} locale, this function
 may recognize additional implementation-dependent syntax.
@@ -911,7 +934,7 @@ The @code{strtoul} (``string-to-unsigned-long'') function is similar to
 This function is similar to the @code{strtol} function with a @var{base}
 argument of @code{10}, except that it need not detect overflow errors.
 The @code{atol} function is provided mostly for compatibility with
-existing code; using @code{strtol} is considered better style.
+existing code; using @code{strtol} is more robust.
 @end deftypefun
 
 @comment stdlib.h
@@ -954,18 +977,18 @@ An optional exponent part, consisting of a character @samp{e} or
 
 @item
 Any remaining characters in the string.  If @var{tailptr} is not a null
-pointer, a pointer to this tail of the string is stored in the object it
-points to.
+pointer, a pointer to this tail of the string is stored in
+@code{*@var{tailptr}}.
 @end itemize
 
-If the string is empty, contains only whitespace, or does not contain
-an initial substring that has the expected syntax for a floating-point
+If the string is empty, contains only whitespace, or does not contain an
+initial substring that has the expected syntax for a floating-point
 number, no conversion is performed.  In this case, @code{strtod} returns
-a value of zero and the value returned in @var{tailptr} is the value of
-@var{string}.
+a value of zero and the value returned in @code{*@var{tailptr}} is the
+value of @var{string}.
 
-In a locale other than the standard @code{"C"} locale, this function
-may recognize additional implementation-dependent syntax.
+In a locale other than the standard @code{"C"} locale, this function may
+recognize additional locale-dependent syntax.
 
 If the string has valid syntax for a floating-point number but the value
 is not representable because of overflow, @code{strtod} returns either
@@ -988,6 +1011,45 @@ An overflow or underflow condition was detected.
 This function is similar to the @code{strtod} function, except that it
 need not detect overflow and underflow errors.  The @code{atof} function
 is provided mostly for compatibility with existing code; using
-@code{strtod} is considered better style.
+@code{strtod} is more robust.
 @end deftypefun
+
+@node Predicates on Floats
+@section Predicates on Floats
+@cindex predicates on floats
+
+This section describes some miscellaneous test functions on doubles.
+Prototypes for these functions appear in @file{math.h}.
+@pindex math.h
+
+@comment math.h
+@comment GNU
+@deftypefun int isinf (double @var{x})
+This function returns @code{-1} if @var{x} represents negative infinity,
+@code{1} if @var{x} represents positive infinity, and @code{0} otherwise.
+@end deftypefun
+
+@comment math.h
+@comment GNU
+@deftypefun int isnan (double @var{x})
+This function returns a nonzero value if @var{x} is a ``not a number''
+value, and zero otherwise.
+@end deftypefun
+
+@comment math.h
+@comment GNU
+@deftypefun int finite (double @var{x})
+This function returns a nonzero value if @var{x} is finite or a ``not a
+number'' value, and zero otherwise.
+@end deftypefun
+
+@comment math.h
+@comment GNU
+@deftypefun double infnan (int @var{error})
+@strong{Incomplete:}  I don't understand what this function does.
+@end deftypefun
+
+@strong{Portability Note:} The functions listed in this section are GNU
+extensions.
+
 
