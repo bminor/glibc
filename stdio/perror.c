@@ -20,11 +20,14 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <errno.h>
 
+#ifndef HAVE_GNU_LD
+#define _sys_errlist sys_errlist
+#define _sys_nerr sys_nerr
+#endif
 
 /* Defined in sys_errlist.c.  */
 extern CONST char *CONST _sys_errlist[];
 extern CONST int _sys_nerr;
-
 
 /* Print a line on stderr consisting of the text in S, a colon, a space,
    a message describing the meaning of the contents of `errno' and a newline.
