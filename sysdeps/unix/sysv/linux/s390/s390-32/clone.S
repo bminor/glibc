@@ -21,6 +21,7 @@
    and invokes a function in the right context after its all over.  */
 
 #include <sysdep.h>
+#include <tls.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
