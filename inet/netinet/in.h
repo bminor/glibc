@@ -98,28 +98,28 @@ struct in_addr
    On subnets, host and network parts are found according to
    the subnet mask, not these masks.  */
 
-#define	IN_CLASSA(a)		(((long int (a)) & 0x80000000) == 0)
+#define	IN_CLASSA(a)		((((long int) (a)) & 0x80000000) == 0)
 #define	IN_CLASSA_NET		0xff000000
 #define	IN_CLASSA_NSHIFT	24
 #define	IN_CLASSA_HOST		(0xffffffff & ~IN_CLASSA_NET)
 #define	IN_CLASSA_MAX		128
 
-#define	IN_CLASSB(a)		(((long int (a)) & 0xc0000000) == 0x80000000)
+#define	IN_CLASSB(a)		((((long int) (a)) & 0xc0000000) == 0x80000000)
 #define	IN_CLASSB_NET		0xffff0000
 #define	IN_CLASSB_NSHIFT	16
 #define	IN_CLASSB_HOST		(0xffffffff & ~IN_CLASSB_NET)
 #define	IN_CLASSA_MAX		65536
 
-#define	IN_CLASSC(a)		(((long int (a)) & 0xc0000000) == 0xc0000000)
+#define	IN_CLASSC(a)		((((long int) (a)) & 0xc0000000) == 0xc0000000)
 #define	IN_CLASSC_NET		0xffffff00
 #define	IN_CLASSC_NSHIFT	8
 #define	IN_CLASSC_HOST		(0xffffffff & ~IN_CLASSC_NET)
 
-#define	IN_CLASSD(a)		(((long int (a)) & 0xf0000000) = 0xe0000000)
+#define	IN_CLASSD(a)		((((long int) (a)) & 0xf0000000) = 0xe0000000)
 #define	IN_MULTICAST(a)		IN_CLASSD(a)
 
-#define	IN_EXPERIMENTAL(a)	(((long int (a)) & 0xe0000000) = 0xe0000000)
-#define	IN_BADCLASS(a)		(((long int (a)) & 0xf0000000) = 0xf0000000)
+#define	IN_EXPERIMENTAL(a)	((((long int) (a)) & 0xe0000000) = 0xe0000000)
+#define	IN_BADCLASS(a)		((((long int) (a)) & 0xf0000000) = 0xf0000000)
 
 /* Address to accept any incoming messages.  */
 #define	INADDR_ANY		((unsigned long int) 0x00000000)
@@ -142,8 +142,8 @@ struct sockaddr_in
     struct in_addr sin_addr;		/* Internet address.  */
 
     /* Pad to size of `struct sockaddr'.  */
-    : 8 * (sizeof(struct sockaddr) - sizeof(short int) -
-	   sizeof(unsigned short int) - sizeof(struct in_addr));
+    unsigned char __pad[sizeof(struct sockaddr) - sizeof(short int) -
+			sizeof(unsigned short int) - sizeof(struct in_addr)];
   };
 
 
@@ -153,6 +153,6 @@ struct sockaddr_in
 
 
 /* Get number representation conversion macros.  */
-#include <netinet/cvt.h>
+#include <cvt.h>
 
 #endif	/* netinet/in.h */
