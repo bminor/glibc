@@ -122,6 +122,10 @@ write_corefile (int signo, int sigcode)
 
 extern const size_t _hurd_thread_state_count;
 
+/* How long to give servers to respond to
+   interrupt_operation before giving up on them.  */
+mach_msg_timeout_t _hurd_interrupt_timeout = 1000; /* One second.  */
+
 /* SS->thread is suspended.  Fills STATE in with its registers.
    SS->lock is held and kept.  */
 static inline void
@@ -135,16 +139,47 @@ abort_rpcs (struct _hurd_sigstate *ss, int signo, void *state)
       extern error_t _hurd_thread_state (thread_t, void *state);
       extern int *_hurd_thread_pc (void *state);
       
-      /* Abort whatever the thread is doing, and fetch its state.  */
+      /* Abort whatever the thread is doing.
+	 If it is in the mach_msg syscall doing the send,
+	 the syscall will return MACH_SEND_INTERRUPTED.  */
       __thread_abort (ss->thread);
       _hurd_thread_state (ss->thread, state);
 
       if (_hurd_thread_pc (state) == &__mach_msg_trap_syscall_pc)
 	{
 	  /* The thread was waiting for the RPC to return.
-	     Abort the operation.  The RPC will return POSIX_EINTR,
-	     or mach_msg will return an interrupt error.  */
-	  __interrupt_operation (ss->intr_port);
+	     Abort the operation.  The RPC will return EINTR.  */
+
+	  struct
+	    {
+	      mach_msg_header_t header;
+	      mach_msg_type_t type;
+	      kern_return_t retcode;
+	    } msg;
+	  kern_return_t err;
+
+	  msg.header.msgh_request_port = ss->intr_port;
+	  msg.header.msgh_reply_port = __mach_reply_port ();
+	  msg.header.msgh_seqno = 0;
+	  msg.header.msgh_id = 33000; /* interrupt_operation XXX */
+	  err = __mach_msg (&msg.header,
+			    MACH_SEND_MSG|MACH_RCV_MSG|MACH_RCV_TIMEOUT,
+			    sizeof (msg.header), sizeof (msg),
+			    msg.header.msgh_reply_port,
+			    _hurd_interrupt_timeout,
+			    MACH_PORT_NULL);
+	  if (err != MACH_MSG_SUCCESS)
+	    /* The interrupt didn't work.
+	       Destroy the receive right the thread is blocked on.  */
+	    __mach_port_destroy (__mach_task_self (),
+				 /* XXX */
+				 _hurd_thread_reply_port (ss->thread));
+	  else
+	    /* In case the server returned something screwy.  */
+	    __mach_msg_destroy (&msg.header);
+
+	  /* Tell the thread whether it should restart the
+	     operation or return EINTR when it wakes up.  */
 	  ss->intr_restart = ss->actions[signo].sa_flags & SA_RESTART;
 	}
 
@@ -194,6 +229,12 @@ _hurd_internal_post_signal (reply_port_t reply,
   if (ss->actions[signo].sa_handler == SIG_DFL)
     switch (signo)
       {
+      case 0:
+	/* A sig_post msg with SIGNO==0 is sent to
+	   tell us to check for pending signals.  */
+	act = ignore;
+	break;
+
       case SIGTTIN:
       case SIGTTOU:
       case SIGSTOP:
@@ -256,37 +297,48 @@ _hurd_internal_post_signal (reply_port_t reply,
   switch (act)
     {
     case stop:
-      __sig_post_reply (reply, POSIX_SUCCESS);
-      _HURD_PORT_USE (&_hurd_proc,
-		      __proc_dostop (port, __mach_thread_self ()));
-      __mutex_unlock (&ss->lock);
-      /* XXX What if a stopped thread is holding siglock? */
-      abort_all_rpcs (signo, thread_state);
-      /* All other threads are now stopped, and one of
-	 them might be holding the _hurd_proc cell lock.  */
-      __proc_markstop (_hurd_proc.port, signo);
+      if (reply != MACH_PORT_NULL)
+	__sig_post_reply (reply, POSIX_SUCCESS);
+      _HURD_PORT_USE
+	(&_hurd_proc,
+	 ({
+	   /* Hold the siglock while stopping other threads to be
+	      sure it is not held by another thread afterwards.  */
+	   __mutex_lock (&_hurd_siglock);
+	   __proc_dostop (port, __mach_thread_self ());
+	   __mutex_unlock (&_hurd_siglock);
+	   __mutex_unlock (&ss->lock);
+	   abort_all_rpcs (signo, thread_state);
+	   __proc_markstop (port, signo);
+	 }));
       _hurd_stopped = 1;
       return MIG_NO_REPLY;	/* Already replied.  */
 
     case ignore:
-      __sig_post_reply (reply, POSIX_SUCCESS);
+      if (reply != MACH_PORT_NULL)
+	__sig_post_reply (reply, POSIX_SUCCESS);
       break;
 
     case core:
     case term:
-      __sig_post_reply (reply, POSIX_SUCCESS);
-      _HURD_PORT_USE (&_hurd_proc,
-		      __proc_dostop (port, __mach_thread_self ()));
-      abort_all_rpcs (signo, thread_state);
-      __proc_exit (_hurd_proc.port,
-		   (W_EXITCODE (0, signo) |
-		    (act == core && write_corefile (signo, sigcode) ?
-		     WCOREDUMP : 0)));
+      if (reply != MACH_PORT_NULL)
+	__sig_post_reply (reply, POSIX_SUCCESS);
+      _HURD_PORT_USE
+	(&_hurd_proc,
+	 ({
+	   __proc_dostop (port, __mach_thread_self ());
+	  abort_all_rpcs (signo, thread_state);
+	  __proc_exit (port,
+		       (W_EXITCODE (0, signo) |
+			(act == core && write_corefile (signo, sigcode) ?
+			 WCOREDUMP : 0)))
+	  }));
       __task_terminate (__mach_task_self ());
       return MIG_NO_REPLY;	/* Yeah, right.  */
 
     case handle:
-      __sig_post_reply (reply, POSIX_SUCCESS);
+      if (reply != MACH_PORT_NULL)
+	__sig_post_reply (reply, POSIX_SUCCESS);
       __thread_suspend (ss->thread);
       abort_rpcs (ss, signo, thread_state);
       {
@@ -319,8 +371,8 @@ _hurd_internal_post_signal (reply_port_t reply,
 }
 
 /* Called by the proc server to send a signal.  */
-static error_t
-sig_post (sigthread_t me,
+error_t
+__sig_post (sigthread_t me,
 	  mig_reply_port_t reply,
 	  int signo,
 	  mach_port_t refport)
@@ -366,16 +418,8 @@ sig_post (sigthread_t me,
       return MIG_NO_REPLY;
     }
 
-  return _hurd_internal_post_signal (reply,
-				     signo, 0,
-				     NULL);
+  return _hurd_internal_post_signal (reply, ss, signo, 0, NULL);
 }
-
-#include "_Xsig_post.c"
-
-asm (".stabs \"__hurd_sigport_ids\",23,0,0,23000"); /* XXX */
-text_set_element (_hurd_sigport_routines, _Xsig_post);
-
 
 /* Called by the exception handler to take a signal.  */
 void
