@@ -17,8 +17,8 @@ This chapter describes how a program can create, terminate, and control
 child processes.
 
 @menu
-* Program Argument Parsing::	Parsing the command-line arguments to
-				 a program
+* Program Arguments::	        Parsing the command-line arguments to
+				 a program.
 * Environment Variables::	How to access parameters inherited from
 				 a parent process.
 * Program Termination::		How to cause a process to terminate and
@@ -28,8 +28,8 @@ child processes.
 @end menu
 
 
-@node Program Argument Parsing
-@section Program Argument Parsing
+@node Program Arguments
+@section Program Arguments
 @cindex program arguments
 @cindex command line arguments
 
@@ -60,13 +60,15 @@ arguments are interpreted in the same way (as file names, for example),
 you are usually better off using @code{getopt} to do the parsing.
 
 @menu
-* Command Argument Syntax Conventions::
-* The getopt Function::
-* Example of getopt::
+* Program Argument Syntax Conventions::         By convention, program
+                                                 options are specified by a
+                                                 leading hyphen.
+* Parsing Program Arguments::                   The @code{getopt} function.
+* Example of Parsing Program Arguments::        An example of @code{getopt}.
 @end menu
 
-@node Command Argument Syntax Conventions
-@subsection Command Argument Syntax Conventions
+@node Program Argument Syntax Conventions
+@subsection Program Argument Syntax Conventions
 
 The @code{getopt} function supports the usual Unix conventions for
 command line argument syntax:
@@ -119,8 +121,8 @@ Options may be supplied in any order, or appear multiple times.  The
 interpretation is left up to the particular application program.
 @end itemize
 
-@node The getopt Function
-@subsection The @code{getopt} Function
+@node Parsing Program Arguments
+@subsection Parsing Program Arguments
 
 Here are the details about how to call the @code{getopt} function.  To
 use this facility, your program must include the header file
@@ -165,22 +167,22 @@ option argument, for those options that accept arguments.
 
 @comment unistd.h
 @comment POSIX.2
-@deftypefun int getopt (int @var{argc}, char **@var{argv}, const char *{options})
+@deftypefun int getopt (int @var{argc}, char **@var{argv}, const char *@var{options})
 The @code{getopt} function gets the next option argument from the argument
 list specified by the @var{argv} and @var{argc} arguments.
 
-The @var{options} argument is a string that specifies the option characters
-that are valid for this program.  An option character in this string can
-be followed by a colon (@samp{:}) to indicate that it takes a required
-argument, or by two colons to indicate that it takes an optional argument.
-The external variable @var{optarg} is used to return a pointer to the
-argument.  You don't ordinarily need to copy this string, since it is
-a pointer into the original @var{argv} array, not into a static area
-that might be overwritten.
+The @var{options} argument is a string that specifies the option
+characters that are valid for this program.  An option character in this
+string can be followed by a colon (@samp{:}) to indicate that it takes a
+required argument, or by two colons to indicate that it takes an
+optional argument.  The external variable @code{optarg} is used to
+return a pointer to the argument.  You don't ordinarily need to copy the
+@code{optarg} string, since it is a pointer into the original @var{argv}
+array, not into a static area that might be overwritten.
 
 If the @var{options} argument string begins with a hyphen (@samp{-}), this
 is treated specially.  It permits arguments without an option to be
-returned as if they were associated with option character @code{'\0'}.
+returned as if they were associated with option character @samp{\0}.
 
 The @code{getopt} function returns the option character for the next
 command line option.  When no more option arguments are available, it
@@ -190,13 +192,13 @@ parameter to check this.
 
 If @code{getopt} finds an option character in @var{argv} that was not
 included in @var{options}, or a missing option argument, it returns
-@code{'?'} and sets the external variable @code{optopt} to the actual
+@samp{?} and sets the external variable @code{optopt} to the actual
 option character.  In addition, if the external variable @code{opterr}
 has a nonzero value, @code{getopt} prints an error message.
 @end deftypefun
 
-@node Example of getopt
-@subsection Example of @code{getopt}
+@node Example of Parsing Program Arguments
+@subsection Example of Parsing Program Arguments
 
 Here is an example showing how @code{getopt} is typically used.  The
 key points to notice are:
@@ -301,7 +303,7 @@ Non-option argument -
 When a program is executed, it receives information about the context in
 which it was invoked in two ways.  The first mechanism uses the
 @var{argv} and @var{argc} arguments to its @code{main} function, and is
-discussed in @ref{Program Argument Parsing}.  The second mechanism is
+discussed in @ref{Program Arguments}.  The second mechanism is
 uses @dfn{environment variables} and is discussed in this section.
 
 The @var{argv} mechanism is typically used to pass command-line
@@ -499,7 +501,7 @@ attribute category.
 @item _POSIX_OPTION_ORDER
 @cindex _POSIX_OPTION_ORDER environment variable.
 If this environment variable is defined, it suppresses the usual
-reordering of command line arguments by @code{getopt}.  @xref{Command
+reordering of command line arguments by @code{getopt}.  @xref{Program
 Argument Syntax Conventions}.
 @end table
 
@@ -953,7 +955,6 @@ This section describes the @code{exec} family of functions, for executing
 a file as a process image.  You can use these functions to make a child
 process execute a new program after it has been forked.
 
-
 There are several variants that allow you to specify the arguments in
 different ways, but otherwise they all work in pretty much the same way.
 These facilities are declared in the header file @file{unistd.h}.
@@ -968,7 +969,8 @@ new process image.
 The @var{argv} argument is an array of null-terminated strings that is
 used to provide a value for the @code{argv} argument to the @code{main}
 function of the program to be executed.  The last element of this array
-must be a null pointer.
+must be a null pointer.  @xref{Program Arguments}, for information on
+how programs can access these arguments.
 
 The environment for the new process image is taken from the
 @code{environ} variable of the current process image; @pxref{Environment
