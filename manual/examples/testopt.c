@@ -10,24 +10,30 @@ main (int argc, char **argv)
   int index;
   int c;
 
+  opterr = 0;
+
   while ((c = getopt (argc, argv, "abc:")) >= 0)
     switch (c)
       {
       case 'a':
-	aflag = 1;
-	break;
+        aflag = 1;
+        break;
       case 'b':
-	bflag = 1;
-	break;
+        bflag = 1;
+        break;
       case 'c':
-	cvalue = optarg;
-	break;
+        cvalue = optarg;
+        break;
       case '?':
-	fprintf (stderr, "Unknown option %c.\n", optopt);
-	return -1;
+        if (isprint (optopt))
+          fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+        else
+          fprintf (stderr,
+                   "Unknown option character `\\x%x'.\n",
+                   optopt);
+        return -1;
       default:
-	fprintf (stderr, "This should never happen!\n");
-	return -1;
+        abort ();
       }
 
   printf ("aflag = %d, bflag = %d, cvalue = %s\n", aflag, bflag, cvalue);
