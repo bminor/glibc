@@ -1,3 +1,8 @@
+1999-12-07  Scott Bambrough <scottb@netwinder.org>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): Fixup R_ARM_PC24
+	relocs if possible.
+
 1999-12-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/ansi_x3.110.c (from_ansi_x3_110): Don't increment
