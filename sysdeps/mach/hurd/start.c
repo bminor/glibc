@@ -43,8 +43,7 @@ extern int main (int argc, char **argv, char **envp);
 void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
 __NORETURN void (*_cthread_exit_routine) (int status);
 
-static int split_args (char *, size_t, char **);
-
+int _hurd_split_args (char *, size_t, char **);
 
 /* These communicate values from _start to start1,
    where we cannot use the stack for anything.  */
@@ -57,131 +56,17 @@ static char **argv, **envp;
 static int argc;
 
 
-static __NORETURN void
-start1 (void)
-{
-  register int envc = 0;
-
-  {
-    /* Check if the stack we are now on is different from
-       the one described by _hurd_stack_{base,size}.  */
-
-    char dummy;
-    const vm_address_t newsp = (vm_address_t) &dummy;
-
-    if (_hurd_stack_size != 0 && (newsp < _hurd_stack_base ||
-				  newsp - _hurd_stack_base > _hurd_stack_size))
-      /* The new stack pointer does not intersect with the
-	 stack the exec server set up for us, so free that stack.  */
-      __vm_deallocate (__mach_task_self (),
-		       _hurd_stack_base, _hurd_stack_size);
-  }
+static __NORETURN void start1 (void);
 
 
-  /* Turn the block of null-separated strings we were passed for the
-     arguments and environment into vectors of pointers to strings.  */
-      
-  if (! argv)
-    {
-      if (args)
-	/* Count up the arguments so we can allocate ARGV.  */
-	argc = split_args (args, argslen, NULL);
-      if (! args || argc == 0)
-	{
-	  /* No arguments passed; set argv to { NULL }.  */
-	  argc = 0;
-	  args = NULL;
-	  argv = (char **) &args;
-	}
-    }
+/* Entry point.  This is the first thing in the text segment.
 
-  if (! envp)
-    {
-      if (env)
-	/* Count up the environment variables so we can allocate ENVP.  */
-	envc = split_args (env, envlen, NULL);
-      if (! env || envc == 0)
-	{
-	  /* No environment passed; set __environ to { NULL }.  */
-	  env = NULL;
-	  envp = (char **) &env;
-	}
-    }
-
-  if (! argv)
-    {
-      /* There were some arguments.
-	 Allocate space for the vectors of pointers and fill them in.  */
-      argv = __alloca ((argc + 1) * sizeof (char *));
-      split_args (args, argslen, argv);
-    }
-  
-  if (! envp)
-    {
-      /* There was some environment.
-	 Allocate space for the vectors of pointers and fill them in.  */
-      envp = __alloca ((envc + 1) * sizeof (char *));
-      split_args (env, envlen, envp);
-    }
-
-  __environ = envp;
-
-  if (portarray || intarray)
-    /* Initialize library data structures, start signal processing, etc.  */
-    _hurd_init (flags, argv, portarray, portarraysize, intarray, intarraysize);
-
-  /* Random library initialization.  These functions may assume that
-     _hurd_init has already run (if it is going to), and POSIX.1 facilities
-     are initialized and available.  */
-  __libc_init (argc, argv, __environ);
-
-  /* Finally, run the user program.  */
-  (_cthread_exit_routine != NULL ? *_cthread_exit_routine : exit)
-    (main (argc, argv, __environ));
-
-  /* Should never get here.  */
-  LOSE;
-}
-
-/* Split ARGSLEN bytes at ARGS into words, breaking at NUL characters.  If
-   ARGV is not a null pointer, store a pointer to the start of each word in
-   ARGV[n], and null-terminate ARGV.  Return the number of words split.  */
-
-static int
-split_args (char *args, size_t argslen, char **argv)
-{
-  char *p = args;
-  size_t n = argslen;
-  int argc = 0;
-
-  while (n > 0)
-    {
-      char *end = memchr (p, '\0', n);
-
-      if (argv)
-	argv[argc] = p;
-      ++argc;
-
-      if (end == NULL)
-	/* The last argument is unterminated.  */
-	break;
-
-      n -= end + 1 - p;
-      p = end + 1;
-    }
-
-  if (argv)
-    argv[argc] = NULL;
-  return argc;
-}
-
-
-/* Entry point.  The exec server started the initial thread in our task with
-   this spot the PC, and a stack that is presumably big enough.  We do basic
-   Mach initialization so mig-generated stubs work, and then do an exec_startup
+   The exec server started the initial thread in our task with this spot the
+   PC, and a stack that is presumably big enough.  We do basic Mach
+   initialization so mig-generated stubs work, and then do an exec_startup
    RPC on our bootstrap port, to which the exec server responds with the
-   information passed in the exec call, as well as our original bootstrap port,
-   and the base address and size of the preallocated stack.
+   information passed in the exec call, as well as our original bootstrap
+   port, and the base address and size of the preallocated stack.
 
    If using cthreads, we are given a new stack by cthreads initialization and
    deallocate the stack set up by the exec server.  On the new stack we call
@@ -257,4 +142,123 @@ _start (void)
 
   /* Should never get here.  */
   LOSE;
+}
+
+
+static __NORETURN void
+start1 (void)
+{
+  register int envc = 0;
+
+  {
+    /* Check if the stack we are now on is different from
+       the one described by _hurd_stack_{base,size}.  */
+
+    char dummy;
+    const vm_address_t newsp = (vm_address_t) &dummy;
+
+    if (_hurd_stack_size != 0 && (newsp < _hurd_stack_base ||
+				  newsp - _hurd_stack_base > _hurd_stack_size))
+      /* The new stack pointer does not intersect with the
+	 stack the exec server set up for us, so free that stack.  */
+      __vm_deallocate (__mach_task_self (),
+		       _hurd_stack_base, _hurd_stack_size);
+  }
+
+
+  /* Turn the block of null-separated strings we were passed for the
+     arguments and environment into vectors of pointers to strings.  */
+      
+  if (! argv)
+    {
+      if (args)
+	/* Count up the arguments so we can allocate ARGV.  */
+	argc = _hurd_split_args (args, argslen, NULL);
+      if (! args || argc == 0)
+	{
+	  /* No arguments passed; set argv to { NULL }.  */
+	  argc = 0;
+	  args = NULL;
+	  argv = (char **) &args;
+	}
+    }
+
+  if (! envp)
+    {
+      if (env)
+	/* Count up the environment variables so we can allocate ENVP.  */
+	envc = _hurd_split_args (env, envlen, NULL);
+      if (! env || envc == 0)
+	{
+	  /* No environment passed; set __environ to { NULL }.  */
+	  env = NULL;
+	  envp = (char **) &env;
+	}
+    }
+
+  if (! argv)
+    {
+      /* There were some arguments.
+	 Allocate space for the vectors of pointers and fill them in.  */
+      argv = __alloca ((argc + 1) * sizeof (char *));
+      _hurd_split_args (args, argslen, argv);
+    }
+  
+  if (! envp)
+    {
+      /* There was some environment.
+	 Allocate space for the vectors of pointers and fill them in.  */
+      envp = __alloca ((envc + 1) * sizeof (char *));
+      _hurd_split_args (env, envlen, envp);
+    }
+
+  __environ = envp;
+
+  if (portarray || intarray)
+    /* Initialize library data structures, start signal processing, etc.  */
+    _hurd_init (flags, argv, portarray, portarraysize, intarray, intarraysize);
+
+  /* Random library initialization.  These functions may assume that
+     _hurd_init has already run (if it is going to), and POSIX.1 facilities
+     are initialized and available.  */
+  __libc_init (argc, argv, __environ);
+
+  /* Finally, run the user program.  */
+  (_cthread_exit_routine != NULL ? *_cthread_exit_routine : exit)
+    (main (argc, argv, __environ));
+
+  /* Should never get here.  */
+  LOSE;
+}
+
+/* Split ARGSLEN bytes at ARGS into words, breaking at NUL characters.  If
+   ARGV is not a null pointer, store a pointer to the start of each word in
+   ARGV[n], and null-terminate ARGV.  Return the number of words split.  */
+
+int
+_hurd_split_args (char *args, size_t argslen, char **argv)
+{
+  char *p = args;
+  size_t n = argslen;
+  int argc = 0;
+
+  while (n > 0)
+    {
+      char *end = memchr (p, '\0', n);
+
+      if (argv)
+	argv[argc] = p;
+      ++argc;
+
+      if (end == NULL)
+	/* The last argument is unterminated.  */
+	break;
+
+      n -= end + 1 - p;
+      p = end + 1;
+    }
+
+  if (argv)
+    argv[argc] = NULL;
+  return argc;
 }
