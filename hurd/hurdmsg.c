@@ -19,78 +19,91 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include "hurd/msg_server.h"
 
-error_t
-__get_init_port (mach_port_t msgport, mach_port_t auth,
-		 int which, mach_port_t *port)
-{
-  if (auth != mach_task_self () && ! __USEPORT (AUTH, port == auth))
-    return EPERM;
 
-  switch (which)
-    {
-    case INIT_PORT_CWDIR:
-      *port = get (&_hurd_cwdir);
-      return 0;
-    case INIT_PORT_CRDIR:
-      *port = get (&_hurd_crdir);
-      return 0;
-    case INIT_PORT_PROC:
-      *port = get (&_hurd_proc);
-      return 0;
-    case INIT_PORT_AUTH:
-      *port = get (&_hurd_auth);
-      return 0;
-    case INIT_PORT_LOGINCOLL:
-      return EOPNOTSUPP;	/* XXX */
-    case INIT_PORT_BOOTSTRAP:
-      return __task_get_special_port (__mach_task_self (),
-				      TASK_BOOTSTRAP_PORT,
-				      port);
-    default:
-      return EINVAL;
-    }
+#define AUTHCHECK \
+  if (auth != mach_task_self () && ! __USEPORT (AUTH, port == auth)) \
+    return EPERM
+
+
+/* Snarfing and frobbing the init ports.  */
+
+error_t
+_S_get_init_port (mach_port_t msgport, mach_port_t auth,
+		  int which, mach_port_t *result)
+{
+  AUTHCHECK;
+  /* This function adds a new user reference for the *RESULT it gives back.
+     Our reply message uses a move-send right that consumes this reference.  */
+  return _hurd_ports_get (which, result);
 }
 
 error_t
-__set_init_port (mach_port_t msgport, mach_port_t auth,
-		 int which, mach_port_t port)
+_S_set_init_port (mach_port_t msgport, mach_port_t auth,
+		  int which, mach_port_t port)
 {
-  if (auth != mach_task_self () && ! __USEPORT (AUTH, port == auth))
-    return EPERM;
+  AUTHCHECK;
 
-  switch (which)
-    {
-    case INIT_PORT_CWDIR:
-      set (&_hurd_cwdir);
-      return 0;
-    case INIT_PORT_CRDIR:
-      set (&_hurd_crdir);
-      return 0;
-    case INIT_PORT_PROC:
-      set (&_hurd_proc); /* XXX do more? */
-      return 0;
-    case INIT_PORT_AUTH:
-      __setauth (&_hurd_auth);
-      return errno;		/* XXX can't clobber errno */
-    case INIT_PORT_LOGINCOLL:
-      return EOPNOTSUPP;	/* XXX */
-    case INIT_PORT_BOOTSTRAP:
-      return __task_set_special_port (__mach_task_self (),
-				      TASK_BOOTSTRAP_PORT,
-				      port);
-    default:
-      return EINVAL;
-    }
+  /* This function consumes a user reference for the PORT send right,
+     if it is successful.  */
+  return _hurd_ports_set (which, port);
 }
 
 error_t
-__get_init_int (mach_port_t msgport, mach_port_t auth,
-		int which, int *value)
+_S_get_init_ports (mach_port_t msgport, mach_port_t auth,
+		   mach_port_t **ports,
+		   mach_msg_type_name_t *ports_type,
+		   unsigned int *nports)
 {
-  if (task != mach_task_self () &&
-      _HURD_PORT_USE (&_hurd_auth, auth != port))
-    return EPERM;
+  unsigned int i;
+  error_t err;
 
+  AUTHCHECK;
+
+  if (err = __vm_allocate (__mach_task_self (), (vm_address_t *) ports,
+			   _hurd_nports * sizeof (mach_port_t), 1))
+    return err;
+  *nports = _hurd_nports;
+
+  for (i = 0; i < _hurd_nports; ++i)
+    /* This function adds a new user ref for the *RESULT it gives back.
+       Our reply message uses move-send rights that consumes this ref.  */
+    if (err = _hurd_ports_get (i, &(*ports)[i]))
+      {
+	/* Died part way through.  Deallocate the ports already fetched.  */
+	while (i-- > 0)
+	  __mach_port_deallocate (__mach_task_self (), (*ports)[i]);
+	__vm_deallocate (__mach_task_self (),
+			 (vm_address_t) *ports,
+			 *nports * sizeof (mach_port_t));
+	return err;
+      }
+
+  *ports_type = MACH_MSG_TYPE_MOVE_SEND;
+  return 0;
+}
+
+error_t
+_S_set_init_ports (mach_port_t msgport, mach_port_t auth,
+		   mach_port_t *ports, unsigned int nports)
+{
+  unsigned int i;
+  error_t err;
+
+  AUTHCHECK;
+
+  for (i = 0; i < _hurd_nports; ++i)
+    /* This function consumes a user reference for the send right.  */
+    if (err = _hurd_ports_set (i, ports[i]))
+      return err;
+
+  return 0;
+}
+
+/* Snarfing and frobbing the init ints.  */
+
+static error_t
+get_int (int which, int *value)
+{
   switch (which)
     {
     case INIT_UMASK:
@@ -100,6 +113,13 @@ __get_init_int (mach_port_t msgport, mach_port_t auth,
       {
 	struct _hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
 	*value = ss->blocked;
+	__mutex_unlock (&ss->lock);
+	return 0;
+      }
+    case INIT_SIGPENDING:
+      {
+	struct _hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
+	*value = ss->pending;
 	__mutex_unlock (&ss->lock);
 	return 0;
       }
@@ -116,8 +136,215 @@ __get_init_int (mach_port_t msgport, mach_port_t auth,
 	*value = ign;
 	return 0;
       }
-      /* XXX ctty crap */
     default:
       return EINVAL;
     }
 }
+
+error_t
+_S_get_init_int (mach_port_t msgport, mach_port_t auth,
+		 int which, int *value)
+{
+  AUTHCHECK;
+
+  return get_int (which, value);
+}
+
+error_t
+_S_get_init_ints (mach_port_t msgport, mach_port_t auth,
+		  int **values, unsigned int *nvalues)
+{
+  error_t;
+  unsigned int i;
+
+  AUTHCHECK;
+
+  if (err = __vm_allocate (__mach_task_self (), (vm_address_t *) values,
+			   INIT_INT_MAX * sizeof (int), 1))
+    return err;
+  *nvalues = INIT_INT_MAX;
+
+  for (i = 0; i < INIT_INT_MAX)
+    switch (err = get_int (i, &(*values)[i]))
+      {
+      case 0:			/* Success.  */
+	break;
+      case EINVAL:		/* Unknown index.  */
+	(*values)[i] = 0;
+	break;
+      default:			/* Lossage.  */
+	__vm_deallocate (__mach_task_self (),
+			 (vm_address_t) *values, INIT_INT_MAX * sizeof (int));
+	return err;
+      }
+
+  return 0;
+}
+
+
+static error_t
+set_int (int which, int value)
+{
+  switch (which)
+    {
+    case INIT_UMASK:
+      _hurd_umask = value;
+      return 0;
+
+      /* These are pretty odd things to do.  But you asked for it.  */
+    case INIT_SIGMASK:
+      {
+	struct _hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
+	ss->blocked = value;
+	__mutex_unlock (&ss->lock);
+	return 0;
+      }
+    case INIT_SIGPENDING:
+      {
+	struct _hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
+	ss->pending = value;
+	__mutex_unlock (&ss->lock);
+	return 0;
+      }
+    case INIT_SIGIGN:
+      {
+	struct _hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
+	int sig;
+	const sigset_t ign = value;
+	for (sig = 1; sig < NSIG; ++sig)
+	  {
+	    if (__sigismember (&ign, sig))
+	      ss->actions[sig].sa_handler = SIG_IGN;
+	    else if (ss->actions[sig].sa_handler == SIG_IGN)
+	      ss->actions[sig].sa_handler = SIG_DFL;
+	  }
+	__mutex_unlock (&ss->lock);
+	return 0;
+      }
+    default:
+      return EINVAL;
+    }
+}
+
+error_t
+_S_set_init_int (mach_port_t msgport, mach_port_t auth,
+		 int which, int value)
+{
+  AUTHCHECK;
+
+  return set_int (which, value);
+}
+
+error_t
+_S_set_init_ints (mach_port_t msgport, mach_port_t auth,
+		  const int *values, unsigned int nvalues)
+{
+  error_t;
+  unsigned int i;
+
+  AUTHCHECK;
+
+  for (i = 0; i < INIT_INT_MAX)
+    switch (err = set_int (i, values[i]))
+      {
+      case 0:			/* Success.  */
+	break;
+      case EINVAL:		/* Unknown index.  */
+	break;
+      default:			/* Lossage.  */
+	return err;
+      }
+
+  return 0;
+}
+
+
+error_t
+_S_get_fd (mach_port_t msgport, mach_port_t auth,
+	   int which, mach_port_t *result)
+{
+  AUTHCHECK;
+
+  *result = __getdport (which);
+  if (*result == MACH_PORT_NULL)
+    return errno;
+  return 0;
+}
+
+error_t
+_S_set_fd (mach_port_t msgport, mach_port_t auth,
+	   int which, mach_port_t port)
+{
+  AUTHCHECK;
+
+  return HURD_FD_USE (which, (_hurd_port2fd (descriptor, port, 0), 0));
+}
+
+/* Snarfing and frobbing environment variables.  */
+
+error_t
+_S_get_env_variable (mach_port_t msgport,
+		     const char *variable,
+		     char **data, unsigned int *datalen)
+{
+  const char *value = getenv (variable);
+
+  if (value == NULL)
+    return ENOENT;
+
+  *data = value;
+  *datalen = strlen (value);
+  return 0;
+}
+
+
+error_t
+_S_set_env_variable (mach_port_t msgport, mach_port_t auth,
+		     const char *variable,
+		     char *value,
+		     int replace)
+{
+  AUTHCHECK;
+
+  if (setenv (variable, value, replace)) /* XXX name space */
+    return errno;
+  return 0;
+}
+
+error_t
+_S_get_environment (mach_port_t msgport,
+		    char **data, unsigned int *datalen)
+{
+  int envc;
+  char **envp;
+
+}
+
+error_t
+_S_set_environment (mach_port_t msgport, mach_port_t auth,
+		    char *data, unsigned int datalen)
+{
+  int envc;
+  char **envp;
+
+  AUTHCHECK;
+
+  envc = _hurd_split_args (data, datalen, NULL);
+  envp = malloc ((envc + 1) * sizeof (char *));
+  if (envp == NULL)
+    return errno;
+  _hurd_split_args (data, datalen, envc);
+  __environ = envp;		/* XXX cooperate with loadenv et al */
+  return 0;
+}
+
+
+
+/* XXX */
+#define STUB(fn) error_t fn (mach_port_t port) { return EOPNOTSUPP; }
+
+STUB(_S_get_dtable)
+STUB(_S_set_dtable)
+STUB(_S_io_select_done)
+STUB(_S_startup_dosync)
+
