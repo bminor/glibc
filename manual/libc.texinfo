@@ -8,7 +8,7 @@
 @ifinfo
 This file documents the GNU C library.
 
-Copyright (C) 1990 Free Software Foundation, Inc.
+Copyright (C) 1992 Free Software Foundation, Inc.
 
 This will be free information when it is finished, but isn't finished yet.
 @end ifinfo
@@ -24,12 +24,12 @@ This will be free information when it is finished, but isn't finished yet.
 @center with
 @center Roland McGrath, Andrew Oram, and Richard M. Stallman
 @sp 3
-@center last updated Aug 30, 1991
+@center last updated January 10, 1992
 @sp 1
 @center for version 0.00
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1991 Free Software Foundation, Inc.
+Copyright @copyright{} 1992 Free Software Foundation, Inc.
 @end titlepage
 @page
 
@@ -108,8 +108,8 @@ Appendices
                                          feature.
 * Maintenance:: 			How to install and maintain the
                                          GNU C Library.
-* Copying::			        The GNU General Public License says
-				         how you can copy and share the
+* Copying::			        The GNU Library General Public License
+                                         says how you can copy and share the
                                          GNU C Library.
 
 Indices
@@ -152,7 +152,9 @@ Indices
 
 @include header.texinfo
 @include maint.texinfo
-@include copying.texinfo
+
+@node Copying, Concept Index, Maintenance, Top
+@include lgpl.texinfo
 
 @node Concept Index
 @unnumbered Concept Index
