@@ -39,6 +39,8 @@
 
 #define __XDR_HEADER__
 #include <features.h>
+#include <sys/types.h>
+#include <rpc/types.h>
 
 /* We need FILE.  */
 #include <stdio.h>
