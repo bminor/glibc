@@ -91,8 +91,15 @@ static __NORETURN void start1 (void);
    This is unfortunate but preferable to machine-dependent frobnication to copy
    the state from the old stack to the new one.  */
 
+#ifndef START_ARGS
+#define START_ARGS void
+#ifdef START_MACHDEP
+START_MACHDEP
+#define _start _start0
+#endif
+
 __NORETURN void
-_start (void)
+_start (START_ARGS)
 {
   error_t err;
   mach_port_t in_bootstrap;

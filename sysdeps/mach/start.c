@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -65,9 +65,15 @@ start1 (void)
   LOSE;
 }
 
+#ifndef START_ARGS
+#define START_ARGS void
+#ifdef START_MACHDEP
+START_MACHDEP
+#define _start _start0
+#endif
 
 void
-_start (void)
+_start (START_ARGS)
 {
   SNARF_ARGS (start_argc, start_argv, __environ);
 
