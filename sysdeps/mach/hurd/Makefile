@@ -105,6 +105,6 @@ $(objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 
 $(hurd)/errlist.c: $(hurd)/errlist.awk $(errno.texinfo)
 	gawk -f $^ > $@-tmp
-	mv $@-tmp $@
+	mv -f $@-tmp $@
 
 endif	# in-Makerules
