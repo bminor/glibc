@@ -12,6 +12,7 @@ register void *__thread_self __asm ("g7");
 #include <fcntl.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <elf.h>
 
 #define verbose_exec(failcode, path...) \
   do							\
@@ -24,6 +25,7 @@ __attribute__((noinline)) void vexec (int failcode, char *const path[]);
 __attribute__((noinline)) void says (const char *str);
 __attribute__((noinline)) void sayn (long num);
 __attribute__((noinline)) void message (char *const path[]);
+__attribute__((noinline)) int check_elf (const char *name);
 
 int
 main (void)
@@ -89,7 +91,7 @@ main (void)
     {
       char p[ldsocst.st_size + 1];
       if (read (ldsocfd, p, ldsocst.st_size) == ldsocst.st_size)
-        {
+	{
 	  p[ldsocst.st_size] = '\0';
 	  if (strstr (p, "include ld.so.conf.d/*.conf") == NULL)
 	    {
@@ -104,7 +106,7 @@ main (void)
 		    _exit (109);
 		}
 	    }
-        }
+	}
       if (ldsocfd >= 0)
 	close (ldsocfd);
     }
@@ -163,14 +165,16 @@ main (void)
       readlink ("/proc/1/root", initpath, 256) <= 0)
     _exit (0);
 
-  verbose_exec (116, "/sbin/telinit", "/sbin/telinit", "u");
+  if (check_elf ("/proc/1/exe"))
+    verbose_exec (116, "/sbin/telinit", "/sbin/telinit", "u");
 
   /* Check if we can safely condrestart sshd.  */
   if (access ("/sbin/service", X_OK) == 0
       && access ("/usr/sbin/sshd", X_OK) == 0
       && access ("/bin/bash", X_OK) == 0)
     {
-	 verbose_exec (121, "/sbin/service", "/sbin/service", "sshd", "condrestart");
+      if (check_elf ("/usr/sbin/sshd"))
+	verbose_exec (121, "/sbin/service", "/sbin/service", "sshd", "condrestart");
     }
 
   _exit(0);
@@ -200,7 +204,7 @@ struct startup_info
 
 int
 __libc_start_main (int argc, char **ubp_av, char **ubp_ev,
-                   void *auxvec, void (*rtld_fini) (void),
+		   void *auxvec, void (*rtld_fini) (void),
 		   struct startup_info *stinfo,
 		   char **stack_on_entry)
 #endif
@@ -288,8 +292,8 @@ sayn (long num)
   else
     while (num)
       {
-        *--p = '0' + num % 10;
-        num = num / 10;
+	*--p = '0' + num % 10;
+	num = num / 10;
       }
 
   says (p);
@@ -300,4 +304,51 @@ message (char *const path[])
 {
   says ("/usr/sbin/glibc_post_upgrade: While trying to execute ");
   says (path[0]);
+}
+
+int
+check_elf (const char *name)
+{
+  /* Play safe, if we can't open or read, assume it might be
+     ELF for the current arch.  */
+  int ret = 1;
+  int fd = open (name, O_RDONLY);
+  if (fd >= 0)
+    {
+      Elf32_Ehdr ehdr;
+      if (read (fd, &ehdr, offsetof (Elf32_Ehdr, e_version))
+	  == offsetof (Elf32_Ehdr, e_version))
+	{
+	  ret = 0;
+	  if (ehdr.e_ident[EI_CLASS]
+	      == (sizeof (long) == 8 ? ELFCLASS64 : ELFCLASS32))
+	    {
+#if defined __i386__
+	      ret = ehdr.e_machine == EM_386;
+#elif defined __x86_64__
+	      ret = ehdr.e_machine == EM_X86_64;
+#elif defined __ia64__
+	      ret = ehdr.e_machine == EM_IA_64;
+#elif defined __powerpc64__
+	      ret = ehdr.e_machine == EM_PPC64;
+#elif defined __powerpc__
+	      ret = ehdr.e_machine == EM_PPC;
+#elif defined __s390__ || defined __s390x__
+	      ret = ehdr.e_machine == EM_S390;
+#elif defined __x86_64__
+	      ret = ehdr.e_machine == EM_X86_64;
+#elif defined __sparc__
+	      if (sizeof (long) == 8)
+		ret = ehdr.e_machine == EM_SPARCV9;
+	      else
+		ret = (ehdr.e_machine == EM_SPARC
+		       || ehdr.e_machine == EM_SPARC32PLUS);
+#else
+	      ret = 1;
+#endif
+	    }
+	}
+      close (fd);
+    }
+  return ret;
 }
