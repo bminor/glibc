@@ -24,8 +24,10 @@ Cambridge, MA 02139, USA.  */
 volatile void
 _hurd_exit (int status)
 {
+#ifdef notyet
   /* Give the proc server our exit status.  */
   _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC], __proc_exit (port, status));
+#endif
 
   /* Commit suicide.  */
   __task_terminate (__mach_task_self ());
