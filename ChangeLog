@@ -1,3 +1,8 @@
+1998-07-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/glob.c: Fix two problems with GLOB_DOOFFS.
+	Reported by bwelling@anomaly.munge.com [PR libc/720].
+
 1998-07-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/Dist: Add sys/elf.h, sys/procfs.h,
