@@ -26,8 +26,8 @@
 /*
  * HISTORY
  * $Log$
- * Revision 1.1  1991/10/23 12:49:45  roland
- * Initial revision
+ * Revision 1.2  1993/08/03 06:13:18  roland
+ * entered into RCS
  *
  * Revision 2.4  91/05/14  17:53:15  mrt
  * 	Correcting copyright
@@ -41,9 +41,14 @@
  * 
  */
 
+#if 1
+#include <mach.h>
+#else
+/* This is what CMU did, but that fails to declare some used functions.  */
 #include <mach/port.h>
 #include <mach/message.h>
 #include <mach_init.h>
+#endif
 
 static void mach_msg_destroy_port();
 static void mach_msg_destroy_memory();
