@@ -45,7 +45,7 @@ _hurd_exec (task_t task, file_t file,
   struct hurd_userlink *ulink_dtable, *ulink_dtable_ctty;
   int i;
   char *const *p;
-  struct _hurd_sigstate *ss;
+  struct hurd_sigstate *ss;
   mach_port_t *please_dealloc, *pdp;
 
 
@@ -133,7 +133,7 @@ _hurd_exec (task_t task, file_t file,
       dtable_ctty_cells = __alloca (dtablesize * sizeof (dtable_cells[0]));
       for (i = 0; i < dtablesize; ++i)
 	{
-	  struct _hurd_fd *const d = _hurd_dtable.d[i];
+	  struct hurd_fd *const d = _hurd_dtable.d[i];
 	  __spin_lock (&d->port.lock);
 	  if (pdp && d->port.port != MACH_PORT_NULL)
 	    *pdp++ = d->port.port;
@@ -205,7 +205,7 @@ _hurd_exec (task_t task, file_t file,
   for (i = 0; i < _hurd_nports; ++i)
     _hurd_port_free (&_hurd_ports[i], &ulink_ports[i], ports[i]);
 
-  if (dealloc_dtable != NULL)
+  if (ulink_dtable != NULL)
     /* Release references to the file descriptor ports.  */
     for (i = 0; i < dtablesize; ++i)
       if (dtable[i] != MACH_PORT_NULL)
