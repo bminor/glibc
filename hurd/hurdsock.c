@@ -27,13 +27,7 @@ Cambridge, MA 02139, USA.  */
 #include "stdio/_itoa.h"
 
 #ifdef noteven
-static struct mutex lock;
-static void
-init_sock (void)
-{
-  __mutex_init (&lock);
-}
-text_set_element (__libc_subinit, init_sock);
+static struct mutex lock = MUTEX_INITIALIZER;
 #endif
 
 static file_t *servers;
