@@ -1,3 +1,8 @@
+2000-03-29  Jes Sorensen  <jes@pcatls01.cern.ch>
+
+	* malloc/malloc.c: Declare bit flags UL so that they will not
+	default to int size when being inverted.
+
 2000-03-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getopt.c (_getopt_internal): Return -1 if argc < 1.
