@@ -30,13 +30,13 @@ typedef struct { long val[2]; } __quad;
 typedef struct { __u_long val[2]; } __u_quad;
 
 typedef short int __dev_t;		/* Type of device numbers.  */
-typedef unsigned short int __gid_t;	/* Type of group identifications.  */
+typedef unsigned int __uid_t;		/* Type of user identifications.  */
+typedef unsigned int __gid_t;		/* Type of group identifications.  */
 typedef unsigned long int __ino_t;	/* Type of file serial numbers.  */
 typedef unsigned short int __mode_t;	/* Type of file attribute bitmasks.  */
 typedef unsigned short int __nlink_t;	/* Type of file link counts.  */
 typedef long int __off_t;		/* Type of file sizes and offsets.  */
 typedef int __pid_t;			/* Type of process identifications.  */
-typedef unsigned short int __uid_t;	/* Type of user identifications.  */
 typedef int __ssize_t;			/* Type of a byte count, or error.  */
 
 
