@@ -1,5 +1,8 @@
 1999-08-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* timezone/tst-timezone.c (tests): Update America/Sao_Paulo test
+	case for new tzdata.
+
 	* sysdeps/libm-ieee754/s_erf.c: Correct type in performance increase
 	rewrite.  Patch by Alan Stern <stern@kitsilano.rowland.org>.
 
