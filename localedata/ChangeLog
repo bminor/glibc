@@ -1,3 +1,9 @@
+1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* charmaps/ISIRI-3342: New file.
+	* locales/fa_IR: New file.
+	Contributed by Roozbeh Pournader <roozbeh@sina.sharif.ac.ir>.
+
 1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* repertoiremaps/mnemonic.ds: Add U066A, UFE80, UFE81, UFE83,
