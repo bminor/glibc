@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,8 +18,10 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <errno.h>
-#include <sys/socket.h>
 #include <hurd.h>
+#include <hurd/fd.h>
+#include <sys/socket.h>
+#include <hurd/socket.h>
 
 /* Await a connection on socket FD.
    When a connection arrives, open a new socket to communicate with it,
@@ -33,7 +35,7 @@ DEFUN(accept, (fd, addr, addr_len),
   socket_t new;
   addr_port_t aport;
   int d;
-  error_t err = _HURD_DPORT_USE (fd, __socket_accept (port, &new, &aport));
+  error_t err = HURD_DPORT_USE (fd, __socket_accept (port, &new, &aport));
   if (err)
     return __hurd_dfail (fd, err);
   if (addr != NULL)
@@ -45,5 +47,5 @@ DEFUN(accept, (fd, addr, addr_len),
       return __hurd_dfail (fd, err);
     }
 
-  return _hurd_intern_fd (new, 0, 1);
+  return _hurd_intern_fd (new, O_IGNORE_CTTY, 1);
 }
