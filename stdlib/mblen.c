@@ -46,7 +46,7 @@ mblen (const char *s, size_t n)
       /* Reset the state.  */
       memset (&state, '\0', sizeof state);
 
-      result = __wcsmbs_gconv_fcts.towc->__stateful;
+      result = __wcsmbs_gconv_fcts.towc->stateful;
     }
   else if (*s == '\0')
     /* According to the ISO C 89 standard this is the expected behaviour.  */

@@ -50,7 +50,7 @@ mbtowc (wchar_t *pwc, const char *s, size_t n)
 	 violate ISO C.  */
       memset (&__no_r_state, '\0', sizeof __no_r_state);
 
-      result = __wcsmbs_gconv_fcts.towc->__stateful;
+      result = __wcsmbs_gconv_fcts.towc->stateful;
     }
   else if (*s == '\0')
     {

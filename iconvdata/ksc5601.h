@@ -54,14 +54,14 @@ ksc5601_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 
   if (ch < offset || (ch - offset) <= 0x20 || (ch - offset) >= 0x7e
       || (ch - offset) == 0x49)
-    return __UNKNOWN_10646_CHAR;
+    return UNKNOWN_10646_CHAR;
 
   if (avail < 2)
     return 0;
 
   ch2 = (*s)[1];
   if (ch2 < offset || (ch2 - offset) <= 0x20 || (ch2 - offset) >= 0x7f)
-    return __UNKNOWN_10646_CHAR;
+    return UNKNOWN_10646_CHAR;
 
   idx = (ch - offset - 0x21) * 94 + (ch2 - offset - 0x21);
 
@@ -72,15 +72,15 @@ ksc5601_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 
   if (idx >= 1410 && idx < 1410 + KSC5601_HANGUL)
     return (__ksc5601_hangul_to_ucs[idx - 1410]
-	    ?: ((*s) -= 2, __UNKNOWN_10646_CHAR));
+	    ?: ((*s) -= 2, UNKNOWN_10646_CHAR));
   else if (idx >= 3854)
     /* Hanja : row 42 - row 93 : 3854 = 94 * (42-1) */
    return (__ksc5601_hanja_to_ucs[idx - 3854]
-	   ?: ((*s) -= 2, __UNKNOWN_10646_CHAR));
+	   ?: ((*s) -= 2, UNKNOWN_10646_CHAR));
   else if (idx <= 1114)
-    return __ksc5601_sym_to_ucs[idx] ?: ((*s) -= 2, __UNKNOWN_10646_CHAR);
+    return __ksc5601_sym_to_ucs[idx] ?: ((*s) -= 2, UNKNOWN_10646_CHAR);
 
-  return __UNKNOWN_10646_CHAR;
+  return UNKNOWN_10646_CHAR;
 }
 
 static inline size_t
@@ -110,7 +110,7 @@ ucs4_to_ksc5601_hangul (uint32_t wch, unsigned char *s, size_t avail)
 	}
     }
 
-  return __UNKNOWN_10646_CHAR;
+  return UNKNOWN_10646_CHAR;
 }
 
 
@@ -141,7 +141,7 @@ ucs4_to_ksc5601_hanja (uint32_t wch, unsigned char *s, size_t avail)
 	}
     }
 
-  return __UNKNOWN_10646_CHAR;
+  return UNKNOWN_10646_CHAR;
 }
 
 static inline  size_t
@@ -171,7 +171,7 @@ ucs4_to_ksc5601_sym (uint32_t wch, unsigned char *s, size_t avail)
 	}
     }
 
-  return __UNKNOWN_10646_CHAR;
+  return UNKNOWN_10646_CHAR;
 }
 
 
