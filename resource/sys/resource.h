@@ -23,34 +23,8 @@ Cambridge, MA 02139, USA.  */
 
 __BEGIN_DECLS
 
-
-/* Kinds of resource limit.  */
-enum __rlimit_resource
-  {
-    /* Per-process CPU limit, in seconds.  */
-    RLIMIT_CPU,
-    /* Largest file that can be created, in bytes.  */
-    RLIMIT_FSIZE,
-    /* Maximum size of data segment, in bytes.  */
-    RLIMIT_DATA,
-    /* Maximum size of stack segment, in bytes.  */
-    RLIMIT_STACK,
-    /* Largest core file that can be created, in bytes.  */
-    RLIMIT_CORE,
-    /* Largest resident set size, in bytes.
-       This affects swapping; processes that are exceeding their
-       resident set size will be more likely to have physical memory
-       taken from them.  */
-    RLIMIT_RSS,
-    /* Locked-in-memory address space.  */
-    RLIMIT_MEMLOCK,
-    /* Number of processes,  */
-    RLIMIT_NPROC,
-    /* Number of open files.  */
-    RLIMIT_OFILE,
-
-    RLIM_NLIMITS
-    };
+/* Get the system-dependent definitions of RLIM_*.  */
+#include <resourcebits.h>
 
 struct rlimit
   {
