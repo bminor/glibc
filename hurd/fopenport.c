@@ -45,7 +45,7 @@ __fopenport (mach_port_t port, const char *mode)
     return __hurd_fail (err), NULL;
 
   /* Check the access mode.  */
-  if ((pflags & O_READ && !m.__read) || (pflags & O_WRITE && !m.__write))
+  if ((m.__read && !(pflags & O_READ)) || (m.__write && !(pflags & O_WRITE)))
     {
       errno = EBADF;		/* XXX ? */
       return NULL;
