@@ -13,8 +13,6 @@ geteuid		-	geteuid		0	__geteuid	geteuid
 getpgid		-	getpgid		1	__getpgid	getpgid
 getpgrp		-	getpgrp		0	getpgrp
 getppid		-	getppid		0	__getppid	getppid
-getresgid	EXTRA	getresgid	3	getresgid
-getresuid	EXTRA	getresuid	3	getresuid
 getsid		-	getsid		1	getsid
 init_module	EXTRA	init_module	5	init_module
 ioperm		-	ioperm		3	ioperm
@@ -39,6 +37,8 @@ quotactl	EXTRA	quotactl	4	quotactl
 s_chown		chown	chown		3	__syscall_chown
 s_getdents	EXTRA	getdents	3	__getdents
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
+s_getresgid	getresgid getresgid	3	__syscall_getresgid
+s_getresuid	getresuid getresuid	3	__syscall_getresuid
 s_poll		poll	poll		3	__syscall_poll
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
 s_reboot	EXTRA	reboot		3	__syscall_reboot
