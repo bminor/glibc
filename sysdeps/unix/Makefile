@@ -16,13 +16,6 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-ifeq ($(subdir),misc)
-
-sysdep_headers := $(sysdep_headers) sys/param.h
-generated := $(generated) sys/param.h
-
-endif
-
 before-compile := $(before-compile) $(common-objpfx)sys/param.h
 
 $(common-objpfx)sys/param.h: $(sysincludedir)/sys/param.h $(common-objpfx)sys/
@@ -82,12 +75,15 @@ $(addprefix $(common-objpfx),$(sys/param.h-includes)): $(common-objpfx)%: \
 	mv $@-t $@
 endif
 
+generated := $(generated) $(addprefix $(common-objpfx),\
+	     sys/param.h $(sys/param.h-includes) param.h.c param.h.dep)
+
+
 ifeq ($(subdir),misc)
 
 # Install system headers the system sys/param.h uses.
 
-sysdep_headers := $(sysdep_headers) $(sys/param.h-includes)
-generated := $(generated) $(sys/param.h-includes)
+sysdep_headers := $(sysdep_headers) sys/param.h $(sys/param.h-includes)
 
 endif # misc
 
@@ -113,6 +109,9 @@ $(common-objpfx)errnos: $(wildcard $(sysincludedir)/errno.h	\
 				   $(sysincludedir)/sys/errno.h)
 	cat $^ | sed -n 's/^#define[ 	]*\(E[A-Z0-9][A-Z0-9]*\)[ 	].*$$/\1/p' > $@-tmp
 	mv $@-tmp $@
+
+generated := $(generated) $(addprefix $(common-objpfx),\
+	     errnos.h errnos make-errnos make-errnos.c)
 endif
 
 ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/ioctls.h))))" \
@@ -136,6 +135,9 @@ $(common-objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls \
 			$(sysincludedir)/sys/ioctl.h
 	$(dir $<)$(notdir $<) $(word 2,$^) | tr '\012' ' ' > $@-tmp
 	mv $@-tmp $@
+
+generated := $(generated) $(addprefix $(common-objpfx),\
+	     ioctls.h ioctls make-ioctls make-ioctls.c)
 endif
 
 ifeq ($(subdir),stdio)
@@ -148,6 +150,8 @@ $(objpfx)errlist.c: $(objpfx)make_errlist
 
 $(objpfx)make_errlist: $(sysdep_dir)/unix/make_errlist.c
 	$(native-compile)
+
+generated := $(generated) $(addprefix $(objpfx),make_errlist errlist.c)
 
 endif
 
@@ -179,6 +183,7 @@ $(common-objpfx)syscall.h: $(syscall.h)
 	mv $@-tmp $@
 
 before-compile := $(before-compile) $(common-objpfx)syscall.h
+generated := $(generated) $(common-objpfx)syscall.h
 
 endif
 
