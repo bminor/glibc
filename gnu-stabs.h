@@ -33,52 +33,32 @@ Cambridge, MA 02139, USA.  */
 #define function_alias_void(name, _name, args, defun) \
   symbol_alias (_name, name);
 
-/* Make references to ALIAS refer to SYMBOL.  */
-#ifdef	__STDC__
-#define	symbol_alias(symbol, alias)	\
-  asm(".stabs \"" "_" #alias "\",11,0,0,0\n"\
-      ".stabs \"" "_" #symbol "\",1,0,0,0")
+#ifdef NO_UNDERSCORES
+#define __SYMBOL_PREFIX "_"
 #else
-/* Your assembler better grok this right!  */
-#define	symbol_alias(symbol, alias)	\
-  asm(".stabs \"_/**/alias\",11,0,0,0\n.stabs \"_/**/symbol\",1,0,0,0")
+#define __SYMBOL_PREFIX
 #endif
+
+/* Make references to ALIAS refer to SYMBOL.  */
+#define	symbol_alias(symbol, alias)	\
+  asm(".stabs \"" __SYMBOL_PREFIX #alias "\",11,0,0,0\n"\
+      ".stabs \"" __SYMBOL_PREFIX #symbol "\",1,0,0,0")
 
 /* Issue a warning message from the linker whenever SYMBOL is referenced.  */
-#ifdef	__STDC__
 #define	warn_references(symbol, msg)	\
   asm(".stabs \"" msg "\",30,0,0,0\n"	\
-      ".stabs \"_" #symbol "\",1,0,0,0")
-#else
-#define	warn_references(symbol, msg)	\
-  asm(".stabs msg,30,0,0,0\n.stabs \"_/**/symbol\",1,0,0,0")
-#endif
+      ".stabs \"" __SYMBOL_PREFIX #symbol "\",1,0,0,0")
 
-#ifdef	__STDC__
 #define	stub_warning(name) \
   warn_references(name, \
 		  "warning: " #name " is not implemented and will always fail")
-#else
-#define	stub_warning(name) \
-  warn_references(name, \
-		  "warning: name is not implemented and will always fail")
-#endif
 
-#ifdef	__STDC__
 #define	text_set_element(set, symbol)	\
-  asm(".stabs \"_" #set "\",23,0,0,_" #symbol)
+  asm(".stabs \"" __SYMBOL_PREFIX #set "\",23,0,0," __SYMBOL_PREFIX #symbol)
 #define	data_set_element(set, symbol)	\
-  asm(".stabs \"_" #set "\",25,0,0,_" #symbol)
+  asm(".stabs \"" __SYMBOL_PREFIX #set "\",25,0,0," __SYMBOL_PREFIX #symbol)
 #define	bss_set_element(set, symbol)	\
-  asm(".stabs \"_" #set "\",27,0,0,_" #symbol)
-#else
-#define	text_set_element(set, symbol)	\
-  asm(".stabs \"_/**/set\",23,0,0,_/**/symbol")
-#define	data_set_element(set, symbol)	\
-  asm(".stabs \"_/**/set\",25,0,0,_/**/symbol")
-#define	bss_set_element(set, symbol)	\
-  asm(".stabs \"_/**/set\",27,0,0,_/**/symbol")
-#endif
+  asm(".stabs \"" __SYMBOL_PREFIX #set "\",27,0,0," __SYMBOL_PREFIX #symbol)
 
 #else	/* No GNU stabs.  */
 
