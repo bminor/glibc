@@ -1,9 +1,26 @@
+2004-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-cancel4.c (tf_msgrcv): Check for failure in msgget.  If the
+	test fails, remove message queue.
+	(tf_msgsnd): Likewise.
+
+2004-10-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* tst-clock1.c: Change #ifdef to #if defined.
+	* tst-clock2.c: Likewise.
+	* tst-cond11.c: Likewise.
+
 2004-10-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/timer_create.c (timer_create): Use
 	defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0 instead of
 	defined CLOCK_PROCESS_CPUTIME_ID #ifs and similarly for
 	THREAD_CPUTIME.
+
+2004-10-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h (_POSIX_CPUTIME,
+	_POSIX_THREAD_CPUTIME): Define to 0.
 
 2004-10-04  Ulrich Drepper  <drepper@redhat.com>
 
@@ -33,7 +50,7 @@
 	(__lll_mutex_timedlock_wait): Address futex correctly.
 
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
-	(__lll_mutex_timedlock_wait): I woken but cannot get the lock,
+	(__lll_mutex_timedlock_wait): If woken but cannot get the lock,
 	make sure 2 is stored in the futex and we looked at the old value.
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
 	(__lll_mutex_timedlock_wait): Likewise.  Fix a few other problems

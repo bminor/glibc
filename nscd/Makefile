@@ -58,7 +58,7 @@ endif
 
 distribute := nscd.h nscd-client.h dbg_log.h \
 	      $(addsuffix .c, $(filter-out xmalloc, $(nscd-modules))) \
-	      nscd_nischeck.c TODO nscd.conf nscd.init nscd_proto.h \
+	      nscd_nischeck.c nscd.conf nscd.init nscd_proto.h \
 	      nscd-types.h
 
 include ../Rules
