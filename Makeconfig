@@ -80,7 +80,7 @@ libc.a = $(common-objpfx)libc.a
 include $(common-objpfx)config.make
 
 # Force the user to configure before making.
-$(objpfx)config.make:
+$(common-objpfx)config.make:
 	@echo The GNU C library has not been configured. >&2
 	@echo Run \`configure\' to configure it before building. >&2
 	@exit 1
