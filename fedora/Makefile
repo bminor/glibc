@@ -1,5 +1,7 @@
 # Makefile for maintaining glibc fedora-branch and creating Fedora source RPMs.
 
+glibc.spec: # The default target.
+
 tag-prefix := fedora-
 
 .PHONY: update commit-merge commit patch tag archive finish_archive srpm rpm
@@ -46,6 +48,10 @@ glibc.spec: glibc.spec.in ../version.h branch.mk
 	     ../version.h; \
 	 cat $<) > $@.new
 	mv -f $@.new $@
+
+ifeq (,$(wildcard glibc.spec))
+Makefile: glibc.spec ;
+else
 
 spec-nvr := $(shell rpm -q --qf '%{NAME}-%{VERSION}-%{RELEASE}\n' \
 			--specfile glibc.spec | sed 1q)
@@ -95,3 +101,5 @@ $(spec-nvr).src.rpm: glibc.spec $(archives)
 		 --define "_specdir `pwd`" \
 		 --define "_srcrpmdir `pwd`" \
 		 --nodeps -bs $<
+
+endif
