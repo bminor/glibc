@@ -406,7 +406,7 @@ DEFUN(__vfscanf, (s, format, arg),
 
 	  if (do_assign)
 	    {
-	      if (number_signed)
+	      if (! number_signed)
 		{
 		  if (is_longlong)
 		    *va_arg (arg, unsigned LONGLONG int *) = unum;
@@ -416,7 +416,7 @@ DEFUN(__vfscanf, (s, format, arg),
 		    *va_arg (arg, unsigned short int *)
 		      = (unsigned short int) unum;
 		  else
-		    *va_arg(arg, int *) = (int) num;
+		    *va_arg(arg, unsigned int *) = (unsigned int) unum;
 		}
 	      else
 		{
