@@ -61,6 +61,7 @@ DEFUN(scandir, (dir, namelist, select, cmp),
 		errno = ENOMEM;
 		return -1;
 	      }
+	    v = new;
 	  }
 
 	v[i] = (struct dirent *) malloc (sizeof (**v));
