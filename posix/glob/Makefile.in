@@ -58,7 +58,7 @@ fnmatch.o: $(srcdir)/fnmatch.h fnmatch.c
 clean glob-clean:
 	-rm -f libglob.a *.o core
 realclean glob-realclean: clean
-	-rm -f TAGS tags Makefile
+	-rm -f TAGS tags Makefile config.status
 
 # For inside the C library.
 glob.tar glob.tar.Z:
