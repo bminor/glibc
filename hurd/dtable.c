@@ -228,31 +228,37 @@ reauth_dtable (void)
   for (i = 0; i < _hurd_dtablesize; ++i)
     {
       struct hurd_fd *const d = _hurd_dtable[i];
-      mach_port_t new, newctty;
+      mach_port_t new, newctty, ref;
       
       if (d == NULL)
 	/* Nothing to do for an unused descriptor cell.  */
 	continue;
+
+      ref = __mach_reply_port ();
 
       /* Take the descriptor cell's lock.  */
       __spin_lock (&d->port.lock);
       
       /* Reauthenticate the descriptor's port.  */
       if (d->port.port != MACH_PORT_NULL &&
-	  ! __io_reauthenticate (d->port.port, _hurd_pid) &&
-	  ! __USEPORT (AUTH, __auth_user_authenticate (port,
-						       d->port.port, _hurd_pid,
-						       &new)))
+	  ! __io_reauthenticate (d->port.port,
+				 ref, MACH_MSG_TYPE_MAKE_SEND_ONCE) &&
+	  ! __USEPORT (AUTH, __auth_user_authenticate
+		       (port,
+			d->port.port,
+			ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+			&new)))
 	{
 	  /* Replace the port in the descriptor cell
 	     with the newly reauthenticated port.  */
 
 	  if (d->ctty.port != MACH_PORT_NULL &&
 	      ! __io_reauthenticate (d->ctty.port, _hurd_pid) &&
-	      ! __USEPORT (AUTH, __auth_user_authenticate (port,
-							   d->ctty.port,
-							   _hurd_pid,
-							   &newctty)))
+	      ! __USEPORT (AUTH, __auth_user_authenticate
+			   (port,
+			    d->ctty.port,
+			    ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+			    &newctty)))
 	    _hurd_port_set (&d->ctty, newctty);
 
 	  _hurd_port_locked_set (&d->port, new);
@@ -260,6 +266,8 @@ reauth_dtable (void)
       else
 	/* Lost.  Leave this descriptor cell alone.  */
 	__spin_unlock (&d->port.lock);
+
+      __mach_port_destroy (__mach_task_self (), ref);
     }
 
   __mutex_unlock (&_hurd_dtable_lock);
