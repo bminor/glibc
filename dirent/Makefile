@@ -19,11 +19,12 @@
 #
 #	Sub-makefile for dirent portion of the library.
 #
-subdir	:= dirent
+subdir		:= dirent
 
-routines   := opendir closedir readdir rewinddir \
-	      seekdir telldir scandir alphasort \
-	      getdents __getdents
+headers		:= dirent.h dirstream.h
+routines	:= opendir closedir readdir rewinddir \
+		   seekdir telldir scandir alphasort \
+		   getdents __getdents
 distribute := direct.h
 
 tests	   := list
