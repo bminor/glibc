@@ -21,6 +21,7 @@ setting file attributes, such as access modes and modification times.
 * Making and Removing Directories::	Functions for adding and removing
 					 the directories themselves.
 * File Attributes::			Attributes of individual files.
+* Making Special Files::		How to create special files.
 * File System Parameters::		Constants and functions that describe
 					 various file system limits.
 @end menu
@@ -48,10 +49,19 @@ used by those commands for examining and changing the working directory.
 Prototypes for these functions are declared in the header file
 @file{<unistd.h>}.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun {char *} getcwd (char *@var{buffer}, int @var{size})
 The @code{getcwd} function returns an absolute file name representing
 the current working directory in the character array @var{buffer}.
 The @var{size} argument specifies the allocation size of the array.
+
+The GNU Library version of this function also permits you to specify a
+null pointer for the @var{buffer} argument.  Then @code{getcwd}
+allocates a buffer automatically, as with @code{malloc}
+(@pxref{Unconstrained Allocation}).  If the @var{size} is greater than
+zero, then the buffer is that large; otherwise, the buffer is as large
+as necessary to hold the result.
 
 The return value is @var{buffer} on success and a null pointer on failure.
 The following @code{errno} error conditions are defined for this function:
@@ -69,6 +79,16 @@ Permission to read or search a component of the file name was denied.
 @end table
 @end deftypefun
 
+@comment unistd.h
+@comment BSD
+@deftypefun {char *} getwd (char *@var{buffer})
+This is similar to @code{getcwd}.  The GNU Library provides @code{getwd}
+for backwards compatibility with BSD.  The @var{buffer} should be a
+pointer to an array at least @code{PATH_MAX} bytes long.
+@end deftypefun
+
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int chdir (const char *@var{filename})
 This function is used to set the process's working directory to
 @var{filename}.
@@ -126,13 +146,26 @@ alphabetizing them) before printing them.
 
 These facilities are declared in the header file @file{<dirent.h>}.
 
+@comment dirent.h
+@comment POSIX.1
 @deftp {Data Type} {struct dirent}
 This is a structure type used to return information about directory
-entries.  It contains the following member:
+entries.  It contains the following members:
 
 @table @code
 @item char *d_name
 This is the null-terminated file name component.
+
+@item ino_t d_fileno
+This is the file serial number.  @xref{File Attribute Inquiry}.
+For BSD compatibility, you can also refer to this member as @code{d_ino}.
+
+@strong{Incomplete:}  This is not part of POSIX.  Do we want to advertise it?
+
+@item size_t d_namlen
+This is the length of the file name.
+
+@strong{Incomplete:}  This is not part of POSIX.  Do we want to advertise it?
 @end table
 
 This structure contains other members too, to identify the actual
@@ -144,6 +177,8 @@ associated with the file itself, not its directory entry.  @xref{File
 Attributes}.
 @end deftp
 
+@comment dirent.h
+@comment POSIX.1
 @deftp {Data Type} DIR
 The @code{DIR} data type represents a directory stream.  
 @end deftp
@@ -152,6 +187,8 @@ You shouldn't ever have to allocate objects of the @code{struct dirent}
 or @code{DIR} data types, since the directory access functions do
 that for you.  Instead, you should just allocate pointers to them.
 
+@comment dirent.h
+@comment POSIX.1
 @deftypefun {DIR *} opendir (const char *@var{dirname})
 The @code{opendir} function is used to open a directory stream for
 reading the directory whose file name is @var{dirname}.  The stream
@@ -178,6 +215,8 @@ and the @code{opendir} function in terms of the @code{open} function.
 file descriptors are closed on @code{exec} (@pxref{Executing a File}).
 @end deftypefun
 
+@comment dirent.h
+@comment POSIX.1
 @deftypefun {struct dirent *} readdir (DIR *@var{dirstream})
 This function reads the next entry from the directory.  It normally
 returns a pointer to a structure containing information about the file.
@@ -197,6 +236,8 @@ The @var{dirstream} argument is not valid.
 @end table
 @end deftypefun
 
+@comment dirent.h
+@comment POSIX.1
 @deftypefun void rewinddir (DIR *@var{dirstream})
 The @code{rewinddir} function is used to reinitialize the directory
 stream @var{dirstream}, so that if you call @code{readdir} it
@@ -208,6 +249,27 @@ added or removed since you last called @code{opendir} or
 @code{rewinddir}.)
 @end deftypefun
 
+@comment dirent.h
+@comment BSD, GNU
+@deftypefun off_t telldir (DIR *@var{dirstream})
+The @code{telldir} function returns the file position of the directory
+stream @var{dirstream}.  You can use this value with @code{seekdir} to
+restore the directory stream to that position.
+@end deftypefun
+
+@comment dirent.h
+@comment BSD, GNU
+@deftypefun void seekdir (DIR *@var{dirstream}, off_t @var{pos})
+The @code{seekdir} function sets the file position of the directory
+stream @var{dirstream} to @var{pos}.  The @var{pos} must be the result
+of a previous call to @code{telldir} on this particular stream; closing
+and reopening the directory can invalidate values returned by
+@code{telldir}.
+@end deftypefun
+
+
+@comment dirent.h
+@comment POSIX.1
 @deftypefun int closedir (DIR *@var{dirstream})
 This function closes the directory stream @var{dirstream}.  It returns
 @code{0} on success and @code{-1} on failure.  
@@ -255,6 +317,8 @@ the file system is not a strict hierarchy or tree.
 The prototype for the @code{link} function is declared in the header
 file @file{<unistd.h>}.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int link (const char *@var{oldname}, const char *@var{newname})
 The @code{link} function makes a new link to the existing file named by
 @var{oldname}, under the new name @var{newname}.
@@ -330,6 +394,8 @@ leave the link pointing to a nonexistent file.  @xref{File Attributes}.
 Prototypes for the functions listed in this section are in
 @file{<unistd.h>}.
 
+@comment unistd.h
+@comment BSD
 @deftypefun int symlink (const char *@var{oldname}, const char *@var{newname})
 The @code{symlink} function makes a symbolic link to @var{oldname} named
 @var{newname}.
@@ -368,6 +434,8 @@ exceeded.
 @end table
 @end deftypefun
 
+@comment unistd.h
+@comment BSD
 @deftypefun int readlink (const char *@var{filename}, char *@var{buffer}, size_t @var{size})
 The @code{readlink} function gets the value of the symbolic link
 @var{filename}.  The file name that the link points to is copied into
@@ -414,6 +482,8 @@ Prototypes for @code{remove} and @code{rename} are in the header file
 
 @cindex removing directory links
 @cindex unlinking a file from a directory
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int unlink (const char *@var{filename})
 The @code{unlink} function removes the link named by the @var{filename}.
 If there are no other links to the file, the file itself is also
@@ -453,12 +523,16 @@ file system, and can't be modified.
 @end deftypefun
 
 @cindex removing a file
+@comment stdio.h
+@comment ANSI
 @deftypefun int remove (const char *@var{filename})
 The @code{remove} function is equivalent to @code{unlink}: it causes the
 file named by @var{filename} to be removed.
 @end deftypefun
 
 @cindex renaming a file
+@comment stdio.h
+@comment ANSI
 @deftypefun int rename (const char *@var{oldname}, const char *@var{newname})
 The @code{rename} function makes the file currently named by
 @var{oldname} be called @var{newname} instead.
@@ -536,6 +610,8 @@ Directories are created and removed with the @code{mkdir} and
 @code{rmdir} functions, respectively.  (There are shell commands with
 the same names that do these operations, too.)
 
+@comment sys/stat.h
+@comment POSIX.1
 @deftypefun int mkdir (const char *@var{filename}, mode_t @var{mode})
 The @code{mkdir} function creates a new, empty directory whose name is
 @var{filename}.
@@ -572,6 +648,8 @@ To use this function, your program should include the header files
 @file{<sys/types.h>} and @file{<sys/stat.h>}.
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int rmdir (const char *@var{filename})
 The @code{rmdir} function removes a directory.  The directory must
 be empty before it can be removed; in other words, it can only contain
@@ -632,6 +710,8 @@ related macros are defined in the header file @file{<sys/stat.h>}.
 The types of some of its component members are defined in the header
 files @file{<sys/types.h>} and @file{<time.h>}.
 
+@comment sys/stat.h
+@comment POSIX.1
 @deftp {Data Type} struct stat
 The @code{stat} structure type is used to return information about the
 attributes of a file.  It contains at least the following members:
@@ -688,6 +768,8 @@ attributes of the file.  @xref{File Times}.
 @end table
 @end deftp
 
+@comment sys/types.h
+@comment POSIX.1
 @deftp {Data Type} mode_t
 This is an integer data type used to represent file modes.  In the
 GNU system, this is equivalent to @code{unsigned short int}.
@@ -695,17 +777,23 @@ GNU system, this is equivalent to @code{unsigned short int}.
 @end deftp
 
 @cindex inode number
+@comment sys/types.h
+@comment POSIX.1
 @deftp {Data Type} ino_t
 This is an arithmetic data type used to represent file serial numbers.
 (In Unix jargon, these are sometimes called @dfn{inode numbers}.)
 In the GNU system, this type is equivalent to @code{unsigned long int}.
 @end deftp
 
+@comment sys/types.h
+@comment POSIX.1
 @deftp {Data Type} dev_t
 This is an arithmetic data type used to represent file device numbers.
 In the GNU system, this is equivalent to @code{short int}.
 @end deftp
 
+@comment sys/types.h
+@comment POSIX.1
 @deftp {Data Type} nlink_t
 This is an arithmetic data type used to represent file link counts.
 In the GNU system, this is equivalent to @code{unsigned short int}.
@@ -713,6 +801,8 @@ In the GNU system, this is equivalent to @code{unsigned short int}.
 
 Here is the description of the @code{stat} function itself.
 
+@comment sys/stat.h
+@comment POSIX.1
 @deftypefun int stat (const char *@var{filename}, struct stat *@var{buf})
 The @code{stat} function returns information about the attributes of the
 file named by @var{filename} in the structure pointed at by @var{buf}.
@@ -728,6 +818,8 @@ The file named by @var{filename} doesn't exist.
 @end table
 @end deftypefun
 
+@comment sys/stat.h
+@comment POSIX.1
 @deftypefun int fstat (int @var{filedes}, struct stat *@var{buf})
 The @code{fstat} function is like @code{stat}, except that it takes an
 open file descriptor as an argument instead of a file name.
@@ -743,6 +835,8 @@ The @var{filedes} argument is not a valid file descriptor.
 @end table
 @end deftypefun
 
+@comment sys/stat.h
+@comment BSD
 @deftypefun int lstat (const char *@var{filename}, struct stat *@var{buf})
 The @code{lstat} function is like @code{stat}, except that it does not
 follow symbolic links.  @xref{Symbolic Links}.  This function is provided
@@ -765,34 +859,48 @@ the header file @file{<sys/stat.h>}.
 
 The following macros test the format encoded in the file mode.
 
+@comment sys/stat.h
+@comment POSIX
 @deftypefn Macro int S_ISDIR (mode_t @var{m})
 This macro returns true if the file is a directory.
 @end deftypefn
 
+@comment sys/stat.h
+@comment POSIX
 @deftypefn Macro int S_ISCHR (mode_t @var{m})
 This macro returns true if the file is a character special file (a
 device like a terminal).
 @end deftypefn
 
+@comment sys/stat.h
+@comment POSIX
 @deftypefn Macro int S_ISBLK (mode_t @var{m})
 This macro returns true if the file is a block special file (a device
 like a disk).
 @end deftypefn
 
+@comment sys/stat.h
+@comment POSIX
 @deftypefn Macro int S_ISREG (mode_t @var{m})
 This macro returns true if the file is a regular file.
 @end deftypefn
 
+@comment sys/stat.h
+@comment POSIX
 @deftypefn Macro int S_ISFIFO (mode_t @var{m})
 This macro returns true if the file is a FIFO special file, or a pipe.
 @xref{Pipes and FIFOs}.
 @end deftypefn
 
+@comment sys/stat.h
+@comment GNU
 @deftypefn Macro int S_ISLNK (mode_t @var{m})
 This macro returns true if the file is a symbolic link.  @xref{Symbolic
 Links}.
 @end deftypefn
 
+@comment sys/stat.h
+@comment GNU
 @deftypefn Macro int S_ISSOCK (mode_t @var{m})
 This macro returns true if the file is a socket.  @xref{Sockets}.
 @end deftypefn
@@ -811,38 +919,54 @@ is equivalent to:
 (@var{mode} & S_IFMT) == S_IFCHR
 @end example
 
+@comment sys/stat.h
+@comment BSD
 @defvr Macro S_IFMT
 This is a bit mask used to extract the file format portion of a mode value.
 @end defvr
 
 These are the constants for the different file format values:
 
+@comment sys/stat.h
+@comment BSD
 @defvr Macro S_IFDIR
 This macro represents the value of the file format for a directory file.
 @end defvr
 
+@comment sys/stat.h
+@comment BSD
 @defvr Macro S_IFCHR
 This macro represents the value of the file format for a character-oriented
 device file.
 @end defvr
 
+@comment sys/stat.h
+@comment BSD
 @defvr Macro S_IFBLK
 This macro represents the value of the file format for a block-oriented
 device file.
 @end defvr
 
+@comment sys/stat.h
+@comment BSD
 @defvr Macro S_IFREG
 This macro represents the value of the file format for a regular file.
 @end defvr
 
+@comment sys/stat.h
+@comment BSD
 @defvr Macro S_IFLNK
 This macro represents the value of the file format for a symbolic link.
 @end defvr
 
+@comment sys/stat.h
+@comment BSD
 @defvr Macro S_IFSOCK
 This macro represents the value of the file format for a socket.
 @end defvr
 
+@comment sys/stat.h
+@comment BSD
 @defvr Macro S_IFIFO
 This macro represents the value of the file format for a FIFO or pipe.
 @end defvr
@@ -852,83 +976,119 @@ This macro represents the value of the file format for a FIFO or pipe.
 These symbolic constants are defined for referring to the @dfn{file
 permission bits} part of the file mode.
 
+@comment sys/stat.h
+@comment POSIX.1
 @defvr {Macro} S_IRUSR
 Read permission bit for the owner of the file.
 @end defvr
 
+@comment sys/stat.h
+@comment POSIX.1
 @defvr {Macro} S_IWUSR
 Write permission bit for the owner of the file.
 @end defvr
 
+@comment sys/stat.h
+@comment POSIX.1
 @defvr {Macro} S_IXUSR
 Execute (for ordinary files) or search (for directories) permission bit
 for the owner of the file.
 @end defvr
 
+@comment sys/stat.h
+@comment POSIX.1
 @defvr {Macro} S_IRWXU
 This is equivalent to @samp{(S_IRUSR | S_IWUSR | S_IXUSR)}.
 @end defvr
 
 
+@comment sys/stat.h
+@comment BSD
 @defvr {Macro} S_IREAD
 This is a synonym for @code{S_IRUSR}, provided for compatibility with
 old BSD code.  Use @code{S_IRUSR} instead.
 @end defvr
 
+@comment sys/stat.h
+@comment BSD
 @defvr {Macro} S_IWRITE
 This is a synonym for @code{S_IWUSR}, provided for compatibility with
 old BSD code.  Use @code{S_IWUSR} instead.
 @end defvr
 
+@comment sys/stat.h
+@comment BSD
 @defvr {Macro} S_IEXEC
 This is a synonym for @code{S_IXUSR}, provided for compatibility with
 old BSD code.  Use @code{S_IXUSR} instead.
 @end defvr
 
 
+@comment sys/stat.h
+@comment POSIX.1
 @defvr {Macro} S_IRGRP
 Read permission bit for the group owner of the file.
 @end defvr
 
+@comment sys/stat.h
+@comment POSIX.1
 @defvr {Macro} S_IWGRP
 Write permission bit for the group owner of the file.
 @end defvr
 
+@comment sys/stat.h
+@comment POSIX.1
 @defvr {Macro} S_IXGRP
 Execute or search permission bit for the group owner of the file.
 @end defvr
 
+@comment sys/stat.h
+@comment POSIX.1
 @defvr {Macro} S_IRWXG
 This is equivalent to @samp{(S_IRGRP | S_IWGRP | S_IXGRP)}.
 @end defvr
 
 
+@comment sys/stat.h
+@comment POSIX.1
 @defvr {Macro} S_IROTH
 Read permission bit for other users.
 @end defvr
 
+@comment sys/stat.h
+@comment POSIX.1
 @defvr {Macro} S_IWOTH
 Write permission bit for other users.
 @end defvr
 
+@comment sys/stat.h
+@comment POSIX.1
 @defvr {Macro} S_IXOTH
 Execute or search permission bit for other users.
 @end defvr
 
+@comment sys/stat.h
+@comment POSIX.1
 @defvr {Macro} S_IRWXO
 This is equivalent to @samp{(S_IROTH | S_IWOTH | S_IXOTH)}.
 @end defvr
 
 
+@comment sys/stat.h
+@comment POSIX
 @defvr {Macro} S_ISUID
 This is the set-user-ID on execute bit.  @xref{User/Group IDs of a Process}.
 @end defvr
 
+@comment sys/stat.h
+@comment POSIX
 @defvr {Macro} S_ISGID
 This is the set-group-ID on execute bit.  @xref{User/Group IDs of a Process}.
 @end defvr
 
 @cindex sticky bit
+@comment sys/stat.h
+@comment BSD
 @defvr {Macro} S_ISVTX
 This is the @dfn{sticky} bit.  On executables, this bit inhibits swapping.
 On directories, this allows deletion of files in the directory only by
@@ -1016,6 +1176,8 @@ administrator, to find out about this.
 You can check whether a file is accessible to your process using the
 @code{access} function.  This function is declared in @file{<unistd.h>}.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int access (const char *@var{filename}, int @var{how})
 The @code{access} function checks to see whether the file named by
 @var{filename} can be accessed in the way specified by the @var{how}
@@ -1052,18 +1214,26 @@ These macros are defined in the header file @file{<unistd.h>} for use
 as the @var{how} argument to the @code{access} function.  The values
 are integer constants.
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro R_OK
 Test for read permission.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro W_OK
 Test for write permission.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro X_OK
 Test for execute/search permission.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro F_OK
 Test for existence of the file.
 @end defvr
@@ -1108,11 +1278,15 @@ primitive for the shell command of the same name.
 
 These functions are declared in @file{<sys/stat.h>}.
 
+@comment sys/stat.h
+@comment POSIX.1
 @deftypefun mode_t umask (mode_t @var{mask})
 The @code{umask} function sets the process's file creation mask to 
 @var{mask}, and returns the previous value of the mask.
 @end deftypefun
 
+@comment sys/stat.h
+@comment POSIX.1
 @deftypefun int chmod (const char *@var{filename}, mode_t @var{mode})
 The @code{chmod} function sets the file protection bits for the file named
 by @var{filename} to @var{mode}.
@@ -1135,6 +1309,36 @@ The file resides on a read-only file system.
 @end table
 @end deftypefun
 
+
+@comment sys/stat.h
+@comment BSD
+@deftypefun int fchmod (int @var{filedes}, int @var{mode})
+This is like @code{chmod}, except that it changes the permissions of
+the file with open file descriptor @var{filedes}.
+
+The return value from @code{fchmod} is @code{0} on success and @code{-1}
+on failure.  The following @code{errno} error codes are defined for this
+function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item EINVAL
+The @var{filedes} argument corresponds to a pipe or socket, not an ordinary
+file.
+
+@item EPERM
+Either the effective user ID of the calling process must be the same
+as the owner of the file, or the calling process must be privileged.
+This error is used to report this problem.
+
+@item EROFS
+The file resides on a read-only file system.
+@end table
+@end deftypefun
+
+
 @node File Ownership
 @subsection File Ownership
 
@@ -1149,6 +1353,8 @@ and @code{chgrp} shell commands.
 
 The prototype for this function is declared in @file{<unistd.h>}.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int chown (const char *@var{filename}, uid_t @var{owner}, gid_t @var{group})
 The @code{chown} function changes the owner of the file @var{filename} to
 @var{owner}, and its group owner to @var{group}.
@@ -1176,6 +1382,29 @@ allow nonprivileged users only to change the group owner of the file;
 
 @item EROFS
 The file is on a read-only file system.
+@end table
+@end deftypefun
+
+@comment unistd.h
+@comment BSD
+@deftypefun int fchown (int @var{filedes}, int @var{owner}, int @var{group})
+This is like @code{chown}, except that it changes the owner of the file
+with open file descriptor @var{filedes}.
+
+The return value from @code{fchown} is @code{0} on success and @code{-1}
+on failure.  The following @code{errno} error codes are defined for this
+function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item EINVAL
+The @var{filedes} argument corresponds to a pipe or socket, not an ordinary
+file.
+
+@item EROFS
+The file resides on a read-only file system.
 @end table
 @end deftypefun
 
@@ -1220,6 +1449,8 @@ You can also change the timestamps of a file explicitly using the
 @code{utime} function.  You need to include the header file
 @file{<utime.h>} to use this facility.
 
+@comment time.h
+@comment POSIX.1
 @deftp {Data Type} {struct utimbuf}
 The @code{utimbuf} structure is used with the @code{utime} function to
 specify new access and modification times for a file.  It contains at
@@ -1234,6 +1465,8 @@ This is the modification time for the file.
 @end table
 @end deftp
 
+@comment time.h
+@comment POSIX.1
 @deftypefun int utime (const char *@var{filename}, const struct utimbuf *@var{times})
 This function is used to modify the file times associated with the file
 named @var{filename}.
@@ -1285,6 +1518,8 @@ The @code{utimes} function is like @code{utime}, but also lets you specify
 the fractional part of the file times.  The prototype for this function is
 in the header file @file{<sys/time.h>}.
 
+@comment sys/time.h
+@comment BSD
 @deftypefun int utimes (const char *@var{filename}, struct timeval @var{tvp}[2])
 This function sets the file access and modification times for the file
 named by @var{filename}.  The new file access time is specified by
@@ -1299,6 +1534,50 @@ function.
 @strong{Portability Note:}  The @code{utimes} function is provided for
 compatibility with BSD.  The POSIX.1 standard specifies only the @code{utime}
 function.
+
+@node Making Special Files
+@section Making Special Files
+
+The @code{mknod} function is the primitive for making special files,
+such as files that correspond to devices.  The GNU Library includes
+this function for compatibility with BSD.
+
+The prototype for @code{mknod} is declared in @file{<sys/stat.h>}.
+
+@comment sys/stat.h
+@comment BSD
+@deftypefun int mknod (const char *@var{filename}, int @var{mode}, int @var{dev})
+The @code{mknod} function makes a special file with name @var{filename}.
+The @var{mode} specifies the mode of the file, and may include the various
+special file bits, such as @code{S_IFCHR} (for a character special file)
+or @code{S_IFBLK} (for a block special file).  @xref{File Modes}.
+
+The @var{dev} argument specifies which device the special file refers to.
+Its exact interpretation depends on the kind of special file being created.
+
+The return value is @code{0} on success and @code{-1} on error.  In addition
+to the usual file name syntax errors (@pxref{File Name Errors}), the
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EPERM
+The calling process is not privileged.  Only the superuser can create
+special files.
+
+@item ENOSPC
+The directory or file system that would contain the new file is ``full''
+and cannot be extended.
+
+@item EROFS
+The directory containing the new file can't be modified because it's on
+a read-only file system.
+
+@item EEXIST
+There is already a file named @var{filename}.  If you want to replace
+this file, you must remove the old file explicitly first.
+@end table
+@end deftypefun
+
 
 @node File System Parameters
 @section File System Parameters
@@ -1325,30 +1604,40 @@ constant values.
 
 @strong{Incomplete:}  What does the GNU system do?
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _POSIX_LINK_MAX
 This macro represents the most restrictive limit permitted by POSIX
 for the maximum value of a file's link count.  The value of this
 constant is @code{8}.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro LINK_MAX
 This is the actual implementation limit corresponding to
 @code{_POSIX_LINK_MAX}, but is defined only if the limit for the
 particular implementation is constant for all files.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _POSIX_MAX_CANON
 This macro represents the most restrictive limit permitted by POSIX
 for the maximum number of bytes in a canonical input line from a
 terminal device.  The value of this constant is @code{255}.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro MAX_CANON
 This is the actual implementation limit corresponding to
 @code{_POSIX_MAX_CANON}, but is defined only if the limit for the
 particular implementation is constant for all files.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _POSIX_MAX_INPUT
 This macro represents the most restrictive limit permitted by POSIX for
 the maximum number of bytes in a terminal device input queue (or
@@ -1356,36 +1645,54 @@ typeahead buffer).  @xref{Input Modes}.  The value of this constant is
 @code{255}.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro MAX_INPUT
 This is the actual implementation limit corresponding to
 @code{_POSIX_MAX_INPUT}, but is defined only if the limit for the
 particular implementation is a constant for all files.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _POSIX_NAME_MAX
 This macro represents the most restrictive limit permitted by POSIX for
 the maximum number of bytes in a file name component.  The value of this
 constant is @code{14}.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro NAME_MAX
 This is the actual implementation limit corresponding to
 @code{_POSIX_NAME_MAX}, but is defined only if the limit for the
 particular implementation is a constant for all files.
 @end defvr
 
+@comment dirent.h
+@comment BSD, GNU
+@defvr Macro MAXNAMLEN
+This is the BSD name for @code{NAME_MAX}.
+@end defvr
+
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _POSIX_PATH_MAX
 This macro represents the most restrictive limit permitted by POSIX for
 the maximum number of bytes in a file name.  The value of this constant
 is @code{255}.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro PATH_MAX
 This is the actual implementation limit corresponding to
 @code{_POSIX_PATH_MAX}, but is defined only if the limit for the
 particular implementation is a constant for all files.
 @end defvr
 
+@comment stdio.h
+@comment ANSI
 @defvr {Macro} FILENAME_MAX 
 The value of this macro is an integer constant expression that
 represents the maximum length of a file name string.
@@ -1397,6 +1704,8 @@ array in which to store a file name!  Use dynamic allocation
 (@pxref{Memory Allocation}) instead.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _POSIX_PIPE_BUF
 This macro represents the most restrictive limit permitted by POSIX for
 the maximum number of bytes that can be written atomically to a pipe.
@@ -1405,6 +1714,8 @@ output from different processes might appear in interleaved chunks of
 this size.  The value of this constant is @code{512}.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _PIPE_BUF
 This is the actual implementation limit corresponding to
 @code{_POSIX_PIPE_BUF}, but is defined only if the limit for the
@@ -1420,6 +1731,8 @@ function at runtime to determine the parameter value.  If the value is
 defined to be @code{-1}, then the option does not apply to any file.
 Otherwise, the option applies to all files.
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _POSIX_CHOWN_RESTRICTED
 If this option is enabled, the @code{chown} function is restricted so
 that the only changes permitted to nonprivileged processes is to change 
@@ -1427,12 +1740,16 @@ the group owner of a file to either be the effective group ID of the
 process, or one of its supplementary group IDs.  @xref{File Ownership}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _POSIX_NO_TRUNC
 If this option is enabled, file name components longer than @code{NAME_MAX}
 generate an @code{ENAMETOOLONG} error.  Otherwise, file name components
 that are too long are silently truncated.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _POSIX_VDISABLE
 This option is only meaningful for files that are terminal devices.
 If it is enabled, then handling for special control characters can
@@ -1445,6 +1762,8 @@ file using the @code{pathconf} or @code{fpathconf}.  These functions
 and the associated @var{parameter} constants are declared in the
 header file @file{<unistd.h>}.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun long pathconf (const char *@var{filename}, int @var{parameter})
 This function is used to inquire about the limits that apply to
 the file named @var{filename}.
@@ -1507,6 +1826,8 @@ support the @var{parameter} for the specific file.
 @end table
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun long fpathconf (int @var{filedes}, int @var{parameter})
 This is just like @code{pathconf} except that an open file descriptor
 is used to specify the file for which information is requested, instead
@@ -1528,38 +1849,56 @@ These symbolic constants are defined for use as the @var{parameter}
 argument to @code{pathconf} and @code{fpathconf}.  The values are
 all integer constants.
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _PC_LINK_MAX
 Inquire about the parameter corresponding to @code{LINK_MAX}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _PC_MAX_CANON
 Inquire about the parameter corresponding to @code{MAX_CANON}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _PC_MAX_INPUT
 Inquire about the parameter corresponding to @code{MAX_INPUT}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _PC_NAME_MAX
 Inquire about the parameter corresponding to @code{NAME_MAX}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _PC_PATH_MAX
 Inquire about the parameter corresponding to @code{PATH_MAX}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _PC_PIPE_BUF
 Inquire about the parameter corresponding to @code{PIPE_BUF}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _PC_CHOWN_RESTRICTED
 Inquire about the parameter corresponding to @code{_POSIX_CHOWN_RESTRICTED}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _PC_NO_TRUNC
 Inquire about the parameter corresponding to @code{_POSIX_NO_TRUNC}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _PC_VDISABLE
 Inquire about the parameter corresponding to @code{_POSIX_VDISABLE}.
 @end defvr

@@ -68,6 +68,8 @@ The value of an environment variable can be accessed with the
 @code{getenv} function.  This is declared in the header file
 @file{<stdlib.h>}.
 
+@comment stdlib.h
+@comment ANSI
 @deftypefun {char *} getenv (const char *@var{name})
 This function returns a string that is the value of the environment
 variable @var{name}.  You must not modify this string, and it might be
@@ -75,6 +77,7 @@ overwritten by subsequent calls to @code{getenv} (but not by any other
 library function).  If there is no environment variable named @var{name}
 present, a null pointer is returned.
 @end deftypefun
+
 
 @node Environment Representation
 @subsection Environment Representation
@@ -90,6 +93,8 @@ function.
 This variable is not declared in any header file, but if you declare it
 in your own program as @code{extern}, the right thing will happen.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypevar {char **} environ
 The environment is represented as an array of strings.  Each string is
 of the format @code{"@var{name}=@var{value}"}.  The order in which
@@ -105,6 +110,19 @@ invariably uppercase.
 The values of environment variables can be anything that can be
 represented as a string.  A value must not contain an embedded null
 character, since this is assumed to terminate the string.
+
+@comment stdlib.h
+@comment SVID
+@deftypefun int putenv (const char *@var{string})
+The @code{putenv} function adds or removes definitions from the environment.
+If the @var{string} is of the form @code{"@var{name}=@var{value}"}, the
+definition is added to the environment.  Otherwise, the @var{string} is
+interpreted as the name of an environment variable, and any definition
+for this variable in the environment is removed.
+
+The GNU library provides this function for compatibility with SVID; it
+may not be available in other systems.
+@end deftypefun
 
 @node Standard Environment Variables
 @subsection Standard Environment Variables
@@ -239,12 +257,12 @@ sequence:
 
 @itemize @bullet
 @item 
-Functions that were registered with the @code{atexit} function are
-called in the reverse order of their registration.  This mechanism
-allows your application to specify its own ``cleanup'' actions to be
-performed at program termination.  Typically, this is used to do things
-like saving program state information in a file, freeing any resources
-allocated by the program, and the like.
+Functions that were registered with the @code{atexit} or @code{on_exit}
+functions are called in the reverse order of their registration.  This
+mechanism allows your application to specify its own ``cleanup'' actions
+to be performed at program termination.  Typically, this is used to do
+things like saving program state information in a file, freeing any
+resources allocated by the program, and the like.
 
 @item 
 All open streams are closed.  This action includes making sure all open
@@ -263,6 +281,8 @@ implementation-specific interpretations.
 
 The following facilities are declared in @file{<stdlib.h>}.
 
+@comment stdlib.h
+@comment ANSI
 @defvr Macro EXIT_SUCCESS
 This macro can be used with the @code{exit} function to indicate
 successful program completion.
@@ -272,6 +292,8 @@ In other implementations, the value might be some other (possibly
 non-constant) integer expression.
 @end defvr
 
+@comment stdlib.h
+@comment ANSI
 @defvr Macro EXIT_FAILURE
 This macro can be used with the @code{exit} function to indicate unsuccessful
 program completion.
@@ -281,11 +303,15 @@ implementations, the value might be some other (possibly non-constant)
 integer expression.
 @end defvr
 
+@comment stdlib.h
+@comment ANSI
 @deftypefun void exit (int @var{status})
 The @code{exit} function causes normal program termination with status
 @var{status}.  This function does not return.
 @end deftypefun
 
+@comment stdlib.h
+@comment ANSI
 @deftypefun int atexit (void (*@var{function})(void))
 The @code{atexit} function registers the function @var{function} to be
 called at normal program termination.  The @var{function} is called with
@@ -296,6 +322,19 @@ the function cannot be registered.  Implementations are required to
 support registration of at least 32 functions.
 
 @strong{Incomplete:}  What's the GNU limit, or isn't there one?
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun int on_exit (void (*@var{function})(int @var{status}, void *@var{arg}), void *@var{arg})
+This function is a somewhat more powerful variant of @code{on_exit}.  It
+accepts two arguments, a function @var{function} and an arbitrary
+pointer @var{arg}.  At normal program termination, the @var{function} is
+called with two arguments:  the @var{status} value passed to @code{exit},
+and the @var{arg}.
+
+This function is a GNU extension, and may not be supported by other
+implementations.
 @end deftypefun
 
 Here's a trivial program that illustrates the use of @code{exit} and
@@ -328,9 +367,11 @@ When this program is executed, it just prints the message and exits.
 You can abort your program using the @code{abort} function.  The prototype
 for this function is in @file{<stdlib.h>}.
 
+@comment stdlib.h
+@comment ANSI
 @deftypefun void abort (void)
 The @code{abort} function causes abnormal program termination, without
-executing functions registered with @code{atexit}.
+executing functions registered with @code{atexit} or @code{on_exit}.
 
 This function actually terminates the process by raising a
 @code{SIGABRT} signal, and your program can include a handler to
@@ -344,10 +385,12 @@ how to do this.
 The @code{_exit} function is the primitive for both @code{exit} and
 @code{abort}.  It is declared in the header file @file{<unistd.h>}.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun void _exit (int @var{status})
 The @code{_exit} function is the primitive for causing a process to
 terminate with status @var{status}.  Calling this function does not
-execute functions registered with @code{atexit}.
+execute functions registered with @code{atexit} or @code{on_exit}.
 @end deftypefun
 
 When a process terminates for any reason --- either by an explicit
@@ -423,6 +466,8 @@ give you as much control as doing each operation the hard way.
 The @code{system} function is declared in the header file
 @file{<stdlib.h>}.
 
+@comment stdlib.h
+@comment ANSI
 @deftypefun int system (const char *@var{command})
 This function is used to cause the command @var{command} to be executed.
 The exact way in which this happens is implementation-dependent, as
@@ -496,11 +541,15 @@ too, instead of returning to the previous process image.
 The @code{fork} function is the primitive for creating a process.
 It is declared in the header file @file{<unistd.h>}.
 
+@comment sys/types.h
+@comment POSIX.1
 @deftp {Data Type} pid_t
 The @code{pid_t} data type is a signed arithmetic type which is capable
 of representing a process ID.
 @end deftp
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun pid_t fork (void)
 The @code{fork} function creates a new process.
 
@@ -554,6 +603,29 @@ The set of pending signals (@pxref{Signal Concepts}) for the child
 process is cleared.
 @end itemize 
 
+
+@comment unistd.h
+@comment BSD
+@deftypefun pid_t vfork (void)
+The @code{vfork} function is similar to @code{fork} but can be used only
+in a more restricted way.  In the situations where it can be used, however,
+it is usually more efficient than @code{fork}.
+
+While @code{fork} makes a complete copy of the calling process's address
+space and allows both the parent and child to execute independently,
+@code{vfork} does not make this copy.  Instead, the child process
+created with @code{vfork} shares its parent's address space until it calls
+one of the @code{exec} functions.  In the meantime, the parent process
+suspends execution.
+
+In typical use, @code{vfork} is used only if the child process immediately
+calls @code{exec}.  You must be very careful if the child process does
+anything else.  In particular, the child process cannot return from (or
+do a long jump out of) the function that called @code{vfork}!  This would
+leave the parent process's control information very confused.  If in
+doubt, use @code{fork} instead.
+@end deftypefun
+
 @node Executing a File
 @subsection Executing a File
 
@@ -564,6 +636,8 @@ pretty much the same way.
 
 These facilities are declared in the header file @file{<unistd.h>}.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int execv (const char *@var{filename}, char *const @var{argv}[])
 The @code{execv} function executes the file named by @var{filename} as a
 new process image.
@@ -578,12 +652,16 @@ The environment for the new process image is taken from the
 Variables}, for information about environments.
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int execl (const char *@var{filename}, const char *@var{arg0}, @dots{})
 This is similar to @code{execv}, but the @var{argv} strings are
 specified individually instead of as an array.  A null pointer must be
 passed as the last such argument.
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int execve (const char *@var{filename}, char *const @var{argv}[], char *const @var{env}[])
 This is similar to @code{execv}, but permits you to specify the environment
 for the new program explicitly as the @var{env} argument.  This should
@@ -591,6 +669,8 @@ be an array of strings in the same format as for the @code{environ}
 variable; @pxref{Environment Representation}.
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int execle (const char *@var{filename}, const char *@var{arg0}, @dots{})
 This is similar to @code{execl}, but permits you to specify the
 environment for the new program explicitly.  The environment argument is
@@ -599,6 +679,8 @@ argument, and should be an array of strings in the same format as for
 the @code{environ} variable.
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int execvp (const char *@var{filename}, char *const @var{argv}[])
 The @code{execvp} function is similar to @code{execv}, except that it
 uses the @code{PATH} environment variable (@pxref{Standard Environment
@@ -616,6 +698,8 @@ because of the user of your program having the wrong @code{PATH}
 configuration.
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int execlp (const char *@var{filename}, const char *@var{arg0}, @dots{})
 This function is like @code{execl}, except that it performs the same
 file name searching as the @code{execvp} function.
@@ -715,6 +799,9 @@ The functions described in this section are used to determine the status
 of a child process.  These functions are declared in the header file
 @file{<sys/wait.h>}.
 
+
+@comment sys/wait.h
+@comment POSIX.1
 @deftypefun pid_t waitpid (pid_t @var{pid}, int *@var{status_ptr}, int @var{options})
 The @code{waitpid} function is used to request status information from a
 child process whose process ID is @var{pid}.  Normally, the calling
@@ -767,18 +854,24 @@ An invalid value was provided for the @var{options} argument.
 These symbolic constants are defined as flags for the @var{options}
 argument to the @code{wait} function.
 
+@comment sys/wait.h
+@comment POSIX.1
 @defvr {Macro} WNOHANG
 This macro is used to specify that @code{waitpid} should return
 immediately instead of suspending execution if there is no status
 information immediately available.
 @end defvr
 
+@comment sys/wait.h
+@comment POSIX.1
 @defvr {Macro} WUNTRACED
 This macro is used to specify that @code{waitpid} should also report the
 status of any child processes that are stopped but whose status hasn't
 been reported since they were stopped.
 @end defvr
 
+@comment sys/wait.h
+@comment POSIX.1
 @deftypefun pid_t wait (int *@var{status_ptr})
 This is a simplified version of @code{waitpid}, and is used to suspend
 program execution until any child process terminates.
@@ -800,36 +893,89 @@ process is zero, then the status value reported by @code{waitpid} or
 @code{wait} is also zero.  You can test for other kinds of information
 encoded in the returned status value using the following macros.
 
+@comment sys/wait.h
+@comment POSIX.1
 @deftypefn Macro int WIFEXITED (int @var{status})
 This macro returns a non-zero value if the child process terminated
 normally.
 @end deftypefn
 
+@comment sys/wait.h
+@comment POSIX.1
 @deftypefn Macro int WEXITSTATUS (int @var{status})
 This macro can be used if @code{WIFEXITED} is true of @var{status}.  It
 returns the low-order 8 bits of the exit status value from the child
 process.
 @end deftypefn
 
+@comment sys/wait.h
+@comment POSIX.1
 @deftypefn Macro int WIFSIGNALED (int @var{status})
 This macro returns a non-zero value if the child process terminated
 by receiving a signal that was not caught.
 @end deftypefn
 
+@comment sys/wait.h
+@comment POSIX.1
 @deftypefn Macro int WTERMSIG (int @var{status})
 This macro can be used if @code{WIFSIGNALED} is true of @var{status}.
 It returns the number of the signal that terminated the child process.
 @end deftypefn
 
+@comment sys/wait.h
+@comment POSIX.1
 @deftypefn Macro int WIFSTOPPED (int @var{status})
 This macro returns a non-zero value if the child process is stopped.
 @end deftypefn
 
+@comment sys/wait.h
+@comment POSIX.1
 @deftypefn Macro int WSTOPSIG (int @var{status})
 This macro can be used if @code{WIFSTOPPED} is true of @var{status}.  It
 returns the number of the signal that caused the child process to stop.
 @end deftypefn
 
+
+The GNU Library also provides these related facilities for compatibility
+with BSD Unix.  BSD uses the @code{union wait} data type to represent
+status values rather than an @code{int}.  The two representations are
+actually interchangable.  The macros such as @code{WEXITSTATUS} are
+defined so that they will work on either kind of object, and the
+@code{wait} function is defined to accept either type of pointer as its
+@var{status_ptr} argument.
+
+@comment sys/wait.h
+@comment BSD
+@deftp {Data Type} {union wait}
+This data type represents program termination status values.
+
+@strong{Incomplete:}  The header file has some definitions for the members
+of this union.  Do they need to be documented?
+@end deftp
+
+@comment sys/wait.h
+@comment BSD
+@deftypefun pid_t wait3 (union wait *@var{status_ptr}, int @var{options}, void * @var{usage})
+If @var{usage} is a null pointer, this function is equivalent to
+@code{waitpid (-1, @var{status_ptr}, @var{options})}.
+
+The @var{usage} argument may also be a pointer to a 
+@code{struct rusage} object.  Information about system resources used by
+terminated processes (but not stopped processes) is returned in this
+structure.  @xref{wherever}.
+@end deftypefun
+
+@comment sys/wait.h
+@comment BSD
+@deftypefun pid_t wait4 (pid_t @var{pid}, union wait *@var{status_ptr}, int @var{options}, void *@var{usage})
+If @var{usage} is a null pointer, this function is equivalent to
+@code{waitpid (@var{pid}, @var{status_ptr}, @var{options})}.
+
+The @var{usage} argument may also be a pointer to a 
+@code{struct rusage} object.  Information about system resources used by
+terminated processes (but not stopped processes) is returned in this
+structure.  @xref{wherever}.
+@end deftypefun
 
 @node Process Creation Example
 @subsection Process Creation Example
@@ -1084,30 +1230,44 @@ changing the user and group IDs of a process.  To use these facilities,
 you must include the header files @file{<sys/types.h>} and
 @file{<unistd.h>}.
 
+@comment sys/types.h
+@comment POSIX.1
 @deftp {Data Type} uid_t
 This is an arithmetic data type used to represent user IDs.
 @end deftp
 
+@comment sys/types.h
+@comment POSIX.1
 @deftp {Data Type} gid_t
 This is an arithmetic data type used to represent group IDs
 @end deftp
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun uid_t getuid (void)
 The @code{getuid} function returns the real user ID of the process.
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun gid_t getgid (void)
 The @code{getgid} function returns the real group ID of the process.
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun uid_t geteuid (void)
 The @code{geteuid} function returns the effective user ID of the process.
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun gid_t getegid (void)
 The @code{getegid} function returns the effective group ID of the process.
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int getgroups (int @var{count}, gid_t *@var{groups})
 The @code{getgroups} function is used to inquire about the supplementary
 group IDs of the process.  Up to @var{count} of these group IDs are
@@ -1123,6 +1283,9 @@ The effective group ID of the process might or might not be included in
 the list of supplementary group IDs.
 @end deftypefun
 
+
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int setuid (@var{newuid})
 This function sets both the real and effective user ID of the process
 to @var{newuid}, provided that the process has appropriate privileges.
@@ -1147,6 +1310,8 @@ The process does not have the appropriate privileges.
 @end table
 @end deftypefun
 
+@comment unistd.h
+@comment BSD
 @deftypefun int setreuid (int @var{ruid}, int @var{euid})
 This function sets the real user ID of the process to @var{ruid} and
 the effective user ID to @var{euid}.
@@ -1167,6 +1332,8 @@ The process does not have the appropriate privileges.
 @end table
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int setgid (@var{newgid})
 This function sets both the real and effective group ID of the process
 to @var{newgid}, provided that the process has appropriate privileges.
@@ -1181,6 +1348,8 @@ as those for @code{setuid}.
 @end deftypefun
 
 
+@comment unistd.h
+@comment BSD
 @deftypefun int setregid (int @var{rgid}, int @var{egid})
 This function sets the real group ID of the process to @var{rgid} and
 the effective group ID to @var{egid}.
@@ -1195,6 +1364,34 @@ The return values and error conditions for @code{setregid} are the same
 as those for @code{setreuid}.
 @end deftypefun
 
+The GNU system also lets privileged processes change their supplementary 
+group IDs.  To use @code{setgroups} or @code{initgroups}, your programs
+should include the header file @file{<grp.h>}.
+
+@comment grp.h
+@comment BSD
+@deftypefun int setgroups (size_t @var{count}, gid_t *@var{groups})
+This function sets the process's supplementary group IDs.  It can only
+be called from privileged processes.  The @var{count} argument specifies
+the number of group IDs in the array @var{groups}.
+
+This function returns @code{0} if successful and @code{-1} on error.
+The following @code{errno} error conditions are defined for this
+function:
+
+@table @code
+@item EPERM
+The calling process is not privileged.
+@end table
+@end deftypefun
+
+@comment grp.h
+@comment BSD
+@deftypefun int initgroups (const char *@var{user}, gid_t @var{gid})
+The @code{initgroups} function effectively calls @code{setgroups} to
+set the process's supplementary group IDs to be the normal default for
+the user name @var{user}.  The group ID @var{gid} is also included.
+@end deftypefun
 
 @node Setuid Program Example
 @subsection Setuid Program Example
@@ -1348,10 +1545,14 @@ running on.
 If you want to use these functions, your program should include the
 header files @file{<unistd.h>} and @file{<sys/types.h>}.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun pid_t getpid (void)
 The @code{getpid} function returns the process ID of the currrent process.
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun pid_t getppid (void)
 The @code{getppid} function returns the process ID of the parent of the
 current process.
@@ -1370,6 +1571,8 @@ password database.
 The @code{getlogin} function is declared in @file{<unistd.h>}, while
 @code{cuserid} and @code{L_cuserid} are declared in @file{<stdio.h>}.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun {char *} getlogin (void)
 The @code{getlogin} function returns a pointer to string containing the
 name of the user logged in on the controlling terminal of the process,
@@ -1378,6 +1581,8 @@ is statically allocated and might be overwritten on subsequent calls to
 this function or to @code{cuserid}.
 @end deftypefun
 
+@comment stdio.h
+@comment POSIX.1
 @deftypefun {char *} cuserid (@var{string})
 The @code{cuserid} function returns a pointer to a string containing a
 name associated with the effective ID of the process.  If @var{string}
@@ -1388,6 +1593,8 @@ string is statically allocated and might be overwritten on subsequent
 calls to this function or to @code{getlogin}.
 @end deftypefun
 
+@comment stdio.h
+@comment POSIX.1
 @defvr Macro L_cuserid
 The value of this macro is an integer constant expression that
 is the size of a string large enough to store a login name.
@@ -1402,15 +1609,20 @@ the computer system your program is running on.  This function and the
 associated data type are declared in the header file
 @file{<sys/utsname.h>}.
 
+@comment sys/utsname.h
+@comment POSIX.1
 @deftp {Data Type} {struct utsname}
 The @code{utsname} structure is used to hold information returned
 by the @code{uname} function.  It has the following members:
 
 @table @code
 @item {char sysname[]}
-This is the name of the operating system implementation.
+This is the name of the operating system implementation.  In the
+GNU Library, the value is the string @code{"GNU C Library"}.
 @item {char nodename[]}
-This is the name of this node within a communications network.
+This is the name of this node within a communications network.  In the
+GNU Library, the value is the same as that returned by
+@code{gethostname}; @pxref{wherever}.
 @item {char release[]}
 This is the current release level of the operating system implementation.
 @item {char version[]}
@@ -1420,21 +1632,17 @@ system.
 This is a description of the hardware type that the operating system
 is running on.
 @end table
-
-@strong{Incomplete:}  The POSIX.1 standard requires the source and format
-of each member to be specified.
 @end deftp
 
 
+@comment sys/utsname.h
+@comment POSIX.1
 @deftypefun int uname (struct utsname *@var{info})
 The @code{uname} function fills in the structure pointed to by
 @var{info} with information about the operating system and host machine.
 A non-negative value is returned on successful completion; in the event
-of an error, @code{-1} is returned and @code{errno} is set to indicate
-the error.
-
-@strong{Incomplete:} POSIX.1 doesn't define any error codes; does the
-GNU library do anything special?
+of an error, @code{-1} is returned.  The @code{errno} error codes for
+this function are the same as those for @code{gethostname}; @pxref{wherever}.
 @end deftypefun
 
 
@@ -1447,6 +1655,8 @@ corresponds to the controlling terminal for the current process.
 controlling terminal of a process is determined.  This function is
 declared in the header file @file{<stdio.h>}.
 
+@comment stdio.h
+@comment POSIX.1
 @deftypefun {char *} ctermid (char *@var{string})
 The @code{ctermid} function returns a string containing the file name of
 the controlling terminal for the current process.  If @var{string} is
@@ -1460,6 +1670,8 @@ any reason.  Even if a file name is returned, access to the file it
 represents is not guaranteed.
 @end deftypefun
 
+@comment stdio.h
+@comment POSIX.1
 @defvr Macro L_ctermid
 The value of this macro is an integer constant expression that
 represents the size of a string large enough to hold the file name
@@ -1497,6 +1709,8 @@ Definitions for the following macros appear in the header file
 @strong{Incomplete:}  What does the GNU system do for the 
 implementation-defined macros?
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _POSIX_ARG_MAX
 The value of this macro is the most restrictive limit permitted by POSIX
 for the maximum combined length of the @var{argv} and @var{environ}
@@ -1504,66 +1718,88 @@ arguments that can be passed to the @code{exec} functions.  The value of
 this constant is @code{4096}.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro ARG_MAX
 This is the actual implementation limit corresponding to
 @code{_POSIX_ARG_MAX}, but is defined only if the limit for the
 particular implementation is a constant.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _POSIX_CHILD_MAX
 The value of this macro is the most restrictive limit permitted by POSIX
 for the maximum number of simultaneous processes per real user ID.  Its
 value is @code{6}.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro CHILD_MAX
 This is the actual implementation limit corresponding to
 @code{_POSIX_CHILD_MAX}, but is defined only if the limit for the
 particular implementation is a constant.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _POSIX_OPEN_MAX
 The value of this macro is the most restrictive limit permitted by POSIX
 for the maximum number of files that a single process can have open
 simultaneously.  The value of this constant is @code{16}.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro OPEN_MAX
 This is the actual implementation limit corresponding to
 @code{_POSIX_OPEN_MAX}, but is defined only if the limit for the
 particular implementation is a constant.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _POSIX_STREAM_MAX
 The value of this macro is the most restrictive limit permitted by POSIX
 for the maximum number of streams that a single process can have open
 simultaneously.  The value of this constant is @code{8}.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro STREAM_MAX
 This is the actual implementation limit corresponding to
 @code{_POSIX_STREAM_MAX}, but is defined only if the limit for the
 particular implementation is a constant.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _POSIX_TZNAME_MAX
 The value of this macro is the most restrictive limit permitted by POSIX
 for the maximum length of a time zone name.  The value of this constant
 is @code{3}.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro TZNAME_MAX
 This is the actual implementation limit corresponding to
 @code{_POSIX_TZNAME_MAX}, but is defined only if the limit for the
 particular implementation is a constant.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _POSIX_NGROUPS_MAX
 The value of this macro is the most restrictive limit permitted by POSIX
 for the maximum number of supplementary group IDs per process.  The
 value of the constant is @code{0}.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro NGROUPS_MAX
 This corresponds to @code{_POSIX_NGROUPS_MAX}, but represents the
 minimum value guaranteed by the implementation.  This macro is defined
@@ -1572,6 +1808,8 @@ even if the limit for the particular implementation is not a constant.
 @code{sysconf} function.)
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro _POSIX_SSIZE_MAX
 The value of this macro is the most restrictive limit permitted by POSIX
 for the maximum value that can be stored in an object of type @code{ssize_t}.
@@ -1580,6 +1818,8 @@ or written in a single operation.  The value of this constant is
 @code{32767}.
 @end defvr
 
+@comment limits.h
+@comment POSIX.1
 @defvr Macro SSIZE_MAX
 This is the actual implementation limit corresponding to
 @code{_POSIX_SSIZE_MAX}.  This macro is always defined and its value is
@@ -1589,12 +1829,16 @@ a constant within a given implementation.
 Definitions for these additional macros that describe system parameters
 appear in the header file @file{<unistd.h>}.
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _POSIX_JOB_CONTROL
 If this symbol is defined, it indicates that the system supports job
 control.  Otherwise, the implementation behaves as if all processes
 within a session belong to a single process group.  @xref{Job Control}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _POSIX_SAVED_IDS
 If this symbol is defined, it indicates that the system remembers the
 effective user and group IDs of an executable file with the set-user-ID
@@ -1605,6 +1849,8 @@ or group ID to the real user or group ID of the process, it can't change
 it back again.  @xref{User/Group IDs of a Process}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _POSIX_VERSION
 This constant represents the version of the POSIX standard to which
 the implementation conforms.  For an implementation conforming to the
@@ -1616,6 +1862,8 @@ You can request the actual runtime values of these parameters using the
 @var{parameter} argument are declared in the header file
 @file{<unistd.h>}.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun long sysconf (int @var{parameter})
 This function is used to inquire about runtime system parameters.
 The @var{parameter} argument can be one of the following:
@@ -1666,43 +1914,66 @@ The value of the @var{parameter} is invalid.
 These symbolic constants are defined for use as the @var{parameter}
 argument to @code{sysconf}.  The values are all integer constants.
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _SC_ARG_MAX
 Inquire about the parameter corresponding to @code{ARG_MAX}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _SC_CHILD_MAX
 Inquire about the parameter corresponding to @code{CHILD_MAX}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _SC_OPEN_MAX
 Inquire about the parameter corresponding to @code{OPEN_MAX}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _SC_STREAM_MAX
 Inquire about the parameter corresponding to @code{STREAM_MAX}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _SC_TZNAME_MAX
 Inquire about the parameter corresponding to @code{TZNAME_MAX}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _SC_NGROUPS_MAX
 Inquire about the parameter corresponding to @code{NGROUPS_MAX}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _SC_JOB_CONTROL
 Inquire about the parameter corresponding to @code{_POSIX_JOB_CONTROL}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _SC_SAVED_IDS
 Inquire about the parameter corresponding to @code{_POSIX_SAVED_IDS}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _SC_VERSION
 Inquire about the parameter corresponding to @code{_POSIX_VERSION}.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro _SC_CLK_TCK
 Inquire about the parameter corresponding to @code{CLOCKS_PER_SEC};
 @pxref{Basic Elapsed CPU Time Inquiry}.
 @end defvr
+
+@strong{Incomplete:}  There are also a bunch of symbols for POSIX.2
+features listed in @file{<unistd.h>}.
