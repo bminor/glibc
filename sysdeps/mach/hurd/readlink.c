@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <limits.h>
+#include <hurd.h>
 
 /* Read the contents of the symbolic link PATH into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
@@ -27,23 +29,28 @@ int
 DEFUN(__readlink, (path, buf, len),
       CONST char *path AND char *buf AND size_t len)
 {
-  io_statbuf_t stb;
   error_t err;
-  char *p;
-  file_t file = __hurd_path_lookup (path, FS_LOOKUP_READ|FS_LOOKUP_NOLINK, 0);
+  file_t file;
 
+  file = __path_lookup (path, FS_LOOKUP_READ|FS_LOOKUP_NOTRANS, 0);
   if (file == MACH_PORT_NULL)
     return -1;
 
   p = buf;
   while (len > 0)
     {
-      size_t nread;
-      err = __io_read (file, p, len, &nread);
+      char *s = p;
+      size_t nread = len;
+      err = __io_read (file, &s, &nread);
       if (err)
 	break;
       if (nread == 0)
 	break;
+      if (s != p)
+	{
+	  memcpy (p, s, nread);
+	  __vm_deallocate (__mach_task_self (), s, nread);
+	}
       len -= nread;
       p += nread;
     }
