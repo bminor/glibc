@@ -55,6 +55,7 @@ Cambridge, MA 02139, USA.  */
 #define SET_SP(sp) \
 
 #define CALL_WITH_SP(fn, sp) \
-  asm volatile ("movl %0, %%esp; jmp %1" : : "g" (sp), "m" (fn) : "%esp")
+  asm volatile ("movl %0, %%esp; jmp %1" : : \
+		"g" (sp), "m" (*(long int *) (fn)) : "%esp")
 
 #include_next <sysdep.h>
