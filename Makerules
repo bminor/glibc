@@ -246,11 +246,12 @@ override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
 +depfiles := $(strip $(sources:.c=.dep) $(extra-objs:.o=.dep) \
 		     $(addsuffix .dep,$(others) $(tests)))
 +depfiles := $(addprefix $(objpfx),\
-			 $(filter-out $(addsuffix.dep,$(omit-deps)),\
+			 $(filter-out $(addsuffix .dep,$(omit-deps)),\
 				      $(+depfiles)))
 
 $(objpfx)depend-$(subdir): Makefile
 ifdef +depfiles
+ifndef omit-deps
 # This used to simply use $(+depfiles) on the command line, but that tended
 # to overflow the arg limit on USG systems.  Since `sources' is in the
 # environment anyway, we do some shell processing on it instead.
@@ -259,6 +260,14 @@ ifdef +depfiles
 		    `echo $${sources} | sed 's/\.c/.dep/g'`; do \
 	  echo "include \$$(objpfx)$$file";	\
 	done > $@
+else
+# We still do the simple thing when omit-deps is defined; otherwise we
+# would have to do something horrid to omit them from the $sources value in
+# the shell.
+	for file in $(+depfiles:$(objpfx)%=%); do \
+	  echo "include \$$(objpfx)$$file";	\
+	done > $@
+endif
 else
 	cp /dev/null $@
 endif
@@ -359,7 +368,7 @@ endef
 # Don't attempt binaries for the Hurd version (yet).
 ifdef mib_hacks
 install :=
-install-others :=
+install-others := $(filter %.h %.defs,$(install-others))
 endif
 
 
@@ -438,7 +447,9 @@ cd $(@D); $(CC) $(native-CFLAGS) $(<:$(common-objpfx)%=%) -o $(@F)
 endef
 
 # We always want to use configuration -D switches.
-native-CFLAGS = $(config-defines)
+# Search $(sysincludedir) first in case GCC searches /usr/local/include and
+# that contains an old (or abortive) GNU libc installation.
+native-CFLAGS = $(config-defines) -I$(sysincludedir)
 
 # Support the GNU standard name for this target.
 .PHONY: check
