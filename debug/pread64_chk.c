@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <sys/param.h>
 
-
+#if 0
 ssize_t
 __pread64_chk (int fd, void *buf, size_t nbytes, off64_t offset, size_t buflen)
 {
@@ -28,3 +28,4 @@ __pread64_chk (int fd, void *buf, size_t nbytes, off64_t offset, size_t buflen)
 
   return __pread64 (fd, buf, offset, nbytes);
 }
+#endif

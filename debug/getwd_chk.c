@@ -20,7 +20,7 @@
 #include <unistd.h>
 #include <sys/param.h>
 
-
+#if 0
 char *
 __getwd_chk (char *buf, size_t buflen)
 {
@@ -32,3 +32,4 @@ __getwd_chk (char *buf, size_t buflen)
 
 link_warning (getwd,
 	      "the `getwd' function is dangerous and should not be used.")
+#endif

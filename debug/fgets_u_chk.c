@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <sys/param.h>
 
+#if 0
 char *
 __fgets_unlocked_chk (buf, size, n, fp)
      char *buf;
@@ -63,3 +64,4 @@ __fgets_unlocked_chk (buf, size, n, fp)
   fp->_IO_file_flags |= old_error;
   return result;
 }
+#endif

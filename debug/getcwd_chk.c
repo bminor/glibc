@@ -20,7 +20,7 @@
 #include <unistd.h>
 #include <sys/param.h>
 
-
+#if 0
 char *
 __getcwd_chk (char *buf, size_t size, size_t buflen)
 {
@@ -29,3 +29,4 @@ __getcwd_chk (char *buf, size_t size, size_t buflen)
 
   return __getcwd (buf, size);
 }
+#endif

@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <sys/param.h>
 
+#if 0
 char *
 __fgets_chk (buf, size, n, fp)
      char *buf;
@@ -65,3 +66,4 @@ __fgets_chk (buf, size, n, fp)
   _IO_release_lock (fp);
   return result;
 }
+#endif

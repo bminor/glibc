@@ -21,64 +21,44 @@
 # error "Never include <bits/unistd.h> directly; use <unistd.h> instead."
 #endif
 
-extern ssize_t __read_chk (int __fd, void *__buf, size_t __nbytes,
-			   size_t __buflen) __wur;
+extern void __chk_fail (void) __attribute__((noreturn));
 #define read(fd, buf, nbytes) \
-  (__bos0 (buf) != (size_t) -1						      \
-   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos0 (buf))	      \
-   ? __read_chk (fd, buf, nbytes, __bos0 (buf))				      \
-   : read (fd, buf, nbytes))
+  (__extension__							      \
+    ({ size_t __nbytes_val = (nbytes);			  		      \
+       if (__bos0 (buf) != (size_t) -1 && __bos0 (buf) < __nbytes_val)	      \
+         __chk_fail ();							      \
+       read (fd, buf, __nbytes_val); }))
 
 #ifdef __USE_UNIX98
-extern ssize_t __pread_chk (int __fd, void *__buf, size_t __nbytes,
-			    __off_t __offset, size_t __bufsize) __wur;
-extern ssize_t __pread64_chk (int __fd, void *__buf, size_t __nbytes,
-			      __off64_t __offset, size_t __bufsize) __wur;
-# ifndef __USE_FILE_OFFSET64
-#  define pread(fd, buf, nbytes, offset) \
-  (__bos0 (buf) != (size_t) -1						      \
-   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos0 (buf))	      \
-   ? __pread64_chk (fd, buf, nbytes, offset, __bos0 (buf))		      \
-   : pread (fd, buf, offset, nbytes))
-# else
-#  define pread(fd, buf, nbytes, offset) \
-  (__bos0 (buf) != (size_t) -1						      \
-   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos0 (buf))	      \
-   ? __pread_chk (fd, buf, nbytes, offset, __bos0 (buf))		      \
-   : pread (fd, buf, offset, nbytes))
-# endif
+# define pread(fd, buf, nbytes, offset) \
+  (__extension__							      \
+    ({ size_t __nbytes_val = (nbytes);			  		      \
+       if (__bos0 (buf) != (size_t) -1 && __bos0 (buf) < __nbytes_val)	      \
+         __chk_fail ();							      \
+       pread (fd, buf, __nbytes_val, offset); }))
 
 # ifdef __USE_LARGEFILE64
 #  define pread64(fd, buf, nbytes, offset) \
-  (__bos0 (buf) != (size_t) -1						      \
-   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos0 (buf))	      \
-   ? __pread64_chk (fd, buf, nbytes, offset, __bos0 (buf))		      \
-   : pread64 (fd, buf, offset, nbytes))
+  (__extension__							      \
+    ({ size_t __nbytes_val = (nbytes);			  		      \
+       if (__bos0 (buf) != (size_t) -1 && __bos0 (buf) < __nbytes_val)	      \
+         __chk_fail ();							      \
+       pread64 (fd, buf, __nbytes_val, offset); }))
 # endif
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
-extern int __readlink_chk (__const char *__restrict __path,
-			   char *__restrict __buf, size_t __len,
-			   size_t __buflen)
-     __THROW __nonnull ((1, 2)) __wur;
 # define readlink(path, buf, len) \
-  (__bos (buf) != (size_t) -1						      \
-   && (!__builtin_constant_p (len) || (len) > __bos (buf))		      \
-   ? __readlink_chk (path, buf, len, __bos (buf))			      \
-   : readlink (path, buf, len))
+  (__extension__							      \
+    ({ size_t __len_val = (len);			  		      \
+       if (__bos (buf) != (size_t) -1 && __bos (buf) < __len_val)	      \
+         __chk_fail ();							      \
+       readlink (path, buf, __len_val); }))
 #endif
 
-extern char *__getcwd_chk (char *__buf, size_t __size, size_t __buflen)
-     __THROW __wur;
 #define getcwd(buf, size) \
-  (__bos (buf) != (size_t) -1						      \
-   && (!__builtin_constant_p (size) || (size) > __bos (buf))		      \
-   ? __getcwd_chk (buf, size, buflen) : getcwd (buf, size))
-
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-extern char *__getwd_chk (char *__buf, size_t buflen)
-     __THROW __nonnull ((1)) __attribute_deprecated__ __wur;
-#define getwd(buf) \
-  (__bos (buf) != (size_t) -1 ? __getwd_chk (buf, buflen) : getwd (buf))
-#endif
+  (__extension__							      \
+    ({ size_t __size_val = (size);			  		      \
+       if (__bos (buf) != (size_t) -1 && __bos (buf) < __size_val)	      \
+         __chk_fail ();							      \
+       getcwd (buf, __size_val); }))

@@ -88,13 +88,17 @@ extern char *__gets_chk (char *__str, size_t);
   ((__bos (__str) == (size_t) -1)					      \
    ? gets (__str) : __gets_chk (__str, __bos (__str)))
 
-extern char *__fgets_chk (char *s, size_t size, int n, FILE *stream);
+extern void __chk_fail (void) __attribute__((noreturn));
 #define fgets(__str, __n, __fp) \
-  ((__bos (__str) == (size_t) -1)					      \
-   ? fgets (__str, __n, __fp) : __fgets_chk (__str, __bos (__str), __n, __fp))
+  (__extension__							      \
+    ({ size_t __n_val = (__n);				  		      \
+       if (__bos (__str) != (size_t) -1 && __bos (__str) < __n_val)	      \
+         __chk_fail ();							      \
+       fgets (__str, __n_val, __fp); }))
 
-extern char *__fgets_unlocked_chk (char *s, size_t size, int n, FILE *stream);
 #define fgets_unlocked(__str, __n, __fp) \
-  ((__bos (__str) == (size_t) -1)					      \
-   ? fgets_unlocked (__str, __n, __fp)					      \
-   : __fgets_unlocked_chk (__str, __bos (__str), __n, __fp))
+  (__extension__							      \
+    ({ size_t __n_val = (__n);				  		      \
+       if (__bos (__str) != (size_t) -1 && __bos (__str) < __n_val)	      \
+         __chk_fail ();							      \
+       fgets_unlocked (__str, __n_val, __fp); }))

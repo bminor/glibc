@@ -23,7 +23,7 @@
 # include <sysdep.h>
 #endif
 
-
+#if 0
 ssize_t
 __readlink_chk (const char *path, void *buf, size_t len, size_t buflen)
 {
@@ -36,3 +36,4 @@ __readlink_chk (const char *path, void *buf, size_t len, size_t buflen)
   return __readlink (path, buf, len);
 #endif
 }
+#endif
