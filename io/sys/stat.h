@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -105,7 +105,7 @@ extern int EXFUN(__lstat, (CONST char *__file, struct __stat *__buf));
 extern int EXFUN(__chmod, (CONST char *__file, __mode_t __mode));
 
 /* Set file access permissions of the file FD is open on to MODE.  */
-extern int EXFUN(__fchmod, (int __fd, int __mode));
+extern int EXFUN(__fchmod, (int __fd, __mode_t __mode));
 
 
 /* Set the file creation mask of the current process to MASK,
@@ -124,7 +124,8 @@ extern int EXFUN(__mkdir, (CONST char *__path, __mode_t __mode));
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
    device numbers with the `makedev' macro above).  */
-extern int EXFUN(__mknod, (CONST char *__path, int __mode, int __dev));
+extern int EXFUN(__mknod, (CONST char *__path,
+			   __mode_t __mode, __dev_t __dev));
 
 
 #define	stat	__stat
