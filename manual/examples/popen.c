@@ -14,6 +14,7 @@ write_data (FILE * stream)
     }
 }
 
+/*@group*/
 int
 main (void)
 {
@@ -29,3 +30,4 @@ main (void)
   pclose (output);
   return EXIT_SUCCESS;
 }
+/*@end group*/
