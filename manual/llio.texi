@@ -1407,12 +1407,16 @@ can do them @i{atomically}.
 @comment POSIX.1
 @deftypevr Macro int O_TRUNC
 Truncate the file to zero length.  This option is only useful for
-regular files, not special files such as directories or FIFOs.  You have
-permission to write the file to truncate it, but you need not open for
-write access.
+regular files, not special files such as directories or FIFOs.  POSIX.1
+requires that you open the file for writing to use @code{O_TRUNC}.  In
+BSD and GNU you must have permission to write the file to truncate it,
+but you need not open for write access.
 
-This is the only open-time action flag specified by POSIX.1.
-@c !!! not atomic? check posix.1
+This is the only open-time action flag specified by POSIX.1.  There is
+no good reason for truncation to be done by @code{open}, instead of by
+calling @code{ftruncate} afterwards.  The @code{O_TRUNC} flag existed in
+Unix before @code{ftruncate} was invented, and is retained for backward
+compatibility.
 @end deftypevr
 
 @comment fcntl.h
