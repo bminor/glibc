@@ -1,22 +1,21 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/fd.h>
@@ -24,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Change the current root directory to FD.  */
 int
-DEFUN(fchroot, (fd), int fd)
+fchroot (int fd)
 {
   error_t err;
   file_t dir;
@@ -36,7 +35,13 @@ DEFUN(fchroot, (fd), int fd)
 			}));
 
   if (! err)
-    _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], dir);
+    {
+      file_t root;
+      err = __file_reparent (dir, MACH_PORT_NULL, &root);
+      __mach_port_deallocate (__mach_task_self (), dir);
+      if (! err)
+	_hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], root);
+    }
 
   return err ? __hurd_fail (err) : 0;
 }

@@ -1,21 +1,21 @@
 /* Report on what a thread in our task is waiting for.
-Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <hurd.h>
 #include <hurd/signal.h>
@@ -93,8 +93,15 @@ describe_port (string_t description, mach_port_t port)
 }
 
 
-/* Common defn so we don't link in the itimer code unnecessarily.  */
-thread_t _hurd_itimer_thread; /* XXX */
+/* We want _HURD_ITIMER_THREAD, but don't want to link in the itimer code
+   unnecessarily.  */
+#if 0 /* libc.so.0.0 needs this defined, so make it a weak alias for now.  */
+extern thread_t _hurd_itimer_thread; /* XXX */
+weak_extern (_hurd_itimer_thread)
+#else
+static thread_t default_hurd_itimer_thread;
+weak_alias (default_hurd_itimer_thread, _hurd_itimer_thread)
+#endif
 
 kern_return_t
 _S_msg_report_wait (mach_port_t msgport, thread_t thread,
@@ -105,7 +112,7 @@ _S_msg_report_wait (mach_port_t msgport, thread_t thread,
   if (thread == _hurd_msgport_thread)
     /* Cute.  */
     strcpy (description, "msgport");
-  else if (thread == _hurd_itimer_thread)
+  else if (&_hurd_msgport_thread && thread == _hurd_itimer_thread)
     strcpy (description, "itimer");
   else
     {

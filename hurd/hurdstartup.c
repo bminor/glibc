@@ -1,21 +1,21 @@
 /* Initial program startup for running under the GNU Hurd.
-Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <stdlib.h>
@@ -34,15 +34,6 @@ Cambridge, MA 02139, USA.  */
 
 mach_port_t *_hurd_init_dtable;
 mach_msg_type_number_t _hurd_init_dtablesize;
-
-unsigned int __hurd_threadvar_max;
-unsigned long int __hurd_threadvar_stack_mask;
-unsigned long int __hurd_threadvar_stack_offset;
-
-/* These are set up by _hurdsig_init.  */
-unsigned long int __hurd_sigthread_stack_base;
-unsigned long int __hurd_sigthread_stack_end;
-unsigned long int *__hurd_sigthread_variables;
 
 extern void __mach_init (void);
 
