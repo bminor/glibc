@@ -47,7 +47,7 @@ aux		:= init-posix environ
 tests		:= tstgetopt
 others		:= getconf
 install-lib	:= libposix.a
-gpl2gpl := getopt.c getopt1.c getopt.h	# Frob these guys' copying notices.
+gpl2lgpl := getopt.c getopt1.c getopt.h	# Frob these guys' copying notices.
 
 include ../Rules
 
