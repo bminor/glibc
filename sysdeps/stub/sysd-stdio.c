@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -76,8 +76,20 @@ DEFUN(__stdio_fileno, (cookie), PTR cookie)
    Store the magic cookie associated with the opened file in *COOKIEPTR.
    Return zero on success and nonzero on failure.  */   
 int
-DEFUN(__stdio_open, (filename, m, fdptr),
+DEFUN(__stdio_open, (filename, m, cookieptr),
       CONST char *filename AND __io_mode m AND PTR *cookieptr)
+{
+  errno = ENOSYS;
+  return -1;
+}
+
+
+/* Open FILENAME with the mode in M.  Use the same magic cookie
+   already in *COOKIEPTR if possible, closing the old cookie with CLOSEFN.  */
+int
+DEFUN(__stdio_reopen, (filename, m, cookieptr),
+      CONST char *filename AND __io_mode m AND
+      PTR *cookieptr AND __io_close closefn)
 {
   errno = ENOSYS;
   return -1;
@@ -94,5 +106,6 @@ stub_warning(__stdio_seek);
 stub_warning(__stdio_close);
 stub_warning(__stdio_fileno);
 stub_warning(__stdio_open);
+stub_warning(__stdio_reopen);
 
 #endif	/* GNU stabs.  */
