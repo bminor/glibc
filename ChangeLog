@@ -16,6 +16,19 @@
 	* iconv/iconv_prog.c (process_block): For stateful charsets write
 	out byte sequence to get to initial state at the end of the file.
 
+1999-11-25  Andreas Schwab  <schwab@suse.de>
+
+	* Makeconfig: Include sys-dirs and sys-sorted earlier.
+	($(common-objpfx)soversions.mk): Wait until subdirs is complete.
+	($(common-objpfx)sysd-sorted): Emit marker when this file is
+	complete.
+
+1999-11-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/signum.h (SIGSYS): New definition.
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h (ARPHRD_IEEE802_TR): Added.
+
 1999-11-23  Thorsten Kukuk  <kukuk@suse.de>
 
 	* iconv/skeleton.c: Don't access next_step->fct if data->is_last
