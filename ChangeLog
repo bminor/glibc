@@ -1,3 +1,7 @@
+2002-08-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc.c (cALLOc): Check for overflow on multiplication.
+
 2002-08-06  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/utime.c: If TIMES is NULL pass it through to utimes.
