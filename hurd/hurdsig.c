@@ -889,40 +889,6 @@ _hurdsig_init (void)
 			   TASK_EXCEPTION_PORT, _hurd_msgport);
 #endif
 }
-
-/* Send exceptions for the signal thread to the proc server.
-   It will forward the message on to our message port,
-   and then restore the thread's state to code which
-   does `longjmp (_hurd_sigthread_fault_env, 1)'.  */
-
-void
-_hurdsig_fault_init (void)
-{
-  error_t err;
-  mach_port_t sigexc;
-  struct machine_thread_state state;
-
-  if (err = __mach_port_allocate (__mach_task_self (),
-				  MACH_PORT_RIGHT_RECEIVE, &sigexc))
-    __libc_fatal ("hurd: Can't create receive right for signal thread exc\n");
-
-  /* Set up STATE with a thread state that will longjmp immediately.  */
-  _hurd_initialize_fault_recovery_state (&state);
-
-#if 0				/* Don't confuse gdb.  */
-  __thread_set_special_port (_hurd_msgport_thread,
-			     THREAD_EXCEPTION_PORT, sigexc);
-#endif
-
-  if (err = __USEPORT
-      (PROC,
-       __proc_handle_exceptions (port,
-				 sigexc,
-				 _hurd_msgport, MACH_MSG_TYPE_COPY_SEND,
-				 MACHINE_THREAD_STATE_FLAVOR,
-				 (int *) &state, MACHINE_THREAD_STATE_COUNT)))
-    __libc_fatal ("hurd: proc won't handle signal thread exceptions\n");
-}
 				/* XXXX */
 /* Reauthenticate with the proc server.  */
 
