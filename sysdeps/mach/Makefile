@@ -13,3 +13,18 @@ includes += -I$(mach-srcdir)
 # Find Mach header files in the kernel source.
 vpath mach/%.h $(mach-srcdir)
 vpath device/%.h $(mach-srcdir)
+
+ifneq (mach,$(subdir))
+# Subdirectories other than mach/ might use the generated Mach headers.
+# So make sure we get a chance to run in mach/ to make them before all else.
+
+ifdef objpfx
+mach_interface.h = $(objpfx)mach/mach_interface.h
+else
+mach_interface.h = $(..)mach/mach/mach_interface.h
+endif
+
+before-compile += $(mach_interface.h)
+$(mach_interface.h):	# Run only if it doesn't exist.
+	$(MAKE) -C $(..)mach $(patsubst $(..)mach/%,%,$@)
+endif
