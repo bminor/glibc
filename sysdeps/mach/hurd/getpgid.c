@@ -31,10 +31,8 @@ DEFUN(__getpgrp, (pid), pid_t pid)
   if (pid == 0)
     return _hurd_pgrp;
 
-  __mutex_lock (&_hurd_lock);
-  err = __proc_getpgrp (_hurd_proc, pid, &pgrp);
-  __mutex_unlock (&_hurd_lock);
-  if (err)
+  if (err = _HURD_PORT_USE (&_hurd_proc,
+			    __proc_getpgrp (port, pid, &pgrp)))
     return __hurd_fail (err);
 
   return pgrp;
