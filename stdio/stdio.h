@@ -131,10 +131,12 @@ extern int __stdio_open __P ((__const char *__file, __io_mode __m,
 			      __ptr_t *__cookieptr));
 /* Put out an error message for when stdio needs to die.  */
 extern void __stdio_errmsg __P ((__const char *__msg, size_t __len));
-/* Generate a unique file name.  */
+/* Generate a unique file name (and possibly open it with mode "w+b").  */
 extern char *__stdio_gen_tempname __P ((__const char *__dir,
 					__const char *__pfx,
-					int __dir_search, size_t *__lenptr));
+					int __dir_search,
+					size_t *__lenptr,
+					FILE **__streamptr));
 
 #ifndef	__NORETURN
 #ifdef	__GNUC__
