@@ -12,16 +12,17 @@ Most of the functions in this chapter operate on file descriptors.
 descriptor is and how to open a file descriptor for a terminal device.
 
 @menu
-* Indentifying Terminals::   How to determine if a file is a terminal
-			         device, and what its name is.
+* Is It a Terminal::    How to determine if a file is a terminal
+			  device, and what its name is.
 * I/O Queues::		About flow control and typeahead.
+* Canonical or Not::    Two basic styles of input processing.
 * Terminal Modes::	How to examine and modify flags controlling
 			  details of terminal I/O: echoing, signals, editing.
 * Line Control::	Sending break sequences, clearing terminal buffers...
-* Terminal Example::	How to read single characters without echo.
+* Noncanon Example::	How to read single characters without echo.
 @end menu
 
-@node Identifying Terminals
+@node Is It a Terminal
 @section Identifying Terminals
 @cindex terminal identification
 @cindex identifying terminals
@@ -93,6 +94,43 @@ that have been received but not yet read.  Similarly, clearing the
 terminal output queue means discarding any characters that have been
 written but not yet transmitted.
 
+@node Canonical or Not
+@section Two Styles of Input: Canonical or Not
+
+POSIX systems support two basic modes of input: canonical and
+noncanonical.
+
+@cindex canonical input processing
+In @dfn{canonical input processing} mode, terminal input is processed in
+lines terminated by newline (@code{'\n'}), EOF, or EOL characters.  No
+input can be read until an entire line has been typed by the user, and
+the @code{read} function (@pxref{I/O Primitives}) returns at most a
+single line of input, no matter how many bytes are requested.
+
+In canonical input mode, the operating system provides input editing
+facilities: the ERASE and KILL characters are interpreted specially to
+perform editing operations within the current line of text.
+@xref{Editing Characters}.
+
+The constants @code{_POSIX_MAX_CANON} and @code{MAX_CANON} parameterize
+the maximum number of bytes which may appear in a single line of
+canonical input.  @xref{File System Parameters}.
+
+@cindex noncanonical input processing
+In @dfn{noncanonical input processing} mode, characters are not grouped
+into lines, and ERASE and KILL processing is not performed.  The
+granularity with which bytes are read in noncanonical input mode is
+controlled by the MIN and TIME settings.  @xref{Noncanonical Input}.
+
+Most programs use canonical input mode, because this gives the user a
+way to edit input line by line.  The usual reason to use noncanonical
+mode is when the program accepts single-character commands or provides
+its own editing facilities.
+
+The choice of canonical or noncanonical input is controlled by the
+@code{ICANON} flag in the @code{c_lflag} member of @code{struct termios}
+(@pxref{Local Modes}).
+
 @node Terminal Modes
 @section Terminal Modes
 
@@ -105,7 +143,6 @@ constants are all declared in the header file @file{termios.h}.
 * Mode Data Types::	The data type @code{struct termios} and related types.
 * Mode Functions::	Functions to read and set the terminal attributes.
 * Setting Modes::       The right way to set terminal attributes reliably.
-* Canonical or Not::    Two basic styles of input processing.
 * Input Modes::		Flags controlling low-level input handling.
 * Output Modes::	Flags controlling low-level output handling.
 * Control Modes::	Flags controlling serial port behavior.
@@ -113,7 +150,7 @@ constants are all declared in the header file @file{termios.h}.
 * Line Speed::		How to read and set the terminal line speed.
 * Special Characters::	Characters that have special effects,
 			  and how to change them.
-* Non-canonical Input::	Controlling how long to wait for input.
+* Noncanonical Input::	Controlling how long to wait for input.
 @end menu
 
 @node Mode Data Types
@@ -331,38 +368,6 @@ set_istrip (int desc, int value)
   return 1;
 @}
 @end example
-
-@node Canonical or Not
-@section Two Styles of Input: Canonical or Not
-
-POSIX systems support two basic modes of input: canonical and
-non-canonical.
-
-@cindex canonical input processing
-In @dfn{canonical input processing} mode, terminal input is processed in
-lines terminated by newline (@code{'\n'}), EOF, or EOL characters.  No
-input can be read until an entire line has been typed by the user, and
-the @code{read} function (@pxref{I/O Primitives}) returns at most a
-single line of input, no matter how many bytes are requested.
-
-In canonical input mode, the operating system provides input editing
-facilities: the ERASE and KILL characters are interpreted specially to
-perform editing operations within the current line of text.
-@xref{Editing Characters}.
-
-The constants @code{_POSIX_MAX_CANON} and @code{MAX_CANON} parameterize
-the maximum number of bytes which may appear in a single line of
-canonical input.  @xref{File System Parameters}.
-
-@cindex non-canonical input processing
-In @dfn{non-canonical input processing} mode, characters are not grouped
-into lines, and ERASE and KILL processing is not performed.  The
-granularity with which bytes are read in non-canonical input mode is
-controlled by the MIN and TIME settings.  @xref{Non-Canonical Input}.
-
-The choice of canonical or non-canonical input is controlled by the
-@code{ICANON} flag in the @code{c_lflag} member of @code{struct termios}
-(@pxref{Local Modes}).
 
 @node Input Modes
 @subsection Input Modes
@@ -648,7 +653,7 @@ This section describes the flags for the @code{c_lflag} member of the
 @code{struct termios} structure.  These flags generally control
 higher-level aspects of input processing than the input modes flags
 described in @ref{Input Modes}, such as echoing, signals, and the choice
-of canonical or non-canonical input.
+of canonical or noncanonical input.
 
 The @code{c_lflag} member itself is an integer, and you change the flags
 and fields using the operators @code{&}, @code{|}, and @code{^}.  Don't
@@ -662,7 +667,7 @@ Modes}).
 @vindex ICANON
 @item ICANON
 This bit, if set, enables canonical input processing mode.  Otherwise,
-input is processed in non-canonical mode.  @xref{Canonical or Not}.
+input is processed in noncanonical mode.  @xref{Canonical or Not}.
 
 @comment termios.h
 @comment POSIX.1
@@ -712,7 +717,7 @@ is not set.
 @item ISIG
 This bit controls whether the INTR, QUIT, and SUSP characters are
 recognized.  The functions associated with these characters are performed
-if and only if this bit is set.  Being in canonical or non-canonical
+if and only if this bit is set.  Being in canonical or noncanonical
 input mode has no affect on the interpretation of these characters.
 
 You should use caution when disabling recognition of these characters.
@@ -905,7 +910,7 @@ characters which perform various control functions.  These include the
 ERASE character (usually @key{DEL}) for editing input, and other editing
 characters.  The INTR character (normally @kbd{C-c}) for sending a
 @code{SIGINT} signal, and other signal-raising characters, may be
-available in either canonical or non-canonical input mode.  All these
+available in either canonical or noncanonical input mode.  All these
 characters are described in this section.
 
 The particular characters used are specified in the @code{c_cc} member
@@ -1003,7 +1008,7 @@ The KILL character is usually @kbd{C-u}.
 @node Signal Characters
 @subsubsection Characters that Cause Signals
 
-These special characters may active in either canonical or non-canonical
+These special characters may active in either canonical or noncanonical
 input mode, but only when the @code{ISIG} flag is set (@pxref{Local
 Modes}).
 
@@ -1061,7 +1066,7 @@ Typically, the SUSP character is @kbd{C-z}.
 @node Start/Stop Characters
 @subsubsection Special Characters for Flow Control
 
-These special characters may active in either canonical or non-canonical
+These special characters may active in either canonical or noncanonical
 input mode, but their use is controlled by the flags @code{IXON} and
 @code{IXOFF} (@pxref{Input Modes}).
 
@@ -1103,18 +1108,18 @@ able to change this value---the hardware may insist on using @kbd{C-s}
 regardless of what you specify.
 @end deftypevr
 
-@node Non-canonical Input
-@subsection Non-Canonical Input
+@node Noncanonical Input
+@subsection Noncanonical Input
 
-In non-canonical input mode, the special editing characters such as
+In noncanonical input mode, the special editing characters such as
 ERASE and KILL are ignored.  The system facilities for the user to edit
-input are disabled in non-canonical mode, so that all input characters
+input are disabled in noncanonical mode, so that all input characters
 (unless they are special for signal or flow-control purposes) are passed
 to the application program exactly as typed.  It is up to the
 application program to give the user ways to edit the input, if
 appropriate.
 
-Non-canonical mode offers special parameters called MIN and TIME for
+noncanonical mode offers special parameters called MIN and TIME for
 controlling whether and how long to wait for input to be available.  You
 can even use them to avoid ever waiting---to return immediately with
 whatever input is available, or with no input.
@@ -1133,7 +1138,7 @@ TIME slots.
 This is the subscript for the MIN slot in the @code{c_cc} array.  Thus,
 @code{@var{termios}.c_cc[VMIN]} is the value itself.
 
-The MIN slot is only meaningful in non-canonical input mode; it
+The MIN slot is only meaningful in noncanonical input mode; it
 specifies the minimum number of bytes that must be available in the
 input queue in order for @code{read} to return.
 @end deftypevr
@@ -1145,7 +1150,7 @@ input queue in order for @code{read} to return.
 This is the subscript for the TIME slot in the @code{c_cc} array.  Thus,
 @code{@var{termios}.c_cc[VTIME]} is the value itself.
 
-The TIME slot is only meaningful in non-canonical input mode; it
+The TIME slot is only meaningful in noncanonical input mode; it
 specifies how long to wait for input before returning, in units of 0.1
 seconds.
 @end deftypevr
@@ -1201,7 +1206,7 @@ system for a subsequent call to @code{read}.
 
 @strong{Portability note:} On some systems, the MIN and TIME slots are
 actually the same as the EOF and EOL slots.  This causes no serious
-problem because the MIN and TIME slots are used only in non-canonical
+problem because the MIN and TIME slots are used only in noncanonical
 input and the EOF and EOL slots are used only in canonical input, but it
 isn't very clean.  The GNU library allocates separate slots for these
 uses.
@@ -1367,11 +1372,11 @@ A bad value was supplied as the @var{action} argument.
 @end table
 @end deftypefun
 
-@node Terminal Example
-@section Terminal Mode Example
+@node Noncanon Example
+@section Noncanonical Mode Example
 
 Here is an example program that shows how you can set up a terminal
-device to read single characters in non-canonical input mode, without
+device to read single characters in noncanonical input mode, without
 echo.
 
 @example
