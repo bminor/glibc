@@ -156,8 +156,12 @@ extern ssize_t EXFUN(write, (int __fd, CONST PTR __buf, size_t __n));
    If successul, two file descriptors are stored in PIPEDES;
    bytes written on PIPEDES[1] can be read from PIPEDES[0].
    Returns 0 if successful, -1 if not.  */
+extern int EXFUN(__pipe, (int __pipedes[2]));
 extern int EXFUN(pipe, (int __pipedes[2]));
 
+#ifdef __OPTIMIZE__
+#define pipe(pipedes)	__pipe(pipedes)
+#endif	/* Optimizing.  */
 
 /* Schedule an alarm.  In SECONDS seconds, the process will get a SIGALRM.
    If SECONDS is zero, any currently scheduled alarm will be cancelled.
@@ -184,17 +188,34 @@ extern int EXFUN(pause, (NOARGS));
 
 
 /* Change the owner and group of FILE.  */
+extern int EXFUN(__chown, (CONST char *__file AND
+			   __uid_t __owner AND __gid_t __group));
 extern int EXFUN(chown, (CONST char *__file AND
 			 __uid_t __owner AND __gid_t __group));
 
+#ifdef __OPTIMIZE__
+#define chown(file, owner, group)	__chown((file), (owner), (group))
+#endif	/* Optimizing.  */
+
 #ifdef	__USE_BSD
 /* Change the owner and group of the file that FD is open on.  */
-extern int EXFUN(fchown, (int __fd AND __uid_t __owner AND __gid_t __group));
-#endif
+extern int EXFUN(__fchown, (int __fd AND
+			    __uid_t __owner AND __gid_t __group));
+extern int EXFUN(fchown, (int __fd AND
+			  __uid_t __owner AND __gid_t __group));
+#ifdef __OPTIMIZE__
+#define fchown(fd, owner, group)	__fchown((fd), (owner), (group))
+#endif	/* Optimizing.  */
+#endif	/* Use BSD.  */
 
 /* Change the process's working directory to PATH.  */
+extern int EXFUN(__chdir, (CONST char *__path));
 extern int EXFUN(chdir, (CONST char *__path));
 
+#ifdef __OPTIMIZE__
+#define chdir(path)	__chdir(path)
+#endif	/* Optimizing.  */
+ 
 /* Get the pathname of the current working directory,
    and put it in SIZE bytes of BUF.  Returns NULL if the
    directory couldn't be determined or SIZE was too small.
@@ -220,11 +241,20 @@ extern char *EXFUN(getwd, (char *__buf));
 
 
 /* Duplicate FD, returning a new file descriptor on the same file.  */
+extern int EXFUN(__dup, (int __fd));
 extern int EXFUN(dup, (int __fd));
 
+#ifdef __OPTIMIZE__
+#define dup(fd)	__dup(fd)
+#endif	/* Optimizing.  */
+
 /* Duplicate FD to FD2, closing FD2 and making it open on the same file.  */
+extern int EXFUN(__dup2, (int __fd, int __fd2));
 extern int EXFUN(dup2, (int __fd, int __fd2));
 
+#ifdef __OPTIMIZE__
+#define dup2(fd, fd2)	__dup2((fd), (fd2))
+#endif	/* Optimizing.  */
 
 /* NULL-terminated array of "NAME=VALUE" environment variables.  */
 extern char **__environ;
@@ -335,7 +365,12 @@ enum
 
 
 /* Get the value of the system variable NAME.  */
+extern long int EXFUN(__sysconf, (int __name));
 extern long int EXFUN(sysconf, (int __name));
+
+#ifdef __OPTIMIZE__
+#define sysconf(name)	__sysconf(name)
+#endif	/* Optimizing.  */
 
 
 #ifdef	__USE_POSIX2
@@ -373,7 +408,12 @@ extern __pid_t EXFUN(getpgrp, (NOARGS));
 /* Set the process group ID of the process matching PID to PGID.
    If PID is zero, the current process's process group ID is set.
    If PGID is zero, the process ID of the process is used.  */
+extern int EXFUN(__setpgrp, (__pid_t __pid, __pid_t __pgid));
 extern int EXFUN(setpgid, (__pid_t __pid, __pid_t __pgid));
+
+#ifdef __OPTIMIZE__
+#define setpgid(pid, pgid)	__setpgrp((pid), (pgid))
+#endif	/* Optimizing.  */
 
 #ifdef	__USE_BSD
 /* Set the process group of PID to PGRP.  */
@@ -387,31 +427,65 @@ extern int EXFUN(setpgrp, (__pid_t __pid, __pid_t __pgrp));
 /* Create a new session with the calling process as its leader.
    The process group IDs of the session and the calling process
    are set to the process ID of the calling process, which is returned.  */
+extern __pid_t EXFUN(__setsid, (NOARGS));
 extern __pid_t EXFUN(setsid, (NOARGS));
 
+#ifdef __OPTIMIZE__
+#define setsid()	__setsid()
+#endif	/* Optimizing.  */
 
 /* Get the real user ID of the calling process.  */
+extern __uid_t EXFUN(__getuid, (NOARGS));
 extern __uid_t EXFUN(getuid, (NOARGS));
 
+#ifdef __OPTIMIZE__
+#define getuid()	__getuid()
+#endif	/* Optimizing.  */
+
 /* Get the effective user ID of the calling process.  */
+extern __uid_t EXFUN(__geteuid, (NOARGS));
 extern __uid_t EXFUN(geteuid, (NOARGS));
 
+#ifdef __OPTIMIZE__
+#define geteuid()	__geteuid()
+#endif	/* Optimizing.  */
+
 /* Get the real group ID of the calling process.  */
+extern __gid_t EXFUN(__getgid, (NOARGS));
 extern __gid_t EXFUN(getgid, (NOARGS));
 
+#ifdef __OPTIMIZE__
+#define getgid()	__getgid()
+#endif /* Optimizing.  */
+
 /* Get the effective group ID of the calling process.  */
+extern __gid_t EXFUN(__getegid, (NOARGS));
 extern __gid_t EXFUN(getegid, (NOARGS));
+
+#ifdef __OPTIMIZE__
+#define getegid()	__getegid()
+#endif /* Optimizing.  */
 
 /* If SIZE is zero, return the number of supplementary groups
    the calling process is in.  Otherwise, fill in the group IDs
    of its supplementary groups in LIST and return the number written.  */
+extern int EXFUN(__getgroups, (int __size, __gid_t __list[]));
 extern int EXFUN(getgroups, (int __size, __gid_t __list[]));
+
+#ifdef __OPTIMIZE__
+#define getgroups(size, list)	__getgroups((size), (list))
+#endif /* Optimizing.  */
 
 /* Set the user ID of the calling process to UID.
    If the calling process is the super-user, set the real
    and effective user IDs, and the saved set-user-ID to UID;
    if not, the effective user ID is set to UID.  */
+extern int EXFUN(__setuid, (__uid_t __uid));
 extern int EXFUN(setuid, (__uid_t __uid));
+
+#ifdef __OPTIMIZE__
+#define setuid(uid)	__setuid(uid)
+#endif	/* Optimizing.  */
 
 #ifdef	__USE_BSD
 /* Set the real user ID of the calling process to RUID,
@@ -419,14 +493,21 @@ extern int EXFUN(setuid, (__uid_t __uid));
 extern int EXFUN(__setreuid, (__uid_t __ruid, __uid_t __euid));
 extern int EXFUN(setreuid, (__uid_t __ruid, __uid_t __euid));
 
-#define	setreuid	__setreuid
+#ifdef __OPTIMIZE__
+#define	setreuid(ruid, euid)	__setreuid((ruid), (euid))
+#endif	/* Optimizing.  */
 #endif	/* Use BSD.  */
 
 /* Set the group ID of the calling process to GID.
    If the calling process is the super-user, set the real
    and effective group IDs, and the saved set-group-ID to GID;
    if not, the effective group ID is set to GID.  */
+extern int EXFUN(__setgid, (__gid_t __gid));
 extern int EXFUN(setgid, (__gid_t __gid));
+
+#ifdef __OPTIMIZE__
+#define setgid(gid)	__setgid(gid)
+#endif /* Optimizing.  */
 
 #ifdef	__USE_BSD
 /* Set the real group ID of the calling process to RGID,
@@ -481,12 +562,22 @@ extern int EXFUN(link, (CONST char *__from, CONST char *__to));
 
 #ifdef	__USE_BSD
 /* Make a symbolic link to FROM named TO.  */
+extern int EXFUN(__symlink, (CONST char *__from, CONST char *__to));
 extern int EXFUN(symlink, (CONST char *__from, CONST char *__to));
+
+#ifdef __OPTIMIZE__
+#define symlink(from, to)	__symlink((from), (to))
+#endif	/* Optimizing.  */
 
 /* Read the contents of the symbolic link PATH into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
+extern int EXFUN(__readlink, (CONST char *__path, char *__buf, size_t __len));
 extern int EXFUN(readlink, (CONST char *__path, char *__buf, size_t __len));
+
+#ifdef __OPTIMIZE__
+#define readlink(path, buf, len)	__readlink((path), (buf), (len))
+#endif	/* Optimizing.  */
 #endif	/* Use BSD.  */
 
 /* Remove the link NAME.  */
@@ -498,7 +589,12 @@ extern int EXFUN(unlink, (CONST char *__name));
 #endif	/* Optimizing.  */
 
 /* Remove the directory PATH.  */
+extern int EXFUN(__rmdir, (CONST char *__path));
 extern int EXFUN(rmdir, (CONST char *__path));
+
+#ifdef __OPTIMIZE__
+#define rmdir(path)	__rmdir(path)
+#endif /* Optimizing.  */
 
 
 /* Return the foreground process group ID of FD.  */
@@ -587,7 +683,12 @@ extern size_t EXFUN(getpagesize, (NOARGS));
 
 /* Return the maximum number of file descriptors
    the current process could possibly have.  */
+extern int EXFUN(__getdtablesize, (NOARGS));
 extern int EXFUN(getdtablesize, (NOARGS));
+
+#ifdef __OPTIMIZE__
+#define getdtablesize()	__getdtablesize()
+#endif
 
 
 /* Make all changes done to FD actually appear on disk.  */
