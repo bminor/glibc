@@ -392,10 +392,12 @@ elf_machine_rela (struct link_map *map,
 	  /* There is no point calling _dl_sysdep_error, it
 	     almost certainly hasn't been relocated properly.  */
 	  asm ("halt");
-#else
+#elif defined PIC
 	  extern char **_dl_argv;
 	  _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
 			    ": Unknown relocation type\n", NULL);
+#else
+	  assert (! "unexpected dynamic reloc type");
 #endif
 	}
     }
