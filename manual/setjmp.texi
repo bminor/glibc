@@ -11,7 +11,7 @@ functions.
 
 @menu
 * Intro: Non-Local Intro.        When and how to use these facilities.
-* Details: Non-Local Details::   Functions for nonlocal exits.
+* Details: Non-Local Details.   Functions for nonlocal exits.
 * Non-Local Exits and Signals::  Portability issues.
 @end menu
 
