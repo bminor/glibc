@@ -1,5 +1,8 @@
 2000-01-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/llseek.c: Formulate warning message
+	stronger.
+
 	* iconvdata/gconv-modules: Remove BALTIC.  It's the same as
 	ISO-8859-13.
 	* iconvdata/Makefile (distribute): Remove baltic.c.
