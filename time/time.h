@@ -101,16 +101,6 @@ extern clock_t clock __P ((void));
 /* Return the current time and put it in *TIMER if TIMER is not NULL.  */
 extern time_t time __P ((time_t * __timer));
 
-#ifndef	__CONSTVALUE
-#ifdef	__GNUC__
-/* The `const' keyword tells GCC that a function's return value is
-   based solely on its arguments, and there are no side-effects.  */
-#define	__CONSTVALUE	__const
-#else
-#define	__CONSTVALUE
-#endif /* GCC.  */
-#endif /* __CONSTVALUE not defined.  */
-
 /* Return the difference between TIME1 and TIME0.  */
 extern __CONSTVALUE double difftime __P ((time_t __time1, time_t __time0));
 
