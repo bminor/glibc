@@ -1,3 +1,8 @@
+2000-03-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* db2/os/os_dir.c (__os_dirlist): Close directory if out of
+	memory.  Reported by Jeff Nowland <jnowland@openport.com>.
+
 2000-03-19  Geoff Clare  <gwc@unisoft.com>
 
 	* sysdeps/generic/glob.c: Correct handling of patterns
