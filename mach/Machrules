@@ -66,7 +66,8 @@ endif
 	 echo 'endef'						;\
 	 echo '$*-calls := $$(subst $$(nl), ,$$($*-calls))'	;\
 	 echo '$$($*-calls:%=_\%%.c): $*.defs'			;\
-	 echo '	$$(MIG) $$< $$(MIGFLAGS) -prefix __ -i ./__'	\
+	 echo '	$$(MIG) $$< $$(MIGFLAGS) -prefix __ -i ./__' \\	;\
+	 echo '	-server /dev/null -user /dev/null -header /dev/null' \
 	) > $@-new
 	mv $@-new $@
 vpath Machrules ../mach	# Find ourselves.
