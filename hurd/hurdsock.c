@@ -45,6 +45,9 @@ static int max_domain;
 socket_t
 _hurd_socket_server (int domain)
 {
+  socket_t server;
+
+  HURD_CRITICAL_BEGIN;
   __mutex_lock (&lock);
 
   if (domain > max_domain)
@@ -52,8 +55,8 @@ _hurd_socket_server (int domain)
       file_t *new = realloc (servers, (domain + 1) * sizeof (file_t));
       if (new == NULL)
 	{
-	  __mutex_unlock (&lock);
-	  return MACH_PORT_NULL;
+	  server = MACH_PORT_NULL;
+	  goto out;
 	}
       while (max_domain < domain)
 	new[max_domain++] = MACH_PORT_NULL;
@@ -68,10 +71,12 @@ _hurd_socket_server (int domain)
     *--np = '/';
     np -= sizeof (_SERVERS_SOCKET) - 1;
     memcpy (np, _SERVERS_SOCKET, sizeof (_SERVERS_SOCKET) - 1);
-    servers[domain] = __path_lookup (name, 0, 0);
+    server = servers[domain] = __path_lookup (name, 0, 0);
   }
 
+ out:
   __mutex_unlock (&lock);
+  HURD_CRITICAL_END;
 
-  return servers[domain];
+  return server;
 }
