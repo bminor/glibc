@@ -47,7 +47,7 @@ __fopenport (mach_port_t port, const char *mode)
   /* Check the access mode.  */
   if ((m.__read && !(pflags & O_READ)) || (m.__write && !(pflags & O_WRITE)))
     {
-      errno = EBADF;		/* XXX ? */
+      errno = EBADF;
       return NULL;
     }
 
