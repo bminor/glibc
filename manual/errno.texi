@@ -73,6 +73,7 @@ that return a perfectly legitimate value in case of an error, but also
 set @code{errno}.  For these functions, if you want to check to see
 whether an error occurred, the recommended method is to set @code{errno}
 to zero before calling the function, and then check its value afterward.
+@end deftypevr
 
 @pindex errno.h
 All the error codes have symbolic names; they are macros defined in
