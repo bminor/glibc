@@ -63,9 +63,15 @@ __fork (void)
   pid_t pid;
   size_t i;
   error_t err;
-  /* This is volatile to avoid warnings about clobberation from longjmp.  */
-  void *volatile crit = _hurd_critical_section_lock ();
   thread_t thread_self = __mach_thread_self ();
+  struct hurd_sigstate *ss;
+
+  __mutex_lock (&_hurd_siglock);
+  for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
+    if (ss->thread == thread_self)
+      break;
+  if (ss)
+    ss->critical_section = 1;
 
   if (! setjmp (env))
     {
@@ -83,16 +89,12 @@ __fork (void)
       unsigned int nthreads = 0;
 
       /* Run things that prepare for forking before we create the task.  */
-      RUN_HOOKS (
-      if (err = run_hooks (&_hurd_fork_prepare_hook,
-			   MACH_PORT_NULL, MACH_PORT_NULL))
-	/* XXX what if some of them were done ok? */
-	goto earlylose;
+      RUN_HOOKS (_hurd_fork_prepare_hook, ());
 
       /* Lock things that want to be locked before we fork.  */
       for (i = 0; i < _hurd_fork_locks.n; ++i)
 	__mutex_lock (_hurd_fork_locks.locks[i]);
-
+      
       newtask = MACH_PORT_NULL;
       thread = sigthread = MACH_PORT_NULL;
       newproc = MACH_PORT_NULL;
@@ -281,8 +283,7 @@ __fork (void)
       for (i = 0; i < _hurd_nports; ++i)
 	__spin_unlock (&_hurd_ports[i].lock);
 
-      /* Run things to set other things up in the child task.  */
-      RUN_HOOKS (_hurd_fork_setup_hook, ());
+
 
       /* Register the child with the proc server.  */
       if (err = __USEPORT (PROC, __proc_child (port, newtask)))
@@ -376,12 +377,34 @@ __fork (void)
       for (i = 0; i < _hurd_nports; ++i)
 	__spin_unlock (&_hurd_ports[i].lock);
 
-      /* Run things that want to run in the child task to set up.  */
-      err = run_hooks (&_hurd_fork_child_hook, MACH_PORT_NULL, MACH_PORT_NULL);
-
       /* We are the only thread in this new task, so we will
 	 take the task-global signals.  */
       _hurd_sigthread = thread_self;
+
+      /* Free the sigstate structures for threads that existed in the
+	 parent task but don't exist in this task (the child process).  */
+      while (_hurd_sigstates != NULL)
+	{
+	  struct hurd_sigstate *next = _hurd_sigstates->next;
+	  if (ss != _hurd_sigstates)
+	    free (_hurd_sigstates);
+	  _hurd_sigstates = next;
+	}
+      _hurd_sigstates = ss;
+      _hurd_sigstates->next = NULL;
+
+      /* Fetch our various new process IDs from the proc server.  */
+      if (!err)
+	err = __USEPORT (PROC, __proc_getpids (port, &_hurd_pid, &_hurd_ppid,
+					       &_hurd_orphaned));
+      if (!err)
+	err = __USEPORT (PROC, __proc_getpgrp (port, _hurd_pid, &_hurd_pgrp));
+
+      /* Run things that want to run in the child task to set up.  */
+      RUN_HOOKS (_hurd_fork_child_hook, ());
+
+      /* Set up proc server-assisted fault recovery for the signal thread.  */
+      _hurdsig_fault_init ();
 
       /* Start the signal thread listening on the message port.  */
       if (!err)
@@ -395,8 +418,9 @@ __fork (void)
   for (i = 0; i < _hurd_fork_locks.n; ++i)
     __mutex_unlock (_hurd_fork_locks.locks[i]);
 
- earlylose:
-  _hurd_critical_section_unlock (crit);
+  if (ss)
+    ss->critical_section = 0;
+  __mutex_unlock (&_hurd_siglock);
 
   return err ? __hurd_fail (err) : pid;
 }
