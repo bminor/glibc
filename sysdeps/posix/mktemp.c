@@ -51,7 +51,7 @@ DEFUN(mktemp, (template), char *template)
   count %= sizeof(letters) - 1;
 
   if (sprintf(&template[len - 6], "%c%.5u",
-	      c, (unsigned int) pid % 10000) != 6)
+	      c, (unsigned int) pid % 100000) != 6)
     return NULL;
 
   return template;
