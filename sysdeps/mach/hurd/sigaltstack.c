@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,18 +25,21 @@ Cambridge, MA 02139, USA.  */
    If OSS is not NULL, it is filled in with the old signal stack status.  */
 int
 DEFUN(sigaltstack, (ss, oss),
-      CONST struct sigaltstack *ss AND struct sigstack *oss)
+      CONST struct sigaltstack *argss AND struct sigaltstack *oss)
 {
   struct _hurd_sigstate *s;
+  struct sigaltstack ss;
 
-  if (ss != NULL)
-    *(volatile struct sigaltstack *) ss;
+  /* Fault before taking any locks.  */
+  if (argss != NULL)
+    ss = *argss;
   if (oss != NULL)
     *(volatile struct sigaltstack *) oss = *oss;
 
   s = _hurd_thread_sigstate (__mach_thread_self ());
 
-  if ((ss->ss_flags & SA_DISABLE) && (s->sigaltstack.ss_flags & SA_ONSTACK))
+  if (argss != NULL &&
+      (ss.ss_flags & SA_DISABLE) && (s->sigaltstack.ss_flags & SA_ONSTACK))
     {
       /* Can't disable a stack that is in use.  */
       __mutex_unlock (&s->lock);
@@ -47,7 +50,7 @@ DEFUN(sigaltstack, (ss, oss),
   if (oss != NULL)
     *oss = s->sigaltstack;
   if (ss != NULL)
-    s->sigaltstack = *ss;
+    s->sigaltstack = ss;
   __mutex_unlock (&s->lock);
 
   return 0;
