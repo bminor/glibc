@@ -43,7 +43,7 @@ DEFUN(__sigblock, (mask), int mask)
 
   mask = 0;
   if (sizeof (mask) == sizeof (oset))
-    omask = oset;
+    mask = oset;
   else
     for (sig = 1; sig < NSIG; ++sig)
       if (__sigismember(&oset, sig))
