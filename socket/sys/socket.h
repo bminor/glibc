@@ -44,7 +44,6 @@ enum __socket_type
 #define	PF_UNSPEC	0	/* Unspecified.  */
 #define	PF_LOCAL	1	/* Local to host (pipes and file-domain).  */
 #define	PF_UNIX		PF_LOCAL /* Old BSD name for PF_LOCAL.  */
-#define	PF_FILE		PF_LOCAL /* XXX old GNU name for PF_LOCAL.  */
 #define	PF_INET		2	/* IP protocol family.  */
 #define	PF_IMPLINK	3	/* ARPAnet IMP protocol.  */
 #define	PF_PUP		4	/* PUP protocols.  */
@@ -63,12 +62,18 @@ enum __socket_type
 #define	PF_APPLETALK	16	/* Don't use this.  */
 #define	PF_ROUTE	17	/* Internal Routing Protocol.  */
 #define	PF_LINK		18	/* Link layer interface.  */
-#define	PF_MAX		19
+#define	PF_XTP		19	/* eXpress Transfer Protocol (no AF).  */
+#define	PF_COIP		20	/* Connection-oriented IP, aka ST II.  */
+#define	PF_CNT		21	/* Computer Network Technology.  */
+#define PF_RTIP		22	/* Help Identify RTIP packets.  **/
+#define	PF_IPX		23	/* Novell Internet Protocol.  */
+#define	PF_SIP		24	/* Simple Internet Protocol.  */
+#define PF_PIP		25	/* Help Identify PIP packets.  */
+#define	PF_MAX		26
 
 /* Address families.  */
 #define	AF_UNSPEC	PF_UNSPEC
 #define	AF_LOCAL	PF_LOCAL
-#define	AF_FILE		PF_FILE	/* XXX */
 #define	AF_UNIX		PF_UNIX
 #define	AF_INET		PF_INET
 #define	AF_IMPLINK	PF_IMPLINK
@@ -88,6 +93,13 @@ enum __socket_type
 #define	AF_APPLETALK	PF_APPLETALK
 #define	AF_ROUTE	PF_ROUTE
 #define	AF_LINK		PF_LINK
+#define	pseudo_AF_XTP	PF_XTP
+#define	AF_COIP		PF_COIP
+#define	AF_CNT		PF_CNT
+#define pseudo_AF_RTIP	PF_RTIP
+#define	AF_IPX		PF_IPX
+#define	AF_SIP		PF_SIP
+#define pseudo_AF_PIP	PF_PIP
 #define	AF_MAX		PF_MAX
 
 
@@ -153,9 +165,14 @@ extern int getpeername __P ((int __fd, __SOCKADDR_ARG __addr,
 /* Bits in the FLAGS argument to `send', `recv', et al.  */
 enum
   {
-    MSG_OOB = 1,		/* Process out-of-band data.  */
-    MSG_PEEK = 2,		/* Peek at incoming messages.  */
-    MSG_DONTROUTE = 4,		/* Don't use local routing.  */
+    MSG_OOB		= 0x01,	/* Process out-of-band data.  */
+    MSG_PEEK		= 0x02,	/* Peek at incoming messages.  */
+    MSG_DONTROUTE	= 0x04,	/* Don't use local routing.  */
+    MSG_EOR		= 0x08,	/* Data completes record.  */
+    MSG_TRUNC		= 0x10,	/* Data discarded before delivery.  */
+    MSG_CTRUNC		= 0x20,	/* Control data lost before delivery.  */
+    MSG_WAITALL		= 0x40,	/* Wait for full request or error.  */
+    MSG_DONTWAIT	= 0x80,	/* This message should be nonblocking.  */
   };
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
@@ -223,6 +240,8 @@ enum
     SO_LINGER = 0x0080,		/* Block on close of a reliable
 				   socket to transmit pending data.  */
     SO_OOBINLINE = 0x0100,	/* Receive out-of-band data in-band.  */
+
+    SO_REUSEPORT = 0x0200,	/* Allow local address and port reuse.  */
 
     SO_SNDBUF = 0x1001,		/* Send buffer size.  */
     SO_RCVBUF = 0x1002,		/* Receive buffer.  */
