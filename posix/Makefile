@@ -59,7 +59,7 @@ lib: $(objpfx)libposix.a
 # Make the standalone glob/fnmatch package.
 
 glob.tar: glob/ChangeLog glob/COPYING.LIB \
-	  glob/Makefile.in glob/configure glob/configure.in glob/configur.bat\
+	  glob/Makefile.in glob/configure glob/configure.in glob/configure.bat\
 	  glob/fnmatch.h glob/glob.h glob/fnmatch.c glob/glob.c	  
 	tar cho$(verbose)f $@ $^
 glob/%.c: %.c
