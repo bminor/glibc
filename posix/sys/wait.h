@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -49,11 +49,12 @@ __BEGIN_DECLS
 /* This is the type of the argument to `wait'.  With GCC 2.4 and later, the
    funky union causes redeclarations with either `int *' or `union wait *'
    to be allowed without complaint.  (__GNUC_MINOR__ is in fact only
-   defined in later versions, after 2.5.0.)  __WAIT_STATUS_DEFN is the type
-   used in the actual function definitions.  */
+   defined in later versions, after 2.5.0; and versions prior to 2.6 have a
+   bug that produces bad code on some machines when using the union.)
+   __WAIT_STATUS_DEFN is the type used in the actual function definitions. */
 
 #if	(!defined (__GNUC__) || __GNUC__ < 2 || \
-	 (__GNUC__ == 2 && __GNUC_MINOR__ < 4))
+	 (__GNUC__ == 2 && __GNUC_MINOR__ < 6))
 #define	__WAIT_STATUS		__ptr_t
 #define	__WAIT_STATUS_DEFN	__ptr_t
 #else
