@@ -365,8 +365,8 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state)
 	mach_msg_header_t head;
 	err = __mach_msg (&head, MACH_RCV_MSG, 0, sizeof head, ss->intr_port,
 			  MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-	if (err) perror ("XXX FIXME interrupted RPC");
-/*	assert (err == KERN_SUCCESS || err == MACH_RCV_TOO_LARGE);*/
+	if (err != MACH_RCV_TOO_LARGE)
+	  assert_perror (err);
       }
 }
 
@@ -411,7 +411,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	  err = __mach_port_insert_right (__mach_task_self (),
 					  ss->suspended, ss->suspended,
 					  MACH_MSG_TYPE_MAKE_SEND);
-	  assert (err == KERN_SUCCESS);
+	  assert_perror (err);
 	  msg.msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_MOVE_SEND, 0);
 	  msg.msgh_remote_port = ss->suspended;
 	  msg.msgh_local_port = MACH_PORT_NULL;
@@ -422,7 +422,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	  err = __mach_msg (&msg, MACH_SEND_MSG, sizeof msg, 0,
 			    MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE,
 			    MACH_PORT_NULL);
-	  assert (err == MACH_MSG_SUCCESS);
+	  assert_perror (err);
 	}
       __mutex_unlock (&ss->lock);
     }
@@ -539,7 +539,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	      __USEPORT (PROC, __proc_mark_cont (port));
 	      /* Fetch ports to all our threads and resume them.  */
 	      err = __task_threads (__mach_task_self (), &threads, &nthreads);
-	      assert (! err);
+	      assert_perror (err);
 	      for (i = 0; i < nthreads; ++i)
 		{
 		  if (threads[i] != _hurd_msgport_thread &&
