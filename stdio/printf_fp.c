@@ -34,11 +34,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <printf.h>
 
-#if DEBUG
-#define MPN_DUMP(x,y,z) mpn_dump(x,y,z)
-#else
-#define MPN_DUMP(x,y,z)
-#endif
+#define NDEBUG
+#include <assert.h>
 
 #define	outchar(x)							      \
   do									      \
@@ -56,6 +53,13 @@ Cambridge, MA 02139, USA.  */
 
 #include "gmp.h"
 #include "gmp-impl.h"
+
+#ifndef NDEBUG
+static void mpn_dump (const char *str, mp_limb *p, mp_size_t size);
+#define MPN_DUMP(x,y,z) mpn_dump(x,y,z)
+#else
+#define MPN_DUMP(x,y,z)
+#endif
 
 extern mp_size_t __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
 				       int *expt, int *is_neg,
@@ -165,7 +169,9 @@ DEFUN(__printf_fp, (s, info, args),
 	{
 	  mp_limb norm_scale[scalesize];
 	  mp_limb cy;
+	  assert (scalesize != 0);
 	  __mpn_lshift (norm_scale, scale, scalesize, cnt);
+	  assert (r10size != 0);
 	  cy = __mpn_lshift (r10, r10, r10size, cnt);
 	  if (cy != 0)
 	    r10[r10size++] = cy;
@@ -189,8 +195,12 @@ DEFUN(__printf_fp, (s, info, args),
       digit = '0' + high_qlimb;
 
       r10size = __mpn_normal_size (r10, r10size);
+      if (r10size == 0)
+	/* We are not prepared for an mpn variable with zero limbs.  */
+	r10size = 1;
 
       MPN_ASSIGN (r, r10);
+      assert (rsize != 0);
       cy = __mpn_lshift (r2, r, rsize, 1);
       r2size = rsize;
       if (cy != 0)
@@ -370,9 +380,11 @@ DEFUN(__printf_fp, (s, info, args),
 	    {
 	      MPN_COPY (r + (e - p) / BITS_PER_MP_LIMB, f, fsize);
 	      rsize = fsize + (e - p) / BITS_PER_MP_LIMB;
+	      assert (rsize != 0);
 	    }
 	  else
 	    {
+	      assert (fsize != 0);
 	      cy = __mpn_lshift (r + (e - p) / BITS_PER_MP_LIMB, f, fsize,
 				 (e - p) % BITS_PER_MP_LIMB);
 	      rsize = fsize + (e - p) / BITS_PER_MP_LIMB;
@@ -381,10 +393,12 @@ DEFUN(__printf_fp, (s, info, args),
 	    }
 
 	  MPN_POW2 (scale, 0);
+	  assert (scalesize != 0);
 
 	  /* The number is (E - P) factors of two larger than
 	     the fraction can represent; this is the potential error.  */
 	  MPN_POW2 (loerr, e - p);
+	  assert (loerrsize != 0);
 	}
       else
 	{
@@ -403,14 +417,17 @@ DEFUN(__printf_fp, (s, info, args),
       if (MPN_EQ (f, tmp))
 	{
 	  /* Account for unequal gaps.  */
+	  assert (hierrsize != 0);
 	  cy = __mpn_lshift (hierr, hierr, hierrsize, 1);
 	  if (cy)
 	    hierr[hierrsize++] = cy;
 
+	  assert (rsize != 0);
 	  cy = __mpn_lshift (r, r, rsize, 1);
 	  if (cy)
 	    r[rsize++] = cy;
 
+	  assert (scalesize != 0);
 	  cy = __mpn_lshift (scale, scale, scalesize, 1);
 	  if (cy)
 	    scale[scalesize++] = cy;
@@ -451,6 +468,7 @@ DEFUN(__printf_fp, (s, info, args),
       do
 	{
 	  mp_limb cy;
+	  assert (rsize != 0);
 	  cy = __mpn_lshift (r2, r, rsize, 1);
 	  r2size = rsize;
 	  if (cy != 0)
@@ -471,6 +489,7 @@ DEFUN(__printf_fp, (s, info, args),
 	    tmp[tmpsize++] = cy;
 
 	  /* while (r2 + hierr >= 2 * scale) */
+	  assert (scalesize != 0);
 	  cy = __mpn_lshift (scale2, scale, scalesize, 1);
 	  scale2size = scalesize;
 	  if (cy)
@@ -481,6 +500,7 @@ DEFUN(__printf_fp, (s, info, args),
 	      if (cy)
 		scale[scalesize++] = cy;
 	      ++k;
+	      assert (scalesize != 0);
 	      cy = __mpn_lshift (scale2, scale, scalesize, 1);
 	      scale2size = scalesize;
 	      if (cy)
@@ -693,19 +713,19 @@ DEFUN(__printf_fp, (s, info, args),
   return done;
 }
 
-#if DEBUG
+#ifndef NDEBUG
 static void
 mpn_dump (str, p, size)
-     char *str;
+     const char *str;
      mp_limb *p;
      mp_size_t size;
 {
-  printf ("%s = ", str);
+  fprintf (stderr, "%s = ", str);
   while (size != 0)
     {
       size--;
-      printf ("%08lX", p[size]);
+      fprintf (stderr, "%08lX", p[size]);
     }
-  printf ("\n");
+  fprintf (stderr, "\n");
 }
 #endif
