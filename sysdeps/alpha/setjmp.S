@@ -72,12 +72,14 @@ END(__sigsetjmp)
 
 ENTRY(__setjmp)
 	ldgp	gp, 0(pv)
+	.prologue 1
 	mov	0, a1
 	br	$sigsetjmp_local
 END(__setjmp)
 
 ENTRY(setjmp)
 	ldgp	gp, 0(pv)
+	.prologue 1
 	mov	1, a1
 	br	$sigsetjmp_local
 END(setjmp)

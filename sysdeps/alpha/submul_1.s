@@ -37,6 +37,7 @@
 	.ent	__mpn_submul_1 2
 __mpn_submul_1:
 	.frame	$30,0,$26
+	.prologue 0
 
 	ldq	$2,0($17)	# $2 = s1_limb
 	addq	$17,8,$17	# s1_ptr++

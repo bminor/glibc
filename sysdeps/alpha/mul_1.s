@@ -46,6 +46,7 @@
 	.ent	__mpn_mul_1 2
 __mpn_mul_1:
 	.frame	$30,0,$26
+	.prologue 0
 
 	ldq	$2,0($17)	# $2 = s1_limb
 	subq	$18,1,$18	# size--

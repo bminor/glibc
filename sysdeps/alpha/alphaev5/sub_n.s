@@ -35,6 +35,7 @@
 	.ent	__mpn_sub_n
 __mpn_sub_n:
 	.frame	$30,0,$26,0
+	.prologue 0
 
 	or	$31,$31,$25		# clear cy
 	subq	$19,4,$19		# decr loop cnt

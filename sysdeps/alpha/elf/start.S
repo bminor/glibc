@@ -28,7 +28,7 @@ _start:
 	mov	zero, fp
 	br	gp, 1f
 1:	ldgp	gp, 0(gp)
-	.prologue 1
+	.prologue 0
 
   /* Save v0.  When starting a binary via the dynamic linker, s0
      contains the address of the shared library termination function,

@@ -36,6 +36,7 @@
 	.ent	__mpn_lshift
 __mpn_lshift:
 	.frame	$30,0,$26,0
+	.prologue 0
 
 	s8addq	$18,$17,$17	# make r17 point at end of s1
 	ldq	$4,-8($17)	# load first limb

@@ -44,6 +44,7 @@
 	.ent	__mpn_rshift
 __mpn_rshift:
 	.frame	$30,0,$26,0
+	.prologue 0
 
 	ldq	$4,0($17)	# load first limb
 	addq	$17,8,$17

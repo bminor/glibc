@@ -35,6 +35,7 @@
 	.ent	__mpn_sub_n
 __mpn_sub_n:
 	.frame	$30,0,$26,0
+	.prologue 0
 
 	ldq	$3,0($17)
 	ldq	$4,0($18)
