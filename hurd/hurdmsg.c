@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,14 +17,13 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
-#include "msg_server.h"
+#include "hurd/msg_server.h"
 
 error_t
 __get_init_port (mach_port_t msgport, mach_port_t auth,
 		 int which, mach_port_t *port)
 {
-  if (task != mach_task_self () &&
-      _HURD_PORT_USE (&_hurd_auth, auth != port))
+  if (auth != mach_task_self () && ! __USEPORT (AUTH, port == auth))
     return EPERM;
 
   switch (which)
@@ -53,11 +52,10 @@ __get_init_port (mach_port_t msgport, mach_port_t auth,
 }
 
 error_t
-__set_init_port (mach_port_t msgport, task_t task,
+__set_init_port (mach_port_t msgport, mach_port_t auth,
 		 int which, mach_port_t port)
 {
-  if (task != mach_task_self () &&
-      _HURD_PORT_USE (&_hurd_auth, auth != port))
+  if (auth != mach_task_self () && ! __USEPORT (AUTH, port == auth))
     return EPERM;
 
   switch (which)
@@ -105,7 +103,7 @@ __get_init_int (mach_port_t msgport, mach_port_t auth,
 	__mutex_unlock (&ss->lock);
 	return 0;
       }
-    case INIT_SIGMASK:
+    case INIT_SIGIGN:
       {
 	struct _hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
 	sigset_t ign;
@@ -113,9 +111,9 @@ __get_init_int (mach_port_t msgport, mach_port_t auth,
 	__sigemptyset (&ign);
 	for (sig = 1; sig < NSIG; ++sig)
 	  if (ss->actions[sig].sa_handler == SIG_IGN)
-	    __sigaddset (sig, &ign);
+	    __sigaddset (&ign, sig);
 	__mutex_unlock (&ss->lock);
-	*value = ign
+	*value = ign;
 	return 0;
       }
       /* XXX ctty crap */
