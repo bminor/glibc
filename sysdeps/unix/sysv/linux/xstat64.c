@@ -1,5 +1,5 @@
 /* xstat64 using old-style Unix stat system call.
-   Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1991, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,12 +29,33 @@
 
 extern int __syscall_stat (const char *, struct kernel_stat *);
 
+#ifdef __NR_stat64
+extern int __syscall_stat64 (const char *, struct stat64 *);
+/* The variable is shared between all wrappers around *stat64 calls.
+   This is the definition.  */
+int __have_no_stat64;
+#endif
+
 /* Get information about the file NAME in BUF.  */
 int
 __xstat64 (int vers, const char *name, struct stat64 *buf)
 {
   struct kernel_stat kbuf;
   int result;
+
+#if defined __NR_stat64
+  if (! have_no_stat64)
+    {
+      int saved_errno = errno;
+      result = INLINE_SYSCALL (stat64, 2, name, buf);
+
+      if (result != -1 || errno != ENOSYS)
+	return result;
+
+      __set_errno (saved_errno);
+      have_no_stat64 = 1;
+    }
+#endif
 
   result = INLINE_SYSCALL (stat, 2, name, &kbuf);
   if (result == 0)
