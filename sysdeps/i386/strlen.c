@@ -27,7 +27,7 @@ DEFUN(strlen, (str), CONST char *str)
   int cnt;
 
   asm("cld\n"			/* Search forward.  */
-      "repnz\n"			/* Look for a zero byte.  */
+      "repne\n"			/* Look for a zero byte.  */
       "scasb" /* %0, %1, %3 */ :
       "=c" (cnt) : "D" (str), "0" (-1), "a" (0));
 
