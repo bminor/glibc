@@ -41,7 +41,9 @@ Cambridge, MA 02139, USA.  */
 		   "std\n"						      \
 		   /* Copy bytes.  */					      \
 		   "rep\n"						      \
-		   "movsb" :						      \
+		   "movsb\n"						      \
+		   /* Clear the dir flag.  Convention says it should be 0. */ \
+		   "cld" :						      \
 		   "=D" (dst_ep), "=S" (src_ep) :			      \
 		   "0" (dst_ep - 1), "1" (src_ep - 1), "c" (nbytes) :	      \
 		   "cx");						      \
@@ -53,7 +55,8 @@ Cambridge, MA 02139, USA.  */
 #define WORD_COPY_FWD(dst_bp, src_bp, nbytes_left, nbytes)		      \
   do									      \
     {									      \
-      asm volatile("cld\n"						      \
+      asm volatile(/* Clear the direction flag, so copying goes forward.  */  \
+		   "cld\n"						      \
 		   /* Copy longwords.  */				      \
 		   "rep\n"						      \
 		   "movsl" :						      \
@@ -67,11 +70,15 @@ Cambridge, MA 02139, USA.  */
 #define WORD_COPY_BWD(dst_ep, src_ep, nbytes_left, nbytes)		      \
   do									      \
     {									      \
-      asm volatile("std\n"						      \
+      asm volatile(/* Set the direction flag, so copying goes backwards.  */  \
+		   "std\n"						      \
+		   /* Copy longwords.  */				      \
 		   "rep\n"						      \
-		   "movsl" :						      \
+		   "movsl\n"						      \
+		   /* Clear the dir flag.  Convention says it should be 0. */ \
+		   "cld" :						      \
 		   "=D" (dst_ep), "=S" (src_ep) :			      \
-		   "0" (dst_ep - 4), "1" (src_ep - 4), "c" (nbytes) :	      \
+		   "0" (dst_ep - 4), "1" (src_ep - 4), "c" ((nbytes) / 4) :   \
 		   "cx");						      \
       dst_ep += 4;							      \
       src_ep += 4;							      \
