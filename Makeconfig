@@ -234,8 +234,8 @@ endif
 # The name of the C compiler to use for compilations of programs to run on
 # the host that is building the library.  If you set CC to a
 # cross-compiler, you must set this to the normal compiler.
-ifndef HOST_CC
-HOST_CC = $(CC)
+ifndef BUILD_CC
+BUILD_CC = $(CC)
 endif
 
 # Default flags to pass the C compiler.
@@ -267,9 +267,6 @@ endif
 ifndef	RANLIB
 RANLIB = ranlib
 endif
-
-# Define non-empty if the C compiler understands -v (print version).
-+cc_version = $(filter gcc,$(notdir $(firstword $(CC)))) # if using gcc
 
 # Extra flags to pass to GCC.
 +gccwarn := -Wall -Wwrite-strings -Wno-parentheses
@@ -337,13 +334,6 @@ endif	# gcc
 +cflags	:= $(sort $(+cflags))
 
 
-ifneq	"$(findstring v,$(MAKEFLAGS))" ""	# if -v
-ifneq	"$(strip $(+cc_version))" ""
-# If Make is telling us version info, tell the compiler to do so as well.
-CC	:= $(CC) -v
-endif	# +cc_version
-endif						# -v
-
 # These are flags given to the C compiler to tell it to look for include
 # files (including ones given in angle brackets) in the current directory
 # and in the parent library source directory.
@@ -371,8 +361,10 @@ ifneq "$(filter -DHAVE_GNU_AS,$(CPPFLAGS))" ""
 gnu-as := yes
 endif
 
-ifneq ($(HOST_CC),$(CC))
-cross-compiling = yes
+ifneq ($(BUILD_CC),$(CC))
+cross-compiling := yes
+else
+cross-compiling := no
 endif
 
 
