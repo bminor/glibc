@@ -68,7 +68,8 @@ rexec(ahost, rport, name, pass, cmd, fd2p)
 	hstbuflen = 1024;
 	hsttmpbuf = __alloca (hstbuflen);
 	while (__gethostbyname_r (*ahost, &hostbuf, hsttmpbuf, hstbuflen,
-				  &hp, &herr) < 0)
+				  &hp, &herr) != 0
+	       || hp == NULL)
 	  if (herr != NETDB_INTERNAL || errno != ERANGE)
 	    {
 	      __set_h_errno (herr);
