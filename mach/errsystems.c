@@ -20,8 +20,8 @@ const struct error_system __mach_error_systems[err_max_system + 1] =
     /* 3 [err_get_system (err_ipc)] = */ { errlib_count (err_ipc_sub),"(system ipc) error with unknown subsystem", err_ipc_sub },
     /* 4 [err_get_system (err_mach_ipc)] = */ { errlib_count (err_mach_ipc_sub),"(system mach_ipc) error with unknown subsystem", err_mach_ipc_sub },
     /* 5 [err_get_system (err_bootstrap)] = */ { errlib_count (err_bootstrap_sub),"(system bootstrap) error with unknown subsystem", err_bootstrap_sub },
-					  {},{},{},{},{},{},{},{},{},{},
-    /* 0x10 [err_get_system (err_hurd)] = */ { errlib_count (err_hurd_sub),"(system hurd) error with unknown subsystem", err_hurd_sub },
+ /* [6..15] */ {},{},{},{},{},{},{},{},{},{},
+    /* 16==0x10 [err_get_system (err_hurd)] = */ { errlib_count (err_hurd_sub),"(system hurd) error with unknown subsystem", err_hurd_sub },
   };
 
 const int __mach_error_system_count = errlib_count (__mach_error_systems);
