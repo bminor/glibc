@@ -43,7 +43,7 @@ DEFUN_VOID(__geteuid)
   else
     {
       /* We do not even have a real uid.  */
-      errno = EIOEIO;		/* XXX */
+      errno = EGRATUITOUS;
       euid = -1;
     }
 
