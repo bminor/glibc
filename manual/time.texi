@@ -879,7 +879,7 @@ Here is an example program showing the use of some of the local time and
 calendar time functions.
 
 @example
-@include strftime.c.texi
+@include strftim.c.texi
 @end example
 
 It produces output like this:
