@@ -1,5 +1,5 @@
 /* _dl_map_object -- Map in a shared object's segments from the file.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <sys/stat.h>
 #include "dynamic-link.h"
 
 
@@ -409,6 +410,7 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 static int
 open_path (const char *name, size_t namelen,
 	   const char *dirpath,
+	   int preloaded,
 	   char **realname,
 	   const char *trusted_dirs[])
 {
@@ -481,18 +483,43 @@ open_path (const char *name, size_t namelen,
       fd = __open (buf, O_RDONLY);
       if (fd != -1)
 	{
-	  *realname = malloc (buflen);
-	  if (*realname)
+	  if (preloaded && __libc_enable_secure)
 	    {
-	      memcpy (*realname, buf, buflen);
-	      return fd;
+	      /* This is an extra security effort to make sure nobody can
+		 preload broken shared objects which are in the trusted
+		 directories and so exploit the bugs.  */
+	      struct stat st;
+
+	      if (__fxstat (_STAT_VER, fd, &st) != 0
+		  || (st.st_mode & S_ISUID) == 0)
+		{
+		  /* The shared object cannot be tested for being SUID
+		     or this bit is not set.  In this case we must not
+		     use this object.  */
+		  __close (fd);
+		  fd = -1;
+		  /* We simply ignore the file, signal this by setting
+		     the error value which would have been set by `open'.  */
+		  errno = ENOENT;
+		}
 	    }
-	  else
+
+	  /* Test again.  */
+	  if (fd != -1)
 	    {
-	      /* No memory for the name, we certainly won't be able
-		 to load and link it.  */
-	      __close (fd);
-	      return -1;
+	      *realname = malloc (buflen);
+	      if (*realname)
+		{
+		  memcpy (*realname, buf, buflen);
+		  return fd;
+		}
+	      else
+		{
+		  /* No memory for the name, we certainly won't be able
+		     to load and link it.  */
+		  __close (fd);
+		  return -1;
+		}
 	    }
 	}
       if (errno != ENOENT && errno != EACCES)
@@ -507,8 +534,8 @@ open_path (const char *name, size_t namelen,
 /* Map in the shared object file NAME.  */
 
 struct link_map *
-_dl_map_object (struct link_map *loader, const char *name, int type,
-		int trace_mode)
+_dl_map_object (struct link_map *loader, const char *name, int preloaded,
+		int type, int trace_mode)
 {
   int fd;
   char *realname;
@@ -540,7 +567,8 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 
       inline void trypath (const char *dirpath, const char *trusted[])
 	{
-	  fd = open_path (name, namelen, dirpath, &realname, trusted);
+	  fd = open_path (name, namelen, dirpath, preloaded, &realname,
+			  trusted);
 	}
 
       fd = -1;
