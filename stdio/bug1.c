@@ -1,7 +1,8 @@
 #include <ansidecl.h>
 #include <stdio.h>
 
-void main (void)
+int
+main (void)
 {
   char *bp;
   size_t size;
@@ -14,5 +15,6 @@ void main (void)
   fprintf (stream, ", world");
   fclose (stream);
   printf ("buf = %s, size = %d\n", bp, size);
+
+  return 0;
 }
-  
