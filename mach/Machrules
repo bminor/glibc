@@ -1,6 +1,6 @@
 # Rules for MiG interfaces that want to go into the C library.
 
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ endef
 ifdef user-interfaces
 interface-includes := $(foreach if,$(user-interfaces),$(if).ir)
 include $(interface-includes)
-clean-extras := $(clean-extras) $(interface-includes)
+generated := $(generated) $(interface-includes)
 endif
 
 # %.ir defines a variable `%-calls', which lists the RPCs defined by
@@ -95,9 +95,9 @@ __%_server.c __%_server.h: %.defs
 	       -header $@ -server /dev/null -user /dev/null
 
 %.h: %.__h %.uh
-# The last line of foo.uh is "#endif _foo_user_".
-# The first two lines of foo.__h are "#ifndef _foo_user_"/"#define _foo_user_".
-	(sed '$$d' $<; tail +2 $(word 2,$^)) > $@-new
+# The last line of foo.__h is "#endif _foo_user_".
+# The first two lines of foo.uh are "#ifndef _foo_user_"/"#define _foo_user_".
+	(sed -e '$$d' $<; sed -e '1,2d' $(word 2,$^)) > $@-new
 	mv $@-new $@
 
 if-calls.c := $(strip $(foreach if,$(user-interfaces),$($(if)-calls:%=%.c)))
@@ -117,9 +117,8 @@ interface-headers := $(user-interfaces:%=%.h) $(server-interfaces:%=%_server.h)
 # Remove the generated user stub source and header files,
 # and don't distribute them.
 mach-generated := $(interface-routines:%=%.c) \
-		  $(interface-headers:%=%.h %.uh)
-clean-extras := $(clean-extras) $(mach-generated)
-dont_distribute := $(dont_distribute) $(mach-generated)
+		  $(interface-headers:%=%.h %.uh %.__h)
+generated := $(generated) $(mach-generated)
 
 # These are needed to generate the dependencies.
 before-compile := $(before-compile) $(interface-headers)
