@@ -22,13 +22,15 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <mach.h>
 #include <device/device.h>
+#include <errno.h>
+#include <string.h>
 
 static int
 input (FILE *f)
 {
-  error_t err;
+  kern_return_t err;
   char *buffer;
-  size_t to_read;
+  size_t to_read, nread;
   char c;
 
   if (f->__buffer == NULL)
@@ -44,8 +46,8 @@ input (FILE *f)
 
   f->__eof = 0;
 
-  if (err = device_read_inband ((device_t) cookie, 0, f->__target, to_read,
-				buffer, &nread))
+  if (err = device_read_inband ((device_t) f->__cookie, 0, f->__target,
+				to_read, buffer, &nread))
     {
       f->__error = 1;
       f->__bufp = f->__get_limit = f->__put_limit = f->__buffer;
@@ -59,14 +61,15 @@ input (FILE *f)
   f->__get_limit = f->__buffer + nread;
   f->__bufp = f->__buffer;
   f->__put_limit = f->__buffer + (f->__mode.__write ? f->__bufsize : 0);
-  return (unsigned char *) *f->__bufp++;
+  return (unsigned char) *f->__bufp++;
 }
 
 static void
 output (FILE *f, int c)
 {
-  error_t err;
+  kern_return_t err;
   size_t to_write;
+  int wrote;
   char *p;
 
   if (f->__buffer == NULL)
@@ -74,7 +77,6 @@ output (FILE *f, int c)
       if (c != EOF)
 	{
 	  char cc = (unsigned char) c;
-	  int wrote;
 	  if (cc == '\n')
 	    cc = '\r';
 	  if ((err = device_write_inband ((device_t) f->__cookie, 0,
@@ -116,7 +118,6 @@ output (FILE *f, int c)
   p = f->__buffer;
   while (to_write > 0)
     {
-      int wrote;
       if (err = device_write_inband ((device_t) f->__cookie, 0, f->__target,
 				     p, to_write, &wrote))
 	{
@@ -154,7 +155,7 @@ output (FILE *f, int c)
 FILE *
 mach_open_devstream (device_t dev, const char *mode)
 {
-  FILE *stream = fopencookie (dev, mode, __default_io_functions);
+  FILE *stream = fopencookie ((void *) dev, mode, __default_io_functions);
   if (stream == NULL)
     return NULL;
 
@@ -163,5 +164,5 @@ mach_open_devstream (device_t dev, const char *mode)
   stream->__io_funcs.__close = device_close;
   stream->__seen = 1;
 
-  retrun stream;
+  return stream;
 }
