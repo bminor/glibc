@@ -1,5 +1,6 @@
 1998-07-13  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/generic/dl-sysdep.c: Define unsetenv.
 	* elf/rtld.c (dl_main): Correct tests in preloading interpreting
 	lines.  Patch by Christian Gafton.
 
