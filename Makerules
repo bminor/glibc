@@ -105,17 +105,29 @@ include $(+sysdir_pfx)sysd-Makefile
 $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)sysdirs
 	(for dir in `cat $<`; do					      \
 	   file=sysdeps/$$dir/Makefile;					      \
-	   if [ -r $(..)$$file ]; then					      \
+	   if [ -f $(..)$$file ]; then					      \
 	     echo include "\$$(..)$$file";				      \
 	   else true;							      \
+	   fi;								      \
 	   echo "\$$(objpfx)%.o: $$dir/%.S \$$(before-compile); \
 		\$$(compile-command.S)";				      \
 	   echo "\$$(objpfx)%.o: $$dir/%.s \$$(before-compile); \
 		\$$(compile-command.s)";				      \
 	   echo "\$$(objpfx)%.o: $$dir/%.c \$$(before-compile); \
 		\$$(compile-command.c)";				      \
+	   if [ $$dir = stub ]; then					      \
+	     echo "	$$(after-stub-compile)";			      \
 	   fi;								      \
 	 done) > $@
+
+# This command is run after compiling a source file from sysdeps/stub.
+# We accumulate in $(objpfx)stubs a list of all the functions which are
+# stubs in this configuration.  The parent Makefile uses this file to
+# create `stubs.h'.
+define after-stub-compile
+sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
+    $< >> $(objpfx)stubs
+endef
 
 # Maximize efficiency by minimizing the number of rules.
 .SUFFIXES:	# Clear the suffix list.
