@@ -33,7 +33,8 @@ getpriority (enum __priority_which which, int who)
   error_t getonepriority (pid_t pid, struct procinfo *pip)
     {
       struct procinfo pi;
-      onerr = pip ? 0 : __proc_getprocinfo (pid, pip = &pi);
+      onerr = pip ? 0 : __USEPORT (PROC, __proc_getprocinfo (port,
+							     pid, pip = &pi));
       if (!onerr && pip->taskinfo.base_priority > maxpri)
 	maxpri = pip->taskinfo.base_priority;
       return 0;
