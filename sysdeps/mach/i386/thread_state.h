@@ -33,4 +33,5 @@ struct machine_thread_all_state
   {
     int set;			/* Mask of bits (1 << FLAVOR).  */
     struct i386_thread_state basic;
+    struct i386_float_state fpu;
   };
