@@ -59,7 +59,8 @@ _hurd_msgport_receive (void)
   /* Get our own sigstate cached so we never again have to take a lock to
      fetch it.  There is much code in hurdsig.c that operates with some
      sigstate lock held, which will deadlock with _hurd_thread_sigstate.  */
-  (void) _hurd_self_sigstate ();
+  struct hurd_sigstate *ss = _hurd_self_sigstate ();
+  __mutex_unlock (&ss->lock);
 
   while (1)
     (void) __mach_msg_server (msgport_server, __vm_page_size, _hurd_msgport);
