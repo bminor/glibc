@@ -1,6 +1,3 @@
-#include <sysdeps/stub/defs.c>
-#if 0
-
 /* Definitions of global stdio data structures.
 
 Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
@@ -36,6 +33,7 @@ FILE *__stdio_head = NULL;
 static void
 init_stdio (void)
 {
+  /* XXX must check posix.1 if dup2(n,1) must affect stdout stream, etc. */
   stdin = __fopenport (__getdport (STDIN_FILENO));
   stdout = __fopenport (__getdport (STDOUT_FILENO));
   stderr = __fopenport (__getdport (STDERR_FILENO));
@@ -56,4 +54,3 @@ DEFUN_VOID(_cleanup)
   (void) fclose ((FILE *) NULL);
 }
 text_set_element (__libc_atexit, _cleanup);
-#endif /* 0 */
