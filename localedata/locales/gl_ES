@@ -26,7 +26,7 @@ copy "es_ES"
 END LC_COLLATE
 
 LC_CTYPE
-copy "en_DK"
+copy "es_ES"
 END LC_CTYPE
 
 LC_MESSAGES
