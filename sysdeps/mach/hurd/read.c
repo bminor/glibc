@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,27 +27,42 @@ DEFUN(__read, (fd, buf, nbytes),
       int fd AND PTR buf AND size_t nbytes)
 {
   error_t err;
-  io_t server;
-  int isctty;
   char *data;
   size_t nread;
 
-  __mutex_lock (&_hurd_dtable.lock);
-  if (fd < 0 || fd >= _hurd_dtable.size ||
-      _hurd_dtable.d[fd].server == MACH_PORT_NULL)
-    {
-      __mutex_unlock (&_hurd_dtable.lock);
-      errno = EBADF;
-      return -1;
-    }
-
-  server = _hurd_dtable.d[fd].server;
-  isctty = _hurd_ctty_check (fd);
-  __mutex_unlock (&_hurd_dtable.lock);
-
   data = buf;
-  err = __io_read (server, isctty, _hurd_pid, _hurd_pgrp,
-		   &data, &nread, -1, nbytes);
+  _HURD_DPORT_USE
+    (fd,
+     ({
+     call:
+       err = __io_read (port, &data, &nread, -1, nbytes);
+       if (ctty != MACH_PORT_NULL && err == EBACKGROUND)
+	 {
+	   struct _hurd_sigstate *ss
+	     = _hurd_thread_sigstate (__mach_thread_self ());
+	   if (_hurd_orphaned ||
+	       __sigismember (SIGTTIN, &ss->blocked) ||
+	       ss->actions[SIGTTIN].sa_handler == SIG_IGN)
+	     {
+	       /* We are orphaned, or are blocking or ignoring SIGTTIN.
+		  Return EOF instead of stopping.  */
+	       __mutex_unlock (&ss->lock);
+	       nread = 0;
+	       err = 0;
+	     }
+	   else
+	     {
+	       const int restart = ss->actions[SIGTTIN].sa_flags & SA_RESTART;
+	       __sigaddmember (SIGTTIN, &ss->pending);
+	       __mutex_unlock (&ss->lock);
+	       /* XXX How do I get the sigthread to deliver the signal? */
+	       if (restart)
+		 goto call;
+	       else
+		 err = EINTR;	/* XXX Is this right? */
+	     }
+	 }
+     }));
 
   if (err)
     return __hurd_fail (err);
