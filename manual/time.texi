@@ -104,7 +104,7 @@ around 36 minutes.
 @deftypevr Macro int CLOCKS_PER_SEC
 The value of this macro is the number of clock ticks per second measured
 by the @code{clock} function.  POSIX requires that this value is one
-million independend of the actual resolution.
+million independent of the actual resolution.
 @end deftypevr
 
 @comment time.h
@@ -552,7 +552,7 @@ Zone Functions}.
 
 Using the @code{localtime} function is a big problem in multi-threaded
 programs.  The result is returned in a static buffer and this is used in
-all threads.  POSIX.1c introduced a varient of this function.
+all threads.  POSIX.1c introduced a variant of this function.
 
 @comment time.h
 @comment POSIX.1c
@@ -1892,7 +1892,7 @@ This is the estimated error, measured in microseconds.  This value can
 be set using bit @code{MOD_ESTERROR}.
 
 @item int status
-This valiable reflects the various states of the clock machinery.  There
+This variable reflects the various states of the clock machinery.  There
 are symbolic constants for the significant bits, starting with
 @code{STA_}.  Some of these flags can be updated using the
 @code{MOD_STATUS} bit.
@@ -1930,7 +1930,7 @@ This value represents the median filtered dispersion of the PPS
 frequency in scaled PPM.
 
 @item long int jitcnt
-This counter represents the numer of pulses where the jitter exceeded
+This counter represents the number of pulses where the jitter exceeded
 the allowed maximum @code{MAXTIME}.
 
 @item long int calcnt

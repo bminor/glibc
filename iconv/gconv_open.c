@@ -1,5 +1,5 @@
 /* Find matching transformation algorithms and initialize steps.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -53,7 +53,7 @@ __gconv_open (const char *toset, const char *fromset, gconv_t *handle)
 		  nsteps * sizeof (struct gconv_step_data));
 
 	  /* Call all initialization functions for the transformation
-	     step implemenations.  */
+	     step implementations.  */
 	  for (cnt = 0; cnt < nsteps; ++cnt)
 	    {
 	      /* If this is the last step we must not allocate an

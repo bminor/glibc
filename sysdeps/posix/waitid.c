@@ -1,5 +1,5 @@
 /* Pseudo implementation of waitid.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1997.
 
@@ -79,7 +79,7 @@ waitid (idtype, id, infop, options)
     {
       /* The WHOHANG bit in OPTIONS is set and there are children available
 	 but none has a status for us.  The XPG docs do not mention this
-	 case so we clear the `siginfo_t' struct and return succesfully.  */
+	 case so we clear the `siginfo_t' struct and return successfully.  */
       infop->si_signo = 0;
       infop->si_code = 0;
       return 0;

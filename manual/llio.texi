@@ -41,7 +41,7 @@ directly.)
                                          or vice-versa.
 * Stream/Descriptor Precautions::       Precautions needed if you use both
                                          descriptors and streams.
-* Scatter-Gather::                      Fast I/O to discontinous buffers.
+* Scatter-Gather::                      Fast I/O to discontinuous buffers.
 * Memory-mapped I/O::                   Using files like memory.
 * Waiting for I/O::                     How to check for input or output
 					 on multiple file descriptors.
@@ -1131,8 +1131,8 @@ Modes}.
 @cindex scatter-gather
 
 Some applications may need to read or write data to multiple buffers,
-which are seperated in memory.  Although this can be done easily enough
-with multiple calls to @code{read} and @code{write}, it is inefficent
+which are separated in memory.  Although this can be done easily enough
+with multiple calls to @code{read} and @code{write}, it is inefficient
 because there is overhead associated with each kernel call.
 
 Instead, many platforms provide special high-speed primitives to perform
@@ -1206,7 +1206,7 @@ On modern operating systems, it is possible to @dfn{mmap} (pronounced
 ``em-map'') a file to a region of memory.  When this is done, the file can
 be accessed just like an array in the program.
 
-This is more efficent than @code{read} or @code{write}, as only regions
+This is more efficient than @code{read} or @code{write}, as only regions
 of the file a program actually accesses are loaded.  Accesses to
 not-yet-loaded parts of the mmapped region are handled in the same way as
 swapped out pages.
@@ -1250,7 +1250,7 @@ Error Signals}).
 
 Note that most hardware designs cannot support write permission without
 read permission, and many do not distinguish read and execute permission.
-Thus, you may recieve wider permissions than you ask for, and mappings of
+Thus, you may receive wider permissions than you ask for, and mappings of
 write-only files may be denied even if you do not use @code{PROT_READ}.
 
 @var{flags} contains flags that control the nature of the map.
@@ -1294,7 +1294,7 @@ Anonymous maps are used as the basic primitive to extend the heap on some
 systems.  They are also useful to share data between multiple tasks
 without creating a file.
 
-On some systems using private anonymous mmaps is more efficent than using
+On some systems using private anonymous mmaps is more efficient than using
 @code{malloc} for large blocks.  This is not an issue with the GNU C library,
 as the included @code{malloc} automatically uses @code{mmap} where appropriate.
 
@@ -1372,8 +1372,8 @@ aligned.
 
 When using shared mappings, the kernel can write the file at any time
 before the mapping is removed.  To be certain data has actually been
-written to the file and will be accessable to non-memory-mapped I/O, it
-is neccessary to use this function.
+written to the file and will be accessible to non-memory-mapped I/O, it
+is necessary to use this function.
 
 It operates on the region @var{address} to (@var{address} + @var{length}).
 It may be used on part of a mapping or multiple mappings, however the
@@ -1444,7 +1444,7 @@ The region has pages locked, and if extended it would exceed the
 process's resource limit for locked pages.  @xref{Limits on Resources}.
 
 @item ENOMEM
-The region is private writable, and insufficent virtual memory is
+The region is private writable, and insufficient virtual memory is
 available to extend it.  Also, this error will occur if
 @code{MREMAP_MAYMOVE} is not given and the extension would collide with
 another mapped region.
@@ -1681,7 +1681,7 @@ until the program ends.  To avoid this calls to @code{fsync} should be
 protected using cancelation handlers.
 @c ref pthread_cleanup_push / pthread_cleanup_pop
 
-The return value of the function is zero if no error occured.  Otherwise
+The return value of the function is zero if no error occurred.  Otherwise
 it is @math{-1} and the global variable @var{errno} is set to the
 following values:
 @table @code
@@ -1714,7 +1714,7 @@ required by @code{fdatasyn}.
 
 The prototype for @code{fdatasync} is in @file{unistd.h}.
 
-The return value of the function is zero if no error occured.  Otherwise
+The return value of the function is zero if no error occurred.  Otherwise
 it is @math{-1} and the global variable @var{errno} is set to the
 following values:
 @table @code
@@ -1745,7 +1745,7 @@ userlevel.  In the latter case it might be necessary to link applications
 with the thread library @file{libpthread} in addition to @file{librt}.
 
 All AIO operations operate on files which were opened previously.  There
-might be arbitrary many operations for one file running.  The
+might be arbitrarily many operations for one file running.  The
 asynchronous I/O operations are controlled using a data structure named
 @code{struct aiocb} (@dfn{AIO control block}).  It is defined in
 @file{aio.h} as follows.
@@ -1873,7 +1873,7 @@ operation terminates.  If the @code{sigev_notify} element is
 @code{SIGEV_NONE} no notification is send.  If it is @code{SIGEV_SIGNAL}
 the signal determined by @code{sigev_signo} is send.  Otherwise
 @code{sigev_notify} must be @code{SIGEV_THREAD} in which case a thread
-which starts executing the function pointeed to by
+which starts executing the function pointed to by
 @code{sigev_notify_function}.
 
 @item int aio_lio_opcode
@@ -1938,7 +1938,7 @@ might also be signaled asynchronously.
 @item EINVAL
 The @code{aiocbp->aio_offset} or @code{aiocbp->aio_reqpiro} value is
 invalid.  This condition need not be recognized before enqueueing the
-request and so this error might also be signaled asynchrously.
+request and so this error might also be signaled asynchronously.
 @end table
 
 In the case @code{aio_read} returns zero the current status of the
@@ -2422,7 +2422,7 @@ For requests which were successfully canceled the normal notification
 about the termination of the request should take place.  I.e., depending
 on the @code{struct sigevent} object which controls this, nothing
 happens, a signal is sent or a thread is started.  If the request cannot
-be canceled it terminates the usual way after performing te operation.
+be canceled it terminates the usual way after performing the operation.
 
 After a request is successfully canceled a call to @code{aio_error} with
 a reference to this request as the parameter will return

@@ -446,7 +446,7 @@ more time to minimize the wasted space.
 
 @end ignore
 
-As apposed to other versions, the @code{malloc} in GNU libc does not
+As opposed to other versions, the @code{malloc} in GNU libc does not
 round up block sizes to powers of two, neither for large nor for small
 sizes.  Neighboring chunks can be coalesced on a @code{free} no matter
 what their size is.  This makes the implementation suitable for all
@@ -636,7 +636,7 @@ variable @code{MALLOC_CHECK_}.  When @code{MALLOC_CHECK_} is set, a
 special (less efficient) implementation is used which is designed to be
 tolerant against simple errors, such as double calls of @code{free} with
 the same argument, or overruns of a single byte (off-by-one bugs).  Not
-all such errors can be proteced against, however, and memory leaks can
+all such errors can be protected against, however, and memory leaks can
 result.  If @code{MALLOC_CHECK_} is set to @code{0}, any detected heap
 corruption is silently ignored; if set to @code{1}, a diagnostic is
 printed on @code{stderr}; if set to @code{2}, @code{abort} is called
@@ -645,7 +645,7 @@ much later, and the true cause for the problem is then very hard to
 track down.
 
 So, what's the difference between using @code{MALLOC_CHECK_} and linking
-with @samp{-lmcheck}?  @code{MALLOC_CHECK_} is orthognal with respect to
+with @samp{-lmcheck}?  @code{MALLOC_CHECK_} is orthogonal with respect to
 @samp{-lmcheck}.  @samp{-lmcheck} has been added for backward
 compatibility.  Both @code{MALLOC_CHECK_} and @samp{-lmcheck} should
 uncover the same bugs - but using @code{MALLOC_CHECK_} you don't need to
@@ -931,7 +931,7 @@ freed at the end of their lifetime.  If this does not happen the system
 runs out of memory, sooner or later.
 
 The @code{malloc} implementation in the GNU C library provides some
-simple means to detect sich leaks and provide some information to find
+simple means to detect such leaks and provide some information to find
 the location.  To do this the application must be started in a special
 mode which is enabled by an environment variable.  There are no speed
 penalties if the program is compiled in preparation of the debugging if
@@ -974,7 +974,7 @@ systems.  The prototype can be found in @file{mcheck.h}.
 @comment GNU
 @deftypefun void muntrace (void)
 The @code{muntrace} function can be called after @code{mtrace} was used
-to enable tracing the @code{malloc} calls.  If no (succesful) call of
+to enable tracing the @code{malloc} calls.  If no (successful) call of
 @code{mtrace} was made @code{muntrace} does nothing.
 
 Otherwise it deinstalls the handlers for @code{malloc}, @code{realloc},
@@ -1110,11 +1110,11 @@ No memory leaks.
 
 In this case the program @code{tst-mtrace} was run and it produced a
 trace file @file{log}.  The message printed by @code{mtrace} shows there
-are no problems with the code, all allocated memory was freed
+are no problems with the code: all allocated memory was freed
 afterwards.
 
-If we call @code{mtrace} on the example trace given above we would get a
-different outout:
+If we call @code{mtrace} on the example trace given above we would get
+different output:
 
 @example
 drepper$ mtrace errlog

@@ -49,7 +49,7 @@ Which of the three versions of a function should be used depends on the
 situation.  For most calculations, the @code{float} functions are the
 fastest.  On the other hand, the @code{long double} functions have the
 highest precision.  @code{double} is somewhere in between.  It is
-usually wise to pick the narrowest type that can accomodate your data.
+usually wise to pick the narrowest type that can accommodate your data.
 Not all machines have a distinct @code{long double} type; it may be the
 same as @code{double}.
 
@@ -1655,7 +1655,7 @@ Using any of the reentrant functions of this family now will
 automatically initialize the random number generator to the default
 values for the state and the parameters of the congruential formula.
 
-The other possibility is too use any of the functions which explicitely
+The other possibility is too use any of the functions which explicitly
 initialize the buffer.  Though it might be obvious how to initialize the
 buffer from the data given as parameter from the function it is highly
 recommended to use these functions since the result might not always be
@@ -1712,8 +1712,8 @@ programs.
 @section Is Fast Code or Small Code preferred?
 @cindex Optimization
 
-If an application uses many floating point function it is often the case
-that the costs for the function calls itselfs are not neglectable.
+If an application uses many floating point functions, it is often the case
+that the costs of the function calls themselves are not negligible.
 Modern processor implementation often can execute the operation itself
 very fast but the call means a disturbance of the control flow.
 
@@ -1721,17 +1721,17 @@ For this reason the GNU C Library provides optimizations for many of the
 frequently used math functions.  When the GNU CC is used and the user
 activates the optimizer several new inline functions and macros get
 defined.  These new functions and macros have the same names as the
-library function and so get used instead of the later.  In case of
+library function and so get used instead of the latter.  In case of
 inline functions the compiler will decide whether it is reasonable to
 use the inline function and this decision is usually correct.
 
 For the generated code this means that no calls to the library functions
 are necessary.  This increases the speed significantly.  But the
 drawback is that the code size increases and this increase is not always
-neglectable.
+negligible.
 
 The speed increase has one drawback: the inline functions might not set
-@code{errno} and might not have the same precission as the library
+@code{errno} and might not have the same precision as the library
 functions.
 
 In cases where the inline functions and macros are not wanted the symbol

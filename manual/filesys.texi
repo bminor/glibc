@@ -1615,7 +1615,7 @@ which @var{buf} must point.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
 function is available under the name @code{stat} and so transparently
-replaces the interface for small fiels on 32 bits machines.
+replaces the interface for small files on 32 bits machines.
 @end deftypefun
 
 @comment sys/stat.h
@@ -1650,7 +1650,7 @@ which is able to represent the larger values.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
 function is available under the name @code{fstat} and so transparently
-replaces the interface for small fiels on 32 bits machines.
+replaces the interface for small files on 32 bits machines.
 @end deftypefun
 
 @comment sys/stat.h
@@ -1676,7 +1676,7 @@ which @var{buf} must point.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
 function is available under the name @code{lstat} and so transparently
-replaces the interface for small fiels on 32 bits machines.
+replaces the interface for small files on 32 bits machines.
 @end deftypefun
 
 @node Testing File Type
@@ -2511,7 +2511,7 @@ size of @math{0} and is automatically extended when data is written
 past its end.  It is also possible to empty a file completely in an
 @code{open} or @code{fopen} call.
 
-However, sometimes it is neccessary to @emph{reduce} the size of a file.
+However, sometimes it is necessary to @emph{reduce} the size of a file.
 This can be done with the @code{truncate} and @code{ftruncate} functions.
 They were introduced in BSD Unix.  @code{ftruncate} was later added to
 POSIX.1.
@@ -2550,7 +2550,7 @@ The file is a directory or not writable.
 The operation would extend the file beyond the limits of the operating system.
 
 @item EIO
-A hardware I/O error occured.
+A hardware I/O error occurred.
 
 @item EPERM
 The file is "append-only" or "immutable".
@@ -2592,7 +2592,7 @@ The operation would extend the file beyond the limits of the operating system.
 @c files with extra-large offsets.
 
 @item EIO
-A hardware I/O error occured.
+A hardware I/O error occurred.
 
 @item EPERM
 The file is "append-only" or "immutable".
@@ -2767,7 +2767,7 @@ the file in any case should use the @code{O_EXCL} flag.  Using
 @comment GNU
 @deftypefun {char *} tmpnam_r (char *@var{result})
 This function is nearly identical to the @code{tmpnam} function.  But it
-does not allow @var{result} to be a null pointer.  In the later case a
+does not allow @var{result} to be a null pointer.  In the latter case a
 null pointer is returned.
 
 This function is reentrant because the non-reentrant situation of

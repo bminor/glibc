@@ -220,13 +220,13 @@ translation actually happened must look like this:
 @end smallexample
 
 @noindent
-When an error occured the global variable @var{errno} is set to
+When an error occurred the global variable @var{errno} is set to
 
 @table @var
 @item EBADF
 The catalog does not exist.
 @item ENOMSG
-The set/message ttuple does not name an existing element in the
+The set/message tuple does not name an existing element in the
 message catalog.
 @end table
 
@@ -276,7 +276,7 @@ all @var{string} arguments should be written in the same language.
 
 It is somewhat uncomfortable to write a program using the @code{catgets}
 functions if no supporting functionality is available.  Since each
-set/message number tuple must be unique the programmer must keep lists
+set/message number tuple must be unique, the programmer must keep lists
 of the messages at the same time the code is written.  And the work
 between several people working on the same project must be coordinated.
 We will see some how these problems can be relaxed a bit (@pxref{Common
@@ -722,7 +722,7 @@ Hallo, Welt!
 
 The call of the @code{gencat} program creates the missing header file
 @file{msgnrs.h} as well as the message catalog binary.  The former is
-used in the compilation of @file{hello.c} while the later is placed in a
+used in the compilation of @file{hello.c} while the latter is placed in a
 directory in which the @code{catopen} function will try to locate it.
 Please check the @code{LC_ALL} environment variable and the default path
 for @code{catopen} presented in the description above.
@@ -816,7 +816,7 @@ history of the function and does not reflect the way the function should
 be used.
 
 Please note that above we wrote ``message catalogs'' (plural).  This is
-a speciality of the GNU implementation of these functions and we will
+a specialty of the GNU implementation of these functions and we will
 say more about this when we talk about the ways message catalogs are
 selected (@pxref{Locating gettext catalog}).
 
@@ -939,7 +939,7 @@ Locate the set of message catalogs.  There are a number of files for
 different languages and which all belong to the package.  Usually they
 are all stored in the filesystem below a certain directory.
 
-There can be arbitrary many packages installed and they can follow
+There can be arbitrarily many packages installed and they can follow
 different guidelines for the placement of their files.
 
 @item
@@ -987,7 +987,7 @@ be based on this.
 As the functions described in the last sections already mention separate
 sets of messages can be selected by a @dfn{domain name}.  This is a
 simple string which should be unique for each program part with uses a
-separate domain.  It is possible to use in one program arbitrary many
+separate domain.  It is possible to use in one program arbitrarily many
 domains at the same time.  E.g., the GNU C Library itself uses a domain
 named @code{libc} while the program using the C Library could use a
 domain named @code{foo}.  The important point is that at any time
@@ -1296,10 +1296,10 @@ translated.  S/He will simply wrap the translatable string in calls to
 program has a lot of option which help to customize the output or do
 help to understand the input better.
 
-Other programs help to manage development cycle when new messages appear
+Other programs help to the manage development cycle when new messages appear
 in the source files or when a new translation of the messages appear.
-here it should only be noted that using all the tools in GNU gettext it
-is possible to @emph{completely} automize the handling of message
-catalog.  Beside marking the translatable string in the source code and
-generating the translations the developers do not have anything to do
-themself.
+Here it should only be noted that using all the tools in GNU gettext it
+is possible to @emph{completely} automate the handling of message
+catalogs.  Beside marking the translatable string in the source code and
+generating the translations the developers do not have to do anything
+themselves.

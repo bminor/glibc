@@ -292,7 +292,7 @@ of this the normal character classification functions as used for
 @comment ISO
 @deftp {Data type} wctype_t
 The @code{wctype_t} can hold a value which represents a character class.
-The ony defined way to generate such a value is by using the
+The only defined way to generate such a value is by using the
 @code{wctype} function.
 
 @pindex wctype.h
@@ -724,7 +724,7 @@ This function is declared in @file{wctype.h}.
 @end deftypefun
 
 The @w{ISO C} standard also defines for the generally available mappings
-convenient shortcuts so that it is not necesary to call @code{wctrans}
+convenient shortcuts so that it is not necessary to call @code{wctrans}
 for them.
 
 @comment wctype.h
@@ -765,6 +765,6 @@ This function is declared in @file{wctype.h}.
 @end deftypefun
 
 The same warnings given in the last section for the use of the wide
-character classiffication function applies here.  It is not possible to
+character classification function applies here.  It is not possible to
 simply cast a @code{char} type value to a @code{wint_t} and use it as an
 argument for @code{towctrans} calls.

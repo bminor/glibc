@@ -676,9 +676,9 @@ namespace.
 This section describes the details of the protocols and socket naming
 conventions used in the Internet namespace.
 
-Originaly the Internet namespace used only IP version 4 (IPv4).  With
+Originally the Internet namespace used only IP version 4 (IPv4).  With
 the growing number of hosts on the Internet, a new protocol with a
-larger address space was neccessary: IP version 6 (IPv6).  IPv6
+larger address space was necessary: IP version 6 (IPv6).  IPv6
 introduces besides 128bit addresses (IPv4 has 32bit addresses) also
 other features and will eventually replace IPv4.
 
@@ -835,7 +835,7 @@ Historically these are divided into two parts, a @dfn{network number} and a
 mid-1990s classless address were introduced which changed the
 behaviour.  Since some functions implicitly expect the old definitions,
 we first describe the class based network and will then describe
-classless addresses.  IPv6 uses only classless adresses and therefore
+classless addresses.  IPv6 uses only classless addresses and therefore
 the following paragraphs don't apply.
 
 The class based IPv4 network number consists of the first one, two or
@@ -904,10 +904,10 @@ radix is assumed.
 
 IPv4 addresses (and IPv6 addresses also) are now considered as
 classless.  The distinction between classes A, B, and C can be ignored.
-Instead a IPv4 host adddress consists of a 32-bit address and a 32-bit
+Instead a IPv4 host address consists of a 32-bit address and a 32-bit
 mask.  The mask contains bits of 1 for the network part and bits of 0
-for the host part.  The 1-bits are contigous from the leftmost bit, the
-0-bits are contigous from the rightmost bit so that the netmask can also
+for the host part.  The 1-bits are contiguous from the leftmost bit, the
+0-bits are contiguous from the rightmost bit so that the netmask can also
 be written as a prefix length of bits of 1.  Classes A, B and C are just
 special cases of this general rule.  For example, class A addresses have
 a netmask of @samp{255.0.0.0} or a prefix length of 8.

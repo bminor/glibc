@@ -1303,7 +1303,7 @@ numbers are represented is the form
 @w{[@code{-}]@code{0x}@var{h}@code{.}@var{hhh}@code{p}[@code{+}|@code{-}]@var{dd}}.
 At the left of the decimal-point character exactly one digit is print.
 This character is only @code{0} if the number is denormalized.
-Otherwise the value is unspecified; it is implemention dependent how many
+Otherwise the value is unspecified; it is implementation dependent how many
 bits are used.  The number of hexadecimal digits on the right side of
 the decimal-point character is equal to the precision.  If the precision
 is zero it is determined to be large enough to provide an exact
@@ -4234,7 +4234,7 @@ is incorrect.
 There are two environment variables which influence the behaviour of
 @code{fmtmsg}.  The first is @code{MSGVERB}.  It is used to control the
 output actually happening on standard error (@emph{not} the console
-output).  Each of the five fields can explicitely be enabled.  To do
+output).  Each of the five fields can be explicitly enabled.  To do
 this the user has to put the @code{MSGVERB} variable with a format like
 the following in the environment before calling the @code{fmtmsg} function
 the first time:
@@ -4329,7 +4329,7 @@ The second call to @code{fmtmsg} illustrates a use of this function how
 it usually happens on System V systems which heavily use this function.
 It might be worth a thought to follow the scheme used in System V
 systems so we give a short explanation here.  The value of the
-@var{label} field (@code{UX:cat}) says that the error occured in the
+@var{label} field (@code{UX:cat}) says that the error occurred in the
 Unix program @code{cat}.  The explanation of the error follows and the
 value for the @var{action} parameter is @code{"refer to manual"}.  One
 could me more specific here, if needed.  The @var{tag} field contains,

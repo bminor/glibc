@@ -1350,7 +1350,7 @@ benchmark program for measuring disk access).
 {AJ} The GNU C library 2.1 uses db2 instead of db1 which was used in version
 2.0.  The internal formats of the actual db files are different.  To convert
 the db files from db1 format to db2 format, you can use the programs
-`db_dump185' and `db_load'.  Alternativly programs can be linked with db1
+`db_dump185' and `db_load'.  Alternatively programs can be linked with db1
 using `-ldb1' instead of linking with db2 which uses `-ldb'.  Linking with
 db1 might be preferable if older programs need to access the db file.
 
@@ -1446,7 +1446,7 @@ reading the POSIX standards.
 <http://www.gnu.org/software/libc/>.  The problem data base of open and
 solved bugs in GNU libc is available at
 <http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl>.  Eric Green has written
-a HowTo for converting from Linux libc5 to glibc2.  The HowTo is accessable
+a HowTo for converting from Linux libc5 to glibc2.  The HowTo is accessible
 via the FSF page and at <http://www.imaxx.net/~thrytis/glibc>.  Frodo
 Looijaard describes a different way installing glibc2 as secondary libc at
 <http://huizen.dds.nl/~frodol/glibc>.
