@@ -34,11 +34,12 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
   size_t argslen, envlen;
   int ints[INIT_INT_MAX];
   mach_port_t ports[_hurd_nports];
-  int dealloc_ports[_hurd_nports];
+  struct _hurd_port_userlink ulink_ports[_hurd_nports];
   file_t *dtable;
   int dtablesize;
   struct _hurd_port **dtable_cells;
-  int *dealloc_dtable, *dealloc_cells;
+  int *dealloc_dtable;
+  struct _hurd_port_userlink *ulink_dtable;
   int i;
   char *const *p;
   struct _hurd_sigstate *ss;
@@ -65,7 +66,7 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
 
   /* Load up the ports to give to the new program.  */
   for (i = 0; i < _hurd_nports; ++i)
-    ports[i] = _hurd_port_get (&_hurd_ports[i], &dealloc_ports[i]);
+    ports[i] = _hurd_port_get (&_hurd_ports[i], &ulink_ports[i]);
 
   /* Load up the ints to give the new program.  */
   for (i = 0; i < INIT_INT_MAX; ++i)
@@ -105,8 +106,8 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
     {
       dtablesize = _hurd_dtable.size;
       dtable = __alloca (dtablesize * sizeof (dtable[0]));
-      dealloc_dtable = __alloca (dtablesize * sizeof (dealloc_dtable[0]));
-      dtable_cells = __alloca (dtablesize * sizeof (dealloc_cells[0]));
+      ulink_dtable = __alloca (dtablesize * sizeof (ulink_dtable[0]));
+      dtable_cells = __alloca (dtablesize * sizeof (dtable_cells[0]));
       for (i = 0; i < dtablesize; ++i)
 	{
 	  struct _hurd_fd *const d = &_hurd_dtable.d[i];
@@ -120,11 +121,11 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
 	    {
 	      /* If this is a descriptor to our controlling tty,
 		 we want to give the normal port, not the foreground port.  */
-	      dtable[i] = _hurd_port_get (&d->ctty, &dealloc_dtable[i]);
+	      dtable[i] = _hurd_port_get (&d->ctty, &ulink_dtable[i]);
 	      if (dtable[i] == MACH_PORT_NULL)
 		{
 		  dtable[i] = _hurd_port_locked_get (&d->port,
-						     &dealloc_dtable[i]);
+						     &ulink_dtable[i]);
 		  dtable_cells[i] = &d->port;
 		}
 	      else
@@ -139,8 +140,8 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
     {
       dtable = _hurd_init_dtable;
       dtablesize = _hurd_init_dtablesize;
-      dealloc_dtable = NULL;
-      dealloc_cells = NULL;
+      ulink_dtable = NULL;
+      dtable_cells = NULL;
     }
 
   /* The information is all set up now.  Try to exec the file.  */
@@ -176,13 +177,13 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
 
   /* Release references to the standard ports.  */
   for (i = 0; i < _hurd_nports; ++i)
-    _hurd_port_free (&_hurd_ports[i], &dealloc_ports[i], ports[i]);
+    _hurd_port_free (&_hurd_ports[i], &ulink_ports[i], ports[i]);
 
   if (dealloc_dtable != NULL)
     /* Release references to the file descriptor ports.  */
     for (i = 0; i < dtablesize; ++i)
       if (dtable[i] != MACH_PORT_NULL)
-	_hurd_port_free (dtable_cells[i], &dealloc_dtable[i], dtable[i]);
+	_hurd_port_free (dtable_cells[i], &ulink_dtable[i], dtable[i]);
 
   return err;
 }
