@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -38,12 +38,28 @@ DEFUN(opendir, (name), CONST char *name)
   struct stat statbuf;
   int fd;
 
+  if (name[0] == '\0')
+    {
+      /* POSIX.1-1990 says an empty name gets ENOENT;
+	 but `open' might like it fine.  */
+      errno = ENOENT;
+      return NULL;
+    }
+
   fd = __open (name, O_RDONLY);
   if (fd < 0)
     return NULL;
 
   if (fcntl (fd, F_SETFD, FD_CLOEXEC) < 0)
     goto lose;
+
+  if (fstat (fd, &statbuf) < 0)
+    goto lose;
+  if (! S_ISDIR (statbuf.st_mode))
+    {
+      errno = ENOTDIR;
+      goto lose;
+    }
 
   dirp = (DIR *) malloc (sizeof (DIR) + NAME_MAX);
   if (dirp == NULL)
@@ -56,8 +72,7 @@ DEFUN(opendir, (name), CONST char *name)
     }
 
 #ifdef _STATBUF_ST_BLKSIZE
-  if (__fstat (fd, &statbuf) < 0 ||
-      statbuf.st_blksize < sizeof (struct direct))
+  if (statbuf.st_blksize < sizeof (struct direct))
     dirp->__allocation = sizeof (struct direct);
   else
     dirp->__allocation = statbuf.st_blksize;
