@@ -657,8 +657,8 @@ extern void __mig_init (void *);
 
 #include <mach/task_special_ports.h>
 
-/* Initialize the message port and _hurd_sigthread once.  Start the signal
-   thread whenever called; we are called again after fork in the child.  */
+/* Initialize the message port and _hurd_sigthread and start the signal
+   thread.  */
 
 void
 _hurdsig_init (void)
@@ -666,25 +666,17 @@ _hurdsig_init (void)
   error_t err;
   vm_size_t stacksize;
 
-  /* If _hurd_msgport is already set, we are in the child side of a fork.
-     We already have a message port set up in __fork.c by the parent, and
-     the parent took the siglock before we copied its memory, so it still
-     appears locked for us (__fork will unlock it after we return).  */
-
-  if (_hurd_msgport == MACH_PORT_NULL)
-    {
-      if (err = __mach_port_allocate (__mach_task_self (),
-				      MACH_PORT_RIGHT_RECEIVE,
-				      &_hurd_msgport))
-	__libc_fatal ("hurd: Can't create message port receive right\n");
-
-      /* Make a send right to the signal port.  */
-      if (err = __mach_port_insert_right (__mach_task_self (),
-					  _hurd_msgport,
-					  _hurd_msgport,
-					  MACH_MSG_TYPE_MAKE_SEND))
-	__libc_fatal ("hurd: Can't create send right to message port\n");
-    }
+  if (err = __mach_port_allocate (__mach_task_self (),
+				  MACH_PORT_RIGHT_RECEIVE,
+				  &_hurd_msgport))
+    __libc_fatal ("hurd: Can't create message port receive right\n");
+  
+  /* Make a send right to the signal port.  */
+  if (err = __mach_port_insert_right (__mach_task_self (),
+				      _hurd_msgport,
+				      _hurd_msgport,
+				      MACH_MSG_TYPE_MAKE_SEND))
+    __libc_fatal ("hurd: Can't create send right to message port\n");
 
   /* Set the default thread to receive task-global signals
      to this one, the main (first) user thread.  */
@@ -777,67 +769,26 @@ data_set_element (_hurd_fork_locks, _hurd_siglock); /* Lock before fork.  */
 
 static struct hurd_sigstate *forking_thread_sigstate;
 
-static error_t
-hurdsig_fork (task_t newtask, process_t newproc)
+static void
+hurdsig_fork (void)
 {
-  error_t err;
-  mach_port_t msgport, oldmsgport;
-
-  /* Create the message port to be used by the child.  */
-  if (err = __mach_port_allocate (__mach_task_self (),
-				  MACH_PORT_RIGHT_RECEIVE, &msgport))
-    return err;
-
-  /* Get us a send right for the child's message port.  */
-  if (err = __mach_port_insert_right (__mach_task_self (), msgport,
-				      msgport, MACH_MSG_TYPE_MAKE_SEND))
+  /* Record a pointer to the sigstate structure for this thread (the one
+     calling fork).  We don't use _hurd_self_sigstate because the
+     _hurd_siglock is already locked; also we don't need to allocate a new
+     structure if there is none for this thread.  */
+  struct hurd_sigstate **location =
+    (void *) __hurd_threadvar_location (_HURD_THREADVAR_SIGSTATE);
+  struct hurd_sigstate *ss;
+  if (*location == NULL)
     {
-      __mach_port_mod_refs (__mach_task_self (), msgport,
-			    MACH_PORT_RIGHT_RECEIVE, -1);
-      return err;
+      thread_t self = __mach_thread_self ();
+      for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
+	if (ss->thread == self)
+	  break;
     }
-
-  /* Move the receive right for the message port to the child,
-     giving it the same name our message port has for us.  */
-  if (err = __mach_port_insert_right (newtask, _hurd_msgport,
-				      msgport, MACH_MSG_TYPE_MOVE_RECEIVE))
-    {
-      __mach_port_mod_refs (__mach_task_self (), msgport,
-			    MACH_PORT_RIGHT_RECEIVE, -1);
-      goto lose;
-    }
-
-  /* Give the proc server the new task's message port.  */
-  if (err = __proc_setmsgport (newproc, msgport, &oldmsgport))
-    goto lose;
-  if (oldmsgport)
-    /* Where did that come from?  */
-    __mach_port_deallocate (__mach_task_self (), oldmsgport);
-
-  {
-    /* Record a pointer to the sigstate structure for this thread (the one
-       calling fork).  We don't use _hurd_self_sigstate because the
-       _hurd_siglock is already locked; also we don't need to allocate a
-       new structure if there is none for this thread.  */
-    struct hurd_sigstate **location =
-      (void *) __hurd_threadvar_location (_HURD_THREADVAR_SIGSTATE);
-    struct hurd_sigstate *ss;
-    if (*location == NULL)
-      {
-	thread_t self = __mach_thread_self ();
-	for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
-	  if (ss->thread == self)
-	    break;
-      }
-    else
-      ss = *location;
-    forking_thread_sigstate = ss;
-  }
-
- lose:
-  __mach_port_deallocate (__mach_task_self (), msgport);
-
-  return err;
+  else
+    ss = *location;
+  forking_thread_sigstate = ss;
 }
 text_set_element (_hurd_fork_setup_hook, hurdsig_fork);
 
@@ -857,9 +808,6 @@ hurdsig_fork_child (void)
     }
   _hurd_sigstates = forking_thread_sigstate;
   _hurd_sigstates->next = NULL;
-
-  /* Start the signal thread.  */
-  _hurdsig_init ();
 
   /* Set up proc server-assisted fault recovery for the signal thread.  */
   _hurdsig_fault_init ();
