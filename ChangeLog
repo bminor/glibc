@@ -1,3 +1,9 @@
+2000-06-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/elf/setjmp.S: Work around change is recent
+	binutils.  gas now emits a jump through the PLT instead of a
+	relative jump if the jump target is an exported symbol.
+
 2000-05-26  Andreas Jaeger  <aj@suse.de>
 
 	* sunrpc/xdr_intXX_t.c (xdr_uint8_t): Fix conversion.
