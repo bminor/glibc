@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
    Based on strlen implemention by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
    bug fix and commentary by Jim Blandy (jimb@ai.mit.edu);
@@ -36,15 +36,15 @@ DEFUN(strchr, (s, c), CONST char *s AND int c)
   c = (unsigned char) c;
 
   /* Handle the first few characters by reading one character at a time.
-     Do this until CHAR_PTR is aligned on a 4-byte border.  */
-  for (char_ptr = (CONST unsigned char *) s;
-       ((unsigned long int) char_ptr & 3) != 0; ++char_ptr)
-    {
-      if (*char_ptr == c)
-	return (char *) char_ptr;
-      else if (*char_ptr == '\0')
-	return NULL;
-    }
+     Do this until CHAR_PTR is aligned on a longword boundary.  */
+  for (char_ptr = s; ((unsigned long int) char_ptr
+		      & (sizeof (longword) - 1)) != 0;
+       --n, ++char_ptr)
+    if (*char_ptr == c)
+      return (PTR) char_ptr;
+
+  /* All these elucidatory comments refer to 4-byte longwords,
+     but the theory applies equally well to 8-byte longwords.  */
 
   longword_ptr = (unsigned long int *) char_ptr;
 
@@ -58,9 +58,15 @@ DEFUN(strchr, (s, c), CONST char *s AND int c)
      The 1-bits make sure that carries propagate to the next 0-bit.
      The 0-bits provide holes for carries to fall into.  */
   magic_bits = 0x7efefeff;
+  if (sizeof (longword) > 4)
+    /* 64-bit version of the magic.  */
+    magic_bits = (0x7efefefe << 32) | 0xfefefeff;
 
   /* Set up a longword, each of whose bytes is C.  */
-  charmask = (c << 24) | (c << 16) | (c << 8) | c;
+  charmask = c | (c << 8);
+  charmask |= charmask << 16;
+  if (sizeof (longword) > 4)
+    charmask |= charmask << 32;
 
   /* Instead of the traditional loop which tests each character,
      we will test a longword at a time.  The tricky part is testing
@@ -139,6 +145,25 @@ DEFUN(strchr, (s, c), CONST char *s AND int c)
 	    return (char *) cp;
 	  else if (*cp == '\0')
 	    return NULL;
+	  if (sizeof (longword) > 4)
+	    {
+	      if (*cp == c)
+		return (char *) cp;
+	      else if (*cp == '\0')
+		return NULL;
+	      if (*++cp == c)
+		return (char *) cp;
+	      else if (*cp == '\0')
+		return NULL;
+	      if (*++cp == c)
+		return (char *) cp;
+	      else if (*cp == '\0')
+		return NULL;
+	      if (*++cp == c)
+		return (char *) cp;
+	      else if (*cp == '\0')
+		return NULL;
+	    }
 	}
     }
 
