@@ -175,15 +175,6 @@ de-..: dist.tar
 	tar cf $< -C /tmp $(tardir)
 	-rm -fr /tmp/$(tardir) &
 
-README: README.template version.c
-	-rm -f $@
-	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
-# Make it unwritable so I won't change it by mistake.
-	chmod 444 $@
-
-INSTALL: manual/maint.texinfo
-	makeinfo +no-validate +no-warn +no-headers $<
-
 %.Z: %
 	compress -c $< > $@
 
