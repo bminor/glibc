@@ -174,14 +174,14 @@ double
 cabs(z)
 struct __complex z;
 {
-	return hypot(z.x,z.y);
+	return hypot(z.__x,z.__y);
 }
 
 double
 z_abs(z)
 struct __complex *z;
 {
-	return hypot(z->x,z->y);
+	return hypot(z->__x,z->__y);
 }
 
 /* A faster but less accurate version of cabs(x,y) */
