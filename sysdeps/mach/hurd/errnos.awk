@@ -33,11 +33,13 @@ BEGIN {
     print "#endif";
     print "";
     print "#ifdef _ERRNO_H\n";
-    print "enum\n{";
+    print "enum __error_t_codes\n{";
     errno = 0;
     errnoh = 0;
     in_mach_errors = 0;
     in_math = 0;
+    edom = erange = "";
+    print "#undef EDOM\n#undef ERANGE";
   }
 
 $1 == "@comment" && $2 == "errno.h" { errnoh=1; next }
@@ -58,27 +60,13 @@ errnoh == 2 && $1 == "@deftypevr"  && $2 == "Macro" && $3 == "int" \
 	print "#define EWOULDBLOCK EAGAIN /* Operation would block */";
 	next;
       }
-    if (e == "EDOM" || e == "ERANGE")
-      {
-	if (! in_math)
-	  {
-	    print "};"
-	    print "#endif /* <errno.h> included.  */";
-	    print "#if (!defined (__Emath_defined) && " \
-	          "(defined (_ERRNO_H) || defined (__need_Emath)))";
-	    print "enum\n{";
-	    in_math = 1;
-	  }
-      }
-    else if (in_math)
-      {
-	print "};"
-	print "#endif \
-	  /* Emath not defined and <errno.h> included or need Emath.  */";
-	print "#ifdef _ERRNO_H";
-	print "enum\n{";
-	in_math = 0;
-      }
+    x = sprintf ("%-40s/*%s */", sprintf ("%-24s%s", "#define\t" e,
+					  "_HURD_ERRNO (" errno+1 ")"),
+		 etext);
+    if (e == "EDOM")
+      edom = x;
+    else if (e == "ERANGE")
+      erange = x;
     printf "%-40s/*%s */\n", sprintf ("%-24s%s", "#define\t" e, e), etext;
     printf "\t%-16s= _HURD_ERRNO (%d),\n", e, ++errno;
     next;
@@ -113,5 +101,17 @@ END \
     print "";
     printf "#define\t_HURD_ERRNOS\t%d\n", ++errno;
     print "";
+    print "\
+/* User-visible type of error codes.  It is ok to use `int' or\n\
+   `kern_return_t' for these, but with `error_t' the debugger prints\n\
+   symbolic values.  */";
+    print "#ifdef __USE_GNU";
+    print "typedef enum __error_t_codes error_t;"
+    print "#endif";
+    print "";
     print "#endif /* <errno.h> included.  */";
+    print "";
+    print "#if !defined (_ERRNO_H) && defined (__need_Emath)";
+    print edom; print erange;
+    print "#endif /* <errno.h> not included and need math error codes.  */";
   }
