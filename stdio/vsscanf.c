@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ Cambridge, MA 02139, USA.  */
    string FORMAT, using the argument list in ARG.  */
 int
 DEFUN(__vsscanf, (s, format, arg),
-      CONST char *s AND CONST char *format AND PTR arg)
+      CONST char *s AND CONST char *format AND va_list arg)
 {
   FILE f;
 
