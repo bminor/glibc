@@ -35,6 +35,9 @@ DEFUN(sigpending, (set), sigset_t *set)
       return -1;
     }
 
+  /* Crash before locking.  */
+  *(volatile sigset_t *) set = *set;
+
   ss = _hurd_thread_sigstate (__mach_thread_self ());
   pending = ss->pending;
   __mutex_unlock (&ss->lock);
