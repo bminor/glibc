@@ -115,9 +115,9 @@ to that other directory to run @code{configure}.  In order to run
 configure, you will have to specify a directory for it, like this:
 
 @smallexample
-mkdir ../hp320
-cd ../hp320
-../src/configure hp320-bsd4.3
+mkdir sun4
+cd sun4
+../configure sparc-sun-sunos4.1
 @end smallexample
 
 @noindent
@@ -142,7 +142,11 @@ file @file{configparms} in the directory where you are building the
 library, and define in that file the parameters you want to specify.
 @file{configparms} should @strong{not} be an edited copy of
 @file{Makeconfig}; specify only the parameters that you want to
-override.
+override.  To see how to set these parameters, find the section of
+@file{Makeconfig} that says ``These are the configuration variables.''
+Then for each parameter that you want to change, copy the definition
+from @file{Makeconfig} to your new @file{configparms} file, and change
+the value as appropriate for your system.
 
 Some of the machine-dependent code for some machines uses extensions in
 the GNU C compiler, so you may need to compile the library with GCC.
