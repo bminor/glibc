@@ -31,7 +31,7 @@ In the meantime, you should avoid using these names yourself.
 * Absolute Value::              Absolute value functions.
 @end menu
 
-@node Domain and Range Errors, Not a Number,  , Mathematics
+@node Domain and Range Errors
 @section Domain and Range Errors
 
 @cindex domain error
@@ -88,7 +88,7 @@ For more information about floating-point representations and limits,
 @xref{Floating-Point Limits}.  In particular, the macro @code{DBL_MAX}
 might be more appropriate than @code{HUGE_VAL} for many uses.
 
-@node Not a Number, Trig Functions, Domain and Range Errors, Mathematics
+@node Not a Number
 @section ``Not a Number'' Values
 @cindex NAN
 @cindex not a number
@@ -115,9 +115,13 @@ An expression representing a value which is ``not a number''.  This
 macro is a GNU extension, available only on machines that support ``not
 a number'' values---that is to say, on all machines that support IEEE
 floating point.
+
+You can use @samp{#ifdef NAN} to test whether the machine supports NaNs.
+(Of course, you must arrange for GNU extensions to be visible,
+such as by defining @code{_GNU_SOURCE}.)
 @end deftypevr
 
-@node Trig Functions, Inverse Trig Functions, Not a Number, Mathematics
+@node Trig Functions
 @section Trigonometric Functions
 @cindex trigonometric functions
 
@@ -170,7 +174,7 @@ negative @code{HUGE_VAL}.
 @end deftypefun
 
 
-@node Inverse Trig Functions, Exponents and Logarithms, Trig Functions, Mathematics
+@node Inverse Trig Functions
 @section Inverse Trigonometric Functions
 @cindex inverse trigonmetric functions
 
@@ -249,7 +253,7 @@ function is not defined in this case.
 @end deftypefun
 
 
-@node Exponents and Logarithms, Hyperbolic Functions, Inverse Trig Functions, Mathematics
+@node Exponents and Logarithms
 @section Exponentiation and Logarithms
 @cindex exponentiation functions
 @cindex power functions
@@ -371,7 +375,7 @@ It is computed in a way that is accurate even if the value of @var{x} is
 near zero.
 @end deftypefun
 
-@node Hyperbolic Functions, Pseudo-Random Numbers, Exponents and Logarithms, Mathematics
+@node Hyperbolic Functions
 @section Hyperbolic Functions
 @cindex hyperbolic functions
 
@@ -441,7 +445,7 @@ value whose hyperbolic tangent is @var{x}.  If the absolute value of
 @code{HUGE_VAL}.
 @end deftypefun
 
-@node Pseudo-Random Numbers, Absolute Value, Hyperbolic Functions, Mathematics
+@node Pseudo-Random Numbers
 @section Pseudo-Random Numbers
 
 This section describes the GNU facilities for generating a series of
@@ -479,7 +483,7 @@ libraries may produce different sequences of values for the same seed.
 * BSD Random Number Functions::         @code{random} and friends.
 @end menu
 
-@node ANSI C Random Number Functions, BSD Random Number Functions,  , Pseudo-Random Numbers
+@node ANSI C Random Number Functions
 @subsection ANSI C Random Number Functions
 
 This section describes the random number functions that are part of
@@ -518,7 +522,7 @@ To produce truly random numbers (not just pseudo-random), do @code{srand
 (time (0))}.
 @end deftypefun
 
-@node BSD Random Number Functions,  , ANSI C Random Number Functions, Pseudo-Random Numbers
+@node BSD Random Number Functions
 @subsection BSD Random Number Functions
 
 This section describes a set of random number generation functions
@@ -580,7 +584,7 @@ You can use thise value later as an argument to @code{setstate} to
 restore that state.
 @end deftypefun
 
-@node Absolute Value,  , Pseudo-Random Numbers, Mathematics
+@node Absolute Value
 @section Absolute Value
 @cindex absolute value functions
 
