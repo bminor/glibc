@@ -34,6 +34,13 @@ extern "C" {
    non-ANSI C where `const' is problematical.  */
 #endif /* C++ or ANSI C.  */
 
+
+/* We #undef these before defining them because some losing systems
+   (HP-UX A.08.07 for example) define these in <unistd.h>.  */
+#undef	FNM_PATHNAME
+#undef	FNM_NOESCAPE
+#undef	FNM_PERIOD
+
 /* Bits set in the FLAGS argument to `fnmatch'.  */
 #define	FNM_PATHNAME	(1 << 0) /* No wildcard can ever match `/'.  */
 #define	FNM_NOESCAPE	(1 << 1) /* Backslashes don't quote special chars.  */
