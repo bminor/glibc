@@ -385,7 +385,8 @@ struct hurd_signal_preempt
        If the return value is SIG_DFL, normal signal processing continues.
        If it is SIG_IGN, the signal is ignored.
        Any other value is used in place of the normal handler.  */
-    sighandler_t (*handler) (thread_t thread, int signo, long int sigcode);
+    sighandler_t (*handler) (thread_t thread,
+			     int signo, long int sigcode, int sigerror);
     long int first, last;	/* Range of sigcodes this handler wants.  */
     struct hurd_signal_preempt *next; /* Next handler on the chain. */
   };
