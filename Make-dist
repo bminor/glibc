@@ -46,6 +46,9 @@ else
 +distinfo := $(shell MAKEFLAGS= MFLAGS= $(MAKE) -s no_deps=t no_ir=t \
 		     echo-distinfo | grep -v '^make')
 all-headers := $(patsubst +header+%,%,$(filter +header+%,$(+distinfo)))
+# Ignore headers that don't have top-level indirections.
+# For example, all the headers in sunrpc are like this.
+all-headers := $(wildcard $(all-headers))
 +subdir-nodist := $(patsubst +nodist+%,%,$(filter +nodist+%,$(+distinfo)))
 +subdir-headers := $(filter-out $(headers),$(all-headers))
 endif
@@ -100,7 +103,7 @@ version := $(word 2,$(rel+vers))
 export tardir := glibc-$(version)
 endif
 
-$(..)glibc-%:
+$(..)glibc-$(version):
 	ln -s . $@
 
 +tsrcs := $(+tsrcs) \
