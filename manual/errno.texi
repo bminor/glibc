@@ -662,6 +662,14 @@ for information on process groups and these signals.
 @end deftypevr
 
 @comment errno.h
+@comment GNU: Translator died
+@deftypevr Macro int EDIED
+In the GNU system, opening a file returns this error when the file is
+translated by a program and the translator program dies while starting
+up, before it has connected to the file.
+@end deftypevr
+
+@comment errno.h
 @comment GNU: ?
 @deftypevr Macro int ED
 The experienced user will know what is wrong.
