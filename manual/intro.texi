@@ -712,9 +712,9 @@ remainder functions on integers as well as the usual trigonometric and
 exponential functions on floating-point numbers.
 
 @item
-@ref{Low-Level Arithmetic Functions}, describes functions for simple
-arithmetic, analysis of floating-point values, and reading numbers from
-strings.
+@ref{Arithmetic,, Low-Level Arithmetic Functions}, describes functions
+for simple arithmetic, analysis of floating-point values, and reading
+numbers from strings.
 
 @item 
 @ref{Searching and Sorting}, contains information about functions
