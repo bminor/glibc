@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -63,6 +63,23 @@ extern int creat __P ((__const char *__file, __mode_t __mode));
 #ifdef	__OPTIMIZE__
 #define	creat(file, m)	__open((file), O_WRONLY|O_CREAT|O_TRUNC, (m))
 #endif /* Optimizing.  */
+
+#if defined (__USE_MISC) && !defined (F_LOCK)
+/* NOTE: These declarations also appear in <unistd.h>; be sure to keep both
+   files consistent.  Some systems have them there and some here, and some
+   software depends on the macros being defined without including both.  */
+
+/* `lockf' is a simpler interface to the locking facilities of `fcntl'.
+   LEN is always relative to the current file position.
+   The CMD argument is one of the following.  */
+
+#define F_ULOCK 0       /* Unlock a previously locked region.  */
+#define F_LOCK  1       /* Lock a region for exclusive use.  */ 
+#define F_TLOCK 2       /* Test and lock a region for exclusive use.  */
+#define F_TEST  3       /* Test a region for other processes locks.  */
+
+extern int lockf __P ((int __fd, int __cmd, __off_t __len));
+#endif
 
 __END_DECLS
 
