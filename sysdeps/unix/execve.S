@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,11 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
+
+/* Some systems misname the system call number macro for this.  */
+#if !defined (SYS_execve) && defined (SYS_exece)
+#define SYS_execve	SYS_exece
+#endif
 
 SYSCALL__ (execve, 3)
 	ret
