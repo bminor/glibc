@@ -139,12 +139,14 @@ compiler normally provides: @file{stddef.h}, @file{stdarg.h}, and
 several files with names of the form @file{va-@var{machine}.h}.  The
 versions of these files that came with older releases of GCC do not work
 properly with the GNU C library.  The @file{stddef.h} file in release
-2.2 and later of GCC is correct.  If you have a new enough release of
-GCC, use its version instead of the C library's.  To do this, put the
-line @w{@samp{override stddef.h =}} in @file{configparms}.  The other
-files are corrected in release 2.3 and later of GCC.  If you have a new
-enough release of GCC, use its files instead of the C library's.  To do
-this, put the line @w{@samp{override stdarg.h =}} in @file{configparms}.
+2.2 and later of GCC is correct.  If you have release 2.2 or later of
+GCC, use its version of @file{stddef.h} instead of the C library's.  To
+do this, put the line @w{@samp{override stddef.h =}} in
+@file{configparms}.  The other files are corrected in release 2.3 and
+later of GCC.  If you release 2.3 or later of GCC, use its
+@file{stdarg.h} and @file{va-@var{machine}.h} files instead of the C
+library's.  To do this, put the line @w{@samp{override stdarg.h =}} in
+@file{configparms}.
 
 There is a potential problem with the @code{size_t} type and versions of
 GCC prior to release 2.4.  ANSI C requires that @code{size_t} always be
