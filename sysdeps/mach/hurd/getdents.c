@@ -36,7 +36,7 @@ DEFUN(__getdirentries, (fd, buf, nbytes, basep),
 			 __dir_readdir (port, buf, nbytes, *basep,
 					basep, &amount));
   if (err)
-    return __hurd_fail (err);
+    return __hurd_dfail (fd, err);
 
   return amount;
 }
