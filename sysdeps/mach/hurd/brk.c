@@ -23,6 +23,10 @@ Cambridge, MA 02139, USA.  */
 #include <gnu-stabs.h>
 
 
+/* Initial maximum size of the data segment.  */
+#define	DATA_SIZE	(32 * 1024 * 1024)
+
+
 /* Up to the page including this address is allocated from the kernel.
    This address is the data resource limit.  */
 vm_address_t _hurd_data_end;
@@ -92,7 +96,7 @@ init_brk (void)
 
   pagend = round_page (&_end);
 
-  _hurd_data_end = ??;
+  _hurd_data_end = DATA_SIZE;
 
   if (pagend < _hurd_data_end)
     {
@@ -134,6 +138,8 @@ _hurd_set_data_limit (const struct rlimit *lim)
 	  return -1;
 	}
     }
+  else if (end < _hurd_data_end)
+    __vm_deallocate (__mach_task_self (), end, _hurd_data_end - end);
   _hurd_brk_limit = lim->rlim_cur;
   _hurd_data_end = end;
   __mutex_unlock (&_hurd_brk_lock);
