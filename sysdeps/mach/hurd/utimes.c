@@ -32,7 +32,8 @@ DEFUN(__utimes, (file, tvp),
   file_t f = __path_lookup (file, 0, 0);
   if (f == MACH_PORT_NULL)
     return -1;
-  err = __file_utimes (f, tvp[0], tvp[1]);
+  err = __file_utimes (f,
+		       *(time_value_t *) &tvp[0], *(time_value_t *) &tvp[1]);
   __mach_port_deallocate (__mach_task_self (), f);
   if (err)
     return __hurd_fail (err);
