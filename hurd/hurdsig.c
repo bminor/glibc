@@ -475,24 +475,24 @@ _hurd_raise_signal (struct _hurd_sigstate *ss, int signo, int sigcode)
     }
 }
 
+/* Initialize the message port and signal thread once.
+   Do nothing on subsequent calls.  */
+
 void
 _hurdsig_init (void)
 {
   thread_t sigthread;
 
-  __mutex_init (&_hurd_siglock);
+  if (_hurd_msgport != MACH_PORT_NULL)
+    /* We have already been run.  Return doing nothing.  */
+    return;
 
-  if (_hurd_msgport == MACH_PORT_NULL)
-    if (err = __mach_port_allocate (__mach_task_self (),
-				    MACH_PORT_RIGHT_RECEIVE,
-				    &_hurd_msgport))
-      __libc_fatal ("hurd: Can't create signal port receive right\n");
+  __mutex_init (&_hurd_siglock); /* Initialize the signal lock.  */
 
-  if (err = __thread_create (__mach_task_self (), &sigthread))
-    __libc_fatal ("hurd: Can't create signal thread\n");
-  if (err = _hurd_start_sigthread (sigthread, _hurd_msgport_receive))
-    __libc_fatal ("hurd: Can't start signal thread\n");
-  _hurd_msgport_thread = sigthread;
+  if (err = __mach_port_allocate (__mach_task_self (),
+				  MACH_PORT_RIGHT_RECEIVE,
+				  &_hurd_msgport))
+    __libc_fatal ("hurd: Can't create signal port receive right\n");
 
   /* Make a send right to the signal port.  */
   if (err = __mach_port_insert_right (__mach_task_self (),
@@ -500,69 +500,52 @@ _hurdsig_init (void)
 				      MACH_PORT_RIGHT_MAKE_SEND))
     __libc_fatal ("hurd: Can't create send right to signal port\n");
 
+  if (err = __thread_create (__mach_task_self (), &_hurd_msgport_thread))
+    __libc_fatal ("hurd: Can't create signal thread\n");
+
+  if (err = _hurd_start_sigthread (_hurd_msgport_thread,
+				   _hurd_msgport_receive))
+    __libc_fatal ("hurd: Can't start signal thread\n");
+
   /* Receive exceptions on the signal port.  */
-  __task_set_special_port (__mach_task_self (),
-			   TASK_EXCEPTION,
-			   _hurd_msgport);
-
-  {
-    /* Send exceptions for the signal thread to the proc server.
-       It will forward the message on to our message port,
-       and then restore the thread's state to code which
-       does `longjmp (_hurd_sigthread_fault_env, 1)'.  */
-
-    mach_port_t sigexc;
-    int state[_hurd_thread_state_count];
-    if (err = __mach_port_allocate (__mach_task_self (),
-				    MACH_PORT_RIGHT_RECEIVE, &sigexc))
-      __libc_fatal ("hurd: Can't create receive right for sigthread exc\n");
-    _hurd_initialize_fault_recovery_state (state);
-    __thread_set_special_port (sigthread, THREAD_EXCEPTION, sigexc);
-    if (err = HURD_PORT_USE
-	(&_hurd_proc,
-	 __proc_handle_exceptions (port,
-				   sigexc,
-				   _hurd_msgport, MACH_PORT_RIGHT_COPY_SEND,
-				   _hurd_thread_state_flavor,
-				   state, _hurd_thread_state_count)))
-      __libc_fatal ("hurd: proc won't handle sigthread exceptions\n");
-  }
+  __task_set_special_port (__mach_task_self (), TASK_EXCEPTION, _hurd_msgport);
 }
-				/* XXXX */
-struct _hurd_port _hurd_proc;
 
-/* Make PROCSERVER be our proc server port.
-   Tell the proc server that we exist.  */
+/* Send exceptions for the signal thread to the proc server.
+   It will forward the message on to our message port,
+   and then restore the thread's state to code which
+   does `longjmp (_hurd_sigthread_fault_env, 1)'.  */
 
 void
-_hurd_proc_init (process_t procserver, char **argv)
+_hurdsig_fault_init (void)
 {
-  mach_port_t oldsig, oldtask;
+  mach_port_t sigexc;
+  int state[_hurd_thread_state_count];
 
-  _hurd_port_init (&_hurd_proc, procserver);
+  if (err = __mach_port_allocate (__mach_task_self (),
+				  MACH_PORT_RIGHT_RECEIVE, &sigexc))
+    __libc_fatal ("hurd: Can't create receive right for signal thread exc\n");
 
-  /* Tell the proc server where our args and environment are.  */
-  __proc_setprocargs (procserver, argv, __environ);
+  /* Set up STATE with a thread state that will longjmp immediately.  */
+  _hurd_initialize_fault_recovery_state (state);
 
-  /* Initialize the signal code; Mach exceptions will become signals.
-     This sets _hurd_msgport; it must be run before _hurd_proc_init.  */
-  _hurdsig_init ();
+  __thread_set_special_port (_hurd_msgport_thread, THREAD_EXCEPTION, sigexc);
 
-  /* Give the proc server our task and signal ports.  */
-  __proc_setports (procserver,
-		   _hurd_msgportG, __mach_task_self (),
-		   &oldsig, &oldtask);
-  if (oldsig != MACH_PORT_NULL)
-    __mach_port_deallocate (__mach_task_self (), oldsig);
-  if (oldtask != MACH_PORT_NULL)
-    __mach_port_deallocate (__mach_task_self (), oldtask);
+  if (err = HURD_PORT_USE
+      (&_hurd_ports[INIT_PORT_PROC],
+       __proc_handle_exceptions (port,
+				 sigexc,
+				 _hurd_msgport, MACH_PORT_RIGHT_COPY_SEND,
+				 _hurd_thread_state_flavor,
+				 state, _hurd_thread_state_count)))
+    __libc_fatal ("hurd: proc won't handle signal thread exceptions\n");
 }
-
+				/* XXXX */
 static void
 reauth_proc (mach_port_t new)
 {
   /* Reauthenticate with the proc server.  */
-  if (! _HURD_PORT_USE (&_hurd_proc,
+  if (! _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
 			__proc_reauthenticate (port) ||
 			__auth_user_authenticate (new, port, &ignore))
       && ignore != MACH_PORT_NULL)
