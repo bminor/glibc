@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,9 @@ DEFUN(getwd, (buf), char *buf)
       return NULL;
     }
 
+#ifndef	PATH_MAX
+#define	PATH_MAX	1024	/* Arbitrary; this function is unreliable.  */
+#endif
   if (getcwd (buf, PATH_MAX) == NULL)
     {
       (void) strncpy (buf, strerror (errno), PATH_MAX);
