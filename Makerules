@@ -73,6 +73,11 @@ endif
 # .S file in a later directory would be chosen over a .c file in an earlier
 # directory, which does not preserve the desired sysdeps ordering behavior.
 
+# This is here so things in sysdep Makefiles can easily depend on foo.h as
+# appropriate and not worry about where foo.h comes from, which may be
+# system dependent and not known by that Makefile.
+vpath %.h $(objpfx):$(addprefix $(sysdep_dir)/,$(sysdirs)) $(..)
+
 ifeq ($(wildcard $(+sysdir_pfx)sysd-Makefile),)
 # Don't do deps until this exists, because it might change the sources list.
 no_deps=t
@@ -270,7 +275,8 @@ install: $(+install-dirs) $(+install)
 
 S-CPPFLAGS = $(asm-CPPFLAGS)
 +make-deps = $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
-	     sed 's,$*\.o,$(@:.dep=.o) $@,' > $@
+	     sed -e 's,$(objpfx),$$(objpfx),g' \
+		 -e 's,$*\.o,$(@:.dep=.o) $@,' > $@
 
 # N.B.: The order of these two rules is important.
 $(objpfx)%.dep: %.S $(before-compile)
@@ -284,7 +290,7 @@ $(objpfx)%.dep: %.c $(before-compile)
 $(objpfx)depend-$(subdir): Makefile
 ifdef +depfiles
 	(for file in $(patsubst $(objpfx)%,%,$(+depfiles)); do	\
-	 echo "include $(objpfx)$$file";	\
+	 echo "include \$$(objpfx)$$file";	\
 	 done) > $@
 else
 	cp /dev/null $@
