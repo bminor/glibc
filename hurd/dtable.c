@@ -90,7 +90,7 @@ int
 _hurd_intern_fd (io_t port, int flags, int dealloc)
 {
   int fd;
-  struct _hurd_fd *d = _hurd_alloc_fd (&fd);
+  struct _hurd_fd *d = _hurd_alloc_fd (&fd, 0);
 
   if (d == NULL)
     {
@@ -107,13 +107,13 @@ _hurd_intern_fd (io_t port, int flags, int dealloc)
 /* Allocate a new file descriptor and return it, locked.
    If the table is full, set errno and return NULL.  */
 struct _hurd_fd *
-_hurd_alloc_fd (int *fd)
+_hurd_alloc_fd (int *fd, const int first_fd)
 {
   int i;
 
   __mutex_lock (&hurd_dtable_lock);
 
-  for (i = 0; i < _hurd_dtable.size; ++i)
+  for (i = first_fd; i < _hurd_dtable.size; ++i)
     {
       struct _hurd_fd *d = &_hurd_dtable.d[i];
       __spin_lock (&d->port.lock);
