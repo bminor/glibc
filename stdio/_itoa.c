@@ -1,4 +1,5 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Internal function for converting integers to ASCII.
+Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
