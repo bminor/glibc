@@ -156,12 +156,6 @@ extern int gethostbyname2_r __P ((__const char *__restrict __name, int __af,
 #endif	/* misc */
 
 
-/* Return entry from host data base for host with NAME.  AF must be
-   set to the desired address type (either `AF_INET' or `AF_INET6').
-   FLAGS is some combination of the following AI_* values.  */
-extern struct hostent *getnodebyname __P ((__const char *__name, int __af,
-					   int __flags));
-
 #define AI_V4MAPPED	1	/* IPv4-mapped addresses are acceptable.  */
 #define AI_ALL		2	/* Return both IPv4 and IPv6 addresses.  */
 #define AI_ADDRCONFIG	4	/* Use configuration of this host to choose
