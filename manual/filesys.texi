@@ -17,7 +17,7 @@ access permissions and modification times.
 				 file names.
 * Accessing Directories::	Finding out what files a directory
 				 contains.
-* Directory Entries::           Adding alternate names to a file.
+* Hard Links::		        Adding alternate names to a file.
 * Symbolic Links::              A file that ``points to'' a file name.
 * Deleting Files::              How to delete a file, and what that means.
 * Renaming Files::              Changing a file's name.
