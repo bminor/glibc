@@ -114,6 +114,4 @@ extern int utimes __P ((__const char *__file, struct timeval __tvp[2]));
 
 __END_DECLS
 
-#endif /* <sys/time.h> included.  */
-
 #endif /* sys/time.h */
