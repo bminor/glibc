@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -45,8 +45,7 @@ typedef struct
 /* Possible nonzero return values from `wordexp'.  */
 enum
   {
-    WRDE_ABEND = 1,	/* WORDS contains unquoted metacharacters.  */
-    WRDE_NOSPACE,	/* Ran out of memory.  */
+    WRDE_NOSPACE = 1,	/* Ran out of memory.  */
     WRDE_BADCHAR,	/* A metacharacter appears in the wrong place.  */
     WRDE_BADVAL,	/* Reference to undefined variable with WRDE_UNDEF.  */
     WRDE_CMDSUB,	/* Command substitution with WRDE_NOCMD.  */
