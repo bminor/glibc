@@ -23,7 +23,7 @@ subdir	:= locale
 
 headers	:= locale.h localeinfo.h
 
-routines	:= setlocale
+routines	:= setlocale localeconv
 aux		:= C-collate C-ctype C-ctype_ct C-ctype_mb \
 		   C-monetary C-numeric C-response C-time
 
