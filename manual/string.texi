@@ -894,7 +894,7 @@ a null pointer.
 @end deftypefun
 
 @strong{Warning:} Since @code{strtok} alters the string it is parsing,
-you always copy the string to a tempoarary buffer before parsing it with
+you always copy the string to a temporary buffer before parsing it with
 @code{strtok}.  If you allow @code{strtok} to modify a string that came
 from another part of your program, you are asking for trouble; that
 string may be part of a data structure that could be used for other

@@ -119,7 +119,7 @@ floating point.
 
 @node Trigonometric Functions
 @section Trigonometric Functions
-@cindex trignometric functions
+@cindex trigonometric functions
 
 These are the familiar @code{sin}, @code{cos}, and @code{tan} functions.
 The arguments to all of these functions are in units of radians; recall
