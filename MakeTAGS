@@ -62,8 +62,10 @@ subdirs := $(subdirs) \
 				    $(wildcard $(addsuffix /Subdirs,\
 							   $(all-dirs)))\
 				    /dev/null))
-all-dist = $(filter %.c %.h %.S %.s,\
-		    $(shell cat /dev/null $(wildcard $(all-dirs:%=%/Dist))))
+all-dist = $(foreach Dist,$(wildcard $(all-dirs:%=%/Dist)),\
+		     $(addprefix $(Dist:%/Dist=%)/,\
+				 $(filter %.c %.h %.S %.s,\
+					  $(shell cat $(Dist)))))
 tags_sources = $(all-sources) $(all-headers) $(all-dist)
 endif
 
