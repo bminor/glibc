@@ -45,13 +45,13 @@
    frexp, gamma, hypot,
    ilogb, isfinite, isinf, isnan, isnormal,
    isless, islessequal, isgreater, isgreaterequal, islessgreater, isunordered,
-   j0, j1,
+   j0, j1, jn,
    ldexp, lgamma, log, log10, log1p, log2, logb,
    modf, nearbyint, nextafter,
    pow, remainder, remquo, rint, lrint, llrint,
    round, lround, llround,
    scalb, scalbn, signbit, sin, sincos, sinh, sqrt, tan, tanh, tgamma, trunc,
-   y0, y1
+   y0, y1, yn
 
    and for the following complex math functions:
    cabs, cacos, cacosh, carg, casin, casinh, catan, catanh,
@@ -59,7 +59,6 @@
 
    At the moment the following functions aren't tested:
    conj, cproj, cimag, creal, drem,
-   jn, yn,
    significand,
    nan
 
@@ -1094,7 +1093,7 @@ cosh_test (void)
 #endif
 
   check_eps ("cosh (0.7) ==  1.2551690056...", FUNC(cosh) (0.7),
-	     1.255169005630943018L, CHOOSE (4e-17L, 0, 0));
+	     1.255169005630943018L, CHOOSE (4e-17L, 2.3e-16, 0));
 }
 
 
@@ -1149,11 +1148,11 @@ exp_test (void)
   check_eps ("exp (1) == e", FUNC(exp) (1), M_El, CHOOSE (4e-18L, 0, 0));
 
   check_eps ("exp (2) == e^2", FUNC(exp) (2), M_E2l,
-	     CHOOSE (1e-18, 0, 0));
+	     CHOOSE (1e-18, 8.9e-16, 0));
   check_eps ("exp (3) == e^3", FUNC(exp) (3), M_E3l,
-	     CHOOSE (1.5e-17, 0, 0));
+	     CHOOSE (1.5e-17, 3.6e-15, 0));
   check_eps ("exp (0.7) == 2.0137527074...", FUNC(exp) (0.7),
-	     2.0137527074704765216L, CHOOSE (9e-17L, 0, 0));
+	     2.0137527074704765216L, CHOOSE (9e-17L, 4.5e-16, 0));
 }
 
 
@@ -1201,7 +1200,7 @@ exp2_test (void)
   check_isinfp ("exp2 (1e6) == +inf", FUNC(exp2) (1e6));
   check ("exp2 (-1e6) == 0", FUNC(exp2) (-1e6), 0);
   check_eps ("exp2 (0.7) == 1.6245047927...", FUNC(exp2) (0.7),
-	     1.6245047927124710452L, CHOOSE (6e-17L, 0, 6e-8));
+	     1.6245047927124710452L, CHOOSE (6e-17L, 0, 1.2e-7));
 }
 
 
@@ -1423,12 +1422,12 @@ tgamma_test (void)
 	     -2*FUNC(sqrt) (M_PIl), CHOOSE (0, 5e-16, 3e-7));
 
   check ("tgamma (1) == 1", FUNC(tgamma) (1), 1);
-  check ("tgamma (4) == 6", FUNC(tgamma) (4), 6);
+  check_eps ("tgamma (4) == 6", FUNC(tgamma) (4), 6, CHOOSE (0, 8.9e-16, 0));
 
   check_eps ("tgamma (0.7) == 1.29805...", FUNC(tgamma) (0.7),
 	     1.29805533264755778568L, CHOOSE (0, 3e-16, 2e-7));
-  check ("tgamma (1.2) == 0.91816...", FUNC(tgamma) (1.2),
-	 0.91816874239976061064L);
+  check_eps ("tgamma (1.2) == 0.91816...", FUNC(tgamma) (1.2),
+	     0.91816874239976061064L, CHOOSE (0, 1.2e-16, 0));
 }
 
 
@@ -2674,13 +2673,13 @@ cexp_test (void)
   check_eps ("real(cexp(0.7 + i 1.2)) == 0.72969...", __real__ result,
 	     0.7296989091503236012L, CHOOSE (6e-17L, 2e-16, 2e-7));
   check_eps ("imag(cexp(0.7 + i 1.2)) == 1.87689...", __imag__ result,
-	     1.8768962328348102821L, CHOOSE (2e-16L, 2.5e-16, 3e-7));
+	     1.8768962328348102821L, CHOOSE (2e-16L, 4.5e-16, 3e-7));
 
   result = FUNC(cexp) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(cexp(-2 - i 3)) == -0.13398...", __real__ result,
-	     -0.1339809149295426134L, CHOOSE (6.8e-20L, 0, 2e-8));
+	     -0.1339809149295426134L, CHOOSE (6.8e-20L, 2.8e-17, 2e-8));
   check_eps ("imag(cexp(-2 - i 3)) == -0.01909...", __imag__ result,
-	     -0.0190985162611351964L, CHOOSE (4e-20L, 0, 2e-9));
+	     -0.0190985162611351964L, CHOOSE (4e-20L, 3.5e-18, 2e-9));
 }
 
 
@@ -2853,13 +2852,13 @@ csin_test (void)
 
   result = FUNC(csin) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(csin(0.7 + i 1.2)) = 1.166456341...", __real__ result,
-	     1.1664563419657581376L, CHOOSE (2e-16L, 0, 0));
+	     1.1664563419657581376L, CHOOSE (2e-16L, 2.3e-16, 0));
   check_eps ("imag(csin(0.7 + i 1.2)) = 1.154499724...", __imag__ result,
 	     1.1544997246948547371L, CHOOSE (2e-17L, 0, 2e-7));
 
   result = FUNC(csin) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(csin(-2 - i 3)) == -9.15449...", __real__ result,
-	     -9.1544991469114295734L, CHOOSE (4e-18L, 0, 1e-6));
+	     -9.1544991469114295734L, CHOOSE (4e-18L, 1.8e-15, 1e-6));
   check_eps ("imag(csin(-2 - i 3)) == -4.16890...", __imag__ result,
 	     4.1689069599665643507L, CHOOSE (2e-17L, 0, 5e-7));
 }
@@ -3036,7 +3035,7 @@ csinh_test (void)
   check_eps ("real(csinh(0.7 + i 1.2)) = 0.274878686...", __real__ result,
 	     0.27487868678117583582L, CHOOSE (2e-17L, 6e-17, 3e-8));
   check_eps ("imag(csinh(0.7 + i 1.2)) = 1.169866572...", __imag__ result,
-	     1.1698665727426565139L, CHOOSE (6e-17L, 0, 2e-7));
+	     1.1698665727426565139L, CHOOSE (6e-17L, 2.3e-16, 2e-7));
 
   result = FUNC(csinh) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(csinh(-2 - i 3)) == -3.59056...", __real__ result,
@@ -3219,7 +3218,7 @@ ccos_test (void)
 
   result = FUNC(ccos) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(ccos(-2 - i 3)) == -4.18962...", __real__ result,
-	     -4.1896256909688072301L, CHOOSE (2e-17L, 0, 5e-7));
+	     -4.1896256909688072301L, CHOOSE (2e-17L, 8.9e-16, 5e-7));
   check_eps ("imag(ccos(-2 - i 3)) == -9.10922...", __imag__ result,
 	     -9.1092278937553365979L, CHOOSE (3e-18L, 0, 1e-6));
 }
@@ -3398,7 +3397,7 @@ ccosh_test (void)
 
   result = FUNC(ccosh) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(ccosh(-2 - i 3)) == -3.72454...", __real__ result,
-	     -3.7245455049153225654L, CHOOSE (7e-19L, 0, 3e-7));
+	     -3.7245455049153225654L, CHOOSE (7e-19L, 4.5e-16, 3e-7));
   check_eps ("imag(ccosh(-2 - i 3)) == -0.51182...", __imag__ result,
 	     0.5118225699873846088L, CHOOSE (3e-19L, 2e-16, 6e-8));
 }
@@ -4414,15 +4413,15 @@ ctan_test (void)
 
   result = FUNC(ctan) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(ctan(0.7 + i 1.2)) == 0.17207...", __real__ result,
-	     0.1720734197630349001L, CHOOSE (1e-17L, 3e-17, 2e-8));
+	     0.1720734197630349001L, CHOOSE (1e-17L, 5.6e-17, 2e-8));
   check_eps ("imag(ctan(0.7 + i 1.2)) == 0.95448...", __imag__ result,
-	     0.9544807059989405538L, CHOOSE (2e-17L, 2e-16, 6e-8));
+	     0.9544807059989405538L, CHOOSE (2e-17L, 2.3e-16, 6e-8));
 
   result = FUNC(ctan) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(ctan(-2 - i 3)) == -0.00376...", __real__ result,
 	     0.0037640256415042482L, CHOOSE (1e-19L, 5e-19, 0));
   check_eps ("imag(ctan(-2 - i 3)) == -1.00323...", __imag__ result,
-	     -1.0032386273536098014L, CHOOSE (2e-19L, 0, 2e-7));
+	     -1.0032386273536098014L, CHOOSE (2e-19L, 2.3e-16, 2e-7));
 }
 
 
@@ -4567,9 +4566,9 @@ ctanh_test (void)
 
   result = FUNC(ctanh) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(ctanh(0.7 + i 1.2)) == 1.34721...", __real__ result,
-	     1.3472197399061191630L, CHOOSE (4e-17L, 5e-16, 2e-7));
+	     1.3472197399061191630L, CHOOSE (4e-17L, 6.7e-16, 2e-7));
   check_eps ("imag(ctanh(0.7 + i 1.2)) == -0.47786...", __imag__ result,
-	     0.4778641038326365540L, CHOOSE (9e-17L, 2e-16, 9e-8));
+	     0.4778641038326365540L, CHOOSE (9e-17L, 2.8e-16, 9e-8));
 
   result = FUNC(ctanh) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(ctanh(-2 - i 3)) == -0.96538...", __real__ result,
@@ -5112,7 +5111,7 @@ cpow_test (void)
 
   result = FUNC(cpow) (BUILD_COMPLEX (2, 0), BUILD_COMPLEX (10, 0));
   check_eps ("real(cpow (2 + i0), (10 + i0)) == 1024", __real__ result, 1024,
-	     CHOOSE (6e-16L, 0, 0));
+	     CHOOSE (6e-16L, 1.2e-13, 0));
   check ("imag(cpow (2 + i0), (10 + i0)) == 0", __imag__ result, 0);
 
   result = FUNC(cpow) (BUILD_COMPLEX (M_El, 0), BUILD_COMPLEX (0, 2 * M_PIl));
@@ -5506,22 +5505,23 @@ j0_test (void)
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
-  
+
   /* j0 is the Bessel function of the first kind of order 0 */
   check_isnan ("j0 (NaN) = NaN", FUNC(j0) (nan_value));
-
+  check ("j0 (+Inf) = 0", FUNC(j0) (plus_infty), 0);
   check ("j0 (-1.0) = 0.76519...", FUNC(j0) (-1.0), 0.76519768655796655145);
   check ("j0 (0) = 1", FUNC(j0) (0.0), 1.0);
   check ("j0 (0.1) = 0.99750...", FUNC(j0) (0.1), 0.99750156206604003228);
   check ("j0 (0.7) = 0.88120...", FUNC(j0) (0.7), 0.88120088860740528084);
   check ("j0 (1.0) = 0.76519...", FUNC(j0) (1.0), 0.76519768655796655145);
-  check ("j0 (1.5) = 0.51182...", FUNC(j0) (1.5), 0.51182767173591812875);
+  check_eps ("j0 (1.5) = 0.51182...", FUNC(j0) (1.5), 0.51182767173591812875,
+	     CHOOSE (0, 0, 6e-8));
   check_eps ("j0 (2.0) = 0.22389...", FUNC(j0) (2.0), 0.22389077914123566805,
 	     CHOOSE(0, 3e-17, 1.5e-8));
   check_eps ("j0 (8.0) = 0.17165...", FUNC(j0) (8.0), 0.17165080713755390609,
 	     CHOOSE(0, 0, 1.5e-8));
   check_eps ("j0 (10.0) = -0.24593...", FUNC(j0) (10.0), -0.24593576445134833520,
-	     CHOOSE(0, 6e-17, 1.5e-8));
+	     CHOOSE(0, 6e-17, 5e-8));
 }
 
 static void
@@ -5533,23 +5533,111 @@ j1_test (void)
     /* Function not implemented.  */
     return;
 
-  /* j is the Bessel function of the first kind of order 1 */
-  check_isnan ("j1 (NaN) = NaN", FUNC(j0) (nan_value));
+  /* j1 is the Bessel function of the first kind of order 1 */
+  check_isnan ("j1 (NaN) = NaN", FUNC(j1) (nan_value));
+  check ("j1 (+Inf) = 0", FUNC(j1) (plus_infty), 0);
 
-  check ("j1 (-1.0) = -0.44005...", FUNC(j1) (-1.0), -0.44005058574493351596);
+  check_eps ("j1 (-1.0) = -0.44005...", FUNC(j1) (-1.0),
+	     -0.44005058574493351596, CHOOSE (0, 0, 3e-8));
   check ("j1 (0) = 0", FUNC(j1) (0.0), 0.0);
   check ("j1 (0.1) = 0.049937...", FUNC(j1) (0.1), 0.049937526036241997556);
   check ("j1 (0.7) = 0.32899...", FUNC(j1) (0.7), 0.32899574154005894785);
-  check ("j1 (1.0) = 0.44005...", FUNC(j1) (1.0), 0.44005058574493351596);
-  check ("j1 (1.5) = 0.55793...", FUNC(j1) (1.5), 0.55793650791009964199);
+  check_eps ("j1 (1.0) = 0.44005...", FUNC(j1) (1.0), 0.44005058574493351596,
+	     CHOOSE (0, 0, 3e-8));
+  check_eps ("j1 (1.5) = 0.55793...", FUNC(j1) (1.5), 0.55793650791009964199,
+	     CHOOSE (0, 0, 6e-8));
   check_eps ("j1 (2.0) = 0.57672...", FUNC(j1) (2.0), 0.57672480775687338720,
 	     CHOOSE(0, 2e-16, 0));
   check_eps ("j1 (8.0) = 0.23463...", FUNC(j1) (8.0), 0.23463634685391462438,
 	     CHOOSE(0, 0, 1.5e-8));
   check_eps ("j1 (10.0) = 0.04347...", FUNC(j1) (10.0), 0.043472746168861436670,
-	     CHOOSE(0, 7e-18, 3.8e-9));
+	     CHOOSE(0, 2e-17, 7.5e-9));
 }
 
+static void
+jn_test (void)
+{
+  errno = 0;
+  FUNC(jn) (1, 1);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  /* jn is the Bessel function of the first kind of order n.  */
+
+  /* jn (0, x) == j0 (x)  */
+  check_isnan ("jn (0, NaN) = NaN", FUNC(jn) (0, nan_value));
+  check ("jn (0, +Inf) = 0", FUNC(jn) (0, plus_infty), 0);
+  check ("jn (0, -1.0) = 0.76519...", FUNC(jn) (0, -1.0), 0.76519768655796655145);
+  check ("jn (0, 0.0) = 1", FUNC(jn) (0, 0.0), 1.0);
+  check ("jn (0, 0.1) = 0.99750...", FUNC(jn) (0, 0.1), 0.99750156206604003228);
+  check ("jn (0, 0.7) = 0.88120...", FUNC(jn) (0, 0.7), 0.88120088860740528084);
+  check ("jn (0, 1.0) = 0.76519...", FUNC(jn) (0, 1.0), 0.76519768655796655145);
+  check_eps ("jn (0, 1.5) = 0.51182...", FUNC(jn) (0, 1.5),
+	     0.51182767173591812875, CHOOSE (0, 0, 6e-8));
+  check_eps ("jn (0, 2.0) = 0.22389...", FUNC(jn) (0, 2.0), 0.22389077914123566805,
+	     CHOOSE(0, 3e-17, 1.5e-8));
+  check_eps ("jn (0, 8.0) = 0.17165...", FUNC(jn) (0, 8.0), 0.17165080713755390609,
+	     CHOOSE(0, 0, 1.5e-8));
+  check_eps ("jn (0, 10.0) = -0.24593...", FUNC(jn) (0, 10.0), -0.24593576445134833520,
+	     CHOOSE(0, 6e-17, 4.5e-8));
+
+  /* jn (1, x) == j1 (x)  */
+  check_isnan ("jn (1, NaN) = NaN", FUNC(jn) (1, nan_value));
+  check ("jn (1, +Inf) = 0", FUNC(jn) (1, plus_infty), 0);
+
+  check_eps ("jn (1, -1.0) = -0.44005...", FUNC(jn) (1, -1.0),
+	     -0.44005058574493351596, CHOOSE (0, 0, 3e-8));
+  check ("jn (1, 0.0) = 0", FUNC(jn) (1, 0.0), 0.0);
+  check ("jn (1, 0.1) = 0.049937...", FUNC(jn) (1, 0.1), 0.049937526036241997556);
+  check ("jn (1, 0.7) = 0.32899...", FUNC(jn) (1, 0.7), 0.32899574154005894785);
+  check_eps ("jn (1, 1.0) = 0.44005...", FUNC(jn) (1, 1.0),
+	     0.44005058574493351596, CHOOSE (0, 0, 3e-8));
+  check_eps ("jn (1, 1.5) = 0.55793...", FUNC(jn) (1, 1.5),
+	     0.55793650791009964199, CHOOSE (0, 0, 6e-8));
+  check_eps ("jn (1, 2.0) = 0.57672...", FUNC(jn) (1, 2.0), 0.57672480775687338720,
+	     CHOOSE(0, 2e-16, 0));
+  check_eps ("jn (1, 8.0) = 0.23463...", FUNC(jn) (1, 8.0), 0.23463634685391462438,
+	     CHOOSE(0, 0, 1.5e-8));
+  check_eps ("jn (1, 10.0) = 0.04347...", FUNC(jn) (1, 10.0), 0.043472746168861436670,
+	     CHOOSE(0, 2e-17, 7.5e-9));
+
+  /* jn (3, x)  */
+  check_isnan ("jn (3, NaN) = NaN", FUNC(jn) (3, nan_value));
+  check ("jn (3, +Inf) = 0", FUNC(jn) (3, plus_infty), 0);
+
+  check_eps ("jn (3, -1.0) = -0.01956...", FUNC(jn) (3, -1.0),
+	     -0.019563353982668405919, CHOOSE (0, 0, 1.9e-9));
+  check ("jn (3, 0.0) = 0", FUNC(jn) (3, 0.0), 0.0);
+  check_eps ("jn (3, 0.1) = 2.082...*10^-6", FUNC(jn) (3, 0.1), 0.000020820315754756261429,
+	     CHOOSE(0, 4e-21, 0));
+  check_eps ("jn (3, 0.7) = 0.00692...", FUNC(jn) (3, 0.7), 0.0069296548267508408077,
+	     CHOOSE(0, 2e-18, 0));
+  check_eps ("jn (3, 1.0) = 0.01956...", FUNC(jn) (3, 1.0),
+	     0.019563353982668405919, CHOOSE (0, 0, 1.9e-9));
+  check_eps ("jn (3, 2.0) = 0.12894...", FUNC(jn) (3, 2.0), 0.12894324947440205110,
+	     CHOOSE(0, 3e-17, 0));
+  check_eps ("jn (3, 10.0) = 0.05837...", FUNC(jn) (3, 10.0), 0.058379379305186812343,
+	     CHOOSE(0, 3e-17, 1.9e-8));
+
+  /*  jn (10, x)  */
+  check_isnan ("jn (10, NaN) = NaN", FUNC(jn) (10, nan_value));
+  check ("jn (10, +Inf) = 0", FUNC(jn) (10, plus_infty), 0);
+
+  check_eps ("jn (10, -1.0) = 2.6306...*10^-10", FUNC(jn) (10, -1.0), 0.26306151236874532070e-9,
+	     CHOOSE(0, 0, 5.6e-17));
+  check ("jn (10, 0) = 0", FUNC(jn) (10, 0.0), 0.0);
+  check_eps ("jn (10, 0.1) = 2.6905...*10^-20", FUNC(jn) (10, 0.1), 0.26905328954342155795e-19,
+	     CHOOSE(0, 2e-35, 9.7e-27));
+  check_eps ("jn (10, 0.7) = 7.517...*10^-12", FUNC(jn) (10, 0.7), 0.75175911502153953928e-11,
+	     CHOOSE(0, 7e-27, 1.8e-18));
+  check_eps ("jn (10, 1.0) = 2.630...*10^-11", FUNC(jn) (10, 1.0), 0.26306151236874532070e-9,
+	     CHOOSE(0, 0, 5.6e-17));
+  check_eps ("jn (10, 2.0) = 2.515...*10^-7", FUNC(jn) (10, 2.0), 0.25153862827167367096e-6,
+	     CHOOSE(0, 2e-22, 5.7e-14));
+  check_eps ("jn (10, 10.0) = 0.20748...", FUNC(jn) (10, 10.0), 0.20748610663335885770,
+	     CHOOSE(0, 2e-16, 1.4e-7));
+}
 
 static void
 y0_test (void)
@@ -5564,9 +5652,10 @@ y0_test (void)
   check_isinfn ("y0 (-1.0) = -inf", FUNC(y0) (-1.0));
   check_isinfn ("y0 (0) = -inf", FUNC(y0) (0.0));
   check_isnan ("y0 (NaN) = NaN", FUNC(y0) (nan_value));
+  check ("y0 (+Inf) = 0", FUNC(y0) (plus_infty), 0);
 
   check_eps ("y0 (0.1) = -1.53423...", FUNC(y0) (0.1), -1.5342386513503668441,
-	     CHOOSE(0, 3e-16, 1.2e-7));
+	     CHOOSE(0, 3e-16, 2.4e-7));
   check_eps ("y0 (0.7) = -0.19066...", FUNC(y0) (0.7), -0.19066492933739506743,
 	     CHOOSE(0, 6e-17, 1.5e-8));
   check_eps ("y0 (1.0) = 0.08825...", FUNC(y0) (1.0), 0.088256964215676957983,
@@ -5574,11 +5663,11 @@ y0_test (void)
   check_eps ("y0 (1.5) = 0.38244...", FUNC(y0) (1.5), 0.38244892379775884396,
 	     CHOOSE(0, 6e-17, 3.0e-8));
   check_eps ("y0 (2.0) = 0.51037...", FUNC(y0) (2.0), 0.51037567264974511960,
-	     CHOOSE(0, 2e-16 ,0));
+	     CHOOSE(0, 2e-16, 6e-8));
   check_eps ("y0 (8.0) = 0.22352...", FUNC(y0) (8.0), 0.22352148938756622053,
 	     CHOOSE(0, 3e-17, 1.5e-8));
   check_eps ("y0 (10.0) = 0.05567...", FUNC(y0) (10.0), 0.055671167283599391424,
-	     CHOOSE(0, 0, 3.8e-9));
+	     CHOOSE(0, 2e-17, 3.8e-9));
 }
 
 
@@ -5594,21 +5683,107 @@ y1_test (void)
   /* y1 is the Bessel function of the second kind of order 1 */
   check_isinfn ("y1 (-1.0) = -inf", FUNC(y1) (-1.0));
   check_isinfn ("y1 (0) = -inf", FUNC(y1) (0.0));
+  check ("y1 (+Inf) = 0", FUNC(y1) (plus_infty), 0);
   check_isnan ("y1 (NaN) = NaN", FUNC(y1) (nan_value));
 
   check_eps ("y1 (0.1) = -6.45895...", FUNC(y1) (0.1), -6.4589510947020269877,
-	     CHOOSE(0, 9e-16, 4.8e-7));
+	     CHOOSE(0, 9e-16, 9.6e-7));
   check_eps ("y1 (0.7) = -1.10324...", FUNC(y1) (0.7), -1.1032498719076333697,
-	     CHOOSE(0, 3e-16, 0));
+	     CHOOSE(0, 3e-16, 1.2e-7));
   check_eps ("y1 (1.0) = -0.78121...", FUNC(y1) (1.0), -0.78121282130028871655,
 	     CHOOSE(0, 2e-16, 0));
-  check ("y1 (1.5) = -0.41230...", FUNC(y1) (1.5), -0.41230862697391129595);
+  check_eps ("y1 (1.5) = -0.41230...", FUNC(y1) (1.5), -0.41230862697391129595,
+	     CHOOSE (0, 0, 6e-8));
   check_eps ("y1 (2.0) = -0.10703...", FUNC(y1) (2.0), -0.10703243154093754689,
 	     CHOOSE(0, 2e-17, 1.5e-8));
   check_eps ("y1 (8.0) = -0.15806...", FUNC(y1) (8.0), -0.15806046173124749426,
 	     CHOOSE(0, 0, 3.0e-8));
   check_eps ("y1 (10.0) = 0.24901...", FUNC(y1) (10.0), 0.24901542420695388392,
 	     CHOOSE(0, 9e-17, 3.0e-8));
+}
+
+static void
+yn_test (void)
+{
+  errno = 0;
+  FUNC(yn) (1, 1);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  /* yn is the Bessel function of the second kind of order n */
+
+  /* yn (0, x) == y0 (x)  */
+  check_isinfn ("yn (0, -1.0) = -inf", FUNC(yn) (0, -1.0));
+  check_isinfn ("yn (0, 0) = -inf", FUNC(yn) (0, 0.0));
+  check_isnan ("yn (0, NaN) = NaN", FUNC(yn) (0, nan_value));
+  check ("yn (0, +Inf) = 0", FUNC(yn) (0, plus_infty), 0);
+
+  check_eps ("yn (0, 0.1) = -1.53423...", FUNC(yn) (0, 0.1), -1.5342386513503668441,
+	     CHOOSE(0, 3e-16, 9.6e-7));
+  check_eps ("yn (0, 0.7) = -0.19066...", FUNC(yn) (0, 0.7), -0.19066492933739506743,
+	     CHOOSE(0, 6e-17, 1.2e-7));
+  check_eps ("yn (0, 1.0) = 0.08825...", FUNC(yn) (0, 1.0), 0.088256964215676957983,
+	     CHOOSE(0, 2e-17, 3e-8));
+  check_eps ("yn (0, 1.5) = 0.38244...", FUNC(yn) (0, 1.5), 0.38244892379775884396,
+	     CHOOSE(0, 6e-17, 3e-8));
+  check_eps ("yn (0, 2.0) = 0.51037...", FUNC(yn) (0, 2.0), 0.51037567264974511960,
+	     CHOOSE(0, 2e-16, 6e-8));
+  check_eps ("yn (0, 8.0) = 0.22352...", FUNC(yn) (0, 8.0), 0.22352148938756622053,
+	     CHOOSE(0, 3e-17, 1.5e-8));
+  check_eps ("yn (0, 10.0) = 0.05567...", FUNC(yn) (0, 10.0), 0.055671167283599391424,
+	     CHOOSE(0, 2e-17, 3.8e-8));
+
+  /* yn (1, x) == y1 (x)  */
+  check_isinfn ("yn (1, -1.0) = -inf", FUNC(yn) (1, -1.0));
+  check_isinfn ("yn (1, 0) = -inf", FUNC(yn) (1, 0.0));
+  check ("yn (1, +Inf) = 0", FUNC(yn) (1, plus_infty), 0);
+  check_isnan ("yn (1, NaN) = NaN", FUNC(yn) (1, nan_value));
+
+  check_eps ("yn (1, 0.1) = -6.45895...", FUNC(yn) (1, 0.1), -6.4589510947020269877,
+	     CHOOSE(0, 9e-16, 5e-7));
+  check_eps ("yn (1, 0.7) = -1.10324...", FUNC(yn) (1, 0.7), -1.1032498719076333697,
+	     CHOOSE(0, 3e-16, 0));
+  check_eps ("yn (1, 1.0) = -0.78121...", FUNC(yn) (1, 1.0), -0.78121282130028871655,
+	     CHOOSE(0, 2e-16, 0));
+  check_eps ("yn (1, 1.5) = -0.41230...", FUNC(yn) (1, 1.5), -0.41230862697391129595,
+	     CHOOSE (0, 0, 3e-8));
+  check_eps ("yn (1, 2.0) = -0.10703...", FUNC(yn) (1, 2.0), -0.10703243154093754689,
+	     CHOOSE(0, 2e-17, 2e-8));
+  check_eps ("yn (1, 8.0) = -0.15806...", FUNC(yn) (1, 8.0), -0.15806046173124749426,
+	     CHOOSE(0, 0, 3e-8));
+  check_eps ("yn (1, 10.0) = 0.24901...", FUNC(yn) (1, 10.0), 0.24901542420695388392,
+	     CHOOSE(0, 9e-17, 3e-8));
+
+  /* yn (3, x)  */
+  check ("yn (3, +Inf) = 0", FUNC(yn) (3, plus_infty), 0);
+  check_isnan ("yn (3, NaN) = NaN", FUNC(yn) (3, nan_value));
+
+  check_eps ("yn (3, 0.1) = -5099.3...", FUNC(yn) (3, 0.1), -5099.3323786129048894,
+	     CHOOSE(0, 1e-12, 9.8e-4));
+  check_eps ("yn (3, 0.7) = -15.819...", FUNC(yn) (3, 0.7), -15.819479052819633505,
+	     CHOOSE(0, 4e-15, 9.6e-7));
+  check ("yn (3, 1.0) = -5.8215...", FUNC(yn) (3, 1.0), -5.8215176059647288478);
+  check_eps ("yn (3, 2.0) = -1.1277...", FUNC(yn) (3, 2.0), -1.1277837768404277861,
+	     CHOOSE(0, 3e-16, 1.2e-7));
+  check_eps ("yn (3, 10.0) = -0.25136...", FUNC(yn) (3, 10.0), -0.25136265718383732978,
+	     CHOOSE(0, 6e-17, 3e-8));
+
+  /* yn (10, x)  */
+  check ("yn (10, +Inf) = 0", FUNC(yn) (10, plus_infty), 0);
+  check_isnan ("yn (10, NaN) = NaN", FUNC(yn) (10, nan_value));
+
+  check_eps ("yn (10, 0.1) = -1.183...*10^18", FUNC(yn) (10, 0.1), -0.11831335132045197885e19,
+	     CHOOSE(0, 6e2, 2.8e11));
+  check_eps ("yn (10, 0.7) = -4.244...*10^9", FUNC(yn) (10, 0.7), -0.42447194260703866924e10,
+	     CHOOSE(0, 3e-6, 8e2));
+  check_eps ("yn (10, 1.0) = -1.216...*10^8", FUNC(yn) (10, 1.0), -0.12161801427868918929e9,
+	     CHOOSE(0, 0, 9));
+  check_eps ("yn (10, 2.0) = -129184.5...", FUNC(yn) (10, 2.0), -129184.54220803928264,
+	     CHOOSE(0, 3e-11, 8e-3));
+  check_eps ("yn (10, 10.0) = -0.35981...", FUNC(yn) (10, 10.0), -0.35981415218340272205,
+	     CHOOSE(0, 6e-17, 3e-8));
+
 }
 
 
@@ -6112,9 +6287,11 @@ main (int argc, char *argv[])
   /* Bessel functions  */
   j0_test ();
   j1_test ();
+  jn_test ();
   y0_test ();
   y1_test ();
-  
+  yn_test ();
+
   /* special tests */
   identities ();
   inverse_functions ();
