@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -49,7 +49,7 @@ typedef struct dom_binding dom_binding;
 
 static struct timeval RPCTIMEOUT = {25, 0};
 static struct timeval UDPTIMEOUT = {5, 0};
-static int const MAXTRIES = 5;
+static int const MAXTRIES = 2;
 static char __ypdomainname[NIS_MAXNAMELEN + 1] = "\0";
 __libc_lock_define_initialized (static, ypbindlist_lock)
 static dom_binding *__ypbindlist = NULL;
@@ -92,7 +92,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 
   do
     {
-      try++;
+      ++try;
       if (try > MAXTRIES)
         {
           if (is_new)
@@ -101,7 +101,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
         }
 
 #if USE_BINDINGDIR
-      if (ysd->dom_vers < 1 && try < 3)
+      if (ysd->dom_vers < 1 && try == 1) /* Try binding dir only first time */
 	{
 	  char path[strlen (BINDINGDIR) + strlen (domain) + 10];
 	  struct iovec vec[2];
