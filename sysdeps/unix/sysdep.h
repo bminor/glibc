@@ -33,9 +33,4 @@ Cambridge, MA 02139, USA.  */
    an instruction such that "movl r1, r0" works.  ret should be defined
    as the return instruction.  */
 
-
-#ifndef	 HAVE_GNU_LD
-#define	 ___errno	_errno
-#endif
-
 #define	HAVE_SYSCALLS
