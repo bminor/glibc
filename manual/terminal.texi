@@ -1353,7 +1353,8 @@ The START character is used to support the @code{IXON} and @code{IXOFF}
 input modes.  If @code{IXON} is set, receiving a START character resumes
 suspended output; the START character itself is discarded.  If
 @code{IXANY} is set, receiving any character at all resumes suspended
-output.  @code{IXOFF} is set, the system may also transmit START
+output; the resuming character is not discarded unless it is the START
+character.  @code{IXOFF} is set, the system may also transmit START
 characters to the terminal.
 
 The usual value for the START character is @kbd{C-q}.  You may not be
