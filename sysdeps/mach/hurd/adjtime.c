@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,14 @@ DEFUN(__adjtime, (delta, olddelta),
       CONST struct timeval *delta AND
       struct timeval *olddelta)
 {
-  error_t err = __host_adjust_time (__pid2task (-1), delta, olddelta);
+  error_t err;
+  mach_port_t hostpriv;
+
+  hostpriv = __pid2task (-1);	/* XXX */
+  if (hostpriv == MACH_PORT_NULL)
+    return -1;
+  err = __host_adjust_time (hostpriv, delta, olddelta);
+  __mach_port_deallocate (__mach_task_self (), hostpriv);
   if (err)
     return __hurd_fail (err);
   return 0;
