@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,9 +22,9 @@ Cambridge, MA 02139, USA.  */
 
 /* Defined in locale/locale-C-ctype.c.  */
 extern CONST unsigned short int __ctype_b_C[];
-extern CONST unsigned char __ctype_tolower_C[];
-extern CONST unsigned char __ctype_toupper_C[];
+extern CONST short int __ctype_tolower_C[];
+extern CONST short int __ctype_toupper_C[];
 
 CONST unsigned short int *__ctype_b = __ctype_b_C + 1;
-CONST unsigned char *__ctype_tolower = __ctype_tolower_C + 1;
-CONST unsigned char *__ctype_toupper = __ctype_toupper_C + 1;
+CONST short int *__ctype_tolower = __ctype_tolower_C + 1;
+CONST short int *__ctype_toupper = __ctype_toupper_C + 1;
