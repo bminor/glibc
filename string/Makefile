@@ -30,7 +30,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
 		   bcopy bzero ffs stpcpy strcasecmp			\
 		   rindex index bcmp memccpy memcpy wordcopy
 
-tests		:= tester # testcopy -- waiting for papers
+tests		:= tester testcopy
 distribute	:= memcopy.h
 
 
