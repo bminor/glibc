@@ -312,6 +312,7 @@ getgrent_next_file (struct group *result, ent_t *ent,
 		return NSS_STATUS_NOTFOUND;
 	      else
 		{
+		  fsetpos (ent->stream, &pos);
 		  __set_errno (ERANGE);
 		  return NSS_STATUS_TRYAGAIN;
 		}
@@ -366,9 +367,14 @@ getgrent_next_file (struct group *result, ent_t *ent,
             if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
               continue;
             else
-              return status;
+	      {
+		if (status == NSS_STATUS_TRYAGAIN)
+		  /* The parser ran out of space.  */
+		  fsetpos (ent->stream, &pos);
+		return status;
+	      }  
 	}
-
+      
       /* +:... */
       if (result->gr_name[0] == '+' && result->gr_name[1] == '\0')
 	{
@@ -436,6 +442,7 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
 		return NSS_STATUS_NOTFOUND;
 	      else
 		{
+		  fsetpos (ent->stream, &pos);
 		  __set_errno (ERANGE);
 		  return NSS_STATUS_TRYAGAIN;
 		}
@@ -471,8 +478,7 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
 	}
 
       /* -group */
-      if (result->gr_name[0] == '-' && result->gr_name[1] != '\0'
-	  && result->gr_name[1] != '@')
+      if (result->gr_name[0] == '-' && result->gr_name[1] != '\0')
 	{
 	  if (strcmp (&result->gr_name[1], name) == 0)
 	    return NSS_STATUS_NOTFOUND;
@@ -481,8 +487,7 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
 	}
 
       /* +group */
-      if (result->gr_name[0] == '+' && result->gr_name[1] != '\0'
-	  && result->gr_name[1] != '@')
+      if (result->gr_name[0] == '+' && result->gr_name[1] != '\0')
 	{
 	  if (strcmp (name, &result->gr_name[1]) == 0)
 	    {
@@ -598,6 +603,7 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 		return NSS_STATUS_NOTFOUND;
 	      else
 		{
+		  fsetpos (ent->stream, &pos);
 		  __set_errno (ERANGE);
 		  return NSS_STATUS_TRYAGAIN;
 		}
@@ -633,16 +639,14 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 	}
 
       /* -group */
-      if (result->gr_name[0] == '-' && result->gr_name[1] != '\0'
-	  && result->gr_name[1] != '@')
+      if (result->gr_name[0] == '-' && result->gr_name[1] != '\0')
 	{
           blacklist_store_name (&result->gr_name[1], ent);
           continue;
 	}
 
       /* +group */
-      if (result->gr_name[0] == '+' && result->gr_name[1] != '\0'
-	  && result->gr_name[1] != '@')
+      if (result->gr_name[0] == '+' && result->gr_name[1] != '\0')
 	{
 	  enum nss_status status;
 
