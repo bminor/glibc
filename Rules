@@ -72,6 +72,8 @@ $(objpfx)%.out: $(objpfx)% %.input
 $(objpfx)%.out: $(objpfx)%
 	$(dir $<)$(notdir $<) > $@
 endif	# tests
+
+export others tests
 
 # This removes everything that can be regenerated
 # except for the object files and the object-file library members.
