@@ -26,8 +26,8 @@
 /*
  * HISTORY
  * $Log$
- * Revision 1.1  1992/10/06 18:29:53  roland
- * Initial revision
+ * Revision 1.2  1993/11/23 21:14:05  mib
+ * entered into RCS
  *
  * Revision 2.2  92/01/16  00:10:45  rpd
  * 	Moved from user collection to mk collection.
@@ -47,7 +47,7 @@
 
 /*	err_us subsystems      	*/
 static struct error_subsystem err_us_sub[] = {
-	0,
+	{0,0,0}
 };
 
 

@@ -26,8 +26,8 @@
 /*
  * HISTORY
  * $Log$
- * Revision 1.1  1992/10/06 18:29:54  roland
- * Initial revision
+ * Revision 1.2  1993/11/23 20:39:08  mib
+ * entered into RCS
  *
  * Revision 2.2  92/01/16  00:08:10  rpd
  * 	Moved from user collection to mk collection.
@@ -49,7 +49,7 @@
 
 #include <mach/error.h>
 
-char		*mach_error_string(
+const char	*mach_error_string(
 /*
  *	Returns a string appropriate to the error argument given
  */
@@ -68,7 +68,7 @@ void		mach_error(
 #endif	c_plusplus
 				);
 
-char		*mach_error_type(
+const char	*mach_error_type(
 /*
  *	Returns a string with the error system, subsystem and code
 */
