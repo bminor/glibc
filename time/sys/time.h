@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -13,7 +13,7 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #ifndef _SYS_TIME_H
@@ -21,6 +21,9 @@ Cambridge, MA 02139, USA.  */
 #if	!defined(__need_timeval)
 #define _SYS_TIME_H	1
 #include <features.h>
+
+__BEGIN_DECLS
+
 #endif
 
 #include <gnu/time.h>
@@ -39,10 +42,9 @@ Cambridge, MA 02139, USA.  */
 #undef	__need_timeval
 
 
-/* <time.h> already does #define timezone __timezone.  */
-
 #ifdef	_SYS_TIME_H
 
+#define	timezone	__timezone	/* XXX */
 #define	itimerval	__itimerval
 
 /* Get the current time of day and timezone information,
@@ -50,20 +52,20 @@ Cambridge, MA 02139, USA.  */
    Returns 0 on success, -1 on errors.
    NOTE: This form of timezone information is obsolete.
    Use the functions and variables declared in <time.h> instead.  */
-extern int EXFUN(__gettimeofday, (struct __timeval *__tv,
-				  struct __timezone *__tz));
+extern int __gettimeofday __P ((struct __timeval * __tv,
+				struct __timezone * __tz));
 
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
-extern int EXFUN(__settimeofday, (CONST struct __timeval *__tv,
-				  CONST struct __timezone *__tz));
+extern int __settimeofday __P ((__const struct __timeval * __tv,
+				__const struct __timezone * __tz));
 
 /* Adjust the current time of day by the amount in DELTA.
    If OLDDELTA is not NULL, it is filled in with the amount
    of time adjustment remaining to be done from the last `adjtime' call.
    This call is restricted to the super-user.  */
-extern int EXFUN(__adjtime, (CONST struct __timeval *__delta,
-			     struct __timeval *__olddelta));
+extern int __adjtime __P ((__const struct __timeval * __delta,
+			   struct __timeval * __olddelta));
 
 #define	gettimeofday	__gettimeofday
 #define	settimeofday	__settimeofday
@@ -71,25 +73,27 @@ extern int EXFUN(__adjtime, (CONST struct __timeval *__delta,
 
 /* Set *VALUE to the current setting of timer WHICH.
    Return 0 on success, -1 on errors.  */
-extern int EXFUN(__getitimer, (enum __itimer_which __which,
-			       struct __itimerval *__value));
+extern int __getitimer __P ((enum __itimer_which __which,
+			     struct __itimerval * __value));
 
 /* Set the timer WHICH to *NEW.  If OLD is not NULL,
    set *OLD to the old value of timer WHICH.
    Returns 0 on success, -1 on errors.  */
-extern int EXFUN(__setitimer, (enum __itimer_which __which,
-			       struct __itimerval *__old,
-			       struct __itimerval *__new));
+extern int __setitimer __P ((enum __itimer_which __which,
+			     struct __itimerval * __old,
+			     struct __itimerval * __new));
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1].  */
-extern int EXFUN(__utimes, (CONST char *__file, struct __timeval __tvp[2]));
+extern int __utimes __P ((__const char *__file, struct __timeval __tvp[2]));
 
 #define	getitimer	__getitimer
 #define	setitimer	__setitimer
 #define	utimes		__utimes
 
 
-#endif	/* <sys/time.h> included.  */
+__END_DECLS
 
-#endif	/* sys/time.h */
+#endif /* <sys/time.h> included.  */
+
+#endif /* sys/time.h */
