@@ -125,6 +125,10 @@ extern char *EXFUN(strerror, (int __errnum));
 #ifdef	__USE_BSD
 /* Compare S1 and S2, ignoring case.  */
 extern int EXFUN(strcasecmp, (CONST char *__s1, CONST char *__s2));
+
+/* Return the next DELIM-delimited token from *STRINGP,
+   terminating it with a '\0', and update *STRINGP to point past it.  */
+extern char *EXFUN(strsep, (char **__stringp, CONST char *__delim));
 #endif
 
 #ifdef	__USE_GNU
