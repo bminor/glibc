@@ -882,8 +882,8 @@ appropriate category @code{nl_langinfo} returns the information from the
 @code{"C"} locale.  It is therefore possible to use this function as
 shown in the example below.
 
-If the argument @var{item} is not valid the global variable @var{errno}
-is set to @code{EINVAL} and a @code{NULL} pointer is returned.
+If the argument @var{item} is not valid a pointer to an empty string is
+returned.
 @end deftypefun
 
 An example for the use of @code{nl_langinfo} is a function which has to
