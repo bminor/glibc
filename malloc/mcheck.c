@@ -1,5 +1,5 @@
 /* Standard debugging hooks for `malloc'.
-   Copyright (C) 1990,91,92,93,94,95,96,97 Free Software Foundation, Inc.
+   Copyright (C) 1990,91,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    Written May 1989 by Mike Haertel.
 
    This library is free software; you can redistribute it and/or
@@ -212,7 +212,7 @@ mcheck (func)
   abortfunc = (func != NULL) ? func : &mabort;
 
   /* These hooks may not be safely inserted if malloc is already in use.  */
-  if (!__malloc_initialized && !mcheck_used)
+  if (!__malloc_initialized <= 0 && !mcheck_used)
     {
       old_free_hook = __free_hook;
       __free_hook = freehook;
