@@ -638,6 +638,11 @@ The experienced user will know what is wrong.
 @end deftypevr
 
 @comment errno.h
+@comment GNU: You really blew it this time
+@deftypevr Macro int EGREGIOUS
+You did @strong{what}?
+
+@comment errno.h
 @comment GNU: Gratuitous error
 @deftypevr Macro int EGRATUITOUS
 This error code has no purpose.
