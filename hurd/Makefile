@@ -40,12 +40,12 @@ routines = $(interface-routines) \
 	   __pid2task __task2pid pid2task task2pid \
 	   getuids setuids getumask fchroot \
 	   dtable __getdport getdport openport setdtsz \
-	   hurdsig hurdmsg hurdsock hurdauth \
+	   hurdsig hurdsock hurdauth \
 	   privports \
 	   msgportdemux startsig \
-	   fopenport __fopenport \
+#	   fopenport __fopenport \
 	   vpprintf
-aux := hurdsyms hurdinit
+aux := hurdsyms hurdinit # hurdmsg
 
 # Get the proper definition of `hurd-srcdir'.
 include ../sysdeps/mach/hurd/Makefile
