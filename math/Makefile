@@ -21,7 +21,7 @@
 #
 subdir	:= math
 
-headers	:= math.h __math.h
+headers	:= math.h __math.h huge_val.h nan.h
 
 
 routines := acos asin atan cos sin tan cosh sinh tanh exp fabs ldexp	\
