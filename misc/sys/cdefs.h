@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,9 +26,24 @@ Cambridge, MA 02139, USA.  */
 #define	__P(args)	args	/* GCC can always grok prototypes.  */
 #define	__DOTS		, ...
 
+/* In GCC versions before 2.5, the `volatile' and `const' keywords have
+   special meanings when applied to functions.  */
+#if	__GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5)
+#define	__NORETURN	__volatile
+#define	__CONSTVALUE	__const
+#else
+/* In GCC 2.5 and later, these keywords are meaningless when applied to
+   functions, as ANSI requires.  Instead, we use GCC's special
+   `__attributes__' syntax.  */
+#define	__NORETURN	__attributes__ ((volatile))
+#define	__CONSTVALUE	__attributes__ ((const))
+#endif
+
 #else	/* Not GCC.  */
 
 #define	__inline		/* No inline functions.  */
+#define	__NORETURN		/* No way to say functions never return.  */
+#define	__CONSTVALUE		/* No way to say functions are functional.  */
 
 #if (defined (__STDC__) && __STDC__) || defined (__cplusplus)
 
