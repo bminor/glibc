@@ -39,7 +39,8 @@ communication either between the parent or child processes, or between
 two sibling processes.
 
 The @code{pipe} function is declared in the header file
-@file{<unistd.h>}.
+@file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -214,7 +215,8 @@ reading normally blocks until some other process opens the same FIFO for
 writing, and vice versa.
 
 The @code{mkfifo} function is declared in the header file
-@file{<sys/stat.h>}.
+@file{sys/stat.h}.
+@pindex sys/stat.h
 
 @comment sys/stat.h
 @comment POSIX.1

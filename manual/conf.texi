@@ -54,10 +54,12 @@ constant, then it defines another constant to represent it.  Otherwise,
 the actual limit that applies to a particular file can be requested at
 runtime by calling @code{pathconf} or @code{fpathconf}.
 
-Except for @code{FILENAME_MAX}, which is defined in @file{<stdio.h>},
+Except for @code{FILENAME_MAX}, which is defined in @file{stdio.h},
 definitions for the following symbolic constants appear in the header
-file @file{<limits.h>}.  All of these macros expand into integer
+file @file{limits.h}.  All of these macros expand into integer
 constant values.
+@pindex limits.h
+@pindex stdio.h
 
 @strong{Incomplete:}  What does the GNU system do?
 
@@ -180,13 +182,14 @@ particular implementation is a constant for all pipes and FIFO files.
 @end defvr
 
 
-There are also these macros which may be defined in @file{<unistd.h>} to
+There are also these macros which may be defined in @file{unistd.h} to
 describe additional characteristics of the file system.  If any of these
 macros are not defined at all, then the corresponding parameter depends
 on the file to which it is applied, and you must use the @code{pathconf}
 function at runtime to determine the parameter value.  If the value is
 defined to be @code{-1}, then the option does not apply to any file.
 Otherwise, the option applies to all files.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -217,7 +220,8 @@ For each of the above parameters, if the value is not a constant
 for all files, you can request the value that applies to a particular
 file using the @code{pathconf} or @code{fpathconf}.  These functions 
 and the associated @var{parameter} constants are declared in the
-header file @file{<unistd.h>}.
+header file @file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -343,7 +347,8 @@ Otherwise, the actual limit can be requested at runtime by calling the
 @code{sysconf} function.
 
 Definitions for the following macros appear in the header file
-@file{<limits.h>}.  The values of the macros are all integer constants.
+@file{limits.h}.  The values of the macros are all integer constants.
+@pindex limits.h
 
 @strong{Incomplete:}  What does the GNU system do for the 
 implementation-defined macros?
@@ -471,7 +476,8 @@ agree with what is currently implemented.
 
 
 Definitions for these additional macros that describe system parameters
-appear in the header file @file{<unistd.h>}.
+appear in the header file @file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -508,7 +514,8 @@ agree with what is currently implemented.
 You can request the actual runtime values of these parameters using the
 @code{sysconf} function.  This function and the macros for use as its
 @var{parameter} argument are declared in the header file
-@file{<unistd.h>}.
+@file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -593,7 +600,7 @@ Inquire about the parameter corresponding to @code{CLOCKS_PER_SEC};
 @end defvr
 
 @strong{Incomplete:}  There are also a bunch of symbols for POSIX.2
-features listed in @file{<unistd.h>}.
+features listed in @file{unistd.h}.
 
 
 @node String-Valued Parameters

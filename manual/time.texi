@@ -1,6 +1,5 @@
 @node Date and Time
 @chapter Date and Time
-@pindex <time.h>
 
 This chapter describes functions for manipulating dates and times,
 including functions for determining what the current time is and
@@ -54,7 +53,8 @@ program invocation.
 
 To get the elapsed CPU time used by a process, you can use the
 @code{clock} function.  This facility is declared in the header file
-@file{<time.h>}.
+@file{time.h}.
+@pindex time.h
 
 In typical usage, you call the @code{clock} function at the beginning
 and end of the interval you want to time, subtract the values, and then
@@ -121,7 +121,8 @@ value @code{(clock_t)(-1)}.
 
 The @code{times} function returns more detailed information about
 elapsed processor time in a @code{struct tms} object.  You should
-include the header file @file{<sys/times.h>} to use this facility.
+include the header file @file{sys/times.h} to use this facility.
+@pindex sys/times.h
 
 @comment sys/times.h
 @comment POSIX.1
@@ -224,7 +225,8 @@ date and time values.
 
 This section describes the @code{time_t} data type for representing
 calendar time, and the functions which operate on calendar time objects.
-These facilities are declared in the header file @file{<time.h>}.
+These facilities are declared in the header file @file{time.h}.
+@pindex time.h
 
 @cindex epoch
 @comment time.h
@@ -273,7 +275,8 @@ accurately represent time values.
 So, the GNU C Library also contains functions which are capable of
 representing calendar times to a higher resolution than one second.  The
 functions and the associated data types described in this section are
-declared in @file{<sys/time.h>}.
+declared in @file{sys/time.h}.
+@pindex sys/time.h
 
 @comment sys/time.h
 @comment BSD
@@ -377,7 +380,8 @@ and @code{adjtime} functions are provided for compatibility with BSD.
 This section describe functions which operate on local time objects, and
 functions for converting between local time and calendar time
 representations.  These facilities are declared in the header file
-@file{<time.h>}.
+@file{time.h}.
+@pindex time.h
 
 The local time representation is usually used in conjunction with
 formatting or printing date and time values.  It is easier to perform
@@ -478,7 +482,8 @@ of @code{(time_t)(-1)} and does not modify the contents of @var{localtime}.
 @subsection Formatting Date and Time
 
 The functions described in this section format time values as strings.
-These functions are declared in the header file @file{<time.h>}.
+These functions are declared in the header file @file{time.h}.
+@pindex time.h
 
 @comment time.h
 @comment ANSI
@@ -623,7 +628,8 @@ The GNU system provides additional utilities for specifying the time
 zone by means of the @code{TZ} environment variable.  For information
 about how to set environment variables, @pxref{Environment Variables}.
 The functions for accessing the time zone are declared in
-@file{<time.h>}.
+@file{time.h}.
+@pindex time.h
 
 The value of the @code{TZ} variable can be of one of three formats.  The
 first form is
@@ -841,9 +847,11 @@ be terminated, since that is the default action for the alarm signals.
 @xref{Signal Handling}.
 
 The @code{setitimer} function is the primary means for setting an alarm.
-This facility is declared in the header file @file{<sys/time.h>}.  The
-@code{alarm} function, declared in @file{<unistd.h>}, provides a somewhat
+This facility is declared in the header file @file{sys/time.h}.  The
+@code{alarm} function, declared in @file{unistd.h}, provides a somewhat
 simpler interface for setting the real-time timer.
+@pindex unistd.h
+@pindex sys/time.h
 
 @comment sys/time.h
 @comment BSD
@@ -917,7 +925,7 @@ This macro can be used as the @var{which} argument to the
 timer.
 @end defvr
 
-@strong{Incomplete:}  In @file{<sys/time.h>}, the @var{which} argument
+@strong{Incomplete:}  In @file{sys/time.h}, the @var{which} argument
 is given as an @code{enum}.  Does it matter?
 
 @comment unistd.h

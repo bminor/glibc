@@ -43,9 +43,11 @@ functions; @pxref{User Database}.
 You can change the working directory using shell commands like
 @samp{cd}.  The functions described in this section are the primitives
 used by those commands for examining and changing the working directory.
+@pindex cd
 
 Prototypes for these functions are declared in the header file
-@file{<unistd.h>}.
+@file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -142,7 +144,8 @@ The order in which files appear in a directory tends to be fairly
 random.  A more useful program would sort the entries (perhaps by
 alphabetizing them) before printing them.
 
-These facilities are declared in the header file @file{<dirent.h>}.
+These facilities are declared in the header file @file{dirent.h}.
+@pindex dirent.h
 
 @comment dirent.h
 @comment POSIX.1
@@ -286,13 +289,13 @@ The @var{dirstream} argument is not valid.
 
 @cindex adding directory links
 @cindex linking a file to a directory
+@pindex ln
 The most obvious way to add an entry to a directory is to create a new
 file, for example using @code{fopen} (@pxref{Opening and Closing
 Streams}) or @code{open} (@pxref{Opening and Closing Files}).  But you
 can also add additional directory entries for an existing file using the
 @code{link} or @code{symlink} functions.  These functions are the
 primitives for the @code{ln} shell command.
-
 
 @menu
 * Hard Links::		Making a hard link to a file.
@@ -313,7 +316,8 @@ Because of the possibility of links across branches, the organization of
 the file system is not a strict hierarchy or tree.
 
 The prototype for the @code{link} function is declared in the header
-file @file{<unistd.h>}.
+file @file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -390,7 +394,8 @@ means that it is possible to delete the file under its original name and
 leave the link pointing to a nonexistent file.  @xref{File Attributes}.
 
 Prototypes for the functions listed in this section are in
-@file{<unistd.h>}.
+@file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment BSD
@@ -475,8 +480,10 @@ You can remove a file with the @code{unlink} or @code{remove} functions,
 or give it another name with the @code{rename} function.
 
 Prototypes for @code{remove} and @code{rename} are in the header file
-@file{<stdio.h>}.  The prototype for @code{unlink} is in
-@file{<unistd.h>}.
+@file{stdio.h}.  The prototype for @code{unlink} is in
+@file{unistd.h}.
+@pindex unistd.h
+@pindex stdio.h
 
 @cindex removing directory links
 @cindex unlinking a file from a directory
@@ -604,6 +611,8 @@ defined here.
 @node Making and Removing Directories
 @section Making and Removing Directories
 
+@pindex mkdir
+@pindex rmdir
 Directories are created and removed with the @code{mkdir} and
 @code{rmdir} functions, respectively.  (There are shell commands with
 the same names that do these operations, too.)
@@ -643,7 +652,9 @@ file system, and cannot be modified.
 @end table
 
 To use this function, your program should include the header files
-@file{<sys/types.h>} and @file{<sys/stat.h>}.
+@file{sys/types.h} and @file{sys/stat.h}.
+@pindex sys/stat.h
+@pindex sys/types.h
 @end deftypefun
 
 @comment unistd.h
@@ -666,13 +677,15 @@ The directory is not empty.
 @end table
 
 The prototype for this function is declared in the header file
-@file{<unistd.h>}.
+@file{unistd.h}.
+@pindex unistd.h
 @end deftypefun
 
 
 @node File Attributes
 @section File Attributes
 
+@pindex ls
 When you issue an @samp{ls -l} shell command on a file, it gives you
 information about the size of the file, who owns it, when it was last
 modified, and the like.  This kind of information is associated with the
@@ -704,9 +717,12 @@ modify these attributes of files.
 You can inquire about the attributes or @dfn{status} of a file using the
 @code{stat} or @code{fstat} functions.  These functions return the
 information in a @code{struct stat} object.  This structure and the
-related macros are defined in the header file @file{<sys/stat.h>}.
+related macros are defined in the header file @file{sys/stat.h}.
 The types of some of its component members are defined in the header
-files @file{<sys/types.h>} and @file{<time.h>}.
+files @file{sys/types.h} and @file{time.h}.
+@pindex time.h
+@pindex sys/types.h
+@pindex sys/stat.h
 
 @comment sys/stat.h
 @comment POSIX.1
@@ -853,7 +869,8 @@ owner of the file.  The mode is represented as the bitwise OR of the
 individual flags.
 
 All of the macros and constants listed in this section are defined in
-the header file @file{<sys/stat.h>}.
+the header file @file{sys/stat.h}.
+@pindex sys/stat.h
 
 The following macros test the format encoded in the file mode.
 
@@ -1172,7 +1189,8 @@ documentation for your specific operating system, or your local system
 administrator, to find out about this.
 
 You can check whether a file is accessible to your process using the
-@code{access} function.  This function is declared in @file{<unistd.h>}.
+@code{access} function.  This function is declared in @file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -1208,9 +1226,10 @@ Write permission was requested for a file on a read-only file system.
 @end table
 @end deftypefun
 
-These macros are defined in the header file @file{<unistd.h>} for use
+These macros are defined in the header file @file{unistd.h} for use
 as the @var{how} argument to the @code{access} function.  The values
 are integer constants.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -1266,15 +1285,18 @@ an especially bad idea for a program to arbitrarily change the file
 creation mask.  In normal use, the file creation mask is initialized in
 the user's login shell, and inherited by all subprocesses.
 
+@pindex umask
 The @code{umask} function is the primitive for the shell command of
 the same name.
 
+@pindex chmod
 The file creation mask only applies to permissions for newly created
 files.  You can change the file permissions of an existing file without
 regard to the file creation mask using @code{chmod}.  Again, this is the
 primitive for the shell command of the same name.
 
-These functions are declared in @file{<sys/stat.h>}.
+These functions are declared in @file{sys/stat.h}.
+@pindex sys/stat.h
 
 @comment sys/stat.h
 @comment POSIX.1
@@ -1348,8 +1370,11 @@ the directory that contains the file.
 You can change the owner and/or group owner of an existing file using
 the @code{chown} function.  This is the primitive for the @code{chown}
 and @code{chgrp} shell commands.
+@pindex chown
+@pindex chgrp
 
-The prototype for this function is declared in @file{<unistd.h>}.
+The prototype for this function is declared in @file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -1418,9 +1443,10 @@ correspond to the @code{st_atime}, @code{st_mtime}, and @code{st_ctime}
 members of the @code{stat} structure; @pxref{File Attributes}.  
 
 All of these times are represented in calendar time format, as
-@code{time_t} objects.  This data type is defined in @file{<time.h>}.
+@code{time_t} objects.  This data type is defined in @file{time.h}.
 For more information about representation and manipulation of time
 values, @pxref{Calendar and Local Time}.
+@pindex time.h
 
 When a file is created, all three timestamps for that file are set to
 the current time.  In addition, the attribute change time and
@@ -1445,7 +1471,8 @@ access time attribute, and writing updates its modification time.
 
 You can also change the timestamps of a file explicitly using the
 @code{utime} function.  You need to include the header file
-@file{<utime.h>} to use this facility.
+@file{utime.h} to use this facility.
+@pindex utime.h
 
 @comment time.h
 @comment POSIX.1
@@ -1514,7 +1541,8 @@ the @code{tv_usec} field of a @code{timeval} structure;
 
 The @code{utimes} function is like @code{utime}, but also lets you specify
 the fractional part of the file times.  The prototype for this function is
-in the header file @file{<sys/time.h>}.
+in the header file @file{sys/time.h}.
+@pindex sys/time.h
 
 @comment sys/time.h
 @comment BSD
@@ -1540,7 +1568,8 @@ The @code{mknod} function is the primitive for making special files,
 such as files that correspond to devices.  The GNU Library includes
 this function for compatibility with BSD.
 
-The prototype for @code{mknod} is declared in @file{<sys/stat.h>}.
+The prototype for @code{mknod} is declared in @file{sys/stat.h}.
+@pindex sys/stat.h
 
 @comment sys/stat.h
 @comment BSD

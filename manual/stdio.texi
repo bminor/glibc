@@ -1,6 +1,5 @@
 @node Input/Output on Streams
 @chapter Input/Output on Streams
-@pindex <stdio.h>
 
 This chapter describes the functions for creating streams and performing
 input and output operations on them.  As discussed in @ref{Input/Output
@@ -44,7 +43,8 @@ manual, however, is careful to use the terms ``file'' and ``stream''
 only in the technical sense.
 @cindex file pointer
 
-The @code{FILE} type is declared in the header file @file{<stdio.h>}.
+The @code{FILE} type is declared in the header file @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -72,7 +72,8 @@ some predefined streams open and available for use.  These represent the
 ``standard'' input and output channels that have been established for
 the process.
 
-These streams are declared in the header file @file{<stdio.h>}.
+These streams are declared in the header file @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -120,7 +121,8 @@ stream and the file is removed.  After you have closed a stream, you
 cannot perform any additional operations on it any more.
 
 The functions in this section are declared in the header file
-@file{<stdio.h>}.
+@file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -250,7 +252,8 @@ several variants of these functions, but as a matter of style (and for
 simplicity!) it's suggested that you stick with using @code{fputc} and
 @code{fputs}, and perhaps @code{putc} and @code{putchar}.
 
-These functions are declared in the header file @file{<stdio.h>}.
+These functions are declared in the header file @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -314,7 +317,8 @@ functions, some of which are considered obsolete stylistically.
 It's suggested that you stick with @code{fgetc}, @code{fgets}, and
 maybe @code{ungetc}, @code{getc}, and @code{getchar}.
 
-These functions are declared in the header file @file{<stdio.h>}.
+These functions are declared in the header file @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -937,7 +941,8 @@ precision, or type modifiers are permitted.
 @subsection Formatted Output Functions
 
 This section describes how to call @code{printf} and related functions.
-Prototypes for these functions are in the header file @file{<stdio.h>}.
+Prototypes for these functions are in the header file @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -1024,7 +1029,8 @@ Facilities}) to initialize @var{ap}, and you @emph{may} call
 further calls to @code{va_arg} with @var{ap} are not permitted once
 @code{vprintf} returns.
 
-Prototypes for these functions are declared in @file{<stdio.h>}.
+Prototypes for these functions are declared in @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -1095,7 +1101,8 @@ eprintf ("The file %s does not exist.\n", filename);
 
 The GNU C Library lets you define new conversion specifiers for 
 @code{printf} format templates.  To do this, you must include the
-header file @file{<printf.h>} in your program.
+header file @file{printf.h} in your program.
+@pindex printf.h
 
 The way you do this is by registering the conversion with
 @code{register_printf_function}; @pxref{Registering New Conversions}.
@@ -1123,7 +1130,8 @@ nothing similar.
 @subsection Registering New Conversions
 
 The function to register a new conversion is
-@code{register_printf_function}, declared in @file{<printf.h>}.
+@code{register_printf_function}, declared in @file{printf.h}.
+@pindex printf.h
 
 @comment printf.h
 @comment GNU
@@ -1159,7 +1167,8 @@ Both the @var{handler_function} and @var{arginfo_function} arguments
 to @code{register_printf_function} accept an argument of type
 @code{struct print_info}, which contains information about the options
 appearing in an instance of the conversion specifier.  This data type
-is declared in the header file @file{<printf.h>}.
+is declared in the header file @file{printf.h}.
+@pindex printf.h
 
 @comment printf.h
 @comment GNU
@@ -1869,7 +1878,8 @@ not permit any flags, field width, or type modifier to be specified.
 
 Here are the descriptions of the functions for performing formatted
 input.
-Prototypes for these functions are in the header file @file{<stdio.h>}.
+Prototypes for these functions are in the header file @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -1965,7 +1975,8 @@ easily using many standard file utilities (such as text editors), and
 are not portable between different implementations of the language, or
 different kinds of computers.
 
-These functions are declared in @file{<stdio.h>}.
+These functions are declared in @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -2001,7 +2012,8 @@ check indicators that are part of the internal state of the stream
 object, that are set if the appropriate condition was detected by a
 previous i/o operation on that stream.
 
-These facilities are declared in the header file @file{<stdio.h>}.
+These facilities are declared in the header file @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -2059,7 +2071,8 @@ Concepts}.  In the GNU system, the file position indicator is the number of
 bytes from the beginning of the file.
 
 The functions and macros listed in this section are declared in the
-header file @file{<stdio.h>}.
+header file @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -2219,7 +2232,8 @@ functions represent the file position as a @code{fpos_t} object, with
 an implementation-dependent internal representation.
 
 Prototypes for these functions are declared in the header file
-@file{<stdio.h>}.
+@file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -2369,7 +2383,8 @@ On normal program exit, output is flushed as part of closing all open
 streams.
 @end itemize
 
-The prototype for @code{fflush} is in the header file @file{<stdio.h>}.
+The prototype for @code{fflush} is in the header file @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -2405,7 +2420,8 @@ buffering mode, and requests to do so may simply fail.
 on all kinds of files?  If not, what are the restrictions?
 
 The facilities listed in this section are declared in the header
-file @file{<stdio.h>}.
+file @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -2515,7 +2531,8 @@ If you need to use a temporary file in your program, you can use the
 function to get the name of a temporary file and then open it in the
 usual way with @code{fopen}.
 
-These facilities are declared in the header file @file{<stdio.h>}.
+These facilities are declared in the header file @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment ANSI
@@ -2616,7 +2633,8 @@ provide equivalent functionality.
 @cindex string stream
 The @code{fmemopen} and @code{open_memstream} functions allow you to do
 i/o to a string or memory buffer.  These facilities are declared in
-@file{<stdio.h>}.
+@file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment GNU
@@ -2748,7 +2766,8 @@ The protocol for transferring data to or from the cookie is defined by
 a set of functions.  You provide appropriate definitions for these 
 functions, and store them in an @code{__io_functions} data structure.
 
-These facilities are declared in @file{<stdio.h>}.
+These facilities are declared in @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment GNU

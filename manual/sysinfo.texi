@@ -22,8 +22,11 @@ particular machine that a program is running on.  In the GNU system,
 this information is the default Internet host name and host address of
 the machine; @pxref{The Internet Domain}.  These functions are the
 primitives for the @code{hostname} and @code{hostid} shell commands.
+@pindex hostname
+@pindex hostid
 
-Prototypes for these functions appear in @file{<unistd.h>}.
+Prototypes for these functions appear in @file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment BSD
@@ -33,7 +36,8 @@ This function returns the name of the host machine in the array
 in bytes.
 
 @strong{Incomplete:}  The size of the host name is limited by a parameter
-@code{MAXHOSTNAMELENGTH}, declared in @file{<sys/param.h>}.
+@code{MAXHOSTNAMELENGTH}, declared in @file{sys/param.h}.
+@pindex sys/param.h
 
 The return value is @code{0} on success and @code{-1} on failure.
 @end deftypefun
@@ -73,7 +77,8 @@ is usually used only at system boot time.
 You can use the @code{uname} function to find out some information about
 the computer system your program is running on.  This function and the
 associated data type are declared in the header file
-@file{<sys/utsname.h>}.
+@file{sys/utsname.h}.
+@pindex sys/utsname.h
 
 @comment sys/utsname.h
 @comment POSIX.1

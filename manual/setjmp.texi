@@ -1,6 +1,5 @@
 @node Non-Local Exits
 @chapter Non-Local Exits
-@pindex <setjmp.h>
 @cindex non-local exits
 
 Sometimes when your program detects an unusual situation inside a deeply
@@ -109,7 +108,8 @@ else
 
 Here are the details on the functions and data structures used for
 performing non-local exits.  These facilities are declared in
-@file{<setjmp.h>}.
+@file{setjmp.h}.
+@pindex setjmp.h
 
 @comment setjmp.h
 @comment ANSI
@@ -201,7 +201,8 @@ default in the GNU system is the POSIX.1 behavior rather than the BSD
 behavior.
 
 The facilities in this section are declared in the header file
-@file{<setjmp.h>}.
+@file{setjmp.h}.
+@pindex setjmp.h
 
 @comment setjmp.h
 @comment POSIX.1

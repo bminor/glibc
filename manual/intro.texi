@@ -32,8 +32,8 @@ assumed.
 The GNU C Library includes several @dfn{header files}, each of which
 provides definitions and declarations for a group of related facilities;
 this information is used by the C compiler when processing your program.
-For example, the header file @file{<stdio.h>} declares facilities for
-performing input and output, and the header file @file{<string.h>}
+For example, the header file @file{stdio.h} declares facilities for
+performing input and output, and the header file @file{string.h}
 declares string processing utilities.  The organization of this manual
 generally follows the same division as the header files.
 
@@ -85,8 +85,7 @@ Standard X3.159-1989 --- ``ANSI C''}.  The header files and library
 facilities that make up the GNU Library are a superset of those
 specified by the ANSI C standard.
 
-@pindex GNU C compiler
-@pindex GCC, the GNU C compiler
+@pindex gcc
 If you are concerned about strict adherence to the ANSI C standard, you
 should use the @samp{-ansi} option when you compile your programs with
 the GNU C compiler.  This tells the compiler to define @emph{only} ANSI
@@ -248,8 +247,6 @@ available and can correctly process references to them.  Once your
 program has been compiled, the linker resolves these references to
 the actual definitions provided in the archive file.
 
-@findex #include
-
 Header files are included into a program source file by the
 @samp{#include} preprocessor directive.  The C language supports two
 forms of this directive:
@@ -314,7 +311,6 @@ to have the correct declaration.
 
 @node Macro Definitions
 @subsection Macro Definitions of Functions
-@findex #undef
 @cindex superseding function declarations with macros
 @cindex removing macros that supersede function declarations
 @cindex undefining macros that supersede function declarations
@@ -350,9 +346,9 @@ the @samp{#undef} preprocessor directive, unless otherwise stated
 explicitly in the description of that facility.
 @end itemize
 
-For example, suppose the header file @file{<stdlib.h>} declares the
+For example, suppose the header file @file{stdlib.h} declares the
 function @code{abs} with @samp{extern int abs(int i);} and also provides
-a macro definition for @code{abs}.  Then, in
+a macro definition for @code{abs}.  Then, in:
 
 @example
 #include <stdlib.h>
@@ -480,37 +476,46 @@ restrictions if your program includes that particular header file.
 
 @itemize @bullet
 @item
-The header file @file{<dirent.h>} reserves names prefixed with
+The header file @file{dirent.h} reserves names prefixed with
 @samp{d_}.
+@pindex dirent.h
 
 @item
-The header file @file{<fcntl.h>} reserves names prefixed with
+The header file @file{fcntl.h} reserves names prefixed with
 @samp{l_}, @samp{F_}, @samp{O_}, and @samp{S_}.
+@pindex fcntl.h
 
 @item
-The header file @file{<grp.h>} reserves names prefixed with @samp{gr_}.
+The header file @file{grp.h} reserves names prefixed with @samp{gr_}.
+@pindex grp.h
 
 @item
-The header file @file{<limits.h>} reserves names suffixed with @samp{_MAX}.
+The header file @file{limits.h} reserves names suffixed with @samp{_MAX}.
+@pindex limits.h
 
 @item
-The header file @file{<pwd.h>} reserves names prefixed with @samp{pw_}.
+The header file @file{pwd.h} reserves names prefixed with @samp{pw_}.
+@pindex pwd.h
 
 @item
-The header file @file{<signal.h>} reserves names prefixed with @samp{sa_}
+The header file @file{signal.h} reserves names prefixed with @samp{sa_}
 and @samp{SA_}.
+@pindex signal.h
 
 @item
-The header file @file{<sys/stat.h>} reserves names prefixed with @samp{st_}
+The header file @file{sys/stat.h} reserves names prefixed with @samp{st_}
 and @samp{S_}.
+@pindex sys/stat.h
 
 @item
-The header file @file{<sys/tims.h>} reserves names prefixed with @samp{tms_}.
+The header file @file{sys/times.h} reserves names prefixed with @samp{tms_}.
+@pindex sys/times.h
 
 @item
-The header file @file{<termios.h>} reserves names prefixed with @samp{c_},
+The header file @file{termios.h} reserves names prefixed with @samp{c_},
 @samp{V}, @samp{I}, @samp{O}, and @samp{TC}; and names prefixed with
 @samp{B} followed by a digit.
+@pindex termios.h
 @end itemize
 
 

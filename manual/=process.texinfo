@@ -124,7 +124,8 @@ interpretation is left up to the particular application program.
 
 Here are the details about how to call the @code{getopt} function.  To
 use this facility, your program must include the header file
-@file{<unistd.h>}.
+@file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.2
@@ -313,6 +314,7 @@ The environment variables discussed in this section are the same
 environment variables that you set using the @code{getenv} shell
 command.  Programs executed from the shell inherit all of the 
 environment variables from the shell.  
+@pindex getenv
 
 @cindex environment
 There are standard environment variables that are used for information
@@ -335,7 +337,8 @@ all environment variables that have values is collectively known as the
 
 The value of an environment variable can be accessed with the
 @code{getenv} function.  This is declared in the header file
-@file{<stdlib.h>}.
+@file{stdlib.h}.
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment ANSI
@@ -557,7 +560,8 @@ successful completion, and a status code of @code{EXIT_FAILURE} to
 report unsuccessful completion.  Other status codes have
 implementation-specific interpretations.
 
-The following facilities are declared in @file{<stdlib.h>}.
+The following facilities are declared in @file{stdlib.h}.
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment ANSI
@@ -640,7 +644,8 @@ When this program is executed, it just prints the message and exits.
 @cindex aborting a program
 
 You can abort your program using the @code{abort} function.  The prototype
-for this function is in @file{<stdlib.h>}.
+for this function is in @file{stdlib.h}.
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment ANSI
@@ -659,7 +664,8 @@ intercept this signal; @pxref{Signal Handling}.
 @subsection Process Termination Details
 
 The @code{_exit} function is the primitive used by both @code{exit} and
-@code{abort}.  It is declared in the header file @file{<unistd.h>}.
+@code{abort}.  It is declared in the header file @file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -745,7 +751,8 @@ function.  This function does all three operations in one step, but it
 doesn't give you as much control as doing each operation the hard way.
 
 The @code{system} function is declared in the header file
-@file{<stdlib.h>}.
+@file{stdlib.h}.
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment ANSI
@@ -758,6 +765,7 @@ The return value is @code{-1} if it wasn't possible to create the
 process, and otherwise is the status reported from the child process.
 @xref{Process Completion}, for details on how this status code can be
 interpreted.
+@pindex sh
 @end deftypefun
 
 @strong{Portability Note:} Some C implementations may not have any
@@ -823,8 +831,10 @@ previous process image.
 The @code{pid_t} data type represents process IDs.  You can get the
 process ID and parent process ID of a process by calling @code{getpid}
 and @code{getppid}, respectively.  Your program should include the
-header files @file{<unistd.h>} and @file{<sys/types.h>} to use these
+header files @file{unistd.h} and @file{sys/types.h} to use these
 functions.
+@pindex sys/types.h
+@pindex unistd.h
 
 @comment sys/types.h
 @comment POSIX.1
@@ -850,7 +860,8 @@ current process.
 @subsection Creating a Process
 
 The @code{fork} function is the primitive for creating a process.
-It is declared in the header file @file{<unistd.h>}.
+It is declared in the header file @file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -945,7 +956,8 @@ process execute a new program after it has been forked.
 
 There are several variants that allow you to specify the arguments in
 different ways, but otherwise they all work in pretty much the same way.
-These facilities are declared in the header file @file{<unistd.h>}.
+These facilities are declared in the header file @file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -1108,7 +1120,8 @@ information about signals, @pxref{Signal Handling}.
 
 The functions described in this section are used to wait for a child
 process to terminate or stop, and determine its status.  These functions
-are declared in the header file @file{<sys/wait.h>}.
+are declared in the header file @file{sys/wait.h}.
+@pindex sys/wait.h
 
 @comment sys/wait.h
 @comment POSIX.1
@@ -1225,7 +1238,8 @@ If the exit status value (@pxref{Program Termination}) of the child
 process is zero, then the status value reported by @code{waitpid} or
 @code{wait} is also zero.  You can test for other kinds of information
 encoded in the returned status value using the following macros.
-These macros are defined in the header file @file{<sys/wait.h>}.
+These macros are defined in the header file @file{sys/wait.h}.
+@pindex sys/wait.h
 
 @comment sys/wait.h
 @comment POSIX.1
@@ -1288,7 +1302,8 @@ defined so that they will work on either kind of object, and the
 @code{wait} function is defined to accept either type of pointer as its
 @var{status_ptr} argument.
 
-These functions are declared in @file{<sys/wait.h>}.
+These functions are declared in @file{sys/wait.h}.
+@pindex sys/wait.h
 
 @comment sys/wait.h
 @comment BSD
@@ -1614,8 +1629,10 @@ effective IDs.
 
 Here are detailed descriptions of the functions for inquiring about or
 changing the user and group IDs of a process.  To use these facilities,
-you must include the header files @file{<sys/types.h>} and
-@file{<unistd.h>}.
+you must include the header files @file{sys/types.h} and
+@file{unistd.h}.
+@pindex unistd.h
+@pindex sys/types.h
 
 @comment sys/types.h
 @comment POSIX.1
@@ -1759,7 +1776,8 @@ as those for @code{setreuid}.
 
 The GNU system also lets privileged processes change their supplementary 
 group IDs.  To use @code{setgroups} or @code{initgroups}, your programs
-should include the header file @file{<grp.h>}.
+should include the header file @file{grp.h}.
+@pindex grp.h
 
 @comment grp.h
 @comment BSD

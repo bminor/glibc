@@ -86,7 +86,8 @@ a @dfn{client}.
 @subsection Creating a Socket
 
 The primitive for creating a socket is the @code{socket} function,
-declared in @file{<sys/socket.h>}.
+declared in @file{sys/socket.h}.
+@pindex sys/socket.h
 
 @comment sys/socket.h
 @comment BSD
@@ -137,7 +138,8 @@ can control this behavior using the @code{SO_LINGER} socket option;
 @pxref{Socket Options}.
 
 To shut down a socket more cleanly, call @code{shutdown} before calling
-@code{close}.  This function is declared in @file{<sys/socket.h>}.
+@code{close}.  This function is declared in @file{sys/socket.h}.
+@pindex sys/socket.h
 
 @comment sys/socket.h
 @comment BSD
@@ -194,7 +196,8 @@ Domain}, for specific information.
 
 Here are descriptions of the functions for setting or inquiring about
 the name of a socket.  The prototypes for these functions are in the
-header file @file{<sys/socket.h>}
+header file @file{sys/socket.h}
+@pindex sys/socket.h
 
 @comment sys/socket.h
 @comment BSD
@@ -317,8 +320,9 @@ This is the address family for sockets in the Internet domain.
 A @dfn{socket pair} consists of a pair of connected (but unnamed)
 sockets.  It is very similar to a pipe and is used in much the same way.
 Socket pairs are created with the @code{socketpair} function, declared
-in @file{<sys/socket.h>}.  (Compare this function with the @code{pipe}
+in @file{sys/socket.h}.  (Compare this function with the @code{pipe}
 function; @pxref{Creating a Pipe}.)
+@pindex sys/socket.h
 
 @comment sys/socket.h
 @comment BSD
@@ -358,10 +362,11 @@ in the local domain.  Is this true of the GNU system also?
 @node Domains and Protocols
 @section Domains and Protocols
 
-The header file @file{<sys/socket.h>} defines these symbolic constants
+The header file @file{sys/socket.h} defines these symbolic constants
 that name various domains (or protocol families).  You can use these
 macros as values for the @var{domain} argument to the @code{socket} or
 @code{socketpair} functions.
+@pindex sys/socket.h
 
 @comment sys/socket.h
 @comment GNU
@@ -388,7 +393,7 @@ for more information.
 @strong{Incomplete:} These are only the most important protocol
 families.  This chapter includes detailed information about socket
 naming conventions and specific protocols for these domains.  There
-are several other domains defined in @file{<sys/socket.h>}, but who
+are several other domains defined in @file{sys/socket.h}, but who
 knows about the details of using them?
 
 Each domain can support multiple protocols.  Normally, though, you can
@@ -415,7 +420,8 @@ file.  It's typical to put these files in the @file{/tmp} directory.
 access to the socket?
 
 The structure for specifying socket names in the local domain is
-defined in the header file @file{<sys/un.h>}:
+defined in the header file @file{sys/un.h}:
+@pindex sys/un.h
 
 @comment sys/un.h
 @comment BSD
@@ -519,6 +525,7 @@ all normal purposes.  Unless you are trying to do something really
 wizardly, just specify the default protocol @code{0} when you create the
 socket, and don't bother with the rest of this section.
 
+@pindex /etc/protocols
 Internet protocols are generally specified by a name instead of a
 number.  The network protocols that a host knows about are stored in a
 database.  This is usually either derived from the file
@@ -527,7 +534,8 @@ server.  You look up the protocol number associated with a named
 protocol in the database using the @code{getprotobyname} function.
 
 Here are detailed descriptions of the utilities for accessing the
-protocols database.  These are declared in @file{<netdb.h>}.
+protocols database.  These are declared in @file{netdb.h}.
+@pindex netdb.h
 
 @comment netdb.h
 @comment BSD
@@ -605,7 +613,8 @@ use the same port numbers without colliding, and you have to be careful
 to use the right protocol that the server is expecting.
 
 The data type for representing socket addresses in the Internet domain
-is defined in the header file @file{<netinet/in.h>}.
+is defined in the header file @file{netinet/in.h}.
+@pindex netinet/in.h
 
 @comment netinet/in.h
 @comment BSD
@@ -712,7 +721,8 @@ hexadecimal radix; a leading @samp{0} implies octal; and otherwise decimal
 radix is assumed.
 
 The following basic definitions for Internet addresses appear in the
-header file @file{<netinet.in.h>}:
+header file @file{netinet/in.h}:
+@pindex netinet/in.h
 
 @comment netinet/in.h
 @comment BSD
@@ -732,7 +742,8 @@ requests.
 @end defvr
 
 These additional functions for manipulating Internet addresses are
-declared in @file{<arpa/inet.h>}:
+declared in @file{arpa/inet.h}:
+@pindex arpa/inet.h
 
 @comment arpa/inet.h
 @comment BSD
@@ -793,10 +804,12 @@ Internet address @samp{128.52.46.32} is also known as
 @samp{churchy.gnu.ai.mit.edu}; and other machines that belong to the
 same network can reference it simply as @samp{churchy}.
 
+@pindex /etc/hosts
 Internally, the system uses a database to keep track of the mapping
 between host names and host numbers.  This database is usually either
 the file @file{/etc/hosts} or an equivalent provided by a name server.
-The utilities for accessing this database are declared in @file{<netdb.h>}.
+The utilities for accessing this database are declared in @file{netdb.h}.
+@pindex netdb.h
 
 @comment netdb.h
 @comment BSD
@@ -950,10 +963,12 @@ access to ports.  If you want to restrict access to your server, you
 should have it examine the addresses associated with connection requests
 or implement some other handshaking or identification protocol.
 
+@pindex /etc/services
 The database that keeps track of ``well-known'' services is usually
 either the file @file{/etc/services} or an equivalent from a name server.
-You can use these utilities, declared in @file{<netdb.h>}, to access
+You can use these utilities, declared in @file{netdb.h}, to access
 the services database.
+@pindex netdb.h
 
 @comment netdb.h
 @comment BSD
@@ -1028,14 +1043,16 @@ This function closes the services database.
 @node Networks Database
 @subsection Networks Database
 
+@pindex /etc/networks
 There is also a database that keeps track of all the known networks.
 This is usually either the file @file{/etc/networks} or an equivalent
 from a name server.  
 
 The following utilities for accessing the networks database are declared
-in @file{<netdb.h>}.  You usually don't have to worry about the networks
+in @file{netdb.h}.  You usually don't have to worry about the networks
 database to write a program that uses sockets; the information is
 presented here for completeness only.
+@pindex netdb.h
 
 @comment netdb.h
 @comment BSD
@@ -1129,7 +1146,8 @@ Otherwise, you have to convert the values explicitly.  Use
 member.  Use @code{htonl} and @code{ntohl} to convert values for the
 @code{sin_addr} member.  (Remember, @code{struct in_addr} is equivalent
 to @code{unsigned long int}.)  These functions are declared in
-@file{<netinet/in.h>}.
+@file{netinet/in.h}.
+@pindex netinet/in.h
 
 @comment netinet/in.h
 @comment BSD
@@ -1233,7 +1251,8 @@ void init_sockaddr (struct sockaddr_in *name, const char *hostname,
 The GNU Library includes support for several different kinds of sockets,
 each with different characteristics.  This section describes the
 supported socket types.  The symbolic constants listed here are
-defined in @file{<sys/socket.h>}.
+defined in @file{sys/socket.h}.
+@pindex sys/socket.h
 
 Each socket type has a number of attributes that characterize it.
 
@@ -1500,7 +1519,8 @@ channel, so read and write operations can be performed at either end.
 You can also use the @code{send} and @code{recv} functions to perform
 read and write operations while specifying additional flags.  The
 prototypes for these functions are in the header file
-@file{<sys/socket.h>}.
+@file{sys/socket.h}.
+@pindex sys/socket.h
 
 @comment sys/socket.h
 @comment BSD
@@ -1827,7 +1847,8 @@ the @code{connect} function.
 The normal way of sending data on an unconnected datagram socket is
 by using the @code{sendto} function.  The @code{recvfrom} function 
 reads data from an unconnected datagram socket.  Both of these functions
-are declared in @file{<sys/socket.h>}.
+are declared in @file{sys/socket.h}.
+@pindex sys/socket.h
 
 @comment sys/socket.h
 @comment BSD
@@ -2033,7 +2054,8 @@ the socket interface, or to a lower-level communications protocol interface.
 @subsection Socket Option Functions
 
 Here are the functions for inquiring about and modifying socket options.
-These functions are declared in @file{<sys/socket.h>}.
+These functions are declared in @file{sys/socket.h}.
+@pindex sys/socket.h
 
 @comment sys/socket.h
 @comment BSD
@@ -2076,7 +2098,8 @@ The return value and error codes are the same as for @code{getsockopt}.
 @subsection Socket-Level Options
 
 The flags for socket-level options are defined in the header file
-@file{<sys/socket.h>}.
+@file{sys/socket.h}.
+@pindex sys/socket.h
 
 @comment sys/socket.h
 @comment BSD

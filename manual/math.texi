@@ -1,11 +1,11 @@
 @node Mathematics
-@chapter Mathematics --- @file{<math.h>}
-@pindex <math.h>
+@chapter Mathematics
 
 This chapter contains information about functions for performing
 mathematical computations, such as trigonometric functions.  Most
 of these functions have prototypes declared in the header file
-@file{<math.h>}.
+@file{math.h}.
+@pindex math.h
 
 @strong{Incomplete:}  This chapter doesn't have any examples.
 
@@ -567,7 +567,8 @@ the ANSI C standard.  These functions represent the state of the
 random number generator as an @code{int}.
 
 To use these facilities, you should include the header file
-@file{<stdlib.h>} in your program.
+@file{stdlib.h} in your program.
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment ANSI
@@ -601,7 +602,8 @@ that are derived from BSD Unix.  The @code{random} function can generate
 better random numbers than @code{rand}, because it maintains more bits
 of internal state.
 
-The prototypes for these functions are in @file{<stdlib.h>}.
+The prototypes for these functions are in @file{stdlib.h}.
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment BSD
@@ -655,7 +657,8 @@ The return value is the previous value of the state information array.
 
 This section describes functions for performing integer division.
 To use these facilities, you should include the header file
-@file{<stdlib.h>} in your program.
+@file{stdlib.h} in your program.
+@pindex stdlib.h
 
 These functions are not necessarily equivalent to the division performed
 by the built-in @code{/} and @code{%} operators.  While the built-in
@@ -725,7 +728,9 @@ structure of type @code{ldiv}.
 
 These functions are provided for obtaining the absolute value of
 integer values.  Prototypes for @code{abs} and @code{abs} are declared
-in @file{<stdlib.h>}; @code{fabs} is declared in @file{<math.h>}.
+in @file{stdlib.h}; @code{fabs} is declared in @file{math.h}.
+@pindex math.h
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment ANSI
@@ -766,7 +771,8 @@ appropriate to use @code{sscanf} or one of the related functions;
 functions for the numeric conversions is exactly the same as the syntax
 recognized by the functions described in this section.
 
-These functions are declared in @file{<stdlib.h>}.
+These functions are declared in @file{stdlib.h}.
+@pindex stdlib.h
 
 @menu
 * Parsing of Integers::		Functions for conversion of integer values.
@@ -866,7 +872,8 @@ instead.
 @subsection Predicates on Floats
 
 This section describes some miscellaneous test functions on doubles.
-Prototypes for these functions appear in @file{<math.h>}.
+Prototypes for these functions appear in @file{math.h}.
+@pindex math.h
 
 @comment math.h
 @comment GNU

@@ -12,7 +12,6 @@ floating-point types supported by the GNU C library.
 
 @node Integer Representation Limits
 @section Integer Representation Limits
-@pindex <limits.h>
 
 Sometimes it is necessary for programs to know about the internal
 representation of various integer subtypes.  For example, if you want
@@ -25,8 +24,9 @@ with @samp{#ifdef} to select the most appropriate integer subtype that
 can represent the required range of values.
 
 Macros representing the minimum and maximum limits of the integer types
-are defined in the header file @file{<limits.h>}.  The values of these
+are defined in the header file @file{limits.h}.  The values of these
 macros are all integer constant expressions.
+@pindex limits.h
 
 @comment limits.h
 @comment ANSI
@@ -139,15 +139,15 @@ long int}.  (The minimum value of an @code{unsigned long int} is zero.)
 C Compiler's @code{long long} type, too.  (But they are not now present
 in the header file.)
 
-The header file @file{<limits.h>} also defines some additional constants
+The header file @file{limits.h} also defines some additional constants
 that parameterize various operating system and file system limits.  These
 constants are described in @ref{System Parameters} and @ref{File System
 Parameters}.
+@pindex limits.h
 
 
 @node Floating-Point Limits 
 @section Floating-Point Limits
-@pindex <float.h>
 @cindex floating-point number representation
 @cindex representation of floating-point numbers
 
@@ -257,7 +257,8 @@ the base.
 of what these parameters mean and how to use them in a program.
 
 These macro definitions can be accessed by including the header file
-@file{<float.h>} in your program.
+@file{float.h} in your program.
+@pindex float.h
 
 Macro names starting with @samp{FLT_} refer to the @code{float} type,
 while names beginning with @samp{DBL_} refer to the @code{double} type

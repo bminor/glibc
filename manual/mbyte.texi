@@ -72,7 +72,8 @@ In both representations, a value of zero represents the null character
 and is used as a string terminator.
 
 The @code{wchar_t} data type is defined in the header file
-@file{<stddef.h>}.
+@file{stddef.h}.
+@pindex stddef.h
 
 @comment stddef.h
 @comment ANSI
@@ -106,8 +107,10 @@ character code occupies.  To determine the length of the next multibyte
 character sequence in a string, use the @code{mblen} function.
 
 The @code{mblen} function and @code{MB_CUR_MAX} macro are declared in the
-header file @file{<stdlib.h>}.  The @code{MB_LEN_MAX} macro is declared
-in @file{<limits.h>}.
+header file @file{stdlib.h}.  The @code{MB_LEN_MAX} macro is declared
+in @file{limits.h}.
+@pindex limits.h
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment ANSI
@@ -151,7 +154,8 @@ in the current locale.  The value is never greater than @code{MB_LEN_MAX}.
 
 You can convert multibyte characters to wide characters with the
 @code{mbtowc} function.  The @code{wctomb} function does the reverse.
-These functions are declared in @file{<stdlib.h>}.
+These functions are declared in @file{stdlib.h}.
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment ANSI
@@ -209,7 +213,8 @@ the shift state getting changed behind your back.
 The @code{mbstowcs} function converts a string of multibyte characters
 to a wide character array.  The @code{wcstombs} function does the
 reverse.  These functions are declared in the header file
-@file{<stdlib.h>}.
+@file{stdlib.h}.
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment ANSI

@@ -19,7 +19,8 @@ function; @pxref{String/Array Comparison}.
 
 To search a sorted array for an element matching the key, use the
 @code{bsearch} function.  The prototype for this function is in
-the header file @file{<stdlib.h>}.
+the header file @file{stdlib.h}.
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment ANSI
@@ -49,7 +50,8 @@ the function.
 
 To sort an array using an arbitrary comparison function, use the
 @code{qsort} function.  The prototype for this function is in
-@file{<stdlib.h>}.
+@file{stdlib.h}.
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment ANSI

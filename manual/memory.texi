@@ -147,7 +147,8 @@ or smaller at any time, and free the blocks in any order (or never).
 @cindex allocation (random-access)
 
 To allocate a block of memory, call @code{malloc}.  The prototype for
-this function is in @file{<stdlib.h>}.
+this function is in @file{stdlib.h}.
+@pindex stdlib.h
 
 @comment malloc.h stdlib.h
 @comment ANSI
@@ -246,7 +247,8 @@ the Size of a Block}).
 
 When you no longer need a block that you got with @code{malloc}, use the
 function @code{free} to make the block available to be allocated again.
-The prototype for this function is in @file{<stdlib.h>}.
+The prototype for this function is in @file{stdlib.h}.
+@pindex stdlib.h
 
 @comment malloc.h stdlib.h
 @comment ANSI
@@ -307,7 +309,8 @@ how long you make the buffer initially, you may encounter a line that is
 longer.
 
 You can make the block longer by calling @code{realloc}.  This function
-is declared in @file{<stdlib.h>}.
+is declared in @file{stdlib.h}.
+@pindex stdlib.h
 
 @comment malloc.h stdlib.h
 @comment ANSI
@@ -356,7 +359,8 @@ is guaranteed to change nothing and return the same address that you gave.
 @subsection Allocating Cleared Space
 
 The function @code{calloc} allocates memory and clears it to zero.  It
-is declared in @file{<stdlib.h>}.
+is declared in @file{stdlib.h}.
+@pindex stdlib.h
 
 @comment malloc.h stdlib.h
 @comment ANSI
@@ -412,7 +416,8 @@ The address of a block returned by @code{malloc} or @code{realloc} in
 the GNU system is always a multiple of eight.  If you need a block whose
 address is a multiple of a higher power of two than that, use
 @code{memalign} or @code{valloc}.  These functions are declared in
-@file{<stdlib.h>}.
+@file{stdlib.h}.
+@pindex stdlib.h
 
 @strong{Incomplete:}  @code{memalign} is not actually defined!!
 
@@ -444,7 +449,8 @@ portably on Unix systems).
 
 You can ask @code{malloc} to check the consistency of the heap by using
 the @code{mcheck} function.  This function is a GNU extension, declared
-in @file{<malloc.h>}.
+in @file{malloc.h}.
+@pindex malloc.h
 
 @comment malloc.h
 @comment GNU
@@ -470,7 +476,8 @@ The GNU C Library lets you modify the behavior of @code{malloc},
 functions.  You can use these hooks to help you debug programs that use
 dynamic storage allocation, for example.
 
-The hook variables are declared in @file{<malloc.h>}.
+The hook variables are declared in @file{malloc.h}.
+@pindex malloc.h
 
 @comment malloc.h
 @comment GNU
@@ -549,7 +556,8 @@ installing such hooks.
 
 In the GNU C Library, you can get information about dynamic storage
 allocation by calling the @code{mstats} function.  This function and
-its associated data type are declared in @file{<malloc.h>}.
+its associated data type are declared in @file{malloc.h}.
+@pindex malloc.h
 
 @comment malloc.h
 @comment GNU
@@ -671,7 +679,8 @@ the padding needed to start each object on a suitable boundary.
 @subsection Representation of Obstacks
 
 The utilities for manipulating obstacks are declared in the header
-file @file{<obstack.h>}.
+file @file{obstack.h}.
+@pindex obstack.h
 
 @comment obstack.h
 @comment GNU
@@ -1377,8 +1386,9 @@ all the blocks are freed when you exit the function that @code{alloca} was
 called from, just as if they were automatic variables declared in that
 function.  There is no way to free the space explicitly.
 
-The prototype for @code{alloca} is in @file{<stdlib.h>}.  This function
+The prototype for @code{alloca} is in @file{stdlib.h}.  This function
 is a GNU extension.
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment GNU, BSD

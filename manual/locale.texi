@@ -1,6 +1,5 @@
 @node Localization
 @chapter Localization
-@pindex <locale.h>
 @cindex locale
 
 There are a number of features of the run-time library whose exact
@@ -30,9 +29,10 @@ interpreted (@pxref{Extended Characters}).
 
 This chapter discusses the mechanism by which you can modify the
 current locale.  This mechanism is declared in the header file
-@file{<locale.h>}.  The effects of the current locale on specific
+@file{locale.h}.  The effects of the current locale on specific
 library functions are discussed in more detail in the descriptions of
 those functions.
+@pindex locale.h
 
 @menu
 * Attributes of a Locale::		The attributes of a locale are grouped
@@ -54,8 +54,9 @@ individual parameters.  You can mix different attribute categories
 from different locales.
 
 These locale attribute categories are defined as preprocessor
-macros in @file{<locale.h>}.  The value of each of these macros
+macros in @file{locale.h}.  The value of each of these macros
 is an integer constant expression.
+@pindex locale.h
 
 @comment locale.h
 @comment ANSI
@@ -188,7 +189,8 @@ machines might have different sets of locales installed.
 @cindex locale, changing
 To actually change attributes of the current locale, use the
 @code{setlocale} function.  The prototype for this function is declared
-in the header file @file{<locale.h>}.
+in the header file @file{locale.h}.
+@pindex locale.h
 
 @comment locale.h
 @comment ANSI
@@ -266,7 +268,8 @@ you'll need to know about the local conventions regarding currency
 symbols, digit grouping and separation, and so on, which vary widely
 from country to country.  The function @code{localeconv} is provided for
 this purpose.  The prototype for this function is in the header file
-@file{<locale.h>}.
+@file{locale.h}.
+@pindex locale.h
 @cindex monetary value formatting
 @cindex numeric value formatting
 

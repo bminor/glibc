@@ -1,6 +1,5 @@
 @node Diagnostics
-@chapter Diagnostics --- @file{<assert.h>}
-@pindex <assert.h>
+@chapter Diagnostics
 @cindex diagnostics
 @cindex assertions
 
@@ -8,10 +7,11 @@ When you're writing a program, it's often a good idea to put in checks
 at strategic places for ``impossible'' errors or violations of basic
 assumptions.  These kinds of checks are helpful in debugging problems
 with the interfaces between different parts of the program, for example.
-The @code{assert} macro, defined in the header file @file{<assert.h>},
+The @code{assert} macro, defined in the header file @file{assert.h},
 provides a convenient way to cause program termination with some
 debugging information about where in the program such an error was
 detected.
+@pindex assert.h
 
 The @code{assert} facility is really oriented more towards debugging
 than towards providing general handling for errors detected by your
@@ -30,7 +30,7 @@ actually have to change the program source code to disable these checks.
 @comment ANSI
 @deftypefn Macro void assert (int @var{expression})
 If the preprocessor macro @code{NDEBUG} is defined before
-@file{<assert.h>} is included, the @code{assert} macro is defined in
+@file{assert.h} is included, the @code{assert} macro is defined in
 such a way that it does absolutely nothing.  Even the argument
 expression @var{expression} is not evaluated, so you should avoid
 calling @code{assert} with arguments that involve side effects.

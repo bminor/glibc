@@ -1,6 +1,5 @@
 @node Signal Handling
 @chapter Signal Handling
-@pindex <signal.h>
 
 @cindex signal
 A @dfn{signal} can be considered a software interrupt.  They are used by
@@ -99,9 +98,10 @@ are discussed in @ref{Blocking Signals}.
 @section Signal Names
 
 Symbolic names for the various kinds of signals are defined in the
-header file @file{<signal.h>}.  Each is a macro wich standars for a
+header file @file{signal.h}.  Each is a macro wich standars for a
 positive integer.  This section describes what conditions these signals
 are used for.
+@pindex signal.h
 
 @comment signal.h
 @comment GNU
@@ -297,6 +297,7 @@ termination.  Unlike @code{SIGKILL}, this signal can be blocked, caught,
 or ignored.
 
 The shell command @code{kill} generates @code{SIGTERM} by default.
+@pindex kill
 @end defvr
 @cindex termination signal
 
@@ -574,8 +575,10 @@ Default action is to ignore it.
 
 You can use the @code{strsignal} and @code{psignal} functions to get or
 print a message string describing a signal.  The prototype for
-@code{strsignal} is in @file{<string.h>}, and that for @code{psignal} in
-@file{<stdio.h>}.
+@code{strsignal} is in @file{string.h}, and that for @code{psignal} in
+@file{stdio.h}.
+@pindex stdio.h
+@pindex string.h
 
 @comment string.h
 @comment GNU
@@ -628,7 +631,8 @@ facilities and gives suggestions on which to use when.
 
 The @code{signal} function provides a simple interface for establishing
 an action for a particular signal.  The function and associated macros
-are declared in the header file @file{<signal.h>}.
+are declared in the header file @file{signal.h}.
+@pindex signal.h
 
 @comment signal.h
 @comment GNU
@@ -775,7 +779,8 @@ complexity.  In particular, @code{sigaction} allows you to specify
 additional flags to control when the signal is generated and how the
 handler is invoked.
 
-The @code{sigaction} function is declared in @file{<signal.h>}.
+The @code{sigaction} function is declared in @file{signal.h}.
+@pindex signal.h
 
 @comment signal.h
 @comment POSIX.1
@@ -928,7 +933,8 @@ can choose the flags you want to have set for some reason, OR those
 flags together, and assign them to the @code{sa_flags} member of your
 @code{sigaction} structure.
 
-These macros are defined in the header file @file{<signal.h>}.
+These macros are defined in the header file @file{signal.h}.
+@pindex signal.h
 
 @comment signal.h
 @comment POSIX.1
@@ -1269,7 +1275,8 @@ Signaling Another Process::	Send a signal to another process.
 @subsection Raising a Signal
 
 A process can send itself a signal with the @code{raise} function.  This
-function is declared in @file{<signal.h>}.
+function is declared in @file{signal.h}.
+@pindex signal.h
 
 @comment signal.h
 @comment ANSI
@@ -1363,7 +1370,8 @@ Two processes need to synchronize while working together.
 This section assumes that you know a little bit about how processes
 work.  For more information on this subject, @pxref{Processes}.
 
-The @code{kill} function is declared in @file{<signal.h>}.
+The @code{kill} function is declared in @file{signal.h}.
+@pindex signal.h
 
 @comment signal.h
 @comment POSIX.1
@@ -1580,7 +1588,8 @@ activity involves two stages: creating the signal set, and then passing
 it as an argument to a library function.
 @cindex signal set
 
-These facilities are declared in the header file @file{<signal.h>}.
+These facilities are declared in the header file @file{signal.h}.
+@pindex signal.h
 
 @comment signal.h
 @comment POSIX.1
@@ -1668,7 +1677,8 @@ create a new process (@pxref{Creating New Processes}), it inherits
 its parent's mask.
 @cindex signal mask
 
-The prototype for the @code{sigprocmask} function is in @file{<signal.h>}.
+The prototype for the @code{sigprocmask} function is in @file{signal.h}.
+@pindex signal.h
 
 @comment signal.h
 @comment POSIX.1
@@ -1866,7 +1876,8 @@ the handler was entered.
 @subsection Checking for Pending Signals
 
 You can find out which signals are pending at any time by calling
-@code{sigpending}.  This function is declared in @file{<signal.h>}.
+@code{sigpending}.  This function is declared in @file{signal.h}.
+@pindex signal.h
 
 @comment signal.h
 @comment POSIX.1
@@ -1922,8 +1933,10 @@ until a signal arrives.  If you block the process in this way, it won't
 use any CPU time while it is waiting.
 
 The @code{pause} and @code{sleep} functions are declared in the header
-file @file{<unistd.h>}, while @code{sigsuspend} is declared in
-@file{<signal.h>}.
+file @file{unistd.h}, while @code{sigsuspend} is declared in
+@file{signal.h}.
+@pindex signal.h
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -2102,7 +2115,8 @@ instead of its normal execution stack.
 @cindex signal stack
 @end itemize
 
-These facilities are declared in @file{<signal.h>}.
+These facilities are declared in @file{signal.h}.
+@pindex signal.h
 
 @comment signal.h
 @comment BSD

@@ -36,8 +36,10 @@ for which there are no equivalents on streams.
 
 This section describes the primitives for opening and closing files
 using file descriptors.  The @code{open} and @code{creat} functions are
-declared in the header file @file{<fcntl.h>}, while @code{close} is
-declared in @file{<unistd.h>}.
+declared in the header file @file{fcntl.h}, while @code{close} is
+declared in @file{unistd.h}.
+@pindex unistd.h
+@pindex fcntl.h
 
 @comment fcntl.h
 @comment POSIX.1
@@ -210,7 +212,8 @@ is flushed.
 This section describes the functions for performing primitive input and
 output operations on file descriptors: @code{read}, @code{write}, and
 @code{lseek}.  These functions are declared in the header file
-@file{<unistd.h>}.
+@file{unistd.h}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -384,7 +387,8 @@ information.
 You can make a new stream from a file descriptor with the @code{fdopen}
 function, and get the underlying file descriptor for an existing stream
 with the @code{fileno} function.  These functions are declared in the
-header file @file{<stdio.h>}.
+header file @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment POSIX.1
@@ -419,9 +423,10 @@ is not valid), @code{-1} is returned instead.
 @end deftypefun
 
 @cindex standard file descriptors
-There are also symbolic constants defined in @file{<unistd.h>} for the
+There are also symbolic constants defined in @file{unistd.h} for the
 file descriptors belonging to the standard streams @code{stdin},
 @code{stdout}, and @code{stderr}; @pxref{Standard Streams}.
+@pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -490,7 +495,8 @@ inefficient.
 A better solution is to use the @code{select} function.  This blocks
 the program until input or output is ready on a specified set of file
 descriptors, or until a timer expires.  This facility is declared in
-the header file @file{<sys/types.h>}.
+the header file @file{sys/types.h}.
+@pindex sys/types.h
 
 The file descriptor sets for the @code{select} function are specified
 as @code{fd_set} objects.  Here is the description of the data type
@@ -638,8 +644,9 @@ like.  All of these operations are performed by the function @code{fcntl}.
 The second argument to the @code{fcntl} function is a command that
 specifies which operation to perform.  The function and macros that name
 various flags that are used with it are declared in the header file
-@file{<fcntl.h>}.  (Many of these flags are also used by the @code{open}
+@file{fcntl.h}.  (Many of these flags are also used by the @code{open}
 function; @pxref{Opening and Closing Files}.)
+@pindex fcntl.h
 
 @comment fcntl.h
 @comment POSIX.1
@@ -705,9 +712,11 @@ You can perform this operation using the @code{fcntl} function with the
 @code{F_DUPFD} command, but there are also specialized functions
 @code{dup} and @code{dup2} to do the same operation.  
 
-The @code{fcntl} function and flags are declared in @file{<fcntl.h>},
+The @code{fcntl} function and flags are declared in @file{fcntl.h},
 while prototypes for @code{dup} and @code{dup2} are in the header file
-@file{<unistd.h>}.
+@file{unistd.h}.
+@pindex unistd.h
+@pindex fcntl.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -809,7 +818,8 @@ pointing to the same open file, each descriptor has its own set of flags.
 @cindex file descriptor flags
 
 These flags for the @code{fcntl} function are defined in the header
-file @file{<fcntl.h>}.
+file @file{fcntl.h}.
+@pindex fcntl.h
 
 @comment fcntl.h
 @comment POSIX.1
@@ -884,7 +894,8 @@ duplicated file descriptors pointing to the open file.
 @cindex file status flags
 
 These flags for the @code{fcntl} function are defined in the header
-file @file{<fcntl.h>}.
+file @file{fcntl.h}.
+@pindex fcntl.h
 
 @comment fcntl.h
 @comment POSIX.1
@@ -1026,7 +1037,7 @@ This macro expands into a value that indicates the file is open for
 both read and write access.
 @end defvr
 
-@strong{Incomplete:} @file{<fcntl.h>} also contains defines for
+@strong{Incomplete:} @file{fcntl.h} also contains defines for
 @code{FREAD}, @code{FWRITE}, etc.  Mib says: ``Those are internal flags
 in the kernel.  They won't exist in the GNU system.''  But this can't
 be right, since apparently at least @code{FASYNC} will be supported.
@@ -1071,7 +1082,8 @@ process exits, and are not inherited by child processes created using
 
 Locks are specified using a @code{flock} structure.  This data type
 and the associated macros for the @code{fcntl} function are declared
-in the header file @file{<fcntl.h>}.
+in the header file @file{fcntl.h}.
+@pindex fcntl.h
 
 @comment fcntl.h
 @comment POSIX.1
@@ -1297,7 +1309,8 @@ than a process group?  Or, are @code{SIGIO} signals sent to @emph{both}
 the ``owner'' and the foreground process group?
 
 These macros for the @code{fcntl} function are defined in the header
-file @file{<fcntl.h>}.
+file @file{fcntl.h}.
+@pindex fcntl.h
 
 @comment fcntl.h
 @comment BSD

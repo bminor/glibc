@@ -1,6 +1,5 @@
 @node Variable Argument Facilities
 @chapter Variable Argument Facilities
-@pindex <stdarg.h>
 @cindex variadic argument functions
 @cindex variadic functions
 @cindex variable number of arguments
@@ -12,7 +11,8 @@ functions are also referred to as @dfn{variadic argument functions}, or
 simply @dfn{variadic functions}.)  However, the kernel language provides
 no mechanism for actually accessing non-required arguments; instead,
 you use the variable arguments macros defined in
-@file{<stdarg.h>}.
+@file{stdarg.h}.
+@pindex stdarg.h
 
 @menu
 * Why Variable Arguments are Used::	
@@ -200,7 +200,8 @@ corresponding formal parameters).
 @section Variable Arguments Interface
 
 Here are descriptions of the macros used to retrieve variable arguments.
-These macros are defined in the header file @file{<stdarg.h>}.
+These macros are defined in the header file @file{stdarg.h}.
+@pindex stdarg.h
 
 @comment stdarg.h
 @comment ANSI

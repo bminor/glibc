@@ -1,6 +1,5 @@
 @node String and Array Utilities
 @chapter String and Array Utilities
-@pindex <string.h>
 
 Operations on strings (or arrays of characters) are an important part of
 many programs.  The GNU C library provides an extensive set of string
@@ -135,7 +134,8 @@ already know the length of the string in advance.
 @section String Length
 
 You can get the length of a string using the @code{strlen} function.
-This function is declared in the header file @file{<string.h>}.
+This function is declared in the header file @file{string.h}.
+@pindex string.h
 
 @comment string.h
 @comment ANSI
@@ -169,7 +169,8 @@ strlen (string)
 You can use the functions described in this section to copy the contents
 of strings and arrays, or to append the contents of one string to
 another.  These functions are declared in the header file
-@file{<string.h>}.
+@file{string.h}.
+@pindex string.h
 @cindex copying strings
 @cindex string copy functions
 
@@ -353,7 +354,8 @@ might find it helpful to hide them behind a macro definition, like this:
 #define str_eq(s1,s2)  (!strcmp ((s1),(s2)))
 @end example
 
-All of these functions are declared in the header file @file{<string.h>}.
+All of these functions are declared in the header file @file{string.h}.
+@pindex string.h
 
 @comment string.h
 @comment ANSI
@@ -462,10 +464,11 @@ two-character sequence @samp{ll} is treated as a single letter that is
 collated immediately after @samp{l}.
 
 You can use the functions @code{strcoll} and @code{strxfrm} (declared in
-the header file @file{<string.h>}) to compare strings using a collation
+the header file @file{string.h}) to compare strings using a collation
 ordering appropriate for the current locale.  The exact ordering
 conventions used by these functions are determined by the
 @code{LC_COLLATE} category; @pxref{Localization}.
+@pindex string.h
 
 @strong{Incomplete:} I believe that in the standard C locale, the
 collation sequence for @code{strcoll} is the same as that for
@@ -531,7 +534,8 @@ feature of ANSI C.  Older C dialects have no equivalent feature.
 
 This section describes library functions which perform various kinds
 of searching operations on strings and arrays.  These functions are
-declared in the header file @file{<string.h>}.
+declared in the header file @file{string.h}.
+@pindex string.h
 @cindex searching strings
 @cindex string search functions
 
@@ -654,7 +658,8 @@ strpbrk ("hello, world", " \t\n,.;!?")
 It's fairly common for programs to have a need to do some simple kinds
 of lexical analysis and parsing, such as splitting a command string up
 into tokens.  You can do this with the @code{strtok} function, declared
-in the header file @file{<string.h>}.
+in the header file @file{string.h}.
+@pindex string.h
 
 @comment string.h
 @comment ANSI

@@ -1,12 +1,12 @@
 @node Character Handling
 @chapter Character Handling
-@pindex <ctype.h>
 
 Programs that work with characters and strings often need to classify a
 character --- is it alphabetic, is it a digit, is it whitespace, and so
 on --- and perform case conversion operations on characters.  The
-functions in the header file @file{<ctype.h>} are provided for this
+functions in the header file @file{ctype.h} are provided for this
 purpose.
+@pindex ctype.h
 
 Since the choice of locale and character set can alter the
 classifications of particular character codes, all of these functions
@@ -44,7 +44,8 @@ constant value @code{EOF} instead of a real character.
 Character attributes can vary between locales. @xref{Localization}, for more
 information on locales.@refill
 
-These functions are declared in the header file @file{<ctype.h>}.
+These functions are declared in the header file @file{ctype.h}.
+@pindex ctype.h
 
 @cindex lower-case character
 @comment ctype.h
@@ -199,7 +200,8 @@ argument is not suitable for the conversion.  Thus for portability, you
 may need to write @code{islower(c) ? toupper(c) : c} rather than just
 @code{toupper(c)}.
 
-These functions are declared in the header file @file{<ctype.h>}.
+These functions are declared in the header file @file{ctype.h}.
+@pindex ctype.h
 
 @comment ctype.h
 @comment ANSI

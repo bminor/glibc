@@ -1,6 +1,5 @@
 @node Error Reporting
 @chapter Error Reporting
-@pindex <errno.h>
 @cindex error reporting
 @cindex reporting errors
 @cindex error codes
@@ -14,8 +13,9 @@ read from it, and print an error message or take other appropriate
 action if the call to the library function failed.
 
 This chapter describes how the error reporting facility works.  Your
-program should include the header file @file{<errno.h>} to use this
+program should include the header file @file{errno.h} to use this
 facility.
+@pindex errno.h
 
 @menu
 * Checking for Errors::	How errors are reported.
@@ -32,7 +32,8 @@ constant such as @code{EOF} that is defined for that purpose.  But this
 a return value tells you only that an error has occurred.  To find out
 what went wrong, you need to look at the error code stored in the
 variable @code{errno}.  This variable is declared in the header file
-@file{<errno.h>}.
+@file{errno.h}.
+@pindex errno.h
 
 @comment errno.h
 @comment ANSI
@@ -66,9 +67,10 @@ whether an error occurred, the recommended method is to set @code{errno}
 to zero before calling the function, and then check its value afterward.
 
 All the error codes have symbolic names, macros defined in
-@file{<errno.h>}.  The names start with @samp{E} and an upper-case
+@file{errno.h}.  The names start with @samp{E} and an upper-case
 letter or digit, and you should consider names of this form to be
 reserved names.  @xref{Reserved Names}.
+@pindex errno.h
 
 The error code values are all positive integers and all distinct.
 (Since the values are distinct, you can use them as labels in a
@@ -121,10 +123,11 @@ open_sesame (char *name)
 @node Error Codes
 @section Error Codes
 
-These macros are defined in the header file @file{<errno.h>}.  All of
+These macros are defined in the header file @file{errno.h}.  All of
 them expand into integer constant values.  Some of these error codes
 can't occur on the GNU system, but they can occur using the GNU library
 on other systems.
+@pindex errno.h
 
 @comment errno.h
 @comment POSIX.1
@@ -629,9 +632,11 @@ An attempt to make an improper link across file systems was detected.
 
 The library contains a couple of other useful functions to produce error
 messages corresponding to values of @code{errno}.  The @code{strerror}
-function, declared in @file{<string.h>}, returns the error message as a
-string; and the @code{perror} function, declared in @file{<stdio.h>},
+function, declared in @file{string.h}, returns the error message as a
+string; and the @code{perror} function, declared in @file{stdio.h},
 prints the error message.@refill
+@pindex stdio.h
+@pindex string.h
 
 @comment string.h
 @comment ANSI

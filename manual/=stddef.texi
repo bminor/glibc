@@ -1,12 +1,12 @@
 @node Common Definitions
-@chapter Common Definitions - @file{<stddef.h>}
-@pindex <stddef.h>
+@chapter Common Definitions
 
 There are some miscellaneous data types and macros that are not part of
 the C language kernel but are nonetheless almost universally used, such
 as the macro @code{NULL}.  In order to use these type and macro
 definitions, your program should include the header file
-@file{<stddef.h>}.
+@file{stddef.h}.
+@pindex stddef.h
 
 @comment stddef.h
 @comment ANSI
@@ -39,7 +39,7 @@ int} or @code{unsigned long int}, since it might be either one of those.
 This is a particular problem when passing values to functions for which
 there is no prototype declared in scope, since the default argument
 promotions can differ from implementation to implementation.  Another
-problem is that there aren't any constants in @file{<limits.h>} to tell
+problem is that there aren't any constants in @file{limits.h} to tell
 you what the minimum and maximum values for these data types are.
 
 @strong{Compatibility Note:}  Types such as @code{size_t} are new

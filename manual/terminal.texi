@@ -55,7 +55,8 @@ be determined.
 @end deftypefun
 
 Prototypes for both @code{isatty} and @code{ttyname} are declared in
-the header file @file{<unistd.h>}.
+the header file @file{unistd.h}.
+@pindex unistd.h
 
 
 @node Input and Output Queues
@@ -96,7 +97,8 @@ not yet transmitted to be discarded.
 
 This section describes the various terminal attributes that you can
 inquire about and change.  The functions, data structures, and symbolic
-constants are all declared in the header file @file{<termios.h>}.
+constants are all declared in the header file @file{termios.h}.
+@pindex termios.h
 
 @menu
 * Terminal Mode Functions::	Descriptions of the functions and data

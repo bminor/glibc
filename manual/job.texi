@@ -974,7 +974,8 @@ to job control.
 
 You can use the @code{ctermid} function to get a file name that
 corresponds to the controlling terminal for the current process.  This
-function is declared in the header file @file{<stdio.h>}.
+function is declared in the header file @file{stdio.h}.
+@pindex stdio.h
 
 @comment stdio.h
 @comment POSIX.1
@@ -1007,8 +1008,10 @@ See also the @code{isatty} and @code{ttyname} functions, in
 @subsection Process Group Functions
 
 Here are descriptions of the functions for manipulating process groups.
-Your program should include the header files @file{<sys/types.h>} and
-@file{<unistd.h>} to use these functions.
+Your program should include the header files @file{sys/types.h} and
+@file{unistd.h} to use these functions.
+@pindex unistd.h
+@pindex sys/types.h
 
 @comment unistd.h
 @comment POSIX.1
@@ -1103,8 +1106,10 @@ the same thing.
 
 These are the functions for inquiring about or modifying the foreground
 process group of a terminal.  You should include the header files
-@file{<sys/types.h>} and @file{<unistd.h>} in your application to use
+@file{sys/types.h} and @file{unistd.h} in your application to use
 these functions.
+@pindex unistd.h
+@pindex sys/types.h
 
 Although these functions take a file descriptor argument to specify
 the terminal device, the foreground job is associated with the terminal
