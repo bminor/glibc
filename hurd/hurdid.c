@@ -64,7 +64,7 @@ _hurd_check_ids (void)
       if (_hurd_id.rid_auth)
 	{
 	  __mach_port_deallocate (__mach_task_self (), _hurd_id.rid_auth);
-	  _hurd_rid_auth = MACH_PORT_NULL;
+	  _hurd_id.rid_auth = MACH_PORT_NULL;
 	}
 
       if (err = __USEPORT (AUTH, __auth_getids
