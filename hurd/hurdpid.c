@@ -19,19 +19,12 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <gnu-stabs.h>
 
-#ifdef noteven
-struct mutex _hurd_pid_lock;
-#endif
 pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 int _hurd_orphaned;
 
 static void
 init_pids (void)
 {
-#ifdef noteven
-  __mutex_init (&_hurd_pid_lock);
-#endif
-
   __USEPORT (PROC,
 	     ({
 	       __proc_getpids (port, &_hurd_pid, &_hurd_ppid, &_hurd_orphaned);
@@ -40,24 +33,35 @@ init_pids (void)
 }
 
 text_set_element (__libc_subinit, init_pids);
+text_set_element (_hurd_fork_child_hook, init_pids);
 
 #include <hurd/msg_server.h>
+
+const struct
+  {
+    size_t n;
+    void (*fn[0]) (pid_t);
+  } _hurd_pgrp_changed_hook;
 
 error_t
 _S_proc_newids (mach_port_t me,
 		task_t task,
 		pid_t ppid, pid_t pgrp, int orphaned)
 {
+  size_t i;
+
   if (task != __mach_task_self ())
     return EPERM;
 
   __mach_port_deallocate (__mach_task_self (), task);
 
-  __mutex_lock (&_hurd_pid_lock);
   _hurd_ppid = ppid;
   _hurd_pgrp = pgrp;
   _hurd_orphaned = orphaned;
-  __mutex_unlock (&_hurd_pid_lock);
+
+  /* Run things that want notification of a pgrp change.  */
+  for (i = 0; i < _hurd_pgrp_changed_hook.n; ++i)
+    (*_hurd_pgrp_changed_hook.fn[i]) (_hurd_pgrp);
 
   return 0;
 }
