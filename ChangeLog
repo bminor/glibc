@@ -1,4 +1,9 @@
-Mon Mar 16 10:49:57 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-03-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/Makefile (CPPFLAGS): Change NLSPATH to also examine
+	directory index by only the language.
+
+1998-03-16 10:49  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/fpu/__math.h (__ieee754_atan2): Reorder conditions
 	to handle x = 0 or y = 0 correctly.
