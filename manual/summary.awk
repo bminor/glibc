@@ -104,7 +104,7 @@ header != 0 && $1 ~ /@def|@item|@vindex/ \
 	    }
 	  }
 	  printf "@comment %s%c", name, 012 # FF
-	  printf "@item%s%c", defn, 012
+	  printf "@item%s%c%c", defn, 012, 012
 	  if (header != -1) printf "%s ", header;
 	  printf "(%s):  @ref{%s}.%c\n", std, node, 012;
 	  header = 0 }
