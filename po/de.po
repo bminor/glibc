@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.2.5\n"
 "POT-Creation-Date: 2001-08-17 13:03-0700\n"
-"PO-Revision-Date: 2002-05-04 16:52+0200\n"
+"PO-Revision-Date: 2002-06-06 09:30+0200\n"
 "Last-Translator: Karl Eichwalder <ke@suse.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -417,7 +417,7 @@ msgstr "%s: Schalt-Zeile in einer nicht-Schaltsekunden-Datei »%s«\n"
 #: timezone/zic.c:365
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
-msgstr "%s: Kein Hauptspeicher mehr verfügbar: %s\n"
+msgstr "%s: Hauptspeicher erschöpft: %s\n"
 
 #: timezone/zic.c:531
 #, c-format
@@ -452,7 +452,7 @@ msgstr "%s: Zu viele Argumente\n"
 #: locale/programs/ld-collate.c:457 locale/programs/ld-collate.c:483 locale/programs/ld-collate.c:499
 #, c-format
 msgid "%s: `%s' mentioned more than once in definition of weight %d"
-msgstr ""
+msgstr "%s: »%s« ist mehr als einmal in der Definition der Gewichtung %d genannt"
 
 # CHECKIT -ke-
 #: locale/programs/ld-collate.c:1336
@@ -503,7 +503,7 @@ msgstr ""
 #: locale/programs/ld-collate.c:3327
 #, c-format
 msgid "%s: cannot reorder after %.*s: symbol not known"
-msgstr ""
+msgstr "%s: es ist nicht möglich, nach %.*s neu zu sortieren: Symbol ist unbekannt"
 
 #: locale/programs/ld-ctype.c:2912 locale/programs/ld-ctype.c:2996 locale/programs/ld-ctype.c:3016 locale/programs/ld-ctype.c:3037 locale/programs/ld-ctype.c:3058 locale/programs/ld-ctype.c:3079 locale/programs/ld-ctype.c:3100 locale/programs/ld-ctype.c:3140 locale/programs/ld-ctype.c:3161 locale/programs/ld-ctype.c:3228
 #, c-format
@@ -541,9 +541,9 @@ msgid "%s: direction flag in string %Zd in `era' field is not a single character
 msgstr "Der Richtungsanzeiger in der Zeichenkette %d im »era«-Feld in der Kategorie »%s« ist kein einzelnes Zeichen"
 
 #: locale/programs/ld-ctype.c:2729
-#, fuzzy, c-format
+#, c-format
 msgid "%s: duplicate `default_missing' definition"
-msgstr "%s: doppelte »set«-Definition"
+msgstr "%s: doppelte »default_missing«-Definition"
 
 #: locale/programs/ld-identification.c:431
 #, fuzzy, c-format
@@ -568,9 +568,9 @@ msgid "%s: empty category description not allowed"
 msgstr ""
 
 #: locale/programs/ld-collate.c:755
-#, fuzzy, c-format
+#, c-format
 msgid "%s: empty weight string not allowed"
-msgstr "Leerer Name der Sortiergewichtung: Die Zeile wird ignoriert"
+msgstr ""
 
 #: locale/programs/charmap.c:836
 #, c-format
@@ -580,12 +580,12 @@ msgstr "%s: Fehler im (intern verwendeten) endlichen Automaten"
 #: locale/programs/ld-address.c:489 locale/programs/ld-address.c:526 locale/programs/ld-address.c:564 locale/programs/ld-ctype.c:2485 locale/programs/ld-identification.c:360 locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:300 locale/programs/ld-monetary.c:694 locale/programs/ld-monetary.c:729 locale/programs/ld-monetary.c:770 locale/programs/ld-name.c:278 locale/programs/ld-numeric.c:263 locale/programs/ld-paper.c:221 locale/programs/ld-telephone.c:288 locale/programs/ld-time.c:1104 locale/programs/ld-time.c:1146
 #, c-format
 msgid "%s: field `%s' declared more than once"
-msgstr ""
+msgstr "%s: Feld »%s« ist mehr als einmal deklariert"
 
 #: locale/programs/ld-ctype.c:1526 locale/programs/ld-ctype.c:1651 locale/programs/ld-ctype.c:1757 locale/programs/ld-ctype.c:2348 locale/programs/ld-ctype.c:3331
 #, c-format
 msgid "%s: field `%s' does not contain exactly ten entries"
-msgstr ""
+msgstr "%s: Feld »%s« beinhaltet nicht genau 10 Einträge"
 
 # CHECKIT field mit "Eintrag" übersetzen? -ke-
 #: locale/programs/ld-address.c:154 locale/programs/ld-address.c:205 locale/programs/ld-address.c:230 locale/programs/ld-address.c:259 locale/programs/ld-name.c:115 locale/programs/ld-telephone.c:117
@@ -594,14 +594,14 @@ msgid "%s: field `%s' must not be empty"
 msgstr "%s: Feld »%s« darf nicht leer sein"
 
 #: locale/programs/ld-address.c:142 locale/programs/ld-address.c:180 locale/programs/ld-address.c:197 locale/programs/ld-address.c:224 locale/programs/ld-address.c:284 locale/programs/ld-address.c:303 locale/programs/ld-address.c:315 locale/programs/ld-identification.c:145 locale/programs/ld-measurement.c:104 locale/programs/ld-monetary.c:206 locale/programs/ld-monetary.c:244 locale/programs/ld-monetary.c:260 locale/programs/ld-monetary.c:272 locale/programs/ld-name.c:104 locale/programs/ld-name.c:141 locale/programs/ld-numeric.c:113 locale/programs/ld-numeric.c:127 locale/programs/ld-paper.c:101 locale/programs/ld-paper.c:109 locale/programs/ld-telephone.c:105 locale/programs/ld-telephone.c:163 locale/programs/ld-time.c:175 locale/programs/ld-time.c:195
-#, fuzzy, c-format
+#, c-format
 msgid "%s: field `%s' not defined"
-msgstr "Der Eintrag »%s« in der Kategorie »%s« ist nicht definiert"
+msgstr "%s: Feld »%s« ist nicht definiert"
 
 #: locale/programs/ld-messages.c:115 locale/programs/ld-messages.c:148
-#, fuzzy, c-format
+#, c-format
 msgid "%s: field `%s' undefined"
-msgstr "Der Eintrag »%s« in der Kategorie »%s« ist nicht definiert"
+msgstr "%s: Feld »%s« ist nicht definiert"
 
 #: locale/programs/ld-time.c:279
 #, fuzzy, c-format
@@ -626,17 +626,17 @@ msgstr "%s: Die Option ist nicht erlaubt -- »%c«\n"
 #: locale/programs/ld-address.c:578 locale/programs/ld-collate.c:3738 locale/programs/ld-ctype.c:2846 locale/programs/ld-identification.c:445 locale/programs/ld-measurement.c:234 locale/programs/ld-messages.c:329 locale/programs/ld-monetary.c:934 locale/programs/ld-name.c:303 locale/programs/ld-numeric.c:373 locale/programs/ld-paper.c:236 locale/programs/ld-telephone.c:311 locale/programs/ld-time.c:1197
 #, c-format
 msgid "%s: incomplete `END' line"
-msgstr ""
+msgstr "%s: unvollständige »END«-Zeile"
 
 #: locale/programs/ld-address.c:166
 #, c-format
 msgid "%s: invalid escape `%%%c' sequence in field `%s'"
-msgstr ""
+msgstr "%s: ungültige Escape-Sequenz »%%%c« im Feld »%s«"
 
 #: locale/programs/ld-name.c:127 locale/programs/ld-telephone.c:126 locale/programs/ld-telephone.c:150
-#, fuzzy, c-format
+#, c-format
 msgid "%s: invalid escape sequence in field `%s'"
-msgstr "ungültige Escape-Sequenz am Ende der Zeichenkette"
+msgstr "%s: ungültige Escape-Sequenz im Feld »%s«"
 
 #: locale/programs/ld-time.c:271
 #, fuzzy, c-format
@@ -646,7 +646,7 @@ msgstr "ungültige Nummer für den Offset in der Zeichenkette %d im »era«-Feld in 
 #: locale/programs/ld-collate.c:3162
 #, c-format
 msgid "%s: invalid number of sorting rules"
-msgstr ""
+msgstr "%s: ungültige Anzahl von Sortierregeln"
 
 #: posix/getopt.c:896 posix/getopt.c:899
 #, c-format
@@ -664,14 +664,14 @@ msgid "%s: invalid stopping date in string %Zd in `era' field"
 msgstr "ungültiges Ende-Datum in der Zeichenkette %d im »era«-Feld in der Kategorie »%s«"
 
 #: locale/programs/ld-measurement.c:112
-#, fuzzy, c-format
+#, c-format
 msgid "%s: invalid value for field `%s'"
-msgstr "%s: Panik: ungültiger »l_value« %d\n"
+msgstr "%s: ungültiger Wert für Feld »l_value«"
 
 #: locale/programs/ld-address.c:242 locale/programs/ld-address.c:270
 #, c-format
 msgid "%s: language abbreviation `%s' not defined"
-msgstr ""
+msgstr "%s: Sprachabkürzung »%s« ist nicht definiert"
 
 #: resolv/res_hconf.c:366
 #, c-format
@@ -679,9 +679,9 @@ msgid "%s: line %d: bad command `%s'\n"
 msgstr ""
 
 #: resolv/res_hconf.c:165
-#, fuzzy, c-format
+#, c-format
 msgid "%s: line %d: cannot specify more than %d services"
-msgstr "Es darf nicht mehr als eine Eingabedatei angegeben werden!\n"
+msgstr "%s: Zeile %d: es ist nicht möglich, mehr als %d Dienste anzugeben"
 
 #: resolv/res_hconf.c:231
 #, c-format
@@ -701,7 +701,7 @@ msgstr ""
 #: resolv/res_hconf.c:395
 #, c-format
 msgid "%s: line %d: ignoring trailing garbage `%s'\n"
-msgstr ""
+msgstr "%s: Zeile %d: unsinnige Einträge »%s« am Ende werden ignoriert\n"
 
 #: resolv/res_hconf.c:256
 #, c-format
@@ -729,19 +729,19 @@ msgid "%s: missing `reorder-sections-end' keyword"
 msgstr ""
 
 #: locale/programs/ld-time.c:456
-#, fuzzy, c-format
+#, c-format
 msgid "%s: missing era format in string %Zd in `era' field"
-msgstr "fehlendes »era«-Format in der Zeichenkette %d im »era«-Feld in der Kategorie »%s«"
+msgstr "%s: fehlendes »era«-Format in der Zeichenkette %Zd im »era«-Feld"
 
 #: locale/programs/ld-time.c:444
-#, fuzzy, c-format
+#, c-format
 msgid "%s: missing era name in string %Zd in `era' field"
-msgstr "fehlender »era«-Name in der Zeichenkette %d im »era« Feld in der Kategorie »%s«"
+msgstr "%s: fehlender »era«-Name in der Zeichenkette %Zd im »era«-Feld"
 
 #: locale/programs/ld-collate.c:3138
 #, fuzzy, c-format
 msgid "%s: multiple order definitions for section `%s'"
-msgstr "Mehrfache Definition des Eintrages »%.*s«"
+msgstr "%s: Mehrfache Definition des Eintrages »%.*s«"
 
 #: locale/programs/ld-collate.c:3188
 #, c-format
@@ -749,14 +749,14 @@ msgid "%s: multiple order definitions for unnamed section"
 msgstr ""
 
 #: locale/programs/ld-messages.c:137 locale/programs/ld-messages.c:170
-#, fuzzy, c-format
+#, c-format
 msgid "%s: no correct regular expression for field `%s': %s"
-msgstr "Kein gültiger regulärer Ausdruck für den Eintrag »%s« in der Kategorie »%s«: %s"
+msgstr "%s: kein gültiger regulärer Ausdruck für das Feld »%s«: %s"
 
 #: locale/programs/ld-identification.c:169
 #, fuzzy, c-format
 msgid "%s: no identification for category `%s'"
-msgstr "Kann die Ausgabedatei »%s« für die Kategorie »%s« nicht öffnen"
+msgstr "%s: Kann die Ausgabedatei »%s« für die Kategorie »%s« nicht öffnen"
 
 #: locale/programs/ld-ctype.c:2755
 #, c-format
@@ -766,12 +766,12 @@ msgstr ""
 #: locale/programs/ld-collate.c:591
 #, c-format
 msgid "%s: not enough sorting rules"
-msgstr ""
+msgstr "%s: Nicht genügend viele Sortierregeln"
 
 #: locale/programs/ld-address.c:295
 #, c-format
 msgid "%s: numeric country code `%d' not valid"
-msgstr ""
+msgstr "%s: Der numerische Ländercode »%d« ist nicht gültig"
 
 #: posix/getopt.c:743 posix/getopt.c:748
 #, c-format
@@ -811,7 +811,7 @@ msgstr "%s: Diese Option benötigt ein Argument -- »%c«\n"
 #: locale/programs/ld-collate.c:1327 locale/programs/ld-collate.c:3675
 #, fuzzy, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
-msgstr "Die Zeichensatzbeschreibung »%s« ist bereits definiert"
+msgstr "%s: Die Zeichensatzbeschreibung »%s« ist bereits definiert"
 
 # Hat hier jemand eine bessere Übersetzung? -- jh
 # Leider nein.  Ich würde es nur groß schreiben und auch im folgenden üs. ke
@@ -924,7 +924,7 @@ msgstr ""
 #: locale/programs/ld-collate.c:906
 #, fuzzy, c-format
 msgid "%s: too many values"
-msgstr "%s: Zu viele Argumente\n"
+msgstr "%s: Zu viele Werte"
 
 #: locale/programs/ld-time.c:1030
 #, c-format
@@ -1338,7 +1338,7 @@ msgstr "Kein Server für diese NIS-Domain gefunden"
 
 #: elf/ldconfig.c:1008
 msgid "Can't chdir to /"
-msgstr ""
+msgstr "Wechsel in das Verzeichnis / nicht möglich"
 
 #: nis/ypclnt.c:806
 msgid "Can't communicate with portmapper"
@@ -1353,19 +1353,19 @@ msgid "Can't communicate with ypserv"
 msgstr "Keine Kommunikation mit »ypserv« möglich"
 
 #: elf/cache.c:394
-#, fuzzy, c-format
+#, c-format
 msgid "Can't create temporary cache file %s"
-msgstr "Kann die Lokale-Datei »%s« nicht lesen"
+msgstr "Es ist nicht möglich, die temporäre Cache-Datei %s zu erzeugen"
 
 #: elf/ldconfig.c:512
 #, c-format
 msgid "Can't find %s"
-msgstr ""
+msgstr "%s ist nicht zu finden"
 
 #: elf/ldconfig.c:449
-#, fuzzy, c-format
+#, c-format
 msgid "Can't link %s to %s"
-msgstr "%s: Kann nicht von »%s« nach »%s« linken: %s\n"
+msgstr "Es ist nicht möglich, von »%s« nach »%s« zu linken"
 
 #: elf/ldconfig.c:528
 #, c-format
@@ -1375,12 +1375,12 @@ msgstr ""
 #: elf/cache.c:131 elf/ldconfig.c:1029
 #, fuzzy, c-format
 msgid "Can't open cache file %s\n"
-msgstr "Kann die Eingabedatei »%s« nicht öffnen"
+msgstr "Kann die Cachedatei »%s« nicht öffnen\n"
 
 #: elf/ldconfig.c:1050
 #, fuzzy, c-format
 msgid "Can't open cache file directory %s\n"
-msgstr "Kann das Lokale-Verzeichnis »%s« nicht lesen"
+msgstr "Kann das Verzeichnis %s der Cachedatei nicht öffnen\n"
 
 #: elf/ldconfig.c:924
 #, fuzzy, c-format
@@ -1390,7 +1390,7 @@ msgstr "Kann die Eingabedatei »%s« nicht öffnen"
 #: elf/ldconfig.c:634
 #, fuzzy, c-format
 msgid "Can't open directory %s"
-msgstr "%s: Kann das Verzeichnis »%s« nicht erzeugen: %s\n"
+msgstr "%s: Kann das Verzeichnis %s nicht öffnen"
 
 #: elf/cache.c:387
 #, c-format
@@ -1410,7 +1410,7 @@ msgstr "%s: Kann »%s« nicht erzeugen: %s\n"
 #: elf/ldconfig.c:443
 #, fuzzy, c-format
 msgid "Can't unlink %s"
-msgstr "%s: Kann den Verzeichniseintrag »%s« nicht löschen (unlink): %s\n"
+msgstr "Kann %s nicht löschen (unlink)"
 
 #. TRANS No memory available.  The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
@@ -1450,7 +1450,7 @@ msgstr "Es ist nicht möglich, den Status (lstat()) der Datei %s zu lesen"
 #: elf/readlib.c:118
 #, fuzzy, c-format
 msgid "Cannot mmap file %s.\n"
-msgstr "Kann die Eingabedatei »%s« nicht öffnen"
+msgstr "Kann die Datei %s nicht einblenden\n"
 
 #: sunrpc/pmap_rmt.c:361
 msgid "Cannot receive reply to broadcast"
@@ -1715,11 +1715,11 @@ msgstr "Die Domain wurde nicht zugewiesen"
 
 #: elf/ldconfig.c:124
 msgid "Don't build cache"
-msgstr ""
+msgstr "Keinen Cache anlegen"
 
 #: elf/ldconfig.c:125
 msgid "Don't generate links"
-msgstr ""
+msgstr "Keine Links erzeugen"
 
 #: debug/pcprofiledump.c:56
 msgid "Dump information generated by PC profiling."
@@ -1772,7 +1772,7 @@ msgstr "Die Typen des Eintrages/der Tabelle passen nicht zusammen"
 #: nss/getent.c:127 nss/getent.c:292
 #, fuzzy, c-format
 msgid "Enumeration not supported on %s\n"
-msgstr "Die Operation wird nicht unterstützt"
+msgstr "Aufzählung von %s nicht unterstützt\n"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:30
 msgid "Error 0"
@@ -1915,9 +1915,8 @@ msgid "Error while talking to callback proc"
 msgstr "Fehler bei der Kommunikation mit der Callback-Prozedur"
 
 #: timezone/zdump.c:268
-#, fuzzy
 msgid "Error writing standard output"
-msgstr "Standardausgabe"
+msgstr "Fehler beim Schreiben zur Standardausgabe"
 
 #: inet/ruserpass.c:184
 msgid "Error: .netrc file is readable by others."
@@ -1953,7 +1952,7 @@ msgstr ""
 #: elf/readlib.c:109
 #, c-format
 msgid "File %s is too small, not checked."
-msgstr ""
+msgstr "Datei %s ist zu klein; keine Überprüfung."
 
 #: stdio-common/../sysdeps/gnu/errlist.c:781 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:111
 msgid "File descriptor in bad state"
@@ -2155,7 +2154,7 @@ msgstr "Bezeichner wurde entfernt"
 #: elf/ldconfig.c:535
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
-msgstr ""
+msgstr "Datei %s übergangen, da sie keine reguläre Datei ist."
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:118
 msgid "Illegal byte sequence"
@@ -2447,7 +2446,7 @@ msgstr "Fehler beim Anfordern von Hauptspeicher"
 
 #: posix/regex.c:1402
 msgid "Memory exhausted"
-msgstr "Kein Hauptspeicher mehr verfügbar"
+msgstr "Hauptspeicher erschöpft"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:82
 msgid "Message tables full"
@@ -2978,7 +2977,7 @@ msgstr "Das übergebene Objekt ist nicht dasselbe Objekt auf dem Server"
 #: elf/ldconfig.c:282
 #, c-format
 msgid "Path `%s' given more than once"
-msgstr ""
+msgstr "Pfad »%s« mehrfach angegeben"
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
 #: nis/nis_error.c:39 nis/ypclnt.c:818 stdio-common/../sysdeps/gnu/errlist.c:109 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:43
@@ -2995,7 +2994,7 @@ msgstr "Unerwartetes Ende des regulären Ausdruckes"
 
 #: elf/ldconfig.c:122
 msgid "Print cache"
-msgstr ""
+msgstr "Cache ausgeben"
 
 #: nscd/nscd.c:89
 msgid "Print current configuration statistic"
@@ -3030,6 +3029,7 @@ msgstr "Die Operation wird bereits ausgeführt"
 msgid "Profiling timer expired"
 msgstr "Zeitnehmer zur Laufzeitbestimmung ist abgelaufen"
 
+# Checkit -ke-
 #: stdio-common/../sysdeps/gnu/errlist.c:709 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:72
 msgid "Protocol driver not attached"
 msgstr "Das Protokoll ist nicht verfügbar"
@@ -4359,7 +4359,7 @@ msgstr "Konvertierung von »%s« nach »%s« wird nicht unterstützt"
 #: catgets/gencat.c:1289
 #, fuzzy
 msgid "conversion modules not available"
-msgstr "Das Programm %lu ist in der Version %lu nicht verfügbar\n"
+msgstr "Konvertierungsmodule nicht erfügbar"
 
 #: locale/programs/ld-monetary.c:902
 msgid "conversion rate value cannot be zero"
@@ -4822,7 +4822,7 @@ msgstr "Der Speicher nach dem Ende des allozierten Blockes wurde überschrieben\n
 
 #: locale/programs/xmalloc.c:70 malloc/obstack.c:489 malloc/obstack.c:493 posix/getconf.c:996
 msgid "memory exhausted"
-msgstr "Kein Hauptspeicher mehr verfügbar"
+msgstr "Hauptspeicher erschöpft"
 
 #: malloc/mcheck.c:293
 msgid "memory is consistent, library is buggy\n"
@@ -4970,7 +4970,7 @@ msgstr "Die Reihenfolge von `%.*s' ist bereits bei %s:%Zu definiert"
 
 #: inet/ruserpass.c:170 inet/ruserpass.c:193
 msgid "out of memory"
-msgstr "Der Hauptspeicher ist erschöpft"
+msgstr "Hauptspeicher erschöpft"
 
 #: iconv/iconv_prog.c:66
 msgid "output file"
@@ -5152,12 +5152,11 @@ msgstr "Das Startjahr ist zu klein für die Darstellung"
 
 #: iconv/iconv_prog.c:67
 msgid "suppress warnings"
-msgstr ""
+msgstr "Warnungen unterdrücken"
 
 #: sunrpc/svc_run.c:76
-#, fuzzy
 msgid "svc_run: - poll failed"
-msgstr "svc_run - »select« ist fehlgeschlagen"
+msgstr "svc_run - »poll« ist fehlgeschlagen"
 
 #: sunrpc/svc_tcp.c:171
 msgid "svc_tcp.c - cannot getsockname or listen"
@@ -5220,7 +5219,7 @@ msgstr "Unbekanntes Symbol »%.*s«: Die Zeile wurde ignoriert"
 #: locale/programs/ld-collate.c:1630 locale/programs/ld-collate.c:1729
 #, c-format
 msgid "symbol `%s'"
-msgstr ""
+msgstr "Symbol »%s«"
 
 #: locale/programs/ld-collate.c:1627 locale/programs/ld-collate.c:1726
 #, c-format
@@ -5490,12 +5489,10 @@ msgid "wrong number of fields on Zone line"
 msgstr "Falsche Anzahl an Feldern in der Zone-Zeile"
 
 #: sunrpc/xdr_array.c:106 sunrpc/xdr_array.c:109
-#, fuzzy
 msgid "xdr_array: out of memory\n"
 msgstr "xdrrec_create: Hauptspeicher erschöpft\n"
 
 #: sunrpc/xdr.c:558 sunrpc/xdr.c:561
-#, fuzzy
 msgid "xdr_bytes: out of memory\n"
 msgstr "xdrrec_create: Hauptspeicher erschöpft\n"
 
@@ -5504,7 +5501,6 @@ msgid "xdr_reference: out of memory\n"
 msgstr "xdr_reference: Hauptspeicher erschöpft\n"
 
 #: sunrpc/xdr.c:710 sunrpc/xdr.c:713
-#, fuzzy
 msgid "xdr_string: out of memory\n"
 msgstr "xdr_reference: Hauptspeicher erschöpft\n"
 
