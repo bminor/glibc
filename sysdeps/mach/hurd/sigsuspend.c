@@ -28,34 +28,49 @@ int
 DEFUN(sigsuspend, (set), CONST sigset_t *set)
 {
   struct hurd_sigstate *ss;
-  sigset_t newmask, oldmask;
+  sigset_t newmask, oldmask, pending;
+  mach_port_t wait;
+  mach_msg_header_t msg;
 
   if (set != NULL)
     /* Crash before locking.  */
     newmask = *set;
 
+  /* Get a fresh port we will wait on.  */
+  wait = __mach_reply_port ();
+
   ss = _hurd_self_sigstate ();
+
   oldmask = ss->blocked;
   if (set != NULL)
+    /* Change to the new blocked signal mask.  */
     ss->blocked = newmask & ~_SIG_CANT_MASK;
 
-  /* Set the `suspended' bit and wait for a condition_signal on
-     SS->arrived.  When a signal arrives and SS->suspended is set, the
-     signal thread does condition_signal (&SS->arrived) after clearing
-     SS->suspended.  */
-  ss->suspended = 1;
-  do
-    {
-#ifdef noteven
-      __condition_wait (&ss->arrived, &ss->lock);
-#else  /* XXX */
-      __mutex_unlock (&ss->lock); __swtch (); __mutex_lock (&ss->lock);
-#endif
-    } while (ss->suspended);
+  /* Notice if any pending signals just became unblocked.  */
+  pending = ss->pending & ~ss->blocked;
 
-  ss->blocked = oldmask;
+  /* Tell the signal thread to message us when a signal arrives.  */
+  ss->suspended = wait;
   __mutex_unlock (&ss->lock);
 
+  if (pending)
+    /* Tell the signal thread to check for pending signals.  */
+    __sig_post (_hurd_msgport, 0, __mach_task_self ());
+
+  /* Wait for the signal thread's message.  */
+  __mach_msg (msg, MACH_MSG_RCV, 0, sizeof (msg), wait,
+	      MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
+  __mach_port_destroy (__mach_task_self (), wait);
+
+  __mutex_lock (&ss->lock);
+  ss->blocked = oldmask;	/* Restore the old mask.  */
+  pending = ss->pending & ~ss->blocked;	/* Again check for pending signals.  */
+  __mutex_unlock (&ss->lock);
+
+  if (pending)
+    /* Tell the signal thread to check for pending signals.  */
+    __sig_post (_hurd_msgport, 0, __mach_task_self ());
+    
   /* We've been interrupted!  And a good thing, too.
      Otherwise we'd never return.
      That's right; this function always returns an error.  */
