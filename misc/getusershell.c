@@ -110,7 +110,7 @@ initshells()
 		(void)fclose(fp);
 		return(okshells);
 	}
-	if ((strings = malloc((unsigned)statb.st_size)) == NULL) {
+	if ((strings = malloc((unsigned)statb.st_size + 1)) == NULL) {
 		(void)fclose(fp);
 		return(okshells);
 	}
@@ -123,7 +123,7 @@ initshells()
 	}
 	sp = shells;
 	cp = strings;
-	while (fgets(cp, MAXPATHLEN + 1, fp) != NULL) {
+	while (fgets(cp, strings + statb.st_size - cp, fp) != NULL) {
 		while (*cp != '#' && *cp != '/' && *cp != '\0')
 			cp++;
 		if (*cp == '#' || *cp == '\0')

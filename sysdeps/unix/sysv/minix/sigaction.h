@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* These definitions match those used by the 4.4 BSD kernel.
-   If the operating system has a `sigaction' system call that correctly
-   implements the POSIX.1 behavior, there should be a system-dependent
-   version of this file that defines `struct sigaction' and the `SA_*'
-   constants appropriately.  */
-
 /* Structure describing the action to be taken when a signal arrives.  */
 struct sigaction
   {
@@ -36,15 +30,20 @@ struct sigaction
   };
 
 /* Bits in `sa_flags'.  */
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 #define	SA_ONSTACK	0x1	/* Take signal on signal stack.  */
-#define	SA_RESTART	0x2	/* Don't restart syscall on signal return.  */
-#define	SA_DISABLE	0x4	/* Disable alternate signal stack.  */
+#define	SA_RESETHAND	0x2	/* Reset signal handler when signal caught.  */
+#define	SA_NODEFER	0x4	/* Don't block signal while catching it.  */
+#define	SA_RESTART	0x8	/* Don't restart syscall on signal return.  */
+#define	SA_SIGINFO	0x10	/* Extended signal handling.  */
+#define	SA_NOCLDWAIT	0x20	/* Don't create zombies.  */
+#define	SA_COMPAT	0x80	/* Internal flag for old signal catchers.  */
+#define	SA_DISABLE	0x100	/* Disable alternate signal stack.  */
 #endif
-#define	SA_NOCLDSTOP	0x8	/* Don't send SIGCHLD when children stop.  */
+#define	SA_NOCLDSTOP	0x40	/* Don't send SIGCHLD when children stop.  */
 
 
 /* Values for the HOW argument to `sigprocmask'.  */
-#define	SIG_BLOCK	1	/* Block signals.  */
-#define	SIG_UNBLOCK	2	/* Unblock signals.  */
-#define	SIG_SETMASK	3	/* Set the set of blocked signals.  */
+#define	SIG_BLOCK	0	/* Block signals.  */
+#define	SIG_UNBLOCK	1	/* Unblock signals.  */
+#define	SIG_SETMASK	2	/* Set the set of blocked signals.  */
