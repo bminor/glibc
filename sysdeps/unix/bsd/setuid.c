@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,13 +20,14 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/types.h>
 
 /* Set the user ID of the calling process to UID.
    If the calling process is the super-user, the real
    and effective user IDs, and the saved set-user-ID to UID;
    if not, the effective user ID is set to UID.  */
 int
-DEFUN(__setuid, (uid), int uid)
+DEFUN(__setuid, (uid), uid_t uid)
 {
-  return __setreuid(uid, uid);
+  return __setreuid (uid, uid);
 }
