@@ -405,7 +405,11 @@ __printf_fphex (FILE *fp,
 	}
     }
   else
-    numend = numstr;
+    {
+      if (precision == -1)
+	precision = 0;
+      numend = numstr;
+    }
 
   /* Now we can compute the exponent string.  */
   expstr = _itoa_word (exponent, expbuf + sizeof expbuf, 10, 0);
@@ -420,7 +424,7 @@ __printf_fphex (FILE *fp,
 
   /* A special case when the mantissa or the precision is zero and the `#'
      is not given.  In this case we must not print the decimal point.  */
-  if ((zero_mantissa || precision == 0) && !info->alt)
+  if (precision == 0 && !info->alt)
     ++width;		/* This nihilates the +1 for the decimal-point
 			   character in the following equation.  */
 
@@ -438,10 +442,10 @@ __printf_fphex (FILE *fp,
   outchar (info->spec == 'A' ? 'X' : 'x');
   outchar (leading);
 
-  if ((!zero_mantissa && precision > 0) || info->alt)
+  if (precision > 0 || info->alt)
     outchar (decimal);
 
-  if (!zero_mantissa && precision > 0)
+  if (precision > 0)
     {
       PRINT (numstr, MIN (numend - numstr, precision));
       if (precision > numend - numstr)
