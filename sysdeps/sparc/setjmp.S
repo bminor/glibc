@@ -19,7 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include "DEFS.h"
 
 FUNC (___setjmp)
+	/* Save our return PC and SP.  */
 	st %o7, [%o0]
-	st %fp, [%o0 + 4]
+	st %sp, [%o0 + 4]
 	retl
 	clr %o0
