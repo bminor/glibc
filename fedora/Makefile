@@ -16,32 +16,23 @@ on-branch = $(filter-out HEAD,$(glibc-base))
 snapshot-date := $($(glibc-branch)-sync-date)
 snapshot-name := $(shell date -u -d '$(snapshot-date)' $(snapshot-name-fmt))
 
-ifeq ($(glibc-base),HEAD)
-tar-name := glibc
-select-snapshot = -D '$(snapshot-date)'
-snapshot-id = $(glibc-base):$(snapshot-date)
-else
-tar-name := glibc-$(subst _,.,$(patsubst glibc-%-branch,%,$(glibc-base)))
+tar-name := glibc-$(subst _,.,$(patsubst glibc-%-branch,%,\
+					 $(filter-out HEAD,$(glibc-base))))
 select-snapshot = -r '$($(glibc-branch)-sync-tag)'
 snapshot-id = $($(glibc-branch)-sync-tag)
-endif
 
 
 update:
 	now=`date -u $(snapshot-date-fmt)`; \
 	name=`date -u -d "$$now" $(snapshot-name-fmt)`; \
-	$(if $(on-branch),\
-	  old="$(tag-prefix)$(tar-name)-$$name; \
-	  new="$(tag-prefix)$(tar-name)$(snapshot-name)"; \
-	  cvs -Q rtag -r $(glibc-base) $$new libc; \
-	, old="$(glibc-base):$(snapshot-date)"; \
-	  new="$(glibc-base):$$now"; \
-	) \
+	old="$(tag-prefix)$(tar-name)-$(snapshot-name)"; \
+	new="$(tag-prefix)$(tar-name)-$$name"; \
+	cvs -Q rtag $(if $(on-branch),-r $(glibc-base),-D "$$now") $$new libc;\
 	(echo '# This file is updated automatically by Makefile.'; \
 	 echo 'glibc-branch := $(glibc-branch)'; \
 	 echo 'glibc-base := $(glibc-base)'; \
 	 echo "$(glibc-branch)-sync-date := $$now"; \
-	 $(if $(on-branch),echo "$(glibc-branch)-sync-tag := $$new";) \
+	 echo "$(glibc-branch)-sync-tag := $$new"; \
 	) > branch.mk; \
 	cd ..; (set -x; cvs -q update -d -P -j"$$old" -j"$$new") \
 		   2>&1 | tee fedora/update.log
