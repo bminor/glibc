@@ -29,9 +29,13 @@ Cambridge, MA 02139, USA.  */
 #define	__need_Emath
 #include <errno.h>
 
-/* Get HUGE_VAL (returned on overflow) from <float.h>.  */
-#define	__need_HUGE_VAL
-#include <float.h>
+/* Get machine-dependent HUGE_VAL value (returned on overflow).  */
+#include <huge_val.h>
+
+/* Get machine-dependent NAN value (returned for some domain errors).  */
+#ifdef	 __USE_GNU
+#include <nan.h>
+#endif
 
 
 #ifndef	__CONSTVALUE
