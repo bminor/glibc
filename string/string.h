@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -100,7 +100,7 @@ extern size_t EXFUN(strspn, (CONST char *__s, CONST char *__accept));
 /* Find the first occurence in S of any character in ACCEPT.  */
 extern char *EXFUN(strpbrk, (CONST char *__s, CONST char *__accept));
 /* Find the first occurence of NEEDLE in HAYSTACK.  */
-extern char *EXFUN(strstr, (CONST char *__needle, CONST char *__haystack));
+extern char *EXFUN(strstr, (CONST char *__haystack, CONST char *__needle));
 /* Divide S into tokens separated by characters in DELIM.  */
 extern char *EXFUN(strtok, (char *__s, CONST char *__delim));
 
