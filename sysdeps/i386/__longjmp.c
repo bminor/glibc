@@ -27,25 +27,29 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 
+#define REGS \
+  REG (bx);\
+  REG (si);\
+  REG (di);\
+  REG (bp);\
+  REG (sp)
+
+#define REG(xx) register long int xx asm (#xx)
+REG (ax);
+REGS;
+#undef	REG
+
 /* Jump to the position specified by ENV, causing the
    setjmp call there to return VAL, or 1 if VAL is 0.  */
 __NORETURN
 void
 DEFUN(__longjmp, (env, val), CONST jmp_buf env AND int val)
 {
-  register long int bp asm("bp"), ax asm("ax");
-
-  if (env[0].__bp != bp)
-    {
-      asm("movl %0, %%ebx" : : "g" (env[0].__bx) : "bx");
-      asm("movl %0, %%esi" : : "g" (env[0].__si) : "si");
-      asm("movl %0, %%edi" : : "g" (env[0].__di) : "di");
-      asm("movl %0, %%ebp" : : "g" (env[0].__bp) : "bp");
-      asm("movl %0, %%esp" : : "g" (env[0].__sp) : "sp");
-    }
+#define	REG(xx)	xx = (long int) env[0].__##xx
+  REGS;
 
   ax = val == 0 ? 1 : val;
-  asm volatile ("jmp %*%0" : : "g" (env[0].__dx));
+  asm volatile ("jmp %*%0" : : "g" (env[0].__pc));
 
   /* NOTREACHED */
   abort ();
