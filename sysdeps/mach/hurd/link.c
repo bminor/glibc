@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ DEFUN(__link, (from, to), CONST char *from AND CONST char *to)
   if (oldfile == MACH_PORT_NULL)
     return -1;
   err = __file_getlinknode (oldfile, &linknode);
-  if (err == POSIX_EOPNOTSUPP)
+  if (err == EOPNOTSUPP)
     linknode = oldfile;
   else
     __mach_port_deallocate (__mach_task_self (), oldfile);
