@@ -31,18 +31,12 @@ DEFUN(__unlink, (name), CONST char *name)
   CONST char *file;
 
   if (err = __hurd_path_split (name, &dir, &file))
-    {
-      errno = __hurd_errno (err);
-      return -1;
-    }
+    return __hurd_fail (err);
 
   err = __dir_unlink (dir, file);
   __mach_port_deallocate (__mach_task_self (), dir);
 
   if (err)
-    {
-      errno = __hurd_errno (err);
-      return -1;
-    }
+    return __hurd_fail (err);
   return 0;
 }
