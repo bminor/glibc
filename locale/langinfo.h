@@ -1,5 +1,5 @@
 /* Access to locale-dependent parameters.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -209,6 +209,10 @@ enum
   _NL_CTYPE_CODESET_NAME,
   CODESET = _NL_CTYPE_CODESET_NAME,
 #define CODESET			CODESET
+  _NL_CTYPE_TOUPPER32_EB,
+  _NL_CTYPE_TOLOWER32_EB,
+  _NL_CTYPE_TOUPPER32_EL,
+  _NL_CTYPE_TOLOWER32_EL,
   _NL_NUM_LC_CTYPE,
 
   /* LC_MONETARY category: formatting of monetary quantities.
