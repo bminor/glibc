@@ -7,6 +7,11 @@
 #include <bstring.h>
 #include <fcntl.h>
 
+#ifndef HAVE_GNU_LD
+#define _sys_nerr	sys_nerr
+#define _sys_errlist	sys_errlist
+#endif
+
 #define	STREQ(a, b)	(strcmp((a), (b)) == 0)
 
 CONST char *it = "<UNSET>";	/* Routine name for message routines. */
