@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,24 +26,16 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(fchdir, (fd), int fd)
 {
-  file_t old;
+  error_t err;
+  file_t cwdir;
 
-  __mutex_lock (&_hurd_dtable.lock);
-  if (fd < 0 || fd >= _hurd_dtable.size ||
-      _hurd_dtable.d[fd].server == MACH_PORT_NULL)
-    {
-      __mutex_unlock (&_hurd_dtable.lock);
-      errno = EBADF;
-      return -1;
-    }
+  if (err = _HURD_DPORT_USE (fd,
+			     __mach_port_mod_refs (__mach_task_self (),
+						   (cwdir = port),
+						   MACH_PORT_RIGHT_SEND, 1)))
+    return err;
 
-  __mach_port_mod_refs (__mach_task_self (), _hurd_dtable.d[fd].server,
-			MACH_PORT_RIGHT_SEND, 1);
-  __mutex_lock (&_hurd_lock);
-  old = cwdir;
-  cwdir = _hurd_dtable.d[fd].server;
-  __mutex_unlock (&_hurd_lock);
-  __mutex_unlock (&_hurd_dtable.lock);
-  __mach_port_deallocate (__mach_task_self (), old);
+  _hurd_port_set (&_hurd_cwdir, cwdir);
+
   return 0;
 }
