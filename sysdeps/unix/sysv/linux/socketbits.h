@@ -215,6 +215,10 @@ enum
 
 
 /* Get socket manipulation related informations from kernel headers.  */
+#ifndef _LINUX_TYPES_H
+# define _LINUX_TYPES_H
+#endif
+
 #include <asm/socket.h>
 
 
