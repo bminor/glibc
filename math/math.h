@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -193,13 +193,13 @@ extern __CONSTVALUE double rint __P ((double __x));
 /* Return `sqrt(X*X + Y*Y)'.  */
 extern __CONSTVALUE double hypot __P ((double __x, double __y));
 
-struct __complex
+struct __cabs_complex
 {
   double __x, __y;
 };
 
 /* Return `sqrt(X*X + Y*Y)'.  */
-extern __CONSTVALUE double cabs __P ((struct __complex));
+extern __CONSTVALUE double cabs __P ((struct __cabs_complex));
 
 extern __CONSTVALUE int isinf __P ((double __value));
 extern __CONSTVALUE int isnan __P ((double __value));
