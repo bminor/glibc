@@ -26,17 +26,16 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(fchroot, (fd), int fd)
 {
-  file_t old;
-  io_t port;
+  error_t err;
+  file_t crdir;
 
-  port = __getdport (fd);
-  if (port == MACH_PORT_NULL)
-    return -1;
+  if (err = _HURD_DPORT_USE (fd,
+			     __mach_port_mod_refs (__mach_task_self (),
+						   (crdir = port),
+						   MACH_PORT_RIGHT_SEND, 1)))
+    return err;
 
-  __mutex_lock (&_hurd_lock);
-  old = _hurd_crdir;
-  _hurd_crdir = port;
-  __mutex_unlock (&_hurd_lock);
-  __mach_port_deallocate (__mach_task_self (), old);
+  _hurd_port_set (&_hurd_crdir, crdir);
+
   return 0;
 }
