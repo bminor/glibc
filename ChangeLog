@@ -1,3 +1,8 @@
+2002-05-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/sparc/fpu/bits/mathinline.h (fdim): Add __THROW.
+	(fdimf): Likewise.
+
 2002-05-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/de.po: Update from translation team.
