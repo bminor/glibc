@@ -1,15 +1,43 @@
-@node Localization
-@chapter Localization
-@cindex locale
+@node Locales
+@chapter Locales and Internationalization
 
-There are a number of features of the run-time library whose exact
-behavior is specific to the @dfn{locale} or local language and cultural
-conventions.  Examples of these features include:
+Different countries and cultures have varying conventions for how to
+communicate.  These conventions range from very simple ones, such as the
+format for representing dates and times, to very complex ones, such as
+the language spoken.
+
+@cindex internationalization
+@cindex locales
+@dfn{Internationalization} of software means programming it to be able
+to adapt to the user's favorite conventions.  In ANSI C,
+internationalization works by means of @dfn{locales}.  Each locale
+specifies a collection of conventions, one convention for each purpose.
+The user chooses a set of conventions by specifying a locale (via
+environment variables).
+
+All programs inherit the chosen locale as part of their environment.
+Provided the programs are written to obey the choice of locale, they
+will follow the conventions preferred by the user.
+
+@menu
+* Effects of Locale::     Actions affected by the choice of locale.
+* Choosing Locale::       How the user specifies a locale.
+* Locale Categories::     Different purposes for which you can select a locale.
+* Setting Locale::        How a program specifies the locale library functions.
+* Standard Locales::      Locale names available on all systems.
+* Numeric Formatting::    How to format numbers according to the chosen locale.
+@end menu
+
+@node Effects of Locale
+@section What Effects a Locale Has
+
+Each locale specifies conventions for several purposes, including the
+following:
 
 @itemize @bullet
 @item
-The collating sequence for the local language and character set
-(@pxref{Collation Functions}).
+What multibyte character sequences are valid, and how they are
+interpreted (@pxref{Extended Characters}).
 
 @item
 Classification of which characters in the local character set are
@@ -17,114 +45,256 @@ considered alphabetic, and upper- and lower-case conversion conventions
 (@pxref{Character Handling}).
 
 @item
+The collating sequence for the local language and character set
+(@pxref{Collation Functions}).
+
+@item
 Formatting of numbers and currency amounts.
 
 @item
-Formatting of the date and time (@pxref{Formatting Date and Time}).
+Formatting of dates and times (@pxref{Formatting Date and Time}).
 
 @item
-What multibyte character sequences are valid, and how they are
-interpreted (@pxref{Extended Characters}).
+What language to use for output, including error messages.
+(The C library doesn't yet help you implement this.)
+
+@item
+What language to use for user answers to yes-or-no questions.
+
+@item
+What language to use for more complex user input.
+(The C library doesn't yet help you implement this.)
 @end itemize
 
-This chapter discusses the mechanism by which you can modify the
-current locale.  This mechanism is declared in the header file
-@file{locale.h}.  The effects of the current locale on specific
-library functions are discussed in more detail in the descriptions of
-those functions.
-@pindex locale.h
+Some aspects of adapting to the specified locale are handled
+automatically by the library subroutines.  For example, all your program
+needs to do in order to use the collating sequence of the chosen locale
+is to use @code{strcoll} or @code{strxfrm} to compare strings.
 
-@menu
-* Attributes of a Locale::		The attributes of a locale are grouped
-					 into categories.
-* Locale Names::			How locales are named; about the
-					 standard locales.
-* Changing the Locale::			How to specify which locale to use.
-* Numeric and Monetary Formatting::	Inquiries about the current locale.
-@end menu
+Other aspects of locales are beyond the comprehension of the library.
+For example, the library can't automatically translate your program's
+output messages into other languages.  The only way you can support
+output in the user's favorite language is to program this more or less
+by hand.  (Eventually, we hope to provide facilities to make this
+easier.)
 
-@node Attributes of a Locale
-@section Attributes of a Locale
+This chapter discusses the mechanism by which you can modify the current
+locale.  The effects of the current locale on specific library functions
+are discussed in more detail in the descriptions of those functions.
 
-@cindex categories, of locale attributes
-@cindex locale attribute categories
-The current locale is modified by selecting groups or categories
-of attributes from other locales, rather than by specifying values for
-individual parameters.  You can mix different attribute categories
-from different locales.
+@node Choosing Locale
+@section Choosing a Locale
 
-These locale attribute categories are defined as preprocessor
-macros in @file{locale.h}.  The value of each of these macros
-is an integer constant expression.
-@pindex locale.h
+The simplest way for the user to choose a locale is to set the
+environment variable @code{LANG}.  This specifies a single locale to use
+for all purposes.  For example, a user could specify a hypothetical
+locale named @samp{espana-castellano} to use the standard conventions of
+most of Spain.
+
+The set of locales supported depends on the operating system you are
+using, and so do their names.  We can't make any promises about what
+locales will exist, except for one standard locale called @samp{C} or
+@samp{POSIX}.
+
+@cindex combining locales
+A user also has the option of specifying different locales for different
+purposes---in effect, choosing a mixture of two locales.
+
+For example, the user might specify the locale @samp{espana-castellano}
+for most purposes, but specify the locale @samp{usa-english} for
+currency formatting.  This might make sense if the user is a
+Spanish-speaking American, working in Spanish, but representing monetary
+amounts in US dollars.
+
+Note that both locales @samp{espana-castellano} and @samp{usa-english},
+like all locales, would include conventions for all of the purposes to
+which locales apply.  However, the user can choose to use each locale
+for a particular subset of those purposes.
+
+@node Locale Categories
+@section Categories of Activities that Locales Affect
+@cindex categories for locales
+@cindex locale categories
+
+The purposes that locales serve are grouped into @dfn{categories}, so
+that a user or a program can choose the locale for each category
+independently.  Here is a table of categories; each name is both an
+environment variable that a user can set, and a macro name that you can
+use as an argument to @code{setlocale}.
+
+@table @code
+@comment locale.h
+@comment ANSI
+@item LC_COLLATE
+@vindex LC_COLLATE
+This category applies to collation of strings (functions @code{strcoll}
+and @code{strxfrm}); see @ref{Collation Functions}.
 
 @comment locale.h
 @comment ANSI
-@deftypevr Macro int LC_ALL
-Selects all attributes.
-@end deftypevr
+@item LC_CTYPE
+@vindex LC_CTYPE
+This category applies to classification and conversion of characters;
+see @ref{Character Handling}.
 
 @comment locale.h
 @comment ANSI
-@deftypevr Macro int LC_COLLATE
-Selects attributes affecting the collation sequence (functions @code{strcoll}
-and @code{strxfrm}; @pxref{Collation Functions}.
-@end deftypevr
-
-@comment locale.h
-@comment ANSI
-@deftypevr Macro int LC_CTYPE
-Selects attributes affecting classification and conversion of characters;
-@pxref{Character Handling}.
-@end deftypevr
-
-@comment locale.h
-@comment ANSI
-@deftypevr Macro int LC_MONETARY
-Selects attributes affecting how monetary values should be formatted,
-returned by the @code{localeconv} function; @pxref{Numeric and Monetary
+@item LC_MONETARY
+@vindex LC_MONETARY
+This category applies to formatting monetary values; see @ref{Numeric
 Formatting}.
-@end deftypevr
 
 @comment locale.h
 @comment ANSI
-@deftypevr Macro int LC_NUMERIC
-Selects attributes affecting formatting of numeric values;
-@pxref{Numeric and Monetary Formatting}.
-@end deftypevr
+@item LC_NUMERIC
+@vindex LC_NUMERIC
+This category applies to formatting numeric values that are not
+monetary; see @ref{Numeric Formatting}.
 
 @comment locale.h
 @comment ANSI
-@deftypevr Macro int LC_TIME
-Selects attributes affecting formatting of date and time values;
-@pxref{Formatting Date and Time}.
-@end deftypevr
+@item LC_TIME
+@vindex LC_TIME
+This category applies to formatting date and time values; see
+@ref{Formatting Date and Time}.
 
 @comment locale.h
 @comment GNU
-@deftypevr Macro int LC_RESPONSE
-Selects attributes affecting which string patterns are recognized as
-``yes'' or ``no'' responses to questions.
+@item LC_RESPONSE
+@vindex LC_RESPONSE
+This category applies to recognizing ``yes'' or ``no'' responses to
+questions.
 
 @strong{Incomplete:} This is apparently a feature that was in some early
 draft of the POSIX.2 standard, but it's not listed in draft 11.  Do we
 still support this anyway?  Is there a corresponding environment
 variable?
-@end deftypevr
 
-The ANSI C standard permits implementations to define additional attribute
-categories.  You should consider all names that begin with the characters
-@samp{LC_} as being reserved for this purpose.
+@comment locale.h
+@comment ANSI
+@item LC_ALL
+@vindex LC_ALL
+This is not an environment variable; it is only a macro that you can use
+with @code{setlocale} to set a single locale for all purposes.
 
-@strong{Incomplete:}  Does the GNU library define any additional
-attributes?
+@comment locale.h
+@comment ANSI
+@item LANG
+@vindex LANG
+If this environment variable is defined, its value specifies the locale
+to use for all purposes except as overridden by the variables below.
+@end table
 
-@node Locale Names
-@section Locale Names
+@node Setting the Locale
+@section How Programs Set the Locale
 
-@cindex locale names
-Locales are referred to by names, which are strings.  There are three
-built-in locales that are always available:
+A C program inherits its locale environment variables when it starts up.
+This happens automatically.  However, these variables do not
+automatically control the locale used by the library functions, because
+ANSI C says that all programs start by default in the standard @samp{C}
+locale.  To use the locales specified by the environment, you must call
+@code{setlocale}.  Call it as follows:
+
+@example
+setlocale (LC_ALL, "");
+@end example
+
+@noindent
+to select a locale based on the appropriate environment variables.
+
+@cindex changing the locale
+@cindex locale, changing
+You can also use @code{setlocale} to specify a particular locale, for
+general use or for a specific category.
+
+@pindex locale.h
+The symbols in this section are defined in the header file @file{locale.h}.
+
+@comment locale.h
+@comment ANSI
+@deftypefun {char *} setlocale (int @var{category}, const char *@var{locale})
+The function @code{setlocale} sets the current locale for 
+category @var{category} to @var{locale}.
+
+If @var{category} is @code{LC_ALL}, this specifies the locale for all
+purposes.  The other possible values of @var{category} specify an
+individual purpose (@pxref{Locale Categories}).
+
+You can also use this function to find out the current locale by passing
+a null pointer as the @var{locale} argument.  In this case,
+@code{setlocale} returns a string that is the name of the locale
+currently selected for category @var{category}.
+
+The string returned by @code{setlocale} can be overwritten by subsequent
+calls, so you should make a copy of the string (@pxref{Copying and
+Concatenation}) if you want to save it past any further calls to
+@code{setlocale}.  (The standard library is guaranteed never to call
+@code{setlocale} itself.)
+
+You should not modify the string returned by @code{setlocale}.
+It might be the same string that was passed as an argument in a 
+previous call to @code{setlocale}.
+
+When you read the current locale for category @code{LC_ALL}, the value
+encodes the entire combination of selected locales for all categories.
+In this case, the value is not just a single locale name.  In fact, we
+don't make any promises about what it looks like.  But if you specify
+the same ``locale name'' with @code{LC_ALL} in a subsequent call to
+@code{setlocale}, it restores the same combination of locale selections.
+
+When the @var{locale} argument is not a null pointer, the string returned
+by @code{setlocale} reflects the newly modified locale.
+
+If you specify an empty string for @var{locale}, this means to read the
+appropriate environment variable and use its value to select the locale
+for @var{category}.
+
+If you specify an invalid locale name, @code{setlocale} returns a null
+pointer and leaves the current locale unchanged.
+@end deftypefun
+
+Here is an example showing how you might use @code{setlocale} to
+temporarily switch to a new locale.
+
+@example
+#include <stddef.h>
+#include <locale.h>
+#include <stdlib.h>
+#include <string.h>
+
+void
+with_other_locale (char *new_locale,
+                   void (*subroutine) (int),
+                   int argument)
+@{
+  char *old_locale, *saved_locale;
+
+  /* @r{Get the name of the current locale.}  */
+  old_locale = setlocale (LC_ALL, NULL);
+  
+  /* @r{Copy the name so it won't be clobbered by @code{setlocale}.} */
+  saved_locale = xmalloc (strlen (old_locale));
+  strcpy (saved_locale, old_locale);
+  
+  /* @r{Now change the locale and do some stuff with it.} */
+  setlocale (LC_ALL, new_locale);
+  (*subroutine) (argument);
+  
+  /* @r{Restore the original locale.} */
+  setlocale (LC_ALL, saved_locale);
+  free (saved_locale);
+@}
+@end example
+
+@strong{Portability Note:} Some ANSI C systems may define additional
+locale categories.  For portability, assume that any symbol beginning
+with @samp{LC_} might be defined in @file{locale.h}.
+
+@node Standard Locales
+@section Standard Locales
+
+The only locale names you can count on finding on all operating systems
+are these three standard ones:
 
 @table @code
 @item "C"
@@ -133,279 +303,242 @@ are specified in the ANSI C standard.  When your program starts up, it
 initially uses this locale by default.
 
 @item "POSIX"
-This is the standard POSIX locale.  It behaves the same way as the
-@code{"C"} locale for most things.  Eventually, other parts of the POSIX
-standard may specify additional requirements for this locale.
+This is the standard POSIX locale.  Currently, it is an alias for the
+standard C locale.
 
 @item ""
-The locale representing the local conventions, with
-implementation-defined attributes.  
+The empty name stands for a site-specific default locale.  It's supposed
+to be a good default for the machine on which the program is running.
 @end table
 
-There might also be additional, non-standard locales available on the
-particular machine you are using.  Defining and installing named locales
-is normally a responsibility of the system administrator at your site
-(or the person who installed the GNU C library).  @xref{Defining New
-Locales}, for information about what this involves.
+Defining and installing named locales is normally a responsibility of
+the system administrator at your site (or the person who installed the
+GNU C library).  Users cannot do this.  @xref{Defining New Locales}, for
+information about what this involves.
 
-You cannot readily define the attributes of new, named locales in the
-programs you write.  You can only select attribute categories from named
-locales that are already installed.
+If your program needs to use something other than the @samp{C} locale,
+it will be more portable if you use the whatever locale the user
+specifies with the environment, rather than trying to specify some
+non-standard locale explicitly by name.  Remember, different machines
+might have different sets of locales installed.
 
-Likewise, individual users of your program cannot easily define new
-named locales for it to use, either.  However, users @emph{can}
-customize the attributes of the @code{""} locale by means of environment
-variables.  These are discussed in more detail in @ref{Standard
-Environment Variables}.  
+@node Numeric Formatting
+@section Numeric Formatting
 
-These environment variables affect the @code{""} environment as follows.
-
-@itemize @bullet
-@item
-If the @code{LC_ALL} environment variable has a value, the attributes are
-taken from that locale.
-
-@item
-If the environment variable corresponding to the particular attribute
-category (@code{LC_COLLATE}, @code{LC_CTYPE}, @code{LC_MONETARY},
-@code{LC_NUMERIC}, and @code{LC_TIME}) has a value, the attributes are
-taken from that locale.
-
-@item
-If the @code{LANG} environment variable is defined, the attributes are
-taken from that locale.
-@end itemize
-
-If your program needs to use something other than the @code{"C"} locale,
-it will be more portable if you use the @code{""} locale and leave it up
-to users of your program to customize its attributes, than if you
-specify some non-standard locale name explicitly.  Remember, different
-machines might have different sets of locales installed.
-
-@node Changing the Locale
-@section Changing the Locale
-
-@cindex changing the locale
-@cindex locale, changing
-To actually change attributes of the current locale, use the
-@code{setlocale} function.  The prototype for this function is declared
-in the header file @file{locale.h}.
-@pindex locale.h
-
-@comment locale.h
-@comment ANSI
-@deftypefun {char *} setlocale (int @var{category}, const char *@var{locale})
-The function @code{setlocale} sets the current locale to use the attributes in
-category @var{category} from the locale named @var{locale}.
-
-The value of @var{category} should correspond to one of the symbolic
-constants listed in @ref{Attributes of a Locale}; for example,
-@code{LC_ALL} specifies all attribute categories.
-
-You can also use this function to inquire about the current locale by
-passing a null pointer as the @var{locale} argument.  In this case,
-@code{setlocale} returns a string that specifies the corresponding part
-of the current locale.  This is useful if you want to temporarily change
-the locale from its current value, perform some computations, and then
-restore the locale to its original state.  However, the string returned
-by @code{setlocale} can be overwritten by subsequent calls, so you
-should make a copy of the string (@pxref{Copying and Concatenation})
-before making any further calls if you plan to use it for this purpose.
-(The standard library is guaranteed never to call @code{setlocale}
-itself.)  You should not modify the string returned by @code{setlocale}.
-
-If the @var{locale} argument is not a null pointer, the string returned
-by @code{setlocale} reflects the newly modified locale.  If it's not
-possible to honor the selection for some reason (perhaps because the
-locale name is not recognized), @code{setlocale} returns a null
-pointer and leave the current locale unchanged.
-@end deftypefun
-
-Here is an example showing how you might use @code{setlocale} to
-temporarily switch to a new locale.
-
-@strong{Incomplete}:  This example hasn't been tested at all.
-
-@example
-#include <stddef.h>
-#include <locale.h>
-#include <stdlib.h>
-#include <string.h>
-
-char *old_locale, *saved_locale;
-
-@dots{}
-
-  /* @r{Get the name of the current locale.}  */
-  old_locale = setlocale (LC_ALL, NULL);
-  
-  /* @r{If} setlocale @r{failed, give up.}  */
-  if (old_locale == NULL)  @{
-    @dots{}
-    exit (EXIT_FAILURE);
-    @}
-  
-  /* @r{Otherwise save the name of the locale.} */
-  saved_locale = malloc (strlen(old_locale));
-  strcpy (saved_locale, old_locale);
-  
-  /* @r{Now change the locale and do some stuff with it.} */
-  setlocale (LC_ALL, "")
-  @dots{}
-  
-  /* @r{Restore the original locale.} */
-  setlocale (LC_ALL, saved_locale);
-  free (saved_locale);
-@end example
-
-@node Numeric and Monetary Formatting
-@section Numeric and Monetary Formatting
-
-Sometimes your programs have need to know about the specific formatting
-conventions for numeric quantities that are appropriate for the current
-locale.  In particular, if your program deals with monetary quantities,
-you'll need to know about the local conventions regarding currency
-symbols, digit grouping and separation, and so on, which vary widely
-from country to country.  The function @code{localeconv} is provided for
-this purpose.  The prototype for this function is in the header file
-@file{locale.h}.
+When you want to format a number or a currency amount using the
+conventions of the current locale, you can use the function
+@code{localeconv} to get the data on how to do it.  The function
+@code{localeconv} is declared in the header file @file{locale.h}.
 @pindex locale.h
 @cindex monetary value formatting
 @cindex numeric value formatting
 
 @comment locale.h
 @comment ANSI
-@deftypefun {struct lconv *} localeconv (void)
+@deftypefun {struct lconv *} localeconv ()
 The @code{localeconv} function returns a pointer to a structure whose
 components contain information about how numeric and monetary values
 should be formatted in the current locale.
 
 You shouldn't modify the structure or its contents.  The structure might
-be overwritten by subsequent calls to @code{localeconv}, or by calling
-@code{setlocale} to alter the @code{LC_ALL}, @code{LC_MONETARY}, or
-@code{LC_NUMERIC} categories of the current environment, but it's
-guaranteed that no other function in the library overwrites its
-contents.
+be overwritten by subsequent calls to @code{localeconv}, or by calls to
+@code{setlocale}, but no other function in the library overwrites this
+value.
 @end deftypefun
 
 @comment locale.h
 @comment ANSI
-@deftp {struct Type} lconv
-This structure type contains information which defines rules for how
-numeric and monetary values should be formatted.  It has at least the
-following members (which, implementationally, can appear in any order):
+@deftp {Data Type} {struct lconv}
+This is the data type of the value returned by @code{localeconv}.
+@end deftp
+
+If a member of the structure @code{struct lconv} has type @code{char},
+and the value is @code{CHAR_MAX}, it means that the current locale has
+no value for that parameter.
+
+@menu
+* General Numeric::
+* Currency Symbol::
+* Sign of Money Amount::
+@end menu
+
+@node General Numeric
+@subsection Generic Numeric Formatting Parameters
+
+These are the standard members of @code{struct lconv}; there may be
+others.
 
 @table @code
-@item {char *decimal_point}
-@itemx {char *mon_decimal_point}
+@item char *decimal_point
+@itemx char *mon_decimal_point
 These are the decimal-point separators used in formatting non-monetary
-and monetary quantities, respectively.  In the @code{"C"} locale, 
-the @code{decimal_point} member has a value of @code{"."}, and the
-@code{mon_decimal_point} member has a value of @code{""}.
+and monetary quantities, respectively.  In the @samp{C} locale, the
+value of @code{decimal_point} is @code{"."}, and the value of
+@code{mon_decimal_point} is @code{""}.
 @cindex decimal-point separator
 
-@item {char *thousands_sep}
-@itemx {char *mon_thousands_sep}
+@item char *thousands_sep
+@itemx char *mon_thousands_sep
 These are the separators used to delimit groups of digits to the left of
 the decimal point in formatting non-monetary and monetary quantities,
-respectively.  In the @code{"C"} locale, both members have a value of
+respectively.  In the @samp{C} locale, both members have a value of
 @code{""} (the empty string).
 
-@item {char *grouping}
-@itemx {char *mon_grouping}
+@item char *grouping
+@itemx char *mon_grouping
 These are strings whose elements indicate the size of each group of 
 digits to the left of the decimal point in formatting non-monetary
 and monetary quantities, respectively.
 @cindex grouping of digits
 
-The elements of this string are actually interpreted as numbers, not as
-characters.  A null character (which marks the end of a string)
-indicates that the previous grouping value is to be used repeatedly for
-the remaining digits.  A character @code{CHAR_MAX} indicates that no
-further grouping is to be performed.  Any other value indicates the size
-of the next group to the left of the decimal point (the first integer
-for the first group to the left, the second for the next group to the
-left, and so on).  For example, a value of @code{"\3"} (a character with
-value @code{3} followed by a character with value @code{0}) indicates
-repeated groups of three digits.
+The characters in this string are actually interpreted as numbers.  A
+nonzero value is the number of digits in the next group of digits, going
+from right to left (less significant digits to more significant).  The
+last character in the string is used over and over for successive
+groups.
 
-In the standard @code{"C"} locale, both @code{grouping} and
-@code{mon_grouping} have a value of @code{""}, indicating that no
-grouping of digits is performed.
+If a character in the string has value @code{CHAR_MAX}, it indicates
+that no further grouping is to be performed.
 
-@item {char *int_curr_symbol}
-@itemx {char *currency_symbol}
-These members have values which are strings representing the currency
-symbol for the locale.  The difference between them is that
-@code{currency_symbol} is the symbol commonly used locally within a
-particular country, while @code{int_curr_symbol} is used internationally
-to refer to that country's currency.  
+For example, if @code{grouping} is @code{"\004\003\002"}, the number
+@code{123456787654321} should be grouped into @samp{12}, @samp{34},
+@samp{56}, @samp{78}, @samp{765}, @samp{4321}.  This uses a group of 4
+digits at the end, preceded by a group of 3 digits, preceded by groups
+of 2 digits (as many as needed).  With a separator of @samp{,}, the number
+would be printed as @samp{12,34,56,78,765,4321}.
+
+A value of @code{"\003"} indicates repeated groups of three digits, as
+normally used in the U.S.
+
+In the standard @samp{C} locale, both @code{grouping} and
+@code{mon_grouping} have a value of @code{""}, which specifies no
+grouping of digits.
+
+@item char int_frac_digits
+@itemx char frac_digits
+These are small integers indicating how many fractional digits (to the
+right of the decimal point) should be displayed in a monetary value in
+international and local formats, respectively.  (Most often, both
+members have the same value.)
+
+In the standard @samp{C} locale, both of these members have the value
+@code{CHAR_MAX}, meaning ``unspecified''.  The ANSI standard doesn't say
+what to do when you find this the value; we recommend printing no
+fractional digits.  (This locale also specifies the empty string for
+@code{mon_decimal_point}, so printing any fractional digits would be
+confusing!)
+@end table
+
+@node Currency Symbol
+@subsection Printing the Currency Symbol
+@cindex currency symbols
+
+These members of the @code{struct lconv} structure specify how to print
+the symbol to identify a monetary value---the international analog of
+@samp{$} for US dollars.
+
+Each country has two standard currency symbols.  The @dfn{local currency
+symbol} is used commonly within the country, while the
+@dfn{international currency symbol} is used internationally to refer to
+that country's currency when it is necessary to indicate the country
+unambiguously.
 
 For example, many countries use the dollar as their monetary unit, and
 when dealing with international currencies it's important to specify
 that one is dealing with (say) Canadian dollars instead of U.S. dollars
 or Australian dollars.  But locally within Canada, dollar amounts are
 implicitly assumed to be in Canadian dollars.
-@cindex currency symbols
 
-In the default @code{"C"} locale, the @code{int_curr_symbol} member has
-a value of @code{""} (the empty string).  Other possible values for this
-string consist of a three-letter abbreviation determined by the
-international standard @cite{ISO 4217 Codes for the Representation of
-Currency and Funds}, followed by a one-character separator that appears
-between the currency symbol and the monetary quantity.
+@table @code
+@item char *currency_symbol
+The local currency symbol for the selected locale.
 
-The @code{currency_symbol} member has a value of @code{""} in the
-default @code{"C"} locale.
+In the standard @samp{C} locale, this member has a value of @code{""}
+(the empty string), meaning ``unspecified''.  The ANSI standard doesn't
+say what to do when you find this value; we recommend you simply print
+the empty string as you would print any other string found in the
+appropriate member.
 
-@item {char *positive_sign}
-@itemx {char *negative_sign}
-These are strings used to indicate nonnegative and negative
-(respectively) monetary quantities.  In the @code{"C"} locale, both
-members have a value of @code{""}.
+@item char *int_curr_symbol
+The international currency symbol for the selected locale.
 
-@item {char int_frac_digits}
-@itemx {char frac_digits}
-These are small integers indicating how many fractional digits (to
-the right of the decimal point) should be displayed in a monetary
-value in international and local formats, respectively.  (Normally,
-both members have the same value.)  In the standard @code{"C"} locale,
-they both have the value of the constant @code{CHAR_MAX}.
+The value of @code{int_curr_symbol} should normally consist of a
+three-letter abbreviation determined by the international standard
+@cite{ISO 4217 Codes for the Representation of Currency and Funds},
+followed by a one-character separator (often a space).
 
-@item {char p_cs_precedes}
-@itemx {char n_cs_precedes}
-These members have a value of @code{1} if the currency symbol should
-precede the value of a monetary quantity, or a value of @code{0} if the
-currency symbol should be placed after the value.  The
-@code{p_cs_precedes} member applies to nonnegative quantities, and the
-@code{n_cs_precedes} member applies to negative quantities.
+In the standard @samp{C} locale, this member has a value of @code{""}
+(the empty string), meaning ``unspecified''.  We recommend you simply
+print the empty string as you would print any other string found in the
+appropriate member.
 
-Both members have a value of @code{CHAR_MAX} in the standard @code{"C"}
-locale.
+@item char p_cs_precedes
+@itemx char n_cs_precedes
+These members are @code{1} if the @code{currency_symbol} string should
+precede the value of a monetary amount, or @code{0} if the string should
+follow the value.  The @code{p_cs_precedes} member applies to positive
+amounts (or zero), and the @code{n_cs_precedes} member applies to
+negative amounts.
 
-@strong{Incomplete:}  I don't have a clue as to what the value in
-the standard locale is supposed to mean.
+In the standard @samp{C} locale, both of these members have a value of
+@code{CHAR_MAX}, meaning ``unspecified''.  The ANSI standard doesn't say
+what to do when you find this value, but we recommend printing the
+currency symbol before the amount.  That's right for most countries.
+In other words, treat all nonzero values alike in these members.
 
+These members apply only to @code{currency_symbol}.  When you use
+@code{int_curr_symbol}, always print it before the amount.
 
-@item {char p_sep_by_space}
-@itemx {char n_sep_by_space}
-These members have a value of @code{1} if a space should appear between
-the currency symbol and the value of monetary quantity, or a value of
-@code{0} if no space should appear.  The @code{p_sep_by_space} member
-applies to nonnegative quantities, and the @code{n_sep_by_space} member
-applies to negative quantities.
+@item char p_sep_by_space
+@itemx char n_sep_by_space
+These members are @code{1} if a space should appear between the
+@code{currency_symbol} string and the amount, or @code{0} if no space
+should appear.  The @code{p_sep_by_space} member applies to positive
+amounts (or zero), and the @code{n_sep_by_space} member applies to
+negative amounts.
 
-Both members have a value of @code{CHAR_MAX} in the standard @code{"C"}
-locale.
+In the standard @samp{C} locale, both of these members have a value of
+@code{CHAR_MAX}, meaning ``unspecified''.  The ANSI standard doesn't say
+what you should do when you find this value; we suggest you treat it as
+one (print a space).  In other words, treat all nonzero values alike in
+these members.
 
-@strong{Incomplete:}  I don't have a clue as to what the value in
-the standard locale is supposed to mean.
+These members apply only to @code{currency_symbol}.  When you use
+@code{int_curr_symbol}, you never print an additional space, because
+@code{int_curr_symbol} itself contains the appropriate separator.
+@end table
 
-@item {char p_sign_posn}
-@itemx {char n_sign_posn}
-These members have values that are small integers indicating positioning
-of the @code{positive_sign} or @code{negative_sign} for nonnegative
-and negative monetary quantities, respectively.  The possible values are
+@node Sign of Money Amount
+@subsection Printing the Sign of an Amount of Money
+
+These members of the @code{struct lconv} structure specify how to print
+the sign (if any) in a monetary value.
+
+@table @code
+@item char *positive_sign
+@itemx char *negative_sign
+These are strings used to indicate positive (or zero) and negative
+(respectively) monetary quantities.
+
+In the standard @samp{C} locale, both of these members have a value of
+@code{""} (the empty string), meaning ``unspecified''.
+
+The ANSI standard doesn't say what to do when you find this value; we
+recommend printing @code{positive_sign} as you find it, even if it is
+empty.  For a negative value, print @code{negative_sign} as you find it
+unless both it and @code{positive_sign} are empty, in which case print
+@samp{-} instead.  (Failing to indicate the sign at all seems rather
+unreasonable.)
+
+It is not clear whether you should use these sign strings for the
+international currency format or not.
+
+@item char p_sign_posn
+@itemx char n_sign_posn
+These members have values that are small integers indicating how to
+position the sign for nonnegative and negative monetary quantities,
+respectively.  (The string used by the sign is what was specified with
+@code{positive_sign} or @code{negative_sign}.)  The possible values are
 as follows:
 
 @table @code
@@ -413,24 +546,26 @@ as follows:
 The currency symbol and quantity should be surrounded by parentheses.
 
 @item 1
-The sign string should be placed before the quantity and currency symbol.
+Print the sign string before the quantity and currency symbol.
 
 @item 2
-The sign string should be placed after the quantity and currency symbol.
+Print the sign string after the quantity and currency symbol.
 
 @item 3
-The sign string should be placed immediately before the currency symbol.
+Print the sign string right before the currency symbol.
 
 @item 4
-The sign string should be placed immediately after the currency symbol.
+Print the sign string right after the currency symbol.
+
+@item CHAR_MAX
+``Unspecified''.  Both members have this value in the standard
+@samp{C} locale.
 @end table
 
-Both members have a value of @code{CHAR_MAX} in the standard @code{"C"}
-locale.
+The ANSI standard doesn't say what you should do when the value is
+@code{CHAR_MAX}.  We recommend you print the sign after the currency
+symbol.
 
-@strong{Incomplete:}  I don't have a clue as to what the value in
-the standard locale is supposed to mean.
+It is not clear whether these members apply to the international
+currency format or not.
 @end table
-@end deftp
-
-
