@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,8 +58,11 @@ _dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy)
 
     /* This macro is used as a callback from the ELF_DYNAMIC_RELOCATE code.  */
 #define RESOLVE(ref, flags) \
-    (_dl_lookup_symbol (strtab + (*ref)->st_name, ref, scope, \
-			l->l_name, flags))
+    (((*ref)->st_shndx != SHN_UNDEF &&					      \
+      ELFW(ST_BIND) ((*ref)->st_info) == STB_LOCAL)			      \
+     ? l->l_addr							      \
+     : _dl_lookup_symbol (strtab + (*ref)->st_name, ref, scope,		      \
+			  l->l_name, flags))
 
 #include "dynamic-link.h"
     ELF_DYNAMIC_RELOCATE (l, lazy);
