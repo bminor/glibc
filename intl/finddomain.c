@@ -35,6 +35,7 @@
 #include "gettextP.h"
 #ifdef _LIBC
 # include <libintl.h>
+# include <bits/libc-lock.h>
 #else
 # include "libgnuintl.h"
 #endif
@@ -78,17 +79,23 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
 		(4) modifier
    */
 
+  /* We need to protect modifying the _NL_LOADED_DOMAINS data.  */
+  __libc_rwlock_define_initialized (static, lock);
+  __libc_rwlock_rdlock (lock);
+
   /* If we have already tested for this locale entry there has to
      be one data set in the list of loaded domains.  */
   retval = _nl_make_l10nflist (&_nl_loaded_domains, dirname,
 			       strlen (dirname) + 1, 0, locale, NULL, NULL,
 			       NULL, NULL, domainname, 0);
+  __libc_rwlock_unlock (lock);
+
   if (retval != NULL)
     {
       /* We know something about this locale.  */
       int cnt;
 
-      if (retval->decided == 0)
+      if (retval->decided <= 0)
 	_nl_load_domain (retval, domainbinding);
 
       if (retval->data != NULL)
@@ -96,12 +103,13 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
 
       for (cnt = 0; retval->successor[cnt] != NULL; ++cnt)
 	{
-	  if (retval->successor[cnt]->decided == 0)
+	  if (retval->successor[cnt]->decided <= 0)
 	    _nl_load_domain (retval->successor[cnt], domainbinding);
 
 	  if (retval->successor[cnt]->data != NULL)
 	    break;
 	}
+
       return cnt >= 0 ? retval : NULL;
       /* NOTREACHED */
     }
@@ -132,24 +140,29 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
   mask = _nl_explode_name (locale, &language, &modifier, &territory,
 			   &codeset, &normalized_codeset);
 
+  /* We need to protect modifying the _NL_LOADED_DOMAINS data.  */
+  __libc_rwlock_wrlock (lock);
+
   /* Create all possible locale entries which might be interested in
      generalization.  */
   retval = _nl_make_l10nflist (&_nl_loaded_domains, dirname,
 			       strlen (dirname) + 1, mask, language, territory,
 			       codeset, normalized_codeset, modifier,
 			       domainname, 1);
+  __libc_rwlock_unlock (lock);
+
   if (retval == NULL)
     /* This means we are out of core.  */
     return NULL;
 
-  if (retval->decided == 0)
+  if (retval->decided <= 0)
     _nl_load_domain (retval, domainbinding);
   if (retval->data == NULL)
     {
       int cnt;
       for (cnt = 0; retval->successor[cnt] != NULL; ++cnt)
 	{
-	  if (retval->successor[cnt]->decided == 0)
+	  if (retval->successor[cnt]->decided <= 0)
 	    _nl_load_domain (retval->successor[cnt], domainbinding);
 	  if (retval->successor[cnt]->data != NULL)
 	    break;
