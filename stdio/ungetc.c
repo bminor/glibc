@@ -34,14 +34,14 @@ DEFUN(ungetc, (c, stream), register int c AND register FILE *stream)
   if (c == EOF)
     return EOF;
 
+  if (stream->__pushed_back)
+    /* There is already a char pushed back.  */
+    return EOF;
+
   if (stream->__mode.__write && stream->__bufp > stream->__buffer &&
       /* This is a read-write stream with something in its buffer.
 	 Flush the stream.  */
       __flshfp (stream, EOF) == EOF)
-    return EOF;
-
-  if (stream->__pushed_back)
-    /* There is already a char pushed back.  */
     return EOF;
 
   stream->__pushback = (unsigned char) c;
