@@ -223,7 +223,7 @@ DEFUN(__ioctl, (fd, request),
   err = HURD_DPORT_USE
     (fd,
      ({
-       const io_t ioport = (noctty && ctty != MACH_PORT_NULL) ? ctty : port;
+       const io_t ioport = (!noctty && ctty != MACH_PORT_NULL) ? ctty : port;
        do
 	 {
 	   /* The actual hair to send the RPC is in the inline `send_rpc'
