@@ -1,5 +1,5 @@
 /* Definitions for BSD-style memory management.
-   Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1994, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
 			  int __flags, int __fd, __off_t __offset));
 #else
 extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
-			  int __flags, int __fd, __off_t __offset))
+			  int __flags, int __fd, __off64_t __offset))
      __asm__ ("mmap64");
 #endif
 #ifdef __USE_LARGEFILE64
