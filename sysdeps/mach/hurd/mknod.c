@@ -24,6 +24,11 @@ Cambridge, MA 02139, USA.  */
 #include <fcntl.h>
 #include "stdio/_itoa.h"
 
+/* Temporary hack; this belongs in a header file, probably types.h. */
+#define major(x) ((int)((unsigned(x) >> 8) & 0xff))
+#define minor(x) ((int)((x) & 0xff))
+
+
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
    device numbers with the `makedev' macro above).  */
