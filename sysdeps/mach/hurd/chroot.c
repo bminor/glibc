@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <fcntl.h>
 
 /* Change the current root to PATH.  */
 int
@@ -29,7 +30,9 @@ DEFUN(chroot, (path), CONST char *path)
   error_t err;
   file_t old, crdir;
 
-  crdir = __path_lookup (path, FS_LOOKUP_EXECUTE, 0);
+  /* XXX check is dir */
+
+  crdir = __path_lookup (path, O_EXE, 0);
   if (crdir == MACH_PORT_NULL)
     return -1;
 
