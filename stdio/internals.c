@@ -90,6 +90,8 @@ DEFUN(init_stream, (fp), register FILE *fp)
 int
 DEFUN(__stdio_check_offset, (stream), FILE *stream)
 {
+  init_stream (stream);
+
   if (stream->__offset == (fpos_t) -1)
     {
       /* This stream's offset is unknown or unknowable.  */
@@ -131,7 +133,9 @@ DEFUN(__stdio_check_offset, (stream), FILE *stream)
 static void
 DEFUN(seek_to_target, (fp), FILE *fp)
 {
-  if (fp->__target != fp->__offset)
+  if (__stdio_check_offset (fp) == EOF)
+    fp->__error = 1;
+  else if (fp->__target != fp->__offset)
     {
       /* We are not at the target file position.
 	 Seek to that position.  */
@@ -169,8 +173,11 @@ DEFUN(flushbuf, (fp, c),
       register FILE *fp AND int c)
 {
   int flush_only = c == EOF;
+  size_t buffer_written;
   size_t to_write;
-  int target_set = 0;
+
+  /* Set if target and get_limit have already been twiddled appropriately.  */
+  int twiddled = 0;
 
   if (fp->__put_limit == fp->__buffer)
     {
@@ -206,9 +213,10 @@ DEFUN(flushbuf, (fp, c),
 		buffer_offset = o;
 	    }
 
-	  /* The target position is now set to where
-	     the beginning of the buffer maps to.  */
-	  target_set = 1;
+	  /* The target position is now set to where the beginning of the
+	     buffer maps to; and the get_limit was set by the input-room
+	     function.  */
+	  twiddled = 1;
 	}
 
       if (fp->__buffer != NULL)
@@ -229,9 +237,11 @@ DEFUN(flushbuf, (fp, c),
   /* If there is read data in the buffer past what was written,
      write all of that as well.  Otherwise, just write what has been
      written into the buffer.  */
-  to_write = (fp->__get_limit > fp->__bufp ?
+  buffer_written = fp->__bufp - fp->__buffer;
+  to_write = (buffer_written == 0 ? 0 :
+	      fp->__get_limit > fp->__bufp ?
 	      fp->__get_limit - fp->__buffer :
-	      fp->__bufp - fp->__buffer);
+	      buffer_written);
 
   if (fp->__io_funcs.__write == NULL || (to_write == 0 && flush_only))
     {
@@ -287,17 +297,18 @@ DEFUN(flushbuf, (fp, c),
 	*fp->__bufp++ = (unsigned char) c;
     }
 
- end:;
+ end:
 
-  if (!target_set)
-    /* The beginning of the buffer now maps to
-       just past the data we have just written.  */
-    fp->__target = fp->__offset;
+  if (!twiddled)
+    {
+      /* The new target position moves up as
+	 much as the user wrote into the buffer.  */
+      fp->__target += buffer_written;
 
-  if (!fp->__mode.__write)
-    /* Set the reading limit to the beginning of the buffer,
-       so the next `getc' will call __fillbf.  */
-    fp->__get_limit = fp->__buffer;
+      /* Set the reading limit to the beginning of the buffer,
+	 so the next `getc' will call __fillbf.  */
+      fp->__get_limit = fp->__buffer;
+    }
 
   if (feof(fp) || ferror(fp))
     fp->__bufp = fp->__put_limit;
@@ -394,12 +405,8 @@ DEFUN(fillbuf, (fp), register FILE *fp)
   /* Set the end pointer to one past the last character we read.  */
   fp->__get_limit = fp->__buffer + nread;
 
-  if (fp->__mode.__write)
-    /* Allow writing into the buffer.  */
-    fp->__put_limit = fp->__buffer + fp->__bufsize;
-  else
-    /* Make it so the next `putc' will call __flshfp.  */
-    fp->__put_limit = fp->__buffer;
+  /* Make it so the next `putc' will call __flshfp.  */
+  fp->__put_limit = fp->__buffer;
 
   /* Return the first character in the buffer.  */
   return (unsigned char) *fp->__bufp++;
@@ -500,6 +507,7 @@ int
 DEFUN(__fillbf, (fp), register FILE *fp)
 {
   register int c;
+  fpos_t new_target;
 
   if (!__validfp(fp) || !fp->__mode.__read)
     {
@@ -530,6 +538,10 @@ DEFUN(__fillbf, (fp), register FILE *fp)
 	  (void) __flshfp(f, EOF);
     }
 
+  /* We want the beginning of the buffer to now
+     map to just past the last data we read.  */
+  new_target = fp->__target + (fp->__get_limit - fp->__buffer);
+
   if (fp->__put_limit > fp->__buffer)
     {
       /* There is written data in the buffer.
@@ -537,16 +549,10 @@ DEFUN(__fillbf, (fp), register FILE *fp)
       if (fp->__room_funcs.__output == NULL)
 	fp->__error = 1;
       else
-	{
-	  fpos_t target = fp->__target;
-	  (*fp->__room_funcs.__output)(fp, EOF);
-	  fp->__target = target;
-	}
+	(*fp->__room_funcs.__output)(fp, EOF);
     }
 
-  /* We want the beginning of the buffer to now
-     map to just past the last data we read.  */
-  fp->__target += fp->__get_limit - fp->__buffer;
+  fp->__target = new_target;
 
   if (ferror(fp))
     c = EOF;
