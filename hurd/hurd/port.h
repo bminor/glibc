@@ -46,8 +46,8 @@ struct hurd_port
 /* Evaluate EXPR with the variable `port' bound to the port in PORTCELL.  */
 
 #define	HURD_PORT_USE(portcell, expr)					      \
-  ({ struct _hurd_port *const __p = (portcell);				      \
-     struct _hurd_userlink __link;					      \
+  ({ struct hurd_port *const __p = (portcell);				      \
+     struct hurd_userlink __link;					      \
      const mach_port_t port = _hurd_port_get (__p, &__link);		      \
      __typeof(expr) __result = (expr);					      \
      _hurd_port_free (__p, &__link, port);				      \
@@ -78,7 +78,9 @@ _hurd_port_locked_get (struct hurd_port *port,
   result = port->port;
   if (result != MACH_PORT_NULL)
     _hurd_userlink_link (&port->users, link);
+#ifdef noteven
   __spin_unlock (&port->lock);
+#endif
   return result;
 }
 
@@ -88,7 +90,9 @@ extern inline mach_port_t
 _hurd_port_get (struct hurd_port *port,
 		struct hurd_userlink *link)
 {
+#ifdef noteven
   __spin_lock (&port->lock);
+#ifdef endif
   return _hurd_port_locked_get (port, link);
 }
 
@@ -101,9 +105,13 @@ _hurd_port_free (struct hurd_port *port,
 		 mach_port_t used_port)
 {
   int dealloc;
+#ifdef noteven
   __spin_lock (&port->lock);
+#endif
   dealloc = _hurd_userlink_unlink (link);
+#ifdef noteven
   __spin_unlock (&port->lock);
+#endif
   if (dealloc)
     __mach_port_deallocate (__mach_task_self (), used_port);
 }
@@ -118,7 +126,9 @@ _hurd_port_locked_set (struct hurd_port *port, mach_port_t newport)
   mach_port_t old;
   old = _hurd_userlink_clear (&port->users) ? port->port : MACH_PORT_NULL;
   port->port = newport;
+#ifdef noteven
   __spin_unlock (&port->lock);
+#endif
   if (old != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), old);
 }
@@ -128,7 +138,9 @@ _hurd_port_locked_set (struct hurd_port *port, mach_port_t newport)
 extern inline void
 _hurd_port_set (struct hurd_port *port, mach_port_t newport)
 {
+#ifdef noteven
   __spin_lock (&port->lock);
+#endif
   return _hurd_port_locked_set (port, newport);
 }
 
