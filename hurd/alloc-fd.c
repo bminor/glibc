@@ -28,7 +28,7 @@ int _hurd_dtable_rlimit;	/* Resource limit on open descriptors.  */
    than the size of the table, set errno to EINVAL and return NULL.  */
 
 struct hurd_fd *
-_hurd_alloc_fd (int *fd, const int first_fd)
+_hurd_alloc_fd (int *fd, int first_fd)
 {
   int i;
   void *crit;
