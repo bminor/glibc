@@ -19,52 +19,68 @@ Cambridge, MA 02139, USA.  */
 /* Signal handlers are actually called:
    void handler (int sig, int code, struct sigcontext *scp);  */
 
+#include <mach/i386/fp_reg.h>
+
 /* State of this thread when the signal was taken.  */
 struct sigcontext
-{
-  /* These first members are machine-independent.  */
+  {
+    /* These first members are machine-independent.  */
 
-  int sc_onstack;		/* Nonzero if running on sigstack.  */
-  sigset_t sc_mask;		/* Blocked signals to restore.  */
+    int sc_onstack;		/* Nonzero if running on sigstack.  */
+    sigset_t sc_mask;		/* Blocked signals to restore.  */
 
-  /* MiG reply port this thread is using.  */
-  unsigned int sc_reply_port;
+    /* MiG reply port this thread is using.  */
+    unsigned int sc_reply_port;
 
-  /* Port this thread is doing an interruptible RPC on.  */
-  unsigned int sc_intr_port;
+    /* Port this thread is doing an interruptible RPC on.  */
+    unsigned int sc_intr_port;
 
-  /* Error code associated with this signal (interpreted as `error_t').  */
-  int sc_err;
+    /* Error code associated with this signal (interpreted as `error_t').  */
+    int sc_error;
 
-  /* All following members are machine-dependent.  */
+    /* All following members are machine-dependent.  The rest of this
+       structure is written to be laid out identically to:
+       {
+         struct i386_thread_state basic;
+         struct i386_float_state fpu;
+       }
+       trampoline.c knows this, so it must be changed if this changes.  */
 
-  /* Segment registers.  */
-  int sc_gs;
-  int sc_fs;
-  int sc_es;
-  int sc_ds;
-  int sc_ss;
+#define sc_i386_thread_state sc_gs /* Beginning of correspondence.  */
+    /* Segment registers.  */
+    int sc_gs;
+    int sc_fs;
+    int sc_es;
+    int sc_ds;
   
-  /* "General" registers.  These members are in the order that the i386
-     `pusha' and `popa' instructions use (`popa' ignores %esp).  */
-  int sc_edi;
-  int sc_esi;
-  int sc_ebp;
-  int sc_esp;			/* Not used; sc_uesp is used instead.  */
-  int sc_ebx;
-  int sc_edx;
-  int sc_ecx;
-  int sc_eax;
+    /* "General" registers.  These members are in the order that the i386
+       `pusha' and `popa' instructions use (`popa' ignores %esp).  */
+    int sc_edi;
+    int sc_esi;
+    int sc_ebp;
+    int sc_esp;			/* Not used; sc_uesp is used instead.  */
+    int sc_ebx;
+    int sc_edx;
+    int sc_ecx;
+    int sc_eax;
   
-  int sc_trapno;		/* Not used.  */
+    int sc_eip;			/* Instruction pointer.  */
+    int sc_cs;			/* Code segment register.  */
   
-  int sc_eip;			/* Instruction pointer.  */
-   
-  int sc_cs;			/* Not used.  */
-  
-  int sc_efl;			/* Processor flags.  */
-  int sc_uesp;			/* This stack pointer is used.  */
-};
+    int sc_efl;			/* Processor flags.  */
+
+    int sc_uesp;		/* This stack pointer is used.  */
+    int sc_ss;			/* Stack segment register.  */
+
+    /* Following mimics struct i386_float_state.  Structures and symbolic
+       values can be found in <mach/i386/fp_reg.h>.  */
+#define sc_i386_float_state sc_fpkind
+    int sc_fpkind;		/* FP_NO, FP_387, etc.  */
+    int sc_fpused;		/* If nonzero, ignore rest of float state.  */
+    struct i386_fp_save sc_fpsave;
+    struct i386_fp_regs sc_fpregs;
+    int sc_fpexcsr;		/* FPSR including exception bits.  */
+  };
 
 
 /* Codes for SIGFPE.  */
