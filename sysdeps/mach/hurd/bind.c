@@ -31,12 +31,56 @@ DEFUN(bind, (fd, addr, len),
   addr_port_t aport;
   error_t err;
 
+  if (addr->sa_family == AF_LOCAL)
+    {
+      /* For the local domain, we must create a node in the filesystem
+	 using the ifsock translator and then fetch the address from it.  */
+      struct sockaddr_un *unaddr = (struct sockaddr_un *) addr;
+      file_t dir, node;
+      char name[len - offsetof (struct sockaddr_un, sun_path)], *n;
+      strncpy (name, unaddr->sun_path, sizeof name);
+      dir = __path_split (name, &n);
+      if (dir == MACH_PORT_NULL)
+	return -1;
+      
+      /* Create a new, unlinked node in the target directory.  */
+      err = __dir_mkfile (dir, O_CREAT|O_EXCL, 0666 & ~_hurd_umask, &node);
+
+      if (! err)
+	{
+	  file_t ifsock;
+	  /* Set the node's translator to make it a local-domain socket.  */
+	  err = __file_set_translator (node, FS_TRANS_EXCL, 0,
+				       _HURD_IFSOCK, sizeof _HURD_IFSOCK,
+				       MACH_PORT_NULL,
+				       MACH_MSG_TYPE_COPY_SEND);
+	  if (! err)
+	    /* Get a port to the ifsock translator.  */
+	    err = __file_invoke_translator (node, &ifsock); /* XXX */
+	  if (! err)
+	    /* Get the address port.  */
+	    err = __ifsock_getsockaddr (ifsock, &aport);
+	  __mach_port_deallocate (__mach_task_self (), ifsock);
+	  if (! err)
+	    /* Link the node, now a socket, into the target directory.  */
+	    err = __dir_link (node, dir, name);
+	  __mach_port_deallocate (__mach_task_self (), node);
+	}
+      __mach_port_deallocate (__mach_task_self (), dir);
+
+      if (err)
+	return __hurd_fail (err);
+    }
+  else
+    aport = MACH_PORT_NULL;
+
   err = HURD_DPORT_USE (fd,
 			({
-			  err = __socket_create_address (port,
-							 addr->sa_family,
-							 (char *) addr, len,
-							 &aport, 1);
+			  if (aport == MACH_PORT_NULL)
+			    err = __socket_create_address (port,
+							   addr->sa_family,
+							   (char *) addr, len,
+							   &aport, 1);
 			  if (! err)
 			    {
 			      err = __socket_bind (port, aport);
