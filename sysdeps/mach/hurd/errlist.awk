@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -46,16 +46,18 @@ errnoh == 1 && $1 == "@comment" \
 errnoh == 2 && $1 == "@deftypevr"  && $2 == "Macro" && $3 == "int" \
   {
     e = $4;
-    s = "    \"" etext "\",";
-    l = 40 - length (s);
-    while (l-- > 0)
-      s = s " ";
-    printf "%s/* %d = %s */\n", s, ++errno, e;
+    if (e != "EAGAIN")
+      printf "%-40s/* %d = %s */\n", "    \"" etext "\",", ++errno, e;
     next;
   }
 { errnoh=0 }
 END {
   print "  };";
   print "";
+  print "#include <errno.h>";
+  ++errno;
+  printf "#if _HURD_ERRNOS != %d\n", errno;
+  print "#error errlist/errnos generation bug";
+  print "#endif"
   printf "const int _sys_nerr = %d;\n", errno;
   }

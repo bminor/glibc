@@ -433,7 +433,6 @@ DEFUN(__vfscanf, (s, format, arg),
 	    }
 	  break;
 
-#ifndef MIB_HACKS
 	case 'e':	/* Floating-point numbers.  */
 	case 'E':
 	case 'f':
@@ -481,6 +480,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	  if (w[-1] == '-' || w[-1] == '+' || w[-1] == 'e')
 	    conv_error();
 
+#ifndef MIB_HACKS
 	  /* Convert the number.  */
 	  *w = '\0';
 	  fp_num = strtod(work, &w);
@@ -498,7 +498,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	      ++done;
 	    }
 	  break;
-#endif MIB_HACKS
+#endif /* MIB_HACKS */
 
 	case '[':	/* Character class.  */
 	  STRING_ARG;
