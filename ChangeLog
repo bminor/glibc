@@ -240,11 +240,9 @@
 	* nis/ypclnt.c (yp_2_yperr): Revert 2004-11-30 patch.
 	(ypprot_err): Use yp_2_yperr table also for YP_NODOM .. YP_NOMORE.
 
-2005-03-19  Jakub Jelinek  <jakub@redhat.com>
+2005-03-20  Alfred M. Szmidt  <ams@gnu.org>
 
-	[BZ #821]
-	* elf/dl-open.c (dl_open_worker): Print exact l_direct_opencount value,
-	it has been incremented before.
+	* elf/dl-open.c (dl_open_worker): Fix typo.
 
 2005-03-19  Ulrich Drepper  <drepper@redhat.com>
 
@@ -259,6 +257,12 @@
 	* elf/order2mod2.c: New file.
 	* elf/order2mod3.c: New file.
 	* elf/order2mod4.c: New file.
+
+2005-03-19  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #821]
+	* elf/dl-open.c (dl_open_worker): Print exact l_direct_opencount value,
+	it has been incremented before.
 
 2005-03-18  Ulrich Drepper  <drepper@redhat.com>
 
