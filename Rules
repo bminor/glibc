@@ -101,7 +101,7 @@ subdir_install: install
 subdir_TAGS: TAGS
 
 # Make the distribution tarfile for the parent makefile.
-
+export distribute dont_distribute
 .PHONY: subdir_dist dist
 subdir_dist: dist
 dist: ../Make-dist
