@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,17 +27,20 @@ Cambridge, MA 02139, USA.  */
 #define	__DOTS		, ...
 
 /* In GCC versions before 2.5, the `volatile' and `const' keywords have
-   special meanings when applied to functions.  In version 2.5, the
-   `__attribute__' syntax used below does not work properly.  */
-#if	__GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 6)
+   special meanings when applied to functions.  In versions 2.5 and 2.6,
+   the `__attribute__' syntax used below does not work properly.  */
+#if	__GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5)
 #define	__NORETURN	__volatile
 #define	__CONSTVALUE	__const
-#else
-/* In GCC 2.6 and later, these keywords are meaningless when applied to
+ #elif	__GNUC__ > 2 || __GNUC_MINOR__ >= 7 /* Faith.  */
+/* In GCC 2.5 and later, these keywords are meaningless when applied to
    functions, as ANSI requires.  Instead, we use GCC's special
    `__attribute__' syntax.  */
-#define	__NORETURN	__attribute__ ((noreturn))
-#define	__CONSTVALUE	__attribute__ ((const))
+#define	__NORETURN	__attribute__ ((__volatile__))
+#define	__CONSTVALUE	__attribute__ ((__const__))
+#else
+#define __NORETURN
+#define __CONSTVALUE
 #endif
 
 #else	/* Not GCC.  */
