@@ -119,9 +119,9 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	  int tag;
 	} msg;
       mach_msg_timeout_t timeout = (timeval != NULL ?
-				    timeval->tv_sec * 1000 +
-				    timeval->tv_usec :
-				    0);
+ 				    (timeval->tv_sec * 1000 +
+				     timeval->tv_usec / 1000) :
+ 				    0);
       mach_msg_option_t options = (timeval == NULL ? 0 : MACH_RCV_TIMEOUT);
     receive:
       switch (err = __mach_msg (&msg, MACH_RCV_MSG | options, 0, sizeof (msg),
