@@ -44,7 +44,7 @@ __xstat64 (int vers, const char *name, struct stat64 *buf)
   int result;
 
 #if defined __NR_stat64
-  if (! have_no_stat64)
+  if (! __have_no_stat64)
     {
       int saved_errno = errno;
       result = INLINE_SYSCALL (stat64, 2, name, buf);
@@ -53,7 +53,7 @@ __xstat64 (int vers, const char *name, struct stat64 *buf)
 	return result;
 
       __set_errno (saved_errno);
-      have_no_stat64 = 1;
+      __have_no_stat64 = 1;
     }
 #endif
 

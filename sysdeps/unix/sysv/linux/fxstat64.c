@@ -43,7 +43,7 @@ __fxstat64 (int vers, int fd, struct stat64 *buf)
   int result;
 
 # if defined __NR_fstat64
-  if (! have_no_stat64)
+  if (! __have_no_stat64)
     {
       int saved_errno = errno;
       result = INLINE_SYSCALL (fstat64, 2, fd, buf);
@@ -52,7 +52,7 @@ __fxstat64 (int vers, int fd, struct stat64 *buf)
 	return result;
 
       __set_errno (saved_errno);
-      have_no_stat64 = 1;
+      __have_no_stat64 = 1;
     }
 #endif
 

@@ -80,12 +80,11 @@ L(einval):
 	jmp SYSCALL_ERROR_LABEL
 #endif
 
-#if !defined __NR_mmap2
 
-# ifndef __NR_mmap2
+#ifndef __NR_mmap2
 	/* Save registers.  */
 	movl %ebx, %edx
-# endif
+#endif
 3:
 	cmpl $0, 44(%esp)
 	jne L(einval)
@@ -94,9 +93,9 @@ L(einval):
 
 	lea 4(%esp), %ebx		/* Address of args is 1st arg.  */
 
-# ifdef __NR_mmap2
+#ifdef __NR_mmap2
 	jmp L(do_syscall)
-# else
+#else
 
 	/* Do the system call trap.  */
 	int $0x80
@@ -115,7 +114,6 @@ L(pseudo_end):
 L(einval):
 	movl $-EINVAL, %eax
 	jmp SYSCALL_ERROR_LABEL
-# endif
 #endif
 
 PSEUDO_END (__mmap64)
