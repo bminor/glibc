@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -52,3 +52,7 @@ Cambridge, MA 02139, USA.  */
 #define	LOSE	__task_terminate (__mach_task_self ())
 #endif
 
+/* One of these should be defined to specify the stack direction.  */
+#if !defined (STACK_GROWTH_UP) && !defined (STACK_GROWTH_DOWN)
+#error stack direction unspecified
+#endif
