@@ -177,8 +177,7 @@ FORCE:
 
 subdir_dist: dist.tar
 dist.tar: $(tardir) $(+tsrcs)
-	tar ch$(verbose)f $@ \
-			  $(addprefix $(tardir)/,$(filter-out $(tardir),$^))
+	tar chvf $@ $(addprefix $(tardir)/,$(filter-out $(tardir),$^))
 
 $(tardir).tar: dist.tar subdir_dist
 	tar xf $< -C /tmp
