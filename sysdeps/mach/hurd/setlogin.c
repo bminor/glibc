@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ int
 DEFUN(setlogin, (name), CONST char *name)
 {
   error_t err;
-  if (err = __proc_setlogin (_hurd_proc, name))
+  if (err = _HURD_PORT_USE (&_hurd_proc, __proc_setlogin (port, name)))
     return __hurd_fail (err);
   return 0;
 }
