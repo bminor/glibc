@@ -212,7 +212,8 @@ struct ioctl_handler
   {
     int first_request, last_request; /* Range of handled request values.  */
 
-    int (*handler) (int fd, int request, __gnuc_va_list);
+    /* Handler function, called like ioctl to do its entire job.  */
+    int (*handler) (int fd, int request, void *arg);
 
     struct ioctl_handler *next;	/* Next handler.  */
   };
