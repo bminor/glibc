@@ -62,6 +62,7 @@ tests := hello
 
 all:
 
+include ../Makeconfig	# To get objpfx defined.
 
 # Define mach-syscalls and sysno-*.
 ifneq ($(no_deps),t)
@@ -71,11 +72,15 @@ $(objpfx)mach-syscalls.mk: mach/syscall_sw.h syscalls.awk
 # Go kludges!!!
 	sed -n -e '/Unix server implement them/,$$d' \
 	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),[0-9]*)$$/\1 \2/p' \
-	< $< | awk -f $(word 2,$^) > $@-new		      
+	< $< | awk -f $(word 2,$^) > $@-new
 	mv $@-new $@
 generated += mach-syscalls.mk
 
-ifdef mach-syscalls
+ifndef mach-syscalls
+# We cannot make the deps properly until we know how to make the system
+# call functions, and for that we must know what they all are.
+no_deps=t
+else
 $(mach-syscalls:%=$(objpfx)__%.S): $(objpfx)__%.S: $(objpfx)mach-syscalls.mk
 	(echo '#include <sysdep.h>'; \
 	 echo 'SYSCALL_TRAP (__$*, $(sysno-$*))') > $@-new
@@ -86,7 +91,7 @@ $(mach-syscalls:%=$(objpfx)%.c): $(objpfx)%.c:
 	mv $@-new $@
 generated += $(mach-syscalls:%=__%.S) \
 	     $(mach-syscalls:%=%.c)
-endif
+endif	# mach-syscalls
 
 mach-shortcuts := $(patsubst syscall_%,%,$(filter syscall_%,$(mach-syscalls)))
 
@@ -104,7 +109,8 @@ migdefines += $(foreach call,$(mach-shortcuts),-D$(call)=$(call)_rpc)
 mach/mach_interface.uh mach/mach_port.uh: $(objpfx)mach-syscalls.mk
 
 ifdef mach-shortcuts
-$(mach-shortcuts:%=__%.c): __%.c: shortcut.awk __%_rpc.c
+$(mach-shortcuts:%=$(objpfx)__%.c): $(objpfx)__%.c: shortcut.awk \
+						    $(objpfx)__%_rpc.c
 	gawk -v call=__$* -v rpc=__$*_rpc -v syscall=__syscall_$* \
 	     -f $^ > $@-new
 	mv $@-new $@
@@ -112,25 +118,27 @@ $(mach-shortcuts:%=__%.c): __%.c: shortcut.awk __%_rpc.c
 # The shortcut calls have had their names changed to CALL_rpc, so
 # CALL_rpc.c is being generated with a symbol alias to __CALL_rpc.  
 # We also want CALL.c with an alias to __CALL.
-$(mach-shortcuts:%=%.c):
+$(mach-shortcuts:%=$(objpfx)%.c): $(objpfx)%.c:
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*)') > $@-new
 	mv $@-new $@
 generated += $(mach-shortcuts:%=%.c)
+endif	# mach-shortcuts
 
 # Generate mach-shortcuts.h, which will contain the prototypes for the
 # shortcutted kernel RPC functions.
-$(objpfx)mach-shortcuts.h: mach/mach_interface.h mach/mach_port.h
+$(objpfx)mach-shortcuts.h: $(objpfx)mach/mach_interface.h \
+			   $(objpfx)mach/mach_port.h
 # The first line gets us one paragraph per line, with @s separating real lines.
 # The second line selects paragraphs for the shortcutted functions.
 # The third line removes `_rpc' from the names and rerealifies the lines.
 	cat $^ | tr \\012 @ | sed s/@@/@%/g | tr % \\012 \
 	| grep '^/\* Routine [a-z0-9_]*_rpc \*/' \
-	| sed 's/_rpc//' | tr @ \\012 > $@-new
+	| sed 's/_rpc//g' | tr @ \\012 > $@-new
 	mv $@-new $@
 
 before-compile += $(objpfx)mach-shortcuts.h
-endif	# mach-shortcuts
+
 
 include Machrules
 include ../Rules
