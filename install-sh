@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # install - install a program, script, or datafile
-# This comes from X11R5; it is not part of GNU.
+# This comes from X11R5.
 #
 # $XConsortium: install.sh,v 1.2 89/12/18 14:47:22 jim Exp $
 #
@@ -146,6 +146,8 @@ dstdir=`echo $dst | sed -e 's,[^/]*$,,;s,/$,,;s,^$,.,'`
 # Make sure that the destination directory exists.
 #  this part is taken from Noah Friedman's mkinstalldirs script
 
+# Skip lots of stat calls in the usual case.
+if [ ! -d "$dstdir" ]; then
 defaultIFS='	
 '
 IFS="${IFS-${defaultIFS}}"
@@ -171,6 +173,7 @@ while [ $# -ne 0 ] ; do
 
 	pathcomp="${pathcomp}/"
 done
+fi
 
 if [ x"$dir_arg" != x ]
 then
