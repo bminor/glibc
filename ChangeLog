@@ -1,3 +1,11 @@
+2000-02-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/nl_langinfo.c: Correct return value in error case.  Don't
+	set errno.
+
+	* iconvdata/gconv-modules: Add aliases CN-GB and CN-BIG5.
+	Reported by Bruno Haible <haible@ilog.fr>.
+
 2000-02-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/canonicalize.c (canonicalize): Zero terminate
