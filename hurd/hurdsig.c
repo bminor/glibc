@@ -602,17 +602,16 @@ _S_sig_post (mach_port_t me,
 	   Someday we could implement some reasonable scheme for
 	   authorizing SIGIO and SIGURG signals properly.  */
 
-	struct hurd_userlink dtable_ulink;
-	struct hurd_dtable dt = _hurd_dtable_get (&dtable_ulink);
+	__mutex_lock (&_hurd_dtable_lock);
 	int d;
-	for (d = 0; d >= 0 && d < dt.size; ++d)
+	for (d = 0; (unsigned int) d < (unsigned int) _hurd_dtablesize; ++d)
 	  {
 	    struct hurd_userlink ulink;
 	    io_t port;
 	    mach_port_t asyncid;
-	    if (dt.d[d] == NULL)
+	    if (_hurd_dtable[d] == NULL)
 	      continue;
-	    port = _hurd_port_locked_get (&dt.d[d]->port, &ulink);
+	    port = _hurd_port_get (&_hurd_dtable[d]->port, &ulink);
 	    if (! __io_get_icky_async_id (port, &asyncid))
 	      {
 		if (refport == asyncid)
@@ -620,9 +619,8 @@ _S_sig_post (mach_port_t me,
 		  d = -1;
 		__mach_port_deallocate (__mach_task_self (), asyncid);
 	      }
-	    _hurd_port_free (&dt.d[d]->port, &ulink, port);
+	    _hurd_port_free (&_hurd_dtable[d]->port, &ulink, port);
 	  }
-	_hurd_dtable_free (dt, &dtable_ulink);
 	/* If we found a lucky winner, we've set D to -1 in the loop.  */
 	if (d < 0)
 	  goto win;
@@ -634,7 +632,7 @@ _S_sig_post (mach_port_t me,
   return EPERM;
 
  win:
-  /* Deallocate the REFPORT right; we are done with it.  */
+  /* Deallocate the REFPORT send right; we are done with it.  */
   __mach_port_deallocate (__mach_task_self (), refport);
 
   /* Get a hold of the designated signal-receiving thread.  */
