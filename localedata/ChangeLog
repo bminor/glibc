@@ -1,6 +1,28 @@
 2002-02-28  Ulrich Drepper  <drepper@redhat.com>
 
-	locales/br_FR@euro: New file.
+	* br_FR: Eliminate old national currencies of countries
+	participating in Euro.  Spell out EUR as currency_name.
+	* ca_ES: Likewise.
+	* de_AT: Likewise.
+	* de_BE: Likewise.
+	* de_DE: Likewise.
+	* de_LU: Likewise.
+	* el_GR: Likewise.
+	* en_IE: Likewise.
+	* es_ES: Likewise.
+	* fi_FI: Likewise.
+	* fr_BE: Likewise.
+	* fr_FR: Likewise.
+	* fr_LU: Likewise.
+	* ga_IE: Likewise.
+	* gl_ES: Likewise.
+	* it_IT: Likewise.
+	* nl_NL: Likewise.
+	* pt_PT: Likewise.
+
+	* es_ES@euro: int_curr_symbol was DEM.  Replace with EUR.
+
+	* locales/br_FR@euro: New file.
 
 2002-02-23  Ulrich Drepper  <drepper@redhat.com>
 

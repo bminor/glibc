@@ -1,3 +1,8 @@
+2002-02-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/iso-4217.def: Remove obsolete currencies for countries
+	with Euro.
+
 2002-02-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Always add SONAME to
