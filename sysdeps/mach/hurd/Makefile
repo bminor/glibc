@@ -55,9 +55,10 @@ ifneq (mach,$(subdir))
 # (But we don't want to do this in mach/, because hurd/ needs some things
 # there, and we know mach/ doesn't need anything from hurd/.)
 
-before-compile += $(common-objpfx)hurd/io.h
-$(common-objpfx)hurd/%:	# Run only if it doesn't exist.
-	$(MAKE) -C $(..)hurd $(patsubst $(..)hurd/%,%,$@)
+# These are all the generated headers that <hurd.h> includes.
+before-compile += $(patsubst %,$(common-objpfx)hurd/%.h,io fs process)
+$(patsubst %,$(common-objpfx)hurd/%.%,io fs process):
+	$(MAKE) -C $(..)hurd generated no_deps=t
 endif
 endif
 
