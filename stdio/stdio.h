@@ -1,19 +1,20 @@
-/* Copyright (C) 1990 Free Software Foundation, Inc.
+/* Copyright (C) 1991 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 1, or (at your option)
-any later version.
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
 
 The GNU C Library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with the GNU C Library; see the file COPYING.  If not, write to
-the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
 /*
  *	ANSI Standard: 4.9 INPUT/OUTPUT	<stdio.h>
@@ -32,8 +33,7 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #define	__need___va_list
 #include <stdarg.h>
 
-#define	__need___off_t
-#include <sys/types.h>
+#include <gnu/types.h>
 #endif	/* Don't need FILE.  */
 #undef	__need_FILE
 
@@ -52,17 +52,13 @@ typedef struct __stdio_file FILE;
 /* The type of the second argument to `fgetpos' and `fsetpos'.  */
 typedef __off_t fpos_t;
 
-/* The current direction of I/O: reading, writing, or in between.  */
-typedef enum { __READING, __WRITING, __CHANGING } __io_direction;
-
-
 /* The mode of I/O, as given in the MODE argument to fopen, etc.  */
 typedef struct
   {
     unsigned int __read:1;	/* Open for reading.  */
     unsigned int __write:1;	/* Open for writing.  */
     unsigned int __append:1;	/* Open for appending.  */
-    unsigned int __bin:1;	/* Opened binary.  */
+    unsigned int __binary:1;	/* Opened binary.  */
     unsigned int __create:1;	/* Create the file.  */
     unsigned int __exclusive:1;	/* Error if it already exists.  */
     unsigned int __truncate:1;	/* Truncate the file on opening.  */
@@ -71,8 +67,10 @@ typedef struct
 
 /* Functions to do I/O and file management for a stream.  */
 
-typedef int EXFUN(__io_read, (PTR __cookie, char *__buf, size_t __nbytes));
-typedef int EXFUN(__io_write, (PTR __cookie, CONST char *__buf, size_t __n));
+typedef __ssize_t EXFUN(__io_read, (PTR __cookie, char *__buf,
+				    size_t __nbytes));
+typedef __ssize_t EXFUN(__io_write, (PTR __cookie, CONST char *__buf,
+				     size_t __n));
 typedef int EXFUN(__io_seek, (PTR __cookie, fpos_t *__pos, int __w));
 typedef int EXFUN(__io_close, (PTR __cookie));
 
@@ -91,7 +89,7 @@ typedef struct
     /* Make room in the input buffer.  */
     int EXFUN((*__input), (FILE *__stream));
     /* Make room in the output buffer.  */
-    void EXFUN((*__output), (FILE *__stream, int __flush_only, int __c));
+    void EXFUN((*__output), (FILE *__stream, int __c));
   } __room_functions;
 
 extern CONST __io_functions __default_io_functions;
@@ -102,10 +100,6 @@ extern CONST __room_functions __default_room_functions;
 extern __io_close __stdio_close;
 /* Open FILE with mode M, return cookie or NULL to use an int in *DP.  */
 extern PTR EXFUN(__stdio_open, (CONST char *__file, __io_mode __m, int *__dp));
-/* Decide the type of buffering and buffer size used for COOKIE.  */
-extern void EXFUN(__stdio_linebf, (PTR __cookie, int *__buffering,
-				   size_t *__bufsize, __io_functions *__iof,
-				   __room_functions *__rf));
 /* Put out an error message for when stdio needs to die.  */
 extern void EXFUN(__stdio_errmsg, (CONST char *__msg, size_t __len));
 /* Generate a unique file name.  */
@@ -127,28 +121,34 @@ extern __NORETURN void EXFUN(__libc_fatal, (CONST char *__message));
 /* The FILE structure.  */
 struct __stdio_file
   {
+    /* Magic number for validation.  Must be negative in open streams
+       for the glue to Unix stdio getc/putc to work.  */
+    int __magic;
+#define	_IOMAGIC	0xfedabeeb	/* Magic number to fill `__magic'.  */
+#define	_GLUEMAGIC	0xfeedbabe	/* Magic for glued Unix streams.  */
+
+    char *__bufp;			/* Pointer into the buffer.  */
+    char *__get_limit;			/* Reading limit.  */
+    char *__put_limit;			/* Writing limit.  */
+    char *__buffer;			/* Base of buffer.  */
+    size_t __bufsize;			/* Size of the buffer.  */
     FILE *__next;			/* Next FILE in the linked list.  */
-    char *__buf;			/* Base of buffer.  */
-    char *__bp;				/* Pointer into the buffer.  */
-    char *__end;			/* Pointer past end of the buffer.  */
-    size_t __bufsz;			/* Size of the buffer.  */
-    PTR __crunch;			/* Magic cookie.  */
-    int __fd;				/* System file descriptor.  */
-    unsigned char __magic;		/* Magic number for validation.  */
-#define	_IOMAGIC 0xd5			/* Magic number to fill `__magic'.  */
-    char __pb_buf[3];			/* Pushback buffer.  */
-    size_t __pb_count;			/* Count of chars pushed back.  */
-    __io_mode __iomode;			/* File access mode.  */
+    PTR __cookie;			/* Magic cookie.  */
+    int __fileno;			/* System file descriptor.  */
+    unsigned char __pushback;		/* Pushed-back character.  */
+    char *__pushback_bufp;		/* Old bufp if char pushed back.  */
+    unsigned int __pushed_back:1;	/* A char has been pushed back.  */
     unsigned int __eof:1;		/* End of file encountered.  */
     unsigned int __error:1;		/* Error encountered.  */
-    unsigned int __usrbuf:1;		/* Buffer is from user.  */
-    unsigned int __lnbuf:1;		/* Flush on newline.  */
-    unsigned int __beenseen:1;		/* This stream has been seen.  */
-    unsigned int __isapipe:1;		/* Nonzero if opened by popen.  */
-    unsigned int __iodir:2;		/* Current direction of I/O.  */
-    __io_functions __iofuncs;		/* I/O functions.  */
-    __room_functions __roomfuncs;	/* I/O buffer room functions.  */
-    fpos_t __off;			/* Offset of the buffer.  */
+    unsigned int __userbuf:1;		/* Buffer is from user.  */
+    unsigned int __linebuf:1;		/* Flush on newline.  */
+    unsigned int __seen:1;		/* This stream has been seen.  */
+    unsigned int __ispipe:1;		/* Nonzero if opened by popen.  */
+    __io_mode __mode;			/* File access mode.  */
+    __io_functions __io_funcs;		/* I/O functions.  */
+    __room_functions __room_funcs;	/* I/O buffer room functions.  */
+    fpos_t __offset;			/* Current file position.  */
+    fpos_t __target;			/* Target file position.  */
   };
 
 
@@ -157,96 +157,21 @@ struct __stdio_file
 
 
 /* Nonzero if STREAM is a valid stream.  */
-#define	__validfp(stream) ((stream) != NULL && (stream)->__magic == _IOMAGIC)
-
-
-/* Check to see if I/O for STREAM is going in
-   direction DIR and signal a fatal error if so.  */
-#define	__ill_dirch_check(stream, dir)	\
-  (__direction(stream) == (dir) && (__stdio_ill_dirch(dir), 0))
-
-/* Print a message about an illegal direction change and abort.  */
-extern __NORETURN void EXFUN(__stdio_ill_dirch, (__io_direction __dir));
-
-
-/* This must be called before each function that does output.  */
-#define	__beginwrite(stream)						      \
-  do									      \
-    switch (__direction(stream))					      \
-      {									      \
-      case __READING:							      \
-	__stdio_ill_dirch(__READING);					      \
-	break;								      \
-      case __WRITING:							      \
-	break;								      \
-      case __CHANGING:							      \
-	/* The buffer is empty.  */					      \
-        __bufp(stream) = __buffer(stream);				      \
-        if (__linebuf(stream))						      \
-	  __endp(stream) = __bufp(stream);				      \
-	__set_direction(stream, __WRITING);				      \
-      }									      \
-  while (0)
-
-
-/* These macros hide the member names of the FILE structure by providing
-   access to their information in the form of pseudo-functions.  */
-
-#define	__direction(stream)	((__io_direction) (stream)->__iodir)
-#define	__set_direction(stream, direction)	\
-  ((stream)->__iodir = (unsigned int) (direction))
-#define	__seen(stream)		((stream)->__beenseen)
-#define	__linebuf(stream)	((stream)->__lnbuf)
-#define	__userbuf(stream)	((stream)->__usrbuf)
-#define	__ispipe(stream)	((stream)->__isapipe)
-
-#define	__mode(stream)		((stream)->__iomode)
-#define	__canread(stream)	(__mode(stream).__read)
-#define	__canwrite(stream)	(__mode(stream).__write)
-#define	__binary(stream)	(__mode(stream).__bin)
-
-#define	__buffer(stream)	((stream)->__buf)
-#define	__bufp(stream)		((stream)->__bp)
-#define	__bufsize(stream)	((stream)->__bufsz)
-#define	__endp(stream)		((stream)->__end)
-
-#define	__charsleft(stream)	(__endp(stream) - __bufp(stream))
-
-#define	__feof(stream)		((stream)->__eof)
-#define	__ferror(stream)	((stream)->__error)
-
-#define	__cookie(stream)	((stream)->__crunch)
-#define	__fileno(stream)	((stream)->__fd)
-
-#define	__io_funcs(stream)	((stream)->__iofuncs)
-#define	__room_funcs(stream)	((stream)->__roomfuncs)
-
-#define	__offset(stream)	((stream)->__off)
-
+#define	__validfp(stream)						      \
+  (stream != NULL && ((stream->__magic == _GLUEMAGIC &&			      \
+		       (stream = (FILE *) &((int *) stream)[1])),	      \
+		      (stream->__magic == _IOMAGIC)))			      \
 
 /* Clear the error and EOF indicators of STREAM.  */
-#define	__clearerr(stream)	(__ferror(stream) = __feof(stream) = 0)
-
-
-/* Set the magic cookie to the fd and the I/O functions to their
-   defaults and set the `seen' flag so it won't be done again.  */
-#define	__see(stream)							      \
-  ((void) (__cookie(stream) = (PTR) &__fileno(stream),			      \
-   __io_funcs(stream) = __default_io_functions,				      \
-   __room_funcs(stream) = __default_room_functions,			      \
-   __seen(stream) = 1))
-
-
-/* Return one of the standard buffering-method constants,
-   telling which method is used by STREAM.  */
-#define	__buffering(stream)						      \
-  ((__buffer(stream) && __buffer(stream) != (stream)->__pb_buf) ?	      \
-   (__linebuf(stream) ? _IOLBF : _IOFBF) :				      \
-   (__userbuf(stream) ? _IONBF : _IOFBF))				      \
-
+#define	__clearerr(stream)	((stream)->__error = (stream)->__eof = 0)
 
 /* Nuke STREAM, making it unusable but available for reuse.  */
 extern void EXFUN(__invalidate, (FILE *__stream));
+
+/* Make sure STREAM->__offset and STREAM->__target are initialized.
+   Returns 0 if successful, or EOF on
+   error (but doesn't set STREAM->__error).  */
+extern int EXFUN(__stdio_check_offset, (FILE *__stream));
 
 
 /* The possibilities for the third argument to `setvbuf'.  */
@@ -291,16 +216,10 @@ extern void EXFUN(__invalidate, (FILE *__stream));
 
 /* All the known streams are in a linked list
    linked by the `next' field of the FILE structure.  */
-
 extern FILE *__stdio_head;	/* Head of the list.  */
-extern FILE *__stdio_tail;	/* Tail of the list.  */
 
-/* The standard streams (standard input, output, and error) must be
-   defined statically because they are never opened.  They are still
-   part of the linked list; _stdio_head is initialized to point to
-   the first of them and _stdio_tail to the last and all of their
-   `next' fields point to the appropriate next address.  */
-extern FILE stdin[1], stdout[1], stderr[1];
+/* Standard streams.  */
+extern FILE *stdin, *stdout, *stderr;
 
 
 /* Remove file FILENAME.  */
@@ -329,8 +248,7 @@ extern char *EXFUN(tempnam, (CONST char *__dir, CONST char *__pfx));
 
 /* This performs actual output when necessary, flushing
    STREAM's buffer and optionally writing another character.  */
-extern int EXFUN(__flshfp, (FILE *__stream, int __c,
-			    int __flush_only));
+extern int EXFUN(__flshfp, (FILE *__stream, int __c));
 
 
 /* Close STREAM, or all streams if STREAM is NULL.  */
@@ -345,10 +263,16 @@ extern FILE *EXFUN(fopen, (CONST char *__filename, CONST char *__modes));
 extern FILE *EXFUN(freopen, (CONST char *__filename,
 			     CONST char *__modes, FILE *__stream));
 
-/* Create a new stream that refers to the given magic cookie,
-   and uses the given functions for input and output. (Used internally.)  */
-extern FILE *EXFUN(__fopencookie, (PTR __magic_cookie, __io_mode mode,
-				   __io_functions __io_functions));
+/* Return a new, zeroed, stream.
+   You must set its cookie and io_mode.
+   The first operation will give it a buffer unless you do.
+   It will also give it the default functions unless you set the `seen' flag.
+   The offset is set to -1, meaning it will be determined by doing a
+   stationary seek.  You can set it to avoid the initial tell call.
+   The target is set to -1, meaning it will be set to the offset
+   before the target is needed.
+   Returns NULL if a stream can't be created.  */
+extern FILE *EXFUN(__newstream, (NOARGS));
 
 #ifdef	__USE_POSIX
 /* Create a new stream that refers to an existing system file descriptor.  */
@@ -362,7 +286,12 @@ extern FILE *EXFUN(fopencookie, (PTR __magic_cookie, CONST char *__modes,
 				 __io_functions __io_functions));
 
 /* Create a new stream that refers to a memory buffer.  */
-extern FILE *EXFUN(fmemopen, (char *__s, size_t __len, CONST char *__modes));
+extern FILE *EXFUN(fmemopen, (PTR __s, size_t __len, CONST char *__modes));
+
+/* Open a stream that writes into a malloc'd buffer that is expanded as
+   necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
+   and the number of characters written on fflush or fclose.  */
+extern FILE *EXFUN(open_memstream, (char **__bufloc, size_t *sizeloc));
 #endif
 
 
@@ -399,14 +328,8 @@ extern int EXFUN(vprintf, (CONST char *__format, __va_list __arg));
 /* Write formatted output to S from argument list ARG.  */
 extern int EXFUN(vsprintf, (char *__s, CONST char *__format, __va_list __arg));
 
-/* Write formatted output to S from argument list ARG.
-   If LIMIT is nonzero, process no more than MAX specs.  */
-extern int EXFUN(__vflprintf, (FILE *__s, CONST char *__format,
-			       __va_list __arg, int __limit, size_t __max));
-
 #ifdef	__OPTIMIZE__
-#define	vfprintf(s, format, arg)	__vflprintf((s), (format), (arg), 0, 0)
-#define	vprintf(fmt, arg)		__vflprintf(stdout, (fmt), (arg), 0, 0)
+#define	vprintf(fmt, arg)		vfprintf(stdout, (fmt), (arg))
 #endif	/* Optimizing.  */
 
 #ifdef	__USE_GNU
@@ -417,27 +340,14 @@ extern int EXFUN(snprintf, (char *__s, size_t __maxlen,
 extern int EXFUN(vsnprintf, (char *__s, size_t __maxlen,
 			     CONST char *__format, __va_list __arg));
 
-/* Process no more than N format specifiers.  */
-extern int EXFUN(vflprintf, (FILE *__s, size_t __n,
-			     CONST char *__format, __va_list __arg));
-
-#ifdef	__OPTIMIZE__
-#define	vflprintf(s, n, fmt, arg)	__vflprintf((s), (fmt), (arg), 1, (n))
-#endif	/* Optimizing.  */
-
-extern int EXFUN(vslprintf, (char *__s, size_t __n,
-			     CONST char *__format, __va_list __arg));
-
-/* Write formatted output to S from FORMAT with arguments from ARG,
-   writing no more than MAXLEN chars and processing no more than N specs.  */
-extern int EXFUN(vslnprintf, (char *__s, size_t __n, size_t __maxlen,
-			      CONST char *__format, __va_list __arg));
-
-
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
 extern int EXFUN(vasprintf, (char **__ptr, CONST char *__f, __va_list __arg));
 extern int EXFUN(asprintf, (char **__ptr, CONST char *__fmt, ...));
+
+/* Write formatted output to a file descriptor.  */
+extern int EXFUN(vdprintf, (int __fd, CONST char *__fmt, __va_list __arg));
+extern int EXFUN(dprintf, (int __fd, CONST char *__fmt, ...));
 #endif
 
 
@@ -487,9 +397,9 @@ extern int EXFUN(getchar, (NOARGS));
 
 /* The C standard explicitly says this can
    re-evaluate its argument, so it does. */
-#define	__getc(stream)	\
-  (__bufp(stream) == __endp(stream) ? __fillbf(stream) : \
-   (int) ((unsigned char) *__bufp(stream)++))
+#define	__getc(stream)							      \
+  ((stream)->__bufp < (stream)->__get_limit ?				      \
+   (int) ((unsigned char) *(stream)->__bufp++) : __fillbf(stream))
 
 /* The C standard explicitly says this is a macro,
    so we always do the optimization for it.  */
@@ -510,8 +420,12 @@ extern int EXFUN(putchar, (int __c));
 /* The C standard explicitly says this can
    re-evaluate its arguments, so it does.  */
 #define	__putc(c, stream)						      \
-  (__bufp(stream) == __endp(stream) ?					      \
-   __flshfp((stream), (c), 0) : (unsigned char) (*__bufp(stream)++ = (c)))
+  ((stream)->__bufp < (stream)->__put_limit ? 				      \
+   (int) (unsigned char) (*(stream)->__bufp++ = (unsigned char) (c)) :	      \
+   ((stream)->__linebuf && (c) != '\n' &&				      \
+    (stream)->__bufp - (stream)->__buffer < (stream)->__bufsize) ?	      \
+   (*(stream)->__bufp++ = (unsigned char) (c)) :			      \
+   __flshfp((stream), (unsigned char) (c)))
 
 /* The C standard explicitly says this can be a macro,
    so we always do the optimization for it.  */
@@ -537,6 +451,18 @@ extern char *EXFUN(fgets, (char *__s, size_t __n, FILE *__stream));
 /* Get a newline-terminated string from stdin, removing the newline.
    DO NOT USE THIS FUNCTION!!  There is no limit on how much it will read.  */
 extern char *EXFUN(gets, (char *__s));
+
+
+#ifdef	__USE_GNU
+#include <sys/types.h>
+
+/* Read up to (and including) a newline from STREAM into *LINEPTR
+   (and null-terminate it).  *LINEPTR is a pointer returned from malloc
+   (or NULL), pointing to *N characters of space.  It is realloc'd as
+   necessary.  Returns the number of characters read (not including the
+   null terminator), or -1 on error or EOF.  */
+ssize_t EXFUN(getline, (char **lineptr, size_t *n, FILE *stream));
+#endif
 
 
 /* Write a string to STREAM.  */
@@ -582,8 +508,8 @@ extern int EXFUN(feof, (FILE *__stream));
 extern int EXFUN(ferror, (FILE *__stream));
 
 #ifdef	__OPTIMIZE__
-#define	feof(stream)	(__feof(stream) != 0)
-#define	ferror(stream)	(__ferror(stream) != 0)
+#define	feof(stream)	((stream)->__eof != 0)
+#define	ferror(stream)	((stream)->__error != 0)
 #endif	/* Optimizing.  */
 
 
@@ -602,7 +528,7 @@ extern int EXFUN(fileno, (CONST FILE *__stream));
 
 #ifdef	__OPTIMIZE__
 /* The `+ 0' makes this not be an lvalue, so it can't be changed.  */
-#define	fileno(stream)	(__fileno(stream) + 0)
+#define	fileno(stream)	((stream)->__fileno + 0)
 #endif	/* Optimizing.  */
 
 #endif	/* Use POSIX.  */
