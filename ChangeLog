@@ -1,3 +1,8 @@
+2005-03-29  Thorsten Kukuk  <kukuk@suse.de>
+
+	* posix/tst-execle1.c (do_test): Fix execle arguments.
+	* posix/tst-execle2.c (do_test): Likewise.
+
 2005-03-01  Alfred M. Szmidt  <ams@gnu.org>
 
 	[BZ #777]
