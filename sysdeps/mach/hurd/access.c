@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <fcntl.h>
 
 /* Test for access to FILE by our real user and group IDs.  */
 int
@@ -39,8 +40,6 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   /* Set up _hurd_id.rid_auth.  */
   if (_hurd_id.rid_auth == MACH_PORT_NULL)
     {
-      uid_t ruid, rgid;
-
       if (_hurd_id.aux.nuids < 1 || _hurd_id.aux.ngids < 1)
 	{
 	  /* We do not have a real UID and GID.  Lose, lose, lose!  */
@@ -64,10 +63,11 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
     }
 
   crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir);
-  err = __io_reauthenticate (crdir);
+  err = __io_reauthenticate (crdir, _hurd_pid);
   if (!err)
     {
-      err = __auth_user_authenticate (_hurd_rid_auth, crdir, &rcrdir);
+      err = __auth_user_authenticate (_hurd_id.rid_auth,
+				      crdir, _hurd_pid, &rcrdir);
       __mach_port_deallocate (__mach_task_self (), crdir);
     }
   _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir, crdir);
@@ -75,13 +75,14 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   if (!err)
     {
       cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &dealloc_cwdir);
-      err = __io_reauthenticate (cwdir);
+      err = __io_reauthenticate (cwdir, _hurd_pid);
       if (!err)
 	{
-	  err = __auth_user_authenticate (_hurd_rid_auth, cwdir, &rcwdir);
+	  err = __auth_user_authenticate (_hurd_id.rid_auth,
+					  cwdir, _hurd_pid, &rcwdir);
 	  __mach_port_deallocate (__mach_task_self (), cwdir);
 	}
-      _hurd_port_free (cwdir, &dealloc_cwdir);
+      _hurd_port_free (&_hurd_ports[INIT_PORT_CWDIR], &dealloc_cwdir, cwdir);
     }
 
   /* We are done with _hurd_rid_auth now.  */
