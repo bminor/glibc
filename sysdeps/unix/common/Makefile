@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 $(common-objpfx)local_lim.h: $(common-objpfx)mk-local_lim
 	$(dir $<)$(notdir $<) > $@-t
 	mv $@-t $@
-$(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/bsd/mk-local_lim.c
+$(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/common/mk-local_lim.c
 	$(native-compile)
 
 before-compile := $(before-compile) $(common-objpfx)local_lim.h
@@ -37,7 +37,7 @@ $(objpfx)ctype-glue.c: $(objpfx)glue-ctype
 	$(dir $<)$(notdir $<) > $@-t
 	mv $@-t $@
 
-$(objpfx)glue-ctype: $(sysdep_dir)/unix/bsd/glue-ctype.c
+$(objpfx)glue-ctype: $(sysdep_dir)/unix/common/glue-ctype.c
 	$(native-compile)
 
 endif
@@ -50,7 +50,7 @@ $(objpfx)siglist.c: $(objpfx)make_siglist
 	$< > $@-tmp
 	mv $@-tmp $@
 
-$(objpfx)make_siglist: $(sysdep_dir)/unix/bsd/make_siglist.c
+$(objpfx)make_siglist: $(sysdep_dir)/unix/common/make_siglist.c
 	$(native-compile)
 
 endif
