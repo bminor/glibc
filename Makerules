@@ -412,9 +412,10 @@ $(addprefix $(includedir)/,$(headers)): \
 	$(includedir)/%: %;$(do-install)
 endif	# headers
 
-.PHONY: install-bin-nosubdir install-lib-nosubdir \
+.PHONY: install-bin-nosubdir install-sbin-nosubdir install-lib-nosubdir \
 	install-data-nosubdir install-headers-nosubdir
-install-bin-nosubdir: $(addprefix $(bindir)/,$(install))
+install-bin-nosubdir: $(addprefix $(bindir)/,$(install-bin))
+install-sbin-nosubdir: $(addprefix $(sbindir)/,$(install-sbin))
 install-lib-nosubdir: $(addprefix $(libdir)/,\
 		       $(patsubst lib%.a,lib$(libprefix)%.a,$(install-lib.a)) \
 		       $(addprefix $(libprefix),$(install-lib-non.a)))
@@ -431,7 +432,7 @@ install-%:: install-%-nosubdir ;
 .PHONY: install install-no-libc.a-nosubdir
 install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir\
 			    install-bin-nosubdir install-lib-nosubdir	\
-			    install-others-nosubdir 
+			    install-others-nosubdir install-sbin-nosubdir
 install: install-no-libc.a-nosubdir
 
 # Command to compile $< in $(objdir) using the native libraries.
