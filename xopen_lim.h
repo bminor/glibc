@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,8 +24,10 @@
    should be used to obtain the actual value.  */
 
 #ifndef _XOPEN_LIM_H
-
 #define _XOPEN_LIM_H	1
+
+#define __need_FOPEN_MAX
+#include <stdio_lim.h>
 
 /* We do not provide fixed values for
 
@@ -53,7 +55,7 @@
 #define IOV_MAX		_XOPEN_IOV_MAX
 
 /* The number of streams that one process can have open at one time.  */
-#define STREAM_MAX	_POSIX_STREAM_MAX
+#define STREAM_MAX	FOPEN_MAX
 
 /* Maximum number of bytes supported for the name of a time zone.  */
 #define TZNAME_MAX	_POSIX_TZNAME_MAX
