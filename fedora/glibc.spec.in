@@ -1,4 +1,4 @@
-%define glibcrelease 85
+%define glibcrelease 86
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1258,6 +1258,14 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Nov 30 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-86
+- update from CVS
+  - some posix_opt.h fixes
+- fix strtold use of unitialized memory (#141000)
+- some more bugfixes for bugs detected by valgrind
+- rebuilt with GCC >= 3.4.3-5 to avoid packed stack layout
+  on s390{,x} (#139678)
+
 * Fri Nov 26 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-85
 - update from CVS
   - support -v specification in getconf
