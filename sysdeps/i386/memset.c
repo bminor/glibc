@@ -34,10 +34,7 @@ DEFUN(memset, (dstpp, c, len),
      improves code very much indeed.  */
   register op_t x asm("ax");
 
-  /* Fill X with four copies of the char we want to fill with.  */
   x = (unsigned char) c;
-  x |= (x << 8);
-  x |= (x << 16);
 
   /* Clear the direction flag, so filling will move forward.  */
   asm volatile("cld");
@@ -45,6 +42,10 @@ DEFUN(memset, (dstpp, c, len),
   /* This threshold value is optimal.  */
   if (len >= 12)
     {
+      /* Fill X with four copies of the char we want to fill with.  */
+      x |= (x << 8);
+      x |= (x << 16);
+
       /* There are at least some bytes to set.
 	 No need to test for LEN == 0 in this alignment loop.  */
 
@@ -76,5 +77,5 @@ DEFUN(memset, (dstpp, c, len),
 }
 
 #else
-#include <sysdeps/generic/bzero.c>
+#include <sysdeps/generic/memset.c>
 #endif
