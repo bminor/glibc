@@ -39,7 +39,7 @@ machine_get_state (thread_t thread, struct machine_thread_all_state *state,
     {
       /* Noone asked about this flavor of state before; fetch the state
 	 directly from the kernel into the sigcontext.  */
-      unsigned int got;
+      unsigned int got = (size / sizeof (int));
       return (! __thread_get_state (thread, flavor, scpptr, &got)
 	      && got == (size / sizeof (int)));
     }
@@ -54,6 +54,7 @@ machine_get_basic_state (thread_t thread,
   if (state->set & (1 << MACHINE_THREAD_STATE_FLAVOR))
     return 1;
 
+  count = MACHINE_THREAD_STATE_COUNT;
   if (__thread_get_state (thread, MACHINE_THREAD_STATE_FLAVOR,
 			  (int *) &state->basic, &count) != KERN_SUCCESS ||
       count != MACHINE_THREAD_STATE_COUNT)
