@@ -1,3 +1,19 @@
+2002-04-28  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/sys/io.h: New file.
+	* sysdeps/mach/hurd/i386/ioperm.c: New file.
+	* sysdeps/mach/hurd/i386/Dist: Add them.
+	* sysdeps/mach/hurd/i386/Versions
+	(libc: GLIBC_2.2.6): New set, add ioperm.
+	* sysdeps/mach/hurd/i386/Makefile [$(subdir) = misc]
+	(sysdep_routines): Append ioperm here.
+	(sysdep_headers): Append sys/io.h here.
+	* sysdeps/mach/i386/configure.in: New file.
+	Check to set HAVE_I386_IO_PERM_MODIFY.
+	* config.h.in (HAVE_I386_IO_PERM_MODIFY): #undef it.
+	* sysdeps/mach/i386/configure: New file.
+	* mach/Makefile (user-interfaces): Add i386/mach_i386 to the list.
+
 2002-04-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/semctl.c: Copied from
