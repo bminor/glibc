@@ -50,7 +50,7 @@ DEFUN(socketpair, (domain, type, protocol, fds),
     {
       close (d1);
       close (d2);
-      return __hurd_fail (err);
+      return __hurd_dfail (fd, err);
     }
 
   fds[0] = d1;
