@@ -23,7 +23,7 @@ subdir	:= setjmp
 
 headers	:= setjmp.h jmp_buf.h
 
-routines	:= setjmp sigjmp_save _setjmp sigsetjmp \
+routines	:= setjmp sigjmp_save _setjmp \
 		   longjmp _longjmp __longjmp siglongjmp
 
 tests		:= tst-setjmp
