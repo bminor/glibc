@@ -1,3 +1,8 @@
+1999-07-02  Cristian Gafton  <gafton@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (__cmsg_nxthdr): "return 0"
+	instead of "return NULL" to make C++ happy.
+
 1999-07-04  Mark Kettenis  <kettenis@gnu.org>
 
 	* libio/iofdopen.c (_IO_new_fdopen): Set EINVAL if MODE is not
