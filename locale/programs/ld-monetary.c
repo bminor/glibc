@@ -129,9 +129,12 @@ monetary_finish (struct localedef_t *locale)
   /* The international currency symbol must come from ISO 4217.  */
   if (monetary->int_curr_symbol != NULL)
     {
-      if (strlen (monetary->int_curr_symbol) != 4 && !be_quiet)
-	error (0, 0, _("\
+      if (strlen (monetary->int_curr_symbol) != 4)
+	{
+	  if (!be_quiet)
+	    error (0, 0, _("\
 value of field `int_curr_symbol' in category `LC_MONETARY' has wrong length"));
+	}
       else if (bsearch (monetary->int_curr_symbol, valid_int_curr,
 			NR_VALID_INT_CURR, sizeof (const char *),
 			(comparison_fn_t) curr_strcmp) == NULL
