@@ -36,7 +36,7 @@ Cambridge, MA 02139, USA.  */
 #include <signal.h>
 #include <errno.h>
 
-#include <mutex.h>
+#include <cthreads.h>		/* For `struct mutex'.  */
 #include <lock-intern.h>
 
 
