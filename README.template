@@ -9,12 +9,14 @@ configurations:
 		sparc-sun-solaris2
 		m68k-hp-bsd4.3
 		m68k-sun-sunos4
-		m68k-sony-newsos
+		m68k-sony-bsd4.3
 		mips-dec-ultrix4
 		i386-bsd4.3
 		i386-sysv
 		i386-sysv4
-		i386-sequent-bsd
+		i386-sco3.2
+		i386-sco3.2v4
+		i386-sequent-dynix
 
 Porting the library is not hard.  If you are interested in doing a port,
 please get on the mailing list by sending electronic mail to
@@ -25,7 +27,7 @@ provides the Unix `crypt' function, plus some other entry points.  Because
 of the United States export restriction on DES implementations, we are
 distributing this code separately from the rest of the C library.  There is
 an extra distribution tar file just for crypt; it is called
-`glibc-VERSION-crypt.tar.Z'.  You can just unpack the crypt distribution
+`glibc-VERSION-crypt.tar.z'.  You can just unpack the crypt distribution
 along with the rest of the C library and build; you can also build the
 library without getting crypt.  Users outside the USA can get the crypt
 distribution via anonymous FTP from ftp.uni-c.dk [129.142.6.74], or another
