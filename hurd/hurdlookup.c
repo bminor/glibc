@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -150,6 +150,15 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
     lookup = __dir_lookup;
 
   nloops = 0;
+#define CHECK_ELOOP do {						      \
+    if (++nloops > SYMLOOP_MAX)						      \
+      {									      \
+	if (*result != MACH_PORT_NULL)					      \
+	  __mach_port_deallocate (__mach_task_self (), *result);	      \
+	return ELOOP;							      \
+      }									      \
+  } while (0)
+
   err = 0;
   do
     {
@@ -164,11 +173,6 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	  /* Fall through.  */
 
 	case FS_RETRY_NORMAL:
-#ifdef SYMLOOP_MAX
-	  if (nloops++ >= SYMLOOP_MAX)
-	    return ELOOP;
-#endif
-
 	  /* An empty RETRYNAME indicates we have the final port.  */
 	  if (retryname[0] == '\0' &&
 	      /* If reauth'd, we must do one more retry on "" to give the new
@@ -229,6 +233,8 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	      return err;
 	    }
 
+	  CHECK_ELOOP;
+
 	  startdir = *result;
 	  file_name = retryname;
 	  break;
@@ -237,6 +243,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	  switch (retryname[0])
 	    {
 	    case '/':
+	      CHECK_ELOOP;
 	      dirport = INIT_PORT_CRDIR;
 	      if (*result != MACH_PORT_NULL)
 		__mach_port_deallocate (__mach_task_self (), *result);
@@ -282,6 +289,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		  else
 		    {
 		      /* Do a normal retry on the remaining components.  */
+		      CHECK_ELOOP;
 		      startdir = *result;
 		      file_name = end + 1; /* Skip the slash.  */
 		      break;
@@ -315,6 +323,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		    abort ();	/* XXX write this right if this ever happens */
 		  if (p > retryname)
 		    strcpy (retryname, p);
+		  CHECK_ELOOP;
 		  startdir = *result;
 		}
 	      else
@@ -347,6 +356,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		  case '/':
 		    if (err = opentty (&startdir))
 		      return err;
+		    CHECK_ELOOP;
 		    strcpy (retryname, &retryname[4]);
 		    break;
 		  default:
