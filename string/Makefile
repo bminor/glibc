@@ -29,7 +29,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
 		   __memccpy memchr memcmp memmove memset  		\
 		   bcopy bzero ffs stpcpy strcasecmp strncase		\
 		   rindex index bcmp memccpy memcpy wordcopy strsep	\
-		   swab strfry memfrob
+		   swab strfry memfrob memmem
 
 tests		:= tester testcopy
 distribute	:= memcopy.h
