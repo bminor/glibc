@@ -21,21 +21,31 @@ Cambridge, MA 02139, USA.  */
 #include <setjmp.h>
 
 
+#define REGS \
+  REG (bx);\
+  REG (si);\
+  REG (di)
+
+#define REG(xx) register long int xx asm (#xx)
+REGS;
+#undef	REG
+
 /* Save the current program position in ENV and return 0.  */
 int
 DEFUN(__setjmp, (env), jmp_buf env)
 {
-  asm ("movl %%ebx, %0" : "=g" (env[0].__bx));
-  asm ("movl %%esi, %0" : "=g" (env[0].__si));
-  asm ("movl %%edi, %0" : "=g" (env[0].__di));
-  asm ("movl %%ebp, %0" : "=g" (env[0].__bp));
-  asm volatile ("popl %%edx\n"
-		"movl %%edx, %0\n"
-		"movl %%esp, %1\n"
-		"xorl %%eax, %%eax\n"
-		"jmp *%%edx\n" :
-		"=g" (env[0].__dx), "=g" (env[0].__sp));
+  /* Save the general registers.  */
+#define	REG(xx)	env[0].__##xx = xx
+  REGS;
 
-  /* NOTREACHED */
+  /* Save the return PC.  */
+  env[0].__pc = (PTR) ((PTR *) &env)[-1];
+
+  /* Save caller's FP, not our own.  */
+  env[0].__bp = (PTR) ((PTR *) &env)[-2];
+
+  /* Save caller's SP, not our own.  */
+  env[0].__sp = (PTR) &env;
+
   return 0;
 }
