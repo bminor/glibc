@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,19 +18,26 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 
+
+
+#if 0
+/* Things in the library which want to be run when the auth port changes.  */
+struct
+  {
+    size_t n;
+    void (*fn[0]) ();
+  } _hurd_reauth;
+#endif
+
 static inline void
 reauth_io (io_t *server)
 {
   if (*server != MACH_PORT_NULL &&
-      __io_reauthenticate (*server) == POSIX_SUCCESS)
+      ! __io_reauthenticate (*server))
     {
       mach_port_t new;
-      if (__auth_user_authenticate (_hurd_auth,
-				    *server,
-				    &new) == POSIX_SUCCESS)
 	{
-	  __mach_port_deallocate (__mach_task_self (),
-				  *server);
+	  __mach_port_deallocate (__mach_task_self (), *server);
 	  *server = new;
 	}
     }
@@ -46,7 +53,10 @@ __setauth (auth_t new)
   auth_t old;
   int d;
   mach_port_t ignore;
+  void (**fn) (void);
 
+  /* Give the new send right a user reference.
+     This is a good way to check that it is valid.  */
   if (__mach_port_mod_refs (__mach_task_self (), new,
 			    MACH_PORT_RIGHT_SEND, 1))
     {
@@ -54,25 +64,64 @@ __setauth (auth_t new)
       return -1;
     }
 
+  /* Install the new port in the _hurd_auth cell.  */
   __mutex_lock (&_hurd_idlock);
-  __mutex_lock (&_hurd_dtable_lock);
-  __mutex_lock (&_hurd_lock);
-  old = _hurd_auth;
-  _hurd_auth = new;
+  _hurd_port_set (&_hurd_auth, new);
   _hurd_id_valid = 0;
   __mutex_unlock (&_hurd_idlock);
-  __mach_port_deallocate (__mach_task_self (), old);
-  __proc_reauthenticate (_hurd_proc);
-  __auth_user_authenticate (_hurd_auth, _hurd_proc, &ignore);
-  if (ignore != MACH_PORT_NULL)
+
+  /* Reauthenticate with the proc server.  */
+  if (!_HURD_PORT_USE (&_hurd_proc,
+		       __proc_reauthenticate (port) ||
+		       __auth_user_authenticate (new, port, &ignore))
+      && ignore != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), ignore);
+
+  /* Reauthenticate the file descriptor table.  */
+
   if (_hurd_dtable.d == NULL)
+    /* We just have the simple table we got at startup.  */
     for (d = 0; d < _hurd_init_dtablesize; ++d)
-      reauth_io (&_hurd_init_dtable[d]);
+      if (_hurd_init_dtable[d] != MACH_PORT_NULL)
+	{
+	  mach_port_t new;
+	  if (! __io_reauthenticate (_hurd_init_dtable[d]) &&
+	      ! _HURD_PORT_USE (&_hurd_auth,
+				__auth_user_authenticate (_hurd_init_dtable[d],
+							  &new)))
+	    {
+	      __mach_port_deallocate (__mach_task_self (),
+				      _hurd_init_dtable[d]);
+	      _hurd_init_dtable[d] = new;
+	    }
+	}
   else
-    for (d = 0; d < _hurd_dtable.size; ++d)
-      reauth_io (&_hurd_dtable.d[d]);
-  __mutex_unlock (&_hurd_dtable_lock);
+    {
+      /* We have a real descriptor table.  */
+      __mutex_lock (&_hurd_dtable_lock);
+      for (d = 0; d < _hurd_dtable.size; ++d)
+	{
+	  struct _hurd_port *const cell = &hurd_dtable.d[d].port;
+	  mach_port_t new;
+
+	  /* Take the descriptor cell's lock.  */
+	  __spin_lock (&cell->lock);
+
+	  /* Reauthenticate the descriptor's port.  */
+	  if (cell->port != MACH_PORT_NULL &&
+	      ! __io_reauthenticate (cell->port) &&
+	      ! _HURD_PORT_USE (&_hurd_auth,
+				__auth_user_authenticate (port,
+							  cell->port, &new)))
+	    /* Replace the port in the descriptor cell
+	       with the newly reauthenticated port.  */
+	    _hurd_port_locked_set (cell, new);
+	  else
+	    /* Lost.  Leave this descriptor cell alone.  */
+	    __spin_unlock (&cell->lock);
+	}
+      __mutex_unlock (&_hurd_dtable_lock);
+    }
 
   return 0;
 }
