@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,24 +18,13 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <math.h>
+#include "ieee754.h"
 
 /* Return nonzero if VALUE is not a number.  */
 int
 DEFUN(__isnan, (value), double value)
 {
-  union
-    {
-      double d;
-      /* This is the IEEE 754 double-precision format.  */
-      struct
-	{
-	  unsigned int negative:1;
-	  int exponent:11;
-	  /* Together these comprise the signed mantissa.  */
-	  int mantissa0:20;
-	  unsigned int mantissa1:32;
-	} ieee;
-    } u;
+  union ieee754_double u;
 
   u.d = value;
 
