@@ -19,6 +19,7 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sysdep.h>		/* In case it wants to define anything.  */
 
 /* The first piece of initialized data.  */
 int __data_start = 0;
