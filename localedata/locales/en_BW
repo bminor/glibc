@@ -17,11 +17,11 @@ comment_char  %
 % for commercial purposes.
 
 LC_CTYPE
-copy "en_ZA"
+copy "en_DK"
 END LC_CTYPE
 
 LC_COLLATE
-copy "en_ZA"
+copy "en_DK"
 END LC_COLLATE
 
 LC_MONETARY
