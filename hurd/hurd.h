@@ -32,9 +32,11 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/hurd_types.h>
 
 /* Get MiG stub declarations for commonly used Hurd interfaces.  */
+#include <hurd/auth.h>
 #include <hurd/process.h>
 #include <hurd/fs.h>
 #include <hurd/io.h>
+#include <hurd/msg.h>
 
 #include <errno.h>
 #define	__hurd_fail(err)	(errno = (err), -1)
@@ -66,7 +68,7 @@ struct _hurd_port
 
 /* Evaluate EXPR with the variable `port' bound to the port in PORTCELL.  */
 #define	_HURD_PORT_USE(portcell, expr)					      \
-  ({ struct _hurd_port *const __p = &(portcell);			      \
+  ({ struct _hurd_port *const __p = (portcell);				      \
      int __dealloc;							      \
      const mach_port_t port = _hurd_port_get (__p, &__dealloc);		      \
      __typeof(expr) __result = (expr);					      \
@@ -156,7 +158,7 @@ extern volatile mode_t _hurd_umask;
 
 /* Shorthand macro for referencing _hurd_ports.  */
 #define	__USEPORT(which, expr) \
-  _HURD_USE_PORT (&_hurd_ports[INIT_PORT_##], (expr))
+  _HURD_PORT_USE (&_hurd_ports[INIT_PORT_##which], (expr))
 
 /* Base address and size of the initial stack set up by the exec server.
    If using cthreads, this stack is deallocated in startup.
@@ -184,9 +186,8 @@ struct _hurd_fd
 
     /* Normal port to the ctty.  When `port' is our ctty, this is a port to
        the same io object but which never returns EBACKGROUND; when not,
-       this is nil.  This is controlled by the lock and user_dealloc fields
-       in `port', since they are always used and changed together.  */
-    io_t ctty;
+       this is nil.  */
+    struct _hurd_port ctty;
   };
 
 /* Set up *FD to have PORT its server port, doing appropriate ctty magic.
@@ -314,11 +315,11 @@ _hurd_fd_done (struct _hurd_fd_user d, int *dealloc)
 #define	_HURD_DPORT_USE(fd, expr)					      \
   ({ int __dealloc_dt;							      \
      struct _hurd_fd_user __d = _hurd_fd (fd, &__dealloc_dt);		      \
-     if (__d.cell == NULL)						      \
+     if (__d.d == NULL)							      \
        EBADF;								      \
      else								      \
        {								      \
-	 int __dealloc = 0, __dealloc_ctty = 0;				      \
+	 int __dealloc, __dealloc_ctty;					      \
 	 io_t port = _hurd_port_locked_get (&__d.d->port, &__dealloc);	      \
 	 io_t ctty = _hurd_port_locked_get (&__d.d->ctty, &__dealloc_ctty);   \
 	 __typeof (expr) __result;					      \
@@ -332,7 +333,7 @@ _hurd_fd_done (struct _hurd_fd_user d, int *dealloc)
    })									      \
 
 static inline int
-_hurd_dfail (int fd, error_t err)
+__hurd_dfail (int fd, error_t err)
 {
   switch (err)
     {
@@ -371,13 +372,26 @@ extern struct mutex _hurd_pid_lock; /* Locks above.  */
 
 
 /* User and group IDs.  */
+struct _hurd_id_data
+  {
 #ifdef noteven
-extern mutex_t _hurd_idlock;
+    mutex_t lock;
 #endif
-extern int _hurd_id_valid;	/* If _hurd_uid and _hurd_gid are valid.  */
-extern struct idlist *_hurd_uid, *_hurd_gid;
-extern unsigned int _hurd_nuids, _hurd_ngids;
-extern auth_t _hurd_rid_auth;	/* Cache used by access.  */
+
+    int valid;			/* If following data are up to date.  */
+
+    struct
+      {
+	uid_t *uids;
+	gid_t *gids;
+	unsigned int nuids, ngids;
+      } gen, aux;
+
+    auth_t rid_auth;		/* Cache used by access.  */
+  };
+extern struct _hurd_id_data _hurd_id;
+/* Update _hurd_id (caller should be holding the lock).  */
+extern error_t _hurd_check_ids (void);
 
 
 /* Unix `data break', for brk and sbrk.
@@ -502,6 +516,10 @@ extern void _hurd_msgport_receive (void);
   })
 
 #endif /* notyet */
+
+/* Mask of signals that cannot be caught, blocked, or ignored.  */
+#define	_SIG_CANT_MASK	(__sigmask (SIGSTOP) | __sigmask (SIGKILL))
+
 
 
 /* Calls to get and set basic ports.  */
