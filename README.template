@@ -5,18 +5,20 @@ Some bugs surely remain.
 As of this release, the GNU C library has been ported to the following
 configurations:
 
-		sparc-sun-sunos4
-		sparc-sun-solaris2
-		m68k-hp-bsd4.3
-		m68k-sun-sunos4
-		m68k-sony-bsd4.3
-		mips-dec-ultrix4
+		alpha-dec-osf1 (mostly finished)
 		i386-bsd4.3
-		i386-sysv
-		i386-sysv4
+		i386-gnu (for Hurd development only)
 		i386-sco3.2
 		i386-sco3.2v4
 		i386-sequent-dynix
+		i386-sysv
+		i386-sysv4
+		m68k-hp-bsd4.3
+		m68k-sony-newsos
+		m68k-sun-sunos4
+		mips-dec-ultrix4
+		sparc-sun-solaris2
+		sparc-sun-sunos4
 
 Porting the library is not hard.  If you are interested in doing a port,
 please get on the mailing list by sending electronic mail to
@@ -27,7 +29,7 @@ provides the Unix `crypt' function, plus some other entry points.  Because
 of the United States export restriction on DES implementations, we are
 distributing this code separately from the rest of the C library.  There is
 an extra distribution tar file just for crypt; it is called
-`glibc-VERSION-crypt.tar.z'.  You can just unpack the crypt distribution
+`glibc-VERSION-crypt.tar.gz'.  You can just unpack the crypt distribution
 along with the rest of the C library and build; you can also build the
 library without getting crypt.  Users outside the USA can get the crypt
 distribution via anonymous FTP from ftp.uni-c.dk [129.142.6.74], or another
