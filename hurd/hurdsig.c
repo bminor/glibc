@@ -600,8 +600,14 @@ _hurdsig_init (void)
   stacksize = __vm_page_size * 4; /* Small stack for signal thread.  */
   if (err = __mach_setup_thread (__mach_task_self (), _hurd_msgport_thread,
 				 _hurd_msgport_receive,
-				 NULL, &stacksize))
+				 (vm_address_t *) &__hurd_sigthread_stack_base,
+				 &stacksize))
     __libc_fatal ("hurd: Can't setup signal thread\n");
+  __hurd_sigthread_stack_end = __hurd_sigthread_stack_base + stacksize;
+  __hurd_sigthread_variables =
+    malloc (__hurd_threadvar_max * sizeof (unsigned long int));
+  if (__hurd_sigthread_variables == NULL)
+    __libc_fatal ("hurd: Can't allocate thread variables for signal thread\n");
   if (err = __thread_resume (_hurd_msgport_thread))
     __libc_fatal ("hurd: Can't resume signal thread\n");
     
