@@ -47,7 +47,6 @@ _S_add_auth (mach_port_t me,
 					&newauth)))
     return err;
 
-  /* XXX clobbers errno. Need per-thread errno. */
   err = __setauth (newauth);
   __mach_port_deallocate (__mach_task_self (), newauth);
   if (err)
@@ -68,6 +67,7 @@ _S_del_auth (mach_port_t me,
   if (!_hurd_refport_secure_p (task))
     return EPERM;
 
+  HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_id.lock);
   err = _hurd_check_ids ();
 
@@ -115,6 +115,7 @@ _S_del_auth (mach_port_t me,
 			&newauth));
     }
   __mutex_unlock (&_hurd_id.lock);
+  HURD_CRITICAL_END;
 
   if (err)
     return err;
