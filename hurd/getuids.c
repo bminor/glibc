@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 
 
 int
-__getuids (int n, gid_t *gidset)
+__getuids (int n, uid_t *uidset)
 {
   error_t err;
   int nuids;
