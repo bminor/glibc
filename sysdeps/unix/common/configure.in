@@ -1,8 +1,10 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 
+if [ ! "$inhibit_glue" ]; then
 # Find out what this system calls `sys_siglist'.
 AC_HAVE_FUNCS(sys_siglist _sys_siglist)
 
 # Find out the name of the table the system's <ctype.h> uses for character
 # classification.  This is used by sysdeps/unix/common/glue-ctype.c.
 AC_HAVE_FUNCS(_ctype_ __ctype_ __ctype _ctype__ _ctype _locp)
+fi
