@@ -24,9 +24,9 @@ This will be free information when it is finished, but isn't finished yet.
 @center with
 @center Roland McGrath, Andrew Oram, and Richard M. Stallman
 @sp 3
-@center last updated January 10, 1992
+@center last updated October 16, 1992
 @sp 1
-@center for version 0.00
+@center for version 1.05
 @page
 @vskip 0pt plus 1filll
 Copyright @copyright{} 1992 Free Software Foundation, Inc.
@@ -567,8 +567,8 @@ Mathematics
 
 Pseudo-Random Numbers
 
-* ANSI C Random Number Functions::  @code{rand} and friends.
-* BSD Random Number Functions::  @code{random} and friends.
+* ANSI Random::                 @code{rand} and friends.
+* BSD Random::                  @code{random} and friends.
 
 Low-Level Arithmetic Functions
 
@@ -656,7 +656,7 @@ Defining Signal Handlers
 * Handler Returns::             
 * Termination in Handler::      
 * Longjmp in Handler::          
-* Signals in Succession::       
+* Signals in Handler::       
 * Nonreentrancy::               
 * Atomic Data Access::          
 
@@ -935,20 +935,37 @@ Porting the GNU C Library
 @include header.texinfo
 @include maint.texinfo
 
-@c @set lgpl-appendix
-@c node Copying, Concept Index, Maintenance, Top
-@c @include lgpl.texinfo
-@include copying.texinfo
 
-@include index-cp.texi
+@set lgpl-appendix
+@node Copying, Concept Index, Maintenance, Top
+@include lgpl.texinfo
 
-@include index-tp.texi
-   
-@include index-fn.texi
 
-@include index-vr.texi
+@node Concept Index, Type Index, Copying, Top
+@unnumbered Concept Index
 
-@include index-pg.texi
+@printindex cp
+
+@node Type Index, Function Index, Concept Index, Top
+@unnumbered Type Index
+
+@printindex tp
+
+@node Function Index, Variable Index, Type Index, Top
+@unnumbered Function and Macro Index
+
+@printindex fn
+
+@node Variable Index, File Index, Function Index, Top
+@unnumbered Variable and Constant Macro Index
+
+@printindex vr
+
+@node File Index, , Variable Index, Top
+@unnumbered Program and File Index
+
+@printindex pg
+
 
 @shortcontents
 @contents
