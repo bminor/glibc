@@ -1,5 +1,7 @@
 1998-10-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dl-close.c (_dl_close): Fix typo.  Patch by Christian Gafton.
+
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Add missing
 	Ruffian entry.
 	Patch by Christian Gafton.
