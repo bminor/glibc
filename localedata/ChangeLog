@@ -21,7 +21,7 @@
 1999-11-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* charmaps/ISO-8859-10: Correct alias.  This standard was issued
-	in 1992.  Reported by Bruno Haibe <haible@ilog.fr>.
+	in 1992.  Reported by Bruno Haible <haible@ilog.fr>.
 
 1999-11-12  Ulrich Drepper  <drepper@cygnus.com>
 
