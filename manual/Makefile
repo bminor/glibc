@@ -1,6 +1,6 @@
 # Makefile for the GNU C Library manual.
 
-# Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ endif
 define find-includes
 (echo '$(@F) :=' \\	;\
  awk '$$1 == "@include" { print $$2 " \\" }' $^) > $@.new
-mv $@.new $@
+mv -f $@.new $@
 endef
 
 libc.dvi libc.info: $(chapters) summary.texi $(chapters-incl)
@@ -66,7 +66,7 @@ stamp-summary: summary.awk $(chapters)
 	    -e 's,/\*  *,/* @r{,g' -e 's,  *\*/,} */,'	\
 	    -e 's/\(@[a-z][a-z]*\)@{\([^}]*\)@}/\1{\2}/'\
 	    $< | expand > $@.new
-	mv $@.new $@
+	mv -f $@.new $@
 
 
 minimal-dist = summary.awk move-if-change libc.texinfo $(chapters)	\
@@ -96,13 +96,13 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 
 %.Z: %
 	compress -c $< > $@.new
-	mv $@.new $@
+	mv -f $@.new $@
 %.z: %
 	gzip -9 -c $< > $@.new
-	mv $@.new $@
+	mv -f $@.new $@
 %.uu: %
 	uuencode $< < $< > $@.new
-	mv $@.new $@
+	mv -f $@.new $@
 
 .PHONY: mostlyclean distclean realclean clean subdir_clean
 subdir_clean: clean
@@ -168,6 +168,9 @@ $(glibc-targets):
 stubs: $(common-objpfx)stub-manual
 $(common-objpfx)stub-manual:
 	cp /dev/null $@
+
+# The top-level glibc Makefile expects subdir_install to update the stubs file.
+subdir_install: stubs
 
 
 # Get rid of these variables if they came from the parent.
