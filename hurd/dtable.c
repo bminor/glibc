@@ -338,6 +338,8 @@ rectty_dtable (mach_port_t cttyid)
   __mutex_unlock (&_hurd_dtable_lock);
 }
 
+#if 0
+
 #include <sys/ioctl.h>
 
 
@@ -391,4 +393,6 @@ tiocnoctty (int fd,
   return 0;
 }
 _HURD_HANDLE_IOCTL (tiocnotty, TIOCNOTTY);
+#endif
+
 #endif
