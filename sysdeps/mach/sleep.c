@@ -36,10 +36,10 @@ DEFUN(sleep, (seconds), unsigned int seconds)
   recv = __mach_reply_port ();
 
   before = time ((time_t *) NULL);
-  (void) __mach_msg (NULL, MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
+  (void) __mach_msg (NULL, MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT|MACH_RCV_MSG,
 		     0, 0, recv, seconds * 1000000, MACH_PORT_NULL);
   after = time ((time_t *) NULL);
   __mach_port_destroy (__mach_task_self (), recv);
 
-  return (after - before);
+  return seconds - (after - before);
 }
