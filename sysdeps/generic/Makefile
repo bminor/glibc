@@ -24,7 +24,6 @@ routines:= $(filter-out acos asin cos sin ceil __rint hypot,$(routines)) \
 aux	:= $(aux) exp__E log__L
 
 math-twiddled := t
-
 endif
 
 bsdmath_dirs := $(bsdmath_dirs) common common_source
