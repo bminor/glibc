@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -81,7 +81,7 @@ DEFUN_VOID(__tzset)
 
   tz = getenv("TZ");
 
-  if (*tz == ':')
+  if (tz != NULL && *tz == ':')
     {
       __tzfile_read(tz + 1);
       if (__use_tzfile)
