@@ -68,12 +68,11 @@ void
 _start (void)
 {
   error_t err;
-  mach_port_t in_bootstrap, passed_bootstrap;
+  mach_port_t in_bootstrap;
   char *args, *env;
   mach_port_t *portarray;
   int *intarray;
   size_t argslen, envlen, portarraysize, intarraysize;
-  int dealloc_args, dealloc_env;
 
   int argc, envc;
   char **argv;
@@ -86,130 +85,72 @@ _start (void)
   __mach_init ();
 
   if (_cthread_init_routine != NULL)
-    SET_SP ((*_cthread_init_routine) ());
+    {				/* XXXXXXXXXXXXXXXXXXXXXXXX */
+      void *newsp = (*_cthread_init_routine) ();
+      SET_SP (newsp);
+      if (newsp < _hurd_stack_low || newsp > _hurd_stack_high)
+	__vm_deallocate (__mach_task_self (),
+			 _hurd_stack_low,
+			 _hurd_stack_high - _hurd_stack_low);
+    }
 
   if (err = __task_get_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
 				     &in_bootstrap))
     LOSE;
 
-  err = __exec_startup (in_bootstrap,
-			&args, &argslen, &dealloc_args,
-			&env, &envlen, &dealloc_env,
-			&_hurd_init_dtable, &_hurd_init_dtablesize,
-			&portarray, &portarraysize,
-			&intarray, &intarraysize,
-			&passed_bootstrap);
-  __mach_port_deallocate (__mach_task_self (), in_bootstrap);
-  if (err)
-    LOSE;
-
-  /* When the user asks for the bootstrap port,
-     he will get the one the exec server passed us.  */
-  __task_set_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
-			   passed_bootstrap);
-  __mach_port_deallocate (__mach_task_self (), passed_bootstrap);
-
-  for (i = 0; i < portarraysize; ++i)
-    switch (i)
-      {
-#define	initport(upper, lower) \
-      case INIT_PORT_##upper: \
-	_hurd_port_init (&_hurd_##lower, portarray[i]); \
-	break
-	
-	initport (PROC, proc);
-	initport (CCDIR, ccdir);
-	initport (CWDIR, cwdir);
-	initport (CRDIR, crdir);
-	initport (AUTH, auth);
-
-      default:
-	/* Wonder what that could be.  */
-	__mach_port_deallocate (__mach_task_self (), portarray[i]);
-	break;
-      }
-
-  if (intarraysize > INIT_UMASK)
-    _hurd_umask = intarray[INIT_UMASK] & 0777;
-  else
-    _hurd_umask = 0022;		/* XXX */
-  if (intarraysize > INIT_CTTY_FILEID) /* Knows that these are sequential.  */
+  if (in_bootstrap != MACH_PORT_NULL)
     {
-      _hurd_ctty_fstype = intarray[INIT_CTTY_FSTYPE];
-      _hurd_ctty_fsid.val[0] = intarray[INIT_CTTY_FSID1];
-      _hurd_ctty_fsid.val[1] = intarray[INIT_CTTY_FSID2];
-      _hurd_ctty_fileid = intarray[INIT_CTTY_FILEID];
+      err = __exec_startup (in_bootstrap,
+			    &args, &argslen, &env, &envlen,
+			    &_hurd_init_dtable, &_hurd_init_dtablesize,
+			    &portarray, &portarraysize,
+			    &intarray, &intarraysize);
+      __mach_port_deallocate (__mach_task_self (), in_bootstrap);
     }
 
-  {
-    struct _hurd_sigstate *ss;
-    thread_t sigthread;
-    mach_port_t oldsig, oldtask;
-    int i;
-    sigset_t ignored = ((nints > INIT_SIGIGN ? intarray[INIT_SIGIGN] : 0)
-			& ~_SIG_CANT_IGNORE);
+  if (err || in_bootstrap == MACH_PORT_NULL)
+    {
+      static char *noargs = NULL, *noenv = NULL;
+      argc = 0;
+      argv = &null;
+      __environ = &noenv;
+      _hurd_init_dtable = NULL;
+      _hurd_init_dtablesize = 0;
+      portarray = NULL;
+      portarraysize = 0;
+      intarray = NULL;
+      intarraysize = 0;
+    }
+  else
+    {
+      /* Turn the block of null-separated strings we were passed for the
+	 arguments and environment into vectors of pointers to strings.  */
+      
+      argc = count (args, argslen);
+      envc = count (env, envlen);
+      
+      if (err = __vm_allocate (__mach_task_self (),
+			       &argv, round_page ((argc + 1 + envc + 1) *
+						  sizeof (char *)),
+			       1))
+	__libc_fatal ("hurd: Can't allocate space for argv and environ\n");
+      __environ = &argv[argc + 1];
+      
+      makevec (args, argslen, argv);
+      makevec (env, envlen, __environ);
+    }
 
-    ss = _hurd_thread_sigstate (__mach_thread_self ());
-    ss->blocked = nints > INIT_SIGMASK ? intarray[INIT_SIGMASK] : 0;
-    ss->blocked &= ~_SIG_CANT_BLOCK;
-    __sigemptyset (&ss->pending);
-    for (i = 1; i < NSIG; ++i)
-      ss->actions[i].sa_handler
-	= __sigismember (i, &ignored) ? SIG_IGN : SIG_DFL;
-    __mutex_unlock (&ss->lock);
+  /* Initialize library data structures, start signal processing, etc.  */
+  _hurd_init (argv,
+	      portarray, portarraysize,
+	      intarray, intarraysize);
 
-    if (err = __mach_port_allocate (__mach_task_self (),
-				    MACH_PORT_RIGHT_RECEIVE,
-				    &_hurd_sigport))
-      __libc_fatal ("hurd: Can't create signal port receive right\n");
 
-    if (err = __thread_create (__mach_task_self (), &sigthread))
-      __libc_fatal ("hurd: Can't create signal thread\n");
-    if (err = _hurd_start_sigthread (sigthread, _hurd_sigport_receive))
-      __libc_fatal ("hurd: Can't start signal thread\n");
-    _hurd_sigport_thread = sigthread;
-
-    /* Make a send right to the signal port.  */
-    if (err = __mach_port_insert_right (__mach_task_self (),
-					_hurd_sigport,
-					MACH_PORT_RIGHT_MAKE_SEND))
-      __libc_fatal ("hurd: Can't create send right to signal port\n");
-
-    /* Receive exceptions on the signal port.  */
-    __task_set_special_port (__mach_task_self (),
-			     TASK_EXCEPTION,
-			     _hurd_sigport);
-
-    /* Give the proc server our task and signal ports.  */
-    __proc_setports (_hurd_proc.port, _hurd_sigport, __mach_task_self (),
-		     &oldsig, &oldtask);
-    if (oldsig != MACH_PORT_NULL)
-      __mach_port_deallocate (__mach_task_self (), oldsig);
-    if (oldtask != MACH_PORT_NULL)
-      __mach_port_deallocate (__mach_task_self (), oldtask);
-
-    /* Free the send right we gave to the proc server.  */
-    __mach_port_deallocate (__mach_task_self (), _hurd_sigport);
-  }
-
-  argc = count (args, argslen);
-  envc = count (env, envlen);
-
-  if (err = __vm_allocate (__mach_task_self (),
-			   &argv, round_page ((argc + 1 + envc + 1) *
-					      sizeof (char *)),
-			   1))
-    __libc_fatal ("hurd: Can't allocate space for args and env\n");
-  __environ = &argv[argc + 1];
-
-  makevec (args, argslen, argv);
-  makevec (env, envlen, __environ);
-
-  /* Tell the proc server where our args and environment are.  */
-  __proc_setprocargs (_hurd_proc.port, argv, __environ);
-
+  /* Random library initialization.  */
   __libc_init (argc, argv, __environ);
 
+
+  /* Finally, run the user program.  */
   (_cthread_exit_routine != NULL ? *_cthread_exit_routine : exit)
     (main (argc, argv, __environ));
 }
@@ -258,4 +199,68 @@ makevec (char *args, size_t argslen, char **argv)
     }
 
   argv[argc] = NULL;
+}
+
+/* Initialize the library data structures from the
+   ints and ports passed to us by the exec server.
+
+   PORTARRAY and INTARRAY are vm_deallocate'd.  */
+
+void
+_hurd_init (char **argv,
+	    mach_port_t *portarray, size_t portarraysize,
+	    int *intarray, size_t intarraysize)
+{
+  int i;
+
+  /* See what ports we were passed.  */
+  for (i = 0; i < portarraysize; ++i)
+    switch (i)
+      {
+#define	initport(upper, lower) \
+      case INIT_PORT_##upper: \
+	_hurd_port_init (&_hurd_##lower, portarray[i]); \
+	break
+
+	  /* Install the standard ports in their cells.  */
+	initport (CCDIR, ccdir);
+	initport (CWDIR, cwdir);
+	initport (CRDIR, crdir);
+	initport (AUTH, auth);
+
+      case INIT_PORT_PROC:
+	/* Install the proc port and tell the proc server we exist.  */
+	_hurd_proc_init (portarray[i], argv);
+	break;
+
+      case INIT_PORT_BOOTSTRAP:
+	/* When the user asks for the bootstrap port,
+	   he will get the one the exec server passed us.  */
+	__task_set_special_port (__mach_task_self (),
+				 TASK_BOOTSTRAP_PORT, portarray[i]);
+	/* FALLTHROUGH */
+
+      default:
+	/* Wonder what that could be.  */
+	__mach_port_deallocate (__mach_task_self (), portarray[i]);
+	break;
+      }
+
+  if (intarraysize > INIT_UMASK)
+    _hurd_umask = intarray[INIT_UMASK] & 0777;
+  else
+    _hurd_umask = 0022;		/* XXX */
+  if (intarraysize > INIT_CTTY_FILEID) /* Knows that these are sequential.  */
+    {
+      _hurd_ctty_fstype = intarray[INIT_CTTY_FSTYPE];
+      _hurd_ctty_fsid.val[0] = intarray[INIT_CTTY_FSID1];
+      _hurd_ctty_fsid.val[1] = intarray[INIT_CTTY_FSID2];
+      _hurd_ctty_fileid = intarray[INIT_CTTY_FILEID];
+    }
+
+
+  /* All done with init ints and ports.  */
+  __vm_deallocate (__mach_task_self (), intarray, nints * sizeof (int));
+  __vm_deallocate (__mach_task_self (),
+		   portarray, nports * sizeof (mach_port_t));
 }
