@@ -841,7 +841,7 @@ done
 
 grep '%{_prefix}/%{_lib}/lib.*_p\.a' < rpm.filelist > profile.filelist || :
 grep '%{_infodir}' < rpm.filelist | grep -v '%{_infodir}/dir' > devel.filelist
-grep '%{_prefix}/include/gnu/stubs-[32164]\+\.h' < rpm.filelist >> devel.filelist
+grep '%{_prefix}/include/gnu/stubs-[32164]\+\.h' < rpm.filelist >> devel.filelist || :
 
 grep '%{_prefix}/include' < rpm.filelist |
 	egrep -v '%{_prefix}/include/(nptl|gnu/stubs-[32164]+\.h)' \
