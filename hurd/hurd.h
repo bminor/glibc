@@ -119,10 +119,11 @@ _hurd_port_locked_get (struct _hurd_port *port,
 
 /* Same, but locks PORT first.  */
 static inline mach_port_t
-_hurd_port_get (struct _hurd_port *port, int *myflag)
+_hurd_port_get (struct _hurd_port *port,
+		struct _hurd_port_userlink *link)
 {
   __spin_lock (&port->lock);
-  return _hurd_port_locked_get (port, myflag);
+  return _hurd_port_locked_get (port, link);
 }
 
 /* Free a reference gotten with
@@ -347,13 +348,13 @@ _hurd_fd_done (struct _hurd_fd_user d, int *dealloc)
        __result = EBADF;						      \
      else								      \
        {								      \
-	 int __dealloc, __dealloc_ctty;					      \
-	 io_t port = _hurd_port_locked_get (&__d.d->port, &__dealloc);	      \
-	 io_t ctty = _hurd_port_locked_get (&__d.d->ctty, &__dealloc_ctty);   \
+         struct _hurd_port_userlink __ulink, __ctty_ulink;		      \
+	 io_t port = _hurd_port_locked_get (&__d.d->port, &__ulink);	      \
+	 io_t ctty = _hurd_port_locked_get (&__d.d->ctty, &__ctty_ulink);     \
 	 __result = (expr);						      \
-	 _hurd_port_free (&__d.d->port, &__dealloc, port);		      \
+	 _hurd_port_free (&__d.d->port, &__ulink, port);		      \
 	 if (ctty != MACH_PORT_NULL)					      \
-	   _hurd_port_free (&__d.d->ctty, &__dealloc_ctty, ctty);	      \
+	   _hurd_port_free (&__d.d->ctty, &__ctty_ulink, ctty);		      \
 	 _hurd_fd_done (__d, &__dealloc_dt);				      \
        }								      \
       __result;								      \
@@ -382,6 +383,9 @@ __hurd_dfail (int fd, error_t err)
       return __hurd_fail (err);
     }
 }
+
+extern io_t __getdport (int);
+extern io_t getdport (int);
 
 /* Return the socket server for sockaddr domain DOMAIN.  */
 extern socket_t _hurd_socket_server (int domain);
