@@ -27,7 +27,7 @@ Cambridge, MA 02139, USA.  */
 /* Write formatted output to stdout according to the
    format string FORMAT, using the argument list in ARG.  */
 int
-DEFUN(vprintf, (format, arg), CONST char *format AND va_list arg)
+DEFUN(vprintf, (format, arg), CONST char *format AND PTR arg)
 {
   return vfprintf (stdout, format, arg);
 }
