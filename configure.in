@@ -177,6 +177,9 @@ sysdep_dir=$srcdir/sysdeps
 eval "`echo $config | \
        sed 's/^\(.*\)-\(.*\)-\(.*\)$/machine=\1 vendor=\2 os=\3/'`"
 
+# Make sco3.2v4 become sco3.2.4.
+os="`echo $os | sed 's/\([0-9]\)v\([0-9]\)/\1.\2/g'`"
+
 case "$os" in
 gnu*)
   os=mach/hurd ;;
