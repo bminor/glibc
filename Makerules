@@ -246,6 +246,13 @@ objects objs: $(objects)
 
 do-install = $(INSTALL_DATA) $< $@
 
+# Any directory (parent or subdir) that has any object files to build
+# should install libc.a; this way "make install" in a subdir is guaranteed
+# to install everything it changes.
+ifdef objects
+install-lib := $(install-lib) libc.a
+endif
+
 ifdef install
 $(addprefix $(bindir)/,$(install)): $(bindir)/%: $(objpfx)%
 	$(INSTALL) $< $@
@@ -278,7 +285,7 @@ endif	# headers
 install: $(+install-dirs) $(+install)
 
 S-CPPFLAGS = $(asm-CPPFLAGS)
-+make-deps = $(+mkdep) $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) $< | \
++make-deps = $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
 	     sed 's,$*\.o,$(@:.dep=.o) $@,' > $@
 
 # N.B.: The order of these two rules is important.
