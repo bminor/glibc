@@ -312,8 +312,6 @@ INTERNAL (strtol) (nptr, endptr, base, group)
 	      ? -((unsigned LONG int) (LONG_MIN + 1)) + 1
 	      : (unsigned LONG int) LONG_MAX))
     overflow = 1;
-#else
-  overflow |= negative;
 #endif
 
   if (overflow)
