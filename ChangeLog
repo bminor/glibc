@@ -1,3 +1,7 @@
+1999-07-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/unistd.h: Use __PMT for exit.
+
 1999-07-13  Andreas Schwab  <schwab@suse.de>
 
 	* elf/dl-runtime.c (fixup, profile_fixup): Call alloca to prevent
