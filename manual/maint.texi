@@ -46,6 +46,9 @@ m68k-hp-bsd4.3
 m68k-sun-sunos4.@var{n}
 m68k-sony-bsd4.3
 mips-dec-ultrix4.2
+i386-bsd4.3
+i386-sysv
+i386-sysv4
 @end example
 
 While no other configurations are supported, there are handy aliases for
@@ -57,6 +60,7 @@ hp320-bsd4.3
 sun3-sunos4.@var{n}
 news
 decstation-ultrix
+i386-svr4
 @end example
 
 Here are some options that you should specify (if appropriate) when
@@ -64,11 +68,25 @@ you run @code{configure}:
 
 @table @samp
 @item --with-gnu-ld
-Use this option if you plan to use GNU ld to link programs with the GNU
-C Library.  (we strongly recommend that you do.)
+Use this option if you plan to use GNU @code{ld} to link programs with
+the GNU C Library.  (We strongly recommend that you do.)
+
+@item --with-gnu-as
+Use this option if you plan to use the GNU assembler, @code{gas}, when
+building the GNU C Library.  On some systems, the library may not build
+properly if you do @emph{not} use @code{gas}.
 
 @item --nfp
 Use this option if your computer lacks hardware floating point support.
+
+@item --prefix=@var{directory}
+Install machine-independent data files in @file{@var{directory}/lib}.
+(You can also set this in @file{configparms}; see below.)
+
+@item --exec_prefix=@var{directory}
+Install the library and other machine-dependent files in
+@file{@var{directory}/lib}.  (You can also set this in
+@file{configparms}; see below.)
 @end table
 
 The simplest way to run @code{configure} is to do it in the directory
