@@ -44,8 +44,7 @@ __BEGIN_DECLS
 /* Apply or remove an advisory lock, according to OPERATION,
    on the file FD refers to.  */
 extern int __flock __P ((int __fd, int __operation));
-
-/* It just so happens that <fcntl.h> does #define flock __flock.  Bletch.  */
+extern int flock __P ((int __fd, int __operation));
 
 
 __END_DECLS
