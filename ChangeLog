@@ -1,3 +1,8 @@
+2002-01-16  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed: Fix regexp to
+	reliably remove "-ia64" from rtld name.
+
 2002-01-16  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/swapcontext.c: Remove.
