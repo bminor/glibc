@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <hurd.h>
 #include <hurd/fd.h>
 #include <stdarg.h>
 
@@ -61,7 +62,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 
 	/* Get a new file descriptor.  The third argument to __fcntl is the
 	   minimum file descriptor number for it.  */
-	new = _hurd_alloc_fd (&result, va_arg (int));
+	new = _hurd_alloc_fd (&result, va_arg (ap, int));
 	if (new == NULL)
 	  /* _hurd_alloc_fd has set errno.  */
 	  result = -1;
