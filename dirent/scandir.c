@@ -21,9 +21,9 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 
 int
-DEFUN(scandir,(dir, namelist, select, cmp),
+DEFUN(scandir, (dir, namelist, select, cmp),
       CONST char *dir AND
-      struct dirent ***__namelist AND
+      struct dirent ***namelist AND
       int EXFUN((*select), (struct dirent *)) AND
       int EXFUN((*cmp), (CONST PTR, CONST PTR)))
 {
@@ -41,7 +41,7 @@ DEFUN(scandir,(dir, namelist, select, cmp),
 
   i = 0;
   while ((d = readdir (dp)) != NULL)
-    if ((*select) (dp))
+    if ((*select) (d))
       {
 	if (i == vsize)
 	  {
