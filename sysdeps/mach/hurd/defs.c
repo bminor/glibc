@@ -58,6 +58,8 @@ init_stdio (void)
 #undef S
 
   stderr->__userbuf = 1;	/* stderr is always unbuffered.  */
+
+  (void) &init_stdio;		/* Avoid "defined but not used" warning.  */
 }
 text_set_element (_hurd_fd_subinit, init_stdio);
 
