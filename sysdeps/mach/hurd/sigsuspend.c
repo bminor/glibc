@@ -44,9 +44,13 @@ DEFUN(sigsuspend, (set), CONST sigset_t *set)
      signal thread does condition_signal (&SS->arrived).  */
   ss->suspended = 1;
   while ((pending = ss->pending & ~ss->blocked) == 0)
+    {
 #ifdef noteven
-    __condition_wait (&ss->arrived, &ss->lock);
+      __condition_wait (&ss->arrived, &ss->lock);
+#else  /* XXX */
+      __mutex_unlock (&ss->lock); __swtch (); __mutex_lock (&ss->lock);
 #endif
+    }
   ss->suspended = 0;
   __mutex_unlock (&ss->lock);
 
