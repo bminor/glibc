@@ -28,31 +28,25 @@ DEFUN_VOID(__getegid)
   error_t err;
   gid_t egid;
 
-  __mutex_lock (&_hurd_idlock);
+  __mutex_lock (&_hurd_id.lock);
 
   if (err = _hurd_check_ids ())
     {
       errno = err;
       egid = -1;
     }
+  else if (_hurd_id.gen.ngids >= 1)
+    egid = _hurd_id.gen.gids[0];
+  else if (_hurd_id.aux.ngids >= 1)
+    /* We have no effective gids.  Return the real gid.  */
+    egid = _hurd_id.aux.gids[0];
   else
-    switch (_hurd_ngids)
-      {
-      case 0:
-	/* We have not even a real gid.  */
-	errno = XXX;
-	egid = -1;
-	break;
-      case 1:
-      case 2:
-	/* We have no effective gids.  Return the real gid.  */
-	egid = _hurd_gid.rid;
-	break;
-      default:
-	egid = _hurd_gid.ids[0];
-	break;
-      }
+    {
+      /* We do not even have a real gid.  */
+      errno = EIOEIO;		/* XXX */
+      egid = -1;
+    }
 
-  __mutex_unlock (&_hurd_idlock);
+  __mutex_unlock (&_hurd_id.lock);
   return egid;
 }
