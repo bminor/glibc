@@ -17,9 +17,9 @@
 # Cambridge, MA 02139, USA.
 
 #
-#	Sub-makefile for res portion of the library.
+#	Sub-makefile for resolv portion of the library.
 #
-subdir	:= res
+subdir	:= resolv
 
 headers	:= netdb.h resolv.h arpa/nameser.h sys/bitypes.h
 distribute := ../conf/portability.h
