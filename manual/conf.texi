@@ -438,6 +438,14 @@ utilities can handle.
 
 @comment unistd.h
 @comment POSIX.2
+@item _SC_EQUIV_CLASS_MAX
+Inquire about the maximum number of weights that can be assigned to an
+entry of the @code{LC_COLLATE} category @samp{order} keyword in a locale
+definition.  The GNU C library does not presently support locale
+definitions.
+
+@comment unistd.h
+@comment POSIX.2
 @item _SC_VERSION
 Inquire about the version number of POSIX.1 that the library and kernel
 support.
@@ -935,6 +943,13 @@ The largest text line that the text-oriented POSIX.2 utilities can
 support.  (If you are using the GNU versions of these utilities, then
 there is no actual limit except that imposed by the available virtual
 memory, but there is no way that the library can tell you this.)
+
+@comment limits.h
+@comment POSIX.2
+@deftypevr Macro int EQUIV_CLASS_MAX
+The maximum number of weights that can be assigned to an entry of the
+@code{LC_COLLATE} category @samp{order} keyword in a locale definition.
+The GNU C library does not presently support locale definitions.
 @end deftypevr
 
 @node Utility Minimums
@@ -985,6 +1000,15 @@ Its value is @code{32}.
 The most restrictive limit permitted by POSIX.2 for the maximum size of
 a text line that the text utilities can handle.  Its value is
 @code{2048}.
+
+@comment limits.h
+@comment POSIX.2
+@item _POSIX2_EQUIV_CLASS_MAX
+The most restrictive limit permitted by POSIX.2 for the maximum number
+of weights that can be assigned to an entry of the @code{LC_COLLATE}
+category @samp{order} keyword in a locale definition.  Its value is
+@code{2}.  The GNU C library does not presently support locale
+definitions.
 @end table
 
 @node String Parameters
