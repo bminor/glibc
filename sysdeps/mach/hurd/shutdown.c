@@ -33,6 +33,6 @@ DEFUN(shutdown, (fd, how),
 {
   error_t err = _HURD_DPORT_USE (fd, __socket_shutdown (port, how));
   if (err)
-    return __hurd_fail (err);
+    return __hurd_dfail (fd, err);
   return 0;
 }
