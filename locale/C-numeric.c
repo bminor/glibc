@@ -6,7 +6,7 @@
 CONST struct numeric_info __numeric_C =
   {
     (char *) ".", (char *) "",
-    (char *) "\177"
+    (char *) ""
   };
 
 CONST struct numeric_info *_numeric_info = &__numeric_C;
