@@ -28,7 +28,7 @@ headers = hurd.h $(interface-headers) \
 	  $(addprefix hurd/,fd.h id.h port.h signal.h userlink.h \
 		            resource.h threadvar.h)
 
-distribute := intr-rpc.awk intr-rpc.defs
+distribute := intr-rpc.awk intr-rpc.defs STATUS
 
 # The RPC interfaces go in a separate library.
 interface-library := libhurduser.a
