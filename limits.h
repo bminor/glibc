@@ -20,9 +20,6 @@ Cambridge, MA 02139, USA.  */
  *	ANSI Standard: 4.14/2.2.4.2 Limits of integral types	<limits.h>
  */
 
-#ifndef	_LIMITS_H
-
-#define	_LIMITS_H	1
 #include <features.h>
 
 #ifdef	__USE_POSIX
@@ -38,12 +35,20 @@ Cambridge, MA 02139, USA.  */
 #if	__GNUC__ >= 2
 
  /* Get the compiler's limits.h, which defines all the ANSI constants.  */
+ #ifndef _LIBC_LIMITS_H_
  #define _LIBC_LIMITS_H_	/* This tells it not to look for another.  */
+ #endif
  #ifndef _GCC_LIMITS_H_		/* This is what GCC's file defines.  */
  #include_next <limits.h>
  #endif
 
 #else	/* Not GCC 2.  */
+
+/* We only protect from multiple inclusion here, because all the other
+   #include's protect themselves, and in GCC 2 we may #include_next through
+   multiple copies of this file before we get to GCC's.  */
+#ifndef	_LIMITS_H
+#define	_LIMITS_H
 
 /* We don't have #include_next.
    Define ANSI <limits.h> for standard 32-bit words.  */
@@ -103,7 +108,5 @@ Cambridge, MA 02139, USA.  */
 /* Maximum value an `unsigned long int' can hold.  (Minimum is 0.)  */
 #define	ULONG_MAX	UINT_MAX
 
-#endif	/* GCC 2.  */
-
-
 #endif	/* limits.h  */
+#endif	/* GCC 2.  */
