@@ -21,8 +21,10 @@ Cambridge, MA 02139, USA.  */
 
 typedef int __sig_atomic_t;
 
-/* Return a mask that includes SIG only.  */
-#define	__sigmask(sig)	(1 << ((sig) - 1))
+/* Return a mask that includes SIG only.
+   The cast to `sigset_t' avoids overflow
+   if `sigset_t' is wider than `int'.  */
+#define	__sigmask(sig)	(((sigset_t) 1) << ((sig) - 1))
 
 /* A `sigset_t' has a bit for each signal.  */
 typedef unsigned long int __sigset_t;
