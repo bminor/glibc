@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/ioctl.h>
 
 /* Return the foreground process group ID of FD.  */
 pid_t

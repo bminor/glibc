@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <stddef.h>
 #include <termios.h>
+#include <sys/ioctl.h>
 
 #include <sysv_termio.h>
 

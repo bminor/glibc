@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <sys/wait.h>
-
+#include <string.h>
 
 /* Create a directory named PATH with protections MODE.  */
 int

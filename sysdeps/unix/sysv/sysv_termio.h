@@ -118,6 +118,9 @@ Cambridge, MA 02139, USA.  */
 #define _SYSV_TAB0 0
 #define _SYSV_TAB1 0x0800
 #define _SYSV_TAB2 0x1000
+/* TAB3 is an obsolete name for XTABS.  But we provide it since some
+   programs expect it to exist.  */
+#define _SYSV_TAB3 0x1800
 #define _SYSV_XTABS 0x1800
 #define _SYSV_BSDLY 0x2000
 #define _SYSV_BS0 0

@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <termios.h>
 #include <unistd.h>
 #include <sysv_termio.h>
+#include <sys/ioctl.h>
 
 /* Wait for pending output to be written on FD.  */
 int

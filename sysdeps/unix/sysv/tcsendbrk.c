@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <termios.h>
 #include <unistd.h>
 #include <sysv_termio.h>
+#include <sys/ioctl.h>
 
 /* Send zero bits on FD.  */
 int

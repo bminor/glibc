@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <sysv_termio.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/ioctl.h>
 
 /* Set the foreground process group ID of FD set PGRP_ID.  */
 int

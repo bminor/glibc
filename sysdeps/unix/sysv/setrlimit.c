@@ -32,11 +32,6 @@ int
 DEFUN(setrlimit, (resource, rlimits),
       enum __rlimit_resource resource AND struct rlimit *rlimits)
 {
-#ifndef	HAVE_GNU_LD
-#define	__etext	etext
-#endif
-  extern char __etext;
-
   if (rlimits == NULL)
     {
       errno = EINVAL;

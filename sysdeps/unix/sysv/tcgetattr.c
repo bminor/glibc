@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <sysv_termio.h>
 #include <termios.h>
+#include <sys/ioctl.h>
 
 /* Put the state of FD into *TERMIOS_P.  */
 int

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,6 @@ clock_t
 DEFUN_VOID(clock)
 {
   struct tms buf;
-  clock_t result;
 
   if (__times(&buf) < 0)
     return (clock_t) -1;
