@@ -262,7 +262,7 @@ getcwd (buf, size)
 	    }
 	  else
 	    {
-	      new = realloc (dotlist, dotsize * 2 + 1);
+	      new = realloc ((__ptr_t) dotlist, dotsize * 2 + 1);
 	      if (new == NULL)
 		goto lose;
 	    }
@@ -355,13 +355,13 @@ getcwd (buf, size)
     *--pathp = '/';
 
   if (dotlist != dots)
-    free (dotlist);
+    free ((__ptr_t) dotlist);
 
   memmove (path, pathp, path + size - pathp);
   return path;
 
  lose:
   if (dotlist != dots)
-    free (dotlist);
+    free ((__ptr_t) dotlist);
   return NULL;
 }
