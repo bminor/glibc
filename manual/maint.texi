@@ -18,14 +18,13 @@
 
 Installation of the GNU C Library is relatively simple.
 
-You will need the latest version of GNU @code{make}.
-If you do not have GNU @code{make}, life will be more difficult.
-For the time being, you're on your own.  Good luck.
-The author recommends porting GNU @code{make} to your system over trying
-to install the GNU C Library without it.  @strong{Really.}@refill
+You will need the latest version of GNU @code{make}.  If you do not have
+GNU @code{make}, life will be more difficult.  We recommend porting GNU
+@code{make} to your system rather than trying to install the GNU C
+Library without it.  @strong{Really.}@refill
 
 To configure the GNU C Library for your system, run the script
-@file{config.libc} with @code{sh}.  You must give as an argument to the
+@file{configure} with @code{sh}.  You must give as an argument to the
 script a word describing your system.  If you give no argument, you will
 get a list of systems the script knows about.
 
@@ -50,7 +49,7 @@ appropriate places.
 @appendixsec Reporting Bugs
 
 There are probably bugs in the GNU C Library.  If you report them,
-they will get fixed.  If you don't, noone will ever know about them
+they will get fixed.  If you don't, no one will ever know about them
 and they will remain unfixed for all eternity, if not longer.
 
 To report a bug, first you must find it.  Hopefully, this will be
@@ -72,7 +71,7 @@ got, the results you expected, what you think the problem might be
 of the GNU C Library which you are using.
 
 If you are not sure how a function should behave, and this manual
-doesn't tell you, it's a bug in the documentation.  Report that too!
+doesn't tell you, that's a bug in the documentation.  Report that too!
 
 If you think you have found some way in which the GNU C Library does not
 conform to the ANSI and POSIX standards (@pxref{Standards and
