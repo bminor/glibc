@@ -41,23 +41,20 @@ DEFUN(readdir, (dirp), DIR *dirp)
 
   do
     {
-      if (dirp->__offset >= dirp->__size)
+      if (dirp->__ptr - dirp->__data >= dirp->__size)
 	{
 	  /* We've emptied out our buffer.  Refill it.  */
 
 	  char *data = dirp->__data;
-	  error_t err = __dir_readdir (dirp->__port,
-				       &data, &dirp->__size,
-				       dirp->__filepos, &dirp->__filepos,
-				       dirp->__block_size);
-	  if (err)
-	    {
-	      errno = err;
-	      return NULL;
-	    }
+	  int nentries;
+	  error_t err;
 
-	  if (!dirp->__size)
-	    return NULL;
+	  if (err = __dir_readdir (dirp->__port, &data, &dirp->__size,
+				   dirp->__entry_ptr, -1, 0, &nentries))
+	    return __hurd_fail (err), NULL;
+
+	  /* DATA now corresponds to entry index DIRP->__entry_ptr.  */
+	  dirp->__entry_data = dirp->__entry_ptr;
 
 	  if (data != dirp->__data)
 	    {
@@ -68,15 +65,23 @@ DEFUN(readdir, (dirp), DIR *dirp)
 			       (vm_address_t) dirp->__data,
 			       dirp->__allocation);
 	      dirp->__data = data;
-	      dirp->__allocation = dirp->__size;
+	      dirp->__allocation = round_page (dirp->__size);
 	    }
 
-	  /* Reset the offset into the buffer.  */
-	  dirp->__offset = 0;
+	  /* Reset the pointer into the buffer.  */
+	  dirp->__ptr = dirp->__data;
+
+	  if (nentries == 0)
+	    /* End of file.  */
+	    return NULL;
+
+	  /* We trust the filesystem to return correct data and so we
+	     ignore NENTRIES.  */
 	}
 
-      dp = (struct dirent *) &dirp->__data[dirp->__offset];
-      dirp->__offset += dp->d_reclen;
+      dp = (struct dirent *) dirp->__ptr;
+      dirp->__ptr += dp->d_reclen;
+      ++dirp->__entry_ptr;
 
       /* Loop to ignore deleted files.  */
     } while (dp->d_fileno == 0);

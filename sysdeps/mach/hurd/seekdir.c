@@ -26,13 +26,10 @@ Cambridge, MA 02139, USA.  */
 void
 DEFUN(seekdir, (dirp, pos), DIR *dirp AND __off_t pos)
 {
-  if (pos == dirp->__filepos + dirp->__offset)
-    return;
-
-  dirp->__filepos = pos;
-  dirp->__offset = 0;
-
-  /* The block we have read is no longer appropriate; it corresponds to
-     a different position in the file than our offset now indicates.  */
+  /* Change our entry index pointer to POS and discard any data already
+     read.  The next `readdir' call will notice the empty block and read
+     anew from the location in DIRP->__entry_ptr and reset the other state
+     variables.  */
+  dirp->__entry_ptr = pos;
   dirp->__size = 0;
 }
