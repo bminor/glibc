@@ -529,8 +529,6 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 
   /* strerror - VERY system-dependent.  */
   {
-    extern CONST unsigned int _sys_nerr;
-    extern CONST char *CONST _sys_errlist[];
     int f;
     it = "strerror";
     f = open("/", O_WRONLY);	/* Should always fail. */
