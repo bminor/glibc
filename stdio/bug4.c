@@ -1,4 +1,4 @@
-#ifdef LIBC
+#ifdef _LIBC
 #include <ansidecl.h>
 #endif
 #include <stdio.h>

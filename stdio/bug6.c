@@ -9,14 +9,17 @@ DEFUN_VOID(main)
   int lost = 0;
 
   scanf ("%2s", buf);
-  if (lost |= (buf[0] != 'X' || buf[1] != 'Y' || buf[2] != '\0'))
+  lost |= (buf[0] != 'X' || buf[1] != 'Y' || buf[2] != '\0');
+  if (lost)
     puts ("test of %2s failed.");
   scanf (" ");
   scanf ("%d", &i);
-  if (lost |= (i != 1234))
+  lost |= (i != 1234);
+  if (lost)
     puts ("test of %d failed.");
   scanf ("%c", buf);
-  if (lost |= (buf[0] != 'L'))
+  lost |= (buf[0] != 'L');
+  if (lost)
     puts ("test of %c failed.\n");
 
   puts (lost ? "Test FAILED!" : "Test succeeded.");
