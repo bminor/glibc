@@ -17,7 +17,10 @@
 # Cambridge, MA 02139, USA.
 
 ifeq ($(subdir),posix)
+ifeq ($(sysdep_dir)/unix/common/,\
+      $(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/__getgrps.[cSs])))))
 sysdep_routines := $(sysdep_routines) bsd_getgrp
+endif
 endif
 
 ifeq ($(subdir),ctype)
