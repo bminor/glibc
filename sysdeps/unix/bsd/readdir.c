@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -57,6 +57,11 @@ DEFUN(readdir, (dirp), DIR *dirp)
 
       dp = (struct dirent *) &dirp->__data[dirp->__offset];
       dirp->__offset += dp->d_reclen;
+
+#ifndef HAVE_D_TYPE
+      dp->d_namlen = ((struct direct *) dp)->d_namlen;
+      dp->d_type = DT_UNKNOWN;
+#endif
 
       /* Loop to ignore deleted files.  */
     } while (dp->d_fileno == 0);
