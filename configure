@@ -1930,7 +1930,7 @@ __throw () {}
 EOF
 if { ac_try='${CC-cc} $CFLAGS
 			    -nostdlib -nostartfiles -Wl,--no-whole-archive
-			    -o conftest conftest.c'; { (eval echo configure:1934: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+			    -o conftest conftest.c 1>&5'; { (eval echo configure:1934: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_ld_no_whole_archive=yes
 else
   libc_cv_ld_no_whole_archive=no
@@ -1952,7 +1952,7 @@ __throw () {}
 EOF
 if { ac_try='${CC-cc} $CFLAGS
 			    -nostdlib -nostartfiles -fno-exceptions
-			    -o conftest conftest.c'; { (eval echo configure:1956: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+			    -o conftest conftest.c 1>&5'; { (eval echo configure:1956: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_gcc_no_exceptions=yes
 else
   libc_cv_gcc_no_exceptions=no
