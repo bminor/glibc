@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
    The actual type and use of ARG and the return value depend on REQUEST.  */
 int
 DEFUN(__ioctl, (fd, request),
-      int fd AND int request DOTS)
+      int fd AND unsigned long int request DOTS)
 {
   errno = ENOSYS;
   return -1;
