@@ -26,11 +26,5 @@ void
 DEFUN(cfsetspeed, (termios_p, speed),
       struct termios *termios_p AND speed_t speed)
 {
-  if (termios_p == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
   termios_p->__ospeed = termios_p->__ispeed = speed;
 }
