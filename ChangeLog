@@ -1,3 +1,9 @@
+1997-05-26 18:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/erand48_r.c (__erand48_r): Don't generate numbers in
+	[0.5,1.0) but really in [0.0, 1.0).
+	Patch by Oliver Gathmann <gathmann@scar.utoronto.ca>.
+
 1997-05-25 09:51  H.J. Lu  <hjl@gnu.ai.mit.edu>
 
 	* sysdeps/i386/elf/start.S: Change local label "nofini"
