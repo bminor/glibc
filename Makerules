@@ -259,6 +259,8 @@ echo-headers:
 # install-data are installed as they are into datadir.  
 # headers are installed from the object directory header directories into
 # one or both of ansi-incldir and trad-incldir.
+# install-others are absolute path names of files to install;
+# rules to install them are defined elsewhere.
 
 do-install = $(INSTALL_DATA) $< $@
 
@@ -274,7 +276,8 @@ $(addprefix $(datadir)/,$(install-data)): $(datadir)/%: %;$(do-install)
 endif
 +install := $(addprefix $(libdir)/,$(install-lib))	\
 	    $(addprefix $(datadir)/,$(install-data))	\
-	    $(addprefix $(bindir)/,$(install))
+	    $(addprefix $(bindir)/,$(install))		\
+	    $(install-others)
 headers := $(strip $(headers))
 ifdef headers
 ifdef ansi-incldir
