@@ -8,6 +8,8 @@ configurations:
 		alpha-dec-osf1 (mostly finished)
 		i386-bsd4.3
 		i386-gnu (for Hurd development only)
+		i386-isc2.2
+		i386-isc3
 		i386-sco3.2
 		i386-sco3.2v4
 		i386-sequent-dynix
