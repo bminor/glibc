@@ -34,7 +34,7 @@ routines :=								      \
 	__wait __waitpid __wait3 __wait4				      \
 	alarm sleep pause						      \
 	__fork __vfork _exit	      					      \
-	__execve execve execv execle execl execvp execlp		      \
+	__execve execve fexecve execv execle execl execvp execlp	      \
 	__getpid __getppid						      \
 	__getuid __geteuid __getgid __getegid __getgrps __setuid __setgid     \
 	__getpgrp __setpgrp __setsid setpgid				      \
