@@ -22,12 +22,17 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 
+extern const struct
+  {
+    int set;
+    struct _hurd_dtable *dtable;
+  } _hurd_dtable_set;
+
 /* Replace the current process, executing PATH with arguments ARGV and
    environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
 int
 DEFUN(__execve, (path, argv, envp),
-      CONST char *path AND
-      char *CONST argv[] AND char *CONST envp[])
+      CONST char *path AND char *CONST argv[] AND char *CONST envp[])
 {
   error_t err;
   file_t file;
@@ -76,20 +81,27 @@ DEFUN(__execve, (path, argv, envp),
   {
     struct _hurd_sigstate *ss = _hurd_thread_sigstate (__mach_thread_self ());
     int i;
-    ints[INIT_SIGMASK] = ss->sigmask;
+    ints[INIT_SIGMASK] = ss->blocked;
     ints[INIT_SIGIGN] = 0;
     for (i = 1; i < NSIG; ++i)
       if (ss->actions[i].sa_handler == SIG_IGN)
-	ints[INIT_SIGIGN] |= sigmask (i);
+	ints[INIT_SIGIGN] |= __sigmask (i);
     __mutex_unlock (&ss->lock);
   }
   
-  __mutex_lock (&_hurd_dtable.lock);
-  dtablesize = _hurd_dtable.size;
-  dtable = alloca (dtablesize * sizeof (file_t));
-  for (i = 0; i < dtablesize; ++i)
-    dtable[i] = _hurd_dtable.d[i].server;
-  __mutex_unlock (&_hurd_dtable.lock);
+  if (_hurd_dtable_set.set)
+    {
+      __mutex_lock (&_hurd_dtable_set.dtable->lock);
+      dtablesize = _hurd_dtable_set.dtable->size;
+      dtable = alloca (dtablesize * sizeof (file_t));
+      for (i = 0; i < dtablesize; ++i)
+	dtable[i] = _hurd_dtable_set.dtable->d[i].server;
+    }
+  else
+    {
+      dtable = _hurd_init_dtable;
+      dtablesize = _hurd_init_dtablesize;
+    }
 
   err = __file_exec (file, __mach_task_self (),
 		     args, argslen, env, envlen,
@@ -97,6 +109,10 @@ DEFUN(__execve, (path, argv, envp),
 		     ints, INIT_INT_MAX,
 		     ports, INIT_PORT_MAX,
 		     0);
+  if (_hurd_dtable_set.set)
+    /* We must hold the dtable lock while doing the file_exec to avoid
+       the dtable entries being deallocated before we send them.  */
+    __mutex_unlock (&_hurd_dtable_set.dtable->lock);
   if (err)
     return __hurd_fail (err);
 
