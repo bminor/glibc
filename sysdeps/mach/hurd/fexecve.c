@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/fd.h>
+#include <errno.h>
 
 /* Execute the file FD refers to, overlaying the running program image.  */
 
@@ -27,5 +28,7 @@ fexecve (int fd, char *const argv[], char *const envp[])
 {
   error_t err = HURD_DPORT_USE (fd, _hurd_exec (__mach_task_self (), port,
 						argv, envp));
+  if (! err)
+    err = EGRATUITOUS;
   return __hurd_fail (err);
 }
