@@ -182,7 +182,8 @@ struct termios
 #define	EXTB	38400
 #endif
   };
-
+#define _IOT_termios /* Hurd ioctl type field.  */ \
+  _IOT (_IOTS (cflag_t), 4, _IOTS (cc_t), NCCS, _IOTS (speed_t), 2)
 
 /* Return the output baud rate stored in *TERMIOS_P.  */
 extern speed_t EXFUN(cfgetospeed, (CONST struct termios *__termios_p));
