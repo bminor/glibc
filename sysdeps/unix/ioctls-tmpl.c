@@ -1,3 +1,7 @@
+/* On SVR4, this #define is necessary to make <sys/ioctl.h> define
+   many of the ioctls.  */
+#define BSD_COMP
+
 #include <sys/types.h>
 #include <sys/param.h>
 
@@ -8,7 +12,7 @@
    So we include <sys/termios.h> and let <sys/ioctl.h> redefine things.
    This produces some spurious warnings.  */
 
-#ifdef HAVE_SYS_TERMIOS_H
+#ifdef HAVE_sys_termios_h
 #include <sys/termios.h>
 #endif
 
@@ -28,7 +32,11 @@
 #include <net/if_arp.h>
 #endif
 #ifdef	SIOCGNIT
+#ifdef HAVE_net_nit_h
 #include <net/nit.h>
+#else
+#undef SIOCGNIT
+#undef SIOCSNIT
 #endif
 #endif
 
