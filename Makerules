@@ -274,7 +274,16 @@ objects objs: $(objects)
 # installed as they are in $(includedir).  install-others are absolute path
 # names of files to install; rules to install them are defined elsewhere.
 
-do-install = $(INSTALL_DATA) $< $@
+define do-install
+$(make-target-directory)
+$(INSTALL_DATA) $< $@
+endef
+
+# Make the target directory if it doesn't exist.
+define make-target-directory
+$(patsubst %/,-mkdir %,$(filter-out $(wildcard $(@D)),$(@D)))
+endef
+
 
 # Any directory (parent or subdir) that has any object files to build
 # should install libc.a; this way "make install" in a subdir is guaranteed
@@ -309,7 +318,6 @@ endif	# headers
 .PHONY: install installdirs install-no-libc.a
 install-no-libc.a: $(+install)
 install: install-no-libc.a
-$(+install): installdirs
 installdirs: $(..)mkinstalldirs
 	$(dir $<)$(notdir $<) $(sort $(dir $(+install)))
 
