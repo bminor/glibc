@@ -52,7 +52,7 @@ subdirs := $(filter-out inet sunrpc manual,$(subdirs)) # XXX
 includes += -I$(..)hurd
 
 # When compiling, use the Hurd header files directly from the sources.
-includes += -I$(hurd-srcdir)
+includes += -I$(hurd-srcdir) -I$(hurd-srcdir)/libthreads
 
 # Marks temporary work-arounds installed by mib.
 defines += -DMIB_HACKS
