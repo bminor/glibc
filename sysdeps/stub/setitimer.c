@@ -25,9 +25,9 @@ Cambridge, MA 02139, USA.  */
    set *OLD to the old value of timer WHICH.
    Returns 0 on success, -1 on errors.  */
 int
-DEFUN(__setitimer, (which, old, new),
+DEFUN(__setitimer, (which, new, old),
       enum __itimer_which __which AND
-      struct itimerval *old AND struct itimerval *new)
+      struct itimerval *, 1994new AND struct itimerval *old)
 {
   if (new == NULL)
     {
