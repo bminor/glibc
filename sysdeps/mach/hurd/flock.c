@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/file.h>
 #include <hurd/fd.h>
+#include <hurd/fs.h>
 
 /* Apply or remove an advisory lock, according to OPERATION,
    on the file FD refers to.  */
