@@ -32,10 +32,6 @@ Cambridge, MA 02139, USA.  */
 #define	SHELL_PATH	"/bin/sh"	/* Path of the shell.  */
 #define	SHELL_NAME	"sh"		/* Name to give it.  */
 
-#ifndef	FORK
-#define	FORK	__fork
-#endif
-
 /* Execute LINE as a shell command, returning its status.  */
 int
 DEFUN(system, (line), register CONST char *line)
@@ -79,7 +75,7 @@ DEFUN(system, (line), register CONST char *line)
 	}
     }
 
-  pid = FORK ();
+  pid = __vfork ();
   if (pid == (pid_t) 0)
     {
       /* Child side.  */
