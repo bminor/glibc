@@ -1,4 +1,4 @@
-%define glibcrelease 82
+%define glibcrelease 83
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1256,6 +1256,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sun Nov 21 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-83
+- update from CVS
+  - add deprecated and/or nonnull attribute to some signal.h
+    functions
+  - speed up tzset () by only using stat instead of open/fstat
+    when calling tzset for the second and following time if
+    /etc/localtime has not changed
+- fix tgamma (BZ #552)
+
 * Sat Nov 20 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-82
 - update from CVS
   - some malloc () checking
