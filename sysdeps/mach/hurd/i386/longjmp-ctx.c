@@ -18,7 +18,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <setjmp.h>
-#include <signal.h>
+#include <hurd/signal.h>
 
 void
 _hurd_longjmp_sigcontext (struct sigcontext *scp, jmp_buf env, int retval)
