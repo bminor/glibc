@@ -28,7 +28,7 @@ DEFUN(__ioctl, (fd, request, arg),
       int fd AND int request AND PTR arg)
 {
   /* Map individual type fields to Mach IPC types.  */
-  const static int mach_types[] =
+  static const int mach_types[] =
     { MACH_MSG_TYPE_CHAR, MACH_MSG_TYPE_INTEGER_16, MACH_MSG_TYPE_INTEGER_32,
       -1 };
 
