@@ -1,3 +1,8 @@
+1998-03-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/maint.texi (Reporting Bugs): Change
+	bug-glibc-manual@prep.ai.mit.edu to bug-glibc-manual@gnu.org.
+
 1997-10-15 06:56  Ulrich Drepper  <drepper@cygnus.com>
 
 	* glibcbug.in: Fix @gnu.ai.mit.edu -> @gnu.org.
