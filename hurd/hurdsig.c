@@ -265,7 +265,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     /* Let the preempting handler examine the thread.
        If it returns SIG_DFL, we run the normal handler;
        otherwise we use the handler it returns.  */
-    handler = (*preempt) (thread, signo, sigcode);
+    handler = (*preempt) (ss->thread, signo, sigcode);
   if (handler != SIG_DFL)
     handler = ss->actions[signo].sa_handler;
 
