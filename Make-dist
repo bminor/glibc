@@ -50,7 +50,7 @@ all-headers := $(patsubst +header+%,%,$(filter +header+%,$(+distinfo)))
 # It is not safe to use `$(wildcard $(all-headers))' to ignore headers
 # without top-level indirections because some of $(all-headers) might need
 # to be found in sysdeps/.
-all-headers := $(filter-out rpc/%,$(all-headers))
+all-headers := $(filter-out rpc/% rpcsvc/%,$(all-headers))
 +subdir-nodist := $(patsubst +nodist+%,%,$(filter +nodist+%,$(+distinfo)))
 +subdir-headers := $(filter-out $(headers),$(all-headers))
 endif
