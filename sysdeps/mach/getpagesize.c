@@ -17,14 +17,14 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <stdio.h>
+#include <stddef.h>
+#include <unistd.h>
+#include <errno.h>
+#include <mach.h>
 
-/* Initialize STREAM as necessary.
-   This may change I/O functions, give a buffer, etc.
-   If no buffer is allocated, but the bufsize is set,
-   the bufsize will be used to allocate the buffer.  */
-void
-DEFUN(__stdio_init_stream, (stream), FILE *stream)
+/* Return the system page size.  */
+size_t
+DEFUN_VOID(__getpagesize)
 {
-  stream->__bufsize = BUFSIZ;
+  return __vm_page_size;
 }
