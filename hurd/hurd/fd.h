@@ -48,7 +48,7 @@ struct hurd_dtable
 
     /* Uses of individual descriptors are not locked.  It is up to the user
        to synchronize descriptor operations on a single descriptor.  */
-    struct hurd_fd *d;
+    struct hurd_fd **d;
   };
 
 /* Current file descriptor table.  */
@@ -66,8 +66,7 @@ extern int _hurd_dtable_rlimit;	/* RLIM_OFILES: number of file descriptors.  */
 #ifdef noteven
 extern struct mutex _hurd_dtable_lock;
 #endif
-
-
+
 /* Get a descriptor table structure to use.
    Pass this structure and ULINK to _hurd_dtable_free when done.  */
 
@@ -90,7 +89,7 @@ extern void (*_hurd_dtable_deallocate) (void *);
 
 /* Free a reference gotten with `DTABLE = _hurd_dtable_get (ULINK);' */
 
-static inline void
+extern inline void
 _hurd_dtable_free (struct hurd_dtable dtable,
 		   struct hurd_userlink *ulink)
 {
@@ -113,10 +112,15 @@ _hurd_dtable_fd (int fd, struct hurd_dtable dtable)
     return NULL;
   else
     {
-      struct hurd_fd *cell = &dtable.d[fd];
+      struct hurd_fd *cell = dtable.d[fd];
+      if (cell == NULL)
+	/* No descriptor allocated at this index.  */
+	return NULL;
       __spin_lock (&cell->port.lock);
       if (cell->port.port == MACH_PORT_NULL)
 	{
+	  /* The descriptor at this index has no port in it.
+	     This happens if it existed before but was closed.  */
 	  __spin_unlock (&cell->port.lock);
 	  return NULL;
 	}
@@ -130,31 +134,54 @@ struct hurd_fd_user
     struct hurd_fd *d;
   };
 
-/* Returns the descriptor cell for FD, locked.  The passed DEALLOC word and
-   returned structure hold onto the descriptor table to it doesn't move
+/* Returns the descriptor cell for FD, locked.  The passed ULINK structure
+   and returned structure hold onto the descriptor table to it doesn't move
    while you might be using a pointer into it.  */
-static inline struct hurd_fd_user
-_hurd_fd (int fd, int *dealloc)
+
+extern inline struct hurd_fd_user
+_hurd_fd_get (int fd, struct hurd_userlink *ulink)
 {
   struct hurd_fd_user d;
-  d.dtable = _hurd_dtable_use (dealloc);
+  d.dtable = _hurd_dtable_get (ulink);
   d.d = _hurd_dtable_fd (fd, d.dtable);
   if (d.d == NULL)
-    _hurd_dtable_done (d.dtable, dealloc);
+    _hurd_dtable_free (d.dtable, ulink);
   return d;
 }
 
-static inline void
-_hurd_fd_done (struct hurd_fd_user d, int *dealloc)
+/* Free a reference gotten with `D = _hurd_fd_get (FD, ULINK);'.
+   The descriptor cell D.d should be unlocked before calling this function.  */
+
+extern inline void
+_hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
 {
-  _hurd_dtable_done (d.dtable, dealloc);
+  _hurd_dtable_free (d.dtable, ulink);
 }
+
+
+/* Evaluate EXPR with the variable `port' bound to the port to FD,
+   and `ctty' bound to the ctty port.  */
+   
+#define	_HURD_DPORT_USE(fd, expr)					      \
+  ({ struct hurd_userlink __dt_ulink;					      \
+     error_t __result;							      \
+     struct hurd_fd_user __d = _hurd_fd_get (fd, &__dt_ulink);		      \
+     if (__d.d == NULL)							      \
+       __result = EBADF;						      \
+     else								      \
+       {								      \
+         struct hurd_userlink __ulink, __ctty_ulink; 			      \
+	 io_t port = _hurd_port_locked_get (&__d.d->port, &__ulink);	      \
+	 io_t ctty = _hurd_port_locked_get (&__d.d->ctty, &__ctty_ulink);     \
+	 __result = (expr);						      \
+	 _hurd_port_free (&__d.d->port, &__ulink, port);		      \
+	 if (ctty != MACH_PORT_NULL)					      \
+	   _hurd_port_free (&__d.d->ctty, &__ctty_ulink, ctty);		      \
+	 _hurd_fd_free (__d, &__dealloc_dt);				      \
+       }								      \
+      __result;								      \
+   })									      \
 
-
-extern io_t __getdport (int);
-extern io_t getdport (int);
-
-
 /* Handle an error from an RPC on a file descriptor's port.  You should
    always use this function to handle errors from RPCs made on file
    descriptor ports.  Some errors are translated into signals.  */   
@@ -191,9 +218,7 @@ __hurd_dfail (int fd, error_t err)
   errno = _hurd_fd_error (fd, err);
   return -1;
 }
-
-
-
+
 /* Set up *FD to have PORT its server port, doing appropriate ctty magic.
    Does no locking or unlocking.  */
 
@@ -211,30 +236,6 @@ extern int _hurd_intern_fd (io_t port, int flags, int dealloc);
 /* Allocate a new file descriptor and return it, locked.
    The new descriptor will not be less than FIRST_FD.  */
 extern struct hurd_fd *_hurd_alloc_fd (int *fd_ptr, int first_fd);
-
-
-/* Evaluate EXPR with the variable `port' bound to the port to FD,
-   and `ctty' bound to the ctty port.  */
-   
-#define	_HURD_DPORT_USE(fd, expr)					      \
-  ({ int __dealloc_dt;							      \
-     error_t __result;							      \
-     struct hurd_fd_user __d = _hurd_fd (fd, &__dealloc_dt);		      \
-     if (__d.d == NULL)							      \
-       __result = EBADF;						      \
-     else								      \
-       {								      \
-         struct hurd_port_userlink __ulink, __ctty_ulink;		      \
-	 io_t port = _hurd_port_locked_get (&__d.d->port, &__ulink);	      \
-	 io_t ctty = _hurd_port_locked_get (&__d.d->ctty, &__ctty_ulink);     \
-	 __result = (expr);						      \
-	 _hurd_port_free (&__d.d->port, &__ulink, port);		      \
-	 if (ctty != MACH_PORT_NULL)					      \
-	   _hurd_port_free (&__d.d->ctty, &__ctty_ulink, ctty);		      \
-	 _hurd_fd_done (__d, &__dealloc_dt);				      \
-       }								      \
-      __result;								      \
-   })									      \
 
 /* User-registered handlers for specific `ioctl' requests.  */
 
