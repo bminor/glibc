@@ -29,6 +29,10 @@ __wait4 (pid_t pid, __WAIT_STATUS_DEFN stat_loc,
 {
   pid_t dead;
   error_t err;
+  struct rusage rubuf;
+
+  if (!usage)
+    usage = &rubuf;
 
   err = __USEPORT (PROC, __proc_wait (port, pid, options, stat_loc,
 				      usage, &dead));
