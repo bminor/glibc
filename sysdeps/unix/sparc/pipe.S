@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,10 +18,9 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-.global ___pipe
-___pipe:
+ENTRY(___pipe)
 	mov %o0, %o2
-PSEUDO (__Spipe, pipe)
+PSEUDO (__Spipe, pipe, 1)
 	st %o0, [%o2]
 	st %o1, [%o2 + 4]
 	retl
