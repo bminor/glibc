@@ -14,8 +14,7 @@ See the file INSTALL to find out how to configure, build, install, and port
 the GNU C library.
 
 The manual for the GNU C library is still being worked on, and is not yet
-distributed.  The file Q+A contains a few questions you're likely to have,
-and some answers, but is by no means exhaustive.
+distributed.
 
 The file NOTES contains a description of the feature-test macros used in
 the GNU C library, explaining how you can tell the library what facilities
