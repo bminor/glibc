@@ -8,7 +8,7 @@ static char buffer[SIZE];
 main ()
 {
   strncpy (buffer, "hello", SIZE);
-  printf ("%s\n", buffer);
+  puts (buffer);
   strncat (buffer, ", world", SIZE - strlen (buffer) - 1);
-  printf ("%s\n", buffer);
+  puts (buffer);
 }
