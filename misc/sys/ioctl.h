@@ -108,8 +108,8 @@ struct ttysize
 /* Perform the I/O control operation specified by REQUEST on FD.
    One argument may follow; its presence and type depend on REQUEST.
    Return value depends on REQUEST.  Usually -1 indicates error.  */
-extern int __ioctl __P ((int __fd, int __request, ...));
-extern int ioctl __P ((int __fd, int __request, ...));
+extern int __ioctl __P ((int __fd, unsigned long int __request, ...));
+extern int ioctl __P ((int __fd, unsigned long int __request, ...));
 
 __END_DECLS
 
