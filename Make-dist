@@ -209,3 +209,7 @@ endif	# Subdirectory vs. parent makefile
 
 # Get these things out of the environment because they take up lots of space.
 unexport distribute generated
+
+# Fnord.
+export inhibit-mach-syscalls=t
+export no_deps=t
