@@ -38,7 +38,13 @@ DEFUN_VOID(__geteuid)
 	}
       _hurd_id_valid = 1;
     }
-  euid = _hurd_id.euid;
+  if (_hurd_id.nuids == 0)
+    {
+      errno = ENOENT;
+      euid = -1;
+    }
+  else
+    euid = _hurd_id.uids[0];
   __mutex_unlock (&_hurd_idlock);
   return euid;
 }
