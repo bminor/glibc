@@ -252,7 +252,7 @@ interrupted_reply_port_location (struct machine_thread_all_state *thread_state)
    This uses only the constant member SS->thread and the unlocked, atomically
    set member SS->intr_port, so no locking is needed.
 
-If successfully sent an interrupt_operation and therefore the thread should
+   If successfully sent an interrupt_operation and therefore the thread should
    wait for its pending RPC to return (possibly EINTR) before taking the
    incoming signal, returns the reply port to be received on.  Otherwise
    returns MACH_PORT_NULL.  */
@@ -268,7 +268,7 @@ abort_rpcs (struct hurd_sigstate *ss, int signo,
   intr_port = ss->intr_port;
   if (intr_port == MACH_PORT_NULL)
     /* No interruption needs done.  */
-    return 0;
+    return MACH_PORT_NULL;
 
   /* Abort the thread's kernel context, so any pending message send or
      receive completes immediately or aborts.  */
@@ -320,7 +320,7 @@ abort_rpcs (struct hurd_sigstate *ss, int signo,
       if (!(ss->actions[signo].sa_flags & SA_RESTART))
 	ss->intr_port = MACH_PORT_NULL;
 
-      return !err;
+      return err ? MACH_PORT_NULL : msging_port;
     }
 
   /* One of the following is true:
@@ -335,7 +335,7 @@ abort_rpcs (struct hurd_sigstate *ss, int signo,
      system call will return MACH_SEND_INTERRUPTED, and HURD_EINTR_RPC will
      notice the interruption (either retrying the RPC or returning EINTR).  */
 
-  return 0;
+  return MACH_PORT_NULL;
 }
 
 /* Abort the RPCs being run by all threads but this one;
