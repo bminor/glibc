@@ -1,3 +1,8 @@
+1998-06-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strtod.c (str_to_mpn): Fix extending of n array which
+	only should happen for cy != 0.
+
 1998-06-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* elf/rtld.c (_dl_start): Make static.
