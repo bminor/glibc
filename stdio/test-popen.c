@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void write_data (FILE *stream)
+void
+DEFUN(write_data, (stream), FILE *stream)
 {
   int i;
   for (i=0; i<100; i++)
@@ -13,20 +14,51 @@ void write_data (FILE *stream)
     }
 }
 
-void main (void)
+void
+DEFUN(read_data, (stream), FILE *stream)
 {
-  FILE *output;
+  int i, j;
+
+  for (i=0; i<100; i++)
+    {
+      if (fscanf (stream, "%d\n", &j) != 1 || j != i)
+	{
+	  if (ferror (stream))
+	    perror ("fscanf");
+	  puts ("Test FAILED!");
+	  exit (1);
+	}
+    }
+}
+
+int
+DEFUN_VOID(main)
+{
+  FILE *output, *input;
   int status;
 
-  output = popen ("/usr/ucb/more", "w");
-  if (!output) {
-    fprintf (stderr, "Could not run more.\n");
-    exit (1);
+  output = popen ("/bin/cat >tstpopen.tmp", "w");
+  if (output == NULL)
+    {
+      perror ("popen");
+      puts ("Test FAILED!");
+      exit (1);
     }
   write_data (output);
   status = pclose (output);
   fprintf (stderr, "pclose returned %d\n", status);
-  exit (0);
+  input = fopen ("tstpopen.tmp", "r");
+  if (input == NULL)
+    {
+      perror ("tstpopen.tmp");
+      puts ("Test FAILED!");
+      exit (1);
+    }
+  read_data (input);
+  (void) fclose (input);
+
+  puts (status ? "Test FAILED!" : "Test succeeded.");
+  exit (status);
 }
 
   
