@@ -48,6 +48,7 @@ all-headers := $(patsubst +header+%,%,$(filter +header+%,$(+distinfo)))
 +subdir-nodist := $(patsubst +nodist+%,%,$(filter +nodist+%,$(+distinfo)))
 +subdir-headers := $(filter-out $(headers),$(all-headers))
 endif
+foo:=$(shell echo 'IS THIS WORKING??? all-headers=$(all-headers)' >&2)
 
 # Find all sysdep sources and headers.
 +maybe-sysdeps := $(sources) $(sources:.c=.s) $(sources:.c=.S) $(all-headers) \
