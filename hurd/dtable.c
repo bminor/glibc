@@ -27,6 +27,7 @@ Cambridge, MA 02139, USA.  */
 #include <limits.h>
 #include <cthreads.h>		/* For `struct mutex'.  */
 #include "set-hooks.h"
+#include "hurdmalloc.h"		/* XXX */
 
 
 struct mutex _hurd_dtable_lock;
