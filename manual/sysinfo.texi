@@ -158,9 +158,10 @@ Here is a list of all the possible alternatives:
 The @code{uname} function fills in the structure pointed to by
 @var{info} with information about the operating system and host machine.
 A non-negative value indicates that the data was successfully stored.
-@code{-1} as the value indicates an error.
 
-@strong{Incomplete:} What can cause an error in this function?
+@code{-1} as the value indicates an error.  The only error possible is
+@code{EFAULT}, which we normally don't mention as it is always a
+possibility.
 @end deftypefun
 
 
