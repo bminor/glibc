@@ -1433,6 +1433,7 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charset_t *charset)
      value for TABSIZE * N, where TABSIZE >= 256.  */
   size_t min_total = UINT_MAX;
   size_t act_size = 256;
+  size_t width_table_size;
 
   if (!be_quiet)
     fputs (_("\
@@ -1636,8 +1637,9 @@ Computing table size for character classes might take a while..."),
   /* Array for width information.  Because the expected width are very
      small we use only one single byte.  This save space and we need
      not provide the information twice with both endianesses.  */
-  ctype->width = (unsigned char *) xmalloc (ctype->plane_size
-					    * ctype->plane_cnt);
+  width_table_size = (ctype->plane_size * ctype->plane_cnt + 3) & ~3ul;
+  ctype->width = (unsigned char *) xmalloc (width_table_size);
+
   /* Initialize with default width value.  */
   memset (ctype->width, charset->width_default,
 	  ctype->plane_size * ctype->plane_cnt);
