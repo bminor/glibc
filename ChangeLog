@@ -1,3 +1,7 @@
+1999-05-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 2.1.2.
+
 1999-05-24  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/sparc/bits/wordsize.h: New file.
