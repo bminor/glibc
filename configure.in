@@ -79,7 +79,7 @@ for arg in $*; do
       # For `--with-fnord', do "with_fnord=yes".
       # These variables may be examined by sysdep configure fragments.
       eval `echo "$arg" | sed '{s/^-*//;s/-/_/g
-s/^\([^=]*\)=\(.*\)$/\1='\'\\2\''/;s/^\([^=]*\)$/\1=yes/;}'
+s/^\([^=]*\)=\(.*\)$/\1='\'\\2\''/;s/^\([^=]*\)$/\1=yes/;}'`
       ;;
 
     -x | --x)
@@ -155,7 +155,7 @@ AC_PREPARE(features.h)
 changequote(,)
 
 # Decanonicalize srcdir so we can tell when we are configuring in srcdir.
-if [ "(cd ${srcdir}; pwd)" = "`pwd`" ]; then
+if [ "`(cd ${srcdir}; pwd)`" = "`pwd`" ]; then
   srcdir=.
 fi
 
