@@ -77,7 +77,7 @@ sunrpc-headers = netdb.h pmap_prot.h xdr.h types.h auth.h \
 installed-sunrpc-headers = $(addprefix $(inst_includedir)/rpc/, \
 				       $(sunrpc-headers))
 install-headers-nosubdir: $(installed-sunrpc-headers)
-$(installed-sunrpc-headers): $(inst_includedir)/%: $(..)sunrpc/%
+$(installed-sunrpc-headers): $(inst_includedir)/%: $(..)sunrpc/% $(+force)
 	$(do-install)
 
 
