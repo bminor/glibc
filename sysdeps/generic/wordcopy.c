@@ -199,13 +199,13 @@ DEFUN(_wordcopy_fwd_dest_aligned, (dstp, srcp, len),
       a3 = ((op_t *) srcp)[3];
       ((op_t *) dstp)[3] = MERGE (a1, sh_1, a2, sh_2);
 
-    do0:
       srcp += 4 * OPSIZ;
       dstp += 4 * OPSIZ;
       len -= 4;
     }
   while (len != 0);
 
+ do0:
   ((op_t *) dstp)[0] = MERGE (a2, sh_1, a3, sh_2);
 }
 
@@ -303,13 +303,13 @@ DEFUN(_wordcopy_bwd_aligned, (dstp, srcp, len),
       a1 = ((op_t *) srcp)[0];
       ((op_t *) dstp)[0] = a0;
 
-    do0:
       srcp -= 8 * OPSIZ;
       dstp -= 8 * OPSIZ;
       len -= 8;
     }
   while (len != 0);
 
+ do0:
   ((op_t *) dstp)[7] = a1;
 }
 
@@ -386,12 +386,12 @@ DEFUN(_wordcopy_bwd_dest_aligned, (dstp, srcp, len),
       a0 = ((op_t *) srcp)[0];
       ((op_t *) dstp)[0] = MERGE (a1, sh_1, a2, sh_2);
 
-    do0:
       srcp -= 4 * OPSIZ;
       dstp -= 4 * OPSIZ;
       len -= 4;
     }
   while (len != 0);
 
+ do0:
   ((op_t *) dstp)[3] = MERGE (a0, sh_1, a1, sh_2);
 }
