@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -187,21 +187,33 @@ DEFUN(__tzfile_compute, (timer, tm), time_t timer AND struct tm tm)
   struct ttinfo *info;
   register size_t i;
 
-  /* Find the first transition after TIMER, and then go back one.  */
-  i = 0;
-  while (i < num_transitions && transitions[i] < timer)
-    ++i;
-  if (i == num_transitions)
-    i = 0;
+  if (num_transitions == 0 || timer < transitions[0])
+    {
+      /* TIMER is before any transition (or there are no transitions).
+	 Choose the first non-DST type
+	 (or the first if they're all DST types).  */
+      i = 0;
+      while (i < num_types && types[i].isdst)
+	++i;
+      if (i == num_types)
+	i = 0;
+    }
   else
-    --i;
+    {
+      /* Find the first transition after TIMER, and then go back one.  */
+      i = 1;
+      while (i < num_transitions && transitions[i] < timer)
+	++i;
+    }
 
-  info = &types[type_idxs[i]];
+  info = &types[type_idxs[i - 1]];
   __daylight = info->isdst;
   __timezone = info->offset;
   for (i = 0; i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
        ++i)
     __tzname[types[i].isdst] = &zone_names[types[i].idx];
+  if (info->isdst < sizeof (__tzname) / sizeof (__tzname[0]))
+    __tzname[info->isdst] = &zone_names[info->idx];
 
   i = num_leaps;
   do
