@@ -348,9 +348,12 @@ else
 default-rpath = $(libdir)
 endif
 # This is how to find at build-time things that will be installed there.
-rpath-link = $(common-objdir):$(elfobjdir):$(nssobjdir)
+rpath-link = $(common-objdir):$(elfobjdir):$(nssobjdir):$(nisobjdir):$(dbobjdir):$(resolvobjdir)
 elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
 nssobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nss)
+nisobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nis)
+dbobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)db)
+resolvobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)resolv)
 else
 link-libc = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
 endif
@@ -416,6 +419,15 @@ ETAGS	:= etags -T
 # The `m4' macro processor; this is used by sysdeps/sparc/Makefile (and
 # perhaps others) to preprocess assembly code in some cases.
 M4 = m4
+
+# To force installation of files even if they are older than the
+# installed files.  This variable is included in the dependency list
+# of all installation targets.
+ifeq ($(force-install),yes)
++force = force-install
+else
++force =
+endif
 
 ####
 #### End of configuration variables.
