@@ -348,8 +348,8 @@ of this helper program; chances are you did not intend to run this program.\n",
   preloadlist = getenv ("LD_PRELOAD");
   if (preloadlist)
     {
-      /* The LD_PRELOAD environment variable gives a white space
-	 separated list of libraries that are loaded before the
+      /* The LD_PRELOAD environment variable gives list of libraries
+	 separated by white space or colons that are loaded before the
 	 executable's dependencies and prepended to the global scope
 	 list.  If the binary is running setuid all elements
 	 containing a '/' are ignored since it is insecure.  */
