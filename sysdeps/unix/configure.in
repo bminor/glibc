@@ -1,3 +1,5 @@
+sinclude(./aclocal.m4)dnl Autoconf lossage.
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -16,25 +18,26 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-# configure fragment for Unix-based systems.
-# This file is sourced by the top-level configure script.  Note that we use
-# the prefix `unix_' on all shell variables here, to avoid conflicting with
-# any variables the top-level script might be using.
+dnl configure fragment for Unix-based systems.  This is processed by Autoconf,
+dnl but we just use the AC_MSG_* macros.  This file is sourced by the
+dnl top-level configure script.  Note that we use the prefix `unix_' on all
+dnl shell variables here, to avoid conflicting with any variables the
+dnl top-level script might be using.
 
 sysincludedir=/usr/include # XXX
 
 # Find the <syscall.h> file we will be using, or something like it.
 unix_found=
 for unix_dir in $sysnames; do
-  if [ -r $sysdep_dir/$unix_dir/syscall.h ]; then
+  if test -r $sysdep_dir/$unix_dir/syscall.h; then
     unix_found=$unix_dir
     break
   fi
 done
-if [ $unix_found = stub ]; then
+if test $unix_found = stub; then
   # XXX This list of possibilities duplicates the list in Makefile.
   for try in sys.s sys/sys.s sys.S sys/sys.S syscall.h sys/syscall.h; do
-    if [ -r $sysincludedir/$try ]; then
+    if test -r $sysincludedir/$try; then
       unix_syscall_h=$sysincludedir/$try
       break
     fi
@@ -46,7 +49,7 @@ fi
 test -n "$unix_syscall_h" && {
 
 # Where to put the .S files we write.
-if [ "`pwd`" = "`(cd $srcdir; pwd)`" ]; then
+if test "`pwd`" = "`(cd $srcdir; pwd)`"; then
   unix_generated_dirpfx=sysdeps/unix/
 else
   # We are running in a separate build directory.
@@ -83,9 +86,9 @@ do
 
   unix_implementor=none
   for unix_dir in $sysnames; do
-    if [ -r $sysdep_dir/$unix_dir/${unix_srcname}.c -o \
-         -r $sysdep_dir/$unix_dir/${unix_srcname}.S -o \
-	 -r $sysdep_dir/$unix_dir/${unix_srcname}.s ]; then
+    if test -r $sysdep_dir/$unix_dir/${unix_srcname}.c ||
+       test -r $sysdep_dir/$unix_dir/${unix_srcname}.S ||
+       test -r $sysdep_dir/$unix_dir/${unix_srcname}.s; then
       unix_implementor=$unix_dir
       break
     fi
@@ -102,15 +105,18 @@ do
     # The chosen implementation of ${unix_syscall} is a boring one.
     # We want to use the unix/common implementation instead iff
     # ${unix_syscall} appears in <syscall.h>.
-    echo checking for ${unix_syscall} system call
+    AC_MSG_CHECKING(for ${unix_syscall} system call)
+changequote(,)dnl We need to use [ and ] for real now.
     if grep -i "[ 	_]${unix_syscall}[ 	]" $unix_syscall_h >/dev/null
+changequote([,])dnl Back to Autoconf land.
     then
       # It does seem to be present in <syscall.h>.
       echo "#include <sysdeps/unix/${unix_srcdir}/${unix_srcname}.S>" \
       > ${unix_generated_dirpfx}${unix_srcname}.S
-      test -n "$verbose" &&
-        echo "	wrote ${unix_generated_dirpfx}${unix_srcname}.S"
+      AC_MSG_RESULT(wrote ${unix_generated_dirpfx}${unix_srcname}.S)
       unix_generated="$unix_generated $unix_generated_dirpfx${unix_srcname}.S"
+    else
+      AC_MSG_RESULT(no)
     fi
   ;;
   *) ;;
