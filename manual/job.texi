@@ -684,7 +684,7 @@ Here is the sample shell's function for doing all of this.
 
 @example
 @group
-/* @r{Put job J in the foreground.  If CONT is nonzero,}
+/* @r{Put job @var{j} in the foreground.  If @var{cont} is nonzero,}
    @r{restore the saved terminal modes and send the process group a}
    @r{@code{SIGCONT} signal to wake it up before we block.}  */
 
@@ -778,7 +778,7 @@ the status of jobs and reporting the information to the user.
 
 @example
 @group
-/* @r{Store the status of the process PID that was returned by waitpid.}
+/* @r{Store the status of the process @var{pid} that was returned by waitpid.}
    @r{Return 0 if all went well, nonzero otherwise.}  */
 
 int
