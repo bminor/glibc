@@ -56,9 +56,11 @@ This is the reference manual for version 0.00 of the GNU C Library.
                                          the behavior of library functions.
 * Searching and Sorting::       General searching and sorting
 					 functions.
-* I/O Overview::       Introduction to the i/o facilities.
-* I/O on Streams::     High-level, portable i/o facilities.
-* Low-Level I/O::      Low-level, less portable i/o.
+* Pattern Matching::   Matching wildcards and regular expressions.
+			  Shell-style ``word expansion''.
+* I/O Overview::       Introduction to the I/O facilities.
+* I/O on Streams::     High-level, portable I/O facilities.
+* Low-Level I/O::      Low-level, less portable I/O.
 * File System Interface::       Functions for manipulating files.
 * Pipes and FIFOs::             A simple interprocess communication
 					 mechanism.
@@ -262,6 +264,15 @@ Searching and Sorting
 * Array Search Function::       The @code{bsearch} function.
 * Array Sort Function::         The @code{qsort} function.
 * Search/Sort Example::         An example program.
+
+Pattern Matching
+
+* Wildcard Matching::    Matching a wildcard pattern against a single string.
+* Globbing::             Finding the files that match a wildcard pattern.
+* Regular Expressions::  Matching regular expressions against strings.
+* Word Expansion::       Expanding shell variables, nested commands,
+			    arithmetic, and wildcards.
+			    This is what the shell does with shell commands.
 
 I/O Overview
 
@@ -873,6 +884,7 @@ Porting the GNU C Library
 @include mbyte.texinfo
 @include locale.texinfo
 @include search.texinfo
+@include pattern.texi
 @include io.texinfo
 @include stdio.texinfo
 @include llio.texinfo

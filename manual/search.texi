@@ -1,4 +1,4 @@
-@node Searching and Sorting, I/O Overview, Locales, Top
+@node Searching and Sorting, Pattern Matching, Locales, Top
 @chapter Searching and Sorting 
 
 This chapter describes functions for searching and sorting arrays of

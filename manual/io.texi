@@ -1,4 +1,4 @@
-@node I/O Overview, I/O on Streams, Searching and Sorting, Top
+@node I/O Overview, I/O on Streams, Pattern Matching, Top
 @chapter Input/Output Overview
 
 Most programs need to do either input (reading data) or output (writing
