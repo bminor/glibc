@@ -140,14 +140,20 @@ info dvi:
 	$(MAKE) -C manual $@
 
 # This makes all the subdirectory targets.
-.PHONY: $(+subdir_targets)
-$(+subdir_targets):
-	@lose=nil;			\
-	 for dir in $(subdirs); do	\
-	 $(+cmdecho) $(MAKE) -C $$dir $@;\
-	 $(MAKE) -C $$dir $@ || lose=t;	\
-	 done;				\
-	 test $$lose = nil
+
+# For each target, make it depend on DIR/target for each subdirectory DIR.
+$(+subdir_targets): %: $(addsuffix /%,$(subdirs))
+
+# Compute a list of all those targets.
+all-subdirs-targets := $(foreach dir,$(subdirs),\
+				 $(addprefix $(dir)/,$(+subdir_targets)))
+
+# The action for each of those is to cd into the directory and make the
+# target there.
+$(all-subdirs-targets):
+	$(MAKE) -C $(@D) $(@F)
+
+.PHONY: $(+subdir_targets) $(all-subdirs-targets)
 
 # This clobbers everything that can be regenerated.
 .PHONY: clean realclean distclean
