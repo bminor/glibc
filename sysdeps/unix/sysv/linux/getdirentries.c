@@ -22,6 +22,9 @@
 #ifdef GETDENTS64
 # define getdirentries getdirentries64
 # define __getdents __getdents64
+# undef off_t
+# define off_t off64_t
+# define __lseek __lseek64
 #endif
 
 ssize_t
