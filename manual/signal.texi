@@ -835,7 +835,7 @@ This function is a GNU extension, declared in the header file
 @file{string.h}.
 @end deftypefun
 
-@comment stdio.h
+@comment signal.h
 @comment BSD
 @deftypefun void psignal (int @var{signum}, const char *@var{message})
 This function prints a message describing the signal @var{signum} to the
@@ -851,7 +851,7 @@ character to separate the @var{message} from the string corresponding
 to @var{signum}.
 
 @pindex stdio.h
-This function is a BSD feature, declared in the header file @file{stdio.h}.
+This function is a BSD feature, declared in the header file @file{signal.h}.
 @end deftypefun
 
 @vindex sys_siglist
