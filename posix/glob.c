@@ -329,7 +329,6 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
 
 	    pglob->gl_pathv[pglob->gl_pathc++] = patcopy;
 	    pglob->gl_flags = flags;
-	    return 0;
 	  }
 	else
 	  return GLOB_NOMATCH;
@@ -355,9 +354,9 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
       if (!(flags & GLOB_NOSORT))
 	qsort ((PTR) &pglob->gl_pathv[oldcount], pglob->gl_pathc - oldcount,
 	       sizeof(char *), collated_compare);
-
-      return 0;
     }
+
+  return 0;
 }
 
 
