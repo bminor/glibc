@@ -451,7 +451,7 @@ strptime_internal (rp, fmt, tm, decided)
 		}
 	      else
 		{
-		  if (decided == not
+		  if (*decided == not
 		      && strcmp (_NL_CURRENT (LC_TIME, D_FMT), HERE_D_FMT))
 		    *decided = loc;
 		  want_xday = 1;
