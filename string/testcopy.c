@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <malloc.h>
 
@@ -103,6 +104,8 @@ DEFUN(main, (argc, argv),
 	    }
 	}
     }
+
+  puts ("Test succeeded.");
 
   return 0;
 }

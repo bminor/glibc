@@ -11,7 +11,7 @@
 static char buf[8192];
 
 int
-main (int argc, char **argv)
+DEFUN_VOID(main)
 {
   FILE *in;
   FILE *out;
@@ -21,20 +21,39 @@ main (int argc, char **argv)
 
   /* Create a test file.  */
   in = fopen (inname, "w+");
-  if (in == NULL) perror (inname);
+  if (in == NULL)
+    {
+      perror (inname);
+      return 1;
+    }
   for (i = 0; i < 1000; ++i)
     fprintf (in, "%d\n", i);
 
   out = fopen (outname, "w");
-  if (out == NULL) perror (outname);
-  if (fseek (in, 0L, SEEK_SET) != 0) abort ();
+  if (out == NULL)
+    {
+      perror (outname);
+      return 1;
+    }
+  if (fseek (in, 0L, SEEK_SET) != 0)
+    abort ();
   putc (getc (in), out);
   i = fread (buf, 1, sizeof (buf), in);
-  if (i == 0) perror (inname);
-  if (fwrite (buf, 1, i, out) != i) perror (outname);
+  if (i == 0)
+    {
+      perror ("fread");
+      return 1;
+    }
+  if (fwrite (buf, 1, i, out) != i)
+    {
+      perror ("fwrite");
+      return 1;
+    }
   fclose (in);
   fclose (out);
 
+  puts ("There should be no further output from this test.");
+  fflush (stdout);
   execlp ("cmp", "cmp", inname, outname, (char *) NULL);
   perror ("execlp: cmp");
   exit (1);
