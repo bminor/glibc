@@ -1456,7 +1456,7 @@ lock and where.  This data type and the associated macros for the
 
 @comment fcntl.h
 @comment POSIX.1
-@deftp {struct Type} flock
+@deftp {Data Type} {struct flock}
 This structure is used with the @code{fcntl} function to describe a file
 lock.  It has these members:
 
