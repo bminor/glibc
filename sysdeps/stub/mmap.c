@@ -20,13 +20,19 @@ Cambridge, MA 02139, USA.  */
 #include <sys/mman.h>
 #include <errno.h>
 
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
+/* Map addresses starting near ADDR and extending for LEN bytes.  from
+   OFFSET into the file FD describes according to PROT and FLAGS.  If ADDR
+   is nonzero, it is the desired mapping address.  If the MAP_FIXED bit is
+   set in FLAGS, the mapping will be at ADDR exactly (which must be
+   page-aligned); otherwise the system chooses a convenient nearby address.
+   The return value is the actual mapping address chosen or (caddr_t) -1
+   for errors (in which case `errno' is set).  A successful `mmap' call
+   deallocates any previous mapping for the affected region.  */
 
-int
-munmap (caddr_t addr, size_t len)
+caddr_t
+mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
   errno = ENOSYS;
-  return -1;
+  return (caddr_t) -1;
 }
 	

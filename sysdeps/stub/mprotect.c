@@ -20,11 +20,12 @@ Cambridge, MA 02139, USA.  */
 #include <sys/mman.h>
 #include <errno.h>
 
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
+/* Change the memory protection of the region starting at ADDR and
+   extending LEN bytes to PROT.  Returns 0 if successful, -1 for errors
+   (and sets errno).  */
 
 int
-munmap (caddr_t addr, size_t len)
+mprotect (caddr_t addr, size_t len, int prot)
 {
   errno = ENOSYS;
   return -1;

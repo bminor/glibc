@@ -16,17 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sys/types.h>
-#include <sys/mman.h>
-#include <errno.h>
+#include <sysdep.h>
 
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
-
-int
-munmap (caddr_t addr, size_t len)
-{
-  errno = ENOSYS;
-  return -1;
-}
-	
+SYSCALL (mprotect, 3)
+	ret

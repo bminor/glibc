@@ -30,4 +30,3 @@ msync (caddr_t addr, size_t len)
   errno = ENOSYS;
   return -1;
 }
-	
