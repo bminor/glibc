@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,20 +25,25 @@ Cambridge, MA 02139, USA.  */
 gid_t
 DEFUN_VOID(__getgid)
 {
-  gid_t gid;
+  error_t err;
+  gid_t rgid;
+
   __mutex_lock (&_hurd_idlock);
-  if (!_hurd_id_valid)
+
+  if (err = _hurd_check_ids ())
     {
-      error_t err = _HURD_PORT_USE (&_hurd_auth,
-				    __auth_getids (port, &_hurd_id));
-      if (err)
-	{
-	  __mutex_unlock (&_hurd_idlock);
-	  return __hurd_fail (err);
-	}
-      _hurd_id_valid = 1;
+      errno = err;
+      rgid = -1;
     }
-  gid = _hurd_id.rgid;
+  else if (_hurd_ngids == 0)
+    {
+      /* We have no real gid.  */
+      errno = XXX;
+      egid = -1;
+    }
+  else
+    egid = _hurd_gid.rid;
+
   __mutex_unlock (&_hurd_idlock);
-  return gid;
+  return egid;
 }
