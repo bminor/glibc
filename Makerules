@@ -143,11 +143,24 @@ $(objpfx)%.dep: $(objpfx).s $(objpfx)dummy.dep; $(make-dummy-dep)
 $(objpfx)%.o: $(objpfx)%.c $(before-compile); $(compile-command.c)
 $(objpfx)%.dep: $(objpfx)%.c $(before-compile); $(+make-deps)
 
+# System-dependent makefiles can put in `inhibit-sysdep-asm' wildcard
+# patterns matching sysdep directories whose assembly source files should
+# be suppressed.
+ifdef inhibit-sysdep-asm
+define open-check-inhibit-asm
+case $$dir in $(subst $(empty) ,|,$(inhibit-sysdep-asm))) ;; *)
+endef
+close-check-inhibit-asm = ;; esac
+endif
+
 include $(+sysdir_pfx)sysd-rules
-$(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules
+$(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
+			  $(wildcard $(foreach dir,$(sysdirs),\
+					       $(sysdep_dir)/$(dir)/Makefile))
 	-@rm -f $@T
 	(for dir in $(sysdirs); do		   			      \
 	   dir="\$$(sysdep_dir)/$$dir";					      \
+	   $(open-check-inhibit-asm) \
 	   echo "\$$(objpfx)%.o: $$dir/%.S \$$(before-compile); \
 		\$$(compile-command.S)";				      \
 	   echo "\$$(objpfx)%.dep: $$dir/%.S \$$(before-compile); \
@@ -155,7 +168,7 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules
 	   echo "\$$(objpfx)%.o: $$dir/%.s \$$(before-compile); \
 		\$$(compile-command.s)";				      \
 	   echo "\$$(objpfx)%.dep: $$dir/%.s \$$(objpfx)dummy.dep; \
-		\$$(make-dummy-dep)";	     \
+		\$$(make-dummy-dep)" $(close-check-inhibit-asm);	\
 	   echo "\$$(objpfx)%.o: $$dir/%.c \$$(before-compile); \
 		\$$(compile-command.c)";				      \
 	   echo "\$$(objpfx)%.dep: $$dir/%.c \$$(before-compile); \
