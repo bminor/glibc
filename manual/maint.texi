@@ -891,6 +891,45 @@ The floating-point printing function used by @code{printf} and friends
 was written by Roland McGrath and @value{tege}.  The multi-precision
 integer functions used in that function are taken from GNU MP, which was
 contributed by @value{tege}.
+
+@item
+The code to support Sun RPC is taken verbatim from Sun's
+@w{@sc{rpcsrc-4.0}} distribution, and is covered by this copyright:
+
+@quotation
+@display
+Copyright @copyright{} 1984, Sun Microsystems, Inc.
+@end display
+
+Sun RPC is a product of Sun Microsystems, Inc. and is provided for
+unrestricted use provided that this legend is included on all tape media
+and as a part of the software program in whole or part.  Users may copy
+or modify Sun RPC without charge, but are not authorized to license or
+distribute it to anyone else except as part of a product or program
+developed by the user.
+
+@sc{sun rpc is provided as is with no warranties of any kind including the
+warranties of design, merchantibility and fitness for a particular
+purpose, or arising from a course of dealing, usage or trade practice.}
+
+Sun RPC is provided with no support and without any obligation on the
+part of Sun Microsystems, Inc. to assist in its use, correction,
+modification or enhancement.
+
+@sc{sun microsystems, inc. shall have no liability with respect to the
+infringement of copyrights, trade secrets or any patents by sun rpc
+or any part thereof.}
+
+In no event will Sun Microsystems, Inc. be liable for any lost revenue
+or profits or other special, indirect and consequential damages, even if
+Sun has been advised of the possibility of such damages.
+
+@display
+Sun Microsystems, Inc.
+2550 Garcia Avenue
+Mountain View, California  94043
+@end display
+@end quotation
 @end itemize
 
 @c @bye
