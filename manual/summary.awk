@@ -1,0 +1,96 @@
+# awk script to create summary.out from the library texinfo files.
+
+# Copyright (C) 1992 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License
+# as published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+BEGIN { header = 0;
+nameword["@defun"]=1
+nameword["@defmac"]=1
+nameword["@defspec"]=1
+nameword["@defvar"]=1
+nameword["@defopt"]=1
+nameword["@deffn"]=2
+nameword["@defvr"]=2
+nameword["@deftp"]=2
+nameword["@deftypefun"]=2
+nameword["@deftypevar"]=2
+nameword["@deftypefn"]=3
+nameword["@deftypevr"]=3
+firstword["@defun"]=1
+firstword["@defmac"]=1
+firstword["@defspec"]=1
+firstword["@defvar"]=1
+firstword["@defopt"]=1
+firstword["@deffn"]=2
+firstword["@defvr"]=2
+firstword["@deftp"]=2
+firstword["@deftypefun"]=1
+firstword["@deftypevar"]=1
+firstword["@deftypefn"]=2
+firstword["@deftypevr"]=2
+nameword["@item"]=1
+firstword["@item"]=1
+nameword["@itemx"]=1
+firstword["@itemx"]=1
+nameword["@vindex"]=1
+firstword["@vindex"]=1
+}
+
+$1 == "@node" { node=$2;
+		for (i = 3; i <= NF; ++i)
+		 { node=node " " $i; if ( $i ~ /,/ ) break; }
+	      } 
+
+$1 == "@comment" && $2 ~ /\.h$/ { header="@file{" $2 "}";
+				  for (i = 3; i <= NF; ++i)
+				    header=header ", @file{" $i "}"
+				}
+
+$1 == "@comment" && header != 0 { std=$2;
+				  for (i=3;i<=NF;++i) std=std " " $i }
+
+header != 0 && $1 ~ /@def|@item|@vindex/ \
+	{ defn=""; name=""; curly=0; n=1;
+	  for (i = 2; i <= NF; ++i) {
+	    if ($i ~ /[^@]?{/ && $i !~ /}/) {
+	      curly=1
+	      word=substr ($i, 2, length ($i))
+	    }
+	    else {
+	      if (curly) {
+	        if ($i ~ /[^@]?}/) {
+		  curly=0
+		  word=word " " substr (word, 1, length ($i) - 1)
+	        } else
+		  word=word " " $i
+	      }
+	      else
+	        word=$i
+	      if (!curly) {
+		if (n >= firstword[$1])
+		  defn=defn " " word
+		if (n == nameword[$1])
+		  name=word
+		++n
+	      }
+	    }
+	  }
+	  printf "@comment %s%c", name, 012 # FF
+	  printf "@item%s%c", defn, 012
+	  printf "%s (%s):  @ref{%s}.%c\n", header, std, node, 012;
+	  header = 0 }
