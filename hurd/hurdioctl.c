@@ -22,14 +22,19 @@ Cambridge, MA 02139, USA.  */
 #include <sys/ioctl.h>
 #include <gnu-stabs.h>
 
-/* Symbol set of ioctl handler lists.  This definition is here so that when
-   __ioctl refers to it, we will link in fionread et al (below).  */
 
-const struct
+/* Symbol set of ioctl handler lists.
+   This must be uninitialized for ld to use it for the set.  */
+struct handler_set
   {
     size_t n;
     struct ioctl_handler *v[0];
-  } _hurd_ioctl_handler_lists;
+  };
+struct handler_set _hurd_ioctl_handler_lists;
+
+/* This definition is here (and initialized!) so that when __ioctl refers
+   to it, we will link in fionread et al (below).  */
+struct handler_set *const _hurd_ioctl_handlers = &_hurd_ioctl_handler_lists;
 
 #include <fcntl.h>
 
