@@ -1,5 +1,8 @@
 2002-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/syslog.c (vsyslog): Only use cleanup handler is
+	_LIBC_REENTRANT is defined [PR libc/2924].
+
 	* sunrpc/rpc_svcout.c (write_real_program): Write "result, "
 	parameter if mtflag.  Patch by <jeongyun@innovay.com>.
 
