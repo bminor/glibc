@@ -41,7 +41,10 @@ alarm (seconds)
     return 0;
 
   retval = old.it_value.tv_sec;
-  if (old.it_value.tv_usec)
+  /* Round to the nearest second, but never report zero seconds when
+     the alarm is still set.  */
+  if (old.it_value.tv_usec >= 500000
+      || (retval == 0 && old.it_value.tv_usec > 0))
     ++retval;
   return retval;
 }
