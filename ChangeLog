@@ -1,3 +1,9 @@
+2002-08-18  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/dl-sysdep.c
+	[HP_TIMING_AVAIL] (_dl_cpuclock_offset): New variable.
+	[HP_TIMING_AVAIL] (_dl_sysdep_start): Set it with HP_TIMING_NOW.
+
 2002-08-12  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/errlist.c: Remove sys_nerr, _sys_nerr aliases.
