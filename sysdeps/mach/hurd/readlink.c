@@ -57,7 +57,7 @@ DEFUN(__readlink, (path, buf, len),
       if (transp[translen - 1] == '\0')
 	/* Remove the null terminator.  */
 	--len;
-      memcpy (buf, transp, len);
+      memcpy (buf, transp + sizeof (_HURD_SYMLINK), len);
     }
 
   if (transp != mybuf)
