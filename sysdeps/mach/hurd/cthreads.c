@@ -1,4 +1,4 @@
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <errno.h>
 #include <stdlib.h>
 
