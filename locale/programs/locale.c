@@ -22,6 +22,8 @@
 # include <config.h>
 #endif
 
+#include <argz.h>
+#include <ctype.h>
 #include <dirent.h>
 #include <error.h>
 #include <getopt.h>
@@ -29,11 +31,13 @@
 #include <libintl.h>
 #include <limits.h>
 #include <locale.h>
+#include <search.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include "localeinfo.h"
 
@@ -201,6 +205,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
   /* `-a' requests the names of all available locales.  */
   if (do_all != 0)
     {
+      setlocale (LC_ALL, "");
       write_locales ();
       exit (EXIT_SUCCESS);
     }
@@ -263,31 +268,165 @@ Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
 }
 
 
-/* Write the names of all available locales to stdout.  */
+/* Simple action function which prints arguments as strings.  */
+static void
+print_names (const void *nodep, VISIT value, int level)
+{
+  if (value == postorder || value == leaf)
+    puts (*(char **) nodep);
+}
+
+
+/* Write the names of all available locales to stdout.  We have some
+   sources of the information: the contents of the locale directory
+   and the locale.alias file.  To avoid duplicates and print the
+   result is a reasonable order we put all entries is a search tree
+   and print them afterwards.  */
 static void
 write_locales (void)
 {
+  void *all_data = NULL;
   DIR *dir;
   struct dirent *dirent;
+  char *alias_path;
+  size_t alias_path_len;
+  char *entry;
 
-  /* `POSIX' locale is always available (POSIX.2 4.34.3).  */
-  puts ("POSIX");
+#define PUT(name) tsearch ((name), &all_data, \
+			   (int (*) (const void *, const void *)) strcoll)
 
-  dir = opendir (LOCALE_PATH);
+  dir = opendir (LOCALEDIR);
   if (dir == NULL)
     {
       error (1, errno, gettext ("cannot read locale directory `%s'"),
-	     LOCALE_PATH);
+	     LOCALEDIR);
       return;
     }
+
+  /* `POSIX' locale is always available (POSIX.2 4.34.3).  */
+  PUT ("POSIX");
+  /* And so is the "C" locale.  */
+  PUT ("C");
 
   /* Now we can look for all files in the directory.  */
   while ((dirent = readdir (dir)) != NULL)
     if (strcmp (dirent->d_name, ".") != 0
 	&& strcmp (dirent->d_name, "..") != 0)
-      puts (dirent->d_name);
+      {
+	mode_t mode;
+#ifdef _DIRENT_HAVE_D_TYPE
+	if (dirent->d_type != DT_UNKNOWN)
+	  mode = DTTOIF (dirent->d_type);
+	else
+#endif
+	  {
+	    struct stat st;
+	    char buf[sizeof (LOCALEDIR) + strlen (dirent->d_name) + 1];
+
+	    stpcpy (stpcpy (stpcpy (buf, LOCALEDIR), "/"), dirent->d_name);
+
+	    if (stat (buf, &st) < 0)
+	      continue;
+	    mode = st.st_mode;
+	  }
+
+	if (S_ISDIR (mode))
+	  PUT (strdup (dirent->d_name));
+      }
 
   closedir (dir);
+
+  /* Now read the locale.alias files.  */
+  if (argz_create_sep (LOCALE_ALIAS_PATH, ':', &alias_path, &alias_path_len))
+    error (1, errno, gettext ("while preparing output"));
+
+  entry = NULL;
+  while ((entry = argz_next (alias_path, alias_path_len, entry)))
+    {
+      static const char aliasfile[] = "/locale.alias";
+      FILE *fp;
+      char full_name[strlen (entry) + sizeof aliasfile];
+
+      stpcpy (stpcpy (full_name, entry), aliasfile);
+      fp = fopen (full_name, "r");
+      if (fp == NULL)
+	/* Ignore non-existing files.  */
+	continue;
+
+      while (! feof (fp))
+	{
+	  /* It is a reasonable approach to use a fix buffer here
+	     because
+	     a) we are only interested in the first two fields
+	     b) these fields must be usable as file names and so must
+	        not be that long  */
+	  char buf[BUFSIZ];
+	  char *alias;
+	  char *value;
+	  char *cp;
+
+	  if (fgets (buf, BUFSIZ, fp) == NULL)
+	    /* EOF reached.  */
+	    break;
+
+	  cp = buf;
+	  /* Ignore leading white space.  */
+	  while (isspace (cp[0]))
+	    ++cp;
+
+	  /* A leading '#' signals a comment line.  */
+	  if (cp[0] != '\0' && cp[0] != '#')
+	    {
+	      alias = cp++;
+	      while (cp[0] != '\0' && !isspace (cp[0]))
+		++cp;
+	      /* Terminate alias name.  */
+	      if (cp[0] != '\0')
+		*cp++ = '\0';
+
+	      /* Now look for the beginning of the value.  */
+	      while (isspace (cp[0]))
+		++cp;
+
+	      if (cp[0] != '\0')
+		{
+		  value = cp++;
+		  while (cp[0] != '\0' && !isspace (cp[0]))
+		    ++cp;
+		  /* Terminate value.  */
+		  if (cp[0] == '\n')
+		    {
+		      /* This has to be done to make the following
+			 test for the end of line possible.  We are
+			 looking for the terminating '\n' which do not
+			 overwrite here.  */
+		      *cp++ = '\0';
+		      *cp = '\n';
+		    }
+		  else if (cp[0] != '\0')
+		    *cp++ = '\0';
+
+		  /* Add the alias.  */
+		  PUT (strdup (alias));
+		}
+	    }
+
+	  /* Possibly not the whole line fits into the buffer.
+	     Ignore the rest of the line.  */
+	  while (strchr (cp, '\n') == NULL)
+	    {
+	      cp = buf;
+	      if (fgets (buf, BUFSIZ, fp) == NULL)
+		/* Make sure the inner loop will be left.  The outer
+		   loop will exit at the `feof' test.  */
+		*cp = '\n';
+	    }
+	}
+
+      fclose (fp);
+    }
+
+  twalk (all_data, print_names);
 }
 
 
@@ -295,6 +434,7 @@ write_locales (void)
 static void
 write_charmaps (void)
 {
+  void *all_data = NULL;
   DIR *dir;
   struct dirent *dirent;
 
@@ -310,9 +450,31 @@ write_charmaps (void)
   while ((dirent = readdir (dir)) != NULL)
     if (strcmp (dirent->d_name, ".") != 0
 	&& strcmp (dirent->d_name, "..") != 0)
-      puts (dirent->d_name);
+      {
+	mode_t mode;
+#ifdef _DIRENT_HAVE_D_TYPE
+	if (dirent->d_type != DT_UNKNOWN)
+	  mode = DTTOIF (dirent->d_type);
+	else
+#endif
+	  {
+	    struct stat st;
+	    char buf[sizeof (CHARMAP_PATH) + strlen (dirent->d_name) + 1];
+
+	    stpcpy (stpcpy (stpcpy (buf, CHARMAP_PATH), "/"), dirent->d_name);
+
+	    if (stat (buf, &st) < 0)
+	      continue;
+	    mode = st.st_mode;
+	  }
+
+	if (S_ISREG (mode))
+	  PUT (strdup (dirent->d_name));
+      }
 
   closedir (dir);
+
+  twalk (all_data, print_names);
 }
 
 
