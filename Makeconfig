@@ -111,6 +111,20 @@ ifndef localtime
 localtime = Factory
 endif
 
+# Where to install the "localtime" timezone file; this is file
+# whose contents $(localtime) specifies.  If this is a relative
+# pathname, it is relative to $(datadir)/zoneinfo.
+ifndef localtime-file
+localtime-file = localtime
+endif
+
+
+# Directory where your system's native header files live.
+# This is used on Unix systems to generate some GNU libc header files.
+ifndef sysincludedir
+sysincludedir = /usr/include
+endif
+
 
 # Commands to install files.
 ifndef INSTALL_DATA
