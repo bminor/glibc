@@ -52,7 +52,7 @@ test -n "$unix_syscall_h" && {
 
 for unix_function in \
   __dup2 __lstat __mkdir __rmdir __readlink __symlink rename swapon \
-  __getpgrp __access __select __getgroups/__getgrps setgroups
+  __access __select __getgroups/__getgrps setgroups
 do
 
   # $unix_function  =>	$unix_syscall		$unix_srcname
