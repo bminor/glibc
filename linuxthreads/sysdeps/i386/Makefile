@@ -15,6 +15,7 @@ CFLAGS-pthread.c += -fno-omit-frame-pointer -mpreferred-stack-boundary=4
 CFLAGS-ptlongjmp.c += -fno-omit-frame-pointer
 CFLAGS-semaphore.c += -fno-omit-frame-pointer
 CFLAGS-sighandler.c += -fno-omit-frame-pointer -mpreferred-stack-boundary=4
+CFLAGS-tst-align.c += -mpreferred-stack-boundary=4
 endif
 
 ifeq ($(subdir),csu)
