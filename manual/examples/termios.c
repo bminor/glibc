@@ -30,14 +30,15 @@ set_input_mode (void)
   tcgetattr (STDIN_FILENO, &saved_attributes);
   atexit (reset_input_mode);
 
+/*@group*/
   /* Set the funny terminal modes. */
   tcgetattr (STDIN_FILENO, &tattr);
-  tattr.c_lflag = tattr.c_lflag & (~ICANON);	/* Clear ICANON. */
-  tattr.c_lflag = tattr.c_lflag & (~ECHO);	/* Clear ECHO. */
+  tattr.c_lflag &= ~(ICANON|ECHO); /* Clear ICANON and ECHO.  */
   tattr.c_cc[VMIN] = 1;
   tattr.c_cc[VTIME] = 0;
   tcsetattr (STDIN_FILENO, TCSAFLUSH, &tattr);
 }
+/*@end group*/
 
 int
 main (void)
@@ -49,7 +50,7 @@ main (void)
   while (1)
     {
       read (STDIN_FILENO, &c, 1);
-      if (c == '\004')
+      if (c == '\004')		/* @kbd{C-d} */
 	break;
       else
 	putchar (c);
