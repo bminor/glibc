@@ -1,3 +1,32 @@
+1997-04-19 17:12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Make-dist: Don't automatically ignore .c files os .S or .s files
+	are ignored.
+
+	* csu/Makefile (distribute): Add defs.awk.
+
+1997-04-19 15:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/stub/shmat.c: Update to XPG4.2 interface.
+	* sysdeps/stub/shmdt.c: Likewise.
+	Reported by Thomas Bushnell, n/BSG.
+
+1997-04-18 15:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Dist: Rename
+	sysdeps/sysv/linux/netatalk/atalk.h to .../at.h.
+	Remove sysdeps/sysv/linux/netinet/icmp.h.
+
+	* login/utmp.h: Add prototype for updwtmp.
+	* login/logwtmp.c: Add new function updwtmp which allows to write
+	a complete record to the wtmp file.
+	Patch by Miquel van Smoorenburg <miquels@cistron.nl>.
+
+1997-04-18 11:21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* shadow/fgetspent_r.c: Set *RESULT to NULL before returning error.
+	Patch by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>.
+
 1997-04-18 02:18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* csu/initfini.c: Rewrite by Zack Weinberg
