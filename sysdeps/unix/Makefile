@@ -131,3 +131,18 @@ $(objpfx)make_errlist: $(sysdep_dir)/unix/make_errlist.c
 	$(native-compile)
 
 endif
+
+ifeq ($(wildcard $(sysincludedir)/syscall.h),)
+
+# Some systems have <syscall.h>, some <sys/syscall.h>.
+
+syscall.h := $(patsubst $(sysincludedir)/%,%,
+			$(wildcard $(sysincludedir)/sys/syscall.h))
+
+ifdef	syscall.h
+$(objpfx)syscall.h: $(syscall.h)
+	echo '#include <$(syscall.h)>' > $@
+before-compile := $(before-compile) $(objpfx)syscall.h
+endif
+
+endif
