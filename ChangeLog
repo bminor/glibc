@@ -1,5 +1,10 @@
 2002-03-23  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/posix/shm_open.c (SHMDIR): /var/run/shm -> /dev/shm
+	* sysdeps/posix/shm_unlink.c: Likewise.
+
+2002-03-23  Roland McGrath  <roland@frob.com>
+
 	* sysdeps/mach/hurd/i386/Makefile
 	(sysdep_routines, shared-only-routines): Don't add framestate,
 	reverting 2001-10-02 change.
