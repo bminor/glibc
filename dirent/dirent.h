@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,10 @@ Cambridge, MA 02139, USA.  */
 
 #define	_DIRENT_H	1
 #include <features.h>
+
+#ifdef	__cplusplus
+extern "C" {
+#endif
 
 #include <gnu/types.h>
 
@@ -100,5 +104,8 @@ extern __off_t EXFUN(telldir, (DIR *__dirp));
 
 #endif	/* Use BSD or misc.  */
 
+#ifdef	__cplusplus
+}
+#endif
 
 #endif	/* dirent.h  */
