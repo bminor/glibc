@@ -1,7 +1,7 @@
 /* memchr (str, ch, n) -- Return pointer to first occurrence of CH in STR less
    than N.
    For Intel 80x86, x>=3.
-   Copyright (C) 1991 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,8 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <string.h>
 
+#ifdef	__GNUC__
+
 PTR
 DEFUN(memchr, (str, c, len),
       CONST PTR str AND int c AND size_t len)
@@ -37,3 +39,7 @@ DEFUN(memchr, (str, c, len),
       "2:" : "=a" (str), "=D" (str) : "c" (len), "1" (str), "a" (c));
   return str;
 }
+
+#else
+#include <sysdeps/generic/bzero.c>
+#endif
