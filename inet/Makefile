@@ -23,7 +23,7 @@ subdir	:= inet
 
 headers	:= netinet/ether.h netinet/in.h netinet/if_ether.h \
 	   netinet/tcp.h netinet/ip.h $(wildcard arpa/*.h protocols/*.h) \
-	   aliases.h net/ethernet.h
+	   aliases.h
 
 distribute := netgroup.h
 

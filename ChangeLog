@@ -1,3 +1,54 @@
+1997-02-25 15:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/e_acoshf.S (__ieee754_acoshf): Test correct
+	word on stack for overflow.
+
+1997-02-24 23:05  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c (malloc_get_state): New function.
+	Saves global malloc state to an opaque data structure which
+	is dynamically allocated in the heap.
+	* malloc/malloc.c (malloc_set_state): New function.
+	Restore previously obtained state.
+	* malloc/malloc.h: Add declaration of malloc_get_state()
+	and malloc_set_state().
+
+1997-02-24 23:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_cbrtl.c: Shift B1_EXP value to right
+	position.
+
+1997-02-24 17:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/error.c: Make error and error_at_line weak aliases of
+	__error and __error_at_line respectively.
+	Suggested by David Mosberger-Tang <davidm@AZStarNet.COM>.
+
+1997-02-22 12:25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/C-time.c (_nl_C_LC_TIME): Add missing entry for
+	time-era-num-entries.
+
+1997-02-24 15:20  Jonathan T. Agnew  <jtagnew@amherst.edu>
+
+	* glibcbug.in: Don't mention destination on MAIL_AGENT command line
+	to avoid duplicate mail.
+
+1997-02-23 02:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfprintf.c (printf_unknown): Correct printing of
+	numeric values.
+
+1997-02-22 03:02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/math.h: Prevent definition of struct exception when using
+	C++.
+
+1997-02-22 01:46  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/syscalls.list: Dup takes only one argument.
+	Reported by Greg McGary.
+
 1997-02-20 17:51  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/netinet/in.h: Protect contents using

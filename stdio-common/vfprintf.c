@@ -1405,16 +1405,16 @@ printf_unknown (FILE *s, const struct printf_info *info,
   if (info->width != 0)
     {
       w = _itoa_word (info->width, workend + 1, 10, 0);
-      while (++w <= workend)
-	outchar (*w);
+      while (w <= workend)
+	outchar (*w++);
     }
 
   if (info->prec != -1)
     {
       outchar ('.');
       w = _itoa_word (info->prec, workend + 1, 10, 0);
-      while (++w <= workend)
-	outchar (*w);
+      while (w <= workend)
+	outchar (*w++);
     }
 
   if (info->spec != '\0')
