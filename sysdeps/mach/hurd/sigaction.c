@@ -51,24 +51,8 @@ DEFUN(__sigaction, (sig, act, oact),
   old = ss->actions[sig];
 
   if (act != NULL)
-    {
-      /* If SIG is to be ignored, remove it from the pending set.  */
-      if (a.sa_handler == SIG_IGN)
-	__sigdelmember (sig, &ss->pending);
-      else
-	switch (sig)
-	  {
-	  case SIGCONT:
-	  case SIGIO:
-	  case SIGURG:
-	  case SIGCHLD:
-	  case SIGWINCH:
-	    if (a.sa_handler == SIG_DFL)
-	      __sigdelmember (sig, &ss->pending);
-	  }
-      
-      ss->actions[sig] = a;
-    }
+    ss->actions[sig] = a;
+
   __mutex_unlock (&ss->lock);
 
   if (oact != NULL)
