@@ -7,7 +7,7 @@ changequote(,)dnl
 dnl You can ignore the following line if you are reading this sentence.
 # DO NOT EDIT!  This script is generated from configure.in; edit that instead.
 
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -309,7 +309,7 @@ if [ $uname = generic ]; then
     # All is well.
     true
   elif [ x`echo "$config_release" | sed "s/^$kernel_release//"` \
-       != x$config_release ]; then
+	 != x$config_release ]; then
     # The configuration release is a substring of the kernel release.
     release=$kernel_release
   elif [ x$config_release != x ]; then
