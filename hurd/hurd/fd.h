@@ -74,10 +74,14 @@ extern inline struct hurd_dtable
 _hurd_dtable_get (struct hurd_userlink *ulink)
 {
   struct hurd_dtable dtable;
+#ifdef noteven
   __mutex_lock (&_hurd_dtable_lock);
+#endif
   _hurd_userlink_link (&_hurd_dtable_users, ulink);
   dtable = _hurd_dtable;
+#ifdef noteven
   __mutex_unlock (&_hurd_dtable_lock);
+#endif
   return dtable;
 }
 
@@ -94,9 +98,13 @@ _hurd_dtable_free (struct hurd_dtable dtable,
 		   struct hurd_userlink *ulink)
 {
   int dealloc;
+#ifdef noteven
   __mutex_lock (&_hurd_dtable_lock);
+#endif
   dealloc = _hurd_userlink_unlink (ulink);
+#ifdef noteven
   __mutex_unlock (&_hurd_dtable_lock);
+#endif
   if (dealloc && _hurd_dtable_deallocate)
     (*_hurd_dtable_deallocate) (dtable.d);
 }
@@ -116,12 +124,16 @@ _hurd_dtable_fd (int fd, struct hurd_dtable dtable)
       if (cell == NULL)
 	/* No descriptor allocated at this index.  */
 	return NULL;
+#ifdef noteven
       __spin_lock (&cell->port.lock);
+#endif
       if (cell->port.port == MACH_PORT_NULL)
 	{
 	  /* The descriptor at this index has no port in it.
 	     This happens if it existed before but was closed.  */
+#ifdef noteven
 	  __spin_unlock (&cell->port.lock);
+#endif
 	  return NULL;
 	}
       return cell;
@@ -182,6 +194,8 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
       __result;								      \
    })									      \
 
+#include <errno.h>
+
 /* Handle an error from an RPC on a file descriptor's port.  You should
    always use this function to handle errors from RPCs made on file
    descriptor ports.  Some errors are translated into signals.  */   
