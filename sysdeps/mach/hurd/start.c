@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -208,7 +208,7 @@ _start (void)
   /* Tell the proc server where our args and environment are.  */
   __proc_setprocargs (_hurd_proc, argv, __environ);
 
-  __libc_init ();
+  __libc_init (argc, argv, __environ);
 
   (_cthread_exit_routine != NULL ? *_cthread_exit_routine : exit)
     (main (argc, argv, __environ));
