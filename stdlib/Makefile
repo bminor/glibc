@@ -61,10 +61,15 @@ distribute	:= exit.h grouping.h abort-instr.h isomac.c tst-fmtmsg.sh   \
 test-srcs	:= tst-fmtmsg
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   test-canon test-canon2 tst-strtoll tst-environ	    \
-		   tst-xpg-basename tst-random tst-bsearch tst-limits	    \
-		   tst-rand48 bug-strtod tst-setcontext test-a64l tst-qsort \
-		   tst-system testmb2
+		   tst-xpg-basename tst-random tst-random2 tst-bsearch	    \
+		   tst-limits tst-rand48 bug-strtod tst-setcontext	    \
+		   test-a64l tst-qsort tst-system testmb2
 
+include ../Makeconfig
+
+ifeq ($(build-shared),yes)
+tests		+= tst-putenv
+endif
 
 # Several mpn functions from GNU MP are used by the strtod function.
 mpn-routines := inlines add_n addmul_1 cmp divmod_1 divrem udiv_qrnnd \
@@ -75,17 +80,20 @@ routines := $(strip $(routines) $(mpn-routines))	\
 	    dbl2mpn ldbl2mpn				\
 	    mpn2flt mpn2dbl mpn2ldbl
 aux += fpioconst mp_clz_tab
-distribute := $(distribute) $(mpn-headers) gen-mpn-copy fpioconst.h
+distribute := $(distribute) $(mpn-headers) gen-mpn-copy fpioconst.h \
+	      tst-putenvmod.c
 
-generated += isomac isomac.out
+tests-extras += tst-putenvmod
+extra-objs += tst-putenvmod.os
+
+generated += isomac isomac.out tst-putenvmod.so
 
 CFLAGS-bsearch.c = $(uses-callbacks)
 CFLAGS-msort.c = $(uses-callbacks)
 CFLAGS-qsort.c = $(uses-callbacks)
 CFLAGS-system.c = -fexceptions
+CFLAGS-system.os = -fomit-frame-pointer
 CFLAGS-fmtmsg.c = -fexceptions
-
-include ../Makeconfig
 
 ifneq (,$(filter %REENTRANT, $(defines)))
 CFLAGS-strfmon.c = -D_IO_MTSAFE_IO
@@ -124,3 +132,9 @@ $(objpfx)isomac: isomac.c
 
 $(objpfx)tst-fmtmsg.out: tst-fmtmsg.sh $(objpfx)tst-fmtmsg
 	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)stdlib/
+
+$(objpfx)tst-putenv: $(objpfx)tst-putenvmod.so
+
+$(objpfx)tst-putenvmod.so: $(objpfx)tst-putenvmod.os
+	$(build-module)
+CFLAGS-tst-putenvmod.c = -DNOT_IN_libc=1

@@ -20,9 +20,7 @@
 #ifndef _MALLOC_H
 #define _MALLOC_H 1
 
-#ifdef _LIBC
 #include <features.h>
-#endif
 
 /*
   $Id$

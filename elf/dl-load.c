@@ -36,6 +36,7 @@
 #include <dl-osinfo.h>
 #include <stackinfo.h>
 #include <caller.h>
+#include <sysdep.h>
 
 #include <dl-dst.h>
 
@@ -105,13 +106,11 @@ ELF_PREFERRED_ADDRESS_DATA;
 
 
 int __stack_prot attribute_hidden attribute_relro
-  = (PROT_READ|PROT_WRITE
 #if _STACK_GROWS_DOWN && defined PROT_GROWSDOWN
-     |PROT_GROWSDOWN
+  = PROT_GROWSDOWN;
 #elif _STACK_GROWS_UP && defined PROT_GROWSUP
-     |PROT_GROWSUP
+  = PROT_GROWSUP;
 #endif
-     );
 
 
 /* Type for the buffer we put the ELF header and hopefully the program
@@ -1327,12 +1326,16 @@ cannot allocate TLS data structures for initial thread");
 	  if (__builtin_expect (__check_caller (RETURN_ADDRESS (0),
 						allow_ldso|allow_libc) == 0,
 				0))
-	    __stack_prot |= PROT_EXEC;
+	    __stack_prot |= PROT_READ|PROT_WRITE|PROT_EXEC;
 	  __mprotect ((void *) p, s, PROT_READ);
 	}
       else
 #endif
-	__stack_prot |= PROT_EXEC;
+	__stack_prot |= PROT_READ|PROT_WRITE|PROT_EXEC;
+
+#ifdef check_consistency
+      check_consistency ();
+#endif
 
       errval = (*GL(dl_make_stack_executable_hook)) (stack_endp);
       if (errval)
@@ -1788,7 +1791,12 @@ open_path (const char *name, size_t namelen, int preloaded,
 	 must not be freed using the general free() in libc.  */
       if (sps->malloced)
 	free (sps->dirs);
-      sps->dirs = (void *) -1;
+#ifdef HAVE_Z_RELRO
+      /* rtld_search_dirs is attribute_relro, therefore avoid writing
+	 into it.  */
+      if (sps != &rtld_search_dirs)
+#endif
+	sps->dirs = (void *) -1;
     }
 
   return -1;

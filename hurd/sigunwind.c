@@ -111,7 +111,7 @@ _hurdsig_longjmp_from_handler (void *data, jmp_buf env, int val)
       link = (void *) &scp[1];
       assert (! link->resource.next && ! link->resource.prevp);
       assert (link->thread.next == ss->active_resources);
-      assert (link->thread.prevp = &ss->active_resources);
+      assert (link->thread.prevp == &ss->active_resources);
       if (link->thread.next)
 	link->thread.next->thread.prevp = &link->thread.next;
       ss->active_resources = link;

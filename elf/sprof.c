@@ -357,7 +357,7 @@ Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 "),
-	   "2004");
+	   "2005");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 

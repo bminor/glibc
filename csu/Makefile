@@ -54,11 +54,13 @@ include ../Makeconfig
 ifeq (yes,$(build-shared))
 extra-objs += S$(start-installed-name)
 install-lib += S$(start-installed-name)
+generated += start.os
 endif
 
 ifeq (yes,$(build-bounded))
 extra-objs += b$(start-installed-name)
 install-lib += b$(start-installed-name)
+generated += start.ob
 endif
 
 ifneq ($(start-installed-name),$(static-start-installed-name))

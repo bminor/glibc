@@ -512,6 +512,14 @@
 
 2004-11-26  Jakub Jelinek  <jakub@redhat.com>
 
+	* posix/Makefile (generated: Add getconf.speclist.
+	($(inst_libexecdir)/getconf): Use getconf.speclist instead of
+	getconf output.
+	($(objpfx)getconf.speclist): New rule.
+	* posix/getconf.speclist.h: New file.
+
+2004-11-26  Jakub Jelinek  <jakub@redhat.com>
+
 	* posix/Makefile (install-others): Add $(inst_libexecdir)/getconf.
 	(CFLAGS-sysconf.c): Add -D_GETCONF_DIR.
 	(CFLAGS-getconf.c): New.
@@ -1103,6 +1111,16 @@
 	* sysdeps/generic/tempname.c (__path_search): Add missing argument
 	TRY_TMPDIR.
 
+2004-11-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/features.h (__USE_FORTIFY_LEVEL): Also set for Red Hat
+	GCC 3.4.x-RH >= 3.4.2-8.
+	* libio/bits/features.h (printf, fprintf, vprintf, vfprintf): For
+	GCC 3.4.x-RH use __builtin___{,v}{,f}printf_chk instead of
+	__{,v}{,f}printf_chk.
+	* debug/tst-chk1.c (do_test): Deal with GCC 3.4.x-RH not
+	being able to recognize subobjects.
+
 2004-10-31  Mariusz Mazur <mmazur@kernel.pl>
 
 	* sysdeps/unix/sysv/linux/alpha/setregid.c: New file.
@@ -1398,6 +1416,11 @@
 	* posix/execvp.c (execvp): Also ignore ENODEV and ETIMEDOUT errno
 	values.
 
+2004-10-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/readonly-area.c (__readonly_area): If /proc
+	is not mounted, return 1.
+
 2004-10-20  Roland McGrath  <roland@redhat.com>
 
 	* Makeconfig ($(common-objpfx)shlib-versions.v.i): Check also
@@ -1469,6 +1492,11 @@
 
 	* debug/catchsegv.sh: Update copyright year.
 	Use mktemp to create segv_output file.
+
+2004-10-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/features.h (__USE_FORTIFY_LEVEL): Enable even with
+	Red Hat gcc4 4.0.0 and above.
 
 2004-10-18  Jakub Jelinek  <jakub@redhat.com>
 
@@ -2453,6 +2481,22 @@
 	* string/string.h: Add __nonnull annotations.
 	* stdlib/stdlib.h: Likewise.
 
+2004-09-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/alpha/sysdep.h (inline_syscall[0-6]): Change name
+	argument to numbers from syscall names.
+	(INLINE_SYSCALL1): Pass __NR_##name to inline_syscall##nr.
+	(INTERNAL_SYSCALL_NCS): Renamed from...
+	(INTERNAL_SYSCALL_1): ... this.  Use INTERNAL_SYSCALL_NCS.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h
+	(INTERNAL_SYSCALL_NCS): Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
+	(INTERNAL_SYSCALL_NCS): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (inline_syscall[0-6]):
+	Change name argument to numbers from syscall names.
+	(INLINE_SYSCALL, INTERNAL_SYSCALL): Adjust.
+	(INTERNAL_SYSCALL_NCS): Define.
+
 2004-09-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h (DO_INLINE_SYSCALL):
@@ -3182,6 +3226,23 @@
 	before return type.
 	* locale/localename.c (__current_locale_name): Likewise.
 
+2004-08-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/ldconfig.c (parse_conf): Add prefix argument, prepend it
+	before arguments to add_dir and pass to parse_conf_include.
+	(parse_conf_include): Add prefix argument, pass it down to
+	parse_conf.
+	(main): Call arch_startup.  Adjust parse_conf caller.
+	Call add_arch_dirs.
+	* sysdeps/generic/dl-cache.h (arch_startup, add_arch_dirs): Define.
+	* sysdeps/unix/sysv/linux/i386/dl-cache.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/dl-cache.h (EMUL_HACK, arch_startup,
+	add_arch_dirs): Define.
+	* sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed: Prepend
+	/emul/ia32-linux before the 32-bit ld.so pathname.
+	* sysdeps/unix/sysv/linux/ia64/dl-procinfo.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/dl-procinfo.h: New file.
+
 2004-08-30  Roland McGrath  <roland@frob.com>
 
 	* scripts/extract-abilist.awk: If `lastversion' variable defined, omit
@@ -3337,6 +3398,22 @@
 
 	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Initialize
 	status to NSS_STATUS_UNAVAIL.
+
+2004-08-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/configure.in: New file.
+	* sysdeps/powerpc/powerpc64/configure: Rebuilt.
+	* config.h.in (USE_PPC64_OVERLAPPING_OPD): Add.
+	* configure.in (HAVE_ASM_GLOBAL_DOT_NAME): Remove.
+	* configure: Rebuilt.
+	* sysdeps/powerpc/powerpc64/sysdep.h: Formatting.
+	(OPD_ENT, BODY_LABEL, ENTRY_1, ENTRY_2, END_2, DOT_PREFIX,
+	BODY_PREFIX): Define.
+	(ENTRY, DOT_LABEL, END, TRACEBACK, END_GEN_TB, EALIGN): Support
+	HAVE_ASM_GLOBAL_DOT_NAME or no dot symbols,
+	USE_PPC64_OVERLAPPING_OPD or never overlapping .opd entries.
+	* sysdeps/powerpc/powerpc64/dl-machine.h: Include sysdep.h.
+	(TRAMPOLINE_TEMPLATE, RTLD_START): Use the new sysdep.h macros.
 
 2004-08-19  Ulrich Drepper  <drepper@redhat.com>
 
@@ -3641,6 +3718,12 @@
 2004-08-11  Roland McGrath  <roland@redhat.com>
 
 	* iconvdata/testdata/ISO-2022-JP-3: Regenerated.
+
+2004-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #284]
+	* include/features.h (_POSIX_SOURCE, _POSIX_C_SOURCE): Define
+	if _XOPEN_SOURCE >= 500 even if __STRICT_ANSI__ is defined.
 
 2004-08-10  Alfred M. Szmidt  <ams@kemisten.nu>
 

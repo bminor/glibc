@@ -20,6 +20,7 @@
 # define _GNU_SOURCE	1
 #endif
 
+#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,6 +60,10 @@ static testcase ecvt_tests[] =
   { 123.01, -4, 3, "" },
   { 126.71, -4, 3, "" },
   { 0.0, 4, 1, "0000" },
+#if DBL_MANT_DIG == 53
+  { 0x1p-1074, 3, -323, "494" },
+  { -0x1p-1074, 3, -323, "494" },
+#endif
   /* -1.0 is end marker.  */
   { -1.0, 0, 0, "" }
 };

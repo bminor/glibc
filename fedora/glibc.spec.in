@@ -1,4 +1,4 @@
-%define glibcrelease 2
+%define glibcrelease 3.fc3
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -12,10 +12,10 @@ Version: %{glibcversion}
 Release: %{glibcrelease}
 Copyright: LGPL
 Group: System Environment/Libraries
-%define glibcsrcdir %{name}-%{glibcdate}
+%define glibcsrcdir %{glibcname}-%{glibcdate}
 Source0: %{glibcsrcdir}.tar.bz2
-Source1: %{name}-fedora-%{glibcdate}.tar.bz2
-Patch0: %{name}-fedora.patch
+Source1: %{glibcname}-fedora-%{glibcdate}.tar.bz2
+Patch0: %{glibcname}-fedora.patch
 Patch1: %{name}-nptl-check.patch
 Patch2: %{name}-ppc-assume.patch
 Patch3: %{name}-ia64-lib64.patch
@@ -1270,6 +1270,47 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Feb 16 2005 Roland McGrath <roland@redhat.com> 2.3.4-3.fc3
+- update from CVS
+  - fix initstate{,_r} (BZ#710)
+  - fix segfault if chrooted app attempts to dlopen a library
+    and no standard library directory exists at all (#147067, #144303, BZ#738)
+  - fix initgroups when nscd is running, but has group caching disabled
+    (#146588, BZ#741)
+  - fix pthread_key_{create,destroy} in LinuxThreads when pthread_create
+    has not been called yet (#146710, BZ#739)
+  - fix ppc64 swapcontext and setcontext (#146736, BZ#700)
+  - service nscd cosmetic fixes (#146776, BZ#742)
+  - fix s390{,x} string.h (BZ#743)
+  - fix IA-32 and x86-64 stack alignment in DSO constructors (#145689, BZ#735)
+  - fix zdump -v segfaults on x86-64 (#146210, BZ#736)
+  - update IA-64 libm from Intel v2.1 (#142494, BZ#592)
+  - avoid calling sigaction (SIGPIPE, ...) inside syslog
+    (#146021, IT#56686, BZ#671)
+  - declare ftruncate for POSIX 2003 (BZ#640)
+  - fix errno values for futimes (BZ#633)
+  - unconditionally include <features.h> in malloc.h (BZ#650)
+  - change regex \B handling to match old GNU regex as well as perl/grep's dfa
+    (from empty string inside of word to empty string not at a word boundary,
+     BZ#693)
+  - slightly optimize i686 TLS accesses, use direct TLS %gs access in sem_*
+    and allow building -mno-tls-direct-seg-refs glibc that is free of
+    direct TLS %gs access with negative offsets (BZ#737)
+  - fix addseverity (BZ#731)
+  - fix fmemopen (BZ#730)
+  - fix rewinddir (BZ#734)
+  - increase svc{tcp,unix}_create listen backlog (BZ#733)
+  - fix vDSO l_map_end/l_text_end computation (BZ#729)
+  - fix IA-32 stack alignment for LinuxThreads thread functions
+    and functions passed to clone(2) directly (BZ#723)
+  - fix ecvt{,_r} on denormals (#143279, BZ#725)
+  - fix __tls_get_addr typo (BZ#726)
+  - fix rounding in IA-64 alarm (#143710, BZ#626)
+  - don't reinitialize __environ in __libc_start_main, so that
+    effects of setenv/putenv done in DSO initializers are preserved
+    (#144037, IT#57403, BZ#727)
+  - fix ppc/ppc64 rint and other rounding functions (#144931, BZ#602)
+
 * Mon Dec 19 2004 Jakub Jelinek <jakub@redhat.com> 2.3.4-2
 - work around rpm bug some more, this time by copying
   iconvconfig to iconvconfig.%%{_target_cpu}.
@@ -1574,7 +1615,7 @@ rm -f *.filelist*
 - update from CVS
   - fix BZ #151, #362, #381, #407
   - fdim fix for +inf/+inf (BZ #376)
- 
+
 * Sun Sep 26 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-58
 - update from CVS
   - vasprintf fix (BZ #346)

@@ -75,7 +75,7 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
 				 sizeof (initgr_resp_mem));
       if (sock == -1)
 	{
-	  /* nscd not running or wrong version or hosts caching disabled.  */
+	  /* nscd not running or wrong version.  */
 	  __nss_not_use_nscd_group = 1;
 	  goto out;
 	}
@@ -101,7 +101,7 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
 				 (initgr_resp->ngrps + 1) * sizeof (gid_t));
 	  if (newp == NULL)
 	    /* We cannot increase the buffer size.  */
-	    goto out;
+	    goto out_close;
 
 	  *groupsp = newp;
 	  *size = initgr_resp->ngrps + 1;
@@ -125,6 +125,13 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
     }
   else
     {
+      if (__builtin_expect (initgr_resp->found == -1, 0))
+	{
+	  /* The daemon does not cache this database.  */
+	  __nss_not_use_nscd_group = 1;
+	  goto out_close;
+	}
+
       /* No group found yet.   */
       retval = 0;
 
@@ -143,6 +150,7 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
 	(*groupsp)[retval++] = group;
     }
 
+ out_close:
   if (sock != -1)
     close_not_cancel_no_status (sock);
  out:
