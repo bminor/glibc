@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)emkdir.c	8.21";
+static char	elsieid[] = "@(#)emkdir.c	8.23";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -23,7 +23,7 @@ register const char *	name;
 
 	if (name == NULL)
 		name = "";
-	result = imalloc(4 * strlen(name) + 3);
+	result = imalloc((int) (4 * strlen(name) + 3));
 	if (result == NULL)
 		return NULL;
 	cp = result;
@@ -66,7 +66,7 @@ const int	mode;
 #ifndef unix
 	format = "mkdir %s";
 #endif /* !defined unix */
-	command = imalloc(strlen(format) + 2 * strlen(qname) + 20 + 1);
+	command = imalloc((int) (strlen(format) + 2 * strlen(qname) + 20 + 1));
 	if (command == NULL) {
 		ifree(qname);
 		return -1;
@@ -79,7 +79,7 @@ const int	mode;
 }
 
 /*
-** UNIX is a registered trademark of AT&T.
+** UNIX was a registered trademark of UNIX System Laboratories in 1993.
 */
 
 #endif /* !defined emkdir */

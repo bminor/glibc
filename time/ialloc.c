@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)ialloc.c	8.21";
+static char	elsieid[] = "@(#)ialloc.c	8.24";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -21,7 +21,7 @@ char *	icalloc P((int nelem, int elsize));
 char *	icatalloc P((char * old, const char * new));
 char *	icpyalloc P((const char * string));
 char *	imalloc P((int n));
-char *	irealloc P((char * pointer, int size));
+void *	irealloc P((void * pointer, int size));
 void	ifree P((char * pointer));
 
 char *
@@ -31,11 +31,11 @@ const int	n;
 #ifdef MAL
 	register char *	result;
 
-	result = malloc((alloc_size_t) nonzero(n));
+	result = malloc((alloc_size_T) nonzero(n));
 	return NULLMAL(result) ? NULL : result;
 #endif /* defined MAL */
 #ifndef MAL
-	return malloc((alloc_size_t) nonzero(n));
+	return malloc((alloc_size_T) nonzero(n));
 #endif /* !defined MAL */
 }
 
@@ -46,17 +46,17 @@ int	elsize;
 {
 	if (nelem == 0 || elsize == 0)
 		nelem = elsize = 1;
-	return calloc((alloc_size_t) nelem, (alloc_size_t) elsize);
+	return calloc((alloc_size_T) nelem, (alloc_size_T) elsize);
 }
 
-char *
+void *
 irealloc(pointer, size)
-char * const	pointer;
+void * const	pointer;
 const int	size;
 {
 	if (NULLMAL(pointer))
 		return imalloc(size);
-	return realloc((genericptr_t) pointer, (alloc_size_t) nonzero(size));
+	return realloc((genericptr_T) pointer, (alloc_size_T) nonzero(size));
 }
 
 char *
