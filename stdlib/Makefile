@@ -41,6 +41,6 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv
 
 $(objpfx)testsort.input: /usr/dict/words
 	cp $< $@
-generated := testsort.input
+generated := $(objpfx)testsort.input
 
 include ../Rules
