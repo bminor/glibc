@@ -163,7 +163,8 @@ __open_catalog (__nl_catd catalog, int with_path)
 
   if (fd < 0 || __fstat (fd, &st) < 0 || !S_ISREG (st.st_mode))
     {
-      __close (fd);
+      if (fd != -1)
+	__close (fd);
       catalog->status = nonexisting;
       return;
     }
