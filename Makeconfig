@@ -145,6 +145,11 @@ ifndef bindir
 bindir = $(exec_prefix)/bin
 endif
 
+# Where to install the Info files.
+ifndef infodir
+infodir = $(prefix)/info
+endif
+
 # What timezone should be the installed default (e.g., US/Eastern).
 # Run `make -C time echo-zonenames' to see a list of available zone names.
 # The local timezone can be changed with `zic -l TIMEZONE' at any time.
