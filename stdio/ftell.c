@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,13 +36,19 @@ DEFUN(ftell, (stream), FILE *stream)
   if (__stdio_check_offset (stream) == EOF)
     return -1L;
 
-  pos = stream->__target + (stream->__bufp - stream->__buffer);
+  /* Start with the file position associated with the beginning
+     of our buffer.  */
+  pos = stream->__target;
 
   if (stream->__pushed_back)
-    /* Calling ungetc is supposed to decrement the file position.
-       ANSI says the file position is unspecified if you ungetc when
-       the position is zero; -1 seems as good as anything to me.  */
-    --pos;
+    /* ungetc was just called, so our real buffer pointer is squirreled
+       away in STREAM->__pushback_bufp, not in STREAM->__bufp as normal.
+       Calling ungetc is supposed to decrement the file position.  ANSI
+       says the file position is unspecified if you ungetc when the
+       position is zero; -1 seems as good as anything to me.  */
+    pos += stream->__pushback_bufp - stream->__buffer - 1;
+  else
+    pos += stream->__bufp - stream->__buffer;
 
   return pos;
 }
