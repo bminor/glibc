@@ -140,13 +140,13 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	{
 	  long int inner;
 	  for (inner = 0; inner < prev_start; ++inner)
-	    if ((*groupsp)[inner] == (*groups)[cnt])
+	    if (groups[inner] == groups[cnt])
 	      break;
 
 	  if (inner < prev_start)
 	    ++cnt;
 	  else
-	    (*groupsp)[cnt] = (*groupsp)[--start];
+	    groups[cnt] = groups[--start];
 	}
 
       if (status != NSS_STATUS_TRYAGAIN)

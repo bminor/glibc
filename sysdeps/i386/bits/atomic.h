@@ -181,6 +181,11 @@ init_has_cmpxchg (void)							      \
 									      \
      *__gmemp == (oldval) ? (*__gmemp = __gnewval, 0) : 1; })
 
+/* XXX We do not really need 64-bit compare-and-exchange.  At least
+   not in the moment.  */
+# define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) ret = *(mem); abort (); ret = (newval); ret = (oldval); })
+
 #endif
 
 /* Note that we need no lock prefix.  */

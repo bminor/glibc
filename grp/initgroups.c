@@ -108,7 +108,7 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
 	{
 	  long int inner;
 	  for (inner = 0; inner < prev_start; ++inner)
-	    if ((*groupsp)[inner] == (*groups)[cnt])
+	    if ((*groupsp)[inner] == (*groupsp)[cnt])
 	      break;
 
 	  if (inner < prev_start)
