@@ -31,6 +31,10 @@ all: lib others
 configure: configure.in
 	autoconf $(ACFLAGS)
 
+%/configure: %/configure.in
+	autoconf $(ACFLAGS) $< > $@.new
+	mv $@.new $@
+
 include Makeconfig
 
 include $(objpfx)sysd-dirs
