@@ -16,10 +16,10 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-$(common-objpfx)local_lim.h: $(common-objpfx)make-local_lim
+$(common-objpfx)local_lim.h: $(common-objpfx)mk-local_lim
 	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
-$(common-objpfx)make-local_lim: $(sysdep_dir)/unix/bsd/make-local_lim.c
+$(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/bsd/mk-local_lim.c
 	$(native-compile)
 
 before-compile := $(before-compile) $(common-objpfx)local_lim.h
