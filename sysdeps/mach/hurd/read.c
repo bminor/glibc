@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <hurd/fd.h>
 
 /* Read NBYTES into BUF from FD.  Return the number read or -1.  */
 ssize_t
@@ -31,7 +32,7 @@ DEFUN(__read, (fd, buf, nbytes),
   mach_msg_type_size_t nread;
 
   data = buf;
-  _HURD_DPORT_USE
+  err = HURD_DPORT_USE
     (fd,
      ({
      call:
@@ -64,7 +65,7 @@ DEFUN(__read, (fd, buf, nbytes),
 	     }
 #endif
 	 }
-       0;
+       err;
      }));
 
   if (err)
