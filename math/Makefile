@@ -39,8 +39,10 @@ include ../Rules
 $(objpfx)libm.a:
 	$(AR) cr $@ /dev/null
 
+ifdef have_export_directive	# kludge for GNU make before 3.63
 # Other dirs to look for source files (for dist).
 export source_dirs = $(filter-out unused,$(shell find bsd -type d -print))
+endif
 
 include $(objpfx)BSDmath-files
 $(objpfx)BSDmath-files:
