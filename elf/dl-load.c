@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1186,7 +1186,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   /* When we profile the SONAME might be needed for something else but
      loading.  Add it right away.  */
-  if (__builtin_expect (GL(dl_profile) != NULL, 0)
+  if (__builtin_expect (_dl_profile) != NULL, 0)
       && l->l_info[DT_SONAME] != NULL)
     add_name_to_object (l, ((const char *) D_PTR (l, l_info[DT_STRTAB])
 			    + l->l_info[DT_SONAME]->d_un.d_val));
