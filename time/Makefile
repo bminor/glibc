@@ -21,7 +21,7 @@
 #
 subdir	:= time
 
-headers	:= time.h sys/time.h
+headers	:= time.h sys/time.h sys/timeb.h
 distribute := tzfile.h private.h scheck.c ialloc.c emkdir.c yearistype
 extra-objs = scheck.o ialloc.o emkdir.o zonenames $(tzfiles:%=z.%)
 
@@ -30,7 +30,7 @@ routines	:= offtime asctime clock ctime difftime gmtime	\
 		   __gettod settod adjtime getitmr \
 		   __getitmr __adjtime __settod \
 		   __setitmr tzset gettod setitmr \
-		   stime dysize timegm timelocal
+		   stime dysize timegm timelocal ftime
 aux		:= syms-time
 
 others	:= ap zdump zic
