@@ -1,3 +1,8 @@
+1999-07-04  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c (request2size): Check for overflow and return
+	NULL whenever it is encountered.
+
 1999-07-01  Cristian Gafton  <gafton@redhat.com>
 
 	* time/strptime.c (strptime): Initialize the tm struct first to avoid
