@@ -87,111 +87,9 @@ init_dtable (void)
 }
 
 text_set_element (__libc_subinit, init_dtable);
-
-/* Allocate a new file descriptor and install PORT in it.  FLAGS are as for
-   `open'; only O_IGNORE_CTTY is meaningful, but all are saved.
 
-   If the descriptor table is full, set errno, and return -1.
-   If DEALLOC is nonzero, deallocate PORT first.  */
-int
-_hurd_intern_fd (io_t port, int flags, int dealloc)
-{
-  int fd;
-  struct _hurd_fd *d = _hurd_alloc_fd (&fd, 0);
-
-  if (d == NULL)
-    {
-      if (dealloc)
-	__mach_port_deallocate (__mach_task_self (), port);
-      return -1;
-    }
-
-  _hurd_port2fd (d, port, flags);
-  __spin_unlock (&d->port.lock);
-  return fd;
-}
-
-/* Allocate a new file descriptor and return it, locked.
-   If the table is full, set errno and return NULL.  */
-struct _hurd_fd *
-_hurd_alloc_fd (int *fd, const int first_fd)
-{
-  int i;
-
-  __mutex_lock (&hurd_dtable_lock);
-
-  for (i = first_fd; i < _hurd_dtable.size; ++i)
-    {
-      struct _hurd_fd *d = &_hurd_dtable.d[i];
-      __spin_lock (&d->port.lock);
-      if (d->port.port == MACH_PORT_NULL)
-	{
-	  __mutex_unlock (&hurd_dtable_lock);
-	  if (fd != NULL)
-	    *fd = i;
-	  return d;
-	}
-      else
-	__spin_unlock (&d->port.lock);
-    }
-
-  __mutex_unlock (&hurd_dtable_lock);
-
-  errno = EMFILE;
-  return NULL;
-}
-
-
-void
-_hurd_port2fd (struct _hurd_fd *d, io_t port, int flags)
-{
-  io_t ctty;
-  mach_port_t cttyid;
-  int is_ctty = !(flags & O_IGNORE_CTTY) && ! __term_getctty (port, &cttyid);
-
-  if (is_ctty)
-    {
-      /* This port is capable of being a controlling tty.
-	 Is it ours?  */
-      is_ctty &= __USEPORT (CTTYID, port == cttyid);
-      __mach_port_deallocate (__mach_task_self (), cttyid);
-#if 0
-      struct _hurd_port *const id = &_hurd_ports[INIT_PORT_CTTYID];
-      __spin_lock (&id->lock);
-      if (id->port == MACH_PORT_NULL)
-	/* We have no controlling tty, so make this one it.  */
-	_hurd_port_locked_set (id, cttyid);
-      else
-	{
-	  if (cttyid != id->port)
-	    /* We have a controlling tty and this is not it.  */
-	    is_ctty = 0;
-	  /* Either we don't want CTTYID, or ID->port already is it.
-	     So we don't need to change ID->port, and we
-	     can release the reference to CTTYID.  */
-	  __spin_unlock (&id->lock);
-	  __mach_port_deallocate (__mach_task_self (), cttyid);
-	}
-#endif
-    }
-
-  if (is_ctty && ! __term_become_ctty (port, _hurd_pid, _hurd_pgrp,
-				       _hurd_msgport, &ctty))
-    {
-      /* Operations on CTTY return EBACKGROUND when we are not a
-	 foreground user of the tty.  */
-      d->port.port = ctty;
-      ctty = port;
-    }
-  else
-    /* XXX if IS_CTTY, then this port is our ctty, but we are
-       not doing ctty style i/o because term_become_ctty barfed.
-       What to do?  */
-    /* No ctty magic happening here.  */
-    ctty = MACH_PORT_NULL;
-
-  _hurd_port_set (&d->ctty, ctty);
-}
+/* XXX when the linker supports it, the following functions should all be
+   elsewhere and just have text_set_elements here.  */
 
 /* Called by `getdport' to do its work.  */
 
@@ -377,13 +275,12 @@ tiocsctty (int fd,
 }
 _HURD_HANDLE_IOCTL (tiocsctty, TIOCSCTTY);
 
-#ifdef TIOCNOCTTY
 /* Dissociate from the controlling terminal.  */
 
 static int
-tiocnoctty (int fd,
-	    int request,	/* Always TIOCNOCTTY.  */
-	    void *arg)		/* Not used.  */
+tiocnotty (int fd,
+	   int request,		/* Always TIOCNOTTY.  */
+	   void *arg)		/* Not used.  */
 {
   /* XXX should verify that FD is ctty and return EINVAL? */
 
@@ -397,6 +294,5 @@ tiocnoctty (int fd,
   return 0;
 }
 _HURD_HANDLE_IOCTL (tiocnotty, TIOCNOTTY);
-#endif
 
 #endif
