@@ -426,7 +426,7 @@ extern int EXFUN(setreuid, (__uid_t __ruid, __uid_t __euid));
    If the calling process is the super-user, set the real
    and effective group IDs, and the saved set-group-ID to GID;
    if not, the effective group ID is set to GID.  */
-extern int EXFUN(setgid, (int __gid));
+extern int EXFUN(setgid, (__gid_t __gid));
 
 #ifdef	__USE_BSD
 /* Set the real group ID of the calling process to RGID,
