@@ -39,8 +39,7 @@ user-interfaces		:= $(addprefix hurd/,\
 				       fs fsys io term socket )
 server-interfaces	:= hurd/msg
 
-routines = hurdid hurdpath hurdpid hurdports hurdrlimit \
-	   hurdexec \
+routines = hurdinit hurdid hurdpath hurdpid hurdrlimit hurdexec \
 	   __setauth setauth \
 	   __pid2task __task2pid pid2task task2pid \
 	   getuids setuids getumask fchroot \
@@ -49,13 +48,14 @@ routines = hurdid hurdpath hurdpid hurdports hurdrlimit \
 	   msgportdemux \
 	   fopenport __fopenport \
  	   vpprintf \
+	   ports-get ports-set hurdports hurdmsg \
 	   $(sig) $(dtable) hurdinline
 sig	= hurdsig siginfo init-fault msging-p hurd-raise preempt-sig \
 	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal hurdkill
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport \
 	  fd-close fd-read fd-write hurdioctl
-aux := hurdsyms hurdinit msgstub # hurdmsg
+aux := hurdsyms
 
 # XXX this is a temporary hack; see hurdmalloc.h
 routines += hurdmalloc
