@@ -438,12 +438,14 @@ install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir\
 install: install-no-libc.a-nosubdir
 
 # Command to compile $< in $(objdir) using the native libraries.
-native-compile = cwd=`pwd`; cd $(@D); $(CC) $(native-CFLAGS) \
-					    $(addprefix $$cwd/,$^) -o $(@F)
+define native-compile
+cwd=`pwd`; cd $(@D); $(HOST_CC) $(native-CFLAGS) \
+	   $(addprefix $$cwd/,$^) -o $(@F)
+endef
 
 # Command to compile $< in $(common-objdir) using the native libraries.
 define common-objdir-compile
-cd $(@D); $(CC) $(native-CFLAGS) $(<:$(common-objpfx)%=%) -o $(@F)
+cd $(@D); $(HOST_CC) $(native-CFLAGS) $(<:$(common-objpfx)%=%) -o $(@F)
 endef
 
 # We always want to use configuration -D switches.
