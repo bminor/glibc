@@ -58,6 +58,8 @@ $(objpfx)sys/param.h: $(sysincludedir)/sys/param.h $(objpfx)sys/
 	      was_null = 0 }';		\
 	 echo '#endif	/* sys/param.h */') > $@-tmp
 	mv $@-tmp $@
+# Make it newer than the directory.
+	touch $@
 
 $(objpfx)param.h.c: $(sysincludedir)/sys/param.h
 	rm -f $@
@@ -75,7 +77,8 @@ include $(objpfx)param.h.dep
 headers := $(headers) $(sys/param.h-includes)
 dont_distribute := $(dont_distribute) $(sys/param.h-includes)	# Generated.
 ifdef sys/param.h-includes
-$(addprefix $(objpfx),$(sys/param.h-includes)): $(objpfx)%: $(sysincludedir)%
+$(addprefix $(objpfx),$(sys/param.h-includes)): $(objpfx)%: \
+  $(sysincludedir)% $(dir $(sys/param.h-includes))
 	cp $< $@
 endif
 endif # misc
