@@ -14,9 +14,11 @@ configurations:
 		i386-sysv
 		i386-sysv4
 		m68k-hp-bsd4.3
-		m68k-sony-newsos
+		m68k-sony-newsos3
+		m68k-sony-newsos4
 		m68k-sun-sunos4
 		mips-dec-ultrix4
+		mips-sgi-irix4
 		sparc-sun-solaris2
 		sparc-sun-sunos4
 
