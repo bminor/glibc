@@ -153,7 +153,7 @@ $(mach-shortcuts:%=$(objpfx)__%.c): $(objpfx)__%.c: shortcut.awk \
 # The shortcut calls have had their names changed to CALL_rpc, so
 # CALL_rpc.c is being generated with a symbol alias to __CALL_rpc.  
 # We also want CALL.c with an alias to __CALL.
-$(mach-shortcuts:%=$(objpfx)%.c): $(objpfx)%.c: Makefile
+$(mach-shortcuts:%=$(objpfx)%.c): $(objpfx)%.c: # Makefile
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*);') > $@-new
 	mv $@-new $@
