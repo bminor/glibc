@@ -20,8 +20,7 @@ Cambridge, MA 02139, USA.  */
 #define	_FNMATCH_H	1
 
 #ifdef	__cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #if defined (__cplusplus) || (defined (__STDC__) && __STDC__)
@@ -38,9 +37,10 @@ extern "C"
 #define	FNM_PATHNAME	(1 << 0)/* No wildcard can ever match `/'.  */
 #define	FNM_NOESCAPE	(1 << 1)/* Backslashes don't quote special chars.  */
 #define	FNM_PERIOD	(1 << 2)/* Leading `.' is matched only explicitly.  */
-#define	__FNM_FLAGS	(FNM_PATHNAME|FNM_NOESCAPE|FNM_PERIOD)
+#define	__FNM_FLAGS	(FNM_PATHNAME|FNM_NOESCAPE|FNM_PERIOD|FNM_TARPATH)
 
 #if !defined (_POSIX_C_SOURCE) || _POSIX_C_SOURCE < 2 || defined (_BSD_SOURCE)
+#define	FNM_LEADING_DIR	(1 << 3)/* Ignore `/...' after a match.  */
 #define	FNM_FILE_NAME	FNM_PATHNAME
 #endif
 
@@ -49,12 +49,11 @@ extern "C"
 
 /* Match STRING against the filename pattern PATTERN,
    returning zero if it matches, FNM_NOMATCH if not.  */
-  extern int fnmatch __P ((const char *__pattern, const char *__string,
-			   int __flags));
+extern int fnmatch __P ((const char *__pattern, const char *__string,
+			 int __flags));
 
 #ifdef	__cplusplus
 }
-
 #endif
 
 #endif /* fnmatch.h */
