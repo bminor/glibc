@@ -928,13 +928,11 @@ as an obstack, it must initialize the obstack by calling
 @comment GNU
 @deftypefun int obstack_init (struct obstack *@var{obstack-ptr})
 Initialize obstack @var{obstack-ptr} for allocation of objects.  This
-function calls the obstack's @code{obstack_chunk_alloc} function.  It
-returns 0 if @code{obstack_chunk_alloc} returns a null pointer, meaning
-that it is out of memory.  Otherwise, it returns 1.  If you supply an
-@code{obstack_chunk_alloc} function that calls @code{exit}
-(@pxref{Program Termination}) or @code{longjmp} (@pxref{Non-Local
-Exits}) when out of memory, you can safely ignore the value that
-@code{obstack_init} returns.
+function calls the obstack's @code{obstack_chunk_alloc} function.  If
+allocation of memory fails, the function pointed to by
+@code{obstack_alloc_failed_handler} is called.  The @code{obstack_init}
+function always returns 1 (Compatibility notice: Former versions of
+obstack returned 0 if allocation failed).
 @end deftypefun
 
 Here are two examples of how to allocate the space for an obstack and
@@ -956,6 +954,24 @@ struct obstack *myobstack_ptr
 obstack_init (myobstack_ptr);
 @end smallexample
 
+@comment obstack.h
+@comment GNU
+@defvar obstack_alloc_failed_handler
+The value of this variable is a pointer to a function that
+@code{obstack} uses when @code{obstack_chunk_alloc} fails to allocate
+memory.  The default action is to print a message and abort.
+You should supply a function that either calls @code{exit}
+(@pxref{Program Termination}) or @code{longjmp} (@pxref{Non-Local
+Exits}) and doesn't return.
+
+@smallexample
+void my_obstack_alloc_failed (void)
+@dots{}
+obstack_alloc_failed_handler = &my_obstack_alloc_failed;
+@end smallexample
+
+@end defvar
+
 @node Allocation in an Obstack
 @subsection Allocation in an Obstack
 @cindex allocation (obstacks)
@@ -973,13 +989,9 @@ object which represents the obstack.  Each obstack function or macro
 requires you to specify an @var{obstack-ptr} as the first argument.
 
 This function calls the obstack's @code{obstack_chunk_alloc} function if
-it needs to allocate a new chunk of memory; it returns a null pointer if
-@code{obstack_chunk_alloc} returns one.  In that case, it has not
-changed the amount of memory allocated in the obstack.  If you supply an
-@code{obstack_chunk_alloc} function that calls @code{exit}
-(@pxref{Program Termination}) or @code{longjmp} (@pxref{Non-Local
-Exits}) when out of memory, then @code{obstack_alloc} will never return
-a null pointer.
+it needs to allocate a new chunk of memory; it calls
+@code{obstack_alloc_failed_handler} if allocation of memory by
+@code{obstack_chunk_alloc} failed.
 @end deftypefun
 
 For example, here is a function that allocates a copy of a string @var{str}
@@ -1005,8 +1017,9 @@ To allocate a block with specified contents, use the function
 @comment GNU
 @deftypefun {void *} obstack_copy (struct obstack *@var{obstack-ptr}, void *@var{address}, int @var{size})
 This allocates a block and initializes it by copying @var{size}
-bytes of data starting at @var{address}.  It can return a null pointer
-under the same conditions as @code{obstack_alloc}.
+bytes of data starting at @var{address}.  It calls
+@code{obstack_alloc_failed_handler} if allocation of memory by
+@code{obstack_chunk_alloc} failed.
 @end deftypefun
 
 @comment obstack.h
