@@ -28,7 +28,8 @@ routines	:= offtime asctime clock ctime difftime gmtime	\
 		   localtime mktime strftime time __tzset tzfile \
 		   __gettod settod adjtime getitmr \
 		   __getitmr __adjtime __settod \
-		   __setitmr tzset gettod setitmr
+		   __setitmr tzset gettod setitmr \
+		   stime
 aux		:= syms-time
 
 others	:= ap zdump zic
