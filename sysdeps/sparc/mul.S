@@ -77,7 +77,8 @@ FUNC(.mul)
 	and	%o1, %o2, %o2	! %o2 = 0 or %o1, depending on %o0's sign
 	rd	%y, %o0		! get lower half of product
 	retl
-	sub	%o4, %o2, %o1	| add compensation and put upper half in place
+	sub	%o4, %o2, %o1	! subtract compensation 
+				!  and put upper half in place
 #endif
 
 Lmul_shortway:
