@@ -52,6 +52,12 @@ DEFUN(__pipe, (pipedes), int pipedes[2])
       return __hurd_fail (err);
     }
   __socket_shutdown (w, 0);
+  if (err = __socket_connect2 (r, w))
+    {
+      __mach_port_deallocate (__mach_task_self (), r);
+      __mach_port_deallocate (__mach_task_self (), w);
+      return __hurd_fail (err);
+    }
 
   __mutex_lock (&_hurd_dtable.lock);
   fd0 = _hurd_dalloc ();
