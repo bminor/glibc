@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.21";
+static char	elsieid[] = "@(#)zic.c	7.22";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -1877,20 +1877,16 @@ const char * const	string;
 	charcnt += eitol(i);
 }
 
-
 static int
 mkdirs(argname)
 char * const	argname;
 {
+	register char *	name;
 	register char *	cp;
-	/* We must make a copy in case the
-	   passed pointer is a read-only string.  */
-	char *name = ecpyalloc (argname);
 
-	if (*cp == '\0') {
-	  ifree (name);
-	  return 0;
-	}
+	if (argname == NULL || *argname == '\0')
+		return 0;
+	cp = name = ecpyalloc(argname);
 	while ((cp = strchr(cp + 1, '/')) != 0) {
 		*cp = '\0';
 #ifndef unix
@@ -1912,13 +1908,13 @@ char * const	argname;
 					"%s: Can't create directory ",
 					progname);
 				(void) perror(name);
-				free (name);
+				ifree(name);
 				return -1;
 			}
 		}
 		*cp = '/';
 	}
-	free (name);
+	ifree(name);
 	return 0;
 }
 

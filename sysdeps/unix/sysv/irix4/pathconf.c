@@ -17,17 +17,16 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
+#include <errno.h>
+#include <stddef.h>
 #include <unistd.h>
 #include <sys/syssgi.h>
 
 extern int __syssgi __P ((int, ...));
 
-/* Get the value of the system variable NAME.  */
+/* Get file-specific information about PATH.  */
 long int
-DEFUN(__sysconf, (name), int name)
+DEFUN(__pathconf, (path, name), CONST char *path AND int name)
 {
-  if (name == _SC_TZNAME_MAX)
-    return __tzname_max ();
-
-  return __syssgi (SGI_SYSCONF, name);
+  return __syssgi (SGI_PATHCONF, PATHCONF, path, name);
 }
