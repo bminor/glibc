@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 long int
 DEFUN_VOID(gethostid)
 {
-  long int hostid;
+  int hostid;
   error_t err;
   if (err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
 			    __proc_gethostid (port, &hostid)))
