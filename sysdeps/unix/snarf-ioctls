@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 1991 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or modify
@@ -19,5 +19,15 @@
 for file in $*; do
   sed -n 's/^#define[ 	]*\([A-Z][A-Z0-9_]*\)[ 	][ 	]*[^ 	].*$/\1/p' \
     < $file
-  $0 `sed -n 's,^#include[ 	]*<\(.*\)>.*$,/usr/include/\1,p' < $file`
+
+  snarfexclude="$snarfexclude \
+		`echo $file | sed -e 's,/,\\/,g' -e 's,^.*$,-e /&/d'`"
+  export snarfexclude
+echo "excluding --${snarfexclude}--"
+
+  included="`sed -n < $file -e 's,^#include[ 	]*<\(.*\)>.*$,./\1,p' \
+		 $snarfexclude`"
+  if [ "$included" ]; then
+    sh -x $0 $included
+  fi
 done
