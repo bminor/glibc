@@ -43,6 +43,8 @@ following patterns:
 @example
 sparc-sun-sunos4.@var{n}
 m68k-hp-bsd4.3
+m68k-sun-sunos4.@var{n}
+m68k-sony-bsd4.3
 mips-dec-ultrix4.2
 @end example
 
@@ -52,6 +54,8 @@ these few.  (These aliases work in other GNU software as well.)
 @example
 sun4-sunos4.@var{n}
 hp320-bsd4.3
+sun3-sunos4.@var{n}
+news
 decstation-ultrix
 @end example
 
@@ -59,11 +63,11 @@ Here are some options that you should specify (if appropriate) when
 you run @code{configure}:
 
 @table @samp
-@item -with-gnu-ld
+@item --with-gnu-ld
 Use this option if you plan to use GNU ld to link programs with the GNU
 C Library.  (we strongly recommend that you do.)
 
-@item -nfp
+@item --nfp
 Use this option if your computer lacks hardware floating point support.
 @end table
 
@@ -465,7 +469,7 @@ generated are @file{ioctls.h}, @file{errnos.h}, @file{sys/param.h}, and
 
 @ignore
 @c This section might be a good idea if it is finished,
-@c but there's no point including it as it stands.
+@c but there's no point including it as it stands. --rms
 @node Traditional C
 @appendixsec Compatibility with Traditional C
 
@@ -505,7 +509,11 @@ copyrighted by the Regents of the University of California.
 They have been modified only slightly to work with the GNU C library.
 
 @item
-The @code{qsort} function was written by Douglas C. Schmidt.
+The merge sort function @code{qsort} was written by Michael J. Haertel.
+
+@item
+The quick sort function used as a fallback by @code{qsort} was written
+by Douglas C. Schmidt.
 
 @item
 The memory allocation functions @code{malloc}, @code{realloc} and
