@@ -157,7 +157,7 @@ DEFUN(fnmatch, (pattern, string, flags),
 	  break;
 	  
 	default:
-	  if (c != *n++)
+	  if (c != *n)
 	    return FNM_NOMATCH;
 	}
       
