@@ -7,15 +7,7 @@
 # define ERR_REMAP(n) n
 #endif
 
-#if !defined EMIT_ERR_MAX && !defined ERRLIST_NO_COMPAT
-# include <errlist-compat.h>
-#endif
-#ifdef ERR_MAX
-# define ERRLIST_SIZE ERR_MAX + 1
-#else
-# define ERRLIST_SIZE
-#endif
-const char *const _sys_errlist_internal[ERRLIST_SIZE] =
+const char *const _sys_errlist_internal[] =
   {
     [0] = N_("Success"),
 #ifdef EPERM
@@ -1406,38 +1398,6 @@ TRANS error; @pxref{Cancel AIO Operations}. */
 # if EMEDIUMTYPE > ERR_MAX
 # undef ERR_MAX
 # define ERR_MAX EMEDIUMTYPE
-# endif
-#endif
-#ifdef ENOKEY
-/* */
-    [ERR_REMAP (ENOKEY)] = N_("Required key not available"),
-# if ENOKEY > ERR_MAX
-# undef ERR_MAX
-# define ERR_MAX ENOKEY
-# endif
-#endif
-#ifdef EKEYEXPIRED
-/* */
-    [ERR_REMAP (EKEYEXPIRED)] = N_("Key has expired"),
-# if EKEYEXPIRED > ERR_MAX
-# undef ERR_MAX
-# define ERR_MAX EKEYEXPIRED
-# endif
-#endif
-#ifdef EKEYREVOKED
-/* */
-    [ERR_REMAP (EKEYREVOKED)] = N_("Key has been revoked"),
-# if EKEYREVOKED > ERR_MAX
-# undef ERR_MAX
-# define ERR_MAX EKEYREVOKED
-# endif
-#endif
-#ifdef EKEYREJECTED
-/* */
-    [ERR_REMAP (EKEYREJECTED)] = N_("Key was rejected by service"),
-# if EKEYREJECTED > ERR_MAX
-# undef ERR_MAX
-# define ERR_MAX EKEYREJECTED
 # endif
 #endif
   };
