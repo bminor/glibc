@@ -294,6 +294,14 @@ abort_rpcs (struct hurd_sigstate *ss, int signo,
 	     Destroy the receive right the thread is blocked on.  */
 	  __mach_port_destroy (__mach_task_self (), msging_port);
 
+	  /* The system call return value register now contains
+	     MACH_RCV_INTERRUPTED; when mach_msg resumes, it will retry the
+	     call.  Since we have just destroyed the receive right, the
+	     retry will fail with MACH_RCV_INVALID_NAME.  Instead, just
+	     change the return value here to EINTR so mach_msg will not
+	     retry and the EINTR error code will propagate up.  */
+	  state->basic.SYSRETURN = EINTR;
+
 	  /* If that was the thread's MiG reply port (which I think should
 	     always be the case), clear the reply port cell so it won't be
 	     reused.  */
