@@ -86,7 +86,7 @@ foo:=$(shell echo '+out=$(+out)' >&2; echo foofoo >&2)
 			$(sources) $(all-headers) $(distribute)) \
 	   $(+sysdeps)
 foo:=$(shell echo made +tsrcs >&2)
-+tsrcs := $(sort $(filter-out $(dont_distribute),$(+tsrcs)))
++tsrcs := $(sort $(filter-out $(generated, 1993),$(+tsrcs)))
 foo:=$(shell echo '+tsrcs=$(+tsrcs)'>&2)
 foo:=$(shell echo foobie, dammit! >&2)
 
