@@ -19,32 +19,31 @@
 # errno.texinfo contains lines like:
 # @deftypevr Macro int ENOSYS     @c 78 Function not implemented
 
-BEGIN
-  {
+BEGIN {
     print "/* This file is generated from errno.texinfo by errnos.awk. */";
     print "";
     print "#ifdef _ERRNO_H";
   }
-$1 == "@deftypevr" && $5 == "@c"
-  {
+$1 == "@deftypevr" && $5 == "@c" {
     if ($4 == "EDOM" || $4 == "ERANGE")
       {
         print "#endif /* <errno.h> included.  */";
-	print "#if (!defined (__Emath_defined) && \\\n\
-     (defined (_ERRNO_H) || defined (__need_Emath)))";
+	print "#if (!defined (__Emath_defined) && \\\n     (defined (_ERRNO_H) || defined (__need_Emath)))";
       }
-     printf "#define\t%s\t%d\t/* ", $4, $6;
-     for (i = 7; i < NF; ++i)
+     s = "#define\t" $4
+     l = 24 - length (s);
+     while (l-- > 0)
+       s = s " "
+     printf "%s%d\t/* ", s, $6;
+     for (i = 7; i <= NF; ++i)
        printf "%s ", $i
-     print " */"
+     print "*/"
     if ($4 == "EDOM" || $4 == "ERANGE")
       {
-        print "#endif /* Emath not defined and <errno.h> \
-included or need Emath.  */";
+        print "#endif /* Emath not defined and <errno.h> included or need Emath.  */";
 	print "#ifdef _ERRNO_H"
       }
   }
-END
-  {
+END {
     print "#endif /* <errno.h> included.  */"
   }
