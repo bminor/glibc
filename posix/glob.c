@@ -15,10 +15,6 @@ License along with this library; see the file COPYING.LIB.  If
 not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* @ */
-#include <ansidecl.h>
-/* @ */
-
 #include <glob.h>
 #include <fnmatch.h>
 
@@ -167,8 +163,8 @@ static int glob_in_dir __P ((const char *pattern, const char *directory,
 			     int flags,
 			     int (*errfunc) __P ((const char *, int)),
 			     glob_t * pglob));
-     static int prefix_array __P ((const char *prefix, char **array, size_t n));
-     static int collated_compare __P ((const __ptr_t, const __ptr_t));
+static int prefix_array __P ((const char *prefix, char **array, size_t n));
+static int collated_compare __P ((const __ptr_t, const __ptr_t));
 
 /* Do glob searching for PATTERN, placing results in PGLOB.
    The bits defined above may be set in FLAGS.
@@ -246,8 +242,9 @@ static int glob_in_dir __P ((const char *pattern, const char *directory,
       glob_t dirs;
       register int i;
 
-      status = glob (dirname, ((flags & (GLOB_ERR | GLOB_NOCHECK | GLOB_NOESCAPE)) |
-			       GLOB_NOSORT),
+      status = glob (dirname,
+		     ((flags & (GLOB_ERR | GLOB_NOCHECK | GLOB_NOESCAPE)) |
+		      GLOB_NOSORT),
 		     errfunc, &dirs);
       if (status != 0)
 	return status;
@@ -353,7 +350,8 @@ static int glob_in_dir __P ((const char *pattern, const char *directory,
 	}
 
       if (!(flags & GLOB_NOSORT))
-	qsort ((__ptr_t) & pglob->gl_pathv[oldcount], pglob->gl_pathc - oldcount,
+	qsort ((__ptr_t) & pglob->gl_pathv[oldcount],
+	       pglob->gl_pathc - oldcount,
 	       sizeof (char *), collated_compare);
     }
 
