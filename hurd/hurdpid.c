@@ -33,7 +33,6 @@ init_pids (void)
 }
 
 text_set_element (_hurd_proc_subinit, init_pids);
-text_set_element (_hurd_fork_child_hook, init_pids);
 
 #include <hurd/msg_server.h>
 #include "set-hooks.h"
