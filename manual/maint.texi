@@ -32,7 +32,7 @@ requires several GNU tools to be installed already.
 @menu
 * Tools for Installation::      We recommend using these tools to build.
 * Supported Configurations::    What systems the GNU C library runs on.
-* Tips for Installtion::        Useful hints for the installation.
+* Tips for Installation::       Useful hints for the installation.
 @end menu
 
 To configure the GNU C library for your system, run the shell script
@@ -307,7 +307,7 @@ sun4-solaris2.@var{n} sun4-sunos5.@var{n}
 sun4-sunos4.@var{n} sun4
 @end smallexample
 
-@node Tips for Installtion
+@node Tips for Installation
 @appendixsubsec Useful hints for the installation
 
 There are a some more or less obvious methods one should know when
