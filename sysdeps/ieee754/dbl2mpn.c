@@ -69,7 +69,7 @@ __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
     }
   else
     /* Add the implicit leading one bit for a normalized number.  */
-    res_ptr[N - 1] |= 1 << (52 - ((N - 1) * BITS_PER_MP_LIMB);
+    res_ptr[N - 1] |= 1 << (52 - ((N - 1) * BITS_PER_MP_LIMB));
 
   return N;
 }
