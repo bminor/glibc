@@ -158,9 +158,14 @@ sem_timedwait:
 #endif
 	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
 #if USE___THREAD
-	movl	%gs:0, %edx
-	subl	errno@gottpoff(%ebx), %edx
+# ifdef NO_TLS_DIRECT_SEG_REFS
+	movl	errno@gotntpoff(%ebx), %edx
+	addl	%gs:0, %edx
 	movl	%esi, (%edx)
+# else
+	movl	errno@gotntpoff(%ebx), %edx
+	movl	%esi, %gs:(%edx)
+# endif
 #else
 	call	__errno_location@plt
 	movl	%esi, (%eax)
