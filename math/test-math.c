@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+void print_trig_stuff __P ((void));
+
 int
 DEFUN_VOID(main)
 {
@@ -79,5 +81,68 @@ DEFUN_VOID(main)
 	    x == -1e-17 ? "Worked" : "Failed");
   }
 
+  print_trig_stuff ();
+
   return 0;
+}
+
+
+#define PI 3.14159265358979323846264338327
+
+const double RAD[5] = { 0, PI/2, PI, (3*PI)/2, 2*PI };
+const int    DEG[5] = { 0, 90, 180, 360 };
+
+#define PRINT_IT_1_ARG(_func, _arg, _value) \
+    (_value) = (_func)((_arg)); \
+    if (errno) { \
+      errno = 0; \
+      printf("%s = ERROR %s\n", #_func, strerror(errno)); \
+    } else \
+      printf("%s(%g) = %g\n", #_func, _arg, (_value)); \
+
+#define PRINT_IT_2_ARG(_func, _arg1, _arg2, _value) \
+    (_value) = (_func)((_arg1),(_arg2)); \
+    if (errno) { \
+      errno = 0; \
+      printf("%s = ERROR %s\n", #_func, strerror(errno)); \
+    } else \
+      printf("%s(%g, %g) = %g\n", #_func, _arg1, _arg2, (_value)); \
+
+void
+DEFUN_VOID (print_trig_stuff)
+{
+  double value, arg1, arg2;
+  int i;
+
+  puts ("\n\nMath Test");
+
+  errno = 0;			/* automatically reset on error condition */
+  for (i=0; i<4; i++)
+    {
+      PRINT_IT_1_ARG (sin, RAD[i], value);
+      PRINT_IT_1_ARG (cos, RAD[i], value);
+      PRINT_IT_1_ARG (tan, RAD[i], value);
+      PRINT_IT_1_ARG (asin, RAD[i], value);
+      PRINT_IT_1_ARG (acos, RAD[i], value);
+      PRINT_IT_1_ARG (atan, RAD[i], value);
+      PRINT_IT_2_ARG (atan2, RAD[i], -RAD[i % 4], value);
+    }
+
+  arg1 = 16;
+  arg2 = 3;
+  PRINT_IT_1_ARG (exp, arg1, value);
+  PRINT_IT_1_ARG (log, arg1, value);
+  PRINT_IT_1_ARG (log10, arg1, value);
+  PRINT_IT_2_ARG (pow, arg1, arg2, value);
+  PRINT_IT_1_ARG (sqrt, arg1, value);
+  PRINT_IT_1_ARG (cbrt, arg1, value);
+  PRINT_IT_2_ARG (hypot, arg1, arg2, value);
+  PRINT_IT_1_ARG (expm1, arg1, value);
+  PRINT_IT_1_ARG (log1p, arg1, value);
+  PRINT_IT_1_ARG (sinh, arg1, value);
+  PRINT_IT_1_ARG (cosh, arg1, value);
+  PRINT_IT_1_ARG (tanh, arg1, value);
+  PRINT_IT_1_ARG (asinh, arg1, value);
+  PRINT_IT_1_ARG (acosh, arg1, value);
+  PRINT_IT_1_ARG (atanh, arg1, value);
 }
