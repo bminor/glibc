@@ -36,7 +36,7 @@ routines := brk sbrk sstk ioctl \
 	    __getdtsz \
 	    __gethstnm gethstnm sethostnam \
 	    __select select \
-	    acct chroot fsync sync \
+	    acct chroot fsync sync reboot \
 	    getdents \
 	    __getdents \
 	    gethostid sethostid \
