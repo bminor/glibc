@@ -316,6 +316,8 @@ DEFUN(__tzfile_compute, (timer, leap_correct, leap_hit),
 void
 DEFUN(compute_tzname_max, (chars), size_t chars)
 {
+  extern long int __tzname_cur_max; /* Defined in __tzset.c. */
+
   const char *p;
 
   p = zone_names;
@@ -324,7 +326,7 @@ DEFUN(compute_tzname_max, (chars), size_t chars)
       const char *start = p;
       while (*p != '\0')
 	++p;
-      if (p - start > __tzname_max)
-	__tzname_max = p - start;
+      if (p - start > __tzname_cur_max)
+	__tzname_cur_max = p - start;
     } while (++p < &zone_names[chars]);
 }

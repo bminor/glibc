@@ -34,11 +34,7 @@ DEFUN(__sysconf, (name), int name)
       return -1;
 
     case _SC_TZNAME_MAX:
-#ifdef TZNAME_MAX
-      return __tzname_max > TZNAME_MAX ? __tzname_max : TZNAME_MAX;
-#else
-      return __tzname_max;
-#endif
+      return __tzname_max ();
 
     case _SC_ARG_MAX:
     case _SC_CHILD_MAX:
