@@ -61,11 +61,14 @@ include ../Rules
 	$(MSGFMT) -o $@ $<
 
 # Install the message object files as libc.po in the language directory.
-$(mo-installed): %.mo; $(do-install)
+$(mo-installed): %.mo; $(do-install) || exit 0
 
 .PHONY: linguas linguas.mo
 linguas: $(ALL_LINGUAS:=.po)
 linguas.mo: $(ALL_LINGUAS:=.mo)
+
+realclean:
+	rm -f $(ALL_LINGUAS:=.mo)
 
 # Copy the PO files from the translation coordinator's repository.
 
