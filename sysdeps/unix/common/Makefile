@@ -35,18 +35,3 @@ $(objpfx)glue-ctype: $(sysdep_dir)/unix/common/glue-ctype.c
 	$(native-compile)
 
 endif
-
-ifeq ($(subdir),stdio)
-
-before-compile := $(before-compile) $(objpfx)siglist.c
-$(objpfx)siglist.c: $(objpfx)make_siglist
-	@rm -f $@
-	$< > $@-tmp
-	mv $@-tmp $@
-
-$(objpfx)make_siglist: $(sysdep_dir)/unix/common/make_siglist.c
-	$(native-compile)
-
-generated := $(generated) $(objpfx)siglist.c $(objpfx)make_siglist
-
-endif
