@@ -61,18 +61,26 @@ DEFUN(__stdio_close, (cookie), PTR cookie)
   return -1;
 }
 
-
-/* Open FILENAME with the mode in M.
-   Return the magic cookie associated with the opened file
-   or NULL which specifies that an integral descriptor may be
-   found in *FDPTR.  This descriptor is negative for errors.  */
-PTR
-DEFUN(__stdio_open, (filename, m, fdptr),
-      CONST char *filename AND __io_mode m AND int *fdptr)
+/* Return the POSIX.1 file descriptor associated with COOKIE,
+   or -1 for errors.  If COOKIE does not relate to any POSIX.1 file
+   descriptor, this should return -1 with errno set to EOPNOTSUPP.  */
+int
+DEFUN(__stdio_fileno, (cookie), PTR cookie)
 {
   errno = ENOSYS;
-  *fdptr = -1;
-  return NULL;
+  return -1;
+}
+
+
+/* Open FILENAME with the mode in M.
+   Store the magic cookie associated with the opened file in *COOKIEPTR.
+   Return zero on success and nonzero on failure.  */   
+int
+DEFUN(__stdio_open, (filename, m, fdptr),
+      CONST char *filename AND __io_mode m AND PTR *cookieptr)
+{
+  errno = ENOSYS;
+  return -1;
 }
 
 
@@ -84,6 +92,7 @@ stub_warning(__stdio_read);
 stub_warning(__stdio_write);
 stub_warning(__stdio_seek);
 stub_warning(__stdio_close);
+stub_warning(__stdio_fileno);
 stub_warning(__stdio_open);
 
 #endif	/* GNU stabs.  */
