@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,15 +25,8 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(fsync, (fd), int fd)
 {
-  error_t err;
-  file_t server;
-  __mutex_lock (&_hurd_dtable.lock);
-  server = _hurd_dport (fd);
-  if (server == MACH_PORT_NULL)
-    return -1;
-  __mutex_unlock (&_hurd_dtable.lock);
-
-  if (err = __file_sync (server))
+  error_t err = _HURD_DPORT_USE (fd, __file_sync (port));
+  if (err)
     return __hurd_fail (err);
   return 0;
 }
