@@ -909,7 +909,7 @@ character following a whitespace character.  If the bit is set, then the
 beginning of a word is an alphanumeric character or underscore following
 a character which is none of those.
 
-@xref{Editting Characters}, for more information about the WERASE character.
+@xref{Editing Characters}, for more information about the WERASE character.
 @end deftypevr
 
 @comment termios.h
@@ -931,7 +931,7 @@ Setting this bit disables handling of the STATUS character.
 @deftypevr Macro tcflag_t PENDIN
 If this bit is set, it indicates that there is a line of input that
 needs to be reprinted.  Typing the REPRINT character sets this bit; the
-bit remains set until reprinting is finished.  @xref{BSD Editing}.
+bit remains set until reprinting is finished.  @xref{Editing Characters}.
 @end deftypevr
 
 @c EXTPROC is too obscure to document now.  --roland
