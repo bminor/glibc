@@ -20,28 +20,12 @@ Cambridge, MA 02139, USA.  */
 
 
 
-#if 0
 /* Things in the library which want to be run when the auth port changes.  */
-struct
+const struct
   {
     size_t n;
     void (*fn[0]) ();
-  } _hurd_reauth;
-#endif
-
-static inline void
-reauth_io (io_t *server)
-{
-  if (*server != MACH_PORT_NULL &&
-      ! __io_reauthenticate (*server))
-    {
-      mach_port_t new;
-	{
-	  __mach_port_deallocate (__mach_task_self (), *server);
-	  *server = new;
-	}
-    }
-}
+  } _hurd_reauth_hook;
 
 
 /* Set the auth port to NEW, and reauthenticate
@@ -79,7 +63,7 @@ __setauth (auth_t new)
 
   /* Reauthenticate the file descriptor table.  */
 
-  if (_hurd_dtable.d == NULL)
+  if (_hurd_init_dtable != NULL)
     /* We just have the simple table we got at startup.  */
     for (d = 0; d < _hurd_init_dtablesize; ++d)
       if (_hurd_init_dtable[d] != MACH_PORT_NULL)
@@ -95,33 +79,10 @@ __setauth (auth_t new)
 	      _hurd_init_dtable[d] = new;
 	    }
 	}
-  else
-    {
-      /* We have a real descriptor table.  */
-      __mutex_lock (&_hurd_dtable_lock);
-      for (d = 0; d < _hurd_dtable.size; ++d)
-	{
-	  struct _hurd_port *const cell = &hurd_dtable.d[d].port;
-	  mach_port_t new;
 
-	  /* Take the descriptor cell's lock.  */
-	  __spin_lock (&cell->lock);
-
-	  /* Reauthenticate the descriptor's port.  */
-	  if (cell->port != MACH_PORT_NULL &&
-	      ! __io_reauthenticate (cell->port) &&
-	      ! _HURD_PORT_USE (&_hurd_auth,
-				__auth_user_authenticate (port,
-							  cell->port, &new)))
-	    /* Replace the port in the descriptor cell
-	       with the newly reauthenticated port.  */
-	    _hurd_port_locked_set (cell, new);
-	  else
-	    /* Lost.  Leave this descriptor cell alone.  */
-	    __spin_unlock (&cell->lock);
-	}
-      __mutex_unlock (&_hurd_dtable_lock);
-    }
+  /* Run things which want to do reauthorization stuff.  */
+  for (fn = _hurd_reauth_hook.fn; *fn != NULL; ++fn)
+    (**fn) ();
 
   return 0;
 }
