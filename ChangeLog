@@ -1,3 +1,21 @@
+2000-02-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/canonicalize.c (canonicalize): Zero terminate
+	path to copy on error.
+
+2000-02-01  Cristian Gafton  <gafton@redhat.com>
+
+	* misc/syslog.c (closelog): Reset LogType to SOCK_DGRAM.
+
+2000-01-31  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/fpu/fpu_control.h (_FPU_DEFAULT): Set the AC bit.
+
+2000-01-31  Andreas Jaeger  <aj@suse.de>
+
+	* inet/inet_net.c (inet_network): Don't overwrite memory or allow
+	to great last digits.
+
 2000-02-02  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/readlink.c (__readlink): Don't clobber original
