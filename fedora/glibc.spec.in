@@ -1,4 +1,4 @@
-%define glibcrelease 67
+%define glibcrelease 68
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1239,6 +1239,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Oct 14 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-68
+- update from CVS
+  - support for namespaces in the dynamic linker
+  - fix dlclose (BZ #77)
+  - libSegFault.so uses now backtrace() to work on IA-64, x86-64
+    and s390 (#130254)
+
 * Tue Oct 12 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-67
 - update from CVS
   - use non-blocking sockets in resolver (#135234)
