@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <unistd.h>
 
-/* Test for access to FILE.  */
+/* Test for access to FILE by our real user and group IDs.  */
 int
 DEFUN(__access, (file, type), CONST char *file AND int type)
 {
@@ -34,6 +34,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   if (dir == MACH_PORT_NULL)
     return -1;
 
+  /* Set up _hurd_rid_auth.  */
   __mutex_lock (&_hurd_idlock);
   if (!_hurd_id_valid)
     {
@@ -50,6 +51,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
     {
       idblock_t rid;
       rid = _hurd_id;
+      /* XXX Should keep supplementary ids or not? */
       rid.uids[0] = rid.ruid;
       rid.gids[0] = rid.rgid;
       rid.ruid = _hurd_id.uids[0];
@@ -75,6 +77,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   if (type & X_OK)
     flags |= FS_LOOKUP_EXECUTE;
 
+  /* XXX auth for crdir on retries from /? */
   err = __dir_lookup (rdir, name, flags, &file);
   __mach_port_deallocate (__mach_task_self (), rdir);
   if (err)
