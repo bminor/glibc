@@ -194,8 +194,9 @@ endif
 # this timezone must use rules that are as U.S. federal law defines DST.
 # Run `make -C time echo-zonenames' to see a list of available zone names.
 # This setting can be changed with `zic -p TIMEZONE' at any time.
+# If you want POSIX.1 compatibility, use `America/New_York'.
 ifndef posixrules
-posixrules = US/Eastern
+posixrules = America/New_York
 endif
 
 # Where to install the "posixrules" timezone file; this is file
