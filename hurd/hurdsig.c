@@ -510,7 +510,7 @@ _hurdsig_init (void)
   /* Receive exceptions on the signal port.  */
   __task_set_special_port (__mach_task_self (), TASK_EXCEPTION, _hurd_msgport);
 }
-
+
 /* Send exceptions for the signal thread to the proc server.
    It will forward the message on to our message port,
    and then restore the thread's state to code which
