@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,14 +25,6 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(__sigpause, (mask), int mask)
 {
-  register int sig;
-  sigset_t set;mpook
-  if (__sigemptyset(&set) < 0)
-    return -1;
-  for (sig = 1; sig < NSIG; ++sig)
-    if ((mask & sigmask(sig)) &&
-	__sigaddset(&set, sig) < 0)
-      return -1;
-
-  return sigsuspend(set);
+  sigset_t set = mask;
+  return sigsuspend (&set);
 }
