@@ -59,11 +59,7 @@ extern int errno;
 #endif
 
 struct netent *_getnetbyaddr __P((long net, int type));
-#if defined(sun)
-struct netent *_getnetbyname __P((char *name));
-#else
 struct netent *_getnetbyname __P((const char *name));
-#endif
 
 #define BYADDR 0
 #define BYNAME 1
@@ -272,11 +268,7 @@ getnetbyaddr(net, net_type)
 
 struct netent *
 getnetbyname(net)
-#if defined(sun)
-	register char *net;
-#else
 	register const char *net;
-#endif
 {
 	unsigned int	netbr[4];
 	int		anslen;
