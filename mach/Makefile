@@ -23,8 +23,7 @@ distribute = Machrules syscalls.awk shortcut.awk
 headers = mach_init.h mach.h mach-shortcuts.h \
 	  $(addprefix mach/,$(mach-headers)) \
 	  $(interface-headers)
-dont_distribute := mach-shortcuts.h # Generated
-clean-extras := mach-shortcuts.h
+generated := mach-shortcuts.h
 
 mach-headers := host_info.h kern_return.h \
 		mach_param.h mach_types.h \
