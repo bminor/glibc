@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993, 1996-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    This library is free software; you can redistribute it and/or
@@ -368,8 +368,9 @@ internal_fnmatch (const char *pattern, const char *string,
 		  return FNM_NOMATCH;
 		else
 		  {
+		    c = FOLD (c);
 		  normal_bracket:
-		    if (FOLD (c) == fn)
+		    if (c == fn)
 		      goto matched;
 
 		    cold = c;
@@ -378,14 +379,26 @@ internal_fnmatch (const char *pattern, const char *string,
 		    if (c == '-' && *p != ']')
 		      {
 			/* It is a range.  */
+			char lo[2];
+			char fc[2];
 			unsigned char cend = *p++;
 			if (!(flags & FNM_NOESCAPE) && cend == '\\')
 			  cend = *p++;
 			if (cend == '\0')
 			  return FNM_NOMATCH;
 
-			if (cold <= fn && fn <= FOLD (cend))
-			  goto matched;
+			lo[0] = cold;
+			lo[1] = '\0';
+			fc[0] = fn;
+			fc[1] = '\0';
+			if (strcoll (lo, fc) <= 0)
+			  {
+			    char hi[2];
+			    hi[0] = FOLD (cend);
+			    hi[1] = '\0';
+			    if (strcoll (fc, hi) <= 0)
+			      goto matched;
+			  }
 
 			c = *p++;
 		      }
