@@ -37,5 +37,5 @@ DEFUN(socket, (domain, type, protocol),
   if (err = __socket_create (server, type, protocol, &sock))
     return __hurd_fail (err);
 
-  return _hurd_dalloc (sock, 0);
+  return _hurd_dalloc (sock, MACH_PORT_NULL, 0);
 }
