@@ -60,8 +60,9 @@ _hurd_port2fd (struct hurd_fd *d, io_t port, int flags)
     {
       /* Operations on CTTY return EBACKGROUND when we are not a
 	 foreground user of the tty.  */
-      d->port.port = ctty;
-      ctty = port;
+      mach_port_t tmp = port;
+      port = ctty;
+      ctty = tmp;
     }
   else
     /* XXX if IS_CTTY, then this port is our ctty, but we are
@@ -70,7 +71,14 @@ _hurd_port2fd (struct hurd_fd *d, io_t port, int flags)
     /* No ctty magic happening here.  */
     ctty = MACH_PORT_NULL;
 
-  /* The immediately following line is broken.  -mib */
-  d->port.port = port;		/* XXX FIXME */
+  /* Install PORT in the descriptor cell, leaving it locked.  */
+  {
+    mach_port_t old
+      = _hurd_userlink_clear (&d->port.users) ? d->port.port : MACH_PORT_NULL;
+    d->port.port = port;
+    if (old != MACH_PORT_NULL)
+      __mach_port_deallocate (__mach_task_self (), old);
+  }
+
   _hurd_port_set (&d->ctty, ctty);
 }
