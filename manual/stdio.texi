@@ -2865,10 +2865,9 @@ The value of @code{BUFSIZ} is chosen on each system so as to make stream
 I/O efficient.  So it is a good idea to use @code{BUFSIZ} as the size 
 for the buffer when you call @code{setvbuf}.
 
-Actually, you can get an even better valuse to use for the buffer size
-by means of the @code {fstat} system call: it is found in the
-@code{st_blksize} field of the file attributes.  @xref{Attribute
-Meanings}.
+Actually, you can get an even better value to use for the buffer size
+by means of the @code{fstat} system call: it is found in the
+@code{st_blksize} field of the file attributes.  @xref{Attribute Meanings}.
 
 Sometimes people also use @code{BUFSIZ} as the allocation size of
 buffers used for related purposes, such as strings used to receive a
