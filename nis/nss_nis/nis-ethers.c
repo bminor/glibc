@@ -158,7 +158,7 @@ internal_nis_getetherent_r (struct ether *eth, char *buffer, size_t buflen)
 
       if (next == NULL)
 	return NSS_STATUS_NOTFOUND;
-      p = strcpy (buffer, next->val);
+      p = strncpy (buffer, next->val, buflen);
       next = next->next;
 
       while (isspace (*p))
