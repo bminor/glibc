@@ -30,7 +30,7 @@ Cambridge, MA 02139, USA.  */
 void
 DEFUN(__stdio_init_stream, (stream), FILE *stream)
 {
-  struct hurd_fd *const fd = stream->__cookie;
+  struct hurd_fd *const d = stream->__cookie;
   struct stat statb;
   error_t err;
 
