@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,7 +59,8 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 	  if (bytes <= 0)
 	    {
 	      dp = NULL;
-	      reclen = 0;
+	      /* Reclen != 0 signals that an error occurred.  */
+	      reclen = bytes != 0;
 	      break;
 	    }
 	  dirp->size = (size_t) bytes;
@@ -96,13 +97,12 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
     } while (dp->d_ino == 0);
 
   if (dp != NULL)
-    {
-      memcpy (entry, dp, reclen);
-      *result = entry;
-    }
+    *result = memcpy (entry, dp, reclen);
+  else
+    *result = NULL;
 
   __libc_lock_unlock (dirp->lock);
 
-  return dp != NULL ? 0 : -1;
+  return dp != NULL ? 0 : reclen ? errno : 0;
 }
 weak_alias (__readdir_r, readdir_r)
