@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -73,6 +73,7 @@ localepath = "$(localedir):$(i18ndir)"
 
 CPPFLAGS := -DLOCALE_PATH='$(localepath)' \
 	    -DLOCALEDIR='"$(localedir)"' \
+	    -DLOCALE_ALIAS_PATH='"$(localedir):$(i18ndir)"' \
 	    -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
 	    -DLOCSRCDIR='"$(i18ndir)/locales"' -DHAVE_CONFIG_H \
 	    -Iprograms $(CPPFLAGS)
