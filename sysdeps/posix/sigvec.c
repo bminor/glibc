@@ -117,9 +117,12 @@ DEFUN(__sigvec, (sig, vec, ovec),
       register int i;
       int mask = 0;
 
-      for (i = 1; i < NSIG; ++i)
-	if (__sigismember(&old.sa_mask, i))
-	  mask |= sigmask(i);
+      if (sizeof (int) == sizeof (sigset_t))
+	mask = old.sa_mask;
+      else
+	for (i = 1; i < NSIG; ++i)
+	  if (__sigismember(&old.sa_mask, i))
+	    mask |= sigmask(i);
 
       ovec->sv_mask = mask;
       ovec->sv_flags = (((old.sa_flags & SA_ONSTACK) ? SV_ONSTACK : 0) |
