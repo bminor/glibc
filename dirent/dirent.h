@@ -42,7 +42,8 @@ struct dirent
   {
     __ino_t d_fileno;		/* File serial number.  */
     unsigned short int d_reclen; /* Length of the whole `struct dirent'.  */
-    unsigned short int d_namlen; /* Length of the file name.  */
+    unsigned char d_type;	/* File type, possibly unknown.  */
+    unsigned char d_namlen;	/* Length of the file name.  */
 
     /* Only this member is in the POSIX standard.  */
     char d_name[1];		/* File name (actually longer).  */
@@ -51,6 +52,26 @@ struct dirent
 #if defined(__USE_BSD) || defined(__USE_MISC)
 #define	d_ino		d_fileno /* Backward compatibility.  */
 #endif
+
+#ifdef __USE_BSD
+/* File types fo `d_type'.  */
+enum
+  {
+    DT_UNKNOWN = 0,
+    DT_FIFO = 1,
+    DT_CHR = 2,
+    DT_DIR = 4,
+    DT_BLK = 6,
+    DT_REG = 8,
+    DT_LNK = 10,
+    DT_SOCK = 12
+  };
+
+/* Convert between stat structure types and directory types.  */
+#define	IFTODT(mode)	(((mode) & 0170000) >> 12)
+#define	DTTOIF(dirtype)	((dirtype) << 12)
+#endif
+
 
 /* Get the system-dependent definition of `DIR',
    the data type of directory stream objects.  */
