@@ -134,6 +134,15 @@ abort_rpcs (struct _hurd_sigstate *ss, int signo, void *state)
 {
   if (ss->intr_port != MACH_PORT_NULL)
     {
+      /* XXX I am changing how this is done.
+	 There will be a new proc call that needs done
+	 at init time to give a thread state to restore
+	 when the sigthread faults.  proc will then forward
+	 the exception msg and set the thread state to
+	 a state we gave it at startup.
+	 This state will be to run a function which will
+	 longjmp to something here.  */
+
       /* This is the address the PC will be at if the thread
 	 is waiting for a mach_msg syscall to return.  */
       extern const int __mach_msg_trap_syscall_pc;
