@@ -38,7 +38,7 @@ static const struct ltest tests[] =
     { "0xffffffffg",	0xffffffff,	0,	'g',	0 },
     { "0xf1f2f3f4f5",	0xffffffff,	0,	0,	ERANGE },
     { "-0x123456789",	0xffffffff,	0,	0,	ERANGE },
-    { "-0xfedcba98",	0xffffffff,	0,	0,	ERANGE },
+    { "-0xfedcba98",	0x01234568,	0,	0,	0 },
     { NULL,		0,		0,	0,	0 },
 #else
     /* assume 64 bit long... */
@@ -66,7 +66,7 @@ static const struct ltest tests[] =
     { "0xffffffffffffffffg",	0xffffffffffffffff,	0,	'g',	0 },
     { "0xf1f2f3f4f5f6f7f8f9",	0xffffffffffffffff,	0,	0,	ERANGE },
     { "-0x123456789abcdef01",	0xffffffffffffffff,	0,	0,	ERANGE },
-    { "-0xfedcba987654321",	0xffffffffffffffff,	0,	0,	ERANGE },
+    { "-0xfedcba987654321",	0x0123456789abcdf,	0,	0,	0 },
     { NULL,		0,		0,	0,	0 },
 #endif
   };
@@ -79,16 +79,19 @@ main (int argc, char ** argv)
   register const struct ltest *lt;
   char *ep;
   int status = 0;
+  int save_errno;
 
   for (lt = tests; lt->str != NULL; ++lt)
     {
       register long int l;
 
       errno = 0;
-      l = strtol(lt->str, &ep, lt->base);
-      printf("strtol(\"%s\", , %d) test %u",
-	     lt->str, lt->base, (unsigned int) (lt - tests));
-      if (l == (long int) lt->expect && *ep == lt->left && errno == lt->err)
+      l = strtol (lt->str, &ep, lt->base);
+      save_errno = errno;
+      printf ("strtol(\"%s\", , %d) test %u",
+	      lt->str, lt->base, (unsigned int) (lt - tests));
+      if (l == (long int) lt->expect && *ep == lt->left
+	  && save_errno == lt->err)
 	puts("\tOK");
       else
 	{
@@ -99,13 +102,14 @@ main (int argc, char ** argv)
 	  if (lt->left != *ep)
 	    {
 	      char exp1[5], exp2[5];
-	      expand(exp1, *ep);
-	      expand(exp2, lt->left);
-	      printf("  leaves '%s', expected '%s'\n", exp1, exp2);
+	      expand (exp1, *ep);
+	      expand (exp2, lt->left);
+	      printf ("  leaves '%s', expected '%s'\n", exp1, exp2);
 	    }
-	  if (errno != lt->err)
-	    printf("  errno %d (%s)  instead of %d (%s)\n",
-		   errno, strerror(errno), lt->err, strerror(lt->err));
+	  if (save_errno != lt->err)
+	    printf ("  errno %d (%s)  instead of %d (%s)\n",
+		    save_errno, strerror (save_errno),
+		    lt->err, strerror (lt->err));
 	  status = 1;
 	}
     }
@@ -115,32 +119,34 @@ main (int argc, char ** argv)
       register unsigned long int ul;
 
       errno = 0;
-      ul = strtoul(lt->str, &ep, lt->base);
-      printf("strtoul(\"%s\", , %d) test %u",
-	     lt->str, lt->base, (unsigned int) (lt - tests));
-      if (ul == lt->expect && *ep == lt->left && errno == lt->err)
+      ul = strtoul (lt->str, &ep, lt->base);
+      save_errno = errno;
+      printf ("strtoul(\"%s\", , %d) test %u",
+	      lt->str, lt->base, (unsigned int) (lt - tests));
+      if (ul == lt->expect && *ep == lt->left && save_errno == lt->err)
 	puts("\tOK");
       else
 	{
-	  puts("\tBAD");
+	  puts ("\tBAD");
 	  if (ul != lt->expect)
-	    printf("  returns %lu, expected %lu\n",
-		   ul, lt->expect);
+	    printf ("  returns %lu, expected %lu\n",
+		    ul, lt->expect);
 	  if (lt->left != *ep)
 	    {
 	      char exp1[5], exp2[5];
-	      expand(exp1, *ep);
-	      expand(exp2, lt->left);
-	      printf("  leaves '%s', expected '%s'\n", exp1, exp2);
+	      expand (exp1, *ep);
+	      expand (exp2, lt->left);
+	      printf ("  leaves '%s', expected '%s'\n", exp1, exp2);
 	    }
-	  if (errno != lt->err)
-	    printf("  errno %d (%s) instead of %d (%s)\n",
-		   errno, strerror(errno), lt->err, strerror(lt->err));
+	  if (save_errno != lt->err)
+	    printf ("  errno %d (%s) instead of %d (%s)\n",
+		    save_errno, strerror (save_errno),
+		    lt->err, strerror (lt->err));
 	  status = 1;
 	}
     }
 
-  exit(status ? EXIT_FAILURE : EXIT_SUCCESS);
+  exit (status ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
 static void
@@ -148,11 +154,11 @@ expand (dst, c)
      char *dst;
      int c;
 {
-  if (isprint(c))
+  if (isprint (c))
     {
       dst[0] = c;
       dst[1] = '\0';
     }
   else
-    (void) sprintf(dst, "%#.3o", (unsigned int) c);
+    (void) sprintf (dst, "%#.3o", (unsigned int) c);
 }
