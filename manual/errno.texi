@@ -18,7 +18,8 @@ facility.
 
 @menu
 * Checking for Errors::         How errors are reported by library functions.
-* Error Codes::                 Error Codes
+* Error Codes::                 Error code macros; all of these expand 
+                                 into integer constant values.
 * Error Messages::              Mapping error codes onto error messages.
 @end menu
 
