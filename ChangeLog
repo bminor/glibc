@@ -1,3 +1,39 @@
+1998-02-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* dladdr.c (dladdr): Remove duplicate code.
+
+1998-03-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (subdirs): Remove login.  It appears in
+	sysdeps/unix/Subdirs.  Reported by Roland McGrath.
+
+	* configure.in: Fix script for handling $CC containing whitespace.
+	Patch by Roland McGrath.
+
+	* configure.in: Avoid //s in sysdirs.  Patch by Roland McGrath.
+
+1998-03-02 07:17  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-open.c (_dl_open): Update _dl_global_scope_end when
+	setting _dl_global_scope for RTLD_GLOBAL.
+
+1998-02-05 20:41  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* elf/dl-addr.c: Fix search algorithms in dladdr(); don't assume
+	that the number of program headers is >0 (which is wrong for the
+	loader itself).
+
+1998-02-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/execl.c: POSIX.1 says that argv[0] *should* be provided,
+	but does not require it.  Handle missing argv[] values gracefully.
+	* posix/execle.c: Likewise.
+
+1998-02-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfscanf.c: Fix problem with EOF while waiting for
+	input.
+
 1998-02-18 23:31  Richard Henderson  <rth@cygnus.com>
 
 	* stdlib/strtod.c (STRTOF): Don't call lshift with zero count.
@@ -26,7 +62,7 @@
 1998-02-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/statfsbuf.h: Include <gnu/types.h> for
-	__fsid_t. Reported by Gene McCulley <mcculley@iag.net>.
+	__fsid_t.  Reported by Gene McCulley <mcculley@iag.net>.
 
 1998-02-19  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -97,7 +133,7 @@
 1998-02-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/mach/_strerror.c (_strerror_internal): Use memcpy
-	instead of __mempcpy. Reported by OKUJI Yoshinori
+	instead of __mempcpy.  Reported by OKUJI Yoshinori
 	<okuji@kmc.kyoto-u.ac.jp>. [PR libc/446].
 
 1998-02-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
@@ -140,24 +176,23 @@
 
 1998-01-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	* sysdeps/libm-ieee754/s_modfl.c (modf): Correct
-	calculation.  Patch by Markus Schoder
-	<Markus.Schoder@dresdner-bank.de>.
+	* sysdeps/libm-ieee754/s_modfl.c (modf): Correct calculation.
+	Patch by Markus Schoder <Markus.Schoder@dresdner-bank.de>.
 
 1998-02-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/errno.texi (Error Messages): Correct description of
-	strerror_r. Pointed out by jonas@bagge.se.
+	strerror_r.  Pointed out by jonas@bagge.se.
 
 1998-02-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* db/makedb.c (main): Add output_name to error message.
 
-	* sunrpc/rpc/xdr.h: Include <sys/types.h> and <rpc/types.h>. Patch
-	by Thorsten Kukuk.
+	* sunrpc/rpc/xdr.h: Include <sys/types.h> and <rpc/types.h>.
+	Patch by Thorsten Kukuk.
 
 	* nis/nss_nis/nis-hosts.c (_nss_nis_gethostbyname2_r): Correct
-	last patch. Patch by Thorsten Kukuk.
+	last patch.  Patch by Thorsten Kukuk.
 
 	* nss/getXXent_r.c: Include <errno.h>
 

@@ -7,6 +7,10 @@ Please send GNU C library bug reports using the `glibcbug' script to
 <bugs@gnu.org>.  Questions and suggestions should be send to
 <bug-glibc@prep.ai.mit.edu>.
 
+Version 2.0.7
+
+* more bug fixes
+
 Version 2.0.6
 
 * more bug fixes
