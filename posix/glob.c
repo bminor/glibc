@@ -153,7 +153,10 @@ extern char *alloca ();
 
 #endif
 
-#ifndef	__STDC__
+#if defined (__STDC__) && __STDC__
+#define	__ptr_t	void *
+#else
+#define	__ptr_t	char *
 #undef	size_t
 #define	size_t	unsigned int
 #endif
