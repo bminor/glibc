@@ -115,6 +115,9 @@ before-compile := $(filter $(common-objpfx)mach% $(common-objpfx)hurd%,\
 # and those gratuitous dependencies result in many gratuitous
 # recompilations.
 before-compile := $(filter-out $(wildcard $(before-compile)),$(before-compile))
+
+# Don't let any before-compile file be an intermediate and get removed.
+$(before-compile):
 
 # Generate an ordered list of implicit rules which find the source files in
 # each sysdep directory.  The old method was to use vpath to search all the
@@ -125,15 +128,18 @@ before-compile := $(filter-out $(wildcard $(before-compile)),$(before-compile))
 # When making the list of .dep files to include, we can't know which ones
 # have source in .s files, and thus do not in fact need a .dep file.
 # So we must define rules to make .dep files for .s files.
-make-dummy-dep = \
-	echo '\# $< cannot contain includes, so it needs no deps.' > $@
+define make-dummy-dep
+$(addprefix ln $(objpfx)dummy.dep ,$(wildcard $@))
+endef
+$(objpfx)dummy.dep:
+	echo '\# .s files cannot contain includes, so they need no deps.' > $@
 
 # Define first rules to find the source files in $(objpfx).
 # Generated source files will end up there.
 $(objpfx)%.o: $(objpfx)%.S $(before-compile); $(compile-command.S)
 $(objpfx)%.dep: $(objpfx)%.S $(before-compile); $(+make-deps)
 $(objpfx)%.o: $(objpfx)%.s $(before-compile); $(compile-command.s)
-$(objpfx)%.dep: $(objpfx)%.s; $(make-dummy-dep)
+$(objpfx)%.dep: $(objpfx).s $(objpfx)dummy.dep; $(make-dummy-dep)
 $(objpfx)%.o: $(objpfx)%.c $(before-compile); $(compile-command.c)
 $(objpfx)%.dep: $(objpfx)%.c $(before-compile); $(+make-deps)
 
@@ -148,7 +154,8 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules
 		\$$(+make-deps)";					      \
 	   echo "\$$(objpfx)%.o: $$dir/%.s \$$(before-compile); \
 		\$$(compile-command.s)";				      \
-	   echo "\$$(objpfx)%.dep: $$dir/%.s; \$$(make-dummy-dep)";	      \
+	   echo "\$$(objpfx)%.dep: $$dir/%.s \$$(objpfx)dummy.dep; \
+		\$$(make-dummy-dep)";	     \
 	   echo "\$$(objpfx)%.o: $$dir/%.c \$$(before-compile); \
 		\$$(compile-command.c)";				      \
 	   echo "\$$(objpfx)%.dep: $$dir/%.c \$$(before-compile); \
