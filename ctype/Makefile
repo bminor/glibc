@@ -30,7 +30,9 @@ tests	:= test_ctype
 # the header files so tags for optimizing #define's in the
 # headers won't be put in the tags files, but for ctype,
 # the functions are just backup for the #define's in the header.
+ifdef have_export_directive	# kludge for GNU make before 3.63
 export tags_sources = $(all-headers) $(all-sources)
+endif
 
 all:
 include ../Rules
