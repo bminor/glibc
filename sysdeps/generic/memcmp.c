@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,9 +16,44 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#if defined (HAVE_STRING_H) || defined (_LIBC)
 #include <string.h>
+#endif
+
+#ifdef _LIBC
+
 #include <memcopy.h>
+
+#else	/* Not in the GNU C library.  */
+
+/* Type to use for aligned memory operations.
+   This should normally be the biggest type supported by a single load
+   and store.  */
+#define	op_t	unsigned long int
+#define OPSIZ	(sizeof(op_t))
+
+/* Threshold value for when to enter the unrolled loops.  */
+#define	OP_T_THRES	16
+
+/* Type to use for unaligned operations.  */
+typedef unsigned char byte;
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN /* XXX */
+#define MERGE(w0, sh_1, w1, sh_2) (((w0) >> (sh_1)) | ((w1) << (sh_2)))
+#endif
+#if __BYTE_ORDER == __BIG_ENDIAN /* XXX */
+#define MERGE(w0, sh_1, w1, sh_2) (((w0) << (sh_1)) | ((w1) >> (sh_2)))
+#endif
+#ifndef MERGE
+ #error Byte order unknown.
+#endif
+
+#endif	/* In the GNU C library.  */
+
 
 /* BE VERY CAREFUL IF YOU CHANGE THIS CODE!  */
 
@@ -40,8 +75,10 @@ Cambridge, MA 02139, USA.  */
 __inline
 #endif
 static int
-DEFUN(memcmp_common_alignment, (srcp1, srcp2, len),
-      long int srcp1 AND long int srcp2 AND size_t len)
+memcmp_common_alignment (srcp1, srcp2, len)
+     long int srcp1;
+     long int srcp2;
+     size_t len;
 {
   op_t a0, a1;
   op_t b0, b1;
@@ -126,8 +163,10 @@ DEFUN(memcmp_common_alignment, (srcp1, srcp2, len),
 __inline
 #endif
 static int
-DEFUN(memcmp_not_common_alignment, (srcp1, srcp2, len),
-      long int srcp1 AND long int srcp2 AND size_t len)
+memcmp_not_common_alignment (srcp1, srcp2, len)
+     long int srcp1;
+     long int srcp2;
+     size_t len;
 {
   op_t a0, a1, a2, a3;
   op_t b0, b1, b2, b3;
@@ -226,8 +265,10 @@ DEFUN(memcmp_not_common_alignment, (srcp1, srcp2, len),
 }
 
 int
-DEFUN(memcmp, (s1, s2, n),
-      CONST PTR s1 AND CONST PTR s2 AND size_t len)
+memcmp (s1, s2, n)
+     const __ptr_t s1;
+     const __ptr_t s2;
+     size_t len;
 {
   op_t a0;
   op_t b0;
