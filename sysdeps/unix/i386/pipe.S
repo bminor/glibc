@@ -22,5 +22,5 @@ SYSCALL__ (pipe)
 	movl 4(%esp), %ecx
 	movl %eax, (%ecx)
 	movl %edx, 4(%ecx)
-	movl $0, %eax
+	xorl %eax, %eax
 	ret
