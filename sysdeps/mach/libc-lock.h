@@ -27,6 +27,9 @@
 typedef struct __libc_lock_opaque__ __libc_lock_t;
 #endif
 
+/* Type for key of thread specific data.  */
+typedef cthread_key_t __libc_key_t;
+
 /* Define a lock variable NAME with storage class CLASS.  The lock must be
    initialized with __libc_lock_init before it can be used (or define it
    with __libc_lock_define_initialized, below).  Use `extern' for CLASS to
@@ -72,19 +75,26 @@ typedef struct __libc_lock_opaque__ __libc_lock_t;
     (*__save_FCT)(__save_ARG);						    \
 }
 
-/* Use mutexes as once control variables. */
-
 /* Define once control variable.  */
-#define __libc_once_define(CLASS, NAME) \
-  CLASS __libc_lock_define_initialized(,NAME)
+
+struct __libc_once
+  {
+    __libc_lock_t lock;
+    int done;
+  };
+
+#define __libc_once_define(CLASS,NAME) \
+  CLASS struct __libc_once NAME = { MUTEX_INITIALZER, 0 }
+
 
 /* Call handler iff the first call.  */
 #define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
   do {									      \
-    if (!__libc_lock_trylock(ONCE_CONTROL) {				      \
+    __libc_lock_lock (ONCE_CONTROL.lock);				      \
+    if (!ONCE_CONTROL.done)						      \
       (INIT_FUNCTION) ();						      \
-      __libc_lock_lock(ONCE_CONTROL);					      \
-    }									      \
+    ONCE_CONTROL.done = 1;						      \
+    __libc_lock_unlock (ONCE_CONTROL.lock);				      \
   } while (0)
 
 #ifdef _LIBC
@@ -92,6 +102,10 @@ typedef struct __libc_lock_opaque__ __libc_lock_t;
    used as argument to __libc_cleanup_region_start.  */
 #define __libc_mutex_unlock __mutex_unlock
 #endif
+
+#define __libc_key_create(KEY,DEST) cthread_keycreate (KEY)
+#define __libc_setspecific(KEY,VAL) cthread_setspecific (KEY, VAL)
+void *__libc_getspecific (__libc_key_t key);
 
 /* XXX until cthreads supports recursive locks */
 #define __libc_lock_define_initialized_recursive __libc_lock_define_initialized
