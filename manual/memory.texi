@@ -96,8 +96,8 @@ class ``dynamic'', and there can never be a C variable whose value is
 stored in dynamically allocated space.  The only way to refer to
 dynamically allocated space is through a pointer.  Because it is less
 convenient, and because the actual process of dynamic allocation
-requires more computation time, programmers use dynamic allocation only
-when neither static nor automatic allocation will serve.
+requires more computation time, programmers generally use dynamic
+allocation only when neither static nor automatic allocation will serve.
 
 For example, if you want to allocate dynamically some space to hold a
 @code{struct foobar}, you cannot declare a variable of type @code{struct
@@ -224,6 +224,7 @@ The function @code{savestring} will copy a sequence of characters into
 a newly allocated null-terminated string:
 
 @smallexample
+@group
 char *
 savestring (const char *ptr, size_t len)
 @{
@@ -232,6 +233,7 @@ savestring (const char *ptr, size_t len)
   value[len] = '\0';
   return value;
 @}
+@end group
 @end smallexample
 
 The block that @code{malloc} gives you is guaranteed to be aligned so
@@ -401,10 +403,6 @@ calloc (size_t count, size_t eltsize)
   return value;
 @}
 @end smallexample
-
-We rarely use @code{calloc} today, because it is equivalent to such a
-simple combination of other features that are more often used.  It is a
-historical holdover that is not quite obsolete.
 
 @node Efficiency and Malloc
 @subsection Efficiency Considerations for @code{malloc}
@@ -1195,22 +1193,26 @@ Here is an example:
 @smallexample
 @group
 void
-add_string (struct obstack *obstack, char *ptr, int len)
+add_string (struct obstack *obstack, const char *ptr, int len)
 @{
   while (len > 0)
     @{
-      if (obstack_room (obstack) > len)
-        @{
-          /* @r{We have enough room: add everything fast.}  */
-          while (len-- > 0)
-            obstack_1grow_fast (obstack, *ptr++);
-        @}
-      else
+      int room = obstack_room (obstack);
+      if (room == 0)
         @{
           /* @r{Not enough room. Add one character slowly,}
              @r{which may copy to a new chunk and make room.}  */
           obstack_1grow (obstack, *ptr++);
           len--;
+        @}
+      else 
+        @{
+          if (room > len)
+            room = len;
+          /* @r{Add fast as much as we have room for.} */
+          len -= room;
+          while (room-- > 0)
+            obstack_1grow_fast (obstack, *ptr++);
         @}
     @}
 @}

@@ -390,9 +390,7 @@ arguments are not in the same order.
 @deftypefun {void *} bzero (void *@var{block}, size_t @var{size})
 This is a partially obsolete alternative for @code{memset}, derived from
 BSD.  Note that it is not as general as @code{memset}, because the only
-value it can store is zero.  Some machines have special instructions for
-zeroing memory, so @code{bzero} might be more efficient than
-@code{memset}.
+value it can store is zero.
 @end deftypefun
 
 @node String/Array Comparison, Collation Functions, Copying and Concatenation, String and Array Utilities
@@ -416,13 +414,8 @@ negative value indicates that the first string is ``less'' than the
 second, while a positive value indicates that the first string is 
 ``greater''.
 
-If you are using these functions only to check for equality, you might
-find it makes for a cleaner program to hide them behind a macro
-definition, like this:
-
-@smallexample
-#define str_eq(s1,s2)  (!strcmp ((s1),(s2)))
-@end smallexample
+The most common use of these functions is to check only for equality.
+This is canonically done with an expression like @w{@samp{! strcmp (s1, s2)}}.
 
 All of these functions are declared in the header file @file{string.h}.
 @pindex string.h
