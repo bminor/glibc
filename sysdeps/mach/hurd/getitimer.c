@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 /* XXX Temporary cheezoid implementation; see __setitmr.c.  */
 
 /* These are defined in __setitmr.c.  */
-extern struct mutex _hurd_itimer_lock;
+extern spin_lock_t _hurd_itimer_lock;
 extern struct itimerval _hurd_itimerval;
 extern struct timeval _hurd_itimer_started;
 
@@ -69,10 +69,10 @@ DEFUN(__getitimer, (which, value),
 
   /* Extract the current timer setting; and the time it was set, so we can
      calculate the time elapsed so far.  */
-  __mutex_lock (&_hurd_itimer_lock);
+  __spin_lock (&_hurd_itimer_lock);
   val = _hurd_itimerval;
   subtract_timeval (&elapsed, &_hurd_itimer_started);
-  __mutex_unlock (&_hurd_itimer_lock);
+  __spin_unlock (&_hurd_itimer_lock);
 
   if ((val.it_value.tv_sec | val.it_value.tv_usec) != 0)
     {
