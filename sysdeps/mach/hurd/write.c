@@ -26,48 +26,8 @@ ssize_t
 DEFUN(__write, (fd, buf, nbytes),
       int fd AND CONST PTR buf AND size_t nbytes)
 {
-  error_t err;
-  mach_msg_type_number_t wrote;
-  int noctty;
-
-#ifdef notyet
-  struct _hurd_sigstate *ss
-    = _hurd_thread_sigstate (__mach_thread_self ());
-
-  /* Don't use the ctty io port if we are orphaned, or are blocking or
-     ignoring SIGTTOU.  */
-  noctty = (_hurd_orphaned ||
-	    __sigismember (SIGTTOU, &ss->blocked) ||
-	    ss->actions[SIGTTOU].sa_handler == SIG_IGN);
-  __mutex_unlock (&ss->lock);
-#endif
-  
-  err = HURD_DPORT_USE
-    (fd,
-     ({
-     call:
-       err = __io_write (noctty ? port : ctty, buf, nbytes, -1, &wrote);
-       if (!noctty && ctty != MACH_PORT_NULL && err == EBACKGROUND)
-	 {
-#if 1
-	   abort ();
-#else
-	   int restart;
-	   __mutex_lock (&ss->lock);
-	   restart = ss->actions[SIGTTOU].sa_flags & SA_RESTART;
-	   _hurd_raise_signal (ss, SIGTTOU, 0); /* Unlocks SS->lock.  */
-	   if (restart)
-	     goto call;
-	   else
-	     err = EINTR;	/* XXX Is this right? */
-#endif
-	 }
-       err;
-     }));
-
-  if (err)
-    return __hurd_dfail (fd, err);
-
-  return wrote;
+  error_t err = HURD_FD_USE (fd, _hurd_fd_write (descriptor, buf, &nbytes));
+  return err ? __hurd_dfail (fd, err) : nbytes;
 }
+
 
