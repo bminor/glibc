@@ -27,6 +27,8 @@ an Alarm}.
 * Setting an Alarm::            Sending a signal after a specified time.
 * Sleeping::                    Waiting for a period of time.
 * Resource Usage::		Measuring various resources used.
+* Limits on Resources::		Specifying limits on resource usage.
+* Priority::			Reading or setting process run priority.
 @end menu
 
 @node Processor Time, Calendar Time,  , Date and Time
@@ -1159,6 +1161,8 @@ One way of getting usage figures for a particular child process is with
 the function @code{wait4}, which returns totals for a child when it
 terminates.  @xref{BSD Wait Functions}.
 
+@comment sys/resource.h
+@comment BSD
 @deftp {Data Type} {struct rusage}
 This data type records a collection usage amounts for various sorts of
 resources.  It has the following members, and possibly others:
@@ -1189,3 +1193,281 @@ Number of messages received.
 Number of signals received.
 @end table
 @end deftp
+
+An additional historical function for examining usage figures,
+@code{vtimes}, is supported but not documented here.  It is declared in
+@file{sys/vtimes.h}.
+
+@node Limits on Resources
+@section Limiting Resource Usage
+@cindex resource limits
+@cindex limits on resource usage
+@cindex usage limits
+
+You can specify limits for the resource usage of a process.  When the
+process tries to exceed a limit, it may get a signal, or the system call
+by which it tried to do so may fail, depending on the limit.  Each
+process initially inherits its limit values from its parent, but it can
+subsequently change them.
+
+@pindex sys/resource.h
+The symbols in this section are defined in @file{sys/resource.h}.
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int getrlimit (int @var{resource}, struct rlimit *@var{rlp})
+Read the current value and the maximum value of resource @var{resource}
+and store them in @code{*@var{rlp}}.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+only possible @code{errno} error condition is @code{EFAULT}.
+@end deftypefun
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int setrlimit (int @var{resource}, struct rlimit *@var{rlp})
+Store the current value and the maximum value of resource @var{resource}
+in @code{*@var{rlp}}.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error condition is possible:
+
+@table @code
+@item EPERM
+You tried to change the maximum permissible limit value,
+but you don't have privileges to do so.
+@end table
+@end deftypefun
+
+@comment sys/resource.h
+@comment BSD
+@deftp {Data Type} {struct rlimit}
+This structure is used with @code{getrlimit} to receive limit values,
+and with @code{setrlimit} to specify limit values.  It has two fields:
+
+@table @code
+@item rlim_cur
+The current value of the limit in question.
+
+@item rlim_max
+The maximum permissible value of the limit in question.  You cannot set
+the current value of the limit to a larger number than this maximum.
+Only the super user can change the maximum permissible value.
+@end table
+
+In @code{getrlimit}, the structure is an output; it receives the current
+values.  In @code{setrlimit}, it specifies the new values.
+@end deftp
+
+Here is a list of resources that you can specify a limit for.
+Those that are sizes are measured in bytes.
+
+@table @code
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_CPU
+@vindex RLIMIT_CPU
+The maximum amount of cpu time the process can use.  If it runs for
+longer than this, it gets a signal: @code{SIGXCPU}.  The value is
+measured in seconds.  @xref{Nonstandard Signals}.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_FSIZE
+@vindex RLIMIT_FSIZE
+The maximum size of file the process can create.  Trying to write a
+larger file causes a signal: @code{SIGXFSZ}.  @xref{Nonstandard
+Signals}.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_DATA
+@vindex RLIMIT_DATA
+The maximum size of data memory for the process.  If the process tries
+to allocate data memory beyond this amount, the allocation function
+fails.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_STACK
+@vindex RLIMIT_STACK
+The maximum stack size for the process.  If the process tries to extend
+its stack past this size, it gets a @code{SIGSEGV} signal.
+@xref{Program Error Signals}.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_CORE
+@vindex RLIMIT_CORE
+The maximum size core file that this process can create.  If the process
+terminates and a core file is made, and this maximum size is not enough,
+the core file is truncated.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_RSS
+@vindex RLIMIT_RSS
+The maximum amount of physical memory that this process should get.
+This parameter is a guide for the system's scheduler and memory
+allocator; the system may give the process more memory when there is a
+surplus.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_OPEN_FILES
+@vindex RLIMIT_OPEN_FILES
+The maximum number of files that the process can open.
+If it tries to open more files than this, it gets error code
+@code{EMFILE}.  @xref{Error Codes}.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIM_NLIMITS
+@vindex RLIM_NLIMITS
+The number of different resource limits.  Any valid @var{resource}
+operand must be less than @code{RLIM_NLIMITS}.
+@end table
+
+@comment sys/resource.h
+@comment BSD
+@defvr Constant int RLIM_INFINITY
+This constant stands for a value of ``infinity'' when supplied as
+the limit value in @code{setrlimit}.
+@end defvr
+
+@c ??? Someone want to finish these?
+Two historical functions for setting resource limits, @code{ulimit} and
+@code{vlimit}, are not documented here.  The latter is declared in
+@file{sys/vlimit.h} and comes from BSD.
+
+@node Priority
+@section Process Priority
+@cindex process priority
+@cindex priority of a process
+
+@pindex sys/resource.h
+When several processes try to run, their respective priorities determine
+what share of the CPU each process gets.  This section describes how you
+can read and set the priority of a process.  All these functions and
+macros are declared in @file{sys/resource.h}.
+
+The range of valid priority values depends on the operating system, but
+typically it runs from @code{-20} to @code{20}.  A lower priority value
+means the process runs more often.  These constants describe the range of
+priority values:
+
+@table @code
+@comment sys/resource.h
+@comment BSD
+@item PRIO_MIN
+@vindex PRIO_MIN
+The smallest valid priority value.
+
+@comment sys/resource.h
+@comment BSD
+@item PRIO_MAX
+@vindex PRIO_MAX
+The smallest valid priority value.
+@end table
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int getpriority (int @var{class}, int @var{id})
+Read the priority of a class of processes; @var{class} and @var{id}
+specify which ones (see below).
+
+@c ??? What happens if class and id specify several processes
+@c ??? whose priorities differ?
+
+The return value is the priority value on success, and @code{-1} on
+failure.  The following @code{errno} error condition are possible for
+this function:
+
+@table @code
+@item ESRCH
+The combination of @var{class} and @var{id} does not match any existing
+process.
+
+@item EINVAL
+The value of var{class} is not valid.
+@end table
+
+When the return value is @code{-1}, it could indicate failure, or it
+could be the priority value.  The only way to make certain is to set
+@code{errno = 0} before calling @code{getpriority}, then use @code{errno
+!= 0} afterward as the criterion for failure:
+@end deftypefun
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int setpriority (int @var{class}, int @var{id}, int @var{priority})
+Read the priority of a class of processes; @var{class} and @var{id}
+specify which ones (see below).
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error condition are defined for this function:
+
+@table @code
+@item ESRCH
+The combination of @var{class} and @var{id} does not match any existing
+process.
+
+@item EINVAL
+The value of var{class} is not valid.
+
+@item EPERM
+You tried to set the priority of some other user's process, and you
+don't have privileges for that.
+
+@item EACCES
+You tried to lower the priority of a process, and you don't have
+privileges for that.
+@end table
+@end deftypefun
+
+The arguments @var{class} and @var{id} together specify a set of
+processes you are interested in.  These are the possible values for
+@var{class}:
+
+@table @code
+@comment sys/resource.h
+@comment BSD
+@item PRIO_PROCESS
+@vindex PRIO_PROCESS
+Read or set the priority of one process.  The argument @var{id} is a
+process ID.
+
+@comment sys/resource.h
+@comment BSD
+@item PRIO_PGRP
+@vindex PRIO_PGRP
+Read or set the priority of one process group.  The argument @var{id} is
+a process group ID.
+
+@comment sys/resource.h
+@comment BSD
+@item PRIO_USER
+@vindex PRIO_USER
+Read or set the priority of one user's processes.  The argument @var{id}
+is a user ID.
+@end table
+
+If the argument @var{id} is 0, it stands for the current process,
+current process group, or the current user, according to @var{class}.
+
+@c ??? I don't know where we should say this comes from.
+@deftypefun int nice (int @var{increment})
+Increment the priority of the current process by @var{increment}.
+The return value is not meaningful.
+@c ??? What is it in GNU libc?
+
+Here is an equivalent definition for @code{nice}:
+
+@example
+int
+nice (int increment)
+@{
+  int old = getpriority (PRIO_PROCESS, 0);
+  setpriority (PRIO_PROCESS, 0, old + increment);
+@}
+@end example
