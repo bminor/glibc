@@ -1,3 +1,17 @@
+1998-03-12 14:24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dlerror.c (last_object_name): Removed.
+	(dlerror): Don't use last_object_name.
+	(_dl_error_run): Omit second argument to _dl_catch_error.
+	* elf/dl-error.c (struct catch): Remove objname member.
+	(_dl_signal_error): Construct string including objname when given.
+	(_dl_catch_error): Remove objname handling.
+	* elf/link.h (_dl_catch_error): Fix prototype and comment.
+	* elf/rtld.c (dl_main): Call _dl_catch_error correctly.
+	* elf/dl-deps.c (_dl_map_objet_deps): Likewise.
+	* nss/nsswitch.c (nss_dlerror_run): Likewise.
+	[Corrects PR libc/501].
+
 1998-03-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c (dl_main): Install link maps for preloaded objects
