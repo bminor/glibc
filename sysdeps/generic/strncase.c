@@ -32,17 +32,16 @@ DEFUN(strncasecmp, (s1, s2, n),
   register CONST unsigned char *p2 = (CONST unsigned char *) s2;
   unsigned char c1, c2;
 
-  if (p1 == p2)
+  if (p1 == p2 || n == 0)
     return 0;
 
-  while (n > 0)
+  do
     {
-      c1 = tolower(*p1++);
-      c2 = tolower(*p2++);
+      c1 = tolower (*p1++);
+      c2 = tolower (*p2++);
       if (c1 == '\0' || c1 != c2)
 	return c1 - c2;
-      n--;
-    }
+    } while (--n > 0);
 
   return c1 - c2;
 }

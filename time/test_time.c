@@ -100,7 +100,17 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
     fputs (buffer, stdout);
     strftime (buffer, SIZE, "The time is %I:%M %p.\n", loctime);
     fputs (buffer, stdout);
+
+    loctime->tm_year = 72;
+    loctime->tm_mon = 8;
+    loctime->tm_mday = 12;
+    loctime->tm_hour = 20;
+    loctime->tm_min = 49;
+    loctime->tm_sec = 05;
+    curtime = mktime (loctime);
+    strftime (buffer, SIZE, "%D %T was %w the %jth.\n", loctime);
+    fputs (buffer, stdout);
   }
 
-  exit(lose ? EXIT_FAILURE : EXIT_SUCCESS);
+  return (lose ? EXIT_FAILURE : EXIT_SUCCESS);
 }
