@@ -253,7 +253,8 @@ reauth_dtable (void)
 	     with the newly reauthenticated port.  */
 
 	  if (d->ctty.port != MACH_PORT_NULL &&
-	      ! __io_reauthenticate (d->ctty.port, _hurd_pid) &&
+	      ! __io_reauthenticate (d->ctty.port,
+				     ref, MACH_MSG_TYPE_MAKE_SEND_ONCE) &&
 	      ! __USEPORT (AUTH, __auth_user_authenticate
 			   (port,
 			    d->ctty.port,
