@@ -24,5 +24,5 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(tcdrain, (fd), int fd)
 {
-  return __ioctl (fd, TIOCDRAIN, NULL);
+  return __ioctl (fd, TIOCDRAIN);
 }

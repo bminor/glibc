@@ -18,6 +18,16 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <stddef.h>
+#include <termios.h>
+
+/* These are defined both in termbits.h and in ioctls.h.
+   They should have the same values, but perhaps not written the same way.  */
+#undef ECHO
+#undef MDMBUF
+#undef TOSTOP
+#undef FLUSHO
+#undef PENDIN
+#undef NOFLSH
 #include <sys/ioctl.h>
 
 /* Put the state of FD into *TERMIOS_P.  */

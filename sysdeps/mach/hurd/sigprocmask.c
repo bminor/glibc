@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <signal.h>
 #include <hurd.h>
 #include <hurd/signal.h>
+#include <hurd/msg.h>
 
 
 /* If SET is not NULL, modify the current set of blocked signals
