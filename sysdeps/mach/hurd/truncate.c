@@ -22,10 +22,10 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <fcntl.h>
 
-/* Truncate PATH to LENGTH bytes.  */
+/* Truncate FILE_NAME to LENGTH bytes.  */
 int
-DEFUN(truncate, (path, length),
-      CONST char *path AND off_t length)
+DEFUN(truncate, (file_name, length),
+      CONST char *file_name AND off_t length)
 {
   error_t err;
   file_t file = __file_name_lookup (file_name, O_WRITE, 0);
