@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,10 +30,11 @@ DEFUN_VOID(getlogin)
   static char login[1024];
   error_t err;
 
-  if (err = __proc_getlogin (_hurd_proc, login))
+  if (err = _HURD_PORT_USE (&_hurd_proc, __proc_getlogin (port, login)))
     {
-      errno = __hurd_errno (err);
+      errno = err;
       return NULL;
     }
+
   return login;
 }
