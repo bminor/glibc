@@ -49,7 +49,7 @@ static void start1();
 
 #ifndef	HAVE__start
 
-#ifdef __GNUC__
+#if !defined (NO_UNDERSCORES) && defined (__GNUC__)
 /* Declare _start with an explicit assembly symbol name of `start'
    (note no leading underscore).  This is the name vendor crt0.o's
    tend to use, and thus the name most linkers expect.  */
