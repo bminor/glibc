@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -34,10 +34,9 @@ get_privileged_ports (host_priv_t *host_priv_ptr, device_t *device_master_ptr)
       if (_hurd_ports)
 	/* We have gotten some initial ports, so perhaps
 	   we have a proc server to talk to.  */
-	err = HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
-			     __proc_getprivports (port,
-						  &_hurd_host_priv,
-						  &_hurd_device_master));
+	err = __USEPORT (PROC, __proc_getprivports (port,
+						    &_hurd_host_priv,
+						    &_hurd_device_master));
       else
 	return MACH_SEND_INVALID_DEST;
 
