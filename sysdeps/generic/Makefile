@@ -30,17 +30,17 @@ bsdmath_dirs := $(bsdmath_dirs) common common_source
 
 endif
 
-ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/endian.h))))" \
+ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bytesex.h))))" \
      "$(sysdep_dir)/stub/"
 
-$(common-objpfx)endian.h: $(common-objpfx)det_endian
+$(common-objpfx)bytesex.h: $(common-objpfx)det_endian
 	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 
 $(common-objpfx)det_endian: $(sysdep_dir)/generic/det_endian.c
 	$(native-compile)
 
-before-compile := $(before-compile) $(common-objpfx)endian.h
+before-compile := $(before-compile) $(common-objpfx)bytesex.h
 
 endif
 
