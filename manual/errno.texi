@@ -671,11 +671,13 @@ The experienced user will know what is wrong.
 @comment GNU: You really blew it this time
 @deftypevr Macro int EGREGIOUS
 You did @strong{what}?
+@end deftypevr
 
 @comment errno.h
 @comment GNU: Computer bought the farm
 @deftypevr Macro int EIEIO
 Go home and have a glass of warm, dairy-fresh milk.
+@end deftypevr
 
 @comment errno.h
 @comment GNU: Gratuitous error
