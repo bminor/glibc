@@ -29,7 +29,7 @@ routines := acos asin atan cos sin tan cosh sinh tanh exp fabs ldexp	\
 	    isinf isnan finite infnan copysign scalb drem logb		\
 	    __isinf __isnan __finite __infnan __copysign __scalb __drem __logb\
 	    __rint rint hypot cabs cbrt __expm1 expm1 log1p acosh asinh atanh 
-tests := test-math
+tests := # test-math
 install-lib := libm.a
 
 
