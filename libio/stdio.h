@@ -488,7 +488,7 @@ typedef __off64_t off64_t;
 
 
 #ifndef __USE_FILE_OFFSET64
-# ifdef __USE_UNIX98
+# ifdef __USE_LARGEFILE
 /* Seek to a certain position on STREAM.  */
 extern int fseeko __P ((FILE *__stream, __off_t __off, int __whence));
 /* Return the current position of STREAM.  */
@@ -502,7 +502,7 @@ extern int fgetpos __P ((FILE *__restrict __stream,
 extern int fsetpos __P ((FILE *__stream, __const fpos_t *__pos));
 #else
 # ifdef __REDIRECT
-#  ifdef __USE_UNIX98
+#  ifdef __USE_LARGEFILE
 extern int __REDIRECT (fseeko,
 		       __P ((FILE *__stream, __off64_t __off, int __whence)),
 		       fseeko64);
@@ -513,7 +513,7 @@ extern int __REDIRECT (fgetpos, __P ((FILE *__restrict __stream,
 extern int __REDIRECT (fsetpos, __P ((FILE *__stream, __const fpos_t *__pos)),
 		       fsetpos64);
 # else
-#  ifdef __USE_UNIX98
+#  ifdef __USE_LARGEFILE
 #   define fseeko fseeko64
 #   define ftello ftello64
 #  endif
@@ -523,10 +523,8 @@ extern int __REDIRECT (fsetpos, __P ((FILE *__stream, __const fpos_t *__pos)),
 #endif
 
 #ifdef __USE_LARGEFILE64
-# ifdef __USE_UNIX98
 extern int fseeko64 __P ((FILE *__stream, __off64_t __off, int __whence));
 extern __off64_t ftello64 __P ((FILE *__stream));
-# endif
 extern int fgetpos64 __P ((FILE *__restrict __stream,
 			   fpos64_t *__restrict __pos));
 extern int fsetpos64 __P ((FILE *__stream, __const fpos64_t *__pos));
