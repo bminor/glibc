@@ -438,9 +438,7 @@ cd $(@D); $(HOST_CC) $(native-CFLAGS) $(<:$(common-objpfx)%=%) -o $(@F)
 endef
 
 # We always want to use configuration -D switches.
-# Search $(sysincludedir) first in case GCC searches /usr/local/include and
-# that contains an old (or abortive) GNU libc installation.
-native-CFLAGS = $(config-defines) -I$(sysincludedir)
+native-CFLAGS = $(config-defines)
 
 # Support the GNU standard name for this target.
 .PHONY: check
