@@ -18,8 +18,7 @@
 
 ifeq ($(subdir),io)
 
-sysdep_routines := $(sysdep_routines) sys_stat sys_fstat \
-		   __utssys
+sysdep_routines := $(sysdep_routines) __utssys
 
 endif
 
