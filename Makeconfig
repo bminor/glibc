@@ -31,15 +31,18 @@ ifdef subdir
 .. := ../
 endif
 
-ifndef ARCH
-ifdef machine
 # If config.make exists, the source directory was configured,
 # so don't try to be clever and find another directory to build in.
-ifeq (,$(wildcard $(..)config.make))
+ifneq (,$(wildcard $(..)config.make))
+ARCH =
+machine =
+else	# Not configured.
+ifndef ARCH
+ifdef machine
 ARCH = $(machine)
-endif # config.make
 endif # machine
 endif # ARCH
+endif # config.make
 
 # Directory for object files and libc.a.  If this is not defined, the
 # object files live in the subdirectories where their sources live, and
