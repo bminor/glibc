@@ -38,7 +38,7 @@ Cambridge, MA 02139, USA.  */
 #if	__GNUC__ >= 2
 
  /* Get the compiler's limits.h, which defines all the ANSI constants.  */
- #define _LIBC_LIMITS_H		/* This tells it not to look for another.  */
+ #define _LIBC_LIMITS_H_	/* This tells it not to look for another.  */
  #include_next <limits.h>
 
 #else	/* Not GCC 2.  */
