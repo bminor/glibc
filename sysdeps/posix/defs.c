@@ -34,9 +34,9 @@ Cambridge, MA 02139, USA.  */
     {									      \
       _IOMAGIC,								      \
       NULL, NULL, NULL, NULL, 0,					      \
-      &(name)->__fileno, fd,						      \
+      (PTR) fd,								      \
       { readwrite, /* ... */ },						      \
-      { NULL, NULL, NULL, NULL },					      \
+      { NULL, NULL, NULL, NULL, NULL },					      \
       { NULL, NULL },							      \
       -1, -1,								      \
       (next),								      \

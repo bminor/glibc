@@ -81,8 +81,6 @@ FILE *
 DEFUN(fopen, (filename, mode), CONST char *filename AND CONST char *mode)
 {
   FILE *stream;
-  int fd;
-  PTR cookie;
   __io_mode m;
 
   if (filename == NULL)
@@ -98,21 +96,13 @@ DEFUN(fopen, (filename, mode), CONST char *filename AND CONST char *mode)
   if (stream == NULL)
     return NULL;
 
-  cookie = __stdio_open (filename, m, &fd);
-  if (cookie == NULL)
+  if (__stdio_open (filename, m, &stream->__cookie))
     {
-      if (fd < 0)
-	{
-	  int save = errno;
-	  (void) fclose (stream);
-	  errno = save;
-	  return NULL;
-	}
-      stream->__fileno = fd;
-      stream->__cookie = &stream->__fileno;
+      int save = errno;
+      (void) fclose (stream);
+      errno = save;
+      return NULL;
     }
-  else
-    stream->__cookie = cookie;
 
   stream->__mode = m;
 
