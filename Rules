@@ -122,4 +122,5 @@ dist: ../Make-dist
 
 # Convenient target to update all the generated source files.
 .PHONY: generated
+fo:=$(shell echo>&2 '+++generated: $(generated)')
 generated: $(generated)
