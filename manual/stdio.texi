@@ -1579,11 +1579,22 @@ The facilities of this section are declared in the header file
 @file{printf.h}.
 
 @menu
-* Registering New Conversions::  
-* Conversion Specifier Options::  
-* Defining the Output Handler::  
-* Printf Extension Example::    
+* Registering New Conversions::         Using @code{register_printf_function} 
+                                         to register a new output conversion.
+* Conversion Specifier Options::        The handler must be able to get
+                                         the options specified in the
+                                         template when it is called. 
+* Defining the Output Handler::         Defining the handler and arginfo
+                                         functions that are passed as arguments
+                                         to @code{register_printf_function}.  
+* Printf Extension Example::            How to define a @code{printf}
+                                         handler function. 
 @end menu
+
+@c the above menu may still need soe work.  Specifically, the second
+@c entry; maybe insert the followi g instead: Functions with information
+@c re: options appearing in an instance of the conversion specifier.
+@c --melissa 
 
 @strong{Portability Note:} The ability to extend the syntax of
 @code{printf} template strings is a GNU extension.  ANSI standard C has
@@ -3020,8 +3031,10 @@ specific to GNU.  Other systems or C implementations might or might not
 provide equivalent functionality.
 
 @menu
-* String Streams::              
-* Custom Streams::              
+* String Streams::              These functions allow you to do I/O to
+                                 a string or memory buffer.
+* Custom Streams::              Streams you can define with an arbitrary
+                                 input data source and/or output data sink.
 @end menu
 
 @node String Streams, Custom Streams,  , Other Kinds of Streams
@@ -3130,8 +3143,10 @@ arbitrary data source or writes output to an arbitrary data sink
 programmed by you.  We call these @dfn{custom streams}.
 
 @menu
-* Streams and Cookies::         
-* Hook Functions::              
+* Streams and Cookies::         The @dfn{cookie} records where to fetch or
+                                 store data that is read or written. 
+* Hook Functions::              How you should define the four @dfn{hook
+                                 functions} that a custom stream needs. 
 @end menu
 
 @node Streams and Cookies, Hook Functions,  , Custom Streams
