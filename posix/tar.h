@@ -105,8 +105,8 @@ Cambridge, MA 02139, USA.  */
 #define TMAGLEN	6
 
 /* Contents of the version field and its length.  */
-#define TVERSION"00"
-#define TVERSLEN 2
+#define TVERSION	"00"
+#define TVERSLEN	2
 
 
 #endif	/* tar.h */
