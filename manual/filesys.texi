@@ -125,11 +125,11 @@ pointer to an array at least @code{PATH_MAX} bytes long.
 This function is used to set the process's working directory to
 @var{filename}.
 
-The normal, successful return value from @code{chdir} is @code{0}.
-A value of @code{-1} is returned to indicate an error.  The @code{errno}
+The normal, successful return value from @code{chdir} is @code{0}.  A
+value of @code{-1} is returned to indicate an error.  The @code{errno}
 error conditions defined for this function are the usual file name
-syntax errors (@pxref{File Name Errors}).
-@c !!! also ENOTDIR
+syntax errors (@pxref{File Name Errors}), plus @code{ENOTDIR} if the
+file @var{filename} is not a directory.
 @end deftypefun
 
 
@@ -173,13 +173,13 @@ in the header file @file{dirent.h}.
 @comment POSIX.1
 @deftp {Data Type} {struct dirent}
 This is a structure type used to return information about directory
-entries.  It contains the following members:
+entries.  It contains the following fields:
 
 @table @code
 @item char *d_name
-This is the null-terminated file name component.
+This is the null-terminated file name component.  This is the only
+field you can count on in all POSIX systems.
 
-@c !!! POSIX.1 specifies only d_name member; others are BSD/GNU extensions
 @item ino_t d_fileno
 This is the file serial number.  For BSD compatibility, you can also
 refer to this member as @code{d_ino}.
@@ -307,7 +307,7 @@ The order in which files appear in a directory tends to be fairly
 random.  A more useful program would sort the entries (perhaps by
 alphabetizing them) before printing them; see @ref{Array Sort Function}
 
-@c !!! not documented: scandir, alphasort
+@c ??? not documented: scandir, alphasort
 
 @node Random Access Directory
 @subsection Random Access in a Directory Stream
@@ -697,10 +697,9 @@ directories and write permission is refused for one of them.
 
 @item EBUSY
 A directory named by @var{oldname} or @var{newname} is being used by
-the system in a way that prevents the renaming from working.  For example,
-a directory that is a mount point for a filesystem might have this
-problem.
-@c !!! also any process having the dir as its cwd
+the system in a way that prevents the renaming from working.  This includes
+directories that are mount points for filesystems, and directories
+that are the current working directories of processes.
 
 @item EEXIST
 The directory @var{newname} isn't empty.
@@ -851,8 +850,8 @@ Specifies the mode of the file.  This includes file type information
 (@pxref{Permission Bits}).
 
 @item ino_t st_ino
-The file serial number.
-@c !!! explain what it means
+The file serial number, which distinguishes this file from all other
+files on the same device.
 
 @item dev_t st_dev
 Identifies the device containing the file.  The @code{st_ino} and
@@ -1042,8 +1041,6 @@ All of the symbols listed in this section are defined in the header file
 The following predicate macros test the type of a file, given the value
 @var{m} which is the @code{st_mode} field returned by @code{stat} on
 that file:
-@c !!! it might not be a file; with fstat, could be a non-file socket or
-@c a pipe.
 
 @comment sys/stat.h
 @comment POSIX
@@ -1414,8 +1411,6 @@ guaranteed.
 practice.  It is not only nonportable, it also requires everyone who
 reads your program to remember what the bits mean.  To make your
 program clean, use the symbolic names.
-@c !!! I don't know how useful it is to tell people not to depend on the
-@c values.  0777 is programmed into many brains.
 
 @node Access Permission
 @subsection How Your Access to a File is Decided
@@ -1532,9 +1527,7 @@ If the @var{filename} names a symbolic link, @code{chmod} changes the
 permission of the file pointed to by the link, not those of the link
 itself.  There is actually no way to set the mode of a link, which is
 always @code{-1}.
-@c !!! no, it's not.  it is 0777&~umask for umask at time of creation.
-@c better to say the permission bits on a symlink are random and meaningless.
-@c actually, i don't know if the symlink being unreadable matters; ask mib.
+@c I verified this experimentally.  It does not depend on umask. -- rms.
 
 This function returns @code{0} if successful and @code{-1} if not.  In
 addition to the usual file name syntax errors (@pxref{File Name
@@ -1688,8 +1681,6 @@ Argument that means, test for existence of the file.
 
 @node File Times
 @subsection File Times
-
-@c !!!! mib has lots to say about this section.
 
 @cindex file access time
 @cindex file modification time
