@@ -28,6 +28,27 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(__setpgrp, (pid, pgid), pid_t pid AND pid_t pgid)
 {
-  error_t err = __USEPORT (PROC, __proc_setpgrp (port, pid, pgid));
-  return err ? __hurd_fail (err) : 0;
+  error_t err;
+  unsigned int stamp;
+
+  stamp = _hurd_pids_changed_stamp; /* Atomic fetch.  */
+
+  if (err = __USEPORT (PROC, __proc_setpgrp (port, pid, pgid)))
+    return __hurd_fail (err);
+
+  if (pid == 0 || pid == _hurd_pid)
+    /* Synchronize with the signal thread to make sure we have
+       received and processed proc_newids before returning to the user.  */
+    while (_hurd_pids_changed_stamp == stamp)
+      {
+#ifdef noteven
+	/* XXX we have no need for a mutex, but cthreads demands one.  */
+	__condition_wait (&_hurd_pids_changed_sync, NULL);
+#else
+	swtch();
+#endif
+      }
+
+  return 0;
+
 }
