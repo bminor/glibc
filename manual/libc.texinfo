@@ -137,7 +137,8 @@ Indices
 
 @c @set lgpl-appendix
 @c node Copying, Concept Index, Maintenance, Top
-@include lgpl.texinfo
+@c @include lgpl.texinfo
+@include copying.texinfo
 
 @include index-cp.texi
 
