@@ -10,13 +10,12 @@ do such @dfn{non-local exits} using the @code{setjmp} and @code{longjmp}
 functions.
 
 @menu
-* Intro to Non-Local Exits::  An overview of how and when to use
-					 these facilities.
-* Functions for Non-Local Exits::  Details of the interface.
+* Intro: Non-Local Intro.        When and how to use these facilities.
+* Details: Non-Local Details::   Functions for nonlocal exits.
 * Non-Local Exits and Signals::  Portability issues.
 @end menu
 
-@node Intro to Non-Local Exits, Functions for Non-Local Exits,  , Non-Local Exits
+@node Non-Local Intro, Non-Local Details,  , Non-Local Exits
 @section Introduction to Non-Local Exits
 
 As an example of a situation where a non-local exit can be useful,
@@ -86,8 +85,8 @@ else
   @dots{}
 @end example
 
-@node Functions for Non-Local Exits, Non-Local Exits and Signals, Intro to Non-Local Exits, Non-Local Exits
-@section Functions for Non-Local Exits
+@node Non-Local Details, Non-Local Exits and Signals, Non-Local Intro, Non-Local Exits
+@section Details of Non-Local Exits
 
 Here are the details on the functions and data structures used for
 performing non-local exits.  These facilities are declared in
@@ -168,8 +167,8 @@ function containing the @code{setjmp} call that have been changed since
 the call to @code{setjmp} are indeterminate, unless you have declared
 them @code{volatile}.
 
-@node Non-Local Exits and Signals,  , Functions for Non-Local Exits, Non-Local Exits
-@section Non-Local Exits and Blocked Signals
+@node Non-Local Exits and Signals,, Non-Local Details, Non-Local Exits
+@section Non-Local Exits and Signals
 
 In BSD Unix systems, @code{setjmp} and @code{longjmp} also save and
 restore the set of blocked signals; see @ref{Blocking Signals}.  However,
