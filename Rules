@@ -104,7 +104,7 @@ subdir_echo-headers: echo-headers
 .PHONY: subdir_echo-distinfo
 subdir_echo-distinfo:
 	@echo $(addprefix +header+,$(headers)) \
-	      $(addprefix +nodist+,$(generated))
+	      $(addprefix +nodist+,$(generated) $(dont_distribute))
 
 .PHONY: subdir_install
 subdir_install: install-no-libc.a
@@ -114,6 +114,7 @@ subdir_TAGS: TAGS
 
 # Make the distribution tarfile for the parent makefile.
 export distribute := $(distribute)
+export dont_distribute := $(dont_distribute)
 export generated := $(generated)
 .PHONY: subdir_dist dist
 subdir_dist: dist
