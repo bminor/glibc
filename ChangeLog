@@ -1,3 +1,10 @@
+2002-02-02  Paul Eggert  <eggert@twinsun.com>
+
+	* src/mktime.c [defined DEBUG && STDC_HEADERS]: Include <string.h>.
+	(__mktime_internal): If no tm_isdst is requested, prefer solutions
+	with tm_isdst > 0 when the requested time falls within a
+	spring-forward gap.
+
 2002-02-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-origin.c (_dl_get_origin): Avoid writing
