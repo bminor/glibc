@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -13,13 +13,15 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #ifndef	_PRINTF_H
 
 #define	_PRINTF_H	1
 #include <features.h>
+
+__BEGIN_DECLS
 
 #define	__need_FILE
 #include <stdio.h>
@@ -30,19 +32,19 @@ Cambridge, MA 02139, USA.  */
 
 
 struct printf_info
-  {
-    int prec;				/* Precision.  */
-    int width;				/* Width.  */
-    char spec;				/* Format letter.  */
-    unsigned int is_long_double:1; 	/* L flag.  */
-    unsigned int is_short:1;		/* h flag.  */
-    unsigned int is_long:1;		/* l flag.  */
-    unsigned int alt:1;			/* # flag.  */
-    unsigned int space:1;		/* Space flag.  */
-    unsigned int left:1;		/* - flag.  */
-    unsigned int showsign:1;		/* + flag.  */
-    char pad;				/* Padding character.  */
-  };
+{
+  int prec;			/* Precision.  */
+  int width;			/* Width.  */
+  char spec;			/* Format letter.  */
+  unsigned int is_long_double:1;/* L flag.  */
+  unsigned int is_short:1;	/* h flag.  */
+  unsigned int is_long:1;	/* l flag.  */
+  unsigned int alt:1;		/* # flag.  */
+  unsigned int space:1;		/* Space flag.  */
+  unsigned int left:1;		/* - flag.  */
+  unsigned int showsign:1;	/* + flag.  */
+  char pad;			/* Padding character.  */
+};
 
 
 /* Type of a printf specifier-handler function.
@@ -51,21 +53,20 @@ struct printf_info
    Arguments can be read from ARGS.
    The function should return the number of characters written,
    or -1 for errors.  */
-   
-typedef int EXFUN(printf_function, (FILE *__stream,
-				    CONST struct printf_info *__info,
-				    va_list *__args));
-typedef int EXFUN(printf_arginfo_function, (CONST struct printf_info *__info,
-					    size_t __n,
-					    int *__argtypes));
+
+typedef int printf_function __P ((FILE * __stream,
+				  __const struct printf_info * __info,
+				  va_list * __args));
+typedef int printf_arginfo_function __P ((__const struct printf_info * __info,
+					  size_t __n,
+					  int *__argtypes));
 
 /* Register FUNC to be called to format SPEC specifiers.
    ARGINFO, if not NULL, is a function used by `parse_printf_format'
    to determine how many arguments a SPEC conversion requires,
    and what their types are.  */
-extern int EXFUN(register_printf_function,
-		 (int __spec AND printf_function __func,
-		  printf_arginfo_function __arginfo));
+extern int register_printf_function __P ((int __spec AND printf_function __func,
+					printf_arginfo_function __arginfo));
 
 /* Parse FMT, and fill in N elements of ARGTYPES with the
    types needed for the conversions FMT specifies.  Returns
@@ -78,9 +79,9 @@ extern int EXFUN(register_printf_function,
    array it is passed with the types of the arguments it wants, and return
    the number of arguments it wants.  */
 
-extern size_t EXFUN(parse_printf_format, (CONST char *__fmt,
-					  size_t __n,
-					  int *__argtypes));
+extern size_t parse_printf_format __P ((__const char *__fmt,
+					size_t __n,
+					int *__argtypes));
 
 /* Codes returned by `parse_printf_format' for basic types.
 
@@ -88,15 +89,15 @@ extern size_t EXFUN(parse_printf_format, (CONST char *__fmt,
    Users can add new values after PA_LAST for their own types.  */
 
 enum
-  {				/* C type: */
-    PA_INT,			/* int */
-    PA_CHAR,			/* int, cast to char */
-    PA_STRING,			/* const char *, a '\0'-terminated string */
-    PA_POINTER,			/* void * */
-    PA_FLOAT,			/* float */
-    PA_DOUBLE,			/* double */
-    PA_LAST
-  };
+{				/* C type: */
+  PA_INT,			/* int */
+  PA_CHAR,			/* int, cast to char */
+  PA_STRING,			/* const char *, a '\0'-terminated string */
+  PA_POINTER,			/* void * */
+  PA_FLOAT,			/* float */
+  PA_DOUBLE,			/* double */
+  PA_LAST
+};
 
 /* Flag bits that can be set in a type returned by `parse_printf_format'.  */
 #define	PA_FLAG_MASK		0xff00
@@ -107,4 +108,6 @@ enum
 #define	PA_FLAG_PTR		(1 << 11)
 
 
-#endif	/* printf.h  */
+__END_DECLS
+
+#endif /* printf.h  */
