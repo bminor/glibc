@@ -101,7 +101,7 @@ DEFUN(__ioctl, (fd, request),
 	  break;
 	case MACH_SEND_INVALID_REPLY:
 	case MACH_RCV_INVALID_NAME:
-	  __mig_dealloc_reply_port ();
+	  __mig_dealloc_reply_port (m->msgh_local_port);
 	default:
 	  return err;
 	}
