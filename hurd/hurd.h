@@ -109,7 +109,6 @@ static inline void
 _hurd_port_locked_set (struct _hurd_port *port, mach_port_t newport)
 {
   mach_port_t old;
-  __spin_lock (&port->lock);
   if (port->user_dealloc == NULL)
     old = port->port;
   else
@@ -153,38 +152,89 @@ extern mach_port_t *_hurd_init_dtable;
 extern size_t _hurd_init_dtablesize;
 
 /* File descriptor table.  */
+struct _hurd_fd
+  {
+    struct _hurd_port port;
+    int flags;			/* fcntl flags; locked by port.lock.  */
+
+    /* Normal port to the ctty.  Also locked by port.lock.
+       (The ctty.lock is only ever used when the port.lock is held.)  */
+    struct _hurd_port ctty;
+  };
+
 struct _hurd_dtable
   {
     int size;			/* Number of elts in `d' array.  */
-    /* Individual descriptors are not locked.  It is up to the user to
-       synchronize descriptor operations on a single descriptor.  */
-    struct
-      {
-	struct _hurd_port port;
-	/* Locked by port.lock.  */
-	int isctty;		/* Is a port to the controlling tty.  */
-	int flags;		/* fcntl flags.  */
-      } *d;
+
+    /* Uses of individual descriptors are not locked.  It is up to the user
+       to synchronize descriptor operations on a single descriptor.  */
+
+    struct _hurd_fd *d;
   };
 extern struct _hurd_dtable _hurd_dtable;
+
 extern struct mutex _hurd_dtable_lock; /* Locks _hurd_dtable.  */
 
-/* Allocate a new file descriptor and set it to PORT.  */
+/* If not NULL, pointed-to word is set when _hurd_dtable.d changes.
+   User who set `user_dealloc' should free the _hurd_dtable.d value
+   he used if his word is set when he is finished.
+   If NULL, the old value of _hurd_dtable.d is freed by the setter.  */
+int *_hurd_dtable_user_dealloc;
+
+static inline struct _hurd_dtable
+_hurd_dtable_use (int *dealloc)
+{
+  struct _hurd_dtable dtable;
+  __mutex_lock (&_hurd_dtable_lock);
+  _hurd_dtable_user_dealloc = dealloc;
+  dtable = _hurd_dtable;
+  __mutex_unlock (&_hurd_dtable_lock);
+  return dtable;
+}
+
+struct _hurd_dtable_resizes
+  {
+    size_t n;
+    void (*free) (void *);
+    void *terminator;
+  };
+extern const struct _hurd_dtable_resizes _hurd_dtable_resizes;
+
+static inline void
+_hurd_dtable_done (struct _hurd_dtable dtable, int *dealloc)
+{
+  __mutex_lock (&_hurd_dtable_lock);
+  if (_hurd_dtable_user_dealloc == dealloc)
+    _hurd_dtable_user_dealloc = NULL;
+  __mutex_unlock (&_hurd_dtable_lock);
+  if (*dealloc)
+    /* _hurd_dtable_resizes is a symbol set.
+       setdtablesize.c gives it one element: free.
+       If setdtablesize is not linked in, *DEALLOC
+       will never get set, so we will never get here.
+       This hair avoids linking in free if we don't need it.  */
+    (*_hurd_dtable_resizes.free) (dtable);
+}
+
+
+/* Allocate a new file descriptor and set it to PORT.
+   If the table is full, deallocate PORT, set errno, and return -1.  */
 static inline int
-_hurd_dalloc (io_t port, int flags)
+_hurd_dalloc (io_t port, io_t ctty, int flags)
 {
   int i;
   __mutex_lock (&hurd_dtable_lock);
   for (i = 0; i < _hurd_dtable.size; ++i)
     {
-      __typeof (&_hurd_dtable.d[i]) d = &_hurd_dtable.d[i];
+      struct _hurd_fd *d = &_hurd_dtable.d[i];
       __spin_lock (&d->port.lock);
       if (d->port.port == MACH_PORT_NULL)
 	{
-	  d->isctty = -1;
-	  d->flags = flags;
 	  d->port.port = port;
 	  d->port.user_dealloc = NULL;
+	  d->ctty.port = ctty;
+	  d->ctty.user_dealloc = NULL;
+	  d->flags = flags;
 	  __spin_unlock (&d->port.lock);
 	  __mutex_unlock (&hurd_dtable_lock);
 	  return i;
@@ -193,46 +243,73 @@ _hurd_dalloc (io_t port, int flags)
     }
   __mutex_unlock (&hurd_dtable_lock);
   __mach_port_deallocate (__mach_task_self (), port);
+  __mach_port_deallocate (__mach_task_self (), ctty);
   errno = EMFILE;
   return -1;
 }
 
-/* Returns the port cell for FD, locked.  */
-static inline struct _hurd_port *
-_hurd_dport (int fd)
+/* Returns the descriptor cell for FD in DTABLE, locked.  */
+static inline struct _hurd_fd *
+_hurd_dtable_fd (int fd, struct _hurd_dtable dtable)
 {
-  struct _hurd_port *port;
-  __mutex_lock (&_hurd_dtable.lock);
-  if (fd < 0 || fd >= _hurd_dtable.size ||
-      _hurd_dtable.d[fd].server == MACH_PORT_NULL)
-    {
-      errno = EBADF;
-      port = NULL;
-    }
+  if (fd < 0 || fd >= dtable.size)
+    return NULL;
   else
     {
-      port = &_hurd_dtable.d[fd].port;
-      __spin_lock (&port->lock);
+      struct _hurd_fd *cell = &dtable.d[fd];
+      __spin_lock (&cell->port.lock);
+      if (cell->port.port == MACH_PORT_NULL)
+	{
+	  __spin_unlock (&cell->port.lock);
+	  return NULL;
+	}
+      return cell;
     }
-  __mutex_unlock (&_hurd_dtable.lock);
-  return port;
 }
 
-/* Evaluate EXPR with the variable `port' bound to the port to FD.  */
+struct _hurd_fd_user
+  {
+    struct _hurd_dtable dtable;
+    struct _hurd_fd *d;
+  };
+
+/* Returns the descriptor cell for FD, locked.  */
+static inline struct _hurd_fd_user
+_hurd_fd (int fd, int *dealloc)
+{
+  struct _hurd_fd_user d;
+  d.dtable = _hurd_dtable_use (dealloc);
+  d.d = _hurd_dtable_fd (fd, dtable);
+  if (d.d == NULL)
+    _hurd_dtable_done (d.dtable, dealloc);
+  return d;
+}
+
+static inline void
+_hurd_fd_done (struct _hurd_fd_user d, int *dealloc)
+{
+  _hurd_dtable_done (d->dtable, dealloc);n
+}
+
+/* Evaluate EXPR with the variable `port' bound to the port to FD,
+   and `ctty' bound to the ctty port.  */
+   
 #define	_HURD_DPORT_USE(fd, expr)					      \
-  ({ struct _hurd_port *__port = _hurd_dport (fd);			      \
-     if (__port == NULL)						      \
-       {								      \
-	 errno = EBADF;							      \
-	 -1;								      \
-       }								      \
+  ({ int __dealloc_dt;							      \
+     struct _hurd_fd_user __d = _hurd_fd (fd, &__dealloc_dt);		      \
+     if (__cell.d == NULL)						      \
+       EBADF;								      \
      else								      \
        {								      \
-	 int __dealloc = 0;						      \
-	 io_t port = _hurd_port_locked_get (__port, &__dealloc);	      \
+	 int __dealloc = 0, __dealloc_ctty = 0;				      \
+	 io_t port = _hurd_port_locked_get (&__d.d->port, &__dealloc);	      \
+	 io_t ctty = _hurd_port_locked_get (&__d.d->ctty, &__dealloc_ctty);   \
 	 __typeof (expr) __result;					      \
 	 __result = (expr);						      \
-	 _hurd_port_free (port, &__dealloc);				      \
+	 _hurd_port_free (&__d.d->port, port, &__dealloc);		      \
+	 if (ctty != MACH_PORT_NULL)					      \
+	   _hurd_port_free (&__d.d->ctty, ctty, &__dealloc_ctty);	      \
+	 _hurd_fd_done (__d, &__dealloc_dt);				      \
 	 __result;							      \
        }								      \
    })									      \
@@ -329,9 +406,6 @@ extern void _hurd_internal_post_signal (reply_port_t,
 /* Function run by the signal thread to receive from the signal port.  */
 extern void _hurd_sigport_receive (void);
 
-/* Set the signal-receiving thread.  */
-extern int sigsetthread (thread_t);
-
 
 /* Perform interruptible RPC CALL on PORT.
    The args in CALL should be constant or local variable refs.
@@ -359,12 +433,14 @@ extern int sigsetthread (thread_t);
       {
       case EINTR:		/* RPC went out and was interrupted.  */
       case MACH_SEND_INTERRUPTED: /* RPC didn't get out.  */
-      case MACH_RCV_INTERRUPTED: /* RPC pending.  */
 	if (__ss->intr_restart)
 	  /* Restart the interrupted call.  */
 	  goto __do_call;
 	/* Return EINTR.  */
 	__err = EINTR;
+	break;
+      case MACH_RCV_INTERRUPTED: /* RPC pending.  */
+	/* XXX */ ;
 	break;
       }
     __ss->intr_port = MACH_PORT_NULL;
