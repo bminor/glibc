@@ -38,7 +38,7 @@ DEFUN(ungetc, (c, stream), register int c AND register FILE *stream)
     /* There is already a char pushed back.  */
     return EOF;
 
-  if (stream->__mode.__write && stream->__bufp > stream->__buffer &&
+  if ((stream->__linebuf_active || stream->__put_limit > stream->__buffer) &&
       /* This is a read-write stream with something in its buffer.
 	 Flush the stream.  */
       __flshfp (stream, EOF) == EOF)
