@@ -35,5 +35,5 @@ DEFUN(send, (fd, buf, n, flags),
 					   NULL, 0, NULL,
 					   NULL, 0, &wrote));
 
-  return err ? __hurd_fail (err) : wrote;
+  return err ? __hurd_dfail (fd, err) : wrote;
 }
