@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,97,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@
 
 #include <sys/types.h>
 #include <errno.h>
-#include <signal.h>
+#include <signal.h>		/* NSIG, which BSD <sys/param.h> provides.  */
 #include <endian.h>
 #include <limits.h>
 #ifdef notyet
