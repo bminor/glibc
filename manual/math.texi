@@ -21,6 +21,7 @@ In the meantime, you should avoid using these names yourself.
 @menu
 * Domain and Range Errors::		How overflow conditions and the like
 					 are reported.
+* Not a Number::			Making NANs and testing for NANs.
 * Trigonometric Functions::		Sine, cosine, and tangent.
 * Inverse Trigonometric Functions::	Arc sine, arc cosine, and arc tangent.
 * Exponentiation and Logarithms::	Also includes square root.
@@ -74,10 +75,10 @@ check for errors.
 @comment math.h
 @comment ANSI
 @deftypevr Macro double HUGE_VAL
-This macro expands into an expression of type @code{double} representing
-a particular very large number.  On machines that use IEEE floating
-point format, the value is ``infinity''.  On other machines, it's
-typically the largest positive number that can be represented.
+An expression representing a particular very large number.  On machines
+that use IEEE floating point format, the value is ``infinity''.  On
+other machines, it's typically the largest positive number that can be
+represented.
 
 The value of this macro is used as the return value from various 
 mathematical functions in overflow situations.
@@ -87,6 +88,34 @@ For more information about floating-point representations and limits,
 @xref{Floating-Point Limits}.  In particular, the macro @code{DBL_MAX}
 might be more appropriate than @code{HUGE_VAL} for many uses.
 
+@node Not a Number
+@section ``Not a Number'' Values
+@cindex NAN
+@cindex not a number
+@cindex IEEE floating point
+
+The IEEE floating point format used by most modern computers supports
+values that are ``not a number''.  These values are called @dfn{NANs}.
+``Not a number'' values result from certain operations which have no
+meaningful numeric result, such as zero divided by zero or infinity
+divided by infinity.
+
+One noteworthy property of NANs is that they are not equal to
+themselves.  Thus, @code{x == x} can be 0 if the value of @code{x} is a
+NAN.  In fact, this is the way to test whether a value is a NAN or not:
+if it is not equal to itself, then it is a NAN.
+
+Almost any arithmetic operation in which one argument is a NAN returns
+a NAN.
+
+@comment math.h
+@comment GNU
+@deftypevr Macro double NAN
+An expression representing a value which is ``not a number''.  This
+macro is a GNU extension, available only on machines that support ``not
+a number'' values---that is to say, on all machines that support IEEE
+floating point.
+@end deftypevr
 
 @node Trigonometric Functions
 @section Trigonometric Functions
