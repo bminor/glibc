@@ -385,7 +385,7 @@ When @code{getopt_long} has no more options to handle, it returns
 @subsection Example of Parsing Long Options
 
 @example
-@include longopts.c.texi
+@include longopt.c.texi
 @end example
 
 @node Environment Variables
