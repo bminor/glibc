@@ -36,9 +36,9 @@ Cambridge, MA 02139, USA.  */
 
 enum __ioctl_dir
   {
-    IOC_VOID = 0,	/* No parameters.  */
-    IOC_OUT = 1,	/* Copy in parameters.  */
-    IOC_IN = 2,		/* Copy out parameters.  */
+    IOC_VOID = 0,		/* No parameters.  */
+    IOC_OUT = 1,		/* Data is written into the user's buffer.  */
+    IOC_IN = 2,			/* Data is read from the user's buffer.  */
     IOC_INOUT = (IOC_IN|IOC_OUT)
   };
 
@@ -75,8 +75,8 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32 };
    _IOT_foobar is defined either in this file,
    or where struct foobar is defined.  */
 #define	_IO(g, n)	_IOC (IOC_VOID, (g), (n), 0)
-#define	_IOR(g, n, t)	_IOC (IOC_IN, (g), (n), _IOT_##t)
-#define	_IOW(g, n, t)	_IOC (IOC_OUT, (g), (n), _IOT_##t)
+#define	_IOR(g, n, t)	_IOC (IOC_OUT, (g), (n), _IOT_##t)
+#define	_IOW(g, n, t)	_IOC (IOC_IN, (g), (n), _IOT_##t)
 #define	_IOWR(g, n, t)	_IOC (IOC_INOUT, (g), (n), _IOT_##t)
 
 /* Construct an individual type field for TYPE.  */
