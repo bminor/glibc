@@ -41,7 +41,7 @@ Cambridge, MA 02139, USA.  */
   lea SYS_##syscall_name, %eax;						      \
   /* lcall $7, $0; */							      \
   /* Above loses; GAS bug.  */						      \
-  .byte 0x9a, 0, 0, 0, 0, 7, 0
+  .byte 0x9a, 0, 0, 0, 0, 7, 0						      \
   jb syscall_error
 #else
 #define	PSEUDO(name, syscall_name, args)				      \
@@ -52,7 +52,7 @@ Cambridge, MA 02139, USA.  */
   lea SYS_/**/syscall_name, %eax;					      \
   /* lcall $7, $0; */							      \
   /* Above loses; GAS bug.  */						      \
-  .byte 0x9a, 0, 0, 0, 0, 7, 0
+  .byte 0x9a, 0, 0, 0, 0, 7, 0						      \
   jb syscall_error
 #endif
 
