@@ -1,5 +1,5 @@
 /* Set a host configuration item kept as the whole contents of a file.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,8 +33,9 @@ _hurd_set_host_config (const char *item, const char *value, size_t valuelen)
   if (dir == MACH_PORT_NULL)
     return -1;
 
-  /* Create a new node.  */
-  err = __dir_mkfile (dir, O_CREAT|O_TRUNC, 0644, &new);
+  /* Create a new node.
+     Only O_READ|O_WRITE|O_EXEC are meaningful in FLAGS.  */
+  err = __dir_mkfile (dir, O_WRITE, 0644, &new);
   if (! err)
     {
       /* Write the contents.  */
