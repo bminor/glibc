@@ -33,8 +33,8 @@ typedef struct
     int __entry_data;		/* Entry number `__data' corresponds to.  */
     char *__ptr;		/* Current pointer into the block.  */
     int __entry_ptr;		/* Entry number `__ptr' corresponds to.  */
-    unsigned int __allocation;	/* Space allocated for the block.  */
-    unsigned int __size;	/* Total valid data in the block.  */
+    unsigned long int __allocation; /* Space allocated for the block.  */
+    unsigned long int __size;	/* Total valid data in the block.  */
   } DIR;
 
 #endif	/* dirstream.h */
