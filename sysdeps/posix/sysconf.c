@@ -23,6 +23,8 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <time.h>
 
+extern int EXFUN(__getdtablesize, (NOARGS));
+
 /* Get the value of the system variable NAME.  */
 long int
 DEFUN(__sysconf, (name), int name)
@@ -57,11 +59,7 @@ DEFUN(__sysconf, (name), int name)
 #endif
 
     case _SC_OPEN_MAX:
-#ifdef	OPEN_MAX
-      return OPEN_MAX;
-#else
-      return -1;
-#endif
+      return __getdtablesize ();
 
     case _SC_STREAM_MAX:
       return FOPEN_MAX;
