@@ -2,49 +2,59 @@
 @appendix Library Maintenance
 
 @menu
-* Installation::	How to configure, compile and install
-			 the GNU C library.
-* Reporting Bugs::	How to report bugs (if you want to get them fixed) and
-			 other troubles you may have with the GNU C Library.
-
-* ansidecl::		ANSI and traditional C compatibility.
-* Locale Writing::	Locale information writing.
-* Contributors::	Contributors to the GNU C Library.
-
+* How to Install the GNU C Library::	How to configure, compile and install
+                			 the GNU C library.
+* Reporting Bugs::	                How to report bugs (if you want to
+                                         get them fixed) and other troubles
+                                         you may have with the GNU C library.
+* Compatibility with Traditional C::    Using the GNU C library with non-ANSI
+                                         C compilers.
+* Defining New Locales::                How to define and install new named 
+                                         locales.
+* Contributors to the GNU C Library::	Contributors to the GNU C Library.
 @end menu
-@node Installation
+
+
+@node How to Install the GNU C Library
 @appendixsec How to Install the GNU C Library
 @cindex installing the library
 
 Installation of the GNU C library is relatively simple.
 
-You will need the latest version of GNU @code{make}.  If you do not have
-GNU @code{make}, life will be more difficult.  We recommend porting GNU
+You need the latest version of GNU @code{make}.  If you do not have
+GNU @code{make}, life is more difficult.  We recommend porting GNU
 @code{make} to your system rather than trying to install the GNU C
 library without it.  @strong{Really.}@refill
 
 To configure the GNU C library for your system, run the script
 @file{configure} with @code{sh}.  You must give as an argument to the
-script a word describing your system.  If you give no argument, you will
-get a list of systems the script knows about.
+script a word describing your system.  If you give no argument, the
+script gives you a list of systems it knows about.
 
-The configuration process will take a little while and print out a slew
-of messages telling you what it's doing.  These will probably not be
-very interesting to read, but you'll have nothing better to do while
-waiting for it to finish.
+The configuration process takes a little while and prints out a slew of
+messages telling you what it's doing.  These are probably not very
+interesting to read, but you'll have nothing better to do while waiting
+for it to finish.
 
 If the configuration is successful, it will say @samp{Successfully
-configured}.  If the configuration failed, it will say @samp{Failed in
-configuration}.  If the configuration fails, something's wrong.  Figure
-out what it is and fix it or report it as a bug (@pxref{Reporting
-Bugs}).@refill
+configured}.  If the configuration fails it will say @samp{Failed in
+configuration}; you must then figure out the source of the problem and
+either fix it or report it as a bug (@pxref{Reporting Bugs}).@refill
 
 After successful configuration, simply run @code{make} to make the
 library and related things.  If all goes well, you will end up with the
 library archive in the file @file{libc.a}, ANSI C versions of the header
 files in the @file{ansi/} subdirectory, and traditional C versions of
-the header files in the @file{trad/} subdirectory.  Install these in
-appropriate places.
+the header files in the @file{trad/} subdirectory.  Install the archive
+and the header files in appropriate places.
+
+@strong{Incomplete:} This section needs to give more details on what
+those ``appropriate places'' are.  What are the default places to
+install things, so that users need not tell the compiler and linker
+explicitly where to search for these files?  If you install them
+someplace else, what options should you tell users to use so that the
+compiler and linker will find the files?
+
 
 @node Reporting Bugs
 @appendixsec Reporting Bugs
@@ -84,14 +94,43 @@ or UUCP path @samp{mit-eddie!prep.ai.mit.edu!bug-gnu-lib?}.  If you have
 other problems with installation, use, or the documentation, please
 report those as well.
 
-@node ansidecl
-@appendixsec Compatibility Between ANSI C and Traditional C
 
-@node Locale Writing
-@appendixsec Writing Locale Information Structures
+@node Compatibility with Traditional C
+@appendixsec Compatibility with Traditional C
+
+Although the GNU C library implements the ANSI C library facilities,
+you @emph{can} use the GNU C library with traditional, ``pre-ANSI'' C
+compilers.  However, there are a couple things you need to watch out for.
+
+You must include a different set of header files when compiling your
+program using a traditional C compiler than when compiling with an ANSI
+C compiler.  (This is because traditional C compilers do not understand
+the function prototypes used in the ANSI C header files.  On the other
+hand, if you are using an ANSI C compiler like GCC, you should use the
+ANSI C header files because the prototypes permit the compiler to do a
+better job of detecting errors in calls to library functions.)  You can
+tell the C compiler what directories to search for header files by using
+the @samp{-I} option.
+
+You also need to be careful because the content and organization of the
+GNU C library header files differs from that of traditional C
+implementations.  This means you may need to make changes to your
+program in order to get it to compile.
+
+@strong{Incomplete:} Maybe list some specific things to watch out for
+here, like: some functions from @file{math.h} have been moved to
+@file{stdlib.h}; confusion between @file{string.h} and @file{strings.h};
+and the like.  Look at Harbison & Steele's C book to get a more complete
+list.
+
+@node Defining New Locales
+@appendixsec Defining New Locales
+
+@strong{Incomplete:}  Fill in this section.  Presumably this is where
+the things in @file{localeinfo.h} will be documented?
 
 
-@node Contributors,
+@node Contributors to the GNU C Library
 @appendixsec Contributors to the GNU C Library
 
 The GNU C library was written almost entirely by Roland McGrath.
