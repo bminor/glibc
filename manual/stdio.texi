@@ -2469,12 +2469,11 @@ systems, text and binary streams use different file formats, and the
 only way to read or write ``an ordinary file of text'' that can work
 with other text-oriented programs is through a text stream.
 
-@c ??? Roland, is this true?
-On POSIX systems, there is no difference between text streams and binary
-streams.  When you open a stream, you get the same kind of stream
-regardless of whether you ask for binary.  This stream can handle any
-file content, and has none of the restrictions that text streams
-sometimes have.
+In the GNU library, and on all POSIX systems, there is no difference
+between text streams and binary streams.  When you open a stream, you
+get the same kind of stream regardless of whether you ask for binary.
+This stream can handle any file content, and has none of the
+restrictions that text streams sometimes have.
 
 @node File Positioning
 @section File Positioning
