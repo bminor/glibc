@@ -89,6 +89,8 @@ strings as file names, etc?
 The @code{wchar_t} data type is defined in the header file
 @file{<stddef.h>}.
 
+@comment stddef.h
+@comment ANSI
 @deftp {Data Type} wchar_t
 This is the ``wide character'' type, an integer type whose range is
 large enough to represent all distinct values in any extended character
@@ -108,6 +110,8 @@ The @code{mblen} function and @code{MB_CUR_MAX} macro are declared in the
 header file @file{<stdlib.h>}.  The @code{MB_LEN_MAX} macro is declared
 in @file{<limits.h>}.
 
+@comment stdlib.h
+@comment ANSI
 @deftypefun int mblen (const char *@var{string}, size_t @var{size})
 The @code{mblen} function returns the number of bytes that make up the
 first multibyte character beginning at @var{string}; at most @var{size}
@@ -127,11 +131,15 @@ No library function calls @code{mblen}, so you don't have to worry about
 the shift state getting changed behind your back.
 @end deftypefun
 
+@comment limits.h
+@comment ANSI
 @defvr Macro MB_LEN_MAX
 This is the maximum length of a multibyte character for any supported
 locale.
 @end defvr
 
+@comment stdlib.h
+@comment ANSI
 @defvr Macro MB_CUR_MAX
 This macro expands into a (possibly non-constant) positive integer
 expression that is the maximum number of bytes in a multibyte character
@@ -146,6 +154,8 @@ You can convert multibyte characters to wide characters with the
 @code{mbtowc} function.  The @code{wctomb} function does the reverse.
 These functions are declared in @file{<stdlib.h>}.
 
+@comment stdlib.h
+@comment ANSI
 @deftypefun int mbtowc (wchar_t *@var{result}, const char *@var{string}, size_t @var{size})
 The @code{mbtowc} (``multibyte to wide character'') function converts
 the first multibyte character beginning at @var{string} to its
@@ -168,6 +178,8 @@ No library function calls @code{mbtowc}, so you don't have to worry about
 the shift state getting changed behind your back.
 @end deftypefun
 
+@comment stdlib.h
+@comment ANSI
 @deftypefun int wctomb (char *@var{string}, wchar_t @var{wchar})
 The @code{wctomb} (``wide character to multibyte'') function converts
 the wide character code @var{wchar} to its corresponding multibyte
@@ -200,6 +212,8 @@ to a wide character array.  The @code{wcstombs} function does the
 reverse.  These functions are declared in the header file
 @file{<stdlib.h>}.
 
+@comment stdlib.h
+@comment ANSI
 @deftypefun size_t mbstowcs (wchar_t *@var{wstring}, const char *@var{string}, size_t @var{size})
 The @code{mbstowcs} (``multibyte string to wide character string'')
 function converts the null-terminated string of multibyte characters
@@ -218,6 +232,8 @@ characters stored in the array @var{wstring} (not including the
 terminating null character).
 @end deftypefun
 
+@comment stdlib.h
+@comment ANSI
 @deftypefun size_t wcstombs (char *@var{string}, const wchar_t @var{wstring}, size_t @var{size})
 The @code{wcstombs} (``wide character string to multibyte string'')
 function converts the null-terminated wide character array @var{wstring}

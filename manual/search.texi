@@ -21,6 +21,8 @@ To search a sorted array for an element matching the key, use the
 @code{bsearch} function.  The prototype for this function is in
 the header file @file{<stdlib.h>}.
 
+@comment stdlib.h
+@comment ANSI
 @deftypefun {void *} bsearch (const void *@var{key}, const void *@var{array}, size_t @var{count}, size_t @var{size}, int (*@var{compare}) (const void *, const void *))
 The @code{bsearch} function searches the sorted array @var{array} for an object
 that is equivalent to @var{key}.  The array contains @var{count} elements,
@@ -49,6 +51,8 @@ To sort an array using an arbitrary comparison function, use the
 @code{qsort} function.  The prototype for this function is in
 @file{<stdlib.h>}.
 
+@comment stdlib.h
+@comment ANSI
 @deftypefun void qsort (void *@var{array}, size_t @var{count}, size_t @var{size}, int (*@var{compare}) (const void *, const void *))
 The @var{qsort} function sorts the array @var{array}.  The array contains
 @var{count} elements, each of which is of size @var{size}.

@@ -257,6 +257,13 @@ The @code{free} function deallocates the block of storage pointed at
 by @var{ptr}.
 @end deftypefun
 
+@comment stdlib.h
+@comment GNU
+@deftypefun void cfree (void *@var{ptr})
+This function does the same thing as @code{free}.  It's provided for
+backward compatibility with SunOS; you should use @code{free} instead.
+@end deftypefun
+
 Freeing a block alters the contents of the block.  @strong{Do not expect to
 find any data (such as a pointer to the next block in a chain of blocks) in
 the block after freeing it.}  Copy whatever you need out of the block before
@@ -1353,6 +1360,8 @@ function.  There is no way to free the space explicitly.
 The prototype for @code{alloca} is in @file{<stdlib.h>}.  This function
 is a GNU extension.
 
+@comment stdlib.h
+@comment GNU, BSD
 @deftypefun {void *} alloca (size_t @var{size});
 The return value of @code{alloca} is the address of a block of @var{size}
 bytes of storage, allocated in the stack frame of the calling function.
