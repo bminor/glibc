@@ -68,13 +68,14 @@ mach-src-headers := $(wildcard $(foreach dir,mach device mach_debug \
 # Exclude mach/machine/*.  A symlink will be installed for mach/machine.
 mach-headers = $(filter-out mach/machine/%,\
 			    $(mach-src-headers:$(mach-srcdir)/%=%))
-install-others += $(addprefix $(includedir),$(mach-headers))
+install-others += $(addprefix $(includedir)/,$(mach-headers))
 $(includedir)/mach/%: $(mach-srcdir)/mach/%; $(do-install)
 $(includedir)/device/%: $(mach-srcdir)/device/%; $(do-install)
 
 # Make a symlink for mach/machine in the installed include directory.
 install-others += $(includedir)/mach/machine
 $(includedir)/mach/machine: $(common-objpfx)config.make
+	-rm -f $@
 	cd $(@D); ln -s $(config-machine) $(@F)
 
 # Install Mach's <sys/version.h> as <mach/version.h>.
