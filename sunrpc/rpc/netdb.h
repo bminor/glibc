@@ -29,7 +29,13 @@
  */
 /*	@(#)rpc.h 1.8 87/07/24 SMI	*/
 
-/* Really belongs in <netdb.h> */
+/* Cleaned up for GNU C library roland@gnu.ai.mit.edu:
+   added multiple inclusion protection and use of <sys/cdefs.h>.
+   In GNU this file is #include'd by <netdb.h>.  */
+
+#ifndef _RPC_NETDB_H
+#define _RPC_NETDB_H
+#include <sys/cdefs.h>
 
 struct rpcent {
       char    *r_name;        /* name of server for this rpc program */
@@ -37,4 +43,10 @@ struct rpcent {
       int     r_number;       /* rpc program number */
 };
 
-struct rpcent *getrpcbyname(), *getrpcbynumber(), *getrpcent();
+__BEGIN_DECLS
+struct rpcent	*getrpcbyname __P((const char *));
+struct rpcent	*getrpcbynumber __P((int));
+struct rpcent	*getrpcent __P((void));
+__END_DECLS
+
+#endif

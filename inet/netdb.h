@@ -150,4 +150,7 @@ void		setprotoent __P((int));
 void		setservent __P((int));
 __END_DECLS
 
+/* Get `struct rpcent' and the definition for reading /etc/rpc.  */
+#include <rpc/netdb.h>
+
 #endif /* !_NETDB_H_ */
