@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -33,13 +33,35 @@ Cambridge, MA 02139, USA.  */
 /* Structure describing a popen child.  */
 struct child
   {
-    /* It is important that the first member of this structure be an `int' that
-       is the file descriptor.  This is because the `fileno' function assumes
-       that __cookie(STREAM) points to the file descriptor.  */
-    int fd;
-    pid_t pid;
+    pid_t pid;			/* PID of the child.  */
+    __ptr_t cookie;		/* Original cookie from fdopen.  */
+    __io_functions funcs;	/* Original functions from fdopen.  */
   };
 
+/* io_functions for pipe streams.
+   These all simply call the corresponding
+   original function with the original cookie.  */
+
+#define FUNC(type, name, args, argdecl)					      \
+  static type DEFUN(__CONCAT(child_,name), args, argdecl)		      \
+  {									      \
+    struct child *c = (struct child *) cookie;				      \
+    __ptr_t cookie = c->cookie;						      \
+    return (*c->cookie.funcs.__CONCAT(__,name)) args;			      \
+  }
+
+FUNC (int, read, (cookie, buf, n),
+      PTR cookie AND register char *buf AND register size_t n)
+FUNC (int, write, (cookie, buf, n),
+      PTR cookie AND register CONST char *buf AND register size_t n)
+FUNC (int, seek, (cookie, pos, whence),
+      PTR cookie AND fpos_t *pos AND int whence)
+FUNC (int, close, (cookie), PTR cookie)
+FUNC (int, fileno, (cookie), PTR cookie)
+
+static const __io_functions child_funcs
+  = { child_read, child_write, child_seek, child_close, child_fileno };
+
 /* Open a new stream that is a one-way pipe to a
    child process running the given shell command.  */
 FILE *
@@ -118,9 +140,11 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
   child = (struct child *) malloc(sizeof(struct child));
   if (child == NULL)
     goto error;
-  child->fd = fileno(stream);
   child->pid = pid;
+  child->cookie = stream->__cookie;
+  child->funcs = stream->__io_funcs;
   stream->__cookie = (PTR) child;
+  stream->__io_funcs = child_funcs;
   stream->__ispipe = 1;
   return stream;
 
@@ -154,6 +178,7 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
 int
 DEFUN(pclose, (stream), register FILE *stream)
 {
+  struct child *c;
   pid_t pid, dead;
   int status;
 
@@ -163,9 +188,11 @@ DEFUN(pclose, (stream), register FILE *stream)
       return -1;
     }
 
-  pid = ((struct child *) stream->__cookie)->pid;
+  c = (struct child *) stream->__cookie;
+  pid = c->pid;
+  stream->__cookie = c->cookie;
+  stream->__io_funcs = c->funcs;
   free(stream->__cookie);
-  stream->__cookie = (PTR) &stream->__fileno;
   stream->__ispipe = 0;
   if (fclose(stream))
     return -1;
