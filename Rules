@@ -79,15 +79,15 @@ endif	# tests
 # except for the object files and the object-file library members.
 .PHONY: mostlyclean
 mostlyclean:
-	rm -f $(addprefix $(objpfx),$(tests) $(others))
-	rm -f core TAGS depend
+	-rm -f $(addprefix $(objpfx),$(tests) $(others))
+	-rm -f core TAGS depend
 
 # This removes absolutely everything that can be regenerated.
 .PHONY: subdir_clean clean realclean
 subdir_clean realclean: clean
 +objs := $(objects)
 clean: mostlyclean
-	rm -f $(+objs) $(+depfiles)
+	-rm -f $(+objs) $(+depfiles)
 
 .PHONY: subdir_echo-headers
 subdir_echo-headers: echo-headers
