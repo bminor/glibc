@@ -24,6 +24,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <libintl.h>
 #include <arpa/inet.h>
 #include <sys/param.h>
 #include <sys/poll.h>
@@ -60,7 +61,8 @@ const char *serv2str[LASTREQ] =
   [GETHOSTBYADDR] = "GETHOSTBYADDR",
   [GETHOSTBYADDRv6] = "GETHOSTBYADDRv6",
   [SHUTDOWN] = "SHUTDOWN",
-  [GETSTAT] = "GETSTAT"
+  [GETSTAT] = "GETSTAT",
+  [INVALIDATE] = "INVALIDATE"
 };
 
 /* The control data structures for the services.  */
@@ -192,10 +194,26 @@ close_sockets (void)
   close (sock);
 }
 
+static void
+invalidate_cache (char *key)
+{
+  dbtype number;
+
+  if (strcmp (key, "passwd") == 0)
+    number = pwddb;
+  else if (strcmp (key, "group") == 0)
+    number = grpdb;
+  else if (strcmp (key, "hosts") == 0)
+    number = hstdb;
+  else return;
+
+  prune_cache (&dbs[number], LONG_MAX);
+}
+
 
 /* Handle new request.  */
 static void
-handle_request (int fd, request_header *req, void *key)
+handle_request (int fd, request_header *req, void *key, uid_t uid)
 {
   if (debug_level > 0)
     dbg_log (_("handle_request: request received (Version = %d)"),
@@ -251,7 +269,7 @@ cannot handle old request version %d; current version is %d"),
 
       /* See whether we can handle it from the cache.  */
       cached = (struct hashentry *) cache_search (req->type, key, req->key_len,
-						  db);
+						  db, uid);
       if (cached != NULL)
 	{
 	  /* Hurray it's in the cache.  */
@@ -271,51 +289,85 @@ cannot handle old request version %d; current version is %d"),
 
       pthread_rwlock_unlock (&db->lock);
     }
-  else
-    if (debug_level > 0)
-      dbg_log ("\t%s", serv2str[req->type]);
+  else if (debug_level > 0)
+    {
+      if (req->type == INVALIDATE)
+	dbg_log ("\t%s (%s)", serv2str[req->type], key);
+      else
+	dbg_log ("\t%s", serv2str[req->type]);
+    }
 
   /* Handle the request.  */
   switch (req->type)
     {
     case GETPWBYNAME:
-      addpwbyname (&dbs[serv2db[req->type]], fd, req, key);
+      addpwbyname (&dbs[serv2db[req->type]], fd, req, key, uid);
       break;
 
     case GETPWBYUID:
-      addpwbyuid (&dbs[serv2db[req->type]], fd, req, key);
+      addpwbyuid (&dbs[serv2db[req->type]], fd, req, key, uid);
       break;
 
     case GETGRBYNAME:
-      addgrbyname (&dbs[serv2db[req->type]], fd, req, key);
+      addgrbyname (&dbs[serv2db[req->type]], fd, req, key, uid);
       break;
 
     case GETGRBYGID:
-      addgrbygid (&dbs[serv2db[req->type]], fd, req, key);
+      addgrbygid (&dbs[serv2db[req->type]], fd, req, key, uid);
       break;
 
     case GETHOSTBYNAME:
-      addhstbyname (&dbs[serv2db[req->type]], fd, req, key);
+      addhstbyname (&dbs[serv2db[req->type]], fd, req, key, uid);
       break;
 
     case GETHOSTBYNAMEv6:
-      addhstbynamev6 (&dbs[serv2db[req->type]], fd, req, key);
+      addhstbynamev6 (&dbs[serv2db[req->type]], fd, req, key, uid);
       break;
 
     case GETHOSTBYADDR:
-      addhstbyaddr (&dbs[serv2db[req->type]], fd, req, key);
+      addhstbyaddr (&dbs[serv2db[req->type]], fd, req, key, uid);
       break;
 
     case GETHOSTBYADDRv6:
-      addhstbyaddrv6 (&dbs[serv2db[req->type]], fd, req, key);
+      addhstbyaddrv6 (&dbs[serv2db[req->type]], fd, req, key, uid);
       break;
 
     case GETSTAT:
-      send_stats (fd, dbs);
-      break;
-
     case SHUTDOWN:
-      termination_handler (0);
+    case INVALIDATE:
+      /* Accept shutdown, getstat and invalidate only from root */
+      if (secure_in_use && uid == 0)
+	{
+	  if (req->type == GETSTAT)
+	    send_stats (fd, dbs);
+	  else if (req->type == INVALIDATE)
+	    invalidate_cache (key);
+	  else
+	    termination_handler (0);
+	}
+      else
+	{
+	  struct ucred caller;
+	  socklen_t optlen = sizeof (caller);
+
+	  if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &caller, &optlen) < 0)
+	    {
+	      char buf[256];
+
+	      dbg_log (_("error getting callers id: %s"),
+		       strerror_r (errno, buf, sizeof (buf)));
+	    }
+	  else
+	    if (caller.uid == 0)
+	      {
+		if (req->type == GETSTAT)
+		  send_stats (fd, dbs);
+		else if (req->type == INVALIDATE)
+		  invalidate_cache (key);
+		else
+		  termination_handler (0);
+	      }
+	}
       break;
 
     default:
@@ -362,6 +414,7 @@ nscd_run (void *p)
 	  int fd = accept (conn.fd, NULL, NULL);
 	  request_header req;
 	  char buf[256];
+	  uid_t uid = 0;
 
 	  if (fd < 0)
 	    {
@@ -378,6 +431,25 @@ nscd_run (void *p)
 		       strerror_r (errno, buf, sizeof (buf)));
 	      close (fd);
 	      continue;
+	    }
+
+	  if (secure_in_use)
+	    {
+	      struct ucred caller;
+	      socklen_t optlen = sizeof (caller);
+
+	      if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED,
+			      &caller, &optlen) < 0)
+		{
+		  dbg_log (_("error getting callers id: %s"),
+			   strerror_r (errno, buf, sizeof (buf)));
+		  close (fd);
+		  continue;
+		}
+
+	      if (req.type < GETPWBYNAME || req.type > LASTDBREQ
+		  || secure[serv2db[req.type]])
+		uid = caller.uid;
 	    }
 
 	  /* It should not be possible to crash the nscd with a silly
@@ -404,7 +476,7 @@ nscd_run (void *p)
 		}
 
 	      /* Phew, we got all the data, now process it.  */
-	      handle_request (fd, &req, keybuf);
+	      handle_request (fd, &req, keybuf, uid);
 
 	      /* We are done.  */
 	      close (fd);
