@@ -28,7 +28,6 @@ DEFUN(__close, (fd), int fd)
 {
   struct hurd_userlink ulink;
   struct hurd_fd_user d = _hurd_fd_get (fd, &ulink);
-  io_t port, ctty;
 
   if (d.d == NULL)
     return __hurd_fail (EBADF);
