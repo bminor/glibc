@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,9 +25,8 @@ mode_t
 DEFUN(__umask, (mask), mode_t mask)
 {
   mode_t omask;
-  __mutex_lock (&_hurd_lock);
+  mask &= 0777;
   omask = _hurd_umask;
-  _hurd_umask = mask & 0777;
-  __mutex_unlock (&_hurd_lock);
+  _hurd_umask = mask;
   return omask;
 }
