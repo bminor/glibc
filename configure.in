@@ -297,8 +297,8 @@ sysnames="`echo $sysnames | sed -e 's@^/@@' -e 's@ /@ @g'`"
 if [ ! "$nfp" ]; then
   fpu_dirs=
   for m in $mach; do
-    if [ -d $sysdep_dir$mach/fpu ]; then
-      fpu_dirs="$fpu_dirs $mach/fpu"
+    if [ -d $sysdep_dir$m/fpu ]; then
+      fpu_dirs="$fpu_dirs $m/fpu"
     fi
   done
   sysnames="`echo $fpu_dirs | sed -e 's,^/,,' -e 's, /,,g'` $sysnames"
