@@ -49,7 +49,7 @@ routines = __pid2task __task2pid pid2task task2pid \
 	   $(interface-routines)
 endif
 
-aux := hurdsyms # hurdinit
+aux := hurdsyms hurdinit
 
 # Get the proper definition of `hurd-srcdir'.
 include ../sysdeps/mach/hurd/Makefile
