@@ -232,6 +232,13 @@ ifeq ($(origin CC),default)
 CC := gcc
 endif
 
+# The name of the C compiler to use for compilations of programs to run on
+# the host that is building the library.  If you set CC to a
+# cross-compiler, you must set this to the normal compiler.
+ifndef HOST_CC
+HOST_CC = $(CC)
+endif
+
 # These are preprocessor macros we want to predefine.  Define HAVE_GNU_LD
 # if using GNU ld (which you should do if possible).  If you do this, you
 # may need the GNU assembler as well.  If you don't do this, your library
