@@ -31,16 +31,11 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
   va_list ap;
   struct hurd_fd *d;
   int result;
-  
-  HURD_CRITICAL_BEGIN;
 
   d = _hurd_fd_get (fd);
 
   if (d == NULL)
-    {
-      result = __hurd_fail (EBADF);
-      goto out;
-    }
+    return __hurd_fail (EBADF);
 
   va_start (ap, cmd);
 
@@ -180,9 +175,6 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
     }
 
   va_end (ap);
-
- out:
-  HURD_CRITICAL_END;
 
   return result;
 }
