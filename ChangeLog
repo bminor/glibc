@@ -1,3 +1,13 @@
+1999-06-05  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/generic/printf_fphex.c (__printf_fphex): Don't ignore
+	the precision if the mantissa is zero.
+
+1999-06-05  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* manual/lang.texi (Floating Point Parameters): GCC already
+	supports long double for a long time.
+
 1999-06-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/libm-test.c: Update from mainline branch.
