@@ -39,7 +39,7 @@ _hurd_setup_sighandler (int flags,
 {
   extern jmp_buf _hurd_sigthread_fault_env;
   struct i386_thread_state *ts;
-  void *sigsp;
+  void *volatile sigsp;
   struct sigcontext *scp;
   struct 
     {
