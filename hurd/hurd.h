@@ -27,6 +27,7 @@ Cambridge, MA 02139, USA.  */
 /* Get types, macros, constants and function declarations
    for all Mach microkernel interaction.  */
 #include <mach.h>
+#include <mach/mig_errors.h>
 
 /* Get types and constants necessary for Hurd interfaces.  */
 #include <hurd/hurd_types.h>
