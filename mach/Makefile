@@ -33,8 +33,8 @@ routines = $(interface-routines) \
 	   mach_init vm_page_size \
 	   mig_strncpy __msg msg \
 	   mig_support mig_syms \
-	   msg_destroy msg_server msg_server_t \
-	   __msg_dest __msg_server \
+	   msg_destroy msgserver msgserver_t \
+	   __msg_dest __msgserver \
 	   mach_error mach_error_string error_compat errsystems \
 	   devstream bootprivport
 user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
