@@ -98,7 +98,7 @@ echo-zonenames: zonenames
 # the command line of `make install' (e.g., "make install prefix=/foo").
 zic-cmd = $(dir $(word 2,$^))$(notdir $(word 2,$^)) -d $(zonedir)
 define tzcompile
-$(zic-cmd) -d $(zonedir) -L $(word 3,$^) $<
+$(zic-cmd) -L $(word 3,$^) $<
 endef
 
 ifdef localtime
