@@ -124,7 +124,7 @@ _dl_close (struct link_map *map)
 	    }
 	  if (imap->l_next)
 	    imap->l_next->l_prev = imap->l_prev;
-	  if (imap->l_dupsearchlist(
+	  if (imap->l_dupsearchlist)
 	    free (imap->l_dupsearchlist);
 	  if (imap->l_searchlist && imap->l_searchlist != list)
 	    free (imap->l_searchlist);
