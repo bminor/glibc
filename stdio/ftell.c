@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@ Cambridge, MA 02139, USA.  */
 long int
 DEFUN(ftell, (stream), FILE *stream)
 {
+  long int pos;
+
   if (!__validfp (stream))
     {
       errno = EINVAL;
@@ -34,5 +36,13 @@ DEFUN(ftell, (stream), FILE *stream)
   if (__stdio_check_offset (stream) == EOF)
     return -1L;
 
-  return stream->__target + (stream->__bufp - stream->__buffer);
+  pos = stream->__target + (stream->__bufp - stream->__buffer);
+
+  if (stream->__pushed_back)
+    /* Calling ungetc is supposed to decrement the file position.
+       ANSI says the file position is unspecified if you ungetc when
+       the position is zero; -1 seems as good as anything to me.  */
+    --pos;
+
+  return pos;
 }

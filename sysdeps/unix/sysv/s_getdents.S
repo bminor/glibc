@@ -18,14 +18,5 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-/* This is just a standard system call, except we need to load %edx
-   with the address of the `__sigreturn' function.  */
-
-	.globl syscall_error
-	.globl C_SYMBOL_NAME(__sigreturn)
-ENTRY (signal)
-	lea SYS_signal, %eax
-	lea C_SYMBOL_NAME(__sigreturn), %edx
-	.byte 0x9a, 0, 0, 0, 0, 7, 0 /* lcall $7, $0 -- GAS bug.  */
-	jb syscall_error
+SYSCALL__ (getdents, 3)
 	ret

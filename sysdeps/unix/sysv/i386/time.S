@@ -19,8 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 SYSCALL (time, 1)
-	movl 4(%esp,1), %edx
-	testl %edx, %edx
+	movl 4(%esp), %edx	/* Put passed pointer in %edx.  */
+	testl %edx, %edx	/* Is it non-nil?  */
 	je null
-	movl %eax, (%edx)
+	movl %eax, (%edx)	/* Yes; store the time there.  */
 null:	ret
