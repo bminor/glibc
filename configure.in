@@ -175,7 +175,15 @@ sysdep_dir=$srcdir/sysdeps
 
 # machine-vendor-os
 eval "`echo $config | \
-       sed 's/^\(.*\)-\(.*\)-\(.*\)$/machine=\1 vendor=\2 os=\3/'`"
+       sed 's/^\(.*\)-\(.*\)-\(.*\)$/\
+config_machine=\1 config_vendor=\2 config_os=\3/'`"
+
+# We keep the original values in `$config_*' and never modify them, so we
+# can write them unchanged into config.make.  Everything else uses
+# $machine, $vendor, and $os, and changes them whenever convenient.
+machine=$config_machine
+vendor=$config_vendor
+os=$config_os
 
 # Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
 os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
@@ -433,7 +441,7 @@ END
 #define UNAME_SYSNAME "${sysname}"
 #define UNAME_RELEASE "${release}"
 #define UNAME_VERSION "${version}"
-#define UNAME_MACHINE "${machine}-${vendor}"
+#define UNAME_MACHINE "${config_machine}-${config_vendor}"
 END
 
   system_name="$sysname $release version $version on $vendor $machine"
@@ -452,9 +460,9 @@ fi
 (
   echo '# This file was generated automatically by configure.  Do not edit.'
   echo '# Put configuration parameters in configparms instead.'
-  echo "config-machine = ${machine}"
-  echo "config-vendor = ${vendor}"
-  echo "config-os = ${os}"
+  echo "config-machine = ${config_machine}"
+  echo "config-vendor = ${config_vendor}"
+  echo "config-os = ${config_os}"
   echo "config-sysdirs = ${sysnames}"
   if [ "$prefix" ]; then
     echo "prefix = ${prefix}"
