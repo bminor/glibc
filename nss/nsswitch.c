@@ -107,7 +107,7 @@ __nss_database_lookup (const char *database, const char *alternate_name,
 	  *ni = entry->service;
 
       if (*ni == NULL && alternate_name != NULL)
-	/* We haven't found a an entry so far.  Try to find it with
+	/* We haven't found an entry so far.  Try to find it with
 	   the alternative name.  */
 	for (entry = service_table->entry; entry != NULL; entry = entry->next)
 	  if (strcmp (alternate_name, entry->name) == 0)
@@ -130,7 +130,8 @@ __nss_database_lookup (const char *database, const char *alternate_name,
 
 
 /* -1 == not found
-    0 == adjusted for next function */
+    0 == adjusted for next function
+    1 == finished */
 int
 __nss_lookup (service_user **ni, const char *fct_name, void **fctp)
 {
@@ -145,7 +146,7 @@ __nss_lookup (service_user **ni, const char *fct_name, void **fctp)
       *fctp = nss_lookup_function (*ni, fct_name);
     }
 
-  return *fctp != NULL ? 0 : -1;
+  return *fctp != NULL ? 0 : (*ni)->next == NULL ? 1 : -1;
 }
 
 
