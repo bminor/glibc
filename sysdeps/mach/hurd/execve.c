@@ -33,9 +33,8 @@ DEFUN(__execve, (path, argv, envp),
   char *args, *env, *ap;
   size_t argslen, envlen;
   int ints[INIT_INT_MAX];
-  mach_port_t ports[INIT_PORT_MAX];
-  int dealloc_ports[INIT_PORT_MAX];
-  struct _hurd_port *port_cells[INIT_PORT_MAX];
+  mach_port_t ports[_hurd_nports];
+  int dealloc_ports[_hurd_nports];
   file_t *dtable;
   int dtablesize;
   struct _hurd_port *dtable_cells;
@@ -43,7 +42,6 @@ DEFUN(__execve, (path, argv, envp),
   int i;
   char *const *p;
   task_t task;
-  int flags;
   struct _hurd_sigstate *ss;
 
   /* Get a port to the file we want to execute.  */
@@ -72,23 +70,8 @@ DEFUN(__execve, (path, argv, envp),
     ap = __memccpy (ap, *p, '\0', ULONG_MAX);
 
   /* Load up the ports to give to the new program.  */
-#define	port(idx, cell)							      \
-      case idx:								      \
-	port_cells[i] = &cell;						      \
-	ports[i] = _hurd_port_get (&cell, &dealloc_ports[i]);		      \
-	break
-  for (i = 0; i < INIT_PORT_MAX; ++i)
-    switch (i)
-      {
-	port (INIT_PORT_CCDIR, _hurd_ccdir);
-	port (INIT_PORT_CWDIR, _hurd_cwdir);
-	port (INIT_PORT_CRDIR, _hurd_crdir);
-	port (INIT_PORT_AUTH, _hurd_auth);
-	port (INIT_PORT_PROC, _hurd_proc);
-      default:
-	port_cells[i] = NULL;
-	break;
-      }
+  for (i = 0; i < _hurd_nports; ++i)
+    ports[i] = _hurd_port_get (&_hurd_ports[i], &dealloc_ports[i]);
 
   /* Load up the ints to give the new program.  */
   for (i = 0; i < INIT_INT_MAX; ++i)
@@ -96,18 +79,6 @@ DEFUN(__execve, (path, argv, envp),
       {
       case INIT_UMASK:
 	ints[i] = _hurd_umask;
-	break;
-      case INIT_CTTY_FSTYPE:
-	ints[i] = _hurd_ctty_fstype;
-	break;
-      case INIT_CTTY_FSID1:
-	ints[i] = _hurd_ctty_fsid.val[0];
-	break;
-      case INIT_CTTY_FSID2:
-	ints[i] = _hurd_ctty_fsid.val[1];
-	break;
-      case INIT_CTTY_FILEID:
-	ints[i] = _hurd_ctty_fileid;
 	break;
 
       case INIT_SIGMASK:
@@ -131,20 +102,6 @@ DEFUN(__execve, (path, argv, envp),
      when the exec actually happens.  A signal handler could change what
      signals are blocked and ignored.  Either the change will be reflected
      in the exec, or the signal will never be delivered.  */
-
-#if 0
-  if (ss->vforked)
-    {
-      /* This thread is vfork'd.  */
-      task = MACH_PORT_NULL;
-      flags = EXEC_NEWTASK;
-    }
-  else
-#endif
-    {
-      task = __mach_task_self ();
-      flags = 0;
-    }
   
   /* Pack up the descriptor table to give the new program.  */
   __mutex_lock (&_hurd_dtable_lock);
@@ -190,29 +147,27 @@ DEFUN(__execve, (path, argv, envp),
       dealloc_cells = NULL;
     }
 
-  err = __file_exec (file, task,
+  /* The information is all set up now.  Try to exec the file.  */
+
+  err = __file_exec (file, __mach_task_self (),
+		     0,
 		     args, argslen, env, envlen,
 		     dtable, dtablesize,
 		     ints, INIT_INT_MAX,
-		     ports, INIT_PORT_MAX,
-		     flags);
+		     ports, _hurd_nports);
 
   /* Safe to let signals happen now.  */
   __mutex_unlock (&ss->lock);
 
-  for (i = 0; i < INIT_PORT_MAX; ++i)
-    if (port_cells[i] != NULL)
-      _hurd_port_free (ports_cells[i], ports[i], &dealloc_ports[i]);
+  /* Release references to the standard ports.  */
+  for (i = 0; i < _hurd_nports; ++i)
+    _hurd_port_free (&_hurd_ports[i], &dealloc_ports[i], ports[i]);
 
   if (dealloc_dtable != NULL)
+    /* Release references to the file descriptor ports.  */
     for (i = 0; i < dtablesize; ++i)
       if (dtable[i] != MACH_PORT_NULL)
 	_hurd_port_free (dtable_cells[i], dtable[i], &dealloc_dtable[i]);
-
-#if 0
-  if (ss->vforked)
-    longjmp (ss->vfork_saved.continuation, 1);
-#endif
 
   if (err)
     return __hurd_fail (err);
