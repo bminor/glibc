@@ -829,9 +829,9 @@ If this bit is set and the system supports job control, then
 attempt to write to the terminal.  @xref{Access to the Terminal}.
 @end table
 
-The following bits are BSD extensions; the GNU library always defines
-these symbols, but the settings of the bits have no effect except on BSD
-systems.
+The following bits are BSD extensions; the GNU library defines these
+symbols on any system if you ask for them, but the settings of the bits
+have no effect except on BSD systems.
 
 @table @code
 @comment termios.h
@@ -848,8 +848,8 @@ The setting of @code{ECHOKE} has no effect when @code{ECHOK} is clear.
 @comment BSD
 @item ECHOPRT
 @vindex ECHOPRT
-@c ??? What does this mean?
-Hardcopy visual erase.
+This bit enables display of the ERASE character in a way that is geared
+to a hardcopy terminal.
 
 @comment termios.h
 @comment BSD
@@ -863,7 +863,8 @@ the corresponding text character.  Thus, control-A echoes as @samp{^A}.
 @vindex ALTWERASE
 @item ALTWERASE
 @c ??? What does this do?
-Alternate WERASE algorithm.
+This bit enables what the BSD documentation calls the ``alternate WERASE
+algorithm.''  We don't know what that means.
 
 @comment termios.h
 @comment BSD
@@ -883,8 +884,9 @@ Special}.
 @comment BSD
 @vindex PENDIN
 @item PENDIN
-@c ??? What does this do?
-Retype pending input (state).
+If this bit is set, it indicates that there is a line of input that
+needs to be reprinted.  Typing the REPRINT character sets this bit; the
+bit remains set until reprinting is finished.  @xref{BSD Editing}.
 @end table
 
 @node Line Speed
@@ -1155,9 +1157,9 @@ The KILL character is usually @kbd{C-u}.
 
 These special characters are active only in canonical input mode.
 @xref{Canonical or Not}.  They are BSD extensions; the GNU library
-always defines the symbols, so your program can set these characters on
-any kind of operating system, but the characters you specify don't
-actually @emph{do} anything except on a BSD system.
+defines the symbols on any system if you ask for them, but the
+characters you specify don't actually @emph{do} anything except on a BSD
+system.
 
 @comment termios.h
 @comment BSD
