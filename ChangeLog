@@ -10,6 +10,20 @@
 
 	* sysdeps/generic/setenv.c: Avoid warning about uninitialized variable.
 
+	* dirent/dirent.h: Define ino_t and ino64_t if not done already.
+	(seekdir): Fix type of second parameter.
+	* sysdeps/generic/seekdir.c: Likewise.
+	* sysdeps/mach/hurd/seekdir.c: Likewise.
+	* sysdeps/unix/seekdir.c: Likewise.
+
+1999-08-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* dirent/dirent.h (telldir): Change return type to long int.
+	* sysdeps/generic/telldir.c: Likewise.
+	* sysdeps/mach/hurd/telldir.c: Likewise.
+	* sysdeps/unix/telldir.c: Likewise.
+	* sysdeps/unix/bsd/telldir.c: Likewise.  Fix locking problem.
+
 1999-08-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/install.texi (Configuring and compiling): Clarify ix86
