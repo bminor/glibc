@@ -43,7 +43,7 @@ routines = $(interface-routines) \
 	   hurdsock hurdauth \
 	   privports \
 	   msgportdemux \
-	   $(XXX fopenport __fopenport) \
+	   fopenport __fopenport \
 	   vpprintf \
 	   $(sig) $(dtable)
 sig	= hurdsig siginfo init-fault msging-p hurd-raise \
@@ -64,6 +64,7 @@ vpath %.defs $(hurd-srcdir)
 hurd-headers := $(patsubst $(hurd-srcdir)/%,%,\
 			   $(wildcard $(addprefix $(hurd-srcdir)/hurd/,\
 						  *.defs *.h)))
+
 
 # Don't distribute the Hurd headers; they are in the Hurd distribution.
 dont_distribute = $(hurd-headers)
