@@ -1,3 +1,8 @@
+2000-04-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Prepend REG_ to
+	enum values and macros for register names.
+
 2000-03-31  Andreas Schwab  <schwab@suse.de>
 
 	* string/strfry.c: Declare STATE as array of char instead of int
