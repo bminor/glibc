@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -78,8 +78,10 @@ struct locale_ctype_t
   size_t nr_charclass;
   const char *classnames[MAX_NR_CHARCLASS];
   unsigned long int current_class_mask;
+  unsigned int last_class_char256;
+  uint32_t class_collection256[256];
   unsigned int last_class_char;
-  u_int32_t *class_collection;
+  uint32_t *class_collection;
   size_t class_collection_max;
   size_t class_collection_act;
   unsigned long int class_done;
@@ -88,11 +90,13 @@ struct locale_ctype_t
      increase it.  But I doubt it will.  --drepper@gnu */
 #define MAX_NR_CHARMAP 16
   const char *mapnames[MAX_NR_CHARMAP];
+  u_int32_t map_collection256[MAX_NR_CHARMAP][256];
   u_int32_t *map_collection[MAX_NR_CHARMAP];
   size_t map_collection_max[MAX_NR_CHARMAP];
   size_t map_collection_act[MAX_NR_CHARMAP];
   size_t map_collection_nr;
   size_t last_map_idx;
+  unsigned int from_map_char256;
   unsigned int from_map_char;
   int toupper_done;
   int tolower_done;
@@ -104,6 +108,8 @@ struct locale_ctype_t
   char_class32_t *ctype32_b;
   u_int32_t *names_el;
   u_int32_t *names_eb;
+  u_int32_t **map256_eb;
+  u_int32_t **map256_el;
   u_int32_t **map_eb;
   u_int32_t **map_el;
   u_int32_t *class_name_ptr;
@@ -123,7 +129,8 @@ static void ctype_map_newP (struct linereader *lr,
 static u_int32_t *find_idx (struct locale_ctype_t *ctype, u_int32_t **table,
 			    size_t *max, size_t *act, unsigned int idx);
 static void set_class_defaults (struct locale_ctype_t *ctype,
-				struct charset_t *charset);
+				struct charset_t *charset,
+				struct repertoire_t *repertoire);
 static void allocate_arrays (struct locale_ctype_t *ctype,
 			     struct charset_t *charset);
 
@@ -156,6 +163,7 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
   /* Fill character class information.  */
   ctype->nr_charclass = 0;
   ctype->current_class_mask = 0;
+  ctype->last_class_char256 = ILLEGAL_CHAR_VALUE;
   ctype->last_class_char = ILLEGAL_CHAR_VALUE;
   /* The order of the following instructions determines the bit
      positions!  */
@@ -174,24 +182,25 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
 
   ctype->class_collection_max = charset->mb_cur_max == 1 ? 256 : 512;
   ctype->class_collection
-    = (u_int32_t *) xmalloc (sizeof (unsigned long int)
-			     * ctype->class_collection_max);
-  memset (ctype->class_collection, '\0',
-	  sizeof (unsigned long int) * ctype->class_collection_max);
+    = (u_int32_t *) xcalloc (sizeof (unsigned long int),
+			     ctype->class_collection_max);
+  memset (ctype->class_collection256, '\0',
+	  sizeof (unsigned long int) * 256);
   ctype->class_collection_act = 256;
 
   /* Fill character map information.  */
   ctype->map_collection_nr = 0;
   ctype->last_map_idx = MAX_NR_CHARMAP;
+  ctype->from_map_char256 = ILLEGAL_CHAR_VALUE;
   ctype->from_map_char = ILLEGAL_CHAR_VALUE;
   ctype_map_newP (lr, ctype, "toupper", charset);
   ctype_map_newP (lr, ctype, "tolower", charset);
 
-  /* Fill first 256 entries in `toupper' and `tolower' arrays.  */
+  /* Fill first entries in `toupper' and `tolower' arrays.  */
   for (cnt = 0; cnt < 256; ++cnt)
     {
-      ctype->map_collection[0][cnt] = cnt;
-      ctype->map_collection[1][cnt] = cnt;
+      ctype->map_collection256[0][cnt] = cnt;
+      ctype->map_collection256[1][cnt] = cnt;
     }
 }
 
@@ -229,9 +238,86 @@ ctype_finish (struct localedef_t *locale, struct charset_t *charset)
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
 
   /* Set default value for classes not specified.  */
-  set_class_defaults (ctype, charset);
+  set_class_defaults (ctype, charset, locale->repertoire);
 
   /* Check according to table.  */
+  for (cnt = 0; cnt < 256; ++cnt)
+    {
+      unsigned long int tmp;
+
+      tmp = ctype->class_collection256[cnt];
+      if (tmp == 0)
+	continue;
+
+      for (cls1 = 0; cls1 < NCLASS; ++cls1)
+	if ((tmp & (1 << cls1)) != 0)
+	  for (cls2 = 0; cls2 < NCLASS; ++cls2)
+	    if (valid_table[cls1].allow[cls2] != '-')
+	      {
+		int eq = (tmp & (1 << cls2)) != 0;
+		switch (valid_table[cls1].allow[cls2])
+		  {
+		  case 'M':
+		    if (!eq)
+		      {
+			char buf[17];
+			char *cp = buf;
+			unsigned int value;
+
+			value = cnt;
+
+			if ((value & 0xff000000) != 0)
+			  cp += sprintf (cp, "\\%o", (value >> 24) & 0xff);
+			if ((value & 0xffff0000) != 0)
+			  cp += sprintf (cp, "\\%o", (value >> 16) & 0xff);
+			if ((value & 0xffffff00) != 0)
+			  cp += sprintf (cp, "\\%o", (value >> 8) & 0xff);
+			sprintf (cp, "\\%o", value & 0xff);
+
+			if (!be_quiet)
+			  error (0, 0, _("\
+character '%s' in class `%s' must be in class `%s'"),
+				 buf, valid_table[cls1].name,
+				 valid_table[cls2].name);
+		      }
+		    break;
+
+		  case 'X':
+		    if (eq)
+		      {
+			char buf[17];
+			char *cp = buf;
+			unsigned int value;
+
+			value = cnt;
+
+			if ((value & 0xff000000) != 0)
+			  cp += sprintf (cp, "\\%o", value >> 24);
+			if ((value & 0xffff0000) != 0)
+			  cp += sprintf (cp, "\\%o", (value >> 16) & 0xff);
+			if ((value & 0xffffff00) != 0)
+			  cp += sprintf (cp, "\\%o", (value >> 8) & 0xff);
+			sprintf (cp, "\\%o", value & 0xff);
+
+			if (!be_quiet)
+			  error (0, 0, _("\
+character '%s' in class `%s' must not be in class `%s'"),
+				 buf, valid_table[cls1].name,
+				 valid_table[cls2].name);
+		      }
+		    break;
+
+		  case 'D':
+		    ctype->class_collection256[cnt] |= 1 << cls2;
+		    break;
+
+		  default:
+		    error (5, 0, _("internal error in %s, line %u"),
+			   __FUNCTION__, __LINE__);
+                  }
+              }
+    }
+
   for (cnt = 0; cnt < ctype->class_collection_max; ++cnt)
     {
       unsigned long int tmp;
@@ -267,8 +353,8 @@ ctype_finish (struct localedef_t *locale, struct charset_t *charset)
 
 			if (!be_quiet)
 			  error (0, 0, _("\
-character %s'%s' in class `%s' must be in class `%s'"), value > 256 ? "L" : "",
-				 buf, valid_table[cls1].name,
+character L'%s' (index %Zd) in class `%s' must be in class `%s'"),
+				 buf, cnt, valid_table[cls1].name,
 				 valid_table[cls2].name);
 		      }
 		    break;
@@ -292,9 +378,8 @@ character %s'%s' in class `%s' must be in class `%s'"), value > 256 ? "L" : "",
 
 			if (!be_quiet)
 			  error (0, 0, _("\
-character %s'%s' in class `%s' must not be in class `%s'"),
-				 value > 256 ? "L" : "", buf,
-				 valid_table[cls1].name,
+character L'%s' (index %Zd) in class `%s' must not be in class `%s'"),
+				 buf, cnt, valid_table[cls1].name,
 				 valid_table[cls2].name);
 		      }
 		    break;
@@ -320,30 +405,35 @@ character %s'%s' in class `%s' must not be in class `%s'"),
 	error (0, 0, _("character <SP> not defined in character map"));
     }
   else if (((cnt = BITPOS (tok_space),
-	     (ELEM (ctype, class_collection, , space_value)
-	      & BIT (tok_space)) == 0)
+	     (ctype->class_collection256[space_value] & BIT (tok_space)) == 0
+	     || (ctype->class_collection[L' '] & BIT (tok_space)) == 0)
 	    || (cnt = BITPOS (tok_blank),
-		(ELEM (ctype, class_collection, , space_value)
-		 & BIT (tok_blank)) == 0)))
+		(ctype->class_collection256[space_value]
+		 & BIT (tok_blank)) == 0
+		|| (ctype->class_collection[L' '] & BIT (tok_blank)) == 0)))
     {
       if (!be_quiet)
 	error (0, 0, _("<SP> character not in class `%s'"),
 	       valid_table[cnt].name);
     }
   else if (((cnt = BITPOS (tok_punct),
-	     (ELEM (ctype, class_collection, , space_value)
-	      & BIT (tok_punct)) != 0)
+	     (ctype->class_collection256[space_value] & BIT (tok_punct)) != 0
+	     || (ctype->class_collection[L' '] & BIT (tok_punct)) != 0)
 	    || (cnt = BITPOS (tok_graph),
-		(ELEM (ctype, class_collection, , space_value)
-		 & BIT (tok_graph))
-		!= 0)))
+		(ctype->class_collection256[space_value]
+		 & BIT (tok_graph)) != 0
+		|| (ctype->class_collection[L' '] & BIT (tok_punct)) != 0)))
     {
       if (!be_quiet)
 	error (0, 0, _("<SP> character must not be in class `%s'"),
 	       valid_table[cnt].name);
     }
   else
-    ELEM (ctype, class_collection, , space_value) |= BIT (tok_print);
+    {
+      if (space_value < 256)
+	ctype->class_collection256[space_value] |= BIT (tok_print);
+      ELEM (ctype, class_collection, , L' ') |= BIT (tok_print);
+    }
 
   /* Now that the tests are done make sure the name array contains all
      characters which are handled in the WIDTH section of the
@@ -416,19 +506,33 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
 		      (256 + 128) * sizeof (char_class_t));
 
 	  CTYPE_DATA (_NL_CTYPE_TOUPPER_EB,
+		      ctype->map256_eb[0],
+		      (256 + 128) * sizeof (u_int32_t));
+	  CTYPE_DATA (_NL_CTYPE_TOLOWER_EB,
+		      ctype->map256_eb[1],
+		      (256 + 128) * sizeof (u_int32_t));
+
+	  CTYPE_DATA (_NL_CTYPE_TOUPPER_EL,
+		      ctype->map256_el[0],
+		      (256 + 128) * sizeof (u_int32_t));
+	  CTYPE_DATA (_NL_CTYPE_TOLOWER_EL,
+		      ctype->map256_el[1],
+		      (256 + 128) * sizeof (u_int32_t));
+
+	  CTYPE_DATA (_NL_CTYPE_TOUPPER32_EB,
 		      ctype->map_eb[0],
 		      (ctype->plane_size * ctype->plane_cnt + 128)
 		      * sizeof (u_int32_t));
-	  CTYPE_DATA (_NL_CTYPE_TOLOWER_EB,
+	  CTYPE_DATA (_NL_CTYPE_TOLOWER32_EB,
 		      ctype->map_eb[1],
 		      (ctype->plane_size * ctype->plane_cnt + 128)
 		      * sizeof (u_int32_t));
 
-	  CTYPE_DATA (_NL_CTYPE_TOUPPER_EL,
+	  CTYPE_DATA (_NL_CTYPE_TOUPPER32_EL,
 		      ctype->map_el[0],
 		      (ctype->plane_size * ctype->plane_cnt + 128)
 		      * sizeof (u_int32_t));
-	  CTYPE_DATA (_NL_CTYPE_TOLOWER_EL,
+	  CTYPE_DATA (_NL_CTYPE_TOLOWER32_EL,
 		      ctype->map_el[1],
 		      (ctype->plane_size * ctype->plane_cnt + 128)
 		      * sizeof (u_int32_t));
@@ -634,7 +738,8 @@ ctype_class_start (struct linereader *lr, struct localedef_t *locale,
 
 void
 ctype_class_from (struct linereader *lr, struct localedef_t *locale,
-		  struct token *code, struct charset_t *charset)
+		  struct token *code, struct charset_t *charset,
+		  struct repertoire_t *repertoire)
 {
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   unsigned int value;
@@ -642,22 +747,33 @@ ctype_class_from (struct linereader *lr, struct localedef_t *locale,
   value = charset_find_value (&charset->char_table, code->val.str.start,
 			      code->val.str.len);
 
-  ctype->last_class_char = value;
+  ctype->last_class_char256 = value;
 
-  if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+  if ((wchar_t) value != ILLEGAL_CHAR_VALUE && value < 256)
     /* In the LC_CTYPE category it is no error when a character is
        not found.  This has to be ignored silently.  */
-    return;
+    ctype->class_collection256[value] |= ctype->current_class_mask;
 
-  *find_idx (ctype, &ctype->class_collection, &ctype->class_collection_max,
-	     &ctype->class_collection_act, value)
-    |= ctype->current_class_mask;
+  /* Now the wide character value.  */
+  value = repertoire_find_value (&repertoire->char_table, code->val.str.start,
+				 code->val.str.len);
+
+  ctype->last_class_char = value;
+
+  if ((wchar_t) value != ILLEGAL_CHAR_VALUE)
+    /* In the LC_CTYPE category it is no error when a character is
+       not found.  This has to be ignored silently.  */
+    *find_idx (ctype, &ctype->class_collection,
+	       &ctype->class_collection_max,
+	       &ctype->class_collection_act, value)
+      |= ctype->current_class_mask;
 }
 
 
 void
 ctype_class_to (struct linereader *lr, struct localedef_t *locale,
-		struct token *code, struct charset_t *charset)
+		struct token *code, struct charset_t *charset,
+		struct repertoire_t *repertoire)
 {
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   unsigned int value, cnt;
@@ -667,7 +783,20 @@ ctype_class_to (struct linereader *lr, struct localedef_t *locale,
 
   /* In the LC_CTYPE category it is no error when a character is
      not found.  This has to be ignored silently.  */
+  if ((wchar_t) ctype->last_class_char256 != ILLEGAL_CHAR_VALUE
+      && ctype->last_class_char256 < value
+      && (wchar_t) value != ILLEGAL_CHAR_VALUE)
+    for (cnt = ctype->last_class_char256 + 1; cnt <= value && cnt < 256; ++cnt)
+      ctype->class_collection256[cnt] |= ctype->current_class_mask;
+
+  ctype->last_class_char256 = ILLEGAL_CHAR_VALUE;
+
+  /* Now the wide character value.  */
+  value = repertoire_find_value (&repertoire->char_table, code->val.str.start,
+				 code->val.str.len);
+
   if ((wchar_t) ctype->last_class_char != ILLEGAL_CHAR_VALUE
+      && ctype->last_class_char < value
       && (wchar_t) value != ILLEGAL_CHAR_VALUE)
     for (cnt = ctype->last_class_char + 1; cnt <= value; ++cnt)
       *find_idx (ctype, &ctype->class_collection, &ctype->class_collection_max,
@@ -752,7 +881,8 @@ ctype_map_start (struct linereader *lr, struct localedef_t *locale,
 
 void
 ctype_map_from (struct linereader *lr, struct localedef_t *locale,
-		struct token *code, struct charset_t *charset)
+		struct token *code, struct charset_t *charset,
+		struct repertoire_t *repertoire)
 {
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   unsigned int value;
@@ -760,20 +890,25 @@ ctype_map_from (struct linereader *lr, struct localedef_t *locale,
   value = charset_find_value (&charset->char_table, code->val.str.start,
 			      code->val.str.len);
 
-  if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
-    /* In the LC_CTYPE category it is no error when a character is
-       not found.  This has to be ignored silently.  */
-    return;
+  if ((wchar_t) value != ILLEGAL_CHAR_VALUE)
+    {
+      /* In the LC_CTYPE category it is no error when a character is
+	 not found.  This has to be ignored silently.  */
+      assert (ctype->last_map_idx < ctype->map_collection_nr);
 
-  assert (ctype->last_map_idx < ctype->map_collection_nr);
+      ctype->from_map_char256 = value;
+    }
 
+  value = repertoire_find_value (&repertoire->char_table, code->val.str.start,
+				 code->val.str.len);
   ctype->from_map_char = value;
 }
 
 
 void
 ctype_map_to (struct linereader *lr, struct localedef_t *locale,
-	      struct token *code, struct charset_t *charset)
+	      struct token *code, struct charset_t *charset,
+	      struct repertoire_t *repertoire)
 {
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   unsigned int value;
@@ -781,19 +916,26 @@ ctype_map_to (struct linereader *lr, struct localedef_t *locale,
   value = charset_find_value (&charset->char_table, code->val.str.start,
 			      code->val.str.len);
 
-  if ((wchar_t) ctype->from_map_char == ILLEGAL_CHAR_VALUE
-      || (wchar_t) value == ILLEGAL_CHAR_VALUE)
-    {
-      /* In the LC_CTYPE category it is no error when a character is
-	 not found.  This has to be ignored silently.  */
-      ctype->from_map_char = ILLEGAL_CHAR_VALUE;
-      return;
-    }
+  if ((wchar_t) ctype->from_map_char256 != ILLEGAL_CHAR_VALUE
+      && (wchar_t) value != ILLEGAL_CHAR_VALUE
+      && ctype->from_map_char256 < 256
+      && value < 256)
+    /* In the LC_CTYPE category it is no error when a character is
+       not found.  This has to be ignored silently.  */
+    ctype->map_collection256[ctype->last_map_idx][ctype->from_map_char256]
+      = value;
 
-  *find_idx (ctype, &ctype->map_collection[ctype->last_map_idx],
-	     &ctype->map_collection_max[ctype->last_map_idx],
-	     &ctype->map_collection_act[ctype->last_map_idx],
-	     ctype->from_map_char) = value;
+  ctype->from_map_char256 = ILLEGAL_CHAR_VALUE;
+
+  value = repertoire_find_value (&repertoire->char_table, code->val.str.start,
+				 code->val.str.len);
+
+  if ((wchar_t) ctype->from_map_char != ILLEGAL_CHAR_VALUE
+      && (wchar_t) value != ILLEGAL_CHAR_VALUE)
+    *find_idx (ctype, &ctype->map_collection[ctype->last_map_idx],
+	       &ctype->map_collection_max[ctype->last_map_idx],
+	       &ctype->map_collection_act[ctype->last_map_idx],
+	       ctype->from_map_char) = value;
 
   ctype->from_map_char = ILLEGAL_CHAR_VALUE;
 }
@@ -938,7 +1080,8 @@ find_idx (struct locale_ctype_t *ctype, u_int32_t **table, size_t *max,
 
 
 static void
-set_class_defaults (struct locale_ctype_t *ctype, struct charset_t *charset)
+set_class_defaults (struct locale_ctype_t *ctype, struct charset_t *charset,
+		    struct repertoire_t *repertoire)
 {
   /* These function defines the default values for the classes and conversions
      according to POSIX.2 2.5.2.1.
@@ -967,7 +1110,10 @@ character `%s' not defined while needed as default value"),
 	      continue;
 	    }
 	  else
-	    ELEM (ctype, class_collection, , value) |= bit;
+	    ctype->class_collection256[value] |= bit;
+
+	  /* The wide character version is even simpler.  */
+	  ELEM (ctype, class_collection, , ch) |= bit;
 	}
     }
 
@@ -991,6 +1137,10 @@ character `%s' not defined while needed as default value"),
       unsigned long int mask = BIT (tok_upper) | BIT (tok_lower);
       size_t cnt;
 
+      for (cnt = 0; cnt < 256; ++cnt)
+	if ((ctype->class_collection256[cnt] & mask) != 0)
+	  ctype->class_collection256[cnt] |= BIT (tok_alpha);
+
       for (cnt = 0; cnt < ctype->class_collection_act; ++cnt)
 	if ((ctype->class_collection[cnt] & mask) != 0)
 	  ctype->class_collection[cnt] |= BIT (tok_alpha);
@@ -1008,6 +1158,10 @@ character `%s' not defined while needed as default value"),
   {
     unsigned long int mask = BIT (tok_alpha) | BIT (tok_digit);
     size_t cnt;
+
+    for (cnt = 0; cnt < 256; ++cnt)
+      if ((ctype->class_collection256[cnt] & mask) != 0)
+	ctype->class_collection256[cnt] |= BIT (tok_alnum);
 
     for (cnt = 0; cnt < ctype->class_collection_act; ++cnt)
       if ((ctype->class_collection[cnt] & mask) != 0)
@@ -1031,7 +1185,9 @@ character `%s' not defined while needed as default value"),
 		   "<space>");
 	}
       else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
+	ctype->class_collection256[value] |= BIT (tok_space);
+
+      ELEM (ctype, class_collection, , L' ') |= BIT (tok_space);
 
       value = charset_find_value (&charset->char_table, "form-feed", 9);
       if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
@@ -1042,7 +1198,9 @@ character `%s' not defined while needed as default value"),
 		   "<form-feed>");
 	}
       else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
+	ctype->class_collection256[value] |= BIT (tok_space);
+
+      ELEM (ctype, class_collection, , L'\f') |= BIT (tok_space);
 
       value = charset_find_value (&charset->char_table, "newline", 7);
       if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
@@ -1053,7 +1211,9 @@ character `%s' not defined while needed as default value"),
 		   "<newline>");
 	}
       else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
+	ctype->class_collection256[value] |= BIT (tok_space);
+
+      ELEM (ctype, class_collection, , L'\n') |= BIT (tok_space);
 
       value = charset_find_value (&charset->char_table, "carriage-return", 15);
       if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
@@ -1064,7 +1224,9 @@ character `%s' not defined while needed as default value"),
 		   "<carriage-return>");
 	}
       else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
+	ctype->class_collection256[value] |= BIT (tok_space);
+
+      ELEM (ctype, class_collection, , L'\r') |= BIT (tok_space);
 
       value = charset_find_value (&charset->char_table, "tab", 3);
       if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
@@ -1075,7 +1237,9 @@ character `%s' not defined while needed as default value"),
 		   "<tab>");
 	}
       else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
+	ctype->class_collection256[value] |= BIT (tok_space);
+
+      ELEM (ctype, class_collection, , L'\t') |= BIT (tok_space);
 
       value = charset_find_value (&charset->char_table, "vertical-tab", 12);
       if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
@@ -1086,7 +1250,9 @@ character `%s' not defined while needed as default value"),
 		   "<vertical-tab>");
 	}
       else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
+	ctype->class_collection256[value] |= BIT (tok_space);
+
+      ELEM (ctype, class_collection, , L'\v') |= BIT (tok_space);
     }
 
   if ((ctype->class_done & BIT (tok_xdigit)) == 0)
@@ -1115,7 +1281,9 @@ character `%s' not defined while needed as default value"),
 		   "<space>");
 	}
       else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_blank);
+	ctype->class_collection256[value] |= BIT (tok_blank);
+
+      ELEM (ctype, class_collection, , L' ') |= BIT (tok_blank);
 
       value = charset_find_value (&charset->char_table, "tab", 3);
       if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
@@ -1126,7 +1294,9 @@ character `%s' not defined while needed as default value"),
 		   "<tab>");
 	}
       else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_blank);
+	ctype->class_collection256[value] |= BIT (tok_blank);
+
+      ELEM (ctype, class_collection, , L'\t') |= BIT (tok_blank);
     }
 
   if ((ctype->class_done & BIT (tok_graph)) == 0)
@@ -1137,6 +1307,10 @@ character `%s' not defined while needed as default value"),
       unsigned long int mask = BIT (tok_upper) | BIT (tok_lower) |
 	BIT (tok_alpha) | BIT (tok_digit) | BIT (tok_xdigit) | BIT (tok_punct);
       size_t cnt;
+
+      for (cnt = 0; cnt < 256; ++cnt)
+	if ((ctype->class_collection256[cnt] & mask) != 0)
+	  ctype->class_collection256[cnt] |= BIT (tok_graph);
 
       for (cnt = 0; cnt < ctype->class_collection_act; ++cnt)
 	if ((ctype->class_collection[cnt] & mask) != 0)
@@ -1154,6 +1328,10 @@ character `%s' not defined while needed as default value"),
       size_t cnt;
       wchar_t space;
 
+      for (cnt = 0; cnt < 256; ++cnt)
+	if ((ctype->class_collection256[cnt] & mask) != 0)
+	  ctype->class_collection256[cnt] |= BIT (tok_print);
+
       for (cnt = 0; cnt < ctype->class_collection_act; ++cnt)
 	if ((ctype->class_collection[cnt] & mask) != 0)
 	  ctype->class_collection[cnt] |= BIT (tok_print);
@@ -1167,7 +1345,9 @@ character `%s' not defined while needed as default value"),
 		   "<space>");
 	}
       else
-	ELEM (ctype, class_collection, , space) |= BIT (tok_print);
+	ctype->class_collection256[space] |= BIT (tok_print);
+
+      ELEM (ctype, class_collection, , L' ') |= BIT (tok_print);
     }
 
   if (ctype->toupper_done == 0)
@@ -1206,12 +1386,13 @@ character `%s' not defined while needed as default value"),
 		error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 		       tmp);
-	      continue;
 	    }
+	  else if (value_to < 256)
+	    /* The index [0] is determined by the order of the
+	       `ctype_map_newP' calls in `ctype_startup'.  */
+	    ctype->map_collection256[0][value_from] = value_to;
 
-	  /* The index [0] is determined by the order of the
-	     `ctype_map_newP' calls in `ctype_startup'.  */
-	  ELEM (ctype, map_collection, [0], value_from) = value_to;
+	  ELEM (ctype, map_collection, [0], ch) = tmp[1];
 	}
     }
 
@@ -1220,6 +1401,10 @@ character `%s' not defined while needed as default value"),
        the reverse mapping of the one specified to `toupper'."  [P1003.2]  */
     {
       size_t cnt;
+
+      for (cnt = 0; cnt < 256; ++cnt)
+	if (ctype->map_collection256[0][cnt] != 0)
+	  ctype->map_collection256[1][ctype->map_collection256[0][cnt]] = cnt;
 
       for (cnt = 0; cnt < ctype->map_collection_act[0]; ++cnt)
 	if (ctype->map_collection[0][cnt] != 0)
@@ -1352,10 +1537,8 @@ Computing table size for character classes might take a while..."),
 # define TRANS32(w) (w)
 #endif
 
-  for (idx = 0; idx < ctype->class_collection_act; ++idx)
-    if (ctype->charnames[idx] < 256)
-      ctype->ctype_b[128 + ctype->charnames[idx]]
-	= TRANS (ctype->class_collection[idx]);
+  for (idx = 0; idx < 256; ++idx)
+    ctype->ctype_b[128 + idx] = TRANS (ctype->class_collection256[idx]);
 
   /* Mirror first 127 entries.  We must take care that entry -1 is not
      mirrored because EOF == -1.  */
@@ -1368,6 +1551,10 @@ Computing table size for character classes might take a while..."),
       = TRANS32 (ctype->class_collection[idx]);
 
   /* Room for table of mappings.  */
+  ctype->map256_eb = (u_int32_t **) xmalloc (ctype->map_collection_nr
+					     * sizeof (u_int32_t *));
+  ctype->map256_el = (u_int32_t **) xmalloc (ctype->map_collection_nr
+					     * sizeof (u_int32_t *));
   ctype->map_eb = (u_int32_t **) xmalloc (ctype->map_collection_nr
 					  * sizeof (u_int32_t *));
   ctype->map_el = (u_int32_t **) xmalloc (ctype->map_collection_nr
@@ -1378,42 +1565,65 @@ Computing table size for character classes might take a while..."),
     {
       unsigned int idx2;
 
-      /* Allocate table.  */
-      ctype->map_eb[idx] = (u_int32_t *) xmalloc ((ctype->plane_size
-						   * ctype->plane_cnt + 128)
-						  * sizeof (u_int32_t));
-      ctype->map_el[idx] = (u_int32_t *) xmalloc ((ctype->plane_size
-						   * ctype->plane_cnt + 128)
-						  * sizeof (u_int32_t));
-
 #if __BYTE_ORDER == __LITTLE_ENDIAN
+# define MAP256_B1 ctype->map256_el
+# define MAP256_B2 ctype->map256_eb
 # define MAP_B1 ctype->map_el
 # define MAP_B2 ctype->map_eb
 #else
+# define MAP256_B1 ctype->map256_eb
+# define MAP256_B2 ctype->map256_el
 # define MAP_B1 ctype->map_eb
 # define MAP_B2 ctype->map_el
 #endif
 
+      /* Allocate table.  */
+      if (idx < 2)
+	{
+	  ctype->map256_eb[idx] = (u_int32_t *) xmalloc ((256 + 128)
+							 * sizeof (u_int32_t));
+	  ctype->map256_el[idx] = (u_int32_t *) xmalloc ((256 + 128)
+							 * sizeof (u_int32_t));
+
+
+	  for (idx2 = 0; idx2 < 256; ++idx2)
+	    {
+	      MAP256_B1[idx][128 + idx2]
+		= ctype->map_collection256[idx][idx2];
+	      MAP256_B2[idx][128 + idx2]
+		= SWAPU32 (ctype->map_collection256[idx][idx2]);
+	    }
+
+	  for (idx2 = 0; idx2 < 127; ++idx2)
+	    {
+	      MAP256_B1[idx][idx2] = MAP256_B1[idx][256 + idx2];
+	      MAP256_B2[idx][idx2] = MAP256_B2[idx][256 + idx2];
+	    }
+
+	  /* EOF must map to EOF.  */
+	  MAP256_B1[idx][127] = EOF;
+	  MAP256_B2[idx][127] = SWAPU32 (EOF);
+	}
+
+      ctype->map_eb[idx] = (u_int32_t *) xmalloc ((ctype->plane_size
+						   * ctype->plane_cnt)
+						  * sizeof (u_int32_t));
+      ctype->map_el[idx] = (u_int32_t *) xmalloc ((ctype->plane_size
+						   * ctype->plane_cnt)
+						  * sizeof (u_int32_t));
+
       /* Copy default value (identity mapping).  */
-      memcpy (&MAP_B1[idx][128], NAMES_B1,
+      memcpy (MAP_B1[idx], NAMES_B1,
 	      ctype->plane_size * ctype->plane_cnt * sizeof (u_int32_t));
 
       /* Copy values from collection.  */
       for (idx2 = 0; idx2 < ctype->map_collection_act[idx]; ++idx2)
 	if (ctype->map_collection[idx][idx2] != 0)
-	  MAP_B1[idx][128 + ctype->charnames[idx2]] =
+	  MAP_B1[idx][ctype->charnames[idx2]] =
 	    ctype->map_collection[idx][idx2];
 
-      /* Mirror first 127 entries.  We must take care not to map entry
-	 -1 because EOF == -1.  */
-      for (idx2 = 0; idx2 < 127; ++idx2)
-	MAP_B1[idx][idx2] = MAP_B1[idx][256 + idx2];
-
-      /* EOF must map to EOF.  */
-      MAP_B1[idx][127] = EOF;
-
       /* And now the other byte order.  */
-      for (idx2 = 0; idx2 < ctype->plane_size * ctype->plane_cnt + 128; ++idx2)
+      for (idx2 = 0; idx2 < ctype->plane_size * ctype->plane_cnt; ++idx2)
 	MAP_B2[idx][idx2] = SWAPU32 (MAP_B1[idx][idx2]);
     }
 
