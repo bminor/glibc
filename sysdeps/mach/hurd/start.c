@@ -186,7 +186,7 @@ start1 (void)
       /* We are not using cthreads, so we will have just a single allocated
 	 area for the per-thread variables of the main user thread.  */
       __hurd_threadvar_stack_offset
-	= (unsigned long int) malloc (__hurd_threadvar_max *
+	= (unsigned long int) calloc (__hurd_threadvar_max, /* Zero-filled.  */
 				      sizeof (unsigned long int));
       if (__hurd_threadvar_stack_offset == 0)
 	__libc_fatal ("Can't allocate single-threaded per-thread variables.");
