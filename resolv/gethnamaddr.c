@@ -114,7 +114,7 @@ static void map_v4v6_address __P((const char *src, char *dst));
 static void map_v4v6_hostent __P((struct hostent *hp, char **bp, int *len));
 
 #ifdef RESOLVSORT
-static void addrsort __P((char **, int));
+extern void addrsort __P((char **, int));
 #endif
 
 #if PACKETSZ > 1024
@@ -286,7 +286,7 @@ getanswer(answer, anslen, qname, qtype)
 		}
 		if (qtype == T_PTR && type == T_CNAME) {
 			n = dn_expand(answer->buf, eom, cp, tbuf, sizeof tbuf);
-			if (n < 0 || !res_hnok(tbuf)) {
+			if (n < 0 || !res_dnok(tbuf)) {
 				had_error++;
 				continue;
 			}
@@ -884,7 +884,7 @@ map_v4v6_hostent(hp, bpp, lenp)
 }
 
 #ifdef RESOLVSORT
-static void
+extern void
 addrsort(ap, num)
 	char **ap;
 	int num;
