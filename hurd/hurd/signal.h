@@ -144,6 +144,12 @@ extern int _hurd_thread_state_msging_p (void *state);
 extern kern_return_t _hurd_start_sigthread (thread_t thread,
 					    void (*function) (void));
 
+/* Set up STATE with a thread state that, when resumed, is
+   like `longjmp (_hurd_sigthread_fault_env, 1)'.  */
+
+extern void _hurd_initialize_fault_recovery_state (void *state);
+
+
 /* Function run for SIGINFO when its action is SIG_DFL and the current
    process is the session leader.  */
 
