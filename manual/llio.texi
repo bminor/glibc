@@ -81,89 +81,7 @@ to supply the argument in any case.
 The @var{flags} argument controls how the file is to be opened.  This is
 a bit mask; you create the value by the bitwise OR of the appropriate
 parameters (using the @samp{|} operator in C).
-
-The @var{flags} argument must include exactly one of these values to
-specify the file access mode:
-
-@table @code
-@comment fcntl.h
-@comment POSIX.1
-@item O_RDONLY
-@vindex O_RDONLY
-Open the file for read access.
-
-@comment fcntl.h
-@comment POSIX.1
-@item O_WRONLY
-@vindex O_WRONLY
-Open the file for write access.
-
-@comment fcntl.h
-@comment POSIX.1
-@item O_RDWR
-@vindex O_RDWR
-Open the file for both reading and writing.
-@end table
-
-The @var{flags} argument can also include any combination of these
-flags:
-
-@table @code
-@comment fcntl.h
-@comment POSIX.1
-@item O_APPEND
-@vindex O_APPEND
-@cindex append mode (file status flag)
-If set, then all @code{write} operations write the data at the end of
-the file, extending it, regardless of the current file position.
-
-@comment fcntl.h
-@comment POSIX.1
-@item O_CREAT
-@vindex O_CREAT
-If set, the file will be created if it doesn't already exist.
-@cindex create on open (file status flag)
-
-@comment fcntl.h
-@comment POSIX.1
-@item O_EXCL
-@vindex O_EXCL
-If both @code{O_CREAT} and @code{O_EXCL} are set, then @code{open} fails
-if the specified file already exists.  This is guaranteed to never
-clobber an existing file.
-
-@comment fcntl.h
-@comment POSIX.1
-@item O_NOCTTY
-@vindex O_NOCTTY
-If @var{filename} names a terminal device, don't make it the controlling
-terminal for the process.  @xref{Job Control}, for information about
-what it means to be the controlling terminal.  In the GNU system and in
-4.4 BSD, opening a file never makes it the controlling terminal.
-
-@comment fcntl.h
-@comment POSIX.1
-@item O_NONBLOCK
-@vindex O_NONBLOCK
-@cindex non-blocking open
-This prevents @code{open} from blocking for a ``long time'' to open the
-file.  This is only meaningful for some kinds of files, usually devices
-such as serial ports.  Often opening a port to a modem blocks until the
-modem reports carrier detection.
-@c !!! describe this better
-
-@comment fcntl.h
-@comment POSIX.1
-@item O_TRUNC
-@vindex O_TRUNC
-Truncate the file to zero length.  This option is only useful for
-regular files, not special files such as directories or FIFOs.  You have
-permission to write the file to truncate it, but you need not open for
-write access.
-@end table
-
-For more information about these symbolic constants, see @ref{File
-Status Flags}.
+@xref{File Status Flags}, for the parameters available.
 
 The normal return value from @code{open} is a non-negative integer file
 descriptor.  In the case of an error, a value of @code{-1} is returned
@@ -1272,23 +1190,326 @@ set_cloexec_flag (int desc, int value)
 @section File Status Flags
 @cindex file status flags
 
-@dfn{File status flags} are used to specify attributes of the opening of
-a file.  Unlike the file descriptor flags discussed in @ref{Descriptor
+@dfn{File status flags} are used to specify attributes of the opening of a
+file.  Unlike the file descriptor flags discussed in @ref{Descriptor
 Flags}, the file status flags are shared by duplicated file descriptors
-resulting from a single opening of the file.
+resulting from a single opening of the file.  The file status flags are
+specified with the @var{flags} argument to @code{open};
+@pxref{Opening and Closing Files}.
 
-The file status flags are initialized by the @code{open} function from
-the @var{flags} argument of the @code{open} function.  Some of the flags
-are meaningful only in @code{open} and are not remembered subsequently;
-many of the rest cannot subsequently be changed, though you can read
-their values by examining the file status flags.
+File status flags fall into three categories, which are described in the
+following sections.
 
-A few file status flags can be changed at any time using @code{fcntl}.
-These include @code{O_APPEND} and @code{O_NONBLOCK}.
+@itemize @bullet
+@item
+@ref{Access Modes}, specify what type of access is allowed to the
+file: reading, writing, or both.  They are set by @code{open} and are
+returned by @code{fcntl}, but cannot be changed.
+
+@item
+@ref{Open-time Flags}, control details of what @code{open} will do.
+These flags are not preserved after the @code{open} call.
+
+@item
+@ref{Operating Modes}, affect how operations such as @code{read} and
+@code{write} are done.  They are set by @code{open}, and can be fetched or
+changed with @code{fcntl}.
+@end itemize
 
 The symbols in this section are defined in the header file
 @file{fcntl.h}.
 @pindex fcntl.h
+
+@menu
+* Access Modes::                Whether the descriptor can read or write.
+* Open-time Flags::             Details of @code{open}.
+* Operating Modes::             Special modes to control I/O operations.
+* Getting File Status Flags::   Fetching and changing these flags.
+@end menu
+
+@node Access Modes
+@subsection File Access Modes
+
+The file access modes allow a file descriptor to be used for reading,
+writing, or both.  (In the GNU system, they can also allow none of these,
+and allow execution of the file as a program.)  The access modes are chosen
+when the file is opened, and never change.
+
+@comment fcntl.h
+@comment POSIX.1
+@deftypevr Macro int O_RDONLY
+Open the file for read access.
+@end deftypevr
+
+@comment fcntl.h
+@comment POSIX.1
+@deftypevr Macro int O_WRONLY
+Open the file for write access.
+@end deftypevr
+
+@comment fcntl.h
+@comment POSIX.1
+@deftypevr Macro int O_RDWR
+Open the file for both reading and writing.
+@end deftypevr
+
+In the GNU system (and not in other systems), @code{O_RDONLY} and
+@code{O_WRONLY} are independent bits that can be bitwise-ORed together,
+and it is valid for either bit to be set or clear.  This means that
+@code{O_RDWR} is the same as @code{O_RDONLY|O_WRONLY}.  A file access
+mode of zero is permissible; it allows no operations that do input or
+output to the file, but does allow other operations such as
+@code{fchmod}.  On the GNU system, since ``read-only'' or ``write-only''
+is a misnomer, @file{fcntl.h} defines additional names for the file
+access modes.  These names are preferred when writing GNU-specific code.
+But most programs will want to be portable to other POSIX.1 systems and
+should use the POSIX.1 names above instead.
+
+@comment fcntl.h
+@comment GNU
+@deftypevr Macro int O_READ
+Open the file for reading.  Same as @code{O_RDWR}; only defined on GNU.
+@end deftypevr
+
+@comment fcntl.h
+@comment GNU
+@deftypevr Macro int O_WRITE
+Open the file for reading.  Same as @code{O_WRONLY}; only defined on GNU.
+@end deftypevr
+
+@comment fcntl.h
+@comment GNU
+@deftypevr Macro int O_EXEC
+Open the file for executing.  Only defined on GNU.
+@end deftypevr
+
+To determine the file access mode with @code{fcntl}, you must extract
+the access mode bits from the retrieved file status flags.  In the GNU
+system, you can just test the @code{O_READ} and @code{O_WRITE} bits in
+the flags word.  But in other POSIX.1 systems, reading and writing
+access modes are not stored as distinct bit flags.  The portable way to
+extract the file access mode bits is with @code{O_ACCMODE}.
+
+@comment fcntl.h
+@comment POSIX.1
+@deftypevr Macro int O_ACCMODE
+This macro stands for a mask that can be bitwise-ANDed with the file
+status flag value to produce a value representing the file access mode.
+The mode will be @code{O_RDONLY}, @code{O_WRONLY}, or @code{O_RDWR}.
+(In the GNU system it could also be zero.)
+@end deftypevr
+
+@node Open-time Flags
+@subsection Open-time Flags
+
+The open-time flags specify options affecting how @code{open} will behave.
+These options are not preserved once the file is open.  The exception to
+this is @code{O_NONBLOCK}, which is also an I/O operating mode and so it
+@emph{is} saved.  @xref{Opening and Closing Files}, for how to call
+@code{open}.
+
+There are two sorts of options specified by open-time flags.
+
+@itemize @bullet
+@item
+@dfn{File name translation flags} affect how @code{open} looks up the
+file name to locate the file, and whether the file can be created.
+@cindex file name translation flags
+@cindex flags, file name translation
+
+@item
+@dfn{Open-time action flags} specify extra operations that @code{open} will
+perform on the file once it is open.
+@cindex open-time action flags
+@cindex flags, open-time action
+@end itemize
+
+Here are the file name translation flags.
+
+@comment fcntl.h
+@comment POSIX.1
+@deftypevr Macro int O_CREAT
+If set, the file will be created if it doesn't already exist.
+@cindex create on open (file status flag)
+@end deftypevr
+
+@comment fcntl.h
+@comment POSIX.1
+@deftypevr Macro int O_EXCL
+If both @code{O_CREAT} and @code{O_EXCL} are set, then @code{open} fails
+if the specified file already exists.  This is guaranteed to never
+clobber an existing file.
+@end deftypevr
+
+@comment fcntl.h
+@comment POSIX.1
+@deftypevr Macro int O_NONBLOCK
+@cindex non-blocking open
+This prevents @code{open} from blocking for a ``long time'' to open the
+file.  This is only meaningful for some kinds of files, usually devices
+such as serial ports.  Often opening a port to a modem blocks until the
+modem reports carrier detection; if @code{O_NONBLOCK} is specified,
+@code{open} will return immediately without a carrier.
+
+Note that the @code{O_NONBLOCK} flag is overloaded as both an I/O operating
+mode and a file name translation flag.  This means that specifying
+@code{O_NONBLOCK} in @code{open} also sets nonblocking I/O mode;
+@pxref{Operating Modes}.  To open the file without blocking but do normal
+I/O that blocks, you must call @code{open} with @code{O_NONBLOCK} set and
+then call @code{fcntl} to turn the bit off.
+@end deftypevr
+
+@comment fcntl.h
+@comment POSIX.1
+@deftypevr Macro int O_NOCTTY
+If the named file is a terminal device, don't make it the controlling
+terminal for the process.  @xref{Job Control}, for information about
+what it means to be the controlling terminal.  In the GNU system and 4.4
+BSD, opening a file never makes it the controlling terminal and
+@code{O_NOCTTY} is zero.
+@cindex controlling terminal, setting
+@end deftypevr
+
+These three file name translation flags exist only in the GNU system.
+
+@comment fcntl.h
+@comment GNU
+@deftypevr Macro int O_IGNORE_CTTY
+Do not recognize the named file as the controlling terminal, even if it
+refers to the process's existing controlling terminal device.  Operations
+on the new file descriptor will never induce job control signals.
+@xref{Job Control}.
+@end deftypevr
+
+@comment fcntl.h
+@comment GNU
+@deftypevr Macro int O_NOLINK
+If the named file is a symbolic link, open the link itself instead of
+the file it refers to.  (@code{fstat} on the new file descriptor will
+return the information returned by @code{lstat} on the link's name.)
+@cindex symbolic link, opening
+@end deftypevr
+
+@comment fcntl.h
+@comment GNU
+@deftypevr Macro int O_NOTRANS
+If the named file is specially translated, do not invoke the translator.
+Open the bare file the translator itself sees.
+@end deftypevr
+
+
+The open-time action flags tell @code{open} to do additional operations
+which are not really related to opening the file.  The reason to do them
+as part of @code{open} instead of in separate calls is that @code{open}
+can do them @i{atomically}.
+
+@comment fcntl.h
+@comment POSIX.1
+@deftypevr Macro int O_TRUNC
+Truncate the file to zero length.  This option is only useful for
+regular files, not special files such as directories or FIFOs.  You have
+permission to write the file to truncate it, but you need not open for
+write access.
+
+This is the only open-time action flag specified by POSIX.1.
+@c !!! not atomic? check posix.1
+@end deftypevr
+
+@comment fcntl.h
+@comment BSD
+@deftypevr Macro int O_SHLOCK
+Acquire a shared lock on the file, as with @code{flock}.
+@xref{BSD File Locking}.
+
+If @code{O_CREAT} is specified, the locking is done atomically when
+creating the file.  You are guaranteed that no other process will get
+the lock on the new file first.
+@end deftypevr
+
+@comment fcntl.h
+@comment BSD
+@deftypevr Macro int O_EXLOCK
+Acquire an exclusive lock on the file, as with @code{flock}.
+@xref{BSD File Locking}.  This is atomic like @code{O_SHLOCK}.
+@end deftypevr
+
+@node Operating Modes
+@subsection I/O Operating Modes
+
+The operating modes affect how input and output operations using a file
+descriptor work.  These flags are set by @code{open} and can be fetched
+and changed with @code{fcntl}.
+
+@comment fcntl.h
+@comment POSIX.1
+@deftypevr Macro int O_APPEND
+The bit that enables append mode for the file.  If set, then all
+@code{write} operations write the data at the end of the file, extending
+it, regardless of the current file position.
+@end deftypevr
+
+@comment fcntl.h
+@comment POSIX.1
+@deftypevr O_NONBLOCK
+The bit that enables nonblocking mode for the file.  If this bit is set,
+@code{read} requests on the file can return immediately with a failure
+status if there is no input immediately available, instead of blocking.
+Likewise, @code{write} requests can also return immediately with a
+failure status if the output can't be written immediately.
+
+Note that the @code{O_NONBLOCK} flag is overloaded as both an I/O
+operating mode and a file name translation flag; @pxref{Open-time Flags}.
+@end deftypevr
+
+@comment fcntl.h
+@comment BSD
+@deftypevr Macro int O_NDELAY
+This is an obsolete name for @code{O_NONBLOCK}, provided for
+compatibility with BSD.  It is not defined by the POSIX.1 standard.
+@end deftypevr
+
+The remaining operating modes are BSD and GNU extensions.  They exist only
+on some systems.  On other systems, these macros are not defined.
+
+@comment fcntl.h
+@comment BSD
+@deftypevr Macro int O_ASYNC
+The bit that enables asynchronous input mode.  If set, then @code{SIGIO}
+signals will be generated when input is available.  @xref{Interrupt Input}.
+
+Asynchronous input mode is a BSD feature.
+@end deftypevr
+
+@comment fcntl.h
+@comment BSD
+@deftypevr Macro int O_FSYNC
+The bit that enables synchronous writing for the file.  If set, each
+@code{write} call will make sure the data is reliably stored on disk before
+returning. @c !!! xref fsync
+
+Synchronous writing is a BSD feature.
+@end deftypevr
+
+@comment fcntl.h
+@comment BSD
+@deftypevr Macro int O_SYNC
+This is another name for @code{O_FSYNC}.  They have the same value.
+@end deftypevr
+
+@comment fcntl.h
+@comment GNU
+@deftypevr Macro int O_NOATIME
+If this bit is set, @code{read} will not update the access time of the
+file.  @xref{File Times}.  This is used by programs that do backups, so
+that backing a file up does not count as reading it.
+
+This is a GNU extension.
+@end deftypevr
+
+@node Getting File Status Flags
+@subsection Getting and Setting File Status Flags
+
+The @code{fcntl} function can fetch or change file status flags.
 
 @comment fcntl.h
 @comment POSIX.1
@@ -1299,10 +1520,7 @@ read the file status flags for the open file with descriptor
 
 The normal return value from @code{fcntl} with this command is a
 nonnegative number which can be interpreted as the bitwise OR of the
-individual flags.  The flags are encoded like the @var{flags} argument
-to @code{open} (@pxref{Opening and Closing Files}), but only the file
-access modes and the @code{O_APPEND} and @code{O_NONBLOCK} flags are
-meaningful here.  Since the file access modes are not single-bit values,
+individual flags.  Since the file access modes are not single-bit values,
 you can mask off other bits in the returned flags with @code{O_ACCMODE}
 to compare them.
 
@@ -1328,59 +1546,12 @@ fcntl (@var{filedes}, F_SETFL, @var{new-flags})
 @end smallexample
 
 You can't change the access mode for the file in this way; that is,
-whether the file descriptor was opened for reading or writing.  You can
-only change the @code{O_APPEND} and @code{O_NONBLOCK} flags.
+whether the file descriptor was opened for reading or writing.
 
 The normal return value from @code{fcntl} with this command is an
 unspecified value other than @code{-1}, which indicates an error.  The
 error conditions are the same as for the @code{F_GETFL} command.
 @end deftypevr
-
-The following macros are defined for use in analyzing and constructing
-file status flag values:
-
-@comment fcntl.h
-@comment POSIX.1
-@table @code
-@item O_APPEND
-The bit that enables append mode for the file.  If set, then all
-@code{write} operations write the data at the end of the file, extending
-it, regardless of the current file position.
-
-@comment fcntl.h
-@comment POSIX.1
-@item O_NONBLOCK
-The bit that enables nonblocking mode for the file.  If this bit is set,
-@code{read} requests on the file can return immediately with a failure
-status if there is no input immediately available, instead of blocking.
-Likewise, @code{write} requests can also return immediately with a
-failure status if the output can't be written immediately.
-
-@comment fcntl.h
-@comment BSD
-@item O_NDELAY
-This is a synonym for @code{O_NONBLOCK}, provided for compatibility with
-BSD.
-@end table
-
-@comment fcntl.h
-@comment POSIX.1
-@deftypevr Macro int O_ACCMODE
-This macro stands for a mask that can be bitwise-ANDed with the file
-status flag value to produce a value representing the file access mode.
-The mode will be @code{O_RDONLY}, @code{O_WRONLY}, or @code{O_RDWR}.
-@end deftypevr
-
-@table @code
-@item O_RDONLY
-Open the file for read access.
-
-@item O_WRONLY
-Open the file for write access.
-
-@item O_RDWR
-Open the file for both reading and writing.
-@end table
 
 If you want to modify the file status flags, you should get the current
 flags with @code{F_GETFL} and modify the value.  Don't assume that the
@@ -1400,8 +1571,8 @@ set_nonblock_flag (int desc, int value)
 @{
   int oldflags = fcntl (desc, F_GETFL, 0);
   /* @r{If reading the flags failed, return error indication now.} */
-  if (oldflags < 0)
-    return oldflags;
+  if (oldflags == -1)
+    return -1;
   /* @r{Set just the flag we want to set.} */
   if (value != 0)
     oldflags |= O_NONBLOCK;
