@@ -66,12 +66,17 @@ endif
 # the kludgificacious method of defining a pattern rule to build files
 # matching patterns we are pretty damn sure will only match the particular
 # files we have in mind.
-$(objpfx)%.ir: $(objpfx)%.uh
+#
+# Depend on %.h just so they will be built from %.uh in the
+# makefile-rebuilding run which builds %.ir; otherwise, %.uh is built as an
+# intermediate in order to make %.ir and then removed before re-exec, when
+# %.uh is built all over again to build %.h.
+$(objpfx)%.ir: $(objpfx)%.uh $(objpfx)%.h
 	(echo 'define $*-calls'					;\
 	 awk '/^kern_return_t/ { print $$2 }' $<		;\
 	 echo 'endef'						;\
 	 echo '$*-calls := $$(subst $$(nl), ,$$($*-calls))'	;\
-	 echo '$$($*-calls:%=\$(objpfx)_\%%.c): $*.defs'		;\
+	 echo '$$($*-calls:%=$$(objpfx)_\%%.c): $*.defs'	;\
 	 echo '	$$(generate-user-calls)'			 \
 	) > $@-new
 	mv $@-new $@
@@ -143,4 +148,4 @@ generated += $(mach-generated)
 before-compile += $(interface-headers:%=$(objpfx)%)
 
 # Don't let these be intermediate files and get removed.
-$(interface-headers:%=$(objpfx)%) :
+$(interface-headers:%=$(objpfx)%) $(interface-routines:%=$(objpfx)%.c) :
