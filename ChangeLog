@@ -1,3 +1,8 @@
+2002-07-02  Andreas Schwab  <schwab@suse.de>
+
+	* resolv/nss_dns/dns-network.c (getanswer_r): Reduce linebuflen
+	in parallel to bumping up the buffer pointer.
+
 2002-06-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* catgets/gencat.c (read_input_file): Handle more than one slash
