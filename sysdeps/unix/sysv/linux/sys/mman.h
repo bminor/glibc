@@ -1,5 +1,5 @@
 /* Definitions for BSD-style memory management.  Linux version.
-   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,6 +37,9 @@
 #ifndef MAP_FILE
 #define MAP_FILE	0
 #endif
+
+/* Return value of `mmap' in case of an error.  */
+#define MAP_FAILED	((__ptr_t) -1)
 
 __BEGIN_DECLS
 /* Map addresses starting near ADDR and extending for LEN bytes.  from
