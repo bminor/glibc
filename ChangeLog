@@ -5,6 +5,13 @@
 	Remove ugetrlimit.
 	* sysdeps/unix/sysv/linux/sparc/sparc32/mmap64.c: New file.
 
+1999-12-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/fxstat64.c: Rewrite to use fstat64
+	syscall if available.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Likewise for lstat64.
+	* sysdeps/unix/sysv/linux/xstat64.c: Likewise for stat64.
+
 1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/ftruncate64.c: New file.
