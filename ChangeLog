@@ -1,3 +1,8 @@
+1999-07-26  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdprio.c (_hurd_priority_which_map): Initialize PIDS.
+	Fix from Marcus Brinkmann <Marcus.Brinkmann@ruhr-uni-bochum.de>.
+
 1999-07-21  Andreas Schwab  <schwab@suse.de>
 
 	* libio/fileops.c (_IO_new_file_underflow): Set error indicator
