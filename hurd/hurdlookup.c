@@ -114,9 +114,9 @@ __hurd_path_split (file_t crdir, file_t cwdir,
       if (lastslash == path)
 	{
 	  /* "/foobar" => crdir + "foobar".  */
-	  *name = path;
+	  *name = path + 1;
 	  __mach_port_mod_refs (__mach_task_self (), MACH_PORT_RIGHT_SEND,
-				crdir, 1);
+				crdir, +1);
 	  *dir = crdir;
 	  return 0;
 	}
