@@ -70,6 +70,7 @@ common-objdir = ..
 else
 # This is a kludge.  make wizards might grok.
 common-objpfx = sysdeps/../
+common-objdir = .
 endif
 endif
 
