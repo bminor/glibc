@@ -802,8 +802,15 @@ as an obstack, it must initialize the obstack by calling
 
 @comment obstack.h
 @comment GNU
-@deftypefun void obstack_init (struct obstack *@var{obstack_ptr})
-Initialize obstack @var{obstack_ptr} for allocation of objects.
+@deftypefun int obstack_init (struct obstack *@var{obstack_ptr})
+Initialize obstack @var{obstack_ptr} for allocation of objects.  This
+function calls the obstack's @code{obstack_chunk_alloc} function.  It
+returns 0 if @code{obstack_chunk_alloc} returns a null pointer, meaning
+that it is out of memory.  Otherwise, it returns 1.  If you supply an
+@code{obstack_chunk_alloc} function that calls @code{exit}
+(@pxref{Program Termination}) or @code{longjmp} (@pxref{Non-Local
+Exits}) when out of memory, you can safely ignore the value that
+@code{obstack_init} returns.
 @end deftypefun
 
 Here are two examples of how to allocate the space for an obstack and
@@ -840,6 +847,15 @@ and returns its address.  Here @var{obstack_ptr} specifies which obstack
 to allocate the block in; it is the address of the @code{struct obstack}
 object which represents the obstack.  Each obstack function or macro
 requires you to specify an @var{obstack_ptr} as the first argument.
+
+This function calls the obstack's @code{obstack_chunk_alloc} function if
+it needs to allocate a new chunk of memory; it returns a null pointer if
+@code{obstack_chunk_alloc} returns one.  In that case, it has not
+changed the amount of memory allocated in the obstack.  If you supply an
+@code{obstack_chunk_alloc} function that calls @code{exit}
+(@pxref{Program Termination}) or @code{longjmp} (@pxref{Non-Local
+Exits}) when out of memory, then @code{obstack_alloc} will never return
+a null pointer.
 @end deftypefun
 
 For example, here is a function that allocates a copy of a string @var{str}
@@ -865,7 +881,8 @@ To allocate a block with specified contents, use the function
 @comment GNU
 @deftypefun {void *} obstack_copy (struct obstack *@var{obstack_ptr}, void *@var{address}, size_t @var{size})
 This allocates a block and initializes it by copying @var{size}
-bytes of data starting at @var{address}.
+bytes of data starting at @var{address}.  It can return a null pointer
+under the same conditions as @code{obstack_alloc}.
 @end deftypefun
 
 @comment obstack.h
@@ -1044,6 +1061,9 @@ When you are finished growing the object, use the function
 
 Once you have finished the object, the obstack is available for ordinary
 allocation or for growing another object.
+
+This function can return a null pointer under the same conditions as
+@code{obstack_alloc} (@pxref{Allocation in an Obstack}).
 @end deftypefun
 
 When you build an object by growing it, you will probably need to know
@@ -1271,13 +1291,6 @@ Note that these are simple macros (no arguments).  Macro definitions with
 arguments will not work!  It is necessary that @code{obstack_chunk_alloc}
 or @code{obstack_chunk_free}, alone, expand into a function name if it is
 not itself a function name.
-
-The function that actually implements @code{obstack_chunk_alloc} cannot
-return ``failure'' in any fashion, because the obstack library is not
-prepared to handle failure.  Therefore, @code{malloc} itself is not
-suitable.  If the function cannot obtain space, it should either
-terminate the process (@pxref{Program Termination}) or do a nonlocal
-exit using @code{longjmp} (@pxref{Non-Local Exits}).
 
 If you allocate chunks with @code{malloc}, the chunk size should be a
 power of 2.  The default chunk size, 4096, was chosen because it is long
