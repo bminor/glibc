@@ -1,3 +1,9 @@
+2000-04-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makeconfig (full_config_sysdirs): Renamed from full-config-sysdirs.
+	* Makerules (full_config_sysdirs): Likewise.
+	* MakeTAGS (full_config_sysdirs): Likewise.
+
 2000-05-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/stdio.h: Make fseeko and ftello prototypes available is
@@ -7,8 +13,8 @@
 
 2000-04-18  H.J. Lu  <hjl@gnu.org>
 
-        * posix/globtest.sh: Properly apply the patch by Ulrich Drepper
-        <drepper@redhat.com> on 2000-04-13.
+	* posix/globtest.sh: Properly apply the patch by Ulrich Drepper
+	<drepper@redhat.com> on 2000-04-13.
 
 2000-04-18  Ulrich Drepper  <drepper@redhat.com>
 
