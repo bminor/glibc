@@ -22,6 +22,8 @@ Cambridge, MA 02139, USA.  */
 #include <sys/stat.h>
 #include <unistd.h>
 #include <hurd/fd.h>
+#include <hurd/io.h>
+#include <hurd/term.h>
 
 /* Initialize STREAM as necessary.
    This may change I/O functions, give a buffer, etc.
