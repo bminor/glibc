@@ -88,6 +88,10 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
   char *pivot_buffer = (char *) __alloca (size);
   CONST size_t max_thresh = MAX_THRESH * size;
 
+  if (total_elems == 0)
+    /* Avoid lossage with unsigned arithmetic below.  */
+    return;
+
   if (total_elems > MAX_THRESH)
     {
       char *lo = base_ptr;
