@@ -1,7 +1,8 @@
 2002-03-22  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h (struct
-	_fpstate): Rename fwd to ftw.
+	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h (struct
+	_fpstate): Rename fwd to ftw, use _fpxreg and _xmmreg.
 	* sysdeps/unix/sysv/linux/x86_64/sys/user.h (struct user_fpregs_struct): Likewise.
 
 	* sysdeps/unix/sysv/linux/x86_64/register-dump.h (register_dump):
