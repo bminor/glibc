@@ -204,9 +204,9 @@ endif
 # This makes all the object files in the parent library archive.
 
 .PHONY: lib libobjs lib-noranlib
-lib: lib-noranlib
-	$(RANLIB) $(libc.a)
-$(libc.a): lib
+$(libc.a): lib-noranlib
+	$(RANLIB) $@
+lib: $(libc.a)
 
 +libobjs := $(patsubst %,$(libc.a)(%),$(notdir $(objects)))
 ifdef +libobjs
