@@ -1,3 +1,8 @@
+1998-06-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/rtld.c (_dl_start): Make static.
+	* sysdeps/m68k/Makefile (CFLAGS-rtld.c): Add -Wno-unused.
+
 1998-05025 22:18  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/unix/sysv/linux/i386/Makefile (sysdep_headers): Add
