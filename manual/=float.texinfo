@@ -130,6 +130,8 @@ floating-point representations are supported by the underlying hardware.
 So whether GNU C actually satisfies the ANSI C requirements depends on
 what machine it is running on.
 
+@comment float.h
+@comment ANSI
 @defvr Macro FLT_ROUNDS
 This value characterizes the rounding mode for floating-point addition.
 The following values indicate standard rounding modes:
@@ -152,27 +154,37 @@ Any other value represents a machine-dependent nonstandard rounding
 mode.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro FLT_RADIX
 This is the value of the base, or radix, of exponent representation.
 This is guaranteed to be a constant expression, unlike the other macros
 described in this section.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro FLT_MANT_DIG
 This is the number of base-@code{FLT_RADIX} digits in the floating-point
 mantissa for the @code{float} data type.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro DBL_MANT_DIG
 This is the number of base-@code{FLT_RADIX} digits in the floating-point
 mantissa for the @code{double} data type.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro LDBL_MANT_DIG
 This is the number of base-@code{FLT_RADIX} digits in the floating-point
 mantissa for the @code{long double} data type.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro FLT_DIG
 This is the number of decimal digits of precision for the @code{float}
 data type.  Technically, if @var{p} and @var{b} are the precision and
@@ -185,17 +197,23 @@ change to the @var{q} decimal digits.
 The value of this macro is guaranteed to be at least @code{6}.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro DBL_DIG
 This is similar to @code{FLT_DIG}, but is for the @code{double} data
 type.  The value of this macro is guaranteed to be at least @code{10}.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro LDBL_DIG
 This is similar to @code{FLT_DIG}, but is for the @code{long double}
 data type.  The value of this macro is guaranteed to be at least
 @code{10}.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro FLT_MIN_EXP
 This is the minimum negative integer such that the mathematical value
 @code{FLT_RADIX} raised to this power minus 1 can be represented as a
@@ -204,16 +222,22 @@ actual implementation, this is just the smallest value that can be
 represented in the exponent field of the number.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro DBL_MIN_EXP
 This is similar to @code{FLT_MIN_EXP}, but is for the @code{double} data
 type.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro LDBL_MIN_EXP
 This is similar to @code{FLT_MIN_EXP}, but is for the @code{long double}
 data type.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro FLT_MIN_10_EXP
 This is the minimum negative integer such that the mathematical value
 @code{10} raised to this power minus 1 can be represented as a
@@ -221,11 +245,15 @@ normalized floating-point number of type @code{float}.  This is
 guaranteed to be no greater than @code{-37}.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro DBL_MIN_10_EXP
 This is similar to @code{FLT_MIN_10_EXP}, but is for the @code{double}
 data type.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro LDBL_MIN_10_EXP
 This is similar to @code{FLT_MIN_10_EXP}, but is for the @code{long
 double} data type.
@@ -233,6 +261,8 @@ double} data type.
 
 
 
+@comment float.h
+@comment ANSI
 @defvr Macro FLT_MAX_EXP
 This is the maximum negative integer such that the mathematical value
 @code{FLT_RADIX} raised to this power minus 1 can be represented as a
@@ -241,16 +271,22 @@ implementation, this is just the largest value that can be represented
 in the exponent field of the number.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro DBL_MAX_EXP
 This is similar to @code{FLT_MAX_EXP}, but is for the @code{double} data
 type.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro LDBL_MAX_EXP
 This is similar to @code{FLT_MAX_EXP}, but is for the @code{long double}
 data type.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro FLT_MAX_10_EXP
 This is the maximum negative integer such that the mathematical value
 @code{10} raised to this power minus 1 can be represented as a
@@ -258,29 +294,39 @@ normalized floating-point number of type @code{float}.  This is
 guaranteed to be at least @code{37}.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro DBL_MAX_10_EXP
 This is similar to @code{FLT_MAX_10_EXP}, but is for the @code{double}
 data type.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro LDBL_MAX_10_EXP
 This is similar to @code{FLT_MAX_10_EXP}, but is for the @code{long
 double} data type.
 @end defvr
 
 
+@comment float.h
+@comment ANSI
 @defvr Macro FLT_MAX
 The value of this macro is the maximum representable floating-point
 number of type @code{float}, and is guaranteed to be at least
 @code{1E+37}.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro DBL_MAX
 The value of this macro is the maximum representable floating-point
 number of type @code{double}, and is guaranteed to be at least
 @code{1E+37}.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro LDBL_MAX
 The value of this macro is the maximum representable floating-point
 number of type @code{long double}, and is guaranteed to be at least
@@ -288,18 +334,24 @@ number of type @code{long double}, and is guaranteed to be at least
 @end defvr
 
 
+@comment float.h
+@comment ANSI
 @defvr Macro FLT_MIN
 The value of this macro is the minimum normalized positive
 floating-point number that is representable by type @code{float}, and is
 guaranteed to be no more than @code{1E-37}.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro DBL_MIN
 The value of this macro is the minimum normalized positive
 floating-point number that is representable by type @code{double}, and
 is guaranteed to be no more than @code{1E-37}.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro LDBL_MIN
 The value of this macro is the minimum normalized positive
 floating-point number that is representable by type @code{long double},
@@ -307,17 +359,23 @@ and is guaranteed to be no more than @code{1E-37}.
 @end defvr
 
 
+@comment float.h
+@comment ANSI
 @defvr Macro FLT_EPSILON
 This is the minimum positive floating-point number of type @code{float}
 such that @code{1.0 + FLT_EPSILON != 1.0} is true.  It's guaranteed to
 be no greater than @code{1E-5}.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro DBL_EPSILON
 This is similar to @code{FLT_EPSILON}, but is for the @code{double}
 type.  The maximum value is @code{1E-9}.
 @end defvr
 
+@comment float.h
+@comment ANSI
 @defvr Macro LDBL_EPSILON
 This is similar to @code{FLT_EPSILON}, but is for the @code{long double}
 type.  The maximum value is @code{1E-9}.

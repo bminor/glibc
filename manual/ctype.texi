@@ -47,16 +47,22 @@ information on locales.@refill
 These functions are declared in the header file @file{<ctype.h>}.
 
 @cindex lower-case character
+@comment ctype.h
+@comment ANSI
 @deftypefun int islower (int @var{c})
 Returns true if @var{c} is a lower-case letter.
 @end deftypefun
 
 @cindex upper-case character
+@comment ctype.h
+@comment ANSI
 @deftypefun int isupper (int @var{c})
 Returns true if @var{c} is an upper-case letter.
 @end deftypefun
 
 @cindex alphabetic character
+@comment ctype.h
+@comment ANSI
 @deftypefun int isalpha (int @var{c})
 Returns true if @var{c} is an alphabetic character (a letter).
 If @code{islower} or @code{isupper} is true of a character, then
@@ -69,11 +75,15 @@ no such additional characters.)
 
 @cindex digit character
 @cindex decimal digit character
+@comment ctype.h
+@comment ANSI
 @deftypefun int isdigit (int @var{c})
 Returns true if @var{c} is a decimal digit (@samp{0} through @samp{9}).
 @end deftypefun
 
 @cindex alphanumeric character
+@comment ctype.h
+@comment ANSI
 @deftypefun int isalnum (int @var{c})
 Returns true if @var{c} is an alphanumeric character (a letter or
 number); in other words, if either @code{isalpha} or @code{isdigit} is
@@ -81,6 +91,8 @@ true of a character, then @code{isalnum} is also true.
 @end deftypefun
 
 @cindex hexadecimal digit character
+@comment ctype.h
+@comment ANSI
 @deftypefun int isxdigit (int @var{c})
 Returns true if @var{c} is a hexadecimal digit.
 Hexadecimal digits include the normal decimal digits @samp{0} through
@@ -89,6 +101,8 @@ Hexadecimal digits include the normal decimal digits @samp{0} through
 @end deftypefun
 
 @cindex whitespace character
+@comment ctype.h
+@comment ANSI
 @deftypefun int isspace (int @var{c})
 Returns true if @var{c} is a @dfn{whitespace} character.  In the standard
 @code{"C"} locale, @code{isspace} returns true for only the standard
@@ -115,19 +129,33 @@ vertical tab
 @end table
 @end deftypefun
 
+@cindex blank character
+@comment ctype.h
+@comment GNU
+@deftypefun int isblank (int @var{c})
+Returns true if @var{c} is a blank character; that is, a space or
+a tab.
+@end deftypefun
+
 @cindex graphic character
+@comment ctype.h
+@comment ANSI
 @deftypefun int isgraph (int @var{c})
 Returns true if @var{c} is a graphic character; that is, a character
 that has a glyph associated with it.
 @end deftypefun
 
 @cindex printing character
+@comment ctype.h
+@comment ANSI
 @deftypefun int isprint (int @var{c})
 Returns true if @var{c} is a printing character.  Printing characters
 include all the graphic characters, plus the space (@samp{ }) character.
 @end deftypefun
 
 @cindex punctuation character
+@comment ctype.h
+@comment ANSI
 @deftypefun int ispunct (int @var{c})
 Returns true if @var{c} is a punctuation character.
 This means any printing character that is not alphanumeric or a space
@@ -135,12 +163,17 @@ character.
 @end deftypefun
 
 @cindex control character
+@comment ctype.h
+@comment ANSI
 @deftypefun int iscntrl (int @var{c})
 Returns true if @var{c} is a control character (that is, a character that
 is not a printing character).
 @end deftypefun
 
+
 @cindex ASCII character
+@comment ctype.h
+@comment SVID, GNU
 @deftypefun int isascii (int @var{c})
 Returns true if @var{c} is a 7-bit @code{unsigned char} value that will fit
 into the US/UK ASCII character set.
@@ -168,29 +201,38 @@ may need to write @code{islower(c) ? toupper(c) : c} rather than just
 
 These functions are declared in the header file @file{<ctype.h>}.
 
-
+@comment ctype.h
+@comment ANSI
 @deftypefun int tolower (int @var{c})
 If @var{c} is an upper-case letter, @code{tolower} returns the corresponding
 lower-case letter.  If @var{c} is not an upper-case letter,
 @var{c} is returned unchanged.
 @end deftypefun
 
+@comment ctype.h
+@comment ANSI
 @deftypefun int toupper (int @var{c})
 If @var{c} is a lower-case letter, @code{tolower} returns the corresponding
 upper-case letter.  Otherwise @var{c} is returned unchanged.
 @end deftypefun
 
+@comment ctype.h
+@comment SVID, GNU
 @deftypefun int toascii (int @var{c})
 This function converts @var{c} to a 7-bit @code{unsigned char} value
 that will fit into the US/UK ASCII character set, by clearing the
 high-order bits.
 @end deftypefun
 
+@comment ctype.h
+@comment SVID
 @deftypefun int _tolower (int @var{c})
 This is identical to @code{tolower}, and is provided for compatibility
 with the SVID.  @xref{SVID}.@refill
 @end deftypefun
 
+@comment ctype.h
+@comment SVID
 @deftypefun int _toupper (int @var{c})
 This is identical to @code{toupper}, and is provided for compatibility
 with the SVID.

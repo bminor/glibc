@@ -15,17 +15,19 @@ detected.
 
 The @code{assert} facility is really oriented more towards debugging
 than towards providing general handling for errors detected by your
-program.  When your program is debugged, you can disable the error
-checks performed by the @code{assert} macro without actually changing
-the program source code by recompiling it with the preprocessor symbol
-@code{NDEBUG} defined, but it is not usually a good idea to globally
-disable all error checks on user input to the program in this way.
-Also, the information in the diagnostic messages provided by the
+program.  The information in the diagnostic messages provided by the
 @code{assert} macro is intended to to help you, the programmer, track
 down the source of a bug, but is not really useful in telling a user of
 your program what he or she did wrong.
+
+Once your program is debugged, you can disable the error checks
+performed by the @code{assert} macro by recompiling it with the
+preprocessor symbol @code{NDEBUG} defined.  This means you don't
+actually have to change the program source code to disable these checks.
 @vindex NDEBUG
 
+@comment assert.h
+@comment ANSI
 @deftypefn Macro void assert (int @var{expression})
 If the preprocessor macro @code{NDEBUG} is defined before
 @file{<assert.h>} is included, the @code{assert} macro is defined in
