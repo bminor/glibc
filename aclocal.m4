@@ -8,4 +8,5 @@ AC_PROVIDE([AC_PROG_INSTALL])dnl
 AC_PROVIDE([AC_PROG_RANLIB])dnl
 AC_PROVIDE([AC_PROG_CC])dnl
 AC_PROVIDE([AC_PROG_CPP])dnl
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
 ])dnl
