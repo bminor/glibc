@@ -46,13 +46,18 @@ __BEGIN_DECLS
 #define	__WAIT_INT(status)	(*(int *) &(status))
 #endif
 
-/* This is the type of the argument to `wait'.  With GCC 2.6.1 and later,
-   the funky union causes redeclarations with either `int *' or `union wait
-   *' to be allowed without complaint.  __WAIT_STATUS_DEFN is the type used
-   in the actual function definitions. */
+/* This is the type of the argument to `wait'.
+
+   NOTE: Since this functionality is volatile, I'm disabling the use of it for
+   now.
+
+With GCC 2.6.1 and later, the funky union causes redeclarations with either
+   `int *' or `union wait *' to be allowed without complaint.
+   __WAIT_STATUS_DEFN is the type used in the actual function
+   definitions. */
 
 #if	(!defined (__GNUC__) || __GNUC__ < 2 || \
-	 (__GNUC__ == 2 && __GNUC_MINOR__ < 6))
+	 /*(__GNUC__ == 2 && __GNUC_MINOR__ < 6)*/ 1)
 #define	__WAIT_STATUS		__ptr_t
 #define	__WAIT_STATUS_DEFN	__ptr_t
 #else
