@@ -399,7 +399,7 @@ DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
 	register int i, d, m1, yy0, yy1, yy2, dow;
 
 	/* First add SECSPERDAY for each day in months before M.  */
-	for (i = 0; i <= rule->m; ++i)
+	for (i = 0; i < rule->m - 1; ++i)
 	  t += __mon_lengths[__isleap (year)][i] * SECSPERDAY;
 
 	/* Use Zeller's Congruence to get day-of-week of first day of month. */
