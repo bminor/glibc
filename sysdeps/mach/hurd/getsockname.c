@@ -28,18 +28,30 @@ int
 DEFUN(getsockname, (fd, addr, len),
       int fd AND struct sockaddr *addr AND size_t *len)
 {
-  error_t err = HURD_DPORT_USE
-    (fd,
-     ({
-       addr_port_t aport;
-       err = __socket_name (port, &aport);
-       if (!err)
-	 {
-	   err = __socket_whatis_address (aport, addr, len);
-	   __mach_port_deallocate (__mach_task_self (), aport);
-	 }
-       err;
-     }));
+  error_t err;
+  char *buf = (char *) addr;
+  unsigned int buflen = *len;
+  int type;
+  addr_port_t aport;
 
-  return err ? __hurd_dfail (fd, err) : 0;
+  if (err = HURD_DPORT_USE (fd, __socket_name (port, &aport)))
+    return __hurd_dfail (fd, err);
+
+  err = __socket_whatis_address (aport, &type, &buf, &buflen);
+  __mach_port_deallocate (__mach_task_self (), aport);
+
+  if (err)
+    return __hurd_dfail (fd, err);
+
+  if (buf != (char *) addr)
+    {
+      if (*len < buflen)
+	*len = buflen;
+      memcpy (addr, buf, *len);
+      __vm_deallocate (__mach_task_self (), (vm_address_t) buf, buflen);
+    }
+
+  addr->sa_family = type;
+
+  return 0;
 }
