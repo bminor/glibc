@@ -62,8 +62,8 @@ stamp-summary: summary.awk $(chapters)
 	mv $@.new $@
 
 
-minimal-dist = library.texinfo summary.awk Makefile move-if-change	\
-	       $(chapters)						\
+minimal-dist = COPYING.LIB summary.awk Makefile move-if-change		\
+	       library.texinfo $(chapters)				\
 	       $(patsubst %.c.texi,examples/%.c,			\
 			  $(filter-out summary.texinfo,$(chapters-incl)))
 distribute = $(minimal-dist)	       					\
