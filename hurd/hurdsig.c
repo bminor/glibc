@@ -148,11 +148,11 @@ mach_msg_timeout_t _hurd_interrupt_timeout = 1000; /* One second.  */
 static inline void
 abort_rpcs (struct hurd_sigstate *ss, int signo, void *state)
 {
-  unsigned int count;
+  unsigned int count = MACHINE_THREAD_STATE_COUNT;
   __thread_abort (ss->thread);
-  __thread_get_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
-		      state, &count);
-  if (count != MACHINE_THREAD_STATE_COUNT)
+  if (__thread_get_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
+			  state, &count) != KERN_SUCCESS ||
+      count != MACHINE_THREAD_STATE_COUNT)
     /* What kind of thread?? */
     return;			/* XXX */
 
@@ -237,7 +237,8 @@ struct mutex _hurd_signal_preempt_lock;
 void
 _hurd_internal_post_signal (struct hurd_sigstate *ss,
 			    int signo, int sigcode,
-			    mach_port_t reply_port)
+			    mach_port_t reply_port,
+			    mach_msg_type_name_t reply_port_type)
 {
   struct machine_thread_state thread_state;
   enum { stop, ignore, core, term, handle } act;
@@ -391,7 +392,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       /* The signal can now be considered delivered.
 	 Don't make the killer wait for us to dump core.  */
       if (reply_port)
-	__sig_post_reply (reply_port, 0);
+	__sig_post_reply (reply_port, reply_port_type, 0);
       /* Tell proc how we died and then stick the saber in the gut.  */
       _hurd_exit (W_EXITCODE (0, signo) |
 		  /* Do a core dump if desired.  Only set the wait status
@@ -433,10 +434,16 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       }
     }
 
-  /* The signal has either been ignored or is now being handled.
-     We can consider it delivered and reply to the killer.  */
-  if (reply_port)
-    __sig_post_reply (reply_port, 0);
+  /* The signal has either been ignored or is now being handled.  We can
+     consider it delivered and reply to the killer.  The exception is
+     signal 0, which can be sent by a user thread to make us check for
+     pending signals.  In that case we want to deliver the pending signals
+     before replying.  */
+  if (signo != 0 && reply_port)
+    {
+      __sig_post_reply (reply_port, reply_port_type, 0);
+      reply_port = MACH_PORT_NULL;
+    }
 
   /* We get here only if we are handling or ignoring the signal;
      otherwise we are stopped or dead by now.  We still hold SS->lock.
@@ -447,14 +454,19 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	{
 	  __sigdelset (&ss->pending, signo);
 	  _hurd_internal_post_signal (ss, signo, ss->sigcodes[signo],
-				      MACH_PORT_NULL);
+				      reply_port, reply_port_type);
 	  return;
 	}
+
+  /* No pending signals left undelivered.
+     Now we can reply even for signal 0.  */
+  if (reply_port)
+    __sig_post_reply (reply_port, reply_port_type, 0);
 
 #ifdef noteven
   if (ss->suspended)
     /* There is a sigsuspend waiting.  Tell it to wake up.  */
-    __condition_signal (&ss->arrived, &ss->lock);
+    __condition_broadcast (&ss->arrived, &ss->lock);
   else
 #endif
     __mutex_unlock (&ss->lock);
@@ -464,7 +476,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
    sent when someone wants us to get a signal.  */
 kern_return_t
 _S_sig_post (mach_port_t me,
-	     mach_port_t reply,
+	     mach_port_t reply_port, mach_msg_type_name_t reply_port_type,
 	     int signo,
 	     mach_port_t refport)
 {
@@ -563,7 +575,7 @@ _S_sig_post (mach_port_t me,
 
   /* Post the signal; this will reply when the signal can be considered
      delivered.  */
-  _hurd_internal_post_signal (ss, signo, 0, reply);
+  _hurd_internal_post_signal (ss, signo, 0, reply_port, reply_port_type);
 
   return MIG_NO_REPLY;		/* Already replied.  */
 }
@@ -572,8 +584,8 @@ extern void __mig_init (void *);
 
 #include <mach/task_special_ports.h>
 
-/* Initialize the message port and signal thread once.
-   Do nothing on subsequent calls.  */
+/* Initialize the message port and _hurd_sigthread once.  Start the signal
+   thread whenever called; we are called again after fork in the child.  */
 
 void
 _hurdsig_init (void)
@@ -599,11 +611,11 @@ _hurdsig_init (void)
 					  _hurd_msgport,
 					  MACH_MSG_TYPE_MAKE_SEND))
 	__libc_fatal ("hurd: Can't create send right to message port\n");
-    }
 
-  /* Set the default thread to receive task-global signals
-     to this one, the main (first) user thread.  */
-  _hurd_sigthread = __mach_thread_self ();
+      /* Set the default thread to receive task-global signals
+	 to this one, the main (first) user thread.  */
+      _hurd_sigthread = __mach_thread_self ();
+    }
 
   /* Start the signal thread listening on the message port.  */
 
