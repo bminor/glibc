@@ -1,39 +1,6 @@
-/* This part here added by roland@prep.ai.mit.edu for the GNU C library.  */
-   
-#include <math.h>		/* Done first so we can #undef.  */
-#include <endian.h>
-#if	__BYTE_ORDER == __LITTLE_ENDIAN
-#undef national
-#define national
-#endif
-
-#undef	isinf
-#define	isinf	__isinf
-#undef	isnan
-#define	isnan	__isnan
-#undef	infnan
-#define	infnan	__infnan
-#undef	copysign
-#define	copysign	__copysign
-#undef	scalb
-#define	scalb	__scalb
-#undef	drem
-#define	drem	__drem
-#undef	logb
-#define	logb	__logb
-#undef	__finite
-#undef	finite
-#define	finite	__finite
-#undef	expm1
-#define	expm1	__expm1
-
-#define	exp__E	__exp__E
-#define	log__L	__log__L
-
-
 /*
- * Copyright (c) 1988 The Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1988, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -63,7 +30,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)mathimpl.h	5.4 (Berkeley) 3/5/91
+ *	@(#)mathimpl.h	8.1 (Berkeley) 6/4/93
  */
 
 #include <sys/cdefs.h>
@@ -104,7 +71,7 @@
     * We define "vccast" if this needs doing.
     */
 #  define vc(name, value, x1,x2,x3,x4, bexp, xval) \
-	static const long cat3(name,,x)[] = {cat3t(0x,x1,x2), cat3t(0x,x3,x4)};
+	const static long cat3(name,,x)[] = {cat3t(0x,x1,x2), cat3t(0x,x3,x4)};
 
 #  define ic(name, value, bexp, xval) ;
 
@@ -115,7 +82,7 @@
 #  define vc(name, value, x1,x2,x3,x4, bexp, xval) ;
 
 #  define ic(name, value, bexp, xval) \
-	static const double name = value;
+	const static double name = value;
 
 #endif	/* defined(vax)||defined(tahoe) */
 
@@ -123,6 +90,9 @@
 /*
  * Functions internal to the math package, yet not static.
  */
-extern double	exp__E();
-extern double	log__L();
+extern double	__exp__E();
+extern double	__log__L();
 
+struct Double {double a, b;};
+double __exp__D __P((double, double));
+struct Double __log__D __P((double));
