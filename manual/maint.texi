@@ -16,7 +16,7 @@
                                          a new machine or operating system.
 * Traditional C Compatibility::  Using the GNU C library with non-ANSI
                                          C compilers.
-* GNU C Library Contributors::  Contributors to the GNU C Library.
+* Contributors::                Contributors to the GNU C Library.
 @end menu
 
 
@@ -414,7 +414,7 @@ kept; they should not affect the source tree itself.  The files
 generated are: @file{ioctls.h}, @file{errnos.h}, @file{sys/param.h},
 and @file{errlist.c} (for the @file{stdio} section of the library).
 
-@node Traditional C Compatibility, GNU C Library Contributors, Porting, Maintenance
+@node Traditional C Compatibility, Contributors, Porting, Maintenance
 @appendixsec Compatibility with Traditional C
 
 Although the GNU C library implements the ANSI C library facilities,
@@ -439,7 +439,7 @@ implementations.  This means you may need to make changes to your
 program in order to get it to compile.
 
 
-@node GNU C Library Contributors,  , Traditional C Compatibility, Maintenance
+@node Contributors,  , Traditional C Compatibility, Maintenance
 @appendixsec Contributors to the GNU C Library
 
 The GNU C library was written almost entirely by Roland McGrath.
@@ -518,6 +518,10 @@ The @file{tar.h} header file was written by David J. MacKenzie.
 @item
 The port to the MIPS DECStation was contributed by Brendan Kehoe and Ian
 Lance Taylor.
+
+@item
+The DES encryption function @code{crypt} and related code was donated by
+Michael Glad.
 
 @end itemize
 
