@@ -1,4 +1,4 @@
-/* bzero -- set a block of memory to zero.
+/* memset -- set a block of memory to some byte value.
    For Intel 80x86, x>=3.
    Copyright (C) 1991 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
@@ -20,10 +20,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <string.h>
-
-typedef unsigned long int op_t;
-typedef unsigned char byte;
-#define OPSIZ	(sizeof(op_t))
+#include <memcopy.h>
 
 PTR
 DEFUN(memset, (dstpp, c, len),
