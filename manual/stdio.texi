@@ -1083,7 +1083,8 @@ followed by a digit.
 
 The following flags can be used to modify the behavior:
 
-@table @asis                    @c Not @samp so we can have ` ' as an item.
+@comment We use @asis instead of @samp so we can have ` ' as an item.
+@table @asis
 @item @samp{-}
 Left-justify the result in the field.  Normally the result is
 right-justified.
