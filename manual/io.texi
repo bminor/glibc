@@ -315,8 +315,11 @@ of the file name.
 @item ENAMETOOLONG
 This error is used when either the the total length of a file name is
 greater than @code{PATH_MAX}, or when an individual file name component
-has a length greater than @code{NAME_MAX}.  @xref{File System Parameters}.
-@c ??? Do we really have these limits?
+has a length greater than @code{NAME_MAX}.  @xref{Limits for Files}.
+
+In the GNU system, there is no imposed limit on overall file name
+length, but some file systems may place limits on the length of a
+component.
 
 @item ENOENT
 This error is reported when a file referenced as a directory component
