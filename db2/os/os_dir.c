@@ -76,6 +76,7 @@ __os_dirlist(dir, namesp, cntp)
 
 nomem:	if (names != NULL)
 		__os_dirfree(names, cnt);
+	(void)closedir(dirp);
 	return (ENOMEM);
 }
 
