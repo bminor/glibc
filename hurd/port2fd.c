@@ -18,6 +18,10 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 
+/* Store PORT in file descriptor D, doing appropriate ctty magic.
+   FLAGS are as for `open'; only O_IGNORE_CTTY is meaningful.
+   D should be locked, and will not be unlocked.  */
+
 void
 _hurd_port2fd (struct _hurd_fd *d, io_t port, int flags)
 {
@@ -31,7 +35,7 @@ _hurd_port2fd (struct _hurd_fd *d, io_t port, int flags)
 	 Is it ours?  */
       is_ctty &= __USEPORT (CTTYID, port == cttyid);
       __mach_port_deallocate (__mach_task_self (), cttyid);
-      struct _hurd_port *const id = &_hurd_ports[INIT_PORT_CTTYID];
+      struct hurd_port *const id = &_hurd_ports[INIT_PORT_CTTYID];
       __spin_lock (&id->lock);
       if (id->port == MACH_PORT_NULL)
 	/* We have no controlling tty, so make this one it.  */
@@ -64,5 +68,5 @@ _hurd_port2fd (struct _hurd_fd *d, io_t port, int flags)
     /* No ctty magic happening here.  */
     ctty = MACH_PORT_NULL;
 
-  _hurd_port_locked_set (&d->ctty, ctty);
+  _hurd_port_set (&d->ctty, ctty);
 }
