@@ -1,0 +1,170 @@
+# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+ifndef objpfx
+You must use the parent or subdirectory Makefile, not this one directly.
+endif
+
+dist:
+
+ifdef subdir
+.. := ../
+else
+.. :=
+endif
+
+include $(..)Makeconfig
+
+foo:=$(shell echo 'distribute=$(distribute)'>&2)
+foo:=$(shell echo 'foobar=$(filter %.c %.S %.s %.h,$(distribute))'>&2)
+
+ifndef sysdep_dirs
+# Find all sysdep directories.
+sysdep_dirs := $(shell find $(..)sysdeps -type d -print)
+else
+# Defined by the parent.
+sysdep_dirs := $(addprefix $(..),$(sysdep_dirs))
+endif
+
+# Makefiles can define `source_dirs' to list nonstandard directories
+# where source files might be found.
+
+ifdef	subdir
+all-headers = $(headers)
+else
++distinfo := $(shell MAKEFLAGS= MFLAGS= $(MAKE) -s no_deps=t echo-distinfo)
+all-headers := $(patsubst +header+%,%,$(filter +header+%,$(+distinfo)))
++subdir-nodist := $(patsubst +nodist+%,%,$(filter +nodist+%,$(+distinfo)))
++subdir-headers := $(filter-out $(headers),$(all-headers))
+endif
+
+# Find all sysdep sources and headers.
++maybe-sysdeps := $(sources) $(sources:.c=.s) $(sources:.c=.S) $(all-headers) \
+		  $(filter %.c %.S %.s %.h,$(distribute))
+foo:=$(shell echo '+maybe-sysdeps=$(+maybe-sysdeps)'>&2)
++sysdeps := $(wildcard $(foreach dir,$(sysdep_dirs) $(source_dirs),\
+				 $(addprefix $(dir)/,$(+maybe-sysdeps))))
+
+# Source and header files to go in the distribution tar file.
+
+.S.s := $(wildcard $(sources:.c=.S) $(sources:.c=.s))
+sources := $(filter-out $(addsuffix .c,$(basename $(.S.s))),$(sources)) $(.S.s)
+
++sysdep-names := $(sort $(notdir $(+sysdeps)))
+foo:=$(shell echo '+sysdep-names=$(+sysdep-names)' >&2)
++out := $(patsubst %.S,%.c,$(+sysdep-names:.s=.c)) \
+	$(addsuffix .c,$(sysdep_routines)) \
+	$(+subdir-nodist)
+foo:=$(shell echo '+out=$(+out)' >&2; echo foofoo >&2)
++tsrcs	:= $(filter-out $(+out) $(addprefix %/,$(+out)), \
+			$(sources) $(all-headers) $(distribute)) \
+	   $(+sysdeps)
+foo:=$(shell echo made +tsrcs >&2)
++tsrcs := $(sort $(filter-out $(dont_distribute),$(+tsrcs)))
+foo:=$(shell echo '+tsrcs=$(+tsrcs)'>&2)
+foo:=$(shell echo foobie, dammit! >&2)
+
+ifndef tardir
+rel+vers := $(shell sed -n -e 's/^.*libc_release.*\"\([^"]*\)";$$/\1/p' \
+			   -e 's/^.*libc_version.*\"\([^"]*\)";$$/\1/p' \
+		    < $(..)version.c)
+release := $(word 1,$(rel+vers))
+version := $(word 2,$(rel+vers))
+tardir := glibc-$(version)
+endif
+
+$(..)$(tardir):
+	ln -s . $@
+
+ifdef	   subdir
+
+foo:=$(shell echo subdir foo >&2)
+
++tsrcs := Makefile $(+tsrcs)				\
+	  $(addsuffix .c,$(others) $(tests))		\
+	  $(wildcard $(addsuffix .input,$(tests))	\
+	  $(addsuffix .args,$(tests)))
++tardeps := $(strip $(+tsrcs))
++tsrcs := $(addprefix $(tardir)/$(subdir)/,$(+tardeps))
+
+.PHONY: dist
+dist: $(..)$(tardir) $(+tardeps)
+	@cd ..; if test -f dist.tar; then c=u; else c=c; fi;	\
+	$(+cmdecho) "cd ..; tar $${c}h$(verbose)f dist.tar ...";	\
+	tar $${c}h$(verbose)f dist.tar $(+tsrcs)
+
+else	# Parent makefile.
+
+# Find what other things sysdep directories want to distribute.
+
+foo:=$(shell echo parent foobie>&2)
++sysdep-distfiles := $(wildcard $(addsuffix /Dist,$(sysdep_dirs)))
+foo:=$(shell echo +sysdep-distfiles='$(+sysdep-distfiles)'>&2)
+sysdep-Subdir-files := $(wildcard $(addsuffix /Subdirs,$(sysdep_dirs)))
+ifdef sysdep-Subdir-files
+subdirs := $(sort $(subdirs) $(shell cat $(sysdep-Subdir-files)))
+endif
++sysdep-dist := $(foreach file,$(+sysdep-distfiles),\
+			  $(addprefix $(dir $(file)),$(shell cat $(file)))) \
+		$(+sysdep-distfiles) \
+		$(sysdep-Subdir-files)
+foo:=$(shell echo '+sysdep-dist=$(+sysdep-dist)' >&2)
+
++sysdep-tsrcs := $(wildcard $(foreach file,Makefile Implies,\
+				      $(addsuffix /$(file),$(sysdep_dirs)))) \
+		 $(+sysdep-dist)
+
++tsrcs := $(distribute) $(+tsrcs) $(+sysdep-tsrcs)
+
+.PHONY: dist
+# N.B.: The order in which these are done matters (so don't use -j).
+MAKEFLAGS = -j1	  # I wonder if that works.
+dist: dist.tar subdir_dist de-.. dist.tar.Z
+
+dist.tar: $(tardir) $(+tsrcs)
+	tar ch$(verbose)f $@ $(addprefix $(tardir)/,$(filter-out $(tardir),$^))
+
+de-..: dist.tar
+	tar xf $< -C /tmp
+	tar cf $< -C /tmp $(tardir)
+	-rm -fr /tmp/$(tardir)
+
+README: README.template
+	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
+
+INSTALL: manual/maint.texinfo
+	makeinfo +no-validate +no-warn +no-headers $<
+
+%.Z: %
+	compress -c $< > $@
+
+foo:=$(shell echo 'subdirs=$(subdirs)' >&2)
+dist-subdirs := $(addprefix dist-,$(subdirs)) # dist-manual
+.PHONY: subdir_dist $(dist-subdirs)
+subdir_dist: $(dist-subdirs)
+$(dist-subdirs):
+	$(MAKE) -C $(patsubst dist-%,%,$@) dist
+
+endif	# Subdirectory vs. parent makefile
+
+# Get these things out of the environment because they take up lots of space.
+override distribute :=
+override sources :=
+override objects :=
+override routines :=
+override aux :=
