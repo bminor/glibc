@@ -1,3 +1,208 @@
+1998-02-18 23:31  Richard Henderson  <rth@cygnus.com>
+
+	* stdlib/strtod.c (STRTOF): Don't call lshift with zero count.
+	* tst-strtod.c (tests): Add fail case for above.
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Simplify
+	bootstrapping.  Produce saner error messages.
+
+	* sysdeps/unix/sysv/linux/Makefile [time] (sysdep_routines): Add
+	adjtimex.
+	* sysdeps/unix/sysv/linux/syscalls.list (adjtimex): Remove used-by
+	asjtime.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Force usage of
+	syscalls that use 32-bit struct timeval.
+	* sysdeps/unix/sysv/linux/configure.in (LIBC_LINUX_VERSION):
+	Update to 2.1.87 for the benefit of Alpha.
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Add support for
+	RAWHIDE and TSUNAMI.  Patch from Jay.Estabrook@digital.com.
+
+1998-02-26  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/ypclnt.c: Give clnt handle after error checking free, change
+	return codes to fix problems with rpc.nisd in YP mode on Ultra's.
+
+1998-02-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/statfsbuf.h: Include <gnu/types.h> for
+	__fsid_t. Reported by Gene McCulley <mcculley@iag.net>.
+
+1998-02-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/gethnamaddr.c (addrsort): Make this function extern.
+
+1998-02-18 16:34  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dlsym.c (dlsym:doit): Fix scope and skip maps for
+	_dl_lookup_symbol_skip call.
+
+1998-02-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* wctype/test_wctype.c (TEST): Fix paren nesting.
+
+1998-02-17 16:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/selectbits.h: Compare result with 0 to get an
+	int value.
+
+1998-02-17 11:37  Ulrich Drepper  <drepper@cygnus.com>
+
+	* eld/dl-open.c (_dl_open): Assign correct value to new->l_global.
+	Patch forwarded by Cristian Gafton <gafton@redhat.com>.
+
+	* math/math.h: Define M_* constants always as `double' and add new
+	macros M_*l which are of type `long double'.
+
+1998-02-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (_ioperm): Map all ports
+	starting from 0 not only from `from'.
+	Patch by Maciej W. Rozycki <macro@ds2.pg.gda.pl>.
+
+1998-02-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/programs/ld-messages.c (messages_finish): Don't skip
+	error checking when being quiet.
+	* locale/programs/ld-ctype.c (ctype_finish): Likewise.
+	(set_class_defaults): Likewise.
+	* locale/programs/charmap.c (parse_charmap): Likewise.
+	* locale/programs/ld-collate.c (collate_finish): Likewise.
+	* locale/programs/ld-monetary.c (monetary_finish): Likewise.
+	* locale/programs/ld-time.c (time_finish): Likewise.
+	* locale/programs/locfile.c (write_locale_data): Likewise.
+
+	* locale/programs/ld-ctype.c (ctype_class_to): Silently ignore
+	unknown characters and empty ranges.
+	* locale/programs/ld-collate.c (collate_order_elem): When
+	processing an ellipsis properly form a linked list in the result
+	table, fix typo when allocating ordering array.
+	[PR libc/419]
+
+1998-02-15  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/ypclnt.c (yp_all): Remove error message, user should print it.
+
+1998-02-09  H.J. Lu  <hjl@gnu.org>
+
+	* resolv/gethnamaddr.c (getanswer): Fix the PTR/CNAME bug. From
+	bind 4.9.6.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Ditto.
+	[PR libc/389 and 431]
+
+1998-02-07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-support.c (_dl_sysdep_fatal): Fix parameters.
+
+1998-02-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/mach/_strerror.c (_strerror_internal): Use memcpy
+	instead of __mempcpy. Reported by OKUJI Yoshinori
+	<okuji@kmc.kyoto-u.ac.jp>. [PR libc/446].
+
+1998-02-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in: Check for working msgfmt version (from GNU gettext
+	0.10 or later).
+
+1997-11-28 11:21  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* configure.in: Check for a working makeinfo (3.11 or better).
+	* config.make.in: Add MAKEINFO to be substituted.
+	* manual/Makefile: Don't update info if makeinfo is too old.
+
+1997-10-25 06:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dladdr.c: Use braces for correct logical grouping.
+	Patch by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>.
+
+1998-02-02 01:12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add lchown.
+
+1998-01-30 16:06  Philip Blundell  <pb@nexus.co.uk>
+
+	* manual/Makefile: Don't try to install the info files if makeinfo
+	is not available.
+
+1998-01-26  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Revert last change;
+	kernel 2.1.82 has this fixed.
+
+1998-02-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nis/nss_nis/nis-alias.c (_nss_nis_getaliasbyname_r): Convert
+	name to lowercase.
+
+	* nis/nss_nis/nis-network.c (_nss_nis_getnetbyname_r): Convert
+	name to lowercase, add test for big enough buffer.
+
+1998-01-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/libm-ieee754/s_modfl.c (modf): Correct
+	calculation.  Patch by Markus Schoder
+	<Markus.Schoder@dresdner-bank.de>.
+
+1998-02-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/errno.texi (Error Messages): Correct description of
+	strerror_r. Pointed out by jonas@bagge.se.
+
+1998-02-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* db/makedb.c (main): Add output_name to error message.
+
+	* sunrpc/rpc/xdr.h: Include <sys/types.h> and <rpc/types.h>. Patch
+	by Thorsten Kukuk.
+
+	* nis/nss_nis/nis-hosts.c (_nss_nis_gethostbyname2_r): Correct
+	last patch. Patch by Thorsten Kukuk.
+
+	* nss/getXXent_r.c: Include <errno.h>
+
+	* nss/getXXbyYY_r.c: Include <errno.h>.
+
+1997-12-31  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/C-ctype.c (_nl_C_LC_CTYPE_class32): Undo last change.
+	* locale/programs/ld-ctype.c (CHAR_CLASS32_TRANS): Likewise.
+	* wctype/wctype.c: Likewise.
+	* wctype/wctype.h (_ISwxxx): Renamed from _ISxxx, all uses
+	changed.  They are incompatible with the _ISxxx values from
+	<ctype.h> on little endian machines.
+	(_ISwbit) [__BYTE_ORDER == __LITTLE_ENDIAN]: Correctly transform
+	bit number.  This fixes the real bug and restores the integrity of
+	the LC_CTYPE locale file.
+	* wctype/wcfuncs.c: Change all _ISxxx to _ISwxxx.
+	* wctype/wcfuncs_l.c: Likewise.
+	* wctype/wcextra.c: Likewise.
+	* wctype/wctype_l.c [__BYTE_ORDER == __LITTLE_ENDIAN]: Use correct
+	byte swapping.
+	[PR libc/405]
+
+1998-02-15 17:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define PF_KEY and
+	pseudo_AF_KEY instead of pseudo_PF_KEY and AF_KEY.
+	Reported by Craig Metz <cmetz@inner.net>.
+
+	* Makerules ($(inst_libdir)/libc.so): Use absolute names for objects.
+
+	* signal/signal.h: Always define sigset_t if __need_sigset_h is
+	defined.
+
+1998-02-15 16:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* socket/sys/socket.h (setsockopt): Make OPTVAL parameter const.
+	Patch by Dean Gaudet <dgaudet@arctic.org>.
+
+1998-02-13 17:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_nis/nis-host.c (_nss_nis_gethostbyname2_r): Fix problem
+	with hidden variable name.
+	Patch by Thorsten Kukuk <kukuk@weber.uni-paderborn.de>.
+
 1998-02-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* nss/getXXent_r.c: Include <errno.h>
