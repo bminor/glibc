@@ -127,23 +127,31 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
      won't see it.  */
   if (*mode == 'r')
     {
-      (void) close(pipedes[STDOUT_FILENO]);
+      (void) close (pipedes[STDOUT_FILENO]);
       (void) fcntl (pipedes[STDIN_FILENO], F_SETFD, FD_CLOEXEC);
-      stream = fdopen(pipedes[STDIN_FILENO], mode);
+      stream = fdopen (pipedes[STDIN_FILENO], mode);
     }
   else
     {
-      (void) close(pipedes[STDIN_FILENO]);
+      (void) close (pipedes[STDIN_FILENO]);
       (void) fcntl (pipedes[STDOUT_FILENO], F_SETFD, FD_CLOEXEC);
-      stream = fdopen(pipedes[STDOUT_FILENO], mode);
+      stream = fdopen (pipedes[STDOUT_FILENO], mode);
     }
 
   if (stream == NULL)
     goto error;
 
-  child = (struct child *) malloc(sizeof(struct child));
+  child = (struct child *) malloc (sizeof (struct child));
   if (child == NULL)
     goto error;
+
+  {
+    /* Make sure STREAM has its functions set before
+       we try to squirrel them away in CHILD.  */
+    extern void __stdio_check_funcs __P ((FILE *));
+    __stdio_check_funcs (stream);
+  }
+
   child->pid = pid;
   child->cookie = stream->__cookie;
   child->funcs = stream->__io_funcs;
@@ -152,18 +160,18 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
   stream->__ispipe = 1;
   return stream;
 
- error:;
+ error:
   {
     /* The stream couldn't be opened or the child structure couldn't be
        allocated.  Kill the child and close the other side of the pipe.  */
     int save = errno;
-    (void) kill(pid, SIGKILL);
+    (void) kill (pid, SIGKILL);
     if (stream == NULL)
-      (void) close(pipedes[*mode == 'r' ? STDOUT_FILENO : STDIN_FILENO]);
+      (void) close (pipedes[*mode == 'r' ? STDOUT_FILENO : STDIN_FILENO]);
     else
-      (void) fclose(stream);
+      (void) fclose (stream);
 #ifndef	NO_WAITPID
-    (void) waitpid(pid, (int *) NULL, 0);
+    (void) waitpid (pid, (int *) NULL, 0);
 #else
     {
       pid_t dead;
@@ -196,9 +204,9 @@ DEFUN(pclose, (stream), register FILE *stream)
   pid = c->pid;
   stream->__cookie = c->cookie;
   stream->__io_funcs = c->funcs;
-  free(stream->__cookie);
+  free ((PTR) c);
   stream->__ispipe = 0;
-  if (fclose(stream))
+  if (fclose (stream))
     return -1;
 
 #ifndef	NO_WAITPID
