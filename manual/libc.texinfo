@@ -76,10 +76,11 @@ This is the reference manual for version 0.00 of the GNU C Library.
 					 facilities.
 * Signal Handling::             All about signals; how to send them,
 					 block them, and handle them.
-* Processes::                   How to create processes and run other
-					 programs.
+* Processes Startup::		Writing the beginning and end of your program.
+* Child Processes::             How to create processes and run other programs.
 * Job Control::                 All about process groups and sessions.
-* Users and Groups::            
+* Users and Groups::            How users are identified and classified.
+				  The database of users.
 * System Information::          Getting information about the
                                          hardware and software configuration
                                          of the machine a program runs on.
@@ -884,7 +885,8 @@ Porting the GNU C Library
 @include time.texinfo
 @include setjmp.texinfo
 @include signal.texinfo
-@include process.texinfo
+@include startup.texinfo
+@include child.texinfo
 @include job.texinfo
 @include users.texinfo
 @include sysinfo.texinfo
