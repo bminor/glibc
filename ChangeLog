@@ -1,3 +1,9 @@
+2002-07-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_hconf.c (_res_hconf_init): Move code into new
+	function do_init.  Use __libc_once.
+	(do_init): New function.
+
 2002-07-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/i486/bits/string.h: Add early clobber for "a"
