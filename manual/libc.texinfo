@@ -151,7 +151,9 @@ Memory Allocation
 * Variable Size Automatic::     Allocation of variable-sized blocks
 				 of automatic storage that are freed when the
 				 calling function returns.
-* Relocating Allocator::        
+* Relocating Allocator::        Waste less memory, if you can tolerate
+				 automatic relocation of the blocks you get.
+* Memory Warnings::		Getting warnings when memory is nearly full.
 
 Unconstrained Allocation
 
@@ -176,25 +178,20 @@ Unconstrained Allocation
 
 Obstacks
 
-* Representation of Obstacks::  How to declare an obstack in your
-					 program.
-* Preparing to Use Obstacks::   Preparations needed before you can
-					 use obstacks.
+* Creating Obstacks::		How to declare an obstack in your program.
+* Preparing for Obstacks::	Preparations needed before you can
+				 use obstacks.
 * Allocation in an Obstack::    Allocating objects in an obstack.
-* Freeing Obstack Objects::  Freeing objects in an obstack.
-* Obstack Functions and Macros::  The obstack functions are both
-					 functions and macros.
+* Freeing Obstack Objects::     Freeing objects in an obstack.
+* Obstack Functions::		The obstack functions are both
+				 functions and macros.
 * Growing Objects::             Making an object bigger by stages.
-* Extra Fast Growing Objects::  Extra-high-efficiency (though more
-					 complicated) growing.
-* Status of an Obstack::        Inquiries about the status of an
-					 obstack.
-* Obstacks Data Alignment::  Controlling alignment of objects
-					 in obstacks.
-* Obstack Chunks::              How obstacks obtain and release chunks.
-					 Efficiency considerations.
-* Obstacks and Signal Handling::  Don't try to use obstack functions
-					 in a signal handler.
+* Extra Fast Growing::		Extra-high-efficiency (though more
+				 complicated) growing objects.
+* Status of an Obstack::        Inquiries about the status of an obstack.
+* Obstacks Data Alignment::     Controlling alignment of objects in obstacks.
+* Obstack Chunks::              How obstacks obtain and release chunks. 
+				Efficiency considerations.
 * Summary of Obstacks::         
 
 Automatic Storage with Variable Size
@@ -203,8 +200,12 @@ Automatic Storage with Variable Size
 * Advantages of Alloca::        Reasons to use @code{alloca}.
 * Disadvantages of Alloca::     Reasons to avoid @code{alloca}.
 * GNU C Variable-Size Arrays::  Only in GNU C, here is an alternative
-					 method of allocating dynamically and
-					 freeing automatically.
+				 method of allocating dynamically and
+				 freeing automatically.
+Relocating Allocator
+
+* Relocator Concepts::		How to understand relocating allocation.
+* Using Relocator::		Functions for relocating allocation.
 
 Character Handling
 
