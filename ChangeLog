@@ -1,5 +1,7 @@
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/execve.c: Add weak alias execve.
+
 	* sysdeps/posix/getcwd.c: Correct comment saying < 0 is ok for size
 	type.  [PR libc/1269]
 
