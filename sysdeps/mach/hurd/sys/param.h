@@ -86,7 +86,10 @@ Cambridge, MA 02139, USA.  */
 #define	NGROUPS		NGROUPS_MAX
 #define	MAXSYMLINKS	SYMLINK_MAX
 #define	CANBSIZ		MAX_CANON /* XXX ? */
-#define	NCARGS		INT_MAX	/* XXX ? */
+
+/* ARG_MAX is unlimited, but we define NCARGS for BSD programs that want to
+   compare against some fixed limit.  */
+#define	NCARGS		INT_MAX
 
 /* There is nothing quite equivalent in GNU to Unix "mounts", but there is
    no limit on the number of simultaneously attached filesystems.  */
