@@ -69,6 +69,8 @@ _start (void)
 			    &passed_bootstrap))
     _exit (err);
 
+  /* When the user asks for the bootstrap port,
+     he will get the one the exec server passed us.  */
   __task_set_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
 			   passed_bootstrap);
   __mach_port_deallocate (__mach_task_self (), passed_bootstrap);
@@ -86,7 +88,10 @@ _start (void)
   makevec (args, argslen, argv);
   makevec (env, envlen, __environ);
 
-  __proc_setprocargs (intarray[PROCSERVER], argv, envp);
+  /* Tell the proc server where our args and environment are.  */
+  __proc_setprocargs (portarray[INIT_PORT_PROC], argv, envp);
+
+  /* Make signal thread, init umask and ctty info from intarray, etc.  XXX */
 
   __libc_init ();
 
