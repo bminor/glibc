@@ -1,3 +1,7 @@
+2002-03-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/tst-printf.sh: Adjust for last change in tst-printf.c.
+
 2002-03-02  Andreas Schwab  <schwab@suse.de>
 
 	* stdio-common/vfprintf.c (process_arg): Fix decimal format with
