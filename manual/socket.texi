@@ -12,7 +12,7 @@ over a network.
 This chapter describes the GNU facilities for interprocess
 communication.  First, we look at the functions for creating and
 initializing sockets, and then we consider the details of how to establish
-communications in the two most important domains --- the local domain
+communications in the two most important domains---the local domain
 and the Internet domain.  Finally, actual operations on sockets
 are described.
 
@@ -681,9 +681,10 @@ discussed in @ref{Hosts Database}.
 An Internet host address is a number containing of four bytes of data,
 and consists of a @dfn{network number} and a @dfn{local network address
 number} within that network.  Network numbers are registered with the
-Network Information Center (NIC), and are divided into three classes ---
-A, B, and C.  The local network address numbers of individual machines
-are registered with the administrator of the particular network.
+Network Information Center (NIC), and are divided into three
+classes---A, B, and C.  The local network address numbers of individual
+machines are registered with the administrator of the particular
+network.
 
 Class A networks have single-byte addresses in the range 0 to 127.
 There are only a small number of Class A networks, but they can each
