@@ -38,7 +38,7 @@ typedef unsigned long int __u_long;
 typedef unsigned long int __u_quad_t;
 typedef long int __quad_t;
 #else
-# ifdef __GLIBC_HAVE_LONG_LONG
+# ifdef __GNUC__
 __extension__ typedef unsigned long long int __u_quad_t;
 __extension__ typedef long long int __quad_t;
 # else
