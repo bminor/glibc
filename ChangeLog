@@ -1,3 +1,16 @@
+2002-03-17  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/fpu/fraiseexcpt.c (__feraiseexcept): Set cause bits.
+
+	* sysdeps/mips/fpu/fgetexcptflg.c (__fegetexceptflag): Add comment.
+
+	* sysdeps/mips/fpu/fclrexcpt.c (__feclearexcept): Clear also cause
+	bits.	
+
+	* sysdeps/mips/fpu/fenv_libc.h (CAUSE_MASK): New.
+	(CAUSE_SHIFT): New.
+	Patch by Hartvig Ekner <hartvige@mips.com>.
+
 2002-03-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/iofdopen.c (_IO_new_fdopen): Call _IO_setb to deallocate
