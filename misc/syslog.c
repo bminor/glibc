@@ -329,7 +329,8 @@ closelog ()
 
   closelog_internal ();
   LogTag = NULL;
-
+  LogType = SOCK_DGRAM; /* this is the default */
+  
   /* Free the lock.  */
   __libc_cleanup_region_end (1);
 }
