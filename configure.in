@@ -423,3 +423,6 @@ chmod a+x config.status
 exit 0
 dnl This gets rid of the random stuff autoconf has stuffed in weird places.
 divert(-1)dnl AC_This is here so I can search for `AC_' to find the frobs.
+dnl Local Variables:
+dnl compile-command: "m4 /gd/gnu/autoconf/acgeneral.m4 /gd/gnu/autoconf/acspecific.m4 configure.in > configure"
+dnl End:
