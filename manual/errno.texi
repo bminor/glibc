@@ -82,10 +82,11 @@ codes of their own for other situations.  The only values that are
 guaranteed to be meaningful for a particular library function are the
 ones that this manual lists for that function.
 
-Almost any system call can return @code{EFAULT} if it is given an
-invalid pointer as an argument.  Since this could only happen as a
-result of a bug in your program, this manual saves space by not
-mentioning @code{EFAULT} in the descriptions of individual functions.
+On non-GNU systems, almost any system call can return @code{EFAULT} if
+it is given an invalid pointer as an argument.  Since this could only
+happen as a result of a bug in your program, and since it will not
+happen on the GNU system, we have saved space by not mentioning
+@code{EFAULT} in the descriptions of individual functions.
 
 @node Error Codes, Error Messages, Checking for Errors, Error Reporting
 @section Error Codes
@@ -536,8 +537,9 @@ This often indicates a cycle of symbolic links.
 @comment errno.h
 @comment POSIX.1: File name too long
 @deftypevr Macro int ENAMETOOLONG
-Filename too long (longer than @code{PATH_MAX};
-@pxref{File System Parameters}).@refill
+Filename too long (longer than @code{PATH_MAX}; @pxref{File Limits}) or
+host name too long (in @code{gethostname} or @code{sethostname};
+@pxref{Host Identification}).
 @end deftypevr
 
 @comment errno.h
