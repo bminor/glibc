@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -42,9 +42,9 @@ DEFUN(__gettimeofday, (tv, tz),
       CONST time_t timer = tv->tv_sec;
       CONST struct tm *tm;
 
-      long int save_timezone = __timezone;
-      long int save_daylight = __daylight;
-      CONST char *save_tzname[2];
+      CONST long int save_timezone = __timezone;
+      CONST long int save_daylight = __daylight;
+      char *save_tzname[2];
       save_tzname[0] = __tzname[0];
       save_tzname[1] = __tzname[1];
 
