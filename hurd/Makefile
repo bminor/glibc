@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -66,7 +66,7 @@ migdefines := $(migdefines) $(foreach call,$(intr-calls),-D$(call)=$(call)_rpc)
 
 interface-routines := $(filter-out %_rpc,$(interface-routines)) \
 		      $(intr-calls:%=__% %)
-dont_distribute = $(interface-routines:%=%.c) $(interface-headers)
+generated = $(interface-routines:%=%.c) $(interface-headers)
 
 distribute := intr_rpc.awk hurdintr.awk
 
