@@ -76,7 +76,7 @@ $(objpfx)crt%.o: $(objpfx)crt%.S $(objpfx)defs.h
 
 $(objpfx)initfini.s: initfini.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -g0 -S -fPIC -finhibit-size-directive \
-	      $(no-exceptions) $< -o $@
+	      -fno-inline-functions $(no-exceptions) $< -o $@
 
 $(objpfx)crti.S: $(objpfx)initfini.s
 	sed -n -e '1,/@HEADER_ENDS/p' \
