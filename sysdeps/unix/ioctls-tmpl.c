@@ -12,6 +12,11 @@
 #include <sys/termios.h>
 #endif
 
+/* This causes <sys/ioctl.h> to define some necessary data structure.  */
+#ifdef sony_news
+#define KANJI
+#endif
+
 #include <sys/ioctl.h>
 
 #ifdef	SIOCGIFCONF
