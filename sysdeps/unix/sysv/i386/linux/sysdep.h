@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,19 +20,36 @@ Cambridge, MA 02139, USA.  */
 
 #define	ENTRY(name)							      \
   .globl _##name;							      \
-  .align 4;								      \
+  .align 2;								      \
   _##name##:
 
-#define	PSEUDO(name, syscall_name, args)
+#define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
-  .globl syscall_error							      \
-  .align 4								      \
+  .globl syscall_error;							      \
   ENTRY (name)								      \
-    SETARGS_##args
-    lea __NR_##syscall_name, %eax;
-    int $0x80
-    tst %eax
-    jlt 
+    XCHG_##args
+    movl $__NR_##syscall_name, %eax;					      \
+    int $0x80;								      \
+    test %eax, %eax;							      \
+    jl syscall_error;							      \
+    XCHG_##args
+
+/* Linux takes system call arguments in registers.
+   	1: %ebx
+	2: %ecx
+	3: %edx
+	4: %esi
+	5: %edi
+   We put the arguments into registers from the stack,
+   and save the registers, by using the 386 `xchg' instruction
+   to swap the values in both directions.  */
+
+#define	XCHG_0	/* Nothing.  */
+#define	XCHG_1	xchg 8(%esp), %ebx; XCHG_0
+#define	XCHG_2	xchg 12(%esp), %ecx; XCHG_1
+#define	XCHG_3	xchg 16(%esp), %edx; XCHG_2
+#define	XCHG_4	xchg 20(%esp), %esi; XCHG_3
+#define	XCHG_5	xchg 24(%esp), %edi; XCHG_3
 
 #define	r0	%eax
 #define	r1	%edx
