@@ -306,11 +306,11 @@ else
 endif
 
 # Command to compile $< in $(objdir) using the native libraries.
-native-compile = cwd=`pwd`; cd $(@D); $(CC) $$cwd/$< -o $(@F)
+native-compile = cwd=`pwd`; cd $(@D); $(CC) $(native-CFLAGS) $$cwd/$< -o $(@F)
 
 # Command to compile $< in $(common-objdir) using the native libraries.
 define common-objdir-compile
-cd $(@D); $(CC) $(<:$(common-objpfx)%=%) -o $(@F)
+cd $(@D); $(CC) $(native-CFLAGS) $(<:$(common-objpfx)%=%) -o $(@F)
 endef
 
 # Support the GNU standard name for this target.
@@ -331,6 +331,8 @@ ifneq (,$(wildcard /home/gd/gnu/lib/ChangeLog))
 # Snarf from the master source and frob the copying notice.
 $(gpl2lgpl): %: $(..)gpl2lgpl.sed /home/gd/gnu/lib/%
 	sed -f $^ > $@-tmp
-	mv $@-tmp $@
+# So I don't edit them my mistake.
+	chmod a-w $@-tmp
+	mv -f $@-tmp $@
 endif
 endif
