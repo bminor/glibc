@@ -140,6 +140,11 @@ ifndef datadir
 datadir = $(prefix)/lib
 endif
 
+# Where to install the timezone data files (which are machine-independent).
+ifndef zonedir
+zonedir = $(datadir)/zoneinfo
+endif
+
 # Where to install programs.
 ifndef bindir
 bindir = $(exec_prefix)/bin
@@ -159,7 +164,7 @@ endif
 
 # Where to install the "localtime" timezone file; this is the file whose
 # contents $(localtime) specifies.  If this is a relative pathname, it is
-# relative to $(datadir)/zoneinfo.  It is a good idea to put this somewhere
+# relative to $(zonedir).  It is a good idea to put this somewhere
 # other than there, so the zoneinfo directory contains only universal data,
 # localizing the configuration data elsewhere.
 ifndef localtime-file
@@ -177,7 +182,7 @@ endif
 
 # Where to install the "posixrules" timezone file; this is file
 # whose contents $(posixrules) specifies.  If this is a relative
-# pathname, it is relative to $(datadir)/zoneinfo.
+# pathname, it is relative to $(zonedir).
 ifndef posixrules-file
 posixrules-file = posixrules
 endif
