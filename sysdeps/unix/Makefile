@@ -46,7 +46,8 @@ endif
 
 before-compile := $(before-compile) $(objpfx)sys/param.h
 
-$(objpfx)sys/param.h: $(sysincludedir)/sys/param.h $(objpfx)sys/
+$(objpfx)sys/param.h: $(sysincludedir)/sys/param.h 
+	-mkdir $(dir $@)
 	(echo '#ifndef _GNU_SYS_PARAM_H';	\
 	 echo '#define _GNU_SYS_PARAM_H 1';	\
 	 awk < $<			\
@@ -58,29 +59,40 @@ $(objpfx)sys/param.h: $(sysincludedir)/sys/param.h $(objpfx)sys/
 	      was_null = 0 }';		\
 	 echo '#endif	/* sys/param.h */') > $@-tmp
 	mv $@-tmp $@
-# Make it newer than the directory.
-	touch $@
 
 $(objpfx)param.h.c: $(sysincludedir)/sys/param.h
 	rm -f $@
 	cp $< $@
 $(objpfx)param.h.dep: $(objpfx)param.h.c $(sysdep_dir)/unix/Makefile
-	$(+mkdep) -I$(sysincludedir) $<			\
-	| sed > $@					\
-	      -e 's@^.*:@@'				\
-	      -e 's@../hp300/param.h.c@@g'		\
-	      -e 's@/usr/include/*@@g'			\
-	      -e 's@\\$$@@'				\
+	$(+mkdep) -I$(sysincludedir) $<		\
+	| sed > $@				\
+	      -e 's@^.*:@@'			\
+	      -e 's@$<@@g'			\
+	      -e 's@$(sysincludedir)/*@@g'	\
+	      -e 's@\\$$@@'			\
 	      -e 's@^@sys/param.h-includes := $$(sys/param.h-includes) @'
+
 ifeq ($(subdir),misc)
+
+# Install system headers the system sys/param.h uses.
+
 include $(objpfx)param.h.dep
+
+# Don't preempt our own headers. 
+sys/param.h-includes := \
+  $(filter-out $(wildcard $(addprefix $(..),$(sys/param.h-includes))),\
+	       $(sys/param.h-includes))
+
 headers := $(headers) $(sys/param.h-includes)
 dont_distribute := $(dont_distribute) $(sys/param.h-includes)	# Generated.
+
 ifdef sys/param.h-includes
-$(addprefix $(objpfx),$(sys/param.h-includes)): $(objpfx)%: \
-  $(sysincludedir)% $(dir $(sys/param.h-includes))
+# Copy the system files to $(objdir).
+$(addprefix $(objpfx),$(sys/param.h-includes)): $(objpfx)%: $(sysincludedir)/%
+	-mkdir $(dir $@)
 	cp $< $@
 endif
+
 endif # misc
 
 $(objpfx)ioctls.h: $(objpfx)make-ioctls
