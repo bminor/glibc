@@ -1,3 +1,6 @@
+#if 1
+#include <sysdeps/stub/sysd-stdio.c>
+#else
 /* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -192,3 +195,4 @@ fork_stdio (task_t newtask)
 	  return err;
       }
 }
+#endif /* 1 */
