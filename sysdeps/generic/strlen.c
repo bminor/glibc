@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
    Written by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se);
    commentary by Jim Blandy (jimb@ai.mit.edu).
@@ -33,26 +33,37 @@ DEFUN(strlen, (str), CONST char *str)
   unsigned long int longword, magic_bits, himagic, lomagic;
 
   /* Handle the first few characters by reading one character at a time.
-     Do this until STR is aligned on a 4-byte border.  */
-  for (char_ptr = str; ((unsigned long int) char_ptr & 3) != 0; ++char_ptr)
-    if (*char_ptr == 0)
-      return char_ptr - str;
+     Do this until CHAR_PTR is aligned on a longword boundary.  */
+  for (char_ptr = str; ((unsigned long int) char_ptr
+			& (sizeof (longword) - 1)) != 0;
+       --n, ++char_ptr)
+    if (*char_ptr == '\0')
+      return (PTR) char_ptr;
+
+  /* All these elucidatory comments refer to 4-byte longwords,
+     but the theory applies equally well to 8-byte longwords.  */
 
   longword_ptr = (unsigned long int *) char_ptr;
 
   /* Bits 31, 24, 16, and 8 of this number are zero.  Call these bits
      the "holes."  Note that there is a hole just to the left of
      each byte, with an extra at the end:
-
+     
      bits:  01111110 11111110 11111110 11111111
      bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD 
 
      The 1-bits make sure that carries propagate to the next 0-bit.
      The 0-bits provide holes for carries to fall into.  */
   magic_bits = 0x7efefeff;
-
   himagic = 0x80808080;
   lomagic = 0x01010101;
+  if (sizeof (longword) > 4)
+    {
+      /* 64-bit version of the magic.  */
+      magic_bits = (0x7efefefe << 32) | 0xfefefeff;
+      himagic = (himagic << 32) | himagic;
+      lomagic = (lomagic << 32) | lomagic;
+    }
 
   /* Instead of the traditional loop which tests each character,
      we will test a longword at a time.  The tricky part is testing
@@ -120,6 +131,17 @@ DEFUN(strlen, (str), CONST char *str)
 	    return cp - str + 2;
 	  if (cp[3] == 0)
 	    return cp - str + 3;
+	  if (sizeof (longword) > 4)
+	    {
+	      if (cp[4] == 0)
+		return cp - str + 4;
+	      if (cp[5] == 0)
+		return cp - str + 5;
+	      if (cp[6] == 0)
+		return cp - str + 6;
+	      if (cp[7] == 0)
+		return cp - str + 7;
+	    }
 	}
     }
 }
