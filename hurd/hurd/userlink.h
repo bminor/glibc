@@ -22,6 +22,9 @@ Cambridge, MA 02139, USA.  */
 #define	_HURD_USERLINK_H	1
 #include <features.h>
 
+#define __need_NULL
+#include <stddef.h>
+
 
 /* This structure is simply a doubly-linked list.  Users of a given
    resource are recorded by their presence in a list associated with that
