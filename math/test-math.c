@@ -15,23 +15,23 @@ DEFUN_VOID(main)
   
   x = sinh(2.0);
   
-  fprintf(stderr,"sinh(2.0) = %g\n", x);
+  printf("sinh(2.0) = %g\n", x);
   
   x = sinh(3.0);
   
-  fprintf(stderr,"sinh(3.0) = %g\n", x);
+  printf("sinh(3.0) = %g\n", x);
   
   h = hypot(2.0,3.0);
   
-  fprintf(stderr,"h=%g\n", h);
+  printf("h=%g\n", h);
   
   a = atan2(3.0, 2.0);
   
-  fprintf(stderr,"atan2(3,2) = %g\n", a);
+  printf("atan2(3,2) = %g\n", a);
   
   lr = pow(h,4.0);
   
-  fprintf(stderr,"pow(%g,4.0) = %g\n", h, lr);
+  printf("pow(%g,4.0) = %g\n", h, lr);
   
   lrr = lr;
   
@@ -39,17 +39,36 @@ DEFUN_VOID(main)
   
   lr = lr / exp(a*5.0);
   
-  fprintf(stderr,"%g / exp(%g * 5) = %g\n", lrr, exp(a*5.0), lr);
+  printf("%g / exp(%g * 5) = %g\n", lrr, exp(a*5.0), lr);
   
   lrr = li;
   
   li += 5.0 * log(h);
   
-  fprintf(stderr,"%g + 5*log(%g) = %g\n", lrr, h, li);
+  printf("%g + 5*log(%g) = %g\n", lrr, h, li);
   
-  fprintf(stderr,"cos(%g) = %g,  sin(%g) = %g\n", li, cos(li), li, sin(li));
+  printf("cos(%g) = %g,  sin(%g) = %g\n", li, cos(li), li, sin(li));
   
-  fflush(stderr);
-  
+  x = drem(10.3435,6.2831852);
+
+  printf("drem(10.3435,6.2831852) = %g\n", x);
+
+  x = drem(-10.3435,6.2831852);
+
+  printf("drem(-10.3435,6.2831852) = %g\n", x);
+
+  x = drem(-10.3435,-6.2831852);
+	
+  printf("drem(-10.3435,-6.2831852) = %g\n", x);
+
+  x = drem(10.3435,-6.2831852);
+
+  printf("drem(10.3435,-6.2831852) = %g\n", x);
+
+
+  printf("x%8.6gx\n", .5);
+  printf("x%-8.6gx\n", .5);
+  printf("x%6.6gx\n", .5);
+
   return 0;
 }
