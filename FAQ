@@ -95,6 +95,8 @@ please let me know.
 	still complains about redeclarations of types in the kernel
 	headers.
 3.7.	Why don't signals interrupt system calls anymore?
+3.14.	The pow() inline function I get when including <math.h> is broken.
+	I get segmentation faults when I run the program.
 
 4. Miscellaneous
 
@@ -873,6 +875,16 @@ individually switchable on a per-signal basis with this function.
 If all you want is for one specific signal to cause system calls to fail
 and return EINTR (for example, to implement a timeout) you can do this with
 siginterrupt().
+
+
+3.14.	The pow() inline function I get when including <math.h> is broken.
+	I get segmentation faults when I run the program.
+
+{UD} Nope, the implementation is correct.  The problem is with egcs version
+prior to 1.1.  I.e., egcs 1.0 to 1.0.3 are all broken (at least on Intel).
+If you have to use this compiler you must define __NO_MATH_INLINES before
+including <math.h> to prevent the inline functions from being used.  egcs 1.1
+fixes the problem.  I don't know about gcc 2.8 and 2.8.1.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
