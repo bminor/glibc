@@ -1,3 +1,9 @@
+1999-07-11  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/brk.c (static_data_start): New variable.
+	(_hurd_set_brk, init_brk): Use that instead of &__data_start.
+	Initialize it from &__data_start if defined, or else &_end.
+
 1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/bits/string.h (__memcpy_c): Help some stupid old
@@ -18,7 +24,7 @@
 	* stdio-common/vfprintf.c (buffered_vfprintf): Add locking.
 
 1999-07-09  H.J. Lu  <hjl@gnu.org>
- 
+
 	* Versions.def (GLIBC_2.1.2): Added.
 
 	* nss/getXXent_r.c: Make the new ABI GLIBC_2.1.2 and keep the
@@ -241,7 +247,7 @@
 
 1999-06-25  Roland McGrath  <roland@baalperazim.frob.com>
 
-	* hurd.h, hurd/hurd/fd.h, hurd/hurd/port.h, hurd/hurd/signal.h,
+	* hurd/hurd.h, hurd/hurd/fd.h, hurd/hurd/port.h, hurd/hurd/signal.h,
 	hurd/hurd/threadvar.h, hurd/hurd/userlink.h: Instead of
 	_EXTERN_INLINE, use a macro specific to each file,
 	_HURD_FD_H_EXTERN_INLINE and the like.
