@@ -26,16 +26,16 @@ Cambridge, MA 02139, USA.  */
    If successful, returns BUF.  In GNU, if BUF is NULL,
    an array is allocated with `malloc'; the array is SIZE
    bytes long, unless SIZE <= 0, in which case it is as
-   big as necessary.  SIZE should be a `size_t', 1003.1!  */
+   big as necessary.  */
 char *
-DEFUN(getcwd, (buf, size), char *buf AND int size)
+DEFUN(getcwd, (buf, size), char *buf AND size_t size)
 {
   errno = ENOSYS;
   return NULL;
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 
