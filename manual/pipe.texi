@@ -200,7 +200,8 @@ once it does begin, it finishes immediately.
 
 Reading or writing a larger amount of data may not be atomic; for
 example, output data from other processes sharing the descriptor may be
-interspersed.
+interspersed.  Also, once @code{PIPE_BUF} characters have been written,
+further writes will block until some characters are read.
 
 @xref{Limits for Files}, for information about the @code{PIPE_BUF}
 parameter.
