@@ -42,7 +42,7 @@ enum __rlimit_resource
     RLIMIT_RSS,
     /* Locked-in-memory address space.  */
     RLIMIT_MEMLOCK,
-    /* Number of processes,  */
+    /* Number of processes.  */
     RLIMIT_NPROC,
     /* Number of open files.  */
     RLIMIT_OFILE,
