@@ -39,7 +39,7 @@ Cambridge, MA 02139, USA.  */
 
  /* Get the compiler's limits.h, which defines all the ANSI constants.  */
  #define _LIBC_LIMITS_H_	/* This tells it not to look for another.  */
- #ifndef _LIMITS_H_		/* This is what GCC's file defines.  */
+ #ifndef _GCC_LIMITS_H_		/* This is what GCC's file defines.  */
  #include_next <limits.h>
  #endif
 
