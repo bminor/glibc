@@ -348,7 +348,7 @@ FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c
 eval "$CPP conftest.c 2>/dev/null" \
 | grep '^FOOBAR.*unsigned.*FOOBAR$' >/dev/null \
 || {
-  # Do this by hand instead of AC_DEFINE so we can use -U to avoid warnings.
+  dnl Do this by hand instead of AC_DEFINE so we can use -U to avoid warnings.
   DEFS="$DEFS -U__SIZE_TYPE__ -D__SIZE_TYPE__=unsigned"
   (echo '#undef __SIZE_TYPE__';
    echo '#define __SIZE_TYPE__ unsigned') >> confdefs.h
@@ -528,7 +528,7 @@ cat > config.status <<END
 # This file was generated automatically by configure.  Do not edit.
 # The GNU C library was configured in $PWD for
 # $system_name as follows:
-$0 $configure_args $switches
+$0 $configure_args $switches \$*
 END
 chmod a+x config.status
 echo "Wrote config.status in $PWD."
@@ -537,5 +537,5 @@ exit 0
 dnl This gets rid of the random stuff autoconf has stuffed in weird places.
 divert(-1)dnl AC_This is here so I can search for `AC_' to find the frobs.
 dnl Local Variables:
-dnl compile-command: "m4 /gd/gnu/autoconf/acgeneral.m4 /gd/gnu/autoconf/acspecific.m4 configure.in > configure && chmod a+x configure"
+dnl compile-command: "autoconf"
 dnl End:
