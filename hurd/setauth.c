@@ -18,8 +18,6 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 
-
-
 /* Things in the library which want to be run when the auth port changes.  */
 const struct
   {
@@ -55,16 +53,15 @@ __setauth (auth_t new)
   __mutex_unlock (&_hurd_idlock);
 
   /* Reauthenticate with the proc server.  */
-  if (!_HURD_PORT_USE (&_hurd_proc,
-		       __proc_reauthenticate (port) ||
-		       __auth_user_authenticate (new, port, &ignore))
+  if (! _HURD_PORT_USE (&_hurd_proc,
+			__proc_reauthenticate (port) ||
+			__auth_user_authenticate (new, port, &ignore))
       && ignore != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), ignore);
 
-  /* Reauthenticate the file descriptor table.  */
-
   if (_hurd_init_dtable != NULL)
-    /* We just have the simple table we got at startup.  */
+    /* We just have the simple table we got at startup.
+       Otherwise, a reauth_hook in dtable.c takes care of this.  */
     for (d = 0; d < _hurd_init_dtablesize; ++d)
       if (_hurd_init_dtable[d] != MACH_PORT_NULL)
 	{
