@@ -5,11 +5,8 @@
 
 2005-01-27  Jakub Jelinek  <jakub@redhat.com>
 
-	[BZ #731]
-	* stdlib/tst-fmtmsg.c: Include stdlib.h.
-
-2005-01-27  Jakub Jelinek  <jakub@redhat.com>
-
+	* stdlib/tst-fmtmsg.c: Include stdlib.h.  [BZ #731]
+	* stdio-common/tst-fmemopen2.c: Include string.h.  [BZ #730]
 	* posix/execvp.c: Include stdbool.h.
 
 2005-01-26  Ulrich Drepper  <drepper@redhat.com>
@@ -18,10 +15,26 @@
 	* sysdeps/unix/sysv/linux/kernel-features.h: Found reference to
 	MSG_NOSIGNAL being in 2.2 kernels.
 
+2005-01-26  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #737]
+	* sysdeps/unix/sysv/linux/i386/sysdep.h
+	(SYSCALL_ERROR_HANDLER_TLS_STORE): Remove unnecessary 0 imm.
+
 2005-01-25  Roland McGrath  <roland@redhat.com>
 
 	[BZ #671]
 	* sysdeps/generic/syslog.c [NO_SIGPIPE]: Protect sigpipe_handler decl.
+
+2005-01-23  Roland McGrath  <roland@redhat.com>
+
+	[BZ #737]
+	* sysdeps/i386/Makefile (defines): If -mno-tls-direct-seg-refs appears
+	in $(CFLAGS), add -DNO_TLS_DIRECT_SEG_REFS.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h [USE___THREAD]
+	(SYSCALL_ERROR_HANDLER) [NO_TLS_DIRECT_SEG_REFS]: Load thread pointer
+	from %gs:0 and add to that value, rather that direct %gs:OFFSET access.
+	* sysdeps/unix/i386/sysdep.S [NO_TLS_DIRECT_SEG_REFS]: Likewise.
 
 2005-01-25  Jakub Jelinek  <jakub@redhat.com>
 
@@ -535,11 +548,6 @@
 	(sysdep-CPPFLAGS): Add -include libm-symbols.h, -D__POSIX__,
 	_D_LIB_VERSIONIMF=_LIB_VERSION, -DSIZE_LONG_INT_64, and
 	-DSIZE_LONG_LONG_INT_64.
-
-2005-01-27  Jakub Jelinek  <jakub@redhat.com>
-
-	[BZ #730]
-	* stdio-common/tst-fmemopen2.c: Include string.h.
 
 2005-01-05  Steven Munroe  <sjmunroe@us.ibm.com>
 
