@@ -536,7 +536,7 @@ readlink_malloc (char *filename)
 @}
 @end example
 
-@group
+@c @group  Invalid outside example.
 A value of @code{-1} is returned in case of error.  In addition to the
 usual file name syntax errors (@pxref{File Name Errors}), the following
 @code{errno} error conditions are defined for this function:
@@ -548,7 +548,7 @@ The named file is not a symbolic link.
 @item EIO
 A hardware error occurred while reading or writing data on the disk.
 @end table
-@end group
+@c @end group
 @end deftypefun
 
 @node Deleting Files

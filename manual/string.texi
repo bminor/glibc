@@ -834,13 +834,14 @@ in @var{string} that is a member of the set @var{stopset} instead of the
 length of the initial substring.  It returns a null pointer if no such
 character from @var{stopset} is found.
 
-@group
+@c @group  Invalid outside the example.
 For example,
+
 @example
 strpbrk ("hello, world", " \t\n,.;!?")
     @result{} ", world"
 @end example
-@end group
+@c @end group
 @end deftypefun
 
 @node Finding Tokens in a String,  , Search Functions, String and Array Utilities
