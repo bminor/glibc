@@ -1,5 +1,9 @@
 1998-10-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* time/mktime.c: Update from glibc 2.1.
+
+1998-10-08  Ulrich Drepper  <drepper@cygnus.com>
+
 	* elf/dl-close.c: Fix one more memory leak.
 
 1998-10-07 07:57  H.J. Lu  <hjl@gnu.org>
