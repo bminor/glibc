@@ -26,15 +26,15 @@ Cambridge, MA 02139, USA.  */
 #include <fcntl.h>
 #include <limits.h>
 #include <cthreads.h>		/* For `struct mutex'.  */
+#include "set-hooks.h"
 
 
 struct mutex _hurd_dtable_lock;
-struct hurd_dtable _hurd_dtable;
-int _hurd_dtable_rlimit;
-struct hurd_userlink *_hurd_dtable_users;
+struct hurd_fd **_hurd_dtable;
+int _hurd_dtablesize;
 
-void (*_hurd_dtable_deallocate) (void *);
 
+DEFINE_HOOK (_hurd_fd_subinit, (void));
 
 /* Initialize the file descriptor table at startup.  */
 
@@ -42,21 +42,17 @@ static void
 init_dtable (void)
 {
   register size_t i;
-  struct hurd_fd **dt;
 
   __mutex_init (&_hurd_dtable_lock);
 
-  _hurd_dtable_users = NULL;
-
   /* The initial size of the descriptor table is that of the passed-in
      table, rounded up to a multiple of FOPEN_MAX descriptors.  */
-  _hurd_dtable.size
+  _hurd_dtablesize
     = (_hurd_init_dtablesize + FOPEN_MAX - 1) / FOPEN_MAX * FOPEN_MAX;
-  _hurd_dtable_rlimit = _hurd_dtable.size;
 
   /* Allocate the vector of pointers.  */
-  dt = _hurd_dtable.d = malloc (_hurd_dtable.size * sizeof (*_hurd_dtable.d));
-  if (dt == NULL)
+  _hurd_dtable = malloc (_hurd_dtablesize * sizeof (*_hurd_dtable));
+  if (_hurd_dtable == NULL)
     __libc_fatal ("hurd: Can't allocate file descriptor table\n");
 
   /* Initialize the descriptor table.  */
@@ -64,7 +60,7 @@ init_dtable (void)
     {
       if (_hurd_init_dtable[i] == MACH_PORT_NULL)
 	/* An unused descriptor is marked by a null pointer.  */
-	dt[i] = NULL;
+	_hurd_dtable[i] = NULL;
       else
 	{
 	  /* Allocate a new file descriptor structure.  */
@@ -80,7 +76,7 @@ init_dtable (void)
 	     This sets up all the ctty magic.  */
 	  _hurd_port2fd (new, _hurd_init_dtable[i], 0);
 
-	  dt[i] = new;
+	  _hurd_dtable[i] = new;
 	}
     }
 
@@ -93,8 +89,12 @@ init_dtable (void)
   _hurd_init_dtablesize = 0;
 
   /* Initialize the remaining empty slots in the table.  */
-  for (; i < _hurd_dtable.size; ++i)
-    dt[i] = NULL;
+  for (; i < _hurd_dtablesize; ++i)
+    _hurd_dtable[i] = NULL;
+
+  /* Run things that want to run after the file descriptor table
+     is initialized.  */
+  RUN_HOOK (_hurd_fd_subinit, ());
 }
 
 text_set_element (_hurd_subinit, init_dtable);
@@ -109,7 +109,7 @@ get_dtable_port (int fd)
 {
   file_t dport;
   int err = HURD_DPORT_USE (fd, __mach_port_mod_refs (__mach_task_self (),
-						      (dport = port),
+						      (dport = ctty ?: port),
 						      MACH_PORT_RIGHT_SEND,
 						      1));
   if (err)
@@ -140,11 +140,11 @@ fork_parent_dtable (task_t newtask)
 
   err = 0;
 
-  for (i = 0; !err && i < _hurd_dtable.size; ++i)
+  for (i = 0; !err && i < _hurd_dtablesize; ++i)
     {
       struct hurd_userlink ulink, ctty_ulink;
-      io_t port = _hurd_port_get (&_hurd_dtable.d[i]->port, &ulink);
-      io_t ctty = _hurd_port_get (&_hurd_dtable.d[i]->ctty, &ctty_ulink);
+      io_t port = _hurd_port_get (&_hurd_dtable[i]->port, &ulink);
+      io_t ctty = _hurd_port_get (&_hurd_dtable[i]->ctty, &ctty_ulink);
 
       /* If there is a ctty-special port (it will be in PORT),
 	 insert only the normal io port.  The child will get a fresh
@@ -157,8 +157,8 @@ fork_parent_dtable (task_t newtask)
 	err = __mach_port_insert_right (newtask, port, port,
 					MACH_MSG_TYPE_COPY_SEND);
 
-      _hurd_port_free (&_hurd_dtable.d[i]->port, &ulink, port);
-      _hurd_port_free (&_hurd_dtable.d[i]->ctty, &ctty_ulink, ctty);
+      _hurd_port_free (&_hurd_dtable[i]->port, &ulink, port);
+      _hurd_port_free (&_hurd_dtable[i]->ctty, &ctty_ulink, ctty);
     }
   return err;
 }
@@ -174,9 +174,9 @@ fork_child_dtable (void)
 
   err = 0;
 
-  for (i = 0; !err && i < _hurd_dtable.size; ++i)
+  for (i = 0; !err && i < _hurd_dtablesize; ++i)
     {
-      struct hurd_fd *d = _hurd_dtable.d[i];
+      struct hurd_fd *d = _hurd_dtable[i];
 
       d->port.users = d->ctty.users = NULL;
 
@@ -208,9 +208,9 @@ ctty_new_pgrp (void)
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
 
-  for (i = 0; i < _hurd_dtable.size; ++i)
+  for (i = 0; i < _hurd_dtablesize; ++i)
     {
-      struct hurd_fd *const d = _hurd_dtable.d[i];
+      struct hurd_fd *const d = _hurd_dtable[i];
       struct hurd_userlink ulink, ctty_ulink;
       io_t port, ctty;
 
@@ -251,9 +251,9 @@ reauth_dtable (void)
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
 
-  for (i = 0; i < _hurd_dtable.size; ++i)
+  for (i = 0; i < _hurd_dtablesize; ++i)
     {
-      struct hurd_fd *const d = _hurd_dtable.d[i];
+      struct hurd_fd *const d = _hurd_dtable[i];
       mach_port_t new, newctty;
       
       if (d == NULL)
