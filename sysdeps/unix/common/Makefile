@@ -41,3 +41,16 @@ $(objpfx)glue-ctype: $(sysdep_dir)/unix/bsd/glue-ctype.c
 	$(CC) $< -o $@
 
 endif
+
+ifeq ($(subdir),stdio)
+
+before-compile: $(objpfx)siglist.c
+$(objpfx)siglist.c: $(objpfx)make_siglist
+	@rm -f $@
+	$< > $@-tmp
+	mv $@-tmp $@
+
+$(objpfx)make_siglist: $(sysdep_dir)/unix/make_siglist.c
+	$(CC) $< -o $@
+
+endif
