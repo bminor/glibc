@@ -1,3 +1,9 @@
+1999-08-22  Mark Kettenis  <kettenis@gnu.org>
+
+	* hurd/new-fd.c (_hurd_new_fd): Initialize fcntl flags.
+	* hurd/port2fd.c (_hurd_port2fd): Reset the fcntl flags when
+	installing PORT in the descriptor cell.
+
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/execve.c: Add weak alias execve.
