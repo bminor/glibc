@@ -41,7 +41,11 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc)
      be left, however, in order to confuse people who wonder why its
      here.  (Though perhaps that last sentence (and this one) should
      be deleted to maximize the effect.)  */
+#ifdef STACK_GROWTH_DOWN
   stack = VM_MAX_ADDRESS - STACK_SIZE - __vm_page_size;
+#else
+  stack = VM_MIN_ADDRESS;
+#endif
 
   if (error = __vm_allocate (task, &stack, STACK_SIZE + __vm_page_size, 0))
     return error;
@@ -52,7 +56,13 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc)
   
   memset (&ts, 0, sizeof (ts));
   ts.PC = (int) pc;
+#ifdef STACK_GROWTH_DOWN
   ts.SP = stack + STACK_SIZE;
+#elif defined (STACK_GROWTH_UP)
+  ts.SP = stack;
+#else
+  #error stack direction unknown
+#endif
 
   return __thread_set_state (thread, MACHINE_THREAD_STATE_FLAVOR,
 			     (int *) &ts, tssize);
