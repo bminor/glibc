@@ -207,6 +207,13 @@ extern void _hurd_proc_init (char **argv);
 
 extern socket_t _hurd_socket_server (int domain);
 
+/* Send a `sig_post' RPC to process number PID.  If PID is zero,
+   send the message to all processes in the current process's process group.
+   If PID is < -1, send SIG to all processes in process group - PID.
+   SIG and REFPORT are passed along in the request message.  */
+
+extern error_t _hurd_sig_post (pid_t pid, int sig, mach_port_t refport);
+
 /* Fetch the host privileged port and device master port from the proc
    server.  They are fetched only once and then cached in the
    variables below.  A special program that gets them from somewhere
@@ -233,7 +240,6 @@ extern task_t __pid2task (pid_t pid), pid2task (pid_t pid);
    On error, sets `errno' and returns MACH_PORT_NULL.  */
 
 extern io_t __getdport (int fd), getdport (int fd);
-
 
 
 #endif	/* hurd.h */
