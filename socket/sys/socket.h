@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -42,8 +42,9 @@ enum __socket_type
 
 /* Protocol families.  */
 #define	PF_UNSPEC	0	/* Unspecified.  */
-#define	PF_FILE		1	/* Local to host (pipes and file-domain).  */
-#define	PF_UNIX		PF_FILE	/* BSD name for PF_FILE.  */
+#define	PF_LOCAL	1	/* Local to host (pipes and file-domain).  */
+#define	PF_UNIX		PF_LOCAL /* Old BSD name for PF_LOCAL.  */
+#define	PF_FILE		PF_LOCAL /* XXX old GNU name for PF_LOCAL.  */
 #define	PF_INET		2	/* IP protocol family.  */
 #define	PF_IMPLINK	3	/* ARPAnet IMP protocol.  */
 #define	PF_PUP		4	/* PUP protocols.  */
