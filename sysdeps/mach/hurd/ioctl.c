@@ -50,6 +50,8 @@ DEFUN(__ioctl, (fd, request),
   static const int mach_types[] =
     { MACH_MSG_TYPE_CHAR, MACH_MSG_TYPE_INTEGER_16, MACH_MSG_TYPE_INTEGER_32,
       -1 };
+#define io2mach_type(count, type) \
+  ((mach_msg_type_t) { mach_types[type], typesize (type) * 8, count, 1, 0, 0 })
 
   /* Extract the type information encoded in the request.  */
   unsigned int type = _IOC_TYPE (request);
@@ -127,9 +129,6 @@ DEFUN(__ioctl, (fd, request),
 	return MIG_TYPE_ERROR;
       return msg.header.RetCode;
     }
-
-#define io2mach_type(count, type) \
-  ((mach_msg_type_t) { mach_types[type], typesize (type) * 8, count, 1, 0, 0 })
 
   va_list ap;
 
@@ -217,7 +216,7 @@ DEFUN(__ioctl, (fd, request),
 
   /* Don't use the ctty io port if we are blocking or ignoring SIGTTOU.  */
   ss = _hurd_self_sigstate ();
-  noctty = (__sigismember (SIGTTOU, &ss->blocked) ||
+  noctty = (__sigismember (&ss->blocked, SIGTTOU) ||
 	    ss->actions[SIGTTOU].sa_handler == SIG_IGN);
   __mutex_unlock (&ss->lock);
 
@@ -239,7 +238,6 @@ DEFUN(__ioctl, (fd, request),
 	       else
 		 {
 		   /* Send a SIGTTOU signal to our process group.  */
-		   int restart;
 		   err = __USEPORT (CTTYID, _hurd_sig_post (0, SIGTTOU, port));
 		   /* XXX what to do if error here? */
 		   /* At this point we should have just run the handler for

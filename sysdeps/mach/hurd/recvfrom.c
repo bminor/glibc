@@ -41,7 +41,7 @@ DEFUN(recvfrom, (fd, buf, n, flags, addr, addr_len),
   unsigned int clen = 0;
 
   if (err = HURD_DPORT_USE (fd, __socket_recv (port, &addrport,
-					       flags, bufp, &nread,
+					       flags, &bufp, &nread,
 					       &ports, &nports,
 					       &cdata, &clen,
 					       &flags,

@@ -33,7 +33,7 @@ DEFUN(send, (fd, buf, n, flags),
 
   err = HURD_DPORT_USE (fd, __socket_send (port, MACH_PORT_NULL,
 					   flags, buf, n,
-					   NULL, NULL, 0,
+					   NULL, MACH_MSG_TYPE_COPY_SEND, 0,
 					   NULL, 0, &wrote));
 
   return err ? __hurd_dfail (fd, err) : wrote;

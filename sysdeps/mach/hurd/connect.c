@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/socket.h>
 #include <hurd/socket.h>
 #include <sys/un.h>
+#include <hurd/ifsock.h>
 
 /* Open a connection on socket FD to peer at ADDR (which LEN bytes long).
    For connectionless socket types, just set the default address to send to

@@ -189,6 +189,8 @@ os=$config_os
 # Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
 os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
 
+# Expand the configuration machine name into a subdirectory by architecture
+# type and particular chip.
 case "$machine" in
 i[34]86)
   machine=i386/$machine ;;
@@ -360,9 +362,11 @@ for dir in $sysnames; do echo "	$dir"; done
 changequote([,])dnl The world is now safe for m4, and unsafe for shell.
 dnl Be sure to add each macro used here to aclocal.m4 (which see).
 
-dnl Without this hack, AC_PROG_INSTALL will expand ${srcdir} in the name.
-define([AC_PROG_INSTALL_INSTALL_SH], ['$(..)install.sh -c'])
 AC_PROG_INSTALL
+if [ "$INSTALL" = "${srcdir}/install.sh" ]; then
+  # The makefiles need to use a different form to find it in $srcdir.
+  INSTALL='$(..)./install.sh'
+fi
 AC_PROG_RANLIB
 
 AC_PROG_CC
