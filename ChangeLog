@@ -1,3 +1,56 @@
+2000-02-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/conformtest.pl (@headers): Add wordexp.h, wctype.h, wchar.h,
+	varargs.h, utmpx.h, utime.h, unistd.h, ulimit.h, ucontext.h, time.h,
+	termios.h, tar.h, sys/wait.h, sys/uio.h, sys/types.h, sys/times.h,
+	sys/timeb.h, sys/time.h, sys/statvfs.h, sys/stat.h, sys/shm.h,
+	sys/sem.h, and sys/resource.h.
+	Implement handling of allow-header.
+	* conform/data/fcntl.h-data: Correct various bugs.
+	* conform/data/fnmatch.h-data: Likewise.
+	* conform/data/math.h-data: Likewise.
+	* conform/data/ndbm.h-data: Likewise.
+	* conform/data/nl_types.h-data: Likewise.
+	* conform/data/poll.h-data: Likewise.
+	* conform/data/pthread.h-data: Likewise.
+	* conform/data/semaphore.h-data: Likewise.
+	* conform/data/setjmp.h-data: Likewise.
+	* conform/data/signal.h-data: Likewise.
+	* conform/data/stdarg.h-data: Likewise.
+	* conform/data/stddef.h-data: Likewise.
+	* conform/data/stdio.h-data: Likewise.
+	* conform/data/stdlib.h-data: Likewise.
+	* conform/data/string.h-data: Likewise.
+	* conform/data/strings.h-data: Likewise.
+	* conform/data/stropts.h-data: Likewise.
+	* conform/data/syslog.h-data: Likewise.
+	* conform/data/sys/ipc.h-data: Likewise.
+	* conform/data/sys/mman.h-data: Likewise.
+	* conform/data/sys/msg.h-data: Likewise.
+	* conform/data/tar.h-data: New file.
+	* conform/data/termios.h-data: New file.
+	* conform/data/time.h-data: New file.
+	* conform/data/ucontext.h-data: New file.
+	* conform/data/ulimit.h-data: New file.
+	* conform/data/unistd.h-data: New file.
+	* conform/data/utime.h-data: New file.
+	* conform/data/utmpx.h-data: New file.
+	* conform/data/varargs.h-data: New file.
+	* conform/data/wchar.h-data: New file.
+	* conform/data/wctype.h-data: New file.
+	* conform/data/wordexp.h-data: New file.
+	* conform/data/sys/resource.h-data: New file.
+	* conform/data/sys/sem.h-data: New file.
+	* conform/data/sys/shm.h-data: New file.
+	* conform/data/sys/stat.h-data: New file.
+	* conform/data/sys/statvfs.h-data: New file.
+	* conform/data/sys/time.h-data: New file.
+	* conform/data/sys/timeb.h-data: New file.
+	* conform/data/sys/times.h-data: New file.
+	* conform/data/sys/types.h-data: New file.
+	* conform/data/sys/uio.h-data: New file.
+	* conform/data/sys/wait.h-data: New file.
+
 2000-02-27  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/configure.in: Treat also "/usr/" as
