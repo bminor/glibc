@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ typedef struct
     /* When to change.  */
     enum { J0, J1, M } type;	/* Interpretation of:  */
     unsigned short int m, n, d;	/* Month, week, day.  */
-    unsigned int secs:17;	/* Time of day.  */
+    unsigned int secs;		/* Time of day.  */
 
     long int offset;		/* Seconds east of GMT (west if < 0).  */
 
@@ -257,14 +257,11 @@ DEFUN_VOID(__tzset)
 	  tzr->type = *tz == 'J' ? J1 : J0;
 	  if (tzr->type == J1 && !isdigit(*++tz))
 	    return;
-	  tzr->n = (unsigned short int) strtoul(tz, &end, 10);
-	  if (end == tz || tzr->n > 365)
+	  tzr->d = (unsigned short int) strtoul(tz, &end, 10);
+	  if (end == tz || tzr->d > 365)
 	    return;
-	  else if (tzr->type == J1 && tzr->n == 0)
+	  else if (tzr->type == J1 && tzr->d == 0)
 	    return;
-	  if (tzr->type == J1 && tzr->n == 60)
-	    /* Can't do February 29.  */
-	    ++tzr->n;
 	  tz = end;
 	}
       else if (*tz == 'M')
@@ -343,62 +340,76 @@ DEFUN_VOID(__tzset)
 static int
 DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
 {
-  register unsigned short int m = rule->m, n = rule->n, d = rule->d;
-  struct tm tbuf;
   register time_t t;
+  int y;
 
   if (year != -1 && rule->computed_for == year)
     /* Operations on times in 1969 will be slower.  Oh well.  */
     return 1;
+     
+  /* First set T to January 1st, 0:00:00 GMT in YEAR.  */
+  t = 0;
+  for (y = 1970; y < year; ++y)
+    t += SECSPERDAY * (__isleap (y) ? 366 : 365);
 
-  memset((PTR) &tbuf, 0, sizeof(tbuf));
-  tbuf.tm_year = year;
-
-  if (rule->type == M)
+  switch (rule->type)
     {
-      /* Defined in offtime.c.  */
-      extern CONST unsigned short int __mon_lengths[2][12];
-      unsigned short int ml = __mon_lengths[__isleap(tbuf.tm_year)][m - 1];
-      tbuf.tm_mon = m - 1;
-      if (n == 5)
-	tbuf.tm_mday = ml;
-      else
-	tbuf.tm_mday = max((n - 1) * 7, 1);
-      tbuf.tm_sec = rule->secs;
-      t = mktime(&tbuf);
-      if (t == (time_t) -1)
-	return 0;
-      if (tbuf.tm_wday != d)
-	{
-	  if (d > tbuf.tm_wday)
-	    {
-	      tbuf.tm_mday -= 7;
-	      tbuf.tm_mday += tbuf.tm_wday - d;
-	    }
-	  else
-	    tbuf.tm_mday -= tbuf.tm_wday - d;
-	  if (tbuf.tm_mday < 1)
-	    tbuf.tm_mday += 7;
-	  else
-	    if (tbuf.tm_mday > ml) tbuf.tm_mday -= 7;
-	  t = mktime(&tbuf);
-	  if (t == (time_t) -1)
-	    return 0;
-	}
-    }
-  else
-    {
-      tbuf.tm_mon = 0;
-      if (rule->type == J1)
-	--n;
-      tbuf.tm_mday = n;
-      tbuf.tm_sec = rule->secs;
-      t = mktime(&tbuf);
-      if (t == (time_t) -1)
-	return 0;
+    case J1:
+      /* Jn - Julian day, 1 == January 1, 60 == March 1 even in leap years.
+	 In non-leap years, or if the day number is 59 or less, just
+	 add SECSPERDAY times the day number-1 to the time of
+	 January 1, midnight, to get the day.  */
+      t += (rule->d - 1) * SECSPERDAY;
+      if (rule->d >= 60 && __isleap (year))
+	t += SECSPERDAY;
+      break;
+
+    case J0:
+      /* n - Day of year.
+	 Just add SECSPERDAY times the day number to the time of Jan 1st.  */
+      t += r->day * SECSPERDAY;
+      break;
+
+    case M:
+      /* Mm.n.d - Nth "Dth day" of month M.  */
+      {
+	register unsigned int i, d, m1, yy0, yy1, yy2, dow;
+
+	/* First add SECSPERDAY for each day in months before M.  */
+	for (i = 0; i <= rule->m; ++i)
+	  t += __mon_lengths[__isleap (year)][i] * SECSPERDAY;
+
+	/* Use Zeller's Congruence to get day-of-week of first day of month. */
+	m1 = (rule->m + 9) % 12 + 1;
+	yy0 = (rule->m <= 2) ? (year - 1) : year;
+	yy1 = yy0 / 100;
+	yy2 = yy0 % 100;
+	dow = ((26 * m1 - 2) / 10 + 1 + yy2 + yy2 / 4 + yy1 / 4 - 2 * yy1) % 7;
+	if (dow < 0)
+	  dow += 7;
+
+	/* DOW is the day-of-week of the first day of the month.  Get the
+	   day-of-month (zero-origin) of the first DOW day of the month.  */
+	d = rule->d - dow;
+	if (d < 0)
+	  d += 7;
+	for (i = 1; i < rule->n; ++i)
+	  {
+	    if (d + 7 >= __mon_lengths[__isleap (year)][rule->m - 1])
+	      break;
+	    d += 7;
+	  }
+
+	/* D is the day-of-month (zero-origin) of the day we want.  */
+	t += d * SECSPERDAY;
+      }
+      break;
     }
 
-  rule->change = t;
+  /* T is now the Epoch-relative time of 0:00:00 GMT on the day we want.
+     Just add the time of day and local offset from GMT, and we're done.  */
+
+  rule->change = t + rule->offset + rule->secs;
   rule->computed_for = year;
   return 1;
 }
