@@ -92,7 +92,8 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules
 	   if [ -f $(..)$$file ]; then					      \
 	     echo include "\$$(..)$$file";				      \
 	   else true; fi;						      \
-	 done) > $@T
+	 done; \
+	 echo 'sysd-Makefile-done=t') > $@T
 	mv $@T $@
 
 
@@ -167,7 +168,12 @@ endef
 close-check-inhibit-asm = ;; esac
 endif
 
+# Don't include sysd-rules until sysd-Makefile is already there and has been
+# included.  It might define inhibit-sysdep-asm, which would affect the
+# contents of sysd-rules.
+ifdef sysd-Makefile-done
 include $(+sysdir_pfx)sysd-rules
+endif
 $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 			  $(wildcard $(foreach dir,$(sysdirs),\
 					       $(sysdep_dir)/$(dir)/Makefile))
@@ -310,11 +316,12 @@ lib: $(libc.a)
 libobjs: $(+libobjs)
 lib-noranlib: libobjs
 
-# Define a pattern rule that will match many targets %(foo.o), for each foo
-# in $(objects).  This is the only way to define a rule that updates many
-# targets at once with one sequence of commands.
+# Define a pattern rule that will match many targets libc.%(foo.o), for
+# each foo in $(objects) (% will just happen always to match `a').  This is
+# the only way to define a rule that updates many targets at once with one
+# sequence of commands.
 ifdef objects
-$(patsubst %,\%(%),$(notdir $(objects))): $(objpfx)stamp-$(subdir) ;
+$(patsubst %,$(libc.a:a=)\%(%),$(notdir $(objects))): $(objpfx)stamp-$(subdir);
 $(objpfx)stamp-$(subdir): $(objects)
 #	$(+libc_lock_open)
 ifdef objdir
@@ -402,6 +409,7 @@ ifdef install-lib.a
 $(install-lib.a:lib%.a=$(libdir)/lib$(libprefix)%.a): \
   $(libdir)/lib$(libprefix)%.a: $(objpfx)lib%.a
 	$(do-install)
+	$(RANLIB) $@
 endif
 endif
 ifdef install-data
