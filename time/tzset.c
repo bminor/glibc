@@ -350,7 +350,7 @@ DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
   int y;
 
   /* Turn tm_year into actual year.  */
-  year += 1970;
+  year += 1900;
 
   if (year != -1 && rule->computed_for == year)
     /* Operations on times in 1969 will be slower.  Oh well.  */
