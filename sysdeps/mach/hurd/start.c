@@ -134,8 +134,15 @@ _start (void)
 	break;
       }
 
-  /* Tell the proc server where our args and environment are.  */
-  __proc_setprocargs (_hurd_proc, argv, __environ);
+  if (intarraysize > INIT_UMASK)
+    _hurd_umask = intarray[INIT_UMASK] & 0777;
+  if (intarraysize > INIT_CTTY_FILEID) /* Knows that these are sequential.  */
+    {
+      _hurd_ctty_fstype = intarray[INIT_CTTY_FSTYPE];
+      _hurd_ctty_fsid.val[0] = intarray[INIT_CTTY_FSID1];
+      _hurd_ctty_fsid.val[1] = intarray[INIT_CTTY_FSID2];
+      _hurd_ctty_fileid = intarray[INIT_CTTY_FILEID];
+    }
 
   /* XXX Create the signal thread.  */
 
@@ -147,15 +154,8 @@ _start (void)
     __mach_port_deallocate (__mach_task_self (), oldtask);
   }
 
-  if (intarraysize > INIT_UMASK)
-    _hurd_umask = intarray[INIT_UMASK] & 0777;
-  if (intarraysize > INIT_CTTY_FILEID) /* Knows that these are sequential.  */
-    {
-      _hurd_ctty_fstype = intarray[INIT_CTTY_FSTYPE];
-      _hurd_ctty_fsid.val[0] = intarray[INIT_CTTY_FSID1];
-      _hurd_ctty_fsid.val[1] = intarray[INIT_CTTY_FSID2];
-      _hurd_ctty_fileid = intarray[INIT_CTTY_FILEID];
-    }
+  /* Tell the proc server where our args and environment are.  */
+  __proc_setprocargs (_hurd_proc, argv, __environ);
 
   __libc_init ();
 
