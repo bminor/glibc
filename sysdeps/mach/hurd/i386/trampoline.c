@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <mach/thread_status.h>
 
 static void
-trampoline (__sighandler_t *handler,
+trampoline (void (*handler) (int signo, int sigcode, struct sigcontext *scp)
 	    int signo, int sigcode, struct sigcontext *scp)
 {
   (*handler) (signo, sigcode, scp);
@@ -57,13 +57,9 @@ _hurd_setup_sighandler (int flags,
     {
       sigsp = sigaltstack->ss_sp + sigaltstack->ss_size;
       sigaltstack->ss_flags |= SA_ONSTACK;
-      scp->sc_onstack = 1;
     }
   else
-    {
-      sigsp = (char *) ts->uesp;
-      scp->sc_onstack = 0;
-    }
+    sigsp = (char *) ts->uesp;
 
   /* Push the arguments to call `trampoline' on the stack.  */
   sigsp -= sizeof (*stackframe);
@@ -74,6 +70,8 @@ _hurd_setup_sighandler (int flags,
   stackframe->scp = scp = &stackframe->ctx;
 
   /* Set up the sigcontext from the current state of the thread.  */
+
+  scp->sc_onstack = sigaltstack->ss_flags & SA_ONSTACK ? 1 : 0;
 
   scp->sc_edi = ts->edi;
   scp->sc_esi = ts->esi;
@@ -91,7 +89,7 @@ _hurd_setup_sighandler (int flags,
 
   /* Modify the thread state to call `trampoline' on the new stack.  */
   ts->uesp = (int) sigsp;
-  ts->eip = (int) trampoline;
+  ts->eip = (int) &trampoline;
 
   return scp;
 }
