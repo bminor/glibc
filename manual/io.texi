@@ -66,7 +66,8 @@ output operations on it.
 @menu
 * Streams and File Descriptors::    The GNU Library provides two ways
 			             to access the contents of files.
-* File Position::        
+* File Position::                   The number of bytes from the
+                                     beginning of the file.
 @end menu
 
 @node Streams and File Descriptors, File Position,  , I/O Concepts
@@ -185,7 +186,7 @@ operating system works with them.
 * Directories::                 Directories contain entries for files.
 * File Name Resolution::        A file name specifies how to look up a file.
 * File Name Errors::            Error conditions relating to file names.
-* File Name Portability::   
+* File Name Portability::       File name portability and syntax issues.
 @end menu
 
 

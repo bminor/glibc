@@ -20,10 +20,12 @@ to other systems.  But the emphasis on this manual is not on strict
 portability.
 
 @menu
-* Getting Started::             Getting Started
-* Standards and Portability::   Standards and Portability
-* Using the Library::           Using the Library
-* Roadmap to the Manual::       Roadmap to the Manual
+* Getting Started::             What this manual is for and how to use it.
+* Standards and Portability::   Standards and sources upon which the GNU
+                                 C library is based.
+* Using the Library::           Some practical uses for the library.
+* Roadmap to the Manual::       Overview of the remaining chapters in
+                                 this manual.
 @end menu
 
 @node Getting Started, Standards and Portability,  , Introduction
