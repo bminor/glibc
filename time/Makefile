@@ -44,6 +44,8 @@ distribute := $(distribute) $(tzfiles) leapseconds pacificnew
 
 install := zic zdump
 
+include ../Makeconfig	# Get objpfx defined so we can use it below.
+
 # zonenames uses this variable.
 define nl
 
@@ -87,7 +89,7 @@ echo-zonenames: zonenames
 zones: zoneinfo
 zoneinfo: $(foreach file,$(tzfiles),$(addprefix zoneinfo/,$($(file)-zones)))
 
-zic-cmd = $(notdir $(word 2,$^))$(dir $(word 2,$^))
+zic-cmd = $(dir $(word 2,$^))$(notdir $(word 2,$^))
 define tzcompile
 $(zic-cmd) -d $(patsubst %/,%,$(word 4,$^)) -L $(word 3,$^) $<
 endef
