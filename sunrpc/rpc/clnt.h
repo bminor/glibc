@@ -38,6 +38,9 @@
 
 #define _RPC_CLNT_H	1
 #include <features.h>
+#include <sys/types.h>
+#include <rpc/types.h>
+#include <rpc/auth.h>
 
 __BEGIN_DECLS
 
@@ -336,6 +339,12 @@ extern struct rpc_createerr rpc_createerr;
  */
 extern char *clnt_sperrno __P ((enum clnt_stat __num));	/* string */
 
+
+/*
+ * get the local host's IP address without consulting
+ * name service library functions
+ */
+extern void get_myaddress __P ((struct sockaddr_in *));
 
 
 #define UDPMSGSIZE	8800	/* rpc imposed limit on udp msg size */
