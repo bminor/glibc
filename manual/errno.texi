@@ -1186,18 +1186,6 @@ They are not yet documented.}
 @comment errno ???/121
 @end deftypevr
 
-@comment errno.h
-@comment Linux???: No medium found
-@deftypevr Macro int ENOMEDIUM
-@comment errno ???/???
-@end deftypevr
-
-@comment errno.h
-@comment Linux???: Wrong medium type
-@deftypevr Macro int EMEDIUMTYPE
-@comment errno ???/???
-@end deftypevr
-
 @node Error Messages,  , Error Codes, Error Reporting
 @section Error Messages
 
