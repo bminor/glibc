@@ -43,7 +43,9 @@ $(divrem:%=$(sysdep_dir)/sparc/%.S): $(sysdep_dir)/sparc/divrem.m4
 	       define(S,\`$(+divrem-S-$(+divrem-NAME))')\
 	       /* This file is generated from divrem.m4; DO NOT EDIT! */"; \
 	 cat $<) | $(M4) > $@-tmp
-	mv $@-tmp $@
+# Make it unwritable so noone will edit it by mistake.
+	-chmod a-w $@-tmp
+	mv -f $@-tmp $@
 
 ifeq ($(subdir),crypt)
 
