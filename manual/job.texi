@@ -1059,7 +1059,7 @@ you get.  Specifically, you get the BSD version if you define
 @deftypefn {POSIX.1 Function} pid_t getpgrp ()
 The POSIX.1 definition of @code{getpgrp} returns the process group ID of
 the calling process.
-@end deftypefun
+@end deftypefn
 
 @comment unistd.h
 @comment BSD
@@ -1067,7 +1067,7 @@ the calling process.
 The BSD definition of @code{getpgrp} returns the process group ID of the
 process @var{pid}.  You can supply a value of @code{0} for the @var{pid}
 argument to get information about the calling process.
-@end deftypefun
+@end deftypefn
 
 @comment unistd.h
 @comment POSIX.1
