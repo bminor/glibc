@@ -157,3 +157,10 @@ glibc-targets	:= subdir_lib objects objs others tests subdir_lint.out \
 		   subdir_echo-headers subdir_echo-distinfo
 .PHONY: $(glibc-targets)
 $(glibc-targets):
+
+# Get rid of these variables if they came from the parent.
+routines =
+aux =
+sources =
+objects =
+headers =
