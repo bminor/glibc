@@ -297,31 +297,18 @@ ARFLAGS := r$(verbose)
 # This makes all the object files in the parent library archive.
 
 .PHONY: lib libobjs lib-noranlib
-$(libc.a): lib-noranlib
-	$(RANLIB) $@
+$(libc.a): $(libc.a)(__.SYMDEF)
 lib: $(libc.a)
 
 +libobjs := $(patsubst %,$(libc.a)(%),$(notdir $(objects)))
-ifdef +libobjs
-$(+libobjs): $(libc.a)(%): $(objpfx)%;
-endif
 libobjs: $(+libobjs)
-lib-noranlib: libobjs ar-it
+lib-noranlib: libobjs
 
-#$(libc.a): %: $(addprefix %,$(patsubst $(objpfx)%,(%),$(objects)))
-#	$(AR) $(ARFLAGS) $@ $(patsubst $@(%),%,$?)
-
-define +libc_lock_open
-@. $(..)libc-lock-open
-endef
-define +libc_lock_close
-@rm -f $(..)LOCK-libc.a
-endef
-
-# Temporary until I get a better solution.
-.PHONY: ar-it
-ar-it: $(objects)
+# Define a pattern rule that will match many targets %(foo.o), for each foo
+# in $(objects).  This is the only way to define a rule that updates many
+# targets at once with one sequence of commands.
 ifdef objects
+$(patsubst %,\%(%),$(notdir $(objects))): $(objects)
 #	$(+libc_lock_open)
 ifdef objdir
 	cd $(objdir); $(AR) cru$(verbose) libc.a $(patsubst $(objpfx)%,%,$^)
@@ -331,7 +318,15 @@ endif
 #	$(+libc_lock_close)
 endif
 
+$(libc.a)(__.SYMDEF): $(+libobjs)
+	$(RANLIB) $@
 
+define +libc_lock_open
+@. $(..)libc-lock-open
+endef
+define +libc_lock_close
+@rm -f $(..)LOCK-libc.a
+endef
 
 # This makes all the object files.
 .PHONY: objects objs
@@ -376,7 +371,7 @@ install: $(libdir)/lib$(libprefix)c.a
 # __.SYMDEF time stamp up to date, which avoids messages from some linkers.
 # Depending on subdir_install gets all the subdirs to update the library,
 # and is optimal for `make install' at top level.
-$(libdir)/lib$(libprefix)c.a: libobjs ar-it subdir_install
+$(libdir)/lib$(libprefix)c.a: libobjs subdir_install
 	$(make-target-directory)
 	$(INSTALL_DATA) $(libc.a) $@
 	$(RANLIB) $@
