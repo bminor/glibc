@@ -394,7 +394,7 @@ void skip_whitespace (FILE *stream)
 @deftypefun {char *} fgets (char *@var{s}, int @var{count}, FILE *@var{stream})
 The @code{fgets} function reads characters from the stream @var{stream}
 up to and including a newline character and stores them in the string
-@var{s}.  At most, one less than @var{count} characters will be read;
+@var{s}.  At most, one less than @var{count} characters are read;
 since a null character is added to mark the end of the string,
 @var{count} effectively specifies the minimum allocation size for the
 string @var{s}.
@@ -889,7 +889,7 @@ left-justification in the field, but no other flags or type modifiers
 are defined for this conversion.
 
 If you accidentally pass a null pointer as the argument for a @samp{%s}
-conversion, the GNU library will print it as @samp{(null)}.  This is more
+conversion, the GNU library prints it as @samp{(null)}.  This is more
 because this is such a common program bug than because you ought to depend
 on this behavior in normal use, however.
 
@@ -974,7 +974,7 @@ as an argument to be printed under control of the @samp{%s} conversion.
 @xref{Copying and Concatenation}.
 
 @strong{Warning:} The @code{sprintf} function can be @strong{dangerous}
-because it can potentially output more characters than will fit in the
+because it can potentially output more characters than can fit in the
 allocation size of the string @var{s}.  Remember that the field width
 given in a conversion specification is only a @emph{minimum} value.  The
 @code{snprintf} function lets you specify the maximum number of
@@ -1180,16 +1180,16 @@ contains the following members:
 @item int prec
 This is the precision.  The value is @code{-1} if no precision was specified.
 If the precision was given as @samp{*}, the @code{printf_info} structure
-passed to the handler function will have the actual value retrieved from
-the argument list.  But the structure passed to the arginfo function will
-have a value of @code{INT_MIN}, since the actual value is not known.
+passed to the handler function contains the actual value retrieved from
+the argument list.  But the structure passed to the arginfo function
+contains a value of @code{INT_MIN}, since the actual value is not known.
 
 @item int width
 This is the minimum field width.  The value is @code{0} if no width was
 specified.  If the field width was given as @samp{*}, the
-@code{printf_info} structure passed to the handler function will have
+@code{printf_info} structure passed to the handler function contains
 the actual value retrieved from the argument list.  But the structure
-passed to the arginfo function will have a value of @code{INT_MIN},
+passed to the arginfo function contains a value of @code{INT_MIN},
 since the actual value is not known.
 
 @item char spec
@@ -1830,8 +1830,8 @@ Matches a string of square brackets.
 @item %[^ \f\n\r\t\v]
 Matches a string that doesn't contain any of the standard whitespace
 characters.  This is slightly different from @samp{%s}, because if the
-input begins with a whitespace character, @samp{%[} will report a
-matching failure while @samp{%s} will simply discard the initial
+input begins with a whitespace character, @samp{%[} reports a
+matching failure while @samp{%s} simply discards the initial
 whitespace.
 
 @item %[a-z] 
@@ -2574,7 +2574,7 @@ be at least @code{25}.
 @comment SVID
 @deftypefun {char *} tempnam (const char *@var{dir}, const char *@var{prefix})
 This function generates a unique temporary filename.  If @var{prefix} is
-not a null pointer, up to five characters of this string will be used as
+not a null pointer, up to five characters of this string are used as
 a prefix for the file name.
 
 The directory prefix for the temporary file name is determined by testing
@@ -2646,7 +2646,7 @@ by the argument @var{a}.  This array must be at least @var{size} bytes long.
 support file positioning.
 
 If you specify a null pointer as the @var{a} argument, @code{fmemopen}
-will dynamically allocate (as with @code{malloc}; @pxref{Unconstrained
+dynamically allocates (as with @code{malloc}; @pxref{Unconstrained
 Allocation}) an array @var{size} bytes long.  This is really only useful
 if you are going to write things to the buffer and then read them back
 in again, because you have no way of actually getting a pointer to the
@@ -2659,7 +2659,7 @@ the initial file position is at the beginning of the buffer.  The newly
 created stream does not support file positioning operations.
 
 When a stream open for writing is flushed or closed, a null character
-(zero byte) is written at the end of the buffer if it will fit.  You
+(zero byte) is written at the end of the buffer if it fits.  You
 should add an extra byte to the @var{size} argument to account for this.
 Attempts to write more than @var{size} bytes to the buffer result
 in an error.
@@ -2777,7 +2777,7 @@ the following members:
 @table @code
 @item __io_read *__read
 This is the function that reads data from the cookie.  If the value is a
-null pointer, then read operations will always return @code{EOF}.
+null pointer, then read operations on ths stream always return @code{EOF}.
 
 @item __io_write *__write
 This is the function that writes data to the cookie.  If the value is a
