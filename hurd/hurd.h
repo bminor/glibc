@@ -131,9 +131,7 @@ _hurd_port_set (struct _hurd_port *port, mach_port_t newport)
 }
 
 /* Basic ports and info, initialized by startup.  */
-extern struct _hurd_port _hurd_proc, _hurd_auth;
-extern struct _hurd_port _hurd_cwdir, _hurd_crdir;
-extern struct _hurd_port _hurd_cttyid;
+extern struct _hurd_port _hurd_ports[INIT_PORT_MAX];
 extern volatile mode_t _hurd_umask;
 
 extern vm_address_t _hurd_stack_low, _hurd_stack_high; /* Not locked.  */
@@ -157,6 +155,22 @@ struct _hurd_fd
        (The ctty.lock is only ever used when the port.lock is held.)  */
     struct _hurd_port ctty;
   };
+
+/* Set up *FD to have PORT its server port, doing appropriate ctty magic.
+   Does no locking or unlocking.  */
+extern void _hurd_port2fd (struct _hurd_fd *fd, io_t port, int flags);
+
+/* Allocate a new file descriptor and install PORT in it (including any
+   appropriate ctty magic). FLAGS are as for `open'; only O_NOCTTY is
+   meaningful, but all are saved.
+
+   If the descriptor table is full, set errno, and return -1.
+   If DEALLOC is nonzero, deallocate PORT first.  */
+extern int _hurd_intern_fd (io_t port, int flags, int dealloc);
+
+/* Allocate a new file descriptor and return it, locked.  */
+extern struct _hurd_fd *_hurd_alloc_fd (int *fd_ptr);
+
 
 struct _hurd_dtable
   {
@@ -212,38 +226,6 @@ _hurd_dtable_done (struct _hurd_dtable dtable, int *dealloc)
     (*_hurd_dtable_resizes.free) (dtable);
 }
 
-
-/* Allocate a new file descriptor and install PORT, CTTY, and FLAGS in it.
-   If table is full, deallocate PORT and CTTY, set errno, and return -1.  */
-static inline int
-_hurd_dalloc (io_t port, io_t ctty, int flags)
-{
-  int i;
-  __mutex_lock (&hurd_dtable_lock);
-  for (i = 0; i < _hurd_dtable.size; ++i)
-    {
-      struct _hurd_fd *d = &_hurd_dtable.d[i];
-      __spin_lock (&d->port.lock);
-      if (d->port.port == MACH_PORT_NULL)
-	{
-	  d->port.port = port;
-	  d->port.user_dealloc = NULL;
-	  d->ctty.port = ctty;
-	  d->ctty.user_dealloc = NULL;
-	  d->flags = flags;
-	  __spin_unlock (&d->port.lock);
-	  __mutex_unlock (&hurd_dtable_lock);
-	  return i;
-	}
-      __spin_unlock (&d->port.lock);
-    }
-  __mutex_unlock (&hurd_dtable_lock);
-  __mach_port_deallocate (__mach_task_self (), port);
-  __mach_port_deallocate (__mach_task_self (), ctty);
-  errno = EMFILE;
-  return -1;
-}
-
 /* Return the descriptor cell for FD in DTABLE, locked.  */
 static inline struct _hurd_fd *
 _hurd_dtable_fd (int fd, struct _hurd_dtable dtable)
@@ -284,7 +266,7 @@ _hurd_fd (int fd, int *dealloc)
 static inline void
 _hurd_fd_done (struct _hurd_fd_user d, int *dealloc)
 {
-  _hurd_dtable_done (d->dtable, dealloc);
+  _hurd_dtable_done (d.dtable, dealloc);
 }
 
 /* Evaluate EXPR with the variable `port' bound to the port to FD,
@@ -336,6 +318,7 @@ extern mach_port_t _hurd_dead_recv (void);
 /* Current process IDs.  */
 extern pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 extern int _hurd_orphaned;
+extern struct mutex _hurd_pid_lock; /* Locks above.  */
 
 
 /* User and group IDs.  */
@@ -506,7 +489,7 @@ extern file_t path_lookup (const char *file, int flags, mode_t mode);
 #define path_lookup __path_lookup /* XXX */
 
 /* Open a file descriptor on a port.  */
-extern int openport (io_t port);
+extern int openport (io_t port, int flags);
 
 /* Inform the proc server we have exitted with STATUS, and kill the
    task thoroughly.  This function never returns, no matter what.  */
