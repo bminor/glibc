@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -190,9 +190,9 @@ extern struct tm *localtime_r __P ((__const time_t *__timer,
 /* Compute the `struct tm' representation of *T,
    offset OFFSET seconds east of UTC,
    and store year, yday, mon, mday, wday, hour, min, sec into *TP.  */
-extern void __offtime __P ((__const time_t *__timer,
-			    long int __offset,
-			    struct tm *__TP));
+extern int __offtime __P ((__const time_t *__timer,
+			   long int __offset,
+			   struct tm *__TP));
 
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */
