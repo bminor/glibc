@@ -318,7 +318,8 @@ endif
 #	$(+libc_lock_close)
 endif
 
-$(libc.a)(__.SYMDEF): $(+libobjs)
+# We depend on lib-noranlib because in the parent it depends on subdir_lib.
+$(libc.a)(__.SYMDEF): lib-noranlib
 	$(RANLIB) $@
 
 define +libc_lock_open
