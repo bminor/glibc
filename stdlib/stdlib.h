@@ -25,8 +25,6 @@ Cambridge, MA 02139, USA.  */
 #define	_STDLIB_H	1
 #include <features.h>
 
-__BEGIN_DECLS
-
 /* Get size_t, wchar_t and NULL from <stddef.h>.  */
 #define	__need_size_t
 #define	__need_wchar_t
@@ -36,9 +34,7 @@ __BEGIN_DECLS
 #define	__need_Emath
 #include <errno.h>
 
-/* Get machine-dependent HUGE_VAL value (returned on overflow).  */
-#include <huge_val.h>
-
+__BEGIN_DECLS
 
 /* Returned by `div'.  */
 typedef struct
@@ -218,7 +214,7 @@ extern int system __P ((__const char *__command));
 
 
 /* Shorthand for type of comparison functions.  */
-typedef int (*__compar_fn_t) (__const __ptr_t, __const __ptr_t);
+typedef int (*__compar_fn_t) __P ((__const __ptr_t, __const __ptr_t));
 
 #ifdef	__USE_GNU
 typedef __compar_fn_t comparison_fn_t;
