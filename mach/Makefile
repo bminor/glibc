@@ -25,7 +25,7 @@ include ../Makeconfig
 
 
 headers = mach_init.h mach.h mach-shortcuts.h \
-	  $(interface-headers) mach/exc.h mach/mach.h mach/mig_support.h
+	  $(interface-headers) mach/mach.h mach/mig_support.h
 routines = $(interface-routines) \
 	   $(filter-out syscall_%,$(mach-syscalls)) \
 	   $(addprefix __,$(mach-syscalls)) \
@@ -42,7 +42,7 @@ user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     exc				\
 	            )\
 		   $(addprefix device/,device device_request)
-server-interfaces := device/device_reply mach/exc
+server-interfaces := device/device_reply mach/exc mach/notify
 tests := hello
 distribute = Machrules syscalls.awk shortcut.awk
 
@@ -185,3 +185,12 @@ endif
 
 # Be sure not to make these with implicit rules from foo.defs.
 mach.h mach/memory_object.h: ;
+
+# CMU puts the server header in <mach/exc.h>.  This violates our convention
+# which puts the user header there, so we include the server header as well.
+$(objpfx)mach/exc.h: $(objpfx)mach/exc.__h $(objpfx)mach/exc.uh
+# The last line of foo.__h is "#endif _foo_user_".
+# The first two lines of foo.uh are "#ifndef _foo_user_"/"#define _foo_user_".
+	(sed -e '$$d' $<; sed -e '1,2d' $(word 2,$^); \
+	 echo '#include <mach/exc_server.h>') > $@-new
+	mv $@-new $@
