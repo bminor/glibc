@@ -20,39 +20,28 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <limits.h>
 
-file_t
-__hurd_path_lookup (const char *path, int flags, mode_t mode)
+error_t
+__hurd_path_lookup (file_t crdir, file_t cwdir,
+		    const char *path, int flags, mode_t mode,
+		    file_t *result)
 {
   error_t err;
   file_t startdir, result;
 
-  if (*path == '/')
-    {
-      startdir = _hurd_crdir;
-      while (*path == '/')
-	++path;
-    }
-  else
-    startdir = _hurd_cwdir;
-
-  err = __dir_lookup (startdir, path, flags, mode, &result);
-  if (err)
-    {
-      errno = err;
-      return MACH_PORT_NULL;
-    }
-  return result;
-}
-
-error_t
-__dir_lookup (file_t startdir, const char *path, int flags, mode_t mode,
-	      file_t *result)
-{
   enum retry_type doretry;
   char retryname[PATH_MAX];
   file_t newpt;
   int dealloc_dir;
   int nloops;
+
+  if (*path == '/')
+    {
+      startdir = crdir;
+      while (*path == '/')
+	++path;
+    }
+  else
+    startdir = cwdir;
 
   dealloc_dir = 0;
   nloops = 0;
@@ -74,7 +63,8 @@ __dir_lookup (file_t startdir, const char *path, int flags, mode_t mode,
 	  
 	case FS_RETRY_REAUTH:
 	  __io_reauthenticate (*result);
-	  __auth_user_authenticate (_hurd_auth, result, &newpt);
+	  _HURD_PORT_USE (&_hurd_auth,
+			  __auth_user_authenticate (port, result, &newpt));
 	  __mach_port_deallocate (__mach_task_self (), *result);
 	  *result = newpt;
 	  /* Fall through.  */
@@ -85,11 +75,12 @@ __dir_lookup (file_t startdir, const char *path, int flags, mode_t mode,
 
 	  if (retryname[0] == '/')
 	    {
-	      startdir = _hurd_crdir; /* XXX not modular--pass crdir arg? */
+	      startdir = crdir;
 	      dealloc_dir = 0;
 	      path = retryname;
-	      while (*path == '/')
+	      do
 		++path;
+	      while (*path == '/');
 	    }
 	  else
 	    {
@@ -101,8 +92,10 @@ __dir_lookup (file_t startdir, const char *path, int flags, mode_t mode,
     }
 }
 
-file_t
-__hurd_path_split (const char *path, const char **name)
+error_t
+__hurd_path_split (file_t crdir, file_t cwdir,
+		   const char *path,
+		   file_t *dir, char **name)
 {
   const char *lastslash;
   
@@ -122,7 +115,10 @@ __hurd_path_split (const char *path, const char **name)
 	{
 	  /* "/foobar" => crdir + "foobar".  */
 	  *name = path;
-	  return _hurd_getport (&_hurd_crdir, &_hurd_lock);
+	  __mach_port_mod_refs (__mach_task_self (), MACH_PORT_RIGHT_SEND,
+				crdir, 1);
+	  *dir = crdir;
+	  return 0;
 	}
       else
 	{
@@ -131,13 +127,64 @@ __hurd_path_split (const char *path, const char **name)
 	  memcpy (dirname, path, lastslash - path);
 	  dirname[lastslath - path] = '\0';
 	  *name = lastslash + 1;
-	  return __hurd_path_lookup (dirname, 0, 0);
+	  return __hurd_path_lookup (crdir, cwdir, dirname, 0, 0, dir);
 	}
     }
   else
     {
       /* "foobar" => cwdir + "foobar".  */
       *name = path;
-      return _hurd_getport (&_hurd_cwdir, &_hurd_lock);
+      __mach_port_mod_refs (__mach_task_self (), MACH_PORT_RIGHT_SEND,
+			    cwdir, 1);
+      *dir = cwdir;
+      return 0;
     }
+}
+
+file_t
+__path_lookup (const char *path, int flags, mode_t mode)
+{
+  error_t err;
+  file_t result, crdir, cwdir;
+  int dealloc_crdir, dealloc_cwdir;
+
+  crdir = _hurd_port_get (&_hurd_crdir, &dealloc_crdir);
+  cwdir = _hurd_port_get (&_hurd_cwdir, &dealloc_cwdir);
+
+  err = __hurd_path_lookup (crdir, cwdir, path, flags, mode, &result);
+
+  _hurd_port_free (crdir, &dealloc_crdir);
+  _hurd_port_free (cwdir, &dealloc_cwdir);
+
+  if (err)
+    {
+      errno = err;
+      return MACH_PORT_NULL;
+    }
+  else
+    return result;
+}
+
+file_t
+__path_split (const char *path, char **name)
+{
+  error_t err;
+  file_t dir, crdir, cwdir;
+  int dealloc_crdir, dealloc_cwdir;
+
+  crdir = _hurd_port_get (&_hurd_crdir, &dealloc_crdir);
+  cwdir = _hurd_port_get (&_hurd_cwdir, &dealloc_cwdir);
+
+  err = __hurd_path_split (crdir, cwdir, path, &dir, name);
+
+  _hurd_port_free (crdir, &dealloc_crdir);
+  _hurd_port_free (cwdir, &dealloc_cwdir);
+
+  if (err)
+    {
+      errno = err;
+      return MACH_PORT_NULL;
+    }
+  else
+    return dir;
 }
