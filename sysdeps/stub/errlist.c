@@ -26,11 +26,15 @@ Cambridge, MA 02139, USA.  */
 
 CONST char *CONST _sys_errlist[] =
   {
-    "Error 0",
-    "Operation not implemented",	/* ENOSYS */
-    "Argument out of function's domain",/* EDOM */
-    "Result out of range",		/* ERANGE */
-    NULL
+    "Error 0",			/* 0 */
+    "Argument out of function's domain", /* 1 = EDOM */
+    "Result out of range",	/* 2 = ERANGE */
+    "Operation not implemented", /* 3 = ENOSYS */
+    "Invalid argument",		/* 4 = EINVAL */
+    "Illegal seek",		/* 5 = ESPIPE */
+    "Bad file descriptor",	/* 6 = EBADF */
+    "Cannot allocate memory",	/* 7 = ENOMEM */
+    "Permission denied",	/* 8 = EACCES */
   };
 
-CONST int _sys_nerr = 4;
+CONST int _sys_nerr = sizeof (_sys_errlist) / sizeof (_sys_errlist[0]);
