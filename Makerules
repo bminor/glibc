@@ -269,10 +269,8 @@ endif	# headers
 install: $(+install-dirs) $(+install)
 
 S-CPPFLAGS = $(asm-CPPFLAGS)
-define +make-deps
-$(+mkdep) $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) $< | \
-sed 's,$*\.o,$(@:.dep=.o) $@,' > $@
-endef
++make-deps = $(+mkdep) $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) $< | \
+	     sed 's,$*\.o,$(@:.dep=.o) $@,' > $@
 
 # N.B.: The order of these two rules is important.
 $(objpfx)%.dep: %.S $(before-compile)
