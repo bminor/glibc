@@ -1,6 +1,6 @@
 /* memset -- set a block of memory to some byte value.
    For Intel 80x86, x>=3.
-   Copyright (C) 1991 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <string.h>
 #include <memcopy.h>
+
+#ifdef	__GNUC__
 
 PTR
 DEFUN(memset, (dstpp, c, len),
@@ -72,3 +74,7 @@ DEFUN(memset, (dstpp, c, len),
 
   return dstpp;
 }
+
+#else
+#include <sysdeps/generic/bzero.c>
+#endif
