@@ -26,7 +26,8 @@ static ssize_t
 DEFUN(pwrite, (cookie, buf, n),
       PTR cookie AND CONST char *buf AND size_t n)
 {
-  error_t error = __io_write ((io_t) cookie, buf, n, -1, &n);
+  error_t error = __io_write ((io_t) cookie, buf, n, -1,
+			      (mach_msg_type_number_t *) &n);
   if (error)
     return __hurd_fail (error);
   return n;
