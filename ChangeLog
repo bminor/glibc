@@ -1,3 +1,10 @@
+2001-11-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/glob.c (next_brace_sub): Return NULL if braces
+	don't match, fix {{a,b},c} globbing, clean up.
+	Patch by Flavio Veloso <flaviovs@magnux.com>.
+	* posix/globtest.sh: Add new tests.
+
 2001-11-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/genops.c (_IO_flush_all_lockp): New function.  The same code
@@ -5,7 +12,7 @@
 	(_IO_flush_all): Call _IO_flush_all_lockp with 1 as parameter.
 	* libio/libioP.h: Add prototype for _IO_flush_all_lockp.
 	* sysdeps/generic/abort.c (fflush): Define to _IO_flush_all_lockp(0)
-	if libio is used.
+	if libio is used [PR libc/2575].
 
 2001-11-28  Jakub Jelinek  <jakub@redhat.com>
 
