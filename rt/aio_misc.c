@@ -1,5 +1,5 @@
 /* Handle general operations.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -124,7 +124,7 @@ get_elem (void)
 	  if (new_row == NULL)
 	    return NULL;
 
-	  pool[new_size / ENTRIES_PER_ROW] = new_row;
+	  pool[new_size / ENTRIES_PER_ROW - 1] = new_row;
 	}
 
       /* Put all the new entries in the freelist.  */
