@@ -18,17 +18,6 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdeps/unix/sysdep.h>
 
-/* Define a macro we can use to construct the asm name for a C symbol.  */
-#ifdef	NO_UNDERSCORES
-#define	C_SYMBOL_NAME(name)	name
-#else
-#ifdef	__STDC__
-#define	C_SYMBOL_NAME(name)	_##name
-#else
-#define	C_SYMBOL_NAME(name)	_/**/name
-#endif
-#endif
-
 #ifdef	__STDC__
 #define	ENTRY(name)							      \
   .globl C_SYMBOL_NAME(name);						      \
@@ -48,29 +37,12 @@ Cambridge, MA 02139, USA.  */
 #define	syscall_error	__syscall_error
 #endif
 
-#ifdef	__STDC__
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   .globl syscall_error;							      \
-  .align 4;								      \
   ENTRY (name)								      \
-  DO_CALL (syscall_name, args)
+  DO_CALL (syscall_name, args)						      \
   jb syscall_error
-#else
-#define	PSEUDO(name, syscall_name, args)				      \
-  .text;								      \
-  .globl syscall_error							      \
-  .align 4								      \
-  ENTRY (name)								      \
-  DO_CALL (syscall_name, args)
-  jb syscall_error
-#endif
-
-#ifdef __STDC__
-#define SYS_ify(syscall_name) SYS_##syscall_name
-#else
-#define SYS_ify(syscall_name) SYS_/**/syscall_name
-#endif
 
 /* This is defined as a separate macro so that other sysdep.h files
    can include this one and then redefine DO_CALL.  */
