@@ -7,6 +7,26 @@ Please send GNU C library bug reports using the `glibcbug' script to
 <bugs@gnu.ai.mit.edu>.  Questions and suggestions should be send to
 <bug-glibc@prep.ai.mit.edu>.
 
+Version 2.0.5
+
+* more bug fixes
+
+* inet_ntoa is thread-safe
+
+* updwtmp is moved from libutil to libc
+
+* rewrite of cbrt function
+
+* update of timezone data
+
+Version 2.0.4
+
+* more bug fixes
+
+Version 2.0.3
+
+* more bug fixes
+
 Version 2.0.2
 
 * more bug fixes

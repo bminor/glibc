@@ -1,3 +1,72 @@
+1997-08-16 21:33  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/gencat.c (usage): Fix help text.
+
+	Update of UTMP interface.
+	* login/Makefile (routines): Add utmpname, remove utmp_db.
+	* login/getutent.c: Rename to __getutent and make getutent a weak
+	alias.
+	* login/getutent.c: Rename to __getutid and make getutid a weak
+	alias.
+	* login/getutent.c: Rename to __getutline and make getutline a weak
+	alias.
+	* login/getutent_r.c: Rewrite to use jump table correctly.
+	* login/getutid_r.c: Likewise.
+	* login/getutline_r.c: Likewise.
+	* login/updwtmp.c: Likewise.
+	* login/login.c (login): Correct test for result of utmpname.
+	Use updwtmp instead of implementing this here again.
+	* login/logout.c (logout): Correct test for result of utmpname
+	and pututline.  Handle ut_type field correctly if it exists.
+	* login/utmp-private.h: Update for changed internal functions.
+	* login/utmp.h: Reformat and correct typos.
+	* login/utmp_file.c: Rewrite lock handling.
+	* login/utmpname.c: New file.
+	Patches by Mark Kettenis <kettenis@phys.uva.nl>.
+
+	* socket/sys/socket.h (getpeername): Correct type of len argument.
+	Reported by a sun <asun@zoology.washington.edu>.
+
+	* sysdeps/generic/_G_config.h: Include <gnu/types.h>, not
+	<bits/types.h>.
+	* sysdeps/unix/sysv/linux/_G_config.h: Likewise.
+
+	* sysdeps/mach/libc-lock.h: Introduce thread-specific key handling
+	functions.
+
+	* sysdeps/mach/hurd/Makefile [subdir=misc] (sysdep_routines): Add
+	cthreads.
+	* sysdeps/mach/hurd/cthreads.c: New file.
+
+1997-08-16 04:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* assert/assert.h [__USE_GNU]: Undefine assert_perror.
+	Reported by Theodore C. Belding <Ted.Belding@umich.edu>.
+
+1997-08-10 18:29:08 1997  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/login.c (login): Check for correct return value of
+	utmpname.
+
+1997-08-10 18:44  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/tzset.c: Interpret no DST information in user provided time
+	zone specification as it is meant: no DST.
+	Patch by Paul Eggert <eggert@twinsun.com>.
+
+1997-08-09 13:12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/mach/libc-lock.h (__libc_once): Fix typos.
+	Add macros for key handling.
+	* sysdeps/mach/hurd/Makefile [$(subdir)=misc] (sysdep_routines): Add
+	cthreads.
+	* sysdeps/mach/hurd/cthreads.c: New file.
+	Patches by Marcus G. Daniels <marcusd@cathcart.sysc.pdx.edu>.
+
+1997-08-08  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/bits/libc-lock.h (__libc_once): Define correctly.
+
 1997-08-08 02:25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/stub/libc-lock.h (__libc_once_define): Add new parameter
