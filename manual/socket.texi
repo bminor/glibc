@@ -16,12 +16,12 @@ communicating with other machines; @code{telnet}, @code{rlogin},
 sockets.
 
 Not all operating systems support sockets.  The GNU library provides
-the header file @file{sys/sockets.h} on all systems, and the socket
+the header file @file{sys/socket.h} on all systems, and the socket
 functions always exist, but if the system does not really support
 sockets, these functions always fail.
 
 @strong{Incomplete:} We do not currently document the facilities for
-broadcast messages or for configuring internet interfaces.
+broadcast messages or for configuring Internet interfaces.
 
 @menu
 * Socket Concepts::	Basic concepts you need to know about.
@@ -957,6 +957,8 @@ then call @code{gethostent} to read the entries.
 @c !!! the flag has different meaning if using the DNS. - roland
 @c rms: this is what Bostic told me it means.  He didn't say there
 @c was an exception.
+@c roland: actually, that's more or less true.  If using DNS, it means
+@c to use a TCP connection instead of UDP packets.
 If the @var{stayopen} argument is nonzero, this sets a flag so that
 subsequent calls to @code{gethostbyname} or @code{gethostbyaddr} will
 not close the database (as they usually would).  This makes for more
@@ -1004,28 +1006,28 @@ generates a port number for it.  This number is between
 
 On the Internet, it is actually legitimate to have two different
 sockets with the same port number, as long as they never both try to
-communicate with the same socket address (Host address plus port
+communicate with the same socket address (host address plus port
 number).  You shouldn't duplicate a port number except in special
 circumstances where a higher-level protocol requires it.  Normally,
 the system won't let you do it; @code{bind} normally insists on
 distinct port numbers.  To reuse a port number, you must set the
 socket option @code{SO_REUSEADDR}.  @xref{Socket-Level Options}.
 
-@ignore @c These don't seem to be present in sockets.h
-@comment sys/socket.h
+@c @ignore @c These don't seem to be present in sockets.h --rms
+@c !!! they are not there; they are in netinet/in.h --roland
+@comment netinet/in.h
 @comment BSD
 @defconst IPPORT_RESERVED
 Port numbers less than @code{IPPORT_RESERVED} are reserved for
 superuser use.
 @end defconst
 
-@comment sys/socket.h
+@comment netinet/in.h
 @comment BSD
 @defconst IPPORT_USERRESERVED
 Port numbers greater than or equal to @code{IPPORT_USERRESERVED} are
 reserved for explicit use; they will never be allocated automatically.
 @end defconst
-@end ignore
 
 @node Services Database
 @subsection The Services Database
