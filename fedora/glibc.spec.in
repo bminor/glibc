@@ -1,4 +1,4 @@
-%define glibcrelease 88
+%define glibcrelease 89
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1259,6 +1259,14 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Dec  8 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-89
+- update from CVS
+  - fix clone2 on ia64
+  - avoid tst-timer5 failing with linuxthreads implementation
+- if __libc_enable_secure, disallow mode != normal
+- change ldd script to imply -r when -u is used, properly
+  propagate return value and handle suid binaries
+
 * Tue Dec  7 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-88
 - update from CVS
   - disregard LD_SHOW_AUXV and LD_DYNAMIC_WEAK if __libc_enable_secure
