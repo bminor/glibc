@@ -39,6 +39,12 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #define	__hurd_fail(err)	(errno = (err), -1)
 
+#define __spin_lock(lockaddr) /* no-op XXX */
+#define __spin_unlock(lockaddr) /* no-op XXX */
+
+#define __mutex_lock(lockaddr) /* no-op XXX */
+#define __mutex_unlock(lockaddr) /* no-op XXX */
+
 
 /* Lightweight user references for ports.  */
 
@@ -93,9 +99,6 @@ _hurd_port_locked_get (struct _hurd_port *port, int *myflag)
   __spin_unlock (&port->lock);
   return result;
 }
-
-#define __spin_lock(lockaddr) /* no-op XXX */
-#define __spin_unlock(lockaddr) /* no-op XXX */
 
 /* Same, but locks PORT first.  */
 static inline mach_port_t
@@ -168,26 +171,31 @@ extern mach_port_t _hurd_msgport; /* Locked by _hurd_siglock.  */
    and then cleared at startup.  If not, these are never changed after
    startup.  */
 extern mach_port_t *_hurd_init_dtable;
-extern size_t _hurd_init_dtablesize;
+extern mach_msg_type_number_t _hurd_init_dtablesize;
 
 /* File descriptor table.  */
+
+
+/* File descriptor structure.  */
 struct _hurd_fd
   {
-    struct _hurd_port port;
+    struct _hurd_port port;	/* io server port.  */
     int flags;			/* fcntl flags; locked by port.lock.  */
 
-    /* Normal port to the ctty.  Also locked by port.lock.
-       (The ctty.lock is only ever used when the port.lock is held.)  */
-    struct _hurd_port ctty;
+    /* Normal port to the ctty.  When `port' is our ctty, this is a port to
+       the same io object but which never returns EBACKGROUND; when not,
+       this is nil.  This is controlled by the lock and user_dealloc fields
+       in `port', since they are always used and changed together.  */
+    io_t ctty;
   };
 
 /* Set up *FD to have PORT its server port, doing appropriate ctty magic.
    Does no locking or unlocking.  */
 extern void _hurd_port2fd (struct _hurd_fd *fd, io_t port, int flags);
 
-/* Allocate a new file descriptor and install PORT in it (including any
-   appropriate ctty magic). FLAGS are as for `open'; only O_NOCTTY is
-   meaningful, but all are saved.
+/* Allocate a new file descriptor and install PORT in it (doing any
+   appropriate ctty magic); consumes a user reference on PORT.  FLAGS are
+   as for `open'; only O_NOCTTY is meaningful, but all are saved.
 
    If the descriptor table is full, set errno, and return -1.
    If DEALLOC is nonzero, deallocate PORT first.  */
@@ -207,9 +215,6 @@ struct _hurd_dtable
 
     struct _hurd_fd *d;
   };
-
-#define __mutex_lock(lockaddr) /* no-op XXX */
-#define __mutex_unlock(lockaddr) /* no-op XXX */
 
 #ifdef noteven
 extern struct mutex _hurd_dtable_lock; /* Locks next two.  */
@@ -251,11 +256,11 @@ _hurd_dtable_done (struct _hurd_dtable dtable, int *dealloc)
   __mutex_unlock (&_hurd_dtable_lock);
   if (*dealloc)
     /* _hurd_dtable_resizes is a symbol set.
-       setdtablesize.c gives it one element: free.
-       If setdtablesize is not linked in, *DEALLOC
+       setrlimit.c gives it one element: free.
+       If setrlimit is not linked in, *DEALLOC
        will never get set, so we will never get here.
        This hair avoids linking in free if we don't need it.  */
-    (*_hurd_dtable_resizes.free) (dtable);
+    (*_hurd_dtable_resizes.free) (dtable.d);
 }
 
 /* Return the descriptor cell for FD in DTABLE, locked.  */
@@ -283,13 +288,15 @@ struct _hurd_fd_user
     struct _hurd_fd *d;
   };
 
-/* Returns the descriptor cell for FD, locked.  */
+/* Returns the descriptor cell for FD, locked.  The passed DEALLOC word and
+   returned structure hold onto the descriptor table to it doesn't move
+   while you might be using a pointer into it.  */
 static inline struct _hurd_fd_user
 _hurd_fd (int fd, int *dealloc)
 {
   struct _hurd_fd_user d;
   d.dtable = _hurd_dtable_use (dealloc);
-  d.d = _hurd_dtable_fd (fd, dtable);
+  d.d = _hurd_dtable_fd (fd, d.dtable);
   if (d.d == NULL)
     _hurd_dtable_done (d.dtable, dealloc);
   return d;
@@ -552,9 +559,9 @@ struct ioctl_handler
 /* Define a library-internal handler for ioctl commands
    between FIRST and LAST inclusive.  */
 
-#define	_HURD_HANDLE_IOCTLS(handler, first, last) \
-  static const struct ioctl_handler ##handler##_ioctl_handler =
-    { first, last, handler, NULL };
+#define	_HURD_HANDLE_IOCTLS(handler, first, last)			      \
+  static const struct ioctl_handler ##handler##_ioctl_handler =		      \
+    { first, last, handler, NULL };					      \
   text_set_element (_hurd_ioctl_handler_lists, ##handler##_ioctl_handler)
 
 /* Define a library-internal handler for a single ioctl command.  */
