@@ -1,3 +1,20 @@
+2005-03-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c (_dl_close): Don't try to set up new searchpath if the
+	loader is closed.  Fixes unload3.
+	* elf/tst-global1.c: New file.
+	* elf/Makefile (tests): Add tst-global1.
+	* elf/testobj2.c (p): New function.
+
+2005-03-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile: Add rules to build and run unload3 test.
+	* elf/unload3.c: New test.
+	* elf/unload3mod1.c: New file.
+	* elf/unload3mod2.c: New file.
+	* elf/unload3mod3.c: New file.
+	* elf/unload3mod4.c: New file.
+
 2005-02-23  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #719]
