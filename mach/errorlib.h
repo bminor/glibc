@@ -26,8 +26,8 @@
 /*
  * HISTORY
  * $Log$
- * Revision 1.3  1993/11/23 21:03:37  mib
- * Formerly ../mach/errorlib.h.~3~
+ * Revision 1.4  1993/12/17 21:56:16  roland
+ * entered into RCS
  *
  * Revision 2.3  92/03/31  15:18:52  rpd
  * 	Added KERN_DEVICE_MOD for device errors.
@@ -78,7 +78,7 @@ struct error_subsystem {
 struct error_system {
 	int			max_sub;
 	const char		* bad_sub;
-	struct error_subsystem	* subsystem;
+	const struct error_subsystem	* subsystem;
 };
 
 #define errors __mach_error_systems
