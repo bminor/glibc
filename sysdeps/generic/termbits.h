@@ -87,7 +87,7 @@ struct termios
   /* Local modes.  */
   tcflag_t c_lflag;
 #ifdef	__USE_BSD
- #define	ECHOKE	(1 << 0)	/* Visual erase for KILL.  */
+#define	ECHOKE	(1 << 0)	/* Visual erase for KILL.  */
 #endif
 #define	_ECHOE	(1 << 1)	/* Visual erase for ERASE.  */
 #define	ECHOE	_ECHOE
