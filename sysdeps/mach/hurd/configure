@@ -27,3 +27,37 @@ case "$machine" in
     fi
     ;;
 esac
+
+echo $ac_n "checking Hurd header version""... $ac_c" 1>&6
+echo "configure:33: checking Hurd header version" >&5
+if eval "test \"`echo '$''{'libc_cv_hurd_version'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 38 "configure"
+#include "confdefs.h"
+#include <hurd/version.h>
+int main() {
+
+#define NEED_VERSION 20020609
+#if HURD_INTERFACE_VERSION < NEED_VERSION
+# error Hurd version too old: HURD_INTERFACE_VERSION < NEED_VERSION
+#endif
+; return 0; }
+EOF
+if { (eval echo configure:49: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+  rm -rf conftest*
+  libc_cv_hurd_version=ok
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  libc_cv_hurd_version=bad
+fi
+rm -f conftest*
+fi
+
+echo "$ac_t""$libc_cv_hurd_version" 1>&6
+if test "x$libc_cv_hurd_version" != xok; then
+  { echo "configure: error: Hurd headers not installed or too old" 1>&2; exit 1; }
+fi
