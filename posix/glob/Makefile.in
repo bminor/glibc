@@ -39,13 +39,16 @@ glob.o: glob.h fnmatch.h
 fnmatch.o: fnmatch.h
 
 .c.o:
-	$(CC) $(CFLAGS) $(CPPFLAGS) -I. -c $< $(OUTPUT_OPTION)
+	$(CC) $(CFLAGS) $(CPPFLAGS) -I. -I$(srcdir) -c $< $(OUTPUT_OPTION)
 
 .PHONY: clean realclean glob-clean glob-realclean
 clean glob-clean:
 	-rm -f libglob.a *.o core
 realclean glob-realclean: clean
 	-rm -f TAGS tags
+
+Makefile: $(srcdir)/Makefile.in
+	$(SHELL) config.status
 
 # For inside the C library.
 glob.tar glob.tar.Z:
