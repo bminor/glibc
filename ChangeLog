@@ -1,3 +1,15 @@
+1998-12-11  H.J. Lu  (hjl@gnu.org)
+
+	* elf/soinit.c: Copied from glibc 2.1.
+	* elf/sofini.c: Likewise.
+
+	* config.h.in (HAVE_DWARF2_UNWIND_INFO): New.
+	(HAVE_DWARF2_UNWIND_INFO_STATIC): New.
+
+	* configure.in (HAVE_DWARF2_UNWIND_INFO): Check for it.
+	(HAVE_DWARF2_UNWIND_INFO_STATIC): Check for it.
+	* configure: Regenerated.
+
 1998-12-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* po/es.po: Update from translation team.
