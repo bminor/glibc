@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <math.h>
 
 double
-DEFUN(cabs, (z), struct __complex z)
+DEFUN(cabs, (z), struct __cabs_complex z)
 {
   return hypot (z.__x, z.__y);
 }

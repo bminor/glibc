@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #
 subdir	:= termios
 
-headers	:= termios.h sys/ttydefaults.h sys/termios.h
+headers	:= termios.h termbits.h sys/ttydefaults.h sys/termios.h
 routines	:= speed cfsetspeed tcsetattr tcgetattr tcgetpgrp tcsetpgrp \
 		   tcdrain tcflow tcflush tcsendbrk __tcgetatr cfmakeraw
 

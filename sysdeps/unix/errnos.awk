@@ -2,7 +2,10 @@ BEGIN { special = 0 }
 
 /ERRNOS/ { nerrnos = split(errnos, errs)
 	     for (i = 1; i <= nerrnos; ++i)
-	       printf "  DO(\"%s\", %s);\n", errs[i], errs[i]
+	       # Some systems define errno codes inside undefined #ifdefs,
+	       # and then never actually use them.
+	       printf "#ifdef %s\n  DO(\"%s\", %s);\n#endif\n", \
+		 errs[i], errs[i], errs[i]
 	     special = 1 }
 
 
