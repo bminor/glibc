@@ -77,9 +77,19 @@ mach_msg_server_timeout (boolean_t (*__demux) (mach_msg_header_t *__request,
 /* Open a stream on a Mach device.  */
 extern FILE *mach_open_devstream (mach_port_t device_port, const char *mode);
 
-/* Give THREAD a stack and set it to run at PC when resumed.  */
-kern_return_t __mach_setup_thread (task_t task, thread_t thread, void *pc);
-kern_return_t mach_setup_thread (task_t task, thread_t thread, void *pc);
+/* Give THREAD a stack and set it to run at PC when resumed.
+   If *STACK_SIZE is nonzero, that size of stack is allocated.
+   If *STACK_BASE is nonzero, that stack location is used.
+   If STACK_BASE is not null it is filled in with the chosen stack base.
+   If STACK_SIZE is not null it is filled in with the chosen stack size.
+   Regardless, an extra page of red zone is allocated off the end; this
+   is not included in *STACK_SIZE.  */
+kern_return_t __mach_setup_thread (task_t task, thread_t thread, void *pc,
+				   vm_address_t *stack_base,
+				   vm_size_t *stack_size);
+kern_return_t mach_setup_thread (task_t task, thread_t thread, void *pc,
+				 vm_address_t *stack_base,
+				 vm_size_t *stack_size);
 
 
 #endif	/* mach.h */
