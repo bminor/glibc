@@ -843,7 +843,7 @@ strings (respectively) from the @code{TZ} environment variable.
 The @code{tzname} array is initialized from the @code{TZ} environment
 variable whenever @code{tzset}, @code{ctime}, @code{strftime},
 @code{mktime}, or @code{localtime} is called.
-@end defvar
+@end deftypevar
 
 @comment time.h
 @comment POSIX.1
