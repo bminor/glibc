@@ -1,3 +1,8 @@
+2000-03-26  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdrlimit.c (init_rlimit): Give the RLIMIT_NOFILE soft limit
+	an initial value of 1024 instead of RLIM_INFINITY.
+
 2000-03-24  Scott Bambrough  <scottb@netwinder.org>
 
 	* sysdeps/arm/fpu/fpu_control.h: Define _FPU_MASK_IM, _FPU_MASK_ZM,
