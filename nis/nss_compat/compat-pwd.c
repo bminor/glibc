@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -377,7 +377,8 @@ getpwent_next_nis_netgr (const char *name, struct passwd *result, ent_t *ent,
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
-      if (parse_res)
+      if (parse_res && !in_blacklist (result->pw_name,
+				      strlen (result->pw_name), ent))
 	{
 	  /* Store the User in the blacklist for the "+" at the end of
 	     /etc/passwd */
@@ -490,8 +491,8 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
 
 /* This function handle the +user entrys in /etc/passwd */
 static enum nss_status
-getpwnam_plususer (const char *name, struct passwd *result, char *buffer,
-		   size_t buflen)
+getpwnam_plususer (const char *name, struct passwd *result, ent_t *ent,
+		   char *buffer, size_t buflen)
 {
   struct parser_data *data = (void *) buffer;
   struct passwd pwd;
@@ -532,6 +533,12 @@ getpwnam_plususer (const char *name, struct passwd *result, char *buffer,
     {
       __set_errno (ERANGE);
       return NSS_STATUS_TRYAGAIN;
+    }
+
+  if (in_blacklist (result->pw_name, strlen (result->pw_name), ent))
+    {
+      __set_errno (ENOENT);
+      return NSS_STATUS_NOTFOUND;
     }
 
   if (parse_res > 0)
@@ -624,7 +631,7 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
       if (result->pw_name[0] == '+' && result->pw_name[1] == '@'
 	  && result->pw_name[2] != '\0')
 	{
-	  int status;
+	  enum nss_status status;
 
 	  ent->netgroup = TRUE;
 	  ent->first = TRUE;
@@ -651,17 +658,21 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
       if (result->pw_name[0] == '+' && result->pw_name[1] != '\0'
 	  && result->pw_name[1] != '@')
 	{
+	  char buf[strlen (result->pw_name)];
 	  enum nss_status status;
 
 	  /* Store the User in the blacklist for the "+" at the end of
 	     /etc/passwd */
-	  blacklist_store_name (&result->pw_name[1], ent);
-	  status = getpwnam_plususer (&result->pw_name[1], result, buffer,
-				      buflen);
+	  strcpy (buf, &result->pw_name[1]);
+	  status = getpwnam_plususer (&result->pw_name[1], result, ent,
+				      buffer, buflen);
+	  blacklist_store_name (buf, ent);
+
 	  if (status == NSS_STATUS_SUCCESS) /* We found the entry. */
 	    break;
 	  else
-	    if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
+	    if (status == NSS_STATUS_RETURN || status == NSS_STATUS_NOTFOUND)
+	      /* We couldn't parse the entry or user doesn't exist */
 	      continue;
 	    else
 	      return status;
@@ -689,7 +700,7 @@ internal_getpwent_r (struct passwd *pw, ent_t *ent, char *buffer,
 {
   if (ent->netgroup)
     {
-      int status;
+      enum nss_status status;
 
       /* We are searching members in a netgroup */
       /* Since this is not the first call, we don't need the group name */
@@ -787,47 +798,28 @@ internal_getpwnam_r (const char *name, struct passwd *result, ent_t *ent,
       if (result->pw_name[0] == '-' && result->pw_name[1] == '@'
 	  && result->pw_name[2] != '\0')
 	{
-	  char buf2[1024];
-	  char *user, *host, *domain;
-	  struct __netgrent netgrdata;
-
-	  bzero (&netgrdata, sizeof (struct __netgrent));
-	  __internal_setnetgrent (&result->pw_name[2], &netgrdata);
-	  while (__internal_getnetgrent_r (&host, &user, &domain,
-					   &netgrdata, buf2, sizeof (buf2)))
-	    {
-	      if (user != NULL && user[0] != '-')
-		if (strcmp (user, name) == 0)
-		  return NSS_STATUS_NOTFOUND;
-	    }
-	  __internal_endnetgrent (&netgrdata);
-	  continue;
+	  if (innetgr (&result->pw_name[2], NULL, name, NULL))
+	    return NSS_STATUS_NOTFOUND;
+          continue;
 	}
 
       /* +@netgroup */
       if (result->pw_name[0] == '+' && result->pw_name[1] == '@'
 	  && result->pw_name[2] != '\0')
 	{
-	  char buf[strlen (result->pw_name)];
-	  int status;
+	  enum nss_status status;
 
-	  strcpy (buf, &result->pw_name[2]);
-	  ent->netgroup = TRUE;
-	  ent->first = TRUE;
-	  copy_pwd_changes (&ent->pwd, result, NULL, 0);
+	  if (innetgr (&result->pw_name[2], NULL, name, NULL))
+            {
+	      status = getpwnam_plususer (name, result, ent, buffer,
+					  buflen);
 
-	  do
-	    {
-	      status = getpwent_next_nis_netgr (name, result, ent, buf,
-						buffer, buflen);
-	      if (status == NSS_STATUS_RETURN)
-		continue;
+              if (status == NSS_STATUS_RETURN)
+                continue;
 
-	      if (status == NSS_STATUS_SUCCESS &&
-		  strcmp (result->pw_name, name) == 0)
-		return NSS_STATUS_SUCCESS;
-	    } while (status == NSS_STATUS_SUCCESS);
-	  continue;
+             return status;
+           }
+          continue;
 	}
 
       /* -user */
@@ -848,7 +840,7 @@ internal_getpwnam_r (const char *name, struct passwd *result, ent_t *ent,
 	    {
 	      enum nss_status status;
 
-	      status = getpwnam_plususer (name, result, buffer, buflen);
+	      status = getpwnam_plususer (name, result, ent, buffer, buflen);
 	      if (status == NSS_STATUS_RETURN)
 		/* We couldn't parse the entry */
 		return NSS_STATUS_NOTFOUND;
@@ -862,7 +854,7 @@ internal_getpwnam_r (const char *name, struct passwd *result, ent_t *ent,
 	{
 	  enum nss_status status;
 
-	  status = getpwnam_plususer (name, result, buffer, buflen);
+	  status = getpwnam_plususer (name, result, ent, buffer, buflen);
 	  if (status == NSS_STATUS_SUCCESS) /* We found the entry. */
 	    break;
 	  else
@@ -990,7 +982,7 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	    }
 
 	  /* Terminate the line for any case.  */
-	  buffer[buflen - 1] = '\0';
+ 	  buffer[buflen - 1] = '\0';
 
 	  /* Skip leading blanks.  */
 	  while (isspace (*p))
@@ -1022,20 +1014,16 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
       if (result->pw_name[0] == '-' && result->pw_name[1] == '@'
 	  && result->pw_name[2] != '\0')
 	{
-	  char buf2[1024];
-	  char *user, *host, *domain;
-	  struct __netgrent netgrdata;
+	  char buf[strlen (result->pw_name)];
+	  enum nss_status status;
 
-	  bzero (&netgrdata, sizeof (struct __netgrent));
-	  __internal_setnetgrent (&result->pw_name[2], &netgrdata);
-	  while (__internal_getnetgrent_r (&host, &user, &domain,
-					   &netgrdata, buf2, sizeof (buf2)))
-	    {
-              if (user != NULL && user[0] != '-')
-                blacklist_store_name (user, ent);
-	    }
-	  __internal_endnetgrent (&netgrdata);
-	  continue;
+	  strcpy (buf, &result->pw_name[2]);
+
+	  status = getpwuid_plususer (uid, result, buffer, buflen);
+	  if (status == NSS_STATUS_SUCCESS &&
+	      innetgr (buf, NULL, result->pw_name, NULL))
+	    return NSS_STATUS_NOTFOUND;
+          continue;
 	}
 
       /* +@netgroup */
@@ -1043,31 +1031,43 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	  && result->pw_name[2] != '\0')
 	{
 	  char buf[strlen (result->pw_name)];
-	  int status;
+	  enum nss_status status;
 
 	  strcpy (buf, &result->pw_name[2]);
-	  ent->netgroup = TRUE;
-	  ent->first = TRUE;
-	  copy_pwd_changes (&ent->pwd, result, NULL, 0);
 
-	  do
+	  status = getpwuid_plususer (uid, result, buffer, buflen);
+
+	  if (status == NSS_STATUS_RETURN)
+	    continue;
+
+	  if (status == NSS_STATUS_SUCCESS)
 	    {
-	      status = getpwent_next_nis_netgr (NULL, result, ent, buf,
-						  buffer, buflen);
-	      if (status == NSS_STATUS_RETURN)
-		continue;
+	      if (innetgr (buf, NULL, result->pw_name, NULL))
+                return NSS_STATUS_SUCCESS;
+	    }
+	  else
+            if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
+              return NSS_STATUS_NOTFOUND;
+            else
+              return status;
 
-	      if (status == NSS_STATUS_SUCCESS && uid == result->pw_uid)
-		return NSS_STATUS_SUCCESS;
-	    } while (status == NSS_STATUS_SUCCESS);
-	  continue;
-	}
+          continue;
+        }
+
 
       /* -user */
       if (result->pw_name[0] == '-' && result->pw_name[1] != '\0'
 	  && result->pw_name[1] != '@')
 	{
-          blacklist_store_name (&result->pw_name[1], ent);
+	  char buf[strlen (result->pw_name)];
+	  enum nss_status status;
+
+	  strcpy (buf, &result->pw_name[1]);
+
+	  status = getpwuid_plususer (uid, result, buffer, buflen);
+	  if (status == NSS_STATUS_SUCCESS &&
+	      innetgr (buf, NULL, result->pw_name, NULL))
+	    return NSS_STATUS_NOTFOUND;
           continue;
 	}
 
@@ -1075,18 +1075,29 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
       if (result->pw_name[0] == '+' && result->pw_name[1] != '\0'
 	  && result->pw_name[1] != '@')
 	{
+	  char buf[strlen (result->pw_name)];
 	  enum nss_status status;
 
-	  /* Store the User in the blacklist for the "+" at the end of
-             /etc/passwd */
-          blacklist_store_name (&result->pw_name[1], ent);
-	  status = getpwnam_plususer (&result->pw_name[1], result, buffer,
-				      buflen);
-	  if (status == NSS_STATUS_SUCCESS && result->pw_uid == uid)
-	    break;
+	  strcpy (buf, &result->pw_name[1]);
+
+	  status = getpwuid_plususer (uid, result, buffer, buflen);
+
+	  if (status == NSS_STATUS_RETURN)
+            continue;
+
+	  if (status == NSS_STATUS_SUCCESS)
+	    {
+	      if (strcmp (buf, result->pw_name) == 0)
+		return NSS_STATUS_SUCCESS;
+	    }
 	  else
-	    continue;
-	}
+            if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
+              return NSS_STATUS_NOTFOUND;
+            else
+              return status;
+
+          continue;
+        }
 
       /* +:... */
       if (result->pw_name[0] == '+' && result->pw_name[1] == '\0')
