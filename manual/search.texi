@@ -52,6 +52,8 @@ The header file @file{stdlib.h} defines a name for the data type of
 comparison functions.  This is a GNU extension and thus defined only if
 you request the GNU extensions.
 
+@comment stdlib.h
+@comment GNU
 @tindex comparison_fn_t
 @example
 int comparison_fn_t (const void *, const void *);
