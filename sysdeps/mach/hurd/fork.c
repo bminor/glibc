@@ -404,7 +404,8 @@ __fork (void)
 	 registers not affected by longjmp (such as i386 segment registers)
 	 are in their normal default state.  */
       statecount = MACHINE_THREAD_STATE_COUNT;
-      if (err = __thread_get_state (sigthread, MACHINE_THREAD_STATE_FLAVOR,
+      if (err = __thread_get_state (_hurd_sigthread,
+				    MACHINE_THREAD_STATE_FLAVOR,
 				    (int *) &state, &statecount))
 	goto lose;
 #if STACK_GROWTH_UP
@@ -421,7 +422,7 @@ __fork (void)
 	 fork needs to do more setup before it can take signals.  */
 
       /* Set the child user thread up to return 1 from the setjmp above.  */
-      if (err = __thread_get_state (thread, MACHINE_THREAD_STATE_FLAVOR,
+      if (err = __thread_get_state (thread_self, MACHINE_THREAD_STATE_FLAVOR,
 				    (int *) &state, &statecount))
 	goto lose;
       _hurd_longjmp_thread_state (&state, env, 1);
