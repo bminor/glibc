@@ -1,3 +1,176 @@
+1997-04-18 02:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/initfini.c: Rewrite by Zack Weinberg
+	<zack@rabi.phys.columbia.edu>.
+	* csu/Makefile: Add rules for rewrite.
+	* csu/defs.awk: Helper script to generate derived header.
+
+1997-04-16 17:33  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* login/utmp_file.c (proc_utmp_eq): Only use ut_id field if valid.
+
+1997-04-15 03:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/Dist: Remove old math implementation files.
+	* sysdeps/generic/mathimpl.h: Removed.
+	* sysdeps/generic/trig.h: Removed.
+	* sysdeps/generic/sincos.c: Removed.
+	* sysdeps/generic/asincos.c: Removed.
+	* sysdeps/generic/exp__E.c: Removed.
+	* sysdeps/generic/log__L.c: Removed.
+
+1997-04-13 17:18  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c (fREe): Small optimization.  Before returning,
+	add fast check whether the heap containing top can go away.
+
+1997-04-11 16:46  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c (mALLOc, rEALLOc, cALLOc, mEMALIGn): When
+	failing to allocate a new chunk, also try the main_arena.  It may
+	be that we are only running out of mmapped regions, and other
+	arenas cannot be enlarged sufficiently.
+	(new_heap, malloc_extend_top): Handle top_pad more consistently,
+	i.e. only in new_heap().
+
+1997-04-13 01:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strftime.c (memset_space): Increment pointer.
+	* time/strptime.c: Interpret year number 00-59 as 2000--2059.
+	Patches by Karl Heuer <kwzh@gnu.ai.mit.edu>.
+
+1997-04-11 11:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* rellnsh-sh: Use explicitely /bin/pwd to find the external program.
+
+	* sysdeps/libm-ieee754/s_ceill.c: Corrected.  The mantissa has only
+	63 bits.
+	* sysdeps/libm-ieee754/s_floorl.c: Likewise.
+
+	* po/pl.po: Updated.
+
+	* string/swab.c: Correctly handle array of odd length.
+
+	* manual/string.texi: Correct prototype in memmem documentation.
+
+1997-04-03 10:18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/Makefile (dir-add.texi): Simplify.
+
+1997-04-09 01:24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* rellns-sh: Rewrite to work also in presence of symlinks.
+
+	* locale/setlocale.c (_nl_current): Add element with index LC_ALL.
+	Reported by Greg McGary <gkm@eng.ascend.com>.
+
+	* manual/libc.texinfo: Update malloc documentation for new malloc.
+	* manual/memory.texi: Likewise.
+	Patch by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>.
+
+	* stdlib/erand48_r.c (erand48_r): Build double value using
+	ieee754_double union and use random bits in different order to
+	increase effect of seed.
+	Reported by David Mosberger-Tang <davidm@AZStarNet.com>.
+
+1997-04-08 07:19  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libio/genops.c (_IO_flush_all_linebuffered): Don't flush on
+	a read-only stream.
+
+1997-04-09 01:19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/malloc.c (mALLOC_STATs) [MALLOC_DEBUG>1]: Put declaration
+	in correct place.
+	Patch by Marcus G. Daniels <marcus@cathcart.sysc.pdx.edu>.
+
+1997-04-06 11:32  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* posix/getopt.c (_getopt_initialize): Preserve optind.
+	(_getopt_internal): Set optind to 1 if optind == 0 before
+	calling _getopt_initialize ().
+
+1997-03-27 07:37  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libio/fileops.c (_IO_file_overflow): Set error when try to write
+	on a read-only stream.
+
+	* sysdeps/gnu/utmpbits.h (ut_xtime): New symbol.
+	(ut_time): Define it only if _NO_UT_TIME is not defined.
+
+1997-04-05 16:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netatalk/at.h: Include <sys/socket.h> to
+	get definition of sa_family_t for <linux/atalk.h>.
+	Reported by a sun <asun@zoology.washington.edu>.
+
+	* malloc/malloc.c (cALLOc): Little optimization.
+
+1997-04-05 03:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/arpa/inet.h: Rewrite.  Don't use the ugly BSD way to write
+	headers but instead add comments and parameter names.
+	Don't use BSD specific types in prototypes.
+
+	* manual/nss.texi: Correct a few typos and errors.
+
+1997-03-25 09:38  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/termbits.h (OXTABS): Don't define.
+	* sysdeps/unix/sysv/linux/alpha/termbits.h (OXTABS): Likewise.
+
+	* termios/sys/ttydefaults.h (TTYDEF_OFLAG): Use either OXTABS or
+	TAB3, if one of them is defined.
+
+1997-03-24 19:58  Richard Henderson  <rth@tamu.edu>
+
+	* stdlib/tst-strtol.c (tests): Correct 64-bit entry.
+
+1997-03-25 02:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/setenv.c [_LIBC]: Define __clearenv and make
+	clearenv a weak alias.
+
+	* sysdeps/unix/sysv/linux/iovec.h: Don't use kernel header because
+	of type clashes.  Add all definitions here.
+
+	* sysdeps/unix/sysv/linux/shmat.c: Likewise.  Correct types according
+	to XPG4.2.
+	* sysdeps/unix/sysv/linux/shmdt.c: Likewise.
+	* sysdeps/unix/sysv/linux/msgrcv.c: Likewise.
+
+	* sysvipc/sys/shm.h (shmat, shmdt): Correct types.
+
+	* sysdeps/unix/sysv/linux/sys/kd.h: Define _LINUX_TYPES_H to avoid
+	use of kernel types.
+
+1997-03-25 00:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/ip.h (struct ip_timestamp):
+	Correct typos.  Reported by a sun <asun@zoology.washington.edu>.
+
+1997-03-20 14:46  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig (all): Make sure this is always the default goal.
+
+1997-03-24 23:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/huge_val.h: Remove references to byte order macros.
+	Don't include <endian.h>.
+
+1997-03-19 15:18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+	* sysdeps/m68k/huge_val.h: Remove references to byte order macros.
+	Don't include <endian.h>.
+
+1997-03-24 23:09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/rcmd.c (iruserok): Use access instead of euidaccess.
+
+1997-03-24 15:31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Use AC_PROG_CC instead of AC_PROG_TOOL to find
+	compiler.
+
 1997-04-10 20:22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* hurd/Makefile (sunrpc-headers): Add clnt.h.
@@ -33,6 +206,11 @@
 
 	* sysdeps/unix/sysv/linux/sigset.h (__sigisemptyset): Fix a
 	typo.
+
+1997-04-02 16:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile: Add rule to easily generate dir-add.texi file.
+	* manual/Makefile: Likewise.
 
 1997-04-01 10:11  H.J. Lu  <hjl@gnu.ai.mit.edu>
 
@@ -97,6 +275,8 @@
 	* sysdeps/stub/fchmod.c: Fix typo.
 	* sysdeps/stub/fchdir.c: Fix typo.
 	Reported by Fila Kolodny <fila@ibi.com>.
+
+	* time/time.h (strftime): Remove __restrict in declaration.
 
 1997-04-01 00:37  Ulrich Drepper  <drepper@cygnus.com>
 
