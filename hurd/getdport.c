@@ -18,29 +18,16 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 
-struct _hurd_dtable _hurd_dtable;
+const struct
+  {
+    size_t n;
+    file_t (*getdport) (int fd);
+  } _hurd_getdport_fn;
 
 file_t
 __getdport (int fd)
 {
-  if (_hurd_dtable.d != NULL)
-    {
-      /* We have a real descriptor table.  */
-      file_t dport;
-      int err = _HURD_DPORT_USE (fd,
-				 __mach_port_mod_refs (__mach_task_self (),
-						       (dport = port),
-						       MACH_PORT_RIGHT_SEND,
-						       1));
-      if (err)
-	{
-	  errno = err;
-	  return MACH_PORT_NULL;
-	}
-      else
-	return dport;
-    }
-  else
+  if (_hurd_init_dtable != NULL)
     {
       /* getdport is the only use of file descriptors,
 	 so we don't bother allocating a real table.  */
@@ -57,4 +44,6 @@ __getdport (int fd)
 	  return _hurd_init_dtable[fd];
 	}
     }
+  else
+    return (*_hurd_getdport_fn.getdport) (fd);
 }
