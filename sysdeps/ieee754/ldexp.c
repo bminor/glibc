@@ -53,7 +53,7 @@ DEFUN(ldexp, (x, exp),
 
       if (exp < -2100)
 	return 3e-39 * 3e-39;	/* Cause underflow.  */
-      else if (n > 2100)
+      else if (exp > 2100)
 	return 1.7e308 + 1.7e308; /* Cause overflow.  */
 
       if (u.ieee.exponent == 0)
