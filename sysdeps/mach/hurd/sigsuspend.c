@@ -26,10 +26,15 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(sigsuspend, (set), CONST sigset_t *set)
 {
-  struct _hurd_sigstate *ss = _hurd_thread_sigstate (__mach_thread_self ());
+  struct _hurd_sigstate *ss;
   sigset_t omask, pending;
   int sig;
 
+  if (set != NULL)
+    /* Crash before locking.  */
+    *(volatile sigset_t *) set;
+
+  ss = _hurd_thread_sigstate (__mach_thread_self ());
   omask = ss->blocked;
   if (set != NULL)
     ss->blocked = *set & ~_SIG_CANT_BLOCK;
