@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,17 +18,25 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
+/* <sysdeps/unix/bsd/sequent/i386/sysdep.h> defines this to put the first
+   two arguments into registers.  Since the arguments to wait3 are
+   transferred magically through the same registers, we want to disable this.
+   This allows us to avoid rewriting this file for that system.  */
+
+#undef	ARGS_2
+#define ARGS_2	/* Special-case no-op.  */
+
+.text
 .globl syscall_error
+.align 4
 ENTRY (__wait3)
 	mov 8(%esp), %ecx	/* Flags.  */
 	mov 12(%esp), %edx	/* rusage pointer.  */
-	lea SYS_wait, %eax	/* Load the syscall number.  */
 	pushl $0xdf; popf	/* Set all the condition codes.  */
-        /* lcall $7, $0 */
-	.byte 0x9a, 0, 0, 0, 0, 7, 0 /* Above loses; GAS bug.  */
-	je syscall_error
-	mov 4(%esp), %ecx	/* Status pointer.  */
-	orl %ecx, %ecx		/* Is it nil?  */
-	je 1f			/* Yup; return.  */
-	mov %edx, 0(%ecx)	/* Non-nil; store the status in it.  */
-1:	ret
+	DO_CALL (wait, 2)	/* Do the system call.  */
+	je syscall_error	/* Check for error.  */
+	mov 4(%esp), scratch	/* Status pointer.  */
+	orl scratch, scratch	/* Is it nil?  */
+	je done			/* Yup; return.  */
+	mov r1, 0(scratch)	/* Non-nil; store the status in it.  */
+done:	ret
