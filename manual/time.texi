@@ -731,9 +731,18 @@ set @code{TZ} if you are using a computer over the network from a
 different timezone, and would like times reported to you in the timezone
 that local for you, rather than what is local for the computer.
 
-The value of the @code{TZ} variable can be of one of three formats.  The
-first format is used when there is no Daylight Saving Time (or summer
-time) in the local time zone:
+In POSIX.1 systems the value of the @code{TZ} variable can be of one of
+three formats.  With the GNU C library, the most common format is the
+last one, which can specify a selection from a large database of time
+zone information for many regions of the world.  The first two formats
+are used to describe the time zone information directly, which is both
+more cumbersome and less precise.  But the POSIX.1 standard only
+specifies the details of the first two formats, so it is good to be
+familiar with them in case you come across a POSIX.1 system that doesn't
+support a time zone information database.
+
+The first format is used when there is no Daylight Saving Time (or
+summer time) in the local time zone:
 
 @smallexample
 @r{@var{std} @var{offset}}
@@ -808,14 +817,15 @@ at 2:00am.
 EST+5EDT,M4.1.0/M10.5.0
 @end smallexample
 
-@c !!! this is not true if using the tzfile database
 The schedule of daylight savings time in any particular jurisdiction has
 changed over the years.  To be strictly correct, the conversion of dates
 and times in the past should be based on the schedule that was in effect
 then.  However, this format has no facilities to let you specify how the
 schedule has changed from year to year.  The most you can do is specify
 one particular schedule---usually the present day schedule---and this is
-used to convert any date, no matter when.
+used to convert any date, no matter when.  For precise time zone
+specifications, it is best to use the time zone information database
+(see below).
 
 The third format looks like this:
 
@@ -827,16 +837,31 @@ Each operating system interprets this format differently; in the GNU C
 library, @var{characters} is the name of a file which describes the time
 zone.
 
-@strong{NOTE: I'm planning to update this for the tzfile scheme.}
+@pindex /etc/localtime
+@pindex localtime
 If the @code{TZ} environment variable does not have a value, the
-operation chooses a time zone by default.  Each operating system has its
-own rules for choosing the default time zone, so there is little we can
-say about them.
+operation chooses a time zone by default.  In the GNU C library, the
+default time zone is like the specification @samp{TZ=:/etc/localtime}
+(or @samp{TZ=:/usr/local/etc/localtime}, depending on how GNU C library
+was configured; @pxref{Installation}).  Other C libraries use their own
+rule for choosing the default time zone, so there is little we can say
+about them.
 
-@c !!! this does not vary among operating systems in glibc.  No variable
-@c is like "TZ=:$(prefix)/etc/localtime".  Should describe zic program.
-@c If the name after the : doesn't start with a slash, it is relative to
-@c $(datadir)/zoneinfo.
+@cindex time zone database
+@pindex /share/lib/zoneinfo
+@pindex zoneinfo
+If @var{characters} begins with a slash, it is an absolute file name;
+otherwise the library looks for the file
+@w{@file{/share/lib/zoneinfo/@var{characters}}}.  The @file{zoneinfo}
+directory contains data files describing local time zones in many
+different parts of the world.  The names represent major cities, with
+subdirectories for geographical areas; for example,
+@file{America/New_York}, @file{Europe/London}, @file{Asia/Hong_Kong}.
+These data files are installed by the system administrator, who also
+sets @file{/etc/localtime} to point to the data file for the local time
+zone.  The GNU C library comes with a large database of time zone
+information for most regions of the world, which is maintained by a
+community of volunteers and put in the public domain.
 
 @node Time Zone Functions
 @subsection Functions and Variables for Time Zones
