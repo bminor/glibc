@@ -1,4 +1,4 @@
-%define glibcrelease 65
+%define glibcrelease 66
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -33,6 +33,7 @@ Prereq: basesystem, libgcc
 # This is for building auxiliary programs like memusage, nscd
 # For initial glibc bootstraps it can be commented out
 BuildPreReq: gd-devel libpng-devel zlib-devel texinfo, libselinux-devel >= 1.17.10-1
+BuildPreReq: sed >= 3.95
 %ifarch %{prelinkarches}
 BuildPreReq: prelink >= 0.2.0-5
 %endif
@@ -478,7 +479,7 @@ GCC="gcc -m64"
 # If gcc supports __thread, test it even in --with-tls --without-__thread
 # builds.
 if echo '__thread int a;' | $GCC -xc - -S -o /dev/null 2>/dev/null; then
-  perl -pi -e 's/0 \|\|/1 ||/' ../elf/tst-tls10.h ../linuxthreads/tst-tls1.h
+  sed -ie 's/0 [|][|]/1 ||/' ../elf/tst-tls10.h ../linuxthreads/tst-tls1.h
 fi
 
 BuildFlags="$BuildFlags -DNDEBUG=1"
@@ -922,8 +923,7 @@ ln -sf /%{_lib}/ld-linux-ia64.so.2 $RPM_BUILD_ROOT/lib/ld-linux-ia64.so.2
 %endif
 
 # Increase timeouts
-perl -pi -e 's/alarm \(TIMEOUT\)/alarm (TIMEOUT * 15 * '$numprocs' < 600 ? TIMEOUT * 15 * '$numprocs' : 600)/' \
-  test-skeleton.c
+export TIMEOUTFACTOR=16
 echo ====================TESTING=========================
 cd build-%{_target_cpu}-linux
 make -j$numprocs -k check PARALLELMFLAGS=-s 2>&1 | tee check.log || :
@@ -1239,6 +1239,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+- avoid using perl in the spec file, buildrequire sed >= 3.95
+  (#127671)
+- export TIMEOUTFACTOR=16
+
 * Tue Oct  5 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-65
 - update from CVS
   - define _POSIX_THREAD_PROCESS_SHARED and _POSIX_CLOCK_SELECTION
