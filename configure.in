@@ -36,8 +36,6 @@ prog="`basename $0`"
 nfp=
 gnu_ld=
 gnu_as=
-version=
-release=
 prefix=
 exec_prefix=
 verbose=
@@ -85,29 +83,6 @@ s/^\([^=]*\)=\(.*\)$/\1='\''\2'\''/;s/^\([^=]*\)$/\1=yes/;}'`
 
     -x | --x)
       ;; # ignored
-
-    -os-release=* | -os-releas=* | -os-relea=* | -os-rele=* | -os-rel=* \
-    | -os-re=* | -os-r=* | --os-release=* | --os-releas=* | --os-relea=* \
-    | --os-rele=* | --os-rel=* | --os-re=* | --os-r=*)
-      release=`echo $arg | sed 's/-*os-r[a-z]*=//'`
-      ;;
-    -os-release | -os-releas | -os-relea | -os-rele | -os-rel \
-    | -os-re | -os-r | --os-release | --os-releas | --os-relea \
-    | --os-rele | --os-rel | --os-re | --os-r)
-      next=release
-      ;;
-
-    -os-version=* | -os-versio=* | -os-versi=* | -os-vers=* | -os-ver=* \
-    | -os-ver=* | -os-ve=* | -os-v=* | --os-version=* | --os-versio=* \
-    | --os-versi=* | --os-vers=* | --os-ver=* | --os-ver=* | --os-ve=* \
-    | --os-v=*)
-      version=`echo $arg | sed 's/-*os-v[a-z]*=//'`
-      ;;
-    -os-version | -os-versio | -os-versi | -os-vers | -os-ver \
-    | -os-ver | -os-ve | -os-v |--os-version | --os-versio \
-    | --os-versi | --os-vers | --os-ver | --os-ver | --os-ve | --os-v)
-      next=version
-      ;;
 
     # For backward compatibility, also recognize exact --exec_prefix.
     -exec-prefix=* | --exec_prefix=* | --exec-prefix=* | --exec-prefi=* | --exec-pref=* | --exec-pre=* | --exec-pr=* | --exec-p=* | --exec-=* | --exec=* | --exe=* | --ex=* | --e=*)
@@ -552,14 +527,6 @@ fi
 ) > config.make
 echo "Wrote config.make in $PWD."
 
-switches=
-if [ "$release" ]; then
-  switches="$switches --os-release='$release'"
-fi
-if [ "$version" ]; then
-  switches="$switches --os-version='$version'"
-fi
-
 if [ $srcdir != . ]; then
   if [ $srcdir = .. ]; then
     cwd=`pwd`
@@ -583,7 +550,7 @@ cat > config.status <<END
 # This file was generated automatically by configure.  Do not edit.
 # The GNU C library was configured in $PWD for
 # $system_name as follows:
-$0 $configure_args $switches \$*
+release=$release version=$version $0 $ac_configure_args \$*
 END
 chmod a+x config.status
 echo "Wrote config.status in $PWD."
