@@ -45,7 +45,7 @@ LINE_PARSER
 #include "files-XXX.c"
 
 DB_LOOKUP (netbyname, ,,
-	   LOOKUP_NAME (n_name, n_aliases),
+	   LOOKUP_NAME_CASE (n_name, n_aliases),
 	   const char *name)
 
 DB_LOOKUP (netbyaddr, ,,
