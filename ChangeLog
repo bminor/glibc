@@ -1,3 +1,9 @@
+1998-10-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (inline_outb): Fix output
+	parameter format string.
+	(inline_outw): Likewise.
+
 1998-10-12 14:45  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/opendir.c: Test whether NAME is directory before
