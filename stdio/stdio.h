@@ -97,6 +97,10 @@ typedef int __io_seek __P ((__ptr_t __cookie, fpos_t *__pos, int __w));
 /* Close COOKIE.  */
 typedef int __io_close __P ((__ptr_t __cookie));
 
+/* Return the file descriptor associated with COOKIE,
+   or -1 on error.  There need not be any associated file descriptor.  */
+typedef int __io_fileno __P ((__ptr_t __cookie));
+
 /* Low level interface, independent of FILE representation.  */
 typedef struct
 {
@@ -104,6 +108,7 @@ typedef struct
   __io_write *__write;		/* Write bytes.  */
   __io_seek *__seek;		/* Seek/tell file position.  */
   __io_close *__close;		/* Close file.  */
+  __io_fileno *__fileno;	/* Return file descriptor.  */
 } __io_functions;
 
 /* Higher level interface, dependent on FILE representation.  */
@@ -121,9 +126,9 @@ extern __const __room_functions __default_room_functions;
 
 /* Default close function.  */
 extern __io_close __stdio_close;
-/* Open FILE with mode M, return cookie or NULL to use an int in *DP.  */
-extern __ptr_t __stdio_open __P ((__const char *__file, __io_mode __m,
-				  int *__dp));
+/* Open FILE with mode M, store cookie in *COOKIEPTR.  */
+extern int __stdio_open __P ((__const char *__file, __io_mode __m,
+			      __ptr_t *__cookieptr));
 /* Put out an error message for when stdio needs to die.  */
 extern void __stdio_errmsg __P ((__const char *__msg, size_t __len));
 /* Generate a unique file name.  */
@@ -160,7 +165,6 @@ struct __stdio_file
   char *__buffer;		/* Base of buffer.  */
   size_t __bufsize;		/* Size of the buffer.  */
   __ptr_t __cookie;		/* Magic cookie.  */
-  int __fileno;			/* System file descriptor.  */
   __io_mode __mode;		/* File access mode.  */
   __io_functions __io_funcs;	/* I/O functions.  */
   __room_functions __room_funcs;/* I/O buffer room functions.  */
@@ -580,13 +584,7 @@ extern void psignal __P ((int __sig, __const char *__s));
 
 #ifdef	__USE_POSIX
 /* Return the system file descriptor for STREAM.  */
-extern int fileno __P ((__const FILE *__stream));
-
-#ifdef	__OPTIMIZE__
-/* The `+ 0' makes this not be an lvalue, so it can't be changed.  */
-#define	fileno(stream)	((stream)->__fileno + 0)
-#endif /* Optimizing.  */
-
+extern int fileno __P ((FILE *__stream));
 #endif /* Use POSIX.  */
 
 
