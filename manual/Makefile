@@ -27,7 +27,7 @@ info: library.info
 
 # Set chapters and chapters-incl.
 include chapters
-chapters: library.texinfo
+chapters: libc.texinfo
 	$(find-includes)
 ifdef chapters
 include chapters-incl
@@ -41,15 +41,15 @@ define find-includes
 mv $@.new $@
 endef
 
-library.dvi library.info: $(chapters) summary.texinfo $(chapters-incl)
+library.dvi library.info: $(chapters) summary.texi $(chapters-incl)
 library.dvi: texinfo.tex
 
 # Generate the summary from the Texinfo source files for each chapter.
-summary.texinfo: stamp-summary ;
+summary.texi: stamp-summary ;
 stamp-summary: summary.awk $(chapters)
 	awk -f $^ \
 	| sort +1 -2 | tr '\014' '\012' > summary-tmp
-	move-if-change summary-tmp summary.texinfo
+	move-if-change summary-tmp summary.texi
 	touch $@
 
 # Generate Texinfo files from the C source for the example programs.
@@ -63,13 +63,13 @@ stamp-summary: summary.awk $(chapters)
 
 
 minimal-dist = COPYING.LIB summary.awk Makefile move-if-change		\
-	       library.texinfo $(chapters)				\
+	       libc.texinfo $(chapters)					\
 	       $(patsubst %.c.texi,examples/%.c,			\
-			  $(filter-out summary.texinfo,$(chapters-incl)))
+			  $(filter-out summary.texi,$(chapters-incl)))
 distribute = $(minimal-dist)	       					\
 	     $(patsubst examples/%.c,%.c.texi,$(filter examples/%.c,	\
 			$(minimal-dist)))				\
-	     library.?? library.??s texinfo.tex summary.texinfo		\
+	     library.?? library.??s texinfo.tex summary.texi		\
 	     stamp-summary chapters chapters-incl
 
 tar-it = tar chovf $@ $^
@@ -77,13 +77,13 @@ tar-it = tar chovf $@ $^
 manual.tar: $(minimal-dist) ; $(tar-it)
 mandist.tar: $(distribute) ; $(tar-it)
 
-edition := $(shell sed -n 's/^@set EDITION \(.*\)$$/\1/p' library.texinfo)
+edition := $(shell sed -n 's/^@set EDITION \(.*\)$$/\1/p' libc.texinfo)
 
-glibc-manual-$(edition).tar: $(distribute)
-	@rm -f glibc-manual-$(edition)
-	ln -s . glibc-manual-$(edition)
-	tar chvf $@ $(addprefix glibc-manual-$(edition)/,$^)
-	rm -f glibc-manual-$(edition)
+glibc-doc-$(edition).tar: $(distribute)
+	@rm -f glibc-doc-$(edition)
+	ln -s . glibc-doc-$(edition)
+	tar chvf $@ $(addprefix glibc-doc-$(edition)/,$^)
+	rm -f glibc-doc-$(edition)
 
 %.Z: %
 	compress -c $< > $@.new
@@ -96,7 +96,7 @@ glibc-manual-$(edition).tar: $(distribute)
 	mv $@.new $@
 
 .PHONY: dist
-dist: glibc-manual-$(edition).tar.z
+dist: glibc-doc-$(edition).tar.z
 
 ifneq (,)
 dist: ../Make-dist
