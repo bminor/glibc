@@ -192,9 +192,10 @@ struct __stdio_file
    STREAM must be a modifiable lvalue (wow, I got to use that term).
    See stdio/glue.c for what the confusing bit is about.  */
 #define	__validfp(stream)						      \
-  (stream != NULL && ((stream->__magic == _GLUEMAGIC &&			      \
-		       (stream = *(FILE **) ((int *) stream)[1])),	      \
-		      (stream->__magic == _IOMAGIC)))			      \
+  (stream != NULL &&							      \
+   ((stream->__magic == _GLUEMAGIC &&					      \
+     (stream = *(((struct { int __magic; FILE **__p; } *) stream)->__p))),    \
+    (stream->__magic == _IOMAGIC)))
 
 /* Clear the error and EOF indicators of STREAM.  */
 #define	__clearerr(stream)	((stream)->__error = (stream)->__eof = 0)
@@ -359,7 +360,7 @@ extern int sprintf __P ((char *__s, __const char *__format, ...));
 extern int vfprintf __P ((FILE *__s, __const char *__format,
 			  __gnuc_va_list __arg));
 /* Write formatted output to stdout from argument list ARG.  */
-extern int vprintf __P ((__const char *__format, __ptr_t __arg));
+extern int vprintf __P ((__const char *__format, __gnuc_va_list __arg));
 /* Write formatted output to S from argument list ARG.  */
 extern int vsprintf __P ((char *__s, __const char *__format,
 			  __gnuc_va_list __arg));
