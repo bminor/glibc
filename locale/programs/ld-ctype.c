@@ -594,7 +594,7 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
 
 	  CTYPE_DATA (_NL_CTYPE_WIDTH,
 		      ctype->width,
-		      (ctype->plane_size * ctype->plane_cnt + 3) ~3ul);
+		      (ctype->plane_size * ctype->plane_cnt + 3) & ~3ul);
 
 	  CTYPE_DATA (_NL_CTYPE_MB_CUR_MAX,
 		      &ctype->mb_cur_max, sizeof (u_int32_t));
