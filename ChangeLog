@@ -1,5 +1,10 @@
 2002-04-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h (_DL_HWCAP_COUNT):
+	Define as 8.
+
+2002-04-02  Ulrich Drepper  <drepper@redhat.com>
+
 	* elf/dl-deps.c (_dl_map_object_deps): The sorting of the
 	dependencies must be stable to work correctly.
 	Reported by martin.lubich@datacon.at.
