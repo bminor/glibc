@@ -61,9 +61,9 @@ extern int errno;
 #if defined (USG) && !defined (sgi)
 #if defined (SYSNDIR)
 #include <sys/ndir.h>
-#else /* SYSNDIR */
+#else /* Not SYSNDIR */
 #include "ndir.h"
-#endif /* not SYSNDIR */
+#endif /* SYSNDIR */
 #else /* not USG */
 #include <sys/dir.h>
 #endif /* USG */
@@ -209,7 +209,7 @@ static int glob_pattern_p __P ((const char *pattern, int quote));
 static int glob_in_dir __P ((const char *pattern, const char *directory,
 			     int flags,
 			     int (*errfunc) __P ((const char *, int)),
-			     glob_t * pglob));
+			     glob_t *pglob));
 static int prefix_array __P ((const char *prefix, char **array, size_t n));
 static int collated_compare __P ((const __ptr_t, const __ptr_t));
 
@@ -221,8 +221,8 @@ static int collated_compare __P ((const __ptr_t, const __ptr_t));
    `glob' returns GLOB_ABEND; if it returns zero, the error is ignored.
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
-     int
-       glob (pattern, flags, errfunc, pglob)
+int
+glob (pattern, flags, errfunc, pglob)
      const char *pattern;
      int flags;
      int (*errfunc) __P ((const char *, int));
@@ -373,6 +373,7 @@ static int collated_compare __P ((const __ptr_t, const __ptr_t));
 		pglob->gl_pathv[pglob->gl_pathc++] = NULL;
 
 	    pglob->gl_pathv[pglob->gl_pathc++] = patcopy;
+	    pglob->gl_pathv[pglob->gl_pathc] = NULL;
 	    pglob->gl_flags = flags;
 	  }
 	else
@@ -395,12 +396,13 @@ static int collated_compare __P ((const __ptr_t, const __ptr_t));
 	      return GLOB_NOSPACE;
 	    }
 	}
-
-      if (!(flags & GLOB_NOSORT))
-	qsort ((__ptr_t) & pglob->gl_pathv[oldcount],
-	       pglob->gl_pathc - oldcount,
-	       sizeof (char *), collated_compare);
     }
+
+  if (!(flags & GLOB_NOSORT))
+    /* Sort the vector.  */
+    qsort ((__ptr_t) & pglob->gl_pathv[oldcount],
+	   pglob->gl_pathc - oldcount,
+	   sizeof (char *), collated_compare);
 
   return 0;
 }
@@ -441,23 +443,28 @@ collated_compare (a, b)
 }
 
 
-/* Prepend PREFIX to each of N members of ARRAY, replacing ARRAY's
+/* Prepend DIRNAME to each of N members of ARRAY, replacing ARRAY's
    elements in place.  Return nonzero if out of memory, zero if successful.
-   A slash is inserted between PREFIX and each elt of ARRAY.
-   Each old element of ARRAY is freed.  */
+   A slash is inserted between DIRNAME and each elt of ARRAY,
+   unless DIRNAME is just "/".  Each old element of ARRAY is freed.  */
 static int
-prefix_array (prefix, array, n)
-     const char *prefix;
+prefix_array (dirname, array, n)
+     const char *dirname;
      char **array;
      const size_t n;
 {
   register size_t i;
-  const size_t prelen = strlen (prefix);
+  size_t dirlen = strlen (dirname);
+
+  if (dirlen == 1 && dirname[0] == '/')
+    /* DIRNAME is just "/", so normal prepending would get us "//foo".
+       We want "/foo" instead, so don't prepend any chars from DIRNAME.  */
+    dirlen = 0;
 
   for (i = 0; i < n; ++i)
     {
       const size_t eltlen = strlen (array[i]) + 1;
-      char *new = (char *) malloc (prelen + 1 + eltlen);
+      char *new = (char *) malloc (dirlen + 1 + eltlen);
       if (new == NULL)
 	{
 	  while (i > 0)
@@ -465,9 +472,9 @@ prefix_array (prefix, array, n)
 	  return 1;
 	}
 
-      memcpy (new, prefix, prelen);
-      new[prelen] = '/';
-      memcpy (&new[prelen + 1], array[i], eltlen);
+      memcpy (new, dirname, dirlen);
+      new[dirlen] = '/';
+      memcpy (&new[dirlen + 1], array[i], eltlen);
       free ((__ptr_t) array[i]);
       array[i] = new;
     }
