@@ -40,4 +40,9 @@ typedef struct
     __off_t __pos;		/* Position in directory of this block.  */
   } DIR;
 
+#ifdef __USE_BSD
+/* Macro to return the file descriptor used for an open directory.  */
+#define dirfd(DIR)	((DIR)->__fd)
+#endif
+
 #endif	/* dirstream.h */
