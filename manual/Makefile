@@ -85,7 +85,8 @@ tar-it = tar chovf $@ $^
 manual.tar: $(doc-only-dist) $(minimal-dist) ; $(tar-it)
 mandist.tar: $(doc-only-dist) $(distribute) ; $(tar-it)
 
-edition := $(shell sed -n 's/^@set EDITION \(.*\)$$/\1/p' libc.texinfo)
+edition := $(shell sed -n 's/^@set EDITION \([0-9][0-9.]*\)[^0-9.]*.*$$/\1/p' \
+		       libc.texinfo)
 
 glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 	@rm -f glibc-doc-$(edition)
