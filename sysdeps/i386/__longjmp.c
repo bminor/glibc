@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,13 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
-#include <setjmp.h>
-#include <stdlib.h>
-
-
 #ifndef	__GNUC__
   #error This file uses GNU C extensions; you must compile with GCC.
 #endif
 
+/* Put these global register declarations first, because we get an error if
+   they come after any function definition, including inlines which might
+   be in some header.  */
 
 #define REGS \
   REG (bx);\
@@ -37,6 +34,11 @@ Cambridge, MA 02139, USA.  */
 #define REG(xx) register long int xx asm (#xx)
 REGS;
 #undef	REG
+
+#include <ansidecl.h>
+#include <errno.h>
+#include <setjmp.h>
+#include <stdlib.h>
 
 /* Jump to the position specified by ENV, causing the
    setjmp call there to return VAL, or 1 if VAL is 0.  */
