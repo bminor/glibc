@@ -32,10 +32,8 @@ primitive functions to do each step individually instead.
 * Process Creation Concepts::   An overview of the hard way to do it.
 * Process Identification::      How to get the process ID of a process.
 * Creating a Process::          How to fork a child process.
-* Executing a File::            How to get a process to execute another
-				 program.
-* Process Completion::          How to tell when a child process has
-				 completed.
+* Executing a File::            How to make a process execute another program.
+* Process Completion::          How to tell when a child process has completed.
 * Process Completion Status::   How to interpret the status value 
                                  returned from a child process.
 * BSD Wait Functions::  	More functions, for backward compatibility.
@@ -328,9 +326,8 @@ This function is like @code{execl}, except that it performs the same
 file name searching as the @code{execvp} function.
 @end deftypefun
 
-
 The size of the argument list and environment list taken together must not
-be greater than @code{ARG_MAX} bytes.  @xref{System Parameters}.
+be greater than @code{ARG_MAX} bytes.  @xref{General Limits}.
 
 @strong{Incomplete:}  The POSIX.1 standard requires some statement here
 about how null terminators, null pointers, and alignment requirements
@@ -371,7 +368,7 @@ of the process are unchanged:
 The process ID and the parent process ID.  @xref{Process Creation Concepts}.
 
 @item
-Session and process group membership.  @xref{Job Control Concepts}.
+Session and process group membership.  @xref{Concepts of Job Control}.
 
 @item
 Real user ID and group ID, and supplementary group IDs.  @xref{Process
@@ -399,7 +396,7 @@ Elapsed processor time associated with the process; see @ref{Processor Time}.
 If the set-user-ID and set-group-ID mode bits of the process image file
 are set, this affects the effective user ID and effective group ID
 (respectively) of the process.  These concepts are discussed in detail
-in @ref{User/Group IDs of a Process}.
+in @ref{Process Persona}.
 
 Signals that are set to be ignored in the existing process image are
 also set to be ignored in the new process image.  All other signals are
@@ -410,8 +407,7 @@ File descriptors open in the existing process image remain open in the
 new process image, unless they have the @code{FD_CLOEXEC}
 (close-on-exec) flag set.  The files that remain open inherit all
 attributes of the open file description from the existing process image,
-including file locks.  File descriptors are discussed in @ref{Low-Level
-Input/Output}.
+including file locks.  File descriptors are discussed in @ref{Low-Level I/O}.
 
 Streams, by contrast, cannot survive through @code{exec} functions,
 because they are located in the memory of the process itself.  The new
@@ -513,6 +509,8 @@ child processes that have been stopped as well as those that have
 terminated.
 @end table
 
+@comment sys/wait.h
+@comment POSIX.1
 @deftypefun pid_t wait (int *@var{status_ptr})
 This is a simplified version of @code{waitpid}, and is used to wait
 until any one child process terminates.
