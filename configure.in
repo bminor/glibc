@@ -175,8 +175,11 @@ m88???)		base_machine=m88k machine=m88k/$machine ;;
 m88k)		base_machine=m88k machine=m88k/m88100 ;;
 mips*)		base_machine=mips machine=mips/$machine ;;
 mips64*)	base_machine=mips64 machine=mips/mips64/$machine ;;
-sparc[6789])	base_machine=sparc machine=sparc/$machine ;;
-supersparc)	base_machine=sparc machine=sparc/sparc8 ;;
+sparc | sparcv[67])
+		base_machine=sparc machine=sparc/sparc32 ;;
+sparcv8 | supersparc | hypersparc)
+		base_machine=sparc machine=sparc/sparc32/sparcv8 ;;
+sparc64)	base_machine=sparc machine=sparc/sparc64 ;;
 esac
 changequote([,])dnl
 AC_SUBST(base_machine)
@@ -233,7 +236,7 @@ while b=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$b"; do
   tail="$2"
 done
 
-# For sparc/sparc9, try sparc/sparc9 and then sparc.
+# For sparc/sparcv9, try sparc/sparcv9 and then sparc.
 mach=
 tail=$machine
 while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
@@ -723,6 +726,26 @@ else
 fi
 rm -f conftest*])
 AC_SUBST(libc_cv_gcc_no_exceptions)dnl
+
+if test "$base_machine" = alpha ; then
+AC_CACHE_CHECK(for function ..ng prefix, libc_cv_gcc_alpha_ng_prefix, [dnl
+cat > conftest.c <<\EOF
+foo () { }
+EOF
+dnl
+if AC_TRY_COMMAND([${CC-cc} -S conftest.c -o - | fgrep '$foo..ng' > /dev/null]);
+then
+  libc_cv_gcc_alpha_ng_prefix=yes
+else
+  libc_cv_gcc_alpha_ng_prefix=no
+fi
+rm -f conftest* ])
+if test $libc_cv_gcc_alpha_ng_prefix = yes ; then
+  AC_DEFINE(ASM_ALPHA_NG_SYMBOL_PREFIX, "$")
+else
+  AC_DEFINE(ASM_ALPHA_NG_SYMBOL_PREFIX, "")
+fi
+fi
 
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
