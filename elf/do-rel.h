@@ -28,28 +28,31 @@
 
 
 /* Perform the relocations in MAP on the running program image as specified
-   by RELTAG, SZTAG.  If LAZY is nonzero, this is the first pass on PLT
+   by RELADDR, RELSIZE.  If LAZY is nonzero, this is the first pass on PLT
    relocations; they should be set up to call _dl_runtime_resolve, rather
    than fully resolved now.  */
 
 static inline void
-elf_dynamic_do_rel (struct link_map *map,
-		    int reltag, int sztag,
-		    int lazy)
+elf_dynamic_do_rel (struct link_map *map, ElfW(Addr) reladdr, 
+		    ElfW(Addr) relsize, int lazy)
 {
-  const ElfW(Sym) *const symtab
-    = (const ElfW(Sym) *) (map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
-  const ElfW(Rel) *r
-    = (const ElfW(Rel) *) (map->l_addr + map->l_info[reltag]->d_un.d_ptr);
-  const ElfW(Rel) *end = &r[map->l_info[sztag]->d_un.d_val / sizeof *r];
+  const ElfW(Rel) *r = (const ElfW(Rel) *) (map->l_addr + reladdr);
+  const ElfW(Rel) *end = (const ElfW(Rel) *)(map->l_addr + reladdr + relsize);
 
   if (lazy)
-    /* Doing lazy PLT relocations; they need very little info.  */
-    for (; r < end; ++r)
-      elf_machine_lazy_rel (map, r);
+    {
+      /* Doing lazy PLT relocations; they need very little info.  */
+      for (; r < end; ++r)
+	elf_machine_lazy_rel (map, r);
+    }
   else
-    for (; r < end; ++r)
-      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)]);
+    {
+      const ElfW(Sym) *const symtab =
+	(const ElfW(Sym) *) (map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
+
+      for (; r < end; ++r)
+	elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)]);
+    }
 }
 
 #undef elf_dynamic_do_rel

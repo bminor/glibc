@@ -52,6 +52,7 @@ int _dl_argc;
 char **_dl_argv;
 const char *_dl_rpath;
 const char *_dl_library_path;
+unsigned long _dl_hwcap;
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
@@ -74,7 +75,7 @@ RTLD_START
 #error "sysdeps/MACHINE/dl-machine.h fails to define RTLD_START"
 #endif
 
-ElfW(Addr)
+static ElfW(Addr)
 _dl_start (void *arg)
 {
   struct link_map bootstrap_map;

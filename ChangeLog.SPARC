@@ -1,0 +1,148 @@
+1998-04-07  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/socket.S: Revert change
+	to use ldd, since the buffer is not double-word aligned.
+	Reported by Juan Cespedes <cespedes@debian.org>.
+
+	CVS Import of 2.0.7 980406.
+
+1998-04-06  Jakub Jelinek <jj@sunsite.ms.mff.cuni.cz>
+
+	* elf/elf.h (EM_SPARC64): Remove.
+	(EM_SPARC32PLUS, EM_SPARCV9): New.
+
+	* elf/dl-runtime.c (fixup): Call _dl_lookup_symbol with proper
+	DL_LOOKUP_NOPLT arg.
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_matches_host):
+	Allow v8plus on v9 cpus.
+	(elf_machine_fixup_plt): Make _dl_hwcap usage weak.
+	(elf_machine_rela): Likewise for _dl_rtld_map.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: Export __clone.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Translate
+	to/from struct kernel_sigaction.
+
+	* sysdeps/unix/sysv/linux/sparc/sys/kernel_termios.h: New file.
+        Sparc needs a custom value of __KERNEL_NCCS.
+
+1998-03-26  Richard Henderson  <rth@cygnus.com>
+
+	CVS Commit of lingering Sparc 2.0.x patches.
+
+	* shlib-versions: Add sparc-linux bits.
+
+	* elf/dl-runtime.c (fixup): Handle plt resolution using 
+	elf_machine_fixup_plt, returning the resolved value directly.
+
+	* elf/do-rel.h (elf_dynamic_do_rel): Take arguments by addr and size
+	rather than by tag number.
+	* elf/dynamic-link.h (ELF_DYNAMIC_DO_REL): Conditionally handle 
+	DT_REL including DT_JMPREL.
+
+	* elf/rtld.c (_dl_hwcap): New variable.
+	(_dl_start): Make static.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Record _dl_hwcap.
+	Collect _dl_pagesize if not given.
+
+	Move sysdeps/sparc to sysdeps/sparc/sparc32.
+	Move sysdeps/sparc/sparc32/sparc8 to sysdeps/sparc/sparc32/sparcv8
+	Move sysdeps/unix/sysv/linux/sparc to .../sparc/sparc32
+
+	* sysdeps/sparc/sparc32/DEFS.h: Remove.
+
+	* sysdeps/sparc/sparc32/Implies: Move ieee754 ...
+	* sysdeps/sparc/Implies: ... here.  New file.
+
+	* sysdeps/sparc/sparc32/Makefile (divrem*): Adjust to new location.
+
+	* sysdeps/sparc/sparc32/__longjmp.S: Don't use system reserved
+	registers.  Localize label usage.
+	* sysdeps/sparc/sparc32/divrem.m4: Likewise.
+
+	* sysdeps/sparc/sparc32/add_n.S: Localize label usage.
+	* sysdeps/sparc/sparc32/addmul_1.S: Likewise.
+	* sysdeps/sparc/sparc32/dotmul.S: Likewise.
+	* sysdeps/sparc/sparc32/lshift.S: Likewise.
+	* sysdeps/sparc/sparc32/mul_1.S: Likewise.
+	* sysdeps/sparc/sparc32/rshift.S: Likewise.
+	* sysdeps/sparc/sparc32/sub_n.S: Likewise.
+	* sysdeps/sparc/sparc32/submul_1.S: Likewise.
+	* sysdeps/sparc/sparc32/udiv_qrnnd.S: Likewise.
+	* sysdeps/sparc/sparc32/umul.S: Likewise.
+
+	* sysdeps/sparc/sparc32/alloca.S: Use <sysdep.h>.
+
+	* sysdeps/sparc/sparc32/bsd-_setjmp.S: Move code to setjmp.S.
+	* sysdeps/sparc/sparc32/bsd-setjmp.S: Likewise.
+	* sysdeps/sparc/sparc32/setjmp.S: Use a call for proper PIC code.
+
+	* sysdeps/sparc/sparc32/dl-machine.h (OPCODE_CALL): Fix bogus value.
+	(OPCODE_SAVE_SP): Fix offset.
+	(elf_machine_load_address): Implement it proper.
+	(ELF_MACHINE_RUNTIME_TRAMPOLINE): Likewise.
+	(elf_machine_lookup_noexec_p): New.
+	(elf_machine_lookup_noplt_p): New.
+	(ELF_MACHINE_JMP_SLOT): New.
+	(ELF_MACHINE_PLTREL_OVERLAP): New.
+	(RTLD_START): Care for _dl_skip_args.
+	(elf_machine_plt_value): New.
+	(elf_machine_fixup_plt): New.
+
+	* sysdeps/sparc/sparc32/elf/Makefile: Set ASFLAGS for PIC.
+	* sysdeps/sparc/sparc32/elf/start.S: Rewrite.
+
+	* sysdeps/sparc/sparc32/abort-instr.h: New file.
+
+	Move sysdeps/sparc/sparc32/fpu_control.h to .../fpu/fpu_control.h
+
+	* sysdeps/sparc/sparc32/fpu/fpu_control.h (_FPU_RC_DOWN, _FPU_RC_UP):
+	Swap values.
+	(_FPU_DEFAULT): Default to IEEE, ie no traps enabled.
+	(_FPU_SETCW): Correct ext asm syntax.
+	(fpu_control_t): Is SImode.
+
+	* sysdeps/sparc/sys/trap.h: New file.
+
+	* sysdeps/sparc/sparc32/sparcv8/Dist: New file.
+
+	* sysdeps/sparc/sparc32/sparcv8/addmul_1.S: Localize label usage.
+	* sysdeps/sparc/sparc32/sparcv8/mul_1.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv8/submul_1.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv8/udiv_qrnnd.S: Likewise.
+
+	* sysdeps/sparc/sparc32/sparcv8/dotmul.S: New file.
+	* sysdeps/sparc/sparc32/sparcv8/rem.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv8/sdiv.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv8/udiv.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv8/umul.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv8/urem.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/accept.S (NARGS): Define.
+	* sysdeps/unix/sysv/linux/bind.S: Likewise.
+	* sysdeps/unix/sysv/linux/connect.S: Likewise.
+	* sysdeps/unix/sysv/linux/getpeername.S: Likewise.
+	* sysdeps/unix/sysv/linux/getsockname.S: Likewise.
+	* sysdeps/unix/sysv/linux/getsockopt.S: Likewise.
+	* sysdeps/unix/sysv/linux/listen.S: Likewise.
+	* sysdeps/unix/sysv/linux/recv.S: Likewise.
+	* sysdeps/unix/sysv/linux/recvfrom.S: Likewise.
+	* sysdeps/unix/sysv/linux/recvmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/send.S: Likewise.
+	* sysdeps/unix/sysv/linux/sendmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/sendto.S: Likewise.
+	* sysdeps/unix/sysv/linux/setsockopt.S: Likewise.
+	* sysdeps/unix/sysv/linux/shutdown.S: Likewise.
+	* sysdeps/unix/sysv/linux/socketpair.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/sparc/fcntlbits.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/ioctls.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/signum.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/termbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/trap.h: Likewise.
+
+	* sysdeps/sparc/sparc64/*: New files.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/*: New files.

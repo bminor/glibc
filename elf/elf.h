@@ -161,10 +161,10 @@ typedef struct
 #define EM_S370		9		/* Amdahl */
 #define EM_MIPS_RS4_BE 10		/* MIPS R4000 big-endian */
 
-#define EM_SPARC64     11		/* SPARC v9 (not official) 64-bit */
-
 #define EM_PARISC      15		/* HPPA */
+#define EM_SPARC32PLUS 18		/* Sun's "v8plus" */
 #define EM_PPC         20		/* PowerPC */
+#define EM_SPARCV9     43		/* SPARC v9 64-bit */
 
 /* If it is necessary to assign new unofficial EM_* values, please
    pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
@@ -605,6 +605,11 @@ typedef struct
 #define AT_GID		13		/* Real gid */
 #define AT_EGID		14		/* Effective gid */
 
+/* Some more special a_type values describing the hardware.  */
+#define AT_PLATFORM	15		/* String identifying platform.  */
+#define AT_HWCAP	16		/* Machine dependent hints about
+					   processor capabilities.  */
+
 /* Motorola 68k specific definitions.  */
 
 /* m68k relocs.  */
@@ -677,6 +682,73 @@ typedef struct
 #define R_SPARC_JMP_SLOT 21		/* Create PLT entry */
 #define R_SPARC_RELATIVE 22		/* Adjust by program base */
 #define R_SPARC_UA32	23		/* Direct 32 bit unaligned */
+
+/* Sparc64 additional relocs.  */
+
+#define R_SPARC_PLT32	24
+#define R_SPARC_HIPLT22	25
+#define R_SPARC_LOPLT10	26
+#define R_SPARC_PCPLT32	27
+#define R_SPARC_PCPLT22	28
+#define R_SPARC_PCPLT10	29
+#define R_SPARC_10	30
+#define R_SPARC_11	31
+#define R_SPARC_64	32
+#define R_SPARC_OLO10	33
+#define R_SPARC_HH22	34
+#define R_SPARC_HM10	35
+#define R_SPARC_LM22	36
+#define R_SPARC_PC_HH22	37
+#define R_SPARC_PC_HM10	38
+#define R_SPARC_PC_LM22	39
+#define R_SPARC_WDISP16	40
+#define R_SPARC_WDISP19	41
+#define R_SPARC_7	43
+#define R_SPARC_5	44
+#define R_SPARC_6	45
+#define R_SPARC_DISP64	46
+#define R_SPARC_PLT64	47
+#define R_SPARC_HIX22	48
+#define R_SPARC_LOX10	49
+#define R_SPARC_H44	50
+#define R_SPARC_M44	51
+#define R_SPARC_L44	52
+#define R_SPARC_REGISTER 53
+#define R_SPARC_UA64	54
+#define R_SPARC_UA16	55
+
+/* For Sparc64, legal values for d_tag of Elf64_Dyn.  */
+
+#define DT_SPARC_REGISTER 0x70000001
+#define DT_SPARC_NUM	2
+
+/* Bits present in AT_HWCAP, primarily for Sparc32.  */
+
+#define HWCAP_SPARC_FLUSH	1	/* The cpu supports flush insn.  */
+#define HWCAP_SPARC_STBAR	2
+#define HWCAP_SPARC_SWAP	4
+#define HWCAP_SPARC_MULDIV	8
+#define HWCAP_SPARC_V9		16
+
+/* Values for Elf64_Ehdr.e_flags.  */
+
+#define EF_SPARCV9_MM		3
+#define EF_SPARCV9_TSO		0
+#define EF_SPARCV9_PSO		1
+#define EF_SPARCV9_RMO		2
+#define EF_SPARC_EXT_MASK	0xFFFF00
+#define EF_SPARC_SUN_US1	0x000200
+#define EF_SPARC_HAL_R1		0x000400
+
+/* For Sparc64, special section indices.  */
+
+#define SHN_SPARC_BEFORE	0xff00
+#define SHN_SPARC_AFTER		0xff01
+
+/* For Sparc64, special section flags.  */
+
+#define SHF_SPARC_EXCLUDE	0x80000000
+#define SHF_SPARC_ORDERED	0x40000000
 
 /* MIPS R3000 specific definitions.  */
 

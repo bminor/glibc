@@ -116,25 +116,27 @@ fixup (
   const PLTREL *const reloc
     = (const void *) (l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr +
 		      reloc_offset);
+  const ElfW(Sym) *sym = &symtab[ELFW(R_SYM)(reloc->r_info)];
+  void * const rel_addr = (void *)(l->l_addr + reloc->r_offset);
+  ElfW(Addr) value;
 
   /* Set up the scope to find symbols referenced by this object.  */
   struct link_map **scope = _dl_object_relocation_scope (l);
 
-  {
-    /* This macro is used as a callback from the elf_machine_relplt code.  */
-#define RESOLVE(ref, flags) \
-  (_dl_lookup_symbol (strtab + (*ref)->st_name, ref, scope, \
-		      l->l_name, flags))
-#include "dynamic-link.h"
+  /* Sanity check that we're really looking at a PLT relocation.  */
+  assert (ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT);
 
-    /* Perform the specified relocation.  */
-    elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)]);
-  }
+  /* Look up the target symbol.  */
+  value = _dl_lookup_symbol (strtab + sym->st_name, &sym, scope,
+			     l->l_name, DL_LOOKUP_NOPLT);
+  value = (sym ? value + sym->st_value : 0);
+  value = elf_machine_plt_value (l, reloc, value);
+
+  /* Fix up the plt itself.  */
+  elf_machine_fixup_plt (l, reloc, rel_addr, value);
 
   *_dl_global_scope_end = NULL;
-
-  /* Return the address that was written by the relocation.  */
-  return *(ElfW(Addr) *) (l->l_addr + reloc->r_offset);
+  return value;
 }
 
 

@@ -32,6 +32,7 @@ extern int _dl_argc;
 extern char **_dl_argv;
 extern char **_environ;
 extern size_t _dl_pagesize;
+extern unsigned long _dl_hwcap;
 extern void _end;
 extern void _start (void);
 
@@ -94,6 +95,9 @@ _dl_sysdep_start (void **start_argptr,
       case AT_EGID:
 	egid = av->a_un.a_val;
 	break;
+      case AT_HWCAP:
+	_dl_hwcap = av->a_un.a_val;
+	break;
       }
 
   /* Linux doesn't provide us with any of these values on the stack
@@ -108,6 +112,9 @@ _dl_sysdep_start (void **start_argptr,
 
   __libc_enable_secure = uid != euid || gid != egid;
 
+  if (_dl_pagesize == 0)
+    _dl_pagesize = __getpagesize ();
+
 #ifdef DL_SYSDEP_INIT
   DL_SYSDEP_INIT;
 #endif
@@ -119,9 +126,8 @@ _dl_sysdep_start (void **start_argptr,
 	 will consume the rest of this page, so tell the kernel to move the
 	 break up that far.  When the user program examines its break, it
 	 will see this new value and not clobber our data.  */
-      size_t pg = __getpagesize ();
 
-      __sbrk (pg - ((&_end - (void *) 0) & (pg - 1)));
+      __sbrk (_dl_pagesize - ((&_end - (void *) 0) & (_dl_pagesize - 1)));
     }
 
   (*dl_main) (phdr, phnum, &user_entry);

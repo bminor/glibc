@@ -1,0 +1,50 @@
+/* Copyright (C) 1991, 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#include <sysdep.h>
+#include <sys/trap.h>
+
+#define _ASM 1
+#include <jmp_buf.h>
+
+ENTRY(__setjmp)
+	b	1f
+	 set	0, %o1
+END(__setjmp)
+
+ENTRY(setjmp)
+	set	1, %o1
+END(setjmp)
+
+ENTRY (__sigsetjmp)
+1:
+	/* Save our PC, SP and FP.  Save the signal mask if requested with
+	   a tail-call for simplicity; it always returns zero.  */
+	ta	ST_FLUSH_WINDOWS
+
+	st	%o7, [%o0 + (JB_PC * 4)]
+	st	%sp, [%o0 + (JB_SP * 4)]
+	st	%fp, [%o0 + (JB_FP * 4)]
+
+	mov	%o7, %g1
+	call	__sigjmp_save
+	 mov	%g1, %o7
+END(__sigsetjmp)
+
+weak_alias(__setjmp, _setjmp)
+weak_extern(setjmp)
