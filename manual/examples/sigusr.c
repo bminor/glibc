@@ -1,10 +1,11 @@
+/*@group*/
 #include <signal.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
+/*@end group*/
 
 /* When a @code{SIGUSR1} signal arrives, set this variable.  */
-
 volatile sig_atomic_t usr_interrupt = 0;
 
 void 
@@ -13,9 +14,7 @@ synch_signal (int sig)
   usr_interrupt = 1;
 }
 
-
 /* The child process executes this function. */
-
 void 
 child_function (void)
 {
@@ -26,10 +25,9 @@ child_function (void)
   kill (getppid (), SIGUSR1);
 
   /* Continue with execution. */
-  printf ("Bye, now....\n");
+  puts ("Bye, now....");
   exit (0);
 }
-
 
 int
 main (void)
@@ -48,13 +46,16 @@ main (void)
   /* Create the child process. */
   child_id = fork ();
   if (child_id == 0)
-    child_function ();		/* Does not return */
+    child_function ();		/* Does not return.  */
 
-  /* Busy wait for child to send a signal. */
+/*@group*/
+  /* Busy wait for the child to send a signal. */
   while (!usr_interrupt)
     ;
+/*@end group*/
 
   /* Now continue execution. */
-  printf ("That's all, folks!\n");
+  puts ("That's all, folks!");
+
   return 0;
 }
