@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -48,9 +48,12 @@ Cambridge, MA 02139, USA.  */
 #define	SIGPIPE		13	/* Broken pipe (POSIX).  */
 #define	SIGALRM		14	/* Alarm clock (POSIX).  */
 #define	SIGTERM		15	/* Termination (ANSI).  */
-#define SIGCHLD		16	/* Child status has changed (POSIX).  */
+#define	SIGUSR1		16	/* User-defined signal 1 (POSIX).  */
+#define SIGUSR2		17	/* User-defined signal 2 (POSIX).  */
+#define SIGCHLD		18	/* Child status has changed (POSIX).  */
 #define SIGCLD		SIGCHLD	/* Same as SIGCHLD (System V).  */
+#define	SIGPWR		19	/* Power failure restart (System V).  */
 
 #endif	/* <signal.h> included.  */
 
-#define	_NSIG		17	/* Biggest signal number + 1.  */
+#define	_NSIG		20	/* Biggest signal number + 1.  */
