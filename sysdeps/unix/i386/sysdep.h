@@ -54,10 +54,7 @@ Cambridge, MA 02139, USA.  */
   .globl syscall_error;							      \
   .align 4;								      \
   ENTRY (name)								      \
-  lea SYS_##syscall_name, %eax;						      \
-  /* lcall $7, $0; */							      \
-  /* Above loses; GAS bug.  */						      \
-  .byte 0x9a, 0, 0, 0, 0, 7, 0;						      \
+  DO_CALL (syscall_name, args)
   jb syscall_error
 #else
 #define	PSEUDO(name, syscall_name, args)				      \
@@ -65,12 +62,24 @@ Cambridge, MA 02139, USA.  */
   .globl syscall_error							      \
   .align 4								      \
   ENTRY (name)								      \
-  lea SYS_/**/syscall_name, %eax;					      \
+  DO_CALL (syscall_name, args)
+  jb syscall_error
+#endif
+
+#ifdef __STDC__
+#define SYS_ify(syscall_name) SYS_##syscall_name
+#else
+#define SYS_ify(syscall_name) SYS_/**/syscall_name
+#endif
+
+/* This is defined as a separate macro so that other sysdep.h files
+   can include this one and then redefine DO_CALL.  */
+
+#define DO_CALL(syscall_name, args)
+  lea SYS_ify (syscall_name), %eax;					      \
   /* lcall $7, $0; */							      \
   /* Above loses; GAS bug.  */						      \
   .byte 0x9a, 0, 0, 0, 0, 7, 0;						      \
-  jb syscall_error
-#endif
 
 #define	r0		%eax	/* Normal return-value register.  */
 #define	r1		%edx	/* Secondary return-value register.  */
