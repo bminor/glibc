@@ -129,7 +129,9 @@ _hurd_fd_error_signal (error_t err)
 {
   switch (err)
     {
-    case MACH_SEND_INVALID_DEST: /* The server has disappeared!  */
+    case EMACH_SEND_INVALID_DEST:
+    case EMIG_SERVER_DIED:
+      /* The server has disappeared!  */
       return SIGLOST;
     case EPIPE:
       return SIGPIPE;
