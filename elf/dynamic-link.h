@@ -58,8 +58,6 @@ elf_get_dynamic_info (struct link_map *l)
       else if ((Elf32_Word) DT_EXTRATAGIDX (dyn->d_tag) < DT_EXTRANUM)
 	info[DT_EXTRATAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
 	     + DT_VERSIONTAGNUM] = dyn;
-      else
-	assert (! "bad dynamic tag");
       ++dyn;
     }
 #ifndef DL_RO_DYN_SECTION
