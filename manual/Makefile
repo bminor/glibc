@@ -74,11 +74,10 @@ $(objpfx)%.c.texi: examples/%.c
 	mv $@.new $@
 
 
-minimal-dist = COPYING.LIB summary.awk move-if-change			\
-	       libc.texinfo $(chapters)					\
+minimal-dist = summary.awk move-if-change libc.texinfo $(chapters)	\
 	       $(patsubst %.c.texi,examples/%.c,			\
 			  $(filter-out summary.texi,$(chapters-incl)))
-doc-only-dist = Makefile mkinstalldirs
+doc-only-dist = Makefile COPYING.LIB mkinstalldirs
 distribute = $(minimal-dist)	       					\
 	     $(patsubst examples/%.c,%.c.texi,$(filter examples/%.c,	\
 			$(minimal-dist)))				\
