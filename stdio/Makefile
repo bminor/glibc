@@ -39,7 +39,8 @@ routines	:=							      \
 	ungetc								      \
 	fgetc getc getchar getw						      \
 	fputc putc putchar putw						      \
-	fgets gets fputs puts getdelim getline				      \
+	fgets gets fputs puts						      \
+	getdelim getline __getdelim __getline				      \
 	perror psignal							      \
 	tmpfile tmpnam tempnam						      \
 	fclose fflush							      \
