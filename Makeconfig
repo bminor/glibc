@@ -208,8 +208,8 @@ endif
 
 # Command for linking programs with the C library.
 ifndef +link
-+link = $(CC) -nostdlib -o $@ $(objpfx)start.o $(^:lib=$(objpfx)libc.a) \
-	-lgcc $(objpfx)libc.a
++link = $(CC) -nostdlib -o $@ $(common-objpfx)start.o $(^:lib=$(libc.a)) \
+	-lgcc $(libc.a)
 endif
 
 ifndef LD
