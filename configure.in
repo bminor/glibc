@@ -175,6 +175,20 @@ Usage: $prog [--srcdir=DIR] [--prefix=DIR] [--exec-prefix=DIR]
   exit 1
 fi
 
+# Done parsing the arguments.
+
+# This will get text that should go into config.make.
+config_vars=
+
+# Check for a --with-gmp argument and set gmp-srcdir in config.make.
+case "$with_gmp" in
+yes) echo "$prog: --with-gmp requires an argument; use --with-gmp=DIRECTORY"
+     exit 1 ;;
+'') ;;
+*) config_vars="$config_vars
+gmp-srcdir = $with_gmp" ;;
+esac
+
 # Canonicalize the configuration name.
 config=`$srcdir/config.sub $target`
 if [ ! "$config" ]; then
@@ -330,9 +344,6 @@ done
 
 echo Using system-dependent files from directories:
 for dir in $sysnames; do echo "	$dir"; done
-
-# This will get text that should go into config.make.
-config_vars=
 
 changequote([,])dnl The world is now safe for m4, and unsafe for shell.
 dnl Be sure to add each macro used here to aclocal.m4 (which see).
