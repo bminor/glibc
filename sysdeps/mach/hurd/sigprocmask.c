@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <signal.h>
 #include <hurd.h>
+#include <hurd/signal.h>
 
 
 /* If SET is not NULL, modify the current set of blocked signals
@@ -29,9 +30,9 @@ int
 DEFUN(__sigprocmask, (how, set, oset),
       int how AND CONST sigset_t *set AND sigset_t *oset)
 {
-#ifdef notyet
-  struct _hurd_sigstate *ss;
+  struct hurd_sigstate *ss;
   sigset_t old, new;
+  int pending;
 
   if (set != NULL)
     new = *set;
@@ -66,9 +67,7 @@ DEFUN(__sigprocmask, (how, set, oset),
 
       ss->blocked &= ~_SIG_CANT_MASK;
 
-      if (ss->pending & ~ss->blocked)
-	/* XXX deliver pending signals */
-	;
+      pending = ss->pending & ~ss->blocked;
     }
 
   __mutex_unlock (&ss->lock);
@@ -76,6 +75,10 @@ DEFUN(__sigprocmask, (how, set, oset),
   if (oset != NULL)
     *oset = old;
 
-#endif
+  if (pending)
+    /* Send a message to the signal thread so it
+       will wake up and check for pending signals.  */
+    __sig_post (_hurd_msgport, 0, __mach_task_self ());
+
   return 0;
 }
