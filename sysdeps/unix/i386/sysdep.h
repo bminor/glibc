@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,9 @@ Cambridge, MA 02139, USA.  */
   .align 4;								      \
   ENTRY (name)								      \
   lea SYS_##syscall_name, %eax;						      \
-  lcall $7, $0;								      \
+  /* lcall $7, $0; */							      \
+  /* Above loses; GAS bug.  */						      \
+  .byte 0x9a, 0, 0, 0, 0, 7, 0
   jb syscall_error
 #else
 #define	PSEUDO(name, syscall_name)					      \
@@ -46,7 +48,9 @@ Cambridge, MA 02139, USA.  */
   .align 4								      \
   ENTRY (name)								      \
   lea SYS_/**/syscall_name, %eax;					      \
-  lcall $7, $0								      \
+  /* lcall $7, $0; */							      \
+  /* Above loses; GAS bug.  */						      \
+  .byte 0x9a, 0, 0, 0, 0, 7, 0
   jb syscall_error
 #endif
 
