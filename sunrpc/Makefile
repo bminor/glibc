@@ -21,11 +21,13 @@
 #
 subdir	:= sunrpc
 
-# The code in this subdirectory is taken verbatim from Sun's RPCSRC-4.0
-# distribution.  A few files needed trivial modifications to compile in the
-# GNU environment; these changes are marked by comments that say
-# `roland@gnu'.  Other than that, several files were renamed so as not to
-# exceed 14-character file name limits:
+# The code in this subdirectory is taken verbatim from Sun's
+# RPCSRC-4.0 distribution.  A few files needed trivial modifications
+# to compile in the GNU environment; these changes are marked by
+# comments that say `roland@gnu'.  All the code from Sun's rpc, etc,
+# and rpcgen subdirectories is in this directory; the rpc subdirectory
+# contains only the header files.  Other than that, several files were
+# renamed so as not to exceed 14-character file name limits:
 #
 #	authunix_prot.c -> authuxprot.c
 #	bindresvport.c -> bindrsvprt.c
@@ -40,11 +42,19 @@ subdir	:= sunrpc
 #	rpc_dtablesize.c -> rpc_dtable.c
 #	svc_auth_unix.c -> svc_authux.c
 #	xdr_reference.c -> xdr_ref.c
+#	rpcsvc/bootparam_prot.x -> rpcsvc/bootparam.x
 
-
-headers := $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
-		            pmap_prot.h pmap_rmt.h rpc.h rpc_msg.h svc.h \
-			    svc_auth.h types.h xdr.h)
+headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
+			   pmap_prot.h pmap_rmt.h rpc.h rpc_msg.h svc.h \
+			   svc_auth.h types.h xdr.h) \
+	  $(rpcsvc:%=rpcsvc/%)
+rpcsvc = bootparam.x nlm_prot.x rstat.x \
+	 yppasswd.x klm_prot.x rex.x sm_inter.x mount.x \
+	 rnusers.x spray.x nfs_prot.x rquota.x yp.x
+# These headers are installed with rpcgen by a rule below.
+install-others = $(rpcsvc:%.x=$(includedir)/%.h)
+		 $(includedir)/bootparam_prot.h \
+		 $(etcdir)/rpc
 
 routines := auth_none auth_unix authuxprot bindrsvprt \
 	    clnt_gen clnt_perr clnt_raw clnt_simp clnt_tcp \
@@ -55,7 +65,38 @@ routines := auth_none auth_unix authuxprot bindrsvprt \
 	    svc_tcp svc_udp xdr xdr_array xdr_float xdr_mem \
 	    xdr_rec xdr_ref xdr_stdio
 
+install := rpcgen rpcinfo portmap
+rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
+	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o
+extra-objs = $(rpcgen-objs)
+# These headers are part of rpcgen.
+distribute := rpc_util.h rpc_parse.h rpc_scan.h $(rpcgen-objs:.o=.c)
+
+others := portmap rpcinfo
+
 # Sun's code is not too clean.
-override +gccwarn :=# -w
+override +gccwarn :=
 
 include ../Rules
+
+$(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) $(libc.a)
+	$(+link)
+
+rpcgen-cmd = $(dir $(word 2,$^))$(notdir $(word 2,$^))
+
+# Generate the installed rpcsvc headers in place with rpcgen.
+$(includedir)/rpcsvc/%.h: rpcsvc/%.x $(objpfx)rpcgen
+	$(rpcgen-cmd) -h $< -o $@
+
+# The proper file name is longer than 14 chars, so we install it under
+# a shorter name.  But if the filesystem can handle it, we want to
+# install under the proper name as well.
+$(includedir)/bootparam_prot.h: $(includedir)/bootparam.h
+	@echo It is safe to ignore an error here if this file name is too long.
+	-$(do-install)
+
+# Install the rpc data base file.
+$(etcdir)/rpc: etc.rpc
+	$(do-install)
+
+defines := $(defines) -D_PATH_RPC='"$(etcdir)/rpc"'
