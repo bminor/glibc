@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,9 @@
 #include <fcntl.h>
 
 
+#include "has_cpuclock.c"
+
+
 int
 clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
 {
@@ -31,30 +34,9 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
   if (pid != 0 && pid != getpid ())
     return EPERM;
 
-  static int itc_usable;
   int retval = ENOENT;
 
-  if (__builtin_expect (itc_usable == 0, 0))
-    {
-      int newval = 1;
-      int fd = open ("/proc/sal/itc_drift", O_RDONLY);
-      if (__builtin_expect (fd != -1, 1))
-	{
-	  char buf[16];
-	  /* We expect the file to contain a single digit followed by
-	     a newline.  If the format changes we better not rely on
-	     the file content.  */
-	  if (read (fd, buf, sizeof buf) != 2 || buf[0] != '0'
-	      || buf[1] != '\n')
-	    newval = -1;
-
-	  close (fd);
-	}
-
-      itc_usable = newval;
-    }
-
-  if (itc_usable > 0)
+  if (has_cpuclock () > 0)
     {
       /* Store the number.  */
       *clock_id = CLOCK_PROCESS_CPUTIME_ID;

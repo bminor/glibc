@@ -1,6 +1,6 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Get file-specific information about a file.  Linux version.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,35 +17,29 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <pthread.h>
-#include <stdio.h>
+#include <assert.h>
+#include <stdbool.h>
 #include <stdlib.h>
-#include <time.h>
 #include <unistd.h>
 
 
-int
-do_test (void)
-{
-#ifdef _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
-  clockid_t cl;
-  /* This is really only a linking-test here.  */
-  int e = pthread_getcpuclockid (pthread_self (), &cl);
-  if (e != 0)
-    {
-# if _POSIX_THREAD_CPUTIME == 0
-      if (sysconf (_SC_THREAD_CPUTIME) >= 0)
-# endif
-	{
-	  puts ("cpuclock advertized, but cannot get ID");
-	  exit (1);
-	}
-    }
-#endif
+#include "has_cpuclock.c"
 
-  return 0;
+static long int linux_sysconf (int name);
+
+
+/* Get the value of the system variable NAME.  */
+long int
+__sysconf (int name)
+{
+  if (name == _SC_CPUTIME || name == _SC_THREAD_CPUTIME)
+    return has_cpuclock () ? 200112L : -1;
+
+  /* Everything else is handled by the more general code.  */
+  return linux_sysconf (name);
 }
 
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+/* Now the generic Linux version.  */
+#undef __sysconf
+#define __sysconf static linux_sysconf
+#include "../sysconf.c"

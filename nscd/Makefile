@@ -32,7 +32,7 @@ vpath %.c ../locale/programs
 nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 		getgrnam_r getgrgid_r hstcache gethstbyad_r gethstbynm2_r \
 		dbg_log nscd_conf nscd_stat cache mem nscd_setup_thread \
-		xmalloc xstrdup aicache initgrcache
+		xmalloc xstrdup aicache initgrcache gai
 
 ifeq ($(have-thread-library),yes)
 
@@ -96,11 +96,16 @@ CFLAGS-nscd_setup_thread.c += $(nscd-cflags)
 CFLAGS-aicache.c += $(nscd-cflags)
 CFLAGS-selinux.c += $(nscd-cflags)
 CFLAGS-initgrcache.c += $(nscd-cflags)
+CFLAGS-gai.c += $(nscd-cflags)
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
+ifeq (yes,$(have-z-relro))
+relro-LDFLAGS += -Wl,-z,now
+endif
+
 $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
 	$(LINK.o) -pie -Wl,-O1 \
-	  $(sysdep-LDFLAGS) $(config-LDFLAGS) \
+	  $(sysdep-LDFLAGS) $(config-LDFLAGS) $(relro-LDFLAGS) \
 	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
 	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
 	  $(LDFLAGS) $(LDFLAGS-$(@F)) \

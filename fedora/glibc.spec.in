@@ -1,4 +1,4 @@
-%define glibcrelease 64
+%define glibcrelease 65
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1239,6 +1239,18 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Oct  5 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-65
+- update from CVS
+  - define _POSIX_THREAD_PROCESS_SHARED and _POSIX_CLOCK_SELECTION
+    to -1 in LinuxThreads
+  - define _POSIX_CPUTIME and _POSIX_THREAD_CPUTIME to 0
+    on i?86/ia64 and make sure sysconf (_SC_{,THREAD_}CPUTIME)
+    returns correct value
+- if _POSIX_CLOCK_SELECTION == -1 in nscd, still try
+  sysconf (_SC_CLOCK_SELECTION) and if it returns true,
+  dlopen libpthread.so and dlsym pthread_condattr_setclock
+- build nscd with -z relro and -z now
+
 * Mon Oct  4 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-64
 - update from CVS
   - stop using __builtin_expect in assert and assert_perror

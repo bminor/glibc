@@ -21,6 +21,7 @@
 #include <alloca.h>
 #include <assert.h>
 #include <atomic.h>
+#include <dlfcn.h>
 #include <error.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -42,6 +43,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/un.h>
+#include <gnu/lib-names.h>
 
 #include "nscd.h"
 #include "dbg_log.h"
@@ -1455,12 +1457,39 @@ start_threads (void)
   pthread_condattr_t condattr;
   pthread_condattr_init (&condattr);
 
-#if _POSIX_CLOCK_SELECTION >= 0 && _POSIX_MONOTONIC_CLOCK >= 0
+#if defined _POSIX_MONOTONIC_CLOCK && _POSIX_MONOTONIC_CLOCK >= 0
   /* Determine whether the monotonous clock is available.  */
   struct timespec dummy;
-  if (clock_getres (CLOCK_MONOTONIC, &dummy) == 0
-      && pthread_condattr_setclock (&condattr, CLOCK_MONOTONIC) == 0)
-    timeout_clock = CLOCK_MONOTONIC;
+# if _POSIX_MONOTONIC_CLOCK == 0
+  if (sysconf (_SC_MONOTONIC_CLOCK) > 0)
+# endif
+    {
+# if defined _POSIX_CLOCK_SELECTION && _POSIX_CLOCK_SELECTION >= 0
+#  if _POSIX_CLOCK_SELECTION == 0
+      if (sysconf (_SC_CLOCK_SELECTION) > 0)
+#  endif
+        if (clock_getres (CLOCK_MONOTONIC, &dummy) == 0
+            && pthread_condattr_setclock (&condattr, CLOCK_MONOTONIC) == 0)
+          timeout_clock = CLOCK_MONOTONIC;
+# elif _POSIX_THREADS > 0
+      if (sysconf (_SC_CLOCK_SELECTION) > 0)
+        {
+          void *h = __libc_dlopen (LIBPTHREAD_SO);
+          int (*condattr_setclock) (pthread_condattr_t *, __clockid_t) = NULL;
+
+          if (h != NULL)
+            condattr_setclock = __libc_dlsym (h, "pthread_condattr_setclock");
+
+          if (condattr_setclock
+              && clock_getres (CLOCK_MONOTONIC, &dummy) == 0
+              && condattr_setclock (&condattr, CLOCK_MONOTONIC) == 0)
+            timeout_clock = CLOCK_MONOTONIC;
+
+          if (h != NULL)
+            __libc_dlclose (h);
+        }
+# endif
+    }
 #endif
 
   pthread_cond_init (&readylist_cond, &condattr);

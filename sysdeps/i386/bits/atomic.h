@@ -95,17 +95,29 @@ init_has_cmpxchg (void)							      \
 # define __arch_compare_and_exchange_val_16_acq(mem, newval, oldval) \
   ({ __typeof (*mem) ret;						      \
      if (__builtin_expect (has_cmpxchg, 1))				      \
-     __asm __volatile (LOCK_PREFIX "cmpxchgw %w2, %1"			      \
-		       : "=a" (ret), "=m" (*mem)			      \
-		       : "r" (newval), "m" (*mem), "0" (oldval));	      \
+       __asm __volatile (LOCK_PREFIX "cmpxchgw %w2, %1"			      \
+			 : "=a" (ret), "=m" (*mem)			      \
+			 : "r" (newval), "m" (*mem), "0" (oldval));	      \
+     else								      \
+       {								      \
+	 ret = *mem;							      \
+	 if (ret == oldval)						      \
+	   *mem = (newval);						      \
+       }								      \
      ret; })
 
 # define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
   ({ __typeof (*mem) ret;						      \
      if (__builtin_expect (has_cmpxchg, 1))				      \
-     __asm __volatile (LOCK_PREFIX "cmpxchgl %2, %1"			      \
-		       : "=a" (ret), "=m" (*mem)			      \
-		       : "r" (newval), "m" (*mem), "0" (oldval));	      \
+       __asm __volatile (LOCK_PREFIX "cmpxchgl %2, %1"			      \
+			 : "=a" (ret), "=m" (*mem)			      \
+			 : "r" (newval), "m" (*mem), "0" (oldval));	      \
+     else								      \
+       {								      \
+	 ret = *mem;							      \
+	 if (ret == oldval)						      \
+	   *mem = (newval);						      \
+       }								      \
      ret; })
 
 /* XXX We do not really need 64-bit compare-and-exchange.  At least

@@ -21,7 +21,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#include <hp-timing.h>
 
 static long int linux_sysconf (int name);
 
@@ -319,16 +319,9 @@ handle_amd (int name)
 }
 
 
-/* Get the value of the system variable NAME.  */
-long int
-__sysconf (int name)
+static int
+i386_i486_test (void)
 {
-  /* We only handle the cache information here (for now).  */
-  if (name < _SC_LEVEL1_ICACHE_SIZE || name > _SC_LEVEL4_CACHE_LINESIZE)
-    return linux_sysconf (name);
-
-  /* Recognize i386 and compatible.  These don't have any cache on
-     board.  */
   int eflags;
   int ac;
   asm volatile ("pushfl;\n\t"
@@ -343,6 +336,35 @@ __sysconf (int name)
 		"pushl %0;\n\t"
 		"popfl"
 		: "=r" (eflags), "=r" (ac));
+
+  return ac;
+}
+
+
+/* Get the value of the system variable NAME.  */
+long int
+__sysconf (int name)
+{
+  if (name == _SC_CPUTIME || name == _SC_THREAD_CPUTIME)
+    {
+#if HP_TIMING_AVAIL
+      // XXX We can add  here test for machines which cannot support a
+      // XXX usable TSC.
+      return 200112L;
+#else
+      return -1;
+#endif
+    }
+
+  /* All the remainder, except the cache information, is handled in
+     the generic code.  */
+  if (name < _SC_LEVEL1_ICACHE_SIZE || name > _SC_LEVEL4_CACHE_LINESIZE)
+    return linux_sysconf (name);
+
+  /* Recognize i386 and compatible.  These don't have any cache on
+     board.  */
+  int ac = i386_i486_test ();
+
   if (ac == 0)
     /* This is an i386.  */
     // XXX Is this true for all brands?

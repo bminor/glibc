@@ -106,10 +106,10 @@
 #define _POSIX_SHARED_MEMORY_OBJECTS	200112L
 
 /* CPU-time clocks supported.  */
-#define _POSIX_CPUTIME	200112L
+#define _POSIX_CPUTIME	0
 
 /* We support the clock also in threads.  */
-#define _POSIX_THREAD_CPUTIME	200112L
+#define _POSIX_THREAD_CPUTIME	0
 
 /* GNU libc provides regular expression handling.  */
 #define _POSIX_REGEXP	1
@@ -138,7 +138,13 @@
 /* POSIX message queues are available.  */
 #define	_POSIX_MESSAGE_PASSING	200112L
 
+/* Thread process-shared synchronization is not supported.  */
+#define _POSIX_THREAD_PROCESS_SHARED	-1
+
 /* The monotonic clock might be available.  */
 #define _POSIX_MONOTONIC_CLOCK	0
+
+/* The clock selection interfaces are not available.  */
+#define _POSIX_CLOCK_SELECTION	-1
 
 #endif /* posix_opt.h */

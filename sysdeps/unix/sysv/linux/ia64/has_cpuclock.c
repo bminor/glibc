@@ -1,6 +1,5 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,35 +16,37 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include <errno.h>
+#include <fcntl.h>
 #include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 
-int
-do_test (void)
+static int itc_usable;
+
+static int
+has_cpuclock (void)
 {
-#ifdef _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
-  clockid_t cl;
-  /* This is really only a linking-test here.  */
-  int e = pthread_getcpuclockid (pthread_self (), &cl);
-  if (e != 0)
+  if (__builtin_expect (itc_usable == 0, 0))
     {
-# if _POSIX_THREAD_CPUTIME == 0
-      if (sysconf (_SC_THREAD_CPUTIME) >= 0)
-# endif
+      int newval = 1;
+      int fd = open ("/proc/sal/itc_drift", O_RDONLY);
+      if (__builtin_expect (fd != -1, 1))
 	{
-	  puts ("cpuclock advertized, but cannot get ID");
-	  exit (1);
+	  char buf[16];
+	  /* We expect the file to contain a single digit followed by
+	     a newline.  If the format changes we better not rely on
+	     the file content.  */
+	  if (read (fd, buf, sizeof buf) != 2 || buf[0] != '0'
+	      || buf[1] != '\n')
+	    newval = -1;
+
+	  close (fd);
 	}
+
+      itc_usable = newval;
     }
-#endif
 
-  return 0;
+  return itc_usable;
 }
-
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
