@@ -77,18 +77,20 @@ _hurd_exec (task_t task, file_t file,
 
   /* Load up the ports to give to the new program.  */
   for (i = 0; i < _hurd_nports; ++i)
-    ports[i] = _hurd_port_get (&_hurd_ports[i], &ulink_ports[i]);
+    if (i == INIT_PORT_PROC && task != __mach_task_self ())
+      {
+	/* This is another task, so we need to ask the proc server
+	   for the right proc server port for it.  */
+	if (err = __USEPORT (PROC, __proc_task2proc (port, task, &ports[i])))
+	  {
+	    while (--i > 0)
+	      _hurd_port_free (&_hurd_ports[i], &ulink_ports[i], ports[i]);
+	    return err;
+	  }
+      }
+    else
+      ports[i] = _hurd_port_get (&_hurd_ports[i], &ulink_ports[i]);
 
-  /* If this is another task, get the correct proc server port. */
-  if (task != __mach_task_self ())
-    {
-      mach_port_t newproc = MACH_PORT_NULL;
-      proc_task2proc (ports[INIT_PORT_PROC], task, &newproc);
-      _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], 
-		       &ulink_ports[INIT_PORT_PROC], 
-		       ports[INIT_PORT_PROC]);
-      ports[INIT_PORT_PROC] = newproc;
-    }
 
   /* Load up the ints to give the new program.  */
   for (i = 0; i < INIT_INT_MAX; ++i)
@@ -228,7 +230,7 @@ _hurd_exec (task_t task, file_t file,
   /* Release references to the standard ports.  */
   for (i = 0; i < _hurd_nports; ++i)
     if (i == INIT_PORT_PROC && task != __mach_task_self ())
-      mach_port_deallocate (__mach_task_self (), ports[i]);
+      __mach_port_deallocate (__mach_task_self (), ports[i]);
     else
       _hurd_port_free (&_hurd_ports[i], &ulink_ports[i], ports[i]);
 
