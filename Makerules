@@ -478,7 +478,8 @@ mostlyclean: common-mostlyclean
 # Remove the object files.
 common-mostlyclean:
 	-rm -f $(addprefix $(objpfx),$(tests) $(others) \
-				     $(addsuffix .o,$(tests) $(others)))
+				     $(addsuffix .o,$(tests) $(others)) \
+				     $(addsuffix .out,$(tests)))
 	-rm -f $(objects) $(addprefix $(objpfx),$(extra-objs) stamp-$(subdir))
 	-rm -f core TAGS
 
