@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <signal.h>
 #include <hurd.h>
 #include <hurd/port.h>
+#include <hurd/signal.h>
 
 /* Send signal SIG to process number PID.  If PID is zero,
    send SIG to all processes in the current process's process group.
