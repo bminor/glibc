@@ -55,13 +55,13 @@ include $(objpfx)zonenames
 
 # Make these absolute file names.
 localtime-file := $(firstword $(filter /%,$(localtime-file)) \
-			      $(addprefix $(datadir)/zoneinfo/, \
+			      $(addprefix $(zonedir)/, \
 					  $(localtime-file)))
 posixrules-file := $(firstword $(filter /%,$(posixrules-file)) \
-			       $(addprefix $(datadir)/zoneinfo/, \
+			       $(addprefix $(zonedir)/, \
 					   $(posixrules-file)))
 
-install-others = $(addprefix $(datadir)/zoneinfo/,$(zonenames)) \
+install-others = $(addprefix $(zonedir)/,$(zonenames)) \
 		 $(localtime-file) $(posixrules-file)
 
 include ../Rules
@@ -93,17 +93,20 @@ echo-zonenames: zonenames
 	@echo 'Known zones: $(zonenames)'
 
 
-zic-cmd = $(dir $(word 2,$^))$(notdir $(word 2,$^))
+# Although $(zonedir) gets compiled into zic, it is useful to always
+# specify it with -d on the command line so that it can be overridden on
+# the command line of `make install' (e.g., "make install prefix=/foo").
+zic-cmd = $(dir $(word 2,$^))$(notdir $(word 2,$^)) -d $(zonedir)
 define tzcompile
-$(zic-cmd) -d $(@D) -L $(word 3,$^) $<
+$(zic-cmd) -d $(zonedir) -L $(word 3,$^) $<
 endef
 
 ifdef localtime
-$(localtime-file): $(datadir)/zoneinfo/$(localtime) $(objpfx)zic
+$(localtime-file): $(zonedir)/$(localtime) $(objpfx)zic
 	$(zic-cmd) -l $(localtime)
 endif
 ifdef posixrules
-$(posixrules-file): $(datadir)/zoneinfo/$(posixrules) $(objpfx)zic
+$(posixrules-file): $(zonedir)/$(posixrules) $(objpfx)zic
 	$(zic-cmd) -p $(posixrules)
 endif
 
@@ -115,7 +118,7 @@ $(objpfx)zic.o: zic.c; $(tz-cc)
 
 # Some versions of GNU make have a bug with backslashes in define directives.
 tz-cc = $(COMPILE.c) $(+gcc-nowarn) \
-	     -DTZDIR='"$(datadir)/zoneinfo"' \
+	     -DTZDIR='"$(zonedir)"' \
 	     -DTZDEFAULT='"$(localtime-file)"' \
 	     -DTZDEFRULES='"$(posixrules-file)"' \
 	     $< $(OUTPUT_OPTION)
