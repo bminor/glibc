@@ -40,7 +40,7 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(system, (line), register CONST char *line)
 {
-  int status;
+  int status, save;
   pid_t pid;
   struct sigaction sa, intr, quit;
   sigset_t block, omask;
@@ -50,24 +50,36 @@ DEFUN(system, (line), register CONST char *line)
 
   sa.sa_handler = SIG_IGN;
   sa.sa_flags = 0;
-  if (__sigemptyset(&sa.sa_mask) < 0)
+  __sigemptyset (&sa.sa_mask);
+
+  if (__sigaction (SIGINT, &sa, &intr) < 0)
     return -1;
-  if (__sigaction(SIGINT, &sa, &intr) < 0)
-    return -1;
-  if (__sigaction(SIGQUIT, &sa, &quit) < 0)
+  if (__sigaction (SIGQUIT, &sa, &quit) < 0)
     {
-      (void) __sigaction(SIGINT, &intr, (struct sigaction *) NULL);
-      return -1;
-    }
-  if (__sigemptyset(&block) < 0 || __sigaddset(&block, SIGCHLD) < 0 ||
-      __sigprocmask(SIG_BLOCK, &block, &omask) < 0)
-    {
-      (void) __sigaction(SIGINT, &intr, (struct sigaction *) NULL);
-      (void) __sigaction(SIGQUIT, &quit, (struct sigaction *) NULL);
+      save = errno;
+      (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
+      errno = save;
       return -1;
     }
 
-  pid = FORK();
+  __sigemptyset (&block);
+  __sigaddset (&block, SIGCHLD);
+  save = errno;
+  if (__sigprocmask(SIG_BLOCK, &block, &omask) < 0)
+    {
+      if (errno == ENOSYS)
+	errno = save;
+      else
+	{
+	  save = errno;
+	  (void) __sigaction(SIGINT, &intr, (struct sigaction *) NULL);
+	  (void) __sigaction(SIGQUIT, &quit, (struct sigaction *) NULL);
+	  errno = save;
+	  return -1;
+	}
+    }
+
+  pid = FORK ();
   if (pid == (pid_t) 0)
     {
       /* Child side.  */
@@ -78,13 +90,13 @@ DEFUN(system, (line), register CONST char *line)
       new_argv[3] = NULL;
 
       /* Restore the signals.  */
-      (void) __sigaction(SIGINT, &intr, (struct sigaction *) NULL);
-      (void) __sigaction(SIGQUIT, &quit, (struct sigaction *) NULL);
-      (void) __sigprocmask(SIG_SETMASK, &omask, (sigset_t *) NULL);
+      (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
+      (void) __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
+      (void) __sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL);
 
       /* Exec the shell.  */
-      (void) __execve(SHELL_PATH, (char *CONST *) new_argv, __environ);
-      _exit(127);
+      (void) __execve (SHELL_PATH, (char *CONST *) new_argv, __environ);
+      _exit (127);
     }
   else if (pid < (pid_t) 0)
     /* The fork failed.  */
@@ -105,14 +117,20 @@ DEFUN(system, (line), register CONST char *line)
 	} while (child != pid);
     }
 #else
-    if (__waitpid(pid, &status, 0) != pid)
+    if (__waitpid (pid, &status, 0) != pid)
       status = -1;
 #endif
 
-  if ((__sigaction(SIGINT, &intr, (struct sigaction *) NULL) |
-       __sigaction(SIGQUIT, &quit, (struct sigaction *) NULL) |
-       __sigprocmask(SIG_SETMASK, &omask, (sigset_t *) NULL)) != 0)
-    return -1;
+  save = errno;
+  if ((__sigaction (SIGINT, &intr, (struct sigaction *) NULL) |
+       __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL) |
+       __sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL)) != 0)
+    {
+      if (errno == ENOSYS)
+	errno = save;
+      else
+	return -1;
+    }
 
   return status;
 }
