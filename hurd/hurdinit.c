@@ -124,9 +124,9 @@ _hurd_proc_init (char **argv)
     __mach_port_deallocate (__mach_task_self (), oldmsg);
 
   /* Tell the proc server where our args and environment are.  */
-  __proc_setprocargs (procserver,
-		      _hide_arguments ? 0 : (vm_address_t) argv,
-		      _hide_environment ? 0 : (vm_address_t) __environ);
+  __proc_set_arg_locations (procserver,
+			    _hide_arguments ? 0 : (vm_address_t) argv,
+			    _hide_environment ? 0 : (vm_address_t) __environ);
 
   _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], &ulink, procserver);
 
