@@ -138,3 +138,45 @@ _hurd_proc_init (char **argv)
      here, like _hurd_pid, are already initialized.  */
   RUN_HOOK (_hurd_proc_subinit, ());
 }
+
+/* Called when we get a message telling us to change our proc server port.  */
+
+error_t
+_hurd_setproc (process_t procserver)
+{
+  error_t err;
+  mach_port_t oldmsg;
+
+  /* Give the proc server our message port.  */
+  if (err = __proc_setmsgport (procserver, _hurd_msgport, &oldmsg))
+    return err;
+  if (oldmsg != MACH_PORT_NULL)
+    /* Deallocate the old msg port we replaced.  */
+    __mach_port_deallocate (__mach_task_self (), oldmsg);
+
+  /* Tell the proc server where our args and environment are.  */
+  if (err = __proc_set_arg_locations (procserver,
+				      /* We don't know the ARGV location.  */
+				      (vm_address_t) 0,
+				      _hide_environment ? 0 :
+				      (vm_address_t) __environ))
+    return err;
+
+  /* Those calls worked, so the port looks good.  */
+  _hurd_port_set (&_hurd_ports[INIT_PORT_PROC], procserver);
+
+  {
+    extern DEFINE_HOOK (_hurd_pgrp_changed_hook, (_hurd_pgrp));
+    pid_t oldpgrp = _hurd_pgrp;
+
+    /* Call these functions again so they can fetch the
+       new information from the new proc server.  */
+    RUN_HOOK (_hurd_proc_subinit, ());
+
+    if (_hurd_pgrp != oldpgrp)
+      /* Run things that want notification of a pgrp change.  */
+      RUN_HOOK (_hurd_pgrp_changed_hook, (_hurd_pgrp));
+  }
+
+  return 0;
+}

@@ -31,20 +31,18 @@ static struct mutex reauth_lock = MUTEX_INITIALIZER;
 
 /* Set the auth port to NEW, and reauthenticate
    everything used by the library.  */
-int
-__setauth (auth_t new)
+error_t
+_hurd_setauth (auth_t new)
 {
+  error_t err;
   int d;
   mach_port_t newport;
 
   /* Give the new send right a user reference.
      This is a good way to check that it is valid.  */
-  if (__mach_port_mod_refs (__mach_task_self (), new,
-			    MACH_PORT_RIGHT_SEND, 1))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  if (err = __mach_port_mod_refs (__mach_task_self (), new,
+				  MACH_PORT_RIGHT_SEND, 1))
+    return err;
 
   HURD_CRITICAL_BEGIN;
 
@@ -101,4 +99,11 @@ __setauth (auth_t new)
   HURD_CRITICAL_END;
 
   return 0;
+}
+
+int
+__setauth (auth_t new)
+{
+  error_t err = _hurd_setauth (new);
+  return err ? __hurd_fail (err) : 0;
 }

@@ -19,38 +19,25 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/port.h>
 
+
 static inline mach_port_t
-get (const size_t idx)
+get (const int idx)
 {
   mach_port_t result;
-  error_t err = HURD_PORT_USE (&_hurd_ports[idx],
-			       __mach_port_mod_refs (__mach_task_self (),
-						     (result = port),
-						     MACH_PORT_RIGHT_SEND,
-						     1));
+  error_t err = _hurd_ports_get (idx, &result);
+
   if (err)
-    {
-      errno = err;
-      return MACH_PORT_NULL;
-    }
-  else
-    return result;
+    return __hurd_fail (err), MACH_PORT_NULL;
+  return result;
 }
 #define	GET(type, what, idx) \
   type get##what (void) { return get (INIT_PORT_##idx); }
 
 static inline int
-set (const size_t idx, mach_port_t new)
+set (const int idx, mach_port_t new)
 {
-  error_t err;
-  if (err = __mach_port_mod_refs (__mach_task_self (), new,
-				  MACH_PORT_RIGHT_SEND, 1))
-    {
-      errno = EINVAL;
-      return -1;
-    }
-  _hurd_port_set (&_hurd_ports[idx], new);
-  return 0;
+  error_t err = _hurd_ports_set (idx, new);
+  return err ? __hurd_fail (err) : 0;
 }
 #define SET(type, what, idx) \
   int set##what (type new) { return set (INIT_PORT_##idx, new); }
@@ -59,8 +46,7 @@ set (const size_t idx, mach_port_t new)
   GET (type, what, idx) SET (type, what, idx)
 
 GETSET (process_t, proc, PROC)
+GETSET (mach_port_t, cttyid, CTTYID)
 GETSET (file_t, cwdir, CWDIR)
 GETSET (file_t, crdir, CRDIR)
-
-/* setauth is nontrivial; see __setauth.c.  */
-GET (auth_t, auth, AUTH)
+GETSET (auth_t, auth, AUTH)

@@ -162,6 +162,29 @@ rectty_dtable (mach_port_t cttyid)
 }
 
 
+/* Called when we have received a message saying to use a new ctty ID port.  */
+
+error_t
+_hurd_setcttyid (mach_port_t cttyid)
+{
+  error_t err;
+
+  /* Give the new send right a user reference.
+     This is a good way to check that it is valid.  */
+  if (err = __mach_port_mod_refs (__mach_task_self (), cttyid,
+				  MACH_PORT_RIGHT_SEND, 1))
+    return err;
+
+  /* Install the port, consuming the reference we just created.  */
+  _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], cttyid);
+
+  /* Reset all the ctty ports in all the descriptors.  */
+  __USEPORT (CTTYID, (rectty_dtable (cttyid), 0));
+
+  return 0;
+}
+
+
 /* Make FD be the controlling terminal.
    This function is called for `ioctl (fd, TCIOSCTTY)'.  */
 
@@ -182,10 +205,10 @@ tiocsctty (int fd,
     return __hurd_fail (err);
 
   /* Make it our own.  */
-  _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], cttyid); /* Consumes ref.  */
+  _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], cttyid);
 
   /* Reset all the ctty ports in all the descriptors.  */
-  __USEPORT (CTTYID, (rectty_dtable (port), 0));
+  __USEPORT (CTTYID, (rectty_dtable (cttyid), 0));
 
   return 0;
 }
