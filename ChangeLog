@@ -1,3 +1,14 @@
+1999-12-21  Andreas Schwab  <schwab@suse.de>
+
+	* include/unistd.h: Declare __libc_lseek.
+
+1999-12-19  Andreas Jaeger  <aj@suse.de>
+        
+        * include/fcntl.h: Declare __libc_fcntl.
+
+	* include/unistd.h: Move __libc_open and __libc_open64 to ...
+	* include/fcntl.h: ...here.
+
 2000-01-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/Dist: Distribute oldgetrlimit64.c
