@@ -44,8 +44,16 @@ includes += -I$(..)hurd
 # When compiling, use the Hurd header files directly from the sources.
 includes += -I$(hurd-srcdir)
 
+# Marks temporary work-arounds installed by mib.
+defines += -DMIB_HACKS
+
 # Find the Hurd header files in the Hurd source.
 vpath hurd/%.h $(hurd-srcdir)
+
+# Do not use any assembly code from sysdeps/unix (and subdirectories).
+# This bypasses all the system call stubs and uses any existing posix or
+# generic C files instead.
+inhibit-sysdep-asm += unix*
 
 
 ifneq (hurd,$(subdir))
