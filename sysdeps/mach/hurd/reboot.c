@@ -27,7 +27,9 @@ int
 DEFUN(reboot, (howto), int howto)
 {
   error_t err;
-  mach_port_t init;
+  mach_port_t *ports;
+  mach_msg_type_number_t nports;
+  static const pid_t one = 1;
 
   err = __USEPORT (PROC, __proc_getmsgport (port, 1, &init));
   if (!err)
