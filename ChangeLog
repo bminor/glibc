@@ -1,5 +1,9 @@
 2005-03-29  Thorsten Kukuk  <kukuk@suse.de>
 
+	[BZ #661]
+	* grp/initgroups.c (internal_getgrouplist): Check if we have
+	enough space before adding the primary group to the list.
+
 	* posix/tst-execle1.c (do_test): Fix execle arguments.
 	* posix/tst-execle2.c (do_test): Likewise.
 
