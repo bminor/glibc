@@ -44,7 +44,7 @@ DEFUN(__sigaction, (sig, act, oact),
   if (act != NULL)
     a = *act;
 
-  ss = _hurd_thread_sigstate (__mach_thread_self ());
+  ss = _hurd_self_sigstate ();
 
   if (act != NULL && sig == SIGCHLD)
     /* Inform the proc server whether or not it should send us SIGCHLD for
