@@ -539,6 +539,8 @@ not set, then START and STOP can be read as ordinary characters.
 If this bit is set, any input character restarts output when output has
 been suspended with the STOP character.  Otherwise, only the START
 character restarts output.
+
+This is a BSD extension; it exists only on BSD systems and the GNU system.
 @end deftypevr
 
 @comment termios.h
@@ -546,6 +548,8 @@ character restarts output.
 @deftypevr Macro tcflag_t IMAXBEL
 If this bit is set, then filling up the terminal input buffer sends a
 BEL character (code @code{007}) to the terminal to ring the bell.
+
+This is a BSD extension.
 @end deftypevr
 
 @node Output Modes
@@ -573,9 +577,9 @@ carriage return and linefeed pairs.
 If this bit isn't set, the characters are transmitted as-is.
 @end deftypevr
 
-The following three bits are BSD features, and they have no effect on
-non-BSD systems.  On all systems, they are effective only if
-@code{OPOST} is set.
+The following three bits are BSD features, and they exist only BSD
+systems and the GNU system.  They are effective only if @code{OPOST} is
+set.
 
 @comment termios.h
 @comment BSD
@@ -709,6 +713,9 @@ This specifies seven bits per byte.
 This specifies eight bits per byte.
 @end deftypevr
 
+The following four bits are BSD extensions; this exist only on BSD
+systems and the GNU system.
+
 @comment termios.h
 @comment BSD
 @deftypevr Macro tcflag_t CCTS_OFLOW
@@ -729,7 +736,15 @@ If this bit is set, enable flow control of input based on the RTS wire
 If this bit is set, enable carrier-based flow control of output.
 @end deftypevr
 
-@c !!! BSD also has CIGNORE
+@comment termios.h
+@comment BSD
+@deftypevr Macro tcflag_t CIGNORE
+If this bit is set, it says to ignore the @code{c_cflag} member
+entirely.  This is only meaningful in a call to @code{tcsetattr}; it can
+be useful if you want to set all the software modes in the other
+members, but leave the hardware details in @code{c_cflag} unchanged.
+This bit is never set in the structure set by @code{tcgetattr}.
+@end deftypevr
 
 @node Local Modes
 @subsection Local Modes
@@ -775,13 +790,25 @@ input, without which @code{ECHOE} is simply irrelevant.
 @end deftypevr
 
 @comment termios.h
+@comment BSD
+@deftypevr Macro tcflag_t ECHOPRT
+This bit is like @code{ECHOE}, enables display of the ERASE character in
+a way that is geared to a hardcopy terminal.  When you type the ERASE
+character, a @samp{\} character is printed followed by the first
+character erased.  Typing the ERASE character again just prints the next
+character erased.  Then, the next time you type a normal character, a
+@samp{/} character is printed before the character echoes.
+
+This is a BSD extension, and exists only in BSD systems and the
+GNU system.
+@end deftypevr
+
+@comment termios.h
 @comment POSIX.1
 @deftypevr Macro tcflag_t ECHOK
-This bit enables special display of the KILL character.  There are two
-ways this can be done.  The better way is by erasing on the screen the
-entire line that has been killed.  The worse way is by moving to a new
-line after echoing the KILL character normally.  Some systems do one,
-some systems do the other, and some let you choose either way.
+This bit enables special display of the KILL character by moving to a
+new line after echoing the KILL character normally.  The behavior of
+@code{ECHOKE} (below) is nicer to look at.
 
 If this bit is not set, the KILL character echoes just as it would if it
 were not the KILL character.  Then it is up to the user to remember that
@@ -794,11 +821,33 @@ input, without which @code{ECHOK} is simply irrelevant.
 @end deftypevr
 
 @comment termios.h
+@comment BSD
+@deftypevr Macro tcflag_t ECHOKE
+This bit is similar to @code{ECHOK}.  It enables special display of the
+KILL character by erasing on the screen the entire line that has been
+killed.  This is a BSD extension, and exists only in BSD systems and the
+GNU system.
+@end deftypevr
+
+@comment termios.h
 @comment POSIX.1
 @deftypevr Macro tcflag_t ECHONL
 If this bit is set and the @code{ICANON} bit is also set, then the
 newline (@code{'\n'}) character is echoed even if the @code{ECHO} bit
 is not set.
+@end deftypevr
+
+@comment termios.h
+@comment BSD
+@deftypevr Macro tcflag_t ECHOCTL
+If this bit is set and the @code{ECHO} bit is also set, echo control
+characters with @samp{^} followed by the corresponding text character.
+Thus, control-A echoes as @samp{^A}.  This is usually the preferred mode
+for interactive input, because echoing a control character back to the
+terminal could have some undesired effect on the terminal.
+
+This is a BSD extension, and exists only in BSD systems and the
+GNU system.
 @end deftypevr
 
 @comment termios.h
@@ -845,34 +894,9 @@ If this bit is set and the system supports job control, then
 attempt to write to the terminal.  @xref{Access to the Terminal}.
 @end deftypevr
 
-The following bits are BSD extensions; the GNU library defines these
-symbols on any system if you ask for them, but the settings of the bits
-have no effect except on BSD systems and on the GNU system.
-
-@comment termios.h
-@comment BSD
-@deftypevr Macro tcflag_t ECHOKE
-On BSD systems, this bit selects between the two alternative ways of
-displaying the KILL character, when @code{ECHOK} is set.  If
-@code{ECHOKE} is set, then the KILL character erases the whole screen
-line; otherwise, the KILL character moves to the next screen line.
-The setting of @code{ECHOKE} has no effect when @code{ECHOK} is clear.
-@end deftypevr
-
-@comment termios.h
-@comment BSD
-@deftypevr Macro tcflag_t ECHOPRT
-This bit enables display of the ERASE character in a way that is geared
-to a hardcopy terminal.
-@end deftypevr
-
-@comment termios.h
-@comment BSD
-@deftypevr Macro tcflag_t ECHOCTL
-If this bit is set, echo control characters with @samp{^} followed by
-the corresponding text character.  Thus, control-A echoes as @samp{^A}.
-@end deftypevr
-
+The following bits are BSD extensions; they exist only in BSD systems
+and the GNU system.
+     
 @comment termios.h
 @comment BSD
 @deftypevr Macro tcflag_t ALTWERASE
@@ -909,6 +933,8 @@ If this bit is set, it indicates that there is a line of input that
 needs to be reprinted.  Typing the REPRINT character sets this bit; the
 bit remains set until reprinting is finished.  @xref{BSD Editing}.
 @end deftypevr
+
+@c EXTPROC is too obscure to document now.  --roland
 
 @node Line Speed
 @subsection Line Speed
