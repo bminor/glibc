@@ -1,3 +1,8 @@
+1999-08-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/install.texi (Running make install): Give examples for
+	timezone and locale installation.
+
 1999-08-28  Zack Weinberg  <zack@bitmover.com>
 
 	* glibcbug.in: Get CCVERSION from autoconf substitution.
