@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <hurd.h>
+#include <hurd/port.h>
 #include <dirent.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -47,7 +48,7 @@ getcwd (char *buf, size_t size)
   char *dirbuf = NULL;
   unsigned int dirbufsize = 0;
   file_t crdir;
-  struct _hurd_port_userlink crdir_ulink;
+  struct hurd_userlink crdir_ulink;
 
   inline void cleanup (void)
     {
@@ -68,7 +69,7 @@ getcwd (char *buf, size_t size)
 	  return NULL;
 	}
 
-      size = FILENAME_MAX + 1;	/* Good starting guess.  */
+      size = FILENAME_MAX * 4 + 1;	/* Good starting guess.  */
     }
 
   if (buf != NULL)
@@ -83,6 +84,8 @@ getcwd (char *buf, size_t size)
   pathp = path + size;
   *--pathp = '\0';
 
+  /* Get a port to our root directory and stat it.  */
+
   crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink);
   if (err = __io_stat (crdir, &st))
     {
@@ -91,6 +94,8 @@ getcwd (char *buf, size_t size)
     }
   rootdev = st.st_dev;
   rootino = st.st_ino;
+
+  /* Get a port to our current working directory and stat it.  */
 
   if (err = __USEPORT (CWDIR, __mach_port_mod_refs (__mach_task_self (),
 						    (parent = port),
@@ -105,6 +110,10 @@ getcwd (char *buf, size_t size)
 
   while (!(thisdev == rootdev && thisino == rootino))
     {
+      /* PARENT is a port to the directory we are currently on;
+	 THISDEV and THISINO are its device and node numbers.
+	 Look in its parent (..) for a file with the same numbers.  */
+
       struct dirent *d;
       dev_t dotdev;
       ino_t dotino;
@@ -135,6 +144,8 @@ getcwd (char *buf, size_t size)
 				    dirpos, &dirpos, st.st_blksize)) &&
 	     dirdatasize != 0)	     
 	{
+	  /* We have a block of directory entries.  */
+
 	  unsigned int offset;
 
 	  if (dirdata != dirbuf)
@@ -147,6 +158,9 @@ getcwd (char *buf, size_t size)
 	      dirbuf = dirdata;
 	      dirbufsize = dirdatasize;
 	    }
+
+	  /* Iterate over the returned directory entries, looking for one
+	     whose file number is THISINO.  */
 
 	  offset = 0;
 	  while (offset < dirdatasize)
@@ -180,6 +194,8 @@ getcwd (char *buf, size_t size)
 	goto lose;
       else
 	{
+	  /* Prepend the directory name just discovered.  */
+
 	  if (pathp - path < d->d_namlen + 1)
 	    {
 	      if (buf != NULL)
@@ -205,11 +221,15 @@ getcwd (char *buf, size_t size)
 	  *--pathp = '/';
 	}
 
+      /* The next iteration will find the name of the directory we
+	 just searched through.  */
       thisdev = dotdev;
       thisino = dotino;
     }
 
   if (pathp == &path[size - 1])
+    /* We found nothing and got all the way to the root.
+       So the root is our current directory.  */
     *--pathp = '/';
 
   memmove (path, pathp, path + size - pathp);
