@@ -111,7 +111,7 @@ $(objpfx)mach-syscalls.mk: mach/syscall_sw.h syscalls.awk
 	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),[0-9]*)$$/\1 \2/p' \
 	< $< | awk -f $(word 2,$^) > $@-new
 	mv $@-new $@
-generated += $(objpfx)mach-syscalls.mk
+generated += mach-syscalls.mk
 
 ifndef mach-syscalls
 # We cannot make the deps properly until we know how to make the system
@@ -126,8 +126,8 @@ $(mach-syscalls:%=$(objpfx)%.c): $(objpfx)%.c: Makefile
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*);') > $@-new
 	mv $@-new $@
-generated += $(mach-syscalls:%=$(objpfx)__%.S) \
-	     $(mach-syscalls:%=$(objpfx)%.c)
+generated += $(mach-syscalls:%=__%.S) \
+	     $(mach-syscalls:%=%.c)
 endif	# mach-syscalls
 
 mach-shortcuts := $(patsubst syscall_%,%,$(filter syscall_%,$(mach-syscalls)))
@@ -159,7 +159,7 @@ $(mach-shortcuts:%=$(objpfx)%.c): $(objpfx)%.c: # Makefile
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*);') > $@-new
 	mv $@-new $@
-generated += $(mach-shortcuts:%=$(objpfx)%.c)
+generated += $(mach-shortcuts:%=%.c)
 endif	# mach-shortcuts
 
 # Generate mach-shortcuts.h, which will contain the prototypes for the
@@ -173,7 +173,7 @@ $(objpfx)mach-shortcuts.h: $(objpfx)mach/mach_interface.h \
 	| grep '^/\* Routine [a-z0-9_]*_rpc \*/' \
 	| sed 's/_rpc//g' | tr @ \\012 > $@-new
 	mv $@-new $@
-generated += $(objpfx)mach-shortcuts.h
+generated += mach-shortcuts.h
 
 before-compile += $(objpfx)mach-shortcuts.h
 
@@ -201,7 +201,7 @@ ifeq (,)
 # XXX we have an errsystems.c here because a gcc bug makes the generated
 # version lose.
 else
-generated += $(objpfx)errsystems.c
+generated += errsystems.c
 $(objpfx)errsystems.c: errsystems.awk err_*.sub \
 		       $(wildcard $(addsuffix /err_*.sub,$(+sysdep_dirs)))
 	gawk -v subsys='$(filter-out $<,$^)' -f $^ > $@.n
