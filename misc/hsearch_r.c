@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    This file is part of the GNU C Library.
 
@@ -195,6 +195,10 @@ hsearch_r (item, action, retval, htab)
 	    idx = htab->size + idx - hval2;
 	  else
 	    idx -= hval2;
+
+	  /* If we visited all entries leave the loop unsuccessfully.  */
+	  if (idx == hval)
+	    break;
 
             /* If entry is found use it. */
           if (htab->table[idx].used == hval
