@@ -111,11 +111,11 @@ ifndef localtime
 localtime = Factory
 endif
 
-# Where to install the "localtime" timezone file; this is file
+# Where to install the "localtime" timezone file; this is the file
 # whose contents $(localtime) specifies.  If this is a relative
 # pathname, it is relative to $(datadir)/zoneinfo.
 ifndef localtime-file
-localtime-file = localtime
+localtime-file = /etc/localtime
 endif
 
 # What timezone's DST rules should be used when a POSIX-style TZ
