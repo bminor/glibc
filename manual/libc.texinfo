@@ -140,9 +140,7 @@ Indices
 @include terminal.texinfo
 @include assert.texinfo
 @include math.texinfo
-@include math-arithmetic.texinfo
-@c the above file was created from `math.texinfo', which contained
-@c two @chapters and could not be updated easily.  --mew
+@include arith.texinfo
 @include time.texinfo
 @include setjmp.texinfo
 @include signal.texinfo
