@@ -355,7 +355,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	 containing a '/' are ignored since it is insecure.  */
       char *list = strdupa (preloadlist);
       char *p;
-      while ((p = strsep (&list, " ")) != NULL)
+      while ((p = strsep (&list, " :")) != NULL)
 	if (! __libc_enable_secure || strchr (p, '/') == NULL)
 	  {
 	    struct link_map *new_map = _dl_map_object (NULL, p, lt_library, 0);
