@@ -1,4 +1,5 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
+Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -64,3 +65,11 @@ enum
     _SC_2_SW_DEV,
     _SC_2_LOCALEDEF
   };
+
+#ifdef __USE_POSIX2
+/* Values for the NAME argument to `confstr'.  */
+enum
+  {
+    _CS_PATH			/* The default search path.  */
+  };
+#endif
