@@ -15,6 +15,11 @@ License along with this library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+/* AIX requires this to be the first thing in the file.  */
+#if defined (_AIX) && !defined (__GNUC__)
+ #pragma alloca
+#endif
+
 #ifdef	SHELL
 #include "config.h"
 #endif
@@ -121,22 +126,14 @@ extern void qsort ();
 
 #endif /* Standard headers.  */
 
-#ifdef	ANSI_STRING
-#define	index(s, c)	strchr((s), (c))
-#define	rindex(s, c)	strrchr((s), (c))
-
-#define bcmp(s1, s2, n)	memcmp ((s1), (s2), (n))
-#define bzero(s, n)	memset ((s), 0, (n))
-#define bcopy(s, d, n)	memcpy ((d), (s), (n))
-#undef	ANSI_STRING
-#else	/* Not ANSI_STRING.  */
+#ifndef	ANSI_STRING
 #define	strcoll	strcmp
 #define	memcpy(d, s, n)	bcopy((s), (d), (n))
 #define	strrchr	rindex
 /* memset is only used for zero here, but let's be paranoid.  */
 #define	memset(s, better_be_zero, n) \
   ((void) ((better_be_zero) == 0 ? (bzero((s), (n)), 0) : (abort(), 0)))
-#endif	/* ANSI_STRING.  */
+#endif	/* Not ANSI_STRING.  */
 
 
 #ifndef	__GNU_LIBRARY__
