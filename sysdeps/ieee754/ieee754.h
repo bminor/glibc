@@ -18,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <endian.h>
 
-union
+union ieee754_double
   {
     double d;
     
