@@ -20,7 +20,10 @@ Cambridge, MA 02139, USA.  */
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sysdep.h>
 
+
+CONST char *__assert_program_name;
 
 /* This function, when passed a string containing an asserted
    expression, a filename, and a line number, prints a message
@@ -33,9 +36,15 @@ DEFUN(__assert_fail, (assertion, file, line, function),
       CONST char *assertion AND
       CONST char *file AND unsigned int line AND CONST char *function)      
 {
+#ifdef FATAL_PREPARE
+  FATAL_PREPARE;
+#endif
+
   /* Print the message.  */
-  (void) fprintf (stderr, "%s:%u: %s%sAssertion `%s' failed.\n",
+  (void) fprintf (stderr, "%s:%u: %s%s%s%sAssertion `%s' failed.\n",
 		  file, line,
+		  __assert_program_name ? __assert_program_name : "",
+		  __assert_program_name ? ": " : "",
 		  function ? function : "", function ? ": " : "",
 		  assertion);
   (void) fflush (stderr);
@@ -46,3 +55,30 @@ DEFUN(__assert_fail, (assertion, file, line, function),
      but returning something makes the assert macro easier to write.  */
   return 0;
 }
+
+#ifdef	HAVE_GNU_LD
+
+#include <string.h>
+#include <gnu-stabs.h>
+
+static void
+DEFUN(set_progname, (argc, argv, envp),
+      int argc AND char **argv AND char **envp)
+{
+  char *p;
+
+  if (argv && argv[0])
+    {
+      p = strrchr (argv[0], '/');
+      if (p == NULL)
+	__assert_program_name = argv[0];
+      else
+	__assert_program_name = p + 1;
+    }
+
+  (void) &set_progname;		/* Avoid "defined but not used" warning.  */
+}
+
+text_set_element (__libc_subinit, set_progname);
+
+#endif
