@@ -1,3 +1,8 @@
+1999-08-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/Makefile [csu]: Define CFLAGS-initfini.s to force
+	compiling for i386 to avoid i686-like GOT pointer computation.
+
 1999-08-28  H.J. Lu  <hjl@gnu.org>
 
 	* nscd/nscd_getgr_r.c (nscd_getgr_r): Don't count the alloca'ed
@@ -6,7 +11,7 @@
 1999-08-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* malloc/malloc.c (ptmalloc_init): Don't use variables to set
-	thresholds for SUID binaries.  [PR libc/1277]  
+	thresholds for SUID binaries.  [PR libc/1277]
 
 1999-08-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
