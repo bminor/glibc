@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,13 @@ __BEGIN_DECLS
 
 /* Declare the `errno' variable.  */
 extern __volatile int errno;
+
+#ifdef __USE_GNU
+/* The full and simple forms of the name with which the program was
+   invoked.  These variables are set up automatically at startup based on
+   the value of ARGV[0] (this works only if you use GNU ld).  */
+extern char *program_invocation_name, *program_invocation_short_name;
+#endif
 
 __END_DECLS
 
