@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,15 +29,11 @@ DEFUN(chroot, (path), CONST char *path)
   error_t err;
   file_t old, crdir;
 
-  crdir = __hurd_path_lookup (path, FS_LOOKUP_EXECUTE, 0);
+  crdir = __path_lookup (path, FS_LOOKUP_EXECUTE, 0);
   if (crdir == MACH_PORT_NULL)
     return -1;
 
-  __mutex_lock (&_hurd_lock);
-  old = _hurd_crdir;
-  _hurd_crdir = crdir;
-  __mutex_lock (&_hurd_lock);
-  __mach_port_deallocate (__mach_task_self (), old);
+  _hurd_port_set (&_hurd_crdir, crdir);
 
   return 0;
 }
