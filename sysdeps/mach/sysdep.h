@@ -16,7 +16,13 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* sysdeps/mach/MACHINE/sysdep.h should define these macros.  */
+/* This is invoked by things run when there is random lossage, before they
+   try to do anything else.  Just to be safe, deallocate the reply port so
+   bogons arriving on it don't foul up future RPCs.  */
+
+#define FATAL_PREPARE __mig_dealloc_reply_port ()
+
+/* sysdeps/mach/MACHINE/sysdep.h should define the following macros.  */
 
 /* Produce a text assembler label for the C global symbol NAME.  */
 #ifndef ENTRY
