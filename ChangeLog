@@ -127,10 +127,48 @@
 	test for 'one bit set'.
 	(feclearexcept): Likewise.
 
+1999-11-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/setrlimit.c: New file.
+
+	* sysdeps/unix/sysv/linux/bits/resource.h (RLIM_INFINITY): Adjust
+	for kernel changes.
+	* sysdeps/unix/sysv/linux/bits/types.h (__rlim_t, __rlim64_t): Make
+	unsigned.
+
+1999-10-04  Tim Waugh  <twaugh@redhat.com>
+
+	* posix/wordexp.c (wordexp): Explicit null words should be kept.
+
+1999-11-02  Andreas Jaeger  <aj@suse.de>
+
+	* manual/header.texi (Library Summary): The command @indexfonts
+	doesn't exist anymore, use @smallfonts instead.
+
 1999-11-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/sys/procfs.h: Include sys/ucontext.h
 	instead of duplicating definitions.
+
+1999-11-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h: Add more pr* types used
+	by the debugger.
+	* sysdeps/unix/sysv/linux/arm/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/procfs.h: Likewise.
+
+1999-10-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/ioctl-types.h: Added missing
+	N_* constants.
+
+	* sysdeps/unix/sysv/linux/bits/ioctl-types.h (N_SYNC_PPP): Added
+	new constant from Linux 2.3.25pre1.
+
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h (BFS_MAGIC): Added.
 
 1999-10-27  Andreas Jaeger  <aj@suse.de>
 
@@ -234,6 +272,10 @@
 
 	* stdlib/xpg_basename.c (__xpg_basename): Don't return pointer to
 	slash before the basename [PR libc/1383].
+
+1999-10-14  Cristian Gafton  <gafton@redhat.com>
+
+	* string/bits/string2.h (__stpcpy_small): Make -pedantic shut up.
 
 1999-10-08  Ulrich Drepper  <drepper@cygnus.com>
 
