@@ -147,8 +147,8 @@ The random number generation functions @code{random}, @code{srandom},
 @code{rand} and @code{srand} functions, were written by Earl T. Cohen
 for the University of California at Berkeley and are copyrighted by the
 Regents of the University of California.  They have undergone minor
-changes to fit into the GNU C library and to be ANSI conformant, but the
-functional code is Berkeley's.@refill
+changes to fit into the GNU C library and to fit the ANSI C standard,
+but the functional code is Berkeley's.@refill
 
 @item
 The @code{qsort} function was written by Douglas C. Schmidt.
