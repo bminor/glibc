@@ -37,7 +37,7 @@ divrem := sdiv udiv rem urem
 +divrem-S-rem := true
 +divrem-S-udiv := false
 +divrem-S-urem := false
-$(divrem:%=$(sysdep_dir)/sparc/%.S): divrem.m4
+$(divrem:%=$(sysdep_dir)/sparc/%.S): $(sysdep_dir)/sparc/divrem.m4
 	(echo "define(NAME,\`.$(+divrem-NAME)')\
 	       define(OP,\`$(+divrem-OP-$(+divrem-NAME))')\
 	       define(S,\`$(+divrem-S-$(+divrem-NAME))')\
