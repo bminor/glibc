@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,8 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <errno.h>
-#include <stddef.h>
+#include <string.h>
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/paths.h>
@@ -30,28 +29,21 @@ DEFUN(__symlink, (from, to), CONST char *from AND CONST char *to)
 {
   error_t err;
   file_t node;
-  size_t to_write;
+  const size_t len = strlen (to) + 1;
+  char buf[sizeof (_HURD_SYMLINK) + len];
 
-  node = __path_lookup (to, O_WRITE|O_CREAT|O_EXCL,
-			0777 & _hurd_umask);
+  /* A symlink is a file whose translator is "/hurd/symlink\0target\0".  */
+
+  memcpy (buf, _HURD_SYMLINK, sizeof (_HURD_SYMLINK));
+  memcpy (&buf[sizeof (_HURD_SYMLINK)], to, len);
+
+  node = __path_lookup (to, O_WRITE|O_CREAT|O_EXCL, 0777 & _hurd_umask);
   if (node == MACH_PORT_NULL)
     return -1;
 
-  to_write = strlen (from);
-
-  while (to_write > 0)
-    {
-      mach_msg_type_number_t wrote;
-      if (err = __io_write (node, from, to_write, -1, &wrote))
-	break;
-      to_write -= wrote;
-      from += wrote;
-    }
-
-  if (!err)
-    err = __file_set_translator (node, FS_TRANS_EXCL, 0,
-				 _HURD_SYMLINK, sizeof (_HURD_SYMLINK),
-				 MACH_PORT_NULL);
+  err = __file_set_translator (node, FS_TRANS_EXCL, 0,
+			       buf, sizeof (_HURD_SYMLINK) + len,
+			       MACH_PORT_NULL);
 
   /* XXX can leave half-finished file */
 
