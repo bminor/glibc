@@ -1,3 +1,10 @@
+1999-07-19  Andreas Schwab  <schwab@suse.de>
+
+	* iconvdata/Makefile (distribute): Don't distribute CVS
+	directory.
+	* sysdeps/generic/Dist: Add siglist.h.
+	* sysdeps/mach/hurd/Dist: Add siglist.h.
+
 1999-07-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sparc/Dist: Add ldd-rewrite.sed.
