@@ -19,7 +19,7 @@
 ifeq ($(subdir),misc)
 
 sysdep_headers := $(sysdep_headers) sys/param.h
-dont_distribute := $(dont_distribute) sys/param.h	# Generated.
+generated := $(generated) sys/param.h
 
 endif
 
@@ -67,7 +67,7 @@ sys/param.h-includes := \
 	       $(sys/param.h-includes))
 
 sysdep_headers := $(sysdep_headers) $(sys/param.h-includes)
-dont_distribute := $(dont_distribute) $(sys/param.h-includes)	# Generated.
+generated := $(generated) $(sys/param.h-includes)
 
 ifdef sys/param.h-includes
 # Copy the system files to $(common-objdir).
