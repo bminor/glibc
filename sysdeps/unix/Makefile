@@ -118,7 +118,7 @@ ifeq ($(subdir),misc)
 
 # Install system headers the system sys/param.h uses.
 
-sysdep_headers := $(sysdep_headers) sys/param.h $(sys/param.h-includes)
+sysdep_headers := $(sysdep_headers) $(sys/param.h-includes)
 
 endif # misc
 
