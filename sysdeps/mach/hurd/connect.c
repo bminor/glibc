@@ -34,14 +34,20 @@ DEFUN(connect, (fd, addr, len),
   error_t err;
   addr_port_t aport;
 
-  if (err = HURD_DPORT_USE (fd, __socket_create_address (port,
+  err = HURD_DPORT_USE (fd,
+			({
+			  err = __socket_create_address (port,
 							 addr->sa_family,
-							 addr, len,
-							 &aport, 0)))
-    return __hurd_dfail (fd, err);
-
-  err = __socket_connect (port, aport);
-  __mach_port_deallocate (__mach_task_self (), aport);
+							 (char *) addr, len,
+							 &aport, 0);
+			  if (! err)
+			    {
+			      err = __socket_connect (port, aport);
+			      __mach_port_deallocate (__mach_task_self (),
+						      aport);
+			    }
+			  err;
+			}));
 
   return err ? __hurd_dfail (fd, err) : 0;
 }
