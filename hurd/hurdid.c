@@ -20,19 +20,9 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/id.h>
 #include <gnu-stabs.h>
 
-struct hurd_id_data _hurd_id;
+struct hurd_id_data _hurd_id /* = { lock: MUTEX_INITIALIZER } */;
 
-static void
-init_id (void)
-{
-#ifdef noteven
-  __mutex_init (&_hurd_id.lock);
-#endif
-  _hurd_id.valid = 0;
-}
 
-text_set_element (__libc_subinit, init_id);
-
 /* Check that _hurd_id.{gen,aux} are valid and update them if not.
    Expects _hurd_id.lock to be held and does not release it.  */
 
