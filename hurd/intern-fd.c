@@ -17,6 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
+#include <hurd/fd.h>
 
 /* Allocate a new file descriptor and install PORT in it.  FLAGS are as for
    `open'; only O_IGNORE_CTTY is meaningful.
@@ -27,7 +28,7 @@ int
 _hurd_intern_fd (io_t port, int flags, int dealloc)
 {
   int fd;
-  struct _hurd_fd *d = _hurd_alloc_fd (&fd, 0);
+  struct hurd_fd *d = _hurd_alloc_fd (&fd, 0);
 
   if (d == NULL)
     {
