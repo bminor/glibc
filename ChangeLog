@@ -1,3 +1,10 @@
+1998-06-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* pwd/fgetpwent_r.c (__fgetpwent_r): Correct buffer overflow fix.
+	* grp/fgetgrent_r.c (__fgetgrent_r): Likewise.
+	* shadow/fgetspent_r.c (__fgetspent_r): Likewise.
+	Noticed by Jake Garver <garver@valkyrie.net>.
+
 1998-06-04  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/stdio.h: Protect parameter names in prototypes with __.
