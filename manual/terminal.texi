@@ -1063,6 +1063,13 @@ the terminal.  The SUSP character itself is then discarded.
 Typically, the SUSP character is @kbd{C-z}.
 @end deftypevr
 
+Few applications disable the normal interpretation of the SUSP
+character.  If your program does this, it should provide some other
+mechanism for the user to stop the job.  When the user invokes this
+mechanism, the program should send a @code{SIGTSTP} signal to the
+process group of the process, not just to the process itself.
+@xref{Signaling Another Process}.
+
 @node Start/Stop Characters
 @subsubsection Special Characters for Flow Control
 

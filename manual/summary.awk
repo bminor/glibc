@@ -67,15 +67,15 @@ $1 == "@comment" && header != 0 { std=$2;
 header != 0 && $1 ~ /@def|@item|@vindex/ \
 	{ defn=""; name=""; curly=0; n=1;
 	  for (i = 2; i <= NF; ++i) {
-	    if ($i ~ /[^@]?{/ && $i !~ /}/) {
+	    if ($i ~ /^{/ && $i !~ /}/) {
 	      curly=1
 	      word=substr ($i, 2, length ($i))
 	    }
 	    else {
 	      if (curly) {
-	        if ($i ~ /[^@]?}/) {
+	        if ($i ~ /}$/) {
 		  curly=0
-		  word=word " " substr (word, 1, length ($i) - 1)
+		  word=word " " substr ($i, 1, length ($i) - 1)
 	        } else
 		  word=word " " $i
 	      }
