@@ -51,21 +51,6 @@ library functions are guaranteed to set it to certain nonzero values
 when they encounter certain kinds of errors.  These error conditions are
 listed for each function.  No library function ever stores zero in
 @code{errno}.
-
-When you define a feature test macro to request a larger class of
-features, defining in it as well the feature test macro for a strict
-subset of those features is harmless but has no effect.  For example, if
-you define @code{_posix_c_source}, then defining @code{_posix_source} as
-well has no effect.  Likewise, if you define @code{_gnu_source}, then
-defining either @code{_posix_source} or @code{_posix_c_source} or
-@code{_svid_source} as well has no effect.  Note, however, that
-@code{_bsd_source} does not select a set of features which is not a
-subset of any of the other feature test macros supported.  This is
-because it defines BSD features that take precedence over the POSIX
-features that are requested by the other macros.  For this reason,
-defining @code{_bsd_source} in addition to the other feature test macros
-does have an effect: it causes the BSD features to take priority over
-the conflicting POSIX features.  
 @end deftypevr
 
 @strong{Portability Note:} ANSI C specifies @code{errno} as a
@@ -80,13 +65,13 @@ set @code{errno}.  For these functions, if you want to check to see
 whether an error occurred, the recommended method is to set @code{errno}
 to zero before calling the function, and then check its value afterward.
 
-All the error codes have symbolic names, macros defined in
+All the error codes have symbolic names; they are macros defined in
 @file{errno.h}.  The names start with @samp{E} and an upper-case
 letter or digit; you should consider names of this form to be
 reserved names.  @xref{Reserved Names}.
 @pindex errno.h
 
-The error code values are all positive integers and all distinct.
+The error code values are all positive integers and are all distinct.
 (Since the values are distinct, you can use them as labels in a
 @code{switch} statement, for example.)  Your program should not make any
 other assumptions about the specific values of these symbolic constants.
@@ -100,12 +85,11 @@ ones that this manual explicitly lists for that function.
 @node Error Codes
 @section Error Codes
 
-These macros are defined in the header file @file{errno.h}.  All of
-them expand into integer constant values.  Some of these error codes
-can't occur on the GNU system, but they can occur using the GNU library
-on other systems.
 @pindex errno.h
-
+The error code macros are defined in the header file @file{errno.h}.
+All of them expand into integer constant values.  Some of these error
+codes can't occur on the GNU system, but they can occur using the GNU
+library on other systems.
 
 @comment errno.h
 @comment POSIX.1: Operation not permitted
@@ -669,7 +653,7 @@ prefixes its output with this string.  It adds a colon and a space
 character to separate the @var{message} from the error string corresponding
 to @code{errno}.
 
-The function @code{strerror} is declared in @file{stdio.h}.
+The function @code{perror} is declared in @file{stdio.h}.
 @end deftypefun
 
 @code{strerror} and @code{perror} produce the exact same message for any
@@ -688,7 +672,8 @@ Many programs that don't read input from the terminal are designed to
 exit if any system call fails.  By convention, the error message from
 such a program should start with the program's name, sans directories.
 You can find that name in the variable
-@code{program_invocation_short_name}:
+@code{program_invocation_short_name}; the full file name is stored the
+variable @code{program_invocation_name}:
 
 @comment errno.h
 @comment GNU
@@ -712,7 +697,7 @@ Both @code{program_invocation_name} and
 
 @strong{Portability Note:} These two variables are GNU extensions.  If
 you want your program to work with non-GNU libraries, you must save the
-value of @code{argv[0]} in @code{main}, and strip off the directory
+value of @code{argv[0]} in @code{main}, and then strip off the directory
 names yourself.  We added these extensions to make it possible to write
 self-contained error-reporting subroutines that require no explicit
 cooperation from @code{main}.
@@ -745,8 +730,7 @@ open_sesame (char *name)
     fprintf (stderr, "%s: Couldn't open file %s; %s\n",
              program_invocation_short_name, name, strerror (errno));
     exit (EXIT_FAILURE);
-    @}
-  else
+  @} else
     return stream;
 @}
 @end example
