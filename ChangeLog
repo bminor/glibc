@@ -1,3 +1,8 @@
+1998-06-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/__math.h: Use ((__unused__)) instead of
+	((unused)).  Reported by Bruno Haible.
+
 1998-05-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/loadlocale.c (_nl_load_locale): Don't allow too small
