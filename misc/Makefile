@@ -44,7 +44,7 @@ routines := brk sbrk sstk ioctl \
 	    swapon vhangup mktemp \
 	    ualarm usleep \
 	    gtty stty \
-	    flock ptrace \
+	    ptrace \
 	    nlist \
 	    utimes \
 	    __utimes \
