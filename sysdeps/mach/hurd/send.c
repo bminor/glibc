@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/socket.h>
 #include <hurd.h>
 #include <hurd/socket.h>
+#include <hurd/fd.h>
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 int
@@ -32,7 +33,7 @@ DEFUN(send, (fd, buf, n, flags),
 
   err = HURD_DPORT_USE (fd, __socket_send (port, MACH_PORT_NULL,
 					   flags, buf, n,
-					   NULL, 0, NULL,
+					   NULL, NULL, 0,
 					   NULL, 0, &wrote));
 
   return err ? __hurd_dfail (fd, err) : wrote;
