@@ -1,3 +1,7 @@
+@c This is for making the `INSTALL' file for the distribution.
+@c Makeinfo ignores it when processing the file from the include.
+@setfilename INSTALL
+
 @node Maintenance
 @appendix Library Maintenance
 
@@ -9,16 +13,9 @@
                                          you may have with the GNU C library.
 * Compatibility with Traditional C::    Using the GNU C library with non-ANSI
                                          C compilers.
-* Defining New Locales::                How to define and install new named 
-                                         locales.
 * Contributors to the GNU C Library::	Contributors to the GNU C Library.
 @end menu
 
-
-@c Uncomment the @setfilename to format the `INSTALL' file for the
-@c distribution.  I make the file with texinfo-format-region on a region
-@c from here to the end of this node.
-@c @setfilename ../INSTALL
 
 @node How to Install the GNU C Library
 @appendixsec How to Install the GNU C Library
@@ -51,14 +48,18 @@ configured for that machine in the @code{make} variable @samp{ARCH}.
 For example, use @samp{make ARCH=sun4}, or put @samp{ARCH=sun4} in your
 environment.  If you don't specify a value for @samp{ARCH}, the variable
 @samp{machine} is used if defined; otherwise @code{make} will build for
-the configuration most recently configured for.
+the configuration most recently configured for.@refill
 
 Now edit the file @file{Makeconfig} to set the compilation parameters,
 and what directories to install the library and header files in.  See
 the comments in @file{Makeconfig} for the details.  If you are building
-for several machines, you can put values specific to a particular
-machine in a file called @file{Makeconfig} in the object directory for
-that machine (for example, @file{sun4/Makeconfig}).@refill
+for several machines, you can put just the values specific to a
+particular machine in a file called file{Makeconfig} in the object
+directory for that machine (for example, @file{sun4/Makeconfig}).  This
+should @emph{not} be an editted copy of @file{Makeconfig}.  Make a new
+file containing just the variables in @file{Makeconfig} that you want to
+set specially for the particular machine.  These values will override
+the values defined in @file{Makeconfig}.@refill
 
 Some of the machine-dependent code for some machines uses extensions in
 the GNU C compiler, so you may need to compile the library with GCC.
@@ -73,7 +74,7 @@ produce a lot of output, some of which looks like errors from
 containing @samp{***}.  Those indicate that something is really wrong.
 Using the @samp{-w} option to @code{make} may make the output easier to
 understand (this option tells @code{make} to print messages telling you
-what subdirectories it is working on).
+what subdirectories it is working on).@refill
 
 To install the library and header files, type @code{make install}, after
 setting the installation directories in @file{Makeconfig} (or
@@ -106,8 +107,9 @@ got, the results you expected, what you think the problem might be
 (if you've thought of anything), your system type, and the version
 of the GNU C library which you are using.
 
-If you are not sure how a function should behave, and this manual
-doesn't tell you, that's a bug in the documentation.  Report that too!
+@c Uncomment when the manual is distributed.
+@c If you are not sure how a function should behave, and this manual
+@c doesn't tell you, that's a bug in the documentation.  Report that too!
 
 If you think you have found some way in which the GNU C library does not
 conform to the ANSI and POSIX standards (@pxref{Standards and
@@ -134,24 +136,14 @@ hand, if you are using an ANSI C compiler like GCC, you should use the
 ANSI C header files because the prototypes permit the compiler to do a
 better job of detecting errors in calls to library functions.)  You can
 tell the C compiler what directories to search for header files by using
-the @samp{-I} option.
+the @samp{-I} option.  Set the @samp{trad-incldir} variable in
+@file{Makeconfig} to choose where to install this set of header
+files.@refill
 
 You also need to be careful because the content and organization of the
 GNU C library header files differs from that of traditional C
 implementations.  This means you may need to make changes to your
 program in order to get it to compile.
-
-@strong{Incomplete:} Maybe list some specific things to watch out for
-here, like: some functions from @file{math.h} have been moved to
-@file{stdlib.h}; confusion between @file{string.h} and @file{strings.h};
-and the like.  Look at Harbison & Steele's C book to get a more complete
-list.
-
-@node Defining New Locales
-@appendixsec Defining New Locales
-
-@strong{Incomplete:}  Fill in this section.  Presumably this is where
-the things in @file{localeinfo.h} will be documented?
 
 
 @node Contributors to the GNU C Library
@@ -175,8 +167,9 @@ changes to fit into the GNU C library and to fit the ANSI C standard,
 but the functional code is Berkeley's.@refill
 
 @item
-The math functions are taken from BSD 4.3-Reno, and are copyrighted by
-the Regents of the University of California at Berkeley.
+Most of the math functions are taken from 4.4 BSD, and are
+copyrighted by the Regents of the University of California.
+They have been modified only slightly to work with the GNU C library.
 
 @item
 The @code{qsort} function was written by Douglas C. Schmidt.
@@ -188,4 +181,35 @@ The memory allocation functions @code{malloc}, @code{realloc} and
 @item
 Fast implementations of many of the string functions (@code{memcpy},
 @code{strlen}, etc.) were written by Torbjorn Granlund.
+
+@item
+Some of the support code for Mach is taken from Mach 3.0, from CMU,
+and is under the following copyright terms:
+
+@display
+Mach Operating System
+Copyright (c) 1991,1990,1989 Carnegie Mellon University
+All Rights Reserved.
+
+Permission to use, copy, modify and distribute this software and its
+documentation is hereby granted, provided that both the copyright
+notice and this permission notice appear in all copies of the
+software, derivative works or modified versions, and any portions
+thereof, and that both notices appear in supporting documentation.
+
+CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"
+CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR
+ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.
+
+Carnegie Mellon requests users of this software to return to
+
+ Software Distribution Coordinator  or  Software.Distribution@@CS.CMU.EDU
+ School of Computer Science
+ Carnegie Mellon University
+ Pittsburgh PA 15213-3890
+
+any improvements or extensions that they make and grant Carnegie Mellon
+the rights to redistribute these changes.
+@end display
+
 @end itemize
