@@ -222,9 +222,11 @@ enum
 /* Get socket manipulation related informations from kernel headers.  */
 #ifndef _LINUX_TYPES_H
 # define _LINUX_TYPES_H
+# include <asm/socket.h>
+# undef _LINUX_TYPES_H
+#else
+# include <asm/socket.h>
 #endif
-
-#include <asm/socket.h>
 
 
 /* Structure used to manipulate the SO_LINGER option.  */
