@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)ialloc.c	8.19";
+static char	elsieid[] = "@(#)ialloc.c	8.21";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -10,7 +10,8 @@ static char	elsieid[] = "@(#)ialloc.c	8.19";
 
 #ifdef MAL
 #define NULLMAL(x)	((x) == NULL || (x) == MAL)
-#else /* !defined MAL */
+#endif /* defined MAL */
+#ifndef MAL
 #define NULLMAL(x)	((x) == NULL)
 #endif /* !defined MAL */
 
@@ -32,7 +33,8 @@ const int	n;
 
 	result = malloc((alloc_size_t) nonzero(n));
 	return NULLMAL(result) ? NULL : result;
-#else /* !defined MAL */
+#endif /* defined MAL */
+#ifndef MAL
 	return malloc((alloc_size_t) nonzero(n));
 #endif /* !defined MAL */
 }
@@ -63,7 +65,7 @@ char * const		old;
 const char * const	new;
 {
 	register char *	result;
-	register	oldsize, newsize;
+	register int	oldsize, newsize;
 
 	newsize = NULLMAL(new) ? 0 : strlen(new);
 	if (NULLMAL(old))

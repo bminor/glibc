@@ -1,10 +1,6 @@
-#ifdef LIBC
-#include <ansidecl.h>
-#endif
-
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)emkdir.c	8.20";
+static char	elsieid[] = "@(#)emkdir.c	8.21";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -41,7 +37,8 @@ register const char *	name;
 			*cp++ = c;
 		} else	*cp++ = c;
 	*cp++ = '\'';
-#else /* !defined unix */
+#endif /* defined unix */
+#ifndef unix
 	while ((c = *name++) != '\0')
 		if (c == '/')
 			*cp++ = '\\';
@@ -65,7 +62,8 @@ const int	mode;
 		return -1;
 #ifdef unix
 	format = "mkdir 2>&- %s && chmod 2>&- %o %s";
-#else /* !defined unix */
+#endif /* defined unix */
+#ifndef unix
 	format = "mkdir %s";
 #endif /* !defined unix */
 	command = imalloc(strlen(format) + 2 * strlen(qname) + 20 + 1);

@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include "ieee754.h"
 
 /* Return nonzero if VALUE is not a number.  */
-int
+__CONSTVALUE int
 DEFUN(__isnan, (value), double value)
 {
   union ieee754_double u;
