@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,15 @@ DEFUN(mbstowcs, (pwcs, s, n),
   while (*s != '\0')
     {
       int len;
-      if (isascii(*s) || (len = mbtowc(pwcs, s, n)) < 1)
+      if (isascii (*s))
+	{
+	  *pwcs = (wchar_t) *s;
+	  len = 1;
+	}
+      else
+	len = mbtowc (pwcs, s, n);
+
+      if (len < 1)
 	{
 	  /* Return an error.  */
 	  written = (size_t) -1;
