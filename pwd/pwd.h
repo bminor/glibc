@@ -78,8 +78,7 @@ extern struct passwd *EXFUN(fgetpwent, (FILE *__stream));
 extern int EXFUN(putpwent, (CONST struct passwd *__p, FILE *__f));
 #endif
 
-/* Search for an entry with a matching user ID.
-   This takes an `int' because that is what `uid_t's get widened to.  */
+/* Search for an entry with a matching user ID.  */
 extern struct passwd *EXFUN(getpwuid, (__uid_t __uid));
 
 /* Search for an entry with a matching username.  */
