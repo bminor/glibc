@@ -269,7 +269,7 @@ extern double __ieee754_y1 __P((double));
 extern double __ieee754_jn __P((int,double));
 extern double __ieee754_yn __P((int,double));
 extern double __ieee754_remainder __P((double,double));
-extern int    __ieee754_rem_pio2 __P((double,double*));
+extern int32_t __ieee754_rem_pio2 __P((double,double*));
 extern double __ieee754_scalb __P((double,double));
 
 /* fdlibm kernel function */
@@ -277,7 +277,7 @@ extern double __kernel_standard __P((double,double,int));
 extern double __kernel_sin __P((double,double,int));
 extern double __kernel_cos __P((double,double));
 extern double __kernel_tan __P((double,double,int));
-extern int    __kernel_rem_pio2 __P((double*,double*,int,int,int,const int*));
+extern int __kernel_rem_pio2 __P((double*,double*,int,int,int,const int32_t*));
 
 
 /* ieee style elementary float functions */
@@ -306,14 +306,14 @@ extern float __ieee754_y1f __P((float));
 extern float __ieee754_jnf __P((int,float));
 extern float __ieee754_ynf __P((int,float));
 extern float __ieee754_remainderf __P((float,float));
-extern int   __ieee754_rem_pio2f __P((float,float*));
+extern int32_t __ieee754_rem_pio2f __P((float,float*));
 extern float __ieee754_scalbf __P((float,float));
 
 /* float versions of fdlibm kernel functions */
 extern float __kernel_sinf __P((float,float,int));
 extern float __kernel_cosf __P((float,float));
 extern float __kernel_tanf __P((float,float,int));
-extern int   __kernel_rem_pio2f __P((float*,float*,int,int,int,const int*));
+extern int __kernel_rem_pio2f __P((float*,float*,int,int,int,const int32_t*));
 
 
 /* ieee style elementary long double functions */
@@ -342,14 +342,14 @@ extern long double __ieee754_y1l __P((long double));
 extern long double __ieee754_jnl __P((int,long double));
 extern long double __ieee754_ynl __P((int,long double));
 extern long double __ieee754_remainderl __P((long double,long double));
-extern int   __ieee754_rem_pio2l __P((long double,long double*));
+extern int32_t __ieee754_rem_pio2l __P((long double,long double*));
 extern long double __ieee754_scalbl __P((long double,long double));
 
 /* long double versions of fdlibm kernel functions */
 extern long double __kernel_sinl __P((long double,long double,int));
 extern long double __kernel_cosl __P((long double,long double));
 extern long double __kernel_tanl __P((long double,long double,int));
-extern int   __kernel_rem_pio2l __P((long double*,long double*,int,int,
-				     int,const int*));
+extern int __kernel_rem_pio2l __P((long double*,long double*,int,int,
+				   int,const int32_t*));
 
 #endif /* _MATH_PRIVATE_H_ */
