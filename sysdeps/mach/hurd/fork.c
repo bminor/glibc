@@ -37,7 +37,7 @@ const struct
 struct hook 
   {
     size_t n;
-    error_t (*fn[0]) (task_t);
+    error_t (*fn[0]) (task_t, process_t);
   };
 
 static inline error_t
@@ -180,11 +180,6 @@ __fork (void)
          inserted send rights with the names that were in the cells then.  */
       for (i = 0; i < _hurd_nports; ++i)
 	__spin_unlock (&_hurd_ports[i].lock);
-
-      /* Start up our signal thread.  */
-      _hurdsig_init ();
-      /* Initialize proc server-assisted fault recovery for it.  */
-      _hurdsig_fault_init ();
 
       /* Run things that want to run in the child task to set up.  */
       err = run_hooks (&_hurd_fork_child_hook, MACH_PORT_NULL, MACH_PORT_NULL);
