@@ -49,8 +49,8 @@ struct ctype_mbchar_info
 struct ctype_ctype_info
 {
   unsigned short int *ctype_b;	/* Characteristics.  */
-  unsigned char *ctype_tolower;	/* Case mappings.  */
-  unsigned char *ctype_toupper;	/* Case mappings.  */
+  short int *ctype_tolower;	/* Case mappings.  */
+  short int *ctype_toupper;	/* Case mappings.  */
 };
 
 struct ctype_info
@@ -63,8 +63,8 @@ extern __const struct ctype_info *_ctype_info;
 
 /* These are necessary because they are used in a header file.  */
 extern __const unsigned short int *__ctype_b;
-extern __const unsigned char *__ctype_tolower;
-extern __const unsigned char *__ctype_toupper;
+extern __const short int *__ctype_tolower;
+extern __const short int *__ctype_toupper;
 
 
 /* Used by strcoll and strxfrm.  */

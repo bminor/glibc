@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 
 /* Get the effective group ID of the calling process.  */
-int
+__gid_t
 DEFUN_VOID(__getegid)
 {
   errno = ENOSYS;

@@ -41,17 +41,11 @@ func(isxdigit, _ISxdigit)
 int
 DEFUN(tolower, (c), int c)
 {
-  if ((unsigned char) c != c)
-    return c;
-  else
-    return __tolower (c);
+  return __tolower (c);
 }
 
 int
 DEFUN(toupper, (c), int c)
 {
-  if ((unsigned char) c != c)
-    return c;
-  else
-    return __toupper (c);
+  return __toupper (c);
 }
