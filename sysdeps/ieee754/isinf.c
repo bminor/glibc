@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Return 0 if VALUE is finite or NaN, +1 if it
    is +Infinity, -1 if it is -Infinity.  */
-int
+__CONSTVALUE int
 DEFUN(__isinf, (value), double value)
 {
   union ieee754_double u;

@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #undef	__finite
 
 /* Return nonzero if VALUE is finite and not NaN.  */
-int
+__CONSTVALUE int
 DEFUN(__finite, (value), double value)
 {
   return !__isinf (value) && !__isnan (value);

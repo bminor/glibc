@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <math.h>
 
 /* Return the inverse tangent of X.  */
-double
+__CONSTVALUE double
 DEFUN(atan, (x), register double x)
 {
   return atan2(x, 1.0);

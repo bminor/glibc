@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include "ieee754.h"
 
 /* Return X with its signed changed to Y's.  */
-double
+__CONSTVALUE double
 DEFUN(__copysign, (x, y), double x AND double y)
 {
   union ieee754_double ux, uy;

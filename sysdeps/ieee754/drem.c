@@ -41,7 +41,7 @@ Cambridge, MA 02139, USA.  */
 #include "ieee754.h"
 
 /* Return the remainder of X/Y.  */
-double
+__CONSTVALUE double
 DEFUN(__drem, (x, y),
       double x AND double y)
 {

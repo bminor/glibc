@@ -40,7 +40,7 @@ Cambridge, MA 02139, USA.  */
 #include <float.h>
 #include "ieee754.h"
 
-double
+__CONSTVALUE double
 DEFUN(ldexp, (x, exp),
       double x AND int exp)
 {

@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include "ieee754.h"
 
 /* Return the base 2 signed integral exponent of X.  */
-double
+__CONSTVALUE double
 DEFUN(__logb, (x), double x)
 {
   union ieee754_double u;

@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <math.h>
 
 /* Return the base-ten logarithm of X.  */
-double
+__CONSTVALUE double
 DEFUN(log10, (x), double x)
 {
   CONST double inverse_ln10 = 4.3429448190325181667e-1;	/* 1 / log(10) */
