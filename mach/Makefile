@@ -26,6 +26,7 @@ include ../Makeconfig
 
 headers = mach_init.h mach.h mach_error.h mach-shortcuts.h \
 	  $(interface-headers) mach/mach.h mach/mig_support.h mach/error.h
+distribute = thread_state.h
 routines = $(interface-routines) \
 	   $(filter-out syscall_%,$(mach-syscalls)) \
 	   $(addprefix __,$(mach-syscalls)) \
@@ -36,7 +37,7 @@ routines = $(interface-routines) \
 	   msg_destroy msgserver msgserver_t \
 	   __msg_dest __msgserver \
 	   mach_error mach_error_string error_compat errsystems \
-	   devstream bootprivport
+	   devstream bootprivport setup-thread thread-sym
 user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     memory_object_user			\
 				     memory_object_default		\
@@ -48,7 +49,7 @@ tests := hello
 # It is important that we do not use the wildcard function to expand
 # `err_*.sub'.  Leaving the wildcard allows Make-dist to find all matching
 # files in all sysdep directories.
-distribute := Machrules syscalls.awk shortcut.awk \
+distribute += Machrules syscalls.awk shortcut.awk \
 	      errorlib.h err_*.sub
 
 
