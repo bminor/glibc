@@ -15,7 +15,7 @@ The @code{malloc} facility allows fully general dynamic allocation.
 
 @item
 Obstacks are another facility, less general than @code{malloc} but more
-efficient and convenient.  @xref{Obstacks}.
+efficient and convenient for stacklike allocation.  @xref{Obstacks}.
 
 @item
 The function @code{alloca} lets you allocate storage dynamically that
@@ -42,11 +42,10 @@ will be freed automatically.  @xref{Variable Size Automatic}.
 @cindex static allocation
 @cindex automatic allocation
 
-@dfn{Dynamic memory allocation} is a technique in which programs determine
-as they are running where to store some information.
-
-You need dynamic allocation when the number of memory blocks you need, or
-how long you continue to need them, depends on the data you are working on.
+@dfn{Dynamic memory allocation} is a technique in which programs
+determine as they are running where to store some information.  You need
+dynamic allocation when the number of memory blocks you need, or how
+long you continue to need them, depends on the data you are working on.
 
 For example, you may need a block to store a line read from an input file;
 since there is no limit to how long a line can be, you must allocate the
@@ -92,8 +91,8 @@ class ``dynamic'', and there can never be a C variable whose value is
 stored in dynamically allocated space.  The only way to refer to
 dynamically allocated space is through a pointer.  Because it is less
 convenient, and because the actual process of dynamic allocation
-requires more computation time, you use dynamic allocation only when
-neither static nor automatic allocation will serve.
+requires more computation time, programmers use dynamic allocation only
+when neither static nor automatic allocation will serve.
 
 For example, if you want to allocate dynamically some space to hold a
 @code{struct foobar}, you cannot declare a variable of type @code{struct
@@ -107,6 +106,7 @@ address of the space.  Then you can use the operators @samp{*} and
   struct foobar *ptr
      = (struct foobar *) malloc (sizeof (struct foobar));
   ptr->name = x;
+  ptr->next = current_foobar;
   current_foobar = ptr;
 @}
 @end example
@@ -117,9 +117,10 @@ address of the space.  Then you can use the operators @samp{*} and
 @cindex @code{malloc} function
 @cindex heap, dynamic allocation from
 
-The most general dynamic allocation facility is @code{malloc}.  It allows
-you to allocate blocks of memory of any size at any time, make them bigger
-or smaller at any time, and free the blocks in any order (or never).
+The most general dynamic allocation facility is @code{malloc}.  It
+allows you to allocate blocks of memory of any size at any time, make
+them bigger or smaller at any time, and free the blocks individually at
+any time (or never).
 
 @menu
 * Basic Allocation::		Simple use of @code{malloc}.
@@ -331,7 +332,7 @@ contents.
 
 Like @code{malloc}, @code{realloc} may return a null pointer if no
 memory space is available to make the block bigger.  When this happens,
-the original block is not modified or reallocated.
+the original block is untouched; it has not been modified or relocated.
 
 In most cases it makes no difference what happens to the original block
 when @code{realloc} fails, because the application program cannot continue
@@ -346,7 +347,7 @@ xrealloc (void *ptr, size_t size)
 @{
   register void *value = realloc (ptr, size);
   if (value == 0)
-    fatal ("Virtual memory exhausted.");
+    fatal ("Virtual memory exhausted");
   return value;
 @}
 @end example
@@ -388,9 +389,9 @@ calloc (size_t count, size_t eltsize)
 @}
 @end example
 
-People rarely use @code{calloc}, because it is equivalent to such a simple
-combination of other features that are more often used.  It is a historical
-holdover that is not quite obsolete.
+We rarely use @code{calloc} today, because it is equivalent to such a
+simple combination of other features that are more often used.  It is a
+historical holdover that is not quite obsolete.
 
 @node Efficiency and Malloc
 @subsection Efficiency Considerations for @code{malloc}
@@ -398,17 +399,17 @@ holdover that is not quite obsolete.
 
 @strong{Incomplete:}  This material may be inaccurate.
 
-To make the best use of @code{malloc}, it helps to know that @code{malloc}
-always dispenses memory in units of powers of two.  It keeps separate pools
-for each power of two.
+To make the best use of @code{malloc}, it helps to know that the GNU
+version of @code{malloc} always dispenses memory in units of powers of
+two.  It keeps separate pools for each power of two.
 
 Therefore, if you are free to choose the size of a block in order to make
 @code{malloc} more efficient, make it a power of two.
 
 The pools for different powers of two remain separate forever; a block
-of 32 bytes can never be split into two blocks of 16 bytes.  So it is
-good if you manage to use blocks of the same size for as many different
-purposes as possible.
+of 32 bytes can never be split into two blocks of 16 bytes.  Thus, you
+can make your program use memory more efficiently by using blocks of
+the same size for many different purposes.
 
 @node Aligned Memory Blocks
 @subsection Allocating Aligned Memory Blocks
@@ -429,9 +430,9 @@ address is a multiple of a higher power of two than that, use
 @deftypefun {void *} memalign (size_t @var{size}, int @var{boundary})
 The @code{memalign} function allocates a block of @var{size} bytes whose
 address is a multiple of @var{boundary}.  The @var{boundary} must be a
-power of two!  It works by calling @code{malloc} to allocate a somewhat
-larger block, and then returning an address within the block that is on
-the desired boundary.
+power of two!  The function @code{memalign} works by calling
+@code{malloc} to allocate a somewhat larger block, and then returning an
+address within the block that is on the specified boundary.
 @end deftypefun
 
 @comment malloc.h stdlib.h
@@ -440,7 +441,7 @@ the desired boundary.
 Using @code{valloc} is like using @code{memalign} and passing the page size
 as the value of the second argument.  Its advantage is that you don't need
 to determine the page size explicitly (something which cannot be done
-portably on Unix systems).
+portably).
 @end deftypefun
 
 @node Heap Consistency Checking
@@ -449,24 +450,24 @@ portably on Unix systems).
 @cindex heap consistency checking
 @cindex consistency checking, of heap
 
-You can ask @code{malloc} to check the consistency of the heap by using
-the @code{mcheck} function.  This function is a GNU extension, declared
-in @file{malloc.h}.
+You can ask @code{malloc} to check the consistency of dynamic storage by
+using the @code{mcheck} function.  This function is a GNU extension,
+declared in @file{malloc.h}.
 @pindex malloc.h
 
 @comment malloc.h
 @comment GNU
 @deftypefun void mcheck (void (*@var{abortfn}) (void))
 Calling @code{mcheck} tells @code{malloc} to perform occasional
-consistency checks on the heap.  These will catch things such as writing
-past the end of a @code{malloc}ed block.
+consistency checks.  These will catch things such as writing
+past the end of a block that was allocated with @code{malloc}.
 
 The @var{abortfn} argument is the function to call when an inconsistency
 is found.  If you supply a null pointer, the @code{abort} function is
 used.
 @end deftypefun
 
-Since other library functions (such as the standard i/o functions) may
+Since other library functions (such as the standard I/O functions) may
 call @code{malloc}, you should do @code{mcheck} before anything else in
 your program.  To do this automatically, link with @samp{-lmcheck}.
 
@@ -556,9 +557,9 @@ installing such hooks.
 @subsection Statistics for Storage Allocation with @code{malloc}
 
 @cindex allocation statistics
-In the GNU C library, you can get information about dynamic storage
-allocation by calling the @code{mstats} function.  This function and
-its associated data type are declared in @file{malloc.h}.
+You can get information about dynamic storage allocation by calling the
+@code{mstats} function.  This function and its associated data type are
+declared in @file{malloc.h}; they are a GNU extension.
 @pindex malloc.h
 
 @comment malloc.h
@@ -569,7 +570,7 @@ storage allocator.  It contains the following members:
 
 @table @code
 @item size_t bytes_total
-This is the total size of the heap, in bytes.
+This is the total size of memory managed by malloc, in bytes.
 
 @item size_t chunks_used
 This is the number of chunks in use.  (The storage allocator internally
@@ -629,8 +630,9 @@ Allocate a block @var{size} bytes, starting on an address that is a
 multiple of @var{boundary}.  @xref{Allocation with Specified Alignment}.
 
 @item mcheck (@var{abortfn})
-Tell @code{malloc} to perform occasional consistency checks on the heap,
-and to call @var{abortfn} when an inconsistency is found.
+Tell @code{malloc} to perform occasional consistency checks on
+dynamically allocated memory, and to call @var{abortfn} when an
+inconsistency is found.  @xref{Heap Consistency Checking}.
 
 @item __malloc_hook
 A pointer to a function that @code{malloc} uses whenever it is called.
@@ -642,7 +644,8 @@ A pointer to a function that @code{realloc} uses whenever it is called.
 A pointer to a function that @code{free} uses whenever it is called.
 
 @item mstats ()
-Read information about the current dynamic memory usage.
+Read information about the current dynamic memory usage.  @xref{Statistics
+of Malloc}.
 @end table
 
 @node Obstacks
