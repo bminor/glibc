@@ -1,3 +1,8 @@
+2004-09-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/string.h: Add __nonnull annotations.
+	* stdlib/stdlib.h: Likewise.
+
 2004-09-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/alpha/sysdep.h (inline_syscall[0-6]): Change name
