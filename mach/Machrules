@@ -204,6 +204,8 @@ else
 endif
 	$(RANLIB) $@
 
+lib-noranlib: $(objpfx)$(interface-library)
+
 mostlyclean:
 	-rm -f $(objpfx)$(interface-library)
 
