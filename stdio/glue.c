@@ -17,15 +17,15 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 /* This file provides glue between Unix stdio and GNU stdio.
-   It supports use of Unix stdio `getc' and `putc' (and,
-   by extension, `getchar' and `putchar') macros on GNU stdio streams
-   (they are slow, but they work).  It also supports all stdio
-   operations (including Unix `getc' and `putc') on Unix's stdin, stdout,
-   and stderr (the elements of `_iob').
+   It supports use of Unix stdio `getc' and `putc' (and, by extension,
+   `getchar' and `putchar') macros on GNU stdio streams (they are slow, but
+   they work).  It also supports all stdio operations (including Unix
+   `getc' and `putc') on Unix's stdin, stdout, and stderr (the elements of
+   `_iob').
 
    The reasoning behind this is to allow programs (and especially
-   libraries) compiled with Unix header files to work with the
-   GNU C library.  */
+   libraries) compiled with Unix header files to work with the GNU C
+   library.  */
 
 #include <ansidecl.h>
 #include <stdio.h>
@@ -36,7 +36,11 @@ typedef union
     struct
       {
 	int magic;
-	FILE **streamp;
+	FILE **streamp;		/* Overlaps GNU stdio `bufp' member.  */
+	/* These two overlap the GNU stdio `get_limit' and `put_limit'
+	   members.  They must be <= `streamp'/`bufp' for GNU getc and putc
+	   to do the right thing.  */
+	FILE **streamp2, **streamp3;
       } glue;
     struct _iobuf
       {
@@ -47,6 +51,7 @@ typedef union
 	short int _flag;
 	char _file;
       } unix_iobuf;
+    FILE gnu_stream;
   } unix_FILE;
 
 /* These are the Unix stdio's stdin, stdout, and stderr.
@@ -56,9 +61,11 @@ typedef union
    for glued streams, and replaces them with the GNU stdio stream.  */
 unix_FILE _iob[] =
   {
-    { { _GLUEMAGIC, &stdin } },
-    { { _GLUEMAGIC, &stdout } },
-    { { _GLUEMAGIC, &stderr } },
+#define	S(name)	{ { _GLUEMAGIC, &name, &name, &name } }
+    S (stdin),
+    S (stdout),
+    S (stderr),
+#undef	S
   };
 
 /* Called by the Unix stdio `getc' macro.

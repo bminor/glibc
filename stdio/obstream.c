@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <obstack.h>
 #include <stdarg.h>
+#include <string.h>
 
 /* Output-room function for obstack streams.  */
 
@@ -114,7 +115,7 @@ DEFUN(input, (stream), FILE *stream)
   if (stream->__bufp < stream->__get_limit)
     return (unsigned char) *stream->__bufp++;
 
-  stream.__eof = 1;
+  stream->__eof = 1;
   return EOF;
 }
 
@@ -147,8 +148,6 @@ DEFUN(init_obstream, (stream, obstack),
 
   /* We don't have to initialize the buffer.
      The first read attempt will call grow, which will do all the work.  */
-
-  return stream;
 }
 
 FILE *
@@ -170,7 +169,7 @@ DEFUN(obstack_vprintf, (obstack, format, args),
       struct obstack *obstack AND const char *format AND va_list args)
 {
   FILE f;
-  memset (&f, 0, sizeof (f));
+  bzero (&f, sizeof (f));
   init_obstream (&f, obstack);
   return vfprintf (&f, format, args);
 }
