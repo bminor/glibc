@@ -1,3 +1,13 @@
+1998-09-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/socketbits.h (CMSG_ALIGN): Define.
+	(__cmsg_nxthdr): Use CMSG_ALIGN (fixes a bug) and correct test for
+	availability of another entry.
+	Patch by ak@muc.de.
+
+	* sysdeps/unix/sysv/linux/netinet/ip.h (IPOPT_NOOP): Fix typo.
+	Patch by ak@muc.de.
+
 1998-09-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/res_init.c (res_init): Handle resolv.conf file with only
