@@ -312,7 +312,7 @@ echo-headers:
 
 
 ifdef gpl2lgpl
-ifneq (,$(wildcard /home/gd/gnu/lib/ChangeLog)
+ifneq (,$(wildcard /home/gd/gnu/lib/ChangeLog))
 # Snarf from the master source and frob the copying notice.
 $(gpl2lgpl): %: $(..)gpl2lgpl.sed /home/gd/gnu/lib/%
 	sed -f $^ > $@-tmp
