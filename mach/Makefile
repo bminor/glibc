@@ -25,8 +25,11 @@ include ../Makeconfig
 
 
 headers = mach_init.h mach.h mach_error.h mach-shortcuts.h \
-	  $(interface-headers) mach/mach.h mach/mig_support.h mach/error.h
+	  $(interface-headers) mach/mach.h mach/mig_support.h mach/error.h \
+	  $(lock-headers) machine-sp.h
 distribute = thread_state.h
+lock = spin-solid spin-lock
+lock-headers = lock-intern.h machine-lock.h mutex.h
 routines = $(filter-out syscall_%,$(mach-syscalls)) \
 	   $(addprefix __,$(mach-syscalls)) \
 	   $(mach-shortcuts) $(addprefix __,$(mach-shortcuts)) \
@@ -36,7 +39,7 @@ routines = $(filter-out syscall_%,$(mach-syscalls)) \
 	   msg_destroy msgserver msgserver_t \
 	   __msg_dest __msgserver \
 	   mach_error mach_error_string error_compat errsystems \
-	   devstream bootprivport setup-thread thread-sym
+	   devstream bootprivport setup-thread thread-sym $(lock)
 # The RPC interfaces go in a separate library.
 interface-library := libmachuser.a
 user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
