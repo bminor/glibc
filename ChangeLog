@@ -1,6 +1,11 @@
-2002-05-20  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+2002-05-23  Jakub Jelinek  <jakub@redhat.com>
 
-	2002-05-17  David S. Miller  <davem@redhat.com>
+	* inet/ether_line.c (ether_line): Fix a typo causing only
+	lower 4 bits of each ethernet address byte being assigned.
+	Don't modify what line points to.
+	* inet/tst-ether_aton.c (main): Add ether_line tests.
+
+2002-05-17  David S. Miller  <davem@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/fork.S: Define _internal aliases.
 
@@ -28,7 +33,9 @@
 	Only pad to the left using left shift if value uses less than the
 	available fractional bits.
 
-* sysdeps/powerpc/Makefile: Build libgcc-compat and divdi3.
+2002-05-20  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/powerpc/Makefile: Build libgcc-compat and divdi3.
 	* sysdeps/powerpc/libgcc-compat.c: New file.
 
 2002-05-16  Bruno Haible  <bruno@clisp.org>
