@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -17,10 +17,12 @@
 # Cambridge, MA 02139, USA.
 
 ifeq ($(subdir),gnulib)
+routines = mul umul $(divrem) 
+endif	# gnulib
 
+# We distribute these files, even though they are generated,
+# so as to avoid the need for a functioning m4 to build the library.
 divrem := sdiv udiv rem urem
-routines := mul umul $(divrem) 
-nodist-routines = $(divrem)
 
 +divrem-NAME-sdiv := div
 +divrem-NAME-udiv := udiv
@@ -35,14 +37,13 @@ nodist-routines = $(divrem)
 +divrem-S-rem := true
 +divrem-S-udiv := false
 +divrem-S-urem := false
-$(addprefix $(objpfx),$(divrem:%=%.S)): divrem.m4
+$(divrem:%=$(sysdep_dir)/sparc/%.S): divrem.m4
 	(echo "define(NAME,\`.$(+divrem-NAME)')\
 	       define(OP,\`$(+divrem-OP-$(+divrem-NAME))')\
-	       define(S,\`$(+divrem-S-$(+divrem-NAME))')"; \
+	       define(S,\`$(+divrem-S-$(+divrem-NAME))')\
+	       /* This file is generated from divrem.m4; DO NOT EDIT! */"; \
 	 cat $<) | $(M4) > $@-tmp
 	mv $@-tmp $@
-
-endif	# gnulib
 
 ifeq ($(subdir),crypt)
 
