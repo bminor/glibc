@@ -154,7 +154,8 @@ extern void _hurd_exception2signal (int exception, int code, int subcode,
 
 extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
 					int signo, int sigcode,
-					mach_port_t reply_port);
+					mach_port_t reply_port,
+					mach_msg_type_name_t reply_port_type);
 
 /* Set up STATE to handle signal SIGNO by running HANDLER.  FLAGS is the
    `sa_flags' member from `struct sigaction'.  If the SA_ONSTACK bit is
@@ -281,8 +282,8 @@ extern void _hurd_siginfo_handler (int);
 	__mach_port_deallocate (__mach_task_self (), msgport);		      \
 	if (refport != MACH_PORT_NULL)					      \
 	  __mach_port_deallocate (__mach_task_self (), refport);    	      \
-      } while (__err != MACH_SEND_INVALID_DEST &&			      \
-	       __err != MIG_SERVER_DIED);				      \
+      } while (__err == MACH_SEND_INVALID_DEST ||			      \
+	       __err == MIG_SERVER_DIED);				      \
     __err;								      \
 })
 
