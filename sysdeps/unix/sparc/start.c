@@ -54,10 +54,12 @@ register long int sp asm("%sp"), fp asm("%fp");
 static void EXFUN(init_shlib, (NOARGS));
 #endif
 
+#ifndef NO_EXPLICIT_START
 /* Declare _start with an explicit assembly symbol name of `start'
    (note no leading underscore).  This is the name Sun's crt0.o uses,
    and programs are often linked with `ld -e start'.  */
 void _start (void) asm ("start");
+#endif
 
 void
 _start (void)
