@@ -1,4 +1,5 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* `struct termios' speed frobnication functions.  4.4 BSD/generic GNU version.
+Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,42 +22,18 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <termios.h>
 
-
-/* Table mapping internal speed codes to actual speeds.  */
-static CONST int speedtab[] =
-  {
-    0,
-    50,
-    75,
-    110,
-    134,
-    150,
-    200,
-    300,
-    600,
-    1200,
-    1800,
-    2400,
-    4800,
-    9600,
-    19200,
-    38400,
-  };
-
 /* Return the output baud rate stored in *TERMIOS_P.  */
 speed_t
 DEFUN(cfgetospeed, (termios_p), CONST struct termios *termios_p)
 {
-  return speedtab[termios_p->__ospeed];
+  return termios_p->__ospeed;
 }
 
 /* Return the input baud rate stored in *TERMIOS_P.  */
 speed_t
 DEFUN(cfgetispeed, (termios_p), CONST struct termios *termios_p)
 {
-  if (termios_p->__ispeed == 0)
-    return speedtab[termios_p->__ispeed];
-  return speedtab[termios_p->__ospeed];
+  return termios_p->__ispeed;
 }
 
 /* Set the output baud rate stored in *TERMIOS_P to SPEED.  */
@@ -64,21 +41,14 @@ int
 DEFUN(cfsetospeed, (termios_p, speed),
       struct termios *termios_p AND speed_t speed)
 {
-  int i;
-
   if (termios_p == NULL)
     {
       errno = EINVAL;
       return -1;
     }
 
-  for (i = 0; i < sizeof speedtab / sizeof (speedtab[0]); i++)
-    if (speedtab[i] == speed)
-      {
-	termios_p->__ospeed = i;
-	return 0;
-      }
-  return -1;
+  termios_p->__ospeed = speed;
+  return 0;
 }
 
 /* Set the input baud rate stored in *TERMIOS_P to SPEED.  */
@@ -86,18 +56,12 @@ int
 DEFUN(cfsetispeed, (termios_p, speed),
       struct termios *termios_p AND speed_t speed)
 {
-  int i;
   if (termios_p == NULL)
     {
       errno = EINVAL;
       return -1;
     }
 
-  for (i = 0; i < sizeof speedtab / sizeof (speedtab[0]); i++)
-    if (speedtab[i] == speed)
-      {
-	termios_p->__ispeed = i;
-	return 0;
-      }
-  return -1;
+  termios_p->__ispeed = speed;
+  return 0;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,5 +26,6 @@ void
 DEFUN(cfsetspeed, (termios_p, speed),
       struct termios *termios_p AND speed_t speed)
 {
-  termios_p->__ospeed = termios_p->__ispeed = speed;
+  cfsetispeed (termios_p, speed);
+  cfsetospeed (termios_p, speed);
 }
