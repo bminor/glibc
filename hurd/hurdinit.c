@@ -49,11 +49,7 @@ _hurd_init (int flags, char **argv,
   /* See what ports we were passed.  */
   for (i = 0; i < portarraysize; ++i)
     {
-#ifdef noteven
       _hurd_port_init (&_hurd_ports[i], portarray[i]);
-#else
-      _hurd_ports[i].port = portarray[i];
-#endif      
 
       switch (i)
 	{
