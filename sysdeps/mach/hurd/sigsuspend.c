@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,8 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <errno.h>
-#include <signal.h>
-#include <hurd.h>
+#include <hurd/signal.h>
 
 
 /* Change the set of blocked signals to SET,
@@ -27,7 +26,7 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(sigsuspend, (set), CONST sigset_t *set)
 {
-  struct _hurd_sigstate *ss;
+  struct hurd_sigstate *ss;
   sigset_t omask, pending;
 
   if (set != NULL)
@@ -39,6 +38,9 @@ DEFUN(sigsuspend, (set), CONST sigset_t *set)
   if (set != NULL)
     ss->blocked = *set & ~_SIG_CANT_MASK;
 
+  /* Set the `suspended' bit and wait for a condition_signal on
+     SS->arrived.  When a signal arrives and SS->suspended is set, the
+     signal thread does condition_signal (&SS->arrived).  */
   ss->suspended = 1;
   while ((pending = ss->pending & ~ss->blocked) == 0)
 #ifdef noteven
