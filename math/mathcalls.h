@@ -152,14 +152,6 @@ __MATHDECL (int,isinf,, (_Mdouble_ __value));
 /* Return nonzero if VALUE is finite and not NaN.  */
 __MATHDECL (int,finite,, (_Mdouble_ __value));
 
-/* Deal with an infinite or NaN result.
-   If ERROR is ERANGE, result is +Inf;
-   if ERROR is - ERANGE, result is -Inf;
-   otherwise result is NaN.
-   This will set `errno' to either ERANGE or EDOM,
-   and may return an infinity or NaN, or may do something else.  */
-__MATHCALL (infnan,, (int __error));
-
 /* Return X with its signed changed to Y's.  */
 __MATHCALL (copysign,, (_Mdouble_ __x, _Mdouble_ __y));
 
@@ -168,15 +160,6 @@ __MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
 
 /* Return the remainder of X/Y.  */
 __MATHCALL (drem,, (_Mdouble_ __x, _Mdouble_ __y));
-
-struct __MATH_PRECNAME(__cabs_complex,)
-{
-  _Mdouble_ x, y;
-};
-
-/* Return `sqrt(X*X + Y*Y)'.  */
-__MATHCALL (cabs,, (struct __MATH_PRECNAME(__cabs_complex,)));
-
 
 /* Return the fractional part of X after dividing out `ilogb (X)'.  */
 __MATHCALL (significand,, (_Mdouble_ __x));
