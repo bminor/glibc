@@ -30,9 +30,9 @@ Cambridge, MA 02139, USA.  */
 /* These do not depend on __USE_BSD because
    <strings.h> is a BSD-only header.  */
 
-/* Find the first occurence of C in S.  */
+/* Find the first occurrence of C in S.  */
 extern char *EXFUN(index, (CONST char *__s, int __c));
-/* Find the last occurence of C in S.  */
+/* Find the last occurrence of C in S.  */
 extern char *EXFUN(rindex, (CONST char *__s, int __c));
 
 
