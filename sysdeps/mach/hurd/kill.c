@@ -30,6 +30,7 @@ DEFUN(__kill, (pid, sig), int pid AND int sig)
   error_t err;
   mach_port_t portbuf[10];
   mach_port_t *ports = portbuf;
+  mach_port_t refport;		/* XXX */
   size_t nports = 10, i;
   mach_port_t proc;
   int dealloc_proc;
@@ -64,13 +65,15 @@ DEFUN(__kill, (pid, sig), int pid AND int sig)
 
   for (i = 0; i < nports; ++i)
     {
+      if (!err && signo == SIGKILL)
+	err = __task_terminate (refport); /* XXX */
       if (!err)
-	err = __sig_post (ports[i], sig, refport);
+	err = __sig_post (ports[i], sig, refport); /* XXX */
       __mach_port_deallocate (__mach_task_self (), ports[i]);
     }
 
   if (refport != MACH_PORT_NULL)
-    __mach_port_deallocate (__mach_task_self (), refport);
+    __mach_port_deallocate (__mach_task_self (), refport); /* XXX */
 
   if (ports != portbuf)
     __vm_deallocate (__mach_task_self (), ports, nports * sizeof (ports[0]));
