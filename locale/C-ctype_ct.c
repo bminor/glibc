@@ -14,7 +14,7 @@ CONST unsigned short int __ctype_b_C[] =
     _IScntrl,
     _IScntrl,
     _IScntrl,
-    _IScntrl,
+    _IScntrl|_ISspace,
     _IScntrl|_ISspace|_ISblank,
     _IScntrl|_ISspace,
     _IScntrl|_ISspace,
