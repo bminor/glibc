@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include <gnu-stabs.h>
 #include <stdio.h>
 #include "stdio/_itoa.h"
-#include <mutex.h>
+#include <cthreads.h>		/* For `struct mutex'.  */
 
 static struct mutex lock = MUTEX_INITIALIZER;
 
