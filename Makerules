@@ -178,12 +178,19 @@ $(objpfx)%.o: %.c $(before-compile)
 
 # This makes all the object files in the parent library archive.
 
-.PHONY: lib lib-noranlib libobjs
+.PHONY: lib libobjs lib-noranlib
 lib: lib-noranlib
 	$(RANLIB) $(libc.a)
-libobjs: lib-noranlib
-lib-noranlib: $(libc.a) ar-it
-$(libc.a): %: $(addprefix %,$(patsubst $(objpfx)%,(%),$(objects)))
+$(libc.a): lib
+
++libobjs := $(patsubst %,$(libc.a)(%),$(notdir $(objects)))
+ifdef +libobjs
+$(+libobjs): $(libc.a)(%): $(objpfx)%;
+endif
+libobjs: $(+libobjs)
+lib-noranlib: libobjs ar-it
+
+#$(libc.a): %: $(addprefix %,$(patsubst $(objpfx)%,(%),$(objects)))
 #	$(AR) $(ARFLAGS) $@ $(patsubst $@(%),%,$?)
 
 define +libc_lock_open
@@ -204,9 +211,6 @@ else
 endif
 #	$(+libc_lock_close)
 
-ifdef objects
-$(patsubst %,$(libc.a)(%),$(notdir $(objects))): $(libc.a)(%): $(objpfx)%;
-endif
 
 
 # This makes all the object files.
