@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -26,7 +26,7 @@ lcong48_r (param, buffer)
      struct drand48_data *buffer;
 {
   /* Store the given values.  */
-  memcpy (buffer->X, &param[0], sizeof (buffer->X));
+  memcpy (buffer->x, &param[0], sizeof (buffer->x));
   memcpy (buffer->a, &param[3], sizeof (buffer->a));
   buffer->c = param[6];
   buffer->init = 1;
