@@ -211,5 +211,5 @@ endif	# Subdirectory vs. parent makefile
 unexport distribute generated
 
 # Fnord.
-export inhibit-mach-syscalls=t
+export inhibit_mach_syscalls=t
 export no_deps=t
