@@ -234,7 +234,9 @@ extern int hurd_register_ioctl_handler (int first_request, int last_request,
 #define	_HURD_HANDLE_IOCTLS(handler, first, last)			      \
   static const struct ioctl_handler handler##_ioctl_handler =		      \
     { (first), (last), (int (*) (int, int, __gnuc_va_list)) (handler),	      \
-	(void *) ((void *) &(handler) - (void *) &(handler)) };		      \
+	(void *) (((void *) &(handler) - (void *) &(handler)) +		      \
+		  ((void *) &(handler##_ioctl_handler) -		      \
+		   (void *) &(handler##_ioctl_handler))) };		      \
   text_set_element (_hurd_ioctl_handler_lists, ##handler##_ioctl_handler)
 
 /* Define a library-internal handler for a single ioctl command.  */
