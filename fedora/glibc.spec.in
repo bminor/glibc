@@ -1,4 +1,4 @@
-%define glibcrelease 98
+%define glibcrelease 99
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1266,6 +1266,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sun Dec 19 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-99
+- rebuilt
+
 * Sat Dec 18 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-98
 - add .%%{_target_cpu} to glibc_post_upgrade, only run telinit u
   if /sbin/init is the same ELF class and machine as
