@@ -1460,7 +1460,8 @@ connected socket.
 * Initiating a Connection::       What the client program must do.
 * Accepting Connections::         What the server program must do.
 * Transferring Data::             How to send and receive data.
-* Byte Stream Socket Example::    An example program.
+* Byte Stream Socket Example::    An example program: communications over a 
+                                   byte stream socket in the Internet domain.
 * Out-of-Band Data::              This is an advanced feature.
 @end menu
 
@@ -1992,7 +1993,8 @@ the @code{connect} function.
 @menu
 * Transmitting Datagrams::      Functions for sending and receiving
                                  messages on a datagram socket.
-* Datagram Socket Example::     An example program.
+* Datagram Socket Example::     An example program: messages sent over a
+                                 datagram stream in the local domain.
 @end menu
 
 @node Transmitting Datagrams, Datagram Socket Example,  , Datagram Socket Operations
