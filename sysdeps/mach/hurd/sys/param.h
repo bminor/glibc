@@ -76,9 +76,11 @@ Cambridge, MA 02139, USA.  */
 
 
 /* What versions of BSD we are compatible with.  */
-#define	BSD	199103		/* March, 1991 system version (year & month) */
+#define	BSD	199306		/* System version (year & month). */
 #define BSD4_3	1
-#define BSD4_4	0.5
+#define BSD4_4	1
+
+#define	GNU	1994100		/* GNU version (year, month, and release).  */
 
 
 /* BSD names for some <limits.h> values.  We do not define the BSD names
