@@ -61,6 +61,8 @@ _hurd_exec (task_t task, file_t file,
       for (p = argv; *p != NULL; ++p)
 	ap = __memccpy (ap, *p, '\0', ULONG_MAX);
     }
+  else
+    args = NULL;
 
   /* Pack the environment into an array with nulls separating elements.  */
   envlen = 0;
@@ -74,6 +76,8 @@ _hurd_exec (task_t task, file_t file,
       for (p = envp; *p != NULL; ++p)
 	ap = __memccpy (ap, *p, '\0', ULONG_MAX);
     }
+  else
+    env = NULL;
 
   /* Load up the ports to give to the new program.  */
   for (i = 0; i < _hurd_nports; ++i)
@@ -110,7 +114,6 @@ _hurd_exec (task_t task, file_t file,
 	ints[i] = 0;
       }
 
-#if 0
   ss = _hurd_thread_sigstate (__mach_thread_self ());
   ints[INIT_SIGMASK] = ss->blocked;
   ints[INIT_SIGPENDING] = ss->pending;
@@ -118,7 +121,6 @@ _hurd_exec (task_t task, file_t file,
   for (i = 1; i < NSIG; ++i)
     if (ss->actions[i].sa_handler == SIG_IGN)
       ints[INIT_SIGIGN] |= __sigmask (i);
-#endif
 
   /* We hold the sigstate lock until the exec has failed so that no signal
      can arrive between when we pack the blocked and ignored signals, and
