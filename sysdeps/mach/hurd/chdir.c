@@ -28,8 +28,9 @@ DEFUN(__chdir, (path), CONST char *path)
   error_t err;
   file_t old, cwdir;
 
-  if (err = __hurd_path_lookup (path, 0, 0, &cwdir))
-    return __hurd_fail (err);
+  cwdir = __hurd_path_lookup (path, 0, 0);
+  if (cwdir == MACH_PORT_NULL)
+    return -1;
 
   old = _hurd_cwdir;
   _hurd_cwdir = cwdir;
