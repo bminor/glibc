@@ -23,7 +23,8 @@ Cambridge, MA 02139, USA.  */
 #define	__need_size_t
 #include <stddef.h>
 
-/* Remove any previous definition.  */
+/* Remove any previous definitions.  */
+#undef	__alloca
 #undef	alloca
 
 /* Allocate a block that will be freed when the calling function exits.  */
@@ -34,8 +35,6 @@ extern PTR EXFUN(alloca, (size_t __size));
 #define	__alloca(size)	__builtin_alloca(size)
 #endif	/* GCC.  */
 
-#ifdef	__OPTIMIZE__
 #define	alloca(size)	__alloca(size)
-#endif	/* Optimizing.  */
 
 #endif	/* alloca.h */
