@@ -42,7 +42,7 @@
              int(($g - 0x8140) / 256) * 192 + (($g - 0x8140) & 0xff), $u);
    }
    printf ("\n");
- 
+
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 static const uint16_t __gbk_to_ucs[] =
@@ -13124,7 +13124,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
       if (ch <= 0x80 || ch > 0xfe)					      \
 	{								      \
 	  /* This is illegal.  */					      \
-	  result = __GCONV_ILLEGAL_INPUT;				      \
+	  result = GCONV_ILLEGAL_INPUT;					      \
 	  break;							      \
 	}								      \
       else								      \
@@ -13138,7 +13138,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	    {								      \
 	      /* The second character is not available.  Store		      \
 		 the intermediate result.  */				      \
-	      result = __GCONV_INCOMPLETE_INPUT;			      \
+	      result = GCONV_INCOMPLETE_INPUT;				      \
 	      break;							      \
 	    }								      \
 									      \
@@ -13148,7 +13148,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  if (ch2 < 0x40)						      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
-	      result = __GCONV_ILLEGAL_INPUT;				      \
+	      result = GCONV_ILLEGAL_INPUT;				      \
 	      break;							      \
 	    }								      \
 									      \
@@ -13160,7 +13160,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  if (ch == 0 && *inptr != '\0')				      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
-	      result = __GCONV_ILLEGAL_INPUT;				      \
+	      result = GCONV_ILLEGAL_INPUT;				      \
 	      break;							      \
 	    }								      \
 									      \
@@ -13458,7 +13458,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
       if (cp[0] == '\0' && ch != 0)					      \
 	{								      \
 	  /* Illegal character.  */					      \
-	  result = __GCONV_ILLEGAL_INPUT;				      \
+	  result = GCONV_ILLEGAL_INPUT;					      \
 	  break;							      \
 	}								      \
 									      \
@@ -13466,7 +13466,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
       if (NEED_LENGTH_TEST && cp[1] != '\0' && outptr + 1 >= outend)	      \
 	{								      \
 	  /* We have not enough room.  */				      \
-	  result = __GCONV_FULL_OUTPUT;					      \
+	  result = GCONV_FULL_OUTPUT;					      \
 	  break;							      \
 	}								      \
 									      \
