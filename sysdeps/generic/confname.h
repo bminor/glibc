@@ -29,7 +29,7 @@ enum
     _PC_CHOWN_RESTRICTED,
     _PC_NO_TRUNC,
     _PC_VDISABLE
-  }
+  };
 
 /* Values for the argument to `sysconf'.  */
 enum
