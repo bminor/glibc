@@ -1084,6 +1084,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  goto do_positional;
 	}
 
+      /* The format is correctly handled.  */
+      ++nspecs_done;
+
       /* Look for next format specifier.  */
       f = find_spec ((end_of_spec = ++f), &mbstate);
 
