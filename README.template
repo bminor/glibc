@@ -25,30 +25,33 @@ please get on the mailing list by sending electronic mail to
 bug-glibc-request@prep.ai.mit.edu.
 
 The GNU C library now includes Michael Glad's Ultra Fast Crypt, which
-provides the Unix `crypt' function, plus some other entry points.  Because
-of the United States export restriction on DES implementations, we are
-distributing this code separately from the rest of the C library.  There is
-an extra distribution tar file just for crypt; it is called
-`glibc-VERSION-crypt.tar.gz'.  You can just unpack the crypt distribution
-along with the rest of the C library and build; you can also build the
-library without getting crypt.  Users outside the USA can get the crypt
-distribution via anonymous FTP from ftp.uni-c.dk [129.142.6.74], or another
-archive site outside the USA.  Archive maintainers are encouraged to copy
-this distribution to their archives outside the USA.  Please get it from
-ftp.uni-c.dk; transferring this distribution from prep.ai.mit.edu (or any
-other site in the USA) to a site outside the USA is in violation of US
-export laws.
+provides the Unix `crypt' function, plus some other entry points.
+Because of the United States export restriction on DES implementations,
+we are distributing this code separately from the rest of the C
+library.  There is an extra distribution tar file just for crypt; it is
+called `glibc-VERSION-crypt.tar.gz'.  You can just unpack the crypt
+distribution along with the rest of the C library and build; you can
+also build the library without getting crypt.  Users outside the USA
+can get the crypt distribution via anonymous FTP from ftp.uni-c.dk
+[129.142.6.74], or another archive site outside the USA.  Archive
+maintainers are encouraged to copy this distribution to their archives
+outside the USA.  Please get it from ftp.uni-c.dk; transferring this
+distribution from prep.ai.mit.edu (or any other site in the USA) to a
+site outside the USA is in violation of US export laws.
 
 See the file INSTALL to find out how to configure, build, install, and port
 the GNU C library.
 
-The GNU C Library is completely documented by the Texinfo manual found in
-the `manual/' subdirectory.  Please send comments on the manual to
-bug-glibc-manual@prep.ai.mit.edu, and not to the library bug-reporting address.
+The GNU C Library is completely documented by the Texinfo manual found
+in the `manual/' subdirectory.  The manual is still being updated and
+contains some known errors and omissions; we regret that we do not have
+the resources to work on the manual as much as we would like.  Please
+send comments on the manual to bug-glibc-manual@prep.ai.mit.edu, and
+not to the library bug-reporting address.
 
-The file NOTES contains a description of the feature-test macros used in
-the GNU C library, explaining how you can tell the library what facilities
-you want it to make available.
+The file NOTES contains a description of the feature-test macros used
+in the GNU C library, explaining how you can tell the library what
+facilities you want it to make available.
 
 Send bug reports to bug-glibc@prep.ai.mit.edu.
 
