@@ -633,7 +633,7 @@ a signal that kills the program.
                                  functions upon normal termination. 
 * Aborting a Program::          The @code{abort} function causes
                                  abnormal program termination. 
-* Termination Internals::       Termination Internals
+* Termination Internals::       What happens when a process terminates.
 @end menu
 
 @node Normal Termination
