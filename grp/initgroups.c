@@ -112,9 +112,9 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
 	      break;
 
 	  if (inner < prev_start)
-	    ++cnt;
-	  else
 	    (*groupsp)[cnt] = (*groupsp)[--start];
+	  else
+	    ++cnt;
 	}
 
       /* This is really only for debugging.  */
@@ -141,10 +141,10 @@ int
 getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups)
 {
   gid_t *newgroups;
-  long int size = *ngroups;
+  long int size = MAX (1, *ngroups);
   int result;
 
-  newgroups = (gid_t *) malloc (size * sizeof (gid_t));
+  newgroups = (gid_t *) malloc ((size + 1) * sizeof (gid_t));
   if (__builtin_expect (newgroups == NULL, 0))
     /* No more memory.  */
     // XXX This is wrong.  The user provided memory, we have to use

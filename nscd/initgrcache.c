@@ -144,9 +144,9 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	      break;
 
 	  if (inner < prev_start)
-	    ++cnt;
-	  else
 	    groups[cnt] = groups[--start];
+	  else
+	    ++cnt;
 	}
 
       if (status != NSS_STATUS_TRYAGAIN)
