@@ -77,7 +77,11 @@ DEFUN(setvbuf, (stream, buf, mode, size),
     }
 
   stream->__bufp = stream->__buffer;
-  stream->__put_limit = stream->__get_limit = stream->__buffer;
+  stream->__get_limit = stream->__buffer;
+  if (stream->__mode.__write)
+    stream->__put_limit = stream->__buffer + stream->__bufsize;
+  else
+    stream->__put_limit = stream->__buffer;
 
   return 0;
 }
