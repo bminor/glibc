@@ -278,15 +278,21 @@ __tzfile_read (const char *file)
 
   compute_tzname_max (chars);
 
-  rule_stdoff = rule_dstoff = 0;
-  for (i = 0; i < num_transitions; ++i)
+  if (num_transitions == 0)
+    /* Use the first rule (which should also be the only one).  */
+    rule_stdoff = rule_dstoff = types[0].offset;
+  else
     {
-      if (!rule_stdoff && !types[type_idxs[i]].isdst)
-	rule_stdoff = types[type_idxs[i]].offset;
-      if (!rule_dstoff && types[type_idxs[i]].isdst)
-	rule_dstoff = types[type_idxs[i]].offset;
-      if (rule_stdoff && rule_dstoff)
-	break;
+      rule_stdoff = rule_dstoff = 0;
+      for (i = 0; i < num_transitions; ++i)
+	{
+	  if (!rule_stdoff && !types[type_idxs[i]].isdst)
+	    rule_stdoff = types[type_idxs[i]].offset;
+	  if (!rule_dstoff && types[type_idxs[i]].isdst)
+	    rule_dstoff = types[type_idxs[i]].offset;
+	  if (rule_stdoff && rule_dstoff)
+	    break;
+	}
     }
 
   __daylight = rule_stdoff != rule_dstoff;
