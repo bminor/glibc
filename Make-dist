@@ -46,11 +46,8 @@ else
 +distinfo := $(shell MAKEFLAGS= MFLAGS= $(MAKE) -s no_deps=t no_ir=t \
 		     echo-distinfo | grep -v '^make')
 all-headers := $(patsubst +header+%,%,$(filter +header+%,$(+distinfo)))
-# Filter out the generated rpc headers; they don't have top-level indirections.
-# It is not safe to use `$(wildcard $(all-headers))' to ignore headers
-# without top-level indirections because some of $(all-headers) might need
-# to be found in sysdeps/.
-all-headers := $(filter-out rpcsvc/%,$(all-headers))
+# Ignore subdir headers without top-level indirections.
+all-headers := $(sort $(headers) $(wildcard $(all-headers)))
 +subdir-nodist := $(patsubst +nodist+%,%,$(filter +nodist+%,$(+distinfo)))
 +subdir-headers := $(filter-out $(headers),$(all-headers))
 endif
