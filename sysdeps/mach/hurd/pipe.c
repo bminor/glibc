@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <hurd.h>
 #include <sys/socket.h>
+#include <hurd/socket.h>
 
 /* Create a one-way communication channel (pipe).
    If successul, two file descriptors are stored in FDS;
