@@ -57,9 +57,9 @@ DEFUN(__ioctl, (fd, request),
   struct
     {
       mig_reply_header_t header;
-      char data[_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (request)) +
-		_IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (request)) +
-		_IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (request))];
+      char data[_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type)) +
+		_IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type)) +
+		_IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (type))];
     } msg;
   mach_msg_header_t *const m = &msg.header.Head;
   mach_msg_type_t *t = &msg.header.RetCodeType;
@@ -230,9 +230,9 @@ DEFUN(__ioctl, (fd, request),
     case 0:
       if (m->msgh_size != reply_size ||
 	  ((_IOC_INOUT (request) & IOC_OUT) &&
-	   out (_IOT_COUNT0 (type), _IOT_TYPE0 (type), arg, &arg) ||
-	   out (_IOT_COUNT1 (type), _IOT_TYPE1 (type), arg, &arg) ||
-	   out (_IOT_COUNT2 (type), _IOT_TYPE2 (type), arg, &arg)))
+	   (out (_IOT_COUNT0 (type), _IOT_TYPE0 (type), arg, &arg) ||
+	    out (_IOT_COUNT1 (type), _IOT_TYPE1 (type), arg, &arg) ||
+	    out (_IOT_COUNT2 (type), _IOT_TYPE2 (type), arg, &arg))))
 	return __hurd_fail (MIG_TYPE_ERROR);
       return 0;
 
