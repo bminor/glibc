@@ -45,84 +45,73 @@ Cambridge, MA 02139, USA.  */
 
 #define __mutex_lock(lockaddr) /* no-op XXX */
 #define __mutex_unlock(lockaddr) /* no-op XXX */
-
 
 /* Basic ports and info, initialized by startup.  */
-extern struct _hurd_port *_hurd_ports;
+
+extern struct hurd_port *_hurd_ports;
 extern unsigned int _hurd_nports;
 extern volatile mode_t _hurd_umask;
 
 /* Shorthand macro for referencing _hurd_ports.  */
+
 #define	__USEPORT(which, expr) \
-  _HURD_PORT_USE (&_hurd_ports[INIT_PORT_##which], (expr))
+  HURD_PORT_USE (&_hurd_ports[INIT_PORT_##which], (expr))
+
 
 /* Base address and size of the initial stack set up by the exec server.
    If using cthreads, this stack is deallocated in startup.
    Not locked.  */
+
 extern vm_address_t _hurd_stack_base;
 extern vm_size_t _hurd_stack_size;
 
-extern thread_t _hurd_msgport_thread;
-extern mach_port_t _hurd_msgport; /* Locked by _hurd_siglock.  */
+/* Initial file descriptor table we were passed at startup.  If we are
+   using a real dtable, these are turned into that and then cleared at
+   startup.  If not, these are never changed after startup.  Not locked.  */
 
-/* Not locked.  If we are using a real dtable, these are turned into that
-   and then cleared at startup.  If not, these are never changed after
-   startup.  */
 extern mach_port_t *_hurd_init_dtable;
 extern mach_msg_type_number_t _hurd_init_dtablesize;
 
-/* Return the socket server for sockaddr domain DOMAIN.  */
-extern socket_t _hurd_socket_server (int domain);
+/* Miscellaneous library state.  */
 
 
 /* Current process IDs.  */
+
 extern pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 extern int _hurd_orphaned;
 #ifdef noteven
 extern struct mutex _hurd_pid_lock; /* Locks above.  */
 #endif
-
-
-/* User and group IDs.  */
-struct _hurd_id_data
-  {
-#ifdef noteven
-    mutex_t lock;
-#endif
-
-    int valid;			/* If following data are up to date.  */
-
-    struct
-      {
-	uid_t *uids;
-	gid_t *gids;
-	unsigned int nuids, ngids;
-      } gen, aux;
-
-    auth_t rid_auth;		/* Cache used by access.  */
-  };
-extern struct _hurd_id_data _hurd_id;
-/* Update _hurd_id (caller should be holding the lock).  */
-extern error_t _hurd_check_ids (void);
-
-
+
 /* Unix `data break', for brk and sbrk.
    If brk and sbrk are not used, this info will not be initialized or used.  */
-extern vm_address_t _hurd_brk;	/* Data break.  */
-extern vm_address_t _hurd_data_end; /* End of allocated space.  */
+
+
+/* Data break.  This is what `sbrk (0)' returns.  */
+
+extern vm_address_t _hurd_brk;
+
+/* End of allocated space.  This is generally `round_page (_hurd_brk)'.  */
+
+extern vm_address_t _hurd_data_end;
+
+/* This mutex locks _hurd_brk and _hurd_data_end.  */
+
 #ifdef noteven
-extern struct mutex _hurd_brk_lock; /* Locks brk and data_end.  */
+extern struct mutex _hurd_brk_lock;
 #endif
+
+/* Set the data resource limit (RLIM_DATA).  */
+
 extern int _hurd_set_data_limit (const struct rlimit *);
 
-/* Set the data break; the brk lock must
+/* Set the data break to NEWBRK; _hurd_brk_lock must
    be held, and is released on return.  */
-extern int _hurd_set_brk (vm_address_t newbrk);
 
-/* Resource limit on core file size.  Enforced by hurdsig.c.  */
-extern int _hurd_core_limit;
+extern int _hurd_set_brk (vm_address_t newbrk);
 
 /* Calls to get and set basic ports.  */
+
 extern process_t getproc (void);
 extern file_t getccdir (void), getcwdir (void), getcrdir (void);
 extern auth_t getauth (void);
@@ -133,12 +122,24 @@ extern int setcwdir (file_t), setcrdir (file_t);
 extern int __setauth (auth_t), setauth (auth_t);
 
 
+/* Split FILE into a directory and a name within the directory.  Look up a
+   port for the directory and store it in *DIR; store in *NAME a pointer
+   into FILE where the name within directory begins.  The directory lookup
+   uses CRDIR for the root directory and CWDIR for the current directory.
+   Returns zero on success or an error code.  */
+
 extern error_t __hurd_path_split (file_t crdir, file_t cwdir,
 				  const char *file,
 				  file_t *dir, char **name);
 extern error_t hurd_path_split (file_t crdir, file_t cwdir,
 				const char *file,
 				file_t *dir, char **name);
+
+/* Open a port to FILE with the given FLAGS and MODE (see <fcntl.h>).
+   The file lookup uses CRDIR for the root directory and CWDIR for the
+   current directory.  If successful, returns zero and store the port
+   to FILE in *PORT; otherwise returns an error code. */
+
 extern error_t __hurd_path_lookup (file_t crdir, file_t cwdir,
 				   const char *file,
 				   int flags, mode_t mode,
@@ -148,48 +149,77 @@ extern error_t hurd_path_lookup (file_t crdir, file_t cwdir,
 				 int flags, mode_t mode,
 				 file_t *port);
 
-/* Returns a port to the directory, and sets *NAME to the file name.  */
+/* Split FILE into a directory and a name within the directory.  The
+   directory lookup uses the current root and working directory.  If
+   successful, stores in *NAME a pointer into FILE where the name
+   within directory begins and returns a port to the directory;
+   otherwise sets `errno' and returns MACH_PORT_NULL.  */
+
 extern file_t __path_split (const char *file, char **name);
 extern file_t path_split (const char *file, char **name);
 
-/* Looks up FILE with the given FLAGS and MODE (as for dir_pathtrans).  */
+/* Open a port to FILE with the given FLAGS and MODE (see <fcntl.h>).
+   The file lookup uses the current root and working directory.
+   Returns a port to the file if successful; otherwise sets `errno'
+   and returns MACH_PORT_NULL.  */
+
 extern file_t __path_lookup (const char *file, int flags, mode_t mode);
 extern file_t path_lookup (const char *file, int flags, mode_t mode);
 
+
 /* Open a file descriptor on a port.  */
+
 extern int openport (io_t port, int flags);
 
+
 /* Execute a file, replacing the current program image.  */
+
 extern error_t _hurd_exec (file_t file,
 			   char *const argv[],
 			   char *const envp[]);
 
+
 /* Inform the proc server we have exitted with STATUS, and kill the
    task thoroughly.  This function never returns, no matter what.  */
-extern volatile void _hurd_exit (int status);
+
+extern void _hurd_exit (int status) __attribute__ ((noreturn));
+
 
 /* Initialize the library data structures from the
    ints and ports passed to us by the exec server.
    Then vm_deallocate PORTARRAY and INTARRAY.  */
+
 extern void _hurd_init (int flags, char **argv,
 			mach_port_t *portarray, size_t portarraysize,
 			int *intarray, size_t intarraysize);
 
 /* Do startup handshaking with the proc server.  */
+
 extern void _hurd_proc_init (char **argv);
 
+/* Return the socket server for sockaddr domain DOMAIN.  */
+
+extern socket_t _hurd_socket_server (int domain);
+
 /* Fetch the host privileged port and device master port from the proc
-   server.  They are fetched only once and then cached in the variables
-   below.  A special program that gets them from somewhere other than the
-   proc server (such as a bootstrap filesystem) can set these variables at
-   startup to install the ports.  */
+   server.  They are fetched only once and then cached in the
+   variables below.  A special program that gets them from somewhere
+   other than the proc server (such as a bootstrap filesystem) can set
+   these variables to install the ports.  */
+
 extern kern_return_t get_privileged_ports (host_priv_t *host_priv_ptr,
 					   device_t *device_master_ptr);
 extern mach_port_t _hurd_host_priv, _hurd_device_master;
 
-/* Convert between PIDs and task ports.  */
-extern pid_t __task2pid (task_t), task2pid (task_t);
-extern task_t __pid2task (pid_t), pid2task (pid_t);
+/* Return the PID of the task whose control port is TASK.
+   On error, sets `errno' and returns -1.  */
+
+extern pid_t __task2pid (task_t task), task2pid (task_t task);
+
+/* Return the task control port of process PID.
+   On error, sets `errno' and returns MACH_PORT_NULL.  */
+
+extern task_t __pid2task (pid_t pid), pid2task (pid_t pid);
 
 
 #endif	/* hurd.h */
