@@ -62,21 +62,25 @@
 # define encode_error()	do {						      \
 			  if (errp != NULL) *errp |= 4;			      \
 			  _IO_funlockfile (s);				      \
+			  __libc_cleanup_end (0);			      \
 			  __set_errno (EILSEQ);				      \
 			  return done;					      \
 			} while (0)
 # define conv_error()	do {						      \
 			  if (errp != NULL) *errp |= 2;			      \
 			  _IO_funlockfile (s);				      \
+			  __libc_cleanup_end (0);			      \
 			  return done;					      \
 			} while (0)
 # define input_error()	do {						      \
 			  _IO_funlockfile (s);				      \
+			  __libc_cleanup_end (0);			      \
 			  if (errp != NULL) *errp |= 1;			      \
 			  return done ?: EOF;				      \
 			} while (0)
 # define memory_error()	do {						      \
 			  _IO_funlockfile (s);				      \
+			  __libc_cleanup_end (0);			      \
 			  __set_errno (ENOMEM);				      \
 			  return EOF;					      \
 			} while (0)
