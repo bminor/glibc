@@ -186,6 +186,15 @@ else
 compile.S = $(COMPILE.S) $(asm-CPPFLAGS) $<
 compile.c = $(COMPILE.c) $<
 endif
+
+ifndef OUTPUT_OPTION
+ifdef objpfx
+# We need this for the output to go in the right place.  It will default to
+# empty if make was configured to work with a cc that can't grok -c and -o
+# together.  You can't compile the C library with such a compiler.
+OUTPUT_OPTION = -o $@
+endif
+endif
 
 # This makes all the object files in the parent library archive.
 
