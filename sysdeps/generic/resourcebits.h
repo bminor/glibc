@@ -49,5 +49,5 @@ enum __rlimit_resource
     RLIMIT_NOFILE = RLIMIT_OFILE, /* Another name for the same thing.  */
 
     RLIMIT_NLIMITS,		/* Number of limit flavors.  */
-    RLIM_NLIMITS = RLIM_NLIMITS	/* Traditional name for same.  */
+    RLIM_NLIMITS = RLIMIT_NLIMITS /* Traditional name for same.  */
   };

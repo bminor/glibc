@@ -36,13 +36,11 @@ DEFUN(getrlimit, (resource, rlimits),
       return -1;
     }
 
-  lim = *rlimits;
-  if (lim.rlim_cur > lim.rlim_max)
-    lim.rlim_cur = lim.rlim_max;
-
   __mutex_lock (&_hurd_rlimit_lock);
-  _hurd_rlimits[resource] = lim;
+  lim = _hurd_rlimits[resource];
   __mutex_unlock (&_hurd_rlimit_lock);
+
+  *rlimits = lim;
 
   return 0;
 }

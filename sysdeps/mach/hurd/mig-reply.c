@@ -73,16 +73,3 @@ __mig_init (void *stack)
       global_reply_port = MACH_PORT_NULL;
     }
 }
-
-#include <gnu-stabs.h>
-
-/* After fork, the child thread needs its own new reply port.  */
-
-static void
-mig_fork_child (void)
-{
-  GETPORT;
-  *portloc = MACH_PORT_NULL;
-}
-
-text_set_element (_hurd_fork_child_hook, mig_fork_child);
