@@ -1,4 +1,4 @@
-%define glibcrelease 12
+%define glibcrelease 13
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1274,6 +1274,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sun Mar  6 2005 Roland McGrath <roland@redhat.com> 2.3.4-13
+- fix bits/socket2.h macro typos
+
 * Sat Mar  5 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-12
 - fix tst-chk{2,3}
 - fix up AS_NEEDED directive in /usr/%{_lib}/libc.so
