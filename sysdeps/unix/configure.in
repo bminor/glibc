@@ -64,7 +64,9 @@ unix_generated=
 for unix_function in \
   __dup2 __lstat __mkdir __rmdir __readlink __symlink rename swapon \
   __access __select __getgroups/__getgrps setgroups \
-  __getitimer/__getitmr __setitimer/__setitmr
+  __getitimer/__getitmr __setitimer/__setitmr \
+  getdomainname/getdomain=bsd/bsd4.4 \
+  setdomainname/setdomain=bsd/bsd4.4
 do
 
   # $unix_function  =>	$unix_syscall		$unix_srcname
@@ -72,9 +74,11 @@ do
   #	__CALL			CALL			__CALL
   #	__CALL/NAME		CALL			NAME
   unix_srcname=
+  unix_srcdir=common
   eval "unix_syscall=`echo $unix_function | \
 		       sed -e '/^__/s/^__//' \
-			   -e 's@/\(.*\)$@ unix_srcname=\1@'`"
+			   -e 's@/\(.*\)$@ unix_srcname=\1@' \
+			   -e 's@=\(.*\)$@ unix_srcdir=\1@'`"
   test -z "$unix_srcname" && unix_srcname=$unix_function
 
   unix_implementor=none
@@ -102,7 +106,7 @@ do
     if grep -i "[ 	_]${unix_syscall}[ 	]" $unix_syscall_h >/dev/null
     then
       # It does seem to be present in <syscall.h>.
-      echo "#include <sysdeps/unix/common/${unix_srcname}.S>" \
+      echo "#include <sysdeps/unix/${unix_srcdir}/${unix_srcname}.S>" \
       > ${unix_generated_dirpfx}${unix_srcname}.S
       test -n "$verbose" &&
         echo "	wrote ${unix_generated_dirpfx}${unix_srcname}.S"
