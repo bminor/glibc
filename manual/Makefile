@@ -66,13 +66,9 @@ stamp-summary: summary.awk $(chapters) $(chapters-incl)
 # Generate a file which can be added to the `dir' content to provide direct
 # access to the documentation of the function, variables, and other
 # definitions.
-dir-add.texi: manual/xtract-typefun.awk $(chapters-incl)
-	if test -n "$(chapters-incl)"; then \
-	  (for i in $(chapters-incl); do \
-	     $(GAWK) -f $< < $i; \
-	   done) | sort > $@.new; \
-	   ./move-if-change $@.new $@; \
-	fi
+dir-add.texi: xtract-typefun.awk $(chapters)
+	$(GAWK) -f $^ | sort > $@.new;
+	mv -f $@.new $@
 
 # Generate Texinfo files from the C source for the example programs.
 %.c.texi: examples/%.c
