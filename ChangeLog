@@ -11,6 +11,69 @@
 
 	* string/bits/string2.h (__strcpy_small): Fix a typo.
 
+1999-07-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/e_pow.S: Use addl %esp instead of pop.
+	* sysdeps/i386/fpu/e_powf.S: Likewise.
+	* sysdeps/i386/fpu/e_powl.S: Likewise.  [PR libc/1213].
+
+	* sysdeps/generic/e_lgammal_r.c: Set *signgam to zero.
+	* sysdeps/generic/e_gammal_r.c: Likewise.  [PR libc/1212].
+
+1999-07-30  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (GET_NPROCS_PARSER): New
+	definition.
+	(__get_nprocs): Use it.
+	(__get_nprocs_conf): Define as separate function if
+	GET_NPROCS_CONF_PARSER is defined.
+	* sysdeps/unix/sysv/linux/alpha/getsysstats.c: New file.
+
+	* include/sys/sysinfo.h: New file.
+	* sysdeps/generic/sys/sysinfo.h: Remove declaration of internal
+	interface.
+	* sysdeps/unix/sysv/linux/sys/sysinfo.h: Likewise.
+
+1999-07-30  Andreas Schwab  <schwab@suse.de>
+
+	* Makerules: Put sysd-versions and Versions.all on
+	postclean-generated instead of common-generated.
+
+1999-07-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/time.texi (Basic CPU Time): Note that clock_t can wrap
+	around and CLOCKS_PER_SEC is 1e6.
+
+1999-07-29  Andreas Schwab  <schwab@suse.de>
+
+	* misc/efgcvt.c (NDIGIT_MAX): Provide precomputed constants for
+	all floating point formats supported by gcc.  Error out for
+	unhandled precisions.
+	* misc/efgcvt_r.c (NDIGIT_MAX): Likewise.
+	* misc/qefgcvt.c (NDIGIT_MAX): Likewise.
+	* misc/qefgcvt_r.c (NDIGIT_MAX): Likewise.
+
+1999-07-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/setenv.c: Move setenv code in new function
+	__add_to_environ.  Add new parameter specifying already
+	constructed string for the environment.
+	(setenv): Call __add_to_environ with new parameter set to NULL.
+	(unsetenv): Really test all elements for duplicated name.  Missed those
+	cases where the two are following each other.
+	* sysdeps/generic/putenv.c: Use __add_to_environ instead of setenv.
+	* include/stdlib.h: Add prototype of __add_to_environ.
+	* stdlib/tst-environ.c: New file.
+	* stdlib/Makefile (tests): Add tst-environ.
+
+	* sysdeps/i386/bits/string.h (__memset_cc): Fix typo in last patch.
+
+	* nis/nss_nis/nis-initgroups.c (_nss_nis_initgroups): Correct size
+	argument in realloc call.
+	* nis/nss_compat/compat-initgroups.c (_nss_compat_initgroups):
+	Likewise.
+	Reported by Danny Braniss <danny@cs.huji.ac.il>.
+
 1999-07-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* misc/efgcvt.c: Use IEEE 854 formula to compute the number of digits
