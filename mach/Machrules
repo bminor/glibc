@@ -35,17 +35,18 @@
 
 all:
 
-interfaces = $(user-interface) $(server-interfaces)
+include ../Makeconfig
 
 # Where to find interface definition files.
 ifdef	MIG_DEFS_PATH
 vpath %.defs $(MIG_DEFS_PATH)
 endif
 
+ifndef MIG
 MIG = mig
-migdefines := -DMACH_IPC_COMPAT=0 -DSTANDALONE -DTypeCheck=0
-
-MIGFLAGS = -subrprefix __ $(migdefines)
+endif
+MIGFLAGS = -DMACH_IPC_COMPAT=0 -DSTANDALONE -DTypeCheck=0 \
+	   $(includes) $(migdefines)
 
 .SUFFIXES: .defs
 
@@ -59,31 +60,41 @@ interface-rules: Makefile Machrules
 	   echo "include .ir-$${interface}";		\
 	 done) > $@-new
 	mv $@-new $@
-.ir-%: %.uh
+.ir-%: %.uh Machrules
 	(echo 'define $*-calls'					;\
-	 awk '$$1 == "kern_return_t" { print $$2 }' $<		;\
+	 awk '/^kern_return_t/ { print $$2 }' $<		;\
 	 echo 'endef'						;\
-	 echo '$*-calls := $$(subst $$('\\\\'n), ,$$($*-calls))';\
-	 echo '$$(patsubst %,%%c,$$(calls-$*:%=__%)): $*.defs'; \
-	 echo '	$$(MIG) $$(MIGFLAGS) -prefix __ -i ./__ $$<') > $@-new
-# XXX ./__ vs ./?  Does -prefix apply to -i name already?
+	 echo '$*-calls := $$(subst $$('\\'n), ,$$($*-calls))'	;\
+	 echo '$$(patsubst %,foreign-%%c,$$($*-calls:%=__%)): $*.defs'	;\
+	 echo '	$$(MIG) < $$< $$(MIGFLAGS) -subrprefix __ -prefix __ -i ./foreign-__')\
+	> $@-new
 	mv $@-new $@
+vpath Machrules ../mach
+
+%.c: foreign-%.c
+	(echo '#include <ansidecl.h>'; cat $^) > $@
 
 # MiG doesn't know how to make separate files for the server stubs.
-__%_server.c %_server.h: %.defs
-	$(MIG) $(MIGFLAGS) -prefix __ -server $@ -sheader $(@:__%.c=%.h) $<
-%_server.c %_server.h: %.defs
-	$(MIG) $(MIGFLAGS) -server $@ -sheader $(@:.c=.h) $<
+foreign-__%_server.c %_server.h: %.defs
+	$(MIG) < $< $(MIGFLAGS) -subrprefix __ -prefix __ \
+	       -user /dev/null -header /dev/null \
+	       -server $@ -sheader $(@:__%.c=%.h)
+foreign-%_server.c %_server.h: %.defs
+	$(MIG) < $< $(MIGFLAGS) -subrprefix __ \
+	       -user /dev/null -header /dev/null \
+	       -server $@ -sheader $(@:.c=.h)
 
 %.uh: %.defs
-	$(MIG) $(MIGFLAGS) -header $@ $<
+	$(MIG) < $< $(MIGFLAGS) -subrprefix __ \
+	       -header $@ -server /dev/null -user /dev/null
 %.__h: %.defs
-	$(MIG) $(MIGFLAGS) -prefix __ -header $@ $<
+	$(MIG) < $< $(MIGFLAGS) -subrprefix __ -prefix __ \
+	       -header $@ -server /dev/null -user /dev/null
 
 $(interface-header-prefix)%.h: %.__h %.uh $(interface-header-prefix)
 # The last line of foo.uh is "#endif _foo_user_".
 # The first two lines of foo.__h are "#ifndef _foo_user_"/"#define _foo_user_".
-	(sed '$$d' < $<; tail +2 $(word 2,$^)<) > $@
+	(sed '$$d' < $<; tail +2 $(word 2,$^)) > $@
 
 %.c: __%.c
 	(echo '#include <gnu-stabs.h>'; \
