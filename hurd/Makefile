@@ -55,7 +55,7 @@ sig	= hurdsig siginfo init-fault hurd-raise preempt-sig \
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport \
 	  fd-close fd-read fd-write hurdioctl
-aux := hurdsyms
+aux := hurdsyms gratuitous
 
 # XXX this is a temporary hack; see hurdmalloc.h
 routines += hurdmalloc
