@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,10 +37,11 @@ extern struct tm _tmbuf;
 extern int __use_tzfile;
 extern void __tzfile_read __P ((const char *file));
 extern int __tzfile_compute __P ((time_t timer, int use_localtime,
-				  long int *leap_correct, int *leap_hit));
+				  long int *leap_correct, int *leap_hit,
+				  struct tm *tp));
 extern void __tzfile_default __P ((const char *std, const char *dst,
 				   long int stdoff, long int dstoff));
-extern char * __tzstring __P ((const char *string));
+extern char *__tzstring __P ((const char *string));
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
 int __daylight = 0;
@@ -331,6 +332,7 @@ tzset_internal (always)
     {
       /* There is no DST.  */
       tz_rules[1].name = tz_rules[0].name;
+      tz_rules[1].offset = tz_rules[0].offset;
       free (tzbuf);
       return;
     }
@@ -487,8 +489,9 @@ compute_change (rule, year)
     case M:
       /* Mm.n.d - Nth "Dth day" of month M.  */
       {
-	register int i, d, m1, yy0, yy1, yy2, dow;
-	register const unsigned short int *myday =
+	unsigned int i;
+	int d, m1, yy0, yy1, yy2, dow;
+	const unsigned short int *myday =
 	  &__mon_yday[__isleap (year)][rule->m];
 
 	/* First add SECSPERDAY for each day in months before M.  */
@@ -510,7 +513,7 @@ compute_change (rule, year)
 	  d += 7;
 	for (i = 1; i < rule->n; ++i)
 	  {
-	    if (d + 7 >= myday[0] - myday[-1])
+	    if (d + 7 >= (int) myday[0] - myday[-1])
 	      break;
 	    d += 7;
 	  }
@@ -542,8 +545,8 @@ tz_compute (timer, tm)
       ! compute_change (&tz_rules[1], 1900 + tm->tm_year))
     return 0;
 
-  __daylight = timer >= tz_rules[0].change && timer < tz_rules[1].change;
-  __timezone = -tz_rules[__daylight].offset;
+  __daylight = tz_rules[0].offset != tz_rules[1].offset;
+  __timezone = -tz_rules[0].offset;
   __tzname[0] = (char *) tz_rules[0].name;
   __tzname[1] = (char *) tz_rules[1].name;
 
@@ -606,13 +609,12 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
   if (__use_tzfile)
     {
       if (! __tzfile_compute (*timer, use_localtime,
-			      &leap_correction, &leap_extra_secs))
+			      &leap_correction, &leap_extra_secs, tp))
 	tp = NULL;
     }
   else
     {
-      __offtime (timer, 0, tp);
-      if (! tz_compute (*timer, tp))
+      if (! (__offtime (timer, 0, tp) && tz_compute (*timer, tp)))
 	tp = NULL;
       leap_correction = 0L;
       leap_extra_secs = 0;
@@ -622,9 +624,14 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
     {
       if (use_localtime)
 	{
-	  tp->tm_isdst = __daylight;
-	  tp->tm_zone = __tzname[__daylight];
-	  tp->tm_gmtoff = -__timezone;
+	  if (!__use_tzfile)
+	    {
+	      int isdst = (*timer >= tz_rules[0].change
+			   && *timer < tz_rules[1].change);
+	      tp->tm_isdst = isdst;
+	      tp->tm_zone = __tzname[isdst];
+	      tp->tm_gmtoff = tz_rules[isdst].offset;
+	    }
 	}
       else
 	{
@@ -633,8 +640,10 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
 	  tp->tm_gmtoff = 0L;
 	}
 
-      __offtime (timer, tp->tm_gmtoff - leap_correction, tp);
-      tp->tm_sec += leap_extra_secs;
+      if (__offtime (timer, tp->tm_gmtoff - leap_correction, tp))
+        tp->tm_sec += leap_extra_secs;
+      else
+	tp = NULL;
     }
 
   __libc_lock_unlock (tzset_lock);
