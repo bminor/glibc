@@ -57,15 +57,15 @@ case "$machine" in
     arch_minimum_kernel=2.2.15
     libc_cv_gcc_unwind_find_fde=yes
     ;;
-  powerpc)
+  powerpc*)
     libc_cv_gcc_unwind_find_fde=yes
     arch_minimum_kernel=2.0.10
     ;;
-  s390)
+  s390/s390-32)
     libc_cv_gcc_unwind_find_fde=yes
     arch_minimum_kernel=2.2.10
     ;;
-  s390x)
+  s390/s390-64)
     libc_cv_gcc_unwind_find_fde=yes
     arch_minimum_kernel=2.4.0
     ;;
