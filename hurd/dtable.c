@@ -194,7 +194,7 @@ fork_child_dtable (void)
   return err;
 }
 
-text_set_element (_hurd_fork_locks, _hurd_dtable_lock);
+data_set_element (_hurd_fork_locks, _hurd_dtable_lock);
 text_set_element (_hurd_fork_setup_hook, fork_parent_dtable);
 text_set_element (_hurd_fork_child_hook, fork_child_dtable);
 
