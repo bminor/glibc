@@ -185,6 +185,10 @@ DEFUN(flushbuf, (fp, c),
 
       size_t buffer_offset = 0;
 
+      /* If the user has read some of the buffer, the target position
+	 is incremented for each character he has read.  */
+      fp->__target += fp->__bufp - fp->__buffer;
+
       if (fp->__mode.__read && fp->__room_funcs.__input != NULL)
 	{
 	  int save = errno;
