@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 /* The function `_exit' should take a status argument and simply
    terminate program execution, using the low-order 8 bits of the
@@ -30,7 +31,7 @@ DEFUN(_exit, (status), int status)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 
