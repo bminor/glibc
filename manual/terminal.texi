@@ -1071,7 +1071,8 @@ These aliases are obsolete.
 @deftypefun int cfmakeraw (struct termios *@var{termios_p})
 @c !!! this is a BSD extension.  it does:
 @example
-  t->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
+  t->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP
+                  |INLCR|IGNCR|ICRNL|IXON);
   t->c_oflag &= ~OPOST;
   t->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
   t->c_cflag &= ~(CSIZE|PARENB);
