@@ -119,19 +119,8 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)sysdirs
 	   fi;								      \
 	 done) > $@
 
-ifneq ($(no_deps),t)
-# Include the generated dependencies of the sources in this directory.
-include $(objpfx)depend-$(subdir)
-endif
-
 # Maximize efficiency by minimizing the number of rules.
 .SUFFIXES:	# Clear the suffix list.
-# Remove the RCS and SCCS rules.
-%: %,v
-%: RCS/%,v
-%: s.%
-%: SCCS/s.%
-
 # Add the suffixes we use.
 .SUFFIXES: .a .o .S .s .c .h .dep .m4
 
@@ -296,6 +285,7 @@ $(objpfx)%.dep: %.c $(before-compile)
 
 +depfiles := $(strip $(sources:.c=.dep) $(addsuffix .dep,$(others) $(tests)))
 +depfiles := $(addprefix $(objpfx),$(+depfiles))
+
 $(objpfx)depend-$(subdir): Makefile
 ifdef +depfiles
 	(for file in $(patsubst $(objpfx)%,%,$(+depfiles)); do	\
@@ -305,6 +295,16 @@ else
 	cp /dev/null $@
 endif
 
+ifneq ($(no_deps),t)
+# Include the generated dependencies of the sources in this directory.
+ifdef have.make.that.groks.multiple.includes
+# Avoid the extra file and waiting for it, since we can.
+include $(+depfiles)
+else
+include $(objpfx)depend-$(subdir)
+endif
+endif
+
 # Command to compile $< in $(objdir) using the native libraries.
 native-compile = cwd=`pwd`; cd $(@D); $(CC) $(native-CFLAGS) $$cwd/$< -o $(@F)
 
