@@ -37,10 +37,10 @@ struct mapped
 
 
 /* Get IT.  */
-static error_t
 #ifdef	__GNUC__
 __inline
 #endif
+static error_t
 DEFUN(get_it, (m), struct mapped *m)
 {
  try:
@@ -74,10 +74,10 @@ DEFUN(get_it, (m), struct mapped *m)
 }
 
 /* Release IT.  */
-static error_t
 #ifdef	__GNUC__
 __inline
 #endif
+static error_t
 DEFUN(release_it, (m), struct mapped *m)
 {
   __spin_lock(m->shared.lock);
