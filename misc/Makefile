@@ -25,7 +25,7 @@ subdir	:= misc
 headers	:= sys/uio.h sys/ioctl.h sys/ptrace.h ioctls.h sys/file.h	\
 	   a.out.h nlist.h stab.h stab.def sgtty.h sys/dir.h sys/cdefs.h \
 	   ttyent.h syscall.h syslog.h sys/syslog.h paths.h sys/reboot.h \
-	   sys/mman.h sys/param.h
+	   sys/mman.h sys/param.h fstab.h
 
 routines := brk sbrk sstk ioctl \
 	    __brk __sbrk __ioctl \
@@ -46,9 +46,8 @@ routines := brk sbrk sstk ioctl \
 	    ualarm usleep \
 	    gtty stty \
 	    ptrace \
-	    nlist \
-	    utimes \
-	    __utimes \
+	    nlist fstab \
+	    utimes __utimes \
 	    truncate ftruncate \
 	    chflags fchflags \
 	    insremque getttyent getusersh getpass ttyslot \
