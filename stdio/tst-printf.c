@@ -76,7 +76,7 @@ I am ready for my first lesson today.";
 
 #ifndef	BSD
   printf("bad format:\t\"%z\"\n");
-  printf("nil pointer:\t\"%p\"\n", (PTR) NULL);
+  printf("nil pointer (padded):\t\"%10p\"\n", (PTR) NULL);
 #endif
 
   printf("decimal negative:\t\"%d\"\n", -2345);
@@ -113,6 +113,8 @@ I am ready for my first lesson today.";
   printf (" %6.5lf\n", .099999999860301614);
   printf (" %6.5lf\n", .1);
   printf ("x%5.4lfx\n", .5);
+
+  printf ("%#03x\n", 1);
 
 #if 0				/* XXX printf_fp still broken */
   {
