@@ -55,7 +55,7 @@ DEFUN(readv, (fd, vector, count),
 #define	min(a, b)	((a) > (b) ? (b) : (a))
       size_t copy = min(vector[i].iov_len, bytes);
 
-      (void) memcpy((PTR) vector[i].iov_buf, (PTR) buffer, copy);
+      (void) memcpy((PTR) vector[i].iov_base, (PTR) buffer, copy);
 
       buffer += copy;
       bytes -= copy;
