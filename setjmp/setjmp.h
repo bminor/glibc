@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -129,6 +129,9 @@ extern __NORETURN void _longjmp __P ((__const jmp_buf __env, int __val));
 
 /* `setjmp' and `_setjmp' are the same.  */
 #define	_setjmp(env)		setjmp (env)
+
+/* `longjmp' and `_longjmp' are the same.  */
+#define	_longjmp(env, val)	longjmp ((env), (val))
 
 #endif /* Favor BSD.  */
 
