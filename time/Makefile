@@ -49,19 +49,12 @@ endef
 include zonenames
 zonenames := $(subst $(nl), ,$(zonenames))
 
-include ../Makeconfig
-ifdef localtime
-zonenames := $(zonenames) localtime
-endif
-ifdef posixrules
-zonenames := $(zonenames) posixrules
-endif
-
-install-data := $(addprefix zoneinfo/,$(zonenames))
-
+install-data = $(addprefix zoneinfo/,$(zonenames) \
+			   	     $(filter-out /%,$(localtime-file) \
+						     $(posixrules-file)))
+install-others = $(filter /%,$(localtime-file) $(posixrules-file))
 
 include ../Rules
-
 
 $(tzfiles:%=zones-%): zones-%: %
 	(echo 'define $*-zones'						;\
@@ -106,6 +99,13 @@ zoneinfo/posixrules: zoneinfo/$(posixrules) $(objpfx)zic
 	$(word 2,$^) -d zoneinfo -p $(<:zoneinfo/%=%)
 zoneinfo: zoneinfo/posixrules
 endif
+ifneq ($(filter /%,$(localtime-file)),)
+$(localtime-file): zoneinfo/$(localtime); $(do-install)
+endif
+ifneq ($(filter /%,$(posixrules-file)),)
+$(posixrules-file): zoneinfo/$(posixrules); $(do-install)
+endif
+
 
 $(objpfx)zic: $(objpfx)scheck.o $(objpfx)ialloc.o $(objpfx)emkdir.o
 
