@@ -27,7 +27,7 @@
 #include <bits/libc-lock.h>
 
 /* Try to get a socket to talk to the kernel.  */
-#if defined SIOGIFINDEX || defined SIOGIFNAME
+#if defined SIOCGIFINDEX || defined SIOCGIFNAME
 static int
 internal_function
 opensock (void)
@@ -71,7 +71,7 @@ opensock (void)
 unsigned int
 if_nametoindex (const char *ifname)
 {
-#ifndef SIOGIFINDEX
+#ifndef SIOCGIFINDEX
   __set_errno (ENOSYS);
   return 0;
 #else
@@ -82,7 +82,7 @@ if_nametoindex (const char *ifname)
     return 0;
 
   strncpy (ifr.ifr_name, ifname, sizeof (ifr.ifr_name));
-  if (__ioctl (fd, SIOGIFINDEX, &ifr) < 0)
+  if (__ioctl (fd, SIOCGIFINDEX, &ifr) < 0)
     {
       int saved_errno = errno;
       __close (fd);
@@ -111,7 +111,7 @@ if_freenameindex (struct if_nameindex *ifn)
 struct if_nameindex *
 if_nameindex (void)
 {
-#ifndef SIOGIFINDEX
+#ifndef SIOCGIFINDEX
   __set_errno (ENOSYS);
   return NULL;
 #else
@@ -172,7 +172,7 @@ if_nameindex (void)
       struct ifreq *ifr = &ifc.ifc_req[i];
       idx[i].if_name = __strdup (ifr->ifr_name);
       if (idx[i].if_name == NULL
-	  || __ioctl (fd, SIOGIFINDEX, ifr) < 0)
+	  || __ioctl (fd, SIOCGIFINDEX, ifr) < 0)
 	{
 	  int saved_errno = errno;
 	  unsigned int j;
@@ -199,7 +199,7 @@ if_nameindex (void)
 char *
 if_indextoname (unsigned int ifindex, char *ifname)
 {
-#ifndef SIOGIFINDEX
+#ifndef SIOCGIFINDEX
   __set_errno (ENOSYS);
   return NULL;
 #else
@@ -207,14 +207,14 @@ if_indextoname (unsigned int ifindex, char *ifname)
   struct if_nameindex *p;
   char *result = NULL;
 
-#ifdef SIOGIFNAME
+#ifdef SIOCGIFNAME
   /* We may be able to do the conversion directly, rather than searching a
      list.  This ioctl is not present in kernels before version 2.1.50.  */
   struct ifreq ifr;
   int fd;
-  static int siogifname_works_not;
+  static int siocgifname_works_not;
 
-  if (!siogifname_works_not)
+  if (!siocgifname_works_not)
     {
       int serrno = errno;
 
@@ -224,10 +224,10 @@ if_indextoname (unsigned int ifindex, char *ifname)
 	return NULL;
 
       ifr.ifr_ifindex = ifindex;
-      if (__ioctl (fd, SIOGIFNAME, &ifr) < 0)
+      if (__ioctl (fd, SIOCGIFNAME, &ifr) < 0)
 	{
 	  if (errno == EINVAL)
-	    siogifname_works_not = 1; /* Don't make the same mistake twice. */
+	    siocgifname_works_not = 1; /* Don't make the same mistake twice. */
 	}
       else
 	{

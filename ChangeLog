@@ -1,3 +1,110 @@
+1999-06-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/lc-time.c: Add free_mem function to free if necessary
+	statically allocated memory.
+
+1999-06-10  Jakub Jelinek   <jj@ultra.linux.cz>
+
+	* sysdeps/libm-ieee754/s_truncl.c: Subtract exponent
+	bias from the raw exponent.
+
+1999-06-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/arpa/tftp.h: Move attribute declaration in right position.
+
+1999-06-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/nss_dns/dns-host.c (getanswer_r): Correctly track usage
+	of user-provided buffer.
+
+1999-06-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/printf-parse.h (parse_one_spec): Add support for a
+	and A format.
+
+	* shadow/fgetspent_r.c (__fgetspent_r): Set errno to ENOENT for
+	returning after last entry.
+	* pwd/fgetpwent_r.c (__fgetpwent_r): Likewise.
+
+1999-06-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* pwd/fgetpwent_r.c: Set errno in the correct way.
+	* shadow/fgetspent_r.c: Likewise.
+	* pwd/fgetpwent.c: Handle long lines correctly.  Little
+	optimizations.  Free static buffer when debugging memory handling.
+	* shadow/fgetspent.c: Likewise.
+
+	* grp/fgetgrent.c: Little optimization in loop.
+
+1999-06-09  Jakub Jelinek   <jj@ultra.linux.cz>
+
+	* stdlib/longlong.h: gas changed sethi handling when without
+	%hi(). Fix assembly.
+
+1999-06-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/daemon.c: Call fork.
+
+	* grp/fgetgrent.c (buffer): Make file local variable.
+	(free_mem): New function.  Call for malloc debugging.
+
+1999-06-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* ctype/ctype.h: Protect __tobody code by __extension__.
+
+1999-06-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/if_index.c: Replace SIOG* with SIOCG*.
+
+1999-06-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h (makedev): Handle signed
+	parameters.
+
+1999-06-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Correct restorer
+	function handling.
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (SA_RESTORER): New #define.
+
+1999-06-06  Andi Kleen  <ak@muc.de>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__sigaction): Set
+	SA_RESTORER flag.
+
+1999-06-05  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_load_address): Fix
+	problems with GOT addressing.
+
+1999-06-02  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* stdlib/longlong.h: Define UDIV_TIME on sparc64.
+
+1999-06-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h (ARPHRD_DDCMP): Add it
+	(from Linux 2.3.4).
+
+1999-05-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/stdio.texi: Fix some typos.
+
+1999-05-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/stdio.texi (Formatted Output Functions): Mention
+	semantics of snprintf in glibc 2.0.
+	Reported by Ben Pfaff <pfaffben@msu.edu>.
+
+1999-05-27  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* malloc/malloc.h: Properly handle future GCC versions.
+
+1999-05-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/getcwd.c (__getcwd): Fix potential memory leaks.
+
 1999-06-11  Mark Kettenis  <kettenis@gnu.org>
 
 	* hurd/hurdsock.c (max_domain): Initialize to `-1'.

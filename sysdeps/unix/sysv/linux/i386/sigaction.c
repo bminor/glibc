@@ -1,5 +1,5 @@
 /* POSIX.1 `sigaction' call for Linux/i386.
-   Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1991, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +30,8 @@
    translate it here.  */
 #include <kernel_sigaction.h>
 
+/* We do not globally define the SA_RESTORER flag so do it here.  */
+#define SA_RESTORER 0x04000000
 
 extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
 				   struct kernel_sigaction *, size_t);
@@ -38,6 +40,8 @@ extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
    functions which have RT equivalents.  */
 int __libc_missing_rt_sigs;
 
+static void restore_rt (void) asm ("__restore_rt");
+static void restore (void) asm ("__restore");
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
@@ -58,10 +62,10 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 	{
 	  kact.k_sa_handler = act->sa_handler;
 	  memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
-	  kact.sa_flags = act->sa_flags;
+	  kact.sa_flags = act->sa_flags | SA_RESTORER;
 
-	  kact.sa_restorer = ((act->sa_flags & SA_NOMASK)
-			      ? &&restore_nomask : &&restore);
+	  kact.sa_restorer = ((act->sa_flags & SA_SIGINFO)
+			      ? &restore_rt : &restore);
 	}
 
       /* XXX The size argument hopefully will have to be changed to the
@@ -90,10 +94,9 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
     {
       k_newact.k_sa_handler = act->sa_handler;
       k_newact.sa_mask = act->sa_mask.__val[0];
-      k_newact.sa_flags = act->sa_flags;
+      k_newact.sa_flags = act->sa_flags | SA_RESTORER;
 
-      k_newact.sa_restorer = ((act->sa_flags & SA_NOMASK)
-			      ? &&restore_nomask : &&restore);
+      k_newact.sa_restorer = &restore;
     }
 
   asm volatile ("pushl %%ebx\n"
@@ -119,41 +122,33 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
     }
 
   return 0;
-
- restore:
-  asm (
-#ifdef	PIC
-       "	pushl %%ebx\n"
-       "	call 0f\n"
-       "0:	popl %%ebx\n"
-       "	addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %%ebx\n"
-       "	addl $8, %%esp\n"
-       "	call __sigsetmask@PLT\n"
-       "	addl $8, %%esp\n"
-       "	popl %%ebx\n"
-#else
-       "	addl $4, %%esp\n"
-       "	call __sigsetmask\n"
-       "	addl $4, %%esp\n"
-#endif
-       "	popl %%eax\n"
-       "	popl %%ecx\n"
-       "	popl %%edx\n"
-       "	popf\n"
-       "	ret"
-       : : );
-
- restore_nomask:
-  asm ("	addl $4, %%esp\n"
-       "	popl %%eax\n"
-       "	popl %%ecx\n"
-       "	popl %%edx\n"
-       "	popf\n"
-       "	ret"
-       : : );
-
-  /* NOTREACHED */
-  return -1;
 }
 
 weak_alias (__sigaction, sigaction)
+
+#define RESTORE(name, syscall) RESTORE2 (name, syscall)
+#define RESTORE2(name, syscall) \
+asm						\
+  (						\
+   ".align 16\n"				\
+   "__" #name ":\n"					\
+   "	movl $" #syscall ", %eax\n"		\
+   "	int  $0x80"				\
+   );
+
+/* The return code for realtime-signals.  */
+RESTORE (restore_rt, __NR_rt_sigreturn)
+
+/* For the boring old signals.  */
+# undef RESTORE2
+# define RESTORE2(name, syscall) \
+asm						\
+  (						\
+   ".align 8\n"				\
+   "__" #name ":\n"					\
+   "	popl %eax\n"				\
+   "	movl $" #syscall ", %eax\n"		\
+   "	int  $0x80"				\
+   );
+
+RESTORE (restore, __NR_sigreturn)
