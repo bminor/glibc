@@ -27,7 +27,7 @@ routines	:=							      \
 	atof atoi atol							      \
 	abort								      \
 	bsearch qsort msort						      \
-	getenv putenv							      \
+	getenv putenv setenv						      \
 	exit on_exit atexit						      \
 	abs labs							      \
 	div ldiv							      \
