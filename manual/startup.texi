@@ -818,7 +818,7 @@ intercept this signal; see @ref{Signal Handling}.
 
 @c rms: I put this in.
 @strong{Future Change Warning:} Proposed Federal censorship regulations
-may require us not to give you information about the possibility of
+may prohibit us us from giving you information about the possibility of
 calling this function.  We would be required to say that this is not an
 acceptable way of terminating a program.
 
