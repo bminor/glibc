@@ -17,15 +17,27 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <errno.h>
-#include <signal.h>
+#include <stddef.h>
 
-/* Run signals handlers on the stack specified by SS (if not NULL).
-   If OSS is not NULL, it is filled in with the old signal stack status.  */
-int
-DEFUN(sigstack, (ss, oss),
-      CONST struct sigstack *ss AND struct sigstack *oss)
-{
-  errno = ENOSYS;
-  return -1;
-}
+CONST char *CONST _sys_siglist[] =
+  {
+    "Signal 0",
+    "Aborted",
+    "Erroneous arithmetic operation",
+    "Illegal instruction",
+    "Interrupt",
+    "Invalid access to storage",
+    "Terminated",
+    "Hangup",
+    "Quit",
+    "Broken pipe",
+    "Killed",
+    "Alarm clock",
+    "Stopped (signal)",
+    "Stopped",
+    "Continued",
+    "Child exited",
+    "Stopped (tty input)",
+    "Stopped (tty output)",
+    NULL
+  };

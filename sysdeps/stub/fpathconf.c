@@ -18,14 +18,38 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <errno.h>
-#include <signal.h>
+#include <stddef.h>
+#include <unistd.h>
 
-/* Run signals handlers on the stack specified by SS (if not NULL).
-   If OSS is not NULL, it is filled in with the old signal stack status.  */
-int
-DEFUN(sigstack, (ss, oss),
-      CONST struct sigstack *ss AND struct sigstack *oss)
+
+/* Get file-specific information about descriptor FD.  */
+long int
+DEFUN(__fpathconf, (fd, name), int fd AND int name)
 {
+  if (fd < 0)
+    {
+      errno = EBADF;
+      return -1;
+    }
+
+  switch (name)
+    {
+    default:
+      errno = EINVAL;
+      return -1;
+
+    case _PC_LINK_MAX:
+    case _PC_MAX_CANON:
+    case _PC_MAX_INPUT:
+    case _PC_NAME_MAX:
+    case _PC_PATH_MAX:
+    case _PC_PIPE_BUF:
+    case _PC_CHOWN_RESTRICTED:
+    case _PC_NO_TRUNC:
+    case _PC_VDISABLE:
+      break;
+    }
+
   errno = ENOSYS;
   return -1;
 }
