@@ -277,6 +277,13 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 	act = core;
 	break;
 
+      case SIGINFO:
+	if (_hurd_pgrp == _hurd_pid)
+	  /* We are the session leader.  Print something interesting.  */
+	  puts ("fnord");	/* XXX */
+	act = ignore;
+	break;
+
       default:
 	act = term;
 	break;
@@ -403,6 +410,7 @@ _S_sig_post (sigthread_t me,
     case SIGQUIT:
     case SIGTSTP:
     case SIGHUP:
+    case SIGINFO:
       /* Job control signals can be sent by the controlling terminal.  */
       if (refport == _hurd_cttyport)
 	goto win;
