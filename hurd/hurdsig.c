@@ -148,12 +148,18 @@ write_corefile (int signo, int sigcode)
    interrupt_operation before giving up on them.  */
 mach_msg_timeout_t _hurd_interrupt_timeout = 1000; /* One second.  */
 
-/* SS->thread is suspended.  Fills STATE in with its registers.
-   SS->lock is held and kept.  */
-static inline void
+/* SS->thread is suspended.  Always fills STATE in with its registers.
+
+   Abort any interruptible RPC operation the thread is doing.
+
+   This uses only the constant member SS->thread and the unlocked,
+   atomically set member SS->intr_port, so no locking is needed.  */
+static void
 abort_rpcs (struct hurd_sigstate *ss, int signo, void *state)
 {
   unsigned int count = MACHINE_THREAD_STATE_COUNT;
+  mach_port_t msging_port;
+
   __thread_abort (ss->thread);
   if (__thread_get_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
 			  state, &count) != KERN_SUCCESS ||
@@ -161,76 +167,69 @@ abort_rpcs (struct hurd_sigstate *ss, int signo, void *state)
     /* What kind of thread?? */
     return;			/* XXX */
 
-  if (ss->intr_port != MACH_PORT_NULL)
+  if (ss->intr_port == MACH_PORT_NULL)
+    return;
+
+  /* Tell the server to abort whatever the thread is doing.
+     If it is in the mach_msg syscall doing the send,
+     the syscall will return MACH_SEND_INTERRUPTED.  */
+  if (_hurd_thread_state_msging_p (state, &msging_port))
     {
-      /* Abort whatever the thread is doing.
-	 If it is in the mach_msg syscall doing the send,
-	 the syscall will return MACH_SEND_INTERRUPTED.  */
-      mach_port_t msging_port;
-      if (_hurd_thread_state_msging_p (state, &msging_port))
+      /* The thread was waiting for the RPC to return.
+	 Abort the operation.  The RPC will return EINTR.  */
+
+      struct
 	{
-	  /* The thread was waiting for the RPC to return.
-	     Abort the operation.  The RPC will return EINTR.  */
+	  mach_msg_header_t header;
+	  mach_msg_type_t type;
+	  kern_return_t retcode;
+	} msg;
+      kern_return_t err;
 
-	  struct
-	    {
-	      mach_msg_header_t header;
-	      mach_msg_type_t type;
-	      kern_return_t retcode;
-	    } msg;
-	  kern_return_t err;
+      msg.header.msgh_remote_port = ss->intr_port;
+      msg.header.msgh_local_port = __mach_reply_port ();
+      msg.header.msgh_seqno = 0;
+      msg.header.msgh_id = 33000; /* interrupt_operation XXX */
+      err = __mach_msg (&msg.header,
+			MACH_SEND_MSG|MACH_RCV_MSG|MACH_RCV_TIMEOUT,
+			sizeof (msg.header), sizeof (msg),
+			msg.header.msgh_local_port,
+			_hurd_interrupt_timeout,
+			MACH_PORT_NULL);
+      if (err != MACH_MSG_SUCCESS)
+	/* The interrupt didn't work.
+	   Destroy the receive right the thread is blocked on.  */
+	__mach_port_destroy (__mach_task_self (), msging_port);
+      else
+	/* In case the server returned something screwy.  */
+	__mach_msg_destroy (&msg.header);
 
-	  msg.header.msgh_remote_port = ss->intr_port;
-	  msg.header.msgh_local_port = __mach_reply_port ();
-	  msg.header.msgh_seqno = 0;
-	  msg.header.msgh_id = 33000; /* interrupt_operation XXX */
-	  err = __mach_msg (&msg.header,
-			    MACH_SEND_MSG|MACH_RCV_MSG|MACH_RCV_TIMEOUT,
-			    sizeof (msg.header), sizeof (msg),
-			    msg.header.msgh_local_port,
-			    _hurd_interrupt_timeout,
-			    MACH_PORT_NULL);
-	  if (err != MACH_MSG_SUCCESS)
-	    /* The interrupt didn't work.
-	       Destroy the receive right the thread is blocked on.  */
-	    __mach_port_destroy (__mach_task_self (), msging_port);
-	  else
-	    /* In case the server returned something screwy.  */
-	    __mach_msg_destroy (&msg.header);
-
-	  /* Tell the thread whether it should restart the
-	     operation or return EINTR when it wakes up.  */
-	  ss->intr_restart = ss->actions[signo].sa_flags & SA_RESTART;
-	}
-
-      /* If the thread is anywhere before the system call trap,
-	 it will start the operation after the signal is handled.
-	 
-	 If the thread is after the system call trap, but before it has
-	 cleared SS->intr_port, the operation is already finished.  */
+      /* Tell the thread whether it should restart the
+	 operation or return EINTR when it wakes up.  */
+      ss->intr_restart = ss->actions[signo].sa_flags & SA_RESTART;
     }
+
+  /* If the thread is anywhere before the system call trap,
+     it will start the operation after the signal is handled.
+     
+     If the thread is after the system call trap, but before it has
+     cleared SS->intr_port, the operation is already finished.  */
 }
 
 /* Abort the RPCs being run by all threads but this one;
    all other threads should be suspended.  */
-static inline void
+static void
 abort_all_rpcs (int signo, void *state)
 {
-  thread_t me = __mach_thread_self ();
-  thread_t *threads;
-  mach_msg_type_number_t nthreads, i;
+  struct hurd_sigstate *ss;
 
-  __task_threads (__mach_task_self (), &threads, &nthreads);
-  for (i = 0; i < nthreads; ++i)
-    {
-      if (threads[i] != me)
-	{
-	  struct hurd_sigstate *ss = _hurd_thread_sigstate (threads[i]);
-	  abort_rpcs (ss, signo, state);
-	  __mutex_unlock (&ss->lock);
-	}
-      __mach_port_deallocate (__mach_task_self (), threads[i]);
-    }
+  /* We can just loop over the sigstates.  Any thread doing something
+     interruptible must have one.  We needn't bother locking (see
+     abort_rpcs).  */
+
+  for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
+    if (ss->thread != _hurd_msgport_thread)
+      abort_rpcs (ss, signo, state);
 }
 
 
@@ -414,7 +413,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 		      sure it is not held by another thread afterwards.  */
 		   __mutex_unlock (&ss->lock);
 		   __mutex_lock (&_hurd_siglock);
-		   __proc_dostop (port, __mach_thread_self ());
+		   __proc_dostop (port, _hurd_msgport_thread);
 		   __mutex_unlock (&_hurd_siglock);
 		   abort_all_rpcs (signo, &thread_state);
 		   __proc_mark_stop (port, signo);
@@ -443,8 +442,10 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
     case term:			/* Time to die.  */
     case core:			/* And leave a rotting corpse.  */
+      __mutex_lock (&_hurd_siglock);
       /* Have the proc server stop all other threads in our task.  */
-      __USEPORT (PROC, __proc_dostop (port, __mach_thread_self ()));
+      __USEPORT (PROC, __proc_dostop (port, _hurd_msgport_thread));
+      __mutex_unlock (&_hurd_siglock);
       /* Abort all server operations now in progress.  */
       abort_all_rpcs (signo, &thread_state);
       /* The signal can now be considered delivered.
@@ -455,7 +456,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       _hurd_exit (W_EXITCODE (0, signo) |
 		  /* Do a core dump if desired.  Only set the wait status
                      bit saying we in fact dumped core if the operation was
-                     actually succesful.  */
+                     actually successful.  */
 		  (act == core && write_corefile (signo, sigcode) ?
 		   WCOREFLAG : 0));
       /* NOTREACHED */
