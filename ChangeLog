@@ -1,3 +1,13 @@
+2002-03-09  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdsig.c (write_corefile): Fix swapped arguments to __dir_link.
+	Reported by Jon Arney <jarney1@cox.net>.
+
+2002-02-06  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/unix/sysv/linux/netinet/ip.h: Moved to ...
+	* sysdeps/generic/netinet/ip.h: ... here, replacing old file.
+
 2002-03-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/sys/reg.h: Add compatibility for
