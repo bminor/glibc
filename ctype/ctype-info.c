@@ -21,10 +21,10 @@ Cambridge, MA 02139, USA.  */
 #include <localeinfo.h>
 
 /* Defined in locale/locale-C-ctype.c.  */
-extern CONST unsigned char __ctype_b_C[];
+extern CONST unsigned short int __ctype_b_C[];
 extern CONST unsigned char __ctype_tolower_C[];
 extern CONST unsigned char __ctype_toupper_C[];
 
-CONST unsigned char *__ctype_b = __ctype_b_C + 1;
+CONST unsigned short int *__ctype_b = __ctype_b_C + 1;
 CONST unsigned char *__ctype_tolower = __ctype_tolower_C + 1;
 CONST unsigned char *__ctype_toupper = __ctype_toupper_C + 1;
