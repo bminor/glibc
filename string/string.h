@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -113,8 +113,8 @@ extern char *strtok __P ((char *__s, __const char *__delim));
 /* Find the first occurence of NEEDLE in HAYSTACK.
    NEEDLE is NEEDLELEN bytes long;
    HAYSTACK is HAYSTACKLEN bytes long.  */
-extern __ptr_t memmem __P ((__const __ptr_t __needle, size_t __needlelen,
-			    __const __ptr_t __haystack, size_t __haystacklen));
+extern __ptr_t memmem __P ((__const __ptr_t __haystack, size_t __haystacklen,
+			    __const __ptr_t __needle, size_t __needlelen));
 #endif
 
 /* Return the length of S.  */
