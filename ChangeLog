@@ -1,3 +1,7 @@
+2000-02-24  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/sys/param.h: Add comment.
+
 2000-02-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-ctype.c (allocate_arrays): Make sure the end
