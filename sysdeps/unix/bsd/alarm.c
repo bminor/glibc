@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -44,9 +44,9 @@ DEFUN(alarm, (seconds), unsigned int seconds)
   if (old.it_value.tv_usec > 0 && old_seconds == 0)
     /* Make sure we don't return zero (which says that
        there is no alarm at all) if there is an alarm set
-       to go off in less than 500 microseconds.  */
+       to go off in less than half a second.  */
     ++old_seconds;
   else
-    old_seconds += old.it_value.tv_usec / 1000;
+    old_seconds += old.it_value.tv_usec / 1000000;
   return old_seconds;
 }
