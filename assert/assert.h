@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,8 +30,6 @@ Cambridge, MA 02139, USA.  */
 #define	_ASSERT_H	1
 #include <features.h>
 
-__BEGIN_DECLS
-
 /* void assert(int expression);
    If NDEBUG is defined, do nothing.
    If not, and EXPRESSION is zero, print an error message and abort.  */
@@ -42,16 +40,29 @@ __BEGIN_DECLS
 
 #else /* Not NDEBUG.  */
 
-/* This prints an "Assertion failed" message and aborts.  */
-extern int __assert_fail __P ((__const char *__assertion,
-			       __const char *__file, unsigned int __line));
-
 #include <sys/cdefs.h>
 
-#define	assert(expr)							      \
-  ((void) ((expr) ||							      \
-	   __assert_fail (__STRING(expr), __FILE__, __LINE__)))
+__BEGIN_DECLS
+
+/* This prints an "Assertion failed" message and aborts.  */
+extern __NORETURN int __assert_fail __P ((__const char *__assertion,
+					  __const char *__file,
+					  unsigned int __line,
+					  __const char *__function));
+
+__END_DECLS
+
+#define	assert(expr) 							      \
+  ((void) ((expr) || __assert_fail (__STRING(expr),			      \
+				    __FILE__, __LINE__, __ASSERT_FUNCTION)))
+
+/* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'
+   which contains the name of the function currently being defined.  */
+#if !defined (__GNUC__) || __GNUC__ < 2 || __GNUC_MINOR__ < 4
+#define __ASSERT_FUNCTION	((__const char *) 0)
+#else
+#define __ASSERT_FUNCTION	__PRETTY_FUNCTION__
+#endif
 
 #endif /* NDEBUG.  */
 
-__END_DECLS
