@@ -16,19 +16,19 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <hurd.h>
 #include <mach.h>
-#include <thread_state.h>
+#include "thread_state.h"
+#include <string.h>
 
 #define	STACK_SIZE	(4 * __vm_page_size) /* ? XXX */
 
 /* Give THREAD a stack and set it to run at PC when resumed.  */
-error_t
-_hurd_setup_thread (task_t task, thread_t thread, void *pc)
+kern_return_t
+__mach_setup_thread (task_t task, thread_t thread, void *pc)
 {
-  error_t error;
-  struct hurd_thread_state ts;
-  size_t tssize = HURD_THREAD_STATE_COUNT;
+  kern_return_t error;
+  struct machine_thread_state ts;
+  mach_msg_type_number_t tssize = MACHINE_THREAD_STATE_COUNT;
   vm_address_t stack;
 
   if (error = __vm_allocate (task, &stack, STACK_SIZE, 1))
@@ -38,6 +38,6 @@ _hurd_setup_thread (task_t task, thread_t thread, void *pc)
   ts.PC = (int) pc;
   ts.SP = stack + STACK_SIZE;
 
-  return __thread_set_state (thread, HURD_THREAD_STATE_FLAVOR,
+  return __thread_set_state (thread, MACHINE_THREAD_STATE_FLAVOR,
 			     (int *) &ts, tssize);
 }
