@@ -1203,6 +1203,7 @@ rm -f *.filelist*
 %verify(not md5 size mtime) %config(noreplace) /etc/ld.so.conf
 %dir /etc/ld.so.conf.d
 %dir %{_prefix}/libexec/getconf
+%dir %{_prefix}/%{_lib}/gconv
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /etc/ld.so.cache
 %doc README NEWS INSTALL FAQ BUGS NOTES PROJECTS CONFORMANCE
 %doc COPYING COPYING.LIB README.libm LICENSES
@@ -1274,6 +1275,8 @@ rm -f *.filelist*
 %endif
 
 %changelog
+- add %%dir %{_prefix}/%{_lib}/gconv to glibc's file list (#151372)
+
 * Sun Mar  6 2005 Roland McGrath <roland@redhat.com> 2.3.4-14
 - fix bits/socket2.h macro typos
 
