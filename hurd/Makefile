@@ -67,7 +67,7 @@ vpath %.defs $(hurd-srcdir)
 hurd-headers := $(patsubst $(hurd-srcdir)/%,%,\
 			   $(wildcard $(addprefix $(hurd-srcdir)/hurd/,\
 						  *.defs *.h)))
-install-others += $(addprefix $(includedir),$(hurd-headers))
+install-others += $(addprefix $(includedir)/,$(hurd-headers))
 $(includedir)/hurd/%: $(hurd-srcdir)/hurd/%; $(do-install)
 
 # Insert comment here.
