@@ -4,7 +4,7 @@
    by Guy L. Steele, Jr. and Jon L. White, presented at the ACM SIGPLAN '90
    Conference on Programming Language Design and Implementation.
 
-Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -692,7 +692,9 @@ DEFUN(__printf_fp, (s, info, args),
   return done;
 }
 
-static mpn_dump (str, p, size)
+#if DEBUG
+static void
+mpn_dump (str, p, size)
      char *str;
      mp_limb *p;
      mp_size_t size;
@@ -705,3 +707,4 @@ static mpn_dump (str, p, size)
     }
   printf ("\n");
 }
+#endif
