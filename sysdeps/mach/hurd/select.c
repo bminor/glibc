@@ -38,9 +38,8 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   int i;
   mach_port_t port;
   int got;
-  struct hurd_dtable dtable;
-  struct hurd_userlink dtable_ulink, *ulink;
   int *types;
+  struct hurd_userlink *ulink;
   mach_port_t *ports;
   struct hurd_fd **cells;
   error_t err;
@@ -62,10 +61,10 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
     port = __mach_reply_port ();
 
   HURD_CRITICAL_BEGIN;
-  dtable = _hurd_dtable_get (&dtable_ulink);
+  __mutex_lock (&_hurd_dtable_lock);
 
-  if (nfds > _hurd_dtable.size)
-    nfds = _hurd_dtable.size;
+  if (nfds > _hurd_dtablesize)
+    nfds = _hurd_dtablesize;
 
   /* Collect the ports for interesting FDs.  */
   cells = __alloca (nfds * sizeof (*cells));
@@ -84,8 +83,8 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
       types[i] = type;
       if (type)
 	{
-	  cells[i] = _hurd_dtable_fd (i, dtable);
-	  ports[i] = _hurd_port_locked_get (&cells[i]->port, &ulink[i]);
+	  cells[i] = _hurd_dtable[i];
+	  ports[i] = _hurd_port_get (&cells[i]->port, &ulink[i]);
 	  if (ports[i] == MACH_PORT_NULL)
 	    {
 	      /* If one descriptor is bogus, we fail completely.  */
@@ -97,7 +96,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	}
     }
 
-  _hurd_dtable_free (dtable, &dtable_ulink);
+  __mutex_unlock (&_hurd_dtable_lock);
   HURD_CRITICAL_END;
 
   if (i < nfds)
