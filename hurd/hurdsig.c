@@ -663,3 +663,52 @@ reauth_proc (mach_port_t new)
     __mach_port_deallocate (__mach_task_self (), ignore);
 }
 text_set_element (__hurd_reauth_hook, reauth_proc);
+
+/* Setting up signals in the child for fork.  */
+
+static error_t
+hurdsig_fork (task_t newtask, process_t newproc)
+{
+  error_t err;
+  mach_port_t msgport, oldmsgport;
+
+  /* Create the message port to be used by the child.  */
+  if (err = __mach_port_allocate (__mach_task_self (),
+				  MACH_PORT_RIGHT_RECEIVE, &msgport))
+    return err;
+
+  /* Get us a send right for the child's message port.  */
+  if (err = __mach_port_insert_right (__mach_task_self (), msgport,
+				      msgport, MACH_MSG_TYPE_MAKE_SEND))
+    {
+      __mach_port_mod_refs (__mach_task_self (), msgport,
+			    MACH_PORT_RIGHT_RECEIVE, -1);
+      return err;
+    }
+
+  /* Move the receive right for the message port to the child,
+     giving it the same name our message port has for us.  */
+  if (err = __mach_port_insert_right (newtask, _hurd_msgport,
+				      msgport, MACH_MSG_TYPE_MOVE_RECEIVE))
+    {
+      __mach_port_mod_refs (__mach_task_self (), msgport,
+			    MACH_PORT_RIGHT_RECEIVE, -1);
+      goto lose;
+    }
+
+  /* Give the proc server the new task's message port.  */
+  if (err = __proc_setmsgport (newproc, msgport, &oldmsgport))
+    goto lose;
+  if (oldmsgport)
+    /* Where did that come from?  */
+    __mach_port_deallocate (__mach_task_self (), oldmsgport);
+
+ lose:
+  __mach_port_deallocate (__mach_task_self (), msgport);
+
+  return err;
+}
+
+text_set_element (_hurd_fork_setup_hook, hurdsig_fork);
+text_set_element (_hurd_fork_child_hook, _hurdsig_init);
+text_set_element (_hurd_fork_child_hook, _hurdsig_fault_init);
