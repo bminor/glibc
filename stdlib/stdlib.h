@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -119,19 +119,7 @@ extern void srandom __P ((unsigned int __seed));
 extern __ptr_t initstate __P ((unsigned int __seed, __ptr_t __statebuf,
 			       size_t __statelen));
 extern __ptr_t setstate __P ((__ptr_t __statebuf));
-
-#ifdef	__OPTIMIZE__
-#define	random()		__random()
-#define	srandom(seed)		__srandom(seed)
-#define	initstate(s, b, n)	__initstate((s), (b), (n))
-#define	setstate(state)		__setstate(state)
-#endif /* Optimizing.  */
 #endif /* Use BSD.  */
-
-#ifdef	__OPTIMIZE__
-#define	rand()		((int) __random())
-#define	srand(seed)	__srandom(seed)
-#endif /* Optimizing.  */
 
 
 /* Allocate SIZE bytes of memory.  */
@@ -147,10 +135,6 @@ extern void free __P ((__ptr_t __ptr));
 #ifdef	__USE_MISC
 /* Free a block.  An alias for `free'.	(Sun Unices).  */
 extern void cfree __P ((__ptr_t __ptr));
-
-#ifdef	__OPTIMIZE__
-#define	cfree(ptr)	free(ptr)
-#endif /* Optimizing.  */
 #endif /* Use misc.  */
 
 #if defined(__USE_GNU) || defined(__USE_BSD) || defined(__USE_MISC)
