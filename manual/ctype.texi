@@ -11,9 +11,8 @@ purpose.
 Since the choice of locale and character set can alter the
 classifications of particular character codes, all of these functions
 are affected by the current locale.  (More precisely, they are affected
-by the locale currently selected for character classification.)
-@xref{Locales}.
-@c !!! should mention the symbol `LC_CTYPE' here.
+by the locale currently selected for character classification---the
+@code{LC_CTYPE} category; @xref{Locale Categories}.)
 
 @menu
 * Classification of Characters::   Testing whether characters are
@@ -179,16 +178,14 @@ Returns true if @var{c} is a control character (that is, a character that
 is not a printing character).
 @end deftypefun
 
-
 @cindex ASCII character
 @comment ctype.h
 @comment SVID, BSD
 @deftypefun int isascii (int @var{c})
 Returns true if @var{c} is a 7-bit @code{unsigned char} value that fits
-into the US/UK ASCII character set.
-@c !!! should say this is a non-ansi fn
+into the US/UK ASCII character set.  This function is a BSD extension
+and is also an SVID extension.
 @end deftypefun
-
 
 @node Case Conversion,  , Classification of Characters, Character Handling
 @section Case Conversion
@@ -234,9 +231,8 @@ upper-case letter.  Otherwise @var{c} is returned unchanged.
 @comment SVID, BSD
 @deftypefun int toascii (int @var{c})
 This function converts @var{c} to a 7-bit @code{unsigned char} value
-that fits into the US/UK ASCII character set, by clearing the
-high-order bits.
-@c !!! should say this is a non-ansi fn
+that fits into the US/UK ASCII character set, by clearing the high-order
+bits.  This function is a BSD extension and is also an SVID extension.
 @end deftypefun
 
 @comment ctype.h
