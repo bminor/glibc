@@ -1,5 +1,5 @@
 /* Inline math functions for i387.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by John C. Bowman <bowman@ipp-garching.mpg.de>, 1995.
 
@@ -21,10 +21,9 @@
 #ifndef __MATH_H
 #define __MATH_H	1
 
-#if defined __GNUG__ && \
-    (__GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ <= 7))
-/* gcc 2.7.2 and 2.7.2.1 have problems with inlining `long double'
-   functions so we disable this now.  */
+#if (__GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ <= 7))
+/* The gcc, version 2.7 or below, has problems with all this inlining
+   code.  So disable it for this version of the compiler.  */
 #undef __NO_MATH_INLINES
 #define __NO_MATH_INLINES
 #endif
@@ -484,9 +483,9 @@ sincos (double __x, double *__sinx, double *__cosx)
   *__cosx = __cosr;
 }
 
-__MATH_INLINE double sgn (double __x);
+__MATH_INLINE double __sgn (double __x);
 __MATH_INLINE double
-sgn (double __x)
+__sgn (double __x)
 {
   return (__x == 0.0 ? 0.0 : (__x > 0.0 ? 1.0 : -1.0));
 }
