@@ -1,5 +1,5 @@
 /* termios type and macro definitions.  4.4 BSD/generic GNU version.
-Copyright (C) 1993 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -180,7 +180,7 @@ struct termios
 };
 
 #define _IOT_termios /* Hurd ioctl type field.  */ \
-  _IOT (_IOTS (cflag_t), 4, _IOTS (cc_t), NCCS, _IOTS (speed_t), 2)
+  _IOT (_IOTS (tcflag_t), 4, _IOTS (cc_t), NCCS, _IOTS (speed_t), 2)
 
 /* Values for the OPTIONAL_ACTIONS argument to `tcsetattr'.  */
 #define	TCSANOW		0	/* Change immediately.  */
