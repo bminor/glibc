@@ -22,9 +22,10 @@ distribute = Machrules syscalls.awk shortcut.awk
 
 headers = mach_init.h mach.h mach-shortcuts.h \
 	  $(addprefix mach/,$(mach-headers)) \
-	  $(interface-headers)
-generated := mach-shortcuts.h
+	  # $(interface-headers)
+generated = mach-shortcuts.h $(interface-headers)
 
+ifndef no_deps	# XXX
 mach-headers := host_info.h kern_return.h \
 		mach_param.h mach_types.h \
 		memory_object.h \
@@ -35,6 +36,7 @@ mach-headers := host_info.h kern_return.h \
 		thread_status.h thread_switch.h time_value.h \
 		vm_attributes.h vm_inherit.h vm_prot.h \
 		vm_statistics.h
+endif
 
 user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     default_pager_object		\
@@ -55,7 +57,7 @@ routines = $(interface-routines) \
 	   mig_support mig_support_syms \
 	   msg_destroy msg_server msg_server_t \
 	   __msg_destroy __msg_server \
-	   devstream bootprivport privports
+	   devstream bootprivport # privports
 
 tests := hello
 
