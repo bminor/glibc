@@ -1,5 +1,8 @@
 2000-02-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED: Add gl_ES.
+	* locales/gl_ES: Copy CTYPE category from es_ES.
+
 	* SUPPORTED: Add af_ZA, ar_SA, en_BW, and en_ZW.
 
 	* locales/ar_SA: New file.
