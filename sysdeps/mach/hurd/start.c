@@ -29,6 +29,7 @@ mode_t _hurd_umask;
 int _hurd_ctty_fstype;
 fsid_t _hurd_ctty_fsid;
 ino_t _hurd_ctty_fileid;
+mach_port_t _hurd_sigport;
 
 mach_port_t *_hurd_init_dtable;
 size_t _hurd_init_dtablesize;
@@ -145,14 +146,31 @@ _start (void)
       _hurd_ctty_fileid = intarray[INIT_CTTY_FILEID];
     }
 
-  /* XXX Create the signal thread.  */
-
   {
+    thread_t sigthread;
     mach_port_t oldsig, oldtask;
+
+    if (err = __mach_port_allocate (__mach_task_self (),
+				    MACH_PORT_RIGHT_RECEIVE,
+				    &_hurd_sigport))
+      _exit (err);
+    if (err = __mach_port_insert_right (__mach_task_self (),
+					_hurd_sigport,
+					MACH_PORT_RIGHT_MAKE_SEND))
+      _exit (err);
+
+    if (err = __thread_create (__mach_task_self (), &sigthread))
+      _exit (err);
+    if (err = _hurd_start_sigthread (sigthread, _hurd_sigport_receive))
+      _exit (err);
+    __mach_port_deallocate (__mach_task_self (), sigthread);
+
     __proc_setports (_hurd_proc, _hurd_sigport, __mach_task_self (),
 		     &oldsig, &oldtask);
-    __mach_port_deallocate (__mach_task_self (), oldsig);
-    __mach_port_deallocate (__mach_task_self (), oldtask);
+    if (oldsig != MACH_PORT_NULL)
+      __mach_port_deallocate (__mach_task_self (), oldsig);
+    if (oldtask != MACH_PORT_NULL)
+      __mach_port_deallocate (__mach_task_self (), oldtask);
   }
 
   /* Tell the proc server where our args and environment are.  */
