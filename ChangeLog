@@ -3,6 +3,12 @@
 	[BZ #671]
 	* sysdeps/generic/syslog.c (send_flags) [!send_flags]: Define it.
 
+2005-01-28  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	[BZ #743]
+	* sysdeps/s390/bits/string.h (strlen, strncpy, strcat, strncat,
+	strncat, memchr, strcmp): Add missing memory clobber.
+
 2005-01-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/tst-fmtmsg.c: Include stdlib.h.  [BZ #731]
