@@ -1,5 +1,10 @@
 1998-10-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/Makefile [subdir==misc]
+	(sysdep_headers): Remove sys/debugreg.h.
+	* sysdeps/unix/sysv/linux/i386/Makefile [subdir==misc]
+	(sysdep_headers): Add sys/debugreg.h.
+
 	* time/mktime.c: Update from glibc 2.1.
 
 1998-10-08  Ulrich Drepper  <drepper@cygnus.com>
