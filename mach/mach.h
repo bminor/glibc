@@ -1,5 +1,5 @@
 /* Standard header for all Mach programs.
-Copyright (C) 1993 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -76,6 +76,10 @@ mach_msg_server_timeout (boolean_t (*__demux) (mach_msg_header_t *__request,
 
 /* Open a stream on a Mach device.  */
 extern FILE *mach_open_devstream (mach_port_t device_port, const char *mode);
+
+/* Give THREAD a stack and set it to run at PC when resumed.  */
+kern_return_t __mach_setup_thread (task_t task, thread_t thread, void *pc);
+kern_return_t mach_setup_thread (task_t task, thread_t thread, void *pc);
 
 
 #endif	/* mach.h */
