@@ -1,3 +1,7 @@
+2000-01-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/bits/string2.h (__strsep_g): Don't handle empty __S special.
+
 2000-01-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/mmap64.S: Pop registers after mmap2
