@@ -56,12 +56,11 @@ $(objpfx)libposix.a:
 	$(AR) cr $@ /dev/null
 
 # Make the standalone glob/fnmatch package.
-glob.tar.Z: glob.tar
-	compress -c $< > $@-tmp
-	mv $@-tmp $@
-glob.tar: glob/COPYING.LIB glob/Makefile.in glob/configure glob/configure.in \
+
+glob.tar: glob/ChangeLog glob/COPYING.LIB \
+	  glob/Makefile.in glob/configure glob/configure.in \
 	  glob/fnmatch.h glob/glob.h glob/fnmatch.c glob/glob.c	  
-	tar ch$(verbose)f $@ $^
+	tar cho$(verbose)f $@ $^
 glob/%.c: %.c
 	rm -f $@
 	ln -s ../$< $@
@@ -69,7 +68,17 @@ glob/%.h: %.h
 	rm -f $@
 	ln -s ../$< $@
 
-glob/configure: /home/gd/gnu/autoconf/glob.conf
-	cp $< $@
-/home/gd/gnu/autoconf/%: FORCE;$(MAKE) -C $(@D) $(@F)
-FORCE:
+glob/configure: glob/configure.in
+	autoconf $(ACFLAGS)
+
+glob/ChangeLog: ../ChangeLog
+	changelog-extract --regexp '(glob|fnmatch)\.[ch]' < $@ > $@.new
+	chmod a-w $@.new
+	mv $@.new $@
+
+%.Z: %
+	compress -c $< > $@-tmp
+	mv $@-tmp $@
+%.z: %
+	gzip -9 -c $< > $@-tmp
+	mv $@-tmp $@
