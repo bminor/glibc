@@ -51,7 +51,7 @@ routines := brk sbrk sstk ioctl \
 	    truncate ftruncate \
 	    chflags fchflags \
 	    insremque getttyent getusersh getpass ttyslot \
-	    syslog syscall \
+	    syslog syscall daemon \
 	    mmap munmap mprotect msync madvise
 aux := data_start progname init-misc
 distribute := bsd-compat.c
