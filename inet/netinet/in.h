@@ -1,4 +1,4 @@
-/* Copyright (C) 1990 Free Software Foundation, Inc.
+/* Copyright (C) 1991 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -153,6 +153,6 @@ struct sockaddr_in
 
 
 /* Get number representation conversion macros.  */
-#include <cvt.h>
+#include <inet-cvt.h>
 
 #endif	/* netinet/in.h */
