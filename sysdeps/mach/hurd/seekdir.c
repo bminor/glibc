@@ -26,12 +26,13 @@ Cambridge, MA 02139, USA.  */
 void
 DEFUN(seekdir, (dirp, pos), DIR *dirp AND __off_t pos)
 {
-  if (dirp->__offset != pos % dirp->__block_size)
-    {
-      dirp->__offset = pos % dirp->__block_size;
-      /* The block we have read is no longer appropriate; it corresponds to
-         a different position in the file that our offset now indicates. */
-      dirp->__size = 0;
-    }
-  dirp->__filepos = pos - dirp->__offset;
+  if (pos == dirp->__filepos + dirp->__offset)
+    return;
+
+  dirp->__filepos = pos;
+  dirp->__offset = 0;
+
+  /* The block we have read is no longer appropriate; it corresponds to
+     a different position in the file than our offset now indicates.  */
+  dirp->__size = 0;
 }
