@@ -59,9 +59,7 @@ sysdirs = $(config-sysdirs)
 
 +sysdir_pfx = $(common-objpfx)
 
-sysdep_dir := $(..)sysdeps
 export sysdirs := $(sysdirs)
-export sysdep_dir := $(sysdep_dir)
 
 +sysdep_dirs := $(addprefix $(sysdep_dir)/,$(sysdirs))
 ifdef objdir
