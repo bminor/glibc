@@ -27,9 +27,6 @@
 # define PT_EI extern inline
 #endif
 
-/* Memory barrier.  */
-#define MEMORY_BARRIER() __asm__ ("" : : : "memory")
-
 
 /* Spinlock implementation; required.  */
 
