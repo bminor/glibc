@@ -96,7 +96,7 @@ __%_server.c __%_server.h: %.defs
 	(sed '$$d' $<; tail +2 $(word 2,$^)) > $@-new
 	mv $@-new $@
 
-if-calls.c := $(foreach if,$(user-interfaces),$($(if)-calls:%=%.c))
+if-calls.c := $(strip $(foreach if,$(user-interfaces),$($(if)-calls:%=%.c)))
 ifdef if-calls.c
 $(if-calls.c): %.c:
 	(echo '#include <gnu-stabs.h>'; \
