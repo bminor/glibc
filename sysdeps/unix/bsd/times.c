@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,10 +27,10 @@ Cambridge, MA 02139, USA.  */
 /* Time the program started.  */
 extern time_t _posix_start_time;
 
-static clock_t
 #ifdef	__GNUC__
 __inline
 #endif
+static clock_t
 DEFUN(timeval_to_clock_t, (tv), CONST struct timeval *tv)
 {
   return (clock_t) ((tv->tv_sec * CLK_TCK) +
