@@ -20,7 +20,6 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <string.h>
 
-
 /* Return the first ocurrence of NEEDLE in HAYSTACK.  */
 char *
 DEFUN(strstr, (haystack, needle),
@@ -34,7 +33,7 @@ DEFUN(strstr, (haystack, needle),
   register CONST char *begin;
 
   if (needle_len == 0)
-    return (char *) haystack_end;
+    return (char *) haystack;
   if ((size_t) (haystack_end - haystack) < needle_len)
     return NULL;
 
@@ -42,13 +41,15 @@ DEFUN(strstr, (haystack, needle),
     {
       register CONST char *n = &needle[needle_last];
       register CONST char *h = begin;
+
       do
 	if (*h != *n)
-	  goto loop;
+	  goto loop;		/* continue for loop */
       while (--n >= needle && --h >= haystack);
 
       return (char *) h;
-    loop:;
+
+    loop:
     }
 
   return NULL;
