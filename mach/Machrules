@@ -60,6 +60,7 @@ endif
 generated += $(*.ir)
 endif
 
+
 # %.ir defines a variable `%-calls', which lists the RPCs defined by
 # %.defs, and a rule to build $(%-calls:%=__$(%-userprefix)%.c) from
 # %.defs, where $(%-userprefix) is the user prefix given in %.defs.  We use
