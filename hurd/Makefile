@@ -50,7 +50,7 @@ routines = hurdinit hurdid hurdpath hurdpid hurdrlimit hurdexec \
  	   vpprintf \
 	   ports-get ports-set hurdports hurdmsg \
 	   $(sig) $(dtable) hurdinline
-sig	= hurdsig siginfo init-fault msging-p hurd-raise preempt-sig \
+sig	= hurdsig siginfo init-fault hurd-raise preempt-sig \
 	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal hurdkill
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport \
