@@ -181,7 +181,7 @@ double x,y;
 	double tahoe_tmp;
 #endif	/* tahoe */
         float sx,sy;
-	long k=0;
+	long k;
         int n,m;
 
 	if(x==zero||!finite(x)) {           /* if x is +INF or +0 */
