@@ -18,15 +18,23 @@
 
 subdir := hurd
 
-interface-header-prefix = hurd/
+all:
+
+# Some things below (but before including Rules) use configuration variables.
+include ../Makeconfig
+
+
 headers = hurd.h $(interface-headers)
 distribute := intr_rpc.awk hurdintr.awk
 
-user-interfaces		:= auth process \
-			   exec core interrupt \
-			   fs io socket term
-server-interfaces	:= __misc
+user-interfaces		:= $(addprefix hurd/,\
+				       auth process \
+				       exec core interrupt \
+				       fs io) # socket term
+server-interfaces	:= # hurd/__misc
 
+routines = $(interface-routines) # XXX
+ifneq (,)
 routines = __pid2task __task2pid pid2task task2pid \
 	   __setauth setauth hurdports \
 	   fchroot \
@@ -39,10 +47,30 @@ routines = __pid2task __task2pid pid2task task2pid \
 	   fopenport __fopenport \
 	   vpprintf \
 	   $(interface-routines)
-aux := hurdinit hurdsyms
+endif
 
-all:
+aux := hurdsyms # hurdinit
+
+# Use and install the Hurd header files directly out of the Hurd source.
 
+
+# If we were configured with `--with-hurd=DIR', then config.make sets
+# hurd-srcdir to DIR.  Otherwise guess we are in a big source tree.
+ifndef hurd-srcdir
+hurd-srcdir = ../../hurd
+endif
+
+# Find the MiG defs files in the Hurd source.
+vpath %.defs $(hurd-srcdir)
+
+# Install all .h and .defs files we find in the Hurd's hurd/ directory.
+hurd-headers := $(patsubst $(hurd-srcdir)/%,%,\
+			   $(wildcard $(addprefix $(hurd-srcdir)/hurd/,\
+						  *.defs *.h)))
+install-others += $(addprefix $(includedir),$(hurd-headers))
+$(includedir)/hurd/%: $(hurd-srcdir)/hurd/%; $(do-install)
+
+# Insert comment here.
 
 ifdef intrhack # XXX
 # This rule needs to come before the implicit rules in Machrules.
@@ -70,6 +98,5 @@ migdefines := $(migdefines) $(foreach call,$(intr-calls),-D$(call)=$(call)_rpc)
 interface-routines := $(filter-out %_rpc,$(interface-routines)) \
 		      $(intr-calls:%=__% %)
 endif
-
-
+
 include ../Rules
