@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,91 +22,33 @@ Cambridge, MA 02139, USA.  */
 #include <signal.h>
 #include <termios.h>
 #include <unistd.h>
-
-#undef	B0
 #include "bsdtty.h"
 #include <sys/file.h>
 #include <sys/time.h>
-
-
-/* SIGALRM handler for `tcsendbreak'.  */
-static void
-DEFUN(break_handler, (sig), int sig)
-{
-  return;
-}
 
 /* Send zero bits on FD.  */
 int
 DEFUN(tcsendbreak, (fd, duration), int fd AND int duration)
 {
-  int failed = 0, bad_errno = 0;
-  struct itimerval old, new;
-  __sighandler_t handler;
+  struct timeval delay;
 
   /* The break lasts 0.25 to 0.5 seconds if DURATION is zero,
      and an implementation-defined period if DURATION is nonzero.
-     We define a positive DURATION to be number of milliseconds to break.  */
+     We define a positive DURATION to be number of microseconds to break.  */
   if (duration <= 0)
-    duration = 250;
+    duration = 400000;
+
+  delay.tv_sec = 0;
+  delay.tv_usec = duration;
 
   /* Starting sending break.  */
-  if (__ioctl(fd, TIOCSBRK, (PTR) NULL) < 0)
+  if (__ioctl (fd, TIOCSBRK, (PTR) NULL) < 0)
     return -1;
 
-  /* Set the timer to go off in DURATION milliseconds.  */
-  new.it_interval.tv_usec = 0;
-  new.it_interval.tv_sec = 0;
-  new.it_value.tv_usec = duration;
-  new.it_value.tv_sec = 0;
-  if (__setitimer(ITIMER_REAL, &new, &old) < 0)
-    {
-      /* Couldn't set the timer.  Turn off the break and lose.  */
-      (void) __ioctl(fd, TIOCCBRK, (PTR) NULL);
-      return -1;
-    }
-  handler = signal(SIGALRM, break_handler);
-  if (handler == SIG_ERR)
-    {
-      /* Couldn't set the timer signal handler.
-	 Turn off the break, restore the timer, and lose.  */
-      (void) __ioctl(fd, TIOCCBRK, (PTR) NULL);
-      (void) __setitimer(ITIMER_REAL, &old, (struct itimerval *) NULL);
-      return -1;
-    }
-
-  /* Wait for the SIGARLM to come.  */
-  (void) pause();
+  /* Wait DURATION microseconds.  */
+  (void) __select (0, (fd_set *) NULL, (fd_set *) NULL, (fd_set *) NULL,
+		   &delay);
 
   /* Turn off the break.  */
-  if (__ioctl(fd, TIOCCBRK, (PTR) NULL) < 0)
-    {
-      bad_errno = errno;
-      failed = 1;
-    }
-  if (signal(SIGALRM, handler) == SIG_ERR)
-    {
-      bad_errno = errno;
-      failed = 1;
-    }
-  old.it_value.tv_usec -= duration;
-  while (old.it_value.tv_usec < 0)
-    {
-      --old.it_value.tv_sec;
-      old.it_value.tv_usec += 1000;
-    }
-  if (old.it_value.tv_sec < 0)
-    old.it_value.tv_sec = 0;
-  if (__setitimer(ITIMER_REAL, &old, (struct itimerval *) NULL) < 0)
-    {
-      bad_errno = errno;
-      failed = 1;
-    }
-
-  if (failed)
-    {
-      errno = bad_errno;
-      return -1;
-    }
-  return 0;
+  return __ioctl (fd, TIOCCBRK, (PTR) NULL);
 }
