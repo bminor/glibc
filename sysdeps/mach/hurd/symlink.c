@@ -30,13 +30,13 @@ DEFUN(__symlink, (from, to), CONST char *from AND CONST char *to)
   error_t err;
   file_t dir, node;
   char *name;
-  const size_t len = strlen (to) + 1;
+  const size_t len = strlen (from) + 1;
   char buf[sizeof (_HURD_SYMLINK) + len];
 
   /* A symlink is a file whose translator is "/hurd/symlink\0target\0".  */
 
   memcpy (buf, _HURD_SYMLINK, sizeof (_HURD_SYMLINK));
-  memcpy (&buf[sizeof (_HURD_SYMLINK)], to, len);
+  memcpy (&buf[sizeof (_HURD_SYMLINK)], from, len);
 
   dir = __path_split (to, &name);
   if (dir == MACH_PORT_NULL)
