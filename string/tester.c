@@ -281,7 +281,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   check(strstr(one, "abcd") == one, 8);	/* Exact match. */
   check(strstr(one, "abcde") == NULL, 9);	/* Too long. */
   check(strstr(one, "de") == NULL, 10);	/* Past end. */
-  check(strstr(one, "") == one+4, 11);	/* Finding empty. */
+  check(strstr(one, "") == one, 11);	/* Finding empty. */
   (void) strcpy(one, "ababa");
   check(strstr(one, "ba") == one+1, 12);	/* Finding first. */
   (void) strcpy(one, "");
