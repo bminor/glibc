@@ -20,6 +20,20 @@ Cambridge, MA 02139, USA.  */
 
 #define	_IOCTLS_H	1
 
+/* Hurd ioctl request are made up of several fields:
+     bits 31-30: inout direction (enum __ioctl_dir)
+     bits 29-12: type encoding as follows; zero count indicates omitted datum
+	  29-28: datum #0 type (enum __ioctl_datum)
+	  27-26: datum #1 type (enum __ioctl_datum)
+	  25-24: datum #2 type (enum __ioctl_datum)
+	  23-19: datum #0 count	[0..31]
+	  18-14: datum #1 count [0..31]
+	  13-12: datum #2 count [0..3]
+     bits 11- 8: group (letter - 'f': ['f'..'v'])
+     bits  7- 0: command	[0..127]
+
+   The following macros construct and dissect these fields.  */
+
 enum __ioctl_dir
   {
     IOC_VOID = 0,	/* No parameters.  */
@@ -28,37 +42,30 @@ enum __ioctl_dir
     IOC_INOUT = (IOC_IN|IOC_OUT)
   };
 
-/* Bits in ioctl command values.  */
-union __ioctl
-  {
-    /* We use this structure when we want all the information
-       broken out for convenient access.  */
-    struct
-      {
-	enum __ioctl_dir inout:2;
-	enum { IOC_8, IOC_16, IOC_32 } type0:2, type1:2, type2:2;
-	unsigned int count0:5, count1:5, count2:3;
-	unsigned int group:4, command:7;
-      } __t;
-    /* We use this structure to construct and insert type information.  */
-    struct
-      {
-	enum __ioctl_dir inout:2;
-	unsigned int type:19;
-	unsigned int group:4, command:7;
-      } __s;
-    /* We use the plain integer to pass around.  */
-    unsigned long int __i;
-  };
+enum __ioctl_datum { IOC_8, IOC_16, IOC_32 };
 
 /* Construct an ioctl from constructed type plus other fields.  */
 #define	_IOC(inout, group, num, type) \
   ((num) | ((((group) - 'f') | ((type) | (inout) << 19) << 4) << 7))
 
+/* Dissect an ioctl into its component fields.  */
+#define _IOC_INOUT(request)	(((unsigned int) (request) >> 30) & IOC_INOUT)
+#define _IOC_GROUP(request)	('f' + (((unsigned int) (request) >> 7) & 15))
+#define _IOC_COMMAND(request)	((unsigned int) (request) & 0x7f)
+#define _IOC_TYPE(request)	(((unsigned int) (request) >> 11) & 0x7ffff)
+
 /* Construct a type information field from
    the broken-out type and count fields.  */
 #define	_IOT(t0, c0, t1, c1, t2, c2) \
   ((c2) | (((c1) | ((c0) | ((t2) | ((t1) | (t0) << 2) << 2) << 5) << 5) << 3))
+
+/* Dissect a type information field into the type and count fields.  */
+#define	_IOT_TYPE0(type)	(((unsigned int) (type) >> 17) & 3)
+#define	_IOT_TYPE1(type)	(((unsigned int) (type) >> 15) & 3)
+#define	_IOT_TYPE2(type)	(((unsigned int) (type) >> 13) & 3)
+#define	_IOT_COUNT0(type)	(((unsigned int) (type) >> 8) & 0x1f)
+#define	_IOT_COUNT1(type)	(((unsigned int) (type) >> 3) & 0x1f)
+#define	_IOT_COUNT2(type)	(((unsigned int) (type) >> 0) & 3)
 
 /* Construct an ioctl from all the broken-out fields.  */
 #define	_IOCT(inout, group, num, t0, c0, t1, c1, t2, c2)		      \
