@@ -252,11 +252,12 @@ interrupted_reply_port_location (struct machine_thread_all_state *thread_state)
    This uses only the constant member SS->thread and the unlocked, atomically
    set member SS->intr_port, so no locking is needed.
 
-   Returns nonzero iff it successfully sent an interrupt_operation and
-   therefore the thread should wait for its pending RPC to return (possibly
-   EINTR) before taking the incoming signal.  */
+If successfully sent an interrupt_operation and therefore the thread should
+   wait for its pending RPC to return (possibly EINTR) before taking the
+   incoming signal, returns the reply port to be received on.  Otherwise
+   returns MACH_PORT_NULL.  */
 
-static int
+static mach_port_t
 abort_rpcs (struct hurd_sigstate *ss, int signo,
 	    struct machine_thread_all_state *state,
 	    mach_port_t *reply_port, mach_msg_type_name_t reply_port_type)
@@ -342,17 +343,28 @@ abort_rpcs (struct hurd_sigstate *ss, int signo,
 static void
 abort_all_rpcs (int signo, struct machine_thread_all_state *state)
 {
-  struct hurd_sigstate *ss;
-
   /* We can just loop over the sigstates.  Any thread doing something
-     interruptible must have one.  We needn't bother locking (see
-     abort_rpcs).  */
+     interruptible must have one.  We needn't bother locking because all
+     other threads are stopped.  */
 
-  __mutex_lock (&_hurd_siglock);
   for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
     if (ss->thread != _hurd_msgport_thread)
-      abort_rpcs (ss, signo, state, NULL, 0);
-  __mutex_unlock (&_hurd_siglock);
+      /* Abort any operation in progress with interrupt_operation.  We
+	 record this by putting the reply port into SS->intr_port, or
+	 MACH_PORT_NULL if no interruption was done.  We will wait for
+	 all the replies below.  */
+      ss->intr_port = abort_rpcs (ss, signo, state, NULL, 0);
+
+  /* Wait for replies from all the successfully interrupted RPCs.  */
+  for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
+    if (ss->intr_port != MACH_PORT_NULL)
+      {
+	error_t err;
+	mach_msg_header_t head;
+	err = __mach_msg (&head, MACH_RCV_MSG, 0, sizeof head, ss->intr_port,
+			  MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
+	assert (err == KERN_SUCCESS || err == MACH_RCV_TOO_LARGE);
+      }
 }
 
 
@@ -626,8 +638,9 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	/* Stop the thread and abort its pending RPC operations.  */
 	if (! ss_suspended)
 	  __thread_suspend (ss->thread);
-	wait_for_reply = abort_rpcs (ss, signo, &thread_state,
-				     &reply_port, reply_port_type);
+	wait_for_reply = (abort_rpcs (ss, signo, &thread_state,
+				      &reply_port, reply_port_type)
+			  != MACH_PORT_NULL);
 
 	/* Call the machine-dependent function to set the thread up
 	   to run the signal handler, and preserve its old context.  */
