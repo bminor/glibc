@@ -9,6 +9,12 @@ VERSION="@VERSION@"
 BUGGLIBC="bugs@gnu.org"
 ADDONS="@subdirs@"
 HOST="@host@"
+CC='@CC@'
+CFLAGS="@CFLAGS@"
+BUILD_SHARED="@shared@"
+BUILD_PROFILE="@profile@"
+BUILD_OMITFP="@omitfp@"
+STDIO="@stdio@"
 
 PATH=/bin:/usr/bin:/usr/local/bin:$PATH
 export PATH
@@ -125,6 +131,12 @@ ${ORGANIZATION- $ORGANIZATION_C}
 `[ -n "$ARCH" ] && echo Architecture: $ARCH`
 `[ -n "$MACHINE" ] && echo Machine: $MACHINE`
 `[ -n "$ADDONS" ] && echo Addons: $ADDONS`
+`[ -n "$CFLAGS" ] && echo Build CFLAGS: $CFLAGS`
+`[ -n "$CC" ] && echo Build CC: $CC`
+`[ -n "$BUILD_SHARED" ] && echo Build shared: $BUILD_SHARED`
+`[ -n "$BUILD_PROFILE" ] && echo Build profile: $BUILD_PROFILE`
+`[ -n "$BUILD_OMITFP" ] && echo Build omitfp: $BUILD_OMITFP`
+`[ -n "$STDIO" ] && echo Stdio: $STDIO`
 
 >Description:
 	$DESCRIPTION_C
