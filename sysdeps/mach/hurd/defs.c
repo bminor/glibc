@@ -1,6 +1,6 @@
 /* Definitions of global stdio data structures.
 
-Copyright (C) 1991 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -50,6 +50,6 @@ text_set_element (__libc_subinit, init_stdio);
 void
 DEFUN_VOID(_cleanup)
 {
-  (void) fclose((FILE *) NULL);
+  (void) fclose ((FILE *) NULL);
 }
-text_set_element(__libc_atexit, _cleanup);
+text_set_element (__libc_atexit, _cleanup);
