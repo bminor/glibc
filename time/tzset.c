@@ -227,6 +227,15 @@ DEFUN_VOID(__tzset)
   if (*tz_rules[1].name == '\0')
     tz_rules[1].offset = tz_rules[0].offset + (60 * 60);
 
+  if (*tz == '\0' || tz[0] == ',' && tz[1] == '\0')
+    {
+      /* There is no rule.  See if there is a default rule file.  */
+      __tzfile_default (tz_rules[0].name, tz_rules[1].name,
+			tz_rules[0].offset, tz_rules[1].offset);
+      if (__use_tzfile)
+	return;
+    }
+
   /* Figure out the standard <-> DST rules.  */
   for (whichrule = 0; whichrule < 2; ++whichrule)
     {
