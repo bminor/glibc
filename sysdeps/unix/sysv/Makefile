@@ -16,12 +16,6 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-ifeq ($(subdir),io)
-
-sysdep_routines := $(sysdep_routines) __utssys
-
-endif
-
 ifeq ($(subdir), misc)
 
 sysdep_headers := $(sysdep_headers) termio.h
