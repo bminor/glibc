@@ -75,7 +75,7 @@ ifeq (,$(filter mach hurd,$(subdir)))
 # there, and we know mach/ doesn't need anything from hurd/.)
 
 ifdef objpfx
-hurd-objpfx = $(objpfx)hurd/
+hurd-objpfx = $(objpfx)
 else
 hurd-objpfx = $(..)hurd/
 endif
