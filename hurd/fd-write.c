@@ -40,7 +40,7 @@ _hurd_fd_write (struct hurd_fd *fd, const void *buf, size_t *nbytes)
   __mutex_unlock (&ss->lock);
 #endif
   
-  err = HURD_FD_USE
+  err = HURD_FD_PORT_USE
     (fd,
      ({
      call:
