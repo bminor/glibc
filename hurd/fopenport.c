@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <stdio.h>
 #include <fcntl.h>
-#incllude <string.h>
+#include <string.h>
 
 /* Read up to N chars into BUF from COOKIE.
    Return how many chars were read, 0 for EOF or -1 for error.  */
