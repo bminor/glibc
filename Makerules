@@ -26,26 +26,24 @@ endif
 
 ifdef	subdir
 ..	:= ../
+endif	# subdir
 
 # If `sources' was defined by the parent makefile, undefine it so
 # we will later get it from wildcard search in this directory.
 ifneq	"$(findstring env,$(origin sources))" ""
 sources :=
 endif
+export sources
+
+ifneq	"$(findstring env,$(origin headers))" ""
+headers :=
+endif
+export headers
+
 
 ifneq ($(findstring e,$(MAKEFLAGS)),)
 You must not use the -e flag when building the GNU C library.
 endif
-
-# If defined, these will determine the value of `sources'.
-ifneq	"$(findstring env,$(origin routines))" ""
-routines	:=
-endif
-ifneq	"$(findstring env,$(origin aux))" ""
-aux		:=
-endif
-
-endif	# subdir
 
 ifndef +included-Makeconfig
 include $(..)Makeconfig
@@ -83,6 +81,8 @@ $(+sysdir_pfx)Sysnames:
 	@(echo The GNU C Library has not been configured!	;\
 	  echo Run \`configure\' to configure it before building.\
 	 ) >&2; exit 1
+export sysdirs
+export sysdep_dir
 
 # Turn the list of sysdep names into a colon-separated list of directories
 # under SYSDEP_DIR (the base directory for sysdep files), and tell Make to
@@ -255,16 +255,6 @@ echo-headers:
 
 # Installation.
 
-ifneq "$(findstring env,$(origin install-lib))" ""
-override install-lib :=
-endif
-ifneq "$(findstring env,$(origin install-data))" ""
-override install-data :=
-endif
-ifneq "$(findstring env,$(origin install))" ""
-override install :=
-endif
-
 # install-lib are installed from the object directory into libdir.
 # install-data are installed as they are into datadir.  
 # headers are installed from the object directory header directories into
@@ -326,3 +316,6 @@ endif
 
 # Command to compile in $< in $(objdir) using the native libraries.
 native-compile = cwd=`pwd`; cd $(objdir); $(CC) $$cwd/$< -o $(@:$(objpfx)%=%)
+
+TAGS: $(..)MakeTAGS
+	$(MAKE) -f $< $@
