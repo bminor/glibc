@@ -71,7 +71,7 @@ Cambridge, MA 02139, USA.  */
    to do nonblocking i/o; any i/o operation that would block for any length
    of time will instead fail with EAGAIN.  */
 
-#define	O_NONBLOCK	0x0800	/* Non-blocking open or non-blocking I/O.  */
+#define	O_NONBLOCK	0x0008	/* Non-blocking open or non-blocking I/O.  */
 #ifdef __USE_BSD
 #define	O_NDELAY	O_NONBLOCK
 #endif
