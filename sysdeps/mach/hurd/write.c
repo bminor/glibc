@@ -29,6 +29,7 @@ DEFUN(__write, (fd, buf, nbytes),
   size_t wrote;
   int noctty;
 
+#ifdef notyet
   struct _hurd_sigstate *ss
     = _hurd_thread_sigstate (__mach_thread_self ());
 
@@ -38,6 +39,7 @@ DEFUN(__write, (fd, buf, nbytes),
 	    __sigismember (SIGTTOU, &ss->blocked) ||
 	    ss->actions[SIGTTOU].sa_handler == SIG_IGN);
   __mutex_unlock (&ss->lock);
+#endif
   
   _HURD_DPORT_USE
     (fd,
@@ -59,6 +61,7 @@ DEFUN(__write, (fd, buf, nbytes),
 	     err = EINTR;	/* XXX Is this right? */
 #endif
 	 }
+       0;
      }));
 
   if (err)
