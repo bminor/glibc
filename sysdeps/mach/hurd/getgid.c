@@ -33,8 +33,7 @@ DEFUN_VOID(__getgid)
       if (err)
 	{
 	  __mutex_unlock (&_hurd_idlock);
-	  errno = __hurd_errno (err);
-	  return -1;
+	  return __hurd_fail (err);
 	}
       _hurd_id_valid = 1;
     }
