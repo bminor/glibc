@@ -205,6 +205,7 @@ ctty_new_pgrp (void)
 {
   int i;
   
+  HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
 
   for (i = 0; i < _hurd_dtable.size; ++i)
@@ -235,6 +236,7 @@ ctty_new_pgrp (void)
     }
 
   __mutex_unlock (&_hurd_dtable_lock);
+  HURD_CRITICAL_END;
 }
 
 text_set_element (_hurd_pgrp_changed_hook, ctty_new_pgrp);
@@ -246,6 +248,7 @@ reauth_dtable (void)
 {
   int i;
 
+  HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
 
   for (i = 0; i < _hurd_dtable.size; ++i)
@@ -286,10 +289,10 @@ reauth_dtable (void)
     }
 
   __mutex_unlock (&_hurd_dtable_lock);
+  HURD_CRITICAL_END;
 }
 
 text_set_element (_hurd_reauth_hook, reauth_dtable);
-
 
 #if 0
 
@@ -300,6 +303,7 @@ rectty_dtable (mach_port_t cttyid)
 {
   int i;
   
+  HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
 
   for (i = 0; i < _hurd_dtable.size; ++i)
@@ -341,6 +345,7 @@ rectty_dtable (mach_port_t cttyid)
     }
 
   __mutex_unlock (&_hurd_dtable_lock);
+  HURD_CRITICAL_END;
 }
 
 #include <sys/ioctl.h>
