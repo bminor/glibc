@@ -564,16 +564,21 @@ included as well as the ANSI C, POSIX.1, and POSIX.2 material.
 
 @defvr Macro _GNU_SOURCE
 If you define this macro, everything is included: ANSI C, POSIX.1,
-POSIX.2, BSD, SVID, and GNU extensions.  Again, the BSD definitions
-take precedence over the POSIX definitions where there are conflicts.
+POSIX.2, BSD, SVID, and GNU extensions.  In the cases where POSIX.1
+conflicts with BSD, the POSIX definitions take precedence.
+
+If you want to get the full effect of @code{_GNU_SOURCE} but make the
+BSD definitions take precedence over the POSIX definitions, use this
+sequence of definitions:
+
+@example
+#define _GNU_SOURCE
+#define _BSD_SOURCE
+#define _SVID_SOURCE
+@end example
 @end defvr
 
-@strong{Incomplete:} RMS says that @code{_GNU_SOURCE} should prefer
-POSIX to BSD, and there should be another feature test macro called
-@code{_GNU_BSD_SOURCE} that does what @code{_GNU_SOURCE} should do.
-We should recommend that people writing new programs use the (new)
-@code{_GNU_SOURCE}.
-
+We recommend you use @code{_GNU_SOURCE} in new programs.
 If you don't specify the @samp{-ansi} option to GCC and don't define
 any of these macros explicitly, the effect as the same as defining
 @code{_GNU_SOURCE}.
