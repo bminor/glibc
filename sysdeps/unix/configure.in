@@ -45,6 +45,9 @@ fi
 
 test -n "$unix_syscall_h" && {
 
+# This variable will collect the names of the files we create.
+unix_generated=
+
 # These several functions are system calls on Unix systems which have them.
 # The details of these calls are universal enough that if a system's
 # <syscall.h> defines the system call number, we know that the simple
@@ -92,11 +95,16 @@ do
       echo "#include <sysdeps/unix/common/${unix_srcname}.S>" \
       > ${unix_srcname}.S
       test -n "$verbose" && echo "	wrote ${unix_srcname}.S"
+      unix_generated="$unix_generated ${unix_srcname}.S"
     fi
   ;;
   *) ;;
   esac
 
 done
+
+# Store the list of files we created in config.make; Makefile uses it.
+test -n "$unix_generated" && config_vars="$config_vars
+unix-generated := ${unix_generated}"
 
 }
