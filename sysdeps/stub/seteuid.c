@@ -20,12 +20,9 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <unistd.h>
 
-/* Set the user ID of the calling process to UID.
-   If the calling process is the super-user, the real
-   and effective user IDs, and the saved set-user-ID to UID;
-   if not, the effective user ID is set to UID.  */
+/* Set the effective user ID of the calling process to UID.  */
 int
-DEFUN(seteuid, (uid), int uid)
+DEFUN(seteuid, (uid), __uid_t uid)
 {
   errno = ENOSYS;
   return -1;
