@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,9 +36,12 @@ DEFUN(__pipe, (fds), int fds[2])
   if (fds == NULL)
     return __hurd_fail (EINVAL);
 
-  server = _hurd_socket_server (AF_LOCAL);
+  /* Find the file domain socket server.  */
+  server = _hurd_socket_server (AF_FILE);
   if (server == NULL)
     return -1;
+
+  /* Create two file domain sockets and connect them together.  */
 
   if (err = __socket_create (server, SOCK_STREAM, 0, &sock1))
     return __hurd_fail (err);
@@ -53,20 +56,22 @@ DEFUN(__pipe, (fds), int fds[2])
       __mach_port_deallocate (__mach_task_self (), sock2);
       return __hurd_fail (err);
     }
+
+  /* Shut down the unused sides of the sockets.  */
   __socket_shutdown (sock1, 1);
   __socket_shutdown (sock2, 0);
 
-  d1 = _hurd_dalloc (sock1, MACH_PORT_NULL, 0);
+  /* Put the sockets into file descriptors.  */
+
+  d1 = _hurd_intern_fd (sock1, 0, 1);
   if (d1 < 0)
-    {
-      __mach_port_deallocate (__mach_task_self (), sock2);
-      return -1;
-    }
-  d2 = _hurd_dalloc (sock2, MACH_PORT_NULL, 0);
+    return -1;
+  d2 = _hurd_intern_fd (sock2, 0, 1);
   if (d2 < 0)
     {
+      err = errno;
       (void) close (d1);
-      return __hurd_fail (EMFILE);
+      return __hurd_fail (err);
     }
 
   fds[0] = d1;
