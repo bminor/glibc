@@ -48,7 +48,7 @@ DEFUN(__execve, (path, argv, envp),
   struct _hurd_sigstate *ss;
 
   /* Get a port to the file we want to execute.  */
-  file = __path_lookup (path, FS_LOOKUP_EXEC, 0);
+  file = __path_lookup (path, O_EXEC, 0);
   if (file == MACH_PORT_NULL)
     return -1;
 
