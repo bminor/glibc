@@ -528,7 +528,8 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   check(bcmp("abc", "def", 0) == 0, 8);	/* Zero count. */
 
   {
-    char *list = "This,is,a,test", *token = NULL;
+    char text[] = "This,is,a,test";
+    char *list = text, *token = NULL;
     it = "strsep";
     check (!strcmp ("This", strsep (&list, ",")), 1);
     check (!strcmp ("is", strsep (&list, ",")), 2);
