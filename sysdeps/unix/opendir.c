@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,15 +36,12 @@ DEFUN(opendir, (name), CONST char *name)
   struct stat statbuf;
   int fd;
 
-  fd = __open(name, O_RDONLY);
+  fd = __open (name, O_RDONLY);
   if (fd < 0)
     return NULL;
 
-  {
-    int flags = FD_CLOEXEC;
-    if (fcntl(fd, F_SETFD, &flags) < 0)
-      return NULL;
-  }
+  if (fcntl (fd, F_SETFD, FD_CLOEXEC) < 0)
+    return NULL;
 
   dirp = (DIR *) malloc(sizeof(DIR) + NAME_MAX);
   if (dirp == NULL)
