@@ -86,20 +86,21 @@ include mpn-copy.mk
 
 mpn-copy-1 := $(patsubst $(gmp-srcdir)/mpn/%,$(sysdep_dir)/%,$(mpn-found))
 mpn-copy-sysdep := $(mpn-copy-sysdep) $(mpn-copy-1)
-$(mpn-copy-1): $(sysdep_dir)/%: gmp2glibc.sed $(gmp-srcdir)/mpn/%
+$(mpn-copy-1): $(sysdep_dir)/%: $(ignore gmp2glibc.sed) $(gmp-srcdir)/mpn/%
 	$(gmp2glibc)
 
 mpn-stuff = $(mpn-copy-sysdep) $(mpn-copy)
 
 # chmod so I don't edit them by mistake.
 define gmp2glibc
-sed -f $^ > $@-tmp
+$(ignore sed -f $^ > $@-tmp)
+cp $< $@-tmp
 chmod a-w $@-tmp
 mv -f $@-tmp $@
 endef
 
 mpn-copy = $(filter-out $(mpn-sysdep),$(mpn-headers) mp_clz_tab.c)
-$(mpn-copy): %: gmp2glibc.sed $(gmp-srcdir)/%; $(gmp2glibc)
+$(mpn-copy): %: $(ignore gmp2glibc.sed) $(gmp-srcdir)/%; $(gmp2glibc)
 
 .PHONY: copy-mpn clean-mpn
 copy-mpn: $(mpn-stuff)
