@@ -515,9 +515,9 @@ Greenwich Mean Time (GMT) rather than relative to the local time zone.
 
 Recall that calendar times are @emph{always} expressed in coordinated
 universal time.
-@c If the implementation can't figure out where the local time zone is
-@c relative to GMT, this function returns a null pointer.
-@c ??? This function should not need to use the local time zone. ???
+
+If the system doesn't currently know the time, @code{gmtime} returns
+a null pointer.
 @end deftypefun
 
 @comment time.h
