@@ -101,5 +101,10 @@ endif
 
 $(objpfx)zic: $(objpfx)scheck.o $(objpfx)ialloc.o $(objpfx)emkdir.o
 
-$(objpfx)tzfile.o: tzfile.c
-	$(COMPILE.c) -DTZDIR='"$(datadir)/zoneinfo"' $< $(OUTPUT_OPTION)
+$(objpfx)tzfile.o: tzfile.c; $(tz-cc)
+$(objpfx)zic.o: zic.c; $(tz-cc)
+define tz-cc
+$(COMPILE.c) -DTZDIR='"$(datadir)/zoneinfo"' \
+	     -DTZDEFAULT='"$(localtime-file)"' \
+	     $< $(OUTPUT_OPTION)
+endef
