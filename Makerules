@@ -285,8 +285,10 @@ install: $(+install-dirs) $(+install)
 
 S-CPPFLAGS = $(asm-CPPFLAGS)
 +make-deps = $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
-	     sed -e 's,$(objpfx),$$(objpfx),g' \
-		 -e 's,$*\.o,$(@:.dep=.o) $@,' > $@
+	     sed $(sed-remove-objpfx) -e 's,$*\.o,$(@:.dep=.o) $@,' > $@
+ifneq (,$(objpfx))
+sed-remove-objpfx = -e 's,$(objpfx),$$(objpfx),g'
+endif
 
 # N.B.: The order of these two rules is important.
 $(objpfx)%.dep: %.S $(before-compile)
@@ -354,8 +356,10 @@ ifdef +depfiles
 .PHONY: stubs # The parent Makefile calls this target.
 stubs: $(common-objpfx)stub-$(subdir)
 $(common-objpfx)stub-$(subdir): $(+depfiles)
-	sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' > $@T \
-	    `sed -n 's/^.*\($(sysdep_dir)/stub/[a-z0-9_]*\.c\).*$$/\1/p' $^`
+# Use /dev/null since `...` might expand to empty.
+	sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
+	    `sed -n 's@^.*\($(sysdep_dir)/stub/[a-z0-9_]*\.c\).*$$@\1@p' $^` \
+	    /dev/null > $@T
 	mv $@T $@
 endif
 
