@@ -124,7 +124,9 @@ start1 (void)
     /* Initialize library data structures, start signal processing, etc.  */
     _hurd_init (flags, argv, portarray, portarraysize, intarray, intarraysize);
 
-  /* Random library initialization.  */
+  /* Random library initialization.  These functions may assume that
+     _hurd_init has already run (if it is going to), and POSIX.1 facilities
+     are initialized and available.  */
   __libc_init (argc, argv, __environ);
 
   /* Finally, run the user program.  */
