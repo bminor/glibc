@@ -16,12 +16,13 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-register int *sp asm ("%esp");
+register void *sp asm ("%esp");
 
 #include <hurd.h>
 #include <hurd/signal.h>
 #include <hurd/threadvar.h>
 #include <hurd/msg.h>
+#include <stdlib.h>
 
 int
 __sigreturn (struct sigcontext *scp)
@@ -64,6 +65,7 @@ __sigreturn (struct sigcontext *scp)
     {
       ss->sigaltstack.ss_flags &= ~SA_ONSTACK; /* XXX threadvars */
       /* XXX cannot unlock until off sigstack */
+      abort ();
     }
   else
     __mutex_unlock (&ss->lock);
@@ -79,37 +81,42 @@ __sigreturn (struct sigcontext *scp)
   if (scp->sc_fpused)
     {
   /* XXX should restore FPU state here XXX roland needs 387 manual */
+      abort ();
     }
 
-  scp->sc_uesp += 128;		/* XXX bogosity XXX iret doesn't do SP */
+  {
+    /* There are convenient instructions to pop state off the stack, so we
+       copy the registers onto the user's stack, switch there, pop and
+       return.  */
 
-  /* There are convenient instructions to pop state off the stack,
-     so we switch our stack pointer to point into SCP.  */
-  sp = &scp->sc_gs;
+    struct i386_thread_state *ustack = (void *) scp->sc_uesp;
+
+    memcpy (--ustack, &scp->sc_i386_thread_state, sizeof *ustack);
+    ustack->cs = ustack->eip;
+    ustack->eip = ustack->efl;
+
+    sp = ustack;
 
 #define A(line) asm volatile (#line)
-  /* The members in the sigcontext are arranged in this order
-     so we can pop them easily.  */
+    /* The members in the sigcontext are arranged in this order
+       so we can pop them easily.  */
 
-  /* Pop the segment registers (except %cs and %ss, done last).  */
-  A (popl %gs);
-  A (popl %fs);
-  A (popl %es);
-  A (popl %ds);
-  /* Pop the general registers.  */
-  A (popa);
-  /* Now at the top of the stack:
-     	sc_eip
-	sc_cs
-	sc_efl
-	sc_uesp	XXX DOES NOT WORK
-	sc_ss	XXX it does not restore %esp and %ss in user mode!!!
-     The `iret' instruction does just what we need.  It pops %eip, %cs, the
-     processor flag word, %esp, and %ss; then resumes execution at the new
-     %eip value in the new code segment.  */
-  A (iret);
+    /* Pop the segment registers (except %cs and %ss, done last).  */
+    A (popl %gs);
+    A (popl %fs);
+    A (popl %es);
+    A (popl %ds);
+    /* Pop the general registers.  */
+    A (popa);
+    /* Pop the processor flags.  */
+    A (popf);
+    /* Return to the saved PC.  */
+    A (ret);
 
+    /* Firewall.  */
+    A (hlt);
 #undef A
+  }
 
   /* NOTREACHED */
   return -1;
