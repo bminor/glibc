@@ -30,13 +30,24 @@ Cambridge, MA 02139, USA.  */
 #define	_ASSERT_H	1
 #include <features.h>
 
-/* void assert(int expression);
+/* void assert (int expression);
+
    If NDEBUG is defined, do nothing.
    If not, and EXPRESSION is zero, print an error message and abort.  */
 
 #ifdef	NDEBUG
 
-#define	assert(expr)	((void) 0)
+#define	assert(expr)		((void) 0)
+
+/* void assert_perror (int errnum);
+
+   If NDEBUG is defined, do nothing.  If not, and ERRNUM is not zero, print an
+   error message with the error text for ERRNUM and abort.
+   (This is a GNU extension.) */
+
+#ifdef	__USE_GNU
+#define	assert_perror(errnum)	((void) 0)
+#endif
 
 #else /* Not NDEBUG.  */
 
@@ -50,11 +61,24 @@ extern __NORETURN int __assert_fail __P ((__const char *__assertion,
 					  unsigned int __line,
 					  __const char *__function));
 
+/* Likewise, but prints the error text for ERRNUM.  */
+extern __NORETURN int __assert_perror_fail __P ((int __errnum,
+						 __const char *__file,
+						 unsigned int __line,
+						 __const char *__function));
+
 __END_DECLS
 
 #define	assert(expr) 							      \
   ((void) ((expr) || __assert_fail (__STRING(expr),			      \
 				    __FILE__, __LINE__, __ASSERT_FUNCTION)))
+
+#ifdef	__USE_GNU
+#define assert_perror(errnum)						      \
+  ((void) ((errnum) && __assert_perror_fail ((errnum),			      \
+					     __FILE__, __LINE__,	      \
+					     __ASSERT_FUNCTION)))
+#endif
 
 /* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'
    which contains the name of the function currently being defined.
@@ -65,6 +89,7 @@ __END_DECLS
 #else
 #define __ASSERT_FUNCTION	__PRETTY_FUNCTION__
 #endif
+
 
 #endif /* NDEBUG.  */
 
