@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,14 +21,10 @@ Cambridge, MA 02139, USA.  */
 /* This file defines the fake signal functions and signal
    number constants for System V release 3.  */
 
-/* Fake signal functions. IGNORE($
-   These lines MUST be split!  m4 will not change them otherwise.$) */
-#define	SIG_ERR	/* Error return.  */	\
-	((void EXFUN((*), (int sig))) -1)
-#define	SIG_DFL	/* Default action.  */	\
-	((void EXFUN((*), (int sig))) 0)
-#define	SIG_IGN	/* Ignore signal.  */	\
-	((void EXFUN((*), (int sig))) 1)
+/* Fake signal functions.  */
+#define	SIG_ERR	((__sighandler_t) -1) /* Error return.  */
+#define	SIG_DFL	((__sighandler_t) 0) /* Default action.  */
+#define	SIG_IGN	((__sighandler_t) 1) /* Ignore signal.  */
 
 
 /* Signals.  */
