@@ -49,7 +49,8 @@ __setregid (gid_t rgid, gid_t egid)
 
   if (i == _hurd_id.ngroups)
     {
-      if (_hurd_id.ngroups == sizeof (_hurd_id.gids) / sizeof (_hurd_id.gids[0]))
+      if (_hurd_id.ngroups == (sizeof (_hurd_id.gids) /
+			       sizeof (_hurd_id.gids[0])))
 	{
 	  __mutex_unlock (&_hurd_idlock);
 	  errno = ENOMEM;	/* ? */
