@@ -34,11 +34,11 @@ user-interfaces		:= $(addprefix hurd/,\
 server-interfaces	:= hurd/msg
 
 routines = $(interface-routines) \
-	   hurdauth hurdid hurdpath hurdpid hurdports \
+	   hurdid hurdpath hurdpid hurdports \
 	   __setauth setauth \
 	   getuids setuids getumask fchroot \
 	   dtable __getdport getdport openport setdtsz \
-#	   hurdsig hurdmsg hurdsock
+#	   hurdsig hurdmsg hurdsock hurdauth
 #	   __pid2task __task2pid pid2task task2pid \
 	   privports \
 	   msgportdemux startsig \
