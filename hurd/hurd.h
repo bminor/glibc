@@ -55,29 +55,35 @@ Cambridge, MA 02139, USA.  */
 
 /* Lightweight user references for ports.  */
 
-/* Structure describing a cell containing a port.
-   With the lock held, a user extracts PORT, and sets USER_DEALLOC to point
-   to a word in his local storage.  PORT can then safely be used.  When
-   PORT is no longer needed, with the lock held, the user examines
-   USER_DEALLOC.  If it is the same address that user stored there, he
-   extracts *USER_DEALLOC, clears USER_DEALLOC to NULL, and releases the
-   lock.  If *USER_DEALLOC is set, the user deallocates the port he used.  */
+/* Structure describing a cell containing a port.  With the lock held, a
+   user extracts PORT, and attaches his own link (in local storage) to the
+   USERS chain.  PORT can then safely be used.  When PORT is no longer
+   needed, with the lock held, the user removes his link from the chain.
+   If his link is the last, and PORT has changed since he fetched it, the
+   user deallocates the port he used.  */
 struct _hurd_port
   {
 #ifdef noteven
     spin_lock_t lock;		/* Locks rest.  */
 #endif
-    int *user_dealloc;		/* If not NULL, points to user's flag word.  */
+    struct _hurd_port_userlink *users; /* Chain of users; see below.  */
     mach_port_t port;		/* Port. */
+  };
+
+/* This structure is simply a doubly-linked list.
+   Users of a port cell are recorded by their presence in the list.  */   
+struct _hurd_port_userlink
+  {
+    struct _hurd_port_userlink *next, **prevp;
   };
 
 /* Evaluate EXPR with the variable `port' bound to the port in PORTCELL.  */
 #define	_HURD_PORT_USE(portcell, expr)					      \
   ({ struct _hurd_port *const __p = (portcell);				      \
-     int __dealloc;							      \
-     const mach_port_t port = _hurd_port_get (__p, &__dealloc);		      \
+     struct _hurd_port_userlink __link;					      \
+     const mach_port_t port = _hurd_port_get (__p, &__link);		      \
      __typeof(expr) __result = (expr);					      \
-     _hurd_port_free (__p, &__dealloc, port);				      \
+     _hurd_port_free (__p, &__link, port);				      \
      __result; })
 
 /* Initialize *PORT to INIT.  */
@@ -87,21 +93,25 @@ _hurd_port_init (struct _hurd_port *port, mach_port_t init)
 #ifdef noteven
   __spin_lock_init (&port->lock);
 #endif
-  port->user_dealloc = NULL;
+  port->users = NULL;
   port->port = init;
 }
 
 /* Get a reference to *PORT, which is locked.
-   Pass return value and MYFLAG to _hurd_port_free when done.  */
+   Pass return value and LINK to _hurd_port_free when done.  */
 static inline mach_port_t
-_hurd_port_locked_get (struct _hurd_port *port, int *myflag)
+_hurd_port_locked_get (struct _hurd_port *port,
+		       struct _hurd_port_userlink *link)
 {
   mach_port_t result;
   result = port->port;
   if (result != MACH_PORT_NULL)
     {
-      port->user_dealloc = myflag;
-      *myflag = 0;
+      link->next = port->users;
+      if (link->next)
+	link->next->prevp = &link->next;
+      link->prevp = &port->users;
+      port->users = link;
     }
   __spin_unlock (&port->lock);
   return result;
@@ -116,16 +126,25 @@ _hurd_port_get (struct _hurd_port *port, int *myflag)
 }
 
 /* Free a reference gotten with
-   `USED_PORT = _hurd_port_get (PORT, MYFLAG);' */
+   `USED_PORT = _hurd_port_get (PORT, LINK);' */
 static inline void
 _hurd_port_free (struct _hurd_port *port,
-		 int *myflag, mach_port_t used_port)
+		 struct _hurd_port_userlink *link,
+		 mach_port_t used_port)
 {
+  int dealloc;
   __spin_lock (&port->lock);
-  if (port->user_dealloc == myflag)
-    port->user_dealloc = NULL;
+  /* We should deallocate USED_PORT if our chain has been detached from the
+     cell (and thus has a nil `prevp'), and there is no next link
+     representing another user reference to the same port we fetched.  */
+  dealloc = ! link->next && ! link->prevp;
+  /* Remove our link from the chain of current users.  */
+  if (link->prevp)
+    *link->prevp = link->next;
+  if (link->next)
+    link->next->prevp = link->prevp;
   __spin_unlock (&port->lock);
-  if (*myflag)
+  if (dealloc)
     __mach_port_deallocate (__mach_task_self (), used_port);
 }
 
@@ -135,12 +154,15 @@ static inline void
 _hurd_port_locked_set (struct _hurd_port *port, mach_port_t newport)
 {
   mach_port_t old;
-  if (port->user_dealloc == NULL)
+  if (port->users == NULL)
     old = port->port;
   else
     {
       old = MACH_PORT_NULL;
-      *port->user_dealloc = 1;
+      /* Detach the chain of current users from the cell.  The last user to
+	 remove his link from that chain will deallocate the old port.  */
+      port->users->prevp = NULL;
+      port->users = NULL;
     }
   port->port = newport;
   __spin_unlock (&port->lock);
