@@ -16,20 +16,20 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* This file defines the `errno' constants.  */
+#include <ansidecl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/uio.h>
 
-#if !defined(__Emath_defined) && (defined(_ERRNO_H) || defined(__need_Emath))
-#undef	__need_Emath
-#define	__Emath_defined	1
-
-#define	EDOM	1
-#define	ERANGE	2
-#endif
-
-#ifdef	_ERRNO_H
-#define	ENOSYS	3
-#define	EINVAL	4
-#define	ESPIPE	5
-#define	EBADF	6
-#endif
-
+/* Read data from file descriptor FD, and put the result in the
+   buffers described by VECTOR, which is a vector of COUNT `struct iovec's.
+   The buffers are filled in the order specified.
+   Operates just like `read' (see <unistd.h>) except that data are
+   put in VECTOR instead of a contiguous buffer.  */
+int
+DEFUN(readv, (fd, vector, count),
+      int fd AND CONST struct iovec *vector AND size_t count)
+{
+  errno = ENOSYS;
+  return -1;
+}
