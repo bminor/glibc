@@ -38,6 +38,6 @@ DEFUN(__chdir, (path), CONST char *path)
   if (err)
     return __hurd_fail (err);
 
-  _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], cwdir);
+  _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], dir);
   return 0;
 }
