@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,19 +18,26 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdeps/unix/sysdep.h>
 
+#ifdef	NO_UNDERSCORES
+/* Since C identifiers are not normally prefixed with an underscore
+   on this system, the asm identifier `syscall_error' intrudes on the
+   C name space.  Make sure we use an innocuous name.  */
+#define	syscall_error	C_SYMBOL_NAME(__syscall_error)
+#endif
+
 #define	ENTRY(name)							      \
   .global C_SYMBOL_NAME(name);						      \
   .align 2;								      \
   C_LABEL(name)
 
 #define	PSEUDO(name, syscall_name, args)				      \
+  .global syscall_error;						      \
   ENTRY (name)								      \
   mov SYS_ify(syscall_name), %g1;				   	      \
   ta 0;									      \
   bcc 1f;								      \
-  sethi %hi(C_SYMBOL_NAME(errno)), %g1;					      \
-  st %o0, [%g1 + %lo(C_SYMBOL_NAME(errno))];				      \
-  sub %g0, 1, %o0;							      \
+  sethi %hi(syscall_error), %g1;					      \
+  jmp %g1 + %lo(syscall_error);						      \
 1:
 
 #define	ret		retl; nop
