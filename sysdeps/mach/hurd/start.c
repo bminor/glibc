@@ -49,6 +49,10 @@ extern void (*_cthread_exit_routine) (int status);
 #error "Machine-dependent cthread startup code needs to exist."
 #endif
 
+#ifndef	GET_STACK
+#error "Machine-dependent stack startup code needs to exist."
+#endif
+
 static int count (char *, size_t);
 static void makevec (char *, size_t, char **);
 
@@ -71,6 +75,8 @@ _start (void)
   char **argv;
 
   char *p;
+
+  GET_STACK (_hurd_stack_low, _hurd_stack_high);
 
   /* Basic Mach initialization, must be done before RPCs can be done.  */
   __mach_init ();
