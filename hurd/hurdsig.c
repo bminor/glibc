@@ -20,8 +20,11 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 #include <stdio.h>
 #include <gnu-stabs.h>
+#include <hurd/msg_reply.h>	/* For __sig_post_reply.  */
 
+#ifdef noteven
 struct mutex _hurd_siglock;
+#endif
 int _hurd_stopped;
 
 /* Port that receives signals and other miscellaneous messages.  */
@@ -78,10 +81,10 @@ static int
 write_corefile (int signo, int sigcode)
 {
   error_t err;
-  mach_port_t coreserver;
-  file_t file;
-  char *name;
-  char *target;
+  volatile mach_port_t coreserver;
+  volatile file_t file;
+  char *volatile name;
+  char *volatile target;
 
   if (_hurd_core_limit == 0)
     /* User doesn't want a core.  */
@@ -101,6 +104,7 @@ write_corefile (int signo, int sigcode)
     return 0;
 
   file = MACH_PORT_NULL;
+  name = NULL;
   if (!setjmp (_hurd_sigthread_fault_env))
     {
       name = getenv ("COREFILE");
@@ -147,6 +151,7 @@ write_corefile (int signo, int sigcode)
 
 
 extern const size_t _hurd_thread_state_count;
+extern const int _hurd_thread_state_flavor;
 
 /* How long to give servers to respond to
    interrupt_operation before giving up on them.  */
@@ -287,7 +292,12 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 
       case SIGINFO:
 	if (_hurd_pgrp == _hurd_pid)
-	  /* We are the session leader.  Print something interesting.  */
+	  /* We are the session leader.  Print something interesting.
+	     XXX Perhaps this should be done with:
+	       act = handle;
+	       handler = _hurd_siginfo_handler;
+	     to not tie up the signal thread, especially if it might
+	     block doing tty i/o.  */
 	  puts ("fnord");	/* XXX */
 	act = ignore;
 	break;
@@ -361,7 +371,7 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
       /* Tell proc how we died and then stick the saber in the gut.  */
       _hurd_exit (W_EXITCODE (0, signo) |
 		  (act == core && write_corefile (signo, sigcode) ?
-		   WCOREDUMP : 0));
+		   WCOREFLAG : 0));
       /* NOTREACHED */
 
     case handle:
@@ -398,7 +408,7 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 /* Sent when someone wants us to get a signal.  */
 error_t
 _S_sig_post (mach_port_t me,
-	     mig_reply_port_t reply,
+	     mach_port_t reply,
 	     int signo,
 	     mach_port_t refport)
 {
@@ -423,7 +433,7 @@ _S_sig_post (mach_port_t me,
     case SIGHUP:
     case SIGINFO:
       /* Job control signals can be sent by the controlling terminal.  */
-      if (refport == _hurd_cttyport)
+      if (__USEPORT (CTTYID, port == refport))
 	goto win;
       break;
 
@@ -462,10 +472,10 @@ _S_sig_post (mach_port_t me,
 	struct _hurd_dtable dt = _hurd_dtable_use (&dealloc_dt);
 	for (d = 0; d >= 0 && d < dt.size; ++d)
 	  {
-	    int dealloc;
+	    struct _hurd_port_userlink ulink;
 	    io_t port;
 	    mach_port_t asyncid;
-	    port = _hurd_port_locked_get (&d->d[d].port, &dealloc);
+	    port = _hurd_port_locked_get (&dt.d[d].port, &ulink);
 	    if (! __io_get_icky_async_id (port, &asyncid))
 	      {
 		if (refport == asyncid)
@@ -473,7 +483,7 @@ _S_sig_post (mach_port_t me,
 		  d = -1;
 		__mach_port_deallocate (__mach_task_self (), asyncid);
 	      }
-	    _hurd_port_free (&d->d[d].port, &dealloc, port);
+	    _hurd_port_free (&dt.d[d].port, &ulink, port);
 	  }
 	_hurd_dtable_done (dt, &dealloc_dt);
 	/* If we found a lucky winner, we've set D to -1 in the loop.  */
@@ -501,6 +511,7 @@ _hurd_exc_post_signal (thread_t thread, int signo, int sigcode)
 }
 
 #include <sysdep.h>
+#include <mach/task_special_ports.h>
 
 /* Handle signal SIGNO in the calling thread.
    If SS is not NULL it is the sigstate for the calling thread;
@@ -550,13 +561,15 @@ _hurd_raise_signal (struct _hurd_sigstate *ss, int signo, int sigcode)
 void
 _hurdsig_init (void)
 {
-  thread_t sigthread;
+  error_t err;
 
   if (_hurd_msgport != MACH_PORT_NULL)
     /* We have already been run.  Return doing nothing.  */
     return;
 
+#ifdef noteven
   __mutex_init (&_hurd_siglock); /* Initialize the signal lock.  */
+#endif
 
   if (err = __mach_port_allocate (__mach_task_self (),
 				  MACH_PORT_RIGHT_RECEIVE,
@@ -566,7 +579,8 @@ _hurdsig_init (void)
   /* Make a send right to the signal port.  */
   if (err = __mach_port_insert_right (__mach_task_self (),
 				      _hurd_msgport,
-				      MACH_PORT_RIGHT_MAKE_SEND))
+				      _hurd_msgport,
+				      MACH_MSG_TYPE_MAKE_SEND))
     __libc_fatal ("hurd: Can't create send right to signal port\n");
 
   if (err = __thread_create (__mach_task_self (), &_hurd_msgport_thread))
@@ -577,7 +591,8 @@ _hurdsig_init (void)
     __libc_fatal ("hurd: Can't start signal thread\n");
 
   /* Receive exceptions on the signal port.  */
-  __task_set_special_port (__mach_task_self (), TASK_EXCEPTION, _hurd_msgport);
+  __task_set_special_port (__mach_task_self (),
+			   TASK_EXCEPTION_PORT, _hurd_msgport);
 }
 
 /* Send exceptions for the signal thread to the proc server.
@@ -588,6 +603,7 @@ _hurdsig_init (void)
 void
 _hurdsig_fault_init (void)
 {
+  error_t err;
   mach_port_t sigexc;
   int state[_hurd_thread_state_count];
 
@@ -598,13 +614,14 @@ _hurdsig_fault_init (void)
   /* Set up STATE with a thread state that will longjmp immediately.  */
   _hurd_initialize_fault_recovery_state (state);
 
-  __thread_set_special_port (_hurd_msgport_thread, THREAD_EXCEPTION, sigexc);
+  __thread_set_special_port (_hurd_msgport_thread,
+			     THREAD_EXCEPTION_PORT, sigexc);
 
-  if (err = HURD_PORT_USE
-      (&_hurd_ports[INIT_PORT_PROC],
+  if (err = __USEPORT
+      (PROC,
        __proc_handle_exceptions (port,
 				 sigexc,
-				 _hurd_msgport, MACH_PORT_RIGHT_COPY_SEND,
+				 _hurd_msgport, MACH_MSG_TYPE_COPY_SEND,
 				 _hurd_thread_state_flavor,
 				 state, _hurd_thread_state_count)))
     __libc_fatal ("hurd: proc won't handle signal thread exceptions\n");
@@ -613,10 +630,13 @@ _hurdsig_fault_init (void)
 static void
 reauth_proc (mach_port_t new)
 {
+  mach_port_t ignore;
+
   /* Reauthenticate with the proc server.  */
   if (! _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
-			__proc_reauthenticate (port) ||
-			__auth_user_authenticate (new, port, &ignore))
+			__proc_reauthenticate (port, _hurd_pid) ||
+			__auth_user_authenticate (new, port, _hurd_pid,
+						  &ignore))
       && ignore != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), ignore);
 }
