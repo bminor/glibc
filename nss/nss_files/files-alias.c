@@ -1,5 +1,5 @@
 /* Mail alias file parser in nss_files module.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -150,12 +150,12 @@ get_next_alias (const char *match, struct aliasent *result,
 
       /* Read the first line.  It must contain the alias name and
 	 possibly some alias names.  */
-      first_unused[room_left - 1] = '\0';
+      first_unused[room_left - 1] = '\xff';
       line = fgets (first_unused, room_left, stream);
-      if (line == NULL)
+      if (line == NULL && feof (stream))
 	/* Nothing to read.  */
 	break;
-      else if (first_unused[room_left - 1] != '\0')
+      else if (line == NULL || first_unused[room_left - 1] != '\xff')
 	{
 	  /* The line is too long for our buffer.  */
 	no_more_room:
@@ -200,7 +200,8 @@ get_next_alias (const char *match, struct aliasent *result,
 	     looking for.  If it does not match we simply ignore all
 	     lines until the next line containing the start of a new
 	     alias is found.  */
-	  ignore = match != NULL && strcmp (result->alias_name, match) != 0;
+	  ignore = (match != NULL
+		    && __strcasecmp (result->alias_name, match) != 0);
 
 	  while (! ignore)
 	    {
@@ -243,11 +244,12 @@ get_next_alias (const char *match, struct aliasent *result,
 			{
 			  while (! feof (listfile))
 			    {
-			      first_unused[room_left - 1] = '\0';
+			      first_unused[room_left - 1] = '\xff';
 			      line = fgets (first_unused, room_left, listfile);
-			      if (line == NULL)
+			      if (line == NULL && feof (listfile))
 				break;
-			      if (first_unused[room_left - 1] != '\0')
+			      if (line == NULL
+				  || first_unused[room_left - 1] != '\xff')
 				{
 				  free (old_line);
 				  goto no_more_room;
@@ -343,9 +345,11 @@ get_next_alias (const char *match, struct aliasent *result,
 
 		  /* The just read character is a white space and so
 		     can be ignored.  */
-		  first_unused[room_left - 1] = '\0';
+		  first_unused[room_left - 1] = '\xff';
 		  line = fgets (first_unused, room_left, stream);
-		  if (first_unused[room_left - 1] != '\0')
+		  if (line == NULL && feof (stream))
+		    break;
+		  if (line == NULL || first_unused[room_left - 1] != '\xff')
 		    goto no_more_room;
 		  cp = strpbrk (line, "#\n");
 		  if (cp != NULL)

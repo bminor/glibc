@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -515,9 +515,16 @@ getspent_next_file (struct spwd *result, ent_t *ent,
       do
 	{
 	  fgetpos (ent->stream, &pos);
+	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
-	  if (p == NULL)
+	  if (p == NULL && feof (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
+	  if (p == NULL || buffer[buflen - 1] != '\xff')
+	    {
+	      fsetpos (ent->stream, &pos);
+	      __set_errno (ERANGE);
+	      return NSS_STATUS_TRYAGAIN;
+	    }
 
 	  /* Terminate the line for any case.  */
 	  buffer[buflen - 1] = '\0';
@@ -690,9 +697,16 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
       do
 	{
 	  fgetpos (ent->stream, &pos);
+	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
-	  if (p == NULL)
+	  if (p == NULL && feof (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
+	  if (p == NULL || buffer[buflen - 1] != '\xff')
+	    {
+	      fsetpos (ent->stream, &pos);
+	      __set_errno (ERANGE);
+	      return NSS_STATUS_TRYAGAIN;
+	    }
 
 	  /* Terminate the line for any case.  */
 	  buffer[buflen - 1] = '\0';

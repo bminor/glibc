@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -315,17 +315,15 @@ getgrent_next_file (struct group *result, ent_t *ent,
       do
 	{
 	  fgetpos (ent->stream, &pos);
+	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
-	  if (p == NULL)
+	  if (p == NULL && feof (ent->stream))
+	    return NSS_STATUS_NOTFOUND;
+	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
-	      if (feof (ent->stream))
-		return NSS_STATUS_NOTFOUND;
-	      else
-		{
-		  fsetpos (ent->stream, &pos);
-		  __set_errno (ERANGE);
-		  return NSS_STATUS_TRYAGAIN;
-		}
+	      fsetpos (ent->stream, &pos);
+	      __set_errno (ERANGE);
+	      return NSS_STATUS_TRYAGAIN;
 	    }
 
 	  /* Terminate the line for any case.  */
@@ -446,17 +444,15 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
       do
 	{
 	  fgetpos (ent->stream, &pos);
+	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
-	  if (p == NULL)
+	  if (p == NULL && feof (ent->stream))
+	    return NSS_STATUS_NOTFOUND;
+	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
-	      if (feof (ent->stream))
-		return NSS_STATUS_NOTFOUND;
-	      else
-		{
-		  fsetpos (ent->stream, &pos);
-		  __set_errno (ERANGE);
-		  return NSS_STATUS_TRYAGAIN;
-		}
+	      fsetpos (ent->stream, &pos);
+	      __set_errno (ERANGE);
+	      return NSS_STATUS_TRYAGAIN;
 	    }
 
 	  /* Terminate the line for any case.  */
@@ -607,17 +603,15 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
       do
 	{
 	  fgetpos (ent->stream, &pos);
+	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
-	  if (p == NULL)
+	  if (p == NULL && feof (ent->stream))
+	    return NSS_STATUS_NOTFOUND;
+	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
-	      if (feof (ent->stream))
-		return NSS_STATUS_NOTFOUND;
-	      else
-		{
-		  fsetpos (ent->stream, &pos);
-		  __set_errno (ERANGE);
-		  return NSS_STATUS_TRYAGAIN;
-		}
+	      fsetpos (ent->stream, &pos);
+	      __set_errno (ERANGE);
+	      return NSS_STATUS_TRYAGAIN;
 	    }
 
 	  /* Terminate the line for any case.  */
