@@ -23,5 +23,6 @@ ___pipe:
 	mov %o0, %o2
 PSEUDO (__Spipe, pipe)
 	st %o0, [%o2]
-	retl
 	st %o1, [%o2 + 4]
+	retl
+	clr %o0
