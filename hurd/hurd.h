@@ -133,7 +133,7 @@ _hurd_port_set (struct _hurd_port *port, mach_port_t newport)
 /* Basic ports and info, initialized by startup.  */
 extern struct _hurd_port _hurd_proc, _hurd_auth;
 extern struct _hurd_port _hurd_ccdir, _hurd_cwdir, _hurd_crdir;
-extern mode_t _hurd_umask;
+extern volatile mode_t _hurd_umask;
 
 extern struct mutex _hurd_ctty_lock;
 extern int _hurd_ctty_fstype;
@@ -417,6 +417,9 @@ extern void _hurd_sigport_receive (void);
     struct _hurd_sigstate *__ss
       = _hurd_thread_sigstate (__mach_thread_self ());
     __mutex_unlock (&__ss->lock); /* Lock not needed.  */
+    /* If we get a signal and should return EINTR, the signal thread will
+       clear this.  The RPC might return EINTR when some other thread gets
+       a signal, in which case we want to restart our call.  */
     __ss->intr_restart = 1;
     /* This one needs to be last.  A signal can arrive before here,
        and if intr_port were set before intr_restart are
@@ -439,8 +442,10 @@ extern void _hurd_sigport_receive (void);
 	/* Return EINTR.  */
 	__err = EINTR;
 	break;
-      case MACH_RCV_INTERRUPTED: /* RPC pending.  */
-	/* XXX */ ;
+      case MACH_RCV_PORT_DIED:
+	/* Server didn't respond to interrupt_operation,
+	   so the signal thread destroyed the reply port.  */
+	__err = EINTR;
 	break;
       }
     __ss->intr_port = MACH_PORT_NULL;
