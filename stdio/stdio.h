@@ -101,15 +101,39 @@ typedef int __io_close_fn __P ((__ptr_t __cookie));
    or -1 on error.  There need not be any associated file descriptor.  */
 typedef int __io_fileno_fn __P ((__ptr_t __cookie));
 
+#ifdef __USE_GNU
+/* User-visible names for the above.  */
+typedef __io_read_fn cookie_read_function_t;
+typedef __io_write_fn cookie_write_function_t;
+typedef __io_seek cookie_seek_function_t;
+typedef __io_close_fn cookie_close_function_t;
+typedef __io_fileno_fn cookie_fileno_function_t;
+#endif
+
 /* Low level interface, independent of FILE representation.  */
+#if defined (__USE_GNU) && !defined (_LIBC)
+/* Define the user-visible type, with user-friendly member names.  */
+typedef struct
+{
+  __io_read_fn *read;		/* Read bytes.  */
+  __io_write_fn *write;		/* Write bytes.  */
+  __io_seek_fn *seek;		/* Seek/tell file position.  */
+  __io_close_fn *close;		/* Close file.  */
+  __io_fileno_fn *fileno;	/* Return file descriptor.  */
+} cookie_io_functions_t;
+/* This name is still used in the prototypes in this file.  */
+typedef cookie_io_functions_t __io_functions;
+#else
+/* Stick to ANSI-safe names.  */
 typedef struct
 {
   __io_read_fn *__read;		/* Read bytes.  */
-  __io_write_fn *__write;		/* Write bytes.  */
+  __io_write_fn *__write;	/* Write bytes.  */
   __io_seek_fn *__seek;		/* Seek/tell file position.  */
-  __io_close_fn *__close;		/* Close file.  */
+  __io_close_fn *__close;	/* Close file.  */
   __io_fileno_fn *__fileno;	/* Return file descriptor.  */
 } __io_functions;
+#endif
 
 /* Higher level interface, dependent on FILE representation.  */
 typedef struct
