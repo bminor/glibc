@@ -299,8 +299,8 @@ $name"
   fi
 done
 
-echo "Using system-dependent file from directories:
-$seen"
+echo Using system-dependent files from directories:
+for dir in $sysnames; do echo "	$dir"; done
 
 # This will get text that should go into config.make.
 config_vars=
@@ -447,6 +447,7 @@ fi
   done
   echo "$config_vars"
 ) > config.make
+echo "Wrote config.make in $PWD."
 
 switches=
 if [ "$gnu_as" ]; then
@@ -468,15 +469,6 @@ if [ "$version" ]; then
   switches="$switches --os-version='$version'"
 fi
 
-cat > config.status <<END
-#!/bin/sh
-# This file was generated automatically by configure.  Do not edit.
-# The GNU C library was configured in $PWD for
-# $system_name as follows:
-$0 $config --srcdir=$srcdir $switches
-# Wrote config.make in $PWD.
-END
-
 if [ $srcdir != . ]; then
   if [ $srcdir = .. ]; then
     cwd=`pwd`
@@ -492,10 +484,18 @@ all .DEFAULT:
 	\$(MAKE) -C \$(srcdir) ARCH=$objdir \$@
 END
 
-echo "# Wrote Makefile in $PWD." >> config.status
+echo "Wrote Makefile in $PWD."
 fi
+
+cat > config.status <<END
+#!/bin/sh
+# This file was generated automatically by configure.  Do not edit.
+# The GNU C library was configured in $PWD for
+# $system_name as follows:
+$0 $config --srcdir=$srcdir $switches
+END
 chmod a+x config.status
-echo "Write config.status in $PWD."
+echo "Wrote config.status in $PWD."
 
 exit 0
 dnl This gets rid of the random stuff autoconf has stuffed in weird places.
