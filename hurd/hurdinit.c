@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -99,7 +99,7 @@ void
 _hurd_proc_init (char **argv)
 {
   mach_port_t oldmsg;
-  int dealloc;
+  struct _hurd_port_userlink ulink;
   process_t procserver;
 
 #ifdef notyet
@@ -112,7 +112,7 @@ _hurd_proc_init (char **argv)
   /* The signal thread is now prepared to receive messages.
      It is safe to give the port to the proc server.  */
 
-  procserver = _hurd_port_get (&_hurd_ports[INIT_PORT_PROC], &dealloc);
+  procserver = _hurd_port_get (&_hurd_ports[INIT_PORT_PROC], &ulink);
 
 #ifdef notyet
   /* Give the proc server our message port.  */
@@ -127,7 +127,7 @@ _hurd_proc_init (char **argv)
 		      _hide_arguments ? 0 : (vm_address_t) argv,
 		      _hide_environment ? 0 : (vm_address_t) __environ);
 
-  _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], &dealloc, procserver);
+  _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], &ulink, procserver);
 
 #ifdef notyet
   /* Initialize proc server-assisted fault recovery for the signal thread.  */
