@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -116,6 +116,14 @@ endif
 # Where to install the library and object files.
 ifndef libdir
 libdir = $(exec_prefix)/lib
+endif
+
+# Prefix to put on files installed in $(libdir).  For libraries `libNAME.a',
+# the prefix is spliced between `lib' and the name, so the linker switch
+# `-l$(libprefix)NAME' finds the library; for other files the prefix is
+# just prepended to the whole file name.
+ifndef libprefix
+libprefix =
 endif
 
 # Where to install the header files.
