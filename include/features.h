@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,8 @@
    to specify the desired environment:
 
    __STRICT_ANSI__	ISO Standard C.
-   _ISOC9X_SOURCE	Extensions to ISO C 89 from ISO C 9x.
+   _ISOC99_SOURCE	Extensions to ISO C 89 from ISO C 99.
+   _ISOC9X_SOURCE	Similar, kept for compatibility.
    _POSIX_SOURCE	IEEE Std 1003.1.
    _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if >=2 add IEEE Std 1003.2;
 			if >=199309L, add IEEE Std 1003.1b-1993;
@@ -148,7 +149,7 @@
 
 /* This is to enable the ISO C 9x extension.  It will go away as soon
    as this standard is officially released.  */
-#ifdef _ISOC9X_SOURCE
+#if defined _ISOC9X_SOURCE || defined _ISOC99_SOURCE
 # define __USE_ISOC9X	1
 #endif
 
