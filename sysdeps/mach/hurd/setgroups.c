@@ -28,12 +28,16 @@ DEFUN(setgroups, (n, groups), size_t n AND CONST gid_t *groups)
 {
   error_t err;
   auth_t newauth;
+  gid_t gids[sizeof (_hurd_id.groups) / sizeof (gid_t)];
 
-  if (n > sizeof (_hurd_id.groups) / sizeof (gid_t))
+  if (n > sizeof (gids) / sizeof (gids[0]) || groups == NULL)
     {
       errno = EINVAL;
       return -1;
     }
+
+  memcpy (gids, groups, n * sizeof (gid_t));
+  groups = gids;
 
   __mutex_lock (&_hurd_idlock);
   if (!_hurd_id_valid)
