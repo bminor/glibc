@@ -31,7 +31,7 @@ DEFUN(memchr, (str, c, len),
   PTR retval;
   asm("cld\n"			/* Search forward.  */
       "testl %1,%1\n"		/* Clear Z flag, to handle LEN == 0.  */
-      "repnz\n"			/* Search for C in al.  */
+      "repne\n"			/* Search for C in al.  */
       "scasb\n"
       "movl %2,%0\n"		/* Set %0 to 0 (without affecting Z flag) */
       "jnz 1f\n"		/* Jump if we found nothing equal to C */
