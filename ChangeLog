@@ -1,5 +1,8 @@
 2005-03-05  Jakub Jelinek  <jakub@redhat.com>
 
+	* include/bits/unistd.h: New file.
+	* include/bits/socket2.h: New file.
+
 	* sysdeps/i386/dl-machine.h (ELF_MACHINE_NO_RELA): Define
 	unconditionally to (defined RTLD_BOOTSTRAP).
 	* sysdeps/arm/dl-machine.h (ELF_MACHINE_NO_RELA): Likewise.
