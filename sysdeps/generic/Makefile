@@ -2,10 +2,9 @@ ifeq	($(subdir),math)
 ifndef	math-twiddled
 
 routines:= $(filter-out acos asin cos sin ceil __rint hypot	\
-			__copysign __scalb __drem __logb	\
 			__finite,$(routines))	  		\
 	   sincos asincos
-aux	:= $(aux) support exp__E log__L
+aux	:= $(aux) exp__E log__L
 
 math-twiddled := t
 
