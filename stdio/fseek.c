@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -82,7 +82,7 @@ DEFUN(fseek, (stream, offset, whence),
 	  stream->__offset = pos;
 	  /* Make O be absolute, rather than
 	     relative to the end of the file.  */
-	  o += pos;
+	  o = pos;
 	}
 
       /* Fall through to try an absolute seek.  */
