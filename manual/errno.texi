@@ -1,4 +1,4 @@
-@node Error Reporting, Common Definitions, Introduction, Top
+@node Error Reporting, Memory Allocation, Introduction, Top
 @chapter Error Reporting
 @cindex error reporting
 @cindex reporting errors

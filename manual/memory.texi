@@ -1,4 +1,4 @@
-@node Memory Allocation, Character Handling, Common Definitions, Top
+@node Memory Allocation, Character Handling, Error Reporting, Top
 @chapter Memory Allocation
 @cindex memory allocation
 @cindex storage allocation
