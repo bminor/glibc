@@ -30,11 +30,18 @@ DEFUN(reboot, (howto), int howto)
   mach_port_t init;
 
   err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
-			__proc_getmsgport (1, &init));
+			__proc_getmsgport (port, 1, &init));
   if (!err)
     {
-      err = __startup_reboot (init, howto);
+      task_t refport = __pid2task (1);
+      if (refport != MACH_PORT_NULL)
+	{
+	  err = __startup_reboot (init, refport, howto);
+	  __mach_port_deallocate (__mach_task_self (), refport);
+	}
       __mach_port_deallocate (__mach_task_self (), init);
+      if (refport == MACH_PORT_NULL)
+	return -1;
     }
 
   if (err)
