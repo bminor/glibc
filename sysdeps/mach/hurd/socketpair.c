@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/socket.h>
 #include <hurd.h>
+#include <hurd/socket.h>
+#include <hurd/fd.h>
 
 /* Create two new sockets, of type TYPE in domain DOMAIN and using
    protocol PROTOCOL, which are connected to each other, and put file
@@ -43,10 +45,10 @@ DEFUN(socketpair, (domain, type, protocol, fds),
       return __hurd_fail (err);
     }
 
-  if (err = _HURD_DPORT_USE
+  if (err = HURD_DPORT_USE
       (d1,
        ({ socket_t sock1 = port;
-	  _HURD_DPORT_USE (d2, __socket_connect2 (sock1, port)) })))
+	  HURD_DPORT_USE (d2, __socket_connect2 (sock1, port)) })))
     {
       close (d1);
       close (d2);
