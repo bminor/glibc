@@ -89,7 +89,10 @@ write_corefile (int signo, int sigcode)
   char *volatile name;
   char *volatile target;
 
-  /* XXX RLIMIT_CORE */
+  /* XXX RLIMIT_CORE:
+     When we have a protocol to make the server return an error
+     for RLIMIT_FSIZE, then tell the corefile fs server the RLIMIT_CORE
+     value in place of the RLIMIT_FSIZE value.  */
 
   coreserver = MACH_PORT_NULL;
   if (!setjmp (_hurd_sigthread_fault_env))
@@ -442,6 +445,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
     case term:			/* Time to die.  */
     case core:			/* And leave a rotting corpse.  */
+    nirvana:
       __mutex_lock (&_hurd_siglock);
       /* Have the proc server stop all other threads in our task.  */
       __USEPORT (PROC, __proc_dostop (port, _hurd_msgport_thread));
@@ -468,6 +472,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
 	/* Stop the thread and abort its pending RPC operations.  */
 	__thread_suspend (ss->thread);
+	/* This call fetches the thread state even if it has nothing to do.  */
 	abort_rpcs (ss, signo, &thread_state);
 
 	/* Call the machine-dependent function to set the thread up
@@ -477,6 +482,15 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 				      &ss->sigaltstack,
 				      signo, sigcode,
 				      &thread_state);
+	if (scp == NULL)
+	  {
+	    /* We got a fault setting up the stack frame for the handler.
+	       Nothing to do but die; BSD gets SIGILL in this case.  */
+	    sigcode = signo;	/* XXX ? */
+	    signo = SIGILL;
+	    act = core;
+	    goto nirvana;
+	  }
 
 	/* Set the machine-independent parts of the signal context.  */
 	scp->sc_mask = ss->blocked;
