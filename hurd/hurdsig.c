@@ -76,7 +76,7 @@ write_corefile (int signo, int sigcode)
     /* User doesn't want a core.  */
     return 0;
 
-  name = getenv ("CORESERVER");
+  name = getenv ("CORESERVER");	/* XXX don't lose if environ scrod */
   if (name != NULL)
     coreserver = __path_lookup (name, 0, 0);
   else
@@ -87,7 +87,7 @@ write_corefile (int signo, int sigcode)
   if (coreserver == MACH_PORT_NULL)
     return 0;
 
-  name = getenv ("COREFILE");
+  name = getenv ("COREFILE");	/* XXX ditto */
   if (name != NULL)
     file = __path_lookup (name, FS_LOOKUP_WRITE|FS_LOOKUP_CREATE,
 			  0666 & ~_hurd_umask);
@@ -105,7 +105,7 @@ write_corefile (int signo, int sigcode)
 			  __mach_task_self (),
 			  file,
 			  signo, sigcode,
-			  getenv ("GNUTARGET"));
+			  getenv ("GNUTARGET")); /* XXX ditto */
   __mach_port_deallocate (__mach_task_self (), coreserver);
   if (!err && _hurd_core_limit != RLIM_INFINITY)
     {
@@ -337,8 +337,6 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 			(act == core && write_corefile (signo, sigcode) ?
 			 WCOREDUMP : 0)))
 	  }));
-      __task_terminate (__mach_task_self ());
-      return;			/* Yeah, right.  */
 
     case handle:
       __thread_suspend (ss->thread);
