@@ -30,6 +30,7 @@ int _hurd_ctty_fstype;
 fsid_t _hurd_ctty_fsid;
 ino_t _hurd_ctty_fileid;
 mach_port_t _hurd_sigport;
+thread_t _hurd_sigport_thread;
 
 mach_port_t *_hurd_init_dtable;
 size_t _hurd_init_dtablesize;
@@ -179,7 +180,7 @@ _start (void)
       __libc_fatal ("hurd: Can't create signal thread\n");
     if (err = _hurd_start_sigthread (sigthread, _hurd_sigport_receive))
       __libc_fatal ("hurd: Can't start signal thread\n");
-    __mach_port_deallocate (__mach_task_self (), sigthread);
+    _hurd_sigport_thread = sigthread;
 
     /* Make a send right to the signal port.  */
     if (err = __mach_port_insert_right (__mach_task_self (),
