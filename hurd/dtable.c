@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -228,9 +228,9 @@ fork_dtable (task_t newtask)
 
   for (i = 0; !err && i < _hurd_dtable.size; ++i)
     {
-      int dealloc, dealloc_ctty;
-      io_t port = _hurd_port_get (&_hurd_dtable.d[i].port, &dealloc);
-      io_t ctty = _hurd_port_get (&_hurd_dtable.d[i].ctty, &dealloc_ctty);
+      struct _hurd_port_userlink ulink, ctty_ulink;
+      io_t port = _hurd_port_get (&_hurd_dtable.d[i].port, &ulink);
+      io_t ctty = _hurd_port_get (&_hurd_dtable.d[i].ctty, &ctty_ulink);
 
       if (port != MACH_PORT_NULL)
 	err = __mach_port_insert_right (newtask, port, port,
@@ -239,8 +239,8 @@ fork_dtable (task_t newtask)
 	err = __mach_port_insert_right (newtask, ctty, ctty,
 					MACH_MSG_TYPE_COPY_SEND);
 
-      _hurd_port_free (&_hurd_dtable.d[i].port, &dealloc, port);
-      _hurd_port_free (&_hurd_dtable.d[i].ctty, &dealloc_ctty, ctty);
+      _hurd_port_free (&_hurd_dtable.d[i].port, &ulink, port);
+      _hurd_port_free (&_hurd_dtable.d[i].ctty, &ctty_ulink, ctty);
 
       /* XXX for each fd with a cntlmap, reauth and re-map_cntl.  */
     }
