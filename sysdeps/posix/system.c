@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,10 @@ Cambridge, MA 02139, USA.  */
 #include <signal.h>
 #include <sys/types.h>
 
+
+#ifndef	HAVE_GNU_LD
+#define	__environ	environ
+#endif
 
 #define	SHELL_PATH	"/bin/sh"	/* Path of the shell.  */
 #define	SHELL_NAME	"sh"		/* Name to give it.  */
