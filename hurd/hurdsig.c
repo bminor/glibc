@@ -812,7 +812,7 @@ hurdsig_fork (task_t newtask, process_t newproc)
     /* Record a pointer to the sigstate structure for this thread (the one
        calling fork).  We don't use _hurd_self_sigstate because the
        _hurd_siglock is already locked; also we don't need to allocate a
-       new structure if there is none of this thread.  */
+       new structure if there is none for this thread.  */
     struct hurd_sigstate **location =
       (void *) __hurd_threadvar_location (_HURD_THREADVAR_SIGSTATE);
     if (*location == NULL)
