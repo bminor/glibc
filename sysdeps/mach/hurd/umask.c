@@ -24,7 +24,10 @@ Cambridge, MA 02139, USA.  */
 mode_t
 DEFUN(__umask, (mask), mode_t mask)
 {
-  mode_t omask = _hurd_umask;
+  mode_t omask;
+  __mutex_lock (&_hurd_lock);
+  omask = _hurd_umask;
   _hurd_umask = mask & 0777;
+  __mutex_unlock (&_hurd_lock);
   return omask;
 }
