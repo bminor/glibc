@@ -1,3 +1,10 @@
+2002-03-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/configure.in: New file.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_load_address): Fix
+	if .dynamic comes before .got.
+	* config.h.in (SPARC64_DYNAMIC_BEFORE_GOT): Add.
+
 2002-03-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/es.po: Update from translation team.
