@@ -169,7 +169,17 @@ S-CPPFLAGS = $(asm-CPPFLAGS)
 ifneq (,$(objpfx))
 sed-remove-objpfx = -e 's@$(subst @,\@,$(objpfx))@$$(objpfx)@g'
 endif
+
+# Figure out the source filenames in this directory.
 
+override sources	:= $(addsuffix .c,$(routines) $(aux) \
+				          $(sysdep_routines))
+export sysdep_routines := $(sysdep_routines)
+
+# This is the list of all object files, gotten by
+# replacing every ".c" in `sources' with a ".o".
+override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
+
 +depfiles := $(strip $(sources:.c=.dep) $(addsuffix .dep,$(others) $(tests)))
 +depfiles := $(addprefix $(objpfx),$(+depfiles))
 
@@ -217,16 +227,6 @@ verbose	:=
 endif						# not -s
 
 ARFLAGS := r$(verbose)
-
-# Figure out the source filenames in this directory.
-
-override sources	:= $(addsuffix .c,$(routines) $(aux) \
-				          $(sysdep_routines))
-export sysdep_routines := $(sysdep_routines)
-
-# This is the list of all object files, gotten by
-# replacing every ".c" in `sources' with a ".o".
-override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
 
 # This makes all the object files in the parent library archive.
 
