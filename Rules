@@ -89,7 +89,7 @@ mostlyclean:
 subdir_clean realclean: clean
 +objs := $(objects)
 clean: mostlyclean
-	-rm -f $(+objs) $(+depfiles)
+	-rm -f $(+objs) $(+depfiles) $(clean-extras)
 
 .PHONY: subdir_echo-headers
 subdir_echo-headers: echo-headers
