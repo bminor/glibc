@@ -100,11 +100,11 @@ endef
 
 ifdef localtime
 $(localtime-file): $(datadir)/zoneinfo/$(localtime) $(objpfx)zic
-	$(zic-cmd) -d $(<D) -l $(<F)
+	$(zic-cmd) -l $(localtime)
 endif
 ifdef posixrules
 $(posixrules-file): $(datadir)/zoneinfo/$(posixrules) $(objpfx)zic
-	$(zic-cmd) -d $(<D) -p $(<F)
+	$(zic-cmd) -p $(posixrules)
 endif
 
 
