@@ -28,7 +28,7 @@ DEFUN(__read, (fd, buf, nbytes),
 {
   error_t err;
   char *data;
-  size_t nread;
+  mach_msg_type_size_t nread;
 
   data = buf;
   _HURD_DPORT_USE
@@ -64,6 +64,7 @@ DEFUN(__read, (fd, buf, nbytes),
 	     }
 #endif
 	 }
+       0;
      }));
 
   if (err)
@@ -72,7 +73,7 @@ DEFUN(__read, (fd, buf, nbytes),
   if (data != buf)
     {
       memcpy (buf, data, nread);
-      __vm_deallocate (__mach_task_self (), data, nread);
+      __vm_deallocate (__mach_task_self (), (vm_address_t) data, nread);
     }
 
   return nread;
