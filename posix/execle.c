@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1998 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,11 +32,11 @@ DEFUN(execle, (path), CONST char *path AND CONST char *arg DOTS)
 
   va_start(args, arg);
   argv[0] = arg;
-  i = 1;
-  do
+  i = 0;
+  while (argv[i++] != NULL)
     {
       argv[i] = va_arg(args, CONST char *);
-    } while (argv[i++] != NULL);
+    }
 
   envp = va_arg(args, CONST char *CONST *);
   va_end(args);
