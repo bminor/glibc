@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,10 +18,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <errno.h>
-#include <unistd.h>
-#include <stddef.h>
-#include <hurd.h>
 #include <sys/socket.h>
+#include <hurd.h>
 
 /* Create two new sockets, of type TYPE in domain DOMAIN and using
    protocol PROTOCOL, which are connected to each other, and put file
@@ -31,52 +29,31 @@ int
 DEFUN(socketpair, (domain, type, protocol, fds),
       int domain AND enum __socket_type type AND int protocol AND int fds[2])
 {
-  socket_t skt, r, w;
-  int fd0, fd1;
   error_t err;
+  int d1, d2;
 
-  if (fds == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  ((volatile int *) fds)[0] = fds[1];
-
-  skt = _hurd_socket_server (domain);
-  if (skt == MACH_PORT_NULL)
+  d1 = socket (domain, type, protocol);
+  if (d1 < 0)
     return -1;
-
-  if (err = __socket_create (skt, SOCK_STREAM, protocol, &r))
-    return __hurd_fail (err);
-  if (err = __socket_create (skt, SOCK_STREAM, protocol, &w))
+  d2 = socket (domain, type, protocol);
+  if (d2 < 0)
     {
-      __mach_port_deallocate (__mach_task_self (), r);
-      return __hurd_fail (err);
-    }
-  if (err = __socket_connect2 (r, w))
-    {
-      __mach_port_deallocate (__mach_task_self (), w);
-      __mach_port_deallocate (__mach_task_self (), r);
+      err = errno;
+      (void) close (d1);
       return __hurd_fail (err);
     }
 
-  __mutex_lock (&_hurd_dtable.lock);
-  fd0 = _hurd_dalloc ();
-  fd1 = _hurd_dalloc ();
-  if (fd0 < 0 || fd0 < 0)
+  if (err = _HURD_DPORT_USE
+      (d1,
+       ({ socket_t sock1 = port;
+	  _HURD_DPORT_USE (d2, __socket_connect2 (sock1, port)) })))
     {
-      __mach_port_deallocate (__mach_task_self (), r);
-      __mach_port_deallocate (__mach_task_self (), w);
+      close (d1);
+      close (d2);
+      return __hurd_fail (err);
     }
-  else
-    {
-      _hurd_dtable.d[fd0].server = r;
-      _hurd_dtable.d[fd1].server = w;
-    }
-  __mutex_unlock (&_hurd_dtable.lock);
 
-  fds[0] = fd0;
-  fds[1] = fd1;
+  fds[0] = d1;
+  fds[2] = d2;
   return 0;
 }
