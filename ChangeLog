@@ -1,3 +1,7 @@
+1999-09-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/Dist: Add sys/user.h.
+
 1999-09-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* math/libm-test.c (j0_test): Add some deltas for m68k.
