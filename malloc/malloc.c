@@ -4233,6 +4233,14 @@ _int_free(mstate av, Void_t* mem)
 #endif
       ) {
 
+    if (__builtin_expect (chunksize (chunk_at_offset (p, size)) < MINSIZE, 0)
+	|| __builtin_expect (chunksize (chunk_at_offset (p, size))
+			     >= av->system_mem, 0))
+      {
+	errstr = "invalid next size (fast)";
+	goto errout;
+      }
+
     set_fastchunks(av);
     fb = &(av->fastbins[fastbin_index(size)]);
     /* Another simple check: make sure the top of the bin is not the
