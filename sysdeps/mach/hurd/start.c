@@ -33,7 +33,10 @@ extern int EXFUN(main, (int argc, char **argv, char **envp));
 static int count (char *, size_t);
 static void makevec (char *, size_t, char **);
 
-/* Entry point.  */
+/* Entry point.  The exec server started the initial thread in our task with
+   this spot the PC, and a stack that is presumably big enough.
+   The stack base address (|sp - this| is the size of the stack) is
+   in the return-value register (%eax for i386, etc.).  */
 void
 _start (void)
 {
@@ -46,23 +49,24 @@ _start (void)
   int dealloc_args, dealloc_env;
 
   int argc, envc;
-  char **argv, **envp;
+  char **argv;
 
   char *p;
 
+  /* Basic Mach initialization, must be done before RPCs can be done.  */
   __mach_init ();
 
   if (err = __task_get_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
 				     &in_bootstrap))
     _exit (err);
 
-  if (err = __exec_newtask_startup (in_bootstrap,
-				    &args, &argslen, &dealloc_args,
-				    &env, &envlen, &dealloc_env,
-				    &dtable, &dtablesize,
-				    &portarray, &portarraysize,
-				    &intarray, &intarraysize,
-				    &passed_bootstrap))
+  if (err = __exec_startup (in_bootstrap,
+			    &args, &argslen, &dealloc_args,
+			    &env, &envlen, &dealloc_env,
+			    &dtable, &dtablesize,
+			    &portarray, &portarraysize,
+			    &intarray, &intarraysize,
+			    &passed_bootstrap))
     _exit (err);
 
   __task_set_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
@@ -77,12 +81,12 @@ _start (void)
 					      sizeof (char *)),
 			   1))
     _exit (err);
-  envp = &argv[argc + 1];
+  __environ = &argv[argc + 1];
 
   makevec (args, argslen, argv);
-  makevec (env, envlen, envp);
+  makevec (env, envlen, __environ);
 
-  __environ = envp;
+  __proc_setprocargs (intarray[PROCSERVER], argv, envp);
 
   __libc_init ();
 
