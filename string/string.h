@@ -144,7 +144,7 @@ extern int bcmp __P ((__const __ptr_t __s1, __const __ptr_t __s2, size_t __n));
 extern int ffs __P ((int __i));
 
 #if	defined(__GNUC__) && defined(__OPTIMIZE__)
-#define	ffs()	__builtin_ffs()
+#define	ffs(x)	__builtin_ffs(x)
 #endif /* GCC and optimizing.  */
 
 /* Compare S1 and S2, ignoring case.  */
