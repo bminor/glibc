@@ -1,3 +1,32 @@
+1997-08-25 17:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/selectbits.h: Correct assembler versions to work even
+	for descriptors >= 32.
+
+	* stdlib/alloca.h: Don't define alloca to __alloca since if gcc
+	is used __alloca is not defined to __builtin_alloca and so might
+	not be available.
+	Reported by Uwe Ohse <uwe@ohse.de>.
+
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Define macros in a special
+	way if gcc is not used and so dev_t is an array.
+	Reported by Uwe Ohse <uwe@ohse.de>.
+
+	* sysdeps/unix/sysv/linux/netinet/tcp.h: Include features.h instead
+	of sys/cdefs.h.  Pretty print.
+
+1997-08-25 12:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/rpc/xdr.h: Change name of parameters in prototypes of
+	xdr_reference, xdrmem_create, and xdrstdio_create because of clash
+	with g++ internal symbols.
+	Patch by Sudish Joseph <sj@eng.mindspring.net>.
+
+1997-08-24 18:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/argz.h: Add missing __END_DECLS.
+	Patch by Miles Bader <miles@gnu.ai.mit.edu>.
+
 1997-08-24 00:48  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/iso-4217.def: Update for more complete ISO 4217 match.
