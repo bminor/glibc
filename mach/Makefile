@@ -136,7 +136,9 @@ generated += $(mach-syscalls:%=__%.S) \
 	     $(mach-syscalls:%=%.c)
 endif	# mach-syscalls
 
-mach-shortcuts := $(patsubst syscall_%,%,$(filter syscall_%,$(mach-syscalls)))
+# syscall_device_writev_request has no RPC equivalent.
+mach-shortcuts := $(filter-out device_writev_request,\
+		  $(patsubst syscall_%,%,$(filter syscall_%,$(mach-syscalls))))
 
 ifndef mach-shortcuts
 # Forget about mach_interface.defs for this run.  On the next run,
