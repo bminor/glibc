@@ -182,10 +182,7 @@ for @code{size_t} arrange to override it if necessary.
 To build the library, type @code{make lib}.  This will produce a lot of
 output, some of which looks like errors from @code{make} (but isn't).
 Look for error messages from @code{make} containing @samp{***}.  Those
-indicate that something is really wrong.  Using the @samp{-w} option to
-@code{make} may make the output easier to understand (this option tells
-@code{make} to print messages telling you what subdirectories it is
-working on).@refill
+indicate that something is really wrong.
 
 To build and run some test programs which exercise some of the library
 facilities, type @code{make tests}.  This will produce several files
