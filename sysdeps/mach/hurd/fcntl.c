@@ -26,19 +26,14 @@ int
 DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 {
   va_list ap;
-  struct _hurd_port *p = _hurd_dport (fd);
-  io_t port;
-  int dealloc;
+  int dealloc_dt;
+  struct _hurd_fd_user d = _hurd_fd (fd, &dealloc_dt);
+  io_t port, ctty;
+  int dealloc, dealloc_ctty;
   int result;
   
-  if (p == NULL)
+  if (d.d == NULL)
     {
-      errno = EBADF;
-      return -1;
-    }
-  if (p->port == MACH_PORT_NULL)
-    {
-      __spin_unlock (&p->lock);
       errno = EBADF;
       return -1;
     }
@@ -50,59 +45,86 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
     case F_GETLK:
     case F_SETLK:
     case F_SETLKW:
+      __spin_unlock (&d.d->lock);
       errno = ENOSYS;
       result = -1;
       break;
 
     default:
+      __spin_unlock (&d.d->lock);
       errno = EINVAL;
       result = -1;
       break;
 
     case F_DUPFD:
       {
-	int new;
-	__typeof (_hurd_dtable.d[fd]) old;
-	old = _hurd_dtable.d[fd];
-	_hurd_dtable.d[fd].user_dealloc = &dealloc;
-	__spin_unlock (&_hurd_dtable.d[fd].user_dealloc);
-	port = _hurd_port_locked_get (p, &dealloc);
-	__mutex_lock (&hurd_dtable_lock);
-	for (new = va_arg (ap, int); new < _hurd_dtable.size; ++new)
+	int fd2 = va_arg (args, int);
+	int flags;
+
+	/* Extract the ports and flags from FD.  */
+	flags = d->flags;
+	ctty = _hurd_port_get (&d->ctty, &dealloc_ctty);
+	port = _hurd_port_locked_get (&d->port, &dealloc); /* Unlocks D.  */
+	
+	if (port == MACH_PORT_NULL)
+	  goto badf;
+	
+	__mutex_lock (&_hurd_dtable_lock);
+	if (fd2 < 0 || fd2 >= _hurd_dtable.size)
 	  {
-	    __typeof (&_hurd_dtable.d[new]) d = &_hurd_dtable.d[new];
-	    __spin_lock (&d->port.lock);
-	    if (d->port.port == MACH_PORT_NULL)
-	      {
-		*d = old;
-		d->port.user_dealloc = NULL;
-		__spin_unlock (&d->port.lock);
-		__mutex_unlock (&hurd_dtable_lock);
-		result = new;
-		if (!dealloc)
-		  __mach_port_mod_refs (__mach_task_self (), old.port.port,
-					MACH_PORT_RIGHT_SEND, 1);
-		goto win;
-	      }
-	    __spin_unlock (&d->port.lock);
+	    errno = EBADF;
+	    fd2 = -1;
 	  }
-	__mutex_unlock (&hurd_dtable_lock);
-	errno = EMFILE;
-	result = -1;
-      win:
+	else
+	  {
+	    while (fd2 < _hurd_dtable.size)
+	      {
+		struct _hurd_fd *d2 = &_hurd_dtable.d[fd2];
+		__spin_lock (&d2->port.lock);
+		if (d2->port.port == MACH_PORT_NULL)
+		  {
+		    d2->flags = flags;
+		    _hurd_port_set (&d2->ctty, ctty);
+		    _hurd_port_locked_set (&d2->port, port); /* Unlocks D2.  */
+		    break;
+		  }
+		else
+		  __spin_unlock (&d2->port.lock);
+	      }
+	    if (fd2 == _hurd_dtable.size)
+	      {
+		errno = EMFILE;
+		fd2 = -1;
+	      }
+	  }
+	__mutex_unlock (&_hurd_dtable_lock);
+	
+	if (fd2 >= 0)
+	  {
+	    /* Give the ports each a user ref for the new descriptor.  */
+	    __mach_port_mod_refs (__mach_task_self (), port,
+				  MACH_PORT_RIGHT_SEND, 1);
+	    if (ctty != MACH_PORT_NULL)
+	      __mach_port_mod_refs (__mach_task_self (), ctty,
+				    MACH_PORT_RIGHT_SEND, 1);
+	  }
+	
+	_hurd_port_free (port, &dealloc);
+	if (ctty != MACH_PORT_NULL)
+	  _hurd_port_free (ctty, &dealloc_ctty);
+	
+	result = fd2;
 	break;
       }
 
     case F_GETFD:
-      {
-	result = _hurd_dtable.d[fd].flags;
-	__spin_unlock (&_hurd_dtable.d[fd].lock);
-	break;
-      }
+      result = d.d->flags;
+      __spin_unlock (&d.d->lock);
+      break;
 
     case F_SETFD:
-      _hurd_dtable.d[fd].flags = va_arg (ap, int);
-      __spin_unlock (&_hurd_dtable.d[fd].lock);
+      d.d->flags = va_arg (ap, int);
+      __spin_unlock (&d.d->lock);
       result = 0;
       break;
 
@@ -110,7 +132,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
       {
 	error_t err;
 	int nonblock, append;
-	port = _hurd_port_locked_get (p, &dealloc);
+	port = _hurd_port_locked_get (d.d, &dealloc); /* Unlocks D.d.  */
 	err = __io_get_nonblock (port, &nonblock);
 	if (!err)
 	  err = __io_get_append (port, &append);
@@ -130,7 +152,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
       {
 	int flags = va_arg (ap, int);
 	error_t err;
-	port = _hurd_port_locked_get (p, &dealloc);
+	port = _hurd_port_locked_get (d.d, &dealloc); /* Unlocks D.d.  */
 	err = __io_mod_nonblock (port, flags & O_NONBLOCK);
 	if (!err)
 	  err = __io_mod_append (port, flags & O_APPEND);
@@ -148,7 +170,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
     case F_GETOWN:
       {
 	error_t err;
-	port = _hurd_port_locked_get (p, &dealloc);
+	port = _hurd_port_locked_get (d.d, &dealloc); /* Unlocks D.d.  */
 	if (err = __io_get_owner (port, &result))
 	  {
 	    errno = err;
@@ -162,7 +184,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
       {
 	pid_t owner = va_arg (ap, pid_t);
 	error_t err;
-	port = _hurd_port_locked_get (p, &dealloc);
+	port = _hurd_port_locked_get (d.d, &dealloc); /* Unlocks D.d.  */
 	if (err = __io_set_owner (port, owner))
 	  {
 	    errno = err;
@@ -174,6 +196,8 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	break;
       }
     }
+
+  _hurd_fd_done (d, &dealloc_dt);
 
   va_end (ap);
 
