@@ -429,6 +429,25 @@ in the same directory, or header files used by the source files in that
 directory.  You don't need to list files that are implementations
 (either C or assembly source) of routines whose names are given in the
 machine-independent makefiles in the main source tree.
+
+@item configure
+This file is a shell script fragment to be run at configuration time.
+The top-level @file{configure} script uses the shell @code{.} command to
+read the @file{configure} file in each system-dependent directory
+chosen.  The @file{configure} files are usually generated from
+@file{configure.in} files using Autoconf.  A system-dependent
+@file{configure} script will usually add things to the shell variables
+@samp{DEFS} and @samp{config_vars}; see the top-level @file{configure}
+script for details.
+
+@item configure.in
+This file is an Autoconf input fragment to be processed into
+@file{configure}.  You should write either @file{configure} or
+@file{configure.in}, but not both.  The first line of @file{configure}
+should invoke the @code{m4} macro @samp{GLIBC_PROVIDES}.  This macro
+does several @code{AC_PROVIDE} calls for Autoconf macros which are used
+by the top-level @file{configure} script; without this, those macros
+might be invoked again unnecessarily by Autoconf.
 @end table
 
 That is the general system for how system-dependencies are isolated.
