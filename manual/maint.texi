@@ -45,34 +45,36 @@ The GNU C Library currently supports configurations that match the
 following patterns:
 
 @smallexample
-sparc-sun-sunos4.@var{n}
-sparc-sun-solaris2.@var{n}
-m68k-hp-bsd4.3
-m68k-sun-sunos4.@var{n}
-m68k-sony-newsos
-mips-dec-ultrix4.@var{n}
+alpha-dec-osf1
 i386-@var{anything}-bsd4.3
+i386-@var{anything}-gnu
+i386-@var{anything}-sco3.2
+i386-@var{anything}-sco3.2v4
 i386-@var{anything}-sysv
 i386-@var{anything}-sysv4
-i386-@var{anything}-sco3.2v2
-i386-@var{anything}-sco3.2v4
 i386-sequent-bsd
+m68k-hp-bsd4.3
+m68k-sony-newsos
+m68k-sun-sunos4.@var{n}
+mips-dec-ultrix4.@var{n}
+sparc-sun-solaris2.@var{n}
+sparc-sun-sunos4.@var{n}
 @end smallexample
 
 While no other configurations are supported, there are handy aliases for
 these few.  (These aliases work in other GNU software as well.)
 
 @smallexample
-sun4-sunos4.@var{n} sun4
-sun4-solaris2.@var{n} sun4-sunos5.@var{n}
-hp320-bsd4.3 hp300bsd
-sun3-sunos4.@var{n} sun3
-news
 decstation
-i386-svr4
+hp320-bsd4.3 hp300bsd
 i386-sco
 i386-sco3.2v4
 i386-sequent-dynix
+i386-svr4
+news
+sun3-sunos4.@var{n} sun3
+sun4-solaris2.@var{n} sun4-sunos5.@var{n}
+sun4-sunos4.@var{n} sun4
 @end smallexample
 
 Here are some options that you should specify (if appropriate) when
