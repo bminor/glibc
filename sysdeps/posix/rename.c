@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,8 @@ DEFUN(rename, (old, new), CONST char *old AND CONST char *new)
 	      __link(old, new) < 0)
 	    return -1;
 	}
+      else
+	return -1;
     }
   if (__unlink(old) < 0)
     {
