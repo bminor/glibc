@@ -34,10 +34,10 @@ Many of the functions listed in this chapter are defined mathematically
 over a domain that is only a subset of real numbers.  For example, the
 @code{acos} function is defined over the domain between @code{-1} and
 @code{1}.  If you pass an argument to one of these functions that is
-outside the domain over which it is defined, the function returns
-an unspecified value and sets @code{errno} to @code{EDOM} to indicate
-a @dfn{domain error}.
-@c !!! the "unspecified value" is NAN on ieee754 machines
+outside the domain over which it is defined, the function sets
+@code{errno} to @code{EDOM} to indicate a @dfn{domain error}.  On
+machines that support IEEE floating point, functions reporting error
+@code{EDOM} also return a NaN.
 
 Some of these functions are defined mathematically to result in a
 complex value over parts of their domains.  The most familiar example of
@@ -375,37 +375,35 @@ value whose hyperbolic tangent is @var{x}.  If the absolute value of
 
 @node Pseudo-Random Numbers
 @section Pseudo-Random Numbers
-
-This section describes the GNU facilities for generating a series of
-pseudo-random numbers.  The numbers generated are not necessarily truly
-random; typically, the sequences repeat periodically, with the period
-being a function of the number of bits in the @dfn{seed} or initial
-state.
 @cindex random numbers
 @cindex pseudo-random numbers
 @cindex seed (for random numbers)
 
-There are actually two sets of random number functions provided.
+This section describes the GNU facilities for generating a series of
+pseudo-random numbers.  The numbers generated are not truly random;
+typically, they form a sequence that repeats periodically, with a
+period so large that you can ignore it for ordinary purposes.  The
+random number generator works by remembering at all times a @dfn{seed}
+value which it uses to compute the next random number and also to
+compute a new seed.
 
-@itemize @bullet
-@item 
-The @code{rand} and @code{srand} functions, described in @ref{ANSI
-Random}, are part of the ANSI C standard.  You can use these functions
-portably in many C implementations.
+Although the generated numbers look unpredictable within one run of a
+program, the sequence of numbers is @emph{exactly the same} from one run
+to the next.  This is because the initial seed is always the same.  This
+is convenient when you are debugging a program, but it is unhelpful if
+you want the program to behave unpredictably.  If you want truly random
+numbers, not just pseudo-random, specify a seed based on the current
+time.
 
-@item 
-The @code{random} and @code{srandom} functions, described in @ref{BSD
-Random}, are derived from BSD.  They use a better random number
-generator (producing numbers that are more random), but are less
-portable.
-@c !!! rand/srand just call random/srandom.  It is the same RNG.
-@end itemize
+You can get repeatable sequences of numbers on a particular machine type
+by specifying the same initial seed value for the random number
+generator.  There is no standard meaning for a particular seed value;
+the same seed, used in different C libraries or on different CPU types,
+will give you different random numbers.
 
-For both sets of functions, you can get repeatable sequences of numbers
-within a single implementation on a single machine type by specifying
-the same initial seed value for the random number generator.  Other C
-libraries may produce different sequences of values for the same seed.
-
+The GNU library supports the standard ANSI C random number functions
+plus another set derived from BSD.  We recommend you use the standard
+ones, @code{rand} and @code{srand}.
 
 @menu
 * ANSI Random::      @code{rand} and friends.
@@ -455,10 +453,8 @@ To produce truly random numbers (not just pseudo-random), do @code{srand
 @subsection BSD Random Number Functions
 
 This section describes a set of random number generation functions that
-are derived from BSD.  The @code{random} function can generate better
-random numbers than @code{rand}, because it maintains more bits of
-internal state.
-@c !!! false
+are derived from BSD.  There is no advantage to using these functions
+with the GNU C library; we support them for BSD compatibility only.
 
 The prototypes for these functions are in @file{stdlib.h}.
 @pindex stdlib.h
