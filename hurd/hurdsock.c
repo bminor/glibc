@@ -44,7 +44,7 @@ static int max_domain;
    and does not look them up in /servers/socket more than once.  */
 
 socket_t
-_hurd_socket_server (int domain)
+_hurd_socket_server (int domain, int dead)
 {
   socket_t server;
 
@@ -64,6 +64,14 @@ _hurd_socket_server (int domain)
       else
 	/* No space to cache the port; we will just fetch it anew below.  */
 	errno = save;
+    }
+
+  if (dead && domain <= max_domain)
+    {
+      /* The user says the port we returned earlier (now in SERVERS[DOMAIN])
+	 was dead.  Clear the cache and fetch a new one below.  */
+      __mach_port_deallocate (__mach_task_self (), servers[domain]);
+      servers[domain] = MACH_PORT_NULL;
     }
 
   if (domain > max_domain || servers[domain] == MACH_PORT_NULL)
