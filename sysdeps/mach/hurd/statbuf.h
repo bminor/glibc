@@ -77,10 +77,28 @@ struct stat
 #define	__S_ISUID	04000	/* Set user ID on execution.  */
 #define	__S_ISGID	02000	/* Set group ID on execution.  */
 #define	__S_ISVTX	01000	/* Save swapped text after use (sticky).  */
-#define	__S_IREAD	0400	/* Read by owner.  */
-#define	__S_IWRITE	0200	/* Write by owner.  */
-#define	__S_IEXEC	0100	/* Execute by owner.  */
+#define	__S_IREAD	00400	/* Read by owner.  */
+#define	__S_IWRITE	00200	/* Write by owner.  */
+#define	__S_IEXEC	00100	/* Execute by owner.  */
 
+
+#ifdef	__USE_GNU
+/* If set, there is no benefit in caching the contents of this file.  */
+#define S_INOCACHE	000000200000
+
+/* If the S_IUSEUNK bit is set, then the S_IUNKNOWN bits (see below)
+   control access for unknown users.  If S_IUSEUNK is clear, then unknown
+   users are treated as "others" for purposes of access control.  */
+#define S_IUSEUNK	000000400000
+/* Mask of protection bits for unknown users (no effective IDs at all).  */
+#define S_IUNKNOWN      000007000000
+/* Shift S_IREAD, S_IWRITE, S_IEXEC left this many bits to produce the
+   protection bits for unknown users.  */
+#define S_IUNKSHIFT	12
+
+/* All the unused bits.  */
+#define	S_ISPARE	(~(S_IFMT|S_INOCACHE|S_IUNKNOWN|07777))
+#endif
 
 /* Default file creation mask (umask).  */
 #ifdef	__USE_BSD
