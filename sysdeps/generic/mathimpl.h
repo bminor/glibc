@@ -1,3 +1,32 @@
+/* This part here added by roland@prep.ai.mit.edu for the GNU C library.  */
+   
+#include <math.h>		/* Done first so we can #undef.  */
+#include <endian.h>
+#if	__BYTE_ORDER == __LITTLE_ENDIAN
+#undef national
+#define national
+#endif
+
+#undef	isinf
+#define	isinf	__isinf
+#undef	isnan
+#define	isnan	__isnan
+#undef	infnan
+#define	infnan	__infnan
+#undef	copysign
+#define	copysign	__copysign
+#undef	scalb
+#define	scalb	__scalb
+#undef	drem
+#define	drem	__drem
+#undef	logb
+#define	logb	__logb
+#undef	__finite
+#undef	finite
+#define	finite	__finite
+#undef	expm1
+#define	expm1	__expm1
+
 /*
  * Copyright (c) 1988, 1993
  *	The Regents of the University of California.  All rights reserved.
