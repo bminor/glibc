@@ -1,4 +1,4 @@
-%define glibcrelease 15
+%define glibcrelease 16
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1275,6 +1275,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sun Mar 20 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-16
+- fix pread with -D_FILE_OFFSET_BITS=64 (#151573)
+
 * Sat Mar 19 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-15
 - update from CVS
   - better fix for the dlclose bug (#145810, #150414)
