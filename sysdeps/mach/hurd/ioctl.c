@@ -169,13 +169,23 @@ DEFUN(__ioctl, (fd, request),
     }
 
   t = (mach_msg_type_t *) &m[1];
-  if (out (1, _IOTS (sizeof (error_t)), &err, NULL) ||
-      out (r.__t.count0, r.__t.type0, arg, &arg) ||
-      out (r.__t.count1, r.__t.type2, arg, &arg) ||
-      out (r.__t.count2, r.__t.type2, arg, &arg))
+  if (out (1, _IOTS (sizeof (error_t)), &err, NULL))
     return __hurd_fail (MIG_TYPE_ERROR);
 
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+  switch (err)
+    {
+    case 0:
+      if (out (r.__t.count0, r.__t.type0, arg, &arg) ||
+	  out (r.__t.count1, r.__t.type2, arg, &arg) ||
+	  out (r.__t.count2, r.__t.type2, arg, &arg))
+	return __hurd_fail (MIG_TYPE_ERROR);
+      return 0;
+
+    case MIG_BAD_ID:
+    case EOPNOTSUPP:
+      /* The server didn't understand the RPC.  */
+      err = ENOTTY;
+    default:
+      return __hurd_fail (err);
+    }
 }
