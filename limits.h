@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 
 #ifndef	_LIMITS_H
 
+#define	_LIMITS_H	1
 #include <features.h>
 
 #ifdef	__USE_POSIX
@@ -36,15 +37,14 @@ Cambridge, MA 02139, USA.  */
 
 #if	__GNUC__ >= 2
 
-/* Get GCC's limits.h.  It tests and defines _LIMITS_H.  */
+ /* Get the compiler's limits.h, which defines all the ANSI constants.  */
+ #define _LIBC_LIMITS_H		/* This tells it not to look for another.  */
  #include_next <limits.h>
 
 #else	/* Not GCC 2.  */
 
 /* We don't have #include_next.
    Define ANSI <limits.h> for standard 32-bit words.  */
-
-#define	_LIMITS_H	1
 
 /* These assume 8-bit `char's, 16-bit `short int's,
    and 32-bit `int's and `long int's.  */
