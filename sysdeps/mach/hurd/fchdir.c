@@ -22,7 +22,6 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/port.h>
 #include <hurd/fd.h>
-#include <sys/stat.h>
 
 /* Change the current directory to FD.  */
 int
@@ -31,23 +30,16 @@ DEFUN(fchdir, (fd), int fd)
   error_t err;
   file_t cwdir;
 
-  err = HURD_DPORT_USE
-    (fd,
-     ({ struct stat st;
-	cwdir = port;
-	err = __io_stat (cwdir, &st);
-	if (! err && ! S_ISDIR (st.st_mode))
-	  err = ENOTDIR;
-	if (! err)
-	  __mach_port_mod_refs (__mach_task_self (),
-				cwdir, MACH_PORT_RIGHT_SEND, 1);
-	err;
-      }));
+  err = __USEPORT (CRDIR,
+		   ({ file_t crdir = port;
+		      HURD_DPORT_USE (fd,
+				      __hurd_path_lookup (crdir, port, "",
+							  O_EXEC, 0, &cwdir));
+		    }));
 
   if (err)
     return __hurd_fail (err);
 
   _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], cwdir);
-
   return 0;
 }

@@ -21,30 +21,23 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/fd.h>
 
-/* Change the current directory root to FD.  */
+/* Change the current root directory to FD.  */
 int
 DEFUN(fchroot, (fd), int fd)
 {
   error_t err;
-  file_t crdir;
+  file_t dir;
 
-  err = HURD_DPORT_USE
-    (fd,
-     ({ struct stat st;
-	crdir = port;
-	err = __io_stat (crdir, &st);
-	if (! err && ! S_ISDIR (st.st_mode))
-	  err = ENOTDIR;
-	if (! err)
-	  __mach_port_mod_refs (__mach_task_self (),
-				crdir, MACH_PORT_RIGHT_SEND, 1);
-	err;
-      }));
+  err = __USEPORT (CRDIR,
+		   ({ file_t crdir = port;
+		      HURD_DPORT_USE (fd,
+				      __hurd_path_lookup (crdir, port, "",
+							  O_EXEC, 0, &dir));
+		    }));
 
   if (err)
     return __hurd_fail (err);
 
-  _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], crdir);
-
+  _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], dir);
   return 0;
 }
