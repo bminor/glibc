@@ -33,7 +33,7 @@ FILE *__stdio_head = NULL;
 static void
 init_stdio (void)
 {
-  /* XXX must check posix.1 if dup2(n,1) must affect stdout stream, etc. */
+  /* XXX temp hack */
   stdin = __fopenport (__getdport (STDIN_FILENO), "r");
   stdout = __fopenport (__getdport (STDOUT_FILENO), "w");
   stderr = __fopenport (__getdport (STDERR_FILENO), "w");
