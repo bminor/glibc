@@ -673,6 +673,16 @@ This error never occurs in the GNU system.
 @end deftypevr
 
 @comment errno.h
+@comment BSD: Inappropriate file type or format
+@deftypevr Macro int EFTYPE
+Inappropriate file type or format.  The file was the wrong type for the
+operation, or a data file had the wrong format.
+
+On some systems @code{chmod} returns this error if you try to set the
+sticky bit on a non-directory file; @pxref{Setting Permissions}.
+@end deftypevr
+
+@comment errno.h
 @comment POSIX.1: Function not implemented
 @deftypevr Macro int ENOSYS
 Function not implemented.  Some functions have commands or options defined
