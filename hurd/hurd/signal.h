@@ -109,6 +109,13 @@ extern thread_t _hurd_sigthread;
 /* Resource limit on core file size.  Enforced by hurdsig.c.  */
 extern int _hurd_core_limit;
 
+/* Raise a signal as described by SIGNO and SIGCODE, on the thread whose
+   sigstate SS points to.  If SS is a null pointer, this instead affects
+   the calling thread.  */
+
+extern void _hurd_raise_signal (struct hurd_sigstate *ss,
+				int signo, int sigcode);
+
 /* Translate a Mach exception into a signal (machine-dependent).  */
 
 extern void _hurd_exception2signal (int exception, int code, int subcode,
