@@ -32,3 +32,16 @@ Cambridge, MA 02139, USA.  */
    for the PC and stack pointer.  */
 #define PC ?
 #define SP ?
+
+/* This structure should contain all of the different flavors of thread
+   state structures which are meaningful for this machine.  Every machine's
+   definition of this structure should have a member `int set' which is a
+   bit mask (1 << FLAVOR) of the flavors of thread state in the structure
+   which are filled in; and a member `struct machine_thread_state basic'.
+   On some machines those are the only members (e.g. i386); on others,
+   there are several relevant flavors of thread state (e.g. mips).  */
+struct machine_thread_all_state
+  {
+    int set;			/* Mask of bits (1 << FLAVOR).  */
+    struct <machine>_thread_state basic;
+  };

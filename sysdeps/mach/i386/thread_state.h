@@ -28,3 +28,9 @@ Cambridge, MA 02139, USA.  */
 
 #define PC eip
 #define SP uesp
+
+struct machine_thread_all_state
+  {
+    int set;			/* Mask of bits (1 << FLAVOR).  */
+    struct i386_thread_state basic;
+  };
