@@ -783,6 +783,10 @@ The @code{mktime} function was contributed by Noel Cragg.
 @item
 The port to the Sequent Symmetry running Dynix version 3
 (@code{i386-sequent-bsd}) was contributed by Jason Merrill.
+
+@item
+The timezone support code is derived from the public-domain timezone
+package by Arthur David Olsen.
 @end itemize
 
 @c @bye
