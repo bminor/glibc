@@ -38,7 +38,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   int i;
   mach_port_t port;
   int got;
-  struct _hurd_dtable dtable;
+  struct hurd_dtable dtable;
   struct hurd_userlink dtable_ulink, *ulink;
   int *types;
   mach_port_t *ports;
@@ -131,55 +131,56 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 				      timeout->tv_usec / 1000) :
 				     0);
       mach_msg_option_t options = (timeout == NULL ? 0 : MACH_RCV_TIMEOUT);
-    receive:
-      switch (err = __mach_msg (&msg, MACH_RCV_MSG | options, 0, sizeof (msg),
-				port, to, MACH_PORT_NULL))
+      while ((err = __mach_msg (&msg, MACH_RCV_MSG | options, 0, sizeof (msg),
+				port, to, MACH_PORT_NULL)) == MACH_MSG_SUCCESS)
 	{
-	case MACH_MSG_SUCCESS:
-	  {
-	    /* We got a message.  Decode it.  */
-	    const mach_msg_type_t inttype =
-	      { MACH_MSG_TYPE_INTEGER_32, 32, 1, 1, 0, 0 };
-	    if (msg.head.msgh_id == SELECT_DONE_MSGID &&
-		!(msg.head.msgh_bits & MACH_MSGH_BITS_COMPLEX) &&
-		*(int *) &msg.result_type == *(int *) &inttype &&
-		*(int *) &msg.tag_type == *(int *) &inttype &&
-		(msg.result & (SELECT_READ|SELECT_WRITE|SELECT_URG)) &&
-		msg.tag >= 0 && msg.tag < nfds)
-	      {
-		/* This is a winning io_select_done message!
-		   Record the readiness it indicates and send a reply.  */
+	  /* We got a message.  Decode it.  */
+	  const mach_msg_type_t inttype =
+	    { MACH_MSG_TYPE_INTEGER_32, 32, 1, 1, 0, 0 };
+	  if (msg.head.msgh_id == SELECT_DONE_MSGID &&
+	      !(msg.head.msgh_bits & MACH_MSGH_BITS_COMPLEX) &&
+	      *(int *) &msg.result_type == *(int *) &inttype &&
+	      *(int *) &msg.tag_type == *(int *) &inttype &&
+	      (msg.result & (SELECT_READ|SELECT_WRITE|SELECT_URG)) &&
+	      msg.tag >= 0 && msg.tag < nfds)
+	    {
+	      /* This is a winning io_select_done message!
+		 Record the readiness it indicates and send a reply.  */
 
-		if (types[msg.tag] == 0)
-		  /* This descriptor is ready and it was not before,
-		     so we increment our count of ready descriptors.  */
-		  ++got;
-		types[msg.tag] |= msg.result;
-		if (msg.head.msgh_remote_port != MACH_PORT_NULL)
-		  {
-		  /* XXX */
-		    msg.head.msgh_id += 100;
-		    msg.result_type = inttype;
-		    msg.result = 0;
-		    options = MACH_SEND_MSG | MACH_RCV_TIMEOUT;
-		  }
-	      }
-	    else
-	      {
-		/* Randomness.  */
-		__mach_msg_destroy (msg);
-		options = MACH_RCV_TIMEOUT;
-	      }
+	      if (types[msg.tag] == 0)
+		/* This descriptor is ready and it was not before,
+		   so we increment our count of ready descriptors.  */
+		++got;
+	      types[msg.tag] |= msg.result;
+	      if (msg.head.msgh_remote_port != MACH_PORT_NULL)
+		{
+		  msg.head.msgh_id += 100;
+		  msg.result_type = inttype;
+		  msg.result = 0;
+		  /* When we loop below, send this reply message
+		     in the same operation that polls for another
+		     io_select_done request message.  */
+		  options |= MACH_SEND_MSG;
+		}
+	    }
+	  else
+	    {
+	      /* Randomness.  */
+	      __mach_msg_destroy (msg);
+	    }
 
-	    /* Poll for another message.  */
-	    timeout = 0;
-	    goto receive;
-	  }
-
-	case MACH_RCV_TIMED_OUT:
-	  err = 0;
-	  break;
+	  /* Poll for another message.  */
+	  timeout = 0;
+	  options |= MACH_RCV_TIMEOUT;
 	}
+
+    if (err == MACH_RCV_TIMED_OUT)
+      /* This is the normal value for ERR.  We might have timed out and
+         read no messages.  Otherwise, after receiving the first message,
+         we poll for more messages.  We receive with a timeout of 0 to
+         effect a poll, so ERR is MACH_RCV_TIMED_OUT when the poll finds no
+         message waiting.  */
+      err = 0;
     }
 
   if (port != MACH_PORT_NULL)
