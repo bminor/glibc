@@ -22,7 +22,7 @@
 subdir	:= time
 
 headers	:= time.h sys/time.h
-distribute := tzfile.h private.h scheck.c ialloc.c emkdir.c
+distribute := tzfile.h private.h scheck.c ialloc.c emkdir.c yearistype
 extra-objs = scheck.o ialloc.o emkdir.o zonenames $(tzfiles:%=zones-%)
 
 routines	:= offtime asctime clock ctime difftime gmtime	\
