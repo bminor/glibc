@@ -29,7 +29,7 @@ routines	:= signal raise killpg \
 		   sigpending sigsuspend \
 		   sigblock sigsetmask sigpause sigvec \
 		   __sigblock __sigstmsk __sigpause __sigvec \
-		   sigstack sigintr \
+		   sigstack sigaltstack sigintr \
 		   sigempty sigfillset sigaddset sigdelset sigismem \
 		   sigret __sigret \
 		   gsignal ssignal
