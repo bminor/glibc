@@ -55,8 +55,8 @@ else
 objdir = $(ARCH)
 endif
 
-ifneq ($(wildcard $(objdir)/Makeconfig),)
-include $(objdir)/Makeconfig
+ifneq ($(wildcard $(objdir)/configparms),)
+include $(objdir)/configparms
 endif
 endif
 
@@ -65,19 +65,24 @@ endif
 #
 
 
-# Common prefix for all installation directories.
+# Common prefix for machine-independent installation directories.
 ifndef prefix
 prefix = /usr/local
 endif
 
+# Common prefix for machine-dependent installation directories.
+ifndef prefix
+exec_prefix = /usr/local
+endif
+
 # Where to install the library and object files.
 ifndef libdir
-libdir = $(prefix)/lib
+libdir = $(exec_prefix)/lib
 endif
 
 # Where to install the header files.
 ifndef includedir
-includedir = $(prefix)/include
+includedir = $(exec_prefix)/include
 endif
 
 # Define if the library should install its own <stddef.h>.
@@ -94,7 +99,7 @@ endif
 
 # Where to install programs.
 ifndef bindir
-bindir = $(prefix)/bin
+bindir = $(exec_prefix)/bin
 endif
 
 # What timezone should be the installed default (e.g., US/Eastern).
