@@ -192,15 +192,17 @@ extern char *ctermid __P ((char *__buf));
 extern char *cuserid __P ((char * __buf));
 #endif
 
-#ifdef __USE_GNU
-extern _IO_ssize_t getdelim __P ((char **, size_t *, int, FILE*));
-extern _IO_ssize_t getline __P ((char **, size_t *, FILE *));
-extern _IO_ssize_t __getline __P ((char **, size_t *, FILE *));
-
+#if defined __USE_BSD
 extern int snprintf __P ((char *, size_t, __const char *, ...));
 extern int __snprintf __P ((char *, size_t, __const char *, ...));
 extern int vsnprintf __P ((char *, size_t, __const char *, _G_va_list));
 extern int __vsnprintf __P ((char *, size_t, __const char *, _G_va_list));
+#endif
+
+#ifdef __USE_GNU
+extern _IO_ssize_t getdelim __P ((char **, size_t *, int, FILE*));
+extern _IO_ssize_t getline __P ((char **, size_t *, FILE *));
+extern _IO_ssize_t __getline __P ((char **, size_t *, FILE *));
 
 extern int asprintf __P ((char **, const char *, ...));
 extern int vasprintf __P ((char **, const char *, _G_va_list));
