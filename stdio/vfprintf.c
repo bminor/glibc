@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -406,11 +406,7 @@ DEFUN(vfprintf, (s, format, args),
 		}
 
 	      if (alt && base == 16)
-		{
-		  *w-- = fc;
-		  *w-- = '0';
-		  width -= 2;
-		}
+		width -= 2;
 
 	      if (is_neg || showsign || space)
 		--width;
@@ -429,6 +425,12 @@ DEFUN(vfprintf, (s, format, args),
 	      if (!left && pad == '0')
 		while (width-- > 0)
 		  outchar('0');
+
+	      if (alt && base == 16)
+		{
+		  outchar ('0');
+		  outchar (fc);
+		}
 
 	      /* Write the number.  */
 	      while (++w <= workend)
