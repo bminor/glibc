@@ -50,7 +50,7 @@ __getuids (int n, uid_t *uidset)
       memcpy (uidset, uids, nuids * sizeof (uid_t));
     }
   else
-    __mutex_unlock (&_hurd_idlock);
+    __mutex_unlock (&_hurd_id.lock);
 
   return nuids;
 }
