@@ -43,65 +43,56 @@ This is the reference manual for version 0.00 of the GNU C Library.
 @menu
 * Introduction::                Purpose of the GNU C Library.
 * Error Reporting::             How the GNU Library functions report
-					 error conditions.
-* Memory Allocation::           Your program can allocate memory
-					 dynamically and manipulate it via
-					 pointers.
-* Character Handling::          Character testing and conversion
-					 functions.
+                                 error conditions.
+* Memory Allocation::           Your program can allocate memory dynamically
+                                 and manipulate it via pointers.
+* Character Handling::          Character testing and conversion functions.
 * String and Array Utilities::  Utilities for copying and comparing
-					 strings and arrays.
+                                 strings and arrays.
 * Extended Characters::         Support for extended character sets.
 * Locales::                     The country and language can affect
-                                         the behavior of library functions.
-* Searching and Sorting::       General searching and sorting
-					 functions.
-* Pattern Matching::   Matching wildcards and regular expressions.
-			  Shell-style ``word expansion''.
-* I/O Overview::       Introduction to the I/O facilities.
-* I/O on Streams::     High-level, portable I/O facilities.
-* Low-Level I/O::      Low-level, less portable I/O.
+                                 the behavior of library functions.
+* Searching and Sorting::       General searching and sorting functions.
+* Pattern Matching::            Matching wildcards and regular expressions,
+                                 and shell-style ``word expansion''.
+* I/O Overview::                Introduction to the I/O facilities.
+* Streams: I/O on Streams.      High-level, portable I/O facilities.
+* Low-Level I/O::               Low-level, less portable I/O.
 * File System Interface::       Functions for manipulating files.
-* Pipes and FIFOs::             A simple interprocess communication
-					 mechanism.
-* Sockets::                     A more complicated interprocess
-					 communication mechanism, with support
-					 for networking.
-* Low-Level Terminal Interface::  How to change the characteristics
-					 of a terminal device.
-* Mathematics::                 Math functions (transcendental,
-					  random numbers, abs value).
+* Pipes and FIFOs::             A simple interprocess communication mechanism.
+* Sockets::                     A more complicated interprocess communication
+                                 mechanism, with support for networking.
+* Low-Level Terminal Interface::How to change the characteristics
+                                 of a terminal device.
+* Mathematics::                 Math functions (transcendental functions,
+                                 random numbers, absolute value, etc.).
 * Arithmetic::                  Low-level arithmetic functions.
-* Date and Time::               Functions for getting the date and
-					 time, and conversion between formats.
-* Non-Local Exits::             The @code{setjmp} and @code{longjmp}
-					 facilities.
+* Date and Time::               Functions for getting the date and time,
+                                 and for conversion between formats.
+* Non-Local Exits::             The @code{setjmp} and @code{longjmp} facilities.
 * Signal Handling::             All about signals; how to send them,
-					 block them, and handle them.
-* Process Startup::		Writing the beginning and end of your program.
+                                 block them, and handle them.
+* Process Startup::             Writing the beginning and end of your program.
 * Child Processes::             How to create processes and run other programs.
 * Job Control::                 All about process groups and sessions.
 * Users and Groups::            How users are identified and classified.
-				  The database of users.
 * System Information::          Getting information about the
-                                         hardware and software configuration
-                                         of the machine a program runs on.
-* System Configuration::	Parameters describing operating
-					 system limits.
+                                 hardware and software configuration
+                                 of the machine a program runs on.
+* System Configuration::        Parameters describing operating system limits.
 
 Appendices
+
 * Language Features::           C language features provided by the library. 
 
-* Library Summary::		A summary showing the syntax, header
-                                         file, and derivation of each library
-                                         feature.
-* Maintenance::                 How to install and maintain the
-                                         GNU C Library.
-* Copying::                     The GNU Library General Public License
-                                         says how you can copy and share the
-                                         GNU C Library.
+* Library Summary::             A summary showing the syntax, header file,
+                                 and derivation of each library feature.
+* Maintenance::                 How to install and maintain the GNU C Library.
+* Copying::                     The GNU Library General Public License says
+                                 how you can copy and share the GNU C Library.
 
 Indices
+
 * Concept Index::               Index of concepts and names.
 * Type Index::                  Index of types and type qualifiers.
 * Function Index::              Index of functions and function-like macros.
@@ -120,24 +111,24 @@ Introduction
 Standards and Portability
 
 * ANSI C::                      The American National Standard for the
-				 C programming language.  
+                                 C programming language.  
 * POSIX::                       The IEEE 1003 standards for operating systems.
 * Berkeley Unix::               BSD and SunOS.
 * SVID::                        The System V Interface Description.  
 
 Using the Library
 
-* Header Files::                How to include the header files in your programs.
-* Macro Definitions::           Some functions in the library may really be 
-			 implemented as macros.
-* Reserved Names::              The C standard reserves some names for the library,
-			 and some for users.
+* Header Files::                How to use the header files in your programs.
+* Macro Definitions::           Some functions in the library may really
+                                 be implemented as macros.
+* Reserved Names::              The C standard reserves some names for
+                                 the library, and some for users.
 * Feature Test Macros::         How to control what names are defined.
 
 Error Reporting
 
 * Checking for Errors::         How errors are reported by library functions.
-* Error Codes::                 Error Codes
+* Error Codes::                 What all the error codes are.
 * Error Messages::              Mapping error codes onto error messages.
 
 Memory Allocation
@@ -145,30 +136,30 @@ Memory Allocation
 * Memory Concepts::             An introduction to concepts and terminology.
 * Dynamic Allocation and C::    How to get different kinds of allocation in C.
 * Unconstrained Allocation::    The @code{malloc} facility allows fully general
-		 		 dynamic allocation.
+                                 dynamic allocation.
 * Obstacks::                    Obstacks are less general than malloc
-				 but more efficient and convenient.
+                                 but more efficient and convenient.
 * Variable Size Automatic::     Allocation of variable-sized blocks
-				 of automatic storage that are freed when the
-				 calling function returns.
+                                 of automatic storage that are freed when the
+                                 calling function returns.
 * Relocating Allocator::        Waste less memory, if you can tolerate
-				 automatic relocation of the blocks you get.
-* Memory Warnings::		Getting warnings when memory is nearly full.
+                                 automatic relocation of the blocks you get.
+* Memory Warnings::             Getting warnings when memory is nearly full.
 
 Unconstrained Allocation
 
 * Basic Allocation::            Simple use of @code{malloc}.
 * Malloc Examples::             Examples of @code{malloc}.  @code{xmalloc}.
 * Freeing after Malloc::        Use @code{free} to free a block you
-				 got with @code{malloc}.
+                                 got with @code{malloc}.
 * Changing Block Size::         Use @code{realloc} to make a block
-				 bigger or smaller.
+                                 bigger or smaller.
 * Allocating Cleared Space::    Use @code{calloc} to allocate a
-				 block and clear it.
+                                 block and clear it.
 * Efficiency and Malloc::       Efficiency considerations in use of
-				 these functions.
+                                 these functions.
 * Aligned Memory Blocks::       Allocating specially aligned memory:
-				 @code{memalign} and @code{valloc}.
+                                 @code{memalign} and @code{valloc}.
 * Heap Consistency Checking::   Automatic checking for errors.
 * Hooks for Malloc::            You can use these hooks for debugging
 				 programs that use @code{malloc}.
@@ -209,8 +200,8 @@ Relocating Allocator
 
 Character Handling
 
-* Classification of Characters::  Testing whether characters are
-					 letters, digits, punctuation, etc.
+* Classification of Characters::Testing whether characters are
+                                 letters, digits, punctuation, etc.
 * Case Conversion::             Case mapping, and the like.
 
 String and Array Utilities
@@ -246,16 +237,11 @@ Locales and Internationalization
 
 * Effects of Locale::           Actions affected by the choice of locale.
 * Choosing Locale::             How the user specifies a locale.
-* Locale Categories::           Different purposes for which you can select a locale.
-* Setting the Locale::          How a program specifies the locale library functions.
+* Locale Categories::           Different purposes for which
+                                 you can select a locale.
+* Setting the Locale::          How a program specifies the locale.
 * Standard Locales::            Locale names available on all systems.
-* Numeric Formatting::          How to format numbers according to the chosen locale.
-
-Numeric Formatting
-
-* General Numeric::             
-* Currency Symbol::             
-* Sign of Money Amount::        
+* Numeric Formatting::          How to format numbers for the chosen locale.
 
 Searching and Sorting 
 
@@ -272,32 +258,33 @@ Pattern Matching
 * Globbing::             Finding the files that match a wildcard pattern.
 * Regular Expressions::  Matching regular expressions against strings.
 * Word Expansion::       Expanding shell variables, nested commands,
-			    arithmetic, and wildcards.
-			    This is what the shell does with shell commands.
+                          arithmetic, and wildcards.
+			  This is what the shell does with shell commands.
 
 I/O Overview
 
-* I/O Concepts::       Some basic information and terminology.
+* I/O Concepts::                Some basic information and terminology.
 * File Names::                  How to refer to a file.
 
 I/O Concepts
 
-* Streams and File Descriptors::  The GNU Library provides two ways
-					 to access the contents of files.
-* File Position::               
+* Streams and File Descriptors:: The GNU Library provides two ways
+                                  to access the contents of files.
+* File Position::               The number of bytes from the
+                                 beginning of the file.
 
 File Names
 
 * Directories::                 Directories contain entries for files.
 * File Name Resolution::        A file name specifies how to look up a file.
 * File Name Errors::            Error conditions relating to file names.
-* File Name Portability::   
+* File Name Portability::       File name portability and syntax issues.
 
 I/O on Streams
 
 * Streams::                     About the data type representing a stream.
 * Standard Streams::            Streams to the standard input and output 
-                         devices are created for you.
+                                 devices are created for you.
 * Opening Streams::             How to create a stream to talk to a file.
 * Closing Streams::             Close a stream when you are finished with it.
 * Simple Output::               Unformatted output by characters and lines.
@@ -306,12 +293,12 @@ I/O on Streams
 * Unreading::                   Peeking ahead/pushing back input just read.
 * Formatted Output::            @code{printf} and related functions.
 * Customizing Printf::          You can define new conversion specifiers for
-                         @code{printf} and friends.
+                                 @code{printf} and friends.
 * Formatted Input::             @code{scanf} and related functions.
 * Block Input/Output::          Input and output operations on blocks of data.
 * EOF and Errors::              How you can tell if an I/O error happens.
 * Binary Streams::              Some systems distinguish between text files
-                         and binary files.
+                                 and binary files.
 * File Positioning::            About random-access streams.
 * Portable Positioning::        Random access on peculiar ANSI C systems.
 * Stream Buffering::            How to control buffering of streams.
@@ -326,19 +313,16 @@ Unreading
 Formatted Output
 
 * Formatted Output Basics::     Some examples to get you started.
-* Output Conversion Syntax::    General syntax of conversion
-                                         specifications.
-* Table of Output Conversions::  Summary of output conversions and
-                                         what they do.
-* Integer Conversions::         Details about formatting of integers.
-* Floating-Point Conversions::  Details about formatting of
-                                         floating-point numbers.
+* Output Conversion Syntax::    General syntax of conversion specifications.
+* Table of Output Conversions:: Summary of output conversions, what they do.
+* Integer Conversions::         Details of formatting integers.
+* Floating-Point Conversions::  Details of formatting floating-point numbers.
 * Other Output Conversions::    Details about formatting of strings,
-                                         characters, pointers, and the like.
+                                 characters, pointers, and the like.
 * Formatted Output Functions::  Descriptions of the actual functions.
-* Variable Arguments Output::  @code{vprintf} and friends.
-* Parsing a Template String::   What kinds of args
-                                         does a given template call for?
+* Variable Arguments Output::   @code{vprintf} and friends.
+* Parsing a Template String::   What kinds of arguments does
+                                 a given template call for?
 
 Customizing Printf
 
@@ -356,7 +340,7 @@ Formatted Input
 * String Input Conversions::    Details of conversions for reading strings.
 * Other Input Conversions::     Details of miscellaneous other conversions.
 * Formatted Input Functions::   Descriptions of the actual functions.
-* Variable Arguments Input::  @code{vscanf} and friends.
+* Variable Arguments Input::    @code{vscanf} and friends.
 
 Stream Buffering
 
@@ -379,31 +363,24 @@ Low-Level I/O
 * Opening and Closing Files::   How to open and close file descriptors.
 * I/O Primitives::              Reading and writing data.
 * File Position Primitive::     Setting a descriptor's file position.
-* Descriptors and Streams::     Converting descriptor to stream
-                                         or vice-versa.
+* Descriptors and Streams::     Converting descriptor to stream or vice-versa.
 * Stream/Descriptor Precautions::  Precautions needed if you use both
-                                         descriptors and streams.
+                                    descriptors and streams.
 * Waiting for I/O::             How to check for input or output
-					 on multiple file descriptors.
-* Control Operations::          Various other operations on file
-					 descriptors.
-* Duplicating Descriptors::     Fcntl commands for duplicating file
-					 descriptors.
+                                 on multiple file descriptors.
+* Control Operations::          Various other operations on file descriptors.
+* Duplicating Descriptors::     Fcntl commands for duplicating descriptors.
 * Descriptor Flags::            Fcntl commands for manipulating flags
-					 associated with file descriptors.
+                                 associated with file descriptors.
 * File Status Flags::           Fcntl commands for manipulating flags
-					 associated with open files.
-* File Locks::                  Fcntl commands for implementing file
-					 locking.
-* Interrupt Input::             Getting an asynchronous signal when
-                                         input arrives.
+                                 associated with open files.
+* File Locks::                  Fcntl commands for implementing file locking.
+* Interrupt Input::             Getting a signal when input arrives.
 
 File System Interface
 
-* Working Directory::           This is used to resolve relative
-				 file names.
-* Accessing Directories::       Finding out what files a directory
-				 contains.
+* Working Directory::           This is used to resolve relative file names.
+* Accessing Directories::       Finding out what files a directory contains.
 * Hard Links::                  Adding alternate names to a file.
 * Symbolic Links::              A file that ``points to'' a file name.
 * Deleting Files::              How to delete a file, and what that means.
@@ -423,63 +400,65 @@ Accessing Directories
 
 File Attributes
 
-* Attribute Meanings::          The names of the file attributes, 
-                           and what their values mean.
+* Attribute Meanings::          The names of the file attributes,
+                                 and what their values mean.
 * Reading Attributes::          How to read the attributes of a file.
-* Testing File Type::           Distinguishing ordinary files, directories, links...
+* Testing File Type::           Distinguishing ordinary files,
+                                 directories, links...
 * File Owner::                  How ownership for new files is determined,
-			   and how to change it.
-* Permission Bits::             How information about a file's access mode is stored.
+                                 and how to change it.
+* Permission Bits::             How information about a file's access mode
+                                 is stored.
 * Access Permission::           How the system decides who can access a file.
 * Setting Permissions::         How permissions for new files are assigned,
-			   and how to change them.
-* Testing File Access::         How to find out if your process can access a file.
+                                 and how to change them.
+* Testing File Access::         How to find out if your process can
+                                 access a file.
 * File Times::                  About the time attributes of a file.
 
 Pipes and FIFOs
 
 * Creating a Pipe::             Making a pipe with the @code{pipe} function.
-* Pipe to a Subprocess::        Using a pipe to communicate with a
-				 child process.
+* Pipe to a Subprocess::        Using a pipe to communicate with a child.
 * FIFO Special Files::          Making a FIFO special file.
 
 Sockets
 
-* Socket Concepts::		Basic concepts you need to know about.
-* Communication Styles::	Stream communication, datagrams, and others.
-* Socket Addresses::		How socket names (``addresses'') work.
-* File Namespace::		Details about the file namespace.
-* Internet Namespace::		Details about the Internet namespace.
-* Open/Close Sockets::		Creating sockets and destroying them.
-* Connections::			Operations on sockets with connection state.
-* Datagrams::			Operations on datagram sockets.
-* Socket Options::		Miscellaneous low-level socket options.
-* Networks Database::		Accessing the database of network names.
+* Socket Concepts::             Basic concepts you need to know about.
+* Communication Styles::        Stream communication, datagrams, and others.
+* Socket Addresses::            How socket names (``addresses'') work.
+* File Namespace::              Details about the file namespace.
+* Internet Namespace::          Details about the Internet namespace.
+* Open/Close Sockets::          Creating sockets and destroying them.
+* Connections::                 Operations on sockets with connection state.
+* Datagrams::                   Operations on datagram sockets.
+* Socket Options::              Miscellaneous low-level socket options.
+* Networks Database::           Accessing the database of network names.
 
 Socket Addresses
 
-* Address Formats::		About @code{struct sockaddr}.
-* Setting Address::		Binding an address to a socket.
-* Reading Address::		Reading the address of a socket.
+* Address Formats::             About @code{struct sockaddr}.
+* Setting Address::             Binding an address to a socket.
+* Reading Address::             Reading the address of a socket.
 
 Internet Domain
 
 * Internet Address Format::     How socket addresses are specified in the
-                                   Internet namespace.
-* Host Addresses::	        All about host addresses of internet host.
-* Protocols Database::		Referring to protocols by name.
+                                 Internet namespace.
+* Host Addresses::              All about host addresses of Internet hosts.
+* Protocols Database::          Referring to protocols by name.
 * Services Database::           Ports may have symbolic names.
-* Byte Order::		        Different hosts may use different byte
-                                   ordering conventions; you need to
-                                   canonicalize host address and port number. 
-* Inet Example::	        Putting it all together.
+* Byte Order::                  Different hosts may use different byte
+                                 ordering conventions; you need to
+                                 canonicalize host address and port number. 
+* Inet Example::                Putting it all together.
 
 Host Addresses
 
-* Abstract Host Addresses::	What a host number consists of.
-* Data type: Host Address Data Type.	Data type for a host number.
-* Functions: Host Address Functions.	Functions to operate on them.
-* Names: Host Names.		Translating host names to host numbers.
+* Abstract Host Addresses::             What a host number consists of.
+* Data type: Host Address Data Type.    Data type for a host number.
+* Functions: Host Address Functions.    Functions to operate on them.
+* Names: Host Names.                    Translating host names to host numbers.
 
 Open/Close Sockets
 
@@ -489,61 +468,60 @@ Open/Close Sockets
 
 Connections
 
-* Connecting::			What the client program must do.
-* Listening::			How a server program waits for requests.
-* Accepting Connections::	What the server does when it gets a request.
-* Who is Connected::		Getting the address of the
-				   other side of a connection.
-* Transferring Data::		How to send and receive data.
-* Byte Stream Example::		An example program: a client for communicating
-				   over a byte stream socket
-				   in the Internet namespace.
-* Server Example::		A corresponding server program.
-* Out-of-Band Data::		This is an advanced feature.
+* Connecting::                  What the client program must do.
+* Listening::                   How a server program waits for requests.
+* Accepting Connections::       What the server does when it gets a request.
+* Who is Connected::            Getting the address of the
+                                 other side of a connection.
+* Transferring Data::           How to send and receive data.
+* Byte Stream Example::         An example client for communicating over a
+                                 byte stream socket in the Internet namespace.
+* Server Example::              A corresponding server program.
+* Out-of-Band Data::            This is an advanced feature.
 
 Transferring Data
 
-* Sending Data::		Sending data with @code{write}.
-* Receiving Data::		Reading data with @code{read}.
-* Socket Data Options::		Using @code{send} and @code{recv}.
+* Sending Data::                Sending data with @code{write}.
+* Receiving Data::              Reading data with @code{read}.
+* Socket Data Options::         Using @code{send} and @code{recv}.
 
 Datagrams
 
-* Sending Datagrams::		Sending packets on a datagram socket.
-* Receiving Datagrams::		Receiving packets on a datagram socket.
-* Datagram Example::		An example program: packets sent over a
-				   datagram stream in the file namespace.
-* Example Receiver::		Another program, that receives those packets.
+* Sending Datagrams::           Sending packets on a datagram socket.
+* Receiving Datagrams::         Receiving packets on a datagram socket.
+* Datagram Example::            An example program: packets sent over a
+                                 datagram stream in the file namespace.
+* Example Receiver::            Another program, that receives those packets.
 
 Socket Options
 
 * Socket Option Functions::     The basic functions for setting and getting
-                                   socket options.
+                                 socket options.
 * Socket-Level Options::        Details of the options at the socket level.
 
 Low-Level Terminal Interface
 
 * Is It a Terminal::            How to determine if a file is a terminal
-			  device, and what its name is.
+                                 device, and what its name is.
 * I/O Queues::                  About flow control and typeahead.
 * Canonical or Not::            Two basic styles of input processing.
 * Terminal Modes::              How to examine and modify flags controlling
-			  details of terminal I/O: echoing, signals, editing.
-* Line Control::                Sending break sequences, clearing terminal buffers...
+                                 terminal I/O: echoing, signals, editing.
+* Line Control::                Sending break sequences, clearing  buffers...
 * Noncanon Example::            How to read single characters without echo.
 
 Terminal Modes
 
 * Mode Data Types::             The data type @code{struct termios} and related types.
-* Mode Functions::              Functions to read and set the terminal attributes.
-* Setting Modes::               The right way to set terminal attributes reliably.
+* Mode Functions::              Functions to read and set terminal attributes.
+* Setting Modes::               The right way to set attributes reliably.
 * Input Modes::                 Flags controlling low-level input handling.
 * Output Modes::                Flags controlling low-level output handling.
 * Control Modes::               Flags controlling serial port behavior.
 * Local Modes::                 Flags controlling high-level input handling.
 * Line Speed::                  How to read and set the terminal line speed.
 * Special Characters::          Characters that have special effects,
-			  and how to change them.
+                                 and how to change them.
 * Noncanonical Input::          Controlling how long to wait for input.
 
 Special Characters
@@ -554,15 +532,14 @@ Special Characters
 
 Mathematics
 
-* Domain and Range Errors::     How overflow conditions and the like
-					 are reported.
+* Domain and Range Errors::     How overflow conditions and the
+                                 like are reported.
 * Not a Number::                Making NANs and testing for NANs.
-* Trig Functions::     Sine, cosine, and tangent.
-* Inverse Trig Functions::  Arc sine, arc cosine, and arc tangent.
-* Exponents and Logarithms::  Also includes square root.
+* Trig Functions::              Sine, cosine, and tangent.
+* Inverse Trig Functions::      Arc sine, arc cosine, and arc tangent.
+* Exponents and Logarithms::    Also includes square root.
 * Hyperbolic Functions::        Hyperbolic sine and friends.
-* Pseudo-Random Numbers::       Functions for generating pseudo-random
-					 numbers.
+* Pseudo-Random Numbers::       Functions for generating pseudo-random numbers.
 * Absolute Value::              Absolute value functions.
 
 Pseudo-Random Numbers
@@ -573,19 +550,16 @@ Pseudo-Random Numbers
 Low-Level Arithmetic Functions
 
 * Normalization Functions::     Hacks for radix-2 representations.
-* Rounding and Remainders::  Determinining the integer and
-					 fractional parts of a float.
-* Integer Division::            Functions for performing integer
-					 division.
-* Parsing of Numbers::          Functions for ``reading'' numbers
-					 from strings.
+* Rounding and Remainders::     Determinining the integer and
+                                 fractional parts of a float.
+* Integer Division::            Functions for performing integer division.
+* Parsing of Numbers::          Functions for ``reading'' numbers from strings.
 * Predicates on Floats::        Some miscellaneous test functions.
 
 Parsing of Numbers
 
 * Parsing of Integers::         Functions for conversion of integer values.
-* Parsing of Floats::           Functions for conversion of floating-point
-				 values.
+* Parsing of Floats::           Functions for conversion of floating-point.
 
 Date and Time
 
@@ -608,21 +582,21 @@ Calendar Time
 * TZ Variable::                 How users specify the time zone.
 * Time Zone Functions::         Functions to examine or specify the time zone.
 * Time Functions Example::      An example program showing use of some of
-				 the time functions.
+                                 the time functions.
 
 Signal Handling
 
 * Concepts of Signals::         Introduction to the signal facilities.
 * Standard Signals::            Particular kinds of signals with standard
-			     names and meanings.
-* Signal Actions::              Specifying what happens when a particular signal
-			     is delivered.
+                                 names and meanings.
+* Signal Actions::              Specifying what happens when a particular
+                                 signal is delivered.
 * Defining Handlers::           How to write a signal handler function.
 * Generating Signals::          How to send a signal to a process.
 * Blocking Signals::            Making the system hold signals temporarily.
 * Waiting for a Signal::        Suspending your program until a signal arrives.
 * BSD Signal Handling::         Additional functions for backward
-			     compatibility with BSD.
+                                 compatibility with BSD.
 * BSD Handler::                 BSD Function to Establish a Handler
 
 Basic Concepts of Signals
@@ -672,14 +646,14 @@ Blocking Signals
 * Why Block::                   The purpose of blocking signals.
 * Signal Sets::                 How to specify which signals to block.
 * Process Signal Mask::         Blocking delivery of signals to your
-					 process during normal execution.
+                                 process during normal execution.
 * Testing for Delivery::        Blocking to Test for Delivery of a Signal
 * Blocking for Handler::        Blocking additional signals while a
-					 handler is being run.
-* Checking for Pending Signals::  Checking for Pending Signals
+                                 handler is being run.
+* Checking for Pending Signals::Checking for Pending Signals
 * Remembering a Signal::        How you can get almost the same effect
-				 as blocking a signal, by handling it
-				 and setting a flag to be tested later.
+                                 as blocking a signal, by handling it
+                                 and setting a flag to be tested later.
 
 Waiting for a Signal
 
@@ -689,7 +663,7 @@ Waiting for a Signal
 
 BSD Signal Handling
 
-* POSIX vs BSD::                Overview comparing BSD and POSIX signal functions.
+* POSIX vs BSD::                Comparison of BSD and POSIX signal functions.
 
 BSD Function to Establish a Handler
 
@@ -700,25 +674,25 @@ Process Startup and Termination
 
 * Program Arguments::           Parsing your program's command-line arguments.
 * Environment Variables::       How to access parameters inherited from
-				 a parent process.
+                                 a parent process.
 * Program Termination::         How to cause a process to terminate and
-				 return status information to its parent.
+                                 return status information to its parent.
 
 Program Arguments
 
-* Argument Syntax::		By convention, options start with a hyphen.
-* Parsing Options::		The @code{getopt} function.
-* Example of Getopt::		An example of parsing options with @code{getopt}.
-* Long Options::		GNU utilities should accept long-named options.
-				   Here is how to do that.
-* Long Option Example::		An example of using @code{getopt_long}.
+* Argument Syntax::             By convention, options start with a hyphen.
+* Parsing Options::             The @code{getopt} function.
+* Example of Getopt::           An example of parsing options with @code{getopt}.
+* Long Options::                GNU utilities should accept long-named options.
+                                 Here is how to do that.
+* Long Option Example::         An example of using @code{getopt_long}.
 
 Environment Variables
 
-* Environment Access::		How to get and set the values of
-				   environment variables.
-* Standard Environment::	These environment variables have
-				   standard interpretations.
+* Environment Access::          How to get and set the values of
+                                 environment variables.
+* Standard Environment::        These environment variables have
+                                 standard interpretations.
 
 Program Termination
 
@@ -742,8 +716,8 @@ Child Processes
 * Executing a File::            How to make a child execute another program.
 * Process Completion::          How to tell when a child process has completed.
 * Process Completion Status::   How to interpret the status value 
-                                   returned from a child process.
-* BSD Wait Functions::		More functions, for backward compatibility.
+                                 returned from a child process.
+* BSD Wait Functions::          More functions, for backward compatibility.
 * Process Creation Example::    A complete example program.
 
 Job Control
@@ -760,13 +734,13 @@ Implementing a Job Control Shell
 
 * Data Structures::             Introduction to the sample shell.
 * Initializing the Shell::      What the shell must do to take
-				 responsibility for job control.
+                                 responsibility for job control.
 * Launching Jobs::              Creating jobs to execute commands.
 * Foreground and Background::   Putting a job in foreground of background.
-* Stopped and Terminated Jobs::  Reporting job status.
+* Stopped and Terminated Jobs:: Reporting job status.
 * Continuing Stopped Jobs::     How to continue a stopped job in
-				 the foreground or background.
-* Missing Pieces::          Other parts of the shell.
+                                 the foreground or background.
+* Missing Pieces::              Other parts of the shell.
 
 Functions for Job Control
 
@@ -776,26 +750,26 @@ Functions for Job Control
 
 Users and Groups
 
-* User and Group IDs::          Each user has a unique numeric ID; likewise for groups.
+* User and Group IDs::          Each user and group has a unique numeric ID.
 * Process Persona::             The user IDs and group IDs of a process.
 * Why Change Persona::          Why a program might need to change
-			 its user and/or group IDs.
-* How Change Persona::          Restrictions on changing the user and group IDs.
-* Reading Persona::             How to examine the process's user and group IDs.
+                                 its user and/or group IDs.
+* How Change Persona::          Restrictions on changing user and group IDs.
+* Reading Persona::             Examining the process's user and group IDs.
 * Setting User ID::             
 * Setting Groups::              
 * Enable/Disable Setuid::       
 * Setuid Program Example::      Setuid Program Example
 * Tips for Setuid::             
 * Who Logged In::               Getting the name of the user who logged in,
-			 or of the real user ID of the current process.
+                                 or of the real user ID of the current process.
 
 * User Database::               Functions and data structures for
-                         accessing the user database.
+                                 accessing the user database.
 * Group Database::              Functions and data structures for
-                         accessing the group database.
+                                 accessing the group database.
 * Database Example::            Example program showing use of database
-			 inquiry functions.
+                                 inquiry functions.
 
 User Database
 
@@ -814,27 +788,27 @@ System Information
 
 * Host Identification::         Determining the name of the machine.
 * Hardware/Software Type ID::   Determining the hardware type and
-				   operating system type.
+                                 operating system type.
 
 System Configuration Limits
 
 * General Limits::		Constants and functions that describe
-				   various process-related limits that have
-				   one uniform value for any given machine.
+				 various process-related limits that have
+				 one uniform value for any given machine.
 * System Options::		Optional POSIX features.
 * Version Supported::		Version numbers of POSIX.1 and POSIX.2.
 * Sysconf::			Getting specific configuration values
-				   of general limits and system options.
+				 of general limits and system options.
 * Minimums::			Minimum values for general limits.
    
-* Limits for Files::		Size limitations that pertain to individual files.
-				   These can vary between file systems
-				   or even from file to file.
+* Limits for Files::		Size limitations on individual files.
+				 These can vary between file systems
+				  or even from file to file.
 * Options for Files::		Optional features that some files may support.
 * File Minimums::		Minimum values for file limits.
 * Pathconf::			Getting the limit values for a particular file.
    
-* Utility Limits::		Capacity limits of some POSIX.2 utility programs.
+* Utility Limits::		Capacity limits of POSIX.2 utility programs.
 * Utility Minimums::		Minimum allowable values of those limits.
    
 * String Parameters::		Getting the default search path.
@@ -842,36 +816,38 @@ System Configuration Limits
 Library Facilities that are Part of the C Language
 
 * Consistency Checking::        Using @code{assert} to abort
-				if something ``impossible'' happens.
-* Variadic Functions::          Defining functions with varying numbers of args.
+				 if something ``impossible'' happens.
+* Variadic Functions::          Defining functions with varying
+                                 numbers of arguments.
 * Null Pointer Constant::       The macro @code{NULL}.
 * Important Data Types::        Data types for object sizes.
 * Data Type Measurements::      Parameters of data type representations.
 
 Variadic Functions
 
-* Why Variadic::                Reasons for making functions take variable arguments.
+* Why Variadic::                Reasons for making functions take
+                                 variable arguments.
 * How Variadic::                How to define and call variadic functions.
 * Argument Macros::             Detailed specification of the macros
-				   for accessing variable arguments.
+				 for accessing variable arguments.
 * Variadic Example::            A complete example.
 
 How Variadic Functions are Defined and Used
 
 * Variadic Prototypes::         How to make a prototype for a function
-				   with variable arguments.
+				 with variable arguments.
 * Receiving Arguments::		Steps you must follow to access the
-				   optional argument values.
+				 optional argument values.
 * How Many Arguments::          How to decide whether there are more arguments.
 * Calling Variadics::		Things you need to know about calling
-				   variable arguments functions.
+				 variable arguments functions.
 
 Data Type Measurements
 
 * Width of Type::		How many bits does an integer type hold?
 * Range of Type::		What are the largest and smallest values
-				  that an integer type can hold?
-* Floating Type Macros::        Parameters that measure the floating point types.
+				 that an integer type can hold?
+* Floating Type Macros::        Parameters that measure floating-point types.
 * Structure Measurement::       Getting measurements on structure types.
 
 Floating Type Macros
@@ -883,15 +859,15 @@ Floating Type Macros
 Library Maintenance
 
 * Installation::                How to configure, compile and install
-                			 the GNU C library.
+                                 the GNU C library.
 * Reporting Bugs::              How to report bugs (if you want to
-                                         get them fixed) and other troubles
-                                         you may have with the GNU C library.
+                                 get them fixed) and other troubles
+                                 you may have with the GNU C library.
 * Porting::                     How to port the GNU C library to
-                                         a new machine or operating system.
+                                 a new machine or operating system.
 @c * Traditional C Compatibility::  Using the GNU C library with non-ANSI
 @c                                          C compilers.
-* Contributors::		Contributors to the GNU C Library.
+* Contributors::		Who wrote what parts of the GNU C Library.
 
 Porting the GNU C Library
 
@@ -902,7 +878,7 @@ Porting the GNU C Library
 @end menu
 
 
-
+@comment Includes of all the individual chapters.
 @include intro.texinfo
 @include errno.texinfo
 @include memory.texinfo
@@ -932,6 +908,7 @@ Porting the GNU C Library
 @include conf.texinfo
 @include lang.texinfo
 
+@comment Includes of the appendices.
 @include header.texinfo
 @include maint.texinfo
 
