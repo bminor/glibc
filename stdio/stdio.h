@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -440,7 +440,11 @@ extern int getchar __P ((void));
 #define	getc(stream)	__getc(stream)
 
 #ifdef	__OPTIMIZE__
-#define	getchar()	__getc(stdin)
+extern __inline int
+getchar (void)
+{
+  return __getc (stdin);
+}
 #endif /* Optimizing.  */
 
 
@@ -464,9 +468,11 @@ extern int putchar __P ((int __c));
 #define	putc(c, stream)	__putc ((c), (stream))
 
 #ifdef __OPTIMIZE__
-/* Note that putchar is NOT allowed to evaluate its arguments more than once.
-   This macro is valid only because __putc evaluates C exactly once.  */
-#define putchar(c)	__putc ((c), stdout)
+extern __inline int
+putchar (int __c)
+{
+  return __putc (__c, stdout);
+}
 #endif
 
 
@@ -505,9 +511,22 @@ ssize_t __getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
 ssize_t getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
 
 #ifdef	__OPTIMIZE__
-#define	getdelim(l, n, d, s)	__getdelim ((l), (n), (d), (s))
-#define	getline(l, n, s)	__getline ((l), (n), (s))
-#define	__getline(l, n, stream) __getdelim ((l), (n), '\n', (stream))
+extern __inline ssize_t
+__getline (char **__lineptr, size_t *__n, FILE *__stream)
+{
+  return __getdelim (__lineptr, __n, '\n', __stream);
+}
+
+extern __inline ssize_t
+getdelim (char **__lineptr, size_t *__n, int __delimiter, FILE *__stream)
+{
+  return __getdelim (__lineptr, __n, __delimiter, __stream);
+}
+extern __inline ssize_t
+getline (char **__lineptr, size_t *__n, FILE *__stream)
+{
+  return __getline (__lineptr, __n, __stream);
+}
 #endif /* Optimizing.  */
 #endif
 
@@ -516,10 +535,6 @@ ssize_t getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
 extern int fputs __P ((__const char *__s, FILE *__stream));
 /* Write a string, followed by a newline, to stdout.  */
 extern int puts __P ((__const char *__s));
-
-#ifdef	__OPTIMIZE__
-#define	puts(s)	((fputs((s), stdout) || __putc('\n', stdout) == EOF) ? EOF : 0)
-#endif /* Optimizing.  */
 
 
 /* Push a character back onto the input buffer of STREAM.  */
