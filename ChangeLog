@@ -1,3 +1,9 @@
+1999-09-15  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Protect real time
+	signal definitions to let glibc compile with older Linux versions
+	(2.0.10 to 2.1.100 or so).
+
 1999-09-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nis/nss_compat/compat-grp.c (getgrgid_plusgroup): Correct
