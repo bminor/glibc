@@ -1,3 +1,8 @@
+2002-08-12  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/errlist.c: Remove sys_nerr, _sys_nerr aliases.
+	Anything that ever used them deserves to break.
+
 2002-08-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c: Don't use MALLOC_FAILURE_ACTION introduced in
