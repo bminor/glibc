@@ -21,15 +21,12 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 #include <limits.h>
 
-struct _hurd_dtable _hurd_dtable;
-text_set_element (_hurd_dtable_set, _hurd_dtable);
-
 static void
 init_dtable (void)
 {
   register size_t i;
 
-  __mutex_init (&_hurd_dtable.lock);
+  __mutex_init (&_hurd_dtable_lock);
 
   /* The initial size of the descriptor table is that of the passed-in
      table, rounded up to a multiple of OPEN_MAX descriptors.  */
@@ -42,18 +39,12 @@ init_dtable (void)
 
   for (i = 0; i < _hurd_init_dtablesize; ++i)
     {
-      _hurd_dtable.d[i] = _hurd_init_dtable[i];
-      __spin_lock_init (&_hurd_dtable.d[i].reflock);
-      _hurd_dtable.d[i].refs = 0;
-      __condition_init (&_hurd_dtable.d[i].free);
+      _hurd_dtable.d[i].server = _hurd_init_dtable[i];
+      _hurd_dtable.d[i].isctty = -1;
+      _hurd_dtable.d[i].flags = 0;
     }
   for (; i < _hurd_dtable.size; ++i)
-    {
-      _hurd_dtable.d[i].server = MACH_PORT_NULL;
-      __spin_lock_init (&_hurd_dtable.d[i].reflock);
-      _hurd_dtable.d[i].refs = 0;
-      __condition_init (&_hurd_dtable.d[i].free);
-    }
+    _hurd_dtable.d[i].server = MACH_PORT_NULL;
 
   _hurd_init_dtable = NULL;
   _hurd_init_dtablesize = 0;
@@ -67,7 +58,7 @@ static error_t
 fork_dtable (task_t newtask)
 {
   int i;
-  __mutex_lock (&_hurd_dtable.lock);
+  __mutex_lock (&_hurd_dtable_lock);
   for (i = 0; i < _hurd_dtable.size; ++i)
     if (err = __mach_port_insert_right (newtask, _hurd_dtable.d[i].server,
 					_hurd_dtable.d[i].server,
@@ -77,7 +68,7 @@ fork_dtable (task_t newtask)
 	__mutex_unlock (&_hurd_dtable.lock);
 	return 1;
       }
-  __mutex_unlock (&_hurd_dtable.lock);
+  __mutex_unlock (&_hurd_dtable_lock);
   return 0;
 }
 
