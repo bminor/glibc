@@ -46,7 +46,7 @@ Cambridge, MA 02139, USA.  */
    Return the number of assignments made, or -1 for an input error.  */
 int
 DEFUN(__vfscanf, (s, format, arg),
-      FILE *s AND CONST char *format AND PTR argptr)
+      FILE *s AND CONST char *format AND va_list argptr)
 {
   va_list arg = (va_list) argptr;
 
