@@ -1598,12 +1598,11 @@ interrupt, your program can explicitly send signals to itself or to
 another process.
 
 @menu
-* Signaling Yourself::          Signaling Yourself.
+* Signaling Yourself::          A process can send a signal to itself.
 * Signaling Another Process::   Send a signal to another process.
 * Permission for kill::         Permission for using @code{kill}.
 * Kill Example::                Using @code{kill} for Communication.
 @end menu
-
 
 @node Signaling Yourself, Signaling Another Process,  , Generating Signals
 @subsection Signaling Yourself
