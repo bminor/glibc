@@ -18,6 +18,18 @@ Cambridge, MA 02139, USA.  */
 
 /* sysdeps/mach/MACHINE/sysdep.h should define these macros.  */
 
+/* Produce a text assembler label for the C global symbol NAME.  */
+#ifndef ENTRY
+#define ENTRY(name)
+#error ENTRY not defined by sysdeps/mach/MACHINE/sysdep.h
+#endif
+
+/* Define a C function called NAME which does system call NUMBER.  */
+#ifndef SYSCALL_TRAP
+#define SYSCALL_TRAP(name, number)
+#error SYSCALL_TRAP not defined by sysdeps/mach/MACHINE/sysdep.h
+#endif
+
 /* Set variables ARGC, ARGV, and ENVP for the arguments
    left on the stack by the microkernel.  */
 #ifndef SNARF_ARGS
@@ -26,7 +38,8 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 /* Call the C function FN with no arguments,
-   on a stack starting at SP (as returned by *_cthread_init_routine).  */
+   on a stack starting at SP (as returned by *_cthread_init_routine).
+   You don't need to deal with FN returning; it shouldn't.  */
 #ifndef	CALL_WITH_SP
 #define CALL_WITH_SP(fn, sp)
 #error CALL_WITH_SP not defined by sysdeps/mach/MACHINE/sysdep.h
