@@ -166,11 +166,11 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	      /* This is a winning io_select_done message!
 		 Record the readiness it indicates and send a reply.  */
 
-	      if (types[msg.tag] == 0)
+	      if (types[msg.request.tag] == 0)
 		/* This descriptor is ready and it was not before,
 		   so we increment our count of ready descriptors.  */
 		++got;
-	      types[msg.tag] |= msg.result;
+	      types[msg.request.tag] |= msg.request.result;
 	      if (msg.head.msgh_remote_port != MACH_PORT_NULL)
 		{
 		  msg.head.msgh_id += 100;
