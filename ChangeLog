@@ -1,3 +1,8 @@
+2000-01-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: Fix code generated if
+	mmap2 is available when compiling but no at runtime.
+
 2000-01-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/gconv-modules: Add aliases ISO-IR-199 and ISO-IR-203.
@@ -20,10 +25,10 @@
 	* sysdeps/unix/sysv/linux/arm/setrlimit.c: Likewise.
 	* sysdeps/unix/sysv/linux/arm/getrlimit.c: Likewise.
 
-	* sysdeps/unix/sysv/linux/arm/Makefile [subdir=resource] 
+	* sysdeps/unix/sysv/linux/arm/Makefile [subdir=resource]
 	(sysdep_routines): Add oldgetrlimit64, oldsetrlimit64.
 	[subdir=misc] (sysdep_headers): Add sys/elf.h.
-	
+
 2000-01-09  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/arm/dl-machine.h (CLEAR_CACHE): System calls clobber R0.
