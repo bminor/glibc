@@ -213,7 +213,7 @@ usage (int status)
 Usage: %s [OPTION]... -o OUTPUT-FILE [INPUT-FILE]...\n\
        %s [OPTION]... [OUTPUT-FILE [INPUT-FILE]...]\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
-  -H, --header        create C header file containing symbol definitions\n\
+  -H, --header=NAME   create C header file NAME containing symbol definitions\n\
   -h, --help          display this help and exit\n\
       --new           do not use existing catalog, force new output file\n\
   -o, --output=NAME   write output to file NAME\n\
