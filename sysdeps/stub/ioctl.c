@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
    The actual type and use of ARG and the return value depend on REQUEST.  */
 int
 DEFUN(__ioctl, (fd, request),
-      int fd AND int request DOTS
+      int fd AND int request DOTS)
 {
   errno = ENOSYS;
   return -1;
