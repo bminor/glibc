@@ -1,6 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(fnmatch.c)		dnl A distinctive file to look for in srcdir.
 AC_PREREQ(2.1)			dnl Minimum Autoconf version required.
+AC_PROG_CC
 AC_CHECK_PROG(AR, ar, ar, ar)
 AC_PROG_RANLIB
 AC_PROG_CPP			dnl Later checks need this.
