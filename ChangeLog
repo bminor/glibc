@@ -1,3 +1,11 @@
+2000-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Change return type and remove
+	last parameter.  Move code to add map to global scope from here...
+	* elf/dl-open.c (dl_open_worker): ...here.
+	* elf/ldsodefs.h: Adjust declaration of _dl_map_object_deps.
+	* elf/rtld.c: Adjust call to _dl_map_object_deps.
+
 2000-03-14  Andreas Jaeger  <aj@suse.de>
 
 	* locale/localeconv.c (localeconv): Fix typo.
@@ -17,7 +25,7 @@
 2000-03-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/init-first.c (init): Remove personality
-        call.  It should not be necessary and is harmful for Alpha.
+	call.  It should not be necessary and is harmful for Alpha.
 
 2000-03-01  Andreas Jaeger  <aj@suse.de>
 
