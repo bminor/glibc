@@ -49,91 +49,96 @@ for arg in $*; do
     next=
   else
     case $arg in
-     -srcdir=* | --srcdir=* | --srcdi=* | --srcd=* | --src=* | --sr=* | --s=*)
-	srcdir=`echo $arg | sed 's/-*s[a-z]*=//'`
-	;;
-     -srcdir | --srcdir | --srcdi | --srcd | --src | --sr | --s)
-	next=srcdir
-	;;
-     -target | --target | --targe | --targ | --tar | --ta | --t)
-	next=target
-	;;
-     -target=* | --target=* | --targe=* | --targ=* | --tar=* | --ta=* | --t=*)
-	target=`echo $arg | sed 's/-*t[a-z]*=//'`
-	;; 
-
-     -with-gnu-ld | --with-gnu-ld | --with-gnu-l)
-	gnu_ld=--with-gnu-ld
-	;;
-
-     -gas | --gas | --ga | --g | -with-gnu-as | --with-gnu-as | -with-gnu-a)
-        gnu_as=--with-gnu-as
-	;;
-
-     -nfp | --nfp | --nf | --n)
-	nfp=--nfp
-	;;
-
-     -with-* | --with-*)
-       ;; # ignored
-
-     -x | --x)
-       ;; # ignored
-
-     -os-release=* | -os-releas=* | -os-relea=* | -os-rele=* | -os-rel=* \
-     | -os-re=* | -os-r=* | --os-release=* | --os-releas=* | --os-relea=* \
-     | --os-rele=* | --os-rel=* | --os-re=* | --os-r=*)
-       release=`echo $arg | sed 's/-*os-r[a-z]*=//'`
+    -srcdir=* | --srcdir=* | --srcdi=* | --srcd=* | --src=* | --sr=* | --s=*)
+       srcdir=`echo $arg | sed 's/-*s[a-z]*=//'`
        ;;
-     -os-release | -os-releas | -os-relea | -os-rele | -os-rel \
-     | -os-re | -os-r | --os-release | --os-releas | --os-relea \
-     | --os-rele | --os-rel | --os-re | --os-r)
-       next=release
+    -srcdir | --srcdir | --srcdi | --srcd | --src | --sr | --s)
+       next=srcdir
+       ;;
+    -target | --target | --targe | --targ | --tar | --ta | --t)
+       next=target
+       ;;
+    -target=* | --target=* | --targe=* | --targ=* | --tar=* | --ta=* | --t=*)
+       target=`echo $arg | sed 's/-*t[a-z]*=//'`
+       ;; 
+
+    -with-gnu-ld | --with-gnu-ld | --with-gnu-l)
+       gnu_ld=--with-gnu-ld
        ;;
 
-     -os-version=* | -os-versio=* | -os-versi=* | -os-vers=* | -os-ver=* \
-     | -os-ver=* | -os-ve=* | -os-v=* | --os-version=* | --os-versio=* \
-     | --os-versi=* | --os-vers=* | --os-ver=* | --os-ver=* | --os-ve=* \
-     | --os-v=*)
-       version=`echo $arg | sed 's/-*os-v[a-z]*=//'`
-       ;;
-     -os-version | -os-versio | -os-versi | -os-vers | -os-ver \
-     | -os-ver | -os-ve | -os-v |--os-version | --os-versio \
-     | --os-versi | --os-vers | --os-ver | --os-ver | --os-ve | --os-v)
-       next=version
+    -gas | --gas | --ga | --g | -with-gnu-as | --with-gnu-as | -with-gnu-a)
+       gnu_as=--with-gnu-as
        ;;
 
-     # For backward compatibility, also recognize exact --exec_prefix.
-     -exec-prefix=* | --exec_prefix=* | --exec-prefix=* | --exec-prefi=* | --exec-pref=* | --exec-pre=* | --exec-pr=* | --exec-p=* | --exec-=* | --exec=* | --exe=* | --ex=* | --e=*)
-	exec_prefix=`echo $arg | sed 's/[-a-z_]*=//'`
-	;;
-     -exec-prefix | --exec_prefix | --exec-prefix | --exec-prefi | --exec-pref | --exec-pre | --exec-pr | --exec-p | --exec- | --exec | --exe | --ex | --e)
-	next=exec_prefix
-	;;
-
-     -prefix=* | --prefix=* | --prefi=* | --pref=* | --pre=* | --pr=* | --p=*)
-	prefix=`echo $arg | sed 's/[-a-z_]*=//'`
-	;;
-     -prefix | --prefix | --prefi | --pref | --pre | --pr | --p)
-	next=prefix
-	;;
-
-     -v | -verbose | --verbose | --verbos | --verbo | --verb | --ver | --ve | --v)
-       # Autoconf-generated code below will test this.
-       verbose=yes
+    -nfp | --nfp | --nf | --n)
+       nfp=--nfp
        ;;
 
-     -*)
-	echo "Invalid option \`$arg'" 1>&2
-	lose=yes
-	;;
-     *)
-	if [ ! "$target" ]; then
-	  target=$arg
-	else
-	  lose=yes
-	fi
-	;;
+    -with-* | --with-*)
+      # For `--with-foo=bar', do "with_foo='bar'".
+      # For `--with-fnord', do "with_fnord=yes".
+      # These variables may be examined by sysdep configure fragments.
+      eval `echo "$arg" | sed '{s/^-*//;s/-/_/g
+s/^\([^=]*\)=\(.*\)$/\1='\'\\2\''/;s/^\([^=]*\)$/\1=yes/;}'
+      ;;
+
+    -x | --x)
+      ;; # ignored
+
+    -os-release=* | -os-releas=* | -os-relea=* | -os-rele=* | -os-rel=* \
+    | -os-re=* | -os-r=* | --os-release=* | --os-releas=* | --os-relea=* \
+    | --os-rele=* | --os-rel=* | --os-re=* | --os-r=*)
+      release=`echo $arg | sed 's/-*os-r[a-z]*=//'`
+      ;;
+    -os-release | -os-releas | -os-relea | -os-rele | -os-rel \
+    | -os-re | -os-r | --os-release | --os-releas | --os-relea \
+    | --os-rele | --os-rel | --os-re | --os-r)
+      next=release
+      ;;
+
+    -os-version=* | -os-versio=* | -os-versi=* | -os-vers=* | -os-ver=* \
+    | -os-ver=* | -os-ve=* | -os-v=* | --os-version=* | --os-versio=* \
+    | --os-versi=* | --os-vers=* | --os-ver=* | --os-ver=* | --os-ve=* \
+    | --os-v=*)
+      version=`echo $arg | sed 's/-*os-v[a-z]*=//'`
+      ;;
+    -os-version | -os-versio | -os-versi | -os-vers | -os-ver \
+    | -os-ver | -os-ve | -os-v |--os-version | --os-versio \
+    | --os-versi | --os-vers | --os-ver | --os-ver | --os-ve | --os-v)
+      next=version
+      ;;
+
+    # For backward compatibility, also recognize exact --exec_prefix.
+    -exec-prefix=* | --exec_prefix=* | --exec-prefix=* | --exec-prefi=* | --exec-pref=* | --exec-pre=* | --exec-pr=* | --exec-p=* | --exec-=* | --exec=* | --exe=* | --ex=* | --e=*)
+       exec_prefix=`echo $arg | sed 's/[-a-z_]*=//'`
+       ;;
+    -exec-prefix | --exec_prefix | --exec-prefix | --exec-prefi | --exec-pref | --exec-pre | --exec-pr | --exec-p | --exec- | --exec | --exe | --ex | --e)
+       next=exec_prefix
+       ;;
+
+    -prefix=* | --prefix=* | --prefi=* | --pref=* | --pre=* | --pr=* | --p=*)
+       prefix=`echo $arg | sed 's/[-a-z_]*=//'`
+       ;;
+    -prefix | --prefix | --prefi | --pref | --pre | --pr | --p)
+       next=prefix
+       ;;
+
+    -v | -verbose | --verbose | --verbos | --verbo | --verb | --ver | --ve | --v)
+      # Autoconf-generated code below will test this.
+      verbose=yes
+      ;;
+
+    -*)
+       echo "Invalid option \`$arg'" 1>&2
+       lose=yes
+       ;;
+    *)
+       if [ ! "$target" ]; then
+	 target=$arg
+       else
+	 lose=yes
+       fi
+       ;;
     esac
   fi
 done
@@ -148,6 +153,11 @@ dnl This deals with setting srcdir if it needs to be set.
 changequote([,])
 AC_PREPARE(features.h)
 changequote(,)
+
+# Decanonicalize srcdir so we can tell when we are configuring in srcdir.
+if [ "(cd ${srcdir}; pwd)" = "`pwd`" ]; then
+  srcdir=.
+fi
 
 if [ ! "$target" ]; then
   target=`$srcdir/config.guess`
