@@ -102,7 +102,7 @@ endif
 
 # Common prefix for machine-dependent installation directories.
 ifndef exec_prefix
-exec_prefix = /usr/local
+exec_prefix = $(prefix)
 endif
 
 # Where to install the library and object files.
@@ -124,7 +124,7 @@ endif
 # Define if the library should install its own <stdarg.h>.
 # Do this unless you are using version 2.3 or later of GCC.
 ifndef stdarg.h
-stdarg.h = stdarg.h va-*.h
+stdarg.h := stdarg.h $(wildcard va-*.h)
 endif
 
 # Where to install machine-independent data files.
