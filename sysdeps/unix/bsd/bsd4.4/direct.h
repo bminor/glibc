@@ -12,3 +12,5 @@ struct direct
   };
 
 #define D_NAMLEN(d) ((d)->d_namlen)
+
+#define HAVE_D_TYPE
