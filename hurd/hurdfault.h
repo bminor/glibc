@@ -35,7 +35,7 @@ Cambridge, MA 02139, USA.  */
 #define _hurdsig_end_catch_fault() \
   (_hurdsig_fault_expect_signo = 0)
 
-extern jmp_buf _hurd_sig_fault_env;
+extern jmp_buf _hurdsig_fault_env;
 extern int _hurdsig_fault_expect_signo;
 
 /* If _hurdsig_catch_fault returns nonzero, these variables
