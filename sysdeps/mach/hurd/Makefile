@@ -17,8 +17,17 @@
 # Cambridge, MA 02139, USA.
 
 
-# Find hurd.h and hurd/*.h easily.
-+includes := $(+includes) -I$(..)hurd
+# If we were configured with `--with-hurd=DIR', then config.make sets
+# hurd-srcdir to DIR.  Otherwise guess we are in a big source tree.
+ifndef hurd-srcdir
+hurd-srcdir = ../../hurd
+endif
+
+# When compiling, use the Hurd header files directly from the sources.
+includes += -I$(hurd-srcdir)
+
+# Find the Hurd header files in the Hurd source.
+vpath hurd/%.h $(hurd-srcdir)
 
 # Generate errnos.h and sys_errlist.c from the section of the manual that
 # lists all the errno codes.
