@@ -441,7 +441,7 @@ the line from the null character inserted as a terminator.
 
 This function is a GNU extension.
 
-If an error occurs or end-of-file is reached, @code{getline} returns
+If an error occurs or end of file is reached, @code{getline} returns
 @code{-1}.
 @end deftypefun
 
@@ -584,7 +584,7 @@ buffering for the stream is affected.  If a file positioning function
 (such as @code{fseek} or @code{rewind}; @pxref{File Positioning}) is
 called, any pending pushed-back characters are discarded.
 
-Unreading a character on a stream that is at end-of-file clears the
+Unreading a character on a stream that is at end of file clears the
 end-of-file indicator for the stream, because it makes the character of
 input available.  Reading that character will set the end-of-file
 indicator again.
@@ -2335,12 +2335,13 @@ These functions are declared in @file{stdio.h}.
 This function reads up to @var{count} objects of size @var{size} into
 the array @var{data}, from the stream @var{stream}.  It returns the
 number of objects actually read, which might be less than @var{count} if
-a read error or end-of-file occurs.  This function returns a value of
-zero (and doesn't read anything) if either @var{size} or @var{count} is
-zero.
+a read error occurs or the end of the file is reached.  This function
+returns a value of zero (and doesn't read anything) if either @var{size}
+or @var{count} is zero.
 
-@c ??? What happens for EOF in middle of an object?
-@c ??? Does this always read an integral number of objects?
+If @code{fread} encounters end of file in the middle of an object, it
+returns the number of complete objects read, and discards the partial
+object.  Therefore, the stream remains at the actual end of the file.
 @end deftypefun
 
 @comment stdio.h
@@ -2360,12 +2361,12 @@ only if a write error occurs.
 @node End-Of-File and Errors
 @section End-Of-File and Errors
 
-@cindex end-of-file, on a stream
+@cindex end of file, on a stream
 Many of the functions described in this chapter return the value of the
 macro @code{EOF} to indicate unsuccessful completion of the operation.
-Since @code{EOF} is used to report both end-of-file and random errors,
+Since @code{EOF} is used to report both end of file and random errors,
 it's often better to use the @code{feof} function to check explicitly
-for end-of-file and @code{ferror} to check for errors.  These functions
+for end of file and @code{ferror} to check for errors.  These functions
 check indicators that are part of the internal state of the stream
 object, indicators set if the appropriate condition was detected by a
 previous I/O operation on that stream.
@@ -2713,32 +2714,36 @@ transmitted to or from the file in blocks of arbitrary size.
 @cindex fully buffered stream
 @end itemize
 
-@strong{Incomplete:}  What is the default buffering behavior in the 
-GNU system?
+Newly opened streams are normally fully buffered, with one exception: a
+stream connected to an interactive device such as a terminal is
+initially line buffered.  @xref{Controlling Buffering}, for information
+on how to select a different kind of buffering.
 
-You can explicitly set the buffering strategy used by a stream.
+The use of line buffering for interactive devices implies that output
+messages ending in a newline will appear immediately---which is usually
+what you want.  Output that doesn't end in a newline might or might not
+show up immediately, so if you want them to appear immediately, you
+should flush buffered output explicitly with @code{fflush}, as described
+in @ref{Flushing Buffers}.
 
-When a stream corresponding to an interactive device (such as a
-terminal) is opened, its default behavior is to be either unbuffered or
-line buffered.
+Line buffering is a good default for terminal input as well, because
+most interactive programs read commands that are normally single lines.
+The program should be able to execute each line right away.  A line
+buffered stream permits this, whereas a fully buffered stream would
+always read enough text to fill the buffer before allowing the program
+to read any of it.  Line buffering also fits in with the usual
+input-editing facilities of most operating systems, which work within a
+line of input.
 
-This means that when your program writes messages to an interactive
-device that end in a newline, they'll always show up immediately.
-Output that doesn't end in a newline might or might not show up
-immediately, and if it matters you should flush buffered output
-explicitly with @code{fflush}, as described in @ref{Flushing Buffers}.
-
-For input, if an interactive stream is line-buffered, users of your
-program will probably be able to use whatever basic input editing
-facilities are normally provided by the host operating system (such as
-being able to correct typing mistakes with rubout or backspace), but
-you'll have to design your program so that it expects to look for
-newline characters to terminate input.  If an interactive stream is
-unbuffered, it might be appropriate for your program to provide its own
-input editing facilities.
-
-@strong{Incomplete:}  I don't think changing the buffering on a stream
-in the GNU system messes with input modes on a terminal device, does it?
+Some programs need an unbuffered terminal input stream.  These include
+programs that read single-character commands (like Emacs) and programs
+that do their own input editing (such as those that use readline).  In
+order to read a character at a time, it is not enough to turn off
+buffering in the input stream; you must also turn off input editing in
+the operating system.  This requires changing the terminal mode
+(@pxref{Terminal Modes}).  If you want to change the terminal modes, you
+have to do this separately---merely using an unbuffered stream does not
+change the modes.
 
 @node Flushing Buffers
 @subsection Flushing Buffers
@@ -2760,7 +2765,7 @@ When the program terminates by calling @code{exit}.
 @c ??? xref here.
 
 @item
-When a newline is written, if the stream is line-buffered.
+When a newline is written, if the stream is line buffered.
 
 @item
 Whenever an input operation on @emph{any} stream actually reads data
@@ -2785,7 +2790,7 @@ otherwise.
 
 @strong{Compatibility Note:} Some brain-damaged operating systems have
 been known to be so thoroughly fixated on line-oriented input and output
-that flushing a line-buffered stream causes a newline to be written!
+that flushing a line buffered stream causes a newline to be written!
 Fortunately, this ``feature'' seems to be becoming less common.  You do
 not need to worry about this in the GNU system.
 
@@ -2906,7 +2911,7 @@ This function is provided for compatibility with old BSD code.  Use
 @comment stdio.h
 @comment BSD
 @deftypefun void setlinebuf (FILE *@var{stream})
-This function makes @var{stream} be line-buffered, and allocates the
+This function makes @var{stream} be line buffered, and allocates the
 buffer for you.
 
 This function is provided for compatibility with old BSD code.  Use
@@ -3074,10 +3079,10 @@ Attempts to write more than @var{size} bytes to the buffer result
 in an error.
 
 For a stream open for reading, null characters (zero bytes) in the
-buffer do not count as end-of-file.  Read operations return end-of-file
-only when the file position advances past @var{size} bytes.  So, if you
-want to read characters from a null-terminated string, you should supply
-the length of the string as the @var{size} argument.
+buffer do not count as ``end of file''.  Read operations indicate end of
+file only when the file position advances past @var{size} bytes.  So, if
+you want to read characters from a null-terminated string, you should
+supply the length of the string as the @var{size} argument.
 @end deftypefun
 
 Here is an example of using @code{fmemopen} to create a stream for
