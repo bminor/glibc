@@ -30,7 +30,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   error_t err;
   file_t crdir, cwdir, rcrdir, rcwdir, io;
   struct hurd_userlink crdir_ulink, cwdir_ulink;
-  int flags;
+  int flags, allowed;
 
   HURD_CRITICAL_BEGIN;
 
@@ -99,6 +99,18 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   /* Now do a path lookup on FILE, using the crdir and cwdir
      reauthenticated with _hurd_id.rid_auth.  */
 
+  err = __hurd_path_lookup (rcrdir, rcwdir, file, 0, 0, &io);
+  __mach_port_deallocate (__mach_task_self (), rcrdir);
+  __mach_port_deallocate (__mach_task_self (), rcwdir);
+  if (err)
+    return __hurd_fail (err);
+
+  /* Find out what types of access we are allowed to this file.  */
+  err = __file_check_access (io, &allowed);
+  __mach_port_deallocate (__mach_task_self (), io);
+  if (err)
+    return __hurd_fail (err);
+
   flags = 0;
   if (type & R_OK)
     flags |= O_READ;
@@ -107,12 +119,9 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   if (type & X_OK)
     flags |= O_EXEC;
 
-  err = __hurd_path_lookup (rcrdir, rcwdir, file, flags, 0, &io);
-  __mach_port_deallocate (__mach_task_self (), rcrdir);
-  __mach_port_deallocate (__mach_task_self (), rcwdir);
-  if (err)
-    return __hurd_fail (err);
+  if (flags & ~allowed)
+    /* We are not allowed all the requested types of access.  */
+    return __hurd_fail (EACCES);
 
-  __mach_port_deallocate (__mach_task_self (), io);
   return 0;
 }
