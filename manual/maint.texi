@@ -3,7 +3,7 @@
 @c Makeinfo ignores it when processing the file from the include.
 @setfilename INSTALL
 
-@node Maintenance, Copying, Summary of Library Facilities, Top
+@node Maintenance, Copying, Library Summary, Top
 @appendix Library Maintenance
 
 @menu
@@ -16,8 +16,6 @@
                              to the GNU C library.
 * Porting::               How to port the GNU C library to
                              a new machine or operating system.
-@c * Traditional C::         Using the GNU C library with
-@c                              non-ANSI C compilers.
 * Contributors::          Contributors to the GNU C Library.
 @end menu
 
@@ -537,7 +535,6 @@ generated are @file{ioctls.h}, @file{errnos.h}, @file{sys/param.h}, and
 @ignore
 @c This section might be a good idea if it is finished,
 @c but there's no point including it as it stands. --rms
-@c @node Traditional C
 @c @appendixsec Compatibility with Traditional C
 
 @c ??? This section is really short now.  Want to keep it? --roland
