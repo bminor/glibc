@@ -348,11 +348,8 @@ endif						# -v
 # files (including ones given in angle brackets) in the current directory
 # and in the parent library source directory.
 # `+sysdep-includes' will be defined by Makerules.
-ifneq "$(..)" ""
-+includes	= -I. -I$(patsubst %/,%,$(..)) $(includes) $(+sysdep-includes)
-else
-+includes	= -I. $(includes) $(+sysdep-includes)
-endif
++includes = -I. $(filter-out -I,-I$(patsubst %/,%,$(..))) \
+	    $(includes) $(+sysdep-includes) $(last-includes)
 
 
 # These are the variables that the implicit compilation rules use.
