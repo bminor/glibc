@@ -1,5 +1,13 @@
 1998-09-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libio/libio.h [!__STDC__]: Define const only if not defined.
+
+1998-09-29  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/ypclnt.c (yp_all): Close UDP socket und give CLIENT handle free.
+
+1998-09-28  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/unix/sysv/linux/socketbits.h (CMSG_ALIGN): Define.
 	(__cmsg_nxthdr): Use CMSG_ALIGN (fixes a bug) and correct test for
 	availability of another entry.
