@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1338,7 +1338,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       if (fd == -1 && env_path_list != NULL)
 	fd = open_path (name, namelen, preloaded, env_path_list, &realname);
 
-      if (fd == -1)
+      if (fd == -1 && (! preloaded || ! __libc_enable_secure))
 	{
 	  /* Check the list of libraries in the file /etc/ld.so.cache,
 	     for compatibility with Linux's ldconfig program.  */
