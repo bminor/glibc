@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -49,7 +49,10 @@ Cambridge, MA 02139, USA.  */
 /*
  * HISTORY
  * $Log$
- * Revision 1.1  1993/12/06 23:25:25  roland
+ * Revision 1.2  1994/10/10 07:20:14  roland
+ * Increase default MAX_SIZE to two pages.
+ *
+ * Revision 1.1  1993/12/06  23:25:25  roland
  * entered into RCS
  *
  * Revision 2.4  91/05/14  17:53:22  mrt
@@ -83,7 +86,7 @@ __mach_msg_server_timeout (boolean_t (*demux) (mach_msg_header_t *request,
   if (max_size == 0)
     {
       option |= MACH_RCV_LARGE;
-      max_size = __vm_page_size; /* Generic.  Good? XXX */
+      max_size = 2 * __vm_page_size; /* Generic.  Good? XXX */
     }
 
   request = __alloca (max_size);
