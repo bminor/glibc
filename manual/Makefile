@@ -26,6 +26,11 @@ GAWK = gawk
 # Allow override
 INSTALL_INFO = install-info
 
+# Get glibc's configuration info.
+ifneq (,$(wildcard ../Makeconfig))
+include ../Makeconfig
+endif
+
 .PHONY: all dvi info
 all: dvi
 dvi: libc.dvi
@@ -33,11 +38,6 @@ dvi: libc.dvi
 ifneq ($(strip $(MAKEINFO)),)
 all: info
 info: libc.info dir-add.info
-endif
-
-# Get glibc's configuration info.
-ifneq (,$(wildcard ../Makeconfig))
-include ../Makeconfig
 endif
 
 # Set chapters and chapters-incl.
@@ -72,7 +72,7 @@ stamp-summary: summary.awk $(chapters) $(chapters-incl)
 # Generate a file which can be added to the `dir' content to provide direct
 # access to the documentation of the function, variables, and other
 # definitions.
-dir-add.texi: xtract-typefun.awk $(chapters) $(chapters-incl)
+dir-add.texinfo: xtract-typefun.awk $(chapters) $(chapters-incl)
 	(echo "@dircategory GNU C library functions";			\
 	 echo "@direntry";						\
 	 $(GAWK) -f $^ | sort;						\
@@ -88,6 +88,11 @@ dir-add.texi: xtract-typefun.awk $(chapters) $(chapters-incl)
 	    $< | expand > $@.new
 	mv -f $@.new $@
 
+%.info: %.texinfo
+	$(MAKEINFO) $<
+
+%.dvi: %.texinfo
+	$(TEXI2DVI) $<
 
 minimal-dist = summary.awk move-if-change libc.texinfo $(chapters)	\
 	       $(patsubst %.c.texi,examples/%.c,			\
@@ -98,7 +103,7 @@ distribute = $(minimal-dist)	       					\
 			$(minimal-dist)))				\
 	     libc.info* libc.?? libc.??s texinfo.tex summary.texi	\
 	     stamp-summary chapters chapters-incl			\
-	     xtract-typefun.awk dir-add.texi dir-add.info dir
+	     xtract-typefun.awk dir-add.texinfo dir-add.info dir
 export distribute := $(distribute)
 
 tar-it = tar chovf $@ $^
@@ -134,7 +139,7 @@ indices = cp fn pg tp vr ky
 realclean: distclean
 	-rm -f chapters chapters-incl summary.texi stamp-summary *.c.texi
 	-rm -f $(foreach index,$(indices),libc.$(index) libc.$(index)s)
-	-rm -f libc.log libc.aux libc.toc dir-add.texi
+	-rm -f libc.log libc.aux libc.toc dir-add.texinfo
 
 .PHONY: install subdir_install installdirs install-data
 install-data subdir_install: install
