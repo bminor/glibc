@@ -50,6 +50,9 @@ $(common-objpfx)sys/param.h: $(sysincludedir)/sys/param.h
 				  was_null = 1 }	\
 	    { if (!was_null) print $$0;			\
 	      was_null = 0 }';		\
+	 echo '#ifndef MAXHOSTNAMELEN'; \
+	 echo '#define MAXHOSTNAMELEN 64 /* XXX */'; \
+	 echo '#endif /* No MAXHOSTNAMELEN.  */'; \
 	 echo '#endif	/* sys/param.h */') > $@-tmp
 	mv $@-tmp $@
 
