@@ -62,7 +62,7 @@ struct	hostent *gethostent();
 char	*inet_ntoa();
 extern	char *index();		/* Changed from static by roland@gnu */
 
-static char RPCDB[] = "/etc/rpc";
+static char RPCDB[] = _PATH_RPC; /* Changed from "/etc/rpc" by roland@gnu */
 
 static struct rpcdata *
 _rpcdata()
