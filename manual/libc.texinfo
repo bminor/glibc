@@ -40,85 +40,74 @@ This is the reference manual for version 0.00 of the GNU C Library.
 @end ifinfo
 
 @menu
-Overview
-* Introduction::		Purpose of the GNU C Library.
-* Getting Started::		How this document is organized.
-* Standards and Portability::	The functionality in the GNU C Library is
-				 derived from various standards.
-* Using the Library::		How to use the library facilities in
-				 your programs.
-* Roadmap to the Manual::       A short description of the contents of
-                                 each chapter of this manual.
-
-Contents of the Library
-* Error Reporting::			How the GNU Library functions report
+* Introduction::                Purpose of the GNU C Library.
+* Error Reporting::             How the GNU Library functions report
 					 error conditions.
-* Common Definitions::			Things like @code{sizeof} and
+* Common Definitions::          Things like @code{sizeof} and
                                          @code{NULL}.
-* Variable Argument Facilities::	How to process variable-length
+* Variable Argument Facilities::  How to process variable-length
 					 argument lists.
-* Memory Allocation::			Your program can allocate memory
+* Memory Allocation::           Your program can allocate memory
 					 dynamically and manipulate it via
 					 pointers.
-* Character Handling::			Character testing and conversion
+* Character Handling::          Character testing and conversion
 					 functions.
-* String and Array Utilities::		Utilities for copying and comparing
+* String and Array Utilities::  Utilities for copying and comparing
 					 strings and arrays.
-* Extended Characters::			Support for extended character sets.
-* Locales::				The country and language can affect
+* Extended Characters::         Support for extended character sets.
+* Locales::                     The country and language can affect
                                          the behavior of library functions.
-* Searching and Sorting::		General searching and sorting
+* Searching and Sorting::       General searching and sorting
 					 functions.
-* Input/Output Overview::		Introduction to the i/o facilities.
-* Input/Output on Streams::		High-level, portable i/o facilities.
-* Low-Level Input/Output::		Low-level, less portable i/o.
-* File System Interface::		Functions for manipulating files.
-* Pipes and FIFOs::			A simple interprocess communication
+* Input/Output Overview::       Introduction to the i/o facilities.
+* Input/Output on Streams::     High-level, portable i/o facilities.
+* Low-Level Input/Output::      Low-level, less portable i/o.
+* File System Interface::       Functions for manipulating files.
+* Pipes and FIFOs::             A simple interprocess communication
 					 mechanism.
-* Sockets::				A more complicated interprocess
+* Sockets::                     A more complicated interprocess
 					 communication mechanism, with support
 					 for networking.
-* Low-Level Terminal Interface::	How to change the characteristics
+* Low-Level Terminal Interface::  How to change the characteristics
 					 of a terminal device.
-* Consistency Checking::		A helpful debugging facility.
-* Mathematics::				Math functions (transcendental,
+* Consistency Checking::        A helpful debugging facility.
+* Mathematics::                 Math functions (transcendental,
 					  random numbers, abs value).
-* Arithmetic::				Low-level arithmetic functions.
-* Date and Time::			Functions for getting the date and
+* Arithmetic::                  Low-level arithmetic functions.
+* Date and Time::               Functions for getting the date and
 					 time, and conversion between formats.
-* Non-Local Exits::			The @code{setjmp} and @code{longjmp}
+* Non-Local Exits::             The @code{setjmp} and @code{longjmp}
 					 facilities.
-* Signal Handling::			All about signals; how to send them,
+* Signal Handling::             All about signals; how to send them,
 					 block them, and handle them.
-* Processes::				How to create processes and run other
+* Processes::                   How to create processes and run other
 					 programs.
-* Job Control::				All about process groups and sessions.
-* System Databases::			About the system user and group
-					 databases.
-* System Information::                  Getting information about the
+* Job Control::                 All about process groups and sessions.
+* Users and Groups::
+* System Information::          Getting information about the
                                          hardware and software configuration
                                          of the machine a program runs on.
-* Representation Limits::	        Parameters describing numeric data
+* Representation Limits::       Parameters describing numeric data
 					 type representations..
-* System Configuration Limits::		Parameters describing operating
+* System Configuration Limits::  Parameters describing operating
 					 system limits.
 
 Appendices
-* Summary of Library Facilities::       A summary showing the syntax, header
+* Summary of Library Facilities::  A summary showing the syntax, header
                                          file, and derivation of each library
                                          feature.
-* Maintenance:: 			How to install and maintain the
+* Maintenance::                 How to install and maintain the
                                          GNU C Library.
-* Copying::			        The GNU Library General Public License
+* Copying::                     The GNU Library General Public License
                                          says how you can copy and share the
                                          GNU C Library.
 
 Indices
-* Concept Index::	Index of concepts and names.
-* Type Index::		Index of types and type qualifiers.
-* Function Index::	Index of functions and function-like macros.
-* Variable Index::	Index of variables and variable-like macros.
-* File Index::		Index of programs and files.
+* Concept Index::               Index of concepts and names.
+* Type Index::                  Index of types and type qualifiers.
+* Function Index::              Index of functions and function-like macros.
+* Variable Index::              Index of variables and variable-like macros.
+* File Index::                  Index of programs and files.
 @end menu
 
 @include intro.texinfo
@@ -155,29 +144,19 @@ Indices
 @include header.texinfo
 @include maint.texinfo
 
-@set lgpl-appendix
-@node Copying, Concept Index, Maintenance, Top
+@c @set lgpl-appendix
+@c node Copying, Concept Index, Maintenance, Top
 @include lgpl.texinfo
 
-@node Concept Index
-@unnumbered Concept Index
-@printindex cp
+@include index-cp.texi
 
-@node Type Index
-@unnumbered Type Index
-@printindex tp
+@include index-tp.texi
    
-@node Function Index
-@unnumbered Function and Macro Index
-@printindex fn
+@include index-fn.texi
 
-@node Variable Index
-@unnumbered Variable and Constant Macro Index
-@printindex vr
+@include index-vr.texi
 
-@node File Index
-@unnumbered Program and File Index
-@printindex pg
+@include index-pg.texi
 
 @shortcontents
 @contents
