@@ -73,8 +73,9 @@ DEFUN_VOID(main)
   {
     double x = atof ("-1e-17-");
     printf ("%g %c= %g %s!\n",
-	    x, -1e-17,
+	    x,
 	    x == -1e-17 ? '=' : '!',
+	    -1e-17,
 	    x == -1e-17 ? "Worked" : "Failed");
   }
 
