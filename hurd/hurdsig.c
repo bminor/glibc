@@ -76,7 +76,14 @@ write_corefile (int signo, int sigcode)
     /* User doesn't want a core.  */
     return 0;
 
-  coreserver = __path_lookup (_SERVERS_CORE, 0, 0);
+  name = getenv ("CORESERVER");
+  if (name != NULL)
+    coreserver = __path_lookup (name, 0, 0);
+  else
+    coreserver = MACH_PORT_NULL;
+
+  if (coreserver == MACH_PORT_NULL)
+    coreserver = __path_lookup (_SERVERS_CORE, 0, 0);
   if (coreserver == MACH_PORT_NULL)
     return 0;
 
