@@ -34,7 +34,7 @@ DEFUN(sigsuspend, (set), CONST sigset_t *set)
     /* Crash before locking.  */
     *(volatile const sigset_t *) set;
 
-  ss = _hurd_thread_sigstate (__mach_thread_self ());
+  ss = _hurd_self_sigstate ();
   omask = ss->blocked;
   if (set != NULL)
     ss->blocked = *set & ~_SIG_CANT_MASK;
