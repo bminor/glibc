@@ -89,7 +89,7 @@ case $# in
      ;;
   esac
   if test ! -f "$file"; then
-    echo "ldd: ${file}:" $"no such file"
+    echo "ldd: ${file}:" $"no such file" >&2
     exit 1
   elif test -r "$file"; then
     test -x "$file" ||
@@ -119,7 +119,7 @@ ldd: warning: you do not have execution permission for" "\`$file'" >&2
        ;;
     esac
     if test ! -f "$file"; then
-      echo "ldd: ${file}:" $"no such file"
+      echo "ldd: ${file}:" $"no such file" >&2
       result=1
     elif test -r "$file"; then
       test -x "$file" || echo $"\
