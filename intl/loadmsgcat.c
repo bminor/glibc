@@ -1,5 +1,5 @@
 /* loadmsgcat.c -- load needed message catalogs
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
 
 This file is part of the GNU C Library.  Its master source is NOT part of
 the C library, however.  The master source lives in /gd/gnu/lib.
@@ -94,7 +94,7 @@ _nl_load_domain (domain_file)
 
   /* We must know about the size of the file.  */
   if (fstat (fd, &st) != 0
-      && st.st_size < (off_t) sizeof (struct mo_file_header))
+      || st.st_size < (off_t) sizeof (struct mo_file_header))
     {
       /* Something went wrong.  */
       close (fd);
