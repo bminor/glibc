@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,9 +18,16 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
+#ifdef __STDC__
+#define PASTE(a,b) a##b
+#else
+#define PASTE(a,b) a/**/b
+#endif
+
 .globl C_SYMBOL_NAME(errno)
 .globl syscall_error
-syscall_error:
+/* Avoid space being appended when syscall_error is #defined.  */
+PASTE(syscall_error,:)
 	movl %eax, C_SYMBOL_NAME(errno)
 	movl $-1, %eax
 	ret
