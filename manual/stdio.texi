@@ -228,7 +228,7 @@ If the operation fails, a null pointer is returned; otherwise,
 @code{freopen} returns @var{stream}.
 
 The main use of @code{freopen} is to connect a standard stream such as
-@code{stdir} with a file of your own choice.  This is useful in programs
+@code{stdin} with a file of your own choice.  This is useful in programs
 in which use of a standard stream for certain purposes is hard-coded.
 @c !!! can do stdout=... in glibc
 @end deftypefun
@@ -254,7 +254,7 @@ if an error was detected.
 It is important to check for errors when you call @code{fclose} to close
 an output stream, because real, everyday errors can be detected at this
 time.  For example, when @code{fclose} writes the remaining buffered
-output, it might get an error because the disk is full.  Even if you you
+output, it might get an error because the disk is full.  Even if you
 know the buffer is empty, errors can still occur when closing a file if
 you are using NFS.
 
@@ -441,7 +441,7 @@ makes it easy to read lines reliably.
 
 Another GNU extension, @code{getdelim}, generalizes @code{getline}.  It
 reads a delimited record, defined as everything through the next
-occurrence of a specified delimeter character.
+occurrence of a specified delimiter character.
 
 All these functions are declared in @file{stdio.h}.
 
@@ -458,6 +458,8 @@ long enough to hold the line, @code{getline} stores the line in this
 buffer.  Otherwise, @code{getline} makes the buffer bigger using
 @code{realloc}, storing the new buffer address back in
 @code{*@var{lineptr}} and the increased size back in @code{*@var{n}}.
+If you set @code{*@var{lineptr}} to a null pointer, and @code{*@var{n}}
+to zero, @code{getline} will allocate the initial buffer for you.
 
 In either case, when @code{getline} returns,  @code{*@var{lineptr}} is
 a @code{char *} which points to the text of the line.
@@ -479,10 +481,10 @@ If an error occurs or end of file is reached, @code{getline} returns
 @deftypefun ssize_t getdelim (char **@var{lineptr}, size_t *@var{n}, int @var{delimiter}, FILE *@var{stream})
 This function is like @code{getline} except that the character which
 tells it to stop reading is not necessarily newline.  The argument
-@var{delimeter} specifies the delimeter character; @code{getdelim} keeps
+@var{delimiter} specifies the delimiter character; @code{getdelim} keeps
 reading until it sees that character (or end of file).
 
-The text is stored in @var{lineptr}, including the delimeter character
+The text is stored in @var{lineptr}, including the delimiter character
 and a terminating null.  Like @code{getline}, @code{getdelim} makes
 @var{lineptr} bigger if it isn't big enough.
 @end deftypefun
@@ -861,6 +863,7 @@ Conversions}, for details.
 @item @samp{%Z}
 Print an integer as an unsigned decimal number, assuming it was passed
 with type @code{size_t}.  @xref{Integer Conversions}, for details.
+This is a GNU extension.
 
 @item @samp{%x}, @samp{%X}
 Print an integer as an unsigned hexadecimal number.  @samp{%x} uses
@@ -1405,8 +1408,8 @@ after the call to @code{vprintf}, so you must not use @code{va_arg}
 after you call @code{vprintf}.  Instead, you should call @code{va_end}
 to retire the pointer from service.  However, you can safely call
 @code{va_start} on another pointer variable and begin fetching the
-arguments again through that pointer.  Calling @code{vfprintf} does
-not destroy the argument list of your function, merely the particular
+arguments again through that pointer.  Calling @code{vprintf} does not
+destroy the argument list of your function, merely the particular
 pointer that you passed to it.
 
 The GNU library does not have such restrictions.  You can safely continue
@@ -1795,7 +1798,7 @@ the template.
 
 Both the @var{handler_function} and @var{arginfo_function} arguments
 to @code{register_printf_function} accept an argument of type
-@code{struct print_info}, which contains information about the options
+@code{struct printf_info}, which contains information about the options
 appearing in an instance of the conversion specifier.  This data type
 is declared in the header file @file{printf.h}.
 @pindex printf.h
@@ -2642,7 +2645,7 @@ support other characters.  However, binary streams can handle any
 character value.
 
 @item
-Space characters that are written immediately preceeding a newline
+Space characters that are written immediately preceding a newline
 character in a text stream may disappear when the file is read in again.
 
 @item

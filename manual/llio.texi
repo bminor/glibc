@@ -1241,9 +1241,9 @@ descriptor will survive into the new program after @code{exec}.
 
 If you want to modify the file descriptor flags, you should get the
 current flags with @code{F_GETFD} and modify the value.  Don't assume
-that the flag listed here is the only ones that are implemented; your
-program may be run years from now and more flags may exist then.
-For example, here is a function to set or clear the flag @code{FD_CLOEXEC}
+that the flags listed here are the only ones that are implemented; your
+program may be run years from now and more flags may exist then.  For
+example, here is a function to set or clear the flag @code{FD_CLOEXEC}
 without altering any other flags:
 
 @example
@@ -1545,7 +1545,7 @@ fcntl (@var{filedes}, F_SETLK, @var{lockp})
 
 If the process already has a lock on any part of the region, the old lock
 on that part is replaced with the new lock.  You can remove a lock
-by specifying the a lock type of @code{F_UNLCK}.
+by specifying a lock type of @code{F_UNLCK}.
 
 If the lock cannot be set, @code{fcntl} returns immediately with a value
 of @code{-1}.  This function does not block waiting for other processes

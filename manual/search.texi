@@ -89,7 +89,7 @@ pointer if no match is found.  If the array contains more than one element
 that matches, the one that is returned is unspecified.
 
 This function derives its name from the fact that it is implemented
-using the binary search.
+using the binary search algorithm.
 @end deftypefun
 
 @node Array Sort Function, Search/Sort Example, Array Search Function, Searching and Sorting

@@ -266,7 +266,8 @@ This structure is statically allocated and can be rewritten by a
 subsequent call.
 
 @strong{Portability Note:} On some systems, @code{readdir} may not
-return entries for @file{.} and @file{..}.  @xref{File Name Resolution}.
+return entries for @file{.} and @file{..}, though you can always use
+@file{.} and @file{..} in file names.  @xref{File Name Resolution}.
 
 If there are no more entries in the directory or an error is detected,
 @code{readdir} returns a null pointer.  The following @code{errno} error
@@ -305,7 +306,7 @@ the current working directory:
 
 The order in which files appear in a directory tends to be fairly
 random.  A more useful program would sort the entries (perhaps by
-alphabetizing them) before printing them; see @ref{Array Sort Function}
+alphabetizing them) before printing them; see @ref{Array Sort Function}.
 
 @c ??? not documented: scandir, alphasort
 

@@ -230,7 +230,7 @@ in @ref{File System Interface}.
 @subsection File Name Resolution
 
 A file name consists of file name components separated by slash
-(@samp{/}) characters.  On the systems that that GNU library supports,
+(@samp{/}) characters.  On the systems that the GNU C library supports,
 multiple successive @samp{/} characters are equivalent to a single
 @samp{/} character.
 

@@ -325,10 +325,10 @@ we don't discuss that here.
 @c ??? to be changed.
 
 If your program needs to use something other than the @samp{C} locale,
-it will be more portable if you use the whatever locale the user
-specifies with the environment, rather than trying to specify some
-non-standard locale explicitly by name.  Remember, different machines
-might have different sets of locales installed.
+it will be more portable if you use whatever locale the user specifies
+with the environment, rather than trying to specify some non-standard
+locale explicitly by name.  Remember, different machines might have
+different sets of locales installed.
 
 @node Numeric Formatting,  , Standard Locales, Locales
 @section Numeric Formatting
@@ -504,7 +504,7 @@ The POSIX standard says that these two members apply to the
 @code{int_curr_symbol} as well as the @code{currency_symbol}.  The ANSI
 C standard seems to imply that they should apply only to the
 @code{currency_symbol}---so the @code{int_curr_symbol} should always
-preceed the amount.
+precede the amount.
 
 We can only guess which of these (if either) matches the usual
 conventions for printing international currency symbols.  Our guess is

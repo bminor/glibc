@@ -282,10 +282,10 @@ number.
 
 @cindex cube root function
 @comment math.h
-@comment GNU
+@comment BSD
 @deftypefun double cbrt (double @var{x})
 This function returns the cube root of @var{x}.  This function cannot
-fail; every representable real value has a represetable real cube root.
+fail; every representable real value has a representable real cube root.
 @end deftypefun
 
 @comment math.h

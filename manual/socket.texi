@@ -66,7 +66,7 @@ this context as @dfn{packets}).
 @cindex data loss on sockets
 @strong{Can data be lost during normal operation?}  Some communication
 styles guarantee that all the data sent arrives in the order it was
-sent (barring system or network crashes); others styles occasionally
+sent (barring system or network crashes); other styles occasionally
 lose data as a normal part of operation, and may sometimes deliver
 packets more than once or in the wrong order.
 
@@ -99,7 +99,7 @@ address format for that namespace.
 @cindex protocol (of socket)
 @cindex socket protocol
 @cindex protocol family
-Finally you must next choose the @dfn{protocol} to carry out the
+Finally you must choose the @dfn{protocol} to carry out the
 communication.  The protocol determines what low-level mechanism is used
 to transmit and receive data.  Each protocol is valid for a particular
 namespace and communication style; a namespace is sometimes called a
@@ -165,7 +165,7 @@ fourth and fifth packets; the seventh packet may arrive before the
 sixth, and may arrive a second time after the sixth.
 
 The typical use for @code{SOCK_DGRAM} is in situations where it is
-acceptible to simply resend a packet if no response is seen in a
+acceptable to simply resend a packet if no response is seen in a
 reasonable amount of time.
 
 @xref{Datagrams}, for detailed information about how to use datagram
@@ -1585,7 +1585,8 @@ connected socket.
 
 In making a connection, the client makes a connection while the server
 waits for and accepts the connection.  Here we discuss what the client
-program must do, using the @code{connect} function.
+program must do, using the @code{connect} function, which is declared in
+@file{sys/socket.h}.
 
 @comment sys/socket.h
 @comment BSD
@@ -2611,13 +2612,13 @@ nonzero value means ``yes''.
 @comment sys/socket.h
 @comment BSD
 @item SO_SNDBUF
-This option gets or sets the size of the output buffer.  The value is an
+This option gets or sets the size of the output buffer.  The value is a
 @code{size_t}, which is the size in bytes.
 
 @comment sys/socket.h
 @comment BSD
 @item SO_RCVBUF
-This option gets or sets the size of the input buffer.  The value is an
+This option gets or sets the size of the input buffer.  The value is a
 @code{size_t}, which is the size in bytes.
 
 @comment sys/socket.h
