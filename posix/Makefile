@@ -53,9 +53,7 @@ gpl2lgpl := getopt.c getopt1.c getopt.h	# Frob these guys' copying notices.
 
 include ../Rules
 
-$(objpfx)libposix.a:
-	$(AR) cr $@ /dev/null
-
+$(objpfx)libposix.a: $(dep-dummy-lib); $(make-dummy-lib)
 lib: $(objpfx)libposix.a
 
 # Make the standalone glob/fnmatch package.
