@@ -515,6 +515,10 @@ the rights to redistribute these changes.
 @item
 The @file{tar.h} header file was written by David J. MacKenzie.
 
+@item
+The port to the MIPS DECStation was contributed by Brendan Kehoe and Ian
+Lance Taylor.
+
 @end itemize
 
 @c @bye
