@@ -63,10 +63,6 @@ Severity: [  *] to [***]
 [  *]  The strftime() implementation cannot handle multibyte locales really
        good since the TOLOWER and TOUPPER are not prepared.
 
-[  *]  The putenv() function copies it's argument which means that the
-       string (and possible later changes to it) are not automatically
-       reflected in the environment.
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Ulrich Drepper
 drepper@cygnus.com
