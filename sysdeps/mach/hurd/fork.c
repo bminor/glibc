@@ -339,10 +339,6 @@ __fork (void)
 	__spin_unlock (&_hurd_ports[i].lock);
       ports_locked = 0;
 
-      /* Get the PID of the child from the proc server.  */
-      if (err = __USEPORT (PROC, __proc_task2pid (port, newtask, &pid)))
-	goto lose;
-
       /* Create the child main user thread and signal thread.  */
       if ((err = __thread_create (newtask, &thread)) ||
 	  (err = __thread_create (newtask, &sigthread)))
@@ -419,26 +415,27 @@ __fork (void)
 				    (int *) &state, statecount))
 	goto lose;
 
-      /* Register the child with the proc server.  It is important that
-	 this happen after we have set the child's message port in the
-	 port-copying loop above.  Once proc_child has been done for the
-	 task, it appears as a POSIX.1 process and is obliged to respond to
-	 POSIX.1 signals.  Before the message port is set, signallers get
-	 an inappropriate error. 
+      /* Get the PID of the child from the proc server.  We must do this
+	 before calling proc_child below, because at that point any
+	 authorized POSIX.1 process may kill the child task with SIGKILL.  */
+      if (err = __USEPORT (PROC, __proc_task2pid (port, newtask, &pid)))
+	goto lose;
 
-	 Also, this must be the last thing we do (except the actual
-	 __thread_resume below) because the child becomes visible to
-	 Posix.1 here, at which point we are prohibited from returning
-	 an error.  */
+      /* Register the child with the proc server.  It is important that
+	 this be that last thing we do before starting the child thread
+	 running.  Once proc_child has been done for the task, it appears
+	 as a POSIX.1 process.  Any errors we get must be detected before
+	 this point, and the child must have a message port so it responds
+	 to POSIX.1 signals.  */
       if (err = __USEPORT (PROC, __proc_child (port, newtask)))
 	goto lose;
 
-      /* This must be the absolutel last thing we do; we can't assume
-	 that the child will remain alive for even a moment once we do
-	 this.  Ignore errors; we have committed to the fork and are
-	 not allowed to return them after the process becomes visible
-	 to Posix.1 (which happened right above at proc_child time.  */
-      __thread_resume (thread);
+      /* This must be the absolutely last thing we do; we can't assume that
+	 the child will remain alive for even a moment once we do this.  We
+	 ignore errors because we have committed to the fork and are not
+	 allowed to return them after the process becomes visible to
+	 POSIX.1 (which happened right above when we called proc_child).  */
+      (void) __thread_resume (thread);
 
     lose:
       if (ports_locked)
