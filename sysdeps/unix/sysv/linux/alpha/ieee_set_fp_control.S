@@ -41,9 +41,9 @@ LEAF(__ieee_set_fp_control, 16)
 	ldi	v0, __NR_osf_setsysinfo
 	call_pal PAL_callsys
 
-	lda	sp, 16(sp)
-
 	bne	a3, $error
+
+	lda	sp, 16(sp)
 	ret
 
 $error:
