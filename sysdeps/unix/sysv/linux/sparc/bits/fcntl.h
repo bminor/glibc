@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux/SPARC.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #define _FCNTLBITS_H	1
 
 #include <sys/types.h>
+#include <bits/wordsize.h>
 
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
    located on an ext2 file system */
@@ -37,11 +38,19 @@
 #define O_NONBLOCK	0x4000
 #define O_NDELAY	(0x0004 | O_NONBLOCK)
 #define O_NOCTTY	0x8000	/* not fcntl */
-#define O_DIRECTORY	0x10000 /* must be a directory */
-#define O_NOFOLLOW	0x20000 /* don't follow links */
 
-/* XXX missing */
-#define O_LARGEFILE	0
+#ifdef __USE_GNU
+# define O_DIRECTORY	0x10000 /* must be a directory */
+# define O_NOFOLLOW	0x20000 /* don't follow links */
+#endif
+
+#ifdef __USE_LARGEFILE64
+# if __WORDSIZE == 64
+#  define O_LARGEFILE	0
+# else
+#  define O_LARGEFILE	0x40000
+# endif
+#endif
 
 /* For now Linux has synchronisity options for data and read operations.
    We define the symbols here but let them do the same as O_SYNC since
