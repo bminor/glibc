@@ -576,7 +576,7 @@ extern int rpmatch __P ((__const char *__response));
    optional value introduced by an equal sign.  If the suboption is
    not part of TOKENS return in *VALUEP beginning of unknown
    suboption.  On exit *OPTIONP is set to the beginning of the next
-   otken or at the terminating NUL character.  */
+   token or at the terminating NUL character.  */
 extern int getsubopt __P ((char **__optionp, __const char *__const *__tokens,
 			   char **__valuep));
 #endif
