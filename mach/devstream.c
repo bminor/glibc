@@ -76,9 +76,9 @@ output (FILE *f, int c)
       int wrote;
       while (to_write > 0)
 	{
-	  if (err = device_write_inband ((device_t) f->__cookie, 0,
-					 f->__target, (char *)p, 
-					 to_write, &wrote))
+	  if (err = device_write ((device_t) f->__cookie, 0,
+				  f->__target, (char *)p, 
+				  to_write, &wrote))
 	    {
 	      errno = err;
 	      f->__error = 1;
