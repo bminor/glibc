@@ -64,7 +64,7 @@ __fork (void)
   size_t i;
   error_t err;
   thread_t thread_self = __mach_thread_self ();
-  struct hurd_sigstate *ss;
+  struct hurd_sigstate *volatile ss;
 
   __mutex_lock (&_hurd_siglock);
   for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
@@ -77,7 +77,6 @@ __fork (void)
     {
       process_t newproc;
       task_t newtask;
-      mach_port_t ports[_hurd_nports];
       thread_t thread, sigthread;
       struct machine_thread_state state;
       unsigned int statecount;
@@ -89,7 +88,7 @@ __fork (void)
       unsigned int nthreads = 0;
 
       /* Run things that prepare for forking before we create the task.  */
-      RUN_HOOKS (_hurd_fork_prepare_hook, ());
+      RUN_HOOK (_hurd_fork_prepare_hook, ());
 
       /* Lock things that want to be locked before we fork.  */
       for (i = 0; i < _hurd_fork_locks.n; ++i)
@@ -126,7 +125,7 @@ __fork (void)
 	goto lose;
 
       /* Create the child main user thread and signal thread.  */
-      if ((err = __thread_create (newtask, &thread))
+      if ((err = __thread_create (newtask, &thread)) ||
 	  (err = __thread_create (newtask, &sigthread)))
 	goto lose;
 
@@ -305,7 +304,7 @@ __fork (void)
 #endif      
       state.PC = (unsigned long int) _hurd_msgport_receive;
       if (err = __thread_set_state (sigthread, MACHINE_THREAD_STATE_FLAVOR,
-				    (int *) &state, &statecount))
+				    (int *) &state, statecount))
 	goto lose;
       /* We do not thread_resume SIGTHREAD here because the child
 	 fork needs to do more setup before it can take signals.  */
@@ -360,14 +359,7 @@ __fork (void)
 	 symmetrical: the prepare hook arrests state in some way for the
 	 fork, and the parent hook restores the state for the parent to
 	 continue executing normally.  */
-      if (err)
-	/* We already have an error.  We still want to run these hooks, to
-	   undo whatever the prepare hooks might have done, but ignore
-	   these errors.  */
-	run_hooks (&_hurd_fork_parent_hook, MACH_PORT_NULL, MACH_PORT_NULL);
-      else
-	err = run_hooks (&_hurd_fork_parent_hook,
-			 MACH_PORT_NULL, MACH_PORT_NULL);
+      RUN_HOOK (_hurd_fork_parent_hook, ());
     }
   else
     {
@@ -394,14 +386,13 @@ __fork (void)
       _hurd_sigstates->next = NULL;
 
       /* Fetch our various new process IDs from the proc server.  */
-      if (!err)
-	err = __USEPORT (PROC, __proc_getpids (port, &_hurd_pid, &_hurd_ppid,
-					       &_hurd_orphaned));
+      err = __USEPORT (PROC, __proc_getpids (port, &_hurd_pid, &_hurd_ppid,
+					     &_hurd_orphaned));
       if (!err)
 	err = __USEPORT (PROC, __proc_getpgrp (port, _hurd_pid, &_hurd_pgrp));
 
       /* Run things that want to run in the child task to set up.  */
-      RUN_HOOKS (_hurd_fork_child_hook, ());
+      RUN_HOOK (_hurd_fork_child_hook, ());
 
       /* Set up proc server-assisted fault recovery for the signal thread.  */
       _hurdsig_fault_init ();
