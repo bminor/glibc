@@ -24,6 +24,11 @@
 BEGIN {
     print "/* This file is generated from errno.texi by errlist.awk.  */"
     print "";
+    print "#ifndef HAVE_GNU_LD"
+    print "#define _sys_nerr sys_nerr"
+    print "#define _sys_errlist sys_errlist"
+    print "#endif"
+    print ""
     print "const char *_sys_errlist[] =";
     print "  {";
     errno = 0;
