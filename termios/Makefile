@@ -22,6 +22,6 @@
 subdir	:= termios
 
 routines	:= speed cfsetspeed tcsetattr tcgetattr tcgetpgrp tcsetpgrp \
-		   tcdrain tcflow tcflush tcsendbreak __tcgetattr
+		   tcdrain tcflow tcflush tcsendbrk __tcgetatr
 
 include ../Rules
