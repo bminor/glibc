@@ -18,6 +18,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
+#include <hurd/signal.h>
 
 /* Translate the Mach exception codes, as received in an `exception_raise' RPC,
    into a signal number and signal subcode.  */
