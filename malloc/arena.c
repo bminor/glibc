@@ -429,10 +429,16 @@ ptmalloc_init (void)
   main_arena.next = &main_arena;
 
 #if defined _LIBC && defined SHARED
-  /* In case this libc copy is in a non-default namespace, never use brk.  */
+  /* In case this libc copy is in a non-default namespace, never use brk.
+     Likewise if dlopened from statically linked program.  */
   Dl_info di;
   struct link_map *l;
-  if (_dl_addr (ptmalloc_init, &di, &l, NULL) != 0 && l->l_ns != LM_ID_BASE)
+  extern struct dl_open_hook *_dl_open_hook;
+  libc_hidden_proto (_dl_open_hook);
+
+  if (_dl_open_hook != NULL
+      || (_dl_addr (ptmalloc_init, &di, &l, NULL) != 0
+          && l->l_ns != LM_ID_BASE))
     __morecore = __failing_morecore;
 #endif
 

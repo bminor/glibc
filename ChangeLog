@@ -1,5 +1,11 @@
 2004-10-18  Jakub Jelinek  <jakub@redhat.com>
 
+	* malloc/arena.c (ptmalloc_init): Don't use brk if dlopened
+	from statically linked program and avoid calling _dl_addr in that
+	case.
+
+2004-10-18  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/generic/strcpy_chk.c (__strcpy_chk): Speed up by checking
 	destlen only every 4 bytes.
 
