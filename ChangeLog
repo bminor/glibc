@@ -1,3 +1,20 @@
+2002-08-22  Roland McGrath  <roland@redhat.com>
+
+	* scripts/firstversions.awk: When encountering a version newer than
+	the specified earliest version, be sure to emit the specified earliest
+	version first if any renaming of an older version to that has been.
+
+2002-03-22  H.J. Lu  <hjl@gnu.org>
+
+	* scripts/firstversions.awk: Check the first version.
+
+2002-02-06  Roland McGrath  <roland@frob.com>
+
+	* scripts/firstversions.awk: Handle libraries that don't have each
+	particular version named in the third column of shlib-versions.
+
+	* scripts/firstversions.awk: Don't mess with GLIBC_PRIVATE.
+
 2002-08-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/_mcount.S: Fix assembler.
