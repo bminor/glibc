@@ -30,7 +30,7 @@ DEFUN_VOID(__getdtablesize)
   int size;
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
-  size = _hurd_dtable.size;
+  size = _hurd_dtablesize;
   __mutex_unlock (&_hurd_dtable_lock);
   HURD_CRITICAL_END;
   return size;

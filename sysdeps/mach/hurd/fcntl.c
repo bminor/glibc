@@ -29,15 +29,14 @@ int
 DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 {
   va_list ap;
-  struct hurd_userlink dtable_ulink;
-  struct hurd_fd_user d;
+  struct hurd_fd *d;
   int result;
   
   HURD_CRITICAL_BEGIN;
 
-  d = _hurd_fd_get (fd, &dtable_ulink);
+  d = _hurd_fd_get (fd);
 
-  if (d.d == NULL)
+  if (d == NULL)
     {
       result = __hurd_fail (EBADF);
       goto out;
@@ -48,7 +47,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
   switch (cmd)
     {
     default:			/* Bad command.  */
-      __spin_unlock (&d.d->port.lock);
+      __spin_unlock (&d->port.lock);
       errno = EINVAL;
       result = -1;
       break;
@@ -63,9 +62,9 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	int flags;
 
 	/* Extract the ports and flags from the file descriptor.  */
-	flags = d.d->flags;
-	ctty = _hurd_port_get (&d.d->ctty, &ctty_ulink);
-	port = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
+	flags = d->flags;
+	ctty = _hurd_port_get (&d->ctty, &ctty_ulink);
+	port = _hurd_port_locked_get (&d->port, &ulink); /* Unlocks D.  */
 
 	/* Get a new file descriptor.  The third argument to __fcntl is the
 	   minimum file descriptor number for it.  */
@@ -90,21 +89,21 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	    new->flags = flags & ~FD_CLOEXEC;
 	  }
 
-	_hurd_port_free (&d.d->port, &ulink, port);
+	_hurd_port_free (&d->port, &ulink, port);
 	if (ctty != MACH_PORT_NULL)
-	  _hurd_port_free (&d.d->ctty, &ctty_ulink, port);
+	  _hurd_port_free (&d->ctty, &ctty_ulink, port);
 
 	break;
       }
 
     case F_GETFD:		/* Get descriptor flags.  */
-      result = d.d->flags;
-      __spin_unlock (&d.d->port.lock);
+      result = d->flags;
+      __spin_unlock (&d->port.lock);
       break;
 
     case F_SETFD:		/* Set descriptor flags.  */
-      d.d->flags = va_arg (ap, int);
-      __spin_unlock (&d.d->port.lock);
+      d->flags = va_arg (ap, int);
+      __spin_unlock (&d->port.lock);
       result = 0;
       break;
 
@@ -116,7 +115,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
     case F_SETLKW:
       {
 	struct flock *fl = va_arg (ap, struct flock *);
-	__spin_unlock (&d.d->port.lock);
+	__spin_unlock (&d->port.lock);
 	errno = fl?ENOSYS:EINVAL; /* XXX mib needs to implement io rpcs.  */
 	result = -1;
 	break;
@@ -126,12 +125,12 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
       {
 	struct hurd_userlink ulink;
 	io_t port
-	  = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */ 
+	  = _hurd_port_locked_get (&d->port, &ulink); /* Unlocks D.  */ 
 	error_t err;
 
 	err = __io_get_openmodes (port, &result);
 
-	_hurd_port_free (&d.d->port, &ulink, port);
+	_hurd_port_free (&d->port, &ulink, port);
 
 	if (err)
 	  result = __hurd_fail (err);
@@ -143,12 +142,12 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	const int flags = va_arg (ap, int);
 	struct hurd_userlink ulink;
 	io_t port
-	  = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
+	  = _hurd_port_locked_get (&d->port, &ulink); /* Unlocks D.  */
 	error_t err;
 
 	err = __io_set_all_openmodes (port, flags);
 	    
-	_hurd_port_free (&d.d->port, &ulink, port);
+	_hurd_port_free (&d->port, &ulink, port);
 
 	result = err ? __hurd_fail (err) : 0;
 	break;
@@ -159,9 +158,9 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	struct hurd_userlink ulink;
 	error_t err;
 	io_t port
-	  = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
+	  = _hurd_port_locked_get (&d->port, &ulink); /* Unlocks D.  */
 	err = __io_get_owner (port, &result);
-	_hurd_port_free (&d.d->port, &ulink, port);
+	_hurd_port_free (&d->port, &ulink, port);
 	result = err ? __hurd_fail (err) : 0;
 	break;
       }
@@ -172,15 +171,13 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	error_t err;
 	struct hurd_userlink ulink;
 	io_t port
-	  = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
+	  = _hurd_port_locked_get (&d->port, &ulink); /* Unlocks D.  */
 	err = __io_mod_owner (port, owner);
-	_hurd_port_free (&d.d->port, &ulink, port);
+	_hurd_port_free (&d->port, &ulink, port);
 	result = err ? __hurd_fail (err) : 0;
 	break;
       }
     }
-
-  _hurd_fd_free (d, &dtable_ulink);
 
   va_end (ap);
 

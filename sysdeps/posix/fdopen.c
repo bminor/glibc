@@ -35,7 +35,7 @@ DEFUN(fdopen, (fd, mode), int fd AND CONST char *mode)
   if (!__getmode (mode, &m))
     return NULL;
 
-  /* Verify the FD is valid allows the access MODE specifies.  */
+  /* Verify the FD is valid and allows the access MODE specifies.  */
 
   dflags = __fcntl (fd, F_GETFL);
   if (dflags == -1)
