@@ -1,2 +1,2189 @@
 @node Sockets
 @chapter Sockets
+
+@cindex socket
+A @dfn{socket} is a generalized interprocess communication channel.
+Like a pipe, a socket is represented as a file descriptor.  But, unlike
+pipes, sockets support communication between unrelated processes, and
+even between processes running on different machines that communicate
+over a network.
+
+This chapter describes the GNU facilities for interprocess
+communication.  First, we look at the functions for creating and
+initializing sockets, and then we consider the details of how to establish
+communications in the two most important domains --- the local domain
+and the Internet domain.  Finally, actual operations on sockets
+are described.
+
+@menu
+* Socket Creation and Naming::          Functions for creating and
+                                         initializing sockets.
+* Domains and Protocols::		How to specify the communications
+					 protocol for a socket.
+* The Local Domain::			Details about the local (Unix) domain.
+* The Internet Domain::			Details about the Internet domain.
+* Types of Sockets::			Different socket types have different
+					 semantics for data transmission.
+* Byte Stream Socket Operations::	Operations on sockets with connection
+					 state.
+* Datagram Socket Operations::		Operations on datagram sockets.
+* Socket Options::			Miscellaneous low-level socket options.
+@end menu
+
+
+@node Socket Creation and Naming
+@section Socket Creation and Naming
+
+This section presents the basic functions for creating and initializing
+sockets.  These functions are fairly general, and the exact details
+of how you call them depend on the particular communications protocol
+you want to use.  Once the basic functions have been covered, we will
+come back to consider these details later in the chapter.
+
+When you create a socket, you must specify its type and the
+communications domain and protocol you want it to use.
+
+@cindex socket type
+@cindex type, of a socket
+The @dfn{socket type} defines the semantics of the communication.
+Some socket types provide reliable, sequential byte stream communications
+in much the same way as a pipe, while others permit messages to be
+lost or arrive out of sequence.  Socket types are discussed in more
+detail in @ref{Types of Sockets}.
+
+@cindex socket domain
+@cindex domain, for socket
+@cindex protocol family, for socket
+@cindex socket protocol family
+@cindex protocol, for socket
+@cindex socket protocol
+The socket @dfn{domain} or @dfn{protocol family} is the low-level
+mechanism used for communications.  For example, there is a protocol
+family for communication between processes on the same machine, and
+another protocol family for communication over the Internet.  Each
+domain supports one or more specific @dfn{protocols} for communication.
+@xref{Domains and Protocols}, for more information about this.
+
+@cindex peer socket
+@cindex server socket
+@cindex client socket
+A socket is only one end of a communications path.  Before you can
+transfer any data through the socket, you must specify another socket to
+be at the other end of the communications path; this is called its
+@dfn{peer}.  A socket that accepts connections in this way is called a
+@dfn{server}, while the socket that initiates the connection is called
+a @dfn{client}.
+
+@menu
+* Creating a Socket::			How to open a socket.
+* Closing a Socket::			How to close a socket.
+* Socket Naming::			You must associate a name with a socket
+					 before it can receive data.
+* Socket Pairs::			These are created like pipes.
+@end menu
+
+@node Creating a Socket
+@subsection Creating a Socket
+
+The primitive for creating a socket is the @code{socket} function,
+declared in @file{<sys/socket.h>}.
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int socket (int @var{domain}, int @var{type}, int @var{protocol})
+This function creates a socket of type @var{type}, which should be one
+of the socket types listed in @ref{Types of Sockets}.  The @var{domain}
+argument specifies the protocol family and the @var{protocol} the
+specific communications protocol within that family; @pxref{Domains and
+Protocols}.
+
+The return value from @code{socket} is the file descriptor for the new
+socket, or @code{-1} in case of error.  The following @code{errno} error
+conditions are defined for this function:
+
+@table @code
+@item EPROTONOSUPPORT
+The @var{protocol} or @var{type} is not supported by the communications
+protocol family @var{domain}.
+
+@item EMFILE
+The process already has too many file descriptors open.
+
+@item ENFILE
+The system already has too many file descriptors open.
+
+@item EACCESS
+The process does not have privilege to create a socket of the specified
+@var{type} or @var{protocol}.
+
+@item ENOBUFS
+The system ran out of internal buffer space.
+@end table
+@end deftypefun
+
+Sockets are two-way communications channels.  That is, you can read or
+write at either end of the connection.  Like pipes, sockets do not
+support file positioning operations.
+
+
+@node Closing a Socket
+@subsection Closing a Socket
+
+When you are finished using a socket, you can simply close its
+file descriptor with @code{close}; @pxref{Opening and Closing Files}.
+If there is still data waiting to be transmitted over the connection,
+normally @code{close} will try to complete this transmission.  You
+can control this behavior using the @code{SO_LINGER} socket option;
+@pxref{Socket Options}.
+
+To shut down a socket more cleanly, call @code{shutdown} before calling
+@code{close}.  This function is declared in @file{<sys/socket.h>}.
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int shutdown (int @var{filedes}, int @var{how})
+The @code{shutdown} function shuts down the socket @var{filedes}.  The
+@var{how} argument specifies what action to perform:
+
+@table @code
+@item 0
+Disable further receive operations on this socket.
+
+@item 1
+Disable further send operations on this socket.
+
+@item 2
+Disable both receive and send operations.
+@end table
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} is not a valid file descriptor.
+
+@item ENOTSOCK
+The @var{filedes} is not a socket.
+
+@item ENOTCONN
+The @var{filedes} is not connected.
+@end table
+@end deftypefun
+
+
+@node Socket Naming
+@subsection Socket Naming
+
+@cindex binding a name to a socket
+@cindex socket name binding
+When a socket is created with the @code{socket} function, it initially
+has no name assigned to it.  Before other processes can send data
+to this socket, you must assign it a name.  This process is called
+@dfn{binding} the name to the socket, and is performed with the @code{bind}
+function.
+
+Only sockets belonging to server processes need to be named.  You can
+also call @code{bind} to establish the name of the socket on the client
+side, but this is optional; a name will be assigned automatically if you
+don't.
+
+The details of how sockets are named vary depending on the particular
+domain of the socket.  @xref{The Local Domain}, or @ref{The Internet
+Domain}, for specific information.
+
+Here are descriptions of the functions for setting or inquiring about
+the name of a socket.  The prototypes for these functions are in the
+header file @file{<sys/socket.h>}
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int bind (int @var{filedes}, struct sockaddr *@var{addr}, size_t @var{length})
+The @code{bind} function assigns a name to the socket @var{filedes}.  The
+@var{addr} and @var{length} arguments specify the name; the format of this
+information depends on the socket domain.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item ENOTSOCK
+The @var{filedes} argument is not a socket.
+
+@item EADDRNOTAVAIL
+The specified address is not available on this machine.
+
+@item EADDRINUSE
+Some other socket is already using the specified address.
+
+@item EINVAL
+The @var{filedes} has already been bound to a name.
+
+@item EACCESS
+You do not have permission to access the requested address.
+@end table
+
+Additional errors may be detected depending on the particular domain
+of the socket.
+@end deftypefun
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int getsockname (int @var{filedes}, struct sockaddr *@var{addr}, size_t *@var{length_ptr})
+The @code{getsockname} information returns information about the name
+of the socket @var{filedes} in the locations specified by the @var{addr} 
+and @var{length_ptr} arguments.  Note that the @var{length_ptr} is a pointer;
+you should initialize it to be the allocation size of @var{addr}, and on
+return it will contain the actual size of the name.  Again, the format of the
+information depends on the socket domain.
+
+The return value is @code{0} on success and @code{-1} on error.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item ENOTSOCK
+The @var{filedes} argument is not a socket.
+
+@item ENOBUFS
+There are not enough internal buffers available for the operation.
+@end table
+@end deftypefun
+
+@comment sys/socket.h
+@comment BSD
+@deftp {Data Type} {struct sockaddr}
+Since the format of socket addresses varies depending on the domain of
+the socket, the functions that deal with socket names treat them as a
+byte vector prefixed with a code that identifies the format of the data
+which follows.  In the function prototypes, this is declared as a
+@code{struct sockaddr *}, but in actual practice there is a separate
+@code{struct} type for each address family.  You just cast the pointer
+as necessary.
+
+The basic @code{struct sockaddr} type has the following members:
+
+@table @code
+@item unsigned short int sa_family
+This is the socket address family, and identifies the format of the
+data which follows.
+
+@item char sa_data[14]
+This is the actual socket address data.  
+@end table
+@end deftp
+
+You can use these symbolic constants to identify the address family:
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro AF_UNSPEC
+This is the unspecified address family.
+@end defvr
+
+@comment sys/socket.h
+@comment GNU
+@defvr Macro AF_LOCAL
+This is the address family for sockets in the local domain.  @xref{The
+Local Domain}.
+
+@strong{Incomplete:}  This isn't actually in the header file yet!!!
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro AF_UNIX
+This is a synonym for @code{AF_LOCAL}.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro AF_INET
+This is the address family for sockets in the Internet domain.
+@xref{The Internet Domain}.
+@end defvr
+
+@strong{Incomplete:}  There are a bunch more of these.
+
+
+@node Socket Pairs
+@subsection Socket Pairs
+
+A @dfn{socket pair} consists of a pair of connected (but unnamed)
+sockets.  It is very similar to a pipe and is used in much the same way.
+Socket pairs are created with the @code{socketpair} function, declared
+in @file{<sys/socket.h>}.  (Compare this function with the @code{pipe}
+function; @pxref{Creating a Pipe}.)
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int socketpair (int @var{domain}, int @var{type}, int @var{protocol}, int @var{filedes}[2])
+This function creates a socket pair, returning the file descriptors in
+@code{@var{filedes}[0]} and @code{@var{filedes}[1]}.  The socket pair
+is a full-duplex communications channel, so that both reading and writing
+may be performed at either end.
+
+The @var{domain}, @var{type}, and @var{protocol} are interpreted as for
+the @code{socket} function; @pxref{Creating a Socket}.
+
+The @code{socketpair} function returns @code{0} on success and @code{-1}
+on failure.  The following @code{errno} error conditions are defined
+for this function:
+
+@table @code
+@item EMFILE
+The process has too many file descriptors open.
+
+@item EAFNOSUPPORT
+The specified address family is not supported.
+
+@item EPROTONOSUPPORT
+The specified protocol is not supported.
+
+@item EOPNOTSUPP
+The specified protocol does not support the creation of socket pairs.
+@end table
+
+@strong{Incomplete:}  The BSD manual says socket pairs are only supported
+in the local domain.  Is this true of the GNU system also?
+@end deftypefun
+
+
+
+@node Domains and Protocols
+@section Domains and Protocols
+
+The header file @file{<sys/socket.h>} defines these symbolic constants
+that name various domains (or protocol families).  You can use these
+macros as values for the @var{domain} argument to the @code{socket} or
+@code{socketpair} functions.
+
+@comment sys/socket.h
+@comment GNU
+@defvr Macro PF_LOCAL
+This is the domain local to the host machine.  The local domain is
+discussed in more detail in @ref{The Local Domain}.
+
+@strong{Incomplete:}  This isn't actually in the header file yet!!!
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro PF_UNIX
+This is a synonym for @code{PF_LOCAL}.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro PF_INET
+This is the Internet protocol (IP) family.  @xref{The Internet Domain},
+for more information.
+@end defvr
+
+@strong{Incomplete:} These are only the most important protocol
+families.  This chapter includes detailed information about socket
+naming conventions and specific protocols for these domains.  There
+are several other domains defined in @file{<sys/socket.h>}, but who
+knows about the details of using them?
+
+Each domain can support multiple protocols.  Normally, though, you can
+just use the default protocol for the domain.  You do this by providing
+a value of @code{0} as the @var{protocol} argument when creating a
+socket with @code{socket} or @code{socketpair}.
+
+
+@node The Local Domain
+@section The Local Domain
+
+This section describes the details of the local domain, @code{PF_LOCAL}.
+This is also known as the Unix domain, @code{PF_UNIX}.
+
+In the local domain, socket names are file names.  This effectively
+allows processes on hosts that share a common file system to
+communicate.
+
+You can specify any file name you want as the name of the socket.
+However, you must have write permission on the directory containing the
+file.  It's typical to put these files in the @file{/tmp} directory.
+
+@strong{Incomplete:}  Can you fiddle with file protections to restrict
+access to the socket?
+
+The structure for specifying socket names in the local domain is
+defined in the header file @file{<sys/un.h}:
+
+@comment sys/un.h
+@comment BSD
+@deftp {Data Type} {struct sockaddr_un}
+This structure is used to specify local domain socket addresses.  It has
+the following members:
+
+@table @code
+@item short int sun_family
+This identifies the address family or format of the socket address.  You
+should assign a value of @code{AF_LOCAL} (or @code{AF_UNIX}) to this
+member.  @xref{Socket Naming}.
+
+@item char sun_path[108]
+This is the file name to use.
+@end table
+@end deftp
+
+The @var{length} parameter associated with socket names in the local
+domain is computed as the sum of the size of the address family
+component of the address structure, and the string length (@emph{not}
+the allocation size!) of the file name string.
+
+After you close a socket in the local domain, you should delete the file.
+Use @code{unlink} or @code{remove} to do this; @pxref{Removing and
+Renaming Files}.
+
+The default communications protocol (protocol number @code{0}) is the
+only one supported by the local domain.
+
+@strong{Incomplete:}  Is this correct?  I couldn't find any mention
+of other protocols.
+
+Here is an example showing how to create and name a socket in the local
+domain.
+
+@comment This example is from lsockserver.c.
+@example
+#include <sys/socket.h>
+#include <stdio.h>
+#include <sys/un.h>
+#include <errno.h>
+#include <stdlib.h>
+
+int make_named_socket (const char *filename)
+@{
+  struct sockaddr_un name;
+  int sock, status;
+  size_t size;
+
+  /* @r{Create the socket.} */
+  
+  sock = socket (PF_UNIX, SOCK_DGRAM, 0);
+  if (sock < 0) @{
+    fprintf (stderr, "socket() failed with error %d.\n", errno);
+    exit (EXIT_FAILURE);
+  @}
+
+  /* @r{Bind a name to the socket.} */
+
+  name.sun_family = AF_UNIX;
+  strcpy (name.sun_path, filename);
+  size = strlen (name.sun_path) + sizeof (name.sun_family);
+  status = bind (sock, (struct sockaddr *)&name, size);
+  if (size < 0) @{
+    fprintf (stderr, "bind() failed with error %d.\n", errno);
+    exit (EXIT_FAILURE);
+  @}
+
+  return sock;
+@}
+@end example
+
+@node The Internet Domain
+@section The Internet Domain
+
+This section describes the details the protocols and socket naming
+conventions used in the Internet domain, @code{PF_INET}.
+
+@menu
+* Protocols Database::          Selecting a communications protocol.
+* Internet Socket Naming::      How socket names are specified in the Internet
+                                 domain.
+* Internet Host Addresses::     Hosts are assigned addresses that are numbers.
+* Hosts Database::              A host may also have a symbolic host name.
+* Services Database::           Ports may also have symbolic names.
+* Networks Database::           There is also a database for network names.
+* Byte Order Conversion::       Different hosts may use different byte
+                                 ordering conventions; you need to canonicalize
+                                 host address and port numbers.
+* Internet Socket Example::     Putting it all together.
+@end menu
+
+@node Protocols Database
+@subsection Protocols Database
+
+@cindex TCP (Internet protocol)
+The default communications protocol for the Internet domain is TCP
+(``transmission control protocol'').  This is adequate for just about
+all normal purposes.  Unless you are trying to do something really
+wizardly, just specify the default protocol @code{0} when you create the
+socket, and don't bother with the rest of this section.
+
+Internet protocols are generally specified by a name instead of a
+number.  The network protocols that a host knows about are stored in a
+database.  This is usually either derived from the file
+@file{/etc/protocols}, or it may be an equivalent provided by a name
+server.  You look up the protocol number associated with a named
+protocol in the database using the @code{getprotobyname} function.
+
+Here are detailed descriptions of the utilities for accessing the
+protocols database.  These are declared in @file{<netdb.h>}.
+
+@comment netdb.h
+@comment BSD
+@deftp {Data Type} {struct protoent}
+This data type is used to represent entries in the network protocols
+database.  It has the following members:
+
+@table @code
+@item char *p_name
+This is the official name of the protocol.
+
+@item char **p_aliases
+These are alternate names for the protocol, specified as an array of
+strings.  The last element of the array is a null pointer.
+
+@item int p_proto
+This is the protocol number; use this member as the @var{protocol}
+argument to @code{socket}.
+@end table
+@end deftp
+
+You can use @code{getprotobyname} and @code{getprotobynumber} to search
+the protocols database for a specific protocol.  The information is
+returned in a statically-allocated structure; you must copy the
+information if you need to save it.
+
+@comment netdb.h
+@comment BSD
+@deftypefun {struct protoent *} getprotobyname (const char *@var{name})
+The @code{getprotobyname} function returns information about the network
+protocol named @var{name}.  If the lookup fails, a null pointer is
+returned.
+@end deftypefun
+
+@comment netdb.h
+@comment BSD
+@deftypefun {struct protoent *} getprotobynumber (int @var{protocol})
+The @code{getprotobynumber} function returns information about the
+network protocol with number @var{protocol}.  If the lookup fails, a
+null pointer is returned.
+@end deftypefun
+
+You can also scan the protocols database by using @code{setprotoent},
+@code{getprotoent}, and @code{endprotoent}.
+
+@comment netdb.h
+@comment BSD
+@deftypefun void setprotoent (int @var{stayopen})
+This function opens and rewinds the protocols database.  If the
+@var{stayopen} argument is true, the database stays open after calls to
+@code{getprotobyname} or @code{getprotobynumber}.
+@end deftypefun
+
+@comment netdb.h
+@comment BSD
+@deftypefun {struct protoent *} getprotoent (void)
+This function returns the next entry in the protocols database.  A null
+pointer is returned if there are no more entries.
+@end deftypefun
+
+@comment netdb.h
+@comment BSD
+@deftypefun void endprotoent (void)
+This function closes the protocols database.
+@end deftypefun
+
+
+@node Internet Socket Naming
+@subsection Internet Socket Naming
+
+In the Internet domain, socket names are a triple consisting of a
+protocol, a host address, and a port on that host.  The protocol is
+implicit, however; all this really means is that different protocols can
+use the same port numbers without colliding, and you have to be careful
+to use the right protocol that the server is expecting.
+
+The data type for representing socket addresses in the Internet domain
+is defined in the header file @file{<netinet/in.h>}.
+
+@comment netinet/in.h
+@comment BSD
+@deftp {Data Type} {struct sockaddr_in}
+This is the data type used to represent socket addresses in the
+Internet domain.  It has the following members:
+
+@table @code
+@item short int sin_family
+This identifies the address family or format of the socket address.  You
+should assign a value of @code{AF_INET} to this member.  @xref{Socket Naming}.
+
+@item unsigned short int sin_port
+This is the port number.  @xref{Services Database}, for information about
+what to put in this member.
+
+@item struct in_addr sin_addr
+This is the Internet address of the host machine.  @xref{Internet Host
+Addresses}, and @ref{Hosts Database}, for information about how to
+get a value to store here.
+@end table
+@end deftp
+
+The @var{length} parameter associated with socket names in the Internet
+domain is computed as @code{sizeof (struct sockaddr_in)}.
+
+
+@node Internet Host Addresses
+@subsection Internet Host Addresses
+
+@cindex host address, Internet
+@cindex Internet host address
+The first step in building a socket name in the Internet domain is
+determining the @dfn{host address}.  This is an identifier that
+uniquely identifies a particular machine on the Internet.
+
+Host addresses are represented internally as @code{struct in_addr}
+objects, although in some situations you need to cast this to a
+@code{unsigned long int} or just treat it as a block of memory; unfortunately,
+the interfaces to the various functions for manipulating addresses are
+not at all consistent about this.
+
+Externally, host addresses are specified as strings like
+@samp{128.52.46.32}.  A machine may also have a @dfn{host name} that is
+a string; for example, @samp{churchy.gnu.ai.mit.edu}.  This section
+discusses the numeric form of host addresses only.  To map a host name
+onto an address, you need to call @code{gethostbyname}; this function is
+discussed in @ref{Hosts Database}.
+
+@cindex network number
+@cindex local network address number
+An Internet host address is a number containing of four bytes of data,
+and consists of a @dfn{network number} and a @dfn{local network address
+number} within that network.  Network numbers are registered with the
+Network Information Center (NIC), and are divided into three classes ---
+A, B, and C.  The local network address numbers of individual machines
+are registered with the administrator of the particular network.
+
+Class A networks have single-byte addresses in the range 0 to 127.
+There are only a small number of Class A networks, but they can each
+support a very large number of hosts.  Medium-sized Class B networks
+have two-byte addresses, with the first byte in the range 128 to 191.
+Class C networks are the smallest; they have three-byte addresses, with
+the first byte in the range 192-255.  The remaining bytes of the
+Internet address specify the local network address number.
+
+The Class A network 0 is reserved for broadcast to all networks.  In
+addition, the host number 0 within each network is reserved for broadcast 
+to all hosts in that network.
+
+The Class A network 127 is reserved for loopback; you can always use
+the Internet address @samp{127.0.0.1} to refer to the host machine.
+
+Since a single machine can be a member of multiple networks, it can have
+multiple Internet host addresses.  However, there is never more than one
+machine with the same host address.
+
+@cindex standard dot notation, for Internet addresses
+There are four forms of the @dfn{standard dot notation} for Internet
+addresses:
+
+@table @code
+@item @var{a}.@var{b}.@var{c}.@var{d}
+This specifies all four bytes of the address individually.
+
+@item @var{a}.@var{b}.@var{c}
+The last part of the address, @var{c}, is interpreted as a 2-byte quantity.
+This is useful for specifying host addresses in a Class B network with
+network address number @code{@var{a}.@var{b}}.
+
+@item @var{a}.@var{b}
+The last part of the address, @var{c}, is interpreted as a 3-byte quantity.
+This is useful for specifying host addresses in a Class A network with
+network address number @var{a}.
+
+@item @var{a}
+If only one part is given, this corresponds directly to the host address
+number.
+@end table
+
+Within each part of the address, the usual C conventions for specifying
+the radix apply.  In other words, a leading @samp{0x} or @samp{0X} implies
+hexadecimal radix; a leading @samp{0} implies octal; and otherwise decimal
+radix is assumed.
+
+The following basic definitions for Internet addresses appear in the
+header file @file{<netinet.in.h>}:
+
+@comment netinet/in.h
+@comment BSD
+@deftp {Data Type} {struct in_addr}
+This is the data type representing an Internet host address.  You can
+cast this structure type to a @code{unsigned long int} to get the host address
+number.
+@end deftp
+
+@comment netinet/in.h
+@comment BSD
+@defvr Macro INADDR_ANY
+This constant can be used to specify the address of the host computer;
+it is essentially equivalent to saying that any of the host addresses of
+the machine the program is running on may be used by connection
+requests.
+@end defvr
+
+These additional functions for manipulating Internet addresses are
+declared in @file{<arpa/inet.h>}:
+
+@comment arpa/inet.h
+@comment BSD
+@deftypefun {unsigned long int} inet_addr (const char *@var{name})
+This function converts the address @var{name} from the standard dot
+notation into a host address number.
+@end deftypefun
+
+@comment arpa/inet.h
+@comment BSD
+@deftypefun {unsigned long int} inet_network (const char *@var{name})
+This function extracts the network address number from the address 
+@var{name}, which is given in the standard dot notation.
+@end deftypefun
+
+@comment arpa/inet.h
+@comment BSD
+@deftypefun {char *} inet_ntoa (struct in_addr @var{addr})
+This function converts the Internet address @var{addr} to a string in
+the standard dot notation.  The return value is a pointer into a
+statically-allocated buffer; this can be overwritten on subsequent calls,
+so you should copy the data if you need to save it.
+@end deftypefun
+
+@comment arpa/inet.h
+@comment BSD
+@deftypefun {struct in_addr} inet_makeaddr (int @var{net}, int @var{lna})
+This function makes an Internet host address by combining the 
+network number @var{net} with the local network address number @var{lna}.
+@end deftypefun
+
+@comment arpa/inet.h
+@comment BSD
+@deftypefun int inet_lnaof (struct in_addr @var{addr})
+This function returns the local network address number part of the Internet
+host address @var{addr}.
+@end deftypefun
+
+@comment arpa/inet.h
+@comment BSD
+@deftypefun int inet_netof (struct in_addr @var{addr})
+This function returns the network address number part of the Internet host
+address @var{addr}.
+@end deftypefun
+
+All of the functions listed in this section represent Internet addresses
+in network byte order, and network numbers and local network address
+numbers in host byte order.  @xref{Byte Order Conversion}.
+
+
+@node Hosts Database
+@subsection Hosts Database
+
+Besides the standard dot notation for Internet addresses, you can also
+refer to a host by a symbolic name.  The advantage of a symbolic name is
+that it is usually easier to remember.  For example, the machine with
+Internet address @samp{128.52.46.32} is also known as
+@samp{churchy.gnu.ai.mit.edu}; and other machines that belong to the
+same network can reference it simply as @samp{churchy}.
+
+Internally, the system uses a database to keep track of the mapping
+between host names and host numbers.  This database is usually either
+the file @file{/etc/hosts} or an equivalent provided by a name server.
+The utilities for accessing this database are declared in @file{<netdb.h>}.
+
+@comment netdb.h
+@comment BSD
+@deftp {Data Type} {struct hostent}
+This data type is used to represent an entry in the hosts database.  It
+has the following members:
+
+@table @code
+@item char *h_name
+This is the ``official'' name of the host.
+
+@item char **h_aliases
+These are alternative names for the host, represented as a null-terminated
+vector of strings.
+
+@item int h_addrtype
+This is the host address type; this is always @code{AF_INET}.
+@xref{Socket Naming}.
+
+@item int h_length
+This is the length, in bytes, of each address.
+
+@item char **h_addr_list
+This is the vector of addresses for the host.  (Recall that the host
+might be connected to multiple networks and have different addresses on
+each one.)  The vector is terminated by a null pointer.
+
+@item char *h_addr
+This is a synonym for @code{h_addr_list[0]}; in other words, it is the
+first host address.
+@end table
+@end deftp
+
+As far as the host database is concerned, each address is just a block
+of memory @code{h_length} bytes long.  But in other contexts there is an
+implicit assumption that you can cast this to a @code{struct in_addr} or
+a @code{unsigned long int}.  Host addresses in a @code{struct hostent}
+structure are always given in network byte order; @pxref{Byte Order
+Conversion}.
+
+You can use @code{gethostbyname} or @code{gethostbyaddr} to search the
+hosts database for information about a particular host.  The information
+is returned in a statically-allocated structure; you must copy the
+information if you need to save it across calls.
+
+@comment netdb.h
+@comment BSD
+@deftypefun {struct hostent *} gethostbyname (const char *@var{name})
+The @code{gethostbyname} function returns information about the host
+named @var{name}.  If the lookup fails, a null pointer is returned.
+@end deftypefun
+
+@comment netdb.h
+@comment BSD
+@deftypefun {struct hostent *} gethostbyaddr (const char *@var{addr}, int @var{length}, int @var{type})
+The @code{gethostbyaddr} function returns information about the host
+with Internet address @var{addr}.  The @var{length} argument is the size
+(in bytes) of the @var{addr}.  The @var{type} is the type of the
+address; for an Internet address, specify a value of @code{AF_INET}.
+
+If the lookup fails, a null pointer is returned.
+@end deftypefun
+
+@vindex h_errno
+If the name lookup by @code{gethostbyname} or @code{gethostbyaddr}
+fails, you can get more information about the specific error code by
+looking at the value of the variable @code{h_errno}.  If your program
+uses this variable, you need to declare it like this:
+
+@example
+extern int h_errno;
+@end example
+
+The value of @code{h_errno} can be one of the following symbolic constants:
+
+@comment netdb.h
+@comment BSD
+@defvr Macro HOST_NOT_FOUND
+No such host is known.
+@end defvr
+
+@comment netdb.h
+@comment BSD
+@defvr Macro TRY_AGAIN
+This condition happens when the name server could not be contacted.
+If you trying again later, the request may succeed.
+@end defvr
+
+@comment netdb.h
+@comment BSD 
+@defvr Macro NO_RECOVERY 
+A non-recoverable error occurred.
+@end defvr
+
+@comment netdb.h
+@comment BSD
+@defvr Macro NO_ADDRESS
+The host database contains an entry for the name, but it doesn't have an
+associated Internet address.
+@end defvr
+
+@strong{Incomplete:} Is there some similar error-reporting mechanism
+for the other server-based databases?  
+
+You can also scan the hosts database using @code{sethostent},
+@code{gethostent}, and @code{endhostent}.
+
+@comment netdb.h
+@comment BSD
+@deftypefun void sethostent (int @var{stayopen})
+This function opens and rewinds the hosts database.  If the
+@var{stayopen} argument is true, the database stays open after calls to
+@code{gethostbyname} or @code{gethostbyaddr}.
+@end deftypefun
+
+@comment netdb.h
+@comment BSD
+@deftypefun {struct hostent *} gethostent (void)
+This function returns the next entry in the hosts database.  A null
+pointer is returned if there are no more entries.
+@end deftypefun
+
+@comment netdb.h
+@comment BSD
+@deftypefun void endhostent (void)
+This function closes the hosts database.
+@end deftypefun
+
+
+@node Services Database
+@subsection Services Database
+
+Once you have figured out the address of the host you wish to talk to,
+the next step is to figure out which specific port on that machine to
+use.
+
+Port numbers less than 1024 are reserved for ``well-known'' services, or
+system daemons such as the servers for @code{finger} and @code{telnet}.
+Again, there is a database that keeps track of these, and you can use
+the @code{getservbyname} function to map a service name onto a port
+number.
+
+Typically, only privileged system-level processes that are run
+automatically are registered in the services database.  If you are
+writing your own user-level server, you can simply choose an arbitrary
+port number greater than or equal to 1024 for it to accept connections
+on.
+
+There aren't any built-in protection mechanisms for controlling
+access to ports.  If you want to restrict access to your server, you
+should have it examine the addresses associated with connection requests
+or implement some other handshaking or identification protocol.
+
+The database that keeps track of ``well-known'' services is usually
+either the file @file{/etc/services} or an equivalent from a name server.
+You can use these utilities, declared in @file{<netdb.h>}, to access
+the services database.
+
+@comment netdb.h
+@comment BSD
+@deftp {Data Type} {struct servent}
+This data type holds information about entries from the services database.
+It has the following members:
+
+@table @code
+@item char *s_name
+This is the ``official'' name of the service.
+
+@item char **s_aliases
+These are alternate names for the service, represented as an array of
+strings.  A null pointer terminates the array.
+
+@item int s_port
+This is the port number for the service.  Port numbers are given in
+network byte order; @pxref{Byte Order Conversion}.
+
+@item char *s_proto
+This is the name of the protocol to use with this service.
+@xref{Protocols Database}.
+@end table
+@end deftp
+
+To get information about a particular service, use the
+@code{getservbyname} or @code{getservbyport} functions.  The information
+is returned in a statically-allocated structure; you must copy the
+information if you need to save it across calls.
+
+@comment netdb.h
+@comment BSD
+@deftypefun {struct servent *} getservbyname (const char *@var{name}, const char *@var{proto})
+The @code{getservbyname} function returns information about the service
+named @var{name} using protocol @var{proto}.  If the lookup fails, a
+null pointer is returned.
+@end deftypefun
+
+@comment netdb.h
+@comment BSD
+@deftypefun {struct servent *} getservbyport (int @var{port}, const char *@var{proto})
+The @code{getservbyport} function returns information about the service
+at port @var{port} using protocol @var{proto}.  If the lookup fails, a
+null pointer is returned.
+@end deftypefun
+
+You can also scan the services database using @code{setservent},
+@code{getservent}, and @code{endservent}.
+
+@comment netdb.h
+@comment BSD
+@deftypefun void setservent (int @var{stayopen})
+This function opens and rewinds the services database.  If the
+@var{stayopen} argument is true, the database stays open after calls to
+@code{getservbyname} or @code{getservbyport}.
+@end deftypefun
+
+@comment netdb.h
+@comment BSD
+@deftypefun {struct servent *} getservent (void)
+This function returns the next entry in the services database.  A null
+pointer is returned if there are no more entries.
+@end deftypefun
+
+@comment netdb.h
+@comment BSD
+@deftypefun void endservent (void)
+This function closes the services database.
+@end deftypefun
+
+
+@node Networks Database
+@subsection Networks Database
+
+There is also a database that keeps track of all the known networks.
+This is usually either the file @file{/etc/networks} or an equivalent
+from a name server.  
+
+The following utilities for accessing the networks database are declared
+in @file{<netdb.h>}.  You usually don't have to worry about the networks
+database to write a program that uses sockets; the information is
+presented here for completeness only.
+
+@comment netdb.h
+@comment BSD
+@deftp {Data Type} {struct netent}
+This data type is used to represent information about entries in the
+networks database.  It has the following members:
+
+@table @code
+@item char *n_name
+This is the ``official'' name of the network.
+
+@item char **n_aliases
+These are alternative names for the network, represented as a vector
+of strings.  A null pointer terminates the array.
+
+@item int n_addrtype
+This is the type of the network number; this is always equal to
+@code{AF_INET} for Internet networks.
+
+@item unsigned long int n_net
+This is the network number.  Network numbers are returned in host
+byte order; @pxref{Byte Order Conversion}.
+@end table
+@end deftp
+
+Use the @code{getnetbyname} or @code{getnetbyaddr} functions to search
+the networks database for information about a specific network.  The
+information is returned in a statically-allocated structure; you must
+copy the information if you need to save it.
+
+@comment netdb.h
+@comment BSD
+@deftypefun {struct netent *} getnetbyname (const char *@var{name})
+The @code{getnetbyname} function returns information about the network
+named @var{name}.  If the lookup fails, a null pointer is returned.
+@end deftypefun
+
+@comment netdb.h
+@comment BSD
+@deftypefun {struct netent *} getnetbyaddr (long @var{net}, int @var{type})
+The @code{getnetbyaddr} function returns information about the network
+of type @var{type} with number @var{net}.  You should specify a value of
+@code{AF_INET} for the @var{type} argument for Internet networks.  
+
+If the lookup fails, a null pointer is returned.
+@end deftypefun
+
+You can also scan the networks database using @code{setnetent},
+@code{getnetent}, and @code{endnetent}.
+
+@comment netdb.h
+@comment BSD
+@deftypefun void setnetent (int @var{stayopen})
+This function opens and rewinds the networks database.  If the
+@var{stayopen} argument is true, the database stays open after calls to
+@code{getnetbyname} or @code{getnetbyaddr}.
+@end deftypefun
+
+@comment netdb.h
+@comment BSD
+@deftypefun {struct netent *} getnetent (void)
+This function returns the next entry in the networks database.  A null
+pointer is returned if there are no more entries.
+@end deftypefun
+
+@comment netdb.h
+@comment BSD
+@deftypefun void endnetent (void)
+This function closes the networks database.
+@end deftypefun
+
+
+@node Byte Order Conversion
+@subsection Byte Order Conversion
+
+@cindex network byte order
+Finally, there is one more wrinkle: the byte ordering of the data in the
+@code{sin_port} and @code{sin_addr} members of the @code{sockaddr_in}
+structure must be canonicalized into the @dfn{network byte order}.  This
+ensures that machines that use different native byte ordering conventions
+can still talk to each other.  If you don't do this, your program may fail
+when running on or talking to other kinds of machines.
+
+If you use @code{getservbyname} and @code{gethostbyname} or
+@code{inet_addr} to get the port number and host address, the values are
+already in the network byte order, and you can copy them directly into
+the @code{sockaddr_in} structure.
+
+Otherwise, you will have to convert the values explicitly.  Use
+@code{htons} and @code{ntohs} to convert values for the @code{sin_port}
+member.  Use @code{htonl} and @code{ntohl} to convert values for the
+@code{sin_addr} member.  (Remember, @code{struct in_addr} is equivalent
+to @code{unsigned long int}.)  These functions are declared in
+@file{<netinet/in.h>}.
+
+@comment netinet/in.h
+@comment BSD
+@deftypefun {unsigned short int} htons (unsigned short int @var{hostshort})
+This function converts the @code{short} integer @var{hostshort} from
+host byte order to network byte order.
+@end deftypefun
+
+@comment netinet/in.h
+@comment BSD
+@deftypefun {unsigned short int} ntohs (unsigned short int @var{netshort})
+This function converts the @code{short} integer @var{netshort} from
+network byte order to host byte order.
+@end deftypefun
+
+@comment netinet/in.h
+@comment BSD
+@deftypefun {unsigned long int} htonl (unsigned long int @var{hostlong})
+This function converts the @code{long} integer @var{hostlong} from
+host byte order to network byte order.
+@end deftypefun
+
+@comment netinet/in.h
+@comment BSD
+@deftypefun {unsigned long int} ntohl (unsigned long int @var{netlong})
+This function converts the @code{long} integer @var{netlong} from
+network byte order to host byte order.
+@end deftypefun
+
+@node Internet Socket Example
+@subsection Internet Socket Example
+
+Here is an example showing how to create and name a socket in the
+Internet domain.  Since the newly created socket exists on the local
+machine that the program is running on, this example uses @code{INADDR_ANY}
+as the host address.
+
+@comment This example is from isockserver.c.
+@example
+#include <sys/socket.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+
+int make_socket (unsigned short int port)
+@{
+  int sock, status;
+  struct sockaddr_in name;
+  unsigned long int addr;
+
+  /* @r{Create the socket.} */
+  sock = socket (PF_INET, SOCK_STREAM, 0);
+  if (sock < 0) @{
+    fprintf (stderr, "socket() failed with error %d.\n", errno);
+    exit (EXIT_FAILURE);
+  @}
+
+  /* @r{Give the socket a name.} */
+  name.sin_family = AF_INET;
+  name.sin_port = htons (port);
+  addr = htonl (INADDR_ANY);
+  memcpy (&name.sin_addr, &addr, sizeof (addr));
+  status = bind (sock, (struct sockaddr *)&name, sizeof (name));
+  if (status < 0) @{
+    fprintf (stderr, "bind() failed with error %d.\n", errno);
+    exit (EXIT_FAILURE);
+  @}
+
+  return sock;
+@}
+@end example
+
+Here is another example, showing how you can fill in a @code{sockaddr_in}
+structure, given a host name string and a port number:
+
+@comment This example is from isockclient.c.
+@example
+void init_sockaddr (struct sockaddr_in *name, const char *hostname,
+                    unsigned short int port)
+@{
+  struct hostent *hostinfo;
+
+  name->sin_family = AF_INET;
+  name->sin_port = htons (PORT);
+  hostinfo = gethostbyname (SERVERHOST);
+  if (!hostinfo) @{
+    fprintf (stderr, "Unknown host %s.\n", SERVERHOST);
+    exit (EXIT_FAILURE);
+  @}
+  memcpy (&name->sin_addr, hostinfo->h_addr, sizeof (unsigned long int));
+@}
+@end example
+
+
+@node Types of Sockets
+@section Types of Sockets
+
+The GNU Library includes support for several different kinds of sockets,
+each with different characteristics.  This section describes the
+supported socket types.  The symbolic constants listed here are
+defined in @file{<sys/socket.h>}.
+
+Each socket type has a number of attributes that characterize it.
+
+@itemize @bullet
+@cindex datagram
+@item
+Data may be organized as a byte stream, or as a @dfn{datagram} or
+message packet.  In the latter case, record boundaries between
+messages are preserved.
+
+@item
+The socket may maintain a connection to one particular peer socket, or
+messages may be addressed individually.
+
+@item
+Lost messages or messages received with errors may be retransmitted
+automatically, or simply ignored.  
+
+@item
+Messages may be guaranteed to arrive in sequence, or permitted to
+arrive out of order or be duplicated.
+@end itemize
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SOCK_STREAM
+The @code{SOCK_STREAM} socket type is similar to a pipe; it provides
+a byte stream based communications channel with connection state
+and reliable, sequential transmission of messages.
+
+Operations on this type of stream are covered in detail in @ref{Byte
+Stream Socket Operations}.
+@end defvr
+
+@cindex datagrams
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SOCK_DGRAM
+The @code{SOCK_DGRAM} socket type is used for sending individually-addressed
+datagrams.  This kind of socket does not guarantee reliable or sequential
+transmission of messages.  It is typically used in situations where
+it is acceptible to simply resend the message if no response is seen
+in a reasonable amount of time.
+
+@ref{Datagram Socket Operations}, contains detailed information about
+how to use sockets of this type.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SOCK_SEQPACKET
+This socket type is similar to @code{SOCK_STREAM}, except that messages
+are sent by datagrams rather than as bytes.  This socket type may not
+be supported by all protocols.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SOCK_RDM
+This socket type is similar to @code{SOCK_DGRAM}, except that reliable
+delivery of datagrams is guaranteed.  This socket type may not be
+supported by all protocols.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SOCK_RAW
+This socket type provides access to internal network protocols and
+interfaces.  Ordinary user programs usually have no need to use this
+socket type.
+@end defvr
+
+
+@node Byte Stream Socket Operations
+@section Byte Stream Socket Operations
+
+This section describes operations on sockets that have connection state, 
+such as @code{SOCK_STREAM} sockets.
+
+@iftex
+@itemize @bullet
+@item
+@ref{Establishing a Connection}, describes how two processes establish a
+connection.
+
+@item
+@ref{Transferring Data}, describes how data is transferred through the
+connected socket.
+@end itemize
+@end iftex
+
+@menu
+* Establishing a Connection::   The socket must be connected before it
+                                 can transmit data.
+* Transferring Data::           How to send and receive data.
+* Byte Stream Socket Example::  An example program.
+* Out-of-Band Data::            This is an advanced feature.
+@end menu
+
+@node Establishing a Connection
+@subsection Establishing a Connection
+
+Before two processes can exchange data through a socket, they must
+establish a connection.  One process acts as a server and waits
+for a connection by calling the @code{listen} and @code{accept}
+function; the other process acts as the client and initiates the
+connection by calling the @code{connect} function.
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int connect (int @var{filedes}, struct sockaddr *@var{addr}, size_t @var{length})
+The @code{connect} function initiates a connection from the socket with
+file descriptor @var{filedes} to the socket whose address is specified
+by the @var{addr} and @var{length} arguments.  @xref{Socket Naming}, for
+information about how these arguments are interpreted.
+
+The normal return value from @code{connect} is @code{0}.  If an error
+occurs, @code{connect} returns @code{-1}.  The following @code{errno}
+error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} is not a valid file descriptor.
+
+@item ENOTSOCK
+The @var{filedes} is not a socket.
+
+@item EADDRNOTAVAIL
+The specified address is not available on this machine.
+
+@item EAFNOSUPPORT
+The address family of the @var{addr} is not supported by this socket.
+
+@item EISCONN
+The socket is already connected.
+
+@item ETIMEDOUT
+The attempt to establish the connection timed out.
+
+@item ECONNREFUSED
+The attempt to establish the connection was actively refused by the peer.
+
+@item ENETUNREACH
+The network isn't reachable from this host.
+
+@item EADDRINUSE
+The socket address is already in use.
+
+@item EINPROGRESS
+The socket is non-blocking and the connection could not be established
+immediately.
+
+@item EALREADY
+The socket is non-blocking and already has a pending connection in progress.
+@end table
+@end deftypefun
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int listen (int @var{filedes}, unsigned int @var{n})
+The @code{listen} function specifies that the socket @var{filedes} is
+willing to accept connections.  
+
+The argument @var{n} specifies the length of the queue for pending
+connections.  If more than this many connection requests arrive without
+actually being accepted via a call to @code{accept}, additional
+@code{connect} requests to this socket are either refused with a
+@code{ECONNREFUSED} error or retransmitted (depending on the particular
+socket protocol).  The system may also impose its own internal limit on
+the length of this queue.
+
+The @code{listen} function returns @code{0} on success and @code{-1}
+on failure.  The following @code{errno} error conditions are defined
+for this function:
+
+@table @code
+@item EBADF
+The argument @var{filedes} is not a valid file descriptor.
+
+@item ENOTSOCK
+The argument @var{filedes} is not a socket.
+
+@item EOPNOTSUPP
+The socket @var{filedes} does not support this operation.
+@end table
+@end deftypefun
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int accept (int @var{filedes}, struct sockaddr *@var{addr}, size_t *@var{length_ptr})
+This function is used to accept a connection to the socket @var{filedes}.
+You must first call @code{listen} on this socket to enable connections to
+be made.
+
+The @code{accept} function causes the calling process to block if there
+are no connections pending, unless the socket @var{filedes} has
+nonblocking mode set.  @xref{File Status Flags}.
+
+The @var{sockaddr} and @var{length_ptr} arguments are used to return
+information about the name of the peer socket that initiated the
+connection.  @xref{Socket Naming}, for information about the format of
+the information.
+
+The normal return value from @code{accept} is a newly allocated file
+descriptor that refers to the connection; you should use this file
+descriptor for transferring data.  The original socket @var{filedes}
+remains open, and you can pass it to @code{accept} again to make further
+connections.
+
+If an error occurs, @code{accept} returns @code{-1}.  The following
+@code{errno} error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item ENOTSOCK
+The @var{filedes} argument is not a socket.
+
+@item EOPNOTSUPP
+The @var{filedes} does not support this operation.
+
+@item EWOULDBLOCK
+The @var{filedes} has nonblocking mode set, and there are no pending
+connections immediately available.
+@end table
+@end deftypefun
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int getpeername (int @var{filedes}, struct sockaddr *@var{addr}, size_t *@var{length_ptr})
+The @code{getpeername} function returns the address of the peer
+connected to the socket @var{filedes} in the locations pointed at by the
+@var{addr} and @var{length_ptr} arguments.  @xref{Socket Naming}, for
+information about the format of this information.
+
+The return value is @code{0} on success and @code{-1} on error.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The argument @var{filedes} is not a valid file descriptor.
+
+@item ENOTSOCK
+The argument @var{filedes} is not a socket.
+
+@item ENOTCONN
+The socket @var{filedes} is not connected.
+
+@item ENOBUFS
+There are not enough internal buffers available.
+@end table
+@end deftypefun
+
+
+@node Transferring Data
+@subsection Transferring Data
+
+Once a socket has been connected to a peer, you can use the ordinary
+@code{read} and @code{write} operations (@pxref{Input and Output
+Primitives}) to transfer data.  A socket is a two-way communications
+channel, so read and write operations can be performed at either end.
+
+You can also use the @code{send} and @code{recv} functions to perform
+read and write operations while specifying additional flags.  The
+prototypes for these functions are in the header file
+@file{<sys/socket.h>}.
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int send (int @var{filedes}, void *@var{buffer}, size_t @var{size}, int @var{flags})
+The @code{send} function is like @code{write}, but with the additional
+flags @var{flags}.  The possible values of the @var{flags} are described
+below.
+
+This function returns the number of bytes transmitted, or @code{-1} on
+failure.  Note, however, that a successful return value merely indicates
+that the message has been sent without error, not necessarily that it
+has been received without error.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item ENOTSOCK
+The @var{filedes} argument is not a socket.
+
+@item EMSGSIZE
+The socket type requires that the message be sent atomically, but the
+message is too large for this to be possible.
+
+@item EWOULDBLOCK
+Nonblocking mode has been set on the socket, and the write operation
+would block.  (Normally @code{send} blocks until the operation can be
+completed.)
+
+@item ENOBUFS
+There is not enough internal buffer space available.
+@end table
+@end deftypefun
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int recv (int @var{filedes}, void *@var{buffer}, size_t @var{size}, int @var{flags})
+The @code{recv} function is like @code{read}, but with the additional
+flags @var{flags}.  The possible values of the @var{flags} are described
+below.
+
+This function returns the number of bytes received, or @code{-1} on failure.
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item ENOTSOCK
+The @var{filedes} argument is not a socket.
+
+@item EWOULDBLOCK
+Nonblocking mode has been set on the socket, and the read operation
+would block.  (Normally, @code{recv} blocks until there is input available
+to be read.)
+
+@item EINTR
+The operation was interrupted by a signal before any data was read.
+@end table
+@end deftypefun
+
+The @var{flags} argument to these functions is a bit mask.  You can
+specify the following options by OR'ing the bit values together:
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro MSG_OOB
+Send or receive out-of-band data.  @xref{Out-of-Band Data}.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro MSG_PEEK
+Look at the data but don't remove it from the input queue.  This is
+only useful on read operations.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro MSG_DONTROUTE
+Don't include routing information in the message.  This is only useful
+on write operations, and is generally only of interest for diagnostic or
+routing programs.
+@end defvr
+
+@node Byte Stream Socket Example
+@subsection Byte Stream Socket Example
+
+Here are a set of example programs that show communications over a 
+byte stream socket in the Internet domain.  These programs use the
+@code{make_socket} and @code{init_sockaddr} functions that were presented
+in @ref{Internet Socket Example} to set up the socket names.
+
+First, here is the client program.  It doesn't do anything particularly
+interesting once it has connected to the server; it just sends a message
+to the server and exits.
+
+@comment This example is from isockclient.c.
+@example
+#include <sys/socket.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+
+
+#define PORT 2222
+#define MESSAGE "Yow!!! Are we having fun yet?!?"
+#define SERVERHOST "churchy.gnu.ai.mit.edu"
+
+
+void write_to_server (int filedes)
+@{
+  int nbytes;
+
+  nbytes = write (filedes, MESSAGE, strlen (MESSAGE) + 1);
+  if (nbytes < 0) @{
+    fprintf (stderr, "write() failed with error %d.\n", errno);
+    exit (EXIT_FAILURE);
+  @}
+@}
+
+
+void main (void)
+@{
+  int sock;
+  int status;
+  struct sockaddr_in servername;
+
+  /* @r{Create the socket.}  */
+  sock = socket (PF_INET, SOCK_STREAM, 0);
+  if (sock < 0) @{
+    fprintf (stderr, "Client: socket() failed with error %d.\n", errno);
+    exit (EXIT_FAILURE);
+  @}
+
+  /* @r{Connect to the server.}  */
+  init_sockaddr (&servername, SERVERHOST, PORT);
+  status = connect (sock, (struct sockaddr *) &servername,
+                    sizeof (servername));
+  if (status < 0) @{
+    fprintf (stderr, "Client: connect() failed with error %d.\n", errno);
+    exit (EXIT_FAILURE);
+  @}
+
+  /* @r{Send data to the server.} */
+  write_to_server (sock);
+  close (sock);
+  exit (EXIT_SUCCESS);
+@}
+@end example
+
+The server end is much more complicated.  Since we want to allow
+multiple clients to be connected to the server at the same time, it
+would be incorrect to wait for input from a single client by simply
+calling @code{read} or @code{recv}.  Instead, the right thing to do
+is to use @code{select} (described in @ref{Waiting for Input or Output})
+to wait for input on all of the open sockets.  This also allows the
+server to deal with additional connection requests.
+
+Again, this particular program doesn't do anything very exciting once it
+has gotten a message from a client.  It does close the socket for that
+client when it detects and end-of-file condition (resulting from the
+client shutting down its end of the connection).
+
+@comment This example is isockserver.c.
+@example
+#include <sys/socket.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+
+#define PORT 2222
+#define MAXMSG 512
+
+int read_from_client (int filedes)
+@{
+  char buffer[MAXMSG];
+  int nbytes;
+
+  nbytes = read (filedes, buffer, MAXMSG);
+  if (nbytes < 0) @{
+    /* Read error. */
+    fprintf (stderr, "read() failed with error %d.\n", errno);
+    exit (EXIT_FAILURE);
+  @}
+  else if (nbytes == 0) @{
+    /* End-of-file. */
+    return -1;
+  @}
+  else @{
+    /* Data read. */
+    fprintf (stderr, "Server:  got message: %s\n", buffer);
+    return 0;
+  @}
+@}
+
+
+void main (void)
+@{
+  int sock;
+  int status;
+  fd_set active_fd_set, read_fd_set;
+  int i;
+  struct sockaddr_in clientname;
+  size_t size;
+
+  /* @r{Create the socket and set it up to accept connections.} */
+  sock = make_socket (PORT);
+  status = listen (sock, 1);
+  if (status < 0) @{
+    fprintf (stderr, "listen() failed with error %d.\n", errno);
+    exit (EXIT_FAILURE);
+  @}
+
+  /* @r{Initialize the set of active sockets.} */
+  FD_ZERO (&active_fd_set);
+  FD_SET (sock, &active_fd_set);
+
+  while (1) @{
+    /* @r{Block until input arrives on one or more active sockets.} */
+    memcpy (&read_fd_set, &active_fd_set, sizeof (active_fd_set));
+    status = select (FD_SETSIZE, &read_fd_set, NULL, NULL, NULL);
+    if (status < 0) @{
+      fprintf (stderr, "select() failed with error %d.\n", errno);
+      exit (EXIT_FAILURE);
+    @}
+    /* @r{Service all the sockets with input pending.} */
+    for (i=0; i<FD_SETSIZE; i++)  @{
+      if (FD_ISSET (i, &read_fd_set)) @{
+
+        /* @r{Connection request on original socket.} */
+        if (i == sock) @{
+          size = sizeof (clientname);
+          status = accept (sock, (struct sockaddr *)&clientname, &size);
+          if (status < 0) @{
+            fprintf (stderr, "accept() failed with error %d.\n", errno);
+            exit (EXIT_FAILURE);
+          @}
+          fprintf (stderr, "Server: connection from host %s, port %d.\n",
+                   inet_ntoa (clientname.sin_addr),
+                   ntohs (clientname.sin_port));
+          FD_SET (status, &active_fd_set);
+        @}
+
+        /* @r{Data arriving on an already-connected socket.} */
+        else @{
+          if (read_from_client (i) < 0) @{
+            close (i);
+            FD_CLR (i, &active_fd_set);
+          @}
+        @}
+      @}
+    @}
+  @}
+@}
+@end example
+
+
+@node Out-of-Band Data
+@subsection Out-of-Band Data
+
+@cindex out-of-band data
+@cindex urgent socket condition
+Streams of type @code{SOCK_STREAM} support the concept of
+@dfn{out-of-band} data that is transmitted in a channel in parallel with
+that used for ordinary data transmission.  Out-of-band data is typically
+used to flag exceptional conditions.
+
+When out-of-band data is pending on a socket, a @code{SIGURG} signal is
+sent to the owner process or process group of the socket.  You establish
+this using the @code{F_SETOWN} command to the @code{fcntl} function;
+@pxref{wherever}.  You can establish a handler for this signal, as
+described in @ref{Signal Handling}.  
+
+Alternatively, you can get synchronous notification of pending out-of-band
+data by using the @code{select} function to wait for an exceptional
+condition on the socket.  @xref{Waiting for Input or Output}, for more
+information about @code{select}.
+
+Receiving a @code{SIGURG} signal only means that out-of-band data is
+pending, not that it has arrived.  If you try to read the out-of-band
+data with @code{recv} when it has not yet arrived, it will fail with a
+@code{EWOULDBLOCK} error.  You may even need to read some of the in-band
+data to empty out internal buffers before the out-of-band data can be
+delivered.
+
+
+@node Datagram Socket Operations
+@section Datagram Socket Operations
+
+This section describes functions for sending messages on datagram
+sockets (type @code{SOCK_DGRAM}).  Unlike the byte stream sockets
+discussed in @ref{Byte Stream Socket Operations}, these sockets do
+not support any notion of connection state.  Instead, each message
+is addressed individually.
+
+The @code{listen} and @code{accept} functions cannot be used on datagram
+sockets.  You can call @code{connect} on a datagram socket, but this
+only affects the local state of the socket.  It remembers the specified
+address as the default for any further data transmission on the socket.
+You can remove the connection by calling @code{connect} again and
+specifying an address family of @code{AF_UNSPEC} in the @var{addr}
+argument.  @xref{Establishing a Connection}, for more information about
+the @code{connect} function.
+
+@menu
+* Transmitting Datagrams::      Functions for sending and receiving messages
+                                 on a datagram socket.
+* Datagram Socket Example::     An example program.
+@end menu
+
+@node Transmitting Datagrams
+@subsection Transmitting Datagrams
+
+The normal way of sending data on an unconnected datagram socket is
+by using the @code{sendto} function.  The @code{recvfrom} function 
+reads data from an unconnected datagram socket.  Both of these functions
+are declared in @file{<sys/socket.h>}.
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int sendto (int @var{filedes}, void *@var{buffer}. size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, size_t @var{length})
+The @code{sendto} function transmits the data in the @var{buffer}
+through the socket @var{filedes} to the target socket named by the
+@var{addr} and @var{length} arguments.  The @var{size} argument
+specifies the number of bytes to be transmitted.
+
+The @var{flags} are interpreted the same way as for @code{send};
+@pxref{Transferring Data}.  The return value and error conditions are
+also the same as for @code{send}.
+@end deftypefun
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int recvfrom (int @var{filedes}, void *@var{buffer}. size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, size_t *@var{length_ptr})
+The @code{recvfrom} function reads data from the socket @var{filedes} into
+the buffer @var{buffer}.  The @var{size} argument specifies the maximum
+number of bytes to be read.
+
+The @var{addr} and @var{length_ptr} arguments are used to return information
+about the peer socket that sent the information.  @xref{Socket Naming}.
+You can specify a null pointer as the @var{addr} argument if you are not
+interested in this information.
+
+The @var{flags} are interpreted the same way as for @code{recv};
+@pxref{Transferring Data}.  The return value and error conditions are
+also the same as for @code{recv}.
+@end deftypefun
+
+@ignore
+@strong{Incomplete:}  I am not sure what this is for.  It seems to be
+related to @code{readv}, which I don't understand either.
+
+@comment sys/socket.h
+@comment BSD
+@deftp {Data Type} {struct msghdr}
+@end deftp
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int sendmsg (int @var{filedes}, const struct msghdr *@var{message}, int @var{flags})
+@end deftypefun
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int recvmsg (int @var{filedes}, struct msghdr *@var{message}, int @var{flags})
+@end deftypefun
+@end ignore
+
+@node Datagram Socket Example
+@subsection Datagram Socket Example
+
+Here is a set of example programs that send messages over a datagram
+stream in the local domain.  Both the client and server programs use the
+@code{make_named_socket} function that was presented in @ref{The Local
+Domain} to create and name their sockets.
+
+First, here is the server program.  It sits in a loop waiting for
+messages to arrive, bouncing each message back to the sender.
+Obviously, this isn't a particularly useful program, but it does show
+the general ideas involved.
+
+@comment This example is from lsockserver.c.
+
+@example
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+
+#define SERVER "/tmp/serversocket"
+#define MAXMSG 512
+
+void main (void)
+@{
+  int sock;
+  char message[MAXMSG];
+  struct sockaddr_un name;
+  size_t size;
+  int nbytes;
+
+  /* @r{Make the socket, then loop endlessly.} */
+
+  sock = make_named_socket (SERVER);
+  while (1) @{
+
+    /* @r{Wait for a datagram.} */
+    size = sizeof (name);
+    nbytes = recvfrom (sock, message, MAXMSG, 0,
+                       (struct sockaddr *)&name, &size);
+    if (nbytes < 0) @{
+      fprintf (stderr, "Server: recvfrom () failed with error %d.\n", errno);
+      exit (EXIT_FAILURE);
+    @}
+
+    /* @r{Give a diagnostic message.} */
+    fprintf (stderr, "Server: got message: %s\n", message);
+
+    /* @r{Bounce the message back to the sender.} */
+    nbytes = sendto (sock, message, nbytes, 0,
+                     (struct sockaddr *)&name, size);
+    if (nbytes < 0) @{
+      fprintf (stderr, "Server: sendto () failed with error %d.\n", errno);
+      exit (EXIT_FAILURE);
+    @}
+  @}
+@}
+@end example
+
+Next, here is the client program.  It sends a datagram to the server
+and then waits for a reply.  Notice that the socket for the client (as
+well as for the server) in this example has to be given a name.  This is 
+so that the server can direct a message back to the client.  Since the
+socket has no associated connection state, the only way the server can
+do this is by referencing the name of the client.
+
+@comment This example is from lsockclient.c.
+
+@example
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+
+#define SERVER "/tmp/serversocket"
+#define CLIENT "/tmp/mysocket"
+#define MAXMSG 512
+#define MESSAGE "Yow!!! Are we having fun yet?!?"
+
+void main (void)
+@{
+  int sock;
+  char message[MAXMSG];
+  struct sockaddr_un name;
+  size_t size;
+  int nbytes;
+
+  /* @r{Make the socket.} */
+  sock = make_named_socket (CLIENT);
+
+  /* @r{Initialize the server socket address.} */
+  name.sun_family = AF_UNIX;
+  strcpy (name.sun_path, SERVER);
+  size = strlen (name.sun_path) + sizeof (name.sun_family);
+
+  /* @r{Send the datagram.} */
+  nbytes = sendto (sock, MESSAGE, strlen (MESSAGE) + 1, 0,
+                   (struct sockaddr *)&name, size);
+  if (nbytes < 0) @{
+    fprintf (stderr, "Client: sendto () failed with error %d.\n", errno);
+    exit (EXIT_FAILURE);
+  @}
+
+  /* @r{Wait for a reply.} */   
+  nbytes = recvfrom (sock, message, MAXMSG, 0, NULL, 0);
+  if (nbytes < 0) @{
+    fprintf (stderr, "Client: recvfrom () failed with error %d.\n", errno);
+    exit (EXIT_FAILURE);
+  @}
+
+  /* @r{Print a diagnostic message.} */
+  fprintf (stderr, "Client: got message: %s\n", message);
+
+  /* @r{Clean up.} */
+  close (sock);
+  remove (CLIENT);
+@}
+@end example
+
+Finally, remember that datagram socket communications are unreliable.
+In this example, the client program will simply block indefinitely if
+the message is not delivered to the server; it's left up to the user of
+the program to kill it off and restart it interactively, if necessary.
+A better solution would be to use @code{select} (@pxref{Waiting for
+Input or Output}) to establish a timeout period for the reply, and
+either resend the message or shut down the socket cleanly before exiting
+if the connection appears to be dead.
+
+
+@node Socket Options
+@section Socket Options
+
+This section describes how you can set or inquire about various options
+pertaining to sockets and their underlying communications protocols.
+
+@cindex level, for socket options
+@cindex socket option level
+When you are manipulating a socket option, you must specify which @dfn{level}
+the option pertains to.  This describes whether the option applies to
+the socket interface, or to a lower-level communications protocol interface.
+
+@menu
+* Socket Option Functions::     The basic functions for setting and getting
+                                 socket options.
+* Socket-Level Options::        Details of the options at the socket level.
+@end menu
+
+@node Socket Option Functions
+@subsection Socket Option Functions
+
+Here are the functions for inquiring about and modifying socket options.
+These functions are declared in @file{<sys/socket.h>}.
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int getsockopt (int @var{filedes}, int @var{level}, int @var{optname}, void *@var{optval}, size_t *@var{optlen_ptr})
+The @code{getsockopt} function gets information about the value of
+option @var{optname} at level @var{level} for socket @var{filedes}.  The
+information is stored at the location pointed at by @var{optval}.  You
+should initialize the value at @var{optlen_ptr} to contain the size of
+this buffer, and on return it will contain the actual number of bytes of
+information stored.  Most options interpret the @var{optval} buffer as a
+single @code{int} value.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item ENOTSOCK
+The @var{filedes} argument is not a socket.
+
+@item ENOPROTOOPT
+The @var{optname} doesn't make sense for the given @var{level}.
+@end table
+@end deftypefun
+
+@comment sys/socket.h
+@comment BSD
+@deftypefun int setsockopt (int @var{filedes}, int @var{level}, int @var{optname}, void *@var{optval}, size_t @var{optlen})
+This function is used to set the socket option @var{optname} at level
+@var{level} for socket @var{filedes}.  The value of the option is passed
+in the buffer @var{optval}, which has size @var{optlen}.
+
+The return value and error codes are the same as for @code{getsockopt}.
+@end deftypefun
+
+
+@node Socket-Level Options
+@subsection Socket-Level Options
+
+The flags for socket-level options are defined in the header file
+@file{<sys/socket.h>}.
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SOL_SOCKET
+You should use this macro as the @var{level} argument to @code{getsockopt}
+or @code{setsockopt} to manipulate the socket-level options described
+in this section.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SO_DEBUG
+This option toggles recording of debugging information in the underlying
+protocol modules.  The value is an @code{int}, interpreted as a boolean.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SO_REUSEADDR
+This option controls whether @code{bind} should permit reuse of local
+addresses for this socket.  The value is an @code{int}, interpreted as a
+boolean.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SO_KEEPALIVE
+This option controls whether the underlying protocol should periodically
+transmit messages on a connected socket.  If the peer fails to respond
+to these messages, the connection is considered broken.  The value is an
+@code{int}, interpreted as a boolean.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SO_DONTROUTE
+This option controls whether outgoing messages bypass the normal message
+routing facilities.  If set, messages are sent directly to the network
+interface instead.  The value is an @code{int}, interpreted as a boolean.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SO_LINGER
+This option specifies what should happen when the socket of a type that
+promises reliable delivery still has untransmitted messages when it is
+closed; @pxref{Closing a Socket}.  The value is a @code{struct linger}
+object.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@deftp {Data Type} {struct linger}
+This data type is used to supply a value for the @code{SO_LINGER} socket
+option.  It has the following members:
+
+@table @code
+@item int l_onoff
+This field is interpreted as a boolean.  If nonzero, @code{close} will
+block until the data is transmitted or the timeout period has expired.
+
+@item int l_linger
+This specifies the timeout period, in seconds.
+@end table
+@end deftp
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SO_BROADCAST
+This option controls whether datagrams may be broadcast from the socket.
+The value is an @code{int}, interpreted as a boolean.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SO_OOBINLINE
+If this option is set, out-of-band data received on the socket is placed
+in the normal input queue.  This permits it to be read using @code{read}
+or @code{recv} without specifying the @code{MSG_OOB} flag.
+@xref{Out-of-Band Data}.  The value is an @code{int}, interpreted as a boolean.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SO_SNDBUF
+This option gets or sets the size of the output buffer.  The value is an
+@code{int}, which is the size in bytes.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD
+@defvr Macro SO_RCVBUF
+This option gets or sets the size of the input buffer.  The value is an
+@code{int}, which is the size in bytes.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD 
+@defvr Macro SO_TYPE
+This option can be used with @code{getsockopt} only.  It is used to return
+the socket type.  The value is an @code{int}.
+@end defvr
+
+@comment sys/socket.h
+@comment BSD 
+@defvr Macro SO_ERROR
+This option can be used with @code{getsockopt} only.  It is used to reset
+the error status of the socket.  The value is an @code{int}, which represents
+the previous error status.
+@end defvr
+
