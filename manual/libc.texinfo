@@ -43,10 +43,6 @@ This is the reference manual for version 0.00 of the GNU C Library.
 * Introduction::                Purpose of the GNU C Library.
 * Error Reporting::             How the GNU Library functions report
 					 error conditions.
-* Common Definitions::          Things like @code{sizeof} and
-                                         @code{NULL}.
-* Variable Argument Facilities::  How to process variable-length
-					 argument lists.
 * Memory Allocation::           Your program can allocate memory
 					 dynamically and manipulate it via
 					 pointers.
@@ -70,7 +66,6 @@ This is the reference manual for version 0.00 of the GNU C Library.
 					 for networking.
 * Low-Level Terminal Interface::  How to change the characteristics
 					 of a terminal device.
-* Consistency Checking::        A helpful debugging facility.
 * Mathematics::                 Math functions (transcendental,
 					  random numbers, abs value).
 * Arithmetic::                  Low-level arithmetic functions.
@@ -87,12 +82,12 @@ This is the reference manual for version 0.00 of the GNU C Library.
 * System Information::          Getting information about the
                                          hardware and software configuration
                                          of the machine a program runs on.
-* Representation Limits::       Parameters describing numeric data
-					 type representations..
 * System Configuration Limits::  Parameters describing operating
 					 system limits.
 
 Appendices
+* Language Features::		C language features provided by the library. 
+
 * Summary of Library Facilities::  A summary showing the syntax, header
                                          file, and derivation of each library
                                          feature.
@@ -112,8 +107,6 @@ Indices
 
 @include intro.texinfo
 @include errno.texinfo
-@include stddef.texinfo
-@include stdarg.texinfo
 @include memory.texinfo
 @include ctype.texinfo
 @include string.texinfo
@@ -127,7 +120,6 @@ Indices
 @include pipe.texinfo
 @include socket.texinfo
 @include terminal.texinfo
-@include assert.texinfo
 @include math.texinfo
 @include arith.texinfo
 @include time.texinfo
@@ -137,9 +129,8 @@ Indices
 @include job.texinfo
 @include users.texinfo
 @include sysinfo.texinfo
-@include limits.texinfo
 @include conf.texinfo
-
+@include lang.texinfo
 
 @include header.texinfo
 @include maint.texinfo
