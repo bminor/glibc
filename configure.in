@@ -332,6 +332,19 @@ rm -f conftest*
 AC_HEADER_EGREP(__gnuc_va_list, stdarg.h, [config_vars="$config_vars
 stdarg.h = # The installed <stdarg.h> defines __gnuc_va_list."])
 
+AC_COMPILE_CHECK([libc-friendly stddef.h],
+[#define __need_size_t
+#define __need_wchar_t
+#include <stddef.h>
+#define __need_NULL
+#include <stddef.h>], [size_t size; wchar_t wchar;
+#ifdef offsetof
+#error stddef.h ignored __need_*
+#endif
+if (&size == NULL || &wchar == NULL) abort ();],
+[config_vars="$config_vars
+stddef.h = # The installed <stddef.h> seems to be libc-friendly."])
+
 changequote(,)dnl The world is again safe for shell scripts.
 
 # Iterate over all the sysdep directories we will use, running their
