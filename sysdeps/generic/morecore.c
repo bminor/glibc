@@ -15,12 +15,17 @@ You should have received a copy of the GNU General Public License
 along with the GNU C Library; see the file COPYING.  If not, write to
 the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
+/* IGNORE(@ */
 #include <ansidecl.h>
 #include <stddef.h>
-#include <errno.h>
+/* @) */
 
 #define	_MALLOC_INTERNAL
 #include <malloc.h>
+
+#ifndef	__GNU_LIBRARY__
+#define	__sbrk	sbrk
+#endif
 
 extern PTR EXFUN(__sbrk, (int increment));
 
