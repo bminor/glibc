@@ -1,5 +1,7 @@
 1997-05-21 17:50  Ulrich Drepper  <drepper@cygnus.com>
 
+	* version.h (VERSION): Bump to 2.0.4.
+
 	* db/Makefile (libdb.so): Depend on libc.so for dynamic loading
 	and for Linux ld.so.
 	* login/Makefile (libutil.so): Likewise.
