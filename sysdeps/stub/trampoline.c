@@ -18,7 +18,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
-#include <mach/thread_state.h>
+#include <mach/thread_status.h>
 
 /* Set up STATE to run a signal handler in the thread it describes.
    This should save the original state in a `struct sigcontext' on the

@@ -1,5 +1,5 @@
-/* Perform a `longjmp' on a Mach thread_state.  Stub version.
-Copyright (C) 1991, 1994 Free Software Foundation, Inc.
+/* Set up a thread_state for proc_handle_exceptions.  Stub version.
+Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,16 +17,22 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <setjmp.h>
+#include <hurd.h>
 #include <mach/thread_status.h>
 
-/* Set up STATE to do the equivalent of `longjmp (ENV, VAL);'.  */
+static char fault_stack[32];
+static volatile void
+faulted (void)
+{
+  __longjmp (_hurd_sigthread_fault_env, 1);
+}
 
 void
-_hurd_longjmp_thread_state (void *state, jmp_buf env, int val)
+_hurd_initialize_fault_recovery_state (void *state)
 {
-  /* Set all the registers in *STATE to the values described by ENV and
-     RETVAL.  After this, setting that thread's state to STATE should be
-     just like calling `longjmp (ENV, RETVAL)'.  */
-  #error "Need to write sysdeps/mach/hurd/MACHINE/longjmp-ctx.c"
+  struct hurd_thread_state *ts = state;
+  memset (ts, 0, sizeof (*ts));
+  /* Point the SP in TS at the fault stack,
+     and set the PC to run `faulted' (above).  */
+  #error "Need to write sysdeps/mach/hurd/MACHINE/init_fault.c"
 }
