@@ -51,7 +51,7 @@ long int __timezone = 0L;
    timezone given in the POSIX standard TZ envariable.  */
 typedef struct
   {
-    CONST char *name;
+    char *name;
 
     /* When to change.  */
     enum { J0, J1, M } type;	/* Interpretation of:  */
@@ -202,18 +202,18 @@ DEFUN_VOID(__tzset)
     {
     default:
       /* Default to one hour later than standard time.  */
-      tz_rules[1].offset *= abs (tz_rules[0].offset);
-      hh = 1;
+      tz_rules[1].offset = tz_rules[0].offset + (60 * 60);
+      break;
 
     case 1:
       mm = 0;
     case 2:
       ss = 0;
     case 3:
+      tz_rules[1].offset *= (min(ss, 59) + (min(mm, 59) * 60) +
+			     (min(hh, 12) * (60 * 60)));
       break;
     }
-  tz_rules[1].offset *= (min(ss, 59) + (min(mm, 59) * 60) +
-			 (min(hh, 12) * (60 * 60)));
   for (l = 0; l < 3; ++l)
     {
       while (isdigit(*tz))
