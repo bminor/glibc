@@ -45,6 +45,14 @@ fi
 
 test -n "$unix_syscall_h" && {
 
+# Where to put the .S files we write.
+if [ "`pwd`" = "`(cd $srcdir; pwd)`" ]; then
+  unix_generated_dirpfx=sysdeps/unix/
+else
+  # We are running in a separate build directory.
+  unix_generated_dirpfx=
+fi
+
 # This variable will collect the names of the files we create.
 unix_generated=
 
@@ -72,7 +80,8 @@ do
   unix_implementor=none
   for unix_dir in $sysnames; do
     if [ -r $sysdep_dir/$unix_dir/${unix_srcname}.c -o \
-	 -r $sysdep_dir/$unix_dir/${unix_srcname}.S ]; then
+         -r $sysdep_dir/$unix_dir/${unix_srcname}.S -o \
+	 -r $sysdep_dir/$unix_dir/${unix_srcname}.s ]; then
       unix_implementor=$unix_dir
       break
     fi
@@ -94,9 +103,10 @@ do
     then
       # It does seem to be present in <syscall.h>.
       echo "#include <sysdeps/unix/common/${unix_srcname}.S>" \
-      > ${unix_srcname}.S
-      test -n "$verbose" && echo "	wrote ${unix_srcname}.S"
-      unix_generated="$unix_generated ${unix_srcname}.S"
+      > ${unix_generated_dirpfx}${unix_srcname}.S
+      test -n "$verbose" &&
+        echo "	wrote ${unix_generated_dirpfx}${unix_srcname}.S"
+      unix_generated="$unix_generated $unix_generated_dirpfx${unix_srcname}.S"
     fi
   ;;
   *) ;;
@@ -106,6 +116,6 @@ done
 
 # Store the list of files we created in config.make; Makefile uses it.
 test -n "$unix_generated" && config_vars="$config_vars
-unix-generated := ${unix_generated}"
+unix-generated := \$(addprefix $(objpfx),${unix_generated})"
 
 }
