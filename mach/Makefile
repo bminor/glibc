@@ -33,7 +33,7 @@ routines = $(interface-routines) \
 	   $(mach-shortcuts) $(addprefix __,$(mach-shortcuts)) \
 	   mach_init vm_page_size \
 	   mig_strncpy __msg msg \
-	   mig_support mig_syms \
+	   mig-alloc mig-dealloc mig-reply mig_syms \
 	   msg_destroy msgserver msgserver_t \
 	   __msg_dest __msgserver \
 	   mach_error mach_error_string error_compat errsystems \
