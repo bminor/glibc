@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,16 +17,17 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
+#include <hurd/port.h>
 
 static inline mach_port_t
 get (const size_t idx)
 {
   mach_port_t result;
-  error_t err = _HURD_PORT_USE (&_hurd_ports[idx],
-				__mach_port_mod_refs (__mach_task_self (),
-						      (result = port),
-						      MACH_PORT_RIGHT_SEND,
-						      1));
+  error_t err = HURD_PORT_USE (&_hurd_ports[idx],
+			       __mach_port_mod_refs (__mach_task_self (),
+						     (result = port),
+						     MACH_PORT_RIGHT_SEND,
+						     1));
   if (err)
     {
       errno = err;
