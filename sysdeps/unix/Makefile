@@ -81,6 +81,6 @@ $(objpfx)errlist.c: $(objpfx)make_errlist
 	mv $@-tmp $@
 
 $(objpfx)make_errlist: $(sysdep_dir)/unix/make_errlist.c
-	cd $(objdir); $(CC) ../$< -o $(@:$(objpfx)%=%)
+	cd $(objdir); $(CC) $< -o $(@:$(objpfx)%=%)
 
 endif
