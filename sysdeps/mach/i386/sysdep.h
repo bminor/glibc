@@ -18,33 +18,15 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdeps/mach/sysdep.h>
 
-#ifdef	__STDC__
 #define	ENTRY(name)							      \
   .globl _##name;							      \
   .align 4;								      \
   _##name##:
-#else
-#define	ENTRY(name)							      \
-  .globl _/**/name;							      \
-  .align 4;								      \
-  _/**/name/**/:
-#endif
 
-#ifdef	__STDC__
-#define	PSEUDO(name, syscall_name)					      \
+#define	SYSCALL_TRAP(name, number)					      \
   .text;								      \
   .align 4								      \
   ENTRY (name)								      \
-  lea SYS_##syscall_name, %eax;						      \
+  lea number, %eax;							      \
   lcall $7, $0								      \
-#else
-#define	PSEUDO(name, syscall_name)					      \
-  .text;								      \
-  .align 4								      \
-  ENTRY (name)								      \
-  lea SYS_/**/syscall_name, %eax;					      \
-  lcall $7, $0								      \
-#endif
-
-#define	r0	%eax
-#define	r1	%edx
+  ret
