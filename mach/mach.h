@@ -27,6 +27,9 @@ Cambridge, MA 02139, USA.  */
 /* This declares the basic variables and macros everything needs.  */
 #include <mach_init.h>
 
+/* This declares all the real system call functions.  */
+#include <mach/mach_traps.h>
+
 /* These are MiG-generated headers for the kernel interfaces commonly used.  */
 #include <mach/mach_interface.h> /* From <mach/mach.defs>.  */
 #include <mach/mach_port.h>
