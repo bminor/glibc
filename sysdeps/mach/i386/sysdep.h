@@ -30,3 +30,5 @@ Cambridge, MA 02139, USA.  */
   .byte 0x9a, 0, 0, 0, 0, 7, 0;						      \
   _##name##_syscall_pc:							      \
   ret
+
+#define MOVE(x,y)	movl x , y
