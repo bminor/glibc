@@ -1,8 +1,7 @@
 ifeq	($(subdir),math)
 ifndef	math-twiddled
 
-routines:= $(filter-out acos asin cos sin ceil __rint hypot	\
-			__finite,$(routines))	  		\
+routines:= $(filter-out acos asin cos sin ceil __rint hypot,$(routines)) \
 	   sincos asincos
 aux	:= $(aux) exp__E log__L
 
