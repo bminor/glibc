@@ -26,14 +26,16 @@ Cambridge, MA 02139, USA.  */
    SS->lock is held on entry and released before return.  */
 
 void
-_hurd_raise_signal (struct hurd_sigstate *ss, int signo, int sigcode)
+_hurd_raise_signal (struct hurd_sigstate *ss,
+		    int signo, int sigcode, int sigerror)
 {
   if (ss == NULL)
     ss = _hurd_self_sigstate ();
 
   /* Mark SIGNO as pending to be delivered.  */
   __sigaddset (&ss->pending, signo);
-  ss->sigcodes[signo] = sigcode;
+  ss->pending_data[signo].code = sigcode;
+  ss->pending_data[signo].error = sigerror;
 
   __mutex_unlock (&ss->lock);
 
