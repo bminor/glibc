@@ -50,8 +50,8 @@ routines	:=							      \
 routines := $(strip $(routines))
 aux	:= errlist siglist defs syms-stdio glue
 
-tests := bug1 bug2 bug3 bug4 bug5 tst-printf tstscanf test_rdwr test-popen \
-	 tstgetline
+tests := tst-printf tstscanf test_rdwr test-popen tstgetline \
+	 bug1 bug2 bug3 bug4 bug5 bug6
 
 
 include ../Rules
