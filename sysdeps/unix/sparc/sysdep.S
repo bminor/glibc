@@ -17,12 +17,31 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
+#define _ERRNO_H
+#include <errnos.h>
 
+.global C_SYMBOL_NAME(errno)
 .global syscall_error
+
 .text
 .align 2
+#undef syscall_error
+#ifdef NO_UNDERSCORES
+__syscall_error:
+#else
 syscall_error:
+#endif
+#if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
+	/* We translate the system's EWOULDBLOCK error into EAGAIN.
+	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
+	   EWOULDBLOCK_sys is the original number.  */
+	cmp %o0, EWOULDBLOCK_sys
+	be,a notblock
+	mov EAGAIN, %o0
+#endif
+notblock: /* Store the error code in `errno'.  */
 	sethi %hi(C_SYMBOL_NAME(errno)), %g1
 	st %o0, [%g1 + %lo(C_SYMBOL_NAME(errno))]
+	/* And return -1.  */
 	retl
-	sub %g0, 1, %o0
+	mov -1, %o0

@@ -29,7 +29,7 @@ __syscall_error:
 #else
 syscall_error:
 #endif
-#ifdef EWOULDBLOCK_sys
+#if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
 	/* We translate the system's EWOULDBLOCK error into EAGAIN.
 	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
 	   EWOULDBLOCK_sys is the original number.  */
