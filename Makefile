@@ -186,6 +186,7 @@ $(all-subdirs-targets):
 parent-mostlyclean: common-mostlyclean # common-mostlyclean is in Makerules.
 	-rm -f $(libc.a) $(addprefix $(objpfx),$(install-lib))
 parent-clean: parent-mostlyclean common-clean
+	-rm -f $(common-generated)
 	-rm -f $(addprefix $(+sysdir_pfx),sysd-Makefile sysd-dirs sysdirs)
 
 clean: parent-clean
