@@ -18,9 +18,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <stdio.h>
-#include <fs.h>
-#include <io.h>
-#include <shared.h>
+#include <hurd.h>
+#include <hurd/shared.h>
 
 struct mapped
   {
