@@ -66,6 +66,11 @@ vpath hurd/%.h $(hurd-srcdir)
 # generic C files instead.
 inhibit-sysdep-asm += unix*
 
+# Don't try to generate anything from the installed Unix system and its
+# libraries.  That is only of use when building for a Unix system, so as to
+# be compatible with some existing binaries for that system.
+inhibit-glue = yes
+
 
 ifeq (,$(filter mach hurd,$(subdir)))
 # Subdirectories other than hurd/ might use the generated Hurd headers.
