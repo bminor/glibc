@@ -537,7 +537,7 @@ _dl_start (void *arg)
 # define ELF_MACHINE_START_ADDRESS(map, start) (start)
 #endif
 
-    return ELF_MACHINE_START_ADDRESS (GL(dl_loaded), entry);
+    return ELF_MACHINE_START_ADDRESS (GL(dl_ns)[LM_ID_BASE]._ns_loaded, entry);
   }
 }
 
@@ -1090,32 +1090,36 @@ of this helper program; chances are you did not intend to run this program.\n\
 #if defined(__i386__)
   /* Force non-TLS libraries for glibc 2.0 binaries
      or if a buggy binary references non-TLS errno or h_errno.  */
-  if (__builtin_expect (GL(dl_loaded)->l_info[DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (DT_VERNEED)] == NULL, 0)
-      && GL(dl_loaded)->l_info[DT_DEBUG])
+  if (__builtin_expect (main_map->l_info[DT_NUM + DT_THISPROCNUM
+                                         + DT_VERSIONTAGIDX (DT_VERNEED)]
+                        == NULL, 0)
+      && main_map->l_info[DT_DEBUG])
     GLRO(dl_osversion) = 0x20205;
   else if ((__builtin_expect (mode, normal) != normal
-	    || GL(dl_loaded)->l_info [ADDRIDX (DT_GNU_LIBLIST)] == NULL)
+	    || main_map->l_info[ADDRIDX (DT_GNU_LIBLIST)] == NULL)
 	      /* Only binaries have DT_DEBUG dynamic tags...  */
-	   && GL(dl_loaded)->l_info[DT_DEBUG])
+	   && main_map->l_info[DT_DEBUG])
     {
       /* Workaround for buggy binaries.  This doesn't handle buggy
 	 libraries.  */
       bool buggy = false;
-      const ElfW(Sym) *symtab = (const void *) D_PTR (GL(dl_loaded), l_info[DT_SYMTAB]);
-      const char *strtab = (const void *) D_PTR (GL(dl_loaded), l_info[DT_STRTAB]);
+      const ElfW(Sym) *symtab = (const void *) D_PTR (main_map,
+                                                      l_info[DT_SYMTAB]);
+      const char *strtab = (const void *) D_PTR (main_map,
+                                                 l_info[DT_STRTAB]);
       Elf_Symndx symidx;
-      for (symidx = GL(dl_loaded)->l_buckets[0x6c994f % GL(dl_loaded)->l_nbuckets];
+      for (symidx = main_map->l_buckets[0x6c994f % main_map->l_nbuckets];
 	   symidx != STN_UNDEF;
-	   symidx = GL(dl_loaded)->l_chain[symidx])
+	   symidx = main_map->l_chain[symidx])
 	{
 	  if (__builtin_expect (strcmp (strtab + symtab[symidx].st_name,
 					"errno") == 0, 0)
 	      && ELFW(ST_TYPE) (symtab[symidx].st_info) != STT_TLS)
 	    buggy = true;
 	}
-      for (symidx = GL(dl_loaded)->l_buckets[0xe5c992f % GL(dl_loaded)->l_nbuckets];
+      for (symidx = main_map->l_buckets[0xe5c992f % main_map->l_nbuckets];
 	   symidx != STN_UNDEF;
-	   symidx = GL(dl_loaded)->l_chain[symidx])
+	   symidx = main_map->l_chain[symidx])
 	{
 	  if (__builtin_expect (strcmp (strtab + symtab[symidx].st_name,
 					"h_errno") == 0, 0)
@@ -1315,8 +1319,11 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
    */
 #define LIB_NOVERSION "/lib/libNoVersion.so.1"
 
-  if (__builtin_expect (GL(dl_loaded)->l_info[DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (DT_VERNEED)] == NULL, 0)
-      && (GL(dl_loaded)->l_info[DT_DEBUG] || !(GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)))
+  if (__builtin_expect (main_map->l_info[DT_NUM + DT_THISPROCNUM
+                                         + DT_VERSIONTAGIDX (DT_VERNEED)]
+                        == NULL, 0)
+      && (main_map->l_info[DT_DEBUG]
+          || !(GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)))
     {
       struct stat test_st;
       int test_fd;
@@ -1343,8 +1350,8 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 
       if (can_load != 0) {
 	  struct link_map *new_map;
-	  new_map = _dl_map_object (GL(dl_loaded), LIB_NOVERSION,
-				    1, lt_library, 0, 0);
+	  new_map = _dl_map_object (main_map, LIB_NOVERSION,
+				    1, lt_library, 0, 0, LM_ID_BASE);
 	  if (++new_map->l_opencount == 1) {
 	      /* It is no duplicate.  */
 	      ++npreloads;
