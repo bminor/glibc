@@ -71,6 +71,9 @@ endif
 tag: glibc.spec
 	cd ..; cvs -Q tag -c $(tag-prefix)$(spec-tag)
 
+force-tag: glibc.spec
+	cd ..; cvs -Q tag -F -c $(tag-prefix)$(spec-tag)
+
 # Note this rule assumes that your working directory (..) is up to date.
 $(tar-name)-$(glibc-branch).patch: makepatch.awk glibc.spec \
 				   ../ChangeLog ../*/ChangeLog
@@ -88,7 +91,7 @@ $(tar-name)-$(glibc-branch)-$(snapshot-name).tar.bz2: Makefile branch.mk \
 						      ../ChangeLog \
 						      ../*/ChangeLog
 	@rm -rf libc
-	cvs -Q export $(select-release) $(addprefix libc/,$(outside-patch)) \
+	cvs -Q export $(select-release) $(addprefix libc/,$(outside-patch))
 	tar cf - -C libc $(outside-patch) | bzip2 -9 > $@.new
 	rm -rf libc
 	mv -f $@.new $@
