@@ -140,7 +140,7 @@ COLLECTION ?= dist-fc3
 BHC_FLAGS ?= -n
 
 bhc-baseurl := cvs://cvs.devel.redhat.com/cvs/dist?rpms
-bhc-url = $(bhc-baseurl)/glibc/$(DIST_BRANCH)#$(spec-tag)
+bhc-url = $(bhc-baseurl)/glibc/$(DIST_BRANCH)\#$(spec-tag)
 
 dist-import: $(spec-nvr).src.rpm
 	$(DIST_COMMON)/cvs-import.sh -b $(DIST_BRANCH) $<
