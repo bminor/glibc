@@ -574,7 +574,8 @@ This is the total size of memory managed by malloc, in bytes.
 @item size_t chunks_used
 This is the number of chunks in use.  (The storage allocator internally
 gets chunks of memory from the operating system, and them carves them up
-to satisfy individual @code{malloc} requests; @pxref{Efficiency and Malloc}.)
+to satisfy individual @code{malloc} requests; see @ref{Efficiency and
+Malloc}.)
 
 @item size_t bytes_used
 This is the number of bytes in use.
@@ -1131,7 +1132,7 @@ still growing it.
 @comment obstack.h
 @comment GNU
 @deftypefun {void *} obstack_base (struct obstack *@var{obstack_ptr})
-This function teturns the tentative address of the beginning of the
+This function returns the tentative address of the beginning of the
 currently growing object in @var{obstack_ptr}.  If you finish the object
 immediately, it will have that address.  If you make it larger first, it
 may outgrow the current chunk---then its address will change!
