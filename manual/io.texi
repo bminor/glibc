@@ -143,9 +143,8 @@ the file.  Some other kinds of files may also permit this.  Files which
 do permit this are sometimes referred to as @dfn{random-access} files.
 You can change the file position using the @code{fseek} function on a
 stream (@pxref{File Positioning}) or the @code{lseek} function on a file
-descriptor (@pxref{Input and Output Primitives}).  If you try to change
-the file position on a file that doesn't support random access, you get
-an error.
+descriptor (@pxref{I/O Primitives}).  If you try to change the file
+position on a file that doesn't support random access, you get an error.
 @cindex random-access files
 
 Streams and descriptors that are opened for @dfn{append access} are

@@ -909,7 +909,7 @@ parent process.
 The child process gets its own copies of the parent process's open file
 descriptors.  Changing attributes of the file descriptors in the parent
 process won't change the file descriptors in the child, and vice versa.
-@xref{Control Operations on Files}.
+@xref{Control Operations}.
 
 @item
 The elapsed processor times for the child process are set to zero;
@@ -917,7 +917,7 @@ The elapsed processor times for the child process are set to zero;
 
 @item
 The child doesn't inherit file locks set by the parent process.
-@xref{Control Operations on Files}.
+@xref{Control Operations}.
 
 @item
 The child doesn't inherit alarms set by the parent process.

@@ -352,8 +352,8 @@ code profiling facilities, hence the name of this signal.
 The signals listed in this section are used in conjunction with
 asynchronous I/O facilities.  You have to take explicit action by
 calling @code{fcntl} to enable delivery of these signals by the
-operating system; @pxref{Interrupt-Driven Input}.  The default action
-for these signals is to ignore them.
+operating system; @pxref{Interrupt Input}.  The default action for these
+signals is to ignore them.
 
 @comment signal.h
 @comment BSD

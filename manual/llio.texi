@@ -3,30 +3,33 @@
 
 This chapter describes functions for performing low-level input/output
 operations on file descriptors.  These functions include the primitives for
-the higher-level i/o functions described in @ref{Input/Output on
+the higher-level I/O functions described in @ref{Input/Output on
 Streams}, as well as functions for performing low-level control operations
 for which there are no equivalents on streams.
 
+@c ??? Why use descriptor-level fns?
+
 @menu
 * Opening and Closing Files::		How to open and close file descriptors.
-* Input and Output Primitives::		Reading, writing, and seeking 
-					 operations.
-* File Descriptors and Streams::	How the low-level facilities described
-					 here interact with the high-level
-					 I/O facilities.
-* Waiting for Input or Output::		How to check for input or output
+* I/O Primitives::			Reading and writing data.
+* File Position Primitive::             Setting a descriptor's file position.
+* Descriptors and Streams::             Converting descriptor to stream
+                                         or vice-versa.
+* Stream/Descriptor Precautions::       Precautions needed if you use both
+                                         descriptors and streams.
+* Waiting for I/O::			How to check for input or output
 					 on multiple file descriptors.
-* Control Operations on Files::		Various other operations on file
+* Control Operations::			Various other operations on file
 					 descriptors.
 * Duplicating Descriptors::	        Fcntl commands for duplicating file
 					 descriptors.
-* File Descriptor Flags::		Fcntl commands for manipulating flags
+* Descriptor Flags::			Fcntl commands for manipulating flags
 					 associated with file descriptors.
 * File Status Flags::			Fcntl commands for manipulating flags
 					 associated with open files.
 * File Locks::				Fcntl commands for implementing file
 					 locking.
-* Interrupt-Driven Input::              Getting an asynchronous signal when
+* Interrupt Input::	                Getting an asynchronous signal when
                                          input arrives.
 @end menu
 
@@ -45,25 +48,31 @@ declared in @file{unistd.h}.
 
 @comment fcntl.h
 @comment POSIX.1
-@deftypefun int open (const char *@var{filename}, int @var{flags}, @dots{})
+@deftypefun int open (const char *@var{filename}, int @var{flags}, [mode_t @var{mode}])
 The @code{open} function creates and returns a new file descriptor
 for the file named by @var{filename}.  Initially, the file position
-indicator for the file is at the beginning of the file.
+indicator for the file is at the beginning of the file.  The argument
+@var{mode} is used only when a file is created, but it doesn't hurt
+to supply the argument in any case.
 
-The @var{flags} argument controls how the file is to be opened.
-This is formed from the bitwise OR of the appropriate parameters.
+The @var{flags} argument controls how the file is to be opened.  This is
+a bit mask; you create the value by the bitwise OR of the appropriate
+parameters.
 
 The @var{flags} argument must include exactly one of these values to
 specify the file access mode:
 
 @table @code
 @item O_RDONLY
+@vindex O_RDONLY
 Open the file for read access.
 
 @item O_WRONLY
+@vindex O_WRONLY
 Open the file for write access.
 
 @item O_RDWR
+@vindex O_RDWR
 Open the file for both reading and writing.
 @end table
 
@@ -72,37 +81,52 @@ flags:
 
 @table @code
 @item O_APPEND
-If set, writing can be performed only at the end of the file.
+@vindex O_APPEND
+@cindex append mode (file status flag)
+If set, then all @code{write} operations write the data at the end of
+the file, extending it, regardless of the current file position.
 
+@comment fcntl.h
+@comment POSIX.1
 @item O_CREAT
-If the file doesn't exist, create it.  This option requires a third
-argument, @var{mode}, of type @code{mode_t}, to be supplied; 
-@pxref{Assigning File Permissions}.
+@vindex O_CREAT
+If set, the file will be created if it doesn't already exist.
+@cindex create on open (file status flag)
 
 @item O_EXCL
-If both @code{O_CREAT} and @code{O_EXCL} are set, then @code{open}
-fails if the file already exists.
+@vindex O_EXCL
+If both @code{O_CREAT} and @code{O_EXCL} are set, then @code{open} fails
+if the specified file already exists.
 
 @item O_NOCTTY
-If the @var{filename} names a terminal device, don't make it the
-controlling terminal for the process.  @xref{Job Control}, for
-information about what it means to be the controlling terminal.
+@vindex O_NOCTTY
+If @var{filename} names a terminal device, don't make it the controlling
+terminal for the process.  @ref{Job Control} for information about what
+it means to be the controlling terminal.
 
 @item O_NONBLOCK
+@vindex O_NONBLOCK
+@cindex non-blocking mode (file status flag)
 This sets nonblocking mode.  This option is usually only useful for
 special files such as FIFOs (@pxref{Pipes and FIFOs}) and devices such
 as terminals.  Normally, for these files, @code{open} blocks until
 the file is ``ready''.  If @code{O_NONBLOCK} is set, @code{open}
 returns immediately.
 
+The @code{O_NONBLOCK} bit also affects @code{read} and @code{write}: It
+permits them to return immediately with a failure status if there is no
+input immediately available (@code{read}), or if the output can't be
+written immediately (@code{write}).
+
 @item O_TRUNC
+@vindex O_TRUNC
 If the file exists and is opened for write access, truncate it to zero
 length.  This option is only useful for regular files, not special
 files such as directories or FIFOs.
 @end table
 
-For more information about these symbolic constants, @pxref{File Status
-Flags}.
+For more information about these symbolic constants, see @ref{File
+Status Flags}.
 
 The normal return value from @code{open} is a non-negative integer file
 descriptor.  In the case of an error, a value of @code{-1} is returned
@@ -111,7 +135,7 @@ Name Errors}), the following @code{errno} error conditions are defined
 for this function:
 
 @table @code
-@item EACCES
+
 The file exists but is not readable/writable as requested by the @var{flags}
 argument.
 
@@ -120,7 +144,7 @@ Both @code{O_CREAT} and @code{O_EXCL} are set, and the named file already
 exists.
 
 @item EINTR
-The operation was interrupted by a signal.
+The @code{open} operation was interrupted by a signal.
 
 @item EISDIR
 The @var{flags} argument specified write access, and the file is a directory.
@@ -129,14 +153,17 @@ The @var{flags} argument specified write access, and the file is a directory.
 The process has too many files open.
 
 @item ENFILE
-The system has too many files open.
+The entire system, or perhaps the file system which contains the
+directory, cannot support any additional open files at the moment.
+(This problem cannot happen on the GNU system.)
 
 @item ENOENT
 The named file does not exist, but @code{O_CREAT} is not specified.
 
 @item ENOSPC
 The directory or file system that would contain the new file cannot be
-extended.
+extended, because there is no disk space left.  @strong{Incomplete:} Talk
+about nodes versus blocks.
 
 @item ENXIO
 @code{O_NONBLOCK} and @code{O_WRONLY} are both set in the @var{flags}
@@ -155,7 +182,7 @@ and @code{freopen} functions, that create streams.
 
 @comment fcntl.h
 @comment POSIX.1
-@deftypefun int creat (const char *@var{filename}, mode_t @var{mode})
+@deftypefn {Obsolete function} int creat (const char *@var{filename}, mode_t @var{mode})
 This function is obsolete.  The call
 
 @example
@@ -198,17 +225,17 @@ The @var{filedes} argument is not a valid file descriptor.
 
 @item EINTR
 The call was interrupted by a signal.
+
+@emph{Incomplete}: Explain and show example to handle @code{EINTR}.
 @end table
 @end deftypefun
 
 To close a stream, you should call @code{fclose} (@pxref{Opening and
 Closing Streams}) instead of trying to close its underlying file
-descriptor with @code{close}.  This makes sure that the stream is
-closed cleanly, and that any buffered output associated with the stream
-is flushed.
+descriptor with @code{close}.  This flushes any buffered output and
+updates the stream object to indicate that it is closed.
 
-
-@node Input and Output Primitives
+@node I/O Primitives
 @section Input and Output Primitives
 
 This section describes the functions for performing primitive input and
@@ -234,37 +261,47 @@ with descriptor @var{filedes}, storing the results in the @var{buffer}.
 (This is not necessarily a character string and there is no terminating
 null character added.)
 
-The number of bytes actually read is returned.  This might be less than
-@var{size}; for example, if there aren't that many bytes left in the
-file or if there aren't that many bytes immediately available.
-The exact behavior depends on what kind of file it is.  A value of zero
-indicates end-of-file (except if the value of the @var{size} argument
-is also zero).
 @cindex end-of-file, on a file descriptor
+The return value is the number of bytes actually read.  This might be
+less than @var{size}; for example, if there aren't that many bytes left
+in the file or if there aren't that many bytes immediately available.
+The exact behavior depends on what kind of file it is.  Note that
+reading less than @var{size} bytes is not an error.
+
+A value of zero indicates end-of-file (except if the value of the
+@var{size} argument is also zero).  This is not considered an error.
+If you keep calling @code{read} while at end-of-file, it will keep
+returning zero and doing nothing else.
+
+If @code{read} returns at least one character, there is no way you can
+tell whether end-of-file was reached.  But if you did reach the end, the
+next read will return zero.
 
 In case of an error, @code{read} returns @code{-1}.  The following
 @code{errno} error conditions are defined for this function:
 
 @table @code
 @item EAGAIN
-Normally, @code{read} blocks if there is no input immediately available
-on the file.  But if the @code{O_NONBLOCK} flag is set for the file
-(@pxref{File Status Flags}), it returns immediately without
+Normally, when no input is immediately available, @code{read} waits for
+some input.  But if the @code{O_NONBLOCK} flag is set for the file
+(@pxref{File Status Flags}), @code{read} returns immediately without
 reading any data, and reports this error.
 
 @item EBADF
 The @var{filedes} argument is not a valid file descriptor.
 
 @item EINTR
-The read operation was interrupted by a signal while it was blocked
-waiting for input.
+@code{read} was interrupted by a signal while it was waiting for input.
 
 @item EIO
-This error is reported when a background process tries to read from the
+For many devices, and for disk files, this error code indicates
+a hardware error.
+
+@code{EIO} also occurs when a background process tries to read from the
 controlling terminal, and the normal action of stopping the process by
 sending it a @code{SIGTTIN} signal isn't working.  This might happen if
 signal is being blocked or ignored, or because the process group is
-orphaned).  @xref{Job Control}, for more information about job control,
+orphaned.  @xref{Job Control}, for more information about job control,
 and @ref{Signal Handling}, for information about signals.
 @end table
 
@@ -277,13 +314,13 @@ functions that read from streams, such as @code{fgetc}.
 @comment POSIX.1
 @deftypefun ssize_t write (int @var{filedes}, const void *@var{buffer}, size_t @var{size})
 The @code{write} function writes up to @var{size} bytes from
-@var{buffer} to the file with descriptor @var{filedes}.  The
+@var{buffer} to the file with descriptor @var{filedes}.  The data in
 @var{buffer} is not necessarily a character string and a null character
-is not used as a terminator.
+output like any other character.
 
-The number of bytes actually written is returned.  This is normally the
-same as @var{size}, but might be less (for example, if the physical
-media being written to fills up).  
+The return value is the number of bytes actually written.  This is
+normally the same as @var{size}, but might be less (for example, if the
+physical media being written to fills up).
 
 In the case of an error, @code{write} returns @code{-1}.  The following
 @code{errno} error conditions are defined for this function:
@@ -292,8 +329,8 @@ In the case of an error, @code{write} returns @code{-1}.  The following
 @item EAGAIN
 Normally, @code{write} blocks until the write operation is complete.
 But if the @code{O_NONBLOCK} flag is set for the file (@pxref{Control
-Operations on Files}), it returns immediately without writing any data,
-and reports this error.  An example of a situation that might cause the
+Operations}), it returns immediately without writing any data, and
+reports this error.  An example of a situation that might cause the
 process to block on output is writing to a terminal device that supports
 flow control, where output has been suspended by receipt of a STOP
 character.
@@ -309,7 +346,10 @@ The write operation was interrupted by a signal while it was blocked
 waiting for completion.
 
 @item EIO
-This error is reported when a background process tries to write to the
+For many devices, and for disk files, this error code indicates
+a hardware error.
+
+@code{EIO} also occurs when a background process tries to write to the
 controlling terminal, and the normal action of stopping the process by
 sending it a @code{SIGTTOU} signal isn't working.  This might happen if
 the signal is being blocked or ignored.  @xref{Job Control}, for more
@@ -322,8 +362,17 @@ The device is full.
 @item EPIPE
 This error is returned when you try to write to a pipe or FIFO that
 isn't open for reading by any process.  When this happens, a @code{SIGPIPE}
-signal is also sent to the process; @pxref{Signal Handling}.
+signal is also sent to the process; see @ref{Signal Handling}.
 @end table
+
+Normally, you should check @code{errno} after each failing call to
+@code{write}, and if the error was @code{EINTR} or @code{EAGAIN}, you
+should simply repeat the call.  The easy way to do this is with the
+macro @code{TEMP_FAILURE_RETRY}, as follows:
+
+@example
+nbytes = TEMP_FAILURE_RETRY (write (desc, buffer, count));
+@end example
 
 The @code{write} function is the underlying primitive for all of the
 functions that write to streams, such as @code{fputc}.
@@ -333,12 +382,17 @@ functions that write to streams, such as @code{fputc}.
 about writing to a pipe and the interaction with the @code{O_NONBLOCK} 
 flag and the @code{PIPE_BUF} parameter.  Is this really important?
 
-@comment sys/types.h
-@comment POSIX.1
-@deftp {Data Type} off_t
-This is an arithmetic data type used to represent file sizes.
-In the GNU system, this is equivalent to @code{fpos_t} or @code{long int}.
-@end deftp
+@node File Position Primitive
+@section Setting the File Position of a Descriptor
+
+Just as you can set the file position of a stream with @code{fseek}, you
+can set the file position of a descriptor with @code{lseek}.  This
+specifies the position in the file for the next @code{read} or
+@code{write} operation.  @xref{File Positioning}, for more information
+on the file position and what it means.
+
+To read the current file position value from a descriptor, use
+@code{lseek (@var{desc}, zero, SEEK_CUR)}.
 
 @cindex file positioning on a file descriptor
 @cindex positioning a file descriptor
@@ -347,19 +401,39 @@ In the GNU system, this is equivalent to @code{fpos_t} or @code{long int}.
 @comment POSIX.1
 @deftypefun off_t lseek (int @var{filedes}, off_t @var{offset}, int @var{whence})
 The @code{lseek} function is used to change the file position of the
-file with descriptor @var{filedes}.  This is similar to the @code{fseek}
-function (@pxref{File Positioning}), but operates on a file descriptor
-rather than a stream.  The @var{whence} argument specifies how the
-@var{offset} should be interpreted in the same way as for the
-@code{fseek} function, and can be one of the symbolic constants
-@code{SEEK_SET}, @code{SEEK_CUR}, or @code{SEEK_END}.
+file with descriptor @var{filedes}.
+
+The @var{whence} argument specifies how the @var{offset} should be
+interpreted in the same way as for the @code{fseek} function, and can be
+one of the symbolic constants @code{SEEK_SET}, @code{SEEK_CUR}, or
+@code{SEEK_END}.
+
+@table @code
+@item SEEK_SET
+Specifies that @var{whence} is a count of characters from the beginning
+of the file.
+
+@item SEEK_CUR
+Specifies that @var{whence} is a count of characters from the current
+file position.  This count may be positive or negative.
+
+@item SEEK_END
+Specifies that @var{whence} is a count of characters from the end of
+the file.  A negative count specifies a position within the current
+extent of the file; a positive count specifies a position past the
+current end.  If you set the position past the current end, and 
+actually write data, you will extend the file with zeros up to that
+position.
+@end table
 
 The return value from @code{lseek} is normally the resulting file
 position, measured in bytes from the beginning of the file.
+You can use this feature together with @code{SEEK_CUR} to read the
+current file position.
 
-If the file positioning operation fails, @code{lseek} returns a value of
-@code{(off_t)(-1)}.  The following @code{errno} error conditions are
-defined for this function:
+If the file position cannot be changed, or the operation is in some way
+invalid, @code{lseek} returns a value of @code{-1}.  The following
+@code{errno} error conditions are defined for this function:
 
 @table @code
 @item EBADF
@@ -380,26 +454,68 @@ The @code{lseek} function is the underlying primitive for the
 streams instead of file descriptors.
 @end deftypefun
 
+You can have multiple descriptors for the same file if you open the file
+more than once, or if you duplicate a descriptor with @code{dup}.  
+Descriptors that come from separate calls to @code{open} have independent
+file positions; using @code{lseek} on one descriptor has no effect on the
+other.  For example, 
 
-@node File Descriptors and Streams
-@section File Descriptors and Streams
+@example
+@{
+  int d1, d2;
+  char buf[4];
+  d1 = open ("foo", O_READ, 0);
+  d2 = open ("foo", O_READ, 0);
+  lseek (d1, 1024, SEEK_SET);
+  read (d2, buf, 4);
+@}
+@end example
+
+@noindent
+will read the first four characters of the file @file{foo}.  (The
+error-checking code necessary for a real program has been omitted here
+for brevity.)
+
+By contrast, descriptors made by duplication share a common file
+position with the original descriptor that was duplicated.  Anything
+which alters the file position of one of the duplicates, including
+reading or writing data, affects all of them alike.  Thus, for example,
+
+@example
+@{
+  int d1, d2, d3;
+  char buf1[4], buf2[4];
+  d1 = open ("foo", O_READ, 0);
+  d2 = dup (d1);
+  d3 = dup (d2);
+  lseek (d3, 1024, SEEK_SET);
+  read (d1, buf1, 4);
+  read (d2, buf2, 4);
+@}
+@end example
+
+@noindent
+will read four characters starting with the 1024'th character of
+@file{foo}, and then four more characters starting with the 1028'th
+character.
+
+@comment sys/types.h
+@comment POSIX.1
+@deftp {Data Type} off_t
+This is an arithmetic data type used to represent file sizes.
+In the GNU system, this is equivalent to @code{fpos_t} or @code{long int}.
+@end deftp
+
+@node Descriptors and Streams
+@section Descriptors and Streams
+@cindex streams, and file descriptors
 @cindex converting file descriptor to stream
-@cindex converting stream to file descriptor
 @cindex extracting file descriptor from stream
-@cindex creating stream from file descriptor
 
-The functions described in this chapter deal with open files by means of
-integer file descriptors.  These are distinct from streams.  Streams are
-implemented in terms of file descriptors, but include additional
-information to support things like buffering of input and output, and
-error and end-of-file indicators.  A file descriptor is much more
-primitive than a stream, and has none of this associated state
-information.
-
-You can make a new stream from a file descriptor with the @code{fdopen}
-function, and get the underlying file descriptor for an existing stream
-with the @code{fileno} function.  These functions are declared in the
-header file @file{stdio.h}.
+Given an open file descriptor, you can create a stream for it with the
+@code{fdopen} function.  You can get the underlying file descriptor for
+an existing stream with the @code{fileno} function.  These functions are
+declared in the header file @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
@@ -424,7 +540,7 @@ null pointer is returned instead.
 @end deftypefun
 
 For an example showing the use of the @code{fdopen} function,
-@pxref{Creating a Pipe}.
+see @ref{Creating a Pipe}.
 
 @comment stdio.h
 @comment POSIX.1
@@ -432,78 +548,116 @@ For an example showing the use of the @code{fdopen} function,
 This function returns the file descriptor associated with the stream
 @var{stream}.  If an error is detected (for example, if the @var{stream}
 is not valid), @code{-1} is returned instead.
+
+@c ??? Is this really true?  What about streams that don't have descriptors?
 @end deftypefun
 
 @cindex standard file descriptors
 @cindex file descriptors, standard
 There are also symbolic constants defined in @file{unistd.h} for the
 file descriptors belonging to the standard streams @code{stdin},
-@code{stdout}, and @code{stderr}; @pxref{Standard Streams}.
+@code{stdout}, and @code{stderr}; see @ref{Standard Streams}.
 @pindex unistd.h
 
 @comment unistd.h
 @comment POSIX.1
-@deftypevr Macro int STDIN_FILENO
+@table @code
+@item STDIN_FILENO
+@vindex STDIN_FILENO
 This macro has value @code{0}, which is the file descriptor for
 standard input.
-@end deftypevr
 @cindex standard input file descriptor
 
 @comment unistd.h
 @comment POSIX.1
-@deftypevr Macro int STDOUT_FILENO
+@item STDOUT_FILENO
+@vindex STDOUT_FILENO
 This macro has value @code{1}, which is the file descriptor for
 standard output.
-@end deftypevr
 @cindex standard output file descriptor
 
 @comment unistd.h
 @comment POSIX.1
-@deftypevr Macro int STDERR_FILENO
+@item STDERR_FILENO
+@vindex STDERR_FILENO
 This macro has value @code{2}, which is the file descriptor for
 standard error output.
-@end deftypevr
+@end table
 @cindex standard error file descriptor
 
-Because you can have multiple file descriptors and streams pointing to
-the same open file, you have to be very careful about mixing operations
-on them.  
+@node Stream/Descriptor Precautions
+@section Precautions for Mixing Streams and Descriptors
+@cindex channels
+@cindex streams and descriptors
+@cindex descriptors and streams
+@cindex mixing descriptors and streams
 
-The exact rules for mixing operations on streams and file descriptors
-for the same open file are complicated (you can read the POSIX.1 standard
-to find out about them), but the general idea is that you must make sure
-that any buffered input or output to a stream has been flushed before
-you start to do further i/o operations on the same open file by means of
-another file descriptor or stream.  And, you should also be aware that
-changing the file position of a file descriptor or stream can confuse
-other file descriptors and streams pointing to the same open file.
+You can have multiple file descriptors and streams (let's call both
+streams and descriptors ``channels'' for short) connected to the same
+file, but if you are doing any output, you have to be very careful to
+avoid confusion within the system.  The system handles each descriptor or
+stream more or less independently, so its handling of one channel may go
+awry if another channel has been used.
 
-It's best not to try to interleave input and output operations on file
-descriptors and streams pointing to the same open file at all.  For
-example, if you want to open a pipe (something you can only do at the
-file descriptor level) but otherwise treat the pipe like an ordinary
-file, you should use @code{fdopen} to create a stream and do all
-subsequent i/o operations on the stream instead of on the file
-descriptor.  If you want to change the input modes on a terminal device
-so that it does something nonstandard like single-character input
-without echo (@pxref{Terminal Modes}, for information on how to do
-this), then you should use the low-level i/o primitives on the file
-descriptor instead of trying to treat it as a stream.
+One basic rule is that if you have been doing output on a stream, you
+should use @code{fflush} on that stream before doing output to the same
+file through any other channel.  This way, the output buffered by that
+stream will at least appear at the proper place in the file.
 
+If you do output to the same file through several channels that were
+opened separately, keep in mind that each channel has its own file
+position.  In some cases, this is just what you want: each channel can
+read or write sequentially, at its own place in the file.  But if you do
+output to one channel at the end of the file, this will certainly leave
+the others positioned somewhere before the new end.  If you want them to
+output at the end, you must set their file positions first.
 
-@node Waiting for Input or Output
+@c ??? How can you force a stream to reread its input buffer
+@c ??? if that part of the file might have been modified?
+@c ??? Or should people simply avoid using streams in such cases?
+
+The worst thing you can do is operate on the same descriptor used by a
+stream, or a duplicate of that descriptor, because this can modify the
+descriptor's file pointer behind the stream's back.  If you set the file
+position of such a descriptor, even by calling @code{read} or
+@code{write}, you should call @code{fflush} on the stream beforehand,
+and you should call @code{fseek} to tell the stream its new file
+position afterward.
+
+@c ??? Look at the POSIX book and state here the precise rules 
+@c ??? guaranteed to work for any system.
+
+Control operations such as setting the mode flags of a terminal are
+mostly safe---you can use any descriptor for these operations, and all
+channels are affected simultaneously.  However, text already ``output''
+to a stream but still buffered by the stream will be subject to the new
+terminal modes when subsequently flushed.  To make sure ``past''
+output is covered by the terminal settings that were in effect at the
+time, always flush all possible output streams for that terminal before
+setting the modes.  @xref{Terminal Modes}.
+
+It's best not to use more than one channel in your program for actual
+data transfer to any given file except when all the access is for input.
+And for each opening of a file, choose either a descriptor or a stream
+to use for all data transfer.  For example, if you open a pipe
+(something you can only do at the file descriptor level), you can
+construct a stream for the pipe using @code{fdopen}, but you should do
+all subsequent I/O operations on the stream and never on the file
+descriptor.
+
+@node Waiting for I/O
 @section Waiting for Input or Output
 @cindex waiting for input or output
 @cindex multiplexing input
 @cindex input from multiple files
 
-Sometimes a program needs to accept input on multiple input channels.
-For example, some workstations may have devices such as a digitizing
-tablet, function button box, or dial box that are connected via a normal
-asynchronous serial interface; good user interface style requires that
-programs that deal with these devices respond immediately to input on
-any device.  Another example is a program that acts as a server to
-several other processes via pipes or sockets.
+Sometimes a program needs to accept input on multiple input channels
+whenever input arrives.  For example, some workstations may have devices
+such as a digitizing tablet, function button box, or dial box that are
+connected via normal asynchronous serial interfaces; good user interface
+style requires responding immediately to input on any device.  Another
+example is a program that acts as a server to several other processes
+via pipes or sockets.
 
 You cannot normally use @code{read} for this purpose, because this
 blocks the program until input is available on one particular file
@@ -511,10 +665,10 @@ descriptor; input on other channels won't wake it up.  You could set
 nonblocking mode and poll each file descriptor in turn, but this is very
 inefficient.
 
-A better solution is to use the @code{select} function.  This blocks
-the program until input or output is ready on a specified set of file
-descriptors, or until a timer expires.  This facility is declared in
-the header file @file{sys/types.h}.
+A better solution is to use the @code{select} function.  This blocks the
+program until input or output is ready on a specified set of file
+descriptors, or until timer expires, whichever comes first.  This
+facility is declared in the header file @file{sys/types.h}.
 @pindex sys/types.h
 
 @cindex file descriptor sets, for @code{select}
@@ -526,8 +680,7 @@ and some macros for manipulating these objects.
 @comment BSD
 @deftp {Data Type} fd_set
 The @code{fd_set} data type represents file descriptor sets for the
-@code{select} function.  Internally, the information is stored as
-a bit array.
+@code{select} function.  It is actually a bit array.
 @end deftp
 
 @comment sys/types.h
@@ -576,29 +729,42 @@ The @code{select} function blocks the calling process until there is
 activity on any of the specified sets of file descriptors, or until the
 timeout period has expired.
 
-The file descriptors specified by the @var{read_fds} argument are checked
-to see if they are ready for reading; the @var{write_fds} file descriptors are
-checked to see if they are ready for writing; and the @var{except_fds}
-file descriptors are checked for exceptional conditions (errors).  A null
-pointer may be passed for any of these arguments if no file descriptors
-are of interest in that category.
+The file descriptors specified by the @var{read_fds} argument are
+checked to see if they are ready for reading; the @var{write_fds} file
+descriptors are checked to see if they are ready for writing; and the
+@var{except_fds} file descriptors are checked for exceptional
+conditions.  You can pass a null pointer for any of these arguments if
+you are not interested in checking for that kind of condition.
+
+``Exceptional conditions'' does not mean errors---errors are reported
+immediately when an erroneous system call is executed, and do not
+constitute a state of the descriptor.  Rather, they include conditions
+such as the presence of an urgent message on a socket.  (@xref{Sockets},
+for information on urgent messages.)
 
 Only the first @var{nfds} file descriptors in each set are checked.  
 Normally, you pass @code{FD_SETSIZE} as the value of this argument.
 
-The @var{timeout} specifies the maximum time to wait.  You can pass a
-null pointer as this argument to indicate that the process should block
-indefinitely until one of the file descriptors is ready.  Otherwise, you
-should provide the time @code{struct timeval} format;
-@pxref{High-Resolution Calendar}.
+The @var{timeout} specifies the maximum time to wait.  If you pass a
+null pointer for this argument, it means to block indefinitely until one
+of the file descriptors is ready.  Otherwise, you should provide the
+time @code{struct timeval} format; see @ref{High-Resolution Calendar}.
 
 The normal return value from @code{select} is the total number of ready file
 descriptors in all of the sets.  Each of the argument sets is overwritten
 with information about the descriptors that are ready for the corresponding
-operation.
+operation.  Thus, to see if a particular descriptor @var{desc} has input,
+use @code{FD_ISSET (@var{desc}, @var{read_fds}) after @code{select} returns.
 
 If @code{select} returns because the timeout period expires, it returns
 a value of zero.
+
+Any signal will cause @code{select} to return immediately.  So if your
+program uses signals, you can't rely on @code{select} to keep waiting
+for the full time specified.  If you want to be sure of waiting for a
+particular amount of time, you must check for @code{EINTR} and repeat
+the @code{select} with a newly calculated timeout based on the current
+time.  See the example below.
 
 If an error occurs, @code{select} returns @code{-1} and does not modify
 the argument file descriptor sets.  The following @code{errno} error 
@@ -631,21 +797,44 @@ file descriptor, or until the timeout period expires.
 #include <sys/types.h>
 #include <sys/time.h>
 
-int input_timeout (int filedes, int seconds)
+int 
+input_timeout (int filedes, int seconds)
 @{
   fd_set set;
-  struct timeval timeout;
+  struct timeval end_time, garbage;
 
   /* @r{Initialize the file descriptor set.} */
   FD_ZERO (&set);
   FD_SET (filedes, &set);
 
-  /* @r{Initialize the timeout data structure.} */
-  timeout.tv_sec = seconds;
-  timeout.tv_usec = 0;
+  /* @r{Compute the time to stop waiting.} */
+  gettimeofday (&end_time, &garbage);
+  end_time.tv_sec += time_limit;
 
-  /* @r{Return 0 if timeout, 1 if input available, -1 if error.} */
-  return select (FD_SETSIZE, &set, NULL, NULL, &timeout);
+  while (1) @{
+    struct timeval timeout;
+    int val;
+
+    /* @r{Calculate time remaining till then.} */
+    gettimeofday (&timeout, &garbage);
+    timeout.tv_sec = end_time.tv_sec - timeout.tv_sec;
+    timeout.tv_usec = end_time.tv_usec - timeout.tv_usec;
+    /* @r{Must propagate carries for proper subtraction.} */
+    if (timeout.tv_usec < 0) @{
+      timeout.tv_usec += 1000000;
+      timeout.tv_sec--;
+    @}
+    /* @r{Return now if wakeup time has been reached.} */
+    if (timeout.tv_sec < 0)
+      return 0;
+
+    /* @r{@code{select} returns 0 if timeout, 1 if input available, -1 if error.} */
+    val = select (FD_SETSIZE, &set, NULL, NULL, &timeout);
+    /* @r{Return as @code{select} would return,}
+       @r{but retry instead if we had a signal.} */
+    if (val >= 0 || errno != EINTR)
+      return val;
+  @}
 @}
 @end example
 
@@ -653,7 +842,7 @@ There is another example showing the use of @code{select} to multiplex
 input from multiple sockets in @ref{Byte Stream Socket Example}.
 
 
-@node Control Operations on Files
+@node Control Operations
 @section Control Operations on Files
 
 @cindex control operations on files
@@ -687,10 +876,10 @@ Duplicate the file descriptor (return another file descriptor pointing
 to the same open file).  @xref{Duplicating Descriptors}.
 
 @item F_GETFD
-Get flags associated with the file descriptor.  @xref{File Descriptor Flags}.
+Get flags associated with the file descriptor.  @xref{Descriptor Flags}.
 
 @item F_SETFD
-Set flags associated with the file descriptor.  @xref{File Descriptor Flags}.
+Set flags associated with the file descriptor.  @xref{Descriptor Flags}.
 
 @item F_GETFL
 Get flags associated with the open file.  @xref{File Status Flags}.
@@ -709,11 +898,11 @@ Like @code{F_SETLK}, but wait for completion.  @xref{File Locks}.
 
 @item F_GETOWN
 Get process or process group ID to receive @code{SIGIO} signals.
-@xref{Interrupt-Driven Input}.
+@xref{Interrupt Input}.
 
 @item F_SETOWN
 Set process or process group ID to receive @code{SIGIO} signals.
-@xref{Interrupt-Driven Input}.
+@xref{Interrupt Input}.
 @end table
 @end deftypefun
 
@@ -728,7 +917,7 @@ You can @dfn{duplicate} a file descriptor, or allocate another file
 descriptor that refers to the same open file as the original.
 The major use of duplicating a file descriptor is to implement
 @dfn{redirection} of input or output:  that is, to change the
-file or pipe that a file descriptor corresponds to.
+file or pipe that a particular file descriptor corresponds to.
 
 You can perform this operation using the @code{fcntl} function with the
 @code{F_DUPFD} command, but there are also specialized functions
@@ -799,7 +988,8 @@ The @var{filedes} argument is invalid.
 The @var{next_filedes} argument is invalid.
 
 @item EMFILE
-There are no more file descriptors available.
+There are no more file descriptors available---your program is already
+using the maximum.
 @end table
 @end deftypevr
 
@@ -816,31 +1006,50 @@ So, to redirect standard input to a file, the shell could do something
 like:
 
 @example
-char *filename;
-char *program;
-int file;
-@dots{}
-file = open (filename, O_RDONLY);
-dup2 (file, STDIN_FILENO);
-execv (program, NULL);
+pid = fork ();
+if (pid == 0)
+  @{
+    char *filename;
+    char *program;
+    int file;
+    @dots{}
+    file = TEMP_FAILURE_RETRY (open (filename, O_RDONLY));
+    dup2 (file, STDIN_FILENO);
+    TEMP_FAILURE_RETRY (close (file));
+    execv (program, NULL);
+  @}
 @end example
 
 There is also a more detailed example showing how to implement redirection
 in the context of a pipeline of processes in @ref{Launching Jobs}.
 
 
-@node File Descriptor Flags
+@node Descriptor Flags
 @section File Descriptor Flags
+@cindex file descriptor flags
 
 @dfn{File descriptor flags} are miscellaneous attributes of a file
 descriptor.  These flags are associated with particular file
 descriptors, so that if you have created duplicate file descriptors
-pointing to the same open file, each descriptor has its own set of flags.
-@cindex file descriptor flags
+from a single opening of a file, each descriptor has its own set of flags.
 
-These flags for the @code{fcntl} function are defined in the header
-file @file{fcntl.h}.
+Currently there is just one file descriptor flag: @code{FD_CLOEXEC},
+which causes the descriptor to be closed if you use any of the
+@code{exec@dots{}} functions (@pxref{Executing a File}).
+
+The symbols in this section are defined in the header file
+@file{fcntl.h}.
 @pindex fcntl.h
+
+@comment fcntl.h
+@comment POSIX.1
+@deftypevr Macro int FD_CLOEXEC
+@cindex close-on-exec (file descriptor flag)
+This flag specifies that the file descriptor should be closed when
+an @code{exec} function is invoked; see @ref{Executing a File}.  When
+a file descriptor is allocated (as with @code{open} or @code{dup}),
+this bit is initially cleared on the new file descriptor.
+@end deftypevr
 
 @comment fcntl.h
 @comment POSIX.1
@@ -851,8 +1060,7 @@ with the @var{filedes} argument.
 
 The normal return value from @code{fcntl} with this command is a
 nonnegative number which can be interpreted as the bitwise OR of the
-individual flags.  The only flag currently defined is @code{FD_CLOEXEC}
-(close on @code{exec}).
+individual flags (except that currently there is only one flag to use).
 
 In case of an error, @code{fcntl} returns @code{-1}.  The following
 @code{errno} error conditions are defined for this command:
@@ -886,45 +1094,63 @@ The following macro is defined for use as a file descriptor flag with
 the @code{fcntl} function.  The value is an integer constant usable
 as a bit mask value.
 
-@comment fcntl.h
-@comment POSIX.1
-@deftypevr Macro int FD_CLOEXEC
-This flag specifies that the file descriptor should be closed when
-an @code{exec} function is invoked; @pxref{Executing a File}.  When
-a file descriptor is allocated (as with @code{open} or @code{dup}),
-this bit is initially cleared on the new file descriptor.
-
-@strong{Incomplete:}  RMS suggests putting the main entry for this
-macro with the documentation for the @code{exec} functions, with only
-a cross-reference here.  But I think the current organization makes
-more sense.
-@end deftypevr
-@cindex close-on-exec (file descriptor flag)
-
 If you want to modify the file descriptor flags, you should get the
 current flags with @code{F_GETFD} and modify the value.  Don't assume
-that the flags listed here are the only ones that are implemented.
+that the flag listed here is the only ones that are implemented; your
+program may be run years from now and more flags may exist then.
+For example, here is a function to set or clear the flag @code{FD_CLOEXEC}
+without altering any other flags:
 
+@example
+/* @r{Set the @code{FD_CLOEXEC} flag of @var{desc} if @var{value} is nonzero,}
+   @r{or clear the flag if @var{value} is 0.}
+   @r{Return 0 on success, or -1 on error with @code{errno} set.} */ 
+
+int
+set_cloexec_flag (int desc, int value)
+@{
+  int oldflags = fcntl (desc, F_GETFD, 0);
+  /* @r{If reading the flags failed, return error indication now.}
+  if (oldflags < 0)
+    return oldflags;
+  /* @r{Set just the flag we want to set.} */
+  if (value != 0)
+    oldflags |= FD_CLOEXEC;
+  else
+    oldflags &= ~FD_CLOEXEC;
+  /* @r{Store modified flag word in the descriptor.} */
+  return fcntl (desc, F_SETFD, oldflags);
+@}
+@end example
 
 @node File Status Flags
 @section File Status Flags
-
-@dfn{File status flags} are used to specify more attributes of an open
-file descriptor.  Unlike the file descriptor flags discussed in
-@ref{File Descriptor Flags}, the file status flags are shared by
-duplicated file descriptors pointing to the open file.
 @cindex file status flags
 
-These flags for the @code{fcntl} function are defined in the header
-file @file{fcntl.h}.
+@dfn{File status flags} are used to specify attributes of the opening of
+a file.  Unlike the file descriptor flags discussed in @ref{Descriptor
+Flags}, the file status flags are shared by duplicated file descriptors
+resulting from a single opening of the file.
+
+The file status flags are initialized by the @code{open} function from
+the @var{flags} argument of the @code{open} function.  Some of the flags
+are meaningful only in @code{open} and are not remembered subsequently;
+many of the rest cannot subsequently be changed, though you can read
+their values by examining the file status flags.
+
+A few file status flags can be changed at any time using @code{fcntl}.
+These include @code{O_APPEND} and @code{O_NONBLOCK}.
+
+The symbols in this section are defined in the header file
+@file{fcntl.h}.
 @pindex fcntl.h
 
 @comment fcntl.h
 @comment POSIX.1
 @deftypevr Macro int F_GETFL
 This macro is used as the @var{command} argument to @code{fcntl}, to
-specify that it should return the file status flags for the open file
-with descriptor @var{filedes}.
+read the file status flags for the open file with descriptor
+@var{filedes}.
 
 The normal return value from @code{fcntl} with this command is a
 nonnegative number which can be interpreted as the bitwise OR of the
@@ -947,11 +1173,10 @@ The @var{filedes} argument is invalid.
 @comment fcntl.h
 @comment POSIX.1
 @deftypevr Macro int F_SETFL
-This macro is used as the @var{command} argument to @code{fcntl}, to
-specify that it should set the file status flags for the open
-file corresponding to the @var{filedes} argument.  This command requires
-a third @code{int} argument to specify the new flags, so the form of
-the call is
+This macro is used as the @var{command} argument to @code{fcntl}, to set
+the file status flags for the open file corresponding to the
+@var{filedes} argument.  This command requires a third @code{int}
+argument to specify the new flags, so the call looks like this:
 
 @example
 fcntl (@var{filedes}, F_SETFL, @var{new_flags})
@@ -966,105 +1191,55 @@ unspecified value other than @code{-1}, which indicates an error.  The
 error conditions are the same as for the @code{F_GETFL} command.
 @end deftypevr
 
-The following macros are defined for use as file status flags with the
-@code{fcntl} and @code{open} functions:
+The following macros are defined for use in analyzing and constructing
+file status flag values:
 
 @comment fcntl.h
 @comment POSIX.1
-@deftypevr Macro int O_CREAT
-This macro is usable as a flag to @code{open} only.  It expands into a
-bit mask value; if this bit is set, it specifies that the file should be
-created if it doesn't already exist.
-@end deftypevr
-@cindex create on open (file status flag)
+@table @code
+@item O_APPEND
+The bit that enables append mode for the file.  If set, then all
+@code{write} operations write the data at the end of the file, extending
+it, regardless of the current file position.
 
 @comment fcntl.h
 @comment POSIX.1
-@deftypevr Macro int O_EXCL
-This macro is usable as a flag to @code{open} only.  It's a bit mask
-value that specifies exclusive use of the new file.  If this bit is set
-and the file already exists, @code{open} reports an error.
-@end deftypevr
-@cindex exclusive use (file status flag)
-
-@comment fcntl.h
-@comment POSIX.1
-@deftypevr Macro int O_NOCTTY
-This macro is usable as a flag to @code{open} only.  If this bit is set,
-it prevents the new file from becoming the controlling terminal of the
-process that opens it.
-@end deftypevr
-@cindex no controlling terminal (file status flag)
-
-@comment fcntl.h
-@comment POSIX.1
-@deftypevr Macro int O_TRUNC
-This macro is usable as a flag to @code{open} only.  If this bit is set,
-the old contents of an existing file are discarded when the file is
-opened.  If this bit isn't set, then parts of the file that aren't
-explicitly overwritten remain in place with their original contents
-intact.
-@end deftypevr
-@cindex truncate on open (file status flag)
-
-@comment fcntl.h
-@comment POSIX.1
-@deftypevr Macro int O_APPEND
-This macro is a bit mask value that specifies append mode for the file.
-If this bit is set, then writing happens at the end of the file only.
-You can use this flag with both @code{open} and @code{fcntl}.
-@end deftypevr
-@cindex append mode (file status flag)
-
-@comment fcntl.h
-@comment POSIX.1
-@deftypevr Macro int O_NONBLOCK
-This macro is a bit mask value that specifies nonblocking mode for the
-file.  If this bit is set, this permits @code{read} requests on the file
-to return immediately with a failure status if there is no input
-immediately available, instead of blocking.  Likewise, @code{write}
-requests can also return immediately with a failure status if the output
-can't be written immediately.  You can use this flag with both
-@code{open} and @code{fcntl}.
-@end deftypevr
-@cindex non-blocking mode (file status flag)
+@item O_NONBLOCK
+The bit that enables nonblocking mode for the file.  If this bit is set,
+@code{read} requests on the file can return immediately with a failure
+status if there is no input immediately available, instead of blocking.
+Likewise, @code{write} requests can also return immediately with a
+failure status if the output can't be written immediately.
 
 @comment fcntl.h
 @comment BSD
-@deftypevr Macro int O_NDELAY
+@item O_NDELAY
 This is a synonym for @code{O_NONBLOCK}, provided for compatibility with
 BSD.
-@end deftypevr
+@end table
 
 @comment fcntl.h
 @comment POSIX.1
 @deftypevr Macro int O_ACCMODE
-The value of this macro is a mask that can be bitwise-ANDed with the
-file status flag value to produce a value representing the file access
-mode.
+This macro stands for a mask that can be bitwise-ANDed with the file
+status flag value to produce a value representing the file access mode.
+The mode will be @code{O_RDONLY}, @code{O_WRONLY}, or @code{O_RDWR}.
 @end deftypevr
 
 @comment fcntl.h
 @comment POSIX.1
-@deftypevr Macro int O_RDONLY
-This macro expands into a value that indicates the file is open for
-read access only.
-@end deftypevr
+@table @code
+@item O_RDONLY
+Open the file for read access.
 
-@comment fcntl.h
-@comment POSIX.1
-@deftypevr Macro int O_WRONLY
-This macro expands into a value that indicates the file is open for
-write access only.
-@end deftypevr
+@item O_WRONLY
+Open the file for write access.
 
-@comment fcntl.h
-@comment POSIX.1
-@deftypevr Macro int O_RDWR
-This macro expands into a value that indicates the file is open for
-both read and write access.
-@end deftypevr
+@item O_RDWR
+Open the file for both reading and writing.
+@end table
 
+@c ??? 
 @strong{Incomplete:} @file{fcntl.h} also contains defines for
 @code{FREAD}, @code{FWRITE}, etc.  Mib says: ``Those are internal flags
 in the kernel.  They won't exist in the GNU system.''  But this can't
@@ -1072,7 +1247,32 @@ be right, since apparently at least @code{FASYNC} will be supported.
 
 If you want to modify the file status flags, you should get the current
 flags with @code{F_GETFL} and modify the value.  Don't assume that the
-flags listed here are the only ones that are implemented.
+flags listed here are the only ones that are implemented; your program
+may be run years from now and more flags may exist then.  For example,
+here is a function to set or clear the flag @code{O_NONBLOCK} without
+altering any other flags:
+
+@example
+/* @r{Set the @code{O_NONBLOCK} flag of @var{desc} if @var{value} is nonzero,}
+   @r{or clear the flag if @var{value} is 0.}
+   @r{Return 0 on success, or -1 on error with @code{errno} set.} */ 
+
+int
+set_nonblock_flag (int desc, int value)
+@{
+  int oldflags = fcntl (desc, F_GETFL, 0);
+  /* @r{If reading the flags failed, return error indication now.}
+  if (oldflags < 0)
+    return oldflags;
+  /* @r{Set just the flag we want to set.} */
+  if (value != 0)
+    oldflags |= O_NONBLOCK;
+  else
+    oldflags &= ~O_NONBLOCK;
+  /* @r{Store modified flag word in the descriptor.} */
+  return fcntl (desc, F_SETFL, oldflags);
+@}
+@end example
 
 @node File Locks
 @section File Locks
@@ -1080,8 +1280,9 @@ flags listed here are the only ones that are implemented.
 @cindex file locks
 @cindex record locking
 The remaining @code{fcntl} commands are used to support @dfn{record
-locking}, a way to prevent multiple processes from simultaneously
-accessing parts of a file in incompatible ways.
+locking}, which permits multiple cooperating programs to prevent each
+other from simultaneously accessing parts of a file in error-prone
+ways.
 
 @cindex exclusive lock
 @cindex write lock
@@ -1102,15 +1303,16 @@ must do explicit @code{fcntl} calls to request and clear locks at the
 appropriate points.
 
 Locks are associated with processes.  A process can only have one kind
-of lock set for each byte of the same file.  When any file descriptor
-for that file is closed by the process, all of the locks that process
-holds on that file are released.  Likewise, locks are released when a
+of lock set for each byte of a given file.  When any file descriptor for
+that file is closed by the process, all of the locks that process holds
+on that file are released, even if the locks were made using other
+descriptors that remain open.  Likewise, locks are released when a
 process exits, and are not inherited by child processes created using
 @code{fork} (@pxref{Creating a Process}).
 
-Locks are specified using a @code{flock} structure.  This data type
-and the associated macros for the @code{fcntl} function are declared
-in the header file @file{fcntl.h}.
+When making a lock, use a @code{struct flock} to specify what kind of
+lock and where.  This data type and the associated macros for the
+@code{fcntl} function are declared in the header file @file{fcntl.h}.
 @pindex fcntl.h
 
 @comment fcntl.h
@@ -1131,7 +1333,8 @@ can be one of @code{SEEK_SET}, @code{SEEK_CUR}, or @code{SEEK_END}.
 
 @item off_t l_start
 This specifies the offset of the start of the region to which the lock
-applies, and is given in bytes relative to the @code{l_whence} member.
+applies, and is given in bytes relative to the point specified by
+@code{l_whence} member.
 
 @item off_t l_len
 This specifies the length of the region to be locked.  A value of
@@ -1139,9 +1342,9 @@ This specifies the length of the region to be locked.  A value of
 the file.
 
 @item pid_t l_pid
-This is the process ID (@pxref{Process Creation Concepts}) of the process
-holding the lock.  It is filled in by calling @code{fcntl} with the
-@code{F_GETLK} command, but is otherwise ignored.
+This is the process ID (@pxref{Process Creation Concepts}) of the
+process holding the lock.  It is filled in by calling @code{fcntl} with
+the @code{F_GETLK} command, but is ignored when making a lock.
 @end table
 @end deftp
 
@@ -1158,16 +1361,18 @@ fcntl (@var{filedes}, F_GETLK, @var{lockp})
 @end example
 
 If there is a lock already in place that would block the lock described
-by the @var{lockp} argument, information about that lock overwrites its
-current contents.  In other words, you should specify a lock type of
-@code{F_WRLCK} if you want to find out about both read and write locks,
-or @code{F_RDLCK} if you want to find out about write locks only.
+by the @var{lockp} argument, information about that lock overwrites
+@code{*@var{lockp}}.  Existing locks are not reported if they are
+compatible with making a new lock as specified.  Thus, you should
+specify a lock type of @code{F_WRLCK} if you want to find out about both
+read and write locks, or @code{F_RDLCK} if you want to find out about
+write locks only.
 
 There might be more than one lock affecting the region specified by the
 @var{lockp} argument, but @code{fcntl} only returns information about
-the first such lock.  The @code{l_whence} member of the @var{lockp}
-structure is set to @code{SEEK_SET} and the @code{l_start} and
-@code{l_len} fields set to identify the locked region.
+one of them.  The @code{l_whence} member of the @var{lockp} structure is
+set to @code{SEEK_SET} and the @code{l_start} and @code{l_len} fields
+set to identify the locked region.
 
 If no lock applies, the only change to the @var{lockp} structure is to
 update the @code{l_type} to a value of @code{F_UNLCK}.
@@ -1192,7 +1397,7 @@ or the file associated with @var{filedes} doesn't support locks.
 @deftypevr Macro int F_SETLK
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should set or clear a lock.  This command requires a
-third argument of type @code{const struct flock *} to be passed to
+third argument of type @code{struct flock *} to be passed to
 @code{fcntl}, so that the form of the call is:
 
 @example
@@ -1200,15 +1405,13 @@ fcntl (@var{filedes}, F_SETLK, @var{lockp})
 @end example
 
 If the process already has a lock on any part of the region, the old lock
-on that part is replaced with the new lock.  Thus, you can remove a lock
+on that part is replaced with the new lock.  You can remove a lock
 by specifying the a lock type of @code{F_UNLCK}.
-
-The normal return value from @code{fcntl} with this command is an
-unspecified value other than @code{-1}.
 
 If the lock cannot be set, @code{fcntl} returns immediately with a value
 of @code{-1}.  This function does not block waiting for other processes
-to release locks.
+to release locks.  If @code{fcntl} succeeds, it return a value other
+than @code{-1}.
 
 The following @code{errno} error conditions are defined for this
 command:
@@ -1234,6 +1437,7 @@ or the file associated with @var{filedes} doesn't support locks.
 @item ENOLCK
 The system has run out of file lock resources; there are already too
 many file locks in place.
+@c ??? Can this happen in the GNU kernel?
 @end table
 @end deftypevr
 
@@ -1245,8 +1449,8 @@ specify that it should set or clear a lock.  It is just like the
 @code{F_SETLK} command, but causes the process to block (or wait)
 until the request can be specified.
 
-This command requires a third argument of type @code{const struct flock *},
-as for the @code{F_SETLK} command.
+This command requires a third argument of type @code{struct flock *}, as
+for the @code{F_SETLK} command.
 
 The @code{fcntl} return values and errors are the same as for the
 @code{F_SETLK} command, but these additional @code{errno} error conditions
@@ -1267,23 +1471,24 @@ region locked by the other process.
 The following macros are defined for use as values for the @code{l_type}
 member of the @code{flock} structure.  The values are integer constants.
 
+@table @code
 @comment fcntl.h
 @comment POSIX.1
-@deftypevr Macro int F_RDLCK
+@vindex F_RDLCK
+@item Macro int F_RDLCK
 This macro is used to specify a read (or shared) lock.
-@end deftypevr
 
 @comment fcntl.h
 @comment POSIX.1
-@deftypevr Macro int F_WRLCK
+@vindex F_WRLCK
+@item Macro int F_WRLCK
 This macro is used to specify a write (or exclusive) lock.
-@end deftypevr
 
 @comment fcntl.h
 @comment POSIX.1
-@deftypevr Macro int F_UNLCK
+@vindex F_UNLCK
+@item Macro int F_UNLCK
 This macro is used to specify that the region is unlocked.
-@end deftypevr
 
 As an example of a situation where file locking is useful, consider a
 program that can be run simultaneously by several different users, that
@@ -1307,10 +1512,9 @@ that part of the file for writing.
 Remember that file locks are only a @emph{voluntary} protocol for
 controlling access to a file.  There is still potential for access to
 the file by programs that don't use the lock protocol.
+@end table
 
-
-
-@node Interrupt-Driven Input
+@node Interrupt Input
 @section Interrupt-Driven Input
 
 @cindex interrupt-driven input
@@ -1321,34 +1525,27 @@ or process group to receive the signal can be selected by using the
 @code{F_SETOWN} command to the @code{fcntl} function.  If the file
 descriptor is a socket, this also selects the recipient of @code{SIGURG}
 signals that are delivered when out-of-band data arrives on that socket;
-@pxref{Out-of-Band Data}.
-
-@strong{Incomplete:}  If you don't call @code{F_SETOWN}, where are the
-signals delivered by default?
+see @ref{Out-of-Band Data}.
 
 If the file descriptor corresponds to a terminal device, then @code{SIGIO}
 signals are sent to the foreground process group of the terminal.  
 @xref{Job Control}.
 
-@strong{Incomplete:}  I don't understand.  Does setting the foreground
-process group also effectively change the ``owner''?  Does changing the
-``owner'' of a terminal with @code{fcntl} also set the foreground
-process group?  What if I specify that the ``owner'' is a process rather
-than a process group?  Or, are @code{SIGIO} signals sent to @emph{both}
-the ``owner'' and the foreground process group?
-
-These macros for the @code{fcntl} function are defined in the header
-file @file{fcntl.h}.
 @pindex fcntl.h
+The symbols in this section are defined in the header file
+@file{fcntl.h}.
 
 @comment fcntl.h
 @comment BSD
 @deftypevr Macro int F_GETOWN
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should get information about the process or process
-group to which @code{SIGIO} signals are sent.  The return value is
-interpreted as a process ID; if negative, its absolute value is the
-process group ID.
+group to which @code{SIGIO} signals are sent.  (For a terminal, this is
+actually the foreground process group ID, which you can get using
+@code{tcgetpgrp}; see @ref{Foreground Process Group Functions}.)
+
+The return value is interpreted as a process ID; if negative, its
+absolute value is the process group ID.
 
 The following @code{errno} error conditions are defined for this
 command:

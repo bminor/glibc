@@ -4,15 +4,54 @@
 This chapter describes functions for searching and sorting arrays of
 arbitrary objects.  You pass the appropriate comparison function to be
 applied as an argument, along with the size of the objects in the array
-and the total number of elements.  The return value from the comparison
-function should follow the same conventions as the @code{strcmp}
-function; @pxref{String/Array Comparison}.
+and the total number of elements.
 
 @menu
 * Array Search Function::		The @code{bsearch} function.
 * Array Sort Function::			The @code{qsort} function.
 * Searching and Sorting Example::	An example program.
 @end menu
+
+@node Comparison Functions
+@section Defining the Comparison Function
+@cindex Comparison Function
+
+In order to use the sorted array library functions, you have to describe
+how to compare the elements of the array.
+
+To do this, you supply a comparison function to compare two elements of
+the array.  The library will call this function, passing as arguments
+pointers to two array elements to be compared.  Your comparison function
+should return a value the way @code{strcmp} (@pxref{String/Array
+Comparison}) does: negative if the first argument is ``less'' than the
+second, zero if they are ``equal'', and positive if the first argument
+is ``greater''.
+
+Here is an example of a comparison function which works with an array of
+numbers of type @code{double}:
+
+@example
+int
+compare_doubles (const double *a, const double *b)
+@{
+  double temp = *a - *b;
+  if (temp > 0)
+    return 1;
+  else if (temp < 0)
+    return -1;
+  else
+    return 0;
+@}
+@end example
+
+The header file @file{stdlib.h} defines a name for the data type of
+comparison functions.  This is a GNU extension and thus defined only if
+you request the GNU extensions.
+
+@tindex comparison_fn_t
+@example
+int comparison_fn_t (const void *, const void *);
+@end example
 
 @node Array Search Function
 @section Array Search Function
@@ -27,7 +66,7 @@ the header file @file{stdlib.h}.
 
 @comment stdlib.h
 @comment ANSI
-@deftypefun {void *} bsearch (const void *@var{key}, const void *@var{array}, size_t @var{count}, size_t @var{size}, int (*@var{compare}) (const void *, const void *))
+@deftypefun {void *} bsearch (const void *@var{key}, const void *@var{array}, size_t @var{count}, size_t @var{size}, compare_fn_t @var{compare})
 The @code{bsearch} function searches the sorted array @var{array} for an object
 that is equivalent to @var{key}.  The array contains @var{count} elements,
 each of which is of size @var{size}.
@@ -43,9 +82,8 @@ The return value is a pointer to the matching array element, or a null
 pointer if no match is found.  If the array contains more than one element
 that matches, the one that is returned is unspecified.
 
-Although the specific algorithm used by this function is not specified,
-traditionally a binary search algorithm has been used; hence the name of
-the function.
+This function derives its name from the fact that it is implemented
+using the binary search.
 @end deftypefun
 
 @node Array Sort Function
@@ -61,7 +99,7 @@ To sort an array using an arbitrary comparison function, use the
 
 @comment stdlib.h
 @comment ANSI
-@deftypefun void qsort (void *@var{array}, size_t @var{count}, size_t @var{size}, int (*@var{compare}) (const void *, const void *))
+@deftypefun void qsort (void *@var{array}, size_t @var{count}, size_t @var{size}, compare_fn_t @var{compare})
 The @var{qsort} function sorts the array @var{array}.  The array contains
 @var{count} elements, each of which is of size @var{size}.
 
@@ -69,12 +107,34 @@ The @var{compare} function is used to compare perform the comparison on
 the array elements.  This function is called with two pointer arguments
 and should return an integer less than, equal to, or greater than zero
 corresponding to whether its first argument is considered less than,
-equal to, or greater than its second argument.  If two objects compare
-as equal, their order in the sorted array is unspecified.
+equal to, or greater than its second argument.
 
-Although the specific algorithm used by this function is not specified,
-traditionally a quick sort algorithm has been used; hence the name of
-the function.
+@cindex stable sorting
+@strong{Warning:} if two objects compare as equal, their order after
+sorting is unpredictable.  That is to say, the sorting is not stable.
+This can make a difference when the comparison considers only part of
+the elements.  Two elements with the same sort key may differ in other
+respects.
+
+If you want the effect of a stable sort, you can get this result by
+writing the comparison function so that, lacking other reason
+distinguish between two elements, it compares them by their addresses.
+
+Here is a simple example of sorting an array of doubles in numerical
+order, using the comparison function defined above (@pxref{Comparison
+Functions}):
+
+@example
+@{
+  double *array;
+  int size;
+  @dots{}
+  qsort (array, size, sizeof (double), compare_doubles);
+@}
+@end example
+
+The @code{qsort} function derives its name from the fact that it was
+originally implemented using the algorithm ``quick sort''.
 @end deftypefun
 
 
@@ -82,7 +142,7 @@ the function.
 @section Searching and Sorting Example
 
 Here is an example showing the use of @code{qsort} and @code{bsearch}
-with an array of @code{struct}s.  The objects in the array are sorted
+with an array of structures.  The objects in the array are sorted
 by comparing their @code{name} fields with the @code{strcmp} function.
 Then, we can look up individual objects based on their names.
 
@@ -98,6 +158,8 @@ struct critter @{
   char *name;
   char *species;
   @};
+
+/* @r{Initialize the array in an order which is not properly sorted.}  */
 
 struct critter muppets[] = @{@{"Kermit", "frog"@},
                             @{"Piggy", "pig"@},
@@ -117,27 +179,26 @@ struct critter muppets[] = @{@{"Kermit", "frog"@},
 
 int count = sizeof(muppets) / sizeof(struct critter);
 
-
-
 /* @r{This is the comparison function used for sorting and searching.} */
 
-int critter_cmp (const struct critter *c1, const struct critter *c2)
+int
+critter_cmp (const struct critter *c1, const struct critter *c2)
 @{
   return strcmp (c1->name, c2->name);
 @}
 
-
 /* @r{Print information about a critter.} */
 
-void print_critter (const struct critter *c)
+void
+print_critter (const struct critter *c)
 @{
   printf ("%s, the %s\n", c->name, c->species);
 @}
 
-
 /* @r{Do the lookup into the sorted array.} */
 
-void find_critter (char *name)
+void
+find_critter (char *name)
 @{
   struct critter target, *result;
   target.name = name;
@@ -149,10 +210,10 @@ void find_critter (char *name)
     printf ("Couldn't find %s.\n", name);
 @}
 
-
 /* @r{Main program.} */
 
-void main (void)
+void
+main (void)
 @{
   int i;
   

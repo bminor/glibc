@@ -161,7 +161,7 @@ permitted without sending a signal.  Writing is also permitted if the
 process.
 
 For more information about the primitive @code{read} and @code{write}
-functions, @pxref{Input and Output Primitives}.
+functions, see @ref{I/O Primitives}.
 
 
 @node Orphaned Process Groups

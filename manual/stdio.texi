@@ -356,8 +356,8 @@ recommend you use @code{fwrite} instead (@pxref{Block Input/Output}).
 This section describes functions for performing character- and
 line-oriented input.  Again, there are several variants of these
 functions, some of which are considered obsolete stylistically.  It's
-suggested that you stick with @code{fgetc}, @code{fgets}, @code{ungetc},
-and maybe @code{getc} and @code{getchar}.
+suggested that you stick with @code{fgetc}, @code{getline}, and maybe
+@code{getc}, @code{getchar} and @code{fgets}.
 
 These functions are declared in the header file @file{stdio.h}.
 @pindex stdio.h
@@ -418,6 +418,34 @@ y_or_n_p (const char *question)
 @end example
 
 @comment stdio.h
+@comment GNU
+@deftypefun ssize_t getline (char **@var{lineptr}, size_t *@var{n}, FILE *@var{stream})
+This function reads an entire line from @var{stream}, storing the text
+(including the newline and a terminating null character) in a buffer
+and storing the buffer address is @code{*@var{lineptr}}.
+
+Before calling @code{getline}, you should place in @code{*@var{lineptr}}
+the address of a buffer @code{*@var{n}} bytes long.  If this buffer is
+long enough to hold the line, @code{getline} stores the line in this
+buffer.  Otherwise, @code{getline} makes the buffer bigger using
+@code{realloc}, storing the new buffer address back in
+@code{*@var{lineptr}} and the increased size back in @code{*@var{n}}.
+
+In either case, when @code{getline} returns,  @code{*@var{lineptr}} is
+a @code{char *} which points to the text of the line.
+
+When @code{getline} is successful, it returns the number of characters
+read (including the newline, but not including the terminating null).
+This value enables you to distinguish null characters that are part of
+the line from the null character inserted as a terminator.
+
+This function is a GNU extension.
+
+If an error occurs or end-of-file is reached, @code{getline} returns
+@code{-1}.
+@end deftypefun
+
+@comment stdio.h
 @comment ANSI
 @deftypefun {char *} fgets (char *@var{s}, int @var{count}, FILE *@var{stream})
 The @code{fgets} function reads characters from the stream @var{stream}
@@ -437,7 +465,7 @@ Otherwise, the return value is the pointer @var{s}.
 So don't use @code{fgets} unless you know the data cannot contain a null.
 Don't use it to read files edited by the user because, if the user inserts
 a null character, you should either handle it properly or print a clear
-error message.
+error message.  We recommend using @code{getline} instead of @code{fgets}.
 @end deftypefun
 
 @comment stdio.h
@@ -452,7 +480,7 @@ string).
 @strong{Warning:}  The @code{gets} function is @strong{very dangerous} 
 because it provides no protection against overflowing the string @var{s}.
 The GNU library includes it for compatibility only.  You should 
-@strong{always} use @code{fgets} instead.
+@strong{always} use @code{fgets} or @code{getline} instead.
 @end deftypefun
 
 @comment stdio.h
@@ -2505,8 +2533,8 @@ Binary Streams}.
 
 The following symbolic constants are defined for use as the @var{whence}
 argument to @code{fseek}.  They are also used with the @code{lseek}
-function (@pxref{Input and Output Primitives}) and to specify offsets
-for file locks (@pxref{Control Operations on Files}).
+function (@pxref{I/O Primitives}) and to specify offsets for file locks
+(@pxref{Control Operations}).
 
 @comment stdio.h
 @comment ANSI
@@ -2836,6 +2864,11 @@ guaranteed to be at least @code{256}.
 The value of @code{BUFSIZ} is chosen on each system so as to make stream
 I/O efficient.  So it is a good idea to use @code{BUFSIZ} as the size 
 for the buffer when you call @code{setvbuf}.
+
+Actually, you can get an even better valuse to use for the buffer size
+by means of the @code {fstat} system call: it is found in the
+@code{st_blksize} field of the file attributes.  @xref{Attribute
+Meanings}.
 
 Sometimes people also use @code{BUFSIZ} as the allocation size of
 buffers used for related purposes, such as strings used to receive a
@@ -3225,21 +3258,21 @@ You should define the function to read data from the cookie as:
 int @var{function} (void *@var{cookie}, void *@var{buffer}, size_t @var{size})
 @end example
 
-This is very similar to the @code{read} function; see @ref{Input and
-Output Primitives}.  Your function should transfer up to @var{size}
-bytes into the @var{buffer}, and return the number of bytes read.
-You can return a value of @code{-1} to indicate an error.
-You should define the function to write data to the cookie as:
+This is very similar to the @code{read} function; see @ref{I/O
+Primitives}.  Your function should transfer up to @var{size} bytes into
+the @var{buffer}, and return the number of bytes read.  You can return a
+value of @code{-1} to indicate an error.  You should define the function
+to write data to the cookie as:
 
 @example
 int @var{function} (void *@var{cookie}, const void *@var{buffer}, size_t @var{size})
 @end example
 
-This is very similar to the @code{write} function; see @ref{Input and
-Output Primitives}.  Your function should transfer up to @var{size}
-bytes from the buffer, and return the number of bytes written.  You can
-return a value of @code{-1} to indicate an error.
-You should define the function to perform seek operations on the cookie as:
+This is very similar to the @code{write} function; see @ref{I/O
+Primitives}.  Your function should transfer up to @var{size} bytes from
+the buffer, and return the number of bytes written.  You can return a
+value of @code{-1} to indicate an error.  You should define the function
+to perform seek operations on the cookie as:
 
 @example
 int @var{function} (void *@var{cookie}, fpos_t *@var{position}, int @var{whence})

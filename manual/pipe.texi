@@ -3,12 +3,16 @@
 
 @cindex pipe
 A @dfn{pipe} is a mechanism for interprocess communication; data written
-to the pipe by one process can be read by another process.  The data
-is handled in a first-in, first-out (FIFO) order.
+to the pipe by one process can be read by another process.  The data is
+handled in a first-in, first-out (FIFO) order.  The pipe has no name; it
+is created for one use and both ends must be inherited from the single
+process which created the pipe.
 
 @cindex FIFO special file
 A @dfn{FIFO special file} is similar to a pipe, but instead of being an
-anonymous, temporary connection, a FIFO is an ordinary file with a name.
+anonymous, temporary connection, a FIFO has a name or names like any
+other file.  Processes open the FIFO by name in order to communicate
+through it.
 
 A pipe or FIFO has to be open at both ends simultaneously.  If you read
 from a pipe or FIFO file that doesn't have any processes writing to it
@@ -47,7 +51,7 @@ The @code{pipe} function is declared in the header file
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun int pipe (int @var{filedes}[2])
+@deftypefun int pipe (int @var{filedes}@t{[2]})
 The @code{pipe} function creates a pipe and puts the file descriptors
 for the reading and writing ends of the pipe (respectively) into
 @code{@var{filedes}[0]} and @code{@var{filedes}[1]}.
@@ -78,7 +82,8 @@ read by the child process.
 
 /* @r{Read characters from the pipe and echo them to stdout.}  */
 
-void read_from_pipe (int file)
+void 
+read_from_pipe (int file)
 @{
   FILE *stream;
   int c;
@@ -90,7 +95,8 @@ void read_from_pipe (int file)
 
 /* @r{Write some random text to the pipe.} */
 
-void write_to_pipe (int file)
+void 
+write_to_pipe (int file)
 @{
   FILE *stream;
   stream = fdopen (file, "w");
@@ -100,14 +106,15 @@ void write_to_pipe (int file)
 @}
 
 
-void main (void)
+void
+main (void)
 @{
   pid_t pid;
   int mypipe[2];
 
   /* @r{Create the pipe.} */
   if (pipe (mypipe)) @{
-    fprintf (stderr, "Pipe failed.\n");
+    perror ("pipe failed");
     exit (EXIT_FAILURE);
     @}
 
@@ -120,7 +127,7 @@ void main (void)
     @}
   else if (pid < (pid_t) 0) @{
     /* @r{The fork failed.} */
-    fprintf (stderr, "Fork failed.\n");
+    perror ("fork failed");
     exit (EXIT_FAILURE);
     @}
   else @{
@@ -188,15 +195,16 @@ filter output through another program, in this case the paging program
 #include <stdio.h>
 #include <stdlib.h>
 
-void main (void)
+void 
+main (void)
 @{
   FILE *output;
 
   output = popen ("more", "w");
-  if (!output) {
-    fprintf (stderr, "Could not run more.\n");
+  if (!output) @{
+    perror ("popen failed, running `more'");
     exit (EXIT_FAILURE);
-    }
+    @}
   @dots{}
   fprintf (output, @dots{});
   @dots{}

@@ -1541,9 +1541,9 @@ There are not enough internal buffers available.
 @cindex writing to a socket
 
 Once a socket has been connected to a peer, you can use the ordinary
-@code{read} and @code{write} operations (@pxref{Input and Output
-Primitives}) to transfer data.  A socket is a two-way communications
-channel, so read and write operations can be performed at either end.
+@code{read} and @code{write} operations (@pxref{I/O Primitives}) to
+transfer data.  A socket is a two-way communications channel, so read
+and write operations can be performed at either end.
 
 You can also use the @code{send} and @code{recv} functions to perform
 read and write operations while specifying additional flags.  The
@@ -1710,10 +1710,10 @@ void main (void)
 The server end is much more complicated.  Since we want to allow
 multiple clients to be connected to the server at the same time, it
 would be incorrect to wait for input from a single client by simply
-calling @code{read} or @code{recv}.  Instead, the right thing to do
-is to use @code{select} (described in @ref{Waiting for Input or Output})
-to wait for input on all of the open sockets.  This also allows the
-server to deal with additional connection requests.
+calling @code{read} or @code{recv}.  Instead, the right thing to do is
+to use @code{select} (described in @ref{Waiting for I/O}) to wait for
+input on all of the open sockets.  This also allows the server to deal
+with additional connection requests.
 
 Again, this particular program doesn't do anything very exciting once it
 has gotten a message from a client.  It does close the socket for that
@@ -1830,12 +1830,12 @@ used to flag exceptional conditions.
 When out-of-band data is pending on a socket, a @code{SIGURG} signal is
 sent to the owner process or process group of the socket.  You establish
 this using the @code{F_SETOWN} command to the @code{fcntl} function;
-@pxref{Interrupt-Driven Input}.  You can establish a handler for this
-signal, as described in @ref{Signal Handling}.
+@pxref{Interrupt Input}.  You can establish a handler for this signal,
+as described in @ref{Signal Handling}.
 
-Alternatively, you can get synchronous notification of pending out-of-band
-data by using the @code{select} function to wait for an exceptional
-condition on the socket.  @xref{Waiting for Input or Output}, for more
+Alternatively, you can get synchronous notification of pending
+out-of-band data by using the @code{select} function to wait for an
+exceptional condition on the socket.  @xref{Waiting for I/O}, for more
 information about @code{select}.
 
 Receiving a @code{SIGURG} signal only means that out-of-band data is
@@ -2059,10 +2059,10 @@ Finally, remember that datagram socket communications are unreliable.
 In this example, the client program simply blocks indefinitely if the
 message is not delivered to the server; it's left up to the user of the
 program to kill it off and restart it interactively, if necessary.  A
-better solution would be to use @code{select} (@pxref{Waiting for Input
-or Output}) to establish a timeout period for the reply, and either
-resend the message or shut down the socket cleanly before exiting if the
-connection appears to be dead.
+better solution would be to use @code{select} (@pxref{Waiting for I/O})
+to establish a timeout period for the reply, and either resend the
+message or shut down the socket cleanly before exiting if the connection
+appears to be dead.
 
 
 @node Socket Options

@@ -723,9 +723,9 @@ There are two general ways in which input is processed.
 In @dfn{canonical input processing} mode, terminal input is processed in
 lines terminated by newline (@code{'\n'}), EOF, or EOL characters;
 @pxref{Special Characters}.  No input can be read until an entire line
-has been typed by the user, and the @code{read} function (@pxref{Input
-and Output Primitives}) returns at most a single line of input, no
-matter how many bytes are requested.
+has been typed by the user, and the @code{read} function (@pxref{I/O
+Primitives}) returns at most a single line of input, no matter how many
+bytes are requested.
 
 The constants @code{_POSIX_MAX_CANON} and @code{MAX_CANON} parameterize
 the maximum number of bytes which may appear in a single line.  
