@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,8 @@ DEFUN(reboot, (howto), int howto)
   error_t err;
   mach_port_t init;
 
-  err = _HURD_PORT_USE (&_hurd_proc, __proc_getmsgport (1, &init));
+  err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
+			__proc_getmsgport (1, &init));
   if (!err)
     {
       err = __startup_reboot (init, howto);
