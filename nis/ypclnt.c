@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -80,6 +80,8 @@ __yp_bind (const char *domain, dom_binding **ypdb)
     {
       is_new = 1;
       ysd = (dom_binding *) calloc (1, sizeof *ysd);
+      if (ysd == NULL)
+	return YPERR_RESRC;
     }
 
 #if USE_BINDINGDIR
@@ -445,6 +447,8 @@ yp_match (const char *indomain, const char *inmap, const char *inkey,
 
   *outvallen = resp.val.valdat_len;
   *outval = malloc (*outvallen + 1);
+  if (*outval == NULL)
+    return YPERR_RESRC;
   memcpy (*outval, resp.val.valdat_val, *outvallen);
   (*outval)[*outvallen] = '\0';
 
@@ -483,10 +487,14 @@ yp_first (const char *indomain, const char *inmap, char **outkey,
 
   *outkeylen = resp.key.keydat_len;
   *outkey = malloc (*outkeylen + 1);
+  if (*outkey == NULL)
+    return YPERR_RESRC;
   memcpy (*outkey, resp.key.keydat_val, *outkeylen);
   (*outkey)[*outkeylen] = '\0';
   *outvallen = resp.val.valdat_len;
   *outval = malloc (*outvallen + 1);
+  if (*outval == NULL)
+    return YPERR_RESRC;
   memcpy (*outval, resp.val.valdat_val, *outvallen);
   (*outval)[*outvallen] = '\0';
 
@@ -529,10 +537,14 @@ yp_next (const char *indomain, const char *inmap, const char *inkey,
 
   *outkeylen = resp.key.keydat_len;
   *outkey = malloc (*outkeylen + 1);
+  if (*outkey == NULL)
+    return YPERR_RESRC;
   memcpy (*outkey, resp.key.keydat_val, *outkeylen);
   (*outkey)[*outkeylen] = '\0';
   *outvallen = resp.val.valdat_len;
   *outval = malloc (*outvallen + 1);
+  if (*outval == NULL)
+    return YPERR_RESRC;
   memcpy (*outval, resp.val.valdat_val, *outvallen);
   (*outval)[*outvallen] = '\0';
 
