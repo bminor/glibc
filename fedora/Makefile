@@ -23,20 +23,26 @@ select-snapshot = -r '$($(glibc-branch)-sync-tag)'
 snapshot-id = $($(glibc-branch)-sync-tag)
 
 
+branch.mk-vars = glibc-branch glibc-base \
+		 $(glibc-branch)-sync-date $(glibc-branch)-sync-tag \
+		 DIST_BRANCH COLLECTION
+
 update:
 	now=`date -u $(snapshot-date-fmt)`; \
 	name=`date -u -d "$$now" $(snapshot-name-fmt)`; \
 	new="$(tag-prefix)$(tar-name)-$$name"; \
 	cvs -Q rtag $(if $(on-branch),-r $(glibc-base),-D "$$now") $$new libc;\
 	(echo '# This file is updated automatically by Makefile.'; \
-	 echo 'glibc-branch := $(glibc-branch)'; \
-	 echo 'glibc-base := $(glibc-base)'; \
-	 echo "$(glibc-branch)-sync-date := $$now"; \
-	 echo "$(glibc-branch)-sync-tag := $$new"; \
+	 $(foreach var,$(branch.mk-vars),\
+		   $(if $($(var)),echo '$(var) := $($(var))';)) \
 	) > branch.mk; \
 	cd ..; (set -x; cvs -q update -d -P \
 			    -j'$($(glibc-branch)-sync-tag)' -j"$$new") \
 		   2>&1 | tee fedora/update.log
+
+.PHONY: snapshot-time
+snapshot-time: branch.mk
+	date -d '$(snapshot-date)'
 
 commit-merge:
 	cd ..; cvs -Q commit -m"Updated to $(snapshot-id)"
@@ -56,13 +62,19 @@ spec-nvr := $(shell rpm -q --qf '%{NAME}-%{VERSION}-%{RELEASE}\n' \
 			--specfile glibc.spec | sed 1q)
 spec-tag = $(subst .,_,$(spec-nvr))
 
+ifeq ($(tagged),no)
+select-release = -r $(glibc-branch)-branch
+else
+select-release = -r $(tag-prefix)$(spec-tag)
+endif
+
 tag: glibc.spec
 	cd ..; cvs -Q tag -c $(tag-prefix)$(spec-tag)
 
+# Note this rule assumes that your working directory (..) is up to date.
 $(tar-name)-$(glibc-branch).patch: makepatch.awk glibc.spec \
 				   ../ChangeLog ../*/ChangeLog
-	(cd ..; cvs -q diff -upN \
-		    $(select-snapshot) -r $(tag-prefix)$(spec-tag)) | \
+	(cd ..; cvs -q diff -upN $(select-snapshot) $(select-release)) | \
 	awk -v OLDVER=$(tar-name)-$(snapshot-name) \
 	    -v NEWVER=$(tar-name)-$(snapshot-name)-$(glibc-branch) \
 	    -f $< > patch.tmp
@@ -76,8 +88,7 @@ $(tar-name)-$(glibc-branch)-$(snapshot-name).tar.bz2: Makefile branch.mk \
 						      ../ChangeLog \
 						      ../*/ChangeLog
 	@rm -rf libc
-	cvs -Q export -r$(tag-prefix)$(spec-tag) \
-		      $(addprefix libc/,$(outside-patch))
+	cvs -Q export $(select-release) $(addprefix libc/,$(outside-patch)) \
 	tar cf - -C libc $(outside-patch) | bzip2 -9 > $@.new
 	rm -rf libc
 	mv -f $@.new $@
@@ -103,5 +114,35 @@ $(spec-nvr).src.rpm: glibc.spec $(archives)
 		 --define "_specdir `pwd`" \
 		 --define "_srcrpmdir `pwd`" \
 		 --nodeps -bs $<
+
+###
+# These rules are for dealing with the Fedora package repository
+# and the Red Hat internal build system.
+#
+# To use this, put in ~/.cvsdistrc at least a line:
+#	DIST_COMMON = /some/checkout/of/dist/common
+# We will find cvs-import.sh there and use its CVS/Root for where to commit.
+
+.PHONY: dist-import
+
+-include ~/.cvsdistrc
+
+ifdef DIST_COMMON
+DIST_BRANCH ?= devel
+COLLECTION ?= dist-fc3
+BHC_FLAGS ?= -n
+
+bhc-baseurl := cvs://cvs.devel.redhat.com/cvs/dist?rpms
+bhc-url = $(bhc-baseurl)/glibc/$(DIST_BRANCH)#$(spec-tag)
+
+dist-import: $(spec-nvr).src.rpm
+	$(DIST_COMMON)/cvs-import.sh -b $(DIST_BRANCH) $<
+	ls -l $< > $@
+
+dist-build: dist-import
+	bhc $(BHC_FLAGS) $(COLLECTION) '$(bhc-url)'
+
+endif
+###
 
 endif
