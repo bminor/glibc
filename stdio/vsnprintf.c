@@ -29,7 +29,7 @@ Cambridge, MA 02139, USA.  */
  */
 int
 DEFUN(vsnprintf, (s, maxlen, format, arg),
-	char *s AND size_t maxlen AND CONST char *format AND va_list arg)
+	char *s AND size_t maxlen AND CONST char *format AND PTR arg)
 {
   int done;
   FILE f;
