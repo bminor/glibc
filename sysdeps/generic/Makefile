@@ -22,6 +22,6 @@ $(objpfx)endian.h: $(objpfx)det_endian
 	mv $@-tmp $@
 
 $(objpfx)det_endian: $(sysdep_dir)/generic/det_endian.c
-	$(CC) $< -o $@
+	cd $(objdir); $(CC) $(<:$(objpfx)%=%) -o $(@:$(objpfx)%=%)
 
 before-compile := $(before-compile) $(objpfx)endian.h
