@@ -42,6 +42,7 @@ prefix=
 exec_prefix=
 verbose=
 
+next=
 lose=
 for arg in $*; do
   if [ x$next != x ]; then
