@@ -51,16 +51,18 @@ union __ioctl
     unsigned long int __i;
   };
 
-/* Construct an ioctl from all the broken-out fields.  */
-#define	_IOCT(inout, group, num, t0, c0, t1, c1, t2, c2)		      \
-  (((union __ioctl)							      \
-    { __t: { (inout), (t0), (t1), (t2), (c0), (c1), (c2),		      \
-	       ((group) - 'f'), (num) } }).__i)
-
 /* Construct an ioctl from constructed type plus other fields.  */
 #define	_IOC(inout, group, num, type) \
-  (((union __ioctl) \
-    { __s: { (inout), (type), (group) - 'f', (num) } }).__i)
+  ((num) | ((((group) - 'f') | ((type) | (inout) << 19) << 4) << 7))
+
+/* Construct a type information field from
+   the broken-out type and count fields.  */
+#define	_IOT(t0, c0, t1, c1, t2, c2) \
+  ((c2) | (((c1) | ((c0) | ((t2) | ((t1) | (t0) << 2) << 2) << 5) << 5) << 3))
+
+/* Construct an ioctl from all the broken-out fields.  */
+#define	_IOCT(inout, group, num, t0, c0, t1, c1, t2, c2)		      \
+  _IOC ((inout), (group), (num), _IOT ((t0), (c0), (t1), (c1), (t2), (c2)))
 
 /* Standard flavors of ioctls.
    _IOT_foobar is defined either in this file,
@@ -69,11 +71,6 @@ union __ioctl
 #define	_IOR(g, n, t)	_IOC (IOC_IN, (g), (n), _IOT_##t)
 #define	_IOW(g, n, t)	_IOC (IOC_OUT, (g), (n), _IOT_##t)
 #define	_IOWR(g, n, t)	_IOC (IOC_INOUT, (g), (n), _IOT_##t)
-
-/* Construct a type information field from
-   the broken-out type and count fields.  */
-#define	_IOT(t0, c0, t1, c1, t2, c2) \
-  (_IOCT (0, 0, 0, (t0), (c0), (t1), (c1), (t2), (c2)) >> (4 + 7))
 
 /* Construct an individual type field for TYPE.  */
 #define _IOTS(type)		(sizeof (type) >> 1)
