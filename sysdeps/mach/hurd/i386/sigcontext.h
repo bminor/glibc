@@ -24,6 +24,9 @@ struct sigcontext
 {
   int sc_onstack;		/* Nonzero if running on sigstack.  */
   sigset_t sc_mask;		/* Blocked signals to restore.  */
+
+  /* Port this thread is doing an interruptible RPC on.  */
+  unsigned long int intr_port;
   
   /* Segment registers (not used).  */
   int sc_gs;
