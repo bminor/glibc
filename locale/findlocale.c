@@ -67,7 +67,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 
   if (*name == NULL || (*name)[0] == '\0'
       || (__builtin_expect (__libc_enable_secure, 0)
-	  && memchr (*name, '/', *name) != NULL))
+	  && strchr (*name, '/') != NULL))
     *name = (char *) _nl_C_name;
 
   if (strcmp (*name, _nl_C_name) == 0 || strcmp (*name, _nl_POSIX_name) == 0)
