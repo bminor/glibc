@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  x86-64 version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>.
 
@@ -66,11 +66,11 @@ elf_machine_load_address (void)
      and compare it with the current value that we can get via
      an RIP relative addressing mode.  */
 
-  asm ("movq .L1(%%rip), %1\n"
+  asm ("movq 1f(%%rip), %1\n"
        "0:\tleaq _dl_start(%%rip), %0\n\t"
        "subq %1, %0\n\t"
        ".section\t.data\n"
-       ".L1:\t.quad _dl_start\n\t"
+       "1:\t.quad _dl_start\n\t"
        ".previous\n\t"
        : "=r" (addr), "=r" (tmp) : : "cc");
 
