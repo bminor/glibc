@@ -253,23 +253,10 @@ override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
 
 $(objpfx)depend-$(subdir): Makefile
 ifdef +depfiles
-ifndef omit-deps
-# This used to simply use $(+depfiles) on the command line, but that tended
-# to overflow the arg limit on USG systems.  Since `sources' is in the
-# environment anyway, we do some shell processing on it instead.
-	for file in $(patsubst %,%.dep,$(others) $(tests)) \
-		    $(patsubst %.o,%.dep,$(filter %.o,$(extra-objs))) \
-		    `echo $${sources} | sed 's/\.c/.dep/g'`; do \
-	  echo "include \$$(objpfx)$$file";	\
-	done > $@
-else
-# We still do the simple thing when omit-deps is defined; otherwise we
-# would have to do something horrid to omit them from the $sources value in
-# the shell.
 	for file in $(+depfiles:$(objpfx)%=%); do \
 	  echo "include \$$(objpfx)$$file";	\
-	done > $@
-endif
+	done > $@-tmp
+	mv -f $@-tmp $@
 else
 	cp /dev/null $@
 endif
