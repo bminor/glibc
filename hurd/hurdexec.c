@@ -126,8 +126,12 @@ _hurd_exec (task_t task, file_t file,
      can arrive between when we pack the blocked and ignored signals, and
      when the exec actually happens.  A signal handler could change what
      signals are blocked and ignored.  Either the change will be reflected
-     in the exec, or the signal will never be delivered.  */
+     in the exec, or the signal will never be delivered.  Setting the
+     critical section flag avoids anything we call trying to acquire the
+     sigstate lock.  */
   
+  ss->critical_section = 1;
+
   /* Pack up the descriptor table to give the new program.  */
   __mutex_lock (&_hurd_dtable_lock);
 
@@ -226,9 +230,6 @@ _hurd_exec (task_t task, file_t file,
 		       NULL, 0);
   }
 
-  /* Safe to let signals happen now.  */
-  __mutex_unlock (&ss->lock);
-
   /* Release references to the standard ports.  */
   for (i = 0; i < _hurd_nports; ++i)
     if (i == INIT_PORT_PROC && task != __mach_task_self ())
@@ -244,6 +245,10 @@ _hurd_exec (task_t task, file_t file,
 
   /* Release lock on the file descriptor table. */
   __mutex_unlock (&_hurd_dtable_lock);
+
+  /* Safe to let signals happen now.  */
+  ss->critical_section = 0;
+  __mutex_unlock (&ss->lock);
 
   return err;
 }
