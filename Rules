@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -112,3 +112,9 @@ export dont_distribute := $(dont_distribute)
 subdir_dist: dist
 dist: ../Make-dist
 	$(MAKE) -f $< $(Make-dist-args)
+
+# XXX finish this.
+
+$(objpfx)stubs-$(subdir).h: Makefile $(stubbed-routines)
+	sed -n 's/^stub_warning *(\([^)]*\).*$/#define __stub_\1/p' $< > $@.new
+	mv $@.new $@
