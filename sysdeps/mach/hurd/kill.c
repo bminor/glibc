@@ -55,8 +55,8 @@ __kill (pid_t pid, int sig)
 		err = __task_terminate (refport);
 		__mach_port_deallocate (__mach_task_self (), refport);
 	      }
-	  } while (err != MACH_SEND_INVALID_DEST &&
-		   err != MIG_SERVER_DIED);
+	  } while (err == MACH_SEND_INVALID_DEST ||
+		   err == MIG_SERVER_DIED);
       else
 	err = HURD_MSGPORT_RPC (__proc_getmsgport (proc, pid, &msgport),
 				({ err = __proc_pid2task (proc, pid,

@@ -67,7 +67,8 @@ enum __socket_type
 
 /* Address families.  */
 #define	AF_UNSPEC	PF_UNSPEC
-#define	AF_FILE		PF_FILE
+#define	AF_LOCAL	PF_LOCAL
+#define	AF_FILE		PF_FILE	/* XXX */
 #define	AF_UNIX		PF_UNIX
 #define	AF_INET		PF_INET
 #define	AF_IMPLINK	PF_IMPLINK
