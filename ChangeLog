@@ -1,3 +1,12 @@
+2000-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getdents.c (__getdents): The Linux
+	kernel does not allow relative seeks on descriptors associated
+	with directories.  Go back to get the position in the directory
+	every time we enter the function.  Return -1 and set errno if one
+	entry could be read from the kernel but does not fit into the
+	buffer passed in by the user.
+
 1999-10-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/strtod.c: Handle hexadecimal numbers with leading digit
