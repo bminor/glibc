@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <hurd.h>
 #include <hurd/signal.h>
-
+#include <hurd/msg.h>
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
