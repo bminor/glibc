@@ -2,7 +2,7 @@
 
 	* glibcbug.in: Fix @gnu.ai.mit.edu -> @gnu.org.
 	* catgets/gencat.c: Likewise.
-	* db2/makedb.c: Likewise. (naja, in 2.0.7 für db/makedb.c)
+	* db2/makedb.c: Likewise.
 	* locale/programs/locale.c: Likewise.
 	* locale/programs/localedef.c: Likewise.
 
