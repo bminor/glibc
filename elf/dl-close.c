@@ -117,11 +117,17 @@ _dl_close (struct link_map *map)
 	  if (imap->l_prev)
 	    imap->l_prev->l_next = imap->l_next;
 	  else
-	    _dl_loaded = imap->l_next;
+	    {
+	      if (_dl_global_scope[2] == imap)
+		_dl_global_scope[2] = imap->l_next;
+	      _dl_loaded = imap->l_next;
+	    }
 	  if (imap->l_next)
 	    imap->l_next->l_prev = imap->l_prev;
 	  if (imap->l_searchlist && imap->l_searchlist != list)
 	    free (imap->l_searchlist);
+	  free (imap->l_name);
+	  free ((char *) imap->l_libname);
 	  free (imap);
 	}
     }
