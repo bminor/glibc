@@ -1,7 +1,9 @@
 #include <ansidecl.h>
 #include <stdio.h>
 
-main () {
+int
+main ()
+{
   FILE *f;
   int i;
 
@@ -12,4 +14,5 @@ main () {
   fseek(f, 8180L, 0);
   fwrite("Where does this text go?", 1, 24, f);
   fclose(f);
+  return 0;
 }
