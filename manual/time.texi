@@ -965,7 +965,7 @@ Calendar}.
 
 @comment sys/time.h
 @comment BSD
-@deftypefun int setitimer (int @var{which}, struct itimerval *@var{old}, struct itimerval *@var{new})
+@deftypefun int setitimer (int @var{which}, struct itimerval *@var{new}, struct itimerval *@var{old})
 The @code{setitimer} function sets the timer specified by @var{which} 
 according to @var{new}.  The @var{which} argument can have a value of
 @code{ITIMER_REAL}, @code{ITIMER_VIRTUAL}, or @code{ITIMER_PROF}.
