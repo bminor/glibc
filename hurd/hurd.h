@@ -70,13 +70,17 @@ extern vm_size_t _hurd_stack_size;
 extern mach_port_t *_hurd_init_dtable;
 extern mach_msg_type_number_t _hurd_init_dtablesize;
 
-/* Miscellaneous library state.  */
-
-
 /* Current process IDs.  */
 
 extern pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 extern int _hurd_orphaned;
+
+/* This variable is incremented every time the process IDs change.  */
+
+unsigned int _hurd_pids_changed_stamp;
+
+/* This condition is broadcast every time the process IDs change.  */
+struct condition _hurd_pids_changed_sync;
 
 /* Unix `data break', for brk and sbrk.
    If brk and sbrk are not used, this info will not be initialized or used.  */
