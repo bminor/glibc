@@ -109,6 +109,10 @@ END \
     print "typedef enum __error_t_codes error_t;"
     print "#endif";
     print "";
+    print "/* errno is a per-thread variable.  */";
+    print "#include <hurd/threadvar.h>";
+    print "#define errno	(*__hurd_errno_location ())";
+    print "";
     print "#endif /* <errno.h> included.  */";
     print "";
     print "#if !defined (_ERRNO_H) && defined (__need_Emath)";
