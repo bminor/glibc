@@ -69,7 +69,8 @@ __setauth (auth_t new)
 	  mach_port_t new;
 	  if (! __io_reauthenticate (_hurd_init_dtable[d]) &&
 	      ! _HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
-				__auth_user_authenticate (_hurd_init_dtable[d],
+				__auth_user_authenticate (port,
+							  _hurd_init_dtable[d],
 							  &new)))
 	    {
 	      __mach_port_deallocate (__mach_task_self (),
