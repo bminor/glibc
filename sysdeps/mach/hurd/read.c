@@ -29,7 +29,6 @@ DEFUN(__read, (fd, buf, nbytes),
   error_t err;
   io_t server;
   int isctty;
-  int vmalloc;
   char *data;
   size_t nread;
 
@@ -48,12 +47,12 @@ DEFUN(__read, (fd, buf, nbytes),
 
   data = buf;
   err = __io_read (server, isctty, _hurd_pid, _hurd_pgrp,
-		   &data, &nread, &vmalloc, -1, nbytes);
+		   &data, &nread, -1, nbytes);
 
   if (err)
     return __hurd_fail (err);
 
-  if (vmalloc)
+  if (data != buf)
     {
       memcpy (buf, data, nread);
       __vm_deallocate (__mach_task_self (), data, nread);
