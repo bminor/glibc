@@ -249,7 +249,8 @@ do-install = $(INSTALL_DATA) $< $@
 # should install libc.a; this way "make install" in a subdir is guaranteed
 # to install everything it changes.
 ifdef objects
-install-lib := $(install-lib) $(libc.a)
+install: $(libdir)/libc.a
+$(libdir)/libc.a: $(libc.a); $(do-install)
 endif
 
 ifdef install
@@ -274,8 +275,9 @@ $(addprefix $(includedir)/,$(headers)): \
 endif	# headers
 +install := $(filter-out $(addprefix %/,$(no-install)),$(+install))
 
-.PHONY: install installdirs
-install: $(+install)
+.PHONY: install installdirs install-no-libc.a
+install-no-libc.a: $(+install)
+install: install-no-libc.a
 $(+install): installdirs
 installdirs: $(..)mkinstalldirs
 	$(dir $<)$(notdir $<) $(sort $(dir $(+install)))
