@@ -61,9 +61,9 @@ kern_return_t
 _S_get_init_ports (mach_port_t msgport, mach_port_t auth,
 		   mach_port_t **ports,
 		   mach_msg_type_name_t *ports_type,
-		   unsigned int *nports)
+		   mach_msg_type_number_t *nports)
 {
-  unsigned int i;
+  mach_msg_type_number_t i;
   error_t err;
 
   AUTHCHECK;
@@ -93,9 +93,9 @@ _S_get_init_ports (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_set_init_ports (mach_port_t msgport, mach_port_t auth,
-		   mach_port_t *ports, unsigned int nports)
+		   mach_port_t *ports, mach_msg_type_number_t nports)
 {
-  unsigned int i;
+  mach_msg_type_number_t i;
   error_t err;
 
   AUTHCHECK;
@@ -164,10 +164,10 @@ _S_get_init_int (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_get_init_ints (mach_port_t msgport, mach_port_t auth,
-		  int **values, unsigned int *nvalues)
+		  int **values, mach_msg_type_number_t *nvalues)
 {
   error_t err;
-  unsigned int i;
+  mach_msg_type_number_t i;
 
   AUTHCHECK;
 
@@ -249,10 +249,10 @@ _S_set_init_int (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_set_init_ints (mach_port_t msgport, mach_port_t auth,
-		  int *values, unsigned int nvalues)
+		  int *values, mach_msg_type_number_t nvalues)
 {
   error_t err;
-  unsigned int i;
+  mach_msg_type_number_t i;
 
   AUTHCHECK;
 
@@ -302,7 +302,7 @@ _S_set_fd (mach_port_t msgport, mach_port_t auth,
 kern_return_t
 _S_get_env_variable (mach_port_t msgport,
 		     char *variable,
-		     char **data, unsigned int *datalen)
+		     char **data, mach_msg_type_number_t *datalen)
 {
   const char *value = getenv (variable);
 
@@ -331,7 +331,7 @@ _S_set_env_variable (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_get_environment (mach_port_t msgport,
-		    char **data, unsigned int *datalen)
+		    char **data, mach_msg_type_number_t *datalen)
 {
   /* Pack the environment into an array with nulls separating elements.  */
   if (__environ != NULL)
@@ -363,9 +363,9 @@ _S_get_environment (mach_port_t msgport,
 
 kern_return_t
 _S_set_environment (mach_port_t msgport, mach_port_t auth,
-		    char *data, unsigned int datalen)
+		    char *data, mach_msg_type_number_t datalen)
 {
-  int _hurd_split_args (char *, unsigned int, char **);
+  int _hurd_split_args (char *, mach_msg_type_number_t, char **);
   int envc;
   char **envp;
 
