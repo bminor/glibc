@@ -45,7 +45,7 @@ routines	:=							      \
 	tmpfile tmpnam tempnam						      \
 	fclose fflush							      \
 	remove rename							      \
-	memstream							      \
+	memstream obstream						      \
 	internals sysd-stdio pipestream stdio_init
 routines := $(strip $(routines))
 aux	:= errlist siglist defs syms-stdio glue
