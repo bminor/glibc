@@ -1,3 +1,7 @@
+2000-01-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_simple.c: Fix two problems in UTF-8 decoder.
+
 2000-01-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/getopt.texi (Using the getopt function): Fix description of
