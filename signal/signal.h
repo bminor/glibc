@@ -58,7 +58,7 @@ extern __sighandler_t signal __P ((int __sig, __sighandler_t __handler));
    If PID is < -1, send SIG to all processes in process group - PID.  */
 extern int __kill __P ((__pid_t __pid, int __sig));
 #ifdef	__USE_POSIX
-extern int kill __P ((int __pid, int __sig));
+extern int kill __P ((__pid_t __pid, int __sig));
 #endif /* Use POSIX.  */
 
 #ifdef	__USE_BSD
@@ -143,33 +143,19 @@ extern int sigismember __P ((__const sigset_t *__set, int signo));
 #define	sigismember(set, signo)	__sigismember(set, signo)
 #endif
 
+/* Get the system-specific definitions of `struct sigaction'
+   and the `SA_*' and `SIG_*'. constants.  */
+#include <sigaction.h>
+
 /* Get and/or change the set of blocked signals.  */
 extern int __sigprocmask __P ((int __how,
 			       __const sigset_t *__set, sigset_t *__oset));
 extern int sigprocmask __P ((int __how,
 			     __const sigset_t *__set, sigset_t *__oset));
 
-/* Values for the HOW argument to `sigprocmask'.  */
-#define	SIG_BLOCK	1	/* Block signals.  */
-#define	SIG_UNBLOCK	2	/* Unblock signals.  */
-#define	SIG_SETMASK	3	/* Set the set of blocked signals.  */
-
-
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
 extern int sigsuspend __P ((__const sigset_t *__set));
-
-/* Get the system-specific definitions of
-   `struct sigaction' and the `__SA_*' constants.  */
-#include <sigaction.h>
-
-/* Bits in the `sa_flags' field of a `struct sigaction'.  */
-#ifdef	__USE_BSD
-#define	SA_ONSTACK	__SA_ONSTACK	/* Take signal on signal stack.  */
-#define	SA_RESTART	__SA_RESTART	/* No syscall restart on sig ret.  */
-#define	SA_DISABLE	__SA_DISABLE	/* Disable alternate signal stack.  */
-#endif
-#define	SA_NOCLDSTOP	__SA_NOCLDSTOP	/* No SIGCHLD when children stop.  */
 
 /* Get and/or set the action for signal SIG.  */
 extern int __sigaction __P ((int __sig, __const struct __sigaction *__act,
