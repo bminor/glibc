@@ -1,0 +1,199 @@
+/* Implementing POSIX.1 signals under the Hurd.
+Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
+
+#ifndef	_HURD_SIGNAL_H
+
+#define	_HURD_SIGNAL_H	1
+#include <features.h>
+/* Make sure <signal.h> is going to define NSIG.  */
+#ifndef __USE_GNU
+#error "Must have `_GNU_SOURCE' feature test macro to use this file"
+#endif
+
+#include <mach/mach_types.h>
+#include <mach/port.h>
+#include <mach/message.h>
+#include <hurd/hurd_types.h>
+#include <signal.h>
+#include <errno.h>
+
+
+/* Per-thread signal state.  */
+
+struct _hurd_sigstate
+  {
+    /* XXX should be in cthread variable (?) */
+    thread_t thread;
+    struct _hurd_sigstate *next; /* Linked-list of thread sigstates.  */
+
+#ifdef noteven
+    struct mutex lock;		/* Locks the rest of this structure.  */
+#endif
+    sigset_t blocked;
+    sigset_t pending;
+    struct sigaction actions[NSIG];
+    struct sigaltstack sigaltstack;
+    int sigcodes[NSIG];		/* Codes for pending signals.  */
+
+    int suspended;		/* If nonzero, sig_post signals `arrived'.  */
+#ifdef noteven
+    struct condition arrived;
+#endif
+
+#if 0
+    int vforked;		/* Nonzero if this thread is a vfork child.  */
+    struct
+      {
+	process_t proc;
+	file_t ccdir, cwdir, crdir, auth;
+	mode_t umask;
+	int ctty_fstype;
+	fsid_t ctty_fsid;
+	ino_t ctty_fileid;
+	struct _hurd_dtable *dtable;
+	jmp_buf continuation;
+      } *vfork_saved;
+#endif
+
+    /* Not locked.  Used only by this thread,
+       or by signal thread with this thread suspended.  */
+    volatile mach_port_t intr_port; /* Port interruptible RPC was sent on.  */
+    volatile int intr_restart;	/* If nonzero, restart interrupted RPC.  */
+  };
+
+/* Linked list of states of all threads whose state has been asked for.  */
+
+extern struct _hurd_sigstate *_hurd_sigstates;
+
+extern struct mutex _hurd_siglock; /* Locks _hurd_sigstates.  */
+
+/* Get the sigstate of a given thread, taking its lock.  */
+
+extern struct _hurd_sigstate *_hurd_thread_sigstate (thread_t);
+
+
+/* Thread to receive process-global signals.  */
+extern thread_t _hurd_sigthread;
+
+/* SS->lock is held on entry, and released before return.  */
+extern void _hurd_internal_post_signal (struct _hurd_sigstate *ss,
+					int signo, int sigcode,
+					sigset_t *restore_blocked);
+
+/* Function run by the signal thread to receive from the signal port.  */
+extern void _hurd_msgport_receive (void);
+
+
+#ifdef notyet
+/* Perform interruptible RPC CALL on PORT.
+   The args in CALL should be constant or local variable refs.
+   They may be evaluated many times, and must not change.
+   PORT must not be deallocated before this RPC is finished.  */
+#define	HURD_EINTR_RPC(port, call) \
+  ({
+    error_t __err;
+    struct _hurd_sigstate *__ss
+      = _hurd_thread_sigstate (__mach_thread_self ());
+    __mutex_unlock (&__ss->lock); /* Lock not needed.  */
+    /* If we get a signal and should return EINTR, the signal thread will
+       clear this.  The RPC might return EINTR when some other thread gets
+       a signal, in which case we want to restart our call.  */
+    __ss->intr_restart = 1;
+    /* This one needs to be last.  A signal can arrive before here,
+       and if intr_port were set before intr_restart is
+       initialized, the signal thread would get confused.  */
+    __ss->intr_port = (port);
+    /* A signal may arrive here, after intr_port is set,
+       but before the mach_msg system call.  The signal handler might do an
+       interruptible RPC, and clobber intr_port; then it would not be set
+       properly when we actually did send the RPC, and a later signal
+       wouldn't interrupt that RPC.  So, _hurd_run_sighandler saves
+       intr_port in the sigcontext, and sigreturn restores it.  */
+  __do_call:
+    switch (__err = (call))
+      {
+      case EINTR:		/* RPC went out and was interrupted.  */
+      case MACH_SEND_INTERRUPTED: /* RPC didn't get out.  */
+	if (__ss->intr_restart)
+	  /* Restart the interrupted call.  */
+	  goto __do_call;
+	/* FALLTHROUGH */
+      case MACH_RCV_PORT_DIED:
+	/* Server didn't respond to interrupt_operation,
+	   so the signal thread destroyed the reply port.  */
+	__err = EINTR;
+	break;
+      }
+    __ss->intr_port = MACH_PORT_NULL;
+    __err;
+  })
+
+#endif /* notyet */
+
+/* Mask of signals that cannot be caught, blocked, or ignored.  */
+#define	_SIG_CANT_MASK	(__sigmask (SIGSTOP) | __sigmask (SIGKILL))
+
+/* Do an RPC to a process's message port.
+
+   Each argument is an expression which returns an error code; each
+   expression may be evaluated several times.  FETCH_MSGPORT_EXPR should
+   fetch the appropriate message port and store it in the local variable
+   `msgport'.  FETCH_REFPORT_EXPR should fetch the appropriate message port
+   and store it in the local variable `refport' (if no reference port is
+   needed in the call, then FETCH_REFPORT_EXPR should be simply
+   KERN_SUCCESS or 0).  Both of these are assumed to create user
+   references, which this macro deallocates.  RPC_EXPR should perform the
+   desired RPC operation using `msgport' and `refport'.
+
+   The reason for the complexity is that a process's message port and
+   reference port may change between fetching those ports and completing an
+   RPC using them (usually they change only when a process execs).  The RPC
+   will fail with MACH_SEND_INVALID_DEST if the msgport dies before we can
+   send the RPC request; or with MIG_SERVER_DIED if the msgport was
+   destroyed after we sent the RPC request but before it was serviced.  In
+   either of these cases, we retry the entire operation, discarding the old
+   message and reference ports and fetch them anew.  */
+
+#define _HURD_MSGPORT_RPC(fetch_msgport_expr, fetch_refport_expr, rpc_expr)   \
+({									      \
+    error_t __err;							      \
+    mach_port_t msgport, refport = MACH_PORT_NULL;			      \
+    do									      \
+      {									      \
+	/* Get the message port.  */					      \
+	if (__err = (fetch_msgport_expr))				      \
+	  break;							      \
+	/* Get the reference port.  */					      \
+	if (__err = (fetch_refport_expr))				      \
+	  {								      \
+	    /* Couldn't get it; deallocate MSGPORT and fail.  */	      \
+	    __mach_port_deallocate (__mach_task_self (), msgport);	      \
+	    break;							      \
+	  }								      \
+	__err = (rpc_expr);						      \
+	__mach_port_deallocate (__mach_task_self (), msgport);		      \
+	if (refport != MACH_PORT_NULL)					      \
+	  __mach_port_deallocate (__mach_task_self (), refport);    	      \
+      } while (__err != MACH_SEND_INVALID_DEST &&			      \
+	       __err != MIG_SERVER_DIED);				      \
+    __err;								      \
+})
+
+
+#endif	/* hurd/signal.h */
