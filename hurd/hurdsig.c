@@ -349,6 +349,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
  post_signal:
 
+  thread_state.set = 0;		/* We know nothing.  */
+
   /* Check for a preempted signal.  */
   __mutex_lock (&_hurd_signal_preempt_lock);
   for (pe = _hurd_signal_preempt[signo]; pe != NULL; pe = pe->next)
