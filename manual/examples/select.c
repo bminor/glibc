@@ -18,12 +18,15 @@ input_timeout (int filedes, unsigned int seconds)
   timeout.tv_usec = 0;
 
   /* @code{select} returns 0 if timeout, 1 if input available, -1 if error. */
-  return TEMP_FAILURE_RETRY (select (FD_SETSIZE, &set, NULL, NULL, &timeout));
+  return TEMP_FAILURE_RETRY (select (FD_SETSIZE,
+				     &set, NULL, NULL,
+				     &timeout));
 }
 
 int
 main (void)
 {
-  fprintf (stderr, "select returned %d.\n", input_timeout (STDIN_FILENO, 5));
+  fprintf (stderr, "select returned %d.\n",
+	   input_timeout (STDIN_FILENO, 5));
   return 0;
 }
