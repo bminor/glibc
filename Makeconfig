@@ -30,38 +30,55 @@ ifneq "$(origin +included-Makeconfig)" "file"
 ifdef subdir
 .. := ../
 endif
-
-# You can put variables that are specific to a configuration in the file
-# Makeconfig in the object directory for that configuration.  Variables
-# that do not vary between different configurations at your site can be
-# editted below.
 
 ifndef ARCH
 ifdef machine
 ARCH = $(machine)
-else
-include $(..)config.status
 endif
 endif
 
-# Directory for object files, libc.a, and ansi/ and trad/ directories.
-# If this is not defined, the object files live in the subdirectories
-# where their sources live, and libc.a and the ansi/ and trad/ directories
-# live in the parent directory (this probably doesn't work any more).
+# Directory for object files and libc.a.  If this is not defined, the
+# object files live in the subdirectories where their sources live, and
+# libc.a lives in the parent directory (this probably doesn't work any
+# more).
 ifdef ARCH
 ifeq ($(filter /%,$(ARCH)),)
 objdir := $(..)$(ARCH)
 else
 objdir = $(ARCH)
 endif
+endif
 
-ifneq ($(wildcard $(objdir)/configparms),)
-include $(objdir)/configparms
+ifdef objdir
+objpfx = $(objdir)/
+libc.a = $(objpfx)libc.a
+else
+objpfx :=
+libc.a = $(..)libc.a
+endif
+
+# Get the values defined by options to `configure'.
+include $(objpfx)config.make
+
+# Force the user to configure before making.
+$(objpfx)config.make:
+	@echo The GNU C library has not been configured. >&2
+	@echo Run \`configure\' to configure it before building. >&2
+	@exit 1
+
+# Get the user's configuration parameters.
+ifneq ($(wildcard $(..)configparms),)
+include $(..)configparms
+endif
+ifneq ($(objpfx),)
+ifneq ($(wildcard $(objpfx)configparms),)
+include $(objpfx)configparms
 endif
 endif
 
 #
-#	These are the configuration variables.
+#	These are the configuration variables.  You can define values for
+#	the variables below in the file `configparms'.
 #
 
 
@@ -71,7 +88,7 @@ prefix = /usr/local
 endif
 
 # Common prefix for machine-dependent installation directories.
-ifndef prefix
+ifndef exec_prefix
 exec_prefix = /usr/local
 endif
 
@@ -158,12 +175,12 @@ ifeq ($(origin CC),default)
 CC := gcc -pipe
 endif
 
-# These are preprocessor macros we want to predefine.
-# Define HAVE_GNU_LD if using GNU ld (which you should do if possible).
-# If you do this, you may need the GNU assembler as well.
-# If you don't do this, your library won't work as well (and won't be strictly
-# compliant with the ANSI C standard).
-+defines = $(defines) -DHAVE_GNU_LD
+# These are preprocessor macros we want to predefine.  Define HAVE_GNU_LD
+# if using GNU ld (which you should do if possible).  If you do this, you
+# may need the GNU assembler as well.  If you don't do this, your library
+# won't work as well (and won't be strictly compliant with the ANSI C
+# standard).
++defines = $(defines) $(gnu_ld) $(gnu_as)
 
 # Default flags to pass the C compiler.
 ifndef default_cflags
@@ -200,14 +217,6 @@ endif
 # The program that makes Emacs-style TAGS files.
 ETAGS	:= etags -T
 
-ifdef objdir
-objpfx = $(objdir)/
-libc.a = $(objpfx)libc.a
-else
-objpfx :=
-libc.a = $(..)libc.a
-endif
-
 # We want to echo the commands we're running without
 # umpteem zillion filenames along with it (we use `...' instead)
 # but we don't want this echoing done when the user has said
@@ -237,7 +246,10 @@ ifneq	"$(findstring gcc,$(CC))" ""
 +cflags := $(+cflags) $(+gccwarn)
 ifneq	"$(filter -O,$(+cflags))" ""
 +cflags := $(+cflags) $(+gccopt)
++gcc-nowarn := -w
 endif
+else
++gcc-nowarn :=
 endif	# gcc
 
 # Don't duplicate options if we inherited variables from the parent.
