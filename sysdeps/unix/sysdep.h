@@ -37,14 +37,18 @@ Cambridge, MA 02139, USA.  */
 /* Define a macro we can use to construct the asm name for a C symbol.  */
 #ifdef	NO_UNDERSCORES
 #define	C_SYMBOL_NAME(name)	name
-#define C_LABEL(name)		name:
+#ifdef	__STDC__
+#define C_LABEL(name)		name##:
+#else
+#define C_LABEL(name)		name/**/:
+#endif
 #else
 #ifdef	__STDC__
 #define	C_SYMBOL_NAME(name)	_##name
-#define C_LABEL(name)		_##name:
+#define C_LABEL(name)		_##name##:
 #else
 #define	C_SYMBOL_NAME(name)	_/**/name
-#define C_LABEL(name)		_/**/name:
+#define C_LABEL(name)		_/**/name/**/:
 #endif
 #endif
 

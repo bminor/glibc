@@ -19,7 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 SYSCALL__ (wait, 1)
-	movl 4(%esp), scratch	/* Put status pointer in %ecx.  */
+	movl 4(%esp), scratch	/* Put status pointer in scratch register.  */
 	testl scratch, scratch	/* Is it non-nil?  */
 	je null
 	movl r1, (scratch)	/* Yes; store the status there.  */
