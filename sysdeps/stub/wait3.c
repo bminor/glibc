@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <sys/wait.h>
+#include <sys/types.h>
 
 /* Wait for a child to exit.  When one does, put its status in *STAT_LOC and
    return its process ID.  For errors return (pid_t) -1.  If USAGE is not nil,
@@ -40,7 +41,7 @@ DEFUN(__wait3, (stat_loc, options, usage),
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 
