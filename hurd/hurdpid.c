@@ -30,6 +30,8 @@ init_pids (void)
 	       __proc_getpids (port, &_hurd_pid, &_hurd_ppid, &_hurd_orphaned);
 	       __proc_getpgrp (port, _hurd_pid, &_hurd_pgrp);
 	     }));
+
+  (void) &init_pids;		/* Avoid "defined but not used" warning.  */
 }
 
 text_set_element (_hurd_proc_subinit, init_pids);
