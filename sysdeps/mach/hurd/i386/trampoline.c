@@ -73,10 +73,14 @@ _hurd_setup_sighandler (int flags,
 
   scp->sc_onstack = sigaltstack->ss_flags & SA_ONSTACK ? 1 : 0;
 
+  scp->sc_gs = ts->gs;
+  scp->sc_fs = ts->fs;
+  scp->sc_es = ts->es;
+  scp->sc_ds = ts->ds;
+
   scp->sc_edi = ts->edi;
   scp->sc_esi = ts->esi;
   scp->sc_ebp = ts->ebp;
-  /* Segment registers??? XXX */
 
   scp->sc_ebx = ts->ebx;
   scp->sc_edx = ts->edx;
