@@ -62,5 +62,5 @@ DEFUN(__times, (buffer), struct tms *buffer)
   buffer->tms_cutime = (clock_t) timeval_to_clock_t(&usage.ru_utime);
   buffer->tms_cstime = (clock_t) timeval_to_clock_t(&usage.ru_stime);
 
-  return time((time_t *) NULL) - _posix_start_time;
+  return (time((time_t *) NULL) - _posix_start_time) * CLK_TCK;
 }
