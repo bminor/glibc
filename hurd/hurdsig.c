@@ -31,14 +31,6 @@ thread_t _hurd_sigthread;
 /* Linked-list of per-thread signal state.  */
 struct _hurd_sigstate *_hurd_sigstates;
 
-static void
-init_sig (void)
-{
-  __mutex_init (&_hurd_siglock);
-}
-text_set_element (__libc_subinit, init_sig);
-
-
 struct _hurd_sigstate *
 _hurd_thread_sigstate (thread_t thread)
 {
@@ -433,4 +425,62 @@ _hurd_exc_post_signal (thread_t thread, int signo, int sigcode)
   (void) _hurd_internal_post_signal (MACH_PORT_NULL,
 				     _hurd_thread_sigstate (thread),
 				     signo, sigcode, NULL);
+}
+
+void
+_hurdsig_init (void)
+{
+  thread_t sigthread;
+
+  __mutex_init (&_hurd_siglock);
+
+  if (_hurd_sigport == MACH_PORT_NULL)
+    if (err = __mach_port_allocate (__mach_task_self (),
+				    MACH_PORT_RIGHT_RECEIVE,
+				    &_hurd_sigport))
+      __libc_fatal ("hurd: Can't create signal port receive right\n");
+
+  if (err = __thread_create (__mach_task_self (), &sigthread))
+    __libc_fatal ("hurd: Can't create signal thread\n");
+  if (err = _hurd_start_sigthread (sigthread, _hurd_sigport_receive))
+    __libc_fatal ("hurd: Can't start signal thread\n");
+  _hurd_sigport_thread = sigthread;
+
+  /* Make a send right to the signal port.  */
+  if (err = __mach_port_insert_right (__mach_task_self (),
+				      _hurd_sigport,
+				      MACH_PORT_RIGHT_MAKE_SEND))
+    __libc_fatal ("hurd: Can't create send right to signal port\n");
+
+  /* Receive exceptions on the signal port.  */
+  __task_set_special_port (__mach_task_self (),
+			   TASK_EXCEPTION,
+			   _hurd_sigport);
+}
+
+/* Make PROCSERVER be our proc server port.
+   Tell the proc server that we exist.  */
+
+void
+_hurd_proc_init (process_t procserver, char **argv)
+{
+  mach_port_t oldsig, oldtask;
+
+  _hurd_port_init (&_hurd_proc, procserver);
+
+  /* Tell the proc server where our args and environment are.  */
+  __proc_setprocargs (procserver, argv, __environ);
+
+  /* Initialize the signal code; Mach exceptions will become signals.
+     This sets _hurd_sigport; it must be run before _hurd_proc_init.  */
+  _hurdsig_init ();
+
+  /* Give the proc server our task and signal ports.  */
+  __proc_setports (procserver,
+		   _hurd_sigport, __mach_task_self (),
+		   &oldsig, &oldtask);
+  if (oldsig != MACH_PORT_NULL)
+    __mach_port_deallocate (__mach_task_self (), oldsig);
+  if (oldtask != MACH_PORT_NULL)
+    __mach_port_deallocate (__mach_task_self (), oldtask);
 }
