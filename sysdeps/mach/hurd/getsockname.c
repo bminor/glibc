@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,16 +20,17 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/socket.h>
 #include <hurd.h>
+#include <hurd/fd.h>
+#include <hurd/socket.h>
 
 /* Put the local address of FD into *ADDR and its length in *LEN.  */
 int
 DEFUN(getsockname, (fd, addr, len),
       int fd AND struct sockaddr *addr AND size_t *len)
 {
-  return _HURD_DPORT_USE
+  error_t err = HURD_DPORT_USE
     (fd,
      ({
-       error_t err;
        addr_port_t aport;
        err = __socket_name (port, &aport);
        if (!err)
@@ -37,6 +38,8 @@ DEFUN(getsockname, (fd, addr, len),
 	   err = __socket_whatis_address (aport, addr, len);
 	   __mach_port_deallocate (__mach_task_self (), aport);
 	 }
-       err ? __hurd_dfail (fd, err) : 0;
+       err;
      }));
+
+  return err ? __hurd_dfail (fd, err) : 0;
 }
