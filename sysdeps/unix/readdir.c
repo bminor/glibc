@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -69,12 +69,13 @@ DEFUN(readdir, (dirp), DIR *dirp)
 	{
 	  /* Not a deleted file.  */
 	  register struct dirent *d = &dirp->__entry;
+	  register const char *p;
 	  d->d_fileno = (ino_t) dp->d_ino;
-	  d->d_namlen = (size_t) D_NAMLEN (dp);
 	  /* On some systems the name length does not actually mean much.  */
-	  while (dp->d_name[d->d_namlen - 1] == '\0')
-	    --d->d_namlen;
-	  (void) strncpy (d->d_name, dp->d_name, d->d_namlen + 1);
+	  p = memchr ((PTR) dp->d_name, '\0', D_NAMLEN (dp));
+	  if (p != NULL)
+	    d->d_namlen = p - dp->d_name;
+	  memcpy (d->d_name, dp->d_name, d->d_namlen + 1);
 	  return d;
 	}
     }
