@@ -287,8 +287,13 @@ else
 	cp /dev/null $@
 endif
 
-# Command to compile in $< in $(objdir) using the native libraries.
-native-compile = cwd=`pwd`; cd $(objdir); $(CC) $$cwd/$< -o $(@:$(objpfx)%=%)
+# Command to compile $< in $(objdir) using the native libraries.
+native-compile = cwd=`pwd`; cd $(@D); $(CC) $$cwd/$< -o $(@F)
+
+# Command to compile $< in $(common-objdir) using the native libraries.
+define common-objdir-compile
+cd $(@D); $(CC) $(<:$(common-objpfx)%=%) -o $(@F)
+endef
 
 TAGS: $(..)MakeTAGS
 	$(MAKE) -f $< $@
