@@ -41,6 +41,36 @@ Cambridge, MA 02139, USA.  */
 #include <mach-shortcuts.h>
 
 
+/* Receive RPC request messages on RCV_NAME and pass them to DEMUX, which
+   decodes them and produces reply messages.  MAX_SIZE is the maximum size
+   (in bytes) of the request and reply buffers.  */
+extern mach_msg_return_t
+__mach_msg_server (boolean_t (*__demux) (mach_msg_header_t *__request,
+					 mach_msg_header_t *__reply),
+		   mach_msg_size_t __max_size,
+		   mach_port_t __rcv_name),
+mach_msg_server (boolean_t (*__demux) (mach_msg_header_t *__request,
+				       mach_msg_header_t *__reply),
+		 mach_msg_size_t __max_size,
+		 mach_port_t __rcv_name);
+
+/* Just like `mach_msg_server', but the OPTION and TIMEOUT parameters are
+   passed on to `mach_msg'.  */
+extern mach_msg_return_t
+__mach_msg_server_timeout (boolean_t (*__demux) (mach_msg_header_t *__request,
+						 mach_msg_header_t *__reply),
+			   mach_msg_size_t __max_size,
+			   mach_port_t __rcv_name,
+			   mach_msg_option_t __option,
+			   mach_msg_timeout_t __timeout),
+mach_msg_server_timeout (boolean_t (*__demux) (mach_msg_header_t *__request,
+					       mach_msg_header_t *__reply),
+			 mach_msg_size_t __max_size,
+			 mach_port_t __rcv_name,
+			 mach_msg_option_t __option,
+			 mach_msg_timeout_t __timeout);
+
+
 #define __need_FILE
 #include <stdio.h>
 
