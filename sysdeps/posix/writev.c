@@ -38,7 +38,7 @@ DEFUN(writev, (fd, vector, count),
   /* Find the total number of bytes to be written.  */
   bytes = 0;
   for (i = 0; i < count; ++i)
-    bytes += vector[i].io_len;
+    bytes += vector[i].iov_len;
 
   /* Allocate a temporary buffer to hold the data.  */
   buffer = (char *) __alloca(bytes);
@@ -49,9 +49,9 @@ DEFUN(writev, (fd, vector, count),
   for (i = 0; i < count; ++i)
     {
 #define	min(a, b)	((a) > (b) ? (b) : (a))
-      size_t copy = min(vector[i].io_len, to_copy);
+      size_t copy = min(vector[i].iov_len, to_copy);
 
-      (void) memcpy((PTR) bp, (PTR) vector[i].io_buf, copy);
+      (void) memcpy((PTR) bp, (PTR) vector[i].iov_base, copy);
 
       bp += copy;
       to_copy -= copy;
