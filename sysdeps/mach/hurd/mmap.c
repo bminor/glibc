@@ -57,16 +57,39 @@ mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
       break;
 
     case MAP_FILE:
-      /* XXX which memobj? */
-      if (err = HURD_DPORT_USE (fd, __io_map (port, &memobj, &memobj)))
-	return __hurd_dfail (fd, err);
-      break;
-      /* XXX handle MAP_NOEXTEND */
+      {
+	mach_port_t robj, wobj;
+	if (err = HURD_DPORT_USE (fd, __io_map (port, &robj, &wobj)))
+	  return (caddr_t) __hurd_dfail (fd, err);
+	switch (prot & (PROT_READ|PROT_WRITE))
+	  {
+	  case PROT_READ:
+	    memobj = robj;
+	    __mach_port_deallocate (__mach_task_self (), wobj);
+	    break;
+	  case PROT_WRITE:
+	    memobj = wobj;
+	    __mach_port_deallocate (__mach_task_self (), robj);
+	    break;
+	  case PROT_READ|PROT_WRITE:
+	    __mach_port_deallocate (__mach_task_self (), robj);
+	    if (robj == wobj)
+	      memobj = wobj;
+	    else
+	      {
+		__mach_port_deallocate (__mach_task_self (), wobj);
+		return __hurd_fail (EGRATUITOUS); /* XXX */
+	      }
+	    break;
+	  }
+	break;
+	/* XXX handle MAP_NOEXTEND */
+      }
     }
 
   mapaddr = (vm_address_t) addr;
   err = __vm_map (__mach_task_self (),
-		  &mapaddr, (vm_size_t) size, (vm_address_t) 0,
+		  &mapaddr, (vm_size_t) len, (vm_address_t) 0,
 		  flags & MAP_FIXED,
 		  memobj, (vm_offset_t) offset,
 		  flags & (MAP_COPY|MAP_PRIVATE),
