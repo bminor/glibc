@@ -23,15 +23,9 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 
 
-/* Minimum size of a buffer we will allocate by default.
-   If this much memory is not available,
-   the stream in question will be made unbuffered instead.  */
-#define	MIN_BUFSIZE	128
-
-/* Figure out what kind of buffering (none, line, or full)
-   and what buffer size to give FP.  */
-static void
-DEFUN(init_stream, (fp), register FILE *fp)
+/* Make sure that FP has its functions set.  */
+void
+DEFUN(__stdio_check_funcs, (fp), register FILE *fp)
 {
   if (!fp->__seen)
     {
@@ -43,9 +37,23 @@ DEFUN(init_stream, (fp), register FILE *fp)
       extern void EXFUN(__stdio_init_stream, (FILE *));
       fp->__room_funcs = __default_room_functions;
       fp->__io_funcs = __default_io_functions;
-      __stdio_init_stream(fp);
+      __stdio_init_stream (fp);
       fp->__seen = 1;
     }
+}
+
+
+/* Minimum size of a buffer we will allocate by default.
+   If this much memory is not available,
+   the stream in question will be made unbuffered instead.  */
+#define	MIN_BUFSIZE	128
+
+/* Figure out what kind of buffering (none, line, or full)
+   and what buffer size to give FP.  */
+static void
+DEFUN(init_stream, (fp), register FILE *fp)
+{
+  __stdio_check_funcs (fp);
 
   if (fp->__buffer == NULL && !fp->__userbuf)
     {
