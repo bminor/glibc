@@ -101,6 +101,9 @@ fts_open(argv, options, compar)
 	 * Start out with 1K of path space, and enough, in any case,
 	 * to hold the user's paths.
 	 */
+#ifndef MAXPATHLEN
+#define MAXPATHLEN 1024
+#endif
 	if (fts_palloc(sp, MAX(fts_maxarglen(argv), MAXPATHLEN)))
 		goto mem1;
 
