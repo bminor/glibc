@@ -73,6 +73,7 @@ _start (void)
   mach_port_t *portarray;
   int *intarray;
   size_t argslen, envlen, portarraysize, intarraysize;
+  int flags;
 
   int argc, envc;
   char **argv;
@@ -101,6 +102,7 @@ _start (void)
   if (in_bootstrap != MACH_PORT_NULL)
     {
       err = __exec_startup (in_bootstrap,
+			    &flags,
 			    &args, &argslen, &env, &envlen,
 			    &_hurd_init_dtable, &_hurd_init_dtablesize,
 			    &portarray, &portarraysize,
