@@ -192,4 +192,8 @@ ifeq (posix, $(subdir))
 sysdep_routines += clk_tck
 endif
 
+ifeq ($(subdir),sunrpc)
+sysdep_headers += nfs/nfs.h
+endif
+
 endif	# in-Makerules
