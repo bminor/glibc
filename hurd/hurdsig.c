@@ -130,7 +130,7 @@ int _hurd_core_limit;	/* XXX */
 /* Call the core server to mummify us before we die.
    Returns nonzero if a core file was written.  */
 static int
-write_corefile (int signo, int sigcode, int sigerror)
+write_corefile (int signo, long int sigcode, int sigerror)
 {
   error_t err;
   mach_port_t coreserver;
@@ -231,7 +231,7 @@ interrupted_reply_port_location (struct machine_thread_all_state *thread_state)
 
   if (_hurdsig_catch_fault (SIGSEGV))
     {
-      assert (_hurdsig_fault_sigcode == (int) portloc);
+      assert (_hurdsig_fault_sigcode == (long int) portloc);
       /* Faulted trying to read the stack.  */
       return NULL;
     }
@@ -382,7 +382,7 @@ struct mutex _hurd_signal_preempt_lock;
    SS->lock is held on entry and released before return.  */
 void
 _hurd_internal_post_signal (struct hurd_sigstate *ss,
-			    int signo, int sigcode, int sigerror,
+			    int signo, long int sigcode, int sigerror,
 			    mach_port_t reply_port,
 			    mach_msg_type_name_t reply_port_type)
 {
@@ -533,7 +533,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	  if (_hurd_stopped)
 	    {
 	      thread_t *threads;
-	      unsigned int nthreads, i;
+	      mach_msg_type_number_t nthreads, i;
 	      error_t err;
 	      /* Tell the proc server we are continuing.  */
 	      __USEPORT (PROC, __proc_mark_cont (port));
@@ -698,7 +698,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	/* Start the thread running the handler (or possibly waiting for an
 	   RPC reply before running the handler).  */
 	__thread_set_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
-			    (int *) &thread_state.basic,
+			    (natural_t *) &thread_state.basic,
 			    MACHINE_THREAD_STATE_COUNT);
 	__thread_resume (ss->thread);
 	thread_state.set = 0;	/* Everything we know is now wrong.  */
