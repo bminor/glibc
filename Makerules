@@ -132,7 +132,7 @@ define make-dummy-dep
 $(addprefix ln $(objpfx)dummy.dep ,$(wildcard $@))
 endef
 $(objpfx)dummy.dep:
-	echo '\# .s files cannot contain includes, so they need no deps.' > $@
+	echo '# .s files cannot contain includes, so they need no deps.' > $@
 
 # Define first rules to find the source files in $(objpfx).
 # Generated source files will end up there.
