@@ -31,9 +31,9 @@ others	:= zdump zic
 tests	:= test-tz tst-timezone
 
 tzbases := africa antarctica asia australasia europe northamerica \
-	   southamerica etcetera factory systemv \
+	   southamerica etcetera factory \
 	   solar87 solar88 solar89
-tzlinks := backward
+tzlinks := backward systemv
 tzfiles := $(tzbases) $(tzlinks)
 # pacificnew doesn't compile; if it is to be used, it should be included in
 # northamerica.
