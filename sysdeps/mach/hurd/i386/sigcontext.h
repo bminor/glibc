@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 /* State of this thread when the signal was taken.  */
 struct sigcontext
 {
-  /* The first four members are machine-independent.  */
+  /* These first members are machine-independent.  */
 
   int sc_onstack;		/* Nonzero if running on sigstack.  */
   sigset_t sc_mask;		/* Blocked signals to restore.  */
@@ -32,6 +32,9 @@ struct sigcontext
 
   /* Port this thread is doing an interruptible RPC on.  */
   unsigned int sc_intr_port;
+
+  /* Error code associated with this signal (interpreted as `error_t').  */
+  int sc_err;
 
   /* All following members are machine-dependent.  */
 
@@ -54,7 +57,6 @@ struct sigcontext
   int sc_eax;
   
   int sc_trapno;		/* Not used.  */
-  int sc_err;			/* Not used.  */
   
   int sc_eip;			/* Instruction pointer.  */
    
