@@ -1,6 +1,6 @@
 #! /bin/sh
 # rellns-sh - Simplified ln program to generate relative symbolic link.
-# Copyright (C) 1996 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 # Written by Ulrich Drepper <drepper@cygnus.com>, October 1996
 #
 # This program is free software; you can redistribute it and/or modify
@@ -22,33 +22,27 @@ if test $# -ne 2; then
   exit 1
 fi
 
-case $1 in
-/*)
-  # Make both paths absolute.
-  to=`echo $1 | sed 's%^/%%'`
+# Make both paths absolute.
+if test -d $1; then
+  to=`cd $1 && /bin/pwd`
+else
+  temp=`echo $1 | sed 's%/*[^/]*$%%'`
+  to=`cd $temp && /bin/pwd`
+  to="$to/`echo $1 | sed 's%.*/\([^/][^/]*\)$%\1%'`"
+fi
+to=`echo $to | sed 's%^/%%'`
 
-  if test -d $2; then
-    from=`echo $2 | sed 's%/*$%%'`
-  else
-    from=`echo $2 | sed 's%/*[^/]*$%%'`
-  fi
+if test -d $2; then
+  from=`echo $2 | sed 's%/*$%%'`
+else
+  from=`echo $2 | sed 's%/*[^/]*$%%'`
+fi
 
-  case "$from" in
-  /*) from=`echo $from | sed 's%^/*%%'` ;;
-  ?*) from=`cd $from && pwd | sed 's%^/%%'` ;;
-  *) from=`pwd | sed 's%^/%%'` ;;
-  esac
-  ;;
-*)
-  to=$1
-
-  if test -d $2; then
-    from=`echo $2 | sed 's%/*$%%'`
-  else
-    from=`echo $2 | sed 's%/*[^/]*$%%'`
-  fi
-  ;;
-esac
+if test -z "$from"; then
+  from=`/bin/pwd | sed 's%^/%%'`
+else
+  from=`cd $from && /bin/pwd | sed 's%^/%%'`
+fi
 
 while test -n "$to" && test -n "$from"; do
   preto=`echo $to | sed 's%^\([^/]*\)/.*%\1%'`
