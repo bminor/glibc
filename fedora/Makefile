@@ -43,8 +43,8 @@ update:
 	 echo "$(glibc-branch)-sync-date := $$now"; \
 	 $(if $(on-branch),echo "$(glibc-branch)-sync-tag := $$new";) \
 	) > branch.mk; \
-	cd ..; cvs -q update -d -P -j"$$old" -j"$$new" \
-		   2>&1 | tee redhat/update.log
+	cd ..; (set -x; cvs -q update -d -P -j"$$old" -j"$$new") \
+		   2>&1 | tee fedora/update.log
 
 commit-merge:
 	cd ..; cvs -Q commit -m"Updated to $(snapshot-id)"
