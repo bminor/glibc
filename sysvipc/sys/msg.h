@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@
 #define _SYS_MSG_H
 
 #include <features.h>
-#include <sys/types.h>
 
 /* Get common definition of System V style IPC.  */
 #include <sys/ipc.h>
@@ -28,14 +27,33 @@
 /* Get system dependent definition of `struct msqid_ds' and more.  */
 #include <bits/msq.h>
 
+/* Define types required by the standard.  */
+#define	__need_time_t
+#include <time.h>
+
+#ifndef pid_t
+typedef __pid_t pid_t;
+# define pid_t pid_t
+#endif
+
+#ifndef ssize_t
+typedef __ssize_t ssize_t;
+# define ssize_t ssize_t
+#endif
+
 /* The following System V style IPC functions implement a message queue
    system.  The definition is found in XPG2.  */
 
 /* Template for struct to be used as argument for `msgsnd' and `msgrcv'.  */
 struct msgbuf
   {
+#ifdef __USE_GNU
     long int mtype;		/* type of received/sent message */
     char mtext[1];		/* text of the message */
+#else
+    long int __mtype;		/* type of received/sent message */
+    char __mtext[1];		/* text of the message */
+#endif
   };
 
 
@@ -52,7 +70,7 @@ extern int msgrcv __P ((int __msqid, void *__msgp, size_t __msgsz,
 			long int __msgtyp, int __msgflg));
 
 /* Send message to message queue.  */
-extern int msgsnd __P ((int __msqid, void *__msgp, size_t __msgsz,
+extern int msgsnd __P ((int __msqid, __const void *__msgp, size_t __msgsz,
 			int __msgflg));
 
 __END_DECLS
