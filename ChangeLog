@@ -1,3 +1,29 @@
+2000-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/sys/mman.h: Define off_t and mode_t.
+	* posix/sys/types.h: Allow definition of key_t elsewhere.
+	* streams/stropts.h: Define gid_t and uid_t.
+	* sysdeps/generic/bits/msq.h: Define msgqnum_t and msglen_t and use
+	them in struct msqid_s.
+	* sysdeps/gnu/bits/msq.h: Likewise.
+	* sysdeps/generic/bits/stropts.h (I_GWROPT): Renamed from I_GWRSET.
+	Define FLUSHBAND, PROTMASK, SNDPIPE, and MUXID_ALL only if __USE_GNU.
+	(struct strpeek): Use t_uscalar_t.
+	(struct strfdinsert): Likewise.
+	(struct strioctl): Use gid_t and uid_t.  Rename fill to __fill.
+	* sysdeps/gnu/bits/ipc.h: Define IPC_INFO only if __USE_GNU.
+	* sysdeps/unix/sysv/linux/alpha/bits/ipc.h: Likewise.
+	Define IPCOP_* constants only if __USE_GNU.
+	* sysdeps/unix/sysv/linux/mips/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/ipc.h: Likewise.
+	* sysvips/sys/ipc.h: Define uid_t, gid_t, and mode_t.
+	* sysvips/sys/msg.h: Define pid_t and ssize_t.
+	(struct msgbuf): Rename mtype to __mtype and mtext to __mtext if not
+	__USE_GNU.
+	(msgsnd): Mark second parameter as const.
+	* sysdeps/generic/msgsnd.c: Mark second parameter as const.
+	* sysdeps/unix/sysv/linux/msgsnd.c: Likewise.
+
 2000-03-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Add entry for
