@@ -16,12 +16,16 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include "DEFS.h"
+#include <sysdep.h>
+#ifdef __svr4__
+#include <sys/trap.h>
+#else
 #include <machine/trap.h>
+#endif
 
 /* NOTE: This code depends on the definition of `__jmp_buf' in <jmp_buf.h>.  */
 
-FUNC (___longjmp)
+ENTRY (__longjmp)
 	/* Do a "flush register windows trap".  The trap handler in the
 	   kernel writes all the register windows to their stack slots, and
 	   marks them all as invalid (needing to be sucked up from the

@@ -16,11 +16,11 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include "DEFS.h"
+#include <sysdep.h>
 
 /* NOTE: This code depends on the definition of `__jmp_buf' in <jmp_buf.h>.  */
 
-FUNC (___setjmp)
+ENTRY (__setjmp)
 	/* Save our return PC and SP.  */
 	st %o7, [%o0]
 	st %sp, [%o0 + 4]
