@@ -142,7 +142,8 @@ bhc-url = $(bhc-baseurl)/glibc/$(DIST_BRANCH)#$(spec-tag)
 
 dist-import: $(spec-nvr).src.rpm
 	$(DIST_COMMON)/cvs-import.sh -b $(DIST_BRANCH) $<
-	ls -l $< > $@
+	rpm -qp $< --queryformat '[%{FILEMD5S}  %{FILENAMES}\n]' > $@.new
+	mv -f $@.new $@
 
 dist-build: dist-import
 	bhc $(BHC_FLAGS) $(COLLECTION) '$(bhc-url)'
