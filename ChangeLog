@@ -1,3 +1,8 @@
+1997-04-10 20:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* hurd/Makefile (sunrpc-headers): Add clnt.h.
+	Proposed by Thomas Bushnell <thomas@gnu.ai.mit.edu>.
+
 1997-03-24 02:34  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/libm-ieee754/s_finitel.c (__finitel): Shift return value
