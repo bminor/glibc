@@ -31,9 +31,9 @@ endif
 # This is benign and useless in GNU make before 3.63.
 export subdir := $(subdir)
 
-# This is the default target; it makes the library.
+# This is the default target; it makes the library and auxiliary programs.
 .PHONY: all
-all: lib
+all: lib others
 
 ifneq	"$(findstring env,$(origin headers))" ""
 headers :=
@@ -81,15 +81,16 @@ export tests := $(tests)
 # except for the object files and the object-file library members.
 .PHONY: mostlyclean
 mostlyclean:
-	-rm -f $(addprefix $(objpfx),$(tests) $(others))
-	-rm -f core TAGS depend
+	-rm -f $(addprefix $(objpfx),$(tests) $(others) \
+				     $(addsuffix .o,$(tests) $(others)))
+	-rm -f core TAGS $(objpfx)depend-$(subdir)
 
 # This removes absolutely everything that can be regenerated.
 .PHONY: subdir_clean clean realclean
 subdir_clean realclean: clean
-+objs := $(objects)
 clean: mostlyclean
-	-rm -f $(+objs) $(+depfiles) $(generated)
+	-rm -f $(objects) $(addprefix $(objpfx),$(extra-objs)) \
+	       $(+depfiles) $(generated)
 
 .PHONY: subdir_echo-headers
 subdir_echo-headers: echo-headers
