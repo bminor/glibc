@@ -18,8 +18,7 @@ Source1: %{name}-fedora-%{glibcdate}.tar.bz2
 Patch0: %{name}-fedora.patch
 Patch1: %{name}-nptl-check.patch
 Patch2: %{name}-ppc-assume.patch
-Patch3: %{name}-execstack-disable.patch
-Patch4: %{name}-ia64-lib64.patch
+Patch3: %{name}-ia64-lib64.patch
 Buildroot: %{_tmppath}/glibc-%{PACKAGE_VERSION}-root
 Obsoletes: zoneinfo, libc-static, libc-devel, libc-profile, libc-headers,
 Obsoletes:  linuxthreads, gencat, locale, ldconfig, locale-ja
@@ -249,7 +248,7 @@ package or when debugging this package.
 %setup -q -n %{glibcsrcdir} -a1
 %patch0 -p1
 case "`gcc --version | head -1`" in
-gcc*\ 3.3*)
+gcc*\ 3.[34]*)
 %ifarch %{nptlarches}
 %patch1 -p1
 %endif
@@ -257,12 +256,11 @@ gcc*\ 3.3*)
 gcc*\ 3.2.3*)
   case "`uname -r`" in *.ent*|*.EL*)
 %patch2 -p1
-%patch3 -p1
   ;; esac ;;
 esac
 %ifarch ia64
 %if "%{_lib}" == "lib64"
-%patch4 -p1
+%patch3 -p1
 %endif
 %endif
 
