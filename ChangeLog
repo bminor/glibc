@@ -1,3 +1,9 @@
+1999-10-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_nisplus/nisplus-parser.c (_nss_nisplus_parse_spent): Fix
+	handling of empty entries.
+	Patch by Thorsten Kukuk <kukuk@suse.de>.
+
 1999-10-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* po/cs.po: Update.
