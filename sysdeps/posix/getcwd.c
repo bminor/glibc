@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -46,17 +46,35 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
   size_t dotsize;
   dev_t rootdev, thisdev;
   ino_t rootino, thisino;
-  char path[PATH_MAX + 1];
+  char *path;
   register char *pathp;
+  size_t pathlen;
   struct stat st;
 
-  if (buf != NULL && size == 0)
+if (size == 0)
+  {
+    if (buf != NULL)
+      {
+	errno = EINVAL;
+	return NULL;
+      }
+
+#ifndef PATH_MAX
+#define	PATH_MAX 1024
+#endif
+    size = PATH_MAX + 1;
+  }
+
+  if (buf != NULL)
+    path = buf;
+  else
     {
-      errno = EINVAL;
-      return NULL;
+      path = malloc (size);
+      if (path == NULL)
+	return NULL;
     }
 
-  pathp = &path[sizeof(path)];
+  pathp = path + size;
   *--pathp = '\0';
 
   if (stat (".", &st) < 0)
@@ -151,7 +169,30 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
 	}
       else
 	{
+	  if (pathp - path < d->d_namlen + 1)
+	    {
+	      if (buf != NULL)
+		{
+		  errno = ERANGE;
+		  return NULL;
+		}
+	      else
+		{
+		  size *= 2;
+		  buf = realloc (path, size);
+		  if (buf == NULL)
+		    {
+		      (void) closedir (dirstream);
+		      free (path);
+		      errno = ENOMEM; /* closedir might have changed it.  */
+		      return NULL;
+		    }
+		  pathp = &buf[pathp - path];
+		  path = buf;
+		}
+	    }
 	  pathp -= d->d_namlen;
+	  (void) closedir (dirstream);
 	  (void) memcpy (pathp, d->d_name, d->d_namlen);
 	  *--pathp = '/';
 	  (void) closedir (dirstream);
@@ -161,31 +202,13 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
       thisino = dotino;
     }
 
-  if (pathp == &path[sizeof(path) - 1])
+  if (pathp == &path[size - 1])
     *--pathp = '/';
 
   if (dotlist != dots)
     free ((PTR) dotlist);
 
-  {
-    size_t len = &path[sizeof(path)] - pathp;
-    if (buf == NULL)
-      {
-	if (len < (size_t) size)
-	  len = size;
-	buf = (char *) malloc(len);
-	if (buf == NULL)
-	  return NULL;
-      }
-    else if ((size_t) size < len)
-      {
-	errno = ERANGE;
-	return NULL;
-      }
-    (void) memcpy((PTR) buf, (PTR) pathp, len);
-  }
-
-  return buf;
+  return memmove (path, pathp, path + size - pathp);
 
  lose:
   if (dotlist != dots)
