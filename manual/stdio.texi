@@ -17,7 +17,7 @@ useful here.
 * Character Output::		Unformatted output by characters and lines.
 * Character Input::		Unformatted input by characters and lines.
 * Formatted Output::		@code{printf} and related functions.
-* Customizing @code{printf}::	You can define new conversion specifiers for
+* Customizing Printf::	        You can define new conversion specifiers for
 				 @code{printf} and friends.
 * Formatted Input::		@code{scanf} and related functions.
 * Block Input/Output::		Input and output operations on blocks of data.
@@ -1094,8 +1094,8 @@ You could call this function like:
 eprintf ("The file %s does not exist.\n", filename);
 @end example
 
-@node Customizing @code{printf}
-@section Customizing @code{printf}
+@node Customizing Printf
+@section Customizing Printf
 
 The GNU C Library lets you define new conversion specifiers for 
 @code{printf} format templates.  To do this, you must include the
@@ -1117,7 +1117,7 @@ number and type of arguments expected by the conversion specifier.
 * Conversion Specifier Options::
 * Defining the Output Handler::
 * Parsing a Format Template::
-* @code{printf} Extension Example::
+* Printf Extension Example::
 @end menu
 
 @strong{Portability Note:} The ability to extend the syntax of
@@ -1410,8 +1410,8 @@ This is a synonym for @code{PA_FLAG_LONGLONG}, used by convention with
 a base type of @code{PA_FLOAT} to indicate a type of @code{long double}.
 @end deftypevr
 
-@node @code{printf} Extension Example
-@subsection @code{printf} Extension Example
+@node Printf Extension Example
+@subsection Printf Extension Example
 
 Here is an example showing how to define a @code{printf} handler function.
 This program defines a data structure called a @code{Widget} and 

@@ -130,7 +130,7 @@ or smaller at any time, and free the blocks in any order (or never).
 					 bigger or smaller.
 * Allocating Cleared Space::		Use @code{calloc} to allocate a
 					 block and clear it.
-* Efficiency Considerations::	Efficiency considerations in use of
+* Efficiency Considerations::	        Efficiency considerations in use of
 					 these functions.
 * Allocation with Specified Alignment::	Allocating specially aligned memory:
 					 @code{memalign} and @code{valloc}.
@@ -139,7 +139,8 @@ or smaller at any time, and free the blocks in any order (or never).
 					 programs that use @code{malloc}.
 * Storage Allocation Statistics::	Getting information about how much
 					 memory your program is using.
-* Summary of @code{malloc} and Related Functions::         Malloc Summary.
+* Unconstrained Allocation Summary::    Summary of @code{malloc} and
+                                         related functions.
 @end menu
 
 @node Basic Storage Allocation
@@ -596,8 +597,8 @@ in a structure of type @code{struct mstats}.
 @end deftypefun
 
 
-@node Summary of @code{malloc} and Related Functions
-@subsection Summary of @code{malloc} and Related Functions
+@node Unconstrained Allocation Summary
+@subsection Unconstrained Allocation Summary
 
 Here is a summary of the functions that work with @code{malloc}:
 
@@ -1399,8 +1400,8 @@ bytes of storage, allocated in the stack frame of the calling function.
 
 @menu
 * Alloca Example::			Example of using @code{alloca}.
-* Advantages of @code{alloca}::		Reasons to use @code{alloca}.
-* Disadvantages of @code{alloca}::	Reasons to avoid @code{alloca}.
+* Advantages of Alloca::		Reasons to use @code{alloca}.
+* Disadvantages of Alloca::     	Reasons to avoid @code{alloca}.
 * GNU C Variable-Size Arrays::		Only in GNU C, here is an alternative
 					 method of allocating dynamically and
 					 freeing automatically.
@@ -1445,8 +1446,8 @@ int open2 (char *str1, char *str2, int flags, int mode)
 As you can see, it is simpler with @code{alloca}.  But @code{alloca} has
 other, more important advantages, and some disadvantages.
 
-@node Advantages of @code{alloca}
-@subsection Advantages of @code{alloca}
+@node Advantages of Alloca
+@subsection Advantages of Alloca
 
 Here are the reasons why @code{alloca} may be preferable to @code{malloc}:
 
@@ -1494,8 +1495,8 @@ changed in this way.  Even if you are willing to make more changes to
 fix it, there is no easy way to do so.
 @end itemize
 
-@node Disadvantages of @code{alloca}
-@subsection Disadvantages of @code{alloca}
+@node Disadvantages of Alloca
+@subsection Disadvantages of Alloca
 @cindex @code{alloca} disadvantages
 @cindex disadvantages of @code{alloca}
 
