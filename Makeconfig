@@ -49,16 +49,25 @@ objdir = $(ARCH)
 endif
 endif
 
+# $(common-objdir) is the place to put objects and 
+# such that are not specific to a single subdir.
 ifdef objdir
 objpfx = $(objdir)/
-libc.a = $(objpfx)libc.a
+common-objpfx = $(objpfx)
+common-objdir = $(objdir)
 else
 objpfx :=
-libc.a = $(..)libc.a
+common-objpfx = $(..)
+ifdef ..
+common-objdir = ..
+endif
 endif
 
+libc.a = $(common-objpfx)libc.a
+
+
 # Get the values defined by options to `configure'.
-include $(objpfx)config.make
+include $(common-objpfx)config.make
 
 # Force the user to configure before making.
 $(objpfx)config.make:
