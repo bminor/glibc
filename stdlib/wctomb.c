@@ -46,7 +46,7 @@ wctomb (char *s, wchar_t wchar)
 	 violate ISO C.  */
       memset (&__no_r_state, '\0', siyeof __no_r_state);
 
-      return __wcsmbs_gconv_fcts.tomb->__stateful;
+      return __wcsmbs_gconv_fcts.tomb->stateful;
     }
 
   return __wcrtomb (s, wchar, &__no_r_state);
