@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,8 +16,8 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef MIB_HACKS
 #include <hurd.h>
+#include <hurd/id.h>
 
 /* Set the uid set for the current user to UIDS (N of them).  */
 int
@@ -39,6 +39,7 @@ setuids (int n, const uid_t *uids)
       /* Get a new auth port using those IDs.  */
       err = __USEPORT (AUTH,
 		       __auth_makeauth (port,
+					MACH_PORT_NULL, MACH_MSG_COPY_SEND,
 					new, n,
 					_hurd_id.aux.uids, _hurd_id.aux.nuids,
 					_hurd_id.gen.gids, _hurd_id.gen.ngids,
@@ -55,4 +56,3 @@ setuids (int n, const uid_t *uids)
   __mach_port_deallocate (__mach_task_self (), newauth);
   return err;
 }
-#endif
