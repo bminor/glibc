@@ -185,14 +185,14 @@ additional variable arguments.  @xref{Calling Variadics}.
 
 @menu
 * Variadic Prototypes::  How to make a prototype for a function
-			    with variable arguments.
+			  with variable arguments.
 * Receiving Arguments::  Steps you must follow to access the
-			    optional argument values.
+			  optional argument values.
 * How Many Arguments::   How to decide whether there are more arguments. 
 * Calling Variadics::    Things you need to know about calling
-			    variable arguments functions.
+			  variable arguments functions.
 * Argument Macros::      Detailed specification of the macros
-        		    for accessing variable arguments.
+        		  for accessing variable arguments.
 @end menu
 
 @node Variadic Prototypes
@@ -532,7 +532,7 @@ which give you this information in full detail.
 @menu
 * Width of Type::           How many bits does an integer type hold?
 * Range of Type::           What are the largest and smallest values
-			       that an integer type can hold?
+			     that an integer type can hold?
 * Floating Type Macros::    Parameters that measure the floating point types. 
 * Structure Measurement::   Getting measurements on structure types.
 @end menu
@@ -714,7 +714,8 @@ machine.
 @menu
 * Floating Point Concepts::     Definitions of terminology.
 * Floating Point Parameters::   Details of specific macros.
-* IEEE Floating Point::         The measurements for one common representation.
+* IEEE Floating Point::         The measurements for one common
+                                 representation. 
 @end menu
 
 @node Floating Point Concepts
