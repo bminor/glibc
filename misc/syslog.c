@@ -201,7 +201,7 @@ vsyslog(pri, fmt, ap)
 	if (LogType == SOCK_STREAM)
 	  ++bufsize;
 
-	if (__send(LogFile, buf, bufsize, 0) < 0)
+	if (!connected || __send(LogFile, buf, bufsize, 0) < 0)
 	  {
 	    closelog_internal ();	/* attempt re-open next time */
 	    /*
@@ -297,6 +297,8 @@ sigpipe_handler (int signo)
 static void
 closelog_internal()
 {
+	if (!connected)
+		return;
 	(void)close(LogFile);
 	LogFile = -1;
 	connected = 0;
