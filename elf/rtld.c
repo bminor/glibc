@@ -369,7 +369,7 @@ of this helper program; chances are you did not intend to run this program.\n",
       char *list = strdupa (preloadlist);
       char *p;
       list += strspn (list, " :");
-      while (*list && (p = strsep (&list, " :")) != NULL)
+      while (list && *list && (p = strsep (&list, " :")) != NULL)
 	if (! __libc_enable_secure || strchr (p, '/') == NULL)
 	  {
 	    struct link_map *new_map = _dl_map_object (l, p, 1, lt_library, 0);
@@ -437,7 +437,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	{
 	  char *p;
 	  runp = file + strspn (file, ": \t\n");
-	  while (*runp && (p = strsep (&runp, ": \t\n")) != NULL)
+	  while (runp && *runp && (p = strsep (&runp, ": \t\n")) != NULL)
 	    {
 	      struct link_map *new_map = _dl_map_object (l, p, 1,
 							 lt_library, 0);
