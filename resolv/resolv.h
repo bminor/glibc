@@ -69,6 +69,7 @@
 #endif
 #include <sys/cdefs.h>
 #include <stdio.h>
+#include <netinet/in.h>
 
 /*
  * Revision information.  This is the release date in YYYYMMDD format.
