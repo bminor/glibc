@@ -16,21 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <stddef.h>
+#include "set-hooks.h"
 
-struct
-  {
-    size_t n;
-    void EXFUN((*fn[0]), (int argc, char **argv, char **envp));
-  } __libc_subinit;
-
-void
-DEFUN(__libc_init, (argc, argv, envp),
-      int argc AND char **argv AND char **envp)
-{
-  size_t i;
-
-  for (i = 0; i < __libc_subinit.n; ++i)
-    (*__libc_subinit.fn[i]) (argc, argv, envp);
-}
+DEFINE_HOOK_RUNNER (__libc_subinit, __libc_init,
+		    (int argc, char **argv, char **envp), (argc, argv, envp))

@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 
 #define __need_size_t
 #include <stddef.h>
+#include <sys/cdefs.h>
 
 /* Define a hook variable called NAME.  Functions put on this hook take
    arguments described by PROTO.  Use `text_set_element (NAME, FUNCTION)'
@@ -30,7 +31,7 @@ Cambridge, MA 02139, USA.  */
 const struct								      \
   {									      \
     size_t n;								      \
-    void (*fn[0]) __P (NAME);						      \
+    void (*fn[0]) __P (PROTO);						      \
   } NAME
 
 /* Run all the functions hooked on the set called NAME.
