@@ -362,7 +362,7 @@ $(common-objpfx)stub-$(subdir): $(+depfiles)
 	mv $@T $@
 
 ifdef gpl2lgpl
-ifneq (,$(wildcard /home/gd/gnu/lib/ChangeLog))
+ifneq (,$(wildcard $(..)gpl2lgpl.sed))
 # Snarf from the master source and frob the copying notice.
 $(gpl2lgpl): %: $(..)gpl2lgpl.sed /home/gd/gnu/lib/%
 	sed -f $^ > $@-tmp
