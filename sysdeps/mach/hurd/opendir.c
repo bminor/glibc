@@ -59,10 +59,11 @@ DEFUN(opendir, (name), CONST char *name)
 
   dirp->__port = port;
   dirp->__filepos = 0;
-  dirp->__block_size = st.st_blksize;
+  dirp->__block_size = statbuf.st_blksize;
   dirp->__data = NULL;
-  dirp->__offset = 0;
+  dirp->__allocation = 0;
   dirp->__size = 0;
+  dirp->__offset = 0;
 
   return dirp;
 }
