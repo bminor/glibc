@@ -570,8 +570,8 @@ extern int EXFUN(sethostid, (long int __id));
 
 /* Return the number of bytes in a page.  This is the system's page size,
    which is not necessarily the same as the hardware page size.  */
-extern int EXFUN(__getpagesize, (NOARGS));
-extern int EXFUN(getpagesize, (NOARGS));
+extern size_t EXFUN(__getpagesize, (NOARGS));
+extern size_t EXFUN(getpagesize, (NOARGS));
 
 #ifdef	__OPTIMIZE__
 #define	getpagesize()	__getpagesize()
