@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/stat.h>
 #include <hurd.h>
+#include <hurd/paths.h>
+#include <fcntl.h>
 
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
@@ -28,11 +30,10 @@ int
 DEFUN(__mknod, (path, mode, dev),
       CONST char *path AND mode_t mode AND dev_t dev)
 {
-  const char *name;
   file_t node;
   error_t err;
   const char *translator;
-  size_t n;
+  unsigned int n;
 
   if (S_ISCHR (mode))
     translator = _HURD_CHRDEV;
@@ -46,20 +47,16 @@ DEFUN(__mknod, (path, mode, dev),
       return -1;
     }
 
-  node = __path_lookup (path,
-			FS_LOOKUP_CREATE|FS_LOOKUP_EXCL|FS_LOOKUP_WRITE,
-			mode & 0777,
-			&node);
+  node = __path_lookup (path, O_WRITE|O_CREAT|O_EXCL, mode & 0777);
   if (node == MACH_PORT_NULL)
     return -1;
 
-  err = __file_set_translator (node,
-			       FS_GOAWAY_DONT,
+  err = __file_set_translator (node, FS_TRANS_EXCL, 0,
 			       translator, strlen (translator) + 1,
 			       MACH_PORT_NULL);
 
   if (!err)
-    err = __io_write (node, &dev, sizeof (dev), &n);
+    err = __io_write (node, &dev, sizeof (dev), -1, &n);
   if (!err && n != sizeof (dev))
     err = EIO;
 
