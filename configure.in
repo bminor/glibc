@@ -369,10 +369,10 @@ changequote([,])dnl The world is now safe for m4, and unsafe for shell.
 dnl Be sure to add each macro used here to aclocal.m4 (which see).
 
 AC_PROG_INSTALL
-if [ "$INSTALL" = "${srcdir}/install.sh" ]; then
+[if [ "$INSTALL" = "${srcdir}/install.sh" ]; then
   # The makefiles need to use a different form to find it in $srcdir.
   INSTALL='$(..)./install.sh'
-fi
+fi]
 AC_PROG_RANLIB
 
 AC_PROG_CC
