@@ -25,6 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include "bsdtty.h"
 #include <sys/file.h>
 #include <sys/time.h>
+#include <sys/types.h>
 
 /* Send zero bits on FD.  */
 int
