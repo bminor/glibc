@@ -202,7 +202,7 @@ __hurd_file_name_lookup_retry (file_t crdir,
 		  mach_msg_type_number_t hostinfocnt = HOST_BASIC_INFO_COUNT;
 		  char *p;
 		  if (err = __host_info (__mach_host_self (), HOST_BASIC_INFO,
-					 (natrual_t *) &hostinfo,
+					 (natural_t *) &hostinfo,
 					 &hostinfocnt))
 		    return err;
 		  if (hostinfocnt != HOST_BASIC_INFO_COUNT)
