@@ -582,6 +582,11 @@ DEFUN(vfprintf, (s, format, args),
 #define _sys_errlist sys_errlist
 #define _sys_nerr sys_nerr
 #endif
+
+#ifdef MIB_HACKS
+#define sys_nerr _sys_nerr
+#define sys_errlist _sys_errlist
+#endif
 	    if (errno < 0 || errno > _sys_nerr)
 	      {
 		sprintf (unknown_error, "Unknown error %d", errno);
