@@ -238,7 +238,7 @@ endif
 
 # Figure out the source filenames in this directory.
 
-override sources	:= $(addsuffix .c,$(filter-out $(elided-rouintes),\
+override sources	:= $(addsuffix .c,$(filter-out $(elided-routines),\
 						       $(routines) $(aux) \
 						       $(sysdep_routines)))
 sysdep_routines := $(sysdep_routines)
