@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -211,7 +211,7 @@ extern int EXFUN(__stdio_check_offset, (FILE *__stream));
    L_cuserid	How long an array to pass to `cuserid'.
    FOPEN_MAX	Mininum number of files that can be open at once.
    FILENAME_MAX	Maximum length of a filename.  */
-#include <stdio_limits.h>
+#include <stdio_lim.h>
 
 
 /* All the known streams are in a linked list
@@ -456,12 +456,20 @@ extern char *EXFUN(gets, (char *__s));
 #ifdef	__USE_GNU
 #include <sys/types.h>
 
-/* Read up to (and including) a newline from STREAM into *LINEPTR
-   (and null-terminate it).  *LINEPTR is a pointer returned from malloc
-   (or NULL), pointing to *N characters of space.  It is realloc'd as
+/* Read up to (and including) a DELIMITER from STREAM into *LINEPTR
+   (and null-terminate it). *LINEPTR is a pointer returned from malloc (or
+   NULL), pointing to *N characters of space.  It is realloc'd as
    necessary.  Returns the number of characters read (not including the
    null terminator), or -1 on error or EOF.  */
+ssize_t EXFUN(getdelim, (char **lineptr, size_t *n,
+			 int delimiter, FILE *stream));
+
+/* Like `getdelim', but reads up to a newline.  */
 ssize_t EXFUN(getline, (char **lineptr, size_t *n, FILE *stream));
+
+#ifdef	__OPTIMIZE__
+#define	getline(lineptr, n, stream) getdelim ((lineptr), (n), '\n', (stream))
+#endif	/* Optimizing.  */
 #endif
 
 
