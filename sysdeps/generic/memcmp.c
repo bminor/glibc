@@ -20,6 +20,15 @@ Cambridge, MA 02139, USA.  */
 #include "config.h"
 #endif
 
+#undef	__ptr_t
+#if defined (__cplusplus) || (defined (__STDC__) && __STDC__)
+#define	__ptr_t	void *
+#else /* Not C++ or ANSI C.  */
+#undef	const
+#define	const
+#define	__ptr_t	char *
+#endif /* C++ or ANSI C.  */
+
 #if defined (HAVE_STRING_H) || defined (_LIBC)
 #include <string.h>
 #endif
@@ -42,14 +51,10 @@ Cambridge, MA 02139, USA.  */
 /* Type to use for unaligned operations.  */
 typedef unsigned char byte;
 
-#if __BYTE_ORDER == __LITTLE_ENDIAN /* XXX */
+#ifndef WORDS_BIGENDIAN
 #define MERGE(w0, sh_1, w1, sh_2) (((w0) >> (sh_1)) | ((w1) << (sh_2)))
-#endif
-#if __BYTE_ORDER == __BIG_ENDIAN /* XXX */
+#else
 #define MERGE(w0, sh_1, w1, sh_2) (((w0) << (sh_1)) | ((w1) >> (sh_2)))
-#endif
-#ifndef MERGE
- #error Byte order unknown.
 #endif
 
 #endif	/* In the GNU C library.  */
@@ -265,7 +270,7 @@ memcmp_not_common_alignment (srcp1, srcp2, len)
 }
 
 int
-memcmp (s1, s2, n)
+memcmp (s1, s2, len)
      const __ptr_t s1;
      const __ptr_t s2;
      size_t len;
