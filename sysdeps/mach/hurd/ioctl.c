@@ -129,7 +129,7 @@ DEFUN(__ioctl, (fd, request),
      ({
        m->msgh_size = (char *) t - msg;
        m->msgh_remote_port = port;
-       m->msgh_local_port = __mig_reply_port ();
+       m->msgh_local_port = __mig_get_reply_port ();
        m->msgh_seqno = 0;
        m->msgh_id = msgid;
 #if 0
