@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,12 +18,10 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 
-#define GET(type, what)							      \
+#define GET(lock, type, what)						      \
 type get##what (void)							      \
 {									      \
-  __mach_port_mod_refs (__mach_task_self (), _hurd_##what,		      \
-			MACH_PORT_RIGHT_SEND, 1);			      \
-  return _hurd_##what;							      \
+  return _hurd_getport (&_hurd_##what, &_hurd_##lock);			      \
 }
 
 #define SET(lock, type, what)						      \
@@ -46,7 +44,8 @@ set##what (type new)							      \
   return 0;								      \
 }
 
-#define	GETSET(lock, type, what)	GET (type, what) SET (lock, type, what)
+#define	GETSET(lock, type, what) \
+  GET (lock, type, what) SET (lock, type, what)
 
 GETSET (lock, process_t, proc)
 GETSET (lock, file_t, ccdir)
