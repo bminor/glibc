@@ -207,9 +207,8 @@ enum
   _NL_CTYPE_WIDTH,
   _NL_CTYPE_MB_CUR_MAX,
   _NL_CTYPE_CODESET_NAME,
-#ifdef __USE_XOPEN
   CODESET = _NL_CTYPE_CODESET_NAME,
-#endif
+#define CODESET			CODESET
   _NL_NUM_LC_CTYPE,
 
   /* LC_MONETARY category: formatting of monetary quantities.
