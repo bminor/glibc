@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 /* File access modes for `open', `fcntl', `dir_pathtrans',
    `hurd_path_lookup', and `path_lookup'.  */
 
-   In GNU, read and write are bits (unlike BSD).  */
+/*   In GNU, read and write are bits (unlike BSD).  */
 #ifdef __USE_GNU
 #define	O_READ		O_RDONLY /* Open for reading.  */
 #define O_WRITE		O_WRONLY /* Open for writing.  */
