@@ -71,11 +71,6 @@ endif
 +sysdep-includes := $(addprefix -I,$(+sysdep_dirs))
 
 # Include any system-specific makefiles.
-# Also generate an ordered list of implicit rules which find the source
-# files in each sysdep directory.  The old method was to use vpath to
-# search all the sysdep directories.  However, that had the problem that a
-# .S file in a later directory would be chosen over a .c file in an earlier
-# directory, which does not preserve the desired sysdeps ordering behavior.
 
 # This is here so things in sysdep Makefiles can easily depend on foo.h as
 # appropriate and not worry about where foo.h comes from, which may be
@@ -88,6 +83,30 @@ ifeq ($(wildcard $(+sysdir_pfx)sysd-Makefile),)
 # Don't do deps until this exists, because it might change the sources list.
 no_deps=t
 endif
+
+include $(+sysdir_pfx)sysd-Makefile
+$(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules
+	-@rm -f $@T
+	(for dir in $(sysdirs); do		   			      \
+	   file=sysdeps/$$dir/Makefile;					      \
+	   if [ -f $(..)$$file ]; then					      \
+	     echo include "\$$(..)$$file";				      \
+	   else true; fi;						      \
+	 done) > $@T
+	mv $@T $@
+
+# Remove existing files from `before-compile'.  Things are added there when
+# they must exist for dependency generation to work right, but once they
+# exist there is no further need for every single file to depend on them,
+# and those gratuitous dependencies result in many gratuitous
+# recompilations.
+before-compile := $(filter-out $(wildcard $(before-compile)),$(before-compile))
+
+# Generate an ordered list of implicit rules which find the source files in
+# each sysdep directory.  The old method was to use vpath to search all the
+# sysdep directories.  However, that had the problem that a .S file in a
+# later directory would be chosen over a .c file in an earlier directory,
+# which does not preserve the desired sysdeps ordering behavior.
 
 # When making the list of .dep files to include, we can't know which ones
 # have source in .s files, and thus do not in fact need a .dep file.
@@ -104,14 +123,10 @@ $(objpfx)%.dep: $(objpfx)%.s; $(make-dummy-dep)
 $(objpfx)%.o: $(objpfx)%.c $(before-compile); $(compile-command.c)
 $(objpfx)%.dep: $(objpfx)%.c $(before-compile); $(+make-deps)
 
-include $(+sysdir_pfx)sysd-Makefile
-$(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules
+include $(+sysdir_pfx)sysd-rules
+$(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules
+	-@rm -f $@T
 	(for dir in $(sysdirs); do		   			      \
-	   file=sysdeps/$$dir/Makefile;					      \
-	   if [ -f $(..)$$file ]; then					      \
-	     echo include "\$$(..)$$file";				      \
-	   else true;							      \
-	   fi;								      \
 	   dir="\$$(sysdep_dir)/$$dir";					      \
 	   echo "\$$(objpfx)%.o: $$dir/%.S \$$(before-compile); \
 		\$$(compile-command.S)";				      \
@@ -124,7 +139,8 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules
 		\$$(compile-command.c)";				      \
 	   echo "\$$(objpfx)%.dep: $$dir/%.c \$$(before-compile); \
 		\$$(+make-deps)";					      \
-	 done) > $@
+	 done) > $@T
+	mv $@T $@
 
 # The order of these rules is important.
 
@@ -164,8 +180,12 @@ endif
 endif
 
 S-CPPFLAGS = $(asm-CPPFLAGS)
-+make-deps = $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
-	     sed $(sed-remove-objpfx) -e 's,$*\.o,$(@:.dep=.o) $@,' > $@
+define +make-deps
+-@rm -f $@
+$(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
+sed $(sed-remove-objpfx) -e 's,$*\.o,$(@:.dep=.o) $@,' > $(@:.dep=.dtm)
+mv $(@:.dep=.dtm) $@
+endef
 ifneq (,$(objpfx))
 sed-remove-objpfx = -e 's@$(subst @,\@,$(objpfx))@$$(objpfx)@g'
 endif
