@@ -314,22 +314,22 @@ _hurd_fd_done (struct _hurd_fd_user d, int *dealloc)
    
 #define	_HURD_DPORT_USE(fd, expr)					      \
   ({ int __dealloc_dt;							      \
+     __typeof (expr) __result;						      \
      struct _hurd_fd_user __d = _hurd_fd (fd, &__dealloc_dt);		      \
      if (__d.d == NULL)							      \
-       EBADF;								      \
+       __result = EBADF;						      \
      else								      \
        {								      \
 	 int __dealloc, __dealloc_ctty;					      \
 	 io_t port = _hurd_port_locked_get (&__d.d->port, &__dealloc);	      \
 	 io_t ctty = _hurd_port_locked_get (&__d.d->ctty, &__dealloc_ctty);   \
-	 __typeof (expr) __result;					      \
 	 __result = (expr);						      \
 	 _hurd_port_free (&__d.d->port, &__dealloc, port);		      \
 	 if (ctty != MACH_PORT_NULL)					      \
 	   _hurd_port_free (&__d.d->ctty, &__dealloc_ctty, ctty);	      \
 	 _hurd_fd_done (__d, &__dealloc_dt);				      \
-	 __result;							      \
        }								      \
+      __result;								      \
    })									      \
 
 static inline int
@@ -588,7 +588,7 @@ struct ioctl_handler
    between FIRST and LAST inclusive.  */
 
 #define	_HURD_HANDLE_IOCTLS(handler, first, last)			      \
-  static const struct ioctl_handler ##handler##_ioctl_handler =		      \
+  static const struct ioctl_handler handler##_ioctl_handler =		      \
     { first, last, handler, NULL };					      \
   text_set_element (_hurd_ioctl_handler_lists, ##handler##_ioctl_handler)
 
