@@ -201,7 +201,7 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 {
   struct gconv_step *next_step = step + 1;
   struct gconv_step_data *next_data = data + 1;
-  gconv_fct fct = next_step->fct;
+  gconv_fct fct = data->is_last ? NULL : next_step->fct;
   int status;
 
   /* If the function is called with no input this means we have to reset
