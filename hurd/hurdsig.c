@@ -599,15 +599,17 @@ _hurdsig_init (void)
 
   stacksize = __vm_page_size * 4; /* Small stack for signal thread.  */
   if (err = __mach_setup_thread (__mach_task_self (), _hurd_msgport_thread,
-				_hurd_msgport_receive,
+				 _hurd_msgport_receive,
 				 NULL, &stacksize))
     __libc_fatal ("hurd: Can't setup signal thread\n");
   if (err = __thread_resume (_hurd_msgport_thread))
     __libc_fatal ("hurd: Can't resume signal thread\n");
     
+#if 0				/* Don't confuse poor gdb.  */
   /* Receive exceptions on the signal port.  */
   __task_set_special_port (__mach_task_self (),
 			   TASK_EXCEPTION_PORT, _hurd_msgport);
+#endif
 }
 
 /* Send exceptions for the signal thread to the proc server.
@@ -629,8 +631,10 @@ _hurdsig_fault_init (void)
   /* Set up STATE with a thread state that will longjmp immediately.  */
   _hurd_initialize_fault_recovery_state (&state);
 
+#if 0				/* Don't confuse gdb.  */
   __thread_set_special_port (_hurd_msgport_thread,
 			     THREAD_EXCEPTION_PORT, sigexc);
+#endif
 
   if (err = __USEPORT
       (PROC,
