@@ -112,10 +112,10 @@ $(objpfx)zic: $(objpfx)scheck.o $(objpfx)ialloc.o $(objpfx)emkdir.o
 
 $(objpfx)tzfile.o: tzfile.c; $(tz-cc)
 $(objpfx)zic.o: zic.c; $(tz-cc)
-define tz-cc
-$(COMPILE.c) $(+gcc-nowarn) \
+
+# Some versions of GNU make have a bug with backslashes in define directives.
+tz-cc = $(COMPILE.c) $(+gcc-nowarn) \
 	     -DTZDIR='"$(datadir)/zoneinfo"' \
 	     -DTZDEFAULT='"$(localtime-file)"' \
 	     -DTZDEFRULES='"$(posixrules-file)"' \
 	     $< $(OUTPUT_OPTION)
-endef
