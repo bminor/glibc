@@ -81,11 +81,14 @@ enum __itimer_which
   {
     /* Timers run in real time.  */
     ITIMER_REAL = 0,
+#define ITIMER_REAL ITIMER_REAL
     /* Timers run only when the process is executing.  */
     ITIMER_VIRTUAL = 1,
+#define ITIMER_VIRTUAL ITIMER_VIRTUAL
     /* Timers run when the process is executing and when
        the system is executing on behalf of the process.  */
     ITIMER_PROF = 2
+#define ITIMER_PROF ITIMER_PROF
   };
 
 /* Type of the second argument to `getitimer' and
@@ -109,10 +112,10 @@ extern int getitimer __P ((enum __itimer_which __which,
    set *OLD to the old value of timer WHICH.
    Returns 0 on success, -1 on errors.  */
 extern int __setitimer __P ((enum __itimer_which __which,
-			     struct itimerval *__new,
+			     __const struct itimerval *__new,
 			     struct itimerval *__old));
 extern int setitimer __P ((enum __itimer_which __which,
-			   struct itimerval *__new,
+			   __const struct itimerval *__new,
 			   struct itimerval *__old));
 
 /* Change the access time of FILE to TVP[0] and
