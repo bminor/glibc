@@ -25,7 +25,7 @@ vpath %.h $(..)
 ifdef subdir
 objdir-CPPFLAGS = $(CPPFLAGS) # Already has appropriate `..'s.
 else
-objdir-CPPFLAGS = $(patsubst -I%,-I../%,$(patsubst -I/%,-I//%))
+objdir-CPPFLAGS = $(patsubst -I/..//%,-I/%,$(CPPFLAGS:-I%=-I../%))
 endif
 # The point of this is to not use -W options to gcc.
 $(objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
