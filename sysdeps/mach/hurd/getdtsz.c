@@ -21,14 +21,14 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 
-/* Return the maximum number of file descriptors
-   the current process could possibly have (until it does setdtablesize).  */
+/* Return the maximum number of file descriptors the current process
+   could possibly have (until it raises the resource limit).  */
 int
 DEFUN_VOID(__getdtablesize)
 {
   int size;
   __mutex_lock (&_hurd_dtable_lock);
-  size = _hurd_dtable.size;
+  size = _hurd_dtable_rlimit;
   __mutex_unlock (&_hurd_dtable_lock);
   return size;
 }
