@@ -294,7 +294,7 @@ __MATH_INLINE double
 pow (double __x, double __y)
 {
   register double __value, __exponent;
-  long __p = (long) __y;
+  long long int __p = (long long int) __y;
 
   if (__x == 0.0 && __y > 0.0)
     return 0.0;
@@ -494,7 +494,7 @@ __MATH_INLINE double
 pow2 (double __x)
 {
   register double __value, __exponent;
-  long __p = (long) __x;
+  int __p = (int) __x;
 
   if (__x == (double) __p)
     return ldexp (1.0, __p);
