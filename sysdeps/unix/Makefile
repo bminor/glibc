@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -17,12 +17,7 @@
 # Cambridge, MA 02139, USA.
 
 # The unix-specific configure fragment writes `unix-generated' in config.make.
-ifdef objdir
-unix-generated-pfx = $(objpfx)
-else
-unix-generated-pfx = $(sysdep_dir)/unix/
-endif
-generated := $(generated) $(addprefix $(unix-generated-pfx),$(unix-generated))
+config-generated := $(config-generated) $(unix-generated)
 
 ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/local_lim.h))))))
@@ -235,7 +230,8 @@ ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
 # it's in <sys.s>;
 # it defines `CALL' instead of `SYS_call'.
 
-# Find a file that might have these.
+# Find a file that might have these.  NOTE: This list of possibilities is
+# repeated in sysdeps/unix/configure and the two should be kept in sync.
 syscall.h := $(firstword $(wildcard $(addprefix $(sysincludedir)/, \
 						syscall.h sys/syscall.h \
 						sys.s sys/sys.s \
