@@ -1,3 +1,12 @@
+2000-03-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* mutex.c (__pthread_reset_pthread_once): Reset once_masterlock.
+	* internals.h (__pthread_reset_pthread_once): Add prototype.
+	* ptfork.c (__fork): Call __pthread_reset_pthread_once.
+
+	* manager.c (pthread_handle_create): Store ID of new thread before
+	clone call.
+
 2000-03-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread.c (pthread_initialize): Test for address of __dso_handle
