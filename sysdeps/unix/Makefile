@@ -44,7 +44,8 @@ common-generated := $(common-generated) local_lim.h mk-local_lim
 endif
 
 ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
-	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/sys/param.h))))))
+	$(patsubst %/sys/param.h,%/,\
+		   $(firstword $(wildcard $(+sysdep_dirs:%=%/sys/param.h))))))
 
 before-compile := $(before-compile) $(common-objpfx)sys/param.h
 
