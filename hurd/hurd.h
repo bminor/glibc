@@ -77,7 +77,6 @@ extern mach_msg_type_number_t _hurd_init_dtablesize;
 
 extern pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 extern int _hurd_orphaned;
-extern struct mutex _hurd_pid_lock; /* Locks above.  */
 
 /* Unix `data break', for brk and sbrk.
    If brk and sbrk are not used, this info will not be initialized or used.  */
@@ -106,7 +105,7 @@ extern int _hurd_set_brk (vm_address_t newbrk);
 /* Calls to get and set basic ports.  */
 
 extern process_t getproc (void);
-extern file_t getccdir (void), getcwdir (void), getcrdir (void);
+extern file_t getcwdir (void), getcrdir (void);
 extern auth_t getauth (void);
 extern int setproc (process_t);
 extern int setcwdir (file_t), setcrdir (file_t);
@@ -208,7 +207,7 @@ extern socket_t _hurd_socket_server (int domain);
    If PID is < -1, send SIG to all processes in process group - PID.
    SIG and REFPORT are passed along in the request message.  */
 
-extern error_t _hurd_sig_post (pid_t pid, int sig, mach_port_t refport);
+extern error_t hurd_sig_post (pid_t pid, int sig, mach_port_t refport);
 
 /* Fetch the host privileged port and device master port from the proc
    server.  They are fetched only once and then cached in the
