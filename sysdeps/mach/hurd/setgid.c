@@ -55,7 +55,8 @@ DEFUN(__setgid, (gid), gid_t gid)
 			_hurd_id.gen.uids, _hurd_id.gen.nuids,
 			_hurd_id.aux.uids, _hurd_id.aux.nuids,
 			newgen, 1 + _hurd_id.gen.ngids,
-			newaux, _hurd_id.aux.ngids));
+			newaux, _hurd_id.aux.ngids,
+			&newauth));
     }
   __mutex_unlock (&_hurd_id.lock);
 
