@@ -34,9 +34,9 @@ Cambridge, MA 02139, USA.  */
 #else
 /* In GCC 2.5 and later, these keywords are meaningless when applied to
    functions, as ANSI requires.  Instead, we use GCC's special
-   `__attributes__' syntax.  */
-#define	__NORETURN	__attributes__ ((volatile))
-#define	__CONSTVALUE	__attributes__ ((const))
+   `__attribute__' syntax.  */
+#define	__NORETURN	__attribute__ ((volatile))
+#define	__CONSTVALUE	__attribute__ ((const))
 #endif
 
 #else	/* Not GCC.  */
