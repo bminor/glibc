@@ -839,7 +839,7 @@ Conversions}, for details.
 
 @item @samp{%Z}
 Print an integer as an unsigned decimal number, assuming it was passed
-with type @cod{size_t}.  @xref{Integer Conversions}, for details.
+with type @code{size_t}.  @xref{Integer Conversions}, for details.
 
 @item @samp{%x}, @samp{%X}
 Print an integer as an unsigned hexadecimal number.  @samp{%x} uses
@@ -1652,7 +1652,7 @@ validate_args (char *format, int nargs, OBJECT *args)
 @end example
 
 @node Customizing Printf
-@section Customizing Printf
+@section Customizing @code{printf}
 @cindex customizing @code{printf}
 @cindex defining new @code{printf} conversions
 @cindex extending @code{printf}
@@ -1871,7 +1871,7 @@ the number and type of arguments used by a conversion specifier.
 @end deftp
 
 @node Printf Extension Example
-@subsection Printf Extension Example
+@subsection @code{printf} Extension Example
 
 Here is an example showing how to define a @code{printf} handler function.
 This program defines a data structure called a @code{Widget} and 
@@ -3281,6 +3281,8 @@ make_message_string (char *a, int b, char *c)
 This section describes how you can make a stream that gets input from an
 arbitrary data source or writes output to an arbitrary data sink
 programmed by you.  We call these @dfn{custom streams}.
+
+@c !!! this does not talk at all about the higher-level hooks
 
 @menu
 * Streams and Cookies::         The @dfn{cookie} records where to fetch or

@@ -13,6 +13,7 @@ classifications of particular character codes, all of these functions
 are affected by the current locale.  (More precisely, they are affected
 by the locale currently selected for character classification.)
 @xref{Locales}.
+@c !!! should mention the symbol `LC_CTYPE' here.
 
 @menu
 * Classification of Characters::   Testing whether characters are
@@ -185,6 +186,7 @@ is not a printing character).
 @deftypefun int isascii (int @var{c})
 Returns true if @var{c} is a 7-bit @code{unsigned char} value that fits
 into the US/UK ASCII character set.
+@c !!! should say this is a non-ansi fn
 @end deftypefun
 
 
@@ -234,6 +236,7 @@ upper-case letter.  Otherwise @var{c} is returned unchanged.
 This function converts @var{c} to a 7-bit @code{unsigned char} value
 that fits into the US/UK ASCII character set, by clearing the
 high-order bits.
+@c !!! should say this is a non-ansi fn
 @end deftypefun
 
 @comment ctype.h

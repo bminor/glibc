@@ -1,4 +1,5 @@
 @node Language Features, Library Summary, System Configuration, Top
+@c !!! this title is too long -- it gets 2 lines in contents
 @appendix Library Facilities that are Part of the C Language
 
 Some of the facilities implemented by the C library really should be

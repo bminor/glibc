@@ -547,6 +547,7 @@ The pattern didn't match the string.  This isn't really an error.
 @end table
 
 @node Regexp Subexpressions
+@c !!! I think this title is awkward -rm 
 @subsection Subexpressions Match Results
 
 When @code{regexec} matches parenthetical subexpressions of
@@ -684,6 +685,7 @@ the error message was not truncated, and you can use it.  Otherwise, you
 should call @code{regerror} again with a larger buffer.
 @end deftypefun
 
+@c !!!! this is not actually in the library....
 @node Word Expansion
 @section Shell-Style Word Expansion
 @cindex word expansion

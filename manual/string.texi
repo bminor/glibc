@@ -57,8 +57,8 @@ attempting to reference the string it points to gets an error.
 
 By convention, a @dfn{null character}, @code{'\0'}, marks the end of a
 string.  For example, in testing to see whether the @code{char *}
-@var{p} points to a null character marking the end of a string, you can
-write @code{!*@var{p}} or @code{*@var{p} == '\0'}.
+variable @var{p} points to a null character marking the end of a string,
+you can write @code{!*@var{p}} or @code{*@var{p} == '\0'}.
 
 A null character is quite different conceptually from a null pointer,
 although both are represented by the integer @code{0}.
@@ -99,6 +99,7 @@ checks for overflowing the array.  Many of the library functions
 an extra byte to hold the null character that marks the end of the
 string.
 
+@c !!! I think the / looks bad in the printed manual---use `and' instead?  -rm
 @node String/Array Conventions, String Length, Representation of Strings, String and Array Utilities
 @section String/Array Conventions
 
@@ -196,7 +197,9 @@ your program.
 
 All functions that have problems copying between overlapping arrays are
 explicitly identified in this manual.  In addition to functions in this
-section, there are a few others like @code{sprintf} and @code{scanf}.
+section, there are a few others like @code{sprintf} (@pxref{Formatted
+Output Functions}) and @code{scanf} (@pxref{Formatted Input
+Functions}).
 
 @comment string.h
 @comment ANSI
@@ -259,7 +262,7 @@ overlap.  The return value is the value of @var{to}.
 @comment ANSI
 @deftypefun {char *} strncpy (char *@var{to}, const char *@var{from}, size_t @var{size})
 This function is similar to @code{strcpy} but always copies exactly
-@var{size}.
+@var{size} characters into @var{to}.
 
 If the length of @var{from} is more than @var{size}, then @code{strncpy}
 copies just the first @var{size} characters.
@@ -285,6 +288,7 @@ waste a considerable amount of time copying null characters.
 This function copies the null-terminated string @var{s} into a newly
 allocated string.  The string is allocated using @code{malloc};
 see @ref{Unconstrained Allocation}.
+@c !!! say returns new string or NULL if can't malloc
 @end deftypefun
 
 @comment string.h
@@ -298,13 +302,7 @@ For example, this program uses @code{stpcpy} to concatenate @samp{foo}
 and @samp{bar} to produce @samp{foobar}, which it then prints.
 
 @example
-main ()
-@{
-  char *to = buffer;
-  to = stpcpy (to, "foo");
-  to = stpcpy (to, "bar");
-  printf ("%s\n", buffer);
-@}
+@include stpcpy.c.texi
 @end example
 
 This function is not part of the ANSI or POSIX standards, and is not
@@ -345,13 +343,16 @@ single null character is also always appended to @var{to}, so the total
 allocated size of @var{to} must be at least @code{@var{size} + 1} bytes
 longer than its initial length.
 
+@c !!! why is this here?  It should be introduced.
 @example
+@group
 char *
 strncat (char *to, const char *from, size_t size)
 @{
   strncpy (to + strlen (to), from, size);
   return to;
 @}
+@end group
 @end example
 
 The behavior of @code{strncat} is undefined if the strings overlap.
@@ -384,8 +385,8 @@ arguments are not in the same order.
 @comment string.h
 @comment BSD
 @deftypefun {void *} bzero (void *@var{block}, size_t @var{size})
-This is a partially obsolete alternative for @code{bzero}, derived from
-BSD.  Note that it is not as powerful as @code{bzero}, because the only
+This is a partially obsolete alternative for @code{memset}, derived from
+BSD.  Note that it is not as general as @code{bmemset}, because the only
 value it can store is zero.
 @end deftypefun
 
@@ -426,7 +427,7 @@ All of these functions are declared in the header file @file{string.h}.
 @deftypefun int memcmp (const void *@var{a1}, const void *@var{a2}, size_t @var{size})
 The function @code{memcmp} compares the @var{size} bytes of memory
 beginning at @var{a1} against the @var{size} bytes of memory beginning
-at @var{a1}.  The value returned has the same sign as the difference
+at @var{a2}.  The value returned has the same sign as the difference
 between the first differing pair of bytes (interpreted as @code{unsigned
 char} objects, then promoted to @code{int}).
 
@@ -453,13 +454,15 @@ component-wise comparison.
 For example, given a structure type definition like:
 
 @example
-struct foo @{
-  unsigned char tag;
-  union @{
-    double f;
-    long i;
-    char *p;
-    @} value;
+struct foo
+  @{
+    unsigned char tag;
+    union
+      @{
+        double f;
+        long i;
+        char *p;
+      @} value;
   @};
 @end example
 
@@ -488,7 +491,16 @@ is an initial substring of @var{s2}, then @var{s1} is considered to be
 This function is like @code{strcmp}, except that differences in case
 are ignored.
 
-@code{strcasecmp} is a GNU extension.
+@code{strcasecmp} is derived from BSD.
+@end deftypefun
+
+@comment string.h
+@comment BSD
+@deftypefun int strncasecmp (const char *@var{s1}, const char *@var{s2}, size_t @var{n})
+This function is like @code{strncmp}, except that differences in case
+are ignored.
+
+@code{strncasecmp} is a GNU extension.
 @end deftypefun
 
 @comment string.h
@@ -583,7 +595,7 @@ efficiently using @code{strxfrm}.)
 int
 compare_elements (char **p1, char **p2)
 @{
-  return strcmp (*p1, *p2);
+  return strcoll (*p1, *p2);
 @}
 
 /* @r{This is the entry point---the function to sort}
@@ -636,7 +648,7 @@ the time needed to allocate and free storage is much less than the time
 we save, when there are many strings.
 
 @example
-struct sorter @{char *input; char *transformed; @};
+struct sorter @{ char *input; char *transformed; @};
 
 /* @r{This is the comparison function used with @code{qsort}}
    @r{to sort an array of @code{struct sorter}.} */
@@ -658,25 +670,27 @@ sort_strings_fast (char **array, int nstrings)
 
   /* @r{Set up @code{temp_array}.  Each element contains}
      @r{one input string and its transformed string.} */
-  for (i = 0; i < nstrings; i++) @{
-    int length = strlen (array[i]) * 2;
+  for (i = 0; i < nstrings; i++)
+    @{
+      size_t length = strlen (array[i]) * 2;
 
-    temp_array[i].input = array[i];
+      temp_array[i].input = array[i];
 
-    /* @r{Transform @code{array[i]}.}
-       @r{First try a buffer probably big enough.} */
-    while (1) @{
-      char *transformed = (char *) xmalloc (length);
-      if (strxfrm (transformed, array[i], length)
-          < length) @{
-        temp_array[i].transformed = transformed;
-        break;
-      @}
-      /* @r{Try again with a bigger buffer.} */
-      free (transformed);
-      length *= 2;
+      /* @r{Transform @code{array[i]}.}
+         @r{First try a buffer probably big enough.} */
+      while (1)
+        @{
+          char *transformed = (char *) xmalloc (length);
+          if (strxfrm (transformed, array[i], length) < length)
+            @{
+              temp_array[i].transformed = transformed;
+              break;
+            @}
+          /* @r{Try again with a bigger buffer.} */
+          free (transformed);
+          length *= 2;
+        @}
     @}
-  @}
 
   /* @r{Sort @code{temp_array} by comparing transformed strings.} */
   qsort (temp_array, sizeof (struct sorter),
@@ -752,7 +766,7 @@ strrchr ("hello, world", 'l')
 
 @comment string.h
 @comment ANSI
-@deftypefun {char *} strstr (const char *@var{needle}, const char *@var{haystack})
+@deftypefun {char *} strstr (const char *@var{haystack}, const char *@var{needle})
 This is like @code{strchr}, except that it searches @var{needle} for a
 substring @var{haystack} rather than just a single character.  It
 returns a pointer into the string @var{needle} that is the first
@@ -771,7 +785,7 @@ strstr ("hello, world", "wo")
 
 @comment string.h
 @comment GNU
-@deftypefun {void *} memstr (const void *@var{needle}, size_t @var{needle_len},@*const void *@var{haystack}, size_t @var{haystack_len})
+@deftypefun {void *} memmem (const void *@var{needle}, size_t @var{needle_len},@*const void *@var{haystack}, size_t @var{haystack_len})
 This is like @code{strstr}, but @var{needle} and @var{haystack} are byte
 arrays rather than null-terminated strings.  @var{needle_len} is the
 length of @var{needle} and @var{haystack_len} is the length of
@@ -820,15 +834,19 @@ in @var{string} that is a member of the set @var{stopset} instead of the
 length of the initial substring.  It returns a null pointer if no such
 character from @var{stopset} is found.
 
+@group
 For example,
 @example
 strpbrk ("hello, world", " \t\n,.;!?")
     @result{} ", world"
 @end example
+@end group
 @end deftypefun
 
 @node Finding Tokens in a String,  , Search Functions, String and Array Utilities
 @section Finding Tokens in a String
+
+@c !!! Document strsep, which is a better thing to use than strtok.
 
 @cindex tokenizing strings
 @cindex breaking a string into tokens

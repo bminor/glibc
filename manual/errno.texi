@@ -52,6 +52,9 @@ library functions are guaranteed to set it to certain nonzero values
 when they encounter certain kinds of errors.  These error conditions are
 listed for each function.  No library function ever stores zero in
 @code{errno}.
+@c !!! No library function ever returns with errno==0, but it might
+@c store 0 in errno temporarily, which could be detected by a user's
+@c signal handler (for nonreentrant fns).
 @end deftypevr
 
 @strong{Portability Note:} ANSI C specifies @code{errno} as a
@@ -59,6 +62,7 @@ listed for each function.  No library function ever stores zero in
 implemented as a macro.  For example, its expansion might involve a
 function call, like @code{*_errno ()}.  But in the GNU system,
 @code{errno} really is a variable.
+@c !!! No.  In GNU, errno will be (*_errno ()).
 
 There are a few library functions, like @code{sqrt} and @code{atan},
 that return a perfectly legitimate value in case of an error, but also
@@ -88,6 +92,8 @@ it is given an invalid pointer as an argument.  Since this could only
 happen as a result of a bug in your program, and since it will not
 happen on the GNU system, we have saved space by not mentioning
 @code{EFAULT} in the descriptions of individual functions.
+
+@c !!! In GNU, many functions can fail with ENOMEM.
 
 @node Error Codes, Error Messages, Checking for Errors, Error Reporting
 @section Error Codes
@@ -208,7 +214,7 @@ Bad address; an invalid pointer was detected.
 @deftypevr Macro int ENOTBLK
 A file that isn't a block special file was given in a situation that
 requires one.  For example, trying to mount an ordinary file as a file
-system gives this error.
+system in Unix gives this error.
 @end deftypevr
 
 @comment errno.h
@@ -243,7 +249,6 @@ particular sort of device.
 @comment POSIX.1: Not a directory
 @deftypevr Macro int ENOTDIR
 A file that isn't a directory was specified when a directory is required.
-one.
 @end deftypevr
 
 @comment errno.h
@@ -264,6 +269,7 @@ with passing the wrong argument to a library function.
 @comment POSIX.1: Too many open files in system
 @deftypevr Macro int ENFILE
 There are too many files open in the entire system.
+@c !!! this will never happen in GNU; EMFILE or ENOMEM instead.
 @end deftypevr
 
 @comment errno.h
@@ -271,7 +277,8 @@ There are too many files open in the entire system.
 @deftypevr Macro int EMFILE
 The current process has too many files open and can't open any more,
 and the kernel's table of open files is full.
-@c In GNU, use setdtablesize.
+@c !!! In 4.4BSD and GNU, the number of open files is a resource limit
+@c set with setrlimit.
 @end deftypevr
 
 @comment errno.h
@@ -325,6 +332,7 @@ Too many links; the link count of a single file is too large.
 @comment POSIX.1: Broken pipe
 @deftypevr Macro int EPIPE
 Broken pipe; there is no process reading from the other end of a pipe.
+@c !!! mention relationship to SIGPIPE
 @end deftypevr
 
 @comment errno.h
@@ -492,6 +500,9 @@ local host, such as by the remote machine rebooting.
 @comment BSD: No buffer space available
 @deftypevr Macro int ENOBUFS
 The kernel's buffers for I/O operations are all in use.
+@c !!! this will probably never happen in GNU (I'm presuming the
+@c eventual implementation of the network won't want to use it); you get
+@c ENOMEM instead.
 @end deftypevr
 
 @comment errno.h
@@ -567,6 +578,7 @@ this error occurs when you are trying to delete a directory.
 @comment BSD: Too many users
 @deftypevr Macro int EUSERS
 The file quota system is confused because there are too many users.
+@c !!! never in GNU
 @end deftypevr
 
 @comment errno.h
@@ -589,6 +601,7 @@ the NFS file system on the local host.
 @deftypevr Macro int EREMOTE
 An attempt was made to NFS-mount a remote file system with a file name that
 already specifies an NFS-mounted file.
+@c !!! won't be an error in GNU
 @end deftypevr
 
 @comment errno.h

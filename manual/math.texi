@@ -386,15 +386,15 @@ There are actually two sets of random number functions provided.
 
 @itemize @bullet
 @item 
-The @code{rand} and @code{srand} functions, described in @ref{ANSI C
-Random Number Functions}, are part of the ANSI C standard.  You can use
-these functions portably in many C implementations.
+The @code{rand} and @code{srand} functions, described in @ref{ANSI
+Random}, are part of the ANSI C standard.  You can use these functions
+portably in many C implementations.
 
 @item 
 The @code{random} and @code{srandom} functions, described in @ref{BSD
-Random Number Functions}, are derived from BSD.  They use a better
-random number generator (producing numbers that are more random), but
-are less portable.
+Random}, are derived from BSD.  They use a better random number
+generator (producing numbers that are more random), but are less
+portable.
 @end itemize
 
 For both sets of functions, you can get repeatable sequences of numbers

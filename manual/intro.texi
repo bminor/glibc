@@ -72,6 +72,7 @@ library.  This section gives you an overview of these standards, so that
 you will know what they are when they are mentioned in other parts of
 the manual.
 
+@c !!! this should explain better how to use the summary
 @xref{Library Summary}, for information about what
 standards specify what features.
 
@@ -108,6 +109,7 @@ by the library implementation, and the GNU extensions don't fit these
 limitations.  @xref{Reserved Names}, for more information about these
 restrictions.
 
+@c !!! but glibc is backward compatible!
 The GNU C library specifically does @emph{not} attempt to provide
 backward compatibility with library facilities from older,
 ``traditional'' C dialects.  Likewise, this document does not attempt to
@@ -180,6 +182,7 @@ specifically from the 4.2 BSD and 4.3 BSD Unix systems (also known as
 @dfn{Berkeley Unix}) and from @dfn{SunOS} (a popular 4.2 BSD derivative
 that includes some Unix System V functionality).  
 
+@c !!! sockets, all network code, select, BSD signals, symlinks
 @strong{Incomplete:} Are there any particular Berkeley/SunOS facilities
 that ought to be mentioned specifically here?
 
@@ -256,7 +259,7 @@ forms of this directive; the first,
 #include "@var{header}"
 @end example
 
-@noindent 
+@noindent
 is typically used to include a header file @var{header} that you write
 yourself; this would contain definitions and declarations describing the
 interfaces between the different parts of your particular application.
@@ -272,10 +275,6 @@ definitions and declarations for a standard library.  This file would
 normally be installed in a standard place by your system administrator.
 You should use this second form for the C library header files.
 
-For more information about the use of header files and @samp{#include}
-directives, @pxref{Header Files,,, cpp.texinfo, The GNU C Preprocessor
-Manual}.@refill
-
 Typically, @samp{#include} directives are placed at the top of the C
 source file, before any other code.  If you begin your source files with
 some comments explaining what the code in the file does (a good idea),
@@ -283,7 +282,7 @@ put the @samp{#include} directives immediately afterwards, following the
 feature test macro definition (@pxref{Feature Test Macros}).
 
 For more information about the use of header files and @samp{#include}
-directives, @pxref{Header Files,,, cpp.texinfo, The GNU C Preprocessor
+directives, @pxref{Header Files,,, cpp.info, The GNU C Preprocessor
 Manual}.@refill
 
 The GNU C library provides several header files, each of which contains
@@ -322,7 +321,7 @@ way to have the correct declaration.
 @cindex undefining macros that shadow functions
 
 If we describe something as a function in this manual, it may have a
-macro definition as well.  This normally has no efect on how your
+macro definition as well.  This normally has no effect on how your
 program runs---the macro definition does the same thing as the function
 would.  In particular, macro equivalents for library functions evaluate
 arguments exactly once, in the same way that a function call would.  The
@@ -353,8 +352,8 @@ explicitly in the description of that facility.
 @end itemize
 
 For example, suppose the header file @file{stdlib.h} declares the
-function @code{abs} with @samp{extern int abs(int i);} and also provides
-a macro definition for @code{abs}.  Then, in:
+function @code{abs} with @w{@samp{extern int abs(int i);}} and also
+provides a macro definition for @code{abs}.  Then, in:
 
 @example
 #include <stdlib.h>
@@ -389,7 +388,7 @@ The names of all library types, macros, variables and functions that
 come from the ANSI C standard are reserved unconditionally; your program
 @strong{may not} redefine these names.  All other library names are
 reserved if your programs explicitly includes the header file that
-defines are declares them. There are several reasons for these
+defines or declares them.  There are several reasons for these
 restrictions:
 
 @itemize @bullet
@@ -502,7 +501,7 @@ and @samp{SA_}.
 @pindex signal.h
 
 @item
-The header file @file{stat.h} reserves names prefixed with @samp{st_}
+The header file @file{sys/stat.h} reserves names prefixed with @samp{st_}
 and @samp{S_}.
 @pindex sys/stat.h
 
@@ -668,9 +667,9 @@ facilities in the library, and contains information about basic concepts
 such as file names.
 
 @item
-@ref{I/O on Streams}, describes I/O operations involving
-streams (or @code{FILE *} objects).  These are the normal C library
-functions from @file{stdio.h}.
+@ref{I/O on Streams}, describes I/O operations involving streams (or
+@w{@code{FILE *}} objects).  These are the normal C library functions
+from @file{stdio.h}.
 
 @item
 @ref{Low-Level I/O}, contains information about I/O operations

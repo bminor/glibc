@@ -26,7 +26,7 @@ an Alarm}.
 * Calendar Time::               Manipulation of ``real'' dates and times.
 * Setting an Alarm::            Sending a signal after a specified time.
 * Sleeping::                    Waiting for a period of time.
-* Usage Measurements::		Measuring various resources used.
+* Resource Usage::		Measuring various resources used.
 @end menu
 
 @node Processor Time, Calendar Time,  , Date and Time

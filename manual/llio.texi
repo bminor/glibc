@@ -253,6 +253,7 @@ Here's an example of how to handle @code{EINTR} properly:
 @example
 TEMP_FAILURE_RETRY (close (desc));
 @end example
+@end table
 @end deftypefun
 
 To close a stream, call @code{fclose} (@pxref{Closing Streams}) instead
