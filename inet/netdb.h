@@ -116,6 +116,8 @@ struct	protoent {
  * (left in extern int h_errno).
  */
 
+extern int h_errno;
+
 #define	HOST_NOT_FOUND	1 /* Authoritative Answer Host not found */
 #define	TRY_AGAIN	2 /* Non-Authoritive Host not found, or SERVERFAIL */
 #define	NO_RECOVERY	3 /* Non recoverable errors, FORMERR, REFUSED, NOTIMP */
