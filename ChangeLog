@@ -1,3 +1,8 @@
+1999-06-15  H.J. Lu  <hjl@gnu.org>
+
+	* Make-dist (sysdep_dirs): Exclude SCCS.
+	* MakeTAGS (sysdep_dirs): Likewise.
+
 1999-06-14  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* stdlib/strtol.c: It is not generally true that if
