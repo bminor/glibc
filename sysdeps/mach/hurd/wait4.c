@@ -30,8 +30,8 @@ DEFUN(__wait4, (pid, stat_loc, options, usage),
   error_t err;
 
   err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
-			__proc_wait (port, pid, stat_loc,
-				     options, usage, &dead));
+			__proc_wait (port, pid, options, stat_loc,
+				     usage, &dead));
 
   return err ? (pid_t) __hurd_fail (err) : dead;
 }
