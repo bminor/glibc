@@ -115,6 +115,7 @@ __hurd_path_split (file_t crdir, file_t cwdir,
 		   file_t *dir, char **name)
 {
   const char *lastslash;
+  error_t err;
   
   /* Skip leading slashes in the pathname.  */
   if (*path == '/')
@@ -132,8 +133,9 @@ __hurd_path_split (file_t crdir, file_t cwdir,
 	{
 	  /* "/foobar" => crdir + "foobar".  */
 	  *name = (char *) path + 1;
-	  __mach_port_mod_refs (__mach_task_self (), MACH_PORT_RIGHT_SEND,
-				crdir, +1);
+	  if (err = __mach_port_mod_refs (__mach_task_self (), 
+					  crdir, MACH_PORT_RIGHT_SEND, +1))
+	    return err;
 	  *dir = crdir;
 	  return 0;
 	}
@@ -151,8 +153,9 @@ __hurd_path_split (file_t crdir, file_t cwdir,
     {
       /* "foobar" => cwdir + "foobar".  */
       *name = (char *) path;
-      __mach_port_mod_refs (__mach_task_self (), MACH_PORT_RIGHT_SEND,
-			    cwdir, 1);
+      if (err = __mach_port_mod_refs (__mach_task_self (),
+				      cwdir, MACH_PORT_RIGHT_SEND, +1))
+	return err;
       *dir = cwdir;
       return 0;
     }
