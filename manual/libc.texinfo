@@ -5,9 +5,9 @@
 @setchapternewpage odd
 @comment %**end of header (This is for running Texinfo on a region.)
 
-@set EDITION 0.03
-@set VERSION 1.06 Beta
-@set UPDATED 19 May 1993
+@set EDITION 0.04
+@set VERSION 1.07 Beta
+@set UPDATED 28 May 1993
 
 @ifinfo
 This file documents the GNU C library.
