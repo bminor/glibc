@@ -1,4 +1,4 @@
-@node Introduction
+@node Introduction, Getting Started, Top, Top
 @chapter Introduction
 
 The C language provides no built-in facilities for performing such
@@ -19,8 +19,7 @@ standards to help you identify things that are potentially nonportable
 to other systems.  But the emphasis on this manual is not on strict
 portability.
 
-
-@node Getting Started
+@node Getting Started, Standards and Portability, Introduction, Top
 @section Getting Started
 
 This manual is written with the assumption that you are at least
@@ -48,7 +47,7 @@ library functions, and @emph{where} in this manual you can find more
 specific information about them.
 
 
-@node Standards and Portability
+@node Standards and Portability, Using the Library, Getting Started, Top
 @section Standards and Portability
 @cindex standards
 
@@ -200,7 +199,7 @@ ought to be mentioned specifically here?
 
 
 
-@node Using the Library
+@node Using the Library, Roadmap to the Manual, Standards and Portability, Top
 @section Using the Library
 
 This section describes some of the practical issues involved in using
@@ -592,7 +591,7 @@ any of these macros explicitly, the effect as the same as defining
 @code{_GNU_SOURCE}.
 
 
-@node Roadmap to the Manual
+@node Roadmap to the Manual, Error Reporting, Using the Library, Top
 @section Roadmap to the Manual
 
 Here is an overview of the contents of the remaining chapters of
