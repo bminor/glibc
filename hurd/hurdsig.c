@@ -386,18 +386,21 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
   /* Wake up a sigsuspend call that is blocking SS->thread.  */
   inline void sigwakeup (struct hurd_sigstate *ss)
     {
-      if (ss->suspended)
+      if (ss->suspended != MACH_PORT_NULL)
 	{
 	  /* There is a sigsuspend waiting.  Tell it to wake up.  */
-	  ss->suspended = 0;
-#ifdef noteven
-	  __condition_signal (&ss->arrived);
-#else
-	  __mutex_unlock (&ss->lock);
-#endif
+	  mach_msg_header_t msg;
+	  msg.msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_MOVE_SEND, 0);
+	  msg.msgh_remote_port = ss->suspended;
+	  msg.msgh_local_port = MACH_PORT_NULL;
+	  /* These values do not matter.  */
+	  msg.msgh_msgid = 0x8675309; /* Jenny, Jenny.  */
+	  msg.msgh_seqno = 17;	/* Random.  */
+	  ss->suspended = MACH_PORT_NULL;
+	  __mach_msg (&msg, MACH_SEND_MSG, sizeof msg, 0,
+		      MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
 	}
-      else
-	__mutex_unlock (&ss->lock);
+      __mutex_unlock (&ss->lock);
     }
 
  post_signal:
@@ -694,18 +697,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     }
 
   /* No more signals pending; SS->lock is still locked.  */
-  if (ss->suspended)
-    {
-      /* There is a sigsuspend waiting.  Tell it to wake up.  */
-      ss->suspended = 0;
-#ifdef noteven
-      __condition_signal (&ss->arrived);
-#else
-      __mutex_unlock (&ss->lock);
-#endif
-    }
-  else
-    __mutex_unlock (&ss->lock);
+  sigwakeup ();
 
   /* No pending signals left undelivered for this thread.
      If we were sent signal 0, we need to check for pending
