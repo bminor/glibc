@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -40,10 +40,6 @@ struct child
     pid_t pid;
   };
 
-#ifndef	FORK
-#define	FORK	fork
-#endif
-
 /* Open a new stream that is a one-way pipe to a
    child process running the given shell command.  */
 FILE *
@@ -65,12 +61,12 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
     return NULL;
 
   /* Fork off the child.  */
-  pid = FORK();
+  pid = __vfork ();
   if (pid == (pid_t) -1)
     {
       /* The fork failed.  */
-      (void) close(pipedes[0]);
-      (void) close(pipedes[1]);
+      (void) close (pipedes[0]);
+      (void) close (pipedes[1]);
       return NULL;
     }
   else if (pid == (pid_t) 0)
