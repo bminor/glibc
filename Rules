@@ -34,6 +34,10 @@ export subdir
 .PHONY: all
 all: lib headers
 
+ifneq	"$(findstring env,$(origin headers))" ""
+headers :=
+endif
+
 ifeq "$(strip $(headers))" ""
 ifneq "$(wildcard $(subdir).h)" ""
 override headers := $(subdir).h
