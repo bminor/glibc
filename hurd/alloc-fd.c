@@ -40,7 +40,7 @@ _hurd_alloc_fd (int *fd, const int first_fd)
 
   for (i = first_fd; i < _hurd_dtable.size; ++i)
     {
-      struct hurd_fd *d = &_hurd_dtable.d[i];
+      struct hurd_fd *d = _hurd_dtable.d[i];
       if (d == NULL)
 	{
 	  /* Allocate a new descriptor structure for this slot,
