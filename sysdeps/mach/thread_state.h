@@ -51,7 +51,7 @@ machine_get_basic_state (thread_t thread,
 {
   unsigned int count;
 
-  if (state->set & (1 << flavor))
+  if (state->set & (1 << MACHINE_THREAD_STATE_FLAVOR))
     return 1;
 
   if (__thread_get_state (thread, MACHINE_THREAD_STATE_FLAVOR,
