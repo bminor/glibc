@@ -39,14 +39,12 @@ DEFUN(__write, (fd, buf, nbytes),
       return -1;
     }
 
-  __mutex_lock (&_hurd_dtable.d[fd].lock); /* XXX ???? */
   server = _hurd_dtable.d[fd].server;
   isctty = _hurd_ctty_check (fd);
-  __mutex_unlock (&_hurd_dtable.lock); /* XXX ???? */
+  __mutex_unlock (&_hurd_dtable.lock);
 
   err = __io_write (server, isctty, _hurd_pid, _hurd_pgrp,
 		    buf, nbytes, -1, &wrote);
-  __mutex_unlock (&_hurd_dtable.d[fd].lock);
 
   if (err)
     return __hurd_fail (err);
