@@ -490,14 +490,17 @@ declared in @file{malloc.h}.
 
 @comment malloc.h
 @comment GNU
-@deftypefun int mcheck (void (*@var{abortfn}) (void))
+@deftypefun int mcheck (void (*@var{abortfn}) (enum mcheck_status @var{status}))
 Calling @code{mcheck} tells @code{malloc} to perform occasional
 consistency checks.  These will catch things such as writing
 past the end of a block that was allocated with @code{malloc}.
 
 The @var{abortfn} argument is the function to call when an inconsistency
-is found.  If you supply a null pointer, the @code{abort} function is
-used.
+is found.  If you supply a null pointer, then @code{mcheck} uses a
+default function which prints a message and calls @code{abort}
+(@pxref{Aborting a Program}).  The function you supply is called with
+one argument, which says what sort of inconsistency was detected; its
+type is described below.
 
 It is too late to begin allocation checking once you have allocated
 anything with @code{malloc}.  So @code{mcheck} does nothing in that
@@ -508,6 +511,41 @@ The easiest way to arrange to call @code{mcheck} early enough is to use
 the option @samp{-lmcheck} when you link your program; then you don't
 need to modify your program source at all.
 @end deftypefun
+
+@deftypefun {enum mcheck_status} mprobe (void *@var{pointer})
+The @code{mprobe} function lets you explicitly check for inconsistencies
+in a particular allocated block.  You must have already called
+@code{mcheck} at the beginning of the program, to do its occasional
+checks; calling @code{mprobe} requests an additional consistency check
+to be done at the time of the call.
+
+The argument @var{pointer} must be a pointer returned by @code{malloc}
+or @code{realloc}.  @code{mprobe} returns a value that says what
+inconsistency, if any, was found.  The values are described below.
+@end deftypefun
+
+@deftp {Data Type} {enum mcheck_status}
+This enumerated type describes what kind of inconsistency was detected
+in an allocated block, if any.  Here are the possible values:
+
+@table @code
+@item MCHECK_DISABLED
+@code{mcheck} was not called before the first allocation.
+No consistency checking can be done.
+@item MCHECK_OK
+No inconsistency detected.
+@item MCHECK_HEAD
+The data immediately before the block was modified.
+This commonly happens when an array index or pointer
+is decremented too far.
+@item MCHECK_TAIL
+The data immediately after the block was modified.
+This commonly happens when an array index or pointer
+is incremented too far.
+@item MCHECK_FREE
+The block was already freed.
+@end table
+@end deftp
 
 @node Hooks for Malloc
 @subsection Storage Allocation Hooks
