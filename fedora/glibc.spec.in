@@ -1,4 +1,4 @@
-%define glibcrelease 11
+%define glibcrelease 12
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -71,7 +71,8 @@ Conflicts: kernel < 2.4.19
 %define tls_subdir tls
 %endif
 %endif
-BuildRequires: binutils >= 2.13.90.0.16-5
+# Need AS_NEEDED directive
+BuildRequires: binutils >= 2.15.94.0.2-1
 BuildRequires: gcc >= 3.2.1-5
 %if "%{_enable_debug_packages}" == "1"
 BuildPreReq: elfutils >= 0.72
@@ -93,7 +94,8 @@ Linux system will not function.
 Summary: Object files for development using standard C libraries.
 Group: Development/Libraries
 Conflicts: texinfo < 3.11
-Conflicts: binutils < 2.13.90.0.16-5
+# Need AS_NEEDED directive
+Conflicts: binutils < 2.15.94.0.2-1
 Prereq: /sbin/install-info
 Obsoletes: libc-debug, libc-headers, libc-devel, linuxthreads-devel
 Obsoletes: glibc-debug
@@ -1272,6 +1274,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sat Mar  5 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-12
+- fix tst-chk{2,3}
+- fix up AS_NEEDED directive in /usr/%{_lib}/libc.so
+- BuildReq binutils >= 2.15.94.0.2-1 for AS_NEEDED, in
+  glibc-devel Conflict with binutils < 2.15.94.0.2-1
+
 * Thu Mar  3 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-11
 - update from CVS
   - fix execvp (#149290)
