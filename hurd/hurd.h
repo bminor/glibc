@@ -359,6 +359,8 @@ extern int _hurd_set_brk (vm_address_t newbrk);
 /* Resource limit on core file size.  Enforced by hurdsig.c.  */
 extern int _hurd_core_limit;
 
+#ifdef notyet
+
 #include <signal.h>
 
 /* Per-thread signal state.  */
@@ -461,36 +463,47 @@ extern void _hurd_msgport_receive (void);
     __ss->intr_port = MACH_PORT_NULL;
     __err;
   })
+
+#endif /* notyet */
 
 /* Calls to get and set basic ports.  */
 extern process_t getproc (void);
 extern file_t getccdir (void), getcwdir (void), getcrdir (void);
 extern auth_t getauth (void);
 extern int setproc (process_t);
-extern int setccdir (file_t), setcwdir (file_t), setcrdir (file_t);
+extern int setcwdir (file_t), setcrdir (file_t);
 
 /* Does reauth with the proc server and fd io servers.  */
 extern int __setauth (auth_t), setauth (auth_t);
-#define	setauth	__setauth
+#define	setauth	__setauth	/* XXX */
 
 
 extern error_t __hurd_path_split (file_t crdir, file_t cwdir,
 				  const char *file,
 				  file_t *dir, const char **name);
-#define	hurd_path_split	__hurd_path_split
+extern error_t hurd_path_split (file_t crdir, file_t cwdir,
+				const char *file,
+				file_t *dir, const char **name);
+#define	hurd_path_split	__hurd_path_split /* XXX */
 extern error_t __hurd_path_lookup (file_t crdir, file_t cwdir,
 				   const char *file,
 				   int flags, mode_t mode,
 				   file_t *file);
-#define	hurd_path_lookup __hurd_path_lookup
+extern error_t hurd_path_lookup (file_t crdir, file_t cwdir,
+				 const char *file,
+				 int flags, mode_t mode,
+				 file_t *file);
+#define	hurd_path_lookup __hurd_path_lookup /* XXX */
 
 /* Returns a port to the directory, and sets *NAME to the file name.  */
 extern file_t __path_split (const char *file, const char **name);
+extern file_t path_split (const char *file, const char **name);
 #define	path_split	__path_split
 
 /* Looks up FILE with the given FLAGS and MODE (as for dir_pathtrans).  */
 extern file_t __path_lookup (const char *file, int flags, mode_t mode);
-#define path_lookup __path_lookup
+extern file_t path_lookup (const char *file, int flags, mode_t mode);
+#define path_lookup __path_lookup /* XXX */
 
 /* Open a file descriptor on a port.  */
 extern int openport (io_t port);
