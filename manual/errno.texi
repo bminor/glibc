@@ -422,12 +422,6 @@ A file that isn't a socket was specified when a socket is required.
 @end deftypevr
 
 @comment errno.h
-@comment BSD: Destination address required
-@deftypevr Macro int EDESTADDRREQ
-No destination address was supplied on a socket operation that needed one.
-@end deftypevr
-
-@comment errno.h
 @comment BSD: Message too long
 @deftypevr Macro int EMSGSIZE
 The size of a message sent on a socket was larger than the supported
@@ -548,8 +542,15 @@ You tried to connect a socket that is already connected.
 @comment BSD: Socket is not connected
 @deftypevr Macro int ENOTCONN
 The socket is not connected to anything.  You get this error when you
-try to transmit data over a socket, without first specifying a destination
-for the data.
+try to transmit data over a socket, without first specifying a
+destination for the data.  For a connectionless socket (for datagram
+protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
+@end deftypevr
+
+@comment errno.h
+@comment BSD: Destination address required
+@deftypevr Macro int EDESTADDRREQ
+No destination address was supplied on a socket operation that needed one.
 @end deftypevr
 
 @comment errno.h
