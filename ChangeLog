@@ -1,3 +1,41 @@
+1997-03-19 01:40  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/setjmp.S (__setjmp): Fix fatal bug where 0 argument
+	is placed in wrong place on the stack.
+	Reported by Marc Lehmann <mlehmann@hildesheim.sgh-net.de>.
+
+1997-03-18 23:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/offtime.c (__offtime): Change type of `yg' to long int.
+	Reported by  a sun <asun@zoology.washington.edu>.
+
+1997-03-18 23:09  a sun  <asun@zoology.washington.edu>
+
+	* sysdeps/unix/sysv/linux/net/if_ppp.h (PPP_VERSION): Define to
+	2.2.0 to prevent version mismatch.
+
+1997-03-17 21:39  Philip Blundell  <phil@london.uk.eu.org>
+
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r): Allow
+	protocol=NULL to match any protocol rather than returning an
+	error.
+
+1997-03-17 19:00  Philip Blundell  <phil@london.uk.eu.org>
+
+	* nss/nss_files/files-service.c (servbyname): Match any protocol
+	if proto==NULL.
+
+1997-03-18 05:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/fcntlbits.h: Don't define O_NORW.
+	* sysdeps/unix/sysv/linux/fcntlbits.h: Likewise.
+	Proposed by Thomas Bushnell, n/BSG.
+
+1997-03-18 07:53  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/generic/setenv.c (setenv): Don't copy name when we reuse
+	the buffer for replacement.
+
 1997-03-16 19:30  H.J. Lu  <hjl@gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Add sys_fstat,
@@ -5,12 +43,12 @@
 
 1997-03-17 04:00  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/libmieee754/w_atan2.c: Don't ignore exception if library
+	* sysdeps/libm-ieee754/w_atan2.c: Don't ignore exception if library
 	type is SVID.
-	* sysdeps/libmieee754/w_atan2f.c: Likewise.
-	* sysdeps/libmieee754/w_atan2l.c: Likewise.
+	* sysdeps/libm-ieee754/w_atan2f.c: Likewise.
+	* sysdeps/libm-ieee754/w_atan2l.c: Likewise.
 
-	* sysdeps/unix/sysv/linux/sys/mman.h (msync): Add descrption for
+	* sysdeps/unix/sysv/linux/sys/mman.h (msync): Add description for
 	FLAGS parameter.
 
 1997-03-16 18:43  Ulrich Drepper  <drepper@cygnus.com>
@@ -491,6 +529,108 @@
 	* sysdeps/unix/syscalls.list: Dup takes only one argument.
 	Reported by Greg McGary.
 
+1997-02-21 00:22  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/readlink.c (__readlink): Use io_read rather
+	than file_get_translator.
+
+	* sysdeps/mach/hurd/defs.c, sysdeps/stub/defs.c, sysdeps/posix/defs.c
+	(_cleanup): Use __fcloseall instead of fclose with a NULL stream.
+
+1997-02-20 01:28  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* hurd/fchroot.c (fchroot): Reparent DIR to make it a real root.
+	* sysdeps/mach/hurd/chroot.c (chroot): Likewise.
+
+1997-02-19 13:56  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/accept.c (accept): Don't segv if ADDR_LEN == 0
+	but ADDR also == 0.
+
+	* hurd/report-wait.c (_hurd_itimer_thread): Make a weak alias for
+	now instead of a weak extern, as some old programs expect it to be
+	defined by ld.so.
+
+1997-02-18 15:39  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* hurd/hurdfault.c (_hurdsig_fault_preempter): New weak alias.
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__hurd_threadvar_max,
+	__hurd_threadvar_stack_offset): Restore initialized versions, so
+	startup works correctly.
+
+	* malloc/thread-m.h (mutex_trylock): Invert sense of return value.
+
+1997-02-17 10:58  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* malloc/thread-m.h (mutex_trylock): Define to be __mutex_trylock,
+	not __mutex_try_lock.
+	(tsd_setspecific): Cast DATA to (unsigned long) before storing.
+	(tsd_getspecific): Case variable to (void *) before returning.
+
+	* hurd/hurdinit.c (__libc_argv): Remove extern.
+	(__libc_argc): New variable.
+
+1997-02-15 10:23  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* hurd/hurd/threadvar.h (enum __hurd_threadvar_index): Add
+	_HURD_THREADVAR_MALLOC.
+	* malloc/thread-m.h
+	[_LIBC && !PTHREAD_MUTEX_INITIALIZER && MUTEX_INITIALIZER]
+	(mutex_lock, mutex_unlock, mutex_trylock): Defined in terms of
+	__mutex_*.
+	(mutex_t): Type removed & replaced by new macro.
+	(tsd_key_t): Typedef to int instead of pthread_key_t.
+	(tsd_key_create, tsd_setspecific, tsd_getspecific): New macros.
+	(__pthread_initialize): New macro, work around assumption of pthreads.
+	(tsd_keys_alloced): New static variable.
+	<hurd/threadvar.h>: New include.
+
+	* hurd/report-wait.c (_hurd_itimer_thread): Make a weak extern.
+	(_S_msg_report_wait): Check to see if _hurd_itimer_thread is
+	defined before using it.
+
+	* sysdeps/mach/hurd/i386/init-first.c (__libc_argv, __libc_argc):
+	Make extern.
+	* hurd/hurdinit.c (__libc_argv): Make extern.
+
+	* hurd/getdport.c (_default_hurd_getdport_fn): New variable.
+	(_hurd_getdport_fn): Now a weak alias to _default_hurd_getdport_fn.
+
+	* sysdeps/mach/hurd/i386/init-first.c (__hurd_threadvar_max,
+	__hurd_threadvar_stack_offset,
+	__hurd_threadvar_stack_mask): New variables.
+	* hurd/hurdsig.c (__hurd_sigthread_stack_base,
+	__hurd_sigthread_stack_end, __hurd_sigthread_stack_variables):
+	New variables (moved here from hurdstartup.c).
+	* hurd/hurdstartup.c (__hurd_sigthread_stack_base,
+	__hurd_sigthread_stack_end, __hurd_sigthread_stack_variables):
+	Variables removed (moved to hurdsig.c).
+	(__hurd_threadvar_max, __hurd_threadvar_stack_offset,
+	__hurd_threadvar_stack_mask): Variables removed.
+	* sysdeps/mach/hurd/dl-sysdep.c (__hurd_sigthread_stack_base,
+	__hurd_sigthread_stack_end, __hurd_sigthread_stack_variables,
+	__hurd_threadvar_max, __hurd_threadvar_stack_offset,
+	__hurd_threadvar_stack_mask): Variables removed.
+
+1997-02-14 14:07  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* hurd/hurd.h (_hurd_pids_changed_stamp, _hurd_pids_changed_sync):
+	Declare extern.
+
+	* malloc/thread-m.h
+	[_LIBC && !PTHREAD_MUTEX_INITIALIZER && MUTEX_INITIALIZER]
+	(mutex_t): Type removed.
+	(mutex_t): New macro.
+	(mutex_trylock): New macro.
+	(__x_mutex_lock, __x_mutex_unlock): New functions.
+	(mutex_lock, mutex_unlock): New macros, redefining the behavior of
+	the cthread definitions.
+	(tsd_key_t): Typedef to cthread_key_t instead of pthread_key_t.
+	(tsd_key_create, tsd_setspecific, tsd_getspecific): New macros.
+	(mutex_lock, mutex_unlock, mutex_trylock, mutex_init): Macros removed.
+	(__pthread_initialize): New macro, work around assumption of pthreads.
+
 1997-02-20 17:51  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/netinet/in.h: Protect contents using
@@ -706,7 +846,7 @@
 
 1997-02-11 14:49  Andreas Jaeger  <jaeger@informatik.uni-kl.de>
 
-	* stdlib/atoll.c: Undefined atoll, not atol.
+	* stdlib/atoll.c: Undefine atoll, not atol.
 
 1997-02-08 09:36  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
