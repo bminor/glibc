@@ -42,7 +42,7 @@ _dl_get_origin (void)
     {
       /* We can use this value.  */
       char *last_slash = strrchr (linkval, '/');
-      result = (char *) malloc (last_slash - linkval + 1);
+      result = (char *) malloc (last_slash - linkval + 2);
       if (result == NULL)
 	result = (char *) -1;
       else if (last_slash == linkval)
