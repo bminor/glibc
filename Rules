@@ -28,14 +28,11 @@ include ../Makeconfig
 ifndef	subdir
 Each subdirectory makefile must define the `subdir' variable.
 endif
+export subdir
 
 # This is the default target; it makes the library.
 .PHONY: all
 all: lib headers
-
-ifneq	"$(findstring env,$(origin headers))" ""
-override headers :=
-endif
 
 ifeq "$(strip $(headers))" ""
 ifneq "$(wildcard $(subdir).h)" ""
@@ -99,36 +96,13 @@ subdir_echo-distinfo:
 
 .PHONY: subdir_install
 subdir_install: install
-
-# In most cases, we want the C source files to come before
-# the header files so tags for optimizing #define's in the
-# headers won't be put in the tags files, but for ctype,
-# the functions are just backup for the #define's in the header.
-ifeq	"$(subdir)" "ctype"
-+tags_sources	:= *.h $(sources)
-else
-+tags_sources	:= $(sources) *.h
-endif
 
-# This makes the tags file.
-TAGS: $(+tags_sources)
-	@$(cmdecho) '$(ctags) -f $@ ...'
-	@$(ctags) -f $@ $^
 .PHONY: subdir_TAGS
 subdir_TAGS: TAGS
-
-# Make the distribution tarfile for the parent makefile.
 
-ifneq "$(findstring env,$(origin distribute))" ""
-override distribute :=
-endif
+# Make the distribution tarfile for the parent makefile.
 
 .PHONY: subdir_dist dist
 subdir_dist: dist
 dist: ../Make-dist
 	$(MAKE) -f $< $(Make-dist-args)
-
-# Keep these out of the environment so it doesn't get too big.
-override routines :=
-override aux :=
-override objects :=
