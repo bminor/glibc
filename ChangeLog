@@ -1,3 +1,32 @@
+1997-09-06  Paul Eggert  <eggert@twinsun.com>
+
+	* tzfile.c (__tzfile_read): Don't read a file if TZ is the empty
+	string, just use UTC without leap seconds.  This is for compatibility
+	with the Olson code.
+
+1997-09-06  Paul Eggert  <eggert@twinsun.com>
+
+	* time/tzset.c (__tzname_max): Lock tz data structures before
+	invoking tzset_internal.
+
+	* time/tzfile.c: Define compute_tzname_max statically.
+
+1997-09-07 15:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/selectbits.h [__GNUC__] (__FD_ZERO, __FD_SET, __FD_CLR,
+	__FD_ISSET): Use correct casts to address array correctly.
+	Reported by urbanw@cs.umu.se.
+
+1997-09-05 06:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* gmon/gmon.c (write_bb_counts): Make sure entries are written before
+	next head.  Reported by baccala@FreeSoft.org.
+
+1997-09-01 14:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/stub/sigaction.c: Fix typo.
+	Reported by Klaus Reichl <klaus.reichl@aut.alcatel.at>.
+
 1997-08-28 17:30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* catgets/catgets.c (catopen): Correctly determine length of string

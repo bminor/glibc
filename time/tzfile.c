@@ -112,8 +112,8 @@ __tzfile_read (const char *file)
     /* No user specification; use the site-wide default.  */
     file = TZDEFAULT;
   else if (*file == '\0')
-    /* User specified the empty string; use UTC explicitly.  */
-    file = "Universal";
+    /* User specified the empty string; use UTC with no leap seconds.  */
+    return;
   else
     {
       /* We must not allow to read an arbitrary file in a setuid
@@ -455,7 +455,7 @@ __tzfile_compute (time_t timer, long int *leap_correct, int *leap_hit)
   return 1;
 }
 
-void
+static void
 compute_tzname_max (size_t chars)
 {
   extern size_t __tzname_cur_max; /* Defined in tzset.c. */

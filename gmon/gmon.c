@@ -285,8 +285,9 @@ write_bb_counts (fd)
 	  bbbody[nfilled++].iov_base = (char *) &grp->addresses[i];
 	  bbbody[nfilled++].iov_base = &grp->counts[i];
 	}
+      if (nfilled > 0)
+	__writev (fd, bbbody, nfilled);
     }
-  __writev (fd, bbbody, nfilled);
 }
 
 

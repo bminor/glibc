@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
+#include <libc-lock.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,6 +44,9 @@ long int __timezone = 0L;
 weak_alias (__tzname, tzname)
 weak_alias (__daylight, daylight)
 weak_alias (__timezone, timezone)
+
+/* This locks all the state variables in tzfile.c and this file.  */
+__libc_lock_define (static, tzset_lock)
 
 
 #define	min(a, b)	((a) < (b) ? (a) : (b))
@@ -430,7 +434,11 @@ size_t __tzname_cur_max;
 long int
 __tzname_max ()
 {
+  __libc_lock_lock (tzset_lock);
+
   __tzset_internal (0);
+
+  __libc_lock_unlock (tzset_lock);
 
   return __tzname_cur_max;
 }
@@ -552,18 +560,13 @@ __tz_compute (timer, tm)
   return 1;
 }
 
-#include <libc-lock.h>
-
-/* This locks all the state variables in tzfile.c and this file.  */
-__libc_lock_define (, __tzset_lock)
-
 /* Reinterpret the TZ environment variable and set `tzname'.  */
 #undef tzset
 
 void
 __tzset (void)
 {
-  __libc_lock_lock (__tzset_lock);
+  __libc_lock_lock (tzset_lock);
 
   __tzset_internal (1);
 
@@ -574,6 +577,6 @@ __tzset (void)
       __tzname[1] = (char *) tz_rules[1].name;
     }
 
-  __libc_lock_unlock (__tzset_lock);
+  __libc_lock_unlock (tzset_lock);
 }
 weak_alias (__tzset, tzset)

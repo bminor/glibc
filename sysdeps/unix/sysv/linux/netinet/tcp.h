@@ -89,7 +89,7 @@ struct tcphdr
     u_int16_t psh:1;
     u_int16_t ack:1;
     u_int16_t urg:1;
-    urg res2:2;
+    u_int16_t res2:2;
 #elif __BYTE_ORDER == __BIG_ENDIAN
     u_int16_t doff:4;
     u_int16_t res1:4;
