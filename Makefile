@@ -121,7 +121,7 @@ $(objpfx)Mcrt1.o $(objpfx)crt1.o:
 	$(COMPILE.c) $(@:.o=.c) $(OUTPUT_OPTION)
 	rm -f $(@:.o=.c)
 
-lib-noranlib: subdir_lib
+lib-noranlib $(libc.a)(__.SYMDEF): subdir_lib
 
 
 $(objpfx)sysd-dirs: $(+sysdir_pfx)config.make
