@@ -29,14 +29,13 @@ DEFUN(memchr, (str, c, len),
       CONST PTR str AND int c AND size_t len)
 {
   asm("cld\n"			/* Search forward.  */
-      "orl %2, %2\n"		/* Reset zero flag, to handle LEN == 0.  */
-      "repne\n"			/* Search for C.  */
+      "orl %0,%0\n"		/* Reset zero flag, to handle LEN == 0.  */
+      "repnz\n"			/* Search for C.  */
       "scasb\n"
       "jz 1f\n"			/* Jump if we found something equal to C */
-      "xorl %0, %0\n"		/* Nothing found.  Return NULL.  */
-      "jmp 2f\n"
-      "1:leal -1(%2), %0\n"	/* edi has been incremented.  Return edi-1.  */
-      "2:" : "=a" (str), "=D" (str) : "c" (len), "1" (str), "a" (c));
+      "movl %4,%0\n"		/* Nothing found.  Return NULL.  */
+      "1:decl %0" :		/* edi has been incremented.  Return edi-1.  */
+      "=D" (str) : "c" (len), "0" (str), "a" (c), "n" (1));
   return str;
 }
 
