@@ -255,7 +255,7 @@ endif
 +cc_version = $(filter gcc,$(notdir $(firstword $(CC)))) # if using gcc
 
 # Extra flags to pass to GCC.
-+gccwarn := -Wall -Wwrite-strings
++gccwarn := -Wall -Wwrite-strings -Wno-parentheses
 +gccopt := -fstrength-reduce
 
 # This is the program that generates makefile
