@@ -17,7 +17,10 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <errno.h>
+#include <stdlib.h>
+#include <string.h>
 #include <hurd.h>
+#include <hurd/exec.h>
 #include <sysdep.h>
 
 /* The first piece of initialized data.  */
@@ -27,7 +30,9 @@ struct _hurd_port *_hurd_ports;
 mode_t _hurd_umask;
 
 mach_port_t *_hurd_init_dtable;
-size_t _hurd_init_dtablesize;
+mach_msg_type_number_t _hurd_init_dtablesize;
+
+vm_address_t _hurd_stack_low, _hurd_stack_high;
 
 volatile int errno;		/* XXX wants to be per-thread */
 
@@ -57,7 +62,7 @@ _start (void)
   char *args, *env;
   mach_port_t *portarray;
   int *intarray;
-  size_t argslen, envlen, portarraysize, intarraysize;
+  mach_msg_type_number_t argslen, envlen, portarraysize, intarraysize;
   int flags;
 
   int argc, envc;
@@ -85,7 +90,8 @@ _start (void)
 #endif
       SET_SP (newsp);
 
-      if (newsp < _hurd_stack_low || newsp > _hurd_stack_high)
+      if ((vm_address_t) newsp < _hurd_stack_low ||
+	  (vm_address_t) newsp > _hurd_stack_high)
 	/* The new stack pointer does not intersect with the
 	   stack the exec server set up for us, so free that stack.  */
 	__vm_deallocate (__mach_task_self (),
@@ -107,6 +113,10 @@ _start (void)
     {
       /* Call the exec server on our bootstrap port and
 	 get all our standard information from it.  */
+
+      argslen = envlen = 0;
+      _hurd_init_dtablesize = portarraysize = intarraysize = 0;
+
       err = __exec_startup (in_bootstrap,
 			    &flags,
 			    &args, &argslen, &env, &envlen,
@@ -176,22 +186,20 @@ _start (void)
       /* There were some arguments or environment.
 	 Allocate space for the vectors of pointers and fill them in.  */
 
-      if (err = __vm_allocate (__mach_task_self (),
-			       &argv, round_page ((argc + envc) *
-						  sizeof (char *)),
-			       1))
-	__libc_fatal ("hurd: Can't allocate space for argv and environ\n");
-      envp = &argv[argc + 1];
+      argv = __alloca (argc * sizeof (char *));
+      envp = __alloca (envc * sizeof (char *));
       
       split_args (args, argslen, argv);
       split_args (env, envlen, envp);
     }
 
   if (portarray || intarray)
+#ifdef notyet
     /* Initialize library data structures, start signal processing, etc.  */
     _hurd_init (argv,
 		portarray, portarraysize,
 		intarray, intarraysize);
+#endif
 
 
   /* Random library initialization.  */
