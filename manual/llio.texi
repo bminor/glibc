@@ -138,7 +138,7 @@ Name Errors}), the following @code{errno} error conditions are defined
 for this function:
 
 @table @code
-
+@item EACCES
 The file exists but is not readable/writable as requested by the @var{flags}
 argument.
 
