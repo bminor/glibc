@@ -56,7 +56,7 @@ MIGFLAGS = -DMACH_IPC_COMPAT=0 -DSTANDALONE -DTypeCheck=0 \
 	   $(+includes) $(migdefines) -subrprefix __
 # Putting CC in the enivronment makes the mig wrapper script
 # use the same compiler setup we are using to run cpp.
-MIG := CC='${CC}' $(MIG)
+MIG := CC='${CC}' CPP='${CPP}' $(MIG)
 
 .SUFFIXES: .defs	# Just to set specified_rule_matched.
 
@@ -134,8 +134,9 @@ $(patsubst %,$(objpfx)%.ustamp,$(user-interfaces)): $(objpfx)%.ustamp:
 $(patsubst %,$(objpfx)%.udeps,$(user-interfaces)):
   $(objpfx)%.udeps: $(..)mach/Machrules
 	$(make-target-directory)
+# We must use $(CFLAGS) to get -O flags that affect #if's in header files.
 	$(include-%.defs) | \
-	$(CC) $(CPPFLAGS) -M -x c - | \
+	$(CC) $(CFLAGS) $(CPPFLAGS) -M -x c - | \
 	sed -e 's,- *:,$@ $(@:.udeps=.ustamp) $(@:.udeps=.uh) $(@:.udeps=.__h)\
 			  $(@:.udeps=_server.c) $(@:.udeps=_server.h):,' \
 	    $(sed-remove-objpfx) > $@.new
