@@ -1,3 +1,9 @@
+1999-11-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strptime.c (day_of_the_week): Make sure result is never
+	negative.
+	(strptime_internal): Allow %C without %y.
+
 1999-11-18  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Sorted entries and added
