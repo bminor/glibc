@@ -35,32 +35,11 @@ DEFUN(fflush, (stream), register FILE *stream)
       return lossage ? EOF : 0;
     }
 
-  if (!__validfp(stream))
+  if (!__validfp(stream) || !stream->__mode.__write)
     {
       errno = EINVAL;
       return EOF;
     }
 
-  if (stream->__mode.__write && __flshfp(stream, EOF) == EOF)
-    return EOF;
-
-  /* Kill any pushed-back input.  */
-  stream->__pushback_bufp = NULL;
-
-  if (stream->__get_limit > stream->__buffer)
-    {
-      /* Kill buffered input.  */
-
-      if (stream->__buffer == NULL)
-	/* Nothing there.  */
-	return 0;
-
-      /* Reset bufp and the get limit so __fillbf
-	 will be called on the next getc.
-	 The target position is still where the beginning of the buffer
-	 maps to.  Since get_limit - buffer == 0, fillbuf won't move it.  */
-      stream->__bufp = stream->__get_limit = stream->__buffer;
-    }
-
-  return 0;
+  return __flshfp(stream, EOF);
 }
