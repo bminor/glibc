@@ -38,21 +38,6 @@
  * local lock manager.  The local lock manager is a deamon running
  * above the kernel.
  */
-program KLM_PROG {
-	version KLM_VERS {
-
-		klm_testrply	KLM_TEST (struct klm_testargs) =	1;
-
-		klm_stat	KLM_LOCK (struct klm_lockargs) =	2;
-
-		klm_stat	KLM_CANCEL (struct klm_lockargs) =	3;
-		/* klm_granted=> the cancel request fails due to lock is already granted */
-		/* klm_denied=> the cancel request successfully aborts
-lock request  */
-
-		klm_stat	KLM_UNLOCK (struct klm_unlockargs) =	4;
-	} = 1;
-} = 100020;
 
 const	LM_MAXSTRLEN = 1024;
 
@@ -130,3 +115,20 @@ struct klm_testargs {
 struct klm_unlockargs {
 	struct klm_lock alock;
 };
+
+program KLM_PROG {
+	version KLM_VERS {
+
+		klm_testrply	KLM_TEST (struct klm_testargs) =	1;
+
+		klm_stat	KLM_LOCK (struct klm_lockargs) =	2;
+
+		klm_stat	KLM_CANCEL (struct klm_lockargs) =	3;
+		/* klm_granted=> the cancel request fails due to lock is already granted */
+		/* klm_denied=> the cancel request successfully aborts
+lock request  */
+
+		klm_stat	KLM_UNLOCK (struct klm_unlockargs) =	4;
+	} = 1;
+} = 100020;
+
