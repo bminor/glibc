@@ -660,6 +660,11 @@ of this helper program; chances are you did not intend to run this program.\n",
     _dl_debug_state ();
   }
 
+#ifndef MAP_COPY
+  /* We must munmap() the cache file.  */
+  _dl_unload_cache ();
+#endif
+
   /* Once we return, _dl_sysdep_start will invoke
      the DT_INIT functions and then *USER_ENTRY.  */
 }
