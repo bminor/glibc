@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ int
 DEFUN(chflags, (file, flags), CONST char *file AND int flags)
 {
   error_t err;
-  file_t port = __hurd_path_lookup (file, 0, 0);
+  file_t port = __path_lookup (file, 0, 0);
   if (port == MACH_PORT_NULL)
     return -1;
   err = __file_chflags (port, flags);
