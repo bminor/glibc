@@ -162,10 +162,12 @@ $(common-objpfx)ioctls.h: $(common-objpfx)make-ioctls
 	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 
-sys/termios.h := $(wildcard $(sysincludedir)/sys/termios.h)
-ifneq (,$(strip $(sys/termios.h)))
-make-ioctls-CFLAGS := -DHAVE_SYS_TERMIOS_H
-endif
+ioctl-includes := sys/termios.h net/nit.h
+ioctl-includes := $(wildcard $(addprefix $(sysincludedir)/,$(ioctl-includes)))
+make-ioctls-CFLAGS := $(subst /,_,$(subst .,_,\
+			$(patsubst $(sysincludedir)/%,HAVE_%,\
+				   $(ioctl-includes))))
+
 $(common-objpfx)make-ioctls: $(common-objpfx)make-ioctls.c
 	cd $(@D); $(CC) $(native-CFLAGS) $(make-ioctls-CFLAGS) \
 			$(<:$(common-objpfx)%=%) -o $(@F)
@@ -193,7 +195,7 @@ endif
 # CSTOP's presence elided TIOCSTOP.
 
 $(common-objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls \
-			$(sysincludedir)/sys/ioctl.h $(sys/termios.h)
+			$(sysincludedir)/sys/ioctl.h $(ioctl-includes)
 	$(dir $<)$(notdir $<) $(filter-out $<,$^) \
 	| fgrep -xv "`$(dir $<)$(notdir $<) $(termbits.h) \
 					    $(..)termios/sys/ttydefaults.h \
