@@ -1,0 +1,44 @@
+# Copyright (C) 1991 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License
+# as published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+ifeq ($(subdir),gnulib)
+
+divrem := sdiv udiv rem urem
+routines := mul umul $(divrem) 
+nodist-routines = $(divrem)
+
++divrem-NAME-sdiv := div
++divrem-NAME-udiv := udiv
++divrem-NAME-rem := rem
++divrem-NAME-urem := urem
++divrem-NAME = $(+divrem-NAME-$(basename $(notdir $@)))
++divrem-OP-div := div
++divrem-OP-udiv := div
++divrem-OP-rem := rem
++divrem-OP-urem := rem
++divrem-S-div := true
++divrem-S-rem := true
++divrem-S-udiv := false
++divrem-S-urem := false
+$(addprefix $(objpfx),$(divrem:%=%.S)): divrem.m4
+	(echo "define(NAME,\`.$(+divrem-NAME)')\
+	       define(OP,\`$(+divrem-OP-$(+divrem-NAME))')\
+	       define(S,\`$(+divrem-S-$(+divrem-NAME))')"; \
+	 cat $<) | m4 > $@
+
+endif	# gnulib
