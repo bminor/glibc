@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,12 @@ DEFUN(ungetc, (c, stream), register int c AND register FILE *stream)
     }
 
   if (c == EOF)
+    return EOF;
+
+  if (stream->__mode.__write && stream->__bufp > stream->__buffer &&
+      /* This is a read-write stream with something in its buffer.
+	 Flush the stream.  */
+      __flshfp (stream, EOF) == EOF)
     return EOF;
 
   if (stream->__pushed_back)
