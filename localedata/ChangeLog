@@ -1,3 +1,7 @@
+1999-09-01  Thorsten Kukuk  <kukuk@suse.de>
+
+	* localedata/locales/en_DK: Fix typos
+
 1999-08-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/en_DK: Add Euro symbol to collation and characterization
