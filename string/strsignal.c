@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995, 1996, 1998 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -35,13 +35,13 @@ strsignal (int signum)
 {
   const char *desc;
 
-  if (signum < 0 || signum > NSIG || (desc = _sys_siglist[signum]) == NULL)
+  if (signum < 0 || signum >= NSIG || (desc = _sys_siglist[signum]) == NULL)
     {
       static char buf[512];
       int len = __snprintf (buf, sizeof buf, _("Unknown signal %d"), signum);
       if (len < 0)
 	return NULL;
-      buf[len - 1] = '\0';
+      buf[len] = '\0';
       return buf;
     }
 
