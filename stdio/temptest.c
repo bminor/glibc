@@ -9,7 +9,7 @@ main ()
 
   for (i = 0; i < 500; i++) {
     fn = __stdio_gen_tempname((CONST char *) NULL,
-	"file", 0, (size_t *) NULL);
+	"file", 0, (size_t *) NULL, (FILE **) NULL);
     if (fn == NULL) {
       printf ("__stdio_gen_tempname failed\n");
       exit (1);
