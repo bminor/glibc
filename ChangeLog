@@ -1,5 +1,8 @@
 2002-07-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/i486/bits/string.h: Add early clobber for "a"
+	output parameter.  Reported by Denis Zaitsev <zzz@cd-club.ru>.
+
 	* Versions.def [libpthread]: Add GLIBC_2.2.6.
 	* posix/Versions [libc] (GLIBC_2.2.6): Add __nanosleep.
 
