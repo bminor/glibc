@@ -19,12 +19,15 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* One out of _LIBC, USE_PTHREADS, USE_THR or USE_SPROC should be
+/* $Id$
+   One out of _LIBC, USE_PTHREADS, USE_THR or USE_SPROC should be
    defined, otherwise the token NO_THREADS and dummy implementations
    of the macros will be defined.  */
 
 #ifndef _THREAD_M_H
 #define _THREAD_M_H
+
+#undef thread_atfork_static
 
 #if defined(_LIBC) /* The GNU C library, a special case of Posix threads */
 
@@ -60,6 +63,9 @@ typedef void * tsd_key_t;
 #define mutex_unlock(m)		\
    (__pthread_mutex_unlock != NULL ? __pthread_mutex_unlock (m) : 0)
 
+#define thread_atfork(prepare, parent, child) \
+   (__pthread_atfork != NULL ? __pthread_atfork(prepare, parent, child) : 0)
+
 #elif defined(MUTEX_INITIALIZER)
 /* Assume hurd, with cthreads */
 
@@ -90,6 +96,12 @@ static int tsd_keys_alloced = 0;
 #define tsd_getspecific(key, vptr) \
   ((vptr) = (void *)*__hurd_threadvar_location (_HURD_THREADVAR_MALLOC))
 
+#define thread_atfork(prepare, parent, child) do {} while(0)
+#define thread_atfork_static(prepare, parent, child) \
+ text_set_element(_hurd_fork_prepare_hook, prepare); \
+ text_set_element(_hurd_fork_parent_hook, parent); \
+ text_set_element(_hurd_fork_child_hook, child);
+
 /* No we're *not* using pthreads.  */
 #define __pthread_initialize ((void (*)(void))0)
 
@@ -115,11 +127,36 @@ typedef pthread_mutex_t mutex_t;
 #define mutex_unlock(m)            pthread_mutex_unlock(m)
 
 /* thread specific data */
+#if defined(__sgi) || defined(USE_TSD_DATA_HACK)
+
+/* Hack for thread-specific data, e.g. on Irix 6.x.  We can't use
+   pthread_setspecific because that function calls malloc() itself.
+   The hack only works when pthread_t can be converted to an integral
+   type. */
+
+typedef void *tsd_key_t[256];
+#define tsd_key_create(key, destr) do { \
+  int i; \
+  for(i=0; i<256; i++) (*key)[i] = 0; \
+} while(0)
+#define tsd_setspecific(key, data) \
+ (key[(unsigned)pthread_self() % 256] = (data))
+#define tsd_getspecific(key, vptr) \
+ (vptr = key[(unsigned)pthread_self() % 256])
+
+#else
+
 typedef pthread_key_t tsd_key_t;
 
 #define tsd_key_create(key, destr) pthread_key_create(key, destr)
 #define tsd_setspecific(key, data) pthread_setspecific(key, data)
 #define tsd_getspecific(key, vptr) (vptr = pthread_getspecific(key))
+
+#endif
+
+/* at fork */
+#define thread_atfork(prepare, parent, child) \
+                                   pthread_atfork(prepare, parent, child)
 
 #elif USE_THR /* Solaris threads */
 
@@ -141,6 +178,8 @@ typedef void *tsd_key_t[256];
 } while(0)
 #define tsd_setspecific(key, data) (key[(unsigned)thr_self() % 256] = (data))
 #define tsd_getspecific(key, vptr) (vptr = key[(unsigned)thr_self() % 256])
+
+#define thread_atfork(prepare, parent, child) do {} while(0)
 
 #elif USE_SPROC /* SGI sproc() threads */
 
@@ -165,6 +204,8 @@ int tsd_key_next;
 #define tsd_setspecific(key, data) (((void **)(&PRDA->usr_prda))[key] = data)
 #define tsd_getspecific(key, vptr) (vptr = ((void **)(&PRDA->usr_prda))[key])
 
+#define thread_atfork(prepare, parent, child) do {} while(0)
+
 #else /* no _LIBC or USE_... are defined */
 
 #define NO_THREADS
@@ -187,6 +228,8 @@ typedef void *tsd_key_t;
 #define tsd_key_create(key, destr) do {} while(0)
 #define tsd_setspecific(key, data) do {} while(0)
 #define tsd_getspecific(key, vptr) (vptr = NULL)
+
+#define thread_atfork(prepare, parent, child) do {} while(0)
 
 #endif /* defined(NO_THREADS) */
 
