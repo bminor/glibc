@@ -164,6 +164,12 @@ ifndef infodir
 infodir = $(prefix)/info
 endif
 
+# Where to install default configuration files.  These include the local
+# timezone specification and network data base files.
+ifndef etcdir
+etcdir = $(prefix)/etc
+endif
+
 # What timezone should be the installed default (e.g., US/Eastern).
 # Run `make -C time echo-zonenames' to see a list of available zone names.
 # The local timezone can be changed with `zic -l TIMEZONE' at any time.
@@ -177,7 +183,7 @@ endif
 # other than there, so the zoneinfo directory contains only universal data,
 # localizing the configuration data elsewhere.
 ifndef localtime-file
-localtime-file = $(prefix)/etc/localtime
+localtime-file = $(etcdir)/localtime
 endif
 
 # What timezone's DST rules should be used when a POSIX-style TZ
