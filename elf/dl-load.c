@@ -1186,7 +1186,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   /* When we profile the SONAME might be needed for something else but
      loading.  Add it right away.  */
-  if (__builtin_expect (_dl_profile) != NULL, 0)
+  if (__builtin_expect (_dl_profile != NULL, 0)
       && l->l_info[DT_SONAME] != NULL)
     add_name_to_object (l, ((const char *) D_PTR (l, l_info[DT_STRTAB])
 			    + l->l_info[DT_SONAME]->d_un.d_val));
