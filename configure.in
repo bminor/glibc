@@ -1,6 +1,6 @@
 foo and bar
 
-AC_INIT(features.h)
+AC_PREPARE(features.h)
 AC_PROG_INSTALL
 AC_PROG_RANLIB
 AC_HAVE_FUNCS(sys_siglist _sys_siglist _ctype_ __ctype_ __ctype)
