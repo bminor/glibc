@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,102 +29,73 @@ __BEGIN_DECLS
 
 /* Get the machine-dependent definition of `__jmp_buf'.  */
 #include <jmp_buf.h>
-
-
-#ifdef	__USE_POSIX
-#define	__need_sigset_t
-#include <signal.h>
+#include <sigset.h>		/* Get `__sigset_t'.  */
 
 /* Calling environment, plus possibly a saved signal mask.  */
 typedef struct
   {
+    /* NOTE: The machine-dependent definitions of `__sigsetjmp'
+       assume that a `jmp_buf' begins with a `__jmp_buf'.
+       Do not move this member or add others before it.  */
     __jmp_buf __jmpbuf;		/* Calling environment.  */
     int __mask_was_saved;	/* Saved the signal mask?  */
-    sigset_t __saved_mask;	/* Saved signal mask.  */
-  } sigjmp_buf[1];
+    __sigset_t __saved_mask;	/* Saved signal mask.  */
+  } jmp_buf[1];
+
 
 /* Store the calling environment in ENV, also saving the
-   signal mask if SAVEMASK is nonzero.  Return 0.  */
-extern void __sigjmp_save __P ((sigjmp_buf __env, int __savemask));
-#ifdef __GNUC__
-#define	sigsetjmp(env, savemask) \
-  ({ __typeof ((*((sigjmp_buf *) 0))[0]) *__e = (env);			      \
-     __sigjmp_save (__e, (savemask));					      \
-     __setjmp (__e[0].__jmpbuf); })
+   signal mask if SAVEMASK is nonzero.  Return 0.
+   This is the internal name for `sigsetjmp'.  */
+extern int __sigsetjmp __P ((jmp_buf __env, int __savemask));
+
+#ifndef	__FAVOR_BSD
+/* Set ENV to the current position and return 0.
+   This is just like `sigsetjmp (ENV, 0)'.
+   The ANSI C standard says `setjmp' is a macro.  */
+#define	setjmp(env)	__sigsetjmp ((env), 0)
 #else
-/* Not strictly POSIX-compliant, because it evaluates ENV more than once.  */
-#define	sigsetjmp(env, savemask) \
-  (__sigjmp_save ((env), (savemask)), __setjmp ((env)[0].__jmpbuf))
-#endif
-
-
-/* Jump to the environment saved in ENV, making the
-   sigsetjmp call there return VAL, or 1 if VAL is 0.
-   Restore the signal mask if that sigsetjmp call saved it.  */
-extern __NORETURN void siglongjmp __P ((__const sigjmp_buf __env, int __val));
-#endif /* Use POSIX.  */
-
-
-#ifdef	__FAVOR_BSD
-
-/* BSD defines `setjmp' and `longjmp' to save and restore the set of
-   blocked signals.  For this, `jmp_buf' must be what POSIX calls
-   `sigjmp_buf', which includes that information.  */
-typedef sigjmp_buf jmp_buf;
-
-#else /* Don't favor BSD.  */
-
-/* A `jmp_buf' really is a `jmp_buf'.  Oh boy.  */
-typedef __jmp_buf jmp_buf;
-
+/* We are in 4.3 BSD-compatibility mode in which `setjmp' 
+   saves the signal mask like `sigsetjmp (ENV, 1)'.  */
+#define	setjmp(env)	__sigsetjmp ((env), 1)
 #endif /* Favor BSD.  */
 
 
 /* Jump to the environment saved in ENV, making the
-   setjmp call there return VAL, or 1 if VAL is 0.  */
-extern __NORETURN void __longjmp __P ((__const __jmp_buf __env, int __val));
+   `setjmp' call there return VAL, or 1 if VAL is 0.  */
 extern __NORETURN void longjmp __P ((__const jmp_buf __env, int __val));
-
-#ifdef	__OPTIMIZE__
-#define	longjmp(env, val)	__longjmp ((env), (val))
-#endif /* Optimizing.  */
-
-/* Set ENV to the current position and return 0.  */
-extern int __setjmp __P ((__jmp_buf __env));
-/* The ANSI C standard says `setjmp' is a macro.  */
-#define	setjmp(env)	__setjmp (env)
-
-
 #ifdef	__USE_BSD
+/* Same.  Usually `_longjmp' is used with `_setjmp', which does not save
+   the signal mask.  But it is how ENV was saved that determines whether
+   `longjmp' restores the mask; `_longjmp' is just an alias.  */
 extern __NORETURN void _longjmp __P ((__const jmp_buf __env, int __val));
 #endif /* Use BSD.  */
 
-#ifdef	__FAVOR_BSD
+/* Internal machine-dependent function to restore context sans signal mask.  */
+extern __NORETURN void __longjmp __P ((__const __jmp_buf __env, int __val));
 
-/* We are in the mode in which `setjmp' and `longjmp' save and restore
-   the signal mask, and `jmp_buf' is `sigjmp_buf'.  */
+/* Internal function to possibly save the current mask of blocked signals
+   in ENV, and always set the flag saying whether or not it was saved.
+   This is used by the machine-dependent definition of `__sigsetjmp'.
+   Always returns zero, for convenience.  */
+extern int __sigjmp_save __P ((jmp_buf __env, int __savemask));
 
-#undef	setjmp
-#undef	longjmp
 
-#define	setjmp(env)		sigsetjmp ((env), 1)
+#ifdef	__USE_POSIX
+/* Use the same type for `jmp_buf' and `sigjmp_buf'.
+   The `__mask_was_saved' flag determines whether
+   or not `longjmp' will restore the signal mask.  */
+typedef jmp_buf sigjmp_buf;
 
-#ifdef	__OPTIMIZE__
-#define	longjmp(env, val)	siglongjmp ((env), (val))
-#endif /* Optimizing.  */
+/* Store the calling environment in ENV, also saving the
+   signal mask if SAVEMASK is nonzero.  Return 0.  */
+#define	sigsetjmp(env, savemask)	__sigsetjmp ((env), (savemask))
 
-#define	_setjmp(env)		sigsetjmp ((env), 0)
-
-#else	/* Don't favor BSD.  */
-
-/* `setjmp' and `_setjmp' are the same.  */
-#define	_setjmp(env)		setjmp (env)
-
-/* `longjmp' and `_longjmp' are the same.  */
-#define	_longjmp(env, val)	longjmp ((env), (val))
-
-#endif /* Favor BSD.  */
-
+/* Jump to the environment saved in ENV, making the
+   sigsetjmp call there return VAL, or 1 if VAL is 0.
+   Restore the signal mask if that sigsetjmp call saved it.
+   This is just an alias `longjmp'.  */
+extern __NORETURN void siglongjmp __P ((__const sigjmp_buf __env, int __val));
+#endif /* Use POSIX.  */
 
 __END_DECLS
 
