@@ -1,3 +1,9 @@
+1999-05-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/socket.texi (Host Names): Remove statement that h_errno
+	needs to be declared since this isn't true anymore.
+	Closes PR libc/1138.
+
 1999-05-26  Jakub Jelinek   <jj@ultra.linux.cz>
 
 	* stdlib/longlong.h (add_ssaaaa, sub_ddmmss, umul_ppmm):
