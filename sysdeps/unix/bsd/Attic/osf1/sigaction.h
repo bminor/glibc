@@ -1,6 +1,6 @@
 /* Structure and constand definitions for sigaction et al.  OSF/1 version.
-Copyright (C) 1993 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1993 Free Software Foundation, Inc.
+   Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -31,6 +31,11 @@ struct sigaction
   };
 
 /* Bits in `sa_flags'.  */
+#ifdef	__USE_BSD
+#define	SA_ONSTACK	0x1	/* Take signal on signal stack.  */
+#define	SA_RESTART	0x2	/* Don't restart syscall on signal return.  */
+#define	SA_DISABLE	0x4	/* Disable alternate signal stack.  */
+#endif
 #define	SA_NOCLDSTOP	0x4	/* Don't send SIGCHLD when children stop.  */
 
 
