@@ -73,6 +73,7 @@ _hurd_thread_sigstate (thread_t thread)
 #include "thread_state.h"
 #include <hurd/msg_server.h>
 #include <hurd/msg_reply.h>	/* For __sig_post_reply.  */
+#include <assert.h>
 
 jmp_buf _hurd_sigthread_fault_env;
 
@@ -273,7 +274,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 			    mach_msg_type_name_t reply_port_type)
 {
   struct machine_thread_state thread_state;
-  enum { stop, ignore, core, term, handle } act;
+  enum { stop, cont, ignore, core, term, handle } act;
   sighandler_t handler;
   struct hurd_signal_preempt *pe;
   sighandler_t (*preempt) (thread_t, int, int) = NULL;
@@ -300,6 +301,23 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       return 0;
     }
 
+  /* Wake up a sigsuspend call that is blocking SS->thread.  */
+  inline void sigwakeup (struct hurd_sigstate *ss)
+    {
+      if (ss->suspended)
+	{
+	  /* There is a sigsuspend waiting.  Tell it to wake up.  */
+	  ss->suspended = 0;
+#ifdef noteven
+	  __condition_signal (&ss->arrived);
+#else
+	  __mutex_unlock (&ss->lock);
+#endif
+	}
+      else
+	__mutex_unlock (&ss->lock);
+    }
+
   /* Check for a preempted signal.  */
   __mutex_lock (&_hurd_signal_preempt_lock);
   for (pe = _hurd_signal_preempt[signo]; pe != NULL; pe = pe->next)
@@ -317,7 +335,14 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
        otherwise we use the handler it returns.  */
     handler = (*preempt) (ss->thread, signo, sigcode);
   if (handler == SIG_DFL)
-    handler = ss->actions[signo].sa_handler;
+    {
+      handler = ss->actions[signo].sa_handler;
+      if (sigmask (signo) & (sigmask (SIGTTIN) | sigmask (SIGTTOU) |
+			     sigmask (SIGSTOP) | sigmask (SIGTSTP)))
+	/* Stop signals clear a pending SIGCONT even if they
+	   are handled or ignored (but not if preempted).  */
+	ss->pending &= ~sigmask (SIGCONT);
+    }
 
   if (handler == SIG_DFL)
     /* Figure out the default action for this signal.  */
@@ -333,14 +358,15 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       case SIGTTOU:
       case SIGSTOP:
       case SIGTSTP:
-	ss->pending &= ~sigmask (SIGCONT);
 	act = stop;
 	break;
 
       case SIGCONT:
 	ss->pending &= ~(sigmask (SIGSTOP) | sigmask (SIGTSTP) |
 			 sigmask (SIGTTIN) | sigmask (SIGTTOU));
-	/* Fall through.  */
+	act = cont;
+	break;
+
       case SIGIO:
       case SIGURG:
       case SIGCHLD:
@@ -411,34 +437,48 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
   switch (act)
     {
     case stop:
-      /* Stop all other threads and mark ourselves stopped.  */
-      __USEPORT (PROC,
-		 ({
-		   /* Hold the siglock while stopping other threads to be
-		      sure it is not held by another thread afterwards.  */
-		   __mutex_unlock (&ss->lock);
-		   __mutex_lock (&_hurd_siglock);
-		   __proc_dostop (port, _hurd_msgport_thread);
-		   __mutex_unlock (&_hurd_siglock);
-		   abort_all_rpcs (signo, &thread_state);
-		   __proc_mark_stop (port, signo);
-		 }));
-      _hurd_stopped = 1;
+      if (! _hurd_stopped)
+	{
+	  /* Stop all other threads and mark ourselves stopped.  */
+	  __USEPORT (PROC,
+		     ({
+		       /* Hold the siglock while stopping other threads to be
+			  sure it is not held by another thread afterwards.  */
+		       __mutex_unlock (&ss->lock);
+		       __mutex_lock (&_hurd_siglock);
+		       __proc_dostop (port, _hurd_msgport_thread);
+		       __mutex_unlock (&_hurd_siglock);
+		       abort_all_rpcs (signo, &thread_state);
+		       __proc_mark_stop (port, signo);
+		     }));
+	  _hurd_stopped = 1;
+	}
 
       __mutex_lock (&ss->lock);
-      if (ss->suspended)
-	{
-	  /* There is a sigsuspend waiting.  Tell it to wake up.  */
-	  ss->suspended = 0;
-#ifdef noteven
-	  __condition_signal (&ss->arrived);
-#else
-	  __mutex_unlock (&ss->lock);
-#endif
-	}
-      else
-	__mutex_unlock (&ss->lock);
+      sigwakeup (ss);		/* Wake up sigsuspend.  */
+      break;
 
+    case cont:
+      if (_hurd_stopped)
+	{
+	  thread_t *threads;
+	  unsigned int nthreads, i;
+	  /* Tell the proc server we are continuing.  */
+	  __USEPORT (PROC, __proc_mark_cont (port));
+	  /* Fetch ports to all our threads and resume them.  */
+	  assert (! __task_threads (__mach_task_self (), &threads, &nthreads));
+	  for (i = 0; i < nthreads; ++i)
+	    {
+	      if (threads[i] != _hurd_msgport_thread)
+		__thread_resume (threads[i]);
+	      __mach_port_deallocate (__mach_task_self (), threads[i]);
+	    }
+	  __vm_deallocate (__mach_task_self (),
+			   (vm_address_t) threads, nthreads * sizeof *threads);
+	  _hurd_stopped = 0;
+	}
+
+      sigwakeup (ss);		/* Wake up sigsuspend.  */
       break;
 
     case ignore:
@@ -448,6 +488,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     case term:			/* Time to die.  */
     case core:			/* And leave a rotting corpse.  */
     nirvana:
+      __mutex_unlock (&ss->lock);
       __mutex_lock (&_hurd_siglock);
       /* Have the proc server stop all other threads in our task.  */
       __USEPORT (PROC, __proc_dostop (port, _hurd_msgport_thread));
