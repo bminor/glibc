@@ -24,16 +24,16 @@ subdir	:= signal
 headers	:= signal.h signum.h sys/signal.h gnu/signal.h sigcontext.h
 
 routines	:= signal raise killpg \
-		   sigaction sigprocmask kill \
-		   __sigaction __sigprocmask __kill \
+		   sigaction sigproc kill \
+		   __sigact __sigproc __kill \
 		   sigpending sigsuspend \
 		   sigblock sigsetmask sigpause sigvec \
-		   __sigblock __sigsetmask __sigpause __sigvec \
-		   sigstack siginterrupt \
-		   sigemptyset sigfillset sigaddset sigdelset sigismember \
+		   __sigblock __sigstmsk __sigpause __sigvec \
+		   sigstack sigintr \
+		   sigempty sigfillset sigaddset sigdelset sigismem \
 		   gsignal ssignal
 
-tests		:= test-signal
+tests		:= tst-signal
 
 distribute	:= sigsetops.h
 
