@@ -16,6 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#include <ansidecl.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -28,7 +29,7 @@ DEFUN(check, (name, stream, fd), CONST char *name FILE *stream AND int fd)
 }
 
 int
-main ()
+DEFUN_VOID(main)
 {
   exit (check ("stdin", stdin, STDIN_FILENO) ||
 	check ("stdout", stdout, STDOUT_FILENO) ||
