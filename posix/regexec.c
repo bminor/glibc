@@ -175,8 +175,8 @@ static reg_errcode_t check_arrival_expand_ecl_sub (re_dfa_t *dfa,
 static reg_errcode_t expand_bkref_cache (re_match_context_t *mctx,
 					 re_node_set *cur_nodes, int cur_str,
 					 int subexp_num, int type) internal_function;
-static int build_trtable (re_dfa_t *dfa,
-			  re_dfastate_t *state) internal_function;
+static re_dfastate_t **build_trtable (re_dfa_t *dfa,
+				      re_dfastate_t *state) internal_function;
 #ifdef RE_ENABLE_I18N
 static int check_node_accept_bytes (re_dfa_t *dfa, int node_idx,
 				    const re_string_t *input, int idx) internal_function;
@@ -605,7 +605,6 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
   re_dfa_t *dfa = (re_dfa_t *)preg->buffer;
   int left_lim, right_lim, incr;
   int fl_longest_match, match_first, match_kind, match_last = -1;
-  int extra_nmatch;
   int sb, ch;
 #if defined _LIBC || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L)
   re_match_context_t mctx = { .dfa = dfa };
@@ -620,9 +619,6 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
   memset (&mctx, '\0', sizeof (re_match_context_t));
   mctx.dfa = dfa;
 #endif
-
-  extra_nmatch = (nmatch > preg->re_nsub) ? nmatch - (preg->re_nsub + 1) : 0;
-  nmatch -= extra_nmatch;
 
   /* Check if the DFA haven't been compiled.  */
   if (BE (preg->used == 0 || dfa->init_state == NULL
@@ -886,14 +882,11 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 	    pmatch[reg_idx].rm_so += match_first;
 	    pmatch[reg_idx].rm_eo += match_first;
 	  }
-      for (reg_idx = 0; reg_idx < extra_nmatch; ++reg_idx)
-	{
-	  pmatch[nmatch + reg_idx].rm_so = -1;
-	  pmatch[nmatch + reg_idx].rm_eo = -1;
-	}
 
       if (dfa->subexp_map)
-        for (reg_idx = 0; reg_idx + 1 < nmatch; reg_idx++)
+        for (reg_idx = 0;
+             reg_idx + 1 < nmatch && reg_idx < preg->re_nsub;
+             reg_idx++)
           if (dfa->subexp_map[reg_idx] != reg_idx)
             {
               pmatch[reg_idx + 1].rm_so
@@ -1269,7 +1262,7 @@ proceed_next_node (mctx, nregs, regs, pidx, node, eps_via_nodes, fs)
       re_token_type_t type = dfa->nodes[node].type;
 
 #ifdef RE_ENABLE_I18N
-      if (dfa->nodes[node].accept_mb)
+      if (ACCEPT_MB_NODE (type))
 	naccepted = check_node_accept_bytes (dfa, node, &mctx->input, *pidx);
       else
 #endif /* RE_ENABLE_I18N */
@@ -1378,7 +1371,7 @@ set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)
      int fl_backtrack;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
-  int idx, cur_node;
+  int idx, cur_node, real_nmatch;
   re_node_set eps_via_nodes;
   struct re_fail_stack_t *fs;
   struct re_fail_stack_t fs_body = { 0, 2, NULL };
@@ -1399,14 +1392,15 @@ set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)
     fs = NULL;
 
   cur_node = dfa->init_node;
+  real_nmatch = (nmatch <= preg->re_nsub) ? nmatch : preg->re_nsub + 1;
   re_node_set_init_empty (&eps_via_nodes);
 
-  prev_idx_match = (regmatch_t *) alloca (sizeof (regmatch_t) * nmatch);
-  memcpy (prev_idx_match, pmatch, sizeof (regmatch_t) * nmatch);
+  prev_idx_match = (regmatch_t *) alloca (sizeof (regmatch_t) * real_nmatch);
+  memcpy (prev_idx_match, pmatch, sizeof (regmatch_t) * real_nmatch);
 
   for (idx = pmatch[0].rm_so; idx <= pmatch[0].rm_eo ;)
     {
-      update_regs (dfa, pmatch, prev_idx_match, cur_node, idx, nmatch);
+      update_regs (dfa, pmatch, prev_idx_match, cur_node, idx, real_nmatch);
 
       if (idx == pmatch[0].rm_eo && cur_node == mctx->last_node)
 	{
@@ -1630,13 +1624,15 @@ build_sifted_states (mctx, sctx, str_idx, cur_dest)
       int naccepted = 0;
       int ret;
 
-#ifdef DEBUG
+#if defined DEBUG || defined RE_ENABLE_I18N
       re_token_type_t type = dfa->nodes[prev_node].type;
+#endif
+#ifdef DEBUG
       assert (!IS_EPSILON_NODE (type));
 #endif
 #ifdef RE_ENABLE_I18N
       /* If the node may accept `multi byte'.  */
-      if (dfa->nodes[prev_node].accept_mb)
+      if (ACCEPT_MB_NODE (type))
 	naccepted = sift_states_iter_mb (mctx, sctx, prev_node,
 					 str_idx, sctx->last_str_idx);
 #endif /* RE_ENABLE_I18N */
@@ -2222,6 +2218,7 @@ transit_state (err, mctx, state)
      re_match_context_t *mctx;
      re_dfastate_t *state;
 {
+  re_dfa_t *const dfa = mctx->dfa;
   re_dfastate_t **trtable;
   unsigned char ch;
 
@@ -2236,22 +2233,21 @@ transit_state (err, mctx, state)
 #endif /* RE_ENABLE_I18N */
 
   /* Then decide the next state with the single byte.  */
-#if 0
-  if (0)
-    /* don't use transition table  */
-    return transit_state_sb (err, mctx, state);
-#endif
-
-  /* Use transition table  */
-  ch = re_string_fetch_byte (&mctx->input);
-  for (;;)
+  if (1)
     {
+      /* Use transition table  */
+      ch = re_string_fetch_byte (&mctx->input);
       trtable = state->trtable;
-      if (BE (trtable != NULL, 1))
-	return trtable[ch];
-
-      trtable = state->word_trtable;
-      if (BE (trtable != NULL, 1))
+      if (trtable == NULL)
+        {
+          trtable = build_trtable (dfa, state);
+          if (trtable == NULL)
+	    {
+	      *err = REG_ESPACE;
+	      return NULL;
+	    }
+	}
+      if (BE (state->word_trtable, 0))
         {
 	  unsigned int context;
 	  context
@@ -2263,15 +2259,14 @@ transit_state (err, mctx, state)
 	  else
 	    return trtable[ch];
 	}
-
-      if (!build_trtable (mctx->dfa, state))
-	{
-	  *err = REG_ESPACE;
-	  return NULL;
-	}
-
-      /* Retry, we now have a transition table.  */
+      else
+	return trtable[ch];
     }
+#if 0
+  else
+    /* don't use transition table  */
+    return transit_state_sb (err, mctx, state);
+#endif
 }
 
 /* Update the state_log if we need */
@@ -2475,12 +2470,9 @@ transit_state_mb (mctx, pstate)
     {
       re_node_set dest_nodes, *new_nodes;
       int cur_node_idx = pstate->nodes.elems[i];
-      int naccepted, dest_idx;
+      int naccepted = 0, dest_idx;
       unsigned int context;
       re_dfastate_t *dest_state;
-
-      if (!dfa->nodes[cur_node_idx].accept_mb)
-        continue;
 
       if (dfa->nodes[cur_node_idx].constraint)
 	{
@@ -2493,8 +2485,9 @@ transit_state_mb (mctx, pstate)
 	}
 
       /* How many bytes the node can accept?  */
-      naccepted = check_node_accept_bytes (dfa, cur_node_idx, &mctx->input,
-					   re_string_cur_idx (&mctx->input));
+      if (ACCEPT_MB_NODE (dfa->nodes[cur_node_idx].type))
+	naccepted = check_node_accept_bytes (dfa, cur_node_idx, &mctx->input,
+					     re_string_cur_idx (&mctx->input));
       if (naccepted == 0)
 	continue;
 
@@ -2508,7 +2501,9 @@ transit_state_mb (mctx, pstate)
 #ifdef DEBUG
       assert (dfa->nexts[cur_node_idx] != -1);
 #endif
-      new_nodes = dfa->eclosures + dfa->nexts[cur_node_idx];
+      /* `cur_node_idx' may point the entity of the OP_CONTEXT_NODE,
+	 then we use pstate->nodes.elems[i] instead.  */
+      new_nodes = dfa->eclosures + dfa->nexts[pstate->nodes.elems[i]];
 
       dest_state = mctx->state_log[dest_idx];
       if (dest_state == NULL)
@@ -3024,13 +3019,15 @@ check_arrival_add_next_nodes (mctx, str_idx, cur_nodes, next_nodes)
     {
       int naccepted = 0;
       int cur_node = cur_nodes->elems[cur_idx];
-#ifdef DEBUG
+#if defined DEBUG || defined RE_ENABLE_I18N
       re_token_type_t type = dfa->nodes[cur_node].type;
+#endif
+#ifdef DEBUG
       assert (!IS_EPSILON_NODE (type));
 #endif
 #ifdef RE_ENABLE_I18N
       /* If the node may accept `multi byte'.  */
-      if (dfa->nodes[cur_node].accept_mb)
+      if (ACCEPT_MB_NODE (type))
 	{
 	  naccepted = check_node_accept_bytes (dfa, cur_node, &mctx->input,
 					       str_idx);
@@ -3276,15 +3273,15 @@ expand_bkref_cache (mctx, cur_nodes, cur_str, subexp_num,
 }
 
 /* Build transition table for the state.
-   Return 1 if succeeded, otherwise return NULL.  */
+   Return the new table if succeeded, otherwise return NULL.  */
 
-static int
+static re_dfastate_t **
 build_trtable (dfa, state)
     re_dfa_t *dfa;
     re_dfastate_t *state;
 {
   reg_errcode_t err;
-  int i, j, ch, need_word_trtable = 0;
+  int i, j, ch;
   unsigned int elem, mask;
   int dests_node_malloced = 0, dest_states_malloced = 0;
   int ndests; /* Number of the destination states from `state'.  */
@@ -3301,20 +3298,20 @@ build_trtable (dfa, state)
 #ifdef _LIBC
   if (__libc_use_alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX))
     dests_node = (re_node_set *)
-      alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX);
+		 alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX);
   else
 #endif
     {
       dests_node = (re_node_set *)
-	malloc ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX);
+		   malloc ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX);
       if (BE (dests_node == NULL, 0))
-	return 0;
+	return NULL;
       dests_node_malloced = 1;
     }
   dests_ch = (bitset *) (dests_node + SBC_MAX);
 
   /* Initialize transiton table.  */
-  state->word_trtable = state->trtable = NULL;
+  state->word_trtable = 0;
 
   /* At first, group all nodes belonging to `state' into several
      destinations.  */
@@ -3323,14 +3320,14 @@ build_trtable (dfa, state)
     {
       if (dests_node_malloced)
 	free (dests_node);
-      /* Return 0 in case of an error, 1 otherwise.  */
+      /* Return NULL in case of an error, trtable otherwise.  */
       if (ndests == 0)
 	{
 	  state->trtable = (re_dfastate_t **)
-	    calloc (sizeof (re_dfastate_t *), SBC_MAX);
-	  return 1;
+	    calloc (sizeof (re_dfastate_t *), SBC_MAX);;
+	  return state->trtable;
 	}
-      return 0;
+      return NULL;
     }
 
   err = re_node_set_alloc (&follows, ndests + 1);
@@ -3341,12 +3338,12 @@ build_trtable (dfa, state)
   if (__libc_use_alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX
 			 + ndests * 3 * sizeof (re_dfastate_t *)))
     dest_states = (re_dfastate_t **)
-      alloca (ndests * 3 * sizeof (re_dfastate_t *));
+		  alloca (ndests * 3 * sizeof (re_dfastate_t *));
   else
 #endif
     {
       dest_states = (re_dfastate_t **)
-	malloc (ndests * 3 * sizeof (re_dfastate_t *));
+		    malloc (ndests * 3 * sizeof (re_dfastate_t *));
       if (BE (dest_states == NULL, 0))
 	{
 out_free:
@@ -3357,7 +3354,7 @@ out_free:
 	    re_node_set_free (dests_node + i);
 	  if (dests_node_malloced)
 	    free (dests_node);
-	  return 0;
+	  return NULL;
 	}
       dest_states_malloced = 1;
     }
@@ -3393,8 +3390,9 @@ out_free:
 	  if (BE (dest_states_word[i] == NULL && err != REG_NOERROR, 0))
 	    goto out_free;
 
-	  if (dest_states[i] != dest_states_word[i] && dfa->mb_cur_max > 1)
-	    need_word_trtable = 1;
+	  if (dest_states[i] != dest_states_word[i]
+	      && dfa->mb_cur_max > 1)
+	    state->word_trtable = 1;
 
 	  dest_states_nl[i] = re_acquire_state_context (&err, dfa, &follows,
 							CONTEXT_NEWLINE);
@@ -3409,14 +3407,13 @@ out_free:
       bitset_merge (acceptable, dests_ch[i]);
     }
 
-  if (!BE (need_word_trtable, 0))
+  if (!BE (state->word_trtable, 0))
     {
       /* We don't care about whether the following character is a word
 	 character, or we are in a single-byte character set so we can
 	 discern by looking at the character code: allocate a
 	 256-entry transition table.  */
-      trtable = state->trtable =
-	(re_dfastate_t **) calloc (sizeof (re_dfastate_t *), SBC_MAX);
+      trtable = (re_dfastate_t **) calloc (sizeof (re_dfastate_t *), SBC_MAX);
       if (BE (trtable == NULL, 0))
 	goto out_free;
 
@@ -3446,8 +3443,8 @@ out_free:
 	 by looking at the character code: build two 256-entry
 	 transition tables, one starting at trtable[0] and one
 	 starting at trtable[SBC_MAX].  */
-      trtable = state->word_trtable =
-	(re_dfastate_t **) calloc (sizeof (re_dfastate_t *), 2 * SBC_MAX);
+      trtable = (re_dfastate_t **) calloc (sizeof (re_dfastate_t *),
+					   2 * SBC_MAX);
       if (BE (trtable == NULL, 0))
 	goto out_free;
 
@@ -3478,7 +3475,7 @@ out_free:
 	  {
 	    /* k-th destination accepts newline character.  */
 	    trtable[NEWLINE_CHAR] = dest_states_nl[j];
-	    if (need_word_trtable)
+	    if (state->word_trtable)
 	      trtable[NEWLINE_CHAR + SBC_MAX] = dest_states_nl[j];
 	    /* There must be only one destination which accepts
 	       newline.  See group_nodes_into_DFAstates.  */
@@ -3496,7 +3493,8 @@ out_free:
   if (dests_node_malloced)
     free (dests_node);
 
-  return 1;
+  state->trtable = trtable;
+  return trtable;
 }
 
 /* Group all nodes belonging to STATE into several destinations.

@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  NPTL/s390 version.
-   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,6 @@
 
 #include <dl-sysdep.h>
 #ifndef __ASSEMBLER__
-# include <stdbool.h>
 # include <stddef.h>
 # include <stdint.h>
 # include <stdlib.h>
@@ -33,11 +32,7 @@
 typedef union dtv
 {
   size_t counter;
-  struct
-  {
-    void *val;
-    bool is_static;
-  } pointer;
+  void *pointer;
 } dtv_t;
 
 

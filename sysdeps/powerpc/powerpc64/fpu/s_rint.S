@@ -27,7 +27,7 @@
 	.tc FD_43300000_0[TC],0x4330000000000000
 	.section	".text"
 
-EALIGN (__rint, 4, 0)
+ENTRY (__rint)
 	CALL_MCOUNT 0
 	lfd	fp13,.LC0@toc(2)
 	fabs	fp0,fp1
@@ -38,14 +38,13 @@ EALIGN (__rint, 4, 0)
 	bng-	cr6,.L4
 	fadd	fp1,fp1,fp13	/* x+= TWO52;  */
 	fsub	fp1,fp1,fp13	/* x-= TWO52;  */
-	fabs	fp1,fp1		/* if (x == 0.0)  */
-	blr			/* x = 0.0; */
+	blr
 .L4:
 	bnllr-	cr6		/* if (x < 0.0)  */
-	fsub	fp1,fp1,fp13	/* x-= TWO52;  */
-	fadd	fp1,fp1,fp13	/* x+= TWO52;  */
-	fnabs	fp1,fp1		/* if (x == 0.0)  */
-	blr			/* x = -0.0; */
+	fsub	fp1,fp13,fp1	/* x = TWO52 - x;  */
+	fsub	fp0,fp1,fp13	/* x = - (x - TWO52);  */
+	fneg	fp1,fp0
+	blr
 	END (__rint)
 
 weak_alias (__rint, rint)

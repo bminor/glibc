@@ -1781,9 +1781,9 @@ uppercase and lowercase characters are related.
 
 For example,
 @smallexample
-strcasestr ("hello, world", "L")
+strstr ("hello, world", "L")
     @result{} "llo, world"
-strcasestr ("hello, World", "wo")
+strstr ("hello, World", "wo")
     @result{} "World"
 @end smallexample
 @end deftypefun

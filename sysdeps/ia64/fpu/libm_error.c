@@ -1,10 +1,9 @@
-/* file: libm_error.c */
-
-
-// Copyright (c) 2000 - 2003, Intel Corporation
+//
+// Copyright (C) 2000, 2001, Intel Corporation
 // All rights reserved.
 //
-// Contributed 2000 by the Intel Numerics Group, Intel Corporation
+// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story, James
+// Edwards, and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,15 +19,14 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
 // EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
 // PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
@@ -36,39 +34,19 @@
 //
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at
-// http://www.intel.com/software/products/opensource/libraries/num.htm.
+// http://developer.intel.com/opensource.
 //
 // History
 //==============================================================
 //  2/02/00: Initial version
-//  3/22/00: Updated to support flexible and dynamic error handling. 
-//  8/16/00: Changed all matherr function-calls to use the pmatherr 
+//  3/22/00: Updated to support flexible and dynamic error handling.
+//  8/16/00: Changed all matherr function-calls to use the pmatherr
 //           function-pointers.
 // 10/03/00: Corrected a scalb type.
 // 11/28/00: Changed INPUT_XL to INPUT_XD for scalb_underflow case.
 // 12/07/00: Added code to make scalbn error support equivalent to ldexp.
 //  2/07/01: Added __declspec(align(16)) to long double constants to correct
 //           alignment problem.
-//  4/23/01: Added code for remquo
-//  6/07/01: Added code for fdim, lrint, lround, llrint, llround
-//           Deleted code for remquo
-//  8/15/01: Added code for scalbln, nexttoward
-// 12/10/01: Added code for erfc
-// 12/27/01: Added code for degree argument functions
-// 01/02/02: Added code for tand, cotd
-// 01/15/02: Corrected SVID/XOPEN code for log1p, pow, and acosh
-// 01/25/02: Corrected ISOC for lgamma and gamma to return EDOM for neg ints
-// 01/28/02: Corrected SVID/XOPEN stderr message for log2
-// 05/20/02: Added code for cot
-// 07/01/02: Added code for sinhcosh
-// 10/04/02: Underflow detection in ISOC path redefined to 
-//           be zero rather than tiny and inexact  
-// 12/06/02: Added code for annuity and compound
-// 01/30/03: Corrected test for underflow in ISOC path to not set denormal
-// 04/10/03: Corrected ISOC branch for gamma/lgamma to return ERANGE for neg ints.
-//           Added code for tgamma
-// 04/11/03: Corrected POSIX/SVID/XOPEN branches for gamma/lgamma 
-//           to return EDOM for neg ints.
 //
 
 #include <errno.h>
@@ -76,41 +54,38 @@
 #include <stdlib.h>
 #include "libm_support.h"
 
-#ifdef _LIBC
-# define pmatherr matherr
-# define pmatherrf matherrf
-# define pmatherrl matherrl
-#else
+#ifndef _LIBC
 _LIB_VERSION_TYPE
 #if defined( __POSIX__ )
-_LIB_VERSIONIMF = _POSIX_;
+_LIB_VERSION = _POSIX_;
 #elif defined( __XOPEN__ )
-_LIB_VERSIONIMF = _XOPEN_;
+_LIB_VERSION = _XOPEN_;
 #elif defined( __SVID__ )
-_LIB_VERSIONIMF = _SVID_;
+_LIB_VERSION = _SVID_;
 #elif defined( __IEEE__ )
-_LIB_VERSIONIMF = _IEEE_;
+_LIB_VERSION = _IEEE_;
 #else
-_LIB_VERSIONIMF = _ISOC_;
+_LIB_VERSION = _ISOC_;
+#endif
 #endif
 
 /************************************************************/
 /* matherrX function pointers and setusermatherrX functions */
 /************************************************************/
+#if 0
 int (*pmatherrf)(struct exceptionf*) = MATHERR_F;
 int (*pmatherr)(struct EXC_DECL_D*) = MATHERR_D;
 int (*pmatherrl)(struct exceptionl*) = matherrl;
 
 void __libm_setusermatherrf( int(*user_merrf)(struct exceptionf*) )
-{	pmatherrf = ( (user_merrf==NULL)? (MATHERR_F) : (user_merrf) );	}
+{      pmatherrf = ( (user_merrf==NULL)? (MATHERR_F) : (user_merrf) ); }
 
 void __libm_setusermatherr( int(*user_merr)(struct EXC_DECL_D*) )
-{	pmatherr = ( (user_merr==NULL)? (MATHERR_D) : (user_merr) );	}
+{      pmatherr = ( (user_merr==NULL)? (MATHERR_D) : (user_merr) );    }
 
 void __libm_setusermatherrl( int(*user_merrl)(struct exceptionl*) )
-{	pmatherrl = ( (user_merrl==NULL)? (matherrl) : (user_merrl) );	}
-
-#endif /* !_LIBC */
+{      pmatherrl = ( (user_merrl==NULL)? (matherrl) : (user_merrl) );  }
+#endif
 
 /***********************************************/
 /* error-handling function, libm_error_support */
@@ -118,27 +93,22 @@ void __libm_setusermatherrl( int(*user_merrl)(struct exceptionl*) )
 void __libm_error_support(void *arg1,void *arg2,void *retval,error_types input_tag)
 {
 
+
 # ifdef __cplusplus
 struct __exception exc;
-# else 
+# else
 struct exception  exc;
-# endif 
+# endif
 
 struct exceptionf excf;
 struct exceptionl excl;
 
-# if defined(__GNUC__)
-#define ALIGNIT __attribute__ ((__aligned__ (16)))
-# elif defined opensource
+# if defined opensource || defined _LIBC
 #define ALIGNIT
+#define ALIGNATTR __attribute__ ((__aligned__ (16)))
 # else
 #define ALIGNIT __declspec(align(16))
-# endif
-
-# ifdef SIZE_LONG_INT_64
-#define __INT_64__ signed long
-# else 
-#define __INT_64__ __int64
+#define ALIGNATTR
 # endif
 
 const char float_inf[4] = {0x00,0x00,0x80,0x7F};
@@ -148,74 +118,66 @@ const char float_neg_inf[4] = {0x00,0x00,0x80,0xFF};
 const char float_neg_huge[4] = {0xFF,0xFF,0x7F,0xFF};
 const char float_neg_zero[4] = {0x00,0x00,0x00,0x80};
 ALIGNIT
-const char double_inf[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0xF0,0x7F}; 
-#if 0 /* unused */
+const char double_inf[8] ALIGNATTR = {0x00,0x00,0x00,0x00,0x00,0x00,0xF0,0x7F};
 ALIGNIT
-const char double_huge[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xEF,0x7F};
-#endif
+//const char double_huge[8] ALIGNATTR = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xEF,0x7F};
 ALIGNIT
-const char double_zero[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const char double_zero[8] ALIGNATTR = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 ALIGNIT
-const char double_neg_inf[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0xF0,0xFF}; 
-#if 0 /* unused */
+const char double_neg_inf[8] ALIGNATTR = {0x00,0x00,0x00,0x00,0x00,0x00,0xF0,0xFF};
 ALIGNIT
-const char double_neg_huge[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xEF,0xFF};
-#endif
+//const char double_neg_huge[8] ALIGNATTR = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xEF,0xFF};
 ALIGNIT
-const char double_neg_zero[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80};
+const char double_neg_zero[8] ALIGNATTR = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80};
 ALIGNIT
-const char long_double_inf[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80,0xFF,0x7F,0x00,0x00,0x00,0x00,0x00,0x00}; 
-#if 0 /* unused */
+const char long_double_inf[16] ALIGNATTR = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80,0xFF,0x7F,0x00,0x00,0x00,0x00,0x00,0x00};
 ALIGNIT
-const char long_double_huge[16] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFE,0x7F,0x00,0x00,0x00,0x00,0x00,0x00};
-#endif
+//const char long_double_huge[16] ALIGNATTR = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFE,0x7F,0x00,0x00,0x00,0x00,0x00,0x00};
 ALIGNIT
-const char long_double_zero[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+const char long_double_zero[16] ALIGNATTR = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 ALIGNIT
-const char long_double_neg_inf[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80,0xFF,0xFF,0x00,0x00,0x00,0x00,0x00,0x00}; 
-#if 0 /* unused */
+const char long_double_neg_inf[16] ALIGNATTR = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80,0xFF,0xFF,0x00,0x00,0x00,0x00,0x00,0x00};
 ALIGNIT
-const char long_double_neg_huge[16] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFE,0xFF,0x00,0x00,0x00,0x00,0x00,0x00};
-#endif
+//const char long_double_neg_huge[16] ALIGNATTR = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF, 0xFE,0xFF,0x00,0x00,0x00,0x00,0x00,0x00};
 ALIGNIT
-const char long_double_neg_zero[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80,0x00,0x00,0x00,0x00,0x00,0x00};
+const char long_double_neg_zero[16] ALIGNATTR = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 0x00,0x80,0x00,0x00,0x00,0x00,0x00,0x00};
 
-#define RETVAL_HUGE_VALL *(long double *)retval =  *(long double *)long_double_inf 
-#define RETVAL_NEG_HUGE_VALL *(long double *)retval = *(long double *)long_double_neg_inf 
-#define RETVAL_HUGEL *(long double *)retval = (long double)*(float *)float_huge 
-#define RETVAL_NEG_HUGEL *(long double *)retval =(long double)*(float*)float_neg_huge 
+#define RETVAL_HUGE_VALL *(long double *)retval =  *(long double *)long_double_inf
+#define RETVAL_NEG_HUGE_VALL *(long double *)retval = *(long double *)long_double_neg_inf
+#define RETVAL_HUGEL *(long double *)retval = (long double)*(float *)float_huge
+#define RETVAL_NEG_HUGEL *(long double *)retval =(long double)*(float*)float_neg_huge
 
 #define RETVAL_HUGE_VALD *(double *)retval = *(double *) double_inf
 #define RETVAL_NEG_HUGE_VALD *(double *)retval = *(double *) double_neg_inf
 #define RETVAL_HUGED *(double *)retval = (double) *(float *)float_huge
-#define RETVAL_NEG_HUGED *(double *)retval = (double) *(float *) float_neg_huge 
+#define RETVAL_NEG_HUGED *(double *)retval = (double) *(float *) float_neg_huge
 
 #define RETVAL_HUGE_VALF *(float *)retval =  *(float *) float_inf
 #define RETVAL_NEG_HUGE_VALF *(float *)retval = *(float *) float_neg_inf
 #define RETVAL_HUGEF *(float *)retval = *(float *) float_huge
-#define RETVAL_NEG_HUGEF *(float *)retval = *(float *) float_neg_huge 
+#define RETVAL_NEG_HUGEF *(float *)retval = *(float *) float_neg_huge
 
-#define RETVAL_ZEROL *(long double *)retval = *(long double *)long_double_zero 
-#define RETVAL_ZEROD *(double *)retval = *(double *)double_zero 
-#define RETVAL_ZEROF *(float *)retval = *(float *)float_zero 
+#define RETVAL_ZEROL *(long double *)retval = *(long double *)long_double_zero
+#define RETVAL_ZEROD *(double *)retval = *(double *)double_zero
+#define RETVAL_ZEROF *(float *)retval = *(float *)float_zero
 
-#define RETVAL_NEG_ZEROL *(long double *)retval = *(long double *)long_double_neg_zero 
-#define RETVAL_NEG_ZEROD *(double *)retval = *(double *)double_neg_zero 
-#define RETVAL_NEG_ZEROF *(float *)retval = *(float *)float_neg_zero 
+#define RETVAL_NEG_ZEROL *(long double *)retval = *(long double *)long_double_neg_zero
+#define RETVAL_NEG_ZEROD *(double *)retval = *(double *)double_neg_zero
+#define RETVAL_NEG_ZEROF *(float *)retval = *(float *)float_neg_zero
 
-#define RETVAL_ONEL *(long double *)retval = (long double) 1.0 
-#define RETVAL_ONED *(double *)retval = 1.0 
-#define RETVAL_ONEF *(float *)retval = 1.0f 
+#define RETVAL_ONEL *(long double *)retval = (long double) 1.0
+#define RETVAL_ONED *(double *)retval = 1.0
+#define RETVAL_ONEF *(float *)retval = 1.0f
 
-#define NOT_MATHERRL excl.arg1=*(long double *)arg1;excl.arg2=*(long double *)arg2;excl.retval=*(long double *)retval;if(!pmatherrl(&excl))
-#define NOT_MATHERRD exc.arg1=*(double *)arg1;exc.arg2=*(double *)arg2;exc.retval=*(double *)retval;if(!pmatherr(&exc))
-#define NOT_MATHERRF excf.arg1=*(float *)arg1;excf.arg2=*(float *)arg2;excf.retval=*(float *)retval;if(!pmatherrf(&excf))
+#define NOT_MATHERRL excl.arg1=*(long double *)arg1;excl.arg2=*(long double *)arg2;excl.retval=*(long double *)retval;if(!matherrl(&excl))
+#define NOT_MATHERRD exc.arg1=*(double *)arg1;exc.arg2=*(double *)arg2;exc.retval=*(double *)retval;if(!MATHERR_D(&exc))
+#define NOT_MATHERRF excf.arg1=*(float *)arg1;excf.arg2=*(float *)arg2;excf.retval=*(float *)retval;if(!MATHERR_F(&excf))
 
-#define ifSVID if(_LIB_VERSIONIMF==_SVID_)
+#define ifSVID if(_LIB_VERSION==_SVID_)
 
-#define NAMEL excl.name  
-#define NAMED exc.name  
-#define NAMEF excf.name  
+#define NAMEL excl.name
+#define NAMED exc.name
+#define NAMEF excf.name
 
 //
 // These should work OK for MS because they are ints -
@@ -230,28 +192,28 @@ const char long_double_neg_zero[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0
 #define PLOSS           6
 
 #define SINGL excl.type = SING
-#define DOMAINL excl.type = DOMAIN 
-#define OVERFLOWL excl.type = OVERFLOW 
-#define UNDERFLOWL excl.type = UNDERFLOW 
-#define TLOSSL excl.type = TLOSS 
+#define DOMAINL excl.type = DOMAIN
+#define OVERFLOWL excl.type = OVERFLOW
+#define UNDERFLOWL excl.type = UNDERFLOW
+#define TLOSSL excl.type = TLOSS
 #define SINGD exc.type = SING
-#define DOMAIND exc.type = DOMAIN 
-#define OVERFLOWD exc.type = OVERFLOW 
-#define UNDERFLOWD exc.type = UNDERFLOW 
-#define TLOSSD exc.type = TLOSS 
+#define DOMAIND exc.type = DOMAIN
+#define OVERFLOWD exc.type = OVERFLOW
+#define UNDERFLOWD exc.type = UNDERFLOW
+#define TLOSSD exc.type = TLOSS
 #define SINGF excf.type = SING
-#define DOMAINF excf.type = DOMAIN 
-#define OVERFLOWF excf.type = OVERFLOW 
-#define UNDERFLOWF excf.type = UNDERFLOW 
-#define TLOSSF excf.type = TLOSS 
+#define DOMAINF excf.type = DOMAIN
+#define OVERFLOWF excf.type = OVERFLOW
+#define UNDERFLOWF excf.type = UNDERFLOW
+#define TLOSSF excf.type = TLOSS
 
 #define INPUT_XL (excl.arg1=*(long double*)arg1)
 #define INPUT_XD (exc.arg1=*(double*)arg1)
 #define INPUT_XF (excf.arg1=*(float*)arg1)
-#define INPUT_YL (excl.arg2=*(long double*)arg2)
-#define INPUT_YD (exc.arg2=*(double*)arg2)
-#define INPUT_YF (excf.arg2=*(float*)arg2)
-#define INPUT_RESL (*(long double *)retval) 
+#define INPUT_YL (excl.arg1=*(long double*)arg2)
+#define INPUT_YD (exc.arg1=*(double*)arg2)
+#define INPUT_YF (excf.arg1=*(float*)arg2)
+#define INPUT_RESL (*(long double *)retval)
 #define INPUT_RESD (*(double *)retval)
 #define INPUT_RESF (*(float *)retval)
 
@@ -286,17 +248,11 @@ const char long_double_neg_zero[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0
 #define WRITED_LOG1P_NEGATIVE fputs("log1p: DOMAIN error\n",stderr)
 #define WRITEF_LOG1P_NEGATIVE fputs("log1pf: DOMAIN error\n",stderr)
 #define WRITEL_LOG10_ZERO fputs("log10l: SING error\n",stderr)
-#define WRITED_LOG10_ZERO fputs("log10: SING error\n",stderr) 
+#define WRITED_LOG10_ZERO fputs("log10: SING error\n",stderr)
 #define WRITEF_LOG10_ZERO fputs("log10f: SING error\n",stderr)
 #define WRITEL_LOG10_NEGATIVE fputs("log10l: DOMAIN error\n",stderr)
 #define WRITED_LOG10_NEGATIVE fputs("log10: DOMAIN error\n",stderr)
 #define WRITEF_LOG10_NEGATIVE fputs("log10f: DOMAIN error\n",stderr)
-#define WRITEL_LOG2_ZERO fputs("log2l: SING error\n",stderr)
-#define WRITED_LOG2_ZERO fputs("log2: SING error\n",stderr) 
-#define WRITEF_LOG2_ZERO fputs("log2f: SING error\n",stderr)
-#define WRITEL_LOG2_NEGATIVE fputs("log2l: DOMAIN error\n",stderr)
-#define WRITED_LOG2_NEGATIVE fputs("log2: DOMAIN error\n",stderr)
-#define WRITEF_LOG2_NEGATIVE fputs("log2f: DOMAIN error\n",stderr)
 #define WRITEL_POW_ZERO_TO_ZERO fputs("powl(0,0): DOMAIN error\n",stderr)
 #define WRITED_POW_ZERO_TO_ZERO fputs("pow(0,0): DOMAIN error\n",stderr)
 #define WRITEF_POW_ZERO_TO_ZERO fputs("powf(0,0): DOMAIN error\n",stderr)
@@ -339,9 +295,6 @@ const char long_double_neg_zero[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0
 #define WRITEL_GAMMA_NEGATIVE fputs("gammal: SING error\n",stderr)
 #define WRITED_GAMMA_NEGATIVE fputs("gamma: SING error\n",stderr)
 #define WRITEF_GAMMA_NEGATIVE fputs("gammaf: SING error\n",stderr)
-#define WRITEL_TGAMMA_NEGATIVE fputs("tgammal: DOMAIN error\n",stderr)
-#define WRITED_TGAMMA_NEGATIVE fputs("tgamma: DOMAIN error\n",stderr)
-#define WRITEF_TGAMMA_NEGATIVE fputs("tgammaf: DOMAIN error\n",stderr)
 #define WRITEL_J0_TLOSS  fputs("j0l: TLOSS error\n",stderr)
 #define WRITEL_Y0_TLOSS  fputs("y0l: TLOSS error\n",stderr)
 #define WRITEL_J1_TLOSS  fputs("j1l: TLOSS error\n",stderr)
@@ -360,26 +313,16 @@ const char long_double_neg_zero[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0
 #define WRITEF_Y1_TLOSS  fputs("y1f: TLOSS error\n",stderr)
 #define WRITEF_JN_TLOSS  fputs("jnf: TLOSS error\n",stderr)
 #define WRITEF_YN_TLOSS  fputs("ynf: TLOSS error\n",stderr)
-#define WRITEL_ACOSD fputs("acosdl: DOMAIN error\n",stderr)
-#define WRITED_ACOSD fputs("acosd: DOMAIN error\n",stderr)
-#define WRITEF_ACOSD fputs("acosdf: DOMAIN error\n",stderr)
-#define WRITEL_ASIND fputs("asindl: DOMAIN error\n",stderr)
-#define WRITED_ASIND fputs("asind: DOMAIN error\n",stderr)
-#define WRITEF_ASIND fputs("asindf: DOMAIN error\n",stderr)
-#define WRITEL_ATAN2D_ZERO_BY_ZERO fputs("atan2dl: DOMAIN error\n",stderr)
-#define WRITED_ATAN2D_ZERO_BY_ZERO fputs("atan2d: DOMAIN error\n",stderr)
-#define WRITEF_ATAN2D_ZERO_BY_ZERO fputs("atan2df: DOMAIN error\n",stderr)
-
 
 /***********************/
 /* IEEE Path           */
 /***********************/
-if(_LIB_VERSIONIMF==_IEEE_) return;
+if(_LIB_VERSION==_IEEE_) return;
 
 /***********************/
 /* C9X Path           */
 /***********************/
-else if(_LIB_VERSIONIMF==_ISOC_) 
+else if(_LIB_VERSION==_ISOC_)
 {
   switch(input_tag)
   {
@@ -396,145 +339,79 @@ else if(_LIB_VERSIONIMF==_ISOC_)
     case log1p_zero:
     case log1pf_zero:
     case powl_overflow:
-    case pow_overflow:  
-    case powf_overflow: 
+    case pow_overflow:
+    case powf_overflow:
+    case powl_underflow:
+    case pow_underflow:
+    case powf_underflow:
     case expl_overflow:
-    case exp_overflow:  
-    case expf_overflow: 
+    case exp_overflow:
+    case expf_overflow:
+    case expl_underflow:
+    case exp_underflow:
+    case expf_underflow:
     case exp2l_overflow:
-    case exp2_overflow:  
-    case exp2f_overflow: 
+    case exp2_overflow:
+    case exp2f_overflow:
+    case exp2l_underflow:
+    case exp2_underflow:
+    case exp2f_underflow:
     case exp10l_overflow:
-    case exp10_overflow:  
-    case exp10f_overflow: 
+    case exp10_overflow:
+    case exp10f_overflow:
     case expm1l_overflow:
-    case expm1_overflow:  
-    case expm1f_overflow: 
+    case expm1_overflow:
+    case expm1f_overflow:
     case hypotl_overflow:
     case hypot_overflow:
     case hypotf_overflow:
-    case sinhl_overflow: 
-    case sinh_overflow: 
-    case sinhf_overflow: 
-    case atanhl_eq_one:  
-    case atanh_eq_one:  
-    case atanhf_eq_one:  
+    case sinhl_overflow:
+    case sinh_overflow:
+    case sinhf_overflow:
+    case atanhl_eq_one:
+    case atanh_eq_one:
+    case atanhf_eq_one:
     case scalbl_overflow:
     case scalb_overflow:
     case scalbf_overflow:
+    case scalbl_underflow:
+    case scalb_underflow:
+    case scalbf_underflow:
     case coshl_overflow:
     case cosh_overflow:
     case coshf_overflow:
     case nextafterl_overflow:
     case nextafter_overflow:
     case nextafterf_overflow:
-    case nexttowardl_overflow:
-    case nexttoward_overflow:
-    case nexttowardf_overflow:
     case scalbnl_overflow:
     case scalbn_overflow:
     case scalbnf_overflow:
-    case scalblnl_overflow:
-    case scalbln_overflow:
-    case scalblnf_overflow:
+    case scalbnl_underflow:
+    case scalbn_underflow:
+    case scalbnf_underflow:
     case ldexpl_overflow:
     case ldexp_overflow:
     case ldexpf_overflow:
+    case ldexpl_underflow:
+    case ldexp_underflow:
+    case ldexpf_underflow:
     case lgammal_overflow:
     case lgamma_overflow:
     case lgammaf_overflow:
-    case gammal_overflow:
-    case gamma_overflow:
-    case gammaf_overflow:
     case lgammal_negative:
     case lgamma_negative:
     case lgammaf_negative:
+    case gammal_overflow:
+    case gamma_overflow:
+    case gammaf_overflow:
     case gammal_negative:
     case gamma_negative:
     case gammaf_negative:
     case ilogbl_zero:
-    case ilogb_zero: 
+    case ilogb_zero:
     case ilogbf_zero:
-    case fdiml_overflow:
-    case fdim_overflow: 
-    case fdimf_overflow:
-    case llrintl_large:
-    case llrint_large: 
-    case llrintf_large:
-    case llroundl_large:
-    case llround_large: 
-    case llroundf_large:
-    case lrintl_large:
-    case lrint_large: 
-    case lrintf_large:
-    case lroundl_large:
-    case lround_large: 
-    case lroundf_large:
-    case tandl_overflow:
-    case tand_overflow: 
-    case tandf_overflow:
-    case cotdl_overflow:
-    case cotd_overflow: 
-    case cotdf_overflow:
-    case cotl_overflow:
-    case cot_overflow: 
-    case cotf_overflow:
-    case sinhcoshl_overflow: 
-    case sinhcosh_overflow: 
-    case sinhcoshf_overflow: 
-    case annuityl_overflow:
-    case annuity_overflow:
-    case annuityf_overflow:
-    case compoundl_overflow:
-    case compound_overflow:
-    case compoundf_overflow:
-    case tgammal_overflow:
-    case tgamma_overflow:
-    case tgammaf_overflow:
     {
          ERRNO_RANGE; break;
-    }
-    case powl_underflow:
-    case expl_underflow:
-    case exp2l_underflow:
-    case scalbl_underflow:
-    case scalbnl_underflow:
-    case scalblnl_underflow:
-    case ldexpl_underflow:
-    case erfcl_underflow:
-    case annuityl_underflow:
-    case compoundl_underflow:
-    {
-       if ( *(__INT_64__*)retval == 0 ) ERRNO_RANGE; 
-       break;
-    }
-    case pow_underflow:  
-    case exp_underflow:  
-    case exp2_underflow:  
-    case scalb_underflow:
-    case scalbn_underflow:
-    case scalbln_underflow:
-    case ldexp_underflow:
-    case erfc_underflow:  
-    case annuity_underflow:
-    case compound_underflow:
-    {
-       if ( ((*(__INT_64__*)retval)<<1) == 0 ) ERRNO_RANGE; 
-       break;
-    }
-    case powf_underflow: 
-    case expf_underflow: 
-    case exp2f_underflow: 
-    case scalbf_underflow:
-    case scalbnf_underflow:
-    case scalblnf_underflow:
-    case ldexpf_underflow:
-    case erfcf_underflow: 
-    case annuityf_underflow:
-    case compoundf_underflow:
-    {
-       if ( ((*(__INT_64__*)retval)<<33) == 0 ) ERRNO_RANGE; 
-       break;
     }
     case logl_negative:
     case log_negative:
@@ -563,17 +440,17 @@ else if(_LIB_VERSIONIMF==_ISOC_)
     case fmodl_by_zero:
     case fmod_by_zero:
     case fmodf_by_zero:
-    case atanhl_gt_one:  
-    case atanh_gt_one:  
-    case atanhf_gt_one:  
-    case acosl_gt_one: 
-    case acos_gt_one: 
-    case acosf_gt_one: 
-    case asinl_gt_one: 
-    case asin_gt_one: 
-    case asinf_gt_one: 
+    case atanhl_gt_one:
+    case atanh_gt_one:
+    case atanhf_gt_one:
+    case acosl_gt_one:
+    case acos_gt_one:
+    case acosf_gt_one:
+    case asinl_gt_one:
+    case asin_gt_one:
+    case asinf_gt_one:
     case logbl_zero:
-    case logb_zero: 
+    case logb_zero:
     case logbf_zero:
     case acoshl_lt_one:
     case acosh_lt_one:
@@ -596,30 +473,6 @@ else if(_LIB_VERSIONIMF==_ISOC_)
     case ynl_negative:
     case yn_negative:
     case ynf_negative:
-    case acosdl_gt_one: 
-    case acosd_gt_one: 
-    case acosdf_gt_one: 
-    case asindl_gt_one: 
-    case asind_gt_one: 
-    case asindf_gt_one: 
-    case atan2dl_zero:
-    case atan2d_zero:
-    case atan2df_zero:
-    case annuityl_by_zero:
-    case annuity_by_zero:
-    case annuityf_by_zero:
-    case annuityl_less_m1:
-    case annuity_less_m1:
-    case annuityf_less_m1:
-    case compoundl_by_zero:
-    case compound_by_zero:
-    case compoundf_by_zero:
-    case compoundl_less_m1:
-    case compound_less_m1:
-    case compoundf_less_m1:
-    case tgammal_negative:
-    case tgamma_negative:
-    case tgammaf_negative:
     {
          ERRNO_DOMAIN; break;
     }
@@ -633,37 +486,31 @@ else if(_LIB_VERSIONIMF==_ISOC_)
 /* _POSIX_ Path        */
 /***********************/
 
-else if(_LIB_VERSIONIMF==_POSIX_)
+else if(_LIB_VERSION==_POSIX_)
 {
 switch(input_tag)
   {
   case gammal_overflow:
   case lgammal_overflow:
-  case tgammal_overflow:
   {
        RETVAL_HUGE_VALL; ERRNO_RANGE; break;
   }
   case gamma_overflow:
   case lgamma_overflow:
-  case tgamma_overflow:
   {
        RETVAL_HUGE_VALD; ERRNO_RANGE; break;
   }
   case gammaf_overflow:
   case lgammaf_overflow:
-  case tgammaf_overflow:
   {
        RETVAL_HUGE_VALF; ERRNO_RANGE; break;
   }
   case gammal_negative:
-  case lgammal_negative:
   case gamma_negative:
-  case lgamma_negative:
   case gammaf_negative:
+  case lgammal_negative:
+  case lgamma_negative:
   case lgammaf_negative:
-  case tgammal_negative:
-  case tgamma_negative:
-  case tgammaf_negative:
   {
        ERRNO_DOMAIN; break;
   }
@@ -679,56 +526,38 @@ switch(input_tag)
   case scalbn_underflow:
   case scalbnf_overflow:
   case scalbnf_underflow:
-  case scalblnl_overflow:
-  case scalblnl_underflow:
-  case scalbln_overflow:
-  case scalbln_underflow:
-  case scalblnf_overflow:
-  case scalblnf_underflow:
-  case tandl_overflow:
-  case tand_overflow: 
-  case tandf_overflow:
-  case cotdl_overflow:
-  case cotd_overflow: 
-  case cotdf_overflow:
-  case cotl_overflow:
-  case cot_overflow: 
-  case cotf_overflow:
-  case sinhcoshl_overflow: 
-  case sinhcosh_overflow: 
-  case sinhcoshf_overflow: 
   {
        ERRNO_RANGE; break;
   }
-  case atanhl_gt_one: 
-  case atanhl_eq_one: 
+  case atanhl_gt_one:
+  case atanhl_eq_one:
     /* atanhl(|x| >= 1) */
     {
        ERRNO_DOMAIN; break;
     }
-  case atanh_gt_one: 
-  case atanh_eq_one: 
+  case atanh_gt_one:
+  case atanh_eq_one:
     /* atanh(|x| >= 1) */
     {
        ERRNO_DOMAIN; break;
     }
-  case atanhf_gt_one: 
-  case atanhf_eq_one: 
+  case atanhf_gt_one:
+  case atanhf_eq_one:
     /* atanhf(|x| >= 1) */
     {
        ERRNO_DOMAIN; break;
     }
-  case sqrtl_negative: 
+  case sqrtl_negative:
     /* sqrtl(x < 0) */
     {
        ERRNO_DOMAIN; break;
     }
-  case sqrt_negative: 
+  case sqrt_negative:
     /* sqrt(x < 0) */
     {
        ERRNO_DOMAIN; break;
     }
-  case sqrtf_negative: 
+  case sqrtf_negative:
     /* sqrtf(x < 0) */
     {
        ERRNO_DOMAIN; break;
@@ -777,7 +606,7 @@ switch(input_tag)
     /* yn(x < 0) */
     {
        RETVAL_NEG_HUGE_VALD; ERRNO_DOMAIN; break;
-    } 
+    }
   case y0f_negative:
   case y1f_negative:
   case ynf_negative:
@@ -786,11 +615,10 @@ switch(input_tag)
     /* ynf(x < 0) */
     {
        RETVAL_NEG_HUGE_VALF; ERRNO_DOMAIN; break;
-    } 
+    }
   case logl_zero:
   case log1pl_zero:
   case log10l_zero:
-  case log2l_zero:
     /* logl(0) */
     /* log1pl(0) */
     /* log10l(0) */
@@ -800,7 +628,7 @@ switch(input_tag)
   case log_zero:
   case log1p_zero:
   case log10_zero:
-  case log2_zero:
+  case log2l_zero:
    /* log(0) */
    /* log1p(0) */
    /* log10(0) */
@@ -810,7 +638,6 @@ switch(input_tag)
   case logf_zero:
   case log1pf_zero:
   case log10f_zero:
-  case log2f_zero:
     /* logf(0) */
     /* log1pf(0) */
     /* log10f(0) */
@@ -825,9 +652,6 @@ switch(input_tag)
     /* log1pl(x < 0) */
     /* log10l(x < 0) */
     {
-#ifndef _LIBC
-       RETVAL_NEG_HUGE_VALL;
-#endif
        ERRNO_DOMAIN; break;
     }
   case log_negative:
@@ -838,11 +662,8 @@ switch(input_tag)
     /* log1p(x < 0) */
     /* log10(x < 0) */
     {
-#ifndef _LIBC
-       RETVAL_NEG_HUGE_VALD;
-#endif
        ERRNO_DOMAIN; break;
-    } 
+    }
   case logf_negative:
   case log1pf_negative:
   case log10f_negative:
@@ -851,46 +672,34 @@ switch(input_tag)
     /* log1pf(x < 0) */
     /* log10f(x < 0) */
     {
-#ifndef _LIBC
-       RETVAL_NEG_HUGE_VALF;
-#endif
        ERRNO_DOMAIN; break;
-    } 
+    }
   case expl_overflow:
-  case exp2l_overflow:
-  case exp10l_overflow:
     /* expl overflow */
     {
        RETVAL_HUGE_VALL; ERRNO_RANGE; break;
     }
   case exp_overflow:
-  case exp2_overflow:
-  case exp10_overflow:
     /* exp overflow */
     {
        RETVAL_HUGE_VALD; ERRNO_RANGE; break;
     }
   case expf_overflow:
-  case exp2f_overflow:
-  case exp10f_overflow:
     /* expf overflow */
     {
        RETVAL_HUGE_VALF; ERRNO_RANGE; break;
     }
   case expl_underflow:
-  case exp2l_underflow:
     /* expl underflow */
     {
        RETVAL_ZEROL; ERRNO_RANGE; break;
     }
   case exp_underflow:
-  case exp2_underflow:
     /* exp underflow */
     {
        RETVAL_ZEROD; ERRNO_RANGE; break;
     }
   case expf_underflow:
-  case exp2f_underflow:
     /* expf underflow */
     {
        RETVAL_ZEROF; ERRNO_RANGE; break;
@@ -941,17 +750,13 @@ switch(input_tag)
        break;
     }
   case powl_overflow:
-  case annuityl_overflow:
-  case compoundl_overflow:
     /* powl(x,y) overflow */
     {
        if (INPUT_RESL < 0) RETVAL_NEG_HUGE_VALL;
        else RETVAL_HUGE_VALL;
-       ERRNO_RANGE; break; 
+       ERRNO_RANGE; break;
     }
   case pow_overflow:
-  case annuity_overflow:
-  case compound_overflow:
     /* pow(x,y) overflow */
     {
        if (INPUT_RESD < 0) RETVAL_NEG_HUGE_VALD;
@@ -959,8 +764,6 @@ switch(input_tag)
        ERRNO_RANGE; break;
     }
   case powf_overflow:
-  case annuityf_overflow:
-  case compoundf_overflow:
     /* powf(x,y) overflow */
     {
        if (INPUT_RESF < 0) RETVAL_NEG_HUGE_VALF;
@@ -968,40 +771,19 @@ switch(input_tag)
        ERRNO_RANGE; break;
     }
   case powl_underflow:
-  case annuityl_underflow:
-  case compoundl_underflow:
     /* powl(x,y) underflow */
     {
        RETVAL_ZEROL; ERRNO_RANGE; break;
     }
   case pow_underflow:
-  case annuity_underflow:
-  case compound_underflow:
     /* pow(x,y) underflow */
     {
        RETVAL_ZEROD; ERRNO_RANGE; break;
     }
-  case powf_underflow:
-  case annuityf_underflow:
-  case compoundf_underflow:
+  case  powf_underflow:
     /* powf(x,y) underflow */
     {
        RETVAL_ZEROF; ERRNO_RANGE; break;
-    }
-  case annuityl_by_zero:
-  case annuityl_less_m1:
-  case compoundl_by_zero:
-  case compoundl_less_m1:
-  case annuity_by_zero:
-  case annuity_less_m1:
-  case compound_by_zero:
-  case compound_less_m1:
-  case annuityf_by_zero:
-  case annuityf_less_m1:
-  case compoundf_by_zero:
-  case compoundf_less_m1:
-    {
-       ERRNO_DOMAIN; break;
     }
   case powl_zero_to_negative:
     /* 0**neg */
@@ -1038,7 +820,7 @@ switch(input_tag)
     /* Special Error */
     {
        break;
-    } 
+    }
   case  pow_nan_to_zero:
     /* pow(NaN,0.0) */
     {
@@ -1050,51 +832,36 @@ switch(input_tag)
        break;
     }
   case atan2l_zero:
-  case atan2dl_zero:
-    /* atan2dl(0,0) */
+    /* atan2l(0,0) */
     {
-#ifndef _LIBC
-       RETVAL_ZEROL;
-#else
-       /* XXX  arg1 and arg2 are switched!!!!  */
+      /* XXX  arg1 and arg2 are switched!!!!  */
        if (signbit (*(long double *) arg1))
 	 /* y == -0 */
-	 *(long double *) retval = __libm_copysignl (M_PIl, *(long double *) arg2);
+	 *(long double *) retval = copysignl (M_PIl, *(long double *) arg2);
        else
 	 *(long double *) retval = *(long double *) arg2;
-#endif
        ERRNO_DOMAIN; break;
     }
   case atan2_zero:
-  case atan2d_zero:
-    /* atan2d(0,0) */
+    /* atan2(0,0) */
     {
-#ifndef _LIBC
-       RETVAL_ZEROD;
-#else
-       /* XXX  arg1 and arg2 are switched!!!!  */
+      /* XXX  arg1 and arg2 are switched!!!!  */
        if (signbit (*(double *) arg1))
 	 /* y == -0 */
-	 *(double *) retval = __libm_copysign (M_PI, *(double *) arg2);
+	 *(double *) retval = copysign (M_PI, *(double *) arg2);
        else
 	 *(double *) retval = *(double *) arg2;
-#endif
        ERRNO_DOMAIN; break;
     }
-  case atan2f_zero:
-  case atan2df_zero:
+  case
+    atan2f_zero:
     /* atan2f(0,0) */
-    /* atan2df(0,0) */
     {
-#ifndef _LIBC
-       RETVAL_ZEROF;
-#else
        if (signbit (*(float *) arg2))
 	 /* y == -0 */
-	 *(float *) retval = __libm_copysignf (M_PI, *(float *) arg1);
+	 *(float *) retval = copysignf (M_PI, *(float *) arg1);
        else
 	 *(float *) retval = *(float *) arg1;
-#endif
        ERRNO_DOMAIN; break;
     }
   case expm1l_overflow:
@@ -1145,42 +912,42 @@ switch(input_tag)
   case scalbl_underflow:
     /* scalbl underflow */
     {
-       if (INPUT_XL < 0) RETVAL_NEG_ZEROL; 
+       if (INPUT_XL < 0) RETVAL_NEG_ZEROL;
        else RETVAL_ZEROL;
        ERRNO_RANGE; break;
     }
   case scalb_underflow:
     /* scalb underflow */
     {
-       if (INPUT_XD < 0) RETVAL_NEG_ZEROD; 
+       if (INPUT_XD < 0) RETVAL_NEG_ZEROD;
        else RETVAL_ZEROD;
        ERRNO_RANGE; break;
     }
   case scalbf_underflow:
     /* scalbf underflow */
     {
-       if (INPUT_XF < 0) RETVAL_NEG_ZEROF; 
+       if (INPUT_XF < 0) RETVAL_NEG_ZEROF;
        else RETVAL_ZEROF;
        ERRNO_RANGE; break;
     }
   case scalbl_overflow:
     /* scalbl overflow */
     {
-       if (INPUT_XL < 0) RETVAL_NEG_HUGE_VALL; 
+       if (INPUT_XL < 0) RETVAL_NEG_HUGE_VALL;
        else RETVAL_HUGE_VALL;
        ERRNO_RANGE; break;
     }
   case scalb_overflow:
     /* scalb overflow */
     {
-       if (INPUT_XD < 0) RETVAL_NEG_HUGE_VALD; 
+       if (INPUT_XD < 0) RETVAL_NEG_HUGE_VALD;
        else RETVAL_HUGE_VALD;
        ERRNO_RANGE; break;
     }
   case scalbf_overflow:
     /* scalbf overflow */
     {
-       if (INPUT_XF < 0) RETVAL_NEG_HUGE_VALF; 
+       if (INPUT_XF < 0) RETVAL_NEG_HUGE_VALF;
        else RETVAL_HUGE_VALF;
        ERRNO_RANGE; break;
     }
@@ -1200,62 +967,33 @@ switch(input_tag)
         ERRNO_DOMAIN; break;
     }
   case acosl_gt_one:
-  case acosdl_gt_one:
     /* acosl(x > 1) */
-    /* acosdl(x > 1) */
     {
-#ifndef _LIBC
-       RETVAL_ZEROL;
-#endif
        ERRNO_DOMAIN; break;
     }
   case acos_gt_one:
-  case acosd_gt_one:
     /* acos(x > 1) */
-    /* acosd(x > 1) */
     {
-#ifndef _LIBC
-       RETVAL_ZEROD;
-#endif
-       ERRNO_DOMAIN; break;
+      ERRNO_DOMAIN; break;
     }
   case acosf_gt_one:
-  case acosdf_gt_one:
     /* acosf(x > 1) */
-    /* acosdf(x > 1) */
     {
-#ifndef _LIBC
-       RETVAL_ZEROF;
-#endif
-       ERRNO_DOMAIN; break;
+      ERRNO_DOMAIN; break;
     }
   case asinl_gt_one:
-  case asindl_gt_one:
     /* asinl(x > 1) */
-    /* asindl(x > 1) */
     {
-#ifndef _LIBC
-       RETVAL_ZEROL;
-#endif
        ERRNO_DOMAIN; break;
     }
   case asin_gt_one:
-  case asind_gt_one:
     /* asin(x > 1) */
-    /* asind(x > 1) */
     {
-#ifndef _LIBC
-       RETVAL_ZEROD;
-#endif
        ERRNO_DOMAIN; break;
     }
   case asinf_gt_one:
-  case asindf_gt_one:
-    /* asindf(x > 1) */
+    /* asinf(x > 1) */
     {
-#ifndef _LIBC
-       RETVAL_ZEROF;
-#endif
        ERRNO_DOMAIN; break;
     }
   case remainderl_by_zero:
@@ -1290,15 +1028,6 @@ switch(input_tag)
     /* coshf overflows */
     {
        RETVAL_HUGE_VALF; ERRNO_RANGE; break;
-    }
-  case nextafterl_overflow:
-  case nextafter_overflow:
-  case nextafterf_overflow:
-  case nexttowardl_overflow:
-  case nexttoward_overflow:
-  case nexttowardf_overflow:
-    {
-      ERRNO_RANGE; break;
     }
   case sinhl_overflow:
     /* sinhl overflows */
@@ -1361,7 +1090,7 @@ return;
 /*******************************/
 /* __SVID__ and __XOPEN__ Path */
 /*******************************/
-else 
+else
 {
   switch(input_tag)
   {
@@ -1377,57 +1106,15 @@ else
   case scalbn_underflow:
   case scalbnf_overflow:
   case scalbnf_underflow:
-  case scalblnl_overflow:
-  case scalblnl_underflow:
-  case scalbln_overflow:
-  case scalbln_underflow:
-  case scalblnf_overflow:
-  case scalblnf_underflow:
-  case tandl_overflow:
-  case tand_overflow: 
-  case tandf_overflow:
-  case cotdl_overflow:
-  case cotd_overflow: 
-  case cotdf_overflow:
-  case cotl_overflow:
-  case cot_overflow: 
-  case cotf_overflow:
-  case annuityl_overflow:
-  case annuityl_underflow:
-  case annuity_overflow:
-  case annuity_underflow:
-  case annuityf_overflow:
-  case annuityf_underflow:
-  case compoundl_overflow:
-  case compoundl_underflow:
-  case compound_overflow:
-  case compound_underflow:
-  case compoundf_overflow:
-  case compoundf_underflow:
   {
        ERRNO_RANGE; break;
   }
-  case annuityl_by_zero:
-  case annuityl_less_m1:
-  case annuity_by_zero:
-  case annuity_less_m1:
-  case annuityf_by_zero:
-  case annuityf_less_m1:
-  case compoundl_by_zero:
-  case compoundl_less_m1:
-  case compound_by_zero:
-  case compound_less_m1:
-  case compoundf_by_zero:
-  case compoundf_less_m1:
-  {
-       ERRNO_DOMAIN; break;
-  }
-  case sqrtl_negative: 
+  case sqrtl_negative:
     /* sqrtl(x < 0) */
     {
        DOMAINL; NAMEL = (char *) "sqrtl";
-       ifSVID 
-       { 
+       ifSVID
+       {
           RETVAL_ZEROL;
           NOT_MATHERRL
           {
@@ -1435,22 +1122,22 @@ else
             ERRNO_DOMAIN;
           }
        }
-       else 
+       else
        { /* NaN already computed */
           NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
-  case sqrt_negative: 
+  case sqrt_negative:
     /* sqrt(x < 0) */
     {
        DOMAIND; NAMED = (char *) "sqrt";
-       ifSVID 
+       ifSVID
        {
-         
+
          RETVAL_ZEROD;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
            WRITED_SQRT;
            ERRNO_DOMAIN;
@@ -1459,18 +1146,18 @@ else
        else
        { /* NaN already computed */
          NOT_MATHERRD {ERRNO_DOMAIN;}
-       } 
-       *(double *)retval = exc.retval;	
+       }
+       *(double *)retval = exc.retval;
        break;
     }
-  case sqrtf_negative: 
+  case sqrtf_negative:
     /* sqrtf(x < 0) */
     {
        DOMAINF; NAMEF = (char *) "sqrtf";
-       ifSVID 
+       ifSVID
        {
          RETVAL_ZEROF;
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
            WRITEF_SQRT;
            ERRNO_DOMAIN;
@@ -1479,59 +1166,62 @@ else
        else
        {
          NOT_MATHERRF {ERRNO_DOMAIN;}
-       } 
-       *(float *)retval = excf.retval;	
+       }
+       *(float *)retval = excf.retval;
        break;
     }
   case logl_zero:
+  case log2l_zero:
     /* logl(0) */
     {
        SINGL; NAMEL = (char *) "logl";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEL;
-         NOT_MATHERRL 
+         NOT_MATHERRL
          {
            WRITEL_LOG_ZERO;
            ERRNO_DOMAIN;
-         } 
+         }
        }
        else
        {
          RETVAL_NEG_HUGE_VALL;
          NOT_MATHERRL {ERRNO_DOMAIN;}
-       } 
-       *(long double *)retval = excl.retval;	
+       }
+       *(long double *)retval = excl.retval;
        break;
     }
   case log_zero:
+  case log2_zero:
     /* log(0) */
     {
        SINGD; NAMED = (char *) "log";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGED;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
            WRITED_LOG_ZERO;
            ERRNO_DOMAIN;
-         }  
+         }
        }
        else
        {
          RETVAL_NEG_HUGE_VALD;
          NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case logf_zero:
+  case log2f_zero:
     /* logf(0) */
     {
        SINGF; NAMEF = (char *) "logf";
-       ifSVID 
+       ifSVID
        {
-         RETVAL_NEG_HUGEF; 
+         RETVAL_NEG_HUGEF;
          NOT_MATHERRF
          {
             WRITEF_LOG_ZERO;
@@ -1540,21 +1230,22 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALF; 
+         RETVAL_NEG_HUGE_VALF;
          NOT_MATHERRF {ERRNO_DOMAIN;}
        }
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
 
   case logl_negative:
+  case log2l_negative:
     /* logl(x < 0) */
     {
        DOMAINL; NAMEL = (char *) "logl";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEL;
-         NOT_MATHERRL 
+         NOT_MATHERRL
          {
            WRITEL_LOG_NEGATIVE;
            ERRNO_DOMAIN;
@@ -1562,20 +1253,21 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALL; 
+         RETVAL_NEG_HUGE_VALL;
          NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case log_negative:
+  case log2_negative:
     /* log(x < 0) */
     {
        DOMAIND; NAMED = (char *) "log";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGED;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
            WRITED_LOG_NEGATIVE;
            ERRNO_DOMAIN;
@@ -1583,38 +1275,39 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALD; 
+         RETVAL_NEG_HUGE_VALD;
          NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
-    } 
+    }
   case logf_negative:
+  case log2f_negative:
     /* logf(x < 0) */
     {
        DOMAINF; NAMEF = (char *) "logf";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEF;
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
            WRITEF_LOG_NEGATIVE;
            ERRNO_DOMAIN;
          }
-       }  
+       }
        else
        {
-         RETVAL_NEG_HUGE_VALF; 
+         RETVAL_NEG_HUGE_VALF;
          NOT_MATHERRF{ERRNO_DOMAIN;}
        }
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case log1pl_zero:
     /* log1pl(-1) */
     {
        SINGL; NAMEL = (char *) "log1pl";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEL;
          NOT_MATHERRL
@@ -1635,7 +1328,7 @@ else
     /* log1p(-1) */
     {
        SINGD; NAMED = (char *) "log1p";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGED;
          NOT_MATHERRD
@@ -1656,7 +1349,7 @@ else
     /* log1pf(-1) */
     {
        SINGF; NAMEF = (char *) "log1pf";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEF;
          NOT_MATHERRF
@@ -1668,11 +1361,11 @@ else
        else
        {
          RETVAL_NEG_HUGE_VALF;
-         NOT_MATHERRF {ERRNO_DOMAIN;}
+         NOT_MATHERRF {}ERRNO_DOMAIN;
        }
        *(float *)retval = excf.retval;
        break;
-    } 
+    }
  case log1pl_negative:
    /* log1pl(x < -1) */
    {
@@ -1686,7 +1379,7 @@ else
           ERRNO_DOMAIN;
         }
       }
-      else 
+      else
       {
         RETVAL_NEG_HUGE_VALL;
         NOT_MATHERRL {ERRNO_DOMAIN;}
@@ -1707,7 +1400,7 @@ else
           ERRNO_DOMAIN;
         }
       }
-      else 
+      else
       {
         RETVAL_NEG_HUGE_VALD;
         NOT_MATHERRD {ERRNO_DOMAIN;}
@@ -1728,7 +1421,7 @@ else
           ERRNO_DOMAIN;
         }
       }
-      else 
+      else
       {
         RETVAL_NEG_HUGE_VALF;
         NOT_MATHERRF {ERRNO_DOMAIN;}
@@ -1740,7 +1433,7 @@ else
     /* log10l(0) */
     {
        SINGL; NAMEL = (char *) "log10l";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEL;
          NOT_MATHERRL
@@ -1754,14 +1447,14 @@ else
          RETVAL_NEG_HUGE_VALL;
          NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case log10_zero:
     /* log10(0) */
     {
        SINGD; NAMED = (char *) "log10";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGED;
          NOT_MATHERRD
@@ -1775,14 +1468,14 @@ else
          RETVAL_NEG_HUGE_VALD;
          NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case log10f_zero:
     /* log10f(0) */
     {
        SINGF; NAMEF = (char *) "log10f";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEF;
          NOT_MATHERRF
@@ -1796,17 +1489,17 @@ else
          RETVAL_NEG_HUGE_VALF;
          NOT_MATHERRF {ERRNO_DOMAIN;}
        }
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case log10l_negative:
     /* log10l(x < 0) */
     {
        DOMAINL; NAMEL = (char *) "log10l";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEL;
-         NOT_MATHERRL 
+         NOT_MATHERRL
          {
            WRITEL_LOG10_NEGATIVE;
            ERRNO_DOMAIN;
@@ -1817,38 +1510,38 @@ else
          RETVAL_NEG_HUGE_VALL;
          NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case log10_negative:
     /* log10(x < 0) */
     {
        DOMAIND; NAMED = (char *) "log10";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGED;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
            WRITED_LOG10_NEGATIVE;
            ERRNO_DOMAIN;
          }
-       }  
+       }
        else
        {
          RETVAL_NEG_HUGE_VALD;
          NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case log10f_negative:
     /* log10f(x < 0) */
     {
        DOMAINF; NAMEF = (char *) "log10f";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEF;
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
            WRITEF_LOG10_NEGATIVE;
            ERRNO_DOMAIN;
@@ -1859,119 +1552,14 @@ else
          RETVAL_NEG_HUGE_VALF;
          NOT_MATHERRF {ERRNO_DOMAIN;}
        }
-       *(float *)retval = excf.retval;	
-       break;
-    }
-  case log2_zero:
-    /* log2(0) */
-    {
-       SINGD; NAMED = (char *) "log2";
-       ifSVID 
-       {
-         RETVAL_NEG_HUGED;
-         NOT_MATHERRD
-         {
-           WRITED_LOG2_ZERO;
-           ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         RETVAL_NEG_HUGE_VALD;
-         NOT_MATHERRD {ERRNO_DOMAIN;}
-       }
-       *(double *)retval = exc.retval;	
-       break;
-    }
-  case log2f_zero:
-    /* log2f(0) */
-    {
-       SINGF; NAMEF = (char *) "log2f";
-       ifSVID 
-       {
-         RETVAL_NEG_HUGEF;
-         NOT_MATHERRF
-         {
-          WRITEF_LOG2_ZERO;
-          ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         RETVAL_NEG_HUGE_VALF;
-         NOT_MATHERRF {ERRNO_DOMAIN;}
-       }
-       *(float *)retval = excf.retval;	
-       break;
-    }
-  case log2l_negative:
-    /* log2l(x < 0) */
-    {
-       DOMAINL; NAMEL = (char *) "log2l";
-       ifSVID 
-       {
-         RETVAL_NEG_HUGEL;
-         NOT_MATHERRL 
-         {
-           WRITEL_LOG2_NEGATIVE;
-           ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         RETVAL_NEG_HUGE_VALL;
-         NOT_MATHERRL {ERRNO_DOMAIN;}
-       }
-       *(long double *)retval = excl.retval;	
-       break;
-    }
-  case log2_negative:
-    /* log2(x < 0) */
-    {
-       DOMAIND; NAMED = (char *) "log2";
-       ifSVID 
-       {
-         RETVAL_NEG_HUGED;
-         NOT_MATHERRD 
-         {
-           WRITED_LOG2_NEGATIVE;
-           ERRNO_DOMAIN;
-         }
-       }  
-       else
-       {
-         RETVAL_NEG_HUGE_VALD;
-         NOT_MATHERRD {ERRNO_DOMAIN;}
-       }
-       *(double *)retval = exc.retval;	
-       break;
-    }
-  case log2f_negative:
-    /* log2f(x < 0) */
-    {
-       DOMAINF; NAMEF = (char *) "log2f";
-       ifSVID 
-       {
-         RETVAL_NEG_HUGEF;
-         NOT_MATHERRF 
-         {
-           WRITEF_LOG2_NEGATIVE;
-           ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         RETVAL_NEG_HUGE_VALF;
-         NOT_MATHERRF {ERRNO_DOMAIN;}
-       }
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case expl_overflow:
     /* expl overflow */
     {
        OVERFLOWL; NAMEL = (char *) "expl";
-       ifSVID 
+       ifSVID
        {
          RETVAL_HUGEL;
        }
@@ -1980,14 +1568,14 @@ else
        RETVAL_HUGE_VALL;
        }
        NOT_MATHERRL {ERRNO_RANGE;}
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case exp_overflow:
     /* exp overflow */
     {
        OVERFLOWD; NAMED = (char *) "exp";
-       ifSVID 
+       ifSVID
        {
          RETVAL_HUGED;
        }
@@ -1996,14 +1584,14 @@ else
          RETVAL_HUGE_VALD;
        }
        NOT_MATHERRD {ERRNO_RANGE;}
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case expf_overflow:
     /* expf overflow */
     {
        OVERFLOWF; NAMEF = (char *) "expf";
-       ifSVID 
+       ifSVID
        {
          RETVAL_HUGEF;
        }
@@ -2012,7 +1600,7 @@ else
          RETVAL_HUGE_VALF;
        }
        NOT_MATHERRF {ERRNO_RANGE;}
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case expl_underflow:
@@ -2020,7 +1608,7 @@ else
     {
        UNDERFLOWL; NAMEL = (char *) "expl"; RETVAL_ZEROL;
        NOT_MATHERRL {ERRNO_RANGE;}
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case exp_underflow:
@@ -2028,7 +1616,7 @@ else
     {
        UNDERFLOWD; NAMED = (char *) "exp"; RETVAL_ZEROD;
        NOT_MATHERRD {ERRNO_RANGE;}
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case expf_underflow:
@@ -2036,22 +1624,22 @@ else
     {
        UNDERFLOWF; NAMEF = (char *) "expf"; RETVAL_ZEROF;
        NOT_MATHERRF {ERRNO_RANGE;}
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case powl_zero_to_zero:
     /* powl 0**0 */
     {
        DOMAINL; NAMEL = (char *) "powl";
-       ifSVID 
+       ifSVID
        {
          RETVAL_ZEROL;
-         NOT_MATHERRL 
+         NOT_MATHERRL
          {
             WRITEL_POW_ZERO_TO_ZERO;
-            ERRNO_DOMAIN;
+            ERRNO_RANGE;
          }
-         *(long double *)retval = excl.retval;	
+         *(long double *)retval = excl.retval;
        }
        else RETVAL_ONEL;
        break;
@@ -2060,15 +1648,15 @@ else
     /* pow 0**0 */
     {
        DOMAIND; NAMED = (char *) "pow";
-       ifSVID 
+       ifSVID
        {
          RETVAL_ZEROD;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
             WRITED_POW_ZERO_TO_ZERO;
-            ERRNO_DOMAIN;
+            ERRNO_RANGE;
          }
-         *(double *)retval = exc.retval;	
+         *(double *)retval = exc.retval;
        }
        else RETVAL_ONED;
        break;
@@ -2077,15 +1665,15 @@ else
     /* powf 0**0 */
     {
        DOMAINF; NAMEF = (char *) "powf";
-       ifSVID 
+       ifSVID
        {
          RETVAL_ZEROF;
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
           WRITEF_POW_ZERO_TO_ZERO;
-          ERRNO_DOMAIN;
+          ERRNO_RANGE;
          }
-         *(float *)retval = excf.retval;	
+         *(float *)retval = excf.retval;
        }
        else RETVAL_ONEF;
        break;
@@ -2094,54 +1682,54 @@ else
     /* powl(x,y) overflow */
     {
        OVERFLOWL; NAMEL = (char *) "powl";
-       ifSVID 
+       ifSVID
        {
          if (INPUT_XL < 0)  RETVAL_NEG_HUGEL;
          else RETVAL_HUGEL;
        }
        else
-       { 
+       {
          if (INPUT_XL < 0) RETVAL_NEG_HUGE_VALL;
          else RETVAL_HUGE_VALL;
        }
        NOT_MATHERRL {ERRNO_RANGE;}
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case pow_overflow:
     /* pow(x,y) overflow */
     {
        OVERFLOWD; NAMED = (char *) "pow";
-       ifSVID 
+       ifSVID
        {
          if (INPUT_XD < 0) RETVAL_NEG_HUGED;
          else RETVAL_HUGED;
        }
        else
-       { 
+       {
          if (INPUT_XD < 0) RETVAL_NEG_HUGE_VALD;
          else RETVAL_HUGE_VALD;
        }
        NOT_MATHERRD {ERRNO_RANGE;}
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case powf_overflow:
     /* powf(x,y) overflow */
     {
        OVERFLOWF; NAMEF = (char *) "powf";
-       ifSVID 
+       ifSVID
        {
          if (INPUT_XF < 0) RETVAL_NEG_HUGEF;
-         else RETVAL_HUGEF; 
+         else RETVAL_HUGEF;
        }
        else
-       { 
+       {
          if (INPUT_XF < 0) RETVAL_NEG_HUGE_VALF;
          else RETVAL_HUGE_VALF;
        }
        NOT_MATHERRF {ERRNO_RANGE;}
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case powl_underflow:
@@ -2149,7 +1737,7 @@ else
     {
        UNDERFLOWL; NAMEL = (char *) "powl"; RETVAL_ZEROL;
        NOT_MATHERRL {ERRNO_RANGE;}
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case pow_underflow:
@@ -2157,7 +1745,7 @@ else
     {
        UNDERFLOWD; NAMED = (char *) "pow"; RETVAL_ZEROD;
        NOT_MATHERRD {ERRNO_RANGE;}
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case powf_underflow:
@@ -2165,17 +1753,17 @@ else
     {
        UNDERFLOWF; NAMEF = (char *) "powf"; RETVAL_ZEROF;
        NOT_MATHERRF {ERRNO_RANGE;}
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case powl_zero_to_negative:
     /* 0 to neg */
     {
        DOMAINL; NAMEL = (char *) "powl";
-       ifSVID 
-       { 
+       ifSVID
+       {
          RETVAL_ZEROL;
-         NOT_MATHERRL 
+         NOT_MATHERRL
          {
            WRITEL_POW_ZERO_TO_NEGATIVE;
            ERRNO_DOMAIN;
@@ -2186,17 +1774,17 @@ else
          RETVAL_NEG_HUGE_VALL;
          NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case pow_zero_to_negative:
     /* 0**neg */
     {
        DOMAIND; NAMED = (char *) "pow";
-       ifSVID 
-       { 
+       ifSVID
+       {
          RETVAL_ZEROD;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
            WRITED_POW_ZERO_TO_NEGATIVE;
            ERRNO_DOMAIN;
@@ -2207,7 +1795,7 @@ else
          RETVAL_NEG_HUGE_VALD;
          NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case powf_zero_to_negative:
@@ -2215,10 +1803,10 @@ else
     {
        DOMAINF; NAMEF = (char *) "powf";
        RETVAL_NEG_HUGE_VALF;
-       ifSVID 
-       { 
+       ifSVID
+       {
          RETVAL_ZEROF;
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
             WRITEF_POW_ZERO_TO_NEGATIVE;
             ERRNO_DOMAIN;
@@ -2229,17 +1817,17 @@ else
          RETVAL_NEG_HUGE_VALF;
          NOT_MATHERRF {ERRNO_DOMAIN;}
        }
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case powl_neg_to_non_integer:
     /* neg**non_integral */
     {
        DOMAINL; NAMEL = (char *) "powl";
-       ifSVID 
-       { 
+       ifSVID
+       {
          RETVAL_ZEROF;
-         NOT_MATHERRL 
+         NOT_MATHERRL
          {
            WRITEL_POW_NEG_TO_NON_INTEGER;
            ERRNO_DOMAIN;
@@ -2249,17 +1837,17 @@ else
        {
          NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case pow_neg_to_non_integer:
     /* neg**non_integral */
     {
        DOMAIND; NAMED = (char *) "pow";
-       ifSVID 
-       { 
+       ifSVID
+       {
          RETVAL_ZEROD;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
             WRITED_POW_NEG_TO_NON_INTEGER;
             ERRNO_DOMAIN;
@@ -2269,17 +1857,17 @@ else
        {
          NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case powf_neg_to_non_integer:
     /* neg**non-integral */
     {
        DOMAINF; NAMEF = (char *) "powf";
-       ifSVID 
-       { 
+       ifSVID
+       {
          RETVAL_ZEROF;
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
             WRITEF_POW_NEG_TO_NON_INTEGER;
             ERRNO_DOMAIN;
@@ -2289,37 +1877,37 @@ else
        {
          NOT_MATHERRF {ERRNO_DOMAIN;}
        }
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case powl_nan_to_zero:
     /* pow(NaN,0.0) */
     /* Special Error */
     {
-       DOMAINL; NAMEL = (char *) "powl";
-       *(long double *)retval = *(long double *)arg1;
+       DOMAINL; NAMEL = (char *) "powl"; INPUT_XL; INPUT_YL;
+       excl.retval = *(long double *)arg1;
        NOT_MATHERRL {ERRNO_DOMAIN;}
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
-    } 
+    }
   case pow_nan_to_zero:
     /* pow(NaN,0.0) */
     /* Special Error */
     {
-       DOMAIND; NAMED = (char *) "pow";
-       *(double *)retval = *(double *)arg1;
+       DOMAIND; NAMED = (char *) "pow"; INPUT_XD; INPUT_YD;
+       exc.retval = *(double *)arg1;
        NOT_MATHERRD {ERRNO_DOMAIN;}
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case powf_nan_to_zero:
     /* powf(NaN,0.0) */
     /* Special Error */
     {
-       DOMAINF; NAMEF = (char *) "powf";
-       *(float *)retval = *(float *)arg1;
+       DOMAINF; NAMEF = (char *) "powf"; INPUT_XF; INPUT_YF;
+       excf.retval = *(float *)arg1;
        NOT_MATHERRF {ERRNO_DOMAIN;}
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case atan2l_zero:
@@ -2327,15 +1915,15 @@ else
     {
        DOMAINL; NAMEL = (char *) "atan2l";
        RETVAL_ZEROL;
-       NOT_MATHERRL 
+       NOT_MATHERRL
        {
-         ifSVID 
+         ifSVID
          {
             WRITEL_ATAN2_ZERO_BY_ZERO;
          }
          ERRNO_DOMAIN;
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case atan2_zero:
@@ -2343,15 +1931,15 @@ else
     {
        DOMAIND; NAMED = (char *) "atan2";
        RETVAL_ZEROD;
-       NOT_MATHERRD 
+       NOT_MATHERRD
        {
-         ifSVID 
-         { 
+         ifSVID
+         {
             WRITED_ATAN2_ZERO_BY_ZERO;
          }
          ERRNO_DOMAIN;
        }
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case atan2f_zero:
@@ -2359,59 +1947,13 @@ else
     {
        DOMAINF; NAMEF = (char *) "atan2f";
        RETVAL_ZEROF;
-       NOT_MATHERRF 
-         ifSVID  
+       NOT_MATHERRF
+         ifSVID
          {
             WRITEF_ATAN2_ZERO_BY_ZERO;
          }
        ERRNO_DOMAIN;
-       *(float *)retval = excf.retval;	
-       break;
-    }
-  case atan2dl_zero:
-    /* atan2dl(0.0,0.0) */
-    {
-       DOMAINL; NAMEL = (char *) "atan2dl";
-       RETVAL_ZEROL;
-       NOT_MATHERRL 
-       {
-         ifSVID 
-         {
-            WRITEL_ATAN2D_ZERO_BY_ZERO;
-         }
-         ERRNO_DOMAIN;
-       }
-       *(long double *)retval = excl.retval;	
-       break;
-    }
-  case atan2d_zero:
-    /* atan2d(0.0,0.0) */
-    {
-       DOMAIND; NAMED = (char *) "atan2d";
-       RETVAL_ZEROD;
-       NOT_MATHERRD 
-       {
-         ifSVID 
-         { 
-            WRITED_ATAN2D_ZERO_BY_ZERO;
-         }
-         ERRNO_DOMAIN;
-       }
-       *(double *)retval = exc.retval;	
-       break;
-    }
-  case atan2df_zero:
-    /* atan2df(0.0,0.0) */
-    {
-       DOMAINF; NAMEF = (char *) "atan2df";
-       RETVAL_ZEROF;
-       NOT_MATHERRF 
-         ifSVID  
-         {
-            WRITEF_ATAN2D_ZERO_BY_ZERO;
-         }
-       ERRNO_DOMAIN;
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case expm1_overflow:
@@ -2448,8 +1990,8 @@ else
        UNDERFLOWL; NAMEL = (char *) "scalbl";
        if (INPUT_XL < 0.0L) RETVAL_NEG_ZEROL;
        else  RETVAL_ZEROL;
-       NOT_MATHERRL {ERRNO_RANGE;} 
-       *(long double *)retval = excl.retval;	
+       NOT_MATHERRL {ERRNO_RANGE;}
+       *(long double *)retval = excf.retval;
        break;
     }
   case scalb_underflow:
@@ -2458,8 +2000,8 @@ else
        UNDERFLOWD; NAMED = (char *) "scalb";
        if (INPUT_XD < 0.0) RETVAL_NEG_ZEROD;
        else  RETVAL_ZEROD;
-       NOT_MATHERRD {ERRNO_RANGE;} 
-       *(double *)retval = exc.retval;	
+       NOT_MATHERRD {ERRNO_RANGE;}
+       *(double *)retval = exc.retval;
        break;
     }
   case scalbf_underflow:
@@ -2468,8 +2010,8 @@ else
        UNDERFLOWF; NAMEF = (char *) "scalbf";
        if (INPUT_XF < 0.0) RETVAL_NEG_ZEROF;
        else  RETVAL_ZEROF;
-       NOT_MATHERRF {ERRNO_RANGE;} 
-       *(float *)retval = excf.retval;	
+       NOT_MATHERRF {ERRNO_RANGE;}
+       *(float *)retval = excf.retval;
        break;
     }
   case scalbl_overflow:
@@ -2478,8 +2020,8 @@ else
        OVERFLOWL; NAMEL = (char *) "scalbl";
        if (INPUT_XL < 0) RETVAL_NEG_HUGE_VALL;
        else RETVAL_HUGE_VALL;
-       NOT_MATHERRL {ERRNO_RANGE;} 
-       *(long double *)retval = excl.retval;	
+       NOT_MATHERRL {ERRNO_RANGE;}
+       *(long double *)retval = excl.retval;
        break;
     }
   case scalb_overflow:
@@ -2488,8 +2030,8 @@ else
        OVERFLOWD; NAMED = (char *) "scalb";
        if (INPUT_XD < 0) RETVAL_NEG_HUGE_VALD;
        else RETVAL_HUGE_VALD;
-       NOT_MATHERRD {ERRNO_RANGE;} 
-       *(double *)retval = exc.retval;	
+       NOT_MATHERRD {ERRNO_RANGE;}
+       *(double *)retval = exc.retval;
        break;
     }
   case scalbf_overflow:
@@ -2498,8 +2040,8 @@ else
        OVERFLOWF; NAMEF = (char *) "scalbf";
        if (INPUT_XF < 0) RETVAL_NEG_HUGE_VALF;
        else RETVAL_HUGE_VALF;
-       NOT_MATHERRF {ERRNO_RANGE;} 
-       *(float *)retval = excf.retval;	
+       NOT_MATHERRF {ERRNO_RANGE;}
+       *(float *)retval = excf.retval;
        break;
     }
   case hypotl_overflow:
@@ -2507,7 +2049,7 @@ else
     {
        OVERFLOWL; NAMEL = (char *) "hypotl";
        ifSVID
-       { 
+       {
          RETVAL_HUGEL;
        }
        else
@@ -2515,7 +2057,7 @@ else
          RETVAL_HUGE_VALL;
        }
        NOT_MATHERRL {ERRNO_RANGE;}
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case hypot_overflow:
@@ -2523,7 +2065,7 @@ else
     {
        OVERFLOWD; NAMED = (char *) "hypot";
        ifSVID
-       { 
+       {
          RETVAL_HUGED;
        }
        else
@@ -2531,14 +2073,14 @@ else
          RETVAL_HUGE_VALD;
        }
        NOT_MATHERRD {ERRNO_RANGE;}
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case hypotf_overflow:
     /* hypotf overflow */
-    { 
+    {
        OVERFLOWF; NAMEF = (char *) "hypotf";
-       ifSVID 
+       ifSVID
        {
          RETVAL_HUGEF;
        }
@@ -2547,7 +2089,7 @@ else
          RETVAL_HUGE_VALF;
        }
        NOT_MATHERRF {ERRNO_RANGE;}
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case acosl_gt_one:
@@ -2555,7 +2097,7 @@ else
     {
        DOMAINL; NAMEL = (char *) "acosl";
        RETVAL_ZEROL;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRL
          {
@@ -2575,7 +2117,7 @@ else
     {
        DOMAIND; NAMED = (char *) "acos";
        RETVAL_ZEROD;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRD
          {
@@ -2595,9 +2137,9 @@ else
     {
        DOMAINF; NAMEF = (char *) "acosf";
        RETVAL_ZEROF;
-       ifSVID 
+       ifSVID
        {
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
            WRITEF_ACOS;
            ERRNO_DOMAIN;
@@ -2606,8 +2148,8 @@ else
        else
        {
          NOT_MATHERRF {ERRNO_DOMAIN;}
-       } 
-       *(float *)retval = excf.retval;	
+       }
+       *(float *)retval = excf.retval;
        break;
     }
   case asinl_gt_one:
@@ -2615,7 +2157,7 @@ else
     {
        DOMAINL; NAMEL = (char *) "asinl";
        RETVAL_ZEROL;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRL
          {
@@ -2635,7 +2177,7 @@ else
     {
        DOMAIND; NAMED = (char *) "asin";
        RETVAL_ZEROD;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRD
          {
@@ -2655,9 +2197,9 @@ else
     {
        DOMAINF; NAMEF = (char *) "asinf";
        RETVAL_ZEROF;
-       ifSVID 
+       ifSVID
        {
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
             WRITEF_ASIN;
             ERRNO_DOMAIN;
@@ -2666,128 +2208,8 @@ else
        else
        {
          NOT_MATHERRF {ERRNO_DOMAIN;}
-       } 
-       *(float *)retval = excf.retval;	
-       break;
-    }
-  case acosdl_gt_one:
-    /* acosdl(x > 1) */
-    {
-       DOMAINL; NAMEL = (char *) "acosdl";
-       RETVAL_ZEROL;
-       ifSVID 
-       {
-         NOT_MATHERRL
-         {
-           WRITEL_ACOSD;
-           ERRNO_DOMAIN;
-         }
        }
-       else
-       {
-         NOT_MATHERRL {ERRNO_DOMAIN;}
-       }
-       *(long double *)retval = excl.retval;
-       break;
-    }
-  case acosd_gt_one:
-    /* acosd(x > 1) */
-    {
-       DOMAIND; NAMED = (char *) "acosd";
-       RETVAL_ZEROD;
-       ifSVID 
-       {
-         NOT_MATHERRD
-         {
-           WRITED_ACOSD;
-           ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         NOT_MATHERRD {ERRNO_DOMAIN;}
-       }
-       *(double *)retval = exc.retval;
-       break;
-    }
-  case acosdf_gt_one:
-    /* acosdf(x > 1) */
-    {
-       DOMAINF; NAMEF = (char *) "acosdf";
-       RETVAL_ZEROF;
-       ifSVID 
-       {
-         NOT_MATHERRF 
-         {
-           WRITEF_ACOSD;
-           ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         NOT_MATHERRF {ERRNO_DOMAIN;}
-       } 
-       *(float *)retval = excf.retval;	
-       break;
-    }
-  case asindl_gt_one:
-    /* asindl(x > 1) */
-    {
-       DOMAINL; NAMEL = (char *) "asindl";
-       RETVAL_ZEROL;
-       ifSVID 
-       {
-         NOT_MATHERRL
-         {
-           WRITEL_ASIND;
-           ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         NOT_MATHERRL {ERRNO_DOMAIN;}
-       }
-       *(long double *)retval = excl.retval;
-       break;
-    }
-  case asind_gt_one:
-    /* asind(x > 1) */
-    {
-       DOMAIND; NAMED = (char *) "asind";
-       RETVAL_ZEROD;
-       ifSVID 
-       {
-         NOT_MATHERRD
-         {
-           WRITED_ASIND;
-           ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         NOT_MATHERRD {ERRNO_DOMAIN;}
-       }
-       *(double *)retval = exc.retval;
-       break;
-    }
-  case asindf_gt_one:
-    /* asindf(x > 1) */
-    {
-       DOMAINF; NAMEF = (char *) "asindf";
-       RETVAL_ZEROF;
-       ifSVID 
-       {
-         NOT_MATHERRF 
-         {
-            WRITEF_ASIND;
-            ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         NOT_MATHERRF {ERRNO_DOMAIN;}
-       } 
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
  case coshl_overflow:
@@ -2798,7 +2220,7 @@ else
       {
         RETVAL_HUGEL;
       }
-      else 
+      else
       {
         RETVAL_HUGE_VALL;
       }
@@ -2814,7 +2236,7 @@ else
       {
         RETVAL_HUGED;
       }
-      else 
+      else
       {
         RETVAL_HUGE_VALD;
       }
@@ -2830,7 +2252,7 @@ else
       {
         RETVAL_HUGEF;
       }
-      else 
+      else
       {
         RETVAL_HUGE_VALF;
       }
@@ -2847,7 +2269,7 @@ else
         if (INPUT_XL > 0.0) RETVAL_HUGEL;
         else RETVAL_NEG_HUGEL;
       }
-      else 
+      else
       {
         if (INPUT_XL > 0.0) RETVAL_HUGE_VALL;
         else RETVAL_NEG_HUGE_VALL;
@@ -2865,7 +2287,7 @@ else
         if (INPUT_XD > 0.0) RETVAL_HUGED;
         else RETVAL_NEG_HUGED;
       }
-      else 
+      else
       {
         if (INPUT_XD > 0.0) RETVAL_HUGE_VALD;
         else RETVAL_NEG_HUGE_VALD;
@@ -2883,7 +2305,7 @@ else
         if( INPUT_XF > 0.0) RETVAL_HUGEF;
         else RETVAL_NEG_HUGEF;
       }
-      else 
+      else
       {
         if (INPUT_XF > 0.0) RETVAL_HUGE_VALF;
         else RETVAL_NEG_HUGE_VALF;
@@ -2896,7 +2318,7 @@ else
     /* acoshl(x < 1) */
     {
        DOMAINL; NAMEL = (char *) "acoshl";
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRL
          {
@@ -2904,10 +2326,7 @@ else
            ERRNO_DOMAIN;
          }
        }
-       else 
-       {
-           NOT_MATHERRL {ERRNO_DOMAIN;}
-       }
+       else NOT_MATHERRL {ERRNO_DOMAIN;}
        *(long double *)retval = excl.retval;
        break;
     }
@@ -2915,7 +2334,7 @@ else
     /* acosh(x < 1) */
     {
        DOMAIND; NAMED = (char *) "acosh";
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRD
          {
@@ -2923,10 +2342,7 @@ else
           ERRNO_DOMAIN;
          }
        }
-       else 
-       {
-          NOT_MATHERRD {ERRNO_DOMAIN;}
-       }
+       else NOT_MATHERRD {ERRNO_DOMAIN;}
        *(double *)retval = exc.retval;
        break;
     }
@@ -2934,7 +2350,7 @@ else
     /* acoshf(x < 1) */
     {
        DOMAINF; NAMEF = (char *) "acoshf";
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRF
          {
@@ -2953,7 +2369,7 @@ else
     /* atanhl(|x| > 1) */
     {
        DOMAINL; NAMEL = (char *) "atanhl";
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRL
          {
@@ -2971,7 +2387,7 @@ else
     /* atanh(|x| > 1) */
     {
        DOMAIND; NAMED = (char *) "atanh";
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRD
          {
@@ -2989,7 +2405,7 @@ else
     /* atanhf(|x| > 1) */
     {
        DOMAINF; NAMEF = (char *) "atanhf";
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRF
          {
@@ -3006,8 +2422,8 @@ else
   case atanhl_eq_one:
     /* atanhl(|x| == 1) */
     {
-       SINGL; NAMEL = (char *) "atanhl";
-       ifSVID 
+       SINGL; NAMEL = (char *)"atanhl";
+       ifSVID
        {
          NOT_MATHERRL
          {
@@ -3025,7 +2441,7 @@ else
     /* atanh(|x| == 1) */
     {
        SINGD; NAMED = (char *) "atanh";
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRD
          {
@@ -3043,7 +2459,7 @@ else
     /* atanhf(|x| == 1) */
     {
        SINGF; NAMEF = (char *) "atanhf";
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRF
          {
@@ -3061,7 +2477,7 @@ else
     /* gammal overflow */
     {
        OVERFLOWL; NAMEL = (char *) "gammal";
-       ifSVID 
+       ifSVID
        {
          RETVAL_HUGEL;
        }
@@ -3069,15 +2485,15 @@ else
        {
          RETVAL_HUGE_VALL;
        }
-       NOT_MATHERRL{ERRNO_RANGE;}
-       *(long double*)retval = excl.retval;
+       NOT_MATHERRL {ERRNO_RANGE;}
+       *(long double *)retval = excl.retval;
        break;
     }
   case gamma_overflow:
     /* gamma overflow */
     {
        OVERFLOWD; NAMED = (char *) "gamma";
-       ifSVID 
+       ifSVID
        {
          RETVAL_HUGED;
        }
@@ -3085,94 +2501,31 @@ else
        {
          RETVAL_HUGE_VALD;
        }
-       NOT_MATHERRD{ERRNO_RANGE;}
-       *(double*)retval = exc.retval;
+       NOT_MATHERRD {ERRNO_RANGE;}
+       *(double *)retval = exc.retval;
        break;
     }
   case gammaf_overflow:
     /* gammaf overflow */
     {
        OVERFLOWF; NAMEF = (char *) "gammaf";
-       ifSVID 
-       {
-         RETVAL_HUGEF;
-       }
-       else
-       {
-         RETVAL_HUGE_VALF;
-       }
-       NOT_MATHERRF{ERRNO_RANGE;}
-       *(float*)retval = excf.retval;
-       break;
-    }
-  case gammal_negative:
-    /* gammal -int or 0 */
-    {
-       SINGL; NAMEL = (char *) "gammal";
        ifSVID
        {
-         RETVAL_HUGEL;
-         NOT_MATHERRL
-         {
-            WRITEL_GAMMA_NEGATIVE;
-            ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         RETVAL_HUGE_VALL;
-         NOT_MATHERRL{ERRNO_DOMAIN;}
-       }
-       *(long double*)retval = excl.retval;	
-       break;
-    }
-  case gamma_negative:
-    /* gamma -int or 0 */
-    {
-       SINGD; NAMED = (char *) "gamma";
-       ifSVID 
-       {
-         RETVAL_HUGED;
-         NOT_MATHERRD
-         {
-            WRITED_GAMMA_NEGATIVE;
-            ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         RETVAL_HUGE_VALD;
-         NOT_MATHERRD{ERRNO_DOMAIN;}
-       }
-       *(double*)retval = exc.retval;	
-       break;
-    }
-  case gammaf_negative:
-    /* gammaf -int or 0 */
-    {
-       SINGF; NAMEF = (char *) "gammaf";
-       ifSVID 
-       {
          RETVAL_HUGEF;
-         NOT_MATHERRF
-         {
-            WRITEF_GAMMA_NEGATIVE;
-            ERRNO_DOMAIN;
-         }
        }
        else
        {
          RETVAL_HUGE_VALF;
-         NOT_MATHERRF{ERRNO_DOMAIN;}
        }
-       *(float*)retval = excf.retval;	
+       NOT_MATHERRF {ERRNO_RANGE;}
+       *(float *)retval = excf.retval;
        break;
     }
   case lgammal_overflow:
     /* lgammal overflow */
     {
        OVERFLOWL; NAMEL = (char *) "lgammal";
-       ifSVID 
+       ifSVID
        {
          RETVAL_HUGEL;
        }
@@ -3180,15 +2533,15 @@ else
        {
          RETVAL_HUGE_VALL;
        }
-       NOT_MATHERRL{ERRNO_RANGE;}
-       *(long double*)retval = excl.retval;
+       NOT_MATHERRL {ERRNO_RANGE;}
+       *(long double *)retval = excl.retval;
        break;
     }
   case lgamma_overflow:
     /* lgamma overflow */
     {
        OVERFLOWD; NAMED = (char *) "lgamma";
-       ifSVID 
+       ifSVID
        {
          RETVAL_HUGED;
        }
@@ -3196,15 +2549,15 @@ else
        {
          RETVAL_HUGE_VALD;
        }
-       NOT_MATHERRD{ERRNO_RANGE;}
-       *(double*)retval = exc.retval;
+       NOT_MATHERRD {ERRNO_RANGE;}
+       *(double *)retval = exc.retval;
        break;
     }
   case lgammaf_overflow:
     /* lgammaf overflow */
     {
        OVERFLOWF; NAMEF = (char *) "lgammaf";
-       ifSVID 
+       ifSVID
        {
          RETVAL_HUGEF;
        }
@@ -3212,8 +2565,8 @@ else
        {
          RETVAL_HUGE_VALF;
        }
-       NOT_MATHERRF{ERRNO_RANGE;}
-       *(float*)retval = excf.retval;
+       NOT_MATHERRF {ERRNO_RANGE;}
+       *(float *)retval = excf.retval;
        break;
     }
   case lgammal_negative:
@@ -3225,16 +2578,16 @@ else
          RETVAL_HUGEL;
          NOT_MATHERRL
          {
-            WRITEL_GAMMA_NEGATIVE;
-            ERRNO_DOMAIN;
+           WRITEL_LGAMMA_NEGATIVE;
+           ERRNO_DOMAIN;
          }
        }
        else
        {
          RETVAL_HUGE_VALL;
-         NOT_MATHERRL{ERRNO_DOMAIN;}
+         NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double*)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case lgamma_negative:
@@ -3253,16 +2606,16 @@ else
        else
        {
          RETVAL_HUGE_VALD;
-         NOT_MATHERRD{ERRNO_DOMAIN;}
+         NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       *(double*)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case lgammaf_negative:
     /* lgammaf -int or 0 */
     {
        SINGF; NAMEF = (char *) "lgammaf";
-       ifSVID 
+       ifSVID
        {
          RETVAL_HUGEF;
          NOT_MATHERRF
@@ -3274,114 +2627,72 @@ else
        else
        {
          RETVAL_HUGE_VALF;
-         NOT_MATHERRF{ERRNO_DOMAIN;}
+         NOT_MATHERRF {ERRNO_DOMAIN;}
        }
-       *(float*)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
-  case tgammal_overflow:
-    /* tgammal overflow */
+  case gammal_negative:
+    /* gammal -int or 0 */
     {
-       OVERFLOWL; NAMEL = (char *) "tgammal";
-       ifSVID 
+       SINGL; NAMEL = (char *) "gammal";
+       ifSVID
        {
          RETVAL_HUGEL;
+         NOT_MATHERRL
+         {
+            WRITEL_GAMMA_NEGATIVE;
+            ERRNO_DOMAIN;
+         }
        }
        else
        {
          RETVAL_HUGE_VALL;
+         NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       NOT_MATHERRL{ERRNO_RANGE;}
-       *(long double*)retval = excl.retval;
+       *(long double *)retval = excl.retval;
        break;
     }
-  case tgamma_overflow:
-    /* tgamma overflow */
+  case gamma_negative:
+    /* gamma -int or 0 */
     {
-       OVERFLOWD; NAMED = (char *) "tgamma";
-       ifSVID 
+       SINGD; NAMED = (char *) "gamma";
+       ifSVID
        {
          RETVAL_HUGED;
+         NOT_MATHERRD
+         {
+            WRITED_GAMMA_NEGATIVE;
+            ERRNO_DOMAIN;
+         }
        }
        else
        {
          RETVAL_HUGE_VALD;
+         NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       NOT_MATHERRD{ERRNO_RANGE;}
-       *(double*)retval = exc.retval;
+       *(double *)retval = exc.retval;
        break;
     }
-  case tgammaf_overflow:
-    /* tgammaf overflow */
+  case gammaf_negative:
+    /* gammaf -int or 0 */
     {
-       OVERFLOWF; NAMEF = (char *) "tgammaf";
-       ifSVID 
+       SINGF; NAMEF = (char *) "gammaf";
+       ifSVID
        {
          RETVAL_HUGEF;
+         NOT_MATHERRF
+         {
+            WRITEF_GAMMA_NEGATIVE;
+            ERRNO_DOMAIN;
+         }
        }
        else
        {
          RETVAL_HUGE_VALF;
+         NOT_MATHERRF {ERRNO_DOMAIN;}
        }
-       NOT_MATHERRF{ERRNO_RANGE;}
-       *(float*)retval = excf.retval;
-       break;
-    }
-  case tgammal_negative:
-    /* tgammal -int or 0 */
-    {
-       SINGL; NAMEL = (char *) "tgammal";
-       ifSVID 
-       {
-         NOT_MATHERRL
-         {
-           WRITEL_TGAMMA_NEGATIVE;
-           ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         NOT_MATHERRL{ERRNO_DOMAIN;}
-       }
-       *(long double*)retval = excl.retval;	
-       break;
-    }
-  case tgamma_negative:
-    /* tgamma -int or 0 */
-    {
-       SINGD; NAMED = (char *) "tgamma";
-       ifSVID 
-       {
-         NOT_MATHERRD
-         {
-           WRITED_TGAMMA_NEGATIVE;
-           ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         NOT_MATHERRD{ERRNO_DOMAIN;}
-       }
-       *(double*)retval = exc.retval;	
-       break;
-    }
-  case tgammaf_negative:
-    /* tgammaf -int or 0 */
-    {
-       SINGF; NAMEF = (char *) "tgammaf";
-       ifSVID 
-       {
-         NOT_MATHERRF
-         {
-           WRITEF_TGAMMA_NEGATIVE;
-           ERRNO_DOMAIN;
-         }
-       }
-       else
-       {
-         NOT_MATHERRF{ERRNO_DOMAIN;}
-       }
-       *(float*)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case j0l_gt_loss:
@@ -3389,7 +2700,7 @@ else
     {
        TLOSSL; NAMEL = (char *) "j0l";
        RETVAL_ZEROL;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRL
          {
@@ -3401,7 +2712,7 @@ else
        {
          NOT_MATHERRL {ERRNO_RANGE;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case j0_gt_loss:
@@ -3409,7 +2720,7 @@ else
     {
        TLOSSD; NAMED = (char *) "j0";
        RETVAL_ZEROD;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRD
          {
@@ -3421,7 +2732,7 @@ else
        {
          NOT_MATHERRD {ERRNO_RANGE;}
        }
-       *(double*)retval = exc.retval;	
+       *(double*)retval = exc.retval;
        break;
     }
   case j0f_gt_loss:
@@ -3429,7 +2740,7 @@ else
     {
        TLOSSF; NAMEF = (char *) "j0f";
        RETVAL_ZEROF;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRF
          {
@@ -3449,7 +2760,7 @@ else
     {
        TLOSSL; NAMEL = (char *) "j1l";
        RETVAL_ZEROL;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRL
          {
@@ -3461,7 +2772,7 @@ else
        {
          NOT_MATHERRL {ERRNO_RANGE;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case j1_gt_loss:
@@ -3469,7 +2780,7 @@ else
     {
        TLOSSD; NAMED = (char *) "j1";
        RETVAL_ZEROD;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRD
          {
@@ -3481,7 +2792,7 @@ else
        {
          NOT_MATHERRD {ERRNO_RANGE;}
        }
-       *(double*)retval = exc.retval;	
+       *(double*)retval = exc.retval;
        break;
     }
   case j1f_gt_loss:
@@ -3489,7 +2800,7 @@ else
     {
        TLOSSF; NAMEF = (char *) "j1f";
        RETVAL_ZEROF;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRF
          {
@@ -3509,7 +2820,7 @@ else
     {
        TLOSSL; NAMEL = (char *) "jnl";
        RETVAL_ZEROL;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRL
          {
@@ -3521,7 +2832,7 @@ else
        {
          NOT_MATHERRL {ERRNO_RANGE;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case jn_gt_loss:
@@ -3529,7 +2840,7 @@ else
     {
        TLOSSD; NAMED = (char *) "jn";
        RETVAL_ZEROD;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRD
          {
@@ -3541,7 +2852,7 @@ else
        {
          NOT_MATHERRD {ERRNO_RANGE;}
        }
-       *(double*)retval = exc.retval;	
+       *(double*)retval = exc.retval;
        break;
     }
   case jnf_gt_loss:
@@ -3549,7 +2860,7 @@ else
     {
        TLOSSF; NAMEF = (char *) "jnf";
        RETVAL_ZEROF;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRF
          {
@@ -3569,7 +2880,7 @@ else
     {
        TLOSSL; NAMEL = (char *) "y0l";
        RETVAL_ZEROL;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRL
          {
@@ -3589,7 +2900,7 @@ else
     {
        TLOSSD; NAMED = (char *) "y0";
        RETVAL_ZEROD;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRD
          {
@@ -3609,7 +2920,7 @@ else
     {
        TLOSSF; NAMEF = (char *) "y0f";
        RETVAL_ZEROF;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRF
          {
@@ -3628,10 +2939,10 @@ else
     /* y0l(0) */
     {
        DOMAINL; NAMEL = (char *) "y0l";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEL;
-         NOT_MATHERRL 
+         NOT_MATHERRL
          {
            WRITEL_Y0_ZERO;
            ERRNO_DOMAIN;
@@ -3639,20 +2950,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALL; 
+         RETVAL_NEG_HUGE_VALL;
          NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case y0_zero:
     /* y0(0) */
     {
        DOMAIND; NAMED = (char *) "y0";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGED;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
            WRITED_Y0_ZERO;
            ERRNO_DOMAIN;
@@ -3660,20 +2971,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALD; 
+         RETVAL_NEG_HUGE_VALD;
          NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case y0f_zero:
     /* y0f(0) */
     {
        DOMAINF; NAMEF = (char *) "y0f";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEF;
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
            WRITEF_Y0_ZERO;
            ERRNO_DOMAIN;
@@ -3681,10 +2992,10 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALF; 
+         RETVAL_NEG_HUGE_VALF;
          NOT_MATHERRF {ERRNO_DOMAIN;}
        }
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case y1l_gt_loss:
@@ -3692,7 +3003,7 @@ else
     {
        TLOSSL; NAMEL = (char *) "y1l";
        RETVAL_ZEROL;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRL
          {
@@ -3712,7 +3023,7 @@ else
     {
        TLOSSD; NAMED = (char *) "y1";
        RETVAL_ZEROD;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRD
          {
@@ -3732,7 +3043,7 @@ else
     {
        TLOSSF; NAMEF = (char *) "y1f";
        RETVAL_ZEROF;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRF
          {
@@ -3751,10 +3062,10 @@ else
     /* y1l(0) */
     {
        DOMAINL; NAMEL = (char *) "y1l";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEL;
-         NOT_MATHERRL 
+         NOT_MATHERRL
          {
            WRITEL_Y1_ZERO;
            ERRNO_DOMAIN;
@@ -3762,20 +3073,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALL; 
+         RETVAL_NEG_HUGE_VALL;
          NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case y1_zero:
     /* y1(0) */
     {
        DOMAIND; NAMED = (char *) "y1";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGED;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
            WRITED_Y1_ZERO;
            ERRNO_DOMAIN;
@@ -3783,30 +3094,30 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALD; 
+         RETVAL_NEG_HUGE_VALD;
          NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case y1f_zero:
     /* y1f(0) */
     {
        DOMAINF; NAMEF = (char *) "y1f";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEF;
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
            WRITEF_Y1_ZERO;
            ERRNO_DOMAIN;
          }
        }else
        {
-         RETVAL_NEG_HUGE_VALF; 
+         RETVAL_NEG_HUGE_VALF;
          NOT_MATHERRF {ERRNO_DOMAIN;}
        }
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case ynl_gt_loss:
@@ -3814,7 +3125,7 @@ else
     {
        TLOSSL; NAMEL = (char *) "ynl";
        RETVAL_ZEROL;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRL
          {
@@ -3834,7 +3145,7 @@ else
     {
        TLOSSD; NAMED = (char *) "yn";
        RETVAL_ZEROD;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRD
          {
@@ -3854,7 +3165,7 @@ else
     {
        TLOSSF; NAMEF = (char *) "ynf";
        RETVAL_ZEROF;
-       ifSVID 
+       ifSVID
        {
          NOT_MATHERRF
          {
@@ -3873,10 +3184,10 @@ else
     /* ynl(0) */
     {
        DOMAINL; NAMEL = (char *) "ynl";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEL;
-         NOT_MATHERRL 
+         NOT_MATHERRL
          {
            WRITEL_YN_ZERO;
            ERRNO_DOMAIN;
@@ -3884,20 +3195,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALL; 
+         RETVAL_NEG_HUGE_VALL;
          NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case yn_zero:
     /* yn(0) */
     {
        DOMAIND; NAMED = (char *) "yn";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGED;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
            WRITED_YN_ZERO;
            ERRNO_DOMAIN;
@@ -3905,20 +3216,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALD; 
+         RETVAL_NEG_HUGE_VALD;
          NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case ynf_zero:
     /* ynf(0) */
     {
        DOMAINF; NAMEF = (char *) "ynf";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEF;
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
            WRITEF_YN_ZERO;
            ERRNO_DOMAIN;
@@ -3926,20 +3237,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALF; 
+         RETVAL_NEG_HUGE_VALF;
          NOT_MATHERRF {ERRNO_DOMAIN;}
        }
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case y0l_negative:
     /* y0l(x<0) */
     {
        DOMAINL; NAMEL = (char *) "y0l";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEL;
-         NOT_MATHERRL 
+         NOT_MATHERRL
          {
            WRITEL_Y0_NEGATIVE;
            ERRNO_DOMAIN;
@@ -3947,20 +3258,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALL; 
+         RETVAL_NEG_HUGE_VALL;
          NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case y0_negative:
     /* y0(x<0) */
     {
        DOMAIND; NAMED = (char *) "y0";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGED;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
            WRITED_Y0_NEGATIVE;
            ERRNO_DOMAIN;
@@ -3968,20 +3279,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALD; 
+         RETVAL_NEG_HUGE_VALD;
          NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case y0f_negative:
     /* y0f(x<0) */
     {
        DOMAINF; NAMEF = (char *) "y0f";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEF;
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
            WRITEF_Y0_NEGATIVE;
            ERRNO_DOMAIN;
@@ -3989,20 +3300,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALF; 
+         RETVAL_NEG_HUGE_VALF;
          NOT_MATHERRF {ERRNO_DOMAIN;}
        }
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case y1l_negative:
     /* y1l(x<0) */
     {
        DOMAINL; NAMEL = (char *) "y1l";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEL;
-         NOT_MATHERRL 
+         NOT_MATHERRL
          {
            WRITEL_Y1_NEGATIVE;
            ERRNO_DOMAIN;
@@ -4010,20 +3321,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALL; 
+         RETVAL_NEG_HUGE_VALL;
          NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case y1_negative:
     /* y1(x<0) */
     {
        DOMAIND; NAMED = (char *) "y1";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGED;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
            WRITED_Y1_NEGATIUE;
            ERRNO_DOMAIN;
@@ -4031,20 +3342,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALD; 
+         RETVAL_NEG_HUGE_VALD;
          NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case y1f_negative:
     /* y1f(x<0) */
     {
        DOMAINF; NAMEF = (char *) "y1f";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEF;
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
            WRITEF_Y1_NEGATIVE;
            ERRNO_DOMAIN;
@@ -4052,20 +3363,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALF; 
+         RETVAL_NEG_HUGE_VALF;
          NOT_MATHERRF {ERRNO_DOMAIN;}
        }
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
   case ynl_negative:
     /* ynl(x<0) */
     {
        DOMAINL; NAMEL = (char *) "ynl";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEL;
-         NOT_MATHERRL 
+         NOT_MATHERRL
          {
           WRITEL_YN_NEGATIVE;
           ERRNO_DOMAIN;
@@ -4073,20 +3384,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALL; 
+         RETVAL_NEG_HUGE_VALL;
          NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
   case yn_negative:
     /* yn(x<0) */
     {
        DOMAIND; NAMED = (char *) "yn";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGED;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
            WRITED_YN_NEGATIVE;
            ERRNO_DOMAIN;
@@ -4094,20 +3405,20 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALD; 
+         RETVAL_NEG_HUGE_VALD;
          NOT_MATHERRD {ERRNO_DOMAIN;}
        }
-       *(double *)retval = exc.retval;	
+       *(double *)retval = exc.retval;
        break;
     }
   case ynf_negative:
     /* ynf(x<0) */
     {
        DOMAINF; NAMEF = (char *) "ynf";
-       ifSVID 
+       ifSVID
        {
          RETVAL_NEG_HUGEF;
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
            WRITEF_YN_NEGATIVE;
            ERRNO_DOMAIN;
@@ -4115,18 +3426,18 @@ else
        }
        else
        {
-         RETVAL_NEG_HUGE_VALF; 
+         RETVAL_NEG_HUGE_VALF;
          NOT_MATHERRF {ERRNO_DOMAIN;}
        }
-       *(float *)retval = excf.retval;	
+       *(float *)retval = excf.retval;
        break;
     }
-  case fmodl_by_zero: 
+  case fmodl_by_zero:
     /* fmodl(x,0) */
     {
        DOMAINL; NAMEL = (char *) "fmodl";
-       ifSVID 
-       { 
+       ifSVID
+       {
             *(long double *)retval = *(long double *)arg1;
             NOT_MATHERRL
             {
@@ -4134,21 +3445,21 @@ else
               ERRNO_DOMAIN;
             }
        }
-       else 
+       else
        { /* NaN already computed */
             NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
-  case fmod_by_zero: 
+  case fmod_by_zero:
     /* fmod(x,0) */
     {
        DOMAIND; NAMED = (char *) "fmod";
-       ifSVID 
+       ifSVID
        {
          *(double *)retval = *(double *)arg1;
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
            WRITED_FMOD;
            ERRNO_DOMAIN;
@@ -4157,18 +3468,18 @@ else
        else
        { /* NaN already computed */
          NOT_MATHERRD {ERRNO_DOMAIN;}
-       } 
-       *(double *)retval = exc.retval;	
+       }
+       *(double *)retval = exc.retval;
        break;
     }
-  case fmodf_by_zero: 
+  case fmodf_by_zero:
     /* fmodf(x,0) */
     {
        DOMAINF; NAMEF = (char *) "fmodf";
-       ifSVID 
+       ifSVID
        {
          *(float *)retval = *(float *)arg1;
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
            WRITEF_FMOD;
            ERRNO_DOMAIN;
@@ -4177,36 +3488,36 @@ else
        else
        {
          NOT_MATHERRF {ERRNO_DOMAIN;}
-       } 
-       *(float *)retval = excf.retval;	
+       }
+       *(float *)retval = excf.retval;
        break;
     }
-  case remainderl_by_zero: 
+  case remainderl_by_zero:
     /* remainderl(x,0) */
     {
        DOMAINL; NAMEL = (char *) "remainderl";
-       ifSVID 
-       { 
+       ifSVID
+       {
           NOT_MATHERRL
           {
             WRITEL_REM;
             ERRNO_DOMAIN;
           }
        }
-       else 
+       else
        { /* NaN already computed */
             NOT_MATHERRL {ERRNO_DOMAIN;}
        }
-       *(long double *)retval = excl.retval;	
+       *(long double *)retval = excl.retval;
        break;
     }
-  case remainder_by_zero: 
+  case remainder_by_zero:
     /* remainder(x,0) */
     {
        DOMAIND; NAMED = (char *) "remainder";
-       ifSVID 
+       ifSVID
        {
-         NOT_MATHERRD 
+         NOT_MATHERRD
          {
            WRITED_REM;
            ERRNO_DOMAIN;
@@ -4215,17 +3526,17 @@ else
        else
        { /* NaN already computed */
          NOT_MATHERRD {ERRNO_DOMAIN;}
-       } 
-       *(double *)retval = exc.retval;	
+       }
+       *(double *)retval = exc.retval;
        break;
     }
-  case remainderf_by_zero: 
+  case remainderf_by_zero:
     /* remainderf(x,0) */
     {
        DOMAINF; NAMEF = (char *) "remainderf";
-       ifSVID 
+       ifSVID
        {
-         NOT_MATHERRF 
+         NOT_MATHERRF
          {
            WRITEF_REM;
            ERRNO_DOMAIN;
@@ -4234,14 +3545,12 @@ else
        else
        {
          NOT_MATHERRF {ERRNO_DOMAIN;}
-       } 
-       *(float *)retval = excf.retval;	
+       }
+       *(float *)retval = excf.retval;
        break;
     }
   default:
-    /* We don't want to abort () since SVID doesn't cover all math
-       library functions.  */
-    break;
+    abort();
    }
    return;
    }

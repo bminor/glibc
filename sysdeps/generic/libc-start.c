@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,10 +80,6 @@ STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
 			    void *__unbounded stack_end)
      __attribute__ ((noreturn));
 
-
-/* Note: the fini parameter is ignored here.  It used to be registered
-   with __cxa_atexit.  This had the disadvantage that finalizers were
-   called in more than one place.  */
 STATIC int
 LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 		 int argc, char *__unbounded *__unbounded ubp_av,
@@ -110,9 +106,9 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 
   __libc_multiple_libcs = &_dl_starting_up && !_dl_starting_up;
 
-#ifndef SHARED
   INIT_ARGV_and_ENVIRON;
 
+#ifndef SHARED
   /* Store the lowest stack address.  This is done in ld.so if this is
      the code for the DSO.  */
   __libc_stack_end = stack_end;
@@ -162,6 +158,10 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   __libc_init_first (argc, argv, __environ);
 #endif
 
+  /* Register the destructor of the program, if any.  */
+  if (fini)
+    __cxa_atexit ((void (*) (void *)) fini, NULL, NULL);
+
 #ifndef SHARED
   /* Some security at this point.  Prevent starting a SUID binary where
      the standard file descriptors are not opened.  We have to do this
@@ -182,22 +182,6 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 	     argc, argv, __environ MAIN_AUXVEC_PARAM
 #endif
 	     );
-
-#ifdef SHARED
-  /* Auditing checkpoint: we have a new object.  */
-  if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
-    {
-      struct audit_ifaces *afct = GLRO(dl_audit);
-      struct link_map *head = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
-      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-	{
-	  if (afct->preinit != NULL)
-	    afct->preinit (&head->l_audit[cnt].cookie);
-
-	  afct = afct->next;
-	}
-    }
-#endif
 
 #ifdef SHARED
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))

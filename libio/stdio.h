@@ -1,5 +1,5 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991,1994-2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1991,1994-2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -393,15 +393,15 @@ __BEGIN_NAMESPACE_STD
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int fscanf (FILE *__restrict __stream,
-		   __const char *__restrict __format, ...) __wur;
+		   __const char *__restrict __format, ...);
 /* Read formatted input from stdin.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int scanf (__const char *__restrict __format, ...) __wur;
+extern int scanf (__const char *__restrict __format, ...);
 /* Read formatted input from S.  */
 extern int sscanf (__const char *__restrict __s,
-		   __const char *__restrict __format, ...) __THROW __wur;
+		   __const char *__restrict __format, ...) __THROW;
 __END_NAMESPACE_STD
 
 #ifdef	__USE_ISOC99
@@ -412,19 +412,19 @@ __BEGIN_NAMESPACE_C99
    marked with __THROW.  */
 extern int vfscanf (FILE *__restrict __s, __const char *__restrict __format,
 		    _G_va_list __arg)
-     __attribute__ ((__format__ (__scanf__, 2, 0))) __wur;
+     __attribute__ ((__format__ (__scanf__, 2, 0)));
 
 /* Read formatted input from stdin into argument list ARG.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int vscanf (__const char *__restrict __format, _G_va_list __arg)
-     __attribute__ ((__format__ (__scanf__, 1, 0))) __wur;
+     __attribute__ ((__format__ (__scanf__, 1, 0)));
 
 /* Read formatted input from S into argument list ARG.  */
 extern int vsscanf (__const char *__restrict __s,
 		    __const char *__restrict __format, _G_va_list __arg)
-     __THROW __attribute__ ((__format__ (__scanf__, 2, 0))) __wur;
+     __THROW __attribute__ ((__format__ (__scanf__, 2, 0)));
 __END_NAMESPACE_C99
 #endif /* Use ISO C9x.  */
 
@@ -525,15 +525,14 @@ __BEGIN_NAMESPACE_STD
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
-     __wur;
+extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream);
 
 /* Get a newline-terminated string from stdin, removing the newline.
    DO NOT USE THIS FUNCTION!!  There is no limit on how much it will read.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern char *gets (char *__s) __wur;
+extern char *gets (char *__s);
 __END_NAMESPACE_STD
 
 #ifdef __USE_GNU
@@ -544,7 +543,7 @@ __END_NAMESPACE_STD
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
 extern char *fgets_unlocked (char *__restrict __s, int __n,
-			     FILE *__restrict __stream) __wur;
+			     FILE *__restrict __stream);
 #endif
 
 
@@ -561,10 +560,10 @@ extern char *fgets_unlocked (char *__restrict __s, int __n,
    therefore not marked with __THROW.  */
 extern _IO_ssize_t __getdelim (char **__restrict __lineptr,
 			       size_t *__restrict __n, int __delimiter,
-			       FILE *__restrict __stream) __wur;
+			       FILE *__restrict __stream);
 extern _IO_ssize_t getdelim (char **__restrict __lineptr,
 			     size_t *__restrict __n, int __delimiter,
-			     FILE *__restrict __stream) __wur;
+			     FILE *__restrict __stream);
 
 /* Like `getdelim', but reads up to a newline.
 
@@ -574,7 +573,7 @@ extern _IO_ssize_t getdelim (char **__restrict __lineptr,
    therefore not marked with __THROW.  */
 extern _IO_ssize_t getline (char **__restrict __lineptr,
 			    size_t *__restrict __n,
-			    FILE *__restrict __stream) __wur;
+			    FILE *__restrict __stream);
 #endif
 
 
@@ -596,7 +595,7 @@ extern int puts (__const char *__s);
 
    This function is a possible cancellation points and therefore not
    marked with __THROW.  */
-extern int ungetc (int __c, FILE *__stream) __wur;
+extern int ungetc (int __c, FILE *__stream);
 
 
 /* Read chunks of generic data from STREAM.
@@ -604,13 +603,13 @@ extern int ungetc (int __c, FILE *__stream) __wur;
    This function is a possible cancellation points and therefore not
    marked with __THROW.  */
 extern size_t fread (void *__restrict __ptr, size_t __size,
-		     size_t __n, FILE *__restrict __stream) __wur;
+		     size_t __n, FILE *__restrict __stream);
 /* Write chunks of generic data to STREAM.
 
    This function is a possible cancellation points and therefore not
    marked with __THROW.  */
 extern size_t fwrite (__const void *__restrict __ptr, size_t __size,
-		      size_t __n, FILE *__restrict __s) __wur;
+		      size_t __n, FILE *__restrict __s);
 __END_NAMESPACE_STD
 
 #ifdef __USE_GNU
@@ -632,9 +631,9 @@ extern int fputs_unlocked (__const char *__restrict __s,
    or due to the implementation they are cancellation points and
    therefore not marked with __THROW.  */
 extern size_t fread_unlocked (void *__restrict __ptr, size_t __size,
-			      size_t __n, FILE *__restrict __stream) __wur;
+			      size_t __n, FILE *__restrict __stream);
 extern size_t fwrite_unlocked (__const void *__restrict __ptr, size_t __size,
-			       size_t __n, FILE *__restrict __stream) __wur;
+			       size_t __n, FILE *__restrict __stream);
 #endif
 
 
@@ -648,7 +647,7 @@ extern int fseek (FILE *__stream, long int __off, int __whence);
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern long int ftell (FILE *__stream) __wur;
+extern long int ftell (FILE *__stream);
 /* Rewind to the beginning of STREAM.
 
    This function is a possible cancellation point and therefore not
@@ -672,7 +671,7 @@ extern int fseeko (FILE *__stream, __off_t __off, int __whence);
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern __off_t ftello (FILE *__stream) __wur;
+extern __off_t ftello (FILE *__stream);
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT (fseeko,
@@ -713,7 +712,7 @@ __END_NAMESPACE_STD
 
 #ifdef __USE_LARGEFILE64
 extern int fseeko64 (FILE *__stream, __off64_t __off, int __whence);
-extern __off64_t ftello64 (FILE *__stream) __wur;
+extern __off64_t ftello64 (FILE *__stream);
 extern int fgetpos64 (FILE *__restrict __stream, fpos64_t *__restrict __pos);
 extern int fsetpos64 (FILE *__stream, __const fpos64_t *__pos);
 #endif
@@ -811,7 +810,7 @@ extern void flockfile (FILE *__stream) __THROW;
 
 /* Try to acquire ownership of STREAM but do not block if it is not
    possible.  */
-extern int ftrylockfile (FILE *__stream) __THROW __wur;
+extern int ftrylockfile (FILE *__stream) __THROW;
 
 /* Relinquish the ownership granted for STREAM.  */
 extern void funlockfile (FILE *__stream) __THROW;

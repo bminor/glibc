@@ -6,7 +6,3 @@ endif
 ifeq ($(subdir),setjmp)
 sysdep_routines += setjmp_aux
 endif
-
-ifeq ($(subdir),rt)
-librt-sysdep_routines += rt-sysdep
-endif

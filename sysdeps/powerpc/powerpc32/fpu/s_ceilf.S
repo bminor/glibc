@@ -20,16 +20,26 @@
 #include <sysdep.h>
 
 	.section	.rodata
-	.align 2
-	.type	TWO23.0,@object
-	.size	TWO23.0,4
-TWO23.0:
-	.long 0x4b000000
+	.align 3
+	.type	TWO52.0,@object
+	.size	TWO52.0,8
+TWO52.0:
+	.long 0x43300000
+	.long 0
+	.type	NEGZERO.0,@object
+	.size	NEGZERO.0,8
+NEGZERO.0:
+	.long 0x80000000
+	.long 0
 
-	.section	.rodata.cst4,"aM",@progbits,4
-	.align 2
+	.section	.rodata.cst8,"aM",@progbits,8
+	.align 3
 .LC0:	/* 2**23 */
-	.long 0x4b000000
+	.long 0x41600000
+	.long 0
+.LC1:	/* -0.0 */
+	.long 0x80000000
+	.long 0
 
 	.section	".text"
 ENTRY (__ceilf)
@@ -40,10 +50,10 @@ ENTRY (__ceilf)
 	mflr	r10
 	lwz	r9,.LC0@got(10)
 	mtlr	r11
-	lfs	fp13,0(r9)
+	lfd	fp13,0(r9)
 #else
 	lis	r9,.LC0@ha
-	lfs	fp13,.LC0@l(r9)
+	lfd	fp13,.LC0@l(r9)
 #endif
 	fabs	fp0,fp1
 	fsubs	fp12,fp13,fp13	/* generate 0.0  */
@@ -54,18 +64,27 @@ ENTRY (__ceilf)
 	ble-	cr6,.L4
 	fadds	fp1,fp1,fp13	/* x+= TWO23;  */
 	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
-	fabs	fp1,fp1		/* if (x == 0.0)  */
-				/* x = 0.0; */
+.L9:	
 	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
 	blr
 .L4:
 	bge-	cr6,.L9		/* if (x < 0.0)  */
 	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
 	fadds	fp1,fp1,fp13	/* x+= TWO23;  */
-	fnabs	fp1,fp1		/* if (x == 0.0)  */
-				/* x = -0.0; */
-.L9:
+	fcmpu	cr5,fp1,fp12	/* if (x > 0.0)  */
 	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
+	bnelr+	cr5
+#ifdef SHARED
+	mflr	r11
+	bl	_GLOBAL_OFFSET_TABLE_@local-4
+	mflr	r10
+	lwz	r9,.LC1@got(10)
+	mtlr	r11
+	lfd	fp1,0(r9)
+#else
+	lis	r9,.LC1@ha
+	lfd	fp1,.LC1@l(r9)
+#endif
 	blr
 	END (__ceilf)
 

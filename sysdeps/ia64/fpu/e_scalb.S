@@ -1,10 +1,10 @@
 .file "scalb.s"
 
-
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (C) 2000, 2001, Intel Corporation
 // All rights reserved.
-//
-// Contributed 2000 by the Intel Numerics Group, Intel Corporation
+// 
+// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
+// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,14 +35,12 @@
 // 
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at 
-// http://www.intel.com/software/products/opensource/libraries/num.htm.
+// http://developer.intel.com/opensource.
 //
 // History
 //==============================================================
-// 02/02/00 Initial version
-// 01/26/01 Scalb completely reworked and now standalone version 
-// 05/20/02 Cleaned up namespace and sf0 syntax
-// 02/10/03 Reordered header: .section, .global, .proc, .align
+// 2/02/00  Initial version
+// 1/26/01  Scalb completely reworked and now standalone version 
 //
 // API
 //==============================================================
@@ -54,6 +52,8 @@
 // and underflow.   
 //
 //
+
+#include "libm_support.h"
 
 FR_Floating_X  = f8
 FR_Result      = f8
@@ -84,8 +84,19 @@ GR_Parameter_Y      = r36
 GR_Parameter_RESULT = r37
 GR_Tag              = r38
 
+.align 32
+.global scalb
+
 .section .text
-GLOBAL_IEEE754_ENTRY(scalb)
+.proc  scalb
+.align 32
+
+scalb: 
+#ifdef _LIBC
+.global __ieee754_scalb
+.type __ieee754_scalb,@function
+__ieee754_scalb:
+#endif
 
 //
 //   Is x NAN, INF, ZERO, +-?
@@ -129,12 +140,12 @@ GLOBAL_IEEE754_ENTRY(scalb)
 { .mib
      setf.exp      FR_Big = GR_Scratch                  
      nop.i 0 
-(p6) br.cond.spnt  SCALB_NAN_INF_ZERO 
+(p6) br.cond.spnt  L(SCALB_NAN_INF_ZERO) 
 }
 { .mib
      setf.exp      FR_NBig = GR_Scratch1                  
      nop.i 0 
-(p7) br.cond.spnt  SCALB_NAN_INF_ZERO 
+(p7) br.cond.spnt  L(SCALB_NAN_INF_ZERO) 
 };;
 
 //
@@ -201,7 +212,7 @@ GLOBAL_IEEE754_ENTRY(scalb)
 }
 {    .mfb
      nop.m 0
-(p7) frcpa.s0          f8,p11     =    f0,f0
+(p7) frcpa          f8,p11     =    f0,f0
 (p7) br.ret.spnt    b0          
 };;
 
@@ -235,7 +246,7 @@ GLOBAL_IEEE754_ENTRY(scalb)
 }
 { .mlx
      nop.m 999
-     movl GR_Scratch = 0x00000000000303FF 
+(p0) movl GR_Scratch = 0x00000000000303FF 
 };;
 {    .mfi
      nop.m 0
@@ -244,7 +255,7 @@ GLOBAL_IEEE754_ENTRY(scalb)
 }
 {    .mlx
      nop.m 999
-     movl GR_Scratch1= 0x00000000000103FF 
+(p0) movl GR_Scratch1= 0x00000000000103FF 
 };;
 
 //   Set up necessary status fields 
@@ -255,12 +266,12 @@ GLOBAL_IEEE754_ENTRY(scalb)
 //
 {    .mfi
      nop.m 999
-     fsetc.s3 0x7F,0x41
+(p0) fsetc.s3 0x7F,0x41
      nop.i 999
 }
 {    .mfi
      nop.m 999
-     fsetc.s2 0x7F,0x42
+(p0) fsetc.s2 0x7F,0x42
      nop.i 999
 };;
 
@@ -334,7 +345,7 @@ GLOBAL_IEEE754_ENTRY(scalb)
 {    .mfb
 (p6) addl GR_Tag = 54, r0
 (p8) fcmp.le.unc.s1 p9, p10 = FR_Result2 , FR_NBig
-(p6) br.cond.spnt SCALB_UNDERFLOW 
+(p6) br.cond.spnt L(SCALB_UNDERFLOW) 
 };;
 
 //
@@ -342,8 +353,8 @@ GLOBAL_IEEE754_ENTRY(scalb)
 //
 { .mbb
      nop.m 0
-(p7) br.cond.spnt SCALB_OVERFLOW 
-(p9) br.cond.spnt SCALB_OVERFLOW 
+(p7) br.cond.spnt L(SCALB_OVERFLOW) 
+(p9) br.cond.spnt L(SCALB_OVERFLOW) 
 };;
 
 //
@@ -355,7 +366,7 @@ GLOBAL_IEEE754_ENTRY(scalb)
      br.ret.sptk     b0;;                   
 }
 
-SCALB_NAN_INF_ZERO: 
+L(SCALB_NAN_INF_ZERO): 
 
 //
 //   Convert N to a fp integer
@@ -460,11 +471,16 @@ SCALB_NAN_INF_ZERO:
      br.ret.sptk   b0
 };;
 
-GLOBAL_IEEE754_END(scalb)
+.endp scalb
+ASM_SIZE_DIRECTIVE(scalb)
+#ifdef _LIBC
+ASM_SIZE_DIRECTIVE(__ieee754_scalb)
+#endif
+.proc __libm_error_region
 __libm_error_region:
 
-SCALB_OVERFLOW: 
-SCALB_UNDERFLOW: 
+L(SCALB_OVERFLOW): 
+L(SCALB_UNDERFLOW): 
 
 //
 // Get stack address of N
@@ -541,7 +557,8 @@ SCALB_UNDERFLOW:
    br.ret.sptk     b0                  
 };;
 
-LOCAL_LIBM_END(__libm_error_region)
+.endp __libm_error_region
+ASM_SIZE_DIRECTIVE(__libm_error_region)
 
 .type   __libm_error_support#,@function
 .global __libm_error_support#

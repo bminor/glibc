@@ -1,5 +1,5 @@
 /* Fmemopen implementation.
-   Copyright (C) 2000, 2002, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by  Hanno Mueller, kontakt@hanno.de, 2000.
 
@@ -26,6 +26,8 @@
  * I needed fmemopen() for an application that I currently work on,
  * but couldn't find it in libio. The following snippet of code is an
  * attempt to implement what glibc's documentation describes.
+ *
+ * No, it isn't really tested yet. :-)
  *
  *
  *
@@ -71,7 +73,6 @@
 #include <libio.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <string.h>
 #include <sys/types.h>
 #include "libioP.h"
@@ -165,7 +166,7 @@ fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
       break;
 
     case SEEK_END:
-      np = c->maxpos - *p;
+      np = c->size - *p;
       break;
 
     default:
@@ -175,9 +176,9 @@ fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
   if (np < 0 || (size_t) np > c->size)
     return -1;
 
-  *p = c->pos = np;
+  c->pos = np;
 
-  return 0;
+  return np;
 }
 
 
@@ -202,13 +203,6 @@ fmemopen (void *buf, size_t len, const char *mode)
   cookie_io_functions_t iof;
   fmemopen_cookie_t *c;
 
-  if (len == 0)
-    {
-    einval:
-      __set_errno (EINVAL);
-      return NULL;
-    }
-
   c = (fmemopen_cookie_t *) malloc (sizeof (fmemopen_cookie_t));
   if (c == NULL)
     return NULL;
@@ -226,12 +220,7 @@ fmemopen (void *buf, size_t len, const char *mode)
       c->buffer[0] = '\0';
     }
   else
-    {
-      if ((uintptr_t) len > -(uintptr_t) buf)
-	goto einval;
-
-      c->buffer = buf;
-    }
+    c->buffer = buf;
 
   c->size = len;
 

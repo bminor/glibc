@@ -22,7 +22,6 @@
 
 #include <dl-sysdep.h>
 #ifndef __ASSEMBLER__
-# include <stdbool.h>
 # include <stddef.h>
 # include <stdint.h>
 # include <stdlib.h>
@@ -33,11 +32,7 @@
 typedef union dtv
 {
   size_t counter;
-  struct
-  {
-    void *val;
-    bool is_static;
-  } pointer;
+  void *pointer;
 } dtv_t;
 
 
@@ -402,12 +397,9 @@ union user_desc_init
 #define CALL_THREAD_FCT(descr) \
   ({ void *__res;							      \
      int __ignore1, __ignore2;						      \
-     asm volatile ("pushl %%eax\n\t"					      \
-		   "pushl %%eax\n\t"					      \
-		   "pushl %%eax\n\t"					      \
-		   "pushl %%gs:%P4\n\t"					      \
+     asm volatile ("pushl %%gs:%P4\n\t"					      \
 		   "call *%%gs:%P3\n\t"					      \
-		   "addl $16, %%esp"					      \
+		   "addl $4, %%esp"					      \
 		   : "=a" (__res), "=c" (__ignore1), "=d" (__ignore2)	      \
 		   : "i" (offsetof (struct pthread, start_routine)),	      \
 		     "i" (offsetof (struct pthread, arg)));		      \
