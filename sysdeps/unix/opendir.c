@@ -26,6 +26,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <stdio.h>
 
 #include "direct.h"		/* This file defines `struct direct'.  */
 

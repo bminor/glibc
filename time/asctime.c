@@ -28,7 +28,7 @@ Cambridge, MA 02139, USA.  */
 char *
 DEFUN(asctime, (tp), CONST struct tm *tp)
 {
-  static const char format[] = "%.3s %.3s %2d %.2d:%.2d:%.2d %d\n";
+  static const char format[] = "%.3s %.3s%3d %.2d:%.2d:%.2d %d\n";
   static char result[	         3+1+ 3+1+20+1+20+1+20+1+20+1+20+1 + 1];
 
   if (tp == NULL)
@@ -43,7 +43,7 @@ DEFUN(asctime, (tp), CONST struct tm *tp)
 	       (tp->tm_mon < 0 || tp->tm_mon >= 12 ?
 		"???" : _time_info->abbrev_month[tp->tm_mon]),
 	       tp->tm_mday, tp->tm_hour, tp->tm_min,
-	       tp->tm_sec, 1900 + tp->tm_year) < 25)
+	       tp->tm_sec, 1900 + tp->tm_year) < 0)
     return NULL;
 
   return result;
