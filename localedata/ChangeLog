@@ -1,3 +1,8 @@
+2002-05-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/be_BY: Fix int_curr_symbol.
+	Patch by Alexander Mikhailian <lowry@altern.org> [PR libc/3565].
+
 2002-04-19  Bruno Haible  <bruno@clisp.org>
 
 	* charmaps/ISO-IR-209: Fix the Unicode values for LETTER H WITH CARON.
