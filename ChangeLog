@@ -1,3 +1,8 @@
+1998-03-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/posix/mkstemp.c (mkstemp): Open temporary file mode
+	0600.  Reported by Greg Alexander <galexand@sietch.bloomington.in.us>.
+
 1998-03-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/getresgid.c: Remove stub-tag.h.
