@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <unistd.h>
+#include <sys/types.h>
 #include <sys/time.h>
 
 /* Sleep USECONDS microseconds, or until a previously set timer goes off.  */
