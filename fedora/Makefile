@@ -70,7 +70,7 @@ $(tar-name)-$(snapshot-name)-$(glibc-branch).patch: makepatch.awk glibc.spec \
 	awk -v OLDVER=$(tar-name)-$(snapshot-name) \
 	    -v NEWVER=$(tar-name)-$(snapshot-name)-$(glibc-branch) \
 	    -f $< > patch.tmp
-	mv -f patch.tmp
+	mv -f patch.tmp $@
 
 # makepatch.awk omits these files from the patch; we put them in a tar file.
 outside-patch = redhat c_stubs rtkaio glibc-compat \
