@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,9 +55,10 @@
 # undef va_list
 # define va_list	_IO_va_list
 # define ungetc(c, s)	((void) ((int) c != EOF && --read_in),		      \
-			_IO_ungetc (c, s))
-# define inchar()	((c = _IO_getc_unlocked (s)), \
-			 (void) (c != EOF && ++read_in), c)
+			 _IO_ungetc (c, s))
+# define inchar()	(c == EOF ? EOF
+			 : ((c = _IO_getc_unlocked (s)), \
+			    (void) (c != EOF && ++read_in), c))
 # define encode_error()	do {						      \
 			  if (errp != NULL) *errp |= 4;			      \
 			  _IO_funlockfile (s);				      \
@@ -101,7 +102,8 @@
 # define UNLOCK_STREAM __libc_cleanup_region_end (1)
 #else
 # define ungetc(c, s)	((void) (c != EOF && --read_in), ungetc (c, s))
-# define inchar()	((c = getc (s)), (void) (c != EOF && ++read_in), c)
+# define inchar()	(c == EOF ? EOF
+			 : ((c = getc (s)), (void) (c != EOF && ++read_in), c))
 # define encode_error()	do {						      \
 			  funlockfile (s);				      \
 			  __set_errno (EILSEQ);				      \
@@ -438,19 +440,18 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       if (*f == '\0')
 	conv_error ();
 
-      /* We must take care for EINTR errors.  */
-      if (c == EOF && errno == EINTR)
-	input_error ();
-
       /* Find the conversion specifier.  */
       fc = *f++;
       if (skip_space || (fc != '[' && fc != 'c' && fc != 'C' && fc != 'n'))
 	{
 	  /* Eat whitespace.  */
+	  int save_errno = errno;
+	  errno = 0;
 	  do
 	    if (inchar () == EOF && errno == EINTR)
 	      input_error ();
 	  while (isspace (c));
+	  errno = save_errno;
 	  ungetc (c, s);
 	  skip_space = 0;
 	}
@@ -459,6 +460,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	{
 	case '%':	/* Must match a literal '%'.  */
 	  c = inchar ();
+	  if (c == EOF)
+	    input_error ();
 	  if (c != fc)
 	    {
 	      ungetc (c, s);
@@ -504,7 +507,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		     of 3 is also assigned to n2.  The value of d2 is not
 		     affected.  The value 3 is assigned to i.
 
-		 We go for now with the historically correct code fro ISO C,
+		 We go for now with the historically correct code from ISO C,
 		 i.e., we don't count the %n assignments.  When it ever
 		 should proof to be wrong just remove the #ifdef above.  */
 	      ++done;
@@ -538,10 +541,6 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      else
 		while (--width > 0 && inchar () != EOF);
 
-	      if (width > 0)
-		/* I.e., EOF was read.  */
-		--read_in;
-
 	      if (!(flags & SUPPRESS))
 		++done;
 
@@ -573,10 +572,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  if (First)						      \
 		    input_error ();					      \
 		  else							      \
-		    {							      \
-		      --read_in;					      \
-		      break;						      \
-		    }							      \
+		    break;						      \
 		val = c;						      \
 		if (val >= 0x80)					      \
 		  {							      \
@@ -627,15 +623,11 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 									      \
 		if (!(flags & SUPPRESS))				      \
 		  *wstr++ = val;					      \
-		first = 0
+		First = 0
 
 		NEXT_WIDE_CHAR (first);
 	      }
 	    while (--width > 0);
-
-	    if (width > 0)
-	      /* I.e., EOF was read.  */
-	      --read_in;
 
 	    if (!(flags & SUPPRESS))
 	      ++done;
