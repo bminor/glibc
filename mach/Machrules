@@ -60,17 +60,21 @@ endif
 # the kludgificacious method of defining a pattern rule to build files
 # matching patterns we are pretty damn sure will only match the particular
 # files we have in mind.
-%.ir: %.uh Machrules
+%.ir: %.uh
 	(echo 'define $*-calls'					;\
 	 awk '/^kern_return_t/ { print $$2 }' $<		;\
 	 echo 'endef'						;\
 	 echo '$*-calls := $$(subst $$(nl), ,$$($*-calls))'	;\
 	 echo '$$($*-calls:%=_\%%.c): $*.defs'			;\
-	 echo '	$$(MIG) $$< $$(MIGFLAGS) -prefix __ -i ./__' \\	;\
-	 echo '	-server /dev/null -user /dev/null -header /dev/null' \
+	 echo '	$$(generate-user-calls)'			 \
 	) > $@-new
 	mv $@-new $@
 vpath Machrules ../mach	# Find ourselves.
+
+define generate-user-calls
+$(MIG) $< $(MIGFLAGS) \
+       -prefix __ -i ./__ -server /dev/null -user /dev/null -header /dev/null
+endef
 
 __%_server.c __%_server.h: %.defs
 	$(MIG) $< $(MIGFLAGS) -prefix __ \
@@ -98,7 +102,7 @@ __%_server.c __%_server.h: %.defs
 
 if-calls.c := $(strip $(foreach if,$(user-interfaces),$($(if)-calls:%=%.c)))
 ifdef if-calls.c
-$(if-calls.c): %.c:
+$(if-calls.c):
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*)') > $@-new
 	mv $@-new $@
