@@ -86,7 +86,7 @@ $(objpfx)db_load: $(objpfx)getlong.o
 
 ifeq ($(build-shared),yes)
 $(objpfx)makedb: $(objpfx)libdb.so$(libdb.so-version)
-$(objpfx)db_dump185: $(objpfx)libdb.so$(libdb.so-version)
+$(objpfx)db_dump185: $(common-objpfx)db/libdb1.so$(libdb1.so-version)
 $(objpfx)db_archive: $(objpfx)libdb.so$(libdb.so-version)
 $(objpfx)db_checkpoint: $(objpfx)libdb.so$(libdb.so-version)
 $(objpfx)db_deadlock: $(objpfx)libdb.so$(libdb.so-version)
@@ -97,7 +97,7 @@ $(objpfx)db_recover: $(objpfx)libdb.so$(libdb.so-version)
 $(objpfx)db_stat: $(objpfx)libdb.so$(libdb.so-version)
 else
 $(objpfx)makedb: $(objpfx)libdb.a
-$(objpfx)db_dump185: $(objpfx)libdb.a
+$(objpfx)db_dump185: $(common-objpfx)db/libdb1.a
 $(objpfx)db_archive: $(objpfx)libdb.a
 $(objpfx)db_checkpoint: $(objpfx)libdb.a
 $(objpfx)db_deadlock: $(objpfx)libdb.a
