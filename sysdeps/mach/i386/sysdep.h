@@ -27,4 +27,5 @@ Cambridge, MA 02139, USA.  */
   ENTRY (name)								      \
   lea number, %eax;							      \
   lcall $7, $0								      \
+  ENTRY (name##_syscall_pc)						      \
   ret
