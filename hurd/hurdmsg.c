@@ -18,6 +18,10 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 #include <hurd/msg_server.h>
+#include <hurd/fd.h>
+#include <unistd.h>
+#include <limits.h>
+#include <string.h>
 
 
 #define AUTHCHECK \
@@ -27,17 +31,18 @@ Cambridge, MA 02139, USA.  */
 
 /* Snarfing and frobbing the init ports.  */
 
-error_t
-_S_get_init_port (mach_port_t msgport, mach_port_t auth,
-		  int which, mach_port_t *result)
+kern_return_t
+_S_get_init_port (mach_port_t msgport, mach_port_t auth, int which,
+		  mach_port_t *result, mach_msg_type_name_t *result_type)
 {
   AUTHCHECK;
+  *result_type = MACH_MSG_TYPE_MOVE_SEND;
   /* This function adds a new user reference for the *RESULT it gives back.
      Our reply message uses a move-send right that consumes this reference.  */
   return _hurd_ports_get (which, result);
 }
 
-error_t
+kern_return_t
 _S_set_init_port (mach_port_t msgport, mach_port_t auth,
 		  int which, mach_port_t port)
 {
@@ -52,7 +57,7 @@ _S_set_init_port (mach_port_t msgport, mach_port_t auth,
   return 0;
 }
 
-error_t
+kern_return_t
 _S_get_init_ports (mach_port_t msgport, mach_port_t auth,
 		   mach_port_t **ports,
 		   mach_msg_type_name_t *ports_type,
@@ -86,7 +91,7 @@ _S_get_init_ports (mach_port_t msgport, mach_port_t auth,
   return 0;
 }
 
-error_t
+kern_return_t
 _S_set_init_ports (mach_port_t msgport, mach_port_t auth,
 		   mach_port_t *ports, unsigned int nports)
 {
@@ -108,7 +113,7 @@ _S_set_init_ports (mach_port_t msgport, mach_port_t auth,
 
 /* Snarfing and frobbing the init ints.  */
 
-static error_t
+static kern_return_t
 get_int (int which, int *value)
 {
   switch (which)
@@ -118,21 +123,21 @@ get_int (int which, int *value)
       return 0;
     case INIT_SIGMASK:
       {
-	struct _hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
+	struct hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
 	*value = ss->blocked;
 	__mutex_unlock (&ss->lock);
 	return 0;
       }
     case INIT_SIGPENDING:
       {
-	struct _hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
+	struct hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
 	*value = ss->pending;
 	__mutex_unlock (&ss->lock);
 	return 0;
       }
     case INIT_SIGIGN:
       {
-	struct _hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
+	struct hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
 	sigset_t ign;
 	int sig;
 	__sigemptyset (&ign);
@@ -148,7 +153,7 @@ get_int (int which, int *value)
     }
 }
 
-error_t
+kern_return_t
 _S_get_init_int (mach_port_t msgport, mach_port_t auth,
 		 int which, int *value)
 {
@@ -157,11 +162,11 @@ _S_get_init_int (mach_port_t msgport, mach_port_t auth,
   return get_int (which, value);
 }
 
-error_t
+kern_return_t
 _S_get_init_ints (mach_port_t msgport, mach_port_t auth,
 		  int **values, unsigned int *nvalues)
 {
-  error_t;
+  error_t err;
   unsigned int i;
 
   AUTHCHECK;
@@ -171,7 +176,7 @@ _S_get_init_ints (mach_port_t msgport, mach_port_t auth,
     return err;
   *nvalues = INIT_INT_MAX;
 
-  for (i = 0; i < INIT_INT_MAX)
+  for (i = 0; i < INIT_INT_MAX; ++i)
     switch (err = get_int (i, &(*values)[i]))
       {
       case 0:			/* Success.  */
@@ -189,7 +194,7 @@ _S_get_init_ints (mach_port_t msgport, mach_port_t auth,
 }
 
 
-static error_t
+static kern_return_t
 set_int (int which, int value)
 {
   switch (which)
@@ -201,21 +206,21 @@ set_int (int which, int value)
       /* These are pretty odd things to do.  But you asked for it.  */
     case INIT_SIGMASK:
       {
-	struct _hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
+	struct hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
 	ss->blocked = value;
 	__mutex_unlock (&ss->lock);
 	return 0;
       }
     case INIT_SIGPENDING:
       {
-	struct _hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
+	struct hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
 	ss->pending = value;
 	__mutex_unlock (&ss->lock);
 	return 0;
       }
     case INIT_SIGIGN:
       {
-	struct _hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
+	struct hurd_sigstate *ss = _hurd_thread_sigstate (_hurd_sigthread);
 	int sig;
 	const sigset_t ign = value;
 	for (sig = 1; sig < NSIG; ++sig)
@@ -233,7 +238,7 @@ set_int (int which, int value)
     }
 }
 
-error_t
+kern_return_t
 _S_set_init_int (mach_port_t msgport, mach_port_t auth,
 		 int which, int value)
 {
@@ -242,16 +247,16 @@ _S_set_init_int (mach_port_t msgport, mach_port_t auth,
   return set_int (which, value);
 }
 
-error_t
+kern_return_t
 _S_set_init_ints (mach_port_t msgport, mach_port_t auth,
-		  const int *values, unsigned int nvalues)
+		  int *values, unsigned int nvalues)
 {
-  error_t;
+  error_t err;
   unsigned int i;
 
   AUTHCHECK;
 
-  for (i = 0; i < INIT_INT_MAX)
+  for (i = 0; i < INIT_INT_MAX; ++i)
     switch (err = set_int (i, values[i]))
       {
       case 0:			/* Success.  */
@@ -266,9 +271,9 @@ _S_set_init_ints (mach_port_t msgport, mach_port_t auth,
 }
 
 
-error_t
+kern_return_t
 _S_get_fd (mach_port_t msgport, mach_port_t auth,
-	   int which, mach_port_t *result)
+	   int which, mach_port_t *result, mach_msg_type_name_t *result_type)
 {
   AUTHCHECK;
 
@@ -277,11 +282,12 @@ _S_get_fd (mach_port_t msgport, mach_port_t auth,
   *result = __getdport (which);
   if (*result == MACH_PORT_NULL)
     return errno;
+  *result_type = MACH_MSG_TYPE_MOVE_SEND;
 
   return 0;
 }
 
-error_t
+kern_return_t
 _S_set_fd (mach_port_t msgport, mach_port_t auth,
 	   int which, mach_port_t port)
 {
@@ -293,9 +299,9 @@ _S_set_fd (mach_port_t msgport, mach_port_t auth,
 
 /* Snarfing and frobbing environment variables.  */
 
-error_t
+kern_return_t
 _S_get_env_variable (mach_port_t msgport,
-		     const char *variable,
+		     char *variable,
 		     char **data, unsigned int *datalen)
 {
   const char *value = getenv (variable);
@@ -310,9 +316,9 @@ _S_get_env_variable (mach_port_t msgport,
 }
 
 
-error_t
+kern_return_t
 _S_set_env_variable (mach_port_t msgport, mach_port_t auth,
-		     const char *variable,
+		     char *variable,
 		     char *value,
 		     int replace)
 {
@@ -323,10 +329,9 @@ _S_set_env_variable (mach_port_t msgport, mach_port_t auth,
   return 0;
 }
 
-error_t
+kern_return_t
 _S_get_environment (mach_port_t msgport,
-		    char **data, unsigned int *datalen,
-		    int *dealloc)
+		    char **data, unsigned int *datalen)
 {
   /* Pack the environment into an array with nulls separating elements.  */
   if (__environ != NULL)
@@ -342,11 +347,10 @@ _S_get_environment (mach_port_t msgport,
 	  if (__vm_allocate (__mach_task_self (),
 			     (vm_address_t *) data, envlen, 1))
 	    return ENOMEM;
-	  *dealloc = 1;
 	}
 
       ap = *data;
-      for (p = envp; *p != NULL; ++p)
+      for (p = __environ; *p != NULL; ++p)
 	ap = __memccpy (ap, *p, '\0', ULONG_MAX);
 
       *datalen = envlen;
@@ -357,10 +361,11 @@ _S_get_environment (mach_port_t msgport,
   return 0;
 }
 
-error_t
+kern_return_t
 _S_set_environment (mach_port_t msgport, mach_port_t auth,
 		    char *data, unsigned int datalen)
 {
+  int _hurd_split_args (char *, unsigned int, char **);
   int envc;
   char **envp;
 
@@ -370,7 +375,7 @@ _S_set_environment (mach_port_t msgport, mach_port_t auth,
   envp = malloc ((envc + 1) * sizeof (char *));
   if (envp == NULL)
     return errno;
-  _hurd_split_args (data, datalen, envc);
+  _hurd_split_args (data, datalen, envp);
   __environ = envp;		/* XXX cooperate with loadenv et al */
   return 0;
 }
@@ -378,10 +383,41 @@ _S_set_environment (mach_port_t msgport, mach_port_t auth,
 
 
 /* XXX */
-#define STUB(fn) error_t fn (mach_port_t port) { return EOPNOTSUPP; }
 
-STUB(_S_get_dtable)
-STUB(_S_set_dtable)
-STUB(_S_io_select_done)
-STUB(_S_startup_dosync)
+kern_return_t
+_S_get_dtable (mach_port_t process,
+	       mach_port_t refport,
+	       portarray_t *dtable,
+	       mach_msg_type_name_t *dtablePoly,
+	       mach_msg_type_number_t *dtableCnt)
+{ return EOPNOTSUPP; }
 
+kern_return_t
+_S_set_dtable (mach_port_t process,
+	       mach_port_t refport,
+	       portarray_t dtable,
+	       mach_msg_type_number_t dtableCnt)
+{ return EOPNOTSUPP; }
+
+kern_return_t
+_S_io_select_done (mach_port_t notify_port,
+		   int select_result,
+		   int id_tag)
+{ return EOPNOTSUPP; }
+
+kern_return_t
+_S_startup_dosync (mach_port_t process)
+{ return EOPNOTSUPP; }
+
+kern_return_t
+_S_dir_changed (mach_port_t notify_port,
+		dir_changed_type_t change,
+		string_t name)
+{ return EOPNOTSUPP; }
+
+kern_return_t
+_S_file_changed (mach_port_t notify_port,
+		 file_changed_type_t change,
+		 off_t start,
+		 off_t end)
+{ return EOPNOTSUPP; }
