@@ -1,4 +1,4 @@
-# Copyright (C) 1991 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,13 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-$(objpfx)stdio_limits.h: $(objpfx)make-stdio_limits
+$(objpfx)stdio_lim.h: $(objpfx)mk-stdiolim
 	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 
 vpath %.h $(..)
-$(objpfx)make-stdio_limits.o: posix1_limits.h local_limits.h
+$(objpfx)mk-stdiolim.o: posix1_lim.h local_lim.h
 
 ifeq ($(subdir),posix)
-dont_distribute := $(dont_distribute) stdio_limits.h # Generated.
+dont_distribute := $(dont_distribute) stdio_lim.h # Generated.
 endif
