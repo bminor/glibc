@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -151,9 +151,11 @@ my_realloc (p, n)
      char *p;
      unsigned int n;
 {
+  /* These casts are the for sake of the broken Ultrix compiler,
+     which warns of illegal pointer combinations otherwise.  */
   if (p == NULL)
-    return malloc (n);
-  return realloc (p, n);
+    return (char *) malloc (n);
+  return (char *) realloc (p, n);
 }
 #define	realloc	my_realloc
 #endif
