@@ -65,6 +65,7 @@ extern int _hurd_dtable_rlimit;	/* RLIM_OFILES: number of file descriptors.  */
 /* This locks _hurd_dtable, _hurd_dtable_users, and _hurd_dtable_rlimit.  */
 extern struct mutex _hurd_dtable_lock;
 
+#include <hurd/signal.h>
 #include <lock-intern.h>
 
 #ifndef _EXTERN_INLINE
@@ -78,10 +79,12 @@ _EXTERN_INLINE struct hurd_dtable
 _hurd_dtable_get (struct hurd_userlink *ulink)
 {
   struct hurd_dtable dtable;
+  HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
   _hurd_userlink_link (&_hurd_dtable_users, ulink);
   dtable = _hurd_dtable;
   __mutex_unlock (&_hurd_dtable_lock);
+  HURD_CRITICAL_END;
   return dtable;
 }
 
@@ -98,9 +101,11 @@ _hurd_dtable_free (struct hurd_dtable dtable,
 		   struct hurd_userlink *ulink)
 {
   int dealloc;
+  HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
   dealloc = _hurd_userlink_unlink (ulink);
   __mutex_unlock (&_hurd_dtable_lock);
+  HURD_CRITICAL_END;
   if (dealloc && _hurd_dtable_deallocate)
     (*_hurd_dtable_deallocate) (dtable.d);
 }
@@ -169,6 +174,7 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
 #define	HURD_FD_USE(fd, expr)						      \
   ({ struct hurd_userlink __dt_ulink;					      \
      error_t __result;							      \
+     HURD_CRITICAL_BEGIN;						      \
      struct hurd_fd_user __d = _hurd_fd_get (fd, &__dt_ulink);		      \
      if (__d.d == NULL)							      \
        __result = EBADF;						      \
@@ -178,6 +184,7 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
 	 __result = (expr);						      \
 	 _hurd_fd_free (__d, &__dt_ulink);				      \
        }								      \
+     HURD_CRITICAL_END;							      \
      __result; })
 
 /* Evaluate EXPR with the variable `port' bound to the port to FD,
@@ -201,7 +208,6 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
      __result; })
 
 #include <errno.h>
-#include <hurd/signal.h>
 
 /* Handle an error from an RPC on a file descriptor's port.  You should
    always use this function to handle errors from RPCs made on file
