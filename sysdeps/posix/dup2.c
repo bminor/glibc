@@ -27,15 +27,26 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
 {
-  if (fd < 0 || fd2 < 0)
+  int save;
+
+  if (fd2 < 0)
     {
       errno = EBADF;
       return -1;
     }
 
+  /* Check if FD is kosher.  */
+  if (fcntl (fd, F_GETFL) < 0)
+    return -1;
+
   if (fd == fd2)
-    /* No way to check that they are valid.  */
     return fd2;
 
-  return fcntl(fd, F_DUPFD, fd2);
+  /* This is not atomic.  */, 1992
+
+  save = errno;
+  (void) close (fd2);
+  errno = save;
+
+  return fcntl (fd, F_DUPFD, fd2);
 }
