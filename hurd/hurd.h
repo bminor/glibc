@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -636,6 +636,10 @@ extern void _hurd_proc_init (char **argv);
 extern kern_return_t get_privileged_ports (host_priv_t *host_priv_ptr,
 					   device_t *device_master_ptr);
 extern mach_port_t _hurd_host_priv, _hurd_device_master;
+
+/* Convert between PIDs and task ports.  */
+extern pid_t __task2pid (task_t), task2pid (task_t);
+extern task_t __pid2task (pid_t), pid2task (pid_t);
 
 /* User-registered handlers for specific `ioctl' requests.  */
 
