@@ -22,7 +22,7 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 /* Make a definition for sys_siglist.  */
 
 
-#undef	SYS_SIGLIST_MISSING
+#undef	HAVE_SYS_SIGLIST
 #include "signame.c"
 
 
