@@ -143,10 +143,10 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	      error_t err;
 	    } reply;
 	} msg;
-      const mach_msg_timeout_t to = (timeout != NULL ?
-				     (timeout->tv_sec * 1000 +
-				      timeout->tv_usec / 1000) :
-				     0);
+      mach_msg_timeout_t to = (timeout != NULL ?
+			       (timeout->tv_sec * 1000 +
+				timeout->tv_usec / 1000) :
+			       0);
       mach_msg_option_t options = (timeout == NULL ? 0 : MACH_RCV_TIMEOUT);
       while ((err = __mach_msg (&msg.head,
 				MACH_RCV_MSG | options,
