@@ -1,5 +1,5 @@
 /* Simple transformations functions.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -255,8 +255,11 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
       }									      \
     else								      \
       {									      \
-	if ((ch & 0xe0) == 0xc0)					      \
+	if (ch >= 0xc2 && ch < 0xe0)					      \
 	  {								      \
+ 	    /* We expect two bytes.  The first byte cannot be 0xc0 or 0xc1,   \
+	       otherwise the wide character could have been represented	      \
+	       using a single byte.  */					      \
 	    cnt = 2;							      \
 	    ch &= 0x1f;							      \
 	  }								      \
