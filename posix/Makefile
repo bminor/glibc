@@ -46,7 +46,7 @@ routines	:= $(sort $(foreach f,$(routines),$f $(f:__%=%)))
 aux		:= init-posix environ
 tests := tstgetopt
 
-others		:= logname getconf id
+others		:= getconf
 
 include ../Rules
 
