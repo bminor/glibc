@@ -1,3 +1,7 @@
+1998-03-02 18:23  H.J. Lu  <hjl@gnu.org>
+
+	* stdio-common/vfscanf.c (inchar): Fix typos.
+
 1998-03-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Fix msgfmt test.  Fix handling of //s in sysdeps
