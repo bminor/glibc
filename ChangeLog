@@ -1,3 +1,32 @@
+1998-08-20 16:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/ldd.sh.in: Redirect warnings and error messages to stderr.
+	* elf/ldd.bash.in: Likewise.
+
+	* stdio-common/tst-printf.c: Add test case for snprintf.
+
+1998-08-17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* shadow/putspent.c: Remove stray CR.
+
+1998-08-18  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/Makefile (link-libc-static): New variable; set
+	this here, overriding Makeconfig generic value so we link against
+	the RPC libs.
+
+1998-08-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* Makeconfig (link-libc-static): Define it.
+
+	* elf/Makefile ($(objpfx)sln): Use $(link-libc-static).
+
+1998-08-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/rpcsvc/rusers.x: Write ut_line, ut_name, and ut_host as
+	byte arrays, not as strings.
+	Patch by HJ Lu.
+
 1998-08-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* pwd/putpwent.c (putpwent): Fix typos.
