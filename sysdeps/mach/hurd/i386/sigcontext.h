@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,12 +22,16 @@ Cambridge, MA 02139, USA.  */
 /* State of this thread when the signal was taken.  */
 struct sigcontext
 {
+  /* The first three members are machine-independent.  */
+
   int sc_onstack;		/* Nonzero if running on sigstack.  */
   sigset_t sc_mask;		/* Blocked signals to restore.  */
 
   /* Port this thread is doing an interruptible RPC on.  */
   unsigned long int sc_intr_port;
   
+  /* All following members are machine-dependent.  */
+
   /* Segment registers (not used).  */
   int sc_gs;
   int sc_fs;
