@@ -18,8 +18,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <errno.h>
-#include <sys/resource.h>
 #include <hurd.h>
+#include <hurd/resource.h>
 #include <cthreads.h>		/* For `struct mutex'.  */
 #include <gnu-stabs.h>
 
@@ -36,10 +36,10 @@ vm_address_t _hurd_data_end;
    Pages beyond the one containing this address allow no access.  */
 vm_address_t _hurd_brk;
 
-/* The RLIM_DATA resource limit on bytes of data space.  */
-long int _hurd_brk_limit;
-
 struct mutex _hurd_brk_lock;
+
+extern int __data_start, _end;
+
 
 /* Set the end of the process's data space to INADDR.
    Return 0 if successful, -1 if not.  */
@@ -61,6 +61,7 @@ _hurd_set_brk (vm_address_t addr)
   error_t err;
   vm_address_t pagend = round_page (addr);
   vm_address_t pagebrk = round_page (_hurd_brk);
+  long int rlimit;
 
   if (pagend <= pagebrk)
     {
@@ -72,7 +73,11 @@ _hurd_set_brk (vm_address_t addr)
       return 0;
     }
 
-  if (pagend > _hurd_data_end)
+  __mutex_lock (&_hurd_rlimit_lock);
+  rlimit = _hurd_rlimits[RLIMIT_DATA].rlim_cur;
+  __mutex_unlock (&_hurd_rlimit_lock);
+
+  if (addr - (vm_address_t) &__data_start > rlimit)
     {
       /* Need to increase the resource limit.  */
       errno = ENOMEM;
@@ -94,7 +99,6 @@ _hurd_set_brk (vm_address_t addr)
 static void
 init_brk (void)
 {
-  extern char _end;
   vm_address_t pagend;
 
   __mutex_init (&_hurd_brk_lock);
@@ -103,56 +107,19 @@ init_brk (void)
 
   pagend = round_page (&_end);
 
-  _hurd_data_end = DATA_SIZE;
+  _hurd_data_end = (vm_address_t) &__data_start + DATA_SIZE;
 
   if (pagend < _hurd_data_end)
     {
       /* We use vm_map to allocate and change permissions atomically.  */
-      if (!__vm_map (__mach_task_self (), &pagend, _hurd_data_end - pagend,
-		     0, 0, MACH_PORT_NULL, 0, 0,
-		     0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE,
-		     VM_INHERIT_COPY)) /* ? */
+      if (__vm_map (__mach_task_self (), &pagend, _hurd_data_end - pagend,
+		    0, 0, MACH_PORT_NULL, 0, 0,
+		    0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE,
+		    VM_INHERIT_COPY))
+	/* Couldn't allocate the memory.  The break will be very short.  */
 	_hurd_data_end = pagend;
     }
 
   (void) &init_brk;		/* Avoid ``defined but not used'' warning.  */
 }
 text_set_element (_hurd_preinit_hook, init_brk);
-
-
-int
-_hurd_set_data_limit (const struct rlimit *lim)
-{
-  vm_address_t end = round_page (lim->rlim_max);
-  error_t err;
-
-  if (lim->rlim_cur > lim->rlim_max)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  err = 0;
-
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_brk_lock);
-  if (end > _hurd_data_end)
-    {
-      /* We use vm_map to allocate and change permissions atomically.  */
-      if (__vm_map (__mach_task_self (), &_hurd_data_end, end - _hurd_data_end,
-		    0, 0, MACH_PORT_NULL, 0, 0,
-		    0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE,
-		    VM_INHERIT_COPY)) /* ? */
-	err = ENOMEM;
-    }
-  else if (end < _hurd_data_end)
-    __vm_deallocate (__mach_task_self (), end, _hurd_data_end - end);
-  if (! err)
-    {
-      _hurd_brk_limit = lim->rlim_cur;
-      _hurd_data_end = end;
-    }
-  __mutex_unlock (&_hurd_brk_lock);
-  HURD_CRITICAL_END;
-  return err ? __hurd_fail (err) : 0;
-}
