@@ -147,7 +147,8 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		FD_SET(s, &reads);
 		FD_SET(s2, &reads);
 		errno = 0;
-		if (select(32, &reads, 0, 0, 0) < 1 || !FD_ISSET(s2, &reads)) {
+		if (select(1 + (s > s2 ? s : s2), &reads, 0, 0, 0) < 1 ||
+		    !FD_ISSET(s2, &reads)) {
 			if (errno != 0)
 				(void)fprintf(stderr,
 				    "rcmd: select (setting up stderr): %s\n",
