@@ -57,7 +57,8 @@ struct aiocb
   char __unused[32];
 };
 
-/* The same for the 64bit offsets.  */
+/* The same for the 64bit offsets.  Please note that the members aio_fildes
+   to __return_value have to be the same in aiocb and aiocb64.  */
 #ifdef __USE_LARGEFILE64
 struct aiocb64
 {
@@ -69,6 +70,7 @@ struct aiocb64
   struct sigevent aio_sigevent;	/* Signal number and value.  */
 
   /* Internal members.  */
+  struct aiocb *__next_prio;
   int __abs_prio;
   int __policy;
   int __error_code;
@@ -172,7 +174,7 @@ extern int __REDIRECT (aio_write, __P ((struct aiocb *__aiocbp)), aio_write64);
 
 extern int __REDIRECT (lio_listio,
 		       __P ((int __mode,
-			     struct aiocb *__const __restrict __list[],
+			     struct aiocb *__const __list[],
 			     int __nent, struct sigevent *__restrict __sig)),
 		       lio_listio64);
 
@@ -186,13 +188,13 @@ extern int __REDIRECT (aio_cancel, __P ((int __fildes,
 		       aio_cancel64);
 
 extern int __REDIRECT (aio_suspend,
-		       __P ((__const struct aiocb *__const __restrict __list[],
+		       __P ((__const struct aiocb *__const __list[],
 			     int __nent,
 			     __const struct timespec *__restrict __timeout)),
 		       aio_suspend64);
 
-extern int __REDIRECT (aio_fsync __P ((int __operation,
-				       struct aiocb *__aiocbp)),
+extern int __REDIRECT (aio_fsync, __P ((int __operation,
+					struct aiocb *__aiocbp)),
 		       aio_fsync64);
 
 # else
