@@ -20,6 +20,9 @@ Cambridge, MA 02139, USA.  */
 
 #define	_DIRSTREAM_H	1
 
+#define __need_size_t
+#include <stddef.h>
+
 /* Directory stream type.
 
    The BSD directory format is the same as `struct dirent', so `readdir'

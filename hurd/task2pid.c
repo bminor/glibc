@@ -23,9 +23,6 @@ __task2pid (task_t task)
 {
   error_t err;
   pid_t pid;
-  err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
-			__proc_task2pid (proc, task, &pid));
-  if (err)
-    return __hurd_fail (err);
-  return pid;
+  err = __USEPORT (PROC, __proc_task2pid (port, task, &pid));
+  return err ? (pid_t) __hurd_fail (err) : pid;
 }

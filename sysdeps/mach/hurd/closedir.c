@@ -37,8 +37,9 @@ DEFUN(closedir, (dirp), DIR *dirp)
       return -1;
     }
 
-  if ((err = __vm_deallocate (__mach_task_self (), dirp->__data, dirp->__size))
-      || (err = __mach_port_deallocate (dirp->__port)))
+  if ((err = __vm_deallocate (__mach_task_self (),
+			      (vm_address_t) dirp->__data, dirp->__allocation))
+      || (err = __mach_port_deallocate (__mach_task_self (), dirp->__port)))
     {
       errno = err;
       return -1;

@@ -20,6 +20,9 @@ Cambridge, MA 02139, USA.  */
 
 #define	_DIRSTREAM_H	1
 
+#define __need_size_t
+#include <stddef.h>
+
 /* Directory stream type.
 
    The miscellaneous Unix `readdir' implementations read directory data
