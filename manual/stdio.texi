@@ -1015,12 +1015,19 @@ anyway, but the @samp{h} modifier says to convert it back to a
 
 @item l
 Specifies that the argument is a @code{long int} or @code{unsigned long
-int}, as appropriate.  
+int}, as appropriate.  Two @samp{l} characters is like the @samp{L}
+modifier, below.
 
 @item L
+@itemx ll
+@itemx q
 Specifies that the argument is a @code{long long int}.  (This type is
 an extension supported by the GNU C compiler.  On systems that don't
 support extra-long integers, this is the same as @code{long int}.)
+
+The @samp{q} modifier is another name for the same thing, which comes
+from 4.4 BSD; a @w{@code{long long int}} is sometimes called a ``quad''
+@code{int}.
 
 @item Z
 Specifies that the argument is a @code{size_t}.  This is a GNU extension.
@@ -2289,12 +2296,18 @@ short int *}.
 
 @item l
 Specifies that the argument is a @code{long int *} or @code{unsigned
-long int *}.
+long int *}.  Two @samp{l} characters is like the @samp{L} modifier, below.
 
-@item L
+@item ll
+@itemx L
+@itemx q
 Specifies that the argument is a @code{long long int *} or @code{unsigned long long int *}.  (The @code{long long} type is an extension supported by the
 GNU C compiler.  For systems that don't provide extra-long integers, this
 is the same as @code{long int}.)
+
+The @samp{q} modifier is another name for the same thing, which comes
+from 4.4 BSD; a @w{@code{long long int}} is sometimes called a ``quad''
+@code{int}.
 @end table
 
 All of the @samp{%e}, @samp{%f}, @samp{%g}, @samp{%E}, and @samp{%G}
