@@ -29,16 +29,18 @@ init_pids (void)
 
   __USEPORT (PROC,
 	     ({
-	       __proc_getpids (proc, &_hurd_pid, &_hurd_ppid, &_hurd_orphaned);
-	       __proc_getpgrp (proc, _hurd_pid, &_hurd_pgrp);
+	       __proc_getpids (port, &_hurd_pid, &_hurd_ppid, &_hurd_orphaned);
+	       __proc_getpgrp (port, _hurd_pid, &_hurd_pgrp);
 	     }));
 }
 
 text_set_element (__libc_subinit, init_pids);
 
+#include "hurd/msg_server.h"
+
 error_t
-__proc_newids (mach_port_t me,
-	       pid_t ppid, pid_t pgrp, int orphaned)
+_S_proc_newids (mach_port_t me,
+		pid_t ppid, pid_t pgrp, int orphaned)
 {
   __mutex_lock (&_hurd_pid_lock);
   _hurd_ppid = ppid;
