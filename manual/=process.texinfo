@@ -2,17 +2,19 @@
 @chapter Processes
 
 @cindex process
-A @dfn{process} corresponds to the notion of a thread of control.  Each
-process executes a program; you can have multiple processes executing
-the same program, but each process has its own copy of the program
-within its own address space.
+@dfn{Processes} are the primitive units for allocation of system
+resources.  Each process has its own address space and (usually) one
+thread of control.  A process executes a program; you can have multiple
+processes executing the same program, but each process has its own copy
+of the program within its own address space and executes it
+independently of the other copies.
 
 Processes are organized hierarchically.  Child processes are created by
 a parent process, and inherit many of their attributes from the parent
-process.  Processes can also be organized into process groups or jobs.
+process.
 
-This chapter describes how you can create and terminate processes and
-control their attributes.
+This chapter describes how a program can create, terminate, and control
+child processes.
 
 @menu
 * Program Argument Parsing::	Parsing the command-line arguments to
@@ -23,8 +25,6 @@ control their attributes.
 				 return status information to its parent.
 * Creating New Processes::	Running other programs.
 * User/Group IDs of a Process::	Controlling what privileges your program has.
-* Process Information::		Miscellaneous functions for inquiring about
-				 the execution environment of a process.
 @end menu
 
 
@@ -298,30 +298,32 @@ Non-option argument -
 
 @cindex environment variable
 When a program is executed, it receives information about the context in
-which it was invoked in two ways.  The first mechanism is the @var{argv}
-and @var{argc} arguments to its @code{main} function, as discussed in
-@ref{Program Argument Parsing}.  The second mechanism is by means of
-@dfn{environment variables}, discussed in this section.
+which it was invoked in two ways.  The first mechanism uses the
+@var{argv} and @var{argc} arguments to its @code{main} function, and is
+discussed in @ref{Program Argument Parsing}.  The second mechanism is
+uses @dfn{environment variables} and is discussed in this section.
 
-The @var{argv} mechanism is typically used to pass information that is
-specific to the particular program being invoked.  Typically, programs
-do not share their command-line arguments.  The environment, on the
-other hand, keeps track of information that is shared by many programs,
-changes infrequently, and that is less frequently accessed.
+The @var{argv} mechanism is typically used to pass command-line
+arguments specific to the particular program being invoked.  The
+environment, on the other hand, keeps track of information that is
+shared by many programs, changes infrequently, and that is less
+frequently accessed.
+
+The environment variables discussed in this section are the same
+environment variables that you set using the @code{getenv} shell
+command.  Programs executed from the shell inherit all of the 
+environment variables from the shell.  
 
 @cindex environment
-The names of environment variables are strings.  There are standard
-environment variables that are used for information about the user's
-home directory, terminal type, current locale, and so on; you can define
-additional variables for other purposes.  The set of all environment
-variables that have values is collectively known as the
+There are standard environment variables that are used for information
+about the user's home directory, terminal type, current locale, and so
+on; you can define additional variables for other purposes.  The set of
+all environment variables that have values is collectively known as the
 @dfn{environment}.
 
 @menu
-* Environment Access::			The easy way to get the value of
-					 an environment variable.
-* Environment Representation::		Low-level implementation of
-					 environments.
+* Environment Access::			How to get and set the values of
+					 environment variables.
 * Standard Environment Variables::	These environment variables have
 					 standard interpretations.
 @end menu
@@ -329,6 +331,7 @@ variables that have values is collectively known as the
 @node Environment Access
 @subsection Environment Access
 @cindex environment access
+@cindex environment representation
 
 The value of an environment variable can be accessed with the
 @code{getenv} function.  This is declared in the header file
@@ -345,16 +348,24 @@ present, a null pointer is returned.
 @end deftypefun
 
 
-@node Environment Representation
-@subsection Environment Representation
-@cindex environment representation
+@comment stdlib.h
+@comment SVID
+@deftypefun int putenv (const char *@var{string})
+The @code{putenv} function adds or removes definitions from the environment.
+If the @var{string} is of the form @samp{@var{name}=@var{value}}, the
+definition is added to the environment.  Otherwise, the @var{string} is
+interpreted as the name of an environment variable, and any definition
+for this variable in the environment is removed.
+
+The GNU library provides this function for compatibility with SVID; it
+may not be available in other systems.
+@end deftypefun
 
 You can deal directly with the underlying representation of environment
 objects when you are going to add things to the environment (for
 example, to communicate with another program you are about to execute;
 @pxref{Executing a File}).  If you just want to get the value of an
-environment variable, the preferred interface is the @code{getenv}
-function.
+environment variable, use @code{getenv}.
 
 This variable is not declared in any header file, but if you declare it
 in your own program as @code{extern}, the right thing will happen.
@@ -363,7 +374,7 @@ in your own program as @code{extern}, the right thing will happen.
 @comment POSIX.1
 @deftypevar {char **} environ
 The environment is represented as an array of strings.  Each string is
-of the format @code{"@var{name}=@var{value}"}.  The order in which
+of the format @samp{@var{name}=@var{value}}.  The order in which
 strings appear in the environment is not significant, but the same
 @var{name} must not appear more than once.  The last element of the
 array is a null pointer.
@@ -376,19 +387,6 @@ invariably uppercase.
 The values of environment variables can be anything that can be
 represented as a string.  A value must not contain an embedded null
 character, since this is assumed to terminate the string.
-
-@comment stdlib.h
-@comment SVID
-@deftypefun int putenv (const char *@var{string})
-The @code{putenv} function adds or removes definitions from the environment.
-If the @var{string} is of the form @code{"@var{name}=@var{value}"}, the
-definition is added to the environment.  Otherwise, the @var{string} is
-interpreted as the name of an environment variable, and any definition
-for this variable in the environment is removed.
-
-The GNU library provides this function for compatibility with SVID; it
-may not be available in other systems.
-@end deftypefun
 
 @node Standard Environment Variables
 @subsection Standard Environment Variables
@@ -407,6 +405,8 @@ This is a string representing the user's @dfn{home directory}, or
 initial default working directory.  @xref{User Database}, for a
 more secure way of determining this information.
 
+@comment RMS says to explay why HOME is better, but I don't know why.
+
 @item LOGNAME
 @cindex LOGNAME environment variable
 This is the name of the user's login account.  Since the value in the
@@ -414,6 +414,8 @@ environment can be tweaked arbitrarily, this is not the most reliable
 way to identify the user who is running a process; a function like
 @code{getlogin} (@pxref{User Identification}) is better for that
 purpose.
+
+@comment RMS says to explay why LOGNAME is better, but I don't know why.
 
 @item PATH
 @cindex PATH environment variable
@@ -425,15 +427,18 @@ utilities which are implemented in terms of those functions.
 
 Each prefix is a file name which specifies a directory; an empty prefix
 specifies the current working directory (@pxref{Working Directory}).
-The prefixes are separated by colon (@samp{:}) characters.  In building
-the full file names, a slash (@samp{/}) is glued between the prefix and
-the file name component.
+The prefixes are separated by colon (@samp{:}) characters.
 
 A typical value for this environment variable might be a string like:
 
 @example
 .:/bin:/etc:/usr/bin:/usr/new/X11:/usr/new:/usr/local:/usr/local/bin
 @end example
+
+This means that if the user tries to execute a program named @code{foo},
+the system will look for files named @file{./foo}, @file{/bin/foo},
+@file{/etc/foo}, and so on.  The first of these files that exists is
+the one that is executed.
 
 @item TERM
 @cindex TERM environment variable
@@ -506,8 +511,8 @@ function to return.  The @dfn{exit status value} returned from the
 @code{main} function is used to report information back to the process's
 parent process or shell.
 
-A program can also be terminated normally using the @code{exit}
-function, or aborted using the @code{abort} function.  Both of these
+A program can also terminat normally using the @code{exit}
+function, or abort itself using the @code{abort} function.  Both of these
 functions (as well as the normal return from @code{main}) are defined in
 terms of a lower-level primitive, @code{_exit}.
 
@@ -527,7 +532,7 @@ When a program terminates normally by returning from its @code{main}
 function or by calling @code{exit}, the following actions occur in
 sequence:
 
-@itemize @bullet
+@enumerate
 @item 
 Functions that were registered with the @code{atexit} or @code{on_exit}
 functions are called in the reverse order of their registration.  This
@@ -538,13 +543,14 @@ resources allocated by the program, and the like.
 
 @item 
 All open streams are closed.  This action includes making sure all open
-output streams are flushed.  In addition, temporary files opened with
-the @code{tmpfile} function are removed.
+output streams are flushed; @pxref{Opening and Closing Streams}.  In
+addition, temporary files opened with the @code{tmpfile} function are
+removed; @pxref{Temporary Files}.
 
 @item 
-Control is returned to the host environment, with the specified exit
+Control returns to the host environment, with the specified exit
 status.
-@end itemize
+@end enumerate
 
 An exit status of zero or @code{EXIT_SUCCESS} can be specified to report
 successful completion, and a status code of @code{EXIT_FAILURE} to
@@ -559,7 +565,7 @@ The following facilities are declared in @file{<stdlib.h>}.
 This macro can be used with the @code{exit} function to indicate
 successful program completion.
 
-In the GNU Library, the value of this macro is @code{0}.
+In the GNU library, the value of this macro is @code{0}.
 In other implementations, the value might be some other (possibly
 non-constant) integer expression.
 @end defvr
@@ -590,16 +596,13 @@ called at normal program termination.  The @var{function} is called with
 no arguments.
 
 The return value from @code{atexit} is zero on success and nonzero if
-the function cannot be registered.  Implementations are required to
-support registration of at least 32 functions.
-
-@strong{Incomplete:}  What's the GNU limit, or isn't there one?
+the function cannot be registered. 
 @end deftypefun
 
 @comment stdlib.h
 @comment GNU
 @deftypefun int on_exit (void (*@var{function})(int @var{status}, void *@var{arg}), void *@var{arg})
-This function is a somewhat more powerful variant of @code{on_exit}.  It
+This function is a somewhat more powerful variant of @code{atexit}.  It
 accepts two arguments, a function @var{function} and an arbitrary
 pointer @var{arg}.  At normal program termination, the @var{function} is
 called with two arguments:  the @var{status} value passed to @code{exit},
@@ -647,14 +650,15 @@ executing functions registered with @code{atexit} or @code{on_exit}.
 
 This function actually terminates the process by raising a
 @code{SIGABRT} signal, and your program can include a handler to
-intercept this signal; @pxref{Signal Handling}, for more information on
-how to do this.
+intercept this signal; @pxref{Signal Handling}.
+
+@strong{Incomplete:}  Why would you want to define such a handler?
 @end deftypefun
 
 @node Process Termination Details
 @subsection Process Termination Details
 
-The @code{_exit} function is the primitive for both @code{exit} and
+The @code{_exit} function is the primitive used by both @code{exit} and
 @code{abort}.  It is declared in the header file @file{<unistd.h>}.
 
 @comment unistd.h
@@ -716,14 +720,19 @@ how this is done, you can use the primitive functions to do
 each step individually instead.
 
 @menu
-* Running a Command::		The easy way to run another program.
-* Process Creation Concepts::	An overview of the hard way to do it.
-* Creating a Process::		How to fork a child process.
-* Executing a File::		How to get a process to execute another
-				 program.
-* Process Completion::		How to tell when a child process has
-				 completed.
-* Process Creation Example::    A complete example program.
+* Running a Command::		        The easy way to run another program.
+* Process Creation Concepts::	        An overview of the hard way to do it.
+* Process Identification::              How to get the process ID of a process.
+* Creating a Process::		        How to fork a child process.
+* Executing a File::		        How to get a process to execute another
+				         program.
+* Process Completion::		        How to tell when a child process has
+				         completed.
+* Process Completion Status::           How to interpret the status value 
+                                         returned from a child process.
+* BSD Process Completion Functions::    More functions, for backward
+                                         compatibility.
+* Process Creation Example::            A complete example program.
 @end menu
 
 
@@ -732,8 +741,8 @@ each step individually instead.
 @cindex running a command
 
 The easy way to run another program is to use the @code{system}
-function.  This function does everything in one step, but it doesn't
-give you as much control as doing each operation the hard way.
+function.  This function does all three operations in one step, but it
+doesn't give you as much control as doing each operation the hard way.
 
 The @code{system} function is declared in the header file
 @file{<stdlib.h>}.
@@ -741,27 +750,26 @@ The @code{system} function is declared in the header file
 @comment stdlib.h
 @comment ANSI
 @deftypefun int system (const char *@var{command})
-This function is used to cause the command @var{command} to be executed.
-The exact way in which this happens is implementation-dependent, as
-is the return value from @code{system}.
-
-In the GNU C Library, the @code{system} function uses the value of
+This function executes @var{command} as a shell command.  In the GNU C
+Library, the @code{system} function executes the command as if by the
+shell @code{sh}.  In particular, this means that it uses the value of
 the @code{PATH} environment variable to find the program to execute.
 The return value is @code{-1} if it wasn't possible to create the
 process, and otherwise is the status reported from the child process.
-@xref{Process Completion}, for details on how this status code can
-be interpreted.
-
-Some C implementations may not have any notion of a command processor
-that can execute other programs.  The @var{command} can be a null pointer
-to inquire whether a command processor exists; in this case the return
-value is nonzero if and only if such a processor is available.
+@xref{Process Completion}, for details on how this status code can be
+interpreted.
 @end deftypefun
+
+@strong{Portability Note:} Some C implementations may not have any
+notion of a command processor that can execute other programs.  The
+@var{command} can be a null pointer to inquire whether a command
+processor exists; in this case the return value is nonzero if and only
+if such a processor is available.  
 
 The @code{popen} and @code{pclose} functions (@pxref{Pipe to a
 Subprocess}) are closely related to the @code{system} function.  They
 allow the parent process to communicate with the standard input and
-output channels of the @var{command} being executed.
+output channels of the command being executed.
 
 @node Process Creation Concepts
 @subsection Process Creation Concepts
@@ -795,17 +803,48 @@ process terminated is also retrieved by these functions.
 
 A newly forked child process continues to execute the same program as
 its parent process, at the point where the @code{fork} call returns.
-Having all processes run the same program is usually not very useful,
-but if you want the new process to execute a different program you must
-do this explicitly too.  
+You can use the return value from @code{fork} to tell whether the program
+is running in the parent process or the child.
 
 @cindex process image
-The functions in the @code{exec} family are used to cause the current
-process to begin execution of a new program.  The program that the
-process is executing is called its @dfn{process image}.  Starting
-execution of a new program causes the process to forget all about its
-current process image; when the new program exits, the process exits
-too, instead of returning to the previous process image.
+Having all processes run the same program is usually not very useful,
+but if you want the new process to execute a different program you must
+call one of the @code{exec} functions to load it; @pxref{Executing a
+File}.  The program that the process is executing is called its
+@dfn{process image}.  Starting execution of a new program causes the
+process to forget all about its current process image; when the new
+program exits, the process exits too, instead of returning to the
+previous process image.
+
+
+@node Process Identification
+@subsection Process Identification
+
+The @code{pid_t} data type represents process IDs.  You can get the
+process ID and parent process ID of a process by calling @code{getpid}
+and @code{getppid}, respectively.  Your program should include the
+header files @file{<unistd.h>} and @file{<sys/types.h>} to use these
+functions.
+
+@comment sys/types.h
+@comment POSIX.1
+@deftp {Data Type} pid_t
+The @code{pid_t} data type is a signed integer type which is capable
+of representing a process ID.  In the GNU library, this is an @code{int}.
+@end deftp
+
+@comment unistd.h
+@comment POSIX.1
+@deftypefun pid_t getpid (void)
+The @code{getpid} function returns the process ID of the currrent process.
+@end deftypefun
+
+@comment unistd.h
+@comment POSIX.1
+@deftypefun pid_t getppid (void)
+The @code{getppid} function returns the process ID of the parent of the
+current process.
+@end deftypefun
 
 @node Creating a Process
 @subsection Creating a Process
@@ -813,22 +852,17 @@ too, instead of returning to the previous process image.
 The @code{fork} function is the primitive for creating a process.
 It is declared in the header file @file{<unistd.h>}.
 
-@comment sys/types.h
-@comment POSIX.1
-@deftp {Data Type} pid_t
-The @code{pid_t} data type is a signed arithmetic type which is capable
-of representing a process ID.
-@end deftp
-
 @comment unistd.h
 @comment POSIX.1
 @deftypefun pid_t fork (void)
 The @code{fork} function creates a new process.
 
-If the operation is successful, @code{fork} returns a value of @code{0}
-to the child process and the process ID of the newly created process to
-the parent process.  If the child process could not be created, a value
-of @code{-1} is returned to the parent process.  The following @code{errno}
+If the operation is successful, there are then both parent and child
+processes and both see @code{fork} return, but with different values.
+The @code{fork} function returns a value of @code{0} to the child
+process and the process ID of the newly created process to the parent
+process.  If the child process could not be created, a value of
+@code{-1} is returned to the parent process.  The following @code{errno}
 error conditions are defined for this function:
 
 @table @code
@@ -872,7 +906,8 @@ The child doesn't inherit alarms set by the parent process.
 
 @item
 The set of pending signals (@pxref{Signal Concepts}) for the child
-process is cleared.
+process is cleared.  (The child process inherits its mask of blocked
+signals and signal actions from the parent process.)
 @end itemize 
 
 
@@ -880,8 +915,10 @@ process is cleared.
 @comment BSD
 @deftypefun pid_t vfork (void)
 The @code{vfork} function is similar to @code{fork} but can be used only
-in a more restricted way.  In the situations where it can be used, however,
-it is usually more efficient than @code{fork}.
+in a more restricted way, such as when the child process calls
+@code{exec} immediately after it has been forked.  In the situations
+where it can be used, however, it is usually more efficient than
+@code{fork}.
 
 While @code{fork} makes a complete copy of the calling process's address
 space and allows both the parent and child to execute independently,
@@ -890,22 +927,24 @@ created with @code{vfork} shares its parent's address space until it calls
 one of the @code{exec} functions.  In the meantime, the parent process
 suspends execution.
 
-In typical use, @code{vfork} is used only if the child process immediately
-calls @code{exec}.  You must be very careful if the child process does
-anything else.  In particular, the child process cannot return from (or
-do a long jump out of) the function that called @code{vfork}!  This would
-leave the parent process's control information very confused.  If in
-doubt, use @code{fork} instead.
+You must be very careful not to allow the child process created with
+@code{vfork} to modify any global data or even local variables shared
+with the parent.  Furthermore, the child process cannot return from (or
+do a long jump out of) the function that called @code{vfork}!  This
+would leave the parent process's control information very confused.  If
+in doubt, use @code{fork} instead.
 @end deftypefun
 
 @node Executing a File
 @subsection Executing a File
 
 This section describes the @code{exec} family of functions, for executing
-a file as a process image.  There are several variants that allow you to
-specify the arguments in different ways, but otherwise they all work in
-pretty much the same way.
+a file as a process image.  You can use these functions to make a child
+process execute a new program after it has been forked.
 
+
+There are several variants that allow you to specify the arguments in
+different ways, but otherwise they all work in pretty much the same way.
 These facilities are declared in the header file @file{<unistd.h>}.
 
 @comment unistd.h
@@ -938,7 +977,7 @@ passed as the last such argument.
 This is similar to @code{execv}, but permits you to specify the environment
 for the new program explicitly as the @var{env} argument.  This should
 be an array of strings in the same format as for the @code{environ} 
-variable; @pxref{Environment Representation}.
+variable; @pxref{Environment Access}.
 @end deftypefun
 
 @comment unistd.h
@@ -956,10 +995,10 @@ the @code{environ} variable.
 @deftypefun int execvp (const char *@var{filename}, char *const @var{argv}[])
 The @code{execvp} function is similar to @code{execv}, except that it
 uses the @code{PATH} environment variable (@pxref{Standard Environment
-Variables}) to find the full file name of a file whose name is
-@var{filename}.  If the @var{filename} does not contain a directory
-specification, the directories specified in the file name list are
-searched in left-to-right order for a file with this name.
+Variables}) to find the full file name of a file from @var{filename}.
+If the @var{filename} does not contain a directory specification, the
+directories specified in the path are searched in left-to-right order
+for a file with this name.
 
 This function is primarily intended for use by shells and the like,
 where the name of the program to be executed is provided by the user as
@@ -1004,10 +1043,10 @@ Executing the specified file requires more storage than is available.
 @end table
 
 If execution of the new file is successful, the access time field of the
-file is updated and the file is considered to have been @code{open}ed.
+file is updated and the file is considered to have been opened.
 @xref{File Times}, for more details about access times of files.
 
-The point at which the file is @code{close}d again is not specified, but
+The point at which the file is closed again is not specified, but
 is at some point before the process exits or before another process
 image is executed.
 
@@ -1016,10 +1055,10 @@ from the existing image:
 
 @itemize @bullet
 @item
-The process ID, parent process ID, and process group ID.  @xref{Process Creation Concepts}, and @ref{Job Control Concepts}.
+The process ID and  parent process ID.  @xref{Process Creation Concepts}.
 
 @item
-Session membership.  @xref{Job Control Concepts}.
+Session and process group membership.  @xref{Job Control Concepts}.
 
 @item
 Real user ID and group ID, and supplementary group IDs.  @xref{User/Group
@@ -1067,10 +1106,9 @@ information about signals, @pxref{Signal Handling}.
 @cindex waiting for completion of child process
 @cindex testing exit status of child process
 
-The functions described in this section are used to determine the status
-of a child process.  These functions are declared in the header file
-@file{<sys/wait.h>}.
-
+The functions described in this section are used to wait for a child
+process to terminate or stop, and determine its status.  These functions
+are declared in the header file @file{<sys/wait.h>}.
 
 @comment sys/wait.h
 @comment POSIX.1
@@ -1094,7 +1132,7 @@ process has status information available, the order in which they report
 their status is not specified.
 
 The @var{options} argument is a bit mask.  Its value should be the
-bitwise exclusive OR (that is, the @samp{|} operator) of zero or more of
+bitwise OR (that is, the @samp{|} operator) of zero or more of
 the @code{WNOHANG} and @code{WUNTRACED} flags.  You can use the
 @code{WNOHANG} flag to indicate that the parent process shouldn't be
 suspended, and the @code{WUNTRACED} flag to request status information
@@ -1179,16 +1217,21 @@ waitpid (-1, &status, 0)
 @end example
 @end deftypefun
 
+
+@node Process Completion Status
+@subsection Process Completion Status
+
 If the exit status value (@pxref{Program Termination}) of the child
 process is zero, then the status value reported by @code{waitpid} or
 @code{wait} is also zero.  You can test for other kinds of information
 encoded in the returned status value using the following macros.
+These macros are defined in the header file @file{<sys/wait.h>}.
 
 @comment sys/wait.h
 @comment POSIX.1
 @deftypefn Macro int WIFEXITED (int @var{status})
 This macro returns a non-zero value if the child process terminated
-normally.
+normally with @code{exit} or @code{_exit}.
 @end deftypefn
 
 @comment sys/wait.h
@@ -1234,6 +1277,8 @@ returns the number of the signal that caused the child process to stop.
 @end deftypefn
 
 
+@node BSD Process Completion Functions
+@subsection BSD Process Completion Functions
 
 The GNU Library also provides these related facilities for compatibility
 with BSD Unix.  BSD uses the @code{union wait} data type to represent
@@ -1242,6 +1287,8 @@ actually interchangable.  The macros such as @code{WEXITSTATUS} are
 defined so that they will work on either kind of object, and the
 @code{wait} function is defined to accept either type of pointer as its
 @var{status_ptr} argument.
+
+These functions are declared in @file{<sys/wait.h>}.
 
 @comment sys/wait.h
 @comment BSD
@@ -1276,7 +1323,10 @@ If @var{usage} is a null pointer, this function is equivalent to
 The @var{usage} argument may also be a pointer to a 
 @code{struct rusage} object.  Information about system resources used by
 terminated processes (but not stopped processes) is returned in this
-structure.  @xref{wherever}.
+structure.
+
+@strong{Incomplete:}  The description of the @code{struct rusage} structure
+hasn't been written yet.  Put in a cross-reference here.
 @end deftypefun
 
 @comment sys/wait.h
@@ -1288,7 +1338,10 @@ If @var{usage} is a null pointer, this function is equivalent to
 The @var{usage} argument may also be a pointer to a 
 @code{struct rusage} object.  Information about system resources used by
 terminated processes (but not stopped processes) is returned in this
-structure.  @xref{wherever}.
+structure.
+
+@strong{Incomplete:}  The description of the @code{struct rusage} structure
+hasn't been written yet.  Put in a cross-reference here.
 @end deftypefun
 
 @node Process Creation Example
@@ -1388,8 +1441,8 @@ Each user account on a computer system is identified by a @dfn{user
 name} (or @dfn{login name}) and @dfn{user ID}.  These are assigned by
 the system administrator when the account is created in the system user
 database.  Normally, each login name in the database has a unique user
-ID, but it is possible for multiple login names to be associated with a
-single user ID.
+ID, but it is possible for several login names to have the same
+user ID.
 
 @cindex group name
 @cindex group ID
@@ -1400,10 +1453,7 @@ not a member of that group.  Each group has a @dfn{group name} and
 @dfn{group ID}.
 
 When you log in to the computer, the processes that you create are
-assigned your user ID and your default group ID.  But an individual
-program can change the user and group IDs of the process that is running
-in; @pxref{Changing the User or Group ID}, for information about why
-a program would want to do this.
+assigned your user ID and your default group ID.
 
 @cindex effective user ID
 @cindex real user ID
@@ -1412,6 +1462,7 @@ A particular process actually has two user IDs associated with it.  The
 @dfn{effective user ID}, on the other hand, is used to determine
 permissions for accessing resources such as files.  Both the real and
 effective user ID can be changed during the lifetime of a process.
+@xref{Changing the User or Group ID}.
 
 @cindex real group ID
 @cindex effective group ID
@@ -1419,7 +1470,7 @@ effective user ID can be changed during the lifetime of a process.
 Similarly, an individual process has both @dfn{real group ID} and
 @dfn{effective group ID} attributes.  In addition, since a user can
 belong to multiple groups, the additional groups that can affect
-permissions are referred to as @dfn{supplementary group IDs}.
+access permissions are called @dfn{supplementary group IDs}.
 
 For details on how a process's user IDs and group IDs affect its
 permission to access files, @pxref{Permission to Access a File}.  For
@@ -1435,9 +1486,9 @@ using the @code{kill} function.  @xref{Signaling Another Process}.
 @subsection Changing the User or Group ID
 
 The most obvious situation where it is necessary for a process to change
-its user and/or group IDs is in a system login-type program.  Such a
-program creates processes and sets both the real and effective user and
-group IDs to match those of the user who is logging in.
+its user and/or group IDs is the @code{login} program.  It starts a
+shell and sets both the real and effective user and group IDs of to match
+those of the user who is logging in.
 
 Some ordinary user programs need to use an effective user or group ID
 that corresponds to something other than the user who is actually
@@ -1452,20 +1503,26 @@ restricted access can be implemented by having the program change its
 user or group ID to be the same as the owner of the resource.
 
 As an example, some game programs use a file to keep track of high
-scores and the like.  The game program itself obviously needs to be able
-to update this file no matter who is running it, but users shouldn't be
-allowed to write to the file directly --- otherwise people might cheat
-and give themselves outrageously high scores!  The solution is to create
-a new user ID and login name (say, @samp{games}) to own the scores
-file, and make the file writable only by this user.  Then, when the game
-program wants to update this file, it can change its effective user ID
-to be that for @samp{games}.
+scores.  The game program itself obviously needs to be able to update
+this file no matter who is running it, but users shouldn't be allowed to
+write to the file directly --- otherwise people might cheat and give
+themselves outrageously high scores!  The solution is to create a new
+user ID and login name (say, @samp{games}) to own the scores file, and
+make the file writable only by this user.  Then, when the game program
+wants to update this file, it can change its effective user ID to be
+that for @samp{games}.
 
 Another example of a resource that commonly has restricted access is a
 dialout modem port, where you would like to have all programs that make
 use of the port record some information so that phone calls can be
 billed to the correct user.  In fact, system programs such as @code{tip}
 and @code{uucp} do use just such a mechanism.
+
+@comment RMS thinks this is "gross", but I see nothing wrong with people
+@comment paying their phone bills.  I think a more serious example such
+@comment as this is necessary to balance the rather lightweight game
+@comment program example.  Otherwise, people might not realize the importance
+@comment of this facility.
 
 
 @node Controlling Process Privileges
@@ -1475,8 +1532,8 @@ The ability to set the user ID of a process is very powerful facility
 and can be a source of unintentional privacy or security violations, or
 even intentional abuse by antisocial users.  Because of the potential
 for problems, there are a number of restrictions on how nonprivileged
-programs can use the facilities, and some voluntary guidelines you
-should follow.
+programs can use the facilities, and some guidelines you should follow
+in writing such programs.
 
 You can't just arbitrarily set your user ID or group ID to anything you
 want; only privileged users can do that.  Permission for a program being
@@ -1495,7 +1552,23 @@ programs, respectively.)
 @xref{File Attributes}, for a more general discussion of file modes and
 accessibility.
 
-Even with this restriction, it is still possible for @code{setuid} or
+A process can always change its effective user (or group) ID back to its
+real ID.  This is often done because the program doesn't need the
+special privileges all the time.
+
+@cindex saved IDs
+Many operating systems (including GNU) implement a feature known as
+@dfn{saved IDs}.  This means that the IDs of the owner and group owner
+of the executable file are remembered.  If the process changes its
+effective IDs back to its real user or group IDs, it can later change
+back to the saved IDs when it needs special privileges.
+
+Other systems do not support saved IDs.  If you want to limit the parts
+of the program that have special privileges when it is running on one of
+these systems, the only way you can do this is by swapping the real and
+effective IDs, using @code{setreuid} or @code{setregid}.
+
+Even with these restrictions, it is still possible for @code{setuid} or
 @code{setgid} programs to get into trouble.  There are a few
 things you can do in order to minimize the potential for problems in
 your own programs:
@@ -1527,8 +1600,8 @@ that actually uses that resource.  When you're finished with it, restore
 the effective user ID back to the user's real user ID.
 
 @item
-If the @code{setuid} part of your program needs to access ordinary files
-as well as the controlled resource, make sure that the user would
+If the @code{setuid} part of your program needs to access other files
+besides the controlled resource, it should verify that the user would
 ordinarily have permission to access those files.  You can use the
 @code{access} function (@pxref{Permission to Access a File}) to make
 this determination; it uses the real user and group IDs, rather than the
@@ -1547,13 +1620,15 @@ you must include the header files @file{<sys/types.h>} and
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} uid_t
-This is an arithmetic data type used to represent user IDs.
+This is an integer data type used to represent user IDs.  In the GNU
+library, this is equivalent to @code{unsigned short int}.
 @end deftp
 
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} gid_t
-This is an arithmetic data type used to represent group IDs
+This is an integer data type used to represent group IDs.  In the GNU
+library, this is equivalent to @code{unsigned short int}.
 @end deftp
 
 @comment unistd.h
@@ -1620,7 +1695,9 @@ function:
 The value of the @var{newuid} argument is invalid.
 
 @item EPERM
-The process does not have the appropriate privileges.
+The process does not have the appropriate privileges; you do not
+have permission to change to the specified ID.  @xref{Controlling Process
+Privileges}.
 @end table
 @end deftypefun
 
@@ -1634,7 +1711,7 @@ The @code{setreuid} function is provided for compatibility with 4.2 BSD
 Unix, which does not support saved IDs.  You can use this function to
 swap the effective and real user IDs of the process.  (Privileged users
 can make other changes as well.)  If saved IDs are supported, you should
-make use of that feature instead of using this function.
+use that feature instead of this function.
 
 The return value is @code{0} on success and @code{-1} on failure.
 The following @code{errno} error conditions are defined for this
@@ -1642,7 +1719,9 @@ function:
 
 @table @code
 @item EPERM
-The process does not have the appropriate privileges.  
+The process does not have the appropriate privileges; you do not
+have permission to change to the specified ID.  @xref{Controlling Process
+Privileges}.
 @end table
 @end deftypefun
 
@@ -1713,11 +1792,11 @@ the user name @var{user}.  The group ID @var{gid} is also included.
 Here's an example showing how to set up a program that changes its
 effective user ID.
 
-This is part of a game program called @code{caber-toss} that wants to
-manipulate a file @file{scores} that should only be writable by the game
-program itself.  The program is written assuming that the executable
+This is part of a game program called @code{caber-toss} that
+manipulates a file @file{scores} that should be writable only by the game
+program itself.  The program assumes that its executable
 file will be installed with the set-user-ID bit set and owned by the
-same user as the resource it wants to access.  Typically, a system
+same user as the @file{scores} file.  Typically, a system
 administrator will set up an account like @samp{games} for this purpose.
 
 The executable file is given mode @code{4755}, so that doing an 
@@ -1805,9 +1884,11 @@ void main (void)
 @end example
 
 Notice how the first thing the @code{main} function does is to set the
-effective user ID back to the real user ID.  Only when the program needs
-to open the scores file does it switch back to the original effective
-user ID, like this:
+effective user ID back to the real user ID.  This is so that any other
+file accesses that are performed while the user is playing the game use
+the real user ID for determining permissions.  Only when the program
+needs to open the scores file does it switch back to the original
+effective user ID, like this:
 
 @example
 /* @r{Record the score.} */
@@ -1836,162 +1917,4 @@ int record_score (int score)
     return -1;
 @}
 @end example
-
-
-@node Process Information
-@section Process Information
-
-This section describes functions you can use to inquire about various
-attributes of the process, including information about the user who
-is running the program and what terminal and computer system it is
-running on.
-
-@menu
-* Process Identification::
-* User Identification::
-* System Identification::
-* Controlling Terminal Identification::
-@end menu
-
-@node Process Identification
-@subsection Process Identification
-
-If you want to use these functions, your program should include the
-header files @file{<unistd.h>} and @file{<sys/types.h>}.
-
-@comment unistd.h
-@comment POSIX.1
-@deftypefun pid_t getpid (void)
-The @code{getpid} function returns the process ID of the currrent process.
-@end deftypefun
-
-@comment unistd.h
-@comment POSIX.1
-@deftypefun pid_t getppid (void)
-The @code{getppid} function returns the process ID of the parent of the
-current process.
-@end deftypefun
-
-@node User Identification
-@subsection User Identification
-
-These functions can be used to determine the login name of the user who
-is running a process.  You can also use @code{getuid} and friends
-(@pxref{User and Group ID Functions}) to determine the user and group ID
-of user who is running a process, and functions such as @code{getpwnam}
-(@pxref{System Databases}) to get information about the user from the system
-password database.
-
-The @code{getlogin} function is declared in @file{<unistd.h>}, while
-@code{cuserid} and @code{L_cuserid} are declared in @file{<stdio.h>}.
-
-@comment unistd.h
-@comment POSIX.1
-@deftypefun {char *} getlogin (void)
-The @code{getlogin} function returns a pointer to string containing the
-name of the user logged in on the controlling terminal of the process,
-or a null pointer if this information cannot be determined.  The string
-is statically allocated and might be overwritten on subsequent calls to
-this function or to @code{cuserid}.
-@end deftypefun
-
-@comment stdio.h
-@comment POSIX.1
-@deftypefun {char *} cuserid (@var{string})
-The @code{cuserid} function returns a pointer to a string containing a
-name associated with the effective ID of the process.  If @var{string}
-is not a null pointer, it should be an array that can hold at least
-@code{L_cuserid} characters; the string is returned in this array.
-Otherwise, a pointer to a string in a static area is returned.  This
-string is statically allocated and might be overwritten on subsequent
-calls to this function or to @code{getlogin}.
-@end deftypefun
-
-@comment stdio.h
-@comment POSIX.1
-@defvr Macro L_cuserid
-The value of this macro is an integer constant expression that
-is the size of a string large enough to store a login name.
-@end defvr
-
-
-@node System Identification
-@subsection System Identification
-
-You can use the @code{uname} function to find out some information about
-the computer system your program is running on.  This function and the
-associated data type are declared in the header file
-@file{<sys/utsname.h>}.
-
-@comment sys/utsname.h
-@comment POSIX.1
-@deftp {Data Type} {struct utsname}
-The @code{utsname} structure is used to hold information returned
-by the @code{uname} function.  It has the following members:
-
-@table @code
-@item {char sysname[]}
-This is the name of the operating system implementation.  In the
-GNU Library, the value is the string @code{"GNU C Library"}.
-@item {char nodename[]}
-This is the name of this node within a communications network.  In the
-GNU Library, the value is the same as that returned by
-@code{gethostname}; @pxref{wherever}.
-@item {char release[]}
-This is the current release level of the operating system implementation.
-@item {char version[]}
-This is the current version level within the release of the operating
-system.
-@item {char machine[]}
-This is a description of the hardware type that the operating system
-is running on.
-@end table
-@end deftp
-
-
-@comment sys/utsname.h
-@comment POSIX.1
-@deftypefun int uname (struct utsname *@var{info})
-The @code{uname} function fills in the structure pointed to by
-@var{info} with information about the operating system and host machine.
-A non-negative value is returned on successful completion; in the event
-of an error, @code{-1} is returned.  The @code{errno} error codes for
-this function are the same as those for @code{gethostname}; @pxref{wherever}.
-@end deftypefun
-
-
-@node Controlling Terminal Identification
-@subsection Controlling Terminal Identification
-
-You can use the @code{ctermid} function to get a file name that
-corresponds to the controlling terminal for the current process.
-@xref{Job Control}, for more detailed information about how the
-controlling terminal of a process is determined.  This function is
-declared in the header file @file{<stdio.h>}.
-
-@comment stdio.h
-@comment POSIX.1
-@deftypefun {char *} ctermid (char *@var{string})
-The @code{ctermid} function returns a string containing the file name of
-the controlling terminal for the current process.  If @var{string} is
-not a null pointer, it should be an array that can hold at least
-@code{L_ctermid} characters; the string is returned in this array.
-Otherwise, a pointer to a string in a static area is returned, which
-might get overwritten on subsequent calls to this function.
-
-An empty string is returned if the file name cannot be determined for
-any reason.  Even if a file name is returned, access to the file it
-represents is not guaranteed.
-@end deftypefun
-
-@comment stdio.h
-@comment POSIX.1
-@defvr Macro L_ctermid
-The value of this macro is an integer constant expression that
-represents the size of a string large enough to hold the file name
-returned by @code{ctermid}.
-@end defvr
-
-See also the @code{isatty} and @code{ttyname} functions, in 
-@ref{Terminal Identification}.
 
