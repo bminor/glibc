@@ -16,14 +16,14 @@
 @appendixsec How to Install the GNU C Library
 @cindex installation
 
-Installation of the GNU C Library is relatively simple.
+Installation of the GNU C library is relatively simple.
 
 You will need the latest version of GNU @code{make}.  If you do not have
 GNU @code{make}, life will be more difficult.  We recommend porting GNU
 @code{make} to your system rather than trying to install the GNU C
-Library without it.  @strong{Really.}@refill
+library without it.  @strong{Really.}@refill
 
-To configure the GNU C Library for your system, run the script
+To configure the GNU C library for your system, run the script
 @file{configure} with @code{sh}.  You must give as an argument to the
 script a word describing your system.  If you give no argument, you will
 get a list of systems the script knows about.
@@ -48,13 +48,13 @@ appropriate places.
 @node Bugs
 @appendixsec Reporting Bugs
 
-There are probably bugs in the GNU C Library.  If you report them,
+There are probably bugs in the GNU C library.  If you report them,
 they will get fixed.  If you don't, no one will ever know about them
 and they will remain unfixed for all eternity, if not longer.
 
 To report a bug, first you must find it.  Hopefully, this will be
 the hard part.  Once you've found a bug, make sure it's really a
-bug.  A good way to do this is to see if the GNU C Library behaves
+bug.  A good way to do this is to see if the GNU C library behaves
 the same way some other C library does.  If so, probably you are
 wrong and the libraries are right.  If not, one of the libraries is
 probably wrong.
@@ -68,12 +68,12 @@ The final step when you have a simple test case is to report the
 bug.  When reporting a bug, send your test case, the results you
 got, the results you expected, what you think the problem might be
 (if you've thought of anything), your system type, and the version
-of the GNU C Library which you are using.
+of the GNU C library which you are using.
 
 If you are not sure how a function should behave, and this manual
 doesn't tell you, that's a bug in the documentation.  Report that too!
 
-If you think you have found some way in which the GNU C Library does not
+If you think you have found some way in which the GNU C library does not
 conform to the ANSI and POSIX standards (@pxref{Standards and
 Portability}), that is definitely a bug.  Report it!@refill
 
@@ -92,7 +92,7 @@ report those as well.
 @node Contributors,
 @appendixsec Contributors to the GNU C Library
 
-The GNU C Library was written almost entirely by Roland McGrath.
+The GNU C library was written almost entirely by Roland McGrath.
 Some parts of the library were contributed by other people.
 
 @itemize @bullet
@@ -106,7 +106,7 @@ The random number generation functions @code{random}, @code{srandom},
 @code{rand} and @code{srand} functions, were written by Earl T. Cohen
 for the University of California at Berkeley and are copyrighted by the
 Regents of the University of California.  They have undergone minor
-changes to fit into the GNU C Library and to be ANSI conformant, but the
+changes to fit into the GNU C library and to be ANSI conformant, but the
 functional code is Berkeley's.@refill
 
 @item

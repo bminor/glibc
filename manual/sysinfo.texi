@@ -89,16 +89,20 @@ by the @code{uname} function.  It has the following members:
 @table @code
 @item {char sysname[]}
 This is the name of the operating system implementation.  In the
-GNU Library, the value is the string @code{"GNU C Library"}.
+GNU library, the value is the string @code{"GNU C Library"}.
+
 @item {char nodename[]}
 This is the name of this node within a communications network.  In the
-GNU Library, the value is the same as that returned by
+GNU library, the value is the same as that returned by
 @code{gethostname}; @pxref{Host Identification}.
+
 @item {char release[]}
 This is the current release level of the operating system implementation.
+
 @item {char version[]}
 This is the current version level within the release of the operating
 system.
+
 @item {char machine[]}
 This is a description of the hardware type that the operating system
 is running on.

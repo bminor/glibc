@@ -164,7 +164,7 @@ techniques also often need to be parameterized in this way in order to
 minimize or compute error bounds.
 
 The specific representation of floating-point numbers varies from
-machine to machine.  The GNU C Library defines a set of parameters which
+machine to machine.  The GNU C library defines a set of parameters which
 characterize each of the supported floating-point representations on a
 particular system.
 

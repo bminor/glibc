@@ -97,7 +97,7 @@ other words, the whitespace separating them is optional.)
 @item
 Options typically precede other non-option arguments.
 
-The implementation of @code{getopt} in the GNU C Library normally makes
+The implementation of @code{getopt} in the GNU C library normally makes
 it appear as if all the option arguments were specified before all the
 non-option arguments for the purposes of parsing, even if the user of
 your program intermixed option and non-option arguments.  It does this
@@ -582,7 +582,7 @@ non-constant) integer expression.
 This macro can be used with the @code{exit} function to indicate unsuccessful
 program completion.
 
-In the GNU Library, the value of this macro is @code{1}.  In other
+In the GNU library, the value of this macro is @code{1}.  In other
 implementations, the value might be some other (possibly non-constant)
 integer expression.
 @end deftypevr
@@ -760,7 +760,7 @@ The @code{system} function is declared in the header file
 @comment ANSI
 @deftypefun int system (const char *@var{command})
 This function executes @var{command} as a shell command.  In the GNU C
-Library, the @code{system} function executes the command as if by the
+library, the @code{system} function executes the command as if by the
 shell @code{sh}.  In particular, this means that it uses the value of
 the @code{PATH} environment variable to find the program to execute.
 The return value is @code{-1} if it wasn't possible to create the
@@ -1297,7 +1297,7 @@ returns the number of the signal that caused the child process to stop.
 @node BSD Process Completion Functions
 @subsection BSD Process Completion Functions
 
-The GNU Library also provides these related facilities for compatibility
+The GNU library also provides these related facilities for compatibility
 with BSD Unix.  BSD uses the @code{union wait} data type to represent
 status values rather than an @code{int}.  The two representations are
 actually interchangable.  The macros such as @code{WEXITSTATUS} are

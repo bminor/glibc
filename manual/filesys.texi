@@ -1,7 +1,7 @@
 @node File System Interface
 @chapter File System Interface
 
-This chapter describes the GNU C Library's functions for manipulating
+This chapter describes the GNU C library's functions for manipulating
 files.  Unlike the input and output functions described in
 @ref{Input/Output on Streams} and @ref{Low-Level Input/Output}, these
 functions are concerned with operating on the files themselves, rather
@@ -56,7 +56,7 @@ The @code{getcwd} function returns an absolute file name representing
 the current working directory in the character array @var{buffer}.
 The @var{size} argument specifies the allocation size of the array.
 
-The GNU Library version of this function also permits you to specify a
+The GNU library version of this function also permits you to specify a
 null pointer for the @var{buffer} argument.  Then @code{getcwd}
 allocates a buffer automatically, as with @code{malloc}
 (@pxref{Unconstrained Allocation}).  If the @var{size} is greater than
@@ -82,7 +82,7 @@ Permission to read or search a component of the file name was denied.
 @comment unistd.h
 @comment BSD
 @deftypefun {char *} getwd (char *@var{buffer})
-This is similar to @code{getcwd}.  The GNU Library provides @code{getwd}
+This is similar to @code{getcwd}.  The GNU library provides @code{getwd}
 for backwards compatibility with BSD.  The @var{buffer} should be a
 pointer to an array at least @code{PATH_MAX} bytes long.
 @end deftypefun
@@ -1565,7 +1565,7 @@ function.
 @section Making Special Files
 
 The @code{mknod} function is the primitive for making special files,
-such as files that correspond to devices.  The GNU Library includes
+such as files that correspond to devices.  The GNU library includes
 this function for compatibility with BSD.
 
 The prototype for @code{mknod} is declared in @file{sys/stat.h}.

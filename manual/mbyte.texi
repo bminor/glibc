@@ -8,7 +8,7 @@ A number of languages use character sets that are larger than the range
 of values that can be stored in objects of type @code{char}.  Japanese
 and Chinese are probably the most familiar examples.
 
-The GNU C Library includes support for two mechanisms for dealing with
+The GNU C library includes support for two mechanisms for dealing with
 extended character sets: multibyte characters and wide characters.  This
 chapter describes how to use these mechanisms, and the functions for
 converting between them.

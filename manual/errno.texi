@@ -5,7 +5,7 @@
 @cindex error codes
 @cindex status codes
 
-Many functions in the GNU C Library detect and report error conditions,
+Many functions in the GNU C library detect and report error conditions,
 and sometimes your programs need to check for these error conditions.
 For example, if your program needs to open an input file, you should
 make sure that the file was actually opened correctly before trying to

@@ -472,7 +472,7 @@ your program.  To do this automatically, link with @samp{-lmcheck}.
 @node Storage Allocation Hooks
 @subsection Storage Allocation Hooks
 
-The GNU C Library lets you modify the behavior of @code{malloc},
+The GNU C library lets you modify the behavior of @code{malloc},
 @code{realloc}, and @code{free} by specifying appropriate hook
 functions.  You can use these hooks to help you debug programs that use
 dynamic storage allocation, for example.
@@ -555,7 +555,7 @@ installing such hooks.
 @node Storage Allocation Statistics
 @subsection Storage Allocation Statistics
 
-In the GNU C Library, you can get information about dynamic storage
+In the GNU C library, you can get information about dynamic storage
 allocation by calling the @code{mstats} function.  This function and
 its associated data type are declared in @file{malloc.h}.
 @pindex malloc.h
@@ -634,7 +634,7 @@ multiple of @var{boundary}.  @xref{Allocation with Specified Alignment}.
 @section Obstacks
 @cindex obstacks
 
-@strong{Incomplete:}  Obstacks are not now part of the GNU C Library.
+@strong{Incomplete:}  Obstacks are not now part of the GNU C library.
 You must specify @samp{-lobstack} when linking to use these functions.
 
 @strong{Incomplete:} The functions in this section take @code{int}

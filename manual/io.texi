@@ -3,7 +3,7 @@
 
 Most programs need to do either input (reading data) or output (writing
 data), or most frequently both, in order to do anything useful.  The GNU
-C Library provides such a large selection of input and output functions
+C library provides such a large selection of input and output functions
 that the hardest part is often deciding which function is most
 appropriate!
 

@@ -233,7 +233,7 @@ These facilities are declared in the header file @file{time.h}.
 @comment ANSI
 @deftp {Data Type} time_t
 This is the data type used to represent calendar time.  In the GNU C
-Library and other POSIX-compliant implementations, @code{time_t} is
+library and other POSIX-compliant implementations, @code{time_t} is
 equivalent to @code{long int}.  When interpreted as an absolute time
 value, it represents the number of seconds elapsed since 00:00:00 on
 January 1, 1970, Coordinated Universal Time.  (This date is sometimes
@@ -272,7 +272,7 @@ The @code{time_t} data type used to represent calendar times has a
 resolution of only one second.  Sometimes, this is not enough to 
 accurately represent time values.
 
-So, the GNU C Library also contains functions which are capable of
+So, the GNU C library also contains functions which are capable of
 representing calendar times to a higher resolution than one second.  The
 functions and the associated data types described in this section are
 declared in @file{sys/time.h}.

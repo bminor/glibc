@@ -1248,7 +1248,7 @@ void init_sockaddr (struct sockaddr_in *name, const char *hostname,
 @node Types of Sockets
 @section Types of Sockets
 
-The GNU Library includes support for several different kinds of sockets,
+The GNU library includes support for several different kinds of sockets,
 each with different characteristics.  This section describes the
 supported socket types.  The symbolic constants listed here are
 defined in @file{sys/socket.h}.

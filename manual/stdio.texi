@@ -180,7 +180,7 @@ operations.  Otherwise, internal buffers might not be emptied properly.
 Additional characters that follow these sequences specify other
 implementation-specific file or stream attributes.
 
-The GNU C Library defines only one additional attribute: if the
+The GNU C library defines only one additional attribute: if the
 character @samp{x} is given, this specifies exclusive use of a new file.
 This is equivalent to the @code{O_EXCL} option to the @code{open}
 function (@pxref{File Status Flags}).  Any other characters are simply
@@ -355,7 +355,7 @@ character that was actually read from the stream.  In fact, it isn't
 necessary to actually read any characters from the stream before
 unreading them with @code{ungetc}!
 
-The GNU C Library only supports one character of pushback.  Other
+The GNU C library only supports one character of pushback.  Other
 systems might let you push back multiple characters; in such
 implementations, reading from the stream retrieves the characters in the
 reverse order that they were pushed.
@@ -416,7 +416,7 @@ string).
 
 @strong{Warning:}  The @code{gets} function is @strong{very dangerous} 
 because it provides no protection against overflowing the string @var{s}.
-The GNU Library includes it for compatibility only.  You should 
+The GNU library includes it for compatibility only.  You should 
 @strong{always} use @code{fgets} instead.
 @end deftypefun
 
@@ -1097,7 +1097,7 @@ eprintf ("The file %s does not exist.\n", filename);
 @node Customizing Printf
 @section Customizing Printf
 
-The GNU C Library lets you define new conversion specifiers for 
+The GNU C library lets you define new conversion specifiers for 
 @code{printf} format templates.  To do this, you must include the
 header file @file{printf.h} in your program.
 @pindex printf.h
@@ -2604,7 +2604,7 @@ the default directory for temporary files.  It is used by @code{tempnam}.
 @node Other Kinds of Streams
 @section Other Kinds of Streams
 
-The GNU Library provides ways for you to define additional kinds of
+The GNU library provides ways for you to define additional kinds of
 streams that do not necessarily correspond to an open file.
 
 One such type of stream takes input from or writes output to a string.

@@ -6,7 +6,7 @@ A @dfn{signal} can be considered a software interrupt.  They are used by
 the operating system to report information about exceptional situations
 to an executing program.
 
-The GNU C Library defines a variety of signal types to handle program
+The GNU C library defines a variety of signal types to handle program
 errors and other system events that affect the behavior of your program.
 Most of these events make it inadvisable or impossible for the program
 to proceed as usual, and therefore normally cause the kernel to abort
@@ -612,7 +612,7 @@ to @var{signum}.
 @cindex signal actions
 
 The simplest way to change the default action for a signal is to use the
-@code{signal} function.  The GNU Library also implements the more
+@code{signal} function.  The GNU library also implements the more
 complicated @code{sigaction} facility.  This section describes both
 facilities and gives suggestions on which to use when.
 
@@ -2085,7 +2085,7 @@ kind of signal eventually arrives.
 @section BSD Signal Handling
 
 This section describes signal handling functions included in the GNU C
-Library for backward compability with BSD Unix.  In new programs, you
+library for backward compability with BSD Unix.  In new programs, you
 should avoid these functions and use the POSIX-standard functions
 instead, because they are more general in some ways.
 
