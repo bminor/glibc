@@ -19,8 +19,8 @@ from a pipe or FIFO file that doesn't have any processes writing to it
 (perhaps because they have all closed the file, or exited), the read
 returns end-of-file.  Writing to a pipe or FIFO that doesn't have a
 reading process is treated as an error condition; it generates a
-@code{SIGPIPE} signal and fails with error code @code{EPIPE} if you
-handle the signal.
+@code{SIGPIPE} signal, and fails with error code @code{EPIPE} if the
+signal is handled or blocked.
 
 Neither pipes nor FIFO special files allow file positioning.  Both
 reading and writing operations happen sequentially; reading from the
