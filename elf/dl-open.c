@@ -279,22 +279,13 @@ dl_open_worker (void *a)
     {
       /* Let the user know about the opencount.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
-	GLRO(dl_debug_printf) ("opening file=%s [%lu]; opencount=%u\n\n",
-			       new->l_name, new->l_ns, new->l_opencount);
+	GLRO(dl_debug_printf) ("opening file=%s [%lu]; direct_opencount=%u\n\n",
+			       new->l_name, new->l_ns, new->l_direct_opencount);
 
       /* If the user requested the object to be in the global namespace
 	 but it is not so far, add it now.  */
       if ((mode & RTLD_GLOBAL) && new->l_global == 0)
 	(void) add_to_global (new);
-
-      if (new->l_direct_opencount == 1)
-	/* This is the only direct reference.  Increment all the
-	   dependencies' reference counter.  */
-	for (i = 0; i < new->l_searchlist.r_nlist; ++i)
-	  ++new->l_searchlist.r_list[i]->l_opencount;
-      else
-	/* Increment just the reference counter of the object.  */
-	++new->l_opencount;
 
       return;
     }
@@ -373,135 +364,133 @@ dl_open_worker (void *a)
   any_tls = false;
 #endif
 
-  /* Increment the open count for all dependencies.  If the file is
-     not loaded as a dependency here add the search list of the newly
-     loaded object to the scope.  */
+  /* If the file is not loaded now as a dependency, add the search
+     list of the newly loaded object to the scope.  */
   for (i = 0; i < new->l_searchlist.r_nlist; ++i)
-    if (++new->l_searchlist.r_list[i]->l_opencount > 1
-	&& new->l_real->l_searchlist.r_list[i]->l_type == lt_loaded)
-      {
-	struct link_map *imap = new->l_searchlist.r_list[i];
-	struct r_scope_elem **runp = imap->l_scope;
-	size_t cnt = 0;
+    {
+      struct link_map *imap = new->l_searchlist.r_list[i];
 
-	while (*runp != NULL)
-	  {
-	    /* This can happen if imap was just loaded, but during
-	       relocation had l_opencount bumped because of relocation
-	       dependency.  Avoid duplicates in l_scope.  */
-	    if (__builtin_expect (*runp == &new->l_searchlist, 0))
-	      break;
+      /* If the initializer has been called already, the object has
+	 not been loaded here and now.  */
+      if (imap->l_init_called && imap->l_type == lt_loaded)
+	{
+	  struct r_scope_elem **runp = imap->l_scope;
+	  size_t cnt = 0;
 
-	    ++cnt;
-	    ++runp;
-	  }
+	  while (*runp != NULL)
+	    {
+	      ++cnt;
+	      ++runp;
+	    }
 
-	if (*runp != NULL)
-	  /* Avoid duplicates.  */
-	  continue;
+	  if (*runp != NULL)
+	    /* Avoid duplicates.  */
+	    continue;
 
-	if (__builtin_expect (cnt + 1 >= imap->l_scope_max, 0))
-	  {
-	    /* The 'r_scope' array is too small.  Allocate a new one
-	       dynamically.  */
-	    struct r_scope_elem **newp;
-	    size_t new_size = imap->l_scope_max * 2;
+	  if (__builtin_expect (cnt + 1 >= imap->l_scope_max, 0))
+	    {
+	      /* The 'r_scope' array is too small.  Allocate a new one
+		 dynamically.  */
+	      struct r_scope_elem **newp;
+	      size_t new_size = imap->l_scope_max * 2;
 
-	    if (imap->l_scope == imap->l_scope_mem)
-	      {
-		newp = (struct r_scope_elem **)
-		  malloc (new_size * sizeof (struct r_scope_elem *));
-		if (newp == NULL)
-		  GLRO(dl_signal_error) (ENOMEM, "dlopen", NULL,
-					 N_("cannot create scope list"));
-		imap->l_scope = memcpy (newp, imap->l_scope,
-					cnt * sizeof (imap->l_scope[0]));
-	      }
-	    else
-	      {
-		newp = (struct r_scope_elem **)
-		  realloc (imap->l_scope,
-			   new_size * sizeof (struct r_scope_elem *));
-		if (newp == NULL)
-		  GLRO(dl_signal_error) (ENOMEM, "dlopen", NULL,
-					 N_("cannot create scope list"));
-		imap->l_scope = newp;
-	      }
+	      if (imap->l_scope == imap->l_scope_mem)
+		{
+		  newp = (struct r_scope_elem **)
+		    malloc (new_size * sizeof (struct r_scope_elem *));
+		  if (newp == NULL)
+		    GLRO(dl_signal_error) (ENOMEM, "dlopen", NULL,
+					   N_("cannot create scope list"));
+		  imap->l_scope = memcpy (newp, imap->l_scope,
+					  cnt * sizeof (imap->l_scope[0]));
+		}
+	      else
+		{
+		  newp = (struct r_scope_elem **)
+		    realloc (imap->l_scope,
+			     new_size * sizeof (struct r_scope_elem *));
+		  if (newp == NULL)
+		    GLRO(dl_signal_error) (ENOMEM, "dlopen", NULL,
+					   N_("cannot create scope list"));
+		  imap->l_scope = newp;
+		}
 
-	    imap->l_scope_max = new_size;
-	  }
+	      imap->l_scope_max = new_size;
+	    }
 
-	imap->l_scope[cnt++] = &new->l_searchlist;
-	imap->l_scope[cnt] = NULL;
-      }
+	  imap->l_scope[cnt++] = &new->l_searchlist;
+	  imap->l_scope[cnt] = NULL;
+	}
 #if USE_TLS
-    else if (new->l_searchlist.r_list[i]->l_opencount == 1
-	     /* Only if the module defines thread local data.  */
-	     && __builtin_expect (new->l_searchlist.r_list[i]->l_tls_blocksize
-				  > 0, 0))
-      {
-	/* Now that we know the object is loaded successfully add
-	   modules containing TLS data to the dtv info table.  We
-	   might have to increase its size.  */
-	struct dtv_slotinfo_list *listp;
-	struct dtv_slotinfo_list *prevp;
-	size_t idx = new->l_searchlist.r_list[i]->l_tls_modid;
+      /* Only add TLS memory if this object is loaded now and
+	 therefore is not yet initialized.  */
+      else if (! imap->l_init_called
+	       /* Only if the module defines thread local data.  */
+	       && __builtin_expect (imap->l_tls_blocksize > 0, 0))
+	{
+	  /* Now that we know the object is loaded successfully add
+	     modules containing TLS data to the dtv info table.  We
+	     might have to increase its size.  */
+	  struct dtv_slotinfo_list *listp;
+	  struct dtv_slotinfo_list *prevp;
+	  size_t idx = imap->l_tls_modid;
 
-	assert (new->l_searchlist.r_list[i]->l_type == lt_loaded);
+	  assert (imap->l_type == lt_loaded);
 
-	/* Find the place in the dtv slotinfo list.  */
-	listp = GL(dl_tls_dtv_slotinfo_list);
-	prevp = NULL;		/* Needed to shut up gcc.  */
-	do
-	  {
-	    /* Does it fit in the array of this list element?  */
-	    if (idx < listp->len)
-	      break;
-	    idx -= listp->len;
-	    prevp = listp;
-	    listp = listp->next;
-	  }
-	while (listp != NULL);
+	  /* Find the place in the dtv slotinfo list.  */
+	  listp = GL(dl_tls_dtv_slotinfo_list);
+	  prevp = NULL;		/* Needed to shut up gcc.  */
+	  do
+	    {
+	      /* Does it fit in the array of this list element?  */
+	      if (idx < listp->len)
+		break;
+	      idx -= listp->len;
+	      prevp = listp;
+	      listp = listp->next;
+	    }
+	  while (listp != NULL);
 
-	if (listp == NULL)
-	  {
-	    /* When we come here it means we have to add a new element
-	       to the slotinfo list.  And the new module must be in
-	       the first slot.  */
-	    assert (idx == 0);
+	  if (listp == NULL)
+	    {
+	      /* When we come here it means we have to add a new element
+		 to the slotinfo list.  And the new module must be in
+		 the first slot.  */
+	      assert (idx == 0);
 
-	    listp = prevp->next = (struct dtv_slotinfo_list *)
-	      malloc (sizeof (struct dtv_slotinfo_list)
-		      + TLS_SLOTINFO_SURPLUS * sizeof (struct dtv_slotinfo));
-	    if (listp == NULL)
-	      {
-		/* We ran out of memory.  We will simply fail this
-		   call but don't undo anything we did so far.  The
-		   application will crash or be terminated anyway very
-		   soon.  */
+	      listp = prevp->next = (struct dtv_slotinfo_list *)
+		malloc (sizeof (struct dtv_slotinfo_list)
+			+ TLS_SLOTINFO_SURPLUS * sizeof (struct dtv_slotinfo));
+	      if (listp == NULL)
+		{
+		  /* We ran out of memory.  We will simply fail this
+		     call but don't undo anything we did so far.  The
+		     application will crash or be terminated anyway very
+		     soon.  */
 
-		/* We have to do this since some entries in the dtv
-		   slotinfo array might already point to this
-		   generation.  */
-		++GL(dl_tls_generation);
+		  /* We have to do this since some entries in the dtv
+		     slotinfo array might already point to this
+		     generation.  */
+		  ++GL(dl_tls_generation);
 
-		GLRO(dl_signal_error) (ENOMEM, "dlopen", NULL, N_("\
-cannot create TLS data structures"));
-	      }
+		  GLRO(dl_signal_error) (ENOMEM, "dlopen", NULL, N_("\
+  cannot create TLS data structures"));
+		}
 
-	    listp->len = TLS_SLOTINFO_SURPLUS;
-	    listp->next = NULL;
-	    memset (listp->slotinfo, '\0',
-		    TLS_SLOTINFO_SURPLUS * sizeof (struct dtv_slotinfo));
-	  }
+	      listp->len = TLS_SLOTINFO_SURPLUS;
+	      listp->next = NULL;
+	      memset (listp->slotinfo, '\0',
+		      TLS_SLOTINFO_SURPLUS * sizeof (struct dtv_slotinfo));
+	    }
 
-	/* Add the information into the slotinfo data structure.  */
-	listp->slotinfo[idx].map = new->l_searchlist.r_list[i];
-	listp->slotinfo[idx].gen = GL(dl_tls_generation) + 1;
+	  /* Add the information into the slotinfo data structure.  */
+	  listp->slotinfo[idx].map = imap;
+	  listp->slotinfo[idx].gen = GL(dl_tls_generation) + 1;
 
-	/* We have to bump the generation counter.  */
-	any_tls = true;
-      }
+	  /* We have to bump the generation counter.  */
+	  any_tls = true;
+	}
+    }
 
   /* Bump the generation number if necessary.  */
   if (any_tls)
@@ -532,8 +521,8 @@ cannot create TLS data structures"));
 
   /* Let the user know about the opencount.  */
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
-    GLRO(dl_debug_printf) ("opening file=%s [%lu]; opencount=%u\n\n",
-			   new->l_name, new->l_ns, new->l_opencount);
+    GLRO(dl_debug_printf) ("opening file=%s [%lu]; direct_opencount=%u\n\n",
+			   new->l_name, new->l_ns, new->l_direct_opencount);
 }
 
 
@@ -603,14 +592,6 @@ no more namespaces available for dlmopen()"));
 	 state if relocation failed, for example.  */
       if (args.map)
 	{
-	  unsigned int i;
-
-	  /* Increment open counters for all objects since this
-	     sometimes has not happened yet.  */
-	  if (args.map->l_searchlist.r_list[0]->l_opencount == 0)
-	    for (i = 0; i < args.map->l_searchlist.r_nlist; ++i)
-	      ++args.map->l_searchlist.r_list[i]->l_opencount;
-
 #ifdef USE_TLS
 	  /* Maybe some of the modules which were loaded uses TLS.
 	     Since it will be removed in the following _dl_close call
