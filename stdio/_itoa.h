@@ -28,12 +28,12 @@ extern const char _itoa_lower_digits[], _itoa_upper_digits[];
    Return the address of the first (left-to-right) character in the number.
    Use upper case letters iff UPPER_CASE is nonzero.  */
 
-extern char *_itoa __P ((unsigned long int value, char *buflim,
+extern char *_itoa __P ((unsigned long long int value, char *buflim,
 			 unsigned int base, int upper_case));
 
 #if defined (__GNUC__) && defined (__OPTIMIZE__)
 extern __inline char *
-_itoa (unsigned long int value, char *buflim,
+_itoa (unsigned long long int value, char *buflim,
        unsigned int base, int upper_case)
 {
   /* Base-36 digits for numbers.  */
