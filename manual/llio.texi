@@ -1681,7 +1681,7 @@ descriptor is a socket, this also selects the recipient of @code{SIGURG}
 signals that are delivered when out-of-band data arrives on that socket;
 see @ref{Out-of-Band Data}.  (@code{SIGURG} is sent in any situation
 where @code{select} would report the socket as having an ``exceptional
-condition''.  @xref{Waiting for Input}.)
+condition''.  @xref{Waiting for I/O}.)
 
 If the file descriptor corresponds to a terminal device, then @code{SIGIO}
 signals are sent to the foreground process group of the terminal.  
