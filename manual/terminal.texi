@@ -1,4 +1,4 @@
-@node Low-Level Terminal Interface, Consistency Checking, Sockets, Top
+@node Low-Level Terminal Interface, Mathematics, Sockets, Top
 @chapter Low-Level Terminal Interface
 
 This chapter describes functions that are specific to terminal devices.

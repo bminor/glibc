@@ -1,4 +1,4 @@
-@node Mathematics, Arithmetic, Consistency Checking, Top
+@node Mathematics, Arithmetic, Low-Level Terminal Interface, Top
 @chapter Mathematics
 
 This chapter contains information about functions for performing
