@@ -653,6 +653,7 @@ extern char *optarg;
 
 
 #ifdef	__USE_BSD
+
 /* Put the name of the current host in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
    name and the terminator.  */
@@ -723,6 +724,17 @@ extern int swapon __P ((__const char *__path));
 
 /* Reboot or halt the system.  */
 extern int reboot __P ((int __howto));
+
+
+/* Successive calls return the shells listed in `/etc/shells'.  */
+extern char *getusershell __P ((void));
+extern void endusershell __P ((void)); /* Discard cached info.  */
+extern void setusershell __P ((void)); /* Rewind and re-read the file.  */
+
+/* Prompt with PROMPT and read a string from the terminal without echoing.
+   Uses /dev/tty if possible; otherwise stderr and stdin.  */
+extern char *getpass __P ((const char *__prompt));
+
 #endif /* Use BSD.  */
 
 
