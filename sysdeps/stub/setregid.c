@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,12 +19,13 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/types.h>
 
 /* Set the real group ID of the calling process to RGID,
    and the effective group ID of the calling process to EGID.  */
 int
 DEFUN(__setregid, (effective_gid, real_gid),
-      int effective_gid AND int real_gid)
+      gid_t effective_gid AND gid_t real_gid)
 {
   errno = ENOSYS;
   return -1;
