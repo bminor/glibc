@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 
 
-#ifdef	__GNU_STAB__
+#ifdef	HAVE_GNU_LD
 #include <gnu-stabs.h>
 warn_references(gets,
 		"the `gets' function is unreliable and should not be used.");
