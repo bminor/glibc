@@ -88,9 +88,8 @@ of the shell to check for stopped jobs, notify the user about them, and
 to provide mechanisms for allowing the user to interactively continue
 stopped jobs and switch jobs between foreground and background.
 
-For more information about I/O to the controlling terminal,
-@pxref{Access to the Controlling Terminal}.
-
+@xref{Access to the Controlling Terminal}, for more information about
+I/O to the controlling terminal,
 
 @node Job Control is Optional
 @section Job Control is Optional
@@ -243,7 +242,7 @@ have been stopped.
 
 All of the program examples included in this chapter are part of
 a simple shell program.  This section presents the data structures
-and some utility functions which are used throught the example.
+and some utility functions which are used throughout the example.
 
 The sample shell deals with two main kinds of data structures.  The
 @code{Job} type contains information about a job, which is a
@@ -261,25 +260,25 @@ typedef struct process @{
   char completed;             /* @r{true if process has completed} */
   char stopped;               /* @r{true if process has stopped} */
   int status;                 /* @r{reported status value} */
-@} Process;
+@} process;
 
 
-/* @r{A Job is a pipeline of Processs.}  */
+/* @r{A Job is a pipeline of Processes.}  */
 
 typedef struct job @{
   struct job *next;           /* @r{next active job} */
   char *command;              /* @r{command line, used for messages} */
-  Process *first_process;     /* @r{list of processs in this job} */
+  process *first_process;     /* @r{list of processes in this job} */
   pid_t pgid;                 /* @r{process group ID} */
   char notified;              /* @r{true if user told about stopped job} */
   struct termios tmodes;      /* @r{saved terminal modes} */
   int stdin, stdout, stderr;  /* @r{standard i/o channels} */
-@} Job;
+@} job;
 
 
 /* @r{The active jobs are linked into a list.  This is its head.}   */
 
-Job *first_job = NULL;
+job *first_job = NULL;
 @end example
 
 Here are some utility functions that are used for operating on @code{Job}
@@ -288,9 +287,10 @@ objects.
 @example
 /* @r{Find the active job with the indicated pgid.}  */
 
-Job *find_job (pid_t pgid)
+job *
+find_job (pid_t pgid)
 @{
-  Job *j;
+  job *j;
   
   for (j = first_job; j; j = j->next)
     if (j->pgid == pgid)
@@ -301,9 +301,10 @@ Job *find_job (pid_t pgid)
 
 /* @r{Return true if all processes in the job have stopped or completed.}  */
 
-int job_is_stopped (Job *j)
+int
+job_is_stopped (job *j)
 @{
-  Process *p;
+  process *p;
   
   for (p = j->first_process; p; p = p->next)
     if (!p->completed  && !p->stopped)
@@ -314,9 +315,10 @@ int job_is_stopped (Job *j)
 
 /* @r{Return true if all processes in the job have completed.}  */
 
-int job_is_completed (Job *j)
+int
+job_is_completed (job *j)
 @{
-  Process *p;
+  process *p;
   
   for (p = j->first_process; p; p = p->next)
     if (!p->completed)
@@ -379,10 +381,10 @@ int shell_is_interactive;
 
 
 /* @r{Make sure the shell is running interactively as the foreground job}
- * @r{before proceeding.}
- */
+   @r{before proceeding.} */
 
-void init_shell (void)
+void
+init_shell ()
 @{
   
   /* @r{See if we are running interactively.}  */
@@ -444,7 +446,7 @@ makes bookkeeping somewhat simpler.
 @cindex process group leader
 @cindex process group ID
 As each process is forked, it should put itself in the new process group
-by calling @code{setpgid}; @pxref{Process Group Functions}.  The first
+by calling @code{setpgid}; see @ref{Process Group Functions}.  The first
 process in the new group becomes its @dfn{process group leader}, and its
 process ID becomes the @dfn{process group ID} for the group.
 
@@ -467,7 +469,7 @@ The next thing that has to be done by each child process is to reset its
 signal actions.
 
 During initialization, the shell process set itself to ignore job
-control signals; @pxref{Initializing the Shell}.  As a result, any child
+control signals; see @ref{Initializing the Shell}.  As a result, any child
 processes it creates also ignore these signals by inheritance.  This is
 definitely undesirable, so each child process should explicitly set the
 actions for these signals back to @code{SIG_DFL} just after it is forked.
@@ -476,7 +478,7 @@ actions for these signals back to @code{SIG_DFL} just after it is forked.
 (Applications also have a responsibility not to mess up the handling of
 stop signals.  In general, an application should assume that it inherits
 the correct handling of these signals from the shell.  Some applications
-disable the normal interpretation of the SUSP character; @pxref{Special
+disable the normal interpretation of the SUSP character; see @ref{Special
 Characters}.  If you are writing a program that does this, you can make your
 application be a ``good citizen'' by providing some other mechanism for
 users to interactively stop the job.  Implementationally, this involves
@@ -493,9 +495,10 @@ for launching a program.  The function is executed by each child process
 immediately after it has been forked by the shell, and never returns.
 
 @example
-void launch_process (Process *p, pid_t pgid,
-                     int infile, int outfile, int errfile,
-                     int foreground)
+void
+launch_process (process *p, pid_t pgid,
+                int infile, int outfile, int errfile,
+                int foreground)
 @{
   pid_t pid;
 
@@ -553,9 +556,10 @@ functions to put the newly created job into the foreground or background;
 these are discussed in @ref{Foreground and Background Jobs}.
 
 @example
-void launch_job (Job *j, int foreground)
+void
+launch_job (job *j, int foreground)
 @{
-  Process *p;
+  process *p;
   pid_t pid;
   int mypipe[2], infile, outfile;
   
@@ -704,7 +708,7 @@ void put_job_in_background (Job *j, int cont)
 @cindex terminated jobs, detecting
 When a foreground process is launched, the shell must block until all of
 the processes in that job have either terminated or stopped.  It can do
-this by calling the @code{waitpid} function; @pxref{Process Completion}.
+this by calling the @code{waitpid} function; see @ref{Process Completion}.
 The @code{WUNTRACED} option should be specified so that status is
 reported for processes that are stopped as well as processes that have
 completed.
@@ -723,8 +727,8 @@ information available for a child process by establishing a handler for
 In the sample shell program, the @code{SIGCHLD} signal is normally
 ignored.  This is to avoid reentrancy problems involving the global data
 structures the shell manipulates.  But at specific times when the shell
-is not using these data structures --- such as when it is waiting for
-input on the terminal --- it makes sense to enable a handler for
+is not using these data structures---such as when it is waiting for
+input on the terminal---it makes sense to enable a handler for
 @code{SIGCHLD}.  The same function that is used to do the synchronous
 status checks (@code{do_job_notification}, in this case) can also be
 called from within this handler.
@@ -867,7 +871,7 @@ background job tries to access the terminal, its job is normally stopped
 by the terminal driver.  Both foreground and background jobs can also be
 stopped explicitly by sending them a stop signal.  And, the terminal
 driver stops the current foreground process when the user types the
-SUSP character (usually @kbd{C-z}); @pxref{Special Characters}.
+SUSP character (usually @kbd{C-z}); see @ref{Special Characters}.
 
 @cindex stopped jobs, continuing
 The shell can continue a stopped job by sending a @code{SIGCONT} signal
@@ -877,13 +881,14 @@ access to the terminal, restore the saved terminal settings, and then
 wait for the job to stop or complete.  This is similar to what must be
 done when initially launching a foreground job.
 
-The sample shell program uses the same set of functions ---
-@code{put_job_in_foreground} and @code{put_job_in_background} --- to
-handle both newly created and continued jobs.  The definitions of these
-functions were given in @ref{Foreground and Background Jobs}.  When
-continuing a stopped job, a nonzero value is passed as the @var{cont}
-argument to ensure that the @code{SIGCONT} signal is sent and the
-terminal modes reset, as appropriate.
+The sample shell program uses the same set of
+functions---@code{put_job_in_foreground} and
+@code{put_job_in_background}---to handle both newly created and
+continued jobs.  The definitions of these functions were given in
+@ref{Foreground and Background Jobs}.  When continuing a stopped job, a
+nonzero value is passed as the @var{cont} argument to ensure that the
+@code{SIGCONT} signal is sent and the terminal modes reset, as
+appropriate.
 
 This leaves only a function for updating the shell's internal bookkeeping
 about the job being continued:
