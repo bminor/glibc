@@ -26,10 +26,9 @@
 #	interface-routines	Names of generated interface routines.
 # All user stubs are put in individual files, prefixed with RPC_ (and the
 # function names prefixed with __), and a symbol-alias to the un-__'d form
-# generated; header for both is put in foo.h.  If a server interface is
-# listed as __foo, then its routines are prefixed with __; server
-# interfaces are written to foo_server.c and foo_server.h (or
-# __foo_server.c and __foo_server.h).
+# generated; header for both is put in foo.h.  Server interfaces are
+# written to foo_server.c and foo_server.h; the server functions are called
+# _S_rpcname.
 
 # Includers can also add to or modify `migdefines' to set MiG flags.
 
@@ -103,13 +102,9 @@ $(objpfx)%.ustamp: %.defs
 vpath %_server.c $(addprefix $(objpfx),$(sort $(dir $(server-interfaces))))
 
 # Build the server stubs in $(objdir).
-# XXX __ loses for subdirs: __mach/exc???
-$(objpfx)__%_server.c $(objpfx)__%_server.h: %.defs
-	$(MIG) $< $(MIGFLAGS) -prefix __ \
-	       -user /dev/null -header /dev/null \
-	       -server $(@:.h=.c) -sheader $(@:.c=.h)
 $(objpfx)%_server.c $(objpfx)%_server.h: %.defs
 	$(MIG) $< $(MIGFLAGS) \
+	       -prefix _S_ \
 	       -user /dev/null -header /dev/null \
 	       -server $(@:.h=.c) -sheader $(@:.c=.h)
 
