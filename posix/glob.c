@@ -45,14 +45,14 @@ extern int errno;
 
 #if defined (POSIX) || defined (DIRENT) || defined (__GNU_LIBRARY__)
 #include <dirent.h>
-#define direct dirent
 #ifndef	__GNU_LIBRARY__
 #define D_NAMLEN(d) strlen((d)->d_name)
 #else
 #define D_NAMLEN(d) ((d)->d_namlen)
 #endif
 #else /* not POSIX or DIRENT */
-#define D_NAMLEN(d) ((d)->d_namlen)
+#define	dirent		direct
+#define D_NAMLEN(d)	((d)->d_namlen)
 #if defined (USG) && !defined (sgi)
 #if defined (SYSNDIR)
 #include <sys/ndir.h>
@@ -118,7 +118,7 @@ extern void bcopy ();
 extern char *malloc (), *realloc ();
 extern void free ();
 
-#endif	/* Standard headers.  */
+#endif /* Standard headers.  */
 
 #ifdef	ANSI_STRING
 #define	index(s, c)	strchr((s), (c))
@@ -127,14 +127,14 @@ extern void free ();
 #define bcmp(s1, s2, n)	memcmp ((s1), (s2), (n))
 #define bzero(s, n)	memset ((s), 0, (n))
 #define bcopy(s, d, n)	memcpy ((d), (s), (n))
-#endif
+#endif	/* ANSI_STRING.  */
 #undef	ANSI_STRING
 #define	strcoll	strcmp
 extern void free ();
 extern void qsort ();
 extern char *malloc ();
 extern char *realloc ();
-#endif /* Not STDC_HEADERS or __GNU_LIBRARY__.  */
+
 
 
 #ifndef	__GNU_LIBRARY__
