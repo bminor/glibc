@@ -433,6 +433,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	    }
 	  break;
 
+#ifndef MIB_HACKS
 	case 'e':	/* Floating-point numbers.  */
 	case 'E':
 	case 'f':
@@ -497,6 +498,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	      ++done;
 	    }
 	  break;
+#endif MIB_HACKS
 
 	case '[':	/* Character class.  */
 	  STRING_ARG;
