@@ -4,10 +4,9 @@
 /* Now define the internal interfaces.  */
 extern int __access __P ((__const char *__name, int __type));
 extern int __euidaccess __P ((__const char *__name, int __type));
-extern int __libc_open64 (const char *file, int oflag, ...);
-extern int __libc_open (const char *file, int oflag, ...);
 extern __off64_t __lseek64 __P ((int __fd, __off64_t __offset, int __whence));
 extern __off64_t __libc_lseek64 (int __fd, __off64_t __offset, int __whence);
+extern __off_t __libc_lseek __P ((int __fd, __off_t __offset, int __whence));
 extern ssize_t __pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
 			     __off_t __offset));
 extern ssize_t __libc_pread (int __fd, void *__buf, size_t __nbytes,
