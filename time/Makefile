@@ -96,8 +96,6 @@ endef
 ifdef localtime
 zoneinfo/localtime: zoneinfo/$(localtime) $(objpfx)zic
 	$(word 2,$^) -d zoneinfo -l $(<:zoneinfo/%=%)
-$(datadir)/zoneinfo/localtime: $(datadir)/zoneinfo/$(localtime) $(objpfx)zic
-	$(word 2,$^) -d $(datadir)/zoneinfo -l $(<:$(datadir)/zoneinfo/%=%)
 zoneinfo: zoneinfo/localtime
 endif
 
