@@ -600,6 +600,22 @@ extern char *ctermid __P ((char *__s));
 extern char *cuserid __P ((char *__s));
 #endif
 
+
+#ifdef	__USE_GNU
+struct obstack;			/* See <obstack.h>.  */
+
+/* Open a stream that writes to OBSTACK.  */
+extern FILE *open_obstack_stream __P ((struct obstack *__obstack));
+
+/* Write formatted output to an obstack.  */
+extern int obstack_printf __P ((struct obstack *__obstack,
+				__const char *__format, ...));
+extern int obstack_vprintf __P ((struct obstack *__obstack,
+				 __const char *__format,
+				 __gnuc_va_list __args));
+#endif
+
+
 __END_DECLS
 
 #endif /* <stdio.h> included.  */
