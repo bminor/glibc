@@ -51,14 +51,10 @@ endif
 
 aux := hurdsyms # hurdinit
 
+# Get the proper definition of `hurd-srcdir'.
+include ../sysdeps/mach/hurd/Makefile
+
 # Use and install the Hurd header files directly out of the Hurd source.
-
-
-# If we were configured with `--with-hurd=DIR', then config.make sets
-# hurd-srcdir to DIR.  Otherwise guess we are in a big source tree.
-ifndef hurd-srcdir
-hurd-srcdir = ../../hurd
-endif
 
 # Find the MiG defs files in the Hurd source.
 vpath %.defs $(hurd-srcdir)
