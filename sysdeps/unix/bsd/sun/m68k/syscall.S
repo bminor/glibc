@@ -18,12 +18,11 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-#ifndef SYS_syscall
-#define SYS_syscall	0
-#endif
-
-/* This works if the kernel does an "indirect system call" for system call 0,
-   taking the first argument word off the stack as the system call number.  */
-
-SYSCALL (syscall, 1)
+ENTRY (syscall)
+	movel sp@, d0		/* Save return address in D0.  */
+	movel sp@(4), sp@	/* Put syscall number at top of stack.  */
+	movel d0, sp@(4)	/* Put return address under it.  */
+	trap #0			/* Do syscall; pops number from stack.  */
+	jcs error
 	ret
+error:	jmp syscall_error

@@ -18,12 +18,11 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-#ifndef SYS_syscall
-#define SYS_syscall	0
-#endif
-
-/* This works if the kernel does an "indirect system call" for system call 0,
-   taking the first argument word off the stack as the system call number.  */
-
-SYSCALL (syscall, 1)
+.globl syscall_error
+ENTRY (syscall)
+	popl %ecx		/* Pop return address into %ecx.  */
+	popl %eax		/* Pop syscall number into %eax.  */
+	pushl %ecx		/* Push back return address.  */
+	.byte 0x9a, 0, 0, 0, 0, 7, 0 /* lcall $7, $0 -- gas bug */
+	jb syscall_error
 	ret
