@@ -192,7 +192,7 @@ solaris[2-9]*)
 esac
 
 case "$os" in
-gnu* | linux*)
+gnu* | linux* | bsd4.4)
   gnu_ld=--with-gnu-ld
   gnu_as=--with-gnu-as
 esac
