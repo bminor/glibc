@@ -49,7 +49,7 @@ DEFUN(__symlink, (from, to), CONST char *from AND CONST char *to)
     /* Set the node's translator to make it a symlink.  */
     err = __file_set_translator (node, FS_TRANS_EXCL, 0,
 				 buf, sizeof (_HURD_SYMLINK) + len,
-				 MACH_PORT_NULL);
+				 MACH_PORT_NULL, MACH_MSG_TYPE_COPY_SEND);
 
   if (! err)
     /* Link the node, now a valid symlink, into the target directory.  */
