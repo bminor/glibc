@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -47,25 +47,35 @@ DEFUN(fmemopen, (s, len, mode),
   __io_mode m;
   register FILE *stream;
 
-  if (!__getmode(mode, &m))
+  if (!__getmode (mode, &m))
     return NULL;
 
-  stream = __newstream();
+  stream = __newstream ();
   if (stream == NULL)
     return NULL;
 
   stream->__mode = m;
-  stream->__io_funcs.__seek = NULL;
+
+  /* Input gets EOF.  */
+  stream->__room_funcs.__input = NULL;
+  /* Output gets error.  */
+  stream->__room_funcs.__output = NULL;
+
+  /* Do nothing for close.  */
   stream->__io_funcs.__close = NULL;
+  /* Can't seek outside the buffer.  */
+  stream->__io_funcs.__seek = NULL;
+
+  stream->__seen = 1;
 
   stream->__userbuf = s != NULL && len > 0;
   if (s == NULL)
     {
-      s = malloc(len);
+      s = malloc (len);
       if (s == NULL)
 	{
 	  int save = errno;
-	  (void) fclose(stream);
+	  (void) fclose (stream);
 	  errno = save;
 	  return NULL;
 	}
@@ -87,19 +97,7 @@ DEFUN(fmemopen, (s, len, mode),
 	   *stream->__bufp != '\0')
       ++stream->__bufp;
   else if (stream->__mode.__truncate)
-    memset((PTR) stream->__buffer, 0, len);
-
-  /* Input gets EOF.  */
-  stream->__room_funcs.__input = NULL;
-  /* Output gets error.  */
-  stream->__room_funcs.__output = NULL;
-
-  /* Do nothing for close.  */
-  stream->__io_funcs.__close = NULL;
-  /* Can't seek outside the buffer.  */
-  stream->__io_funcs.__seek = NULL;
-
-  stream->__seen = 1;
+    memset ((PTR) stream->__buffer, 0, len);
 
   return stream;
 }
