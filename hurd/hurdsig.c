@@ -85,7 +85,7 @@ _hurd_thread_sigstate (thread_t thread)
       /* Initialize the sigaction vector from the default signal receiving
 	 thread's state, and its from the system defaults.  */
       if (thread == _hurd_sigthread)
-	default_sigaction (&ss->actions);
+	default_sigaction (ss->actions);
       else
 	{
 	  struct hurd_sigstate *s;
@@ -99,7 +99,7 @@ _hurd_thread_sigstate (thread_t thread)
 	      __mutex_unlock (&s->lock);
 	    }
 	  else
-	    default_sigaction (&ss->actions);
+	    default_sigaction (ss->actions);
 	}
 
       ss->next = _hurd_sigstates;
