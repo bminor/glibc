@@ -111,6 +111,8 @@ mostlyclean:
 	-rm -f libc.dvi libc.info*
 realclean: clean
 	-rm -f chapters chapters-incl summary.texi stamp-summary *.c.texi
+	-rm -f libc.cp libc.cps libc.fn libc.fns libc.pg libc.pgs \
+	       libc.tp libc.tps libc.vr libc.vrs libc.log libc.aux libc.toc
 
 .PHONY: install subdir_install installdirs
 subdir_install: install
