@@ -1,3 +1,9 @@
+2000-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (vALLOc): Call ptmalloc_init before mEMALIGn
+	call to initialize malloc_getpagesize.
+	(pvALLOc): Likewise.
+
 2000-02-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/it.po: Update from translation team.
