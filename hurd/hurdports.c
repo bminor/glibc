@@ -24,35 +24,49 @@ type get##what (void)							      \
   return _hurd_getport (&_hurd_##what, &_hurd_##lock);			      \
 }
 
-#define SET(lock, type, what)						      \
-int									      \
-set##what (type new)							      \
-{									      \
-  error_t err;								      \
-  type old;								      \
-  if (err = __mach_port_mod_refs (__mach_task_self (), new,		      \
-				  MACH_PORT_RIGHT_SEND, 1))		      \
-    {									      \
-      errno = EINVAL;							      \
-      return -1;							      \
-    }									      \
-  __mutex_lock (&_hurd_##lock);						      \
-  old = _hurd_##what;							      \
-  _hurd_##what = new;							      \
-  __mutex_unlock (&_hurd_##lock);					      \
-  __mach_port_deallocate (__mach_task_self (), old);			      \
-  return 0;								      \
+static inline mach_port_t
+get (struct _hurd_port *cell)
+{
+  mach_port_t result;
+  error_t err = _HURD_PORT_USE (cell,
+				__mach_port_mod_refs (__mach_task_self (),
+						      (result = port),
+						      MACH_PORT_RIGHT_SEND,
+						      1));
+  if (err)
+    {
+      errno = err;
+      return MACH_PORT_NULL;
+    }
+  else
+    return result;
 }
+#define	GET(type, what) \
+  type get##what (void) { return get (&what); }
 
-#define	GETSET(lock, type, what) \
-  GET (lock, type, what) SET (lock, type, what)
+static inline int
+set (struct _hurd_port *cell, mach_port_t new)
+{
+  error_t err;
+  if (err = __mach_port_mod_refs (__mach_task_self (), new,
+				  MACH_PORT_RIGHT_SEND, 1))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+  _hurd_port_set (cell, new);
+  return 0;
+}
+#define SET(type, what) \
+  int set##what (type new) { return set (&what, new); }
 
-GETSET (lock, process_t, proc)
-GETSET (lock, file_t, ccdir)
-GETSET (lock, file_t, cwdir)
-GETSET (lock, file_t, crdir)
-GET (lock, auth_t, auth)
+#define	GETSET(type, what) \
+  GET (type, what) SET (type, what)
 
-#define	getsigthread	siggetthread
-#define	setsigthread	sigsetthread
-GETSET (siglock, thread_t, sigthread)
+GETSET (process_t, proc)
+GETSET (file_t, ccdir)
+GETSET (file_t, cwdir)
+GETSET (file_t, crdir)
+
+/* setauth is nontrivial; see __setauth.c.  */
+GET (auth_t, auth)
