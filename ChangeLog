@@ -1,3 +1,8 @@
+2002-03-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Don't abort on unknown
+	dynamic tags.
+
 2002-04-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/gl.po: Update from translation team.
