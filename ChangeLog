@@ -156,6 +156,9 @@
 	[BZ #671]
 	* sysdeps/generic/syslog.c (send_flags) [!send_flags]: Define it.
 
+	[BZ #765]
+	* libio/fmemopen.c: Include <stdint.h>.
+
 2005-01-28  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	[BZ #743]
