@@ -26,24 +26,24 @@ uid_t
 DEFUN_VOID(__getuid)
 {
   error_t err;
-  uid_t ruid;
+  uid_t uid;
 
-  __mutex_lock (&_hurd_idlock);
+  __mutex_lock (&_hurd_id.lock);
 
   if (err = _hurd_check_ids ())
     {
       errno = err;
-      ruid = -1;
+      uid = -1;
     }
-  else if (_hurd_nuids == 0)
-    {
-      /* We have no real uid.  */
-      errno = XXX;
-      ruid = -1;
-    }
+  else if (_hurd_id.aux.nuids >= 1)
+    uid = _hurd_id.aux.uids[0];
   else
-    ruid = _hurd_uid.rid;
+    {
+      /* We do not even have a real uid.  */
+      errno = EIOEIO;		/* XXX */
+      uid = -1;
+    }
 
-  __mutex_unlock (&_hurd_idlock);
-  return ruid;
+  __mutex_unlock (&_hurd_id.lock);
+  return uid;
 }
