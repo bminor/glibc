@@ -74,6 +74,10 @@
 	* sysdeps/generic/dl-tls.c (_dl_next_tls_modid): Fix assertion and
 	recognition of last entry.
 
+2005-01-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile (generated): Add tst-pie1{,.out,.o}.
+
 2005-01-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/unistd.h: Declare ftruncate for POSIX 2003.  [BZ #640]
