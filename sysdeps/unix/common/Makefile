@@ -20,7 +20,7 @@ $(objpfx)local_lim.h: $(objpfx)make-local_lim
 	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 $(objpfx)make-local_lim: $(sysdep_dir)/unix/bsd/make-local_lim.c
-	$(CC) $< -o $@
+	cd $(objdir); $(CC) $(<:$(objpfx)%=%) -o $(@:$(objpfx)%=%)
 
 before-compile := $(before-compile) $(objpfx)local_lim.h
 
@@ -38,7 +38,7 @@ $(objpfx)ctype-glue.c: $(objpfx)glue-ctype
 	mv $@-tmp $@
 
 $(objpfx)glue-ctype: $(sysdep_dir)/unix/bsd/glue-ctype.c
-	$(CC) $< -o $@
+	cd $(objdir); $(CC) ../$< -o $(@:$(objpfx)%=%)
 
 endif
 
@@ -50,7 +50,7 @@ $(objpfx)siglist.c: $(objpfx)make_siglist
 	$< > $@-tmp
 	mv $@-tmp $@
 
-$(objpfx)make_siglist: $(sysdep_dir)/unix/make_siglist.c
-	$(CC) $< -o $@
+$(objpfx)make_siglist: $(sysdep_dir)/unix/bsd/make_siglist.c
+	cd $(objdir); $(CC) ../$< -o $(@:$(objpfx)%=%)
 
 endif
