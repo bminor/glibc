@@ -27,7 +27,7 @@ Cambridge, MA 02139, USA.  */
 char *
 DEFUN_VOID(getlogin)
 {
-  static char login[1024];
+  static char login[1024];	/* XXX */
   error_t err;
 
   if (err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
