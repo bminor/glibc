@@ -41,7 +41,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
   switch (cmd)
     {
     default:			/* Bad command.  */
-      __spin_unlock (&d.d->lock);
+      __spin_unlock (&d.d->port.lock);
       errno = EINVAL;
       result = -1;
       break;
@@ -92,12 +92,12 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 
     case F_GETFD:		/* Get descriptor flags.  */
       result = d.d->flags;
-      __spin_unlock (&d.d->lock);
+      __spin_unlock (&d.d->port.lock);
       break;
 
     case F_SETFD:		/* Set descriptor flags.  */
       d.d->flags = va_arg (ap, int);
-      __spin_unlock (&d.d->lock);
+      __spin_unlock (&d.d->port.lock);
       result = 0;
       break;
 
@@ -109,7 +109,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
     case F_SETLKW:
       {
 	struct flock *fl = va_arg (ap, struct flock *);
-	__spin_unlock (&d.d->lock);
+	__spin_unlock (&d.d->port.lock);
 	errno = fl?ENOSYS:EINVAL; /* XXX mib needs to implement io rpcs.  */
 	result = -1;
 	break;
