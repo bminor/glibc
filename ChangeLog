@@ -1,3 +1,7 @@
+1998-08-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Dist: Add umount.S.
+
 1998-08-28 09:22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* malloc/malloc.c (malloc_hook_ini): Don't overwrite realloc and
