@@ -72,9 +72,6 @@ _hurd_thread_sigstate (thread_t thread)
 
 jmp_buf _hurd_sigthread_fault_env;
 
-/* Limit on size of core files.  */
-int _hurd_core_limit;
-
 /* Call the core server to mummify us before we die.
    Returns nonzero if a core file was written.  */
 static int
@@ -86,9 +83,7 @@ write_corefile (int signo, int sigcode)
   char *volatile name;
   char *volatile target;
 
-  if (_hurd_core_limit == 0)
-    /* User doesn't want a core.  */
-    return 0;
+  /* XXX RLIMIT_CORE */
 
   coreserver = MACH_PORT_NULL;
   if (!setjmp (_hurd_sigthread_fault_env))
@@ -136,22 +131,12 @@ write_corefile (int signo, int sigcode)
 			  signo, sigcode,
 			  target);
   __mach_port_deallocate (__mach_task_self (), coreserver);
-  if (!err && _hurd_core_limit != RLIM_INFINITY)
-    {
-      struct stat stb;
-      err = __io_stat (file, &stb);
-      if (!err && stb.st_size > _hurd_core_limit)
-	err = EFBIG;
-    }
   __mach_port_deallocate (__mach_task_self (), file);
   if (err)
     (void) remove (name);
   return !err;
 }
 
-
-extern const size_t _hurd_thread_state_count;
-extern const int _hurd_thread_state_flavor;
 
 /* How long to give servers to respond to
    interrupt_operation before giving up on them.  */
@@ -168,9 +153,10 @@ abort_rpcs (struct _hurd_sigstate *ss, int signo, void *state)
 	 If it is in the mach_msg syscall doing the send,
 	 the syscall will return MACH_SEND_INTERRUPTED.  */
       __thread_abort (ss->thread);
-      _hurd_thread_state (ss->thread, state);
+      __thread_get_state (ss->thread, HURD_THREAD_STATE_FLAVOR,
+			  state, HURD_THREAD_STATE_COUNT);
 
-      if (_hurd_thread_msging_p (state))
+      if (_hurd_thread_state_msging_p (state))
 	{
 	  /* The thread was waiting for the RPC to return.
 	     Abort the operation.  The RPC will return EINTR.  */
@@ -247,10 +233,12 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 			    int sigcode,
 			    sigset_t *restore_blocked)
 {
-  char thread_state[_hurd_thread_state_count];
+  struct hurd_thread_state thread_state;
   enum { stop, ignore, core, term, handle } act;
+  __sighandler_t handler = ss->actions[signo].sa_handler;
 
-  if (ss->actions[signo].sa_handler == SIG_DFL)
+  if (handler == SIG_DFL)
+    /* Figure out the default action for this signal.  */
     switch (signo)
       {
       case 0:
@@ -292,28 +280,33 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 
       case SIGINFO:
 	if (_hurd_pgrp == _hurd_pid)
-	  /* We are the session leader.  Print something interesting.
-	     XXX Perhaps this should be done with:
-	       act = handle;
-	       handler = _hurd_siginfo_handler;
-	     to not tie up the signal thread, especially if it might
-	     block doing tty i/o.  */
-	  puts ("fnord");	/* XXX */
-	act = ignore;
+	  {
+	    /* We are the session leader.  Since there is no user-specified
+	       handler for SIGINFO, we use a default one which prints
+	       something interesting.  We use the normal handler mechanism
+	       instead of just doing it here to avoid the signal thread
+	       faulting or blocking in this potentially hairy operation.  */
+	    act = handle;
+	    handler = _hurd_siginfo_handler;
+	  }
 	break;
 
       default:
 	act = term;
 	break;
       }
-  else if (ss->actions[signo].sa_handler == SIG_IGN)
+  else if (handler == SIG_IGN)
     act = ignore;
   else
     act = handle;
-  if (_hurd_orphaned &&
-      (signo == SIGTTIN || signo == SIGTTOU || signo == SIGTSTP) &&
-      act == stop)
+
+  if (_hurd_orphaned && act == stop &&
+      (signo & (__sigmask (SIGTTIN) | __sigmask (SIGTTOU) |
+		__sigmask (SIGTSTP))))
     {
+      /* If we would ordinarily stop for a job control signal, but we are
+	 orphaned so noone would ever notice and continue us again, we just
+	 quietly die, alone and in the dark.  */
       sigcode = signo;
       signo = SIGKILL;
       act = term;
@@ -332,9 +325,11 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
   if (restore_blocked != NULL)
     ss->blocked = *restore_blocked;
 
+  /* Perform the chosen action for the signal.  */
   switch (act)
     {
     case stop:
+      /* Stop all other threads and mark ourselves stopped.  */
       __USEPORT (PROC,
 		 ({
 		   /* Hold the siglock while stopping other threads to be
@@ -343,7 +338,7 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 		   __mutex_lock (&_hurd_siglock);
 		   __proc_dostop (port, __mach_thread_self ());
 		   __mutex_unlock (&_hurd_siglock);
-		   abort_all_rpcs (signo, thread_state);
+		   abort_all_rpcs (signo, &thread_state);
 		   __proc_mark_stop (port, signo);
 		 }));
       _hurd_stopped = 1;
@@ -360,29 +355,54 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
       return;
 
     case ignore:
+      /* Nobody cares about this signal.  */
       break;
 
-    case core:
-    case term:
+    case term:			/* Time to die.  */
+    case core:			/* And leave a rotting corpse.  */
       /* Have the proc server stop all other threads in our task.  */
       __USEPORT (PROC, __proc_dostop (port, __mach_thread_self ()));
       /* Abort all server operations now in progress.  */
-      abort_all_rpcs (signo, thread_state);
+      abort_all_rpcs (signo, &thread_state);
       /* Tell proc how we died and then stick the saber in the gut.  */
       _hurd_exit (W_EXITCODE (0, signo) |
+		  /* Do a core dump if desired.  Only set the wait status
+                     bit saying we in fact dumped core if the operation was
+                     actually succesful.  */
 		  (act == core && write_corefile (signo, sigcode) ?
 		   WCOREFLAG : 0));
       /* NOTREACHED */
 
     case handle:
-      __thread_suspend (ss->thread);
-      abort_rpcs (ss, signo, thread_state);
+      /* Call a handler for this signal.  */
       {
-	const sigset_t blocked = ss->blocked;
+	struct sigcontext *scp;
+
+	/* Stop the thread and abort its pending RPC operations.  */
+	__thread_suspend (ss->thread);
+	abort_rpcs (ss, signo, &thread_state);
+
+	/* Call the machine-dependent function to set the thread up
+	   to run the signal handler, and preserve its old context.  */
+	scp = _hurd_setup_sighandler (ss->actions[signo].sa_flags,
+				      handler,
+				      &ss->sigaltstack,
+				      signo, sigcode,
+				      &thread_state);
+
+	/* Set the machine-independent parts of the signal context.  */
+	scp->sc_intr_port = ss->intr_port;
+	scp->sc_mask = ss->blocked;
+
+	/* Block SIGNO and requested signals while running the handler.  */
 	ss->blocked |= __sigmask (signo) | ss->actions[signo].sa_mask;
-	_hurd_run_sighandler (ss, signo, sigcode, blocked, thread_state);
+
+	/* Start the thread running the handler.  */
+	__thread_set_state (ss->thread, HURD_THREAD_STATE_FLAVOR,
+			    (int *) &thread_state, HURD_THREAD_STATE_COUNT);
+	__thread_resume (ss->thread);
+	break;
       }
-      __thread_resume (ss->thread);
     }
 
   /* We get here only if we are handling or ignoring the signal;
@@ -405,7 +425,8 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 #endif
 }
 
-/* Sent when someone wants us to get a signal.  */
+/* Implement the sig_post RPC from <hurd/msg.defs>;
+   sent when someone wants us to get a signal.  */
 error_t
 _S_sig_post (mach_port_t me,
 	     mach_port_t reply,
@@ -487,74 +508,33 @@ _S_sig_post (mach_port_t me,
 	  }
 	_hurd_dtable_done (dt, &dealloc_dt);
 	/* If we found a lucky winner, we've set D to -1 in the loop.  */
-	if (d == -1)
+	if (d < 0)
 	  goto win;
       }
     }
 
+  /* If this signal is legit, we have done `goto win' by now.
+     When we return the error, mig deallocates REFPORT.  */
   return EPERM;
 
  win:
+  /* Deallocate the REFPORT right; we are done with it.  */
   __mach_port_deallocate (__mach_task_self (), refport);
+
+  /* Get a hold of the designated signal-receiving thread.  */
   ss = _hurd_thread_sigstate (_hurd_sigthread);
+
+  /* Send a reply indicating success to the signaller.  */
   __sig_post_reply (reply, 0);
+
+  /* Post the signal.  */
   _hurd_internal_post_signal (ss, signo, 0, NULL);
+
   return MIG_NO_REPLY;		/* Already replied.  */
 }
-
-/* Called by the exception handler to take a signal.  */
-void
-_hurd_exc_post_signal (thread_t thread, int signo, int sigcode)
-{
-  _hurd_internal_post_signal (_hurd_thread_sigstate (thread),
-			      signo, sigcode, NULL);
-}
 
-#include <sysdep.h>
 #include <mach/task_special_ports.h>
 
-/* Handle signal SIGNO in the calling thread.
-   If SS is not NULL it is the sigstate for the calling thread;
-   SS->lock is held on entry and released before return.  */
-void
-_hurd_raise_signal (struct _hurd_sigstate *ss, int signo, int sigcode)
-{
-  jmp_buf env;
-  struct sigcontext sc;
-
-  if (ss == NULL)
-    ss = _hurd_thread_sigstate (__mach_thread_self ());
-
-  if (! setjmp (env))
-    {
-      register volatile void (*handler) (int signo, int sigcode,
-					 struct sigcontext *scp);
-
-      handler = (__typeof (handler)) ss->actions[signo].sa_handler;
-
-      /* Set up SC to make setjmp return 1.  */
-      _hurd_jmp_buf_sigcontext (env, &sc, 1);
-
-      sc.sc_mask = ss->blocked;	/* Restored by sigreturn.  */
-      sc.sc_onstack = ((ss->actions[signo].sa_flags & SA_ONSTACK) &&
-		       !(ss->sigaltstack.ss_flags & SA_DISABLE));
-      if (sc.sc_onstack)
-	{
-	  /* Switch to the signal stack.  */
-	  ss->sigaltstack.ss_flags |= SA_ONSTACK;
-	  SET_SP (ss->sigaltstack.ss_sp);
-	}
-
-      __mutex_unlock (&ss->lock);
-
-      /* Call the handler.  */
-      (*handler) (signo, sigcode, &sc);
-
-      __sigreturn (&sc);	/* Does not return.   */
-      LOSE;			/* Firewall.  */
-    }
-}
-
 /* Initialize the message port and signal thread once.
    Do nothing on subsequent calls.  */
 
@@ -574,14 +554,14 @@ _hurdsig_init (void)
   if (err = __mach_port_allocate (__mach_task_self (),
 				  MACH_PORT_RIGHT_RECEIVE,
 				  &_hurd_msgport))
-    __libc_fatal ("hurd: Can't create signal port receive right\n");
+    __libc_fatal ("hurd: Can't create message port receive right\n");
 
   /* Make a send right to the signal port.  */
   if (err = __mach_port_insert_right (__mach_task_self (),
 				      _hurd_msgport,
 				      _hurd_msgport,
 				      MACH_MSG_TYPE_MAKE_SEND))
-    __libc_fatal ("hurd: Can't create send right to signal port\n");
+    __libc_fatal ("hurd: Can't create send right to message port\n");
 
   if (err = __thread_create (__mach_task_self (), &_hurd_msgport_thread))
     __libc_fatal ("hurd: Can't create signal thread\n");
@@ -622,8 +602,8 @@ _hurdsig_fault_init (void)
        __proc_handle_exceptions (port,
 				 sigexc,
 				 _hurd_msgport, MACH_MSG_TYPE_COPY_SEND,
-				 _hurd_thread_state_flavor,
-				 state, _hurd_thread_state_count)))
+				 HURD_THREAD_STATE_FLAVOR,
+				 state, HURD_THREAD_STATE_COUNT)))
     __libc_fatal ("hurd: proc won't handle signal thread exceptions\n");
 }
 				/* XXXX */
@@ -640,3 +620,4 @@ reauth_proc (mach_port_t new)
       && ignore != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), ignore);
 }
+text_set_element (__hurd_reauth_hook, reauth_proc);
