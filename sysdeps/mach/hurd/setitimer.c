@@ -310,3 +310,20 @@ preempt_sigalrm (thread_t thread, int signo, int sigcode)
   /* Continue with normal delivery of SIGALRM.  */
   return SIG_DFL;
 }
+
+#include <gnu-stabs.h>
+
+static void
+fork_itimer (void)
+{
+  /* We must restart the itimer in the child.  */
+
+  struct itimerval it;
+
+  __spin_lock (&_hurd_itimer_lock);
+  it = _hurd_itimerval;
+  it.it_value = it.it_interval;
+
+  setitimer_locked (&it, NULL, NULL);
+}
+text_set_element (_hurd_fork_child_hook, fork_itimer);
