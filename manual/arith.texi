@@ -1,4 +1,4 @@
-@node Arithmetic
+@node Arithmetic, Date and Time, Mathematics, Top
 @chapter Low-Level Arithmetic Functions
 
 This chapter contains information about functions for doing basic
@@ -7,17 +7,17 @@ fractional parts.  These functions are declared in the header file
 @file{math.h}.
 
 @menu
-* Normalization Functions::		Hacks for radix-2 representations.
-* Rounding and Remainder Functions::	Determinining the integer and
+* Normalization Functions::     Hacks for radix-2 representations.
+* Rounding and Remainder Functions::  Determinining the integer and
 					 fractional parts of a float.
-* Integer Division::			Functions for performing integer
+* Integer Division::            Functions for performing integer
 					 division.
-* Parsing of Numbers::			Functions for ``reading'' numbers
+* Parsing of Numbers::          Functions for ``reading'' numbers
 					 from strings.
-* Predicates on Floats::		Some miscellaneous test functions.
+* Predicates on Floats::        Some miscellaneous test functions.
 @end menu
 
-@node Normalization Functions
+@node Normalization Functions, Rounding and Remainder Functions,  , Arithmetic
 @section Normalization Functions
 @cindex normalization functions (floating-point)
 
@@ -81,7 +81,7 @@ quotient between @code{1} (inclusive) and @code{2} (exclusive).
 @end deftypefun
 
 
-@node Rounding and Remainder Functions
+@node Rounding and Remainder Functions, Integer Division, Normalization Functions, Arithmetic
 @section Rounding and Remainder Functions
 @cindex rounding functions
 @cindex remainder functions
@@ -172,7 +172,7 @@ The @var{denominator} is zero.
 @end deftypefun
 
 
-@node Integer Division
+@node Integer Division, Parsing of Numbers, Rounding and Remainder Functions, Arithmetic
 @section Integer Division
 @cindex integer division functions
 
@@ -244,7 +244,7 @@ structure of type @code{ldiv}.
 @end deftypefun
 
 
-@node Parsing of Numbers
+@node Parsing of Numbers, Predicates on Floats, Integer Division, Arithmetic
 @section Parsing of Numbers
 @cindex parsing numbers (in formatted input)
 @cindex converting strings to numbers
@@ -262,12 +262,12 @@ These functions are declared in @file{stdlib.h}.
 @pindex stdlib.h
 
 @menu
-* Parsing of Integers::		Functions for conversion of integer values.
-* Parsing of Floats::		Functions for conversion of floating-point
+* Parsing of Integers::         Functions for conversion of integer values.
+* Parsing of Floats::           Functions for conversion of floating-point
 				 values.
 @end menu
 
-@node Parsing of Integers
+@node Parsing of Integers, Parsing of Floats,  , Parsing of Numbers
 @subsection Parsing of Integers
 
 @comment stdlib.h
@@ -355,7 +355,7 @@ instead.
 @end deftypefun
 
 
-@node Parsing of Floats
+@node Parsing of Floats,  , Parsing of Integers, Parsing of Numbers
 @subsection Parsing of Floats
 
 @comment stdlib.h
@@ -423,7 +423,7 @@ is provided mostly for compatibility with existing code; using
 @code{strtod} is more robust.
 @end deftypefun
 
-@node Predicates on Floats
+@node Predicates on Floats,  , Parsing of Numbers, Arithmetic
 @section Predicates on Floats
 @cindex predicates on floats
 
