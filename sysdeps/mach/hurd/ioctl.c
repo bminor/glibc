@@ -100,7 +100,7 @@ DEFUN(__ioctl, (fd, request, arg),
     for (i = 0; i < _hurd_ioctl_handler_lists.n; ++i)
       for (h = _hurd_ioctl_handler_lists.v[i]; *h; h = h->next)
 	if (request >= h->first_request && request <= h->last_request)
-	  /* This handler groks REQUEST.  Le puntamonos.  */
+	  /* This handler groks REQUEST.  Se lo puntamonos.  */
 	  return (*h->handler) (fd, request, arg);
   }
   
