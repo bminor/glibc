@@ -24,25 +24,58 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Duplicate FD to FD2, closing the old FD2 and making FD2 be
-   open the same file as FD is.  Return FD2 or -1.  */
+   open on the same file as FD is.  Return FD2 or -1.  */
 int
 DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
 {
-  __mutex_lock (&_hurd_dtable_lock);
-  if (fd < 0 || fd >= _hurd_dtable.size ||
-      _hurd_dtable.d[fd].server == MACH_PORT_NULL ||
-      fd2 < 0 || fd2 >= _hurd_dtable.size)
+  int dealloc_dt;
+  struct _hurd_fd_user d, d2;
+  io_t port, ctty;
+  int dealloc, dealloc_ctty;
+
+  /* Extract the ports and flags from FD.  */
+  d = _hurd_fd (fd, &dealloc_dt);
+  if (d.d == NULL)
     {
-      __mutex_unlock (&_hurd_dtable_lock);
+    badf:
       errno = EBADF;
       return -1;
     }
-  if (_hurd_dtable.d[fd2].server != MACH_PORT_NULL)
-    __mach_port_deallocate (__mach_task_self (), _hurd_dtable.d[fd2].server);
-  _hurd_dtable.d[fd2] = _hurd_dtable.d[fd];
-  __mach_port_mod_refs (__mach_task_self (), _hurd_dtable.d[fd].server,
-			MACH_PORT_RIGHT_SEND, 1);
+  flags = d->flags;
+  ctty = _hurd_port_get (&d.d->ctty, &dealloc_ctty);
+  port = _hurd_port_locked_get (&d.d->port, &dealloc); /* Unlocks D.d.  */
+
+  __mutex_lock (&_hurd_dtable_lock);
+  if (fd2 < 0 || fd2 >= _hurd_dtable.size)
+    {
+      errno = EBADF;
+      fd2 = -1;
+    }
+  else
+    {
+      d2 = &_hurd_dtable.d[fd2];
+      __spin_lock (&d2->port.lock);
+      d2->flags = flags;
+      _hurd_port_set (&d2->ctty, ctty);
+      _hurd_port_locked_set (&d2->port, port); /* Unlocks D2.  */
+    }
   __mutex_unlock (&_hurd_dtable_lock);
+
+  if (fd2 >= 0)
+    {
+      /* Give the ports each a user ref for the new descriptor.  */
+      __mach_port_mod_refs (__mach_task_self (), port,
+			    MACH_PORT_RIGHT_SEND, 1);
+      if (ctty != MACH_PORT_NULL)
+	__mach_port_mod_refs (__mach_task_self (), ctty,
+			      MACH_PORT_RIGHT_SEND, 1);
+    }
+
+  _hurd_port_free (&d.d->port, port, &dealloc);
+  if (ctty != MACH_PORT_NULL)
+    _hurd_port_free (&d.d->ctty, ctty, &dealloc_ctty);
+
+  _hurd_fd_done (d, &dealloc_dt);
 
   return fd2;
 }
