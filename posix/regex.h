@@ -1,6 +1,6 @@
 /* Definitions for data structures and routines for the regular
    expression library, version 0.12.
-   Copyright (C) 1985,89,90,91,92,93,95,96 Free Software Foundation, Inc.
+   Copyright (C) 1985,89,90,91,92,93,95,96,97 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
@@ -22,6 +22,11 @@
 
 #ifndef __REGEXP_LIBRARY_H__
 #define __REGEXP_LIBRARY_H__
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* POSIX says that <sys/types.h> must be included (by the caller) before
    <regex.h>.  */
@@ -486,6 +491,11 @@ extern size_t regerror
   _RE_ARGS ((int errcode, const regex_t *preg, char *errbuf,
              size_t errbuf_size));
 extern void regfree _RE_ARGS ((regex_t *preg));
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* not __REGEXP_LIBRARY_H__ */
 

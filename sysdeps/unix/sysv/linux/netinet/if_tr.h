@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,19 +16,26 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _LIBGEN_H
+#ifndef _NETINET_IF_TR_H
+#define	_NETINET_IF_TR_H 1
 
-#define _LIBGEN_H	1
 #include <sys/cdefs.h>
+#include <sys/types.h>
+#include <asm/types.h>
 
-__BEGIN_DECLS
+#include <linux/if_tr.h>
 
-/* Return directory part of PATH or "." if none is available.  */
-extern char *dirname __P ((char *__path));
+#ifdef __USE_BSD
 
-/* Return filename part of PATH.  */
-extern char *basename __P ((__const char *__path));
+struct trn_hdr {
+  u_int8_t trn_ac;                /* access control field */
+  u_int8_t trn_fc;                /* field control field */
+  u_int8_t trn_dhost[TR_ALEN];    /* destination host */
+  u_int8_t trn_shost[TR_ALEN];    /* source host */
+  u_int16_t trn_rcf;              /* route control field */
+  u_int16_t trn_rseg[8];          /* routing registers */
+};
 
-__END_DECLS
+#endif
 
-#endif /* libgen.h */
+#endif	/* netinet/if_tr.h */

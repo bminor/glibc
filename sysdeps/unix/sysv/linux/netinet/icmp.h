@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,19 +16,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _LIBGEN_H
+#ifndef _NETINET_ICMP_H
+#define	_NETINET_ICMP_H 1
 
-#define _LIBGEN_H	1
-#include <sys/cdefs.h>
+#include <asm/types.h>
+#include <linux/icmp.h>
 
-__BEGIN_DECLS
-
-/* Return directory part of PATH or "." if none is available.  */
-extern char *dirname __P ((char *__path));
-
-/* Return filename part of PATH.  */
-extern char *basename __P ((__const char *__path));
-
-__END_DECLS
-
-#endif /* libgen.h */
+#endif	/* netinet/icmp.h */

@@ -26,6 +26,8 @@
 #define	_FTW_H	1
 #include <features.h>
 
+__BEGIN_DECLS
+
 #include <statbuf.h>
 
 /* The FLAG argument to the user function passed to ftw.  */
@@ -40,5 +42,7 @@ extern int ftw __P ((__const char *__dir,
 				    __const struct stat *__status,
 				    int __flag),
 		     int __descriptors));
+
+__END_DECLS
 
 #endif	/* ftw.h */

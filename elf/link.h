@@ -25,6 +25,8 @@
 
 #include <elf.h>
 
+__BEGIN_DECLS
+
 /* We use this macro to refer to ELF types independent of the native wordsize.
    `ElfW(TYPE)' is used in place of `Elf32_TYPE' or `Elf64_TYPE'.  */
 #define ElfW(type)	_ElfW (Elf, __ELF_NATIVE_CLASS, type)
@@ -340,5 +342,6 @@ extern void _dl_debug_state (void);
    in the `r_ldbase' member.  Returns the address of the structure.  */
 extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase);
 
+__END_DECLS
 
 #endif /* link.h */

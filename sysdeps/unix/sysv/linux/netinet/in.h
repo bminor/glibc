@@ -23,6 +23,7 @@
 
 #include <sys/socket.h>
 
+__BEGIN_DECLS
 
 /* Standard well-defined IP protocols.  */
 enum
@@ -202,5 +203,11 @@ extern unsigned short int htons __P ((unsigned short int));
 #define	htonl(x)	(x)
 #define	htons(x)	(x)
 #endif
+
+
+/* Bind socket to a priviledged IP port.  */
+extern int bindresvport __P ((int __sockfd, struct sockaddr_in *__sin));
+
+__END_DECLS
 
 #endif	/* netinet/in.h */

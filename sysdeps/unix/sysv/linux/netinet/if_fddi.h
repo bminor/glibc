@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,19 +16,22 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _LIBGEN_H
+#ifndef _NETINET_IF_FDDI_H
+#define	_NETINET_IF_FDDI_H 1
 
-#define _LIBGEN_H	1
 #include <sys/cdefs.h>
+#include <sys/types.h>
+#include <asm/types.h>
 
-__BEGIN_DECLS
+#include <linux/if_fddi.h>
 
-/* Return directory part of PATH or "." if none is available.  */
-extern char *dirname __P ((char *__path));
+#ifdef __USE_BSD
 
-/* Return filename part of PATH.  */
-extern char *basename __P ((__const char *__path));
+struct fddi_header {
+  u_int8_t fddi_fc;                    /* Frame Control (FC) value */
+  u_int8_t fddi_dhost[FDDI_K_ALEN];    /* Destination host */
+  u_int8_t fddi_shost[FDDI_K_ALEN];    /* Source host */
+};
+#endif
 
-__END_DECLS
-
-#endif /* libgen.h */
+#endif	/* netinet/if_fddi.h */

@@ -24,6 +24,7 @@
 
 #include <sys/types.h>
 
+__BEGIN_DECLS
 
 /* Get system dependent values and data structures.  */
 #include <utmpbits.h>

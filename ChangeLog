@@ -1,3 +1,81 @@
+1997-02-18 03:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/bug10.c (main): Correct parameter.
+
+	* string/strcoll.c: Update copyright.
+
+1997-02-17 02:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/obstack.h: Add `extern "C"' protection.
+	* posix/regex.h: Likewise.
+	* io/ftw.h: Likewise.
+	* misc/libgen.h: Likewise.
+	* login/utmp.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/reboot.h: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/in.h: Likewise.
+	* sunrpc/rpc/pmap_rmt.h: Likewise.
+	* sunrpc/rpc/auth_des.h: Likewise.
+	* elf/link.h: Likewise.
+	* inet/netinet/ether.h: Likewise.
+	Reported by HJ Lu.
+
+1997-02-17 01:45  a sun  <asun@zoology.washington.edu>
+
+	Linux specific network headers.
+	* sysdeps/unix/sysv/linux/netinet/if_fddi.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/if_tr.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/ip_icmp.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/ip_fw.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/igmp.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/icmp.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/ip.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/tcp.h: New file.
+	* sysdeps/unix/sysv/linux/netipx/ipx.h: New file.
+	* sysdeps/unix/sysv/linux/netatalk/atalk.h: New file.
+	* sysdeps/unix/sysv/linux/Dist: Add new network headers.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=misc] (sysdep_headers):
+	Add sys/quota.h.
+	[$(subdir)=inet] (sysdep_headers): Add new network header.
+
+	* sysdeps/unix/sysv/linux/netinet/udp.h: Add Linux specific changes.
+	* sysdeps/unix/sysv/linux/netinet/in.h: Likewise.
+
+	* inet/netinet/ip.h: Move to sysdeps/generic.
+
+1997-02-16 13:15 1997  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* inet/netinet/ip.h: Add protection.
+
+1997-02-17 01:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/sys/syslog.h (prioritynames): Correct definition to use
+	braces where necessary.
+	(facilitynames): Likewise.
+	Patch by Ronald F. Guilmette <rfg@monkeys.com>.
+	Comment and beautify declarations.
+
+1997-02-16 03:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/in.h: Declare bindresvport.
+	Reported by fabsoft@fabserver1.zarm.uni-bremen.de.
+
+1997-02-16 03:48  Thorsten Kukuk  <kukuk@weber.uni-paderborn.de>
+
+	* nis/nss_nis/nis-ethers.c (_nss_nis_getethernam_r): Rename to
+	_nss_nis_gethostton_r.
+	(_nss_nis_getetherbyaddr_r): Rename to _nss_nis_getntohost_r.
+
+1997-02-16 02:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/l10nflist.c (_nl_make_l10nflist): Fix bug in computation of
+	length of abs_filename.
+
+1997-02-15 22:37  Andy Berkheimer  <andy@tho.org>
+
+	* resolv/gethnamaddr.c (gethostbyname2): Test for ':' in name before
+	trying to resolv name as numeric IPv6 address.
+	* nss/digits_dots.c: Likewise.
+
 1997-02-13 11:44  Andreas Jaeger  <aj@arthur.pfalz.de>
 
 	* stdlib/qsort.c: Add prototype for _quicksort.
