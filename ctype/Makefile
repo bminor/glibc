@@ -1,4 +1,4 @@
-# Copyright (C) 1991 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #
 subdir	:= ctype
 
-routines	:= ctype ctype-nonansi
+routines	:= ctype ctype-extn
 aux		:= ctype-info
 
 tests	:= test_ctype
