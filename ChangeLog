@@ -1,3 +1,10 @@
+2000-01-27  Scott Bambrough  <scottb@netwinder.org>
+
+        * sysdeps/unix/sysv/linux/arm/Makefile: Backout rlimit changes for 
+	resource directory.
+        * sysdeps/unix/sysv/linux/arm/syscalls.list: Backout changes for 
+	versioning setrlimit and getrlimit.
+
 2000-01-28  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/hurdselect.c (_hurd_select): Don't allocate D as a
