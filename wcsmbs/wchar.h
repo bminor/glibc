@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,8 +58,8 @@ typedef struct
 
 #ifndef WCHAR_MIN
 /* These constants might also be defined in <inttypes.h>.  */
-# define WCHAR_MIN ((wchar_t) 0)
-# define WCHAR_MAX (~WCHAR_MIN)
+# define WCHAR_MIN (0)
+# define WCHAR_MAX (0x7fffffff)
 #endif
 
 #ifndef WEOF
