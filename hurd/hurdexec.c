@@ -242,5 +242,8 @@ _hurd_exec (task_t task, file_t file,
       if (dtable[i] != MACH_PORT_NULL)
 	_hurd_port_free (dtable_cells[i], &ulink_dtable[i], dtable[i]);
 
+  /* Release lock on the file descriptor table. */
+  __mutex_unlock (&_hurd_dtable_lock);
+
   return err;
 }
