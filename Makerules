@@ -256,14 +256,21 @@ endif
 ifneq "$(findstring env,$(origin install-data))" ""
 override install-data :=
 endif
+ifneq "$(findstring env,$(origin install))" ""
+override install :=
+endif
 
 # install-lib are installed from the object directory into libdir.
 # install-data are installed as they are into datadir.  
 # headers are installed from the object directory header directories into
-# one or both ofg ansi-incldir and trad-incldir.
+# one or both of ansi-incldir and trad-incldir.
 
 do-install = $(INSTALL_DATA) $< $@
 
+ifdef install
+$(addprefix $(bindir)/,$(install)): $(bindir)/%: $(objpfx)%
+	$(INSTALL) $< $@
+endif
 ifdef install-lib
 $(addprefix $(libdir)/,$(install-lib)): $(libdir)/%: $(objpfx)%;$(do-install)
 endif
@@ -271,7 +278,8 @@ ifdef install-data
 $(addprefix $(datadir)/,$(install-data)): $(datadir)/%: %;$(do-install)
 endif
 +install := $(addprefix $(libdir)/,$(install-lib))	\
-	    $(addprefix $(datadir)/,$(install-data))
+	    $(addprefix $(datadir)/,$(install-data))	\
+	    $(addprefix $(bindir)/,$(install))
 ifdef headers
 ifdef ansi-incldir
 $(addprefix $(ansi-incldir)/,$(headers)): \
