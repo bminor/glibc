@@ -55,7 +55,7 @@ known_compare (const void *p1, const void *p2)
   const struct gconv_loaded_object *s2 =
     (const struct gconv_loaded_object *) p2;
 
-  return (intptr_t) s1->handle - (intptr_t) s2->handle;
+  return strcmp (s1->name, s2->name);
 }
 
 
