@@ -87,6 +87,9 @@ header != 0 && $1 ~ /@def|@item|@vindex/ \
 	        } else
 		  word=word " " $i
 	      }
+	      # Handle a single word in braces.
+	      else if ($i ~ /^{.*}$/)
+		word=substr ($i, 2, length ($i) - 2)
 	      else
 	        word=$i
 	      if (!curly) {
