@@ -205,6 +205,25 @@ __hurd_path_lookup_retry (file_t crdir,
 		goto bad_magic;
 	      break;
 
+	    case 't':
+	      if (retryname[1] == 't' && retryname[2] == 'y')
+		switch (retryname[3])
+		  {
+		  case '\0':
+		    return _hurd_ports_get (INIT_PORT_CTTYID, result);
+		  case '/':
+		    if (err = _hurd_ports_get (INIT_PORT_CTTYID, &startdir))
+		      return err;
+		    dealloc_dir = 1;
+		    strcpy (retryname, &retryname[4]);
+		    break;
+		  default:
+		    goto bad_magic;
+		  }
+	      else
+		goto bad_magic;
+	      break;
+
 	    default:
 	    bad_magic:
 	      return EGRATUITOUS;
