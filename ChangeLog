@@ -1,4 +1,6 @@
-1997-08-23 23:50  Ulrich Drepper  <drepper@cygnus.com>
+1997-08-24 00:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/iso-4217.def: Update for more complete ISO 4217 match.
 
 	* libio/stdio.h: Make {,v}snprintf functions available is __USE_BSD.
 

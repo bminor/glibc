@@ -157,19 +157,31 @@ build the GNU C library:
      recommend you port GNU `make' instead.  *Really.* We recommend
      version GNU `make' version 3.75 or later.
 
-   * GCC 2.7.2
+   * GCC 2.7.2.3
 
      On most platforms, the GNU C library can only be compiled with the
      GNU C compiler.  We recommend GCC version 2.7.2 or later; earlier
      versions may have problems.
 
-   * `binutils' 2.8
+   * `binutils' 2.8.1
 
      Using the GNU `binutils' (assembler, linker, and related tools) is
      preferable when possible, and they are required to build an ELF
      shared C library.  We recommend `binutils' version 2.8 or later;
      earlier versions are known to have problems or to not support all
      architectures.
+
+If you change any configuration file you will need also
+
+   * `autoconf' 2.12
+
+and if you change any of the message translation files you will also need
+
+   * `GNU gettext' 0.10 or later
+
+If you upgrade your source tree using the patches made available you probably
+will need those package above in any case.
+
 
 Supported Configurations
 ------------------------
@@ -922,4 +934,3 @@ parts of the library were contributed or worked on by other people.
           or <Software.Distribution@CS.CMU.EDU> any improvements or
           extensions that they make and grant Carnegie Mellon the
           rights to redistribute these changes.
-
