@@ -33,7 +33,9 @@ will be freed automatically.  @xref{Variable Size Automatic}.
 * Variable Size Automatic::     Allocation of variable-sized blocks
 				 of automatic storage that are freed when the
 				 calling function returns.
-* Relocating Allocator::        
+* Relocating Allocator::        Waste less memory, if you can tolerate
+				 automatic relocation of the blocks you get.
+* Memory Warnings::		Getting warnings when memory is nearly full.
 @end menu
 
 @node Memory Concepts
@@ -674,26 +676,20 @@ the objects are usually small.  And the only space overhead per object is
 the padding needed to start each object on a suitable boundary.
 
 @menu
-* Representation of Obstacks::          How to declare an obstack in your
-			                 program.
-* Preparing to Use Obstacks::           Preparations needed before you can
-				         use obstacks.
-* Allocation in an Obstack::            Allocating objects in an obstack.
-* Freeing Obstack Objects::             Freeing objects in an obstack.
-* Obstack Functions and Macros::        The obstack functions are both
-				         functions and macros.
-* Growing Objects::                     Making an object bigger by stages.
-* Extra Fast Growing Objects::          Extra-high-efficiency (though more
-					 complicated) growing.
-* Status of an Obstack::                Inquiries about the status of an
-					 obstack.
-* Obstacks Data Alignment::             Controlling alignment of objects
-					 in obstacks.
-* Obstack Chunks::                      How obstacks obtain and release
-                                         chunks. 
-					Efficiency considerations.
-* Obstacks and Signal Handling::        Don't try to use obstack functions
-					 in a signal handler.
+* Creating Obstacks::		How to declare an obstack in your program.
+* Preparing for Obstacks::	Preparations needed before you can
+				 use obstacks.
+* Allocation in an Obstack::    Allocating objects in an obstack.
+* Freeing Obstack Objects::     Freeing objects in an obstack.
+* Obstack Functions::		The obstack functions are both
+				 functions and macros.
+* Growing Objects::             Making an object bigger by stages.
+* Extra Fast Growing::		Extra-high-efficiency (though more
+				 complicated) growing objects.
+* Status of an Obstack::        Inquiries about the status of an obstack.
+* Obstacks Data Alignment::     Controlling alignment of objects in obstacks.
+* Obstack Chunks::              How obstacks obtain and release chunks. 
+				Efficiency considerations.
 * Summary of Obstacks::         
 @end menu
 
@@ -701,8 +697,8 @@ the padding needed to start each object on a suitable boundary.
 @c "Efficiency considerations" is capitalized, but doesn't go with
 @c anything.  Is it part of the above description?
 
-@node Representation of Obstacks
-@subsection Representation of Obstacks
+@node Creating Obstacks
+@subsection Creating Obstacks
 
 The utilities for manipulating obstacks are declared in the header
 file @file{obstack.h}.
@@ -742,8 +738,8 @@ get a chunk.  Usually you supply a function which uses @code{malloc}
 directly or indirectly.  You must also supply a function to free a chunk.
 These matters are described in the following section.
 
-@node Preparing to Use Obstacks
-@subsection Preparing to Use Obstacks
+@node Preparing for Obstacks
+@subsection Preparing for Using Obstacks
 
 Each source file in which you plan to use the obstack functions
 must include the header file @file{obstack.h}, like this:
@@ -902,10 +898,10 @@ obstack_free (obstack_ptr, first_object_allocated_ptr);
 
 Recall that the objects in an obstack are grouped into chunks.  When all
 the objects in a chunk become free, the obstack library automatically
-frees the chunk (@pxref{Preparing to Use Obstacks}).  Then other
+frees the chunk (@pxref{Preparing for Obstacks}).  Then other
 obstacks, or non-obstack allocation, can reuse the space of the chunk.
 
-@node Obstack Functions and Macros
+@node Obstack Functions
 @subsection Obstack Functions and Macros
 @cindex macros
 
@@ -1057,7 +1053,7 @@ You can use @code{obstack_blank} with a negative size argument to make
 the current object smaller.  Just don't try to shrink it beyond zero
 length---there's no telling what would happen if you do that.
 
-@node Extra Fast Growing Objects
+@node Extra Fast Growing
 @subsection Extra Fast Growing Objects
 @cindex efficiency and obstacks
 
@@ -1239,7 +1235,7 @@ library frees the chunk by calling @code{obstack_chunk_free}, which you
 must also define.
 
 These two must be defined (as macros) or declared (as functions) in each
-source file that uses @code{obstack_init} (@pxref{Representation of Obstacks}).
+source file that uses @code{obstack_init} (@pxref{Creating Obstacks}).
 Most often they are defined as macros like this:
 
 @example
@@ -1282,42 +1278,6 @@ if (obstack_chunk_size (obstack_ptr) < @var{new_chunk_size})
   obstack_chunk_size (obstack_ptr) = @var{new_chunk_size};
 @end example
 
-@node Obstacks and Signal Handling
-@subsection Obstacks and Signal Handling
-@cindex signals and obstacks
-
-Is it safe to use @code{obstack_alloc} in a signal handler?  Yes, provided
-you are careful in the following ways:
-
-@itemize @bullet
-@item
-Use an obstack that you are certain the interrupted program is not
-trying to allocate or free in at the time the signal happens.  (For
-example, you may have a special obstack for use in signal handlers.)
-
-@item
-Make sure that the @code{obstack_chunk_alloc} function is safe for
-use in signal handlers.  This may mean keeping an extra emergency
-chunk to allocate when a new chunk is needed within a signal handler,
-just to avoid calling @code{malloc} from the signal handler.
-@end itemize
-
-The same consideration applies to any of the functions that allocate
-or grow objects.
-
-Likewise, you can use @code{obstack_free} in a signal handler provided
-you are sure that the interrupted program was not trying to allocate or
-free in the same obstack, and provided you can dispose of freed chunks
-without calling @code{free} immediately.  You may be able to save the
-chunks in a chain and free them later when signal handling is over.
-
-In a multi-threaded program, you must make certain that it never happens
-that two threads simultaneously operate on the same obstack.  In addition,
-since @code{malloc} and @code{free} are not reentrant, you must design
-the @code{obstack_chunk_alloc} and @code{obstack_chunk_free} functions
-to interlock so that only one of them can actually call @code{malloc} or
-@code{free} at a given time.
-
 @node Summary of Obstacks
 @subsection Summary of Obstack Functions
 
@@ -1327,7 +1287,7 @@ argument.
 
 @table @code
 @item obstack_init (@var{obstack_ptr})
-Initialize use of an obstack.  @xref{Representation of Obstacks}.
+Initialize use of an obstack.  @xref{Creating Obstacks}.
 
 @item obstack_alloc (@var{obstack_ptr}, @var{size})
 Allocate an object of @var{size} uninitialized bytes.
@@ -1373,15 +1333,15 @@ Objects}.
 
 @item obstack_blank_fast (@var{obstack_ptr}, @var{size})
 Add @var{size} uninitialized bytes to a growing object without checking
-that there is enough room.  @xref{Extra Fast Growing Objects}.
+that there is enough room.  @xref{Extra Fast Growing}.
 
 @item obstack_1grow_fast (@var{obstack_ptr}, @var{data_char})
 Add one byte containing @var{data_char} to a growing object without
-checking that there is enough room.  @xref{Extra Fast Growing Objects}.
+checking that there is enough room.  @xref{Extra Fast Growing}.
 
 @item obstack_room (@var{obstack_ptr})
 Get the amount of room now available for growing the current object.
-@xref{Extra Fast Growing Objects}.
+@xref{Extra Fast Growing}.
 
 @item obstack_alignment_mask (@var{obstack_ptr})
 The mask used for aligning the beginning of an object.  This is an
@@ -1593,5 +1553,116 @@ scope.
 @node Relocating Allocator
 @section Relocating Allocator
 
-@strong{Incomplete:}  Information about the relocating storage allocator
-used by Emacs 19 goes here.
+@cindex relocating memory allocator
+Any system of dynamic memory allocation has overhead: the amount of
+space it uses is more than the amount the program asks for.  The
+@dfn{relocating memory allocator} achieves very low overhead by moving
+blocks in memory as necessary, on its own initiative.
+
+@menu
+* Relocator Concepts::		How to understand relocating allocation.
+* Using Relocator::		Functions for relocating allocation.
+@end menu
+
+@node Relocator Concepts
+@subsection Concepts of Relocating Allocation
+
+@ifinfo
+The @dfn{relocating memory allocator} achieves very low overhead by
+moving blocks in memory as necessary, on its own initiative.
+@end ifinfo
+
+When you allocate a block with @code{malloc}, the address of the block
+never changes unless you use @code{realloc} to change its size.  Thus,
+you can safely store the address in various places, temporarily or
+permanently, as you like.  This is not safe when you use the relocating
+memory allocator, because any and all relocatable blocks can move
+whenever you allocate memory in any fashion.  Even calling @code{malloc}
+or @code{realloc} can move the relocatable blocks.
+
+@cindex handle
+For each relocatable block, you must make a @dfn{handle}---a pointer
+object in memory, designated to store the address of that block.  The
+relocating allocator knows where each block's handle is, and updates the
+address stored there whenever it moves the block, so that the handle
+always points to the block.  Each time you access the contents of the
+block, you should fetch its address anew from the handle.
+
+To call any of the relocating allocator functions from a signal handler
+is almost certainly incorrect, because the signal could happen at any
+time and relocate all the blocks.  The only way to make this safe is to
+block the signal around any access to the contents of any relocatable
+block---not a convenient mode of operation.  @xref{Nonreentrancy}.
+
+@node Using Relocator
+@subsection Allocating and Freeing Relocatable Blocks
+
+@pindex ralloc.h
+In the descriptions below, @var{handleptr} designates the address of the
+handle.  All the functions are declared in @file{ralloc.h}; all are GNU
+extensions.
+
+@comment ralloc.h
+@comment GNU
+@deftypefun {void *} r_alloc (void **@var{handleptr}, int @var{size})
+This function allocates a relocatable block of size @var{size}.  It
+stores the block's address in @code{*@var{handleptr}} and returns
+a non-null pointer to indicate success.
+
+If @code{r_alloc} can't get the space needed, it stores a null pointer
+in @code{*@var{handleptr}}, and returns a null pointer.
+@end deftypefun
+
+@comment ralloc.h
+@comment GNU
+@deftypefun void r_alloc_free (void **@var{handleptr})
+This function is the way to free a relocatable block.  It frees the
+block that @code{*@var{handleptr}} points to, and stores a null pointer
+in @code{*@var{handleptr}} to show it doesn't point to an allocated
+block any more.
+@end deftypefun
+
+@comment ralloc.h
+@comment GNU
+@deftypefun {void *} r_re_alloc (void **@var{handleptr}, int @var{size})
+The function @code{r_re_alloc} adjusts the size of the block that
+@code{*@var{handleptr}} points to, making it @var{size} bytes long.  It
+stores the address of the resized block in @code{*@var{handleptr}} and
+returns a non-null pointer to indicate success.
+
+If enough memory is not available, this function returns a null pointer
+and does not modify @code{*@var{handleptr}}.
+@end deftypefun
+
+@node Memory Warnings
+@section Memory Usage Warnings
+@cindex memory usage warnings
+@cindex warnings of memory almost full
+
+@pindex stdlib.h
+You can ask for warnings as the program approaches running out of memory
+space, by calling @code{memory_warnings}.  This is a GNU extension
+declared in @file{stdlib.h}.
+
+@comment stdlib.h
+@comment GNU
+@deftypefun void memory_warnings (void *@var{start}, void (*@var{warn_func}) (char *))
+Call this function to request warnings for nearing exhaustion of virtual
+memory.
+
+The argument @var{start} says where data space begins, in memory.  The
+allocator compares this against the last address used and against the
+limit of data space, to determine the fraction of available memory in
+use.  if you supply zero for @var{start}, then a default value is used
+which is right in most circumstances.
+
+For @var{warn_func}, supply a function that the relocating allocator can
+call to warn you.  It is called with a string (a warning message) as
+argument.  Normally it ought to display the string for the user to
+read.
+@end deftypefun
+
+The warnings come when memory becomes 75% full, when it becomes 85%
+full, and when it becomes 95% full.  Above 95% you get another warning
+each time memory usage increases.
+
