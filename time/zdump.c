@@ -1,10 +1,6 @@
-#ifdef	LIBC
-#include <ansidecl.h>
-#endif
-
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zdump.c	7.2";
+static char	elsieid[] = "@(#)zdump.c	7.10";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -43,8 +39,12 @@ static char	elsieid[] = "@(#)zdump.c	7.2";
 #define SECSPERMIN	60
 #endif /* !defined SECSPERMIN */
 
+#ifndef MINSPERHOUR
+#define MINSPERHOUR	60
+#endif /* !defined MINSPERHOUR */
+
 #ifndef SECSPERHOUR
-#define SECSPERHOUR	3600
+#define SECSPERHOUR	(SECSPERMIN * MINSPERHOUR)
 #endif /* !defined SECSPERHOUR */
 
 #ifndef HOURSPERDAY
@@ -55,9 +55,17 @@ static char	elsieid[] = "@(#)zdump.c	7.2";
 #define EPOCH_YEAR	1970
 #endif /* !defined EPOCH_YEAR */
 
+#ifndef TM_YEAR_BASE
+#define TM_YEAR_BASE	1900
+#endif /* !defined TM_YEAR_BASE */
+
 #ifndef DAYSPERNYEAR
 #define DAYSPERNYEAR	365
 #endif /* !defined DAYSPERNYEAR */
+
+#ifndef isleap
+#define isleap(y) ((((y) % 4) == 0 && ((y) % 100) != 0) || ((y) % 400) == 0)
+#endif /* !defined isleap */
 
 extern char **	environ;
 extern int	getopt();
@@ -74,7 +82,7 @@ extern void	perror();
 
 static char *	abbr();
 static long	delta();
-static void	hunt();
+static time_t	hunt();
 static int	longest;
 static char *	progname;
 static void	show();
@@ -102,26 +110,28 @@ char *	argv[];
 			vflag = 1;
 		else	cutoff = optarg;
 	if (c != EOF ||
-	   (optind == argc - 1 && strcmp(argv[optind], "=") == 0)) {
-		(void) fprintf(stderr,
-			"%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n",
-			argv[0], argv[0]);
-		(void) exit(EXIT_FAILURE);
+		(optind == argc - 1 && strcmp(argv[optind], "=") == 0)) {
+			(void) fprintf(stderr,
+"%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n",
+				argv[0], argv[0]);
+			(void) exit(EXIT_FAILURE);
 	}
-	if (cutoff != NULL)
+	if (cutoff != NULL) {
+		int	y;
+
 		cutyear = atoi(cutoff);
-	/*
-	** VERY approximate.
-	*/
-	cuttime = (long) (cutyear - EPOCH_YEAR) *
-		SECSPERHOUR * HOURSPERDAY * DAYSPERNYEAR;
+		cuttime = 0;
+		for (y = EPOCH_YEAR; y < cutyear; ++y)
+			cuttime += DAYSPERNYEAR + isleap(y);
+		cuttime *= SECSPERHOUR * HOURSPERDAY;
+	}
 	(void) time(&now);
 	longest = 0;
 	for (i = optind; i < argc; ++i)
 		if (strlen(argv[i]) > longest)
 			longest = strlen(argv[i]);
 	for (hibit = 1; (hibit << 1) != 0; hibit <<= 1)
-		;
+		continue;
 	for (i = optind; i < argc; ++i) {
 		register char **	saveenv;
 		static char		buf[MAX_STRING_LENGTH];
@@ -167,7 +177,8 @@ char *	argv[];
 			if (delta(&newtm, &tm) != (newt - t) ||
 				newtm.tm_isdst != tm.tm_isdst ||
 				strcmp(abbr(&newtm), buf) != 0) {
-					hunt(argv[i], t, newt);
+					newt = hunt(argv[i], t, newt);
+					newtm = *localtime(&newt);
 					(void) strncpy(buf, abbr(&newtm),
 						(sizeof buf) - 1);
 			}
@@ -195,10 +206,10 @@ char *	argv[];
 
 	/* gcc -Wall pacifier */
 	for ( ; ; )
-		;
+		continue;
 }
 
-static void
+static time_t
 hunt(name, lot, hit)
 char *	name;
 time_t	lot;
@@ -227,7 +238,12 @@ time_t	hit;
 	}
 	show(name, lot, TRUE);
 	show(name, hit, TRUE);
+	return hit;
 }
+
+/*
+** Thanks to Paul Eggert (eggert@twinsun.com) for logic used in delta.
+*/
 
 static long
 delta(newp, oldp)
@@ -235,13 +251,21 @@ struct tm *	newp;
 struct tm *	oldp;
 {
 	long	result;
+	int	tmy;
 
-	result = newp->tm_hour - oldp->tm_hour;
-	if (result < 0)
-		result += HOURSPERDAY;
-	result *= SECSPERHOUR;
-	result += (newp->tm_min - oldp->tm_min) * SECSPERMIN;
-	return result + newp->tm_sec - oldp->tm_sec;
+	if (newp->tm_year < oldp->tm_year)
+		return -delta(oldp, newp);
+	result = 0;
+	for (tmy = oldp->tm_year; tmy < newp->tm_year; ++tmy)
+		result += DAYSPERNYEAR + isleap(tmy + TM_YEAR_BASE);
+	result += newp->tm_yday - oldp->tm_yday;
+	result *= HOURSPERDAY;
+	result += newp->tm_hour - oldp->tm_hour;
+	result *= MINSPERHOUR;
+	result += newp->tm_min - oldp->tm_min;
+	result *= SECSPERMIN;
+	result += newp->tm_sec - oldp->tm_sec;
+	return result;
 }
 
 static void
@@ -274,9 +298,10 @@ abbr(tmp)
 struct tm *	tmp;
 {
 	register char *	result;
+	static char	nada[1];
 
 	if (tmp->tm_isdst != 0 && tmp->tm_isdst != 1)
-		return "";
+		return nada;
 	result = tzname[tmp->tm_isdst];
-	return (result == NULL) ? "" : result;
+	return (result == NULL) ? nada : result;
 }
