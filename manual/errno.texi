@@ -131,19 +131,6 @@ on other systems.
 
 
 @comment errno.h
-@comment BSD
-@deftypevr Macro int EIDRM      @c ????
-A message queue identifier has been removed and is no longer valid.
-@end deftypevr
-
-@comment errno.h
-@comment BSD
-@deftypevr Macro int ENOMSG     @c ???
-There is no message of the specified type available immediately, and
-blocking was not desired.
-@end deftypevr
-
-@comment errno.h
 @comment POSIX.1
 @deftypevr Macro int EPERM      @c 1 Operation not permitted
 Operation not permitted; only the owner of the file (or other resource)
@@ -644,7 +631,7 @@ The experienced user will know what is wrong.
 
 @comment errno.h
 @comment GNU
-@deftypevr Macro int EGRATUITOUS @c 101 Gratuitous error
+@deftypevr Macro int EGRATUITOUSLYLONGERRORNAME @c 101 Gratuitous error
 This error code has no purpose.
 @end deftypevr
 
