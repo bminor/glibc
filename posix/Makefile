@@ -71,4 +71,5 @@ glob/%.h: %.h
 
 glob/configure: /home/gd/gnu/autoconf/glob.conf
 	cp $< $@
-/home/gd/gnu/autoconf/%: force;$(MAKE) -C $(@D) $(@F)
+/home/gd/gnu/autoconf/%: FORCE;$(MAKE) -C $(@D) $(@F)
+FORCE:
