@@ -20,7 +20,6 @@
 #include <unistd.h>
 #include <sysdep.h>
 #include <fpu_control.h>
-#include <linux/personality.h>
 #include <init-first.h>
 #include <sys/types.h>
 
@@ -50,19 +49,11 @@ char **__libc_argv;
 static void
 init (int argc, char **argv, char **envp)
 {
-  extern int __personality (int);
   extern void __getopt_clean_environment (char **);
 
-  /* We must not call `personality' twice.  */
+  /* Make sure we don't initialize twice.  */
   if (!__libc_multiple_libcs)
     {
-      /* The `personality' system call takes one argument that chooses
-	 the "personality", i.e. the set of system calls and such.  We
-	 must make this call first thing to disable emulation of some
-	 other system that might have been enabled by default based on
-	 the executable format.  */
-      __personality (PER_LINUX);
-
       /* Set the FPU control word to the proper default value if the
 	 kernel would use a different value.  (In a static program we
 	 don't have this information.)  */
