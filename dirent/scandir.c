@@ -41,7 +41,7 @@ DEFUN(scandir, (dir, namelist, select, cmp),
 
   i = 0;
   while ((d = readdir (dp)) != NULL)
-    if ((*select) (d))
+    if (select == NULL || (*select) (d))
       {
 	if (i == vsize)
 	  {
@@ -79,7 +79,9 @@ DEFUN(scandir, (dir, namelist, select, cmp),
 
   errno = save;
 
-  qsort (v, i, sizeof (*v), cmp);
+  /* Sort the list if we have a comparison function to sort with.  */
+  if (cmp != NULL)
+    qsort (v, i, sizeof (*v), cmp);
   *namelist = v;
   return i;
 }
