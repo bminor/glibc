@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -49,34 +49,44 @@ typedef union
       } unix_iobuf;
   } unix_FILE;
 
-/* These are the Unix stdio's stdin, stdout, and stderr.  */
+/* These are the Unix stdio's stdin, stdout, and stderr.
+   In Unix stdin is (&_iob[0]), stdout is (&_iob[1]), and stderr is
+   (&_iob[2]).  The magic number marks these as glued streams.  The
+   __validfp macro in stdio.h is used by every stdio function.  It checks
+   for glued streams, and replaces them with the GNU stdio stream.  */
 unix_FILE _iob[] =
   {
-    { { _GLUEMAGIC, &stdin, } },
-    { { _GLUEMAGIC, &stdout, } },
-    { { _GLUEMAGIC, &stderr, } },
+    { { _GLUEMAGIC, &stdin } },
+    { { _GLUEMAGIC, &stdout } },
+    { { _GLUEMAGIC, &stderr } },
   };
 
-/* Called by the Unix stdio `getc' macro.  */
+/* Called by the Unix stdio `getc' macro.
+   The macro is assumed to look something like:
+       (--file->_cnt < 0 ? _filbuf (file) ...)
+   In a Unix stdio FILE `_cnt' is the first element.
+   In a GNU stdio or glued FILE, the first element is the magic number.  */
 int
 DEFUN(_filbuf, (file), unix_FILE *file)
 {
-  /* Compensate for getc's decrement.  */
-  switch (++file->glue.magic)
+  switch (++file->glue.magic)	/* Compensate for Unix getc's decrement.  */
     {
     case _GLUEMAGIC:
+      /* This is a glued stream.  */
       return getc (*file->glue.streamp);
 
     case  _IOMAGIC:
+      /* This is a normal GNU stdio stream.  */
       return getc ((FILE *) file);
 
     default:
+      /* Bogus stream.  */
       errno = EINVAL;
       return EOF;
     }
 }
 
-/* Called by the Unix stdio `putc' macro.  */
+/* Called by the Unix stdio `putc' macro.  Much like getc, above.  */
 int
 DEFUN(_flsbuf, (c, file),
       int c AND unix_FILE *file)
