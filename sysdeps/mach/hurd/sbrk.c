@@ -30,7 +30,7 @@ DEFUN(__sbrk, (increment), int increment)
 
   __mutex_lock (&_hurd_brk_lock);
   result = (PTR) _hurd_brk;
-  if (increment != 0 &&_hurd_set_brk (_hurd_brk + increment) < 0)
+  if (increment != 0 && _hurd_set_brk (_hurd_brk + increment) < 0)
     result = (PTR) -1;
   __mutex_unlock (&_hurd_brk_lock);
   return result;
