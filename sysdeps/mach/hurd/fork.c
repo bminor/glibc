@@ -19,7 +19,12 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <hurd/signal.h>
+#include <setjmp.h>
 #include "thread_state.h"
+
+extern void _hurd_longjmp_thread_state (struct machine_thread_state *,
+					jmp_buf env, int value);
 
 
 /* Things that want to be locked while forking.  */
@@ -36,12 +41,12 @@ struct hook
   };
 
 static inline error_t
-run_hooks (const struct hook *h, task_t t)
+run_hooks (const struct hook *h, task_t t, process_t p)
 {
   size_t i;
   error_t err;
   for (i = 0; i < h->n; ++i)
-    if (err = (*h->fn[i]) (t))
+    if (err = (*h->fn[i]) (t, p))
       return err;
   return 0;
 }
@@ -69,18 +74,16 @@ __fork (void)
     {
       process_t newproc;
       task_t newtask;
-      mach_port_t msgport;
       mach_port_t ports[_hurd_nports];
       thread_t thread;
       struct machine_thread_state state;
 
       /* Lock things that want to be locked before we fork.  */
-      for (i = 0; i < _hurd_fork_locks.n; ++n)
-	__mutex_lock (_hurd_fork_locks.locks[n]);
+      for (i = 0; i < _hurd_fork_locks.n; ++i)
+	__mutex_lock (_hurd_fork_locks.locks[i]);
 
       newtask = MACH_PORT_NULL;
       thread = MACH_PORT_NULL;
-      msgport = MACH_PORT_NULL;
       newproc = MACH_PORT_NULL;
 
       /* Lock all the port cells for the standard ports and extract the
@@ -105,13 +108,6 @@ __fork (void)
 
       /* Insert the ports used by the library into the child task.  */
 
-      /* Give the child's message port the same name the parent's
-	 message port has in the parent task.  The child's signal
-	 thread will listen on MSGPORT.  */
-      if (err = __mach_port_insert_right (newtask, _hurd_msgport, msgport,
-					  MACH_MSG_TYPE_MOVE_RECEIVE))
-	goto lose;
-
       /* Copy the standard ports into the child task,
 	 with the names that were the standard ports' names
 	 in the parent task at the time the child task was created.  */
@@ -120,38 +116,36 @@ __fork (void)
 	  if (i == INIT_PORT_PROC)
 	    {
 	      /* Get the proc server port for the new task.  */
-	      if (err = __proc_task2proc (newtask, &newproc))
+	      if (err = __USEPORT (PROC,
+				   __proc_task2proc (port, newtask, &newproc)))
 		goto lose;
-	      err = __mach_port_insert_right (newtask, ports[i],
-					      newproc, MACH_PORT_COPY_SEND);
+	      err = __mach_port_insert_right (newtask, ports[i], newproc,
+					      MACH_MSG_TYPE_COPY_SEND);
 	    }
 	  else
-	    err = _HURD_PORT_USE
+	    err = HURD_PORT_USE
 	      (&_hurd_ports[i],
-	       __mach_port_insert_right (newtask,
-					 ports[i], port, MACH_PORT_COPY_SEND));
+	       __mach_port_insert_right (newtask, ports[i], port,
+					 MACH_MSG_TYPE_COPY_SEND));
 	  if (err)
 	    goto lose;
 	}
 
+      /* If we have a real dtable, the hooks will be taking care of it.
+	 If not, copy the ports in the initial dtable.  */
+      if (_hurd_init_dtable != NULL)
+	for (i = 0; i < _hurd_init_dtablesize; ++i)
+	  if (err = __mach_port_insert_right (newtask, _hurd_init_dtable[i],
+					      _hurd_init_dtable[i],
+					      MACH_MSG_TYPE_COPY_SEND))
+	    goto lose;
+
       /* Run things to set other things up in the child task.  */
-      if (err = run_hooks (&_hurd_fork_setup_hook, newtask))
+      if (err = run_hooks (&_hurd_fork_setup_hook, newtask, newproc))
 	goto lose;
 
-      /* Create the message port to be used by the child.  */
-      if (err = __mach_port_allocate (__mach_task_self (),
-				      MACH_PORT_RIGHT_RECEIVE, &msgport))
-	goto lose;
-
-      /* Get us a send right for the child's message port.  */
-      if (err = __mach_port_insert_right (__mach_task_self (), _hurd_msgport,
-					  msgport, MACH_MSG_TYPE_MAKE_SEND))
-	goto lose;
-
-      /* Move the receive right for the message port to the child,
-	 giving it the same name our message port has for us.  */
-      if (err = __mach_port_insert_right (newtask, _hurd_msgport,
-					  msgport, MACH_MSG_TYPE_MOVE_RECEIVE))
+      /* Register the child with the proc server.  */
+      if (err = __USEPORT (PROC, __proc_child (port, newtask)))
 	goto lose;
 
       /* Create the child thread.  */
@@ -159,16 +153,7 @@ __fork (void)
 	goto lose;
 
       /* Set the child thread up to return 1 from the setjmp above.  */
-      _hurd_longjmp_thread_state (thread, env, 1);
-
-      /* Give the proc server the new task's message port.  */
-      if (err = __proc_setmsgport (newproc, msgport))
-	goto lose;
-
-      /* Register the child with the proc server.  */
-      if (err = __USEPORT (PROC, __proc_child (port, newtask)))
-	goto lose;
-
+      _hurd_longjmp_thread_state (&state, env, 1);
       if (err = __thread_resume (thread))
 	goto lose;
 
@@ -185,8 +170,6 @@ __fork (void)
 	}
       if (thread != MACH_PORT_NULL)
 	__mach_port_deallocate (__mach_task_self (), thread);
-      if (msgport != MACH_PORT_NULL)
-	__mach_port_deallocate (__mach_task_self (), msgport);
       if (newproc != MACH_PORT_NULL)
 	__mach_port_deallocate (__mach_task_self (), newproc);
     }
@@ -194,7 +177,7 @@ __fork (void)
     {
       /* We are the child task.  Unlock the standard port cells, which were
          locked in the parent when we copied its memory.  The parent has
-         inserted send rights with the names in that were the cells then.  */
+         inserted send rights with the names that were in the cells then.  */
       for (i = 0; i < _hurd_nports; ++i)
 	__spin_unlock (&_hurd_ports[i].lock);
 
@@ -204,15 +187,15 @@ __fork (void)
       _hurdsig_fault_init ();
 
       /* Run things that want to run in the child task to set up.  */
-      err = run_hooks (&_hurd_fork_child_hook, MACH_PORT_NULL);
+      err = run_hooks (&_hurd_fork_child_hook, MACH_PORT_NULL, MACH_PORT_NULL);
 
       pid = 0;
     }
 
   /* Unlock things we locked before creating the child task.
      They are locked in both the parent and child tasks.  */
-  for (i = 0; i < _hurd_fork_locks.n; ++n)
-    __mutex_unlock (_hurd_fork_locks.locks[n]);
+  for (i = 0; i < _hurd_fork_locks.n; ++i)
+    __mutex_unlock (_hurd_fork_locks.locks[i]);
 
   return err ? __hurd_fail (err) : pid;
 }
