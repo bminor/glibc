@@ -27,16 +27,16 @@ union ieee754_double
       {
 #ifdef	__BIG_ENDIAN
 	unsigned int negative:1;
-	int exponent:11;
-	/* Together these comprise the signed mantissa.  */
-	int mantissa0:20;
+	unsigned int exponent:11;
+	/* Together these comprise the mantissa.  */
+	unsigned int mantissa0:20;
 	unsigned int mantissa1:32;
 #endif
 #ifdef	__LITTLE_ENDIAN
-	/* Together these comprise the signed mantissa.  */
+	/* Together these comprise the mantissa.  */
 	unsigned int mantissa1:32;
-	int mantissa0:20;
-	int exponent:11;
+	unsigned int mantissa0:20;
+	unsigned int exponent:11;
 	unsigned int negative:1;
 #endif
       } ieee;
