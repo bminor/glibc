@@ -138,13 +138,6 @@ extern char *__stdio_gen_tempname __P ((__const char *__dir,
 					size_t *__lenptr,
 					FILE **__streamptr));
 
-#ifndef	__NORETURN
-#ifdef	__GNUC__
-#define	__NORETURN	__volatile
-#else /* Not GCC.  */
-#define	__NORETURN
-#endif /* GCC.  */
-#endif /* __NORETURN not defined.  */
 
 /* Print out MESSAGE on the error output and abort.  */
 extern __NORETURN void __libc_fatal __P ((__const char *__message));
