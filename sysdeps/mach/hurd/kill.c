@@ -60,7 +60,7 @@ DEFUN(__kill, (pid, sig), int pid AND int sig)
 	err = __proc_getsidport (proc, &refport);
     }
 
-  _hurd_port_free (proc, &dealloc_proc);
+  _hurd_port_free (&_hurd_proc, proc, &dealloc_proc);
 
   for (i = 0; i < nports; ++i)
     {
