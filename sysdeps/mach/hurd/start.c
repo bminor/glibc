@@ -83,28 +83,32 @@ start1 (void)
       
   if (! argv)
     {
-      if (! args)
+      if (args)
+	/* Count up the arguments so we can allocate ARGV.  */
+	argc = split_args (args, argslen, NULL);
+      if (! args || argc == 0)
 	{
 	  /* No arguments passed; set argv to { NULL }.  */
 	  argc = 0;
+	  args = NULL;
 	  argv = (char **) &args;
 	}
-      else
-	/* Count up the arguments so we can allocate ARGV.  */
-	argc = split_args (args, argslen, NULL);
     }
 
   if (! envp)
     {
-      if (! env)
-	/* No environment passed; set __environ to { NULL }.  */
-	envp = (char **) &env;
-      else
+      if (env)
 	/* Count up the environment variables so we can allocate ENVP.  */
 	envc = split_args (env, envlen, NULL);
+      if (! env || envc == 0)
+	{
+	  /* No environment passed; set __environ to { NULL }.  */
+	  env = NULL;
+	  envp = (char **) &env;
+	}
     }
 
-  if (! argv && argc > 0)
+  if (! argv)
     {
       /* There were some arguments.
 	 Allocate space for the vectors of pointers and fill them in.  */
@@ -112,7 +116,7 @@ start1 (void)
       split_args (args, argslen, argv);
     }
   
-  if (! envp && envc > 0)
+  if (! envp)
     {
       /* There was some environment.
 	 Allocate space for the vectors of pointers and fill them in.  */
