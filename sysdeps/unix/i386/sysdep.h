@@ -18,17 +18,10 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdeps/unix/sysdep.h>
 
-#ifdef	__STDC__
 #define	ENTRY(name)							      \
   .globl C_SYMBOL_NAME(name);						      \
   .align 4;								      \
-  C_SYMBOL_NAME(name)##:
-#else
-#define	ENTRY(name)							      \
-  .globl C_SYMBOL_NAME(name);						      \
-  .align 4;								      \
-  C_SYMBOL_NAME(name)/**/:
-#endif
+  C_LABEL(name)
 
 #ifdef	NO_UNDERSCORES
 /* Since C identifiers are not normally prefixed with an underscore
@@ -51,7 +44,7 @@ Cambridge, MA 02139, USA.  */
   lea SYS_ify (syscall_name), %eax;					      \
   /* lcall $7, $0; */							      \
   /* Above loses; GAS bug.  */						      \
-  .byte 0x9a, 0, 0, 0, 0, 7, 0;						      \
+  .byte 0x9a, 0, 0, 0, 0, 7, 0
 
 #define	r0		%eax	/* Normal return-value register.  */
 #define	r1		%edx	/* Secondary return-value register.  */
