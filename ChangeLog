@@ -1,3 +1,7 @@
+1998-06-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/stdio.h: Protect parameter names in prototypes with __.
+
 1998-05-31  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* login/login.c (login): Let pututline take care of finding the
