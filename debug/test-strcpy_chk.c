@@ -46,9 +46,10 @@ simple_strcpy_chk (char *dst, const char *src, size_t len)
 }
 #endif
 
+#include <fcntl.h>
+#include <paths.h>
 #include <setjmp.h>
 #include <signal.h>
-#include <fcntl.h>
 
 volatile int chk_fail_ok;
 jmp_buf chk_fail_buf;
@@ -81,8 +82,8 @@ do_one_test (impl_t *impl, char *dst, const char *src,
       if (setjmp (chk_fail_buf) == 0)
 	{
 	  res = CALL (impl, dst, src, dlen);
-	  printf ("*** Function %s (%zd; %zd) did not __chk_fail",
-	          impl->name, len, dlen);
+	  printf ("*** Function %s (%zd; %zd) did not __chk_fail\n",
+		  impl->name, len, dlen);
 	  chk_fail_ok = 0;
 	  ret = 1;
 	}
@@ -93,7 +94,7 @@ do_one_test (impl_t *impl, char *dst, const char *src,
 
   if (res != STRCPY_RESULT (dst, len))
     {
-      printf ("*** Wrong result in function %s %p %p", impl->name,
+      printf ("Wrong result in function %s %p %p\n", impl->name,
 	      res, STRCPY_RESULT (dst, len));
       ret = 1;
       return;
@@ -101,7 +102,7 @@ do_one_test (impl_t *impl, char *dst, const char *src,
 
   if (strcmp (dst, src) != 0)
     {
-      printf ("*** Wrong result in function %s dst \"%s\" src \"%s\"",
+      printf ("Wrong result in function %s dst \"%s\" src \"%s\"\n",
 	      impl->name, dst, src);
       ret = 1;
       return;
@@ -233,7 +234,7 @@ do_random_tests (void)
 		  if (setjmp (chk_fail_buf) == 0)
 		    {
 		      res = CALL (impl, p2 + align2, p1 + align1, dlen);
-		      printf ("*** Iteration %zd - did not __chk_fail", n);
+		      printf ("Iteration %zd - did not __chk_fail\n", n);
 		      chk_fail_ok = 0;
 		      ret = 1;
 		    }
@@ -244,7 +245,8 @@ do_random_tests (void)
 	  res = CALL (impl, p2 + align2, p1 + align1, dlen);
 	  if (res != STRCPY_RESULT (p2 + align2, len))
 	    {
-	      printf ("*** Iteration %zd - wrong result in function %s (%zd, %zd, %zd) %p != %p",
+	      printf ("\
+Iteration %zd - wrong result in function %s (%zd, %zd, %zd) %p != %p\n",
 		      n, impl->name, align1, align2, len, res,
 		      STRCPY_RESULT (p2 + align2, len));
 	      ret = 1;
@@ -253,7 +255,8 @@ do_random_tests (void)
 	    {
 	      if (p2[j - 64] != '\1')
 		{
-		  printf ("*** Iteration %zd - garbage before, %s (%zd, %zd, %zd)",
+		  printf ("\
+Iteration %zd - garbage before, %s (%zd, %zd, %zd)\n",
 			  n, impl->name, align1, align2, len);
 		  ret = 1;
 		  break;
@@ -263,7 +266,8 @@ do_random_tests (void)
 	    {
 	      if (p2[j] != '\1')
 		{
-		  printf ("*** Iteration %zd - garbage after, %s (%zd, %zd, %zd)",
+		  printf ("\
+Iteration %zd - garbage after, %s (%zd, %zd, %zd)\n",
 			  n, impl->name, align1, align2, len);
 		  ret = 1;
 		  break;
@@ -271,7 +275,8 @@ do_random_tests (void)
 	    }
 	  if (memcmp (p1 + align1, p2 + align2, len + 1))
 	    {
-	      printf ("*** Iteration %zd - different strings, %s (%zd, %zd, %zd)",
+	      printf ("\
+Iteration %zd - different strings, %s (%zd, %zd, %zd)\n",
 		      n, impl->name, align1, align2, len);
 	      ret = 1;
 	    }
@@ -292,8 +297,15 @@ test_main (void)
   sigaction (SIGABRT, &sa, NULL);
 
   /* Avoid all the buffer overflow messages on stderr.  */
-  close (STDERR_FILENO);
-  open ("/dev/null", O_WRONLY);
+  int fd = open (_PATH_DEVNULL, O_WRONLY);
+  if (fd == -1)
+    close (STDERR_FILENO);
+  else
+    {
+      dup2 (fd, STDERR_FILENO);
+      close (fd);
+    }
+  setenv ("LIBC_FATAL_STDERR_", "1", 1);
 
   test_init ();
 

@@ -2192,10 +2192,12 @@ typedef struct malloc_chunk* mfastbinptr;
 struct malloc_state {
   /* Serialize access.  */
   mutex_t mutex;
+  // Should we have padding to move the mutex to its own cache line?
 
+#if THREAD_STATS
   /* Statistics for locking.  Only used if THREAD_STATS is defined.  */
   long stat_lock_direct, stat_lock_loop, stat_lock_wait;
-  long pad0_[1]; /* try to give the mutex its own cacheline */
+#endif
 
   /* The maximum chunk size to be eligible for fastbin */
   INTERNAL_SIZE_T  max_fast;   /* low 2 bits used as flags */
@@ -4196,191 +4198,182 @@ _int_free(mstate av, Void_t* mem)
   mchunkptr       fwd;         /* misc temp for linking */
 
 
-  /* free(0) has no effect */
-  if (mem != 0) {
-    const char *errstr = NULL;
+  const char *errstr = NULL;
 
-    p = mem2chunk(mem);
-    size = chunksize(p);
+  p = mem2chunk(mem);
+  size = chunksize(p);
 
-    /* Little security check which won't hurt performance: the
-       allocator never wrapps around at the end of the address space.
-       Therefore we can exclude some size values which might appear
-       here by accident or by "design" from some intruder.  */
-    if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0))
-      {
-	errstr = "free(): invalid pointer";
-      errout:
-	malloc_printerr (check_action, errstr, mem);
-	return;
-      }
+  /* Little security check which won't hurt performance: the
+     allocator never wrapps around at the end of the address space.
+     Therefore we can exclude some size values which might appear
+     here by accident or by "design" from some intruder.  */
+  if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0))
+    {
+      errstr = "free(): invalid pointer";
+    errout:
+      malloc_printerr (check_action, errstr, mem);
+      return;
+    }
 
-    check_inuse_chunk(av, p);
+  check_inuse_chunk(av, p);
 
-    /*
-      If eligible, place chunk on a fastbin so it can be found
-      and used quickly in malloc.
-    */
+  /*
+    If eligible, place chunk on a fastbin so it can be found
+    and used quickly in malloc.
+  */
 
-    if ((unsigned long)(size) <= (unsigned long)(av->max_fast)
+  if ((unsigned long)(size) <= (unsigned long)(av->max_fast)
 
 #if TRIM_FASTBINS
-        /*
-           If TRIM_FASTBINS set, don't place chunks
-           bordering top into fastbins
-        */
-        && (chunk_at_offset(p, size) != av->top)
+      /*
+	If TRIM_FASTBINS set, don't place chunks
+	bordering top into fastbins
+      */
+      && (chunk_at_offset(p, size) != av->top)
 #endif
-        ) {
+      ) {
 
-      set_fastchunks(av);
-      fb = &(av->fastbins[fastbin_index(size)]);
-      /* Another simple check: make sure the top of the bin is not the
-	 record we are going to add (i.e., double free).  */
-      if (__builtin_expect (*fb == p, 0))
-	{
-	  errstr = "double free or corruption (fasttop)";
-	  goto errout;
-	}
-      p->fd = *fb;
-      *fb = p;
+    set_fastchunks(av);
+    fb = &(av->fastbins[fastbin_index(size)]);
+    /* Another simple check: make sure the top of the bin is not the
+       record we are going to add (i.e., double free).  */
+    if (__builtin_expect (*fb == p, 0))
+      {
+	errstr = "double free or corruption (fasttop)";
+	goto errout;
+      }
+    p->fd = *fb;
+    *fb = p;
+  }
+
+  /*
+    Consolidate other non-mmapped chunks as they arrive.
+  */
+
+  else if (!chunk_is_mmapped(p)) {
+    nextchunk = chunk_at_offset(p, size);
+
+    /* Lightweight tests: check whether the block is already the
+       top block.  */
+    if (__builtin_expect (p == av->top, 0))
+      {
+	errstr = "double free or corruption (top)";
+	goto errout;
+      }
+    /* Or whether the next chunk is beyond the boundaries of the arena.  */
+    if (__builtin_expect (contiguous (av)
+			  && (char *) nextchunk
+			  >= ((char *) av->top + chunksize(av->top)), 0))
+      {
+	errstr = "double free or corruption (out)";
+	goto errout;
+      }
+    /* Or whether the block is actually not marked used.  */
+    if (__builtin_expect (!prev_inuse(nextchunk), 0))
+      {
+	errstr = "double free or corruption (!prev)";
+	goto errout;
+      }
+
+    nextsize = chunksize(nextchunk);
+    assert(nextsize > 0);
+
+    /* consolidate backward */
+    if (!prev_inuse(p)) {
+      prevsize = p->prev_size;
+      size += prevsize;
+      p = chunk_at_offset(p, -((long) prevsize));
+      unlink(p, bck, fwd);
+    }
+
+    if (nextchunk != av->top) {
+      /* get and clear inuse bit */
+      nextinuse = inuse_bit_at_offset(nextchunk, nextsize);
+
+      /* consolidate forward */
+      if (!nextinuse) {
+	unlink(nextchunk, bck, fwd);
+	size += nextsize;
+      } else
+	clear_inuse_bit_at_offset(nextchunk, 0);
+
+      /*
+	Place the chunk in unsorted chunk list. Chunks are
+	not placed into regular bins until after they have
+	been given one chance to be used in malloc.
+      */
+
+      bck = unsorted_chunks(av);
+      fwd = bck->fd;
+      p->bk = bck;
+      p->fd = fwd;
+      bck->fd = p;
+      fwd->bk = p;
+
+      set_head(p, size | PREV_INUSE);
+      set_foot(p, size);
+
+      check_free_chunk(av, p);
     }
 
     /*
-       Consolidate other non-mmapped chunks as they arrive.
-    */
-
-    else if (!chunk_is_mmapped(p)) {
-      nextchunk = chunk_at_offset(p, size);
-
-      /* Lightweight tests: check whether the block is already the
-	 top block.  */
-      if (__builtin_expect (p == av->top, 0))
-	{
-	  errstr = "double free or corruption (top)";
-	  goto errout;
-	}
-      /* Or whether the next chunk is beyond the boundaries of the arena.  */
-      if (__builtin_expect (contiguous (av)
-			    && (char *) nextchunk
-			       >= ((char *) av->top + chunksize(av->top)), 0))
-	{
-	  errstr = "double free or corruption (out)";
-	  goto errout;
-	}
-      /* Or whether the block is actually not marked used.  */
-      if (__builtin_expect (!prev_inuse(nextchunk), 0))
-	{
-	  errstr = "double free or corruption (!prev)";
-	  goto errout;
-	}
-
-      nextsize = chunksize(nextchunk);
-      assert(nextsize > 0);
-
-      /* consolidate backward */
-      if (!prev_inuse(p)) {
-        prevsize = p->prev_size;
-        size += prevsize;
-        p = chunk_at_offset(p, -((long) prevsize));
-        unlink(p, bck, fwd);
-      }
-
-      if (nextchunk != av->top) {
-        /* get and clear inuse bit */
-        nextinuse = inuse_bit_at_offset(nextchunk, nextsize);
-
-        /* consolidate forward */
-        if (!nextinuse) {
-          unlink(nextchunk, bck, fwd);
-          size += nextsize;
-        } else
-	  clear_inuse_bit_at_offset(nextchunk, 0);
-
-        /*
-          Place the chunk in unsorted chunk list. Chunks are
-          not placed into regular bins until after they have
-          been given one chance to be used in malloc.
-        */
-
-        bck = unsorted_chunks(av);
-        fwd = bck->fd;
-        p->bk = bck;
-        p->fd = fwd;
-        bck->fd = p;
-        fwd->bk = p;
-
-        set_head(p, size | PREV_INUSE);
-        set_foot(p, size);
-
-        check_free_chunk(av, p);
-      }
-
-      /*
-         If the chunk borders the current high end of memory,
-         consolidate into top
-      */
-
-      else {
-        size += nextsize;
-        set_head(p, size | PREV_INUSE);
-        av->top = p;
-        check_chunk(av, p);
-      }
-
-      /*
-        If freeing a large space, consolidate possibly-surrounding
-        chunks. Then, if the total unused topmost memory exceeds trim
-        threshold, ask malloc_trim to reduce top.
-
-        Unless max_fast is 0, we don't know if there are fastbins
-        bordering top, so we cannot tell for sure whether threshold
-        has been reached unless fastbins are consolidated.  But we
-        don't want to consolidate on each free.  As a compromise,
-        consolidation is performed if FASTBIN_CONSOLIDATION_THRESHOLD
-        is reached.
-      */
-
-      if ((unsigned long)(size) >= FASTBIN_CONSOLIDATION_THRESHOLD) {
-        if (have_fastchunks(av))
-          malloc_consolidate(av);
-
-	if (av == &main_arena) {
-#ifndef MORECORE_CANNOT_TRIM
-	  if ((unsigned long)(chunksize(av->top)) >=
-	      (unsigned long)(mp_.trim_threshold))
-	    sYSTRIm(mp_.top_pad, av);
-#endif
-	} else {
-	  /* Always try heap_trim(), even if the top chunk is not
-             large, because the corresponding heap might go away.  */
-	  heap_info *heap = heap_for_ptr(top(av));
-
-	  assert(heap->ar_ptr == av);
-	  heap_trim(heap, mp_.top_pad);
-	}
-      }
-
-    }
-    /*
-      If the chunk was allocated via mmap, release via munmap(). Note
-      that if HAVE_MMAP is false but chunk_is_mmapped is true, then
-      user must have overwritten memory. There's nothing we can do to
-      catch this error unless MALLOC_DEBUG is set, in which case
-      check_inuse_chunk (above) will have triggered error.
+      If the chunk borders the current high end of memory,
+      consolidate into top
     */
 
     else {
-#if HAVE_MMAP
-      int ret;
-      INTERNAL_SIZE_T offset = p->prev_size;
-      mp_.n_mmaps--;
-      mp_.mmapped_mem -= (size + offset);
-      ret = munmap((char*)p - offset, size + offset);
-      /* munmap returns non-zero on failure */
-      assert(ret == 0);
-#endif
+      size += nextsize;
+      set_head(p, size | PREV_INUSE);
+      av->top = p;
+      check_chunk(av, p);
     }
+
+    /*
+      If freeing a large space, consolidate possibly-surrounding
+      chunks. Then, if the total unused topmost memory exceeds trim
+      threshold, ask malloc_trim to reduce top.
+
+      Unless max_fast is 0, we don't know if there are fastbins
+      bordering top, so we cannot tell for sure whether threshold
+      has been reached unless fastbins are consolidated.  But we
+      don't want to consolidate on each free.  As a compromise,
+      consolidation is performed if FASTBIN_CONSOLIDATION_THRESHOLD
+      is reached.
+    */
+
+    if ((unsigned long)(size) >= FASTBIN_CONSOLIDATION_THRESHOLD) {
+      if (have_fastchunks(av))
+	malloc_consolidate(av);
+
+      if (av == &main_arena) {
+#ifndef MORECORE_CANNOT_TRIM
+	if ((unsigned long)(chunksize(av->top)) >=
+	    (unsigned long)(mp_.trim_threshold))
+	  sYSTRIm(mp_.top_pad, av);
+#endif
+      } else {
+	/* Always try heap_trim(), even if the top chunk is not
+	   large, because the corresponding heap might go away.  */
+	heap_info *heap = heap_for_ptr(top(av));
+
+	assert(heap->ar_ptr == av);
+	heap_trim(heap, mp_.top_pad);
+      }
+    }
+
+  }
+  /*
+    If the chunk was allocated via mmap, release via munmap(). Note
+    that if HAVE_MMAP is false but chunk_is_mmapped is true, then
+    user must have overwritten memory. There's nothing we can do to
+    catch this error unless MALLOC_DEBUG is set, in which case
+    check_inuse_chunk (above) will have triggered error.
+  */
+
+  else {
+#if HAVE_MMAP
+    munmap_chunk (p);
+#endif
   }
 }
 
@@ -4528,7 +4521,8 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
 
 #if REALLOC_ZERO_BYTES_FREES
   if (bytes == 0) {
-    _int_free(av, oldmem);
+    if (oldmem != 0)
+      _int_free(av, oldmem);
     return 0;
   }
 #endif
@@ -5474,45 +5468,19 @@ malloc_printerr(int action, const char *str, void *ptr)
 {
   if (action & 1)
     {
-      /* output string will be ": ADDR ***\n"  */
-      static const char suffix[] = " ***\n";
-      static const char prefix[] = ": 0x";
-      char buf[sizeof (prefix) - 1 + sizeof (void *) * 2 + sizeof (suffix)];
-      char *cp;
-      if (action & 4)
-	cp = memcpy (&buf[sizeof (buf) - 2], "\n", 2);
-      else
-	{
-	  cp = memcpy (&buf[sizeof (buf) - sizeof (suffix)], suffix,
-		       sizeof (suffix));
-	  cp = _itoa_word ((unsigned long int) ptr, cp, 16, 0);
-	  while (cp > &buf[sizeof (prefix) - 1])
-	    *--cp = '0';
-	  cp = memcpy (buf, prefix, sizeof (prefix) - 1);
-	}
+      char buf[2 * sizeof (uintptr_t) + 1];
 
-      struct iovec iov[3];
-      int n = 0;
-      if ((action & 4) == 0)
-	{
-	  iov[0].iov_base = (char *) "*** glibc detected *** ";
-	  iov[0].iov_len = strlen (iov[0].iov_base);
-	  ++n;
-	}
-      iov[n].iov_base = (char *) str;
-      iov[n].iov_len = strlen (str);
-      ++n;
-      iov[n].iov_base = cp;
-      iov[n].iov_len = &buf[sizeof (buf) - 1] - cp;
-      ++n;
-      if (TEMP_FAILURE_RETRY (__writev (STDERR_FILENO, iov, n)) == -1
-	  && errno == EBADF)
-	/* Standard error is not opened.  Try using syslog.  */
-	syslog (LOG_ERR, "%s%s%s", (char *) iov[0].iov_base,
-		(char *) iov[1].iov_base,
-		n == 3 ? (const char *) iov[2].iov_base : "");
+      buf[sizeof (buf) - 1] = '\0';
+      char *cp = _itoa_word ((uintptr_t) ptr, &buf[sizeof (buf) - 1], 16, 0);
+      while (cp > buf)
+	*--cp = '0';
+
+      __libc_message (action & 2,
+		      action & 4
+		      ? "%s\n" : "*** glibc detected *** %s: 0x%s ***\n",
+		      str, cp);
     }
-  if (action & 2)
+  else if (action & 2)
     abort ();
 }
 

@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <fcntl.h>
+#include <paths.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <stdio.h>
@@ -108,8 +109,15 @@ do_test (void)
   sigaction (SIGABRT, &sa, NULL);
 
   /* Avoid all the buffer overflow messages on stderr.  */
-  close (STDERR_FILENO);
-  open ("/dev/null", O_WRONLY);
+  int fd = open (_PATH_DEVNULL, O_WRONLY);
+  if (fd == -1)
+    close (STDERR_FILENO);
+  else
+    {
+      dup2 (fd, STDERR_FILENO);
+      close (fd);
+    }
+  setenv ("LIBC_FATAL_STDERR_", "1", 1);
 
   struct A { char buf1[9]; char buf2[1]; } a;
 
@@ -205,7 +213,7 @@ do_test (void)
   if (memcmp (a.buf1, "aabcdabcjj", 10))
     FAIL ();
 
-#if __USE_FORTIFY_LEVEL < 2 || !__GNUC_PREREQ (4, 0)
+#if __USE_FORTIFY_LEVEL < 2
   /* The following tests are supposed to crash with -D_FORTIFY_SOURCE=2
      and sufficient GCC support, as the string operations overflow
      from a.buf1 into a.buf2.  */
@@ -304,7 +312,7 @@ do_test (void)
   memset (a.buf1 + 9, 'j', l0 + 2);
   CHK_FAIL_END
 
-#if __USE_FORTIFY_LEVEL >= 2 && __GNUC_PREREQ (4, 0)
+#if __USE_FORTIFY_LEVEL >= 2
 # define O 0
 #else
 # define O 1
