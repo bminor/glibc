@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include "hurdmalloc.h"		/* XXX */
 
-struct mutex _hurd_siglock = MUTEX_INITIALIZER;
+struct mutex _hurd_siglock;
 int _hurd_stopped;
 
 /* Port that receives signals and other miscellaneous messages.  */
@@ -665,6 +665,8 @@ _hurdsig_init (void)
 {
   error_t err;
   vm_size_t stacksize;
+
+  __mutex_init (&_hurd_siglock);
 
   if (err = __mach_port_allocate (__mach_task_self (),
 				  MACH_PORT_RIGHT_RECEIVE,
