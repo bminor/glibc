@@ -191,9 +191,9 @@ DEFUN(getcwd, (buf, size), char *buf AND size_t size)
 		}
 	    }
 	  pathp -= d->d_namlen;
-	  (void) closedir (dirstream);
 	  (void) memcpy (pathp, d->d_name, d->d_namlen);
 	  *--pathp = '/';
+	  (void) closedir (dirstream);
 	}
 
       thisdev = dotdev;
