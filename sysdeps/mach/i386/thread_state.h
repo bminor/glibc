@@ -25,3 +25,6 @@ Cambridge, MA 02139, USA.  */
 #define HURD_THREAD_STATE_COUNT		i386_THREAD_STATE_COUNT
 
 #define hurd_thread_state i386_thread_state
+
+#define PC eip
+#define SP uesp
