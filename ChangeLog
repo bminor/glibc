@@ -1,3 +1,11 @@
+2002-05-09  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/Dist: Add sys/io.h.
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/io.h: New.
+
+	* sysdeps/unix/sysv/linux/x86_64/Makefile (sysdep_headers): Add sys/io.h.
+
 2002-05-08  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurdfchdir.c (_hurd_change_directory_port_from_fd): Use
