@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992,94,97,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,10 +45,10 @@ getsockopt (fd, level, optname, optval, optlen)
 						 &buf, &buflen)))
     return __hurd_dfail (fd, err);
 
-  if (buf != optval)
+  if (buflen < *optlen)
+    *optlen = buflen;
+  if (buflen != 0 && buf != optval)
     {
-      if (*optlen < buflen)
-	*optlen = buflen;
       memcpy (optval, buf, *optlen);
       __vm_deallocate (__mach_task_self (), (vm_address_t) buf, buflen);
     }
