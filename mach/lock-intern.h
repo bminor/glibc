@@ -25,7 +25,20 @@ Cambridge, MA 02139, USA.  */
 #define _EXTERN_INLINE extern __inline
 #endif
 
-extern void __spin_lock_solid (__spin_lock_t *);
+
+/* Initialize LOCK.  */
+
+_EXTERN_INLINE void
+__spin_lock_init (__spin_lock_t *__lock)
+{
+  *__lock = __SPIN_LOCK_INITIALIZER;
+}
+
+
+/* Lock LOCK, blocking if we can't get it.  */
+extern void __spin_lock_solid (__spin_lock_t *__lock);
+
+/* Lock the spin lock LOCK.  */
 
 _EXTERN_INLINE void
 __spin_lock (__spin_lock_t *__lock)
@@ -35,8 +48,8 @@ __spin_lock (__spin_lock_t *__lock)
 }
 
 
-#define __mutex_lock(lockaddr) __spin_lock (&(lockaddr)->lock)
-#define __mutex_unlock(lockaddr) __spin_unlock (&(lockaddr)->lock)
+#define __mutex_lock(lockaddr) __spin_lock (&(lockaddr)->lock) /* XXX */
+#define __mutex_unlock(lockaddr) __spin_unlock (&(lockaddr)->lock) /* XXX */
 
 
 #endif /* lock-intern.h */
