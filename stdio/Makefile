@@ -29,7 +29,7 @@ routines	:=							      \
 	newstream fopen freopen fdopen fopncook fmemopen		      \
 	setbuf setvbuf setbuffer setlinebuf				      \
 	fseek ftell rewind fgetpos fsetpos				      \
-	vfprintf vprintf printf_fp reg-printf printf-prs		      \
+	vfprintf vprintf printf_fp reg-printf printf-prs _itoa		      \
 	vsnprintf vsprintf vasprintf	      				      \
 	fprintf printf snprintf sprintf asprintf			      \
 	dprintf vdprintf						      \
@@ -55,7 +55,7 @@ mpn-headers = longlong.h gmp.h gmp-impl.h gmp-mparam.h asm.h
 
 routines := $(strip $(routines) $(mpn-routines)) dbl2mpn
 aux	:= errlist siglist defs syms-stdio glue mp_clz_tab
-distribute = $(mpn-headers) mpn-copy.mk
+distribute = $(mpn-headers) mpn-copy.mk _itoa.h
 
 tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 bug1 bug2 bug3 bug4 bug5 bug6 temptest tst-fileno
