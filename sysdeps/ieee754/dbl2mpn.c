@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include "gmp.h"
 #include "gmp-impl.h"
 #include "ieee754.h"
+#include <stdlib.h>
 
 /* Convert a `double' in IEEE754 standard double-precision format to a
    multi-precision integer representing the significand scaled up by its
@@ -35,14 +36,25 @@ __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
   *is_neg = u.ieee.negative;
   *expt = (int) u.ieee.exponent - 1022;
 
+#if BITS_PER_MP_LIMB == 32
   res_ptr[0] = u.ieee.mantissa1; /* Low-order 32 bits of fraction.  */
   res_ptr[1] = u.ieee.mantissa0; /* High-order 20 bits.  */
+  #define N 2
+  #define IMPL1 1 << 20
+#elif BITS_PER_MP_LIMB == 64
+  /* Hopefully the compiler will combine the two bitfield extracts
+     and this composition into just the original quadword extract.  */
+  res_ptr[0] = (u.ieee.mantissa0 << 20) | u.ieee.mantissa1;
+  #define N 1
+#else
+  #error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
+#endif
 
   if (*expt == 0)
     {
       /* A biased exponent of zero is a special case.
 	 Either it is a zero or it is a denormal number.  */
-      if (res_ptr[0] == 0 && res_ptr[1] == 0)
+      if (res_ptr[0] == 0 && res_ptr[n - 1] == 0)
 	/* It's zero.  Just one limb records that.  */
 	return 1;
       else
@@ -52,7 +64,7 @@ __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
     }
   else
     /* Add the implicit leading one bit for a normalized number.  */
-    res_ptr[1] |= 1 << 20;
+    res_ptr[N - 1] |= 1 << (52 - ((N - 1) * BITS_PER_MP_LIMB);
 
-  return 2;
+  return n;
 }
