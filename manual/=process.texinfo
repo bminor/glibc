@@ -1501,19 +1501,17 @@ that wouldn't otherwise be available to it.
 @cindex user name
 @cindex user ID
 Each user account on a computer system is identified by a @dfn{user
-name} (or @dfn{login name}) and @dfn{user ID}.  These are assigned by
-the system administrator when the account is created in the system user
-database.  Normally, each login name in the database has a unique user
-ID, but it is possible for several login names to have the same
-user ID.
+name} (or @dfn{login name}) and @dfn{user ID}.  Normally, each login
+name in the database has a unique user ID, but it is possible for
+several login names to have the same user ID.
 
 @cindex group name
 @cindex group ID
-The system administrator is also responsible for establishing which
-groups a user belongs to.  Users who are members of the same group can
-share resources (such as files) that are not accessible to users who are
-not a member of that group.  Each group has a @dfn{group name} and
-@dfn{group ID}.
+Users are classified in @dfn{groups}.  Each user name also belongs to
+one or more groups, and has one @dfn{default group}.  Users who are
+members of the same group can share resources (such as files) that are
+not accessible to users who are not a member of that group.  Each group
+has a @dfn{group name} and @dfn{group ID}.
 
 When you log in to the computer, the processes that you create are
 assigned your user ID and your default group ID.
@@ -1531,9 +1529,9 @@ effective user ID can be changed during the lifetime of a process.
 @cindex effective group ID
 @cindex supplementary group IDs
 Similarly, an individual process has both @dfn{real group ID} and
-@dfn{effective group ID} attributes.  In addition, since a user can
-belong to multiple groups, the additional groups that can affect
-access permissions are called @dfn{supplementary group IDs}.
+@dfn{effective group ID} attributes.  In addition, a user can belong to
+multiple groups, so a process can have @dfn{supplementary group IDs}.
+that also contribute to access permission.
 
 For details on how a process's user IDs and group IDs affect its
 permission to access files, see @ref{Access Permission}.  For
@@ -1549,31 +1547,31 @@ using the @code{kill} function.  @xref{Signaling Another Process}.
 @subsection Changing the User or Group ID
 
 The most obvious situation where it is necessary for a process to change
-its user and/or group IDs is the @code{login} program.  It starts a
-shell and sets both the real and effective user and group IDs of to match
-those of the user who is logging in.
+its user and/or group IDs is the @code{login} program.  When
+@code{login} starts running, its user ID is @code{root}.  Its job is to
+start a shell whose user and group IDs are those of the user who is
+logging in.
 
-Some ordinary user programs need to use an effective user or group ID
-that corresponds to something other than the user who is actually
-running the program, too.  This permits the program to use a resource
-that wouldn't otherwise be accessible to the user who runs it.  This
-situation most commonly arises when you want to have a file that is
-controlled by your program but that shouldn't be read or modified
-directly by ordinary users, either because it implements some kind of
-locking protocol, or because you want to be careful to preserve the
-integrity or privacy of the information it contains.  This kind of
+Some ordinary user programs also need to use an effective user or group
+ID that corresponds to something other than the user who is actually
+running the program.  This permits the program to use a resource that
+wouldn't otherwise be accessible to the user.  For example, you may have
+a file that is controlled by your program but that shouldn't be read or
+modified directly by ordinary users, either because it implements some
+kind of locking protocol, or because you want to be careful to preserve
+the integrity or privacy of the information it contains.  This kind of
 restricted access can be implemented by having the program change its
 user or group ID to be the same as the owner of the resource.
 
-As an example, some game programs use a file to keep track of high
-scores.  The game program itself obviously needs to be able to update
-this file no matter who is running it, but users shouldn't be allowed to
-write to the file directly---otherwise people might cheat and give
-themselves outrageously high scores!  The solution is to create a new
-user ID and login name (say, @samp{games}) to own the scores file, and
-make the file writable only by this user.  Then, when the game program
-wants to update this file, it can change its effective user ID to be
-that for @samp{games}.
+Thus, imagine a game program that saves scores in a file.  The game
+program itself obviously needs to be able to update this file no matter
+who is running it, but if users can write the file without going through
+the game, they can give themselves any scores they like.  Some people
+consider this undesirable; or even reprehensible.  It can be prevented
+by creating a new user ID and login name (say, @samp{games}) to own the
+scores file, and make the file writable only by this user.  Then, when
+the game program wants to update this file, it can change its effective
+user ID to be that for @samp{games}.
 
 @comment The example of phone bills was deleted by RMS because it endorses 
 @comment a way of running a computer facility that he detests.
@@ -1582,26 +1580,22 @@ that for @samp{games}.
 @subsection Controlling Process Privileges
 @cindex restrictions on @code{setuid} programs
 
-The ability to set the user ID of a process is very powerful facility
-and can be a source of unintentional privacy or security violations, or
-even intentional abuse by antisocial users.  Because of the potential
-for problems, there are a number of restrictions on how nonprivileged
-programs can use the facilities, and some guidelines you should follow
-in writing such programs.
+The ability to change the user ID of a process can be a source of
+unintentional privacy violations, or even intentional abuse.  Because of
+the potential for problems, there are a number of restrictions on how
+nonprivileged programs can use the facilities, and some guidelines you
+should follow in writing such programs.
 
 You can't just arbitrarily set your user ID or group ID to anything you
-want; only privileged users can do that.  Permission for a program being
-run by an ordinary user to change to another user or group ID has to be
-granted explicitly by that user or group.  This is done by setting the
-modes on the executable file for the program in a special way.
-
-When you execute a file (@pxref{Executing a File}) that has the
-set-user-ID mode bit set, then the effective user ID of the process is
-set to the owner of the file.  Likewise, if the set-group-ID mode bit of
-the file being executed is set, then the effective group ID of the
-process is set to the group owner of the file.  (Files that have these
-bits set are often referred to as @code{setuid} or @code{setgid}
-programs, respectively.)
+want; only privileged users can do that.  Instead, the normal way for a
+program to change its user or group ID is that it has been set up in
+advance to change to a particular user or group.  This is the function
+of the suid and sgid bits.  When the suid bit of an executable file is
+set, executing that file automatically changes the effective user ID to
+the user that owns the file.  Likewise, executing a file whose sgid bit
+is set changes the effective group ID to the group of the file.
+@xref{Executing a File}.  Creating a file that changes to a particular
+user or group ID thus requires full access to that user or group ID.
 
 @xref{File Attributes}, for a more general discussion of file modes and
 accessibility.
@@ -1610,60 +1604,8 @@ A process can always change its effective user (or group) ID back to its
 real ID.  This is often done because the program doesn't need the
 special privileges all the time.
 
-@cindex saved IDs
-Many operating systems (including GNU) implement a feature known as
-@dfn{saved IDs}.  This means that the IDs of the owner and group owner
-of the executable file are remembered.  If the process changes its
-effective IDs back to its real user or group IDs, it can later change
-back to the saved IDs when it needs special privileges.
-
-Other systems do not support saved IDs.  If you want to limit the parts
-of the program that have special privileges when it is running on one of
-these systems, the only way you can do this is by swapping the real and
-effective IDs, using @code{setreuid} or @code{setregid}.
-
-Even with these restrictions, it is still possible for @code{setuid} or
-@code{setgid} programs to get into trouble.  There are a few
-things you can do in order to minimize the potential for problems in
-your own programs:
-
-@itemize @bullet
-@item
-Don't have @code{setuid} programs owned by privileged accounts such as
-@samp{root} or @samp{superuser}, unless it is absolutely necessary.  If
-the resource is specific to your particular program, it's better to
-define a new, nonprivileged user ID just to manage that resource.
-
-@item
-Be cautious about using the @code{system} and @code{exec} functions in
-combination with changing the effective user ID.  Don't let users of
-your program execute arbitrary programs under a changed user ID.
-Executing a shell is especially bad news.  Less obviously, the
-@code{execlp} and @code{execvp} functions are a potential risk (since
-the program they execute depends on the user's @code{PATH} environment
-variable).
-
-If you must @code{exec} another program under a changed ID, specify
-an absolute file name (@pxref{File Name Resolution}) for the executable,
-and make sure that the protections on that executable and its directory
-are such that ordinary users cannot replace it with some other program.
-
-@item
-Only use the user ID controlling the resource in the part of the program
-that actually uses that resource.  When you're finished with it, restore
-the effective user ID back to the user's real user ID.
-
-@item
-If the @code{setuid} part of your program needs to access other files
-besides the controlled resource, it should verify that the user would
-ordinarily have permission to access those files.  You can use the
-@code{access} function (@pxref{Access Permission}) to check this; it
-uses the real user and group IDs, rather than the effective IDs.
-@end itemize
-
-
-@node User and Group ID Functions
-@subsection User and Group ID Functions
+@node Reading User and Group IDs
+@subsection Reading User and Group IDs 
 
 Here are detailed descriptions of the functions for inquiring about or
 changing the user and group IDs of a process.  To use these facilities,
@@ -1676,14 +1618,14 @@ you must include the header files @file{sys/types.h} and
 @comment POSIX.1
 @deftp {Data Type} uid_t
 This is an integer data type used to represent user IDs.  In the GNU
-library, this is equivalent to @code{unsigned short int}.
+library, this is an alias for @code{unsigned short int}.
 @end deftp
 
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} gid_t
 This is an integer data type used to represent group IDs.  In the GNU
-library, this is equivalent to @code{unsigned short int}.
+library, this is an alias for @code{unsigned short int}.
 @end deftp
 
 @comment unistd.h
@@ -1727,19 +1669,25 @@ Here's how to use @code{getgroups} to read all the supplementary group
 IDs:
 
 @example
+gid_t *
+read_all_groups ()
 @{
   int ngroups = getgroups (0, 0);
   gid_t *groups = (gid_t *) xmalloc (ngroups * sizeof (gid_t));
   int val = getgroups (ngroups, groups);
   if (val < 0)
-
-The effective group ID of the process might or might not be included in
-the list of supplementary group IDs.
+    return 0;
+  return groups;
+@}
 @end example
 @end deftypefun
 
 @comment unistd.h
 @comment POSIX.1
+
+@node Setting Uids
+@subsection Setting User IDs
+
 @deftypefun int setuid (@var{newuid})
 This function sets both the real and effective user ID of the process
 to @var{newuid}, provided that the process has appropriate privileges.
@@ -1792,6 +1740,10 @@ Privileges}.
 
 @comment unistd.h
 @comment POSIX.1
+
+@node Setting Groups
+@subsection Setting Group IDs
+
 @deftypefun int setgid (@var{newgid})
 This function sets both the real and effective group ID of the process
 to @var{newgid}, provided that the process has appropriate privileges.
@@ -1851,6 +1803,55 @@ The @code{initgroups} function effectively calls @code{setgroups} to
 set the process's supplementary group IDs to be the normal default for
 the user name @var{user}.  The group ID @var{gid} is also included.
 @end deftypefun
+
+@node Enable/Disable Setuid
+@subsection Turning Setuid Access On and Off
+
+You can use @code{setreuid} to swap the real and effective user IDs of
+the process, as follows:
+
+@example
+setreuid (geteuid (), getuid ());
+@end example
+
+@noindent
+This special case is always allowed---it cannot fail.  A @code{setuid}
+program can use this to turn its special access on and off.  For
+example, suppose a game program has just started, and its real user ID
+is @code{jdoe} while its effective user ID is @code{games}.  In this
+state, the game can write the scores file.  If it swaps the two uids,
+the real becomes @code{games} and the effective becomes @code{jdoe}; now
+the program has only @code{jdoe} to access.  Another swap brings
+@code{games} back to the effective user ID and restores access to the
+scores file.
+
+If the system supports the saved user ID feature, you can accomplish 
+the same job with @code{setuid}.  When the game program starts, its
+real user ID is @code{jdoe}, its effective user ID is @code{games}, and
+its saved user ID is also @code{games}.  The program should record both
+user ID values once at the beginning, like this:
+
+@example
+user_user_id = getuid ();
+game_user_id = geteuid ();
+@end example
+
+Then it can turn off game file access with 
+
+@example
+setuid (user_user_id);
+@end example
+
+@noindent
+and turn it on with 
+
+@example
+setuid (game_user_id);
+@end example
+
+@noindent
+Throughout the process, the real user ID remains @code{jdoe} and the 
+saved user ID remains @code{games}.
 
 @node Setuid Program Example
 @subsection Setuid Program Example
@@ -1984,3 +1985,45 @@ int record_score (int score)
 @}
 @end example
 
+@node Tips for Setuid
+@subsection Tips for Writing Setuid Programs
+
+It is easy for setuid programs to give the user access that isn't 
+intended--in fact, if you want to avoid this, you need to be careful.
+Here are some guidelines for preventing unintended access and
+minimizing its consequences when it does occur:
+
+@itemize @bullet
+@item
+Don't have @code{setuid} programs owned by privileged accounts such as
+@samp{root} or @samp{superuser}, unless it is absolutely necessary.  If
+the resource is specific to your particular program, it's better to
+define a new, nonprivileged user ID or group ID just to manage that
+resource.
+
+@item
+Be cautious about using the @code{system} and @code{exec} functions in
+combination with changing the effective user ID.  Don't let users of
+your program execute arbitrary programs under a changed user ID.
+Executing a shell is especially bad news.  Less obviously, the
+@code{execlp} and @code{execvp} functions are a potential risk (since
+the program they execute depends on the user's @code{PATH} environment
+variable).
+
+If you must @code{exec} another program under a changed ID, specify
+an absolute file name (@pxref{File Name Resolution}) for the executable,
+and make sure that the protections on that executable and its directory
+are such that ordinary users cannot replace it with some other program.
+
+@item
+Only use the user ID controlling the resource in the part of the program
+that actually uses that resource.  When you're finished with it, restore
+the effective user ID back to the actual user's user ID.
+
+@item
+If the @code{setuid} part of your program needs to access other files
+besides the controlled resource, it should verify that the user would
+ordinarily have permission to access those files.  You can use the
+@code{access} function (@pxref{Access Permission}) to check this; it
+uses the real user and group IDs, rather than the effective IDs.
+@end itemize
