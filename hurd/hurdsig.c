@@ -390,7 +390,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
   enum { stop, ignore, core, term, handle } act;
   sighandler_t handler;
   struct hurd_signal_preempt *pe;
-  sighandler_t (*preempt) (thread_t, int, int) = NULL;
+  sighandler_t (*preempt) (thread_t, int, long int, int) = NULL;
   sigset_t pending;
   int ss_suspended;
 
@@ -446,7 +446,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     /* Let the preempting handler examine the thread.
        If it returns SIG_DFL, we run the normal handler;
        otherwise we use the handler it returns.  */
-    handler = (*preempt) (ss->thread, signo, sigcode);
+    handler = (*preempt) (ss->thread, signo, sigcode, sigerror);
 
   ss_suspended = 0;
 
