@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -17,6 +17,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <errno.h>
 #include <fnmatch.h>
+#include <ctype.h>
 
 #if !defined(__GNU_LIBRARY__) && !defined(STDC_HEADERS)
 extern int errno;
@@ -33,14 +34,13 @@ fnmatch (pattern, string, flags)
   register const char *p = pattern, *n = string;
   register char c;
 
-  if ((flags & ~__FNM_FLAGS) != 0)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+/* Note that this evalutes C many times.  */
+#define FOLD(c)	((flags & FNM_CASEFOLD) && isupper (c) ? tolower (c) : (c))
 
   while ((c = *p++) != '\0')
     {
+      c = FOLD (c);
+
       switch (c)
 	{
 	case '?':
@@ -55,8 +55,11 @@ fnmatch (pattern, string, flags)
 
 	case '\\':
 	  if (!(flags & FNM_NOESCAPE))
-	    c = *p++;
-	  if (*n != c)
+	    {
+	      c = *p++;
+	      c = FOLD (c);
+	    }
+	  if (FOLD (*n) != c)
 	    return FNM_NOMATCH;
 	  break;
 
@@ -74,9 +77,9 @@ fnmatch (pattern, string, flags)
 	    return 0;
 
 	  {
-	    char c1 = (!(flags & FNM_NOESCAPE) && c == '\\') ? *p : c;
+	    char c1 = (!(flags & FNM_NOESCAPE) && c == '\\') ? FOLD (*p) : c;
 	    for (--p; *n != '\0'; ++n)
-	      if ((c == '[' || *n == c1) &&
+	      if ((c == '[' || FOLD (*n) == c1) &&
 		  fnmatch (p, n, flags & ~FNM_PERIOD) == 0)
 		return 0;
 	    return FNM_NOMATCH;
@@ -106,11 +109,14 @@ fnmatch (pattern, string, flags)
 		if (!(flags & FNM_NOESCAPE) && c == '\\')
 		  cstart = cend = *p++;
 
+		cstart = cend = FOLD (cstart);
+
 		if (c == '\0')
 		  /* [ (unterminated) loses.  */
 		  return FNM_NOMATCH;
 
 		c = *p++;
+		c = FOLD (c);
 
 		if ((flags & FNM_PATHNAME) && c == '/')
 		  /* [/] can never match.  */
@@ -123,10 +129,12 @@ fnmatch (pattern, string, flags)
 		      cend = *p++;
 		    if (cend == '\0')
 		      return FNM_NOMATCH;
+		    cend = FOLD (cend);
+
 		    c = *p++;
 		  }
 
-		if (*n >= cstart && *n <= cend)
+		if (FOLD (*n) >= cstart && FOLD (*n) <= cend)
 		  goto matched;
 
 		if (c == ']')
@@ -146,7 +154,7 @@ fnmatch (pattern, string, flags)
 
 		c = *p++;
 		if (!(flags & FNM_NOESCAPE) && c == '\\')
-		  /* 1003.2d11 is unclear if this is right.  %%% */
+		  /* XXX 1003.2d11 is unclear if this is right.  */
 		  ++p;
 	      }
 	    if (not)
@@ -155,7 +163,7 @@ fnmatch (pattern, string, flags)
 	  break;
 
 	default:
-	  if (c != *n)
+	  if (c != FOLD (*n))
 	    return FNM_NOMATCH;
 	}
 
