@@ -28,7 +28,7 @@ endif
 
 
 update:
-	now=`date -u -d $(snapshot-date-fmt)`; \
+	now=`date -u $(snapshot-date-fmt)`; \
 	name=`date -u -d "$$now" $(snapshot-name-fmt)`; \
 	$(if $(on-branch),\
 	  old="$(tag-prefix)$(tar-name)-$$name; \
