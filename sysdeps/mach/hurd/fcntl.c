@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <fcntl.h>
 #include <hurd.h>
+#include <stdarg.h>
 
 /* Mapping of F_GETFL/F_SETFL flag bits to io protocol functions.  */
 
