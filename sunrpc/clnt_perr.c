@@ -66,7 +66,7 @@ _buf()
 char *
 clnt_sperror(rpch, s)
 	CLIENT *rpch;
-	char *s;
+	const char *s;
 {
 	struct rpc_err e;
 	void clnt_perrno();
@@ -149,7 +149,7 @@ clnt_sperror(rpch, s)
 void
 clnt_perror(rpch, s)
 	CLIENT *rpch;
-	char *s;
+	const char *s;
 {
 	(void) fprintf(stderr,"%s",clnt_sperror(rpch,s));
 }
