@@ -42,9 +42,10 @@ following patterns:
 
 @example
 sparc-sun-sunos4.@var{n}
+sparc-sun-solaris2.@var{n}
 m68k-hp-bsd4.3
 m68k-sun-sunos4.@var{n}
-m68k-sony-bsd4.3
+m68k-sony-newsos
 mips-dec-ultrix4.@var{n}
 i386-bsd4.3
 i386-sysv
@@ -55,11 +56,12 @@ While no other configurations are supported, there are handy aliases for
 these few.  (These aliases work in other GNU software as well.)
 
 @example
-sun4-sunos4.@var{n}
-hp320-bsd4.3
-sun3-sunos4.@var{n}
+sun4-sunos4.@var{n} sun4
+sun4-solaris2.@var{n} sun4-sunos5.@var{n}
+hp320-bsd4.3 hp300bsd
+sun3-sunos4.@var{n} sun3
 news
-decstation-ultrix
+decstation
 i386-svr4
 @end example
 
