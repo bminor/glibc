@@ -29,7 +29,8 @@ int
 DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
 {
   int dealloc_dt;
-  struct _hurd_fd_user d, d2;
+  struct _hurd_fd_user d;
+  struct _hurd_fd *d2;
   io_t port, ctty;
   int dealloc, dealloc_ctty;
   int flags;
@@ -38,11 +39,10 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
   d = _hurd_fd (fd, &dealloc_dt); /* Locks D.d.  */
   if (d.d == NULL)
     {
-    badf:
       errno = EBADF;
       return -1;
     }
-  flags = d->flags;
+  flags = d.d->flags;
   ctty = _hurd_port_get (&d.d->ctty, &dealloc_ctty);
   port = _hurd_port_locked_get (&d.d->port, &dealloc); /* Unlocks D.d.  */
 
