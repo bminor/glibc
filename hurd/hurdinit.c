@@ -17,7 +17,13 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
+#include <sys/stat.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 
+
+void _hurd_proc_init (char **argv);
 
 /* Initialize the library data structures from the
    ints and ports passed to us by the exec server.
@@ -61,12 +67,12 @@ _hurd_init (char **argv,
   if (intarraysize > INIT_UMASK)
     _hurd_umask = intarray[INIT_UMASK] & 0777;
   else
-    _hurd_umask = 0022;		/* XXX */
+    _hurd_umask = CMASK;
 
   /* All done with init ints and ports.  */
-  __vm_deallocate (__mach_task_self (), intarray, nints * sizeof (int));
+  __vm_deallocate (__mach_task_self (), intarray, intarraysize * sizeof (int));
   __vm_deallocate (__mach_task_self (),
-		   portarray, nports * sizeof (mach_port_t));
+		   portarray, portarraysize * sizeof (mach_port_t));
 }
 
 /* The user can do "int _hide_arguments = 1;" to make
@@ -95,10 +101,8 @@ _hurd_proc_init (char **argv)
 
   procserver = _hurd_port_get (&_hurd_ports[INIT_PORT_PROC], &dealloc);
 
-  /* Give the proc server our task and message ports.  */
-  __proc_setports (procserver,
-		   _hurd_msgport, __mach_task_self (),
-		   &oldmsg, &oldtask);
+  /* Give the proc server our message port.  */
+  __proc_setmsgport (procserver, _hurd_msgport, &oldmsg);
 
   /* Tell the proc server where our args and environment are.  */
   __proc_setprocargs (procserver,
