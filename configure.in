@@ -264,14 +264,17 @@ done
 # Find what sysdep directories exist.
 sysnames=
 for b in $base ''; do
-  for v in /$vendor ''; do
-    for o in /$ostry ''; do
-      for m in $mach ''; do
-        if [ -d $sysdep_dir$b$v$o$m ]; then
-          sysnames="$sysnames $b$v$o$m"
-	  [ "$o" -o "$b" ] && os_used=t
-	  [ "$m" ] && machine_used=t
-	fi
+  for m0 in $mach ''; do
+    for v in /$vendor ''; do
+      for o in /$ostry ''; do
+	for m in $mach ''; do
+	  try="$m0$b$v$o$m"
+	  if [ -d $sysdep_dir$try ]; then
+	    sysnames="$sysnames $try"
+	    [ "$o" -o "$b" ] && os_used=t
+	    [ "$m" -o "$m0" ] && machine_used=t
+	  fi
+	done
       done
     done
   done
