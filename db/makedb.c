@@ -121,7 +121,7 @@ main (argc, argv)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1996, 1997");
+"), "1996, 1997, 1998");
       printf (_("Written by %s.\n"), "Ulrich Drepper");
 
       exit (EXIT_SUCCESS);
@@ -186,7 +186,8 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
   db_file = dbopen (output_name, O_CREAT | O_RDWR | O_TRUNC, 0666,
 		    DB_BTREE, NULL);
   if (db_file == NULL)
-    error (EXIT_FAILURE, errno, gettext ("cannot open output file `%s'"));
+    error (EXIT_FAILURE, errno, gettext ("cannot open output file `%s'"),
+	   output_name);
 
   /* Start the real work.  */
   status = process_input (input_file, input_name, db_file, to_lowercase,
