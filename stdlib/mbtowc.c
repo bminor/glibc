@@ -40,7 +40,12 @@ DEFUN(mbtowc, (pwc, s, n), wchar_t *pwc AND CONST char *s AND size_t n)
     return _mb_shift != 0;
 
   if (*s == '\0')
-    return 0;
+    {
+      /* ANSI 4.10.7.2, line 11.  */
+      if (pwc != NULL)
+	*pwc = (wchar_t) 0;
+      return 1;
+    }
 
   if (_ctype_info->mbchar == NULL ||
       _ctype_info->mbchar->mb_chars == NULL)
