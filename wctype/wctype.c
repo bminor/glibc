@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -42,9 +42,9 @@ wctype (const char *property)
 #if __BYTE_ORDER == __BIG_ENDIAN
   return result;
 #else
-# define SWAPU32(w) \
-  (((w) << 24) | (((w) & 0xff00) << 8) | (((w) >> 8) & 0xff00) | ((w) >> 24))
+#define XSWAPU32(w) \
+  ((((w) & 0xff00ff00) >> 8) | (((w) & 0xff00ff) << 8))
 
-  return SWAPU32 (result);
+  return XSWAPU32 (result);
 #endif
 }
