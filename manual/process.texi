@@ -343,9 +343,11 @@ usual file name syntax errors (@pxref{File Name Errors}), the following
 
 @table @code
 @item E2BIG
-The combined size of the new program's argument list and environment list
-is larger than @code{ARG_MAX} bytes.
-@c !!! never in GNU; ARG_MAX is unlimited.  Get ENOMEM instead if too big.
+The combined size of the new program's argument list and environment
+list is larger than @code{ARG_MAX} bytes.  The GNU system has no
+specific limit on the argument list size, so this error code cannot
+result, but you may get @code{ENOMEM} instead if the arguments are too
+big for available memory.
 
 @item ENOEXEC
 The specified file can't be executed because it isn't in the right format.
@@ -362,11 +364,9 @@ The point at which the file is closed again is not specified, but
 is at some point before the process exits or before another process
 image is executed.
 
-@c !!! this paragraph suggests that argv and envp keep their addressses
-@c in the new program, which is not true.
 Executing a new process image completely changes the contents of memory,
-except for the arguments and the environment, but many other attributes
-of the process are unchanged:
+copying only the argument and environment strings to new locations.  But
+many other attributes of the process are unchanged:
 
 @itemize @bullet
 @item
@@ -422,8 +422,9 @@ it, and these descriptors do survive through @code{exec} (provided that
 they do not have @code{FD_CLOEXEC} set.  The new process image can
 reconnect these to new streams using @code{fdopen} (@pxref{Descriptors
 and Streams}).
-@c !!! this is a bad thing to recommend.  it won't work in GNU, where
+@c ??? this is a bad thing to recommend.  it won't work in GNU, where
 @c fopen doesn't go thru a file descriptor.
+@c ??? I think Posix.1 requires this to work -- rms.
 
 @node Process Completion
 @section Process Completion
@@ -746,7 +747,11 @@ successful.  If it fails, you must do something to make the child
 process terminate.  Just returning a bad status code with @code{return}
 would leave two processes running the original program.  Instead, the
 right behavior is for the child process to report failure to its parent
-process.  Calling @code{exit} accomplishes this.
+process.
 
-@c !!! you want to call _exit instead, to avoid lossage from duplicated
-@c stdio buffers after fork.  explain this situation.
+Call @code{_exit} to accomplish this.  The reason for using @code{_exit}
+instead of @code{exit} is to avoid flushing fully buffered streams such
+as @code{stdout}.  The buffers of these streams probably contain data
+that was copied from the parent process by the @code{fork}, data that
+will be output eventually by the parent process.  Calling @code{exit} in
+the child would output the data twice.  @xref{Termination Internals}.
