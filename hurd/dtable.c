@@ -30,7 +30,7 @@ Cambridge, MA 02139, USA.  */
 #include "hurdmalloc.h"		/* XXX */
 
 
-struct mutex _hurd_dtable_lock;
+struct mutex _hurd_dtable_lock = MUTEX_INITIALIZER; /* XXX ld bug; must init */
 struct hurd_fd **_hurd_dtable;
 int _hurd_dtablesize;
 
@@ -95,6 +95,8 @@ init_dtable (void)
   /* Run things that want to run after the file descriptor table
      is initialized.  */
   RUN_HOOK (_hurd_fd_subinit, ());
+
+  (void) &init_dtable;		/* Avoid "defined but not used" warning.  */
 }
 
 text_set_element (_hurd_subinit, init_dtable);
@@ -161,9 +163,11 @@ fork_child_dtable (void)
       /* XXX for each fd with a cntlmap, reauth and re-map_cntl.  */
     }
   return err;
+
+  (void) &fork_child_dtable;	/* Avoid "defined but not used" warning.  */
 }
 
-data_set_element (_hurd_fork_locks, _hurd_dtable_lock);
+data_set_element (_hurd_fork_locks, _hurd_dtable_lock);	/* XXX ld bug: bss */
 text_set_element (_hurd_fork_child_hook, fork_child_dtable);
 
 /* Called when our process group has changed.  */
@@ -205,6 +209,8 @@ ctty_new_pgrp (void)
 
   __mutex_unlock (&_hurd_dtable_lock);
   HURD_CRITICAL_END;
+
+  (void) &ctty_new_pgrp;	/* Avoid "defined but not used" warning.  */
 }
 
 text_set_element (_hurd_pgrp_changed_hook, ctty_new_pgrp);
@@ -258,6 +264,8 @@ reauth_dtable (void)
 
   __mutex_unlock (&_hurd_dtable_lock);
   HURD_CRITICAL_END;
+
+  (void) &reauth_dtable;	/* Avoid "defined but not used" warning.  */
 }
 
 text_set_element (_hurd_reauth_hook, reauth_dtable);
