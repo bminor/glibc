@@ -31,25 +31,6 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 
 #define	__hurd_fail(err)	(errno = (err), -1)
-
-
-/* Basic ports and info, initialized by startup.  */
-extern mutex_t _hurd_lock;	/* Locks against change, but not reference.  */
-extern process_t _hurd_proc;
-extern file_t _hurd_ccdir, _hurd_cwdir, _hurd_crdir, _hurd_auth;
-extern mode_t _hurd_umask;
-extern int _hurd_ctty_fstype;
-extern fsid_t _hurd_ctty_fsid;
-extern ino_t _hurd_ctty_fileid;
-extern vm_address_t _hurd_stack_low, _hurd_stack_high;
-extern thread_t _hurd_sigport_thread;
-extern mach_port_t _hurd_sigport; /* Locked by _hurd_siglock.  */
-
-/* Not locked.  If we are using a real dtable,
-   these are turned into that and then cleared at startup.
-   If not, these are never changed after startup.  */
-extern mach_port_t *_hurd_init_dtable;
-extern size_t _hurd_init_dtablesize;
 
 /* Lightweight user references for ports.  */
 
@@ -68,48 +49,65 @@ struct _hurd_port
     int *user_dealloc;		/* If not NULL, points to user's flag word.  */
   };
 
-/* Initialize *PORT.  */
+/* Evaluate EXPR with the variable `port' bound to the port in PORTCELL.  */
+#define	_HURD_PORT_USE(portcell, expr)					      \
+  ({ struct _hurd_port *const __p = &(portcell);			      \
+     int __dealloc;							      \
+     const mach_port_t port = _hurd_port_get (__p, &__dealloc);		      \
+     __typeof(expr) __result = (expr);					      \
+     _hurd_port_free (__p, &__dealloc);					      \
+     __result; })
+
+/* Initialize *PORT to INIT.  */
 static inline void
-_hurd_port_init (struct _hurd_port *port)
+_hurd_port_init (struct _hurd_port *port, mach_port_t init)
 {
   __spin_lock_init (&port->lock);
-  port->port = MACH_PORT_NULL;
+  port->port = init;
   port->user_dealloc = NULL;
 }
 
-/* Get a reference to *PORT.
+/* Get a reference to *PORT, which is locked.
    Pass return value and MYFLAG to _hurd_port_free when done.  */
 static inline mach_port_t
-_hurd_port_get (struct _hurd_port *port, int *myflag)
+_hurd_port_locked_get (struct _hurd_port *port, int *myflag)
 {
   mach_port_t result;
-  __spin_lock (&port->lock);
   result = port->port;
   if (result != MACH_PORT_NULL)
-    port->user_dealloc = myflag;
+    {
+      port->user_dealloc = myflag;
+      *myflag = 0;
+    }
   __spin_unlock (&port->lock);
   return result;
 }
 
-/* Free a reference to gotten with
+/* Same, but locks PORT first.  */
+static inline mach_port_t
+_hurd_port_get (struct _hurd_port *port, int *myflag)
+{
+  __spin_lock (&port->lock);
+  return _hurd_port_locked_get (port, myflag);
+}
+
+/* Free a reference gotten with
    `USED_PORT = _hurd_port_get (PORT, MYFLAG);' */
 static inline void
 _hurd_port_free (struct _hurd_port *port,
-int *myflag, mach_port_t used_port)
+		 int *myflag, mach_port_t used_port)
 {
   __spin_lock (&port->lock);
   if (port->user_dealloc == myflag)
     port->user_dealloc = NULL;
-  else
-    myflag = NULL;
   __spin_unlock (&port->lock);
-  if (myflag != NULL && *myflag)
+  if (*myflag)
     __mach_port_deallocate (__mach_task_self (), used_port);
 }
 
-/* Set *PORT's port to NEWPORT.  */
+/* Set *PORT's port to NEWPORT.  PORT is locked. */
 static inline void
-_hurd_port_set (struct _hurd_port *port, mach_port_t newport)
+_hurd_port_locked_set (struct _hurd_port *port, mach_port_t newport)
 {
   mach_port_t old;
   __spin_lock (&port->lock);
@@ -125,22 +123,36 @@ _hurd_port_set (struct _hurd_port *port, mach_port_t newport)
   if (old != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), old);
 }
-
-/* Get a reference for the send right in *VAR,
-   made atomic by locking LOCK.  */
-static inline mach_port_t
-_hurd_getport (volatile const mach_port_t *var, mutex_t lock)
+
+/* Same, but locks PORT first.  */
+static inline void
+_hurd_port_set (struct _hurd_port *port, mach_port_t newport)
 {
-  mach_port_t port;
-  __mutex_lock (lock);
-  port = *var;
-  __mach_port_mod_refs (__mach_task_self (), port,
-			MACH_PORT_RIGHT_SEND, 1);
-  __mutex_unlock (lock);
-  return port;
+  __spin_lock (&port->lock);
+  return _hurd_port_locked_set (port, newport);
 }
+
+/* Basic ports and info, initialized by startup.  */
+extern struct _hurd_port _hurd_proc, _hurd_auth;
+extern struct _hurd_port _hurd_ccdir, _hurd_cwdir, _hurd_crdir;
+extern mode_t _hurd_umask;
 
+extern struct mutex _hurd_ctty_lock;
+extern int _hurd_ctty_fstype;
+extern fsid_t _hurd_ctty_fsid;
+extern ino_t _hurd_ctty_fileid;
 
+extern vm_address_t _hurd_stack_low, _hurd_stack_high; /* Not locked.  */
+
+extern thread_t _hurd_sigport_thread;
+extern mach_port_t _hurd_sigport; /* Locked by _hurd_siglock.  */
+
+/* Not locked.  If we are using a real dtable,
+   these are turned into that and then cleared at startup.
+   If not, these are never changed after startup.  */
+extern mach_port_t *_hurd_init_dtable;
+extern size_t _hurd_init_dtablesize;
+
 /* File descriptor table.  */
 struct _hurd_dtable
   {
@@ -149,7 +161,8 @@ struct _hurd_dtable
        synchronize descriptor operations on a single descriptor.  */
     struct
       {
-	io_t server;
+	struct _hurd_port port;
+	/* Locked by port.lock.  */
 	int isctty;		/* Is a port to the controlling tty.  */
 	int flags;		/* fcntl flags.  */
       } *d;
@@ -157,44 +170,79 @@ struct _hurd_dtable
 extern struct _hurd_dtable _hurd_dtable;
 extern struct mutex _hurd_dtable_lock; /* Locks _hurd_dtable.  */
 
-/* Allocate a new file descriptor.  The dtable lock must be held.  */
+/* Allocate a new file descriptor and set it to PORT.  */
 static inline int
-_hurd_dalloc (void)
+_hurd_dalloc (io_t port, int flags)
 {
   int i;
+  __mutex_lock (&hurd_dtable_lock);
   for (i = 0; i < _hurd_dtable.size; ++i)
-    if (_hurd_dtable.d[i] == MACH_PORT_NULL)
-      {
-	_hurd_dtable.d[i].isctty = -1;
-	_hurd_dtable.d[i].flags = 0;
-	return i;
-      }
+    {
+      __typeof (&_hurd_dtable.d[i]) d = &_hurd_dtable.d[i];
+      __spin_lock (&d->port.lock);
+      if (d->port.port == MACH_PORT_NULL)
+	{
+	  d->isctty = -1;
+	  d->flags = flags;
+	  d->port.port = port;
+	  d->port.user_dealloc = NULL;
+	  __spin_unlock (&d->port.lock);
+	  __mutex_unlock (&hurd_dtable_lock);
+	  return i;
+	}
+      __spin_unlock (&d->port.lock);
+    }
+  __mutex_unlock (&hurd_dtable_lock);
+  __mach_port_deallocate (__mach_task_self (), port);
   errno = EMFILE;
   return -1;
 }
 
-/* Return the server port for FD.  Does not add a ref.  Takes the dtable lock.
-   On error, sets errno and returns MACH_PORT_NULL.  */
-static inline io_t
+/* Returns the port cell for FD, locked.  */
+static inline struct _hurd_port *
 _hurd_dport (int fd)
 {
-  io_t port;
+  struct _hurd_port *port;
   __mutex_lock (&_hurd_dtable.lock);
   if (fd < 0 || fd >= _hurd_dtable.size ||
       _hurd_dtable.d[fd].server == MACH_PORT_NULL)
     {
       errno = EBADF;
-      port = MACH_PORT_NULL;
+      port = NULL;
     }
   else
-    port = _hurd_dtable.d[fd].server;
+    {
+      port = &_hurd_dtable.d[fd].port;
+      __spin_lock (&port->lock);
+    }
   __mutex_unlock (&_hurd_dtable.lock);
   return port;
 }
 
-
+/* Evaluate EXPR with the variable `port' bound to the port to FD.  */
+#define	_HURD_DPORT_USE(fd, expr)					      \
+  ({ struct _hurd_port *__port = _hurd_dport (fd);			      \
+     if (__port == NULL)						      \
+       {								      \
+	 errno = EBADF;							      \
+	 -1;								      \
+       }								      \
+     else								      \
+       {								      \
+	 int __dealloc = 0;						      \
+	 io_t port = _hurd_port_locked_get (__port, &__dealloc);	      \
+	 __typeof (expr) __result;					      \
+	 __result = (expr);						      \
+	 _hurd_port_free (port, &__dealloc);				      \
+	 __result;							      \
+       }								      \
+   })									      \
+
 /* Return the socket server for sockaddr domain DOMAIN.  */
 extern socket_t _hurd_socket_server (int domain);
+
+/* Return a receive right which will not be sent to.  */
+extern mach_port_t _hurd_dead_recv (void);
 
 
 /* Current process IDs.  */
@@ -220,11 +268,9 @@ extern int _hurd_set_data_limit (const struct rlimit *);
    be held, and is released on return.  */
 extern int _hurd_set_brk (vm_address_t newbrk);
 
-
-/* Resource limit on core file size.  */
+/* Resource limit on core file size.  Enforced by hurdsig.c.  */
 extern int _hurd_core_limit;
-
-
+
 #include <signal.h>
 
 /* Per-thread signal state.  */
@@ -260,7 +306,6 @@ struct _hurd_sigstate
     /* Not locked.  Used only by this thread,
        or by signal thread with this thread suspended.  */
     mach_port_t intr_port;	/* Port an interruptible RPC was sent on.  */
-    int intr_is_wait;		/* Interruptible RPC was wait, not io.  */
     int intr_restart;		/* If nonzero, restart interrupted RPC.  */
   };
 /* Linked list of states of all threads
@@ -293,35 +338,34 @@ extern int sigsetthread (thread_t);
    The args in CALL should be constant or local variable refs.
    They may be evaluated many times, and must not change.
    PORT must not be deallocated before this RPC is finished.  */
-#define	_HURD_EINTR_RPC(port, is_wait, call) \
+#define	_HURD_EINTR_RPC(port, call) \
   ({
     error_t __err;
     struct _hurd_sigstate *__ss
       = _hurd_thread_sigstate (__mach_thread_self ());
     __mutex_unlock (&__ss->lock); /* Lock not needed.  */
-    __ss->intr_is_wait = (is_wait);
     __ss->intr_restart = 1;
     /* This one needs to be last.  A signal can arrive before here,
-       and if intr_port were set before intr_is_wait and intr_restart are
+       and if intr_port were set before intr_restart are
        initialized, the signal thread would get confused.  */
     __ss->intr_port = (port);
     /* A signal may arrive here, after intr_port is set,
        but before the mach_msg system call.  The signal handler might do an
        interruptible RPC, and clobber intr_port; then it would not be set
        properly when we actually did send the RPC, and a later signal
-       wouldn't interrupt that RPC.  So, _hurd_run_sighandler saves intr_port
-       and intr_is_wait in the sigcontext, and sigreturn restores them.  */
+       wouldn't interrupt that RPC.  So, _hurd_run_sighandler saves
+       intr_port in the sigcontext, and sigreturn restores them.  */
   __do_call:
     switch (__err = (call))
       {
-      case POSIX_EINTR:		/* RPC went out and was interrupted.  */
+      case EINTR:		/* RPC went out and was interrupted.  */
       case MACH_SEND_INTERRUPTED: /* RPC didn't get out.  */
       case MACH_RCV_INTERRUPTED: /* RPC pending.  */
 	if (__ss->intr_restart)
 	  /* Restart the interrupted call.  */
 	  goto __do_call;
 	/* Return EINTR.  */
-	__err = POSIX_EINTR;
+	__err = EINTR;
 	break;
       }
     __ss->intr_port = MACH_PORT_NULL;
@@ -340,19 +384,23 @@ extern int __setauth (auth_t), setauth (auth_t);
 #define	setauth	__setauth
 
 
-/* Front-end to dir_pathtrans.  */
-extern error_t __dir_lookup (file_t startdir, const char *name,
-			     int flags, mode_t mode,
-			     file_t *result);
-#define	dir_lookup __dir_lookup
+extern error_t __hurd_path_split (file_t crdir, file_t cwdir,
+				  const char *file,
+				  file_t *dir, const char **name);
+#define	hurd_path_split	__hurd_path_split
+extern error_t __hurd_path_lookup (file_t crdir, file_t cwdir,
+				   const char *file,
+				   int flags, mode_t mode,
+				   file_t *file);
+#define	hurd_path_lookup __hurd_path_lookup
 
 /* Returns a port to the directory, and sets *NAME to the file name.  */
-extern file_t __hurd_path_split (const char *file, const char **name);
-#define	hurd_path_split	__hurd_path_split
+extern file_t __path_split (const char *file, const char **name);
+#define	path_split	__path_split
 
 /* Looks up FILE with the given FLAGS and MODE (as for dir_pathtrans).  */
-extern file_t __hurd_path_lookup (const char *file, int flags, mode_t mode);
-#define hurd_path_lookup __hurd_path_lookup
+extern file_t __path_lookup (const char *file, int flags, mode_t mode);
+#define path_lookup __path_lookup
 
 /* Open a file descriptor on a port.  */
 extern int openport (io_t port);
