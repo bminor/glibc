@@ -86,7 +86,7 @@ Install machine-independent data files in subdirectories of
 @file{@var{directory}}.  (You can also set this in @file{configparms};
 see below.)
 
-@item --exec_prefix=@var{directory}
+@item --exec-prefix=@var{directory}
 Install the library and other machine-dependent files in subdirectories
 of @file{@var{directory}}.  (You can also set this in
 @file{configparms}; see below.)
