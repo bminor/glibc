@@ -1,3 +1,52 @@
+1998-08-28 09:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/malloc.c (malloc_hook_ini): Don't overwrite realloc and
+	memalign hook.
+	(realloc_hook_ini): Don't overwrite memalign hook.
+	(memalign_hook_ini): Don't overwrite malloc and memalign hooks.
+	Reported by Philippe Troin <phil@fifi.org>.
+
+	* malloc/mcheck.c (mprobe): Call checkhdr with adjusted pointer.
+	Patch by Philippe Troin <phil@fifi.org>.
+
+1998-08-26 17:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-close.c (_dl_close): Move map->l_nsearchlist value into local
+	variable so that map can be freed.
+	Reported by Philippe Troin <phil@fifi.org>.
+
+	* elf/dl-open.c (_dl_open): Correct test for extending global
+	scope array.
+	Patch by Philippe Troin <phil@fifi.org>.
+
+1998-08-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/vsnprintf.c (_IO_vsnprintf): Set first byte of destination
+	array to NUL to handle maxlen==1 case correctly.
+	Patch by HJ Lu.
+
+1998-08-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/dl-cache.c: Move static variable cache and cachesize
+	to toplevel.
+	(_dl_unload_cache): New function.
+	* elf/dl-open.c (_dl_open): Unload map file before freeing the lock.
+	* elf/rtld.c (dl_main): Unload map file before jumping to user code.
+
+1998-08-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* stdlib/jrand48_r.c (__jrand48_r): Set also upper half of result.
+	Fixes PR libc/757 (Reported by Michael Creutz <creutz@bnl.gov).
+
+1998-08-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/ldd.bash.in: Print "no such file" to stderr.
+	Patch by Alexander Kjeldaas <astor@guardian.no> [PR libc/712].
+
+1998-08-21  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (install-symblolic-link): Fix spelling.
+
 1998-08-20 17:14  H.J. Lu  <hjl@gnu.org>
 
 	* libio/libioP.h (FILEBUF_LITERAL): Set the _offset field to
