@@ -1,0 +1,52 @@
+# Makefile for standalone distribution of libglob.a (fnmatch, glob).
+
+# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License
+# as published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with this library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+srcdir = @srcdir@
+VPATH = $(srcdir)
+
+CPPFLAGS = @DEFS@
+
+# How to invoke ranlib.
+RANLIB = ranlib
+# Test to use to see whether ranlib exists on the system.
+RANLIB_TEST = [ -f /usr/bin/ranlib -o -f /bin/ranlib ]
+
+.PHONY: all
+all: libglob.a
+
+libglob.a: glob.o fnmatch.o
+	ar rv $@ glob.o fnmatch.o
+	-if $(RANLIB_TEST) ; then $(RANLIB) $@; else true; fi
+
+glob.o: glob.h fnmatch.h
+fnmatch.o: fnmatch.h
+
+.c.o:
+	$(CC) $(CFLAGS) $(CPPFLAGS) -I. -c $< $(OUTPUT_OPTION)
+
+.PHONY: clean realclean glob-clean glob-realclean
+clean glob-clean:
+	-rm -f libglob.a *.o core
+realclean glob-realclean: clean
+	-rm -f TAGS tags
+
+# For inside the C library.
+glob.tar glob.tar.Z:
+	$(MAKE) -C .. $@
