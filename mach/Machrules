@@ -1,6 +1,6 @@
 # Rules for MiG interfaces that want to go into the C library.
 
-# Copyright (C) 1991 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -18,61 +18,81 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
+# Makefiles define these variable before including this file:
+#	user-interfaces		Names of interfaces to put user stubs in for.
+#	server-interfaces	Names of interfaces to put server stubs in for.
+#	interface-header-prefix	Directory prefix for interface header files.
+# This file sets:
+#	interface-headers	Names of generated interface header files.
+#	interface-routines	Names of generated interface routines.
+# All user stubs are put in individual files, prefixed with __, and a
+# symbol-alias to the un-__'d form generated; header for both is put in
+# foo.h.  If a server interface is listed as __foo, then its routines are
+# prefixed with __; server interfaces are written to foo_server.c and
+# foo_server.h (or __foo_server.c and __foo_server.h).
+
+# Includers can also add to or modify `migdefines' to set MiG flags.
+
 all:
 
-interface-routines := $(user-interfaces:%=%_user) \
-		      $(server-interfaces:%=%_server)
-interface-headers := $(addsuffix .h,$(interface-headers))
-interface-routines := $(interface-routines) \
-		      $(addsuffix -syms,$(interface-routines))
-dont_distribute := $(dont_distribute) \
-		   $(addsuffix .h,$(interface-routines)) \
-		   $(addsuffix .c,$(interface-routines))	# Generated.
+interfaces = $(user-interface) $(server-interfaces)
 
-
+# Where to find interface definition files.
 ifdef	MIG_DEFS_PATH
 vpath %.defs $(MIG_DEFS_PATH)
 endif
 
 MIG = mig
-migdefines := -DMACH_IPC_COMPAT=0 -DSTANDALONE -DTypeCheck=0 \
-	      $(foreach call,$(mach-shortcuts),-D$(call)=mig_$(call))
-MIGFLAGS = -subrprefix __ -prefix __ $(migdefines)
+migdefines := -DMACH_IPC_COMPAT=0 -DSTANDALONE -DTypeCheck=0
 
-ifneq ($(no_deps),t)
-include $(..)mach/mach-shortcuts
-endif
-$(..)mach/mach-shortcuts: $(..)mach/mach_shortcuts.h
-	(echo 'mach-shortcuts := ' \\ ; \
-	 sed -n 's/SHORTCUT[^(]*(\([^,]*\),.*$$/  \1 \\/p' < $<) > $@
+MIGFLAGS = -subrprefix __ $(migdefines)
 
-.SUFFIXES: .defs .migh .__h
+.SUFFIXES: .defs
 
-%_user.c %.migh: %.defs
-	$(MIG) $(MIGFLAGS) -server /dev/null -user $@ -header $*.migh $<
+define \n
 
-%_server.c %.migh: %.defs
-	$(MIG) $(MIGFLAGS) -user /dev/null -server $@ -sheader $*.migh $<
 
-%.__h: %.migh
-	sed -n 's/^kern_return_t *__\([a-zA-Z0-9_]*\)$$/#define \1 __\1/' \
-	< $< > $@
-
-%.h: %.migh %.__h
-# The last line of foo.migh is "#endif /* foo.h */"
-	(sed '$$d' < $<; cat $(word 2,$^); tail -1 $<) > $@
-
-# Foo.	XXX
-CPP = /usr/local/lib/gcc-cpp
-define defs-mkdep
-$(CPP) -M $(MIGFLAGS) $< | sed 's/$<.o/$@ $(@:.dep=.o)/' > $@
 endef
-%_user.dep: %.defs
-	$(defs-mkdep)
-%_server.dep: %.defs
-	$(defs-mkdep)
+include interface-rules
+interface-rules: Makefile Machrules
+	(for interface in $(user-interfaces); do	\
+	   echo "include .ir-$${interface}";		\
+	 done) > $@-new
+	mv $@-new $@
+.ir-%: %.uh
+	(echo 'define $*-calls'					;\
+	 awk '$$1 == "kern_return_t" { print $$2 }' $<		;\
+	 echo 'endef'						;\
+	 echo '$*-calls := $$(subst $$('\\\\'n), ,$$($*-calls))';\
+	 echo '$$(patsubst %,%%c,$$(calls-$*:%=__%)): $*.defs'; \
+	 echo '	$$(MIG) $$(MIGFLAGS) -prefix __ -i ./__ $$<') > $@-new
+# XXX ./__ vs ./?  Does -prefix apply to -i name already?
+	mv $@-new $@
 
-%-syms.c: %.c
-	(echo '#include <gnu-stabs.h>';
-	 sed -n 's/^mig_external kern_return_t __\([a-zA-Z0-9_]*\)$/\
-symbol_alias (__\1, \1)/p' < $<) > $@
+# MiG doesn't know how to make separate files for the server stubs.
+__%_server.c %_server.h: %.defs
+	$(MIG) $(MIGFLAGS) -prefix __ -server $@ -sheader $(@:__%.c=%.h) $<
+%_server.c %_server.h: %.defs
+	$(MIG) $(MIGFLAGS) -server $@ -sheader $(@:.c=.h) $<
+
+%.uh: %.defs
+	$(MIG) $(MIGFLAGS) -header $@ $<
+%.__h: %.defs
+	$(MIG) $(MIGFLAGS) -prefix __ -header $@ $<
+
+$(interface-header-prefix)%.h: %.__h %.uh $(interface-header-prefix)
+# The last line of foo.uh is "#endif _foo_user_".
+# The first two lines of foo.__h are "#ifndef _foo_user_"/"#define _foo_user_".
+	(sed '$$d' < $<; tail +2 $(word 2,$^)<) > $@
+
+%.c: __%.c
+	(echo '#include <gnu-stabs.h>'; \
+	 echo 'symbol_alias (__$*, $*)') > $@
+
+interface-routines := $(foreach if,$(user-interfaces),		\
+				$(calls-$(if))			\
+				$(addprefix __,$(calls-$(if))))	\
+		      $(server-interfaces:%=%_server)
+interface-headers := $(addprefix $(interface-header-prefix),\
+				 $(user-interfaces:%=%.h) \
+				 $(server-interfaces:%=%_server.h))
