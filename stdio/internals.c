@@ -189,7 +189,8 @@ DEFUN(flushbuf, (fp, c),
 	 is incremented for each character he has read.  */
       fp->__target += fp->__bufp - fp->__buffer;
 
-      if (fp->__mode.__read && fp->__room_funcs.__input != NULL)
+      if (fp->__mode.__read && fp->__room_funcs.__input != NULL &&
+	  !fp->__mode.__append)
 	{
 	  int save = errno;
 	  CONST int aligned = (__stdio_check_offset(fp) == EOF ||
@@ -261,8 +262,10 @@ DEFUN(flushbuf, (fp, c),
     {
       int wrote;
 
-      /* Go to the target file position.  */
-      seek_to_target(fp);
+      /* Go to the target file position.  Don't bother if appending;
+         the write will just ignore the file position anyway.  */
+      if (!fp->__mode.__append)
+	seek_to_target (fp);
 
       if (!ferror(fp))
 	{
@@ -270,8 +273,17 @@ DEFUN(flushbuf, (fp, c),
 	  wrote = (*fp->__io_funcs.__write)(fp->__cookie, fp->__buffer,
 					    to_write);
 	  if (wrote > 0)
-	    /* Record that we've moved forward in the file.  */
-	    fp->__offset += wrote;
+	    {
+	      if (fp->__mode.__append)
+		/* The write has written the data to the end of the file
+		   and updated the file position to after the data.  Don't
+		   bother to find the current position; we can get it
+		   later if we need it.  */
+		fp->__offset = fp->__target = -1;
+	      else
+		/* Record that we've moved forward in the file.  */
+		fp->__offset += wrote;
+	    }
 	  if (wrote < (int) to_write)
 	    /* The writing function should always write
 	       the whole buffer unless there is an error.  */
