@@ -106,6 +106,7 @@ extern __CONSTVALUE double log10 __P ((double __x));
 
 #ifdef	__USE_MISC
 /* Return exp(X) - 1.  */
+extern __CONSTVALUE double __expm1 __P ((double __x));
 extern __CONSTVALUE double expm1 __P ((double __x));
 
 /* Return log(1 + X).  */
