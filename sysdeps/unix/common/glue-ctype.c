@@ -19,16 +19,16 @@ Cambridge, MA 02139, USA.  */
 #include <ctype.h>
 
 /* Different systems have different names for the array.  */
-#ifdef	HAVE__ctype_
+#ifdef	HAVE__CTYPE_
 #define	TABLE	_ctype_
 #endif
-#ifdef	HAVE___ctype_
+#ifdef	HAVE___CTYPE_
 #define	TABLE	__ctype_
 #endif
-#ifdef	HAVE___ctype
+#ifdef	HAVE___CTYPE
 #define	TABLE	__ctype
 #endif
-#ifdef	HAVE__ctype__
+#ifdef	HAVE__CTYPE__
 #define	TABLE	_ctype__
 #endif
 
