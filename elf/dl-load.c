@@ -597,6 +597,10 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	    NULL
 	  };
 
+	  /* For static binaries _dl_library_path might be uninitialized.  */
+	  if (_dl_library_path == NULL)
+	    _dl_library_path = getenv ("LD_LIBRARY_PATH");
+
 	  trypath (_dl_library_path, trusted_dirs);
 	}
       if (fd == -1)
