@@ -20,8 +20,10 @@
 
 subdir := manual
 
-.PHONY: all
-all: library.dvi library.info
+.PHONY: all dvi info
+all: dvi info
+dvi: library.dvi
+info: library.info
 
 # Set chapters and chapters-incl.
 include chapters
