@@ -672,7 +672,7 @@ To use this function, your program should include the header files
 @deftypefun int rmdir (const char *@var{filename})
 The @code{rmdir} function removes a directory.  The directory must
 be empty before it can be removed; in other words, it can only contain
-entries for @file{.} and @file {..}.
+entries for @file{.} and @file{..}.
 
 The other effects of this function are like those of @code{unlink};
 @pxref{Removing and Renaming Files}.  There are two additional

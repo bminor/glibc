@@ -1414,7 +1414,7 @@ If this bit is set, it indicates that the base type is modified with
 @comment GNU
 @deftypevr Macro int PA_FLAG_LONGLONG
 If this bit is set, it indicates that the base type is modified with
-@code {long long}.  (This corresponds to the @samp{L} type modifier.)
+@code{long long}.  (This corresponds to the @samp{L} type modifier.)
 @end deftypevr
 
 @comment printf.h
@@ -2604,13 +2604,17 @@ each of the following, in sequence.  The directory must exist and be
 writable.
 
 @itemize @bullet
-@item The environment variable @code{TMPDIR}, if it is defined.
+@item
+The environment variable @code{TMPDIR}, if it is defined.
 
-@item The @var{dir} argument, if it is not a null pointer.
+@item
+The @var{dir} argument, if it is not a null pointer.
 
-@item The value of the @code{P_tmpdir} macro.
+@item
+The value of the @code{P_tmpdir} macro.
 
-@item The directory @file{/tmp}.
+@item
+The directory @file{/tmp}.
 @end itemize
 @end deftypefun
 @cindex TMPDIR environment variable

@@ -656,7 +656,7 @@ integer argument specifying the signal number, and have return type
 @code{void}.  So, you should define handler functions like this:
 
 @example
-void @var{handler} (int @var{signum}) @{ @dots @}
+void @var{handler} (int @var{signum}) @{ @dots{} @}
 @end example
 @end deftp
 

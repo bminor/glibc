@@ -80,10 +80,10 @@ For information about what standards specify what features,
 @cindex ANSI C
 
 The GNU C library is compatible with the C standard adopted by the
-American National Standards Institute (ANSI): @cite{American National
-Standard X3.159-1989 --- ``ANSI C''}.  The header files and library
-facilities that make up the GNU library are a superset of those
-specified by the ANSI C standard.
+American National Standards Institute (ANSI):
+@cite{American National Standard X3.159-1989 --- ``ANSI C''}.
+The header files and library facilities that make up the GNU library are
+a superset of those specified by the ANSI C standard.@refill
 
 @pindex gcc
 If you are concerned about strict adherence to the ANSI C standard, you

@@ -164,7 +164,7 @@ of it, thus forming a work based on the Library, and copy and
 distribute such modifications or work under the terms of Section 1
 above, provided that you also meet all of these conditions:
 
-@alphaenumerate
+@enumerate a
 @item
 The modified work must itself be a software library.
 
@@ -191,7 +191,7 @@ application.  Therefore, Subsection 2d requires that any
 application-supplied function or table used by this function must
 be optional: if the application does not supply it, the square
 root function must still compute square roots.)
-@end alphaenumerate
+@end enumerate
 
 These requirements apply to the modified work as a whole.  If
 identifiable sections of that work are not derived from the Library,
@@ -293,7 +293,7 @@ copyright notice for the Library among them, as well as a reference
 directing the user to the copy of this License.  Also, you must do one
 of these things:
 
-@alphaenumerate
+@enumerate a
 @item
 Accompany the work with the complete corresponding
 machine-readable source code for the Library including whatever
@@ -321,7 +321,7 @@ specified materials from the same place.
 @item
 Verify that the user has already received a copy of these
 materials or that you have already sent this user a copy.
-@end alphaenumerate
+@end enumerate
 
   For an executable, the required form of the ``work that uses the
 Library'' must include any data and utility programs needed for
@@ -346,7 +346,7 @@ library, provided that the separate distribution of the work based on
 the Library and of the other library facilities is otherwise
 permitted, and provided that you do these two things:
 
-@alphaenumerate
+@enumerate a
 @item
 Accompany the combined library with a copy of the same work
 based on the Library, uncombined with any other library
@@ -357,7 +357,7 @@ Sections above.
 Give prominent notice with the combined library of the fact
 that part of it is a work based on the Library, and explaining
 where to find the accompanying uncombined form of the same work.
-@end alphaenumerate
+@end enumerate
 
 @item
 You may not copy, modify, sublicense, link with, or distribute

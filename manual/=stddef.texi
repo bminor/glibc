@@ -52,7 +52,7 @@ and @code{int} for pointer subtraction results.
 @deftypevr Macro {void *} NULL
 @cindex null pointer
 This is a null pointer constant.  It can be assigned to any pointer
-variable since it has type @code {void *}, and is guaranteed not to
+variable since it has type @code{void *}, and is guaranteed not to
 point to any real object.  This macro is the best way to get a null
 pointer value.  You can also use @code{0} or @code{(void *)0} as a null
 pointer constant, but using @code{NULL} makes the purpose of the
