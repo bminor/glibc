@@ -26,12 +26,16 @@ DEFUN(_exit, (status), int status)
   /* Does not return (when applied to the calling task).  */
   extern volatile void __task_terminate (task_t);
 
+#if 0
   struct _hurd_sigstate *ss = _hurd_thread_sigstate (__mach_thread_self ());
+#endif
 
-  __proc_exit (_hurd_proc, status);
+  _HURD_PORT_USE (&_hurd_proc, __proc_exit (port, status));
 
+#if 0
   if (ss->vforked)
     longjmp (ss->vfork_saved.continuation, 1);
+#endif
 
   __task_terminate (__mach_task_self ());
 }
