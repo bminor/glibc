@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 #include <sysdep.h>
+#include <sys/wait.h>
 
 volatile void
 _hurd_exit (int status)
@@ -43,8 +44,8 @@ _hurd_exit (int status)
 #else
       volatile const int zero = 0, one = 1;
       volatile int lossage = one / zero;
-    }
 #endif
+    }
 }
 
 void
