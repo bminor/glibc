@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,6 @@ void
 DEFUN(_exit, (status), int status)
 {
   /* Does not return (when applied to the calling task).  */
-  extern volatile error_t __proc_exit (process_t, int);
   extern volatile void __task_terminate (task_t);
 
   struct _hurd_sigstate *ss = _hurd_thread_sigstate (__mach_thread_self ());
