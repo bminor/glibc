@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Alpha version.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -74,7 +74,7 @@ elf_machine_load_address (void)
       "0:\n\t"
       "br $0, 2f\n"
       "1:\n\t"
-      ".data\n"
+      ".section\t.data\n"
       "2:\n\t"
       ".quad 0b\n\t"
       ".previous"
@@ -270,7 +270,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    its return value is the user program's entry point.  */
 
 #define RTLD_START asm ("\
-.text
+	.section .text
 	.set at
 	.globl _start
 	.ent _start
