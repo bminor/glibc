@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <limits.h>
 #include <fcntl.h>
 #include "stdio/_itoa.h"
+#include <hurd/term.h>
 
 /* Translate the error from dir_pathtrans into the error the user sees.  */
 static inline error_t
@@ -226,7 +227,7 @@ __hurd_path_lookup_retry (file_t crdir,
 			  {
 			    err = __io_reauthenticate (unauth, _hurd_pid);
 			    if (! err)
-			      err == __USEPORT
+			      err = __USEPORT
 				(AUTH, __auth_user_authenticate (port,
 								 unauth,
 								 _hurd_pid,
