@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ DEFUN(__sigaction, (sig, act, oact),
 
   if (sig <= 0 || sig >= NSIG ||
       (act != NULL && act->sa_handler != SIG_DFL &&
-       ((__sigmask (sig) & _SIG_CANT_IGNORE) ||
+       ((__sigmask (sig) & _SIG_CANT_MASK) ||
 	act->sa_handler == SIG_ERR)))
     {
       errno = EINVAL;
@@ -45,8 +45,12 @@ DEFUN(__sigaction, (sig, act, oact),
 
   ss = _hurd_thread_sigstate (__mach_thread_self ());
 
-  if (sig == SIGCHLD && act != NULL)
-    __proc_mark_nostopchild (_hurd_proc, a.sa_flags & SA_NOCLDSTOP);
+  if (act != NULL && sig == SIGCHLD)
+    /* Inform the proc server whether or not it should send us SIGCHLD for
+       stopped children.  We do this with SS->lock held so that no SIGCHLD
+       can arrive in the middle and be of indeterminate status.  */
+    __USEPORT (PROC, __proc_mark_nostopchild (port,
+					      a.sa_flags & SA_NOCLDSTOP));
 
   old = ss->actions[sig];
 
