@@ -772,7 +772,7 @@ On the GNU system, you can clean up any stream with @code{fclean}:
 
 @comment stdio.h
 @comment GNU
-@deftypefun int fclean (@var{stream})
+@deftypefun int fclean (FILE *@var{stream})
 Clean up the stream @var{stream} so that its buffer is empty.  If
 @var{stream} is doing output, force it out.  If @var{stream} is doing
 input, give the data in the buffer back to the system, arranging to
