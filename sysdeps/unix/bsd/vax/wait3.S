@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,8 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-.globl ___wait3
-___wait3:
+ENTRY(___wait3)
 	movel 8(ap), r1
 	movel 12(ap), r0
 	/* Set all condition codes to tell the kernel this is wait3.  */

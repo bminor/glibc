@@ -18,14 +18,5 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-#ifndef	 SYS_vfork
-#define	 SYS_vfork	66
-#endif
-
-SYSCALL__ (vfork, 0)
-	tst %o1		/* If %o1 is zero, we're the parent.  */
-	bne,a parent
-	/* We're the child, so return zero.  */
-	clr %o0
-parent:	retl
-	nop
+SYSCALL__ (stat, 2)
+	ret
