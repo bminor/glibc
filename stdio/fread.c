@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -82,7 +82,8 @@ DEFUN(fread, (p, size, nmemb, stream),
      using a user-specified input buffer filling/expanding function,
      so we don't do it in that case.  */
   if (to_read >= stream->__bufsize &&
-      stream->__room_funcs.__input == default_func)
+      stream->__room_funcs.__input == default_func &&
+      stream->__offset == stream->__target)
     {
       /* Read directly into the user's buffer.  */
       if (stream->__io_funcs.__read != NULL)
