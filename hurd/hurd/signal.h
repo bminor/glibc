@@ -154,9 +154,10 @@ extern struct sigcontext *_hurd_setup_sighandler (int flags,
 extern void _hurd_msgport_receive (void);
 
 /* Return nonzero if STATE indicates a thread that is blocked in a mach_msg
-   system call (machine-dependent).  */
+   system call (machine-dependent).  If returning nonzero, set *PORT to
+   the receive right that the thread is blocked on.  */
 
-extern int _hurd_thread_state_msging_p (void *state);
+extern int _hurd_thread_state_msging_p (void *state, mach_port_t *port);
 
 /* Set up STATE with a thread state that, when resumed, is
    like `longjmp (_hurd_sigthread_fault_env, 1)'.  */
