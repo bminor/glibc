@@ -1,6 +1,6 @@
 # Makefile for elf subdirectory of GNU C Library.
 
-# Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,8 @@ elide-routines.so = $(dl-routines) dl-support enbl-secure
 # interpreter and operating independent of libc.
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
-		  soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c
+		  soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c \
+		  dl-envvars.h
 
 extra-libs	 = libdl
 extra-libs-others = $(extra-libs)
