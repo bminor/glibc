@@ -19,6 +19,7 @@
 
 #include <link.h>
 #include <stddef.h>
+#include <sys/types.h>
 #include <sys/mman.h>
 
 /* System-dependent function to read a file's whole contents
@@ -114,7 +115,7 @@ _dl_unload_cache (void)
 {
   if (cache != NULL && cache != (struct cache_file *) -1)
     {
-      __munmap (cache, cachesize);
+      __munmap ((caddr_t) cache, cachesize);
       cache = NULL;
     }
 }
