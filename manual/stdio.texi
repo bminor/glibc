@@ -1042,13 +1042,13 @@ conversions.
 
 The @samp{%f} conversion prints its argument in fixed-point notation,
 producing output of the form
-[@code{-}]@var{ddd}@code{.}@var{ddd},
+@w{[@code{-}]@var{ddd}@code{.}@var{ddd}},
 where the number of digits following the decimal point is controlled
 by the precision you specify.
 
 The @samp{%e} conversion prints its argument in exponential notation,
 producing output of the form
-[@code{-}]@var{d}@code{.}@var{ddd}@code{e}[@code{+}|@code{-}]@var{dd}.
+@w{[@code{-}]@var{d}@code{.}@var{ddd}@code{e}[@code{+}|@code{-}]@var{dd}}.
 Again, the number of digits following the decimal point is controlled by
 the precision.  The exponent always contains at least two digits.  The
 @samp{%E} conversion is similar but the exponent is marked with the letter
@@ -1063,7 +1063,7 @@ followed by a digit.
 
 The following flags can be used to modify the behavior:
 
-@table @asis
+@table @asis                    @c Not @samp so we can have ` ' as an item.
 @item @samp{-}
 Left-justify the result in the field.  Normally the result is
 right-justified.
@@ -1090,14 +1090,15 @@ specified.
 
 The precision specifies how many digits follow the decimal-point
 character for the @samp{%f}, @samp{%e}, and @samp{%E} conversions.  For
-these conversions, the default is @code{6}.  If the precision is
-explicitly @code{0}, this has the rather strange effect of suppressing
-the decimal point character entirely!  For the @samp{%g} and @samp{%G}
-conversions, the precision specifies how many significant digits to
-print; if @code{0} or not specified, it is treated like a value of
-@code{1}.
-@c !!! clarify "significant digits" -- that is something that caused
-@c confusion just between Sandra and me. -rm
+these conversions, the default precision is @code{6}.  If the precision
+is explicitly @code{0}, this suppresses the decimal point character
+entirely.  For the @samp{%g} and @samp{%G} conversions, the precision
+specifies how many significant digits to print.  Significant digits are
+the first digit before the decimal point, and all the digits after it.
+If the precision @code{0} or not specified for @smap{%g} or @samp{%G},
+it is treated like a value of @code{1}.  If the value being printed
+cannot be expressed precisely in the specified number of digits, the
+value is rounded to the nearest number that fits.
 
 Without a type modifier, the floating-point conversions use an argument
 of type @code{double}.  (By the default argument promotions, any
