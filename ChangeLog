@@ -1,3 +1,9 @@
+1999-06-14  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* stdlib/strtol.c: It is not generally true that if
+	(unsigned)a*(unsigned)b overflows, then the result is
+	less than 'a'.
+
 1999-06-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/i386/fpu/bits/mathinline.h: Disable signbit* inline
