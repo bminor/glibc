@@ -13,13 +13,15 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #ifndef	_SYS_IOCTL_H
 
 #define	_SYS_IOCTL_H	1
 #include <features.h>
+
+__BEGIN_DECLS
 
 /* Get the list of `ioctl' requests and related constants.  */
 #include <ioctls.h>
@@ -28,60 +30,85 @@ Cambridge, MA 02139, USA.  */
 #if	defined(TIOCGETC) || defined(TIOCSETC)
 /* Type of ARG for TIOCGETC and TIOCSETC requests.  */
 struct tchars
-  {
-    char t_intrc;	/* Interrupt character.  */
-    char t_quitc;	/* Quit character.  */
-    char t_startc;	/* Start-output character.  */
-    char t_stopc;	/* Stop-output character.  */
-    char t_eofc;	/* End-of-file character.  */
-    char t_brkc;	/* Input delimiter character.  */
-  };
+{
+  char t_intrc;			/* Interrupt character.  */
+  char t_quitc;			/* Quit character.  */
+  char t_startc;		/* Start-output character.  */
+  char t_stopc;			/* Stop-output character.  */
+  char t_eofc;			/* End-of-file character.  */
+  char t_brkc;			/* Input delimiter character.  */
+};
+
+#define	_IOT_tchars	/* Hurd ioctl type field.  */ \
+  _IOT (_IOTS (char), 6, 0, 0, 0, 0)
 #endif
 
 #if	defined(TIOCGLTC) || defined(TIOCSLTC)
 /* Type of ARG for TIOCGLTC and TIOCSLTC requests.  */
 struct ltchars
-  {
-    char t_suspc;	/* Suspend character.  */
-    char t_dsuspc;	/* Delayed suspend character.  */
-    char t_rprntc;	/* Reprint-line character.  */
-    char t_flushc;	/* Flush-output character.  */
-    char t_werasc;	/* Word-erase character.  */
-    char t_lnextc;	/* Literal-next character.  */
-  };
+{
+  char t_suspc;			/* Suspend character.  */
+  char t_dsuspc;		/* Delayed suspend character.  */
+  char t_rprntc;		/* Reprint-line character.  */
+  char t_flushc;		/* Flush-output character.  */
+  char t_werasc;		/* Word-erase character.  */
+  char t_lnextc;		/* Literal-next character.  */
+};
+
+#define	_IOT_ltchars	/* Hurd ioctl type field.  */ \
+  _IOT (_IOTS (char), 6, 0, 0, 0, 0)
 #endif
 
 /* Type of ARG for TIOCGETP and TIOCSETP requests (and gtty and stty).  */
 struct sgttyb
-  {
-    char sg_ispeed;	/* Input speed.  */
-    char sg_ospeed;	/* Output speed.  */
-    char sg_erase;	/* Erase character.  */
-    char sg_kill;	/* Kill character.  */
-    short int sg_flags;	/* Mode flags.  */
-  };
+{
+  char sg_ispeed;		/* Input speed.  */
+  char sg_ospeed;		/* Output speed.  */
+  char sg_erase;		/* Erase character.  */
+  char sg_kill;			/* Kill character.  */
+  short int sg_flags;		/* Mode flags.  */
+};
+
+#define	_IOT_sgttyb	/* Hurd ioctl type field.  */ \
+  _IOT (_IOTS (char), 6, _IOTS (short int), 1, 0, 0)
 
 #if	defined(TIOCGWINSZ) || defined(TIOCSWINSZ)
 /* Type of ARG for TIOCGWINSZ and TIOCSWINSZ requests.  */
 struct winsize
-  {
-    unsigned short int ws_row;	/* Rows, in characters.  */
-    unsigned short int ws_col;	/* Columns, in characters.  */
+{
+  unsigned short int ws_row;	/* Rows, in characters.  */
+  unsigned short int ws_col;	/* Columns, in characters.  */
 
-    unsigned short int ws_xpixel;	/* Horizontal pixels.  */
-    unsigned short int ws_ypixel;	/* Vertical pixels.  */
-  };
+  unsigned short int ws_xpixel;	/* Horizontal pixels.  */
+  unsigned short int ws_ypixel;	/* Vertical pixels.  */
+};
+
+#define	_IOT_winsize	/* Hurd ioctl type field.  */ \
+  _IOT (_IOTS (unsigned short int), 4, 0, 0, 0, 0)
 #endif
 
+#if	defined (TIOCGSIZE) || defined (TIOCSSIZE)
+struct ttysize
+{
+  unsigned short int ts_lines;
+  unsigned short int ts_cols;
+  unsigned short int ts_xxx;
+  unsigned short int ts_yyy;
+};
+
+#define	_IOT_ttysize	_IOT_winsize
+#endif
 
 /* Perform the I/O control operation specified by REQUEST on FD.
    The actual type and use of ARG and the return value depend on REQUEST.  */
-extern int EXFUN(__ioctl, (int __fd, int __request, PTR __arg));
-extern int EXFUN(ioctl, (int __fd, int __request, PTR __arg));
+extern int __ioctl __P ((int __fd, int __request, __ptr_t __arg));
+extern int ioctl __P ((int __fd, int __request, __ptr_t __arg));
 
 #ifdef	__OPTIMIZE__
 #define	ioctl(fd, request, arg)	__ioctl((fd), (request), (arg))
 #endif
 
 
-#endif	/* sys/ioctl.h */
+__END_DECLS
+
+#endif /* sys/ioctl.h */
