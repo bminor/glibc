@@ -82,6 +82,8 @@ init_dtable (void)
 	  /* Install the port in the descriptor.
 	     This sets up all the ctty magic.  */
 	  _hurd_port2fd (new, _hurd_init_dtable[i], 0);
+
+	  dt[i] = new;
 	}
     }
 
