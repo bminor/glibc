@@ -210,6 +210,9 @@ __MATHCALLX (nan,, (__const char *__tagb), (__const__));
 #endif
 
 
+/* Return nonzero if VALUE is not a number.  */
+__MATHDECLX (int,__isnan,, (_Mdouble_ __value), (__const__));
+
 #if defined __USE_MISC || defined __USE_XOPEN
 /* Return nonzero if VALUE is not a number.  */
 __MATHDECLX (int,isnan,, (_Mdouble_ __value), (__const__));
@@ -259,10 +262,10 @@ __MATHCALLX (nexttoward,, (_Mdouble_ __x, long double __y), (__const__));
 /* Return the remainder of integer divison X / Y with infinite precision.  */
 __MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+# if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));
-#endif
+# endif
 
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
