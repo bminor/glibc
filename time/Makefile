@@ -21,11 +21,9 @@
 #
 subdir	:= time
 
-headers	:= time.h sys/time.h tzname_max.h
-distribute := tzfile.h private.h scheck.c ialloc.c emkdir.c yearistype \
-	      make-tzlim.c
-extra-objs = scheck.o ialloc.o emkdir.o zonenames $(tzfiles:%=z.-%) \
-	     make-tzlim.o make-tzlim
+headers	:= time.h sys/time.h
+distribute := tzfile.h private.h scheck.c ialloc.c emkdir.c yearistype
+extra-objs = scheck.o ialloc.o emkdir.o zonenames $(tzfiles:%=z.-%)
 
 routines	:= offtime asctime clock ctime difftime gmtime	\
 		   localtime mktime strftime time __tzset tzfile \
@@ -124,10 +122,3 @@ tz-cc = $(COMPILE.c) $(+gcc-nowarn) \
 	     -DTZDEFAULT='"$(localtime-file)"' \
 	     -DTZDEFRULES='"$(posixrules-file)"' \
 	     $< $(OUTPUT_OPTION)
-
-# Generate tzname_max.h from all the zoneinfo data files.
-$(common-objpfx)tzname_max.h: $(objpfx)make-tzlim \
-			      $(addprefix $(zonedir)/,$(zonenames))
-	$(dir $<)$(notdir $<) $(filter-out $<,$^) > $@.n
-	@rm -f $@
-	mv -f $@.n $@
