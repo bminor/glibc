@@ -56,4 +56,6 @@ Cambridge, MA 02139, USA.  */
   asm volatile ("movl %0, %%esp; jmp %1" : : \
 		"g" (sp), "m" (*(long int *) (fn)) : "%esp")
 
+#define STACK_GROWTH_DOWN
+
 #include_next <sysdep.h>
