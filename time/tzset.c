@@ -25,17 +25,23 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <time.h>
 
-#ifndef	HAVE_GNU_LD
-#define	__tzname	tzname
-#define	__daylight	daylight
-#define	__timezone	timezone
-#endif
+/* Defined in offtime.c.  */
+extern CONST unsigned short int __mon_lengths[2][12];
+
+#define NOID
+#include "tzfile.h"
 
 extern int __use_tzfile;
 extern void EXFUN(__tzfile_read, (CONST char *file));
 extern void EXFUN(__tzfile_default, (char *std AND char *dst AND
 				     long int stdoff AND long int dstoff));
 extern int EXFUN(__tzfile_compute, (time_t, struct tm));
+
+#ifndef	HAVE_GNU_LD
+#define	__tzname	tzname
+#define	__daylight	daylight
+#define	__timezone	timezone
+#endif
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
 int __daylight = 0;
@@ -367,13 +373,13 @@ DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
     case J0:
       /* n - Day of year.
 	 Just add SECSPERDAY times the day number to the time of Jan 1st.  */
-      t += r->day * SECSPERDAY;
+      t += rule->d * SECSPERDAY;
       break;
 
     case M:
       /* Mm.n.d - Nth "Dth day" of month M.  */
       {
-	register unsigned int i, d, m1, yy0, yy1, yy2, dow;
+	register int i, d, m1, yy0, yy1, yy2, dow;
 
 	/* First add SECSPERDAY for each day in months before M.  */
 	for (i = 0; i <= rule->m; ++i)
