@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Symbol set of ioctl handler lists.  If there are user-registered
    handlers, one of these lists will contain them.  The other lists are
-   handler built into the library.  */
+   handlers built into the library.  */
 const struct
   {
     size_t n;
