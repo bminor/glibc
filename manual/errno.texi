@@ -598,14 +598,14 @@ of error you get if you request them and they are not supported.
 @end deftypevr
 
 @comment errno.h
-@comment GNU: Wrong editor
+@comment GNU: ?
 @deftypevr Macro int ED
 The experienced user will know what is wrong.
 @end deftypevr
 
 @comment errno.h
 @comment GNU: Gratuitous error
-@deftypevr Macro int EGRATUITOUSLYLONGERRORNAME
+@deftypevr Macro int EGRATUITOUS
 This error code has no purpose.
 @end deftypevr
 
