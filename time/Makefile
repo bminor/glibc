@@ -34,7 +34,7 @@ routines	:= offtime asctime clock ctime difftime gmtime	\
 aux		:= syms-time
 
 others	:= ap zdump zic
-tests	:= test_time
+tests	:= test_time clocktest
 
 tzfiles := africa antarctica asia australasia europe northamerica \
 	   southamerica etcetera factory systemv
