@@ -394,7 +394,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	  msg.msgh_remote_port = ss->suspended;
 	  msg.msgh_local_port = MACH_PORT_NULL;
 	  /* These values do not matter.  */
-	  msg.msgh_msgid = 0x8675309; /* Jenny, Jenny.  */
+	  msg.msgh_id = 0x8675309; /* Jenny, Jenny.  */
 	  msg.msgh_seqno = 17;	/* Random.  */
 	  ss->suspended = MACH_PORT_NULL;
 	  __mach_msg (&msg, MACH_SEND_MSG, sizeof msg, 0,
