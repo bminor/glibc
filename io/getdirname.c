@@ -41,5 +41,5 @@ DEFUN_VOID(get_current_dir_name)
     /* The PWD value is correct.  Use it.  */
     return strdup (pwd);
 
-  return getcwd ((char *) NULL);
+  return getcwd ((char *) NULL, 0);
 }
