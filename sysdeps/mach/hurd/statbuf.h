@@ -27,24 +27,34 @@ struct stat
     int st_fstype;		/* File system type.  */
     __fsid_t st_fsid;		/* File system ID.  */
 #define	st_dev	st_fsid
+
     __ino_t st_ino;		/* File number.  */
     unsigned int st_gen;	/* To detect reuse of file numbers.  */
     __dev_t st_rdev;		/* Device if special file.  */
     __mode_t st_mode;		/* File mode.  */
     __nlink_t st_nlink;		/* Number of links.  */
+
     __uid_t st_uid;		/* Owner.  */
     __gid_t st_gid;		/* Owning group.  */
+
     __off_t st_size;		/* Size in bytes.  */
+
     __time_t st_atime;		/* Access time, seconds */
     unsigned long int st_atime_usec; /* and microseconds.  */
     __time_t st_mtime;		/* Modification time, seconds */
     unsigned long int st_mtime_usec; /* and microseconds.  */
     __time_t st_ctime;		/* Status change time, seconds */
     unsigned long int st_ctime_usec; /* and microseconds.  */
+
     unsigned int st_blksize;	/* Optimal size for I/O.  */
+
+#define	_STATBUF_ST_BLKSIZE	/* Tell code we have this member.  */
+
     unsigned int st_blocks;	/* Number of 512-byte blocks allocated.
-				   Not particular related to `st_blksize'.  */
+				   Not related to `st_blksize'.  */
+
     __uid_t st_author;		/* File author.  */
+
     int st_spare[8];		/* Reserved for future use.  */
   };
 
