@@ -1,4 +1,4 @@
-# Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -123,6 +123,12 @@ $(inst_libdir)/libc.so: $(rpcuserlibs)
 ifeq (elf,$(subdir))
 $(objpfx)librtld.so: $(rpcuserlibs:.so=_pic.a)
 endif
+
+# We need these libs to link static programs in the libc source tree, too.
+link-libc-static := -Wl,-\( \
+		    $(patsubst %,$(common-objpfx)%.a,\
+			       libc mach/libmachuser hurd/libhurduser) \
+		    $(gnulib) -Wl,-\)
 
 ifeq ($(subdir),misc)
 sysdep_routines += cthreads
