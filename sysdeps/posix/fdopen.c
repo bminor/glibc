@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
-
+#include <fcntl.h>
 
 /* Defined in fopen.c.  */
 extern int EXFUN(__getmode, (CONST char *mode, __io_mode *mptr));
@@ -30,17 +30,38 @@ DEFUN(fdopen, (fd, mode), int fd AND CONST char *mode)
 {
   register FILE *stream;
   __io_mode m;
+  int dflags;
 
-  if (fd < 0)
-    {
-      errno = EBADF;
-      return NULL;
-    }
-
-  if (!__getmode(mode, &m))
+  if (!__getmode (mode, &m))
     return NULL;
 
-  stream = __newstream();
+  /* Verify the FD is valid allows the access MODE specifies.  */
+
+  dflags = __fcntl (fd, F_GETFL);
+  if (dflags == -1)
+    /* FD was invalid; fcntl has already set errno.  */
+    return NULL;
+
+  /* Check the access mode.  */
+  switch (dflags & O_ACCMODE)
+    {
+    case O_RDONLY:
+      if (!m.__read)
+	{
+	  errno = EBADF;
+	  return NULL;
+	}
+      break;
+    case O_WRONLY:
+      if (!m.__write)
+	{
+	  errno = EBADF;
+	  return NULL;
+	}
+      break;
+    }
+
+  stream = __newstream ();
   if (stream == NULL)
     return NULL;
 
