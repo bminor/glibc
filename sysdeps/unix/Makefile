@@ -174,14 +174,13 @@ endif
 # We also want to omit from ioctls the symbols defined in our own
 # <sys/ttydefaults.h>, to avoid multiple definition conflicts.
 # We use snarf-ioctls on these files to find what symbols we want to omit.
-# Then we turn this into a big alternation for egrep.  
 
 $(common-objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls \
 			$(sysincludedir)/sys/ioctl.h $(sys/termios.h)
 	$(dir $<)$(notdir $<) $(filter-out $<,$^) \
-	| egrep -v "^(`$(dir $<)$(notdir $<) \
-		   	$(termbits.h) $(..)termios/sys/ttydefaults.h \
-		    | tr '\012' '|'`nevermatch)$$" \
+	| fgrep -v "`$(dir $<)$(notdir $<) $(termbits.h) \
+					   $(..)termios/sys/ttydefaults.h \
+		     | sort | uniq`" \
 	| sort | uniq | tr '\012' ' ' > $@-tmp
 	mv $@-tmp $@
 
@@ -194,7 +193,7 @@ ifeq ($(subdir),stdio)
 before-compile: $(objpfx)errlist.c
 $(objpfx)errlist.c: $(objpfx)make_errlist
 	@rm -f $@
-	$< > $@-tmp
+	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 
 $(objpfx)make_errlist: $(sysdep_dir)/unix/make_errlist.c
