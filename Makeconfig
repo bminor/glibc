@@ -268,7 +268,6 @@ endif
 
 # Extra flags to pass to GCC.
 +gccwarn := -Wall -Wwrite-strings -Wno-parentheses
-+gccopt := -fstrength-reduce
 
 # This is the program that generates makefile
 # dependencies from C source files.
@@ -324,10 +323,7 @@ endif	# $(+cflags) == ""
 # If using gcc, add flags that only it will grok.
 ifneq	"$(findstring gcc,$(CC))" ""
 +cflags := $(+cflags) $(+gccwarn)
-ifneq	"$(filter -O,$(+cflags))" ""
-+cflags := $(+cflags) $(+gccopt)
 +gcc-nowarn := -w
-endif
 else
 +gcc-nowarn :=
 endif	# gcc
@@ -355,8 +351,8 @@ endif
 
 
 # These are the variables that the implicit compilation rules use.
-CPPFLAGS = $(+includes) $(+defines) -D_LIBC
-override CFLAGS	= $(+cflags)
+CPPFLAGS = $(+includes) $(+defines) -D_LIBC $(sysdep-CPPFLAGS)
+override CFLAGS	= $(+cflags) $(sysdep-CFLAGS)
 
 
 # This is the macro that the implicit linking rules use.
