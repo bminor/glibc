@@ -30,11 +30,18 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 {
   va_list ap;
   struct hurd_userlink dtable_ulink;
-  struct hurd_fd_user d = _hurd_fd_get (fd, &dtable_ulink);
+  struct hurd_fd_user d;
   int result;
   
+  HURD_CRITICAL_BEGIN;
+
+  d = _hurd_fd_get (fd, &dtable_ulink);
+
   if (d.d == NULL)
-    return __hurd_fail (EBADF);
+    {
+      result = __hurd_fail (EBADF);
+      goto out;
+    }
 
   va_start (ap, cmd);
 
@@ -176,6 +183,9 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
   _hurd_fd_free (d, &dtable_ulink);
 
   va_end (ap);
+
+ out:
+  HURD_CRITICAL_END;
 
   return result;
 }
