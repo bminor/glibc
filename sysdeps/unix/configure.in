@@ -29,28 +29,47 @@ test -n "$unix_syscall_h" && {
 # <syscall.h> defines the system call number, we know that the simple
 # system call implementations in unix/common will be sufficient.
 
-for unix_function in dup2 lstat mkdir rmdir readlink getpgrp access; do
+for unix_function in \
+  __dup2 __lstat __mkdir __rmdir __readlink __symlink rename \
+  __getpgrp __setpgrp __access __select __getgroups/__getgrps setgroups
+do
+
+  # $unix_function  =>	$unix_syscall		$unix_srcname
+  #	CALL			CALL			CALL
+  #	__CALL			CALL			__CALL
+  #	__CALL/NAME		CALL			NAME
+  unix_srcname=
+  eval "unix_syscall=`echo $unix_functon | \
+		       sed -e '/^__/s/^__//' \
+			   -e 's@/\(.*\)$@ unix_srcname=\1@'`"
+  test -z "$unix_srcname" && unix_srcname=$unix_function
 
   unix_implementor=none
   for unix_dir in $sysnames; do
-    if [ -r $sysdep_dir/$unix_dir/__${unix_function}.c -o \
-	 -r $sysdep_dir/$unix_dir/__${unix_function}.S ]; then
+    if [ -r $sysdep_dir/$unix_dir/${unix_srcname}.c -o \
+	 -r $sysdep_dir/$unix_dir/${unix_srcname}.S ]; then
       unix_implementor=$unix_dir
       break
     fi
   done
 
+  # mkdir and rmdir have implementations in unix/sysv, but
+  # the simple syscall versions are preferable if available.
+  test $unix_syscall = mkdir -o $unix_syscall = rmdir && \
+  test $unix_implementor = unix/sysv && \
+    unix_implementor=generic
+
   case $unix_implementor in
   none|stub|generic|posix)
-    # The chosen implementation of ${unix_function} is a boring one.
+    # The chosen implementation of ${unix_syscall} is a boring one.
     # We want to use the unix/common implementation instead iff
-    # ${unix_function} appears in <syscall.h>.
-    echo checking for ${unix_function} system call
-    if grep "[ 	_]${unix_function}[ 	]" $unix_syscall_h >/dev/null; then
+    # ${unix_syscall} appears in <syscall.h>.
+    echo checking for ${unix_syscall} system call
+    if grep "[ 	_]${unix_syscall}[ 	]" $unix_syscall_h >/dev/null; then
       # It does seem to be present in <syscall.h>.
-      echo "#include <sysdeps/unix/common/__${unix_function}.S>" \
-      > __${unix_function}.S
-      test -n "$verbose" && echo "	found ${unix_function}"
+      echo "#include <sysdeps/unix/common/${unix_srcname}.S>" \
+      > ${unix_srcname}.S
+      test -n "$verbose" && echo "	wrote ${unix_srcname}.S"
     fi
   ;;
   *) ;;
