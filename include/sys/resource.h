@@ -5,4 +5,8 @@
 extern int __getrlimit __P ((enum __rlimit_resource __resource,
 			     struct rlimit *__rlimits));
 extern int __getrusage __P ((enum __rusage_who __who, struct rusage *__usage));
+
+extern int __setrlimit (enum __rlimit_resource __resource,
+			const struct rlimit *__rlimits);
+
 #endif
