@@ -79,9 +79,10 @@ static struct param params[] =
 #if !defined (NAME_MAX) && defined (MAXNAMLEN)
 #define NAME_MAX MAXNAMLEN
 #endif
-#ifdef NAME_MAX
-    { "NAME_MAX", NAME_MAX },
+#ifndef NAME_MAX
+#define NAME_MAX	255	/* XXX ? */
 #endif
+    { "NAME_MAX", NAME_MAX },
 
 #if !defined (PATH_MAX) && defined (MAXPATHLEN)
 #define PATH_MAX MAXPATHLEN
