@@ -41,7 +41,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Type to use for aligned memory operations.
    This should normally be the biggest type supported by a single load
-   and store.  */
+   and store.  Must be an unsigned type.  */
 #define	op_t	unsigned long int
 #define OPSIZ	(sizeof(op_t))
 
@@ -73,6 +73,33 @@ typedef unsigned char byte;
 
    3. Compare the few remaining bytes.  */
 
+#ifndef WORDS_BIGENDIAN
+/* memcmp_bytes -- Compare A and B bytewise in the byte order of the machine.
+   A and B are known to be different.
+   This is needed only on little-endian machines.  */
+#ifdef  __GNUC__
+__inline
+#endif
+static int
+memcmp_bytes (a, b)
+     op_t a, b;
+{
+  long int srcp1 = (long int) &a;
+  long int srcp2 = (long int) &b;
+  op_t a0, b0;
+
+  do
+    {
+      a0 = ((byte *) srcp1)[0];
+      b0 = ((byte *) srcp2)[0];
+      srcp1 += 1;
+      srcp2 += 1;
+    }
+  while (a0 == b0);
+  return a0 - b0;
+}
+#endif
+
 /* memcmp_common_alignment -- Compare blocks at SRCP1 and SRCP2 with LEN `op_t'
    objects (not LEN bytes!).  Both SRCP1 and SRCP2 should be aligned for
    memory operations on `op_t's.  */
@@ -87,7 +114,6 @@ memcmp_common_alignment (srcp1, srcp2, len)
 {
   op_t a0, a1;
   op_t b0, b1;
-  op_t res;
 
   switch (len % 4)
     {
@@ -126,27 +152,42 @@ memcmp_common_alignment (srcp1, srcp2, len)
     {
       a0 = ((op_t *) srcp1)[0];
       b0 = ((op_t *) srcp2)[0];
-      res = a1 - b1;
-      if (res != 0)
-	return res;
+      if (a1 != b1)
+#ifdef WORDS_BIGENDIAN
+	return a1 > b1 ? 1 : -1;
+#else
+	return memcmp_bytes (a1, b1);
+#endif
+
     do3:
       a1 = ((op_t *) srcp1)[1];
       b1 = ((op_t *) srcp2)[1];
-      res = a0 - b0;
-      if (res != 0)
-	return res;
+      if (a0 != b0)
+#ifdef WORDS_BIGENDIAN
+	return a0 > b0 ? 1 : -1;
+#else
+	return memcmp_bytes (a0, b0);
+#endif
+
     do2:
       a0 = ((op_t *) srcp1)[2];
       b0 = ((op_t *) srcp2)[2];
-      res = a1 - b1;
-      if (res != 0)
-	return res;
+      if (a1 != b1)
+#ifdef WORDS_BIGENDIAN
+	return a1 > b1 ? 1 : -1;
+#else
+	return memcmp_bytes (a1, b1);
+#endif
+
     do1:
       a1 = ((op_t *) srcp1)[3];
       b1 = ((op_t *) srcp2)[3];
-      res = a0 - b0;
-      if (res != 0)
-	return res;
+      if (a0 != b0)
+#ifdef WORDS_BIGENDIAN
+	return a0 > b0 ? 1 : -1;
+#else
+	return memcmp_bytes (a0, b0);
+#endif
 
       srcp1 += 4 * OPSIZ;
       srcp2 += 4 * OPSIZ;
@@ -157,13 +198,18 @@ memcmp_common_alignment (srcp1, srcp2, len)
   /* This is the right position for do0.  Please don't move
      it into the loop.  */
  do0:
-  return a1 - b1;
+  if (a1 != b1)
+#ifdef WORDS_BIGENDIAN
+    return a1 > b1 ? 1 : -1;
+#else
+    return memcmp_bytes (a1, b1);
+#endif
+  return 0;
 }
 
-
-/* SRCP2 should be aligned for memory operations on `op_t',
-   but SRCP1 *should be unaligned*.  */
-
+/* memcmp_not_common_alignment -- Compare blocks at SRCP1 and SRCP2 with LEN
+   `op_t' objects (not LEN bytes!).  SRCP2 should be aligned for memory
+   operations on `op_t', but SRCP1 *should be unaligned*.  */
 #ifdef	__GNUC__
 __inline
 #endif
@@ -175,7 +221,6 @@ memcmp_not_common_alignment (srcp1, srcp2, len)
 {
   op_t a0, a1, a2, a3;
   op_t b0, b1, b2, b3;
-  op_t res;
   op_t x;
   int shl, shr;
 
@@ -231,30 +276,45 @@ memcmp_not_common_alignment (srcp1, srcp2, len)
       a0 = ((op_t *) srcp1)[0];
       b0 = ((op_t *) srcp2)[0];
       x = MERGE(a2, shl, a3, shr);
-      res = x - b3;
-      if (res != 0)
-	return res;
+      if (x != b3)
+#ifdef WORDS_BIGENDIAN
+	return x > b3 ? 1 : -1;
+#else
+	return memcmp_bytes (x, b3);
+#endif
+
     do3:
       a1 = ((op_t *) srcp1)[1];
       b1 = ((op_t *) srcp2)[1];
       x = MERGE(a3, shl, a0, shr);
-      res = x - b0;
-      if (res != 0)
-	return res;
+      if (x != b0)
+#ifdef WORDS_BIGENDIAN
+	return x > b0 ? 1 : -1;
+#else
+	return memcmp_bytes (x, b0);
+#endif
+
     do2:
       a2 = ((op_t *) srcp1)[2];
       b2 = ((op_t *) srcp2)[2];
       x = MERGE(a0, shl, a1, shr);
-      res = x - b1;
-      if (res != 0)
-	return res;
+      if (x != b1)
+#ifdef WORDS_BIGENDIAN
+	return x > b1 ? 1 : -1;
+#else
+	return memcmp_bytes (x, b1);
+#endif
+
     do1:
       a3 = ((op_t *) srcp1)[3];
       b3 = ((op_t *) srcp2)[3];
       x = MERGE(a1, shl, a2, shr);
-      res = x - b2;
-      if (res != 0)
-	return res;
+      if (x != b2)
+#ifdef WORDS_BIGENDIAN
+	return x > b2 ? 1 : -1;
+#else
+	return memcmp_bytes (x, b2);
+#endif
 
       srcp1 += 4 * OPSIZ;
       srcp2 += 4 * OPSIZ;
@@ -266,7 +326,13 @@ memcmp_not_common_alignment (srcp1, srcp2, len)
      it into the loop.  */
  do0:
   x = MERGE(a2, shl, a3, shr);
-  return x - b3;
+  if (x != b3)
+#ifdef WORDS_BIGENDIAN
+    return x > b3 ? 1 : -1;
+#else
+    return memcmp_bytes (x, b3);
+#endif
+  return 0;
 }
 
 int
