@@ -129,39 +129,37 @@ If set, the file will be created if it doesn't already exist.
 @item O_EXCL
 @vindex O_EXCL
 If both @code{O_CREAT} and @code{O_EXCL} are set, then @code{open} fails
-if the specified file already exists.
+if the specified file already exists.  This is guaranteed to never
+clobber an existing file.
 
 @comment fcntl.h
 @comment POSIX.1
 @item O_NOCTTY
 @vindex O_NOCTTY
 If @var{filename} names a terminal device, don't make it the controlling
-terminal for the process.  @xref{Job Control}, for information about what
-it means to be the controlling terminal.
+terminal for the process.  @xref{Job Control}, for information about
+what it means to be the controlling terminal.  In the GNU system and in
+4.4 BSD, opening a file never makes it the controlling terminal.
 
 @comment fcntl.h
 @comment POSIX.1
 @item O_NONBLOCK
 @vindex O_NONBLOCK
-@cindex non-blocking mode (file status flag)
-This sets nonblocking mode.  This option is usually only useful for
-special files such as FIFOs (@pxref{Pipes and FIFOs}) and devices such
-as terminals.  Normally, for these files, @code{open} blocks until
-the file is ``ready''.  If @code{O_NONBLOCK} is set, @code{open}
-returns immediately.
-
-The @code{O_NONBLOCK} bit also affects @code{read} and @code{write}: It
-permits them to return immediately with a failure status if there is no
-input immediately available (@code{read}), or if the output can't be
-written immediately (@code{write}).
+@cindex non-blocking open
+This prevents @code{open} from blocking for a ``long time'' to open the
+file.  This is only meaningful for some kinds of files, usually devices
+such as serial ports.  Often opening a port to a modem blocks until the
+modem reports carrier detection.
+@c !!! describe this better
 
 @comment fcntl.h
 @comment POSIX.1
 @item O_TRUNC
 @vindex O_TRUNC
-If the file exists and is opened for write access, truncate it to zero
-length.  This option is only useful for regular files, not special
-files such as directories or FIFOs.
+Truncate the file to zero length.  This option is only useful for
+regular files, not special files such as directories or FIFOs.  You have
+permission to write the file to truncate it, but you need not open for
+write access.
 @end table
 
 For more information about these symbolic constants, see @ref{File
@@ -198,7 +196,7 @@ directory, cannot support any additional open files at the moment.
 (This problem cannot happen on the GNU system.)
 
 @item ENOENT
-The named file does not exist, but @code{O_CREAT} is not specified.
+The named file does not exist, and @code{O_CREAT} is not specified.
 
 @item ENOSPC
 The directory or file system that would contain the new file cannot be
@@ -211,8 +209,8 @@ FIFOs}), and no process has the file open for reading.
 
 @item EROFS
 The file resides on a read-only file system and any of @code{O_WRONLY},
-@code{O_RDWR}, @code{O_CREAT}, and @code{O_TRUNC} are set in the
-@var{flags} argument.
+@code{O_RDWR}, and @code{O_TRUNC} are set in the @var{flags} argument,
+or @code{O_CREAT} is set and the file does not already exist.
 @end table
 
 The @code{open} function is the underlying primitive for the @code{fopen}
@@ -330,7 +328,6 @@ some input.  But if the @code{O_NONBLOCK} flag is set for the file
 (@pxref{File Status Flags}), @code{read} returns immediately without
 reading any data, and reports this error.
 
-@c ??? This is a change yet to be made in the library.
 @strong{Compatibility Note:} Most versions of BSD Unix use a different
 error code for this: @code{EWOULDBLOCK}.  In the GNU library,
 @code{EWOULDBLOCK} is an alias for @code{EAGAIN}, so it doesn't matter
@@ -342,6 +339,10 @@ physical memory to lock down the user's pages.  This is limited to
 devices that transfer with direct memory access into the user's memory,
 which means it does not include terminals, since they always use
 separate buffers inside the kernel.
+
+Any condition that could result in @code{EAGAIN} can instead result in a
+successful @code{read} which returns fewer bytes than requested.
+Calling @code{read} again immediately would result in @code{EAGAIN}.
 
 @item EBADF
 The @var{filedes} argument is not a valid file descriptor.
@@ -419,13 +420,6 @@ blocked waiting for completion.  @xref{Interrupted Primitives}.
 For many devices, and for disk files, this error code indicates
 a hardware error.
 
-@code{EIO} also occurs when a background process tries to write to the
-controlling terminal, and the normal action of stopping the process by
-sending it a @code{SIGTTOU} signal isn't working.  This might happen if
-the signal is being blocked or ignored.  @xref{Job Control}, for more
-information about job control, and @ref{Signal Handling}, for
-information about signals.
-
 @item ENOSPC
 The device is full.
 
@@ -500,8 +494,8 @@ current file position.
 
 You can set the file position past the current end of the file.  This
 does not by itself make the file longer; @code{lseek} never changes the
-file.  But subsequent output at that position will extend the file's
-size.  Characters between the previous end of file and the new position
+file.  But subsequent output at that position will extend the file.
+Characters between the previous end of file and the new position
 are filled with zeros.
 
 If the file position cannot be changed, or the operation is in some way
@@ -581,8 +575,8 @@ This is an arithmetic data type used to represent file sizes.
 In the GNU system, this is equivalent to @code{fpos_t} or @code{long int}.
 @end deftp
 
-These three aliases for the @samp{SEEK_@dots{}} constants exist for the
-sake of compatibility with older BSD systems.  They are defined in two
+These aliases for the @samp{SEEK_@dots{}} constants exist for the sake
+of compatibility with older BSD systems.  They are defined in two
 different header files: @file{fcntl.h} and @file{sys/file.h}.
 
 @table @code
@@ -839,7 +833,7 @@ inefficient.
 
 A better solution is to use the @code{select} function.  This blocks the
 program until input or output is ready on a specified set of file
-descriptors, or until timer expires, whichever comes first.  This
+descriptors, or until a timer expires, whichever comes first.  This
 facility is declared in the header file @file{sys/types.h}.
 @pindex sys/types.h
 
@@ -1590,6 +1584,13 @@ Well-designed file systems never report this error, because they have no
 limitation on the number of locks.  However, you must still take account
 of the possibility of this error, as it could result from network access
 to a file system on another machine.
+
+@item EDEADLK
+The specified region is being locked by another process.  But that
+process is waiting to lock a region which the current process has
+locked, so waiting for the lock would result in deadlock.  The system
+does not guarantee that it will detect all such conditions, but it lets
+you know if it notices one.
 @end table
 @end deftypevr
 
@@ -1671,14 +1672,16 @@ the file by programs that don't use the lock protocol.
 @section Interrupt-Driven Input
 
 @cindex interrupt-driven input
-If you set the @code{FASYNC} status flag on a file descriptor
+If you set the @code{O_ASYNC} status flag on a file descriptor
 (@pxref{File Status Flags}), a @code{SIGIO} signal is sent whenever
 input or output becomes possible on that file descriptor.  The process
 or process group to receive the signal can be selected by using the
 @code{F_SETOWN} command to the @code{fcntl} function.  If the file
 descriptor is a socket, this also selects the recipient of @code{SIGURG}
 signals that are delivered when out-of-band data arrives on that socket;
-see @ref{Out-of-Band Data}.
+see @ref{Out-of-Band Data}.  (@code{SIGURG} is sent in any situation
+where @code{select} would report the socket as having an ``exceptional
+condition''.  @xref{Waiting for Input}.)
 
 If the file descriptor corresponds to a terminal device, then @code{SIGIO}
 signals are sent to the foreground process group of the terminal.  
