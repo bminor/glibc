@@ -51,23 +51,29 @@ _hurd_exec (task_t task, file_t file,
 
   /* Pack the arguments into an array with nulls separating the elements.  */
   argslen = 0;
-  p = argv;
-  while (*p != NULL)
-    argslen += strlen (*p++) + 1;
-  args = __alloca (argslen);
-  ap = args;
-  for (p = argv; *p != NULL; ++p)
-    ap = __memccpy (ap, *p, '\0', ULONG_MAX);
+  if (argv != NULL)
+    {
+      p = argv;
+      while (*p != NULL)
+	argslen += strlen (*p++) + 1;
+      args = __alloca (argslen);
+      ap = args;
+      for (p = argv; *p != NULL; ++p)
+	ap = __memccpy (ap, *p, '\0', ULONG_MAX);
+    }
 
   /* Pack the environment into an array with nulls separating elements.  */
   envlen = 0;
-  p = envp;
-  while (*p != NULL)
-    envlen += strlen (*p++) + 1;
-  env = __alloca (envlen);
-  ap = env;
-  for (p = envp; *p != NULL; ++p)
-    ap = __memccpy (ap, *p, '\0', ULONG_MAX);
+  if (envp != NULL)
+    {
+      p = envp;
+      while (*p != NULL)
+	envlen += strlen (*p++) + 1;
+      env = __alloca (envlen);
+      ap = env;
+      for (p = envp; *p != NULL; ++p)
+	ap = __memccpy (ap, *p, '\0', ULONG_MAX);
+    }
 
   /* Load up the ports to give to the new program.  */
   for (i = 0; i < _hurd_nports; ++i)
@@ -91,6 +97,7 @@ _hurd_exec (task_t task, file_t file,
 	ints[i] = 0;
       }
 
+#if 0
   ss = _hurd_thread_sigstate (__mach_thread_self ());
   ints[INIT_SIGMASK] = ss->blocked;
   ints[INIT_SIGPENDING] = ss->pending;
@@ -98,6 +105,7 @@ _hurd_exec (task_t task, file_t file,
   for (i = 1; i < NSIG; ++i)
     if (ss->actions[i].sa_handler == SIG_IGN)
       ints[INIT_SIGIGN] |= __sigmask (i);
+#endif
 
   /* We hold the sigstate lock until the exec has failed so that no signal
      can arrive between when we pack the blocked and ignored signals, and
@@ -134,6 +142,11 @@ _hurd_exec (task_t task, file_t file,
       for (i = 0; i < dtablesize; ++i)
 	{
 	  struct hurd_fd *const d = _hurd_dtable.d[i];
+	  if (d == NULL)
+	    {
+	      dtable[i] = MACH_PORT_NULL;
+	      continue;
+	    }
 	  __spin_lock (&d->port.lock);
 	  if (pdp && d->port.port != MACH_PORT_NULL)
 	    *pdp++ = d->port.port;
