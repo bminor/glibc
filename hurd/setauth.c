@@ -36,7 +36,7 @@ _hurd_setauth (auth_t new)
 {
   error_t err;
   int d;
-  mach_port_t newport;
+  mach_port_t newport, ref;
 
   /* Give the new send right a user reference.
      This is a good way to check that it is valid.  */
@@ -68,28 +68,42 @@ _hurd_setauth (auth_t new)
       if (_hurd_init_dtable[d] != MACH_PORT_NULL)
 	{
 	  mach_port_t new;
-	  if (! __io_reauthenticate (_hurd_init_dtable[d], _hurd_pid) &&
+	  ref = __mach_reply_port ();
+	  if (! __io_reauthenticate (_hurd_init_dtable[d],
+				     ref, MACH_MSG_TYPE_MAKE_SEND_ONCE) &&
 	      ! HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
-			       __auth_user_authenticate (port,
-							 _hurd_init_dtable[d],
-							 _hurd_pid,
-							 &new)))
+			       __auth_user_authenticate
+			       (port,
+				_hurd_init_dtable[d],
+				ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+				&new)))
 	    {
 	      __mach_port_deallocate (__mach_task_self (),
 				      _hurd_init_dtable[d]);
 	      _hurd_init_dtable[d] = new;
 	    }
+	  __mach_port_destroy (__mach_task_self (), ref);
 	}
 
+  ref = __mach_reply_port ();
   if (__USEPORT (CRDIR,
-		 ! __io_reauthenticate (port, _hurd_pid) &&
-		 ! __auth_user_authenticate (new, port, _hurd_pid, &newport)))
+		 ! __io_reauthenticate (port,
+					ref, MACH_MSG_TYPE_MAKE_SEND_ONCE) &&
+		 ! __auth_user_authenticate (new, port,
+					     ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+					     &newport)))
     _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], newport);
+  __mach_port_destroy (__mach_task_self (), ref);
 
+  ref = __mach_reply_port ();
   if (__USEPORT (CWDIR,
-		 ! __io_reauthenticate (port, _hurd_pid) &&
-		 ! __auth_user_authenticate (new, port, _hurd_pid, &newport)))
+		 ! __io_reauthenticate (port,
+					ref, MACH_MSG_TYPE_MAKE_SEND_ONCE) &&
+		 ! __auth_user_authenticate (new, port,
+					     ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+					     &newport)))
     _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], newport);
+  __mach_port_destroy (__mach_task_self (), ref);
 
   /* Run things which want to do reauthorization stuff.  */
   RUN_HOOK (_hurd_reauth_hook, (new));
