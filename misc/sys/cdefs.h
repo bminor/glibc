@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 #ifdef __GNUC__
 
 #define	__P(args)	args	/* GCC can always grok prototypes.  */
+#define	__DOTS		, ...
 
 #else	/* Not GCC.  */
 
@@ -35,6 +36,7 @@ Cambridge, MA 02139, USA.  */
 #define	__const		const
 #define	__signed	signed
 #define	__volatile	volatile
+#define	__DOTS		, ...
 
 #else	/* Not ANSI C or C++.  */
 
@@ -42,6 +44,7 @@ Cambridge, MA 02139, USA.  */
 #define	__const			/* No ANSI C keywords.  */
 #define	__signed
 #define	__volatile
+#define	__DOTS
 
 #endif	/* ANSI C or C++.  */
 
