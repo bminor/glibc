@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <setjmp.h>
+#include <stdlib.h>
 
 
 #ifndef	__GNUC__
@@ -32,15 +33,15 @@ __NORETURN
 void
 DEFUN(__longjmp, (env, val), CONST jmp_buf env AND int val)
 {
-  register long int bp asm("%ebp"), ax asm("%eax");
+  register long int bp asm("bp"), ax asm("ax");
 
   if (env[0].__bp != bp)
     {
-      asm("movl %0, %%ebx" : : "g" (env[0].__bx) : "ebx");
-      asm("movl %0, %%esi" : : "g" (env[0].__si) : "esi");
-      asm("movl %0, %%edi" : : "g" (env[0].__di) : "edi");
-      asm("movl %0, %%ebp" : : "g" (env[0].__bp) : "ebp");
-      asm("movl %0, %%esp" : : "g" (env[0].__sp) : "esp");
+      asm("movl %0, %%ebx" : : "g" (env[0].__bx) : "bx");
+      asm("movl %0, %%esi" : : "g" (env[0].__si) : "si");
+      asm("movl %0, %%edi" : : "g" (env[0].__di) : "di");
+      asm("movl %0, %%ebp" : : "g" (env[0].__bp) : "bp");
+      asm("movl %0, %%esp" : : "g" (env[0].__sp) : "sp");
     }
 
   ax = val == 0 ? 1 : val;
