@@ -70,7 +70,6 @@ But unless your program takes a fixed number of arguments, or all of the
 arguments are interpreted in the same way (as file names, for example),
 you are usually better off using @code{getopt} to do the parsing.
 
-@c !!! does posix allow envp?
 In Unix systems you can define @code{main} a third way, using three arguments:
 
 @smallexample
@@ -79,7 +78,9 @@ int main (int @var{argc}, char *@var{argv}[], char *@var{envp})
 
 The first two arguments are just the same.  The third argument
 @var{envp} gives the process's environment; it is the same as the value
-of @code{environ}.  @xref{Environment Variables}.
+of @code{environ}.  @xref{Environment Variables}.  POSIX.1 does not
+allow this three-argument form, so to be portable it is best to write
+@code{main} to take two arguments, and use the value of @code{environ}.
 
 @menu
 * Argument Syntax::       By convention, options start with a hyphen.
@@ -509,7 +510,6 @@ If you just want to get the value of an environment variable, use
 @code{getenv}.
 @end deftypevar
 
-@c !!! posix?
 Unix systems, and the GNU system, pass the initial value of
 @code{environ} as the third argument to @code{main}.
 @xref{Program Arguments}.
