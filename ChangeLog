@@ -1,3 +1,7 @@
+1998-03-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules: Remove extra rule for .oS.
+
 1998-03-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/getXXent_r.c (REENTRANT_GETNAME): Avoid endless loop.
