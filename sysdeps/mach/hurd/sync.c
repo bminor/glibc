@@ -25,7 +25,8 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN_VOID(sync)
 {
-  error_t err = __USEPORT (CRDIR, __file_syncfs (port, 1, 1));
+  /* This is not actually synchronous; we don't wait.  */
+  error_t err = __USEPORT (CRDIR, __file_syncfs (port, 0, 1));
   if (err)
     return __hurd_fail (err);
   return 0;
