@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -50,13 +50,13 @@ __setauth (auth_t new)
       return -1;
     }
 
-  /* We lock against another thread doing setauth.
-     Anyone who sets _hurd_auth some other way is asking to lose.  */
+  /* We lock against another thread doing setauth.  Anyone who sets
+     _hurd_ports[INIT_PORT_AUTH] some other way is asking to lose.  */
   __mutex_lock (&reauth_lock);
 
-  /* Install the new port in the _hurd_auth cell.  */
+  /* Install the new port in the cell.  */
   __mutex_lock (&_hurd_idlock);
-  _hurd_port_set (&_hurd_auth, new);
+  _hurd_port_set (&_hurd_ports[INIT_PORT_AUTH], new);
   _hurd_id_valid = 0;
   __mutex_unlock (&_hurd_idlock);
 
@@ -68,7 +68,7 @@ __setauth (auth_t new)
 	{
 	  mach_port_t new;
 	  if (! __io_reauthenticate (_hurd_init_dtable[d]) &&
-	      ! _HURD_PORT_USE (&_hurd_auth,
+	      ! _HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
 				__auth_user_authenticate (_hurd_init_dtable[d],
 							  &new)))
 	    {
