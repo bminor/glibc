@@ -127,7 +127,7 @@ getcwd (char *buf, size_t size)
       file_t newp;
       char *dirdata;
       unsigned int dirdatasize;
-      off_t dirpos;
+      int direntry, nentries;
 
       /* Look at the parent directory.  */
       if (err = __hurd_path_lookup (crdir, parent, "..", O_READ, 0, &newp))
@@ -143,16 +143,18 @@ getcwd (char *buf, size_t size)
       mount_point = dotdev != thisdev;
 
       /* Search for the last directory.  */
-      dirpos = 0;
+      direntry = 0;
       dirdata = dirbuf;
       dirdatasize = dirbufsize;
       while (!(err = __dir_readdir (parent, &dirdata, &dirdatasize,
-				    dirpos, &dirpos, st.st_blksize)) &&
-	     dirdatasize != 0)	     
+				    direntry, -1, 0, &nentries)) &&
+	     nentries != 0)	     
 	{
 	  /* We have a block of directory entries.  */
 
 	  unsigned int offset;
+
+	  direntry += nentries;
 
 	  if (dirdata != dirbuf)
 	    {
@@ -162,7 +164,7 @@ getcwd (char *buf, size_t size)
 	      __vm_deallocate (__mach_task_self (),
 			       (vm_address_t) dirbuf, dirbufsize);
 	      dirbuf = dirdata;
-	      dirbufsize = dirdatasize;
+	      dirbufsize = round_page (dirdatasize);
 	    }
 
 	  /* Iterate over the returned directory entries, looking for one
