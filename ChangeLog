@@ -1,3 +1,16 @@
+1999-09-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname2_r): if res_search
+	fails don't rely on errno value.
+	(getanswer_r): Sett *ERRNOP in error cases.
+
+	* sysdeps/posix/getaddrinfo.c (gaih_local): Test protocol and socktype.
+	(gaih_inet_serv): Return EIA_NODATA if name is known but has no
+	associated data.  Test for matching numeric address and family.
+	(getaddrinfo): Remember EAI_NODATA result and return this in case
+	everything fails.
+	Reported by Arkadiusz Miskiewicz <misiek@misiek.eu.org>.
+
 1999-09-07  Cristian Gafton  <gafton@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sys/raw.h: New file
