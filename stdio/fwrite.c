@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
   register size_t written = 0;
   int newlinep;
   size_t buffer_space;
-  char default_func;
+  int default_func;
 
   if (!__validfp (stream) || !stream->__mode.__write)
     {
@@ -157,6 +157,10 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
 	    /* We've filled the buffer, so flush it.  */
 	    if (fflush (stream) == EOF)
 	      break;
+	    /* Reset our record of the space available in the buffer,
+	       since we have just flushed it.  */
+	    buffer_space = (stream->__bufsize -
+			    (stream->__bufp - stream->__buffer));
 	  }
       }
   else
