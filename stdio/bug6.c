@@ -6,15 +6,19 @@ DEFUN_VOID(main)
 {
   char buf[80];
   int i;
-  FILE *f = stdin;
-  if (f == NULL) perror ("");
-  fscanf (f, "%2s", buf);
-  if (buf[0] != 'X' || buf[1] != 'Y' || buf[2] != '\0')
-    printf ("test of %%2s failed.\n");
-  fscanf (f, " ");
-  fscanf (f, "%d", &i);
-  if (i != 1234) printf ("test of %%d failed.\n");
-  fscanf (f, "%c", buf);
-  if (buf[0] != 'L') printf ("test of %%c failed.\n");
-  return 0;
+  int lost = 0;
+
+  scanf ("%2s", buf);
+  if (lost |= (buf[0] != 'X' || buf[1] != 'Y' || buf[2] != '\0'))
+    puts ("test of %2s failed.");
+  scanf (" ");
+  scanf ("%d", &i);
+  if (lost |= (i != 1234))
+    puts ("test of %d failed.");
+  scanf ("%c", buf);
+  if (lost |= (buf[0] != 'L'))
+    puts ("test of %c failed.\n");
+
+  puts (lost ? "Test FAILED!" : "Test succeeded.");
+  return lost;
 }
