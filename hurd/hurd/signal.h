@@ -44,40 +44,31 @@ Cambridge, MA 02139, USA.  */
 
 struct hurd_sigstate
   {
+    /* This mutex locks most of the rest of this structure.  It also acts
+       as a critical section lock for the thread (see below).  */
+    struct mutex lock;
+    int critical_section;
+
     /* XXX This should perhaps instead be something that identifies
        cthreads multiplexed on a single kernel thread.  */
     thread_t thread;
     struct hurd_sigstate *next; /* Linked-list of thread sigstates.  */
 
-    struct mutex lock;		/* Locks the rest of this structure.  */
     sigset_t blocked;
     sigset_t pending;
     struct sigaction actions[NSIG];
     struct sigaltstack sigaltstack;
     int sigcodes[NSIG];		/* Codes for pending signals.  */
 
-    int suspended;		/* If nonzero, sig_post signals `arrived'.  */
+    /* If `suspended' is set when this thread gets a signal,
+       the signal thread clears it and then signals `arrived'.  */
+    int suspended;
 #ifdef noteven
     struct condition arrived;
 #endif
 
-#if 0
-    int vforked;		/* Nonzero if this thread is a vfork child.  */
-    struct
-      {
-	process_t proc;
-	file_t ccdir, cwdir, crdir, auth;
-	mode_t umask;
-	int ctty_fstype;
-	fsid_t ctty_fsid;
-	ino_t ctty_fileid;
-	struct hurd_dtable *dtable;
-	jmp_buf continuation;
-      } *vfork_saved;
-#endif
-
-    /* Not locked.  Used only by this thread,
-       or by signal thread with this thread suspended.  */
+    /* Not locked.  Used only by this thread, or by the signal thread with
+       this thread suspended.  */
     volatile mach_port_t intr_port; /* Port interruptible RPC was sent on.  */
     volatile int intr_restart;	/* If nonzero, restart interrupted RPC.  */
   };
@@ -107,6 +98,71 @@ _hurd_self_sigstate (void)
     *location = _hurd_thread_sigstate (__mach_thread_self ()); /* cproc_self */
   return *location;
 }
+
+/* Critical sections.
+
+   A critical section is a section of code which cannot safely be interrupted
+   to run a signal handler; for example, code that holds any lock cannot be
+   interrupted lest the signal handler try to take the same lock and
+   deadlock result.  Before entering a critical section, a thread must make
+   sure it holds its own sigstate lock.  The thread sets the
+   `critical_section' flag (which is not itself locked) to indicate the
+   lock is already held by the same thread.  Subroutines which contain
+   critical sections of their own then test this flag; if it is set, they
+   don't try to acquire the sigstate lock again, to avoid deadlock.  */
+
+_EXTERN_INLINE void *
+_hurd_critical_section_lock (void)
+{
+  struct hurd_sigstate **location =
+    (void *) __hurd_threadvar_location (_HURD_THREADVAR_SIGSTATE);
+  struct hurd_sigstate *ss = *location;
+  if (ss == NULL)
+    /* The thread variable is unset; this must be the first time we've
+       asked for it.  In this case, the critical section flag cannot
+       possible already be set.  Look up our sigstate structure the slow
+       way; this locks the sigstate lock.  */
+    ss = *location = _hurd_thread_sigstate (__mach_thread_self ());
+  else
+    {
+      if (ss->critical_section)
+	/* Some caller higher up has already acquired the critical section
+	   lock.  We need do nothing.  The null pointer we return will
+	   make _hurd_critical_section_unlock (below) be a no-op.  */
+	return NULL;
+      /* Acquire the sigstate lock to prevent any signal from arriving.  */
+      __mutex_lock (&ss->lock);
+    }
+  /* Set the critical section flag so no later call will try to
+     take the sigstate lock while we already have it locked.  */
+  ss->critical_section = 1;
+  /* Return  */
+  return ss;
+}
+
+_EXTERN_INLINE void
+_hurd_critical_section_unlock (void *our_lock)
+{
+  if (our_lock == NULL)
+    /* The critical section lock was held when we began.  Do nothing.  */
+    return;
+  else
+    {
+      /* It was us who acquired the critical section lock.  Clear the
+	 critical section flag and unlock the sigstate lock.  */
+      struct hurd_sigstate *ss = our_lock;
+      ss->critical_section = 0;
+      __mutex_unlock (&ss->lock);
+    }
+}
+
+/* Convenient macros for simple uses of critical sections.
+   These two must be used as a pair at the same C scoping level.  */
+
+#define HURD_CRITICAL_BEGIN \
+  { void *__hurd_critical__ = _hurd_critical_section_lock ()
+#define HURD_CRITICAL_END \
+      _hurd_critical_section_unlock (__hurd_critical__); } while (0)
 
 /* Thread listening on our message port; also called the "signal thread".  */
 
