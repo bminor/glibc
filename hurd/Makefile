@@ -52,7 +52,7 @@ sig	= hurdsig siginfo init-fault msging-p hurd-raise \
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport setdtsz \
 	  fd-read fd-write
-inlines = $(addprefix inline-,fd port signal userlink)
+inlines = $(addprefix inline-,fd port signal userlink threadvar)
 aux := hurdsyms hurdinit msgstub # hurdmsg
 
 # The files inline-*.c contain the real-function definition of the
