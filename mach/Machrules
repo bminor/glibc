@@ -54,7 +54,9 @@ define \n
 
 
 endef
+ifdef user-interfaces
 include interface-rules
+endif
 interface-rules: Makefile Machrules
 	(for interface in $(user-interfaces); do	\
 	   echo "include .ir-$${interface}";		\
