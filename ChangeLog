@@ -1,3 +1,7 @@
+1998-03-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/socketbits.h (MSG_*): Also define as macros.
+
 1998-03-31 08:01  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/unix/sysv/linux/syscalls.list (sigpending): Renamed
