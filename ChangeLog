@@ -1,3 +1,13 @@
+1997-05-22 17:44  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/shmat.c (shmat): Add cast to prevent
+	warning.
+
+	* stdlib/seed48_r.c (seed48_r): Incldue limits.h to get definition
+	of USHRT_MAX.
+
+	* locale/localeinfo.h: _nl_current has LC_ALL + 1 elements.
+
 1997-05-21 17:50  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.4.
