@@ -47,8 +47,8 @@ clean glob-clean:
 realclean glob-realclean: clean
 	-rm -f TAGS tags
 
-Makefile: $(srcdir)/Makefile.in
-	$(SHELL) config.status
+Makefile: $(srcdir)/Makefile.in config.status
+	./config.status
 
 # For inside the C library.
 glob.tar glob.tar.Z:
