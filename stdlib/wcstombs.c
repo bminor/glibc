@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -40,10 +40,12 @@ DEFUN(wcstombs, (s, pwcs, n),
 
   while ((w = *pwcs++) != (wchar_t) '\0')
     {
-      if (w == ((wchar_t) EOF) || isascii(w))
+      if (isascii (w))
 	{
-	  written = (size_t) -1;
-	  break;
+	  /* A normal character.  */
+	  *s++ = (unsigned char) w;
+	  --n;
+	  ++written;
 	}
       else
 	{
@@ -57,7 +59,8 @@ DEFUN(wcstombs, (s, pwcs, n),
 	    break;
 	  else
 	    {
-	      memcpy((PTR) s, (CONST PTR) mb->string, mb->len);
+	      memcpy ((PTR) s, (CONST PTR) mb->string, mb->len);
+	      s += mb->len;
 	      n -= mb->len;
 	      written += mb->len;
 	      shift += mb->shift;

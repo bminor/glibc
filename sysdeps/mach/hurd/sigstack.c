@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,19 +27,20 @@ int
 DEFUN(sigstack, (ss, oss),
       CONST struct sigstack *ss AND struct sigstack *oss)
 {
-  struct _hurd_sigstate *s;
+  struct sigaltstack as, oas;
 
-  if (ss != NULL)
-    *(volatile struct sigstack *) ss;
-  if (oss != NULL)
-    *(volatile struct sigstack *) oss = *oss;
+  as.ss_sp = ss->ss_sp;
+  as.ss_size = 0;
+  as.ss_flags = 0;
 
-  s = _hurd_thread_sigstate (__mach_thread_self ());
+  if (sigaltstack (&as, &oas) < 0)
+    return -1;
+
   if (oss != NULL)
-    *oss = s->sigstack;
-  if (ss != NULL)
-    s->sigstack = *ss;
-  __mutex_unlock (&s->lock);
+    {
+      oss->ss_sp = oas.ss_sp;
+      oss->ss_onstack = oas.ss_flags & SA_ONSTACK;
+    }
 
   return 0;
 }
