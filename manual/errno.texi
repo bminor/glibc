@@ -1,4 +1,4 @@
-@node Error Reporting
+@node Error Reporting, Common Definitions, Roadmap to the Manual, Top
 @chapter Error Reporting
 @cindex error reporting
 @cindex reporting errors
