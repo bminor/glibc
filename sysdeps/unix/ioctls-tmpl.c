@@ -15,6 +15,17 @@
 #endif
 #endif
 
+/* These exist on Sequents.  */
+#ifdef SMIOSTATS
+#include <sec/sec.h>
+#include <sec/sm.h>
+#endif
+#ifdef SMIOGETREBOOT0
+#include <i386/cfg.h>
+#endif
+#ifdef ZIOCBCMD
+#include <zdc/zdc.h>
+#endif
 
 #define	DEFINE(name, value) \
   printf("#define %s 0x%.8x\n", (name), (value))
