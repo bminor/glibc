@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.1.3\n"
-"POT-Creation-Date: 1999-10-08 12:00-0700\n"
+"POT-Creation-Date: 2000-02-16 10:39-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+DIST\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -201,7 +201,7 @@ msgstr ""
 msgid " [OPTION...]"
 msgstr ""
 
-#: locale/programs/ld-collate.c:370 locale/programs/ld-ctype.c:1291
+#: locale/programs/ld-collate.c:370 locale/programs/ld-ctype.c:1476
 msgid " done\n"
 msgstr ""
 
@@ -374,52 +374,52 @@ msgstr ""
 msgid "%s: command was '%s', result was %d\n"
 msgstr ""
 
-#: locale/programs/charmap.c:677 locale/programs/locfile.c:1008
+#: locale/programs/charmap.c:676 locale/programs/locfile.c:1014
 #, c-format
 msgid "%s: error in state machine"
 msgstr ""
 
-#: posix/getopt.c:784
+#: posix/getopt.c:788
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr ""
 
-#: posix/getopt.c:787
+#: posix/getopt.c:791
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr ""
 
-#: posix/getopt.c:707
+#: posix/getopt.c:711
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:677
+#: posix/getopt.c:681
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:725 posix/getopt.c:898
+#: posix/getopt.c:729 posix/getopt.c:902
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr ""
 
-#: posix/getopt.c:702
+#: posix/getopt.c:706
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:882
+#: posix/getopt.c:886
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:864
+#: posix/getopt.c:868
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:817 posix/getopt.c:947
+#: posix/getopt.c:821 posix/getopt.c:951
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr ""
@@ -434,7 +434,7 @@ msgstr ""
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr ""
 
-#: locale/programs/charmap.c:684 locale/programs/repertoire.c:289
+#: locale/programs/charmap.c:683 locale/programs/repertoire.c:301
 #, c-format
 msgid "%s: premature end of file"
 msgstr ""
@@ -444,12 +444,12 @@ msgstr ""
 msgid "%s: unable to open %s: %m\n"
 msgstr ""
 
-#: posix/getopt.c:758
+#: posix/getopt.c:762
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr ""
 
-#: posix/getopt.c:754
+#: posix/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr ""
@@ -498,11 +498,11 @@ msgstr ""
 msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
 msgstr ""
 
-#: catgets/gencat.c:266
+#: catgets/gencat.c:267
 msgid "*standard input*"
 msgstr ""
 
-#: catgets/gencat.c:120
+#: catgets/gencat.c:121
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
@@ -527,12 +527,12 @@ msgstr ""
 msgid "<%s> and <%s> are illegal names for range"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:342
+#: locale/programs/ld-ctype.c:428
 #, c-format
 msgid "<SP> character must not be in class `%s'"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:330
+#: locale/programs/ld-ctype.c:416
 #, c-format
 msgid "<SP> character not in class `%s'"
 msgstr ""
@@ -739,19 +739,19 @@ msgstr ""
 msgid "Can not exec a shared library directly"
 msgstr ""
 
-#: nis/ypclnt.c:769
+#: nis/ypclnt.c:779
 msgid "Can't bind to server which serves this domain"
 msgstr ""
 
-#: nis/ypclnt.c:781
+#: nis/ypclnt.c:791
 msgid "Can't communicate with portmapper"
 msgstr ""
 
-#: nis/ypclnt.c:783
+#: nis/ypclnt.c:793
 msgid "Can't communicate with ypbind"
 msgstr ""
 
-#: nis/ypclnt.c:785
+#: nis/ypclnt.c:795
 msgid "Can't communicate with ypserv"
 msgstr ""
 
@@ -859,7 +859,7 @@ msgstr ""
 msgid "Computer bought the farm"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:1253
+#: locale/programs/ld-ctype.c:1438
 msgid "Computing table size for character classes might take a while..."
 msgstr ""
 
@@ -902,10 +902,10 @@ msgstr ""
 msgid "Convert key to lower case"
 msgstr ""
 
-#: catgets/gencat.c:236 db2/makedb.c:242 elf/sprof.c:355
+#: catgets/gencat.c:237 db2/makedb.c:242 elf/sprof.c:355
 #: iconv/iconv_prog.c:294 locale/programs/locale.c:267
 #: locale/programs/localedef.c:400 nscd/nscd.c:277 nscd/nscd_nischeck.c:90
-#: nss/getent.c:65 posix/getconf.c:624
+#: nss/getent.c:66 posix/getconf.c:624
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -918,7 +918,7 @@ msgstr ""
 msgid "Could not create log file \"%s\""
 msgstr ""
 
-#: catgets/gencat.c:107
+#: catgets/gencat.c:108
 msgid "Create C header file NAME containing symbol definitions"
 msgstr ""
 
@@ -939,8 +939,8 @@ msgstr ""
 msgid "Cross-device link"
 msgstr ""
 
-#: nis/nss_nisplus/nisplus-publickey.c:89
-#: nis/nss_nisplus/nisplus-publickey.c:159
+#: nis/nss_nisplus/nisplus-publickey.c:95
+#: nis/nss_nisplus/nisplus-publickey.c:171
 #, c-format
 msgid "DES entry for netname %s not unique\n"
 msgstr ""
@@ -961,7 +961,7 @@ msgstr ""
 msgid "Database for table does not exist"
 msgstr ""
 
-#: nis/ypclnt.c:795
+#: nis/ypclnt.c:805
 msgid "Database is busy"
 msgstr ""
 
@@ -1039,11 +1039,11 @@ msgstr ""
 msgid "Do not print messages while building database"
 msgstr ""
 
-#: catgets/gencat.c:109
+#: catgets/gencat.c:110
 msgid "Do not use existing catalog, force new output file"
 msgstr ""
 
-#: nis/ypclnt.c:841
+#: nis/ypclnt.c:851
 msgid "Domain not bound"
 msgstr ""
 
@@ -1311,7 +1311,7 @@ msgstr ""
 msgid "Garbage in ARGP_HELP_FMT: %s"
 msgstr ""
 
-#: catgets/gencat.c:115
+#: catgets/gencat.c:116
 msgid ""
 "Generate message catalog.\\vIf INPUT-FILE is -, input is read from standard "
 "input.  If OUTPUT-FILE\n"
@@ -1377,8 +1377,8 @@ msgstr ""
 msgid "Haven't found \"%s\" in group cache!"
 msgstr ""
 
-#: nscd/hstcache.c:300 nscd/hstcache.c:342 nscd/hstcache.c:387
-#: nscd/hstcache.c:431
+#: nscd/hstcache.c:291 nscd/hstcache.c:333 nscd/hstcache.c:378
+#: nscd/hstcache.c:422
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr ""
@@ -1493,11 +1493,11 @@ msgstr ""
 msgid "Input/output error"
 msgstr ""
 
-#: nis/ypclnt.c:775
+#: nis/ypclnt.c:785
 msgid "Internal NIS error"
 msgstr ""
 
-#: nis/ypclnt.c:839
+#: nis/ypclnt.c:849
 msgid "Internal ypbind error"
 msgstr ""
 
@@ -1529,11 +1529,11 @@ msgstr ""
 msgid "Invalid argument"
 msgstr ""
 
-#: posix/regex.c:1037
+#: posix/regex.c:1034
 msgid "Invalid back reference"
 msgstr ""
 
-#: posix/regex.c:1031
+#: posix/regex.c:1028
 msgid "Invalid character class name"
 msgstr ""
 
@@ -1545,11 +1545,11 @@ msgstr ""
 msgid "Invalid client verifier"
 msgstr ""
 
-#: posix/regex.c:1028
+#: posix/regex.c:1025
 msgid "Invalid collation character"
 msgstr ""
 
-#: posix/regex.c:1049
+#: posix/regex.c:1046
 msgid "Invalid content of \\{\\}"
 msgstr ""
 
@@ -1574,15 +1574,15 @@ msgstr ""
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr ""
 
-#: posix/regex.c:1058
+#: posix/regex.c:1055
 msgid "Invalid preceding regular expression"
 msgstr ""
 
-#: posix/regex.c:1052
+#: posix/regex.c:1049
 msgid "Invalid range end"
 msgstr ""
 
-#: posix/regex.c:1025
+#: posix/regex.c:1022
 msgid "Invalid regular expression"
 msgstr ""
 
@@ -1683,11 +1683,11 @@ msgstr ""
 msgid "Linked to : %s\n"
 msgstr ""
 
-#: nis/ypclnt.c:787
+#: nis/ypclnt.c:797
 msgid "Local domain name not set"
 msgstr ""
 
-#: nis/ypclnt.c:777
+#: nis/ypclnt.c:787
 msgid "Local resource allocation failure"
 msgstr ""
 
@@ -1718,7 +1718,7 @@ msgstr ""
 msgid "Memory allocation failure"
 msgstr ""
 
-#: posix/regex.c:1055
+#: posix/regex.c:1052
 msgid "Memory exhausted"
 msgstr ""
 
@@ -1759,7 +1759,7 @@ msgstr ""
 msgid "Multihop attempted"
 msgstr ""
 
-#: catgets/gencat.c:106 catgets/gencat.c:110 db2/makedb.c:59
+#: catgets/gencat.c:107 catgets/gencat.c:111 db2/makedb.c:59
 #: locale/programs/localedef.c:112 nscd/nscd.c:80
 msgid "NAME"
 msgstr ""
@@ -1774,11 +1774,11 @@ msgstr ""
 msgid "NIS"
 msgstr ""
 
-#: nis/ypclnt.c:791
+#: nis/ypclnt.c:801
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr ""
 
-#: nis/ypclnt.c:789
+#: nis/ypclnt.c:799
 msgid "NIS map database is bad"
 msgstr ""
 
@@ -1913,7 +1913,7 @@ msgstr ""
 msgid "No locks available"
 msgstr ""
 
-#: posix/regex.c:1022
+#: posix/regex.c:1019
 msgid "No match"
 msgstr ""
 
@@ -1926,11 +1926,11 @@ msgstr ""
 msgid "No message of desired type"
 msgstr ""
 
-#: nis/ypclnt.c:779
+#: nis/ypclnt.c:789
 msgid "No more records in map database"
 msgstr ""
 
-#: posix/regex.c:5564
+#: posix/regex.c:5569
 msgid "No previous regular expression"
 msgstr ""
 
@@ -1974,11 +1974,11 @@ msgstr ""
 msgid "No such file or directory"
 msgstr ""
 
-#: nis/ypclnt.c:773
+#: nis/ypclnt.c:783
 msgid "No such key in map"
 msgstr ""
 
-#: nis/ypclnt.c:771
+#: nis/ypclnt.c:781
 msgid "No such map in server's domain"
 msgstr ""
 
@@ -2232,7 +2232,7 @@ msgid "Passed object is not the same object on server"
 msgstr ""
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: nis/nis_error.c:38 nis/ypclnt.c:793
+#: nis/nis_error.c:38 nis/ypclnt.c:803
 #: stdio-common/../sysdeps/gnu/errlist.c:108
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:42
 msgid "Permission denied"
@@ -2242,7 +2242,7 @@ msgstr ""
 msgid "Power failure"
 msgstr ""
 
-#: posix/regex.c:1061
+#: posix/regex.c:1058
 msgid "Premature end of regular expression"
 msgstr ""
 
@@ -2329,7 +2329,7 @@ msgstr ""
 msgid "RPC bad procedure for program"
 msgstr ""
 
-#: nis/ypclnt.c:767
+#: nis/ypclnt.c:777
 msgid "RPC failure on NIS operation"
 msgstr ""
 
@@ -2457,7 +2457,7 @@ msgstr ""
 msgid "Real-time signal %d"
 msgstr ""
 
-#: posix/regex.c:1064
+#: posix/regex.c:1061
 msgid "Regular expression too big"
 msgstr ""
 
@@ -2489,12 +2489,12 @@ msgstr ""
 msgid "Report bugs to %s.\n"
 msgstr ""
 
-#: catgets/gencat.c:223 db2/makedb.c:229 iconv/iconv_prog.c:280
+#: catgets/gencat.c:224 db2/makedb.c:229 iconv/iconv_prog.c:280
 #: locale/programs/locale.c:254 locale/programs/localedef.c:386
 msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
 msgstr ""
 
-#: nis/ypclnt.c:765
+#: nis/ypclnt.c:775
 msgid "Request arguments bad"
 msgstr ""
 
@@ -2697,7 +2697,7 @@ msgstr ""
 msgid "Structure needs cleaning"
 msgstr ""
 
-#: nis/nis_error.c:28 nis/ypclnt.c:763 nis/ypclnt.c:837 posix/regex.c:1019
+#: nis/nis_error.c:28 nis/ypclnt.c:773 nis/ypclnt.c:847 posix/regex.c:1016
 #: stdio-common/../sysdeps/gnu/errlist.c:19
 msgid "Success"
 msgstr ""
@@ -2718,7 +2718,7 @@ msgstr ""
 msgid "System information:"
 msgstr ""
 
-#: nis/ypclnt.c:843
+#: nis/ypclnt.c:853
 msgid "System resource allocation failure"
 msgstr ""
 
@@ -2767,7 +2767,7 @@ msgstr ""
 msgid "Text file busy"
 msgstr ""
 
-#: iconv/iconv_prog.c:550
+#: iconv/iconv_prog.c:578
 msgid ""
 "The following list contain all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -2852,7 +2852,7 @@ msgstr ""
 msgid "Trace/breakpoint trap"
 msgstr ""
 
-#: posix/regex.c:1034
+#: posix/regex.c:1031
 msgid "Trailing backslash"
 msgstr ""
 
@@ -2884,7 +2884,7 @@ msgstr ""
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
 msgstr ""
 
-#: inet/rcmd.c:145
+#: inet/rcmd.c:150
 #, c-format
 msgid "Trying %s...\n"
 msgstr ""
@@ -2924,11 +2924,11 @@ msgstr ""
 msgid "Unknown .netrc keyword %s"
 msgstr ""
 
-#: nis/ypclnt.c:797
+#: nis/ypclnt.c:807
 msgid "Unknown NIS error code"
 msgstr ""
 
-#: nss/getent.c:505
+#: nss/getent.c:512
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr ""
@@ -2973,23 +2973,23 @@ msgstr ""
 msgid "Unknown system error"
 msgstr ""
 
-#: nis/ypclnt.c:845
+#: nis/ypclnt.c:855
 msgid "Unknown ypbind error"
 msgstr ""
 
-#: posix/regex.c:1043
+#: posix/regex.c:1040
 msgid "Unmatched ( or \\("
 msgstr ""
 
-#: posix/regex.c:1067
+#: posix/regex.c:1064
 msgid "Unmatched ) or \\)"
 msgstr ""
 
-#: posix/regex.c:1040
+#: posix/regex.c:1037
 msgid "Unmatched [ or [^"
 msgstr ""
 
-#: posix/regex.c:1046
+#: posix/regex.c:1043
 msgid "Unmatched \\{"
 msgstr ""
 
@@ -3065,14 +3065,14 @@ msgstr ""
 msgid "Write names of selected keywords"
 msgstr ""
 
-#: catgets/gencat.c:110 db2/makedb.c:59
+#: catgets/gencat.c:111 db2/makedb.c:59
 msgid "Write output to file NAME"
 msgstr ""
 
-#: catgets/gencat.c:241 db2/makedb.c:247 elf/sprof.c:361
+#: catgets/gencat.c:242 db2/makedb.c:247 elf/sprof.c:361
 #: iconv/iconv_prog.c:299 locale/programs/locale.c:272
 #: locale/programs/localedef.c:405 nscd/nscd.c:282 nscd/nscd_nischeck.c:95
-#: nss/getent.c:70 posix/getconf.c:629
+#: nss/getent.c:71 posix/getconf.c:629
 #, c-format
 msgid "Written by %s.\n"
 msgstr ""
@@ -3089,7 +3089,7 @@ msgstr ""
 msgid "XCHS"
 msgstr ""
 
-#: nis/ypclnt.c:185
+#: nis/ypclnt.c:171
 #, c-format
 msgid "YPBINDPROC_DOMAIN: %s\n"
 msgstr ""
@@ -3115,8 +3115,8 @@ msgstr ""
 msgid "__get_myaddress: ioctl (get interface configuration)"
 msgstr ""
 
-#: locale/programs/charmap.c:481 locale/programs/locfile.c:471
-#: locale/programs/repertoire.c:278
+#: locale/programs/charmap.c:480 locale/programs/locfile.c:477
+#: locale/programs/repertoire.c:290
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr ""
@@ -3135,7 +3135,7 @@ msgstr ""
 msgid "`...' must only be used in `...' and `UNDEFINED' entries"
 msgstr ""
 
-#: locale/programs/locfile.c:668
+#: locale/programs/locfile.c:674
 msgid "`from' expected after first argument to `collating-element'"
 msgstr ""
 
@@ -3156,7 +3156,7 @@ msgstr ""
 msgid "already running"
 msgstr ""
 
-#: locale/programs/charmap.c:352 locale/programs/repertoire.c:152
+#: locale/programs/charmap.c:352 locale/programs/repertoire.c:164
 #, c-format
 msgid "argument to <%s> must be a single character"
 msgstr ""
@@ -3175,11 +3175,11 @@ msgid "authunix_create: out of memory\n"
 msgstr ""
 
 #: locale/programs/charmap.c:297 locale/programs/locfile.c:234
-#: locale/programs/locfile.c:261 locale/programs/repertoire.c:144
+#: locale/programs/locfile.c:261 locale/programs/repertoire.c:156
 msgid "bad argument"
 msgstr ""
 
-#: inet/rcmd.c:321
+#: inet/rcmd.c:326
 msgid "bad owner"
 msgstr ""
 
@@ -3286,7 +3286,7 @@ msgstr ""
 msgid "cannot load profiling data"
 msgstr ""
 
-#: inet/rcmd.c:317
+#: inet/rcmd.c:322
 msgid "cannot open"
 msgstr ""
 
@@ -3300,7 +3300,7 @@ msgstr ""
 msgid "cannot open database file `%s': %s"
 msgstr ""
 
-#: catgets/gencat.c:272 db2/makedb.c:167 iconv/iconv_prog.c:177
+#: catgets/gencat.c:273 db2/makedb.c:167 iconv/iconv_prog.c:177
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr ""
@@ -3314,12 +3314,12 @@ msgstr ""
 msgid "cannot open output file"
 msgstr ""
 
-#: catgets/gencat.c:805 catgets/gencat.c:846 db2/makedb.c:181
+#: catgets/gencat.c:780 catgets/gencat.c:821 db2/makedb.c:181
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr ""
 
-#: locale/programs/locfile.c:1129
+#: locale/programs/locfile.c:1135
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
 msgstr ""
@@ -3361,9 +3361,9 @@ msgstr ""
 msgid "cannot read locale file `%s'"
 msgstr ""
 
-#: locale/programs/locfile.c:288 locale/programs/locfile.c:306
-#: locale/programs/locfile.c:324 locale/programs/locfile.c:342
-#: locale/programs/locfile.c:360 locale/programs/locfile.c:378
+#: locale/programs/locfile.c:289 locale/programs/locfile.c:308
+#: locale/programs/locfile.c:327 locale/programs/locfile.c:346
+#: locale/programs/locfile.c:365 locale/programs/locfile.c:384
 #, c-format
 msgid "cannot read repertoire map `%s'"
 msgstr ""
@@ -3400,36 +3400,46 @@ msgstr ""
 msgid "category data requested more than once: should not happen"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:269
+#: locale/programs/ld-ctype.c:278
 #, c-format
-msgid "character %s'%s' in class `%s' must be in class `%s'"
+msgid "character '%s' in class `%s' must be in class `%s'"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:294
+#: locale/programs/ld-ctype.c:303
 #, c-format
-msgid "character %s'%s' in class `%s' must not be in class `%s'"
+msgid "character '%s' in class `%s' must not be in class `%s'"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:320
+#: locale/programs/ld-ctype.c:405
 msgid "character <SP> not defined in character map"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:964 locale/programs/ld-ctype.c:1029
-#: locale/programs/ld-ctype.c:1040 locale/programs/ld-ctype.c:1051
-#: locale/programs/ld-ctype.c:1062 locale/programs/ld-ctype.c:1073
-#: locale/programs/ld-ctype.c:1084 locale/programs/ld-ctype.c:1113
-#: locale/programs/ld-ctype.c:1124 locale/programs/ld-ctype.c:1165
-#: locale/programs/ld-ctype.c:1194 locale/programs/ld-ctype.c:1206
+#: locale/programs/ld-ctype.c:355
+#, c-format
+msgid "character L'%s' (index %Zd) in class `%s' must be in class `%s'"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:380
+#, c-format
+msgid "character L'%s' (index %Zd) in class `%s' must not be in class `%s'"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:1107 locale/programs/ld-ctype.c:1183
+#: locale/programs/ld-ctype.c:1196 locale/programs/ld-ctype.c:1209
+#: locale/programs/ld-ctype.c:1222 locale/programs/ld-ctype.c:1235
+#: locale/programs/ld-ctype.c:1248 locale/programs/ld-ctype.c:1279
+#: locale/programs/ld-ctype.c:1292 locale/programs/ld-ctype.c:1343
+#: locale/programs/ld-ctype.c:1374 locale/programs/ld-ctype.c:1386
 #, c-format
 msgid "character `%s' not defined while needed as default value"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:825
+#: locale/programs/ld-ctype.c:967
 #, c-format
 msgid "character class `%s' already defined"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:857
+#: locale/programs/ld-ctype.c:999
 #, c-format
 msgid "character map `%s' already defined"
 msgstr ""
@@ -3465,12 +3475,12 @@ msgstr ""
 msgid "collation symbol `%.*s' appears more than once: ignore line"
 msgstr ""
 
-#: locale/programs/locfile.c:652
+#: locale/programs/locfile.c:658
 #, c-format
 msgid "collation symbol expected after `%s'"
 msgstr ""
 
-#: inet/rcmd.c:138
+#: inet/rcmd.c:143
 #, c-format
 msgid "connect to address %s: "
 msgstr ""
@@ -3484,7 +3494,7 @@ msgstr ""
 msgid "conversion from `%s' to `%s' not supported"
 msgstr ""
 
-#: iconv/iconv_prog.c:326
+#: iconv/iconv_prog.c:328 iconv/iconv_prog.c:353
 msgid "conversion stopped due to problem in writing the output"
 msgstr ""
 
@@ -3497,7 +3507,7 @@ msgstr ""
 msgid "couldn't register prog %d vers %d\n"
 msgstr ""
 
-#: nss/getent.c:49
+#: nss/getent.c:50
 msgid "database [key ...]"
 msgstr ""
 
@@ -3538,7 +3548,7 @@ msgstr ""
 msgid "duplicate key"
 msgstr ""
 
-#: catgets/gencat.c:388
+#: catgets/gencat.c:389
 msgid "duplicate set definition"
 msgstr ""
 
@@ -3547,11 +3557,11 @@ msgstr ""
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr ""
 
-#: catgets/gencat.c:571
+#: catgets/gencat.c:556
 msgid "duplicated message identifier"
 msgstr ""
 
-#: catgets/gencat.c:530
+#: catgets/gencat.c:528
 msgid "duplicated message number"
 msgstr ""
 
@@ -3617,11 +3627,11 @@ msgstr ""
 msgid "error while inserting to hash table"
 msgstr ""
 
-#: iconv/iconv_prog.c:389 iconv/iconv_prog.c:420
+#: iconv/iconv_prog.c:417 iconv/iconv_prog.c:448
 msgid "error while reading the input"
 msgstr ""
 
-#: locale/programs/locfile.c:595
+#: locale/programs/locfile.c:601
 msgid "expect string argument for `copy'"
 msgstr ""
 
@@ -3646,7 +3656,7 @@ msgstr ""
 msgid "failed to start conversion processing"
 msgstr ""
 
-#: locale/programs/locfile.c:1154
+#: locale/programs/locfile.c:1160
 #, c-format
 msgid "failure while writing data for category `%s'"
 msgstr ""
@@ -3666,11 +3676,11 @@ msgstr ""
 msgid "file `%s' already exists and may be overwritten\n"
 msgstr ""
 
-#: locale/programs/locfile.c:677
+#: locale/programs/locfile.c:683
 msgid "from-value of `collating-element' must be a string"
 msgstr ""
 
-#: inet/rcmd.c:319
+#: inet/rcmd.c:324
 msgid "fstat failed"
 msgstr ""
 
@@ -3712,7 +3722,7 @@ msgstr ""
 msgid "get_myaddress: ioctl (get interface configuration)"
 msgstr ""
 
-#: nss/getent.c:53
+#: nss/getent.c:54
 msgid "getent - get entries from administrative database."
 msgstr ""
 
@@ -3725,7 +3735,7 @@ msgstr ""
 msgid "hard link failed, symbolic link used"
 msgstr ""
 
-#: inet/rcmd.c:325
+#: inet/rcmd.c:330
 msgid "hard linked somewhere"
 msgstr ""
 
@@ -3761,7 +3771,7 @@ msgstr ""
 msgid "illegal escape sequence at end of string"
 msgstr ""
 
-#: iconv/iconv_prog.c:342
+#: iconv/iconv_prog.c:370
 #, c-format
 msgid "illegal input sequence at position %ld"
 msgstr ""
@@ -3780,7 +3790,7 @@ msgstr ""
 msgid "illegal number for offset in string %d in `era' field in category `%s'"
 msgstr ""
 
-#: catgets/gencat.c:361 catgets/gencat.c:438
+#: catgets/gencat.c:362 catgets/gencat.c:439
 msgid "illegal set number"
 msgstr ""
 
@@ -3794,17 +3804,17 @@ msgstr ""
 msgid "illegal stopping date in string %d in `era' field in category `%s'"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:831
+#: locale/programs/ld-ctype.c:973
 #, c-format
 msgid "implementation limit: no more than %d character classes allowed"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:863
+#: locale/programs/ld-ctype.c:1005
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr ""
 
-#: iconv/iconv_prog.c:346
+#: iconv/iconv_prog.c:374
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr ""
 
@@ -3816,7 +3826,7 @@ msgstr ""
 msgid "input line of unknown type"
 msgstr ""
 
-#: iconv/iconv_prog.c:350
+#: iconv/iconv_prog.c:378
 msgid "internal error (illegal descriptor)"
 msgstr ""
 
@@ -3832,7 +3842,7 @@ msgstr ""
 msgid "internal error - addtype called with bad ttisstd"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:307
+#: locale/programs/ld-ctype.c:315 locale/programs/ld-ctype.c:392
 #, c-format
 msgid "internal error in %s, line %u"
 msgstr ""
@@ -3907,11 +3917,11 @@ msgstr ""
 msgid "locale file `%s', used in `copy' statement, not found"
 msgstr ""
 
-#: inet/rcmd.c:310
+#: inet/rcmd.c:315
 msgid "lstat failed"
 msgstr ""
 
-#: catgets/gencat.c:650
+#: catgets/gencat.c:625
 msgid "malformed line ignored"
 msgstr ""
 
@@ -3933,7 +3943,7 @@ msgstr ""
 
 #: locale/programs/ld-collate.c:170 locale/programs/ld-collate.c:176
 #: locale/programs/ld-collate.c:180 locale/programs/ld-collate.c:1453
-#: locale/programs/ld-collate.c:1482 locale/programs/locfile.c:1082
+#: locale/programs/ld-collate.c:1482 locale/programs/locfile.c:1088
 #: locale/programs/xmalloc.c:70 login/programs/database.c:62
 #: login/programs/database.c:79 login/programs/database.c:95
 #: malloc/obstack.c:471 posix/getconf.c:682
@@ -3962,35 +3972,35 @@ msgstr ""
 msgid "neither original nor target encoding specified"
 msgstr ""
 
-#: nis/nss_nisplus/nisplus-publickey.c:262
-#: nis/nss_nisplus/nisplus-publickey.c:268
-#: nis/nss_nisplus/nisplus-publickey.c:327
-#: nis/nss_nisplus/nisplus-publickey.c:336
+#: nis/nss_nisplus/nisplus-publickey.c:280
+#: nis/nss_nisplus/nisplus-publickey.c:286
+#: nis/nss_nisplus/nisplus-publickey.c:345
+#: nis/nss_nisplus/nisplus-publickey.c:354
 #, c-format
 msgid "netname2user: (nis+ lookup): %s\n"
 msgstr ""
 
-#: nis/nss_nisplus/nisplus-publickey.c:281
+#: nis/nss_nisplus/nisplus-publickey.c:299
 #, c-format
 msgid "netname2user: DES entry for %s in directory %s not unique"
 msgstr ""
 
-#: nis/nss_nisplus/nisplus-publickey.c:349
+#: nis/nss_nisplus/nisplus-publickey.c:367
 #, c-format
 msgid "netname2user: LOCAL entry for %s in directory %s not unique"
 msgstr ""
 
-#: nis/nss_nisplus/nisplus-publickey.c:194
+#: nis/nss_nisplus/nisplus-publickey.c:206
 #, c-format
 msgid "netname2user: missing group id list in `%s'."
 msgstr ""
 
-#: nis/nss_nisplus/nisplus-publickey.c:299
+#: nis/nss_nisplus/nisplus-publickey.c:317
 #, c-format
 msgid "netname2user: principal name `%s' too long"
 msgstr ""
 
-#: nis/nss_nisplus/nisplus-publickey.c:356
+#: nis/nss_nisplus/nisplus-publickey.c:374
 msgid "netname2user: should not have uid 0"
 msgstr ""
 
@@ -3999,7 +4009,7 @@ msgstr ""
 msgid "never registered prog %d\n"
 msgstr ""
 
-#: locale/programs/repertoire.c:238
+#: locale/programs/repertoire.c:250
 msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr ""
 
@@ -4022,7 +4032,7 @@ msgid ""
 "no filename for profiling data given and shared object `%s' has no soname"
 msgstr ""
 
-#: locale/programs/locfile.c:609
+#: locale/programs/locfile.c:615
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr ""
 
@@ -4030,19 +4040,19 @@ msgstr ""
 msgid "no output file produced because warning were issued"
 msgstr ""
 
-#: locale/programs/locfile.c:283 locale/programs/locfile.c:301
-#: locale/programs/locfile.c:319 locale/programs/locfile.c:337
-#: locale/programs/locfile.c:355 locale/programs/locfile.c:373
+#: locale/programs/locfile.c:283 locale/programs/locfile.c:302
+#: locale/programs/locfile.c:321 locale/programs/locfile.c:340
+#: locale/programs/locfile.c:359 locale/programs/locfile.c:378
 msgid "no repertoire map specified: cannot proceed"
 msgstr ""
 
-#: locale/programs/charmap.c:400 locale/programs/charmap.c:550
-#: locale/programs/charmap.c:629 locale/programs/repertoire.c:199
+#: locale/programs/charmap.c:400 locale/programs/charmap.c:549
+#: locale/programs/charmap.c:628 locale/programs/repertoire.c:211
 msgid "no symbolic name given"
 msgstr ""
 
-#: locale/programs/charmap.c:465 locale/programs/charmap.c:596
-#: locale/programs/charmap.c:662 locale/programs/repertoire.c:261
+#: locale/programs/charmap.c:464 locale/programs/charmap.c:595
+#: locale/programs/charmap.c:661 locale/programs/repertoire.c:273
 msgid "no symbolic name given for end of range"
 msgstr ""
 
@@ -4051,7 +4061,7 @@ msgstr ""
 msgid "no weight defined for symbol `%s'"
 msgstr ""
 
-#: inet/rcmd.c:312
+#: inet/rcmd.c:317
 msgid "not regular file"
 msgstr ""
 
@@ -4067,7 +4077,7 @@ msgstr ""
 msgid "nscd not running!\n"
 msgstr ""
 
-#: locale/programs/charmap.c:514
+#: locale/programs/charmap.c:513
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
 msgstr ""
 
@@ -4083,7 +4093,7 @@ msgstr ""
 msgid "pmap_getmaps rpc problem"
 msgstr ""
 
-#: inet/rcmd.c:181
+#: inet/rcmd.c:186
 msgid "poll: protocol failure in circuit setup\n"
 msgstr ""
 
@@ -4126,16 +4136,16 @@ msgstr ""
 msgid "program %lu version %lu ready and waiting\n"
 msgstr ""
 
-#: inet/rcmd.c:178
+#: inet/rcmd.c:183
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr ""
 
-#: inet/rcmd.c:112
+#: inet/rcmd.c:117
 msgid "rcmd: socket: All ports in use\n"
 msgstr ""
 
-#: inet/rcmd.c:168
+#: inet/rcmd.c:173
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr ""
@@ -4148,7 +4158,7 @@ msgstr ""
 msgid "repeated leap second moment"
 msgstr ""
 
-#: locale/programs/repertoire.c:95
+#: locale/programs/repertoire.c:107
 #, c-format
 msgid "repertoire map file `%s' not found"
 msgstr ""
@@ -4199,16 +4209,16 @@ msgstr ""
 msgid "short read while reading request: %s"
 msgstr ""
 
-#: nscd/grpcache.c:191 nscd/hstcache.c:279 nscd/pwdcache.c:189
+#: nscd/grpcache.c:191 nscd/hstcache.c:270 nscd/pwdcache.c:189
 #, c-format
 msgid "short write in %s: %s"
 msgstr ""
 
-#: inet/rcmd.c:199
+#: inet/rcmd.c:204
 msgid "socket: protocol failure in circuit setup\n"
 msgstr ""
 
-#: locale/programs/locfile.c:730
+#: locale/programs/locfile.c:736
 msgid "sorting order `forward' and `backward' are mutually exclusive"
 msgstr ""
 
@@ -4324,78 +4334,78 @@ msgid ""
 msgstr ""
 
 #: locale/programs/charmap.c:399 locale/programs/charmap.c:433
-#: locale/programs/charmap.c:463 locale/programs/charmap.c:549
-#: locale/programs/charmap.c:595 locale/programs/charmap.c:628
-#: locale/programs/charmap.c:660
+#: locale/programs/charmap.c:462 locale/programs/charmap.c:548
+#: locale/programs/charmap.c:594 locale/programs/charmap.c:627
+#: locale/programs/charmap.c:659
 #, c-format
 msgid "syntax error in %s definition: %s"
 msgstr ""
 
-#: locale/programs/locfile.c:750
+#: locale/programs/locfile.c:756
 msgid "syntax error in `order_start' directive"
 msgstr ""
 
-#: locale/programs/locfile.c:492
+#: locale/programs/locfile.c:498
 msgid "syntax error in character class definition"
 msgstr ""
 
-#: locale/programs/locfile.c:550
+#: locale/programs/locfile.c:556
 msgid "syntax error in character conversion definition"
 msgstr ""
 
-#: locale/programs/locfile.c:792
+#: locale/programs/locfile.c:798
 msgid "syntax error in collating order definition"
 msgstr ""
 
-#: locale/programs/locfile.c:642
+#: locale/programs/locfile.c:648
 msgid "syntax error in collation definition"
 msgstr ""
 
-#: locale/programs/locfile.c:465
+#: locale/programs/locfile.c:471
 msgid "syntax error in definition of LC_CTYPE category"
 msgstr ""
 
-#: locale/programs/locfile.c:408
+#: locale/programs/locfile.c:414
 msgid "syntax error in definition of new character class"
 msgstr ""
 
-#: locale/programs/locfile.c:418
+#: locale/programs/locfile.c:424
 msgid "syntax error in definition of new character map"
 msgstr ""
 
-#: locale/programs/locfile.c:1003
+#: locale/programs/locfile.c:1009
 msgid "syntax error in message locale definition"
 msgstr ""
 
-#: locale/programs/locfile.c:914
+#: locale/programs/locfile.c:920
 msgid "syntax error in monetary locale definition"
 msgstr ""
 
-#: locale/programs/locfile.c:941
+#: locale/programs/locfile.c:947
 msgid "syntax error in numeric locale definition"
 msgstr ""
 
-#: locale/programs/locfile.c:852
+#: locale/programs/locfile.c:858
 msgid "syntax error in order specification"
 msgstr ""
 
 #: locale/programs/charmap.c:280 locale/programs/charmap.c:296
-#: locale/programs/repertoire.c:143
+#: locale/programs/repertoire.c:155
 #, c-format
 msgid "syntax error in prolog: %s"
 msgstr ""
 
-#: locale/programs/repertoire.c:198 locale/programs/repertoire.c:237
-#: locale/programs/repertoire.c:260
+#: locale/programs/repertoire.c:210 locale/programs/repertoire.c:249
+#: locale/programs/repertoire.c:272
 #, c-format
 msgid "syntax error in repertoire map definition: %s"
 msgstr ""
 
-#: locale/programs/locfile.c:979
+#: locale/programs/locfile.c:985
 msgid "syntax error in time locale definition"
 msgstr ""
 
-#: locale/programs/locfile.c:385
+#: locale/programs/locfile.c:391
 msgid "syntax error: not inside a locale definition section"
 msgstr ""
 
@@ -4403,7 +4413,7 @@ msgstr ""
 msgid "target encoding not specified using `-t'"
 msgstr ""
 
-#: catgets/gencat.c:390 catgets/gencat.c:532 catgets/gencat.c:574
+#: catgets/gencat.c:391 catgets/gencat.c:530 catgets/gencat.c:559
 msgid "this is the first definition"
 msgstr ""
 
@@ -4464,7 +4474,7 @@ msgstr ""
 msgid "typed single year"
 msgstr ""
 
-#: iconv/iconv_prog.c:406
+#: iconv/iconv_prog.c:434
 msgid "unable to allocate buffer for input"
 msgstr ""
 
@@ -4476,7 +4486,7 @@ msgstr ""
 msgid "undefined"
 msgstr ""
 
-#: locale/programs/charmap.c:701 locale/programs/charmap.c:712
+#: locale/programs/charmap.c:700 locale/programs/charmap.c:711
 #, c-format
 msgid "unknown character `%s'"
 msgstr ""
@@ -4488,21 +4498,21 @@ msgstr ""
 msgid "unknown character in field `%s' of category `%s'"
 msgstr ""
 
-#: locale/programs/locfile.c:715
+#: locale/programs/locfile.c:721
 msgid "unknown collation directive"
 msgstr ""
 
-#: catgets/gencat.c:487
+#: catgets/gencat.c:488
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr ""
 
-#: iconv/iconv_prog.c:353
+#: iconv/iconv_prog.c:381
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr ""
 
-#: catgets/gencat.c:466
+#: catgets/gencat.c:467
 #, c-format
 msgid "unknown set `%s'"
 msgstr ""
@@ -4517,7 +4527,7 @@ msgstr ""
 msgid "unruly zone"
 msgstr ""
 
-#: catgets/gencat.c:1002
+#: catgets/gencat.c:977
 msgid "unterminated message"
 msgstr ""
 
@@ -4550,7 +4560,7 @@ msgstr ""
 msgid "use of 2/29 in non leap-year"
 msgstr ""
 
-#: locale/programs/charmap.c:522 locale/programs/charmap.c:576
+#: locale/programs/charmap.c:521 locale/programs/charmap.c:575
 #, c-format
 msgid "value for %s must be an integer"
 msgstr ""
@@ -4594,7 +4604,7 @@ msgstr ""
 msgid "while accepting connection: %s"
 msgstr ""
 
-#: nscd/grpcache.c:149 nscd/hstcache.c:169 nscd/pwdcache.c:143
+#: nscd/grpcache.c:149 nscd/hstcache.c:168 nscd/pwdcache.c:143
 msgid "while allocating cache entry"
 msgstr ""
 
@@ -4602,11 +4612,11 @@ msgstr ""
 msgid "while allocating hash table entry"
 msgstr ""
 
-#: nscd/grpcache.c:99 nscd/hstcache.c:110 nscd/pwdcache.c:106
+#: nscd/grpcache.c:99 nscd/hstcache.c:111 nscd/pwdcache.c:106
 msgid "while allocating key copy"
 msgstr ""
 
-#: catgets/gencat.c:1032
+#: catgets/gencat.c:1007
 msgid "while opening old catalog file"
 msgstr ""
 
@@ -4630,11 +4640,11 @@ msgstr ""
 msgid "write incomplete"
 msgstr ""
 
-#: inet/rcmd.c:323
+#: inet/rcmd.c:328
 msgid "writeable by other than owner"
 msgstr ""
 
-#: db2/makedb.c:124 nscd/nscd.c:120 nscd/nscd_nischeck.c:64 nss/getent.c:392
+#: db2/makedb.c:124 nscd/nscd.c:120 nscd/nscd_nischeck.c:64 nss/getent.c:399
 msgid "wrong number of arguments"
 msgstr ""
 
@@ -4662,14 +4672,14 @@ msgstr ""
 msgid "xdr_reference: out of memory\n"
 msgstr ""
 
-#: sunrpc/xdr_rec.c:151 sunrpc/xdr_rec.c:166
+#: sunrpc/xdr_rec.c:150 sunrpc/xdr_rec.c:165
 msgid "xdrrec_create: out of memory\n"
 msgstr ""
 
-#: nis/ypclnt.c:884
+#: nis/ypclnt.c:894
 msgid "yp_update: cannot convert host to netname\n"
 msgstr ""
 
-#: nis/ypclnt.c:896
+#: nis/ypclnt.c:906
 msgid "yp_update: cannot get server address\n"
 msgstr ""
