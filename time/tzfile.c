@@ -26,6 +26,12 @@ Cambridge, MA 02139, USA.  */
 #define	NOID
 #include <tzfile.h>
 
+#ifndef	HAVE_GNU_LD
+#define	__tzname	tzname
+#define	__daylight	daylight
+#define	__timezone	timezone
+#endif
+
 int __use_tzfile = 0;
 
 struct ttinfo
