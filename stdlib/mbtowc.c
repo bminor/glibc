@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -39,11 +39,12 @@ DEFUN(mbtowc, (pwc, s, n), wchar_t *pwc AND CONST char *s AND size_t n)
   if (s == NULL)
     return _mb_shift != 0;
 
+  if (*s == '\0')
+    return 0;
+
   if (_ctype_info->mbchar == NULL ||
       _ctype_info->mbchar->mb_chars == NULL)
     return -1;
-  if (*s == '\0')
-    return 0;
 
   if (n > MB_CUR_MAX)
     n = MB_CUR_MAX;
