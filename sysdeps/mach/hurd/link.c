@@ -30,9 +30,10 @@ DEFUN(__link, (from, to), CONST char *from AND CONST char *to)
   file_t oldfile, linknode, todir;
   CONST char *toname;
 
-  oldfile = __hurd_path_lookup (from, 0, 0);
+  oldfile = __path_lookup (from, 0, 0);
   if (oldfile == MACH_PORT_NULL)
     return -1;
+
   err = __file_getlinknode (oldfile, &linknode);
   if (err == EOPNOTSUPP)
     linknode = oldfile;
@@ -40,7 +41,8 @@ DEFUN(__link, (from, to), CONST char *from AND CONST char *to)
     __mach_port_deallocate (__mach_task_self (), oldfile);
   if (err)
     return __hurd_fail (err);
-  todir = __hurd_path_split (to, &toname);
+
+  todir = __path_split (to, &toname);
   if (todir != MACH_PORT_NULL)
     {
       err = __dir_link (linknode, todir, toname);
