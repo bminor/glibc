@@ -152,6 +152,7 @@ abort_rpcs (struct hurd_sigstate *ss, int signo, void *state)
       /* Abort whatever the thread is doing.
 	 If it is in the mach_msg syscall doing the send,
 	 the syscall will return MACH_SEND_INTERRUPTED.  */
+      mach_port_t msging_port;
       unsigned int count;
       __thread_abort (ss->thread);
       __thread_get_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
@@ -160,7 +161,7 @@ abort_rpcs (struct hurd_sigstate *ss, int signo, void *state)
 	/* What kind of thread?? */
 	return;			/* XXX */
 
-      if (_hurd_thread_state_msging_p (state))
+      if (_hurd_thread_state_msging_p (state, &msging_port))
 	{
 	  /* The thread was waiting for the RPC to return.
 	     Abort the operation.  The RPC will return EINTR.  */
@@ -186,9 +187,7 @@ abort_rpcs (struct hurd_sigstate *ss, int signo, void *state)
 	  if (err != MACH_MSG_SUCCESS)
 	    /* The interrupt didn't work.
 	       Destroy the receive right the thread is blocked on.  */
-	    __mach_port_destroy (__mach_task_self (),
-				 /* XXX */
-				 _hurd_thread_reply_port (ss->thread));
+	    __mach_port_destroy (__mach_task_self (), msging_port);
 	  else
 	    /* In case the server returned something screwy.  */
 	    __mach_msg_destroy (&msg.header);
