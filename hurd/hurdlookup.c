@@ -22,6 +22,22 @@ Cambridge, MA 02139, USA.  */
 #include <fcntl.h>
 #include "stdio/_itoa.h"
 
+/* Translate the error from dir_pathtrans into the error the user sees.  */
+static inline error_t
+pathtrans_error (error_t error)
+{
+  switch (error)
+    {
+    case EOPNOTSUPP:
+    case MIG_BAD_ID:
+      /* These indicate that the server does not understand dir_pathtrans
+	 at all.  If it were a directory, it would, by definition.  */
+      return ENOTDIR;
+    default:
+      return error;
+    }
+}
+
 error_t
 __hurd_path_lookup (file_t crdir, file_t cwdir,
 		    const char *path, int flags, mode_t mode,
@@ -39,7 +55,7 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
 
   if (err = __dir_pathtrans (startdir, path, flags, mode,
 			     &doretry, retryname, result))
-    return err;
+    return pathtrans_error (err);
 
   return __hurd_path_lookup_retry (crdir, doretry, retryname, flags, mode,
 				   result);
@@ -67,7 +83,7 @@ __hurd_path_lookup_retry (file_t crdir,
       if (dealloc_dir)
 	__mach_port_deallocate (__mach_task_self (), startdir);
       if (err)
-	return err;
+	return pathtrans_error (err);
 
       switch (doretry)
 	{
