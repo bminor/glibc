@@ -104,11 +104,16 @@ extern int _hurd_set_brk (vm_address_t newbrk);
 
 /* Calls to get and set basic ports.  */
 
+extern error_t _hurd_ports_get (int which, mach_port_t *result);
+extern error_t _hurd_ports_set (int which, mach_port_t newport);
+
 extern process_t getproc (void);
 extern file_t getcwdir (void), getcrdir (void);
 extern auth_t getauth (void);
+extern mach_port_t getcttyid ();
 extern int setproc (process_t);
 extern int setcwdir (file_t), setcrdir (file_t);
+extern int setcttyid (mach_port_t);
 
 /* Does reauth with the proc server and fd io servers.  */
 extern int __setauth (auth_t), setauth (auth_t);
