@@ -76,7 +76,7 @@ _hurd_alloc_fd (int *fd, int first_fd)
 	__spin_unlock (&d->port.lock);
     }
 
-  if (first_fd < _hurd_dtablesize)
+  if (first_fd < _hurd_dtable_rlimit)
     {
       /* The descriptor table is full.  Check if we have reached the
 	 resource limit, or only the allocated size.  */
@@ -85,8 +85,10 @@ _hurd_alloc_fd (int *fd, int first_fd)
 	  /* Enlarge the table.  */
 	  int save = errno;
 	  struct hurd_fd **new;
-	  /* Try to double the table size (but don't exceed the limit).  */
-	  int size = _hurd_dtablesize * 2;
+	  /* Try to double the table size (but don't exceed the limit).
+	     If there isn't any at all, give it three slots (because
+	     stdio will take that many anyway).  */
+	  int size = _hurd_dtablesize ? _hurd_dtablesize * 2 : 3;
 	  if (size > _hurd_dtable_rlimit)
 	    size = _hurd_dtable_rlimit;
 	  /* If we fail to allocate that, decrement the desired size
@@ -108,6 +110,8 @@ _hurd_alloc_fd (int *fd, int first_fd)
 	      goto search;
 	    }
 	}
+      else
+	errno = EMFILE;
     }
   else
     errno = EINVAL;		/* Bogus FIRST_FD value.  */
