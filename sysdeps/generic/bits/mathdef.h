@@ -20,7 +20,7 @@
 # error "Never use <bits/mathdef.h> directly; include <math.h> instead"
 #endif
 
-#if defined  __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
+#if defined  __USE_ISOC9X && defined _MATH_H && !defined _MATH_H_MATHDEF
 # define _MATH_H_MATHDEF	1
 
 /* Normally, there is no long double type and the `float' and `double'
@@ -44,7 +44,7 @@ typedef double double_t;	/* `double' expressions are evaluated as
 /* Number of decimal digits for the `double' type.  */
 # define DECIMAL_DIG	15
 
-#endif	/* ISO C99 */
+#endif	/* ISO C9X */
 
 #ifndef __NO_LONG_DOUBLE_MATH
 /* Signal that we do not really have a `long double'.  The disables the
