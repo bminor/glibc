@@ -1,3 +1,21 @@
+1997-05-22 05:40  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_runtime_setup): If we are
+	not looking at the new thread-safe .plt, don't be lazy about relocs.
+	(_dl_runtime_resolve): Fix up arithmetic for new .plt layout.
+	(elf_alpha_fix_plt): Insert wmb as appropriate to ensure safety.
+	* elf/dynamic-link.h (ELF_DYNAMIC_RELOCATE): Let
+	elf_machine_runtime_setup() decide if we can actually be lazy.
+	* elf/rtld.c (_dl_start): So don't call it.
+	* elf/dl-reloc.c (_dl_relocate_object): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_runtime_setup): Return lazy.
+	* sysdeps/m68k/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	* sysdeps/mips/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	* sysdeps/powerpc/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	* sysdeps/sparc/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	* sysdeps/stub/dl-machine.h (elf_machine_runtime_setup): Update
+	skeleton definition.
+
 1997-05-22 18:37  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/fpu/__math.h (logb): Remove second value placed on
