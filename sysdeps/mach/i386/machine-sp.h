@@ -20,17 +20,18 @@ Cambridge, MA 02139, USA.  */
 #ifndef _MACHINE_SP_H
 #define _MACHINE_SP_H
 
+/* Return the current stack pointer.  */
+
 #ifndef _EXTERN_INLINE
 #define _EXTERN_INLINE extern __inline
 #endif
 
-/* Return the current stack pointer.  */
-
 _EXTERN_INLINE void *
 __thread_stack_pointer (void)
 {
-  register void *__sp __asm__ ("%esp");
-  return __sp;
+  void *__sp__;
+  __asm__ ("movl %%esp, %0" : "=r" (__sp__));
+  return __sp__;
 }
 
 #endif	/* machine-sp.h */
