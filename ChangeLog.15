@@ -477,6 +477,14 @@
 
 2004-11-26  Jakub Jelinek  <jakub@redhat.com>
 
+	* posix/Makefile (generated: Add getconf.speclist.
+	($(inst_libexecdir)/getconf): Use getconf.speclist instead of
+	getconf output.
+	($(objpfx)getconf.speclist): New rule.
+	* posix/getconf.speclist.h: New file.
+
+2004-11-26  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/generic/unsecvars.h (UNSECURE_ENVVARS): Add GETCONF_DIR.
 
 2004-11-26  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
@@ -1103,6 +1111,16 @@
 	* sysdeps/generic/tempname.c (__path_search): Add missing argument
 	TRY_TMPDIR.
 
+2004-11-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/features.h (__USE_FORTIFY_LEVEL): Also set for Red Hat
+	GCC 3.4.x-RH >= 3.4.2-8.
+	* libio/bits/features.h (printf, fprintf, vprintf, vfprintf): For
+	GCC 3.4.x-RH use __builtin___{,v}{,f}printf_chk instead of
+	__{,v}{,f}printf_chk.
+	* debug/tst-chk1.c (do_test): Deal with GCC 3.4.x-RH not
+	being able to recognize subobjects.
+
 2004-10-31  Mariusz Mazur <mmazur@kernel.pl>
 
 	* sysdeps/unix/sysv/linux/alpha/setregid.c: New file.
@@ -1398,6 +1416,11 @@
 	* posix/execvp.c (execvp): Also ignore ENODEV and ETIMEDOUT errno
 	values.
 
+2004-10-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/readonly-area.c (__readonly_area): If /proc
+	is not mounted, return 1.
+
 2004-10-20  Roland McGrath  <roland@redhat.com>
 
 	* Makeconfig ($(common-objpfx)shlib-versions.v.i): Check also
@@ -1442,6 +1465,11 @@
 
 	* sysdeps/generic/readonly-area.c (__readonly_str): Renamed to ...
 	(__readonly_area): ... this.
+
+2004-10-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/features.h (__USE_FORTIFY_LEVEL): Enable even with
+	Red Hat gcc4 4.0.0 and above.
 
 2004-10-18  Jakub Jelinek  <jakub@redhat.com>
 
@@ -3181,6 +3209,23 @@
 	* wcsmbs/wcsmbsload.c (__wcsmbs_getfct): Move attribute_hidden
 	before return type.
 	* locale/localename.c (__current_locale_name): Likewise.
+
+2004-08-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/ldconfig.c (parse_conf): Add prefix argument, prepend it
+	before arguments to add_dir and pass to parse_conf_include.
+	(parse_conf_include): Add prefix argument, pass it down to
+	parse_conf.
+	(main): Call arch_startup.  Adjust parse_conf caller.
+	Call add_arch_dirs.
+	* sysdeps/generic/dl-cache.h (arch_startup, add_arch_dirs): Define.
+	* sysdeps/unix/sysv/linux/i386/dl-cache.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/dl-cache.h (EMUL_HACK, arch_startup,
+	add_arch_dirs): Define.
+	* sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed: Prepend
+	/emul/ia32-linux before the 32-bit ld.so pathname.
+	* sysdeps/unix/sysv/linux/ia64/dl-procinfo.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/dl-procinfo.h: New file.
 
 2004-08-30  Roland McGrath  <roland@frob.com>
 
