@@ -29,6 +29,21 @@ __BEGIN_DECLS
 
 #include <bits/types.h>
 
+#ifdef __USE_XOPEN
+# ifndef ino_t
+#  ifndef __USE_FILE_OFFSET64
+typedef __ino_t ino_t;
+#  else
+typedef __ino64_t ino_t;
+#  endif
+#  define ino_t ino_t
+# endif
+# if defined __USE_LARGEFILE64 && !defined ino64_t
+typedef __ino64_t ino64_t;
+#  define ino64_t ino64_t
+# endif
+#endif
+
 /* This file defines `struct dirent'.
 
    It defines the macro `_DIRENT_HAVE_D_NAMLEN' iff there is a `d_namlen'
