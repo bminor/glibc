@@ -20,11 +20,14 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <string.h>
 
+#ifndef HAVE_GNU_LD
+#define _sys_errlist sys_errlist
+#define _sys_nerr sys_nerr
+#endif
 
 /* Defined in stdio/sys_errlist.c.  */
 extern CONST char *CONST _sys_errlist[];
 extern CONST int _sys_nerr;
-
 
 /* Return a string descibing the errno code in ERRNUM.
    The storage is good only until the next call to strerror.
