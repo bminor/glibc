@@ -1,4 +1,5 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Definitions of status bits for `wait' et al.
+Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +21,6 @@ Cambridge, MA 02139, USA.  */
 
 #ifndef	_WAITSTATUS_H
 #define	_WAITSTATUS_H
-
 
 /* If WIFEXITED(STATUS), the low-order 8 bits of the status.  */
 #define	__WEXITSTATUS(status)	(((status) & 0xff00) >> 8)
@@ -46,12 +46,55 @@ Cambridge, MA 02139, USA.  */
 /* Nonzero if STATUS indicates the child is stopped.  */
 #define	__WIFSTOPPED(status)	(((status) & 0xff) == 0x7f)
 
-/* Nonzero if STATUS indicated the child dumped core.  */
+/* Nonzero if STATUS indicates the child dumped core.  */
 #define	__WCOREDUMP(status)	((status) & 0200)
 
 /* Macros for constructing status values.  */
 #define	__W_EXITCODE(ret, sig)	((ret) << 8 | (sig))
 #define	__W_STOPCODE(sig)	((sig) << 8 | 0x7f)
+
+
+#ifdef	__USE_BSD
+
+#include <endian.h>
+
+union wait
+  {
+    struct
+      {
+#ifdef	__LITTLE_ENDIAN
+	unsigned int __w_termsig:7; /* Terminating signal.  */
+	unsigned int __w_coredump:1; /* Set if dumped core.  */
+	unsigned int __w_retcode:8; /* Return code if exited normally.  */
+	unsigned int:16;
+#else				/* Big endian.  */
+	unsigned int:16;
+	unsigned int __w_retcode:8;
+	unsigned int __w_coredump:1;
+	unsigned int __w_termsig:7;
+#endif				/* Little endian.  */
+      } __wait_terminated;
+    struct
+      {
+#ifdef	__LITTLE_ENDIAN
+	unsigned int __w_stopval:8; /* W_STOPPED if stopped.  */
+	unsigned int __w_stopsig:8; /* Stopping signal.  */
+	unsigned int:16;
+#else				/* Big endian.  */
+	unsigned int:16;
+	unsigned int __w_stopsig:8; /* Stopping signal.  */
+	unsigned int __w_stopval:8; /* W_STOPPED if stopped.  */
+#endif				/* Little endian.  */
+      } __wait_stopped;
+  };
+
+#define	w_termsig	__wait_terminated.__w_termsig
+#define	w_coredump	__wait_terminated.__w_coredump
+#define	w_retcode	__wait_terminated.__w_retcode
+#define	w_stopsig	__wait_stopped.__w_stopsig
+#define	w_stopval	__wait_stopped.__w_stopval
+
+#endif	/* Use BSD.  */
 
 
 #endif	/* waitstatus.h */
