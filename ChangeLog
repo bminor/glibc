@@ -1,3 +1,55 @@
+1997-09-09  Paul Eggert  <eggert@twinsun.com>
+
+	* time/mktime.c (__mktime_internal): Declare sec_requested even if
+	!LEAP_SECONDS_POSSIBLE, since it's needed at the end when checking
+	for time_t overflow.
+
+1997-09-10 04:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/ip_fw.h (struct ip_fw): Correct
+	type of fw_pcnt and fw_bcnt fields to match kernel.
+	Patch by a sun <asun@zoology.washington.edu>.
+
+1997-09-09 22:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/getcwd.c: Correct test for too small buffer.
+	Reported by Erik Troan <ewt@redhat.com>.
+
+1997-09-06  Paul Eggert  <eggert@twinsun.com>
+
+	Fix gmtime so that it reports leap seconds when TZ
+	indicates that leap seconds are desired.
+
+	* time/gmtime.c (<stddef.h>): Remove unnecessary include.
+	(gmtime): Put after gmtime_r, to help the compiler inline.
+	(__tz_convert): New decl.
+	(gmtime_r): Use __tz_convert instead of __offtime,
+	so that leap seconds are handled correctly.
+
+	* time/localtime.c (<errno.h>, <libc-lock.h>): Remove includes that
+	are now unnecessary.
+	(__tzset_internal, __tz_compute, __tzfile_compute, __use_tzfile,
+	__tzset_lock): Remove extern decls that are now unnecessary.
+	(localtime_internal): Moved to __tz_convert in tzset.c.
+	so that localtime and gmtime can both use it easily.
+	(localtime): Put after localtime_r, to help the compiler inline.
+	(localtime_r): Use __tz_convert instead of localtime_internal.
+
+	* time/strftime.c (__tz_compute): Remove unused (and now incorrect)
+	decl.
+
+	* time/tzfile.c (__tzfile_compute): New arg USE_LOCALTIME.
+
+	* time/tzset.c (<errno.h>): Include.
+	(_tmbuf): New decl.
+	(__tzfile_compute): New function.
+	(tz_compute): Renamed from __tz_compute.  No longer extern.
+	Remove redundant call to tzset_internal.
+	(tzset_internal): Renamed from __tzset_internal.  No longer extern.
+	(tzset_lock): Renamed from __tzset_lock.  No longer extern.
+	(__tz_convert): New function, containing functionality of old
+	localtime_internal function, plus locking and optional UTC.
+
 1997-09-06  Paul Eggert  <eggert@twinsun.com>
 
 	* tzfile.c (__tzfile_read): Don't read a file if TZ is the empty
