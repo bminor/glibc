@@ -33,6 +33,7 @@ _hurd_longjmp_thread_state (void *state, jmp_buf env, int val)
   ts->esi = env[0].__si;
   ts->edi = env[0].__di;
   ts->ebp = (int) env[0].__bp;
-  ts->esp = (int) env[0].__sp;
+  ts->uesp = (int) env[0].__sp;
+  ts->eip = (int) env[0].__pc;
   ts->eax = val == 0 ? 1 : val;
 }
