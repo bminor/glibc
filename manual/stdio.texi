@@ -1452,10 +1452,13 @@ This specifies that the base type is @code{void *}, an arbitrary pointer.
 @comment printf.h
 @comment GNU
 @deftypevr Macro int PA_FLOAT
-This specifies that the base type is @code{double}.
+This specifies that the base type is @code{float}.
+@end deftypevr
 
-@strong{Incomplete:}  Should this be @code{float} instead?  How do you
-encode the type of @code{float *}?
+@comment printf.h
+@comment GNU
+@deftypevr Macro int PA_DOUBLE
+This specifies that the base type is @code{double}.
 @end deftypevr
 
 @comment printf.h
@@ -2998,7 +3001,6 @@ The directory @file{/tmp}.
 @end itemize
 
 This function is defined for SVID compatibility.
-@c ??? Add xref to the node for feature test macros.
 @end deftypefun
 @cindex TMPDIR environment variable
 
@@ -3324,6 +3326,7 @@ The data type of the seek function for a custom stream.
 The data type of the close function for a custom stream.
 @end deftp
 
+@ignore
 @strong{Incomplete:}  Roland says:
 
 @quotation
@@ -3337,5 +3340,6 @@ good documentation.  But it's pretty complex and deals with lots
 of nitty-gritty details.  I think it might be better to let this
 wait until the rest of the manual is more done and polished.
 @end quotation
+@end ignore
 
 @strong{Incomplete:}  This section could use an example.
