@@ -91,6 +91,8 @@ enum
 	    {								      \
 	      /* Write out the shift sequence.  */			      \
 	      *outbuf++ = SI;						      \
+	      if (data->__is_last)					      \
+		*written += 1;						      \
 	      data->outbuf = outbuf;					      \
 	      data->statep->count = ASCII_set;				      \
 	    }								      \
