@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,9 +32,9 @@ __kill (pid_t pid, int sig)
   pid_t *pids;
   mach_msg_type_number_t npids, nports, i;
   mach_port_t proc;
-  int dealloc_proc;
+  struct _hurd_port_userlink ulink;
 
-  proc = _hurd_port_get (&_hurd_ports[INIT_PORT_PROC], &dealloc_proc);
+  proc = _hurd_port_get (&_hurd_ports[INIT_PORT_PROC], &ulink);
 
   if (pid <= 0)
     {
@@ -122,7 +122,7 @@ __kill (pid_t pid, int sig)
 				 __sig_post (msgport, sig, refport));
     }
 
-  _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], &dealloc_proc, proc);
+  _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], &ulink, proc);
 
   if (ports != &oneport)
     __vm_deallocate (__mach_task_self (),
