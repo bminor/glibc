@@ -106,7 +106,7 @@ $(..)glibc-%:
 	  TAGS
 .PHONY: TAGS
 TAGS: $(..)MakeTAGS
-	$(MAKE) -f $< $@
+	$(MAKE) -f $< $@ -o subdir_TAGS
 
 ifdef	   subdir
 
@@ -163,8 +163,9 @@ $(tardir).tar.Z: dist.tar.Z
 
 $(tardir)-crypt.tar.Z: crypt/crypt.tar.Z
 	ln $< $@
-crypt/%:
+crypt/%: FORCE
 	$(MAKE) -C $(@D) $(@F)
+FORCE:
 
 dist.tar: $(tardir) $(+tsrcs)
 	tar ch$(verbose)f $@ $(addprefix $(tardir)/,$(filter-out $(tardir),$^))
