@@ -113,7 +113,7 @@ _start (void)
     {
       static char *noargs = NULL, *noenv = NULL;
       argc = 0;
-      argv = &null;
+      argv = &noargs;
       __environ = &noenv;
       _hurd_init_dtable = NULL;
       _hurd_init_dtablesize = 0;
