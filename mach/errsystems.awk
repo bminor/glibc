@@ -2,7 +2,7 @@ BEGIN {
   print "#include <mach/error.h>\n#include <errorlib.h>";
   print "#define static static const"
   nsubs = split(subsys, subs);
-  while (nsubs-- > 0) printf "#include \"%s\"\n", subs[nsubs];
+  while (nsubs > 0) printf "#include \"%s\"\n", subs[nsubs--];
   print "\n\n\
 static const struct error_system __mach_error_systems[err_max_system + 1] =";
   print "  {";
