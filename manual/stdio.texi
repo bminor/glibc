@@ -3346,7 +3346,7 @@ already written fills the intervening space with zeroes.
 Here is an example of using @code{open_memstream}:
 
 @example
-@include memstream.c.texi
+@include memstrm.c.texi
 @end example
 
 This program produces the following output:
