@@ -188,7 +188,7 @@ endif
 # The name of the C compiler.
 # If you've got GCC, and it works, use it.
 ifeq ($(origin CC),default)
-CC := gcc -pipe
+CC := gcc
 endif
 
 # These are preprocessor macros we want to predefine.  Define HAVE_GNU_LD
