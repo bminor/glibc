@@ -370,17 +370,23 @@ set_istrip (int desc, int value)
 @{
   struct termios settings;
   int result;
+@end group
 
+@group
   result = tcgetattr (desc, &settings);
   if (result < 0)
     @{
       perror ("error in tcgetattr");
       return 0;
     @}
+@end group
+@group
   settings.c_iflag &= ~ISTRIP;
   if (value)
     settings.c_iflag |= ISTRIP;
-  result = tcgetattr (desc, &settings);
+@end group
+@group
+  result = tcsetattr (desc, TCSANOW, &settings);
   if (result < 0)
     @{
       perror ("error in tcgetattr");
