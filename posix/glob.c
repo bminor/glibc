@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -146,9 +146,9 @@ my_realloc (p, n)
 #ifdef __GNUC__
 #define alloca __builtin_alloca
 #else /* Not GCC.  */
-#if	defined (sparc) || defined (sgi)
+#ifdef	sparc
 #include <alloca.h>
-#else	/* Not sparc or sgi.  */
+#else	/* Not sparc.  */
 extern char *alloca ();
 #endif /* sparc.  */
 #endif /* GCC.  */
