@@ -1,3 +1,10 @@
+1999-06-25  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* elf/dl-deps.c (_dl_map_object_deps): When looking for the next
+	occurence of the aux object start with the current list entry, not
+	the new one.  Adjust tail pointer in the unique list.  Explain how
+	the meaning of the variables changes.
+
 1999-06-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/bits/string2.h (strnlen): Remove extra prototype.
