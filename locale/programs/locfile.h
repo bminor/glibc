@@ -22,8 +22,8 @@
 
 #include <sys/uio.h>
 
-#include "linereader.h"
 #include "localedef.h"
+#include "linereader.h"
 
 
 /* Header of the locale data files.  */
