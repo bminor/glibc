@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <errno.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 extern int __getdents __P ((int fd, char *buf, size_t nbytes));
 
@@ -28,7 +29,7 @@ DEFUN(__getdirentries, (fd, buf, nbytes, basep),
       int fd AND char *buf AND size_t nbytes AND off_t *basep)
 {
   if (basep)
-    *basep = __lseek(fd, (off_t)0, SEEK_CUR);
+    *basep = __lseek (fd, (off_t) 0, SEEK_CUR);
 
   return __getdents (fd, buf, nbytes);
 }
