@@ -54,10 +54,6 @@ includes += -I$(..)hurd
 # When compiling, use the Hurd header files directly from the sources.
 includes += -I$(hurd-srcdir) -I$(hurd-srcdir)/libthreads
 
-# Marks temporary work-arounds installed by mib.
-defines += -DMIB_HACKS
-mib_hacks=t
-
 # Find the Hurd header files in the Hurd source.
 vpath hurd/%.h $(hurd-srcdir)
 
