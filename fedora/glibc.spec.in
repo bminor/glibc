@@ -1,4 +1,4 @@
-%define glibcrelease 17
+%define glibcrelease 18
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1275,6 +1275,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Mar 25 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-18
+- fix build on 64-bit arches with new GCC
+
 * Thu Mar 24 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-17
 - update from CVS
   - fix LD_AUDIT in LinuxThreads ld.so
