@@ -42,22 +42,26 @@ struct child
    These all simply call the corresponding
    original function with the original cookie.  */
 
-#define FUNC(type, name, args, argdecl)					      \
-  static type DEFUN(__CONCAT(child_,name), args, argdecl)		      \
+#define FUNC(type, name, args)						      \
+  static type DEFUN(__CONCAT(child_,name), args, __CONCAT(name,decl))	      \
   {									      \
     struct child *c = (struct child *) cookie;				      \
-    __ptr_t cookie = c->cookie;						      \
-    return (*c->cookie.funcs.__CONCAT(__,name)) args;			      \
+    {									      \
+      __ptr_t cookie = c->cookie;					      \
+      return (*c->funcs.__CONCAT(__,name)) args;			      \
+    }									      \
   }
 
-FUNC (int, read, (cookie, buf, n),
-      PTR cookie AND register char *buf AND register size_t n)
-FUNC (int, write, (cookie, buf, n),
-      PTR cookie AND register CONST char *buf AND register size_t n)
-FUNC (int, seek, (cookie, pos, whence),
-      PTR cookie AND fpos_t *pos AND int whence)
-FUNC (int, close, (cookie), PTR cookie)
-FUNC (int, fileno, (cookie), PTR cookie)
+#define readdecl PTR cookie AND register char *buf AND register size_t n
+FUNC (int, read, (cookie, buf, n))
+#define writedecl PTR cookie AND register CONST char *buf AND register size_t n
+FUNC (int, write, (cookie, buf, n))
+#define seekdecl PTR cookie AND fpos_t *pos AND int whence
+FUNC (int, seek, (cookie, pos, whence))
+#define closedecl PTR cookie
+FUNC (int, close, (cookie))
+#define filenodecl PTR cookie
+FUNC (int, fileno, (cookie))
 
 static const __io_functions child_funcs
   = { child_read, child_write, child_seek, child_close, child_fileno };
