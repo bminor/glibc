@@ -20,7 +20,19 @@ Cambridge, MA 02139, USA.  */
 
 #define	_FNMATCH_H	1
 
-__BEGIN_DECLS
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
+#if defined (__cplusplus) || (defined (__STDC__) && __STDC__)
+#undef	__P
+#define	__P(args)	args
+#else				/* Not C++ or ANSI C.  */
+#undef	__P
+#define	__P(args)	()
+#undef	const
+#define	const
+#endif				/* C++ or ANSI C.  */
 
 /* Bits set in the FLAGS argument to `fnmatch'.  */
 #define	FNM_PATHNAME	(1 << 0)/* No wildcard can ever match `/'.  */
@@ -33,9 +45,11 @@ __BEGIN_DECLS
 
 /* Match STRING against the filename pattern PATTERN,
    returning zero if it matches, FNM_NOMATCH if not.  */
-extern int fnmatch __P ((__const char *__pattern, __const char *__string,
+extern int fnmatch __P ((const char *__pattern, const char *__string,
 			 int __flags));
 
-__END_DECLS
+#ifdef	__cplusplus
+}
+#endif
 
 #endif /* fnmatch.h */
