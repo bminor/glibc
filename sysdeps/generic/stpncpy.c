@@ -29,6 +29,7 @@ char *
 DEFUN(__stpncpy, (dest, src, n), char *dest AND CONST char *src AND size_t n)
 {
   reg_char c;
+  char *s = dest;
 
   --dest;
 
