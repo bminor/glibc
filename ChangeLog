@@ -1,3 +1,27 @@
+1997-08-23 23:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/stdio.h: Make {,v}snprintf functions available is __USE_BSD.
+
+	* sysdeps/generic/dl-sysdep.c: Don't use fstat, use fxstat.
+
+1997-08-17  Paul Eggert  <eggert@twinsun.com>
+
+	* tzset.c (__tzset_internal): Fix memory leak when the user
+	specifies a TZ value that uses a default rule file.
+	Do not assume US DST rules when the user specifies
+	that there is no DST.
+
+1997-08-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sys/mount.h: Remove the IS_* macros,
+	they operate on internal kernel structures and have no place in a
+	user header.
+
+1997-08-18 01:52  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/mach/libc-lock.h: Fix typo.
+	Reported by Marcus G. Daniels <marcusd@cathcart.sysc.pdx.edu>.
+
 1997-08-16 21:33  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/mach/hurd/Dist: Add cthreads.c.
