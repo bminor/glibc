@@ -2498,7 +2498,7 @@ If invoking @code{sigprocmask} causes any pending signals to be
 unblocked, at least one of those signals is delivered to the process
 before @code{sigprocmask} returns.  The order in which pending signals
 are delivered is not specified, but you can control the order explicitly
-by making multiple @code{sigprockmask} calls to unblock various signals
+by making multiple @code{sigprocmask} calls to unblock various signals
 one at a time.
 
 The @code{sigprocmask} function returns @code{0} if successful, and @code{-1}
