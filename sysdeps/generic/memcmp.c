@@ -61,6 +61,11 @@ typedef unsigned char byte;
 
 #endif	/* In the GNU C library.  */
 
+#ifdef WORDS_BIGENDIAN
+#define CMP_LT_OR_GT(a, b) ((a) > (b) ? 1 : -1)
+#else
+#define CMP_LT_OR_GT(a, b) memcmp_bytes ((a), (b))
+#endif
 
 /* BE VERY CAREFUL IF YOU CHANGE THIS CODE!  */
 
@@ -155,41 +160,25 @@ memcmp_common_alignment (srcp1, srcp2, len)
       a0 = ((op_t *) srcp1)[0];
       b0 = ((op_t *) srcp2)[0];
       if (a1 != b1)
-#ifdef WORDS_BIGENDIAN
-	return a1 > b1 ? 1 : -1;
-#else
-	return memcmp_bytes (a1, b1);
-#endif
+	return CMP_LT_OR_GT (a1, b1);
 
     do3:
       a1 = ((op_t *) srcp1)[1];
       b1 = ((op_t *) srcp2)[1];
       if (a0 != b0)
-#ifdef WORDS_BIGENDIAN
-	return a0 > b0 ? 1 : -1;
-#else
-	return memcmp_bytes (a0, b0);
-#endif
+	return CMP_LT_OR_GT (a0, b0);
 
     do2:
       a0 = ((op_t *) srcp1)[2];
       b0 = ((op_t *) srcp2)[2];
       if (a1 != b1)
-#ifdef WORDS_BIGENDIAN
-	return a1 > b1 ? 1 : -1;
-#else
-	return memcmp_bytes (a1, b1);
-#endif
+	return CMP_LT_OR_GT (a1, b1);
 
     do1:
       a1 = ((op_t *) srcp1)[3];
       b1 = ((op_t *) srcp2)[3];
       if (a0 != b0)
-#ifdef WORDS_BIGENDIAN
-	return a0 > b0 ? 1 : -1;
-#else
-	return memcmp_bytes (a0, b0);
-#endif
+	return CMP_LT_OR_GT (a0, b0);
 
       srcp1 += 4 * OPSIZ;
       srcp2 += 4 * OPSIZ;
@@ -201,11 +190,7 @@ memcmp_common_alignment (srcp1, srcp2, len)
      it into the loop.  */
  do0:
   if (a1 != b1)
-#ifdef WORDS_BIGENDIAN
-    return a1 > b1 ? 1 : -1;
-#else
-    return memcmp_bytes (a1, b1);
-#endif
+    return CMP_LT_OR_GT (a1, b1);
   return 0;
 }
 
@@ -279,44 +264,28 @@ memcmp_not_common_alignment (srcp1, srcp2, len)
       b0 = ((op_t *) srcp2)[0];
       x = MERGE(a2, shl, a3, shr);
       if (x != b3)
-#ifdef WORDS_BIGENDIAN
-	return x > b3 ? 1 : -1;
-#else
-	return memcmp_bytes (x, b3);
-#endif
+	return CMP_LT_OR_GT (x, b3);
 
     do3:
       a1 = ((op_t *) srcp1)[1];
       b1 = ((op_t *) srcp2)[1];
       x = MERGE(a3, shl, a0, shr);
       if (x != b0)
-#ifdef WORDS_BIGENDIAN
-	return x > b0 ? 1 : -1;
-#else
-	return memcmp_bytes (x, b0);
-#endif
+	return CMP_LT_OR_GT (x, b0);
 
     do2:
       a2 = ((op_t *) srcp1)[2];
       b2 = ((op_t *) srcp2)[2];
       x = MERGE(a0, shl, a1, shr);
       if (x != b1)
-#ifdef WORDS_BIGENDIAN
-	return x > b1 ? 1 : -1;
-#else
-	return memcmp_bytes (x, b1);
-#endif
+	return CMP_LT_OR_GT (x, b1);
 
     do1:
       a3 = ((op_t *) srcp1)[3];
       b3 = ((op_t *) srcp2)[3];
       x = MERGE(a1, shl, a2, shr);
       if (x != b2)
-#ifdef WORDS_BIGENDIAN
-	return x > b2 ? 1 : -1;
-#else
-	return memcmp_bytes (x, b2);
-#endif
+	return CMP_LT_OR_GT (x, b2);
 
       srcp1 += 4 * OPSIZ;
       srcp2 += 4 * OPSIZ;
@@ -329,11 +298,7 @@ memcmp_not_common_alignment (srcp1, srcp2, len)
  do0:
   x = MERGE(a2, shl, a3, shr);
   if (x != b3)
-#ifdef WORDS_BIGENDIAN
-    return x > b3 ? 1 : -1;
-#else
-    return memcmp_bytes (x, b3);
-#endif
+    return CMP_LT_OR_GT (x, b3);
   return 0;
 }
 
