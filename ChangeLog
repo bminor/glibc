@@ -1,3 +1,50 @@
+2004-09-26  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/alphaev6/memcpy.S: Mark .prologue.
+	* sysdeps/unix/alpha/sysdep.h (LEAF, ENTRY): Align entry points
+	to 16 byte boundaries.
+
+2004-09-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/readlib.c (process_file): Before complaining about too-short
+	file, check that it potentially be an ELF file.  Also complain about
+	empty files.  [BZ #151].
+
+	* scripts/test-installation.pl: Fix ld.so recognition for new
+	LD_TRACE_LOADED_OBJECTS output format.
+	Patch by <jsberg04+computing.glibc@ftml.net>  [BZ #407].
+
+	* elf/dl-support.c (_dl_non_dynamic_init): Fix cleaning of
+	environment.  [BZ #384]
+
+	* sunrpc/clnt_udp.c (is_network_up): Use getifaddrs instead of ioctl.
+	* sunrpc/get_myaddr.c (get_myaddress): Likewise.
+	* sunrpc/pmap_clnt.c (__get_myaddress): Likewise.
+	* sunrpc/pmap_rmt.c (getbroadcastnets): Likewise.  Change interface
+	to avoid buffer overrun and remove now useless parameters.
+	(clnt_broadcast): Adjust caller.  [BZ #381].
+
+	* sysdeps/generic/s_fdim.c: Handle +inf/+inf
+	* sysdeps/generic/s_fdimf.c: Likewise.
+	* sysdeps/generic/s_fdiml.c: Likewise.
+	* sysdeps/i386/i686/fpu/s_fdim.S: Likewise.
+	* sysdeps/i386/i686/fpu/s_fdimf.S: Likewise.
+	* sysdeps/i386/i686/fpu/s_fdiml.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fdim.c: Likewise.
+	* sysdeps/powerpc/fpu/s_fdimf.c: Likewise.
+	* sysdeps/x86_64/fpu/s_fdiml.S: Likewise.
+	* math/libm-test.inc (fdim_test): Add test case.  [BZ #376].
+
+	* sysdeps/generic/bits/types.h: Fix __SQUAD_TYPE and __UQUAD_TYPE
+	for compilers without __GLIBC_HAVE_LONG_LONG.  [BZ #362]
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Remove incorrect
+	requirement on socktype and protocol.
+	(gaih_inet): If numeric port number is given, return records for all
+	possible socket types.
+	* posix/tst-getaddrinfo2.c: New file.
+	* posix/Makefile (tests): Add tst-getaddrinfo2.  [BZ #358]
+
 2004-09-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/loadlocale.c (_nl_intern_locale_data): Recognize LC_CTYPE
@@ -17,10 +64,11 @@
 	are done.  First set to -1 to signal initialization is ongoing.
 	Protect against concurrent callers with recursive lock.
 	* intl/finddomain.c (_nl_find_domain): Protect calls to
-	_nl_make_l10nflist.
+	_nl_make_l10nflist.  [BZ #322]
+
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): If determinination of
 	source address fails, initialized source_addr_len field so that
-	duplicate address recognition does not copy junk.  [BZ #322]
+	duplicate address recognition does not copy junk.
 
 2004-09-25  Jakub Jelinek  <jakub@redhat.com>
 

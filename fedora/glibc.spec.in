@@ -1,4 +1,4 @@
-%define glibcrelease 58
+%define glibcrelease 59
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1239,6 +1239,11 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Sep 27 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-59
+- update from CVS
+  - fix BZ #151, #362, #381, #407
+  - fdim fix for +inf/+inf (BZ #376)
+ 
 * Sun Sep 26 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-58
 - update from CVS
   - vasprintf fix (BZ #346)
