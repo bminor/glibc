@@ -50,6 +50,13 @@ DEFUN(fseek, (stream, offset, whence),
   if (__stdio_check_offset(stream) == EOF)
     return EOF;
 
+  if (stream->__pushed_back)
+    {
+      /* Discard the character pushed back by ungetc.  */
+      stream->__bufp = stream->__pushback_bufp;
+      stream->__pushed_back = 0;
+    }
+
   /* Check the WHENCE argument for validity, and process OFFSET
      into an absolute position in O.  By the end of this switch,
      either we have returned, or O contains an absolute position.  */
