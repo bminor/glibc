@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -53,7 +53,8 @@ DEFUN(mktemp, (template), char *template)
 
       template[len - 6] = letters[i];
 
-      if (stat (template, &ignored) == 0)
+      if (stat (template, &ignored) < 0 && errno == ENOENT)
+	/* The file does not exist.  So return this name.  */
 	return template;
     }
 
