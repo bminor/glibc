@@ -1,3 +1,8 @@
+2002-07-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* wrapsyscall.c: Add __nanosleep alias.
+	* Versions (GLIBC_2.2.6): Add __nanosleep.
+
 2002-06-17  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/Makefile: Merge from mainline.

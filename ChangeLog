@@ -1,3 +1,8 @@
+2002-07-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def [libpthread]: Add GLIBC_2.2.6.
+	* posix/Versions [libc] (GLIBC_2.2.6): Add __nanosleep.
+
 2002-07-08  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/unix/sysv/linux/mips/sys/shm.h: New.
