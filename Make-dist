@@ -54,8 +54,12 @@ foo:=$(shell echo 'IS THIS WORKING??? all-headers=$(all-headers)' >&2)
 +maybe-sysdeps := $(sources) $(sources:.c=.s) $(sources:.c=.S) $(all-headers) \
 		  $(filter %.c %.S %.s %.h,$(distribute))
 foo:=$(shell echo '+maybe-sysdeps=$(+maybe-sysdeps)'>&2)
+# Find all the files that have a stub or generic version.
++sysdeps := $(wildcard $(foreach dir,$(..)sysdeps/stub $(..)sysdeps/generic,\
+				 $(addprefix $(dir),$(+maybe-sysdeps))))
+# Now find all the sysdep versions of those files.
 +sysdeps := $(wildcard $(foreach dir,$(sysdep_dirs) $(source_dirs),\
-				 $(addprefix $(dir)/,$(+maybe-sysdeps))))
+				 $(notdir $(+sysdeps))))
 
 # Source and header files to go in the distribution tar file.
 
@@ -152,7 +156,7 @@ README: README.template version.c
 	-rm -f $@
 	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
 # Make it unwritable so I won't change it by mistake.
-	chmod a-w $@
+	chmod 444 $@
 
 INSTALL: manual/maint.texinfo
 	makeinfo +no-validate +no-warn +no-headers $<
