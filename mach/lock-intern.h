@@ -48,8 +48,10 @@ __spin_lock (__spin_lock_t *__lock)
 }
 
 
-#define __mutex_lock(lockaddr) __spin_lock (&(lockaddr)->lock) /* XXX */
-#define __mutex_unlock(lockaddr) __spin_unlock (&(lockaddr)->lock) /* XXX */
+/* XXX */
+#define __mutex_lock(lockaddr) __spin_lock ((__spin_lock_t*)(lockaddr))
+#define __mutex_unlock(lockaddr) __spin_unlock ((__spin_lock_t*)(lockaddr))
+/* XXX */
 
 
 #endif /* lock-intern.h */
