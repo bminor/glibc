@@ -36,7 +36,7 @@ struct hurd_id_data
       {
 	uid_t *uids;
 	gid_t *gids;
-	unsigned int nuids, ngids;
+	mach_msg_type_number_t nuids, ngids;
       } gen, aux;
 
     auth_t rid_auth;		/* Cache used by access.  */

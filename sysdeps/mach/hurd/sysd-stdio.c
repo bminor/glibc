@@ -206,7 +206,7 @@ void
 DEFUN(__stdio_errmsg, (msg, len), CONST char *msg AND size_t len)
 {
   io_t server;
-  unsigned int wrote;
+  mach_msg_type_number_t wrote;
 
   server = __getdport (2);
   __io_write (server, msg, len, -1, &wrote);
