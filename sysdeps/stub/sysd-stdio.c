@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ DEFUN(__stdio_write, (cookie, buf, n),
 }
 
 /* Move COOKIE's file position *POS bytes, according to WHENCE.
-   The old file position is stored in *POS.
+   The current file position is stored in *POS.
    Returns zero if successful, nonzero if not.  */
 int
 DEFUN(__stdio_seek, (cookie, pos, whence),
