@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <hurd.h>
 #include <stdio.h>
+#include <fcntl.h>
 
 
 /* Defined in fopen.c.  */
