@@ -484,6 +484,8 @@ __fork (void)
     }
   else
     {
+      struct hurd_sigstate *oldstates;
+
       /* We are the child task.  Unlock the standard port cells, which were
          locked in the parent when we copied its memory.  The parent has
          inserted send rights with the names that were in the cells then.  */
@@ -494,17 +496,16 @@ __fork (void)
 	 take the task-global signals.  */
       _hurd_sigthread = thread_self;
 
-      /* Free the sigstate structures for threads that existed in the
-	 parent task but don't exist in this task (the child process).  */
-      while (_hurd_sigstates != NULL)
-	{
-	  struct hurd_sigstate *next = _hurd_sigstates->next;
-	  if (ss != _hurd_sigstates)
-	    free (_hurd_sigstates);
-	  _hurd_sigstates = next;
-	}
+      /* Unchain the sigstate structures for threads that existed in the
+	 parent task but don't exist in this task (the child process).
+	 Delay freeing them until later because some of the further setup
+	 and unlocking might be required for free to work.  */
+      oldstates = _hurd_sigstates;
+      while (_hurd_sigstates->next != ss)
+	_hurd_sigstates = _hurd_sigstates->next;
+      _hurd_sigstates->next = ss->next;
+      ss->next = NULL;
       _hurd_sigstates = ss;
-      _hurd_sigstates->next = NULL;
 
       /* Fetch our various new process IDs from the proc server.  */
       err = __USEPORT (PROC, __proc_getpids (port, &_hurd_pid, &_hurd_ppid,
@@ -522,6 +523,13 @@ __fork (void)
       if (!err)
 	err = __thread_resume (_hurd_msgport_thread);
 
+      /* Free the old sigstate structures.  */
+      while (oldstates != NULL)
+	{
+	  struct hurd_sigstate *next = oldstates->next;
+	  free (oldstates);
+	  oldstates = next;
+	}
       /* XXX what to do if we have any errors here? */
 
       pid = 0;
