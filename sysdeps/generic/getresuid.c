@@ -28,4 +28,3 @@ __getresuid (uid_t euid, uid_t ruid, uid_t suid)
 stub_warning (getresuid)
 
 weak_alias (__getresuid, getresuid)
-#include <stub-tag.h>

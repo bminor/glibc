@@ -28,4 +28,3 @@ __getresgid (gid_t egid, gid_t rgid, gid_t sgid)
 stub_warning (getresgid)
 
 weak_alias (__getresgid, getresgid)
-#include <stub-tag.h>
