@@ -38,7 +38,7 @@ Cambridge, MA 02139, USA.  */
    With the lock held, a user extracts PORT, and sets USER_DEALLOC to point
    to a word in his local storage.  PORT can then safely be used.  When
    PORT is no longer needed, with the lock held, the user examines
-   USER_DEALLOC.  If it is the same address that user stored there, it
+   USER_DEALLOC.  If it is the same address that user stored there, he
    extracts *USER_DEALLOC, clears USER_DEALLOC to NULL, and releases the
    lock.  If *USER_DEALLOC is set, the user deallocates the port he used.  */
 struct _hurd_port
@@ -381,6 +381,7 @@ struct _hurd_sigstate
     int suspended;		/* If nonzero, sig_post signals `arrived'.  */
     struct condition arrived;
 
+#if 0
     int vforked;		/* Nonzero if this thread is a vfork child.  */
     struct
       {
@@ -393,11 +394,12 @@ struct _hurd_sigstate
 	struct _hurd_dtable *dtable;
 	jmp_buf continuation;
       } *vfork_saved;
+#endif
 
     /* Not locked.  Used only by this thread,
        or by signal thread with this thread suspended.  */
-    mach_port_t intr_port;	/* Port an interruptible RPC was sent on.  */
-    int intr_restart;		/* If nonzero, restart interrupted RPC.  */
+    volatile mach_port_t intr_port; /* Port interruptible RPC was sent on.  */
+    volatile int intr_restart;	/* If nonzero, restart interrupted RPC.  */
   };
 /* Linked list of states of all threads
    whose state has been inquired about.  */
@@ -425,7 +427,7 @@ extern void _hurd_msgport_receive (void);
    The args in CALL should be constant or local variable refs.
    They may be evaluated many times, and must not change.
    PORT must not be deallocated before this RPC is finished.  */
-#define	_HURD_EINTR_RPC(port, call) \
+#define	HURD_EINTR_RPC(port, call) \
   ({
     error_t __err;
     struct _hurd_sigstate *__ss
@@ -436,7 +438,7 @@ extern void _hurd_msgport_receive (void);
        a signal, in which case we want to restart our call.  */
     __ss->intr_restart = 1;
     /* This one needs to be last.  A signal can arrive before here,
-       and if intr_port were set before intr_restart are
+       and if intr_port were set before intr_restart is
        initialized, the signal thread would get confused.  */
     __ss->intr_port = (port);
     /* A signal may arrive here, after intr_port is set,
@@ -444,7 +446,7 @@ extern void _hurd_msgport_receive (void);
        interruptible RPC, and clobber intr_port; then it would not be set
        properly when we actually did send the RPC, and a later signal
        wouldn't interrupt that RPC.  So, _hurd_run_sighandler saves
-       intr_port in the sigcontext, and sigreturn restores them.  */
+       intr_port in the sigcontext, and sigreturn restores it.  */
   __do_call:
     switch (__err = (call))
       {
@@ -453,9 +455,7 @@ extern void _hurd_msgport_receive (void);
 	if (__ss->intr_restart)
 	  /* Restart the interrupted call.  */
 	  goto __do_call;
-	/* Return EINTR.  */
-	__err = EINTR;
-	break;
+	/* FALLTHROUGH */
       case MACH_RCV_PORT_DIED:
 	/* Server didn't respond to interrupt_operation,
 	   so the signal thread destroyed the reply port.  */
@@ -498,6 +498,10 @@ extern file_t __path_lookup (const char *file, int flags, mode_t mode);
 
 /* Open a file descriptor on a port.  */
 extern int openport (io_t port);
+
+/* Inform the proc server we have exitted with STATUS, and kill the
+   task thoroughly.  This function never returns, no matter what.  */
+extern volatile void _hurd_exit (int status);
 
 
 #endif	/* hurd.h */
