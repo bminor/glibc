@@ -29,11 +29,11 @@ _hurd_longjmp_thread_state (void *state, jmp_buf env, int val)
 {
   struct i386_thread_state *ts = state;
 
-  ts->ebx = env[0].__bx;
-  ts->esi = env[0].__si;
-  ts->edi = env[0].__di;
-  ts->ebp = (int) env[0].__bp;
-  ts->uesp = (int) env[0].__sp;
-  ts->eip = (int) env[0].__pc;
-  ts->eax = val == 0 ? 1 : val;
+  ts->ebx = env[0].__jmpbuf.__bx;
+  ts->esi = env[0].__jmpbuf.__si;
+  ts->edi = env[0].__jmpbuf.__di;
+  ts->ebp = (int) env[0].__jmpbuf.__bp;
+  ts->uesp = (int) env[0].__jmpbuf.__sp;
+  ts->eip = (int) env[0].__jmpbuf.__pc;
+  ts->eax = val ?: 1;
 }
