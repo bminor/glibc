@@ -68,6 +68,15 @@ __fork (void)
   thread_t thread_self = __mach_thread_self ();
   struct hurd_sigstate *volatile ss;
 
+  void unlockss (void)
+    {
+      ss->critical_section = 0;
+      /* XXX Copying mutex into child and calling mutex_unlock lossy.  */
+      __mutex_unlock (&ss->lock);
+      __mutex_unlock (&_hurd_siglock);
+      ss = NULL;		/* Make sure we crash if we use it again.  */
+    }
+
   ss = _hurd_self_sigstate ();
   ss->critical_section = 1;
   __mutex_lock (&_hurd_siglock);
@@ -340,6 +349,9 @@ __fork (void)
 	__spin_unlock (&_hurd_ports[i].lock);
       ports_locked = 0;
 
+      /* Unlock the signal state.  The child must unlock its own copy too.  */
+      unlockss ();
+
       /* Create the child main user thread and signal thread.  */
       if ((err = __thread_create (newtask, &thread)) ||
 	  (err = __thread_create (newtask, &sigthread)))
@@ -513,11 +525,15 @@ __fork (void)
       ss->next = NULL;
       _hurd_sigstates = ss;
 
-      /* Fetch our various new process IDs from the proc server.  */
+      /* Unlock our copies of the signal state locks.  */
+      unlockss ();
+
+      /* Fetch our new process IDs from the proc server.  No need to
+	 refetch our pgrp; it is always inherited from the parent (so
+	 _hurd_pgrp is already correct), and the proc server will send us a
+	 proc_newids notification when it changes.  */
       err = __USEPORT (PROC, __proc_getpids (port, &_hurd_pid, &_hurd_ppid,
 					     &_hurd_orphaned));
-      if (!err)
-	err = __USEPORT (PROC, __proc_getpgrp (port, _hurd_pid, &_hurd_pgrp));
 
       /* Run things that want to run in the child task to set up.  */
       RUN_HOOK (_hurd_fork_child_hook, ());
@@ -545,10 +561,6 @@ __fork (void)
      They are locked in both the parent and child tasks.  */
   for (i = 0; i < _hurd_fork_locks.n; ++i)
     __mutex_unlock (_hurd_fork_locks.locks[i]);
-
-  ss->critical_section = 0;
-  __mutex_unlock (&ss->lock);
-  __mutex_unlock (&_hurd_siglock);
 
   return err ? __hurd_fail (err) : pid;
 }
