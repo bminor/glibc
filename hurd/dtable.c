@@ -16,10 +16,18 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#include <ansidecl.h>
 #include <hurd.h>
 #include <gnu-stabs.h>
 #include <stdlib.h>
 #include <limits.h>
+
+
+struct _hurd_dtable _hurd_dtable;
+struct mutex _hurd_dtable_lock;
+int *_hurd_dtable_user_dealloc;
+
+const struct _hurd_dtable_resizes _hurd_dtable_resizes;
 
 
 /* Initialize the file descriptor table at startup.  */
@@ -30,6 +38,8 @@ init_dtable (void)
   register size_t i;
 
   __mutex_init (&_hurd_dtable_lock);
+
+  _hurd_dtable_user_dealloc = NULL;
 
   /* The initial size of the descriptor table is that of the passed-in
      table, rounded up to a multiple of OPEN_MAX descriptors.  */
@@ -42,9 +52,9 @@ init_dtable (void)
 
   for (i = 0; i < _hurd_init_dtablesize; ++i)
     {
-      __typeof (_hurd_dtable.d[i]) *const d = &_hurd_dtable.d[i];
+      struct _hurd_fd *const d = &_hurd_dtable.d[i];
       io_statbuf_t stb;
-      io_t fg_port;
+      io_t ctty;
 
       _hurd_port_init (&d->port, _hurd_init_dtable[i]);
       d->flags = 0;
@@ -57,24 +67,25 @@ init_dtable (void)
 	  stb.stb_fileid == _hurd_ctty_fileid &&
 	  /* This is a descriptor to our controlling tty.  */
 	  ! __term_become_ctty (d->port.port, _hurd_pid, _hurd_pgrp,
-				_hurd_sigport, &fg_port))
+				_hurd_sigport, &ctty))
 	{
-	  /* Operations on FG_PORT return EBACKGROUND when we are not a
-	     foreground user of the tty.  Operations on D->ctty never
-	     return EBACKGROUND.  */
-	  d->ctty = d->port.port;
-	  d->port.port = fg_port;
+	  /* Operations on CTTY return EBACKGROUND when we are not a
+	     foreground user of the tty.  */
+	  d->port.port = ctty;
+	  ctty = _hurd_init_dtable[i];
 	}
       else
 	/* No ctty magic happening here.  */
-	d->ctty = MACH_PORT_NULL;
+	ctty = MACH_PORT_NULL;
+
+      _hurd_port_init (&d->ctty, ctty);
     }
 
   /* Initialize the remaining empty slots in the table.  */
   for (; i < _hurd_dtable.size; ++i)
     {
       _hurd_port_init (&_hurd_dtable.d[i].port, MACH_PORT_NULL);
-      _hurd_dtable.d[i].ctty = MACH_PORT_NULL;
+      _hurd_port_init (&_hurd_dtable.d[i].ctty, MACH_PORT_NULL);
       _hurd_dtable.d[i].flags = 0;
     }
 
@@ -89,24 +100,107 @@ init_dtable (void)
 
 text_set_element (__libc_subinit, init_dtable);
 
-/* Called on fork to install the dtable in NEWTASK.  */
+/* Called by `getdport' to do its work.  */
+
+static file_t
+get_dtable_port (int fd)
+{
+  file_t dport;
+  int err = _HURD_DPORT_USE (fd,
+			     __mach_port_mod_refs (__mach_task_self (),
+						   (dport = port),
+						   MACH_PORT_RIGHT_SEND,
+						   1));
+  if (err)
+    {
+      errno = err;
+      return MACH_PORT_NULL;
+    }
+  else
+    return dport;
+}
+
+text_set_element (_hurd_getdport_fn, get_dtable_port);
+
+/* Called on fork to install the dtable in NEWTASK.
+   The dtable lock is held.  */
 
 static error_t
 fork_dtable (task_t newtask)
 {
+  error_t err;
   int i;
-  __mutex_lock (&_hurd_dtable_lock);
-  for (i = 0; i < _hurd_dtable.size; ++i)
-    if (err = _HURD_PORT_USE (&_hurd_dtable.d[i],
-			      __mach_port_insert_right (newtask, port, port,
-							MACH_PORT_COPY_SEND)))
-      {
-	/* XXX for each fd with a cntlmap, reauth and re-map_cntl.  */
-	__mutex_unlock (&_hurd_dtable.lock);
-	return err;
-      }
+
+  err = 0;
+
+  for (i = 0; !err && i < _hurd_dtable.size; ++i)
+    {
+      int dealloc, dealloc_ctty;
+      io_t port = _HURD_PORT_USE (&_hurd_dtable.d[i].port, &dealloc);
+      io_t ctty = _HURD_PORT_USE (&_hurd_dtable.d[i].ctty, &dealloc_ctty);
+
+      if (port != MACH_PORT_NULL)
+	err = __mach_port_insert_right (newtask, port, port,
+					MACH_PORT_COPY_SEND);
+      if (!err && ctty != MACH_PORT_NULL)
+	err = __mach_port_insert_right (newtask, ctty, ctty,
+					MACH_PORT_COPY_SEND);
+
+      _hurd_port_free (port, &dealloc);
+      _hurd_port_free (ctty, &dealloc_ctty);
+
+      /* XXX for each fd with a cntlmap, reauth and re-map_cntl.  */
+    }
   __mutex_unlock (&_hurd_dtable_lock);
-  return 0;
+  return err;
 }
 
 text_set_element (_hurd_fork_hook, fork_dtable);
+text_set_element (_hurd_fork_locks, _hurd_dtable_lock);
+
+/* Called to reauthenticate the dtable when the auth port changes.  */
+
+static void
+reauth_dtable (void)
+{
+  int d;
+
+  __mutex_lock (&_hurd_dtable_lock);
+
+  for (d = 0; d < _hurd_dtable.size; ++d)
+    {
+      struct _hurd_fd *const d = &hurd_dtable.d[d];
+      mach_port_t new, newctty;
+      
+      /* Take the descriptor cell's lock.  */
+      __spin_lock (&cell->port.lock);
+      
+      /* Reauthenticate the descriptor's port.  */
+      if (cell->port.port != MACH_PORT_NULL &&
+	  ! __io_reauthenticate (cell->port.port) &&
+	  ! _HURD_PORT_USE (&_hurd_auth,
+			    __auth_user_authenticate (port,
+						      cell->port.port, &new)))
+	{
+	  /* Replace the port in the descriptor cell
+	     with the newly reauthenticated port.  */
+
+	  if (cell->ctty.port != MACH_PORT_NULL &&
+	      ! __io_reauthenticate (cell->ctty.port) &&
+	      ! _HURD_PORT_USE (&_hurd_auth,
+				__auth_user_authenticate (port,
+							  cell->ctty.port,
+							  &newctty)))
+	    _hurd_port_set (&cell->ctty, newctty);
+
+	  _hurd_port_locked_set (&cell->port, new);
+	}
+      else
+	/* Lost.  Leave this descriptor cell alone.  */
+	__spin_unlock (&cell->port.lock);
+    }
+
+  __mutex_unlock (&_hurd_dtable_lock);
+}
+
+text_set_element (_hurd_reauth_hook, reauth_dtable);
