@@ -20,17 +20,13 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/port.h>
 #include <hurd/id.h>
 #include <gnu-stabs.h>
+#include "set-hooks.h"
 
 /* Things in the library which want to be run when the auth port changes.  */
-const struct
-  {
-    size_t n;
-    void (*fn[0]) (auth_t new_auth);
-  } _hurd_reauth_hook;
-
+DEFINE_HOOK (_hurd_reauth_hook, (auth_t new_auth));
 
 #ifdef noteven
-static struct mutex reauth_lock;
+static struct mutex reauth_lock = MUTEX_INITIALIZER;
 #endif
 
 
@@ -98,20 +94,9 @@ __setauth (auth_t new)
     _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], newport);
 
   /* Run things which want to do reauthorization stuff.  */
-  for (fn = _hurd_reauth_hook.fn; *fn != NULL; ++fn)
-    (**fn) (new);
+  RUN_HOOK (_hurd_reauth_hook, (new));
 
   __mutex_unlock (&reauth_lock);
 
   return 0;
 }
-
-static void
-init_reauth (void)
-{
-#ifdef noteven
-  __mutex_init (&reauth_lock);
-#endif
-}
-
-text_set_element (__libc_subinit, init_reauth);
