@@ -1,4 +1,4 @@
-%define glibcrelease 19
+%define glibcrelease 20
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -65,10 +65,8 @@ Conflicts: kernel < 2.4.19
 %define enablekernelnptl 2.4.20
 %ifarch i386
 %define nptl_target_cpu i486
-%define tls_subdir tls/i486
 %else
 %define nptl_target_cpu %{_target_cpu}
-%define tls_subdir tls
 %endif
 %endif
 # Need AS_NEEDED directive
@@ -154,7 +152,10 @@ Autoreq: true
 %description -n linuxthreads-devel
 The linuxthreads-devel package contains the header and object files necessary
 for developing programs which can use the LinuxThreads library (normally
-newly linked programs will work only with NPTL).
+newly linked programs will work only with NPTL).  To compile and link
+a program against LinuxThreads libraries, use
+-I/usr/include/linuxthreads -L/usr/%{_lib}/linuxthreads \\
+-Wl,-rpath-link,/%{_lib}/obsolete/linuxthreads
 %endif
 
 %package profile
@@ -611,7 +612,11 @@ SubDir=
 %ifarch i686 athlon
 cd build-%{_target_cpu}-linuxltfs
 Pthreads=linuxthreads
+%ifarch %{nptlarches}
+SubDir=obsolete/linuxthreads/i686
+%else
 SubDir=i686
+%endif
 mkdir -p $RPM_BUILD_ROOT/lib/$SubDir/
 cp -a libc.so $RPM_BUILD_ROOT/lib/$SubDir/`basename $RPM_BUILD_ROOT/lib/libc-*.so`
 ln -sf `basename $RPM_BUILD_ROOT/lib/libc-*.so` $RPM_BUILD_ROOT/lib/$SubDir/`basename $RPM_BUILD_ROOT/lib/libc.so.*`
@@ -634,54 +639,46 @@ cd ..
 
 %ifarch %{nptlarches}
 cd build-%{nptl_target_cpu}-linuxnptl
+mkdir -p $RPM_BUILD_ROOT/%{_lib}/obsolete/linuxthreads
+mv -f $RPM_BUILD_ROOT/%{_lib}/lib{c,m,pthread,rt,thread_db}[.-]*so* $RPM_BUILD_ROOT/%{_lib}/obsolete/linuxthreads/
 Pthreads=nptl
-SubDir=%{tls_subdir}
+SubDir=
+ObsDir=obsolete/linuxthreads
 mkdir -p $RPM_BUILD_ROOT/%{_lib}/$SubDir/
-cp -a libc.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libc-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libc-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libc.so.*`
-cp -a math/libm.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libm-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libm-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libm.so.*`
+cp -a libc.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libc-*.so`
+ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libc-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libc.so.*`
+cp -a math/libm.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libm-*.so`
+ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libm-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libm.so.*`
 cp -a $Pthreads/libpthread.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/libpthread-%{version}.so
 pushd $RPM_BUILD_ROOT/%{_lib}/$SubDir
-ln -sf libpthread-*.so `basename $RPM_BUILD_ROOT/%{_lib}/libpthread.so.*`
+ln -sf libpthread-*.so `basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libpthread.so.*`
 popd
 %ifarch %{rtkaioarches}
-cp -a rtkaio/librtkaio.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
+cp -a rtkaio/librtkaio.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/librt-*.so | sed s/librt-/librtkaio-/`
+ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/librt-*.so | sed s/librt-/librtkaio-/` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/librt.so.*`
 %else
-cp -a rt/librt.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
+cp -a rt/librt.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/librt-*.so`
+ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/librt-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/librt.so.*`
 %endif
-cp -a ${Pthreads}_db/libthread_db.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db.so.*`
+cp -a ${Pthreads}_db/libthread_db.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libthread_db-*.so`
+ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libthread_db-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libthread_db.so.*`
 
 mkdir -p $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads
 mv -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/{libc,libpthread,libpthread_nonshared,librt}.a \
   $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/
 cp -a libc.a nptl/libpthread.a nptl/libpthread_nonshared.a rt/librt.a \
   $RPM_BUILD_ROOT%{_prefix}/%{_lib}/
-mv -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libc.so \
-  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/
-sed "s|/libpthread_nonshared.a|/linuxthreads&|" $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libpthread.so \
+sed "s| /%{_lib}/| /%{_lib}/$ObsDir/|" $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libc.so \
+  > $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/libc.so
+sed "s| /%{_lib}/| /%{_lib}/$ObsDir/|;s|/libpthread_nonshared|/linuxthreads&|" $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libpthread.so \
   > $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/libpthread.so
-rm -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libpthread.so
-sed "s| /%{_lib}/| /%{_lib}/$SubDir/|" $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/libc.so \
-  > $RPM_BUILD_ROOT/%{_lib}/tls/libc.so
-ln -sf /%{_lib}/tls/libc.so $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libc.so
-sed "s|^GROUP (.*)|GROUP ( /%{_lib}/$SubDir/"`basename $RPM_BUILD_ROOT/%{_lib}/libpthread.so.*`' %{_prefix}/%{_lib}/libpthread_nonshared.a )|' \
-  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/libc.so \
-  > $RPM_BUILD_ROOT/%{_lib}/tls/libpthread.so
-ln -sf /%{_lib}/tls/libpthread.so $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libpthread.so
 %ifarch %{rtkaioarches}
 ln -sf /%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed 's/librt-/librtkaio-/'` \
-  $RPM_BUILD_ROOT/%{_lib}/tls/librt.so
+  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/librt.so
 %else
 ln -sf /%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` \
-  $RPM_BUILD_ROOT/%{_lib}/tls/librt.so
-%endif
-ln -sf /%{_lib}/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` \
   $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/librt.so
-ln -sf /%{_lib}/tls/librt.so $RPM_BUILD_ROOT%{_prefix}/%{_lib}/librt.so
+%endif
 strip -g $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/*.a
 mkdir -p $RPM_BUILD_ROOT/nptl $RPM_BUILD_ROOT%{_prefix}/include/linuxthreads
 make -j1 install_root=$RPM_BUILD_ROOT/nptl install-headers PARALLELMFLAGS=-s
@@ -701,15 +698,6 @@ rm -rf $RPM_BUILD_ROOT/nptl
 
 cd ..
 
-%ifarch i386
-for i in i586 i686; do
-  mkdir $RPM_BUILD_ROOT/%{_lib}/tls/$i
-  pushd $RPM_BUILD_ROOT/%{_lib}/tls/$i
-    ln -sf ../i486/*.so .
-    cp -a ../i486/*.so.* .
-  popd
-done
-%endif
 %endif
 
 # compatibility hack: this locale has vanished from glibc, but some other
@@ -787,27 +775,6 @@ for i in *.a; do
   fi
 done
 popd
-
-%ifarch %{prelinkarches}
-%ifarch i686 athlon
-# Prelink ld.so and libc.so
-> prelink.conf
-# For now disable prelinking of ld.so, as it breaks statically linked
-# binaries built against non-NDEBUG old glibcs (assert unknown dynamic tag)
-# /usr/sbin/prelink -c ./prelink.conf -C ./prelink.cache \
-#  --mmap-region-start=0x00101000 $RPM_BUILD_ROOT/%{_lib}/ld-*.so
-/usr/sbin/prelink --reloc-only=0x00e80000 $RPM_BUILD_ROOT/%{_lib}/$SubDir/libc-*.so
-%endif
-%ifarch alpha alphaev6
-# Prelink ld.so and libc.so
-> prelink.conf
-# For now disable prelinking of ld.so, as it breaks statically linked
-# binaries built against non-NDEBUG old glibcs (assert unknown dynamic tag)
-# /usr/sbin/prelink -c ./prelink.conf -C ./prelink.cache \
-# --mmap-region-start=0x0000020000000000 $RPM_BUILD_ROOT/%{_lib}/ld-*.so
-/usr/sbin/prelink --reloc-only=0x0000020010000000 $RPM_BUILD_ROOT/%{_lib}/$SubDir/libc-*.so
-%endif
-%endif
 
 # rquota.x and rquota.h are now provided by quota
 rm -f $RPM_BUILD_ROOT%{_prefix}/include/rpcsvc/rquota.[hx]
@@ -940,7 +907,7 @@ cp -r linuxthreads/Examples documentation/examples.threads
 cp crypt/README.ufc-crypt documentation/README.ufc-crypt
 cp timezone/README documentation/README.timezone
 cp ChangeLog{,.14,.15} documentation
-gzip -9n documentation/ChangeLog*
+bzip2 -9 documentation/ChangeLog*
 
 %ifarch s390x
 # Compatibility symlink
@@ -1120,15 +1087,6 @@ cat $blf $cblf | LC_ALL=C sort -u > debuginfo.filelist
 echo '/usr/src/debug/%{glibcsrcdir}' >> debuginfo.filelist
 %endif
 
-%ifarch i386
-%ifarch %{nptlarches}
-ln -sf i486 $RPM_BUILD_ROOT/usr/lib/debug/%{_lib}/tls/i586
-ln -sf i486 $RPM_BUILD_ROOT/usr/lib/debug/%{_lib}/tls/i686
-echo /usr/lib/debug/%{_lib}/tls/i586 >> debuginfo.filelist
-echo /usr/lib/debug/%{_lib}/tls/i686 >> debuginfo.filelist
-%endif
-%endif
-
 [ "x$save_trace" = xyes ] && set -x
 
 %endif
@@ -1205,14 +1163,15 @@ rm -f *.filelist*
 %files -f rpm.filelist
 %defattr(-,root,root)
 %ifarch %{nptlarches}
-%dir /%{_lib}/%{tls_subdir}
-%ifarch i386
-%dir /%{_lib}/tls/i586
-%dir /%{_lib}/tls/i686
+%dir /%{_lib}/obsolete
+%dir /%{_lib}/obsolete/linuxthreads
+%ifarch i686 athlon
+%dir /%{_lib}/obsolete/linuxthreads/i686
 %endif
-%endif
+%else
 %ifarch i686 athlon
 %dir /lib/i686
+%endif
 %endif
 %ifarch s390x
 %dir /lib
@@ -1301,6 +1260,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Apr  4 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-20
+- move LinuxThreads libraries to /%{_lib}/obsolete/linuxthreads/
+  and NPTL libraries to /%{_lib}.  To run a program against LinuxThreads,
+  LD_ASSUME_KERNEL=2.4.xx LD_LIBRARY_PATH=/%{_lib}/obsolete/linuxthreads/
+  is now needed
+- bzip2 ChangeLog* files instead of gzipping them
+
 * Sat Apr  2 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-19
 - update from CVS
   - fix nextafterl and several other libm routines on ia64

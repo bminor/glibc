@@ -30,10 +30,8 @@ __attribute__((noinline)) int check_elf (const char *name);
 int
 main (void)
 {
-  int rerun_ldconfig = 0, rerun_cnt = 0;
   char initpath[256];
 
-#ifdef __i386__
   char buffer[4096];
   struct pref {
     char *p;
@@ -44,10 +42,10 @@ main (void)
   int i, j, fd;
   off_t base;
   ssize_t ret;
-#ifdef ARCH_386
-  const char *remove_dirs[] = { "/lib/i686", "/lib/tls" };
+#ifdef __i386__
+  const char *remove_dirs[] = { "/lib/tls", "/lib/i686", "/lib/tls/i486", "/lib/tls/i586", "/lib/tls/i686" };
 #else
-  const char *remove_dirs[] = { "/lib/tls/i686" };
+  const char *remove_dirs[] = { "/lib/tls" };
 #endif
   for (j = 0; j < sizeof (remove_dirs) / sizeof (remove_dirs[0]); ++j)
     {
@@ -83,7 +81,6 @@ main (void)
 	  close (fd);
 	}
     }
-#endif
 
   int ldsocfd = open (LD_SO_CONF, O_RDONLY);
   struct stat ldsocst;
@@ -111,51 +108,11 @@ main (void)
 	close (ldsocfd);
     }
 
-  do
-    {
-      char linkbuf[64], *linkp;
-      int linklen;
-
-      /* If installing bi-arch glibc, rpm sometimes doesn't unpack all files
-         before running one of the lib's %post scriptlet.  /sbin/ldconfig will
-         then be run by the other arch's %post.  */
-      if (access ("/sbin/ldconfig", X_OK))
-	break;
-
-      verbose_exec (110, "/sbin/ldconfig", "/sbin/ldconfig");
-
-      rerun_ldconfig = 0;
-#ifdef LIBTLS
-      linkp = linkbuf + strlen (LIBTLS);
-      linklen = readlink (LIBTLS "librt.so.1", linkp,
-			  sizeof (linkbuf) - 1 - strlen (LIBTLS));
-      if (linklen == strlen ("librtkaio-2.3.X.so")
-	  && memcmp (linkp, "librtkaio-2.3.", 14) == 0
-	  && strchr ("23", linkp[14])
-	  && memcmp (linkp + 15, ".so", 4) == 0)
-	{
-	  memcpy (linkbuf, LIBTLS, strlen (LIBTLS));
-	  unlink (linkbuf);
-	  rerun_ldconfig = 1;
-	}
-#endif
-
-#ifdef __i386__
-      linkp = linkbuf + strlen ("/lib/i686/");
-      linklen = readlink ("/lib/i686/librt.so.1", linkp,
-			  sizeof (linkbuf) - 1 - strlen ("/lib/i686/"));
-      if (linklen == strlen ("librtkaio-2.3.X.so")
-	  && memcmp (linkp, "librtkaio-2.3.", 14) == 0
-	  && strchr ("23", linkp[14])
-	  && memcmp (linkp + 15, ".so", 4) == 0)
-	{
-	  memcpy (linkbuf, "/lib/i686/", strlen ("/lib/i686/"));
-	  unlink (linkbuf);
-	  rerun_ldconfig = 1;
-	}
-#endif
-     }
-  while (rerun_ldconfig && ++rerun_cnt < 2);
+  /* If installing bi-arch glibc, rpm sometimes doesn't unpack all files
+     before running one of the lib's %post scriptlet.  /sbin/ldconfig will
+     then be run by the other arch's %post.  */
+  if (! access ("/sbin/ldconfig", X_OK))
+    verbose_exec (110, "/sbin/ldconfig", "/sbin/ldconfig");
 
   if (! utimes (GCONV_MODULES_DIR "/gconv-modules.cache", NULL))
     {
