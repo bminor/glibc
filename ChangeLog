@@ -1,5 +1,34 @@
 2000-02-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/stdio.h: Define macros stdin, stdout, and stderr.
+
+	* dirent/dirent.h [__USE_XOPEN]: Define ino_t and ino64_t.
+	* posix/sys/types.h: Allow ino64_t be defined elsewhere.
+
+	* dlfcn/dlfcn.h (RTLD_DEFAULT): Don't use NULL.
+
+	* stdlib/fmtmsg.h (MM_NULL*): Don't use NULL.
+
+	* posix/glob.h [_XOPEN_SOURCE]: Define size_t.
+
+	* iconv/iconv.h (iconv): Fix prototype.
+
+	* misc/libgen.h (basename): Define without parameter so that use as
+	function pointer also works.
+
+	* misc/search.h (struct entry): Fix type of element data.
+
+	* posix/unistd.h (getpagesize): Declare as const function.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/sigaction.h: Define SA_NOCLDWAIT.
+	* sysdeps/unix/sysv/linux/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h: Likewise.
+
+	* signal/signal.h [__USE_XOPEN]: Define uid_t.
+	(sigstack): Correct type of first parameter.
+	* sysdeps/generic/sigstack.h (sigstack): Likewise.
+
 	* po/de.po: Update from translation team.
 
 1999-12-31  Martin Buchholz  <martin@xemacs.org>
