@@ -73,6 +73,10 @@ please let me know.
 2.16	What do I need for C++ development?
 2.17	Programs using libc have their messages translated, but other
 	behavior is not localized (e.g. collating order); why?
+2.18.	I have killed ypbind to stop using NIS, but glibc
+        continues using NIS.
+2.19.	Under Linux/Alpha, I always get "do_ypcall: clnt_call:
+       RPC: Unable to receive; errno = Connection refused" when using NIS.
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -663,6 +667,25 @@ issue the command
 Please see localedata/README in the source tree for further details.
 You only get the locale database if the localedata add-on is installed
 when building the GNU C library.
+
+
+2.18.	I have killed ypbind to stop using NIS, but glibc
+        continues using NIS.
+
+{TK} For faster NIS lookups, glibc uses the /var/yp/binding/ files
+from ypbind.  ypbind 3.3 and older versions don't always remove these
+files, so glibc will continue to use them.  Other BSD versions seem to
+work correctly.  Until ypbind 3.4 is released, you can find a patch at
+ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc3.diff.
+
+
+2.19.	Under Linux/Alpha, I always get "do_ypcall: clnt_call:
+       RPC: Unable to receive; errno = Connection refused" when using NIS.
+
+{TK} You need a ypbind version which is 64bit clean.  Some versions
+are not 64bit clean.  A 64bit clean implementation is ypbind-mt.  For
+ypbind 3.3, you need the patch from ftp.kernel.org (See the previous
+question).  I don't know about other versions.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
