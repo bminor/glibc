@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
  #pragma alloca
 #endif
 
-#ifdef	SHELL
+#ifdef	HAVE_CONFIG_H
 #include "config.h"
 #endif
 
