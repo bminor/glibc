@@ -51,12 +51,6 @@ Overview
 Contents of the Library
 * Error Reporting::			How the GNU Library functions report
 					 error conditions.
-* Integer Representation Limits::	Parameters describing integer data
-					 types.
-* Floating-Point Limits::		Parameters describing floating-point
-					 data types.
-* System Configuration Limits::		Parameters describing operating
-					 system limits.
 * Common Definitions::			<stddef.h>.
 * Variable Argument Facilities::	How to process variable-length
 					 argument lists.
@@ -86,7 +80,7 @@ Contents of the Library
 * Mathematics::				Math functions.
 * Date and Time::			Functions for getting the date and
 					 time, and conversion between formats.
-* Non-Local Jumps::			The @code{setjmp} and @code{longjmp}
+* Non-Local Exits::			The @code{setjmp} and @code{longjmp}
 					 facilities.
 * Signal Handling::			All about signals; how to send them,
 					 block them, and handle them.
@@ -95,7 +89,13 @@ Contents of the Library
 * Job Control::				All about process groups and sessions.
 * System Databases::			About the system user and group
 					 databases.
-* Archive Format::			The format of @code{tar} files.
+* System Information::                  Getting information about the
+                                         hardware and software configuration
+                                         of the machine a program runs on.
+* Representation Limits::	        Parameters describing numeric data
+					 type representations..
+* System Configuration Limits::		Parameters describing operating
+					 system limits.
 
 Appendices
 * Header File Contents::	A complete list of what facilities are
@@ -114,9 +114,6 @@ Indices
 
 @include intro.texinfo
 @include errno.texinfo
-@include limits.texinfo
-@include float.texinfo
-@include conf.texinfo
 @include stddef.texinfo
 @include stdarg.texinfo
 @include memory.texinfo
@@ -140,7 +137,10 @@ Indices
 @include process.texinfo
 @include job.texinfo
 @include database.texinfo
-@include archive.texinfo
+@include sysinfo.texinfo
+@include limits.texinfo
+@include conf.texinfo
+
 
 @include header.texinfo
 @include maint.texinfo
