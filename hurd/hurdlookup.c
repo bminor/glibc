@@ -62,8 +62,9 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
 	  return 0;
 	  
 	case FS_RETRY_REAUTH:
-	  __io_reauthenticate (*result);
-	  __USEPORT (AUTH, __auth_user_authenticate (port, *result, &newpt));
+	  __io_reauthenticate (*result, _hurd_pid);
+	  __USEPORT (AUTH, __auth_user_authenticate (port, *result, _hurd_pid,
+						     &newpt));
 	  __mach_port_deallocate (__mach_task_self (), *result);
 	  *result = newpt;
 	  /* Fall through.  */
