@@ -194,7 +194,6 @@ if (size == 0)
 	  (void) closedir (dirstream);
 	  (void) memcpy (pathp, d->d_name, d->d_namlen);
 	  *--pathp = '/';
-	  (void) closedir (dirstream);
 	}
 
       thisdev = dotdev;
