@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1998 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,8 +31,12 @@ Cambridge, MA 02139, USA.  */
 
    The .S files for the other calls just #define socket and #include this.  */
 
-.globl P(__,socket)
-ENTRY (P(__,socket))
+#ifndef __socket
+#define __socket P(__,socket)
+#endif
+
+.globl __socket
+ENTRY (__socket)
 
 	/* Save registers.  */
 	move.l %d2, %a0
@@ -56,6 +60,6 @@ ENTRY (P(__,socket))
 
 	/* Successful; return the syscall's value.  */
 	rts
-PSEUDO_END (P(__,socket))
+PSEUDO_END (__socket)
 
-weak_alias (P(__,socket), socket)
+weak_alias (__socket, socket)
