@@ -37,4 +37,12 @@ Cambridge, MA 02139, USA.  */
    This file declares the simple `CALL' functions.  */
 #include <mach-shortcuts.h>
 
+
+#define __need_FILE
+#include <stdio.h>
+
+/* Open a stream on a Mach device.  */
+extern FILE *mach_open_devstream (mach_port_t device_port);
+
+
 #endif	/* mach.h */
