@@ -1,8 +1,42 @@
+# Copyright (C) 1993 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License
+# as published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+ifndef mach-srcdir-computed
+mach-srcdir-computed := yes
+
 # If we were configured with `--with-mach=DIR', then config.make sets
 # mach-srcdir to DIR.  Otherwise guess we are in a big source tree.
 ifndef mach-srcdir
-mach-srcdir = ../../mach
+mach-srcdir = ../mach
 endif
+
+# mach-srcdir is now set to the logical directory name.  This name might be
+# relative to $(objdir), might be relative to the source directory $(..), or
+# might be absolute.  We choose among these possibilities by looking for a
+# canonical file in each of those places (in that order).
+f := mach/mach.defs # Random file that identifies the Mach source dir.
+f := $(strip $f)
+mach-srcdir := $(firstword $(patsubst %/$f,%,$(wildcard $(addsuffix /$f,\
+	       $(objpfx)$(mach-srcdir) $(..)$(mach-srcdir)))) $(mach-srcdir))
+
+endif	# ! mach-srcdir-computed
+
+ifdef in-Makerules
 
 # Look for header files in mach/ under the top-level library source directory.
 includes += -I$(..)mach
@@ -22,3 +56,5 @@ before-compile += $(common-objpfx)mach/mach_interface.h
 $(common-objpfx)mach/%:	# Run only if it doesn't exist.
 	$(MAKE) -C $(..)mach $(patsubst $(..)mach/%,%,$@)
 endif
+
+endif	# in-Makerules
