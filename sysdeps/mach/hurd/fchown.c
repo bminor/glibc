@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,20 +27,9 @@ DEFUN(__fchown, (fd, owner, group),
       int fd AND uid_t owner AND gid_t group)
 {
   error_t err;
-  io_t server;
 
-  __mutex_lock (&_hurd_dtable.lock);
-  if (fd < 0 || fd >= _hurd_dtable.size ||
-      _hurd_dtable.d[fd].server == MACH_PORT_NULL)
-    {
-      __mutex_unlock (&_hurd_dtable.lock);
-      errno = EBADF;
-      return -1;
-    }
-  server = _hurd_dtable.d[fd].server;
-  __mutex_unlock (&_hurd_dtable.lock);
-
-  if (err = __file_chown (server, owner, group))
+  if (err = _HURD_DPORT_USE (fd, __file_chown (port, mode)))
     return __hurd_fail (err);
+
   return 0;
 }
