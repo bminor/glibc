@@ -1,4 +1,4 @@
-%define glibcrelease 78
+%define glibcrelease 79
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1188,8 +1188,6 @@ rm -f *.filelist*
 %verify(not md5 size mtime) %config(noreplace) /etc/ld.so.conf
 %dir /etc/ld.so.conf.d
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /etc/ld.so.cache
-%dir %attr(755,root,root) /etc/default
-%verify(not md5 size mtime) %config(noreplace) /etc/default/nss
 %doc README NEWS INSTALL FAQ BUGS NOTES PROJECTS CONFORMANCE
 %doc COPYING COPYING.LIB README.libm LICENSES
 %doc hesiod/README.hesiod
@@ -1198,6 +1196,8 @@ rm -f *.filelist*
 %files -f common.filelist common
 %defattr(-,root,root)
 %attr(0644,root,root) %verify(not md5 size mtime mode) %ghost %config(missingok,noreplace) %{_prefix}/lib/locale/locale-archive
+%dir %attr(755,root,root) /etc/default
+%verify(not md5 size mtime) %config(noreplace) /etc/default/nss
 %doc documentation/*
 
 %files -f devel.filelist devel
@@ -1256,11 +1256,16 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Nov 16 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-79
+- update from CVS
+- fix free () checking
+- move /etc/default/nss into glibc-common (hopefully fix #132392)
+
 * Mon Nov 15 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-78
 - update from CVS
   - fix LD_DEBUG=statistics
   - issue error message before aborting in __chk_fail ()
-  - some more free () checking
+- some more free () checking
 
 * Fri Nov 12 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-77
 - update from CVS
