@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,34 +25,23 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(__close, (fd), int fd)
 {
-  struct _hurd_fd *d;
+  int dealloc;
+  struct _hurd_fd_user d = _hurd_fd (fd, &dealloc);
   io_t port, ctty;
 
-  __mutex_lock (&_hurd_dtable_lock);
-  if (fd < 0 || fd >= _hurd_dtable.size)
-    {
-      __mutex_unlock (&_hurd_dtable_lock);
-      errno = EBADF;
-      return -1;
-    }
+  if (d.d == NULL)
+    return __hurd_fail (EBADF);
 
-  d = &_hurd_dtable.d[fd];
-  __spin_lock (d->port);
-  port = d->port.port;
-  ctty = d->ctty.port;
-  d->port.port = d->ctty.port = MACH_PORT_NULL;
-  d->port.user_dealloc = d->ctty.user_dealloc = NULL;
-  d->flags = 0;
-  __spin_unlock (&d->port);
+  /* Extract the descriptor's ports and replace them with nil.  */
 
-  __mutex_unlock (&_hurd_dtable_lock);
+  ctty = d.d->ctty.port;
+  _hurd_port_set (&d.d->ctty, MACH_PORT_NULL);
+  port = d.d->port.port;
+  _hurd_port_locked_set (&d.d->port, MACH_PORT_NULL);
 
-  if (port == MACH_PORT_NULL)
-    {
-      errno = EBADF;
-      return -1;
-    }
+  _hurd_fd_done (d, &dealloc);
 
+  /* Deallocate the ports.  */
   __mach_port_deallocate (__mach_task_self (), port);
   if (ctty != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), ctty);
