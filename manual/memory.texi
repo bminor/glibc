@@ -194,7 +194,7 @@ ptr = (char *) malloc (length + 1);
 @xref{Representation of Strings}, for more information about this.
 
 @node Malloc Examples
-@section Examples of @code{malloc}
+@subsection Examples of @code{malloc}
 
 If no more space is available, @code{malloc} returns a null pointer.
 You should check the value of @emph{every} call to @code{malloc}.  It is
@@ -1299,7 +1299,7 @@ the @code{obstack_chunk_alloc} and @code{obstack_chunk_free} functions
 to interlock so that only one of them can actually call @code{malloc} or
 @code{free} at a given time.
 
-@node Summary of Obstakc
+@node Summary of Obstacks
 @subsection Summary of Obstack Functions
 
 Here is a summary of all the functions associated with obstacks.  Each
@@ -1460,8 +1460,8 @@ open2 (char *str1, char *str2, int flags, int mode)
 As you can see, it is simpler with @code{alloca}.  But @code{alloca} has
 other, more important advantages, and some disadvantages.
 
-@node Advantages of @code{alloca}
-@subsection Advantages and Disadvantages of @code{alloca}
+@node Advantages of Alloca
+@subsection Advantages of @code{alloca}
 
 Here are the reasons why @code{alloca} may be preferable to @code{malloc}:
 
@@ -1510,6 +1510,9 @@ By contrast, the previous definition of @code{open2} (which uses
 changed in this way.  Even if you are willing to make more changes to
 fix it, there is no easy way to do so.
 @end itemize
+
+@node Disadvantages of Alloca
+@subsection Disadvantages of @code{alloca}
 
 @cindex @code{alloca} disadvantages
 @cindex disadvantages of @code{alloca}
