@@ -760,7 +760,7 @@ fi
 # These programs are version sensitive.
 AC_CHECK_TOOL_PREFIX
 AC_CHECK_PROG_VER(CC, ${ac_tool_prefix}gcc ${ac_tool_prefix}cc, -v,
-  [version \([egcygnustpi-]*[0-9.]*\)], [3.[2-9]* | 4.[0-9]* ],
+  [version \([egcygnustpi-]*[0-9.]*\)], [3.4* | 4.[0-9]* ],
   critic_missing="$critic_missing gcc")
 AC_CHECK_PROG_VER(MAKE, gnumake gmake make, --version,
   [GNU Make[^0-9]*\([0-9][0-9.]*\)],
@@ -1632,7 +1632,7 @@ fi
 AC_CACHE_CHECK(whether CFI directives are supported, libc_cv_asm_cfi_directives, [dnl
 cat > conftest.s <<EOF
         .text
-        .type   func,@function
+        .type   func,%function
 func:
         .cfi_startproc
 	.cfi_remember_state
@@ -2123,12 +2123,6 @@ AC_SUBST(static_nss)
 AC_SUBST(nopic_initfini)
 
 AC_SUBST(DEFINES)
-
-case "$add_ons" in
-  *door*) linux_doors=yes ;;
-  *) linux_doors=no ;;
-esac
-AC_SUBST(linux_doors)
 
 dnl See sysdeps/mach/configure.in for this variable.
 AC_SUBST(mach_interface_list)

@@ -21,44 +21,78 @@
 # error "Never include <bits/unistd.h> directly; use <unistd.h> instead."
 #endif
 
-extern void __chk_fail (void) __attribute__((noreturn));
-#define read(fd, buf, nbytes) \
-  (__extension__							      \
-    ({ size_t __nbytes_val = (nbytes);			  		      \
-       if (__bos0 (buf) != (size_t) -1 && __bos0 (buf) < __nbytes_val)	      \
-         __chk_fail ();							      \
-       read (fd, buf, __nbytes_val); }))
+extern void __chk_fail (void) __attribute__((__noreturn__));
+extern ssize_t __REDIRECT (__read_alias, (int __fd, void *__buf,
+					  size_t __nbytes), read) __wur;
+
+extern __always_inline __wur ssize_t
+read (int __fd, void *__buf, size_t __nbytes)
+{
+  if (__bos0 (__buf) != (size_t) -1 && __nbytes > __bos0 (__buf))
+    __chk_fail ();
+  return __read_alias (__fd, __buf, __nbytes);
+}
 
 #ifdef __USE_UNIX98
-# define pread(fd, buf, nbytes, offset) \
-  (__extension__							      \
-    ({ size_t __nbytes_val = (nbytes);			  		      \
-       if (__bos0 (buf) != (size_t) -1 && __bos0 (buf) < __nbytes_val)	      \
-         __chk_fail ();							      \
-       pread (fd, buf, __nbytes_val, offset); }))
+extern ssize_t __REDIRECT (__pread_alias,
+			   (int __fd, void *__buf, size_t __nbytes,
+			    __off_t __offset), pread) __wur;
+extern ssize_t __REDIRECT (__pread64_alias,
+			   (int __fd, void *__buf, size_t __nbytes,
+			    __off64_t __offset), pread64) __wur;
+
+# ifndef __USE_FILE_OFFSET64
+extern __always_inline __wur ssize_t
+pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
+{
+  if (__bos0 (__buf) != (size_t) -1 && __nbytes > __bos0 (__buf))
+    __chk_fail ();
+  return __pread_alias (__fd, __buf, __nbytes, __offset);
+}
+# else
+extern __always_inline __wur ssize_t
+pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
+{
+  if (__bos0 (__buf) != (size_t) -1 && __nbytes > __bos0 (__buf))
+    __chk_fail ();
+  return __pread64_alias (__fd, __buf, __nbytes, __offset);
+}
+# endif
 
 # ifdef __USE_LARGEFILE64
-#  define pread64(fd, buf, nbytes, offset) \
-  (__extension__							      \
-    ({ size_t __nbytes_val = (nbytes);			  		      \
-       if (__bos0 (buf) != (size_t) -1 && __bos0 (buf) < __nbytes_val)	      \
-         __chk_fail ();							      \
-       pread64 (fd, buf, __nbytes_val, offset); }))
+extern __always_inline __wur ssize_t
+pread64 (int __fd, void *__buf, size_t __nbytes, __off64_t __offset)
+{
+  if (__bos0 (__buf) != (size_t) -1 && __nbytes > __bos0 (__buf))
+    __chk_fail ();
+  return __pread64_alias (__fd, __buf, __nbytes, __offset);
+}
 # endif
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
-# define readlink(path, buf, len) \
-  (__extension__							      \
-    ({ size_t __len_val = (len);			  		      \
-       if (__bos (buf) != (size_t) -1 && __bos (buf) < __len_val)	      \
-         __chk_fail ();							      \
-       readlink (path, buf, __len_val); }))
+extern int __REDIRECT_NTH (__readlink_alias,
+			   (__const char *__restrict __path,
+			    char *__restrict __buf, size_t __len), readlink)
+     __nonnull ((1, 2)) __wur;
+
+extern __always_inline __nonnull ((1, 2)) __wur int
+__NTH (readlink (__const char *__restrict __path, char *__restrict __buf,
+		 size_t __len))
+{
+  if (__bos (__buf) != (size_t) -1 && __len > __bos (__buf))
+    __chk_fail ();
+  return __readlink_alias (__path, __buf, __len);
+}
 #endif
 
-#define getcwd(buf, size) \
-  (__extension__							      \
-    ({ size_t __size_val = (size);			  		      \
-       if (__bos (buf) != (size_t) -1 && __bos (buf) < __size_val)	      \
-         __chk_fail ();							      \
-       getcwd (buf, __size_val); }))
+extern char *__REDIRECT_NTH (__getcwd_alias,
+			     (char *__buf, size_t __size), getcwd) __wur;
+
+extern __always_inline __wur char *
+__NTH (getcwd (char *__buf, size_t __size))
+{
+  if (__bos (__buf) != (size_t) -1 && __size > __bos (__buf))
+    __chk_fail ();
+  return __getcwd_alias (__buf, __size);
+}

@@ -1,14 +1,357 @@
+2005-03-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/test-ifaddrs.c: Use test-skeleton.
+	* inet/test_ifindex.c: Likewise.
+
+	* elf/dl-lookup.c (add_dependency): Always search l_initfini if
+	the list exists.
+
+	* elf/Makefile: Add rules to build and run order2.
+	* elf/order2.c: New file.
+	* elf/order2mod1.c: New file.
+	* elf/order2mod2.c: New file.
+	* elf/order2mod3.c: New file.
+	* elf/order2mod4.c: New file.
+
+2005-03-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Print exact l_direct_opencount value,
+	it has been incremented before.
+
+2005-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-fini.c (_dl_fini): Split sorting of the maps in separate
+	function _dl_sort_fini.
+	(_dl_sort_fini): New function.
+	* sysdeps/generic/ldsodefs.h: Declare _dl_sort_fini.
+	* elf/dl-close.c (_dl_close): Call _dl_sort_fini before running
+	destructors to call them in the right order.
+
+2005-02-07  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/bits/link.h (La_ppc64_regs): Add lr_vrsave.
+	(La_ppc64_retval): Correct size of lrc_fp.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S (_dl_profile_resolve):
+	Fix up ABI problems and complete function.
+
+2005-03-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/test-misc.c (main): Add some more tests.
+
+2005-03-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (re_compile_fastmap_iter): Fix check for failed
+	__wcrtomb.  Check return values of other __wcrtomb calls.
+	* posix/regex_internal.c (build_wcs_buffer, re_string_skip_chars):
+	Change mbclen type to size_t.
+	(build_wcs_upper_buffer): Change mbclen and mbcdlen type to size_t.
+	Handle mb chars whose upper case doesn't have multibyte representation
+	in locale's charset.
+
+2005-03-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc.c (_int_icalloc, _int_icomalloc, iALLOc,
+	public_iCALLOc, public_iCALLOc, public_iCOMALLOc): Protect with
+	#ifndef _LIBC.
+
+	[BZ #779]
+	* malloc/malloc.c (public_mTRIm): Initialize malloc if not yet
+	initialized.
+
+2005-03-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/cdefs.h (__always_inline): Define.
+	* posix/bits/unistd.h (read, pread, pread64, readlink, getcwd, getwd):
+	Use __always_inline instead of __inline.
+	* socket/bits/socket2.h (recv, recvfrom): Likewise.
+	* libio/bits/stdio2.h (gets, fgets, fgets_unlocked): Likewise.
+	* string/bits/string3.h (__memcpy_ichk, __memmove_ichk, __mempcpy_ichk,
+	__memset_ichk, __strcpy_ichk, __stpcpy_ichk, __strncpy_ichk,
+	__strcat_ichk, __strncat_ichk): Use __always_inline instead of
+	__inline__ __attribute__ ((__always_inline__)).
+
+2005-03-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* debug/tst-chk1.c: Include sys/socket.h and sys/un.h.
+	(do_test): Add new tests for recv, recvfrom, getcwd, getwd and
+	readlink.  Add some more tests for read, pread, pread64, fgets and
+	fgets_unlocked.
+
+	* posix/bits/unistd.h (read, pread, pread64, readlink,
+	getcwd, getwd): Change macros into extern inline functions.
+	(__read_alias, __pread_alias, __pread64_alias, __readlink_alias,
+	__getcwd_alias, __getwd_alias): New prototypes.
+	* socket/bits/socket2.h (recv, recvfrom): Change macros into
+	extern inline functions.
+	(__recv_alias, __recvfrom_alias): New prototypes.
+	* libio/bits/stdio2.h (gets, fgets, fgets_unlocked): Change macros
+	into extern inline functions.
+	(__gets_alias, __fgets_alias, __fgets_unlocked_alias): New prototypes.
+
+	* debug/pread_chk.c (__pread_chk): Fix order of arguments passed
+	to __pread.
+	* debug/pread64_chk.c (__pread64_chk): Fix order of arguments passed
+	to __pread64.
+
+2005-03-18  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* configure.in: Use %function instead of @function.
+
+2005-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/link.h (struct link_map): Remove l_opencount.  Add l_removed.
+	Change type of l_idx to int.
+	* elf/dl-close.c: Basically rewrite.  Do not use l_opencount to
+	determine whether a DSO has to be unloaded.  Instead compute this
+	in this function.
+	* elf/dl-deps.c: No need to manipulate l_opencount anymore.
+	* elf/dl-lookup.c: Likewise.
+	* elf/rtld.c: Likewise
+	* elf/dl-open.c: Likewise.  Use l_init_called to determine whether
+	object was just loaded.
+	* elf/dl-fini.c: Bump l_direct_opencount instead of l_opencount.
+	* elf/dl-load.c (_dl_map_object_from_fd): Do not recognize DSO which
+	is about to be unloaded as a match.
+	(_dl_map_object): Likewise.
+	* elf/do-lookup.h (do_lookup_x): Do not look into DSO which is about
+	to be unloaded.
+	* elf/circleload1.c: Don't use l_opencount anymore.
+	* elf/neededtest.c: Likewise.
+	* elf/neededtest2.c: Likewise.
+	* elf/neededtest3.c: Likewise.
+	* elf/neededtest4.c: Likewise.
+	* elf/unload.c: Likewise.
+	* elf/unload2.c: Likewise.
+	* elf/loadtest.c: Likewise.
+
+	* elf/rtld.c: Preloading errors are now never fatal.
+
+2005-03-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile: Add rules to build and run unload5 test.
+	* elf/unload5.c: New file.
+
+2005-03-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile: Add rules to build and run unload4 test.
+	* elf/unload4.c: New file.
+	* elf/unload4mod1.c: New file.
+	* elf/unload4mod2.c: New file.
+	* elf/unload4mod3.c: New file.
+	* elf/unload4mod4.c: New file.
+
+2005-03-17  Roland McGrath  <roland@redhat.com>
+
+	* nscd/aicache.c (addhstaiX): Tweak type to avoid warning.
+
+2005-03-16  Richard Henderson  <rth@redhat.com>
+
+	* include/libc-symbols.h (__hidden_proto): Remove bogus declaration
+	of internal.
+	(__hidden_def1, __hidden_dot_def1): Remove.
+	(__hidden_def2, __hidden_def3): Remove.
+	(__hidden_ver1): New.
+	(hidden_ver, hidden_def, hidden_weak): Use it.
+	(hidden_data_ver, hidden_data_ver, hidden_data_weak): Use non-data
+	version of the macro.
+
+	* include/wchar.h (__wcscoll): Remove.
+	* wcsmbs/wcscoll.c: Define wcscoll directly instead of via __wcscoll.
+	* string/strcoll.c: Don't issue libc_hidden_def STRCOLL redefined.
+
+2005-03-16  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* elf/elf.h: Define MIPS TLS relocations.
+
+2005-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/circleload1.c (main): Pretty printing.
+
+2005-03-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/wordexp.c (exec_comm_child): Add inline keyword.
+	Patch by Dan Kegel <dank@kegel.com>.
+
+	* elf/dynamic-link.h (elf_machine_rel, elf_machine_rel_relative,
+	elf_machine_rela, elf_machine_rela_relative, elf_machine_lazy_rel):
+	Add inline keyword.
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative, elf_machine_lazy_rel): Add always_inline
+	attribute.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.  Change
+	static inline into auto inline.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.
+	* sysdeps/generic/dl-machine.h (elf_machine_rel, elf_machine_rela):
+	Likewise.
+	* sysdeps/arm/dl-machine.h (elf_machine_rel, elf_machine_rel_relative,
+	elf_machine_rela, elf_machine_rela_relative, elf_machine_lazy_rel):
+	Likewise.
+
+2005-03-15  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #789]
+	* sysdeps/i386/i686/hp-timing.h (HP_TIMING_ACCUM): Fix asm constraints.
+	Remove memory clobber.
+
+	* sysdeps/x86_64/hp-timing.h (HP_TIMING_ACCUM): Make the addition
+	thread-safe.  Subtract GLRO(dl_hp_timing_overhead) from Diff.
+
+2005-03-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Don't include
+	asm/types.h.
+
+2005-03-10  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Define MAP_POPULATE and
+	MAP_NONBLOCK.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+	Correct MAP_GROWSDOWN value.
+
+2005-03-13  Roland McGrath  <roland@redhat.com>
+
+	* elf/tls-macros.h: #include_next <tls-macros.h> to get a sysdeps
+	version if there is one.  Only #error if macros are then undefined.
+	* sysdeps/generic/tls-macros.h: New file.
+
+2005-03-10  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sysdeps/hppa/configure.in: Remove old Makefile leftovers.
+	* sysdeps/hppa/configure: Regenerated.
+
+2005-03-08  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/gnu/errlist-compat.awk: Use NERR in all array decls, so
+	array types match exactly in C alias decls.
+
+2005-03-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/arena.c (ptmalloc_init): Recognize MALLOC_PERTURB_ and call
+	mallopt appropriately.
+	* malloc/malloc.h: Define M_PERTURB.
+	* malloc/malloc.c (perturb_byte): New variable.
+	(alloc_perturb, free_perturb): New macros.
+	(_int_malloc): Before returning, overwrite the memory if this is
+	requested.
+	(_int_free): Overwrite freed memory if requested.
+	(mALLOPt): Handle M_PERTURB.
+	* test-skeleton.c: Add call to mallopt with M_PERTURB command.
+
+	* elf/dl-close.c (_dl_close): Decrement l_opencount before
+	printing debug message.
+	* elf/dl-open.c (dl_open_worker): Always print the new opencount
+	in debug messages.
+
+2005-03-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c (_dl_close): Unify debug message format.
+
+	* elf/dl-close.c (_dl_close): Print debug message just before
+	destroying a link map.
+
+	* elf/do-lookup.h (do_lookup_x): Add namespace info to debug output.
+	* elf/dl-version.c (match_symbol): Likewise.
+
+	* posix/bits/unistd.h (pread): Fix typo in __USE_FILE_OFFSET64 code.
+
+	* debug/recv_chk.c (__recv_chk): Always fail if request could
+	overflow the buffer.
+	* debug/recvfrom_chk.c (__recvfrom_chk): Likewise.
+	* socket/bits/socket2.h (recv): Avoid calls to the _chk variant if
+	we know the call succeeds.
+	(recvfrom): Likewise.
+
+2005-03-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regexec.c (check_node_accept_bytes): Correct cast to avoid
+	warning.
+	* posix/regex_internal.c (re_string_reconstruct): Add cast to
+	avoid warning.
+	(build_wcs_upper_buffer): Change type of bug to plain char.
+	* locale/weightwc.h (findidx): Add casts to avoid warnings.
+	* time/mktime.c (ranged_convert): Initialize tm to make the
+	compiler happy.
+	* wcsmbs/mbsrtowcs_l.c (__mbsrtowcs_l): Add casts to avoid warnings.
+	* wcsmbs/wcsnrtombs.c (__wcsnrtombs): Add casts to avoid warnings.
+	* wcsmbs/mbsnrtowcs.c: Add casts to avoid warnings.
+	* wcsmbs/wcsrtombs.c (__wcsrtombs): Add casts to avoid warnings.
+	* wcsmbs/wcrtomb.c (__wcrtomb): Add casts to avoid warnings.
+	* wcsmbs/mbrtowc.c (__mbrtowc): Use unsigned char for outbuf.
+	* wcsmbs/wctob.c (wctob): Make buf array of unsigned char.
+	* sysdeps/generic/strchrnul.c: Add cast to avoid warning.
+	* libio/iofwide.c: Add casts to avoid warnings.
+	* stdio-common/printf-prs.c (parse_printf_format): Introduce new
+	variable f to avoid warnings.
+	* sysdeps/unix/sysv/linux/x86_64/makecontext.c (__makecontext):
+	Fix a few casts to avoid warnings.
+	* iconv/gconv_simple.c (internal_utf8_loop): Make start unsigned
+	to avoid warning.
+
+	* posix/regex_internal.c [_LIBC] (build_wcs_buffer): Avoid using
+	dynamically sized array.
+	(build_wcs_upper_buffer): Likewise.
+
+2005-03-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/bits/unistd.h: New file.
+	* include/bits/socket2.h: New file.
+
+2005-03-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/key_call.c: Remove doors support.
+	* sunrpc/Makefile: Remove CPPFLAGS-key_call.c definition.
+	* configure.in: Remove test for doors support which never existed.
+	* config.make.in: Remove have_doors entry.
+
+	* configure.in: Make sure at least gcc 3.4 is used.  Undo last change.
+	* config.make.in: Undo last change.
+
+	* sysdeps/i386/Makefile (CFLAGS-initfini.s): Unconditionally use
+	-mtune.
+
+2005-03-05  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (_dl_out_of_memory_internal): Remove decl.
+	(_dl_out_of_memory): Use rtld_hidden_proto.
+	* elf/dl-error.c (_dl_out_of_memory): Use rtld_hidden_data_def.
+	(_dl_signal_error): Don't use INTUSE on _dl_out_of_memory.
+	* elf/dl-open.c (_dl_open): Likewise.
+	* elf/dl-deps.c (_dl_map_object_deps): Likewise.
+
+	* sunrpc/des_impl.c (des_set_key): Make first argument unsigned char *.
+
+	* elf/dl-addr.c (_dl_addr): Add a cast.
+
+	* elf/unload3mod4.c: Declare foo.
+	* elf/testobj2.c: Include <stdio.h>.
+
+	* sysdeps/gnu/errlist.awk: Emit NERR macro for _sys_nerr_internal
+	value constant, and use it in the defn.
+	* sysdeps/gnu/errlist-compat.awk: Use NERR in array decl.
+	Use actual size for compat array decls.
+
+	* config.make.in (cc-mtune): New substituted variable.
+	* configure.in (libc_cv_cc_mtune): New test for -mtune= switch,
+	done only if libc_mtune_example is defined.
+	* sysdeps/i386/configure.in (libc_mtune_example): Set it.
+	* sysdeps/i386/Makefile (CFLAGS-initfini.s): Use $(cc-mtune).
+
+2005-03-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (ELF_MACHINE_NO_RELA): Define
+	unconditionally to (defined RTLD_BOOTSTRAP).
+	* sysdeps/arm/dl-machine.h (ELF_MACHINE_NO_RELA): Likewise.
+
 2005-03-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makerules ($(inst_libdir)/libc.so): Use $(slibdir) instead of
 	$(inst_slibdir) in AS_NEEDED directive.
 
-	* include/bits/unistd.h: New file.
-	* include/bits/socket2.h: New file.
+2005-03-03  Jakub Jelinek  <jakub@redhat.com>
 
-	* sysdeps/i386/dl-machine.h (ELF_MACHINE_NO_RELA): Define
-	unconditionally to (defined RTLD_BOOTSTRAP).
-	* sysdeps/arm/dl-machine.h (ELF_MACHINE_NO_RELA): Likewise.
+	* posix/bits/unistd.h (pread, pread64): Don't swap function arguments.
 
 2005-03-01  H.J. Lu  <hongjiu.lu@intel.com>
 
@@ -52,9 +395,11 @@
 
 2005-03-01  Alfred M. Szmidt  <ams@gnu.org>
 
+	[BZ #777]
 	* elf/dl-load.c (__stack_prot) [!PROT_GROWSUP && !PROT_GROWSDOWN]:
 	Add missing initializer.
 
+	[BZ #777]
 	* malloc/arena.c: #include <stdbool.h> outside of [SHARED &&
 	USE_TLS && !USE___THREAD].
 

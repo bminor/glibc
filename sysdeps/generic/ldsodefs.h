@@ -694,10 +694,7 @@ extern char **_dl_argv_internal attribute_hidden
 
 /* The array with message we print as a last resort.  */
 extern const char _dl_out_of_memory[];
-#ifdef IS_IN_rtld
-/* XXX #ifdef should go away.  */
-extern const char _dl_out_of_memory_internal[] attribute_hidden;
-#endif
+rtld_hidden_proto (_dl_out_of_memory)
 
 /* Flag set at startup and cleared when the last initializer has run.  */
 extern int _dl_starting_up;
@@ -894,6 +891,11 @@ extern void _dl_init (struct link_map *main_map, int argc, char **argv,
 /* Call the finalizer functions of all shared objects whose
    initializer functions have completed.  */
 extern void _dl_fini (void) internal_function;
+
+/* Sort array MAPS according to dependencies of the contained objects.  */
+extern void _dl_sort_fini (struct link_map *l, struct link_map **maps,
+			   size_t nmaps, char *used, Lmid_t ns)
+     internal_function;
 
 /* The dynamic linker calls this function before and having changing
    any shared object mappings.  The `r_state' member of `struct r_debug'

@@ -1,5 +1,5 @@
 # This file is updated automatically by Makefile.
 glibc-branch := fedora
 glibc-base := HEAD
-fedora-sync-date := 2005-03-03 13:35 UTC
-fedora-sync-tag := fedora-glibc-20050303T1335
+fedora-sync-date := 2005-03-19 19:07 UTC
+fedora-sync-tag := fedora-glibc-20050319T1907

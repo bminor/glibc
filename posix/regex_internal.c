@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -214,12 +214,14 @@ build_wcs_buffer (pstr)
      re_string_t *pstr;
 {
 #ifdef _LIBC
-  unsigned char buf[pstr->mb_cur_max];
+  unsigned char buf[MB_CUR_MAX];
+  assert (MB_CUR_MAX >= pstr->mb_cur_max);
 #else
   unsigned char buf[64];
 #endif
   mbstate_t prev_st;
-  int byte_idx, end_idx, mbclen, remain_len;
+  int byte_idx, end_idx, remain_len;
+  size_t mbclen;
 
   /* Build the buffers from pstr->valid_len to either pstr->len or
      pstr->bufs_len.  */
@@ -280,11 +282,13 @@ build_wcs_upper_buffer (pstr)
      re_string_t *pstr;
 {
   mbstate_t prev_st;
-  int src_idx, byte_idx, end_idx, mbclen, remain_len;
+  int src_idx, byte_idx, end_idx, remain_len;
+  size_t mbclen;
 #ifdef _LIBC
-  unsigned char buf[pstr->mb_cur_max];
+  char buf[MB_CUR_MAX];
+  assert (MB_CUR_MAX >= pstr->mb_cur_max);
 #else
-  unsigned char buf[64];
+  char buf[64];
 #endif
 
   byte_idx = pstr->valid_len;
@@ -316,12 +320,12 @@ build_wcs_upper_buffer (pstr)
 	  mbclen = mbrtowc (&wc,
 			    ((const char *) pstr->raw_mbs + pstr->raw_mbs_idx
 			     + byte_idx), remain_len, &pstr->cur_state);
-	  if (BE (mbclen > 0, 1))
+	  if (BE (mbclen + 2 > 2, 1))
 	    {
 	      wchar_t wcu = wc;
 	      if (iswlower (wc))
 		{
-		  int mbcdlen;
+		  size_t mbcdlen;
 
 		  wcu = towupper (wc);
 		  mbcdlen = wcrtomb (buf, wcu, &prev_st);
@@ -384,20 +388,20 @@ build_wcs_upper_buffer (pstr)
 	else
 	  p = (const char *) pstr->raw_mbs + pstr->raw_mbs_idx + src_idx;
 	mbclen = mbrtowc (&wc, p, remain_len, &pstr->cur_state);
-	if (BE (mbclen > 0, 1))
+	if (BE (mbclen + 2 > 2, 1))
 	  {
 	    wchar_t wcu = wc;
 	    if (iswlower (wc))
 	      {
-		int mbcdlen;
+		size_t mbcdlen;
 
 		wcu = towupper (wc);
 		mbcdlen = wcrtomb ((char *) buf, wcu, &prev_st);
 		if (BE (mbclen == mbcdlen, 1))
 		  memcpy (pstr->mbs + byte_idx, buf, mbclen);
-		else
+		else if (mbcdlen != (size_t) -1)
 		  {
-		    int i;
+		    size_t i;
 
 		    if (byte_idx + mbcdlen > pstr->bufs_len)
 		      {
@@ -414,7 +418,7 @@ build_wcs_upper_buffer (pstr)
 		      }
 		    if (!pstr->offsets_needed)
 		      {
-			for (i = 0; i < byte_idx; ++i)
+			for (i = 0; i < (size_t) byte_idx; ++i)
 			  pstr->offsets[i] = i;
 			pstr->offsets_needed = 1;
 		      }
@@ -437,13 +441,15 @@ build_wcs_upper_buffer (pstr)
 		    src_idx += mbclen;
 		    continue;
 		  }
+                else
+                  memcpy (pstr->mbs + byte_idx, p, mbclen);
 	      }
 	    else
 	      memcpy (pstr->mbs + byte_idx, p, mbclen);
 
 	    if (BE (pstr->offsets_needed != 0, 0))
 	      {
-		int i;
+		size_t i;
 		for (i = 0; i < mbclen; ++i)
 		  pstr->offsets[byte_idx + i] = src_idx + i;
 	      }
@@ -494,7 +500,8 @@ re_string_skip_chars (pstr, new_raw_idx, last_wc)
      wint_t *last_wc;
 {
   mbstate_t prev_st;
-  int rawbuf_idx, mbclen;
+  int rawbuf_idx;
+  size_t mbclen;
   wchar_t wc = 0;
 
   /* Skip the characters which are not necessary to check.  */
@@ -666,8 +673,9 @@ re_string_reconstruct (pstr, idx, eflags)
 			/* XXX Don't use mbrtowc, we know which conversion
 			   to use (UTF-8 -> UCS4).  */
 			memset (&cur_state, 0, sizeof (cur_state));
-			mlen = mbrtowc (&wc2, p, mlen, &cur_state)
-			       - (raw + offset - p);
+			mlen = (mbrtowc (&wc2, (const char *) p, mlen,
+					 &cur_state)
+				- (raw + offset - p));
 			if (mlen >= 0)
 			  {
 			    memset (&pstr->cur_state, '\0',

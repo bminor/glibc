@@ -21,17 +21,28 @@
 # error "Never include <bits/socket2.h> directly; use <sys/socket.h> instead."
 #endif
 
-extern void __chk_fail (void) __attribute__((noreturn));
-#define recv(fd, buf, n, flags) \
-  (__extension__							      \
-    ({ size_t __n_val = (n);				  		      \
-       if (__bos0 (buf) != (size_t) -1 && __bos0 (buf) < __n_val)	      \
-         __chk_fail ();							      \
-       recv ((fd), (buf), __n_val, (flags)); }))
+extern void __chk_fail (void) __attribute__((__noreturn__));
+extern ssize_t __REDIRECT (__recv_alias, (int __fd, void *__buf, size_t __n,
+					  int __flags), recv);
 
-#define recvfrom(fd, buf, n, flags, addr, addr_len) \
-  (__extension__							      \
-    ({ size_t __n_val = (n);				  		      \
-       if (__bos0 (buf) != (size_t) -1 && __bos0 (buf) < __n_val)	      \
-         __chk_fail ();							      \
-       recvfrom ((fd), (buf), __n_val, (flags), (addr), (addr_len)); }))
+extern __always_inline ssize_t
+recv (int __fd, void *__buf, size_t __n, int __flags)
+{
+  if (__bos0 (__buf) != (size_t) -1 && __n > __bos0 (__buf))
+    __chk_fail ();
+  return __recv_alias (__fd, __buf, __n, __flags);
+}
+
+extern ssize_t __REDIRECT (__recvfrom_alias,
+			   (int __fd, void *__restrict __buf, size_t __n,
+			    int __flags, __SOCKADDR_ARG __addr,
+			    socklen_t *__restrict __addr_len), recvfrom);
+
+extern __always_inline ssize_t
+recvfrom (int __fd, void *__buf, size_t __n, int __flags,
+	  __SOCKADDR_ARG __addr, socklen_t *__restrict __addr_len)
+{
+  if (__bos0 (__buf) != (size_t) -1 && __n > __bos0 (__buf))
+    __chk_fail ();
+  return __recvfrom_alias (__fd, __buf, __n, __flags, __addr, __addr_len);
+}

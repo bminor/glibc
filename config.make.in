@@ -69,7 +69,6 @@ versioning = @VERSIONING@
 oldest-abi = @oldest_abi@
 no-whole-archive = @no_whole_archive@
 exceptions = @exceptions@
-have_doors = @linux_doors@
 
 mach-interface-list = @mach_interface_list@
 

@@ -83,22 +83,40 @@ extern int __vprintf_chk (int __flag, __const char *__restrict __format,
 
 #endif
 
-extern char *__gets_chk (char *__str, size_t);
-#define gets(__str) \
-  ((__bos (__str) == (size_t) -1)					      \
-   ? gets (__str) : __gets_chk (__str, __bos (__str)))
+extern char *__gets_chk (char *__str, size_t) __wur;
+extern char *__REDIRECT (__gets_alias, (char *__str), gets) __wur;
 
-extern void __chk_fail (void) __attribute__((noreturn));
-#define fgets(__str, __n, __fp) \
-  (__extension__							      \
-    ({ size_t __n_val = (__n);				  		      \
-       if (__bos (__str) != (size_t) -1 && __bos (__str) < __n_val)	      \
-         __chk_fail ();							      \
-       fgets (__str, __n_val, __fp); }))
+extern __always_inline __wur char *
+gets (char *__str)
+{
+  if (__bos (__str) != (size_t) -1)
+    return __gets_chk (__str, __bos (__str));
+  return __gets_alias (__str);
+}
 
-#define fgets_unlocked(__str, __n, __fp) \
-  (__extension__							      \
-    ({ size_t __n_val = (__n);				  		      \
-       if (__bos (__str) != (size_t) -1 && __bos (__str) < __n_val)	      \
-         __chk_fail ();							      \
-       fgets_unlocked (__str, __n_val, __fp); }))
+extern void __chk_fail (void) __attribute__((__noreturn__));
+extern char *__REDIRECT (__fgets_alias,
+			 (char *__restrict __s, int __n,
+			  FILE *__restrict __stream), fgets) __wur;
+
+extern __always_inline __wur char *
+fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
+{
+  if (__bos (__s) != (size_t) -1 && (size_t) __n > __bos (__s))
+    __chk_fail ();
+  return __fgets_alias (__s, __n, __stream);
+}
+
+#ifdef __USE_GNU
+extern char *__REDIRECT (__fgets_unlocked_alias,
+			 (char *__restrict __s, int __n,
+			  FILE *__restrict __stream), fgets_unlocked) __wur;
+
+extern __always_inline __wur char *
+fgets_unlocked (char *__restrict __s, int __n, FILE *__restrict __stream)
+{
+  if (__bos (__s) != (size_t) -1 && (size_t) __n > __bos (__s))
+    __chk_fail ();
+  return __fgets_unlocked_alias (__s, __n, __stream);
+}
+#endif
