@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -105,15 +105,20 @@ start1 (void)
 	envc = split_args (env, envlen, NULL);
     }
 
-  if (! argv && ! envp && argc + envc > 0)
+  if (! argv && argc > 0)
     {
-      /* There were some arguments or environment.
+      /* There were some arguments.
+	 Allocate space for the vectors of pointers and fill them in.  */
+      argv = __alloca ((argc + 1) * sizeof (char *));
+      split_args (args, argslen, argv);
+    }
+  
+  if (! envp && envc > 0)
+    {
+      /* There was some environment.
 	 Allocate space for the vectors of pointers and fill them in.  */
 
-      argv = __alloca ((argc + 1) * sizeof (char *));
       envp = __alloca ((envc + 1) * sizeof (char *));
-      
-      split_args (args, argslen, argv);
       split_args (env, envlen, envp);
     }
 
@@ -183,15 +188,6 @@ _start (void)
 {
   error_t err;
   mach_port_t in_bootstrap;
-  vm_address_t stack_pointer, stack_base;
-  vm_size_t stack_size;
-
-  /* GET_SP (SP) should put the stack pointer in SP.  */
-
-#ifndef	GET_SP
-#error GET_SP not defined by sysdeps/mach/hurd/MACHINE/sysdep.h
-#endif
-  GET_SP (stack_pointer);
 
   /* Basic Mach initialization, must be done before RPCs can be done.  */
   __mach_init ();
@@ -209,7 +205,7 @@ _start (void)
       _hurd_init_dtablesize = portarraysize = intarraysize = 0;
 
       err = __exec_startup (in_bootstrap,
-			    &stack_base, &stack_size,
+			    &_hurd_stack_base, &_hurd_stack_size,
 			    &flags,
 			    &args, &argslen, &env, &envlen,
 			    &_hurd_init_dtable, &_hurd_init_dtablesize,
