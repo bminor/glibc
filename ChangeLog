@@ -1,5 +1,7 @@
 1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconv/gconv_db.c: Correctly transfer last patch from 2.2 branch.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't fail if host has
 	only IPv6 address.  Reported by Artur Frysiak <wiget@pld.org.pl>.
 
