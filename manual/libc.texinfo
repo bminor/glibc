@@ -56,6 +56,8 @@ Foundation.
 @center with
 @center Roland McGrath, Andrew Oram, and Richard M. Stallman
 @sp 3
+@center Edition @value{EDITION}
+@sp 1
 @center last updated @value{UPDATED}
 @sp 1
 @center for version @value{VERSION}
