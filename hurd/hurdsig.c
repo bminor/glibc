@@ -392,27 +392,70 @@ _S_sig_post (sigthread_t me,
   if (refport == __mach_task_self ())
     /* Can send any signal.  */
     goto win;
-  else if (refport == _hurd_cttyport)
-    switch (signo)
-      {
-      case SIGINT:
-      case SIGQUIT:
-      case SIGTSTP:
-      case SIGHUP:
-	goto win;
-      }
-  else
+
+  /* Avoid needing to check for this below.  */
+  if (refport == MACH_PORT_NULL)
+    return EPERM;
+
+  switch (signo)
     {
-      static mach_port_t sessport = MACH_PORT_NULL;
-      if (sessport == MACH_PORT_NULL)
-	_HURD_PORT_USE (&_hurd_proc,
-			__proc_getsidport (port, &sessport));
-      if (sessport != MACH_PORT_NULL && refport == sessport &&
-	  signo == SIGCONT)
+    case SIGINT:
+    case SIGQUIT:
+    case SIGTSTP:
+    case SIGHUP:
+      /* Job control signals can be sent by the controlling terminal.  */
+      if (refport == _hurd_cttyport)
 	goto win;
+      break;
+
+    case SIGCONT:
+      {
+	/* A continue signal can be sent by anyone in the session.  */
+	mach_port_t sessport;
+	if (! __USEPORT (PROC, __proc_getsidport (port, &sessport)))
+	  { 
+	    int win = refport == sessport;
+	    __mach_port_deallocate (__mach_task_self (), sessport);
+	    if (win)
+	      goto win;
+	  }
+      }
+      break;
+
+    case SIGIO:
+    case SIGURG:
+      {
+	/* Any io server for a file descriptor with the O_ASYNC flag
+	   set 
+
+	int dealloc_dt;
+	int d;
+	struct _hurd_dtable dt = _hurd_dtable_use (&dealloc_dt);
+	for (d = 0; d >= 0 && d < dt.size; ++d)
+	  {
+	    int dealloc;
+	    io_t port;
+	    port = _hurd_port_locked_get (&d->d[d].port, &dealloc);
+	    if (flags & O_ASYNC)
+	      {
+		mach_port_t asyncid;
+		if (! __io_get_icky_async_id (port, &asyncid))
+		  {
+		    if (refport == asyncid)
+		      /* Break out of the loop on the next iteration.  */
+		      d = -1;
+		    __mach_port_deallocate (__mach_task_self (), asyncid);
+		  }
+	      }
+	    _hurd_port_free (&d->d[d].port, &dealloc, port);
+	  }
+	_hurd_dtable_done (dt, &dealloc_dt);
+	/* If we found a lucky winner, we've set D to -1 in the loop.  */
+	if (d == -1)
+	  goto win;
+      }
     }
 
-  /* XXX async io? */
   return EPERM;
 
  win:
