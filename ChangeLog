@@ -1,4 +1,88 @@
+2004-10-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* assert/assert.h: Give up on using __builtin_expect.
+
+	* elf/rtld.c (dl_main): Only skip => output in ldd mode if both
+	strings are identical.
+
+2004-03-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/arena.c (aligned_heap_area): New variable.
+	(new_heap): If aligned_heap_area != NULL, attempt to use that
+	first.  If HEAP_MAX_SIZE << 1 area is already HEAP_MAX_SIZE bytes
+	aligned, remember the second half in aligned_heap_area.
+	(delete_heap): Clear aligned_heap_area if deleting the area right
+	before aligned_heap_area.
+
+2004-10-03  Juerg Billeter  <j@bitron.ch>
+
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Return -1 if nscd
+	can't be used.
+
+2004-10-03  Ulrich Drepper  <drepper@redhat.com>
+
+	Dynamically create new threads if necessary.
+	* nscd/connections.c (fd_ready): If no thread available for processing
+	the request, create a new one unless the limit is reached.
+	(start_threads): Check errors from pthread_create.
+	* nscd/nscd.h: Declare max_nthreads.
+	* nscd/nscd_conf.c: Parse max-nthreads entry.
+	* nscd/nscd.conf: Add max-threads entry.
+	* nscd/nscd_stat.c: Print current and maximum number of threads.
+
+	Implement paranoia mode.
+	* nscd/connections.c (nscd_init): Mark database and socket descriptors
+	as close on exec.
+	(restart): New function.
+	(restart_p): New function.
+	(nscd_run): Add missing descrement of nready in case readylist is
+	empty.
+	(main_loop_poll): Call restart_p and restart.
+	(main_loop_epoll): Likewise.
+	(begin_drop_privileges): Save original UID and GID.
+	* nscd/nscd.c: Define new variables paranoia, restart_time,
+	restart_interval, oldcwd, old_gid, old_uid.
+	(main): Disable paranoia mode if we are not forking.
+	(check_pid): When re-execing, the PID file contains the same PID as
+	the current process.  Do not fail in this case.
+	* nscd/nscd.conf: Add paranoia and restart-interval entries.
+	* nscd/nscd.h: Define RESTART_INTERVAL.  Declare new variables.
+	* nscd/nscd_conf.c: Parse paranoia and restart-internal configurations.
+	* nscd/nscd_stat.c: Print paranoia and restart-internal values.
+
+	* nscd/connections.c: Implement alternative loop for main thread
+	which uses epoll.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=nscd]
+	(CFLAGS-connections.c): Add -DHAVE_EPOLL.
+
+2004-10-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/Makefile (CFLAGS-initgrcache.c): Add to CFLAGS-* variables,
+	don't replace old content.
+
+	* nscd/connections.c: Rewrite handling of incoming connections.  All
+	are handled by one thread which then hands of the descriptors for the
+	real work to the worker threads.
+	* nscd/Makefile: Link nscd with librt.
+
+	* nscd/selinux.c: Pretty printing.
+
+	* nscd/dbg_log.c (dbg_log): Don't add unnecessary newline to
+	output.  Let syslog do the formatting if debug_level == 0.
+
+	* nscd/nscd_helper.c (get_mapping): No need to check timestamp if
+	nscd_certainly_running is nonzero.
+
+2004-10-02  Simon Josefsson  <jas@extundo.com>
+
+	[BZ #420]
+	* sysdeps/generic/memmem.c [!_LIBC]: Define __builtin_expect, to
+	make the file usable inside gnulib.
+
 2004-10-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (public_vALLOc): Add missing use of hooks.
+	(public_pVALLOc): Likewise.
 
 	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Always add the
 	group the caller provided unless there is a real problem.

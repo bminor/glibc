@@ -13,10 +13,22 @@ register void *__thread_self __asm ("g7");
 #include <string.h>
 #include <sys/stat.h>
 
-int main(void)
+#define verbose_exec(failcode, path...) \
+  do							\
+    {							\
+      char *const arr[] = { path, NULL };		\
+      vexec (failcode, arr);				\
+    } while (0)
+
+__attribute__((noinline)) void vexec (int failcode, char *const path[]);
+__attribute__((noinline)) void says (const char *str);
+__attribute__((noinline)) void sayn (long num);
+__attribute__((noinline)) void message (char *const path[]);
+
+int
+main (void)
 {
-  pid_t pid;
-  int status, rerun_ldconfig = 0, rerun_cnt = 0;
+  int rerun_ldconfig = 0, rerun_cnt = 0;
   char initpath[256];
 
 #ifdef __i386__
@@ -102,18 +114,7 @@ int main(void)
       char linkbuf[64], *linkp;
       int linklen;
 
-      pid = vfork ();
-      if (pid == 0)
-	{
-	  execl ("/sbin/ldconfig", "/sbin/ldconfig", NULL);
-	  _exit (110);
-	}
-      else if (pid < 0)
-	_exit (111);
-      if (waitpid (0, &status, 0) != pid || !WIFEXITED (status))
-	_exit (112);
-      if (WEXITSTATUS (status))
-	_exit (WEXITSTATUS (status));
+      verbose_exec (110, "/sbin/ldconfig", "/sbin/ldconfig");
 
       rerun_ldconfig = 0;
 #ifdef LIBTLS
@@ -150,18 +151,7 @@ int main(void)
 
   if (! utimes (GCONV_MODULES_CACHE, NULL))
     {
-      pid = vfork ();
-      if (pid == 0)
-	{
-	  execl ("/usr/sbin/iconvconfig", "/usr/sbin/iconvconfig", NULL);
-	  _exit (113);
-	}
-      else if (pid < 0)
-	_exit (114);
-      if (waitpid (0, &status, 0) != pid || !WIFEXITED (status))
-	_exit (115);
-      if (WEXITSTATUS (status))
-	_exit (WEXITSTATUS (status));
+      verbose_exec (113, "/usr/sbin/iconvconfig", "/usr/sbin/iconvconfig");
     }
 
   /* Check if telinit is available and the init fifo as well.  */
@@ -173,32 +163,14 @@ int main(void)
       readlink ("/proc/1/root", initpath, 256) <= 0)
     _exit (0);
 
-  pid = vfork ();
-  if (pid == 0)
-    {
-      execl ("/sbin/telinit", "/sbin/telinit", "u", NULL);
-      _exit (116);
-    }
-  else if (pid < 0)
-    _exit (117);
-  if (waitpid (0, &status, 0) != pid || !WIFEXITED (status))
-    _exit (118);
+  verbose_exec (116, "/sbin/telinit", "/sbin/telinit", "u");
 
   /* Check if we can safely condrestart sshd.  */
   if (access ("/sbin/service", X_OK) == 0
       && access ("/usr/sbin/sshd", X_OK) == 0
       && access ("/bin/bash", X_OK) == 0)
     {
-      pid = vfork ();
-      if (pid == 0)
-	{
-	  execl ("/sbin/service", "/sbin/service", "sshd", "condrestart", NULL);
-	  _exit (119);
-	}
-      else if (pid < 0)
-	_exit (120);
-      if (waitpid (0, &status, 0) != pid || !WIFEXITED (status))
-	_exit (121);
+	 verbose_exec (121, "/sbin/service", "/sbin/service", "sshd", "condrestart");
     }
 
   _exit(0);
@@ -213,9 +185,10 @@ pid_t __fork (void) { return -1; }
 char thr_buf[65536];
 
 #ifndef __powerpc__
-int __libc_start_main (int (*main) (void), int argc, char **argv,
-		       void (*init) (void), void (*fini) (void),
-		       void (*rtld_fini) (void), void * stack_end)
+int
+__libc_start_main (int (*main) (void), int argc, char **argv,
+		   void (*init) (void), void (*fini) (void),
+		   void (*rtld_fini) (void), void * stack_end)
 #else
 struct startup_info
 {
@@ -225,11 +198,11 @@ struct startup_info
   void (*fini) (void);
 };
 
-int __libc_start_main (int argc, char **ubp_av,
-		       char **ubp_ev,
-		       void *auxvec, void (*rtld_fini) (void),
-		       struct startup_info *stinfo,
-		       char **stack_on_entry)
+int
+__libc_start_main (int argc, char **ubp_av, char **ubp_ev,
+                   void *auxvec, void (*rtld_fini) (void),
+		   struct startup_info *stinfo,
+		   char **stack_on_entry)
 #endif
 {
 #if defined __ia64__ || defined __powerpc64__
@@ -253,4 +226,78 @@ int __libc_start_main (int argc, char **ubp_av,
 #endif
   main();
   return 0;
+}
+
+void
+vexec (int failcode, char *const path[])
+{
+  pid_t pid;
+  int status, save_errno;
+
+  pid = vfork ();
+  if (pid == 0)
+    {	
+      execv (path[0], path + 1);
+      save_errno = errno;
+      message (path);
+      says (" exec failed with errno ");
+      sayn (save_errno);
+      says ("\n");
+      _exit (failcode);
+    }
+  else if (pid < 0)
+    {
+      save_errno = errno;
+      message (path);
+      says (" fork failed with errno ");
+      sayn (save_errno);
+      says ("\n");
+      _exit (failcode + 1);
+    }
+  if (waitpid (0, &status, 0) != pid || !WIFEXITED (status))
+    {
+      message (path);
+      says (" child terminated abnormally\n");
+      _exit (failcode + 2);
+    }
+  if (WEXITSTATUS (status))
+    {
+      message (path);
+      says (" child exited with exit code ");
+      sayn (WEXITSTATUS (status));
+      says ("\n");
+      _exit (WEXITSTATUS (status));
+    }
+}
+
+void
+says (const char *str)
+{
+  write (1, str, strlen (str));
+}
+
+void
+sayn (long num)
+{
+  char string[sizeof (long) * 3 + 1];
+  char *p = string + sizeof (string) - 1;
+
+  *p = '\0';
+  if (num == 0)
+    *--p = '0';
+  else
+    while (num)
+      {
+        *--p = '0' + num % 10;
+        num = num / 10;
+      }
+
+  says (p);
+}
+
+void
+message (char *const path[])
+{
+  says ("/usr/sbin/glibc_post_upgrade: While trying to execute ");
+  says (path[0]);
 }

@@ -74,28 +74,28 @@ ifeq (yesyes,$(have-fpie)$(build-shared))
 nscd-cflags += -fpie
 endif
 
-CFLAGS-nscd.c = $(nscd-cflags)
-CFLAGS-connections.c = $(nscd-cflags)
-CFLAGS-pwdcache.c = $(nscd-cflags)
-CFLAGS-getpwnam_r.c = $(nscd-cflags)
-CFLAGS-getpwuid_r.c = $(nscd-cflags)
-CFLAGS-grpcache.c = $(nscd-cflags)
-CFLAGS-getgrnam_r.c = $(nscd-cflags)
-CFLAGS-getgrgid_r.c = $(nscd-cflags)
-CFLAGS-hstcache.c = $(nscd-cflags)
-CFLAGS-gethstbyad_r.c = $(nscd-cflags)
-CFLAGS-gethstbynm2_r.c = $(nscd-cflags)
-CFLAGS-dbg_log.c = $(nscd-cflags)
-CFLAGS-nscd_conf.c = $(nscd-cflags)
-CFLAGS-nscd_stat.c = $(nscd-cflags)
-CFLAGS-cache.c = $(nscd-cflags)
-CFLAGS-xmalloc.c = $(nscd-cflags)
-CFLAGS-xstrdup.c = $(nscd-cflags)
-CFLAGS-mem.c = $(nscd-cflags)
-CFLAGS-nscd_setup_thread.c = $(nscd-cflags)
-CFLAGS-aicache.c = $(nscd-cflags)
-CFLAGS-selinux.c = $(nscd-cflags)
-CFLAGS-initgrcache.c = $(nscd-cflags)
+CFLAGS-nscd.c += $(nscd-cflags)
+CFLAGS-connections.c += $(nscd-cflags)
+CFLAGS-pwdcache.c += $(nscd-cflags)
+CFLAGS-getpwnam_r.c += $(nscd-cflags)
+CFLAGS-getpwuid_r.c += $(nscd-cflags)
+CFLAGS-grpcache.c += $(nscd-cflags)
+CFLAGS-getgrnam_r.c += $(nscd-cflags)
+CFLAGS-getgrgid_r.c += $(nscd-cflags)
+CFLAGS-hstcache.c += $(nscd-cflags)
+CFLAGS-gethstbyad_r.c += $(nscd-cflags)
+CFLAGS-gethstbynm2_r.c += $(nscd-cflags)
+CFLAGS-dbg_log.c += $(nscd-cflags)
+CFLAGS-nscd_conf.c += $(nscd-cflags)
+CFLAGS-nscd_stat.c += $(nscd-cflags)
+CFLAGS-cache.c += $(nscd-cflags)
+CFLAGS-xmalloc.c += $(nscd-cflags)
+CFLAGS-xstrdup.c += $(nscd-cflags)
+CFLAGS-mem.c += $(nscd-cflags)
+CFLAGS-nscd_setup_thread.c += $(nscd-cflags)
+CFLAGS-aicache.c += $(nscd-cflags)
+CFLAGS-selinux.c += $(nscd-cflags)
+CFLAGS-initgrcache.c += $(nscd-cflags)
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
 $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
@@ -117,9 +117,11 @@ $(objpfx)nscd: $(nscd-modules:%=$(objpfx)%.o)
 $(objpfx)nscd_nischeck: $(objpfx)nscd_nischeck.o
 
 ifeq ($(build-shared),yes)
-$(objpfx)nscd: $(shared-thread-library) $(common-objpfx)nis/libnsl.so
+$(objpfx)nscd: $(common-objpfx)rt/librt.so $(shared-thread-library) \
+	       $(common-objpfx)nis/libnsl.so
 $(objpfx)nscd_nischeck: $(common-objpfx)nis/libnsl.so
 else
-$(objpfx)nscd: $(static-thread-library) $(common-objpfx)nis/libnsl.a
+$(objpfx)nscd: $(common-objpfx)rt/librt.a $(static-thread-library) \
+	       $(common-objpfx)nis/libnsl.a
 $(objpfx)nscd_nischeck: $(common-objpfx)nis/libnsl.a
 endif

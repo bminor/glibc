@@ -1,4 +1,4 @@
-%define glibcrelease 63
+%define glibcrelease 64
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1239,7 +1239,18 @@ rm -f *.filelist*
 %endif
 
 %changelog
-* Fri Oct  1 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-62
+* Mon Oct  4 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-64
+- update from CVS
+  - stop using __builtin_expect in assert and assert_perror
+    (#127606)
+  - try to avoid too much VA fragmentation with malloc
+    on flexmap layout (#118574)
+  - nscd robustification
+  - change valloc to use debugging hooks (#134385)
+- make glibc_post_upgrade more verbose on errors (Fergal Daly,
+  #125700)
+
+* Fri Oct  1 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-63
 - update from CVS
   - fix __nscd_getgrouplist
   - fix a typo in x86_64 pthread_mutex_timedwait fix

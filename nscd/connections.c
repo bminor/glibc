@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <alloca.h>
 #include <assert.h>
 #include <atomic.h>
 #include <error.h>
@@ -32,6 +33,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#ifdef HAVE_EPOLL
+# include <sys/epoll.h>
+#endif
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/poll.h>
@@ -64,6 +68,8 @@ static gid_t *server_groups;
 # define NGROUPS 32
 #endif
 static int server_ngroups;
+
+static pthread_attr_t attr;
 
 static void begin_drop_privileges (void);
 static void finish_drop_privileges (void);
@@ -163,8 +169,10 @@ static struct database_dyn *const serv2db[LASTREQ] =
 #define CACHE_PRUNE_INTERVAL	15
 
 
-/* Number of threads to use.  */
+/* Initial number of threads to use.  */
 int nthreads = -1;
+/* Maximum number of threads to use.  */
+int max_nthreads = 32;
 
 /* Socket for incoming connections.  */
 static int sock;
@@ -434,6 +442,18 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 	      }
 	  }
 
+	if (paranoia
+	    && ((dbs[cnt].wr_fd != -1
+		 && fcntl (dbs[cnt].wr_fd, F_SETFD, FD_CLOEXEC) == -1)
+		|| (dbs[cnt].ro_fd != -1
+		    && fcntl (dbs[cnt].ro_fd, F_SETFD, FD_CLOEXEC) == -1)))
+	  {
+	    dbg_log (_("\
+cannot set socket to close on exec: %s; disabling paranoia mode"),
+		     strerror (errno));
+	    paranoia = 0;
+	  }
+
 	if (dbs[cnt].head == NULL)
 	  {
 	    /* We do not use the persistent database.  Just
@@ -490,11 +510,22 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
       exit (1);
     }
 
-  /* We don't wait for data otherwise races between threads can get
-     them stuck on accept.  */
+  /* We don't want to get stuck on accept.  */
   int fl = fcntl (sock, F_GETFL);
-  if (fl != -1)
-    fcntl (sock, F_SETFL, fl | O_NONBLOCK);
+  if (fl == -1 || fcntl (sock, F_SETFL, fl | O_NONBLOCK) == -1)
+    {
+      dbg_log (_("cannot change socket to nonblocking mode: %s"),
+	       strerror (errno));
+      exit (1);
+    }
+
+  /* The descriptor needs to be closed on exec.  */
+  if (paranoia && fcntl (sock, F_SETFD, FD_CLOEXEC) == -1)
+    {
+      dbg_log (_("cannot set socket to close on exec: %s"),
+	       strerror (errno));
+      exit (1);
+    }
 
   /* Set permissions for the socket.  */
   chmod (_PATH_NSCDSOCKET, DEFFILEMODE);
@@ -785,91 +816,253 @@ cannot handle old request version %d; current version is %d"),
 }
 
 
+/* Restart the process.  */
+static void
+restart (void)
+{
+  /* First determine the parameters.  We do not use the parameters
+     passed to main() since in case nscd is started by running the
+     dynamic linker this will not work.  Yes, this is not the usual
+     case but nscd is part of glibc and we occasionally do this.  */
+  size_t buflen = 1024;
+  char *buf = alloca (buflen);
+  size_t readlen = 0;
+  int fd = open ("/proc/self/cmdline", O_RDONLY);
+  if (fd == -1)
+    {
+      dbg_log (_("\
+cannot open /proc/self/cmdline: %s; disabling paranoia mode"),
+	       strerror (errno));
+
+      paranoia = 0;
+      return;
+    }
+
+  while (1)
+    {
+      ssize_t n = TEMP_FAILURE_RETRY (read (fd, buf + readlen,
+					    buflen - readlen));
+      if (n == -1)
+	{
+	  dbg_log (_("\
+cannot open /proc/self/cmdline: %s; disabling paranoia mode"),
+		   strerror (errno));
+
+	  close (fd);
+	  paranoia = 0;
+	  return;
+	}
+
+      readlen += n;
+
+      if (readlen < buflen)
+	break;
+
+      /* We might have to extend the buffer.  */
+      size_t old_buflen = buflen;
+      char *newp = extend_alloca (buf, buflen, 2 * buflen);
+      buf = memmove (newp, buf, old_buflen);
+    }
+
+  close (fd);
+
+  /* Parse the command line.  Worst case scenario: every two
+     characters form one parameter (one character plus NUL).  */
+  char **argv = alloca ((readlen / 2 + 1) * sizeof (argv[0]));
+  int argc = 0;
+
+  char *cp = buf;
+  while (cp < buf + readlen)
+    {
+      argv[argc++] = cp;
+      cp = (char *) rawmemchr (cp, '\0') + 1;
+    }
+  argv[argc] = NULL;
+
+  /* Second, change back to the old user if we changed it.  */
+  if (server_user != NULL)
+    {
+      if (setuid (old_uid) != 0)
+	{
+	  dbg_log (_("\
+cannot change to old UID: %s; disabling paranoia mode"),
+		   strerror (errno));
+
+	  paranoia = 0;
+	  return;
+	}
+
+      if (setgid (old_gid) != 0)
+	{
+	  dbg_log (_("\
+cannot change to old GID: %s; disabling paranoia mode"),
+		   strerror (errno));
+
+	  setuid (server_uid);
+	  paranoia = 0;
+	  return;
+	}
+    }
+
+  /* Next change back to the old working directory.  */
+  if (chdir (oldcwd) == -1)
+    {
+      dbg_log (_("\
+cannot change to old working directory: %s; disabling paranoia mode"),
+	       strerror (errno));
+
+      if (server_user != NULL)
+	{
+	  setuid (server_uid);
+	  setgid (server_gid);
+	}
+      paranoia = 0;
+      return;
+    }
+
+  /* Synchronize memory.  */
+  for (int cnt = 0; cnt < lastdb; ++cnt)
+    {
+      /* Make sure nobody keeps using the database.  */
+      dbs[cnt].head->timestamp = 0;
+
+      if (dbs[cnt].persistent)
+	// XXX async OK?
+	msync (dbs[cnt].head, dbs[cnt].memsize, MS_ASYNC);
+    }
+
+  /* The preparations are done.  */
+  execv ("/proc/self/exe", argv);
+
+  /* If we come here, we will never be able to re-exec.  */
+  dbg_log (_("re-exec failed: %s; disabling paranoia mode"),
+	   strerror (errno));
+
+  if (server_user != NULL)
+    {
+      setuid (server_uid);
+      setgid (server_gid);
+    }
+  chdir ("/");
+  paranoia = 0;
+}
+
+
+/* List of file descriptors.  */
+struct fdlist
+{
+  int fd;
+  struct fdlist *next;
+};
+/* Memory allocated for the list.  */
+static struct fdlist *fdlist;
+/* List of currently ready-to-read file descriptors.  */
+static struct fdlist *readylist;
+
+/* Conditional variable and mutex to signal availability of entries in
+   READYLIST.  The condvar is initialized dynamically since we might
+   use a different clock depending on availability.  */
+static pthread_cond_t readylist_cond;
+static pthread_mutex_t readylist_lock = PTHREAD_MUTEX_INITIALIZER;
+
+/* The clock to use with the condvar.  */
+static clockid_t timeout_clock = CLOCK_REALTIME;
+
+/* Number of threads ready to handle the READYLIST.  */
+static unsigned long int nready;
+
+
 /* This is the main loop.  It is replicated in different threads but the
    `poll' call makes sure only one thread handles an incoming connection.  */
 static void *
 __attribute__ ((__noreturn__))
 nscd_run (void *p)
 {
-  long int my_number = (long int) p;
-  struct pollfd conn;
-  int run_prune = my_number < lastdb && dbs[my_number].enabled;
-  time_t next_prune = run_prune ? time (NULL) + CACHE_PRUNE_INTERVAL : 0;
-  static unsigned long int nready;
+  const long int my_number = (long int) p;
+  const int run_prune = my_number < lastdb && dbs[my_number].enabled;
+  struct timespec prune_ts;
+  int to = 0;
+  char buf[256];
 
   if (run_prune)
-    setup_thread (&dbs[my_number]);
+    {
+      setup_thread (&dbs[my_number]);
 
-  conn.fd = sock;
-  conn.events = POLLRDNORM;
+      /* We are running.  */
+      dbs[my_number].head->timestamp = time (NULL);
+
+      if (clock_gettime (timeout_clock, &prune_ts) == -1)
+	/* Should never happen.  */
+	abort ();
+
+      /* Compute timeout time.  */
+      prune_ts.tv_sec += CACHE_PRUNE_INTERVAL;
+    }
+
+  /* Initial locking.  */
+  pthread_mutex_lock (&readylist_lock);
+
+  /* One more thread available.  */
+  ++nready;
 
   while (1)
     {
-      int nr;
-      time_t now = 0;
-
-      /* One more thread available.  */
-      atomic_increment (&nready);
-
-    no_conn:
-      do
+      while (readylist == NULL)
 	{
-	  int timeout = -1;
 	  if (run_prune)
 	    {
-	      /* NB: we do not flush the timestamp update using msync since
-		 this value doesnot matter on disk.  */
-	      dbs[my_number].head->timestamp = now = time (NULL);
-	      timeout = now < next_prune ? 1000 * (next_prune - now) : 0;
+	      /* Wait, but not forever.  */
+	      to = pthread_cond_timedwait (&readylist_cond, &readylist_lock,
+					   &prune_ts);
+
+	      /* If we were woken and there is no work to be done,
+		 just start pruning.  */
+	      if (readylist == NULL && to == ETIMEDOUT)
+		{
+		  --nready;
+		  pthread_mutex_unlock (&readylist_lock);
+		  goto only_prune;
+		}
 	    }
-
-	  nr = poll (&conn, 1, timeout);
-
-	  if (nr == 0)
-	    {
-	      /* The `poll' call timed out.  It's time to clean up the
-		 cache.  */
-	      atomic_decrement (&nready);
-	      assert (my_number < lastdb);
-	      prune_cache (&dbs[my_number], time(NULL));
-	      now = time (NULL);
-	      next_prune = now + CACHE_PRUNE_INTERVAL;
-
-	      goto try_get;
-	    }
-	}
-      while ((conn.revents & POLLRDNORM) == 0);
-
-    got_data:;
-      /* We have a new incoming connection.  Accept the connection.  */
-      int fd = TEMP_FAILURE_RETRY (accept (conn.fd, NULL, NULL));
-      request_header req;
-      char buf[256];
-      uid_t uid = -1;
-#ifdef SO_PEERCRED
-      pid_t pid = 0;
-#endif
-
-      if (__builtin_expect (fd, 0) < 0)
-	{
-	  if (errno != EAGAIN && errno != EWOULDBLOCK)
-	    dbg_log (_("while accepting connection: %s"),
-		     strerror_r (errno, buf, sizeof (buf)));
-	  goto no_conn;
+	  else
+	    /* No need to timeout.  */
+	    pthread_cond_wait (&readylist_cond, &readylist_lock);
 	}
 
-      /* This thread is busy.  */
-      atomic_decrement (&nready);
+      struct fdlist *it = readylist->next;
+      if (readylist->next == readylist)
+	/* Just one entry on the list.  */
+	readylist = NULL;
+      else
+	readylist->next = it->next;
+
+      /* Extract the information and mark the record ready to be used
+	 again.  */
+      int fd = it->fd;
+      it->next = NULL;
+
+      /* One more thread available.  */
+      --nready;
+
+      /* We are done with the list.  */
+      pthread_mutex_unlock (&readylist_lock);
+
+      /* We do not want to block on a short read or so.  */
+      int fl = fcntl (fd, F_GETFL);
+      if (fl == -1 || fcntl (fd, F_SETFL, fl | O_NONBLOCK) == -1)
+	goto close_and_out;
 
       /* Now read the request.  */
+      request_header req;
       if (__builtin_expect (TEMP_FAILURE_RETRY (read (fd, &req, sizeof (req)))
 			    != sizeof (req), 0))
 	{
+	  /* We failed to read data.  Note that this also might mean we
+	     failed because we would have blocked.  */
 	  if (debug_level > 0)
 	    dbg_log (_("short read while reading request: %s"),
 		     strerror_r (errno, buf, sizeof (buf)));
-	  close (fd);
-	  continue;
+	  goto close_and_out;
 	}
 
       /* Check whether this is a valid request type.  */
@@ -878,7 +1071,10 @@ nscd_run (void *p)
 
       /* Some systems have no SO_PEERCRED implementation.  They don't
 	 care about security so we don't as well.  */
+      uid_t uid = -1;
 #ifdef SO_PEERCRED
+      pid_t pid = 0;
+
       if (secure_in_use)
 	{
 	  struct ucred caller;
@@ -909,8 +1105,9 @@ nscd_run (void *p)
 
       /* It should not be possible to crash the nscd with a silly
 	 request (i.e., a terribly large key).  We limit the size to 1kb.  */
+#define MAXKEYLEN 1024
       if (__builtin_expect (req.key_len, 1) < 0
-	  || __builtin_expect (req.key_len, 1) > 1024)
+	  || __builtin_expect (req.key_len, 1) > MAXKEYLEN)
 	{
 	  if (debug_level > 0)
 	    dbg_log (_("key length in request too long: %d"), req.key_len);
@@ -918,17 +1115,17 @@ nscd_run (void *p)
       else
 	{
 	  /* Get the key.  */
-	  char keybuf[req.key_len];
+	  char keybuf[MAXKEYLEN];
 
 	  if (__builtin_expect (TEMP_FAILURE_RETRY (read (fd, keybuf,
 							  req.key_len))
 				!= req.key_len, 0))
 	    {
+	      /* Again, this can also mean we would have blocked.  */
 	      if (debug_level > 0)
 		dbg_log (_("short read while reading request key: %s"),
 			 strerror_r (errno, buf, sizeof (buf)));
-	      close (fd);
-	      continue;
+	      goto close_and_out;
 	    }
 
 	  if (__builtin_expect (debug_level, 0) > 0)
@@ -952,44 +1149,380 @@ handle_request: request received (Version = %d)"), req.version);
       /* We are done.  */
       close (fd);
 
-      /* Just determine whether any data is present.  We do this to
-	 measure whether clients are queued up.  */
-    try_get:
-      nr = poll (&conn, 1, 0);
-      if (nr != 0)
+      /* Check whether we should be pruning the cache. */
+      assert (run_prune || to == 0);
+      if (to == ETIMEDOUT)
 	{
-	  if (nready == 0)
-	    ++client_queued;
+	only_prune:
+	  /* The pthread_cond_timedwait() call timed out.  It is time
+		 to clean up the cache.  */
+	  assert (my_number < lastdb);
+	  prune_cache (&dbs[my_number],
+		       prune_ts.tv_sec + (prune_ts.tv_nsec >= 500000000));
 
-	  atomic_increment (&nready);
+	  if (clock_gettime (timeout_clock, &prune_ts) == -1)
+	    /* Should never happen.  */
+	    abort ();
 
-	  goto got_data;
+	  /* Compute next timeout time.  */
+	  prune_ts.tv_sec += CACHE_PRUNE_INTERVAL;
+
+	  /* In case the list is emtpy we do not want to run the prune
+	     code right away again.  */
+	  to = 0;
 	}
+
+      /* Re-locking.  */
+      pthread_mutex_lock (&readylist_lock);
+
+      /* One more thread available.  */
+      ++nready;
     }
 }
+
+
+static unsigned int nconns;
+
+static void
+fd_ready (int fd)
+{
+  pthread_mutex_lock (&readylist_lock);
+
+  /* Find an empty entry in FDLIST.  */
+  size_t inner;
+  for (inner = 0; inner < nconns; ++inner)
+    if (fdlist[inner].next == NULL)
+      break;
+  assert (inner < nconns);
+
+  fdlist[inner].fd = fd;
+
+  if (readylist == NULL)
+    readylist = fdlist[inner].next = &fdlist[inner];
+  else
+    {
+      fdlist[inner].next = readylist->next;
+      readylist = readylist->next = &fdlist[inner];
+    }
+
+  bool do_signal = true;
+  if (__builtin_expect (nready == 0, 0))
+    {
+      ++client_queued;
+      do_signal = false;
+
+      /* Try to start another thread to help out.  */
+      pthread_t th;
+      if (nthreads < max_nthreads
+	  && pthread_create (&th, &attr, nscd_run,
+			     (void *) (long int) nthreads) == 0)
+	{
+	  /* We got another thread.  */
+	  ++nthreads;
+	  /* The new thread might new a kick.  */
+	  do_signal = true;
+	}
+
+    }
+
+  pthread_mutex_unlock (&readylist_lock);
+
+  /* Tell one of the worker threads there is work to do.  */
+  if (do_signal)
+    pthread_cond_signal (&readylist_cond);
+}
+
+
+/* Check whether restarting should happen.  */
+static inline int
+restart_p (time_t now)
+{
+  return (paranoia && readylist == NULL && nready == nthreads
+	  && now >= restart_time);
+}
+
+
+/* Array for times a connection was accepted.  */
+static time_t *starttime;
+
+
+static void
+__attribute__ ((__noreturn__))
+main_loop_poll (void)
+{
+  struct pollfd *conns = (struct pollfd *) xmalloc (nconns
+						    * sizeof (conns[0]));
+
+  conns[0].fd = sock;
+  conns[0].events = POLLRDNORM;
+  size_t nused = 1;
+  size_t firstfree = 1;
+
+  while (1)
+    {
+      /* Wait for any event.  We wait at most a couple of seconds so
+	 that we can check whether we should close any of the accepted
+	 connections since we have not received a request.  */
+#define MAX_ACCEPT_TIMEOUT 30
+#define MIN_ACCEPT_TIMEOUT 5
+#define MAIN_THREAD_TIMEOUT \
+  (MAX_ACCEPT_TIMEOUT * 1000						      \
+   - ((MAX_ACCEPT_TIMEOUT - MIN_ACCEPT_TIMEOUT) * 1000 * nused) / (2 * nconns))
+
+      int n = poll (conns, nused, MAIN_THREAD_TIMEOUT);
+
+      time_t now = time (NULL);
+
+      /* If there is a descriptor ready for reading or there is a new
+	 connection, process this now.  */
+      if (n > 0)
+	{
+	  if (conns[0].revents != 0)
+	    {
+	      /* We have a new incoming connection.  Accept the connection.  */
+	      int fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
+
+	      /* use the descriptor if we have not reached the limit.  */
+	      if (fd >= 0 && firstfree < nconns)
+		{
+		  conns[firstfree].fd = fd;
+		  conns[firstfree].events = POLLRDNORM;
+		  starttime[firstfree] = now;
+		  if (firstfree >= nused)
+		    nused = firstfree + 1;
+
+		  do
+		    ++firstfree;
+		  while (firstfree < nused && conns[firstfree].fd != -1);
+		}
+
+	      --n;
+	    }
+
+	  for (size_t cnt = 1; cnt < nused && n > 0; ++cnt)
+	    if (conns[cnt].revents != 0)
+	      {
+		fd_ready (conns[cnt].fd);
+
+		/* Clean up the CONNS array.  */
+		conns[cnt].fd = -1;
+		if (cnt < firstfree)
+		  firstfree = cnt;
+		if (cnt == nused - 1)
+		  do
+		    --nused;
+		  while (conns[nused - 1].fd == -1);
+
+		--n;
+	      }
+	}
+
+      /* Now find entries which have timed out.  */
+      assert (nused > 0);
+
+      /* We make the timeout length depend on the number of file
+	 descriptors currently used.  */
+#define ACCEPT_TIMEOUT \
+  (MAX_ACCEPT_TIMEOUT							      \
+   - ((MAX_ACCEPT_TIMEOUT - MIN_ACCEPT_TIMEOUT) * nused) / nconns)
+      time_t laststart = now - ACCEPT_TIMEOUT;
+
+      for (size_t cnt = nused - 1; cnt > 0; --cnt)
+	{
+	  if (conns[cnt].fd != -1 && starttime[cnt] < laststart)
+	    {
+	      /* Remove the entry, it timed out.  */
+	      (void) close (conns[cnt].fd);
+	      conns[cnt].fd = -1;
+
+	      if (cnt < firstfree)
+		firstfree = cnt;
+	      if (cnt == nused - 1)
+		do
+		  --nused;
+		while (conns[nused - 1].fd == -1);
+	    }
+	}
+
+      if (restart_p (now))
+	restart ();
+    }
+}
+
+
+#ifdef HAVE_EPOLL
+static void
+main_loop_epoll (int efd)
+{
+  struct epoll_event ev = { 0, };
+  int nused = 1;
+  size_t highest = 0;
+
+  /* Add the socket.  */
+  ev.events = EPOLLRDNORM;
+  ev.data.fd = sock;
+  if (epoll_ctl (efd, EPOLL_CTL_ADD, sock, &ev) == -1)
+    /* We cannot use epoll.  */
+    return;
+
+  while (1)
+    {
+      struct epoll_event revs[100];
+# define nrevs (sizeof (revs) / sizeof (revs[0]))
+
+      int n = epoll_wait (efd, revs, nrevs, MAIN_THREAD_TIMEOUT);
+
+      time_t now = time (NULL);
+
+      for (int cnt = 0; cnt < n; ++cnt)
+	if (revs[cnt].data.fd == sock)
+	  {
+	    /* A new connection.  */
+	    int fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
+
+	    if (fd >= 0)
+	      {
+		/* Try to add the  new descriptor.  */
+		ev.data.fd = fd;
+		if (fd >= nconns
+		    || epoll_ctl (efd, EPOLL_CTL_ADD, fd, &ev) == -1)
+		  /* The descriptor is too large or something went
+		     wrong.  Close the descriptor.  */
+		  close (fd);
+		else
+		  {
+		    /* Remember when we accepted the connection.  */
+		    starttime[fd] = now;
+
+		    if (fd > highest)
+		      highest = fd;
+
+		    ++nused;
+		  }
+	      }
+	  }
+	else
+	  {
+	    /* Remove the descriptor from the epoll descriptor.  */
+	    struct epoll_event ev = { 0, };
+	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, revs[cnt].data.fd, &ev);
+
+	    /* Get a worked to handle the request.  */
+	    fd_ready (revs[cnt].data.fd);
+
+	    /* Reset the time.  */
+	    starttime[revs[cnt].data.fd] = 0;
+	    if (revs[cnt].data.fd == highest)
+	      do
+		--highest;
+	      while (highest > 0 && starttime[highest] == 0);
+
+	    --nused;
+	  }
+
+      /*  Now look for descriptors for accepted connections which have
+	  no reply in too long of a time.  */
+      time_t laststart = now - ACCEPT_TIMEOUT;
+      for (int cnt = highest; cnt > STDERR_FILENO; --cnt)
+	if (cnt != sock && starttime[cnt] != 0 && starttime[cnt] < laststart)
+	  {
+	    /* We are waiting for this one for too long.  Close it.  */
+	    struct epoll_event ev = {0, };
+	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, cnt, &ev);
+
+	    (void) close (cnt);
+
+	    starttime[cnt] = 0;
+	    if (cnt == highest)
+	      --highest;
+	  }
+	else if (cnt != sock && starttime[cnt] == 0 && cnt == highest)
+	  --highest;
+
+      if (restart_p (now))
+	restart ();
+    }
+}
+#endif
 
 
 /* Start all the threads we want.  The initial process is thread no. 1.  */
 void
 start_threads (void)
 {
-  long int i;
-  pthread_attr_t attr;
-  pthread_t th;
+  /* Initialize the conditional variable we will use.  The only
+     non-standard attribute we might use is the clock selection.  */
+  pthread_condattr_t condattr;
+  pthread_condattr_init (&condattr);
 
+#if _POSIX_CLOCK_SELECTION >= 0 && _POSIX_MONOTONIC_CLOCK >= 0
+  /* Determine whether the monotonous clock is available.  */
+  struct timespec dummy;
+  if (clock_getres (CLOCK_MONOTONIC, &dummy) == 0
+      && pthread_condattr_setclock (&condattr, CLOCK_MONOTONIC) == 0)
+    timeout_clock = CLOCK_MONOTONIC;
+#endif
+
+  pthread_cond_init (&readylist_cond, &condattr);
+  pthread_condattr_destroy (&condattr);
+
+
+  /* Create the attribute for the threads.  They are all created
+     detached.  */
   pthread_attr_init (&attr);
   pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+  /* Use 1MB stacks, twice as much for 64-bit architectures.  */
+  pthread_attr_setstacksize (&attr, 1024 * 1024 * (sizeof (void *) / 4));
 
   /* We allow less than LASTDB threads only for debugging.  */
   if (debug_level == 0)
     nthreads = MAX (nthreads, lastdb);
 
-  for (i = 1; i < nthreads; ++i)
-    pthread_create (&th, &attr, nscd_run, (void *) i);
+  int nfailed = 0;
+  for (long int i = 0; i < nthreads; ++i)
+    {
+      pthread_t th;
+      if (pthread_create (&th, &attr, nscd_run, (void *) (i - nfailed)) != 0)
+	++nfailed;
+    }
+  if (nthreads - nfailed < lastdb)
+    {
+      /* We could not start enough threads.  */
+      dbg_log (_("could only start %d threads; terminating"),
+	       nthreads - nfailed);
+      exit (1);
+    }
 
-  pthread_attr_destroy (&attr);
+  /* Determine how much room for descriptors we should initially
+     allocate.  This might need to change later if we cap the number
+     with MAXCONN.  */
+  const long int nfds = sysconf (_SC_OPEN_MAX);
+#define MINCONN 32
+#define MAXCONN 16384
+  if (nfds == -1 || nfds > MAXCONN)
+    nconns = MAXCONN;
+  else if (nfds < MINCONN)
+    nconns = MINCONN;
+  else
+    nconns = nfds;
 
-  nscd_run ((void *) 0);
+  /* We need memory to pass descriptors on to the worker threads.  */
+  fdlist = (struct fdlist *) xcalloc (nconns, sizeof (fdlist[0]));
+  /* Array to keep track when connection was accepted.  */
+  starttime = (time_t *) xcalloc (nconns, sizeof (starttime[0]));
+
+  /* In the main thread we execute the loop which handles incoming
+     connections.  */
+#ifdef HAVE_EPOLL
+  int efd = epoll_create (100);
+  if (efd != -1)
+    {
+      main_loop_epoll (efd);
+      close (efd);
+    }
+#endif
+
+  main_loop_poll ();
 }
 
 /* Look up the uid, gid, and supplementary groups to run nscd as. When
@@ -1009,6 +1542,13 @@ begin_drop_privileges (void)
 
   server_uid = pwd->pw_uid;
   server_gid = pwd->pw_gid;
+
+  /* Save the old UID/GID if we have to change back.  */
+  if (paranoia)
+    {
+      old_uid = getuid ();
+      old_gid = getgid ();
+    }
 
   if (getgrouplist (server_user, server_gid, NULL, &server_ngroups) == 0)
     {

@@ -50,6 +50,10 @@ typedef enum
 #define DEFAULT_RELOAD_LIMIT 5
 
 
+/* Time before restarting the process in paranoia mode.  */
+#define RESTART_INTERVAL (60 * 60)
+
+
 /* Structure describing dynamic part of one database.  */
 struct database_dyn
 {
@@ -98,8 +102,10 @@ extern const struct iovec grp_iov_disabled;
 extern const struct iovec hst_iov_disabled;
 
 
-/* Number of threads to run.  */
+/* Initial number of threads to run.  */
 extern int nthreads;
+/* Maximum number of threads to use.  */
+extern int max_nthreads;
 
 /* Tables for which we cache data with uid.  */
 extern int secure_in_use; /* Is one of the above 1?  */
@@ -126,6 +132,19 @@ extern unsigned int reload_count;
 
 /* Pagesize minus one.  */
 extern uintptr_t pagesize_m1;
+
+/* Nonzero if paranoia mode is enabled.  */
+extern int paranoia;
+/* Time after which the process restarts.  */
+extern time_t restart_time;
+/* How much time between restarts.  */
+extern time_t restart_interval;
+/* Old current working directory.  */
+extern const char *oldcwd;
+/* Old user and group ID.  */
+extern uid_t old_uid;
+extern gid_t old_gid;
+
 
 /* Prototypes for global functions.  */
 
