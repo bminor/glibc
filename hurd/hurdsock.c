@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/paths.h>
 #include <gnu-stabs.h>
 #include <stdio.h>
+#include "stdio/_itoa.h"
 
 #ifdef noteven
 static struct mutex lock;
@@ -68,7 +69,12 @@ _hurd_socket_server (int domain)
 
   {
     char name[sizeof (_SERVERS_SOCKET) + 100];
-    sprintf (name, "%s/%d", _SERVERS_SOCKET, domain);
+    char *np = &name[sizeof (name)];
+    *--np = '\0';
+    np = _itoa (domain, np, 10, 0);
+    *--np = '/';
+    np -= sizeof (_SERVERS_SOCKET) - 1;
+    memcpy (np, _SERVERS_SOCKET, sizeof (_SERVERS_SOCKET) - 1);
     servers[domain] = __path_lookup (name, 0, 0);
   }
 
