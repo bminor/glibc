@@ -25,15 +25,13 @@ Cambridge, MA 02139, USA.  */
 long int
 DEFUN(ftell, (stream), FILE *stream)
 {
-  extern int EXFUN(__stdio_check_offset, (FILE *));
-
-  if (!__validfp(stream))
+  if (!__validfp (stream))
     {
       errno = EINVAL;
       return -1L;
     }
 
-  if (__stdio_check_offset(stream) == EOF)
+  if (__stdio_check_offset (stream) == EOF)
     return -1L;
 
   return stream->__target + (stream->__bufp - stream->__buffer);
