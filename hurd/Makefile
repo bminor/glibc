@@ -36,7 +36,7 @@ server-interfaces	:= hurd/msg
 
 routines = $(interface-routines) \
 	   hurdid hurdpath hurdpid hurdports \
-	   hurdexec fexecve \
+	   hurdexec \
 	   __setauth setauth \
 	   __pid2task __task2pid pid2task task2pid \
 	   getuids setuids getumask fchroot \
