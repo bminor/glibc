@@ -1464,7 +1464,7 @@ arose since the last run.
 On some modern systems where the sticky bit has no useful meaning for an
 executable file, you cannot set the bit at all for a non-directory.
 If you try, @code{chmod} fails with @code{EFTYPE}; 
-@pxref{Assigning File Permissions}.
+@pxref{Setting Permissions}.
 
 Some systems (particularly SunOS) have yet another use for the sticky
 bit.  If the sticky bit is set on a file that is @emph{not} executable,
