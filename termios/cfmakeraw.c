@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,34 +17,17 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <errno.h>
-#include <stddef.h>
 #include <termios.h>
-#include <unistd.h>
-#include "bsdtty.h"
-#include <sys/file.h>
 
-/* Flush pending data on FD.  */
-int
-DEFUN(tcflush, (fd, queue_selector), int fd AND int queue_selector)
+/* Set *T to indicate raw mode.  */
+void
+DEFUN(cfmakeraw, (termios_p), struct termios *t)
 {
-  int arg;
-
-  switch (queue_selector)
-    {
-    case TCIFLUSH:
-      arg = FREAD;
-      break;
-    case TCOFLUSH:
-      arg = FWRITE;
-      break;
-    case TCIOFLUSH:
-      arg = FREAD | FWRITE;
-      break;
-    default:
-      errno = EINVAL;
-      return -1;
-    }
-
-  return __ioctl (fd, TIOCFLUSH, (PTR) &arg);
+  t->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
+  t->c_oflag &= ~OPOST;
+  t->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
+  t->c_cflag &= ~(CSIZE|PARENB);
+  t->c_cflag |= CS8;
+  t->c_cc[VMIN] = 0;
+  /* t->c_cc[VTIME] = ?; */
 }

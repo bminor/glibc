@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -41,11 +41,11 @@ DEFUN(tcflow, (fd, action), int fd AND int action)
 	/* This just writes the START or STOP character with
 	   `write'.  Is there another way to do this?  */
 	struct termios attr;
-	char c;
+	unsigned char c;
 	if (tcgetattr(fd, &attr) < 0)
 	  return -1;
 	c = attr.c_cc[action == TCIOFF ? VSTOP : VSTART];
-	if (write(fd, &c, 1) < 1)
+	if (c != _POSIX_VDISABLE && write (fd, &c, 1) < 1)
 	  return -1;
 	return 0;
       }
