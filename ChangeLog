@@ -1,3 +1,31 @@
+1998-02-02 00:17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/getXXbyYY_r.c: Correct handling of TRYAGAIN error when buffer
+	is too small.
+	* nss/getXXent_r.c: Likewise.
+
+1998-02-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Dist: Add netrose/rose.h.
+
+1998-02-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* rtld.c (dl_main): Allow ":" as separator for LD_PRELOAD. Patch
+	by Rudolf Leitgeb <leitgeb@leland.stanford.edu>.
+	[PR libc/441]
+
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Use first
+	occurence in cache. Reported by Rudolf Leitgeb
+	<leitgeb@leland.stanford.edu>.
+	[PR libc/440]
+
+	* nss/nss_files/files-service.c: Undo last change.
+
+1998-01-31 11:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/efgcvt_r.c (fcvt_r): Handle illegal NDIGIT correctly.
+	[PR libc/410]
+
 1998-01-26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* stdio-common/vfprintf.c (process_arg): Fix printing of octal
