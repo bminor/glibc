@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <signal.h>
 #include <hurd.h>
+#include <hurd/signal.h>
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
@@ -27,7 +28,7 @@ int
 DEFUN(__sigaction, (sig, act, oact),
       int sig AND CONST struct sigaction *act AND struct sigaction *oact)
 {
-  struct _hurd_sigstate *ss;
+  struct hurd_sigstate *ss;
   struct sigaction a, old;
 
   if (sig <= 0 || sig >= NSIG ||
