@@ -18,8 +18,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <ctype.h>
 
-/* Different systems have different names for the array.  This order
-   is important for some systems.  */
+/* Different systems have different names for the array.
+   This order is important for some systems.  */
 #ifdef	HAVE__CTYPE__
 #define	TABLE	_ctype__
 #endif
