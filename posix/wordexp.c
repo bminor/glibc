@@ -91,7 +91,7 @@ DEFUN(wordexp, (string, pwordexp, flags),
   /* Parent.  */
 
   buf = NULL;
-  lose = WRDE_NOSPACE;
+  error = WRDE_NOSPACE;
 
   close (d[STDOUT_FILENO]);
   f = fdopen (d[STDIN_FILENO]);
