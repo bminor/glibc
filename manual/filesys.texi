@@ -26,7 +26,7 @@ access permissions and modification times.
 * Making Special Files::        How to create special files.
 @end menu
 
-@node Working Directory, Accessing Directories,  , File System Interface
+@node Working Directory
 @section Working Directory
 
 @cindex current working directory
@@ -131,7 +131,7 @@ syntax errors (@pxref{File Name Errors}).
 @end deftypefun
 
 
-@node Accessing Directories, Hard Links, Working Directory, File System Interface
+@node Accessing Directories
 @section Accessing Directories
 @cindex accessing directories
 @cindex reading from a directory
@@ -159,7 +159,7 @@ parallels here to the stream facilities for ordinary files, described in
                                  already read with the same stream.
 @end menu
 
-@node Directory Entries, Opening a Directory,  , Accessing Directories
+@node Directory Entries
 @subsection Format of a Directory Entry
 
 @pindex dirent.h
@@ -197,7 +197,7 @@ of the file itself, not any particular directory entry.  @xref{File
 Attributes}.
 @end deftp
 
-@node Opening a Directory, Reading/Closing Directory, Directory Entries, Accessing Directories
+@node Opening a Directory
 @subsection Opening a Directory Stream
 
 @pindex dirent.h
@@ -245,7 +245,7 @@ and the @code{opendir} function in terms of the @code{open} function.
 file descriptors are closed on @code{exec} (@pxref{Executing a File}).
 @end deftypefun
 
-@node Reading/Closing Directory, Simple Directory Lister, Opening a Directory, Accessing Directories
+@node Reading/Closing Directory
 @subsection Reading and Closing a Directory Stream
 
 @pindex dirent.h
@@ -289,7 +289,7 @@ The @var{dirstream} argument is not valid.
 @end table
 @end deftypefun
 
-@node Simple Directory Lister, Random Access Directory, Reading/Closing Directory, Accessing Directories
+@node Simple Directory Lister
 @subsection Simple Program to List a Directory
 
 Here's a simple program that prints the names of the files in
@@ -303,7 +303,7 @@ The order in which files appear in a directory tends to be fairly
 random.  A more useful program would sort the entries (perhaps by
 alphabetizing them) before printing them.
 
-@node Random Access Directory,  , Simple Directory Lister, Accessing Directories
+@node Random Access Directory
 @subsection Random Access in a Directory Stream
 
 @pindex dirent.h
@@ -342,7 +342,7 @@ closing and reopening the directory can invalidate values returned by
 @code{telldir}.
 @end deftypefun
 
-@node Hard Links, Symbolic Links, Accessing Directories, File System Interface
+@node Hard Links
 @section Hard Links
 @cindex hard link
 @cindex link, hard
@@ -423,7 +423,7 @@ than the existing file.
 @end table
 @end deftypefun
 
-@node Symbolic Links, Deleting Files, Hard Links, File System Interface
+@node Symbolic Links
 @section Symbolic Links
 @cindex soft link
 @cindex link, soft
@@ -480,11 +480,6 @@ The directory or file system cannot be extended to make the new link.
 
 @item EIO
 A hardware error occurred while reading or writing data on the disk.
-
-@c ??? Probably possible for
-@c ??? most system calls, and therefore doesn't need to be listed here.
-@c @item EFAULT
-@c An invalid pointer argument was passed.
 
 @ignore
 @comment not sure about these
@@ -543,7 +538,7 @@ A hardware error occurred while reading or writing data on the disk.
 @end table
 @end deftypefun
 
-@node Deleting Files, Renaming Files, Symbolic Links, File System Interface
+@node Deleting Files
 @section Deleting Files
 @cindex deleting a file
 @cindex removing a file
@@ -633,7 +628,7 @@ The prototype for this function is declared in the header file
 @pindex unistd.h
 @end deftypefun
 
-@node Renaming Files, Creating Directories, Deleting Files, File System Interface
+@node Renaming Files
 @section Renaming Files
 
 The @code{rename} function is used to change a file's name.
@@ -651,10 +646,14 @@ those names.)
 The directory containing the name @var{newname} must be on the same
 file system as the file (as indicated by the name @var{oldname}).
 
-@c ??? Isn't this inconsistent?  Shouldn't this delete the old name
-@c ??? while preserving the new name?
-If @var{oldname} and @var{newname} are two names for the same file,
-@code{rename} does nothing and reports success.
+One special case for @code{rename} is when @var{oldname} and
+@var{newname} are two names for the same file.  The consistent way to
+handle this case is to delete @var{oldname}.  However, POSIX says that
+in this case @code{rename} does nothing and reports success---which is
+inconsistent.  We don't know what your operating system will do.  The
+GNU system, when completed, will probably do the right thing (delete
+@var{oldname}) unless you explicitly request strict POSIX compatibility
+``even when it hurts''.
 
 If the @var{oldname} is not a directory, then any existing file named
 @var{newname} is removed during the renaming operation.  However, if
@@ -703,7 +702,11 @@ The @var{newname} names a directory, but the @var{oldname} doesn't.
 
 @item EMLINK
 The parent directory of @var{newname} would have too many links.
-@c ??? Can this happen in GNU?
+
+Well-designed file systems never report this error, because they have no
+limitation on the number of names a file can have.  However, you must
+still take account of the possibility of this error, as it could result
+from network access to a file system on another machine.
 
 @item ENOENT
 The file named by @var{oldname} doesn't exist.
@@ -722,7 +725,7 @@ file systems.
 @end table
 @end deftypefun
 
-@node Creating Directories, File Attributes, Renaming Files, File System Interface
+@node Creating Directories
 @section Creating Directories
 @cindex creating a directory
 @cindex directories, creating
@@ -756,7 +759,11 @@ A file named @var{filename} already exists.
 
 @item EMLINK
 The parent directory has too many links.
-@c ??? Can this happen in GNU?
+
+Well-designed file systems never report this error, because they have no
+limitation on the number of names a file can have.  However, you must
+still take account of the possibility of this error, as it could result
+from network access to a file system on another machine.
 
 @item ENOSPC
 The file system doesn't have enough room to create the new directory.
@@ -772,7 +779,7 @@ To use this function, your program should include the header files
 @pindex sys/types.h
 @end deftypefun
 
-@node File Attributes, Making Special Files, Creating Directories, File System Interface
+@node File Attributes
 @section File Attributes
 
 @pindex ls
@@ -803,7 +810,7 @@ modify these attributes of files.
 * File Times::                  About the time attributes of a file.
 @end menu
 
-@node Attribute Meanings, Reading Attributes,  , File Attributes
+@node Attribute Meanings
 @subsection What the File Attribute Values Mean
 @cindex status of a file
 @cindex attributes of a file
@@ -940,7 +947,7 @@ This is an arithmetic data type used to represent file link counts.
 In the GNU system, this is equivalent to @code{unsigned short int}.
 @end deftp
 
-@node Reading Attributes, Testing File Type, Attribute Meanings, File Attributes
+@node Reading Attributes
 @subsection Reading the Attributes of a File
 
 To examine the attributes of files, use the functions @code{stat},
@@ -996,7 +1003,7 @@ link, @code{lstat} returns information about the link itself; otherwise,
 @code{lstat} works like @code{stat}.  @xref{Symbolic Links}.
 @end deftypefun
 
-@node Testing File Type, File Owner, Reading Attributes, File Attributes
+@node Testing File Type
 @subsection Testing the Type of a File
 
 The @dfn{file mode}, stored in the @code{st_stat} field of the file
@@ -1139,7 +1146,7 @@ This macro represents the value of the file type code for a socket.
 This macro represents the value of the file type code for a FIFO or pipe.
 @end table
 
-@node File Owner, Permission Bits, Testing File Type, File Attributes
+@node File Owner
 @subsection File Owner
 @cindex file owner
 @cindex owner of a file
@@ -1161,8 +1168,11 @@ data.
 When a file is created, its owner is set from the effective user ID of
 the process that creates it.  The file's group ID may be set from either
 effective group ID of the process, or the group ID of the directory that
-contains the file, depending on the operating system.
-@c ??? Say what the GNU system does.
+contains the file, depending on the system where the file is stored.
+When you access a remote file system, it behaves according to its own
+rule, not according to the system your program is running on.  Thus,
+your program must be prepared to encounter either kind of behavior, no
+matter what kind of system you run it on.
 
 @pindex chown
 @pindex chgrp
@@ -1193,10 +1203,11 @@ the following @code{errno} error conditions are defined for this function:
 This process lacks permission to make the requested change.
 
 Only privileged users or the file's owner can change the file's group.
-On most systems, only privileged users can change the file owner; some
-systems allow you to change the owner if you are currently the owner.
-
-@strong{Incomplete:}  What does the GNU system do?
+On most file systems, only privileged users can change the file owner;
+some file systems allow you to change the owner if you are currently the
+owner.  When you access a remote file system, the behavior you encounter
+is determined by the system that actually holds the file, not by the
+system your program is running on.
 
 @xref{Options for Files}, for information about the
 @code{_POSIX_CHOWN_RESTRICTED} macro.
@@ -1233,7 +1244,7 @@ The file resides on a read-only file system.
 @end table
 @end deftypefun
 
-@node Permission Bits, Access Permission, File Owner, File Attributes
+@node Permission Bits
 @subsection The Mode Bits for Access Permission
 
 The @dfn{file mode}, stored in the @code{st_stat} field of the file
@@ -1362,15 +1373,19 @@ This is the set-group-ID on execute bit, usually 02000.
 @vindex S_ISVTX
 This is the @dfn{sticky} bit, usually 01000.
 
-@c ??? What does it mean to inhibit swapping?
-@c ??? Does it mean the file is locked in core?
-@c ??? Does this bit merely discourage swapping?
-When set on an executable file, this bit inhibits swapping when that
-executable is run.
+On an executable file, it modifies the swapping policies of the system.
+Normally, when a program terminates, its pages in core are immediately
+freed and reused.  If the sticky bit is set on the executable file, the
+system keeps the pages in core for a while as if the program were still
+running.  This is advantageous for a program that is likely to be run
+many times in succession.
 
-On directories, this allows deletion of files in the directory only by
-users who have write permission on the specific file (not anybody who has
-write permission on the directory).
+On a directory, the sticky bit gives permission to delete a file in the
+directory if you can write the contents of that file.  Ordinarily, a
+user either can delete all the files in the directory or cannot delete
+any of them (based on whether the user has write permission for the
+directory).  The sticky bit makes it possible to control deletion for
+individual files.
 @end table
 
 The actual bit values of the symbols are listed in the table above
@@ -1383,7 +1398,7 @@ practice.  It is not only nonportable, it also requires everyone who
 reads your program to remember what the bits mean.  To make your
 program clean, use the symbolic names.
 
-@node Access Permission, Setting Permissions, Permission Bits, File Attributes
+@node Access Permission
 @subsection How Your Access to a File is Decided
 @cindex permission to access a file
 @cindex access permission for a file
@@ -1408,7 +1423,7 @@ its file permission bits.  As a special case, for a file to be
 executable even for a privileged user, at least one of its execute bits
 must be set.
 
-@node Setting Permissions, Testing File Access, Access Permission, File Attributes
+@node Setting Permissions
 @subsection Assigning File Permissions
 
 @cindex file creation mask
@@ -1546,7 +1561,7 @@ The file resides on a read-only file system.
 @end table
 @end deftypefun
 
-@node Testing File Access, File Times, Setting Permissions, File Attributes
+@node Testing File Access
 @subsection Testing Permission to Access a File
 @cindex testing access permission
 @cindex access, testing for
@@ -1649,7 +1664,7 @@ Argument that means, test for execute/search permission.
 Argument that means, test for existence of the file.
 @end deftypevr
 
-@node File Times,  , Testing File Access, File Attributes
+@node File Times
 @subsection File Times
 
 @cindex file access time
@@ -1772,7 +1787,7 @@ The return values and error conditions are the same as for the @code{utime}
 function.
 @end deftypefun
 
-@node Making Special Files,  , File Attributes, File System Interface
+@node Making Special Files
 @section Making Special Files
 @cindex creating special files
 @cindex special files
