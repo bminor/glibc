@@ -234,17 +234,24 @@ struct mutex _hurd_signal_preempt_lock;
 
 
 /* Fetch the MiG reply port in use by the thread whose interrupted state is
-   described by *THREAD_STATE.  */
+   described by *THREAD_STATE, and ensure that the thread will not try to
+   use it again.  */
 
 static mach_port_t
-fetch_reply_port (struct machine_thread_state *thread_state)
+interrupted_reply_port (struct machine_thread_state *thread_state)
 {
+  mach_port_t port, *portloc;
+
   if (setjmp (_hurd_sigthread_fault_env))
     /* Faulted trying to read the stack.  */
     return MACH_PORT_NULL;
 
-  return *__hurd_threadvar_location_from_sp (_HURD_THREADVAR_MIG_REPLY,
-					     (void *) thread_state->SP);
+  portloc = (mach_port_t *) __hurd_threadvar_location_from_sp
+    (_HURD_THREADVAR_MIG_REPLY, (void *) thread_state->SP);
+
+  port = *portloc;
+  *portloc = MACH_PORT_NULL;
+  return port;
 }
 
 
@@ -280,6 +287,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 		 returning, so no need to keep looping.  */
 	      return 1;
 	    }
+
+      return 0;
     }
 
   /* Check for a preempted signal.  */
@@ -458,8 +467,9 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	/* Set the machine-independent parts of the signal context.  */
 	scp->sc_mask = ss->blocked;
 	scp->sc_intr_port = ss->intr_port;
-	/* Fetch the thread variable for the MiG reply port.  */
-	scp->sc_reply_port = fetch_reply_port (&thread_state);
+	/* Fetch the thread variable for the MiG reply port,
+	   and set it to MACH_PORT_NULL.  */
+	scp->sc_reply_port = interrupted_reply_port (&thread_state);
 
 	/* Block SIGNO and requested signals while running the handler.  */
 	ss->blocked |= __sigmask (signo) | ss->actions[signo].sa_mask;
