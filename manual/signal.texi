@@ -812,13 +812,13 @@ call was made to the server that died just returns an error.
 @comment BSD
 @deftypevr Macro int SIGXCPU
 CPU time limit exceeded.  This signal is generated when the process
-exceeds its soft resource limit on CPU time.  @xref{Resource Limits}.
+exceeds its soft resource limit on CPU time.  @xref{Limits on Resources}.
 @end deftypevr
 
 @item SIGXFSZ
 File size limit exceeded.  This signal is generated when the process
 attempts to extend a file so it exceeds the process's soft resource
-limit on file size.  @xref{Resource Limits}.
+limit on file size.  @xref{Limits on Resources}.
 @end deftypevr
 
 @node Miscellaneous Signals
