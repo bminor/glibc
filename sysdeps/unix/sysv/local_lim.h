@@ -16,7 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#define NGROUPS_MAX 16
+#define NGROUPS_MAX 0		/* No supplementary groups.  */
 #define ARG_MAX 5120
 #define CHILD_MAX 25
 #define OPEN_MAX 60
