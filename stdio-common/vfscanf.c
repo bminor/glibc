@@ -1018,7 +1018,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      /* Maybe "inf" or "infinity".  */
 	      ADDW (c);
-	      if (witdth == 0 || inchar () == EOF || _tolower (c) != 'n')
+	      if (width == 0 || inchar () == EOF || _tolower (c) != 'n')
 		input_error ();
 	      if (width > 0)
 		--width;
