@@ -3137,10 +3137,9 @@ to store new values before you use them again.
 A null character is written at the end of the buffer.  This null character
 is @emph{not} included in the size value stored at @var{sizeloc}.
 
-You can move the stream's file position with @code{fseek}
-(@pxref{File Positioning}).  If you move the file position past the end
-of the data already written to the stream, the new space will be filled
-with zeros.@refill
+You can move the stream's file position with @code{fseek} (@pxref{File
+Positioning}).  Moving the file position past the end of the data
+already written fills the intervening space with zeroes.
 @end deftypefun
 
 Here is an example of using @code{open_memstream}:
@@ -3172,15 +3171,14 @@ object to match the amount of data that has been written.  After a call
 to @code{fflush}, you can examine the object temporarily.
 
 You can move the file position of an obstack stream with @code{fseek}
-(@pxref{File Positioning}).  If you try to move the file position past
-the end of the data written to the stream, the new space will be
-initialized to all zeros.
+(@pxref{File Positioning}).  Moving the file position past the end of
+the data written fills the intervening space with zeros.
 
 To make the object permanent, update the obstack with @code{fflush}, and
 then @code{obstack_finish} to finalize the object and get its address.
-The first write to the stream after this will start a new object in the
-obstack, and later writes will add to that object until you do another
-@code{fflush} and @code{obstack_finish}.
+The following write to the stream starts a new object in the obstack,
+and later writes add to that object until you do another @code{fflush}
+and @code{obstack_finish}.
 
 But how do you find out how long the object is?  You can get the length
 in bytes by calling @code{obstack_object_size} (@pxref{Status of an
