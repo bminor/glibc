@@ -69,7 +69,7 @@ glob/%.h: %.h
 	ln -s ../$< $@
 
 glob/configure: glob/configure.in
-	autoconf $(ACFLAGS)
+	cd glob; autoconf $(ACFLAGS)
 
 glob/ChangeLog: ../ChangeLog
 	changelog-extract --regexp 'posix/(glob|fnmatch).*' < $< > $@.new
