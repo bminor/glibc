@@ -119,7 +119,9 @@ before-compile := $(filter $(common-objpfx)mach% $(common-objpfx)hurd%,\
 before-compile := $(filter-out $(wildcard $(before-compile)),$(before-compile))
 
 # Don't let any before-compile file be an intermediate and get removed.
+ifdef before-compile
 $(before-compile):
+endif
 
 # Generate an ordered list of implicit rules which find the source files in
 # each sysdep directory.  The old method was to use vpath to search all the
@@ -144,7 +146,7 @@ $(objpfx)dummy.dep:
 $(objpfx)%.o: %.S $(before-compile); $(compile-command.S)
 $(objpfx)%.dep: %.S $(before-compile); $(+make-deps)
 $(objpfx)%.o: %.s $(before-compile); $(compile-command.s)
-$(objpfx)%.dep: %.s; $(make-dummy-dep)
+$(objpfx)%.dep: %.s $(objpfx)dummy.dep; $(make-dummy-dep)
 $(objpfx)%.o: %.c $(before-compile); $(compile-command.c)
 $(objpfx)%.dep: %.c $(before-compile); $(+make-deps)
 
