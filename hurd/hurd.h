@@ -239,9 +239,18 @@ extern void _hurd_init (int flags, char **argv,
 extern void _hurd_proc_init (char **argv);
 
 
-/* Return the socket server for sockaddr domain DOMAIN.  */
+/* Return the socket server for sockaddr domain DOMAIN.  If DEAD is
+   nonzero, remove the old cached port and always do a fresh lookup.
 
-extern socket_t _hurd_socket_server (int domain);
+   It is assumed that a socket server will stay alive during a complex socket
+   operation involving several RPCs.  But a socket server may die during
+   long idle periods between socket operations.  Callers should first pass
+   zero for DEAD; if the first socket RPC tried on the returned port fails
+   with MACH_SEND_INVALID_DEST or MIG_SERVER_DIED (indicating the server
+   went away), the caller should call _hurd_socket_server again with DEAD
+   nonzero and retry the RPC on the new socket server port.  */
+
+extern socket_t _hurd_socket_server (int domain, int dead);
 
 /* Send a `sig_post' RPC to process number PID.  If PID is zero,
    send the message to all processes in the current process's process group.
