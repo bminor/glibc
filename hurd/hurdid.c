@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/id.h>
 #include <gnu-stabs.h>
 
-struct hurd_id_data _hurd_id /* = { lock: MUTEX_INITIALIZER } */;
+struct hurd_id_data _hurd_id;
 
 
 /* Check that _hurd_id.{gen,aux} are valid and update them if not.
@@ -31,7 +31,6 @@ _hurd_check_ids (void)
 {
   if (! _hurd_id.valid)
     {
-      error_t err;
       inline void dealloc (__typeof (_hurd_id.gen) *p)
 	{
 	  if (p->uids)
@@ -50,9 +49,12 @@ _hurd_check_ids (void)
 	    }
 	}
 
+      error_t err;
+
       dealloc (&_hurd_id.gen);
       dealloc (&_hurd_id.aux);
-      if (_hurd_id.rid_auth)
+
+      if (_hurd_id.rid_auth != MACH_PORT_NULL)
 	{
 	  __mach_port_deallocate (__mach_task_self (), _hurd_id.rid_auth);
 	  _hurd_id.rid_auth = MACH_PORT_NULL;
@@ -71,3 +73,19 @@ _hurd_check_ids (void)
 
   return 0;
 }
+
+static void
+init_id (void)
+{
+  __mutex_init (&_hurd_id.lock);
+  _hurd_id.valid = 0;
+  _hurd_id.gen.uids
+  _hurd_id.rid_auth = MACH_PORT_NULL;
+  _hurd_id.gen.uids = _hurd_id.aux.uids = NULL;
+  _hurd_id.gen.nuids = _hurd_id.aux.nuids = 0;
+  _hurd_id.gen.gids = _hurd_id.aux.gids = NULL;
+  _hurd_id.gen.ngids = _hurd_id.aux.ngids = 0;
+
+  (void) &init_id;		/* Avoid "defined but not used" warning.  */
+}
+text_set_element (_hurd_preinit_hook, init_id);
