@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 
 pid_t
 DEFUN(__wait4, (pid, stat_loc, options, usage),
-      pid_t pid AND __WAIT_STATUS stat_loc AND int options AND
+      pid_t pid AND __WAIT_STATUS_DEFN stat_loc AND int options AND
       struct rusage *usage)
 {
   errno = ENOSYS;

@@ -28,7 +28,7 @@ Cambridge, MA 02139, USA.  */
    children; otherwise don't.  */
 pid_t
 DEFUN(__wait3, (stat_loc, options, usage),
-      __WAIT_STATUS stat_loc AND int options AND struct rusage *usage)
+      __WAIT_STATUS_DEFN stat_loc AND int options AND struct rusage *usage)
 {
   return __wait4 (WAIT_ANY, stat_loc, options, usage);
 }
