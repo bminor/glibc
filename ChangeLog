@@ -1,3 +1,21 @@
+2000-01-03  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/generic/dl-sysdep.c: Initialize __libc_multiple_libcs,
+	needed for change in common symbol handing in newer binutils.
+
+2000-01-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/mmap.S (mmap64): Remove weak alias.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list (s_ugetrlimit):
+	Remove.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (O_DIRECTORY,
+	O_NOFOLLOW): Protect by ifdef __USE_GNU.
+	(O_LARGEFILE): Define depending on architecture size.
+	* sysdeps/unix/sysv/linux/ftruncate64.c (__have_no_truncate64):
+	Renamed from have_no_truncate64.
+	* sysdeps/unix/sysv/linux/truncate64.c (__have_no_truncate64):
+	Likewise.
+
 2000-01-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/mmap64.S: Fix code for running on
