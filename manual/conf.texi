@@ -49,7 +49,6 @@ parameter in question.  If the system allows different file systems or
 files to have different limits, then the macro is undefined; use
 @code{sysconf} to find out the limit that applies at a particular time
 on a particular machine.  @xref{Sysconf}.
-@c !!! pathconf, not sysconf
 
 Each of these parameters also has another macro, with a name starting
 with @samp{_POSIX}, which gives the lowest value that the limit is
@@ -661,8 +660,8 @@ POSIX defines certain system-specific options in the system calls for
 operating on files.  Some systems support these options and others do
 not.  Since these options are provided in the kernel, not in the
 library, simply using the GNU C library does not guarantee any of these
-features is supported; it depends on the system you are using.
-@c !!! and can vary between file systems on the same machine.
+features is supported; it depends on the system you are using.  They can
+also vary between file systems on a single machine.
 
 @pindex unistd.h
 This section describes the macros you can test to determine whether a
