@@ -1,5 +1,6 @@
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* inet/getnameinfo.c: Terminate host name for NI_NOFQDN.
 	* sysdeps/posix/getaddrinfo.c: Correct modifications done for
 	PR1515.  Patch by Hideaki YOSHIFUJI <yoshfuji@ecei.tohoku.ac.jp>.
 
