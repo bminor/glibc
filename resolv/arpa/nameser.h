@@ -131,27 +131,9 @@
 #define CONV_BADCKSUM -3
 #define CONV_BADBUFLEN -4
 
-#ifndef BYTE_ORDER
-#define	LITTLE_ENDIAN	1234	/* least-significant byte first (vax) */
-#define	BIG_ENDIAN	4321	/* most-significant byte first (IBM, net) */
-#define	PDP_ENDIAN	3412	/* LSB first in word, MSW first in long (pdp) */
+/* Hacked for GNU: The BSD code has #ifdef's here to set BYTE_ORDER.  */
+#include <endian.h>
 
-#if defined(vax) || defined(ns32000) || defined(sun386) || defined(MIPSEL) || \
-    defined(BIT_ZERO_ON_RIGHT)
-#define BYTE_ORDER	LITTLE_ENDIAN
-
-#endif
-#if defined(sel) || defined(pyr) || defined(mc68000) || defined(sparc) || \
-    defined(is68k) || defined(tahoe) || defined(ibm032) || defined(ibm370) || \
-    defined(MIPSEB) || defined (BIT_ZERO_ON_LEFT)
-#define BYTE_ORDER	BIG_ENDIAN
-#endif
-#endif /* BYTE_ORDER */
-
-#ifndef BYTE_ORDER
-	/* you must determine what the correct bit order is for your compiler */
-	UNDEFINED_BIT_ORDER;
-#endif
 /*
  * Structure for query header, the order of the fields is machine and
  * compiler dependent, in our case, the bits within a byte are assignd 
