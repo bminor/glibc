@@ -610,8 +610,9 @@ my_malloc_hook (size_t size)
   void *result;
   __malloc_hook = old_malloc_hook;
   result = malloc (size);
-  __malloc_hook = my_malloc_hook;
+  /* @r{@code{printf} might call @code{malloc}, so protect it too.} */
   printf ("malloc (%u) returns %p\n", (unsigned int) size, result);
+  __malloc_hook = my_malloc_hook;
   return result;
 @}
 
