@@ -63,7 +63,7 @@ DEFUN (sqrt, (x), double x)
   s = 4.0;
   x -= 1.0;
   r = 1;
-  for (i = 1; i <= k; i++)
+  for (i = 1; i <= 51; i++)
     {
       t = s + 1;
       x *= 4;
