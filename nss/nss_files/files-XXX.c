@@ -185,6 +185,7 @@ internal_getent (struct STRUCTURE *result,
       if (p == NULL && feof (stream))
 	{
 	  /* End of file or read error.  */
+	  __set_errno (ENOENT);
 	  H_ERRNO_SET (HOST_NOT_FOUND);
 	  return NSS_STATUS_NOTFOUND;
 	}
