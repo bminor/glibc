@@ -63,7 +63,8 @@ struct hurd_sigstate
       {
 	/* For each signal that may be pending, the
 	   sigcode and error code to deliver it with.  */
-	int code, error;
+	long int code;
+	error_t error;
       } pending_data[NSIG];
 
     /* If `suspended' is set when this thread gets a signal,
@@ -216,12 +217,12 @@ extern void _hurdsig_fault_init (void);
    instead affects the calling thread.  */
 
 extern void _hurd_raise_signal (struct hurd_sigstate *ss,
-				int signo, int sigcode, int sigerror);
+				int signo, long int sigcode, int sigerror);
 
 /* Translate a Mach exception into a signal (machine-dependent).  */
 
 extern void _hurd_exception2signal (int exception, int code, int subcode,
-				    int *signo, int *sigcode, int *error);
+				    int *signo, long int *sigcode, int *error);
 
 
 /* Make the thread described by SS take the signal described by SIGNO and
@@ -230,7 +231,7 @@ extern void _hurd_exception2signal (int exception, int code, int subcode,
    entry, and released before return.  */
 
 extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
-					int signo, int sigcode, int error,
+					int signo, long int sigcode, int error,
 					mach_port_t reply_port,
 					mach_msg_type_name_t reply_port_type);
 
@@ -244,7 +245,7 @@ extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
 struct machine_thread_all_state;
 extern struct sigcontext *
 _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
-			int signo, int sigcode,
+			int signo, long int sigcode,
 			int rpc_wait, struct machine_thread_all_state *state);
 
 /* Function run by the signal thread to receive from the signal port.  */
@@ -384,8 +385,8 @@ struct hurd_signal_preempt
        If the return value is SIG_DFL, normal signal processing continues.
        If it is SIG_IGN, the signal is ignored.
        Any other value is used in place of the normal handler.  */
-    sighandler_t (*handler) (thread_t thread, int signo, int sigcode);
-    int first, last;		/* Range of sigcodes this handler wants.  */
+    sighandler_t (*handler) (thread_t thread, int signo, long int sigcode);
+    long int first, last;	/* Range of sigcodes this handler wants.  */
     struct hurd_signal_preempt *next; /* Next handler on the chain. */
   };
 
