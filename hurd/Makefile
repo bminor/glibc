@@ -86,30 +86,50 @@ $(includedir)/hurd/%: $(hurd-srcdir)/hurd/%; $(do-install)
 # Insert comment here.
 
 ifdef intrhack # XXX
-# This rule needs to come before the implicit rules in Machrules.
-__%.c: intr_rpc.awk %_rpc.c
+
+# RPC_%_rpc.c is made with mig by Machrules.  RPC_%.c is the stub function
+# we will actually compile: it is just the same, but passes option bits to
+# mach_msg to notice interrupts.
+$(intr-calls:%=$(objpfx)RPC_%.c): %.c: %_rpc.c
+	sed s/MACH_MSG_OPTION_NONE/MACH_SEND_INTERRUPT|MACH_RCV_INTERRUPT/ \
+	    $< > $@-new
+	mv -f $@-new $@
+generated += $(intr-calls:%=RPC_%.c)
+
+# __%.c defines the user-callable function for the stub: this is a wrapper
+# which calls __%_rpc inside HURD_EINTR_RPC.
+$(intr-calls:%=$(objpfx)__%.c): $(objpfx)__%.c: intr_rpc.awk \
+						$(objpfx)RPC_%_rpc.c
 	gawk -v call=__$* -v rpc=__$*_rpc -f $^ > $@-new
-	mv $@-new $@
-# __%_rpc.c is made with mig by Machrules.
-%_rpc.c: __%_rpc.c
-	sed s/MACH_MSG_OPTION_NONE/MACH_SEND_INTERRUPT/ $< > $@
-endif
+	mv -f $@-new $@
+generated += $(intr-calls:%=__%.c)
 
-include ../mach/Machrules
+# %.c defines an alias % for __%.
+$(intr-calls:$(objpfx)%.c): $(objpfx)%.c:
+	(echo '#include <gnu-stabs.h>';\
+	 echo 'symbol_alias (__$*, $*);') > $@-new
+	mv -f $@-new $@
+generated += $(intr-calls:%=%.c)
 
-ifdef intrhack # XXX
 ifdef user-interfaces
-include hurdintr
+include $(objpfx)hurdintr
 endif
-hurdintr: hurdintr.awk $(user-interfaces:%=%.defs)
+$(objpfx)hurdintr: hurdintr.awk $(user-interfaces:%=%.defs)
 	awk -f $^ varname=intr-calls > $@-new
 	mv $@-new $@
+generated += hurdintr
 
 # Make the INTR user stubs be defined as CALL_rpc.
 migdefines += $(foreach call,$(intr-calls),-D$(call)=$(call)_rpc)
 
-interface-routines := $(filter-out %_rpc,$(interface-routines)) \
-		      $(intr-calls:%=__%) $(intr-calls)
+# Machrules has put in routines for RPC_%_rpc and %_rpc.
+# We need RPC_%, __%, and %.
+interface-routines := $(filter-out $(intr-calls:%=RPC_%_rpc)\
+				   $(intr-calls:%=%_rpc),\
+				   $(interface-routines)) \
+		      $(foreach c,$(intr-calls),RPC_$c __$c $c)
+
 endif
 
+include ../mach/Machrules
 include ../Rules
