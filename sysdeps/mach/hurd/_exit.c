@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 #include <sys/wait.h>
 
-__NORETURN void
+void
 _hurd_exit (int status)
 {
 #ifdef notyet
