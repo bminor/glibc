@@ -63,8 +63,8 @@ ifdef objdir
 endif
 
 # Add -I switches to get the right sysdep directories.
+# `+includes' in Makeconfig references $(+sysdep-includes).
 +sysdep-includes := $(addprefix -I,$(+sysdep_dirs))
-+includes := $(+includes) $(+sysdep-includes)
 
 # Include any system-specific makefiles.
 # Also generate an ordered list of implicit rules which find the source
