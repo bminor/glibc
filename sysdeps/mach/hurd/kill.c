@@ -28,10 +28,9 @@ int
 DEFUN(__kill, (pid, sig), int pid AND int sig)
 {
   error_t err;
-  mach_port_t portbuf[10];
-  mach_port_t *ports = portbuf;
+  mach_port_t oneport, *ports;
   mach_port_t refport;		/* XXX */
-  size_t nports = 10, i;
+  mach_msg_type_number_t nports, i;
   mach_port_t proc;
   int dealloc_proc;
 
@@ -50,7 +49,8 @@ DEFUN(__kill, (pid, sig), int pid AND int sig)
     }
   else
     {
-      err = __proc_getmsgport (proc, pid, &ports[0]);
+      err = __proc_getmsgport (proc, pid, &oneport);
+      ports = &oneport;
       nports = 1;
     }
 
@@ -61,7 +61,7 @@ DEFUN(__kill, (pid, sig), int pid AND int sig)
 	err = __proc_getsidport (proc, &refport);
     }
 
-  _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], proc, &dealloc_proc);
+  _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], &dealloc_proc, proc);
 
   for (i = 0; i < nports; ++i)
     {
@@ -75,7 +75,7 @@ DEFUN(__kill, (pid, sig), int pid AND int sig)
   if (refport != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), refport); /* XXX */
 
-  if (ports != portbuf)
+  if (ports != &oneport)
     __vm_deallocate (__mach_task_self (),
 		     (vm_address_t) ports, nports * sizeof (ports[0]));
 
