@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/signal.h>
 #include <cthreads.h>		/* For `struct mutex'.  */
 #include <string.h>
+#include "hurdfault.h"
 #include "hurdmalloc.h"		/* XXX */
 
 const char *_hurdsig_getenv (const char *);
