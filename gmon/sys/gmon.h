@@ -174,6 +174,10 @@ void monstartup __P ((u_long lowpc, u_long highpc));
 /* Clean up profiling and write out gmon.out.  */
 void _mcleanup __P ((void));
 
+/* Write current profiling data to file.  */
+void __write_profiling __P ((void));
+void write_profiling __P ((void));
+
 __END_DECLS
 
 #endif /* !_SYS_GMON_H_ */
