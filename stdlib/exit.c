@@ -22,8 +22,12 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include "exit.h"
 
-#ifdef	__GNU_STAB__
-CONST unsigned long int __libc_atexit[1];
+#ifdef	HAVE_GNU_LD
+CONST struct
+  {
+    size_t n;
+    void EXFUN((*fn[1]), (NOARGS));
+  } __libc_atexit;
 #endif
 
 /* Call all functions registered with `atexit' and `on_exit',
@@ -55,11 +59,11 @@ DEFUN(exit, (status), int status)
 	}
     }
 
-#ifdef	__GNU_STAB__
+#ifdef	HAVE_GNU_LD
   {
-    register unsigned long int i;
-    for (i = 1; i <= __libc_atexit[0]; ++i)
-      (*(void EXFUN((*), (NOARGS))) __libc_atexit[i])();
+    void EXFUN((*CONST *fn), (NOARGS));
+    for (fn = __libc_atexit.fn; *fn != NULL; ++fn)
+      (**fn) ();
   }
 #else
   {

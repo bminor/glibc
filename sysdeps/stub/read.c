@@ -19,11 +19,12 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <stddef.h>
 
 /* Read NBYTES into BUF from FD.  Return the number read or -1.  */
-int
+ssize_t
 DEFUN(__read, (fd, buf, nbytes),
-      int fd AND PTR buf AND unsigned int nbytes)
+      int fd AND PTR buf AND size_t nbytes)
 {
   if (nbytes == 0)
     return 0;
@@ -43,7 +44,7 @@ DEFUN(__read, (fd, buf, nbytes),
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

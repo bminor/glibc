@@ -30,7 +30,7 @@ DEFUN_VOID(__getppid)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

@@ -29,15 +29,14 @@ DEFUN(seekdir, (dirp, pos), DIR *dirp AND off_t pos)
   if (dirp == NULL)
     {
       errno = EINVAL;
-      return(-1);
+      return;
     }
 
   errno = ENOSYS;
-  return(-1);
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

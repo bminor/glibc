@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/types.h>
 
 /* Return the foreground process group ID of FD.  */
 pid_t
@@ -35,7 +36,7 @@ DEFUN(tcgetpgrp, (fd), int fd)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

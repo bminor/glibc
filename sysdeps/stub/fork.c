@@ -25,14 +25,14 @@ Cambridge, MA 02139, USA.  */
    Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
 int
-DEFUN(__fork, (NOARGS))
+DEFUN_VOID(__fork)
 {
   errno = ENOSYS;
   return -1;
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

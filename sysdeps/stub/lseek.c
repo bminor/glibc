@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/types.h>
 
 /* Seek to OFFSET on FD, starting from WHENCE.  */
 off_t
@@ -45,7 +46,7 @@ DEFUN(__lseek, (fd, offset, whence), int fd AND off_t offset AND int whence)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

@@ -68,22 +68,22 @@ DEFUN(bad_speed, (speed), speed_t speed)
 {
   switch (speed)
     {
-    B0:
-    B50:
-    B75:
-    B110:
-    B134:
-    B150:
-    B200:
-    B300:
-    B600:
-    B1200:
-    B1800:
-    B2400:
-    B4800:
-    B9600:
-    B19200:
-    B38400:
+    case B0:
+    case B50:
+    case B75:
+    case B110:
+    case B134:
+    case B150:
+    case B200:
+    case B300:
+    case B600:
+    case B1200:
+    case B1800:
+    case B2400:
+    case B4800:
+    case B9600:
+    case B19200:
+    case B38400:
       return 0;
     default:
       return 1;
@@ -91,7 +91,7 @@ DEFUN(bad_speed, (speed), speed_t speed)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

@@ -18,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <stdio.h>
-
+#include <errno.h>
 
 /* Return the username of the caller.
    If S is not NULL, it points to a buffer of at least L_cuserid bytes
@@ -31,7 +31,7 @@ DEFUN(cuserid, (s), char *s)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

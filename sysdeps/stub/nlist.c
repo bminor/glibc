@@ -37,3 +37,12 @@ DEFUN(nlist, (file, nl),
   errno = ENOSYS;
   return -1;
 }
+
+
+#ifdef	 HAVE_GNU_LD
+
+#include <gnu-stabs.h>
+
+stub_warning(nlist);
+
+#endif	/* GNU stabs.  */

@@ -34,7 +34,7 @@ DEFUN(__adjtime, (delta, olddelta),
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

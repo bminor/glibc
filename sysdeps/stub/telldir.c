@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <errno.h>
+#include <sys/types.h>
 #include <stddef.h>
 #include <dirent.h>
 
@@ -36,7 +37,7 @@ DEFUN(telldir, (dirp), DIR *dirp)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <sys/types.h>
 
 /* Set the file creation mask to MASK, returning the old mask.  */
 mode_t
@@ -29,7 +30,7 @@ DEFUN(__umask, (mask), mode_t mask)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

@@ -23,14 +23,14 @@ Cambridge, MA 02139, USA.  */
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 int
 DEFUN(send, (fd, buf, n, flags),
-      int fd AND PTR buf AND size_t n AND flags)
+      int fd AND PTR buf AND size_t n AND int flags)
 {
   errno = ENOSYS;
   return -1;
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

@@ -18,6 +18,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#include <ansidecl.h>
+#include <stdio.h>
+
 /* This file should define the following
    variables as appropriate for the system.  */
 
@@ -25,8 +28,6 @@ FILE *stdin, *stdout, *stderr;
 
 /* Pointer to the first stream in the list.  */
 FILE *__stdio_head;
-/* Pointer to the last stream in the list.  */
-FILE *__stdio_tail;
 
 /* This function MUST be in this file!
    This is because we want _cleanup to go into the __libc_atexit set
@@ -43,7 +44,7 @@ DEFUN_VOID(_cleanup)
 }
 
 
-#ifdef	__GNU_STAB__
+#ifdef	HAVE_GNU_LD
 #include <gnu-stabs.h>
 
 text_set_element(__libc_atexit, _cleanup);

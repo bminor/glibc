@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/types.h>
 
 /* Set the foreground process group ID of FD set PGRP_ID.  */
 int
@@ -36,7 +37,7 @@ DEFUN(tcsetpgrp, (fd, pgrp_id),
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

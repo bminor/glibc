@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <errno.h>
+#include <stddef.h>
 #include <sys/stat.h>
 
 /* Get file information about FILE in BUF.
@@ -36,7 +37,7 @@ DEFUN(__lstat, (file, buf), CONST char *file AND struct stat *buf)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

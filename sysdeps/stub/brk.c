@@ -29,7 +29,7 @@ DEFUN(__brk, (addr), PTR addr)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

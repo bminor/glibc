@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <errno.h>
+#include <sys/types.h>
 #include <grp.h>
 
 /* Set the group set for the current user to GROUPS (N of them).  */
@@ -29,7 +30,7 @@ DEFUN(setgroups, (n, groups), size_t n AND CONST gid_t *groups)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

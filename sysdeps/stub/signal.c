@@ -29,3 +29,12 @@ DEFUN(signal, (sig, handler), int sig AND __sighandler_t handler)
   errno = ENOSYS;
   return SIG_ERR;
 }
+
+
+#ifdef	 HAVE_GNU_LD
+
+#include <gnu-stabs.h>
+
+stub_warning(signal);
+
+#endif	/* GNU stabs.  */

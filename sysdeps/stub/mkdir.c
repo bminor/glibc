@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 
 /* Create a directory named PATH with protections MODE.  */
@@ -37,7 +38,7 @@ DEFUN(__mkdir, (path, mode), CONST char *path AND mode_t mode)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

@@ -19,10 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <sys/times.h>
-
-
-/* Time the program started.  */
-extern time_t _posix_start_time;
+#include <stddef.h>
 
 /* Store the CPU time used by this process and all its
    dead children (and their dead children) in BUFFER.
@@ -34,16 +31,16 @@ DEFUN(__times, (buffer), struct tms *buffer)
   if (buffer == NULL)
     {
       errno = EINVAL;
-      return((clock_t) -1);
+      return (clock_t) -1;
     }
 
   errno = ENOSYS;
-  return((clock_t) -1);
+  return (clock_t) -1;
 }
 
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

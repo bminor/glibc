@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <stdio.h>
+#include <errno.h>
 
 
 /* Rename the file OLD to NEW.  */
@@ -35,7 +36,7 @@ DEFUN(rename, (old, new), CONST char *old AND CONST char *new)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

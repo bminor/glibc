@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 /* Change the protections of FILE to MODE.  */
 int
@@ -39,7 +40,7 @@ DEFUN(__chmod, (file, mode), CONST char *file AND mode_t mode)
 
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

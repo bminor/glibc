@@ -36,7 +36,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

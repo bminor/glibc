@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <errno.h>
+#include <stddef.h>
 #include <sys/stat.h>
 
 /* Get information about the file descriptor FD in BUF.  */
@@ -40,7 +41,7 @@ DEFUN(__fstat, (fd, buf), int fd AND struct stat *buf)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

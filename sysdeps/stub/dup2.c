@@ -42,7 +42,7 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

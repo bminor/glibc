@@ -26,14 +26,14 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(recvfrom, (fd, buf, n, flags, addr, addr_len),
       int fd AND PTR buf AND size_t n AND int flags AND
-      struct sockaddr *addr AND size_t addr_len)
+      struct sockaddr *addr AND size_t *addr_len)
 {
   errno = ENOSYS;
   return -1;
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

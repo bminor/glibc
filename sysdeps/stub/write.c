@@ -20,12 +20,12 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 #include <errno.h>
 #include <unistd.h>
-
+#include <stddef.h>
 
 /* Write NBYTES of BUF to FD.  Return the number written, or -1.  */
-int
+ssize_t
 DEFUN(__write, (fd, buf, nbytes),
-      int fd AND CONST PTR buf AND unsigned int nbytes)
+      int fd AND CONST PTR buf AND size_t nbytes)
 {
   if (nbytes == 0)
     return 0;
@@ -45,7 +45,7 @@ DEFUN(__write, (fd, buf, nbytes),
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

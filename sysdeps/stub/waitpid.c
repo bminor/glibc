@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <sys/wait.h>
+#include <sys/types.h>
 
 
 /* Wait for a child matching PID to die.
@@ -49,7 +50,7 @@ DEFUN(__waitpid, (pid, stat_loc, options),
 
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

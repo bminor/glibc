@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/types.h>
 
 /* Set the real user ID of the calling process to RUID,
    and the effective user ID of the calling process to EUID.  */
@@ -31,7 +32,7 @@ DEFUN(__setreuid, (effective_uid, real_uid),
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

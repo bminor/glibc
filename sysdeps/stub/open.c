@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <fcntl.h>
 #include <stdarg.h>
+#include <stddef.h>
 
 /* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
    a third argument is the file protection.  */
@@ -47,7 +48,7 @@ DEFUN(__open, (file, oflag), CONST char *file AND int oflag DOTS)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 

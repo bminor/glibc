@@ -19,7 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
-
+#include <sys/types.h>
 
 /* Get the process group ID of process PID.  */
 int
@@ -29,7 +29,7 @@ DEFUN(__getpgrp, (pid), pid_t pid)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 
