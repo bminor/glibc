@@ -1,3 +1,15 @@
+1998-05025 22:18  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/i386/Makefile (sysdep_headers): Add
+	sys/elf.h and sys/reg.h.
+	* sysdeps/unix/sysv/linux/i386/sys/elf.h: New file.
+	* sysdeps/unix/sysv/linux/i386/sys/reg.h: New file.
+	* sysdeps/unix/sysv/linux/i386/sys/procfs.h: New file.
+	* sysdeps/unix/sysv/linux/i386/sys/user.h: New file.
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (PTRACE_GETREGS,
+	PTRACE_SETREGS, PTRACE_GETFPREGS, PTRACE_SETFPREGS): Added.
+
 1998-06-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/netinet/ip.h (struct ip_options): Define
