@@ -136,12 +136,11 @@ ifeq ($(wildcard $(sysincludedir)/syscall.h),)
 
 # Some systems have <syscall.h>, some <sys/syscall.h>.
 
-syscall.h := $(patsubst $(sysincludedir)/%,%,	\
-			$(wildcard $(sysincludedir)/sys/syscall.h))
+syscall.h := $(wildcard $(sysincludedir)/sys/syscall.h)
 
 ifdef	syscall.h
 $(objpfx)syscall.h: $(syscall.h)
-	echo '#include <$(syscall.h)>' > $@
+	echo '#include <$(syscall.h:$(sysincludedir)/%=%)>' > $@
 before-compile := $(before-compile) $(objpfx)syscall.h
 endif
 
