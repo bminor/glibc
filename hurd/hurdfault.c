@@ -17,9 +17,13 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#include <hurd.h>
+#include <hurd/signal.h>
 #include "hurdfault.h"
+#include <errno.h>
 #include <string.h>
 #include <setjmp.h>
+#include <stdio.h>
 #include "thread_state.h"
 #include "faultexc.h"		/* mig-generated header for our exc server.  */
 
@@ -39,7 +43,7 @@ _hurdsig_fault_catch_exception_raise (mach_port_t port,
 				      int code,
 				      int subcode)
 {
-  int signo, sigcode, error;
+  int signo;
 
   if (port != forward_sigexc ||
       thread != _hurd_msgport_thread || task != __mach_task_self ())
@@ -48,7 +52,7 @@ _hurdsig_fault_catch_exception_raise (mach_port_t port,
   /* Call the machine-dependent function to translate the Mach exception
      codes into a signal number and subcode.  */
   _hurd_exception2signal (exception, code, subcode, &signo,
-			  &_hurdsig_fault_sigcode, &_hurdsig_fault_error);
+			  &_hurdsig_fault_sigcode, &_hurdsig_fault_sigerror);
 
   return signo == _hurdsig_fault_expect_signo ? 0 : EGREGIOUS;
 }
@@ -58,39 +62,41 @@ faulted (void)
 {
   struct
     {
-      mach_msg_header_t header;
+      mach_msg_header_t head;
       char buf[64];
     } request;
   struct
     {
-      mach_msg_header_t header;
+      mach_msg_header_t head;
       mach_msg_type_t type;
       int result;
     } reply;
+  extern int _hurdsig_fault_exc_server (mach_msg_header_t *,
+					mach_msg_header_t *);
 
  /* Wait for the exception_raise message forwarded by the proc server.  */
 
- if (__mach_msg (&request->head, MACH_RCV_MSG, 0,
-		  sizeof request, sigexc,
+ if (__mach_msg (&request.head, MACH_RCV_MSG, 0,
+		  sizeof request, forward_sigexc,
 		  MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL)
       != MACH_MSG_SUCCESS)
     __libc_fatal ("msg receive failed on signal thread exc\n");
 
   /* Run the exc demuxer which should call the server function above.
      That function returns 0 if the exception was expected.  */
-  switch (_hurdsig_fault_exc_server (&request->head, &reply->head))
+  switch (_hurdsig_fault_exc_server (&request.head, &reply.head))
     {
     case KERN_SUCCESS:
-      if (reply->header.msgh_remote_port != MACH_PORT_NULL)
-	__mach_msg (&reply->head, MACH_SEND_MSG, reply->header.msgh_size,
+      if (reply.head.msgh_remote_port != MACH_PORT_NULL)
+	__mach_msg (&reply.head, MACH_SEND_MSG, reply.head.msgh_size,
 		    0, MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
       break;
     default:
-      __mach_msg_destroy (&request->head);
+      __mach_msg_destroy (&request.head);
     case MIG_NO_REPLY:
     }
 
-  _hurdsig_expect_signo = 0;
+  _hurdsig_fault_expect_signo = 0;
   longjmp (_hurdsig_fault_env, 1);
 }
 
