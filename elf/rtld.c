@@ -39,6 +39,9 @@ extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 						     ElfW(Addr) *user_entry));
 extern void _dl_sysdep_start_cleanup (void);
 
+/* This function is used to unload the cache file if necessary.  */
+extern void _dl_unload_cache (void);
+
 /* System-dependent function to read a file's whole contents
    in the most convenient manner available.  */
 extern void *_dl_sysdep_read_whole_file (const char *filename,

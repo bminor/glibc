@@ -29,6 +29,9 @@ extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 						     ElfW(Addr) *user_entry));
 weak_extern (_dl_sysdep_start)
 
+/* This function is used to unload the cache file if necessary.  */
+extern void _dl_unload_cache (void);
+
 extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 
 extern int __libc_argc;
