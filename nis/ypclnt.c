@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -24,10 +24,16 @@
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 #include <rpcsvc/ypupd.h>
+#include <sys/uio.h>
 #include <libc-lock.h>
 
 #ifndef NIS_MAXNAMELEN
 #define NIS_MAXNAMELEN 1024
+#endif
+
+/* This should only be defined on systems with a BSD compatible ypbind */
+#ifndef BINDINGDIR
+# define BINDINGDIR "/var/yp/binding"
 #endif
 
 struct dom_binding
@@ -93,6 +99,44 @@ __yp_bind (const char *domain, dom_binding **ypdb)
             free (ysd);
           return YPERR_YPBIND;
         }
+
+#if USE_BINDINGDIR
+      if (ysd->dom_vers < 1)
+	{
+	  char path[strlen (BINDINGDIR) + strlen (domain) + 10];
+	  struct iovec vec[2];
+	  u_short port;
+	  int fd;
+
+	  sprintf (path, "%s/%s.%ld", BINDINGDIR, domain, YPBINDVERS);
+	  fd = open (path, O_RDONLY);
+	  if (fd >= 0)
+	    {
+	      /* We have a binding file and could save a RPC call */
+	      vec[0].iov_base = &port;
+	      vec[0].iov_len = sizeof (port);
+	      vec[1].iov_base = &ypbr;
+	      vec[1].iov_len = sizeof (ypbr);
+
+	      if (readv (fd, vec, 2) == vec[0].iov_len + vec[1].iov_len)
+		{
+		  memset (&ysd->dom_server_addr, '\0',
+			  sizeof ysd->dom_server_addr);
+		  ysd->dom_server_addr.sin_family = AF_INET;
+		  memcpy (&ysd->dom_server_addr.sin_port,
+			  ypbr.ypbind_resp_u.ypbind_bindinfo.ypbind_binding_port,
+			  sizeof (ysd->dom_server_addr.sin_port));
+		  memcpy (&ysd->dom_server_addr.sin_addr.s_addr,
+			  ypbr.ypbind_resp_u.ypbind_bindinfo.ypbind_binding_addr,
+			  sizeof (ysd->dom_server_addr.sin_addr.s_addr));
+		  ysd->dom_vers = YPVERS;
+		  strncpy (ysd->dom_domain, domain, YPMAXDOMAIN);
+		  ysd->dom_domain[YPMAXDOMAIN] = '\0';
+		}
+	      close (fd);
+	    }
+	}
+#endif /* USE_BINDINGDIR */
 
       if (ysd->dom_vers == -1)
         {
