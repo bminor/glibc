@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <gnu/types.h>
 
 /* Structure describing file characteristics.  */
-struct __stat
+struct stat
   {
     /* This is a short instead of dev_t for compatibility with 4.3.  */
     short int st_dev;		/* Device containing the file.	*/
