@@ -34,7 +34,8 @@ init_rlimit (void)
     {
       if (_hurd_rlimits[i].rlim_max == 0)
 	_hurd_rlimits[i].rlim_max = RLIM_INFINITY;
-      _hurd_rlimits[i].rlim_cur = _hurd_rlimits[i].rlim_max;
+      if (_hurd_rlimits[i].rlim_cur == 0)
+	_hurd_rlimits[i].rlim_cur = _hurd_rlimits[i].rlim_max;
     }
 
   __mutex_init (&_hurd_rlimit_lock);
