@@ -28,7 +28,7 @@ Cambridge, MA 02139, USA.  */
   .globl syscall_error;							      \
   ENTRY (name)								      \
     XCHG_##args
-    movl $__NR_##syscall_name, %eax;					      \
+    movl $SYS_##syscall_name, %eax;					      \
     int $0x80;								      \
     test %eax, %eax;							      \
     jl syscall_error;							      \
