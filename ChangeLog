@@ -1,3 +1,31 @@
+2005-01-07  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #738]
+	* elf/dl-load.c (open_path): If rtld_search_dirs is in RELRO segment,
+	avoid writing to it if none of the standard search directories exist.
+
+2005-02-07  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #700]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S
+	(__novec_setcontext, __setcontext): Fix typo so CCR is restored.
+	Load MSR as a doubleword.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
+	(__novec_swapcontext, __swapcontext): Likewise.
+
+2005-02-07  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #741]
+	* nscd/nscd.c (termination_handler): Avoid segfault if some database
+	is not enabled.
+
+	[BZ #741]
+	* nscd/nscd_getai.c (__nscd_getai): If ai_resp->found == -1, set
+	__nss_not_use_nscd_hosts and return -1.
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): If
+	initgr_resp->found == -1, set __nss_not_use_nscd_group and return -1.
+	Avoid leaking sockets.
+
 2005-02-07  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #742]
