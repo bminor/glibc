@@ -1,3 +1,8 @@
+1999-07-04  Mark Kettenis  <kettenis@gnu.org>
+
+	* libio/iofdopen.c (_IO_new_fdopen): Set EINVAL if MODE is not
+	allowed by the file access mode of the open file.
+
 1999-07-04  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
 
 	* malloc/malloc.c (request2size): Check for overflow and return
