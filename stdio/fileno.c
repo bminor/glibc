@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,11 +24,15 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(fileno, (stream), FILE *stream)
 {
+  extern void __stdio_check_funcs __P ((FILE *));
+
   if (! __validfp (stream))
     {
       errno = EINVAL;
       return -1;
     }
+
+  __stdio_check_funcs (stream);
 
   if (stream->__io_funcs.__fileno == NULL)
     {
