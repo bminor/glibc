@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -288,7 +288,7 @@ _hurd_fd (int fd, int *dealloc)
 static inline void
 _hurd_fd_done (struct _hurd_fd_user d, int *dealloc)
 {
-  _hurd_dtable_done (d->dtable, dealloc);n
+  _hurd_dtable_done (d->dtable, dealloc);
 }
 
 /* Evaluate EXPR with the variable `port' bound to the port to FD,
@@ -297,7 +297,7 @@ _hurd_fd_done (struct _hurd_fd_user d, int *dealloc)
 #define	_HURD_DPORT_USE(fd, expr)					      \
   ({ int __dealloc_dt;							      \
      struct _hurd_fd_user __d = _hurd_fd (fd, &__dealloc_dt);		      \
-     if (__cell.d == NULL)						      \
+     if (__d.cell == NULL)						      \
        EBADF;								      \
      else								      \
        {								      \
