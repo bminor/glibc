@@ -24,9 +24,9 @@ subdir	:= string
 headers	:= string.h strings.h memory.h endian.h bytesex.h
 
 routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
-		   strerror strlen strncat strncmp strncpy strpbrk	\
-		   strrchr strsignal strspn strstr strtok strxfrm	\
-		   __memccpy memchr memcmp memmove memset  		\
+		   strerror _strerror strlen strncat strncmp strncpy 	\
+		   strrchr strpbrk strsignal strspn strstr strtok	\
+		   strxfrm __memccpy memchr memcmp memmove memset	\
 		   bcopy bzero ffs stpcpy stpncpy __stpncpy		\
 		   strcasecmp strncase					\
 		   rindex index bcmp memccpy memcpy wordcopy strsep	\
