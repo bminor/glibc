@@ -95,6 +95,9 @@ ifneq ($(wildcard $(objpfx)configparms),)
 include $(objpfx)configparms
 endif
 endif
+
+sysdep_dir := $(..)sysdeps
+export sysdep_dir := $(sysdep_dir)
 
 ####
 ####	These are the configuration variables.  You can define values for
