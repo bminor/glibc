@@ -372,21 +372,21 @@
 	* catgets/open_catalog.c: Catch incorrect string indeces and empty
 	input file.
 
-	* timezone/africa: Update from official tzdata.
-	* timezone/antarctica: Likewise.
-	* timezone/asia: Likewise.
-	* timezone/australasia: Likewise.
-	* timezone/backward: Likewise.
-	* timezone/etcetera: Likewise.
-	* timezone/europe: Likewise.
-	* timezone/factory: Likewise.
-	* timezone/iso3166.tab: Likewise.
-	* timezone/leapseconds: Likewise.
-	* timezone/northamerica: Likewise.
-	* timezone/pacificnew: Likewise.
-	* timezone/southamerica: Likewise.
-	* timezone/tzselect.ksh: Likewise.
-	* timezone/zone.tab: Likewise.
+	* time/africa: Update from official tzdata.
+	* time/antarctica: Likewise.
+	* time/asia: Likewise.
+	* time/australasia: Likewise.
+	* time/backward: Likewise.
+	* time/etcetera: Likewise.
+	* time/europe: Likewise.
+	* time/factory: Likewise.
+	* time/iso3166.tab: Likewise.
+	* time/leapseconds: Likewise.
+	* time/northamerica: Likewise.
+	* time/pacificnew: Likewise.
+	* time/southamerica: Likewise.
+	* time/tzselect.ksh: Likewise.
+	* time/zone.tab: Likewise.
 
 1998-07-21 07:10  H.J. Lu  <hjl@gnu.org>
 
@@ -575,10 +575,10 @@
 
 1998-05-18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
-	* timezone/Makefile (tz-cflags): Define TM_GMTOFF and TM_ZONE.
+	* time/Makefile (tz-cflags): Define TM_GMTOFF and TM_ZONE.
 	(CFLAGS-zdump.c): Add $(tz-cflags).
 
-	* timezone/zdump.c (abbr): Use TM_ZONE if defined.  Add const to
+	* time/zdump.c (abbr): Use TM_ZONE if defined.  Add const to
 	return type.
 
 1998-05-18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
