@@ -27,7 +27,7 @@ Cambridge, MA 02139, USA.  */
 
 void
 _hurd_raise_signal (struct hurd_sigstate *ss,
-		    int signo, int sigcode, int sigerror)
+		    int signo, long int sigcode, int sigerror)
 {
   if (ss == NULL)
     ss = _hurd_self_sigstate ();

@@ -32,7 +32,7 @@ jmp_buf _hurdsig_fault_env;
 static mach_port_t forward_sigexc;
 
 int _hurdsig_fault_expect_signo;
-int _hurdsig_fault_sigcode;
+long int _hurdsig_fault_sigcode;
 int _hurdsig_fault_sigerror;
 
 kern_return_t

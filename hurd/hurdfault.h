@@ -43,7 +43,7 @@ extern int _hurdsig_fault_expect_signo;
 
 
 
-extern int _hurdsig_fault_sigcode;
+extern long int _hurdsig_fault_sigcode;
 extern int _hurdsig_fault_sigerror;
 
 #endif	/* hurd/fault.h */
