@@ -40,9 +40,6 @@ volatile int errno;		/* XXX wants to be per-thread */
 char **__environ;
 
 extern void __mach_init (void);
-extern void _hurd_init (int flags, char **argv,
-			mach_port_t *portarray, size_t portarraysize,
-			int *intarray, size_t intarraysize);
 extern void __libc_init (int argc, char **argv, char **envp);
 extern int main (int argc, char **argv, char **envp);
 
