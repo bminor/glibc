@@ -33,15 +33,8 @@
 extern int __nss_not_use_nscd_hosts;
 
 
-libc_locked_map_ptr (map_handle);
-/* Note that we only free the structure if necessary.  The memory
-   mapping is not removed since it is not visible to the malloc
-   handling.  */
-libc_freeres_fn (ai_map_free)
-{
-  if (map_handle.mapped != NO_MAPPING)
-    free (map_handle.mapped);
-}
+/* We use the mapping from nscd_gethst.  */
+libc_locked_map_ptr (extern, __hst_map_handle);
 
 
 int
@@ -53,7 +46,8 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
   /* If the mapping is available, try to search there instead of
      communicating with the nscd.  */
   struct mapped_database *mapped;
-  mapped = __nscd_get_map_ref (GETFDHST, "hosts", &map_handle, &gc_cycle);
+  mapped = __nscd_get_map_ref (GETFDHST, "hosts", &__hst_map_handle,
+			       &gc_cycle);
 
  retry:;
   const ai_response_header *ai_resp = NULL;
@@ -142,6 +136,12 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
 	  /* Copy the data in the block.  */
 	  memcpy (resultbuf + 1, respdata, datalen);
 
+	  /* Try to detect corrupt databases.  */
+	  if (resultbuf->canon != NULL
+	      && resultbuf->canon[ai_resp->canonlen - 1] != '\0')
+	    /* We cannot use the database.  */
+	    goto out_close;
+
 	  retval = 0;
 	  *result = resultbuf;
 	}
@@ -157,6 +157,7 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
       retval = 0;
     }
 
+ out_close:
   if (sock != -1)
     close_not_cancel_no_status (sock);
  out:

@@ -67,14 +67,18 @@ __nscd_getgrgid_r (gid_t gid, struct group *resultbuf, char *buffer,
 }
 
 
-libc_locked_map_ptr (map_handle);
+libc_locked_map_ptr (,__gr_map_handle);
 /* Note that we only free the structure if necessary.  The memory
    mapping is not removed since it is not visible to the malloc
    handling.  */
 libc_freeres_fn (gr_map_free)
 {
-  if (map_handle.mapped != NO_MAPPING)
-    free (map_handle.mapped);
+  if (__gr_map_handle.mapped != NO_MAPPING)
+    {
+      void *p = __gr_map_handle.mapped;
+      __gr_map_handle.mapped = NO_MAPPING;
+      free (p);
+    }
 }
 
 
@@ -91,7 +95,8 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
   /* If the mapping is available, try to search there instead of
      communicating with the nscd.  */
   struct mapped_database *mapped = __nscd_get_map_ref (GETFDGR, "group",
-						       &map_handle, &gc_cycle);
+						       &__gr_map_handle,
+						       &gc_cycle);
  retry:;
   const gr_response_header *gr_resp = NULL;
   const char *gr_name = NULL;
@@ -204,7 +209,8 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       else
 	/* We already have the data.  Just copy the group name and
 	   password.  */
-	memcpy (resultbuf->gr_name, gr_name, gr_name_len);
+	memcpy (resultbuf->gr_name, gr_name,
+		gr_resp->gr_name_len + gr_resp->gr_passwd_len);
 
       /* Clear the terminating entry.  */
       resultbuf->gr_mem[gr_resp->gr_mem_cnt] = NULL;
@@ -241,6 +247,19 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	{
 	  /* Copy the group member names.  */
 	  memcpy (resultbuf->gr_mem[0], gr_name + gr_name_len, total_len);
+
+	  /* Try to detect corrupt databases.  */
+	  if (resultbuf->gr_name[gr_name_len - 1] != '\0'
+	      || resultbuf->gr_passwd[gr_resp->gr_passwd_len - 1] != '\0'
+	      || ({for (cnt = 0; cnt < gr_resp->gr_mem_cnt; ++cnt)
+		     if (resultbuf->gr_mem[cnt][len[cnt] - 1] != '\0')
+		       break;
+	  	   cnt < gr_resp->gr_mem_cnt; }))
+	    {
+	      /* We cannot use the database.  */
+	      retval = -1;
+	      goto out_close;
+	    }
 
 	  *result = resultbuf;
 	}

@@ -29,7 +29,6 @@ static reg_errcode_t match_ctx_add_entry (re_match_context_t *cache, int node,
      internal_function;
 static int search_cur_bkref_entry (re_match_context_t *mctx, int str_idx)
      internal_function;
-static void match_ctx_clear_flag (re_match_context_t *mctx) internal_function;
 static reg_errcode_t match_ctx_add_subtop (re_match_context_t *mctx, int node,
 					   int str_idx) internal_function;
 static re_sub_match_last_t * match_ctx_add_sublast (re_sub_match_top_t *subtop,
@@ -37,7 +36,7 @@ static re_sub_match_last_t * match_ctx_add_sublast (re_sub_match_top_t *subtop,
      internal_function;
 static void sift_ctx_init (re_sift_context_t *sctx, re_dfastate_t **sifted_sts,
 			   re_dfastate_t **limited_sts, int last_node,
-			   int last_str_idx, int check_subexp)
+			   int last_str_idx)
      internal_function;
 static reg_errcode_t re_search_internal (const regex_t *preg,
 					 const char *string, int length,
@@ -94,6 +93,9 @@ static int sift_states_iter_mb (const re_match_context_t *mctx,
 #endif /* RE_ENABLE_I18N */
 static reg_errcode_t sift_states_backward (re_match_context_t *mctx,
 					   re_sift_context_t *sctx) internal_function;
+static reg_errcode_t build_sifted_states (re_match_context_t *mctx,
+					  re_sift_context_t *sctx, int str_idx,
+					  re_node_set *cur_dest) internal_function;
 static reg_errcode_t update_cur_sifted_state (re_match_context_t *mctx,
 					      re_sift_context_t *sctx,
 					      int str_idx,
@@ -107,9 +109,13 @@ static reg_errcode_t sub_epsilon_src_nodes (re_dfa_t *dfa, int node,
 static int check_dst_limits (re_match_context_t *mctx, re_node_set *limits,
 			     int dst_node, int dst_idx, int src_node,
 			     int src_idx) internal_function;
+static int check_dst_limits_calc_pos_1 (re_match_context_t *mctx,
+					int boundaries, int subexp_idx,
+					int from_node, int bkref_idx) internal_function;
 static int check_dst_limits_calc_pos (re_match_context_t *mctx,
-				      int limit, re_node_set *eclosures,
-				      int subexp_idx, int node, int str_idx) internal_function;
+				      int limit, int subexp_idx,
+				      int node, int str_idx,
+				      int bkref_idx) internal_function;
 static reg_errcode_t check_subexp_limits (re_dfa_t *dfa,
 					  re_node_set *dest_nodes,
 					  const re_node_set *candidates,
@@ -118,7 +124,7 @@ static reg_errcode_t check_subexp_limits (re_dfa_t *dfa,
 					  int str_idx) internal_function;
 static reg_errcode_t sift_states_bkref (re_match_context_t *mctx,
 					re_sift_context_t *sctx,
-					int str_idx, re_node_set *dest_nodes) internal_function;
+					int str_idx, const re_node_set *candidates) internal_function;
 static reg_errcode_t clean_state_log_if_needed (re_match_context_t *mctx,
 					        int next_state_log_idx) internal_function;
 static reg_errcode_t merge_state_array (re_dfa_t *dfa, re_dfastate_t **dst,
@@ -170,8 +176,7 @@ static reg_errcode_t check_arrival_expand_ecl_sub (re_dfa_t *dfa,
 						   int type) internal_function;
 static reg_errcode_t expand_bkref_cache (re_match_context_t *mctx,
 					 re_node_set *cur_nodes, int cur_str,
-					 int last_str, int subexp_num,
-					 int type) internal_function;
+					 int subexp_num, int type) internal_function;
 static re_dfastate_t **build_trtable (re_dfa_t *dfa,
 				      re_dfastate_t *state) internal_function;
 #ifdef RE_ENABLE_I18N
@@ -578,8 +583,6 @@ re_exec (s)
 }
 #endif /* _REGEX_RE_COMP */
 
-static re_node_set empty_set;
-
 /* Internal entry point.  */
 
 /* Searches for a compiled pattern PREG in the string STRING, whose
@@ -641,8 +644,6 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
         return REG_NOMATCH;
       start = range = 0;
     }
-
-  re_node_set_init_empty (&empty_set);
 
   /* We must check the longest matching, if nmatch > 0.  */
   fl_longest_match = (nmatch != 0 || dfa->nbackref);
@@ -910,9 +911,8 @@ prune_impossible_nodes (mctx)
 	{
 	  memset (lim_states, '\0',
 		  sizeof (re_dfastate_t *) * (match_last + 1));
-	  match_ctx_clear_flag (mctx);
 	  sift_ctx_init (&sctx, sifted_states, lim_states, halt_node,
-			 match_last, 0);
+			 match_last);
 	  ret = sift_states_backward (mctx, &sctx);
 	  re_node_set_free (&sctx.limits);
 	  if (BE (ret != REG_NOERROR, 0))
@@ -942,8 +942,7 @@ prune_impossible_nodes (mctx)
     }
   else
     {
-      sift_ctx_init (&sctx, sifted_states, lim_states, halt_node,
-		     match_last, 0);
+      sift_ctx_init (&sctx, sifted_states, lim_states, halt_node, match_last);
       ret = sift_states_backward (mctx, &sctx);
       re_node_set_free (&sctx.limits);
       if (BE (ret != REG_NOERROR, 0))
@@ -1496,17 +1495,14 @@ sift_states_backward (mctx, sctx)
      re_match_context_t *mctx;
      re_sift_context_t *sctx;
 {
-  re_dfa_t *const dfa = mctx->dfa;
   reg_errcode_t err;
   int null_cnt = 0;
   int str_idx = sctx->last_str_idx;
   re_node_set cur_dest;
-  re_node_set *cur_src; /* Points the state_log[str_idx]->nodes  */
 
 #ifdef DEBUG
   assert (mctx->state_log != NULL && mctx->state_log[str_idx] != NULL);
 #endif
-  cur_src = &mctx->state_log[str_idx]->nodes;
 
   /* Build sifted state_log[str_idx].  It has the nodes which can epsilon
      transit to the last_node and the last_node itself.  */
@@ -1520,7 +1516,6 @@ sift_states_backward (mctx, sctx)
   /* Then check each states in the state_log.  */
   while (str_idx > 0)
     {
-      int i, ret;
       /* Update counters.  */
       null_cnt = (sctx->sifted_states[str_idx] == NULL) ? null_cnt + 1 : 0;
       if (null_cnt > mctx->max_mb_elem_len)
@@ -1532,56 +1527,12 @@ sift_states_backward (mctx, sctx)
 	}
       re_node_set_empty (&cur_dest);
       --str_idx;
-      cur_src = ((mctx->state_log[str_idx] == NULL) ? &empty_set
-		 : &mctx->state_log[str_idx]->nodes);
 
-      /* Then build the next sifted state.
-	 We build the next sifted state on `cur_dest', and update
-	 `sifted_states[str_idx]' with `cur_dest'.
-	 Note:
-	 `cur_dest' is the sifted state from `state_log[str_idx + 1]'.
-	 `cur_src' points the node_set of the old `state_log[str_idx]'.  */
-      for (i = 0; i < cur_src->nelem; i++)
+      if (mctx->state_log[str_idx])
 	{
-	  int prev_node = cur_src->elems[i];
-	  int naccepted = 0;
-	  re_token_type_t type = dfa->nodes[prev_node].type;
-
-	  if (IS_EPSILON_NODE (type))
-	    continue;
-#ifdef RE_ENABLE_I18N
-	  /* If the node may accept `multi byte'.  */
-	  if (ACCEPT_MB_NODE (type))
-	    naccepted = sift_states_iter_mb (mctx, sctx, prev_node,
-					     str_idx, sctx->last_str_idx);
-
-#endif /* RE_ENABLE_I18N */
-	  /* We don't check backreferences here.
-	     See update_cur_sifted_state().  */
-
-	  if (!naccepted
-	      && check_node_accept (mctx, dfa->nodes + prev_node, str_idx)
-	      && STATE_NODE_CONTAINS (sctx->sifted_states[str_idx + 1],
-				      dfa->nexts[prev_node]))
-	    naccepted = 1;
-
-	  if (naccepted == 0)
-	    continue;
-
-	  if (sctx->limits.nelem)
-	    {
-	      int to_idx = str_idx + naccepted;
-	      if (check_dst_limits (mctx, &sctx->limits,
-				    dfa->nexts[prev_node], to_idx,
-				    prev_node, str_idx))
-		continue;
-	    }
-	  ret = re_node_set_insert (&cur_dest, prev_node);
-	  if (BE (ret == -1, 0))
-	    {
-	      err = REG_ESPACE;
-	      goto free_return;
-	    }
+	  err = build_sifted_states (mctx, sctx, str_idx, &cur_dest);
+          if (BE (err != REG_NOERROR, 0))
+	    goto free_return;
 	}
 
       /* Add all the nodes which satisfy the following conditions:
@@ -1596,6 +1547,66 @@ sift_states_backward (mctx, sctx)
  free_return:
   re_node_set_free (&cur_dest);
   return err;
+}
+
+static reg_errcode_t
+build_sifted_states (mctx, sctx, str_idx, cur_dest)
+     re_match_context_t *mctx;
+     re_sift_context_t *sctx;
+     int str_idx;
+     re_node_set *cur_dest;
+{
+  re_dfa_t *const dfa = mctx->dfa;
+  re_node_set *cur_src = &mctx->state_log[str_idx]->nodes;
+  int i;
+
+  /* Then build the next sifted state.
+     We build the next sifted state on `cur_dest', and update
+     `sifted_states[str_idx]' with `cur_dest'.
+     Note:
+     `cur_dest' is the sifted state from `state_log[str_idx + 1]'.
+     `cur_src' points the node_set of the old `state_log[str_idx]'.  */
+  for (i = 0; i < cur_src->nelem; i++)
+    {
+      int prev_node = cur_src->elems[i];
+      int naccepted = 0;
+      re_token_type_t type = dfa->nodes[prev_node].type;
+      int ret;
+
+      if (IS_EPSILON_NODE (type))
+	continue;
+#ifdef RE_ENABLE_I18N
+      /* If the node may accept `multi byte'.  */
+      if (ACCEPT_MB_NODE (type))
+	naccepted = sift_states_iter_mb (mctx, sctx, prev_node,
+					 str_idx, sctx->last_str_idx);
+#endif /* RE_ENABLE_I18N */
+
+      /* We don't check backreferences here.
+	 See update_cur_sifted_state().  */
+      if (!naccepted
+	  && check_node_accept (mctx, dfa->nodes + prev_node, str_idx)
+	  && STATE_NODE_CONTAINS (sctx->sifted_states[str_idx + 1],
+				  dfa->nexts[prev_node]))
+	naccepted = 1;
+
+      if (naccepted == 0)
+	continue;
+
+      if (sctx->limits.nelem)
+	{
+	  int to_idx = str_idx + naccepted;
+	  if (check_dst_limits (mctx, &sctx->limits,
+				dfa->nexts[prev_node], to_idx,
+				prev_node, str_idx))
+	    continue;
+	}
+      ret = re_node_set_insert (cur_dest, prev_node);
+      if (BE (ret == -1, 0))
+	return REG_ESPACE;
+    }
+
+  return REG_NOERROR;
 }
 
 /* Helper functions.  */
@@ -1665,36 +1676,39 @@ update_cur_sifted_state (mctx, sctx, str_idx, dest_nodes)
   re_dfa_t *const dfa = mctx->dfa;
   reg_errcode_t err;
   const re_node_set *candidates;
-  candidates = ((mctx->state_log[str_idx] == NULL) ? &empty_set
+  candidates = ((mctx->state_log[str_idx] == NULL) ? NULL
 		: &mctx->state_log[str_idx]->nodes);
 
-  /* At first, add the nodes which can epsilon transit to a node in
-     DEST_NODE.  */
-  if (dest_nodes->nelem)
+  if (dest_nodes->nelem == 0)
+    sctx->sifted_states[str_idx] = NULL;
+  else
     {
-      err = add_epsilon_src_nodes (dfa, dest_nodes, candidates);
+      if (candidates)
+	{
+	  /* At first, add the nodes which can epsilon transit to a node in
+	     DEST_NODE.  */
+	  err = add_epsilon_src_nodes (dfa, dest_nodes, candidates);
+	  if (BE (err != REG_NOERROR, 0))
+	    return err;
+
+	  /* Then, check the limitations in the current sift_context.  */
+	  if (sctx->limits.nelem)
+	    {
+	      err = check_subexp_limits (dfa, dest_nodes, candidates, &sctx->limits,
+					 mctx->bkref_ents, str_idx);
+	      if (BE (err != REG_NOERROR, 0))
+		return err;
+	    }
+	}
+
+      sctx->sifted_states[str_idx] = re_acquire_state (&err, dfa, dest_nodes);
       if (BE (err != REG_NOERROR, 0))
 	return err;
     }
 
-  /* Then, check the limitations in the current sift_context.  */
-  if (dest_nodes->nelem && sctx->limits.nelem)
+  if (candidates && mctx->state_log[str_idx]->has_backref)
     {
-      err = check_subexp_limits (dfa, dest_nodes, candidates, &sctx->limits,
-				 mctx->bkref_ents, str_idx);
-      if (BE (err != REG_NOERROR, 0))
-	return err;
-    }
-
-  /* Update state_log.  */
-  sctx->sifted_states[str_idx] = re_acquire_state (&err, dfa, dest_nodes);
-  if (BE (sctx->sifted_states[str_idx] == NULL && err != REG_NOERROR, 0))
-    return err;
-
-  if ((mctx->state_log[str_idx] != NULL
-       && mctx->state_log[str_idx]->has_backref))
-    {
-      err = sift_states_bkref (mctx, sctx, str_idx, dest_nodes);
+      err = sift_states_bkref (mctx, sctx, str_idx, candidates);
       if (BE (err != REG_NOERROR, 0))
 	return err;
     }
@@ -1789,6 +1803,8 @@ check_dst_limits (mctx, limits, dst_node, dst_idx, src_node, src_idx)
   re_dfa_t *const dfa = mctx->dfa;
   int lim_idx, src_pos, dst_pos;
 
+  int dst_bkref_idx = search_cur_bkref_entry (mctx, dst_idx);
+  int src_bkref_idx = search_cur_bkref_entry (mctx, src_idx);
   for (lim_idx = 0; lim_idx < limits->nelem; ++lim_idx)
     {
       int subexp_idx;
@@ -1797,11 +1813,11 @@ check_dst_limits (mctx, limits, dst_node, dst_idx, src_node, src_idx)
       subexp_idx = dfa->nodes[ent->node].opr.idx - 1;
 
       dst_pos = check_dst_limits_calc_pos (mctx, limits->elems[lim_idx],
-					   dfa->eclosures + dst_node,
-					   subexp_idx, dst_node, dst_idx);
+					   subexp_idx, dst_node, dst_idx,
+					   dst_bkref_idx);
       src_pos = check_dst_limits_calc_pos (mctx, limits->elems[lim_idx],
-					   dfa->eclosures + src_node,
-					   subexp_idx, src_node, src_idx);
+					   subexp_idx, src_node, src_idx,
+					   src_bkref_idx);
 
       /* In case of:
 	 <src> <dst> ( <subexp> )
@@ -1816,26 +1832,13 @@ check_dst_limits (mctx, limits, dst_node, dst_idx, src_node, src_idx)
 }
 
 static int
-check_dst_limits_calc_pos (mctx, limit, eclosures, subexp_idx, from_node,
-			   str_idx)
+check_dst_limits_calc_pos_1 (mctx, boundaries, subexp_idx, from_node, bkref_idx)
      re_match_context_t *mctx;
-     re_node_set *eclosures;
-     int limit, subexp_idx, from_node, str_idx;
+     int boundaries, subexp_idx, from_node, bkref_idx;
 {
   re_dfa_t *const dfa = mctx->dfa;
-  struct re_backref_cache_entry *lim = mctx->bkref_ents + limit;
+  re_node_set *eclosures = dfa->eclosures + from_node;
   int node_idx;
-
-  /* If we are outside the range of the subexpression, return -1 or 1.  */
-  if (str_idx < lim->subexp_from)
-    return -1;
-
-  if (lim->subexp_to < str_idx)
-    return 1;
-
-  /* If we are within the subexpression, return 0.  */
-  if (str_idx != lim->subexp_from && str_idx != lim->subexp_to)
-    return 0;
 
   /* Else, we are on the boundary: examine the nodes on the epsilon
      closure.  */
@@ -1846,16 +1849,10 @@ check_dst_limits_calc_pos (mctx, limit, eclosures, subexp_idx, from_node,
 	{
 	case OP_BACK_REF:
 	  {
-	    int bi = search_cur_bkref_entry (mctx, str_idx);
-	    for (; bi < mctx->nbkref_ents; ++bi)
+	    struct re_backref_cache_entry *ent = mctx->bkref_ents + bkref_idx;
+	    do
 	      {
-		struct re_backref_cache_entry *ent = mctx->bkref_ents + bi;
 		int dst, cpos;
-
-		/* If this backreference goes beyond the point we're
-		   examining, don't go any further.  */
-		if (ent->str_idx > str_idx)
-		  break;
 
 		if (ent->node != node || ent->subexp_from != ent->subexp_to)
 		  continue;
@@ -1869,33 +1866,32 @@ check_dst_limits_calc_pos (mctx, limit, eclosures, subexp_idx, from_node,
 		dst = dfa->edests[node].elems[0];
 		if (dst == from_node)
 		  {
-		    if (str_idx == lim->subexp_from)
+		    if (boundaries & 1)
 		      return -1;
-		    else /* if (str_idx == lim->subexp_to) */
+		    else /* if (boundaries & 2) */
 		      return 0;
 		  }
 
-		cpos = check_dst_limits_calc_pos (mctx, limit,
-						  dfa->eclosures + dst,
-						  subexp_idx, dst,
-						  str_idx);
+		cpos = check_dst_limits_calc_pos_1 (mctx, boundaries,
+						    subexp_idx, dst, bkref_idx);
 
-		if (cpos == -1 && str_idx == lim->subexp_from)
+		if (cpos == -1 && (boundaries & 1))
 		  return -1;
 
-		if (cpos == 0 /* && str_idx == lim->lim->subexp_to */)
+		if (cpos == 0 /* && (boundaries & 2) */)
 		  return 0;
 	      }
-	      break;
-	    }
+	    while (ent++->more);
+	    break;
+	  }
 
 	case OP_OPEN_SUBEXP:
-	  if (str_idx == lim->subexp_from && subexp_idx == dfa->nodes[node].opr.idx)
+	  if ((boundaries & 1) && subexp_idx == dfa->nodes[node].opr.idx)
 	    return -1;
 	  break;
 
 	case OP_CLOSE_SUBEXP:
-	  if (str_idx == lim->subexp_to && subexp_idx == dfa->nodes[node].opr.idx)
+	  if ((boundaries & 2) && subexp_idx == dfa->nodes[node].opr.idx)
 	    return 0;
 	  break;
 
@@ -1904,10 +1900,33 @@ check_dst_limits_calc_pos (mctx, limit, eclosures, subexp_idx, from_node,
 	}
     }
 
-  if (str_idx == lim->subexp_to)
+  return (boundaries & 2) ? 1 : 0;
+}
+
+static int
+check_dst_limits_calc_pos (mctx, limit, subexp_idx, from_node, str_idx, bkref_idx)
+     re_match_context_t *mctx;
+     int limit, subexp_idx, from_node, str_idx, bkref_idx;
+{
+  struct re_backref_cache_entry *lim = mctx->bkref_ents + limit;
+  int boundaries;
+
+  /* If we are outside the range of the subexpression, return -1 or 1.  */
+  if (str_idx < lim->subexp_from)
+    return -1;
+
+  if (lim->subexp_to < str_idx)
     return 1;
-  else
+
+  /* If we are within the subexpression, return 0.  */
+  boundaries = (str_idx == lim->subexp_from);
+  boundaries |= (str_idx == lim->subexp_to) << 1;
+  if (boundaries == 0)
     return 0;
+
+  /* Else, examine epsilon closure.  */
+  return check_dst_limits_calc_pos_1 (mctx, boundaries, subexp_idx,
+				      from_node, bkref_idx);
 }
 
 /* Check the limitations of sub expressions LIMITS, and remove the nodes
@@ -2009,115 +2028,91 @@ check_subexp_limits (dfa, dest_nodes, candidates, limits, bkref_ents, str_idx)
 }
 
 static reg_errcode_t
-sift_states_bkref (mctx, sctx, str_idx, dest_nodes)
+sift_states_bkref (mctx, sctx, str_idx, candidates)
      re_match_context_t *mctx;
      re_sift_context_t *sctx;
      int str_idx;
-     re_node_set *dest_nodes;
+     const re_node_set *candidates;
 {
   re_dfa_t *const dfa = mctx->dfa;
   reg_errcode_t err;
   int node_idx, node;
   re_sift_context_t local_sctx;
-  const re_node_set *candidates;
-  candidates = ((mctx->state_log[str_idx] == NULL) ? &empty_set
-		: &mctx->state_log[str_idx]->nodes);
+  int first_idx = search_cur_bkref_entry (mctx, str_idx);
+
+  if (first_idx == -1)
+    return REG_NOERROR;
+
   local_sctx.sifted_states = NULL; /* Mark that it hasn't been initialized.  */
 
   for (node_idx = 0; node_idx < candidates->nelem; ++node_idx)
     {
-      int cur_bkref_idx = re_string_cur_idx (&mctx->input);
+      int enabled_idx;
       re_token_type_t type;
+      struct re_backref_cache_entry *entry;
       node = candidates->elems[node_idx];
       type = dfa->nodes[node].type;
-      if (node == sctx->cur_bkref && str_idx == cur_bkref_idx)
-	continue;
       /* Avoid infinite loop for the REs like "()\1+".  */
       if (node == sctx->last_node && str_idx == sctx->last_str_idx)
 	continue;
-      if (type == OP_BACK_REF)
+      if (type != OP_BACK_REF)
+	continue;
+
+      entry = mctx->bkref_ents + first_idx;
+      enabled_idx = first_idx;
+      do
 	{
-	  int enabled_idx = search_cur_bkref_entry (mctx, str_idx);
-	  for (; enabled_idx < mctx->nbkref_ents; ++enabled_idx)
-	    {
-	      int disabled_idx, subexp_len, to_idx, dst_node;
-	      struct re_backref_cache_entry *entry;
-	      entry = mctx->bkref_ents + enabled_idx;
-	      if (entry->str_idx > str_idx)
-		break;
-	      if (entry->node != node)
-		  continue;
-	      subexp_len = entry->subexp_to - entry->subexp_from;
-	      to_idx = str_idx + subexp_len;
-	      dst_node = (subexp_len ? dfa->nexts[node]
-			  : dfa->edests[node].elems[0]);
+	  int subexp_len, to_idx, dst_node;
+	  re_dfastate_t *cur_state;
 
-	      if (to_idx > sctx->last_str_idx
-		  || sctx->sifted_states[to_idx] == NULL
-		  || !STATE_NODE_CONTAINS (sctx->sifted_states[to_idx],
-					   dst_node)
-		  || check_dst_limits (mctx, &sctx->limits, node,
-				       str_idx, dst_node, to_idx))
-		continue;
-		{
-		  re_dfastate_t *cur_state;
-		  entry->flag = 0;
-		  for (disabled_idx = enabled_idx + 1;
-		       disabled_idx < mctx->nbkref_ents; ++disabled_idx)
-		    {
-		      struct re_backref_cache_entry *entry2;
-		      entry2 = mctx->bkref_ents + disabled_idx;
-		      if (entry2->str_idx > str_idx)
-			break;
-		      entry2->flag = (entry2->node == node) ? 1 : entry2->flag;
-		    }
+	  if (entry->node != node)
+	    continue;
+	  subexp_len = entry->subexp_to - entry->subexp_from;
+	  to_idx = str_idx + subexp_len;
+	  dst_node = (subexp_len ? dfa->nexts[node]
+		      : dfa->edests[node].elems[0]);
 
-		  if (local_sctx.sifted_states == NULL)
-		    {
-		      local_sctx = *sctx;
-		      err = re_node_set_init_copy (&local_sctx.limits,
-						   &sctx->limits);
-		      if (BE (err != REG_NOERROR, 0))
-			goto free_return;
-		    }
-		  local_sctx.last_node = node;
-		  local_sctx.last_str_idx = str_idx;
-		  err = re_node_set_insert (&local_sctx.limits, enabled_idx);
-		  if (BE (err < 0, 0))
-		    {
-		      err = REG_ESPACE;
-		      goto free_return;
-		    }
-		  cur_state = local_sctx.sifted_states[str_idx];
-		  err = sift_states_backward (mctx, &local_sctx);
-		  if (BE (err != REG_NOERROR, 0))
-		    goto free_return;
-		  if (sctx->limited_states != NULL)
-		    {
-		      err = merge_state_array (dfa, sctx->limited_states,
-					       local_sctx.sifted_states,
-					       str_idx + 1);
-		      if (BE (err != REG_NOERROR, 0))
-			goto free_return;
-		    }
-		  local_sctx.sifted_states[str_idx] = cur_state;
-		  re_node_set_remove (&local_sctx.limits, enabled_idx);
-		  /* We must not use the variable entry here, since
-		     mctx->bkref_ents might be realloced.  */
-		  mctx->bkref_ents[enabled_idx].flag = 1;
-		}
-	    }
-	  enabled_idx = search_cur_bkref_entry (mctx, str_idx);
-	  for (; enabled_idx < mctx->nbkref_ents; ++enabled_idx)
+	  if (to_idx > sctx->last_str_idx
+	      || sctx->sifted_states[to_idx] == NULL
+	      || !STATE_NODE_CONTAINS (sctx->sifted_states[to_idx], dst_node)
+	      || check_dst_limits (mctx, &sctx->limits, node,
+				   str_idx, dst_node, to_idx))
+	    continue;
+
+	  if (local_sctx.sifted_states == NULL)
 	    {
-	      struct re_backref_cache_entry *entry;
-	      entry = mctx->bkref_ents + enabled_idx;
-	      if (entry->str_idx > str_idx)
-		break;
-	      if (entry->node == node)
-		entry->flag = 0;
+	      local_sctx = *sctx;
+	      err = re_node_set_init_copy (&local_sctx.limits, &sctx->limits);
+	      if (BE (err != REG_NOERROR, 0))
+		goto free_return;
 	    }
+	  local_sctx.last_node = node;
+	  local_sctx.last_str_idx = str_idx;
+	  err = re_node_set_insert (&local_sctx.limits, enabled_idx);
+	  if (BE (err < 0, 0))
+	    {
+	      err = REG_ESPACE;
+	      goto free_return;
+	    }
+	  cur_state = local_sctx.sifted_states[str_idx];
+	  err = sift_states_backward (mctx, &local_sctx);
+	  if (BE (err != REG_NOERROR, 0))
+	    goto free_return;
+	  if (sctx->limited_states != NULL)
+	    {
+	      err = merge_state_array (dfa, sctx->limited_states,
+				       local_sctx.sifted_states,
+				       str_idx + 1);
+	      if (BE (err != REG_NOERROR, 0))
+		goto free_return;
+	    }
+	  local_sctx.sifted_states[str_idx] = cur_state;
+	  re_node_set_remove (&local_sctx.limits, enabled_idx);
+
+	  /* mctx->bkref_ents may have changed, reload the pointer.  */
+          entry = mctx->bkref_ents + enabled_idx;
 	}
+      while (enabled_idx++, entry++->more);
     }
   err = REG_NOERROR;
  free_return:
@@ -2611,15 +2606,15 @@ get_subexp (mctx, bkref_node, bkref_str_idx)
   const char *buf = (const char *) re_string_get_buffer (&mctx->input);
   /* Return if we have already checked BKREF_NODE at BKREF_STR_IDX.  */
   int cache_idx = search_cur_bkref_entry (mctx, bkref_str_idx);
-  for (; cache_idx < mctx->nbkref_ents; ++cache_idx)
+  if (cache_idx != -1)
     {
-      const struct re_backref_cache_entry *entry
-	= &mctx->bkref_ents[cache_idx];
-      if (entry->str_idx > bkref_str_idx)
-	break;
-      if (entry->node == bkref_node)
-	return REG_NOERROR; /* We already checked it.  */
+      const struct re_backref_cache_entry *entry = mctx->bkref_ents + cache_idx;
+      do
+        if (entry->node == bkref_node)
+	  return REG_NOERROR; /* We already checked it.  */
+      while (entry++->more);
     }
+
   subexp_num = dfa->nodes[bkref_node].opr.idx - 1;
 
   /* For each sub expression  */
@@ -2871,7 +2866,7 @@ check_arrival (mctx, path, top_node, top_str, last_node, last_str,
     {
       if (next_nodes.nelem)
 	{
-	  err = expand_bkref_cache (mctx, &next_nodes, str_idx, last_str,
+	  err = expand_bkref_cache (mctx, &next_nodes, str_idx,
 				    subexp_num, type);
 	  if (BE ( err != REG_NOERROR, 0))
 	    {
@@ -2920,7 +2915,7 @@ check_arrival (mctx, path, top_node, top_str, last_node, last_str,
 	      re_node_set_free (&next_nodes);
 	      return err;
 	    }
-	  err = expand_bkref_cache (mctx, &next_nodes, str_idx, last_str,
+	  err = expand_bkref_cache (mctx, &next_nodes, str_idx,
 				    subexp_num, type);
 	  if (BE ( err != REG_NOERROR, 0))
 	    {
@@ -2969,6 +2964,7 @@ check_arrival_add_next_nodes (mctx, str_idx, cur_nodes, next_nodes)
      re_node_set *cur_nodes, *next_nodes;
 {
   re_dfa_t *const dfa = mctx->dfa;
+  int result;
   int cur_idx;
   reg_errcode_t err;
   re_node_set union_set;
@@ -3002,8 +2998,8 @@ check_arrival_add_next_nodes (mctx, str_idx, cur_nodes, next_nodes)
 		      return err;
 		    }
 		}
-	      err = re_node_set_insert (&union_set, next_node);
-	      if (BE (err < 0, 0))
+	      result = re_node_set_insert (&union_set, next_node);
+	      if (BE (result < 0, 0))
 		{
 		  re_node_set_free (&union_set);
 		  return REG_ESPACE;
@@ -3022,8 +3018,8 @@ check_arrival_add_next_nodes (mctx, str_idx, cur_nodes, next_nodes)
       if (naccepted
 	  || check_node_accept (mctx, dfa->nodes + cur_node, str_idx))
 	{
-	  err = re_node_set_insert (next_nodes, dfa->nexts[cur_node]);
-	  if (BE (err < 0, 0))
+	  result = re_node_set_insert (next_nodes, dfa->nexts[cur_node]);
+	  if (BE (result < 0, 0))
 	    {
 	      re_node_set_free (&union_set);
 	      return REG_ESPACE;
@@ -3140,24 +3136,26 @@ check_arrival_expand_ecl_sub (dfa, dst_nodes, target, ex_subexp, type)
    in MCTX->BKREF_ENTS.  */
 
 static reg_errcode_t
-expand_bkref_cache (mctx, cur_nodes, cur_str, last_str, subexp_num,
+expand_bkref_cache (mctx, cur_nodes, cur_str, subexp_num,
 		    type)
      re_match_context_t *mctx;
-     int cur_str, last_str, subexp_num, type;
+     int cur_str, subexp_num, type;
      re_node_set *cur_nodes;
 {
   re_dfa_t *const dfa = mctx->dfa;
   reg_errcode_t err;
-  int cache_idx, cache_idx_start;
-  /* The current state.  */
+  int cache_idx_start = search_cur_bkref_entry (mctx, cur_str);
+  struct re_backref_cache_entry *ent;
 
-  cache_idx_start = search_cur_bkref_entry (mctx, cur_str);
-  for (cache_idx = cache_idx_start; cache_idx < mctx->nbkref_ents; ++cache_idx)
+  if (cache_idx_start == -1)
+    return REG_NOERROR;
+
+ restart:
+  ent = mctx->bkref_ents + cache_idx_start;
+  do
     {
       int to_idx, next_node;
-      struct re_backref_cache_entry *ent = mctx->bkref_ents + cache_idx;
-      if (ent->str_idx > cur_str)
-	break;
+
       /* Is this entry ENT is appropriate?  */
       if (!re_node_set_contains (cur_nodes, ent->node))
 	continue; /* No.  */
@@ -3186,8 +3184,7 @@ expand_bkref_cache (mctx, cur_nodes, cur_str, last_str, subexp_num,
 	      return err;
 	    }
 	  /* TODO: It is still inefficient...  */
-	  cache_idx = cache_idx_start - 1;
-	  continue;
+	  goto restart;
 	}
       else
 	{
@@ -3222,6 +3219,7 @@ expand_bkref_cache (mctx, cur_nodes, cur_str, last_str, subexp_num,
 	    return err;
 	}
     }
+  while (ent++->more);
   return REG_NOERROR;
 }
 
@@ -3463,6 +3461,7 @@ group_nodes_into_DFAstates (dfa, state, dests_node, dests_ch)
     bitset *dests_ch;
 {
   reg_errcode_t err;
+  int result;
   int i, j, k;
   int ndests; /* Number of the destinations from `state'.  */
   bitset accepts; /* Characters a node can accept.  */
@@ -3611,8 +3610,8 @@ group_nodes_into_DFAstates (dfa, state, dests_node, dests_ch)
 	    }
 
 	  /* Put the position in the current group. */
-	  err = re_node_set_insert (&dests_node[j], cur_nodes->elems[i]);
-	  if (BE (err < 0, 0))
+	  result = re_node_set_insert (&dests_node[j], cur_nodes->elems[i]);
+	  if (BE (result < 0, 0))
 	    goto error_return;
 
 	  /* If all characters are consumed, go to next node. */
@@ -4147,26 +4146,30 @@ match_ctx_add_entry (mctx, node, str_idx, from, to)
 	      sizeof (struct re_backref_cache_entry) * mctx->abkref_ents);
       mctx->abkref_ents *= 2;
     }
+  if (mctx->nbkref_ents > 0
+      && mctx->bkref_ents[mctx->nbkref_ents - 1].str_idx == str_idx)
+    mctx->bkref_ents[mctx->nbkref_ents - 1].more = 1;
+
   mctx->bkref_ents[mctx->nbkref_ents].node = node;
   mctx->bkref_ents[mctx->nbkref_ents].str_idx = str_idx;
   mctx->bkref_ents[mctx->nbkref_ents].subexp_from = from;
   mctx->bkref_ents[mctx->nbkref_ents].subexp_to = to;
-  mctx->bkref_ents[mctx->nbkref_ents++].flag = 0;
+  mctx->bkref_ents[mctx->nbkref_ents++].more = 0;
   if (mctx->max_mb_elem_len < to - from)
     mctx->max_mb_elem_len = to - from;
   return REG_NOERROR;
 }
 
-/* Search for the first entry which has the same str_idx.
-   Note that MCTX->BKREF_ENTS is already sorted by MCTX->STR_IDX.  */
+/* Search for the first entry which has the same str_idx, or -1 if none is
+   found.  Note that MCTX->BKREF_ENTS is already sorted by MCTX->STR_IDX.  */
 
 static int
 search_cur_bkref_entry (mctx, str_idx)
      re_match_context_t *mctx;
      int str_idx;
 {
-  int left, right, mid;
-  right = mctx->nbkref_ents;
+  int left, right, mid, last;
+  last = right = mctx->nbkref_ents;
   for (left = 0; left < right;)
     {
       mid = (left + right) / 2;
@@ -4175,16 +4178,10 @@ search_cur_bkref_entry (mctx, str_idx)
       else
 	right = mid;
     }
-  return left;
-}
-
-static void
-match_ctx_clear_flag (mctx)
-     re_match_context_t *mctx;
-{
-  int i;
-  for (i = 0; i < mctx->nbkref_ents; ++i)
-    mctx->bkref_ents[i].flag = 0;
+  if (left < last && mctx->bkref_ents[left].str_idx == str_idx)
+    return left;
+  else
+    return -1;
 }
 
 /* Register the node NODE, whose type is OP_OPEN_SUBEXP, and which matches
@@ -4250,18 +4247,14 @@ match_ctx_add_sublast (subtop, node, str_idx)
 }
 
 static void
-sift_ctx_init (sctx, sifted_sts, limited_sts, last_node, last_str_idx,
-	       check_subexp)
+sift_ctx_init (sctx, sifted_sts, limited_sts, last_node, last_str_idx)
     re_sift_context_t *sctx;
     re_dfastate_t **sifted_sts, **limited_sts;
-    int last_node, last_str_idx, check_subexp;
+    int last_node, last_str_idx;
 {
   sctx->sifted_states = sifted_sts;
   sctx->limited_states = limited_sts;
   sctx->last_node = last_node;
   sctx->last_str_idx = last_str_idx;
-  sctx->check_subexp = check_subexp;
-  sctx->cur_bkref = -1;
-  sctx->cls_subexp_idx = -1;
   re_node_set_init_empty (&sctx->limits);
 }

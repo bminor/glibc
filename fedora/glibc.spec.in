@@ -1,4 +1,4 @@
-%define glibcrelease 75
+%define glibcrelease 76
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1256,9 +1256,17 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Nov 10 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-76
+- update from CVS
+  - fix regcomp crash (#138439)
+  - fix ftell{,o,o64} (#137885)
+  - robustification of nscd to cope with corrupt databases (#137140)
+  - fix NPTL with pthread_exit immediately after pthread_create (BZ #530)
+  - some regex optimizations
+
 * Tue Nov  2 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-75
 - update from CVS
-  - mktime cleanups (BZ #487, #473, 
+  - mktime cleanups (BZ #487, #473)
   - unique comments in free(3) check error messages
 - adjust some x86_64 headers for -m32 (#129712)
 - object size checking support even with GCC-3.4.2-RH >= 3.4.2-8

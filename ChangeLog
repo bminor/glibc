@@ -1,12 +1,138 @@
-2004-11-02  Jakub Jelinek  <jakub@redhat.com>
+2004-11-09  Ulrich Drepper  <drepper@redhat.com>
 
-	* include/features.h (__USE_FORTIFY_LEVEL): Also set for Red Hat
-	GCC 3.4.x-RH >= 3.4.2-8.
-	* libio/bits/features.h (printf, fprintf, vprintf, vfprintf): For
-	GCC 3.4.x-RH use __builtin___{,v}{,f}printf_chk instead of
-	__{,v}{,f}printf_chk.
-	* debug/tst-chk1.c (do_test): Deal with GCC 3.4.x-RH not
-	being able to recognize subobjects.
+	* nscd/nscd-client.h (libc_locked_map_ptr): Add new first
+	parameter, used as class for definition.
+	* nscd/nscd_getpw_r.c: Adjust for libc_locked_map_ptr change.
+	(pw_map_free): Ensure no crash after memory is freed.
+	* nscd/nscd_getgr.c: Likewise.  Make map externally visible.
+	* nscd/nscd_gethst.c: Likewise.
+	* nscd/nscd_getai.c: Use map from nscd_gethost.c.
+	* nscd/nscd_initgroups.c: Use map from nscd_getgr.c.
+
+	* nscd/nscd_getai.c: Add some checks to detect corrupt databases.
+	* nscd/nscd_getgr_r.c: Likewise
+	* nscd/nscd_gethst_r.c: Likewise.
+	* nscd/nscd_getpw_r.c: Likewise
+
+2004-11-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (calc_eclosure_iter): Don't access
+	dfa->edests[node].elems[0] if dfa->edests[node].nelem == 0.
+	* posix/rxspencer/tests: Add 5 new tests.
+
+2004-11-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c: Determine sin6_scope_id field
+	value correctly.  Patch by Mitsuru Kanda <mk@karaba.org>.
+
+2004-11-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/fileops.c (_IO_new_file_seekoff): If mode is 0 and
+	fp->_offset == _IO_pos_BAD, just call _IO_SYSSEEK (fp, 0, dir)
+	and if successful set fp->_offset.
+	* libio/Makefile (tests): Add bug-ungetc3.
+	* libio/bug-ungetc3.c: New test.
+
+2004-11-03  Marcus Brinkmann  <marcus@gnu.org>
+
+	* sysdeps/gnu/_G_config.h (_G_HAVE_MREMAP): Define symbol.
+	* sysdeps/mach/hurd/_G_config.h: New file.
+	* libio/fileops.c (mmap_remap_check) [__linux__]: Replaced with
+	[_G_HAVE_MREMAP].
+
+2004-11-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c (utf8_sb_map): Define.
+	(free_dfa_content): Don't free dfa->sb_char if it's a pointer to
+	utf8_sb_map.
+	(init_dfa): Use utf8_sb_map instead of initializing memory when the
+	encoding is UTF-8.
+
+2004-11-03  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c (init_dfa): Get the codeset name outside glibc as
+	well.  Check if it is spelled UTF8 as well as UTF-8, and check
+	case-insensitively.  Set dfa->map_notascii manually when outside
+	glibc.
+	* posix/regex_internal.c (build_wcs_upper_buffer) [!_LIBC]: Enable
+	optimizations based on map_notascii.
+	* posix/regex_internal.h [HAVE_LANGINFO_H || HAVE_LANGINFO_CODESET
+	|| _LIBC]: Include langinfo.h.
+
+	* posix/regex_internal.h (struct re_backref_cache_entry): Add "more"
+	field.
+	* posix/regexec.c (check_dst_limits): Hoist computation of the source
+	and destination bkref_idx out of the loop.  Pass it to
+	check_dst_limits_calc_pos.
+	(check_dst_limits_calc_pos_1): New function, containing the recursive
+	loop of check_dst_limits_calc_pos; uses the "more" field of
+	struct re_backref_cache to control the loop.
+	(check_dst_limits_calc_pos): Store into "boundaries" the position
+	relative to lim's start and end positions.  Do not accept eclosures,
+	accept bkref_idx instead.  Call check_dst_limits_calc_pos_1 to do the
+	work.
+	(sift_states_bkref): Use the "more" field of struct re_backref_cache
+	to control the loop.  A big "if" was turned into a continue and the
+	function was reindented.
+	(get_subexp): Use the "more" field of struct re_backref_cache
+	to control the loop.
+	(match_ctx_add_entry): Initialize the bkref_ents' "more" field.
+	(search_cur_bkref_entry): Return -1 if out of bounds.
+
+	* posix/regexec.c (empty_set): Remove.
+	(sift_states_backward): Remove cur_src variable.  Move inner loop
+	to build_sifted_states.
+	(build_sifted_states): Extract from sift_states_backward.  Do not
+	use empty_set.
+	(update_cur_sifted_state): Do not use empty_set.  Special case
+	dest_nodes->nelem == 0.
+
+	* posix/regex_internal.h (struct re_backref_cache_entry): Remove flag
+	field.
+	(struct re_sift_context_t): Remove cur_bkref, cls_subexp_idx,
+	check_subexp fields.  Move limits last.
+	* posix/regexec.c (match_ctx_clear_flag): Remove.
+	(sift_ctx_init): Remove check_subexp parameter.  Do not set removed
+	fields.  Callers adjusted.
+	(expand_bkref_cache): Remove last_str parameter.  Callers adjusted.
+	(re_search_internal): Remove fast_translate variable.
+	(update_cur_sifted_state): Pass candidates as the final parameter
+	to sift_states_bkref.
+	(sift_states_bkref): Change last unused parameter to be "candidates",
+	do not fetch candidates into a local variable.
+	Remove dead test for "node == sctx->bkref", and the cur_bkref_idx
+	variable.
+	Remove loops that set/reset the flag field of backref cache entries.
+	(check_arrival_add_next_nodes): Use a signed int to hold the return
+	value of re_node_set_insert.
+	(group_nodes_into_DFAstates): Likewise.
+	(match_ctx_add_entry): Do not set the flag field of the new entry.
+
+2004-11-05  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Define
+	_dl_sysinfo_dso under [NEED_DL_SYSINFO_DSO] as well.
+	* elf/rtld.c (dl_main): Set up GLRO(dl_sysinfo_dso) under
+	[NEED_DL_SYSINFO_DSO] as well.
+	* sysdeps/generic/dl-sysdep.c (_dl_show_auxv): Always include
+	AT_SYSINFO and AT_SYSINFO_EHDR in name table.
+	(_dl_sysdep_start) [NEED_DL_SYSINFO_DSO]: Match AT_SYSINFO_EHDR.
+	* elf/dl-support.c (_dl_sysinfo_dso): Define also under
+	[NEED_DL_SYSINFO_DSO].
+	(_dl_aux_init) [NEED_DL_SYSINFO || NEED_DL_SYSINFO_DSO]:
+	Match AT_SYSINFO_EHDR and set GL(dl_sysinfo_dso).
+
+2004-11-05  Roland McGrath  <roland@redhat.com>
+
+	* manual/errno.texi (Error Codes): Revert last change for now.
+	* sysdeps/gnu/errlist.c: Regenerated.
+
+2004-11-04  Roland McGrath  <roland@frob.com>
+
+	* Makeconfig (link-libc, rpath-dirs): Remove AIX cruft definitions.
+	(LDFLAGS-rpath-ORIGIN, LDFLAGS-soname-fname): Likewise.
+	(LDFLAGS-rdynamic, LDFLAGS-Bsymbolic): Likewise.
+	($(common-objpfx)gnu/lib-names.stmp): Likewise.
 
 2004-11-01  Jakub Jelinek  <jakub@redhat.com>
 
@@ -23,6 +149,54 @@
 	long double.
 	* sysdeps/x86_64/fpu/bits/fenv.h: Include bits/wordsize.h.
 	(fenv_t): Remove __mxcsr field for -m32.
+
+2004-11-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/ftello.c (ftello): Don't subtract save_end - save_base
+	if pos is _IO_pos_BAD.
+	* libio/ftello64.c (ftello64): Likewise.
+	* libio/iofgetpos.c (_IO_new_fgetpos): Likewise.
+	* libio/iofgetpos64.c (_IO_new_fgetpos64): Likewise.
+	* libio/oldiofgetpos.c (_IO_old_fgetpos): Likewise.
+	* libio/oldiofgetpos64.c (_IO_old_fgetpos64): Likewise.
+	* libio/ioftell.c (_IO_ftell): Likewise.
+	Cast to long int instead of off_t when checking for overflow.
+
+2004-11-04  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/register-dump.h (regnames): Align.
+	(linefeed): Remove.
+	(register_dump): Rewrite to generate into a flat buffer instead
+	of into iovecs.
+
+2004-11-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* debug/tst-chk1.c (ret): New volatile variable.
+	(CHK_FAIL_END): Remove redundant ret setting.
+	(do_test): Remote ret variable.
+
+2004-01-03  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regex_internal.h (__regfree) [!_LIBC]: Define to regfree.
+
+2004-11-03  Marcus Brinkmann  <marcus@gnu.org>
+
+	* sysdeps/generic/utime.c: Include <stddef.h>.
+
+	* sysdeps/generic/sysconf.c: Include <grp.h> and <pwd.h>.
+
+	* sysdeps/generic/tempname.c (__path_search): Add missing argument
+	TRY_TMPDIR.
+
+2004-11-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/features.h (__USE_FORTIFY_LEVEL): Also set for Red Hat
+	GCC 3.4.x-RH >= 3.4.2-8.
+	* libio/bits/features.h (printf, fprintf, vprintf, vfprintf): For
+	GCC 3.4.x-RH use __builtin___{,v}{,f}printf_chk instead of
+	__{,v}{,f}printf_chk.
+	* debug/tst-chk1.c (do_test): Deal with GCC 3.4.x-RH not
+	being able to recognize subobjects.
 
 2004-10-31  Mariusz Mazur <mmazur@kernel.pl>
 

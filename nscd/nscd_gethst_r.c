@@ -87,14 +87,18 @@ __nscd_gethostbyaddr_r (const void *addr, socklen_t len, int type,
 }
 
 
-libc_locked_map_ptr (map_handle);
+libc_locked_map_ptr (, __hst_map_handle);
 /* Note that we only free the structure if necessary.  The memory
    mapping is not removed since it is not visible to the malloc
    handling.  */
-libc_freeres_fn (gr_map_free)
+libc_freeres_fn (hst_map_free)
 {
-  if (map_handle.mapped != NO_MAPPING)
-    free (map_handle.mapped);
+  if (__hst_map_handle.mapped != NO_MAPPING)
+    {
+      void *p = __hst_map_handle.mapped;
+      __hst_map_handle.mapped = NO_MAPPING;
+      free (p);
+    }
 }
 
 
@@ -110,7 +114,8 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
   /* If the mapping is available, try to search there instead of
      communicating with the nscd.  */
   struct mapped_database *mapped;
-  mapped = __nscd_get_map_ref (GETFDHST, "hosts", &map_handle, &gc_cycle);
+  mapped = __nscd_get_map_ref (GETFDHST, "hosts", &__hst_map_handle,
+			       &gc_cycle);
 
  retry:;
   const hst_response_header *hst_resp = NULL;
@@ -335,6 +340,16 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	{
 	  memcpy (resultbuf->h_aliases[0],
 		  (const char *) addr_list + addr_list_len, total_len);
+
+	  /* Try to detect corrupt databases.  */
+	  if (resultbuf->h_name[hst_resp->h_name_len - 1] != '\0'
+	      || ({for (cnt = 0; cnt < hst_resp->h_aliases_cnt; ++cnt)
+		     if (resultbuf->h_aliases[cnt][aliases_len[cnt] - 1]
+			 != '\0')
+		       break;
+		   cnt < hst_resp->h_aliases_cnt; }))
+	    /* We cannot use the database.  */
+	    goto out_close;
 
 	  retval = 0;
 	  *result = resultbuf;

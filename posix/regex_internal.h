@@ -27,6 +27,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if defined HAVE_LANGINFO_H || defined HAVE_LANGINFO_CODESET || defined _LIBC
+# include <langinfo.h>
+#endif
 #if defined HAVE_LOCALE_H || defined _LIBC
 # include <locale.h>
 #endif
@@ -98,6 +101,7 @@
 # define __btowc btowc
 # define __mempcpy mempcpy
 # define __wcrtomb wcrtomb
+# define __regfree regfree
 # define attribute_hidden
 #endif /* not _LIBC */
 
@@ -544,7 +548,9 @@ struct re_backref_cache_entry
   int str_idx;
   int subexp_from;
   int subexp_to;
-  int flag;
+  /* We need only one byte from the following field.  If other small
+     fields are added the type could be changed to 'char'.  */
+  int more;
 };
 
 typedef struct
@@ -576,17 +582,11 @@ typedef struct
 
 typedef struct
 {
-  int cur_bkref;
-  int cls_subexp_idx;
-
   re_dfastate_t **sifted_states;
   re_dfastate_t **limited_states;
-
-  re_node_set limits;
-
   int last_node;
   int last_str_idx;
-  int check_subexp;
+  re_node_set limits;
 } re_sift_context_t;
 
 struct re_fail_stack_ent_t

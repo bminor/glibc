@@ -635,7 +635,7 @@ mmap_remap_check (_IO_FILE *fp)
 	{
 	  /* The file added some pages.  We need to remap it.  */
 	  void *p;
-#if defined __linux__		/* XXX */
+#ifdef _G_HAVE_MREMAP
 	  p = __mremap (fp->_IO_buf_base, ROUNDED (fp->_IO_buf_end
 						   - fp->_IO_buf_base),
 			ROUNDED (st.st_size), MREMAP_MAYMOVE);
@@ -989,7 +989,18 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
       /* Adjust for read-ahead (bytes is buffer). */
       offset -= fp->_IO_read_end - fp->_IO_read_ptr;
       if (fp->_offset == _IO_pos_BAD)
-	goto dumb;
+        {
+          if (mode != 0)
+            goto dumb;
+          else
+            {
+              result = _IO_SYSSEEK (fp, 0, dir);
+              if (result == EOF)
+                return result;
+
+              fp->_offset = result;
+            }
+        }
       /* Make offset absolute, assuming current pointer is file_ptr(). */
       offset += fp->_offset;
       if (offset < 0)
