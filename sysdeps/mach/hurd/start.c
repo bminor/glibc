@@ -23,8 +23,7 @@ Cambridge, MA 02139, USA.  */
 /* The first piece of initialized data.  */
 int __data_start = 0;
 
-process_t _hurd_proc;
-file_t _hurd_ccdir, _hurd_cwdir, _hurd_crdir;
+struct _hurd_port _hurd_proc, _hurd_ccdir, _hurd_cwdir, _hurd_crdir;
 mode_t _hurd_umask;
 int _hurd_ctty_fstype;
 fsid_t _hurd_ctty_fsid;
@@ -35,7 +34,7 @@ thread_t _hurd_sigport_thread;
 mach_port_t *_hurd_init_dtable;
 size_t _hurd_init_dtablesize;
 
-volatile int errno;
+volatile int errno;		/* XXX wants to be per-thread */
 
 char **__environ;
 
@@ -52,6 +51,10 @@ extern void (*_cthread_exit_routine) (int status);
 
 #ifndef	GET_STACK
 #error "Machine-dependent stack startup code needs to exist."
+#endif
+
+#ifndef LOSE
+#define	LOSE	__task_terminate (__mach_task_self ())
 #endif
 
 static int count (char *, size_t);
@@ -87,7 +90,7 @@ _start (void)
 
   if (err = __task_get_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
 				     &in_bootstrap))
-    _exit (err);
+    LOSE;
 
   err = __exec_startup (in_bootstrap,
 			&args, &argslen, &dealloc_args,
@@ -98,7 +101,7 @@ _start (void)
 			&passed_bootstrap);
   __mach_port_deallocate (__mach_task_self (), in_bootstrap);
   if (err)
-    _exit (err);
+    LOSE;
 
   /* When the user asks for the bootstrap port,
      he will get the one the exec server passed us.  */
@@ -106,25 +109,13 @@ _start (void)
 			   passed_bootstrap);
   __mach_port_deallocate (__mach_task_self (), passed_bootstrap);
 
-  argc = count (args, argslen);
-  envc = count (env, envlen);
-
-  if (err = __vm_allocate (__mach_task_self (),
-			   &argv, round_page ((argc + 1 + envc + 1) *
-					      sizeof (char *)),
-			   1))
-    __libc_fatal ("hurd: Can't allocate space for args and env\n");
-  __environ = &argv[argc + 1];
-
-  makevec (args, argslen, argv);
-  makevec (env, envlen, __environ);
-
-  __mutex_init (&_hurd_lock);
   for (i = 0; i < portarraysize; ++i)
     switch (i)
       {
 #define	initport(upper, lower) \
-      case INIT_PORT_##upper: _hurd_##lower = portarray[i]; break
+      case INIT_PORT_##upper: \
+	_hurd_port_init (&_hurd_##lower, portarray[i]); \
+	break
 	
 	initport (PROC, proc);
 	initport (CCDIR, ccdir);
@@ -190,7 +181,7 @@ _start (void)
 			     _hurd_sigport);
 
     /* Give the proc server our task and signal ports.  */
-    __proc_setports (_hurd_proc, _hurd_sigport, __mach_task_self (),
+    __proc_setports (_hurd_proc.port, _hurd_sigport, __mach_task_self (),
 		     &oldsig, &oldtask);
     if (oldsig != MACH_PORT_NULL)
       __mach_port_deallocate (__mach_task_self (), oldsig);
@@ -201,8 +192,21 @@ _start (void)
     __mach_port_deallocate (__mach_task_self (), _hurd_sigport);
   }
 
+  argc = count (args, argslen);
+  envc = count (env, envlen);
+
+  if (err = __vm_allocate (__mach_task_self (),
+			   &argv, round_page ((argc + 1 + envc + 1) *
+					      sizeof (char *)),
+			   1))
+    __libc_fatal ("hurd: Can't allocate space for args and env\n");
+  __environ = &argv[argc + 1];
+
+  makevec (args, argslen, argv);
+  makevec (env, envlen, __environ);
+
   /* Tell the proc server where our args and environment are.  */
-  __proc_setprocargs (_hurd_proc, argv, __environ);
+  __proc_setprocargs (_hurd_proc.port, argv, __environ);
 
   __libc_init (argc, argv, __environ);
 
