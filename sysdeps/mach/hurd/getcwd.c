@@ -25,6 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <fcntl.h>
 
 
 /* Get the pathname of the current working directory, and put it in SIZE
@@ -36,6 +37,7 @@ Cambridge, MA 02139, USA.  */
 char *
 getcwd (char *buf, size_t size)
 {
+  error_t err;
   dev_t rootdev, thisdev;
   ino_t rootino, thisino;
   char *path;
@@ -103,6 +105,7 @@ getcwd (char *buf, size_t size)
 
   while (!(thisdev == rootdev && thisino == rootino))
     {
+      struct dirent *d;
       dev_t dotdev;
       ino_t dotino;
       int mount_point;
@@ -148,7 +151,7 @@ getcwd (char *buf, size_t size)
 	  offset = 0;
 	  while (offset < dirdatasize)
 	    {
-	      struct dirent *d = (struct dirent *) &dirdata[offset];
+	      d = (struct dirent *) &dirdata[offset];
 	      offset += d->d_reclen;
 
 	      /* Ignore `.' and `..'.  */	
@@ -200,7 +203,6 @@ getcwd (char *buf, size_t size)
 	  pathp -= d->d_namlen;
 	  (void) memcpy (pathp, d->d_name, d->d_namlen);
 	  *--pathp = '/';
-	  (void) closedir (dirstream);
 	}
 
       thisdev = dotdev;
