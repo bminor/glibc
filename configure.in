@@ -412,9 +412,22 @@ AC_COMPILE_CHECK([libc-friendly stddef.h],
 #endif
 if (&size == NULL || &wchar == NULL) abort ();],
 [config_vars="$config_vars
-stddef.h = # The installed <stddef.h> seems to be libc-friendly."])
+stddef.h = # The installed <stddef.h> seems to be libc-friendly."
+test -n "$verbose" && echo '	installed stddef.h looks friendly'])
 
 changequote(,)dnl The world is again safe for shell scripts.
+
+echo 'checking for need to use -P to assemble .S files'
+cat > conftest.S <<EOF
+#include "confdefs.h"
+/* Nothing whatsoever.  */
+EOF
+${CC-cc} $CFLAGS -c conftest.S 2>/dev/null || {
+  config_vars="$config_vars
+asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
+  test -n "$verbose" && echo '	using -P flag'
+}
+rm -f conftest*
 
 # Iterate over all the sysdep directories we will use, running their
 # configure fragments, and looking for a uname implementation.
