@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -370,8 +370,8 @@ extern int setgid __P ((__gid_t __gid));
 extern int __setregid __P ((__gid_t __rgid, __gid_t __egid));
 extern int setregid __P ((__gid_t __rgid, __gid_t __egid));
 
-/* Set the effective user ID of the calling process to UID.  */
-extern int seteuid __P ((__uid_t __uid));
+/* Set the effective group ID of the calling process to GID.  */
+extern int setegid __P ((__gid_t __gid));
 #endif /* Use BSD.  */
 
 
@@ -507,6 +507,13 @@ extern size_t getpagesize __P ((void));
    the current process could possibly have.  */
 extern int __getdtablesize __P ((void));
 extern int getdtablesize __P ((void));
+
+
+/* Truncate FILE to LENGTH bytes.  */
+extern int truncate __P ((__const char *__file, __off_t __length));
+
+/* Truncate the file FD is open on to LENGTH bytes.  */
+extern int ftruncate __P ((int __fd, __off_t __length));
 
 
 /* Make all changes done to FD actually appear on disk.  */
