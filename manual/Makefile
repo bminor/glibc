@@ -97,7 +97,7 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 %.Z: %
 	compress -c $< > $@.new
 	mv -f $@.new $@
-%.z: %
+%.gz: %
 	gzip -9 -c $< > $@.new
 	mv -f $@.new $@
 %.uu: %
@@ -145,7 +145,7 @@ installdirs: $(firstword $(wildcard mkinstalldirs ../mkinstalldirs))
 	$(dir $<)$(notdir $<) $(infodir)
 
 .PHONY: dist
-dist: glibc-doc-$(edition).tar.z
+dist: # glibc-doc-$(edition).tar.gz
 
 ifneq (,$(wildcard ../Make-dist))
 dist: ../Make-dist
