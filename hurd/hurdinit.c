@@ -101,12 +101,12 @@ _hurd_proc_init (process_t procserver, char **argv)
   __proc_setprocargs (procserver, _hide_arguments ? 0 : argv, __environ);
 
   /* Initialize the signal code; Mach exceptions will become signals.
-     This sets _hurd_sigport; it must be run before _hurd_proc_init.  */
+     This sets _hurd_msgport; it must be run before _hurd_proc_init.  */
   _hurdsig_init ();
 
   /* Give the proc server our task and signal ports.  */
   __proc_setports (procserver,
-		   _hurd_sigport, __mach_task_self (),
+		   _hurd_msgport, __mach_task_self (),
 		   &oldsig, &oldtask);
   if (oldsig != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), oldsig);
