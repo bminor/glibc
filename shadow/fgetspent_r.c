@@ -47,7 +47,7 @@ __fgetspent_r (FILE *stream, struct spwd *resbuf, char *buffer, size_t buflen,
 	  *result = NULL;
 	  return errno;
 	}
-      if (p == NULL || buffer[buflen] != '\xff')
+      if (p == NULL || buffer[buflen - 1] != '\xff')
 	{
 	  *result = NULL;
 	  return errno = ERANGE;
