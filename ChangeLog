@@ -1,3 +1,8 @@
+1999-08-23  Andreas Schwab  <schwab@suse.de>
+
+	* posix/regex.c (re_match_2_internal): Correct check for charset
+	after exactn in loop.
+
 1999-08-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add execve syscall.
