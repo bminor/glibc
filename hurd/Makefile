@@ -36,7 +36,7 @@ server-interfaces	:= hurd/msg
 
 routines = $(interface-routines) \
 	   hurdid hurdpath hurdpid hurdports \
-	   $(XXX hurdexec) fexecve \
+	   hurdexec fexecve \
 	   __setauth setauth \
 	   __pid2task __task2pid pid2task task2pid \
 	   getuids setuids getumask fchroot \
@@ -46,7 +46,7 @@ routines = $(interface-routines) \
 	   $(XXX fopenport __fopenport) \
 	   vpprintf \
 	   $(sig) $(dtable)
-sig	= hurdsig siginfo startsig init-fault msging-p hurd-raise \
+sig	= hurdsig siginfo setup-thread init-fault msging-p hurd-raise \
 	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport setdtsz
