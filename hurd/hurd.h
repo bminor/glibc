@@ -535,10 +535,10 @@ extern int __setauth (auth_t), setauth (auth_t);
 
 extern error_t __hurd_path_split (file_t crdir, file_t cwdir,
 				  const char *file,
-				  file_t *dir, const char **name);
+				  file_t *dir, char **name);
 extern error_t hurd_path_split (file_t crdir, file_t cwdir,
 				const char *file,
-				file_t *dir, const char **name);
+				file_t *dir, char **name);
 extern error_t __hurd_path_lookup (file_t crdir, file_t cwdir,
 				   const char *file,
 				   int flags, mode_t mode,
@@ -549,8 +549,8 @@ extern error_t hurd_path_lookup (file_t crdir, file_t cwdir,
 				 file_t *port);
 
 /* Returns a port to the directory, and sets *NAME to the file name.  */
-extern file_t __path_split (const char *file, const char **name);
-extern file_t path_split (const char *file, const char **name);
+extern file_t __path_split (const char *file, char **name);
+extern file_t path_split (const char *file, char **name);
 
 /* Looks up FILE with the given FLAGS and MODE (as for dir_pathtrans).  */
 extern file_t __path_lookup (const char *file, int flags, mode_t mode);
