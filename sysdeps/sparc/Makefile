@@ -44,8 +44,8 @@ $(addprefix $(objpfx),$(divrem:%=%.S)): divrem.m4
 
 endif	# gnulib
 
-ifeq ($(subdir),uf-crypt)
+ifeq ($(subdir),crypt)
 
-crypt := crypt.sparc # Use uf-crypt/crypt.sparc.S.
+crypt := crypt.sparc # Use crypt/crypt.sparc.S.
 
-endif # uf-crypt
+endif # crypt
