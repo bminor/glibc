@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,15 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <stddef.h>
 #include <termios.h>
+
+/* These are defined both in termbits.h and in ioctls.h.
+   They should have the same values, but perhaps not written the same way.  */
+#undef ECHO
+#undef MDMBUF
+#undef TOSTOP
+#undef FLUSHO
+#undef PENDIN
+#undef NOFLSH
 #include <sys/ioctl.h>
 
 

@@ -37,14 +37,14 @@ DEFUN(getsockopt, (fd, level, optname, optval, optlen),
 
   if (err = HURD_DPORT_USE (fd, __socket_getopt (port,
 						 level, optname,
-						 buf, &buflen)))
+						 &buf, &buflen)))
     return __hurd_dfail (fd, err);
 
   if (buf != optval)
     {
       if (*optlen < buflen)
 	*optlen = buflen;
-      memcpy (optval, buf, *len);
+      memcpy (optval, buf, *optlen);
       __vm_deallocate (__mach_task_self (), (vm_address_t) buf, buflen);
     }
 

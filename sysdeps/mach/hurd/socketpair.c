@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/socket.h>
 #include <hurd/fd.h>
+#include <unistd.h>
 
 /* Create two new sockets, of type TYPE in domain DOMAIN and using
    protocol PROTOCOL, which are connected to each other, and put file
@@ -48,11 +49,11 @@ DEFUN(socketpair, (domain, type, protocol, fds),
   if (err = HURD_DPORT_USE
       (d1,
        ({ socket_t sock1 = port;
-	  HURD_DPORT_USE (d2, __socket_connect2 (sock1, port)) })))
+	  HURD_DPORT_USE (d2, __socket_connect2 (sock1, port)); })))
     {
       close (d1);
       close (d2);
-      return __hurd_dfail (fd, err);
+      return __hurd_fail (err);
     }
 
   fds[0] = d1;
