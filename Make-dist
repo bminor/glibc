@@ -37,14 +37,23 @@ else
 sysdep_dirs := $(addprefix $(..),$(sysdep_dirs))
 endif
 
+sysdep-Subdir-files := $(wildcard $(addsuffix /Subdirs,$(sysdep_dirs)))
+ifdef sysdep-Subdir-files
+subdirs := $(sort $(subdirs) \
+		  $(shell sed -e 's/\#.*$$//' $(sysdep-Subdir-files)))
+endif
+
+
 # Makefiles can define `source_dirs' to list nonstandard directories
 # where source files might be found.
 
 ifdef	subdir
 all-headers = $(headers)
 else
-+distinfo := $(shell MAKEFLAGS= MFLAGS= $(MAKE) -s no_deps=t no_ir=t \
-		     echo-distinfo | grep -v '^make')
++distinfo := $(shell MAKEFLAGS= MFLAGS= $(MAKE) -s no_deps=t \
+		     inhibit_interface_rules=t inhibit_mach_syscalls=t \
+		     subdirs='$(subdirs)' echo-distinfo | grep -v '^make')
+foo:=$(shell echo>&2 '+distinfo=$(+distinfo)')
 all-headers := $(patsubst +header+%,%,$(filter +header+%,$(+distinfo)))
 # Ignore subdir headers without top-level indirections.
 all-headers := $(sort $(headers) $(wildcard $(all-headers)))
@@ -137,11 +146,6 @@ else	# Parent makefile.
 foo:=$(shell echo parent foobie>&2)
 +sysdep-distfiles := $(wildcard $(addsuffix /Dist,$(sysdep_dirs)))
 foo:=$(shell echo +sysdep-distfiles='$(+sysdep-distfiles)'>&2)
-sysdep-Subdir-files := $(wildcard $(addsuffix /Subdirs,$(sysdep_dirs)))
-ifdef sysdep-Subdir-files
-subdirs := $(sort $(subdirs) \
-		  $(shell sed -e 's/\#.*$$//' $(sysdep-Subdir-files)))
-endif
 +sysdep-dist := $(foreach file,$(+sysdep-distfiles),\
 			  $(addprefix $(dir $(file)), \
 				      $(shell sed -e 's/\#.*$$//' $(file)))) \
