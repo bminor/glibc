@@ -258,9 +258,8 @@ of this helper program; chances are you did not intend to run this program.\n",
 	      l = _dl_map_object (NULL, _dl_argv[0], 0, lt_library, 0);
 	    }
 	  char *err_str = NULL;
-	  const char *obj_name __attribute__ ((unused));
 
-	  (void) _dl_catch_error (&err_str, &obj_name, doit);
+	  (void) _dl_catch_error (&err_str, doit);
 	  if (err_str != NULL)
 	    {
 	      free (err_str);
