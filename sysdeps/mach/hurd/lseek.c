@@ -26,8 +26,7 @@ off_t
 DEFUN(__lseek, (fd, offset, whence), int fd AND off_t offset AND int whence)
 {
   error_t err;
-  if (err = _HURD_DPORT_USE (fd,
-			     __file_seek (port, offset, whence, &offset)))
+  if (err = _HURD_DPORT_USE (fd, __io_seek (port, offset, whence, &offset)))
     return __hurd_dfail (fd, err);
   return offset;
 }
