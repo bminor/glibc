@@ -1,3 +1,11 @@
+1999-09-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/pl.po: Updated.
+
+1999-09-17  Andreas Schwab  <schwab@suse.de>
+
+	* Makefile (clean): Also remove $(postclean) files.
+
 1999-09-17  Andreas Schwab  <schwab@suse.de>
 
 	* Makefile (clean): Also remove $(postclean) files.
