@@ -1,7 +1,7 @@
 /* stdio on a Mach device port.
    Translates \n to \r\n on output.
 
-Copyright (C) 1992 Free Software Foundation, Inc.
+Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -155,7 +155,7 @@ output (FILE *f, int c)
 }
 
 FILE *
-mach_open_devstream (device_t dev, const char *mode)
+mach_open_devstream (mach_port_t dev, const char *mode)
 {
   FILE *stream = fopencookie ((void *) dev, mode, __default_io_functions);
   if (stream == NULL)
@@ -163,7 +163,7 @@ mach_open_devstream (device_t dev, const char *mode)
 
   stream->__room_funcs.__input = input;
   stream->__room_funcs.__output = output;
-  stream->__io_funcs.__close = device_close;
+  stream->__io_funcs.__close = (__io_close) device_close;
   stream->__seen = 1;
 
   return stream;
