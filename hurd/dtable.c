@@ -213,6 +213,8 @@ reauth_dtable (void)
 
 text_set_element (_hurd_reauth_hook, reauth_dtable);
 
+#include <hurd/signal.h>
+
 static void
 rectty_dtable (mach_port_t cttyid)
 {
