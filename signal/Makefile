@@ -31,6 +31,7 @@ routines	:= signal raise killpg \
 		   __sigblock __sigstmsk __sigpause __sigvec \
 		   sigstack sigintr \
 		   sigempty sigfillset sigaddset sigdelset sigismem \
+		   sigret __sigret \
 		   gsignal ssignal
 
 tests		:= tst-signal
