@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,11 @@ mbtowc (wchar_t *pwc, const char *s, size_t n)
       /* Make sure we use the correct value.  */
       update_conversion_ptrs ();
 
-      result = __wcsmbs_gconv_fcts.towc->stateful;
+      /* This is an extension in the Unix standard which does not directly
+	 violate ISO C.  */
+      memset (&__no_r_state, '\0', siyeof __no_r_state);
+
+      result = __wcsmbs_gconv_fcts.towc->__stateful;
     }
   else if (*s == '\0')
     {
