@@ -575,7 +575,11 @@ ns_name_unpack(msg, eom, src, dst, dstsiz)
 {
 	const u_char *srcp, *dstlim;
 	u_char *dstp;
+#ifdef _LIBC
+	int n, len, checked;
+#else
 	int n, c, len, checked;
+#endif
 
 	len = -1;
 	checked = 0;
@@ -739,7 +743,7 @@ ns_name_pack(src, dst, dstsiz, dnptrs, lastdnptr)
 			*lpp = NULL;
 		__set_errno (EMSGSIZE);
 		return (-1);
-	} 
+	}
 	return (dstp - dst);
 }
 
@@ -761,7 +765,7 @@ ns_name_uncompress(msg, eom, src, dst, dstsiz)
 {
 	u_char tmp[NS_MAXCDNAME];
 	int n;
-	
+
 	if ((n = ns_name_unpack(msg, eom, src, tmp, sizeof tmp)) == -1)
 		return (-1);
 	if (ns_name_ntop(tmp, dst, dstsiz) == -1)
