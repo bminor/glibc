@@ -23,12 +23,10 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#include "kernel-features.h"
-
 
 /* Linux 2.3.25 introduced a new system call since the types used for
    the limits are now unsigned.  */
-#if !defined __ASSUME_NEW_GETRLIMIT_SYSCALL && defined __NR_ugetrlimit
+#ifdef __NR_ugetrlimit
 static int no_new_getrlimit;
 #else
 # define no_new_getrlimit	0
@@ -44,20 +42,15 @@ __setrlimit (resource, rlimits)
     {
       int result = INLINE_SYSCALL (setrlimit, 2, resource, rlimits);
 
-# ifndef __ASSUME_NEW_GETRLIMIT_SYSCALL
       /* If the system call is available return.  */
       if (result != -1 || errno != ENOSYS)
-# endif
 	return result;
 
-# ifndef __ASSUME_NEW_GETRLIMIT_SYSCALL
       /* Remember that the system call is not available.  */
       no_new_getrlimit = 1;
-# endif
     }
 #endif
 
-#ifndef __ASSUME_NEW_GETRLIMIT_SYSCALL
   /* We might have to correct the limits values.  Since the old values
      were signed the new values are too large.  */
   rlimits->rlim_cur = MIN ((unsigned long int) rlimits->rlim_cur,
@@ -67,6 +60,5 @@ __setrlimit (resource, rlimits)
 
   /* Fall back on the old system call.  */
   return INLINE_SYSCALL (setrlimit, 2, resource, rlimits);
-#endif
 }
 weak_alias (__setrlimit, setrlimit)
