@@ -36,6 +36,10 @@ extern "C" {
 #define	__GLOB_FLAGS	(GLOB_ERR|GLOB_MARK|GLOB_NOSORT|GLOB_DOOFFS| \
 			 GLOB_NOESCAPE|GLOB_NOCHECK|GLOB_APPEND|GLOB_PERIOD)
 
+#ifdef __USE_BSD
+#define	GLOB_MAGCHAR	(1 << 8)/* Set in gl_flags if any metachars seen.  */
+#endif
+
 /* Error returns from `glob'.  */
 #define	GLOB_NOSPACE	1	/* Ran out of memory.  */
 #define	GLOB_ABEND	2	/* Read error.  */
@@ -44,9 +48,10 @@ extern "C" {
 /* Structure describing a globbing run.  */
 typedef struct
   {
-    int gl_pathc;	/* Count of paths matched by the pattern.  */
-    char **gl_pathv;	/* List of matched pathnames.  */
-    int gl_offs;	/* Slots to reserve in `gl_pathv'.  */
+    int gl_pathc;		/* Count of paths matched by the pattern.  */
+    char **gl_pathv;		/* List of matched pathnames.  */
+    int gl_offs;		/* Slots to reserve in `gl_pathv'.  */
+    int gl_flags;		/* Set to FLAGS, maybe | GLOB_MAGCHAR.  */
   } glob_t;
 
 /* Do glob searching for PATTERN, placing results in PGLOB.
