@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -136,28 +136,6 @@ DEFUN(__stdio_open, (filename, m, fdptr),
 
   return NULL;
 
-}
-
-/* Write a message to the error output.
-   Try hard to make it really get out.  */
-void
-DEFUN(__stdio_errmsg, (msg, len), CONST char *msg AND size_t len)
-{
-  while (len > 0)
-    {
-      register int count = __write(2, msg, (int) len);
-      if (count > 0)
-	{
-	  msg += count;
-	  len -= count;
-	}
-      else if (count < 0
-#if	defined (EINTR) && defined (EINTR_REPEAT)
-	       && errno != EINTR
-#endif
-	       )
-	break;
-    }
 }
 
 
