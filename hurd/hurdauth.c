@@ -1,0 +1,104 @@
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
+
+#include <hurd.h>
+
+auth_t _hurd_auth;
+
+static error_t
+add_auth (sigthread_t me,
+	  auth_t addauth)
+{
+  error_t err;
+  auth_t newauth;
+
+  if (err = __auth_combine (_hurd_auth, addauth, &newauth))
+    return err;
+
+  /* XXX clobbers errno. Need per-thread errno. */
+  err = __setauth (newauth);
+  __mach_port_deallocate (__mach_task_self (), newauth);
+  if (err)
+    return errno;
+
+  __mach_port_deallocate (__mach_task_self (), addauth);
+  return POSIX_SUCCESS;
+}
+
+#include "_Xadd_auth.c"
+
+asm (".stabs \"__hurd_sigport_ids\",23,0,0,23005"); /* XXX */
+text_set_element (_hurd_sigport_routines, _Xadd_auth);
+
+static error_t
+del_auth (sigthread_t me,
+	  uid_t *uids, size_t nuids,
+	  gid_t *gids, size_t ngids)
+{
+  error_t err;
+  auth_t newauth;
+  size_t i, j;
+
+  __mutex_lock (&_hurd_idlock);
+  if (!_hurd_id_valid)
+    {
+      error_t err = __auth_getids (_hurd_auth, &_hurd_id);
+      if (err)
+	{
+	  __mutex_unlock (&_hurd_idlock);
+	  return err;
+	}
+      _hurd_id_valid = 1;
+    }
+
+  while (nuids-- > 0)
+    {
+      const uid_t uid = *uids++;
+      for (i = 0; i < _hurd_id.nuids; ++i)
+	if (_hurd_id.uidset[i] == uid)
+	  /* Move the last uid into this slot, and decrease the
+	     number of uids so the last slot is no longer used.  */
+	  _hurd_id.uidset[i] = _hurd_id.uidset[--_hurd_id.nuids];
+    }
+  while (ngids-- > 0)
+    {
+      const gid_t gid = *gids++;
+      for (i = 0; i < _hurd_id.ngroups; ++i)
+	if (_hurd_id.gidset[i] == gid)
+	  /* Move the last gid into this slot, and decrease the
+	     number of gids so the last slot is no longer used.  */
+	  _hurd_id.gidset[i] = _hurd_id.gidset[--_hurd_id.ngroups];
+    }
+
+  err = __auth_makeauth (_hurd_auth, &_hurd_id, &newauth);
+  _hurd_id_valid = !err;
+  __mutex_unlock (&_hurd_idlock);
+
+  if (err)
+    return err;
+  err = __setauth (newauth);	/* XXX clobbers errno */
+  __mach_port_deallocate (__mach_task_self (), newauth);
+  if (err)
+    return errno;
+  return POSIX_SUCCESS;
+}
+
+#include "_Xdel_auth.c"
+
+asm (".stabs \"__hurd_sigport_ids\",23,0,0,23006"); /* XXX */
+text_set_element (_hurd_sigport_routines, _Xdel_auth);
