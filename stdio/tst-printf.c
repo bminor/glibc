@@ -108,6 +108,9 @@ I am ready for my first lesson today.";
   printf("g-style < .1:\t\"%g\"\n", 0.001234);
   printf("g-style big:\t\"%.60g\"\n", 1e20);
 
+  printf (" %6.5lf\n", .099999999860301614);
+  printf (" %6.5lf\n", .1);
+
 #define FORMAT "|%12.4f|%12.4e|%12.4g|\n"
   printf (FORMAT, 0.0, 0.0, 0.0);
   printf (FORMAT, 1.0, 1.0, 1.0);
