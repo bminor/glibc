@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 
 /* Generate a unique temporary file name from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
@@ -41,7 +42,8 @@ DEFUN(mktemp, (template), char *template)
       return NULL;
     }
 
-  if (sprintf (&template[len - 5], "%.5u", (unsigned int) pid % 100000) != 5)
+  if (sprintf (&template[len - 5], "%.5u",
+	       (unsigned int) getpid () % 100000) != 5)
     /* Inconceivable lossage.  */
     return NULL;
 
