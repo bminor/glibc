@@ -221,6 +221,8 @@ linux* | sysv* | isc* | esix* | sco* | minix* | irix4*)
   base_os=unix/sysv ;;
 solaris[2-9]*)
   base_os=unix/sysv/sysv4 ;;
+standalone)
+  base_os=standalone ;;
 esac
 
 case "$os:$base_os" in
