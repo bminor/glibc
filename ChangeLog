@@ -1,8 +1,21 @@
+2000-01-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* catgets/catgets.c (catopen): Handle NL_CAT_LOCALE correctly.
+	* catgets/gencat.c (read_input_file): Remove messages correctly.
+	* catgets/open_catalog.c (__open_catalog): Handle trailing colons and
+	adjacent colons correctly.  Correct loops to read territory and
+	and codeset part.
+	Patches by Geoff Clare <gwc@unisoft.com> (PR libc/1559).
+
+	* rt/aio_misc.c (get_elem): Assign pointer to new row to correct
+	pool entry.
+	Patch by Jens Moeller <jens.moeller@waii.com> (PR libc/1558).
+
 2000-01-27  Scott Bambrough  <scottb@netwinder.org>
 
-        * sysdeps/unix/sysv/linux/arm/Makefile: Backout rlimit changes for 
+	* sysdeps/unix/sysv/linux/arm/Makefile: Backout rlimit changes for
 	resource directory.
-        * sysdeps/unix/sysv/linux/arm/syscalls.list: Backout changes for 
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Backout changes for
 	versioning setrlimit and getrlimit.
 
 2000-01-28  Roland McGrath  <roland@baalperazim.frob.com>
