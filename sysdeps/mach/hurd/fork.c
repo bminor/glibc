@@ -109,10 +109,6 @@ __fork (void)
       if (err = __task_create (__mach_task_self (), 1, &newtask))
 	goto lose;
 
-      /* Get the PID of the child from the proc server.  */
-      if (err = __USEPORT (PROC, __proc_task2pid (port, newtask, &pid)))
-	goto lose;
-      
       /* Fetch the names of all ports used in this task.  */
       if (err = __mach_port_names (__mach_task_self (),
 				   &portnames, &nportnames,
@@ -343,13 +339,8 @@ __fork (void)
 	__spin_unlock (&_hurd_ports[i].lock);
       ports_locked = 0;
 
-      /* Register the child with the proc server.  It is important that
-	 this happen after we have set the child's message port in the
-	 port-copying loop above.  Once proc_child has been done for the
-	 task, it appears as a POSIX.1 process and is obliged to respond to
-	 POSIX.1 signals.  Before the message port is set, signallers get
-	 an inappropriate error.  */
-      if (err = __USEPORT (PROC, __proc_child (port, newtask)))
+      /* Get the PID of the child from the proc server.  */
+      if (err = __USEPORT (PROC, __proc_task2pid (port, newtask, &pid)))
 	goto lose;
 
       /* Create the child main user thread and signal thread.  */
@@ -428,9 +419,26 @@ __fork (void)
 				    (int *) &state, statecount))
 	goto lose;
 
-      /* This must be the last thing we do; we can't assume that the
-	 child will remain alive for even a moment once we do this. */
-      err = __thread_resume (thread);
+      /* Register the child with the proc server.  It is important that
+	 this happen after we have set the child's message port in the
+	 port-copying loop above.  Once proc_child has been done for the
+	 task, it appears as a POSIX.1 process and is obliged to respond to
+	 POSIX.1 signals.  Before the message port is set, signallers get
+	 an inappropriate error. 
+
+	 Also, this must be the last thing we do (except the actual
+	 __thread_resume below) because the child becomes visible to
+	 Posix.1 here, at which point we are prohibited from returning
+	 an error.  */
+      if (err = __USEPORT (PROC, __proc_child (port, newtask)))
+	goto lose;
+
+      /* This must be the absolutel last thing we do; we can't assume
+	 that the child will remain alive for even a moment once we do
+	 this.  Ignore errors; we have committed to the fork and are
+	 not allowed to return them after the process becomes visible
+	 to Posix.1 (which happened right above at proc_child time.  */
+      __thread_resume (thread);
 
     lose:
       if (ports_locked)
