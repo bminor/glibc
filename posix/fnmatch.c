@@ -212,12 +212,12 @@ internal_fnmatch (const char *pattern, const char *string,
 
 	      if (flags & FNM_FILE_NAME)
 		{
-		  const char *slashp = strchr (n, L('/'));
+		  const char *slashp = strchr (n, '/');
 
 		  if (flags & FNM_LEADING_DIR)
 		    {
 		      if (slashp != NULL
-			  && strchr (slashp + 1, L('/')) == NULL)
+			  && strchr (slashp + 1, '/') == NULL)
 			result = 0;
 		    }
 		  else
