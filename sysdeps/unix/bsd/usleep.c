@@ -19,6 +19,15 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <signal.h>
+
+/* SIGALRM signal handler for `sleep'.  This does nothing but return,
+   but SIG_IGN isn't supposed to break `pause'.  */
+static void
+DEFUN(sleep_handler, (sig), int sig)
+{
+  return;
+}
 
 /* Sleep USECONDS microseconds, or until a previously set timer goes off.  */
 unsigned int
@@ -26,9 +35,16 @@ DEFUN(usleep, (useconds), unsigned int useconds)
 {
   struct itimerval otimer;
   struct timeval before, after, delta;
+  __sighandler_t ohandler;
+  int omask;
 
   if (getitimer(ITIMER_REAL, &otimer) < 0)
     return -1;
+
+  ohandler = signal (SIGALRM, sleep_handler);
+  if (ohandler == SIG_ERR)
+    return -1;
+  omask = sigblock (SIGALRM);
 
   if ((unsigned int) ((otimer.it_value.tv_sec * 1000) +
 		      otimer.it_value.tv_usec) < useconds)
@@ -42,14 +58,14 @@ DEFUN(usleep, (useconds), unsigned int useconds)
 
       /* Find the time beforehand so we can tell how much time elapsed.  */
       if (gettimeofday(&before, (struct timezone *) NULL) < 0)
-	return -1;
+	goto lose;
 
       if (setitimer(ITIMER_REAL, &timer, &otimer) < 0)
-	return -1;
+	goto lose;
     }
 
   /* Wait for the timer to expire.  */
-  (void) pause();
+  (void) sigpause (omask);
 
   /* Find out what time it is now, and see how much time elapsed.  */
   if (gettimeofday(&after, (struct timezone *) NULL) < 0)
@@ -75,4 +91,9 @@ DEFUN(usleep, (useconds), unsigned int useconds)
   (void) setitimer(ITIMER_REAL, &otimer, (struct itimerval *) NULL);
 
   return useconds - ((delta.tv_sec * 1000) + delta.tv_usec);
+
+ lose:
+  signal (SIGALRM, ohandler);
+  sigsetmask (omask);
+  return -1;
 }
