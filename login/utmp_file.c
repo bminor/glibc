@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -87,8 +87,10 @@ setutent_file (int reset)
 	}
       file_offset = 0;
 
+#if _HAVE_UT_TYPE - 0
       /* Make sure the entry won't match.  */
       last_entry.ut_type = -1;
+#endif
     }
   else if (reset)
     {
@@ -97,8 +99,10 @@ setutent_file (int reset)
       /* Remember we are at beginning of file.  */
       file_offset = 0;
 
+#if _HAVE_UT_TYPE - 0
       /* Make sure the entry won't match.  */
       last_entry.ut_type = -1;
+#endif
     }
 
   return 1;
@@ -210,8 +214,36 @@ getutline_r_file (const struct utmp *line, struct utmp *buffer,
 
 
 static int
-internal_getutid_r (const struct utmp *id, struct utmp *buffer)
+proc_utmp_eq (const struct utmp *entry, const struct utmp *match)
 {
+  return
+    (
+#if _HAVE_UT_TYPE - 0
+     (entry->ut_type == INIT_PROCESS
+      || entry->ut_type == LOGIN_PROCESS
+      || entry->ut_type == USER_PROCESS
+      || entry->ut_type == DEAD_PROCESS)
+     &&
+     (match->ut_type == INIT_PROCESS
+      || match->ut_type == LOGIN_PROCESS
+      || match->ut_type == USER_PROCESS
+      || match->ut_type == DEAD_PROCESS)
+     &&
+#endif
+#if _HAVE_UT_ID - 0
+     (entry->ut_id[0] && match->ut_id[0]
+      ? strncmp (entry->ut_id, match->ut_id, sizeof match->ut_id) == 0
+      : strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0)
+#else
+     strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0
+#endif
+     );
+}
+
+static int
+internal_getut_r (const struct utmp *id, struct utmp *buffer)
+{
+#if _HAVE_UT_TYPE - 0
   if (id->ut_type == RUN_LVL || id->ut_type == BOOT_TIME
       || id->ut_type == OLD_TIME || id->ut_type == NEW_TIME)
     {
@@ -235,6 +267,7 @@ internal_getutid_r (const struct utmp *id, struct utmp *buffer)
 	}
     }
   else
+#endif /* _HAVE_UT_TYPE */
     {
       /* Search for the next entry with the specified ID and with type
 	 INIT_PROCESS, LOGIN_PROCESS, USER_PROCESS, or DEAD_PROCESS.  */
@@ -251,11 +284,7 @@ internal_getutid_r (const struct utmp *id, struct utmp *buffer)
 	    }
 	  file_offset += sizeof (struct utmp);
 
-	  if ((   buffer->ut_type == INIT_PROCESS
-	       || buffer->ut_type == LOGIN_PROCESS
-	       || buffer->ut_type == USER_PROCESS
-	       || buffer->ut_type == DEAD_PROCESS)
-	      && strncmp (buffer->ut_id, id->ut_id, sizeof id->ut_id) == 0)
+	  if (proc_utmp_eq (buffer, id))
 	    break;
 	}
     }
@@ -276,7 +305,7 @@ getutid_r_file (const struct utmp *id, struct utmp *buffer,
       return -1;
     }
 
-  if (internal_getutid_r (id, &last_entry) < 0)
+  if (internal_getut_r (id, &last_entry) < 0)
     {
       *result = NULL;
       return -1;
@@ -306,21 +335,20 @@ pututline_file (const struct utmp *data)
     setutent_file (0);
 
   /* Find the correct place to insert the data.  */
-  if (file_offset > 0)
-    found = 0;
+  if (file_offset > 0
+      && (
+#if _HAVE_UT_TYPE - 0
+	  (last_entry.ut_type == data->ut_type
+	   && (last_entry.ut_type == RUN_LVL
+	       || last_entry.ut_type == BOOT_TIME
+	       || last_entry.ut_type == OLD_TIME
+	       || last_entry.ut_type == NEW_TIME))
+	  ||
+#endif
+	  proc_utmp_eq (&last_entry, data)))
+    found = 1;
   else
-    if (   last_entry.ut_type == RUN_LVL
-	|| last_entry.ut_type == BOOT_TIME
-	|| last_entry.ut_type == OLD_TIME
-	|| last_entry.ut_type == NEW_TIME
-	|| ((   last_entry.ut_type == INIT_PROCESS
-	     || last_entry.ut_type == LOGIN_PROCESS
-	     || last_entry.ut_type == USER_PROCESS
-	     || last_entry.ut_type == DEAD_PROCESS)
-	    && !strncmp (last_entry.ut_id, data->ut_id, sizeof data->ut_id)))
-      found = 1;
-    else
-      found = internal_getutid_r (data, &buffer);
+    found = internal_getut_r (data, &buffer);
 
   /* Try to lock the file.  */
   memset (&fl, '\0', sizeof (struct flock));
