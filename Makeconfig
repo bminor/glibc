@@ -484,7 +484,7 @@ endif
 # Various things use $(object-suffixes) to know what all to make.
 # The compilation rules use $(CPPFLAGS-${SUFFIX}) and $(CFLAGS-${SUFFIX})
 # to pass different flags for each flavor.
-libtypes = $(foreach o,$(object-suffixes),$(libtype$o))
+libtypes = $(foreach o,$(object-suffixes-for-libc),$(libtype$o))
 object-suffixes := .o
 all-object-suffixes := .o .so .po .go .So
 libtype.o := lib%.a
