@@ -1,3 +1,21 @@
+2000-01-22  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/xdr_rec.c: Don't set frag_sent if no more data,
+	fixes part 2 of bug 1549.
+	* sunrpc/rpc_des.h: Remove unused defines.
+
+2000-01-22  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Remove sys/io.h.
+	* sysdeps/unix/sysv/linux/alpha/Makefile: Add sys/io.h.
+	* sysdeps/unix/sysv/linux/arm/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/sys/io.h: Move from here ...
+	* sysdeps/unix/sysv/linux/i386/sys/io.h: ... to here, add inb, outb
+	and other inline functions for port access.
+	* sysdeps/unix/sysv/linux/alpha/sys/io.h: Add prototypes for port
+	access functions.
+
 2000-01-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_simple.c: Fix two problems in UTF-8 decoder.
@@ -19,7 +37,7 @@
 	* time/strptime.c: Change buffer handling to fix recursive calls
 	with locales (PR libc/1546).
 
-	* stdlib/strfmon.c: Don't report an eror if final NUL is at the
+	* stdlib/strfmon.c: Don't report an error if final NUL is at the
 	end of the buffer.  Set errno correctly if floating-point number
 	would overflow buffer.
 
