@@ -1,3 +1,8 @@
+1998-10-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Fix clearing startup
+	flag.  Switch back to previous section.
+
 1998-10-04  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* elf/dl-open.c: Declare _dl_unload_cache.
