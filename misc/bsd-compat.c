@@ -1,6 +1,6 @@
 /* BSD-compatible versions of functions where BSD and POSIX.1 conflict.
 
-Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,5 +32,8 @@ function_alias(getpgrp, __getpgrp, pid_t, (pid),
 	       DEFUN(getpgrp, (pid), pid_t pid))
 
 #undef	longjmp
+#ifdef __STDC__
+#define void __NORETURN void
+#endif
 function_alias_void(longjmp, siglongjmp, (env, val),
 		    DEFUN(longjmp, (env, val), CONST jmp_buf env AND int val))
