@@ -364,7 +364,6 @@ struct _hurd_sigstate
 
     int suspended;		/* If nonzero, sig_post signals `arrived'.  */
     struct condition arrived;
-    mach_port_t suspend_reply;	/* Reply port for sig_post RPC.  */
 
     int vforked;		/* Nonzero if this thread is a vfork child.  */
     struct
