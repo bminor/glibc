@@ -1,3 +1,107 @@
+1997-08-08 02:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/stub/libc-lock.h (__libc_once_define): Add new parameter
+	for storage class.
+	* inet/inet_ntoa.c: Add static to parameter list for __libc_once_init.
+
+	* login/Makefile (routines): Add updwtmp.
+	* login/logwtmp.c: Move definition of updwtmp to ...
+	* login/updwtmp.c: here.  New file.
+
+	* sysdeps/libm-ieee754/s_cbrt.c: Complete rewrite.
+	* sysdeps/libm-ieee754/s_cbrtf.c: Likewise.
+	* sysdeps/libm-ieee754/s_cbrtl.c: Likewise.
+
+1997-07-26 14:42  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libio/stdfiles.c (_libio_using_thunks): Define if
+	_G_USING_THUNKS is defined.
+
+	* libio/_G_config.h: Moved to
+	* sysdeps/generic/_G_config.h: ...here.
+
+	* sysdeps/unix/sysv/linux/_G_config.h: New, add vtable thunks support.
+
+1997-08-07  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/profil.c (fetch_samples): Put parens in the
+	right place.
+
+1997-08-06  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/profil.c (fetch_samples): Do arithmetic on
+	PC's in long long to avoid overflow.
+
+1997-08-07  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/bits/libc-lock.h (__libc_once, __libc_once_define):
+	New macros.
+
+1997-08-06 13:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* gmon/gmon.c (_mcleanup): Fix typos.
+
+	* gmon/sys/gmon.h: Add prototype for write_profiling.
+
+1997-08-01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/__longjmp.c: Replace call to abort by infinite
+	loop, to avoid dragging stdio into the dynamic linker.
+
+1997-08-04 13:06  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* gmon/gmon.c (write_gmon): New function; guts from _mcleanup.
+	(_mcleanup): Use write_gmon.
+	(write_profiling): This function can be safely called at any time
+	to write a current histogram without interfering with ongoing
+	profiling.
+
+	* sysdeps/mach/hurd/profil.c (fetch_samples): Initialize NSAMPLES.
+
+1997-08-01 17:53  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/profil.c (fetch_samples): Sample buffer need
+	not be vm_deallocated; it's a stack buffer.
+	(profil_vm_deallocate): Delete prototype.
+	(#include <../mach/RPC_vm_deallocate_rpc.c>): Drop this
+	inclusion.
+	* sysdeps/mach/hurd/Makefile
+	($(common-objpfx)hurd/../mach/RPC_vm_deallocate_rpc.c): Delete
+	this rule.
+
+	* sysdeps/mach/hurd/profil.c (fetch_samples): New function, guts
+	from profile_waiter.
+	(profile_waiter): Use fetch_samples.
+	(profil): When turning off profiling, fetch the last bunch of
+	samples before disabling PC sampling.
+	(fetch_samples): Add prototype.
+
+1997-07-30 12:53  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/Makefile: Give normal rules for the mach RPC
+	source included by profil.c instead of trying to use
+	before-compile grot.
+
+1997-07-23 15:04  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/profil.c (profile_waiter): Do vm_deallocate
+	after releasing lock.  Use special RPC stubs and avoid assert,
+	thus making this function entirely independent of the threadvar
+	mechanism and of cthreads.
+	(lock): Convert to be a spin lock instead of a mutex, so that the
+	waiter thread need not use cthreads.  Use a fork prepare hook
+	instead of _hurd_fork_locks to make sure we are clean before
+	forking.
+	(fork_profil_child): Renamed from fork_profil.
+	(profil_reply_port): New variable.
+	(profil_vm_deallocate, profil_task_get_sampled_pcs): Special RPC
+	stubs made by special hacks.
+	* sysdeps/mach/hurd/Makefile (before-compile): Add the mach RPC
+	source files that profil.c needs if we are in the gmon directory.
+
+	* mach/setup-thread.c (__mach_setup_thread): Delete avoidance of a
+	cthreads bug that hasn't existed for two years.
+
 1997-08-04 15:29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/localedef.c (main): Set bit in avail for those
@@ -93,6 +197,12 @@
 	path to install-info for systems like Debian that have an
 	install-info with a different command line interface from the
 	canonical GNU texinfo version.
+
+1997-07-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/posix/ttyname_r.c (__ttyname_r): Correct comment.
+	* posix/unistd.h: Likewise.
+	* sysdeps/stub/ttyname_r.c: Likewise.
 
 1997-06-22  Paul Eggert  <eggert@twinsun.com>
 

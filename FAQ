@@ -77,6 +77,16 @@ please let me know.
 
 [Q21]    ``On Linux I've got problems with the declarations in Linux
            kernel headers.''
+
+[Q22]	``When I try to compile code which uses IPv6 header and
+	  definitions on my Linux 2.x.y system I am in trouble.
+	  Nothing seems to work.''
+
+[Q23]	``When compiling GNU libc I get lots of errors saying functions
+	  in glibc are duplicated in libgcc.''
+
+[Q24]	``I have set up /etc/nis.conf, and the Linux libc 5 with NYS
+	  works great.  But the glibc NIS+ doesn't seem to work.''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -173,7 +183,12 @@ Library.
   slow.
 
 * plenty of time (approx 1h for i?86-linux on i586@133 or 2.5h on
-  i486@66 or 4.5h on i486@33).  For Hurd systems times are much higher.
+  i486@66 or 4.5h on i486@33), both for shared and static only).
+  For Hurd systems times are much higher.
+
+  For Atari Falcon (Motorola 68030 @ 16 Mhz, 14 Mb memory) James Troup
+  <J.J.Troup@comp.brad.ac.uk> reports for a full build (shared, static,
+  and profiled) a compile time of 45h34m.
 
   If you have some more measurements let me know.
 
@@ -417,7 +432,7 @@ ship the cryptographic function together with the libc.
 But of course we provide the code and there is an very easy way to use
 this code.  First get the extra package.  People in the US way get it
 from the same place they got the GNU libc from.  People outside the US
-should get the code from ftp.uni-c.dk [129.142.6.74], or another
+should get the code from ftp://ftp.ifi.uio.no/pub/gnu, or another
 archive site outside the USA.  The README explains how to install the
 sources.
 
@@ -568,6 +583,10 @@ something like this:
 
 GROUP ( libc.so.6 ld.so.1 libc.a )
 
+or in ix86/Linux and alpha/Linux:
+
+GROUP ( libc.so.6 ld-linux.so.2 libc.a )
+
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q18]	``The prototypes for `connect', `accept', `getsockopt',
@@ -599,7 +618,13 @@ invalid.  I.e., an emulated FPU is for the libc as good as a real one.
 	  glibc 2.x?
 
 [A20] {AJ} There's only support for glibc 2.0 in gcc 2.7.2.2 or later.
-For 2.7.2.2 you should use the following patch and configure for
+
+gcc 2.7.2.2 has also a nasty bug.  It installs its own version of
+assert.h into /usr/<machine>/include that is not compatible with
+glibc.  Please remove this file - otherwise you get lots of problems
+with configure.
+
+For 2.7.2.2 you should also use the following patch and configure for
 e.g. i486-linux.
 -----------------------------------------------------------------------
 --- configure       Tue Feb 11 15:57:17 1997
@@ -637,13 +662,60 @@ results because of type conflicts.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q22]	``When I try to compile code which uses IPv6 header and
+	  definitions on my Linux 2.x.y system I am in trouble.
+	  Nothing seems to work.''
+
+[A22] {UD} The problem is that the IPv6 development still has not reached
+a point where it is stable.  There are still lots of incompatible changes
+made and the libc headers have to follow.
+
+Currently (as of 970401) according to Philip Blundell <pjb27@cam.ac.uk>
+the required kernel version is 2.1.30.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q23]	``When compiling GNU libc I get lots of errors saying functions
+	  in glibc are duplicated in libgcc.''
+
+[A23] {EY} This is *exactly* the same problem that I was having.  The
+problem was due to the fact that the autoconfigure didn't correctly
+detect that linker flag --no-whole-archive was supported in my linker.
+In my case it was because I had run ./configure with bogus CFLAGS, and
+the test failed.
+
+One thing that is particularly annoying about this problem is that
+once this is misdetected, running configure again won't fix it unless
+you first delete config.cache.
+
+{UD} Starting with glibc-2.0.3 there should be a better test to avoid
+some problems of this kind.  The setting of CFLAGS is checked at the
+very beginning and if it is not usable `configure' will bark.
+
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q24]	``I have set up /etc/nis.conf, and the Linux libc 5 with NYS
+	  works great.  But the glibc NIS+ doesn't seem to work.''
+
+[A24]	The glibc NIS+ implementation uses a /var/nis/NIS_COLD_START
+	file for storing information about the NIS+ server and their
+	public keys, because the nis.conf file do not contain all
+	necessary information.  You have to copy a NIS_COLD_START file
+	from a Solaris client (the NIS_COLD_START file is byte order
+	independend) or generate it new with nisinit from the nis-tools
+	(look at http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html).
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
 {DMT} David Mosberger-Tang, <davidm@AZStarNet.com>
 {RM} Roland McGrath, <roland@gnu.ai.mit.edu>
 {HJL} H.J. Lu, <hjl@gnu.ai.mit.edu>
-{AJ} Andreas Jaeger, <aj@arthur.pfalz.de>
+{AJ} Andreas Jaeger, <aj@arthur.rhein-neckar.de>
+{EY} Eric Youngdale, <eric@andante.jic.com>
 
 Local Variables:
  mode:text
