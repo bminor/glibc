@@ -50,7 +50,7 @@ routines = hurdinit hurdid hurdlookup hurdpid hurdrlimit hurdexec \
  	   vpprintf \
 	   ports-get ports-set hurdports hurdmsg \
 	   $(sig) $(dtable) hurdinline
-sig	= hurdsig hurdfault siginfo hurd-raise preempt-sig \
+sig	= hurdsig hurdfault faultexc siginfo hurd-raise preempt-sig \
 	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal hurdkill
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport \
@@ -105,3 +105,8 @@ $(foreach if,$(user-interfaces),$($(if)-calls:%=$(objpfx)RPC_%.o))): \
 	hurd/signal.h
 
 $(user-interfaces:%=$(objpfx)%.ustamp): intr-rpc.awk
+
+$(objpfx)faultexc.c: $(mach-srcdir)/mach/exc.defs
+	$(MIG) $(MIGFLAGS) -prefix _hurdsig_fault_ -server $@ \
+	       -sheader /dev/null -user /dev/null -header /dev/null
+generated += faultexc.c
