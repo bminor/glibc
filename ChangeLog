@@ -1,3 +1,15 @@
+1998-07-22 12:47  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signal/Makefile (headers): Add sigstack.h.
+	* signal.h: Include sigstack.h instead of defining struct sigstack and
+	struct sigaltstack here.
+	* sysdeps/generic/sigstack.h: New file.
+	* sysdeps/unix/sysv/linux/sigstack.h: New file.
+
+	* string/strcoll.c: Correct problem with empty strings.
+	* string/strxfrm.c: Likewise.
+	Reported by vbzoli@hbrt.hu [PR libc/719].
+
 1998-07-21 10:58  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c: More LD_PRELOAD parsing fixes.
