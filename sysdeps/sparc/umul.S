@@ -104,7 +104,7 @@ FUNC(.umul)
 #else
 	/* Faster code from tege@sics.se.  */
 	sra	%o1, 31, %o2	! make mask from sign bit
-	and	%o0, %o2, %o2	! %o2 = 0 or %o0, depending on %o1's sign
+	and	%o0, %o2, %o2	! %o2 = 0 or %o0, depending on sign of %o1
 	rd	%y, %o0		! get lower half of product
 	retl
 	addcc	%o4, %o2, %o1	! add compensation and put upper half in place
