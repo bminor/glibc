@@ -26,6 +26,14 @@ endif
 
 include $(..)Makeconfig
 
+foo:=$(shell echo first generated='$(generated)' >&2)
+ifdef objpfx
+generated := $(foreach file,$(filter $(objpfx)%,$(generated)),\
+		       $(file:$(objpfx)%=%) $(file)) \
+	     $(filter-out $(objpfx)%,$(generated))
+foo:=$(shell echo generated='$(generated)' >&2)
+endif
+
 foo:=$(shell echo 'distribute=$(distribute)'>&2)
 foo:=$(shell echo 'foobar=$(filter %.c %.S %.s %.h,$(distribute))'>&2)
 
@@ -86,7 +94,7 @@ sources := $(filter-out $(addsuffix .c,$(basename $(.S.s))),$(sources)) $(.S.s)
 			$(sources) $(all-headers) $(distribute)) \
 	   $(+sysdeps)
 foo:=$(shell echo made +tsrcs >&2)
-generated := $(patsubst $(objpfx)%,$(objpfx)% %,$(generated))
+foo:=$(shell echo generated='$(generated)' >&2)
 +tsrcs := $(sort $(filter-out $(generated),$(+tsrcs)))
 foo:=$(shell echo '+tsrcs=$(+tsrcs)'>&2)
 foo:=$(shell echo foobie, dammit! >&2)
@@ -100,7 +108,7 @@ version := $(word 2,$(rel+vers))
 export tardir := glibc-$(version)
 endif
 
-$(..)glibc-%:
+$(..)$(tardir):
 	ln -s . $@
 
 +tsrcs := $(+tsrcs) \
@@ -159,13 +167,7 @@ subdirs := $(filter-out crypt,$(subdirs))
 	mv $@.new $@
 
 .PHONY: dist
-# N.B.: The order in which these are done matters (so don't use -j).
-MAKEFLAGS = -j1	  # I wonder if that works.
-dist: dist.tar subdir_dist de-.. dist.tar.z \
-      $(tardir).tar.z $(tardir)-crypt.tar.z
-
-$(tardir).tar.z: dist.tar.z
-	ln $< $@
+dist: $(tardir).tar.z $(tardir)-crypt.tar.z
 
 $(tardir)-crypt.tar.z: crypt/crypt.tar.z
 	ln $< $@
@@ -173,13 +175,14 @@ crypt/%: FORCE
 	$(MAKE) -C $(@D) $(@F)
 FORCE:
 
+subdir_dist: dist.tar
 dist.tar: $(tardir) $(+tsrcs)
-	tar cho$(verbose)f $@ \
-			   $(addprefix $(tardir)/,$(filter-out $(tardir),$^))
+	tar ch$(verbose)f $@ \
+			  $(addprefix $(tardir)/,$(filter-out $(tardir),$^))
 
-de-..: dist.tar
+$(tardir).tar: dist.tar subdir_dist
 	tar xf $< -C /tmp
-	tar cf $< -C /tmp $(tardir)
+	tar covf $@ -C /tmp $(tardir)
 	-rm -fr /tmp/$(tardir) &
 
 %.Z: %
@@ -206,4 +209,4 @@ README: README.template version.c
 endif	# Subdirectory vs. parent makefile
 
 # Get these things out of the environment because they take up lots of space.
-unexport distribute sources generated headers
+unexport distribute generated
