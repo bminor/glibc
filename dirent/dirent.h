@@ -35,30 +35,30 @@ __BEGIN_DECLS
 
 /* Directory entry structure.  */
 struct dirent
-{
-  __ino_t d_fileno;		/* File serial number.  */
-  size_t d_namlen;		/* Length of the file name.  */
+  {
+    __ino_t d_fileno;		/* File serial number.  */
+    size_t d_namlen;		/* Length of the file name.  */
 
-  /* Only this member is in the POSIX standard.  */
-  char d_name[1];		/* File name (actually longer).  */
-};
+    /* Only this member is in the POSIX standard.  */
+    char d_name[1];		/* File name (actually longer).  */
+  };
 
 #if defined(__USE_BSD) || defined(__USE_MISC)
-#define	d_ino		d_fileno/* Backward compatibility.  */
+#define	d_ino		d_fileno /* Backward compatibility.  */
 #endif
 
 /* Directory stream type.  */
 typedef struct
-{
-  int __fd;			/* File descriptor.  */
+  {
+    int __fd;			/* File descriptor.  */
 
-  char *__data;			/* Directory block.  */
-  size_t __allocation;		/* Space allocated for the block.  */
-  size_t __offset;		/* Current offset into the block.  */
-  size_t __size;		/* Total valid data in the block.  */
+    char *__data;		/* Directory block.  */
+    size_t __allocation;	/* Space allocated for the block.  */
+    size_t __offset;		/* Current offset into the block.  */
+    size_t __size;		/* Total valid data in the block.  */
 
-  struct dirent __entry;	/* Returned by `readdir'.  */
-} DIR;
+    struct dirent __entry;	/* Returned by `readdir'.  */
+  } DIR;
 
 
 /* Open a directory stream on NAME.
@@ -105,22 +105,23 @@ extern __off_t telldir __P ((DIR * __dirp));
    sorted using qsort with CMP, and collected in a malloc'd array in
    *NAMELIST.  Returns the number of entries selected, or -1 on error.  */
 extern int scandir __P ((__const char *__dir,
-			 struct dirent *** __namelist,
+			 struct dirent ***__namelist,
 			 int (*__select) __P ((struct dirent *)),
-		    int (*__cmp) __P ((__const __ptr_t, __const __ptr_t))));
+			 int (*__cmp) __P ((__const __ptr_t,
+					    __const __ptr_t))));
 
 /* Function to compare two `struct dirent's alphabetically.  */
-     extern int alphasort __P ((__const __ptr_t, __const __ptr_t));
+extern int alphasort __P ((__const __ptr_t, __const __ptr_t));
 
 
 /* Read directory entries from FD into BUF, reading at most NBYTES.
    Reading starts at offset *BASEP, and *BASEP is updated with the new
    position after reading.  Returns the number of bytes read; zero when at
    end of directory; or -1 for errors.  */
-     extern __ssize_t __getdirentries __P ((int __fd, char *__buf,
-				       size_t __nbytes, __off_t * __basep));
-     extern __ssize_t getdirentries __P ((int __fd, char *__buf,
-				       size_t __nbytes, __off_t * __basep));
+extern __ssize_t __getdirentries __P ((int __fd, char *__buf,
+				       size_t __nbytes, __off_t *__basep));
+extern __ssize_t getdirentries __P ((int __fd, char *__buf,
+				     size_t __nbytes, __off_t *__basep));
 
 
 #endif /* Use BSD or misc.  */
