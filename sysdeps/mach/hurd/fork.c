@@ -78,6 +78,8 @@ __fork (void)
   size_t i;
   error_t err;
 
+  HURD_CRITICAL_BEGIN;
+
   if (! setjmp (env))
     {
       process_t newproc;
@@ -90,7 +92,7 @@ __fork (void)
       if (err = run_hooks (&_hurd_fork_prepare_hook,
 			   MACH_PORT_NULL, MACH_PORT_NULL))
 	/* XXX what if some of them were done ok? */
-	return __hurd_fail (err);
+	goto earlylose;
 
       /* Lock things that want to be locked before we fork.  */
       for (i = 0; i < _hurd_fork_locks.n; ++i)
@@ -219,6 +221,9 @@ __fork (void)
      They are locked in both the parent and child tasks.  */
   for (i = 0; i < _hurd_fork_locks.n; ++i)
     __mutex_unlock (_hurd_fork_locks.locks[i]);
+
+ earlylose:
+  HURD_CRITICAL_END;
 
   return err ? __hurd_fail (err) : pid;
 }
