@@ -209,6 +209,5 @@ This is similar to @code{longjmp} except for the type of its @var{state}
 argument.  If the @code{sigsetjmp} call that set this @var{state} used a
 nonzero @var{savesigs} flag, @code{siglongjmp} also restores the set of
 blocked signals.
-@c !!! check posix.1 atomicity requirement
 @end deftypefun
 
