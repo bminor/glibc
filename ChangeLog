@@ -35,7 +35,7 @@
 	* sysdeps/libm-i387/s_nearbyint.S: Disable raising exception, not
 	enable it.  Patch by Miloslav Trmac <mitr@volny.cz> (PR libc/1600).
 	* sysdeps/libm-i387/s_nearbyintf.S: Likewise.
-	* sysdeps/libm-i387/s_nearbyintf.l: Likewise.
+	* sysdeps/libm-i387/s_nearbyintl.S: Likewise.
 
 2000-02-14  Andreas Jaeger  <aj@suse.de>
 
