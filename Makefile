@@ -235,13 +235,6 @@ distribute  := README INSTALL NOTES COPYING.LIB COPYING ChangeLog NEWS	\
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h
 
-.PHONY: dist
-dist: Make-dist $(distribute)
-	$(MAKE) -f $< no_deps=t \
-		'distribute=$(distribute)' \
-		'generated=$(generated)' \
-		$(Make-dist-args)
-
 README: README.template version.c ; # Make-dist should update README.
 
 INSTALL: manual/maint.texi
