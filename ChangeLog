@@ -1,3 +1,47 @@
+1998-03-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 2.0.7.
+
+	* elf/dl-load.c (_dl_map_object): Take extra argument and pass it
+	to open_path.
+	(open_path): If preloading and SUID binary, use shared object only
+	if SUID bit is set.
+	* elf/link.h: Adjust prototype for _dl_map_object.
+	* elf/dl-deps.c (_dl_map_object_deps): Call _dl_map_object with
+	new argument.
+	* elf/dl-open.c (_dl_open): Likewise.
+	* elf/rtld.c: Likewise.
+
+	* Makefile (subdirs): Undo last patch.
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add osf_sigaction
+	for some broken kernel versions.
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (_ioperm): Remove extra
+	closing paren.
+	* sysdeps/alpha/dl-machine.h: Add missing opening brace.
+	Patches by Cristian Gafton.
+
+	* misc/efgcvt_r.c: Carry over patches from 2.1 to correct several
+	bugs.
+
+	* nis/rpcsvc/ypclnt.h: Add prototypes to prevent warnings.
+	* sunrpc/rpc/auth.h: Likewise.
+	* sunrpc/rpc/clnt.h: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+
+	* sunrpc/rpc/clnt.h: Add const to prototypes for clnt_perror.
+	* sunrpc/clnt_perror.c: Adopt definition.
+
+1998-02-06 07:48  H.J. Lu  <hjl@gnu.org>
+
+	* db/Makefile ($(inst_libdir)/libndbm.a,
+	$(inst_libdir)/libndbm.so): New targets.
+
+1998-03-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/__math.h: Don't use _Mldbl
+	* math/math.h: Likewise.
+
 1998-03-02 18:23  H.J. Lu  <hjl@gnu.org>
 
 	* stdio-common/vfscanf.c (inchar): Fix typos.
