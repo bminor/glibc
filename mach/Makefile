@@ -25,7 +25,7 @@ include ../Makeconfig
 
 
 headers = mach_init.h mach.h mach-shortcuts.h \
-	  $(interface-headers) mach/exc.h mach/mach.h
+	  $(interface-headers) mach/exc.h mach/mach.h mach/mig_support.h
 routines = $(interface-routines) \
 	   $(filter-out syscall_%,$(mach-syscalls)) \
 	   $(addprefix __,$(mach-syscalls)) \
@@ -70,6 +70,12 @@ mach-src-headers := $(wildcard $(foreach dir,mach device mach_debug \
 # Exclude mach/machine/*.  A symlink will be installed for mach/machine.
 mach-headers = $(filter-out mach/machine/%,\
 			    $(mach-src-headers:$(mach-srcdir)/%=%))
+
+# Don't distribute the Mach headers; they are in the Mach distribution.
+dont_distribute = $(mach-headers)
+
+# DO NOT try to remake these in any way!!!
+$(addprefix $(mach-srcdir)/,$(mach-headers)) : ;
 install-others += $(addprefix $(includedir)/,$(mach-headers))
 $(includedir)/%: $(mach-srcdir)/%; $(do-install)
 
@@ -129,7 +135,7 @@ mach/mach_interface.uh mach/mach_port.uh: $(objpfx)mach-syscalls.mk
 
 ifdef mach-shortcuts
 $(mach-shortcuts:%=$(objpfx)__%.c): $(objpfx)__%.c: shortcut.awk \
-						    $(objpfx)__%_rpc.c
+						    $(objpfx)RPC_%_rpc.c
 	gawk -v call=__$* -v rpc=__$*_rpc -v syscall=__syscall_$* \
 	     -f $^ > $@-new
 	mv $@-new $@
@@ -164,12 +170,17 @@ include ../Rules
 
 
 # There is already a mach.h, so mach.defs generates mach_interface.h.
-$(objpfx)mach/mach_interface.uh: mach/mach.defs; $(mig.uh)
-$(objpfx)mach/mach_interface.__h: mach/mach.defs; $(mig.__h)
+$(objpfx)mach/mach_interface.defs: $(mach-srcdir)/mach/mach.defs
+	ln $< $@ || cp $< $@
 # There is already a memory_object.h,
 # so memory_object.defs generates memory_object_user.h.
-$(objpfx)mach/memory_object_user.uh: mach/memory_object.defs; $(mig.uh)
-$(objpfx)mach/memory_object_user.__h: mach/memory_object.defs; $(mig.__h)
+$(objpfx)mach/memory_object_user.defs: $(mach-srcdir)/mach/memory_object.defs
+	ln $< $@ || cp $< $@
+
+ifdef objdir
+vpath mach/mach_interface.defs $(objdir)
+vpath mach/memory_object_user.defs $(objdir)
+endif
 
 # Be sure not to make these with implicit rules from foo.defs.
 mach.h mach/memory_object.h: ;
