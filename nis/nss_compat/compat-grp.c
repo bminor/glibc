@@ -26,6 +26,7 @@
 #include <string.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
+#include <nsswitch.h>
 
 /* Get the declaration of the parser function.  */
 #define ENTNAME grent
@@ -33,7 +34,7 @@
 #define EXTERN_PARSER
 #include "../../nss/nss_files/files-parse.c"
 
-/* Structure for remembering -@netgroup and -user members ... */
+/* Structure for remembering -group members ... */
 #define BLACKLIST_INITIAL_SIZE 512
 #define BLACKLIST_INCREMENT 256
 struct blacklist_t
@@ -51,7 +52,7 @@ struct ent_t
     int oldkeylen;
     FILE *stream;
     struct blacklist_t blacklist;
-  };
+};
 typedef struct ent_t ent_t;
 
 static ent_t ext_ent = {0, 0, NULL, 0, NULL, {NULL, 0, 0}};
@@ -176,7 +177,7 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
   struct parser_data *data = (void *) buffer;
   char *domain;
   char *outkey, *outval;
-  int outkeylen, outvallen;
+  int outkeylen, outvallen, parse_res;
   char *p;
 
   if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
@@ -187,6 +188,10 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 
   do
     {
+      char *save_oldkey;
+      int save_oldlen;
+      bool_t save_nis_first;
+
       if (ent->nis_first)
 	{
 	  if (yp_first (domain, "group.byname", &outkey, &outkeylen,
@@ -195,7 +200,9 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 	      ent->nis = 0;
 	      return NSS_STATUS_UNAVAIL;
 	    }
-
+	  save_oldkey = ent->oldkey;
+	  save_oldlen = ent->oldkeylen;
+	  save_nis_first = TRUE;
 	  ent->oldkey = outkey;
 	  ent->oldkeylen = outkeylen;
 	  ent->nis_first = FALSE;
@@ -210,7 +217,9 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 	      return NSS_STATUS_NOTFOUND;
 	    }
 
-	  free (ent->oldkey);
+	  save_oldkey = ent->oldkey;
+	  save_oldlen = ent->oldkeylen;
+	  save_nis_first = FALSE;
 	  ent->oldkey = outkey;
 	  ent->oldkeylen = outkeylen;
 	}
@@ -223,15 +232,64 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 
       while (isspace (*p))
 	++p;
-    }
-  while (!_nss_files_parse_grent (p, result, data, buflen));
 
-  if (!in_blacklist (result->gr_name, strlen (result->gr_name), ent))
-    return NSS_STATUS_SUCCESS;
-  else
-    return NSS_STATUS_NOTFOUND;
+      if ((parse_res = _nss_files_parse_grent (p, result, data, buflen)) == -1)
+	{
+	  free (ent->oldkey);
+	  ent->oldkey = save_oldkey;
+	  ent->oldkeylen = save_oldlen;
+	  ent->nis_first = save_nis_first;
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      else
+	{
+	  if (!save_nis_first)
+	    free (save_oldkey);
+	}
+
+      if (parse_res &&
+	  in_blacklist (result->gr_name, strlen (result->gr_name), ent))
+	parse_res = 0; /* if result->gr_name in blacklist,search next entry */
+    }
+  while (!parse_res);
+
+  return NSS_STATUS_SUCCESS;
 }
 
+/* This function handle the +group entrys in /etc/group */
+static enum nss_status
+getgrnam_plusgroup (const char *name, struct group *result, char *buffer,
+		    size_t buflen)
+{
+  struct parser_data *data = (void *) buffer;
+  int parse_res;
+  char *domain, *outval, *p;
+  int outvallen;
+
+  if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
+    return NSS_STATUS_TRYAGAIN;
+
+  if (yp_match (domain, "group.byname", name, strlen (name),
+		&outval, &outvallen) != YPERR_SUCCESS)
+    return NSS_STATUS_TRYAGAIN;
+  p = strncpy (buffer, outval,
+	       buflen < (size_t) outvallen ? buflen : (size_t) outvallen);
+  free (outval);
+  while (isspace (*p))
+    p++;
+  if ((parse_res = _nss_files_parse_grent (p, result, data, buflen)) == -1)
+    {
+      __set_errno (ERANGE);
+      return NSS_STATUS_TRYAGAIN;
+    }
+
+  if (parse_res)
+    /* We found the entry.  */
+    return NSS_STATUS_SUCCESS;
+  else
+    return NSS_STATUS_RETURN;
+}
 
 static enum nss_status
 getgrent_next_file (struct group *result, ent_t *ent,
@@ -240,13 +298,24 @@ getgrent_next_file (struct group *result, ent_t *ent,
   struct parser_data *data = (void *) buffer;
   while (1)
     {
+      fpos_t pos;
+      int parse_res = 0;
       char *p;
 
       do
 	{
+	  fgetpos (ent->stream, &pos);
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL)
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      if (feof (ent->stream))
+		return NSS_STATUS_NOTFOUND;
+	      else
+		{
+		  __set_errno (ERANGE);
+		  return NSS_STATUS_TRYAGAIN;
+		}
+	    }
 
 	  /* Terminate the line for any case.  */
 	  buffer[buflen - 1] = '\0';
@@ -255,11 +324,18 @@ getgrent_next_file (struct group *result, ent_t *ent,
 	  while (isspace (*p))
 	    ++p;
 	}
-      /* Ignore empty and comment lines.  */
-      while (*p == '\0' || *p == '#' ||
+      while (*p == '\0' || *p == '#' || /* Ignore empty and comment lines. */
       /* Parse the line.  If it is invalid, loop to
          get the next line of the file to parse.  */
-	     !_nss_files_parse_grent (p, result, data, buflen));
+	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen)));
+
+      if (parse_res == -1)
+	{
+	  /* The parser ran out of space.  */
+	  fsetpos (ent->stream, &pos);
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       if (result->gr_name[0] != '+' && result->gr_name[0] != '-')
 	/* This is a real entry.  */
@@ -277,27 +353,20 @@ getgrent_next_file (struct group *result, ent_t *ent,
       if (result->gr_name[0] == '+' && result->gr_name[1] != '\0'
 	  && result->gr_name[1] != '@')
 	{
-	  char *domain;
-	  char *outval;
-	  int outvallen;
+          enum nss_status status;
 
-	  if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-	    /* XXX Should we regard this as an fatal error?  I don't
-	       think so.  Just continue working.  --drepper@gnu  */
-	    continue;
-
-	  if (yp_match (domain, "group.byname", &result->gr_name[1],
-			strlen (result->gr_name) - 1, &outval, &outvallen)
-	      != YPERR_SUCCESS)
-	    continue;
-
-	  p = strncpy (buffer, outval, buflen);
-	  while (isspace (*p))
-	    p++;
-	  free (outval);
-	  if (_nss_files_parse_grent (p, result, data, buflen))
-	    /* We found the entry.  */
-	    break;
+ 	  /* Store the group in the blacklist for the "+" at the end of
+	     /etc/group */
+	  blacklist_store_name (&result->gr_name[1], ent);
+	  status = getgrnam_plusgroup (&result->gr_name[1], result, buffer,
+				       buflen);
+          if (status == NSS_STATUS_SUCCESS) /* We found the entry. */
+            break;
+          else
+            if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
+              continue;
+            else
+              return status;
 	}
 
       /* +:... */
@@ -319,7 +388,9 @@ internal_getgrent_r (struct group *gr, ent_t *ent, char *buffer,
 		     size_t buflen)
 {
   if (ent->nis)
-    return getgrent_next_nis (gr, ent, buffer, buflen);
+    {
+      return getgrent_next_nis (gr, ent, buffer, buflen);
+    }
   else
     return getgrent_next_file (gr, ent, buffer, buflen);
 }
@@ -343,6 +414,104 @@ _nss_compat_getgrent_r (struct group *grp, char *buffer, size_t buflen)
   return status;
 }
 
+/* Searches in /etc/group and the NIS/NIS+ map for a special group */
+static enum nss_status
+internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
+		     char *buffer, size_t buflen)
+{
+  struct parser_data *data = (void *) buffer;
+  while (1)
+    {
+      fpos_t pos;
+      int parse_res = 0;
+      char *p;
+
+      do
+	{
+	  fgetpos (ent->stream, &pos);
+	  p = fgets (buffer, buflen, ent->stream);
+	  if (p == NULL)
+	    {
+	      if (feof (ent->stream))
+		return NSS_STATUS_NOTFOUND;
+	      else
+		{
+		  __set_errno (ERANGE);
+		  return NSS_STATUS_TRYAGAIN;
+		}
+	    }
+
+	  /* Terminate the line for any case.  */
+	  buffer[buflen - 1] = '\0';
+
+	  /* Skip leading blanks.  */
+	  while (isspace (*p))
+	    ++p;
+	}
+      while (*p == '\0' || *p == '#' || /* Ignore empty and comment lines. */
+      /* Parse the line.  If it is invalid, loop to
+         get the next line of the file to parse.  */
+	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen)));
+
+      if (parse_res == -1)
+	{
+	  /* The parser ran out of space.  */
+	  fsetpos (ent->stream, &pos);
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      /* This is a real entry.  */
+      if (result->gr_name[0] != '+' && result->gr_name[0] != '-')
+	{
+	  if (strcmp (result->gr_name, name) == 0)
+	    return NSS_STATUS_SUCCESS;
+	  else
+	    continue;
+	}
+
+      /* -group */
+      if (result->gr_name[0] == '-' && result->gr_name[1] != '\0'
+	  && result->gr_name[1] != '@')
+	{
+	  if (strcmp (&result->gr_name[1], name) == 0)
+	    return NSS_STATUS_NOTFOUND;
+	  else
+	    continue;
+	}
+
+      /* +group */
+      if (result->gr_name[0] == '+' && result->gr_name[1] != '\0'
+	  && result->gr_name[1] != '@')
+	{
+	  if (strcmp (name, &result->gr_name[1]) == 0)
+	    {
+	      enum nss_status status;
+
+	      status = getgrnam_plusgroup (name, result, buffer, buflen);
+	      if (status == NSS_STATUS_RETURN)
+		/* We couldn't parse the entry */
+		continue;
+	      else
+		return status;
+	    }
+	}
+      /* +:... */
+      if (result->gr_name[0] == '+' && result->gr_name[1] == '\0')
+	{
+	  enum nss_status status;
+
+	  status = getgrnam_plusgroup (name, result, buffer, buflen);
+	  if (status == NSS_STATUS_RETURN)
+	    /* We couldn't parse the entry */
+	    continue;
+	  else
+	    return status;
+	}
+    }
+
+  return NSS_STATUS_SUCCESS;
+}
 
 enum nss_status
 _nss_compat_getgrnam_r (const char *name, struct group *grp,
@@ -354,20 +523,154 @@ _nss_compat_getgrnam_r (const char *name, struct group *grp,
   if (name[0] == '-' || name[0] == '+')
     return NSS_STATUS_NOTFOUND;
 
+  __libc_lock_lock (lock);
 
   status = internal_setgrent (&ent);
+
+  __libc_lock_unlock (lock);
+
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
-  while ((status = internal_getgrent_r (grp, &ent, buffer, buflen))
-	 == NSS_STATUS_SUCCESS)
-    if (strcmp (grp->gr_name, name) == 0)
-      break;
+  status = internal_getgrnam_r (name, grp, &ent, buffer, buflen);
 
   internal_endgrent (&ent);
+
   return status;
 }
 
+/* This function handle the + entry in /etc/group */
+static enum nss_status
+getgrgid_plusgroup (gid_t gid, struct group *result, char *buffer,
+		    size_t buflen)
+{
+  struct parser_data *data = (void *) buffer;
+  int parse_res;
+  char buf[1024];
+  char *domain, *outval, *p;
+  int outvallen;
+
+  if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
+    return NSS_STATUS_TRYAGAIN;
+
+  snprintf (buf, sizeof (buf), "%d", gid);
+
+  if (yp_match (domain, "group.bygid", buf, strlen (buf),
+		&outval, &outvallen) != YPERR_SUCCESS)
+    return NSS_STATUS_TRYAGAIN;
+  p = strncpy (buffer, outval,
+	       buflen < (size_t) outvallen ? buflen : (size_t) outvallen);
+  free (outval);
+  while (isspace (*p))
+    p++;
+  if ((parse_res = _nss_files_parse_grent (p, result, data, buflen)) == -1)
+    {
+      __set_errno (ERANGE);
+      return NSS_STATUS_TRYAGAIN;
+    }
+
+  if (parse_res)
+    /* We found the entry.  */
+    return NSS_STATUS_SUCCESS;
+  else
+    return NSS_STATUS_RETURN;
+}
+
+/* Searches in /etc/group and the NIS/NIS+ map for a special group id */
+static enum nss_status
+internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
+		     char *buffer, size_t buflen)
+{
+  struct parser_data *data = (void *) buffer;
+  while (1)
+    {
+      fpos_t pos;
+      int parse_res = 0;
+      char *p;
+
+      do
+	{
+	  fgetpos (ent->stream, &pos);
+	  p = fgets (buffer, buflen, ent->stream);
+	  if (p == NULL)
+	    {
+	      if (feof (ent->stream))
+		return NSS_STATUS_NOTFOUND;
+	      else
+		{
+		  __set_errno (ERANGE);
+		  return NSS_STATUS_TRYAGAIN;
+		}
+	    }
+
+	  /* Terminate the line for any case.  */
+	  buffer[buflen - 1] = '\0';
+
+	  /* Skip leading blanks.  */
+	  while (isspace (*p))
+	    ++p;
+	}
+      while (*p == '\0' || *p == '#' || /* Ignore empty and comment lines. */
+      /* Parse the line.  If it is invalid, loop to
+         get the next line of the file to parse.  */
+	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen)));
+
+      if (parse_res == -1)
+	{
+	  /* The parser ran out of space.  */
+	  fsetpos (ent->stream, &pos);
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      /* This is a real entry.  */
+      if (result->gr_name[0] != '+' && result->gr_name[0] != '-')
+	{
+	  if (result->gr_gid == gid)
+	    return NSS_STATUS_SUCCESS;
+	  else
+	    continue;
+	}
+
+      /* -group */
+      if (result->gr_name[0] == '-' && result->gr_name[1] != '\0'
+	  && result->gr_name[1] != '@')
+	{
+          blacklist_store_name (&result->gr_name[1], ent);
+          continue;
+	}
+
+      /* +group */
+      if (result->gr_name[0] == '+' && result->gr_name[1] != '\0'
+	  && result->gr_name[1] != '@')
+	{
+	  enum nss_status status;
+
+	  /* Store the group in the blacklist for the "+" at the end of
+             /etc/group */
+          blacklist_store_name (&result->gr_name[1], ent);
+	  status = getgrnam_plusgroup (&result->gr_name[1], result, buffer,
+				      buflen);
+	  if (status == NSS_STATUS_SUCCESS && result->gr_gid == gid)
+	    break;
+	  else
+	    continue;
+	}
+      /* +:... */
+      if (result->gr_name[0] == '+' && result->gr_name[1] == '\0')
+	{
+	  enum nss_status status;
+
+	  status = getgrgid_plusgroup (gid, result, buffer, buflen);
+	  if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
+	    return NSS_STATUS_NOTFOUND;
+	  else
+	    return status;
+	}
+    }
+
+  return NSS_STATUS_SUCCESS;
+}
 
 enum nss_status
 _nss_compat_getgrgid_r (gid_t gid, struct group *grp,
@@ -376,16 +679,19 @@ _nss_compat_getgrgid_r (gid_t gid, struct group *grp,
   ent_t ent = {0, 0, NULL, 0, NULL, {NULL, 0, 0}};
   enum nss_status status;
 
+  __libc_lock_lock (lock);
+
   status = internal_setgrent (&ent);
+
+  __libc_lock_unlock (lock);
+
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
-  while ((status = internal_getgrent_r (grp, &ent, buffer, buflen))
-	 == NSS_STATUS_SUCCESS)
-    if (grp->gr_gid == gid && grp->gr_name[0] != '+' && grp->gr_name[0] != '-')
-      break;
+  status = internal_getgrgid_r (gid, grp, &ent, buffer, buflen);
 
   internal_endgrent (&ent);
+
   return status;
 }
 
@@ -441,10 +747,14 @@ static bool_t
 in_blacklist (const char *name, int namelen, ent_t *ent)
 {
   char buf[namelen + 3];
+  char *cp;
 
   if (ent->blacklist.data == NULL)
     return FALSE;
 
-  stpcpy (stpcpy (stpcpy (buf, "|"), name), "|");
+  buf[0] = '|';
+  cp = stpcpy (&buf[1], name);
+  *cp++= '|';
+  *cp = '\0';
   return strstr (ent->blacklist.data, buf) != NULL;
 }
