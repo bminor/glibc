@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(__setitimer, (which, new, old),
       enum __itimer_which __which AND
-      struct itimerval *, 1994new AND struct itimerval *old)
+      struct itimerval *new AND struct itimerval *old)
 {
   if (new == NULL)
     {
