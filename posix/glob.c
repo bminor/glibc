@@ -654,7 +654,8 @@ glob (pattern, flags, errfunc, pglob)
 
 	  oldcount = pglob->gl_pathc;
 	  status = glob_in_dir (filename, dirs.gl_pathv[i],
-				(flags | GLOB_APPEND) & ~GLOB_NOCHECK,
+				((flags | GLOB_APPEND)
+				 & ~(GLOB_NOCHECK | GLOB_ERR)),
 				errfunc, pglob);
 	  if (status == GLOB_NOMATCH)
 	    /* No matches in this directory.  Try the next.  */
@@ -904,8 +905,54 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 
   if (!__glob_pattern_p (pattern, !(flags & GLOB_NOESCAPE)))
     {
-      stream = NULL;
-      flags |= GLOB_NOCHECK;
+      /* We must check whether the file in this directory exists.  */
+      stream = ((flags & GLOB_ALTDIRFUNC) ?
+		(*pglob->gl_opendir) (directory) :
+		(__ptr_t) opendir (directory));
+      if (stream == NULL)
+	{
+	  if ((errfunc != NULL && (*errfunc) (directory, errno)) ||
+	      (flags & GLOB_ERR))
+	    return GLOB_ABORTED;
+	}
+      else if (pattern[0] == '\0')
+	{
+	  /* This is a special case for matching directories like in
+	     "*a/".  */
+	  names = (struct globlink *) __alloca (sizeof (struct globlink));
+	  names->name = (char *) malloc (1);
+	  if (names->name == NULL)
+	    goto memory_error;
+	  names->name[0] = '\0';
+	  names->next = NULL;
+	  nfound = 1;
+	}
+      else
+	while (1)
+	  {
+	    struct dirent *d = ((flags & GLOB_ALTDIRFUNC) ?
+				(*pglob->gl_readdir) (stream) :
+				readdir ((DIR *) stream));
+	    if (d == NULL)
+	      break;
+	    if (! REAL_DIR_ENTRY (d))
+	      continue;
+
+	    if (strcmp (pattern, d->d_name) == 0)
+	      {
+		size_t len = NAMLEN (d);
+		names =
+		  (struct globlink *) __alloca (sizeof (struct globlink));
+		names->name = (char *) malloc (len + 1);
+		if (names->name == NULL)
+		  goto memory_error;
+		memcpy ((__ptr_t) names->name, pattern, len);
+		names->name[len] = '\0';
+		names->next = NULL;
+		nfound = 1;
+		break;
+	      }
+	  }
     }
   else
     {
@@ -976,24 +1023,27 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
       names->name[len] = '\0';
     }
 
-  pglob->gl_pathv
-    = (char **) realloc (pglob->gl_pathv,
-			 (pglob->gl_pathc +
-			  ((flags & GLOB_DOOFFS) ? pglob->gl_offs : 0) +
-			  nfound + 1) *
-			 sizeof (char *));
-  if (pglob->gl_pathv == NULL)
-    goto memory_error;
+  if (nfound != 0)
+    {
+      pglob->gl_pathv
+	= (char **) realloc (pglob->gl_pathv,
+			     (pglob->gl_pathc +
+			      ((flags & GLOB_DOOFFS) ? pglob->gl_offs : 0) +
+			      nfound + 1) *
+			     sizeof (char *));
+      if (pglob->gl_pathv == NULL)
+	goto memory_error;
 
-  if (flags & GLOB_DOOFFS)
-    while (pglob->gl_pathc < pglob->gl_offs)
-      pglob->gl_pathv[pglob->gl_pathc++] = NULL;
+      if (flags & GLOB_DOOFFS)
+	while (pglob->gl_pathc < pglob->gl_offs)
+	  pglob->gl_pathv[pglob->gl_pathc++] = NULL;
 
-  for (; names != NULL; names = names->next)
-    pglob->gl_pathv[pglob->gl_pathc++] = names->name;
-  pglob->gl_pathv[pglob->gl_pathc] = NULL;
+      for (; names != NULL; names = names->next)
+	pglob->gl_pathv[pglob->gl_pathc++] = names->name;
+      pglob->gl_pathv[pglob->gl_pathc] = NULL;
 
-  pglob->gl_flags = flags;
+      pglob->gl_flags = flags;
+    }
 
   if (stream != NULL)
     {
