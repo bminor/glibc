@@ -223,7 +223,7 @@ sed $(sed-remove-objpfx) -e 's,$*\.o,$(@:.dep=.o) $@,' > $(@:.dep=.dtm)
 mv $(@:.dep=.dtm) $@
 endef
 ifneq (,$(objpfx))
-sed-remove-objpfx = -e 's@$(subst @,\@,$(objpfx))@$$(objpfx)@g'
+sed-remove-objpfx = -e 's@ $(subst @,\@,$(objpfx))@ $$(objpfx)@g'
 endif
 
 # Figure out the source filenames in this directory.
@@ -363,13 +363,22 @@ endif
 # to install everything it changes.
 ifdef objects
 install: $(libdir)/libc.a
-$(libdir)/libc.a: $(libc.a) installdirs; $(do-install)
+# We avoid depending on lib-noranlib because that makes the parent make
+# subdir_lib in all the subdirs, when the make install run they do will
+# update the library anyway.  Running ranlib after installing makes the
+# __.SYMDEF time stamp up to date, which avoids messages from some linkers.
+# Depending on subdir_install gets all the subdirs to update the library,
+# and is optimal for `make install' at top level.
+$(libdir)/libc.a: libobjs ar-it subdir_install
+	$(make-target-directory)
+	$(INSTALL_DATA) $(libc.a) $@
+	$(RANLIB) $@
 endif
 
 ifdef install
 $(addprefix $(bindir)/,$(install)): $(bindir)/%: $(objpfx)%
 	$(make-target-directory)
-	$(INSTALL) $< $@
+	$(INSTALL_PROGRAM) $< $@
 endif
 ifdef install-lib
 $(addprefix $(libdir)/,$(install-lib)): $(libdir)/%: $(objpfx)%;$(do-install)
@@ -383,19 +392,25 @@ $(addprefix $(includedir)/,$(headers)): \
 	$(includedir)/%: %;$(do-install)
 endif	# headers
 
-.PHONY: install-bin install-lib install-data install-headers
-install-bin: $(addprefix $(bindir)/,$(install))
-install-lib: $(addprefix $(libdir)/,$(install-lib))
-install-data: $(addprefix $(datadir)/,$(install-data))
-install-headers: $(addprefix $(includedir)/,$(headers))
-install-others: $(install-others)
+.PHONY: install-bin-nosubdir install-lib-nosubdir \
+	install-data-nosubdir install-headers-nosubdir
+install-bin-nosubdir: $(addprefix $(bindir)/,$(install))
+install-lib-nosubdir: $(addprefix $(libdir)/,$(install-lib))
+install-data-nosubdir: $(addprefix $(datadir)/,$(install-data))
+install-headers-nosubdir: $(addprefix $(includedir)/,$(headers))
+install-others-nosubdir: $(install-others)
 
-.PHONY: install installdirs install-no-libc.a
-install-no-libc.a: install-headers install-data install-bin \
-		   install-lib install-others 
-install: install-no-libc.a
-installdirs: $(..)mkinstalldirs
-	$(dir $<)$(notdir $<) $(sort $(dir $(+install)))
+# We need all the `-nosubdir' targets so that `install' in the parent
+# doesn't depend on several things which each iterate over the subdirs.
+# This rule makes `install-FOO' always use `install-FOO-nosubdir' as a
+# subroutine.  Then in the parent `install-FOO' also causes subdir makes.
+install-%:: install-%-nosubdir ;
+
+.PHONY: install install-no-libc.a-nosubdir
+install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir\
+			    install-bin-nosubdir install-lib-nosubdir	\
+			    install-others-nosubdir 
+install: install-no-libc.a-nosubdir
 
 # Command to compile $< in $(objdir) using the native libraries.
 native-compile = cwd=`pwd`; cd $(@D); $(CC) $(native-CFLAGS) \
@@ -437,7 +452,7 @@ $(common-objpfx)stub-$(subdir): $(+depfiles)
 	    /dev/null > $@T
 	mv $@T $@
 
-ifdef gpl2lgpl
+ifneq (,$(strip $(gpl2lgpl)))
 ifneq (,$(wildcard $(..)gpl2lgpl.sed))
 # Snarf from the master source and frob the copying notice.
 $(gpl2lgpl): %: $(..)gpl2lgpl.sed /home/gd/gnu/lib/%
