@@ -33,8 +33,9 @@ DEFUN(__readlink, (path, buf, len),
   error_t err;
   file_t file;
   struct stat st;
+  char *p;
 
-  file = __path_lookup (path, FS_LOOKUP_READ|FS_LOOKUP_NOTRANS, 0);
+  file = __path_lookup (path, O_READ|O_NOTRANS, 0);
   if (file == MACH_PORT_NULL)
     return -1;
 
@@ -48,14 +49,14 @@ DEFUN(__readlink, (path, buf, len),
       while (len > 0)
 	{
 	  char *s = p;
-	  size_t nread;
+	  mach_msg_type_number_t nread;
 	  err = __io_read (file, &s, &nread, p - buf, len);
 	  if (err || nread == 0)
 	    break;
 	  if (s != p)
 	    {
 	      memcpy (p, s, nread);
-	      __vm_deallocate (__mach_task_self (), s, nread);
+	      __vm_deallocate (__mach_task_self (), (vm_address_t) s, nread);
 	    }
 	  len -= nread;
 	  p += nread;
