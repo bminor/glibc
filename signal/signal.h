@@ -105,6 +105,10 @@ extern int EXFUN(sigpause, (int __mask));
 #define	NSIG	_NSIG
 #endif
 
+#ifdef	__USE_GNU
+#define	sighandler_t	__sighandler_t
+#endif
+
 #endif	/* <signal.h> included.  */
 
 
