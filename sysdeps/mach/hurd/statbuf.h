@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -69,5 +69,12 @@ struct stat
 #define	__S_IREAD	0400	/* Read by owner.  */
 #define	__S_IWRITE	0200	/* Write by owner.  */
 #define	__S_IEXEC	0100	/* Execute by owner.  */
+
+
+/* Default file creation mask (umask).  */
+#ifdef	__USE_BSD
+#define	CMASK		0022
+#endif
+
 
 #endif /* statbuf.h */
