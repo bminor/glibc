@@ -1,3 +1,10 @@
+1998-07-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/Dist: Add sys/elf.h, sys/procfs.h,
+	sys/reg.h and sys/user.h.
+
+	* elf/Makefile (distribute): Add sln.c
+
 1998-07-22 12:47  Ulrich Drepper  <drepper@cygnus.com>
 
 	* signal/Makefile (headers): Add sigstack.h.
