@@ -53,14 +53,10 @@ user-interfaces += mach/default_pager
 server-interfaces += mach/default_pager_helper
 endif
 
+# Get the proper definition of `mach-srcdir'.
+include ../sysdeps/mach/Makefile
+
 # Use and install the Mach header files directly out of the Mach kernel source.
-
-
-# If we were configured with `--with-mach=DIR', then config.make sets
-# mach-srcdir to DIR.  Otherwise guess we are in a big source tree.
-ifndef mach-srcdir
-mach-srcdir = ../../mach
-endif
 
 # Find the MiG defs files in the kernel source.
 vpath %.defs $(mach-srcdir)
