@@ -23,9 +23,7 @@ select-snapshot = -r '$($(glibc-branch)-sync-tag)'
 snapshot-id = $($(glibc-branch)-sync-tag)
 
 
-branch.mk-vars = glibc-branch glibc-base \
-		 $(glibc-branch)-sync-date $(glibc-branch)-sync-tag \
-		 DIST_BRANCH COLLECTION
+branch.mk-vars = glibc-branch glibc-base DIST_BRANCH COLLECTION
 
 update:
 	now=`date -u $(snapshot-date-fmt)`; \
@@ -35,6 +33,8 @@ update:
 	(echo '# This file is updated automatically by Makefile.'; \
 	 $(foreach var,$(branch.mk-vars),\
 		   $(if $($(var)),echo '$(var) := $($(var))';)) \
+	 echo "$(glibc-branch)-sync-date := $$now"; \
+	 echo "$(glibc-branch)-sync-tag := $$new"; \
 	) > branch.mk; \
 	cd ..; (set -x; cvs -q update -d -P \
 			    -j'$($(glibc-branch)-sync-tag)' -j"$$new") \
