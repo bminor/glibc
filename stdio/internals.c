@@ -456,6 +456,7 @@ extern __io_read __stdio_read;
 extern __io_write __stdio_write;
 extern __io_seek __stdio_seek;
 extern __io_close __stdio_close;
+extern __io_fileno __stdio_fileno;
 CONST __io_functions __default_io_functions =
   {
     __stdio_read, __stdio_write, __stdio_seek, __stdio_close, __stdio_fileno
