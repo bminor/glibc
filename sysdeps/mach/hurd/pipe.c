@@ -43,6 +43,9 @@ DEFUN(__pipe, (pipedes), int pipedes[2])
   ((volatile int *) pipedes)[0] = pipedes[1];
 
   skt = _hurd_socket_server (AF_LOCAL);
+  if (skt == MACH_PORT_NULL)
+    return -1;
+
   if (err = __socket_create (skt, SOCK_STREAM, 0, &r))
     return __hurd_fail (err);
   __socket_shutdown (r, 1);
