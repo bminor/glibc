@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ DEFUN(setvbuf, (stream, buf, mode, size),
 
   stream->__get_limit = stream->__put_limit = NULL;
   stream->__bufp = stream->__buffer = NULL;
-  stream->__userbuf = stream->__linebuf = 0;
+  stream->__userbuf = stream->__linebuf = stream->__linebuf_active = 0;
 
   switch (mode)
     {
@@ -78,10 +78,8 @@ DEFUN(setvbuf, (stream, buf, mode, size),
 
   stream->__bufp = stream->__buffer;
   stream->__get_limit = stream->__buffer;
-  if (stream->__mode.__write)
-    stream->__put_limit = stream->__buffer + stream->__bufsize;
-  else
-    stream->__put_limit = stream->__buffer;
+  /* The next output operation will prime the stream for writing.  */
+  stream->__put_limit = stream->__buffer;
 
   return 0;
 }
