@@ -41,7 +41,7 @@ The variable @code{errno} contains the system error number.  You can
 change the value of @code{errno}.
 
 Since @code{errno} is declared @code{volatile}, it might be changed
-asynchronously by a signal handler; see @ref{Defining a Signal Handler}.
+asynchronously by a signal handler; see @ref{Defining Handlers}.
 However, a properly written signal handler saves and restores the value
 of @code{errno}, so you generally do not need to worry about this
 possibility except when writing signal handlers.
@@ -687,7 +687,7 @@ yet.
 Many programs that don't read input from the terminal are designed to
 exit if any system call fails.  By convention, the error message from
 such a program should start with the program's name, sans directories.
-The easy way to get that name is from the variable
+You can find that name in the variable
 @code{program_invocation_short_name}:
 
 @comment errno.h
@@ -701,9 +701,9 @@ running in the current process.  It is the same as @code{argv[0]}.
 @comment GNU
 @deftypevar {char *} program_invocation_short_name 
 This variable's value is the name that was used to invoke the program
-running in the current process, with directory names removed.  (That
-is to say, it is @code{program_invocation_name} minus everything up
-to the last slash, if any.)
+running in the current process, with directory names removed.  (That is
+to say, it is the same as @code{program_invocation_name} minus
+everything up to the last slash, if any.)
 @end deftypevar
 
 Both @code{program_invocation_name} and
