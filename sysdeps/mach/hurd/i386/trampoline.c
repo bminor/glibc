@@ -156,14 +156,20 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 
       struct mach_msg_trap_args *args = (void *) state->basic.uesp;
 
-      if (setjmp (_hurd_sigthread_fault_env))
-	/* Faulted accessing ARGS.  Bomb.  */
-	return NULL;
+      if (_hurdsig_catch_fault (SIGSEGV))
+	{
+	  assert (_hurdsig_fault_sigcode >= (int) args &&
+		  _hurdsig_fault_sigcode < (int) (args + 1));
+	  /* Faulted accessing ARGS.  Bomb.  */
+	  return NULL;
+	}
 
       assert (args->option & MACH_RCV_MSG);
       /* Disable the message-send, since it has already completed.  The
 	 calls we retry need only wait to receive the reply message.  */
       args->option &= ~MACH_SEND_MSG;
+
+      _hurdsig_end_catch_fault ();
 
       state->basic.eip = (int) &&rpc_wait_trampoline;
       /* The reply-receiving trampoline code runs initially on the original
@@ -237,13 +243,19 @@ int
 _hurdsig_rcv_interrupted_p (struct machine_thread_all_state *state,
 			    mach_port_t *port)
 {
-  if (! setjmp (_hurd_sigthread_fault_env))
+  static const unsigned char syscall[] = { 0x9a, 0, 0, 0, 0, 7, 0 };
+  const unsigned char *pc = (void *) state->basic.eip;
+  pc -= sizeof syscall;
+
+  if (_hurdsig_catch_fault (SIGSEGV))
+    assert (_hurdsig_fault_sigcode >= (int) pc &&
+	    _hurdsig_fault_sigcode < (int) pc + sizeof syscall);
+  else
     {
-      static const unsigned char syscall[] = { 0x9a, 0, 0, 0, 0, 7, 0 };
-      const unsigned char *pc = (void *) state->basic.eip;
-      pc -= sizeof syscall;
-      if (state->basic.eax == MACH_RCV_INTERRUPTED &&
-	  !memcmp (pc, &syscall, sizeof syscall))
+      int rcving = (state->basic.eax == MACH_RCV_INTERRUPTED &&
+		    !memcmp (pc, &syscall, sizeof syscall));
+      _hurdsig_end_catch_fault ();
+      if (rcving)
 	{
 	  /* We did just return from a mach_msg_trap system call
 	     doing a message receive that was interrupted.
