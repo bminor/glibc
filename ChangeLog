@@ -1,3 +1,9 @@
+1998-09-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/random_r.c (__setstate_r): Allow call with same state
+	array as currently used (PR libc/774).
+	Patch by rob@retina.anatomy.upenn.edu.
+
 1998-09-10 11:53  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/tzfile.c (__tzfile_read): Handle case when there are no
