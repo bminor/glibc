@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,12 +18,13 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-/* This code works for both 68000s and Vaxen.  */
+/* This code works for both m68k and i386.  */
 
 SYSCALL__ (fork, 0)
-	tstl r1
-	beq parent	/* Branch if parent.  */
-	/* We are the child.  Return zero.  */
-	clrl r0
-parent:
+	/* R1 is now 0 for the parent and 1 for the child.  Decrement it to
+	   make it -1 (all bits set) for the parent, and 0 (no bits set)
+	   for the child.  Then AND it with R0, so the parent gets
+	   R0&-1==R0, and the child gets R0&0==0.  */
+	decl r1
+	andl r1, r0
 	ret
