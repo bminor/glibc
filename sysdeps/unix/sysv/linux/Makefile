@@ -5,7 +5,7 @@ sysdep_routines += errno-loc
 endif
 
 ifeq ($(subdir),misc)
-sysdep_routines += sysctl clone llseek getresuid getresgid
+sysdep_routines += sysctl clone llseek getresuid getresgid umount
 
 sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h sys/mtio.h \
 		  sys/io.h sys/klog.h sys/kdaemon.h \
