@@ -50,7 +50,9 @@ define nl	# This is needed by *.ir.
 endef
 ifdef user-interfaces
 interface-includes := $(foreach if,$(user-interfaces),$(if).ir)
+ifndef no_deps
 include $(interface-includes)
+endif
 generated := $(generated) $(interface-includes)
 endif
 
