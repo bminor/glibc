@@ -53,7 +53,7 @@ sig	= hurdsig siginfo init-fault msging-p hurd-raise preempt-sig \
 	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport setdtsz \
-	  fd-read fd-write
+	  fd-read fd-write hurdioctl
 inlines = $(addprefix inline-,fd port signal userlink threadvar)
 aux := hurdsyms hurdinit msgstub # hurdmsg
 
