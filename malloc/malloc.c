@@ -1191,10 +1191,12 @@ static Void_t*   malloc_check(size_t sz);
 static void      free_check(Void_t* mem);
 static Void_t*   realloc_check(Void_t* oldmem, size_t bytes);
 static Void_t*   memalign_check(size_t alignment, size_t bytes);
+#ifndef NO_THREADS
 static Void_t*   malloc_starter(size_t sz);
 static void      free_starter(Void_t* mem);
 static Void_t*   malloc_atfork(size_t sz);
 static void      free_atfork(Void_t* mem);
+#endif
 #endif
 
 #else
@@ -1212,10 +1214,12 @@ static Void_t*   malloc_check();
 static void      free_check();
 static Void_t*   realloc_check();
 static Void_t*   memalign_check();
+#ifndef NO_THREADS
 static Void_t*   malloc_starter();
 static void      free_starter();
 static Void_t*   malloc_atfork();
 static void      free_atfork();
+#endif
 #endif
 
 #endif
@@ -1522,6 +1526,8 @@ static unsigned long max_mmapped_mem = 0;
 int __malloc_initialized = -1;
 
 
+#ifndef NO_THREADS
+
 /* The following two functions are registered via thread_atfork() to
    make sure that the mutexes remain in a consistent state in the
    fork()ed version of a thread.  Also adapt the malloc and free hooks
@@ -1605,6 +1611,8 @@ ptmalloc_unlock_all2 __MALLOC_P((void))
 
 #endif
 
+#endif /* !defined NO_THREADS */
+
 /* Initialization routine. */
 #if defined(_LIBC)
 #if 0
@@ -1624,6 +1632,7 @@ ptmalloc_init __MALLOC_P((void))
 
   if(__malloc_initialized >= 0) return;
   __malloc_initialized = 0;
+#ifndef NO_THREADS
 #if defined(_LIBC) || defined(MALLOC_HOOKS)
   /* With some threads implementations, creating thread-specific data
      or initializing a mutex may call malloc() itself.  Provide a
@@ -1633,18 +1642,17 @@ ptmalloc_init __MALLOC_P((void))
   __malloc_hook = malloc_starter;
   __free_hook = free_starter;
 #endif
-#if defined(_LIBC) && !defined (NO_THREADS)
+#ifdef _LIBC
   /* Initialize the pthreads interface. */
   if (__pthread_initialize != NULL)
     __pthread_initialize();
 #endif
-#ifndef NO_THREADS
   mutex_init(&main_arena.mutex);
   mutex_init(&list_lock);
   tsd_key_create(&arena_key, NULL);
   tsd_setspecific(arena_key, (Void_t *)&main_arena);
   thread_atfork(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_unlock_all2);
-#endif
+#endif /* !defined NO_THREADS */
 #if defined(_LIBC) || defined(MALLOC_HOOKS)
   if((s = getenv("MALLOC_TRIM_THRESHOLD_")))
     mALLOPt(M_TRIM_THRESHOLD, atoi(s));
@@ -1655,8 +1663,10 @@ ptmalloc_init __MALLOC_P((void))
   if((s = getenv("MALLOC_MMAP_MAX_")))
     mALLOPt(M_MMAP_MAX, atoi(s));
   s = getenv("MALLOC_CHECK_");
+#ifndef NO_THREADS
   __malloc_hook = save_malloc_hook;
   __free_hook = save_free_hook;
+#endif
   if(s) {
     if(s[0]) mALLOPt(M_CHECK_ACTION, (int)(s[0] - '0'));
     __malloc_check_init();
@@ -4192,7 +4202,7 @@ mem2chunk_check(mem) Void_t* mem;
    necessary. */
 
 static int
-top_check()
+top_check __MALLOC_P((void))
 {
   mchunkptr t = top(&main_arena);
   char* brk, * new_brk;
@@ -4370,6 +4380,8 @@ memalign_check(alignment, bytes) size_t alignment; size_t bytes;
   return chunk2mem_check(p, bytes);
 }
 
+#ifndef NO_THREADS
+
 /* The following hooks are used when the global initialization in
    ptmalloc_init() hasn't completed yet. */
 
@@ -4470,6 +4482,8 @@ free_atfork(mem) Void_t* mem;
   if(vptr)
     (void)mutex_unlock(&ar_ptr->mutex);
 }
+
+#endif /* !defined NO_THREADS */
 
 #endif /* defined(_LIBC) || defined(MALLOC_HOOKS) */
 
