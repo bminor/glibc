@@ -1,3 +1,59 @@
+1997-12-11 18:19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c: Don't count in multiply reference object in number
+	of preloaded objects.  [PR libc/375].
+
+	* sysdeps/generic/gnu/types.h (__FDMASK): Cast constant 1 to be
+	shifted correctly.
+	* sysdeps/unix/sysv/linux/alpha/gnu/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/gnu/types.h: Likewise.
+	Reported by Richard Henderson.
+
+1997-12-11 12:08  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_compat/compat-grp.c: Reset the blacklist correct, fix
+	return code for non existent +name entries.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+
+1997-12-11 17:40  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/glob.c: Update from glibc 2.1.
+	* posix/glob.h: Likewise.
+
+1997-11-10 07:40  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* stdlib/exit.c (exit): Handle recursive calls to exit ().
+
+1997-12-11 07:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/alpha/bsd-setjmp.S: Add empty file.
+	* sysdeps/alpha/bsd-_setjmp.S: Likewise.
+
+1997-12-04 00:06  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* configure.in: If --enable-add-ons is given without an
+	argument, set the addons list to all subdirs with a configure
+	script.
+
+1997-11-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* glibcbug.in: Add more information of build environment and flags.
+
+1997-12-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* resolv/inet_neta.c (inet_neta): Change type of first parameter
+	to u_int32_t. Suggested by John Lavagnino
+	<John_Lavagnino@Brown.edu> [PR libc/366].
+
+	* resolv/inet_addr.c (inet_addr): Change return type to u_int32_t.
+
+	* inet/arpa/inet.h: Change types of inet_neta and inet_addr.
+
+1997-12-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/alpha/Dist: Remove setjmp_aux.c.
+
 1997-12-10 00:38  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makerules (compile.S, COMPILE.S, COMPILE.s): Use $(ASFLAGS-*)
