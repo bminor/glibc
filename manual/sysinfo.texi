@@ -152,7 +152,8 @@ hardware, it consists of the first two parts of the configuration name:
 Here is a list of all the possible alternatives:
 
 @quotation
-@code{"i386-@var{anything}"}, @code{"m68k-hp"}, @code{"sparc-sun"}
+@code{"i386-@var{anything}"}, @code{"m68k-hp"}, @code{"sparc-sun"},
+@code{"m68k-sun"}, @code{"m68k-sony"}, @code{"mips-dec"}
 @end quotation
 @end table
 @end deftp
