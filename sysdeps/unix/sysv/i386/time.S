@@ -18,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-SYSCALL_ (time)
+SYSCALL (time)
 	movl 4(%esp,1), %edx
 	testl %edx, %edx
 	je null
