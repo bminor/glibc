@@ -70,12 +70,12 @@ _hurd_setauth (auth_t new)
 	  mach_port_t new;
 	  ref = __mach_reply_port ();
 	  if (! __io_reauthenticate (_hurd_init_dtable[d],
-				     ref, MACH_MSG_TYPE_MAKE_SEND_ONCE) &&
+				     ref, MACH_MSG_TYPE_MAKE_SEND) &&
 	      ! HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
 			       __auth_user_authenticate
 			       (port,
 				_hurd_init_dtable[d],
-				ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+				ref, MACH_MSG_TYPE_MAKE_SEND,
 				&new)))
 	    {
 	      __mach_port_deallocate (__mach_task_self (),
@@ -88,9 +88,9 @@ _hurd_setauth (auth_t new)
   ref = __mach_reply_port ();
   if (__USEPORT (CRDIR,
 		 ! __io_reauthenticate (port,
-					ref, MACH_MSG_TYPE_MAKE_SEND_ONCE) &&
+					ref, MACH_MSG_TYPE_MAKE_SEND) &&
 		 ! __auth_user_authenticate (new, port,
-					     ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+					     ref, MACH_MSG_TYPE_MAKE_SEND,
 					     &newport)))
     _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], newport);
   __mach_port_destroy (__mach_task_self (), ref);
@@ -98,9 +98,9 @@ _hurd_setauth (auth_t new)
   ref = __mach_reply_port ();
   if (__USEPORT (CWDIR,
 		 ! __io_reauthenticate (port,
-					ref, MACH_MSG_TYPE_MAKE_SEND_ONCE) &&
+					ref, MACH_MSG_TYPE_MAKE_SEND) &&
 		 ! __auth_user_authenticate (new, port,
-					     ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+					     ref, MACH_MSG_TYPE_MAKE_SEND,
 					     &newport)))
     _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], newport);
   __mach_port_destroy (__mach_task_self (), ref);
