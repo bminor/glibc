@@ -1,3 +1,9 @@
+1999-11-22  Andreas Jaeger  <aj@suse.de>
+
+	* sunrpc/rpc_clntout.c (printbody): Fix -CLMNab output.
+	Patch by Jerry Perkins  <jrperkins@iname.com>, closes PR
+	libc/1456+1457.
+
 1999-11-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/longlong.h: Avoid UDIV_TIME redefinition.
