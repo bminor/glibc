@@ -240,6 +240,14 @@ _mktime_internal (timeptr, producer)
   /* Normalize the structure */
   /***************************/
 
+  /* This routine assumes that the value of TM_ISDST is -1, 0, or 1.
+     If the user didn't pass it in that way, fix it. */
+
+  if (me->tm_isdst > 0)
+    me->tm_isdst = 1;
+  else if (me->tm_isdst < 0)
+    me->tm_isdst = -1;
+
   do_normalization (me);
 
   /* Get out of here if it's not possible to represent this struct.
