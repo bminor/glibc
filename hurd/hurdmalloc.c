@@ -5,6 +5,7 @@
 text_set_element (_hurd_fork_prepare_hook, malloc_fork_prepare);
 text_set_element (_hurd_fork_parent_hook, malloc_fork_parent);
 text_set_element (_hurd_fork_child_hook, malloc_fork_child);
+text_set_element (_hurd_preinit_hook, malloc_init);
 
 
 /* 
@@ -35,8 +36,8 @@ text_set_element (_hurd_fork_child_hook, malloc_fork_child);
 /*
  * HISTORY
  * $Log$
- * Revision 1.3  1994/05/26 16:09:45  mib
- * Formerly ../hurd/hurdmalloc.c.~3~
+ * Revision 1.4  1994/06/01 01:10:11  roland
+ * Formerly ../hurd/hurdmalloc.c.~4~
  *
  * Revision 2.7  91/05/14  17:57:34  mrt
  * 	Correcting copyright
@@ -119,6 +120,26 @@ typedef struct free_list {
 
 static struct free_list malloc_free_list[NBUCKETS];
 
+/* Initialization just sets everything to zero, but might be necessary on a
+   machine where spin_lock_init does otherwise, and is necessary when
+   running an executable that was written by something like Emacs's unexec.
+   It preserves the values of data variables like malloc_free_list, but
+   does not save the vm_allocate'd space allocated by this malloc.  */
+
+static void
+malloc_init (void)
+{
+  int i;
+  for (i = i; i < NBUCKETS; ++i)
+    {
+      spin_lock_init (&malloc_free_list[i].lock);
+      malloc_free_list[i].head = NULL;
+#ifdef DEBUG
+      malloc_free_list[i].in_use = 0;
+#endif
+    }
+}
+
 static void
 more_memory(size, fl)
 	int size;
@@ -134,8 +155,7 @@ more_memory(size, fl)
 		amount = vm_page_size;
 		n = vm_page_size / size;
 		/*
-		 * We lose vm_page_size - n*size bytes here.
-		 */
+		 * We lose vm_page_size - n*size bytes here.  */
 	} else {
 		amount = size;
 		n = 1;
@@ -143,9 +163,10 @@ more_memory(size, fl)
 	MACH_CALL(vm_allocate(mach_task_self(), &where, (vm_size_t) amount, TRUE), r);
 	h = (header_t) where;
 	do {
-		h->next = fl->head;
-		fl->head = h;
-		h = (header_t) ((char *) h + size);
+	  spin_lock_init (&h->lock);
+	  h->next = fl->head;
+	  fl->head = h;
+	  h = (header_t) ((char *) h + size);
 	} while (--n != 0);
 }
 
