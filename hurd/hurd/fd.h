@@ -150,7 +150,7 @@ _hurd_fd_error (int fd, error_t err)
 {
   int signo = _hurd_fd_error_signal (err);
   if (signo)
-    _hurd_raise_signal (NULL, signo, fd);
+    _hurd_raise_signal (NULL, signo, fd, err);
   return err;
 }
 
