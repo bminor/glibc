@@ -34,6 +34,8 @@ function, and get the underlying file descriptor for an existing stream
 with the @code{fileno} function.  These functions are declared in the
 header file @file{<stdio.h>}.
 
+@comment stdio.h
+@comment POSIX.1
 @deftypefun {FILE *} fdopen (int @var{filedes}, const char *@var{opentype})
 The @code{fdopen} function returns a new stream for the file descriptor
 @var{filedes}.
@@ -56,6 +58,8 @@ null pointer is returned instead.
 For an example showing the use of the @code{fdopen} function,
 @pxref{Creating a Pipe}.
 
+@comment stdio.h
+@comment POSIX.1
 @deftypefun int fileno (FILE *@var{stream})
 This function returns the file descriptor associated with the stream
 @var{stream}.  If an error is detected (for example, if the @var{stream}
@@ -67,16 +71,22 @@ There are also symbolic constants defined in @file{<unistd.h>} for the
 file descriptors belonging to the standard streams @code{stdin},
 @code{stdout}, and @code{stderr}; @pxref{Standard Streams}.
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro STDIN_FILENO
 This macro has value @code{0}, which is the file descriptor for
 standard input.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro STDOUT_FILENO
 This macro has value @code{1}, which is the file descriptor for
 standard output.
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @defvr Macro STDERR_FILENO
 This macro has value @code{2}, which is the file descriptor for
 standard error output.
@@ -115,6 +125,8 @@ using file descriptors.  The @code{open} and @code{creat} functions are
 declared in the header file @file{<fcntl.h>}, while @code{close} is
 declared in @file{<unistd.h>}.
 
+@comment fcntl.h
+@comment POSIX.1
 @deftypefun int open (const char *@var{filename}, int @var{flags}, @dots{})
 The @code{open} function creates and returns a new file descriptor
 for the file named by @var{filename}.  Initially, the file position
@@ -223,6 +235,8 @@ The @code{open} function is the underlying primitive for the @code{fopen}
 and @code{freopen} functions, that create streams.
 @end deftypefun
 
+@comment fcntl.h
+@comment POSIX.1
 @deftypefun int creat (const char *@var{filename}, mode_t @var{mode})
 This function is obsolete.  The call
 
@@ -238,6 +252,8 @@ open (@var{filename}, O_WRONLY | O_CREAT | O_TRUNC, @var{mode})
 @end example
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int close (int @var{filedes})
 The function @code{close} closes the file descriptor @var{filedes}.
 Closing a file has the following consequences:
@@ -282,12 +298,16 @@ output operations on file descriptors: @code{read}, @code{write}, and
 @code{lseek}.  These functions are declared in the header file
 @file{<unistd.h>}.
 
+@comment unistd.h
+@comment POSIX.1
 @deftp {Data Type} ssize_t
 This data type is used to represent the sizes of blocks that can be
 read or written in a single operation.  It is similar to @code{size_t},
 but must be a signed type.
 @end deftp
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun ssize_t read (int @var{filedes}, void *@var{buffer}, size_t @var{size})
 The @code{read} function reads up to @var{size} bytes from the file
 with descriptor @var{filedes}, storing the results in the @var{buffer}.
@@ -331,6 +351,8 @@ The @code{read} function is the underlying primitive for all of the
 functions that read from streams, such as @code{fgetc}.
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun ssize_t write (int @var{filedes}, const void *@var{buffer}, size_t @var{size})
 The @code{write} function writes up to @var{size} bytes from
 @var{buffer} to the file with descriptor @var{filedes}.  The
@@ -389,11 +411,15 @@ functions that write to streams, such as @code{fputc}.
 about writing to a pipe and the interaction with the @code{O_NONBLOCK} 
 flag and the @code{PIPE_BUF} parameter.  Is this really important?
 
+@comment sys/types.h
+@comment POSIX.1
 @deftp {Data Type} off_t
 This is an arithmetic data type used to represent file sizes.
 In the GNU system, this is equivalent to @code{fpos_t} or @code{long int}.
 @end deftp
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun off_t lseek (int @var{filedes}, off_t @var{offset}, int @var{whence})
 The @code{lseek} function is used to change the file position of the
 file with descriptor @var{filedes}.  This is similar to the @code{fseek}
@@ -448,6 +474,7 @@ like.  All of these operations are performed by the function @code{fcntl}.
 					 associated with open files.
 * File Locks::				Fcntl commands for implementing file
 					 locking.
+* Other File Control Commands::		Miscellaneous commands.
 @end menu
 
 @node File Control Operations Summary
@@ -459,6 +486,8 @@ various flags that are used with it are declared in the header file
 @file{<fcntl.h>}.  (Many of these flags are also used by the @code{open}
 function; @pxref{Opening and Closing Files}.)
 
+@comment fcntl.h
+@comment POSIX.1
 @deftypefun int fcntl (int @var{filedes}, int @var{command}, @dots{})
 The @code{fcntl} function performs the operation specified by
 @var{command} on the file descriptor @var{filedes}.  Some commands
@@ -493,6 +522,14 @@ Set or clear a file lock.  @xref{File Locks}.
 
 @item F_SETLKW
 Like @code{F_SETLK}, but wait for completion.  @xref{File Locks}.
+
+@item F_GETOWN
+Get process or process group ID to receive @code{SIGIO} signals.
+@xref{Other File Control Commands}.
+
+@item F_SETOWN
+Set process or process group ID to receive @code{SIGIO} signals.
+@xref{Other File Control Commands}.
 @end table
 @end deftypefun
 
@@ -513,6 +550,8 @@ The @code{fcntl} function and flags are declared in @file{<fcntl.h>},
 while prototypes for @code{dup} and @code{dup2} are in the header file
 @file{<unistd.h>}.
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro F_DUPFD
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should @dfn{duplicate} the file descriptor received as the
@@ -547,21 +586,14 @@ There are no more file descriptors available.
 @end table
 @end defvr
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int dup (int @var{filedes})
-The call:
-
-@example
-dup (@var{filedes})
-@end example
-
-@noindent
-is equivalent to:
-
-@example
-fcntl (@var{filedes}, F_DUPFD, 0)
-@end example
+This function is equivalent to @code{fcntl (@var{filedes}, F_DUPFD, 0)}.
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int dup2 (int @var{filedes}, int @var{old_filedes})
 The call:
 
@@ -620,6 +652,8 @@ pointing to the same open file, each descriptor has its own set of flags.
 These flags for the @code{fcntl} function are defined in the header
 file @file{<fcntl.h>}.
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro F_GETFD
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should return the file descriptor flags associated
@@ -640,6 +674,8 @@ The @var{filedes} argument is invalid.
 @end defvr
 
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro F_SETFD
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should set the file descriptor flags associated with the
@@ -660,6 +696,8 @@ The following macro is defined for use as a file descriptor flag with
 the @code{fcntl} function.  The value is an integer constant usable
 as a bit mask value.
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro FD_CLOEXEC
 This flag specifies that the file descriptor should be closed when
 an @code{exec} function is invoked; @pxref{Executing a File}.  When
@@ -684,6 +722,8 @@ duplicated file descriptors pointing to the open file.
 These flags for the @code{fcntl} function are defined in the header
 file @file{<fcntl.h>}.
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro F_GETFL
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should return the file status flags for the open file
@@ -707,6 +747,8 @@ The @var{filedes} argument is invalid.
 @end table
 @end defvr
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro F_SETFL
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should set the file status flags for the open
@@ -730,24 +772,32 @@ error conditions are the same as for the @code{F_GETFL} command.
 The following macros are defined for use as file status flags with the
 @code{fcntl} and @code{open} functions:
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro O_CREAT
 This macro is usable as a flag to @code{open} only.  It expands into a
 bit mask value; if this bit is set, it specifies that the file should be
 created if it doesn't already exist.
 @end defvr
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro O_EXCL
 This macro is usable as a flag to @code{open} only.  It's a bit mask
 value that specifies exclusive use of the new file.  If this bit is set
 and the file already exists, @code{open} reports an error.
 @end defvr
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro O_NOCTTY
 This macro is usable as a flag to @code{open} only.  If this bit is set,
 it prevents the new file from becoming the controlling terminal of the
 process that opens it.
 @end defvr
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro O_TRUNC
 This macro is usable as a flag to @code{open} only.  If this bit is set,
 the old contents of an existing file are discarded when the file is
@@ -756,12 +806,16 @@ explicitly overwritten remain in place with their original contents
 intact.
 @end defvr
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro O_APPEND
 This macro is a bit mask value that specifies append mode for the file.
 If this bit is set, then writing happens at the end of the file only.
 You can use this flag with both @code{open} and @code{fcntl}.
 @end defvr
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro O_NONBLOCK
 This macro is a bit mask value that specifies nonblocking mode for the
 file.  If this bit is set, this permits @code{read} requests on the file
@@ -772,27 +826,45 @@ can't be written immediately.  You can use this flag with both
 @code{open} and @code{fcntl}.
 @end defvr
 
+@comment fcntl.h
+@comment BSD
+@defvr Macro O_NDELAY
+This is a synonym for @code{O_NONBLOCK}, provided for compatibility with
+BSD.
+@end defvr
+
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro O_ACCMODE
 The value of this macro is a mask that can be bitwise-ANDed with the
 file status flag value to produce a value representing the file access
 mode.
 @end defvr
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro O_RDONLY
 This macro expands into a value that indicates the file is open for
 read access only.
 @end defvr
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro O_WRONLY
 This macro expands into a value that indicates the file is open for
 write access only.
 @end defvr
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro O_RDWR
 This macro expands into a value that indicates the file is open for
 both read and write access.
 @end defvr
 
+@strong{Incomplete:} @file{<fcntl.h>} also contains defines for
+@code{FREAD}, @code{FWRITE}, etc.  Mib says: ``Those are internal flags
+in the kernel.  They won't exist in the GNU system.''
 
 If you want to modify the file status flags, you should get the current
 flags with @code{F_GETFL} and modify the value.  Don't assume that the
@@ -836,6 +908,8 @@ Locks are specified using a @code{flock} structure.  This data type
 and the associated macros for the @code{fcntl} function are declared
 in the header file @file{<fcntl.h>}.
 
+@comment fcntl.h
+@comment POSIX.1
 @deftp {Data Type} {struct flock}
 This structure is used with the @code{fcntl} function to describe a file
 lock.  It has these members:
@@ -866,6 +940,8 @@ holding the lock.  It is filled in by calling @code{fcntl} with the
 @end table
 @end deftp
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro F_GETLK
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should get information about a lock.  This command
@@ -906,6 +982,8 @@ or the file associated with @var{filedes} doesn't support locks.
 @end table
 @end defvr
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro F_SETLK
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should set or clear a lock.  This command requires a
@@ -954,6 +1032,8 @@ many file locks in place.
 @end table
 @end defvr
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro F_SETLKW
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should set or clear a lock.  It is just like the
@@ -982,14 +1062,20 @@ region locked by the other process.
 The following macros are defined for use as values for the @code{l_type}
 member of the @code{flock} structure.  The values are integer constants.
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro F_RDLCK
 This macro is used to specify a read (or shared) lock.
 @end defvr
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro F_WRLCK
 This macro is used to specify a write (or exclusive) lock.
 @end defvr
 
+@comment fcntl.h
+@comment POSIX.1
 @defvr Macro F_UNLCK
 This macro is used to specify that the region is unlocked.
 @end defvr
@@ -1016,3 +1102,67 @@ that part of the file for writing.
 Remember that file locks are only a @emph{voluntary} protocol for
 controlling access to a file.  There is still potential for access to
 the file by programs that don't use the lock protocol.
+
+@node Other File Control Commands
+@subsection Other File Control Commands
+
+@strong{Incomplete:} I'm confused about what these commands really do.
+Mib says that setting the foreground process group on a terminal file
+descriptor also has the effect of setting the process group to receive
+these signals.
+
+These commands are provided for compatibility with BSD Unix.  In that
+system, if you set the @code{FASYNC} flag on a file descriptor
+(@pxref{wherever}), a @code{SIGIO} signal is sent to the indicated
+process or process group.  This is also used to select a process to
+receive a @code{SIGURG} signal when data arrives on a socket.
+
+These macros for the @code{fcntl} function are defined in the header
+file @file{<fcntl.h>}.
+
+@comment fcntl.h
+@comment BSD
+@defvr Macro F_GETOWN
+This macro is used as the @var{command} argument to @code{fcntl}, to
+specify that it should get information about the process or process
+group to which @code{SIGIO} signals are sent.  The return value is
+interpreted as a process ID; if negative, its absolute value is the
+process group ID.
+
+The following @code{errno} error conditions are defined for this
+command:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is invalid.
+@end table
+@end defvr
+
+@comment fcntl.h
+@comment BSD
+@defvr Macro F_SETOWN
+This macro is used as the @var{command} argument to @code{fcntl}, to
+specify that it should set the process or process group to which
+@code{SIGIO} signals are sent.  This command requires a third argument
+of type @code{pid_t} to be passed to @code{fcntl}, so that the form of
+the call is:
+
+@example
+fcntl (@var{filedes}, F_SETOWN, @var{pid})
+@end example
+
+The @var{pid} argument should be a process ID.  You can also pass a
+negative number whose absolute value is the process group ID.
+
+The return value from @code{fcntl} with this command is @code{-1}
+in case of error and some other value if successful.  The following
+@code{errno} error conditions are defined for this command:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is invalid.
+
+@item ESRCH
+There is no process or process group corresponding to @var{pid}.
+@end table
+@end defvr

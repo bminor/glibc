@@ -970,6 +970,8 @@ Here are descriptions of the functions for manipulating process groups.
 Your program should include the header files @file{<sys/types.h>} and
 @file{<unistd.h>} to use these functions.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun pid_t setsid (void)
 The @code{setsid} function creates a new session.  The calling
 process becomes the session leader, and is put in a new process
@@ -990,10 +992,28 @@ already another process group around that has the same process group ID.
 @end table
 @end deftypefun
 
+The @code{getpgrp} function has two definitions:  one derived from BSD
+Unix, and one from the POSIX.1 standard.  The feature test macros you
+have selected (@pxref{Feature Test Macros}) determine which definition
+you get.
+
+@comment unistd.h
+@comment POSIX.1
 @deftypefun pid_t getpgrp (void)
-This function returns the process group ID of the calling process.
+This is the POSIX.1 definition of @code{getpgrp}.  It returns
+the process group ID of the calling process.
 @end deftypefun
 
+@comment unistd.h
+@comment BSD
+@deftypefun pid_t getpgrp (pid_t @var{pid})
+This is the BSD definition of @code{getpgrp}.  It returns the process
+group ID of the process @var{pid}.  You can supply a value of @code{0}
+for the @code{pid} argument to get information about the calling process.
+@end deftypefun
+
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int setpgid (pid_t @var{pid}, pid_t @var{pgid})
 The @code{setpgid} function sets the process group ID of the process
 named by @var{pid} to @var{pgid}.  As a special case, both @var{pid}
@@ -1030,6 +1050,13 @@ process or a child of the calling process.
 @end table
 @end deftypefun
 
+@comment unistd.h
+@comment BSD
+@deftypefun int setpgrp (pid_t @var{pid}, pid_t @var{pgid})
+This is the BSD Unix name for @code{setpgid}.  Both functions do exactly
+the same thing.
+@end deftypefun
+
 
 @node Foreground Process Group
 @subsection Foreground Process Group
@@ -1043,6 +1070,8 @@ Although these functions take a file descriptor argument to specify
 the terminal device, the foreground job is associated with the terminal
 file itself and not a particular open file descriptor.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun pid_t tcgetpgrp (int @var{filedes})
 This function returns the process group ID of the foreground process
 group associated with the terminal file with descriptor @var{filedes}.
@@ -1069,6 +1098,8 @@ controlling terminal of the calling process.
 @end table
 @end deftypefun
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int tcsetpgrp (int @var{filedes}, pid_t @var{pgid})
 This function is used to set the foreground process group ID associated
 with the terminal file @var{filedes} to @var{pgid}.  The calling process

@@ -31,6 +31,8 @@ correspond to terminal devices.  You can find out whether a file
 descriptor is associated with a terminal by using the @code{isatty}
 function.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun int isatty (int @var{filedes})
 This function returns @code{1} if @var{filedes} is a file descriptor
 associated with an open terminal device, and @code{0} otherwise.
@@ -41,6 +43,8 @@ associated file name using the @code{ttyname} function.  See also the
 @code{ctermid} function, described in @ref{Controlling Terminal
 Identification}.
 
+@comment unistd.h
+@comment POSIX.1
 @deftypefun {char *} ttyname (int @var{filedes})
 If the file descriptor @var{filedes} is associated with a terminal
 device, the @code{ttyname} function returns a pointer to a 
@@ -113,6 +117,8 @@ Objects of type @code{struct termios} are used to represent terminal
 attributes.  Details about the values of each of its components are
 discussed in more detail below.
 
+@comment termios.h
+@comment POSIX.1
 @deftp {Data Type} {struct termios}
 Structures of type @code{termios} are used with the @code{tcgetattr}
 and @code{tcsetattr} functions to describe terminal attributes.  The
@@ -141,11 +147,15 @@ rate information, but the representation is not specified.  @xref{Baud
 Rate}, for information on how baud rates are specified.
 @end deftp
 
+@comment termios.h
+@comment POSIX.1
 @deftp {Data Type} tcflag_t
 This is an unsigned integer type used to represent the various
 bit masks for terminal flags.
 @end deftp
 
+@comment termios.h
+@comment POSIX.1
 @deftp {Data Type} cc_t
 This is an unsigned integer type used to represent characters associated
 with various terminal control functions.
@@ -184,6 +194,8 @@ to leave those alone.
 For the same reasons, you should avoid blindly copying attributes from
 one terminal device to another.
 
+@comment termios.h
+@comment POSIX.1
 @deftypefun int tcgetattr (int @var{filedes}, struct termios *@var{termios_p})
 This function is used to inquire about the attributes of the terminal
 device with file descriptor @var{filedes}.  The attributes are returned
@@ -202,6 +214,8 @@ The @var{filedes} is not associated with a terminal.
 @end table
 @end deftypefun
 
+@comment termios.h
+@comment POSIX.1
 @deftypefun int tcsetattr (int @var{filedes}, int @var{when}, const struct termios *@var{termios_p})
 This function sets the attributes of the terminal device with file
 descriptor @var{filedes}.  The new attributes are taken from the
@@ -250,15 +264,21 @@ something wrong with the data in the @var{termios_p} argument.
 These symbolic constants are defined for use as the @var{when} argument
 to @code{tcsetattr}:
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro TCSANOW
 Make the change to the terminal attributes immediately.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro TCSADRAIN
 Make the change to the terminal attributes after queued output has been
 transmitted.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro TCSAFLUSH
 Make the change to the terminal attributes after queued output has been
 completed, also flushing any queued input in the typeahead buffer.
@@ -276,6 +296,8 @@ The values of each of the following macros are bitwise distinct constants.
 You can specify the value for the @code{c_iflag} member as the bitwise
 OR of the desired flags.
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro INPCK
 @cindex parity checking
 If this bit is set, input parity checking is enabled.  If it is not set,
@@ -294,11 +316,15 @@ of these bits are set, a byte with a parity error is passed to the
 application as a @code{'\0'} character.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro IGNPAR
 If this bit is set, any byte with a framing or parity error is ignored.
 This is only useful if @code{INPCK} is also set.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro PARMRK
 If this bit is set and @code{IGNPAR} is not set, a byte with a framing
 or parity error is prefixed with the characters @code{'\377'} and
@@ -306,6 +332,8 @@ or parity error is prefixed with the characters @code{'\377'} and
 if @code{INPCK} is also set.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro ISTRIP
 If this bit is set, valid input bytes are stripped to seven bits;
 otherwise, all eight bits are processed.
@@ -315,6 +343,8 @@ If both @code{ISTRIP} and @code{PARMRK} are set, an input byte of
 @code{'\377'}, @code{'\377'}.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro IGNBRK
 If this bit is set, break conditions are ignored.
 
@@ -325,6 +355,8 @@ serial data transmission as a series of zero-value bits longer than a
 single byte.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro BRKINT
 If this bit is set and @code{IGNBRK} is not set, a break condition
 causes input and output queues on the terminal to be flushed and a
@@ -337,22 +369,30 @@ passed to the application as a single @code{'\0'} character if
 @code{'\377'}, @code{'\0'}, @code{'\0'}.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro IGNCR
 If this bit is set, carriage return characters (@code{'\r'}) are
 discarded on input.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro ICRNL
 If this bit is set and @code{IGNCR} is not set, carriage return characters
 (@code{'\r'}) received as input are passed to the application as newline
 characters (@code{'\n'}).
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro INLCR
 If this bit is set, newline characters (@code{'\n'}) received as input
 are passed to the application as carriage return characters (@code{'\r'}).
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro IXOFF
 If this bit is set, start/stop control on input is enabled.  In other
 words, STOP and START characters are transmitted as necessary to
@@ -363,6 +403,8 @@ by suspending data transmission, and to a START character by resuming
 transmission.  @xref{Special Characters}.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro IXON
 If this bit is set, start/stop control on output is enabled.  In other
 words, if a STOP character is received as input, output is suspended
@@ -383,6 +425,8 @@ The values of each of the following macros are bitwise distinct constants.
 You can specify the value for the @code{c_oflag} member as the bitwise
 OR of the desired flags.
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro OPOST
 If this bit is set, output data is processed in some unspecified way so
 that it is displayed appropriately on the terminal device.  This
@@ -405,6 +449,8 @@ The values of each of the following macros are bitwise distinct
 constants.  You can specify the value for the @code{c_cflag} member as
 the bitwise OR of the desired flags.
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro CLOCAL
 If this bit is set, it indicates that the terminal is connected
 ``locally'' and that the modem status lines (carrier detect) should be
@@ -426,21 +472,29 @@ reopened to clear the condition.
 @cindex modem disconnect
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro HUPCL
 If this bit is set, a modem disconnect is generated when all processes
 that have the terminal port open have either closed the file or exited.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro CREAD
 If this bit is set, input can be read from the terminal.  Otherwise, no
 characters can be read.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro CSTOPB
 If this bit is set, two stop bits are used.  Otherwise, only one stop bit
 is used.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro PARENB
 If this bit is set, generation and detection of a parity bit are enabled.
 @xref{Input Modes}, for information on how input parity errors are handled.
@@ -448,6 +502,8 @@ If this bit is set, generation and detection of a parity bit are enabled.
 If this bit is not set, no parity bit is added.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro PARODD
 This bit is only useful if @code{PARENB} is set.  If @code{PARODD} is set,
 odd parity is used, otherwise even parity is used.
@@ -457,22 +513,32 @@ The control mode flags also includes a field for the number of bits per
 character.  You can use the @code{CSIZE} macro as a mask to extract the
 value.
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro CSIZE
 This is a mask for the number of bits per character.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro CS5
 This specifies five bits per byte.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro CS6
 This specifies six bits per byte.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro CS7
 This specifies seven bits per byte.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro CS8
 This specifies eight bits per byte.
 @end defvr
@@ -494,6 +560,8 @@ by terminal hardware devices.
 the baud rate value instead of one of these constants.  However, the library
 is not implemented that way now.
 
+@comment termios.h
+@comment POSIX.1
 @deftp {Data Type} speed_t
 The @code{speed_t} type is an unsigned integer data type used to represent
 baud rates.
@@ -501,66 +569,98 @@ baud rates.
 
 You can use these constants as baud rate values.
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B0
 Hang up; turns off the modem control lines.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B50
 50 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B75
 75 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B110
 110 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B134
 134.5 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B150
 150 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B200
 200 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B300
 300 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B600
 600 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B1200
 1200 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B1800
 1800 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B2400
 2400 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B4800
 4800 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B9600
 9600 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B19200
 19200 baud.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro B38400
 38400 baud.
 @end defvr
@@ -568,11 +668,15 @@ Hang up; turns off the modem control lines.
 You can use the following functions to inquire about and modify the
 baud rates in a @code{termios} structure.
 
+@comment termios.h
+@comment POSIX.1
 @deftypefun speed_t cfgetospeed (const struct termios *@var{termios_p})
 This function returns the output baud rate stored in the structure
 pointed at by @var{termios_p}.
 @end deftypefun
 
+@comment termios.h
+@comment POSIX.1
 @deftypefun int cfsetospeed (struct termios *@var{termios_p}, speed_t @var{speed})
 This function sets the output baud rate stored in the structure pointed
 at by @var{termios_p} to @var{speed}.  The normal return value is
@@ -581,11 +685,15 @@ an invalid baud rate, it might be detected by @code{cfsetospeed} or
 @code{tcsetattr} or both.
 @end deftypefun
 
+@comment termios.h
+@comment POSIX.1
 @deftypefun speed_t cfgetispeed (const struct termios *@var{termios_p})
 This function returns the input baud rate stored in the structure
 pointed at by @var{termios_p}.
 @end deftypefun
 
+@comment termios.h
+@comment POSIX.1
 @deftypefun int cfsetispeed (struct termios *@var{termios_p}, speed_t @var{speed})
 This function sets the input baud rate stored in the structure pointed
 at by @var{termios_p} to @var{speed}.  The normal return value is
@@ -634,16 +742,22 @@ The values of each of the following macros are bitwise distinct
 constants.  You can specify the value for the @code{c_iflag} member as
 the bitwise OR of the desired flags.
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro ICANON
 If set, this bit enables canonical input processing mode.  Otherwise,
 input is processed in non-canonical mode.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro ECHO
 If this bit is set, echoing of input characters back to the terminal
 is enabled.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro ECHOE
 If this bit is set and the @code{ICANON} bit is also set, then the ERASE
 character is echoed by erasing the last character in the current line
@@ -651,6 +765,8 @@ from the terminal display.  This bit only controls the echoing behavior;
 the @code{ICANON} bit controls actual recognition of the ERASE character.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro ECHOK
 If this bit is set and the @code{ICANON} bit is also set, then the
 KILL character is echoed either by erasing the current line, or by
@@ -658,12 +774,16 @@ writing a newline character.  This bit only controls the echoing behavior;
 the @code{ICANON} bit controls actual recognition of the KILL character.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro ECHONL
 If this bit is set and the @code{ICANON} bit is also set, then the
 newline (@code{'\n'}) character is echoed even if the @code{ECHO} bit
 is not set.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro ISIG
 This bit controls whether the INTR, QUIT, and SUSP characters are
 recognized.  The functions associated with these characters are performed
@@ -671,6 +791,8 @@ if and only if this bit is set.  Being in canonical or non-canonical
 input mode has no affect on the interpretation of these characters.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro IEXTEN
 This bit is similar to @code{ISIG}, but controls implementation-defined
 special characters.  If it is set, it might override the default behavior
@@ -678,12 +800,16 @@ for the @code{ICANON} and @code{ISIG} local mode flags, and the @code{IXON}
 and @code{IXOFF} input mode flags.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro NOFLSH
 Normally, the INTR, QUIT, and SUSP characters cause input and output
 queues for the terminal to be flushed.  If this bit is set, the flush
 is not performed.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro TOSTOP
 If this bit is set and the implementation supports job control, then
 @code{SIGTTOU} signals are generated by background processes that
@@ -713,6 +839,8 @@ you can also disable each of these functions individually by setting
 the corresponding array element to @code{_POSIX_VDISABLE}.  
 @xref{File System Parameters}, for more information about this parameter.
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro NCCS
 The value of this macro is the number of array elements in the
 @code{c_cc} member of the @code{termios} structure.  The value is
@@ -725,6 +853,8 @@ non-canonical mode) can share values with @code{VEOF} and @code{VEOL}
 (which are used only in canonical mode).  The values are all integer
 constants.
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro VEOF
 @cindex EOF character
 This is the subscript for the EOF character in the special control character
@@ -739,6 +869,8 @@ character itself is discarded.
 Usually, the EOF character is @kbd{C-c}.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro VEOL
 @cindex EOL character
 This is the subscript for the EOL character in the special control character
@@ -750,6 +882,8 @@ as a line terminator, just like a newline character.
 @strong{Incomplete:}  Is this usually a carriage return?
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro VERASE
 @cindex ERASE character
 This is the subscript for the ERASE character in the special control character
@@ -765,6 +899,8 @@ The ERASE character itself is discarded.
 Usually, the ERASE character is either backspace or rubout.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro VKILL
 @cindex KILL character
 This is the subscript for the KILL character in the special control character
@@ -777,6 +913,8 @@ of input are discarded.  The @code{KILL} character itself is discarded.
 The KILL character is usually @kbd{C-u}.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro VINTR
 @cindex INTR character
 @cindex interrupt character
@@ -792,6 +930,8 @@ INTR character itself is discarded.
 Typically, the INTR character is set to be @kbd{C-c}.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro VQUIT
 @cindex QUIT character
 This is the subscript for the QUIT character in the special control character
@@ -806,6 +946,8 @@ itself is discarded.
 Typically, the QUIT character is set to be @kbd{C-\}.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro VSUSP
 @cindex SUSP character
 @cindex suspend character
@@ -822,6 +964,8 @@ character itself is discarded.
 Typically, the SUSP character is set to be @kbd{C-z}.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro VSTART
 @cindex START character
 This is the subscript for the START character in the special control character
@@ -836,6 +980,8 @@ The usual value for the START character is @kbd{C-q}.  You may not be
 able to change this value.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro VSTOP
 @cindex STOP character
 This is the subscript for the STOP character in the special control character
@@ -851,6 +997,8 @@ The usual value for the STOP character is @kbd{C-s}.  You may not be
 able to change this value.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro VMIN
 @cindex MIN character
 This is the subscript for the MIN character in the special control character
@@ -906,6 +1054,8 @@ a particular call to @code{read} is less than MIN?
 @end itemize
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro VTIME
 @cindex TIME character
 This is the subscript for the TIME character in the special control character
@@ -930,6 +1080,8 @@ itself is ignoring or blocking @code{SIGTTOU} signals, in which case the
 operation is performed and no signal is sent.  @xref{Job Control}.
 
 @cindex break condition, generating
+@comment termios.h
+@comment POSIX.1
 @deftypefun int tcsendbreak (int @var{filedes}, int @var{duration})
 This function generates a break condition by transmitting a stream of
 zero bits on the terminal associated with the file descriptor
@@ -953,6 +1105,8 @@ The @var{filedes} is not associated with a terminal device.
 @end table
 @end deftypefun
 
+@comment termios.h
+@comment POSIX.1
 @deftypefun int tcdrain (int @var{filedes})
 The @code{tcdrain} function blocks the calling process until all queued
 output to the terminal @var{filedes} has been transmitted.
@@ -974,6 +1128,8 @@ The operation was interrupted by delivery of a signal.
 @end deftypefun
 
 
+@comment termios.h
+@comment POSIX.1
 @deftypefun int tcflush (int @var{filedes}, int @var{queue})
 The @code{tcflush} function is used to flush the input and/or output
 queues associated with the terminal file @var{filedes}.  The @var{queue}
@@ -1010,20 +1166,28 @@ A bad value was supplied as the @var{queue} argument.
 The following macros define symbolic constants for use as the @var{queue}
 argument to @code{tcflush}:
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro TCIFLUSH
 This specifies that the terminal input queue should be flushed.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro TCOFLUSH
 This specifies that the terminal output queue should be flushed.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro TCIOFLUSH
 This specifies that both the terminal input queue and the terminal
 output queue should be flushed.
 @end defvr
 
 
+@comment termios.h
+@comment POSIX.1
 @deftypefun int tcflow (int @var{filedes}, int @var{action})
 The @code{tcflow} function is used to perform operations relating to
 XON/XOFF flow control on the terminal file specified by @var{filedes}.
@@ -1067,18 +1231,26 @@ A bad value was supplied as the @var{action} argument.
 The following symbolic constants are defined for use as the @var{action}
 argument to @code{tcflow}:
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro TCOOFF
 The action is to suspend transmission of output.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro TCOON
 The action is to resume transmission of output.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro TCIOFF
 The action is to send a STOP character.
 @end defvr
 
+@comment termios.h
+@comment POSIX.1
 @defvr Macro TCION
 The action is to send a START character.
 @end defvr
