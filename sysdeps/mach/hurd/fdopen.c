@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,8 @@ DEFUN(fdopen, (fd, mode), int fd AND CONST char *mode)
   FILE *f;
   file_t file = __getdport (fd);
   /* XXX This differs from Unix behavior if fd
-     gets closed and reopened (or dup2'd).  */
+     gets closed and reopened (or dup2'd).
+     Check POSIX.1 requirements. */
   if (file == MACH_PORT_NULL)
     return NULL;
   f = __fopenport (file, mode);
