@@ -33,7 +33,7 @@ int __data_start = 0;
 
 VOLATILE int errno;
 
-#ifndef	__GNU_STAB__
+#ifndef	HAVE_GNU_LD
 #undef	environ
 #define	__environ	environ
 #endif
@@ -56,6 +56,13 @@ DEFUN_VOID(_start)
 {
   start1();
 }
+
+#ifdef	HAVE_GNU_LD
+/* Make an alias called `start' (no leading underscore,
+   so it can't conflict with C symbols) for `_start'.  */
+asm(".stabs \"start\",11,0,0,0");
+asm(".stabs \"__start\",1,0,0,0");
+#endif
 
 #endif
 
