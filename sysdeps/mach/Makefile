@@ -66,7 +66,6 @@ mach-before-compile := $(mach-objpfx)mach-shortcuts.h \
 # This patsubst generates patterns like `m%h-shortcuts.h', which are damn
 # likely to match just the corresponding particular file we want.
 $(patsubst mach%,m\%h%,$(mach-before-compile)): # Run only if doesn't exist.
-	@echo '+++ mach generation for $@: $^ ($?)'
 	$(MAKE) -C $(..)mach generated no_deps=t
 
 before-compile += $(mach-before-compile)
