@@ -34,7 +34,11 @@ DEFUN(cuserid, (s), char *s)
   struct passwd *pwent = getpwuid(geteuid());
 
   if (pwent == NULL)
-    return NULL;
+    {
+      if (s != NULL)
+	s[0] = '\0';
+      return NULL;
+    }
 
   if (s == NULL)
     s = name;

@@ -47,7 +47,7 @@ DEFUN(vtimes_one, (vt, who),
       vt->vm_minflt = usage.ru_minflt;
       vt->vm_nswap = usage.ru_nswap;
       vt->vm_inblk = usage.ru_inblock;
-      vt->vm_outblk = usage.ru_oublock;
+      vt->vm_oublk = usage.ru_oublock;
     }
   return 0;
 }
