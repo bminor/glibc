@@ -18,6 +18,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <sys/types.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
 
 /* lockf is a simplified interface to fcntl's locking facilities.  */
 

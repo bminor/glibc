@@ -78,7 +78,7 @@ mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	    else
 	      {
 		__mach_port_deallocate (__mach_task_self (), wobj);
-		return __hurd_fail (EGRATUITOUS); /* XXX */
+		return (caddr_t) __hurd_fail (EGRATUITOUS); /* XXX */
 	      }
 	    break;
 	  }
@@ -99,6 +99,6 @@ mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   if (memobj != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), memobj);
 
-  return err ? __hurd_fail (err) : 0;
+  return err ? (caddr_t) __hurd_fail (err) : (caddr_t) mapaddr;
 }
 	
