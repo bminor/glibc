@@ -102,6 +102,29 @@ extern void EXFUN(seekdir, (DIR *__dirp, __off_t __pos));
 /* Return the current position of DIRP.  */
 extern __off_t EXFUN(telldir, (DIR *__dirp));
 
+/* Scan the directory DIR, calling SELECT on each directory entry.
+   Entries for which SELECT returns nonzero are individually malloc'd,
+   sorted using qsort with CMP, and collected in a malloc'd array in
+   *NAMELIST.  Returns the number of entries selected, or -1 on error.  */
+extern int EXFUN(scandir, (CONST char *__dir,
+			   struct dirent ***__namelist,
+			   int EXFUN((*__select), (struct dirent *));
+			   int EXFUN((*__cmp), (CONST PTR, CONST PTR))));
+
+/* Function to compare two `struct dirent's alphabetically.  */
+extern int EXFUN(alphasort, (CONST PTR, CONST PTR));
+
+
+/* Read directory entries from FD into BUF, reading at most NBYTES.
+   Reading starts at offset *BASEP, and *BASEP is updated with the new
+   position after reading.  Returns the number of bytes read; zero when at
+   end of directory; or -1 for errors.  */
+extern __ssize_t EXFUN(__getdirentries, (int __fd, char *__buf,
+					 size_t __nbytes, __off_t *__basep));
+extern __ssize_t EXFUN(getdirentries, (int __fd, char *__buf,
+				       size_t __nbytes, __off_t *__basep));
+
+
 #endif	/* Use BSD or misc.  */
 
 #ifdef	__cplusplus
