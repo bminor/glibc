@@ -32,19 +32,37 @@ int
 DEFUN(accept, (fd, addr, addr_len),
       int fd AND struct sockaddr *addr AND size_t *addr_len)
 {
+  error_t err;
   socket_t new;
   addr_port_t aport;
-  int d;
-  error_t err = HURD_DPORT_USE (fd, __socket_accept (port, &new, &aport));
-  if (err)
+  char *buf = (char *) addr;
+  unsigned int buflen = *len;
+  int type;
+
+  if (err = HURD_DPORT_USE (fd, __socket_accept (port, &new, &aport)))
     return __hurd_dfail (fd, err);
+
   if (addr != NULL)
-    err = __socket_whatis_address (aport, addr, addr_len);
+    err = __socket_whatis_address (aport, &type, &buf, &buflen);
   __mach_port_deallocate (__mach_task_self (), aport);
+
   if (err)
     {
       __mach_port_deallocate (__mach_task_self (), new);
       return __hurd_dfail (fd, err);
+    }
+
+  if (addr != NULL)
+    {
+      if (buf != (char *) addr)
+	{
+	  if (*len < buflen)
+	    *len = buflen;
+	  memcpy (addr, buf, *len);
+	  __vm_deallocate (__mach_task_self (), (vm_address_t) buf, buflen);
+	}
+
+      addr->sa_family = type;
     }
 
   return _hurd_intern_fd (new, O_IGNORE_CTTY, 1);
