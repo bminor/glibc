@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/socket.h>
 #include <hurd.h>
+#include <hurd/socket.h>
+#include <hurd/fd.h>
 
 /* Create a new socket of type TYPE in domain DOMAIN, using
    protocol PROTOCOL.  If PROTOCOL is zero, one is chosen automatically.
@@ -29,7 +31,7 @@ DEFUN(socket, (domain, type, protocol),
       int domain AND enum __socket_type type AND int protocol)
 {
   error_t err;
-  socket_t server = _hurd_socket_server (domain), sock;
+  socket_t sock, server = _hurd_socket_server (domain);
 
   if (server == MACH_PORT_NULL)
     return -1;
@@ -37,5 +39,5 @@ DEFUN(socket, (domain, type, protocol),
   if (err = __socket_create (server, type, protocol, &sock))
     return __hurd_fail (err);
 
-  return _hurd_intern_fd (sock, 0, 1);
+  return _hurd_intern_fd (sock, O_IGNORE_CTTY, 1);
 }
