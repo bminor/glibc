@@ -18,6 +18,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd/fd.h>
 
+/* FD is locked.  Close and unlock it, so it can be reallocated.  */
+
 error_t
 _hurd_fd_close (struct hurd_fd *fd)
 {
@@ -26,4 +28,6 @@ _hurd_fd_close (struct hurd_fd *fd)
 
   _hurd_port_set (&fd->ctty, MACH_PORT_NULL);
   _hurd_port_locked_set (&fd->port, MACH_PORT_NULL);
+
+  return 0;
 }
