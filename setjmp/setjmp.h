@@ -58,8 +58,9 @@ typedef struct
 extern void __sigjmp_save __P ((sigjmp_buf __env, int __savemask));
 #ifdef __GNUC__
 #define	sigsetjmp(env, savemask) \
-  ({ sigjmp_buf *__e = (env);	 \
-     __sigjmp_save (*__e, (savemask)), __setjmp ((*__e)[0].__jmpbuf) })
+  ({ __typeof ((*((sigjmp_buf *) 0))[0]) *__e = (env);			      \
+     __sigjmp_save (__e, (savemask));					      \
+     __setjmp (__e[0].__jmpbuf); })
 #else
 /* Not strictly POSIX-compliant, because it evaluates ENV more than once.  */
 #define	sigsetjmp(env, savemask) \
@@ -106,15 +107,12 @@ extern int __setjmp __P ((__jmp_buf __env));
 
 #ifdef	__USE_BSD
 extern __NORETURN void _longjmp __P ((__const jmp_buf __env, int __val));
-#define	_setjmp(env)	sigsetjmp((env), 0)
-
-#ifdef	__OPTIMIZE__
-#define	_longjmp(env, val)	siglongjmp ((env), (val))
-#endif /* Optimizing.  */
 #endif /* Use BSD.  */
 
-
 #ifdef	__FAVOR_BSD
+
+/* We are in the mode in which `setjmp' and `longjmp' save and restore
+   the signal mask, and `jmp_buf' is `sigjmp_buf'.  */
 
 #undef	setjmp
 #undef	longjmp
@@ -124,6 +122,13 @@ extern __NORETURN void _longjmp __P ((__const jmp_buf __env, int __val));
 #ifdef	__OPTIMIZE__
 #define	longjmp(env, val)	siglongjmp ((env), (val))
 #endif /* Optimizing.  */
+
+#define	_setjmp(env)		sigsetjmp ((env), 0)
+
+#else	/* Don't favor BSD.  */
+
+/* `setjmp' and `_setjmp' are the same.  */
+#define	_setjmp(env)		setjmp (env)
 
 #endif /* Favor BSD.  */
 
