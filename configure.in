@@ -213,6 +213,25 @@ os=$config_os
 # Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
 os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
 
+case "$machine" in
+i[34]86)
+  machine=i386/$machine ;;
+sparc[6789])
+  machine=sparc/$machine ;;
+m68k)
+  machine=m68k/mc68020 ;;
+mc680?0)
+  machine=m68k/$machine ;;
+m88k)
+  machine=m88k/mc88100 ;;
+mc88???)
+  machine=m88k/$machine ;;
+mips|r2000)
+  machine=mips/r3000 ;;
+r[34]000)
+  machine=mips/$machine ;;
+esac
+
 case "$os" in
 gnu*)
   base_os=mach/hurd ;;
@@ -253,12 +272,21 @@ while b=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; [ "$b" ]; do
   tail="$2"
 done
 
+# For sparc/sparc9, try sparc/sparc9 and then sparc.
+mach=
+tail=$machine
+while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; [ "$m" ]; do
+  set $m
+  mach="$mach /$1"
+  tail="$2"
+done
+
 # Find what sysdep directories exist.
 sysnames=
 for b in $base ''; do
   for v in /$vendor ''; do
     for o in /$ostry ''; do
-      for m in /$machine ''; do
+      for m in /$mach ''; do
         if [ -d $sysdep_dir$b$v$o$m ]; then
           sysnames="$sysnames $b$v$o$m"
 	  [ "$o" -o "$b" ] && os_used=t
