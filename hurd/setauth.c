@@ -74,7 +74,7 @@ __setauth (auth_t new)
 	      ! _HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
 				__auth_user_authenticate (port,
 							  _hurd_init_dtable[d],
-							  _hurd_pid
+							  _hurd_pid,
 							  &new)))
 	    {
 	      __mach_port_deallocate (__mach_task_self (),
