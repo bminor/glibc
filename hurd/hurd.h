@@ -39,7 +39,6 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #define	__hurd_fail(err)	(errno = (err), -1)
 
-#ifdef noteven
 
 /* Lightweight user references for ports.  */
 
@@ -52,9 +51,11 @@ Cambridge, MA 02139, USA.  */
    lock.  If *USER_DEALLOC is set, the user deallocates the port he used.  */
 struct _hurd_port
   {
+#ifdef noteven
     spin_lock_t lock;		/* Locks rest.  */
-    mach_port_t port;		/* Port. */
+#endif
     int *user_dealloc;		/* If not NULL, points to user's flag word.  */
+    mach_port_t port;		/* Port. */
   };
 
 /* Evaluate EXPR with the variable `port' bound to the port in PORTCELL.  */
@@ -70,9 +71,11 @@ struct _hurd_port
 static inline void
 _hurd_port_init (struct _hurd_port *port, mach_port_t init)
 {
+#ifdef noteven
   __spin_lock_init (&port->lock);
-  port->port = init;
   port->user_dealloc = NULL;
+  port->port = init;
+#endif
 }
 
 /* Get a reference to *PORT, which is locked.
@@ -90,6 +93,9 @@ _hurd_port_locked_get (struct _hurd_port *port, int *myflag)
   __spin_unlock (&port->lock);
   return result;
 }
+
+#define __spin_lock(lockaddr) /* no-op XXX */
+#define __spin_unlock(lockaddr) /* no-op XXX */
 
 /* Same, but locks PORT first.  */
 static inline mach_port_t
@@ -113,7 +119,8 @@ _hurd_port_free (struct _hurd_port *port,
     __mach_port_deallocate (__mach_task_self (), used_port);
 }
 
-/* Set *PORT's port to NEWPORT.  PORT is locked.  */
+/* Set *PORT's port to NEWPORT.  NEWPORT's reference is consumed by PORT->port.
+   PORT->lock is locked.  */
 static inline void
 _hurd_port_locked_set (struct _hurd_port *port, mach_port_t newport)
 {
@@ -144,14 +151,22 @@ extern struct _hurd_port *_hurd_ports;
 extern unsigned int _hurd_nports;
 extern volatile mode_t _hurd_umask;
 
-extern vm_address_t _hurd_stack_low, _hurd_stack_high; /* Not locked.  */
+/* Shorthand macro for referencing _hurd_ports.  */
+#define	__USEPORT(which, expr) \
+  _HURD_USE_PORT (&_hurd_ports[INIT_PORT_##], (expr))
+
+/* Base address and size of the initial stack set up by the exec server.
+   If using cthreads, this stack is deallocated in startup.
+   Not locked.  */
+extern vm_address_t _hurd_stack_base;
+extern vm_size_t _hurd_stack_size;
 
 extern thread_t _hurd_msgport_thread;
 extern mach_port_t _hurd_msgport; /* Locked by _hurd_siglock.  */
 
-/* Not locked.  If we are using a real dtable,
-   these are turned into that and then cleared at startup.
-   If not, these are never changed after startup.  */
+/* Not locked.  If we are using a real dtable, these are turned into that
+   and then cleared at startup.  If not, these are never changed after
+   startup.  */
 extern mach_port_t *_hurd_init_dtable;
 extern size_t _hurd_init_dtablesize;
 
@@ -192,9 +207,15 @@ struct _hurd_dtable
 
     struct _hurd_fd *d;
   };
+
+#define __mutex_lock(lockaddr) /* no-op XXX */
+#define __mutex_unlock(lockaddr) /* no-op XXX */
+
+#ifdef noteven
 extern struct mutex _hurd_dtable_lock; /* Locks next two.  */
+#endif
 extern struct _hurd_dtable _hurd_dtable;
-extern int _hurd_dtable_rlimit;
+extern int _hurd_dtable_rlimit;	/* RLIM_OFILES: number of file descriptors.  */
 
 /* If not NULL, pointed-to word is set when _hurd_dtable.d changes.
    User who set `user_dealloc' should free the _hurd_dtable.d value
@@ -297,7 +318,7 @@ _hurd_fd_done (struct _hurd_fd_user d, int *dealloc)
 	 __result = (expr);						      \
 	 _hurd_port_free (&__d.d->port, &__dealloc, port);		      \
 	 if (ctty != MACH_PORT_NULL)					      \
-	   _hurd_port_free (&__d.d->ctty, &__dealloc_ctty, port);	      \
+	   _hurd_port_free (&__d.d->ctty, &__dealloc_ctty, ctty);	      \
 	 _hurd_fd_done (__d, &__dealloc_dt);				      \
 	 __result;							      \
        }								      \
@@ -309,10 +330,18 @@ _hurd_dfail (int fd, error_t err)
   switch (err)
     {
     case MACH_SEND_INVALID_DEST: /* The server has disappeared!  */
+#ifdef notyet
       _hurd_raise_signal (NULL, SIGLOST, fd);
+#else
+      abort ();
+#endif
       break;
     case EPIPE:
+#ifdef notyet
       _hurd_raise_signal (NULL, SIGPIPE, fd);
+#else
+      abort ();
+#endif
       break;
     default:
       return __hurd_fail (err);
@@ -329,11 +358,15 @@ extern mach_port_t _hurd_dead_recv (void);
 /* Current process IDs.  */
 extern pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 extern int _hurd_orphaned;
+#ifdef noteven
 extern struct mutex _hurd_pid_lock; /* Locks above.  */
+#endif
 
 
 /* User and group IDs.  */
+#ifdef noteven
 extern mutex_t _hurd_idlock;
+#endif
 extern int _hurd_id_valid;	/* If _hurd_uid and _hurd_gid are valid.  */
 extern struct idlist *_hurd_uid, *_hurd_gid;
 extern unsigned int _hurd_nuids, _hurd_ngids;
@@ -344,7 +377,9 @@ extern auth_t _hurd_rid_auth;	/* Cache used by access.  */
    If brk and sbrk are not used, this info will not be initialized or used.  */
 extern vm_address_t _hurd_brk;	/* Data break.  */
 extern vm_address_t _hurd_data_end; /* End of allocated space.  */
+#ifdef noteven
 extern struct mutex _hurd_brk_lock; /* Locks brk and data_end.  */
+#endif
 extern int _hurd_set_data_limit (const struct rlimit *);
 
 /* Set the data break; the brk lock must
@@ -462,8 +497,6 @@ extern void _hurd_msgport_receive (void);
 #endif /* notyet */
 
 
-#endif /* noteven */
-
 /* Calls to get and set basic ports.  */
 extern process_t getproc (void);
 extern file_t getccdir (void), getcwdir (void), getcrdir (void);
@@ -516,6 +549,16 @@ struct ioctl_handler
     struct ioctl_handler *next;	/* Next handler.  */
   };
 
+/* Define a library-internal handler for ioctl commands
+   between FIRST and LAST inclusive.  */
 
+#define	_HURD_HANDLE_IOCTLS(handler, first, last) \
+  static const struct ioctl_handler ##handler##_ioctl_handler =
+    { first, last, handler, NULL };
+  text_set_element (_hurd_ioctl_handler_lists, ##handler##_ioctl_handler)
+
+/* Define a library-internal handler for a single ioctl command.  */
+#define _HURD_HANDLE_IOCTL(handler, ioctl) \
+  _HURD_HANDLE_IOCTLS (handler, (ioctl), (ioctl))
 
 #endif	/* hurd.h */
