@@ -21,6 +21,16 @@ Cambridge, MA 02139, USA.  */
 #include <sys/ioctl.h>
 #include <hurd.h>
 
+/* Symbol set of ioctl handler lists.  If there are user-registered
+   handlers, one of these lists will contain them.  The other lists are
+   handler built into the library.  */
+const struct
+  {
+    size_t n;
+    struct ioctl_handler *v[0];
+  } _hurd_ioctl_handler_lists;
+
+
 /* Perform the I/O control operation specified by REQUEST on FD.
    The actual type and use of ARG and the return value depend on REQUEST.  */
 int
@@ -80,6 +90,20 @@ DEFUN(__ioctl, (fd, request, arg),
 	}
       return 0;
     }
+
+  {
+    /* Check for a registered handler for REQUEST.  */
+
+    size_t i;
+    const struct ioctl_handler *h;
+
+    for (i = 0; i < _hurd_ioctl_handler_lists.n; ++i)
+      for (h = _hurd_ioctl_handler_lists.v[i]; *h; h = h->next)
+	if (request >= h->first_request && request <= h->last_request)
+	  /* This handler groks REQUEST.  Le puntamonos.  */
+	  return (*h->handler) (fd, request, arg);
+  }
+  
 
   /* Pack the argument data.  */
   r.i = request;
