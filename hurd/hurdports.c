@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,6 @@ set (struct _hurd_port *cell, mach_port_t new)
   GET (type, what) SET (type, what)
 
 GETSET (process_t, proc)
-GETSET (file_t, ccdir)
 GETSET (file_t, cwdir)
 GETSET (file_t, crdir)
 
