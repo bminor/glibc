@@ -468,7 +468,7 @@ digits begins with @samp{0} (specifying octal radix), or @samp{0x} or
 syntax used for integer constants in C.
 
 Otherwise @var{base} must have a value between @code{2} and @code{35}.
-If @var{base} is @code{16}, the digits may optionally be preceeded by
+If @var{base} is @code{16}, the digits may optionally be preceded by
 @samp{0x} or @samp{0X}.
 
 @item 
@@ -525,6 +525,7 @@ Here is a function which parses a string as a sequence of integers and
 returns the sum of them:
 
 @example
+int
 sum_ints_from_string (char *string)
 @{
   int sum = 0;
