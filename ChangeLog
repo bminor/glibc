@@ -1,3 +1,9 @@
+2001-12-01  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/configure.in (libc_cv_gcc_unwind_find_fde): Add
+	missing backslash in test arguments.
+	* sysdeps/mach/hurd/configure: Regenerated.
+
 2001-11-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/glob.c (next_brace_sub): Return NULL if braces
