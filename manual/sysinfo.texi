@@ -20,7 +20,7 @@ information about the particular machine a program is running on.
 The functions listed in this section access information to identify the
 particular machine that a program is running on.  In the GNU system,
 this information is the default Internet host name and host address of
-the machine; @pxref{The Internet Domain}.  These functions are the
+the machine; see @ref{The Internet Domain}.  These functions are the
 primitives for the @code{hostname} and @code{hostid} shell commands.
 @pindex hostname
 @pindex hostid
@@ -94,7 +94,7 @@ GNU library, the value is the string @code{"GNU C Library"}.
 @item char nodename[]
 This is the name of this node within a communications network.  In the
 GNU library, the value is the same as that returned by
-@code{gethostname}; @pxref{Host Identification}.
+@code{gethostname}; see @ref{Host Identification}.
 
 @item char release[]
 This is the current release level of the operating system implementation.
