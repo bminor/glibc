@@ -16,11 +16,11 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <hurd.h>
+#include <hurd/fd.h>
 
 /* Allocate a new file descriptor and return it, locked.
    If the table is full, set errno and return NULL.  */
-struct _hurd_fd *
+struct hurd_fd *
 _hurd_alloc_fd (int *fd, const int first_fd)
 {
   int i;
@@ -29,7 +29,7 @@ _hurd_alloc_fd (int *fd, const int first_fd)
 
   for (i = first_fd; i < _hurd_dtable.size; ++i)
     {
-      struct _hurd_fd *d = &_hurd_dtable.d[i];
+      struct hurd_fd *d = &_hurd_dtable.d[i];
       __spin_lock (&d->port.lock);
       if (d->port.port == MACH_PORT_NULL)
 	{
