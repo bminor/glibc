@@ -68,11 +68,9 @@ __new_setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
   return INLINE_SYSCALL (setrlimit, 2, resource, &rlimits_small);
 }
 
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_setrlimit, __setrlimit, GLIBC_2.1.3);
-strong_alias (__new_setrlimit, _new_setrlimit);
-default_symbol_version (_new_setrlimit, setrlimit, GLIBC_2.1.3);
-#else
 weak_alias (__new_setrlimit, __setrlimit);
+#if defined PIC && DO_VERSIONING
+default_symbol_version (__new_setrlimit, setrlimit, GLIBC_2.1.3);
+#else
 weak_alias (__new_setrlimit, setrlimit);
 #endif
