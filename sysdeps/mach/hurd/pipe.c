@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,63 +21,47 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <stddef.h>
 #include <hurd.h>
-#include <sys/socket.h>
 
-/* Create a one-way communication channel (__pipe).
-   If successul, two file descriptors are stored in PIPEDES;
-   bytes written on PIPEDES[1] can be read from PIPEDES[0].
+/* Create a one-way communication channel (pipe).
+   If successul, two file descriptors are stored in FDS;
+   bytes written on FDS[1] can be read from FDS[0].
    Returns 0 if successful, -1 if not.  */
 int
-DEFUN(__pipe, (pipedes), int pipedes[2])
+DEFUN(__pipe, (fds), int fds[2])
 {
-  socket_t skt, r, w;
-  int fd0, fd1;
   error_t err;
+  socket_t server, sock1, sock2;
+  int d1, d2;
 
-  if (pipedes == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  if (fds == NULL)
+    return __hurd_fail (EINVAL);
 
-  ((volatile int *) pipedes)[0] = pipedes[1];
-
-  skt = _hurd_socket_server (AF_LOCAL);
-  if (skt == MACH_PORT_NULL)
+  server = _hurd_socket_server (AF_LOCAL);
+  if (server == NULL)
     return -1;
 
-  if (err = __socket_create (skt, SOCK_STREAM, 0, &r))
+  if (err = __socket_create (server, SOCK_STREAM, 0, &sock1))
     return __hurd_fail (err);
-  __socket_shutdown (r, 1);
-  if (err = __socket_create (skt, SOCK_STREAM, 0, &w))
+  if (err = __socket_create (server, SOCK_STREAM, 0, &sock2))
     {
-      __mach_port_deallocate (__mach_task_self (), r);
+      __mach_port_deallocate (__mach_task_self (), sock1);
       return __hurd_fail (err);
     }
-  __socket_shutdown (w, 0);
-  if (err = __socket_connect2 (r, w))
+  if (err = __socket_connect2 (sock1, sock2))
     {
-      __mach_port_deallocate (__mach_task_self (), r);
-      __mach_port_deallocate (__mach_task_self (), w);
+      __mach_port_deallocate (__mach_task_self (), sock1);
+      __mach_port_deallocate (__mach_task_self (), sock2);
       return __hurd_fail (err);
     }
+  __socket_shutdown (sock1, 1);
+  __socket_shutdown (sock2, 0);
 
-  __mutex_lock (&_hurd_dtable.lock);
-  fd0 = _hurd_dalloc ();
-  fd1 = _hurd_dalloc ();
-  if (fd0 < 0 || fd0 < 0)
-    {
-      __mach_port_deallocate (__mach_task_self (), r);
-      __mach_port_deallocate (__mach_task_self (), w);
-    }
-  else
-    {
-      _hurd_dtable.d[fd0].server = r;
-      _hurd_dtable.d[fd1].server = w;
-    }
-  __mutex_unlock (&_hurd_dtable.lock);
+  d1 = _hurd_dalloc (sock1, 0);
+  d2 = _hurd_dalloc (sock2, 0);
+  if (d1 < 0 || d2 < 0)
+    return -1;
 
-  pipedes[0] = fd0;
-  pipedes[1] = fd1;
+  fds[0] = d1;
+  fds[2] = d2;
   return 0;
 }
