@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,24 +25,34 @@ Cambridge, MA 02139, USA.  */
 uid_t
 DEFUN_VOID(__geteuid)
 {
+  error_t err;
   uid_t euid;
+
   __mutex_lock (&_hurd_idlock);
-  if (!_hurd_id_valid)
+
+  if (err = _hurd_check_ids ())
     {
-      error_t err = _HURD_PORT_USE (&_hurd_auth,
-				    __auth_getids (port, &_hurd_id));
-      if (err)
-	{
-	  __mutex_unlock (&_hurd_idlock);
-	  return __hurd_fail (err);
-	}
-      _hurd_id_valid = 1;
+      errno = err;
+      euid = -1;
     }
-  if (_hurd_id.nuids == 0)
-    /* We have no effective uids.  Return the real uid.  */
-    euid = _hurd_id.ruid;
   else
-    euid = _hurd_id.uids[0];
+    switch (_hurd_nuids)
+      {
+      case 0:
+	/* We have not even a real uid.  */
+	errno = XXX;
+	euid = -1;
+	break;
+      case 1:
+      case 2:
+	/* We have no effective uids.  Return the real uid.  */
+	euid = _hurd_uid.rid;
+	break;
+      default:
+	euid = _hurd_uid.ids[0];
+	break;
+      }
+
   __mutex_unlock (&_hurd_idlock);
   return euid;
 }
