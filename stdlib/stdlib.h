@@ -157,6 +157,8 @@ extern void EXFUN(cfree, (PTR __ptr));
 #endif	/* Use misc.  */
 
 #if defined(__USE_GNU) || defined(__USE_BSD) || defined(__USE_MISC)
+#undef	alloca
+
 /* Allocate a block that will be freed when the calling function exits.  */
 extern PTR EXFUN(__alloca, (size_t __size));
 extern PTR EXFUN(alloca, (size_t __size));
