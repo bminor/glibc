@@ -39,8 +39,3 @@ Send bug reports to bug-glibc@prep.ai.mit.edu.
 
 The GNU C Library is free software.  See the file COPYING.LIB for copying
 conditions.
-
-Please note that there are some files in the distribution whose names
-exceed 14 characters in length.  None of these files are needed to build
-the library on System V, where a 14 character limit on the length of file
-names is imposed, so this is harmless.
