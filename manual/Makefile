@@ -113,10 +113,11 @@ mostlyclean:
 	-rm -f libc.dvi libc.info*
 clean: mostlyclean
 distclean: clean
+indices = cp fn pg tp vr ky
 realclean: distclean
 	-rm -f chapters chapters-incl summary.texi stamp-summary *.c.texi
-	-rm -f libc.cp libc.cps libc.fn libc.fns libc.pg libc.pgs \
-	       libc.tp libc.tps libc.vr libc.vrs libc.log libc.aux libc.toc
+	-rm -f $(foreach index,$(indices),libc.$(index) libc.$(index)s)
+	-rm -f libc.log libc.aux libc.toc
 
 .PHONY: install subdir_install installdirs install-data
 install-data subdir_install: install
