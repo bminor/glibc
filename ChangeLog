@@ -1,3 +1,29 @@
+1997-03-24 02:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_finitel.c (__finitel): Shift return value
+	by 31 positions to get 0/1 result.
+	Patch by Joe Keane <jgk@jgk.org>.
+
+1997-03-23 12:15  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* posix/getopt.c (__getopt_nonoption_flags): Make it extern
+	to prevent from ld linking in getopt.o even if there is another
+	incompatible one.
+
+	* posix/getopt_init.c (__getopt_nonoption_flags): Remove extern.
+
+1997-03-20 20:22  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* Makerules (depfiles): Remove $(test-srcs).
+
+1997-03-27 07:37  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libio/fileops.c (_IO_file_overflow): Set error when try to write
+	on a read-only stream.
+
+	* sysdeps/gnu/utmpbits.h (ut_xtime): New symbol.
+	(ut_time): Define it only if _NO_UT_TIME is not defined.
+
 1997-04-03 19:24  H.J. Lu  <hjl@gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/sigset.h (__sigisemptyset): Fix a
