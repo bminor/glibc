@@ -32,8 +32,13 @@ main()
 
   puts("\n/* This is a list of all known `errno' codes.  */");
 
+#ifdef HAVE_GNU_LD
   printf("\nCONST int _sys_nerr = %d;\n\n", sys_nerr);
   puts("CONST char *CONST _sys_errlist[] =\n  {");
+#else
+  printf("\nCONST int sys_nerr = %d;\n\n", sys_nerr);
+  puts("CONST char *CONST sys_errlist[] =\n  {");
+#endif
 
   for (i = 0; i < sys_nerr; ++i)
     printf("    \"%s\",\n", sys_errlist[i]);
