@@ -303,6 +303,7 @@ endef
 .PHONY: check
 check: tests
 
+.PHONY: TAGS
 TAGS: $(..)MakeTAGS
 	$(MAKE) -f $< $@
 
