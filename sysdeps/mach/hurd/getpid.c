@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,8 +22,9 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 
 /* Get the process ID of the calling process.  */
-int
+pid_t
 DEFUN_VOID(__getpid)
 {
+  /* Assumes atomic word fetch and store, so doesn't lock _hurd_pid_lock.  */
   return _hurd_pid;
 }
