@@ -17,8 +17,9 @@ on-branch = $(filter-out HEAD,$(glibc-base))
 snapshot-date := $($(glibc-branch)-sync-date)
 snapshot-name := $(shell date -u -d '$(snapshot-date)' $(snapshot-name-fmt))
 
-tar-name := glibc$(subst _,.,$(patsubst glibc-%-branch,-%,\
-					$(filter-out HEAD,$(glibc-base))))
+tag-name := glibc$(patsubst glibc-%-branch,-%,\
+			    $(filter-out HEAD,$(glibc-base)))
+tar-name := $(subst _,.,$(tag-name))
 select-snapshot = -r '$($(glibc-branch)-sync-tag)'
 snapshot-id = $($(glibc-branch)-sync-tag)
 
@@ -28,7 +29,7 @@ branch.mk-vars = glibc-branch glibc-base DIST_BRANCH COLLECTION
 update:
 	now=`date -u $(snapshot-date-fmt)`; \
 	name=`date -u -d "$$now" $(snapshot-name-fmt)`; \
-	new="$(tag-prefix)$(tar-name)-$$name"; \
+	new="$(tag-prefix)$(tag-name)-$$name"; \
 	cvs -Q rtag $(if $(on-branch),-r $(glibc-base),-D "$$now") $$new libc;\
 	(echo '# This file is updated automatically by Makefile.'; \
 	 $(foreach var,$(branch.mk-vars),\
