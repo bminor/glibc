@@ -193,7 +193,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	    }
 
 	  /* Poll for another message.  */
-	  timeout = 0;
+	  to = 0;
 	  options |= MACH_RCV_TIMEOUT;
 	}
 
