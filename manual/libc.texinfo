@@ -1,6 +1,6 @@
 \input texinfo                  @c -*- Texinfo -*-
 @comment %**start of header (This is for running Texinfo on a region.)
-@setfilename library.info
+@setfilename libc.info
 @settitle The GNU C Library
 @setchapternewpage odd
 @comment %**end of header (This is for running Texinfo on a region.)
