@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <shadow.h>
 
+#define _S(x)	x ? x : ""
 
 /* Write an entry to the given stream.
    This must know the format of the password file.  */
@@ -27,7 +28,7 @@ putspent (const struct spwd *p, FILE *stream)
 {
   int errors = 0;
 
-  if (fprintf (stream, "%s:%s:", p->sp_namp, p->sp_pwdp) < 0)
+  if (fprintf (stream, "%s:%s:", p->sp_namp, _S(p->sp_pwdp)) < 0)
     ++errors;
 
   if ((p->sp_lstchg != (long int) -1
