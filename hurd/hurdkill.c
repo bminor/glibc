@@ -50,16 +50,17 @@ hurd_sig_post (pid_t pid, int sig, mach_port_t arg_refport)
   if (pid <= 0)
     {
       /* Send SIG to each process in pgrp (- PID).  */
-      mach_msg_type_number_t npids, i;
-      pid_t *pids;
+      mach_msg_type_number_t npids = 10, i;
+      pid_t pidsbuf[10], *pids = pidsbuf;
       
       err = __proc_getpgrppids (proc, - pid, &pids, &npids);
       if (!err)
 	{
 	  for (i = 0; i < npids; ++i)
 	    kill_pid (pids[i]);
-	  __vm_deallocate (__mach_task_self (),
-			   (vm_address_t) pids, npids * sizeof (pids[0]));
+	  if (pids != pidsbuf)
+	    __vm_deallocate (__mach_task_self (),
+			     (vm_address_t) pids, npids * sizeof (pids[0]));
 	}
     }
   else
