@@ -1655,10 +1655,14 @@ connection in progress.
 @cindex sockets, listening
 
 Now let us consider what the server process must do to accept
-connections on a socket.  This involves the use of the @code{listen}
-function to enable connection requests on the socket, and later using
-the @code{accept} function (@pxref{Accepting Connections}) to act on a
-request.  The @code{listen} function is not allowed for sockets using
+connections on a socket.  First it must use the @code{listen} function
+to enable connection requests on the socket, and then accept each
+incoming connection with a call to @code{accept} (@pxref{Accepting
+Connections}).  Once connection requests are enabled on a server socket,
+the @code{select} function reports when the socket has a connection
+ready to be accepted (@pxref{Waiting for I/O}).
+
+The @code{listen} function is not allowed for sockets using
 connectionless communication styles.
 
 You can write a network server that does not even start running until a
@@ -1677,11 +1681,13 @@ access to connect to the socket.
 @comment sys/socket.h
 @comment BSD
 @deftypefun int listen (int @var{socket}, unsigned int @var{n})
-The @code{listen} function enables the socket @var{socket} to
-accept connections, thus making it a server socket.
+The @code{listen} function enables the socket @var{socket} to accept
+connections, thus making it a server socket.
 
 The argument @var{n} specifies the length of the queue for pending
-connections.
+connections.  When the queue fills, new clients attempting to connect
+fail with @code{ECONNREFUSED} until the server calls @code{accept} to
+accept a connection from the queue.
 
 The @code{listen} function returns @code{0} on success and @code{-1}
 on failure.  The following @code{errno} error conditions are defined
