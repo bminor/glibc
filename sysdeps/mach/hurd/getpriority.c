@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +16,42 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
-#include <sys/resource.h>
+#include <limits.h>
 #include <hurd.h>
+#include <hurd/resource.h>
 
 /* Return the highest priority of any process specified by WHICH and WHO
    (see <sys/resource.h>); if WHO is zero, the current process, process group,
    or user (as specified by WHO) is used.  A lower priority number means higher
    priority.  Priorities range from PRIO_MIN to PRIO_MAX.  */
 int
-DEFUN(getpriority, (which, who),
-      enum __priority_which which AND int who)
+getpriority (enum __priority_which which, int who)
 {
-  return ENOSYS;		/* XXX */
+  error_t err, onerr;
+  int maxpri = INT_MIN;
+
+  error_t getonepriority (pid_t pid, struct procinfo *pip)
+    {
+      struct procinfo pi;
+      if (pip == NULL)
+	{
+	  onerr = __proc_getprocinfo (pid, &pi);
+	  pip = &pi;
+	}
+      if (!onerr && pip->taskinfo.base_priority > maxpri)
+	maxpri = pip->taskinfo.base_priority;
+      return 0;
+    }
+
+  onerr = 0;
+  err = _hurd_priority_which_map (which, who, getonepriority);
+
+  if (!err && maxpri == INT_MIN)
+    /* No error, but no pids found.  */
+    err = onerr ?: ESRCH;
+
+  if (err)
+    return __hurd_fail (err);
+
+  return MACH_PRIORITY_TO_NICE (maxpri);
 }
