@@ -34,7 +34,7 @@ Cambridge, MA 02139, USA.  */
     jl syscall_error;							      \
     XCHG_##args
 
-/* Linux takes system call arguments in registers.
+/* Linux takes system call arguments in registers:
    	1: %ebx
 	2: %ecx
 	3: %edx
@@ -44,7 +44,7 @@ Cambridge, MA 02139, USA.  */
    and save the registers, by using the 386 `xchg' instruction
    to swap the values in both directions.  */
 
-#define	XCHG_0	/* Nothing.  */
+#define	XCHG_0	/* No arguments to frob.  */
 #define	XCHG_1	xchg 8(%esp), %ebx; XCHG_0
 #define	XCHG_2	xchg 12(%esp), %ecx; XCHG_1
 #define	XCHG_3	xchg 16(%esp), %edx; XCHG_2
