@@ -137,6 +137,8 @@ already know the length of the string in advance.
 You can get the length of a string using the @code{strlen} function.
 This function is declared in the header file @file{<string.h>}.
 
+@comment string.h
+@comment ANSI
 @deftypefun size_t strlen (const char *@var{s})
 The @code{strlen} function returns the length of the null-terminated
 string @var{s}.  (In other words, it returns the offset of the terminating
@@ -189,6 +191,8 @@ Any functions that have problems copying between overlapping arrays are
 explicitly identified in this manual.  In addition to functions in this
 section, there are a few others like @code{sprintf} and @code{scanf}.
 
+@comment string.h
+@comment ANSI
 @deftypefun {void *} memcpy (void *@var{to}, const void *@var{from}, size_t @var{size})
 The @code{memcpy} function copies @var{size} bytes from the object
 beginning at @var{from} into the object beginning at @var{to}.  The
@@ -207,6 +211,8 @@ memcpy (new, old, sizeof(struct foo));
 @end example
 @end deftypefun
 
+@comment string.h
+@comment ANSI
 @deftypefun {void *} memmove (void *@var{to}, const void *@var{from}, size_t @var{size})
 The @code{memmove} function is just like @code{memcpy}, except that it works
 even if the objects @var{to} and @var{from} overlap.  However, since 
@@ -214,12 +220,25 @@ even if the objects @var{to} and @var{from} overlap.  However, since
 it can be less efficient than @code{memcpy}.
 @end deftypefun
 
+@comment string.h
+@comment SVID
+@deftypefun {void *} memccpy (void *@var{to}, const void *@var{from}, int @var{c}, size_t @var{size})
+This function copies no more than @var{size} bytes from @var{from} to @var{to},
+stopping if a byte matching @var{c} is found.  The return value is a pointer
+into @var{to} one byte past where @var{c} was copied, or a null pointer if
+no byte matching @var{c} appeared in the first @var{size} bytes of @var{from}.
+@end deftypefun
+
+@comment string.h
+@comment ANSI
 @deftypefun {void *} memset (void *@var{a}, int @var{c}, size_t @var{size})
 This function copies the value of @var{c} (converted to an @code{unsigned
 char}) into each of the first @var{size} bytes of the object beginning at
 @var{a}.  It returns the value of @var{a}.
 @end deftypefun
 
+@comment string.h
+@comment ANSI
 @deftypefun {char *} strcpy (char *@var{to}, const char *@var{from})
 This copies characters from the string @var{from} (up to and including the
 terminating null character) into the string @var{to}.  Like
@@ -227,6 +246,8 @@ terminating null character) into the string @var{to}.  Like
 return value is the value of @var{to}.
 @end deftypefun
 
+@comment string.h
+@comment ANSI
 @deftypefun {char *} strncpy (char *@var{to}, const char *@var{from}, size_t @var{size})
 This function is similar to @code{strcpy} except that no more than @var{size}
 characters are copied.  If the length of @var{from} is less than @var{size} 
@@ -241,6 +262,24 @@ allocation size of @var{from}, using @code{strncpy} as opposed to
 string.
 @end deftypefun
 
+@comment string.h
+@comment SVID
+@deftypefun {char *} strdup (const char *@var{s})
+This function copies the null-terminated string @var{s} into a newly
+allocated (as with @code{malloc}; @pxref{Unconstrained Allocation}
+string.
+@end deftypefun
+
+@comment string.h
+@comment GNU
+@deftypefun {char *} stpcpy (char *@var{to}, const char *@var{from})
+This function is like @code{strcpy}, except that it returns a pointer to
+the end of the string @var{to} (that is, the address of the terminating
+null pointer) rather than the beginning.
+@end deftypefun
+
+@comment string.h
+@comment ANSI
 @deftypefun {char *} strcat (char *@var{to}, const char *@var{from})
 The @code{strcat} function is similar to @code{strcpy}, except that the
 characters from @var{from} are concatenated or appended to the end of
@@ -250,6 +289,8 @@ characters from @var{from} are concatenated or appended to the end of
 This function can fail if the strings overlap.
 @end deftypefun
 
+@comment string.h
+@comment ANSI
 @deftypefun {char *} strncat (char *@var{to}, const char *@var{from}, size_t @var{size})
 This function is like @code{strcat} except that not more than @var{size}
 characters from @var{from} are appended to the end of @var{to}.  A single
@@ -314,6 +355,8 @@ might find it helpful to hide them behind a macro definition, like this:
 
 All of these functions are declared in the header file @file{<string.h>}.
 
+@comment string.h
+@comment ANSI
 @deftypefun int memcmp (const void *@var{a1}, const void *@var{a2}, size_t @var{size})
 The function @code{memcmp} compares the @var{size} bytes of memory
 beginning at @var{a1} against the @var{size} bytes of memory beginning at
@@ -355,6 +398,8 @@ struct foo @{
 you are better off writing a specialized comparison function to compare
 @code{struct foo} objects instead of comparing them with @code{memcmp}.
 
+@comment string.h
+@comment ANSI
 @deftypefun int strcmp (const char *@var{s1}, const char *@var{s2})
 The @code{strcmp} function compares the string @var{s1} against @var{s2},
 returning a value that has the same sign as the difference between
@@ -366,6 +411,15 @@ is an initial substring of @var{s2}, then @var{s1} is considered to be
 ``less than'' @var{s2}.
 @end deftypefun
 
+@comment string.h
+@comment BSD
+@deftypefun int strcasecmp (const char *@var{s1}, const char *@var{s2})
+This function is like @code{strcmp}, except that differences in case
+are ignored.
+@end deftypefun
+
+@comment string.h
+@comment ANSI
 @deftypefun int strncmp (const char *@var{s1}, const char *@var{s2}, size_t @var{size})
 This function is the similar to @code{strcmp}, except that no more than
 @var{size} characters are compared.  In other words, if the two strings are
@@ -429,12 +483,16 @@ transform the strings once and then do the comparisons on the
 transformed strings with @code{strcmp}, instead of passing the
 untransformed strings to @code{strcoll}.
 
+@comment string.h
+@comment ANSI
 @deftypefun int strcoll (const char *@var{s1}, const char *@var{s2})
 The @code{strcoll} function is similar to @code{strcmp} but uses the
 current locale's collation ordering, determined by the @code{LC_COLLATE}
 category.
 @end deftypefun
 
+@comment string.h
+@comment ANSI
 @deftypefun size_t strxfrm (char *@var{to}, const char *@var{from}, size_t @var{size})
 The function @code{strxfrm} applies the collation transformation
 determined by the @code{LC_COLLATE} category of the current locale to
@@ -477,6 +535,8 @@ declared in the header file @file{<string.h>}.
 @cindex searching strings
 @cindex string search functions
 
+@comment string.h
+@comment ANSI
 @deftypefun {void *} memchr (const void *@var{a}, int @var{c}, size_t @var{size})
 This function finds the first occurrence of the byte @var{c} (converted to an
 @code{unsigned char}) in the initial @var{size} bytes of the object beginning
@@ -484,6 +544,8 @@ at @var{a}.  A pointer to the located byte is returned, or a null pointer
 if no match was found.
 @end deftypefun
 
+@comment string.h
+@comment ANSI
 @deftypefun {char *} strchr (const char *@var{s}, int @var{c})
 The @code{strchr} function finds the first occurrence of the character
 @var{c} (converted to a @code{char}) in the null-terminated string
@@ -503,6 +565,8 @@ so you can use this function get a pointer to the end of a string by
 specifying a null character as the value of the @var{c} argument.
 @end deftypefun
 
+@comment string.h
+@comment ANSI
 @deftypefun {char *} strrchr (const char *@var{s}, int @var{c})
 The function @code{strrchr} is like @code{strchr}, except that it searches
 backwards from the end of the string @var{s} (instead of forwards
@@ -515,6 +579,8 @@ strrchr ("hello, world", 'l')
 @end example
 @end deftypefun
 
+@comment string.h
+@comment ANSI
 @deftypefun {char *} strstr (const char *@var{s1}, const char *@var{s2})
 This is like @code{strchr}, except that it searches @var{s1} for a
 substring @var{s2} rather than just a single character.  It returns a
@@ -532,6 +598,8 @@ strstr ("hello, world", "wo")
 @end deftypefun
 
 
+@comment string.h
+@comment ANSI
 @deftypefun size_t strspn (const char *@var{s1}, const char *@var{s2})
 The @code{strspn} (``string span'') function returns the length of the
 initial substring of @var{s1} that consists entirely of characters that
@@ -545,6 +613,8 @@ strspn ("hello, world", "abcdefghijklmnopqrstuvwxyz")
 @end example
 @end deftypefun
 
+@comment string.h
+@comment ANSI
 @deftypefun size_t strcspn (const char *@var{s1}, const char *@var{s2})
 The @code{strcspn} (``string complement span'') function returns the length
 of the initial substring of @var{s1} that consists entirely of characters
@@ -559,6 +629,8 @@ strcspn ("hello, world", " \t\n,.;!?")
 @end example
 @end deftypefun
 
+@comment string.h
+@comment ANSI
 @deftypefun {char *} strpbrk (const char *@var{s1}, const char *@var{s2})
 The @code{strpbrk} (``string pointer break'') function is related to
 @code{strcspn}, except that it returns a pointer to the first character
@@ -584,6 +656,8 @@ of lexical analysis and parsing, such as splitting a command string up
 into tokens.  You can do this with the @code{strtok} function, declared
 in the header file @file{<string.h>}.
 
+@comment string.h
+@comment ANSI
 @deftypefun {char *} strtok (char *@var{s1}, const char *@var{s2})
 A string can be split into tokens by making a series of calls to the
 function @code{strtok}.
