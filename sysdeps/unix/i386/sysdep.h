@@ -34,7 +34,7 @@ Cambridge, MA 02139, USA.  */
   .text;								      \
   .globl syscall_error;							      \
   ENTRY (name)								      \
-  DO_CALL (syscall_name, args)						      \
+  DO_CALL (syscall_name, args);						      \
   jb syscall_error
 
 /* This is defined as a separate macro so that other sysdep.h files
