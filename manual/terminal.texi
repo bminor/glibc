@@ -819,8 +819,8 @@ signals associated with these characters, or to escape from the program.
 POSIX.1 gives @code{IEXTEN} implementation-defined meaning,
 so you cannot rely on this interpretation on all systems.
 
-On BSD systems and the GNU system, it enables the LNEXT character.
-@xref{Editting Characters}.
+On BSD systems and the GNU system, it enables the LNEXT and DISCARD characters.
+@xref{Other Special}.
 @end deftypevr
 
 @comment termios.h
@@ -1241,26 +1241,6 @@ The REPRINT character is usually @kbd{C-r}.
 This is a BSD extension.
 @end deftypevr
 
-@comment termios.h
-@comment BSD
-@deftypevr Macro int VLNEXT
-@cindex LNEXT character
-This is the subscript for the LNEXT character in the special control
-character array.  @code{@var{termios}.c_cc[VLNEXT]} holds the character
-itself.
-
-The LNEXT character is recognized only when @code{IEXTEN} is set, but in
-both canonical and noncanonical mode.  It disables any special
-significance of the next character the user types.  Even if the
-character would normally perform some editting function or generate a
-signal, it is read as a plain character.  This is the analogue of the
-@kbd{C-q} command in Emacs.  ``LNEXT'' stands for ``literal next.''
-
-The LNEXT character is usually @kbd{C-v}.
-
-This is a BSD extension.
-@end deftypevr
-
 @node Signal Characters
 @subsubsection Characters that Cause Signals
 
@@ -1396,8 +1376,25 @@ regardless of what you specify.
 @node Other Special
 @subsubsection Other Special Characters
 
-Here are two additional special characters that are meaningful on BSD
-systems.
+These special characters exist only in BSD systems and the GNU system.
+
+@comment termios.h
+@comment BSD
+@deftypevr Macro int VLNEXT
+@cindex LNEXT character
+This is the subscript for the LNEXT character in the special control
+character array.  @code{@var{termios}.c_cc[VLNEXT]} holds the character
+itself.
+
+The LNEXT character is recognized only when @code{IEXTEN} is set, but in
+both canonical and noncanonical mode.  It disables any special
+significance of the next character the user types.  Even if the
+character would normally perform some editting function or generate a
+signal, it is read as a plain character.  This is the analogue of the
+@kbd{C-q} command in Emacs.  ``LNEXT'' stands for ``literal next.''
+
+The LNEXT character is usually @kbd{C-v}.
+@end deftypevr
 
 @comment termios.h
 @comment BSD
@@ -1407,11 +1404,11 @@ This is the subscript for the DISCARD character in the special control
 character array.  @code{@var{termios}.c_cc[VDISCARD]} holds the character
 itself.
 
-The DISCARD character is recognized only when @code{IEXTEN} is set.  Its
-effect is to toggle the discard-output flag.  When this flag is set, all
-program output is discarded.  Setting the flag also discards all output
-currently in the output buffer.  Typing any other character resets the
-flag.
+The DISCARD character is recognized only when @code{IEXTEN} is set, but
+in both canonical and noncanonical mode.  Its effect is to toggle the
+discard-output flag.  When this flag is set, all program output is
+discarded.  Setting the flag also discards all output currently in the
+output buffer.  Typing any other character resets the flag.
 @end deftypevr
 
 @comment termios.h
@@ -1425,9 +1422,8 @@ itself.
 The STATUS character's effect is to print out a status message about how
 the current process is running.
 
-The STATUS character is recognized only when canonical mode.  This is a
-peculiar design decision, since the STATUS character's meaning has
-nothing to do with input, but that's the way it was done.
+The STATUS character is recognized only in canonical mode, and only if
+@code{NOKERNINFO} is not set.
 @end deftypevr
 
 @node Noncanonical Input
