@@ -59,6 +59,7 @@ Cambridge, MA 02139, USA.  */
 #define	SIGVTALRM	26	/* Virtual alarm clock (4.2 BSD).  */
 #define	SIGPROF		27	/* Profiling alarm clock (4.2 BSD).  */
 #define	SIGWINCH	28	/* Window size change (4.3 BSD, Sun).  */
+#define SIGINFO		29	/* Information request (4.4 BSD).  */
 #define	SIGUSR1		30	/* User-defined signal 1 (POSIX).  */
 #define	SIGUSR2		31	/* User-defined signal 2 (POSIX).  */
 
