@@ -31,6 +31,9 @@ DEFUN_VOID(getlogin)
   error_t err;
 
   if (err = __proc_getlogin (_hurd_proc, login))
-    return __hurd_fail (err);
-  return 0;
+    {
+      errno = __hurd_errno (err);
+      return NULL;
+    }
+  return login;
 }
