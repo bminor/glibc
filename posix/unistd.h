@@ -492,6 +492,9 @@ extern int EXFUN(setreuid, (__uid_t __ruid, __uid_t __euid));
 #ifdef __OPTIMIZE__
 #define	setreuid(ruid, euid)	__setreuid((ruid), (euid))
 #endif	/* Optimizing.  */
+
+/* Set the effective user ID of the calling process to UID.  */
+extern int EXFUN(seteuid, (__uid_t __uid));
 #endif	/* Use BSD.  */
 
 /* Set the group ID of the calling process to GID.
@@ -514,6 +517,9 @@ extern int EXFUN(setregid, (int __rgid, int __egid));
 #ifdef	__OPTIMIZE__
 #define	setregid(rgid, egid)	__setregid((rgid), (egid))
 #endif	/* Optimizing.  */
+
+/* Set the effective user ID of the calling process to UID.  */
+extern int EXFUN(seteuid, (__uid_t __uid));
 #endif	/* Use BSD.  */
 
 
