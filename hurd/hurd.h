@@ -132,13 +132,9 @@ _hurd_port_set (struct _hurd_port *port, mach_port_t newport)
 
 /* Basic ports and info, initialized by startup.  */
 extern struct _hurd_port _hurd_proc, _hurd_auth;
-extern struct _hurd_port _hurd_ccdir, _hurd_cwdir, _hurd_crdir;
+extern struct _hurd_port _hurd_cwdir, _hurd_crdir;
+extern struct _hurd_port _hurd_cttyid;
 extern volatile mode_t _hurd_umask;
-
-extern struct mutex _hurd_ctty_lock;
-extern int _hurd_ctty_fstype;
-extern fsid_t _hurd_ctty_fsid;
-extern ino_t _hurd_ctty_fileid;
 
 extern vm_address_t _hurd_stack_low, _hurd_stack_high; /* Not locked.  */
 
@@ -217,8 +213,8 @@ _hurd_dtable_done (struct _hurd_dtable dtable, int *dealloc)
 }
 
 
-/* Allocate a new file descriptor and set it to PORT.
-   If the table is full, deallocate PORT, set errno, and return -1.  */
+/* Allocate a new file descriptor and install PORT, CTTY, and FLAGS in it.
+   If table is full, deallocate PORT and CTTY, set errno, and return -1.  */
 static inline int
 _hurd_dalloc (io_t port, io_t ctty, int flags)
 {
@@ -248,7 +244,7 @@ _hurd_dalloc (io_t port, io_t ctty, int flags)
   return -1;
 }
 
-/* Returns the descriptor cell for FD in DTABLE, locked.  */
+/* Return the descriptor cell for FD in DTABLE, locked.  */
 static inline struct _hurd_fd *
 _hurd_dtable_fd (int fd, struct _hurd_dtable dtable)
 {
@@ -317,7 +313,6 @@ _hurd_fd_done (struct _hurd_fd_user d, int *dealloc)
 static inline int
 _hurd_dfail (int fd, error_t err)
 {
-  int signo;
   switch (err)
     {
     case MACH_SEND_INVALID_DEST: /* The server has disappeared!  */
@@ -326,8 +321,9 @@ _hurd_dfail (int fd, error_t err)
     case EPIPE:
       _hurd_raise_signal (NULL, SIGPIPE, fd);
       break;
+    default:
+      return __hurd_fail (err);
     }
-  return __hurd_fail (err);
 }
 
 /* Return the socket server for sockaddr domain DOMAIN.  */
@@ -344,8 +340,8 @@ extern int _hurd_orphaned;
 
 /* User and group IDs.  */
 extern mutex_t _hurd_idlock;
-extern int _hurd_id_valid;	/* Nonzero if _hurd_id is valid.  */
-extern idblock_t _hurd_id;
+extern int _hurd_id_valid;	/* If _hurd_uid and _hurd_gid are valid.  */
+extern struct idlist _hurd_uid, _hurd_gid;
 extern auth_t _hurd_rid_auth;	/* Cache used by access.  */
 
 
