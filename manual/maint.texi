@@ -783,7 +783,7 @@ The memory allocation functions @code{malloc}, @code{realloc} and
 @ifinfo
 @set tege Torbjorn Granlund
 @end ifinfo
-@comment @item
+@item
 Fast implementations of many of the string functions (@code{memcpy},
 @code{strlen}, etc.) were written by @value{tege}.
 
