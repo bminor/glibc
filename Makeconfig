@@ -524,7 +524,7 @@ object-suffixes-for-libc += .So
 # shared objects.  We don't want to use CFLAGS-so because users may, for
 # example, make that processor-specific.
 CFLAGS-.So = $(CFLAGS-.o) -fPIC -fno-common
-CPPFLAGS-.So = $(CPPFLAGS-.o)
+CPPFLAGS-.So = $(CPPFLAGS-.o) -DPIC
 libtype.So = lib%_nonshared.a
 endif
 
