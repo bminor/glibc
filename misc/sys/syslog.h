@@ -166,6 +166,7 @@ CODE facilitynames[] = {
 
 #ifndef KERNEL
 
+#if 0
 /*
  * Don't use va_list in the vsyslog() prototype.   Va_list is typedef'd in two
  * places (<machine/varargs.h> and <machine/stdarg.h>), so if we include one
@@ -174,6 +175,14 @@ CODE facilitynames[] = {
  * _BSD_VA_LIST_ from <machine/ansi.h> and use it.
  */
 #include <machine/ansi.h>
+#elif !defined (_BSD_VA_LIST_)
+/* In GNU we don't have a <machine/ansi.h> and it would be too painful to
+   emulate one.  */
+#define __need_va_list
+#include <stdarg.h>
+#define _BSD_VA_LIST_ __gnuc_va_list
+#endif
+
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
