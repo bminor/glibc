@@ -1,12 +1,13 @@
 2000-01-24  Paul Eggert  <eggert@twinsun.com>
 
-	* posix/fnmatch_loop.c (FCT): Use locale's collating sequence when
-	deciding whether a character falls within a character range.
+	* posix/fnmatch.c (internal_fnmatch): Use locale's collating
+	sequence when deciding whether a character falls within a
+	character range.
 
 2000-01-24  Paul Eggert  <eggert@twinsun.com>
 
-	* posix/fnmatch_loop.c (FCT): When matching [A-Z] and folding case,
-	lower-case A too.
+	* posix/fnmatch.c (internal_fnmatch): When matching [A-Z] and
+	folding case, lower-case A too.
 
 2000-01-23  Paul Eggert  <eggert@twinsun.com>
 
