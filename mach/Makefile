@@ -55,12 +55,8 @@ ifndef mach-srcdir
 mach-srcdir = ../../mach
 endif
 
-# When compiling, use the Mach header files directly from the kernel sources.
-includes += -I$(mach-srcdir)
-
 # Find the MiG defs files in the kernel source.
 vpath %.defs $(mach-srcdir)
-vpath mach/%.h $(mach-srcdir)
 
 # Install all .h and .defs files we find in the kernel's mach/ and device/
 # directories and their subdirectories (in MK82, max one level deep).
