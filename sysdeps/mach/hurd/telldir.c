@@ -27,8 +27,6 @@ Cambridge, MA 02139, USA.  */
 off_t
 DEFUN(telldir, (dirp), DIR *dirp)
 {
-  register off_t pos;
-
   if (dirp == NULL)
     {
       errno = EINVAL;
