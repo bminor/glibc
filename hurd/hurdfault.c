@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <setjmp.h>
 #include "thread_state.h"
+#include "faultexc.h"		/* mig-generated header for our exc server.  */
 
 jmp_buf _hurdsig_fault_env;
 
