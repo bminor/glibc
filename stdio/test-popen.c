@@ -35,7 +35,7 @@ int
 DEFUN_VOID(main)
 {
   FILE *output, *input;
-  int status;
+  int wstatus, rstatus;
 
   output = popen ("/bin/cat >tstpopen.tmp", "w");
   if (output == NULL)
@@ -45,9 +45,9 @@ DEFUN_VOID(main)
       exit (1);
     }
   write_data (output);
-  status = pclose (output);
-  fprintf (stderr, "pclose returned %d\n", status);
-  input = fopen ("tstpopen.tmp", "r");
+  wstatus = pclose (output);
+  printf ("writing pclose returned %d\n", wstatus);
+  input = popen ("/bin/cat tstpopen.tmp", "r");
   if (input == NULL)
     {
       perror ("tstpopen.tmp");
@@ -55,10 +55,11 @@ DEFUN_VOID(main)
       exit (1);
     }
   read_data (input);
-  (void) fclose (input);
+  rstatus = pclose (input);
+  printf ("reading pclose returned %d\n", rstatus);
 
-  puts (status ? "Test FAILED!" : "Test succeeded.");
-  exit (status);
+  puts (wstatus | rstatus  ? "Test FAILED!" : "Test succeeded.");
+  exit (wstatus | rstatus);
 }
 
   
