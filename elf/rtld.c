@@ -154,6 +154,14 @@ _dl_start (void *arg)
   if (HP_TIMING_INLINE && HP_TIMING_AVAIL)
     HP_TIMING_NOW (start_time);
 
+  /* Partly clean the `bootstrap_map' structure up.  Don't use `memset'
+     since it might nor be built in or inlined and we cannot make function
+     calls at this point.  */
+  for (cnt = 0;
+       cnt < sizeof (bootstrap_map.l_info) / sizeof (bootstrap_map.l_info[0]);
+       ++cnt)
+    bootstrap_map.l_info[cnt] = 0;
+
   /* Figure out the run-time load address of the dynamic linker itself.  */
   bootstrap_map.l_addr = elf_machine_load_address ();
 
