@@ -117,7 +117,7 @@ General Public License rather than by this special one.
 @center TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
 @end ifinfo
 
-@enumerate
+@enumerate 0
 @item
 This License Agreement applies to any software library which
 contains a notice placed by the copyright holder or other authorized
