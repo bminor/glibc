@@ -43,7 +43,7 @@ volatile int errno;		/* XXX wants to be per-thread */
 char **__environ;
 
 extern void __mach_init (void);
-extern void _hurd_init (char **argv,
+extern void _hurd_init (int flags, char **argv,
 			mach_port_t *portarray, size_t portarraysize,
 			int *intarray, size_t intarraysize);
 extern void __libc_init (int argc, char **argv, char **envp);
@@ -125,9 +125,7 @@ start1 (void)
 
   if (portarray || intarray)
     /* Initialize library data structures, start signal processing, etc.  */
-    _hurd_init (argv,
-		portarray, portarraysize,
-		intarray, intarraysize);
+    _hurd_init (flags, argv, portarray, portarraysize, intarray, intarraysize);
 
 
   /* Random library initialization.  */
