@@ -890,7 +890,7 @@ __sysconf (name)
 #endif
 
     case _SC_CPUTIME:
-#ifdef _POSIX_CPUTIME
+#if _POSIX_CPUTIME > 0
       return _POSIX_CPUTIME;
 #else
       return -1;
@@ -1055,7 +1055,7 @@ __sysconf (name)
 #endif
 
     case _SC_THREAD_CPUTIME:
-#ifdef _POSIX_THREAD_CPUTIME
+#if _POSIX_THREAD_CPUTIME > 0
       return _POSIX_THREAD_CPUTIME;
 #else
       return -1;
