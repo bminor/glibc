@@ -1,3 +1,17 @@
+2002-05-10  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/powerpc/fpu/w_sqrt.c: Add sqrtl alias.
+
+2002-05-12  Franz Sirl  <FranzSirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/semctl.c (__old_semctl, __new_semctl): Only
+	use va_arg if the argument will be used.  [PR libc/3259]
+
+2002-07-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/wfileops.c (_IO_wfile_seekoff): Reposition wide pointers
+	and adjust state for seek position.  [PR libc/4070]
+
 2002-07-12  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/generic/backtrace.c (FIRST_FRAME_POINTER): New macro.
