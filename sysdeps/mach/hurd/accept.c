@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -45,5 +45,5 @@ DEFUN(accept, (fd, addr, addr_len),
       return __hurd_dfail (fd, err);
     }
 
-  return _hurd_dalloc (new, MACH_PORT_NULL, 0);
+  return _hurd_alloc_fd (new, 0, 1);
 }
