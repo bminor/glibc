@@ -1,3 +1,8 @@
+2000-01-27  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/set-host.c (_hurd_set_host_config): Pass O_WRITE in flags to
+	dir_mkfile, so we will be permitted to do the io_write!
+
 2000-01-05  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/mmap64.S: Correct check for ENOSYS.
