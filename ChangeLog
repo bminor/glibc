@@ -1,4 +1,11 @@
+2002-06-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getdents.c [__ASSUME_GETDENTS64_SYSCALL]
+	(__GETDENTS): Check for failed getdents64 syscall.
+
 2002-06-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/hr.po: New file.
 
 	* sysdeps/unix/sysv/linux/ia64/getcontext.S: Fix typo.
 	Patch by Hans Boehm <hans_boehm@hp.com>.
