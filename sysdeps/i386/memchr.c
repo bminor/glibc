@@ -1,7 +1,7 @@
 /* memchr (str, ch, n) -- Return pointer to first occurrence of CH in STR less
    than N.
    For Intel 80x86, x>=3.
-   Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,8 @@ DEFUN(memchr, (str, c, len),
   PTR retval;
   asm("cld\n"			/* Search forward.  */
       "testl %1,%1\n"		/* Clear Z flag, to handle LEN == 0.  */
-      "repne\n"			/* Search for C in al.  */
+      /* Some old versions of gas need `repne' instead of `repnz'.  */
+      "repnz\n"			/* Search for C in al.  */
       "scasb\n"
       "movl %2,%0\n"		/* Set %0 to 0 (without affecting Z flag).  */
       "jnz done\n"		/* Jump if we found nothing equal to C.  */

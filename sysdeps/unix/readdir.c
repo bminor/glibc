@@ -27,6 +27,11 @@ Cambridge, MA 02139, USA.  */
 
 #include "direct.h"		/* This file defines `struct direct'.  */
 
+/* direct.h may have an alternate definition for this.  */
+#ifndef D_RECLEN
+#define D_RECLEN(dp)	((dp)->d_reclen)
+#endif
+
 
 /* Read a directory entry from DIRP.  */
 struct dirent *
@@ -58,7 +63,7 @@ DEFUN(readdir, (dirp), DIR *dirp)
 	}
 
       dp = (struct direct *) &dirp->__data[dirp->__offset];
-      dirp->__offset += dp->d_reclen;
+      dirp->__offset += D_RECLEN (dp);
 
       if (dp->d_ino != 0)
 	{
