@@ -273,7 +273,7 @@ extern int versionsort64 __P ((__const __ptr_t __e1, __const __ptr_t __e2));
    position after reading.  Returns the number of bytes read; zero when at
    end of directory; or -1 for errors.  */
 
-fndef __USE_FILE_OFFSET64
+# ifndef __USE_FILE_OFFSET64
 extern __ssize_t getdirentries __P ((int __fd, char *__restrict __buf,
 				     size_t __nbytes,
 				     __off_t *__restrict __basep));
