@@ -1,4 +1,4 @@
-@node Job Control, Users and Groups, Child Processes, Top
+@node Job Control
 @chapter Job Control
 
 @cindex process groups
@@ -1029,7 +1029,7 @@ use to open the controlling terminal.  In the GNU library, it returns
 the same string all the time: @code{"/dev/tty"}.  That is a special
 ``magic'' file name that refers to the controlling terminal of the
 current process (if it has one).  To find the name of the specific
-terminal device, use @code{ttyname}; @pxref{Is it a Terminal}.
+terminal device, use @code{ttyname}; @pxref{Is It a Terminal}.
 
 The function @code{ctermid} is declared in the header file
 @file{stdio.h}.
