@@ -1,7 +1,7 @@
 /* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
    Contributed by Noel Cragg (noel@cs.oberlin.edu), with fixes by
    Michael E. Calwas (calwas@ttd.teradyne.com) and
-   Wade Hampton (tasi029@tmn.com) */
+   Wade Hampton (tasi029@tmn.com).
 
 This file is part of the GNU C Library.
 
