@@ -1,6 +1,6 @@
 /* Definitions of global stdio data structures.
 
-Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -33,9 +33,9 @@ FILE *__stdio_head = NULL;
 static void
 init_stdio (void)
 {
-  stdin = fdopen (STDIN_FILENO);
-  stdout = fdopen (STDOUT_FILENO);
-  stderr = fdopen (STDERR_FILENO);
+  stdin = __fopenport (__getdport (STDIN_FILENO));
+  stdout = __fopenport (__getdport (STDOUT_FILENO));
+  stderr = __fopenport (__getdport (STDERR_FILENO));
 }
 text_set_element (__libc_subinit, init_stdio);
 
