@@ -34,12 +34,13 @@ DEFUN(ungetc, (c, stream), register int c AND register FILE *stream)
   if (c == EOF)
     return EOF;
 
-  if (stream->__pushback_bufp != NULL)
+  if (stream->__pushed_back)
     /* There is already a char pushed back.  */
     return EOF;
 
   stream->__pushback = (unsigned char) c;
   /* Tell __fillbf we've pushed back a char.  */
+  stream->__pushed_back = 1;
   stream->__pushback_bufp = stream->__bufp;
   /* Make the next getc call __fillbf.  It will return C.  */
   stream->__bufp = stream->__get_limit;
