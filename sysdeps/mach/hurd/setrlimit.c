@@ -72,9 +72,11 @@ DEFUN(setrlimit, (resource, rlimits),
       return -1;
 
     case RLIMIT_OFILE:
+      HURD_CRITICAL_BEGIN;
       __mutex_lock (&_hurd_dtable_lock);
       _hurd_dtable_rlimit = lim.rlim_cur; /* XXX open descriptors? */
       __mutex_unlock (&_hurd_dtable_lock);
+      HURD_CRITICAL_END;
       return 0;
     }
 }
