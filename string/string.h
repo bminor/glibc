@@ -124,9 +124,12 @@ extern int EXFUN(strcasecmp, (CONST char *__s1, CONST char *__s2));
 #endif
 
 #ifdef	__USE_GNU
+/* Compare no more than N chars of S1 and S2, ignoring case.  */
+extern int EXFUN(strncasecmp, (CONST char *__s1, CONST char *__s2,
+			       size_t __n));
+
 /* Return a string describing the meaning of the signal number in SIG.  */
 extern char *EXFUN(strsignal, (int __sig));
-
 
 /* Copy SRC to DEST, returning the address of the terminating '\0' in DEST.  */
 extern char *EXFUN(stpcpy, (char *__dest, CONST char *__src));
