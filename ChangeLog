@@ -15,7 +15,7 @@
 1999-12-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/arm/dl-machine.c (CLEAR_CACHE): Fix a2 value.
-	Patch by Scott Bambrough <scottb@betwinder.org>.
+	Patch by Scott Bambrough <scottb@netwinder.org>.
 
 1999-12-21  Andreas Schwab  <schwab@suse.de>
 
