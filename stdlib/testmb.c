@@ -5,12 +5,25 @@
 int
 DEFUN_VOID(main)
 {
-  wchar_t foo[5];
+  wchar_t w[10];
+  char c[10];
   int i;
-  int lose;
+  int lose = 0;
 
-  i = mbstowcs (foo, "bar", 4);
-  lose = !(i == 3 && foo[1] == 'a');
+  i = mbstowcs (w, "bar", 4);
+  if (!(i == 3 && w[1] == 'a'))
+    {
+      puts ("mbstowcs FAILED!");
+      lose = 1;
+    }
+
+  mbstowcs (w, "blah", 5);
+  i = wcstombs (c, w, 10);
+  if (i != 4)
+    {
+      puts ("wcstombs FAILED!");
+      lose = 1;
+    }
 
   puts (lose ? "Test FAILED!" : "Test succeeded.");
   return lose;
