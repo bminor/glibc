@@ -53,7 +53,7 @@ dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport setdtsz \
 	  fd-read fd-write
 inlines = $(addprefix inline-,fd port signal userlink)
-aux := hurdsyms hurdinit # hurdmsg
+aux := hurdsyms hurdinit msgstub # hurdmsg
 
 # The files inline-*.c contain the real-function definition of the
 # functions defined with `extern inline' in hurd/*.h.
