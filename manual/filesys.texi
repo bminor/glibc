@@ -216,7 +216,7 @@ A directory.
 A named pipe, or FIFO.  @xref{FIFO Special Files}.
 
 @item DT_SOCK
-A local-domain socket.  @xref{Local Domain}.
+A local-domain socket.  @c !!! @xref{Local Domain}.
 
 @item DT_CHR
 A character device.
