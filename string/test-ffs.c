@@ -32,7 +32,7 @@ DEFUN(main, (argc, argv),
   int i;
   void try (int value, int expected)
     {
-      if (value != expected)
+      if (ffs (value) != expected)
 	{
 	  fprintf (stderr, "%#x expected %d got %d\n",
 		   value, expected, ffs (value));
