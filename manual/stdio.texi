@@ -3252,7 +3252,7 @@ pointer in case of an error.
 @end deftypefun
 
 @node Hook Functions
-@subsection Custom Stream Hook Functions
+@subsubsection Custom Stream Hook Functions
 @cindex hook functions (of custom streams)
 
 Here are more details on how you should define the four hook functions
