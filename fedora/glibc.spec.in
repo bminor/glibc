@@ -1,4 +1,4 @@
-%define glibcrelease 59
+%define glibcrelease 60
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1239,6 +1239,14 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Sep 29 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-60
+- update from CVS
+  - fix get_myaddress (#133982)
+  - remove nonnull attribute from second utime argument (#133866)
+  - handle SIGSETXID the same way as SIGCANCEL in
+    sigaction/pthread_kill/sigwait/sigwaitinfo etc.
+  - add __extension__ to long long types in NPTL <bits/pthreadtypes.h>
+
 * Mon Sep 27 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-59
 - update from CVS
   - fix BZ #151, #362, #381, #407
