@@ -1,3 +1,9 @@
+1999-06-24  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/grpcache.c: Add "notfound" data to cache, not iov pointer.
+	* nscd/pwdcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+
 1999-06-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/arith.texi: Document restriction of ndigit parameter of
