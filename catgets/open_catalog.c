@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -35,7 +35,7 @@
 void
 __open_catalog (__nl_catd catalog, int with_path)
 {
-  int fd;
+  int fd = -1;
   struct stat st;
   int swapping;
 
@@ -161,8 +161,9 @@ __open_catalog (__nl_catd catalog, int with_path)
 	}
     }
 
-  if (fd < 0 || __fstat (fd, &st) < 0)
+  if (fd < 0 || __fstat (fd, &st) < 0 || !S_ISREG (st.st_mode))
     {
+      __close (fd);
       catalog->status = nonexisting;
       return;
     }
@@ -194,6 +195,7 @@ __open_catalog (__nl_catd catalog, int with_path)
       catalog->file_ptr = malloc (st.st_size);
       if (catalog->file_ptr == NULL)
 	{
+	  __close (fd);
 	  catalog->status = nonexisting;
 	  return;
 	}
@@ -205,6 +207,7 @@ __open_catalog (__nl_catd catalog, int with_path)
 				    + (st.st_size - todo)), todo);
 	  if (now == 0)
 	    {
+	      __close (fd);
 	      free ((void *) catalog->file_ptr);
 	      catalog->status = nonexisting;
 	      return;
