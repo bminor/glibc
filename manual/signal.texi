@@ -641,14 +641,17 @@ action for all of them is to cause the process to terminate.
 @comment signal.h
 @comment POSIX.1
 @deftypevr Macro int SIGPIPE
-If you use pipes or FIFO special files, you have to design your
-application so that one process opens the pipe for reading before
-another starts writing.  If the reading process never starts, or
-terminates unexpectedly, a write to the pipe or FIFO causes the writing
-process to receive a @code{SIGPIPE} signal.
+If you use pipes or FIFOs, you have to design your application so that
+one process opens the pipe for reading before another starts writing.
+If the reading process never starts, or terminates unexpectedly, a write
+to the pipe or FIFO causes the writing process to receive a
+@code{SIGPIPE} signal.
 
 Pipes and FIFO special files are discussed in more detail in @ref{Pipes
 and FIFOs}.
+
+@code{SIGPIPE} also occurs when you try to output to a socket that isn't
+connected.  @xref{Sending Data}.
 @end deftypevr
 @cindex pipe signal
 @cindex broken pipe signal
