@@ -58,10 +58,10 @@ endif
 # Find the MiG defs files in the kernel source.
 vpath %.defs $(mach-srcdir)
 
-# Install all .h and .defs files we find in the kernel's mach/ and device/
+# Install all .h and .defs files we find in some of the kernel's source
 # directories and their subdirectories (in MK82, max one level deep).
-# XXX really want all from device?
-mach-src-headers := $(wildcard $(foreach dir,mach device,\
+mach-src-headers := $(wildcard $(foreach dir,mach device mach_debug \
+					     $(config-machine),\
 					 $(addprefix $(mach-srcdir)/$(dir)/,\
 						     *.defs *.h \
 						     */*.defs */*.h)))
@@ -75,8 +75,11 @@ $(includedir)/device/%: $(mach-srcdir)/device/%; $(do-install)
 # Make a symlink for mach/machine in the installed include directory.
 install-others += $(includedir)/mach/machine
 $(includedir)/mach/machine: $(common-objpfx)config.make
-# XXX Ask mib about what best to do for this.
 	cd $(@D); ln -s $(config-machine) $(@F)
+
+# Install Mach's <sys/version.h> as <mach/version.h>.
+install-others += $(includedir)/mach/version.h
+$(includedir)/mach/version.h: $(mach-srcdir)/sys/version.h; $(do-install)
 
 # Define mach-syscalls and sysno-*.
 ifneq ($(no_deps),t)
