@@ -140,7 +140,7 @@ svc_register(xprt, prog, vers, dispatch, protocol)
 	u_long prog;
 	u_long vers;
 	void (*dispatch)();
-	int protocol;
+	u_long protocol;
 {
 	struct svc_callout *prev;
 	register struct svc_callout *s;
