@@ -20,12 +20,13 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 
-/* Does not return (when applied to the calling task).  */
-extern volatile void __task_terminate (task_t);
-
 void
 DEFUN(_exit, (status), int status)
 {
+  /* Does not return (when applied to the calling task).  */
+  extern volatile error_t __proc_exit (process_t, int);
+  extern volatile void __task_terminate (task_t);
+
   __proc_exit (_hurd_proc, status);
   __task_terminate (__mach_task_self ());
 }
