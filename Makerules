@@ -499,23 +499,21 @@ $(common-objpfx)stub-$(subdir): $(+depfiles)
 dist: distinfo $(..)Make-dist 
 	$(MAKE) -f $< -f $(word 2,$^) $(Make-dist-args)
 
-dist: $(distribute) DEPENDING-ON-A-LOSER
+dist: $(distribute)
 
 # We used to simply export all these variables, but that frequently made the
 # environment get too large.  Instead, we write all the information into
 # a generated makefile fragment `distinfo', and then include it with -f in
 # the sub-make that makes the distribution (above).
 distinfo: Makefile $(..)Makerules
-	rm -f $@
-	echo >> $@ 'subdir		:= $(subdir)'
-	echo >> $@ 'sources		:= $(sources)'
-	echo >> $@ 'sysdep_routines	:= $(sysdep_routines)'
-	echo >> $@ 'headers		:= $(headers)'
-	echo >> $@ 'distribute		:= $(distribute)'
-	echo >> $@ 'dont_distribute	:= $(dont_distribute)'
-	echo >> $@ 'generated		:= $(generated)'
-	echo >> $@ 'others		:= $(others)'
-	echo >> $@ 'tests		:= $(tests)'
+	$(distinfo-vars)
+	mv -f $@.new $@
+
+define distinfo-vars
+$(foreach var,subdir sources sysdep_routines headers distribute \
+	      dont_distribute generated others tests,
+echo >> $@.new '$(var)	:= $($(var))')
+endef
 
 ifneq (,$(strip $(gpl2lgpl)))
 ifneq (,$(wildcard $(..)gpl2lgpl.sed))
