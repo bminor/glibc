@@ -1,6 +1,15 @@
+1997-04-20 01:28  Richard Henderson  <rth@tamu.edu>
+
+	* rellns-sh: Handle files in the same directory correctly.
+
+1997-04-20 11:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/initfini.c: Place ALIGN instruction at correct positions.
+	Patch by Richard Henderson <richard@twiddle.rth.home>.
+
 1997-04-19 17:12  Ulrich Drepper  <drepper@cygnus.com>
 
-	* Make-dist: Don't automatically ignore .c files os .S or .s files
+	* Make-dist: Don't automatically ignore .c files if .S or .s files
 	are ignored.
 
 	* csu/Makefile (distribute): Add defs.awk.
