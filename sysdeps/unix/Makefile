@@ -33,7 +33,7 @@ $(objpfx)make-errnos.c: $(sysdep_dir)/unix/errnos-tmpl.c \
 	mv $@-tmp $@
 
 $(objpfx)errnos: $(wildcard /usr/include/errno.h /usr/include/sys/errno.h)
-	cat $^ | sed -n 's/^#define[ 	]*\(E[A-Z0-9]*\).*$$/\1/p' > $@-tmp
+	cat $^ | sed -n 's/^#define[ 	]*\(E[A-Z0-9]*\)[ 	]*[0-9][0-9]*[	]*.*$$/\1/p' > $@-tmp
 	mv $@-tmp $@
 
 ifeq ($(subdir),misc)
@@ -74,21 +74,13 @@ $(objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls /usr/include/sys/ioctl.h
 
 ifeq ($(subdir),stdio)
 
-before-compile: $(objpfx)errlist.c $(objpfx)siglist.c
+before-compile: $(objpfx)errlist.c
 $(objpfx)errlist.c: $(objpfx)make_errlist
 	@rm -f $@
 	$< > $@-tmp
 	mv $@-tmp $@
 
-$(objpfx)siglist.c: $(objpfx)make_siglist
-	@rm -f $@
-	$< > $@-tmp
-	mv $@-tmp $@
-
 $(objpfx)make_errlist: $(sysdep_dir)/unix/make_errlist.c
-	$(CC) $< -o $@
-
-$(objpfx)make_siglist: $(sysdep_dir)/unix/make_siglist.c
 	$(CC) $< -o $@
 
 endif
