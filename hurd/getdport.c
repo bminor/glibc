@@ -18,13 +18,16 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 
-/* This is initialized in dtable.c when that gets linked in.  */
+/* This is initialized in dtable.c when that gets linked in.
+   If dtable.c is not linked in, it will be zero.  */
 file_t (*_hurd_getdport_fn) (int fd);
 
 file_t
 __getdport (int fd)
 {
   if (_hurd_getdport_fn)
+    /* dtable.c has defined the function to fetch a port from the real file
+       descriptor table.  */
     return (*_hurd_getdport_fn) (fd);
 
   /* getdport is the only use of file descriptors,
