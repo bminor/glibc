@@ -1,4 +1,4 @@
-%define glibcrelease 2.fc3.1
+%define glibcrelease 2.fc3.2
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1270,6 +1270,17 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sat Feb 26 2005 Roland McGrath <roland@redhat.com> 2.3.4-2.fc3.2
+- update from CVS (glibc-2_3-branch)
+  - fix handling of hosts with ~ 1K or bigger info per answer
+    when using nscd (#140378, BZ#769)
+  - handle partial writes in nscd and partial reads in nscd client
+    code (#147478, BZ#768)
+  - fix a bug in execvp introduced in branch changes, add testcases
+    for the whole exec* family of functions
+  - fix TLS handling in statically linked programs (BZ#719)
+  - provide symlink/readlink prototypes with -D_POSIX_C_SOURCE=200112L (BZ#767)
+
 * Thu Feb 17 2005 Roland McGrath <roland@redhat.com> 2.3.4-2.fc3.1
 - update from CVS (glibc-2_3-branch)
   - existing fix for -ansi vs -D_XOPEN_SOURCE merged upstream (BZ#284)
@@ -1312,7 +1323,7 @@ rm -f *.filelist*
     (#144037, IT#57403, BZ#727)
   - fix ppc/ppc64 rint and other rounding functions (#144931, BZ#602)
 
-* Mon Dec 19 2004 Jakub Jelinek <jakub@redhat.com> 2.3.4-2
+* Mon Dec 19 2004 Jakub Jelinek <jakub@redhat.com> 2.3.4-2.fc3
 - work around rpm bug some more, this time by copying
   iconvconfig to iconvconfig.%%{_target_cpu}.
 
