@@ -114,6 +114,11 @@
 #undef DKIOCEXCL
 #undef DKIOCGET
 #undef DKIOCHDR
+/* Introduced by OSF/1 2.0.  */
+#undef FIOPIPESTAT
+#undef SIOCSRREQR
+#undef SIOCSRREQW
+#undef SRVC_REQUEST
 #endif
 
 #define	DEFINE(name, value) \
