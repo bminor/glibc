@@ -157,7 +157,7 @@ _dl_runtime_resolve:
 	subq	$17, 20, $17
 	addq	$17, $17, $17
 	/* Do the fixup */
-	bsr	$26, fixup..ng
+	bsr	$26, "ASM_ALPHA_NG_SYMBOL_PREFIX"fixup..ng
 	/* Move the destination address into position.  */
 	mov	$0, $27
 	/* Restore program registers.  */
@@ -205,7 +205,7 @@ _start:
 0:	ldgp	$gp, 0($gp)
 	/* Pass pointer to argument block to _dl_start.  */
 	mov	$sp, $16
-	bsr	$26, _dl_start..ng
+	bsr	$26, "ASM_ALPHA_NG_SYMBOL_PREFIX"_dl_start..ng
 	.end _start
 	/* FALLTHRU */
 	.globl _dl_start_user
@@ -248,6 +248,9 @@ _dl_start_user:
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */
 #define elf_machine_pltrel_p(type)  ((type) == R_ALPHA_JMP_SLOT)
+
+/* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
+#define ELF_MACHINE_JMP_SLOT	R_ALPHA_JMP_SLOT
 
 /* The alpha never uses Elf64_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
