@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <gnu-stabs.h>
 
-#if 0
+#ifdef noteven
 struct mutex _hurd_pid_lock;
 #endif
 pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
@@ -28,7 +28,7 @@ int _hurd_orphaned;
 static void
 init_pids (void)
 {
-#if 0
+#ifdef noteven
   __mutex_init (&_hurd_pid_lock);
 #endif
 
@@ -41,7 +41,7 @@ init_pids (void)
 
 text_set_element (__libc_subinit, init_pids);
 
-#include "hurd/msg_server.h"
+#include <hurd/msg_server.h>
 
 error_t
 _S_proc_newids (mach_port_t me,
