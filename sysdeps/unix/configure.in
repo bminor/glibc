@@ -33,7 +33,7 @@ for unix_dir in $sysnames; do
 done
 if [ $unix_found = stub ]; then
   # XXX This list of possibilities duplicates the list in Makefile.
-  for try in syscall.h sys/syscall.h sys.s sys/sys.s sys.S sys/sys.S; do
+  for try in sys.s sys/sys.s sys.S sys/sys.S syscall.h sys/syscall.h; do
     if [ -r $sysincludedir/$try ]; then
       unix_syscall_h=$sysincludedir/$try
       break
