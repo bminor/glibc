@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,14 +29,17 @@ DEFUN(memmem, (haystack, haystack_len,
       CONST PTRCONST needle AND CONST size_t needle_len)
 {
   register CONST char *begin;
+  register CONST char *CONST last_possible
+    = (CONST char *) haystack + haystack_len - needle_len;
 
   if (needle_len == 0)
     return (PTR) &((CONST char *) haystack)[needle_len - 1];
 
-  for (begin = &((CONST char *) haystack)[needle_len - 1];
-       begin < (CONST char *) haystack + haystack_len;
-       ++begin)
-    if (!memcmp ((PTR) begin, needle, needle_len))
+  for (begin = (CONST char *) haystack; begin <= last_possible; ++begin)
+    if (begin[0] == ((CONST char *) needle)[0] &&
+	!memcmp ((CONST PTR) &begin[1],
+		 (CONST PTR) ((CONST char *) needle + 1),
+		 needle_len - 1))
       return (PTR) begin;
 
   return NULL;

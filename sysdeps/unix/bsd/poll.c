@@ -19,6 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include <sys/poll.h>
 #include <sys/types.h>
 #include <errno.h>
+#include <string.h>
+#include <sys/time.h>
 
 /* Poll the file descriptors described by the NFDS structures starting at
    FDS.  If TIMEOUT is nonzero and not -1, allow TIMEOUT milliseconds for
