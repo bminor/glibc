@@ -43,7 +43,6 @@ DEFUN(__sigprocmask, (how, set, oset),
   if (set != NULL)
     {
       sigset_t pending;
-      int i;
 
       switch (how)
 	{
