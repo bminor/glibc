@@ -97,11 +97,6 @@ $(objpfx)%_server.c $(objpfx)%_server.h: %.defs
 	       -user /dev/null -header /dev/null \
 	       -server $(@:.h=.c) -sheader $(@:.c=.h)
 
-# Make the target directory if it doesn't exist.
-define make-target-directory
-$(patsubst %/,-mkdir %,$(filter-out $(wildcard $(@D)),$(@D)))
-endef
-
 # To get header files that declare both the straight and __ functions,
 # we generate two files and paste them together.
 $(objpfx)%.uh: %.defs; $(mig.uh)
