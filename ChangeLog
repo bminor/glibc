@@ -1,3 +1,13 @@
+1998-08-20 17:14  H.J. Lu  <hjl@gnu.org>
+
+	* libio/libioP.h (FILEBUF_LITERAL): Set the _offset field to
+	_IO_pos_BAD.
+
+1998-02-20 17:54  H.J. Lu  <hjl@gnu.org>
+
+	* libio/fileops.c (_IO_file_seekoff): Don't adjust pointers if
+	_IO_SYSSEEK fails.
+
 1998-08-20 19:14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/Makefile [subdirs=misc] (sysdeps_routines):
