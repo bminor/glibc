@@ -15,9 +15,6 @@ License along with this library; see the file COPYING.LIB.  If
 not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* @ */
-#include <ansidecl.h>
-/* @ */
 #include <errno.h>
 #include <fnmatch.h>
 
