@@ -128,8 +128,8 @@ for b in $base ''; do
 	  try="$m0$b$v$o$m"
 	  if test -d $sysdep_dir$try; then
 	    sysnames="$sysnames $try"
-	    { test -n "$o" || test -n "$b" } && os_used=t
-	    { test -n "$m" || test -n "$m0" } && machine_used=t
+	    { test -n "$o" || test -n "$b"; } && os_used=t
+	    { test -n "$m" || test -n "$m0"; } && machine_used=t
 	  fi
 	done
       done
@@ -304,8 +304,8 @@ for dir in $sysnames; do
     . $sysdep_dir/$dir/configure
   fi
   if test -z "$uname"; then
-    { test -r $sysdep_dir/$dir/uname.c || test -r $sysdep_dir/$dir/uname.S } &&
-    uname=$dir
+    { test -r $sysdep_dir/$dir/uname.c || test -r $sysdep_dir/$dir/uname.S; } \
+    && uname=$dir
   fi
 done
 
