@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@ Cambridge, MA 02139, USA.  */
 #include <signal.h>
 
 
+sigset_t _sigintr;		/* Set by siginterrupt.  */
+
 /* Set the handler for the signal SIG to HANDLER,
    returning the old handler, or SIG_ERR on error.  */
 __sighandler_t
@@ -35,10 +37,10 @@ DEFUN(signal, (sig, handler), int sig AND __sighandler_t handler)
     }
 
   act.sa_handler = handler;
-  if (__sigemptyset(&act.sa_mask) < 0)
+  if (__sigemptyset (&act.sa_mask) < 0)
     return SIG_ERR;
-  act.sa_flags = 0;
-  if (__sigaction(sig, &act, &oact) < 0)
+  act.sa_flags = __sigismember (sig, _sigintr) ? 0 : SA_RESTART;
+  if (__sigaction (sig, &act, &oact) < 0)
     return SIG_ERR;
 
   return oact.sa_handler;
