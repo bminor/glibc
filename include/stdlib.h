@@ -49,6 +49,9 @@ extern int __getpt __P ((void));
 
 extern int __add_to_environ (const char *name, const char *value,
 			     const char *combines, int replace);
+
+extern int __cxa_atexit (void (*func) (void *), void *arg, void *d);
+
 #endif
 #undef __Need_M_And_C
 
