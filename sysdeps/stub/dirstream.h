@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 
 /* This file should define a typedef `DIR', the data type of directory
    stream objects returned by `opendir'.  */
+
 #error "No system-dependent definition of `DIR'."
 
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,54 +23,43 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <dirent.h>
 #include <unistd.h>
-#include <bsddir.h>
 #include <sys/types.h>
 
-#ifndef	READ_DIRECTORY
-#define	READ_DIRECTORY							      \
-{									      \
-  int bytes = __read(dirp->__fd, dirp->__data, dirp->__allocation);	      \
-  if (bytes <= 0)							      \
-    return NULL;							      \
-  dirp->__size = (size_t) bytes;					      \
-}
-#endif
 
 /* Read a directory entry from DIRP.  */
 struct dirent *
 DEFUN(readdir, (dirp), DIR *dirp)
 {
+  struct dirent *dp;
+
   if (dirp == NULL || dirp->__data == NULL)
     {
       errno = EINVAL;
       return NULL;
     }
 
-  for (;;)
+  do
     {
-      struct direct *dp;
-
       if (dirp->__offset >= dirp->__size)
 	{
 	  /* We've emptied out our buffer.  Refill it.  */
-	  READ_DIRECTORY;
+
+	  off_t base;
+	  ssize_t bytes = __getdirentries (dirp->__fd, dirp->__data,
+					   dirp->__allocation, &base);
+	  if (bytes <= 0)
+	    return NULL;
+	  dirp->__size = (size_t) bytes;
+
 	  /* Reset the offset into the buffer.  */
 	  dirp->__offset = 0;
 	}
 
-      dp = (struct direct *) &dirp->__data[dirp->__offset];
+      dp = (struct dirent *) &dirp->__data[dirp->__offset];
       dirp->__offset += dp->d_reclen;
 
-      if (dp->d_ino != 0)
-	{
-	  /* Not a deleted file.  */
-	  register struct dirent *d = &dirp->__entry;
-	  d->d_fileno = (ino_t) dp->d_ino;
-	  d->d_namlen = (size_t) dp->d_namlen;
-	  if (d->d_namlen > NAME_MAX)
-	    d->d_namlen = NAME_MAX;
-	  (void) strncpy(d->d_name, dp->d_name, d->d_namlen + 1);
-	  return d;
-	}
-    }
+      /* Loop to ignore deleted files.  */
+    } while (dp->d_fileno == 0);
+
+  return dp;
 }

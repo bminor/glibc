@@ -19,13 +19,13 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <hurd.h>
 
 /* Set the current machine's Internet number to ID.
    This call is restricted to the super-user.  */
 int
 DEFUN(sethostid, (id), long int id)
 {
-  error_t err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
-				__proc_sethostid (port, id));
+  error_t err = __USEPORT (PROC, __proc_sethostid (port, id));
   return err ? __hurd_fail (err) : 0;
 }

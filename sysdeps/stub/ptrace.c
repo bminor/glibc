@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +55,9 @@ DEFUN(ptrace, (request), enum __ptrace_request request DOTS)
     case PTRACE_PEEKUSER:
     case PTRACE_GETREGS:
     case PTRACE_SETREGS:
+#ifdef PTRACE_GETFPREGS
     case PTRACE_GETFPGEGS:
+#endif
     case PTRACE_SETFPREGS:
     case PTRACE_GETFPAREGS:
     case PTRACE_SETFPAREGS:
