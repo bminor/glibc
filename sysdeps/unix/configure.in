@@ -39,7 +39,7 @@ do
   #	__CALL			CALL			__CALL
   #	__CALL/NAME		CALL			NAME
   unix_srcname=
-  eval "unix_syscall=`echo $unix_functon | \
+  eval "unix_syscall=`echo $unix_function | \
 		       sed -e '/^__/s/^__//' \
 			   -e 's@/\(.*\)$@ unix_srcname=\1@'`"
   test -z "$unix_srcname" && unix_srcname=$unix_function
