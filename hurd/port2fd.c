@@ -70,6 +70,7 @@ _hurd_port2fd (struct hurd_fd *d, io_t port, int flags)
     /* No ctty magic happening here.  */
     ctty = MACH_PORT_NULL;
 
-  _hurd_port_set (&d->port, port);
+  /* The immediately following line is broken.  -mib */
+  d->port.port = port;		/* XXX FIXME */
   _hurd_port_set (&d->ctty, ctty);
 }
