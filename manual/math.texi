@@ -819,10 +819,10 @@ This is a structure type used to hold the result returned by the @code{div}
 function.  It has the following members:
 
 @table @code
-@item {int quot}
+@item int quot
 The quotient from the division.
 
-@item {int rem}
+@item int rem
 The remainder from the division.
 @end table
 @end deftp
@@ -846,10 +846,10 @@ This is a structure type used to hold the result returned by the @code{ldiv}
 function.  It has the following members:
 
 @table @code
-@item {long int quot}
+@item long int quot
 The quotient from the division.
 
-@item {long int rem}
+@item long int rem
 The remainder from the division.
 @end table
 
