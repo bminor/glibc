@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +55,9 @@ DEFUN(__stdio_init_stream, (stream), FILE *stream)
 	stream->__linebuf = 1;
     }
   
+#ifdef	_STATBUF_ST_BLKSIZE
   /* Use the block-size field to determine
      the system's optimal buffering size.  */
   stream->__bufsize = statb.st_blksize;
+#endif
 }
