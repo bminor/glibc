@@ -123,6 +123,10 @@ $(inst_libdir)/libc.so: $(rpcuserlibs)
 ifeq (elf,$(subdir))
 $(objpfx)librtld.so: $(rpcuserlibs:.so=_pic.a)
 endif
+
+ifeq ($(subdir),misc)
+sysdep_routines += cthreads
+endif
 
 
 endif	# in-Makerules
