@@ -306,25 +306,40 @@ This is the actual socket address data, which is format-dependent.
 
 These symbolic constants designate particular address formats:
 
+@table @code
 @comment sys/socket.h
 @comment GNU
-@deftypevr Macro int AF_FILE
+@item AF_FILE
+@vindex AF_FILE
 This designates the address format that goes with the file namespace.
 @xref{File Namespace}.
-@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@deftypevr Macro int AF_UNIX
+@item AF_UNIX
+@vindex AF_UNIX
 This is a synonym for @code{AF_FILE}, for compatibility.
-@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@deftypevr Macro int AF_INET
+@item AF_INET
+@vindex AF_INET
 This designates the address format that goes with the Internet namespace.
 @xref{Internet Namespace}.
-@end deftypevr
+
+@comment sys/socket.h
+@comment BSD
+@item AF_UNSPEC
+@vindex AF_UNSPEC
+This designates no particular address format.  It is used only in rare
+cases, such as to clear out the default destination address of a
+``connected'' datagram socket.  @xref{Sending Datagrams}.
+@end table
+
+@file{sys/socket.h} defines symbols starting with @samp{AF_} for a large
+collection of network protocols, all or most of which are not actually
+implemented.  We will document those that really work, as we receive
+information about how to use them.
 
 @node Setting Address
 @subsection Setting a Socket's Address
