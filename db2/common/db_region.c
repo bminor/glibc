@@ -507,8 +507,18 @@ __db_rdetach(infop)
 	 * If the region was removed when it was created, no further action
 	 * is required.
 	 */
-	if (F_ISSET(infop, REGION_REMOVED))
+	if (F_ISSET(infop, REGION_REMOVED)) {
+		if (F_ISSET(infop, REGION_PRIVATE)
+		    && !F_ISSET(infop, REGION_MALLOC))
+	 		/*
+			 * If it is private and not malloced, the
+			 * region is still mapped in. We need to
+			 * discard our mapping of the region.
+			 */
+			ret = __db_unmapregion(infop);
 		goto done;
+	}
+
 	/*
 	 * If the region was created in memory returned by malloc, the only
 	 * action required is freeing the memory.
