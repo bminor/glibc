@@ -1,3 +1,8 @@
+2002-01-07  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/init-first.c (_hurd_stack_setup): Use
+	volatile on type of ARGC so the compiler doesn't get clever.
+
 2002-01-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump to 2.2.5.
