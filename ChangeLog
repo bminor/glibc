@@ -1,5 +1,10 @@
 1999-07-08  Andreas Schwab  <schwab@suse.de>
 
+	* libio/fileno.c: Return -1 instead of EOF and set errno if the
+	stream is not a real file stream.
+
+1999-07-08  Andreas Schwab  <schwab@suse.de>
+
 	* manual/charset.texi: Fix typos.
 
 1999-07-07  Ulrich Drepper  <drepper@cygnus.com>
