@@ -302,7 +302,7 @@ returns @code{0.5} and stores @code{2.0} into @code{intpart}.
 @deftypefun double fmod (double @var{numerator}, double @var{denominator})
 This function computes the remainder from the division of
 @var{numerator} by @var{denominator}.  Specifically, the return value is
-@w{@code{@var{numerator} - @var{n} * @var{denominator}}}, where @var{n}
+@code{@var{numerator} - @w{@var{n} * @var{denominator}}}, where @var{n}
 is the quotient of @var{numerator} divided by @var{denominator}, rounded
 towards zero to an integer.  Thus, @w{@code{fmod (6.5, 2.3)}} returns
 @code{1.9}, which is @code{6.5} minus @code{4.6}.
