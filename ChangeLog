@@ -1,3 +1,8 @@
+1997-05-24 17:45  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* gmon/gmon.c (_mcleanup): Free tostruct array allocated in
+	monstartup.
+
 1997-05-25 00:45  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/fpu/__math.h (logb): Fix thinko, reverse output
