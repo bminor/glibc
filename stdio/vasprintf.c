@@ -62,18 +62,19 @@ DEFUN(vasprintf, (string_ptr, format, args),
   FILE f;
   int done;
 
-  memset((PTR) &f, 0, sizeof(f));
+  memset ((PTR) &f, 0, sizeof (f));
   f.__magic = _IOMAGIC;
   f.__bufsize = 100;
-  f.__buffer = (char *) malloc(f.__bufsize);
+  f.__buffer = (char *) malloc (f.__bufsize);
   if (f.__buffer == NULL)
     return -1;
   f.__bufp = f.__buffer;
   f.__put_limit = f.__buffer + f.__bufsize;
   f.__mode.__write = 1;
   f.__room_funcs.__output = enlarge_buffer;
+  f.__seen = 1;
 
-  done = vfprintf(&f, format, args);
+  done = vfprintf (&f, format, args);
   if (done < 0)
     return done;
 
