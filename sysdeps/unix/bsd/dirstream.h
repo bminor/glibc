@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 
 #define __need_size_t
 #include <stddef.h>
+#include <gnu/types.h>		/* For __off_t.  */
 
 /* Directory stream type.
 
@@ -36,6 +37,7 @@ typedef struct
     size_t __allocation;	/* Space allocated for the block.  */
     size_t __offset;		/* Current offset into the block.  */
     size_t __size;		/* Total valid data in the block.  */
+    __off_t __pos;		/* Position in directory of this block.  */
   } DIR;
 
 #endif	/* dirstream.h */
