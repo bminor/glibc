@@ -283,13 +283,7 @@ extern int sigreturn __P ((struct sigcontext *__scp));
    calls be restarted after signal SIG.  */
 extern int siginterrupt __P ((int __sig, int __interrupt));
 
-
-/* Structure describing a signal stack.  */
-struct sigstack
-  {
-    __ptr_t ss_sp;		/* Signal stack pointer.  */
-    int ss_onstack;		/* Nonzero if executing on this stack.  */
-  };
+#include <sigstack.h>
 
 /* Run signals handlers on the stack specified by SS (if not NULL).
    If OSS is not NULL, it is filled in with the old signal stack status.  */
@@ -297,13 +291,6 @@ extern int sigstack __P ((__const struct sigstack *__ss,
 			  struct sigstack *__oss));
 
 /* Alternate interface.  */
-struct sigaltstack
-  {
-    __ptr_t ss_sp;
-    size_t ss_size;
-    int ss_flags;
-  };
-
 extern int sigaltstack __P ((__const struct sigaltstack *__ss,
 			     struct sigaltstack *__oss));
 
