@@ -1,5 +1,5 @@
 /* The proper definitions for Linux/MIPS's sigaction.
-   Copyright (C) 1993, 1994, 1995, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1993-1995, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,6 +56,7 @@ struct sigaction
 
 /* Bits in `sa_flags'.  */
 #define SA_NOCLDSTOP  0x00020000 /* Don't send SIGCHLD when children stop.  */
+#define SA_NOCLDWAIT  0x00010000 /* Don't create zombie on child death.  */
 #define SA_SIGINFO    0x00000008 /* Invoke signal-catching function with
 				    three arguments instead of one.  */
 #if defined __USE_UNIX98 || defined __USE_MISC
