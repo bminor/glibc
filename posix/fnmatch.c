@@ -77,7 +77,8 @@ fnmatch (pattern, string, flags)
 	    return 0;
 
 	  {
-	    char c1 = (!(flags & FNM_NOESCAPE) && c == '\\') ? FOLD (*p) : c;
+	    char c1 = (!(flags & FNM_NOESCAPE) && c == '\\') ? *p : c;
+	    c1 = FOLD (c1);
 	    for (--p; *n != '\0'; ++n)
 	      if ((c == '[' || FOLD (*n) == c1) &&
 		  fnmatch (p, n, flags & ~FNM_PERIOD) == 0)
