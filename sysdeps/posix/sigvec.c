@@ -90,13 +90,26 @@ DEFUN(__sigvec, (sig, vec, ovec),
 	{
 	  n = &new;
 	  n->sa_handler = vec->sv_handler;
-	  if (convert_mask(&n->sa_mask, vec->sv_mask) < 0)
+	  if (convert_mask (&n->sa_mask, vec->sv_mask) < 0)
 	    return -1;
-	  n->sa_flags = (((vec->sv_flags & SV_ONSTACK) ? SA_ONSTACK : 0) |
-			 (!(vec->sv_flags & SV_INTERRUPT) ? SA_RESTART : 0));
+	  n->sa_flags = 0;
+	  
+	  if (vec->sv_flags & SV_ONSTACK)
+	    {
+#ifdef SA_ONSTACK
+	      n->sa_flags |= SA_ONSTACK;
+#else
+	      errno = ENOSYS;
+	      return -1;
+	    }
+#endif
+#ifdef SA_RESTART
+	  if (!(vec->sv_flags & SV_INTERRUPT))
+	    n->sa_flags |= SA_RESTART;
+#endif
 	}
 
-      if (__sigaction(sig, n, &old) < 0)
+      if (__sigaction (sig, n, &old) < 0)
 	return -1;
     }
   else
@@ -105,10 +118,10 @@ DEFUN(__sigvec, (sig, vec, ovec),
 
       wrapper.sa_handler = wrapper_handler;
       wrapped_handlers[sig] = vec->sv_handler;
-      if (convert_mask(&wrapped_masks[sig], vec->sv_mask) < 0)
+      if (convert_mask (&wrapped_masks[sig], vec->sv_mask) < 0)
 	return -1;
 
-      if (__sigaction(sig, &wrapper, &old) < 0)
+      if (__sigaction (sig, &wrapper, &old) < 0)
 	return -1;
     }
 
@@ -125,8 +138,15 @@ DEFUN(__sigvec, (sig, vec, ovec),
 	    mask |= sigmask(i);
 
       ovec->sv_mask = mask;
-      ovec->sv_flags = (((old.sa_flags & SA_ONSTACK) ? SV_ONSTACK : 0) |
-			(!(old.sa_flags & SA_RESTART) ? SV_INTERRUPT : 0));
+      ovec->sv_flags = 0;
+#ifdef SA_ONSTACK
+      if (old.sa_flags & SA_ONSTACK)
+	ovec->sv_flags |= SV_ONSTACK;
+#endif
+#ifdef SA_RESTART
+      if (!(old.sa_flags & SA_RESTART))
+#endif
+	ovec->sv_flags |= SV_INTERRUPT;
       if (old.sa_handler == wrapper_handler)
 	{
 	  ovec->sv_flags |= SV_RESETHAND;
