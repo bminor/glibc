@@ -298,7 +298,10 @@ ifneq ($(no_deps),t)
 # Include the generated dependencies of the sources in this directory.
 ifdef have.make.that.groks.multiple.includes
 # Avoid the extra file and waiting for it, since we can.
++depfiles := $(strip $(+depfiles))
+ifdef +depfiles
 include $(+depfiles)
+endif
 else
 include $(objpfx)depend-$(subdir)
 endif
