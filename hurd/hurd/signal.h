@@ -213,7 +213,7 @@ extern void _hurd_raise_signal (struct hurd_sigstate *ss,
 /* Translate a Mach exception into a signal (machine-dependent).  */
 
 extern void _hurd_exception2signal (int exception, int code, int subcode,
-				    int *signo, int *sigcode);
+				    int *signo, int *sigcode, int *error);
 
 
 /* Make the thread described by SS take the signal described by SIGNO and
@@ -222,7 +222,7 @@ extern void _hurd_exception2signal (int exception, int code, int subcode,
    entry, and released before return.  */
 
 extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
-					int signo, int sigcode,
+					int signo, int sigcode, int error,
 					mach_port_t reply_port,
 					mach_msg_type_name_t reply_port_type);
 
