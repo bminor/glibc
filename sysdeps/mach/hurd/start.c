@@ -180,7 +180,7 @@ _start (void)
   mach_port_t in_bootstrap;
 
   /* GET_STACK (LOW, HIGH) should put the boundaries of the allocated
-     stack into LOW and HIGH.  */
+     stack into LOW and HIGH.  We later round them to page boundaries.  */
 
 #ifndef	GET_STACK
 #error GET_STACK not defined by sysdeps/mach/hurd/MACHINE/sysdep.h
@@ -189,6 +189,10 @@ _start (void)
 
   /* Basic Mach initialization, must be done before RPCs can be done.  */
   __mach_init ();
+
+  /* We can use `round_page' now because __mach_init has set vm_page_size.  */
+  _hurd_stack_low = trunc_page (_hurd_stack_low);
+  _hurd_stack_high = round_page (_hurd_stack_high);
 
   if (err = __task_get_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
 				     &in_bootstrap))
