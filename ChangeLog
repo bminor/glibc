@@ -1,3 +1,8 @@
+2002-05-20  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/powerpc/Makefile: Build libgcc-compat and divdi3.
+	* sysdeps/powerpc/libgcc-compat.c: New file.
+
 2002-05-16  Bruno Haible  <bruno@clisp.org>
 
 	* MakeTAGS (libc.pot): Don't sort the output.
