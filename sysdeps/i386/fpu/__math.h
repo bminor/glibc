@@ -381,7 +381,7 @@ hypot (double __x, double __y)
 
 /* We cannot rely on M_SQRT being defined.  So we do it for ourself
    here.  */
-# define __M_SQRT2      _Mldbl(1.41421356237309504880)  /* sqrt(2) */
+# define __M_SQRT2      1.41421356237309504880L  /* sqrt(2) */
 
 __MATH_INLINE double log1p (double __x);
 __MATH_INLINE double
