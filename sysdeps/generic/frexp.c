@@ -24,6 +24,28 @@ Cambridge, MA 02139, USA.  */
 double
 DEFUN(frexp, (value, exp), double value AND int *exp)
 {
+#ifdef	NAN
+  if (__isinf (value))
+    {
+      errno = EDOM;
+      *exp = 0;
+      return __copysign (NAN, value);
+    }
+#endif
+
+  if (__isnan (value))
+    {
+      errno = EDOM;
+      *exp = 0;
+      return value;
+    }
+
+  if (value == 0)
+    {
+      *exp = 0;
+      return value;
+    }
+
   /* Add one to the exponent of the number,
      so we have one digit before the binary point.  */
   *exp = (int) __logb (value) + 1;
