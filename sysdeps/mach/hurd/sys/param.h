@@ -80,10 +80,18 @@ Cambridge, MA 02139, USA.  */
 #define BSD4_4	0.5
 
 
-/* BSD names for some <limits.h> values.  */
+/* BSD names for some <limits.h> values.  We do not define the BSD names
+   for the values which are not statically limited, such as NOFILE.  */
+
 #define	NGROUPS		NGROUPS_MAX
 #define	MAXSYMLINKS	SYMLINK_MAX
 #define	CANBSIZ		MAX_CANON /* XXX ? */
+#define	NCARGS		INT_MAX	/* XXX ? */
+
+/* There is nothing quite equivalent in GNU to Unix "mounts", but there is
+   no limit on the number of simultaneously attached filesystems.  */
+#define NMOUNT		INT_MAX
+
 
 /* Magical constants.  */
 #define	NOGROUP	65535		/* Marker for empty group set member.  */
