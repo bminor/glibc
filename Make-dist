@@ -55,11 +55,15 @@ foo:=$(shell echo 'IS THIS WORKING??? all-headers=$(all-headers)' >&2)
 		  $(filter %.c %.S %.s %.h,$(distribute))
 foo:=$(shell echo '+maybe-sysdeps=$(+maybe-sysdeps)'>&2)
 # Find all the files that have a stub or generic version.
-+sysdeps := $(wildcard $(foreach dir,$(..)sysdeps/stub $(..)sysdeps/generic,\
-				 $(addprefix $(dir),$(+maybe-sysdeps))))
+try-sysdeps := $(foreach dir,$(..)sysdeps/stub $(..)sysdeps/generic,\
+			     $(addprefix $(dir)/,$(+maybe-sysdeps)))
+foo:=$(shell echo 'try-sysdeps=$(try-sysdeps)'>&2)
++sysdeps := $(wildcard $(try-sysdeps))
+foo:=$(shell echo 'stub/generic +sysdeps=$(+sysdeps)'>&2)
++sysdeps := $(notdir $(+sysdeps))	# Get just the file names.
 # Now find all the sysdep versions of those files.
 +sysdeps := $(wildcard $(foreach dir,$(sysdep_dirs) $(source_dirs),\
-				 $(notdir $(+sysdeps))))
+				 $(addprefix $(dir)/,$(+sysdeps))))
 
 # Source and header files to go in the distribution tar file.
 
