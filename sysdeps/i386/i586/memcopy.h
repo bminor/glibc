@@ -1,4 +1,4 @@
-/* memcopy.h -- definitions for memory copy functions.  i586 version.
+/* memcopy.h -- definitions for memory copy functions.  Pentium version.
    Copyright (C) 1994 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
@@ -31,64 +31,64 @@ Cambridge, MA 02139, USA.  */
 #define WORD_COPY_FWD(dst_bp, src_bp, nbytes_left, nbytes)		\
   do									\
     {									\
-      size_t __zero;							\
-      if ((nbytes) / 32 != 0)						\
-	asm volatile ("loop:\n"						\
-		      "movl	0(%1),%%eax\n"				\
-		      "movl	4(%1),%%edx\n"				\
-		      "movl	%%eax,0(%0)\n"				\
-		      "movl	%%edx,4(%0)\n"				\
-		      "movl	8(%1),%%eax\n"				\
-		      "movl	12(%1),%%edx\n"				\
-		      "movl	%%eax,8(%0)\n"				\
-		      "movl	%%edx,12(%0)\n"				\
-		      "movl	16(%1),%%eax\n"				\
-		      "movl	20(%1),%%edx\n"				\
-		      "movl	%%eax,16(%0)\n"				\
-		      "movl	%%edx,20(%0)\n"				\
-		      "movl	24(%1),%%eax\n"				\
-		      "movl	28(%1),%%edx\n"				\
-		      "movl	%%eax,24(%0)\n"				\
-		      "movl	%%edx,28(%0)\n"				\
-		      "addl	$32,%1\n"				\
-		      "addl	$32,%0\n"				\
-		      "decl	%2\n"					\
-		      "jnz	loop" :					\
-		      "=D" (dst_bp), "=S" (src_bp), "=b" (__zero) :	\
-		      "0" (dst_bp), "1" (src_bp), "2" ((nbytes) / 32) :	\
-		      "ax", "dx");					\
-      (nbytes_left) = (nbytes) % 32;					\
+      asm volatile ("subl	$32,%2\n"				\
+		    "js		2f\n"					\
+		    "1:\n"						\
+		    "movl	0(%1),%%eax\n"				\
+		    "movl	4(%1),%%edx\n"				\
+		    "movl	%%eax,0(%0)\n"				\
+		    "movl	%%edx,4(%0)\n"				\
+		    "movl	8(%1),%%eax\n"				\
+		    "movl	12(%1),%%edx\n"				\
+		    "movl	%%eax,8(%0)\n"				\
+		    "movl	%%edx,12(%0)\n"				\
+		    "movl	16(%1),%%eax\n"				\
+		    "movl	20(%1),%%edx\n"				\
+		    "movl	%%eax,16(%0)\n"				\
+		    "movl	%%edx,20(%0)\n"				\
+		    "movl	24(%1),%%eax\n"				\
+		    "movl	28(%1),%%edx\n"				\
+		    "movl	%%eax,24(%0)\n"				\
+		    "movl	%%edx,28(%0)\n"				\
+		    "addl	$32,%1\n"				\
+		    "addl	$32,%0\n"				\
+		    "subl	$32,%2\n"				\
+		    "jns	1b\n"					\
+		    "2: addl	$32,%2" :				\
+		    "=r" (dst_bp), "=r" (src_bp), "=r" (nbytes_left) :	\
+		    "0" (dst_bp), "1" (src_bp), "2" (nbytes) :		\
+		    "ax", "dx");					\
     } while (0)
 
 #undef	WORD_COPY_BWD
 #define WORD_COPY_BWD(dst_ep, src_ep, nbytes_left, nbytes)		\
   do									\
     {									\
-      size_t __zero;							\
-      if ((nbytes) / 32 != 0)						\
-	asm volatile ("loop:\n"						\
-		      "movl	-4(%1),%%eax\n"				\
-		      "movl	-8(%1),%%edx\n"				\
-		      "movl	%%eax,-4(%0)\n"				\
-		      "movl	%%edx,-8(%0)\n"				\
-		      "movl	-12(%1),%%eax\n"			\
-		      "movl	-16(%1),%%edx\n"			\
-		      "movl	%%eax,-12(%0)\n"			\
-		      "movl	%%edx,-16(%0)\n"			\
-		      "movl	-20(%1),%%eax\n"			\
-		      "movl	-24(%1),%%edx\n"			\
-		      "movl	%%eax,-20(%0)\n"			\
-		      "movl	%%edx,-24(%0)\n"			\
-		      "movl	-28(%1),%%eax\n"			\
-		      "movl	-32(%1),%%edx\n"			\
-		      "movl	%%eax,-28(%0)\n"			\
-		      "movl	%%edx,-32(%0)\n"			\
-		      "subl	$32,%1\n"				\
-		      "subl	$32,%0\n"				\
-		      "decl	%2\n"					\
-		      "jnz	loop" :					\
-		      "=D" (dst_ep), "=S" (src_ep), "=b" (__zero) :	\
-		      "0" (dst_ep), "1" (src_ep), "2" ((nbytes) / 32) :	\
-		      "ax", "dx");					\
-      (nbytes_left) = (nbytes) % 32;					\
+      asm volatile ("subl	$32,%2\n"				\
+		    "js		2f\n"					\
+		    "1:\n"						\
+		    "movl	-4(%1),%%eax\n"				\
+		    "movl	-8(%1),%%edx\n"				\
+		    "movl	%%eax,-4(%0)\n"				\
+		    "movl	%%edx,-8(%0)\n"				\
+		    "movl	-12(%1),%%eax\n"			\
+		    "movl	-16(%1),%%edx\n"			\
+		    "movl	%%eax,-12(%0)\n"			\
+		    "movl	%%edx,-16(%0)\n"			\
+		    "movl	-20(%1),%%eax\n"			\
+		    "movl	-24(%1),%%edx\n"			\
+		    "movl	%%eax,-20(%0)\n"			\
+		    "movl	%%edx,-24(%0)\n"			\
+		    "movl	-28(%1),%%eax\n"			\
+		    "movl	-32(%1),%%edx\n"			\
+		    "movl	%%eax,-28(%0)\n"			\
+		    "movl	%%edx,-32(%0)\n"			\
+		    "subl	$32,%1\n"				\
+		    "subl	$32,%0\n"				\
+		    "subl	$32,%2\n"				\
+		    "jns	1b\n"					\
+		    "2: addl	$32,%2" :				\
+		    "=r" (dst_bp), "=r" (src_bp), "=r" (nbytes_left) :	\
+		    "0" (dst_bp), "1" (src_bp), "2" (nbytes) :		\
+		    "ax", "dx");					\
     } while (0)

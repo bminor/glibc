@@ -70,16 +70,18 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
   if (error = __vm_allocate (task, &stack, size + __vm_page_size, anywhere))
     return error;
 
-  if (stack_base)
-    *stack_base = stack;
   if (stack_size)
     *stack_size = size;
 
   memset (&ts, 0, sizeof (ts));
   ts.PC = (int) pc;
 #ifdef STACK_GROWTH_DOWN
+  if (stack_base)
+    *stack_base = stack + __vm_page_size;
   ts.SP = stack + __vm_page_size + size;
 #elif defined (STACK_GROWTH_UP)
+  if (stack_base)
+    *stack_base = stack;
   ts.SP = stack;
   stack += size;
 #else
