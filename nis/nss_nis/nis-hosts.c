@@ -271,16 +271,16 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
   else
     {
       /* Convert name to lowercase.  */
-      size_t len = strlen (name);
-      char name2[len + 1];
+      size_t namelen = strlen (name);
+      char name2[namelen + 1];
       int i;
 
-      for (i = 0; i < len; ++i)
+      for (i = 0; i < namelen; ++i)
 	name2[i] = tolower (name[i]);
       name2[i] = '\0';
 
       retval = yperr2nss (yp_match (domain, "hosts.byname", name2,
-				    len, &result, &len));
+				    namelen, &result, &len));
 
     }
 
