@@ -29,26 +29,28 @@ Cambridge, MA 02139, USA.  */
 REGS;
 #undef	REG
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <setjmp.h>
 
 /* Save the current program position in ENV and return 0.  */
 int
-DEFUN(__setjmp, (env), jmp_buf env)
+__sigsetjmp (jmp_buf env, int savemask)
 {
   /* Save the general registers.  */
 #define	REG(xx)	env[0].__##xx = xx
   REGS;
 
+  /* Save the signal mask if requested.  */
+  __sigjmp_save (env, savemask);
+
   /* Save the return PC.  */
-  env[0].__pc = (PTR) ((PTR *) &env)[-1];
+  env[0].__pc = ((void **) &env)[-1];
 
   /* Save caller's FP, not our own.  */
-  env[0].__bp = (PTR) ((PTR *) &env)[-2];
+  env[0].__bp = ((void **) &env)[-2];
 
   /* Save caller's SP, not our own.  */
-  env[0].__sp = (PTR) &env;
+  env[0].__sp = (void *) &env;
 
   return 0;
 }
