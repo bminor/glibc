@@ -19,7 +19,7 @@ Cambridge, MA 02139, USA.  */
 /* Signal handlers are actually called:
    void handler (int sig, int code, struct sigcontext *scp);  */
 
-#include <mach/i386/fp_reg.h>
+#include <mach/machine/fp_reg.h>
 
 /* State of this thread when the signal was taken.  */
 struct sigcontext

@@ -17,7 +17,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <mach/i386/thread_status.h>
+#include <mach/machine/thread_status.h>
 
 #define MACHINE_THREAD_STATE_FLAVOR	i386_THREAD_STATE
 #define MACHINE_THREAD_STATE_COUNT	i386_THREAD_STATE_COUNT
