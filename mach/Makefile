@@ -25,7 +25,7 @@ include ../Makeconfig
 
 
 headers = mach_init.h mach.h mach-shortcuts.h \
-	  $(interface-headers)
+	  $(interface-headers) mach/exc.h mach/mach.h
 routines = $(interface-routines) \
 	   $(filter-out syscall_%,$(mach-syscalls)) \
 	   $(addprefix __,$(mach-syscalls)) \
