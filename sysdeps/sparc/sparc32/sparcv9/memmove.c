@@ -1,1 +1,1 @@
-#include <sysdeps/generic/memmove.c>
+/* memmove is in memcpy.S */
