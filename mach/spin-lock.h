@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #ifndef _SPIN_LOCK_H
 #define _SPIN_LOCK_H
 
-#include <lock-intern.h>
+#include <lock-intern.h>	/* This does all the work.  */
 
 typedef __spin_lock_t spin_lock_t;
 #define SPIN_LOCK_INITIALIZER	__SPIN_LOCK_INITIALIZER
