@@ -25,33 +25,29 @@ Cambridge, MA 02139, USA.  */
 #define	_SYS_TIMES_H	1
 #include <features.h>
 
-__BEGIN_DECLS
-
 #define	__need_clock_t
 #include <time.h>
 
 
+__BEGIN_DECLS
+
 /* Structure describing CPU time used by a process and its children.  */
 struct tms
-{
-  clock_t tms_utime;		/* User CPU time.  */
-  clock_t tms_stime;		/* System CPU time.  */
+  {
+    clock_t tms_utime;		/* User CPU time.  */
+    clock_t tms_stime;		/* System CPU time.  */
 
-  clock_t tms_cutime;		/* User CPU time of dead children.  */
-  clock_t tms_cstime;		/* System CPU time of dead children.  */
-};
+    clock_t tms_cutime;		/* User CPU time of dead children.  */
+    clock_t tms_cstime;		/* System CPU time of dead children.  */
+  };
 
 
 /* Store the CPU time used by this process and all its
    dead children (and their dead children) in BUFFER.
    Return the elapsed real time, or (clock_t) -1 for errors.
    All times are in CLK_TCKths of a second.  */
-extern clock_t __times __P ((struct tms * buffer));
-extern clock_t times __P ((struct tms * buffer));
-
-#ifdef	__OPTIMIZE__
-#define	times(buffer)	__times(buffer)
-#endif /* Optimizing.  */
+extern clock_t __times __P ((struct tms *__buffer));
+extern clock_t times __P ((struct tms *__buffer));
 
 __END_DECLS
 
