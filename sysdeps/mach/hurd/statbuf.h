@@ -22,6 +22,14 @@ Cambridge, MA 02139, USA.  */
 
 #include <gnu/types.h>
 
+/* NOTE: The size of this structure (32 ints) is known in
+   <hurd/hurd_types.defs>, since it is used in the `io_stat' RPC.  MiG
+   does not cope at all well with the passed C structure not being of
+   the expected size.  There are some filler words at the end to allow
+   for future expansion.  To increase the size of the structure used
+   in the RPC and retain binary compatibility, we would need to assign
+   a new message number.  */
+
 struct stat
   {
     int st_fstype;		/* File system type.  */
@@ -57,6 +65,8 @@ struct stat
 
     unsigned int st_flags;	/* User-defined flags.
 				   High 16 bits can be set only by root.  */
+
+    int st_spare[11];		/* Room for future expansion.  */
   };
 
 /* Encoding of the file mode.  */
