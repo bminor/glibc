@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
 int
 DEFUN(pclose, (stream), register FILE *stream)
 {
-  if (!__validfp(stream) || !__ispipe(stream))
+  if (!__validfp (stream) || !stream->__ispipe)
     {
       errno = EINVAL;
       return -1;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <errno.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 
 /* Create a device file named PATH, with permission and special bits MODE
@@ -25,7 +26,7 @@ Cambridge, MA 02139, USA.  */
    device numbers with the `makedev' macro above).  */
 int
 DEFUN(__mknod, (path, mode, dev),
-      CONST char *path AND int mode AND int dev)
+      CONST char *path AND mode_t mode AND dev_t dev)
 {
   errno = ENOSYS;
   return -1;

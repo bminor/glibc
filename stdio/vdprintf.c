@@ -37,7 +37,7 @@ DEFUN(vdprintf, (d, format, arg),
   memset ((PTR) &f, 0, sizeof(f));
   f.__magic = _IOMAGIC;
   f.__mode.__write = 1;
-  f.__cookie = (PTR) d;
+  f.__cookie = (PTR) (long int) d; /* Casting to long quiets GCC on Alpha.  */
   f.__room_funcs = __default_room_functions;
   f.__io_funcs = __default_io_functions;
   f.__seen = 1;

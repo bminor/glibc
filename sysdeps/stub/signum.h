@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,15 +19,12 @@ Cambridge, MA 02139, USA.  */
 #ifdef	_SIGNAL_H
 
 /* Fake signal functions.  */
-extern void EXFUN(_sig_ign, (int sig));
-extern void EXFUN(_sig_dfl, (int sig));
+extern void _sig_ign __P ((int sig));
+extern void _sig_dfl __P ((int sig));
 
-#define	SIG_ERR	/* Error return.  */	\
-	((void EXFUN((*), (int sig))) 0)
-#define	SIG_DFL	/* Default action.  */	\
-	_sig_dfl
-#define	SIG_IGN	/* Ignore signal.  */	\
-	_sig_ign
+#define	SIG_ERR	((__sighandler_t) 0) /* Error return.  */	
+#define	SIG_DFL	_sig_dfl	/* Default action.  */	
+#define	SIG_IGN	_sig_ign	/* Ignore signal.  */
 
 
 /* ANSI signals.  */

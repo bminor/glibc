@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ Cambridge, MA 02139, USA.  */
 /* Write formatted output to stdout according to the
    format string FORMAT, using the argument list in ARG.  */
 int
-DEFUN(vprintf, (format, arg), CONST char *format AND PTR arg)
+DEFUN(vprintf, (format, arg), CONST char *format AND __gnuc_va_list arg)
 {
   return vfprintf (stdout, format, arg);
 }
