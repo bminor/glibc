@@ -66,17 +66,15 @@ __setregid (gid_t rgid, gid_t egid)
 
   _hurd_id.rgid = rgid;
 
-  if (err = _HURD_PORT_USE (&_hurd_auth,
-			    __auth_makeauth (port, &_hurd_id, &newauth)))
-    {
-      _hurd_id_valid = 0;
-      __mutex_unlock (&_hurd_idlock);
-      return __hurd_fail (err);
-    }
-  else
-    {
-      int err = __setauth (newauth);
-      __mach_port_deallocate (__mach_task_self (), newauth);
-      return err;
-    }
+  err = _HURD_PORT_USE (&_hurd_auth,
+			__auth_makeauth (port, &_hurd_id, &newauth));
+  _hurd_id_valid = 0;
+  __mutex_unlock (&_hurd_idlock);
+
+  if (err)
+    return __hurd_fail (err);
+
+  err = __setauth (newauth);
+  __mach_port_deallocate (__mach_task_self (), newauth);
+  return err;
 }
