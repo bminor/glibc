@@ -67,7 +67,9 @@ If defined, the unvarying maximum combined length of the @var{argv} and
 @comment POSIX.1
 @deftypevr Macro int CHILD_MAX
 If defined, the unvarying maximum number of processes that can exist
-with the same real user ID at any one time.
+with the same real user ID at any one time.  In BSD and GNU, this is
+controlled by the @code{RLIMIT_NPROC} resource limit; @pxref{Limits on
+Resources}.
 @end deftypevr
 
 @cindex limits, number of open files
@@ -75,7 +77,8 @@ with the same real user ID at any one time.
 @comment POSIX.1
 @deftypevr Macro int OPEN_MAX
 If defined, the unvarying maximum number of files that a single process
-can have open simultaneously.
+can have open simultaneously.  In BSD and GNU, this is controlled
+by the @code{RLIMIT_NOFILE} resource limit; @pxref{Limits on Resources}.
 @end deftypevr
 
 @comment limits.h
