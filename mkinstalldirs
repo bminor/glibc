@@ -8,13 +8,14 @@ defaultIFS='
 IFS="${IFS-${defaultIFS}}"
 
 for file in ${1+"$@"} ; do 
-   oIFS="${IFS}"; IFS='/'; set - ${file}; IFS="${oIFS}"
+   oIFS="${IFS}"
+   # Some sh's can't handle IFS=/ for some reason.
+   IFS='%'
+   set - `echo ${file} | sed -e 's@/@%@g' -e 's@^%@/@'`
+   IFS="${oIFS}"
    test ".${1}" = "." && shift
 
-   case "${file}" in 
-    /* ) pathcomp='/' ;;
-    * )  pathcomp=''  ;;
-   esac
+   pathcomp=''
 
    while test $# -ne 0 ; do
      pathcomp="${pathcomp}${1}"
