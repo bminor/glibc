@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <limits.h>
 #include <hurd.h>
+#include <sys/stat.h>
 
 /* Read the contents of the symbolic link PATH into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
@@ -31,26 +32,34 @@ DEFUN(__readlink, (path, buf, len),
 {
   error_t err;
   file_t file;
+  struct stat st;
 
   file = __path_lookup (path, FS_LOOKUP_READ|FS_LOOKUP_NOTRANS, 0);
   if (file == MACH_PORT_NULL)
     return -1;
 
-  p = buf;
-  while (len > 0)
+  err = __io_stat (file, &st);
+  if (! err && ! S_ISLNK (st.st_mode))
+    err = EINVAL;
+
+  if (! err)
     {
-      char *s = p;
-      size_t nread;
-      err = __io_read (file, &s, &nread, p - buf, len);
-      if (err || nread == 0)
-	break;
-      if (s != p)
+      p = buf;
+      while (len > 0)
 	{
-	  memcpy (p, s, nread);
-	  __vm_deallocate (__mach_task_self (), s, nread);
+	  char *s = p;
+	  size_t nread;
+	  err = __io_read (file, &s, &nread, p - buf, len);
+	  if (err || nread == 0)
+	    break;
+	  if (s != p)
+	    {
+	      memcpy (p, s, nread);
+	      __vm_deallocate (__mach_task_self (), s, nread);
+	    }
+	  len -= nread;
+	  p += nread;
 	}
-      len -= nread;
-      p += nread;
     }
 
   __mach_port_deallocate (__mach_task_self (), file);
