@@ -2,13 +2,23 @@ This directory contains the version VERSION test release of the GNU C Library.
 Many bugs have been fixed since the last release.
 Some bugs surely remain.
 
-As of this release, the GNU C library has been ported to: sparcs and Sun 3s
-running SunOS 4.1, HP 9000/300 and Sony NEWS workstations running 4.3 BSD,
-and MIPS DECStations running Ultrix 4.  The port to the i386 running
-either System V, SVR4, or BSD, is mostly complete but has not been well
-tested.  Porting the library is not hard.  If you are interested in doing a
-port, please get on the mailing list by sending electronic mail to
-bug-glibc-request@prep.ai.mit.edu
+As of this release, the GNU C library has been ported to the following
+configurations:
+
+		sparc-sun-sunos4
+		sparc-sun-solaris2
+		m68k-hp-bsd4.3
+		m68k-sun-sunos4
+		m68k-sony-newsos
+		mips-dec-ultrix4
+		i386-bsd4.3
+		i386-sysv
+		i386-sysv4
+		i386-sequent-bsd
+
+Porting the library is not hard.  If you are interested in doing a port,
+please get on the mailing list by sending electronic mail to
+bug-glibc-request@prep.ai.mit.edu.
 
 The GNU C library now includes Michael Glad's Ultra Fast Crypt, which
 provides the Unix `crypt' function, plus some other entry points.  Because
@@ -28,8 +38,9 @@ export laws.
 See the file INSTALL to find out how to configure, build, install, and port
 the GNU C library.
 
-The manual for the GNU C library is still being worked on, and is not yet
-distributed.
+The GNU C Library is completely documented by the Texinfo manual found in
+the `manual/' subdirectory.  Please send comments on the manual to
+bug-glibc-manual@prep.ai.mit.edu, and not to the library bug-reporting address.
 
 The file NOTES contains a description of the feature-test macros used in
 the GNU C library, explaining how you can tell the library what facilities
