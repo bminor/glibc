@@ -208,7 +208,7 @@ addgrbyname (struct database *db, int fd, request_header *req, void *key)
   if (debug_level > 0)
     dbg_log (_("Haven't found \"%s\" in group cache!"), key);
 
-  while (getgrnam_r (key, &resultbuf, buffer, buflen, &grp) != 0
+  while (__getgrnam_r (key, &resultbuf, buffer, buflen, &grp) != 0
 	 && errno == ERANGE)
     {
       errno = 0;
@@ -236,7 +236,7 @@ addgrbygid (struct database *db, int fd, request_header *req, void *key)
   if (debug_level > 0)
     dbg_log (_("Haven't found \"%d\" in group cache!"), gid);
 
-  while (getgrgid_r (gid, &resultbuf, buffer, buflen, &grp) != 0
+  while (__getgrgid_r (gid, &resultbuf, buffer, buflen, &grp) != 0
 	 && errno == ERANGE)
     {
       errno = 0;

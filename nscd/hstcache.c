@@ -296,8 +296,8 @@ addhstbyname (struct database *db, int fd, request_header *req, void *key)
   if (debug_level > 0)
     dbg_log (_("Haven't found \"%s\" in hosts cache!"), key);
 
-  while (gethostbyname2_r (key, AF_INET, &resultbuf, buffer, buflen, &hst,
-			   &h_errno) != 0
+  while (__gethostbyname2_r (key, AF_INET, &resultbuf, buffer, buflen,
+  			     &hst, &h_errno) != 0
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
     {
@@ -329,8 +329,8 @@ addhstbyaddr (struct database *db, int fd, request_header *req, void *key)
 	       inet_ntop (AF_INET, key, buf, sizeof (buf)));
     }
 
-  while (gethostbyaddr_r (key, INADDRSZ, AF_INET, &resultbuf, buffer, buflen,
-			  &hst, &h_errno) != 0
+  while (__gethostbyaddr_r (key, INADDRSZ, AF_INET, &resultbuf, buffer,
+  			    buflen, &hst, &h_errno) != 0
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
     {
@@ -363,8 +363,8 @@ addhstbynamev6 (struct database *db, int fd, request_header *req, void *key)
 	       inet_ntop (AF_INET6, key, buf, sizeof (buf)));
     }
 
-  while (gethostbyname2_r (key, AF_INET6, &resultbuf, buffer, buflen, &hst,
-			   &h_errno) != 0
+  while (__gethostbyname2_r (key, AF_INET6, &resultbuf, buffer, buflen,
+  			     &hst, &h_errno) != 0
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
     {
@@ -396,8 +396,8 @@ addhstbyaddrv6 (struct database *db, int fd, request_header *req, void *key)
 	       inet_ntop (AF_INET6, key, buf, sizeof (buf)));
     }
 
-  while (gethostbyaddr_r (key, IN6ADDRSZ, AF_INET6, &resultbuf, buffer, buflen,
-			  &hst, &h_errno) != 0
+  while (__gethostbyaddr_r (key, IN6ADDRSZ, AF_INET6, &resultbuf,
+  			    buffer, buflen, &hst, &h_errno) != 0
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
     {

@@ -206,7 +206,7 @@ addpwbyname (struct database *db, int fd, request_header *req, void *key)
   if (debug_level > 0)
     dbg_log (_("Haven't found \"%s\" in password cache!"), key);
 
-  while (getpwnam_r (key, &resultbuf, buffer, buflen, &pwd) != 0
+  while (__getpwnam_r (key, &resultbuf, buffer, buflen, &pwd) != 0
 	 && errno == ERANGE)
     {
       errno = 0;
@@ -234,7 +234,7 @@ addpwbyuid (struct database *db, int fd, request_header *req, void *key)
   if (debug_level > 0)
     dbg_log (_("Haven't found \"%d\" in password cache!"), uid);
 
-  while (getpwuid_r (uid, &resultbuf, buffer, buflen, &pwd) != 0
+  while (__getpwuid_r (uid, &resultbuf, buffer, buflen, &pwd) != 0
 	 && errno == ERANGE)
     {
       errno = 0;
