@@ -21,7 +21,7 @@
 #
 subdir	:= time
 
-headers	:= time.h sys/time.h gnu/time.h
+headers	:= time.h sys/time.h
 distribute := tzfile.h private.h scheck.c ialloc.c emkdir.c
 
 routines	:= offtime asctime clock ctime difftime gmtime	\
