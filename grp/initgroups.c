@@ -1,4 +1,4 @@
-/* Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1989, 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +31,10 @@ int
 DEFUN(initgroups, (user, group),
       CONST char *user AND gid_t group)
 {
+#ifdef NGROUPS_MAX
+#if NGROUPS_MAX == 0
+  return 0;
+#else
   static PTR info = NULL;
   register FILE *stream;
   register struct group *g;
@@ -62,4 +66,8 @@ DEFUN(initgroups, (user, group),
       }
 
   return setgroups(n, groups);
+#endif
+#else
+  return 0;
+#endif
 }
