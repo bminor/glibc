@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,8 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 SYSCALL__ (wait, 1)
-	movl 4(%esp), %ecx	/* Put status pointer in %ecx.  */
-	testl %ecx, %ecx	/* Is it non-nil?  */
+	movl 4(%esp), scratch	/* Put status pointer in %ecx.  */
+	testl scratch, scratch	/* Is it non-nil?  */
 	je null
-	movl %edx, (%ecx)	/* Yes; store the status there.  */
+	movl r1, (scratch)	/* Yes; store the status there.  */
 null:	ret
