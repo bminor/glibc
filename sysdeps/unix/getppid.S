@@ -19,5 +19,5 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 PSEUDO (__getppid, getpid, 0)
-	movl r1, r0
+	MOVE(r1, r0)
 	ret
