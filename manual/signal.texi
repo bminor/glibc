@@ -2221,7 +2221,7 @@ with BSD; using @code{kill} to do this is more portable.
 @end deftypefun
 
 As a simple example of @code{kill}, the call @w{@code{kill (getpid (),
-@var{sig})} has the same effect as @w{@code{raise (@var{sig})}}.
+@var{sig})}} has the same effect as @w{@code{raise (@var{sig})}}.
 
 @node Permission for kill
 @subsection Permission for using @code{kill}
