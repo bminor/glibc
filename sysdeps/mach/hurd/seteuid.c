@@ -46,7 +46,7 @@ DEFUN(seteuid, (uid), uid_t uid)
       memcpy (&newgen[1], _hurd_id.gen.uids, (ngen - 1) * sizeof (uid_t));
 
       err = __USEPORT (AUTH, __auth_makeauth
-		       (port, NULL, 0, MACH_MSG_TYPE_COPY_SEND,
+		       (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
 			newgen, ngen,
 			_hurd_id.aux.uids, _hurd_id.aux.nuids,
 			_hurd_id.gen.gids, _hurd_id.gen.ngids,
