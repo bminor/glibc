@@ -47,14 +47,13 @@ subdir	:= sunrpc
 headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
 			   pmap_prot.h pmap_rmt.h rpc.h rpc_msg.h svc.h \
 			   svc_auth.h types.h xdr.h) \
-	  $(rpcsvc:%=rpcsvc/%)
+	  $(rpcsvc:%=rpcsvc/%) $(rpcsvc:%=rpcsvc/%.h)
 rpcsvc = bootparam.x nlm_prot.x rstat.x \
 	 yppasswd.x klm_prot.x rex.x sm_inter.x mount.x \
 	 rnusers.x spray.x nfs_prot.x rquota.x yp.x
-# These headers are installed with rpcgen by a rule below.
-install-others = $(rpcsvc:%.x=$(includedir)/rpcsvc/%.h) \
-		 $(includedir)/rpcsvc/bootparam_prot.h \
+install-others = $(includedir)/rpcsvc/bootparam_prot.h \
 		 $(etcdir)/rpc
+generated = $(rpcsvc:$(objpfx)rpcsvc/%.h) $(rpcsvc:$(objpfx)x%.c)
 
 routines := auth_none auth_unix authuxprot bindrsvprt \
 	    clnt_gen clnt_perr clnt_raw clnt_simp clnt_tcp \
@@ -71,6 +70,7 @@ rpcsvc-objs = $(rpcsvc:%.x=x%.o)
 rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o
 extra-objs = $(rpcgen-objs) $(rpcsvc-objs)
+omit-deps = $(basename $(rpcsvc-objs))
 # These headers are part of rpcgen.
 distribute := rpc_util.h rpc_parse.h rpc_scan.h $(rpcgen-objs:.o=.c) etc.rpc
 
@@ -85,10 +85,6 @@ $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) $(libc.a)
 	$(+link)
 
 rpcgen-cmd = $(dir $(word 2,$^))$(notdir $(word 2,$^))
-
-# Generate the installed rpcsvc headers in place with rpcgen.
-$(includedir)/rpcsvc/%.h: rpcsvc/%.x $(objpfx)rpcgen
-	$(rpcgen-cmd) -h $< -o $@
 
 # The proper file name is longer than 14 chars, so we install it under
 # a shorter name.  But if the filesystem can handle it, we want to
@@ -105,7 +101,9 @@ defines := $(defines) -D_PATH_RPC='"$(etcdir)/rpc"'
 
 # Build the `rpcsvc' library of XDR functions.
 
-$(objpfx)librpcsvc.a: $(rpcsvc:%.x=$(objpfx)x%.o)
+lib: $(objpfx)librpcsvc.a
+
+$(objpfx)librpcsvc.a: $(addprefix $(objpfx),$(rpcsvc-objs))
 # This library is small enough that it's simplest to recreate the archive
 # from scratch each time.
 	rm -f $@
@@ -116,5 +114,14 @@ else
 endif
 	$(RANLIB) $@
 
-$(objpfx)x%.o: rpcsvc/%.x $(objpfx)rpcgen
+# Generate the rpcsvc headers with rpcgen.
+$(objpfx)rpcsvc/%.h: rpcsvc/%.x $(objpfx)rpcgen
+	$(make-target-directory)
+	$(rpcgen-cmd) -h $< -o $@
+# Generate the rpcsvc XDR functions with rpcgen.
+$(objpfx)x%.c: rpcsvc/%.x $(objpfx)rpcgen
 	$(rpcgen-cmd) -c $< -o $@
+# The generated source files depend on the corresponding generated headers.
+# Gratuitous dependency on generated .c file here just gets it mentioned to
+# avoid being an intermediate file and getting removed.
+$(rpcsvc:%.x=$(objpfx)x%.o): $(objpfx)x%.o: $(objpfx)x%.c $(objpfx)rpcsvc/%.h
