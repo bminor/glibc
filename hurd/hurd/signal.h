@@ -40,7 +40,7 @@ struct hurd_sigstate
   {
     /* XXX should be in cthread variable (?) */
     thread_t thread;
-    struct _hurd_sigstate *next; /* Linked-list of thread sigstates.  */
+    struct hurd_sigstate *next; /* Linked-list of thread sigstates.  */
 
 #ifdef noteven
     struct mutex lock;		/* Locks the rest of this structure.  */
@@ -66,7 +66,7 @@ struct hurd_sigstate
 	int ctty_fstype;
 	fsid_t ctty_fsid;
 	ino_t ctty_fileid;
-	struct _hurd_dtable *dtable;
+	struct hurd_dtable *dtable;
 	jmp_buf continuation;
       } *vfork_saved;
 #endif
@@ -113,11 +113,28 @@ extern void _hurd_exception2signal (int exception, int code, int subcode,
 
 /* Make the thread described by SS take the signal described by SIGNO and
    SIGCODE.  SS->lock is held on entry, and released before return.  */
+
 extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
 					int signo, int sigcode);
 
 /* Function run by the signal thread to receive from the signal port.  */
+
 extern void _hurd_msgport_receive (void);
+
+/* Return nonzero if STATE indicates a thread that is blocked in a mach_msg
+   system call (machine-dependent).  */
+
+extern int _hurd_thread_state_msging_p (void *state);
+
+/* Start THREAD running FUNCTION (machine-dependent).  */
+
+extern kern_return_t _hurd_start_sigthread (thread_t thread,
+					    void (*function) (void));
+
+/* Function run for SIGINFO when its action is SIG_DFL and the current
+   process is the session leader.  */
+
+extern void _hurd_siginfo_handler (int);
 
 
 #ifdef notyet
@@ -128,7 +145,7 @@ extern void _hurd_msgport_receive (void);
 #define	HURD_EINTR_RPC(port, call) \
   ({
     error_t __err;
-    struct _hurd_sigstate *__ss
+    struct hurd_sigstate *__ss
       = _hurd_thread_sigstate (__mach_thread_self ());
     __mutex_unlock (&__ss->lock); /* Lock not needed.  */
     /* If we get a signal and should return EINTR, the signal thread will
