@@ -110,10 +110,6 @@ __BEGIN_DECLS
 extern int __access __P ((__const char *__name, int __type));
 extern int access __P ((__const char *__name, int __type));
 
-#ifdef	__OPTIMIZE__
-#define	access(name, type)	__access((name), (type))
-#endif /* Optimizing.  */
-
 
 /* Values for the WHENCE argument to lseek.  */
 #ifndef	_STDIO_H		/* <stdio.h> has the same definitions.  */
@@ -143,13 +139,6 @@ extern ssize_t read __P ((int __fd, __ptr_t __buf, size_t __nbytes));
 extern ssize_t __write __P ((int __fd, __const __ptr_t __buf, size_t __n));
 extern ssize_t write __P ((int __fd, __const __ptr_t __buf, size_t __n));
 
-#ifdef	__OPTIMIZE__
-#define	lseek(fd, offset, whence)	__lseek((fd), (offset), (whence))
-#define	close(fd)			__close(fd)
-#define	read(fd, buf, n)		__read((fd), (buf), (n))
-#define	write(fd, buf, n)		__write((fd), (buf), (n))
-#endif /* Optimizing.  */
-
 
 /* Create a one-way communication channel (pipe).
    If successul, two file descriptors are stored in PIPEDES;
@@ -157,10 +146,6 @@ extern ssize_t write __P ((int __fd, __const __ptr_t __buf, size_t __n));
    Returns 0 if successful, -1 if not.  */
 extern int __pipe __P ((int __pipedes[2]));
 extern int pipe __P ((int __pipedes[2]));
-
-#ifdef __OPTIMIZE__
-#define pipe(pipedes)	__pipe(pipedes)
-#endif /* Optimizing.  */
 
 /* Schedule an alarm.  In SECONDS seconds, the process will get a SIGALRM.
    If SECONDS is zero, any currently scheduled alarm will be cancelled.
@@ -192,28 +177,17 @@ extern int __chown __P ((__const char *__file,
 extern int chown __P ((__const char *__file,
 		       __uid_t __owner, __gid_t __group));
 
-#ifdef __OPTIMIZE__
-#define chown(file, owner, group)	__chown((file), (owner), (group))
-#endif /* Optimizing.  */
-
 #ifdef	__USE_BSD
 /* Change the owner and group of the file that FD is open on.  */
 extern int __fchown __P ((int __fd,
 			  __uid_t __owner, __gid_t __group));
 extern int fchown __P ((int __fd,
 			__uid_t __owner, __gid_t __group));
-#ifdef __OPTIMIZE__
-#define fchown(fd, owner, group)	__fchown((fd), (owner), (group))
-#endif /* Optimizing.  */
 #endif /* Use BSD.  */
 
 /* Change the process's working directory to PATH.  */
 extern int __chdir __P ((__const char *__path));
 extern int chdir __P ((__const char *__path));
-
-#ifdef __OPTIMIZE__
-#define chdir(path)	__chdir(path)
-#endif /* Optimizing.  */
 
 /* Get the pathname of the current working directory,
    and put it in SIZE bytes of BUF.  Returns NULL if the
@@ -243,17 +217,9 @@ extern char *getwd __P ((char *__buf));
 extern int __dup __P ((int __fd));
 extern int dup __P ((int __fd));
 
-#ifdef __OPTIMIZE__
-#define dup(fd)	__dup(fd)
-#endif /* Optimizing.  */
-
 /* Duplicate FD to FD2, closing FD2 and making it open on the same file.  */
 extern int __dup2 __P ((int __fd, int __fd2));
 extern int dup2 __P ((int __fd, int __fd2));
-
-#ifdef __OPTIMIZE__
-#define dup2(fd, fd2)	__dup2((fd), (fd2))
-#endif /* Optimizing.  */
 
 /* NULL-terminated array of "NAME=VALUE" environment variables.  */
 extern char **__environ;
@@ -267,7 +233,6 @@ extern int __execve __P ((__const char *__path, char *__const __argv[],
 extern int execve __P ((__const char *__path, char *__const __argv[],
 			char *__const __envp[]));
 
-#define	execve	__execve
 
 /* Execute PATH with arguments ARGV and environment from `environ'.  */
 extern int execv __P ((__const char *__path, char *__const __argv[]));
@@ -324,9 +289,6 @@ extern long int pathconf __P ((__const char *__path, int __name));
 extern long int __fpathconf __P ((int __fd, int __name));
 extern long int fpathconf __P ((int __fd, int __name));
 
-#define	pathconf	__pathconf
-#define	fpathconf	__fpathconf
-
 
 /* Values for the argument to `sysconf'.
    These correspond to the _POSIX_* symbols in <posix_limits.h> and above,
@@ -370,10 +332,6 @@ enum
 extern long int __sysconf __P ((int __name));
 extern long int sysconf __P ((int __name));
 
-#ifdef __OPTIMIZE__
-#define sysconf(name)	__sysconf(name)
-#endif /* Optimizing.  */
-
 
 #ifdef	__USE_POSIX2
 /* Values for the argument to `confstr'.  */
@@ -392,11 +350,6 @@ extern __pid_t getpid __P ((void));
 extern __pid_t __getppid __P ((void));
 extern __pid_t getppid __P ((void));
 
-#ifdef	__OPTIMIZE__
-#define	getpid()	__getpid()
-#define	getppid()	__getppid()
-#endif /* Optimizing.  */
-
 /* Get the process group ID of process PID.  */
 extern __pid_t __getpgrp __P ((__pid_t __pid));
 
@@ -413,17 +366,9 @@ extern __pid_t getpgrp __P ((void));
 extern int __setpgrp __P ((__pid_t __pid, __pid_t __pgid));
 extern int setpgid __P ((__pid_t __pid, __pid_t __pgid));
 
-#ifdef __OPTIMIZE__
-#define setpgid(pid, pgid)	__setpgrp((pid), (pgid))
-#endif /* Optimizing.  */
-
 #ifdef	__USE_BSD
 /* Set the process group of PID to PGRP.  */
 extern int setpgrp __P ((__pid_t __pid, __pid_t __pgrp));
-
-#ifdef	__OPTIMIZE__
-#define	setpgrp(pid, pgrp)	setpgid((pid), (pgrp))
-#endif /* Optimizing.  */
 #endif /* Use BSD.  */
 
 /* Create a new session with the calling process as its leader.
@@ -432,41 +377,21 @@ extern int setpgrp __P ((__pid_t __pid, __pid_t __pgrp));
 extern __pid_t __setsid __P ((void));
 extern __pid_t setsid __P ((void));
 
-#ifdef __OPTIMIZE__
-#define setsid()	__setsid()
-#endif /* Optimizing.  */
-
 /* Get the real user ID of the calling process.  */
 extern __uid_t __getuid __P ((void));
 extern __uid_t getuid __P ((void));
-
-#ifdef __OPTIMIZE__
-#define getuid()	__getuid()
-#endif /* Optimizing.  */
 
 /* Get the effective user ID of the calling process.  */
 extern __uid_t __geteuid __P ((void));
 extern __uid_t geteuid __P ((void));
 
-#ifdef __OPTIMIZE__
-#define geteuid()	__geteuid()
-#endif /* Optimizing.  */
-
 /* Get the real group ID of the calling process.  */
 extern __gid_t __getgid __P ((void));
 extern __gid_t getgid __P ((void));
 
-#ifdef __OPTIMIZE__
-#define getgid()	__getgid()
-#endif /* Optimizing.  */
-
 /* Get the effective group ID of the calling process.  */
 extern __gid_t __getegid __P ((void));
 extern __gid_t getegid __P ((void));
-
-#ifdef __OPTIMIZE__
-#define getegid()	__getegid()
-#endif /* Optimizing.  */
 
 /* If SIZE is zero, return the number of supplementary groups
    the calling process is in.  Otherwise, fill in the group IDs
@@ -481,19 +406,11 @@ extern int getgroups __P ((int __size, __gid_t __list[]));
 extern int __setuid __P ((__uid_t __uid));
 extern int setuid __P ((__uid_t __uid));
 
-#ifdef __OPTIMIZE__
-#define setuid(uid)	__setuid(uid)
-#endif /* Optimizing.  */
-
 #ifdef	__USE_BSD
 /* Set the real user ID of the calling process to RUID,
    and the effective user ID of the calling process to EUID.  */
 extern int __setreuid __P ((__uid_t __ruid, __uid_t __euid));
 extern int setreuid __P ((__uid_t __ruid, __uid_t __euid));
-
-#ifdef __OPTIMIZE__
-#define	setreuid(ruid, euid)	__setreuid((ruid), (euid))
-#endif /* Optimizing.  */
 
 /* Set the effective user ID of the calling process to UID.  */
 extern int seteuid __P ((__uid_t __uid));
@@ -506,19 +423,11 @@ extern int seteuid __P ((__uid_t __uid));
 extern int __setgid __P ((__gid_t __gid));
 extern int setgid __P ((__gid_t __gid));
 
-#ifdef __OPTIMIZE__
-#define setgid(gid)	__setgid(gid)
-#endif /* Optimizing.  */
-
 #ifdef	__USE_BSD
 /* Set the real group ID of the calling process to RGID,
    and the effective group ID of the calling process to EGID.  */
 extern int __setregid __P ((__gid_t __rgid, __gid_t __egid));
 extern int setregid __P ((__gid_t __rgid, __gid_t __egid));
-
-#ifdef	__OPTIMIZE__
-#define	setregid(rgid, egid)	__setregid((rgid), (egid))
-#endif /* Optimizing.  */
 
 /* Set the effective user ID of the calling process to UID.  */
 extern int seteuid __P ((__uid_t __uid));
@@ -531,8 +440,6 @@ extern int seteuid __P ((__uid_t __uid));
 extern __pid_t __fork __P ((void));
 extern __pid_t fork __P ((void));
 
-#define	fork	__fork
-
 #ifdef	__USE_BSD
 /* Clone the calling process, but without copying the whole address space.
    The the calling process is suspended until the the new process exits or is
@@ -540,8 +447,6 @@ extern __pid_t fork __P ((void));
    and the process ID of the new process to the old process.  */
 extern __pid_t __vfork __P ((void));
 extern __pid_t vfork __P ((void));
-
-#define	vfork	__vfork
 #endif /* Use BSD. */
 
 
@@ -554,51 +459,30 @@ extern char *ttyname __P ((int __fd));
 extern int __isatty __P ((int __fd));
 extern int isatty __P ((int __fd));
 
-#ifdef	__OPTIMIZE__
-#define	isatty(fd)	__isatty(fd)
-#endif /* Optimizing.  */
-
 
 /* Make a link to FROM named TO.  */
 extern int __link __P ((__const char *__from, __const char *__to));
 extern int link __P ((__const char *__from, __const char *__to));
-#define	link	__link
 
 #ifdef	__USE_BSD
 /* Make a symbolic link to FROM named TO.  */
 extern int __symlink __P ((__const char *__from, __const char *__to));
 extern int symlink __P ((__const char *__from, __const char *__to));
 
-#ifdef __OPTIMIZE__
-#define symlink(from, to)	__symlink((from), (to))
-#endif /* Optimizing.  */
-
 /* Read the contents of the symbolic link PATH into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
 extern int __readlink __P ((__const char *__path, char *__buf, size_t __len));
 extern int readlink __P ((__const char *__path, char *__buf, size_t __len));
-
-#ifdef __OPTIMIZE__
-#define readlink(path, buf, len)	__readlink((path), (buf), (len))
-#endif /* Optimizing.  */
 #endif /* Use BSD.  */
 
 /* Remove the link NAME.  */
 extern int __unlink __P ((__const char *__name));
 extern int unlink __P ((__const char *__name));
 
-#ifdef	__OPTIMIZE__
-#define	unlink(name)	__unlink(name)
-#endif /* Optimizing.  */
-
 /* Remove the directory PATH.  */
 extern int __rmdir __P ((__const char *__path));
 extern int rmdir __P ((__const char *__path));
-
-#ifdef __OPTIMIZE__
-#define rmdir(path)	__rmdir(path)
-#endif /* Optimizing.  */
 
 
 /* Return the foreground process group ID of FD.  */
@@ -660,10 +544,6 @@ extern char *optarg;
 extern int __gethostname __P ((char *__name, size_t __len));
 extern int gethostname __P ((char *__name, size_t __len));
 
-#ifdef	__OPTIMIZE__
-#define	gethostname(name, len)	__gethostname((name), (len))
-#endif
-
 /* Set the name of the current host to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */
 extern int sethostname __P ((__const char *__name, size_t __len));
@@ -681,19 +561,11 @@ extern int sethostid __P ((long int __id));
 extern size_t __getpagesize __P ((void));
 extern size_t getpagesize __P ((void));
 
-#ifdef	__OPTIMIZE__
-#define	getpagesize()	__getpagesize()
-#endif /* Optimizing.  */
-
 
 /* Return the maximum number of file descriptors
    the current process could possibly have.  */
 extern int __getdtablesize __P ((void));
 extern int getdtablesize __P ((void));
-
-#ifdef __OPTIMIZE__
-#define getdtablesize()	__getdtablesize()
-#endif
 
 
 /* Make all changes done to FD actually appear on disk.  */
