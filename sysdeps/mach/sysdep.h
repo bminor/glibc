@@ -32,7 +32,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Produce a text assembler label for the C global symbol NAME.  */
 #ifndef ENTRY
-#define ENTRY(name) #error ENTRY not defined by sysdeps/mach/MACHINE/sysdep.h
+#define ENTRY(name) .error ENTRY not defined by sysdeps/mach/MACHINE/sysdep.h
 /* This is not used on all machines.  */
 #endif
 
