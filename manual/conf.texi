@@ -1,4 +1,4 @@
-@node System Configuration Limits, Summary of Library Facilities, Representation Limits, Top
+@node System Configuration Limits, Language Features, System Information, Top
 @chapter System Configuration Limits
 
 The functions and macros listed in this chapter describe various operating
