@@ -1,4 +1,4 @@
-%define glibcrelease 8
+%define glibcrelease 9
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -841,10 +841,10 @@ done
 
 grep '%{_prefix}/%{_lib}/lib.*_p\.a' < rpm.filelist > profile.filelist || :
 grep '%{_infodir}' < rpm.filelist | grep -v '%{_infodir}/dir' > devel.filelist
-grep '%{_prefix}/include/gnu/stubs-[3264]\.h' < rpm.filelist >> devel.filelist
+grep '%{_prefix}/include/gnu/stubs-[32164]\+\.h' < rpm.filelist >> devel.filelist
 
 grep '%{_prefix}/include' < rpm.filelist |
-	egrep -v '%{_prefix}/include/(nptl|gnu/stubs-[3264]+\.h)' \
+	egrep -v '%{_prefix}/include/(nptl|gnu/stubs-[32164]+\.h)' \
 		> headers.filelist
 
 mv rpm.filelist rpm.filelist.full
@@ -1269,6 +1269,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Feb 11 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-9
+- update from CVS
+  - bi-arch <gnu/stubs.h> (BZ#715)
+
 * Fri Feb 11 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-8
 - update from CVS
   - bi-arch <gnu/lib-names.h> (BZ#632)
