@@ -22,82 +22,50 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/port.h>
 #include <hurd/signal.h>
+#include <hurd/msg.h>
 
 /* Send a `sig_post' RPC to process number PID.  If PID is zero,
    send the message to all processes in the current process's process group.
    If PID is < -1, send SIG to all processes in process group - PID.
    SIG and REFPORT are passed along in the request message.  */
 error_t
-_hurd_sig_post (pid_t pid, int sig, mach_port_t refport)
+_hurd_sig_post (pid_t pid, int sig, mach_port_t arg_refport)
 {
   int delivered = 0;		/* Set when we deliver any signal.  */
   error_t err;
-  mach_port_t oneport, *ports;
-  pid_t *pids;
-  mach_msg_type_number_t npids, nports, i;
   mach_port_t proc;
   struct hurd_userlink ulink;
+
+  inline void kill_pid (pid_t pid) /* Kill one PID.  */
+    {
+      err = HURD_MSGPORT_RPC (__proc_getmsgport (proc, pid, &msgport),
+			      ((refport = arg_refport), 0),
+			      __sig_post (msgport, sig, refport));
+      if (! err)
+	delivered = 1;
+    }
 
   proc = _hurd_port_get (&_hurd_ports[INIT_PORT_PROC], &ulink);
 
   if (pid <= 0)
     {
       /* Send SIG to each process in pgrp (- PID).  */
-      proccoll_t pcoll;
-      err = __proc_pgrp_pcoll (proc, - pid, &pcoll);
+      mach_msg_type_number_t npids, i;
+      pid_t *pids;
+      
+      err = __proc_getpgrppids (proc, - pid, &pids, &npids);
       if (!err)
 	{
-	  err = __proc_get_collports (proc, pcoll,
-				      &pids, &npids,
-				      &ports, &nports);
-	  __mach_port_deallocate (__mach_task_self (), pcoll);
+	  for (i = 0; i < npids; ++i)
+	    kill_pid (pids[i]);
+	  __vm_deallocate (__mach_task_self (),
+			   (vm_address_t) pids, npids * sizeof (pids[0]));
 	}
     }
   else
-    {
-      err = __proc_getmsgport (proc, pid, &oneport);
-      npids = 1;
-      pids = &pid;
-      ports = &oneport;
-      nports = 1;
-    }
+    kill_pid (pid);
 
-  if (npids != nports)
-    {
-      /* This is scrod.  We can't reasonably try to deliver any signals.  */
-      err = EGRATUITOUS;
-      goto out;
-    }
-    
-  for (i = 0; i < nports; ++i)
-    {
-      int tried = 0;
-      do
-	{
-	  mach_port_t msgport;
-	  if (tried)
-	    {
-	      if (err = __proc_getmsgport (proc, pids[i], &msgport))
-		break;
-	    }
-	  else
-	    {
-	      msgport = ports[i];
-	      tried = 1;
-	    }
-	  err = __sig_post (msgport, sig, refport);
-	  __mach_port_deallocate (__mach_task_self (), msgport);
-	} while (err != MACH_SEND_INVALID_DEST && err != MIG_SERVER_DIED);
-      if (! err)
-	delivered = 1;
-    }
-
- out:
   _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], &ulink, proc);
-
-  if (ports != &oneport)
-    __vm_deallocate (__mach_task_self (),
-		     (vm_address_t) ports, nports * sizeof (ports[0]));
 
   return delivered ? 0 : err;
 }
