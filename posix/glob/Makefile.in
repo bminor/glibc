@@ -35,8 +35,8 @@ libglob.a: glob.o fnmatch.o
 	ar rv $@ glob.o fnmatch.o
 	-if $(RANLIB_TEST) ; then $(RANLIB) $@; else true; fi
 
-glob.o: glob.h fnmatch.h
-fnmatch.o: fnmatch.h
+glob.o: $(srcdir)glob.h $(srcdir)fnmatch.h
+fnmatch.o: $(srcdir)fnmatch.h
 
 .c.o:
 	$(CC) $(CFLAGS) $(CPPFLAGS) -I. -I$(srcdir) -c $< $(OUTPUT_OPTION)
