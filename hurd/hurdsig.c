@@ -61,13 +61,13 @@ int _hurd_core_limit;
 
 /* Call the core server to mummify us before we die.
    Returns nonzero if a core file was written.  */
-static inline int
+static int
 write_corefile (int signo, int sigcode)
 {
   error_t err;
   mach_port_t coreserver;
-  int dealloc_crdir, dealloc_ccdir;
-  file_t crdir, ccdir;
+  file_t file;
+  char *name;
 
   if (_hurd_core_limit == 0)
     /* User doesn't want a core.  */
@@ -77,37 +77,36 @@ write_corefile (int signo, int sigcode)
   if (coreserver == MACH_PORT_NULL)
     return 0;
 
-  ccdir = _hurd_port_get (&_hurd_ccdir, &dealloc_ccdir);
-
-  crdir = _hurd_port_get (&_hurd_crdir, &dealloc_crdir);
-  err = __hurd_path_lookup (crdir, ccdir, "core"
-			    FS_LOOKUP_WRITE|FS_LOOKUP_CREATE,
-			    0666 & ~_hurd_umask,
-			    &file);
-  _hurd_port_free (crdir, &dealloc_crdir);
-
-  if (!err)
+  name = getenv ("COREFILE");
+  if (name != NULL)
+    file = __path_lookup (name, FS_LOOKUP_WRITE|FS_LOOKUP_CREATE,
+			  0666 & ~_hurd_umask);
+  if (name == NULL || file == MACH_PORT_NULL)
     {
-      err = __core_dump_task (coreserver,
-			      __mach_task_self (),
-			      file,
-			      signo, sigcode,
-			      getenv ("GNUTARGET"));
-      __mach_port_deallocate (__mach_task_self (), coreserver);
-      if (!err && _hurd_core_limit != RLIM_INFINITY)
-	{
-	  io_statbuf_t stb;
-	  err = __io_stat (file, &stb);
-	  if (!err && stb.stb_size > _hurd_core_limit)
-	    err = EFBIG;
-	}
-      __mach_port_deallocate (__mach_task_self (), file);
-      if (err)
-	(void) __dir_unlink (ccdir, "core");
+      name = "core";
+      file = __path_lookup (name, FS_LOOKUP_WRITE|FS_LOOKUP_CREATE,
+			    0666 & ~_hurd_umask);
     }
 
-  _hurd_port_free (ccdir, &dealloc_ccdir);
+  if (file == MACH_PORT_NULL)
+    return 0;
 
+  err = __core_dump_task (coreserver,
+			  __mach_task_self (),
+			  file,
+			  signo, sigcode,
+			  getenv ("GNUTARGET"));
+  __mach_port_deallocate (__mach_task_self (), coreserver);
+  if (!err && _hurd_core_limit != RLIM_INFINITY)
+    {
+      io_statbuf_t stb;
+      err = __io_stat (file, &stb);
+      if (!err && stb.stb_size > _hurd_core_limit)
+	err = EFBIG;
+    }
+  __mach_port_deallocate (__mach_task_self (), file);
+  if (err)
+    (void) remove (name);
   return !err;
 }
 
@@ -208,9 +207,8 @@ abort_all_rpcs (int signo, void *state)
 
 /* Deliver a signal.
    SS->lock is held on entry and released before return.  */
-error_t
-_hurd_internal_post_signal (reply_port_t reply,
-			    struct _hurd_sigstate *ss,
+void
+_hurd_internal_post_signal (struct _hurd_sigstate *ss,
 			    int signo,
 			    int sigcode,
 			    sigset_t *restore_blocked)
@@ -291,8 +289,6 @@ _hurd_internal_post_signal (reply_port_t reply,
   switch (act)
     {
     case stop:
-      if (reply != MACH_PORT_NULL)
-	__sig_post_reply (reply, POSIX_SUCCESS);
       _HURD_PORT_USE
 	(&_hurd_proc,
 	 ({
@@ -314,17 +310,13 @@ _hurd_internal_post_signal (reply_port_t reply,
       else
 	__mutex_unlock (&ss->lock);
 	
-      return MIG_NO_REPLY;	/* Already replied.  */
+      return;
 
     case ignore:
-      if (reply != MACH_PORT_NULL)
-	__sig_post_reply (reply, POSIX_SUCCESS);
       break;
 
     case core:
     case term:
-      if (reply != MACH_PORT_NULL)
-	__sig_post_reply (reply, POSIX_SUCCESS);
       _HURD_PORT_USE
 	(&_hurd_proc,
 	 ({
@@ -336,22 +328,15 @@ _hurd_internal_post_signal (reply_port_t reply,
 			 WCOREDUMP : 0)))
 	  }));
       __task_terminate (__mach_task_self ());
-      return MIG_NO_REPLY;	/* Yeah, right.  */
+      return;			/* Yeah, right.  */
 
     case handle:
-      if (reply != MACH_PORT_NULL)
-	__sig_post_reply (reply, POSIX_SUCCESS);
       __thread_suspend (ss->thread);
       abort_rpcs (ss, signo, thread_state);
       {
 	const sigset_t blocked = ss->blocked;
 	ss->blocked |= __sigmask (signo) | ss->actions[signo].sa_mask;
-	_hurd_run_sighandler (ss->thread, signo, sigcode,
-			      ss->actions[signo].sa_handler,
-			      ss->actions[signo].sa_flags,
-			      blocked,
-			      &ss->sigstack,
-			      thread_state);
+	_hurd_run_sighandler (ss, signo, sigcode, blocked, thread_state);
       }
       __thread_resume (ss->thread);
     }
@@ -363,9 +348,8 @@ _hurd_internal_post_signal (reply_port_t reply,
     if (__sigismember (signo, &ss->pending))
       {
 	__sigdelmember (signo, &ss->pending);
-	return _hurd_internal_post_signal (MACH_PORT_NULL, ss,
-					   signo, ss->sigcodes[signo],
-					   NULL);
+	_hurd_internal_post_signal (ss, signo, ss->sigcodes[signo], NULL);
+	return;
       }
 
   if (ss->suspended)
@@ -373,16 +357,14 @@ _hurd_internal_post_signal (reply_port_t reply,
     __condition_signal (&ss->arrived);
   else
     __mutex_unlock (&ss->lock);
-
-  return MIG_NO_REPLY;
 }
 
-/* Called by the proc server to send a signal.  */
+/* Sent when someone wants us to get a signal.  */
 error_t
 __sig_post (sigthread_t me,
-	  mig_reply_port_t reply,
-	  int signo,
-	  mach_port_t refport)
+	    mig_reply_port_t reply,
+	    int signo,
+	    mach_port_t refport)
 {
   struct _hurd_sigstate *ss;
 
@@ -407,8 +389,8 @@ __sig_post (sigthread_t me,
       if (sessport == MACH_PORT_NULL)
 	_HURD_PORT_USE (&_hurd_proc,
 			__proc_getsidport (port, &sessport));
-      if (sessport != MACH_PORT_NULL &&
-	  refport == sessport && signo == SIGCONT)
+      if (sessport != MACH_PORT_NULL && refport == sessport &&
+	  signo == SIGCONT)
 	goto win;
     }
 
@@ -417,16 +399,61 @@ __sig_post (sigthread_t me,
 
  win:
   ss = _hurd_thread_sigstate (_hurd_sigthread);
-  return _hurd_internal_post_signal (reply, ss, signo, 0, NULL);
+  __sig_post_reply (reply, 0);
+  _hurd_internal_post_signal (ss, signo, 0, NULL);
+  return MIG_NO_REPLY;		/* Already replied.  */
 }
 
 /* Called by the exception handler to take a signal.  */
 void
 _hurd_exc_post_signal (thread_t thread, int signo, int sigcode)
 {
-  (void) _hurd_internal_post_signal (MACH_PORT_NULL,
-				     _hurd_thread_sigstate (thread),
-				     signo, sigcode, NULL);
+  _hurd_internal_post_signal (_hurd_thread_sigstate (thread),
+			      signo, sigcode, NULL);
+}
+
+#include <sysdep.h>
+
+/* Handle signal SIGNO in the calling thread.
+   If SS is not NULL it is the sigstate for the calling thread;
+   SS->lock is held on entry and released before return.  */
+void
+_hurd_raise_signal (struct _hurd_sigstate *ss, int signo, int sigcode)
+{
+  jmp_buf env;
+  struct sigcontext sc;
+
+  if (ss == NULL)
+    ss = _hurd_thread_sigstate (__mach_thread_self ());
+
+  if (! setjmp (env))
+    {
+      register volatile void (*handler) (int signo, int sigcode,
+					 struct sigcontext *scp);
+
+      handler = (__typeof (handler)) ss->actions[signo].sa_handler;
+
+      /* Set up SC to make setjmp return 1.  */
+      _hurd_jmp_buf_sigcontext (env, &sc, 1);
+
+      sc.sc_mask = ss->blocked;	/* Restored by sigreturn.  */
+      sc.sc_onstack = ((ss->actions[signo].sa_flags & SA_ONSTACK) &&
+		       !(ss->sigaltstack.ss_flags & SA_DISABLE));
+      if (sc.sc_onstack)
+	{
+	  /* Switch to the signal stack.  */
+	  ss->sigaltstack.ss_flags |= SA_ONSTACK;
+	  SET_SP (ss->sigaltstack.ss_sp);
+	}
+
+      __mutex_unlock (&ss->lock);
+
+      /* Call the handler.  */
+      (*handler) (signo, sigcode, &sc);
+
+      __sigreturn (&sc);	/* Does not return.   */
+      LOSE;			/* Firewall.  */
+    }
 }
 
 void
