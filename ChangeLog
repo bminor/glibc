@@ -1,3 +1,22 @@
+2005-01-27  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #731]
+	* stdlib/tst-fmtmsg.c: Include stdlib.h.
+
+2005-01-25  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #731]
+	* stdlib/fmtmsg.c (addseverity): Remove new_string variable.
+	(free_mem): Don't free string.
+	* stdlib/tst-fmtmsg.c: Include string.h.
+	(main): Add some more tests.
+
+2005-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #731]
+	* stdlib/fmtmsg.c (internal_addseverity): Remove incorrect free call.
+	* stdlib/tst-fmtmsg.c (main): Add another addseverity test.
+
 2005-01-12  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #728]
