@@ -48,6 +48,8 @@ following patterns:
 alpha-dec-osf1
 i386-@var{anything}-bsd4.3
 i386-@var{anything}-gnu
+i386-@var{anything}-isc2.2
+i386-@var{anything}-isc3.@var{n}
 i386-@var{anything}-sco3.2
 i386-@var{anything}-sco3.2v4
 i386-@var{anything}-sysv
