@@ -824,11 +824,11 @@ The @code{fd_set} data type represents file descriptor sets for the
 @comment BSD
 @deftypevr Macro int FD_SETSIZE
 The value of this macro is the maximum number of file descriptors that a
-@code{fd_set} object can hold information about.  This is normally
-greater than or equal to the maximum number of open file descriptors
-supported by the system.  On some systems, including GNU, there is no
-absolute limit on the number of descriptors open, but this macro still
-has a constant value which controls the number of bytes in an @code{fd_set}.
+@code{fd_set} object can hold information about.  On systems with a
+fixed maximum number, @code{FD_SETSIZE} is at least that number.  On
+some systems, including GNU, there is no absolute limit on the number of
+descriptors open, but this macro still has a constant value which
+controls the number of bits in an @code{fd_set}.
 @c ??? xref needed here to setrlimit once we document that.
 @end deftypevr
 
