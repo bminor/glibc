@@ -46,8 +46,9 @@ DEFUN(readdir, (dirp), DIR *dirp)
 	{
 	  /* We've emptied out our buffer.  Refill it.  */
 
+	  off_t base;
 	  ssize_t bytes = __getdirentries (dirp->__fd, dirp->__data,
-					   dirp->__allocation, (off_t *) NULL);
+					   dirp->__allocation, &base);
 	  if (bytes <= 0)
 	    return NULL;
 	  dirp->__size = (size_t) bytes;
