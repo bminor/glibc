@@ -54,8 +54,11 @@ alpha   <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;/
 % digit = Arabic digits  + Thai digits
 %
 digit   <zero>;<one>;<two>;<three>;<four>;/
-        <five>;<six>;<seven>;<eight>;<nine>;/
-        <th240>;...;<th249>
+        <five>;<six>;<seven>;<eight>;<nine>
+% The Thai digits
+%       <th240>;...;<th249>
+% cannot be listed here.  In glibc 2.2 they'll be in indigits and
+% possibly outdigits.
 
 xdigit  <zero>;<one>;<two>;<three>;<four>;/
         <five>;<six>;<seven>;<eight>;<nine>;/
@@ -992,4 +995,3 @@ yesstr  "<th227><th170><th232>"
 nostr   "<th228><th193><th232><th227><th170><th232>"
 
 END LC_MESSAGES
-
