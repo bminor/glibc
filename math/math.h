@@ -187,6 +187,7 @@ extern __CONSTVALUE double __logb __P ((double __x));
 
 /* Return the integer nearest X in the direction of the
    prevailing rounding mode.  */
+extern __CONSTVALUE double __rint __P ((double __x));
 extern __CONSTVALUE double rint __P ((double __x));
 
 /* Return `sqrt(X*X + Y*Y)'.  */
