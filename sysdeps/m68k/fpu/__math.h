@@ -166,19 +166,19 @@ __m81_defun (float_type, __CONCAT(__ieee754_atan2,s),			     \
     }									     \
   else									     \
     {									     \
-      if (__y > 0)							     \
-	{								     \
-	  if (-__x < __y)						     \
-	    return __pi + __m81_u(__CONCAT(__atan,s)) (__y / __x);	     \
-	  else								     \
-	    return __pi_2 - __m81_u(__CONCAT(__atan,s)) (__x / __y);	     \
-	}								     \
-      else								     \
+      if (__y < 0)							     \
 	{								     \
 	  if (-__x > -__y)						     \
 	    return -__pi + __m81_u(__CONCAT(__atan,s)) (__y / __x);	     \
 	  else								     \
 	    return -__pi_2 - __m81_u(__CONCAT(__atan,s)) (__x / __y);	     \
+	}								     \
+      else								     \
+	{								     \
+	  if (-__x > __y)						     \
+	    return __pi + __m81_u(__CONCAT(__atan,s)) (__y / __x);	     \
+	  else								     \
+	    return __pi_2 - __m81_u(__CONCAT(__atan,s)) (__x / __y);	     \
 	}								     \
     }									     \
 }									     \
