@@ -1,4 +1,4 @@
-@node String and Array Utilities
+@node String and Array Utilities, Extended Characters, Character Handling, Top
 @chapter String and Array Utilities
 
 Operations on strings (or arrays of characters) are an important part of
@@ -20,21 +20,21 @@ functions are typically highly optimized, your program may run faster
 too.
 
 @menu
-* Representation of Strings::	Introduction to basic concepts.
-* String/Array Conventions::	Whether to use a string function or an
+* Representation of Strings::   Introduction to basic concepts.
+* String/Array Conventions::    Whether to use a string function or an
 				 arbitrary array function.
-* String Length::		Determining the length of a string.
-* Copying and Concatenation::	Functions to copy the contents of strings
+* String Length::               Determining the length of a string.
+* Copying and Concatenation::   Functions to copy the contents of strings
 				 and arrays.
-* String/Array Comparison::	Functions for byte-wise and character-wise
+* String/Array Comparison::     Functions for byte-wise and character-wise
 				 comparison.
-* Collation Functions::		Functions for collating strings.
-* Search Functions::		Searching for a specific element or substring.
+* Collation Functions::         Functions for collating strings.
+* Search Functions::            Searching for a specific element or substring.
 * Finding Tokens in a String::  Splitting a string into tokens by looking
 				 for delimiters.
 @end menu
 
-@node Representation of Strings
+@node Representation of Strings, String/Array Conventions,  , String and Array Utilities
 @section Representation of Strings
 @cindex string, representation of
 
@@ -104,7 +104,7 @@ checks for overflowing the array.  Many of the library functions
 an extra byte to hold the null character that marks the end of the
 string.
 
-@node String/Array Conventions
+@node String/Array Conventions, String Length, Representation of Strings, String and Array Utilities
 @section String/Array Conventions
 
 This chapter describes both functions that work on arbitrary arrays or
@@ -137,7 +137,7 @@ other hand, when you are manipulating null-terminated strings it is
 usually more convenient to use the @samp{str} functions, unless you
 already know the length of the string in advance.
 
-@node String Length
+@node String Length, Copying and Concatenation, String/Array Conventions, String and Array Utilities
 @section String Length
 
 You can get the length of a string using the @code{strlen} function.
@@ -171,7 +171,7 @@ strlen (string)
 @end example
 @end deftypefun
 
-@node Copying and Concatenation
+@node Copying and Concatenation, String/Array Comparison, String Length, String and Array Utilities
 @section Copying and Concatenation
 
 You can use the functions described in this section to copy the contents
@@ -409,7 +409,7 @@ BSD.  Note that it is not as powerful as @code{bzero}, because the only
 value it can store is zero.
 @end deftypefun
 
-@node String/Array Comparison
+@node String/Array Comparison, Collation Functions, Copying and Concatenation, String and Array Utilities
 @section String/Array Comparison
 @cindex comparing strings and arrays
 @cindex string comparison functions
@@ -546,7 +546,7 @@ strncmp ("hello, world", "hello, stupid world!!!", 5)
 This is an obsolete alias for @code{memcmp}, derived from BSD.
 @end deftypefun
 
-@node Collation Functions
+@node Collation Functions, Search Functions, String/Array Comparison, String and Array Utilities
 @section Collation Functions
 
 @cindex collating strings
@@ -716,7 +716,7 @@ sort_strings_fast (char **array, int nstrings)
 @strong{Compatibility Note:}  The string collation functions are a new
 feature of ANSI C.  Older C dialects have no equivalent feature.
 
-@node Search Functions
+@node Search Functions, Finding Tokens in a String, Collation Functions, String and Array Utilities
 @section Search Functions
 
 This section describes library functions which perform various kinds
@@ -847,7 +847,7 @@ strpbrk ("hello, world", " \t\n,.;!?")
 @end example
 @end deftypefun
 
-@node Finding Tokens in a String
+@node Finding Tokens in a String,  , Search Functions, String and Array Utilities
 @section Finding Tokens in a String
 
 @cindex tokenizing strings

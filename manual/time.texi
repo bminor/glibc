@@ -1,4 +1,4 @@
-@node Date and Time
+@node Date and Time, Non-Local Exits, Arithmetic, Top
 @chapter Date and Time
 
 This chapter describes functions for manipulating dates and times,
@@ -22,13 +22,13 @@ an Alarm}.
 @end itemize
 
 @menu
-* Processor Time::	Measures processor time used by a program.
-* Calendar Time::      	Manipulation of ``real'' dates and times.
-* Setting an Alarm::    Sending a signal after a specified time.
-* Sleeping::            Waiting for a period of time.
+* Processor Time::              Measures processor time used by a program.
+* Calendar Time::               Manipulation of ``real'' dates and times.
+* Setting an Alarm::            Sending a signal after a specified time.
+* Sleeping::                    Waiting for a period of time.
 @end menu
 
-@node Processor Time
+@node Processor Time, Calendar Time,  , Date and Time
 @section Processor Time
 
 If you're trying to optimize your program or measure its efficiency, it's
@@ -46,11 +46,11 @@ of a single program invocation.
 @cindex time, elapsed CPU
 
 @menu
-* Basic CPU Time::      The @code{clock} function.
-* Detailed CPU Time::   The @code{times} function.
+* Basic CPU Time::              The @code{clock} function.
+* Detailed CPU Time::           The @code{times} function.
 @end menu
 
-@node Basic CPU Time
+@node Basic CPU Time, Detailed CPU Time,  , Processor Time
 @subsection Basic CPU Time Inquiry
 
 To get the elapsed CPU time used by a process, you can use the
@@ -117,7 +117,7 @@ value @code{(clock_t)(-1)}.
 @end deftypefun
 
 
-@node Detailed CPU Time
+@node Detailed CPU Time,  , Basic CPU Time, Processor Time
 @subsection Detailed Elapsed CPU Time Inquiry
 
 The @code{times} function returns more detailed information about
@@ -176,7 +176,7 @@ value returned by the @code{clock} function is equivalent to the sum of
 the @code{tms_utime} and @code{tms_stime} fields returned by
 @code{times}.
 
-@node Calendar Time
+@node Calendar Time, Setting an Alarm, Processor Time, Date and Time
 @section Calendar Time
 
 This section describes facilities for keeping track of dates and times
@@ -212,17 +212,17 @@ date and time values.
 @end itemize
 
 @menu
-* Simple Calendar Time:: 	Facilities for manipulating calendar time.
-* High-Resolution Calendar::	A time representation with greater precision.
-* Broken-down Time::		Facilities for manipulating local time.
-* Formatting Date and Time::	Converting times to strings.
-* TZ Variable::			How users specify the time zone.
-* Time Zone Functions::		Functions to examine or specify the time zone.
-* Time Functions Example::	An example program showing use of some of
+* Simple Calendar Time::        Facilities for manipulating calendar time.
+* High-Resolution Calendar::    A time representation with greater precision.
+* Broken-down Time::            Facilities for manipulating local time.
+* Formatting Date and Time::    Converting times to strings.
+* TZ Variable::                 How users specify the time zone.
+* Time Zone Functions::         Functions to examine or specify the time zone.
+* Time Functions Example::      An example program showing use of some of
 				 the time functions.
 @end menu
 
-@node Simple Calendar Time
+@node Simple Calendar Time, High-Resolution Calendar,  , Calendar Time
 @subsection Simple Calendar Time
 
 This section describes the @code{time_t} data type for representing
@@ -267,7 +267,7 @@ time is not available, the value @code{(time_t)(-1)} is returned.
 @end deftypefun
 
 
-@node High-Resolution Calendar
+@node High-Resolution Calendar, Broken-down Time, Simple Calendar Time, Calendar Time
 @subsection High-Resolution Calendar
 
 The @code{time_t} data type used to represent calendar times has a 
@@ -412,7 +412,7 @@ You do not have privilege to set the time.
 and @code{adjtime} functions are derived from BSD.  
 
 
-@node Broken-down Time
+@node Broken-down Time, Formatting Date and Time, High-Resolution Calendar, Calendar Time
 @subsection Broken-down Time
 @cindex broken-down time
 @cindex calendar time and broken-down time
@@ -529,7 +529,7 @@ Calling @code{mktime} also sets the variable @code{tzname} with
 information about the current time zone.  @xref{Time Zone Functions}.
 @end deftypefun
 
-@node Formatting Date and Time
+@node Formatting Date and Time, TZ Variable, Broken-down Time, Calendar Time
 @subsection Formatting Date and Time
 
 The functions described in this section format time values as strings.
@@ -676,7 +676,7 @@ repeat the call, providing a bigger array.
 For an example of @code{strftime}, see @ref{Time Functions Example}.
 @end deftypefun
 
-@node TZ Variable
+@node TZ Variable, Time Zone Functions, Formatting Date and Time, Calendar Time
 @subsection Specifying the Time Zone with @code{TZ}
 
 In the GNU system, a user can specify the time zone by means of the
@@ -786,7 +786,7 @@ operation chooses a time zone by default.  Each operating system has its
 own rules for choosing the default time zone, so there is little we can
 say about them.
 
-@node Time Zone Functions
+@node Time Zone Functions, Time Functions Example, TZ Variable, Calendar Time
 @subsection Functions and Variables for Time Zones
 
 @comment time.h
@@ -835,7 +835,7 @@ This variable has a nonzero value if the standard U.S. daylight savings
 time rules apply.
 @end deftypevar
 
-@node Time Functions Example
+@node Time Functions Example,  , Time Zone Functions, Calendar Time
 @subsection Time Functions Example
 
 Here is an example program showing the use of some of the local time and
@@ -880,7 +880,7 @@ The time is 01:02 PM.
 @end example
 
 
-@node Setting an Alarm
+@node Setting an Alarm, Sleeping, Calendar Time, Date and Time
 @section Setting an Alarm
 
 The @code{alarm} and @code{setitimer} functions provide a mechanism for a
@@ -1050,7 +1050,7 @@ functions are derived from BSD Unix, while the @code{alarm} function is
 specified by the POSIX.1 standard.  @code{setitimer} is more powerful than
 @code{alarm}, but @code{alarm} is more widely used.
 
-@node Sleeping
+@node Sleeping,  , Setting an Alarm, Date and Time
 @section Sleeping
 
 The function @code{sleep} gives a simple way to make the program wait

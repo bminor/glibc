@@ -1,4 +1,4 @@
-@node Summary of Library Facilities
+@node Summary of Library Facilities, Maintenance, System Configuration Limits, Top
 @appendix Summary of Library Facilities
 
 This appendix is a complete list of the facilities declared within the

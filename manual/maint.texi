@@ -2,24 +2,24 @@
 @c Makeinfo ignores it when processing the file from the include.
 @setfilename INSTALL
 
-@node Maintenance
+@node Maintenance, Copying, Summary of Library Facilities, Top
 @appendix Library Maintenance
 
 @menu
-* Installation::                        How to configure, compile and install
+* Installation::                How to configure, compile and install
                 			 the GNU C library.
-* Reporting Bugs::	                How to report bugs (if you want to
+* Reporting Bugs::              How to report bugs (if you want to
                                          get them fixed) and other troubles
                                          you may have with the GNU C library.
-* Porting::                             How to port the GNU C library to
+* Porting::                     How to port the GNU C library to
                                          a new machine or operating system.
-* Compatibility with Traditional C::    Using the GNU C library with non-ANSI
+* Compatibility with Traditional C::  Using the GNU C library with non-ANSI
                                          C compilers.
-* Contributors to the GNU C Library::	Contributors to the GNU C Library.
+* Contributors to the GNU C Library::  Contributors to the GNU C Library.
 @end menu
 
 
-@node Installation
+@node Installation, Reporting Bugs,  , Maintenance
 @appendixsec How to Install the GNU C Library
 @cindex installing the library
 
@@ -80,7 +80,7 @@ setting the installation directories in @file{Makeconfig} (or
 @file{@var{machine}/Makeconfig}).  This will build things if necessary,
 before installing them.@refill
 
-@node Reporting Bugs
+@node Reporting Bugs, Porting, Installation, Maintenance
 @appendixsec Reporting Bugs
 @cindex reporting bugs
 
@@ -120,7 +120,7 @@ other problems with installation, use, or the documentation, please
 report those as well.
 
 
-@node Porting
+@node Porting, Compatibility with Traditional C, Reporting Bugs, Maintenance
 @appendixsec Porting the GNU C Library
 
 The GNU C library is written to be easily portable to a variety of
@@ -337,7 +337,7 @@ organized.
                                  Unix-like system.
 @end menu
 
-@node Hierarchy Conventions
+@node Hierarchy Conventions, Porting to Unix,  , Porting
 @appendixsubsec The Layout of the @file{sysdeps} Directory Hierarchy
 
 Different machine architectures are generally at the top level of the
@@ -387,7 +387,7 @@ This is the directory for things based on the Mach microkernel from CMU
 the @file{sysdeps} hierarchy, parallel to @file{unix} and @file{mach}.
 @end table
 
-@node Porting to Unix
+@node Porting to Unix,  , Hierarchy Conventions, Porting
 @appendixsubsec Porting the GNU C Library to Unix Systems
 
 Most Unix systems are fundamentally very similar.  There are variations
@@ -419,7 +419,7 @@ kept; they should not affect the source tree itself.  The files
 generated are: @file{ioctls.h}, @file{errnos.h}, @file{sys/param.h},
 and @file{errlist.c} (for the @file{stdio} section of the library).
 
-@node Compatibility with Traditional C
+@node Compatibility with Traditional C, Contributors to the GNU C Library, Porting, Maintenance
 @appendixsec Compatibility with Traditional C
 
 Although the GNU C library implements the ANSI C library facilities,
@@ -444,7 +444,7 @@ implementations.  This means you may need to make changes to your
 program in order to get it to compile.
 
 
-@node Contributors to the GNU C Library
+@node Contributors to the GNU C Library,  , Compatibility with Traditional C, Maintenance
 @appendixsec Contributors to the GNU C Library
 
 The GNU C library was written almost entirely by Roland McGrath.

@@ -1,4 +1,4 @@
-@node Non-Local Exits
+@node Non-Local Exits, Signal Handling, Date and Time, Top
 @chapter Non-Local Exits
 @cindex non-local exits
 @cindex long jumps
@@ -10,13 +10,13 @@ do such @dfn{non-local exits} using the @code{setjmp} and @code{longjmp}
 functions.
 
 @menu
-* Introduction to Non-Local Exits::	An overview of how and when to use
+* Introduction to Non-Local Exits::  An overview of how and when to use
 					 these facilities.
-* Functions for Non-Local Exits::	Details of the interface.
-* Non-Local Exits and Blocked Signals::	Portability issues.
+* Functions for Non-Local Exits::  Details of the interface.
+* Non-Local Exits and Blocked Signals::  Portability issues.
 @end menu
 
-@node Introduction to Non-Local Exits
+@node Introduction to Non-Local Exits, Functions for Non-Local Exits,  , Non-Local Exits
 @section Introduction to Non-Local Exits
 
 As an example of a situation where a non-local exit can be useful,
@@ -104,7 +104,7 @@ else
   @dots{}
 @end example
 
-@node Functions for Non-Local Exits
+@node Functions for Non-Local Exits, Non-Local Exits and Blocked Signals, Introduction to Non-Local Exits, Non-Local Exits
 @section Functions for Non-Local Exits
 
 Here are the details on the functions and data structures used for
@@ -186,7 +186,7 @@ function containing the @code{setjmp} call that have been changed since
 the call to @code{setjmp} are indeterminate, unless you have declared
 them @code{volatile}.
 
-@node Non-Local Exits and Blocked Signals
+@node Non-Local Exits and Blocked Signals,  , Functions for Non-Local Exits, Non-Local Exits
 @section Non-Local Exits and Blocked Signals
 
 In BSD Unix systems, @code{setjmp} and @code{longjmp} also save and

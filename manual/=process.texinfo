@@ -1,4 +1,4 @@
-@node Processes
+@node Processes, Job Control, Signal Handling, Top
 @chapter Processes
 
 @cindex process
@@ -17,17 +17,17 @@ This chapter describes how a program can create, terminate, and control
 child processes.
 
 @menu
-* Program Arguments::	        Parsing the command-line arguments to
+* Program Arguments::           Parsing the command-line arguments to
 				 a program.
-* Environment Variables::	How to access parameters inherited from
+* Environment Variables::       How to access parameters inherited from
 				 a parent process.
-* Program Termination::		How to cause a process to terminate and
+* Program Termination::         How to cause a process to terminate and
 				 return status information to its parent.
-* Creating New Processes::	Running other programs.
+* Creating New Processes::      Running other programs.
 @end menu
 
 
-@node Program Arguments
+@node Program Arguments, Environment Variables,  , Processes
 @section Program Arguments
 @cindex program arguments
 @cindex command line arguments
@@ -60,14 +60,14 @@ arguments are interpreted in the same way (as file names, for example),
 you are usually better off using @code{getopt} to do the parsing.
 
 @menu
-* Program Argument Syntax Conventions::         By convention, program
+* Program Argument Syntax Conventions::  By convention, program
                                                  options are specified by a
                                                  leading hyphen.
-* Parsing Program Arguments::                   The @code{getopt} function.
-* Example of Parsing Program Arguments::        An example of @code{getopt}.
+* Parsing Program Arguments::   The @code{getopt} function.
+* Example of Parsing Program Arguments::  An example of @code{getopt}.
 @end menu
 
-@node Program Argument Syntax Conventions
+@node Program Argument Syntax Conventions, Parsing Program Arguments,  , Program Arguments
 @subsection Program Argument Syntax Conventions
 @cindex program argument syntax
 @cindex syntax, for program arguments
@@ -124,7 +124,7 @@ Options may be supplied in any order, or appear multiple times.  The
 interpretation is left up to the particular application program.
 @end itemize
 
-@node Parsing Program Arguments
+@node Parsing Program Arguments, Example of Parsing Program Arguments, Program Argument Syntax Conventions, Program Arguments
 @subsection Parsing Program Arguments
 @cindex program arguments, parsing
 @cindex command arguments, parsing
@@ -207,7 +207,7 @@ option character.  In addition, if the external variable @code{opterr}
 is nonzero, @code{getopt} prints an error message.
 @end deftypefun
 
-@node Example of Parsing Program Arguments
+@node Example of Parsing Program Arguments,  , Parsing Program Arguments, Program Arguments
 @subsection Example of Parsing Program Arguments
 
 Here is an example showing how @code{getopt} is typically used.  The
@@ -311,7 +311,7 @@ aflag = 1, bflag = 0, cvalue = (null)
 Non-option argument -
 @end example
 
-@node Environment Variables
+@node Environment Variables, Program Termination, Program Arguments, Processes
 @section Environment Variables
 
 @cindex environment variable
@@ -349,13 +349,13 @@ character, since this is assumed to terminate the string.
 
 
 @menu
-* Environment Access::			How to get and set the values of
+* Environment Access::          How to get and set the values of
 					 environment variables.
-* Standard Environment Variables::	These environment variables have
+* Standard Environment Variables::  These environment variables have
 					 standard interpretations.
 @end menu
 
-@node Environment Access
+@node Environment Access, Standard Environment Variables,  , Environment Variables
 @subsection Environment Access
 @cindex environment access
 @cindex environment representation
@@ -411,7 +411,7 @@ If you just want to get the value of an environment variable, use
 @code{getenv}.
 @end deftypevar
 
-@node Standard Environment Variables
+@node Standard Environment Variables,  , Environment Access, Environment Variables
 @subsection Standard Environment Variables
 @cindex standard environment variables
 
@@ -520,7 +520,7 @@ reordering of command line arguments by @code{getopt}.  @xref{Program
 Argument Syntax Conventions}.
 @end table
 
-@node Program Termination
+@node Program Termination, Creating New Processes, Environment Variables, Processes
 @section Program Termination
 @cindex program termination
 @cindex process termination
@@ -539,12 +539,14 @@ more detail in @ref{Signal Handling}.  The @code{abort} function causes
 a terminal that kills the program.
 
 @menu
-* Normal Program Termination::
-* Aborting a Program::
-* Process Termination Details::
+* Normal Program Termination::  
+* Exit Status::                 Exit Status
+* Cleanups on Exit::            Cleanups on Exit
+* Aborting a Program::          
+* Termination Internals::       Termination Internals
 @end menu
 
-@node Normal Program Termination
+@node Normal Program Termination, Exit Status,  , Program Termination
 @subsection Normal Program Termination
 
 @comment stdlib.h
@@ -576,7 +578,7 @@ with the @code{tmpfile} function are removed; see @ref{Temporary Files}.
 @code{_exit} is called.  @xref{Termination Internals}
 @end enumerate
 
-@node Exit Status
+@node Exit Status, Cleanups on Exit, Normal Program Termination, Program Termination
 @subsection Exit Status
 @cindex exit status
 
@@ -645,7 +647,7 @@ kinds of "non-success".  For example, @code{diff} uses status value
 mean that there was difficulty in opening the files.
 @end deftypevr
 
-@node Cleanups on Exit
+@node Cleanups on Exit, Aborting a Program, Exit Status, Program Termination
 @subsection Cleanups on Exit
 
 @comment stdlib.h
@@ -695,7 +697,7 @@ void main (void)
 When this program is executed, it just prints the message and exits.
 
 
-@node Aborting a Program
+@node Aborting a Program, Termination Internals, Cleanups on Exit, Program Termination
 @subsection Aborting a Program
 @cindex aborting a program
 
@@ -716,7 +718,7 @@ intercept this signal; see @ref{Signal Handling}.
 @strong{Incomplete:}  Why would you want to define such a handler?
 @end deftypefun
 
-@node Termination Internals
+@node Termination Internals,  , Aborting a Program, Program Termination
 @subsection Termination Internals
 
 The @code{_exit} function is the primitive used for process termination
@@ -766,7 +768,7 @@ signal and a @code{SIGCONT} signal are sent to each process in the
 group.  @xref{Job Control}.
 @end itemize
 
-@node Creating New Processes
+@node Creating New Processes,  , Program Termination, Processes
 @section Creating New Processes
 
 This section describes how your program can cause other programs to be
@@ -781,23 +783,23 @@ need more control over the details of how this is done, you can use the
 primitive functions to do each step individually instead.
 
 @menu
-* Running a Command::		        The easy way to run another program.
-* Process Creation Concepts::	        An overview of the hard way to do it.
-* Process Identification::              How to get the process ID of a process.
-* Creating a Process::		        How to fork a child process.
-* Executing a File::		        How to get a process to execute another
+* Running a Command::           The easy way to run another program.
+* Process Creation Concepts::   An overview of the hard way to do it.
+* Process Identification::      How to get the process ID of a process.
+* Creating a Process::          How to fork a child process.
+* Executing a File::            How to get a process to execute another
 				         program.
-* Process Completion::		        How to tell when a child process has
+* Process Completion::          How to tell when a child process has
 				         completed.
-* Process Completion Status::           How to interpret the status value 
+* Process Completion Status::   How to interpret the status value 
                                          returned from a child process.
-* BSD Process Completion Functions::    More functions, for backward
+* BSD Process Completion Functions::  More functions, for backward
                                          compatibility.
-* Process Creation Example::            A complete example program.
+* Process Creation Example::    A complete example program.
 @end menu
 
 
-@node Running a Command
+@node Running a Command, Process Creation Concepts,  , Creating New Processes
 @subsection Running a Command
 @cindex running a command
 
@@ -835,7 +837,7 @@ Subprocess}) are closely related to the @code{system} function.  They
 allow the parent process to communicate with the standard input and
 output channels of the command being executed.
 
-@node Process Creation Concepts
+@node Process Creation Concepts, Process Identification, Running a Command, Creating New Processes
 @subsection Process Creation Concepts
 
 This section gives an overview of processes and of the steps involved in
@@ -881,7 +883,7 @@ image; when the new program exits, the process exits too, instead of
 returning to the previous process image.
 
 
-@node Process Identification
+@node Process Identification, Creating a Process, Process Creation Concepts, Creating New Processes
 @subsection Process Identification
 
 The @code{pid_t} data type represents process IDs.  You can get the
@@ -913,7 +915,7 @@ The @code{getppid} function returns the process ID of the parent of the
 current process.
 @end deftypefun
 
-@node Creating a Process
+@node Creating a Process, Executing a File, Process Identification, Creating New Processes
 @subsection Creating a Process
 
 The @code{fork} function is the primitive for creating a process.
@@ -1003,7 +1005,7 @@ library permits you to use @code{vfork} on all systems, but actually
 executes @code{fork} if @code{vfork} isn't available.
 @end deftypefun
 
-@node Executing a File
+@node Executing a File, Process Completion, Creating a Process, Creating New Processes
 @subsection Executing a File
 @cindex executing a file
 @cindex @code{exec} functions
@@ -1174,7 +1176,7 @@ it, and these descriptors do survive through @code{exec} (provided that
 they do not have @code{FD_CLOEXEC} set.  The new process image can
 reconnect these to new streams using @code{fdopen}.
 
-@node Process Completion
+@node Process Completion, Process Completion Status, Executing a File, Creating New Processes
 @subsection Process Completion
 @cindex process completion
 @cindex waiting for completion of child process
@@ -1304,7 +1306,7 @@ sigchld_handler (int signum)
 @end example
 @end deftypefun
 
-@node Process Completion Status
+@node Process Completion Status, BSD Process Completion Functions, Process Completion, Creating New Processes
 @subsection Process Completion Status
 
 If the exit status value (@pxref{Program Termination}) of the child
@@ -1363,7 +1365,7 @@ number of the signal that caused the child process to stop.
 @end deftypefn
 
 
-@node BSD Process Completion Functions
+@node BSD Process Completion Functions, Process Creation Example, Process Completion Status, Creating New Processes
 @subsection BSD Process Completion Functions
 
 The GNU library also provides these related facilities for compatibility
@@ -1431,7 +1433,7 @@ structure.
 hasn't been written yet.  Put in a cross-reference here.
 @end deftypefun
 
-@node Process Creation Example
+@node Process Creation Example,  , BSD Process Completion Functions, Creating New Processes
 @subsection Process Creation Example
 
 Here is an example program showing how you might write a function

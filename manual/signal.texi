@@ -1,4 +1,4 @@
-@node Signal Handling
+@node Signal Handling, Processes, Non-Local Exits, Top
 @chapter Signal Handling
 
 @cindex signal
@@ -23,21 +23,22 @@ parent process to abort a child, or two related processes to communicate
 and synchronize.
 
 @menu
-* Concepts of Signals::	  Introduction to the signal facilities.
-* Standard Signals::	  Particular kinds of signals with standard
+* Concepts of Signals::         Introduction to the signal facilities.
+* Standard Signals::            Particular kinds of signals with standard
 			     names and meanings.
-* Signal Actions::	  Specifying what happens when a particular signal
+* Signal Actions::              Specifying what happens when a particular signal
 			     is delivered.
-* Defining Handlers::	  How to write a signal handler function.
-* Generating Signals::    How to send a signal to a process.
-* Blocking Signals::	  Making the system hold signals temporarily.
-* Waiting for a Signal::  Suspending your program until a signal arrives.
-* BSD Signal Handling::	  Additional functions for backward
+* Defining Handlers::           How to write a signal handler function.
+* Generating Signals::          How to send a signal to a process.
+* Blocking Signals::            Making the system hold signals temporarily.
+* Waiting for a Signal::        Suspending your program until a signal arrives.
+* BSD Signal Handling::         Additional functions for backward
 			     compatibility with BSD.
+* BSD Handler::                 BSD Function to Establish a Handler
 @end menu
 
 
-@node Concepts of Signals
+@node Concepts of Signals, Standard Signals,  , Signal Handling
 @section Basic Concepts of Signals
 
 This section explains basic concepts of how signals are generated, what
@@ -45,12 +46,12 @@ happens after a signal is delivered, and how programs can handle
 signals.
 
 @menu
-* Kinds of Signals::	  Some examples of what can cause a signal.
-* Signal Generation::     Concepts of why and how signals occur.
-* Delivery of Signal::    Concepts of what a signal does to the process.
+* Kinds of Signals::            Some examples of what can cause a signal.
+* Signal Generation::           Concepts of why and how signals occur.
+* Delivery of Signal::          Concepts of what a signal does to the process.
 @end menu
 
-@node Kinds of Signals
+@node Kinds of Signals, Signal Generation,  , Concepts of Signals
 @subsection Some Kinds of Signals 
 
 A signal reports the occurrence of an exceptional event.  These are some
@@ -87,7 +88,7 @@ and @code{raise}) generates its own particular kind of signal.  The
 various kinds of signals are listed and described in detail in
 @ref{Standard Signals}.
 
-@node Signal Generation
+@node Signal Generation, Delivery of Signal, Kinds of Signals, Concepts of Signals
 @subsection Concepts of Signal Generation
 @cindex generation of signals
 
@@ -128,7 +129,7 @@ because errors generate signals synchronously.  But any type of signal
 can be generated synchronously or asynchronously with an explicit
 request.
 
-@node Delivery of Signal
+@node Delivery of Signal,  , Signal Generation, Concepts of Signals
 @subsection How Signals Are Delivered
 @cindex delivery of signals
 @cindex pending signals
@@ -187,7 +188,7 @@ If you raise a ``program error'' signal by explicit request, and this
 terminates the process, it makes a core dump file just as if the signal
 had been due directly to an error.
 
-@node Standard Signals
+@node Standard Signals, Signal Actions, Concepts of Signals, Signal Handling
 @section Standard Signals
 @cindex signal names
 @cindex names of signals
@@ -214,17 +215,17 @@ defined.  Since the signal numbers are allocated consecutively,
 @end deftypevr
 
 @menu
-* Program Error Signals::	Used to report serious program errors.
-* Termination Signals::		Used to interrupt and/or terminate the program.
-* Alarm Signals::		Used to indicate expiration of timers.
+* Program Error Signals::       Used to report serious program errors.
+* Termination Signals::         Used to interrupt and/or terminate the program.
+* Alarm Signals::               Used to indicate expiration of timers.
 * Asynchronous I/O Signals::    Used to indicate input is available.
-* Miscellanous Signals::	Used to report various random conditions.
-* Job Control Signals:: 	Signals used to support job control.
-* Other Signals::		Implementations can support other signals.
-* Signal Messages::		Printing a message describing a signal.
+* Job Control Signals::         Signals used to support job control.
+* Miscellaneous Signals::       Miscellaneous Signals
+* Other Signals::               Implementations can support other signals.
+* Signal Messages::             Printing a message describing a signal.
 @end menu
 
-@node Program Error Signals
+@node Program Error Signals, Termination Signals,  , Standard Signals
 @subsection Program Error Signals
 @cindex program error signals
 
@@ -353,7 +354,7 @@ This signal indicates an error detected by the program itself and
 reported by calling @code{abort}.  @xref{Aborting a Program}.
 @end deftypevr
 
-@node Termination Signals
+@node Termination Signals, Alarm Signals, Program Error Signals, Standard Signals
 @subsection Termination Signals
 @cindex program termination signals
 
@@ -450,7 +451,7 @@ constitutes an operating system bug which you should report.
 @end deftypevr
 @cindex kill signal
 
-@node Alarm Signals
+@node Alarm Signals, Asynchronous I/O Signals, Termination Signals, Standard Signals
 @subsection Alarm Signals
 
 These signals are used to indicate the expiration of timers.
@@ -491,7 +492,7 @@ code profiling facilities, hence the name of this signal.
 @cindex profiling alarm signal
 
 
-@node Asynchronous I/O Signals
+@node Asynchronous I/O Signals, Job Control Signals, Alarm Signals, Standard Signals
 @subsection Asynchronous I/O Signals
 
 The signals listed in this section are used in conjunction with
@@ -521,7 +522,7 @@ This signal is sent when ``urgent'' or out-of-band data arrives on a
 socket.  @xref{Out-of-Band Data}.
 @end deftypevr
 
-@node Job Control Signals
+@node Job Control Signals, Miscellaneous Signals, Asynchronous I/O Signals, Standard Signals
 @subsection Job Control Signals
 @cindex job control signals
 
@@ -629,7 +630,7 @@ system might turn the stop signal into another signal like @code{SIGHUP}.
 
 @strong{Incomplete:}  What does the GNU system do?
 
-@node Miscellaneous Signals
+@node Miscellaneous Signals, Other Signals, Job Control Signals, Standard Signals
 @subsection Miscellaneous Signals
 
 These signals are used to report various other conditions.  The default
@@ -667,7 +668,7 @@ in @ref{Signaling Another Process}.
 @end deftypevr
 @cindex user signals
 
-@node Other Signals
+@node Other Signals, Signal Messages, Miscellaneous Signals, Standard Signals
 @subsection Other Signals
 
 Particular operating systems support additional signals not listed
@@ -731,7 +732,7 @@ ignore it.
 @end table
 
 
-@node Signal Messages
+@node Signal Messages,  , Other Signals, Standard Signals
 @subsection Signal Messages
 @cindex signal messages
 
@@ -775,7 +776,7 @@ to @var{signum}.
 This function is declared in the header file @file{stdio.h}.
 @end deftypefun
 
-@node Signal Actions
+@node Signal Actions, Defining Handlers, Standard Signals, Signal Handling
 @section Specifying Signal Actions
 @cindex signal actions
 @cindex establishing a handler
@@ -789,15 +790,15 @@ facility.  This section describes both facilities and gives suggestions
 on which to use when.
 
 @menu
-* Basic Signal Handling::	The simple @code{signal} function.
-* Advanced Signal Handling::	The more powerful @code{sigaction} function.
+* Basic Signal Handling::       The simple @code{signal} function.
+* Advanced Signal Handling::    The more powerful @code{sigaction} function.
 * Signal and Sigaction::        How those two functions interact.
-* Sigaction Function Example::	An example of using the sigaction function.
-* Flags for Sigaction::		Specifying options for signal handling.
-* Initial Signal Actions::	How programs inherit signal actions.
+* Sigaction Function Example::  An example of using the sigaction function.
+* Flags for Sigaction::         Specifying options for signal handling.
+* Initial Signal Actions::      How programs inherit signal actions.
 @end menu
 
-@node Basic Signal Handling
+@node Basic Signal Handling, Advanced Signal Handling,  , Signal Actions
 @subsection Basic Signal Handling
 @cindex @code{signal} function
 
@@ -953,7 +954,7 @@ this purpose.
 @end ignore
 
 
-@node Advanced Signal Handling
+@node Advanced Signal Handling, Signal and Sigaction, Basic Signal Handling, Signal Actions
 @subsection Advanced Signal Handling
 @cindex @code{sigaction} function
 
@@ -1024,7 +1025,7 @@ trap or ignore @code{SIGKILL} or @code{SIGSTOP}.
 @end table
 @end deftypefun
 
-@node Signal and Sigaction
+@node Signal and Sigaction, Sigaction Function Example, Advanced Signal Handling, Signal Actions
 @subsection Interaction of @code{signal} and @code{sigaction}
 
 It's possible to use both the @code{signal} and @code{sigaction}
@@ -1058,7 +1059,7 @@ of ANSI C, while @code{sigaction} is part of the POSIX.1 standard.  If
 you are concerned about portability to non-POSIX systems, then you
 should use the @code{signal} function instead.
 
-@node Sigaction Function Example
+@node Sigaction Function Example, Flags for Sigaction, Signal and Sigaction, Signal Actions
 @subsection @code{sigaction} Function Example
 
 In @ref{Basic Signal Handling}, we gave an example of establishing a
@@ -1125,7 +1126,7 @@ else
   /* @r{A programmer-defined signal handler is in effect.} */
 @end example
 
-@node Flags for Sigaction
+@node Flags for Sigaction, Initial Signal Actions, Sigaction Function Example, Signal Actions
 @subsection Flags for @code{sigaction}
 @cindex signal flags
 @cindex flags for @code{sigaction}
@@ -1183,7 +1184,7 @@ kind of signal that was delivered.  If the flag is set, the system call
 will resume.  If the flag is clear, the system call will return failure.
 @end deftypevr
 
-@node Initial Signal Actions
+@node Initial Signal Actions,  , Flags for Sigaction, Signal Actions
 @subsection Initial Signal Actions
 @cindex initial signal actions
 
@@ -1220,7 +1221,7 @@ if (temp.sa_handler != SIG_IGN)
   @}
 @end example
 
-@node Defining Handlers
+@node Defining Handlers, Generating Signals, Signal Actions, Signal Handling
 @section Defining Signal Handlers
 @cindex signal handler function
 
@@ -1254,15 +1255,15 @@ while it is handling the first signal!  This section describes what your
 handler should do, and what you should avoid.
 
 @menu
-* Handler Returns::
-* Termination in Handler::
-* Longjmp in Handler::
-* Signals in Succession::
-* Nonreentrancy::
-* Atomic Data Access::
+* Handler Returns::             
+* Termination in Handler::      
+* Longjmp in Handler::          
+* Signals in Succession::       
+* Nonreentrancy::               
+* Atomic Data Access::          
 @end menu
 
-@node Handler Returns
+@node Handler Returns, Termination in Handler,  , Defining Handlers
 @subsection Signal Handlers That Return
 
 Handlers which return normally are usually used for signals such as
@@ -1321,7 +1322,7 @@ main (void)
 @}      
 @end example
 
-@node Termination in Handler
+@node Termination in Handler, Longjmp in Handler, Handler Returns, Defining Handlers
 @subsection Handlers That Terminate the Process
 
 Handler functions terminate the program are typically used to cause
@@ -1367,7 +1368,7 @@ fatal_error_signal (int sig)
 @}
 @end example
 
-@node Longjmp in Handler
+@node Longjmp in Handler, Signals in Succession, Termination in Handler, Defining Handlers
 @subsection Nonlocal Control Transfer in Handlers
 @cindex non-local exit, from signal handler
 
@@ -1436,7 +1437,7 @@ read_data ()
 @end example
 
 
-@node Signals in Succession
+@node Signals in Succession, Nonreentrancy, Longjmp in Handler, Defining Handlers
 @subsection Signals Arriving in Quick Succession
 @cindex race conditions, relating to signals
 @cindex handling multiple signals
@@ -1484,7 +1485,7 @@ permits this behavior, but you do not need to worry about this if you
 are using the GNU system.
 
 
-@node Nonreentrancy
+@node Nonreentrancy, Atomic Data Access, Signals in Succession, Defining Handlers
 @subsection Signal Handling and Nonreentrant Functions 
 @cindex restrictions on signal handler functions
 
@@ -1536,7 +1537,7 @@ invalidated by such modifications.
 @cindex @code{volatile} declarations
 @end itemize
 
-@node Atomic Data Access
+@node Atomic Data Access,  , Nonreentrancy, Defining Handlers
 @subsection Atomic Data Access and Signal Handling
 
 Whether the data in your application concerns atoms, or mere text,
@@ -1607,7 +1608,7 @@ On some machines it may be possible to store a new value in
 Then we say the value is stored @dfn{atomically}.  On these machines,
 the handler will always print two zeros or two ones.
 
-@node Generating Signals
+@node Generating Signals, Blocking Signals, Defining Handlers, Signal Handling
 @section Generating Signals
 @cindex sending signals
 @cindex raising signals
@@ -1618,12 +1619,14 @@ interrupt, your program can explicitly send signals to itself or to
 another process.
 
 @menu
-* Raising a Signal::		Send yourself any desired signal.
-* Signaling Another Process::	Send a signal to another process.
+* Signaling Yourself::          Signaling Yourself
+* Signaling Another Process::   Send a signal to another process.
+* Permission for kill::         Permission for using @code{kill}
+* Kill Example::                Using @code{kill} for Communication
 @end menu
 
 
-@node Signaling Yourself
+@node Signaling Yourself, Signaling Another Process,  , Generating Signals
 @subsection Signaling Yourself
 
 A process can send itself a signal with the @code{raise} function.  This
@@ -1700,7 +1703,7 @@ main (void)
 committee.  Older systems may not support it, so using @code{kill} may
 be more portable.  @xref{Signaling Another Process}.
 
-@node Signaling Another Process
+@node Signaling Another Process, Permission for kill, Signaling Yourself, Generating Signals
 @subsection Signaling Another Process
 
 @cindex killing a process
@@ -1807,7 +1810,7 @@ has the same effect as:
 raise (@var{sig})
 @end example
 
-@node Permission for kill
+@node Permission for kill, Kill Example, Signaling Another Process, Generating Signals
 @subsection Permission for using @code{kill}
 
 There are restrictions that prevent you from using @code{kill} to send
@@ -1839,7 +1842,7 @@ The @code{SIGCONT} signal is a special case.  It can be sent if the
 sender is part of the same session as the receiver, regardless of
 user IDs.
 
-@node Kill Example
+@node Kill Example,  , Permission for kill, Generating Signals
 @subsection Using @code{kill} for Communication
 @cindex interprocess communication, with signals
 Here is a longer example showing how signals can be used for
@@ -1923,7 +1926,7 @@ waits one extra second--an imperfection, but not a serious problem.
 There is an example in @ref{Waiting for a Signal} that shows you how
 you can make a program block until a signal arrives.
 
-@node Blocking Signals
+@node Blocking Signals, Waiting for a Signal, Generating Signals, Signal Handling
 @section Blocking Signals
 @cindex blocking signals
 
@@ -1946,20 +1949,20 @@ signal handler can run without being interrupted itself by signals.
 @end itemize
 
 @menu
-* Why Block::                           The purpose of blocking signals.
-* Signal Sets::				How to specify which signals to block.
-* Process Signal Mask::			Blocking delivery of signals to your
+* Why Block::                   The purpose of blocking signals.
+* Signal Sets::                 How to specify which signals to block.
+* Process Signal Mask::         Blocking delivery of signals to your
 					 process during normal execution.
-* Blocking for Handler::	Blocking additional signals while a
+* Testing for Delivery::        Blocking to Test for Delivery of a Signal
+* Blocking for Handler::        Blocking additional signals while a
 					 handler is being run.
-* Pending Signals::	How to tell if there are signals
-					 waiting to be delivered.
+* Checking for Pending Signals::  Checking for Pending Signals
 * Remembering a Signal::        How you can get almost the same effect
 				 as blocking a signal, by handling it
 				 and setting a flag to be tested later.
 @end menu
 
-@node Why Block
+@node Why Block, Signal Sets,  , Blocking Signals
 @subsection Why Blocking Signals is Useful
 
 Temporary blocking of signals with @code{sigprocmask} gives you a way to
@@ -1989,7 +1992,7 @@ perform the action even though the signal has arrived.
 The only way to test reliably for whether a signal has yet arrived is to
 test while the signal is blocked.
 
-@node Signal Sets
+@node Signal Sets, Process Signal Mask, Why Block, Blocking Signals
 @subsection Signal Sets
 
 All of the signal blocking functions use a data structure called a
@@ -2082,7 +2085,7 @@ The @var{signum} argument doesn't specify a valid signal.
 @end table
 @end deftypefun
 
-@node Process Signal Mask
+@node Process Signal Mask, Testing for Delivery, Signal Sets, Blocking Signals
 @subsection Process Signal Mask
 @cindex signal mask
 @cindex process signal mask
@@ -2162,7 +2165,7 @@ This is because your program may be too broken to be able to continue
 executing to a point where the signal is unblocked again.
 @end deftypefun
 
-@node Testing for Delivery
+@node Testing for Delivery, Blocking for Handler, Process Signal Mask, Blocking Signals
 @subsection Blocking to Test for Delivery of a Signal
 
 Now for a simple example.  Suppose you establish a handler for
@@ -2202,7 +2205,7 @@ main ()
 @}
 @end example
 
-@node Blocking for Handler
+@node Blocking for Handler, Checking for Pending Signals, Testing for Delivery, Blocking Signals
 @subsection Blocking Signals for a Handler
 @cindex blocking signals, in a handler
 
@@ -2262,7 +2265,7 @@ your handler to block or unblock signals as you wish.
 In any case, when the handler returns, the system restores the mask that
 was in place before the handler was entered.
 
-@node Checking for Pending Signals
+@node Checking for Pending Signals, Remembering a Signal, Blocking for Handler, Blocking Signals
 @subsection Checking for Pending Signals
 @cindex pending signals, checking for
 @cindex blocked signals, checking for
@@ -2319,7 +2322,7 @@ be discarded.  For example, if a @code{SIGINT} signal is pending when
 another @code{SIGINT} signal arrives, your program will probably only
 see one of them when you unblock this signal.
 
-@node Remembering a Signal
+@node Remembering a Signal,  , Checking for Pending Signals, Blocking Signals
 @subsection Remembering a Signal to Act On Later
 
 Instead of blocking a signal using the library facilities, you can get
@@ -2403,7 +2406,7 @@ might seem equally simple.  This is a further advantage of using a
 counter for @code{defer_signal}: it will reduce the chance you will
 write the code in the wrong order and create a subtle bug.)
 
-@node Waiting for a Signal
+@node Waiting for a Signal, BSD Signal Handling, Blocking Signals, Signal Handling
 @section Waiting for a Signal
 @cindex waiting for a signal
 @cindex @code{pause} function
@@ -2413,12 +2416,12 @@ synchronization, then when it has nothing to do it should probably wait
 until a signal arrives.
 
 @menu
-* Using Pause::       The simple way, using @code{pause}.
-* Pause Problems::    Why the simple way is often not very good.
-* Sigsuspend::        Reliably waiting for a specific signal.
+* Using Pause::                 The simple way, using @code{pause}.
+* Pause Problems::              Why the simple way is often not very good.
+* Sigsuspend::                  Reliably waiting for a specific signal.
 @end menu
 
-@node Using Pause
+@node Using Pause, Pause Problems,  , Waiting for a Signal
 @subsection Using @code{pause}
 
 The simple way to wait until a signal arrives is to call @code{pause}.
@@ -2450,7 +2453,7 @@ If the signal causes program termination, @code{pause} doesn't return
 The @code{pause} function is declared in  @file{unistd.h}.
 @end deftypefun
 
-@node Pause Problems
+@node Pause Problems, Sigsuspend, Using Pause, Waiting for a Signal
 @subsection Problems with @code{pause}
 
 The simplicity of @code{pause} can conceal serious timing errors that
@@ -2501,7 +2504,7 @@ run, using @code{sigsuspend}.
 @xref{Sigsuspend}.
 @end ifinfo
 
-@node Sigsuspend
+@node Sigsuspend,  , Pause Problems, Waiting for a Signal
 @subsection Using @code{sigsuspend}
 
 The clean and reliable way to wait for a signal to arrive is to block it
@@ -2570,7 +2573,7 @@ This technique takes a few more lines of preparation, but that is needed
 just once for each kind of wait criterion you want to use.  The code
 that actually waits is just four lines.
 
-@node BSD Signal Handling
+@node BSD Signal Handling, BSD Handler, Waiting for a Signal, Signal Handling
 @section BSD Signal Handling
 
 This section describes alternative signal handling functions derived
@@ -2584,13 +2587,10 @@ handlers.  Using a signal stack is the only way you can handle a signal
 caused by stack overflow.
 
 @menu
-* POSIX vs BSD::       Overview comparing BSD and POSIX signal functions.
-* BSD Handlers::       BSD functions for specifying signal handling.
-* Blocking in BSD::    BSD functions for blocking, unblocking, and waiting.
-* Signal Stack::       How to use a separate signal stack.
+* POSIX vs BSD::                Overview comparing BSD and POSIX signal functions.
 @end menu
 
-@node POSIX vs BSD
+@node POSIX vs BSD,  ,  , BSD Signal Handling
 @subsection POSIX and BSD Signal Facilities 
 
 There are many similarities between the BSD and POSIX signal handling
@@ -2620,7 +2620,7 @@ instead of its normal execution stack.
 The BSD facilities are declared in @file{signal.h}.
 @pindex signal.h
 
-@node BSD Handler
+@node BSD Handler,  , BSD Signal Handling, Signal Handling
 @section BSD Function to Establish a Handler
 
 @comment signal.h
@@ -2692,7 +2692,12 @@ is true, system calls return with a @code{EINTR} error when
 interrupted.
 @end deftypefun
 
-@node Blocking in BSD
+@menu
+* Blocking in BSD::             BSD Functions for Blocking Signals 
+* Signal Stack::                Using a Separate Signal Stack
+@end menu
+
+@node Blocking in BSD, Signal Stack,  , BSD Handler
 @subsection BSD Functions for Blocking Signals 
 
 @comment signal.h
@@ -2738,7 +2743,7 @@ and waits for a signal to arrive.  On return the previous set of blocked
 signals is restored.
 @end deftypefun
 
-@node Signal Stack
+@node Signal Stack,  , Blocking in BSD, BSD Handler
 @subsection Using a Separate Signal Stack
 
 A signal stack is a special area of memory to be used as the execution

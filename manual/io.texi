@@ -1,4 +1,4 @@
-@node Input/Output Overview
+@node Input/Output Overview, Input/Output on Streams, Searching and Sorting, Top
 @chapter Input/Output Overview
 
 Most programs need to do either input (reading data) or output (writing
@@ -39,11 +39,11 @@ how input and output to terminal or other serial devices are processed.
 
 
 @menu
-* Input/Output Concepts::		Some basic information and terminology.
-* File Names::				How to refer to a file.
+* Input/Output Concepts::       Some basic information and terminology.
+* File Names::                  How to refer to a file.
 @end menu
 
-@node Input/Output Concepts
+@node Input/Output Concepts, File Names,  , Input/Output Overview
 @section Input/Output Concepts
 
 Before you can read or write the contents of a file, you must establish
@@ -64,12 +64,12 @@ closed a stream or file descriptor, you cannot do any more input or
 output operations on it.
 
 @menu
-* Streams and File Descriptors::	The GNU Library provides two ways
+* Streams and File Descriptors::  The GNU Library provides two ways
 					 to access the contents of files.
-* File Position::
+* File Position::               
 @end menu
 
-@node Streams and File Descriptors
+@node Streams and File Descriptors, File Position,  , Input/Output Concepts
 @subsection Streams and File Descriptors
 
 When you want to do input or output to a file, you have a choice of two
@@ -123,7 +123,7 @@ all, or may only implement a subset of the GNU functions that operate on
 file descriptors.  Most of the file descriptor functions in the GNU
 library are included in the POSIX.1 standard, however.
 
-@node File Position
+@node File Position,  , Streams and File Descriptors, Input/Output Concepts
 @subsection File Position 
 
 One of the attributes of an open file is its @dfn{file position}
@@ -167,7 +167,7 @@ By contrast, if you open a descriptor and then duplicate it to get
 another descriptor, these two descriptors share the same file position:
 changing the file position of one descriptor will affect the other.
 
-@node File Names
+@node File Names,  , Input/Output Concepts, Input/Output Overview
 @section File Names
 
 In order to open a connection to a file, or to perform other operations
@@ -182,14 +182,14 @@ operating system works with them.
 @cindex file name
 
 @menu
-* Directories::			Directories contain entries for files.
-* File Name Resolution::	A file name specifies how to look up a file.
-* File Name Errors::		Error conditions relating to file names.
-* Portability of File Names::
+* Directories::                 Directories contain entries for files.
+* File Name Resolution::        A file name specifies how to look up a file.
+* File Name Errors::            Error conditions relating to file names.
+* Portability of File Names::   
 @end menu
 
 
-@node Directories
+@node Directories, File Name Resolution,  , File Names
 @subsection Directories
 
 In order to understand the syntax of file names, you need to understand
@@ -224,7 +224,7 @@ just ``component'', where the context is obvious) in GNU documentation.
 You can find more detailed information about operations on directories
 in @ref{File System Interface}.
 
-@node File Name Resolution
+@node File Name Resolution, File Name Errors, Directories, File Names
 @subsection File Name Resolution
 
 A file name consists of file name components separated by slash
@@ -295,7 +295,7 @@ for file names---for example, files containing C source code usually
 have names suffixed with @samp{.c}---but there is nothing in the file
 system itself that enforces this kind of convention.
 
-@node File Name Errors
+@node File Name Errors, Portability of File Names, File Name Resolution, File Names
 @subsection File Name Errors
 
 @cindex file name syntax errors
@@ -328,7 +328,7 @@ exists, but it isn't a directory.
 @end table
 
 
-@node Portability of File Names
+@node Portability of File Names,  , File Name Errors, File Names
 @subsection Portability of File Names
 
 The rules for the syntax of file names discussed in @ref{File Names},

@@ -1,4 +1,4 @@
-@node Common Definitions
+@node Common Definitions, Variable Argument Facilities, Error Reporting, Top
 @chapter Common Definitions
 
 There are some miscellaneous data types and macros that are not part of

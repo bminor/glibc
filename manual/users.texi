@@ -1,4 +1,4 @@
-@node Users and Groups
+@node Users and Groups, System Information, Job Control, Top
 @chapter Users and Groups
 @cindex persona
 
@@ -25,31 +25,29 @@ database of all the defined groups.  There are library functions you
 can use to examine these databases.
 
 @menu
-* User and Group IDs::  Each user has a unique numeric ID; likewise for groups.
-* Process Persona::	The user IDs and group IDs of a process.
-* Why Change Persona::	Why a program might need to change
+* User and Group IDs::          Each user has a unique numeric ID; likewise for groups.
+* Process Persona::             The user IDs and group IDs of a process.
+* Why Change Persona::          Why a program might need to change
 			 its user and/or group IDs.
-* How Change Persona::	Restrictions on changing the user and group IDs.
-* Reading Persona::	How to examine the process's user and group IDs.
-* Setting User ID::
-* Setting Groups::
-* Enable/Disable Setuid:: 
-* Setuid Example::	A program designed to use setuid.
-
-* Tips for Setuid::
-
-* Who Logged In::	Getting the name of the user who logged in,
+* How Change Persona::          Restrictions on changing the user and group IDs.
+* Reading Persona::             How to examine the process's user and group IDs.
+* Setting User ID::             
+* Setting Groups::              
+* Enable/Disable Setuid::       
+* Setuid Program Example::      Setuid Program Example
+* Tips for Setuid::             
+* Who Logged In::               Getting the name of the user who logged in,
 			 or of the real user ID of the current process.
 
-* User Database::	Functions and data structures for
+* User Database::               Functions and data structures for
                          accessing the user database.
-* Group Database::	Functions and data structures for
+* Group Database::              Functions and data structures for
                          accessing the group database.
-* Database Example::	Example program showing use of database
+* Database Example::            Example program showing use of database
 			 inquiry functions.
 @end menu
 
-@node User and Group IDs
+@node User and Group IDs, Process Persona,  , Users and Groups
 @section User and Group IDs
 
 @cindex login name
@@ -70,7 +68,7 @@ not accessible to users who are not a member of that group.  Each group
 has a @dfn{group name} and @dfn{group ID}.  @xref{Group Database},
 for how to find information about a group ID or group name.
 
-@node Process Persona
+@node Process Persona, Why Change Persona, User and Group IDs, Users and Groups
 @section The Persona of a Process
 
 @cindex effective user ID
@@ -107,7 +105,7 @@ its permission to access files, see @ref{Access Permission}.
 The user ID of a process also controls permissions for sending signals
 using the @code{kill} function.  @xref{Signaling Another Process}.
 
-@node Why Change Persona
+@node Why Change Persona, How Change Persona, Process Persona, Users and Groups
 @section Why Change the Persona of a Process?
 
 The most obvious situation where it is necessary for a process to change
@@ -139,7 +137,7 @@ the game program wants to update this file, it can change its effective
 user ID to be that for @samp{games}.  In effect, the program must
 adopt the persona of @samp{games} so it can write the scores file.
 
-@node How Change Persona
+@node How Change Persona, Reading Persona, Why Change Persona, Users and Groups
 @section How an Application can Change Persona
 @cindex @code{setuid} programs
 
@@ -168,7 +166,7 @@ A process can always change its effective user (or group) ID back to its
 real ID.  Programs do this so as to turn off their special privileges
 when they are not needed, which makes for more robustness.
 
-@node Reading Persona
+@node Reading Persona, Setting User ID, How Change Persona, Users and Groups
 @section Reading the Persona of a Process
 
 Here are detailed descriptions of the functions for reading the user and
@@ -246,7 +244,7 @@ read_all_groups ()
 @end example
 @end deftypefun
 
-@node Setting User ID
+@node Setting User ID, Setting Groups, Reading Persona, Users and Groups
 @section Setting the User ID
 
 This section describes the functions for altering the user ID
@@ -306,7 +304,7 @@ Privileges}.
 @end table
 @end deftypefun
 
-@node Setting Groups
+@node Setting Groups, Enable/Disable Setuid, Setting User ID, Users and Groups
 @section Setting the Group IDs
 
 @comment unistd.h
@@ -370,7 +368,7 @@ set the process's supplementary group IDs to be the normal default for
 the user name @var{user}.  The group ID @var{gid} is also included.
 @end deftypefun
 
-@node Enable/Disable Setuid
+@node Enable/Disable Setuid, Setuid Program Example, Setting Groups, Users and Groups
 @section Turning Setuid Access On and Off
 
 You can use @code{setreuid} to swap the real and effective user IDs of
@@ -419,7 +417,7 @@ setuid (game_user_id);
 Throughout the process, the real user ID remains @code{jdoe} and the 
 saved user ID remains @code{games}.
 
-@node Setuid Program Example
+@node Setuid Program Example, Tips for Setuid, Enable/Disable Setuid, Users and Groups
 @section Setuid Program Example
 
 Here's an example showing how to set up a program that changes its
@@ -555,7 +553,7 @@ record_score (int score)
 @}
 @end example
 
-@node Tips for Setuid
+@node Tips for Setuid, Who Logged In, Setuid Program Example, Users and Groups
 @section Tips for Writing Setuid Programs
 
 It is easy for setuid programs to give the user access that isn't 
@@ -599,7 +597,7 @@ would ordinarily have permission to access those files.  You can use the
 uses the real user and group IDs, rather than the effective IDs.
 @end itemize
 
-@node Who Logged In
+@node Who Logged In, User Database, Tips for Setuid, Users and Groups
 @section Identifying Who Logged In
 @cindex login name, determining
 @cindex user ID, determining
@@ -653,7 +651,7 @@ For most purposes, it is more useful to use the environment variable
 precisely because the user can set @code{LOGNAME} arbitrarily.
 @xref{Environment Variables}.
 
-@node User Database
+@node User Database, Group Database, Who Logged In, Users and Groups
 @section User Database
 @cindex user database
 @cindex password database
@@ -665,13 +663,13 @@ registered users.  The database itself is kept in the file
 network server gives access to it.
 
 @menu
-* User Data Structure::
-* Lookup User::
-* Scan All Users::
-* Writing a User Entry::
+* User Data Structure::         
+* Lookup User::                 
+* Scanning All Users::          Scanning the List of All Users
+* Writing a User Entry::        
 @end menu
 
-@node User Data Structure
+@node User Data Structure, Lookup User,  , User Database
 @subsection The Data Structure that Describes a User
 
 The functions and data structures for accessing the system user database
@@ -712,7 +710,7 @@ be used.
 @end table
 @end deftp
 
-@node Lookup User
+@node Lookup User, Scanning All Users, User Data Structure, User Database
 @subsection Looking Up One User
 @cindex converting user ID to user name
 @cindex converting user name to user ID
@@ -743,7 +741,7 @@ This structure may be overwritten on subsequent calls to
 A null pointer value indicates there is no user named @var{name}.
 @end deftypefun
 
-@node Scanning All Users
+@node Scanning All Users, Writing a User Entry, Lookup User, User Database
 @subsection Scanning the List of All Users
 @cindex scanning the user list
 
@@ -797,7 +795,7 @@ wish to save the information.
 This function closes the internal stream used by @code{getpwent}.
 @end deftypefun
 
-@node Writing a User Entry
+@node Writing a User Entry,  , Scanning All Users, User Database
 @subsection Writing a User Entry
 
 @comment pwd.h
@@ -817,7 +815,7 @@ would inevitably leave out much of the important information.
 The function @code{putpwent} is declared in @file{pwd.h}.
 @end deftypefun
 
-@node Group Database
+@node Group Database, Database Example, User Database, Users and Groups
 @section Group Database
 @cindex group database
 @pindex /etc/group
@@ -828,12 +826,12 @@ registered groups.  The database itself is kept in the file
 service provides access to it.
 
 @menu
-* Group Data Structure::
-* Lookup Group::
-* Scan All Groups::
+* Group Data Structure::        
+* Lookup Group::                
+* Scanning All Groups::         Scanning the List of All Groups
 @end menu
 
-@node Group Data Structure
+@node Group Data Structure, Lookup Group,  , Group Database
 @subsection The Data Structure for a Group
 
 The functions and data structures for accessing the system group
@@ -860,7 +858,7 @@ null pointer.
 @end table
 @end deftp
 
-@node Lookup Group
+@node Lookup Group, Scanning All Groups, Group Data Structure, Group Database
 @subsection Looking Up One Group
 @cindex converting group name to group ID
 @cindex converting group ID to group name
@@ -891,7 +889,7 @@ This structure may be overwritten by subsequent calls to
 A null pointer indicates there is no group named @var{name}.
 @end deftypefun
 
-@node Scanning All Groups
+@node Scanning All Groups,  , Lookup Group, Group Database
 @subsection Scanning the List of All Groups
 @cindex scanning the group list
 
@@ -946,7 +944,7 @@ wish to save the information.
 This function closes the internal stream used by @code{getgrent}.
 @end deftypefun
 
-@node Database Example
+@node Database Example,  , Group Database, Users and Groups
 @section User and Group Database Example
 
 Here is an example program showing the use of the system database inquiry

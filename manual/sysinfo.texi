@@ -1,20 +1,20 @@
-@node System Information
+@node System Information, Representation Limits, Users and Groups, Top
 @chapter System Information
 
 This chapter contains information about functions that return 
 information about the particular machine a program is running on.
 
 @menu
-* Host Identification::                         Determining the name of the
+* Host Identification::         Determining the name of the
                                                  machine.
-* Hardware/Software Type Identification::       Determining the hardware type
+* Hardware/Software Type Identification::  Determining the hardware type
                                                  of the machine and what
                                                  operating system it is
                                                  running.
 @end menu
 
 
-@node Host Identification
+@node Host Identification, Hardware/Software Type Identification,  , System Information
 @section Host Identification
 
 The functions listed in this section access information to identify the
@@ -71,7 +71,7 @@ is usually used only at system boot time.
 @end deftypefun
 
 
-@node Hardware/Software Type Identification
+@node Hardware/Software Type Identification,  , Host Identification, System Information
 @section Hardware/Software Type Identification
 
 You can use the @code{uname} function to find out some information about

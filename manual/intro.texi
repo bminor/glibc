@@ -1,4 +1,4 @@
-@node Introduction, Getting Started, Top, Top
+@node Introduction, Error Reporting, Top, Top
 @chapter Introduction
 
 The C language provides no built-in facilities for performing such
@@ -19,7 +19,14 @@ standards to help you identify things that are potentially nonportable
 to other systems.  But the emphasis on this manual is not on strict
 portability.
 
-@node Getting Started, Standards and Portability, Introduction, Top
+@menu
+* Getting Started::             Getting Started
+* Standards and Portability::   Standards and Portability
+* Using the Library::           Using the Library
+* Roadmap to the Manual::       Roadmap to the Manual
+@end menu
+
+@node Getting Started, Standards and Portability,  , Introduction
 @section Getting Started
 
 This manual is written with the assumption that you are at least
@@ -47,7 +54,7 @@ library functions, and @emph{where} in this manual you can find more
 specific information about them.
 
 
-@node Standards and Portability, Using the Library, Getting Started, Top
+@node Standards and Portability, Using the Library, Getting Started, Introduction
 @section Standards and Portability
 @cindex standards
 
@@ -67,14 +74,14 @@ the manual.
 standards specify what features.
 
 @menu
-* ANSI C::			The American National Standard for the
+* ANSI C::                      The American National Standard for the
 				 C programming language.  
-* POSIX::			The IEEE 1003 standards for operating systems.
+* POSIX::                       The IEEE 1003 standards for operating systems.
 * Berkeley Unix::               BSD and SunOS.
-* SVID::			The System V Interface Description.  
+* SVID::                        The System V Interface Description.  
 @end menu
 
-@node ANSI C
+@node ANSI C, POSIX,  , Standards and Portability
 @subsection ANSI C
 @cindex ANSI C
 
@@ -108,7 +115,7 @@ ANSI C has diverged significantly from older C dialects, this manual
 includes compatibility notes simply to warn you to beware of potential
 portability problems.
 
-@node POSIX
+@node POSIX, Berkeley Unix, ANSI C, Standards and Portability
 @subsection POSIX (The Portable Operating System Interface)
 @cindex POSIX
 @cindex POSIX.1
@@ -160,7 +167,7 @@ material has been incorporated.
 @comment confstr
 
 
-@node Berkeley Unix
+@node Berkeley Unix, SVID, POSIX, Standards and Portability
 @subsection Berkeley Unix
 @cindex BSD Unix
 @cindex 4.x BSD Unix
@@ -177,7 +184,7 @@ that includes some Unix System V functionality).
 that ought to be mentioned specifically here?
 
 
-@node SVID
+@node SVID,  , Berkeley Unix, Standards and Portability
 @subsection SVID (The System V Interface Description)
 @cindex SVID
 @cindex System V Unix
@@ -199,22 +206,22 @@ ought to be mentioned specifically here?
 
 
 
-@node Using the Library, Roadmap to the Manual, Standards and Portability, Top
+@node Using the Library, Roadmap to the Manual, Standards and Portability, Introduction
 @section Using the Library
 
 This section describes some of the practical issues involved in using
 the GNU C library.
 
 @menu
-* Header Files::	How to include the header files in your programs.
-* Macro Definitions::	Some functions in the library may really be 
+* Header Files::                How to include the header files in your programs.
+* Macro Definitions::           Some functions in the library may really be 
 			 implemented as macros.
-* Reserved Names::	The C standard reserves some names for the library,
+* Reserved Names::              The C standard reserves some names for the library,
 			 and some for users.
-* Feature Test Macros:: How to control what names are defined.
+* Feature Test Macros::         How to control what names are defined.
 @end menu
 
-@node Header Files
+@node Header Files, Macro Definitions,  , Using the Library
 @subsection Header Files
 @cindex header files
 
@@ -307,7 +314,7 @@ and macros that are not otherwise available and because it may define
 more efficient macro replacements for some functions.  It is also a sure
 way to have the correct declaration.
 
-@node Macro Definitions
+@node Macro Definitions, Reserved Names, Header Files, Using the Library
 @subsection Macro Definitions of Functions
 @cindex shadowing functions with macros
 @cindex removing macros that shadow functions
@@ -372,7 +379,7 @@ need for any of these methods.  In fact, removing macro definitions usually
 just makes your program slower.
 
 
-@node Reserved Names
+@node Reserved Names, Feature Test Macros, Macro Definitions, Using the Library
 @subsection Reserved Names
 @cindex reserved names
 @cindex name space
@@ -510,7 +517,7 @@ The header file @file{termios.h} reserves names prefixed with @samp{c_},
 @end itemize
 
 
-@node Feature Test Macros
+@node Feature Test Macros,  , Reserved Names, Using the Library
 @subsection Feature Test Macros
 
 @cindex feature test macros
@@ -605,7 +612,7 @@ are requested by the other macros.  For this reason, defining
 have an effect: it causes the BSD features to take priority over the
 conflicting POSIX features.
 
-@node Roadmap to the Manual, Error Reporting, Using the Library, Top
+@node Roadmap to the Manual,  , Using the Library, Introduction
 @section Roadmap to the Manual
 
 Here is an overview of the contents of the remaining chapters of

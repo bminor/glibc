@@ -1,4 +1,4 @@
-@node Memory Allocation
+@node Memory Allocation, Character Handling, Variable Argument Facilities, Top
 @chapter Memory Allocation
 @cindex memory allocation
 @cindex storage allocation
@@ -24,19 +24,19 @@ will be freed automatically.  @xref{Variable Size Automatic}.
 @end iftex
 
 @menu
-* Memory Concepts::		An introduction to concepts and terminology.
-* Dynamic Allocation and C::	How to get different kinds of allocation in C.
-* Unconstrained Allocation::	The @code{malloc} facility allows fully general
+* Memory Concepts::             An introduction to concepts and terminology.
+* Dynamic Allocation and C::    How to get different kinds of allocation in C.
+* Unconstrained Allocation::    The @code{malloc} facility allows fully general
 		 		 dynamic allocation.
-* Obstacks::			Obstacks are less general than malloc
+* Obstacks::                    Obstacks are less general than malloc
 				 but more efficient and convenient.
-* Variable Size Automatic::	Allocation of variable-sized blocks
+* Variable Size Automatic::     Allocation of variable-sized blocks
 				 of automatic storage that are freed when the
 				 calling function returns.
-* Relocating Allocator::
+* Relocating Allocator::        
 @end menu
 
-@node Memory Concepts
+@node Memory Concepts, Dynamic Allocation and C,  , Memory Allocation
 @section Dynamic Memory Allocation Concepts
 @cindex dynamic allocation
 @cindex static allocation
@@ -62,7 +62,7 @@ when you want to allocate space, and specify the size with an argument.  If
 you want to free the space, you do so by calling another function or macro.
 You can do these things whenever you want, as often as you want.
 
-@node Dynamic Allocation and C
+@node Dynamic Allocation and C, Unconstrained Allocation, Memory Concepts, Memory Allocation
 @section Dynamic Allocation and C
 
 The C language supports two kinds of memory allocation through the variables
@@ -111,7 +111,7 @@ address of the space.  Then you can use the operators @samp{*} and
 @}
 @end example
 
-@node Unconstrained Allocation
+@node Unconstrained Allocation, Obstacks, Dynamic Allocation and C, Memory Allocation
 @section Unconstrained Allocation
 @cindex unconstrained storage allocation
 @cindex @code{malloc} function
@@ -123,27 +123,27 @@ them bigger or smaller at any time, and free the blocks individually at
 any time (or never).
 
 @menu
-* Basic Allocation::		Simple use of @code{malloc}.
+* Basic Allocation::            Simple use of @code{malloc}.
 * Malloc Examples::             Examples of @code{malloc}.  @code{xmalloc}.
-* Freeing after Malloc::	Use @code{free} to free a block you
+* Freeing after Malloc::        Use @code{free} to free a block you
 				 got with @code{malloc}.
-* Changing Block Size::		Use @code{realloc} to make a block
+* Changing Block Size::         Use @code{realloc} to make a block
 				 bigger or smaller.
-* Allocating Cleared Space::	Use @code{calloc} to allocate a
+* Allocating Cleared Space::    Use @code{calloc} to allocate a
 				 block and clear it.
 * Efficiency and Malloc::       Efficiency considerations in use of
 				 these functions.
-* Aligned Memory Blocks::	Allocating specially aligned memory:
+* Aligned Memory Blocks::       Allocating specially aligned memory:
 				 @code{memalign} and @code{valloc}.
-* Heap Consistency Checking::	Automatic checking for errors.
-* Hooks for Malloc::		You can use these hooks for debugging
+* Heap Consistency Checking::   Automatic checking for errors.
+* Hooks for Malloc::            You can use these hooks for debugging
 				 programs that use @code{malloc}.
-* Statistics of Malloc::	Getting information about how much
+* Statistics of Malloc::        Getting information about how much
 				 memory your program is using.
-* Summary of Malloc::		Summary of @code{malloc} and related functions.
+* Summary of Malloc::           Summary of @code{malloc} and related functions.
 @end menu
 
-@node Basic Allocation
+@node Basic Allocation, Malloc Examples,  , Unconstrained Allocation
 @subsection Basic Storage Allocation
 @cindex allocation of memory with @code{malloc}
 
@@ -193,7 +193,7 @@ ptr = (char *) malloc (length + 1);
 @noindent
 @xref{Representation of Strings}, for more information about this.
 
-@node Malloc Examples
+@node Malloc Examples, Freeing after Malloc, Basic Allocation, Unconstrained Allocation
 @subsection Examples of @code{malloc}
 
 If no more space is available, @code{malloc} returns a null pointer.
@@ -244,7 +244,7 @@ contents of another block.  If you have already allocated a block and
 discover you want it to be bigger, use @code{realloc} (@pxref{Changing
 Block Size}).
 
-@node Freeing after Malloc
+@node Freeing after Malloc, Changing Block Size, Malloc Examples, Unconstrained Allocation
 @subsection Freeing Memory Allocated with @code{malloc}
 @cindex freeing memory allocated with @code{malloc}
 @cindex heap, freeing memory from
@@ -302,7 +302,7 @@ internally by @code{malloc}.
 Therefore, there is no point in freeing blocks at the end of a program,
 when you are not going to allocate any more.
 
-@node Changing Block Size
+@node Changing Block Size, Allocating Cleared Space, Freeing after Malloc, Unconstrained Allocation
 @subsection Changing the Size of a Block
 @cindex changing the size of a block (@code{malloc})
 
@@ -359,7 +359,7 @@ can fail if no other space is available.
 If the new size you specify is the same as the old size, @code{realloc}
 is guaranteed to change nothing and return the same address that you gave.
 
-@node Allocating Cleared Space
+@node Allocating Cleared Space, Efficiency and Malloc, Changing Block Size, Unconstrained Allocation
 @subsection Allocating Cleared Space
 
 The function @code{calloc} allocates memory and clears it to zero.  It
@@ -392,7 +392,7 @@ We rarely use @code{calloc} today, because it is equivalent to such a
 simple combination of other features that are more often used.  It is a
 historical holdover that is not quite obsolete.
 
-@node Efficiency and Malloc
+@node Efficiency and Malloc, Aligned Memory Blocks, Allocating Cleared Space, Unconstrained Allocation
 @subsection Efficiency Considerations for @code{malloc}
 @cindex efficiency and @code{malloc}
 
@@ -410,7 +410,7 @@ of 32 bytes can never be split into two blocks of 16 bytes.  Thus, you
 can make your program use memory more efficiently by using blocks of
 the same size for many different purposes.
 
-@node Aligned Memory Blocks
+@node Aligned Memory Blocks, Heap Consistency Checking, Efficiency and Malloc, Unconstrained Allocation
 @subsection Allocating Aligned Memory Blocks
 
 @cindex page boundary
@@ -443,7 +443,7 @@ to determine the page size explicitly (something which cannot be done
 portably).
 @end deftypefun
 
-@node Heap Consistency Checking
+@node Heap Consistency Checking, Hooks for Malloc, Aligned Memory Blocks, Unconstrained Allocation
 @subsection Heap Consistency Checking
 
 @cindex heap consistency checking
@@ -470,7 +470,7 @@ Since other library functions (such as the standard I/O functions) may
 call @code{malloc}, you should do @code{mcheck} before anything else in
 your program.  To do this automatically, link with @samp{-lmcheck}.
 
-@node Hooks for Malloc
+@node Hooks for Malloc, Statistics of Malloc, Heap Consistency Checking, Unconstrained Allocation
 @subsection Storage Allocation Hooks
 @cindex allocation hooks, for @code{malloc}
 
@@ -552,7 +552,7 @@ main ()
 The @code{mcheck} function (@pxref{Heap Consistency Checking}) works by
 installing such hooks.
 
-@node Statistics of Malloc
+@node Statistics of Malloc, Summary of Malloc, Hooks for Malloc, Unconstrained Allocation
 @subsection Statistics for Storage Allocation with @code{malloc}
 
 @cindex allocation statistics
@@ -597,7 +597,7 @@ This function returns information about the current dynamic memory usage
 in a structure of type @code{struct mstats}.
 @end deftypefun
 
-@node Summary of Malloc
+@node Summary of Malloc,  , Statistics of Malloc, Unconstrained Allocation
 @subsection Summary of @code{malloc}-Related Functions
 
 Here is a summary of the functions that work with @code{malloc}:
@@ -646,7 +646,7 @@ Read information about the current dynamic memory usage.  @xref{Statistics
 of Malloc}.
 @end table
 
-@node Obstacks
+@node Obstacks, Variable Size Automatic, Unconstrained Allocation, Memory Allocation
 @section Obstacks
 @cindex obstacks
 
@@ -666,29 +666,29 @@ the objects are usually small.  And the only space overhead per object is
 the padding needed to start each object on a suitable boundary.
 
 @menu
-* Representation of Obstacks::		How to declare an obstack in your
+* Representation of Obstacks::  How to declare an obstack in your
 					 program.
-* Preparing to Use Obstacks::		Preparations needed before you can
+* Preparing to Use Obstacks::   Preparations needed before you can
 					 use obstacks.
-* Allocation in an Obstack::		Allocating objects in an obstack.
-* Freeing Objects in an Obstack::	Freeing objects in an obstack.
-* Obstack Functions and Macros::	The obstack functions are both
+* Allocation in an Obstack::    Allocating objects in an obstack.
+* Freeing Objects in an Obstack::  Freeing objects in an obstack.
+* Obstack Functions and Macros::  The obstack functions are both
 					 functions and macros.
-* Growing Objects::			Making an object bigger by stages.
-* Extra Fast Growing Objects::		Extra-high-efficiency (though more
+* Growing Objects::             Making an object bigger by stages.
+* Extra Fast Growing Objects::  Extra-high-efficiency (though more
 					 complicated) growing.
-* Status of an Obstack::		Inquiries about the status of an
+* Status of an Obstack::        Inquiries about the status of an
 					 obstack.
-* Alignment of Data in Obstacks::	Controlling alignment of objects
+* Alignment of Data in Obstacks::  Controlling alignment of objects
 					 in obstacks.
-* Obstack Chunks::			How obstacks obtain and release chunks.
+* Obstack Chunks::              How obstacks obtain and release chunks.
 					 Efficiency considerations.
-* Obstacks and Signal Handling::	Don't try to use obstack functions
+* Obstacks and Signal Handling::  Don't try to use obstack functions
 					 in a signal handler.
-* Summary of Obstacks::
+* Summary of Obstacks::         
 @end menu
 
-@node Representation of Obstacks
+@node Representation of Obstacks, Preparing to Use Obstacks,  , Obstacks
 @subsection Representation of Obstacks
 
 The utilities for manipulating obstacks are declared in the header
@@ -729,7 +729,7 @@ get a chunk.  Usually you supply a function which uses @code{malloc}
 directly or indirectly.  You must also supply a function to free a chunk.
 These matters are described in the following section.
 
-@node Preparing to Use Obstacks
+@node Preparing to Use Obstacks, Allocation in an Obstack, Representation of Obstacks, Obstacks
 @subsection Preparing to Use Obstacks
 
 Each source file in which you plan to use the obstack functions
@@ -794,7 +794,7 @@ struct obstack *myobstack_ptr
 obstack_init (myobstack_ptr);
 @end example
 
-@node Allocation in an Obstack
+@node Allocation in an Obstack, Freeing Objects in an Obstack, Preparing to Use Obstacks, Obstacks
 @subsection Allocation in an Obstack
 @cindex allocation (obstacks)
 
@@ -860,7 +860,7 @@ obstack_savestring (char *addr, size_t size)
 Contrast this with the previous example of @code{savestring} using
 @code{malloc} (@pxref{Basic Allocation}).
 
-@node Freeing Objects in an Obstack
+@node Freeing Objects in an Obstack, Obstack Functions and Macros, Allocation in an Obstack, Obstacks
 @subsection Freeing Objects in an Obstack
 @cindex freeing (obstacks)
 
@@ -892,7 +892,7 @@ the objects in a chunk become free, the obstack library automatically
 frees the chunk (@pxref{Preparing to Use Obstacks}).  Then other
 obstacks, or non-obstack allocation, can reuse the space of the chunk.
 
-@node Obstack Functions and Macros
+@node Obstack Functions and Macros, Growing Objects, Freeing Objects in an Obstack, Obstacks
 @subsection Obstack Functions and Macros
 @cindex macros
 
@@ -949,7 +949,7 @@ If you use the GNU C compiler, this precaution is not necessary, because
 various language extensions in GNU C permit defining the macros so as to
 compute each argument only once.
 
-@node Growing Objects
+@node Growing Objects, Extra Fast Growing Objects, Obstack Functions and Macros, Obstacks
 @subsection Growing Objects
 @cindex growing objects (in obstacks)
 @cindex changing the size of a block (obstacks)
@@ -1044,7 +1044,7 @@ You can use @code{obstack_blank} with a negative size argument to make
 the current object smaller.  Just don't try to shrink it beyond zero
 length---there's no telling what would happen if you do that.
 
-@node Extra Fast Growing Objects
+@node Extra Fast Growing Objects, Status of an Obstack, Growing Objects, Obstacks
 @subsection Extra Fast Growing Objects
 @cindex efficiency and obstacks
 
@@ -1125,7 +1125,7 @@ add_string (struct obstack *obstack, char *ptr, size_t len)
 @}
 @end example
 
-@node Status of an Obstack
+@node Status of an Obstack, Alignment of Data in Obstacks, Extra Fast Growing Objects, Obstacks
 @subsection Status of an Obstack
 @cindex obstack status
 @cindex status of obstack
@@ -1167,7 +1167,7 @@ obstack_next_free (@var{obstack_ptr}) - obstack_base (@var{obstack_ptr})
 @end example
 @end deftypefun
 
-@node Alignment of Data in Obstacks
+@node Alignment of Data in Obstacks, Obstack Chunks, Status of an Obstack, Obstacks
 @subsection Alignment of Data in Obstacks
 @cindex alignment (in obstacks)
 
@@ -1207,7 +1207,7 @@ alignment mask take effect immediately by calling @code{obstack_finish}.
 This will finish a zero-length object and then do proper alignment for
 the next object.
 
-@node Obstack Chunks
+@node Obstack Chunks, Obstacks and Signal Handling, Alignment of Data in Obstacks, Obstacks
 @subsection Obstack Chunks
 @cindex efficiency of chunks
 @cindex chunks
@@ -1269,7 +1269,7 @@ if (obstack_chunk_size (obstack_ptr) < @var{new_chunk_size})
   obstack_chunk_size (obstack_ptr) = @var{new_chunk_size};
 @end example
 
-@node Obstacks and Signal Handling
+@node Obstacks and Signal Handling, Summary of Obstacks, Obstack Chunks, Obstacks
 @subsection Obstacks and Signal Handling
 @cindex signals and obstacks
 
@@ -1305,7 +1305,7 @@ the @code{obstack_chunk_alloc} and @code{obstack_chunk_free} functions
 to interlock so that only one of them can actually call @code{malloc} or
 @code{free} at a given time.
 
-@node Summary of Obstacks
+@node Summary of Obstacks,  , Obstacks and Signal Handling, Obstacks
 @subsection Summary of Obstack Functions
 
 Here is a summary of all the functions associated with obstacks.  Each
@@ -1386,7 +1386,7 @@ Address just after the end of the currently growing object.
 @xref{Status of an Obstack}.
 @end table
 
-@node Variable Size Automatic
+@node Variable Size Automatic, Relocating Allocator, Obstacks, Memory Allocation
 @section Automatic Storage with Variable Size
 @cindex automatic freeing
 @cindex @code{alloca} function
@@ -1417,15 +1417,15 @@ will get unpredictable results.  An example of what to avoid is
 @code{foo (x, alloca (4), y)}.
 
 @menu
-* Alloca Example::			Example of using @code{alloca}.
-* Advantages of Alloca::		Reasons to use @code{alloca}.
-* Disadvantages of Alloca::     	Reasons to avoid @code{alloca}.
-* GNU C Variable-Size Arrays::		Only in GNU C, here is an alternative
+* Alloca Example::              Example of using @code{alloca}.
+* Advantages of Alloca::        Reasons to use @code{alloca}.
+* Disadvantages of Alloca::     Reasons to avoid @code{alloca}.
+* GNU C Variable-Size Arrays::  Only in GNU C, here is an alternative
 					 method of allocating dynamically and
 					 freeing automatically.
 @end menu
 
-@node Alloca Example
+@node Alloca Example, Advantages of Alloca,  , Variable Size Automatic
 @subsection Alloca Example
 
 As an example of use of @code{alloca}, here is a function that opens a file
@@ -1466,7 +1466,7 @@ open2 (char *str1, char *str2, int flags, int mode)
 As you can see, it is simpler with @code{alloca}.  But @code{alloca} has
 other, more important advantages, and some disadvantages.
 
-@node Advantages of Alloca
+@node Advantages of Alloca, Disadvantages of Alloca, Alloca Example, Variable Size Automatic
 @subsection Advantages of @code{alloca}
 
 Here are the reasons why @code{alloca} may be preferable to @code{malloc}:
@@ -1517,7 +1517,7 @@ changed in this way.  Even if you are willing to make more changes to
 fix it, there is no easy way to do so.
 @end itemize
 
-@node Disadvantages of Alloca
+@node Disadvantages of Alloca, GNU C Variable-Size Arrays, Advantages of Alloca, Variable Size Automatic
 @subsection Disadvantages of @code{alloca}
 
 @cindex @code{alloca} disadvantages
@@ -1538,7 +1538,7 @@ portable.  However, a slower emulation of @code{alloca} written in C
 is available for use on systems with this deficiency.
 @end itemize
 
-@node GNU C Variable-Size Arrays
+@node GNU C Variable-Size Arrays,  , Disadvantages of Alloca, Variable Size Automatic
 @subsection GNU C Variable-Size Arrays
 @cindex variable-sized arrays
 
@@ -1577,7 +1577,7 @@ frees all blocks allocated with @code{alloca} during the execution of that
 scope.
 
 
-@node Relocating Allocator
+@node Relocating Allocator,  , Variable Size Automatic, Memory Allocation
 @section Relocating Allocator
 
 @strong{Incomplete:}  Information about the relocating storage allocator

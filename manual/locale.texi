@@ -1,4 +1,4 @@
-@node Locales
+@node Locales, Searching and Sorting, Extended Characters, Top
 @chapter Locales and Internationalization
 
 Different countries and cultures have varying conventions for how to
@@ -20,15 +20,15 @@ Provided the programs are written to obey the choice of locale, they
 will follow the conventions preferred by the user.
 
 @menu
-* Effects of Locale::     Actions affected by the choice of locale.
-* Choosing Locale::       How the user specifies a locale.
-* Locale Categories::     Different purposes for which you can select a locale.
-* Setting the Locale::    How a program specifies the locale library functions.
-* Standard Locales::      Locale names available on all systems.
-* Numeric Formatting::    How to format numbers according to the chosen locale.
+* Effects of Locale::           Actions affected by the choice of locale.
+* Choosing Locale::             How the user specifies a locale.
+* Locale Categories::           Different purposes for which you can select a locale.
+* Setting the Locale::          How a program specifies the locale library functions.
+* Standard Locales::            Locale names available on all systems.
+* Numeric Formatting::          How to format numbers according to the chosen locale.
 @end menu
 
-@node Effects of Locale
+@node Effects of Locale, Choosing Locale,  , Locales
 @section What Effects a Locale Has
 
 Each locale specifies conventions for several purposes, including the
@@ -82,7 +82,7 @@ This chapter discusses the mechanism by which you can modify the current
 locale.  The effects of the current locale on specific library functions
 are discussed in more detail in the descriptions of those functions.
 
-@node Choosing Locale
+@node Choosing Locale, Locale Categories, Effects of Locale, Locales
 @section Choosing a Locale
 
 The simplest way for the user to choose a locale is to set the
@@ -111,7 +111,7 @@ like all locales, would include conventions for all of the purposes to
 which locales apply.  However, the user can choose to use each locale
 for a particular subset of those purposes.
 
-@node Locale Categories
+@node Locale Categories, Setting the Locale, Choosing Locale, Locales
 @section Categories of Activities that Locales Affect
 @cindex categories for locales
 @cindex locale categories
@@ -185,7 +185,7 @@ If this environment variable is defined, its value specifies the locale
 to use for all purposes except as overridden by the variables below.
 @end table
 
-@node Setting the Locale
+@node Setting the Locale, Standard Locales, Locale Categories, Locales
 @section How Programs Set the Locale
 
 A C program inherits its locale environment variables when it starts up.
@@ -290,7 +290,7 @@ with_other_locale (char *new_locale,
 locale categories.  For portability, assume that any symbol beginning
 with @samp{LC_} might be defined in @file{locale.h}.
 
-@node Standard Locales
+@node Standard Locales, Numeric Formatting, Setting the Locale, Locales
 @section Standard Locales
 
 The only locale names you can count on finding on all operating systems
@@ -322,7 +322,7 @@ specifies with the environment, rather than trying to specify some
 non-standard locale explicitly by name.  Remember, different machines
 might have different sets of locales installed.
 
-@node Numeric Formatting
+@node Numeric Formatting,  , Standard Locales, Locales
 @section Numeric Formatting
 
 When you want to format a number or a currency amount using the
@@ -357,12 +357,12 @@ and the value is @code{CHAR_MAX}, it means that the current locale has
 no value for that parameter.
 
 @menu
-* General Numeric::
-* Currency Symbol::
-* Sign of Money Amount::
+* General Numeric::             
+* Currency Symbol::             
+* Sign of Money Amount::        
 @end menu
 
-@node General Numeric
+@node General Numeric, Currency Symbol,  , Numeric Formatting
 @subsection Generic Numeric Formatting Parameters
 
 These are the standard members of @code{struct lconv}; there may be
@@ -429,7 +429,7 @@ fractional digits.  (This locale also specifies the empty string for
 confusing!)
 @end table
 
-@node Currency Symbol
+@node Currency Symbol, Sign of Money Amount, General Numeric, Numeric Formatting
 @subsection Printing the Currency Symbol
 @cindex currency symbols
 
@@ -508,7 +508,7 @@ These members apply only to @code{currency_symbol}.  When you use
 @code{int_curr_symbol} itself contains the appropriate separator.
 @end table
 
-@node Sign of Money Amount
+@node Sign of Money Amount,  , Currency Symbol, Numeric Formatting
 @subsection Printing the Sign of an Amount of Money
 
 These members of the @code{struct lconv} structure specify how to print

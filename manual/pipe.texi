@@ -1,4 +1,4 @@
-@node Pipes and FIFOs
+@node Pipes and FIFOs, Sockets, File System Interface, Top
 @chapter Pipes and FIFOs
 
 @cindex pipe
@@ -25,13 +25,13 @@ reading and writing operations happen sequentially; reading from the
 beginning of the file and writing at the end.
 
 @menu
-* Creating a Pipe::		Making a pipe with the @code{pipe} function.
-* Pipe to a Subprocess::	Using a pipe to communicate with a
+* Creating a Pipe::             Making a pipe with the @code{pipe} function.
+* Pipe to a Subprocess::        Using a pipe to communicate with a
 				 child process.
-* FIFO Special Files::		Making a FIFO special file.
+* FIFO Special Files::          Making a FIFO special file.
 @end menu
 
-@node Creating a Pipe
+@node Creating a Pipe, Pipe to a Subprocess,  , Pipes and FIFOs
 @section Creating a Pipe
 @cindex creating a pipe
 @cindex opening a pipe
@@ -139,7 +139,7 @@ main (void)
 @end example
 
 
-@node Pipe to a Subprocess
+@node Pipe to a Subprocess, FIFO Special Files, Creating a Pipe, Pipes and FIFOs
 @section Pipe to a Subprocess
 @cindex creating a pipe to a subprocess
 @cindex pipe to a subprocess
@@ -214,7 +214,7 @@ main (void)
 @end example
 
 
-@node FIFO Special Files
+@node FIFO Special Files,  , Pipe to a Subprocess, Pipes and FIFOs
 @section FIFO Special Files
 @cindex creating a FIFO special file
 @cindex interprocess communication, with FIFO

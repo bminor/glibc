@@ -1,4 +1,4 @@
-@node Job Control
+@node Job Control, Users and Groups, Processes, Top
 @chapter Job Control
 
 @cindex process groups
@@ -19,16 +19,16 @@ Handling}) in order to understand this material presented in this
 chapter.
 
 @menu
-* Concepts of Job Control::	Introduction and overview.
-* Job Control is Optional::	Not all POSIX systems support job control.
-* Controlling Terminal::	How a process gets its controlling terminal.
-* Access to the Terminal::	How processes share the controlling terminal.
-* Orphaned Process Groups::	Jobs left after the user logs out.
-* Implementing a Shell::	What a shell must do to implement job control.
-* Functions for Job Control::	Functions to control process groups.
+* Concepts of Job Control ::    Concepts of Job Control
+* Job Control is Optional::     Not all POSIX systems support job control.
+* Controlling Terminal::        How a process gets its controlling terminal.
+* Access to the Terminal::      How processes share the controlling terminal.
+* Orphaned Process Groups::     Jobs left after the user logs out.
+* Implementing a Shell::        What a shell must do to implement job control.
+* Functions for Job Control::   Functions to control process groups.
 @end menu
 
-@node Concepts of Job Control 
+@node Concepts of Job Control , Job Control is Optional,  , Job Control
 @section Concepts of Job Control
 
 @cindex shell
@@ -100,7 +100,7 @@ jobs between foreground and background.
 @xref{Access to the Terminal}, for more information about I/O to the
 controlling terminal,
 
-@node Job Control is Optional
+@node Job Control is Optional, Controlling Terminal, Concepts of Job Control , Job Control
 @section Job Control is Optional
 @cindex job control is optional
 
@@ -121,7 +121,7 @@ control signal or examine or specify their actions report errors or do
 nothing.
 
 
-@node Controlling Terminal
+@node Controlling Terminal, Access to the Terminal, Job Control is Optional, Job Control
 @section Controlling Terminal of a Process
 
 One of the attributes of a process is its controlling terminal.  Child
@@ -142,7 +142,7 @@ calls @code{setsid} to become the leader of a new session.
 @xref{Process Group Functions}.
 
 
-@node Access to the Terminal
+@node Access to the Terminal, Orphaned Process Groups, Controlling Terminal, Job Control
 @section Access to the Controlling Terminal
 @cindex controlling terminal, access to
 
@@ -177,7 +177,7 @@ For more information about the primitive @code{read} and @code{write}
 functions, see @ref{I/O Primitives}.
 
 
-@node Orphaned Process Groups
+@node Orphaned Process Groups, Implementing a Shell, Access to the Terminal, Job Control
 @section Orphaned Process Groups
 @cindex orphaned process group
 
@@ -199,7 +199,7 @@ handler for it (@pxref{Signal Handling}), it can continue running as in
 the orphan process group even after its controlling process terminates;
 but it still cannot access the terminal any more.
 
-@node Implementing a Shell
+@node Implementing a Shell, Functions for Job Control, Orphaned Process Groups, Job Control
 @section Implementing a Job Control Shell
 
 This section describes what a shell must do to implement job control, by
@@ -239,18 +239,18 @@ have been stopped.
 @end iftex
 
 @menu
-* Data Structures::		Introduction to the sample shell.
-* Initializing the Shell::	What the shell must do to take
+* Data Structures::             Introduction to the sample shell.
+* Initializing the Shell::      What the shell must do to take
 				 responsibility for job control.
-* Launching Jobs::		Creating jobs to execute commands.
-* Foreground and Background::	Putting a job in foreground of background.
-* Stopped and Terminated Jobs::	Reporting job status.
-* Continuing Stopped Jobs::	How to continue a stopped job in
+* Launching Jobs::              Creating jobs to execute commands.
+* Foreground and Background::   Putting a job in foreground of background.
+* Stopped and Terminated Jobs::  Reporting job status.
+* Continuing Stopped Jobs::     How to continue a stopped job in
 				 the foreground or background.
-* The Missing Pieces::		Other parts of the shell.
+* The Missing Pieces::          Other parts of the shell.
 @end menu
 
-@node Data Structures
+@node Data Structures, Initializing the Shell,  , Implementing a Shell
 @subsection Data Structures for the Shell
 
 All of the program examples included in this chapter are part of
@@ -340,7 +340,7 @@ job_is_completed (job *j)
 @end example
 
 
-@node Initializing the Shell
+@node Initializing the Shell, Launching Jobs, Data Structures, Implementing a Shell
 @subsection Initializing the Shell
 @cindex job control, enabling
 @cindex subshell
@@ -437,7 +437,7 @@ init_shell ()
 @end example
 
 
-@node Launching Jobs
+@node Launching Jobs, Foreground and Background, Initializing the Shell, Implementing a Shell
 @subsection Launching Jobs
 @cindex launching jobs
 
@@ -628,7 +628,7 @@ launch_job (job *j, int foreground)
 @end example
 
 
-@node Foreground and Background
+@node Foreground and Background, Stopped and Terminated Jobs, Launching Jobs, Implementing a Shell
 @subsection Foreground and Background
 
 Now let's consider what actions must be taken by the shell when it
@@ -713,7 +713,7 @@ put_job_in_background (job *j, int cont)
 @end example
 
 
-@node Stopped and Terminated Jobs
+@node Stopped and Terminated Jobs, Continuing Stopped Jobs, Foreground and Background, Implementing a Shell
 @subsection Stopped and Terminated Jobs
 
 @cindex stopped jobs, detecting
@@ -870,7 +870,7 @@ do_job_notification (void)
 @end example
 
 
-@node Continuing Stopped Jobs
+@node Continuing Stopped Jobs, The Missing Pieces, Stopped and Terminated Jobs, Implementing a Shell
 @subsection Continuing Stopped Jobs
 
 @cindex stopped jobs, continuing
@@ -923,7 +923,7 @@ continue_job (job *j, int foreground)
 @end example
 
 
-@node The Missing Pieces
+@node The Missing Pieces,  , Continuing Stopped Jobs, Implementing a Shell
 @subsection The Missing Pieces
 
 The code extracts for the sample shell included in this chapter are only
@@ -963,7 +963,7 @@ managing jobs.  For example, it would be useful to have commands to list
 all active jobs or to send a signal (such as @code{SIGKILL}) to a job.
 
 
-@node Functions for Job Control
+@node Functions for Job Control,  , Implementing a Shell, Job Control
 @section Functions for Job Control
 @cindex process group functions
 @cindex job control functions
@@ -972,13 +972,13 @@ This section contains detailed descriptions of the functions relating
 to job control.
 
 @menu
-* Identifying the Terminal::	Determining the controlling terminal's name.
-* Process Group Functions::	Functions for manipulating process groups.
-* Terminal Access Functions::	Functions for controlling terminal access.
+* Identifying the Terminal::    Determining the controlling terminal's name.
+* Process Group Functions::     Functions for manipulating process groups.
+* Terminal Access Functions::   Functions for controlling terminal access.
 @end menu
 
 
-@node Identifying the Terminal
+@node Identifying the Terminal, Process Group Functions,  , Functions for Job Control
 @subsection Identifying the Controlling Terminal
 @cindex controlling terminal, determining
 
@@ -1016,7 +1016,7 @@ See also the @code{isatty} and @code{ttyname} functions, in
 @ref{Is It a Terminal}.
 
 
-@node Process Group Functions
+@node Process Group Functions, Terminal Access Functions, Identifying the Terminal, Functions for Job Control
 @subsection Process Group Functions
 
 Here are descriptions of the functions for manipulating process groups.
@@ -1114,7 +1114,7 @@ the same thing.
 @end deftypefun
 
 
-@node Terminal Access Functions
+@node Terminal Access Functions,  , Process Group Functions, Functions for Job Control
 @subsection Functions for Controlling Terminal Access
 
 These are the functions for reading or setting the foreground

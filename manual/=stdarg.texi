@@ -1,4 +1,4 @@
-@node Variable Argument Facilities
+@node Variable Argument Facilities, Memory Allocation, Common Definitions, Top
 @chapter Variable Argument Facilities
 @cindex variadic argument functions
 @cindex variadic functions
@@ -14,15 +14,15 @@ defined in @file{stdarg.h}.
 @pindex stdarg.h
 
 @menu
-* Why Variable Arguments are Used::	
-* How Variable Arguments are Used::	An overview of the facilities for
+* Why Variable Arguments are Used::  
+* How Variable Arguments are Used::  An overview of the facilities for
 					 receiving variable arguments.
-* Variable Arguments Interface::	Detailed specification of the
+* Variable Arguments Interface::  Detailed specification of the
 					 library facilities.
-* Example of Variable Arguments::	A complete example.
+* Example of Variable Arguments::  A complete example.
 @end menu
 
-@node Why Variable Arguments are Used
+@node Why Variable Arguments are Used, How Variable Arguments are Used,  , Variable Argument Facilities
 @section Why Variable Arguments are Used
 
 Most C functions take a fixed number of arguments.  When you define a
@@ -51,7 +51,7 @@ example of still another class of function where variable arguments are
 useful.  This function prints its arguments (which can vary in type as
 well as number) under the control of a format template string.
 
-@node How Variable Arguments are Used
+@node How Variable Arguments are Used, Variable Arguments Interface, Why Variable Arguments are Used, Variable Argument Facilities
 @section How Variable Arguments are Used
 
 This section describes how you can define and call functions that take
@@ -59,17 +59,17 @@ variable arguments, and how to access the values of the non-required
 arguments.
 
 @menu
-* Syntax for Variable Arguments::	How to make a prototype for a function
+* Syntax for Variable Arguments::  How to make a prototype for a function
 					 with variable arguments.
-* Receiving the Argument Values::	Steps you must follow to access the
+* Receiving the Argument Values::  Steps you must follow to access the
 					 optional argument values.
-* How Many Arguments::			How to decide whether there are more
+* How Many Arguments::          How to decide whether there are more
 					 arguments.
-* Calling Variadic Functions::		Things you need to know about calling
+* Calling Variadic Functions::  Things you need to know about calling
 					 variable arguments functions.
 @end menu
 
-@node Syntax for Variable Arguments
+@node Syntax for Variable Arguments, Receiving the Argument Values,  , How Variable Arguments are Used
 @subsection Syntax for Variable Arguments
 
 A function that accepts a variable number of arguments must have at
@@ -103,7 +103,7 @@ of arguments.  In particular, the @samp{@dots{}} syntax is a new feature
 of ANSI C.
 
 
-@node Receiving the Argument Values
+@node Receiving the Argument Values, How Many Arguments, Syntax for Variable Arguments, How Variable Arguments are Used
 @subsection Receiving the Argument Values
 
 Inside the definition of a variadic function, to access the optional
@@ -137,7 +137,7 @@ fewer arguments than were supplied in the call, but you will get garbage
 values if you try to access too many arguments.
 
 
-@node How Many Arguments
+@node How Many Arguments, Calling Variadic Functions, Receiving the Argument Values, How Variable Arguments are Used
 @subsection How Many Arguments Were Supplied
 
 There is no general way for a function to determine the number and type
@@ -167,7 +167,7 @@ might indicate the end of the argument list, provided that a null
 pointer isn't otherwise meaningful to the function.
 
 
-@node Calling Variadic Functions
+@node Calling Variadic Functions,  , How Many Arguments, How Variable Arguments are Used
 @subsection Calling Variadic Functions
 
 Functions that are @emph{defined} to be variadic must also be
@@ -198,7 +198,7 @@ corresponding formal parameters).
 @cindex default argument promotions
 @cindex argument promotion
 
-@node Variable Arguments Interface
+@node Variable Arguments Interface, Example of Variable Arguments, How Variable Arguments are Used, Variable Argument Facilities
 @section Variable Arguments Interface
 
 Here are descriptions of the macros used to retrieve variable arguments.
@@ -248,7 +248,7 @@ use it except for reasons of portability.
 @end deftypefn
 
 
-@node Example of Variable Arguments
+@node Example of Variable Arguments,  , Variable Arguments Interface, Variable Argument Facilities
 @section Example of Variable Arguments
 
 Here is a complete sample function that accepts variable numbers of

@@ -1,4 +1,4 @@
-@node Sockets
+@node Sockets, Low-Level Terminal Interface, Pipes and FIFOs, Top
 @chapter Sockets
 
 @cindex socket
@@ -17,22 +17,22 @@ and the Internet domain.  Finally, actual operations on sockets
 are described.
 
 @menu
-* Socket Creation and Naming::          Functions for creating and
+* Socket Creation and Naming::  Functions for creating and
                                          initializing sockets.
-* Domains and Protocols::		How to specify the communications
+* Domains and Protocols::       How to specify the communications
 					 protocol for a socket.
-* The Local Domain::			Details about the local (Unix) domain.
-* The Internet Domain::			Details about the Internet domain.
-* Types of Sockets::			Different socket types have different
+* The Local Domain::            Details about the local (Unix) domain.
+* The Internet Domain::         Details about the Internet domain.
+* Types of Sockets::            Different socket types have different
 					 semantics for data transmission.
-* Byte Stream Socket Operations::	Operations on sockets with connection
+* Byte Stream Socket Operations::  Operations on sockets with connection
 					 state.
-* Datagram Socket Operations::		Operations on datagram sockets.
-* Socket Options::			Miscellaneous low-level socket options.
+* Datagram Socket Operations::  Operations on datagram sockets.
+* Socket Options::              Miscellaneous low-level socket options.
 @end menu
 
 
-@node Socket Creation and Naming
+@node Socket Creation and Naming, Domains and Protocols,  , Sockets
 @section Socket Creation and Naming
 
 This section presents the basic functions for creating and initializing
@@ -76,14 +76,14 @@ be at the other end of the communications path; this is called its
 a @dfn{client}.
 
 @menu
-* Creating a Socket::			How to open a socket.
-* Closing a Socket::			How to close a socket.
-* Socket Naming::			You must associate a name with a socket
+* Creating a Socket::           How to open a socket.
+* Closing a Socket::            How to close a socket.
+* Socket Naming::               You must associate a name with a socket
 					 before it can receive data.
-* Socket Pairs::			These are created like pipes.
+* Socket Pairs::                These are created like pipes.
 @end menu
 
-@node Creating a Socket
+@node Creating a Socket, Closing a Socket,  , Socket Creation and Naming
 @subsection Creating a Socket
 @cindex creating a socket
 @cindex socket, creating
@@ -131,7 +131,7 @@ write at either end of the connection.  Like pipes, sockets do not
 support file positioning operations.
 
 
-@node Closing a Socket
+@node Closing a Socket, Socket Naming, Creating a Socket, Socket Creation and Naming
 @subsection Closing a Socket
 @cindex socket, closing
 @cindex closing a socket
@@ -181,7 +181,7 @@ The @var{filedes} is not connected.
 @end deftypefun
 
 
-@node Socket Naming
+@node Socket Naming, Socket Pairs, Closing a Socket, Socket Creation and Naming
 @subsection Socket Naming
 
 @cindex binding a name to a socket
@@ -321,7 +321,7 @@ This is the address family for sockets in the Internet domain.
 @strong{Incomplete:}  There are a bunch more of these.
 
 
-@node Socket Pairs
+@node Socket Pairs,  , Socket Naming, Socket Creation and Naming
 @subsection Socket Pairs
 @cindex creating a socket pair
 @cindex socket pair
@@ -369,7 +369,7 @@ in the local domain.  Is this true of the GNU system also?
 
 
 
-@node Domains and Protocols
+@node Domains and Protocols, The Local Domain, Socket Creation and Naming, Sockets
 @section Domains and Protocols
 
 The header file @file{sys/socket.h} defines these symbolic constants
@@ -412,7 +412,7 @@ a value of @code{0} as the @var{protocol} argument when creating a
 socket with @code{socket} or @code{socketpair}.
 
 
-@node The Local Domain
+@node The Local Domain, The Internet Domain, Domains and Protocols, Sockets
 @section The Local Domain
 @cindex local domain, for sockets
 
@@ -505,7 +505,7 @@ int make_named_socket (const char *filename)
 @}
 @end example
 
-@node The Internet Domain
+@node The Internet Domain, Types of Sockets, The Local Domain, Sockets
 @section The Internet Domain
 @cindex Internet domain, for sockets
 
@@ -526,7 +526,7 @@ conventions used in the Internet domain, @code{PF_INET}.
 * Internet Socket Example::     Putting it all together.
 @end menu
 
-@node Protocols Database
+@node Protocols Database, Internet Socket Naming,  , The Internet Domain
 @subsection Protocols Database
 @cindex protocols database
 
@@ -615,7 +615,7 @@ This function closes the protocols database.
 @end deftypefun
 
 
-@node Internet Socket Naming
+@node Internet Socket Naming, Internet Host Addresses, Protocols Database, The Internet Domain
 @subsection Internet Socket Naming
 
 In the Internet domain, socket names are a triple consisting of a
@@ -654,7 +654,7 @@ The @var{length} parameter associated with socket names in the Internet
 domain is computed as @code{sizeof (struct sockaddr_in)}.
 
 
-@node Internet Host Addresses
+@node Internet Host Addresses, Hosts Database, Internet Socket Naming, The Internet Domain
 @subsection Internet Host Addresses
 
 @cindex host address, Internet
@@ -808,7 +808,7 @@ in network byte order, and network numbers and local network address
 numbers in host byte order.  @xref{Byte Order Conversion}.
 
 
-@node Hosts Database
+@node Hosts Database, Services Database, Internet Host Addresses, The Internet Domain
 @subsection Hosts Database
 @cindex hosts database
 @cindex converting host name to address
@@ -956,7 +956,7 @@ This function closes the hosts database.
 @end deftypefun
 
 
-@node Services Database
+@node Services Database, Networks Database, Hosts Database, The Internet Domain
 @subsection Services Database
 @cindex services database
 @cindex converting service name to port number
@@ -1060,7 +1060,7 @@ This function closes the services database.
 @end deftypefun
 
 
-@node Networks Database
+@node Networks Database, Byte Order Conversion, Services Database, The Internet Domain
 @subsection Networks Database
 @cindex networks database
 @cindex converting network number to network name
@@ -1148,7 +1148,7 @@ This function closes the networks database.
 @end deftypefun
 
 
-@node Byte Order Conversion
+@node Byte Order Conversion, Internet Socket Example, Networks Database, The Internet Domain
 @subsection Byte Order Conversion
 @cindex byte order conversion, for socket
 @cindex converting byte order
@@ -1202,7 +1202,7 @@ This function converts the @code{long} integer @var{netlong} from
 network byte order to host byte order.
 @end deftypefun
 
-@node Internet Socket Example
+@node Internet Socket Example,  , Byte Order Conversion, The Internet Domain
 @subsection Internet Socket Example
 
 Here is an example showing how to create and name a socket in the
@@ -1270,7 +1270,7 @@ void init_sockaddr (struct sockaddr_in *name, const char *hostname,
 @end example
 
 
-@node Types of Sockets
+@node Types of Sockets, Byte Stream Socket Operations, The Internet Domain, Sockets
 @section Types of Sockets
 
 The GNU library includes support for several different kinds of sockets,
@@ -1350,7 +1350,7 @@ socket type.
 @end deftypevr
 
 
-@node Byte Stream Socket Operations
+@node Byte Stream Socket Operations, Datagram Socket Operations, Types of Sockets, Sockets
 @section Byte Stream Socket Operations
 @cindex byte stream socket
 
@@ -1377,7 +1377,7 @@ connected socket.
 * Out-of-Band Data::            This is an advanced feature.
 @end menu
 
-@node Establishing a Connection
+@node Establishing a Connection, Transferring Data,  , Byte Stream Socket Operations
 @subsection Establishing a Connection
 @cindex connecting a socket
 @cindex socket, connecting
@@ -1535,7 +1535,7 @@ There are not enough internal buffers available.
 @end deftypefun
 
 
-@node Transferring Data
+@node Transferring Data, Byte Stream Socket Example, Establishing a Connection, Byte Stream Socket Operations
 @subsection Transferring Data
 @cindex reading from a socket
 @cindex writing to a socket
@@ -1638,7 +1638,7 @@ on write operations, and is generally only of interest for diagnostic or
 routing programs.
 @end deftypevr
 
-@node Byte Stream Socket Example
+@node Byte Stream Socket Example, Out-of-Band Data, Transferring Data, Byte Stream Socket Operations
 @subsection Byte Stream Socket Example
 
 Here are a set of example programs that show communications over a 
@@ -1817,7 +1817,7 @@ void main (void)
 @end example
 
 
-@node Out-of-Band Data
+@node Out-of-Band Data,  , Byte Stream Socket Example, Byte Stream Socket Operations
 @subsection Out-of-Band Data
 
 @cindex out-of-band data
@@ -1846,7 +1846,7 @@ data to empty out internal buffers before the out-of-band data can be
 delivered.
 
 
-@node Datagram Socket Operations
+@node Datagram Socket Operations, Socket Options, Byte Stream Socket Operations, Sockets
 @section Datagram Socket Operations
 @cindex datagram socket
 This section describes functions for sending messages on datagram
@@ -1870,7 +1870,7 @@ the @code{connect} function.
 * Datagram Socket Example::     An example program.
 @end menu
 
-@node Transmitting Datagrams
+@node Transmitting Datagrams, Datagram Socket Example,  , Datagram Socket Operations
 @subsection Transmitting Datagrams
 @cindex sending a datagram
 @cindex receiving a datagram
@@ -1933,7 +1933,7 @@ related to @code{readv}, which I don't understand either.
 @end deftypefun
 @end ignore
 
-@node Datagram Socket Example
+@node Datagram Socket Example,  , Transmitting Datagrams, Datagram Socket Operations
 @subsection Datagram Socket Example
 
 Here is a set of example programs that send messages over a datagram
@@ -2065,7 +2065,7 @@ message or shut down the socket cleanly before exiting if the connection
 appears to be dead.
 
 
-@node Socket Options
+@node Socket Options,  , Datagram Socket Operations, Sockets
 @section Socket Options
 @cindex socket options
 
@@ -2084,7 +2084,7 @@ the socket interface, or to a lower-level communications protocol interface.
 * Socket-Level Options::        Details of the options at the socket level.
 @end menu
 
-@node Socket Option Functions
+@node Socket Option Functions, Socket-Level Options,  , Socket Options
 @subsection Socket Option Functions
 
 Here are the functions for inquiring about and modifying socket options.
@@ -2128,7 +2128,7 @@ The return value and error codes are the same as for @code{getsockopt}.
 @end deftypefun
 
 
-@node Socket-Level Options
+@node Socket-Level Options,  , Socket Option Functions, Socket Options
 @subsection Socket-Level Options
 
 The flags for socket-level options are defined in the header file

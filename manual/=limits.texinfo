@@ -1,4 +1,4 @@
-@node Representation Limits
+@node Representation Limits, System Configuration Limits, System Information, Top
 @chapter Representation Limits
 
 This chapter contains information about constants and parameters that
@@ -6,11 +6,11 @@ characterize the representation of the various integer and
 floating-point types supported by the GNU C library.
 
 @menu
-* Integer Representation Limits::
-* Floating-Point Limits::
+* Integer Representation Limits::  
+* Floating-Point Limits ::      Floating-Point Limits
 @end menu
 
-@node Integer Representation Limits
+@node Integer Representation Limits, Floating-Point Limits ,  , Representation Limits
 @section Integer Representation Limits
 @cindex integer representation limits
 @cindex representation limits, integer
@@ -149,7 +149,7 @@ Parameters}.
 @pindex limits.h
 
 
-@node Floating-Point Limits 
+@node Floating-Point Limits ,  , Integer Representation Limits, Representation Limits
 @section Floating-Point Limits
 @cindex floating-point number representation
 @cindex representation, floating-point number
@@ -173,12 +173,12 @@ characterize each of the supported floating-point representations on a
 particular system.
 
 @menu
-* Floating-Point Representation::	Definitions of terminology.
-* Floating-Point Parameters::		Descriptions of the library facilities.
-* IEEE Floating Point::			An example of a common representation.
+* Floating-Point Representation::  Definitions of terminology.
+* Floating-Point Parameters::   Descriptions of the library facilities.
+* IEEE Floating Point::         An example of a common representation.
 @end menu
 
-@node Floating-Point Representation
+@node Floating-Point Representation, Floating-Point Parameters,  , Floating-Point Limits
 @subsection Floating-Point Representation
 
 This section introduces the terminology used to characterize the
@@ -254,7 +254,7 @@ therefore greater than or equal to @code{1/@var{b}}, where @var{b} is
 the base.
 @cindex normalized floating-point number
 
-@node Floating-Point Parameters
+@node Floating-Point Parameters, IEEE Floating Point, Floating-Point Representation, Floating-Point Limits
 @subsection Floating-Point Parameters
 
 @strong{Incomplete:}  This section needs some more concrete examples
@@ -537,7 +537,7 @@ type.  The maximum value is @code{1E-9}.
 @end deftypevr
 
 
-@node IEEE Floating Point
+@node IEEE Floating Point,  , Floating-Point Parameters, Floating-Point Limits
 @subsection IEEE Floating Point
 @cindex IEEE floating-point representation 
 @cindex floating-point, IEEE

@@ -1,4 +1,4 @@
-@node Low-Level Input/Output
+@node Low-Level Input/Output, File System Interface, Input/Output on Streams, Top
 @chapter Low-Level Input/Output
 
 This chapter describes functions for performing low-level input/output
@@ -10,31 +10,31 @@ for which there are no equivalents on streams.
 @c ??? Why use descriptor-level fns?
 
 @menu
-* Opening and Closing Files::		How to open and close file descriptors.
-* I/O Primitives::			Reading and writing data.
-* File Position Primitive::             Setting a descriptor's file position.
-* Descriptors and Streams::             Converting descriptor to stream
+* Opening and Closing Files::   How to open and close file descriptors.
+* I/O Primitives::              Reading and writing data.
+* File Position Primitive::     Setting a descriptor's file position.
+* Descriptors and Streams::     Converting descriptor to stream
                                          or vice-versa.
-* Stream/Descriptor Precautions::       Precautions needed if you use both
+* Stream/Descriptor Precautions::  Precautions needed if you use both
                                          descriptors and streams.
-* Waiting for I/O::			How to check for input or output
+* Waiting for I/O::             How to check for input or output
 					 on multiple file descriptors.
-* Control Operations::			Various other operations on file
+* Control Operations::          Various other operations on file
 					 descriptors.
-* Duplicating Descriptors::	        Fcntl commands for duplicating file
+* Duplicating Descriptors::     Fcntl commands for duplicating file
 					 descriptors.
-* Descriptor Flags::			Fcntl commands for manipulating flags
+* Descriptor Flags::            Fcntl commands for manipulating flags
 					 associated with file descriptors.
-* File Status Flags::			Fcntl commands for manipulating flags
+* File Status Flags::           Fcntl commands for manipulating flags
 					 associated with open files.
-* File Locks::				Fcntl commands for implementing file
+* File Locks::                  Fcntl commands for implementing file
 					 locking.
-* Interrupt Input::	                Getting an asynchronous signal when
+* Interrupt Input::             Getting an asynchronous signal when
                                          input arrives.
 @end menu
 
 
-@node Opening and Closing Files
+@node Opening and Closing Files, I/O Primitives,  , Low-Level Input/Output
 @section Opening and Closing Files
 
 @cindex opening a file descriptor
@@ -235,7 +235,7 @@ Closing Streams}) instead of trying to close its underlying file
 descriptor with @code{close}.  This flushes any buffered output and
 updates the stream object to indicate that it is closed.
 
-@node I/O Primitives
+@node I/O Primitives, File Position Primitive, Opening and Closing Files, Low-Level Input/Output
 @section Input and Output Primitives
 
 This section describes the functions for performing primitive input and
@@ -382,7 +382,7 @@ functions that write to streams, such as @code{fputc}.
 about writing to a pipe and the interaction with the @code{O_NONBLOCK} 
 flag and the @code{PIPE_BUF} parameter.  Is this really important?
 
-@node File Position Primitive
+@node File Position Primitive, Descriptors and Streams, I/O Primitives, Low-Level Input/Output
 @section Setting the File Position of a Descriptor
 
 Just as you can set the file position of a stream with @code{fseek}, you
@@ -506,7 +506,7 @@ This is an arithmetic data type used to represent file sizes.
 In the GNU system, this is equivalent to @code{fpos_t} or @code{long int}.
 @end deftp
 
-@node Descriptors and Streams
+@node Descriptors and Streams, Stream/Descriptor Precautions, File Position Primitive, Low-Level Input/Output
 @section Descriptors and Streams
 @cindex streams, and file descriptors
 @cindex converting file descriptor to stream
@@ -585,7 +585,7 @@ standard error output.
 @end table
 @cindex standard error file descriptor
 
-@node Stream/Descriptor Precautions
+@node Stream/Descriptor Precautions, Waiting for I/O, Descriptors and Streams, Low-Level Input/Output
 @section Precautions for Mixing Streams and Descriptors
 @cindex channels
 @cindex streams and descriptors
@@ -645,7 +645,7 @@ construct a stream for the pipe using @code{fdopen}, but you should do
 all subsequent I/O operations on the stream and never on the file
 descriptor.
 
-@node Waiting for I/O
+@node Waiting for I/O, Control Operations, Stream/Descriptor Precautions, Low-Level Input/Output
 @section Waiting for Input or Output
 @cindex waiting for input or output
 @cindex multiplexing input
@@ -843,7 +843,7 @@ There is another example showing the use of @code{select} to multiplex
 input from multiple sockets in @ref{Byte Stream Socket Example}.
 
 
-@node Control Operations
+@node Control Operations, Duplicating Descriptors, Waiting for I/O, Low-Level Input/Output
 @section Control Operations on Files
 
 @cindex control operations on files
@@ -908,7 +908,7 @@ Set process or process group ID to receive @code{SIGIO} signals.
 @end deftypefun
 
 
-@node Duplicating Descriptors
+@node Duplicating Descriptors, Descriptor Flags, Control Operations, Low-Level Input/Output
 @section Duplicating Descriptors
 
 @cindex duplicating file descriptors
@@ -1025,7 +1025,7 @@ There is also a more detailed example showing how to implement redirection
 in the context of a pipeline of processes in @ref{Launching Jobs}.
 
 
-@node Descriptor Flags
+@node Descriptor Flags, File Status Flags, Duplicating Descriptors, Low-Level Input/Output
 @section File Descriptor Flags
 @cindex file descriptor flags
 
@@ -1124,7 +1124,7 @@ set_cloexec_flag (int desc, int value)
 @}
 @end example
 
-@node File Status Flags
+@node File Status Flags, File Locks, Descriptor Flags, Low-Level Input/Output
 @section File Status Flags
 @cindex file status flags
 
@@ -1275,7 +1275,7 @@ set_nonblock_flag (int desc, int value)
 @}
 @end example
 
-@node File Locks
+@node File Locks, Interrupt Input, File Status Flags, Low-Level Input/Output
 @section File Locks
 
 @cindex file locks
@@ -1515,7 +1515,7 @@ controlling access to a file.  There is still potential for access to
 the file by programs that don't use the lock protocol.
 @end table
 
-@node Interrupt Input
+@node Interrupt Input,  , File Locks, Low-Level Input/Output
 @section Interrupt-Driven Input
 
 @cindex interrupt-driven input

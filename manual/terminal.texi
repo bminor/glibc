@@ -1,4 +1,4 @@
-@node Low-Level Terminal Interface
+@node Low-Level Terminal Interface, Consistency Checking, Sockets, Top
 @chapter Low-Level Terminal Interface
 
 This chapter describes functions that are specific to terminal devices.
@@ -12,17 +12,17 @@ Most of the functions in this chapter operate on file descriptors.
 descriptor is and how to open a file descriptor for a terminal device.
 
 @menu
-* Is It a Terminal::    How to determine if a file is a terminal
+* Is It a Terminal::            How to determine if a file is a terminal
 			  device, and what its name is.
-* I/O Queues::		About flow control and typeahead.
-* Canonical or Not::    Two basic styles of input processing.
-* Terminal Modes::	How to examine and modify flags controlling
+* I/O Queues::                  About flow control and typeahead.
+* Canonical or Not::            Two basic styles of input processing.
+* Terminal Modes::              How to examine and modify flags controlling
 			  details of terminal I/O: echoing, signals, editing.
-* Line Control::	Sending break sequences, clearing terminal buffers...
-* Noncanon Example::	How to read single characters without echo.
+* Line Control::                Sending break sequences, clearing terminal buffers...
+* Noncanon Example::            How to read single characters without echo.
 @end menu
 
-@node Is It a Terminal
+@node Is It a Terminal, I/O Queues,  , Low-Level Terminal Interface
 @section Identifying Terminals
 @cindex terminal identification
 @cindex identifying terminals
@@ -58,7 +58,7 @@ the terminal file.  The value is a null pointer if the file descriptor
 isn't associated with a terminal, or the file name cannot be determined.
 @end deftypefun
 
-@node I/O Queues
+@node I/O Queues, Canonical or Not, Is It a Terminal, Low-Level Terminal Interface
 @section I/O Queues
 
 Many of the remaining functions in this section refer to the input and
@@ -94,7 +94,7 @@ that have been received but not yet read.  Similarly, clearing the
 terminal output queue means discarding any characters that have been
 written but not yet transmitted.
 
-@node Canonical or Not
+@node Canonical or Not, Terminal Modes, I/O Queues, Low-Level Terminal Interface
 @section Two Styles of Input: Canonical or Not
 
 POSIX systems support two basic modes of input: canonical and
@@ -131,7 +131,7 @@ The choice of canonical or noncanonical input is controlled by the
 @code{ICANON} flag in the @code{c_lflag} member of @code{struct termios}
 (@pxref{Local Modes}).
 
-@node Terminal Modes
+@node Terminal Modes, Line Control, Canonical or Not, Low-Level Terminal Interface
 @section Terminal Modes
 
 @pindex termios.h
@@ -140,20 +140,20 @@ input and output are done.  The functions, data structures, and symbolic
 constants are all declared in the header file @file{termios.h}.
 
 @menu
-* Mode Data Types::	The data type @code{struct termios} and related types.
-* Mode Functions::	Functions to read and set the terminal attributes.
-* Setting Modes::       The right way to set terminal attributes reliably.
-* Input Modes::		Flags controlling low-level input handling.
-* Output Modes::	Flags controlling low-level output handling.
-* Control Modes::	Flags controlling serial port behavior.
-* Local Modes::		Flags controlling high-level input handling.
-* Line Speed::		How to read and set the terminal line speed.
-* Special Characters::	Characters that have special effects,
+* Mode Data Types::             The data type @code{struct termios} and related types.
+* Mode Functions::              Functions to read and set the terminal attributes.
+* Setting Modes::               The right way to set terminal attributes reliably.
+* Input Modes::                 Flags controlling low-level input handling.
+* Output Modes::                Flags controlling low-level output handling.
+* Control Modes::               Flags controlling serial port behavior.
+* Local Modes::                 Flags controlling high-level input handling.
+* Line Speed::                  How to read and set the terminal line speed.
+* Special Characters::          Characters that have special effects,
 			  and how to change them.
-* Noncanonical Input::	Controlling how long to wait for input.
+* Noncanonical Input::          Controlling how long to wait for input.
 @end menu
 
-@node Mode Data Types
+@node Mode Data Types, Mode Functions,  , Terminal Modes
 @subsection Terminal Mode Data Types
 @cindex terminal mode data types
 
@@ -216,7 +216,7 @@ The value of this macro is the number of elements in the @code{c_cc}
 array.
 @end deftypevr
 
-@node Mode Functions
+@node Mode Functions, Setting Modes, Mode Data Types, Terminal Modes
 @subsection Terminal Mode Functions
 @cindex terminal mode functions
 
@@ -314,7 +314,7 @@ descriptor for the same terminal that you use to read from it in
 single-character, non-echoed mode.  Instead, you have to explicitly
 switch the terminal back and forth between the two modes.
 
-@node Setting Modes
+@node Setting Modes, Input Modes, Mode Functions, Terminal Modes
 @subsection Setting Terminal Modes Properly
 
 When you set terminal modes, you should call @code{tcgetattr} first to
@@ -369,7 +369,7 @@ set_istrip (int desc, int value)
 @}
 @end example
 
-@node Input Modes
+@node Input Modes, Output Modes, Setting Modes, Terminal Modes
 @subsection Input Modes
 
 This section describes the terminal attribute flags that control
@@ -504,7 +504,7 @@ not set, then START and STOP can be read as ordinary characters.
 @xref{Start/Stop Characters}.
 @end table
 
-@node Output Modes
+@node Output Modes, Control Modes, Input Modes, Terminal Modes
 @subsection Output Modes
 
 This section describes the terminal flags and fields that control how
@@ -531,7 +531,7 @@ If this bit isn't set, the characters are transmitted as-is.
 
 @c ??? Add here the flags and fields libc actually supports.
 
-@node Control Modes
+@node Control Modes, Local Modes, Output Modes, Terminal Modes
 @subsection Control Modes
 
 This section describes the terminal flags and fields that control
@@ -646,7 +646,7 @@ This specifies seven bits per byte.
 This specifies eight bits per byte.
 @end table
 
-@node Local Modes
+@node Local Modes, Line Speed, Control Modes, Terminal Modes
 @subsection Local Modes
 
 This section describes the flags for the @code{c_lflag} member of the
@@ -756,7 +756,7 @@ attempt to write to the terminal.  @xref{Access to the Controlling
 Terminal}.
 @end table
 
-@node Line Speed
+@node Line Speed, Special Characters, Local Modes, Terminal Modes
 @subsection Line Speed
 @cindex line speed
 @cindex baud rate
@@ -902,7 +902,7 @@ B300  B600  B1200  B1800  B2400  B4800
 B9600  B19200  B38400
 @end example
 
-@node Special Characters
+@node Special Characters, Noncanonical Input, Line Speed, Terminal Modes
 @subsection Special Characters
 
 In canonical input, the terminal driver recognizes a number of special
@@ -929,12 +929,12 @@ Parameters}, for more information about how to tell whether the
 operating system you are using supports @code{_POSIX_VDISABLE}.
 
 @menu
-* Editing Characters::
-* Signal Characters::
-* Start/Stop Characters::
+* Editing Characters::          
+* Signal Characters::           
+* Start/Stop Characters::       
 @end menu
 
-@node Editing Characters
+@node Editing Characters, Signal Characters,  , Special Characters
 @subsubsection Characters for Input Editing
 
 These special characters are active only in canonical input mode.
@@ -1005,7 +1005,7 @@ of input are discarded.  The kill character itself is discarded too.
 The KILL character is usually @kbd{C-u}.
 @end deftypevr
 
-@node Signal Characters
+@node Signal Characters, Start/Stop Characters, Editing Characters, Special Characters
 @subsubsection Characters that Cause Signals
 
 These special characters may active in either canonical or noncanonical
@@ -1070,7 +1070,7 @@ mechanism, the program should send a @code{SIGTSTP} signal to the
 process group of the process, not just to the process itself.
 @xref{Signaling Another Process}.
 
-@node Start/Stop Characters
+@node Start/Stop Characters,  , Signal Characters, Special Characters
 @subsubsection Special Characters for Flow Control
 
 These special characters may active in either canonical or noncanonical
@@ -1115,7 +1115,7 @@ able to change this value---the hardware may insist on using @kbd{C-s}
 regardless of what you specify.
 @end deftypevr
 
-@node Noncanonical Input
+@node Noncanonical Input,  , Special Characters, Terminal Modes
 @subsection Noncanonical Input
 
 In noncanonical input mode, the special editing characters such as
@@ -1218,7 +1218,7 @@ input and the EOF and EOL slots are used only in canonical input, but it
 isn't very clean.  The GNU library allocates separate slots for these
 uses.
 
-@node Line Control
+@node Line Control, Noncanon Example, Terminal Modes, Low-Level Terminal Interface
 @section Line Control Functions
 @cindex terminal line control functions
 
@@ -1379,7 +1379,7 @@ A bad value was supplied as the @var{action} argument.
 @end table
 @end deftypefun
 
-@node Noncanon Example
+@node Noncanon Example,  , Line Control, Low-Level Terminal Interface
 @section Noncanonical Mode Example
 
 Here is an example program that shows how you can set up a terminal

@@ -1,4 +1,4 @@
-@node Searching and Sorting
+@node Searching and Sorting, Input/Output Overview, Locales, Top
 @chapter Searching and Sorting 
 
 This chapter describes functions for searching and sorting arrays of
@@ -7,15 +7,15 @@ applied as an argument, along with the size of the objects in the array
 and the total number of elements.
 
 @menu
-* Comparison Functions::    Defining how to compare two objects.
+* Comparison Functions::        Defining how to compare two objects.
 				Since the sort and search facilities are
 				general, you have to specify the ordering.
-* Array Search Function::   The @code{bsearch} function.
-* Array Sort Function::	    The @code{qsort} function.
-* Search/Sort Example::     An example program.
+* Array Search Function::       The @code{bsearch} function.
+* Array Sort Function::         The @code{qsort} function.
+* Search/Sort Example::         An example program.
 @end menu
 
-@node Comparison Functions
+@node Comparison Functions, Array Search Function,  , Searching and Sorting
 @section Defining the Comparison Function
 @cindex Comparison Function
 
@@ -56,7 +56,7 @@ you request the GNU extensions.
 int comparison_fn_t (const void *, const void *);
 @end example
 
-@node Array Search Function
+@node Array Search Function, Array Sort Function, Comparison Functions, Searching and Sorting
 @section Array Search Function
 @cindex search function (for arrays)
 @cindex binary search function (for arrays)
@@ -89,7 +89,7 @@ This function derives its name from the fact that it is implemented
 using the binary search.
 @end deftypefun
 
-@node Array Sort Function
+@node Array Sort Function, Search/Sort Example, Array Search Function, Searching and Sorting
 @section Array Sort Function
 @cindex sort function (for arrays)
 @cindex quick sort function (for arrays)
@@ -140,7 +140,7 @@ The @code{qsort} function derives its name from the fact that it was
 originally implemented using the algorithm ``quick sort''.
 @end deftypefun
 
-@node Search/Sort Example
+@node Search/Sort Example,  , Array Sort Function, Searching and Sorting
 @section Searching and Sorting Example
 
 Here is an example showing the use of @code{qsort} and @code{bsearch}

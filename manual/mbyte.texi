@@ -1,4 +1,4 @@
-@node Extended Characters
+@node Extended Characters, Locales, String and Array Utilities, Top
 @chapter Extended Characters
 
 A number of languages use character sets that are larger than the range
@@ -17,20 +17,20 @@ This choice of locale selects which multibyte code is used, and also
 controls the meanings and characteristics of wide character codes.
 
 @menu
-* Extended Char Intro::	         Multibyte codes versus wide characters.
-* Locales and Extended Chars::   The locale selects the character codes.
-* Multibyte Char Intro::         How multibyte codes are represented.
-* Wide Char Intro::              How wide characters are represented.
-* Wide String Conversion::	 Converting wide strings to multibyte code
+* Extended Char Intro::         Multibyte codes versus wide characters.
+* Locales and Extended Chars::  The locale selects the character codes.
+* Multibyte Char Intro::        How multibyte codes are represented.
+* Wide Char Intro::             How wide characters are represented.
+* Wide String Conversion::      Converting wide strings to multibyte code
                                    and vice versa.
-* Length of Char::		 how many bytes make up one multibyte char.
-* Converting One Char::		 Converting a string character by character.
-* Example of Conversion::        Example showing why converting 
+* Length of Char::              how many bytes make up one multibyte char.
+* Converting One Char::         Converting a string character by character.
+* Example of Conversion::       Example showing why converting 
 				   one character at a time may be useful.
-* Shift State::                  Multibyte codes with "shift characters".
+* Shift State::                 Multibyte codes with "shift characters".
 @end menu
 
-@node Extended Char Intro
+@node Extended Char Intro, Locales and Extended Chars,  , Extended Characters
 @section Introduction to Extended Characters
 
 You can represent extended characters in either of two ways:
@@ -79,7 +79,7 @@ as multibyte characters and as wide characters.  The library includes
 functions you can use to convert between the two representations,
 functions described in this chapter.
 
-@node Locales and Extended Chars
+@node Locales and Extended Chars, Multibyte Char Intro, Extended Char Intro, Extended Characters
 @section Locales and Extended Characters
 
 A computer system can support more than one multibyte character code,
@@ -98,7 +98,7 @@ shift state maintained by these functions can become confused, so it's
 not a good idea to change the locale while you are in the middle of
 processing a string.
 
-@node Multibyte Char Intro
+@node Multibyte Char Intro, Wide Char Intro, Locales and Extended Chars, Extended Characters
 @section Multibyte Characters
 @cindex multibyte characters
 
@@ -277,7 +277,7 @@ functions that operate on strings deal with multibyte strings correctly.
 For example, @code{printf} and friends do, but what about multibyte
 strings as file names, etc?
 
-@node Wide Char Intro
+@node Wide Char Intro, Wide String Conversion, Multibyte Char Intro, Extended Characters
 @section Wide Character Introduction
 
 @dfn{Wide characters} are much simpler than multibyte characters.  They
@@ -325,7 +325,7 @@ In this chapter, the term @dfn{code} is used to refer to a single
 extended character object to emphasize the distinction from the
 @code{char} data type.
 
-@node Wide String Conversion
+@node Wide String Conversion, Length of Char, Wide Char Intro, Extended Characters
 @section Conversion of Extended Strings
 @cindex extended strings, converting representations
 @cindex converting extended strings
@@ -403,7 +403,7 @@ This number does not include the terminating null character, which is
 present if the number is less than @var{size}.
 @end deftypefun
 
-@node Length of Char
+@node Length of Char, Converting One Char, Wide String Conversion, Extended Characters
 @section Multibyte Character Length
 @cindex multibyte character, length of
 @cindex length of multibyte character
@@ -442,7 +442,7 @@ the multibyte character code in use actually has a shift state.
 The function @code{mblen} is declared in @file{stdlib.h}.
 @end deftypefun
 
-@node Converting One Char
+@node Converting One Char, Example of Conversion, Length of Char, Extended Characters
 @section Conversion of Extended Characters One by One
 @cindex extended characters, converting
 @cindex converting extended characters
@@ -520,7 +520,7 @@ stored shift state @emph{as well as} storing the multibyte character
 @code{0} and returning @code{0}.
 @end deftypefun
 
-@node Example of Conversion
+@node Example of Conversion, Shift State, Converting One Char, Extended Characters
 @section Example of Character-by-Character Conversion
 
 Here is an example that reads multibyte character text from descriptor
@@ -603,7 +603,7 @@ file_mbstowcs (int input, int output)
 @}
 @end example
 
-@node Shift State
+@node Shift State,  , Example of Conversion, Extended Characters
 @section Multibyte Codes Using Shift Sequences
 
 In some multibyte character codes, the @emph{meaning} of any particular
