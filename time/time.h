@@ -174,6 +174,10 @@ extern void EXFUN(tzset, (NOARGS));
 #ifdef	__USE_SVID
 extern int daylight;
 extern long int timezone;
+
+/* Set the system time to *WHEN.
+   This call is restricted to the superuser.  */
+extern int DEFUN(stime, (CONST time_t *__when));
 #endif
 
 
