@@ -45,14 +45,27 @@ DEFUN(readdir, (dirp), DIR *dirp)
 	{
 	  /* We've emptied out our buffer.  Refill it.  */
 
+	  char *data = dirp->__data;
 	  error_t err = __dir_readdir (dirp->__port,
-				       &dirp->__data, &dirp->__size,
+				       &data, &dirp->__size,
 				       dirp->__filepos, &dirp->__filepos,
 				       dirp->__block_size);
 	  if (err)
 	    {
 	      errno = err;
 	      return NULL;
+	    }
+
+	  if (data != dirp->__data)
+	    {
+	      /* The data was passed out of line, so our old buffer is no
+		 longer useful.  Deallocate the old buffer and reset our
+		 information for the new buffer.  */
+	      __vm_deallocate (__mach_task_self (),
+			       (vm_address_t) dirp->__data,
+			       dirp->__allocation);
+	      dirp->__data = data;
+	      dirp->__allocation = dirp->__size;
 	    }
 
 	  /* Reset the offset into the buffer.  */
