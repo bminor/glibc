@@ -43,7 +43,7 @@ DEFUN(__symlink, (from, to), CONST char *from AND CONST char *to)
     return -1;
 
   /* Create a new, unlinked node in the target directory.  */
-  err = __dir_mkfile (dir, O_WRITE, 0777 & _hurd_umask, &node);
+  err = __dir_mkfile (dir, O_WRITE, 0777 & ~_hurd_umask, &node);
 
   if (! err)
     /* Set the node's translator to make it a symlink.  */
