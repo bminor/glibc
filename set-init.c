@@ -29,7 +29,9 @@ void
 DEFUN(__libc_init, (argc, argv, envp),
       int argc AND char **argv AND char **envp)
 {
-  register size_t i;
-  for (i = 0; i < __libc_subinit.n; ++i)
-    (*__libc_subinit.fn[i]) (argc, argv, envp);
+  
+  void EXFUN((**fn), (int argc, char **argv, char **envp));
+
+  for (fn = __libc_subinit.fn; *fn != NULL; ++fn)
+    (**fn) (argc, argv, envp);
 }
