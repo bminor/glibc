@@ -24,7 +24,7 @@ subdir	:= misc
 
 headers	:= sys/uio.h sys/ioctl.h sys/ptrace.h ioctls.h sys/file.h	\
 	   a.out.h nlist.h stab.h stab.def sgtty.h sys/dir.h sys/cdefs.h \
-	   ttyent.h syscall.h
+	   ttyent.h syscall.h syslog.h
 
 routines := brk sbrk sstk ioctl \
 	    __brk __sbrk __ioctl \
@@ -50,7 +50,8 @@ routines := brk sbrk sstk ioctl \
 	    __utimes \
 	    truncate ftruncate \
 	    chflags fchflags \
-	    insremque getttyent getusersh getpass
+	    insremque getttyent getusersh getpass ttyslot \
+	    syslog
 aux := data_start progname
 distribute := bsd-compat.c
 install-lib := libbsd-compat.a
@@ -58,4 +59,5 @@ install-lib := libbsd-compat.a
 include ../Rules
 
 $(objpfx)libbsd-compat.a: $(objpfx)bsd-compat.o
+	rm -f $@
 	ln $< $@
