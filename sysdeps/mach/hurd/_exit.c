@@ -27,6 +27,12 @@ DEFUN(_exit, (status), int status)
   extern volatile error_t __proc_exit (process_t, int);
   extern volatile void __task_terminate (task_t);
 
+  struct _hurd_sigstate *ss = _hurd_thread_sigstate (__mach_thread_self ());
+
   __proc_exit (_hurd_proc, status);
+
+  if (ss->vforked)
+    longjmp (ss->vfork_saved.continuation, 1);
+
   __task_terminate (__mach_task_self ());
 }
