@@ -139,3 +139,8 @@ weak_alias (__sqrt, sqrt)
 /* Strictly, this is wrong, but the only places where _ieee754_sqrt is
    used will not pass in a negative result.  */
 strong_alias(__sqrt,__ieee754_sqrt)
+
+#ifdef NO_LONG_DOUBLE
+weak_alias (__sqrt, __sqrtl)
+weak_alias (__sqrt, sqrtl)
+#endif
