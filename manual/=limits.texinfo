@@ -12,6 +12,9 @@ floating-point types supported by the GNU C library.
 
 @node Integer Representation Limits
 @section Integer Representation Limits
+@cindex integer representation limits
+@cindex representation limits, integer
+@cindex limits, integer representation
 
 Sometimes it is necessary for programs to know about the internal
 representation of various integer subtypes.  For example, if you want
@@ -149,7 +152,8 @@ Parameters}.
 @node Floating-Point Limits 
 @section Floating-Point Limits
 @cindex floating-point number representation
-@cindex representation of floating-point numbers
+@cindex representation, floating-point number
+@cindex limits, floating-point representation
 
 Because floating-point numbers are represented internally as approximate
 quantities, algorithms for manipulating floating-point data often need
@@ -214,7 +218,7 @@ if you have some reason to pick apart the bit fields making up the
 floating-point number by hand, which is something for which the GNU
 library provides no support.  So this is ignored in the discussion that
 follows.
-@cindex bias, in exponent (of floating-point number)
+@cindex bias (of floating-point number exponent)
 
 @item
 The value of the @dfn{mantissa} or @dfn{significand}, which is an
@@ -232,7 +236,7 @@ the mantissa.  Any such hidden bits are counted in the precision.
 Again, the GNU library provides no facilities for dealing with such low-level
 aspects of the representation.
 @cindex precision (of floating-point number)
-@cindex hidden bit, in mantissa (of floating-point number)
+@cindex hidden bit (of floating-point number mantissa)
 @end itemize
 
 The mantissa of a floating-point number actually represents an implicit
@@ -266,6 +270,9 @@ and names beginning with @samp{LDBL_} refer to the @code{long double}
 type.  (In implementations that do not support @code{long double} as
 a distinct data type, the values for those constants are the same
 as the corresponding constants for the @code{double} type.)@refill
+@cindex @code{float} representation limits
+@cindex @code{double} representation limits
+@cindex @code{long double} representation limits
 
 Of these macros, only @code{FLT_RADIX} is guaranteed to be a constant
 expression.  The other macros listed here cannot be reliably used in
@@ -532,6 +539,10 @@ type.  The maximum value is @code{1E-9}.
 
 @node IEEE Floating Point
 @subsection IEEE Floating Point
+@cindex IEEE floating-point representation 
+@cindex floating-point, IEEE
+@cindex IEEE Std 754
+
 
 Here is an example showing how these parameters work for a common
 floating point representation, specified by the @cite{IEEE Standard for
@@ -573,4 +584,3 @@ DBL_MAX         1.7976931348623157E+308
 DBL_MIN         2.2250738585072014E-308
 DBL_EPSILON     2.2204460492503131E-016
 @end example
-

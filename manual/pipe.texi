@@ -29,6 +29,9 @@ beginning of the file and writing at the end.
 
 @node Creating a Pipe
 @section Creating a Pipe
+@cindex creating a pipe
+@cindex opening a pipe
+@cindex interprocess communication, with pipes
 
 The primitive for creating a pipe is the @code{pipe} function.  This
 creates both the reading and writing ends of the pipe.  It is not very
@@ -128,8 +131,12 @@ void main (void)
 @}
 @end example
 
+
 @node Pipe to a Subprocess
 @section Pipe to a Subprocess
+@cindex creating a pipe to a subprocess
+@cindex pipe to a subprocess
+@cindex filtering i/o through subprocess
 
 A common use of pipes is to send data to or receive data from a program
 being run as subprocess.  One way of doing this is by using a combination of
@@ -201,6 +208,8 @@ void main (void)
 
 @node FIFO Special Files
 @section FIFO Special Files
+@cindex creating a FIFO special file
+@cindex interprocess communication, with FIFO
 
 A FIFO special file is similar to a pipe, except that it is created in a
 different way.  Instead of being an anonymous communications channel, a

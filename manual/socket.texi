@@ -2,6 +2,7 @@
 @chapter Sockets
 
 @cindex socket
+@cindex interprocess communication, with sockets
 A @dfn{socket} is a generalized interprocess communication channel.
 Like a pipe, a socket is represented as a file descriptor.  But, unlike
 pipes, sockets support communication between unrelated processes, and
@@ -84,6 +85,9 @@ a @dfn{client}.
 
 @node Creating a Socket
 @subsection Creating a Socket
+@cindex creating a socket
+@cindex socket, creating
+@cindex opening a socket
 
 The primitive for creating a socket is the @code{socket} function,
 declared in @file{sys/socket.h}.
@@ -129,6 +133,9 @@ support file positioning operations.
 
 @node Closing a Socket
 @subsection Closing a Socket
+@cindex socket, closing
+@cindex closing a socket
+@cindex shutting down a socket
 
 When you are finished using a socket, you can simply close its
 file descriptor with @code{close}; @pxref{Opening and Closing Files}.
@@ -316,6 +323,9 @@ This is the address family for sockets in the Internet domain.
 
 @node Socket Pairs
 @subsection Socket Pairs
+@cindex creating a socket pair
+@cindex socket pair
+@cindex opening a socket pair
 
 A @dfn{socket pair} consists of a pair of connected (but unnamed)
 sockets.  It is very similar to a pipe and is used in much the same way.
@@ -404,6 +414,7 @@ socket with @code{socket} or @code{socketpair}.
 
 @node The Local Domain
 @section The Local Domain
+@cindex local domain, for sockets
 
 This section describes the details of the local domain, @code{PF_LOCAL}.
 This is also known as the Unix domain, @code{PF_UNIX}.
@@ -497,6 +508,7 @@ int make_named_socket (const char *filename)
 
 @node The Internet Domain
 @section The Internet Domain
+@cindex Internet domain, for sockets
 
 This section describes the details the protocols and socket naming
 conventions used in the Internet domain, @code{PF_INET}.
@@ -517,6 +529,7 @@ conventions used in the Internet domain, @code{PF_INET}.
 
 @node Protocols Database
 @subsection Protocols Database
+@cindex protocols database
 
 @cindex TCP (Internet protocol)
 The default communications protocol for the Internet domain is TCP
@@ -693,6 +706,7 @@ multiple Internet host addresses.  However, there is never more than one
 machine with the same host address.
 
 @cindex standard dot notation, for Internet addresses
+@cindex dot notation, for Internet addresses
 There are four forms of the @dfn{standard dot notation} for Internet
 addresses:
 
@@ -796,6 +810,9 @@ numbers in host byte order.  @xref{Byte Order Conversion}.
 
 @node Hosts Database
 @subsection Hosts Database
+@cindex hosts database
+@cindex converting host name to address
+@cindex converting host address to name
 
 Besides the standard dot notation for Internet addresses, you can also
 refer to a host by a symbolic name.  The advantage of a symbolic name is
@@ -941,6 +958,9 @@ This function closes the hosts database.
 
 @node Services Database
 @subsection Services Database
+@cindex services database
+@cindex converting service name to port number
+@cindex converting port number to service name
 
 Once you have figured out the address of the host you wish to talk to,
 the next step is to figure out which specific port on that machine to
@@ -1042,6 +1062,9 @@ This function closes the services database.
 
 @node Networks Database
 @subsection Networks Database
+@cindex networks database
+@cindex converting network number to network name
+@cindex converting network name to network number
 
 @pindex /etc/networks
 There is also a database that keeps track of all the known networks.
@@ -1127,6 +1150,8 @@ This function closes the networks database.
 
 @node Byte Order Conversion
 @subsection Byte Order Conversion
+@cindex byte order conversion, for socket
+@cindex converting byte order
 
 @cindex network byte order
 Finally, there is one more wrinkle: the byte ordering of the data in the
@@ -1287,7 +1312,6 @@ Operations on this type of stream are covered in detail in @ref{Byte
 Stream Socket Operations}.
 @end deftypevr
 
-@cindex datagrams
 @comment sys/socket.h
 @comment BSD
 @deftypevr Macro int SOCK_DGRAM
@@ -1328,6 +1352,7 @@ socket type.
 
 @node Byte Stream Socket Operations
 @section Byte Stream Socket Operations
+@cindex byte stream socket
 
 This section describes operations on sockets that have connection state, 
 such as @code{SOCK_STREAM} sockets.
@@ -1354,6 +1379,8 @@ connected socket.
 
 @node Establishing a Connection
 @subsection Establishing a Connection
+@cindex connecting a socket
+@cindex socket, connecting
 
 Before two processes can exchange data through a socket, they must
 establish a connection.  One process acts as a server and waits
@@ -1510,6 +1537,8 @@ There are not enough internal buffers available.
 
 @node Transferring Data
 @subsection Transferring Data
+@cindex reading from a socket
+@cindex writing to a socket
 
 Once a socket has been connected to a peer, you can use the ordinary
 @code{read} and @code{write} operations (@pxref{Input and Output
@@ -1819,7 +1848,7 @@ delivered.
 
 @node Datagram Socket Operations
 @section Datagram Socket Operations
-
+@cindex datagram socket
 This section describes functions for sending messages on datagram
 sockets (type @code{SOCK_DGRAM}).  Unlike the byte stream sockets
 discussed in @ref{Byte Stream Socket Operations}, these sockets do
@@ -1843,6 +1872,10 @@ the @code{connect} function.
 
 @node Transmitting Datagrams
 @subsection Transmitting Datagrams
+@cindex sending a datagram
+@cindex receiving a datagram
+@cindex transmitting datagrams
+@cindex datagrams, transmitting
 
 The normal way of sending data on an unconnected datagram socket is
 by using the @code{sendto} function.  The @code{recvfrom} function 
@@ -2034,6 +2067,7 @@ connection appears to be dead.
 
 @node Socket Options
 @section Socket Options
+@cindex socket options
 
 This section describes how you can set or inquire about various options
 pertaining to sockets and their underlying communications protocols.

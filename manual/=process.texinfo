@@ -33,7 +33,7 @@ child processes.
 @cindex program arguments
 @cindex command line arguments
 
-@cindex main function
+@cindex @code{main} function
 When your C program starts, it begins by executing the function called
 @code{main}.  You can define @code{main} either to take no arguments,
 or to take two arguments that represent the command line arguments
@@ -69,6 +69,9 @@ you are usually better off using @code{getopt} to do the parsing.
 
 @node Program Argument Syntax Conventions
 @subsection Program Argument Syntax Conventions
+@cindex program argument syntax
+@cindex syntax, for program arguments
+@cindex command argument syntax
 
 The @code{getopt} function supports the usual Unix conventions for
 command line argument syntax:
@@ -123,6 +126,9 @@ interpretation is left up to the particular application program.
 
 @node Parsing Program Arguments
 @subsection Parsing Program Arguments
+@cindex program arguments, parsing
+@cindex command arguments, parsing
+@cindex parsing program arguments
 
 Here are the details about how to call the @code{getopt} function.  To
 use this facility, your program must include the header file
@@ -395,6 +401,7 @@ character, since this is assumed to terminate the string.
 
 @node Standard Environment Variables
 @subsection Standard Environment Variables
+@cindex standard environment variables
 
 These environment variables have standard meanings.
 This doesn't mean that they are always present in the
@@ -714,7 +721,6 @@ group.  @xref{Job Control}.
 
 @node Creating New Processes
 @section Creating New Processes
-@cindex creating new processes
 
 This section describes how your program can cause other programs to be
 executed.  Actually, there are three distinct operations involved:
@@ -950,6 +956,8 @@ in doubt, use @code{fork} instead.
 
 @node Executing a File
 @subsection Executing a File
+@cindex executing a file
+@cindex @code{exec} functions
 
 This section describes the @code{exec} family of functions, for executing
 a file as a process image.  You can use these functions to make a child
@@ -1424,10 +1432,8 @@ process.  To do this, @code{exit} is called with a failure status.
 @section User/Group IDs of a Process
 
 @cindex process ownership
-@cindex process user ID
-@cindex user ID, of a process
-@cindex process group ID
-@cindex group ID, of a process
+@cindex process, user ID of
+@cindex process, group ID of
 @cindex @code{setuid} program
 @cindex @code{setgid} program
 
@@ -1545,6 +1551,7 @@ and @code{uucp} do use just such a mechanism.
 
 @node Controlling Process Privileges
 @subsection Controlling Process Privileges
+@cindex restrictions on @code{setuid} programs
 
 The ability to set the user ID of a process is very powerful facility
 and can be a source of unintentional privacy or security violations, or

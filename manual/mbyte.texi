@@ -42,7 +42,7 @@ information, so that the interpretation of codes within the string is
 sensitive to the surrounding context, instead of having each extended
 character marked individually.
 @cindex multibyte characters
-@cindex shift state
+@cindex shift state (multibyte characters)
 
 @item
 The @dfn{wide character} data type, @code{wchar_t}, has a range large
@@ -100,6 +100,7 @@ strings as file names, etc?
 
 @node Multibyte Character Length
 @section Multibyte Character Length
+@cindex multibyte character, length of
 
 If you are stepping through character codes in a string that contains
 multibyte character sequences, you need to know how many bytes each
@@ -151,6 +152,8 @@ in the current locale.  The value is never greater than @code{MB_LEN_MAX}.
 
 @node Conversion of Extended Characters
 @section Conversion of Extended Characters
+@cindex extended characters, converting representations
+@cindex converting extended characters
 
 You can convert multibyte characters to wide characters with the
 @code{mbtowc} function.  The @code{wctomb} function does the reverse.
@@ -209,6 +212,8 @@ the shift state getting changed behind your back.
 
 @node Conversion of Extended Strings
 @section Conversion of Extended Strings
+@cindex extended strings, converting representations
+@cindex converting extended strings
 
 The @code{mbstowcs} function converts a string of multibyte characters
 to a wide character array.  The @code{wcstombs} function does the

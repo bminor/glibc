@@ -25,6 +25,7 @@ descriptor is and how to open a file descriptor for a terminal device.
 
 @node Terminal Identification
 @section Terminal Identification
+@cindex terminal identification
 
 The functions described in this chapter only work on files that
 correspond to terminal devices.  You can find out whether a file
@@ -114,6 +115,7 @@ constants are all declared in the header file @file{termios.h}.
 
 @node Terminal Mode Functions
 @subsection Terminal Mode Functions
+@cindex terminal mode functions
 
 Objects of type @code{struct termios} are used to represent terminal
 attributes.  Details about the values of each of its components are
@@ -350,7 +352,6 @@ If both @code{ISTRIP} and @code{PARMRK} are set, an input byte of
 @deftypevr Macro int IGNBRK
 If this bit is set, break conditions are ignored.
 
-@cindex break condition
 @cindex break condition, detecting
 A @dfn{break condition} is defined in the context of asynchronous
 serial data transmission as a series of zero-value bits longer than a
@@ -756,6 +757,7 @@ input is processed in non-canonical mode.
 @deftypevr Macro int ECHO
 If this bit is set, echoing of input characters back to the terminal
 is enabled.
+@cindex echo of terminal input
 @end deftypevr
 
 @comment termios.h
@@ -797,6 +799,7 @@ Programs that cannot be interrupted interactively are very
 user-unfriendly.  If you clear this bit, your program should provide
 some alternate interface that allows the user to interactively send the
 signals associated with these characters.
+@cindex interactive signals, from terminal
 @end deftypevr
 
 @comment termios.h
@@ -1083,6 +1086,7 @@ terminal is passed to the application program, as described above.
 
 @node Line Control Functions
 @section Line Control Functions
+@cindex terminal line control functions
 
 These functions perform miscellanous control actions on terminal
 devices.  If any of these functions are called from a background process
@@ -1118,6 +1122,9 @@ The @var{filedes} is not associated with a terminal device.
 @end table
 @end deftypefun
 
+
+@cindex flushing terminal output queue
+@cindex terminal output queue, flushing
 @comment termios.h
 @comment POSIX.1
 @deftypefun int tcdrain (int @var{filedes})
@@ -1141,6 +1148,8 @@ The operation was interrupted by delivery of a signal.
 @end deftypefun
 
 
+@cindex flushing terminal input queue
+@cindex terminal input queue, flushing
 @comment termios.h
 @comment POSIX.1
 @deftypefun int tcflush (int @var{filedes}, int @var{queue})
@@ -1199,6 +1208,8 @@ output queue should be flushed.
 @end deftypevr
 
 
+@cindex flow control, terminal
+@cindex terminal flow control
 @comment termios.h
 @comment POSIX.1
 @deftypefun int tcflow (int @var{filedes}, int @var{action})

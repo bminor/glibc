@@ -35,6 +35,7 @@ optimized, your program may run faster too.
 
 @node Representation of Strings
 @section Representation of Strings
+@cindex string, representation of
 
 This section is a quick summary of string concepts for beginning C
 programmers.  It describes how character strings are represented in C
@@ -81,12 +82,12 @@ documentation about what your program intends to do with the string.
 
 The amount of memory allocated for the character array may extend past
 the null character that normally marks the end of the string.  In this
-document, the term @dfn{allocated size} is carefully used to refer to
+document, the term @dfn{allocation size} is carefully used to refer to
 the total amount of memory allocated for the string, while the term
 @dfn{length} refers to the number of characters up to (but not including)
 the terminating null character.
 @cindex length of string
-@cindex allocated size of string
+@cindex allocation size of string
 @cindex size of string
 @cindex string length
 @cindex string allocation
@@ -171,8 +172,11 @@ of strings and arrays, or to append the contents of one string to
 another.  These functions are declared in the header file
 @file{string.h}.
 @pindex string.h
-@cindex copying strings
+@cindex copying strings and arrays
 @cindex string copy functions
+@cindex array copy functions
+@cindex concatenating strings
+@cindex string concatenation functions
 
 A helpful way to remember the ordering of the arguments to the functions
 in this section is that it corresponds to an assignment expression, with
@@ -344,8 +348,11 @@ of the first characters in the strings that are not equivalent:  a
 negative value indicates that the first string is ``less'' than the
 second, while a positive value indicates that the first string is 
 ``greater''.
-@cindex comparing strings
-@cindex string comparison
+@cindex comparing strings and arrays
+@cindex string comparison functions
+@cindex array comparison functions
+@cindex predicates on strings
+@cindex predicates on arrays
 
 If you are only interested in using these functions as predicates, you
 might find it helpful to hide them behind a macro definition, like this:
@@ -454,7 +461,7 @@ strncmp ("hello, world", "hello, stupid world!!!", 5)
 @section Collation Functions
 
 @cindex collating strings
-@cindex string collation
+@cindex string collation functions
 
 In some locales, the conventions for lexicographic ordering differ from
 the strict numeric ordering of character codes.  For example, in Spanish
@@ -494,6 +501,7 @@ current locale's collation ordering, determined by the @code{LC_COLLATE}
 category.
 @end deftypefun
 
+@cindex converting string to collation order
 @comment string.h
 @comment ANSI
 @deftypefun size_t strxfrm (char *@var{to}, const char *@var{from}, size_t @var{size})
@@ -536,7 +544,7 @@ This section describes library functions which perform various kinds
 of searching operations on strings and arrays.  These functions are
 declared in the header file @file{string.h}.
 @pindex string.h
-@cindex searching strings
+@cindex search functions (for strings)
 @cindex string search functions
 
 @comment string.h
@@ -654,7 +662,7 @@ strpbrk ("hello, world", " \t\n,.;!?")
 
 @cindex tokenizing strings
 @cindex breaking a string into tokens
-@cindex finding tokens in a string
+@cindex parsing tokens from a string
 It's fairly common for programs to have a need to do some simple kinds
 of lexical analysis and parsing, such as splitting a command string up
 into tokens.  You can do this with the @code{strtok} function, declared

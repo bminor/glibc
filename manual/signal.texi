@@ -96,6 +96,7 @@ are discussed in @ref{Blocking Signals}.
 
 @node Signal Names
 @section Signal Names
+@cindex signal names
 
 Symbolic names for the various kinds of signals are defined in the
 header file @file{signal.h}.  Each is a macro wich standars for a
@@ -123,6 +124,7 @@ defined.
 
 @node Program Error Signals
 @subsection Program Error Signals
+@cindex program error signals
 
 The following signals are generated when a serious program error is
 detected by the operating system or the computer itself.  In general,
@@ -192,7 +194,7 @@ dereferencing a null or uninitialized pointer.  Another typical way of
 getting into a @code{SIGSEGV} situation is when you use a pointer to
 step through an array, but fail to check for the end of the array.
 @end deftypevr
-@cindex segment violation
+@cindex segmentation violation
 
 @comment signal.h
 @comment BSD
@@ -207,10 +209,12 @@ pointer.
 
 The name of this signal is an abbreviation for ``bus error''.
 @end deftypevr
+@cindex bus error
 
 
 @node Termination Signals
 @subsection Termination Signals
+@cindex program termination signals
 
 These signals are all used to tell a process to terminate, in one way
 or another.  They have different names because they're used for slightly
@@ -329,6 +333,7 @@ This signal typically indicates expiration of a timer that measures CPU
 time used by the current process.  The name is an abbreviation for
 ``virtual time alarm''.
 @end deftypevr
+@cindex virtual time alarm signal
 
 @comment signal.h
 @comment BSD
@@ -338,6 +343,7 @@ both CPU time used by the current process, and CPU time expended on
 behalf of the process by the system.  Such a timer is used to implement
 code profiling facilities, hence the name of this signal.
 @end deftypevr
+@cindex profiling alarm signal
 
 
 @node Asynchronous I/O Signals
@@ -355,6 +361,7 @@ for these signals is to ignore them.
 This signal is sent when a file descriptor is ready to perform input
 or output.
 @end deftypevr
+@cindex input/output signal
 
 @comment signal.h
 @comment BSD
@@ -362,6 +369,7 @@ or output.
 This signal is sent when ``urgent'' or out-of-band data arrives on a
 socket.  @xref{Out-of-Band Data}.
 @end deftypevr
+@cindex urgent data signal
 
 
 @node Miscellaneous Signals
@@ -405,6 +413,7 @@ in @ref{Signaling Another Process}.
 
 @node Job Control Signals
 @subsection Job Control Signals
+@cindex job control signals
 
 These signals are used to support job control.  If your system
 doesn't support job control, then these macros are defined but the
@@ -443,7 +452,7 @@ it is stopped, and for it to be ignored otherwise.
 The @code{SIGSTOP} signal stops the process.  It cannot be caught or
 ignored.
 @end deftypevr
-@cindex stop signals
+@cindex stop signal
 
 @comment signal.h
 @comment POSIX.1
@@ -457,6 +466,7 @@ This signal is generated when the user types the SUSP character
 (normally @kbd{C-z}).  For more information about terminal driver
 support, @pxref{Special Characters}.
 @end deftypevr
+@cindex interactive stop signal
 
 @comment signal.h
 @comment POSIX.1
@@ -468,6 +478,7 @@ read from the terminal, all of the processes in the job are sent a
 stop the process.  For more information about how this interacts with
 the terminal driver, @pxref{Access to the Controlling Terminal}.
 @end deftypevr
+@cindex terminal input signal
 
 @comment signal.h
 @comment POSIX.1
@@ -476,6 +487,7 @@ This is similar to @code{SIGTTIN}, but is used when a process in a
 background job attempts to write to the terminal.  Again, the default
 action is to stop the process.
 @end deftypevr
+@cindex terminal output signal
 
 While a process is stopped, no more signals can be delivered to it until
 it is continued, except @code{SIGKILL} signals and (obviously)
@@ -572,6 +584,7 @@ Default action is to ignore it.
 
 @node Signal Messages
 @subsection Signal Messages
+@cindex signal messages
 
 You can use the @code{strsignal} and @code{psignal} functions to get or
 print a message string describing a signal.  The prototype for
@@ -628,6 +641,7 @@ facilities and gives suggestions on which to use when.
 
 @node Basic Signal Handling
 @subsection Basic Signal Handling
+@cindex @code{signal} function
 
 The @code{signal} function provides a simple interface for establishing
 an action for a particular signal.  The function and associated macros
@@ -770,6 +784,7 @@ this purpose.
 
 @node Advanced Signal Handling
 @subsection Advanced Signal Handling
+@cindex @code{sigaction} function
 
 The @code{sigaction} function has the same basic effect as
 @code{signal}: to specify how a signal should be handled by the process.
@@ -920,8 +935,10 @@ else
   /* @r{A programmer-defined signal handler is in effect} */
 @end example
 
+
 @node Sigaction Flags
 @subsection Sigaction Flags
+@cindex @code{sigaction} flags
 
 This @code{sa_flags} member of the @code{sigaction} structure is a
 catch-all for special features.  Most of the time, you can simply use
@@ -964,6 +981,7 @@ an @code{EINTR} error instead of restarting.
 
 @node Initial Signal Actions
 @subsection Initial Signal Actions
+@cindex initial signal actions
 
 When a new process is created (@pxref{Creating a Process}), it inherits
 handling of signals from its parent process.  However, when you load a
@@ -1134,12 +1152,15 @@ a signal handler, you must either re-initialize them or else ensure that
 your signal handler won't be invoked while they are in an inconsistent
 state by blocking signals around the critical sections of your program.
 @xref{Blocking Signals}.
+@cindex non-local exit, from signal handler
 
 @strong{Incomplete:}  RMS suggests putting another example here.
 
 
 @node Handling Multiple Signals
 @subsection Handling Multiple Signals
+@cindex race conditions, relating to signals
+@cindex handling multiple signals
 
 What happens if another signal arrives when your signal handler function
 is running?
@@ -1184,6 +1205,7 @@ are using only the GNU system.
 
 @node Restrictions on Handler Functions
 @subsection Restrictions on Handler Functions
+@cindex restrictions on signal handler functions
 
 Handler functions usually don't do very much.  The recommended behavior
 is to just have the handler set an external variable that the program
@@ -1230,6 +1252,7 @@ those variables must be declared @code{volatile}.  This tells the
 compiler that the value of the variable might change asynchronously, and
 keeps it from making some kinds of optimizations that would be
 invalidated by such modifications.
+@cindex @code{volatile} declarations
 
 @item
 The only data type that can be accessed as an atomic operation is the
@@ -1259,14 +1282,17 @@ this implies.
 
 @node Generating Signals
 @section Generating Signals
+@cindex sending signals
+@cindex raising signals
+@cindex signals, generating
 
 Besides signals that are generated as a result of a hardware trap or
 interrupt, your program can explicitly send signals to itself or to
 another process.
 
 @menu
-* Raising a Signal::		Send yourself any desired signal.  *
-Signaling Another Process::	Send a signal to another process.
+* Raising a Signal::		Send yourself any desired signal.
+* Signaling Another Process::	Send a signal to another process.
 @end menu
 
 
@@ -1347,6 +1373,7 @@ main (void)
 @node Signaling Another Process
 @subsection Signaling Another Process
 
+@cindex killing a process
 The @code{kill} function can be used to send a signal to another process.
 In spite of its name, it can be used for a lot of things other than
 causing a process to terminate.  Some examples of situations where you
@@ -1473,6 +1500,7 @@ has the same effect as:
 raise (@var{sig})
 @end example
 
+@cindex interprocess communication, with signals
 Here is a longer example showing how signals can be used for
 interprocess communication.  This is what the @code{SIGUSR1} and
 @code{SIGUSR2} signals are provided for.  Since these signals are fatal
@@ -1550,6 +1578,7 @@ you can make a program block until a signal arrives.
 
 @node Blocking Signals
 @section Blocking Signals
+@cindex blocking signals
 
 Blocking a signal means telling the operating system to hold it and
 deliver it later.  Generally, a program does not block signals
@@ -1675,6 +1704,7 @@ The collection of signals that are currently blocked is called the
 create a new process (@pxref{Creating New Processes}), it inherits
 its parent's mask.
 @cindex signal mask
+@cindex process signal mask
 
 The prototype for the @code{sigprocmask} function is in @file{signal.h}.
 @pindex signal.h
@@ -1823,6 +1853,7 @@ void main (void)
 
 @node Blocking Signals in a Handler
 @subsection Blocking Signals in a Handler
+@cindex blocking signals, in a handler
 
 When a signal handler is invoked, you usually want to let it run to
 completion before another signal arrives.  From the moment the
@@ -1873,6 +1904,9 @@ the handler was entered.
 
 @node Checking for Pending Signals
 @subsection Checking for Pending Signals
+@cindex pending signals, checking for
+@cindex blocked signals, checking for
+@cindex checking for pending signals
 
 You can find out which signals are pending at any time by calling
 @code{sigpending}.  This function is declared in @file{signal.h}.
@@ -1925,6 +1959,9 @@ see one of them when you unblock this signal.
 
 @node Waiting for a Signal
 @section Waiting for a Signal
+@cindex waiting for a signal
+@cindex @code{sleep} function
+@cindex @code{pause} function
 
 If your program is driven by external events, or uses signals for
 synchronization, there are times you might want to suspend execution

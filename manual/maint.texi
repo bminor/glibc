@@ -4,7 +4,7 @@
 @menu
 * Installation::	How to configure, compile and install
 			 the GNU C library.
-* Bugs::		How to report bugs (if you want to get them fixed) and
+* Reporting Bugs::	How to report bugs (if you want to get them fixed) and
 			 other troubles you may have with the GNU C Library.
 
 * ansidecl::		ANSI and traditional C compatibility.
@@ -14,7 +14,7 @@
 @end menu
 @node Installation
 @appendixsec How to Install the GNU C Library
-@cindex installation
+@cindex installing the library
 
 Installation of the GNU C library is relatively simple.
 
@@ -36,7 +36,8 @@ waiting for it to finish.
 If the configuration is successful, it will say @samp{Successfully
 configured}.  If the configuration failed, it will say @samp{Failed in
 configuration}.  If the configuration fails, something's wrong.  Figure
-out what it is and fix it or report it as a bug (@pxref{Bugs}).@refill
+out what it is and fix it or report it as a bug (@pxref{Reporting
+Bugs}).@refill
 
 After successful configuration, simply run @code{make} to make the
 library and related things.  If all goes well, you will end up with the
@@ -45,8 +46,9 @@ files in the @file{ansi/} subdirectory, and traditional C versions of
 the header files in the @file{trad/} subdirectory.  Install these in
 appropriate places.
 
-@node Bugs
+@node Reporting Bugs
 @appendixsec Reporting Bugs
+@cindex reporting bugs
 
 There are probably bugs in the GNU C library.  If you report them,
 they will get fixed.  If you don't, no one will ever know about them

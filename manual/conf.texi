@@ -63,6 +63,7 @@ constant values.
 
 @strong{Incomplete:}  What does the GNU system do?
 
+@cindex limits, link count of files
 @comment limits.h
 @comment POSIX.1
 @deftypevr Macro int _POSIX_LINK_MAX
@@ -79,6 +80,7 @@ This is the actual implementation limit corresponding to
 particular implementation is constant for all files.
 @end deftypevr
 
+@cindex limits, terminal input queue
 @comment limits.h
 @comment POSIX.1
 @deftypevr Macro int _POSIX_MAX_CANON
@@ -112,6 +114,7 @@ This is the actual implementation limit corresponding to
 particular implementation is a constant for all files.
 @end deftypevr
 
+@cindex limits, file name length
 @comment limits.h
 @comment POSIX.1
 @deftypevr Macro int _POSIX_NAME_MAX
@@ -163,6 +166,7 @@ array in which to store a file name!  Use dynamic allocation
 (@pxref{Memory Allocation}) instead.
 @end deftypevr
 
+@cindex limits, pipe buffer size
 @comment limits.h
 @comment POSIX.1
 @deftypevr Macro int _POSIX_PIPE_BUF
@@ -353,6 +357,7 @@ Definitions for the following macros appear in the header file
 @strong{Incomplete:}  What does the GNU system do for the 
 implementation-defined macros?
 
+@cindex limits, program argument size
 @comment limits.h
 @comment POSIX.1
 @deftypevr Macro int _POSIX_ARG_MAX
@@ -370,6 +375,7 @@ This is the actual implementation limit corresponding to
 particular implementation is a constant.
 @end deftypevr
 
+@cindex limits, number of processes
 @comment limits.h
 @comment POSIX.1
 @deftypevr Macro int _POSIX_CHILD_MAX
@@ -386,6 +392,7 @@ This is the actual implementation limit corresponding to
 particular implementation is a constant.
 @end deftypevr
 
+@cindex limits, number of open files
 @comment limits.h
 @comment POSIX.1
 @deftypevr Macro int _POSIX_OPEN_MAX
@@ -418,6 +425,7 @@ This is the actual implementation limit corresponding to
 particular implementation is a constant.
 @end deftypevr
 
+@cindex limits, time zone name length
 @comment limits.h
 @comment POSIX.1
 @deftypevr Macro int _POSIX_TZNAME_MAX
@@ -434,6 +442,7 @@ This is the actual implementation limit corresponding to
 particular implementation is a constant.
 @end deftypevr
 
+@cindex limits, number of supplementary group IDs
 @comment limits.h
 @comment POSIX.1
 @deftypevr Macro int _POSIX_NGROUPS_MAX

@@ -66,6 +66,8 @@ rather than the objects themselves.
 
 @node Standard Streams
 @section Standard Streams
+@cindex standard streams
+@cindex streams, standard
 
 When the @code{main} function of your program is invoked, it already has
 some predefined streams open and available for use.  These represent the
@@ -81,7 +83,7 @@ These streams are declared in the header file @file{stdio.h}.
 This macro expands into an expression that represents the @dfn{standard
 input} stream, the normal source of input for the program.
 @end deftypevr
-@cindex standard input
+@cindex standard input stream
 
 @comment stdio.h
 @comment ANSI
@@ -89,6 +91,7 @@ input} stream, the normal source of input for the program.
 This macro expands into an expression that represents the @dfn{standard
 output} stream, the destination for normal output from the program.
 @end deftypevr
+@cindex standard output stream
 
 @comment stdio.h
 @comment ANSI
@@ -97,6 +100,7 @@ This macro expands into an expression that represents the @dfn{standard
 error} stream, the destination for error and diagnostic messages issued
 by the program.
 @end deftypevr
+@cindex standard error stream
 
 In the GNU system, you can specify what files or processes correspond to
 these streams using the pipe and redirection facilities provided by the
@@ -110,10 +114,12 @@ It is probably not a good idea to close any of these streams.
 @node Opening and Closing Streams
 @section Opening and Closing Streams
 
+@cindex opening a stream
 Opening a file with the @code{fopen} function creates a new stream and
 establishes a connection between the stream and a file.  This may
 involve creating a new file.  
 
+@cindex closing a stream
 When a stream is closed with @code{fclose}, the connection between the
 stream and the file is removed.  After you have closed a stream, you
 cannot perform any additional operations on it any more.
@@ -244,6 +250,7 @@ fails, a null pointer is returned; otherwise, @code{freopen} returns
 @node Character Output
 @section Character Output
 
+@cindex writing to a stream, by characters
 This section describes functions for performing character- and
 line-oriented output.  Largely for historical compatibility, there are
 several variants of these functions, but as a matter of style (and for
@@ -309,6 +316,7 @@ This function writes the word @var{w} (that is, an @code{int}) to
 @node Character Input
 @section Character Input
 
+@cindex reading from a stream, by characters
 This section describes functions for performing character- and
 line-oriented input.  Again, there are several variants of these
 functions, some of which are considered obsolete stylistically.
@@ -433,7 +441,8 @@ It's provided for compatibility with SVID.
 
 @cindex format string, for @code{printf}
 @cindex template, for @code{printf}
-@cindex formatted output
+@cindex formatted output to a stream
+@cindex writing to a stream, formatted
 The functions described in this section (@code{printf} and related
 functions) provide a convenient way to perform formatted output.  You
 call @code{printf} with a @dfn{format string} or @dfn{template} that
@@ -472,7 +481,7 @@ Ordinary characters in the template string are simply written to the
 output stream as-is, while @dfn{conversion specifications} introduced by
 a @samp{%} character in the template cause subsequent arguments to be
 formatted and written to the output stream.  For example,
-@cindex conversion specifications (printf)
+@cindex conversion specifications (@code{printf})
 
 @example
 int pct = 37;
@@ -553,7 +562,7 @@ initial @samp{%} character followed in sequence by:
 @item 
 Zero or more @dfn{flag characters} that modify the normal behavior of
 the conversion specification.
-@cindex flag character (printf)
+@cindex flag character (@code{printf})
 
 @item 
 An optional decimal integer specifying the @dfn{minimum field width}.
@@ -562,7 +571,7 @@ is padded with spaces to the specified width.  This is a @emph{minimum}
 value; if the normal conversion produces more characters than this, the
 field is @emph{not} truncated.  Normally, the output is right-justified
 within the field.
-@cindex minimum field width (printf)
+@cindex minimum field width (@code{printf})
 
 The GNU library's version of @code{printf} also allows you to specify a
 field width of @samp{*}.  This means that the next argument in the
@@ -575,7 +584,7 @@ An optional @dfn{precision} to specify the number of digits to be
 written for the numeric conversions.  If the precision is specified, it
 consists of a period (@samp{.}) followed optionally by a decimal integer
 (which defaults to zero if omitted).
-@cindex precision (printf)
+@cindex precision (@code{printf})
 
 The GNU library's version of @code{printf} also allows you to specify a
 precision of @samp{*}.  This means that the next argument in the
@@ -590,7 +599,7 @@ data type of the corresponding argument if it differs from the default
 type.  (For example, the integer conversions assume a type of @code{int},
 but you can use the same conversions with a type modifier to print
 @code{long int} or @code{short int} objects.)
-@cindex type modifier character (printf)
+@cindex type modifier character (@code{printf})
 
 @item
 A character that specifies the conversion to be applied.
@@ -603,6 +612,7 @@ they use.
 
 @node Table of Output Conversions
 @subsection Table of Output Conversions
+@cindex output conversions, for @code{printf}
 
 Here is a table summarizing what all the different conversions do:
 
@@ -1096,6 +1106,9 @@ eprintf ("The file %s does not exist.\n", filename);
 
 @node Customizing Printf
 @section Customizing Printf
+@cindex customizing @code{printf}
+@cindex defining new @code{printf} conversions
+@cindex extending @code{printf}
 
 The GNU C library lets you define new conversion specifiers for 
 @code{printf} format templates.  To do this, you must include the
@@ -1269,6 +1282,7 @@ can also return a value of @code{-1} to indicate an error.
 
 @node Parsing a Format Template
 @subsection Parsing a Format Template
+@cindex parsing a format template
 
 You can use the function @code{parse_printf_format} to obtain information
 about the number and types of arguments that are expected by a format
@@ -1484,7 +1498,8 @@ The output produced by this program looks like:
 @node Formatted Input
 @section Formatted Input
 
-@cindex formatted input
+@cindex formatted input from a stream
+@cindex reading from a stream, formatted
 @cindex format string, for @code{scanf}
 @cindex template, for @code{scanf}
 The functions described in this section (@code{scanf} and related
@@ -1519,6 +1534,7 @@ input conversions as there is for the corresponding output conversions.
 Ordinary, non-whitespace characters in the template are expected to
 match characters in the input stream exactly, but a matching failure is
 distinct from an input error on the stream.
+@cindex conversion specifications (@code{scanf})
 
 Another area of difference between @code{scanf} and @code{printf} is
 that you must remember to supply pointers rather than immediate values
@@ -1594,7 +1610,7 @@ suppressed.  If this flag appears, input is read from the stream and
 matched against the conversion specification in the usual way, but no
 optional argument is used, no assignment takes place, and the count
 of successful assignments is not incremented.
-@cindex flag character (scanf)
+@cindex flag character (@code{scanf})
 
 @item
 An optional decimal integer that specifies the @dfn{maximum field
@@ -1603,14 +1619,14 @@ this maximum is reached or when a non-matching character is found,
 whichever happens first.  Most conversions discard initial whitespace
 characters (those that don't are explicitly documented), and these
 discarded characters don't count towards the maximum field width.
-@cindex maximum field width (scanf)
+@cindex maximum field width (@code{scanf})
 
 @item
 An optional @dfn{type modifier character}.  For example, you can
 specify a type modifier of @samp{l} with integer conversions such as
 @samp{%d} to specify that the argument is a pointer to a @code{long int}
 rather than a pointer to an @code{int}.
-@cindex type modifier character (scanf)
+@cindex type modifier character (@code{scanf})
 
 @item
 A character that specifies the conversion to be applied.
@@ -1623,6 +1639,7 @@ they use.
 
 @node Table of Input Conversions
 @subsection Table of Input Conversions
+@cindex input conversions, for @code{scanf}
 
 Here is a table that summarizes the various conversion specifications:
 
@@ -1956,8 +1973,10 @@ This section describes how to do input and output operations on blocks
 of data.  You can use these functions to read and write binary data, as
 well as to read and write text in fixed-size blocks instead of by
 characters or lines.
-@cindex binary input/output
-@cindex block input/output
+@cindex binary i/o to a stream
+@cindex block i/o to a stream
+@cindex reading from a stream, by blocks
+@cindex writing to a stream, by blocks
 
 Binary files are typically used to read and write blocks of data in the
 same format as is used to represent the data in a running program.  In
@@ -1997,10 +2016,10 @@ only if a write error occurs.
 @end deftypefun
 
 
-
 @node End-Of-File and Errors
 @section End-Of-File and Errors
 
+@cindex end-of-file, on a stream
 Many of the functions described in this chapter return the value of the
 macro @code{EOF} to indicate unsuccessful completion of the operation.
 Since @code{EOF} is used to report both end-of-file and random errors,
@@ -2062,6 +2081,9 @@ descriptors, @pxref{Low-Level Input/Output}.
 
 @node File Positioning
 @section File Positioning
+@cindex file positioning on a stream
+@cindex positioning a stream
+@cindex seeking on a stream
 
 You can use the functions in this section to inquire about or modify the
 file position indicator associated with a stream; @pxref{Input/Output
@@ -2172,7 +2194,7 @@ A text stream is divided into @dfn{lines} which are terminated by
 newline (@code{'\n'}) characters, while a binary stream is simply a long
 series of characters.  A text stream must be able to handle lines up to
 254 characters long (including the terminating newline character).
-@cindex lines (in a file)
+@cindex lines (in a text file)
 
 @item
 A text stream can (portably) consist only of printing
@@ -2409,7 +2431,7 @@ not need to worry about this in the GNU system.
 After opening a stream (but before any other operations have been
 performed on it), you can explicitly specify what kind of buffering you
 want it to have using the @code{setvbuf} function.
-@cindex buffering, specifying
+@cindex buffering, controlling
 
 Implementations are not required to actually support changes in the
 buffering mode, and requests to do so may simply fail.

@@ -34,6 +34,8 @@ for which there are no equivalents on streams.
 @node Opening and Closing Files
 @section Opening and Closing Files
 
+@cindex opening a file descriptor
+@cindex closing a file descriptor
 This section describes the primitives for opening and closing files
 using file descriptors.  The @code{open} and @code{creat} functions are
 declared in the header file @file{fcntl.h}, while @code{close} is
@@ -223,6 +225,7 @@ read or written in a single operation.  It is similar to @code{size_t},
 but must be a signed type.
 @end deftp
 
+@cindex reading from a file descriptor
 @comment unistd.h
 @comment POSIX.1
 @deftypefun ssize_t read (int @var{filedes}, void *@var{buffer}, size_t @var{size})
@@ -237,6 +240,7 @@ file or if there aren't that many bytes immediately available.
 The exact behavior depends on what kind of file it is.  A value of zero
 indicates end-of-file (except if the value of the @var{size} argument
 is also zero).
+@cindex end-of-file, on a file descriptor
 
 In case of an error, @code{read} returns @code{-1}.  The following
 @code{errno} error conditions are defined for this function:
@@ -268,6 +272,7 @@ The @code{read} function is the underlying primitive for all of the
 functions that read from streams, such as @code{fgetc}.
 @end deftypefun
 
+@cindex writing to a file descriptor
 @comment unistd.h
 @comment POSIX.1
 @deftypefun ssize_t write (int @var{filedes}, const void *@var{buffer}, size_t @var{size})
@@ -335,6 +340,9 @@ This is an arithmetic data type used to represent file sizes.
 In the GNU system, this is equivalent to @code{fpos_t} or @code{long int}.
 @end deftp
 
+@cindex file positioning on a file descriptor
+@cindex positioning a file descriptor
+@cindex seeking on a file descriptor
 @comment unistd.h
 @comment POSIX.1
 @deftypefun off_t lseek (int @var{filedes}, off_t @var{offset}, int @var{whence})
@@ -375,6 +383,10 @@ streams instead of file descriptors.
 
 @node File Descriptors and Streams
 @section File Descriptors and Streams
+@cindex converting file descriptor to stream
+@cindex converting stream to file descriptor
+@cindex extracting file descriptor from stream
+@cindex creating stream from file descriptor
 
 The functions described in this chapter deal with open files by means of
 integer file descriptors.  These are distinct from streams.  Streams are
@@ -423,6 +435,7 @@ is not valid), @code{-1} is returned instead.
 @end deftypefun
 
 @cindex standard file descriptors
+@cindex file descriptors, standard
 There are also symbolic constants defined in @file{unistd.h} for the
 file descriptors belonging to the standard streams @code{stdin},
 @code{stdout}, and @code{stderr}; @pxref{Standard Streams}.
@@ -434,6 +447,7 @@ file descriptors belonging to the standard streams @code{stdin},
 This macro has value @code{0}, which is the file descriptor for
 standard input.
 @end deftypevr
+@cindex standard input file descriptor
 
 @comment unistd.h
 @comment POSIX.1
@@ -441,6 +455,7 @@ standard input.
 This macro has value @code{1}, which is the file descriptor for
 standard output.
 @end deftypevr
+@cindex standard output file descriptor
 
 @comment unistd.h
 @comment POSIX.1
@@ -448,6 +463,7 @@ standard output.
 This macro has value @code{2}, which is the file descriptor for
 standard error output.
 @end deftypevr
+@cindex standard error file descriptor
 
 Because you can have multiple file descriptors and streams pointing to
 the same open file, you have to be very careful about mixing operations
@@ -477,6 +493,9 @@ descriptor instead of trying to treat it as a stream.
 
 @node Waiting for Input or Output
 @section Waiting for Input or Output
+@cindex waiting for input or output
+@cindex multiplexing input
+@cindex input from multiple files
 
 Sometimes a program needs to accept input on multiple input channels.
 For example, some workstations may have devices such as a digitizing
@@ -498,6 +517,7 @@ descriptors, or until a timer expires.  This facility is declared in
 the header file @file{sys/types.h}.
 @pindex sys/types.h
 
+@cindex file descriptor sets, for @code{select}
 The file descriptor sets for the @code{select} function are specified
 as @code{fd_set} objects.  Here is the description of the data type
 and some macros for manipulating these objects.
@@ -636,6 +656,8 @@ input from multiple sockets in @ref{Byte Stream Socket Example}.
 @node Control Operations on Files
 @section Control Operations on Files
 
+@cindex control operations on files
+@cindex @code{fcntl} function
 This section describes how you can perform various other operations on
 file descriptors, such as inquiring about or setting flags describing
 the status of the file descriptor, manipulating record locks, and the
@@ -753,7 +775,6 @@ This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should @dfn{duplicate} the file descriptor received as the
 first argument.  The new file descriptor refers to the same open file,
 but can have its own set of file descriptor flags.
-@cindex duplicating a file descriptor
 
 The form of the call in this case is:
 
@@ -878,6 +899,7 @@ macro with the documentation for the @code{exec} functions, with only
 a cross-reference here.  But I think the current organization makes
 more sense.
 @end deftypevr
+@cindex close-on-exec (file descriptor flag)
 
 If you want to modify the file descriptor flags, you should get the
 current flags with @code{F_GETFD} and modify the value.  Don't assume
@@ -954,6 +976,7 @@ This macro is usable as a flag to @code{open} only.  It expands into a
 bit mask value; if this bit is set, it specifies that the file should be
 created if it doesn't already exist.
 @end deftypevr
+@cindex create on open (file status flag)
 
 @comment fcntl.h
 @comment POSIX.1
@@ -962,6 +985,7 @@ This macro is usable as a flag to @code{open} only.  It's a bit mask
 value that specifies exclusive use of the new file.  If this bit is set
 and the file already exists, @code{open} reports an error.
 @end deftypevr
+@cindex exclusive use (file status flag)
 
 @comment fcntl.h
 @comment POSIX.1
@@ -970,6 +994,7 @@ This macro is usable as a flag to @code{open} only.  If this bit is set,
 it prevents the new file from becoming the controlling terminal of the
 process that opens it.
 @end deftypevr
+@cindex no controlling terminal (file status flag)
 
 @comment fcntl.h
 @comment POSIX.1
@@ -980,6 +1005,7 @@ opened.  If this bit isn't set, then parts of the file that aren't
 explicitly overwritten remain in place with their original contents
 intact.
 @end deftypevr
+@cindex truncate on open (file status flag)
 
 @comment fcntl.h
 @comment POSIX.1
@@ -988,6 +1014,7 @@ This macro is a bit mask value that specifies append mode for the file.
 If this bit is set, then writing happens at the end of the file only.
 You can use this flag with both @code{open} and @code{fcntl}.
 @end deftypevr
+@cindex append mode (file status flag)
 
 @comment fcntl.h
 @comment POSIX.1
@@ -1000,6 +1027,7 @@ requests can also return immediately with a failure status if the output
 can't be written immediately.  You can use this flag with both
 @code{open} and @code{fcntl}.
 @end deftypevr
+@cindex non-blocking mode (file status flag)
 
 @comment fcntl.h
 @comment BSD
@@ -1285,6 +1313,7 @@ the file by programs that don't use the lock protocol.
 @node Interrupt-Driven Input
 @section Interrupt-Driven Input
 
+@cindex interrupt-driven input
 If you set the @code{FASYNC} status flag on a file descriptor
 (@pxref{File Status Flags}), a @code{SIGIO} signal is sent whenever
 input or output becomes possible on that file descriptor.  The process

@@ -90,6 +90,7 @@ might be more appropriate than @code{HUGE_VAL} for many uses.
 
 @node Trigonometric Functions
 @section Trigonometric Functions
+@cindex trignometric functions
 
 @strong{Incomplete:}  What font convention should be used for things
 like ``pi'' and ``e''?
@@ -143,6 +144,7 @@ negative @code{HUGE_VAL}.
 
 @node Inverse Trigonometric Functions
 @section Inverse Trigonometric Functions
+@cindex inverse trigonmetric functions
 
 These are the usual arc sine, arc cosine, and arc tangent functions.
 
@@ -205,6 +207,9 @@ function is not defined in this case.
 
 @node Exponentiation and Logarithms
 @section Exponentiation and Logarithms
+@cindex exponentiation functions
+@cindex power functions
+@cindex logarithm functions
 
 @comment math.h
 @comment ANSI
@@ -263,6 +268,7 @@ An underflow or overflow condition was detected in the result.
 @end table
 @end deftypefun
 
+@cindex square root function
 @comment math.h
 @comment ANSI
 @deftypefun double sqrt (double @var{x})
@@ -277,6 +283,7 @@ be a complex number.
 @end table
 @end deftypefun
 
+@cindex cube root function
 @comment math.h
 @comment GNU
 @deftypefun double cbrt (double @var{x})
@@ -321,6 +328,7 @@ is very small.
 
 @node Hyperbolic Functions
 @section Hyperbolic Functions
+@cindex hyperbolic functions
 
 The functions in this section are related to the exponential and
 functions; @pxref{Exponentiation and Logarithms}.
@@ -357,6 +365,8 @@ was detected.
 This function returns the hyperbolic tangent of @var{x}.
 @end deftypefun
 
+@cindex inverse hyperbolic functions
+
 @comment math.h
 @comment GNU
 @deftypefun double asinh (double @var{x})
@@ -381,6 +391,7 @@ the absolute value of the argument is greater than or equal to @code{1},
 
 @node Normalization Functions
 @section Normalization Functions
+@cindex normalization functions (floating-point)
 
 The functions described in this section are primarily provided as a way
 to efficiently perform certain low-level manipulations on floating point
@@ -440,6 +451,9 @@ greater than or equal to @code{1}, but less than @code{2}.
 
 @node Rounding and Remainder Functions
 @section Rounding and Remainder Functions
+@cindex rounding functions
+@cindex remainder functions
+@cindex converting floats to integers
 
 The functions listed here perform operations such as rounding, 
 truncation, and remainder computation.
@@ -654,6 +668,7 @@ The return value is the previous value of the state information array.
 
 @node Integer Division
 @section Integer Division
+@cindex integer division functions
 
 This section describes functions for performing integer division.
 To use these facilities, you should include the header file
@@ -725,6 +740,7 @@ structure of type @code{ldiv}.
 
 @node Absolute Value
 @section Absolute Value
+@cindex absolute value functions
 
 These functions are provided for obtaining the absolute value of
 integer values.  Prototypes for @code{abs} and @code{abs} are declared
@@ -758,11 +774,51 @@ This function returns the absolute value of the floating-point number
 There is also the function @code{cabs} for computing the absolute value
 of a complex number; @pxref{Exponentiation and Logarithms}.
 
+
+@node Predicates on Floats
+@section Predicates on Floats
+@cindex predicates on floats
+
+This section describes some miscellaneous test functions on doubles.
+Prototypes for these functions appear in @file{math.h}.
+@pindex math.h
+
+@comment math.h
+@comment GNU
+@deftypefun int isinf (double @var{x})
+This function returns @code{-1} if @var{x} represents negative infinity,
+@code{1} if @var{x} represents positive infinity, and @code{0} otherwise.
+@end deftypefun
+
+@comment math.h
+@comment GNU
+@deftypefun int isnan (double @var{x})
+This function returns a nonzero value if @var{x} is the ``not a number''
+value, and zero otherwise.
+@end deftypefun
+
+@comment math.h
+@comment GNU
+@deftypefun int finite (double @var{x})
+This function returns a nonzero value if @var{x} is finite or the ``not
+a number'' value, and zero otherwise.
+@end deftypefun
+
+@comment math.h
+@comment GNU
+@deftypefun double infnan (int @var{error})
+@strong{Incomplete:}  I don't understand what this function does.
+@end deftypefun
+
+@strong{Portability Note:} The functions listed in this section are GNU
+extensions.
+
 @node Parsing of Numbers
 @section Parsing of Numbers
-@cindex parsing of numbers
-@cindex string conversion
-@cindex number syntax
+@cindex parsing numbers (in formatted input)
+@cindex converting strings to numbers
+@cindex number syntax, parsing
+@cindex syntax, for reading numbers
 
 This section describes functions for ``reading'' integer and
 floating-point numbers from a string.  In many cases, it is more
@@ -782,7 +838,6 @@ These functions are declared in @file{stdlib.h}.
 
 @node Parsing of Integers
 @subsection Parsing of Integers
-@cindex parsing of integers
 
 @comment stdlib.h
 @comment ANSI
@@ -868,44 +923,6 @@ returns its value as an @code{int} rather than @code{long int}.  The
 instead.
 @end deftypefun
 
-@node Predicates on Floats
-@subsection Predicates on Floats
-
-This section describes some miscellaneous test functions on doubles.
-Prototypes for these functions appear in @file{math.h}.
-@pindex math.h
-
-@comment math.h
-@comment GNU
-@deftypefun int isinf (double @var{x})
-This function returns @code{-1} if @var{x} represents negative infinity,
-@code{1} if @var{x} represents positive infinity, and @code{0} otherwise.
-@end deftypefun
-
-@comment math.h
-@comment GNU
-@deftypefun int isnan (double @var{x})
-This function returns a nonzero value if @var{x} is the ``not a number''
-value, and zero otherwise.
-@end deftypefun
-
-@comment math.h
-@comment GNU
-@deftypefun int finite (double @var{x})
-This function returns a nonzero value if @var{x} is finite or the ``not
-a number'' value, and zero otherwise.
-@end deftypefun
-
-@comment math.h
-@comment GNU
-@deftypefun double infnan (int @var{error})
-@strong{Incomplete:}  I don't understand what this function does.
-@end deftypefun
-
-
-
-@strong{Portability Note:} The functions listed in this section are GNU
-extensions.
 
 @node Parsing of Floats
 @subsection Parsing of Floats

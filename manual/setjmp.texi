@@ -1,6 +1,7 @@
 @node Non-Local Exits
 @chapter Non-Local Exits
 @cindex non-local exits
+@cindex long jumps
 
 Sometimes when your program detects an unusual situation inside a deeply
 nested set of function calls, you would like to be able to immediately

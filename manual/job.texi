@@ -166,6 +166,7 @@ functions, @pxref{Input and Output Primitives}.
 
 @node Orphaned Process Groups
 @section Orphaned Process Groups
+@cindex orphaned process group
 
 When a controlling process terminates, its terminal becomes free and a
 new session can be established on it.  This could cause a problem if any
@@ -179,7 +180,6 @@ establish a handler for it (@pxref{Signal Handling}), it can continue
 running even after its controlling process terminates.  A process group
 that continues running even after its session leader has terminated is
 called an @dfn{orphaned process group}.
-@cindex orphaned process group
 
 Processes in an orphaned process group cannot read from or write to the
 controlling terminal.  Attempts to do so will fail with an @code{EIO}
@@ -328,8 +328,9 @@ int job_is_completed (Job *j)
 
 @node Initializing the Shell
 @subsection Initializing the Shell
-
+@cindex job control, enabling
 @cindex subshell
+
 When a shell program that normally performs job control is started, it
 has to be careful in case it has been invoked from another shell that is
 already doing its own job control.  
@@ -421,6 +422,7 @@ void init_shell (void)
 
 @node Launching Jobs
 @subsection Launching Jobs
+@cindex launching jobs
 
 Once the shell has taken responsibility for performing job control on
 its controlling terminal, it can launch jobs in response to commands
@@ -955,6 +957,8 @@ all active jobs or to send a signal (such as @code{SIGKILL}) to a job.
 
 @node Job Control Functions
 @section Job Control Functions
+@cindex process group functions
+@cindex job control functions
 
 This section contains detailed descriptions of the functions relating
 to job control.
@@ -971,6 +975,7 @@ to job control.
 
 @node Controlling Terminal Identification
 @subsection Controlling Terminal Identification
+@cindex controlling terminal, determining
 
 You can use the @code{ctermid} function to get a file name that
 corresponds to the controlling terminal for the current process.  This

@@ -22,6 +22,8 @@ are affected by the current locale.  @xref{Localization}.
 @section Classification of Characters
 @cindex character testing
 @cindex classification of characters
+@cindex predicates on characters
+@cindex character predicates
 
 This section explains the library functions for classifying characters.
 For example, @code{isalpha} is the function to test for an alphabetic
@@ -176,13 +178,16 @@ is not a printing character).
 @comment ctype.h
 @comment SVID, GNU
 @deftypefun int isascii (int @var{c})
-Returns true if @var{c} is a 7-bit @code{unsigned char} value that will fit
+Returns true if @var{c} is a 7-bit @code{unsigned char} value that fits
 into the US/UK ASCII character set.
 @end deftypefun
 
 
 @node Case Conversion
 @section Case Conversion
+@cindex character case conversion
+@cindex case conversion of characters
+@cindex converting case of characters
 
 This section explains the library functions for performing conversions
 such as case mappings on characters.  For example, @code{toupper}
@@ -222,7 +227,7 @@ upper-case letter.  Otherwise @var{c} is returned unchanged.
 @comment SVID, GNU
 @deftypefun int toascii (int @var{c})
 This function converts @var{c} to a 7-bit @code{unsigned char} value
-that will fit into the US/UK ASCII character set, by clearing the
+that fits into the US/UK ASCII character set, by clearing the
 high-order bits.
 @end deftypefun
 

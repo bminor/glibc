@@ -102,6 +102,9 @@ syntax errors (@pxref{File Name Errors}).
 
 @node Accessing Directories
 @section Accessing Directories
+@cindex accessing directories
+@cindex reading from a directory
+@cindex directories, accessing
 
 The facilities described in this section let you read the contents of a
 directory file.  This is useful if you want your program to list the
@@ -306,6 +309,7 @@ primitives for the @code{ln} shell command.
 @subsection Hard Links
 
 @cindex hard link
+@cindex link, hard
 The @code{link} function makes what is called a @dfn{hard link}.  A hard
 link is indistinguishible from the initial directory entry for the file.
 Creating a new link to a file does not copy the contents of the file; it
@@ -376,7 +380,9 @@ behavior?
 @subsection Symbolic Links
 
 @cindex soft link
+@cindex link, soft
 @cindex symbolic link
+@cindex link, symbolic
 The GNU system also supports @dfn{soft links} or @dfn{symbolic links}.
 While a hard link is essentially a pointer to a file, a symbolic link is
 a pointer to a file name.  Unlike hard links, symbolic links can be made
@@ -473,6 +479,7 @@ circular symbolic links to directories.
 @strong{Portability Note:}  The @code{symlink} and @code{readlink}
 functions are provided for compatibility with BSD.
 
+
 @node Removing and Renaming Files
 @section Removing and Renaming Files
 
@@ -485,7 +492,7 @@ Prototypes for @code{remove} and @code{rename} are in the header file
 @pindex unistd.h
 @pindex stdio.h
 
-@cindex removing directory links
+@cindex removing a file
 @cindex unlinking a file from a directory
 @comment unistd.h
 @comment POSIX.1
@@ -527,7 +534,6 @@ file system, and can't be modified.
 @end table
 @end deftypefun
 
-@cindex removing a file
 @comment stdio.h
 @comment ANSI
 @deftypefun int remove (const char *@var{filename})
@@ -610,6 +616,10 @@ defined here.
 
 @node Making and Removing Directories
 @section Making and Removing Directories
+@cindex creating a directory
+@cindex removing a directory
+@cindex directories, creating
+@cindex directories, removing
 
 @pindex mkdir
 @pindex rmdir
@@ -1361,6 +1371,9 @@ The file resides on a read-only file system.
 
 @node File Ownership
 @subsection File Ownership
+@cindex file ownership
+@cindex owner of a file
+@cindex group owner of a file
 
 When a file is created, its owner user ID is set to be the same as the
 effective user ID of the process that creates it.  Its group owner ID
@@ -1563,6 +1576,8 @@ function.
 
 @node Making Special Files
 @section Making Special Files
+@cindex creating special files
+@cindex special files
 
 The @code{mknod} function is the primitive for making special files,
 such as files that correspond to devices.  The GNU library includes

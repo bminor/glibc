@@ -1,5 +1,7 @@
 @node Memory Allocation
 @chapter Memory Allocation
+@cindex memory allocation
+@cindex storage allocation
 
 The GNU system provides several methods for allocating memory space
 under explicit program control.  They vary in generality and in
@@ -12,7 +14,7 @@ The @code{malloc} facility allows fully general dynamic allocation.
 @xref{Unconstrained Allocation}.
 
 @item
-Obstacks are another facility, less general than malloc but more
+Obstacks are another facility, less general than @code{malloc} but more
 efficient and convenient.  @xref{Obstacks}.
 
 @item
@@ -117,6 +119,9 @@ address of the space.  Then you can use the operators @samp{*} and
 
 @node Unconstrained Allocation
 @section Unconstrained Allocation
+@cindex unconstrained storage allocation
+@cindex @code{malloc} function
+@cindex heap, dynamic allocation from
 
 The most general dynamic allocation facility is @code{malloc}.  It allows
 you to allocate blocks of memory of any size at any time, make them bigger
@@ -145,7 +150,7 @@ or smaller at any time, and free the blocks in any order (or never).
 
 @node Basic Storage Allocation
 @subsection Basic Storage Allocation
-@cindex allocation (random-access)
+@cindex allocation of memory with @code{malloc}
 
 To allocate a block of memory, call @code{malloc}.  The prototype for
 this function is in @file{stdlib.h}.
@@ -244,7 +249,8 @@ the Size of a Block}).
 
 @node Freeing Allocated Memory
 @subsection Freeing Allocated Memory
-@cindex freeing (random-access)
+@cindex freeing memory allocated with @code{malloc}
+@cindex heap, freeing memory from
 
 When you no longer need a block that you got with @code{malloc}, use the
 function @code{free} to make the block available to be allocated again.
@@ -301,7 +307,7 @@ when you are not going to allocate any more.
 
 @node Changing the Size of a Block
 @subsection Changing the Size of a Block
-@cindex changing size
+@cindex changing the size of a block (@code{malloc})
 
 Often you do not know for certain how big a block you will ultimately need
 at the time you must begin to use the block.  For example, the block might
@@ -412,7 +418,7 @@ purposes as possible.
 @subsection Allocation with Specified Alignment
 
 @cindex page boundary
-@cindex alignment (with malloc)
+@cindex alignment (with @code{malloc})
 The address of a block returned by @code{malloc} or @code{realloc} in
 the GNU system is always a multiple of eight.  If you need a block whose
 address is a multiple of a higher power of two than that, use
@@ -471,6 +477,7 @@ your program.  To do this automatically, link with @samp{-lmcheck}.
 
 @node Storage Allocation Hooks
 @subsection Storage Allocation Hooks
+@cindex allocation hooks, for @code{malloc}
 
 The GNU C library lets you modify the behavior of @code{malloc},
 @code{realloc}, and @code{free} by specifying appropriate hook
@@ -555,6 +562,7 @@ installing such hooks.
 @node Storage Allocation Statistics
 @subsection Storage Allocation Statistics
 
+@cindex allocation statistics
 In the GNU C library, you can get information about dynamic storage
 allocation by calling the @code{mstats} function.  This function and
 its associated data type are declared in @file{malloc.h}.
@@ -843,8 +851,6 @@ obstacks, or non-obstack allocation, can reuse the space of the chunk.
 
 @node Preparing to Use Obstacks
 @subsection Preparing to Use Obstacks
-@cindex header file
-@cindex linking
 
 @strong{Incomplete:}  This section needs to be rewritten when it is
 decided whether obstacks will be part of the C library.
@@ -943,7 +949,7 @@ unwanted recalculation.
 @node Growing Objects
 @subsection Growing Objects
 @cindex growing objects (in obstacks)
-@cindex changing size (in obstacks)
+@cindex changing the size of a block (obstacks)
 
 Because storage in obstack chunks is used sequentially, it is possible to
 build up an object step by step, adding one or more bytes at a time to the
@@ -1377,6 +1383,8 @@ Address just after the end of the currently growing object.
 @node Automatic Storage with Variable Size
 @section Automatic Storage with Variable Size
 @cindex automatic freeing
+@cindex @code{alloca} function
+@cindex automatic storage with variable size
 
 The function @code{alloca} supports a kind of half-dynamic allocation in
 which blocks are allocated dynamically but freed automatically.

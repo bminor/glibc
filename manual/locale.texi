@@ -47,7 +47,7 @@ those functions.
 @section Attributes of a Locale
 
 @cindex categories, of locale attributes
-@cindex locale, attribute categories
+@cindex locale attribute categories
 The current locale is modified by selecting groups or categories
 of attributes from other locales, rather than by specifying values for
 individual parameters.  You can mix different attribute categories

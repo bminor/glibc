@@ -114,10 +114,8 @@ portability problems.
 @cindex POSIX
 @cindex POSIX.1
 @cindex IEEE Std 1003.1
-@cindex 1003.1 (IEEE Std)
 @cindex POSIX.2
 @cindex IEEE Std 1003.2
-@cindex 1003.2 (IEEE Std)
 
 The GNU library is also compatible with the IEEE @dfn{POSIX} family of
 standards, known more formally as the @dfn{Portable Operating System
@@ -166,10 +164,10 @@ material has been incorporated.
 @node Berkeley Unix
 @subsection Berkeley Unix
 @cindex BSD Unix
-@cindex 4.2 BSD Unix
-@cindex 4.3 BSD Unix
+@cindex 4.x BSD Unix
 @cindex Berkeley Unix
 @cindex SunOS
+@cindex Unix, Berkeley
 
 The GNU C library defines facilities from some other versions of Unix,
 specifically from the 4.2 BSD and 4.3 BSD Unix systems (also known as
@@ -187,8 +185,8 @@ that ought to be mentioned specifically here?
 @node SVID
 @subsection SVID (The System V Interface Description)
 @cindex SVID
-@cindex System V
-@cindex Unix System V
+@cindex System V Unix
+@cindex Unix, System V
 
 The @dfn{System V Interface Description} (SVID) is a document describing
 the AT&T Unix System V operating system.  It is to some extent a
@@ -237,8 +235,8 @@ provided as well.  The purpose of declarations are to allow the compiler
 to correctly process references to the declared variables and functions.
 A @dfn{definition}, on the other hand, actually allocates storage for a
 variable or says what a function does.)
-@cindex definition
-@cindex declaration
+@cindex definition (compared to declaration)
+@cindex declaration (compared to definition)
 
 In order to use the facilities in the GNU C library, you should be sure
 that your program source files include the appropriate header files.
@@ -311,9 +309,9 @@ to have the correct declaration.
 
 @node Macro Definitions
 @subsection Macro Definitions of Functions
-@cindex superseding function declarations with macros
-@cindex removing macros that supersede function declarations
-@cindex undefining macros that supersede function declarations
+@cindex shadowing functions with macros
+@cindex removing macros that shadow functions
+@cindex undefining macros that shadow functions
 
 If we describe something as a function in this manual, it may have a
 macro definition as well.  This normally has no efect on how your

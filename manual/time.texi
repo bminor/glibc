@@ -42,6 +42,8 @@ program invocation.
 @cindex CPU time
 @cindex processor time
 @cindex clock ticks
+@cindex ticks, clock
+@cindex time, elapsed CPU
 
 @menu
 * Basic Elapsed CPU Time Inquiry::	The @code{clock} function.
@@ -182,6 +184,8 @@ fields returned by @code{times}.
 This section describes facilities for keeping track of dates and times
 according to the Gregorian calendar.
 @cindex Gregorian calendar
+@cindex time, calendar
+@cindex date and time
 
 There are three representations for date and time information:
 
@@ -190,7 +194,6 @@ There are three representations for date and time information:
 @dfn{Calendar time} (the @code{time_t} data type) is a compact internal
 representation, typically giving the number of seconds elapsed since
 some implementation-specific base time.
-
 @cindex calendar time
 
 @item
@@ -376,6 +379,8 @@ and @code{adjtime} functions are provided for compatibility with BSD.
 
 @node Local Time
 @subsection Local Time
+@cindex converting calendar time to local time
+@cindex converting local time to calendar time
 
 This section describe functions which operate on local time objects, and
 functions for converting between local time and calendar time
@@ -630,6 +635,7 @@ about how to set environment variables, @pxref{Environment Variables}.
 The functions for accessing the time zone are declared in
 @file{time.h}.
 @pindex time.h
+@cindex time zone
 
 The value of the @code{TZ} variable can be of one of three formats.  The
 first form is
@@ -814,7 +820,10 @@ a process to interrupt itself at some future time.  They do this by
 setting a timer; when the timer expires, a signal is sent to the
 process.
 
-@cindex interval timer
+@cindex setting an alarm
+@cindex interval timer, setting
+@cindex alarms, setting
+@cindex timers, setting
 Each process has three independent interval timers available:
 
 @itemize @bullet
