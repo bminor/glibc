@@ -1500,8 +1500,8 @@ could be the priority value.  The only way to make certain is to set
 @comment sys/resource.h
 @comment BSD
 @deftypefun int setpriority (int @var{class}, int @var{id}, int @var{priority})
-Set the priority of a class of processes; @var{class} and @var{id}
-specify which ones (see below).
+Set the priority of a class of processes to @var{priority}; @var{class}
+and @var{id} specify which ones (see below).
 
 The return value is @code{0} on success and @code{-1} on failure.  The
 following @code{errno} error condition are defined for this function:
