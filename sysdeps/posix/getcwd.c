@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -178,7 +178,6 @@ extern char *alloca ();
 
 #ifndef __GNU_LIBRARY__
 #define	__lstat	stat
-#define
 #endif
 
 /* Get the pathname of the current working directory, and put it in SIZE
