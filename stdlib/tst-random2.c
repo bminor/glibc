@@ -1,6 +1,7 @@
-/* Load a shared object at run time.
+/* Test initstate saving the old state.
    Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2005.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,23 +18,42 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <dlfcn.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-
-int __dlfcn_argc attribute_hidden;
-char **__dlfcn_argv attribute_hidden;
-
-#ifdef HAVE_INITFINI_ARRAY
-static void
-init (int argc, char *argv[])
+int
+main (void)
 {
-  __dlfcn_argc = argc;
-  __dlfcn_argv = argv;
-}
+  int pass;
+  int ret = 0;
+  long int r[2];
 
-static void (*const init_array []) (int argc, char *argv[])
-     __attribute__ ((section (".init_array"), aligned (sizeof (void *))))
-     __attribute_used__ = { init };
-#else
-# error "Need linker with .init_array support."
-#endif
+  for (pass = 0; pass < 2; pass++)
+    {
+      srandom (0x12344321);
+
+      int j;
+      for (j = 0; j < 3; ++j)
+	random ();
+      if (pass == 1)
+	{
+	  char state[128];
+	  char *ostate = initstate (0x34562101, state, 128);
+	  if (setstate (ostate) != state)
+	    {
+	      puts ("setstate (ostate) != state");
+	      ret = 1;
+	    }
+	}
+
+      random ();
+      r[pass] = random ();
+    }
+
+  if (r[0] != r[1])
+    {
+      printf ("%ld != %ld\n", r[0], r[1]);
+      ret = 1;
+    }
+  return ret;
+}
