@@ -23,6 +23,10 @@
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2_6)
 
+# ifndef INTUSE
+#  define INTUSE(name) name##_internal
+# endif
+
 #define __ashldi3_v_glibc20	INTUSE (__ashldi3)
 #define __ashrdi3_v_glibc20	INTUSE (__ashrdi3)
 #define __lshrdi3_v_glibc20	INTUSE (__lshrdi3)

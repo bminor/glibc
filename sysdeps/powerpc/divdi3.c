@@ -20,9 +20,14 @@
 #define _DIVDI3_C
 #include <sysdeps/wordsize-32/divdi3.c>
 
-INTDEF (__udivdi3);
-INTDEF (__moddi3);
-INTDEF (__umoddi3);
+asm (".globl __divdi3_internal");
+asm (".set   __divdi3_internal,__divdi3");
+asm (".globl __udivdi3_internal");
+asm (".set   __udivdi3_internal,__udivdi3");
+asm (".globl __moddi3_internal");
+asm (".set   __moddi3_internal,__moddi3");
+asm (".globl __umoddi3_internal");
+asm (".set   __umoddi3_internal,__umoddi3");
 
 #ifdef HAVE_DOT_HIDDEN
 asm (".hidden __divdi3");
@@ -35,9 +40,9 @@ asm (".hidden __umoddi3");
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_2_6)
 
-symbol_version (INTUSE (__divdi3), __divdi3, GLIBC_2.0);
-symbol_version (INTUSE (__udivdi3), __udivdi3, GLIBC_2.0);
-symbol_version (INTUSE (__moddi3), __moddi3, GLIBC_2.0);
-symbol_version (INTUSE (__umoddi3), __umoddi3, GLIBC_2.0);
+symbol_version (__divdi3_internal, __divdi3, GLIBC_2.0);
+symbol_version (__udivdi3_internal, __udivdi3, GLIBC_2.0);
+symbol_version (__moddi3_internal, __moddi3, GLIBC_2.0);
+symbol_version (__umoddi3_internal, __umoddi3, GLIBC_2.0);
 
 #endif
