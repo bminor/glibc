@@ -36,8 +36,8 @@ text_set_element (_hurd_preinit_hook, malloc_init);
 /*
  * HISTORY
  * $Log$
- * Revision 1.4  1994/06/01 01:10:11  roland
- * Formerly ../hurd/hurdmalloc.c.~4~
+ * Revision 1.5  1994/06/04 01:48:44  roland
+ * entered into RCS
  *
  * Revision 2.7  91/05/14  17:57:34  mrt
  * 	Correcting copyright
@@ -130,7 +130,7 @@ static void
 malloc_init (void)
 {
   int i;
-  for (i = i; i < NBUCKETS; ++i)
+  for (i = 0; i < NBUCKETS; ++i)
     {
       spin_lock_init (&malloc_free_list[i].lock);
       malloc_free_list[i].head = NULL;
@@ -163,7 +163,6 @@ more_memory(size, fl)
 	MACH_CALL(vm_allocate(mach_task_self(), &where, (vm_size_t) amount, TRUE), r);
 	h = (header_t) where;
 	do {
-	  spin_lock_init (&h->lock);
 	  h->next = fl->head;
 	  fl->head = h;
 	  h = (header_t) ((char *) h + size);

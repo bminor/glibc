@@ -166,7 +166,7 @@ DEFUN(__stdio_open, (filename, m, cookieptr),
 int
 DEFUN(__stdio_reopen, (filename, m, cookieptr),
       CONST char *filename AND __io_mode m AND
-      PTR *cookieptr AND __io_close closefn)
+      PTR *cookieptr AND __io_close_fn closefn)
 {
   int flags;
   file_t port;
