@@ -864,6 +864,14 @@ between the different conversion specifiers.  See the descriptions of the
 individual conversions for information about the particular options that
 they use.
 
+With the @samp{-Wformat} option, the GNU C compiler checks calls to
+@code{printf} and related functions.  It examines the format string and
+verifies that the correct number and types of arguments are supplied.
+There is also a GNU C syntax to tell the compiler that a function you
+write uses a @code{printf}-style format string.  
+@xref{Function Attributes, , Declaring Attributes of Functions,
+gcc.info, Using GNU CC}, for more information.
+
 @node Table of Output Conversions
 @subsection Table of Output Conversions
 @cindex output conversions, for @code{printf}
@@ -1458,7 +1466,6 @@ Prototypes for these functions are declared in @file{stdio.h}.
 This function is similar to @code{printf} except that, instead of taking
 a variable number of arguments directly, it takes an argument list
 pointer @var{ap}.
-
 @end deftypefun
 
 @comment stdio.h
@@ -1509,7 +1516,7 @@ with a prefix indicating the name of the program
 #include <stdarg.h>
 
 void
-eprintf (char *template, ...)
+eprintf (const char *template, ...)
 @{
   va_list ap;
   extern char *program_invocation_short_name;
@@ -1528,6 +1535,25 @@ You could call @code{eprintf} like this:
 @smallexample
 eprintf ("file `%s' does not exist\n", filename);
 @end smallexample
+
+In GNU C, there is a special construct you can use to let the compiler
+know that a function uses a @code{printf}-style format string.  Then it
+can check the number and types of arguments in each call to the
+function, and warn you when they do not match the format string.
+For example, take this declaration of @code{eprintf}:
+
+@smallexample
+void eprintf (const char *template, ...)
+        __attribute__ ((format (printf, 1, 2)));
+@end smallexample
+
+@noindent
+This tells the compiler that @code{eprintf} uses a format string like
+@code{printf} (as opposed to @code{scanf}; @pxref{Formatted Input});
+the format string appears as the first argument;
+and the arguments to satisfy the format begin with the second.
+@xref{Function Attributes, , Declaring Attributes of Functions,
+gcc.info, Using GNU CC}, for more information.
 
 @node Parsing a Template String
 @subsection Parsing a Template String
@@ -2145,6 +2171,14 @@ between the different conversion specifiers.  See the descriptions of the
 individual conversions for information about the particular options that
 they allow.
 
+With the @samp{-Wformat} option, the GNU C compiler checks calls to
+@code{scanf} and related functions.  It examines the format string and
+verifies that the correct number and types of arguments are supplied.
+There is also a GNU C syntax to tell the compiler that a function you
+write uses a @code{scanf}-style format string.  
+@xref{Function Attributes, , Declaring Attributes of Functions,
+gcc.info, Using GNU CC}, for more information.
+
 @node Table of Input Conversions
 @subsection Table of Input Conversions
 @cindex input conversions, for @code{scanf}
@@ -2534,6 +2568,13 @@ specified directly as for @code{vscanf}.
 This is the equivalent of @code{sscanf} with the variable argument list
 specified directly as for @code{vscanf}.
 @end deftypefun
+
+In GNU C, there is a special construct you can use to let the compiler
+know that a function uses a @code{scanf}-style format string.  Then it
+can check the number and types of arguments in each call to the
+function, and warn you when they do not match the format string.
+@xref{Function Attributes, , Declaring Attributes of Functions,
+gcc.info, Using GNU CC}, for details.
 
 @node Block Input/Output
 @section Block Input/Output
