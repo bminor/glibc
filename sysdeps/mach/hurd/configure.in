@@ -6,3 +6,5 @@ z | zyes) ;; # Not specified, or specified with no value.
 z*) config_vars="$config_vars
 hurd-srcdir = $with_hurd" ;;
 esac
+
+inhibit_glue=yes
