@@ -23,8 +23,7 @@ subdir	:= inet
 
 headers	:= inet-cvt.h netdb.h resolv.h \
 	   netinet/in.h  \
-	   arpa/ftp.h arpa/inet.h arpa/nameser.h arpa/telnet.h arpa/tftp.h \
-	   protocols/talkd.h protocols/timed.h
+	   $(wildcard arpa/*.h protocols/*.h)
 
 routines := ntohl ntohs htonl htons		\
 	    inet_addr inet_lnaof inet_mkadr	\
