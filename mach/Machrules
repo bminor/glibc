@@ -130,17 +130,17 @@ interface-routines := $(foreach if,$(user-interfaces),		\
 				$($(if)-calls)			\
 				$(addprefix __,$($(if)-calls)))	\
 		      $(server-interfaces:%=%_server)
-interface-headers := $(addprefix $(objpfx),$(user-interfaces:%=%.h) \
-				 	   $(server-interfaces:%=%_server.h))
+interface-headers := $(user-interfaces:%=%.h) \
+		     $(server-interfaces:%=%_server.h)
 
 # Remove the generated user stub source and header files,
 # and don't distribute them.
-mach-generated := $(interface-routines:%=$(objpfx)%.c) \
-		  $(interface-headers:%.h=%.h %.uh %.__h)
+mach-generated = $(interface-routines:%=%.c) \
+		 $(interface-headers:%.h=%.h %.uh %.__h)
 generated += $(mach-generated)
 
 # These are needed to generate the dependencies.
-before-compile += $(interface-headers)
+before-compile += $(interface-headers:%=$(objpfx)%)
 
 # Don't let these be intermediate files and get removed.
-$(interface-headers) :
+$(interface-headers:%=$(objpfx)%) :
