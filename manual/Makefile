@@ -78,3 +78,10 @@ ifneq (,)
 dist: ../Make-dist
 	$(MAKE) -f $< $(Make-dist-args)
 endif
+
+ifndef ETAGS
+ETAGS = etags -T
+endif
+TAGS: $(minimal-dist)
+	$(ETAGS) -o $@ $^
+
