@@ -28,7 +28,6 @@ __NORETURN
 void
 DEFUN_VOID(abort)
 {
-  sig_atomic_t aborting = 0;
   sigset_t sigs;
 
   if (__sigemptyset(&sigs) == 0 &&
