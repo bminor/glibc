@@ -86,11 +86,14 @@ errno.texinfo = $(..)manual/errno.texi
 
 hurd = $(..)sysdeps/mach/hurd
 
-$(hurd)/errnos.h: $(hurd)/errnos.awk $(errno.texinfo) \
-		  $(mach-srcdir)/mach/message.h \
-		  $(mach-srcdir)/mach/kern_return.h
-	gawk -f $^ > $@-tmp
-	mv $@-tmp $@
+$(hurd)/errnos.h: $(objpfx)stamp-errnos ;
+$(objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
+		       $(mach-srcdir)/mach/message.h \
+		       $(mach-srcdir)/mach/kern_return.h
+	gawk -f $^ > $(hurd)/errnos.h-tmp
+	./$(..)move-if-change $(hurd)/errnos.h-tmp $(hurd)/errnos.h
+	touch $@
+
 $(hurd)/errlist.c: $(hurd)/errlist.awk $(errno.texinfo)
 	gawk -f $^ > $@-tmp
 	mv $@-tmp $@
