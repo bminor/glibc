@@ -23,22 +23,22 @@
 subdir	:= misc
 
 headers	:= sys/uio.h sys/ioctl.h sys/ptrace.h ioctls.h sys/file.h	\
-	   a.out.h nlist.h sgtty.h gnu/file.h sys/dir.h
+	   a.out.h nlist.h sgtty.h sys/dir.h
 
 routines := brk sbrk sstk ioctl \
 	    __brk __sbrk __ioctl \
 	    readv writev \
 	    setreuid setregid \
 	    __setreuid __setregid \
-	    getpagesize \
-	    __getpagesize \
-	    getdtablesize \
-	    __getdtablesize \
-	    __gethostname gethostname sethostname \
+	    getpgsz \
+	    __getpgsz \
+	    getdtsz \
+	    __getdtsz \
+	    __gethstnm gethstnm sethostnam \
 	    __select select \
 	    acct chroot fsync sync \
-	    getdirentries \
-	    __getdirentries \
+	    getdents \
+	    __getdents \
 	    gethostid sethostid \
 	    mknod __mknod \
 	    swapon vhangup mktemp \
@@ -52,5 +52,10 @@ routines := brk sbrk sstk ioctl \
 	    chflags fchflags \
 	    insremque
 aux := data_start progname
+distribute := bsd-compat.c
+install-lib := libbsd-compat.a
 
 include ../Rules
+
+$(objpfx)libbsd-compat.a: $(objpfx)bsd-compat.o
+	ln $< $@
