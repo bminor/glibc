@@ -18,11 +18,13 @@
 
 subdir := mach
 
-distribute = Machrules interface.awk syscalls.awk shortcut.awk
+distribute = Machrules syscalls.awk shortcut.awk
 
-headers = mach_init.h mach.h \
+headers = mach_init.h mach.h mach-shortcuts.h \
 	  $(addprefix mach/,$(mach-headers)) \
 	  $(interface-headers)
+dont_distribute := mach-shortcuts.h # Generated
+clean-extras := mach-shortcuts.h
 
 mach-headers := host_info.h kern_return.h \
 		mach_param.h mach_types.h \
@@ -70,7 +72,7 @@ $(objpfx)mach-syscalls.mk: mach/syscall_sw.h syscalls.awk
 	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),[0-9]*)$$/\1 \2/p' \
 	< $< | awk -f $(word 2,$^) > $@-new		      
 	mv $@-new $@
-clean-extras := $(clean-extras) $(objpfx)mach-syscalls.mk
+generated := $(generated) $(objpfx)mach-syscalls.mk
 
 ifdef mach-syscalls
 $(mach-syscalls:%=$(objpfx)__%.S): $(objpfx)__%.S: $(objpfx)mach-syscalls.mk
@@ -81,7 +83,7 @@ $(mach-syscalls:%=$(objpfx)%.c): $(objpfx)%.c:
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*)') > $@-new
 	mv $@-new $@
-clean-extras := $(clean-extras) \
+generated := $(generated) \
 		$(mach-syscalls:%=$(objpfx)__%.S) \
 		$(mach-syscalls:%=$(objpfx)%.c)
 endif
@@ -115,7 +117,19 @@ $(mach-shortcuts:%=%.c):
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*)') > $@-new
 	mv $@-new $@
-endif
+generated := $(generated) $(mach-shortcuts:%=%.c)
+
+# Generate mach-shortcuts.h, which will contain the prototypes for the
+# shortcutted kernel RPC functions.
+$(objpfx)mach-shortcuts.h: mach/mach_interface.uh mach/mach_port.uh
+# The first line gets us one paragraph per line, with @s separating real lines.
+# The second line selects paragraphs for the shortcutted functions.
+# The third line removes `_rpc' from the names and rerealifies the lines.
+	cat $^ | tr \\012 @ | sed s/@@/@%/g | tr % \\012 \
+	| grep '^/\* Routine [a-z0-9_]*_rpc \*/' \
+	| sed 's/_rpc//' | tr @ \\012 > $@-new
+	mv $@-new $@
+endif	# mach-shortcuts
 
 include Machrules
 include ../Rules
@@ -128,6 +142,7 @@ mach/mach_interface.defs: mach/mach.defs
 # so memory_object.defs generates memory_object_user.h.
 mach/memory_object_user.defs: mach/memory_object.defs
 	ln $< $@ || cp $< $@
+generated := $(generated) mach/mach.defs mach/memory_object_user.defs
 
 # Be sure not to make these with implicit rules from foo.defs.
 $(filter-out $(interface-headers),$(headers)) : ;
