@@ -2182,7 +2182,7 @@ Two processes need to synchronize while working together.
 @end itemize
 
 This section assumes that you know a little bit about how processes
-work.  For more information on this subject, see @ref{Child Processes}.
+work.  For more information on this subject, see @ref{Processes}.
 
 The @code{kill} function is declared in @file{signal.h}.
 @pindex signal.h
