@@ -276,7 +276,6 @@ iruserok(raddr, superuser, ruser, luser)
 	FILE *hostf;
 	uid_t uid;
 	int first;
-	char pbuf[MAXPATHLEN];
 
 	first = 1;
 	hostf = superuser ? NULL : fopen(_PATH_HEQUIV, "r");
@@ -289,11 +288,17 @@ again:
 		(void)fclose(hostf);
 	}
 	if (first == 1 && (__check_rhosts_file || superuser)) {
+		char *pbuf;
+		size_t dirlen;
+
 		first = 0;
 		if ((pwd = getpwnam(luser)) == NULL)
 			return (-1);
-		(void)strcpy(pbuf, pwd->pw_dir);
-		(void)strcat(pbuf, "/.rhosts");
+
+		dirlen = strlen (pwd->pw_dir);
+		pbuf = alloca (dirlen + sizeof "/.rhosts");
+		memcpy (pbuf, pwd->pw_dir, dirlen);
+		memcpy (pbuf + dirlen, "/.rhosts", sizeof "/.rhosts");
 
 		/*
 		 * Change effective uid while opening .rhosts.  If root and
@@ -347,15 +352,13 @@ __ivaliduser(hostf, raddr, luser, ruser)
 {
 	register char *user, *p;
 	int ch;
-	char buf[MAXHOSTNAMELEN + 128];		/* host + login */
+	char *buf = NULL;
+	size_t bufsize = 0;
+	ssize_t nread;
 
-	while (fgets(buf, sizeof(buf), hostf)) {
+	while ((nread = getline (&buf, &bufsize, hostf)) > 0) {
+		buf[bufsize - 1] = '\0'; /* Make sure it's terminated.  */
 		p = buf;
-		/* Skip lines that are too long. */
-		if (strchr(p, '\n') == NULL) {
-			while ((ch = getc(hostf)) != '\n' && ch != EOF);
-			continue;
-		}
 		while (*p != '\n' && *p != ' ' && *p != '\t' && *p != '\0') {
 			*p = isupper(*p) ? tolower(*p) : *p;
 			p++;
@@ -373,9 +376,11 @@ __ivaliduser(hostf, raddr, luser, ruser)
 		*p = '\0';
 		if (__icheckhost(raddr, buf) &&
 		    strcmp(ruser, *user ? user : luser) == 0) {
+			free (buf);
 			return (0);
 		}
 	}
+	free (buf);
 	return (-1);
 }
 
