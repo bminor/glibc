@@ -266,27 +266,27 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 
   /* strstr - somewhat like strchr.  */
   it = "strstr";
-  check(strstr("z", "abcd") == NULL, 1);	/* Not found. */
-  check(strstr("abx", "abcd") == NULL, 2);	/* Dead end. */
+  check(strstr("abcd", "z") == NULL, 1);	/* Not found. */
+  check(strstr("abcd", "abx") == NULL, 2);	/* Dead end. */
   (void) strcpy(one, "abcd");
-  check(strstr("c", one) == one+2, 3);	/* Basic test. */
-  check(strstr("bc", one) == one+1, 4);	/* Multichar. */
-  check(strstr("d", one) == one+3, 5);	/* End of string. */
-  check(strstr("cd", one) == one+2, 6);	/* Tail of string. */
-  check(strstr("abc", one) == one, 7);	/* Beginning. */
-  check(strstr("abcd", one) == one, 8);	/* Exact match. */
-  check(strstr("abcde", one) == NULL, 9);	/* Too long. */
-  check(strstr("de", one) == NULL, 10);	/* Past end. */
-  check(strstr("", one) == one+4, 11);	/* Finding empty. */
+  check(strstr(one, "c") == one+2, 3);	/* Basic test. */
+  check(strstr(one, "bc") == one+1, 4);	/* Multichar. */
+  check(strstr(one, "d") == one+3, 5);	/* End of string. */
+  check(strstr(one, "cd") == one+2, 6);	/* Tail of string. */
+  check(strstr(one, "abc") == one, 7);	/* Beginning. */
+  check(strstr(one, "abcd") == one, 8);	/* Exact match. */
+  check(strstr(one, "abcde") == NULL, 9);	/* Too long. */
+  check(strstr(one, "de") == NULL, 10);	/* Past end. */
+  check(strstr(one, "") == one+4, 11);	/* Finding empty. */
   (void) strcpy(one, "ababa");
-  check(strstr("ba", one) == one+1, 12);	/* Finding first. */
+  check(strstr(one, "ba") == one+1, 12);	/* Finding first. */
   (void) strcpy(one, "");
-  check(strstr("b", one) == NULL, 13);	/* Empty string. */
-  check(strstr("", one) == one, 14);	/* Empty in empty string. */
+  check(strstr(one, "b") == NULL, 13);	/* Empty string. */
+  check(strstr(one, "") == one, 14);	/* Empty in empty string. */
   (void) strcpy(one, "bcbca");
-  check(strstr("bca", one) == one+2, 15);	/* False start. */
+  check(strstr(one, "bca") == one+2, 15);	/* False start. */
   (void) strcpy(one, "bbbcabbca");
-  check(strstr("bbca", one) == one+1, 16);	/* With overlap. */
+  check(strstr(one, "bbca") == one+1, 16);	/* With overlap. */
 
   /* strspn.  */
   it = "strspn";
