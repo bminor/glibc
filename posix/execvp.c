@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,14 +25,18 @@ Cambridge, MA 02139, USA.  */
 #include <limits.h>
 #include <sys/types.h>
 
+#ifndef	HAVE_GNU_LD
+#define	__environ	environ
+#endif
+
 /* Execute FILE, searching in the `PATH' environment variable if it contains
    no slashes, with arguments ARGV and environment from `environ'.  */
 int
-DEFUN(execvp, (file, argv), CONST char *file AND char *CONST argv[])
+DEFUN (execvp, (file, argv), CONST char *file AND char *CONST argv[])
 {
   char name[PATH_MAX];
 
-  if (strchr(file, '/') == NULL)
+  if (strchr (file, '/') == NULL)
     {
       char *path, *p;
       struct stat st;
@@ -42,42 +46,42 @@ DEFUN(execvp, (file, argv), CONST char *file AND char *CONST argv[])
       int ngroups;
       gid_t groups[NGROUPS_MAX];
 
-      path = getenv("PATH");
+      path = getenv ("PATH");
       if (path == NULL)
 	{
 	  /* There is no `PATH' in the environment.
 	     The default search path is the current directory
 	     followed by the path `confstr' returns for `_CS_PATH'.  */
-	  len = confstr(_CS_PATH, (char *) NULL, 0);
-	  path = (char *) __alloca(1 + len);
+	  len = confstr (_CS_PATH, (char *) NULL, 0);
+	  path = (char *) __alloca (1 + len);
 	  path[0] = ':';
-	  (void) confstr(_CS_PATH, path + 1, len);
+	  (void) confstr (_CS_PATH, path + 1, len);
 	}
 
-      len = strlen(file) + 1;
-      uid = geteuid();
-      gid = getegid();
-      ngroups = getgroups(sizeof(groups) / sizeof(groups[0]), groups);
+      len = strlen (file) + 1;
+      uid = geteuid ();
+      gid = getegid ();
+      ngroups = getgroups (sizeof (groups) / sizeof (groups[0]), groups);
       p = path;
       do
 	{
 	  path = p;
-	  p = strchr(path, ':');
+	  p = strchr (path, ':');
 	  if (p == NULL)
-	    p = strchr(path, '\0');
+	    p = strchr (path, '\0');
 
 	  if (p == path)
 	    /* Two adjacent colons, or a colon at the beginning or the end
 	       of `PATH' means to search the current directory.  */
-	    (void) memcpy(name, file, len);
+	    (void) memcpy (name, file, len);
 	  else
 	    {
 	      /* Construct the pathname to try.  */
-	      (void) memcpy(name, path, p - path);
+	      (void) memcpy (name, path, p - path);
 	      name[p - path] = '/';
-	      (void) memcpy(&name[(p - path) + 1], file, len);
+	      (void) memcpy (&name[(p - path) + 1], file, len);
 	    }
-	  if (stat(name, &st) == 0 && S_ISREG(st.st_mode))
+	  if (stat (name, &st) == 0 && S_ISREG (st.st_mode))
 	    {
 	      int bit = S_IXOTH;
 	      if (st.st_uid == uid)
@@ -100,8 +104,9 @@ DEFUN(execvp, (file, argv), CONST char *file AND char *CONST argv[])
 		  break;
 		}
 	    }
-	} while (*p++ != '\0');
+	}
+      while (*p++ != '\0');
     }
 
-  return __execve(file, argv, __environ);
+  return __execve (file, argv, __environ);
 }
