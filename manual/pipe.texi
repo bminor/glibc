@@ -18,8 +18,9 @@ A pipe or FIFO has to be open at both ends simultaneously.  If you read
 from a pipe or FIFO file that doesn't have any processes writing to it
 (perhaps because they have all closed the file, or exited), the read
 returns end-of-file.  Writing to a pipe or FIFO that doesn't have a
-reading process is treated as an error condition.
-@c !!! is this really true?  what about SIGPIPE?
+reading process is treated as an error condition; it generates a
+@code{SIGPIPE} signal and fails with error code @code{EPIPE} if you
+handle the signal.
 
 Neither pipes nor FIFO special files allow file positioning.  Both
 reading and writing operations happen sequentially; reading from the
@@ -57,11 +58,10 @@ The @code{pipe} function is declared in the header file
 The @code{pipe} function creates a pipe and puts the file descriptors
 for the reading and writing ends of the pipe (respectively) into
 @code{@var{filedes}[0]} and @code{@var{filedes}[1]}.
-@c !!! say something like:
-An easy way to remember which element is which is that file descriptor
-@code{0} is standard input, and file descriptor @code{1} is standard
-output.  You can use @code{@var{filedes}[STDIN_FILENO]} and
-@code{@var{filedes}[STDOUT_FILENO]} to help you remember.
+
+An easy way to remember that the input end comes first is that file
+descriptor @code{0} is standard input, and file descriptor @code{1} is
+standard output.
 
 If successful, @code{pipe} returns a value of @code{0}.  On failure,
 @code{-1} is returned.  The following @code{errno} error conditions are
@@ -72,10 +72,8 @@ defined for this function:
 The process has too many files open.
 
 @item ENFILE
-The system has too many files open.
-@c !!! this will never happen in GNU.  probably should say somewhere (in
-@c EMFILE description in errno.texinfo?) that everything that can get
-@c EMFILE can also get ENFILE in Unix, but not in GNU.
+There are too many open files in the entire system.  @xref{Error Codes},
+for more information about @code{ENFILE}.
 @end table
 @end deftypefun
 
