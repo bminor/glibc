@@ -72,7 +72,7 @@ struct stat
 #else
     __ino64_t st_ino;			/* File serial number.	*/
 #endif
-  } __attribute__ ((__packed__));
+  };
 
 #ifdef __USE_LARGEFILE64
 struct stat64
@@ -98,7 +98,7 @@ struct stat64
     __time_t st_ctime;			/* Time of last status change.  */
     unsigned long int __unused3;
     __ino64_t st_ino;			/* File serial number.		*/
-  } __attribute__ ((__packed__));
+  };
 #endif
 
 /* Tell code we have these members.  */
