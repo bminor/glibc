@@ -118,7 +118,7 @@ __STRING2_COPY_TYPE (8);
      __uint8_t __c = (__uint8_t) (c);					      \
 									      \
      /* This `switch' statement will be removed at compile-time.  */	      \
-     switch (n)								      \
+     switch ((unsigned int) n)						      \
        {								      \
        case 15:								      \
 	 __u->__ui = __c * 0x01010101;					      \
@@ -231,7 +231,7 @@ __mempcpy_small (void *__dest1,
     unsigned char __uc;
     unsigned char __c;
   } *__u = __dest1;
-  switch (__srclen)
+  switch ((unsigned int) __srclen)
     {
     case 1:
       __u->__c = __src0_1;
@@ -333,7 +333,7 @@ __mempcpy_small (void *__dest, char __src1,
     __STRING2_COPY_ARR7 __sca7;
     __STRING2_COPY_ARR8 __sca8;
   } *__u = __dest;
-  switch (__srclen)
+  switch ((unsigned int) __srclen)
     {
     case 1:
       __u->__c = __src1;
@@ -406,7 +406,7 @@ __strcpy_small (char *__dest,
     __uint16_t __usi;
     unsigned char __uc;
   } *__u = (void *) __dest;
-  switch (__srclen)
+  switch ((unsigned int) __srclen)
     {
     case 1:
       __u->__uc = '\0';
@@ -499,7 +499,7 @@ __strcpy_small (char *__dest,
     __STRING2_COPY_ARR7 __sca7;
     __STRING2_COPY_ARR8 __sca8;
   } *__u = (void *) __dest;
-  switch (__srclen)
+  switch ((unsigned int) __srclen)
     {
     case 1:
       __u->__c = '\0';
@@ -566,7 +566,7 @@ __stpcpy_small (char *__dest,
     unsigned char __uc;
     char __c;
   } *__u = (void *) __dest;
-  switch (__srclen)
+  switch ((unsigned int) __srclen)
     {
     case 1:
       __u->__uc = '\0';
@@ -663,7 +663,7 @@ __stpcpy_small (char *__dest,
     __STRING2_COPY_ARR7 __sca7;
     __STRING2_COPY_ARR8 __sca8;
   } *__u = (void *) __dest;
-  switch (__srclen)
+  switch ((unsigned int) __srclen)
     {
     case 1:
       __u->__c = '\0';
