@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ _dl_sysdep_open_zero_fill (void)
 
 /* This should never be called.  */
 void
-_dl_sysdep_fatal (void)
+_dl_sysdep_fatal (const char *msg, ...)
 {
   assert (! "_dl_sysdep_fatal called");
 }
