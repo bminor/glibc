@@ -1,5 +1,5 @@
 /* Networks file parser in nss_files module.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,6 +38,7 @@ LINE_PARSER
 
    STRING_FIELD (addr, isspace, 1);
    result->n_net = inet_network (addr);
+   result->n_addrtype = AF_INET;
 
  })
 
@@ -52,4 +53,4 @@ DB_LOOKUP (netbyaddr, ,,
 	     if (result->n_addrtype == type && result->n_net == net)
 	       /* Bingo!  */
 	       break;
-	   }, int type, unsigned long int net)
+	   }, unsigned long int net, int type)
