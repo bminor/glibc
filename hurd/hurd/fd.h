@@ -203,9 +203,9 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
      io_t port = _hurd_port_locked_get (&__d->port, &__ulink);		      \
      io_t ctty = _hurd_port_locked_get (&__d->ctty, &__ctty_ulink);	      \
      __result = (expr);							      \
-     _hurd_port_free (&d->port, &__ulink, port);			      \
+     _hurd_port_free (&__d->port, &__ulink, port);			      \
      if (ctty != MACH_PORT_NULL)					      \
-       _hurd_port_free (&d->ctty, &__ctty_ulink, ctty);			      \
+       _hurd_port_free (&__d->ctty, &__ctty_ulink, ctty);		      \
      __result; })
 
 #include <errno.h>
