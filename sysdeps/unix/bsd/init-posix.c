@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,10 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <time.h>
 
-time_t _posix_start_time;
+/* This must be initialized data or its presence will not be sufficient to
+   merit linkage of this file, which is necessary for the real
+   initialization function below to be called.  */
+time_t _posix_start_time = -1;
 
 void
 DEFUN_VOID(__init_posix)
