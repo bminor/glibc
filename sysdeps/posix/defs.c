@@ -34,8 +34,8 @@ Cambridge, MA 02139, USA.  */
     {									      \
       _IOMAGIC,								      \
       NULL, NULL, NULL, NULL, 0,					      \
-      next,								      \
-      &name->__fileno, fd,						      \
+      (next),								      \
+      &(name)->__fileno, fd,						      \
       '\0', NULL, 0,							      \
       0, 0,								      \
       unbuffered, 0,							      \
@@ -73,7 +73,7 @@ DEFUN_VOID(_cleanup)
 }
 
 
-#ifdef	__GNU_STAB__
+#ifdef	HAVE_GNU_LD
 #include <gnu-stabs.h>
 
 text_set_element(__libc_atexit, _cleanup);
