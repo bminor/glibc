@@ -17,13 +17,17 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
+#include <gnu-stabs.h>
 
 /* Things in the library which want to be run when the auth port changes.  */
 const struct
   {
     size_t n;
-    void (*fn[0]) ();
+    void (*fn[0]) (auth_t new_auth);
   } _hurd_reauth_hook;
+
+
+static struct mutex reauth_lock;
 
 
 /* Set the auth port to NEW, and reauthenticate
@@ -34,8 +38,8 @@ __setauth (auth_t new)
   error_t err;
   auth_t old;
   int d;
-  mach_port_t ignore;
-  void (**fn) (void);
+  mach_port_t newport;
+  void (**fn) (auth_t);
 
   /* Give the new send right a user reference.
      This is a good way to check that it is valid.  */
@@ -46,18 +50,15 @@ __setauth (auth_t new)
       return -1;
     }
 
+  /* We lock against another thread doing setauth.
+     Anyone who sets _hurd_auth some other way is asking to lose.  */
+  __mutex_lock (&reauth_lock);
+
   /* Install the new port in the _hurd_auth cell.  */
   __mutex_lock (&_hurd_idlock);
   _hurd_port_set (&_hurd_auth, new);
   _hurd_id_valid = 0;
   __mutex_unlock (&_hurd_idlock);
-
-  /* Reauthenticate with the proc server.  */
-  if (! _HURD_PORT_USE (&_hurd_proc,
-			__proc_reauthenticate (port) ||
-			__auth_user_authenticate (new, port, &ignore))
-      && ignore != MACH_PORT_NULL)
-    __mach_port_deallocate (__mach_task_self (), ignore);
 
   if (_hurd_init_dtable != NULL)
     /* We just have the simple table we got at startup.
@@ -77,9 +78,29 @@ __setauth (auth_t new)
 	    }
 	}
 
+  if (_HURD_PORT_USE (&_hurd_crdir,
+		      ! __io_reauthenticate (port) &&
+		      ! __auth_user_authenticate (new, port, &newport)))
+    _hurd_port_set (&_hurd_crdir, newport);
+
+  if (_HURD_PORT_USE (&_hurd_cwdir,
+		      ! __io_reauthenticate (port) &&
+		      ! __auth_user_authenticate (new, port, &newport)))
+    _hurd_port_set (&_hurd_cwdir, newport);
+
   /* Run things which want to do reauthorization stuff.  */
   for (fn = _hurd_reauth_hook.fn; *fn != NULL; ++fn)
-    (**fn) ();
+    (**fn) (new);
+
+  __mutex_unlock (&reauth_lock);
 
   return 0;
 }
+
+static void
+init_reauth (void)
+{
+  __mutex_init (&reauth_lock);
+}
+
+text_set_element (__libc_subinit, init_reauth);
