@@ -1,9 +1,14 @@
+2002-05-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (__posix_memalign): Correct check for size of
+	alignment value [PR libc/3444].
+
 2002-05-13  Marcus Brinkmann  <marcus@gnu.org>
 
-        * hurd/hurdchdir.c (_hurd_change_directory_port_from_name):
-        Allocate three, not two, more than LEN when appending '/.'.
-        * sysdeps/mach/hurd/chroot.c (chroot): Likewise.  Don't check
-        if NAME ends with '/.' if it is shorter than 2 chars.
+	* hurd/hurdchdir.c (_hurd_change_directory_port_from_name):
+	Allocate three, not two, more than LEN when appending '/.'.
+	* sysdeps/mach/hurd/chroot.c (chroot): Likewise.  Don't check
+	if NAME ends with '/.' if it is shorter than 2 chars.
 
 2002-05-12  Roland McGrath  <roland@frob.com>
 
@@ -19,7 +24,8 @@
 
 	* sysdeps/unix/sysv/linux/x86_64/sys/io.h: New.
 
-	* sysdeps/unix/sysv/linux/x86_64/Makefile (sysdep_headers): Add sys/io.h.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile (sysdep_headers): Add
+	sys/io.h.
 
 2002-05-08  Roland McGrath  <roland@frob.com>
 
