@@ -106,7 +106,10 @@ DEFUN(__execve, (path, argv, envp),
       dtablesize = _hurd_dtable_set.dtable->size;
       dtable = alloca (dtablesize * sizeof (file_t));
       for (i = 0; i < dtablesize; ++i)
-	dtable[i] = _hurd_dtable_set.dtable->d[i].server;
+	if (_hurd_dtable_set.dtable->d[i].flags & FD_CLOEXEC)
+	  dtable[i] = MACH_PORT_NULL;
+	else
+	  dtable[i] = _hurd_dtable_set.dtable->d[i].server;
     }
   else
     {
