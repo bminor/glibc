@@ -1,6 +1,6 @@
 /* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -26,6 +26,7 @@
 #include <locale.h>
 #include <malloc.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -76,10 +77,31 @@ locfile_read (const char *filename, struct charset_t *charset)
     {
       if (filename[0] != '/')
 	{
-	  char path[strlen (filename) + 1 + sizeof (LOCSRCDIR)];
+	  char *i18npath = __secure_getenv ("I18NPATH");
+	  if (i18npath != NULL && *i18npath != '\0')
+	    {
+	      char path[strlen (filename) + 1 + strlen (i18npath) + 1];
+	      char *next;
+	      i18npath = strdupa (i18npath);
 
-	  stpcpy (stpcpy (stpcpy (path, LOCSRCDIR), "/"), filename);
-	  ldfile = lr_open (path, locfile_hash);
+
+	      while (ldfile == NULL
+		     && (next = strsep (&i18npath, ":")) != NULL)
+		{
+		  stpcpy (stpcpy (stpcpy (path, next), "/"), filename);
+
+		  ldfile = lr_open (path, locfile_hash);
+		}
+	    }
+
+	  /* Test in the default directory.  */
+	  if (ldfile == NULL)
+	    {
+	      char path[strlen (filename) + 1 + sizeof (LOCSRCDIR)];
+
+	      stpcpy (stpcpy (stpcpy (path, LOCSRCDIR), "/"), filename);
+	      ldfile = lr_open (path, locfile_hash);
+	    }
 	}
 
       if (ldfile == NULL)
