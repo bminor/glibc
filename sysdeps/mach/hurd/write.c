@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,28 +26,44 @@ DEFUN(__write, (fd, buf, nbytes),
       int fd AND CONST PTR buf AND size_t nbytes)
 {
   error_t err;
-  io_t server;
-  int isctty;
   size_t wrote;
 
-  __mutex_lock (&_hurd_dtable.lock);
-  if (fd < 0 || fd >= _hurd_dtable.size ||
-      _hurd_dtable.d[fd].server == MACH_PORT_NULL)
-    {
-      __mutex_unlock (&_hurd_dtable.lock);
-      errno = EBADF;
-      return -1;
-    }
-
-  server = _hurd_dtable.d[fd].server;
-  isctty = _hurd_ctty_check (fd);
-  __mutex_unlock (&_hurd_dtable.lock);
-
-  err = __io_write (server, isctty, _hurd_pid, _hurd_pgrp,
-		    buf, nbytes, -1, &wrote);
+  data = buf;
+  _HURD_DPORT_USE
+    (fd,
+     ({
+     call:
+       err = __io_write (port, buf, nbytes, -1, &wrote);
+       if (ctty != MACH_PORT_NULL && err == EBACKGROUND)
+	 {
+	   struct _hurd_sigstate *ss
+	     = _hurd_thread_sigstate (__mach_thread_self ());
+	   if (_hurd_orphaned ||
+	       __sigismember (SIGTTOU, &ss->blocked) ||
+	       ss->actions[SIGTTOU].sa_handler == SIG_IGN)
+	     {
+	       /* We are orphaned, or are blocking or ignoring SIGTTOU.
+		  Return EIO instead of stopping.  */
+	       __mutex_unlock (&ss->lock);
+	       err = EIO;
+	     }
+	   else
+	     {
+	       const int restart = ss->actions[SIGTTOI].sa_flags & SA_RESTART;
+	       __sigaddmember (SIGTTOU, &ss->pending);
+	       __mutex_unlock (&ss->lock);
+	       /* XXX deliver pending signals */
+	       if (restart)
+		 goto call;
+	       else
+		 err = EINTR;	/* XXX Is this right? */
+	     }
+	 }
+     }));
 
   if (err)
     return __hurd_fail (err);
 
   return wrote;
 }
+
