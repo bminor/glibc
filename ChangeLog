@@ -1,3 +1,8 @@
+2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/hstcache.c (cache_addhst): Don't automatically add IPv6
+	address.  Suggested by Philip Blundell.
+
 2000-01-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/backtrace.c: Include signal.h which
