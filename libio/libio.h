@@ -69,7 +69,9 @@ the executable file might be covered by the GNU General Public License. */
 #endif /*!_PARAMS*/
 
 #ifndef __STDC__
+#ifndef const
 #define const
+#endif
 #endif
 #define _IO_UNIFIED_JUMPTABLES 1
 
