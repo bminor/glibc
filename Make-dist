@@ -31,7 +31,7 @@ foo:=$(shell echo 'foobar=$(filter %.c %.S %.s %.h,$(distribute))'>&2)
 
 ifndef sysdep_dirs
 # Find all sysdep directories.
-export sysdep_dirs := $(shell find $(..)sysdeps -type d -print)
+export sysdep_dirs := $(shell find $(..)sysdeps -type d ! -name RCS -print)
 else
 # Defined by the parent.
 sysdep_dirs := $(addprefix $(..),$(sysdep_dirs))
@@ -161,7 +161,7 @@ subdirs := $(filter-out crypt,$(subdirs))
 
 %/configure: %/configure.in
 	autoconf $(ACFLAGS) $< > $@.new
-	mv $@.new $@
+	mv -f $@.new $@
 
 .PHONY: dist
 dist: $(tardir).tar.gz $(tardir)-crypt.tar.gz
