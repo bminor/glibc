@@ -6,8 +6,8 @@ characterize the representation of the various integer and
 floating-point types supported by the GNU C library.
 
 @menu
-* Integer Representation Limits::  
-* Floating-Point Limits ::      Floating-Point Limits
+* Integer Representation Limits::       
+* Floating-Point Limits ::              Floating-Point Limits.
 @end menu
 
 @node Integer Representation Limits, Floating-Point Limits ,  , Representation Limits
@@ -173,9 +173,11 @@ characterize each of the supported floating-point representations on a
 particular system.
 
 @menu
-* Floating-Point Representation::  Definitions of terminology.
-* Floating-Point Parameters::   Descriptions of the library facilities.
-* IEEE Floating Point::         An example of a common representation.
+* Floating-Point Representation::       Definitions of terminology.
+* Floating-Point Parameters::           Descriptions of the library
+                                         facilities. 
+* IEEE Floating Point::                 An example of a common
+                                         representation. 
 @end menu
 
 @node Floating-Point Representation, Floating-Point Parameters,  , Floating-Point Limits

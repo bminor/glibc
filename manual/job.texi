@@ -247,7 +247,7 @@ have been stopped.
 * Stopped and Terminated Jobs::  Reporting job status.
 * Continuing Stopped Jobs::     How to continue a stopped job in
 				 the foreground or background.
-* Missing Pieces::          Other parts of the shell.
+* Missing Pieces::              Other parts of the shell.
 @end menu
 
 @node Data Structures, Initializing the Shell,  , Implementing a Shell

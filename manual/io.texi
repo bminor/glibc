@@ -40,7 +40,7 @@ how input and output to terminal or other serial devices are processed.
 
 @menu
 * I/O Concepts::       Some basic information and terminology.
-* File Names::                  How to refer to a file.
+* File Names::         How to refer to a file.
 @end menu
 
 @node I/O Concepts, File Names,  , I/O Overview
@@ -64,9 +64,9 @@ closed a stream or file descriptor, you cannot do any more input or
 output operations on it.
 
 @menu
-* Streams and File Descriptors::  The GNU Library provides two ways
-					 to access the contents of files.
-* File Position::               
+* Streams and File Descriptors::    The GNU Library provides two ways
+			             to access the contents of files.
+* File Position::        
 @end menu
 
 @node Streams and File Descriptors, File Position,  , I/O Concepts
@@ -159,7 +159,7 @@ a given file at the same time.  In order for each program to be able to
 read the file at its own pace, each program must have its own file
 pointer, which is not affected by anything the other programs do.
 
-In fact, each opening of  a file creates a separate file position.  
+In fact, each opening of a file creates a separate file position.  
 Thus, if you open a file twice even in the same program, you get two
 streams or descriptors with independent file positions.
 

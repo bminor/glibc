@@ -8,9 +8,10 @@ since we don't have the language manual yet, and documentation for these
 features has been written, we are publishing it here.
 
 @menu
-* Consistency Checking::        Using @code{assert} to abort
-				if something ``impossible'' happens.
-* Variadic Functions::          Defining functions with varying numbers of args.
+* Consistency Checking::        Using @code{assert} to abort if
+				 something ``impossible'' happens.
+* Variadic Functions::          Defining functions with varying numbers
+                                 of args. 
 * Null Pointer Constant::       The macro @code{NULL}.
 * Important Data Types::        Data types for object sizes.
 * Data Type Measurements::      Parameters of data type representations.
@@ -116,10 +117,11 @@ but incompatible, mechanism for defining functions with variable numbers
 of arguments, using @file{varargs.h}.
 
 @menu
-* Why Variadic::                Reasons for making functions take variable arguments.
+* Why Variadic::                Reasons for making functions take
+                                 variable arguments. 
 * How Variadic::                How to define and call variadic functions.
 * Argument Macros::             Detailed specification of the macros
-			   for accessing variable arguments.
+        			 for accessing variable arguments.
 * Variadic Example::            A complete example.
 @end menu
 
@@ -183,12 +185,13 @@ additional variable arguments.  @xref{Calling Variadic Functions}.
 
 @menu
 * Variadic Prototypes::         How to make a prototype for a function
-				   with variable arguments.
+				 with variable arguments.
 * Receiving Argument Values::   Steps you must follow to access the
-				   optional argument values.
-* How Many Arguments::          How to decide whether there are more arguments.
+				 optional argument values.
+* How Many Arguments::          How to decide whether there are more
+                                 arguments. 
 * Calling Variadic Functions::  Things you need to know about calling
-				   variable arguments functions.
+				 variable arguments functions.
 @end menu
 
 @node Variadic Prototypes, Receiving Argument Values,  , How Variadic
@@ -492,8 +495,10 @@ But the information is available in macros defined in the header files
 @file{limits.h} and @file{float.h}.
 
 @menu
-* Integer Type Macros::         Parameters that measure the integer types.
-* Floating Type Macros::        Parameters that measure the floating point types.
+* Integer Type Macros::         Parameters that measure the integer
+                                 types. 
+* Floating Type Macros::        Parameters that measure the floating
+                                 point types. 
 * Structure Measurement::       Getting measurements on structure types.
 @end menu
 
@@ -686,7 +691,8 @@ format used by your machine.
 @menu
 * Floating Point Concepts::     Definitions of terminology.
 * Floating-Point Parameters::   Floating-Point Parameters
-* IEEE Floating Point::         How one common representation is described.
+* IEEE Floating Point::         How one common representation is
+                                 described. 
 @end menu
 
 @node Floating Point Concepts, Floating-Point Parameters,  , Floating Type Macros

@@ -20,12 +20,16 @@ Provided the programs are written to obey the choice of locale, they
 will follow the conventions preferred by the user.
 
 @menu
-* Effects of Locale::           Actions affected by the choice of locale.
+* Effects of Locale::           Actions affected by the choice of
+                                 locale. 
 * Choosing Locale::             How the user specifies a locale.
-* Locale Categories::           Different purposes for which you can select a locale.
-* Setting the Locale::          How a program specifies the locale library functions.
+* Locale Categories::           Different purposes for which you can
+                                 select a locale. 
+* Setting the Locale::          How a program specifies the locale
+                                 library functions. 
 * Standard Locales::            Locale names available on all systems.
-* Numeric Formatting::          How to format numbers according to the chosen locale.
+* Numeric Formatting::          How to format numbers according to the
+                                 chosen locale. 
 @end menu
 
 @node Effects of Locale, Choosing Locale,  , Locales

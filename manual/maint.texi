@@ -7,18 +7,17 @@
 @appendix Library Maintenance
 
 @menu
-* Installation::                How to configure, compile and install
-                			 the GNU C library.
-* Reporting Bugs::              How to report bugs (if you want to
+* Installation::                        How to configure, compile and
+                                         install the GNU C library.
+* Reporting Bugs::                      How to report bugs (if you want to
                                          get them fixed) and other troubles
                                          you may have with the GNU C library.
-* Porting::                     How to port the GNU C library to
+* Porting::                             How to port the GNU C library to
                                          a new machine or operating system.
-* Traditional C Compatibility::  Using the GNU C library with non-ANSI
-                                         C compilers.
-* Contributors::                Contributors to the GNU C Library.
+* Traditional C Compatibility::         Using the GNU C library with
+                                         non-ANSI C compilers.
+* Contributors::                        Contributors to the GNU C Library.
 @end menu
-
 
 @node Installation, Reporting Bugs,  , Maintenance
 @appendixsec How to Install the GNU C Library

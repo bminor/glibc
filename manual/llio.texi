@@ -10,26 +10,29 @@ for which there are no equivalents on streams.
 @c ??? Why use descriptor-level fns?
 
 @menu
-* Opening and Closing Files::   How to open and close file descriptors.
-* I/O Primitives::              Reading and writing data.
-* File Position Primitive::     Setting a descriptor's file position.
-* Descriptors and Streams::     Converting descriptor to stream
+* Opening and Closing Files::           How to open and close file
+                                         descriptors. 
+* I/O Primitives::                      Reading and writing data.
+* File Position Primitive::             Setting a descriptor's file
+                                         position. 
+* Descriptors and Streams::             Converting descriptor to stream
                                          or vice-versa.
-* Stream/Descriptor Precautions::  Precautions needed if you use both
+* Stream/Descriptor Precautions::       Precautions needed if you use both
                                          descriptors and streams.
-* Waiting for I/O::             How to check for input or output
+* Waiting for I/O::                     How to check for input or output
 					 on multiple file descriptors.
-* Control Operations::          Various other operations on file
+* Control Operations::                  Various other operations on file
 					 descriptors.
-* Duplicating Descriptors::     Fcntl commands for duplicating file
-					 descriptors.
-* Descriptor Flags::            Fcntl commands for manipulating flags
-					 associated with file descriptors.
-* File Status Flags::           Fcntl commands for manipulating flags
-					 associated with open files.
-* File Locks::                  Fcntl commands for implementing file
-					 locking.
-* Interrupt Input::             Getting an asynchronous signal when
+* Duplicating Descriptors::             Fcntl commands for duplicating
+                                         file descriptors.
+* Descriptor Flags::                    Fcntl commands for manipulating
+                                         flags associated with file
+                                         descriptors. 
+* File Status Flags::                   Fcntl commands for manipulating
+                                         flags associated with open files.
+* File Locks::                          Fcntl commands for implementing
+                                         file locking.
+* Interrupt Input::                     Getting an asynchronous signal when
                                          input arrives.
 @end menu
 

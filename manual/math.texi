@@ -20,14 +20,14 @@ In the meantime, you should avoid using these names yourself.
 
 @menu
 * Domain and Range Errors::     How overflow conditions and the like
-					 are reported.
+				 are reported.
 * Not a Number::                Making NANs and testing for NANs.
-* Trig Functions::     Sine, cosine, and tangent.
-* Inverse Trig Functions::  Arc sine, arc cosine, and arc tangent.
-* Exponents and Logarithms::  Also includes square root.
+* Trig Functions::              Sine, cosine, and tangent.
+* Inverse Trig Functions::      Arc sine, arc cosine, and arc tangent.
+* Exponents and Logarithms::    Also includes square root.
 * Hyperbolic Functions::        Hyperbolic sine and friends.
 * Pseudo-Random Numbers::       Functions for generating pseudo-random
-					 numbers.
+				 numbers.
 * Absolute Value::              Absolute value functions.
 @end menu
 
@@ -475,8 +475,8 @@ libraries may produce different sequences of values for the same seed.
 
 
 @menu
-* ANSI C Random Number Functions::  @code{rand} and friends.
-* BSD Random Number Functions::  @code{random} and friends.
+* ANSI C Random Number Functions::      @code{rand} and friends.
+* BSD Random Number Functions::         @code{random} and friends.
 @end menu
 
 @node ANSI C Random Number Functions, BSD Random Number Functions,  , Pseudo-Random Numbers

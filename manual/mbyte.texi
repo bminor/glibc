@@ -22,11 +22,11 @@ controls the meanings and characteristics of wide character codes.
 * Multibyte Char Intro::        How multibyte codes are represented.
 * Wide Char Intro::             How wide characters are represented.
 * Wide String Conversion::      Converting wide strings to multibyte code
-                                   and vice versa.
+                                 and vice versa.
 * Length of Char::              how many bytes make up one multibyte char.
 * Converting One Char::         Converting a string character by character.
 * Example of Conversion::       Example showing why converting 
-				   one character at a time may be useful.
+				 one character at a time may be useful.
 * Shift State::                 Multibyte codes with "shift characters".
 @end menu
 
