@@ -23,13 +23,9 @@ __task2pid (task_t task)
 {
   error_t err;
   pid_t pid;
-  __mutex_lock (&_hurd_lock);
-  err = __proc_task2pid (_hurd_proc, task, &pid);
-  __mutex_unlock (&_hurd_lock);
+  err = _HURD_PORT_USE (&_hurd_proc,
+			__proc_task2pid (proc, task, &pid));
   if (err)
-    {
-      errno = err;
-      return (pid_t) -1
-    }
+    return __hurd_fail (err);
   return pid;
 }
