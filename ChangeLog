@@ -1,5 +1,7 @@
 2002-05-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/sk.po: Update from translation team.
+
 	* sysdeps/powerpc/libgcc-compat.c: Don't use INTUSE.
 
 2002-05-28  Andreas Schwab  <schwab@suse.de>
