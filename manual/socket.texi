@@ -19,14 +19,9 @@ Not all operating systems support sockets.  The GNU library provides
 the header file @file{sys/sockets.h} on all systems, and the socket
 functions always exist, but if the system does not really support
 sockets, these functions always fail.
-@c !!! a future release may omit them from the library instead of having
-@c stub functions.
 
 @strong{Incomplete:} We do not currently document the facilities for
 broadcast messages or for configuring internet interfaces.
-
-@c !!! I think we should use `name space' instead of `namespace' in this
-@c chapter. -rm
 
 @menu
 * Socket Concepts::	Basic concepts you need to know about.
@@ -90,21 +85,25 @@ destination address for each message you send.
 @cindex domain (of socket)
 @cindex socket namespace
 @cindex socket domain
-You must also choose a @dfn{namespace} for naming the socket.  A
-socket name (``address'') is meaningful only in the context of a
-particular namespace.  In fact, even the data type to use for a socket
-name may depend on the namespace.  Namespaces are also called
-``domains'', but we avoid that word as it can be confused with other
-usage of the same term.
+You must also choose a @dfn{namespace} for naming the socket.  A socket
+name (``address'') is meaningful only in the context of a particular
+namespace.  In fact, even the data type to use for a socket name may
+depend on the namespace.  Namespaces are also called ``domains'', but we
+avoid that word as it can be confused with other usage of the same
+term.  Each namespace has a symbolic name that starts with @samp{PF_}.
+A corresponding symbolic name starting with @samp{AF_} designates the
+address format for that namespace.
 
 @cindex network protocol
 @cindex protocol (of socket)
 @cindex socket protocol
+@cindex protocol family
 Finally you must next choose the @dfn{protocol} to carry out the
 communication.  The protocol determines what low-level mechanism is used
 to transmit and receive data.  Each protocol is valid for a particular
 namespace and communication style; a namespace is sometimes called a
-@dfn{protocol family} because of this.
+@dfn{protocol family} because of this, which is why the namespace names
+start with @samp{PF_}.
 
 The rules of a protocol apply to the data passing between two programs,
 perhaps on different computers; most of these rules are handled by the
@@ -230,16 +229,16 @@ address.  Other processes can find it for communication only if you
 give it an address.  We call this @dfn{binding} the address to the
 socket, and the way to do it is with the @code{bind} function.
 
-You need be concerned with the address of a socket only if other
-processes are to find it and start communicating with it.  You can
-specify an address for other sockets, but this is usually pointless;
-the first time you send data from a socket, or use it to initiate a
-connection, the system assigns an automatically generated address if
-you have not specified one.
-@c !!! some higher-level protocols may care about the client's port
-@c number.  for example, the rsh and rlogin protocols look at the
-@c client's port number and don't trust it (to log in without a
-@c password) unless it is < 1024 (meaning root on client machine).
+You need be concerned with the address of a socket if other processes
+are to find it and start communicating with it.  You can specify an
+address for other sockets, but this is usually pointless; the first time
+you send data from a socket, or use it to initiate a connection, the
+system assigns an address automatically if you have not specified one.
+
+Occasionally a client needs to specify an address because the server
+discriminates based on addresses; for example, the rsh and rlogin
+protocols look at the client's socket address and don't bypass password
+checking unless it is less than @code{IPPORT_RESERVED} (@pxref{Ports}).
 
 The details of socket addresses vary depending on what namespace you are
 using.  @xref{File Namespace}, or @ref{Internet Namespace}, for specific
@@ -247,10 +246,11 @@ information.
 
 Regardless of the namespace, you use the same functions @code{bind} and
 @code{getsockname} to set and examine a socket's address.  These
-functions use a generic data type, @code{struct sockaddr}, to
-represent the address.
-@c !!! i this is misleading: `struct sockaddr' is in fact never used; it
-@c exists for casting pointers to.
+functions use a phony data type, @code{struct sockaddr *}, to accept the
+address.  In practice, the address lives in a structure of some other
+data type appropriate to the address format you are using, but you cast
+its address to @code{struct sockaddr *} when you pass it to
+@code{bind}.
 
 @menu
 * Address Formats::		About @code{struct sockaddr}.
@@ -262,26 +262,16 @@ represent the address.
 @subsection Address Formats
 
 The functions @code{bind} and @code{getsockname} use the generic data
-type @code{struct sockaddr} to represent a socket address.  You can't
-use this data type effectively to interpret an address or construct
-one; for that, you must use the proper data type for the namespace you
-are using.
+type @code{struct sockaddr *} to represent a pointer to a socket
+address.  You can't use this data type effectively to interpret an
+address or construct one; for that, you must use the proper data type
+for the socket's namespace.
 
 Thus, the usual practice is to construct an address in the proper
 namespace-specific type, then cast a pointer to @code{struct sockaddr *}
-when you call @code{bind}.  
-@c !!! this next sentence sounds like you do:
-@c  struct sockaddr addr;
-@c  getsockname (..., &addr, ...);
-@c  ((struct sockaddr_in *) &addr)->...
-@c rather than the actual:
-@c  struct sockaddr_in addr;
-@c  getsockname (..., (struct sockaddr *) &addr, ...)
-@c  addr....
-Likewise, you would cast the result of @code{getsockname} to the proper
-namespace-specific data type in order to examine its components
-meaningfully.
-The one piece of information that you can get with the @code{struct
+when you call @code{bind} or @code{getsockname}.
+
+The one piece of information that you can get from the @code{struct
 sockaddr} data type is the @dfn{address format} designator which tells
 you which data type to use to understand the address fully.
 
@@ -300,11 +290,15 @@ This is the code for the address format of this address.  It
 identifies the format of the data which follows.
 
 @item char sa_data[14]
-This is the actual socket address data, which is format-dependent.
+This is the actual socket address data, which is format-dependent.  Its
+length is also format-dependent, and may well be more than 14.  The
+length 14 of @code{sa_data} is essentially arbitrary.
 @end table
 @end deftp
 
-These symbolic constants designate particular address formats:
+Each address format has a symbolic name which starts with @samp{AF_}.
+Each of them corresponds to a @samp{PF_} symbol which designates the
+corresponding namespace.  Here is a list of address format names:
 
 @table @code
 @comment sys/socket.h
@@ -312,20 +306,23 @@ These symbolic constants designate particular address formats:
 @item AF_FILE
 @vindex AF_FILE
 This designates the address format that goes with the file namespace.
-@xref{File Namespace}.
+(@code{PF_FILE} is the name of that namespace.)  @xref{File Namespace
+Functions}, for information about this address format.
 
 @comment sys/socket.h
 @comment BSD
 @item AF_UNIX
 @vindex AF_UNIX
 This is a synonym for @code{AF_FILE}, for compatibility.
+(@code{PF_UNIX} is likewise a synonym for @code{PF_FILE}.)
 
 @comment sys/socket.h
 @comment BSD
 @item AF_INET
 @vindex AF_INET
-This designates the address format that goes with the Internet namespace.
-@xref{Internet Namespace}.
+This designates the address format that goes with the Internet
+namespace.  (@code{PF_INET} is the name of that namespace.)
+@xref{Internet Address Format}.
 
 @comment sys/socket.h
 @comment BSD
@@ -334,10 +331,13 @@ This designates the address format that goes with the Internet namespace.
 This designates no particular address format.  It is used only in rare
 cases, such as to clear out the default destination address of a
 ``connected'' datagram socket.  @xref{Sending Datagrams}.
+
+The corresponding namespace designator symbol @code{PF_UNSPEC} exists
+for completeness, but there is no reason to use it in a program.
 @end table
 
-@file{sys/socket.h} defines symbols starting with @samp{AF_} for a large
-collection of network protocols, all or most of which are not actually
+@file{sys/socket.h} defines symbols starting with @samp{AF_} for many
+different kinds of networks, all or most of which are not actually
 implemented.  We will document those that really work, as we receive
 information about how to use them.
 
@@ -380,9 +380,9 @@ The socket @var{socket} already has an address.
 
 @item EACCESS
 You do not have permission to access the requested address.  (In the
-Internet domain, only the super-user is allowed to specify a port
-number in the range 0 through 1023.)
-@c !!! this needs an xref to where priv. port #s are explained
+Internet domain, only the super-user is allowed to specify a port number
+in the range 0 through @code{IPPORT_RESERVED} minus one; see
+@ref{Ports}.)
 @end table
 
 Additional conditions may be possible depending on the particular namespace
@@ -410,7 +410,9 @@ size of the address data.
 The format of the address data depends on the socket namespace.  The
 length of the information is usually fixed for a given namespace, so
 normally you can know exactly how much space is needed and can provide
-that much.
+that much.  The usual practice is to allocate a place for the value
+using the proper data type for the socket's namespace, then cast its
+address to @code{struct sockaddr *} to pass it to @code{getsockname}.
 
 The return value is @code{0} on success and @code{-1} on error.  The
 following @code{errno} error conditions are defined for this function:
@@ -435,10 +437,8 @@ find a file's name from a descriptor for that file.
 @section The File Namespace
 @cindex file namespace, for sockets
 
-This section describes the details of the file namespace, @code{PF_FILE}.
-@c !!! it might be good to somewhere state that all the PF_* and AF_*
-@c constants are the same.  I don't even know where one is supposed to
-@c use PF_foo and where AF_foo.
+This section describes the details of the file namespace, whose
+symbolic name (required when you create a socket) is @code{PF_FILE}.
 
 @menu
 * Concepts: File Namespace Concepts.
@@ -489,7 +489,7 @@ To create a socket in the file namespace, use the constant
 @comment GNU
 @deftypevr Macro int PF_FILE
 This designates the file namespace, in which socket addresses are file
-names.
+names, and its associated family of protocols.
 @end deftypevr
 
 @comment sys/socket.h
@@ -535,7 +535,6 @@ the file name string.
 Here is an example showing how to create and name a socket in the file
 namespace.
 
-@c !!! I changed the example to use offsetof; that should be explained
 @example
 @include makefsock.c.texi
 @end example
@@ -545,17 +544,19 @@ namespace.
 @cindex Internet namespace, for sockets
 
 This section describes the details the protocols and socket naming
-conventions used in the Internet namespace, @code{PF_INET}.
+conventions used in the Internet namespace.
 
-To create a socket in the Internet namespace, use the macro @code{PF_INET}
-as the @var{namespace} argument to @code{socket} or @code{socketpair}.
-This macro is defined in @file{sys/socket.h}.
+To create a socket in the Internet namespace, use the symbolic name
+@code{PF_INET} of this namespace as the @var{namespace} argument to
+@code{socket} or @code{socketpair}.  This macro is defined in
+@file{sys/socket.h}.
 @pindex sys/socket.h
 
 @comment sys/socket.h
 @comment BSD
 @deftypevr Macro int PF_INET
-This is the Internet namespace and associated family of protocols.
+This designates the Internet namespace and associated family of
+protocols.
 @end deftypevr
 
 A socket address for the Internet namespace includes the following components:
@@ -628,7 +629,18 @@ you are using an Internet namespace socket address.
 @node Host Addresses
 @subsection Host Addresses
 
-@c !!! there should be a paragraph here that says something or other.
+Each computer on the Internet has one or more @dfn{Internet addresses},
+numbers which identify that computer among all those on the Internet.
+Users typically write numeric host addresses as sequences of four
+numbers, separated by periods, as in @samp{128.52.46.32}.
+
+Each computer also has one or more @dfn{host names}, which are strings
+of words separated by periods, as in @samp{churchy.gnu.ai.mit.edu}.
+
+Programs that let the user specify a host typically accept both numeric
+addresses and host names.  But the program needs a numeric address to
+open a connection; to use a host name, you must convert it to the
+numeric address it stands for.
 
 @menu
 * Abstract Host Addresses::	What a host number consists of.
@@ -639,37 +651,35 @@ you are using an Internet namespace socket address.
 
 @node Abstract Host Addresses 
 @subsubsection Internet Host Addresses
-
 @cindex host address, Internet
 @cindex Internet host address
+
+@ifinfo
 Each computer on the Internet has one or more Internet addresses,
 numbers which identify that computer among all those on the Internet.
-
-Externally, host addresses are specified as strings like
-@samp{128.52.46.32}.  A machine normally also has a @dfn{host name} that is
-a string; for example, @samp{churchy.gnu.ai.mit.edu}.  This section
-discusses the numeric form of host addresses only.  To map a host name
-onto an address, you need to call @code{gethostbyname}; this function is
-discussed in @ref{Host Names}.
+@end ifinfo
 
 @cindex network number
 @cindex local network address number
-An Internet host address is a number containing four bytes of data, and
-consists of a @dfn{network number} and a @dfn{local network address
-number} within that network.  Network numbers are registered with the
-Network Information Center (NIC), and are divided into three
-classes---A, B, and C.  The local network address numbers of individual
-machines are registered with the administrator of the particular
-network.
+An Internet host address is a number containing four bytes of data.
+These are divided into two parts, a @dfn{network number} and a
+@dfn{local network address number} within that network.  The network
+number consists of the first one, two or three bytes; the rest of the
+bytes are the local address.
+
+Network numbers are registered with the Network Information Center
+(NIC), and are divided into three classes---A, B, and C.  The local
+network address numbers of individual machines are registered with the
+administrator of the particular network.
 
 Class A networks have single-byte numbers in the range 0 to 127.  There
 are only a small number of Class A networks, but they can each support a
 very large number of hosts.  Medium-sized Class B networks have two-byte
-numbers, with the first byte in the range 128 to 191.  Class C networks
-are the smallest; they have three-byte numbers, with the first byte in
-the range 192-255.  Thus, the first 1, 2, or 3 bytes of an Internet
-address specifies a network.  The remaining bytes of the Internet
-address specify the address within that network.
+network numbers, with the first byte in the range 128 to 191.  Class C
+networks are the smallest; they have three-byte network numbers, with
+the first byte in the range 192-255.  Thus, the first 1, 2, or 3 bytes
+of an Internet address specifies a network.  The remaining bytes of the
+Internet address specify the address within that network.
 
 The Class A network 0 is reserved for broadcast to all networks.  In
 addition, the host number 0 within each network is reserved for broadcast 
@@ -716,22 +726,11 @@ radix is assumed.
 @node Host Address Data Type
 @subsubsection Host Address Data Type
 
-@c !!! all this union frobbing is not necessary.  struct in_addr has one
-@c member: "unsigned long int s_addr".
-
-Internet host addresses are represented internally with the data type
-@code{struct in_addr}, though in some situations an @code{unsigned
-long int} is used instead.  Unfortunately, the interfaces to the
-various functions for manipulating addresses are not at all consistent
-about this.  You can use a union to convert between the two
-representations, like this:
-
-@example
-union @{ struct in_addr str; unsigned long int uns; @} u;
-
-u.str = structure;
-@dots{} u.uns @dots{}
-@end example
+Internet host addresses are represented in some contexts as integers
+(type @code{unsigned long int}).  In other contexts, the integer is
+packaged inside a structure of type @code{struct in_addr}.  It would
+be better if the usage were made consistent, but it is not hard to extract
+the integer from the structure or put the integer into a structure.
 
 The following basic definitions for Internet addresses appear in the
 header file @file{netinet/in.h}:
@@ -740,19 +739,19 @@ header file @file{netinet/in.h}:
 @comment netinet/in.h
 @comment BSD
 @deftp {Data Type} {struct in_addr}
-This is the data type representing an Internet host address.  You can
-convert this structure type to a @code{unsigned long int} to get the
-host address number.
+This data type is used in certain contexts to contain an Internet host
+address.  It has just one field, named @code{s_addr}, which records the
+host address number as an @code{unsigned long int}.
 @end deftp
 
 @comment netinet/in.h
 @comment BSD
 @deftypevr Macro {unsigned long int} INADDR_ANY
-You can use this constant to stand for ``the address of this
-machine,'' instead of finding its actual address.  This special
-constant saves you the trouble of looking up the address of your own
-machine.  Also, if your machine has multiple network addresses (which
-is not unusual), using @code{INADDR_ANY} allows the system to choose
+You can use this constant to stand for ``the address of this machine,''
+instead of finding its actual address.  This special constant saves you
+the trouble of looking up the address of your own machine.  Also, if
+your machine has multiple network addresses on different networks (which
+is not unusual), using @code{INADDR_ANY} permits the system to choose
 whichever address makes communication most efficient.
 @end deftypevr
 
@@ -835,11 +834,8 @@ Internally, the system uses a database to keep track of the mapping
 between host names and host numbers.  This database is usually either
 the file @file{/etc/hosts} or an equivalent provided by a name server.
 The functions and other symbols for accessing this database are declared
-in @file{netdb.h}. 
-@c !!! lack of _BSD_SOURCE does not turn these off; the header files
-@c that do not exist in ansi or posix don't pay attention to the macros.
-They are all BSD features, controlled by @code{_BSD_SOURCE} and
-@code{_GNU_SOURCE}.
+in @file{netdb.h}.  They are BSD features, defined unconditionally if
+you include @file{netdb.h}.
 
 @comment netdb.h
 @comment BSD
@@ -856,10 +852,11 @@ These are alternative names for the host, represented as a null-terminated
 vector of strings.
 
 @item int h_addrtype
-This is the host address type; its value is always @code{AF_INET}.
+This is the host address type; in practice, its value is always
+@code{AF_INET}.  In principle other kinds of addresses could be
+represented in the data base as well as Internet addresses; if this were
+done, you might find a value in this field other than @code{AF_INET}.
 @xref{Socket Addresses}.
-@c !!! this really is a general mechanism that can work for things other
-@c than inet; xns for example.
 
 @item int h_length
 This is the length, in bytes, of each address.
@@ -957,8 +954,9 @@ in using these functions, because they are not reentrant.
 This function opens the hosts database to begin scanning it.  You can
 then call @code{gethostent} to read the entries.
 
-@c !!! the flag has different meaning if using the DNS.
-
+@c !!! the flag has different meaning if using the DNS. - roland
+@c rms: this is what Bostic told me it means.  He didn't say there
+@c was an exception.
 If the @var{stayopen} argument is nonzero, this sets a flag so that
 subsequent calls to @code{gethostbyname} or @code{gethostbyaddr} will
 not close the database (as they usually would).  This makes for more
@@ -988,21 +986,21 @@ Internet address plus a @dfn{port number} which distinguishes the
 sockets on a given machine (for a given protocol).  Port numbers range
 from 0 to 65,535.
 
-Port numbers less than 1024 are reserved for standard servers, such as
-@code{finger} and @code{telnet}.  There is a database that keeps track
-of these, and you can use the @code{getservbyname} function to map a
-service name onto a port number; see @ref{Services Database}.
+Port numbers less than @code{IPPORT_RESERVED} are reserved for standard
+servers, such as @code{finger} and @code{telnet}.  There is a database
+that keeps track of these, and you can use the @code{getservbyname}
+function to map a service name onto a port number; see @ref{Services
+Database}.
 
-@c !!! netinet/in.h defines IPPORT_USERRESERVED as 5000, not 50000.
 If you write a server that is not one of the standard ones defined in
 the database, you must choose a port number for it.  Use a number
-greater than 50,000; such numbers are reserved for servers and won't
-ever be generated automatically by the system.  Avoiding conflicts
-with servers being run by other users is up to you.
+greater than @code{IPPORT_USERRESERVED}; such numbers are reserved for
+servers and won't ever be generated automatically by the system.
+Avoiding conflicts with servers being run by other users is up to you.
 
 When you use a socket without specifying its address, the system
-generates a port number for it.  This number is between 1024 and
-50,000.
+generates a port number for it.  This number is between
+@code{IPPORT_RESERVED} and @code{IPPORT_USERRESERVED}.
 
 On the Internet, it is actually legitimate to have two different
 sockets with the same port number, as long as they never both try to
@@ -1290,13 +1288,10 @@ This function closes the protocols database.
 @subsection Internet Socket Example
 
 Here is an example showing how to create and name a socket in the
-Internet namespace.  
-@c !!! this sentence doesn't say anything useful.  i think the IP
-@c address you bind with determines where you will accept connections
-@c from.  this should be explained elsewhere.
-Since the newly created socket exists on the machine
-that the program is running on, this example uses @code{INADDR_ANY} as
-the host address.
+Internet namespace.  The newly created socket exists on the machine that
+the program is running on.  Rather than finding and using the machine's
+Internet address, this example specifies @code{INADDR_ANY} as the host
+address; the system replaces that with the machine's actual address.
 
 @example
 @include makeisock.c.texi
@@ -1312,7 +1307,9 @@ structure, given a host name string and a port number:
 @node Open/Close Sockets
 @section Opening and Closing Sockets
 
-@c !!! need some text here.
+This section describes the actual library functions for opening and
+closing sockets.  The same functions work for all namespaces and
+connection styles.
 
 @menu
 * Creating a Socket::           How to open a socket.
@@ -1434,14 +1431,14 @@ following @code{errno} error conditions are defined for this function:
 @cindex socket pair
 @cindex opening a socket pair
 
-A @dfn{socket pair} consists of a pair of connected (but unnamed)
-sockets.  It is very similar to a pipe and is used in much the same way.
-Socket pairs are created with the @code{socketpair} function, declared
-in @file{sys/socket.h}.  (Compare this function with the @code{pipe}
-function; see @ref{Creating a Pipe}.)
-@c !!! should say how a socketpair differs from a pipe; perhaps give
-@c example of pipe implemented with socketpair.
 @pindex sys/socket.h
+A @dfn{socket pair} consists of a pair of connected (but unnamed)
+sockets.  It is very similar to a pipe and is used in much the same
+way.  Socket pairs are created with the @code{socketpair} function,
+declared in @file{sys/socket.h}.  A socket pair is much like a pipe; the
+main difference is that the socket pair is bidirectional, whereas the
+pipe has one input-only end and one output-only end (@pxref{Pipes and
+Fifos}).
 
 @comment sys/socket.h
 @comment BSD
@@ -1546,11 +1543,11 @@ is typically on another machine, and it must be already set up as a
 server.)  @xref{Socket Addresses}, for information about how these
 arguments are interpreted.
 
-Normally, @code{connect} waits until the server responds to the
-request before it returns.  You can set nonblocking mode on the socket
+Normally, @code{connect} waits until the server responds to the request
+before it returns.  You can set nonblocking mode on the socket
 @var{socket} to make @code{connect} return immediately without waiting
-for the response.
-@c !!! xref to setting nonblock mode.
+for the response.  @xref{File Status Flags}, for information about
+nonblocking mode.
 @c !!! how do you tell when it has finished connecting?  I suspect the
 @c way you do it is select for writing.
 
@@ -1609,12 +1606,15 @@ the @code{accept} function (@pxref{Accepting Connections}) to act on a
 request.  The @code{listen} function is not allowed for sockets using
 connectionless communication styles.
 
-There are no special protection mechanisms for controlling access to
-connect to a port; any process on any machine can make a connection to
-your server.  If you want to restrict access to your server, make it
-examine the addresses associated with connection requests or implement
-some other handshaking or identification protocol.
-@c !!! i think normal file protections apply for AF_FILE
+In the Internet namespace, there are no special protection mechanisms
+for controlling access to connect to a port; any process on any machine
+can make a connection to your server.  If you want to restrict access to
+your server, make it examine the addresses associated with connection
+requests or implement some other handshaking or identification
+protocol.
+
+In the File namespace, the ordinary file protection bits control
+who has access to connect to the socket.
 
 @comment sys/socket.h
 @comment BSD
@@ -1673,9 +1673,10 @@ This function is used to accept a connection request on the server
 socket @var{socket}.
 
 The @code{accept} function waits if there are no connections pending,
-unless the socket @var{socket} has nonblocking mode set.  @xref{File
-Status Flags}, in regard to nonblocking mode.
-@c !!! mention using select to find when connection pending.
+unless the socket @var{socket} has nonblocking mode set.  (You can use
+@code{select} to wait for a pending connection, with a nonblocking
+socket.)  @xref{File Status Flags}, for information about nonblocking
+mode.
 
 The @var{addr} and @var{length_ptr} arguments are used to return
 information about the name of the client socket that initiated the
@@ -1783,8 +1784,7 @@ The @code{send} function is declared in the header file
 as well use @code{write} instead of @code{send}; see @ref{I/O
 Primitives}.  If the socket was connected but the connection has broken,
 you get a @code{SIGPIPE} signal for any use of @code{send} or
-@code{write}.
-@c !!! xref to where SIGPIPE is explained in detail.
+@code{write} (@pxref{Miscellaneous Signals}).
 
 @comment sys/socket.h
 @comment BSD
@@ -1794,8 +1794,9 @@ flags @var{flags}.  The possible values of @var{flags} are described
 in @ref{Socket Data Options}.
 
 This function returns the number of bytes transmitted, or @code{-1} on
-failure.  If the socket is nonblocking, then @code{send} (like @code{write})
-can return after sending just part of the data.
+failure.  If the socket is nonblocking, then @code{send} (like
+@code{write}) can return after sending just part of the data.
+@xref{File Status Flags}, for information about nonblocking mode.
 
 Note, however, that a successful return value merely indicates that
 the message has been sent without error, not necessarily that it has
@@ -1822,7 +1823,6 @@ message is too large for this to be possible.
 Nonblocking mode has been set on the socket, and the write operation
 would block.  (Normally @code{send} blocks until the operation can be
 completed.)
-@c !!! xref to nonblocking mode
 
 @item ENOBUFS
 There is not enough internal buffer space available.
@@ -1854,6 +1854,10 @@ The @code{recv} function is like @code{read}, but with the additional
 flags @var{flags}.  The possible values of @var{flags} are described
 In @ref{Socket Data Options}.
 
+If nonblocking mode is set for @var{socket}, and no data is available to
+be read, @code{recv} fails immediately rather than waiting.  @xref{File
+Status Flags}, for information about nonblocking mode.
+
 This function returns the number of bytes received, or @code{-1} on failure.
 The following @code{errno} error conditions are defined for this function:
 
@@ -1866,9 +1870,8 @@ The descriptor @var{socket} is not a socket.
 
 @item EWOULDBLOCK
 Nonblocking mode has been set on the socket, and the read operation
-would block.  (Normally, @code{recv} blocks until there is input available
-to be read.)
-@c !!! xref to nonblocking mode
+would block.  (Normally, @code{recv} blocks until there is input
+available to be read.)
 
 @item EINTR
 The operation was interrupted by a signal before any data was read.
@@ -2287,17 +2290,13 @@ We've explained above how to write a server program that does its own
 listening.  Such a server must already be running in order for anyone
 to connect to it.
 
-Another way to provide service for an Internet port is to let the
-daemon program @code{inetd} do the listening.  @code{inetd} is a program that runs
-all the time and listens for messages on a specified set of ports.
-When it receives a message, it accepts the connection and then forks a
-child process to run the corresponding server program.  You specify
-the ports and their programs in the file @file{/etc/inetd.conf}.
-@c ??? Supposedly listen is not permitted for conectionless styles.
-@c ??? So what does Inetd do to wait for a message to arrive?
-@c !!! inetd does select for reading; this tells you when a
-@c connection-oriented socket can be accepted from, or when a
-@c connectionless socket can be read from.
+Another way to provide service for an Internet port is to let the daemon
+program @code{inetd} do the listening.  @code{inetd} is a program that
+runs all the time and waits (using @code{select}) for messages on a
+specified set of ports.  When it receives a message, it accepts the
+connection (if the socket style calls for connections) and then forks a
+child process to run the corresponding server program.  You specify the
+ports and their programs in the file @file{/etc/inetd.conf}.
 
 @menu
 * Inetd Servers::
@@ -2482,6 +2481,7 @@ This option toggles recording of debugging information in the underlying
 protocol modules.  The value has type @code{int}; a nonzero value means
 ``yes''.
 @c !!! should say how this is used
+@c Ok, anyone who knows, please explain.
 
 @comment sys/socket.h
 @comment BSD
@@ -2596,13 +2596,11 @@ the previous error status.
 @pindex netdb.h
 Many systems come with a database that records a list of networks known
 to the system developer.  This is usually kept either in the file
-@file{/etc/networks} or in an equivalent from a name server.  We know of
-no practical use for this database, but historically there have been
-functions in the library to access it.  We provide these functions for
-compatibility, and thus we document them here.  They are declared in
+@file{/etc/networks} or in an equivalent from a name server.  This data
+base is useful for routing programs such as @code{route}, but it is not
+useful for programs that simply communicate over the network.  We
+provide functions to access this data base, which are declared in
 @file{netdb.h}.
-@c !!! the database is useful for network routing frobbing programs
-@c (e.g., `route').
 
 @comment netdb.h
 @comment BSD
