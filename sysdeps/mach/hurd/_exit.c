@@ -48,7 +48,7 @@ _hurd_exit (int status)
     }
 }
 
-void
+__NORETURN void
 DEFUN(_exit, (status), int status)
 {
   _hurd_exit (W_EXITCODE (status, 0));
