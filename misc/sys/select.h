@@ -77,12 +77,14 @@ extern int select __P ((int __nfds, __fd_set *__readfds,
 
 /* Same as above only that the TIMEOUT value is given with higher
    resolution.  This version should be used.  */
+#ifdef __USE_POSIX
 extern int __pselect __P ((int __nfds, __fd_set *__readfds,
 			   __fd_set *__writefds, __fd_set *__exceptfds,
 			   struct timespec *__timeout));
 extern int pselect __P ((int __nfds, __fd_set *__readfds,
 			 __fd_set *__writefds, __fd_set *__exceptfds,
 			 struct timespec *__timeout));
+#endif
 
 __END_DECLS
 
