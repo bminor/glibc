@@ -91,9 +91,10 @@ enum
   {				/* C type: */
     PA_INT,			/* int */
     PA_CHAR,			/* int, cast to char */
-    PA_STRING,			/* char *, a '\0'-terminated string */
+    PA_STRING,			/* const char *, a '\0'-terminated string */
     PA_POINTER,			/* void * */
-    PA_FLOAT,			/* double */
+    PA_FLOAT,			/* float */
+    PA_DOUBLE,			/* double */
     PA_LAST
   };
 
