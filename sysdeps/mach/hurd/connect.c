@@ -33,13 +33,33 @@ DEFUN(connect, (fd, addr, len),
 {
   error_t err;
   addr_port_t aport;
-
+  
+  if (addr->sa_family == AF_LOCAL)
+    {
+      /* For the local domain, we must look up the name as a file and talk
+	 to it with the ifsock protocol.  */
+      struct sockaddr_un *unaddr = (struct sockaddr_un *) addr;
+      file_t file = __path_lookup (unaddr->sun_path, 0, 0);
+      if (file == MACH_PORT_NULL)
+	return -1;
+      err = __ifsock_getsockaddr (file, &aport);
+      __mach_port_deallocate (__mach_task_self (), file);
+      if (err == MIG_BAD_ID || err == EOPTNOTSUPP)
+	/* The file did not grok the ifsock protocol.  */
+	err = ENOTSOCK;
+      if (err)
+	return __hurd_fail (err);
+    }
+  else
+    aport = MACH_PORT_NULL;
+    
   err = HURD_DPORT_USE (fd,
 			({
-			  err = __socket_create_address (port,
-							 addr->sa_family,
-							 (char *) addr, len,
-							 &aport, 0);
+			  if (aport == MACH_PORT_NULL)
+			    err = __socket_create_address (port,
+							   addr->sa_family,
+							   (char *) addr, len,
+							   &aport, 0);
 			  if (! err)
 			    {
 			      err = __socket_connect (port, aport);
