@@ -23,6 +23,8 @@ Version 2.2.5
 
 * optimizations in the dynamic linker.  binaries created by recent binutils
   versions start up quicker due to reduced time spend on relocations.
+
+* Support for use of gcc3 added by Jakub Jelinek and HJ Lu.
 
 Version 2.2.4
 
