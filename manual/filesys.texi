@@ -115,9 +115,15 @@ software.
 @comment unistd.h
 @comment BSD
 @deftypefun {char *} getwd (char *@var{buffer})
-This is similar to @code{getcwd}.  The GNU library provides @code{getwd}
-for backwards compatibility with BSD.  The @var{buffer} should be a
-pointer to an array at least @code{PATH_MAX} bytes long.
+This is similar to @code{getcwd}, but has no way to specify the size of
+the buffer.  The GNU library provides @code{getwd} only
+for backwards compatibility with BSD.
+
+The @var{buffer} argument should be a pointer to an array at least
+@code{PATH_MAX} bytes long (@pxref{Limits for Files}).  In the GNU
+system there is no limit to the size of a file name, so this is not
+necessarily enough space to contain the directory name.  That is why
+this function is deprecated.
 @end deftypefun
 
 @comment unistd.h
@@ -177,17 +183,60 @@ This is a structure type used to return information about directory
 entries.  It contains the following fields:
 
 @table @code
-@item char *d_name
+@item char d_name[]
 This is the null-terminated file name component.  This is the only
 field you can count on in all POSIX systems.
 
 @item ino_t d_fileno
 This is the file serial number.  For BSD compatibility, you can also
-refer to this member as @code{d_ino}.
+refer to this member as @code{d_ino}.  In the GNU system and most POSIX
+systems, for most files this the same as the @code{st_ino} member that
+@code{stat} will return for the file.  @xref{File Attributes}.
 
-@item size_t d_namlen
+@item unsigned char d_namlen
 This is the length of the file name, not including the terminating null
-character.
+character.  Its type is @code{unsigned char} because that is the integer
+type of the appropriate size
+
+@item unsigned char d_type
+This is the type of the file, possibly unknown.  The following constants
+are defined for its value:
+
+@table @code
+@item DT_UNKNOWN
+The type is unknown.  On some systems this is the only value returned.
+
+@item DT_REG
+A regular file.
+
+@item DT_DIR
+A directory.
+
+@item DT_FIFO
+A named pipe, or FIFO.  @xref{Named Pipes}.
+
+@item DT_SOCK
+A local-domain socket.  @xref{Local Domain}.
+
+@item DT_CHR
+A character device.
+
+@item DT_BLK
+A block device.
+@end table
+
+This member is a BSD extension.  Each value except DT_UNKNOWN
+corresponds to the file type bits in the @code{st_mode} member of
+@code{struct statbuf}.  These two macros convert between @code{d_type}
+values and @code{st_mode} values:
+
+@deftypefun int IFTODT (mode_t @var{mode})
+This returns the @code{d_type} value corresponding to @var{mode}.
+@end deftypefun
+
+@deftypefun mode_t DTTOIF (int @var{dirtype})
+This returns the @code{st_mode} value corresponding to @var{dirtype}.
+@end deftypefun
 @end table
 
 This structure may contain additional members in the future.
@@ -370,10 +419,10 @@ or names.
 One file can have names in several directories, so the the organization
 of the file system is not a strict hierarchy or tree.
 
-Since a particular file exists within a single file system, all its
-names must be in directories in that file system.  @code{link} reports
-an error if you try to make a hard link to the file from another file
-system.
+In most implementations, it is not possible to have hard links to the
+same file in multiple file systems.  @code{link} reports an error if you
+try to make a hard link to the file from another file system when this
+cannot be done.
 
 The prototype for the @code{link} function is declared in the header
 file @file{unistd.h}.
@@ -421,8 +470,8 @@ The directory or file system that would contain the new link is ``full''
 and cannot be extended.
 
 @item EPERM
-Some implementations only allow privileged users to make links to
-directories, and others prohibit this operation entirely.  This error
+In the GNU system and some others, you cannot make links to directories.
+many systems allow only privileged users to do so.  This error
 is used to report the problem.
 
 @item EROFS
@@ -457,13 +506,14 @@ happen when you try to open the link.  The @code{open} function realizes
 you have specified the name of a link, reads the file name contained in
 the link, and opens that file name instead.  The @code{stat} function
 likewise operates on the file that the symbolic link points to, instead
-of on the link itself.  So does @code{link}, the function that makes a
-hard link.
+of on the link itself.
 
 By contrast, other operations such as deleting or renaming the file
-operate on the link itself.  The functions @code{readlink} and 
-@code{lstat} also refrain from following symbolic links, because
-their purpose is to obtain information about the link.
+operate on the link itself.  The functions @code{readlink} and
+@code{lstat} also refrain from following symbolic links, because their
+purpose is to obtain information about the link.  So does @code{link},
+the function that makes a hard link--it makes a hard link to the
+symbolic link, which one rarely wants.
 
 Prototypes for the functions listed in this section are in
 @file{unistd.h}.
@@ -560,7 +610,6 @@ A hardware error occurred while reading or writing data on the disk.
 @cindex unlinking a file
 
 You can delete a file with the functions @code{unlink} or @code{remove}.
-(These names are synonymous.)
 
 Deletion actually deletes a file name.  If this is the file's only name,
 then the file is deleted as well.  If the file has other names as well
@@ -583,15 +632,15 @@ on error.  In addition to the usual file name syntax errors
 defined for this function:
 
 @table @code
-@item EACCESS
+@item EACCES
 Write permission is denied for the directory from which the file is to be
 removed.
 
 @item EBUSY
 This error indicates that the file is being used by the system in such a
-way that it can't be unlinked.  Examples of situations where you might
-see this error are if the file name specifies the root directory or a
-mount point for a file system.
+way that it can't be unlinked.  For example, you might see this error if
+the file name specifies the root directory or a mount point for a file
+system.
 
 @item ENOENT
 The file name to be deleted doesn't exist.
@@ -600,20 +649,12 @@ The file name to be deleted doesn't exist.
 On some systems, @code{unlink} cannot be used to delete the name of a
 directory, or can only be used this way by a privileged user.
 To avoid such problems, use @code{rmdir} to delete directories.
+The GNU system 
 
 @item EROFS
 The directory in which the file name is to be deleted is on a read-only
 file system, and can't be modified.
 @end table
-@end deftypefun
-
-@comment stdio.h
-@comment ANSI
-@deftypefun int remove (const char *@var{filename})
-The @code{remove} function is another name for @code{unlink}.
-@code{remove} is the ANSI C name, whereas @code{unlink} is the POSIX.1
-name.  The name @code{remove} is declared in @file{stdio.h}.
-@pindex stdio.h
 @end deftypefun
 
 @comment unistd.h
@@ -630,17 +671,26 @@ are two additional @code{errno} error conditions defined for
 @code{rmdir}:
 
 @table @code
-@item EEXIST
-@itemx ENOTEMPTY
+@item ENOTEMPTY
+@itemx EEXIST
 The directory to be deleted is not empty.  
 @end table
 
-These two error codes are synonymous; some systems use one, and some
-use the other.
+These two error codes are synonymous; some systems use one, and some use
+the other.  The GNU system always uses @code{ENOTEMPTY}.
 
 The prototype for this function is declared in the header file
 @file{unistd.h}.
 @pindex unistd.h
+@end deftypefun
+
+@comment stdio.h
+@comment ANSI
+@deftypefun int remove (const char *@var{filename})
+This is the ANSI C function to remove a file.  It works like
+@code{unlink} for files and like @code{rmdir} for directories.
+@code{remove} is declared in @file{stdio.h}.
+@pindex stdio.h
 @end deftypefun
 
 @node Renaming Files
@@ -663,12 +713,9 @@ file system as the file (as indicated by the name @var{oldname}).
 
 One special case for @code{rename} is when @var{oldname} and
 @var{newname} are two names for the same file.  The consistent way to
-handle this case is to delete @var{oldname}.  However, POSIX says that
-in this case @code{rename} does nothing and reports success---which is
-inconsistent.  We don't know what your operating system will do.  The
-GNU system, when completed, will probably do the right thing (delete
-@var{oldname}) unless you explicitly request strict POSIX compatibility
-``even when it hurts''.
+handle this case is to delete @var{oldname}.  However, POSIX requires
+that in this case @code{rename} do nothing and report success---which is
+inconsistent.  We don't know what your operating system will do.
 
 If the @var{oldname} is not a directory, then any existing file named
 @var{newname} is removed during the renaming operation.  However, if
@@ -685,7 +732,10 @@ One useful feature of @code{rename} is that the meaning of the name
 @var{newname} changes ``atomically'' from any previously existing file
 by that name to its new meaning (the file that was called
 @var{oldname}).  There is no instant at which @var{newname} is
-nonexistent ``in between'' the old meaning and the new meaning.
+nonexistent ``in between'' the old meaning and the new meaning.  If
+there is a system crash during the operation, it is possible for both
+names to still exist; but @var{newname} will always be intact if it
+exists at all.
 
 If @code{rename} fails, it returns @code{-1}.  In addition to the usual
 file name syntax errors (@pxref{File Name Errors}), the following
@@ -703,11 +753,10 @@ the system in a way that prevents the renaming from working.  This includes
 directories that are mount points for filesystems, and directories
 that are the current working directories of processes.
 
-@item EEXIST
-The directory @var{newname} isn't empty.
-
 @item ENOTEMPTY
-The directory @var{newname} isn't empty.
+@itemx EEXIST
+The directory @var{newname} isn't empty.  The GNU system always returns
+@code{ENOTEMPTY} for this, but some other systems return @code{EEXIST}.
 
 @item EINVAL
 The @var{oldname} is a directory that contains @var{newname}.
@@ -857,7 +906,9 @@ files on the same device.
 
 @item dev_t st_dev
 Identifies the device containing the file.  The @code{st_ino} and
-@code{st_dev}, taken together, uniquely identify the file.
+@code{st_dev}, taken together, uniquely identify the file.  The
+@code{st_dev} value is not necessarily consistent across reboots or
+system crashes, however.
 
 @item nlink_t st_nlink
 The number of hard links to the file.  This count keeps track of how many
@@ -920,9 +971,9 @@ might not be detected as sparse at all.  For practical applications,
 this is not a problem.
 
 @item unsigned int st_blksize
-The optimal block size for reading of writing this file.  You might use
-this size for allocating the buffer space for reading of writing the
-file.
+The optimal block size for reading of writing this file, in bytes.  You
+might use this size for allocating the buffer space for reading of
+writing the file.  (This is unrelated to @code{st_blocks}.)
 @end table
 @end deftp
 
@@ -1397,11 +1448,11 @@ many times in succession.
 @c !!! obsolete in all modern systems (but ask mib to be sure)
 
 On a directory, the sticky bit gives permission to delete a file in the
-directory if you can write the contents of that file.  Ordinarily, a
-user either can delete all the files in the directory or cannot delete
-any of them (based on whether the user has write permission for the
-directory).  The sticky bit makes it possible to control deletion for
-individual files.
+directory only if you own that file.  Ordinarily, a user either can
+delete all the files in the directory or cannot delete any of them
+(based on whether the user has write permission for the directory).
+This is commonly used for the @file{/tmp} directory, where anyone may
+create files, but not delete files created by other users.
 @end table
 
 The actual bit values of the symbols are listed in the table above
@@ -1465,7 +1516,7 @@ For an ordinary file, this is typically read and write permission for
 all classes of users.  These permissions are then restricted as
 specified by the individual user's own file creation mask.
 
-@pindex chmod
+@findex chmod
 To change the permission of an existing file given its name, call
 @code{chmod}.  This function ignores the file creation mask; it uses
 exactly the specified permission bits.
@@ -1527,9 +1578,7 @@ named by @var{filename} to @var{mode}.
 
 If the @var{filename} names a symbolic link, @code{chmod} changes the
 permission of the file pointed to by the link, not those of the link
-itself.  There is actually no way to set the mode of a link, which is
-always @code{-1}.
-@c I verified this experimentally.  It does not depend on umask. -- rms.
+itself.
 
 This function returns @code{0} if successful and @code{-1} if not.  In
 addition to the usual file name syntax errors (@pxref{File Name
@@ -1613,6 +1662,10 @@ features; your program cannot portably mimic them, and you would not
 want to try to keep track of the diverse features that different systems
 have.  Using @code{access} is simple and automatically does whatever is
 appropriate for the system you are using.
+
+@code{access} is @emph{only} only appropriate to use in setuid programs.
+A non-setuid program will always use the effective ID rather than the
+real ID.
 
 @pindex unistd.h
 The symbols in this section are declared in @file{unistd.h}.

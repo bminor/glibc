@@ -148,9 +148,11 @@ This is the CPU time used by the system on behalf of the calling process.
 This is the sum of the @code{tms_utime} values and the @code{tms_cutime}
 values of all terminated child processes of the calling process, whose
 status has been reported to the parent process by @code{wait} or
-@code{waitpid}; see @ref{Process Completion}.  In other words, it represents
-the total CPU time used in executing the instructions of all the terminated
-child processes of the calling process.
+@code{waitpid}; see @ref{Process Completion}.  In other words, it
+represents the total CPU time used in executing the instructions of all
+the terminated child processes of the calling process, excluding child
+processes which have not yet been reported by @code{wait} or
+@code{waitpid}.
 
 @item clock_t tms_cstime
 This is similar to @code{tms_cutime}, but represents the total CPU time
@@ -299,9 +301,9 @@ to a normal @code{time_t} value.
 This is the fractional second value, represented as the number of
 microseconds.
 
-Some times struct timeval values are user for time intervals.  Then the
+Some times struct timeval values are used for time intervals.  Then the
 @code{tv_sec} member is the number of seconds in the interval, and
-@code{tv_usec} is the number of addictional microseconds.
+@code{tv_usec} is the number of additional microseconds.
 @end table
 @end deftp
 
@@ -439,7 +441,7 @@ and @code{adjtime} functions are derived from BSD.
 @cindex broken-down time
 @cindex calendar time and broken-down time
 
-Calender time is represented as a number of seconds.  This is convenient
+Calendar time is represented as a number of seconds.  This is convenient
 for calculation, but has no resemblance to the way people normally
 represent dates and times.  By contrast, @dfn{broken-down time} is a binary
 representation separated into year, month, day, and so on.  Broken down
@@ -596,9 +598,9 @@ string.)
 @comment time.h
 @comment ANSI
 @deftypefun {char *} ctime (const time_t *@var{time})
-The @code{ctime} function is similar to @code{asctime}, except that
-the time value is specified in calendar time (rather than local time)
-format.  It is equivalent to
+The @code{ctime} function is similar to @code{asctime}, except that the
+time value is specified as a @code{time_t} calendar time value rather
+than in broken-down local time format.  It is equivalent to
 
 @smallexample
 asctime (localtime (@var{time}))
@@ -716,12 +718,18 @@ For an example of @code{strftime}, see @ref{Time Functions Example}.
 @node TZ Variable
 @subsection Specifying the Time Zone with @code{TZ}
 
-In the GNU system, a user can specify the time zone by means of the
+In POSIX systems, a user can specify the time zone by means of the
 @code{TZ} environment variable.  For information about how to set
-environment variables, see @ref{Environment Variables}.  The functions for
-accessing the time zone are declared in @file{time.h}.
+environment variables, see @ref{Environment Variables}.  The functions
+for accessing the time zone are declared in @file{time.h}.
 @pindex time.h
 @cindex time zone
+
+You should not normally need to set @code{TZ}.  If the system is
+configured properly, the default timezone will be correct.  You might
+set @code{TZ} if you are using a computer over the network from a
+different timezone, and would like times reported to you in the timezone
+that local for you, rather than what is local for the computer.
 
 The value of the @code{TZ} variable can be of one of three formats.  The
 first format is used when there is no Daylight Saving Time (or summer
@@ -804,7 +812,7 @@ EST+5EDT,M4.1.0/M10.5.0
 The schedule of daylight savings time in any particular jurisdiction has
 changed over the years.  To be strictly correct, the conversion of dates
 and times in the past should be based on the schedule that was in effect
-then.  However, the system has no facilities to let you specify how the
+then.  However, this format has no facilities to let you specify how the
 schedule has changed from year to year.  The most you can do is specify
 one particular schedule---usually the present day schedule---and this is
 used to convert any date, no matter when.
@@ -819,6 +827,7 @@ Each operating system interprets this format differently; in the GNU C
 library, @var{characters} is the name of a file which describes the time
 zone.
 
+@strong{NOTE: I'm planning to update this for the tzfile scheme.}
 If the @code{TZ} environment variable does not have a value, the
 operation chooses a time zone by default.  Each operating system has its
 own rules for choosing the default time zone, so there is little we can
@@ -1303,8 +1312,9 @@ its stack past this size, it gets a @code{SIGSEGV} signal.
 @item RLIMIT_CORE
 @vindex RLIMIT_CORE
 The maximum size core file that this process can create.  If the process
-terminates and a core file is made, and this maximum size is not enough,
-the core file is truncated.
+terminates and would dump a core file larger than this maximum size,
+then no core file is created.  So setting this limit to zero prevents
+core files from ever being created.
 
 @comment sys/resource.h
 @comment BSD
@@ -1317,11 +1327,13 @@ surplus.
 
 @comment sys/resource.h
 @comment BSD
-@item RLIMIT_OPEN_FILES
+@item RLIMIT_NOFILE
+@itemx RLIMIT_OFILE
 @vindex RLIMIT_OPEN_FILES
-The maximum number of files that the process can open.
-If it tries to open more files than this, it gets error code
-@code{EMFILE}.  @xref{Error Codes}.
+The maximum number of files that the process can open.  If it tries to
+open more files than this, it gets error code @code{EMFILE}.
+@xref{Error Codes}.  Not all systems support this limit; GNU does, and
+4.4 BSD does.
 
 @comment sys/resource.h
 @comment BSD
@@ -1377,10 +1389,9 @@ The smallest valid priority value.
 @comment BSD
 @deftypefun int getpriority (int @var{class}, int @var{id})
 Read the priority of a class of processes; @var{class} and @var{id}
-specify which ones (see below).
-
-@c ??? What happens if class and id specify several processes
-@c ??? whose priorities differ?
+specify which ones (see below).  If the processes specified do not all
+have the same priority, this returns the smallest value that any of them
+has.
 
 The return value is the priority value on success, and @code{-1} on
 failure.  The following @code{errno} error condition are possible for
@@ -1404,7 +1415,7 @@ could be the priority value.  The only way to make certain is to set
 @comment sys/resource.h
 @comment BSD
 @deftypefun int setpriority (int @var{class}, int @var{id}, int @var{priority})
-Read the priority of a class of processes; @var{class} and @var{id}
+Set the priority of a class of processes; @var{class} and @var{id}
 specify which ones (see below).
 
 The return value is @code{0} on success and @code{-1} on failure.  The
@@ -1463,8 +1474,7 @@ current process group, or the current user, according to @var{class}.
 @comment dunno.h
 @deftypefun int nice (int @var{increment})
 Increment the priority of the current process by @var{increment}.
-The return value is not meaningful.
-@c ??? What is it in GNU libc?
+The return value is the same as for @code{setpriority}.
 
 Here is an equivalent definition for @code{nice}:
 
@@ -1473,7 +1483,7 @@ int
 nice (int increment)
 @{
   int old = getpriority (PRIO_PROCESS, 0);
-  setpriority (PRIO_PROCESS, 0, old + increment);
+  return setpriority (PRIO_PROCESS, 0, old + increment);
 @}
 @end smallexample
 @end deftypefun
