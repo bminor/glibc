@@ -1,4 +1,4 @@
-/* memchr (str, ch, n) -- Return pointer to first occurence of CH in STR less
+/* memchr (str, ch, n) -- Return pointer to first occurrence of CH in STR less
    than N.
    For Intel 80x86, x>=3.
    Copyright (C) 1991 Free Software Foundation, Inc.
