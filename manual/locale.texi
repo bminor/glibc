@@ -386,33 +386,35 @@ respectively.  In the @samp{C} locale, both members have a value of
 
 @item char *grouping
 @itemx char *mon_grouping
-These are strings whose elements indicate the size of each group of 
-digits to the left of the decimal point in formatting non-monetary
-and monetary quantities, respectively.
+These are strings that specify how to group the digits to the left of
+the decimal point.  @code{grouping} applies to non-monetary quantities
+and @code{mon_grouping} applies to monetary quantities.  Use either
+@code{thousands_sep} or @code{mon_thousands_sep} to separate the digit
+groups.
 @cindex grouping of digits
 
-The characters in this string are actually interpreted as numbers.  A
-nonzero value is the number of digits in the next group of digits, going
-from right to left (less significant digits to more significant).  The
-last character in the string is used over and over for successive
-groups.
+Each string is made up of decimal numbers separated by semicolons.
+Successive numbers (from left to right) give the sizes of successive
+groups (from right to left, starting at the decimal point).  The last
+number in the string is used over and over for all the remaining groups.
 
-If a character in the string has value @code{CHAR_MAX}, it indicates
-that no further grouping is to be performed.
+If the last integer is @code{-1}, it means that there is no more
+grouping---or, put another way, any remaining digits form one large
+group without separators.
 
-For example, if @code{grouping} is @code{"\004\003\002"}, the number
+For example, if @code{grouping} is @code{"4;3;2"}, the number
 @code{123456787654321} should be grouped into @samp{12}, @samp{34},
 @samp{56}, @samp{78}, @samp{765}, @samp{4321}.  This uses a group of 4
 digits at the end, preceded by a group of 3 digits, preceded by groups
-of 2 digits (as many as needed).  With a separator of @samp{,}, the number
-would be printed as @samp{12,34,56,78,765,4321}.
+of 2 digits (as many as needed).  With a separator of @samp{,}, the
+number would be printed as @samp{12,34,56,78,765,4321}.
 
-A value of @code{"\003"} indicates repeated groups of three digits, as
+A value of @code{"3"} indicates repeated groups of three digits, as
 normally used in the U.S.
 
 In the standard @samp{C} locale, both @code{grouping} and
-@code{mon_grouping} have a value of @code{""}, which specifies no
-grouping of digits.
+@code{mon_grouping} have a value of @code{""}.  This value specifies no
+grouping at all.
 
 @item char int_frac_digits
 @itemx char frac_digits
@@ -446,8 +448,9 @@ unambiguously.
 For example, many countries use the dollar as their monetary unit, and
 when dealing with international currencies it's important to specify
 that one is dealing with (say) Canadian dollars instead of U.S. dollars
-or Australian dollars.  But locally within Canada, dollar amounts are
-implicitly assumed to be in Canadian dollars.
+or Australian dollars.  But when the context is known to be Canada,
+there is no need to make this explicit---dollar amounts are implicitly
+assumed to be in Canadian dollars.
 
 @table @code
 @item char *currency_symbol
@@ -486,8 +489,16 @@ what to do when you find this value, but we recommend printing the
 currency symbol before the amount.  That's right for most countries.
 In other words, treat all nonzero values alike in these members.
 
-These members apply only to @code{currency_symbol}.  When you use
-@code{int_curr_symbol}, always print it before the amount.
+The POSIX standard says that these two members apply to the
+@code{int_curr_symbol} as well as the @code{currency_symbol}.  The ANSI
+C standard seems to imply that they should apply only to the
+@code{currency_symbol}---so the @code{int_curr_symbol} should always
+preceed the amount.
+
+We can only guess which of these (if either) matches the usual
+conventions for printing international currency symbols.  Our guess is
+that they should always preceed the amount.  If we find out a reliable
+answer, we will put it here.
 
 @item char p_sep_by_space
 @itemx char n_sep_by_space
@@ -506,6 +517,16 @@ these members.
 These members apply only to @code{currency_symbol}.  When you use
 @code{int_curr_symbol}, you never print an additional space, because
 @code{int_curr_symbol} itself contains the appropriate separator.
+
+The POSIX standard says that these two members apply to the
+@code{int_curr_symbol} as well as the @code{currency_symbol}.  But an
+example in the ANSI C standard clearly implies that they should apply
+only to the @code{currency_symbol}---that the @code{int_curr_symbol}
+contains any appropriate separator, so you should never print an
+additional space.
+
+based on what we know now, we recommend you ignore these members when
+printing international currency symbols, and print no extra space.
 @end table
 
 @node Sign of Money Amount,  , Currency Symbol, Numeric Formatting
@@ -529,9 +550,6 @@ empty.  For a negative value, print @code{negative_sign} as you find it
 unless both it and @code{positive_sign} are empty, in which case print
 @samp{-} instead.  (Failing to indicate the sign at all seems rather
 unreasonable.)
-
-It is not clear whether you should use these sign strings for the
-international currency format or not.
 
 @item char p_sign_posn
 @itemx char n_sign_posn
@@ -565,7 +583,11 @@ Print the sign string right after the currency symbol.
 The ANSI standard doesn't say what you should do when the value is
 @code{CHAR_MAX}.  We recommend you print the sign after the currency
 symbol.
-
-It is not clear whether these members apply to the international
-currency format or not.
 @end table
+
+It is not clear whether you should let these members apply to the
+international currency format or not.  POSIX says you should, but
+intuition plus the examples in the ANSI C standard suggest you should
+not.  We hope that someone who knows well the conventions for formatting
+monetary quantities will tell us what we should recommend.
+
