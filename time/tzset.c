@@ -17,7 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
-#include <libc-lock.h>
+#include <errno.h>
+#include <bits/libc-lock.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,15 +28,19 @@
 /* Defined in mktime.c.  */
 extern const unsigned short int __mon_yday[2][13];
 
+/* Defined in localtime.c.  */
+extern struct tm _tmbuf;
+
 #define NOID
 #include "tzfile.h"
 
 extern int __use_tzfile;
 extern void __tzfile_read __P ((const char *file));
+extern int __tzfile_compute __P ((time_t timer, int use_localtime,
+				  long int *leap_correct, int *leap_hit));
 extern void __tzfile_default __P ((const char *std, const char *dst,
 				   long int stdoff, long int dstoff));
-extern const char * __tzstring __P ((const char *string));
-extern int __tz_compute __P ((time_t timer, const struct tm *tm));
+extern char * __tzstring __P ((const char *string));
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
 int __daylight = 0;
@@ -78,6 +83,8 @@ static tz_rule tz_rules[2];
 
 
 static int compute_change __P ((tz_rule *rule, int year));
+static int tz_compute __P ((time_t timer, const struct tm *tm));
+static void tzset_internal __P ((int always));
 
 /* Header for a list of buffers containing time zone strings.  */
 struct tzstring_head
@@ -102,7 +109,7 @@ static size_t tzstring_last_buffer_size = sizeof tzstring_list.data;
 /* Allocate a time zone string with given contents.
    The string will never be moved or deallocated.
    However, its contents may be shared with other such strings.  */
-const char *
+char *
 __tzstring (string)
      const char *string;
 {
@@ -113,7 +120,7 @@ __tzstring (string)
   /* Look through time zone string list for a duplicate of this one.  */
   for (h = &tzstring_list.head;  ;  h = h->next)
     {
-      for (p = (char *) (h + 1);  p[0] | p[1];  p++)
+      for (p = (char *) (h + 1);  p[0] | p[1];  ++p)
 	if (strcmp (p, string) == 0)
 	  return p;
       if (! h->next)
@@ -122,7 +129,7 @@ __tzstring (string)
 
   /* No duplicate was found.  Copy to the end of this buffer if there's room;
      otherwise, append a large-enough new buffer to the list and use it.  */
-  p++;
+  ++p;
   needed = strlen (string) + 2; /* Need 2 trailing '\0's after last string.  */
 
   if ((size_t) ((char *) (h + 1) + tzstring_last_buffer_size - p) < needed)
@@ -137,16 +144,14 @@ __tzstring (string)
       p = (char *) (h + 1);
     }
 
-  strncpy (p, string, needed);
-  return p;
+  return strncpy (p, string, needed);
 }
 
 static char *old_tz = NULL;
 
 /* Interpret the TZ envariable.  */
-void __tzset_internal __P ((int always));
-void
-__tzset_internal (always)
+static void
+tzset_internal (always)
      int always;
 {
   static int is_initialized = 0;
@@ -338,12 +343,9 @@ __tzset_internal (always)
     {
       register tz_rule *tzr = &tz_rules[whichrule];
 
-      if (*tz == ',')
-	{
-	  ++tz;
-	  if (*tz == '\0')
-	    return;
-	}
+      /* Ignore comma to support string following the incorrect
+	 specification in early POSIX.1 printings.  */
+      tz += *tz == ',';
 
       /* Get the date of the change.  */
       if (*tz == 'J' || isdigit (*tz))
@@ -436,7 +438,7 @@ __tzname_max ()
 {
   __libc_lock_lock (tzset_lock);
 
-  __tzset_internal (0);
+  tzset_internal (0);
 
   __libc_lock_unlock (tzset_lock);
 
@@ -531,13 +533,11 @@ compute_change (rule, year)
 /* Figure out the correct timezone for *TIMER and TM (which must be the same)
    and set `__tzname', `__timezone', and `__daylight' accordingly.
    Return nonzero on success, zero on failure.  */
-int
-__tz_compute (timer, tm)
+static int
+tz_compute (timer, tm)
      time_t timer;
      const struct tm *tm;
 {
-  __tzset_internal (0);
-
   if (! compute_change (&tz_rules[0], 1900 + tm->tm_year) ||
       ! compute_change (&tz_rules[1], 1900 + tm->tm_year))
     return 0;
@@ -568,7 +568,7 @@ __tzset (void)
 {
   __libc_lock_lock (tzset_lock);
 
-  __tzset_internal (1);
+  tzset_internal (1);
 
   if (!__use_tzfile)
     {
@@ -580,3 +580,64 @@ __tzset (void)
   __libc_lock_unlock (tzset_lock);
 }
 weak_alias (__tzset, tzset)
+
+/* Return the `struct tm' representation of *TIMER in the local timezone.
+   Use local time if USE_LOCALTIME is nonzero, UTC otherwise.  */
+struct tm *
+__tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
+{
+  long int leap_correction;
+  int leap_extra_secs;
+
+  if (timer == NULL)
+    {
+      __set_errno (EINVAL);
+      return NULL;
+    }
+
+  __libc_lock_lock (tzset_lock);
+
+  /* Update internal database according to current TZ setting.
+     POSIX.1 8.3.7.2 says that localtime_r is not required to set tzname.
+     This is a good idea since this allows at least a bit more parallelism.
+     By analogy we apply the same rule to gmtime_r.  */
+  tzset_internal (tp == &_tmbuf);
+
+  if (__use_tzfile)
+    {
+      if (! __tzfile_compute (*timer, use_localtime,
+			      &leap_correction, &leap_extra_secs))
+	tp = NULL;
+    }
+  else
+    {
+      __offtime (timer, 0, tp);
+      if (! tz_compute (*timer, tp))
+	tp = NULL;
+      leap_correction = 0L;
+      leap_extra_secs = 0;
+    }
+
+  if (tp)
+    {
+      if (use_localtime)
+	{
+	  tp->tm_isdst = __daylight;
+	  tp->tm_zone = __tzname[__daylight];
+	  tp->tm_gmtoff = __timezone;
+	}
+      else
+	{
+	  tp->tm_isdst = 0;
+	  tp->tm_zone = "GMT";
+	  tp->tm_gmtoff = 0L;
+	}
+
+      __offtime (timer, tp->tm_gmtoff - leap_correction, tp);
+      tp->tm_sec += leap_extra_secs;
+    }
+
+  __libc_lock_unlock (tzset_lock);
+
+  return tp;
+}

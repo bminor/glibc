@@ -43,7 +43,7 @@ struct leap
     long int change;		/* Seconds of correction to apply.  */
   };
 
-extern const char * __tzstring (const char *); /* Defined in tzset.c.  */
+extern char * __tzstring (const char *); /* Defined in tzset.c.  */
 
 static struct ttinfo *find_transition (time_t timer);
 static void compute_tzname_max (size_t);
@@ -411,19 +411,23 @@ find_transition (time_t timer)
 }
 
 int
-__tzfile_compute (time_t timer, long int *leap_correct, int *leap_hit)
+__tzfile_compute (time_t timer, int use_localtime,
+		  long int *leap_correct, int *leap_hit)
 {
-  struct ttinfo *info;
   register size_t i;
 
-  info = find_transition (timer);
-  __daylight = info->isdst;
-  __timezone = info->offset;
-  for (i = 0; i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
-       ++i)
-    __tzname[types[i].isdst] = &zone_names[types[i].idx];
-  if (info->isdst < sizeof (__tzname) / sizeof (__tzname[0]))
-    __tzname[info->isdst] = &zone_names[info->idx];
+  if (use_localtime)
+    {
+      struct ttinfo *info = find_transition (timer);
+      __daylight = info->isdst;
+      __timezone = info->offset;
+      for (i = 0;
+	   i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
+	   ++i)
+	__tzname[types[i].isdst] = &zone_names[types[i].idx];
+      if (info->isdst < sizeof (__tzname) / sizeof (__tzname[0]))
+	__tzname[info->isdst] = &zone_names[info->idx];
+    }
 
   *leap_correct = 0L;
   *leap_hit = 0;
