@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,28 +16,13 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <hurd.h>
+#include <gnu-stabs.h>
 
-/* Open a file descriptor on a port.  */
+/* User entry point for interning a port as a new FD.
+   Just like _hurd_intern_fd, but don't dealloc PORT on error.  */
 
 int
-openport (io_t port)
+openport (io_t port, int flags)
 {
-  int fd;
-
-  /* Give the port a new user reference.
-     This is a good way to check that it is valid.  */
-  if (__mach_port_mod_refs (__mach_task_self (), port,
-			    MACH_PORT_RIGHT_SEND, 1))
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  fd = _hurd_dalloc (port, 0);
-  if (fd < 0)
-    /* The descriptor table is full.  */
-    __mach_port_deallocate (__mach_task_self (), port); 
-
-  return fd;
+  return _hurd_intern_fd (port, flags, 0);
 }
