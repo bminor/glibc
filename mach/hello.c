@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <mach.h>
-#include <mach/device.h>
+#include <device/device.h>
 #include <errno.h>
 
 extern FILE *mach_open_devstream (device_t dev);
