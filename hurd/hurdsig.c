@@ -667,7 +667,7 @@ _hurdsig_init (void)
   vm_size_t stacksize;
 
   /* If _hurd_msgport is already set, we are in the child side of a fork.
-     We already have a message port set up by in __fork.c the parent, and
+     We already have a message port set up in __fork.c by the parent, and
      the parent took the siglock before we copied its memory, so it still
      appears locked for us (__fork will unlock it after we return).  */
 
@@ -684,11 +684,11 @@ _hurdsig_init (void)
 					  _hurd_msgport,
 					  MACH_MSG_TYPE_MAKE_SEND))
 	__libc_fatal ("hurd: Can't create send right to message port\n");
-
-      /* Set the default thread to receive task-global signals
-	 to this one, the main (first) user thread.  */
-      _hurd_sigthread = __mach_thread_self ();
     }
+
+  /* Set the default thread to receive task-global signals
+     to this one, the main (first) user thread.  */
+  _hurd_sigthread = __mach_thread_self ();
 
   /* Start the signal thread listening on the message port.  */
 
@@ -773,7 +773,7 @@ text_set_element (__hurd_reauth_hook, reauth_proc);
 
 /* Setting up signals in the child for fork.  */
 
-text_set_element (_hurd_fork_locks, _hurd_siglock); /* Lock before fork.  */
+data_set_element (_hurd_fork_locks, _hurd_siglock); /* Lock before fork.  */
 
 static struct hurd_sigstate *forking_thread_sigstate;
 
@@ -821,15 +821,17 @@ hurdsig_fork (task_t newtask, process_t newproc)
        new structure if there is none for this thread.  */
     struct hurd_sigstate **location =
       (void *) __hurd_threadvar_location (_HURD_THREADVAR_SIGSTATE);
+    struct hurd_sigstate *ss;
     if (*location == NULL)
       {
 	thread_t self = __mach_thread_self ();
-	for (*location = _hurd_sigstates; *location != NULL;
-	     *location = (*location)->next)
-	  if ((*location)->thread == self)
+	for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
+	  if (ss->thread == self)
 	    break;
       }
-    forking_thread_sigstate = *location;
+    else
+      ss = *location;
+    forking_thread_sigstate = ss;
   }
 
  lose:
