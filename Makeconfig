@@ -182,7 +182,7 @@ endif
 
 # Commands to install files.
 ifndef INSTALL_DATA
-INSTALL_DATA = $(INSTALL)
+INSTALL_DATA = $(INSTALL) -m 644
 endif
 ifndef INSTALL_PROGRAM
 INSTALL_PROGRAM = $(INSTALL)
