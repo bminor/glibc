@@ -38,23 +38,18 @@ typedef pthread_t thread_id;
 typedef pthread_mutex_t	mutex_t;
 
 /* thread specific data */
-typedef pthread_key_t tsd_key_t;
+typedef void * tsd_key_t;
 
 #define MUTEX_INITIALIZER	PTHREAD_MUTEX_INITIALIZER
 
-static Void_t *malloc_key_data;
-
-#define tsd_key_create(key, destr) \
-  if (__pthread_key_create != NULL) {					      \
-    __pthread_key_create(key, destr);					      \
-  } else { *(key) = (tsd_key_t) 0; }
+#define tsd_key_create(key, destr) ( *(key) = NULL )
 #define tsd_setspecific(key, data) \
-  if (__pthread_setspecific != NULL) {					      \
-    __pthread_setspecific(key, data);					      \
-  } else { malloc_key_data = (Void_t *) data; }
+  if (__libc_internal_tsd_set != NULL) {				      \
+    __libc_internal_tsd_set(_LIBC_TSD_KEY_MALLOC, data);		      \
+  } else { (key) = (Void_t *) data; }
 #define tsd_getspecific(key, vptr) \
-  (vptr = (__pthread_getspecific != NULL				      \
-	   ? __pthread_getspecific(key) : malloc_key_data))
+  (vptr = (__libc_internal_tsd_get != NULL				      \
+	   ? __libc_internal_tsd_get(_LIBC_TSD_KEY_MALLOC) : (key)))
 
 #define mutex_init(m)		\
    (__pthread_mutex_init != NULL ? __pthread_mutex_init (m, NULL) : 0)
