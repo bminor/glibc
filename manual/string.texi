@@ -593,12 +593,12 @@ strrchr ("hello, world", 'l')
 
 @comment string.h
 @comment ANSI
-@deftypefun {char *} strstr (const char *@var{s1}, const char *@var{s2})
-This is like @code{strchr}, except that it searches @var{s1} for a
-substring @var{s2} rather than just a single character.  It returns a
-pointer into the string @var{s1} that is the first character of the
-substring, or a null pointer if no match was found.  If @var{s2} is an
-empty string, the function returns @var{s1}.
+@deftypefun {char *} strstr (const char *@var{needle}, const char *@var{haystack})
+This is like @code{strchr}, except that it searches @var{needle} for a
+substring @var{haystack} rather than just a single character.  It
+returns a pointer into the string @var{needle} that is the first
+character of the substring, or a null pointer if no match was found.  If
+@var{haystack} is an empty string, the function returns @var{needle}.
 
 For example,
 @example
@@ -609,6 +609,15 @@ strstr ("hello, world", "wo")
 @end example
 @end deftypefun
 
+
+@comment string.h
+@comment GNU
+@deftypefun {void *} memstr (const void *@var{needle}, size_t @var{needle_len},@*const void *@var{haystack}, size_t @var{haystack_len})
+This is like @code{strstr}, but @var{needle} and @var{haystack} are byte
+arrays rather than null-terminated strings.  @var{needle_len} is the
+length of @var{needle} and @var{haystack_len} is the length of
+@var{haystack}.@refill
+@end deftypefun
 
 @comment string.h
 @comment ANSI
