@@ -31,7 +31,7 @@ an Alarm}.
 * Priority::			Reading or setting process run priority.
 @end menu
 
-@node Processor Time, Calendar Time,  , Date and Time
+@node Processor Time
 @section Processor Time
 
 If you're trying to optimize your program or measure its efficiency, it's
@@ -53,7 +53,7 @@ of a single program invocation.
 * Detailed CPU Time::           The @code{times} function.
 @end menu
 
-@node Basic CPU Time, Detailed CPU Time,  , Processor Time
+@node Basic CPU Time
 @subsection Basic CPU Time Inquiry
 
 To get the elapsed CPU time used by a process, you can use the
@@ -122,7 +122,7 @@ value @code{(clock_t)(-1)}.
 @end deftypefun
 
 
-@node Detailed CPU Time,  , Basic CPU Time, Processor Time
+@node Detailed CPU Time
 @subsection Detailed Elapsed CPU Time Inquiry
 
 The @code{times} function returns more detailed information about
@@ -181,7 +181,7 @@ value returned by the @code{clock} function is equivalent to the sum of
 the @code{tms_utime} and @code{tms_stime} fields returned by
 @code{times}.
 
-@node Calendar Time, Setting an Alarm, Processor Time, Date and Time
+@node Calendar Time
 @section Calendar Time
 
 This section describes facilities for keeping track of dates and times
@@ -892,7 +892,7 @@ The time is 01:02 PM.
 @end example
 
 
-@node Setting an Alarm, Sleeping, Calendar Time, Date and Time
+@node Setting an Alarm
 @section Setting an Alarm
 
 The @code{alarm} and @code{setitimer} functions provide a mechanism for a
@@ -1062,7 +1062,7 @@ functions are derived from BSD Unix, while the @code{alarm} function is
 specified by the POSIX.1 standard.  @code{setitimer} is more powerful than
 @code{alarm}, but @code{alarm} is more widely used.
 
-@node Sleeping,  , Setting an Alarm, Date and Time
+@node Sleeping
 @section Sleeping
 
 The function @code{sleep} gives a simple way to make the program wait
