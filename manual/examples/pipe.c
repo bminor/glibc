@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Read characters from the pipe and echo them to stdout.  */
+/* Read characters from the pipe and echo them to @code{stdout}.  */
 
 void 
 read_from_pipe (int file)
