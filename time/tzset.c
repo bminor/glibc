@@ -176,7 +176,7 @@ DEFUN_VOID(__tzset)
 
   /* Get the DST timezone name (if any).  */
   if (*tz == '\0')
-    tz_rules[1].name = "";
+    tz_rules[1].name = (char *) "";
   else
     {
       tz_rules[1].name = (char *) malloc(strlen(tz) + 1);
