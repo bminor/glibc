@@ -1,4 +1,16 @@
+2005-02-23  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #719]
+	* elf/Makefile: Run tst-tls9-static again.
+
 2005-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #719]
+	* sysdeps/generic/libc-tls.c (static_dtv): Size the same as the
+	slotinfo array.
+	(__libc_setup_tls): Initialize length of DTV based on array length.
+	* elf/dl-load.c: Revert last change.
+	* sysdeps/generic/dl-tls.c: Revert last change.
 
 	* posix/Makefile (tests): Add tst-execvp1, tst-execvp2, tst-execlp1,
 	tst-execlp2, tst-execv1, tst-execv2, tst-execl1, tst-execl2,
@@ -19,6 +31,25 @@
 2005-02-22  Andreas Schwab  <schwab@suse.de>
 
 	* posix/execvp.c (execvp): Fix invalid free.
+
+2005-02-21  Alan Modra <amodra@bigpond.net.au>
+
+	[BZ #719]
+	* elf/dl-reloc.c (_dl_nothread_init_static_tls): Assert that dtv
+	array index is within bounds.
+
+2005-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #719]
+	* elf/dl-load.c: Do not allow PT_TLS in modules loaded in statically
+	linked code.
+	* sysdeps/generic/dl-tls.c [!SHARED]: Don't build _dl_next_tls_modid.
+	* elf/Makefile: Remove rules to build and run tst-tls9-static.
+
+	[BZ #719]
+	* elf/dl-reloc.c (_dl_nothread_init_static_tls): Avoid using
+	THREAD_DTV multiple times, this minimally reduces code size on
+	some archs.
 
 2005-02-21  Ulrich Drepper  <drepper@redhat.com>
 
