@@ -28,16 +28,14 @@ AR = ar
 ARFLAGS = rv
 
 # How to invoke ranlib.
-RANLIB = ranlib
-# Test to use to see whether ranlib exists on the system.
-RANLIB_TEST = [ -f /usr/bin/ranlib -o -f /bin/ranlib ]
+RANLIB = @RANLIB@
 
 .PHONY: all
 all: libglob.a
 
 libglob.a: glob.o fnmatch.o
 	$(AR) $(ARFLAGS) $@ glob.o fnmatch.o
-	-if $(RANLIB_TEST) ; then $(RANLIB) $@; else true; fi
+	$(RANLIB) $@
 
 glob.o: $(srcdir)/glob.h $(srcdir)/fnmatch.h
 fnmatch.o: $(srcdir)/fnmatch.h
