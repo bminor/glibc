@@ -455,6 +455,13 @@ support.
 @item _SC_2_VERSION
 Inquire about the version number of POSIX.2 that the system utilities
 support.
+
+@comment unistd.h
+@comment GNU
+@item _SC_PAGESIZE
+Inquire about the virtual memory page size of the machine.
+@code{getpagesize} returns the same value.
+@xref{XXX getpagesize}.
 @end table
 
 @node Examples of Sysconf 
