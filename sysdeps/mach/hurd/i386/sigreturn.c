@@ -16,7 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-register void *sp asm ("%esp");
+register int *sp asm ("%esp");
 
 #include <hurd.h>
 #include <hurd/signal.h>
@@ -89,13 +89,13 @@ __sigreturn (struct sigcontext *scp)
        copy the registers onto the user's stack, switch there, pop and
        return.  */
 
-    struct i386_thread_state *ustack = (void *) scp->sc_uesp;
+    int *usp = (int *) scp->sc_uesp;
 
-    memcpy (--ustack, &scp->sc_i386_thread_state, sizeof *ustack);
-    ustack->cs = ustack->eip;
-    ustack->eip = ustack->efl;
+    *--usp = scp->sc_eip;
+    *--usp = scp->sc_efl;
+    memcpy (usp -= 12, &scp->sc_i386_thread_state, 12 * sizeof (int));
 
-    sp = ustack;
+    sp = usp;
 
 #define A(line) asm volatile (#line)
     /* The members in the sigcontext are arranged in this order
