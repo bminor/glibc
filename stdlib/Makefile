@@ -39,4 +39,7 @@ routines	:=							      \
 distribute	:= exit.h
 tests		:= tst-strtol tst-strtod testmb testrand testsort
 
+$(objpfx)testsort.input: /usr/dict/words
+	cp $< $@
+
 include ../Rules
