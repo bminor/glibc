@@ -47,7 +47,7 @@ subdir	:= sunrpc
 headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
 			   pmap_prot.h pmap_rmt.h rpc.h rpc_msg.h svc.h \
 			   svc_auth.h types.h xdr.h) \
-	  $(rpcsvc:%=rpcsvc/%) $(rpcsvc:%=rpcsvc/%.h)
+	  $(rpcsvc:%=rpcsvc/%) $(rpcsvc:%.x=rpcsvc/%.h)
 rpcsvc = bootparam.x nlm_prot.x rstat.x \
 	 yppasswd.x klm_prot.x rex.x sm_inter.x mount.x \
 	 rnusers.x spray.x nfs_prot.x rquota.x yp.x
