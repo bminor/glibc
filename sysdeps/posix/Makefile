@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,6 @@ $(common-objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
 	  $$cwd/$< -o $(patsubst $(common-objpfx)%,%,$@)
 
 
-generated := $(generated) $(common-objpfx)stdio_lim.h \
-			  $(common-objpfx)mk-stdiolim
+common-generated := $(common-generated) $(common-objpfx)stdio_lim.h \
+					$(common-objpfx)mk-stdiolim
 before-compile := $(before-compile) $(common-objpfx)stdio_lim.h
