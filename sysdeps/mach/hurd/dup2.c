@@ -32,6 +32,7 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
   struct _hurd_fd_user d, d2;
   io_t port, ctty;
   int dealloc, dealloc_ctty;
+  int flags;
 
   /* Extract the ports and flags from FD.  */
   d = _hurd_fd (fd, &dealloc_dt); /* Locks D.d.  */
