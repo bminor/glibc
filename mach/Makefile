@@ -35,10 +35,11 @@ routines = $(interface-routines) \
 	   mig_support mig_syms \
 	   msg_destroy msg_server msg_server_t \
 	   __msg_dest __msg_server \
-	   devstream
+	   devstream bootprivport
 user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     memory_object_user			\
 				     memory_object_default		\
+				     exc				\
 	            )\
 		   $(addprefix device/,device device_request)
 server-interfaces := device/device_reply mach/exc
