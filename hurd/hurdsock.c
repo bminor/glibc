@@ -76,7 +76,7 @@ _hurd_socket_server (int domain)
 
   if (errno == ENOENT)
     /* If the server node is absent, we don't support that protocol.  */
-    errno = EPROTONOSUPPORT;
+    errno = EPFNOSUPPORT;
 
  out:
   __mutex_unlock (&lock);
