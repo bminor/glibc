@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,10 +31,8 @@ Cambridge, MA 02139, USA.  */
 /* Structure containing info kept by each __grpread caller.  */
 typedef struct
   {
-#define	NAME_SIZE	8
-#define	PASSWD_SIZE	20
-#define	MEMLIST_SIZE	1000
-    char buf[NAME_SIZE + 1 + PASSWD_SIZE + 1 + 20 + 1 + 20 + MEMLIST_SIZE + 1];
+    char *buf;
+    size_t buflen;
     size_t max_members;
     char **members;
     struct group g;
@@ -45,15 +43,18 @@ typedef struct
 PTR
 DEFUN_VOID(__grpalloc)
 {
-  grpread_info *info = (PTR) malloc(sizeof(grpread_info));
+  grpread_info *info = (PTR) malloc (sizeof(grpread_info));
   if (info == NULL)
     return NULL;
 
+  info->buf = NULL;
+  info->buflen = 0;
+
   info->max_members = 5;
-  info->members = (char **) malloc(5 * sizeof(char *));
+  info->members = (char **) malloc (5 * sizeof(char *));
   if (info->members == NULL)
     {
-      free((PTR) info);
+      free ((PTR) info);
       return NULL;
     }
 
@@ -75,8 +76,10 @@ DEFUN(__grpread, (stream, g), FILE *stream AND PTR CONST g)
       return NULL;
     }
 
-  if (fgets (info->buf, sizeof(info->buf), stream) == NULL)
-    return NULL;
+  do
+    if (__getline (&info->buf, &info->buflen, stream) == -1)
+      return NULL;
+  while (info->buf[0] == '#');
 
   start = info->buf;
   end = strchr (start, ':');

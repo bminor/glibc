@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -33,11 +33,8 @@ Cambridge, MA 02139, USA.  */
 /* Structure containing info kept by each __pwdread caller.  */
 typedef struct
   {
-#define	NAME_SIZE	8
-#define	PASSWD_SIZE	20
-#define	GECOS_SIZE	100
-    char buf[NAME_SIZE + 1 + PASSWD_SIZE + 1 + 20 + 1 + 20 + 1 +
-	     GECOS_SIZE + 1 + PATH_MAX + 1 + PATH_MAX + 1];
+    char *buf;
+    size_t buflen;
     struct passwd p;
   } pwdread_info;
 
@@ -46,9 +43,11 @@ typedef struct
 PTR
 DEFUN_VOID(__pwdalloc)
 {
-  pwdread_info *info = (PTR) malloc(sizeof(pwdread_info));
+  pwdread_info *info = (PTR) malloc (sizeof(pwdread_info));
   if (info == NULL)
     return NULL;
+  info->buf = NULL;
+  info->buflen = 0;
   return info;
 }
 
@@ -66,8 +65,10 @@ DEFUN(__pwdread, (stream, p), FILE *stream AND PTR CONST p)
       return NULL;
     }
 
-  if (fgets (info->buf, sizeof (info->buf), stream) == NULL)
-    return NULL;
+  do
+    if (__getline (&info->buf, &info->buflen, stream) == -1)
+      return NULL;
+  while (info->buf[0] == '#');
 
   start = info->buf;
   end = strchr (start, ':');
