@@ -5,3 +5,12 @@
 
    This file should be prepared to be the first thing in the text section (on
    Unix systems), or otherwise appropriately special.  */
+
+volatile int errno;
+
+#ifndef HAVE_GNU_LD
+#undef environ
+#define __environ environ
+#endif
+
+char **__environ;
