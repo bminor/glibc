@@ -34,6 +34,11 @@ CFLAGS-initfini.s = -g0 -fpic -O1
 CFLAGS-init.o = -G0
 CFLAGS-gmon-start.o = -G0
 endif
+ifeq (yes,$(build-shared))
+# Compatibility
+sysdep_routines += divdi3 libgcc-compat
+shared-only-routines += divdi3 libgcc-compat
+endif
 endif
 
 ifeq ($(subdir),string)
