@@ -1,3 +1,8 @@
+2001-12-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/bg_BG: Rewrite.
+	Patch by Alexander Shopov <al_shopov@web.bg>.
+
 2001-11-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/de_CH: Define decimal point to '.' and thousands
