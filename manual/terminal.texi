@@ -862,9 +862,14 @@ the corresponding text character.  Thus, control-A echoes as @samp{^A}.
 @comment BSD
 @vindex ALTWERASE
 @item ALTWERASE
-@c ??? What does this do?
-This bit enables what the BSD documentation calls the ``alternate WERASE
-algorithm.''  We don't know what that means.
+This bit determines how far the WERASE character should erase.  The
+WERASE character erases back to the beginning of a word; the question
+is, where do words begin?
+
+If this bit is clear, then the beginning of a word is a nonwhitespace
+character following a whitespace character.  If the bit is set, then the
+beginning of a word is an alphanumeric character or underscore following
+a character which is none of those.
 
 @comment termios.h
 @comment BSD
