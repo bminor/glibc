@@ -43,7 +43,7 @@ DEFUN_VOID(__getegid)
   else
     {
       /* We do not even have a real gid.  */
-      errno = EIOEIO;		/* XXX */
+      errno = EGRATUITOUS;
       egid = -1;
     }
 
