@@ -48,7 +48,7 @@ routines = $(interface-routines) \
 	   $(sig) $(dtable)
 sig	= hurdsig startsig init-fault msging_p hurd-raise \
 	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal \
-dtable	= dtable port2fd alloc-fd intern-fd \
+dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport setdtsz
 aux := hurdsyms hurdinit # hurdmsg
 
