@@ -3075,17 +3075,13 @@ This function opens a stream that allows the access specified by the
 @var{opentype} argument, that reads from or writes to the buffer specified
 by the argument @var{buf}.  This array must be at least @var{size} bytes long.
 
-@ignore
-@strong{Incomplete:}  This seems useless since the stream does not
-support file positioning.
-
 If you specify a null pointer as the @var{buf} argument, @code{fmemopen}
 dynamically allocates (as with @code{malloc}; @pxref{Unconstrained
 Allocation}) an array @var{size} bytes long.  This is really only useful
 if you are going to write things to the buffer and then read them back
 in again, because you have no way of actually getting a pointer to the
-buffer.  The buffer is freed when the stream is open.
-@end ignore
+buffer (for this, try @code{open_memstream}, below).  The buffer is
+freed when the stream is open.
 
 The argument @var{opentype} is the same as in @code{fopen}
 (@xref{Opening and Closing Streams}).  If the @var{opentype} specifies
@@ -3140,6 +3136,11 @@ to store new values before you use them again.
 
 A null character is written at the end of the buffer.  This null character
 is @emph{not} included in the size value stored at @var{sizeloc}.
+
+You can move the stream's file position with @code{fseek}
+(@pxref{File Positioning}).  If you move the file position past the end
+of the data already written to the stream, the new space will be filled
+with zeros.@refill
 @end deftypefun
 
 Here is an example of using @code{open_memstream}:
