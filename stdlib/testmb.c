@@ -25,6 +25,18 @@ DEFUN_VOID(main)
       lose = 1;
     }
 
+  if (mblen ("foobar", 7) != -1)
+    {
+      puts ("mblen 1 FAILED!");
+      lose = 1;
+    }
+
+  if (mblen ("", 1) != 0)
+    {
+      puts ("mblen 2 FAILED!");
+      lose = 1;
+    }
+
   puts (lose ? "Test FAILED!" : "Test succeeded.");
   return lose;
 }

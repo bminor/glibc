@@ -120,16 +120,15 @@ static int seps[MAX_TYPES] = { SEP_0, SEP_1, SEP_2, SEP_3, SEP_4 };
 	(MAX_TYPES * (rptr - state)) + TYPE_3 == TYPE_3.  */
 
 static long int randtbl[DEG_3 + 1] =
-  { TYPE_3,
-      0x9a319039, 0x32d9c024, 0x9b663182, 0x5da1f342, 
-      0xde3b81e0, 0xdf0a6fb5, 0xf103bc02, 0x48f340fb, 
-      0x7449e56b, 0xbeb1dbb0, 0xab5c5918, 0x946554fd, 
-      0x8c2e680f, 0xeb3d799f, 0xb11ee0b7, 0x2d436b86, 
-      0xda672e2a, 0x1588ca88, 0xe369735d, 0x904f35f7, 
-      0xd7158fd6, 0x6fa6f051, 0x616e6b96, 0xac94efdc, 
-      0x36413f93, 0xc622c298, 0xf5a42ab8, 0x8a88d77b, 
-      0xf5ad9d0e, 0x8999220b, 0x27fb47b9
-    };
+  {
+    TYPE_3,
+    -851904987, -43806228, -2029755270, 1390239686, -1912102820,
+    -485608943, 1969813258, -1590463333, -1944053249, 455935928, 508023712,
+    -1714531963, 1800685987, -2015299881, 654595283, -1149023258,
+    -1470005550, -1143256056, -1325577603, -1568001885, 1275120390,
+    -607508183, -205999574, -1696891592, 1492211999, -1528267240,
+    -952028296, -189082757, 362343714, 1424981831, 2039449641,
+  };
 
 /* FPTR and RPTR are two pointers into the state info, a front and a rear
    pointer.  These two pointers are always rand_sep places aparts, as they
