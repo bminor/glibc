@@ -71,4 +71,14 @@ typedef double __long_double_t;
 
 #endif
 
+/* The BSD header files use the ANSI keywords unmodified.  (This means that
+   old programs may lose if they use the new keywords as identifiers.)  We
+   define them to their __ versions, which are taken care of above.  */
+
+#ifdef	__USE_BSD
+#define	const		__const
+#define	signed		__signed
+#define	volatile	__volatile
+#endif
+
 #endif	 /* sys/cdefs.h */
