@@ -742,8 +742,9 @@ constitute a state of the descriptor.  Rather, they include conditions
 such as the presence of an urgent message on a socket.  (@xref{Sockets},
 for information on urgent messages.)
 
-Only the first @var{nfds} file descriptors in each set are checked.  
-Normally, you pass @code{FD_SETSIZE} as the value of this argument.
+The @code{select} function checks only the first @var{nfds} file
+descriptors.  The usual thing is to pass @code{FD_SETSIZE} as the value
+of this argument.
 
 The @var{timeout} specifies the maximum time to wait.  If you pass a
 null pointer for this argument, it means to block indefinitely until one

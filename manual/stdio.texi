@@ -1416,10 +1416,10 @@ modifier flag bits.
 @comment printf.h
 @comment GNU
 @deftypevr Macro int PA_FLAG_MASK
-This macro is a bitmask for the type modifier flag bits.  Write the
-expression @code{(argtypes[i] & PA_FLAG_MASK)} to extract just the flag
-bits for an argument, or @code{(argtypes[i] & ~PA_FLAG_MASK)} to extract
-just the basic type code.
+This macro is a bitmask for the type modifier flag bits.  You can write
+the expression @code{(argtypes[i] & PA_FLAG_MASK)} to extract just the
+flag bits for an argument, or @code{(argtypes[i] & ~PA_FLAG_MASK)} to
+extract just the basic type code.
 @end deftypevr
 
 Here are symbolic constants that represent the basic types; they stand
