@@ -190,7 +190,7 @@ os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
 
 case "$os" in
 gnu*)
-  os=mach/hurd ;;
+  base_os=mach/hurd ;;
 sunos* | ultrix* | newsos* | dynix* | bsd*)
   base_os=unix/bsd ;;
 linux* | sysv* | isc* | esix* | sco* | minix*)
