@@ -54,10 +54,8 @@ DEFUN(__drem, (x, y),
 
   uy.ieee.negative = 0;
 
-  if (!__finite (x))
+  if (!__finite (x) || y == 0.0)
     return NAN;
-  else if (y == 0.0)
-    return 0.0 / 0.0;
   else if (__isnan (y))
     return y;
   else if (__isinf (y))
