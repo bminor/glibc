@@ -193,7 +193,7 @@ xdr_double(xdrs, dp)
 	double *dp;
 {
 	register long *lp;
-#if !defined(mc68000) && !defined(sparc)
+#ifdef vax
 	struct	ieee_double id;
 	struct	vax_double vd;
 	register struct dbl_limits *lim;
@@ -203,7 +203,7 @@ xdr_double(xdrs, dp)
 	switch (xdrs->x_op) {
 
 	case XDR_ENCODE:
-#if defined(mc68000) || defined(sparc)
+#ifndef vax
 		lp = (long *)dp;
 #else
 		vd = *((struct vax_double *)dp);
@@ -231,7 +231,7 @@ xdr_double(xdrs, dp)
 		return (XDR_PUTLONG(xdrs, lp++) && XDR_PUTLONG(xdrs, lp));
 
 	case XDR_DECODE:
-#if defined(mc68000) || defined(sparc)
+#ifndef vax
 		lp = (long *)dp;
 		return (XDR_GETLONG(xdrs, lp++) && XDR_GETLONG(xdrs, lp));
 #else
