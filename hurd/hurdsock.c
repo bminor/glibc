@@ -26,6 +26,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include "stdio/_itoa.h"
 #include <cthreads.h>		/* For `struct mutex'.  */
+#include "hurdmalloc.h"		/* XXX */
 
 static struct mutex lock = MUTEX_INITIALIZER;
 
