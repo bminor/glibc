@@ -18,18 +18,19 @@ Cambridge, MA 02139, USA.  */
 
 #include <ctype.h>
 
-/* Different systems have different names for the array.  */
-#ifdef	HAVE__CTYPE_
-#define	TABLE	_ctype_
-#endif
-#ifdef	HAVE___CTYPE_
-#define	TABLE	__ctype_
-#endif
-#ifdef	HAVE___CTYPE
-#define	TABLE	__ctype
-#endif
+/* Different systems have different names for the array.  This order
+   is important for some systems.  */
 #ifdef	HAVE__CTYPE__
 #define	TABLE	_ctype__
+#endif
+#if !defined(TABLE) && defined(HAVE__CTYPE_)
+#define	TABLE	_ctype_
+#endif
+#if !defined(TABLE) && defined(HAVE___CTYPE_)
+#define	TABLE	__ctype_
+#endif
+#if !defined(TABLE) && defined(HAVE___CTYPE)
+#define	TABLE	__ctype
 #endif
 
 #if defined (__STDC__) && __STDC__
