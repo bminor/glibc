@@ -1,3 +1,10 @@
+1998-07-09 14:03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile (distribute): Add dl-envvars.h.
+	* elf/rld.c: Remove LD* envvars if not used.
+	* sysdeps/generic/dl-envvars.h: New file.
+	* sysdeps/unix/sysv/linux/i386/dl-envvars.h: New file.
+
 1998-07-04 10:14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/tzfile.c (__tzfile_read): Correct setting of __tzname array
