@@ -52,8 +52,8 @@ _S_add_auth (mach_port_t me,
 error_t
 _S_del_auth (mach_port_t me,
 	     task_t task,
-	     uid_t *uids, mach_msg_type_number_t nuids,
-	     gid_t *gids, mach_msg_type_number_t ngids)
+	     intarray_t uids, mach_msg_type_number_t nuids,
+	     intarray_t gids, mach_msg_type_number_t ngids)
 {
   error_t err;
   auth_t newauth;
