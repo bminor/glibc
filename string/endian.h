@@ -1,6 +1,4 @@
-/* `NAN' constant for IEEE 754 machines.
-
-Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,29 +16,28 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef	_NAN_H
+#ifndef	_ENDIAN_H
+#define	_ENDIAN_H	1
+#include <features.h>
 
-#define	_NAN_H	1
+/* Definitions for byte order, according to significance of bytes, from low
+   addresses to high addresses.  The value is what you get by putting '4'
+   in the most significant byte, '3' in the second most significant byte,
+   '2' in the second least significant byte, and '1' in the least
+   significant byte.  */
 
-/* IEEE Not A Number.  */
+#define	__LITTLE_ENDIAN	1234
+#define	__BIG_ENDIAN	4321
+#define	__PDP_ENDIAN	3412
 
-#include <endian.h>
+/* This file defines `__BYTE_ORDER' for the particular machine.  */
+#include <bytesex.h>
 
-#if __BYTE_ORDER == __BIG_ENDIAN
-#define	__nan_bytes		{ 0x7f, 0xf8, 0, 0, 0, 0, 0, 0 }
+#ifdef	__USE_BSD
+#define	LITTLE_ENDIAN	__LITTLE_ENDIAN
+#define	BIG_ENDIAN	__BIG_ENDIAN
+#define	PDP_ENDIAN	__PDP_ENDIAN
+#define	BYTE_ORDER	__BYTE_ORDER
 #endif
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-#define	__nan_bytes		{ 0, 0, 0, 0, 0, 0, 0xf8, 0x7f }
-#endif
 
-#ifdef	__GNUC__
-#define	NAN \
-  (__extension__ ((union { unsigned char __c[8];			      \
-			   double __d; })				      \
-		  { __nan_bytes }).__d)
-#else	/* Not GCC.  */
-static CONST char __nan[8] = __nan_bytes;
-#define	NAN	(*(CONST double *) __nan)
-#endif	/* GCC.  */
-
-#endif	/* nan.h */
+#endif	/* endian.h */

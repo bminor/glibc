@@ -27,9 +27,10 @@ Cambridge, MA 02139, USA.  */
 
 /* IEEE positive infinity.  */
 
-#ifdef __BIG_ENDIAN
+#if __BYTE_ORDER == __BIG_ENDIAN
 #define	__huge_val_bytes	{ 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 }
-#else
+#endif
+#if __BYTE_ORDER == __LITTLE_ENDIAN
 #define	__huge_val_bytes	{ 0, 0, 0, 0, 0, 0, 0xf0, 0x7f }
 #endif
 

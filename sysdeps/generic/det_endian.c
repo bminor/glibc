@@ -1,5 +1,5 @@
-/* Determine the "endianess" of the CPU.
-   Copyright (C) 1991 Free Software Foundation, Inc.
+/* Determine the "endianness" of the CPU.
+   Copyright (C) 1991, 1992 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,25 +19,16 @@ Cambridge, MA 02139, USA.  */
 
 #include <stdio.h>
 
-main()
+main ()
 {
   unsigned long int i;
 
-  puts("#ifndef\t_ENDIAN_H\n#define\t_ENDIAN_H\t1");
+  if (sizeof (i) != 4)
+    puts ("#error \"Not a 32-bit machine!\"");
 
-  if (sizeof(i) != 4)
-    puts("#error \"Not a 32-bit machine!\"");
+  i = (((((('4' << 8) + '3') << 8) + '2') << 8) + '1');
 
-  i = (((((('A' << 8) + 'B') << 8) + 'C') << 8) + 'D');
-
-  if (!strncmp ("ABCD", (char *) &i, 4))
-    puts ("#define __BIG_ENDIAN");
-  else if (!strncmp ("DCBA", (char *) &i, 4))
-    puts ("#define __LITTLE_ENDIAN");
-  else
-    puts ("#define __MIXED_ENDIAN");
-
-  puts("#endif\t/* endian.h */");
+  printf ("#define __BYTE_ORDER %.4s\n", (char *) &i);
 
   exit (0);
 }

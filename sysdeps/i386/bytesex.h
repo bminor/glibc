@@ -1,7 +1,3 @@
-#ifndef	_ENDIAN_H
+/* i386 is little-endian.  */
 
-#define	_ENDIAN_H	1	
-
-#define	__LITTLE_ENDIAN
-
-#endif /* endian.h */
+#define __BYTE_ORDER __LITTLE_ENDIAN
