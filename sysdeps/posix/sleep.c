@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -41,23 +41,57 @@ unsigned int
 DEFUN(sleep, (seconds), unsigned int seconds)
 {
   unsigned int remaining, slept;
-  __sighandler_t handler;
   time_t before, after;
+  sigset_t set, oset;
+  struct sigaction act, oact;
 
-  handler = signal (SIGALRM, sleep_handler);
-  if (handler == SIG_ERR)
+  if (seconds == 0)
+    return 0;
+
+  /* Block SIGALRM signals while frobbing the handler.  */
+  if (sigemptyset (&set) < 0 ||
+      sigaddset (&set, SIGALRM) < 0 ||
+      sigprocmask (SIG_BLOCK, &set, &oset))
+    return seconds;
+
+  act.sa_handler = sleep_handler;
+  act.sa_flags = 0;
+  if (sigemptyset (&act.sa_mask) < 0 ||
+      sigaction (SIGALRM, &act, &oact) < 0)
     return seconds;
 
   before = time ((time_t *) NULL);
   remaining = alarm (seconds);
-  (void) pause ();
-  after = time ((time_t *) NULL);
 
-  (void) signal (SIGALRM, handler);
+  if (remaining > 0 && remaining < seconds)
+    {
+      /* The user's alarm will expire before our own would.
+	 Restore the user's signal action state and let his alarm happen.  */
+      (void) sigaction (SIGALRM, &oact, (struct sigaction *) NULL);
+      alarm (remaining);	/* Restore sooner alarm.  */
+      sigsuspend (&oset);	/* Wait for it to go off.  */
+      after = time ((time_t *) NULL);
+    }
+  else
+    {
+      /* Atomically restore the old signal mask
+	 (which had better not block SIGALRM),
+	 and wait for a signal to arrive.  */
+      sigsuspend (&oset);
 
+      after = time ((time_t *) NULL);
+
+      /* Restore the old signal action state.  */
+      (void) sigaction (SIGALRM, &oact, (struct sigaction *) NULL);
+    }
+
+  /* Notice how long we actually slept.  */
   slept = after - before;
-  if (remaining > slept)
-    alarm (remaining - slept);
 
-  return (slept > seconds ? 0 : seconds - slept);
+  /* Restore the user's alarm if we have not already past it.
+     If we have, be sure to turn off the alarm in case a signal
+     other than SIGALRM was what woke us up.  */
+  alarm (remaining > slept ? remaining - slept : 0);
+
+  return slept > seconds ? 0 : seconds - slept;
 }
