@@ -188,7 +188,7 @@ DEFUN(__execve, (path, argv, envp),
     /* Release references to the file descriptor ports.  */
     for (i = 0; i < dtablesize; ++i)
       if (dtable[i] != MACH_PORT_NULL)
-	_hurd_port_free (dtable[i], &dealloc_dtable[i], dtable_cells[i]);
+	_hurd_port_free (dtable_cells[i], &dealloc_dtable[i], dtable[i]);
 
   if (err)
     return __hurd_fail (err);
