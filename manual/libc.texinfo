@@ -934,9 +934,10 @@ Porting the GNU C Library
 @include users.texi
 @include sysinfo.texi
 @include conf.texi
-@include lang.texi
 
 @comment Includes of the appendices.
+@include lang.texi
+@include summary.texi
 @include header.texi
 @include maint.texi
 
