@@ -352,7 +352,6 @@ echo-headers:
 # looking for references to source files in sysdeps/stub.  Then we grovel
 # over each referenced source file to see what stub function it defines.
 
-ifdef +depfiles
 .PHONY: stubs # The parent Makefile calls this target.
 stubs: $(common-objpfx)stub-$(subdir)
 $(common-objpfx)stub-$(subdir): $(+depfiles)
@@ -361,7 +360,6 @@ $(common-objpfx)stub-$(subdir): $(+depfiles)
 	    `sed -n 's@^.*\($(sysdep_dir)/stub/[a-z0-9_]*\.c\).*$$@\1@p' $^` \
 	    /dev/null > $@T
 	mv $@T $@
-endif
 
 ifdef gpl2lgpl
 ifneq (,$(wildcard /home/gd/gnu/lib/ChangeLog))
