@@ -45,13 +45,16 @@ DEFUN(mktemp, (template), char *template)
     }
 
   if (pid != oldpid)
-    count = 0;
+    {
+      oldpid = pid;
+      count = 0;
+    }
 
   c = letters[count++];
   count %= sizeof(letters) - 1;
 
-  if (sprintf(&template[len - 6], "%c%.5u",
-	      c, (unsigned int) pid % 100000) != 6)
+  if (sprintf (&template[len - 6], "%c%.5u",
+	       c, (unsigned int) pid % 100000) != 6)
     return NULL;
 
   return template;
