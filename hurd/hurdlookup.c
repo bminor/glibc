@@ -88,20 +88,6 @@ __hurd_path_lookup_retry (file_t crdir,
 
       switch (doretry)
 	{
-	case FS_RETRY_NONE:
-	  /* We got a successful translation.  Now apply any
-	     open-time action flags we were passed.  */
-	  if (flags & O_EXLOCK)
-	    ;			/* XXX */
-	  if (!err && (flags & O_SHLOCK))
-	    ;			/* XXX */
-	  if (!err && (flags & O_TRUNC))
-	    err = __file_truncate (*result, 0);
-
-	  if (err)
-	    __mach_port_deallocate (__mach_task_self (), *result);
-	  return err;
-	  
 	case FS_RETRY_REAUTH:
 	  err = __io_reauthenticate (*result, _hurd_pid);
 	  if (! err)
@@ -119,6 +105,24 @@ __hurd_path_lookup_retry (file_t crdir,
 	  if (nloops++ >= SYMLOOP_MAX)
 	    return ELOOP;
 #endif
+
+	  /* An empty RETRYNAME indicates we have the final port.  */
+	  if (retryname[0] == '\0')
+	    {
+	    case FS_RETRY_NONE:	/* XXX going away XXX */
+	      /* We got a successful translation.  Now apply any open-time
+		 action flags we were passed.  */
+	      if (flags & O_EXLOCK)
+		;		/* XXX */
+	      if (!err && (flags & O_SHLOCK))
+		;		/* XXX */
+	      if (!err && (flags & O_TRUNC))
+		err = __file_truncate (*result, 0);
+
+	      if (err)
+		__mach_port_deallocate (__mach_task_self (), *result);
+	      return err;
+	    }
 
 	  startdir = *result;
 	  dealloc_dir = 1;
@@ -210,10 +214,33 @@ __hurd_path_lookup_retry (file_t crdir,
 	      if (retryname[1] == 't' && retryname[2] == 'y')
 		switch (retryname[3])
 		  {
+		    error_t opentty (file_t *result)
+		      {
+			error_t err;
+			file_t unauth;
+			err = __USEPORT (CTTYID,
+					 __termctty_open_terminal (port,
+								   flags,
+								   &unauth));
+			if (! err)
+			  {
+			    err = __io_reauthenticate (unauth, _hurd_pid);
+			    if (! err)
+			      err == __USEPORT
+				(AUTH, __auth_user_authenticate (port,
+								 unauth,
+								 _hurd_pid,
+								 result));
+			    __mach_port_deallocate (__mach_task_self (),
+						    unauth);
+			  }
+			return err;
+		      }
+
 		  case '\0':
-		    return _hurd_ports_get (INIT_PORT_CTTYID, result);
+		    return opentty (result);
 		  case '/':
-		    if (err = _hurd_ports_get (INIT_PORT_CTTYID, &startdir))
+		    if (err = opentty (&startdir))
 		      return err;
 		    dealloc_dir = 1;
 		    strcpy (retryname, &retryname[4]);
