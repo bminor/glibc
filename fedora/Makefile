@@ -48,8 +48,9 @@ snapshot-time: branch.mk
 commit-merge:
 	cd ..; cvs -Q commit -m"Updated to $(snapshot-id)"
 
-glibc.spec: glibc.spec.in ../version.h branch.mk
+glibc.spec: glibc.spec.in ../version.h branch.mk Makefile
 	(echo '%define glibcdate $(snapshot-name)'; \
+	 echo '%define glibcname $(tar-name)'; \
 	 sed -n '/VERSION/s/^.*"\([^"]*\)"$$/%define glibcversion \1/p' \
 	     ../version.h; \
 	 cat $<) > $@.new
