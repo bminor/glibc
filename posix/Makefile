@@ -274,6 +274,6 @@ $(inst_libexecdir)/getconf: $(objpfx)getconf $(objpfx)getconf.speclist FORCE
 
 $(objpfx)getconf.speclist: getconf.speclist.h
 	$(CC) -E $(CFLAGS) $(CPPFLAGS) $< \
-	  | sed -n -e '/START_OF_STRINGS/,$${/_POSIX_V6_/{s/^[^"]*"//;s/".*$$//;p}}' \
+	  | sed -n -e '/START_OF_STRINGS/,$${/POSIX_V6_/{s/^[^"]*"//;s/".*$$//;p}}' \
 	  > $@.new
 	mv -f $@.new $@
