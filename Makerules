@@ -1,0 +1,261 @@
+# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+#
+#	Propagated rules for making the GNU C library.
+#
+ifneq (,)
+This makefile requires GNU Make.
+endif
+
+
+ifdef	subdir
+..	:= ../
+
+# If `sources' was defined by the parent makefile, undefine it so
+# we will later get it from wildcard search in this directory.
+ifneq	"$(findstring env,$(origin sources))" ""
+override sources :=
+endif
+
+# If defined, these will determine the value of `sources'.
+ifneq	"$(findstring env,$(origin routines))" ""
+override routines	:=
+endif
+ifneq	"$(findstring env,$(origin aux))" ""
+override aux		:=
+endif
+
+endif	# subdir
+
+ifndef +included-Makeconfig
+include $(..)Makeconfig
+endif
+
+# In make v4, we'll be able to really do this right (or something like that).
+ifeq (,)
+up-one = $(patsubst %/,%,$(dir $0))
+parents-of = $(foreach x,$0,$(notdir $x) \
+			      $(ifeq $(dir $x),./,$(parents-of $(up-one $x))))
+# Finish this someday....
+endif
+
+ifdef  objdir
++sysdir_pfx = $(objpfx)
+else
++sysdir_pfx = $(..)
+endif
+
+# Right now, however, we do it with shell scripts and lots of strangeness.
+sysdep_dir := $(..)sysdeps
+ifndef sysdirs
+include $(+sysdir_pfx)sysdirs
+define \n
+
+
+endef
+sysdirs := $(subst $(\n), ,$(sysdirs))
+$(+sysdir_pfx)sysdirs: $(+sysdir_pfx)Sysnames $(..)find-sysdirs
+	(echo define sysdirs; \
+	 $(dir $(word 2,$^))$(notdir $(word 2,$^)) < $<; \
+	 echo endef) > $@
+$(+sysdir_pfx)Sysnames:
+	@echo The GNU C Library has not been configured! >&2
+	@echo Run \`configure\' to configure it before building. >&2
+	@exit 1
+endif
+
+# Turn the list of sysdep names into a colon-separated list of directories
+# under SYSDEP_DIR (the base directory for sysdep files), and tell Make to
+# search for C and header files in those directories.
++sysdep_dirs := $(addprefix $(sysdep_dir)/,$(sysdirs))
+ifdef objdir
++sysdep_dirs := $(objdir) $(+sysdep_dirs)
+endif
+sysdep_path := $(subst $+ ,:,$(+sysdep_dirs))
+ifeq (,)
+override VPATH := $(sysdep_path)
+else
+vpath %.c $(sysdep_path)
+vpath %.S $(sysdep_path)
+vpath %.s $(sysdep_path)
+vpath %.h $(sysdep_path)
+endif
+
+# Add -I switches to get the right sysdep directories.
++sysdep-includes := $(addprefix -I,$(+sysdep_dirs))
+override CPPFLAGS := $(strip $(filter-out $(+sysdep-includes),$(CPPFLAGS)) \
+			     $(+sysdep-includes))
+
+# Include any system-specific makefiles.
+
++sysdep-makefiles := $(wildcard $(addsuffix /Makefile,$(+sysdep_dirs)))
+
+ifneq ($(+sysdep-makefiles),)
+include $(+sysdir_pfx)sysdep-Makefile
+$(+sysdir_pfx)sysdep-Makefile: $(+sysdep-makefiles)
+	(for file in $(^:$(..)%=%); do \
+	   echo include "\$$(..)$$file"; done) > $@
+endif
+
+ifneq ($(no_deps),t)
+# Include the generated dependencies of the sources in this directory.
+include $(objpfx)depend-$(subdir)
+endif
+
+# Maximize efficiency by minimizing the number of rules.
+.SUFFIXES:	# Clear the suffix list.
+# Remove the RCS and SCCS rules.
+%: %,v
+%: RCS/%,v
+%: s.%
+%: SCCS/s.%
+
+# Add the suffixes we use.
+.SUFFIXES: .a .o .S .s .c .h .dep .m4
+
+# Make sure that object files are not removed
+# when they are intermediates between sources and library members.
+# This can go away with make v4.
+.PRECIOUS: %.o
+
+# Make sure that the parent library archive is never removed.
+.PRECIOUS: $(libc.a)
+
+# Use the verbose option of ar and tar when not running silently.
+ifeq	"$(findstring s,$(MAKEFLAGS))" ""	# if not -s
+verbose := v
+else	   					# -s
+verbose	:=
+endif						# not -s
+
+ARFLAGS := r$(verbose)
+
+# Figure out the source filenames in this directory.
+
+override sources	:= $(addsuffix .c,$(routines) $(aux) \
+				          $(sysdep_routines))
+
+# This is the list of all object files, gotten by
+# replacing every ".c" in `sources' with a ".o".
+override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
+
+# The order of these rules is important.
+
+ifndef .S-rule # Bletch.
+$(objpfx)%.o: %.S $(before-compile)
+	$(COMPILE.S) $< $(OUTPUT_OPTION)
+endif
+$(objpfx)%.o: %.s $(before-compile)
+	$(COMPILE.s) $< $(OUTPUT_OPTION)
+$(objpfx)%.o: %.c $(before-compile)
+	$(COMPILE.c) $< $(OUTPUT_OPTION)
+
+# This makes all the object files in the parent library archive.
+
+.PHONY: lib lib-noranlib libobjs
+lib: lib-noranlib
+	ranlib $(libc.a)
+libobjs: lib-noranlib
+lib-noranlib: $(libc.a) ar-it
+$(libc.a): %: $(addprefix %,$(patsubst $(objpfx)%,(%),$(objects)))
+#	$(AR) $(ARFLAGS) $@ $(patsubst $@(%),%,$?)
+
+define +libc_lock_open
+@. $(..)libc-lock-open
+endef
+define +libc_lock_close
+@rm -f $(..)LOCK-libc.a
+endef
+
+# Temporary until I get a better solution.
+.PHONY: ar-it
+ar-it: $(objects)
+#	$(+libc_lock_open)
+ifdef objdir
+	cd $(objdir); $(AR) ru$(verbose) libc.a $(patsubst $(objpfx)%,%,$^)
+else
+	$(AR) u$(verbose) $(libc.a) $^
+endif
+#	$(+libc_lock_close)
+
+ifdef objects
+$(patsubst %,$(libc.a)(%),$(notdir $(objects))): $(libc.a)(%): $(objpfx)%;
+endif
+
+
+# This makes all the object files.
+.PHONY: objects objs
+objects objs: $(objects)
+
+# Make the ansi and trad versions of the headers from the ansidecl sources.
+
+headers := $(headers) $(sysdep_headers)
+
+ifdef objpfx
++headers_pfx = $(objpfx)
+else
++headers_pfx = $(..)
+endif
+
++header_dirs	:= $(filter-out ./,$(dir $(headers)))
+
+.PHONY: headers
+headers: $(+headers_pfx)ansi/						\
+	 $(addprefix $(+headers_pfx)ansi/,$(+header_dirs) $(headers))	\
+	 $(+headers_pfx)trad/						\
+	 $(addprefix $(+headers_pfx)trad/,$(+header_dirs) $(headers))
+
+%/:
+# mkdir isn't smart enough to strip a trailing /.
+	mkdir $(@:%/=%)
+
+$(+headers_pfx)ansi/%: % $(..)ansidecl.m4;$(+ansideclificate)
+$(+headers_pfx)trad/%: % $(..)ansidecl.m4;$(+ansideclificate)
+
+# The bit with awk is to remove all the newlines from
+# ansidecl.m4, so the output doesn't have 20 blank
+# lines at the beginning.
++ansideclificate = $(dir $(..)ansidecl)$(notdir $(..)ansidecl) \
+		   -$(firstword $(subst /, ,$(@:$(+headers_pfx)%=%))) $< > $@
+
+
+.PHONY: echo-headers
+echo-headers:
+	@echo $(headers)
+
+define +make-deps
+$(+mkdep) $(CPPFLAGS) $< | sed 's,$*\.o,$(@:.dep=.o) $@,' > $@
+endef
+
+# N.B.: The order of these two rules is important.
+$(objpfx)%.dep: %.S $(before-compile)
+	$(+make-deps)
+$(objpfx)%.dep: %.c $(before-compile)
+	$(+make-deps)
+
++depfiles := $(strip $(sources:.c=.dep) $(addsuffix .dep,$(others) $(tests)))
++depfiles := $(addprefix $(objpfx),$(+depfiles))
+$(objpfx)depend-$(subdir): Makefile
+ifdef +depfiles
+	(for file in $(patsubst $(objpfx)%,%,$(+depfiles)); do	\
+	 echo "include $(objpfx)$$file";	\
+	 done) > $@
+else
+	cp /dev/null $@
+endif
