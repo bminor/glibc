@@ -32,6 +32,7 @@ int
 DEFUN(uname, (name), struct utsname *name)
 {
   extern CONST char __libc_release[], __libc_version[];
+  int save;
 
   if (name == NULL)
     {
@@ -39,11 +40,15 @@ DEFUN(uname, (name), struct utsname *name)
       return -1;
     }
 
+  save = errno;
   if (__gethostname (name->nodename, sizeof (name->nodename)) < 0)
     {
       if (errno == ENOSYS)
-	/* Hostname is meaningless for this machine.  */
-	name->nodename[0] = '\0';
+	{
+	  /* Hostname is meaningless for this machine.  */
+	  name->nodename[0] = '\0';
+	  errno = save;
+	}
       else
 	return -1;
     }
