@@ -28,7 +28,7 @@ Cambridge, MA 02139, USA.  */
 
 .data
 .global C_SYMBOL_NAME(__curbrk)
-C_SYMBOL_NAME(__curbrk):
+C_LABEL(__curbrk)
 #ifdef	HAVE_GNU_LD
 	.long C_SYMBOL_NAME(_end)
 #else
@@ -36,8 +36,7 @@ C_SYMBOL_NAME(__curbrk):
 #endif
 
 .text
-.global C_SYMBOL_NAME(__brk)
-C_SYMBOL_NAME(__brk):
+ENTRY (__brk)
 	add %o0, 7, %o0
 	andn %o0, 7, %o0
 	mov SYS_brk, %g1
