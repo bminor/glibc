@@ -23,9 +23,10 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/port.h>
 #include <hurd/signal.h>
 
-/* Send signal SIG to process number PID.  If PID is zero,
-   send SIG to all processes in the current process's process group.
-   If PID is < -1, send SIG to all processes in process group - PID.  */
+/* Send a `sig_post' RPC to process number PID.  If PID is zero,
+   send the message to all processes in the current process's process group.
+   If PID is < -1, send SIG to all processes in process group - PID.
+   SIG and REFPORT are passed along in the request message.  */
 error_t
 _hurd_sig_post (pid_t pid, int sig, mach_port_t refport)
 {
