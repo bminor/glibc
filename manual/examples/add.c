@@ -11,7 +11,7 @@ add_em_up (int count,...)
 
   sum = 0;
   for (i = 0; i < count; i++)
-    sum = sum + va_arg (ap, int);	/* Get the next argument value. */
+    sum += va_arg (ap, int);	/* Get the next argument value. */
 
   va_end (ap);			/* Clean up. */
   return sum;
