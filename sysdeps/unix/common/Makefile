@@ -23,6 +23,8 @@ $(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/common/mk-local_lim.c
 	$(native-compile)
 
 before-compile := $(before-compile) $(common-objpfx)local_lim.h
+generated := $(generated) \
+	     $(common-objpfx)local_lim.h $(common-objpfx)mk-local_lim
 
 ifeq ($(subdir),posix)
 sysdep_routines := $(sysdep_routines) bsd_getgrp
@@ -31,6 +33,8 @@ endif
 ifeq ($(subdir),ctype)
 
 sysdep_routines := $(sysdep_routines) ctype-glue
+
+generated := $(generated) $(objpfx)glue-ctype $(objpfx)glue-ctype.c
 
 $(objpfx)ctype-glue.c: $(objpfx)glue-ctype
 	@rm -f $@
@@ -52,5 +56,7 @@ $(objpfx)siglist.c: $(objpfx)make_siglist
 
 $(objpfx)make_siglist: $(sysdep_dir)/unix/common/make_siglist.c
 	$(native-compile)
+
+generated := $(generated) $(objpfx)siglist.c $(objpfx)make_siglist
 
 endif
