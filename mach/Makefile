@@ -1,0 +1,123 @@
+# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License
+# as published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+subdir := mach
+
+distribute = Machrules interface.awk syscalls.awk shortcut.awk
+
+headers = mach_init.h mach.h \
+	  $(addprefix mach/,$(mach-headers)) \
+	  $(interface-headers)
+
+mach-headers := host_info.h kern_return.h \
+		mach_param.h mach_types.h \
+		memory_object.h \
+		message.h mig_errors.h msg_type.h \
+		policy.h port.h processor_info.h \
+		std_types.h task_info.h task_special_ports.h \
+		thread_info.h thread_special_ports.h \
+		thread_status.h thread_switch.h time_value.h \
+		vm_attributes.h vm_inherit.h vm_prot.h \
+		vm_statistics.h
+
+user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
+				     default_pager_object		\
+				     memory_object_user			\
+				     memory_object_default		\
+				     kernel_boot			\
+	            )\
+		   $(addprefix device/,device device_request)
+# device_reply is giving me headaches because of userprefix
+server-interfaces := # mach/__exc mach/exc
+
+routines = $(interface-routines) \
+	   $(filter-out syscall_%,$(mach-syscalls)) \
+	   $(addprefix __,$(mach-syscalls)) \
+	   mach_init vm_page_size \
+	   mig_strncpy mig_support __bcopy msg \
+	   msg_destroy msg_server msg_server_t \
+	   __msg_destroy __msg_server \
+	   devstream bootprivport privports
+
+tests := hello
+
+
+all:
+
+
+# Define mach-syscalls and sysno-*.
+include $(objpfx)mach-syscalls.mk
+$(objpfx)mach-syscalls.mk: mach/syscall_sw.h syscalls.awk
+# Go kludges!!!
+	sed -n -e '/Unix server implement them/,$$d' \
+	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),[0-9]*)$$/\1 \2/p' \
+	< $< | awk -f $(word 2,$^) > $@-new		      
+	mv $@-new $@
+clean-extras := $(clean-extras) $(objpfx)mach-syscalls.mk
+
+ifdef mach-syscalls
+$(mach-syscalls:%=$(objpfx)__%.S): $(objpfx)__%.S: mach-syscalls.mk
+	(echo '#include <sysdep.h>'; \
+	 echo 'SYSCALL_TRAP (__$*, $(sysno-$*))') > $@-new
+	 mv $@-new $@
+$(mach-syscalls:%=$(objpfx)%.c): $(objpfx)%.c:
+	(echo '#include <gnu-stabs.h>'; \
+	 echo 'symbol_alias (__$*, $*)') > $@-new
+	mv $@-new $@
+clean-extras := $(clean-extras) \
+		$(mach-syscalls:%=$(objpfx)__%.S) \
+		$(mach-syscalls:%=$(objpfx)%.c)
+endif
+
+mach-shortcuts := $(patsubst syscall_%,%,$(filter syscall_%,$(mach-syscalls)))
+
+ifndef mach-shortcuts
+# Forget about mach_interface.defs for this run.  On the next run,
+# $(mach-shortcuts) will be set, and that will change how
+# mach_interface.defs is processed: it will get the -D flags below.
+user-interfaces := $(filter-out mach/mach_interface
+				mach/mach_port mach/mach_host,\
+				$(user-interfaces))
+endif
+
+# Make the MiG stubs for $(mach-shortcuts) be CALL_rpc.
+migdefines := $(migdefines) \
+	      $(foreach call,$(mach-shortcuts),-D$(call)=$(call)_rpc)
+mach/mach_interface.uh mach/mach_port.uh: mach-syscalls.mk
+
+ifdef mach-shortcuts
+$(mach-shortcuts:%=__%.c): __%.c: shortcut.awk __%_rpc.c
+	gawk -v call=__$* -v rpc=__$*_rpc -v syscall=__syscall_$* \
+	     -f $^ > $@-new
+	mv $@-new $@
+endif
+
+include Machrules
+include ../Rules
+
+
+# There is already a mach.h, so mach.defs generates mach_interface.h.
+mach/mach_interface.defs: mach/mach.defs
+	ln $< $@ || cp $< $@
+# There is already a memory_object.h,
+# so memory_object.defs generates memory_object_user.h.
+mach/memory_object_user.defs: mach/memory_object.defs
+	ln $< $@ || cp $< $@
+
+# Be sure not to make these with implicit rules from foo.defs.
+$(filter-out $(interface-headers),$(headers)) : ;
