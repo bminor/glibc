@@ -117,18 +117,25 @@ struct rpc_err {
  * Created by individual implementations, see e.g. rpc_udp.c.
  * Client is responsible for initializing auth, see e.g. auth_none.c.
  */
-typedef struct {
-	AUTH	*cl_auth;			/* authenticator */
-	struct clnt_ops {
-		enum clnt_stat	(*cl_call)();	/* call remote procedure */
-		void		(*cl_abort)();	/* abort a call */
-		void		(*cl_geterr)();	/* get specific error code */
-		bool_t		(*cl_freeres)(); /* frees results */
-		void		(*cl_destroy)();/* destroy this structure */
-		bool_t          (*cl_control)();/* the ioctl() of rpc */
-	} *cl_ops;
-	caddr_t			cl_private;	/* private stuff */
-} CLIENT;
+typedef struct CLIENT CLIENT;
+struct CLIENT {
+  AUTH	*cl_auth;		 /* authenticator */
+  struct clnt_ops {
+    enum clnt_stat (*cl_call) __P ((CLIENT *, u_long, xdrproc_t,
+				    caddr_t, xdrproc_t,
+				    caddr_t, struct timeval));
+			       	/* call remote procedure */
+    void (*cl_abort) __P ((void));  /* abort a call */
+    void (*cl_geterr) __P ((CLIENT *, struct rpc_err *));
+				/* get specific error code */
+    bool_t (*cl_freeres) __P ((CLIENT *, xdrproc_t, caddr_t));
+				/* frees results */
+    void (*cl_destroy) __P ((CLIENT *)); /* destroy this structure */
+    bool_t (*cl_control) __P ((CLIENT *, int, char *));
+				/* the ioctl() of rpc */
+  } *cl_ops;
+  caddr_t cl_private;		/* private stuff */
+};
 
 
 /*
@@ -319,8 +326,10 @@ extern void clnt_perrno __P ((enum clnt_stat __num));	/* stderr */
 /*
  * Print an English error message, given the client error code
  */
-extern void clnt_perror __P ((CLIENT *__clnt, char *__msg)); 	/* stderr */
-extern char *clnt_sperror __P ((CLIENT *__clnt, char *__msg));	/* string */
+extern void clnt_perror __P ((CLIENT *__clnt, __const char *__msg));
+							 	/* stderr */
+extern char *clnt_sperror __P ((CLIENT *__clnt, __const char *__msg));
+								/* string */
 
 /*
  * If a creation fails, the following allows the user to figure out why.
