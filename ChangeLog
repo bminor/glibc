@@ -1,5 +1,9 @@
 1998-10-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Add missing
+	Ruffian entry.
+	Patch by Christian Gafton.
+
 	* sysdeps/unix/sysv/linux/Makefile [subdir==misc]
 	(sysdep_headers): Remove sys/debugreg.h.
 	* sysdeps/unix/sysv/linux/i386/Makefile [subdir==misc]
