@@ -44,6 +44,25 @@
 	* sysdeps/ia64/fpu/w_tgammaf.S: Likewise.
 	* sysdeps/ia64/fpu/w_tgammal.S: Likewise.
 
+2005-04-04  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #825]
+	* timezone/scheck.c: Update from tzcode2005h.
+	* timezone/tzfile.h: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
+	[BZ #825]
+	* timezone/antarctica: Update from tzdata2005h.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/etcetera: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/iso3166.tab: Likewise.
+
 2005-03-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #592]
@@ -205,6 +224,37 @@
 
 	* posix/tst-execle1.c (do_test): Fix execle arguments.
 	* posix/tst-execle2.c (do_test): Likewise.
+
+2005-03-23  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #822]
+	* nis/ypclnt.c (yp_2_yperr): Revert 2004-11-30 patch.
+	(ypprot_err): Use yp_2_yperr table also for YP_NODOM .. YP_NOMORE.
+
+2005-03-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #776]
+	* iconv/iconvconfig.c: Fix comment for the output file.
+	(write_output): Clear padding in header.
+
+2005-03-03  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #821]
+	* elf/dl-close.c (_dl_close): Don't try to set up new searchpath if the
+	loader is closed.  Fixes unload3.
+	* elf/tst-global1.c: New file.
+	* elf/Makefile (tests): Add tst-global1.
+	* elf/testobj2.c (p): New function.
+
+2005-03-03  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #821]
+	* elf/Makefile: Add rules to build and run unload3 test.
+	* elf/unload3.c: New test.
+	* elf/unload3mod1.c: New file.
+	* elf/unload3mod2.c: New file.
+	* elf/unload3mod3.c: New file.
+	* elf/unload3mod4.c: New file.
 
 2005-03-01  Alfred M. Szmidt  <ams@gnu.org>
 
