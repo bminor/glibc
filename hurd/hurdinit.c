@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/port.h>
+#include "set-hooks.h"
 
 
 struct hurd_port *_hurd_ports;
@@ -29,6 +30,8 @@ unsigned int _hurd_nports;
 mode_t _hurd_umask;
 
 void _hurd_proc_init (char **argv);
+
+DEFINE_HOOK (_hurd_subinit, (void));
 
 /* Initialize the library data structures from the
    ints and ports passed to us by the exec server.
@@ -87,11 +90,20 @@ _hurd_init (int flags, char **argv,
        which the library uses and could be security holes.
        CORESERVER, COREFILE
        */ ;
+
+  /* Call other things which want to do some initialization.  These are not
+     on the __libc_subinit hook because things there like to be able to
+     assume the availability of the POSIX.1 services we provide.  */
+  RUN_HOOK (_hurd_subinit, ());
 }
 
 /* The user can do "int _hide_arguments = 1;" to make
    sure the arguments are never visible with `ps'.  */
 int _hide_arguments, _hide_environment;
+
+/* Hook for things which should be initialized as soon as the proc
+   server is available.  */
+DEFINE_HOOK (_hurd_proc_subinit, (void));
 
 /* Do startup handshaking with the proc server just installed in _hurd_ports.
    Call _hurdsig_init to set up signal processing.  */
@@ -132,4 +144,9 @@ _hurd_proc_init (char **argv)
   /* Initialize proc server-assisted fault recovery for the signal thread.  */
   _hurdsig_fault_init ();
 #endif
+
+  /* Call other things which want to do some initialization.  These are not
+     on the _hurd_subinit hook because things there assume that things done
+     here, like _hurd_pid, are already initialized.  */
+  RUN_HOOK (_hurd_proc_subinit, ());
 }
