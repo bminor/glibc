@@ -46,6 +46,7 @@ static char sccsid[] = "@(#)pmap_getmaps.c 1.10 87/08/11 Copyr 1984 Sun Micro";
 #include <netdb.h>
 #include <stdio.h>
 #include <errno.h>
+#include <sys/param.h>		/* Ultrix needs before net/if --roland@gnu */
 #include <net/if.h>
 #include <sys/ioctl.h>
 #define NAMELEN 255
