@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 1998 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ __gethostname (name, len)
 
   if (strlen (buf.nodename) + 1 > len)
     {
-      __set_errno (EINVAL);
+      __set_errno (ENAMETOOLONG);
       return -1;
     }
 
