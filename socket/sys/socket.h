@@ -211,7 +211,8 @@ enum
     SO_RCVTIMEO = 0x1006,	/* Receive timeout.  */
 
     SO_ERROR = 0x1007,		/* Get and clear error status.  */
-    SO_TYPE = 0x1008,		/* Get socket type.  */
+    SO_STYLE = 0x1008,		/* Get socket connection style.  */
+    SO_TYPE = SO_STYLE,		/* Compatible name for SO_STYLE.  */
   };
 
 /* Structure used to manipulate the SO_LINGER option.  */
