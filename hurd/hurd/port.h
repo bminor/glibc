@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <mach.h>
 #include <hurd/userlink.h>
+#include <spin-lock.h>
 
 
 /* Structure describing a cell containing a port.  With the lock held, a
@@ -35,9 +36,7 @@ Cambridge, MA 02139, USA.  */
 
 struct hurd_port
   {
-#ifdef noteven
     spin_lock_t lock;		/* Locks rest.  */
-#endif
     struct hurd_userlink *users; /* Chain of users; see below.  */
     mach_port_t port;		/* Port. */
   };
@@ -54,14 +53,17 @@ struct hurd_port
      __result; })
 
 
+#ifndef _EXTERN_INLINE
+#define _EXTERN_INLINE extern __inline
+#endif
+
+
 /* Initialize *PORT to INIT.  */
 
-extern inline void
+_EXTERN_INLINE void
 _hurd_port_init (struct hurd_port *port, mach_port_t init)
 {
-#ifdef noteven
   __spin_lock_init (&port->lock);
-#endif
   port->users = NULL;
   port->port = init;
 }
@@ -70,7 +72,7 @@ _hurd_port_init (struct hurd_port *port, mach_port_t init)
 /* Get a reference to *PORT, which is locked.
    Pass return value and LINK to _hurd_port_free when done.  */
 
-extern inline mach_port_t
+_EXTERN_INLINE mach_port_t
 _hurd_port_locked_get (struct hurd_port *port,
 		       struct hurd_userlink *link)
 {
@@ -78,28 +80,24 @@ _hurd_port_locked_get (struct hurd_port *port,
   result = port->port;
   if (result != MACH_PORT_NULL)
     _hurd_userlink_link (&port->users, link);
-#ifdef noteven
   __spin_unlock (&port->lock);
-#endif
   return result;
 }
 
 /* Same, but locks PORT first.  */
 
-extern inline mach_port_t
+_EXTERN_INLINE mach_port_t
 _hurd_port_get (struct hurd_port *port,
 		struct hurd_userlink *link)
 {
-#ifdef noteven
   __spin_lock (&port->lock);
-#endif
   return _hurd_port_locked_get (port, link);
 }
 
 
 /* Free a reference gotten with `USED_PORT = _hurd_port_get (PORT, LINK);' */
 
-extern inline void
+_EXTERN_INLINE void
 _hurd_port_free (struct hurd_port *port,
 		 struct hurd_userlink *link,
 		 mach_port_t used_port)
@@ -110,13 +108,9 @@ _hurd_port_free (struct hurd_port *port,
        it does not link us on the users chain, since there is
        no shared resource.  */
     return;
-#ifdef noteven
   __spin_lock (&port->lock);
-#endif
   dealloc = _hurd_userlink_unlink (link);
-#ifdef noteven
   __spin_unlock (&port->lock);
-#endif
   if (dealloc)
     __mach_port_deallocate (__mach_task_self (), used_port);
 }
@@ -125,27 +119,23 @@ _hurd_port_free (struct hurd_port *port,
 /* Set *PORT's port to NEWPORT.  NEWPORT's reference is consumed by PORT->port.
    PORT->lock is locked.  */
 
-extern inline void
+_EXTERN_INLINE void
 _hurd_port_locked_set (struct hurd_port *port, mach_port_t newport)
 {
   mach_port_t old;
   old = _hurd_userlink_clear (&port->users) ? port->port : MACH_PORT_NULL;
   port->port = newport;
-#ifdef noteven
   __spin_unlock (&port->lock);
-#endif
   if (old != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), old);
 }
 
 /* Same, but locks PORT first.  */
 
-extern inline void
+_EXTERN_INLINE void
 _hurd_port_set (struct hurd_port *port, mach_port_t newport)
 {
-#ifdef noteven
   __spin_lock (&port->lock);
-#endif
   return _hurd_port_locked_set (port, newport);
 }
 
