@@ -32,7 +32,7 @@ export subdir
 
 # This is the default target; it makes the library.
 .PHONY: all
-all: lib headers
+all: lib
 
 ifneq	"$(findstring env,$(origin headers))" ""
 headers :=
@@ -48,9 +48,6 @@ include ../Makerules
 
 .PHONY: subdir_lib
 subdir_lib: lib-noranlib
-
-.PHONY: subdir_headers
-subdir_headers: headers
 
 # This makes all the auxilliary and test programs.
 
