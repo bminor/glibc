@@ -434,7 +434,18 @@ _S_sig_post (sigthread_t me,
     case SIGURG:
       {
 	/* Any io object a file descriptor refers to might send us
-	   one of these signals using its async ID port for REFPORT.  */
+	   one of these signals using its async ID port for REFPORT.
+
+	   This is pretty wide open; it is not unlikely that some random
+	   process can at least open for reading something we have open,
+	   get its async ID port, and send us a spurious SIGIO or SIGURG
+	   signal.  But BSD is actually wider open than that!--you can set
+	   the owner of an io object to any process or process group
+	   whatsoever and send them gratuitous signals.
+
+	   Someday we could implement some reasonable scheme for
+	   authorizing SIGIO and SIGURG signals properly.  */
+
 	int dealloc_dt;
 	int d;
 	struct _hurd_dtable dt = _hurd_dtable_use (&dealloc_dt);
