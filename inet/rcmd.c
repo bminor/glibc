@@ -306,7 +306,6 @@ iruserok(raddr, superuser, ruser, luser)
 	struct stat sbuf;
 	struct passwd pwdbuf, *pwd;
 	FILE *hostf;
-	uid_t uid;
 	int first;
 
 	first = 1;
@@ -326,7 +325,7 @@ again:
 		char *buffer = __alloca (buflen);
 
 		first = 0;
-		if (getpwnam_r (luser, &pwdbuf, buffer, buflen, &pwd) < 0)
+		if (__getpwnam_r (luser, &pwdbuf, buffer, buflen, &pwd) < 0)
 			return -1;
 
 		dirlen = strlen (pwd->pw_dir);
@@ -339,10 +338,15 @@ again:
 		 * reading an NFS mounted file system, can't read files that
 		 * are protected read/write owner only.
 		 */
-		uid = geteuid();
-		(void)seteuid(pwd->pw_uid);
-		hostf = fopen(pbuf, "r");
-		(void)seteuid(uid);
+		if (__euidaccess (pbuf, R_OK) != 0)
+		  hostf = NULL;
+		else
+		  {
+		    uid_t uid = geteuid ();
+		    seteuid (pwd->pw_uid);
+		    hostf = fopen (pbuf, "r");
+		    seteuid (uid);
+		  }
 
 		if (hostf == NULL)
 			return (-1);
