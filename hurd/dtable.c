@@ -25,11 +25,10 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <mutex.h>
 
 
-#ifdef noteven
 struct mutex _hurd_dtable_lock;
-#endif
 struct hurd_dtable _hurd_dtable;
 int _hurd_dtable_rlimit;
 struct hurd_userlink *_hurd_dtable_users;
@@ -45,9 +44,7 @@ init_dtable (void)
   register size_t i;
   struct hurd_fd **dt;
 
-#ifdef noteven
   __mutex_init (&_hurd_dtable_lock);
-#endif
 
   _hurd_dtable_users = NULL;
 
