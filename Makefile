@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -279,7 +279,7 @@ parent_echo-distinfo:
 
 # Make the distribution tarfile.
 
-distribute  := README INSTALL FAQ NOTES NEWS PROJECTS BUGS		\
+distribute  := README README.libm INSTALL FAQ NOTES NEWS PROJECTS BUGS	\
 	       COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]		\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
 	       extra-lib.mk o-iterator.mk				\
