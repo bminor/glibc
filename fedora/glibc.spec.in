@@ -1,4 +1,4 @@
-%define glibcrelease 69
+%define glibcrelease 70
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -42,6 +42,7 @@ BuildPreReq: prelink >= 0.2.0-5
 BuildPreReq: gcc >= 3.2
 Conflicts: rpm <= 4.0-0.65
 Conflicts: glibc-devel < 2.2.3
+Conflicts: gcc4 <= 4.0.0-0.6
 # Earlier shadow-utils packages had too restrictive permissions on
 # /etc/default
 Conflicts: shadow-utils < 2:4.0.3-20
@@ -187,7 +188,7 @@ Summary: A Name Service Caching Daemon (nscd).
 Group: System Environment/Daemons
 Conflicts: kernel < 2.2.0
 Requires: libselinux >= 1.17.10-1
-Conflicts: selinux-policy-targeted < 1.17.20
+Conflicts: selinux-policy-targeted < 1.17.30-2.2
 Prereq: /sbin/chkconfig, /usr/sbin/useradd, /usr/sbin/userdel, sh-utils
 Autoreq: true
 
@@ -1101,6 +1102,12 @@ for i in `sed '/%%dir/d;/%%config/d;/%%verify/d;s/%%lang([^)]*) //' \
   [ -f "$RPM_BUILD_ROOT$i" ] && rm -f "$RPM_BUILD_ROOT$i" || :
 done
 [ "x$save_trace" = xyes ] && set -x
+
+%else
+
+mkdir -p $RPM_BUILD_ROOT/var/{db,run}/nscd
+touch $RPM_BUILD_ROOT/var/{db,run}/nscd/{passwd,group,hosts}
+touch $RPM_BUILD_ROOT/var/run/nscd/{socket,nscd.pid}
 %endif
 
 touch $RPM_BUILD_ROOT/%{_prefix}/lib/locale/locale-archive
@@ -1209,6 +1216,16 @@ rm -f *.filelist*
 %defattr(-,root,root)
 %config(noreplace) /etc/nscd.conf
 %config /etc/rc.d/init.d/nscd
+%dir %attr(0755,root,root) /var/run/nscd
+%dir %attr(0755,root,root) /var/db/nscd
+%attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/run/nscd/nscd.pid
+%attr(0666,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/run/nscd/socket
+%attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/run/nscd/passwd
+%attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/run/nscd/group
+%attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/run/nscd/hosts
+%attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/db/nscd/passwd
+%attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/db/nscd/group
+%attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/db/nscd/hosts
 %endif
 
 %ifarch %{nptlarches}
@@ -1239,6 +1256,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Oct 19 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-70
+- update from CVS
+- require newer selinux-policy (#135978)
+- add %%dir for /var/run/nscd and /var/db/nscd and %%ghost
+  files in it
+- conflict with gcc4 4.0.0-0.6 and earlier (needs __builtin_object_size)
+
 * Mon Oct 18 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-69
 - update from CVS
   - object size checking support (-D_FORTIFY_SOURCE={1,2})
