@@ -26,8 +26,9 @@ Cambridge, MA 02139, USA.  */
 
 /* Symbol set of ioctl handler lists.  If there are user-registered
    handlers, one of these lists will contain them.  The other lists are
-   handlers built into the library.  */
-const struct
+   handlers built into the library.  The definition of the set comes from
+   hurdioctl.c.  */
+extern const struct
   {
     size_t n;
     struct ioctl_handler *v[0];
@@ -164,7 +165,7 @@ DEFUN(__ioctl, (fd, request),
   if ((m->msgh_bits & MACH_MSGH_BITS_COMPLEX) || /* Allow no ports or VM.  */
       m->msgh_size != (char *) t - msg)
     {
-      __mach_msg_destroy (m);	/* XXX ? Deallocate gratuitous resources.  */
+      __mach_msg_destroy (m);
       return __hurd_fail (MIG_TYPE_ERROR);
     }
 
