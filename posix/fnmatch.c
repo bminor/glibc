@@ -46,10 +46,10 @@ fnmatch (pattern, string, flags)
 	case '?':
 	  if (*n == '\0')
 	    return FNM_NOMATCH;
-	  else if ((flags & FNM_PATHNAME) && *n == '/')
+	  else if ((flags & FNM_FILE_NAME) && *n == '/')
 	    return FNM_NOMATCH;
 	  else if ((flags & FNM_PERIOD) && *n == '.' &&
-		   (n == string || ((flags & FNM_PATHNAME) && n[-1] == '/')))
+		   (n == string || ((flags & FNM_FILE_NAME) && n[-1] == '/')))
 	    return FNM_NOMATCH;
 	  break;
 
@@ -65,11 +65,11 @@ fnmatch (pattern, string, flags)
 
 	case '*':
 	  if ((flags & FNM_PERIOD) && *n == '.' &&
-	      (n == string || ((flags & FNM_PATHNAME) && n[-1] == '/')))
+	      (n == string || ((flags & FNM_FILE_NAME) && n[-1] == '/')))
 	    return FNM_NOMATCH;
 
 	  for (c = *p++; c == '?' || c == '*'; c = *p++, ++n)
-	    if (((flags & FNM_PATHNAME) && *n == '/') ||
+	    if (((flags & FNM_FILE_NAME) && *n == '/') ||
 		(c == '?' && *n == '\0'))
 	      return FNM_NOMATCH;
 
@@ -94,7 +94,7 @@ fnmatch (pattern, string, flags)
 	      return FNM_NOMATCH;
 
 	    if ((flags & FNM_PERIOD) && *n == '.' &&
-		(n == string || ((flags & FNM_PATHNAME) && n[-1] == '/')))
+		(n == string || ((flags & FNM_FILE_NAME) && n[-1] == '/')))
 	      return FNM_NOMATCH;
 
 	    not = (*p == '!' || *p == '^');
@@ -118,7 +118,7 @@ fnmatch (pattern, string, flags)
 		c = *p++;
 		c = FOLD (c);
 
-		if ((flags & FNM_PATHNAME) && c == '/')
+		if ((flags & FNM_FILE_NAME) && c == '/')
 		  /* [/] can never match.  */
 		  return FNM_NOMATCH;
 
