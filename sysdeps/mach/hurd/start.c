@@ -112,7 +112,7 @@ _start (void)
 			   &argv, round_page ((argc + 1 + envc + 1) *
 					      sizeof (char *)),
 			   1))
-    _exit (err);
+    __libc_fatal ("hurd: Can't allocate space for args and env\n");
   __environ = &argv[argc + 1];
 
   makevec (args, argslen, argv);
@@ -158,10 +158,12 @@ _start (void)
     thread_t sigthread;
     mach_port_t oldsig, oldtask;
     int i;
-    const sigset_t ignored = nints > INIT_SIGIGN ? intarray[INIT_SIGIGN] : 0;
+    sigset_t ignored = nints > INIT_SIGIGN ? intarray[INIT_SIGIGN] : 0;
+    ignored &= ~_SIG_CANT_IGNORE;
 
     ss = _hurd_thread_sigstate (__mach_thread_self ());
     ss->blocked = nints > INIT_SIGMASK ? intarray[INIT_SIGMASK] : 0;
+    ss->blocked &= ~_SIG_CANT_BLOCK;
     __sigemptyset (&ss->pending);
     for (i = 1; i < NSIG; ++i)
       ss->actions[i].sa_handler
@@ -171,19 +173,19 @@ _start (void)
     if (err = __mach_port_allocate (__mach_task_self (),
 				    MACH_PORT_RIGHT_RECEIVE,
 				    &_hurd_sigport))
-      _exit (err);
+      __libc_fatal ("hurd: Can't create signal port receive right\n");
 
     if (err = __thread_create (__mach_task_self (), &sigthread))
-      _exit (err);
+      __libc_fatal ("hurd: Can't create signal thread\n");
     if (err = _hurd_start_sigthread (sigthread, _hurd_sigport_receive))
-      _exit (err);
+      __libc_fatal ("hurd: Can't start signal thread\n");
     __mach_port_deallocate (__mach_task_self (), sigthread);
 
     /* Make a send right to the signal port.  */
     if (err = __mach_port_insert_right (__mach_task_self (),
 					_hurd_sigport,
 					MACH_PORT_RIGHT_MAKE_SEND))
-      _exit (err);
+      __libc_fatal ("hurd: Can't create send right to signal port\n");
 
     /* Receive exceptions on the signal port.  */
     __task_set_special_port (__mach_task_self (),
