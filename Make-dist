@@ -88,7 +88,7 @@ version := $(word 2,$(rel+vers))
 tardir := glibc-$(version)
 endif
 
-$(..)$(tardir):
+$(..)glibc-%:
 	ln -s . $@
 
 ifdef	   subdir
@@ -146,6 +146,8 @@ de-..: dist.tar
 
 README: README.template version.c
 	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
+# Make it unwritable so I won't change it by mistake.
+	chmod a-w $@
 
 INSTALL: manual/maint.texinfo
 	makeinfo +no-validate +no-warn +no-headers $<
