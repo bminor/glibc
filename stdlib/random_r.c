@@ -243,8 +243,8 @@ __setstate_r (arg_state, buf)
      struct random_data *buf;
 {
   int32_t *new_state = (int32_t *) arg_state;
-  int type = new_state[0] % MAX_TYPES;
-  int rear = new_state[0] / MAX_TYPES;
+  int type;
+  int rear;
 
   if (buf == NULL)
     return -1;
@@ -253,6 +253,9 @@ __setstate_r (arg_state, buf)
     buf->state[-1] = buf->rand_type;
   else
     buf->state[-1] = (MAX_TYPES * (buf->rptr - buf->state)) + buf->rand_type;
+
+  type = new_state[0] % MAX_TYPES;
+  rear = new_state[0] / MAX_TYPES;
 
   switch (type)
     {
