@@ -19,17 +19,16 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <hurd.h>
+#include <sysdep.h>
 
 /* The first piece of initialized data.  */
 int __data_start = 0;
 
-struct _hurd_port _hurd_proc, _hurd_ccdir, _hurd_cwdir, _hurd_crdir;
+struct _hurd_port _hurd_cwdir, _hurd_crdir;
 mode_t _hurd_umask;
 int _hurd_ctty_fstype;
 fsid_t _hurd_ctty_fsid;
 ino_t _hurd_ctty_fileid;
-mach_port_t _hurd_sigport;
-thread_t _hurd_sigport_thread;
 
 mach_port_t *_hurd_init_dtable;
 size_t _hurd_init_dtablesize;
@@ -225,7 +224,6 @@ _hurd_init (char **argv,
 	break
 
 	  /* Install the standard ports in their cells.  */
-	initport (CCDIR, ccdir);
 	initport (CWDIR, cwdir);
 	initport (CRDIR, crdir);
 	initport (AUTH, auth);
