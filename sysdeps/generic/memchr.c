@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
    Based on strlen implemention by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
    commentary by Jim Blandy (jimb@ai.mit.edu);
@@ -36,11 +36,15 @@ DEFUN(memchr, (s, c, n), CONST PTR s AND int c AND size_t n)
   c = (unsigned char) c;
 
   /* Handle the first few characters by reading one character at a time.
-     Do this until CHAR_PTR is aligned on a 4-byte border.  */
-  for (char_ptr = s; n > 0 && ((unsigned long int) char_ptr & 3) != 0;
+     Do this until CHAR_PTR is aligned on a longword boundary.  */
+  for (char_ptr = s; n > 0 && ((unsigned long int) char_ptr
+			       & (sizeof (longword) - 1)) != 0;
        --n, ++char_ptr)
     if (*char_ptr == c)
       return (PTR) char_ptr;
+
+  /* All these elucidatory comments refer to 4-byte longwords,
+     but the theory applies equally well to 8-byte longwords.  */
 
   longword_ptr = (unsigned long int *) char_ptr;
 
@@ -54,15 +58,20 @@ DEFUN(memchr, (s, c, n), CONST PTR s AND int c AND size_t n)
      The 1-bits make sure that carries propagate to the next 0-bit.
      The 0-bits provide holes for carries to fall into.  */
   magic_bits = 0x7efefeff;
+  if (sizeof (longword) > 4)
+    /* 64-bit version of the magic.  */
+    magic_bits = (0x7efefefe << 32) | 0xfefefeff;
 
   /* Set up a longword, each of whose bytes is C.  */
   charmask = c | (c << 8);
   charmask |= charmask << 16;
+  if (sizeof (longword) > 4)
+    charmask |= charmask << 32;
 
   /* Instead of the traditional loop which tests each character,
      we will test a longword at a time.  The tricky part is testing
      if *any of the four* bytes in the longword in question are zero.  */
-  while (n >= 4)
+  while (n >= sizeof (longword))
     {
       /* We tentatively exit the loop if adding MAGIC_BITS to
 	 LONGWORD fails to change any of the hole bits of LONGWORD.
@@ -124,9 +133,20 @@ DEFUN(memchr, (s, c, n), CONST PTR s AND int c AND size_t n)
 	    return (PTR) &cp[2];
 	  if (cp[3] == c)
 	    return (PTR) &cp[3];
+	  if (sizeof (longword) > 4)
+	    {
+	      if (cp[4] == c)
+		return (PTR) &cp[4];
+	      if (cp[5] == c)
+		return (PTR) &cp[5];
+	      if (cp[6] == c)
+		return (PTR) &cp[6];
+	      if (cp[7] == c)
+		return (PTR) &cp[7];
+	    }
 	}
 
-      n -= 4;
+      n -= sizeof (longword);
     }
 
   char_ptr = (CONST unsigned char *) longword_ptr;
