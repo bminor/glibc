@@ -283,7 +283,7 @@ DEFUN_VOID(__tzset)
 	}
       else if (*tz == '\0')
 	{
-	  /* United States Federal Law, the equivalent of "M3.1.0,M8.5.0".  */
+	  /* United States Federal Law, the equivalent of "M4.1.0,M10.5.0".  */
 	  tzr->type = M;
 	  if (tzr == &tz_rules[0])
 	    {
