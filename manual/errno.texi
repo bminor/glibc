@@ -81,6 +81,7 @@ All the error codes have symbolic names; they are macros defined in
 letter or digit; you should consider names of this form to be
 reserved names.  @xref{Reserved Names}.
 
+@c ??? not always distinct: EAGAIN==EWOULDBLOCK
 The error code values are all positive integers and are all distinct.
 (Since the values are distinct, you can use them as labels in a
 @code{switch} statement, for example.)  Your program should not make any
@@ -97,8 +98,6 @@ it is given an invalid pointer as an argument.  Since this could only
 happen as a result of a bug in your program, and since it will not
 happen on the GNU system, we have saved space by not mentioning
 @code{EFAULT} in the descriptions of individual functions.
-
-@c !!! In GNU, many functions can fail with ENOMEM.
 
 @node Error Codes, Error Messages, Checking for Errors, Error Reporting
 @section Error Codes
@@ -192,7 +191,7 @@ to manipulate.
 @comment POSIX.1: Resource deadlock avoided
 @deftypevr Macro int EDEADLK
 Deadlock avoided; allocating a system resource would have resulted in
-a deadlock situation.  For an example, @xref{File Locks}.
+a deadlock situation.  @xref{File Locks}, for an example.
 @end deftypevr
 
 @comment errno.h

@@ -299,9 +299,9 @@ free_chain (struct chain *chain)
 
 Occasionally, @code{free} can actually return memory to the operating
 system and make the process smaller.  Usually, all it can do is allow a
-later later call to @code{malloc} to reuse the space.  In the mean time,
-the space remains in your program as part of a free-list used internally
-by @code{malloc}.
+later call to @code{malloc} to reuse the space.  In the meantime, the
+space remains in your program as part of a free-list used internally by
+@code{malloc}.
 
 There is no point in freeing blocks at the end of a program, because all
 of the program's space is given back to the system when the process
@@ -790,7 +790,7 @@ Here are two examples of how to allocate the space for an obstack and
 initialize it.  First, an obstack that is a static variable:
 
 @example
-struct obstack myobstack;
+static struct obstack myobstack;
 @dots{}
 obstack_init (&myobstack);
 @end example
