@@ -21,22 +21,24 @@ subdir := mach
 distribute = Machrules syscalls.awk shortcut.awk
 
 headers = mach_init.h mach.h mach-shortcuts.h \
-	  $(addprefix mach/,$(mach-headers)) \
-	  # $(interface-headers)
-generated = mach-shortcuts.h $(interface-headers)
+	  $(interface-headers)
+generated = mach-shortcuts.h
 
-ifndef no_deps	# XXX
-mach-headers := host_info.h kern_return.h \
-		mach_param.h mach_types.h \
-		memory_object.h \
-		message.h mig_errors.h msg_type.h \
-		policy.h port.h processor_info.h \
-		std_types.h task_info.h task_special_ports.h \
-		thread_info.h thread_special_ports.h \
-		thread_status.h thread_switch.h time_value.h \
-		vm_attributes.h vm_inherit.h vm_prot.h \
-		vm_statistics.h
-endif
+
+# Install the Mach header files directly out of the Mach kernel source.
+mach-srcdir = /usr1/gnu/mach # XXX
+
+# When compiling, use the Mach header files directly from the kernel sources.
+includes += -I$(mach-srcdir)
+
+mach-src-headers := $(wildcard $(addprefix $(mach-srcdir)/mach/,\
+					   *.defs *.h
+					   */*.defs */*.h))
+mach-headers = $(filter-out mach/machine/%,\
+			    $(mach-src-headers:$(mach-srcdir)/%=%))
+install-others += $(addprefix $(includedir),$(mach-headers))
+$(includedir)/mach/%: $(mach-srcdir)/%; $(do-install)
+
 
 user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     memory_object_user			\
