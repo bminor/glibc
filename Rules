@@ -91,12 +91,6 @@ $(objpfx)%.out: $(objpfx)% %.input
 $(objpfx)%.out: $(objpfx)%
 	$(dir $<)$(notdir $<) > $@
 endif	# tests
-
-# Because the link above depends on libc.a, which I don't want built
-# automatically, this is necessary. -mib
-ifdef mib_hacks
-others :=
-endif
 
 .PHONY: distclean realclean subdir_distclean subdir_realclean \
 	subdir_clean subdir_mostlyclean
