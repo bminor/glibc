@@ -66,10 +66,16 @@ minimal-dist = library.texinfo summary.awk Makefile move-if-change	\
 	       $(chapters)						\
 	       $(patsubst %.c.texi,examples/%.c,			\
 			  $(filter-out summary.texinfo,$(chapters-incl)))
-distribute = $(minimal-dist) texinfo.tex summary.texinfo stamp-summary
+distribute = $(minimal-dist)	       					\
+	     $(patsubst examples/%.c,%.c.texi,$(filter examples/%.c,	\
+			$(minimal-dist)))				\
+	     library.?? library.??s texinfo.tex summary.texinfo		\
+	     stamp-summary chapters chapters-incl
 
-manual.tar: $(minimal-dist)
-	tar uhvf $@ $^
+tar-it = tar chvf $@ $^
+
+manual.tar: $(minimal-dist) ; $(tar-it)
+mandist.tar: $(distribute) ; $(tar-it)
 
 %.Z: %
 	compress -c $< > $@.new
