@@ -79,7 +79,6 @@ init_id (void)
 {
   __mutex_init (&_hurd_id.lock);
   _hurd_id.valid = 0;
-  _hurd_id.gen.uids
   _hurd_id.rid_auth = MACH_PORT_NULL;
   _hurd_id.gen.uids = _hurd_id.aux.uids = NULL;
   _hurd_id.gen.nuids = _hurd_id.aux.nuids = 0;
