@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -16,13 +16,13 @@ along with the GNU C Library; see the file COPYING.  If not, write to
 the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
+#include <stddef.h>
 #include <sys/param.h>
 
 /* Return the system page size.  */
 size_t
 DEFUN_VOID(__getpagesize)
 {
-
 #ifdef	EXEC_PAGESIZE
   return EXEC_PAGESIZE;
 #else	/* No EXEC_PAGESIZE.  */

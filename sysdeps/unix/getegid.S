@@ -19,9 +19,9 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 #ifdef	SYS_getegid
-SYSCALL__ (getegid)
+SYSCALL__ (getegid, 0)
 #else
-PSEUDO (__getegid, getgid, 2)
+PSEUDO (__getegid, getgid, 0)
 	MOVE(r1, r0)
 #endif
 	ret

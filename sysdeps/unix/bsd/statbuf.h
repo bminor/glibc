@@ -50,7 +50,9 @@ struct stat
     __time_t st_ctime;		/* Time of last status change.  */
     unsigned long int st_ctime_usec;
 
-    unsigned long int st_blksize; /* Size of blocks on disk.  */
+    unsigned long int st_blksize; /* Optimal block size for I/O.  */
+#define	_STATBUF_ST_BLKSIZE	/* Tell code we have this member.  */
+
     unsigned long int st_blocks; /* Number of 512-byte blocks allocated.  */
 
     long int st_spare[2];

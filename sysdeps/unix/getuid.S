@@ -18,5 +18,5 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-SYSCALL__ (getuid, 1)
+SYSCALL__ (getuid, 0)
 	ret
