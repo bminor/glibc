@@ -1,3 +1,33 @@
+1998-05-06 12:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (pow): Use long long int for
+	test for integer.
+
+	* sysdeps/libm-i387/e_pow.S: Correctly shift double word.
+	* sysdeps/libm-i387/e_powl.S: Likewise.
+
+1998-05-03  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c [__linux__] (ptmalloc_unlock_all2): New
+	function, used as atfork handler for the child process to work
+	around a problem in LinuxThreads.
+
+1998-03-31  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c (chunk2mem_check, top_check): New functions.
+	(malloc_check, free_check, realloc_check, memalign_check): Use
+	them to improve overrun checking.  Overruns of a single byte and
+	corruption of the top chunk are now detected much more reliably.
+
+1997-08-12 17:17  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/thread-m.h (thread_atfork, thread_atfork_static): New
+	macros to encapsulate pthread_atfork's functionality.
+	* malloc/malloc.c (ptmalloc_lock_all, ptmalloc_unlock_all): New
+	functions, registered via thread_atfork in the initialization
+	routine or via thread_atfork_static in global scope.  This
+	ensures a consistent state of all locks across fork().
+
 1998-05-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sunrpc/rpc/pmap_clnt.h: Carry over change from 2.1 to properly
