@@ -577,25 +577,31 @@ _hurdsig_init (void)
 {
   error_t err;
 
-  if (_hurd_msgport != MACH_PORT_NULL)
-    /* We have already been run.  Return doing nothing.  */
-    return;
+    /* If _hurd_msgport is already set, we are in the child side of a fork.
+       We already have a message port set up by in __fork.c the parent, and
+       the parent took the siglock before we copied its memory, so it still
+       appears locked for us (__fork will unlock it after we return).  */
 
+  if (_hurd_msgport == MACH_PORT_NULL)
+    {
 #ifdef noteven
-  __mutex_init (&_hurd_siglock); /* Initialize the signal lock.  */
+      __mutex_init (&_hurd_siglock); /* Initialize the signal lock.  */
 #endif
 
-  if (err = __mach_port_allocate (__mach_task_self (),
-				  MACH_PORT_RIGHT_RECEIVE,
-				  &_hurd_msgport))
-    __libc_fatal ("hurd: Can't create message port receive right\n");
+      if (err = __mach_port_allocate (__mach_task_self (),
+				      MACH_PORT_RIGHT_RECEIVE,
+				      &_hurd_msgport))
+	__libc_fatal ("hurd: Can't create message port receive right\n");
 
-  /* Make a send right to the signal port.  */
-  if (err = __mach_port_insert_right (__mach_task_self (),
-				      _hurd_msgport,
-				      _hurd_msgport,
-				      MACH_MSG_TYPE_MAKE_SEND))
-    __libc_fatal ("hurd: Can't create send right to message port\n");
+      /* Make a send right to the signal port.  */
+      if (err = __mach_port_insert_right (__mach_task_self (),
+					  _hurd_msgport,
+					  _hurd_msgport,
+					  MACH_MSG_TYPE_MAKE_SEND))
+	__libc_fatal ("hurd: Can't create send right to message port\n");
+    }
+
+  /* Start the signal thread listening on the message port.  */
 
   if (err = __thread_create (__mach_task_self (), &_hurd_msgport_thread))
     __libc_fatal ("hurd: Can't create signal thread\n");
