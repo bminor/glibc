@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -43,25 +43,11 @@ DEFUN(sigsuspend, (set), CONST sigset_t *set)
   while ((pending = ss->pending & ~ss->blocked) == 0)
     __condition_wait (&ss->arrived, &ss->lock);
   ss->suspended = 0;
+  __mutex_unlock (&ss->lock);
 
-  for (sig = 1; sig < NSIG; ++sig)
-    if (pending & __sigmask (sig))
-      {
-	/* Post the first pending signal.
-	   This call will handle any more pending signals,
-	   and it will release SS->lock before returning.  */
-	(void) _hurd_internal_post_signal (ss->suspend_reply,
-					   ss,
-					   signo,
-					   ss->sigcodes[signo],
-					   0, 0, &ignore,
-					   &omask);
-	/* We've been interrupted!  And a good thing, too.
-	   Otherwise we'd never return.
-	   That's right; this function always returns an error.  */
-	errno = EINTR;
-	return -1;
-      }
-
-  __libc_fatal ("sigsuspend: Woken up by nonexistent signal.\n");
+  /* We've been interrupted!  And a good thing, too.
+     Otherwise we'd never return.
+     That's right; this function always returns an error.  */
+  errno = EINTR;
+  return -1;
 }
