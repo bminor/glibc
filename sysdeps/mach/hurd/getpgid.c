@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,12 +28,18 @@ DEFUN(__getpgrp, (pid), pid_t pid)
   error_t err;
   pid_t pgrp;
 
+  __mutex_lock (&_hurd_pid_lock);
+
   if (pid == 0)
-    return _hurd_pgrp;
+    {
+      pgrp = _hurd_pgrp;
+      err = 0;
+    }
+  else
+    err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
+			  __proc_getpgrp (port, pid, &pgrp));
 
-  if (err = _HURD_PORT_USE (&_hurd_proc,
-			    __proc_getpgrp (port, pid, &pgrp)))
-    return __hurd_fail (err);
+  __mutex_unlock (&_hurd_pid_lock);
 
-  return pgrp;
+  return err ? __hurd_fail (err) : pgrp;
 }
