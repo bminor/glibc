@@ -1,3 +1,9 @@
+2000-01-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strfmon.c: Don't report an eror if final NUL is at the
+	end of the buffer.  Set errno correctly if floating-point number
+	would overflow buffer.
+
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/wcrtomb.c: Compute result correctly for successful call
