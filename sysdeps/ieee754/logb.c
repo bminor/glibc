@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <math.h>
+#include <float.h>
 #include "ieee754.h"
 
 /* Return the base 2 signed integral exponent of X.  */
@@ -34,5 +35,12 @@ DEFUN(__logb, (x), double x)
     return - HUGE_VAL;
 
   u.d = x;
-  return u.ieee.exponent - 1023;
+
+  if (u.ieee.exponent == 0)
+    /* A denormalized number.
+       Multiplying by 2 ** DBL_MANT_DIG normalizes it;
+       we then subtract the DBL_MANT_DIG we added to the exponent.  */
+    return (__logb (x * ldexp (1.0, DBL_MANT_DIG)) - DBL_MANT_DIG);
+
+  return (int) u.ieee.exponent - (DBL_MAX_EXP - 1);
 }
