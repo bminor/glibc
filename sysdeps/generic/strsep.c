@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,12 +24,16 @@ DEFUN(strsep, (stringp, delim),
       char **stringp AND CONST char *delim)
 {
   char *begin, *end;
+
   begin = *stringp + strspn (*stringp, delim);
   end = *stringp + strcspn (*stringp, delim);
+
   if (end == *stringp)
     return NULL;
+
   if (*end != '\0')
     *end = '\0';
-  *stringp = end;
+  *stringp = end + 1;
+
   return begin;
 }
