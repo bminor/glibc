@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,31 +20,26 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <hurd/fd.h>
 
 /* Close the file descriptor FD.  */
 int
 DEFUN(__close, (fd), int fd)
 {
-  int dealloc;
-  struct _hurd_fd_user d = _hurd_fd (fd, &dealloc);
+  struct hurd_userlink ulink;
+  struct hurd_fd_user d = _hurd_fd_get (fd, &ulink);
   io_t port, ctty;
 
   if (d.d == NULL)
     return __hurd_fail (EBADF);
 
-  /* Extract the descriptor's ports and replace them with nil.  */
+  /* Clear the descriptor's port cells.
+     This deallocates the ports if noone else is still using them.  */
 
-  ctty = d.d->ctty.port;
   _hurd_port_set (&d.d->ctty, MACH_PORT_NULL);
-  port = d.d->port.port;
   _hurd_port_locked_set (&d.d->port, MACH_PORT_NULL);
 
-  _hurd_fd_done (d, &dealloc);
-
-  /* Deallocate the ports.  */
-  __mach_port_deallocate (__mach_task_self (), port);
-  if (ctty != MACH_PORT_NULL)
-    __mach_port_deallocate (__mach_task_self (), ctty);
+  _hurd_fd_free (d, &ulink);
 
   return 0;
 }
