@@ -239,7 +239,7 @@ fi
 
 PWD=`pwd`
 echo Configuring the GNU C library in $PWD
-echo on `hostname` for ${config}.
+echo on `(hostname || uname -n) 2>/dev/null | sed 1q` for ${config}.
 
 # Remove the leading slashes.
 sysnames="`echo $sysnames | sed -e 's@^/@@' -e 's@ /@ @g'`"
