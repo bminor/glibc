@@ -24,7 +24,8 @@ all:
 include ../Makeconfig
 
 
-headers = hurd.h $(interface-headers)
+headers = hurd.h $(addprefix hurd/,fd.h id.h port.h signal.h userlink.h) \
+	  $(interface-headers)
 distribute := intr_rpc.awk hurdintr.awk thread_state.h
 
 user-interfaces		:= $(addprefix hurd/,\
