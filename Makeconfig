@@ -61,7 +61,8 @@ ifdef ..
 common-objpfx = $(..)
 common-objdir = ..
 else
-common-objpfx = sysdeps/..	# This is a kludge.  make wizards might grok.
+# This is a kludge.  make wizards might grok.
+common-objpfx = sysdeps/../
 endif
 endif
 
