@@ -339,7 +339,12 @@ __fork (void)
 	__spin_unlock (&_hurd_ports[i].lock);
       ports_locked = 0;
 
-      /* Register the child with the proc server.  */
+      /* Register the child with the proc server.  It is important that
+	 this happen after we have set the child's message port in the
+	 port-copying loop above.  Once proc_child has been done for the
+	 task, it appears as a POSIX.1 process and is obliged to respond to
+	 POSIX.1 signals.  Before the message port is set, signallers get
+	 an inappropriate error.  */
       if (err = __USEPORT (PROC, __proc_child (port, newtask)))
 	goto lose;
 
@@ -495,6 +500,8 @@ __fork (void)
       /* Start the signal thread listening on the message port.  */
       if (!err)
 	err = __thread_resume (_hurd_msgport_thread);
+
+      /* XXX what to do if we have any errors here? */
 
       pid = 0;
     }
