@@ -582,7 +582,7 @@ number of spaces to emulate a tab stop every eight columns.
 @comment termios.h
 @comment BSD
 @deftypevr Macro int ONOEOT
-If this bit is set, discard @kdb{C-d} characters (code @code{004}) on
+If this bit is set, discard @kbd{C-d} characters (code @code{004}) on
 output.  These characters cause many dial-up terminals to disconnect.
 @end deftypevr
 
@@ -1066,7 +1066,6 @@ BSD defines two additional speed symbols as aliases: @code{EXTA} is an
 alias for @code{B19200} and @code{EXTB} is an alias for @code{B38400}.
 These aliases are obsolete.
 
-@deftypefun
 @comment termios.h
 @comment BSD
 @deftypefun int cfmakeraw (struct termios *@var{termios_p})
