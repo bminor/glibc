@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,21 +25,24 @@ Cambridge, MA 02139, USA.  */
 /* This function, when passed a string containing an asserted
    expression, a filename, and a line number, prints a message
    on the standard error stream of the form:
-   	a.c:10: Assertion `a == b' failed.
-   It then aborts program execution via a call to abort().  */
+   	a.c:10: foobar: Assertion `a == b' failed.
+   It then aborts program execution via a call to `abort'.  */
 
-int
-DEFUN(__assert_fail, (assertion, file, line),
-      CONST char *assertion AND CONST char *file AND unsigned int line)
+__NORETURN int
+DEFUN(__assert_fail, (assertion, file, line, function),
+      CONST char *assertion AND
+      CONST char *file AND unsigned int line AND CONST char *function)      
 {
   /* Print the message.  */
-  (void) fprintf(stderr, "%s:%u: Assertion `%s' failed.\n",
-		 file, line, assertion);
-  (void) fflush(stderr);
+  (void) fprintf (stderr, "%s:%u: %s%sAssertion `%s' failed.\n",
+		  file, line,
+		  function ? function : "", function ? ": " : "",
+		  assertion);
+  (void) fflush (stderr);
 
-  abort();
+  abort ();
 
   /* This function never returns, so making it void would make sense,
      but returning something makes the assert macro easier to write.  */
-  return(0);
+  return 0;
 }
