@@ -73,7 +73,7 @@ DEFUN(_wordcopy_fwd_aligned, (dstp, srcp, len),
       goto do6;
       
     case 0:
-if (OP_T_THRES <= 3 * OPSIZ && len == 0)
+      if (OP_T_THRES <= 3 * OPSIZ && len == 0)
 	return;
       a0 = ((op_t *) srcp)[0];
       srcp -= 0 * OPSIZ;
@@ -122,6 +122,8 @@ if (OP_T_THRES <= 3 * OPSIZ && len == 0)
     }
   while (len != 0);
 
+  /* This is the right position for do0.  Please don't move
+     it into the loop.  */
  do0:
   ((op_t *) dstp)[0] = a1;
 }
@@ -205,6 +207,8 @@ DEFUN(_wordcopy_fwd_dest_aligned, (dstp, srcp, len),
     }
   while (len != 0);
 
+  /* This is the right position for do0.  Please don't move
+     it into the loop.  */
  do0:
   ((op_t *) dstp)[0] = MERGE (a2, sh_1, a3, sh_2);
 }
@@ -309,6 +313,8 @@ DEFUN(_wordcopy_bwd_aligned, (dstp, srcp, len),
     }
   while (len != 0);
 
+  /* This is the right position for do0.  Please don't move
+     it into the loop.  */
  do0:
   ((op_t *) dstp)[7] = a1;
 }
@@ -392,6 +398,8 @@ DEFUN(_wordcopy_bwd_dest_aligned, (dstp, srcp, len),
     }
   while (len != 0);
 
+  /* This is the right position for do0.  Please don't move
+     it into the loop.  */
  do0:
   ((op_t *) dstp)[3] = MERGE (a0, sh_1, a1, sh_2);
 }
