@@ -424,6 +424,9 @@ representation separated into year, month, day, and so on.  Broken down
 time values are not useful for calculations, but they are useful for
 printing human readable time.
 
+A broken-down time value is always relative to a choice of local time
+zone, and it also indicates which time zone was used.
+
 The symbols in this section are declared in the header file @file{time.h}.
 
 @comment time.h
@@ -465,12 +468,24 @@ This is the number of days since January 1, in the range @code{0} to
 @code{365}.
 
 @item int tm_isdst
+@cindex Daylight Saving Time
+@cindex summer time
 This is a flag that indicates whether Daylight Saving Time is (or was, or
 will be) in effect at the time described.  The value is positive if
 Daylight Saving Time is in effect, zero if it is not, and negative if the
 information is not available.
-@cindex Daylight Saving Time
-@cindex summer time
+
+@item long int tm_gmtoff
+This field describes the time zone that was used to compute this
+broken-down time value; it is the amount you must add to the local time
+in that zone to get GMT, in units of seconds.  The value is like that of
+the variable @code{timezone} (@pxref{Time Zone Functions}).  You can
+also think of this as the ``number of seconds west'' of GMT.  The
+@code{tm_gmtoff} field is a GNU library extension.
+
+@item const char *tm_zone
+This field is the three-letter name for the time zone that was used to
+compute this broken-down time value.  It is a GNU library extension.
 @end table
 @end deftp
 
@@ -804,7 +819,7 @@ The data type of @code{tzname} is @code{char *[2]}.
 
 The @code{tzname} array is initialized from the @code{TZ} environment
 variable whenever @code{tzset}, @code{ctime}, @code{strftime},
-@code{mktime}, or @code{localtime} are called.
+@code{mktime}, or @code{localtime} is called.
 @end defvar
 
 @comment time.h
