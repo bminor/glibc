@@ -286,3 +286,95 @@ reauth_dtable (void)
 }
 
 text_set_element (_hurd_reauth_hook, reauth_dtable);
+
+static void
+rectty_dtable (mach_port_t cttyid)
+{
+  int d;
+  
+  __mutex_lock (&_hurd_dtable_lock);
+
+  for (d = 0; d < _hurd_dtable.size; ++d)
+    {
+      struct _hurd_fd *const d = &hurd_dtable.d[d];
+      mach_port_t newctty;
+
+      if (cttyid == MACH_PORT_NULL)
+	/* We now have no controlling tty at all.  */
+	newctty = MACH_PORT_NULL;
+      else
+	_HURD_PORT_USE (&d->port,
+			({ mach_port_t id;
+			   /* Get the io object's cttyid port.  */
+			   if (! __term_getctty (port, &id))
+			     {
+			       if (id == cttyid && /* Is it ours?  */
+				   /* Get the ctty io port.  */
+				   __term_become_ctty (port, _hurd_pid,
+						       _hurd_pgrp,
+						       _hurd_sigport,
+						       &newctty))
+				 /* XXX it is our ctty but the call failed? */
+				 newctty = MACH_PORT_NULL;
+			       __mach_port_deallocate (__mach_task_self, id);
+			     }
+			   else
+			     newctty = MACH_PORT_NULL;
+			 }));
+
+      /* Install the new ctty port.  */
+      _hurd_port_set (&d->ctty, newctty);
+    }
+
+  __mutex_unlock (&_hurd_dtable_lock);
+}
+
+
+/* Make FD be the controlling terminal.
+   This function is called for `ioctl (fd, TIOCSTTY)'.  */
+
+static int
+tiocstty (int fd,
+	  int request,		/* Always TIOCSTTY.  */
+	  void *arg)		/* Not used.  */
+{
+  io_t ctty;
+  mach_port_t cttyid;
+  error_t err;
+  int i;
+
+  if (d.cell == NULL)
+    return __hurd_dfail (fd, EBADF);
+
+  /* Get FD's cttyid port, unless it is already ours.  */
+  err = _HURD_DPORT_USE (fd,
+			 ctty ? EADDRINUSE : __term_getctty (dport, &cttyid));
+  if (err == EADDRINUSE)
+    /* FD is already the ctty.  Nothing to do.  */
+    return 0;
+
+  /* Make it our own.  */
+  _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], cttyid); /* Consumes ref.  */
+
+  /* Reset all the ctty ports in all the descriptors.  */
+  _HURD_PORT_USE (&_hurd_ports[INIT_PORT_CTTYID], rectty_dtable (port));
+}
+_HURD_HANDLE_IOCTL (tiocstty, TIOCSTTY);
+
+/* Dissociate from the controlling terminal.  */
+
+static int
+tiocnoctty (int fd,
+	    int request,	/* Always TIONOCTTY.  */
+	    void *arg)		/* Not used.  */
+{
+  /* XXX should verify that FD is ctty and return EINVAL? */
+
+  /* Clear our cttyid port cell.  */
+  _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], MACH_PORT_NULL);
+
+  /* Reset all the ctty ports in all the descriptors.  */
+  _HURD_PORT_USE (&_hurd_ports[INIT_PORT_CTTYID],
+		  rectty_dtable (MACH_PORT_NULL));
+}
+_HURD_HANDLE_IOCTL (tiocnotty, TIOCNOTTY);
