@@ -26,6 +26,7 @@
 #include "../stdio-common/_itoa.h"
 #include <assert.h>
 #include "dynamic-link.h"
+#include <dl-envvars.h>
 
 
 /* System-specific function to do initial startup for the dynamic linker.
@@ -153,6 +154,9 @@ dl_main (const ElfW(Phdr) *phdr,
 
   mode = getenv ("LD_TRACE_LOADED_OBJECTS") != NULL ? trace : normal;
   _dl_library_path = getenv ("LD_LIBRARY_PATH");
+
+  if (__libc_enable_secure)
+    unsetenv ("LD_LIBRARY_PATH");
 
   /* LAZY is determined by the parameters --datadeps and --function-deps
      if we trace the binary.  */
@@ -375,6 +379,9 @@ of this helper program; chances are you did not intend to run this program.\n",
 	  }
       if (list != NULL)
 	list += strspn (list, " :");
+
+      if (__libc_enable_secure)
+	unsetenv ("LD_PRELOAD");
     }
 
   /* Read the contents of the file.  */
@@ -582,6 +589,10 @@ of this helper program; chances are you did not intend to run this program.\n",
 
       _exit (0);
     }
+
+#ifdef EXTRA_UNSECURE_ENVVARS
+  EXTRA_UNSECURE_ENVVARS;
+#endif
 
   {
     /* Now we have all the objects loaded.  Relocate them all except for
