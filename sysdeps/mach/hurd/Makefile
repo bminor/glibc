@@ -111,5 +111,16 @@ $(objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 $(hurd)/errlist.c: $(hurd)/errlist.awk $(errno.texinfo)
 	gawk -f $^ > $@-tmp
 	mv -f $@-tmp $@
+
+# We install the real libc.a as libcrt.a and as libc.a we install a linker
+# script which does -( -lcrt -lmachuser -lhurduser -).
+
+libc-name = crt
+
+ifeq (,$(subdir))
+install-others += $(libdir)/libc.a
+$(libdir)/libc.a: $(hurd)/libc-ldscript; $(do-install)
+endif
+
 
 endif	# in-Makerules
