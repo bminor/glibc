@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,10 +28,13 @@ DEFUN(__sbrk, (increment), int increment)
 {
   PTR result;
 
+  HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_brk_lock);
   result = (PTR) _hurd_brk;
   if (increment != 0 && _hurd_set_brk (_hurd_brk + increment) < 0)
     result = (PTR) -1;
   __mutex_unlock (&_hurd_brk_lock);
+  HURD_CRITICAL_END;
+
   return result;
 }
