@@ -578,14 +578,39 @@ with the @code{tmpfile} function are removed; see @ref{Temporary Files}.
 
 @node Exit Status
 @subsection Exit Status
+@cindex exit status
 
-The most common exit status values are zero, meaning success, and one,
-usually meaning failure of an unspecified nature.  Some programs use
-other status values so that they can distinguish various kinds of
-failure.  And sometimes the value of one is used to mean ``false''
-rather than a real failure.  For example, comparison programs such as
-@code{cmp} and @code{diff} return 1 as the status code just to indicate
-that the files compared were not identical.
+When a program exits, it can return to the parent process a small
+amount of information about the cause of termination, using the
+@dfn{exit status}.  This is a value between 0 and 255 that the exiting
+process passes as an argument to @code{exit}.
+
+Normally you should use the exit status to report very broad information
+about success or failure.  You can't provide a lot of detail about the
+reasons for the failure, and most parent processes would not want much
+detail anyway.
+
+There are conventions for what sorts of status values certain programs
+should return.  The most common convention is simply 0 for success and 1
+for failure.  Programs that perform comparison use a different
+convention: they use status 1 to indicate a mismatch, and status 2 to
+indicate an inability to compare.  Your program should follow an
+existing convention if an existing convention makes sense for it.
+
+A general convention reserves status values 128 and up for special
+purposes.  In particular, the value 128 is used to indicate failure to
+execute another program in a subprocess.  This convention is not
+universally obeyed, but it is a good idea to follow it in your programs.
+
+@strong{Warning:} Don't try to use the number of errors as the exit
+status.  This is actually not very useful; a parent process would
+generally not care how many errors occurred.  Worse than that, it does
+not work, because the status value is truncated to eight bits.
+Thus, if the program tried to report 256 errors, the parent would
+receive a report of 0 errors---that is, success.
+
+For the same reason, it does not work to use the value of @code{errno}
+as the exit status---these can exceed 255.
 
 @strong{Portability note:} Some non-POSIX systems use different
 conventions for exit status values.  For greater portability, you can
