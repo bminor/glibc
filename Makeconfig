@@ -223,8 +223,8 @@ endif
 
 # Command for linking programs with the C library.
 ifndef +link
-+link = $(CC) -nostdlib -o $@ $(common-objpfx)start.o $(^:lib=$(libc.a)) \
-	$(gnulib) $(libc.a)
++link = $(CC) -nostdlib $(LDFLAGS) -o $@ \
+	$(common-objpfx)start.o $(^:lib=$(libc.a)) $(gnulib) $(libc.a)
 endif
 ifndef gnulib
 gnulib := -lgcc
