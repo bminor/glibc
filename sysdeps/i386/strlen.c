@@ -1,6 +1,6 @@
 /* strlen -- determine the length of a string.
    For Intel 80x86, x>=3.
-   Copyright (C) 1991 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ DEFUN(strlen, (str), CONST char *str)
   int cnt;
 
   asm("cld\n"			/* Search forward.  */
-      "repne\n"			/* Look for a zero byte.  */
+      "repnz\n"			/* Look for a zero byte.  */
       "scasb" /* %0, %1, %3 */ :
       "=c" (cnt) : "D" (str), "0" (-1), "a" (0));
 
