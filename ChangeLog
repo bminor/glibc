@@ -1,3 +1,15 @@
+2005-02-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/termios.h (CMSPAR): Define.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Add __USE_MISC
+	and __USE_XOPEN guards to match linux/bits/termios.h.
+	(CMSPAR): Define.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Add __USE_MISC
+	and __USE_XOPEN guards to match linux/bits/termios.h.
+	(CMSPAR): Define.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Add __USE_MISC
+	and __USE_XOPEN guards to match linux/bits/termios.h.
+
 2005-02-10  Roland McGrath  <roland@redhat.com>
 
 	[BZ #157]
