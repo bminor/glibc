@@ -1,0 +1,7 @@
+#include <stdio.h>
+#include <errnos.h>
+
+static const struct error_subsystem err_hurd_sub[] =
+  {
+    { "(os/hurd)", _HURD_ERRNOS, _sys_errlist },
+  };
