@@ -569,7 +569,7 @@ not a symlink to libc.so.6.  It should look something like this:
 
 GROUP ( libc.so.6 libc_nonshared.a )
 
-??	When I run an executable on one system which I compiled on
+??excpt	When I run an executable on one system which I compiled on
 	another, I get dynamic linker errors.  Both systems have the same
 	version of glibc installed.  What's wrong?
 
@@ -599,6 +599,24 @@ libraries from doing it.
 newer since we have explicitly add references to the functions causing the
 problem.  But you nevertheless should use EGCS for other reasons
 (see ?binsize).
+
+{GK} On some Linux distributions for PowerPC, you can see this when you have
+built gcc or egcs from the Web sources (gcc versions 2.95 or earlier), then
+re-built glibc.  This happens because in these versions of gcc, exception
+handling is implemented using an older method; the people making the
+distributions are a little ahead of their time.
+
+A quick solution to this is to find the libgcc.a file that came with the
+distribution (it would have been installed under /usr/lib/gcc-lib), do 
+`ar x libgcc.a frame.o' to get the frame.o file out, and add a line saying
+`LDLIBS-c.so += frame.o' to the file `configparms' in the directory you're
+building in.  You can check you've got the right `frame.o' file by running
+`nm frame.o' and checking that it has the symbols defined that you're
+missing.
+
+This will let you build glibc with the C compiler.  The C++ compiler
+will still be binary incompatible with any C++ shared libraries that
+you got with your distribution.
 
 ??	How can I compile gcc 2.7.2.1 from the gcc source code using
 	glibc 2.x?
