@@ -105,6 +105,7 @@ static char sccsid[] = "@(#)pow.c	5.7 (Berkeley) 10/9/90";
 
 #include <errno.h>
 #include "mathimpl.h"
+#include <limits.h>
 
 vc(ln2hi,  6.9314718055829871446E-1  ,7217,4031,0000,f7d0,   0, .B17217F7D00000)
 vc(ln2lo,  1.6465949582897081279E-12 ,bcd5,2ce7,d9cc,e4f1, -39, .E7BCD5E4F1D9CC)
@@ -139,7 +140,7 @@ double x,y;
 #endif	/* !defined(vax)&&!defined(tahoe) */
 		) return( x );      /* if x is NaN or y=1 */
 #if !defined(vax)&&!defined(tahoe)
-	else if(y!=y)         return( y );      /* if y is NaN */
+	else if(__isnan(y))         return( y );      /* if y is NaN */
 #endif	/* !defined(vax)&&!defined(tahoe) */
 	else if(!finite(y))                     /* if y is INF */
 	     if((t=copysign(x,one))==one) return(zero/zero);
@@ -210,8 +211,10 @@ double x,y;
 	/* compute y*log(x) ~ mlog2 + t + c */
         	s=y*(n+invln2*t);
                 m=s+copysign(half,s);   /* m := nint(y*log(x)) */ 
-		k=y; 
-		if((double)k==y) {	/* if y is an integer */
+		if (y >= (double) LONG_MIN && y <= (double) LONG_MAX &&
+		    (double) (int) y == y)
+		  {
+		    /* Y is an integer */
 		    k = m-k*n;
 		    sx=t; tx+=(t-sx); }
 		else	{		/* if y is not an integer */    
