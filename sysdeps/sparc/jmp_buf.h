@@ -6,4 +6,4 @@ typedef struct
     PTR __pc;
     /* Saved FP.  */
     PTR __fp;
-  } jmp_buf[1];
+  } __jmp_buf[1];
