@@ -23,7 +23,7 @@ subdir	:= socket
 
 headers	:= sys/socket.h sys/un.h
 
-routines := accept bind connect getpeername getsockname getsockopt	\
+routines := accept bind connect getpeernam getsocknam getsockopt	\
 	    listen recv recvfrom recvmsg send sendmsg sendto		\
 	    setsockopt shutdown socket socketpair
 
