@@ -7,7 +7,15 @@
 # define ERR_REMAP(n) n
 #endif
 
-const char *const _sys_errlist_internal[] =
+#if !defined EMIT_ERR_MAX && !defined ERRLIST_NO_COMPAT
+# include <errlist-compat.h>
+#endif
+#ifdef ERR_MAX
+# define ERRLIST_SIZE ERR_MAX + 1
+#else
+# define ERRLIST_SIZE
+#endif
+const char *const _sys_errlist_internal[ERRLIST_SIZE] =
   {
     [0] = N_("Success"),
 #ifdef EPERM
