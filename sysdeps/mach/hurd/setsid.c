@@ -49,7 +49,7 @@ DEFUN_VOID(__setsid)
       /* XXX we have no need for a mutex, but cthreads demands one.  */
       __condition_wait (&_hurd_pids_changed_sync, NULL);
 #else
-      swtch();
+      swtch_pri(0);
 #endif
     }
 
