@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,8 +30,7 @@ DEFUN(__open, (file, oflag), CONST char *file AND int oflag DOTS)
   error_t err;
   mode_t mode;
   int fl;
-  int fd;
-  file_t port;
+  io_t port, ctty;
 
   switch (oflag & O_ACCMODE)
     {
@@ -71,40 +70,61 @@ DEFUN(__open, (file, oflag), CONST char *file AND int oflag DOTS)
   if (oflag & O_EXCL)
     fl |= FS_LOOKUP_EXCL;
 
-  __mutex_lock (&_hurd_dtable.lock);
-  fd = _hurd_dalloc ();
-  if (fd < 0)
-    {
-      __mutex_unlock (&_hurd_dtable.lock);
-      return -1;
-    }
+  port = __path_lookup (file, fl, mode);
+  if (port == MACH_PORT_NULL)
+    return -1;
 
-  port = __hurd_path_lookup (file, fl, mode);
-
-  if (port != MACH_PORT_NULL && !_hurd_hasctty && !(oflag & O_NOCTTY))
+  ctty = MACH_PORT_NULL;
+  if (!(oflag & O_NOCTTY))
     {
-      mach_port_t cttyid;
       io_statbuf_t stb;
       
       err = __io_stat (port, &stb);
       if (!err)
-	err = __term_getctty (port, &cttyid);
-      if (!err)
 	{
-	  err = __proc_set_ctty (_hurd_proc, cttyid);
-	  __mach_port_deallocate (__mach_task_self (), cttyid);
-	  if (!err)
+	  io_t fg_port = MACH_PORT_NULL;
+
+	  __mutex_lock (&_hurd_ctty_lock);
+	  if (_hurd_ctty_fstype == 0)
 	    {
-	      _hurd_dtable.d[fd].isctty = 1;
-	      _hurd_hasctty = 1;
-	      _hurd_ctty_fstype = stb.stb_fstype;
-	      _hurd_ctty_fsid = stb.stb_fsid;
-	      _hurd_ctty_fileid = stb.stb_file_id;
+	      /* We have no controlling tty.
+		 Try to make this it.  */
+	      mach_port_t cttyid;
+	      err = __term_getctty (port, &cttyid);
+	      if (!err)
+		{
+		  err = __term_become_ctty (port, _hurd_pid, _hurd_pgrp,
+					    _hurd_sigport, &fg_port);
+		  if (err)
+		    __mach_port_deallocate (__mach_task_self (), cttyid);
+		}
 	    }
+	  else if (stb.stb_fstype == _hurd_ctty_fstype &&
+		   stb.stb_fsid.val[0] == _hurd_ctty_fsid.val[0] &&
+		   stb.stb_fsid.val[1] == _hurd_ctty_fsid.val[1] &&
+		   stb.stb_fileno == _hurd_ctty_fileno)
+	    /* This is our controlling tty.  */
+	    err = __term_become_ctty (port, _hurd_pid, _hurd_pgrp,
+				      _hurd_sigport, &fg_port);
+
+	  if (fg_port != MACH_PORT_NULL)
+	    {
+	      int fd = _hurd_dalloc (fg_port, port, 0);
+	      if (fd >= 0 && _hurd_ctty_fstype == 0)
+		{
+		  /* We have a new controlling tty.  */
+		  _hurd_ctty_port = cttyid;
+		  _hurd_ctty_fstype = stb.stb_fstype;
+		  _hurd_ctty_fsid = stb.stb_fsid;
+		  _hurd_ctty_fileno = stb.stb_fileno;
+		}
+	      __mutex_unlock (&_hurd_ctty_lock);
+	      return fd;
+	    }
+	  else
+	    __mutex_unlock (&_hurd_ctty_lock);
 	}
     }
 
-  _hurd_dtable.d[fd].server = port;
-  __mutex_unlock (&_hurd_dtable.lock);
-  return port == MACH_PORT_NULL ? -1 : fd;
+  return _hurd_dalloc (port, MACH_PORT_NULL, 0);
 }
