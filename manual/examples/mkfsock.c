@@ -25,7 +25,14 @@ make_named_socket (const char *filename)
 
   name.sun_family = AF_FILE;
   strcpy (name.sun_path, filename);
-  size = offsetof (name.sun_path) + strlen (name.sun_path) + 1;
+
+  /* The size of the address is
+     the offset of the start of the filename,
+     plus its length,
+     plus one for the terminating null byte.  */
+  size = (offsetof (struct sockaddr_un, sun_path)
+	  + strlen (name.sun_path) + 1);
+
   if (bind (sock, (struct sockaddr *) &name, size) < 0)
     {
       perror ("bind");
