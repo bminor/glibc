@@ -548,6 +548,11 @@ extern int EXFUN(ferror, (FILE *__stream));
 /* Print a message describing the meaning of the value of errno.  */
 extern void EXFUN(perror, (CONST char *__s));
 
+#ifdef	__USE_BSD
+extern CONST int sys_nerr;
+extern CONST char *CONST sys_errlist[];
+#endif
+
 #ifdef	__USE_MISC
 /* Print a message describing the meaning of the given signal number.  */
 extern void EXFUN(psignal, (int __sig, CONST char *__s));
