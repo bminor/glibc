@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -64,7 +64,7 @@ Cambridge, MA 02139, USA.  */
 /* Number of streams a process can have open at once.  */
 #define	_POSIX_STREAM_MAX	8
 
-/* Number of bytes in `tzname'.  */
+/* Number of bytes in an element of `tzname'.  */
 #define	_POSIX_TZNAME_MAX	3
 
 
