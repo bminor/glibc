@@ -521,7 +521,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       else
 	act = handle;
 
-      if (sigmask (signo) & STOPSIGS)
+      if (__sigmask (signo) & STOPSIGS)
 	/* Stop signals clear a pending SIGCONT even if they
 	   are handled or ignored (but not if preempted).  */
 	ss->pending &= ~sigmask (SIGCONT);
@@ -558,8 +558,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     }
 
   if (_hurd_orphaned && act == stop &&
-      (signo & (__sigmask (SIGTTIN) | __sigmask (SIGTTOU) |
-		__sigmask (SIGTSTP))))
+      (__sigmask (signo) & (__sigmask (SIGTTIN) | __sigmask (SIGTTOU) |
+			    __sigmask (SIGTSTP))))
     {
       /* If we would ordinarily stop for a job control signal, but we are
 	 orphaned so noone would ever notice and continue us again, we just
@@ -569,8 +569,10 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       act = term;
     }
 
-  /* Handle receipt of a blocked signal.  */
-  if ((__sigismember (&ss->blocked, signo) && act != ignore) ||
+  /* Handle receipt of a blocked signal, or any signal while stopped.
+     It matters that we test ACT first here, because we must never pass
+     SIGNO==0 to __sigismember.  */
+  if ((act != ignore && __sigismember (&ss->blocked, signo)) ||
       (signo != SIGKILL && _hurd_stopped))
     {
       __sigaddset (&ss->pending, signo);
