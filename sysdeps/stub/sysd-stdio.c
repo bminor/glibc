@@ -76,23 +76,6 @@ DEFUN(__stdio_open, (filename, m, fdptr),
 }
 
 
-/* Generate a (hopefully) unique temporary filename
-   in DIR (if applicable), using prefix PFX.
-   If DIR_SEARCH is nonzero, perform directory searching
-   malarky as per the SVID for tempnam.
-   Return the generated filename or NULL if one could not
-   be generated, putting the length of the string in *LENPTR.  */
-char *
-DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr),
-      CONST char *dir AND CONST char *pfx AND
-      int dir_search AND size_t *lenptr)
-{
-  *lenptr = 0;
-  errno = ENOSYS;
-  return NULL;
-}
-
-
 #ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
@@ -102,8 +85,5 @@ stub_warning(__stdio_write);
 stub_warning(__stdio_seek);
 stub_warning(__stdio_close);
 stub_warning(__stdio_open);
-stub_warning(__stdio_linebf);
-stub_warning(__stdio_errmsg);
-stub_warning(__stdio_gen_tempname);
 
 #endif	/* GNU stabs.  */
