@@ -103,6 +103,7 @@ please let me know.
 4.2.	When I try to compile code which uses IPv6 headers and
 	definitions on my Linux 2.x.y system I am in trouble.
 	Nothing seems to work.
+4.4.    What other sources of documentation about glibc are available?
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -896,6 +897,18 @@ incompatible changes made and the libc headers have to follow.
 Also, make sure you have a suitably recent kernel.  As of the 970401
 snapshot, according to Philip Blundell <Philip.Blundell@pobox.com>, the
 required kernel version is at least 2.1.30.
+
+
+4.4.    What other sources of documentation about glibc are available?
+
+{AJ} The FSF has a page about the GNU C library at
+<http://www.gnu.org/software/libc/>.  The problem data base of open and
+solved bugs in GNU libc is available at
+<http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl>.  Eric Green has written
+a HowTo for converting from Linux libc5 to glibc2.  The HowTo is accessable
+via the FSF page and at <http://www.imaxx.net/~thrytis/glibc>.  Frodo
+Looijaard describes a different way installing glibc2 as secondary libc at
+<http://huizen.dds.nl/~frodol/glibc>.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
