@@ -50,6 +50,7 @@ print_critter (const struct critter *c)
 }
 
 
+/*@group*/
 /* Do the lookup into the sorted array. */
 
 void 
@@ -64,11 +65,11 @@ find_critter (char *name)
   else
     printf ("Couldn't find %s.\n", name);
 }
-
+/*@end group*/
 
 /* Main program. */
 
-void 
+int
 main (void)
 {
   int i;
@@ -86,4 +87,6 @@ main (void)
   find_critter ("Kermit");
   find_critter ("Gonzo");
   find_critter ("Janice");
+
+  return 0;
 }
