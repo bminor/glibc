@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  MIPS version.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@info.kanagawa-u.ac.jp>.
 
@@ -308,7 +308,8 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
 	  }								      \
 	case 0:								      \
 	  value = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,	      \
-				     l->l_scope, ELF_RTYPE_CLASS_PLT, 0);     \
+				     l->l_scope, ELF_RTYPE_CLASS_PLT,	      \
+				     DL_LOOKUP_ADD_DEPENDENCY);		      \
 	}								      \
 									      \
       /* Currently value contains the base load address of the object	      \

@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -126,7 +126,8 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 						   l, (ref), scope,	      \
 						   (version), _tc, 0)	      \
 		    : _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref),  \
-					 scope, _tc, 0));		      \
+					 scope, _tc,			      \
+					 DL_LOOKUP_ADD_DEPENDENCY));	      \
 	     l->l_lookup_cache.ret = (*ref);				      \
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l)
@@ -146,7 +147,8 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 						   l, (ref), scope,	      \
 						   (version), _tc, 0)	      \
 		    : _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref),  \
-					 scope, _tc, 0));		      \
+					 scope, _tc,			      \
+					 DL_LOOKUP_ADD_DEPENDENCY));	      \
 	     l->l_lookup_cache.ret = (*ref);				      \
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l->l_addr)

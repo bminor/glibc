@@ -1,5 +1,5 @@
 /* Handle loading and unloading shared objects for internal libc purposes.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.columbia.edu>, 1999.
 
@@ -84,7 +84,8 @@ do_dlsym (void *ptr)
   struct do_dlsym_args *args = (struct do_dlsym_args *) ptr;
   args->ref = NULL;
   args->loadbase = _dl_lookup_symbol (args->name, args->map, &args->ref,
-				      args->map->l_local_scope, 0, 1);
+				      args->map->l_local_scope, 0,
+				      DL_LOOKUP_RETURN_NEWEST);
 }
 
 static void

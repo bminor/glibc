@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -95,7 +95,8 @@ fixup (
 	  }
 	case 0:
 	  result = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
-				      l->l_scope, ELF_RTYPE_CLASS_PLT, 0);
+				      l->l_scope, ELF_RTYPE_CLASS_PLT,
+				      DL_LOOKUP_ADD_DEPENDENCY);
 	}
 
       /* Currently result contains the base load address (or link map)
@@ -188,7 +189,8 @@ profile_fixup (
 	      }
 	    case 0:
 	      result = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
-					  l->l_scope, ELF_RTYPE_CLASS_PLT, 0);
+					  l->l_scope, ELF_RTYPE_CLASS_PLT,
+					  DL_LOOKUP_ADD_DEPENDENCY);
 	    }
 
 	  /* Currently result contains the base load address (or link map)
