@@ -50,8 +50,8 @@ the user to the shell in invoking the program.  The value of the
 @var{argv} argument is a vector of pointers to @code{char}; sometimes it
 is also declared as @samp{char **@var{argv}}.  The elements of
 @var{argv} are the individual command line argument strings.  By
-convention, @samp{@var{argv}[0]} is the file name of the program being
-run, and @samp{@var{argv}[@var{argc}]} is a null pointer.
+convention, @code{@var{argv}[0]} is the file name of the program being
+run, and @code{@var{argv}[@var{argc}]} is a null pointer.
 
 If the syntax for the command line arguments to your program is simple
 enough, you can simply pick the arguments off from @var{argv} by hand.
