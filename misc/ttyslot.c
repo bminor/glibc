@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1989 The Regents of the University of California.
+ * Copyright (c) 1988 The Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,42 +29,40 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
- *	@(#)ttyent.h	5.7 (Berkeley) 4/3/91
  */
 
-#ifndef	_TTYENT_H_
-#define	_TTYENT_H_
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)ttyslot.c	5.6 (Berkeley) 2/23/91";
+#endif /* LIBC_SCCS and not lint */
 
-#define	_PATH_TTYS	"/etc/ttys"
+#include <ttyent.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
-#define	_TTYS_OFF	"off"
-#define	_TTYS_ON	"on"
-#define	_TTYS_SECURE	"secure"
-#define	_TTYS_WINDOW	"window"
-#define _TTYS_TRUSTED	"trusted"
-#define _TTYS_CONSOLE	"console"
+int
+ttyslot()
+{
+	register struct ttyent *ttyp;
+	register int slot;
+	register char *p;
+	int cnt;
+	char *name;
 
-struct ttyent {
-	char	*ty_name;	/* terminal device name */
-	char	*ty_getty;	/* command to execute, usually getty */
-	char	*ty_type;	/* terminal type for termcap */
-#define	TTY_ON		0x01	/* enable logins (start ty_getty program) */
-#define	TTY_SECURE	0x02	/* allow uid of 0 to login */
-#define	TTY_TRUSTED	0x04	/* allow login without password */
-#define	TTY_CONSOLE	0x08	/* allow uid of 0 to login without password */
-	int	ty_status;	/* status flags */
-	char 	*ty_window;	/* command to start up window manager */
-	char	*ty_comment;	/* comment field */
-};
-
-#include <sys/cdefs.h>
-
-__BEGIN_DECLS
-struct ttyent *getttyent __P((void));
-struct ttyent *getttynam __P((const char *));
-int setttyent __P((void));
-int endttyent __P((void));
-__END_DECLS
-
-#endif /* !_TTYENT_H_ */
+	setttyent();
+	for (cnt = 0; cnt < 3; ++cnt) 
+		if (name = ttyname(cnt)) {
+			if (p = rindex(name, '/')) 
+				++p;
+			else
+				p = name;
+			for (slot = 1; ttyp = getttyent(); ++slot)
+				if (!strcmp(ttyp->ty_name, p)) {
+					endttyent();
+					return(slot);
+				}
+			break;
+		}
+	endttyent();
+	return(0);
+}

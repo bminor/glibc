@@ -108,6 +108,10 @@ getttyent()
 			tty.ty_status |= TTY_ON;
 		else if (scmp(_TTYS_SECURE))
 			tty.ty_status |= TTY_SECURE;
+		else if (scmp(_TTYS_TRUSTED))
+			tty.ty_status |= TTY_TRUSTED;
+		else if (scmp(_TTYS_CONSOLE))
+			tty.ty_status |= TTY_CONSOLE;
 		else if (vcmp(_TTYS_WINDOW))
 			tty.ty_window = value(p);
 		else
