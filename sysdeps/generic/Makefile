@@ -28,8 +28,8 @@ endif
 
 endif
 
-ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bytesex.h))))" \
-     "$(sysdep_dir)/stub/"
+ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
+	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bytesex.h))))))
 
 $(common-objpfx)bytesex.h: $(common-objpfx)det_endian
 	$(dir $<)$(notdir $<) > $@-tmp
