@@ -131,6 +131,11 @@ extern void qsort ();
 #undef	ANSI_STRING
 #else	/* Not ANSI_STRING.  */
 #define	strcoll	strcmp
+#define	memcpy(d, s, n)	bcopy((s), (d), (n))
+#define	strrchr	rindex
+/* memset is only used for zero here, but let's be paranoid.  */
+#define	memset(s, better_be_zero, n) \
+  ((void) ((better_be_zero) == 0 ? (bzero((s), (n)), 0) : (abort(), 0)))
 #endif	/* ANSI_STRING.  */
 
 
@@ -150,14 +155,6 @@ my_realloc (p, n)
 #define	realloc	my_realloc
 #endif
 
-
-#ifndef	STDC_STRINGS
-#define	memcpy(d, s, n)	bcopy((s), (d), (n))
-#define	strrchr	rindex
-/* memset is only used for zero here, but let's be paranoid.  */
-#define	memset(s, better_be_zero, n) \
-  ((void) ((better_be_zero) == 0 ? (bzero((s), (n)), 0) : (abort(), 0)))
-#endif
 
 #if	!defined(__alloca) && !defined(__GNU_LIBRARY__)
 
