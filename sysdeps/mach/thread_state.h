@@ -49,13 +49,17 @@ static inline int
 machine_get_basic_state (thread_t thread,
 			 struct machine_thread_all_state *state)
 {
+  unsigned int count;
+
   if (state->set & (1 << flavor))
     return 1;
 
   if (__thread_get_state (thread, MACHINE_THREAD_STATE_FLAVOR,
-			  &state->basic, MACHINE_THREAD_STATE_COUNT))
-    return 0;
+			  (int *) &state->basic, &count) != KERN_SUCCESS ||
+      count != MACHINE_THREAD_STATE_COUNT)
+    /* What kind of thread?? */
+    return 0;			/* XXX */
 
-  state->set |= 1 << flavor;
+  state->set |= 1 << MACHINE_THREAD_STATE_FLAVOR;
   return 1;
 }
