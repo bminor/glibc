@@ -1,4 +1,7 @@
  
+# The default is now to use libio instead of stdio.
+test $stdio = default && stdio=libio
+
 # GNU libc on the Hurd is always reentrant.
 DEFINES="$DEFINES -D_LIBC_REENTRANT"
 
