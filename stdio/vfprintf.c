@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 #include <string.h>
 #include <printf.h>
+#include "_itoa.h"
 
 
 /* If it's an unbuffered stream that we provided
@@ -71,13 +72,6 @@ int
 DEFUN(vfprintf, (s, format, args),
       register FILE *s AND CONST char *format AND va_list args)
 {
-  /* Lower-case digits.  */
-  static CONST char lower_digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-  /* Upper-case digits.  */
-  static CONST char upper_digits[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  /* Base-36 digits for numbers.  */
-  CONST char *digits = lower_digits;
-
   /* Pointer into the format string.  */
   register CONST char *f;
 
@@ -355,8 +349,6 @@ DEFUN(vfprintf, (s, format, args),
 	  case 'x':
 	    /* Hex with lower-case digits.  */
 
-	    digits = fc == 'X' ? upper_digits : lower_digits;
-
 	    base = 16;
 
 	  unsigned_number:
@@ -387,12 +379,7 @@ DEFUN(vfprintf, (s, format, args),
 		prec = 1;
 
 	      /* Put the number in WORK.  */
-	      w = workend;
-	      while (num > 0)
-		{
-		  *w-- = digits[num % base];
-		  num /= base;
-		}
+	      w = _itoa (num, workend, base, fc == 'X');
 	      width -= workend - w;
 	      prec -= workend - w;
 
