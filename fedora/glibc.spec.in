@@ -926,20 +926,17 @@ perl -pi -e 's/alarm \(TIMEOUT\)/alarm (TIMEOUT * 15 * '$numprocs' < 600 ? TIMEO
 echo ====================TESTING=========================
 cd build-%{_target_cpu}-linux
 make -j$numprocs -k check PARALLELMFLAGS=-s 2>&1 | tee check.log || :
-make -j$numprocs -C sed check || :
 cd ..
 %ifarch i686 athlon
 echo ====================TESTING LINUXTHREADS FS=========
 cd build-%{_target_cpu}-linuxltfs
 make -j$numprocs -k check PARALLELMFLAGS=-s 2>&1 | tee check.log || :
-make -j$numprocs -C sed check || :
 cd ..
 %endif
 %ifarch %{nptlarches}
 echo ====================TESTING NPTL====================
 cd build-%{nptl_target_cpu}-linuxnptl
 make -j$numprocs -k check PARALLELMFLAGS=-s 2>&1 | tee check.log || :
-make -j$numprocs -C sed check || :
 cd ..
 %endif
 echo ====================TESTING DETAILS=================
