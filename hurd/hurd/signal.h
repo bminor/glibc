@@ -59,7 +59,12 @@ struct hurd_sigstate
     sigset_t pending;
     struct sigaction actions[NSIG];
     struct sigaltstack sigaltstack;
-    int sigcodes[NSIG];		/* Codes for pending signals.  */
+    struct
+      {
+	/* For each signal that may be pending, the
+	   sigcode and error code to deliver it with.  */
+	int code, error;
+      } pending_data[NSIG];
 
     /* If `suspended' is set when this thread gets a signal,
        the signal thread clears it and then signals `arrived'.  */
@@ -203,12 +208,12 @@ extern void _hurdsig_init (void);
 
 extern void _hurdsig_fault_init (void);
 
-/* Raise a signal as described by SIGNO and SIGCODE, on the thread whose
-   sigstate SS points to.  If SS is a null pointer, this instead affects
-   the calling thread.  */
+/* Raise a signal as described by SIGNO, SIGCODE and SIGERROR, on the
+   thread whose sigstate SS points to.  If SS is a null pointer, this
+   instead affects the calling thread.  */
 
 extern void _hurd_raise_signal (struct hurd_sigstate *ss,
-				int signo, int sigcode);
+				int signo, int sigcode, int sigerror);
 
 /* Translate a Mach exception into a signal (machine-dependent).  */
 
@@ -226,28 +231,31 @@ extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
 					mach_port_t reply_port,
 					mach_msg_type_name_t reply_port_type);
 
-/* Set up STATE to handle signal SIGNO by running HANDLER.  FLAGS is the
-   `sa_flags' member from `struct sigaction'.  If the SA_ONSTACK bit is
-   set, *ALTSTACK describes the alternate signal stack to use.  The handler
-   is passed SIGNO, SIGCODE, and the returned `struct sigcontext' (which
-   resides on the stack the handler will use, and which describes the state
-   of the thread encoded in STATE before running the handler).  */
+/* Set up STATE and SS to handle signal SIGNO by running HANDLER.  If
+   RPC_WAIT is nonzero, the thread needs to wait for a pending RPC to
+   finish before running the signal handler.  The handler is passed SIGNO,
+   SIGCODE, and the returned `struct sigcontext' (which resides on the
+   stack the handler will use, and which describes the state of the thread
+   encoded in STATE before running the handler).  */
 
-extern struct sigcontext *_hurd_setup_sighandler (int flags,
-						  __sighandler_t handler,
-						  struct sigaltstack *altstack,
-						  int signo, int sigcode,
-						  void *state);
+struct machine_thread_all_state;
+extern struct sigcontext *
+_hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
+			int signo, int sigcode,
+			int rpc_wait, struct machine_thread_all_state *state);
 
 /* Function run by the signal thread to receive from the signal port.  */
 
 extern void _hurd_msgport_receive (void);
 
-/* Return nonzero if STATE indicates a thread that is blocked in a mach_msg
-   system call (machine-dependent).  If returning nonzero, set *PORT to
-   the receive right that the thread is blocked on.  */
+/* STATE describes a thread that had intr_port set (meaning it was inside
+   HURD_EINTR_RPC), after it has been thread_abort'd.  It it looks to have
+   just completed a mach_msg_trap system call that returned
+   MACH_RCV_INTERRUPTED, return nonzero and set *PORT to the receive right
+   being waited on.  */
 
-extern int _hurd_thread_state_msging_p (void *state, mach_port_t *port);
+extern int _hurdsig_rcv_interrupted_p (struct machine_thread_all_state *state,
+				       mach_port_t *port);
 
 /* Set up STATE with a thread state that, when resumed, is
    like `longjmp (_hurd_sigthread_fault_env, 1)'.  */
@@ -288,8 +296,11 @@ extern void _hurd_siginfo_handler (int);
       {									      \
       case EINTR:		/* RPC went out and was interrupted.  */      \
       case MACH_SEND_INTERRUPTED: /* RPC didn't get out.  */		      \
-	if (__ss->intr_port == MACH_PORT_NULL)				      \
-	  /* Restart the interrupted call.  */				      \
+	if (__ss->intr_port != MACH_PORT_NULL)				      \
+	  /* If this signal was for us and it should interrupt calls, the     \
+             signal thread will have cleared SS->intr_port.  Since it's not   \
+             cleared, the signal was for another thread, or SA_RESTART is     \
+             set.  Restart the interrupted call.  */			      \
 	  goto __do_call;						      \
 	/* FALLTHROUGH */						      \
       case MACH_RCV_PORT_DIED:						      \
