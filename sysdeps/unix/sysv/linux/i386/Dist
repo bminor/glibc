@@ -1,3 +1,4 @@
+sys/debugreg.h
 sys/elf.h
 sys/perm.h
 sys/procfs.h
