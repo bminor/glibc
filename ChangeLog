@@ -1,3 +1,14 @@
+1998-10-15 09:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/africa: Update from latest tzdata release.
+	* time/asia: Likewise.
+	* time/australasia: Likewise.
+	* time/backward: Likewise.
+	* time/etcetera: Likewise.
+	* time/europe: Likewise.
+	* time/northamerica: Likewise.
+	* time/southamerica: Likewise.
+
 1998-10-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (inline_outb): Fix output
