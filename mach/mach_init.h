@@ -23,5 +23,4 @@ extern vm_size_t __vm_page_size;
 #define trunc_page(x)	\
   ((((vm_offset_t) (x)) / __vm_page_size) * __vm_page_size)
 
-
 #endif	/* mach_init.h */
