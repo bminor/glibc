@@ -1,4 +1,4 @@
-%define glibcrelease 3.fc3
+%define glibcrelease 2.5.fc3
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1270,8 +1270,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
-* Wed Feb 16 2005 Roland McGrath <roland@redhat.com> 2.3.4-3.fc3
-- update from CVS
+* Thu Feb 17 2005 Roland McGrath <roland@redhat.com> 2.3.4-2.5.fc3
+- update from CVS (glibc-2_3-branch)
+  - existing fix for -ansi vs -D_XOPEN_SOURCE merged upstream (BZ#284)
   - fix initstate{,_r} (BZ#710)
   - fix segfault if chrooted app attempts to dlopen a library
     and no standard library directory exists at all (#147067, #144303, BZ#738)
