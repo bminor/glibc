@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -106,7 +106,7 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
 
   buf.sg_flags &= ~(CBREAK|RAW);
   if (!(termios_p->c_lflag & ICANON))
-    buf.sg_flags |= (termios_p->c_cflag & OPOST) ? CBREAK : RAW;
+    buf.sg_flags |= (termios_p->c_cflag & ISIG) ? CBREAK : RAW;
 #ifdef	LPASS8
   if (termios_p->c_oflag & CS8)
     local |= LPASS8;
@@ -122,7 +122,7 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
   else
     local |= LLITOUT;
 #ifdef	TIOCGETX
-  if (termios_p->c_lflag & _ISIG)
+  if (termios_p->c_lflag & ISIG)
     extra &= ~NOISIG;
   else
     extra |= NOISIG;
@@ -163,7 +163,7 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
   if (termios_p->c_lflag & _TOSTOP)
     local |= LTOSTOP;
   else
-    local &= ~TOSTOP;
+    local &= ~LTOSTOP;
 
   buf.sg_erase = termios_p->c_cc[VERASE];
   buf.sg_kill = termios_p->c_cc[VKILL];
