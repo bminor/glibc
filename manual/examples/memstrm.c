@@ -10,10 +10,10 @@ main (void)
   stream = open_memstream (&bp, &size);
   fprintf (stream, "hello");
   fflush (stream);
-  printf ("buf = %s, size = %d\n", bp, size);
+  printf ("buf = `%s', size = %d\n", bp, size);
   fprintf (stream, ", world");
   fclose (stream);
-  printf ("buf = %s, size = %d\n", bp, size);
+  printf ("buf = `%s', size = %d\n", bp, size);
 
   return 0;
 }
