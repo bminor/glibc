@@ -31,7 +31,7 @@ struct mutex _hurd_dtable_lock;
 #endif
 struct _hurd_dtable _hurd_dtable;
 int _hurd_dtable_rlimit;
-int *_hurd_dtable_user_dealloc;
+struct hurd_userlink *_hurd_dtable_users;
 
 const struct _hurd_dtable_resizes _hurd_dtable_resizes;
 
@@ -42,12 +42,13 @@ static void
 init_dtable (void)
 {
   register size_t i;
+  struct hurd_fd **dt;
 
 #ifdef noteven
   __mutex_init (&_hurd_dtable_lock);
 #endif
 
-  _hurd_dtable_user_dealloc = NULL;
+  _hurd_dtable_users = NULL;
 
   /* The initial size of the descriptor table is that of the passed-in
      table, rounded up to a multiple of FOPEN_MAX descriptors.  */
@@ -55,18 +56,33 @@ init_dtable (void)
     = (_hurd_init_dtablesize + FOPEN_MAX - 1) / FOPEN_MAX * FOPEN_MAX;
   _hurd_dtable_rlimit = _hurd_dtable.size;
 
-  _hurd_dtable.d = malloc (_hurd_dtable.size * sizeof (*_hurd_dtable.d));
-  if (_hurd_dtable.d == NULL)
+  /* Allocate the vector of pointers.  */
+  dt = _hurd_dtable.d = malloc (_hurd_dtable.size * sizeof (*_hurd_dtable.d));
+  if (dt == NULL)
     __libc_fatal ("hurd: Can't allocate file descriptor table\n");
 
+  /* Initialize the descriptor table.  */
   for (i = 0; i < _hurd_init_dtablesize; ++i)
     {
-      struct _hurd_fd *const d = &_hurd_dtable.d[i];
+      if (_hurd_init_dtable[i] == MACH_PORT_NULL)
+	/* An unused descriptor is marked by a null pointer.  */
+	dt[i] = NULL;
+      else
+	{
+	  /* Allocate a new file descriptor structure.  */
+	  struct _hurd_fd *new = malloc (sizeof (struct hurd_fd));
+	  if (new == NULL)
+	    __libc_fatal ("hurd: Can't allocate initial file descriptors\n");
 
-      _hurd_port_init (&d->port, MACH_PORT_NULL);
-      _hurd_port_init (&d->ctty, MACH_PORT_NULL);
+	  /* Initialize the locks.  CTTY.lock is not used, but let's be
+	     paranoid.  */
+	  __spin_lock_init (&new->port.lock);
+	  __spin_lock_init (&new->ctty.lock);
 
-      _hurd_port2fd (d, _hurd_init_dtable[i], 0);
+	  /* Install the port in the descriptor.
+	     This sets up all the ctty magic.  */
+	  _hurd_port2fd (new, _hurd_init_dtable[i], 0);
+	}
     }
 
   /* Clear out the initial descriptor table.
@@ -79,11 +95,7 @@ init_dtable (void)
 
   /* Initialize the remaining empty slots in the table.  */
   for (; i < _hurd_dtable.size; ++i)
-    {
-      _hurd_port_init (&_hurd_dtable.d[i].port, MACH_PORT_NULL);
-      _hurd_port_init (&_hurd_dtable.d[i].ctty, MACH_PORT_NULL);
-      _hurd_dtable.d[i].flags = 0;
-    }
+    dt[i] = NULL;
 }
 
 text_set_element (__libc_subinit, init_dtable);
@@ -113,6 +125,7 @@ get_dtable_port (int fd)
 
 text_set_element (_hurd_getdport_fn, get_dtable_port);
 
+#if 0
 /* Called on fork to install the dtable in NEWTASK.
    The dtable lock is held.  */
 
@@ -148,6 +161,7 @@ fork_dtable (task_t newtask)
 
 text_set_element (_hurd_fork_hook, fork_dtable);
 text_set_element (_hurd_fork_locks, _hurd_dtable_lock);
+#endif
 
 /* Called to reauthenticate the dtable when the auth port changes.  */
 
@@ -160,9 +174,13 @@ reauth_dtable (void)
 
   for (i = 0; i < _hurd_dtable.size; ++i)
     {
-      struct _hurd_fd *const d = &_hurd_dtable.d[i];
+      struct _hurd_fd *const d = _hurd_dtable.d[i];
       mach_port_t new, newctty;
       
+      if (d == NULL)
+	/* Nothing to do for an unused descriptor cell.  */
+	continue;
+
       /* Take the descriptor cell's lock.  */
       __spin_lock (&d->port.lock);
       
@@ -205,8 +223,12 @@ rectty_dtable (mach_port_t cttyid)
 
   for (i = 0; i < _hurd_dtable.size; ++i)
     {
-      struct _hurd_fd *const d = &_hurd_dtable.d[i];
+      struct _hurd_fd *const d = _hurd_dtable.d[i];
       mach_port_t newctty;
+
+      if (d == NULL)
+	/* Nothing to do for an unused descriptor cell.  */
+	continue;
 
       if (cttyid == MACH_PORT_NULL)
 	/* We now have no controlling tty at all.  */
