@@ -32,8 +32,10 @@ DEFUN(__chdir, (path), CONST char *path)
   if (cwdir == MACH_PORT_NULL)
     return -1;
 
+  __mutex_lock (&_hurd_lock);
   old = _hurd_cwdir;
   _hurd_cwdir = cwdir;
+  __mutex_unlock (&_hurd_lock);
   __mach_port_deallocate (__mach_task_self (), old);
 
   return 0;
