@@ -142,10 +142,12 @@ typedef _G_fpos64_t fpos64_t;
 extern struct _IO_FILE *stdin;		/* Standard input stream.  */
 extern struct _IO_FILE *stdout;		/* Standard output stream.  */
 extern struct _IO_FILE *stderr;		/* Standard error output stream.  */
+#ifdef __STDC__
 /* C89/C99 say they're macros.  Make them happy.  */
 #define stdin stdin
 #define stdout stdout
 #define stderr stderr
+#endif
 
 __BEGIN_NAMESPACE_STD
 /* Remove file FILENAME.  */

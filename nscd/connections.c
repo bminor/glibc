@@ -984,7 +984,6 @@ start_threads (void)
   nscd_run ((void *) 0);
 }
 
-
 /* Look up the uid, gid, and supplementary groups to run nscd as. When
    this function is called, we are not listening on the nscd socket yet so
    we can just use the ordinary lookup functions without causing a lockup  */
@@ -1046,3 +1045,18 @@ finish_drop_privileges (void)
       exit (1);
     }
 }
+
+/* Handle the HUP signal which will force a dump of the cache */
+void
+sighup_handler (int signum)
+{
+    /* Prune the password database */
+    prune_cache (&dbs[pwddb], LONG_MAX);
+    
+    /* Prune the group database */
+    prune_cache (&dbs[grpdb], LONG_MAX);
+
+    /* Prune the host database */
+    prune_cache (&dbs[hstdb], LONG_MAX);
+}
+

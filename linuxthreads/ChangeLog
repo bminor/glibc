@@ -623,6 +623,12 @@
 	(pthread_barrierattr_setpshared): Return EINVAL if pshared
 	is neither PTHREAD_PROCESS_PRIVATE nor PTHREAD_PROCESS_SHARED.
 
+2003-09-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/tls.h (TLS_TCB_SIZE): If in ld.so and NPTL struct
+	pthread is bigger than struct _pthread_descr_struct, use NPTL struct
+	pthread size.
+
 2003-09-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h
@@ -752,6 +758,34 @@
 
 	* sysdeps/unix/sysv/linux/mips/sysdep-cancel.h: Add IS_IN_librt,
 	use L() for local labels.
+
+2003-07-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/tls.h (TLS_INIT_TCB_SIZE, TLS_TCB_SIZE): Change to 0.
+	(TLS_INIT_TCB_ALIGN, TLS_TCB_ALIGN): Alignment of struct
+	_pthread_descr_struct.
+	(TLS_PRE_TCB_SIZE): Add sizeof (tcbhead_t) and pad to align.
+	If in ld.so and NPTL struct pthread is bigger than struct
+	_pthread_descr_struct, use NPTL struct pthread size.
+	(TLS_TCB_OFFSET): Define.
+	(INSTALL_DTV, INSTALL_NEW_DTV, GET_DTV, TLS_INIT_TP, THREAD_DTV,
+	THREAD_SELF, INIT_THREAD_SELF): Changed to match NPTL tls.h
+	definitions.
+	* sysdeps/i386/tls.h (TLS_TCB_SIZE): If in ld.so and NPTL struct
+	pthread is bigger than struct _pthread_descr_struct, use NPTL struct
+	pthread size.
+	* sysdeps/ia64/tls.h (TLS_PRE_TCB_SIZE): Likewise.
+	* sysdeps/powerpc/tls.h (TLS_PRE_TCB_SIZE): Likewise.
+	* sysdeps/s390/tls.h (TLS_TCB_SIZE): Likewise.
+	* sysdeps/sh/tls.h (TLS_PRE_TCB_SIZE): Likewise.
+	* sysdeps/x86_64/tls.h (TLS_TCB_SIZE): Likewise.
+	* sysdeps/pthread/Makefile (gen-as-const-headers): Add
+	nptl-struct-pthread.sym if nptl tree is present.
+	(before-compile): Add $(common-objpfx)nptl-struct-pthread.h
+	if nptl tree is not present.
+	(common-generated): Add nptl-struct-pthread.h.
+	($(common-objpfx)nptl-struct-pthread.h): New rule.
+	* sysdeps/pthread/nptl-struct-pthread.sym: New file.
 
 2003-07-22  Jakub Jelinek  <jakub@redhat.com>
 

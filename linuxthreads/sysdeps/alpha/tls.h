@@ -53,54 +53,76 @@ typedef struct
 #  include <sysdep.h>
 
 /* This is the size of the initial TCB.  */
-#  define TLS_INIT_TCB_SIZE	sizeof (tcbhead_t)
+#  define TLS_INIT_TCB_SIZE	0
 
 /* Alignment requirements for the initial TCB.  */
-#  define TLS_INIT_TCB_ALIGN	__alignof__ (tcbhead_t)
+#  define TLS_INIT_TCB_ALIGN	__alignof__ (struct _pthread_descr_struct)
 
 /* This is the size of the TCB.  */
-#  define TLS_TCB_SIZE		sizeof (tcbhead_t)
+#  define TLS_TCB_SIZE		0
 
 /* Alignment requirements for the TCB.  */
-#  define TLS_TCB_ALIGN		__alignof__ (tcbhead_t)
+#  define TLS_TCB_ALIGN		__alignof__ (struct _pthread_descr_struct)
 
 /* This is the size we need before TCB.  */
-#  define TLS_PRE_TCB_SIZE	sizeof (struct _pthread_descr_struct)
+#  ifndef IS_IN_rtld
+#   define TLS_PRE_TCB_SIZE \
+  (sizeof (struct _pthread_descr_struct)				\
+   + ((sizeof (tcbhead_t) + TLS_TCB_ALIGN - 1) & ~(TLS_TCB_ALIGN - 1)))
+#  else
+#   include <nptl-struct-pthread.h>
+#   define TLS_PRE_TCB_SIZE \
+  ((sizeof (struct _pthread_descr_struct) > NPTL_STRUCT_PTHREAD_SIZE	\
+    ? sizeof (struct _pthread_descr_struct) : NPTL_STRUCT_PTHREAD_SIZE)	\
+   + ((sizeof (tcbhead_t) + TLS_TCB_ALIGN - 1) & ~(TLS_TCB_ALIGN - 1)))
+#  endif
 
 /* The DTV is allocated at the TP; the TCB is placed elsewhere.  */
 #  define TLS_DTV_AT_TP 1
 
+/* The following assumes that TP (R2 or R13) points to the end of the
+   TCB + 0x7000 (per the ABI).  This implies that TCB address is
+   TP - 0x7000.  As we define TLS_DTV_AT_TP we can
+   assume that the pthread struct is allocated immediately ahead of the
+   TCB.  This implies that the pthread_descr address is
+   TP - (TLS_PRE_TCB_SIZE + 0x7000).  */
+/* ??? PPC uses offset 0x7000; seems like a good idea for alpha too,
+   but binutils not yet changed to match.  */
+#  define TLS_TCB_OFFSET 0
+
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 #  define INSTALL_DTV(TCBP, DTVP) \
-  (((tcbhead_t *) (TCBP))->dtv = (DTVP) + 1)
+  (((tcbhead_t *) (TCBP))[-1].dtv = (DTVP) + 1)
 
 /* Install new dtv for current thread.  */
 #  define INSTALL_NEW_DTV(DTV) \
-  (((tcbhead_t *)__builtin_thread_pointer ())->dtv = (DTV))
+  (THREAD_DTV() = (DTV))
 
 /* Return dtv of given thread descriptor.  */
 #  define GET_DTV(TCBP) \
-  (((tcbhead_t *) (TCBP))->dtv)
+  (((tcbhead_t *) (TCBP))[-1].dtv)
 
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(TCBP, SECONDCALL) \
-  (__builtin_set_thread_pointer (TCBP), 0)
+  (__builtin_set_thread_pointer ((void *) (TCBP) + TLS_TCB_OFFSET), NULL)
 
 /* Return the address of the dtv for the current thread.  */
 #  define THREAD_DTV() \
-  (((tcbhead_t *)__builtin_thread_pointer ())->dtv)
+  (((tcbhead_t *) (__builtin_thread_pointer () - TLS_TCB_OFFSET))[-1].dtv)
 
 /* Return the thread descriptor for the current thread.  */
 #  undef THREAD_SELF
 #  define THREAD_SELF \
-  ((pthread_descr)__builtin_thread_pointer () - 1)
+  ((pthread_descr) (__builtin_thread_pointer () \
+		    - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE))
 
 #  undef INIT_THREAD_SELF
 #  define INIT_THREAD_SELF(DESCR, NR) \
-  __builtin_set_thread_pointer ((struct _pthread_descr_struct *)(DESCR) + 1)
+  __builtin_set_thread_pointer ((char *)(DESCR) \
+				+ TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE)
 
 /* Get the thread descriptor definition.  */
 #  include <linuxthreads/descr.h>

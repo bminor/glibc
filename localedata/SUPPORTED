@@ -64,6 +64,7 @@ cy_GB.UTF-8/UTF-8 \
 cy_GB/ISO-8859-14 \
 da_DK.UTF-8/UTF-8 \
 da_DK/ISO-8859-1 \
+da_DK.ISO-8859-15/ISO-8859-15 \
 de_AT.UTF-8/UTF-8 \
 de_AT/ISO-8859-1 \
 de_AT@euro/ISO-8859-15 \
@@ -90,6 +91,7 @@ en_DK.UTF-8/UTF-8 \
 en_DK/ISO-8859-1 \
 en_GB.UTF-8/UTF-8 \
 en_GB/ISO-8859-1 \
+en_GB.ISO-8859-15/ISO-8859-15 \
 en_HK.UTF-8/UTF-8 \
 en_HK/ISO-8859-1 \
 en_IE.UTF-8/UTF-8 \
@@ -104,6 +106,7 @@ en_SG.UTF-8/UTF-8 \
 en_SG/ISO-8859-1 \
 en_US.UTF-8/UTF-8 \
 en_US/ISO-8859-1 \
+en_US.ISO-8859-15/ISO-8859-15 \
 en_ZA.UTF-8/UTF-8 \
 en_ZA/ISO-8859-1 \
 en_ZW.UTF-8/UTF-8 \
@@ -244,6 +247,8 @@ nl_NL/ISO-8859-1 \
 nl_NL@euro/ISO-8859-15 \
 nn_NO.UTF-8/UTF-8 \
 nn_NO/ISO-8859-1 \
+no_NO.UTF-8/UTF-8 \
+no_NO/ISO-8859-1 \
 oc_FR/ISO-8859-1 \
 om_ET/UTF-8 \
 om_KE/ISO-8859-1 \
@@ -281,6 +286,7 @@ sv_FI/ISO-8859-1 \
 sv_FI@euro/ISO-8859-15 \
 sv_SE.UTF-8/UTF-8 \
 sv_SE/ISO-8859-1 \
+sv_SE.ISO-8859-15/ISO-8859-15 \
 ta_IN/UTF-8 \
 te_IN/UTF-8 \
 tg_TJ/KOI8-T \

@@ -64,11 +64,19 @@ typedef struct
 #  define TLS_TCB_ALIGN		__alignof__ (struct _pthread_descr_struct)
 
 /* This is the size we need before TCB.  */
-#  define TLS_PRE_TCB_SIZE \
+#  ifndef IS_IN_rtld
+#   define TLS_PRE_TCB_SIZE \
   (sizeof (struct _pthread_descr_struct)				      \
    + ((sizeof (tcbhead_t) + TLS_TCB_ALIGN - 1) & ~(TLS_TCB_ALIGN - 1)))
+#  else
+#   include <nptl-struct-pthread.h>
+#   define TLS_PRE_TCB_SIZE \
+  ((sizeof (struct _pthread_descr_struct) > NPTL_STRUCT_PTHREAD_SIZE	      \
+    ? sizeof (struct _pthread_descr_struct) : NPTL_STRUCT_PTHREAD_SIZE)	      \
+   + ((sizeof (tcbhead_t) + TLS_TCB_ALIGN - 1) & ~(TLS_TCB_ALIGN - 1)))
+#  endif
 
-/* The following assumes that TP (R2 or R13) is points to the end of the
+/* The following assumes that TP (R2 or R13) points to the end of the
    TCB + 0x7000 (per the ABI).  This implies that TCB address is
    TP - 0x7000.  As we define TLS_DTV_AT_TP we can
    assume that the pthread_descr is allocated immediately ahead of the

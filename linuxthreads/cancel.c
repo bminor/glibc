@@ -230,5 +230,6 @@ void __pthread_perform_cleanup(char *currentframe)
     }
 
   /* And the TSD which needs special help.  */
+  THREAD_SETMEM (self, p_cancelstate, PTHREAD_CANCEL_DISABLE);
   __libc_thread_freeres ();
 }

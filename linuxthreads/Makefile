@@ -254,15 +254,18 @@ $(addprefix $(objpfx), \
   $(filter-out $(tests-static) $(tests-reverse) unload, \
     $(tests) $(test-srcs))): $(objpfx)libpthread.so \
 			     $(objpfx)libpthread_nonshared.a
-# $(objpfx)../libc.so is used instead of $(common-objpfx)libc.so,
+# $(objpfx)linklibc.so is used instead of $(common-objpfx)libc.so,
 # since otherwise libpthread.so comes before libc.so when linking.
 $(addprefix $(objpfx), $(tests-reverse)): \
-  $(objpfx)../libc.so $(objpfx)libpthread.so \
+  $(objpfx)linklibc.so $(objpfx)libpthread.so \
   $(objpfx)libpthread_nonshared.a
 $(objpfx)../libc.so: $(common-objpfx)libc.so ;
 $(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.so
 $(objpfx)unload: $(common-objpfx)dlfcn/libdl.so
 $(objpfx)unload.out: $(objpfx)libpthread.so $(objpfx)libpthread_nonshared.a
+$(objpfx)linklibc.so: $(common-objpfx)libc.so
+	ln -s ../libc.so $@
+generated += libclink.so
 else
 $(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.a
 $(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.a

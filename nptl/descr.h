@@ -27,9 +27,13 @@
 #include <sys/types.h>
 #include <hp-timing.h>
 #include <list.h>
+#ifdef __need_struct_pthread_size
+#define lll_lock_t int
+#else
 #include <lowlevellock.h>
 #include <pthreaddef.h>
 #include <dl-sysdep.h>
+#endif
 #include "../nptl_db/thread_db.h"
 #include <tls.h>
 #ifdef HAVE_FORCED_UNWIND

@@ -222,6 +222,7 @@ $(INSTALL-SUPPORTED-LOCALES): install-locales-dir
 	echo -n '...'; \
 	input=`echo $$locale | sed 's/\([^.]*\)[^@]*\(.*\)/\1\2/'`; \
 	$(LOCALEDEF) --alias-file=../intl/locale.alias \
+		     --no-archive \
 		     -i locales/$$input -c -f charmaps/$$charset \
 		     $(addprefix --prefix=,$(install_root)) $$locale; \
 	echo ' done'; \

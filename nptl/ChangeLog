@@ -121,6 +121,11 @@
 	Move definition inside libpthread, libc, librt check.  Provide
 	definition for rtld.
 
+2004-09-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread_cond_destroy.c (__pthread_cond_destroy): If there are
+	waiters, awake all waiters on the associated mutex.
+
 2004-09-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/alpha/jmpbuf-unwind.h: Define __libc_unwind_longjmp.
@@ -2194,6 +2199,11 @@
 2003-07-29  Roland McGrath  <roland@redhat.com>
 
 	* Makefile [$(build-shared) = yes] (tests): Depend on $(test-modules).
+
+2003-07-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* descr.h: Don't include lowlevellock.h, pthreaddef.h and dl-sysdep.h
+	if __need_struct_pthread_size, instead define lll_lock_t.
 
 2003-07-25  Jakub Jelinek  <jakub@redhat.com>
 

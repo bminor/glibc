@@ -21,6 +21,7 @@
 # define __need_timespec
 # include <time.h>
 #endif
+#include <bits/pthreadtypes.h>
 
 #ifndef _PTHREAD_DESCR_DEFINED
 /* Thread descriptors.  Needed for `sem_t' definition.  */

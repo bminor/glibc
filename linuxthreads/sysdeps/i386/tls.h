@@ -81,7 +81,14 @@ typedef struct
 #  define TLS_INIT_TCB_ALIGN __alignof__ (tcbhead_t)
 
 /* This is the size of the TCB.  */
-#  define TLS_TCB_SIZE sizeof (struct _pthread_descr_struct)
+#  ifndef IS_IN_rtld
+#   define TLS_TCB_SIZE sizeof (struct _pthread_descr_struct)
+#  else
+#   include <nptl-struct-pthread.h>
+#   define TLS_TCB_SIZE \
+  (sizeof (struct _pthread_descr_struct) > NPTL_STRUCT_PTHREAD_SIZE	\
+   ? sizeof (struct _pthread_descr_struct) : NPTL_STRUCT_PTHREAD_SIZE)
+#  endif
 
 /* Alignment requirements for the TCB.  */
 #  define TLS_TCB_ALIGN __alignof__ (struct _pthread_descr_struct)

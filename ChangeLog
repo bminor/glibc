@@ -1,3 +1,19 @@
+2004-09-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/alpha/sysdep.h (inline_syscall[0-6]): Change name
+	argument to numbers from syscall names.
+	(INLINE_SYSCALL1): Pass __NR_##name to inline_syscall##nr.
+	(INTERNAL_SYSCALL_NCS): Renamed from...
+	(INTERNAL_SYSCALL_1): ... this.  Use INTERNAL_SYSCALL_NCS.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h
+	(INTERNAL_SYSCALL_NCS): Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
+	(INTERNAL_SYSCALL_NCS): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (inline_syscall[0-6]):
+	Change name argument to numbers from syscall names.
+	(INLINE_SYSCALL, INTERNAL_SYSCALL): Adjust.
+	(INTERNAL_SYSCALL_NCS): Define.
+
 2004-09-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h (DO_INLINE_SYSCALL):
@@ -727,6 +743,23 @@
 	before return type.
 	* locale/localename.c (__current_locale_name): Likewise.
 
+2004-08-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/ldconfig.c (parse_conf): Add prefix argument, prepend it
+	before arguments to add_dir and pass to parse_conf_include.
+	(parse_conf_include): Add prefix argument, pass it down to
+	parse_conf.
+	(main): Call arch_startup.  Adjust parse_conf caller.
+	Call add_arch_dirs.
+	* sysdeps/generic/dl-cache.h (arch_startup, add_arch_dirs): Define.
+	* sysdeps/unix/sysv/linux/i386/dl-cache.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/dl-cache.h (EMUL_HACK, arch_startup,
+	add_arch_dirs): Define.
+	* sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed: Prepend
+	/emul/ia32-linux before the 32-bit ld.so pathname.
+	* sysdeps/unix/sysv/linux/ia64/dl-procinfo.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/dl-procinfo.h: New file.
+
 2004-08-30  Roland McGrath  <roland@frob.com>
 
 	* scripts/extract-abilist.awk: If `lastversion' variable defined, omit
@@ -882,6 +915,22 @@
 
 	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Initialize
 	status to NSS_STATUS_UNAVAIL.
+
+2004-08-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/configure.in: New file.
+	* sysdeps/powerpc/powerpc64/configure: Rebuilt.
+	* config.h.in (USE_PPC64_OVERLAPPING_OPD): Add.
+	* configure.in (HAVE_ASM_GLOBAL_DOT_NAME): Remove.
+	* configure: Rebuilt.
+	* sysdeps/powerpc/powerpc64/sysdep.h: Formatting.
+	(OPD_ENT, BODY_LABEL, ENTRY_1, ENTRY_2, END_2, DOT_PREFIX,
+	BODY_PREFIX): Define.
+	(ENTRY, DOT_LABEL, END, TRACEBACK, END_GEN_TB, EALIGN): Support
+	HAVE_ASM_GLOBAL_DOT_NAME or no dot symbols,
+	USE_PPC64_OVERLAPPING_OPD or never overlapping .opd entries.
+	* sysdeps/powerpc/powerpc64/dl-machine.h: Include sysdep.h.
+	(TRAMPOLINE_TEMPLATE, RTLD_START): Use the new sysdep.h macros.
 
 2004-08-19  Ulrich Drepper  <drepper@redhat.com>
 
@@ -1186,6 +1235,12 @@
 2004-08-11  Roland McGrath  <roland@redhat.com>
 
 	* iconvdata/testdata/ISO-2022-JP-3: Regenerated.
+
+2004-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #284]
+	* include/features.h (_POSIX_SOURCE, _POSIX_C_SOURCE): Define
+	if _XOPEN_SOURCE >= 500 even if __STRICT_ANSI__ is defined.
 
 2004-08-10  Alfred M. Szmidt  <ams@kemisten.nu>
 

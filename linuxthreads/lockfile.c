@@ -74,7 +74,11 @@ __fresetlockfiles (void)
   __pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE_NP);
 
   for (i = _IO_iter_begin(); i != _IO_iter_end(); i = _IO_iter_next(i))
-    __pthread_mutex_init (_IO_iter_file(i)->_lock, &attr);
+    {
+      _IO_lock_t *_lock = _IO_iter_file(i)->_lock;
+      if (_lock)
+	__pthread_mutex_init (_lock, &attr);
+    }
 
   __pthread_mutexattr_destroy (&attr);
 
