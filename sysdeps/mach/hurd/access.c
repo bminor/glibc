@@ -39,27 +39,27 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   /* Set up _hurd_id.rid_auth.  */
   if (_hurd_id.rid_auth == MACH_PORT_NULL)
     {
-      /* Allocate temporary uid and gid arrays at least
-	 big enough to hold one effective ID.  */
-      const unsigned int nuids = _hurd_nuids < 3 ? 3 : _hurd_nuids;
-      const unsigned int ngids = _hurd_ngids < 3 ? 3 : _hurd_ngids;
-      struct idlist *ruid = alloca (sizeof (uid_t) * _hurd_nuids);
-      struct idlist *rgid = alloca (sizeof (gid_t) * _hurd_ngids);
+      uid_t ruid, rgid;
 
-      /* Copy all of our uids and gids to these arrays.  */
-      memcpy (ruid, _hurd_uid, sizeof (uid_t) * nuids);
-      memcpy (rgid, _hurd_gid, sizeof (gid_t) * ngids);
+      if (_hurd_id.aux.nuids < 1 || _hurd_id.aux.ngids < 1)
+	{
+	  /* We do not have a real UID and GID.  Lose, lose, lose!  */
+	  __mutex_unlock (&_hurd_id.lock);
+	  return __hurd_fail (EGRATUITOUS);
+	}
 
-      /* Make the effective IDs be the real ones.  */
-      ruid.ids[0] = ruid.rid;
-      rgid.ids[0] = rgid.rid;
-
-      /* Create a new auth port using these frobbed IDs.  */
-      if (err = _HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
-				__auth_makeauth (port,
-						 ruid, nuids,
-						 rgid, ngids,
-						 &_hurd_id.rid_auth)))
+      /* Create a new auth port using our real UID and GID (the first
+	 auxiliary UID and GID) as the only effective IDs.  */
+      if (err = __USEPORT (AUTH,
+			   __auth_makeauth (port,
+					    NULL, 0, MACH_MSG_TYPE_COPY_SEND,
+					    _hurd_id.aux.uids, 1,
+					    _hurd_id.aux.gids, 1,
+					    _hurd_id.aux.uids,
+					    _hurd_id.aux.nuids,
+					    _hurd_id.aux.gids,
+					    _hurd_id.aux.ngids,
+					    &_hurd_id.rid_auth)))
 	goto lose;
     }
 
