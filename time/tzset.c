@@ -304,6 +304,18 @@ __tzset_internal (always)
 	  if (l < 2 && *tz == ':')
 	    ++tz;
 	}
+      if (*tz == '\0' || (tz[0] == ',' && tz[1] == '\0'))
+	{
+	  /* There is no rule.  See if there is a default rule file.  */
+	  __tzfile_default (tz_rules[0].name, tz_rules[1].name,
+			    tz_rules[0].offset, tz_rules[1].offset);
+	  if (__use_tzfile)
+	    {
+	      free (old_tz);
+	      old_tz = NULL;
+	      return;
+	    }
+	}
     }
   else
     /* There is no DST.  */
@@ -311,19 +323,6 @@ __tzset_internal (always)
 
  done_names:
   free (tzbuf);
-
-  if (*tz == '\0' || (tz[0] == ',' && tz[1] == '\0'))
-    {
-      /* There is no rule.  See if there is a default rule file.  */
-      __tzfile_default (tz_rules[0].name, tz_rules[1].name,
-			tz_rules[0].offset, tz_rules[1].offset);
-      if (__use_tzfile)
-	{
-	  free (old_tz);
-	  old_tz = NULL;
-	  return;
-	}
-    }
 
   /* Figure out the standard <-> DST rules.  */
   for (whichrule = 0; whichrule < 2; ++whichrule)
