@@ -490,18 +490,6 @@ fi
 echo "Wrote config.make in $PWD."
 
 switches=
-if [ "$gnu_as" ]; then
-  switches="$switches --with-gnu-as"
-fi
-if [ "$gnu_ld" ]; then
-  switches="$switches --with-gnu-ld"
-fi
-if [ "$exec_prefix" ]; then
-  switches="$switches --exec_prefix=$exec_prefix"
-fi
-if [ "$prefix" ]; then
-  switches="$switches --prefix=$prefix"
-fi
 if [ "$release" ]; then
   switches="$switches --os-release='$release'"
 fi
@@ -532,7 +520,7 @@ cat > config.status <<END
 # This file was generated automatically by configure.  Do not edit.
 # The GNU C library was configured in $PWD for
 # $system_name as follows:
-$0 $config --srcdir=$srcdir $switches
+$0 $configure_args $switches
 END
 chmod a+x config.status
 echo "Wrote config.status in $PWD."
