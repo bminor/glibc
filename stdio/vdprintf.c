@@ -28,7 +28,7 @@ Cambridge, MA 02139, USA.  */
    FORMAT, using the argument list in ARG.  */
 int
 DEFUN(vdprintf, (d, format, arg),
-      int d AND CONST char *format AND va_list arg)
+      int d AND CONST char *format AND PTR arg)
 {
   int done;
   FILE f;
