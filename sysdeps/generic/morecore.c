@@ -35,7 +35,7 @@ extern __ptr_t __sbrk __P ((int increment));
    If INCREMENT is negative, shrink data space.  */
 __ptr_t
 __default_morecore (increment)
-     long int increment;
+     ptrdiff_t increment;
 {
   __ptr_t result = __sbrk ((int) increment);
   if (result == (__ptr_t) -1)
