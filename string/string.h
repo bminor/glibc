@@ -227,7 +227,7 @@ extern size_t strnlen (__const char *__string, size_t __maxlen)
 
 /* Return a string describing the meaning of the `errno' code in ERRNUM.  */
 extern char *strerror (int __errnum) __THROW;
-#ifdef	__USE_MISC
+#if defined __USE_XOPEN2K || defined __USE_MISC
 /* Reentrant version of `strerror'.  If a temporary buffer is required, at
    most BUFLEN bytes of BUF will be used.  */
 extern char *strerror_r (int __errnum, char *__buf, size_t __buflen) __THROW;
@@ -237,7 +237,7 @@ extern char *strerror_r (int __errnum, char *__buf, size_t __buflen) __THROW;
    the namespace rules does not allow this.  */
 extern void __bzero (void *__s, size_t __n) __THROW;
 
-#if defined __USE_BSD
+#ifdef __USE_BSD
 /* Copy N bytes of SRC to DEST (like memmove, but args reversed).  */
 extern void bcopy (__const void *__src, void *__dest, size_t __n) __THROW;
 
