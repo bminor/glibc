@@ -167,6 +167,10 @@ extern __CONSTVALUE double EXFUN(__copysign, (double __x, double __y));
 /* Return X times (2 to the Nth power).  */
 extern __CONSTVALUE double EXFUN(__scalb, (double __x, int __n));
 
+#ifdef	__OPTIMIZE__
+#define	__scalb(x, n)	ldexp ((x), (n))
+#endif
+
 /* Return the remainder of X/Y.  */
 extern __CONSTVALUE double EXFUN(__drem, (double __x, double __y));
 
