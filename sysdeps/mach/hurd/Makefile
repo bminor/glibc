@@ -1,4 +1,4 @@
-# Copyright (C) 1993 Free Software Foundation, Inc.
+# Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -15,6 +15,13 @@
 # License along with the GNU C Library; see the file COPYING.LIB.  If
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
+
+# Get mach-srcdir defined.
+old-in-Makerules := $(in-Makerules)
+in-Makerules :=
+include $(..)sysdeps/mach/Makefile
+in-Makerules := $(old-in-Makerules)
+
 
 ifndef hurd-srcdir-computed
 hurd-srcdir-computed := yes
@@ -60,8 +67,7 @@ vpath hurd/%.h $(hurd-srcdir)
 inhibit-sysdep-asm += unix*
 
 
-ifneq (hurd,$(subdir))
-ifneq (mach,$(subdir))
+ifeq (,$(filter mach hurd,$(subdir)))
 # Subdirectories other than hurd/ might use the generated Hurd headers.
 # So make sure we get a chance to run in hurd/ to make them before all else.
 # (But we don't want to do this in mach/, because hurd/ needs some things
@@ -72,7 +78,6 @@ before-compile += $(patsubst %,$(common-objpfx)hurd/%.h,io fs process)
 $(patsubst %,$(common-objpfx)hurd/%.%,io fs process):
 	$(MAKE) -C $(..)hurd generated no_deps=t
 endif
-endif
 
 # Generate errnos.h and sys_errlist.c from the section of the manual that
 # lists all the errno codes.
@@ -81,7 +86,9 @@ errno.texinfo = $(..)manual/errno.texi
 
 hurd = $(..)sysdeps/mach/hurd
 
-$(hurd)/errnos.h: $(hurd)/errnos.awk $(errno.texinfo)
+$(hurd)/errnos.h: $(hurd)/errnos.awk $(errno.texinfo) \
+		  $(mach-srcdir)/mach/message.h \
+		  $(mach-srcdir)/mach/kern_return.h
 	gawk -f $^ > $@-tmp
 	mv $@-tmp $@
 $(hurd)/errlist.c: $(hurd)/errlist.awk $(errno.texinfo)
