@@ -28,30 +28,32 @@ int
 DEFUN(sigsuspend, (set), CONST sigset_t *set)
 {
   struct hurd_sigstate *ss;
-  sigset_t omask, pending;
+  sigset_t newmask, oldmask;
 
   if (set != NULL)
     /* Crash before locking.  */
-    *(volatile const sigset_t *) set;
+    newmask = *set;
 
   ss = _hurd_self_sigstate ();
-  omask = ss->blocked;
+  oldmask = ss->blocked;
   if (set != NULL)
-    ss->blocked = *set & ~_SIG_CANT_MASK;
+    ss->blocked = newmask & ~_SIG_CANT_MASK;
 
   /* Set the `suspended' bit and wait for a condition_signal on
      SS->arrived.  When a signal arrives and SS->suspended is set, the
-     signal thread does condition_signal (&SS->arrived).  */
+     signal thread does condition_signal (&SS->arrived) after clearing
+     SS->suspended.  */
   ss->suspended = 1;
-  while ((pending = ss->pending & ~ss->blocked) == 0)
+  do
     {
 #ifdef noteven
       __condition_wait (&ss->arrived, &ss->lock);
 #else  /* XXX */
       __mutex_unlock (&ss->lock); __swtch (); __mutex_lock (&ss->lock);
 #endif
-    }
-  ss->suspended = 0;
+    } while (ss->suspended);
+
+  ss->blocked = oldmask;
   __mutex_unlock (&ss->lock);
 
   /* We've been interrupted!  And a good thing, too.
