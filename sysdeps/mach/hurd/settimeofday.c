@@ -28,7 +28,7 @@ DEFUN(__settimeofday, (tv, tz),
       CONST struct timeval *tv AND CONST struct timezone *tz)
 {
   error_t err;
-  mach_port_t hostpriv;
+  mach_port_t hostpriv, devmaster;
 
   if (tz != NULL)
     {
@@ -36,11 +36,14 @@ DEFUN(__settimeofday, (tv, tz),
       return -1;
     }
 
-  hostpriv = __pid2task (-1);
-  if (hostpriv == MACH_PORT_NULL)
-    return -1;
+  if (err = __USEPORT (PROC, __proc_getprivports (port,
+						  &hostpriv, &devmaster)))
+    return __hurd_fail (err);
+  __mach_port_deallocate (__mach_task_self (), devmaster);
 
-  err = __host_set_time (hostpriv, tv);
+  /* `time_value_t' and `struct timeval' are in fact identical with the
+     names changed.  */
+  err = __host_set_time (hostpriv, *(time_value_t *) tv);
   __mach_port_deallocate (__mach_task_self (), hostpriv);
 
   if (err)
