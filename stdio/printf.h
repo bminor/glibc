@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -66,7 +66,7 @@ typedef int printf_arginfo_function __P ((__const struct printf_info * __info,
    to determine how many arguments a SPEC conversion requires,
    and what their types are.  */
 extern int register_printf_function __P ((int __spec, printf_function __func,
-					printf_arginfo_function __arginfo));
+					  printf_arginfo_function __arginfo));
 
 /* Parse FMT, and fill in N elements of ARGTYPES with the
    types needed for the conversions FMT specifies.  Returns
