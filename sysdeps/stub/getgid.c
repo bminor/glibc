@@ -29,7 +29,7 @@ DEFUN_VOID(__getgid)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 
