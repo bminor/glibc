@@ -71,7 +71,7 @@ _hurd_thread_sigstate (thread_t thread)
 #include <setjmp.h>
 #include <fcntl.h>
 #include <sys/wait.h>
-#include <thread_state.h>
+#include "thread_state.h"
 
 jmp_buf _hurd_sigthread_fault_env;
 
@@ -157,9 +157,9 @@ abort_rpcs (struct hurd_sigstate *ss, int signo, void *state)
 	 the syscall will return MACH_SEND_INTERRUPTED.  */
       unsigned int count;
       __thread_abort (ss->thread);
-      __thread_get_state (ss->thread, HURD_THREAD_STATE_FLAVOR,
+      __thread_get_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
 			  state, &count);
-      if (count != HURD_THREAD_STATE_COUNT)
+      if (count != MACHINE_THREAD_STATE_COUNT)
 	/* What kind of thread?? */
 	return;			/* XXX */
 
@@ -239,7 +239,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 			    int signo,
 			    int sigcode)
 {
-  struct hurd_thread_state thread_state;
+  struct machine_thread_state thread_state;
   enum { stop, ignore, core, term, handle } act;
   __sighandler_t handler = ss->actions[signo].sa_handler;
 
@@ -401,8 +401,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	ss->blocked |= __sigmask (signo) | ss->actions[signo].sa_mask;
 
 	/* Start the thread running the handler.  */
-	__thread_set_state (ss->thread, HURD_THREAD_STATE_FLAVOR,
-			    (int *) &thread_state, HURD_THREAD_STATE_COUNT);
+	__thread_set_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
+			    (int *) &thread_state, MACHINE_THREAD_STATE_COUNT);
 	__thread_resume (ss->thread);
 	break;
       }
@@ -595,7 +595,7 @@ _hurdsig_fault_init (void)
 {
   error_t err;
   mach_port_t sigexc;
-  struct hurd_thread_state state;
+  struct machine_thread_state state;
 
   if (err = __mach_port_allocate (__mach_task_self (),
 				  MACH_PORT_RIGHT_RECEIVE, &sigexc))
@@ -612,8 +612,8 @@ _hurdsig_fault_init (void)
        __proc_handle_exceptions (port,
 				 sigexc,
 				 _hurd_msgport, MACH_MSG_TYPE_COPY_SEND,
-				 HURD_THREAD_STATE_FLAVOR,
-				 (int *) &state, HURD_THREAD_STATE_COUNT)))
+				 MACHINE_THREAD_STATE_FLAVOR,
+				 (int *) &state, MACHINE_THREAD_STATE_COUNT)))
     __libc_fatal ("hurd: proc won't handle signal thread exceptions\n");
 }
 				/* XXXX */
