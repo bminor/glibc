@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -122,7 +122,7 @@ internal_nis_getspent_r (struct spwd *sp, char *buffer, size_t buflen)
       free (result);
 
       parse_res = _nss_files_parse_spent (p, sp, data, buflen);
-      if (!parse_res && errno == ERANGE)
+      if (parse_res == -1 && errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;
 
       free (oldkey);
@@ -192,13 +192,10 @@ _nss_nis_getspnam_r (const char *name, struct spwd *sp,
 
   parse_res = _nss_files_parse_spent (p, sp, data, buflen);
 
-  if (!parse_res)
-    {
-      if (errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
-    }
-  else
-    return NSS_STATUS_SUCCESS;
+  if (parse_res == -1 && errno == ERANGE)
+    return NSS_STATUS_TRYAGAIN;
+  else if (parse_res == 0)
+    return NSS_STATUS_NOTFOUND;
+
+  return NSS_STATUS_SUCCESS;
 }

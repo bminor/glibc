@@ -212,7 +212,7 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
       free (result);
 
       parse_res = parse_line (p, host, data, buflen);
-      if (!parse_res && errno == ERANGE)
+      if (parse_res == -1 && errno == ERANGE)
 	{
 	  *h_errnop = NETDB_INTERNAL;;
 	  return NSS_STATUS_TRYAGAIN;
@@ -299,18 +299,16 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
 
   parse_res = parse_line (p, host, data, buflen);
 
-  if (!parse_res || host->h_addrtype != af)
+  if (parse_res == -1 && errno == ERANGE)
     {
-      if (!parse_res && errno == ERANGE)
-	{
-	  *h_errnop = NETDB_INTERNAL;
-	  return NSS_STATUS_TRYAGAIN;
-	}
-      else
-	{
-	  *h_errnop = HOST_NOT_FOUND;
-	  return NSS_STATUS_NOTFOUND;
-	}
+      *h_errnop = NETDB_INTERNAL;
+      return NSS_STATUS_TRYAGAIN;
+    }
+
+  if (parse_res == 0 || host->h_addrtype != af)
+    {
+      *h_errnop = HOST_NOT_FOUND;
+      return NSS_STATUS_NOTFOUND;
     }
 
   *h_errnop = NETDB_SUCCESS;
@@ -390,18 +388,15 @@ _nss_nis_gethostbyaddr_r (char *addr, int addrlen, int type,
 
   parse_res = parse_line (p, host, data, buflen);
 
-  if (!parse_res)
+  if (parse_res == -1 && errno == ERANGE)
     {
-      if (errno == ERANGE)
-	{
-	  *h_errnop = NETDB_INTERNAL;
-	  return NSS_STATUS_TRYAGAIN;
-	}
-      else
-	{
-	  *h_errnop = HOST_NOT_FOUND;
-	  return NSS_STATUS_NOTFOUND;
-	}
+      *h_errnop = NETDB_INTERNAL;
+      return NSS_STATUS_TRYAGAIN;
+    }
+  else if (parse_res == 0)
+    {
+      *h_errnop = HOST_NOT_FOUND;
+      return NSS_STATUS_NOTFOUND;
     }
 
   *h_errnop = NETDB_SUCCESS;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -122,7 +122,7 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen)
       free (result);
 
       parse_res = _nss_files_parse_pwent (p, pwd, data, buflen);
-      if (!parse_res && errno == ERANGE)
+      if (parse_res == -1 && errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;
 
       free (oldkey);
@@ -192,15 +192,12 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 
   parse_res = _nss_files_parse_pwent (p, pwd, data, buflen);
 
-  if (!parse_res)
-    {
-      if (errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
-    }
-  else
-    return NSS_STATUS_SUCCESS;
+  if (parse_res == -1 && errno == ERANGE)
+    return NSS_STATUS_TRYAGAIN;
+  else if (parse_res == 0)
+    return NSS_STATUS_NOTFOUND;
+
+  return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
@@ -243,13 +240,10 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
 
   parse_res = _nss_files_parse_pwent (p, pwd, data, buflen);
 
-  if (!parse_res)
-    {
-      if (errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
-    }
-  else
-    return NSS_STATUS_SUCCESS;
+  if (parse_res == -1 && errno == ERANGE)
+    return NSS_STATUS_TRYAGAIN;
+  else if (parse_res == 0)
+    return NSS_STATUS_NOTFOUND;
+
+  return NSS_STATUS_SUCCESS;
 }

@@ -174,7 +174,7 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
         ++p;
 
       parse_res = _nss_files_parse_servent (p, serv, buffer, buflen);
-      if (!parse_res && errno == ERANGE)
+      if (parse_res == -1 && errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;
     }
   while (!parse_res);

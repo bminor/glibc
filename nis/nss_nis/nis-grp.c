@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -122,7 +122,7 @@ internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen)
       free (result);
 
       parse_res = _nss_files_parse_grent (p, grp, data, buflen);
-      if (!parse_res && errno == ERANGE)
+      if (parse_res == -1 && errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;
 
       free (oldkey);
@@ -192,15 +192,12 @@ _nss_nis_getgrnam_r (const char *name, struct group *grp,
 
   parse_res = _nss_files_parse_grent (p, grp, data, buflen);
 
-  if (!parse_res)
-    {
-      if (errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
-    }
-  else
-    return NSS_STATUS_SUCCESS;
+  if (parse_res == -1 && errno == ERANGE)
+    return NSS_STATUS_TRYAGAIN;
+  else if (parse_res == 0)
+    return NSS_STATUS_NOTFOUND;
+
+  return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
@@ -243,13 +240,10 @@ _nss_nis_getgrgid_r (gid_t gid, struct group *grp,
 
   parse_res = _nss_files_parse_grent (p, grp, data, buflen);
 
-  if (!parse_res)
-    {
-      if (errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
-    }
-  else
-    return NSS_STATUS_SUCCESS;
+  if (parse_res == -1 && errno == ERANGE)
+    return NSS_STATUS_TRYAGAIN;
+  else if (parse_res == 0)
+    return NSS_STATUS_NOTFOUND;
+
+  return NSS_STATUS_SUCCESS;
 }

@@ -165,7 +165,7 @@ internal_nis_getetherent_r (struct ether *eth, char *buffer, size_t buflen)
         ++p;
 
       parse_res = _nss_files_parse_etherent (p, eth, data, buflen);
-      if (!parse_res && errno == ERANGE)
+      if (parse_res == -1 && errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;
     }
   while (!parse_res);
@@ -230,15 +230,12 @@ _nss_nis_gethostton_r (const char *name, struct ether *eth,
 
   parse_res = _nss_files_parse_etherent (p, eth, data, buflen);
 
-  if (!parse_res)
-    {
-      if (errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
-    }
-  else
-    return NSS_STATUS_SUCCESS;
+  if (parse_res == -1 && errno == ERANGE)
+    return NSS_STATUS_TRYAGAIN;
+  else if (parse_res == 0)
+    return NSS_STATUS_NOTFOUND;
+
+  return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
@@ -293,13 +290,10 @@ _nss_nis_getntohost_r (struct ether_addr *addr, struct ether *eth,
 
   parse_res = _nss_files_parse_etherent (p, eth, data, buflen);
 
-  if (!parse_res)
-    {
-      if (errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
-    }
-  else
-    return NSS_STATUS_SUCCESS;
+  if (parse_res == -1 && errno == ERANGE)
+    return NSS_STATUS_TRYAGAIN;
+  else if (parse_res == 0)
+    return NSS_STATUS_NOTFOUND;
+
+  return NSS_STATUS_SUCCESS;
 }
