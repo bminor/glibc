@@ -124,13 +124,13 @@ endif
 # later directory would be chosen over a .c file in an earlier directory,
 # which does not preserve the desired sysdeps ordering behavior.
 
-# When making the list of .dep files to include, we can't know which ones
-# have source in .s files, and thus do not in fact need a .dep file.
-# So we must define rules to make .dep files for .s files.
+# When making the list of .d files to include, we can't know which ones
+# have source in .s files, and thus do not in fact need a .d file.
+# So we must define rules to make .d files for .s files.
 define make-dummy-dep
-$(addprefix ln $(objpfx)dummy.dep ,$(filter-out $(wildcard $@),$@))
+$(addprefix ln $(objpfx)dummy.d ,$(filter-out $(wildcard $@),$@))
 endef
-$(objpfx)dummy.dep:
+$(objpfx)dummy.d:
 	echo '# .s files cannot contain includes, so they need no deps.' > $@
 
 # It matters that this set of rules, for compiling from sources in
@@ -139,11 +139,11 @@ $(objpfx)dummy.dep:
 # compiling in the source tree, generated sources go into the current
 # directory, and those should be chosen before any sources in sysdeps.
 $(objpfx)%.o: %.S $(before-compile); $(compile-command.S)
-$(objpfx)%.dep: %.S $(before-compile); $(+make-deps)
+$(objpfx)%.d: %.S $(before-compile); $(+make-deps)
 $(objpfx)%.o: %.s $(before-compile); $(compile-command.s)
-$(objpfx)%.dep: %.s $(objpfx)dummy.dep; $(make-dummy-dep)
+$(objpfx)%.d: %.s $(objpfx)dummy.d; $(make-dummy-dep)
 $(objpfx)%.o: %.c $(before-compile); $(compile-command.c)
-$(objpfx)%.dep: %.c $(before-compile); $(+make-deps)
+$(objpfx)%.d: %.c $(before-compile); $(+make-deps)
 
 # Omit the objpfx rules when building in the source tree, because
 # objpfx is empty and so these rules just override the ones above.
@@ -151,11 +151,11 @@ ifdef objpfx
 # Define first rules to find the source files in $(objpfx).
 # Generated source files will end up there.
 $(objpfx)%.o: $(objpfx)%.S $(before-compile); $(compile-command.S)
-$(objpfx)%.dep: $(objpfx)%.S $(before-compile); $(+make-deps)
+$(objpfx)%.d: $(objpfx)%.S $(before-compile); $(+make-deps)
 $(objpfx)%.o: $(objpfx)%.s $(before-compile); $(compile-command.s)
-$(objpfx)%.dep: $(objpfx)%.s $(objpfx)dummy.dep; $(make-dummy-dep)
+$(objpfx)%.d: $(objpfx)%.s $(objpfx)dummy.d; $(make-dummy-dep)
 $(objpfx)%.o: $(objpfx)%.c $(before-compile); $(compile-command.c)
-$(objpfx)%.dep: $(objpfx)%.c $(before-compile); $(+make-deps)
+$(objpfx)%.d: $(objpfx)%.c $(before-compile); $(+make-deps)
 endif
 
 # System-dependent makefiles can put in `inhibit-sysdep-asm' wildcard
@@ -183,15 +183,15 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 	   $(open-check-inhibit-asm) \
 	   echo "\$$(objpfx)%.o: $$dir/%.S \$$(before-compile); \
 		\$$(compile-command.S)";				      \
-	   echo "\$$(objpfx)%.dep: $$dir/%.S \$$(before-compile); \
+	   echo "\$$(objpfx)%.d: $$dir/%.S \$$(before-compile); \
 		\$$(+make-deps)";					      \
 	   echo "\$$(objpfx)%.o: $$dir/%.s \$$(before-compile); \
 		\$$(compile-command.s)";				      \
-	   echo "\$$(objpfx)%.dep: $$dir/%.s \$$(objpfx)dummy.dep; \
+	   echo "\$$(objpfx)%.d: $$dir/%.s \$$(objpfx)dummy.d; \
 		\$$(make-dummy-dep)" $(close-check-inhibit-asm);	\
 	   echo "\$$(objpfx)%.o: $$dir/%.c \$$(before-compile); \
 		\$$(compile-command.c)";				      \
-	   echo "\$$(objpfx)%.dep: $$dir/%.c \$$(before-compile); \
+	   echo "\$$(objpfx)%.d: $$dir/%.c \$$(before-compile); \
 		\$$(+make-deps)";					      \
 	 done) > $@T
 	mv -f $@T $@
@@ -228,8 +228,8 @@ S-CPPFLAGS = $(asm-CPPFLAGS)
 define +make-deps
 -@rm -f $@
 $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
-sed -e 's,$*\.o,$(@:.dep=.o) $@,' $(sed-remove-objpfx) > $(@:.dep=.dtm)
-mv -f $(@:.dep=.dtm) $@
+sed -e 's,$*\.o,$(@:.d=.o) $@,' $(sed-remove-objpfx) > $(@:.d=.T)
+mv -f $(@:.d=.T) $@
 endef
 ifneq (,$(objpfx))
 sed-remove-objpfx = -e 's@ $(subst @,\@,$(objpfx))@ $$(objpfx)@g' \
@@ -246,11 +246,11 @@ sysdep_routines := $(sysdep_routines)
 # replacing every ".c" in `sources' with a ".o".
 override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
 
-+depfiles := $(strip $(sources:.c=.dep) \
-		     $(patsubst %.o,%.dep,$(filter %.o,$(extra-objs))) \
-		     $(addsuffix .dep,$(others) $(tests)))
++depfiles := $(strip $(sources:.c=.d) \
+		     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs))) \
+		     $(addsuffix .d,$(others) $(tests)))
 +depfiles := $(addprefix $(objpfx),\
-			 $(filter-out $(addsuffix .dep,$(omit-deps)),\
+			 $(filter-out $(addsuffix .d,$(omit-deps)),\
 				      $(+depfiles)))
 
 $(objpfx)depend-$(subdir): Makefile
@@ -271,7 +271,7 @@ endif
 # Maximize efficiency by minimizing the number of rules.
 .SUFFIXES:	# Clear the suffix list.
 # Add the suffixes we use.
-.SUFFIXES: .a .o .S .s .c .h .dep
+.SUFFIXES: .a .o .S .s .c .h .d
 
 # Generic rule for making directories.
 %/:
@@ -480,7 +480,7 @@ common-clean: common-mostlyclean
 	-rm -f $(addprefix $(objpfx),$(generated))
 
 # Produce a file `stub-$(subdir)' which contains `#define __stub_FUNCTION'
-# for each function which is a stub.  We grovel over all the .dep files
+# for each function which is a stub.  We grovel over all the .d files
 # looking for references to source files in sysdeps/stub.  Then we grovel
 # over each referenced source file to see what stub function it defines.
 
