@@ -33,6 +33,8 @@ Cambridge, MA 02139, USA.  */
 
 extern int __use_tzfile;
 extern void EXFUN(__tzfile_read, (CONST char *file));
+extern void EXFUN(__tzfile_default, (char *std AND char *dst AND
+				     long int stdoff AND long int dstoff));
 extern int EXFUN(__tzfile_compute, (time_t, struct tm));
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
@@ -227,7 +229,7 @@ DEFUN_VOID(__tzset)
   if (*tz_rules[1].name == '\0')
     tz_rules[1].offset = tz_rules[0].offset + (60 * 60);
 
-  if (*tz == '\0' || tz[0] == ',' && tz[1] == '\0')
+  if (*tz == '\0' || (tz[0] == ',' && tz[1] == '\0'))
     {
       /* There is no rule.  See if there is a default rule file.  */
       __tzfile_default (tz_rules[0].name, tz_rules[1].name,
