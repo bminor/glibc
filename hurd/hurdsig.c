@@ -932,18 +932,23 @@ _hurdsig_fault_init (void)
     __libc_fatal ("hurd: proc won't handle signal thread exceptions\n");
 }
 				/* XXXX */
+/* Reauthenticate with the proc server.  */
+
 static void
 reauth_proc (mach_port_t new)
 {
-  mach_port_t ignore;
+  mach_port_t ref, ignore;
 
-  /* Reauthenticate with the proc server.  */
+  ref = __mach_reply_port ();
   if (! HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
-		       __proc_reauthenticate (port, _hurd_pid) ||
-		       __auth_user_authenticate (new, port, _hurd_pid,
+		       __proc_reauthenticate (port, ref,
+					      MACH_MSG_TYPE_MAKE_SEND_ONCE) ||
+		       __auth_user_authenticate (new, port, ref,
+						 MACH_MSG_TYPE_MAKE_SEND_ONCE,
 						 &ignore))
       && ignore != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), ignore);
+  __mach_port_destroy (__mach_task_self (), ref);
 
   (void) &reauth_proc;		/* Silence compiler warning.  */
 }
