@@ -30,15 +30,19 @@ ifdef	subdir
 # If `sources' was defined by the parent makefile, undefine it so
 # we will later get it from wildcard search in this directory.
 ifneq	"$(findstring env,$(origin sources))" ""
-override sources :=
+sources :=
+endif
+
+ifneq ($(findstring e,$(MAKEFLAGS)),)
+You must not use the -e flag when building the GNU C library.
 endif
 
 # If defined, these will determine the value of `sources'.
 ifneq	"$(findstring env,$(origin routines))" ""
-override routines	:=
+routines	:=
 endif
 ifneq	"$(findstring env,$(origin aux))" ""
-override aux		:=
+aux		:=
 endif
 
 endif	# subdir
@@ -70,15 +74,15 @@ define \n
 
 endef
 sysdirs := $(subst $(\n), ,$(sysdirs))
+endif
 $(+sysdir_pfx)sysdirs: $(+sysdir_pfx)Sysnames $(..)find-sysdirs
 	(echo define sysdirs; \
 	 $(dir $(word 2,$^))$(notdir $(word 2,$^)) < $<; \
 	 echo endef) > $@
 $(+sysdir_pfx)Sysnames:
-	@echo The GNU C Library has not been configured! >&2
-	@echo Run \`configure\' to configure it before building. >&2
-	@exit 1
-endif
+	@(echo The GNU C Library has not been configured!	;\
+	  echo Run \`configure\' to configure it before building.\
+	 ) >&2; exit 1
 
 # Turn the list of sysdep names into a colon-separated list of directories
 # under SYSDEP_DIR (the base directory for sysdep files), and tell Make to
@@ -104,14 +108,19 @@ override CPPFLAGS := $(strip $(filter-out $(+sysdep-includes),$(CPPFLAGS)) \
 
 # Include any system-specific makefiles.
 
-+sysdep-makefiles := $(wildcard $(addsuffix /Makefile,$(+sysdep_dirs)))
-
-ifneq ($(+sysdep-makefiles),)
-include $(+sysdir_pfx)sysdep-Makefile
-$(+sysdir_pfx)sysdep-Makefile: $(+sysdep-makefiles)
-	(for file in $(^:$(..)%=%); do \
-	   echo include "\$$(..)$$file"; done) > $@
+ifeq ($(wildcard $(+sysdir_pfx)sysdep-Makefile),)
+# Don't do deps until this exists, because it might change the sources list.
+no_deps=t
 endif
+
+include $(+sysdir_pfx)sysdep-Makefile
+$(+sysdir_pfx)sysdep-Makefile: $(+sysdir_pfx)sysdirs
+	(for dir in `cat $<`; do					      \
+	   file=sysdeps/$$dir/Makefile;					      \
+	   if [ -r $(..)$$file ]; then					      \
+	     echo include "\$$(..)$$file";				      \
+	   fi;								      \
+	 done) > $@
 
 ifneq ($(no_deps),t)
 # Include the generated dependencies of the sources in this directory.
@@ -170,7 +179,7 @@ $(objpfx)%.o: %.c $(before-compile)
 
 .PHONY: lib lib-noranlib libobjs
 lib: lib-noranlib
-	ranlib $(libc.a)
+	$(RANLIB) $(libc.a)
 libobjs: lib-noranlib
 lib-noranlib: $(libc.a) ar-it
 $(libc.a): %: $(addprefix %,$(patsubst $(objpfx)%,(%),$(objects)))
@@ -225,19 +234,60 @@ headers: $(+headers_pfx)ansi/						\
 # mkdir isn't smart enough to strip a trailing /.
 	mkdir $(@:%/=%)
 
-$(+headers_pfx)ansi/%: % $(..)ansidecl.m4;$(+ansideclificate)
-$(+headers_pfx)trad/%: % $(..)ansidecl.m4;$(+ansideclificate)
+$(+headers_pfx)ansi/%: % $(..)ansidecl $(..)ansidecl.m4;$(+ansideclificate)
+$(+headers_pfx)trad/%: % $(..)ansidecl $(..)ansidecl.m4;$(+ansideclificate)
 
 # The bit with awk is to remove all the newlines from
 # ansidecl.m4, so the output doesn't have 20 blank
 # lines at the beginning.
-+ansideclificate = $(dir $(..)ansidecl)$(notdir $(..)ansidecl) \
++ansideclificate = $(dir $(word 2,$^))$(notdir $(word 2,$^)) \
 		   -$(firstword $(subst /, ,$(@:$(+headers_pfx)%=%))) $< > $@
 
 
 .PHONY: echo-headers
 echo-headers:
 	@echo $(headers)
+
+# Installation.
+
+ifneq "$(findstring env,$(origin install-lib))" ""
+override install-lib :=
+endif
+ifneq "$(findstring env,$(origin install-data))" ""
+override install-data :=
+endif
+
+# install-lib are installed from the object directory into libdir.
+# install-data are installed as they are into datadir.  
+# headers are installed from the object directory header directories into
+# one or both ofg ansi-incldir and trad-incldir.
+
+do-install = $(INSTALL_DATA) $< $@
+
+ifdef install-lib
+$(addprefix $(libdir)/,$(install-lib)): $(libdir)/%: $(objpfx)%;$(do-install)
+endif
+ifdef install-data
+$(addprefix $(datadir)/,$(install-data)): $(datadir)/%: %;$(do-install)
+endif
++install := $(addprefix $(libdir)/,$(install-lib))	\
+	    $(addprefix $(datadir)/,$(install-data))
+ifdef headers
+ifdef ansi-incldir
+$(addprefix $(ansi-incldir)/,$(headers)): \
+	$(ansi-incldir)/%: $(objpfx)ansi/%;$(do-install)
++install := $(+install) $(addprefix $(ansi-incldir)/,$(headers))
+endif
+ifdef trad-incldir
+$(addprefix $(trad-incldir)/,$(headers)): \
+	$(trad-incldir)/%: $(objpfx)trad/%;$(do-install)
++install := $(+install) $(addprefix $(trad-incldir)/,$(headers))
+endif
+endif	# headers
++install := $(filter-out $(addprefix %/,$(no-install)),$(+install))
+
+.PHONY: install
+install: $(dir $(+install)) $(+install)
 
 define +make-deps
 $(+mkdep) $(CPPFLAGS) $< | sed 's,$*\.o,$(@:.dep=.o) $@,' > $@
