@@ -40,7 +40,7 @@ DEFUN_VOID(__getgid)
   else
     {
       /* We do not even have a real gid.  */
-      errno = EIOEIO;		/* XXX */
+      errno = EGRATUITOUS;
       gid = -1;
     }
 
