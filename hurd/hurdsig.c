@@ -354,11 +354,12 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       case SIGINFO:
 	if (_hurd_pgrp == _hurd_pid)
 	  {
-	    /* We are the session leader.  Since there is no user-specified
-	       handler for SIGINFO, we use a default one which prints
-	       something interesting.  We use the normal handler mechanism
-	       instead of just doing it here to avoid the signal thread
-	       faulting or blocking in this potentially hairy operation.  */
+	    /* We are the process group leader.  Since there is no
+	       user-specified handler for SIGINFO, we use a default one
+	       which prints something interesting.  We use the normal
+	       handler mechanism instead of just doing it here to avoid the
+	       signal thread faulting or blocking in this potentially hairy
+	       operation.  */
 	    act = handle;
 	    handler = _hurd_siginfo_handler;
 	  }
