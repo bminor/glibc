@@ -40,6 +40,6 @@ DEFUN(chroot, (path), CONST char *path)
   if (err)
     return __hurd_fail (err);
 
-  _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], crdir);
+  _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], dir);
   return 0;
 }
