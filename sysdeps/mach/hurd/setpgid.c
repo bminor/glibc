@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <hurd.h>
 
 /* Set the process group ID of the process matching PID to PGID.
    If PID is zero, the current process's process group ID is set.
