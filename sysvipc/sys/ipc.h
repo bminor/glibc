@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,26 @@
 
 /* Get system dependent definition of `struct ipc_perm' and more.  */
 #include <bits/ipc.h>
+
+#ifndef uid_t
+typedef __uid_t uid_t;
+# define uid_t uid_t
+#endif
+
+#ifndef gid_t
+typedef __gid_t gid_t;
+# define gid_t gid_t
+#endif
+
+#ifndef mode_t
+typedef __mode_t mode_t;
+# define mode_t mode_t
+#endif
+
+#ifndef key_t
+typedef __key_t key_t;
+# define key_t key_t
+#endif
 
 #if !defined __USE_SVID && !defined __USE_XOPEN && __GNUC__ >= 2
 # warning "Files using this header must be compiled with _SVID_SOURCE or _XOPEN_SOURCE"
