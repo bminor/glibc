@@ -399,7 +399,7 @@ endif
 
 +depfiles := $(strip $(sources:.c=.d) \
 		     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.so=.o))) \
-		     $(addsuffix .d,$(others) $(tests) $(test-srcs)))
+		     $(addsuffix .d,$(others) $(tests)))
 +depfiles := $(addprefix $(objpfx),\
 			 $(filter-out $(addsuffix .d,$(omit-deps)),\
 				      $(+depfiles)))
