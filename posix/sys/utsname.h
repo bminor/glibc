@@ -52,10 +52,6 @@ struct utsname
 extern int uname __P ((struct utsname * __name));
 
 
-/* Store the nodename in NAME, writing no more than LEN characters.  */
-extern int __uname_getnode __P ((char *__name, unsigned int __len));
-
-
 __END_DECLS
 
 #endif /* sys/utsname.h  */
