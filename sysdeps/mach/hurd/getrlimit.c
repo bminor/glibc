@@ -20,10 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/resource.h>
 #include <errno.h>
 #include <hurd.h>
-#include <hurd/fd.h>
-
-extern int _hurd_core_limit, _hurd_dtable_rlimit; /* XXX */
-
+#include <hurd/resource.h>
 
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
@@ -31,48 +28,21 @@ int
 DEFUN(getrlimit, (resource, rlimits),
       enum __rlimit_resource resource AND struct rlimit *rlimits)
 {
-  if (rlimits == NULL)
+  struct rlimit lim;
+
+  if (rlimits == NULL || resource < 0 || resource >= RLIMIT_NLIMITS)
     {
       errno = EINVAL;
       return -1;
     }
 
-  switch (resource)
-    {
-    default:
-      errno = EINVAL;
-      return -1;
+  lim = *rlimits;
+  if (lim->rlim_cur > lim->rlim_max)
+    lim->rlim_cur = lim->rlim_max;
 
-    case RLIMIT_CORE:
-      rlimits->rlim_cur = _hurd_core_limit;
-      rlimits->rlim_max = RLIM_INFINITY;
-      break;
-
-    case RLIMIT_DATA:
-      rlimits->rlim_cur = _hurd_data_end;
-      rlimits->rlim_max = RLIM_INFINITY;
-      break;
-
-    case RLIMIT_OFILE:
-      {
-	int lim;
-	HURD_CRITICAL_BEGIN;
-	__mutex_lock (&_hurd_dtable_lock);
-	lim = _hurd_dtable_rlimit;
-	__mutex_unlock (&_hurd_dtable_lock);
-	HURD_CRITICAL_END;
-	rlimits->rlim_cur = lim;
-	rlimits->rlim_max = RLIM_INFINITY;
-	break;
-      }
-
-    case RLIMIT_CPU:
-    case RLIMIT_FSIZE:
-    case RLIMIT_STACK:
-    case RLIMIT_RSS:
-      errno = ENOSYS;
-      return -1;
-    }
+  __mutex_lock (&_hurd_rlimit_lock);
+  _hurd_rlimits[resource] = lim;
+  __mutex_unlock (&_hurd_rlimit_lock);
 
   return 0;
 }
