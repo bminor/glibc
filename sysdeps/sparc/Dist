@@ -1,3 +1,3 @@
 DEFS.h
 mul.S umul.S
-divrem.m4 div.S udiv.S rem.S urem.S
+divrem.m4 sdiv.S udiv.S rem.S urem.S
