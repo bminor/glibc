@@ -22,7 +22,10 @@ Cambridge, MA 02139, USA.  */
 #define GETPORT \
   mach_port_t *portloc = \
     (mach_port_t *) __hurd_threadvar_location (_HURD_THREADVAR_MIG_REPLY)
-#define reply_port *portloc
+#define reply_port (use_threadvar ? *portloc : global_reply_port)
+
+static int use_threadvar;
+static mach_port_t global_reply_port;
 
 /* These functions are called by MiG-generated code.  */
 
@@ -53,12 +56,19 @@ __mig_dealloc_reply_port (void)
 }
 
 
-/* Called at startup with CPROC == NULL.  cthreads has a different version
-   of this function that is sometimes called with a `cproc_t' pointer.  */
+/* Called at startup with CPROC == NULL.  When per-thread variables are set
+   up, this is called again with CPROC a non-null value.  */
 void
 __mig_init (void *cproc)
 {
   GETPORT;
+  
+  use_threadvar = cproc != 0;
 
-  reply_port = MACH_PORT_NULL;
+  if (use_threadvar)
+    {
+      /* Recycle the reply port used before multithreading was enabled.  */
+      *portloc = global_reply_port;
+      global_reply_port = MACH_PORT_NULL;
+    }
 }
