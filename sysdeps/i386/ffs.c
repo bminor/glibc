@@ -34,8 +34,8 @@ DEFUN(ffs, (x), int x)
   asm ("xorl %0,%0\n"		/* Set CNT to zero.  */
        "bsfl %2,%1\n"		/* Count low bits in X and store in %1.  */
        "jz nonzero\n"		/* Jump if OK, i.e. X was non-zero.  */
-       "leal 1(%3),%0\n"	/* Return bsfl-result plus one on %0.  */
-       "nonzero:" : "=&a" (cnt), "=r" (tmp) : "rm" (x), "1" (tmp));
+       "leal 1(%1),%0\n"	/* Return bsfl-result plus one on %0.  */
+       "nonzero:" : "=&a" (cnt), "=r" (tmp) : "rm" (x));
 
   return cnt;
 }
