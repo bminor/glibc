@@ -60,7 +60,9 @@ include $(common-objpfx)param.h.dep
 
 # Don't preempt our own headers. 
 sys/param.h-includes := \
-  $(filter-out $(wildcard $(addprefix $(..),$(sys/param.h-includes))),\
+  $(filter-out $(patsubst $(..)%,%,\
+			  $(wildcard $(addprefix $(..),\
+				     $(sys/param.h-includes)))),\
 	       $(sys/param.h-includes))
 
 sysdep_headers := $(sysdep_headers) $(sys/param.h-includes)
