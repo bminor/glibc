@@ -1,7 +1,4 @@
-#if 1
-#include <sysdeps/stub/sysd-stdio.c>
-#else
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -38,14 +35,13 @@ DEFUN(__stdio_read, (cookie, buf, n),
   error_t err;
   char *bufp = buf;
 
-  if (err = __io_read ((io_t) cookie, /* XXX ctty */,
-		       &bufp, &nread, -1, n))
+  if (err = __io_read ((io_t) cookie, &bufp, &nread, -1, n))
     return __hurd_fail (err);
 
   if (bufp != buf)
     {
       memcpy (buf, bufp, nread);
-      __vm_deallocate (bufp, nread);
+      __vm_deallocate ((vm_address_t) bufp, (vm_size_t) nread);
     }
 
   return nread;
@@ -60,8 +56,7 @@ DEFUN(__stdio_write, (cookie, buf, n),
   size_t wrote;
   error_t err;
 
-  if (err = __io_write ((io_t) cookie, /* XXX ctty */,
-			buf, n, -1, &wrote))
+  if (err = __io_write ((io_t) cookie, buf, n, -1, &wrote))
     return __hurd_fail (err);
 
   return wrote;
@@ -85,48 +80,40 @@ DEFUN(__stdio_seek, (cookie, pos, whence),
 int
 DEFUN(__stdio_close, (cookie), PTR cookie)
 {
-  if (__mach_port_deallocate (__mach_task_self (), (mach_port_t) cookie))
-    {
-      errno = EINVAL;		/* ? */
-      return -1;
-    }
+  error_t error = __mach_port_deallocate (__mach_task_self (),
+					  (mach_port_t) cookie);
+  if (error)
+    return __hurd_fail (error);
   return 0;
 }
 
 
-/* Open FILENAME with the mode in M.
-   Return the magic cookie associated with the opened file
-   or NULL which specifies that an integral descriptor may be
-   found in *FDPTR.  This descriptor is negative for errors.  */
-PTR
-DEFUN(__stdio_open, (filename, m, fdptr),
-      CONST char *filename AND __io_mode m AND int *fdptr)
+/* Open FILENAME with the mode in M.  */
+int
+DEFUN(__stdio_open, (filename, m, cookieptr),
+      CONST char *filename AND __io_mode m AND PTR *cookieptr)
 {
-  int error;
+  error_t error;
   int flags;
   file_t file;
 
   flags = 0;
   if (m.__read)
-    flags |= FS_LOOKUP_READ;
+    flags |= O_READ;
   if (m.__write)
-    flags |= FS_LOOKUP_WRITE;
+    flags |= O_WRITE;
   if (m.__append)
-    flags |= FS_LOOKUP_APPEND;
+    flags |= O_APPEND;
   if (m.__create)
-    flags |= FS_LOOKUP_CREATE;
+    flags |= O_CREAT;
   if (m.__truncate)
-    flags |= FS_LOOKUP_TRUNCATE;
+    flags |= O_TRUNC;
   if (m.__exclusive)
-    flags |= FS_LOOKUP_EXCL;
+    flags |= OEXCL;
 
-  file = __path_lookup (filename, flags, 0666 & ~_hurd_umask);
-  if (file == MACH_PORT_NULL)
-    {
-      *fdptr = -1;
-      return NULL;
-    }
-  return (PTR) file;
+  error = __hurd_path_lookup (filename, flags, 0666 & ~_hurd_umask,
+			     (file_t *) cookieptr);
+  return error ? __hurd_fail (error) : 0;
 }
 
 
@@ -139,42 +126,35 @@ DEFUN(__stdio_errmsg, (msg, len), CONST char *msg AND size_t len)
   size_t wrote;
 
   server = __getdport (2);
-  __io_write (server, 0, 0, 0,	/* XXX ctty? */
-	      buf, n, -1, &wrote);
+  __io_write (server, buf, n, -1, &wrote);
   __mach_port_deallocate (__mach_task_self (), server);
 }
-
-
-/* Generate a (hopefully) unique temporary filename
-   in DIR (if applicable), using prefix PFX.
-   If DIR_SEARCH is nonzero, perform directory searching
-   malarky as per the SVID for tempnam.
-   Return the generated filename or NULL if one could not
-   be generated, putting the length of the string in *LENPTR.  */
-char *
-DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr),
-      CONST char *dir AND CONST char *pfx AND
-      int dir_search AND size_t *lenptr)
+
+/* Return the POSIX.1 file descriptor associated with COOKIE,
+   or -1 for errors.  If COOKIE does not relate to any POSIX.1 file
+   descriptor, this should return -1 with errno set to EOPNOTSUPP.  */
+int
+DEFUN(__stdio_fileno, (cookie), PTR cookie)
 {
-  char *name;
-  error_t err;
-  static file_t tmpserv = MACH_PORT_NULL;
-
-  if (tmpserv == MACH_PORT_NULL)
-    {
-      tmpserv = __path_lookup (_SERVERS_TMPFILE, 0, 0);
-      if (tmpserv == MACH_PORT_NULL)
-	return NULL;
-    }
-
-  if (err = __tmpfile_generate_name (tmpserv, dir, pfx, getenv ("TMPDIR"),
-				     &name, lenptr))
-    {
-      errno = __hurd_errno (err);
-      return NULL;
-    }
-  return name;
+  errno = ENOSYS;
+  return -1;
 }
+
+#ifdef notready
+#define __stdio_read	__stdio_fd_read
+#define __stdio_write	__stdio_fd_write
+#define __stdio_seek	__stdio_fd_seek
+#define __stdio_close	__stdio_fd_close
+#define __stdio_open	__stdio_fd_open
+#include <sysdeps/posix/sysd-stdio.c>
+
+static const __io_functions fd_io_funcs =
+  {
+    __read: __stdio_fd_read,
+    __write: __stdio_fd_write,
+    __seek: __stdio_fd_seek,
+    __close: __stdio_fd_close,
+  };
 
 /* XXX _hurd_fork_hook to install stream ports.  */
 
@@ -195,4 +175,4 @@ fork_stdio (task_t newtask)
 	  return err;
       }
 }
-#endif /* 1 */
+#endif
