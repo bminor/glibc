@@ -35,12 +35,14 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
   struct hurd_userlink dtable_ulink, ulink, ctty_ulink;
   int flags;
 
+  HURD_CRITICAL_BEGIN;
+
   /* Extract the ports and flags from FD.  */
   d = _hurd_fd_get (fd, &dtable_ulink); /* Locks D.d.  */
   if (d.d == NULL)
     {
       errno = EBADF;
-      return -1;
+      goto earlyout;
     }
 
   if (fd2 == fd)
@@ -103,6 +105,9 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
 
  out:
   _hurd_fd_free (d, &dtable_ulink);
+
+ earlyout:
+  HURD_CRITICAL_END;
 
   return fd2;
 }
