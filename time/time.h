@@ -159,9 +159,9 @@ extern void __tzset __P ((void));
 /* Same as above.  */
 extern char *tzname[2];
 
-/* Maximum length of a timezone name.
-   This is interrogated with `sysconf (_SC_TZNAME_MAX)'.  */
-extern long int __tzname_max;
+/* Return the maximum length of a timezone name.
+   This is what `sysconf (_SC_TZNAME_MAX)' does.  */
+extern long int __tzname_max __P ((void));
 
 extern void tzset __P ((void));
 #ifdef	__OPTIMIZE__
