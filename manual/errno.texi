@@ -272,7 +272,9 @@ with passing the wrong argument to a library function.
 @comment errno.h
 @comment POSIX.1: Too many open files in system
 @deftypevr Macro int ENFILE
-There are too many files open in the entire system.
+There are too many distinct file openings in the entire system.  Note
+that any number of linked channels count as just one file opening; see
+@ref{Linked Channels}.
 @c !!! this will never happen in GNU; EMFILE or ENOMEM instead.
 @c ??? I'm not sure it is a good thing to return ENOMEM
 @c ??? in a case where programmers have been told to expect ENFILE--rms.
@@ -282,6 +284,7 @@ There are too many files open in the entire system.
 @comment POSIX.1: Too many open files
 @deftypevr Macro int EMFILE
 The current process has too many files open and can't open any more.
+Duplicate descriptors do count toward this limit.
 @c !!! In 4.4BSD and GNU, the number of open files is a resource limit
 @c set with setrlimit.
 @end deftypevr
