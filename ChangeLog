@@ -1,5 +1,7 @@
 1999-07-15  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdio-common/bug1.c: Include <stdlib.h> to get prototype for free.
+
 	* malloc/mallo.c: Add missing chunk of patch from 1999-07-04.
 
 	* stdio-common/bug1.c: Avoid memory leak.
