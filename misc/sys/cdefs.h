@@ -58,7 +58,8 @@ Cambridge, MA 02139, USA.  */
 #define	__CONCAT(x,y)	x ## y
 #define	__STRING(x)	#x
 
-typedef void *__ptr_t;
+/* This is not a typedef so `const __ptr_t' does the right thing.  */
+#define __ptr_t void *
 typedef long double __long_double_t;
 
 #else
@@ -66,7 +67,7 @@ typedef long double __long_double_t;
 #define	__CONCAT(x,y)	x/**/y
 #define	__STRING(x)	"x"
 
-typedef char *__ptr_t;
+#define __ptr_t char *
 typedef double __long_double_t;
 
 #endif
