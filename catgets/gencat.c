@@ -264,16 +264,13 @@ read_input_file (struct catalog *current, const char *fname)
   /* If we haven't seen anything yet, allocate result structure.  */
   if (current == NULL)
     {
-      current = (struct catalog *) xmalloc (sizeof (*current));
-
-      current->all_sets = NULL;
-      current->total_messages = 0;
-      current->last_set = 0;
-      current->current_set = find_set (current, NL_SETD);
+      current = (struct catalog *) xcalloc (1, sizeof (*current));
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
       obstack_init (&current->mem_pool);
+
+      current->current_set = find_set (current, NL_SETD);
     }
 
   buf = NULL;
@@ -866,10 +863,8 @@ find_set (struct catalog *current, int number)
       result = result->next;
 
   /* Prepare new message set.  */
-  result = (struct set_list *) xmalloc (sizeof (*result));
+  result = (struct set_list *) xcalloc (1, sizeof (*result));
   result->number = number;
-  result->deleted = 0;
-  result->messages = NULL;
   result->next = current->all_sets;
   current->all_sets = result;
 
