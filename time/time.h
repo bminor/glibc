@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -135,12 +135,8 @@ extern struct tm *localtime __P ((__const time_t * __timer));
 
 /* Return the `struct tm' representation of *TIMER,
    offset OFFSET seconds east of Universal Coordinated Time.  */
-extern struct tm *__offtime __P ((__const time_t * __timer, long int __offset));
-
-#ifdef	__OPTIMIZE__
-#define	gmtime(timer)	__offtime((timer), 0L)
-#endif /* Optimizing.  */
-
+extern struct tm *__offtime __P ((__const time_t * __timer,
+				  long int __offset));
 
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */
