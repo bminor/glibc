@@ -28,7 +28,8 @@ int
 DEFUN(__symlink, (from, to), CONST char *from AND CONST char *to)
 {
   error_t err;
-  file_t node;
+  file_t dir, node;
+  char *name;
   const size_t len = strlen (to) + 1;
   char buf[sizeof (_HURD_SYMLINK) + len];
 
@@ -37,16 +38,24 @@ DEFUN(__symlink, (from, to), CONST char *from AND CONST char *to)
   memcpy (buf, _HURD_SYMLINK, sizeof (_HURD_SYMLINK));
   memcpy (&buf[sizeof (_HURD_SYMLINK)], to, len);
 
-  node = __path_lookup (to, O_WRITE|O_CREAT|O_EXCL, 0777 & _hurd_umask);
-  if (node == MACH_PORT_NULL)
+  dir = __path_split (to, &name);
+  if (dir == MACH_PORT_NULL)
     return -1;
 
-  err = __file_set_translator (node, FS_TRANS_EXCL, 0,
-			       buf, sizeof (_HURD_SYMLINK) + len,
-			       MACH_PORT_NULL);
+  /* Create a new, unlinked node in the target directory.  */
+  err = __dir_mkfile (dir, O_WRITE, 0777 & _hurd_umask, &node);
 
-  /* XXX can leave half-finished file */
+  if (! err)
+    /* Set the node's translator to make it a symlink.  */
+    err = __file_set_translator (node, FS_TRANS_EXCL, 0,
+				 buf, sizeof (_HURD_SYMLINK) + len,
+				 MACH_PORT_NULL);
 
+  if (! err)
+    /* Link the node, now a valid symlink, into the target directory.  */
+    err = __dir_link (node, dir, name);
+
+  __mach_port_deallocate (__mach_task_self (), dir);
   __mach_port_deallocate (__mach_task_self (), node);
 
   if (err)
