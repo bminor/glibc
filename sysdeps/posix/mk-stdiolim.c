@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 int
 main()
 {
-  printf("#define L_tmpnam %u\n", sizeof("/usr/tmp") + 8);
+  printf("#define L_tmpnam %u\n", sizeof("/usr/tmp/") + 8);
   printf("#define TMP_MAX %u\n", 52 * 52 * 52);
   puts  ("#ifdef __USE_POSIX");
   printf("#define L_ctermid %u\n", sizeof("/dev/tty"));
