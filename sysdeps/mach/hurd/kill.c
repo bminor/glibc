@@ -61,11 +61,11 @@ DEFUN(__kill, (pid, sig), int pid AND int sig)
 	err = __proc_getsidport (proc, &refport);
     }
 
-  _hurd_port_free (&_hurd_proc, proc, &dealloc_proc);
+  _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], proc, &dealloc_proc);
 
   for (i = 0; i < nports; ++i)
     {
-      if (!err && signo == SIGKILL)
+      if (!err && sig == SIGKILL)
 	err = __task_terminate (refport); /* XXX */
       if (!err)
 	err = __sig_post (ports[i], sig, refport); /* XXX */
@@ -76,7 +76,8 @@ DEFUN(__kill, (pid, sig), int pid AND int sig)
     __mach_port_deallocate (__mach_task_self (), refport); /* XXX */
 
   if (ports != portbuf)
-    __vm_deallocate (__mach_task_self (), ports, nports * sizeof (ports[0]));
+    __vm_deallocate (__mach_task_self (),
+		     (vm_address_t) ports, nports * sizeof (ports[0]));
 
   return err ? __hurd_fail (err) : 0;
 }
