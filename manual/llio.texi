@@ -8,116 +8,28 @@ Streams}, as well as functions for performing low-level control operations
 for which there are no equivalents on streams.
 
 @menu
-* File Descriptors and Streams::	How the low-level facilities described
-					 here interact with the high-level
-					 I/O facilities.
 * Opening and Closing Files::		How to open and close file descriptors.
 * Input and Output Primitives::		Reading, writing, and seeking 
 					 operations.
+* File Descriptors and Streams::	How the low-level facilities described
+					 here interact with the high-level
+					 I/O facilities.
 * Waiting for Input or Output::		How to check for input or output
 					 on multiple file descriptors.
 * Control Operations on Files::		Various other operations on file
 					 descriptors.
+* Duplicating Descriptors::	        Fcntl commands for duplicating file
+					 descriptors.
+* File Descriptor Flags::		Fcntl commands for manipulating flags
+					 associated with file descriptors.
+* File Status Flags::			Fcntl commands for manipulating flags
+					 associated with open files.
+* File Locks::				Fcntl commands for implementing file
+					 locking.
+* Interrupt-Driven Input::              Getting an asynchronous signal when
+                                         input arrives.
 @end menu
 
-@node File Descriptors and Streams
-@section File Descriptors and Streams
-
-The functions described in this chapter deal with open files by means of
-integer file descriptors.  These are distinct from streams.  Streams are
-implemented in terms of file descriptors, but include additional
-information to support things like buffering of input and output, and
-error and end-of-file indicators.  A file descriptor is much more
-primitive than a stream, and has none of this associated state
-information.
-
-You can make a new stream from a file descriptor with the @code{fdopen}
-function, and get the underlying file descriptor for an existing stream
-with the @code{fileno} function.  These functions are declared in the
-header file @file{<stdio.h>}.
-
-@comment stdio.h
-@comment POSIX.1
-@deftypefun {FILE *} fdopen (int @var{filedes}, const char *@var{opentype})
-The @code{fdopen} function returns a new stream for the file descriptor
-@var{filedes}.
-
-The @var{opentype} argument is interpreted in the same way as for the
-@code{fopen} function (@pxref{Opening and Closing Streams}), except that
-the @samp{b} option is not permitted; this is because GNU makes no
-distinction between text and binary files.  Also, @code{"w"} and
-@code{"w+"} do not cause truncation of the file; these have affect only
-when opening a file, and in this case the file has already been opened.
-You must make sure that the @var{opentype} argument matches the actual
-mode of the open file descriptor.
-
-The return value is the new stream.  If the stream cannot be created
-(for example, if the modes for the file indicated by the file descriptor
-do not permit the access specified by the @var{opentype} argument), a
-null pointer is returned instead.
-@end deftypefun
-
-For an example showing the use of the @code{fdopen} function,
-@pxref{Creating a Pipe}.
-
-@comment stdio.h
-@comment POSIX.1
-@deftypefun int fileno (FILE *@var{stream})
-This function returns the file descriptor associated with the stream
-@var{stream}.  If an error is detected (for example, if the @var{stream}
-is not valid), @code{-1} is returned instead.
-@end deftypefun
-
-@cindex standard file descriptors
-There are also symbolic constants defined in @file{<unistd.h>} for the
-file descriptors belonging to the standard streams @code{stdin},
-@code{stdout}, and @code{stderr}; @pxref{Standard Streams}.
-
-@comment unistd.h
-@comment POSIX.1
-@defvr Macro STDIN_FILENO
-This macro has value @code{0}, which is the file descriptor for
-standard input.
-@end defvr
-
-@comment unistd.h
-@comment POSIX.1
-@defvr Macro STDOUT_FILENO
-This macro has value @code{1}, which is the file descriptor for
-standard output.
-@end defvr
-
-@comment unistd.h
-@comment POSIX.1
-@defvr Macro STDERR_FILENO
-This macro has value @code{2}, which is the file descriptor for
-standard error output.
-@end defvr
-
-Because you can have multiple file descriptors and streams pointing to
-the same open file, you have to be very careful about mixing operations
-on them.  
-
-The exact rules for mixing operations on streams and file descriptors
-for the same open file are complicated (you can read the POSIX.1 standard
-to find out about them), but the general idea is that you must make sure
-that any buffered input or output to a stream has been flushed before
-you start to do further i/o operations on the same open file by means of
-another file descriptor or stream.  And, you should also be aware that
-changing the file position of a file descriptor or stream can confuse
-other file descriptors and streams pointing to the same open file.
-
-It's best not to try to interleave input and output operations on file
-descriptors and streams pointing to the same open file at all.  For
-example, if you want to open a pipe (something you can only do at the
-file descriptor level) but otherwise treat the pipe like an ordinary
-file, you should use @code{fdopen} to create a stream and do all
-subsequent i/o operations on the stream instead of on the file
-descriptor.  If you want to change the input modes on a terminal device
-so that it does something nonstandard like single-character input
-without echo (@pxref{Terminal Modes}, for information on how to do
-this), then you should use the low-level i/o primitives on the file
-descriptor instead of trying to treat it as a stream.
 
 @node Opening and Closing Files
 @section Opening and Closing Files
@@ -457,6 +369,107 @@ The @code{lseek} function is the underlying primitive for the
 streams instead of file descriptors.
 @end deftypefun
 
+
+@node File Descriptors and Streams
+@section File Descriptors and Streams
+
+The functions described in this chapter deal with open files by means of
+integer file descriptors.  These are distinct from streams.  Streams are
+implemented in terms of file descriptors, but include additional
+information to support things like buffering of input and output, and
+error and end-of-file indicators.  A file descriptor is much more
+primitive than a stream, and has none of this associated state
+information.
+
+You can make a new stream from a file descriptor with the @code{fdopen}
+function, and get the underlying file descriptor for an existing stream
+with the @code{fileno} function.  These functions are declared in the
+header file @file{<stdio.h>}.
+
+@comment stdio.h
+@comment POSIX.1
+@deftypefun {FILE *} fdopen (int @var{filedes}, const char *@var{opentype})
+The @code{fdopen} function returns a new stream for the file descriptor
+@var{filedes}.
+
+The @var{opentype} argument is interpreted in the same way as for the
+@code{fopen} function (@pxref{Opening and Closing Streams}), except that
+the @samp{b} option is not permitted; this is because GNU makes no
+distinction between text and binary files.  Also, @code{"w"} and
+@code{"w+"} do not cause truncation of the file; these have affect only
+when opening a file, and in this case the file has already been opened.
+You must make sure that the @var{opentype} argument matches the actual
+mode of the open file descriptor.
+
+The return value is the new stream.  If the stream cannot be created
+(for example, if the modes for the file indicated by the file descriptor
+do not permit the access specified by the @var{opentype} argument), a
+null pointer is returned instead.
+@end deftypefun
+
+For an example showing the use of the @code{fdopen} function,
+@pxref{Creating a Pipe}.
+
+@comment stdio.h
+@comment POSIX.1
+@deftypefun int fileno (FILE *@var{stream})
+This function returns the file descriptor associated with the stream
+@var{stream}.  If an error is detected (for example, if the @var{stream}
+is not valid), @code{-1} is returned instead.
+@end deftypefun
+
+@cindex standard file descriptors
+There are also symbolic constants defined in @file{<unistd.h>} for the
+file descriptors belonging to the standard streams @code{stdin},
+@code{stdout}, and @code{stderr}; @pxref{Standard Streams}.
+
+@comment unistd.h
+@comment POSIX.1
+@defvr Macro STDIN_FILENO
+This macro has value @code{0}, which is the file descriptor for
+standard input.
+@end defvr
+
+@comment unistd.h
+@comment POSIX.1
+@defvr Macro STDOUT_FILENO
+This macro has value @code{1}, which is the file descriptor for
+standard output.
+@end defvr
+
+@comment unistd.h
+@comment POSIX.1
+@defvr Macro STDERR_FILENO
+This macro has value @code{2}, which is the file descriptor for
+standard error output.
+@end defvr
+
+Because you can have multiple file descriptors and streams pointing to
+the same open file, you have to be very careful about mixing operations
+on them.  
+
+The exact rules for mixing operations on streams and file descriptors
+for the same open file are complicated (you can read the POSIX.1 standard
+to find out about them), but the general idea is that you must make sure
+that any buffered input or output to a stream has been flushed before
+you start to do further i/o operations on the same open file by means of
+another file descriptor or stream.  And, you should also be aware that
+changing the file position of a file descriptor or stream can confuse
+other file descriptors and streams pointing to the same open file.
+
+It's best not to try to interleave input and output operations on file
+descriptors and streams pointing to the same open file at all.  For
+example, if you want to open a pipe (something you can only do at the
+file descriptor level) but otherwise treat the pipe like an ordinary
+file, you should use @code{fdopen} to create a stream and do all
+subsequent i/o operations on the stream instead of on the file
+descriptor.  If you want to change the input modes on a terminal device
+so that it does something nonstandard like single-character input
+without echo (@pxref{Terminal Modes}, for information on how to do
+this), then you should use the low-level i/o primitives on the file
+descriptor instead of trying to treat it as a stream.
+
+
 @node Waiting for Input or Output
 @section Waiting for Input or Output
 
@@ -622,22 +635,6 @@ file descriptors, such as inquiring about or setting flags describing
 the status of the file descriptor, manipulating record locks, and the
 like.  All of these operations are performed by the function @code{fcntl}.
 
-@menu
-* File Control Operations Summary::	About the @code{fcntl} function.
-* Redirecting Input and Output::	Fcntl commands for duplicating file
-					 descriptors.
-* File Descriptor Flags::		Fcntl commands for manipulating flags
-					 associated with file descriptors.
-* File Status Flags::			Fcntl commands for manipulating flags
-					 associated with open files.
-* File Locks::				Fcntl commands for implementing file
-					 locking.
-* Other File Control Commands::		Miscellaneous commands.
-@end menu
-
-@node File Control Operations Summary
-@subsection File Control Operations Summary
-
 The second argument to the @code{fcntl} function is a command that
 specifies which operation to perform.  The function and macros that name
 various flags that are used with it are declared in the header file
@@ -658,7 +655,7 @@ Briefly, here is a list of what the various commands are.
 @table @code
 @item F_DUPFD
 Duplicate the file descriptor (return another file descriptor pointing
-to the same open file).  @xref{Redirecting Input and Output}.
+to the same open file).  @xref{Duplicating Descriptors}.
 
 @item F_GETFD
 Get flags associated with the file descriptor.  @xref{File Descriptor Flags}.
@@ -683,19 +680,23 @@ Like @code{F_SETLK}, but wait for completion.  @xref{File Locks}.
 
 @item F_GETOWN
 Get process or process group ID to receive @code{SIGIO} signals.
-@xref{Other File Control Commands}.
+@xref{Interrupt-Driven Input}.
 
 @item F_SETOWN
 Set process or process group ID to receive @code{SIGIO} signals.
-@xref{Other File Control Commands}.
+@xref{Interrupt-Driven Input}.
 @end table
 @end deftypefun
 
 
-@node Redirecting Input and Output
-@subsection Redirecting Input and Output
+@node Duplicating Descriptors
+@section Duplicating Descriptors
 
+@cindex duplicating file descriptors
 @cindex redirecting input and output
+
+You can @dfn{duplicate} a file descriptor, or allocate another file
+descriptor that refers to the same open file as the original.
 The major use of duplicating a file descriptor is to implement
 @dfn{redirection} of input or output:  that is, to change the
 file or pipe that a file descriptor corresponds to.
@@ -707,6 +708,34 @@ You can perform this operation using the @code{fcntl} function with the
 The @code{fcntl} function and flags are declared in @file{<fcntl.h>},
 while prototypes for @code{dup} and @code{dup2} are in the header file
 @file{<unistd.h>}.
+
+@comment unistd.h
+@comment POSIX.1
+@deftypefun int dup (int @var{filedes})
+This function is equivalent to @code{fcntl (@var{filedes}, F_DUPFD, 0)}.
+@end deftypefun
+
+@comment unistd.h
+@comment POSIX.1
+@deftypefun int dup2 (int @var{filedes}, int @var{old_filedes})
+The call:
+
+@example
+dup2 (@var{filedes}, @var{old_filedes})
+@end example
+
+@noindent
+is equivalent to:
+
+@example
+close (@var{old_filedes});
+fcntl (@var{filedes}, F_DUPFD, @var{old_filedes})
+@end example
+
+In other words, the file previously associated with @var{old_filedes} is
+closed, and the descriptor is reassigned to point to the same open file
+as @var{filedes}.
+@end deftypefun
 
 @comment fcntl.h
 @comment POSIX.1
@@ -744,34 +773,6 @@ There are no more file descriptors available.
 @end table
 @end defvr
 
-@comment unistd.h
-@comment POSIX.1
-@deftypefun int dup (int @var{filedes})
-This function is equivalent to @code{fcntl (@var{filedes}, F_DUPFD, 0)}.
-@end deftypefun
-
-@comment unistd.h
-@comment POSIX.1
-@deftypefun int dup2 (int @var{filedes}, int @var{old_filedes})
-The call:
-
-@example
-dup2 (@var{filedes}, @var{old_filedes})
-@end example
-
-@noindent
-is equivalent to:
-
-@example
-close (@var{old_filedes});
-fcntl (@var{filedes}, F_DUPFD, @var{old_filedes})
-@end example
-
-In other words, the file previously associated with @var{old_filedes} is
-closed, and the descriptor is reassigned to point to the same open file
-as @var{filedes}.
-@end deftypefun
-
 Here is an example showing how to use @code{dup2} to do redirection.
 Typically, redirection of the standard streams (like @code{stdin}) is
 done by a shell or shell-like program before calling one of the
@@ -799,7 +800,7 @@ in the context of a pipeline of processes in @ref{Launching Jobs}.
 
 
 @node File Descriptor Flags
-@subsection File Descriptor Flags
+@section File Descriptor Flags
 
 @dfn{File descriptor flags} are miscellaneous attributes of a file
 descriptor.  These flags are associated with particular file
@@ -861,6 +862,11 @@ This flag specifies that the file descriptor should be closed when
 an @code{exec} function is invoked; @pxref{Executing a File}.  When
 a file descriptor is allocated (as with @code{open} or @code{dup}),
 this bit is initially cleared on the new file descriptor.
+
+@strong{Incomplete:}  RMS suggests putting the main entry for this
+macro with the documentation for the @code{exec} functions, with only
+a cross-reference here.  But I think the current organization makes
+more sense.
 @end defvr
 
 If you want to modify the file descriptor flags, you should get the
@@ -869,7 +875,7 @@ that the flags listed here are the only ones that are implemented.
 
 
 @node File Status Flags
-@subsection File Status Flags
+@section File Status Flags
 
 @dfn{File status flags} are used to specify more attributes of an open
 file descriptor.  Unlike the file descriptor flags discussed in
@@ -1022,14 +1028,15 @@ both read and write access.
 
 @strong{Incomplete:} @file{<fcntl.h>} also contains defines for
 @code{FREAD}, @code{FWRITE}, etc.  Mib says: ``Those are internal flags
-in the kernel.  They won't exist in the GNU system.''
+in the kernel.  They won't exist in the GNU system.''  But this can't
+be right, since apparently at least @code{FASYNC} will be supported.
 
 If you want to modify the file status flags, you should get the current
 flags with @code{F_GETFL} and modify the value.  Don't assume that the
 flags listed here are the only ones that are implemented.
 
 @node File Locks
-@subsection File Locks
+@section File Locks
 
 @cindex file locks
 @cindex record locking
@@ -1261,19 +1268,33 @@ Remember that file locks are only a @emph{voluntary} protocol for
 controlling access to a file.  There is still potential for access to
 the file by programs that don't use the lock protocol.
 
-@node Other File Control Commands
-@subsection Other File Control Commands
 
-@strong{Incomplete:} I'm confused about what these commands really do.
-Mib says that setting the foreground process group on a terminal file
-descriptor also has the effect of setting the process group to receive
-these signals.
 
-These commands are provided for compatibility with BSD Unix.  In that
-system, if you set the @code{FASYNC} flag on a file descriptor
-(@pxref{wherever}), a @code{SIGIO} signal is sent to the indicated
-process or process group.  This is also used to select a process to
-receive a @code{SIGURG} signal when data arrives on a socket.
+@node Interrupt-Driven Input
+@section Interrupt-Driven Input
+
+If you set the @code{FASYNC} status flag on a file descriptor
+(@pxref{File Status Flags}), a @code{SIGIO} signal is sent whenever
+input or output becomes possible on that file descriptor.  The process
+or process group to receive the signal can be selected by using the
+@code{F_SETOWN} command to the @code{fcntl} function.  If the file
+descriptor is a socket, this also selects the recipient of @code{SIGURG}
+signals that are delivered when out-of-band data arrives on that socket;
+@pxref{Out-of-Band Data}.
+
+@strong{Incomplete:}  If you don't call @code{F_SETOWN}, where are the
+signals delivered by default?
+
+If the file descriptor corresponds to a terminal device, then @code{SIGIO}
+signals are sent to the foreground process group of the terminal.  
+@xref{Job Control}.
+
+@strong{Incomplete:}  I don't understand.  Does setting the foreground
+process group also effectively change the ``owner''?  Does changing the
+``owner'' of a terminal with @code{fcntl} also set the foreground
+process group?  What if I specify that the ``owner'' is a process rather
+than a process group?  Or, are @code{SIGIO} signals sent to @emph{both}
+the ``owner'' and the foreground process group?
 
 These macros for the @code{fcntl} function are defined in the header
 file @file{<fcntl.h>}.
@@ -1324,3 +1345,5 @@ The @var{filedes} argument is invalid.
 There is no process or process group corresponding to @var{pid}.
 @end table
 @end defvr
+
+@strong{Incomplete:}  This section could use an example program.

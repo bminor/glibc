@@ -789,6 +789,12 @@ This bit controls whether the INTR, QUIT, and SUSP characters are
 recognized.  The functions associated with these characters are performed
 if and only if this bit is set.  Being in canonical or non-canonical
 input mode has no affect on the interpretation of these characters.
+
+You should use caution when disabling recognition of these characters.
+Programs that cannot be interrupted interactively are very
+user-unfriendly.  If you clear this bit, your program should provide
+some alternate interface that allows the user to interactively send the
+signals associated with these characters.
 @end defvr
 
 @comment termios.h
@@ -843,6 +849,7 @@ If the implementation supports @code{_POSIX_VDISABLE} for the terminal,
 you can also disable each of these functions individually by setting
 the corresponding array element to @code{_POSIX_VDISABLE}.  
 @xref{File System Parameters}, for more information about this parameter.
+
 
 @comment termios.h
 @comment POSIX.1
