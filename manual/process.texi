@@ -1,4 +1,4 @@
-@node Child Processes, Jo- Control, Process Startup, Top
+@node Child Processes, Job Control, Process Startup, Top
 @chapter Child Processes
 
 @cindex process
