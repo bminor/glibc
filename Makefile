@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -288,7 +288,12 @@ glibc-%.tar $(dist-separate:%=glibc-%-%.tar): $(files-for-dist) \
 					      $(foreach D,$(dist-separate),\
 							$D/configure)
 	@rm -fr glibc-$*
+	$(MAKE) -q `find sysdeps $(addsuffix /sysdeps,$(add-ons)) \
+			 -name configure`
 	cvs $(CVSOPTS) -Q export -d glibc-$* -r $(tag-of-stem) libc
+# Touch all the configure scripts going into the tarball since cvs export
+# might have delivered configure.in newer than configure.
+	find glibc-$* -name configure -print | xargs touch
 	$(dist-do-separate-dirs)
 	tar cf glibc-$*.tar glibc-$*
 	rm -fr glibc-$*
