@@ -1,5 +1,5 @@
 /* Generic conversion to and from ANSI_X3.110-1983.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -399,6 +399,7 @@ static const char from_ucs4[][2] =
 #define BODY \
   {									      \
     uint32_t ch = *inptr;						      \
+    int incr;								      \
 									      \
     if (ch >= 0xc1 && ch <= 0xcf)					      \
       {									      \
@@ -424,12 +425,12 @@ static const char from_ucs4[][2] =
 									      \
 	ch = to_ucs4_comb[ch - 0xc1][ch2 - 0x20];			      \
 									      \
-	inptr += 2;							      \
+	incr = 2;							      \
       }									      \
     else								      \
       {									      \
 	ch = to_ucs4[ch];						      \
-	++inptr;							      \
+	incr = 1;							      \
       }									      \
 									      \
     if (ch == 0 && *inptr != '\0')					      \
@@ -439,6 +440,7 @@ static const char from_ucs4[][2] =
 	break;								      \
       }									      \
 									      \
+    inptr += incr;							      \
     *((uint32_t *) outptr)++ = ch;					      \
   }
 #include <iconv/loop.c>
