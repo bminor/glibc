@@ -39,7 +39,7 @@ struct ttinfo
     long int offset;		/* Seconds east of GMT.  */
     unsigned char isdst;	/* Used to set tm_isdst.  */
     unsigned char idx;		/* Index into `zone_names'.  */
-    unsigned int isstd:1;	/* Transition times are standard time.  */
+    unsigned char isstd;	/* Transition times are standard time.  */
   };
 
 struct leap
