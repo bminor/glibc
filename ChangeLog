@@ -1,7 +1,39 @@
-2004-12-10  Jakub Jelinek  <jakub@redhat.com>
+2004-12-13  Ulrich Drepper  <drepper@redhat.com>
 
-	* posix/getconf.c (main): Skip over initial underscore in
-	$libexecdir/getconf/default symlink target.
+	* nss/getnssent.c (__nss_getent): Double buffer size each round to
+	avoid problems with delays for some people's huge entries.
+	* nss/getXXbyYY.c (FUNCTION_NAME): Likewise.
+
+2004-12-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/getconf.c (main): Prepend just $GETCONF_DIR/ instead of
+	$GETCONF_DIR/_ to spec.
+	* posix/confstr.c (confstr): Remove leading underscores for
+	_CS_POSIX_V6_WIDTH_RESTRICTED_ENVS.
+
+2004-12-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Fix computation of
+	mapping start.  It must take the actual pagesize into account, not
+	the alignment in the file.
+
+2004-12-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (_int_realloc): Add checks for corrupted memory.
+	(_int_free): Make clear message are result of free() calls.
+
+	* malloc/malloc.c (_int_realloc): Remove unnecessary tests for
+	oldmem and size == 0.
+
+2004-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/arena.c (arena_get2): Prevent endless loop if arenas and
+	list lock are taken.
+
+2004-12-08  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nss_nisplus/nisplus-netgrp.c (_nss_nisplus_getnetgrent_r):
+	Add check if the value is not an empty string.  [BZ #597]
 
 2004-11-29  Jakub Jelinek  <jakub@redhat.com>
 
