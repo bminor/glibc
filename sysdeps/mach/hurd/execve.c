@@ -149,12 +149,29 @@ DEFUN(__execve, (path, argv, envp),
 
   /* The information is all set up now.  Try to exec the file.  */
 
-  err = __file_exec (file, __mach_task_self (),
-		     0,
-		     args, argslen, env, envlen,
-		     dtable, dtablesize,
-		     ints, INIT_INT_MAX,
-		     ports, _hurd_nports);
+  {
+    mach_port_t please_dealloc[_hurd_nports + dtablesize], *p = please_dealloc;
+
+    /* Request the exec server to deallocate some ports from us if the exec
+       succeeds.  The init ports and descriptor ports will arrive in the
+       new program's exec_startup message.  If we failed to deallocate
+       them, the new program would have duplicate user references for them.
+       But we cannot deallocate them ourselves, because we must still have
+       them after a failed exec call.  */
+
+    for (i = 0; i < _hurd_nports; ++i)
+      *p++ = ports[i];
+    for (i = 0; i < dtablesize; ++i)
+      *p++ = dtable[i];
+
+    err = __file_exec (file, __mach_task_self (),
+		       0,
+		       args, argslen, env, envlen,
+		       dtable, dtablesize,
+		       ints, INIT_INT_MAX,
+		       ports, _hurd_nports,
+		       please_dealloc, _hurd_nports + dtablesize);
+  }
 
   /* Safe to let signals happen now.  */
   __mutex_unlock (&ss->lock);
