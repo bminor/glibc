@@ -19,6 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <hurd/port.h>
+#include <hurd/id.h>
 #include <fcntl.h>
 
 /* Test for access to FILE by our real user and group IDs.  */
@@ -27,19 +29,23 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 {
   error_t err;
   file_t crdir, cwdir, rcrdir, rcwdir, io;
-  struct _hurd_port_userlink crdir_ulink, cwdir_ulink;
+  struct hurd_userlink crdir_ulink, cwdir_ulink;
   int flags;
 
   __mutex_lock (&_hurd_id.lock);
+  /* Get _hurd_id up to date.  */
   if (err = _hurd_check_ids ())
     {
       __mutex_unlock (&_hurd_id.lock);
       return __hurd_fail (err);
     }
 
-  /* Set up _hurd_id.rid_auth.  */
   if (_hurd_id.rid_auth == MACH_PORT_NULL)
     {
+      /* Set up _hurd_id.rid_auth.  This is a special auth server port
+	 which uses the real uid and gid (the first aux uid and gid) as
+	 the only effective uid and gid.  */
+
       if (_hurd_id.aux.nuids < 1 || _hurd_id.aux.ngids < 1)
 	{
 	  /* We do not have a real UID and GID.  Lose, lose, lose!  */
@@ -62,6 +68,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 	goto lose;
     }
 
+  /* Get a port to our root directory, authenticated with the real IDs.  */
   crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink);
   err = __io_reauthenticate (crdir, _hurd_pid);
   if (!err)
@@ -74,6 +81,8 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 
   if (!err)
     {
+      /* Get a port to our current working directory, authenticated with
+         the real IDs.  */
       cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink);
       err = __io_reauthenticate (cwdir, _hurd_pid);
       if (!err)
@@ -85,14 +94,14 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
       _hurd_port_free (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink, cwdir);
     }
 
-  /* We are done with _hurd_rid_auth now.  */
+  /* We are done with _hurd_id.rid_auth now.  */
   __mutex_unlock (&_hurd_idlock);
 
   if (err)
     return __hurd_fail (err);
 
   /* Now do a path lookup on FILE, using the crdir and cwdir
-     reauthenticated with _hurd_rid_auth.  */
+     reauthenticated with _hurd_id.rid_auth.  */
 
   flags = 0;
   if (type & R_OK)
