@@ -76,6 +76,7 @@ else
 $(objpfx)munch-init.c: munch.awk munch-tmpl.c $(+subdir_inits)
 	awk -f $< subdirs='$(+init_subdirs)' $(word 2,$^) > $@-t
 	mv $@-t $@
+generated := $(generated) $(objpfx)munch-init.c
 endif
 
 aux	:= sysdep $(+init) version start
@@ -166,10 +167,14 @@ clean:
 # dependency of this target so that libc.a will be removed before the
 # subdirectories are dealt with and so they won't try to remove object
 # files from it when it's going to be removed anyway.
-	@$(MAKE) subdir_clean
+	@$(MAKE) subdir_clean no_deps=t
 
 distclean: clean
-	-rm -f $(addprefix $(objpfx),config.status config.make)
+	-rm -f $(addprefix $(objpfx),config.status config.make \
+				     sysd-Makefile sysd-dirs)
+ifdef objdir
+	-rm -f $(objpfx)Makefile
+endif
 
 .PHONY: echo_subdirs
 echo_subdirs:;@echo '$(subdirs)'
