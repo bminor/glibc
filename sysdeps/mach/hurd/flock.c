@@ -28,10 +28,9 @@ DEFUN(__flock, (fd, operation),
       int fd AND int operation)
 {
   error_t err;
-  file_t file = _hurd_dport (fd);
-  if (file == MACH_PORT_NULL)
-    return -1;
-  if (err = __file_lock (file, operation))
+
+  if (err = _HURD_DPORT_USE (fd, __file_lock (port, operation)))
     return __hurd_fail (err);
+
   return 0;
 }
