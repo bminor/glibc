@@ -527,6 +527,16 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   check(bcmp("abce", "abcd", 3) == 0, 6);	/* Count limited. */
   check(bcmp("abc", "def", 0) == 0, 8);	/* Zero count. */
 
+  {
+    char *list = "This,is,a,test", *token = NULL;
+    it = "strsep";
+    check (!strcmp ("This", strsep (&list, ",")), 1);
+    check (!strcmp ("is", strsep (&list, ",")), 2);
+    check (!strcmp ("a", strsep (&list, ",")), 3);
+    check (!strcmp ("test", strsep (&list, ",")), 4);
+    check (strsep (&list, ",") == NULL, 5);
+  }
+
   /* strerror - VERY system-dependent.  */
   {
     int f;
