@@ -1,8 +1,18 @@
+2001-12-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/zic.c: Fix handling of turnaround times.
+	Patch by Arthur David Olson <olsona@dc37a.nci.nih.gov>.
+
 2001-12-01  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/configure.in (libc_cv_gcc_unwind_find_fde): Add
 	missing backslash in test arguments.
 	* sysdeps/mach/hurd/configure: Regenerated.
+
+2001-12-02  Moshe Olshansky  <OLSHANSK@il.ibm.com>
+
+	* sysdeps/ieee754/dbl-64/e_remainder.c (__ieee754_remainder): Fix
+	overflow problem.
 
 2001-11-29  Jakub Jelinek  <jakub@redhat.com>
 
