@@ -1,22 +1,17 @@
 BEGIN {
-  FS=" \t[";
   print "#include <mach/error.h>\n#include <errorlib.h>";
   print "#define static static const"
   nsubs = split(subsys, subs);
-  for (sub in subs) printf "#includes \"%s\"\n", sub;
+  while (nsubs-- > 0) printf "#include \"%s\"\n", subs[nsubs];
   print "\n\n\
 static const struct error_system __mach_error_systems[err_max_system + 1] =";
   print "  {";
 }
-{
-  for (i = 1; i <= NF; ++i)
-    if ($i ~ /err_[a-z0-9A-Z_]+_sub/) {
-      sub = substr ($i, 0, length ($i) - 4);
-      printf "    [err_get_system (%s)] = { errlib_count (%s),\n", $i, sub;
-      printf "    \"(system %s) error with unknown subsystem\", %s },\n", 
-             sub, $i;
-      break;
-    }
+/^static.*err_[a-z0-9A-Z_]+_sub *\[/ {
+  s = $0; sub(/^.*err_/, "", s); sub(/_sub.*$/, "", s);
+  printf "    [err_get_system (%s)] = { errlib_count (%s),\n", $i, s;
+  printf "    \"(system %s) error with unknown subsystem\", %s },\n", 
+             s, $i;
 }
 END {
   print "  };";
