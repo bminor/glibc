@@ -23,8 +23,10 @@ Cambridge, MA 02139, USA.  */
    try to do anything else.  Just to be safe, deallocate the reply port so
    bogons arriving on it don't foul up future RPCs.  */
 
+#ifndef ASSEMBLER
 #include <mach/mig_support.h>
 #define FATAL_PREPARE __mig_dealloc_reply_port (MACH_PORT_NULL)
+#endif
 
 /* sysdeps/mach/MACHINE/sysdep.h should define the following macros.  */
 
