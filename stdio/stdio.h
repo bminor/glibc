@@ -105,7 +105,7 @@ typedef int __io_fileno_fn __P ((__ptr_t __cookie));
 /* User-visible names for the above.  */
 typedef __io_read_fn cookie_read_function_t;
 typedef __io_write_fn cookie_write_function_t;
-typedef __io_seek cookie_seek_function_t;
+typedef __io_seek_fn cookie_seek_function_t;
 typedef __io_close_fn cookie_close_function_t;
 typedef __io_fileno_fn cookie_fileno_function_t;
 #endif
