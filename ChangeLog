@@ -1,5 +1,8 @@
 1999-08-22  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add execve syscall.
+	Patch by Joel Klecker.
+
 	* libio/libio.h: Define documented cookie types.
 
 1999-08-22  Mark Kettenis  <kettenis@gnu.org>
