@@ -45,7 +45,7 @@ _hurd_ports_set (int which, mach_port_t newport)
   error_t err;
   if (which < 0 || which >= _hurd_nports)
     return EINVAL;
-  if (err = __mach_port_mod_refs (__mach_task_self (), new,
+  if (err = __mach_port_mod_refs (__mach_task_self (), newport,
 				  MACH_PORT_RIGHT_SEND, 1))
     return err;
   if (which >= INIT_PORT_MAX || _hurd_ports_setters[which] == NULL)
