@@ -215,7 +215,7 @@ double x,y;
 		    (double) (int) y == y)
 		  {
 		    /* Y is an integer */
-		    k = m-k*n;
+		    k = m-y*n;
 		    sx=t; tx+=(t-sx); }
 		else	{		/* if y is not an integer */    
 		    k =m;
