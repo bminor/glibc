@@ -232,7 +232,7 @@ $(all-subdirs-targets):
 
 # Subroutines of all cleaning targets.
 parent-mostlyclean: common-mostlyclean # common-mostlyclean is in Makerules.
-	-rm -f $(foreach o,$(object-suffixes),\
+	-rm -f $(foreach o,$(object-suffixes-for-libc),\
 		   $(common-objpfx)$(patsubst %,$(libtype$o),c)) \
 	       $(addprefix $(objpfx),$(install-lib))
 parent-clean: parent-mostlyclean common-clean
