@@ -1,3 +1,8 @@
+2002-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (open_verify): Correct __lseek parameters.
+	Patch by Simon Hildrew <simon@hildrew.net> [PR libc/3354].
+
 2002-04-20  Bruno Haible  <bruno@clisp.org>
 
 	* iconvdata/iso-2002-kr.c (MAX_NEEDED_FROM): Set to 4.
