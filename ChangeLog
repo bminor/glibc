@@ -1,4 +1,20 @@
+1997-05-26 23:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Net release 2.0.4.
+
+1997-05-26 22:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Use AC_PROG_CC_LOCAL instead of AC_PROC_CC.
+	* aclocal.m4: Add AC_PROG_CC_LOCAL which does not fail for
+	environments in which linking is not possible at configure time
+	(since te libc is just build).
+	Based on patches by Marcus G. Daniels <marcus@cathcart.sysc.pdx.edu>.
+
 1997-05-26 18:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/random_r.c (__initstate_r): Initialize randomizer type in
+	state array only at right place.
+	Reported by Sven Verdoolaege <skimo@breughel.ufsia.ac.be>.
 
 	* stdlib/erand48_r.c (__erand48_r): Don't generate numbers in
 	[0.5,1.0) but really in [0.0, 1.0).
