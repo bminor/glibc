@@ -776,16 +776,16 @@ by Douglas C. Schmidt.
 The memory allocation functions @code{malloc}, @code{realloc} and
 @code{free} and related code were written by Michael J. Haertel.
 
-@item
-Fast implementations of many of the string functions (@code{memcpy},
-@code{strlen}, etc.) were written by
+@comment tege's name has an umlaut.
 @tex
-Torbj\"orn
+\xdef\SETtege{Torbj\"orn Granlund}
 @end tex
 @ifinfo
-Torbjorn
+@set tege Torbjorn Granlund
 @end ifinfo
-Granlund.@refill
+@comment @item
+Fast implementations of many of the string functions (@code{memcpy},
+@code{strlen}, etc.) were written by @value{tege}.
 
 @item
 Some of the support code for Mach is taken from Mach 3.0 by CMU,
@@ -879,6 +879,12 @@ with the use or performance of this software.}
 @item
 The port to the DEC Alpha running OSF/1 (@code{alpha-dec-osf1}) was
 contributed by Brendan Kehoe, using some code written by Roland McGrath.
+
+@item
+The floating-point printing function used by @code{printf} and friends
+was written by Roland McGrath and @value{tege}.  The multi-precision
+integer functions used in that function are taken from GNU MP, which was
+contributed by @value{tege}.
 @end itemize
 
 @c @bye
