@@ -68,7 +68,7 @@ $(objpfx)stamp-summary: summary.awk $(chapters)
 $(objpfx)%.c.texi: examples/%.c
 	sed -e 's,[{}],@&,g'				\
 	    -e 's,/\*\(@.*\)\*/,\1,g'			\
-	    -e 's,/\* *\(.*\) *\*/,/* @r{\1} */,g'	\
+	    -e 's,/\*  *,/* @r{,g' -e 's,  *\*/,} */,'	\
 	    -e 's/\(@[a-z][a-z]*\)@{\([^}]*\)@}/\1{\2}/'\
 	    $< | expand > $@.new
 	mv $@.new $@
