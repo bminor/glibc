@@ -6,8 +6,13 @@ characterize the representation of the various integer and
 floating-point types supported by the GNU C library.
 
 @menu
-* Integer Representation Limits::       
-* Floating-Point Limits ::              Floating-Point Limits.
+* Integer Representation Limits::       Determining maximum and minimum
+                                         representation values of
+                                         various integer subtypes.
+* Floating-Point Limits ::              Parameters which characterize
+                                         supported floating-point
+                                         representations on a particular
+                                         system. 
 @end menu
 
 @node Integer Representation Limits, Floating-Point Limits ,  , Representation Limits
