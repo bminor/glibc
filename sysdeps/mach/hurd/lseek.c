@@ -27,16 +27,16 @@ DEFUN(__lseek, (fd, offset, whence), int fd AND off_t offset AND int whence)
   error_t err;
   io_t server;
 
-  __mutex_lock (&_hurd_dtable.lock);
+  __mutex_lock (&_hurd_dtable_lock);
   if (fd < 0 || fd >= _hurd_dtable.size ||
       _hurd_dtable.d[fd].server == MACH_PORT_NULL)
     {
-      __mutex_unlock (&_hurd_dtable.lock);
+      __mutex_unlock (&_hurd_dtable_lock);
       errno = EBADF;
       return -1;
     }
   server = _hurd_dtable.d[fd].server;
-  __mutex_unlock (&_hurd_dtable.lock);
+  __mutex_unlock (&_hurd_dtable_lock);
 
   if (err = __file_seek (server, offset, whence, &offset))
     return __hurd_fail (err);
