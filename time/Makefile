@@ -85,18 +85,19 @@ echo-zonenames: zonenames
 zones: zoneinfo
 zoneinfo: $(foreach file,$(tzfiles),$(addprefix zoneinfo/,$($(file)-zones)))
 
+zic-cmd = $(notdir $(word 2,$^))$(dir $(word 2,$^))
 define tzcompile
-$(word 2,$^) -d $(patsubst %/,%,$(word 4,$^)) -L $(word 3,$^) $<
+$(zic-cmd) -d $(patsubst %/,%,$(word 4,$^)) -L $(word 3,$^) $<
 endef
 
 ifdef localtime
 zoneinfo/localtime: zoneinfo/$(localtime) $(objpfx)zic
-	$(word 2,$^) -d zoneinfo -l $(<:zoneinfo/%=%)
+	$(zic-cmd) -d zoneinfo -l $(<:zoneinfo/%=%)
 zoneinfo: zoneinfo/localtime
 endif
 ifdef posixrules
 zoneinfo/posixrules: zoneinfo/$(posixrules) $(objpfx)zic
-	$(word 2,$^) -d zoneinfo -p $(<:zoneinfo/%=%)
+	$(zic-cmd) -d zoneinfo -p $(<:zoneinfo/%=%)
 zoneinfo: zoneinfo/posixrules
 endif
 ifneq ($(filter /%,$(localtime-file)),)
