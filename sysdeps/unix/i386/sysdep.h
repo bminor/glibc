@@ -33,7 +33,7 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 #ifdef	__STDC__
-#define	PSEUDO(name, syscall_name)					      \
+#define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   .globl syscall_error;							      \
   .align 4;								      \
@@ -44,7 +44,7 @@ Cambridge, MA 02139, USA.  */
   .byte 0x9a, 0, 0, 0, 0, 7, 0
   jb syscall_error
 #else
-#define	PSEUDO(name, syscall_name)					      \
+#define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   .globl syscall_error							      \
   .align 4								      \
