@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,4 +46,3 @@ L(pseudo_end):
 PSEUDO_END (__mmap)
 
 weak_alias (__mmap, mmap)
-weak_alias (__mmap, mmap64)
