@@ -230,9 +230,9 @@ in @ref{File System Interface}.
 @subsection File Name Resolution
 
 A file name consists of file name components separated by slash
-(@samp{/}) characters.  Multiple successive @samp{/} characters are
-equivalent to a single @samp{/} character.
-@c !!! POSIX.1 does not say foo///bar works; it does in Unix & GNU, though.
+(@samp{/}) characters.  On the systems that that GNU library supports,
+multiple successive @samp{/} characters are equivalent to a single
+@samp{/} character.
 
 @cindex file name resolution
 The process of determining what file a file name refers to is called
@@ -249,7 +249,8 @@ process; otherwise the file name resolution fails.
 If a file name begins with a @samp{/}, the first component in the file
 name is located in the @dfn{root directory} of the process.  Such a file
 name is called an @dfn{absolute file name}.
-@c !!! xref here to chroot 
+@c !!! xref here to chroot, if we ever document chroot.
+@c ??? I don't like the idea of encouraging smoking--rms.
 
 @cindex relative file name
 Otherwise, the first component in the file name is located in the
@@ -287,13 +288,13 @@ The file named @file{a}, in the parent directory of the current working
 directory.
 @end table
 
-A file name that names a directory may optionally end in a @samp{/}.  You
-can specify a file name of @file{/} to refer to the root directory, but
-you can't have an empty file name.  If you want to refer to the current
-working directory, use a file name of @file{.} or @file{./}.
-@c !!! this is inconsistent with many /s working.  an empty file name
-@c refers to the current directory.  foo///bar works only because of
-@c this.  
+@c An empty string may ``work'', but I think it's confusing to 
+@c try to describe it.  It's not a useful thing for users to use--rms.
+A file name that names a directory may optionally end in a @samp{/}.
+You can specify a file name of @file{/} to refer to the root directory,
+but the empty string is not a meaningful file name.  If you want to
+refer to the current working directory, use a file name of @file{.} or
+@file{./}.
 
 Unlike some other operating systems, the GNU system doesn't have any
 built-in support for file types (or extensions) or file versions as part
@@ -329,9 +330,7 @@ component.
 
 @item ENOENT
 This error is reported when a file referenced as a directory component
-in the file name doesn't exist.  It also is used when an empty file name
-string is supplied.
-@c !!! 2nd sentence is completely false.  an empty file name IS valid! 
+in the file name doesn't exist.
 
 @item ENOTDIR
 A file that is referenced as a directory component in the file name
