@@ -1,5 +1,8 @@
 1998-05-22  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libio/strops.c (_IO_str_underflow): Read newly available
+	character from buffer as unsigned.
+
 	* catgets/open_catalog.c (__open_catalog): Don't try to close file
 	which isn't open to preserve correct error number.
 
