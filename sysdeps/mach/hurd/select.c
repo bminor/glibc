@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,12 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   int i;
   mach_port_t port;
   int got;
+  struct _hurd_dtable dtable;
+  int dealloc_dtable; *dealloc, *types;
+  mach_port_t *ports;
+  struct _hurd_fd *cells;
+  error_t err;
+
 
   /* If we're going to bomb, do it before we acquire any locks.  */
   if (readfds != NULL)
@@ -42,11 +48,6 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
     *(volatile fd_set *) writefds;
   if (exceptfds != NULL)
     *(volatile fd_set *) exceptfds;
-
-  __mutex_lock (&_hurd_dtable.lock);
-
-  if (nfds > _hurd_dtable.size)
-    nfds = _hurd_dtable.size;
 
   if (timeout != NULL && timeout->tv_sec == 0 && timeval->tv_usec == 0)
     port = MACH_PORT_NULL;
@@ -57,8 +58,16 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 			    MACH_PORT_RIGHT_RECEIVE, &port);
     }
 
-  /* Do an io_select on each interesting FD.  */
-  got = 0;
+  dtable = _hurd_dtable_use (&dealloc_dtable);
+
+  if (nfds > _hurd_dtable.size)
+    nfds = _hurd_dtable.size;
+
+  /* Collect the ports for interesting FDs.  */
+  cells = __alloca (nfds * sizeof (*cells));
+  ports = __alloca (nfds * sizeof (*ports));
+  types = __alloca (nfds * sizeof (*types));
+  dealloc = __alloca (nfds * sizeof (*dealloc));
   for (i = 0; i < nfds; ++i)
     {
       int type = 0;
@@ -68,38 +77,38 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	type |= SELECT_WRITE;
       if (exceptfds != NULL && FD_ISSET (i, exceptfds))
 	type |= SELECT_URG;
+      types[i] = type;
       if (type)
 	{
-	  int result;
-	  error_t err = __io_select (_hurd_dtable.d[i], type, port, i,
-				     &result);
-	  if (result & (SELECT_READ|SELECT_WRITE|SELECT_URG))
+	  cells[i] = _hurd_dtable_fd (i, dtable);
+	  ports[i] = _hurd_port_locked_get (&cells[i]->port, &dealloc[i]);
+	  if (ports[i] == MACH_PORT_NULL)
 	    {
-	      if (readfds != NULL)
-		if (result & SELECT_READ)
-		  FD_SET (i, readfds);
-		else
-		  FD_CLR (i, readfds);
-	      if (writefds != NULL)
-		if (result & SELECT_WRITE)
-		  FD_SET (i, writefds);
-		else
-		  FD_CLR (i, writefds);
-	      if (exceptfds != NULL)
-		if (result & SELECT_URG)
-		  FD_SET (i, exceptfds);
-		else
-		  FD_CLR (i, exceptfds);
-	      ++got;
+	      while (i-- > 0)
+		_hurd_port_free (&cells[i]->port, &dealloc[i]);
+	      _hurd_dtable_done (dtable, &dealloc_dtable);
+	      errno = EBADF;
+	      return -1;
 	    }
 	}
     }
 
-  /* XXX Need to lock those fds so they don't change before select is done.  */
+  /* Send them all io_select calls.  */
+  got = 0;
+  err = 0;
+  for (i = 0; i < nfds; ++i)
+    if (types[i])
+      {
+	if (!err)
+	  {
+	    err = __io_select (ports[i], types[i], port, i, &types[i]);
+	    if (types[i])
+	      ++got;
+	  }
+	_hurd_port_free (&cells[i]->port, ports[i], &dealloc[i]);
+      }
 
-  __mutex_unlock (&_hurd_dtable.lock);
-
-  if (got == 0 && port != MACH_PORT_NULL)
+  if (!err && got == 0 && port != MACH_PORT_NULL)
     {
       struct
 	{
@@ -115,8 +124,8 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 				    0);
       mach_msg_option_t options = (timeval == NULL ? 0 : MACH_RCV_TIMEOUT);
     receive:
-      switch (__mach_msg (&msg, MACH_RCV_MSG | options, 0, sizeof (msg),
-			  port, timeout, MACH_PORT_NULL))
+      switch (err = __mach_msg (&msg, MACH_RCV_MSG | options, 0, sizeof (msg),
+				port, timeout, MACH_PORT_NULL))
 	{
 	case MACH_MSG_SUCCESS:
 	  {
@@ -129,21 +138,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 		(msg.result & (SELECT_READ|SELECT_WRITE|SELECT_URG)) &&
 		msg.tag >= 0 && msg.tag < nfds)
 	      {
-		if (readfds != NULL)
-		  if (msg.result & SELECT_READ)
-		    FD_SET (msg.tag, readfds);
-		  else
-		    FD_CLR (msg.tag, readfds);
-		if (writefds != NULL)
-		  if (msg.result & SELECT_WRITE)
-		    FD_SET (msg.tag, writefds);
-		  else
-		    FD_CLR (msg.tag, writefds);
-		if (exceptfds != NULL)
-		  if (msg.result & SELECT_URG)
-		    FD_SET (msg.tag, exceptfds);
-		  else
-		    FD_CLR (msg.tag, exceptfds);
+		types[i] = msg.result;
 		++got;
 		if (msg.msgh_remote_port != MACH_PORT_NULL)
 		  {
@@ -166,11 +161,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	  }
 
 	case MACH_RCV_TIMED_OUT:
-	  break;
-
-	default:
-	  errno = EIO;		/* XXX ??? */
-	  got = -1;
+	  err = 0;
 	  break;
 	}
     }
@@ -182,6 +173,31 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
        select call to use the port.  The notification might be valid,
        but the descriptor may have changed to a different server.  */
     __mach_port_destroy (port);
+
+  if (err)
+    return __hurd_fail (err);
+
+  /* Set the user bitarrays.  */
+  for (i = 0; i < nfds; ++i)
+    if (types[i] & (SELECT_READ|SELECT_WRITE|SELECT_URG))
+      {
+	if (readfds != NULL)
+	  if (types[i] & SELECT_READ)
+	    FD_SET (i, readfds);
+	  else
+	    FD_CLR (i, readfds);
+	if (writefds != NULL)
+	  if (types[i] & SELECT_WRITE)
+	    FD_SET (i, writefds);
+	  else
+	    FD_CLR (i, writefds);
+	if (exceptfds != NULL)
+	  if (types[i] & SELECT_URG)
+	    FD_SET (i, exceptfds);
+	  else
+	    FD_CLR (i, exceptfds);
+	++got;
+      }
 
   return got;
 }
