@@ -219,7 +219,10 @@ represents the minimum number of streams that the implementation
 guarantees can be open simultaneously.  You might be able to open more
 than this many streams, but that is not guaranteed.  The value of this
 constant is at least eight, which includes the three standard streams
-@code{stdin}, @code{stdout}, and @code{stderr}.
+@code{stdin}, @code{stdout}, and @code{stderr}.  In POSIX.1 systems this
+value is determined by the @code{OPEN_MAX} parameter; @pxref{General
+Limits}.  In BSD and GNU, it is controlled by the @code{RLIMIT_NOFILE}
+resource limit; @pxref{Limits on Resources}.
 @end deftypevr
 
 @comment stdio.h
