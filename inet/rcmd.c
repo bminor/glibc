@@ -390,7 +390,7 @@ __ivaliduser(hostf, raddr, luser, ruser)
 	size_t bufsize = 0;
 	ssize_t nread;
 
-	while ((nread = getline (&buf, &bufsize, hostf)) > 0) {
+	while ((nread = __getline (&buf, &bufsize, hostf)) > 0) {
 		buf[bufsize - 1] = '\0'; /* Make sure it's terminated.  */
 		p = buf;
 		while (*p != '\n' && *p != ' ' && *p != '\t' && *p != '\0') {
