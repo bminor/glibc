@@ -1,3 +1,8 @@
+2002-05-16  Bruno Haible  <bruno@clisp.org>
+
+	* MakeTAGS (libc.pot): Don't sort the output.
+	* po/header.pot: Update to match xgettext 0.11 output.
+
 2002-05-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/sparc/fpu/bits/mathinline.h (fdim): Add __THROW.
