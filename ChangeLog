@@ -1,5 +1,7 @@
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/execvp.c: Allocate array name of correct size.
+
 	* sysdeps/unix/sysv/linux/sys/sendfile.h: Don't allow use with
 	_FILE_OFFSET_BITS=64.
 
