@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -13,10 +13,10 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* 
+/*
  *	ANSI Standard: 4.1.3 Errors	<errno.h>
  */
 
@@ -25,11 +25,14 @@ Cambridge, MA 02139, USA.  */
 #define	_ERRNO_H	1
 #include <features.h>
 
+__BEGIN_DECLS
+
 /* Get the error number constants.  */
 #include <errnos.h>
 
 /* Declare the `errno' variable.  */
-extern VOLATILE int errno;
+extern __volatile int errno;
 
+__END_DECLS
 
-#endif	/* errno.h	*/
+#endif /* errno.h	*/
