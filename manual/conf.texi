@@ -263,7 +263,7 @@ the system.
 @strong{Usage Note:} You can use this macro to tell whether a POSIX.1
 system library supports POSIX.2 as well.  Any POSIX.1 system contains
 @file{unistd.h}, so include that file and then test @code{defined
-(_POSIX2_VERSION)}.
+(_POSIX2_C_VERSION)}.
 @end deftypevr
 
 @node Sysconf
