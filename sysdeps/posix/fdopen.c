@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -65,8 +65,7 @@ DEFUN(fdopen, (fd, mode), int fd AND CONST char *mode)
   if (stream == NULL)
     return NULL;
 
-  stream->__fileno = fd;
-  stream->__cookie = (PTR) &stream->__fileno;
+  stream->__cookie = (PTR) fd;
   stream->__mode = m;
 
   return stream;
