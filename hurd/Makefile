@@ -28,7 +28,7 @@ headers = hurd.h $(interface-headers)
 distribute := intr_rpc.awk hurdintr.awk
 
 user-interfaces		:= $(addprefix hurd/,\
-				       auth process startup msg \
+				       auth process startup msg msg_reply \
 				       exec core interrupt \
 				       fs fsys io term socket )
 server-interfaces	:= hurd/msg
