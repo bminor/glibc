@@ -537,7 +537,7 @@ Here is an example showing how to create and name a socket in the file
 namespace.
 
 @example
-@include makefsock.c.texi
+@include mkfsock.c.texi
 @end example
 
 @node Internet Namespace
@@ -1329,14 +1329,14 @@ Internet address, this example specifies @code{INADDR_ANY} as the host
 address; the system replaces that with the machine's actual address.
 
 @example
-@include makeisock.c.texi
+@include mkisock.c.texi
 @end example
 
 Here is another example, showing how you can fill in a @code{sockaddr_in}
 structure, given a host name string and a port number:
 
 @example
-@include isockaddr.c.texi
+@include isockadr.c.texi
 @end example
 
 @node Misc Namespaces
@@ -1980,7 +1980,7 @@ particularly interesting once it has connected to the server; it just
 sends a text string to the server and exits.
 
 @example
-@include inetclient.c.texi
+@include inetcli.c.texi
 @end example
 
 @node Server Example
@@ -2003,7 +2003,7 @@ This program uses @code{make_socket} and @code{init_sockaddr} to set
 up the socket address; see @ref{Inet Example}.
 
 @example
-@include inetserver.c.texi
+@include inetsrv.c.texi
 @end example
 
 @node Out-of-Band Data
@@ -2313,7 +2313,7 @@ Obviously, this isn't a particularly useful program, but it does show
 the general ideas involved.
 
 @example
-@include fileserver.c.texi
+@include filesrv.c.texi
 @end example
 
 @node Example Receiver
@@ -2329,7 +2329,7 @@ connection state, the only way the server can do this is by
 referencing the name of the client.
 
 @example
-@include fileclient.c.texi
+@include filecli.c.texi
 @end example
 
 Keep in mind that datagram socket communications are unreliable.  In
