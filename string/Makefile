@@ -21,14 +21,15 @@
 #
 subdir	:= string
 
-headers	:= string.h strings.h bstring.h memory.h endian.h
+headers	:= string.h strings.h memory.h endian.h
 
 routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
 		   strerror strlen strncat strncmp strncpy strpbrk	\
 		   strrchr strsignal strspn strstr strtok strxfrm	\
 		   __memccpy memchr memcmp memmove memset  		\
 		   bcopy bzero ffs stpcpy strcasecmp strncase		\
-		   rindex index bcmp memccpy memcpy wordcopy strsep
+		   rindex index bcmp memccpy memcpy wordcopy strsep	\
+		   swab
 
 tests		:= tester testcopy
 distribute	:= memcopy.h
