@@ -234,6 +234,14 @@ extern int __execve __P ((__const char *__path, char *__const __argv[],
 extern int execve __P ((__const char *__path, char *__const __argv[],
 			char *__const __envp[]));
 
+#ifdef __USE_GNU
+/* Execute the file FD refers to, overlaying the running program image.
+   ARGV and ENVP are passed to the new program, as for `execve'.  */
+extern int fexecve __P ((int __fd,
+			 char *const __argv[], char *const __envp[]));
+
+#endif
+
 
 /* Execute PATH with arguments ARGV and environment from `environ'.  */
 extern int execv __P ((__const char *__path, char *__const __argv[]));
