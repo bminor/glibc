@@ -1,3 +1,16 @@
+1999-12-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add
+	truncate64, ftruncate64, fstat64, lstat64, stat64 and mmap2.
+	Remove ugetrlimit.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/mmap64.c: New file.
+
+1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/ftruncate64.c: New file.
+	* sysdeps/unix/sysv/linux/truncate64.c: New file.
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: New file.
+
 1999-12-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/pread.c: Define __libc_* variant for
