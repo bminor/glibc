@@ -74,8 +74,8 @@ typedef struct
 
 /* Read NBYTES bytes from COOKIE into a buffer pointed to by BUF.
    Return number of bytes read.  */
-typedef __ssize_t __io_read __P ((__ptr_t __cookie, char *__buf,
-				  size_t __nbytes));
+typedef __ssize_t __io_read_fn __P ((__ptr_t __cookie, char *__buf,
+				     size_t __nbytes));
 
 /* Write N bytes pointed to by BUF to COOKIE.  Write all N bytes
    unless there is an error.  Return number of bytes written, or -1 if
@@ -83,8 +83,8 @@ typedef __ssize_t __io_read __P ((__ptr_t __cookie, char *__buf,
    opened for append (__mode.__append set), then set the file pointer
    to the end of the file and then do the write; if not, just write at
    the current file pointer.  */
-typedef __ssize_t __io_write __P ((__ptr_t __cookie, __const char *__buf,
-				   size_t __n));
+typedef __ssize_t __io_write_fn __P ((__ptr_t __cookie, __const char *__buf,
+				      size_t __n));
 
 /* Move COOKIE's file position to *POS bytes from the
    beginning of the file (if W is SEEK_SET),
@@ -92,23 +92,23 @@ typedef __ssize_t __io_write __P ((__ptr_t __cookie, __const char *__buf,
    or the end of the file (if W is SEEK_END).
    Set *POS to the new file position.
    Returns zero if successful, nonzero if not.  */
-typedef int __io_seek __P ((__ptr_t __cookie, fpos_t *__pos, int __w));
+typedef int __io_seek_fn __P ((__ptr_t __cookie, fpos_t *__pos, int __w));
 
 /* Close COOKIE.  */
-typedef int __io_close __P ((__ptr_t __cookie));
+typedef int __io_close_fn __P ((__ptr_t __cookie));
 
 /* Return the file descriptor associated with COOKIE,
    or -1 on error.  There need not be any associated file descriptor.  */
-typedef int __io_fileno __P ((__ptr_t __cookie));
+typedef int __io_fileno_fn __P ((__ptr_t __cookie));
 
 /* Low level interface, independent of FILE representation.  */
 typedef struct
 {
-  __io_read *__read;		/* Read bytes.  */
-  __io_write *__write;		/* Write bytes.  */
-  __io_seek *__seek;		/* Seek/tell file position.  */
-  __io_close *__close;		/* Close file.  */
-  __io_fileno *__fileno;	/* Return file descriptor.  */
+  __io_read_fn *__read;		/* Read bytes.  */
+  __io_write_fn *__write;		/* Write bytes.  */
+  __io_seek_fn *__seek;		/* Seek/tell file position.  */
+  __io_close_fn *__close;		/* Close file.  */
+  __io_fileno_fn *__fileno;	/* Return file descriptor.  */
 } __io_functions;
 
 /* Higher level interface, dependent on FILE representation.  */
@@ -125,7 +125,7 @@ extern __const __room_functions __default_room_functions;
 
 
 /* Default close function.  */
-extern __io_close __stdio_close;
+extern __io_close_fn __stdio_close;
 /* Open FILE with mode M, store cookie in *COOKIEPTR.  */
 extern int __stdio_open __P ((__const char *__file, __io_mode __m,
 			      __ptr_t *__cookieptr));
