@@ -1,24 +1,23 @@
 /* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
+This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
 published by the Free Software Foundation; either version 2 of the
 License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
+This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+License along with this library; see the file COPYING.LIB.  If
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* IGNORE(@ */
+/* @ */
 #include <ansidecl.h>
-/* @) */
+/* @ */
 
 #include <glob.h>
 #include <fnmatch.h>
@@ -98,17 +97,17 @@ extern int errno;
 #include <string.h>
 #ifndef	POSIX
 #include <memory.h>
-#endif	/* Not POSIX.  */
+#endif /* Not POSIX.  */
 #define STDC_STRINGS
-#else	/* Not USG.  */
+#else /* Not USG.  */
 #ifdef	NeXT
 #include <string.h>
-#else	/* Not NeXT.  */
+#else /* Not NeXT.  */
 #include <strings.h>
-#endif	/* NeXT.  */
+#endif /* NeXT.  */
 /* Declaring bcopy causes errors on systems whose declarations are different.
    If the declaration is omitted, everything works fine.  */
-#endif	/* Not USG.  */
+#endif /* Not USG.  */
 
 extern char *malloc ();
 extern char *realloc ();
@@ -127,11 +126,12 @@ my_realloc (p, n)
     return malloc (n);
   return realloc (p, n);
 }
+
 #define	realloc	my_realloc
 
 #define	strcoll	strcmp
 
-#endif	/* Not STDC_HEADERS or __GNU_LIBRARY__.  */
+#endif /* Not STDC_HEADERS or __GNU_LIBRARY__.  */
 
 #ifndef	STDC_STRINGS
 #define	memcpy(d, s, n)	bcopy((s), (d), (n))
@@ -148,7 +148,7 @@ my_realloc (p, n)
 #else /* Not GCC.  */
 #ifdef	sparc
 #include <alloca.h>
-#else	/* Not sparc.  */
+#else /* Not sparc.  */
 extern char *alloca ();
 #endif /* sparc.  */
 #endif /* GCC.  */
@@ -162,13 +162,13 @@ extern char *alloca ();
 #define	size_t	unsigned int
 #endif
 
-static int EXFUN(glob_pattern_p, (CONST char *pattern, int quote));
-static int EXFUN(glob_in_dir, (CONST char *pattern, CONST char *directory,
-			       int flags,
-			       int EXFUN((*errfunc), (CONST char *, int)),
-			       glob_t *pglob));
-static int EXFUN(prefix_array, (CONST char *prefix, char **array, size_t n));
-static int EXFUN(collated_compare, (CONST PTR, CONST PTR));
+static int glob_pattern_p __P ((const char *pattern, int quote));
+static int glob_in_dir __P ((const char *pattern, const char *directory,
+			     int flags,
+			     int (*errfunc) __P ((const char *, int)),
+			     glob_t * pglob));
+     static int prefix_array __P ((const char *prefix, char **array, size_t n));
+     static int collated_compare __P ((const __ptr_t, const __ptr_t));
 
 /* Do glob searching for PATTERN, placing results in PGLOB.
    The bits defined above may be set in FLAGS.
@@ -178,13 +178,14 @@ static int EXFUN(collated_compare, (CONST PTR, CONST PTR));
    `glob' returns GLOB_ABEND; if it returns zero, the error is ignored.
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
-int
-DEFUN(glob, (pattern, flags, errfunc, pglob),
-      CONST char *pattern AND int flags AND
-      int EXFUN((*errfunc), (CONST char *, int)) AND
-      glob_t *pglob)
+     int
+       glob (pattern, flags, errfunc, pglob)
+     const char *pattern;
+     int flags;
+     int (*errfunc) __P ((const char *, int));
+     glob_t *pglob;
 {
-  CONST char *filename;
+  const char *filename;
   char *dirname;
   size_t dirlen;
   int status;
@@ -197,7 +198,7 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
     }
 
   /* Find the filename.  */
-  filename = strrchr(pattern, '/');
+  filename = strrchr (pattern, '/');
   if (filename == NULL)
     {
       filename = pattern;
@@ -214,8 +215,8 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
   else
     {
       dirlen = filename - pattern;
-      dirname = (char *) __alloca(dirlen + 1);
-      memcpy(dirname, pattern, dirlen);
+      dirname = (char *) __alloca (dirlen + 1);
+      memcpy (dirname, pattern, dirlen);
       dirname[dirlen] = '\0';
       ++filename;
     }
@@ -223,9 +224,9 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
   if (filename[0] == '\0' && dirlen > 1)
     /* "pattern/".  Expand "pattern", appending slashes.  */
     {
-      int ret = glob (dirname, flags|GLOB_MARK, errfunc, pglob);
+      int ret = glob (dirname, flags | GLOB_MARK, errfunc, pglob);
       if (ret == 0)
-	pglob->gl_flags = (pglob->gl_flags &~ GLOB_MARK) | (flags & GLOB_MARK);
+	pglob->gl_flags = (pglob->gl_flags & ~GLOB_MARK) | (flags & GLOB_MARK);
       return ret;
     }
 
@@ -245,7 +246,7 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
       glob_t dirs;
       register int i;
 
-      status = glob (dirname, ((flags & (GLOB_ERR|GLOB_NOCHECK|GLOB_NOESCAPE))|
+      status = glob (dirname, ((flags & (GLOB_ERR | GLOB_NOCHECK | GLOB_NOESCAPE)) |
 			       GLOB_NOSORT),
 		     errfunc, &dirs);
       if (status != 0)
@@ -270,7 +271,7 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
 		return GLOB_ABEND;
 	      }
 	  }
-#endif	/* SHELL.  */
+#endif /* SHELL.  */
 
 	  oldcount = pglob->gl_pathc;
 	  status = glob_in_dir (filename, dirs.gl_pathv[i],
@@ -288,9 +289,9 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
 	    }
 
 	  /* Stick the directory on the front of each name.  */
-	  if (prefix_array(dirs.gl_pathv[i],
-			   &pglob->gl_pathv[oldcount],
-			   pglob->gl_pathc - oldcount))
+	  if (prefix_array (dirs.gl_pathv[i],
+			    &pglob->gl_pathv[oldcount],
+			    pglob->gl_pathc - oldcount))
 	    {
 	      globfree (&dirs);
 	      globfree (pglob);
@@ -304,19 +305,19 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
 	/* No matches.  */
 	if (flags & GLOB_NOCHECK)
 	  {
-	    CONST size_t len = strlen (pattern) + 1;
+	    const size_t len = strlen (pattern) + 1;
 	    char *patcopy = (char *) malloc (len);
 	    if (patcopy == NULL)
 	      return GLOB_NOSPACE;
 	    memcpy (patcopy, pattern, len);
 
 	    pglob->gl_pathv
-	      = (char **) realloc(pglob->gl_pathv,
-				  (pglob->gl_pathc +
-				   ((flags & GLOB_DOOFFS) ?
-				    pglob->gl_offs : 0) +
-				   1 + 1) *
-				  sizeof(char *));
+	      = (char **) realloc (pglob->gl_pathv,
+				   (pglob->gl_pathc +
+				    ((flags & GLOB_DOOFFS) ?
+				     pglob->gl_offs : 0) +
+				    1 + 1) *
+				   sizeof (char *));
 	    if (pglob->gl_pathv == NULL)
 	      {
 		free (patcopy);
@@ -352,8 +353,8 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
 	}
 
       if (!(flags & GLOB_NOSORT))
-	qsort ((PTR) &pglob->gl_pathv[oldcount], pglob->gl_pathc - oldcount,
-	       sizeof(char *), collated_compare);
+	qsort ((__ptr_t) & pglob->gl_pathv[oldcount], pglob->gl_pathc - oldcount,
+	       sizeof (char *), collated_compare);
     }
 
   return 0;
@@ -362,25 +363,28 @@ DEFUN(glob, (pattern, flags, errfunc, pglob),
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
 void
-DEFUN(globfree, (pglob), register glob_t *pglob)
+globfree (pglob)
+     register glob_t *pglob;
 {
   if (pglob->gl_pathv != NULL)
     {
       register int i;
       for (i = 0; i < pglob->gl_pathc; ++i)
 	if (pglob->gl_pathv[i] != NULL)
-	  free((PTR) pglob->gl_pathv[i]);
-      free((PTR) pglob->gl_pathv);
+	  free ((__ptr_t) pglob->gl_pathv[i]);
+      free ((__ptr_t) pglob->gl_pathv);
     }
 }
 
 
 /* Do a collated comparison of A and B.  */
 static int
-DEFUN(collated_compare, (a, b), CONST PTR a AND CONST PTR b)
+collated_compare (a, b)
+     const __ptr_t a;
+     const __ptr_t b;
 {
-  CONST char *CONST s1 = *(CONST char *CONST *CONST) a;
-  CONST char *CONST s2 = *(CONST char *CONST *CONST) b;
+  const char *const s1 = *(const char *const * const) a;
+  const char *const s2 = *(const char *const * const) b;
 
   if (s1 == s2)
     return 0;
@@ -397,27 +401,29 @@ DEFUN(collated_compare, (a, b), CONST PTR a AND CONST PTR b)
    A slash is inserted between PREFIX and each elt of ARRAY.
    Each old element of ARRAY is freed.  */
 static int
-DEFUN(prefix_array, (prefix, array, n),
-      CONST char *prefix AND char **array AND CONST size_t n)
+prefix_array (prefix, array, n)
+     const char *prefix;
+     char **array;
+     const size_t n;
 {
   register size_t i;
-  CONST size_t prelen = strlen(prefix);
+  const size_t prelen = strlen (prefix);
 
   for (i = 0; i < n; ++i)
     {
-      CONST size_t eltlen = strlen(array[i]) + 1;
-      char *new = (char *) malloc(prelen + 1 + eltlen);
+      const size_t eltlen = strlen (array[i]) + 1;
+      char *new = (char *) malloc (prelen + 1 + eltlen);
       if (new == NULL)
 	{
 	  while (i > 0)
-	    free((PTR) array[--i]);
+	    free ((__ptr_t) array[--i]);
 	  return 1;
 	}
 
-      memcpy(new, prefix, prelen);
+      memcpy (new, prefix, prelen);
       new[prelen] = '/';
-      memcpy(&new[prelen + 1], array[i], eltlen);
-      free((PTR) array[i]);
+      memcpy (&new[prelen + 1], array[i], eltlen);
+      free ((__ptr_t) array[i]);
       array[i] = new;
     }
 
@@ -428,10 +434,11 @@ DEFUN(prefix_array, (prefix, array, n),
 /* Return nonzero if PATTERN contains any metacharacters.
    Metacharacters can be quoted with backslashes if QUOTE is nonzero.  */
 static int
-DEFUN(glob_pattern_p, (pattern, quote),
-      CONST char *pattern AND CONST int quote)
+glob_pattern_p (pattern, quote)
+     const char *pattern;
+     const int quote;
 {
-  register CONST char *p;
+  register const char *p;
   int open = 0;
 
   for (p = pattern; *p != '\0'; ++p)
@@ -465,18 +472,21 @@ DEFUN(glob_pattern_p, (pattern, quote),
    The GLOB_NOSORT bit in FLAGS is ignored.  No sorting is ever done.
    The GLOB_APPEND flag is assumed to be set (always appends).  */
 static int
-DEFUN(glob_in_dir, (pattern, directory, flags, errfunc, pglob),
-      CONST char *pattern AND CONST char *directory AND int flags AND
-      int EXFUN((*errfunc), (CONST char *, int)) AND glob_t *pglob)
+glob_in_dir (pattern, directory, flags, errfunc, pglob)
+     const char *pattern;
+     const char *directory;
+     int flags;
+     int (*errfunc) __P ((const char *, int));
+     glob_t *pglob;
 {
   register DIR *stream;
   register struct dirent *d;
 
   struct globlink
-    {
-      struct globlink *next;
-      char *name;
-    };
+  {
+    struct globlink *next;
+    char *name;
+  };
   struct globlink *names = NULL;
   size_t nfound = 0;
 
@@ -488,28 +498,28 @@ DEFUN(glob_in_dir, (pattern, directory, flags, errfunc, pglob),
   else
     {
       flags |= GLOB_MAGCHAR;
-      stream = opendir(directory);
+      stream = opendir (directory);
       if (stream == NULL)
 	{
-	  if ((errfunc != NULL && (*errfunc)(directory, errno)) ||
+	  if ((errfunc != NULL && (*errfunc) (directory, errno)) ||
 	      (flags & GLOB_ERR))
 	    return GLOB_ABEND;
 	}
       else
-	while ((d = readdir(stream)) != NULL)
+	while ((d = readdir (stream)) != NULL)
 	  if (REAL_DIR_ENTRY (d) &&
-	      fnmatch(pattern, d->d_name,
-		      (!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0) |
-		      ((flags & GLOB_NOESCAPE) ? FNM_NOESCAPE : 0)) == 0)
+	      fnmatch (pattern, d->d_name,
+		       (!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0) |
+		       ((flags & GLOB_NOESCAPE) ? FNM_NOESCAPE : 0)) == 0)
 	    {
 	      struct globlink *new = (struct globlink *)
-		__alloca(sizeof (struct globlink));
+	      __alloca (sizeof (struct globlink));
 	      size_t len = D_NAMLEN (d);
-	      new->name = (char *) malloc(len +
-					  ((flags & GLOB_MARK) ? 1 : 0) + 1);
+	      new->name = (char *) malloc (len +
+					 ((flags & GLOB_MARK) ? 1 : 0) + 1);
 	      if (new->name == NULL)
 		goto memory_error;
-	      memcpy ((PTR) new->name, d->d_name, len);
+	      memcpy ((__ptr_t) new->name, d->d_name, len);
 	      if (flags & GLOB_MARK)
 		new->name[len++] = '/';
 	      new->name[len] = '\0';
@@ -535,11 +545,11 @@ DEFUN(glob_in_dir, (pattern, directory, flags, errfunc, pglob),
     }
 
   pglob->gl_pathv
-    = (char **) realloc(pglob->gl_pathv,
-			(pglob->gl_pathc +
-			 ((flags & GLOB_DOOFFS) ? pglob->gl_offs : 0) +
-			 nfound + 1) *
-			sizeof(char *));
+    = (char **) realloc (pglob->gl_pathv,
+			 (pglob->gl_pathc +
+			  ((flags & GLOB_DOOFFS) ? pglob->gl_offs : 0) +
+			  nfound + 1) *
+			 sizeof (char *));
   if (pglob->gl_pathv == NULL)
     goto memory_error;
 
@@ -561,7 +571,7 @@ DEFUN(glob_in_dir, (pattern, directory, flags, errfunc, pglob),
     }
   return nfound == 0 ? GLOB_NOMATCH : 0;
 
- memory_error:
+memory_error:
   {
     int save = errno;
     (void) closedir (stream);
@@ -570,7 +580,7 @@ DEFUN(glob_in_dir, (pattern, directory, flags, errfunc, pglob),
   while (names != NULL)
     {
       if (names->name != NULL)
-	free((PTR) names->name);
+	free ((__ptr_t) names->name);
       names = names->next;
     }
   return GLOB_NOSPACE;
