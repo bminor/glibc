@@ -400,7 +400,8 @@ __fork (void)
 #else
       state.SP = __hurd_sigthread_stack_end;
 #endif      
-      state.PC = (unsigned long int) _hurd_msgport_receive;
+      MACHINE_THREAD_STATE_SET_PC (&state,
+				   (unsigned long int) _hurd_msgport_receive);
       if (err = __thread_set_state (sigthread, MACHINE_THREAD_STATE_FLAVOR,
 				    (int *) &state, statecount))
 	goto lose;

@@ -74,7 +74,7 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
     *stack_size = size;
 
   memset (&ts, 0, sizeof (ts));
-  ts.PC = (int) pc;
+  MACHINE_THREAD_STATE_SET_PC (&ts, pc);
 #ifdef STACK_GROWTH_DOWN
   if (stack_base)
     *stack_base = stack + __vm_page_size;
