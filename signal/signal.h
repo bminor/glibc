@@ -30,6 +30,9 @@ Cambridge, MA 02139, USA.  */
 #include <gnu/types.h>
 #include <gnu/signal.h>
 
+#define	 __need_size_t
+#include <stddef.h>
+
 #if	!defined(__sig_atomic_t_defined) &&	\
   (defined(_SIGNAL_H) || defined(__need_sig_atomic_t))
 /* An integral type that can be modified atomically, without the
@@ -157,6 +160,7 @@ extern int EXFUN(sigsuspend, (CONST sigset_t *__set));
 #ifdef	__USE_BSD
 #define	SA_ONSTACK	__SA_ONSTACK	/* Take signal on signal stack.  */
 #define	SA_RESTART	__SA_RESTART	/* No syscall restart on sig ret.  */
+#define	SA_DISABLE	__SA_DISABLE	/* Disable alternate signal stack.  */
 #endif
 #define	SA_NOCLDSTOP	__SA_NOCLDSTOP	/* No SIGCHLD when children stop.  */
 
@@ -231,6 +235,16 @@ struct sigstack
 extern int EXFUN(sigstack, (CONST struct sigstack *__ss,
 			    struct sigstack *__oss));
 
+/* Alternate interface.  */
+struct sigaltstack
+  {
+    PTR ss_sp;
+    size_t ss_size;
+    int ss_flags;
+  };
+
+extern int EXFUN(sigaltstack, (CONST struct sigaltstack *__ss,
+			       struct sigaltstack *__oss));
 
 /* Get machine-dependent `struct sigcontext' and signal subcodes.  */
 #include <sigcontext.h>
