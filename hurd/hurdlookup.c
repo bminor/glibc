@@ -26,10 +26,10 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
 		    file_t *result)
 {
   error_t err;
-  file_t startdir, result;
+  file_t startdir;
 
   enum retry_type doretry;
-  char retryname[PATH_MAX];
+  char retryname[1024];		/* XXX string_t LOSES! */
   file_t newpt;
   int dealloc_dir;
   int nloops;
@@ -49,7 +49,7 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
   for (;;)
     {
       err = __dir_pathtrans (startdir, path, flags, mode,
-			     &doretry, retryname, &result);
+			     &doretry, retryname, result);
 
       if (dealloc_dir)
 	__mach_port_deallocate (__mach_task_self (), startdir);
@@ -59,12 +59,11 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
       switch (doretry)
 	{
 	case FS_RETRY_NONE:
-	  return POSIX_SUCCESS;
+	  return 0;
 	  
 	case FS_RETRY_REAUTH:
 	  __io_reauthenticate (*result);
-	  _HURD_PORT_USE (&_hurd_auth,
-			  __auth_user_authenticate (port, result, &newpt));
+	  __USEPORT (AUTH, __auth_user_authenticate (port, *result, &newpt));
 	  __mach_port_deallocate (__mach_task_self (), *result);
 	  *result = newpt;
 	  /* Fall through.  */
@@ -90,6 +89,8 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
 	      dealloc_dir = 1;
 	      path = retryname;
 	    }
+
+	/* case FS_RETRY_MAGICAL: XXX */
 	}
     }
 }
@@ -116,7 +117,7 @@ __hurd_path_split (file_t crdir, file_t cwdir,
       if (lastslash == path)
 	{
 	  /* "/foobar" => crdir + "foobar".  */
-	  *name = path + 1;
+	  *name = (char *) path + 1;
 	  __mach_port_mod_refs (__mach_task_self (), MACH_PORT_RIGHT_SEND,
 				crdir, +1);
 	  *dir = crdir;
@@ -127,15 +128,15 @@ __hurd_path_split (file_t crdir, file_t cwdir,
 	  /* "/dir1/dir2/.../file".  */
 	  char dirname[lastslash - path + 1];
 	  memcpy (dirname, path, lastslash - path);
-	  dirname[lastslath - path] = '\0';
-	  *name = lastslash + 1;
+	  dirname[lastslash - path] = '\0';
+	  *name = (char *) lastslash + 1;
 	  return __hurd_path_lookup (crdir, cwdir, dirname, 0, 0, dir);
 	}
     }
   else
     {
       /* "foobar" => cwdir + "foobar".  */
-      *name = path;
+      *name = (char *) path;
       __mach_port_mod_refs (__mach_task_self (), MACH_PORT_RIGHT_SEND,
 			    cwdir, 1);
       *dir = cwdir;
@@ -150,13 +151,13 @@ __path_lookup (const char *path, int flags, mode_t mode)
   file_t result, crdir, cwdir;
   int dealloc_crdir, dealloc_cwdir;
 
-  crdir = _hurd_port_get (&_hurd_crdir, &dealloc_crdir);
-  cwdir = _hurd_port_get (&_hurd_cwdir, &dealloc_cwdir);
+  crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir);
+  cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &dealloc_cwdir);
 
   err = __hurd_path_lookup (crdir, cwdir, path, flags, mode, &result);
 
-  _hurd_port_free (crdir, &dealloc_crdir);
-  _hurd_port_free (cwdir, &dealloc_cwdir);
+  _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir, crdir);
+  _hurd_port_free (&_hurd_ports[INIT_PORT_CWDIR], &dealloc_cwdir, cwdir);
 
   if (err)
     {
@@ -174,13 +175,13 @@ __path_split (const char *path, char **name)
   file_t dir, crdir, cwdir;
   int dealloc_crdir, dealloc_cwdir;
 
-  crdir = _hurd_port_get (&_hurd_crdir, &dealloc_crdir);
-  cwdir = _hurd_port_get (&_hurd_cwdir, &dealloc_cwdir);
+  crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir);
+  cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &dealloc_cwdir);
 
   err = __hurd_path_split (crdir, cwdir, path, &dir, name);
 
-  _hurd_port_free (crdir, &dealloc_crdir);
-  _hurd_port_free (cwdir, &dealloc_cwdir);
+  _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir, crdir);
+  _hurd_port_free (&_hurd_ports[INIT_PORT_CWDIR], &dealloc_cwdir, cwdir);
 
   if (err)
     {
