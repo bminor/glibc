@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <sys/resource.h>
 #include <time.h>
+#include <sys/time.h>
 
 static clock_t
 #ifdef	__GNUC__
