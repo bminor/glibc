@@ -1,7 +1,7 @@
 /* stdio on a Mach device port.
    Translates \n to \r\n on output.
 
-Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -47,6 +47,7 @@ input (FILE *f)
 
   f->__eof = 0;
 
+  nread = to_read;
   if (err = device_read_inband ((device_t) f->__cookie, 0, f->__target,
 				to_read, buffer, &nread))
     {
