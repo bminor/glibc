@@ -1,5 +1,5 @@
 /* Signal number definitions.  Linux/Alpha version.
-Copyright (C) 1996 Free Software Foundation, Inc.
+Copyright (C) 1996, 1998 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -48,6 +48,7 @@ Cambridge, MA 02139, USA.  */
 #define SIGTSTP		18
 #define SIGCONT		19
 #define SIGCHLD		20
+#define SIGCLD          SIGCHLD
 #define SIGTTIN		21
 #define SIGTTOU		22
 #define SIGIO		23
