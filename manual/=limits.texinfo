@@ -175,7 +175,7 @@ particular system.
 @menu
 * Floating-Point Representation::	Definitions of terminology.
 * Floating-Point Parameters::		Descriptions of the library facilities.
-* IEEE Floating-Point::			An example of a common representation.
+* IEEE Floating Point::			An example of a common representation.
 @end menu
 
 @node Floating-Point Representation
