@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ extern __sighandler_t EXFUN(signal, (int __sig, __sighandler_t __handler));
 /* Send signal SIG to process number PID.  If PID is zero,
    send SIG to all processes in the current process's process group.
    If PID is < -1, send SIG to all processes in process group - PID.  */
-extern __pid_t EXFUN(__kill, (__pid_t __pid, int __sig));
+extern int EXFUN(__kill, (__pid_t __pid, int __sig));
 #ifdef	__USE_POSIX
 extern int EXFUN(kill, (int __pid, int __sig));
 #ifdef	__OPTIMIZE__
