@@ -1,5 +1,5 @@
 /* Catch segmentation faults and print backtrace.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -231,6 +231,7 @@ install_handler (void)
 #endif
       INSTALL_FOR_SIG (SIGABRT, "abrt");
       INSTALL_FOR_SIG (SIGFPE, "fpe");
+      INSTALL_FOR_SIG (SIGTRAP, "trap");
     }
 
   /* Preserve the output file name if there is any given.  */
