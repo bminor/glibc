@@ -623,17 +623,20 @@ to a process causes any pending stop signals for that process to be
 discarded.  Likewise, any pending @code{SIGCONT} signals for a process
 are discarded when it receives a stop signal.
 
-On non-GNU systems, when a process in an orphaned process group
-(@pxref{Orphaned Process Groups}) receives a @code{SIGTSTP},
-@code{SIGTTIN}, or @code{SIGTTOU} signal and does not handle it, the
-process does not stop; in fact, the signal is ignored if not handled in
-such a process.  Stopping the process would be unreasonable since there
-would be no way to continue it.
+When a process in an orphaned process group (@pxref{Orphaned Process
+Groups}) receives a @code{SIGTSTP}, @code{SIGTTIN}, or @code{SIGTTOU}
+signal and does not handle it, the process does not stop.  Stopping the
+process would be unreasonable since there would be no way to continue
+it.  What happens instead depends on the operating system you are
+using.  Some systems may do nothing; others may deliver another signal
+instead, such as @code{SIGKILL} or @code{SIGHUP}.
 
+@ignore
 On the GNU system, it is possible to reattach to the orphaned process
 group and continue it, so stop signals do stop the process as usual on
 a GNU system unless you have requested POSIX compatibility ``till it
 hurts.''
+@end ignore
 
 @node Miscellaneous Signals
 @subsection Miscellaneous Signals
@@ -1684,7 +1687,7 @@ If a function uses and modifies an object that you supply, then it is
 potentially non-reentrant; two calls can interfere if they use the same
 object.
 
-This case arrises when you do I/O using streams.  Suppose that the
+This case arises when you do I/O using streams.  Suppose that the
 signal handler prints a message with @code{fprintf}.  Suppose that the
 program was in the middle of an @code{fprintf} call using the same
 stream when the signal was delivered.  Both the signal handler's message
@@ -1696,10 +1699,11 @@ possibly be used by the program at a time when signals can arrive, then
 you are safe.  It is no problem if the program uses some other stream.
 
 @item
-The memory allocation functions are not reentrant, because they all use
-a static data structure which records what memory blocks are free.  The
-library functions that allocate space to store a result are not
-reentrant, because they use the memory allocation functions.
+On most systems, @code{malloc} and @code{free} are not reentrant,
+because they use a static data structure which records what memory
+blocks are free.  As a result, no library functions that allocate or
+free memory are reentrant.  This includes functions that allocate space
+to store a result.
 
 The best way to avoid the need to allocate memory in a handler is to
 allocate in advance space for signal handlers to use.
@@ -1710,6 +1714,15 @@ whether anything is waiting to be freed.  But this must be done with
 care, because placing an object on a chain is not atomic, and if it is
 interrupted by another signal handler that does the same thing, you
 could ``lose'' one of the objects.
+
+On the GNU system, @code{malloc} and @code{free} are safe to use in
+signal handlers because it blocks signals.  As a result, the library
+functions that allocate space for a result are also safe in signal
+handlers.  The obstack allocation functions are safe as long as you
+don't use the same obstack both inside and outside of a signal handler.
+
+The relocating allocation functions (@pxref{Relocating Allocator})
+are certainly not safe to use in a signal handler.
 
 @item
 Any function that modifies @code{errno} is non-reentrant, but you can
