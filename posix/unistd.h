@@ -884,6 +884,11 @@ extern void sync (void) __THROW;
 extern int getpagesize (void)  __THROW __attribute__ ((__const__));
 
 
+/* Return the maximum number of file descriptors
+   the current process could possibly have.  */
+extern int getdtablesize (void) __THROW;
+
+
 /* Truncate FILE to LENGTH bytes.  */
 # ifndef __USE_FILE_OFFSET64
 extern int truncate (__const char *__file, __off_t __length)
@@ -902,6 +907,10 @@ extern int truncate64 (__const char *__file, __off64_t __length)
      __THROW __nonnull ((1));
 # endif
 
+#endif /* Use BSD || X/Open Unix.  */
+
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
+
 /* Truncate the file FD is open on to LENGTH bytes.  */
 # ifndef __USE_FILE_OFFSET64
 extern int ftruncate (int __fd, __off_t __length) __THROW;
@@ -917,12 +926,7 @@ extern int __REDIRECT_NTH (ftruncate, (int __fd, __off64_t __length),
 extern int ftruncate64 (int __fd, __off64_t __length) __THROW;
 # endif
 
-
-/* Return the maximum number of file descriptors
-   the current process could possibly have.  */
-extern int getdtablesize (void) __THROW;
-
-#endif /* Use BSD || X/Open Unix.  */
+#endif /* Use BSD || X/Open Unix || POSIX 2003.  */
 
 
 #if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
