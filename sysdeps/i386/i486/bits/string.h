@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.  i486 version.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -182,7 +182,7 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
      "sbbl	%0,%0\n\t"
      "orl	$1,%0\n"
      "1:"
-     : "=a" (__res), "=&S" (__d0), "=&D" (__d1), "=&c" (__d2)
+     : "=&a" (__res), "=&S" (__d0), "=&D" (__d1), "=&c" (__d2)
      : "0" (0), "1" (__s1), "2" (__s2), "3" (__n)
      : "cc");
   return __res;
@@ -1804,7 +1804,7 @@ __strstr_cg (__const char *__haystack, __const char __needle[],
      "jne	1b\n\t"
      "xorl	%%eax,%%eax\n"
      "2:"
-     : "=a" (__res), "=&S" (__d0), "=&D" (__d1), "=&c" (__d2)
+     : "=&a" (__res), "=&S" (__d0), "=&D" (__d1), "=&c" (__d2)
      : "g" (__needle_len), "1" (__haystack), "d" (__needle)
      : "cc");
   return __res;
@@ -1837,7 +1837,7 @@ __strstr_g (__const char *__haystack, __const char *__needle)
      "xorl	%%eax,%%eax\n"
      "2:\n\t"
      "popl	%%ebx"
-     : "=a" (__res), "=&c" (__d0), "=&S" (__d1), "=&D" (__d2)
+     : "=&a" (__res), "=&c" (__d0), "=&S" (__d1), "=&D" (__d2)
      : "0" (0), "1" (0xffffffff), "2" (__haystack), "3" (__needle),
        "d" (__needle)
      : "cc");
@@ -1866,7 +1866,7 @@ __strstr_g (__const char *__haystack, __const char *__needle)
      "jne	1b\n\t"
      "xorl	%%eax,%%eax\n"
      "2:"
-     : "=a" (__res), "=&c" (__d0), "=&S" (__d1), "=&D" (__d2), "=&d" (__d3)
+     : "=&a" (__res), "=&c" (__d0), "=&S" (__d1), "=&D" (__d2), "=&d" (__d3)
      : "0" (0), "1" (0xffffffff), "2" (__haystack), "3" (__needle),
        "b" (__needle)
      : "cc");
