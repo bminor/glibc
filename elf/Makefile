@@ -56,9 +56,19 @@ install-others	= $(inst_slibdir)/$(rtld-installed-name)
 install-bin	= ldd
 endif
 
+extra-objs	+= sln.o
+install-rootsbin = sln
+
+$(objpfx)sln: $(objpfx)sln.o
+	$(CC) -nostdlib -nostartfiles -o $@ $(sysdep-LDFLAGS) -static	      \
+	      $(addprefix $(csu-objpfx),start.o) $(+preinit)		      \
+	      $(filter-out $(addprefix $(csu-objpfx),start.o) $(+preinit)     \
+		$(link-extra-libs) $(common-objpfx)libc% $(+postinit),$^)     \
+	      $(link-extra-libs) $(common-objpfx)libc.a $(gnulib) $(+postinit)
+
 ifeq (yes,$(has-ldconfig))
 extra-objs	+= ldconfig.o
-install-rootsbin = ldconfig
+install-rootsbin += ldconfig
 
 $(objpfx)ldconfig: $(objpfx)ldconfig.o
 	$(CC) -nostdlib -nostartfiles -o $@ $(sysdep-LDFLAGS) -static	      \
