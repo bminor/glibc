@@ -119,7 +119,7 @@ _dl_open (const char *file, int mode)
       else
 	{
 	  if (_dl_global_scope_alloc <
-	      (size_t) (_dl_global_scope_end - _dl_global_scope + 2))
+	      (size_t) (_dl_global_scope_end - _dl_global_scope + 3))
 	    {
 	      /* Must extend the list.  */
 	      struct link_map **new = realloc (_dl_global_scope,
@@ -159,6 +159,11 @@ _dl_open (const char *file, int mode)
     /* We must be the static _dl_open in libc.a.  A static program that
        has loaded a dynamic object now has competition.  */
     __libc_multiple_libcs = 1;
+
+#ifndef MAP_COPY
+  /* We must munmap() the cache file.  */
+  _dl_unload_cache ();
+#endif
 
   return new;
 }
