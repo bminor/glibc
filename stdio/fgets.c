@@ -112,7 +112,9 @@ DEFUN(fgets, (s, n, stream), char *s AND size_t n AND register FILE *stream)
       p += i;
     }
 
-  if (p > s)
-    *p = '\0';
+  if (p == s)
+    return NULL;
+
+  *p = '\0';
   return ferror (stream) ? NULL : s;
 }
