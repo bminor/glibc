@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/time.h>
 #include <errno.h>
 #include <stddef.h>
+#include <hurd.h>
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1].  */
@@ -31,7 +32,7 @@ DEFUN(__utimes, (file, tvp),
   file_t f = __path_lookup (file, 0, 0);
   if (f == MACH_PORT_NULL)
     return -1;
-  err = __file_utimes (f, &tvp[0], &tvp[1]);
+  err = __file_utimes (f, tvp[0], tvp[1]);
   __mach_port_deallocate (__mach_task_self (), f);
   if (err)
     return __hurd_fail (err);
