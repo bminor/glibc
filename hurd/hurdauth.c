@@ -120,7 +120,7 @@ _S_del_auth (mach_port_t me,
   if (err)
     return err;
 
-  err = __setauth (newauth);	/* XXX clobbers errno */
+  err = __setauth (newauth);
   __mach_port_deallocate (__mach_task_self (), newauth);
   if (err)
     return errno;
