@@ -718,7 +718,9 @@ variable @code{program_invocation_name}:
 @comment GNU
 @deftypevar {char *} program_invocation_name 
 This variable's value is the name that was used to invoke the program
-running in the current process.  It is the same as @code{argv[0]}.
+running in the current process.  It is the same as @code{argv[0]}.  Note
+that this is not necessarily a useful file name; often it contains no
+directory names.  @xref{Program Arguments}.
 @end deftypevar
 
 @comment errno.h
