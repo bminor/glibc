@@ -34,6 +34,9 @@ all: library.dvi library.info
 
 library.dvi library.info: $(chapters) summary.texinfo texinfo.tex
 
+library.info:
+	makeinfo library.texinfo
+
 summary.texinfo: summary.awk $(chapters)
 	awk -f $^ \
 	| sort +1 -2 | tr '\014' '\012' > $@.new
