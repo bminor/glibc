@@ -5,16 +5,46 @@
 @setchapternewpage odd
 @comment %**end of header (This is for running Texinfo on a region.)
 
+@set EDITION 0.00
+@set VERSION 1.06
+@set UPDATED 18 January 1993
+
 @ifinfo
 This file documents the GNU C library.
 
-Copyright (C) 1992 Free Software Foundation, Inc.
+This is Edition @value{EDITION}, last updated @value{UPDATED},
+of @cite{The GNU C Library Reference Manual}, for Version @value{VERSION}.
 
-This will be free information when it is finished, but isn't finished yet.
+Copyright (C) 1993 Free Software Foundation, Inc.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided also that the
+section entitled ``GNU Library General Public License'' is included
+exactly as in the original, and provided that the entire resulting
+derived work is distributed under the terms of a permission notice
+identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that the text of the translations of the section entitled ``GNU
+Library General Public License'' must be approved for accuracy by the
+Foundation.
 @end ifinfo
 
 @setchapternewpage odd
 
+@shorttitlepage The GNU C Library Reference Manual
 @titlepage
 @center @titlefont{The GNU C Library}
 @sp 1
@@ -24,19 +54,19 @@ This will be free information when it is finished, but isn't finished yet.
 @center with
 @center Roland McGrath, Andrew Oram, and Richard M. Stallman
 @sp 3
-@center last updated October 16, 1992
+@center last updated @value{UPDATED}
 @sp 1
-@center for version 1.05
+@center for version @value{VERSION}
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1992 Free Software Foundation, Inc.
+Copyright @copyright{} 1993 Free Software Foundation, Inc.
 @end titlepage
 @page
 
 @ifinfo
 @node Top, Introduction, (dir), (dir)
 @top Main Menu
-This is the reference manual for version 0.00 of the GNU C Library.
+This is the reference manual for version @value{VERSION} of the GNU C Library.
 @end ifinfo
 
 
