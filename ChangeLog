@@ -1,3 +1,8 @@
+2000-09-10  David S. Miller  <davem@redhat.com>
+
+	* sysdeps/sparc/sparc32/__longjmp.S (__longjmp): Correct %fp
+	frame pointer offset for non-fast path.
+
 2000-08-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/getdate.c (__getdate_r): Add extra access test.
