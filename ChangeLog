@@ -1,3 +1,8 @@
+2000-05-08  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/lockf64.c (lockf64): Return -1 for overflow and
+	set errno.
+
 2000-05-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/ko.po: Update from translation team.
