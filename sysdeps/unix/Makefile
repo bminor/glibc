@@ -16,9 +16,29 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
+ifneq (,$(wildcard $(sysincludedir)/sys/param.h))
+local_lim-CFLAGS := $(local_lim-CFLAGS) -DHAVE_SYS_PARAM_H
+endif
+ifneq (,$(wildcard $(sysincludedir)/sys/limits.h))
+local_lim-CFLAGS := $(local_lim-CFLAGS) -DHAVE_SYS_LIMITS_H
+endif
+ifneq (,$(wildcard $(sysincludedir)/limits.h))
+local_lim-CFLAGS := $(local_lim-CFLAGS) -DHAVE_LIMITS_H
+endif
+
+$(common-objpfx)local_lim.h: $(common-objpfx)mk-local_lim
+	if $(dir $<)$(notdir $<) > $@-t; then mv $@-t $@; else XXX; fi
+$(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/mk-local_lim.c
+	cwd=`pwd`; cd $(@D); \
+	$(CC) $(native-CFLAGS) $(local_lim-CFLAGS) $$cwd/$< -o $(@F)
+
+before-compile := $(before-compile) $(common-objpfx)local_lim.h
+generated := $(generated) \
+	     $(common-objpfx)local_lim.h $(common-objpfx)mk-local_lim
+
 before-compile := $(before-compile) $(common-objpfx)sys/param.h
 
-$(common-objpfx)sys/param.h: $(sysincludedir)/sys/param.h $(common-objpfx)sys/
+$(common-objpfx)sys/param.h: $(sysincludedir)/sys/param.h
 	-mkdir $(@D:%/=%)
 	(echo '#ifndef _GNU_SYS_PARAM_H';	\
 	 echo '#define _GNU_SYS_PARAM_H 1';	\
