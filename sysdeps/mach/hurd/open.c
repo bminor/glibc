@@ -27,27 +27,8 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(__open, (file, oflag), CONST char *file AND int oflag DOTS)
 {
-  error_t err;
   mode_t mode;
-  int fl;
   io_t port;
-  int fd;
-
-  switch (oflag & O_ACCMODE)
-    {
-    case O_RDONLY:
-      fl = FS_LOOKUP_READ;
-      break;
-    case O_WRONLY:
-      fl = FS_LOOKUP_WRITE;
-      break;
-    case O_RDWR:
-      fl = FS_LOOKUP_READ | FS_LOOKUP_WRITE;
-      break;
-    default:
-      errno = EINVAL;
-      return -1;
-    }
 
   if (oflag & O_CREAT)
     {
@@ -55,23 +36,11 @@ DEFUN(__open, (file, oflag), CONST char *file AND int oflag DOTS)
       va_start (arg, oflag);
       mode = va_arg (arg, mode_t);
       va_end (arg);
-      fl |= FS_LOOKUP_CREATE;
     }
   else
     mode = 0;
 
-  if (oflag & O_NDELAY)
-    fl |= FS_LOOKUP_NDELAY;
-  if (oflag & O_APPEND)
-    fl |= FS_LOOKUP_APPEND;
-  if (oflag & O_CREATE)
-    fl |= FS_LOOKUP_CREATE;
-  if (oflag & O_TRUNC)
-    fl |= FS_LOOKUP_TRUNC;
-  if (oflag & O_EXCL)
-    fl |= FS_LOOKUP_EXCL;
-
-  port = __path_lookup (file, fl, mode);
+  port = __path_lookup (file, oflag, mode);
   if (port == MACH_PORT_NULL)
     return -1;
 
