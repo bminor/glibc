@@ -32,7 +32,8 @@ $(objpfx)make-errnos.c: $(sysdep_dir)/unix/errnos-tmpl.c \
 	awk -f $(word 2,$^) errnos="`tr '\012' ' ' < $(word 3,$^)`" $< > $@-tmp
 	mv $@-tmp $@
 
-$(objpfx)errnos: $(wildcard /usr/include/errno.h /usr/include/sys/errno.h)
+$(objpfx)errnos: $(wildcard $(sysincludedir)/errno.h	\
+			    $(sysincludedir)/sys/errno.h)
 	cat $^ | sed -n 's/^#define[ 	]*\(E[A-Z0-9]*\)[ 	]*[0-9][0-9]*[	]*.*$$/\1/p' > $@-tmp
 	mv $@-tmp $@
 
@@ -43,7 +44,7 @@ dont_distribute := $(dont_distribute) sys/param.h	# Generated.
 
 endif
 
-$(objpfx)sys/param.h: /usr/include/sys/param.h $(objpfx)sys/
+$(objpfx)sys/param.h: $(sysincludedir)/sys/param.h $(objpfx)sys/
 	(echo '#ifndef _GNU_SYS_PARAM_H';	\
 	 echo '#define _GNU_SYS_PARAM_H 1';	\
 	 awk < $<			\
@@ -68,7 +69,7 @@ $(objpfx)make-ioctls.c: $(sysdep_dir)/unix/ioctls-tmpl.c \
 	awk -f $(word 2,$^) requests="`cat $(word 3,$^)`" $< > $@-tmp
 	mv $@-tmp $@
 
-$(objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls /usr/include/sys/ioctl.h
+$(objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls $(sysincludedir)/sys/ioctl.h
 	$(dir $<)$(notdir $<) $(word 2,$^) | tr '\012' ' ' > $@-tmp
 	mv $@-tmp $@
 
