@@ -26,7 +26,7 @@ DEFUN(__write, (fd, buf, nbytes),
       int fd AND CONST PTR buf AND size_t nbytes)
 {
   error_t err;
-  size_t wrote;
+  mach_msg_type_number_t wrote;
   int noctty;
 
 #ifdef notyet
