@@ -33,6 +33,6 @@ DEFUN(getsockopt, (fd, level, optname, optval, optlen),
 						      level, optname,
 						      optval, optlen));
   if (err)
-    return __hurd_fail (err);
+    return __hurd_dfail (fd, err);
   return 0;
 }
