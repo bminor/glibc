@@ -110,11 +110,15 @@ struct sockaddr
     char sa_data[14];		/* Address data.  */
   };
 
-/* This is the type we use for generic socket address arguments.  With GCC 2.6
-   and later, the funky union causes redeclarations or uses with any of the
-   listed types to be allowed without complaint.  */
+/* This is the type we use for generic socket address arguments.
+
+   NOTE: Since this functionality is volatile, I'm disabling the use of it for
+   now.
+
+   With GCC 2.6 and later, the funky union causes redeclarations or uses with
+   any of the listed types to be allowed without complaint.  */
 #if	(!defined (__GNUC__) || __GNUC__ < 2 || \
-	 (__GNUC__ == 2 && __GNUC_MINOR__ < 6))
+	 /*(__GNUC__ == 2 && __GNUC_MINOR__ < 6)*/ 1)
 #define	__SOCKADDR_ARG	struct sockaddr *
 #else
 /* Bring these names into being at top-level scope, in case they have not been
