@@ -25,7 +25,7 @@ all: library.dvi library.info
 
 # Set chapters and chapters-incl.
 include chapters
-chapters: library.texinfo Makefile
+chapters: library.texinfo
 	$(find-includes)
 ifdef chapters
 include chapters-incl
@@ -36,17 +36,19 @@ endif
 define find-includes
 (echo '$@ :=' \\	;\
  awk '$$1 == "@include" { print $$2 " \\" }' $^) > $@.new
-move-if-change $@.new $@
+mv $@.new $@
 endef
 
 library.dvi library.info: $(chapters) summary.texinfo $(chapters-incl)
 library.dvi: texinfo.tex
 
 # Generate the summary from the Texinfo source files for each chapter.
-summary.texinfo: summary.awk $(chapters)
+summary.texinfo: stamp-summary ;
+stamp-summary: summary.awk $(chapters)
 	awk -f $^ \
-	| sort +1 -2 | tr '\014' '\012' > $@.new
-	move-if-change $@.new $@
+	| sort +1 -2 | tr '\014' '\012' > summary-tmp
+	move-if-change summary-tmp summary.texinfo
+	touch $@
 
 # Generate Texinfo files from the C source for the example programs.
 %.c.texi: examples/%.c
@@ -59,8 +61,10 @@ summary.texinfo: summary.awk $(chapters)
 
 
 minimal-dist = library.texinfo summary.awk Makefile move-if-change	\
-	       $(chapters) $(chapters-incl:%.c.texi=examples/%.c)
-distribute = $(minimal-dist) texinfo.tex summary.texinfo
+	       $(chapters)						\
+	       $(patsubst %.c.texi,examples/%.c,			\
+			  $(filter-out summary.texinfo,$(chapters-incl)))
+distribute = $(minimal-dist) texinfo.tex summary.texinfo stamp-summary
 
 manual.tar: $(minimal-dist)
 	tar uvf $@ $^
