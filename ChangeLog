@@ -4,10 +4,10 @@
 
 2000-03-17  Cristian Gafton  <gafton@redhat.com>
 
-	* elf/Makefile $(rtld-version-installed-name): delay
-	replacing existing rtld-installed-name
-	$(rtld-installed-name): request libc-$(version) be installed too.
-	replace existing rtld-installed-name using $(symbolic-link-prog)
+	* elf/Makefile ($(rtld-version-installed-name)): Delay
+	replacing existing rtld-installed-name.
+	($(rtld-installed-name)): Request libc-$(version) be installed too.
+	replace existing rtld-installed-name using $(symbolic-link-prog).
 
 2000-03-16  Thorsten Kukuk  <kukuk@suse.de>
 
