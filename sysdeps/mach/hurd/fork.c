@@ -51,8 +51,13 @@ run_hooks (const struct hook *h, task_t t, process_t p)
   return 0;
 }
 
-/* Things that want to be called when we have forked, with the above all
-   locked.  They are passed the task port of the child.  */
+/* Things that want to be called before we fork, to prepare the parent for
+   task_create, when the new child task will inherit our address space.  */
+const struct hook _hurd_fork_prepare_hook;
+
+/* Things that want to be called when we are forking, with the above all
+   locked.  They are passed the task port of the child.  The child process
+   is all set up except for doing proc_child, and has no threads yet.  */
 const struct hook _hurd_fork_setup_hook;
 
 /* Things to be run in the child fork.  */
@@ -77,6 +82,12 @@ __fork (void)
       mach_port_t ports[_hurd_nports];
       thread_t thread;
       struct machine_thread_state state;
+
+      /* Run things that prepare for forking before we create the task.  */
+      if (err = run_hooks (&_hurd_fork_prepare_hook,
+			   MACH_PORT_NULL, MACH_PORT_NULL))
+	/* XXX what if some of them were done ok? */
+	return __hurd_fail (err);
 
       /* Lock things that want to be locked before we fork.  */
       for (i = 0; i < _hurd_fork_locks.n; ++i)
@@ -172,6 +183,20 @@ __fork (void)
 	__mach_port_deallocate (__mach_task_self (), thread);
       if (newproc != MACH_PORT_NULL)
 	__mach_port_deallocate (__mach_task_self (), newproc);
+
+      /* Run things that want to run in the parent to restore it to
+	 normality.  Usually prepare hooks and parent hooks are
+	 symmetrical: the prepare hook arrests state in some way for the
+	 fork, and the parent hook restores the state for the parent to
+	 continue executing normally.  */
+      if (err)
+	/* We already have an error.  We still want to run these hooks, to
+	   undo whatever the prepare hooks might have done, but ignore
+	   these errors.  */
+	run_hooks (&_hurd_fork_parent_hook, MACH_PORT_NULL, MACH_PORT_NULL);
+      else
+	err = run_hooks (&_hurd_fork_parent_hook,
+			 MACH_PORT_NULL, MACH_PORT_NULL);
     }
   else
     {
