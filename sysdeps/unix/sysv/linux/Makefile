@@ -10,7 +10,7 @@ sysdep_routines += sysctl clone llseek getresuid getresgid umount
 sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h sys/mtio.h \
 		  sys/io.h sys/klog.h sys/kdaemon.h \
 		  sys/user.h syscall-list.h sys/sysmacros.h sys/procfs.h \
-		  sys/debugreg.h sys/kd.h sys/soundcard.h sys/vt.h \
+		  sys/kd.h sys/soundcard.h sys/vt.h \
 		  sys/quota.h sys/fsuid.h sys/prctl.h scsi/sg.h
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
