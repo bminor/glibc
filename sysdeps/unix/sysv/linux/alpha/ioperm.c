@@ -128,6 +128,7 @@ static struct platform {
   {"Miata",	IOSYS_CIA},
   {"Tsunami",	IOSYS_TSUNAMI},
   {"Rawhide",	IOSYS_MCPCIA},
+  {"Ruffian",	IOSYS_CIA},
   {"Takara",	IOSYS_CIA},
 };
 
