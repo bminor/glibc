@@ -1,3 +1,58 @@
+1997-05-21 01:52  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/Makefile (CPPFLAGS): Add definition for LOCALE_ALIAS_PATH.
+
+	* malloc/obstack.c: Include <config.h>.  Include <stdlib.h> only
+	if __GNU_LIBRARY__ or HAVE_STDLIB_H is defined.
+	Reported by Ian Taylor <ian@cygnus.com>.
+
+	* manual/errno.texi: Remove ENOMEDIUM and EMEDIUMTYPE errors.
+
+	* po/de.po: Updated.
+
+	* stdlib/seed48_r.c: Also reset `a' and `c' to default values.
+
+	* sysdeps/unix/sysv/linux/shmdt.c: Add cast in call to __ipc.
+
+1997-05-15 13:14  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	Changes by Thomas Bushnell <thomas@gnu.ai.mit.edu>:
+	* hurd/hurdauth.c (_S_msg_add_auth): Implement correctly.
+
+1997-05-12 14:50  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (_hurdsig_init): Double size of sigthread stack;
+	msg_add_auth was overflowing it.
+
+1997-05-12 02:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/sys/time.h: Make second argument of setitimer const.
+	Patch by Michael Deutschmann <ldeutsch@mail.netshop.net>.
+	* sysdeps/stub/setitimer.c: Likewise.
+	* sysdeps/mach/hurd/setitimer.c: Likewise.
+
+1997-05-12 21:20  Richard Henderson  <rth@tamu.edu>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol_skip): Call _dl_signal_error
+	when we can't find the symbol.
+
+1997-05-12 16:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/regex.c: Fix handling of 32-bit Windog environments.
+	Patch by Arnold Robbins <arnold@skeeve.atl.ga.us>.
+
+1997-05-10 23:26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Add cacheflush.
+
+1997-05-08 07:53  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/poll.c: Save errno.
+
+1997-05-08 16:44  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add nfsservctl.
+
 1997-05-07 20:27  H.J. Lu  <hjl@gnu.ai.mit.edu>
 
 	* sys/ttydefaults.h: Removed.
@@ -12,10 +67,58 @@
 	* sysdeps/unix/sysv/linux/sys/ttydefaults.h: New file; use XTABS
 	in TTYDEF_OFLAG (which is correct for all existing Linux ports).
 
+1997-05-07 16:31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/TESTS: Add some more tests for character class matching.
+	* posix/regex.c: Merge with GNU awk version.
+	(regex_compile): Use ISO C/amend 1 functions for character class
+	handling.
+	* posix/regex.h: Merge with GNU awk version.
+
+	* posix/getopt.c: Declare as master copies.
+	* posix/getopt1.c: Likewise.
+	* posix/getopt.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/sys/mount.h: Add definitions for option
+	value to mount functions.
+	Patch by a sun <asun@zoology.washington.edu>.
+
+1997-05-06 13:25  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sunrpc/svc_run.c (svc_exit): New, defined.
+	(svc_run): Test for svc_stop variable.
+	* sunrpc/rpc/svc.h (svc_exit): New, declared.
+
+1997-05-03 22:24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/e_acoshl.c: Fix test for x < 1.
+
+	* sysdeps/libm-ieee754/e_atan2l.c: Ignore integer bit for Inf and
+	NaN.  Fix test for sign of infinite y.
+
+	* sysdeps/libm-ieee754/e_atanhl.c: Fix sign of result.
+
+	* sysdeps/libm-ieee754/e_sinhl.c: Fix test for sign of argument.
+
 1997-05-05 14:22  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* hurd/hurdsig.c (_hurdsig_preemptors): Provide initialization.
 	* hurd/hurdfault.c (_hurdsig_fault_preemptor): Likewise.
+
+1997-05-01 03:13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/shmat.c (shmat): For Linux-2.0 and up the
+	kernel can return negative values.  Only fail when return value is
+	in range in range which is never returned as valid address.
+	Patch by Bruno Haible <haible@ilog.fr>.
+
+1997-04-30 17:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/random_r.c (__srandom_r): Don't use seed 0.  Use 1 in this
+	case.
+
+	* time/strftime.c (add): Respect `0' padding flag.
+	Reported by Richard Stallman <rms@gnu.ai.mit.edu>.
 
 1997-05-01 20:02  Richard Henderson  <rth@tamu.edu>
 
@@ -38,6 +141,11 @@
 	* sysdeps/libm-i387/e_pow.S: Likewise.
 	* sysdeps/libm-i387/e_powl.S: Likewise.
 
+1997-04-27 20:52  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* malloc/obstack.h (obstack_specify_allocation_with_arg,
+	obstack_chunkfun, obstack_freefun): Fix casts.
+
 1997-04-26 13:37  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/netinet/ip_fw.h: Use <netinet/ip_icmp.h>
@@ -45,6 +153,23 @@
 	* inet/netinet/tcp.h: Move to...
 	* sysdeps/generic/netinet/tcp.h: ...here.
 	Reported by Michael Deutschmann <ldeutsch@mail.netshop.net>.
+
+1997-04-25 12:31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/Makefile ($(objpfx)initfini.s): Add CPPFLAGS, CFLAGS and -g0
+	to command line of compiler.
+	Patch by Marcus G. Daniels <marcus@sysc.pdx.edu>.
+
+	* sysdeps/generic/sigset.h (__sigandset, __sigorset): Fix typos.
+	Patch by Marcus G. Daniels <marcus@sysc.pdx.edu>.
+
+	* signal/signal.h (_sys_siglist, sys_siglist): Use _NSIG, not NSIG
+	in declaration.
+	Patch by Michael Widenius <monty@tcx.se>.
+
+	* time/strptime.c (strptime_internal): Fix %I format specifier
+	being off by one.
+	Patch by Mark Kettenis <kettenis@phys.uva.nl>.
 
 1997-04-21 16:28  Ulrich Drepper  <drepper@cygnus.com>
 
