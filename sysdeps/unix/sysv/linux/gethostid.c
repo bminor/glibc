@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -66,6 +66,7 @@ gethostid ()
   struct in_addr in;
   int herr;
   int fd;
+  int save_errno;
 
   /* First try to get the ID from a former invocation of sethostid.  */
   fd = __open (HOSTIDFILE, O_RDONLY);
@@ -87,6 +88,7 @@ gethostid ()
 
   buflen = 1024;
   buffer = __alloca (buflen);
+  save_errno = errno;
 
   /* To get the IP address we need to know the host name.  */
   while (__gethostbyname_r (hostname, &hostbuf, buffer, buflen, &hp, &herr)
@@ -98,7 +100,11 @@ gethostid ()
 	/* Enlarge buffer.  */
 	buflen *= 2;
 	buffer = __alloca (buflen);
+	__set_errno (0);
       }
+
+  if (errno == 0)
+    __set_errno (save_errno);
 
   in.s_addr = 0;
   memcpy (&in, hp->h_addr,
