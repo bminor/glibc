@@ -7,6 +7,7 @@
 
 	* version.h (VERSION): Bump to 2.2.5.
 
+	* Makefile (distribute): Add scripts/cpp.
 	* elf/Makefile (distribute): Add reldep6mod[01234].c,
 	unwind-dw2.c, unwind-dw2-fde.c, unwind.h, unwind-pe.h,
 	unwind-dw2-fde.h, and dwarf2.h.
