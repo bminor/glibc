@@ -22,16 +22,17 @@ subdir := manual
 
 .PHONY: all dvi info
 all: dvi info
-dvi: library.dvi
-info: library.info
+dvi: libc.dvi
+info: libc.info
 
 # Set chapters and chapters-incl.
-include chapters
-chapters: libc.texinfo
+include $(objpfx)chapters
+$(objpfx)chapters: libc.texinfo
 	$(find-includes)
+chapters := $(filter-out summary.texi,$(chapters))
 ifdef chapters
-include chapters-incl
-chapters-incl: $(chapters)
+include $(objpfx)chapters-incl
+$(objpfx)chapters-incl: $(chapters)
 	$(find-includes)
 endif
 
@@ -41,19 +42,20 @@ define find-includes
 mv $@.new $@
 endef
 
-library.dvi library.info: $(chapters) summary.texi $(chapters-incl)
-library.dvi: texinfo.tex
+$(objpfx)libc.dvi $(objpfx)libc.info: $(chapters) summary.texi $(chapters-incl)
+$(objpfx)libc.dvi: texinfo.tex
 
 # Generate the summary from the Texinfo source files for each chapter.
-summary.texi: stamp-summary ;
-stamp-summary: summary.awk $(chapters)
+$(objpfx)summary.texi: stamp-summary ;
+$(objpfx)stamp-summary: summary.awk $(chapters)
 	awk -f $^ \
 	| sort +1 -2 | tr '\014' '\012' > summary-tmp
-	move-if-change summary-tmp summary.texi
-	touch $@
+	./move-if-change summary-tmp $(objpfx)summary.texi
+# touch is broken on our machines.  Sigh.
+	date > $@
 
 # Generate Texinfo files from the C source for the example programs.
-%.c.texi: examples/%.c
+$(objpfx)%.c.texi: examples/%.c
 	sed -e 's,[{}],@&,g'				\
 	    -e 's,/\*\(@.*\)\*/,\1,g'			\
 	    -e 's,/\* *\(.*\) *\*/,/* @r{\1} */,g'	\
@@ -69,7 +71,7 @@ minimal-dist = COPYING.LIB summary.awk Makefile move-if-change		\
 distribute = $(minimal-dist)	       					\
 	     $(patsubst examples/%.c,%.c.texi,$(filter examples/%.c,	\
 			$(minimal-dist)))				\
-	     library.?? library.??s texinfo.tex summary.texi		\
+	     libc.?? libc.??s texinfo.tex summary.texi			\
 	     stamp-summary chapters chapters-incl
 
 tar-it = tar chovf $@ $^
