@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -38,9 +38,11 @@ getuids (int n, uid_t *uidset)
   nuids = _hurd_id.nuids;
   if (uidset != NULL)
     {
+      /* Copy into a temporary array before releasing the lock.  */
       uid_t uids[nuids];
-      memcpy (uids, _hurd_id.groups, sizeof (uids));
+      memcpy (uids, _hurd_id.uids, sizeof (uids));
       __mutex_unlock (&_hurd_idlock);
+      /* Lock is released; now copy into user array, which might fault.  */
       memcpy (uidset, uids, sizeof (uids));
     }
   else
