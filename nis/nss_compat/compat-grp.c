@@ -78,9 +78,14 @@ internal_setgrent (ent_t *ent)
       ent->oldkeylen = 0;
     }
 
-  ent->blacklist.current = 0;
   if (ent->blacklist.data != NULL)
-    ent->blacklist.data[0] = '\0';
+    {
+      ent->blacklist.current = 1;
+      ent->blacklist.data[0] = '|';
+      ent->blacklist.data[1] = '\0';
+    }
+  else
+    ent->blacklist.current = 0;
 
   if (ent->stream == NULL)
     {
@@ -149,9 +154,14 @@ internal_endgrent (ent_t *ent)
       ent->oldkeylen = 0;
     }
 
-  ent->blacklist.current = 0;
   if (ent->blacklist.data != NULL)
-    ent->blacklist.data[0] = '\0';
+    {
+      ent->blacklist.current = 1;
+      ent->blacklist.data[0] = '|';
+      ent->blacklist.data[1] = '\0';
+    }
+  else
+    ent->blacklist.current = 0;
 
   return NSS_STATUS_SUCCESS;
 }
@@ -268,11 +278,11 @@ getgrnam_plusgroup (const char *name, struct group *result, char *buffer,
   int outvallen;
 
   if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-    return NSS_STATUS_TRYAGAIN;
+    return NSS_STATUS_NOTFOUND;
 
   if (yp_match (domain, "group.byname", name, strlen (name),
 		&outval, &outvallen) != YPERR_SUCCESS)
-    return NSS_STATUS_TRYAGAIN;
+    return NSS_STATUS_NOTFOUND;
   p = strncpy (buffer, outval,
 	       buflen < (size_t) outvallen ? buflen : (size_t) outvallen);
   free (outval);
@@ -364,7 +374,8 @@ getgrent_next_file (struct group *result, ent_t *ent,
           if (status == NSS_STATUS_SUCCESS) /* We found the entry. */
             break;
           else
-            if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
+            if (status == NSS_STATUS_RETURN /* We couldn't parse the entry */
+		|| status == NSS_STATUS_NOTFOUND) /* No group in NIS */
               continue;
             else
 	      {
@@ -372,9 +383,9 @@ getgrent_next_file (struct group *result, ent_t *ent,
 		  /* The parser ran out of space.  */
 		  fsetpos (ent->stream, &pos);
 		return status;
-	      }  
+	      }
 	}
-      
+
       /* +:... */
       if (result->gr_name[0] == '+' && result->gr_name[1] == '\0')
 	{

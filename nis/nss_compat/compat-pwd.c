@@ -194,9 +194,14 @@ internal_setpwent (ent_t *ent)
       ent->oldkeylen = 0;
     }
 
-  ent->blacklist.current = 0;
   if (ent->blacklist.data != NULL)
-    ent->blacklist.data[0] = '\0';
+    {
+      ent->blacklist.current = 1;
+      ent->blacklist.data[0] = '|';
+      ent->blacklist.data[1] = '\0';
+    }
+  else
+    ent->blacklist.current = 0;
 
   if (ent->stream == NULL)
     {
@@ -270,9 +275,14 @@ internal_endpwent (ent_t *ent)
       ent->oldkeylen = 0;
     }
 
-  ent->blacklist.current = 0;
   if (ent->blacklist.data != NULL)
-    ent->blacklist.data[0] = '\0';
+    {
+      ent->blacklist.current = 1;
+      ent->blacklist.data[0] = '|';
+      ent->blacklist.data[1] = '\0';
+    }
+  else
+    ent->blacklist.current = 0;
 
   give_pwd_free (&ent->pwd);
 
@@ -506,12 +516,11 @@ getpwnam_plususer (const char *name, struct passwd *result, char *buffer,
 
 
   if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-    return NSS_STATUS_TRYAGAIN;
+    return NSS_STATUS_NOTFOUND;
 
   if (yp_match (domain, "passwd.byname", name, strlen (name),
-		&outval, &outvallen)
-      != YPERR_SUCCESS)
-    return NSS_STATUS_TRYAGAIN;
+		&outval, &outvallen) != YPERR_SUCCESS)
+    return NSS_STATUS_NOTFOUND;
   ptr = strncpy (buffer, outval, buflen < (size_t) outvallen ?
 		 buflen : (size_t) outvallen);
   buffer[buflen < (size_t) outvallen ? buflen : (size_t) outvallen] = '\0';
@@ -541,6 +550,7 @@ getpwnam_plususer (const char *name, struct passwd *result, char *buffer,
   return NSS_STATUS_RETURN;
 }
 
+/* get the next user from NIS+  (+ entry) */
 static enum nss_status
 getpwent_next_file (struct passwd *result, ent_t *ent,
 		    char *buffer, size_t buflen)
@@ -674,6 +684,7 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 }
 
 
+/* get the next user from NIS (+ entry) */
 static enum nss_status
 internal_getpwent_r (struct passwd *pw, ent_t *ent, char *buffer,
 		     size_t buflen)
@@ -983,7 +994,7 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 		  return NSS_STATUS_TRYAGAIN;
 		}
 	    }
-	  
+
 	  /* Terminate the line for any case.  */
 	  buffer[buflen - 1] = '\0';
 
