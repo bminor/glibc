@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <hurd.h>
 #include <hurd/term.h>
+#include <hurd/fd.h>
 #include <gnu-stabs.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -74,10 +75,9 @@ init_dtable (void)
 	  if (new == NULL)
 	    __libc_fatal ("hurd: Can't allocate initial file descriptors\n");
 
-	  /* Initialize the locks.  CTTY.lock is not used, but let's be
-	     paranoid.  */
-	  __spin_lock_init (&new->port.lock);
-	  __spin_lock_init (&new->ctty.lock);
+	  /* Initialize the port cells.  */
+	  _hurd_port_init (&new->port, MACH_PORT_NULL);
+	  _hurd_port_init (&new->ctty, MACH_PORT_NULL);
 
 	  /* Install the port in the descriptor.
 	     This sets up all the ctty magic.  */
