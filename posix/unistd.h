@@ -553,11 +553,30 @@ extern char *getusershell __P ((void));
 extern void endusershell __P ((void)); /* Discard cached info.  */
 extern void setusershell __P ((void)); /* Rewind and re-read the file.  */
 
+
 /* Prompt with PROMPT and read a string from the terminal without echoing.
    Uses /dev/tty if possible; otherwise stderr and stdin.  */
 extern char *getpass __P ((const char *__prompt));
 
 #endif /* Use BSD.  */
+
+
+#ifdef __USE_MISC
+
+/* Generate a unique temporary file name from TEMPLATE.
+   The last six characters of TEMPLATE must be "XXXXXX";
+   they are replaced with a string that makes the file name unique.
+   Returns TEMPLATE, or a null pointer if it cannot get a unique file name.  */
+extern char *mktemp __P ((char *__template));
+
+/* Generate a unique temporary file name from TEMPLATE.
+   The last six characters of TEMPLATE must be "XXXXXX";
+   they are replaced with a string that makes the filename unique.
+   Returns a file descriptor open on the file for reading and writing,
+   or -1 if it cannot create a uniquely-named file.  */
+extern int mkstemp __P ((char *__template));
+
+#endif	/* Use misc.  */
 
 
 __END_DECLS
