@@ -57,7 +57,7 @@ DEFUN(fclose, (stream), register FILE *stream)
   /* Close the system file descriptor.  */
   if (stream->__io_funcs.__close != NULL)
     status = (*stream->__io_funcs.__close)(stream->__cookie);
-  else if (!stream->__seen)
+  else if (!stream->__seen && stream->__cookie != NULL)
     status = __stdio_close(stream->__cookie);
   else
     status = 0;
