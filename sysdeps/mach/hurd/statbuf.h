@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +55,8 @@ struct stat
 
     __uid_t st_author;		/* File author.  */
 
-    int st_spare[8];		/* Reserved for future use.  */
+    unsigned int st_flags;	/* User-defined flags.
+				   High 16 bits can be set only by root.  */
   };
 
 /* Encoding of the file mode.  */
