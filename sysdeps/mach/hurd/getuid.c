@@ -38,13 +38,7 @@ DEFUN_VOID(__getuid)
 	}
       _hurd_id_valid = 1;
     }
-  if (_hurd_id.nuids == 0)
-    {
-      errno = ENOENT;
-      uid = -1;
-    }
-  else
-    uid = _hurd_id.uids[0];
+  uid = _hurd_id.ruid;
   __mutex_unlock (&_hurd_idlock);
   return uid;
 }
