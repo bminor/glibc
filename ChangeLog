@@ -1,3 +1,14 @@
+1999-06-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/libm-ieee754/e_j0.c (__ieee754_y0): Fix array indices.
+	Patch by mhagger@dera.gov.uk [PR libc/1145].
+ 
+	* math/libm-test.c (y1_test): New tests.
+	(y0_test): Likewise.
+	(j1_test): Likewise.
+	(j0_test): Likewise.
+	(main): Added new tests.
+
 1999-06-02  David S. Miller  <davem@redhat.com>
 
 	* nscd/nscd_gethst_r.c (nscd_gethst_r): Align the h_addr_list
