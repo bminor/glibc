@@ -225,9 +225,9 @@ AC_SUBST(sysnames) sysnames="$libc_cv_sysdirs"
 AC_MSG_RESULT(${sysnames})
 
 AC_PROG_INSTALL
-if test "$INSTALL" = "${srcdir}/install.sh"; then
+if test "$INSTALL" = "${srcdir}/install-sh"; then
   # The makefiles need to use a different form to find it in $srcdir.
-  INSTALL='$(..)./install.sh'
+  INSTALL='$(..)./install-sh'
 fi
 
 AC_PROG_RANLIB
