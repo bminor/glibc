@@ -50,109 +50,38 @@ extern void (*_cthread_exit_routine) (int status);
 
 static int split_args (char *, size_t, char **);
 
-/* Entry point.  The exec server started the initial thread in our task with
-   this spot the PC, and a stack that is presumably big enough.
-   The stack base address (|sp - this| is the size of the stack) is
-   in the return-value register (%eax for i386, etc.).  */
-void
-_start (void)
+
+/* These communicate values from _start to start1,
+   where we cannot use the stack for anything.  */
+static char *args, *env;
+static mach_port_t *portarray;
+static int *intarray;
+static mach_msg_type_number_t argslen, envlen, portarraysize, intarraysize;
+static int flags;
+static char **argv, **envp;
+static int argc;
+
+
+static volatile void
+start1 (void)
 {
-  error_t err;
-  mach_port_t in_bootstrap;
-  char *args, *env;
-  mach_port_t *portarray;
-  int *intarray;
-  mach_msg_type_number_t argslen, envlen, portarraysize, intarraysize;
-  int flags;
+  register int envc = 0;
 
-  int argc, envc;
-  char **argv, **envp;
+  {
+    /* Check if the stack we are now on is different from
+       the one described by _hurd_stack_{high,low}.  */
 
-  /* GET_STACK (LOW, HIGH) should put the boundaries of the allocated
-     stack into LOW and HIGH.  */
+    char dummy;
+    const vm_address_t newsp = (vm_address_t) &dummy;
 
-#ifndef	GET_STACK
-#error GET_STACK not defined by sysdeps/hurd/MACHINE/sysdep.h
-#endif
-  GET_STACK (_hurd_stack_low, _hurd_stack_high);
+    if (newsp < _hurd_stack_low || newsp > _hurd_stack_high)
+      /* The new stack pointer does not intersect with the
+	 stack the exec server set up for us, so free that stack.  */
+      __vm_deallocate (__mach_task_self (),
+		       _hurd_stack_low,
+		       _hurd_stack_high - _hurd_stack_low);
+  }
 
-  /* Basic Mach initialization, must be done before RPCs can be done.  */
-  __mach_init ();
-
-  if (_cthread_init_routine != NULL)
-    {
-      /* Do cthreads initialization, and move to using its new stack.  */
-      void *newsp = (*_cthread_init_routine) ();
-
-      /* SET_SP (ADDR) should set the stack pointer to ADDR.  */
-#ifndef	SET_SP
-#error SET_SP not defined by sysdeps/mach/MACHINE/sysdep.h
-#endif
-      SET_SP (newsp);
-
-      if ((vm_address_t) newsp < _hurd_stack_low ||
-	  (vm_address_t) newsp > _hurd_stack_high)
-	/* The new stack pointer does not intersect with the
-	   stack the exec server set up for us, so free that stack.  */
-	__vm_deallocate (__mach_task_self (),
-			 _hurd_stack_low,
-			 _hurd_stack_high - _hurd_stack_low);
-    }
-
-  if (err = __task_get_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
-				     &in_bootstrap))
-    /* LOSE can be defined as the `halt' instruction or something
-       similar which will cause the process to die in a characteristic
-       way suggesting a bug.  */
-#ifndef LOSE
-#define	LOSE	__task_terminate (__mach_task_self ())
-#endif
-    LOSE;
-
-  if (in_bootstrap != MACH_PORT_NULL)
-    {
-      /* Call the exec server on our bootstrap port and
-	 get all our standard information from it.  */
-
-      argslen = envlen = 0;
-      _hurd_init_dtablesize = portarraysize = intarraysize = 0;
-
-      err = __exec_startup (in_bootstrap,
-			    &flags,
-			    &args, &argslen, &env, &envlen,
-			    &_hurd_init_dtable, &_hurd_init_dtablesize,
-			    &portarray, &portarraysize,
-			    &intarray, &intarraysize);
-      __mach_port_deallocate (__mach_task_self (), in_bootstrap);
-    }
-
-  if (err || in_bootstrap == MACH_PORT_NULL)
-    {
-      /* Either we have no bootstrap port, or the RPC to the exec server
-	 failed.  Try to snarf the args in the canonical Mach way.
-	 Hopefully either they will be on the stack as expected, or the
-	 stack will be zeros so we don't crash.  Set all our other
-	 variables to have empty information.  */
-
-      /* SNARF_ARGS (ARGC, ARGV, ENVP) snarfs the arguments and environment
-	 from the stack, assuming they were put there by the microkernel.  */
-#ifndef SNARF_ARGS
-#error SNARF_ARGS not defined by sysdeps/mach/MACHINE/sysdep.h
-#endif
-      SNARF_ARGS (argc, argv, envp);
-
-      flags = 0;
-      args = env = NULL;
-      argslen = envlen = 0;
-      _hurd_init_dtable = NULL;
-      _hurd_init_dtablesize = 0;
-      portarray = NULL;
-      portarraysize = 0;
-      intarray = NULL;
-      intarraysize = 0;
-    }
-  else
-    argv = envp = NULL;
 
   /* Turn the block of null-separated strings we were passed for the
      arguments and environment into vectors of pointers to strings.  */
@@ -172,11 +101,8 @@ _start (void)
   if (! envp)
     {
       if (! env)
-	{
-	  /* No environment passed; set __environ to { NULL }.  */
-	  envc = 0;
-	  envp = (char **) &env;
-	}
+	/* No environment passed; set __environ to { NULL }.  */
+	envp = (char **) &env;
       else
 	envc = split_args (env, envlen, NULL) + 1;
     }
@@ -209,6 +135,9 @@ _start (void)
   /* Finally, run the user program.  */
   (_cthread_exit_routine != NULL ? *_cthread_exit_routine : exit)
     (main (argc, argv, __environ));
+
+  /* Should never get here.  */
+  LOSE;
 }
 
 static int
@@ -237,4 +166,84 @@ split_args (char *args, size_t argslen, char **argv)
   if (argv)
     argv[argc] = NULL;
   return argc;
+}
+
+
+/* Entry point.  The exec server started the initial thread in our task with
+   this spot the PC, and a stack that is presumably big enough.
+   The stack base address (|sp - this| is the size of the stack) is
+   in the return-value register (%eax for i386, etc.).  */
+void
+_start (void)
+{
+  error_t err;
+  mach_port_t in_bootstrap;
+
+  /* GET_STACK (LOW, HIGH) should put the boundaries of the allocated
+     stack into LOW and HIGH.  */
+
+#ifndef	GET_STACK
+#error GET_STACK not defined by sysdeps/mach/hurd/MACHINE/sysdep.h
+#endif
+  GET_STACK (_hurd_stack_low, _hurd_stack_high);
+
+  /* Basic Mach initialization, must be done before RPCs can be done.  */
+  __mach_init ();
+
+  if (err = __task_get_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
+				     &in_bootstrap))
+    LOSE;
+
+  if (in_bootstrap != MACH_PORT_NULL)
+    {
+      /* Call the exec server on our bootstrap port and
+	 get all our standard information from it.  */
+
+      argslen = envlen = 0;
+      _hurd_init_dtablesize = portarraysize = intarraysize = 0;
+
+      err = __exec_startup (in_bootstrap,
+			    &flags,
+			    &args, &argslen, &env, &envlen,
+			    &_hurd_init_dtable, &_hurd_init_dtablesize,
+			    &portarray, &portarraysize,
+			    &intarray, &intarraysize);
+      __mach_port_deallocate (__mach_task_self (), in_bootstrap);
+    }
+
+  if (err || in_bootstrap == MACH_PORT_NULL)
+    {
+      /* Either we have no bootstrap port, or the RPC to the exec server
+	 failed.  Try to snarf the args in the canonical Mach way.
+	 Hopefully either they will be on the stack as expected, or the
+	 stack will be zeros so we don't crash.  Set all our other
+	 variables to have empty information.  */
+
+      /* SNARF_ARGS (ARGC, ARGV, ENVP) snarfs the arguments and environment
+	 from the stack, assuming they were put there by the microkernel.  */
+      SNARF_ARGS (argc, argv, envp);
+
+      flags = 0;
+      args = env = NULL;
+      argslen = envlen = 0;
+      _hurd_init_dtable = NULL;
+      _hurd_init_dtablesize = 0;
+      portarray = NULL;
+      portarraysize = 0;
+      intarray = NULL;
+      intarraysize = 0;
+    }
+  else
+    argv = envp = NULL;
+
+
+  /* Do cthreads initialization and switch to the cthread stack.  */
+
+  if (_cthread_init_routine != NULL)
+    CALL_WITH_SP (start1, (*_cthread_init_routine) ());
+  else
+    start1 ();
+
+  /* Should never get here.  */
+  LOSE;
 }
