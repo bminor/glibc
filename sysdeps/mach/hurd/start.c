@@ -93,6 +93,7 @@ static __NORETURN void start1 (void);
 
 #ifndef START_ARGS
 #define START_ARGS void
+#endif
 #ifdef START_MACHDEP
 START_MACHDEP
 #define _start _start0
