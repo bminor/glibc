@@ -1,3 +1,7 @@
+#ifdef LIBC
+#include <ansidecl.h>
+#endif
+
 #ifndef lint
 #ifndef NOID
 static char	elsieid[] = "@(#)emkdir.c	8.20";
