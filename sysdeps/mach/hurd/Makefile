@@ -105,11 +105,15 @@ $(objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 		       $(mach-srcdir)/mach/mig_errors.h \
 		       $(mach-srcdir)/device/device_types.h
 	gawk -f $^ > $(hurd)/errnos.h-tmp
+# Make it unwritable so noone will edit it by mistake.
+	-chmod a-w $(hurd)/errnos.h-tmp
 	./$(..)move-if-change $(hurd)/errnos.h-tmp $(hurd)/errnos.h
 	touch $@
 
 $(hurd)/errlist.c: $(hurd)/errlist.awk $(errno.texinfo)
 	gawk -f $^ > $@-tmp
+# Make it unwritable so noone will edit it by mistake.
+	-chmod a-w $@-tmp
 	mv -f $@-tmp $@
 
 # We install the real libc.a as libcrt.a and as libc.a we install a linker
