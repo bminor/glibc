@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -252,7 +252,7 @@ extern int execvp __P ((__const char *__file, char *__const __argv[]));
 /* Execute FILE, searching in the `PATH' environment variable if
    it contains no slashes, with all arguments after FILE until a
    NULL pointer and environment from `environ'.  */
-extern int execlp __P ((__const char *__file, __const char *arg,...));
+extern int execlp __P ((__const char *__file, ...));
 
 
 #ifndef	__NORETURN
