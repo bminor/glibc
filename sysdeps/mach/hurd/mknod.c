@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include "stdio/_itoa.h"
 
 /* Temporary hack; this belongs in a header file, probably types.h. */
-#define major(x) ((int)((unsigned(x) >> 8) & 0xff))
+#define major(x) ((int)(((unsigned) (x) >> 8) & 0xff))
 #define minor(x) ((int)((x) & 0xff))
 
 
