@@ -18,16 +18,20 @@ Cambridge, MA 02139, USA.  */
 
 #include <errno.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <hurd.h>
 #include <hurd/exec.h>
 #include <sysdep.h>
+#include <hurd/threadvar.h>
 
 /* The first piece of initialized data.  */
 int __data_start = 0;
 
 mach_port_t *_hurd_init_dtable;
 mach_msg_type_number_t _hurd_init_dtablesize;
+
+unsigned int __hurd_threadvar_max;
 
 vm_address_t _hurd_stack_base;
 vm_size_t _hurd_stack_size;
@@ -133,6 +137,13 @@ _start (void)
     argv = envp = NULL;
 
 
+  /* The user might have defined a value for this, to get more variables.
+     Otherwise it will be zero on startup.  We must make sure it is set
+     properly before before cthreads initialization, so cthreads can know
+     how much space to leave for thread variables.  */
+  if (__hurd_threadvar_max < _HURD_THREADVAR_MAX)
+    __hurd_threadvar_max = _HURD_THREADVAR_MAX;
+
   /* Do cthreads initialization and switch to the cthread stack.  */
 
   if (_cthread_init_routine != NULL)
@@ -164,6 +175,17 @@ start1 (void)
       __vm_deallocate (__mach_task_self (),
 		       _hurd_stack_base, _hurd_stack_size);
   }
+
+  if (__hurd_threadvar_stack_mask == 0)
+    {
+      /* We are not using cthreads, so we will have just a single allocated
+	 area for the per-thread variables of the main user thread.  */
+      __hurd_threadvar_stack_offset
+	= (unsigned long int) malloc (__hurd_threadvar_max *
+				      sizeof (unsigned long int));
+      if (__hurd_threadvar_stack_offset == 0)
+	__libc_fatal ("Can't allocate single-threaded per-thread variables.");
+    }
 
 
   /* Turn the block of null-separated strings we were passed for the
