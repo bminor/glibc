@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,12 +27,12 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 {
   va_list ap;
 
-  __mutex_lock (&_hurd_dtable.lock);
+  __mutex_lock (&_hurd_dtable_lock);
 
   if (fd < 0 || fd >= _hurd_dtable.size ||
       _hurd_dtable.d[fd].server == MACH_PORT_NULL)
     {
-      __mutex_unlock (&_hurd_dtable.lock);
+      __mutex_unlock (&_hurd_dtable_lock);
       errno = EBADF;
       return -1;
     }
@@ -47,7 +47,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	va_end (ap);
 	if (new < 0 || fd >= _hurd_dtable.size)
 	  {
-	    __mutex_unlock (&_hurd_dtable.lock);
+	    __mutex_unlock (&_hurd_dtable_lock);
 	    errno = EBADF;
 	    return -1;
 	  }
@@ -59,18 +59,17 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 					MACH_PORT_RIGHT_SEND,
 					1))
 		{
-		  __mutex_unlock (&_hurd_dtable.lock);
+		  __mutex_unlock (&_hurd_dtable_lock);
 		  errno = EBADF;
 		  return -1;
 		}
-	      _hurd_dtable.d[new].server = _hurd_dtable.d[fd].server;
-	      _hurd_dtable.d[new].flags = 0;
-	      __mutex_unlock (&_hurd_dtable.lock);
+	      _hurd_dtable.d[new] = _hurd_dtable.d[fd];
+	      __mutex_unlock (&_hurd_dtable_lock);
 	      return new;
 	    }
 	  else
 	    ++new;
-	__mutex_unlock (&_hurd_dtable.lock);
+	__mutex_unlock (&_hurd_dtable_lock);
 	errno = EMFILE;
 	return -1;
       }
@@ -78,7 +77,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
     case F_GETFD:
       {
 	const int flags = _hurd_dtable.d[fd].flags;
-	__mutex_unlock (&_hurd_dtable.lock);
+	__mutex_unlock (&_hurd_dtable_lock);
 	return flags;
       }
 
@@ -89,7 +88,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
 	flags = va_arg (ap, int);
 	va_end (ap);
 	_hurd_dtable.d[fd].flags = flags;
-	__mutex_unlock (&_hurd_dtable.lock);
+	__mutex_unlock (&_hurd_dtable_lock);
 	return 0;
       }
 
@@ -102,7 +101,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
       /* XXX */
 
     default:
-      __mutex_unlock (&_hurd_dtable.lock);
+      __mutex_unlock (&_hurd_dtable_lock);
       errno = EINVAL;
       return -1;
     }
