@@ -128,6 +128,7 @@ fi
 dnl This deals with setting srcdir if it needs to be set.
 changequote([,])
 AC_PREPARE(features.h)
+AC_LANG_C
 changequote(,)
 
 # Decanonicalize srcdir so we can tell when we are configuring in srcdir.
@@ -550,7 +551,7 @@ cat > config.status <<END
 # This file was generated automatically by configure.  Do not edit.
 # The GNU C library was configured in $PWD for
 # $system_name as follows:
-release=$release version=$version $0 $ac_configure_args \$*
+release=$release version=$version $0 $configure_args \$*
 END
 chmod a+x config.status
 echo "Wrote config.status in $PWD."
