@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ static ssize_t
 DEFUN(pwrite, (cookie, buf, n),
       PTR cookie AND CONST char *buf AND size_t n)
 {
-  error_t error = __io_write ((io_t) cookie, buf, n, &n);
+  error_t error = __io_write ((io_t) cookie, buf, n, -1, &n);
   if (error)
     return __hurd_fail (error);
   return n;
