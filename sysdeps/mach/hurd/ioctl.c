@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/ioctl.h>
 #include <hurd.h>
+#include <hurd/fd.h>
 #include <stdarg.h>
 #include <mach/notify.h>
 
@@ -123,7 +124,7 @@ DEFUN(__ioctl, (fd, request),
   in (r.__t.count1, r.__t.type1);
   in (r.__t.count2, r.__t.type2);
 
-  err = _HURD_DPORT_USE
+  err = HURD_DPORT_USE
     (fd,
      ({
        m->msgh_size = (char *) t - msg;
@@ -134,11 +135,11 @@ DEFUN(__ioctl, (fd, request),
 #if 0
        m->msgh_bits = ?;	/* XXX */
 #endif
-       _HURD_EINTR_RPC (port, __mach_msg (m, MACH_SEND_MSG|MACH_RCV_MSG,
-					  m->msgh_size, sizeof (msg),
-					  m->msgh_local_port,
-					  MACH_MSG_TIMEOUT_NONE,
-					  MACH_PORT_NULL));
+       HURD_EINTR_RPC (port, __mach_msg (m, MACH_SEND_MSG|MACH_RCV_MSG,
+					 m->msgh_size, sizeof (msg),
+					 m->msgh_local_port,
+					 MACH_MSG_TIMEOUT_NONE,
+					 MACH_PORT_NULL));
      }));
 
   switch (err)
