@@ -45,7 +45,7 @@ interface-library := libmachuser.a
 user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     memory_object_user			\
 				     memory_object_default		\
-				     exc				\
+				     exc mach4				\
 	            )\
 		   $(addprefix device/,device device_request)
 server-interfaces := device/device_reply mach/exc mach/notify
@@ -136,11 +136,7 @@ generated += $(mach-syscalls:%=__%.S) \
 	     $(mach-syscalls:%=%.c)
 endif	# mach-syscalls
 
-# XXX MK85 has some new syscall_* traps that don't seem to correspond to RPCs.
-mach-shortcuts := $(patsubst syscall_%,%,\
-			     $(filter syscall_vm_% syscall_task_% \
-				      syscall_mach_port_% syscall_thread_%,\
-				      $(mach-syscalls)))
+mach-shortcuts := $(patsubst syscall_%,%,$(filter syscall_%,$(mach-syscalls)))
 
 ifndef mach-shortcuts
 # Forget about mach_interface.defs for this run.  On the next run,
