@@ -51,7 +51,7 @@ routines	:=							      \
 # Several mpn functions from GNU MP are used by the printf_fp function.
 mpn-routines := add_1 add_n addmul_1 cmp divmod divmod_1 udiv_qrnnd \
 		lshift rshift mod_1 mul mul_1 mul_n sub_n submul_1 
-mpn-headers = longlong.h gmp.h gmp-impl.h gmp-mparam.h asm.h
+mpn-headers = longlong.h gmp.h gmp-impl.h gmp-mparam.h asm-syntax.h
 
 routines := $(strip $(routines) $(mpn-routines)) dbl2mpn
 aux	:= errlist siglist defs syms-stdio glue mp_clz_tab
