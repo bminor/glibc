@@ -84,12 +84,8 @@ DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr, streamptr),
 {
   int saverrno = errno;
   static CONST char tmpdir[] = P_tmpdir;
-  static struct
-    {
-      char buf[3];
-      char *s;
-      size_t i;
-    } infos[2], *info;
+  static size_t indices[2];
+  size_t *idx;
   static char buf[FILENAME_MAX];
   static pid_t oldpid = (pid_t) 0;
   pid_t pid = __getpid();
@@ -133,41 +129,54 @@ DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr, streamptr),
 
   if (dir != tmpdir && !strcmp(dir, tmpdir))
     dir = tmpdir;
-  info = &infos[(plen == 0 && dir == tmpdir) ? 1 : 0];
+  idx = &indices[(plen == 0 && dir == tmpdir) ? 1 : 0];
 
   if (pid != oldpid)
     {
       oldpid = pid;
-      infos[0].buf[0] = infos[0].buf[1] = infos[0].buf[2] = letters[0];
-      infos[0].s = infos[0].buf;
-      infos[0].i = 0;
-      infos[1].buf[0] = infos[1].buf[1] = infos[1].buf[2] = letters[0];
-      infos[1].s = infos[1].buf;
-      infos[1].i = 0;
+      indices[0] = indices[1] = 0;
     }
 
   len = dlen + 1 + plen + 5 + 3;
-  for (;;)
+  for (; *idx < ((sizeof (letters) - 1) * (sizeof (letters) - 1) *
+		 (sizeof (letters) - 1));
+       ++*idx)
     {
-      *info->s = letters[info->i];
-      if (sizeof (buf) < len ||
-	  sprintf (buf, "%.*s/%.*s%.5d%.3s",
-		   (int) dlen, dir, (int) plen,
-		   pfx, pid % 100000, info->buf) != (int) len)
-	return NULL;
+      /* Construct a file name and see if it already exists.
 
-      /* Always return a unique string.  */
-      ++info->i;
+	 We use a single counter in *IDX to cycle each of three
+	 character positions through each of 62 possible letters.  */
+
+      if (sizeof (buf) < len ||
+	  sprintf (buf, "%.*s/%.*s%.5d%c%c%c",
+		   (int) dlen, dir, (int) plen,
+		   pfx, pid % 100000,
+		   letters[*idx
+			   % (sizeof (letters) - 1)],
+		   letters[(*idx / (sizeof (letters) - 1))
+			   % (sizeof (letters) - 1)],
+		   letters[(*idx / ((sizeof (letters) - 1) *
+				    (sizeof (letters) - 1)))
+			   % (sizeof (letters) - 1)],
+		   ) != (int) len)
+	return NULL;
 
       if (streamptr != NULL)
 	{
+	  /* Try to create the file atomically.  */
 	  int fd = __open (buf, O_RDWR|O_CREAT|O_EXCL, 0666);
 	  if (fd >= 0)
 	    {
+	      /* We got a new file that did not previously exist.
+		 Create a stream for it.  */
 	      *streamptr = __newstream ();
 	      if (*streamptr == NULL)
 		{
-		  int save = errno;
+		  /* We lost trying to create a stream (out of memory?).
+		     Nothing to do but remove the file, close the descriptor,
+		     and return failure.  */
+		  const int save = errno;
+		  (void) remove (buf);
 		  (void) __close (fd);
 		  errno = save;
 		  return NULL;
@@ -176,27 +185,24 @@ DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr, streamptr),
 	      (*streamptr)->__mode.__write = 1;
 	      (*streamptr)->__mode.__read = 1;
 	      (*streamptr)->__mode.__binary = 1;
-	      break;
 	    }
+	  else
+	    continue;
 	}
-      else if (!exists (buf))
-	break;
+      else if (exists (buf))
+	continue;
 
-      if (info->i > sizeof (letters) - 2)
-	{
-	  info->i = 0;
-	  if (info->s == &info->buf[2])
-	    {
-	      errno = EEXIST;
-	      return NULL;
-	    }
-	  ++info->s;
-	}
+      /* If the file already existed we have continued the loop above,
+	 so we only get here when we have a winning name to return.  */
+
+      errno = saverrno;
+
+      if (lenptr != NULL)
+	*lenptr = len + 1;
+      return buf;
     }
 
-  errno = saverrno;
-
-  if (lenptr != NULL)
-    *lenptr = len + 1;
-  return buf;
+  /* We got out of the loop because we ran out of combinations to try.  */
+  errno = EEXIST;		/* ? */
+  return NULL;
 }
