@@ -46,9 +46,10 @@
 */
 
 #include <gconv.h>
-#include <sys/param.h>		/* For MIN.  */
 #define __need_size_t
 #include <stddef.h>
+
+#define	MIN(a,b) (((a)<(b))?(a):(b))
 
 
 /* We need at least one byte for the next round.  */
