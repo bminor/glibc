@@ -190,14 +190,16 @@ endif
 # would define them.  The system-specific <termbits.h> file presumably
 # defines them with the same values as we find from the system's headers.
 # We also want to omit from ioctls the symbols defined in our own
-# <sys/ttydefaults.h>, to avoid multiple definition conflicts.
-# We use snarf-ioctls on these files to find what symbols we want to omit.
+# <sys/ttydefaults.h>, to avoid multiple definition conflicts.  We use
+# snarf-ioctls on these files to find what symbols we want to omit.  fgrep
+# -xv gives all lines which do not match in their entirety; without -x,
+# CSTOP's presence elided TIOCSTOP.
 
 $(common-objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls \
 			$(sysincludedir)/sys/ioctl.h $(sys/termios.h)
 	$(dir $<)$(notdir $<) $(filter-out $<,$^) \
-	| fgrep -v "`$(dir $<)$(notdir $<) $(termbits.h) \
-					   $(..)termios/sys/ttydefaults.h \
+	| fgrep -xv "`$(dir $<)$(notdir $<) $(termbits.h) \
+					    $(..)termios/sys/ttydefaults.h \
 		     | sort | uniq`" \
 	| sort | uniq | tr '\012' ' ' > $@-tmp
 	mv $@-tmp $@
