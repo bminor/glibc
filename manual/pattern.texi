@@ -89,6 +89,11 @@ directory name that @var{pattern} matches.
 
 If this flag is set, either @samp{foo*} or @samp{foobar} as a pattern
 would match the string @samp{foobar/frobozz}.
+
+@comment fnmatch.h
+@comment GNU
+@item FNM_CASEFOLD
+Ignore case in comparing @var{string} to @var{pattern}.
 @end table
 
 @node Globbing
