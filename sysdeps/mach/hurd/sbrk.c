@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Extend the process's data space by INCREMENT.
    If INCREMENT is negative, shrink data space by - INCREMENT.
-   Return the address of the start of data space, or -1 for errors.  */
+   Return the address of the start of the new data space, or -1 for errors.  */
 PTR
 DEFUN(__sbrk, (increment), int increment)
 {
