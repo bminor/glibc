@@ -1,3 +1,10 @@
+1998-05-31  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/login.c (login): Let pututline take care of finding the
+	positin to insert the UTMP entry.  This corrects a bug where ssh
+	was not reusing UTMP entries marked as DEAD_PROCESS.
+	Reported by Herbert Xu <herbert@gondor.apana.org.au>.
+
 1998-06-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/rpc/xdr.h (struct XDR): Don't mark xdr_ops element as
