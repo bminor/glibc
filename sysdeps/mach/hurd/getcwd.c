@@ -99,12 +99,18 @@ getcwd (char *buf, size_t size)
 
   if (err = __USEPORT (CWDIR, __mach_port_mod_refs (__mach_task_self (),
 						    (parent = port),
-						    MACH_PORT_TYPE_SEND,
+						    MACH_PORT_RIGHT_SEND,
 						    1)))
     {
       _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink, crdir);
       return __hurd_fail (err), NULL;
     }
+  if (err = __io_stat (parent, &st))
+    {
+      cleanup ();
+      return __hurd_fail (err), NULL;
+    }
+
   thisdev = st.st_dev;
   thisino = st.st_ino;
 
