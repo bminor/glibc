@@ -1,3 +1,8 @@
+1998-03-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/Makefile (routines): Add libc-start.
+	* sysdeps/generic/libc-stat.c: New file.
+
 1998-03-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	Put the static-only routines in a separate library.
