@@ -256,15 +256,6 @@ extern int execvp __P ((__const char *__file, char *__const __argv[]));
 extern int execlp __P ((__const char *__file, ...));
 
 
-#ifndef	__NORETURN
-#ifdef	__GNUC__
-/* The `volatile' keyword tells GCC that a function never returns.  */
-#define	__NORETURN	__volatile
-#else /* Not GCC.  */
-#define	__NORETURN
-#endif /* GCC.  */
-#endif /* __NORETURN not defined.  */
-
 /* Terminate program execution with the low-order 8 bits of STATUS.  */
 extern __NORETURN void _exit __P ((int __status));
 
