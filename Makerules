@@ -221,7 +221,7 @@ ar-it: $(objects)
 ifdef objdir
 	cd $(objdir); $(AR) ru$(verbose) libc.a $(patsubst $(objpfx)%,%,$^)
 else
-	$(AR) u$(verbose) $(libc.a) $^
+	$(AR) ru$(verbose) $(..)libc.a $^
 endif
 #	$(+libc_lock_close)
 
@@ -294,6 +294,10 @@ native-compile = cwd=`pwd`; cd $(@D); $(CC) $$cwd/$< -o $(@F)
 define common-objdir-compile
 cd $(@D); $(CC) $(<:$(common-objpfx)%=%) -o $(@F)
 endef
+
+# Support the GNU standard name for this target.
+.PHONY: check
+check: tests
 
 TAGS: $(..)MakeTAGS
 	$(MAKE) -f $< $@
