@@ -16,6 +16,9 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
+ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
+	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/local_lim.h))))))
+
 ifneq (,$(wildcard $(sysincludedir)/sys/param.h))
 local_lim-CFLAGS := $(local_lim-CFLAGS) -DHAVE_SYS_PARAM_H
 endif
@@ -35,6 +38,8 @@ $(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/mk-local_lim.c
 before-compile := $(before-compile) $(common-objpfx)local_lim.h
 generated := $(generated) \
 	     $(common-objpfx)local_lim.h $(common-objpfx)mk-local_lim
+
+endif
 
 before-compile := $(before-compile) $(common-objpfx)sys/param.h
 
