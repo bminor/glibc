@@ -134,6 +134,11 @@ endif
 
 # Add the suffixes we use.
 .SUFFIXES: .a .o .S .s .c .h .dep .m4
+
+# Generic rule for making directories.
+%/:
+# mkdir isn't smart enough to strip a trailing /.
+	mkdir $(@:%/=%)
 
 # Make sure that object files are not removed
 # when they are intermediates between sources and library members.
