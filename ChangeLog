@@ -1,3 +1,8 @@
+2004-10-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/readonly-area.c (__readonly_area): If /proc
+	is not mounted, return 1.
+
 2004-10-20  Roland McGrath  <roland@redhat.com>
 
 	* manual/errno.texi (Error Codes): Add ENOKEY, EKEYEXPIRED,

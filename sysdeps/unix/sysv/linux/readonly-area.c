@@ -33,7 +33,10 @@ __readonly_area (const char *ptr, size_t size)
 
   FILE *fp = fopen ("/proc/self/maps", "rc");
   if (fp == NULL)
-    return -1;
+    /* We don't know.  Returning 1 here means that programs using %n
+       and -D_FORTIFY_SOURCE=2 will work even when /proc is not mounted,
+       but will allow %n even in writable areas.  */
+    return 1;
 
   /* We need no locking.  */
   __fsetlocking (fp, FSETLOCKING_BYCALLER);
