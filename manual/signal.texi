@@ -1259,12 +1259,17 @@ while it is handling the first signal!  This section describes what your
 handler should do, and what you should avoid.
 
 @menu
-* Handler Returns::             
-* Termination in Handler::      
-* Longjmp in Handler::          
-* Signals in Succession::       
-* Nonreentrancy::               
-* Atomic Data Access::          
+* Handler Returns::             Handlers that return normally, and what
+                                 this means. 
+* Termination in Handler::      How handler functions terminate a program.
+* Longjmp in Handler::          Nonlocal transfer of control out of a
+                                 signal handler.
+* Signals in Succession::       What happens when signals arrive while
+                                 the handler is already occupied.
+* Nonreentrancy::               Do not call any functions unless you know they
+                                 are reentrant with respect to signals. 
+* Atomic Data Access::          A single handler can run in the middle of
+                                 reading or writing a single object. 
 @end menu
 
 @node Handler Returns, Termination in Handler,  , Defining Handlers
@@ -1515,7 +1520,7 @@ invalidated by such modifications.
 
 Whether the data in your application concerns atoms, or mere text,
 you have to be careful about the fact that access to a single datum
-is not necessary @dfn{atomic}.  This means that a signal handler can
+is not necessarily @dfn{atomic}.  This means that a signal handler can
 run in the middle of reading or writing a single object.
 
 It's very hard to predict what a program will do when that happens.  To
