@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -39,6 +39,18 @@ extern void *xmalloc (size_t __n);
 
 /* Simple keyword hashing for the repertoiremap.  */
 static const struct keyword_t *repertoiremap_hash (const char *str, int len);
+
+
+uint32_t
+repertoire_find_value (const hash_table *ht, const char *name, size_t len)
+{
+  void *result;
+
+  if (find_entry ((hash_table *) ht, name, len, &result) < 0)
+    return ILLEGAL_CHAR_VALUE;
+
+  return (unsigned int) ((unsigned long int) result);
+}
 
 
 struct repertoire_t *
@@ -242,7 +254,7 @@ argument to <%s> must be a single character"),
 	    }
 
 	  /* We've found a new valid definition.  */
-	  charset_new_char (repfile, &result->char_table, 4,
+	  charset_new_char (repfile, &result->char_table,
 			    now->val.charcode.val, from_name, to_name);
 
 	  /* Ignore the rest of the line.  */
