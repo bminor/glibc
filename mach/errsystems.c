@@ -6,10 +6,10 @@
 #include "../sysdeps/mach/hurd/err_hurd.sub"
 #include "err_us.sub"
 #include "err_server.sub"
-#include "err_mach_ipc.sub"
+#include "err_mach.sub"
 #include "err_kern.sub"
 #include "err_ipc.sub"
-#include "err_bootstrap.sub"
+#include "err_boot.sub"
 
 
 const struct error_system __mach_error_systems[err_max_system + 1] =

@@ -167,13 +167,18 @@ _hurd_exec (task_t task, file_t file,
 	      continue;
 	    }
 	  __spin_lock (&d->port.lock);
-	  if (pdp && d->port.port != MACH_PORT_NULL)
-	    *pdp++ = d->port.port;
 	  if (d->flags & FD_CLOEXEC)
 	    {
 	      /* This descriptor is marked to be closed on exec.
 		 So don't pass it to the new program.  */
 	      dtable[i] = MACH_PORT_NULL;
+	      if (pdp && d->port.port != MACH_PORT_NULL)
+		{
+		  /* We still need to deallocate the ports.  */
+		  *pdp++ = d->port.port;
+		  if (d->ctty.port != MACH_PORT_NULL)
+		    *pdp++ = d->ctty.port;
+		}
 	      __spin_unlock (&d->port.lock);
 	    }
 	  else
@@ -189,6 +194,12 @@ _hurd_exec (task_t task, file_t file,
 		}
 	      else
 		{
+		  if (pdp)
+		    /* All the elements of DTABLE are added to PLEASE_DEALLOC
+		       below, so we needn't add the port in the branch above.
+		       But we must deallocate the foreground port as well as
+		       the normal port that got installed in DTABLE[I].  */
+		    *pdp++ = d->port.port;
 		  __spin_unlock (&d->port.lock);
 		  dtable_cells[i] = &d->ctty;
 		}
