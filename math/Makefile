@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -35,10 +35,10 @@ install-lib := libm.a
 
 include ../Rules
 
-
 $(objpfx)libm.a:
 	$(AR) cr $@ /dev/null
 
+lib: $(objpfx)libm.a
 
 ifneq (,)     # the code is now distributed through ../sysdeps/
 
