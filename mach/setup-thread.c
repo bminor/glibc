@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include "thread_state.h"
 #include <string.h>
 
-#define	STACK_SIZE	(4 * __vm_page_size) /* ? XXX */
+#define	STACK_SIZE	(16 * 1024 * 1024) /* 16MB, arbitrary.  */
 
 /* Give THREAD a stack and set it to run at PC when resumed.  */
 kern_return_t
