@@ -13,7 +13,8 @@
 @c  I've already told people the printed edition will be 0.06
 @set EDITION 0.06 DRAFT
 @set VERSION 1.09 Beta
-@set UPDATED 14 October 1994
+@set UPDATED 18 October 1994
+@set ISBN 1-882114-53-1
 
 @ifinfo
 This file documents the GNU C library.
@@ -72,7 +73,8 @@ Copyright @copyright{} 1993, 1994 Free Software Foundation, Inc.
 Published by the Free Software Foundation @*
 675 Massachusetts Avenue, @*
 Cambridge, MA 02139 USA @*
-Printed copies are available for $50 each.
+Printed copies are available for $50 each. @*
+ISBN @value{ISBN} @*
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
