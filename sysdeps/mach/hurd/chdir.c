@@ -28,7 +28,7 @@ DEFUN(__chdir, (path), CONST char *path)
   error_t err;
   file_t old, cwdir;
 
-  cwdir = __hurd_path_lookup (path, 0, 0);
+  cwdir = __hurd_path_lookup (path, FS_LOOKUP_EXECUTE, 0);
   if (cwdir == MACH_PORT_NULL)
     return -1;
 
