@@ -27,37 +27,36 @@ DEFUN(__write, (fd, buf, nbytes),
 {
   error_t err;
   size_t wrote;
+  int noctty;
 
+  struct _hurd_sigstate *ss
+    = _hurd_thread_sigstate (__mach_thread_self ());
+
+  /* Don't use the ctty io port if we are orphaned, or are blocking or
+     ignoring SIGTTOU.  */
+  noctty = (_hurd_orphaned ||
+	    __sigismember (SIGTTOU, &ss->blocked) ||
+	    ss->actions[SIGTTOU].sa_handler == SIG_IGN);
+  __mutex_unlock (&ss->lock);
+  
   _HURD_DPORT_USE
     (fd,
      ({
      call:
-       err = __io_write (port, buf, nbytes, -1, &wrote);
-       if (ctty != MACH_PORT_NULL && err == EBACKGROUND)
+       err = __io_write (noctty ? port : ctty, buf, nbytes, -1, &wrote);
+       if (!noctty && ctty != MACH_PORT_NULL && err == EBACKGROUND)
 	 {
 #if 1
 	   abort ();
 #else
-	   struct _hurd_sigstate *ss
-	     = _hurd_thread_sigstate (__mach_thread_self ());
-	   if (_hurd_orphaned ||
-	       __sigismember (SIGTTOU, &ss->blocked) ||
-	       ss->actions[SIGTTOU].sa_handler == SIG_IGN)
-	     {
-	       /* We are orphaned, or are blocking or ignoring SIGTTOU.
-		  Return EIO instead of stopping.  */
-	       __mutex_unlock (&ss->lock);
-	       err = EIO;
-	     }
+	   int restart;
+	   __mutex_lock (&ss->lock);
+	   restart = ss->actions[SIGTTOU].sa_flags & SA_RESTART;
+	   _hurd_raise_signal (ss, SIGTTOU, 0); /* Unlocks SS->lock.  */
+	   if (restart)
+	     goto call;
 	   else
-	     {
-	       const int restart = ss->actions[SIGTTOU].sa_flags & SA_RESTART;
-	       _hurd_raise_signal (ss, SIGTTOU, 0); /* Unlocks SS->lock.  */
-	       if (restart)
-		 goto call;
-	       else
-		 err = EINTR;	/* XXX Is this right? */
-	     }
+	     err = EINTR;	/* XXX Is this right? */
 #endif
 	 }
      }));
