@@ -32,7 +32,8 @@ mode_t _hurd_umask;
 mach_port_t *_hurd_init_dtable;
 mach_msg_type_number_t _hurd_init_dtablesize;
 
-vm_address_t _hurd_stack_low, _hurd_stack_high;
+vm_address_t _hurd_stack_base;
+vm_size_t _hurd_stack_size;
 
 volatile int errno;		/* XXX wants to be per-thread */
 
@@ -69,18 +70,17 @@ start1 (void)
 
   {
     /* Check if the stack we are now on is different from
-       the one described by _hurd_stack_{high,low}.  */
+       the one described by _hurd_stack_{base,size}.  */
 
     char dummy;
     const vm_address_t newsp = (vm_address_t) &dummy;
 
-    if ((_hurd_stack_low || _hurd_stack_high) &&
-	(newsp < _hurd_stack_low || newsp > _hurd_stack_high))
+    if (_hurd_stack_size != 0 && (newsp < _hurd_stack_base ||
+				  newsp - _hurd_stack_base > _hurd_stack_size))
       /* The new stack pointer does not intersect with the
 	 stack the exec server set up for us, so free that stack.  */
       __vm_deallocate (__mach_task_self (),
-		       _hurd_stack_low,
-		       _hurd_stack_high - _hurd_stack_low);
+		       _hurd_stack_base, _hurd_stack_size);
   }
 
 
@@ -121,12 +121,10 @@ start1 (void)
     }
 
   if (portarray || intarray)
-#ifdef notyet
     /* Initialize library data structures, start signal processing, etc.  */
     _hurd_init (argv,
 		portarray, portarraysize,
 		intarray, intarraysize);
-#endif
 
 
   /* Random library initialization.  */
@@ -171,17 +169,29 @@ split_args (char *args, size_t argslen, char **argv)
 
 
 /* Entry point.  The exec server started the initial thread in our task with
-   this spot the PC, and a stack that is presumably big enough.
-   The stack base address (|sp - this| is the size of the stack) is
-   in the return-value register (%eax for i386, etc.).  */
+   this spot the PC, and a stack that is presumably big enough.  We do basic
+   Mach initialization so mig-generated stubs work, and then do an exec_startup
+   RPC on our bootstrap port, to which the exec server responds with the
+   information passed in the exec call, as well as our original bootstrap port,
+   and the base address and size of the preallocated stack.
+
+   If using cthreads, we are given a new stack by cthreads initialization and
+   deallocate the stack set up by the exec server.  On the new stack we call
+   `start1' (above) to do the rest of the startup work.  Since the stack may
+   disappear out from under us in a machine-dependent way, we use a pile of
+   static variables to communicate the information from exec_startup to start1.
+   This is unfortunate but preferable to machine-dependent frobnication to copy
+   the state from the old stack to the new one.  */
+
 void
 _start (void)
 {
   error_t err;
   mach_port_t in_bootstrap;
   vm_address_t stack_pointer, stack_base;
+  vm_size_t stack_size;
 
-  /* GET_STACK (SP) should put the stack pointer in SP.  */
+  /* GET_SP (SP) should put the stack pointer in SP.  */
 
 #ifndef	GET_SP
 #error GET_SP not defined by sysdeps/mach/hurd/MACHINE/sysdep.h
@@ -204,7 +214,7 @@ _start (void)
       _hurd_init_dtablesize = portarraysize = intarraysize = 0;
 
       err = __exec_startup (in_bootstrap,
-			    &stack_base,
+			    &stack_base, &stack_size,
 			    &flags,
 			    &args, &argslen, &env, &envlen,
 			    &_hurd_init_dtable, &_hurd_init_dtablesize,
@@ -236,26 +246,7 @@ _start (void)
       intarraysize = 0;
     }
   else
-    {
-      argv = envp = NULL;
-
-      if (stack_base == 0)
-	/* This is an explicit message that we should
-	   not deallocate the stack at all.  */
-	_hurd_stack_low = _hurd_stack_high = 0;
-      else if (stack_base < stack_pointer)
-	{
-	  /* Stack grows down.  */
-	  _hurd_stack_low = trunc_page (stack_base);
-	  _hurd_stack_high = round_page (stack_pointer);
-	}
-      else
-	{
-	  /* Stack grows up.  */
-	  _hurd_stack_low = trunc_page (stack_pointer);
-	  _hurd_stack_high = round_page (stack_base);
-	}
-    }
+    argv = envp = NULL;
 
 
   /* Do cthreads initialization and switch to the cthread stack.  */
