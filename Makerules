@@ -99,15 +99,15 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules
 	 done) > $@T
 	mv $@T $@
 
+
 # Reorder before-compile so that mach things come first, and hurd things
 # second, before all else.  The mach and hurd subdirectories have many
 # generated header files which the much of rest of the library depends on,
 # so it is best to build them first (and mach before hurd, at that).
 before-compile := $(filter $(common-objpfx)mach% $(common-objpfx)hurd%,\
-			   $(before-compile))
+			   $(before-compile)) \
 		  $(filter-out $(common-objpfx)mach% $(common-objpfx)hurd%,\
 			       $(before-compile))
-
 
 # Remove existing files from `before-compile'.  Things are added there when
 # they must exist for dependency generation to work right, but once they
