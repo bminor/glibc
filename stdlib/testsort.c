@@ -32,7 +32,7 @@ DEFUN_VOID(main)
   qsort (lines, 500, sizeof (char *), compare);
 
   for (i = 0; i < 500 && lines[i] != NULL; ++i)
-    fputs (lines[i], stdout);
+    puts (lines[i]);
 
   return 0;
 }
