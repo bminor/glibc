@@ -220,7 +220,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	    {
 	      do
 		*str++ = c;
-	      while (inchar() != EOF && width-- > 0);
+	      while (inchar() != EOF && --width > 0);
 	    }
 	  else
 	    while (inchar() != EOF && width > 0)
