@@ -56,6 +56,17 @@ include ../Makerules
 
 .PHONY: subdir_lib
 subdir_lib: lib-noranlib
+
+# Some subdirs need to install a dummy library.
+# They can use "$(objpfx)libfnord.a: $(dep-dummy-lib); $(make-dummy-lib)".
+dep-dummy-lib = $(objpfx)dummy.o
+define make-dummy-lib
+ar cr$(verbose) $@ $<
+endef
+$(objpfx)dummy.o:
+	@rm -f $(@:.o=.c)
+	cp /dev/null $(@:.o=.c)
+	$(CC) -c $(@:.o=.c) -o $@
 
 # This makes all the auxilliary and test programs.
 
