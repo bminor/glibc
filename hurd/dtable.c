@@ -167,7 +167,7 @@ _hurd_port2fd (struct _hurd_fd *d, io_t port, int flags)
     }
 
   if (is_ctty && ! __term_become_ctty (port, _hurd_pid, _hurd_pgrp,
-				       _hurd_sigport, &ctty))
+				       _hurd_msgport, &ctty))
     {
       /* Operations on CTTY return EBACKGROUND when we are not a
 	 foreground user of the tty.  */
@@ -261,26 +261,27 @@ reauth_dtable (void)
       
       /* Reauthenticate the descriptor's port.  */
       if (d->port.port != MACH_PORT_NULL &&
-	  ! __io_reauthenticate (d->port.port) &&
+	  ! __io_reauthenticate (d->port.port, _hurd_pid) &&
 	  ! __USEPORT (AUTH, __auth_user_authenticate (port,
-						       d->port.port, &new)))
+						       d->port.port, _hurd_pid,
+						       &new)))
 	{
 	  /* Replace the port in the descriptor cell
 	     with the newly reauthenticated port.  */
 
-	  if (cell->ctty.port != MACH_PORT_NULL &&
-	      ! __io_reauthenticate (cell->ctty.port) &&
-	      ! _HURD_PORT_USE (&_hurd_auth,
-				__auth_user_authenticate (port,
-							  cell->ctty.port,
-							  &newctty)))
+	  if (d->ctty.port != MACH_PORT_NULL &&
+	      ! __io_reauthenticate (d->ctty.port, _hurd_pid) &&
+	      ! __USEPORT (AUTH, __auth_user_authenticate (port,
+							   d->ctty.port,
+							   _hurd_pid,
+							   &newctty)))
 	    _hurd_port_set (&d->ctty, newctty);
 
 	  _hurd_port_locked_set (&d->port, new);
 	}
       else
 	/* Lost.  Leave this descriptor cell alone.  */
-	__spin_unlock (&cell->port.lock);
+	__spin_unlock (&d->port.lock);
     }
 
   __mutex_unlock (&_hurd_dtable_lock);
@@ -317,7 +318,8 @@ rectty_dtable (mach_port_t cttyid)
 						       &newctty))
 				 /* XXX it is our ctty but the call failed? */
 				 newctty = MACH_PORT_NULL;
-			       __mach_port_deallocate (__mach_task_self, id);
+			       __mach_port_deallocate
+				 (__mach_task_self, (mach_port_t) id);
 			     }
 			   else
 			     newctty = MACH_PORT_NULL;
@@ -333,14 +335,13 @@ rectty_dtable (mach_port_t cttyid)
 
 
 /* Make FD be the controlling terminal.
-   This function is called for `ioctl (fd, TIOCSTTY)'.  */
+   This function is called for `ioctl (fd, TCIOSCTTY)'.  */
 
 static int
-tiocstty (int fd,
-	  int request,		/* Always TIOCSTTY.  */
-	  void *arg)		/* Not used.  */
+tiocsctty (int fd,
+	   int request,		/* Always TCIOSCTTY.  */
+	   void *arg)		/* Not used.  */
 {
-  io_t ctty;
   mach_port_t cttyid;
   error_t err;
 
@@ -361,7 +362,7 @@ tiocstty (int fd,
 
   return 0;
 }
-_HURD_HANDLE_IOCTL (tiocstty, TIOCSTTY);
+_HURD_HANDLE_IOCTL (tciosctty, TCIOSCTTY);
 
 /* Dissociate from the controlling terminal.  */
 
