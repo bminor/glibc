@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <signal.h>
 #include <time.h>
 #include <unistd.h>
+#include <errno.h>
 
 
 /* SIGALRM signal handler for `sleep'.  This does nothing but return,
