@@ -31,9 +31,20 @@ Cambridge, MA 02139, USA.  */
 function_alias(getpgrp, __getpgrp, pid_t, (pid),
 	       DEFUN(getpgrp, (pid), pid_t pid))
 
+/* These entry points allow for things compiled for another C library
+   that want the BSD-compatible definitions.  (Of course, their jmp_buf
+   must be big enough.)  */
+
 #undef	longjmp
 #ifdef __STDC__
 #define void __NORETURN void
 #endif
 function_alias_void(longjmp, siglongjmp, (env, val),
 		    DEFUN(longjmp, (env, val), CONST jmp_buf env AND int val))
+
+#undef	setjmp
+int
+DEFUN(setjmp, (env), jmp_buf env)
+{
+  return sigsetjmp (env, 1);
+}
