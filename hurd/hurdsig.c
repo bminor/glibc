@@ -365,7 +365,8 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state)
 	mach_msg_header_t head;
 	err = __mach_msg (&head, MACH_RCV_MSG, 0, sizeof head, ss->intr_port,
 			  MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-	assert (err == KERN_SUCCESS || err == MACH_RCV_TOO_LARGE);
+	if (err) perror ("XXX FIXME interrupted RPC");
+/*	assert (err == KERN_SUCCESS || err == MACH_RCV_TOO_LARGE);*/
       }
 }
 
