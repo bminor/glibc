@@ -4233,7 +4233,8 @@ _int_free(mstate av, Void_t* mem)
 #endif
       ) {
 
-    if (__builtin_expect (chunksize (chunk_at_offset (p, size)) < MINSIZE, 0)
+    if (__builtin_expect (chunksize (chunk_at_offset (p, size)) < 2 * SIZE_SZ,
+			  0)
 	|| __builtin_expect (chunksize (chunk_at_offset (p, size))
 			     >= av->system_mem, 0))
       {
