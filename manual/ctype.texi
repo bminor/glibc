@@ -12,7 +12,7 @@ Since the choice of locale and character set can alter the
 classifications of particular character codes, all of these functions
 are affected by the current locale.  (More precisely, they are affected
 by the locale currently selected for character classification---the
-@code{LC_CTYPE} category; @xref{Locale Categories}.)
+@code{LC_CTYPE} category; see @ref{Locale Categories}.)
 
 @menu
 * Classification of Characters::   Testing whether characters are
