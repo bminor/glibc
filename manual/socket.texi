@@ -32,7 +32,7 @@ broadcast messages or for configuring internet interfaces.
 * Open/Close Sockets::  Creating sockets and destroying them.
 * Connections::		Operations on sockets with connection state.
 * Datagrams::		Operations on datagram sockets.
-* Inetd::		Inetd is a demon that starts servers on request.
+* Inetd::		Inetd is a daemon that starts servers on request.
 			   The most convenient way to write a server
 			   is to make it work with Inetd.
 * Socket Options::	Miscellaneous low-level socket options.
@@ -2529,14 +2529,14 @@ for the reply, and in case of timeout either resend the message or
 shut down the socket and exit.
 
 @node Inetd
-@section The Inetd Demon
+@section The Inetd Daemon
 
 We've explained above how to write a server program that does its own
 listening.  Such a server must already be running in order for anyone
 to connect to it.
 
 Another way to provide service for an Internet port is to let the
-demon program Inetd do the listening.  Inetd is a program that runs
+daemon program Inetd do the listening.  Inetd is a program that runs
 all the time and listens for messages on a specified set of ports.
 When it receives a message, it accepts the connection and then forks a
 child process to run the corresponding server program.  You specify
