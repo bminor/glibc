@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 #include <hurd/signal.h>
+#include <hurd/msg.h>
 #include <setjmp.h>
 
 /* Handle signal SIGNO in the calling thread.
@@ -28,7 +29,7 @@ void
 _hurd_raise_signal (struct hurd_sigstate *ss, int signo, int sigcode)
 {
   if (ss == NULL)
-    ss = _hurd_thread_sigstate (__mach_thread_self ());
+    ss = _hurd_self_sigstate ();
 
   /* Mark SIGNO as pending to be delivered.  */
   __sigaddset (&ss->pending, signo);
