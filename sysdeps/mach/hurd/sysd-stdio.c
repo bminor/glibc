@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,45 +22,64 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <hurd.h>
 #include <fcntl.h>
+#include <hurd/fd.h>
 
-/* XXX ctty undone */
+
+/* Check ERR for wanting to generate a signal.  */
+
+int __stdio_fileno (void *);
+
+static inline int
+fd_fail (struct hurd_fd *fd, error_t err)
+{
+  int signo = _hurd_fd_error_signal (err);
+  if (signo)
+    _hurd_raise_signal (NULL, signo, __stdio_fileno (fd));
+  errno = err;
+  return -1;
+}
 
 
 /* Read up to N chars into BUF from COOKIE.
    Return how many chars were read, 0 for EOF or -1 for error.  */
 ssize_t
 DEFUN(__stdio_read, (cookie, buf, n),
-      PTR cookie AND register char *buf AND register size_t n)
+      PTR cookie AND register char *buf AND size_t n)
 {
-  unsigned int nread;
   error_t err;
-  char *bufp = buf;
+  struct hurd_fd *fd = cookie;
 
-  nread = n;
-  if (err = __io_read ((io_t) cookie, &bufp, &nread, -1, n))
-    return __hurd_fail (err);
+  if (! fd)
+    return __hurd_fail (EBADF);
 
-  if (bufp != buf)
-    {
-      memcpy (buf, bufp, nread);
-      __vm_deallocate (__mach_task_self (),
-		       (vm_address_t) bufp, (vm_size_t) nread);
-    }
+  if (err = _hurd_fd_read (fd, buf, &n))
+    return fd_fail (fd, err);
 
-  return nread;
+  return n;
 }
 
 /* Write up to N chars from BUF to COOKIE.
    Return how many chars were written or -1 for error.  */
 ssize_t
 DEFUN(__stdio_write, (cookie, buf, n),
-      PTR cookie AND register CONST char *buf AND register size_t n)
+      PTR cookie AND register CONST char *buf AND size_t n)
 {
-  unsigned int wrote;
   error_t err;
+  size_t wrote, nleft;
+  struct hurd_fd *fd = cookie;
 
-  if (err = __io_write ((io_t) cookie, buf, n, -1, &wrote))
-    return __hurd_fail (err);
+  if (! fd)
+    return __hurd_fail (EBADF);
+
+  nleft = n;
+  do
+    {
+      wrote = nleft;
+      if (err = _hurd_fd_write (fd, buf, &wrote))
+	return fd_fail (fd, err);
+      buf += wrote;
+      nleft -= wrote;
+    } while (nleft > 0);
 
   return wrote;
 }
@@ -72,10 +91,13 @@ int
 DEFUN(__stdio_seek, (cookie, pos, whence),
       PTR cookie AND fpos_t *pos AND int whence)
 {
-  error_t error = __io_seek ((file_t) cookie, *pos, whence, pos);
-  if (error)
-    return __hurd_fail (error);
-  return 0;
+  error_t err;
+  struct hurd_fd *fd = cookie;
+  if (! fd)
+    return __hurd_fail (EBADF);
+  __spin_lock (&fd->port.lock);
+  err = HURD_FD_USE (fd, __io_seek (port, *pos, whence, pos));
+  return err ? fd_fail (fd, err) : 0;
 }
 
 /* Close the file associated with COOKIE.
@@ -83,11 +105,12 @@ DEFUN(__stdio_seek, (cookie, pos, whence),
 int
 DEFUN(__stdio_close, (cookie), PTR cookie)
 {
-  error_t error = __mach_port_deallocate (__mach_task_self (),
-					  (mach_port_t) cookie);
-  if (error)
-    return __hurd_fail (error);
-  return 0;
+  error_t error;
+  if (cookie)
+    error = _hurd_fd_close (cookie);
+  else
+    error = EBADF;
+  return error ? __hurd_fail (error) : 0;
 }
 
 
@@ -98,6 +121,7 @@ DEFUN(__stdio_open, (filename, m, cookieptr),
 {
   int flags;
   file_t port;
+  struct hurd_fd *d;
 
   flags = 0;
   if (m.__read)
@@ -116,7 +140,17 @@ DEFUN(__stdio_open, (filename, m, cookieptr),
   port = __path_lookup (filename, flags, 0666 & ~_hurd_umask);
   if (port == MACH_PORT_NULL)
     return -1;
-  *cookieptr = (void *) port;
+
+  HURD_CRITICAL_BEGIN;
+  d = _hurd_alloc_fd (NULL, 0);
+  if (d != NULL)
+    {
+      _hurd_port2fd (d, port, flags);
+      __spin_unlock (&d->port.lock);
+    }
+  HURD_CRITICAL_END;
+
+  *cookieptr = d;
   return 0;
 }
 
@@ -133,50 +167,31 @@ DEFUN(__stdio_errmsg, (msg, len), CONST char *msg AND size_t len)
   __io_write (server, msg, len, -1, &wrote);
   __mach_port_deallocate (__mach_task_self (), server);
 }
-
+
+
 /* Return the POSIX.1 file descriptor associated with COOKIE,
    or -1 for errors.  If COOKIE does not relate to any POSIX.1 file
    descriptor, this should return -1 with errno set to EOPNOTSUPP.  */
 int
 DEFUN(__stdio_fileno, (cookie), PTR cookie)
 {
-  errno = ENOSYS;
+  int fd;
+
+  if (! cookie)
+    return __hurd_fail (EBADF);
+
+  __mutex_lock (&_hurd_dtable_lock);
+  for (fd = 0; fd < _hurd_dtablesize; ++fd)
+    if (_hurd_dtable[fd] == cookie)
+      {
+	__mutex_unlock (&_hurd_dtable_lock);
+	return fd;
+      }
+  __mutex_unlock (&_hurd_dtable_lock);
+
+  /* This should never happen, because this function should not be
+     installed as a stream's __fileno function unless that stream's cookie
+     points to a file descriptor.  */
+  errno = EGRATUITOUS;
   return -1;
 }
-
-#ifdef notready
-#define __stdio_read	__stdio_fd_read
-#define __stdio_write	__stdio_fd_write
-#define __stdio_seek	__stdio_fd_seek
-#define __stdio_close	__stdio_fd_close
-#define __stdio_open	__stdio_fd_open
-#include <sysdeps/posix/sysd-stdio.c>
-
-static const __io_functions fd_io_funcs =
-  {
-    __read: __stdio_fd_read,
-    __write: __stdio_fd_write,
-    __seek: __stdio_fd_seek,
-    __close: __stdio_fd_close,
-  };
-
-/* XXX _hurd_fork_hook to install stream ports.  */
-
-static error_t
-fork_stdio (task_t newtask)
-{
-  FILE *f;
-
-  for (f = __stdio_head; f != NULL; f = f->next)
-    if (f->__io_funcs.__close == __stdio_close &&
-	(io_t) f->__cookie != MACH_PORT_NULL)
-      {
-	error_t err = __mach_port_insert_right (newtask,
-						(io_t) f->__cookie,
-						(io_t) f->__cookie,
-						MACH_PORT_COPY_SEND);
-	if (err)
-	  return err;
-      }
-}
-#endif
