@@ -942,6 +942,10 @@ Mountain View, California  94043
 @item
 The port to SGI machines running Irix 4 (@code{mips-sgi-irix4}) was
 contributed by Tom Quinn.
+
+@item
+The port of the Mach and Hurd code to the MIPS architecture
+(@code{mips-@var{anything}-gnu}) was contribued by Kazumoto Kojima.
 @end itemize
 
 @c @bye
