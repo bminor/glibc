@@ -13,7 +13,7 @@ DEFUN(compare, (a, b), CONST PTR a AND CONST PTR b)
 int
 DEFUN_VOID(main)
 {
-  char bufs[20][500];
+  char bufs[500][20];
   char *lines[500];
   size_t lens[500];
   size_t i, j;
