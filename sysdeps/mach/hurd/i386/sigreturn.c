@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +30,13 @@ __sigreturn (register const struct sigcontext *scp)
       return -1;
     }
 
+  ss = _hurd_thread_sigstate (__mach_thread_self ());
+  ss->blocked = scp->sc_mask;
+  ss->intr_port = scp->sc_intr_port;
+  if (scp->sc_onstack)
+    ss->sigaltstack.ss_flags &= ~SA_ONSTACK;
+  __mutex_unlock (&ss->lock);
+
   /* Push the flags and registers onto the stack we're returning to.  */
   usp = (int *) scp->sc_uesp;
   *--usp = scp->sc_eip;
@@ -42,12 +49,6 @@ __sigreturn (register const struct sigcontext *scp)
   *--usp = scp->sc_edx;
   *--usp = scp->sc_ecx;
   *--usp = scp->sc_eax;
-
-  ss = _hurd_thread_sigstate (__mach_thread_self ());
-  ss->blocked = scp->sc_mask;
-  ss->sigstack.ss_onstack = scp->sc_onstack;
-  ss->intr_port = scp->sc_intr_port;
-  __mutex_unlock (&ss->lock);
 
   /* Switch to the target stack, and pop the state off it.  */
   asm volatile ("movl %0, %%esp\n"
