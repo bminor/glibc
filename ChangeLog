@@ -1,3 +1,8 @@
+2002-05-28  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/generic/readelflib.c (process_elf_file): Give correct
+	message when finding object of wrong class.
+
 2002-05-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/wordsize-32/divdi3.c (__moddi3): Fix pasto.
