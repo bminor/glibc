@@ -171,10 +171,10 @@ extern void rewinddir __P ((DIR *__dirp));
 # include <bits/types.h>
 
 /* Seek to position POS on DIRP.  */
-extern void seekdir __P ((DIR *__dirp, __off_t __pos));
+extern void seekdir __P ((DIR *__dirp, long int __pos));
 
 /* Return the current position of DIRP.  */
-extern __off_t telldir __P ((DIR *__dirp));
+extern long int telldir __P ((DIR *__dirp));
 #endif
 
 #if defined __USE_BSD || defined __USE_MISC
