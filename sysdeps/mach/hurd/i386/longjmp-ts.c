@@ -18,7 +18,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <setjmp.h>
-#include <mach/thread_state.h>
+#include <mach/thread_status.h>
 
 /* Set up STATE to do the equivalent of `longjmp (ENV, VAL);'.  */
 
