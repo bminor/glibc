@@ -94,39 +94,39 @@ struct rusage
     /* Total amount of system time used.  */
     struct timeval ru_stime;
     /* Maximum resident set size (in kilobytes).  */
-    int ru_maxrss;
+    long ru_maxrss;
     /* Amount of sharing of text segment memory
        with other processes (kilobyte-seconds).  */
-    int ru_ixrss;
+    long ru_ixrss;
     /* Amount of data segment memory used (kilobyte-seconds).  */
-    int ru_idrss;
+    long ru_idrss;
     /* Amount of stack memory used (kilobyte-seconds).  */
-    int ru_isrss;
+    long ru_isrss;
     /* Number of soft page faults (i.e. those serviced by reclaiming
        a page from the list of pages awaiting reallocation.  */
-    int ru_minflt;
+    long ru_minflt;
     /* Number of hard page faults (i.e. those that required I/O).  */
-    int ru_majflt;
+    long ru_majflt;
     /* Number of times a process was swapped out of physical memory.  */
-    int ru_nswap;
+    long ru_nswap;
     /* Number of input operations via the file system.  Note: This
        and `ru_oublock' do not include operations with the cache.  */
-    int ru_inblock;
+    long ru_inblock;
     /* Number of output operations via the file system.  */
-    int ru_oublock;
+    long ru_oublock;
     /* Number of IPC messages sent.  */
-    int ru_msgsnd;
+    long ru_msgsnd;
     /* Number of IPC messages received.  */
-    int ru_msgrcv;
+    long ru_msgrcv;
     /* Number of signals delivered.  */
-    int ru_nsignals;
+    long ru_nsignals;
     /* Number of voluntary context switches, i.e. because the process
        gave up the process before it had to (usually to wait for some
        resource to be available).  */
-    int ru_nvcsw;
+    long ru_nvcsw;
     /* Number of involuntary context switches, i.e. a higher priority process
        became runnable or the current process used up its time slice.  */
-    int ru_nivcsw;
+    long ru_nivcsw;
   };
 
 /* Return resource usage information on process indicated by WHO
