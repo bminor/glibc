@@ -32,11 +32,16 @@ mach_port_t *_hurd_init_dtable;
 mach_msg_type_number_t _hurd_init_dtablesize;
 
 unsigned int __hurd_threadvar_max;
+unsigned long int __hurd_threadvar_stack_mask;
+unsigned long int __hurd_threadvar_stack_offset;
+
+/* These are set up by _hurdsig_init.  */
+unsigned long int __hurd_sigthread_stack_base;
+unsigned long int __hurd_sigthread_stack_end;
+unsigned long int *__hurd_sigthread_variables;
 
 vm_address_t _hurd_stack_base;
 vm_size_t _hurd_stack_size;
-
-volatile int errno;		/* XXX wants to be per-thread */
 
 char **__environ;
 
