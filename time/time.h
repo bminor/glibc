@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -156,7 +156,6 @@ extern void EXFUN(__tzset, (NOARGS));
 #ifdef	__USE_POSIX
 /* Same as above.  */
 extern char *tzname[2];
-#define	tzname		__tzname
 
 extern long int EXFUN(__tzname_max, (NOARGS));
 
@@ -169,8 +168,6 @@ extern void EXFUN(tzset, (NOARGS));
 #ifdef	__USE_SVID
 extern int daylight;
 extern long int timezone;
-#define	daylight	__daylight
-#define	timezone	__timezone
 #endif
 
 
