@@ -37,7 +37,7 @@ TEXI2DVI = texi2dvi
 AWK = gawk
 endif
 
-ifneq ($(strip $(MAKEINFO)),)
+ifneq ($(strip $(MAKEINFO)),:)
 all: info
 info: libc.info dir-add.info
 endif
@@ -155,7 +155,7 @@ realclean: distclean
 
 .PHONY: install subdir_install installdirs install-data
 install-data subdir_install: install
-ifneq ($(strip $(MAKEINFO)),)
+ifneq ($(strip $(MAKEINFO)),:)
 # There are two variants of install-info out there.  The GNU version
 # knows about the INFO-DIR-SECTION tag, the Debian version doesn't.
 ifneq ($(OLD_DEBIAN_INSTALL_INFO),yes)
