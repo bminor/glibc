@@ -39,8 +39,8 @@ DEFUN(fchdir, (fd), int fd)
 
   __mach_port_mod_refs (__mach_task_self (), _hurd_dtable.d[fd].server,
 			MACH_PORT_RIGHT_SEND, 1);
-  old = ccdir;
-  ccdir = _hurd_dtable.d[fd].server;
+  old = cwdir;
+  cwdir = _hurd_dtable.d[fd].server;
   __mutex_unlock (&_hurd_dtable.lock);
   __mach_port_deallocate (__mach_task_self (), old);
   return 0;
