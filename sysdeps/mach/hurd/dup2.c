@@ -46,7 +46,7 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
   if (fd2 == fd)
     {
       /* FD is valid and FD2 is already the same; just return it.  */
-      __spin_unlock (&d.d->lock);
+      __spin_unlock (&d.d->port.lock);
       goto out;
     }
 
