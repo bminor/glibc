@@ -70,10 +70,11 @@ __setauth (auth_t new)
       if (_hurd_init_dtable[d] != MACH_PORT_NULL)
 	{
 	  mach_port_t new;
-	  if (! __io_reauthenticate (_hurd_init_dtable[d]) &&
+	  if (! __io_reauthenticate (_hurd_init_dtable[d], _hurd_pid) &&
 	      ! _HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
 				__auth_user_authenticate (port,
 							  _hurd_init_dtable[d],
+							  _hurd_pid
 							  &new)))
 	    {
 	      __mach_port_deallocate (__mach_task_self (),
@@ -83,13 +84,13 @@ __setauth (auth_t new)
 	}
 
   if (__USEPORT (CRDIR,
-		 ! __io_reauthenticate (port) &&
-		 ! __auth_user_authenticate (new, port, &newport)))
+		 ! __io_reauthenticate (port, _hurd_pid) &&
+		 ! __auth_user_authenticate (new, port, _hurd_pid, &newport)))
     _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], newport);
 
   if (__USEPORT (CWDIR,
-		 ! __io_reauthenticate (port) &&
-		 ! __auth_user_authenticate (new, port, &newport)))
+		 ! __io_reauthenticate (port, _hurd_pid) &&
+		 ! __auth_user_authenticate (new, port, _hurd_pid, &newport)))
     _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], newport);
 
   /* Run things which want to do reauthorization stuff.  */
