@@ -49,7 +49,8 @@ routines := brk sbrk sstk ioctl \
 	    utimes \
 	    __utimes \
 	    truncate ftruncate \
-	    chflags fchflags
+	    chflags fchflags \
+	    insremque
 aux := data_start progname
 
 include ../Rules
