@@ -3,6 +3,7 @@
 	* sysdeps/unix/sysv/linux/configure.in: Don't test for libc4 in
 	ldd for SPARC.
 	* /sysdeps/unix/sysv/linux/sparc/ldd-rewrite.sed: New file.
+	Patch by Cristian Gafton.
 
 1999-07-02  Cristian Gafton  <gafton@redhat.com>
 
