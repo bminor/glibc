@@ -131,8 +131,25 @@ __exctype (_tolower);
 #define	isblank(c)	__isctype((c), _ISblank)
 #endif
 
-#define	tolower(c)	__tolower(c)
-#define	toupper(c)	__toupper(c)
+#ifdef	__GNUC__
+extern __inline int
+tolower (int __c)
+{
+  if ((unsigned char) __c != __c)
+    return __c;
+  else
+    return __tolower (__c);
+}
+
+extern __inline int
+toupper (int __c)
+{
+  if ((unsigned char) __c != __c)
+    return __c;
+  else
+    return __toupper (__c);
+}
+#endif	/* GCC.  */
 
 #if defined(__USE_SVID) || defined(__USE_MISC)
 #define	isascii(c)	__isascii(c)
