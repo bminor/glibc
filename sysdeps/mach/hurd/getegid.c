@@ -38,7 +38,13 @@ DEFUN_VOID(__getegid)
 	}
       _hurd_id_valid = 1;
     }
-  egid = _hurd_id.egid;
+  if (_hurd_id.ngroups == 0)
+    {
+      errno = ENOENT;
+      egid = -1;
+    }
+  else
+    egid = _hurd_id.gids[0];
   __mutex_unlock (&_hurd_idlock);
   return egid;
 }
