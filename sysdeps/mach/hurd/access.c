@@ -29,15 +29,15 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   int dealloc_crdir, dealloc_cwdir;
   int flags;
 
-  __mutex_lock (&_hurd_idlock);
+  __mutex_lock (&_hurd_id.lock);
   if (err = _hurd_check_ids ())
     {
-      __mutex_unlock (&_hurd_idlock);
+      __mutex_unlock (&_hurd_id.lock);
       return __hurd_fail (err);
     }
 
-  /* Set up _hurd_rid_auth.  */
-  if (_hurd_rid_auth == MACH_PORT_NULL)
+  /* Set up _hurd_id.rid_auth.  */
+  if (_hurd_id.rid_auth == MACH_PORT_NULL)
     {
       /* Allocate temporary uid and gid arrays at least
 	 big enough to hold one effective ID.  */
@@ -59,7 +59,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 				__auth_makeauth (port,
 						 ruid, nuids,
 						 rgid, ngids,
-						 &_hurd_rid_auth)))
+						 &_hurd_id.rid_auth)))
 	goto lose;
     }
 
