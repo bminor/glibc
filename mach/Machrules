@@ -136,7 +136,7 @@ $(objpfx)%.h: $(objpfx)%.__h $(objpfx)%.uh
 
 if-calls.c := $(strip $(foreach if,$(user-interfaces),$($(if)-calls:%=%.c)))
 ifdef if-calls.c
-$(addprefix $(objpfx),$(if-calls.c)): $(objpfx)%.c: Machrules
+$(addprefix $(objpfx),$(if-calls.c)): $(objpfx)%.c: # Machrules
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*);') > $@-new
 	mv $@-new $@
