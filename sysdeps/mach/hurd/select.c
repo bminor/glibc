@@ -21,9 +21,6 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <gnu-stabs.h>
 
-static spin_lock_t select_port_lock;
-static mach_port_t select_port;
-
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
    (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out
@@ -47,21 +44,12 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
     port = MACH_PORT_NULL;
   else
     {
-      __spin_lock (&select_port_lock);
-      if (select_port != MACH_PORT_NULL)
-	{
-	  port = select_port;
-	  select_port = MACH_PORT_NULL;
-	  __spin_unlock (&select_port_lock);
-	}
-      else
-	{
-	  __spin_unlock (&select_port_lock);
-	  __mach_port_allocate (__mach_task_self (),
-				MACH_PORT_RIGHT_RECEIVE, &port);
-	}
+      /* Get a port to receive io_select_done messages on.  */
+      __mach_port_allocate (__mach_task_self (),
+			    MACH_PORT_RIGHT_RECEIVE, &port);
     }
 
+  /* Do an io_select on each interesting FD.  */
   got = 0;
   for (i = 0; i < nfds; ++i)
     {
@@ -172,28 +160,12 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
     }
 
   if (port != MACH_PORT_NULL)
-    {
-      __spin_lock (&select_port_lock);
-      if (select_port == MACH_PORT_NULL)
-	{
-	  select_port = port;
-	  __spin_unlock (&select_port_lock);
-	}
-      else
-	{
-	  __spin_unlock (&select_port_lock);
-	  __mach_port_destroy (port);
-	}
-    }
+    /* We must destroy the port if we made some select requests
+       that might send notification on that port after we no longer care.
+       If the port were reused, that notification could confuse the next
+       select call to use the port.  The notification might be valid,
+       but the descriptor may have changed to a different server.  */
+    __mach_port_destroy (port);
 
   return got;
 }
-
-
-static void
-init_select_port_lock (void)
-{
-  __spin_lock_init (select_port_lock);
-}
-
-text_set_element (__libc_subinit, init_select_port_lock);
