@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,81 +19,18 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <unistd.h>
 #include <sys/time.h>
-#include <signal.h>
-
-/* SIGALRM signal handler for `sleep'.  This does nothing but return,
-   but SIG_IGN isn't supposed to break `pause'.  */
-static void
-DEFUN(sleep_handler, (sig), int sig)
-{
-  return;
-}
 
 /* Sleep USECONDS microseconds, or until a previously set timer goes off.  */
 unsigned int
 DEFUN(usleep, (useconds), unsigned int useconds)
 {
-  struct itimerval otimer;
-  struct timeval before, after, delta;
-  __sighandler_t ohandler;
-  int omask;
+  struct timeval delay;
 
-  if (getitimer(ITIMER_REAL, &otimer) < 0)
-    return -1;
+  delay.tv_sec = 0;
+  delay.tv_usec = useconds;
 
-  ohandler = signal (SIGALRM, sleep_handler);
-  if (ohandler == SIG_ERR)
-    return -1;
-  omask = sigblock (SIGALRM);
+  (void) __select (0, (fd_set *) NULL, (fd_set *) NULL, (fd_set *) NULL,
+		   &delay);
 
-  if ((unsigned int) ((otimer.it_value.tv_sec * 1000) +
-		      otimer.it_value.tv_usec) < useconds)
-    {
-      /* Set up the timer.  */
-      struct itimerval timer;
-      timer.it_value.tv_sec = useconds / 1000;
-      timer.it_value.tv_usec = useconds % 1000;
-      timer.it_interval.tv_sec = 0;
-      timer.it_interval.tv_usec = 0;
-
-      /* Find the time beforehand so we can tell how much time elapsed.  */
-      if (gettimeofday(&before, (struct timezone *) NULL) < 0)
-	goto lose;
-
-      if (setitimer(ITIMER_REAL, &timer, &otimer) < 0)
-	goto lose;
-    }
-
-  /* Wait for the timer to expire.  */
-  (void) sigpause (omask);
-
-  /* Find out what time it is now, and see how much time elapsed.  */
-  if (gettimeofday(&after, (struct timezone *) NULL) < 0)
-    {
-      delta.tv_sec = 0;
-      delta.tv_usec = 0;
-    }
-  else
-    {
-      delta.tv_sec = after.tv_sec - before.tv_sec;
-      delta.tv_usec = after.tv_usec - before.tv_usec;
-    }
-
-  /* Adjust the old timer to account for the elapsed time.  */
-  otimer.it_value.tv_sec -= delta.tv_sec;
-  if (otimer.it_value.tv_sec < 0)
-    otimer.it_value.tv_sec = 0;
-  otimer.it_value.tv_usec -= delta.tv_usec; 
-  if (otimer.it_value.tv_usec < 0)
-    otimer.it_value.tv_usec = 0;
-
-  /* Restore the old timer (which might have be zero).  */
-  (void) setitimer(ITIMER_REAL, &otimer, (struct itimerval *) NULL);
-
-  return useconds - ((delta.tv_sec * 1000) + delta.tv_usec);
-
- lose:
-  signal (SIGALRM, ohandler);
-  sigsetmask (omask);
-  return -1;
+  return 0;
 }
