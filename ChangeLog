@@ -1,3 +1,11 @@
+1999-07-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strptime.c (get_number): Handle number parsing more
+	consistent with strftime.  Only parse a given number of digits.
+	(get_alt_number):  Fix implementation.  Was broken.
+	(strptime_internal): Add third parameter to get_number and
+	get_alt_number calls.
+
 1999-07-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): For non-passive
