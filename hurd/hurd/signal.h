@@ -38,6 +38,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <cthreads.h>		/* For `struct mutex'.  */
 #include <lock-intern.h>
+#include <hurd/threadvar.h>	/* We cache sigstate in a threadvar.  */
 
 
 /* Per-thread signal state.  */
@@ -85,16 +86,28 @@ extern struct hurd_sigstate *_hurd_thread_sigstate (thread_t);
 /* Get the sigstate of the current thread, taking its lock.
    This uses a per-thread variable to optimize the lookup.  */
 
-#include <hurd/threadvar.h>
+_EXTERN_INLINE struct hurd_sigstate *
+_hurd_self_sigstate_unlocked (void)
+{
+  struct hurd_sigstate **location =
+    (void *) __hurd_threadvar_location (_HURD_THREADVAR_SIGSTATE);
+  if (! *location)
+    {
+      *location = _hurd_thread_sigstate (__mach_thread_self ());
+      __mutex_unlock (&(*location)->lock);
+    }
+  return *location;
+}
+
 _EXTERN_INLINE struct hurd_sigstate *
 _hurd_self_sigstate (void)
 {
   struct hurd_sigstate **location =
     (void *) __hurd_threadvar_location (_HURD_THREADVAR_SIGSTATE);
   if (*location)
-    __mutex_lock (&(*location)->lock);
+    __mutex_lock (&*(location)->lock);
   else
-    *location = _hurd_thread_sigstate (__mach_thread_self ()); /* cproc_self */
+    *location = _hurd_thread_sigstate (__mach_thread_self ());
   return *location;
 }
 
@@ -257,8 +270,7 @@ extern void _hurd_siginfo_handler (int);
   ({									      \
     __label__ __do_call;	/* Give this label block scope.  */	      \
     error_t __err;							      \
-    struct hurd_sigstate *__ss = _hurd_self_sigstate ();		      \
-    __mutex_unlock (&__ss->lock); /* Lock not needed.  */		      \
+    struct hurd_sigstate *__ss = _hurd_self_sigstate_unlocked ();	      \
     __do_call:								      \
     /* Tell the signal thread that we are doing an interruptible RPC on	      \
        this port.  If we get a signal and should return EINTR, the signal     \
@@ -285,7 +297,7 @@ extern void _hurd_siginfo_handler (int);
 	   so the signal thread destroyed the reply port.  */		      \
 	__err = EINTR;							      \
 	break;								      \
-      default:			/* Quiet -Wenum.  */			      \
+      default:			/* Quiet -Wswitch-enum.  */		      \
       }									      \
     __ss->intr_port = MACH_PORT_NULL;					      \
     __err;								      \
