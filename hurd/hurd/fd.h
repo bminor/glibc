@@ -218,6 +218,9 @@ _hurd_fd_error (int fd, error_t err)
     case EPIPE:
       _hurd_raise_signal (NULL, SIGPIPE, fd);
       break;
+    default:
+      /* Having a default case avoids -Wenum-switch warnings.  */
+      break;
     }
   return err;
 }
