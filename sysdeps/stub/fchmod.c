@@ -36,7 +36,7 @@ DEFUN(__fchmod, (fd, mode), int fd AND int mode)
 }
 
 
-#ifdef	 __GNU_STAB__
+#ifdef	 HAVE_GNU_LD
 
 #include <gnu-stabs.h>
 
