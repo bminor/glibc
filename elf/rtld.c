@@ -364,7 +364,8 @@ of this helper program; chances are you did not intend to run this program.\n",
 	 containing a '/' are ignored since it is insecure.  */
       char *list = strdupa (preloadlist);
       char *p;
-      while ((p = strsep (&list, " :")) != NULL)
+      list += strspn (list, " :");
+      while (*list && (p = strsep (&list, " :")) != NULL)
 	if (! __libc_enable_secure || strchr (p, '/') == NULL)
 	  {
 	    struct link_map *new_map = _dl_map_object (l, p, 1, lt_library, 0);
@@ -372,6 +373,8 @@ of this helper program; chances are you did not intend to run this program.\n",
 	      /* It is no duplicate.  */
 	      ++npreloads;
 	  }
+      if (list != NULL)
+	list += strspn (list, " :");
     }
 
   /* Read the contents of the file.  */
@@ -427,7 +430,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	{
 	  char *p;
 	  runp = file + strspn (file, ": \t\n");
-	  while ((p = strsep (&runp, ": \t\n")) != NULL)
+	  while (*runp && (p = strsep (&runp, ": \t\n")) != NULL)
 	    {
 	      struct link_map *new_map = _dl_map_object (l, p, 1,
 							 lt_library, 0);
