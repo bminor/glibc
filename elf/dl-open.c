@@ -46,7 +46,7 @@ _dl_open (const char *file, int mode)
   struct r_debug *r;
 
   /* Load the named object.  */
-  new = _dl_map_object (NULL, file, lt_loaded, 0);
+  new = _dl_map_object (NULL, file, 0, lt_loaded, 0);
   if (new->l_searchlist)
     /* It was already open.  */
     return new;
