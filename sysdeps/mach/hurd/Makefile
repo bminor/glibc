@@ -78,10 +78,10 @@ errno.texinfo = $(..)manual/errno.texi
 hurd = $(..)sysdeps/mach/hurd
 
 $(hurd)/errnos.h: $(hurd)/errnos.awk $(errno.texinfo)
-	awk -f $^ > $@-tmp
+	gawk -f $^ > $@-tmp
 	mv $@-tmp $@
 $(hurd)/errlist.c: $(hurd)/errlist.awk $(errno.texinfo)
-	awk -f $^ > $@-tmp
+	gawk -f $^ > $@-tmp
 	mv $@-tmp $@
 
 endif	# in-Makerules
