@@ -178,7 +178,7 @@ $(common-objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls \
 	$(dir $<)$(notdir $<) $(filter-out $<,$^) \
 	| egrep -v "^(`$(dir $<)$(notdir $<) \
 		   	$(termbits.h) $(..)termios/sys/ttydefaults.h \
-		    | tr '\012' '|' | sed 's/|$$//'`)$$"\
+		    | tr '\012' '|'`nevermatch)$$" \
 	| sort | uniq | tr '\012' ' ' > $@-tmp
 	mv $@-tmp $@
 
