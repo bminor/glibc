@@ -1,6 +1,6 @@
 /* setrlimit function for systems with ulimit system call (SYSV).
 
-Copyright (C) 1991 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <sys/resource.h>
+#include <stddef.h>
+#include <errno.h>
 
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
@@ -30,7 +32,7 @@ int
 DEFUN(setrlimit, (resource, rlimits),
       enum __rlimit_resource resource AND struct rlimit *rlimits)
 {
-#ifndef	__GNU_STAB__
+#ifndef	HAVE_GNU_LD
 #define	__etext	etext
 #endif
   extern char __etext;
