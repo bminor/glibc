@@ -63,6 +63,7 @@ void moncontrol __P ((int mode));
 static void write_hist __P ((int fd));
 static void write_call_graph __P ((int fd));
 static void write_bb_counts __P ((int fd));
+static void write_gmon __P ((void));
 
 /*
  * Control profiling
@@ -289,13 +290,12 @@ write_bb_counts (fd)
 }
 
 
-void
-_mcleanup ()
+static void
+write_gmon ()
 {
     struct gmon_hdr ghdr __attribute__ ((aligned (__alignof__ (int))));
     int fd;
 
-    moncontrol (0);
     fd = __open ("gmon.out", O_CREAT|O_TRUNC|O_WRONLY, 0666);
     if (fd < 0)
       {
@@ -319,6 +319,25 @@ _mcleanup ()
     write_bb_counts (fd);
 
     __close (fd);
+}
+
+void
+__write_profiling ()
+{
+  int save = _gmonparam.state;
+  _gmonparam.state = GMON_PROF_OFF;
+  if (save == GMON_PROF_ON)
+    write_gmon ();
+  _gmonparam.state = save;
+}
+weak_alias (__write_profiling, write_profiling)
+
+void
+_mcleanup ()
+{
+    moncontrol (0);
+
+    write_gmon ();
 
     /* free the memory. */
     free (_gmonparam.tos);
