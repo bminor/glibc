@@ -54,17 +54,17 @@ endef
 include $(objpfx)zonenames
 
 # Make these absolute file names.
-localtime-file := $(firstword $(filter /%,$(localtime-file)) \
-			      $(addprefix $(zonedir)/, \
-					  $(localtime-file)))
-posixrules-file := $(firstword $(filter /%,$(posixrules-file)) \
-			       $(addprefix $(zonedir)/, \
-					   $(posixrules-file)))
+installed-localtime-file := $(firstword $(filter /%,$(localtime-file)) \
+					$(addprefix $(zonedir)/, \
+						    $(localtime-file)))
+installed-posixrules-file := $(firstword $(filter /%,$(posixrules-file)) \
+					 $(addprefix $(zonedir)/, \
+						     $(posixrules-file)))
 
 ifndef cross-compiling
 # Don't try to install the zoneinfo files since we can't run zic.
 install-others = $(addprefix $(zonedir)/,$(zonenames)) \
-		 $(localtime-file) $(posixrules-file)
+		 $(installed-localtime-file) $(installed-posixrules-file)
 endif
 
 include ../Rules
@@ -106,11 +106,11 @@ $(zic-cmd) -L $(word 3,$^) -y $(dir $(word 4,$^))$(notdir $(word 4,$^)) $<
 endef
 
 ifdef localtime
-$(localtime-file): $(zonedir)/$(localtime) $(objpfx)zic
+$(installed-localtime-file): $(zonedir)/$(localtime) $(objpfx)zic
 	$(zic-cmd) -l $(localtime)
 endif
 ifdef posixrules
-$(posixrules-file): $(zonedir)/$(posixrules) $(objpfx)zic
+$(installed-posixrules-file): $(zonedir)/$(posixrules) $(objpfx)zic
 	$(zic-cmd) -p $(posixrules)
 endif
 
