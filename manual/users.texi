@@ -709,7 +709,7 @@ precisely because the user can set @code{LOGNAME} arbitrarily.
 @cindex password database
 @pindex /etc/passwd
 
-This section describes all about now to search and scan the database of
+This section describes all about how to search and scan the database of
 registered users.  The database itself is kept in the file
 @file{/etc/passwd} on most systems, but on some systems a special
 network server gives access to it.
