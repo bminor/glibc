@@ -49,7 +49,7 @@ _hurd_alloc_fd (int *fd, const int first_fd)
 	  d = _hurd_new_fd (MACH_PORT_NULL, MACH_PORT_NULL);
 	  if (d == NULL)
 	    {
-	      __mutex_unlock (&hurd_dtable_lock);
+	      __mutex_unlock (&_hurd_dtable_lock);
 	      return NULL;
 	    }
 	  _hurd_dtable.d[i] = d;
@@ -58,7 +58,7 @@ _hurd_alloc_fd (int *fd, const int first_fd)
       __spin_lock (&d->port.lock);
       if (d->port.port == MACH_PORT_NULL)
 	{
-	  __mutex_unlock (&hurd_dtable_lock);
+	  __mutex_unlock (&_hurd_dtable_lock);
 	  if (fd != NULL)
 	    *fd = i;
 	  return d;
@@ -69,7 +69,7 @@ _hurd_alloc_fd (int *fd, const int first_fd)
 
   errno = first_fd < _hurd_dtable.size ? EMFILE : EINVAL;
 
-  __mutex_unlock (&hurd_dtable_lock);
+  __mutex_unlock (&_hurd_dtable_lock);
 
   return NULL;
 }
