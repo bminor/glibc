@@ -1206,28 +1206,62 @@ resources.  It has the following members, and possibly others:
 
 @table @code
 @item struct timeval ru_utime
-User time used.
+Time spent executing user instructions.
 
 @item struct timeval ru_stime
-System time used.
+Time spent in operating system code on behalf of @var{processes}.
 
-@item long ru_majflt
-Number of page faults.
+@item long int ru_maxrss
+The maximum resident set size used, in kilobytes.  That is, the maximum
+number of kilobytes that @var{processes} used in real memory simultaneously.
 
-@item long ru_inblock
-Number of block input operations.
+@item long int ru_ixrss
+An integral value expressed in kilobytes times ticks of execution, which
+indicates the amount of memory used by text that was shared with other
+processes.
 
-@item long ru_oublock
-Number of block output operations.
+@item long int ru_idrss
+An integral value expressed the same way, which is the amount of
+unshared memory used in data.
 
-@item long ru_msgsnd
-Number of messages sent.
+@item long int ru_isrss
+An integral value expressed the same way, which is the amount of
+unshared memory used in stack space.
+
+@item long int ru_minflt
+The number of page faults which were serviced without requiring any I/O.
+
+@item long int ru_majflt
+The number of page faults which were serviced by doing I/O.
+
+@item long int ru_nswap
+The number of times @var{processes} was swapped entirely out of main memory.
+
+@item long int ru_inblock
+The number of times the file system had to read from the disk on behalf
+of @var{processes}.
+
+@item long int ru_oublock
+The number of times the file system had to write to the disk on behalf
+of @var{processes}.
+
+@item long int ru_msgsnd
+Number of IPC messages sent.
 
 @item long ru_msgrcv
-Number of messages received.
+Number of IPC messages received.
 
-@item long ru_nsignals
+@item long int ru_nsignals
 Number of signals received.
+
+@item long int ru_nvcsw
+The number of times @var{processes} voluntarily invoked a context switch
+(usually to wait for some service).
+
+@item long int ru_nivcsw
+The number of times an involuntary context switch took place (because
+the time slice expired, or another process of higher priority became
+runnable).
 @end table
 @end deftp
 
@@ -1285,11 +1319,15 @@ and with @code{setrlimit} to specify limit values.  It has two fields:
 @table @code
 @item rlim_cur
 The current value of the limit in question.
+This is also called the ``soft limit''.
+@cindex soft limit
 
 @item rlim_max
 The maximum permissible value of the limit in question.  You cannot set
 the current value of the limit to a larger number than this maximum.
 Only the super user can change the maximum permissible value.
+This is also called the ``hard limit''.
+@cindex hard limit
 @end table
 
 In @code{getrlimit}, the structure is an output; it receives the current
@@ -1306,14 +1344,14 @@ Those that are sizes are measured in bytes.
 @vindex RLIMIT_CPU
 The maximum amount of cpu time the process can use.  If it runs for
 longer than this, it gets a signal: @code{SIGXCPU}.  The value is
-measured in seconds.  @xref{Nonstandard Signals}.
+measured in seconds.  @xref{Operation Error Signals}.
 
 @comment sys/resource.h
 @comment BSD
 @item RLIMIT_FSIZE
 @vindex RLIMIT_FSIZE
 The maximum size of file the process can create.  Trying to write a
-larger file causes a signal: @code{SIGXFSZ}.  @xref{Nonstandard
+larger file causes a signal: @code{SIGXFSZ}.  @xref{Operation Error
 Signals}.
 
 @comment sys/resource.h
@@ -1352,9 +1390,23 @@ surplus.
 
 @comment sys/resource.h
 @comment BSD
+@item RLIMIT_MEMLOCK
+The maximum amount of memory that can be locked into physical memory (so
+it will never be paged out).
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_NPROC
+The maximum number of processes that can be created with the same user ID.
+If you have reached the limit for your user ID, @code{fork} will fail
+with @code{EAGAIN}.  @xref{Creating a Process}.
+
+@comment sys/resource.h
+@comment BSD
 @item RLIMIT_NOFILE
+@vindex RLIMIT_NOFILE
 @itemx RLIMIT_OFILE
-@vindex RLIMIT_OPEN_FILES
+@vindex RLIMIT_OFILE
 The maximum number of files that the process can open.  If it tries to
 open more files than this, it gets error code @code{EMFILE}.
 @xref{Error Codes}.  Not all systems support this limit; GNU does, and
