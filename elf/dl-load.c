@@ -70,6 +70,8 @@ int _dl_zerofd = -1;
 
 size_t _dl_pagesize;
 
+/* The load path, defined in rtld.c.   */
+extern const char *_dl_library_path;
 
 /* Local version of `strdup' function.  */
 static inline char *
@@ -595,7 +597,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	    NULL
 	  };
 
-	  trypath (getenv ("LD_LIBRARY_PATH"), trusted_dirs);
+	  trypath (_dl_library_path, trusted_dirs);
 	}
       if (fd == -1)
 	{
