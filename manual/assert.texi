@@ -37,15 +37,18 @@ If @code{NDEBUG} is not defined, @code{assert} tests the value of
 program (@pxref{Aborting a Program}) after printing a message of the
 form:
 
-@example
-@file{@var{file}}:@var{linenum}: Assertion `@var{expression}' failed.
-@end example
+@smallexample
+@file{@var{file}}:@var{linenum}: @var{function}: Assertion `@var{expression}' failed.
+@end smallexample
 
 @noindent
 on the standard error stream @code{stderr} (@pxref{Standard Streams}).
 The filename and line number are taken from the C preprocessor macros
 @code{__FILE__} and @code{__LINE__} and specify where the call to
-@code{assert} was written.
+@code{assert} was written.  When using the GNU C compiler, the name of
+the function which calls @code{assert} is taken from the built-in
+variable @code{__PRETTY_FUNCTION__}; with older compilers, the function
+name and following colon are omitted.
 
 If the preprocessor macro @code{NDEBUG} is defined before
 @file{assert.h} is included, the @code{assert} macro is defined to do
@@ -55,6 +58,38 @@ that involve side effects.
 
 For example, @code{assert (++i > 0);} is a bad idea, because @code{i}
 will not be incremented if @code{NDEBUG} is defined.
+@end deftypefn
+
+Sometimes the ``impossible'' condition you want to check for is an error
+return from an operating system function.  Then it is useful to display
+not only where the program crashes, but also what error was returned.
+The @code{assert_perror} macro makes this easy.
+
+@comment assert.h
+@comment GNU
+@deftypefn Macro void assert_perror (int @var{errnum})
+Similar to @code{assert}, but verifies that @var{errnum} is zero.
+
+If @code{NDEBUG} is defined, @code{assert_perror} tests the value of
+@var{errnum}.  If it is nonzero, @code{assert_perror} aborts the program
+after a printing a message of the form:
+
+@smallexample
+@file{@var{file}}:@var{linenum}: @var{function}: @var{error text}
+@end smallexample
+
+@noindent
+on the standard error stream.  The file name, line number, and function
+name are as for @code{assert}.  The error text is the result of
+@w{@code{strerror (@var{errnum})}}.  @xref{Error Messages}.
+
+Like @code{assert}, if @code{NDEBUG} is defined before @file{assert.h}
+is included, the @code{assert_perror} macro does absolutely nothing.  It
+does not evaluate the argument, so @var{errnum} should not have any side
+effects.  It is best for @var{errnum} to be a just simple variable
+reference; often it will be @code{errno}.
+
+This macro is a GNU extension.
 @end deftypefn
 
 @strong{Usage note:} The @code{assert} facility is designed for
