@@ -563,7 +563,7 @@ You can use the functions @code{strcoll} and @code{strxfrm} (declared in
 the header file @file{string.h}) to compare strings using a collation
 ordering appropriate for the current locale.  The locale used by these
 functions in particular can be specified by setting the locale for the
-@code{LC_COLLATE} category; see @ref{Localization}.
+@code{LC_COLLATE} category; see @ref{Locales}.
 @pindex string.h
 
 In the standard C locale, the collation sequence for @code{strcoll} is
@@ -910,9 +910,8 @@ does not have as its purpose the modification of a certain data
 structure, then it is error-prone to modify the data structure
 temporarily.
 
-The function @code{strtok} is not reentrant.  @xref{Restrictions on
-Handler Functions}, for a discussion of where and why reentrancy is
-important.
+The function @code{strtok} is not reentrant.  @xref{Nonreentrancy}, for
+a discussion of where and why reentrancy is important.
 
 Here is a simple example showing the use of @code{strtok}.
 

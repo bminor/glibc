@@ -12,7 +12,7 @@ converting between them.
 @cindex extended character sets
 
 The behavior of the functions in this chapter is affected by the
-current locale for character classification (@pxref{Localization}).
+current locale for character classification (@pxref{Locales}).
 This choice of locale selects which multibyte code is used, and also
 controls the meanings and characteristics of wide character codes.
 
@@ -85,7 +85,7 @@ functions described in this chapter.
 A computer system can support more than one multibyte character code,
 and more than one wide character code.  The user controls the choice of
 codes through the current locale for character classification
-(@pxref{Localization}).  Each locale specifies a particular multibyte
+(@pxref{Locales}).  Each locale specifies a particular multibyte
 character code and a particular wide character code.  The choice of locale
 influences the behavior of the conversion functions in the library.
 
@@ -310,7 +310,7 @@ byte with value zero often terminates a string of ordinary characters.
 @deftp {Data Type} wchar_t
 This is the ``wide character'' type, an integer type whose range is
 large enough to represent all distinct values in any extended character
-set in the supported locales.  @xref{Localization}, for more information
+set in the supported locales.  @xref{Locales}, for more information
 about locales.  This type is defined in the header file @file{stddef.h}.
 @pindex stddef.h
 @end deftp

@@ -12,7 +12,7 @@ Since the choice of locale and character set can alter the
 classifications of particular character codes, all of these functions
 are affected by the current locale.  (More precisely, they are affected
 by the locale currently selected for character classification.)
-@xref{Localization}.
+@xref{Locales}.
 
 @menu
 * Classification of Characters::	Testing whether characters are
@@ -46,7 +46,7 @@ character argument is passed as an @code{int}, and it may be the
 constant value @code{EOF} instead of a real character.  
 
 The attributes of any given character can vary between locales.
-@xref{Localization}, for more information on locales.@refill
+@xref{Locales}, for more information on locales.@refill
 
 These functions are declared in the header file @file{ctype.h}.
 @pindex ctype.h

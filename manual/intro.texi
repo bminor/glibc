@@ -438,7 +438,7 @@ conversion functions.  @xref{Character Handling}.
 @item
 Names that begin with @samp{LC_} followed by an uppercase letter may be
 used for additional macros specifying locale attributes.
-@xref{Localization}.
+@xref{Locales}.
 
 @item
 Names of all existing mathematics functions (@pxref{Mathematics})
@@ -448,7 +448,7 @@ functions that operate on @code{float} or @code{long double} arguments
 
 @item
 Names that begin with @samp{SIG} followed by an uppercase letter are
-reserved for additional signal names.  @xref{Signal Names}.
+reserved for additional signal names.  @xref{Standard Signals}.
 
 @item
 Names that begin with @samp{SIG_} followed by an uppercase letter are
@@ -634,7 +634,7 @@ characters and strings using character sets larger than will fit in
 the usual @code{char} data type.  
 
 @item 
-@ref{Localization}, describes how selecting a particular country 
+@ref{Locales}, describes how selecting a particular country 
 or language affects the behavior of the library.  For example, the locale
 affects collation sequences for strings and how monetary values are
 formatted.
@@ -685,9 +685,9 @@ attributes of a terminal device.  If you want to disable echo of
 characters typed by the user, for example, read this chapter.
 
 @item 
-@ref{Diagnostics}, contains information about a simple debugging
-mechanism.  You can put assertions in your code, and diagnostic
-messages are printed if the test fails.
+@ref{Consistency Checking}, contains information about a simple
+debugging mechanism.  You can put assertions in your code, and
+diagnostic messages are printed if the test fails.
 
 @item 
 @ref{Mathematics}, contains information about the math library
