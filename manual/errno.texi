@@ -183,12 +183,6 @@ trying to read to a file open only for writing (or vice versa).
 @end defvr
 
 @comment errno.h
-@comment GNU
-@defvr Macro EBADMSG
-@strong{Incomplete:}  Who knows?
-@end defvr
-
-@comment errno.h
 @comment POSIX.1
 @defvr Macro EBUSY
 Resource busy; a system resource that can't be shared is already in use.
@@ -524,12 +518,6 @@ Broken pipe; there is no process reading from the other end of a pipe.
 @end defvr
 
 @comment errno.h
-@comment GNU
-@defvr Macro EPROCLIM
-@strong{Incomplete:} Who knows?
-@end defvr
-
-@comment errno.h
 @comment BSD
 @defvr Macro EPROTONOSUPPORT
 The socket protocol is not supported.
@@ -596,12 +584,6 @@ The NFS file handle is stale; the file on the file server has been deleted.
 @defvr Macro ETIMEDOUT
 The operation on a socket failed because no response was received
 during the timeout period.
-@end defvr
-
-@comment errno.h
-@comment GNU
-@defvr Macro ETOOMANYREFS
-@strong{Incomplete:} Who knows?
 @end defvr
 
 @comment errno.h
