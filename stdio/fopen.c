@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 
 
-#define	badmode()	return((errno = EINVAL), 0)
+#define	badmode()	return ((errno = EINVAL), 0)
 
 /* Dissect the given mode string into an __io_mode.  */
 int
@@ -33,9 +33,9 @@ DEFUN(__getmode, (mode, mptr), CONST char *mode AND __io_mode *mptr)
   register unsigned char i;
 
   if (mode == NULL)
-    badmode();
+    badmode ();
 
-  memset((PTR) mptr, 0, sizeof(*mptr));
+  memset ((PTR) mptr, 0, sizeof (*mptr));
 
   switch (*mode)
     {
@@ -49,7 +49,7 @@ DEFUN(__getmode, (mode, mptr), CONST char *mode AND __io_mode *mptr)
       mptr->__read = 1;
       break;
     default:
-      badmode();
+      badmode ();
     }
 
   for (i = 1; i < 3; ++i)
@@ -69,7 +69,7 @@ DEFUN(__getmode, (mode, mptr), CONST char *mode AND __io_mode *mptr)
     }
 
   if (!mptr->__read && !mptr->__write)
-    badmode();
+    badmode ();
 
   mptr->__exclusive = *mode == 'x';
 
@@ -91,20 +91,20 @@ DEFUN(fopen, (filename, mode), CONST char *filename AND CONST char *mode)
       return NULL;
     }
 
-  if (!__getmode(mode, &m))
+  if (!__getmode (mode, &m))
     return NULL;
 
-  stream = __newstream();
+  stream = __newstream ();
   if (stream == NULL)
     return NULL;
 
-  cookie = __stdio_open(filename, m, &fd);
+  cookie = __stdio_open (filename, m, &fd);
   if (cookie == NULL)
     {
       if (fd < 0)
 	{
 	  int save = errno;
-	  (void) fclose(stream);
+	  (void) fclose (stream);
 	  errno = save;
 	  return NULL;
 	}
