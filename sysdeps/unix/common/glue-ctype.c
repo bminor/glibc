@@ -32,6 +32,15 @@ Cambridge, MA 02139, USA.  */
 #if !defined(TABLE) && defined(HAVE___CTYPE)
 #define	TABLE	__ctype
 #endif
+#if !defined(TABLE) && defined(HAVE__LOCP)
+/* OSF/1 has the name _ctype defined as a macro, which points down into
+   the _locp structure.  Jesus.  We'll hope this works.  */
+#include <sys/localedef.h>
+extern loc_t *_locp;
+#define TABLE		(_locp->lc_chrtbl)->lc_ctype
+#undef _ctype
+#define TABLE_NAME	_ctype
+#endif
 
 #if defined (__STDC__) && __STDC__
 #define	STRINGIFY(arg)	#arg
@@ -48,7 +57,11 @@ main ()
   int i;
 
   puts ("#include <ansidecl.h>");
+#ifdef TABLE_NAME
+  printf ("CONST unsigned char %s[] =\n  {\n", EVALLED_STRINGIFY (TABLE_NAME));
+#else
   printf ("CONST unsigned char %s[] =\n  {\n", EVALLED_STRINGIFY (TABLE));
+#endif
 
   for (i = -1; i < 256; ++i)
     printf ("    %d,\n", (int) ((TABLE+1)[i]));
