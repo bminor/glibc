@@ -1272,6 +1272,7 @@ rm -f *.filelist*
 * Fri Feb 11 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-9
 - update from CVS
   - bi-arch <gnu/stubs.h> (BZ#715)
+- hopefully fix interaction with prelink (#147655)
 
 * Fri Feb 11 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-8
 - update from CVS
