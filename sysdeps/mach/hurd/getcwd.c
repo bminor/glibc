@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -47,11 +47,11 @@ getcwd (char *buf, size_t size)
   char *dirbuf = NULL;
   unsigned int dirbufsize = 0;
   file_t crdir;
-  int dealloc_crdir;
+  struct _hurd_port_userlink crdir_ulink;
 
   inline void cleanup (void)
     {
-      _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir, crdir);
+      _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink, crdir);
       __mach_port_deallocate (__mach_task_self (), parent);
 
       if (dirbuf != NULL)
@@ -83,10 +83,10 @@ getcwd (char *buf, size_t size)
   pathp = path + size;
   *--pathp = '\0';
 
-  crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir);
+  crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink);
   if (err = __io_stat (crdir, &st))
     {
-      _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir, crdir);
+      _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink, crdir);
       return __hurd_fail (err), NULL;
     }
   rootdev = st.st_dev;
@@ -97,7 +97,7 @@ getcwd (char *buf, size_t size)
 						    MACH_PORT_TYPE_SEND,
 						    1)))
     {
-      _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &dealloc_crdir, crdir);
+      _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink, crdir);
       return __hurd_fail (err), NULL;
     }
   thisdev = st.st_dev;
