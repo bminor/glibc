@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <sys/file.h>
-#include <hurd.h>
+#include <hurd/fd.h>
 
 /* Apply or remove an advisory lock, according to OPERATION,
    on the file FD refers to.  */
@@ -29,7 +29,7 @@ DEFUN(__flock, (fd, operation),
 {
   error_t err;
 
-  if (err = _HURD_DPORT_USE (fd, __file_lock (port, operation)))
+  if (err = HURD_DPORT_USE (fd, __file_lock (port, operation)))
     return __hurd_dfail (fd, err);
 
   return 0;
