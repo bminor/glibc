@@ -1,3 +1,18 @@
+1999-11-18  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdsig.c (_hurdsig_init): If __hurd_threadvar_stack_mask is
+	nonzero, use cthread_fork to create the signal thread.
+	* hurd/msgportdemux.c (_hurd_msgport_receive): Initialize
+	_hurd_msgport_thread here (to self).
+	* sysdeps/mach/hurd/fork.c (__fork): When __hurd_sigthread_stack_end
+	is zero, instead compute child signal thread's starting SP from parent
+	signal thread's current SP and the threadvar_stack variables.
+	* hurd/Versions (GLIBC_2.1.3): Add cthread_fork, cthread_detach.
+	These are now referenced weakly by _hurdsig_init.
+
+	* hurd/report-wait.c (_S_msg_report_wait): Fix typo:
+	&_hurd_itimer_thread not &_hurd_msgport_thread.
+
 1999-11-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/gnu/netinet/tcp.h: Add TCP_CORK definition.
