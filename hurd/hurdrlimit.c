@@ -42,4 +42,4 @@ init_rlimit (void)
 
   (void) &init_rlimit;
 }
-text_set_element (_hurd_subinit, init_rlimit);
+text_set_element (_hurd_preinit_hook, init_rlimit);
