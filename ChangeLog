@@ -1,7 +1,8 @@
 2000-02-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/nl_langinfo.c: Correct return value in error case.  Don't
-	set errno.
+	set errno (PR libc/1582).
+	* manual/locale.texi: Update to reflect change.
 
 	* iconvdata/gconv-modules: Add aliases CN-GB and CN-BIG5.
 	Reported by Bruno Haible <haible@ilog.fr>.
