@@ -38,7 +38,7 @@ DEFUN(_itoa, (value, buflim, base, upper_case),
   while (value > 0)
     {
       *--bp = digits[value % base];
-      num /= base;
+      value /= base;
     }
 
   return bp;
