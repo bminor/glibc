@@ -1,4 +1,4 @@
-%define glibcrelease 2.fc3.5
+%define glibcrelease 2.fc3.6
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1269,6 +1269,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Apr  5 2005 Roland McGrath <roland@redhat.com> 2.3.4-2.fc3.6
+- update from CVS (glibc-2_3-branch)
+  - dlclose fixes merged (#145810, #150414, BZ#821)
+  - fix a typo in WINDOWS-31J charmap (#151739, BZ#823)
+  - fix NIS ypprot_err (#151469, BZ#822)
+  - update IA-64 libm from Intel 2005-04-05 (#142494, BZ#592)
+  - update tzcode to 2005h (BZ#825)
+  - fix initgroups when passed zero-size buffer (BZ#661)
+
 * Sat Mar 19 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-2.fc3.5
 - better fix for the dlclose bug (#145810, #150414)
 
