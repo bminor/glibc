@@ -20,10 +20,15 @@ __cabs (struct __cabs_complex z)
 weak_alias (__cabs, cabs)
 
 #ifdef NO_LONG_DOUBLE
+struct __cabs_complexl
+{
+  double x, y;
+};
+
 double
 __cabsl (struct __cabs_complexl z)
 {
-	return __hypotl(z.x, z.y);
+	return __hypot(z.x, z.y);
 }
 weak_alias (__cabsl, cabsl)
 #endif
