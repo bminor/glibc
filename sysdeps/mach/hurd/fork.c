@@ -382,18 +382,17 @@ __fork (void)
 				       sigthread_refs - 1)))
 	goto lose;
 
-#ifdef notquite
       /* This seems like a convenient juncture to copy the proc server's
 	 idea of what addresses our argv and envp are found at from the
 	 parent into the child.  Since we happen to know that the child
 	 shares our memory image, it is we who should do this copying.  */
       {
 	vm_address_t argv, envp;
-	if (err = __USEPORT (PROC, __proc_getprocargs (port, &argv, &envp)
-			     ?: __proc_setprocargs (port, argv, envp)))
+	err = (__USEPORT (PROC, __proc_get_arg_locations (port, &argv, &envp))
+	       ?: __proc_set_arg_locations (newproc, argv, envp));
+	if (err)
 	  goto lose;
       }
-#neidf
 	    
       /* Set the child signal thread up to run the msgport server function
 	 using the same signal thread stack copied from our address space.
