@@ -37,6 +37,6 @@ endif
 
 ifeq ($(subdir),dirent)
 
-sysdep_routines := $(sysdep_routines) sys_getdents
+sysdep_routines := $(sysdep_routines) s_getdents
 
 endif
