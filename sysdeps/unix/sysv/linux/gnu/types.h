@@ -86,4 +86,6 @@ typedef struct
 
 typedef int __key_t;
 
+typedef short int __ipc_pid_t;
+
 #endif /* gnu/types.h */
