@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,12 +17,11 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <errno.h>
 #include <unistd.h>
-#include <limits.h>
 #include <hurd.h>
-#include <sys/stat.h>
+#include <hurd/paths.h>
 #include <fcntl.h>
+#include <string.h>
 
 /* Read the contents of the symbolic link PATH into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
@@ -34,40 +33,37 @@ DEFUN(__readlink, (path, buf, len),
   error_t err;
   file_t file;
   struct stat st;
+  char mybuf[2048], *transp = mybuf;
+  unsigned int translen = sizeof (mybuf);
   char *p;
 
   file = __path_lookup (path, O_READ|O_NOTRANS, 0);
   if (file == MACH_PORT_NULL)
     return -1;
 
-  err = __io_stat (file, &st);
-  if (! err && ! S_ISLNK (st.st_mode))
-    err = EINVAL;
-
-  if (! err)
-    {
-      p = buf;
-      while (len > 0)
-	{
-	  char *s = p;
-	  mach_msg_type_number_t nread;
-	  err = __io_read (file, &s, &nread, p - buf, len);
-	  if (err || nread == 0)
-	    break;
-	  if (s != p)
-	    {
-	      memcpy (p, s, nread);
-	      __vm_deallocate (__mach_task_self (), (vm_address_t) s, nread);
-	    }
-	  len -= nread;
-	  p += nread;
-	}
-    }
-
+  err = __file_get_translator (file, &transp, &translen);
   __mach_port_deallocate (__mach_task_self (), file);
 
   if (err)
     return __hurd_fail (err);
 
-  return p - buf;
+  if (translen < sizeof (_HURD_SYMLINK) ||
+      memcmp (transp, _HURD_SYMLINK, sizeof (_HURD_SYMLINK)))
+    /* The file is not actually a symlink.  */
+    err = EINVAL;
+  else
+    {
+      /* This is a symlink; its translator is "/hurd/symlink\0target\0".  */
+      if (len > translen - sizeof (_HURD_SYMLINK))
+	len = translen - sizeof (_HURD_SYMLINK);
+      if (transp[translen - 1] == '\0')
+	/* Remove the null terminator.  */
+	--len;
+      memcpy (buf, transp, len);
+    }
+
+  if (transp != mybuf)
+    __vm_deallocate (__mach_task_self (), (vm_address_t) transp, translen);
+
+  return err ? __hurd_fail (err) : len;
 }
