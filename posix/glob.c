@@ -28,6 +28,7 @@ Cambridge, MA 02139, USA.  */
 #include <fnmatch.h>
 
 #include <errno.h>
+#include <sys/types.h>
 
 #ifdef	STDC_HEADERS
 #include <stddef.h>
@@ -65,7 +66,6 @@ extern int errno;
 #include "ndir.h"
 #endif /* not SYSNDIR */
 #else /* not USG */
-#include <sys/types.h>
 #include <sys/dir.h>
 #endif /* USG */
 #endif /* POSIX or DIRENT or __GNU_LIBRARY__ */
@@ -128,13 +128,16 @@ extern void qsort ();
 #endif /* Standard headers.  */
 
 #ifndef	ANSI_STRING
-#define	strcoll	strcmp
 #define	memcpy(d, s, n)	bcopy((s), (d), (n))
 #define	strrchr	rindex
 /* memset is only used for zero here, but let's be paranoid.  */
 #define	memset(s, better_be_zero, n) \
   ((void) ((better_be_zero) == 0 ? (bzero((s), (n)), 0) : (abort(), 0)))
 #endif	/* Not ANSI_STRING.  */
+
+#ifndef	HAVE_STRCOLL
+#define	strcoll	strcmp
+#endif
 
 
 #ifndef	__GNU_LIBRARY__
@@ -177,6 +180,9 @@ extern char *alloca ();
 #define	__ptr_t	void *
 #else
 #define	__ptr_t	char *
+#endif
+
+#ifndef	STDC_HEADERS
 #undef	size_t
 #define	size_t	unsigned int
 #endif
