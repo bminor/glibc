@@ -53,10 +53,10 @@ define nl
 endef
 include $(objpfx)zonenames
 
-install-data = $(addprefix zoneinfo/,$(zonenames) \
-			   	     $(filter-out /%,$(localtime-file) \
-						     $(posixrules-file)))
-install-others = $(filter /%,$(localtime-file) $(posixrules-file))
+install-others = $(addprefix $(datadir)zoneinfo/,$(zonenames)		\
+			     $(filter-out /%,$(localtime-file)		\
+					     $(posixrules-file)))	\
+		 $(filter /%,$(localtime-file) $(posixrules-file))
 
 include ../Rules
 
@@ -69,25 +69,23 @@ $(tzfiles:%=$(objpfx)zones-%): $(objpfx)zones-%: % Makefile
 	 echo 'endef'							;\
 	 echo '$*-zones := $$(subst $$(nl), ,$$($*-zones))'		;\
 	 echo 'ifdef $*-zones'						;\
-	 echo '$$(addprefix zone%/,$$($*-zones)): \'			;\
-	 echo '$< $$(objpfx)zic leapseconds zoneinfo/'			;\
+	 echo '$$(addprefix $$(datadir)/zone%/,$$($*-zones)): \'	;\
+	 echo '$< $$(objpfx)zic leapseconds'				;\
 	 echo '	$$(tzcompile)'						;\
 	 echo 'endif'							;\
 	 echo 'zonenames := $$(zonenames) $$($*-zones)'			;\
-	) > $@
+	) > $@.new
+	mv $@.new $@
 $(objpfx)zonenames: Makefile
 	(for file in $(tzfiles); do \
 	   echo "include \$$(objpfx)zones-$$file"; \
-	 done) > $@
+	 done) > $@.new
+	mv $@.new $@
 
 .PHONY: echo-zonenames
 echo-zonenames: zonenames
 	@echo 'Known zones: $(zonenames)'
 
-# Make all the zoneinfo files.
-.PHONY: zones zoneinfo
-zones: zoneinfo
-zoneinfo: $(foreach file,$(tzfiles),$(addprefix zoneinfo/,$($(file)-zones)))
 
 zic-cmd = $(dir $(word 2,$^))$(notdir $(word 2,$^))
 define tzcompile
@@ -95,20 +93,12 @@ $(zic-cmd) -d $(patsubst %/,%,$(word 4,$^)) -L $(word 3,$^) $<
 endef
 
 ifdef localtime
-zoneinfo/localtime: zoneinfo/$(localtime) $(objpfx)zic
-	$(zic-cmd) -d zoneinfo -l $(<:zoneinfo/%=%)
-zoneinfo: zoneinfo/localtime
+$(datadir)/zoneinfo/localtime: $(datadir)/zoneinfo/$(localtime) $(objpfx)zic
+	$(zic-cmd) -d $(@D) -l $(<F)
 endif
 ifdef posixrules
-zoneinfo/posixrules: zoneinfo/$(posixrules) $(objpfx)zic
-	$(zic-cmd) -d zoneinfo -p $(<:zoneinfo/%=%)
-zoneinfo: zoneinfo/posixrules
-endif
-ifneq ($(filter /%,$(localtime-file)),)
-$(localtime-file): zoneinfo/$(localtime); $(do-install)
-endif
-ifneq ($(filter /%,$(posixrules-file)),)
-$(posixrules-file): zoneinfo/$(posixrules); $(do-install)
+$(datadir)/zoneinfo/posixrules: $(datadir)/zoneinfo/$(posixrules) $(objpfx)zic
+	$(zic-cmd) -d $(@D) -p $(<F)
 endif
 
 
