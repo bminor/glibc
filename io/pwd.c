@@ -17,51 +17,22 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <stddef.h>
 #include <stdio.h>
-#include <grp.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-static FILE *stream = NULL;
-
-/* Rewind the stream.  */
-void
-DEFUN_VOID(setgrent)
+int
+DEFUN_VOID(main)
 {
-  if (stream != NULL)
-    rewind(stream);
-}
+  char *dir = getcwd((char *) NULL, 0);
 
-
-/* Close the stream.  */
-void
-DEFUN_VOID(endgrent)
-{
-  if (stream != NULL)
+  if (dir == NULL)
+    perror("getcwd");
+  else
     {
-      (void) fclose(stream);
-      stream = NULL;
-    }
-}
-
-
-/* Read an entry from the stream.  */
-struct group *
-DEFUN_VOID(getgrent)
-{
-  static PTR info = NULL;
-  if (info == NULL)
-    {
-      info = __grpalloc();
-      if (info == NULL)
-	return(NULL);
+      puts(dir);
+      free(dir);
     }
 
-  if (stream == NULL)
-    {
-      stream = __grpopen();
-      if (stream == NULL)
-	return(NULL);
-    }
-
-  return(__grpread(stream, info));
+  exit(dir == NULL ? EXIT_FAILURE : EXIT_SUCCESS);
 }

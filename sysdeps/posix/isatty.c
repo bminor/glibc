@@ -17,51 +17,21 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <grp.h>
+#include <errno.h>
+#include <unistd.h>
+#include <termios.h>
 
-static FILE *stream = NULL;
-
-/* Rewind the stream.  */
-void
-DEFUN_VOID(setgrent)
+/* Return 1 if FD is a terminal, 0 if not.  */
+int
+DEFUN(__isatty, (fd), int fd)
 {
-  if (stream != NULL)
-    rewind(stream);
-}
+  int save;
+  int is_tty;
+  struct termios term;
 
+  save = errno;
+  is_tty = __tcgetattr(fd, &term) == 0;
+  errno = save;
 
-/* Close the stream.  */
-void
-DEFUN_VOID(endgrent)
-{
-  if (stream != NULL)
-    {
-      (void) fclose(stream);
-      stream = NULL;
-    }
-}
-
-
-/* Read an entry from the stream.  */
-struct group *
-DEFUN_VOID(getgrent)
-{
-  static PTR info = NULL;
-  if (info == NULL)
-    {
-      info = __grpalloc();
-      if (info == NULL)
-	return(NULL);
-    }
-
-  if (stream == NULL)
-    {
-      stream = __grpopen();
-      if (stream == NULL)
-	return(NULL);
-    }
-
-  return(__grpread(stream, info));
+  return is_tty;
 }
