@@ -29,6 +29,8 @@ DEFUN(fchroot, (fd), int fd)
   error_t err;
   file_t crdir;
 
+  /* XXX check that's it's a directory */
+
   if (err = _HURD_DPORT_USE (fd,
 			     __mach_port_mod_refs (__mach_task_self (),
 						   (crdir = port),
