@@ -60,8 +60,8 @@ noexpr  "<U005E><U005B><U03BF><U039F><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol           "<U0047><U0052><U0044><U0020>"
-currency_symbol           "<U03B4><U03C1><U03C7>"
+int_curr_symbol           "<U0045><U0055><U0052><U0020>"
+currency_symbol           "<U0045><U0055><U0052>"
 mon_decimal_point         "<U002C>"
 mon_thousands_sep         "<U002E>"
 mon_grouping              3;3
