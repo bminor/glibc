@@ -1,3 +1,18 @@
+1997-05-21 17:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db/Makefile (libdb.so): Depend on libc.so for dynamic loading
+	and for Linux ld.so.
+	* login/Makefile (libutil.so): Likewise.
+	* math/Makefile (libm.so): Likewise.
+	* md5-crypt/Makefile (libcrypt.so): Likewise.
+	* nis/Makefile (libnss_%.so): Likewise.
+	* resolv/Makefile (libnss_dns.so): Likewise.
+
+1997-05-15 16:10  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/Makefile (CFLAGS-s_copysignl.c): Define for gcc bug
+	workaround.
+
 1997-05-21 01:52  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/Makefile (CPPFLAGS): Add definition for LOCALE_ALIAS_PATH.
