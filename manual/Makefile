@@ -66,5 +66,7 @@ distribute := library.texinfo $(chapters) texinfo.tex \
 dist: ../Make-dist
 	$(MAKE) -f $< $(Make-dist-args)
 
-include ../Makeconfig
+#This caused failure, and it should be unnecessary to configure
+#just to process the manual -- rms
+#include ../Makeconfig
 endif
