@@ -45,5 +45,5 @@ DEFUN(accept, (fd, addr, addr_len),
       return __hurd_dfail (fd, err);
     }
 
-  return _hurd_alloc_fd (new, 0, 1);
+  return _hurd_intern_fd (new, 0, 1);
 }
