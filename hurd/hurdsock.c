@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <sys/socket.h>
 #include <stdlib.h>
+#include <string.h>
 #include <hurd/paths.h>
 #include <gnu-stabs.h>
 #include <stdio.h>

@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/msg_server.h>
 #include <hurd/id.h>
+#include <string.h>
 
 int
 _hurd_refport_secure_p (mach_port_t ref)
