@@ -13,7 +13,7 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 /*
@@ -24,6 +24,8 @@ Cambridge, MA 02139, USA.  */
 
 #define	_SYS_WAIT_H	1
 #include <features.h>
+
+__BEGIN_DECLS
 
 #include <gnu/types.h>
 #include <gnu/wait.h>
@@ -39,25 +41,26 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef	__USE_BSD
 union __wait
-  {
+{
 #ifdef	__LITTLE_ENDIAN
-    struct
-      {
-	unsigned int __w_termsig:7;
-	unsigned int __w_coredump:1;
-	unsigned int __w_retcode:8;
-	unsigned int :16;
-      } __wait_status;
-#else	/* Big endian.  */
-    struct
-      {
-	unsigned int :16;
-	unsigned int __w_retcode:8;
-	unsigned int __w_coredump:1;
-	unsigned int __w_termsig:7;
-      } __wait_status;
-#endif	/* Little endian.  */
-  };
+  struct
+  {
+    unsigned int __w_termsig:7;
+    unsigned int __w_coredump:1;
+    unsigned int __w_retcode:8;
+    unsigned int:16;
+  } __wait_status;
+#else /* Big endian.  */
+  struct
+  {
+    unsigned int:16;
+    unsigned int __w_retcode:8;
+    unsigned int __w_coredump:1;
+    unsigned int __w_termsig:7;
+  } __wait_status;
+#endif /* Little endian.  */
+};
+
 #define	w_termsig	__wait_status.__w_termsig
 #define	w_coredump	__wait_status.__w_coredump
 #define	w_retcode	__wait_status.__w_retcode
@@ -74,17 +77,17 @@ union __wait
 /* This is the type of the argument to `wait'.
    With GCC v2, this will be a strange union.  */
 
-/* IGNORE(@This line MUST be split!  m4 will not change it otherwise.@)  */
+/* @This line MUST be split!  m4 will not change it otherwise.@  */
 #define	__WAIT_STATUS	\
-  PTR
+  __ptr_t
 
-#else	/* Don't use BSD.  */
+#else /* Don't use BSD.  */
 
 #define	__WAIT_INT(status)	(status)
 
 #define	__WAIT_STATUS	int *
 
-#endif	/* Use BSD.  */
+#endif /* Use BSD.  */
 
 #define	WEXITSTATUS(status)	__WEXITSTATUS(__WAIT_INT(status))
 #define	WTERMSIG(status)	__WTERMSIG(__WAIT_INT(status))
@@ -102,8 +105,8 @@ union __wait
 
 /* Wait for a child to die.  When one does, put its status in *STAT_LOC
    and return its process ID.  For errors, return (pid_t) -1.  */
-extern __pid_t EXFUN(__wait, (__WAIT_STATUS __stat_loc));
-extern __pid_t EXFUN(wait, (__WAIT_STATUS __stat_loc));
+extern __pid_t __wait __P ((__WAIT_STATUS __stat_loc));
+extern __pid_t wait __P ((__WAIT_STATUS __stat_loc));
 
 #ifdef	__USE_BSD
 /* Special values for the PID argument to `waitpid' and `wait4'.  */
@@ -123,26 +126,30 @@ extern __pid_t EXFUN(wait, (__WAIT_STATUS __stat_loc));
    return PID and store the dead child's status in STAT_LOC.
    Return (pid_t) -1 for errors.  If the WUNTRACED bit is
    set in OPTIONS, return status for stopped children; otherwise don't.  */
-extern __pid_t EXFUN(__waitpid, (__pid_t __pid, int *__stat_loc,
-				 int __options));
+extern __pid_t __waitpid __P ((__pid_t __pid, int *__stat_loc,
+			       int __options));
 #ifdef	__USE_BSD
+struct rusage;
+
 /* Wait for a child to exit.  When one does, put its status in *STAT_LOC and
-   return its process ID.  For errors return (pid_t) -1.  If USAGE is not nil,
-   store information about the child's resource usage (as a `struct rusage')
-   there.  If the WUNTRACED bit is set in OPTIONS, return status for stopped
-   children; otherwise don't.  */
-extern __pid_t EXFUN(__wait3, (union __wait *__stat_loc,
-			       int __options, PTR __usage));
+   return its process ID.  For errors return (pid_t) -1.  If USAGE is not
+   nil, store information about the child's resource usage there.  If the
+   WUNTRACED bit is set in OPTIONS, return status for stopped children;
+   otherwise don't.  */
+extern __pid_t __wait3 __P ((union __wait * __stat_loc,
+			     int __options, struct rusage * __usage));
 #define	wait3	__wait3
 
 /* PID is like waitpid.  Other args are like wait3.  */
-extern __pid_t EXFUN(__wait4, (__pid_t __pid, union __wait *__stat_loc,
-			       int __options, PTR __usage));
+extern __pid_t __wait4 __P ((__pid_t __pid, union __wait * __stat_loc,
+			     int __options, struct rusage * __usage));
 #define	wait4	__wait4
-#endif	/* Use BSD.  */
+#endif /* Use BSD.  */
 
 #define	waitpid	__waitpid
 #define	wait	__wait
 
 
-#endif	/* sys/wait.h  */
+__END_DECLS
+
+#endif /* sys/wait.h  */
