@@ -23,7 +23,7 @@ will follow the conventions preferred by the user.
 * Effects of Locale::     Actions affected by the choice of locale.
 * Choosing Locale::       How the user specifies a locale.
 * Locale Categories::     Different purposes for which you can select a locale.
-* Setting Locale::        How a program specifies the locale library functions.
+* Setting the Locale::    How a program specifies the locale library functions.
 * Standard Locales::      Locale names available on all systems.
 * Numeric Formatting::    How to format numbers according to the chosen locale.
 @end menu
