@@ -77,16 +77,28 @@ tar-it = tar chvf $@ $^
 manual.tar: $(minimal-dist) ; $(tar-it)
 mandist.tar: $(distribute) ; $(tar-it)
 
+edition := $(shell sed -n 's/^@set EDITION \(.*\)$$/\1/p' library.texinfo)
+
+glibc-manual-$(edition).tar: $(distribute)
+	@rm -f glibc-manual-$(edition)
+	ln -s . glibc-manual-$(edition)
+	tar chvf $@ $(addprefix glibc-manual-$(edition)/,$^)
+	rm -f glibc-manual-$(edition)
+
 %.Z: %
 	compress -c $< > $@.new
 	mv $@.new $@
-
+%.z: %
+	gzip -9 -c $< > $@.new
+	mv $@.new $@
 %.uu: %
 	uuencode $< < $< > $@.new
 	mv $@.new $@
 
-ifneq (,)
 .PHONY: dist
+dist: $(addprefix glibc-manual-$(edition).tar,.z .Z)
+
+ifneq (,)
 dist: ../Make-dist
 	$(MAKE) -f $< $(Make-dist-args)
 endif
@@ -96,4 +108,3 @@ ETAGS = etags -T
 endif
 TAGS: $(minimal-dist)
 	$(ETAGS) -o $@ $^
-
