@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,11 +30,13 @@ DEFUN(putpwent, (p, stream), register CONST struct passwd *p AND FILE *stream)
   if (p == NULL || stream == NULL)
     {
       errno = EINVAL;
-      return(-1);
+      return -1;
     }
 
-  if (fprintf(stream, "%s:%s:%d:%d:%s:%s\n", p->pw_name, p->pw_passwd,
-	      p->pw_uid, p->pw_gid, p->pw_gecos, p->pw_shell) < 0)
+  if (fprintf (stream, "%s:%s:%u:%u:%s:%s\n",
+	       p->pw_name, p->pw_passwd,
+	       p->pw_uid, p->pw_gid,
+	       p->pw_gecos, p->pw_shell) < 0)
     return(-1);
 
   return(0);
