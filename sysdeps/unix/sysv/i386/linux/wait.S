@@ -26,4 +26,4 @@ ENTRY (__wait)
 	pushl %eax		/* Push the return address.  */
 
 	/* Jump to waitpid; it will return to our caller.  */
-	jmp __waitpid
+	jmp ___waitpid
