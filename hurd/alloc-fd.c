@@ -52,6 +52,7 @@ _hurd_alloc_fd (int *fd, const int first_fd)
 	      __mutex_unlock (&hurd_dtable_lock);
 	      return NULL;
 	    }
+	  _hurd_dtable.d[i] = d;
 	}
 
       __spin_lock (&d->port.lock);
