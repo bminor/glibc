@@ -495,11 +495,13 @@ common-clean: common-mostlyclean
 
 .PHONY: stubs # The parent Makefile calls this target.
 stubs: $(common-objpfx)stub-$(subdir)
+s = $(sysdep_dir)/stub
 $(common-objpfx)stub-$(subdir): $(+depfiles)
 # Use /dev/null since `...` might expand to empty.
+	s=`cd $s; /bin/pwd`; \
 	$(patsubst %,cd %;,$(objdir)) \
 	sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
-	    `sed -n 's@^.*\($(sysdep_dir)/stub/[a-z0-9_]*\.c\).*$$@\1@p' \
+	    `sed -n 's@^.*$s/\([a-z0-9_-]*\.c\).*$$@'"$$s"'\1@p' \
 		 $(patsubst $(objpfx)%,%,$^) /dev/null` \
 	    /dev/null > $@T
 	mv -f $@T $@
