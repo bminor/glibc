@@ -661,11 +661,22 @@ void __pthread_reset_main_thread()
 
 void __pthread_kill_other_threads_np(void)
 {
+  struct sigaction sa;
   /* Terminate all other threads and thread manager */
   pthread_exit_process(0, NULL);
   /* Make current thread the main thread in case the calling thread
      changes its mind, does not exec(), and creates new threads instead. */
   __pthread_reset_main_thread();
+  /* Reset the signal handlers behaviour for the signals the
+     implementation uses since this would be passed to the new
+     process.  */
+  sigemptyset(&sa.sa_mask);
+  sa.sa_flags = 0;
+  sa.sa_handler = SIG_DFL;
+  __sigaction(__pthread_sig_restart, &sa, NULL);
+  __sigaction(__pthread_sig_cancel, &sa, NULL);
+  if (__pthread_sig_debug > 0)
+    __sigaction(__pthread_sig_debug, &sa, NULL);
 }
 weak_alias (__pthread_kill_other_threads_np, pthread_kill_other_threads_np)
 
