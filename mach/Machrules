@@ -98,7 +98,7 @@ vpath Machrules ../mach	# Find ourselves.
 
 # Not an implicit rule so the stamps are never removed as intermediates!
 $(patsubst %,$(objpfx)%.ustamp,$(user-interfaces)): $(objpfx)%.ustamp: %.defs
-	$(MIG) $< $(MIGFLAGS) \
+	$(MIG) $< $(MIGFLAGS) $(user-MIGFLAGS) \
 	       -prefix __ -i $(objpfx)tmp_ \
 	       -server /dev/null -user /dev/null -header /dev/null
 	for call in $($*-calls); do \
@@ -111,7 +111,7 @@ vpath %_server.c $(addprefix $(objpfx),$(sort $(dir $(server-interfaces))))
 
 # Build the server stubs in $(objdir).
 $(objpfx)%_server.c $(objpfx)%_server.h: %.defs
-	$(MIG) $< $(MIGFLAGS) \
+	$(MIG) $< $(MIGFLAGS) $(server-MIGFLAGS) \
 	       -prefix _S_ \
 	       -user /dev/null -header /dev/null \
 	       -server $(@:.h=.c) -sheader $(@:.c=.h)
