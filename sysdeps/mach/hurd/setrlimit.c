@@ -37,7 +37,14 @@ DEFUN(setrlimit, (resource, rlimits),
       return -1;
     }
 
-  lim = *rlimits;
+  lim = *rlimits;		/* Fault now if ever.  */
+
+  if (lim.rlim_max != RLIM_INFINITY)
+    {
+      /* We have no enforceable resource limits.  */
+      errno = ENOSYS;
+      return -1;
+    }
 
   switch (resource)
     {
