@@ -157,19 +157,7 @@ extern void EXFUN(cfree, (PTR __ptr));
 #endif	/* Use misc.  */
 
 #if defined(__USE_GNU) || defined(__USE_BSD) || defined(__USE_MISC)
-#undef	alloca
-
-/* Allocate a block that will be freed when the calling function exits.  */
-extern PTR EXFUN(__alloca, (size_t __size));
-extern PTR EXFUN(alloca, (size_t __size));
-
-#ifdef	__GNUC__
-#define	__alloca(size)	__builtin_alloca(size)
-#endif	/* GCC.  */
-
-#ifdef	__OPTIMIZE__
-#define	alloca(size)	__alloca(size)
-#endif	/* Optimizing.  */
+#include <alloca.h>
 #endif	/* Use GNU, BSD, or misc.  */
 
 #ifdef	__USE_BSD
