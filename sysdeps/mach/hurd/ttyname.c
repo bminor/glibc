@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <hurd.h>
 #include <errno.h>
 #include <limits.h>
 #include <stddef.h>
@@ -26,7 +25,9 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <hurd.h>
 #include <hurd/term.h>
+#include <hurd/fd.h>
 
 char *__ttyname = NULL;
 
@@ -41,9 +42,10 @@ ttyname (int fd)
   error_t err;
   mach_port_t fd_cttyid;
   static char nodename[1024] = "";	/* XXX */
+  char *name;
   
-  /* Open FILENAME relative to DIR and see if its ctty ID port
-     is the same as FD_CTTYID.  If so, deallocate that port and return 1.  */
+  /* Open FILENAME relative to DIR and return nonzero iff its ctty ID port
+     is the same as FD_CTTYID.  */
   int try (file_t dir, const char *filename)
     {
       mach_port_t file, cttyid;
@@ -61,22 +63,27 @@ ttyname (int fd)
     }
 
   /* Get the ctty ID port of the object we want to find.  */
-  if (err = _HURD_DPORT_USE (fd,
-			     (__term_get_nodename (port, nodename),
-			      __term_getctty (port, &fd_cttyid))))
+  if (err = HURD_DPORT_USE (fd,
+			    (__term_get_nodename (port, nodename),
+			     __term_getctty (port, &fd_cttyid))))
     return __hurd_fail (err), NULL;
 
+  /* If there was a "nodename" set, and it is correct, return that.  */
   if (nodename[0] != '\0' && __USEPORT (CWDIR, try (port, nodename)))
     return nodename;
+
+
+  /* Search the "/dev" directory for a file that returns the same ctty ID
+     port that the terminal FD refers to.  */
 
   dirstream = opendir (dev);
   if (dirstream == NULL)
     return NULL;
 
+  name = NULL;
   while ((d = readdir (dirstream)) != NULL)
     if (try (dirstream->__port, d->d_name))
       {
-	int save;
 	if (__ttyname)
 	  free (__ttyname);
 	__ttyname = malloc (sizeof (dev) + 1 + d->d_namlen);
@@ -86,16 +93,16 @@ ttyname (int fd)
 	    __ttyname[sizeof (dev)] = '/';
 	    memcpy (&__ttyname[sizeof (dev) + 1], d->d_name, d->d_namlen + 1);
 	  }
-	save = errno;
-	(void) closedir (dirstream);
-	errno = save;
-	return __ttyname;
+	name = __ttyname;
+	break;
       }
+
+  __mach_port_deallocate (__mach_task_self (), fd_cttyid);
 
   {
     int save = errno;
     (void) closedir (dirstream);
     errno = save;
-    return NULL;
+    return name;
   }
 }
