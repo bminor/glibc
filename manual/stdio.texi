@@ -3408,24 +3408,24 @@ communications protocol between the stream and its cookie.  It has
 the following members:
 
 @table @code
-@item cookie_read_function *read
+@item cookie_read_function_t *read
 This is the function that reads data from the cookie.  If the value is a
 null pointer instead of a function, then read operations on ths stream
 always return @code{EOF}.
 
-@item cookie_write_function *write
+@item cookie_write_function_t *write
 This is the function that writes data to the cookie.  If the value is a
 null pointer instead of a function, then data written to the stream is
 discarded.
 
-@item cookie_seek_function *seek
+@item cookie_seek_function_t *seek
 This is the function that performs the equivalent of file positioning on
 the cookie.  If the value is a null pointer instead of a function, calls
 to @code{fseek} on this stream can only seek to locations within the
 buffer; any attempt to seek outside the buffer will return an
 @code{ESPIPE} error.
 
-@item cookie_close_function *close
+@item cookie_close_function_t *close
 This function performs any appropriate cleanup on the cookie when
 closing the stream.  If the value is a null pointer instead of a
 function, nothing special is done to close the cookie when the stream is
@@ -3435,7 +3435,7 @@ closed.
 
 @comment stdio.h
 @comment GNU
-@deftypefun {FILE *} fopencookie (void *@var{cookie}, const char *@var{opentype}, struct cookie_functions @var{io_functions})
+@deftypefun {FILE *} fopencookie (void *@var{cookie}, const char *@var{opentype}, cookie_io_functions_t @var{io_functions})
 This function actually creates the stream for communicating with the
 @var{cookie} using the functions in the @var{io_functions} argument.
 The @var{opentype} argument is interpreted as for @code{fopen};
