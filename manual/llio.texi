@@ -372,7 +372,7 @@ functions that read from streams, such as @code{fgetc}.
 @deftypefun ssize_t write (int @var{filedes}, const void *@var{buffer}, size_t @var{size})
 The @code{write} function writes up to @var{size} bytes from
 @var{buffer} to the file with descriptor @var{filedes}.  The data in
-@var{buffer} is not necessarily a character string and a null character
+@var{buffer} is not necessarily a character string and a null character is
 output like any other character.
 
 The return value is the number of bytes actually written.  This is
@@ -501,7 +501,8 @@ current file position.
 You can set the file position past the current end of the file.  This
 does not by itself make the file longer; @code{lseek} never changes the
 file.  But subsequent output at that position will extend the file's
-size.
+size.  Characters between the previous end of file and the new position
+are filled with zeros.
 
 If the file position cannot be changed, or the operation is in some way
 invalid, @code{lseek} returns a value of @code{-1}.  The following
