@@ -32,35 +32,43 @@ _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes)
   err = HURD_FD_PORT_USE
     (fd,
      ({
-     call:
-       err = __io_read (port, &data, &nread, -1, *nbytes);
-       if (ctty != MACH_PORT_NULL && err == EBACKGROUND)
+       do
 	 {
-#if 1
-	   abort ();
-#else
-	   struct _hurd_sigstate *ss = _hurd_self_sigstate ();
-	   if (_hurd_orphaned ||
-	       __sigismember (SIGTTIN, &ss->blocked) ||
-	       ss->actions[SIGTTIN].sa_handler == SIG_IGN)
+	   err = __io_read (port, &data, &nread, -1, *nbytes);
+	   if (ctty != MACH_PORT_NULL && err == EBACKGROUND)
 	     {
-	       /* We are orphaned, or are blocking or ignoring SIGTTIN.
-		  Return EOF instead of stopping.  */
-	       __mutex_unlock (&ss->lock);
-	       nread = 0;
-	       err = 0;
-	     }
-	   else
-	     {
-	       const int restart = ss->actions[SIGTTIN].sa_flags & SA_RESTART;
-	       _hurd_raise_signal (ss, SIGTTIN, 0); /* Unlocks SS->lock.  */
-	       if (restart)
-		 goto call;
+	       /* We are a background job and tried to read from the tty.
+		  We should probably get a SIGTTIN signal.  */
+	       struct _hurd_sigstate *ss;
+	       if (_hurd_orphaned)
+		 /* Our process group is orphaned.  Don't stop; just fail.  */
+		 err = EIO;
 	       else
-		 err = EINTR;	/* XXX Is this right? */
+		 {
+		   ss = _hurd_self_sigstate ();
+		   if (__sigismember (SIGTTIN, &ss->blocked) ||
+		       ss->actions[SIGTTIN].sa_handler == SIG_IGN)
+		     /* We are blocking or ignoring SIGTTIN.  Just fail.  */
+		     err = EIO;
+		   __mutex_unlock (&ss->lock);
+		 }
+	       if (err == EBACKGROUND)
+		 {
+		   /* Send a SIGTTIN signal to our process group.  */
+		   int restart;
+		   err = __USEPORT (CTTYID, _hurd_sig_post (0, SIGTTIN, port));
+		   /* XXX what to do if error here? */
+		   /* At this point we should have just run the handler for
+		      SIGTTIN or resumed after being stopped.  Now this is
+		      still a "system call", so check to see if we should
+		      restart it.  */
+		   __mutex_lock (&ss->lock);
+		   if (!(ss->actions[SIGTTIN].sa_flags & SA_RESTART))
+		     err = EINTR;
+		   __mutex_unlock (&ss->lock);
+		 }
 	     }
-#endif
-	 }
+	 } while (err != EBACKGROUND);
        err;
      }));
 
