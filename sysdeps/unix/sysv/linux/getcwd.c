@@ -58,7 +58,7 @@ __getcwd (char *buf, size_t size)
   if (no_syscall_getcwd && !have_new_dcache)
     return generic_getcwd (buf, size);
 
-  if (size <= 0)
+  if (size == 0)
     {
       if (buf != NULL)
 	{
@@ -150,7 +150,7 @@ __getcwd (char *buf, size_t size)
   __set_errno (save_errno);
 
   /* Don't put restrictions on the length of the path unless the user does.  */
-  if (size <= 0)
+  if (size == 0)
     {
       free (path);
       path = NULL;
@@ -158,7 +158,7 @@ __getcwd (char *buf, size_t size)
 
   result = generic_getcwd (path, size);
 
-  if (result == NULL && buf == NULL && size > 0)
+  if (result == NULL && buf == NULL && size != 0)
     free (path);
 
   return result;
