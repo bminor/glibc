@@ -30,17 +30,32 @@ struct param
 static struct param params[] =
   {
     { "NGROUPS_MAX", NGROUPS },
+
     { "ARG_MAX", NCARGS },
+
 #ifdef	MAXUPRC
     { "CHILD_MAX", MAXUPRC },
 #endif
+
     { "OPEN_MAX", NOFILE },
+
+    /* Apparently, Ultrix's <sys/param.h> defines LINK_MAX and not MAXLINK.  */
+#if defined (LINK_MAX) && !defined (MAXLINK)
+#define MAXLINK	LINK_MAX
+#endif
 #ifdef	MAXLINK
     { "LINK_MAX", MAXLINK },
 #endif
+
     { "MAX_CANON", CANBSIZ },
-    { "NAME_MAX", 255 },
+
+#ifndef	MAXNAMLEN
+#define MAXNAMLEN 255
+#endif
+    { "NAME_MAX", MAXNAMLEN },
+
     { "PATH_MAX", MAXPATHLEN },
+
     { NULL, 0 }
   };
 
