@@ -484,11 +484,11 @@ extern error_t hurd_path_split (file_t crdir, file_t cwdir,
 extern error_t __hurd_path_lookup (file_t crdir, file_t cwdir,
 				   const char *file,
 				   int flags, mode_t mode,
-				   file_t *file);
+				   file_t *port);
 extern error_t hurd_path_lookup (file_t crdir, file_t cwdir,
-				 const char *file,
+				 const char *filename,
 				 int flags, mode_t mode,
-				 file_t *file);
+				 file_t *port);
 
 /* Returns a port to the directory, and sets *NAME to the file name.  */
 extern file_t __path_split (const char *file, const char **name);
