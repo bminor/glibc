@@ -55,8 +55,7 @@ _hurd_port2fd (struct hurd_fd *d, io_t port, int flags)
 	}
     }
 
-  if (is_ctty && ! __term_become_ctty (port, _hurd_pid, _hurd_pgrp,
-				       _hurd_msgport, &ctty))
+  if (is_ctty && ! __term_open_ctty (port, _hurd_pid, _hurd_pgrp, &ctty))
     {
       /* Operations on CTTY return EBACKGROUND when we are not a
 	 foreground user of the tty.  */
