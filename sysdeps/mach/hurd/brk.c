@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <gnu-stabs.h>
 
 
-/* Initial maximum size of the data segment.  */
+/* Initial maximum size of the data segment (32MB, which is arbitrary).  */
 #define	DATA_SIZE	(32 * 1024 * 1024)
 
 
@@ -35,7 +35,7 @@ vm_address_t _hurd_data_end;
    Pages beyond the one containing this address allow no access.  */
 vm_address_t _hurd_brk;
 
-mutex_t _hurd_brk_lock;
+struct mutex _hurd_brk_lock;
 
 /* Set the end of the process's data space to INADDR.
    Return 0 if successful, -1 if not.  */
@@ -53,11 +53,9 @@ int
 _hurd_set_brk (vm_address_t addr)
 {
   error_t err;
-  vm_address_t addr = inaddr;
   vm_address_t pagend = round_page (addr);
-  vm_address_t pagebrk;
+  vm_address_t pagebrk = round_page (_hurd_brk);
 
-  pagebrk = round_page (_hurd_brk);
   if (pagend <= pagebrk)
     {
       if (pagend < pagebrk)
@@ -70,6 +68,7 @@ _hurd_set_brk (vm_address_t addr)
 
   if (pagend > _hurd_data_end)
     {
+      /* Need to increase the resource limit.  */
       errno = ENOMEM;
       return -1;
     }
@@ -78,7 +77,7 @@ _hurd_set_brk (vm_address_t addr)
   if (err = __vm_protect (__mach_task_self (), pagebrk, pagend - pagebrk,
 			  0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE))
     {
-      errno = EIO;		/* XXX ? */
+      errno = err;
       return -1;
     }
 
@@ -93,6 +92,7 @@ init_brk (void)
   vm_address_t pagend;
 
   __mutex_init (&_hurd_brk_lock);
+
   _hurd_brk = &_end;
 
   pagend = round_page (&_end);
