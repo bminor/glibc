@@ -51,7 +51,7 @@ default_sigaction (struct sigaction actions[NSIG])
   actions[0].sa_flags = SA_RESTART;
   actions[0].sa_handler = SIG_DFL;
 
-  for (signo = 1; signo < NSIG; ++i)
+  for (signo = 1; signo < NSIG; ++signo)
     actions[signo] = actions[0];
 }
 
