@@ -107,7 +107,7 @@ main()
 
   printf ("\
 /* Implementation-specific limits.\n\
-   Generated at %.25s.  */\n\n", ctime (&now));
+   Generated at %.24s.  */\n\n", ctime (&now));
 
   for (p = params; p->name != NULL; ++p)
     printf ("#define %s %d\n", p->name, p->value);
