@@ -47,7 +47,7 @@ sparc-sun-sunos4.@var{n}
 m68k-hp-bsd4.3
 m68k-sun-sunos4.@var{n}
 m68k-sony-bsd4.3
-mips-dec-ultrix4.2
+mips-dec-ultrix4.@var{n}
 i386-bsd4.3
 i386-sysv
 i386-sysv4
