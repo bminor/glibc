@@ -30,7 +30,7 @@ test -n "$unix_syscall_h" && {
 # system call implementations in unix/common will be sufficient.
 
 for unix_function in \
-  __dup2 __lstat __mkdir __rmdir __readlink __symlink rename \
+  __dup2 __lstat __mkdir __rmdir __readlink __symlink rename swapon \
   __getpgrp __setpgrp __access __select __getgroups/__getgrps setgroups
 do
 
