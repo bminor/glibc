@@ -1,3 +1,8 @@
+2002-02-17  Andreas Schwab  <schwab@suse.de>
+
+	* signals.c (sigwait): Check for old sighandler being SIG_ERR,
+	not NULL.
+
 2002-02-01  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/mips/pspinlock.c (__pthread_spin_lock): Use a
