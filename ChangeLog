@@ -1,3 +1,8 @@
+1999-06-13  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdsock.c (_hurd_socket_server): Fix fencepost error in last
+	change.
+
 1999-06-12  Mark Kettenis  <kettenis@gnu.org>
 
 	* Makeconfig (static-start-installed-name): Set to
