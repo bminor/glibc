@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <hurd.h>
 #include <sysdep.h>
@@ -32,26 +31,17 @@ size_t _hurd_init_dtablesize;
 
 volatile int errno;		/* XXX wants to be per-thread */
 
+#ifndef	HAVE_GNU_LD
+#define	__environ	environ
+#endif
 char **__environ;
 
-extern void EXFUN(__libc_init, (NOARGS));
-extern void EXFUN(__mach_init, (NOARGS));
-extern int EXFUN(main, (int argc, char **argv, char **envp));
+extern void __mach_init (void);
+extern void __libc_init (int argc, char **argv, char **envp);
+extern int main (int argc, char **argv, char **envp);
 
 extern void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
 extern void (*_cthread_exit_routine) (int status);
-
-#ifndef	SET_SP
-#error SET_SP not defined by sysdep.h
-#endif
-
-#ifndef	GET_STACK
-#error GET_STACK not defined by sysdep.h
-#endif
-
-#ifndef LOSE
-#define	LOSE	__task_terminate (__mach_task_self ())
-#endif
 
 static int split_args (char *, size_t, char **);
 
@@ -71,10 +61,14 @@ _start (void)
   int flags;
 
   int argc, envc;
-  char **argv;
+  char **argv, **envp;
 
-  char *p;
+  /* GET_STACK (LOW, HIGH) should put the boundaries of the allocated
+     stack into LOW and HIGH.  */
 
+#ifndef	GET_STACK
+#error GET_STACK not defined by sysdeps/hurd/MACHINE/sysdep.h
+#endif
   GET_STACK (_hurd_stack_low, _hurd_stack_high);
 
   /* Basic Mach initialization, must be done before RPCs can be done.  */
@@ -85,6 +79,10 @@ _start (void)
       /* Do cthreads initialization, and move to using its new stack.  */
       void *newsp = (*_cthread_init_routine) ();
 
+      /* SET_SP (ADDR) should set the stack pointer to ADDR.  */
+#ifndef	SET_SP
+#error SET_SP not defined by sysdeps/mach/MACHINE/sysdep.h
+#endif
       SET_SP (newsp);
 
       if (newsp < _hurd_stack_low || newsp > _hurd_stack_high)
@@ -97,30 +95,44 @@ _start (void)
 
   if (err = __task_get_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
 				     &in_bootstrap))
+    /* LOSE can be defined as the `halt' instruction or something
+       similar which will cause the process to die in a characteristic
+       way suggesting a bug.  */
+#ifndef LOSE
+#define	LOSE	__task_terminate (__mach_task_self ())
+#endif
     LOSE;
 
   if (in_bootstrap != MACH_PORT_NULL)
     {
       /* Call the exec server on our bootstrap port and
 	 get all our standard information from it.  */
-      err = _hurd_exec_startup (in_bootstrap,
-				&flags,
-				&args, &argslen, &env, &envlen,
-				&_hurd_init_dtable, &_hurd_init_dtablesize,
-				&portarray, &portarraysize,
-				&intarray, &intarraysize);
+      err = __exec_startup (in_bootstrap,
+			    &flags,
+			    &args, &argslen, &env, &envlen,
+			    &_hurd_init_dtable, &_hurd_init_dtablesize,
+			    &portarray, &portarraysize,
+			    &intarray, &intarraysize);
       __mach_port_deallocate (__mach_task_self (), in_bootstrap);
     }
 
   if (err || in_bootstrap == MACH_PORT_NULL)
     {
       /* Either we have no bootstrap port, or the RPC to the exec server
-	 failed.  Set our variables to have empty information.  This is
-	 the same thing _hurd_exec_startup would have done if the kernel
-	 answered instead of the exec server.  */
+	 failed.  Try to snarf the args in the canonical Mach way.
+	 Hopefully either they will be on the stack as expected, or the
+	 stack will be zeros so we don't crash.  Set all our other
+	 variables to have empty information.  */
+
+      /* SNARF_ARGS (ARGC, ARGV, ENVP) snarfs the arguments and environment
+	 from the stack, assuming they were put there by the microkernel.  */
+#ifndef SNARF_ARGS
+#error SNARF_ARGS not defined by sysdeps/mach/MACHINE/sysdep.h
+#endif
+      SNARF_ARGS (argc, argv, envp);
 
       flags = 0;
-      args = env = 0;
+      args = env = NULL;
       argslen = envlen = 0;
       _hurd_init_dtable = NULL;
       _hurd_init_dtablesize = 0;
@@ -129,29 +141,37 @@ _start (void)
       intarray = NULL;
       intarraysize = 0;
     }
+  else
+    argv = envp = NULL;
 
   /* Turn the block of null-separated strings we were passed for the
      arguments and environment into vectors of pointers to strings.  */
       
-  if (! args)
+  if (! argv)
     {
-      /* No arguments passed; set argv to { NULL }.  */
-      argc = 0;
-      argv = (char **) &args;
+      if (! args)
+	{
+	  /* No arguments passed; set argv to { NULL }.  */
+	  argc = 0;
+	  argv = (char **) &args;
+	}
+      else
+	argc = split_args (args, argslen, NULL) + 1;
     }
-  else
-    argc = split_args (args, argslen, NULL) + 1;
 
-  if (! env)
+  if (! envp)
     {
-      /* No environment passed; set __environ to { NULL }.  */
-      envc = 0;
-      __environ = (char **) &env;
+      if (! env)
+	{
+	  /* No environment passed; set __environ to { NULL }.  */
+	  envc = 0;
+	  envp = (char **) &env;
+	}
+      else
+	envc = split_args (env, envlen, NULL) + 1;
     }
-  else
-    envc = split_args (env, envlen, NULL) + 1;
 
-  if (argc + envc > 0)
+  if (! argv && ! envp && argc + envc > 0)
     {
       /* There were some arguments or environment.
 	 Allocate space for the vectors of pointers and fill them in.  */
@@ -161,10 +181,10 @@ _start (void)
 						  sizeof (char *)),
 			       1))
 	__libc_fatal ("hurd: Can't allocate space for argv and environ\n");
-      __environ = &argv[argc + 1];
+      envp = &argv[argc + 1];
       
       split_args (args, argslen, argv);
-      split_args (env, envlen, __environ);
+      split_args (env, envlen, envp);
     }
 
   if (portarray || intarray)
