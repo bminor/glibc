@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,96,97,98,99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,8 +49,9 @@ typedef __ino64_t ino_t;
 # endif
 # define ino_t ino_t
 #endif
-#ifdef __USE_LARGEFILE64
+#if defined __USE_LARGEFILE64 && !defined ino64_t
 typedef __ino64_t ino64_t;
+# define ino64_t ino64_t
 #endif
 
 #ifndef dev_t
