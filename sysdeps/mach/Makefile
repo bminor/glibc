@@ -1,4 +1,4 @@
-# Copyright (C) 1993 Free Software Foundation, Inc.
+# Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ ifneq (mach,$(subdir))
 ifdef objpfx
 mach-objpfx = $(objpfx)
 else
-objpfx = $(..)mach
+mach-objpfx = $(..)mach
 endif
 
 # These are all the generated files that <mach.h> includes.
