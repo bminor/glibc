@@ -98,7 +98,9 @@ aux	:= sysdep $(+init) version start
 
 
 # What to install.
-install-lib = crt0.o Mcrt1.o	# libc.a is done by Makerules.
+# SCO 3.2v4 uses crt1.o.  Some other system uses Mcrt1.o.
+# They are created below (containing no data or code).
+install-lib = crt0.o crt1.o Mcrt1.o	# libc.a is done by Makerules.
 
 
 include Makerules
@@ -112,10 +114,10 @@ $(objpfx)crt0.o: $(objpfx)start.o
 	-rm -f $@
 	ln $< $@
 
-$(objpfx)Mcrt1.o:
-	cp /dev/null $(objpfx)Mcrt1.c
-	$(COMPILE.c) $(objpfx)Mcrt1.c $(OUTPUT_OPTION)
-	rm -f $(objpfx)Mcrt1.c
+$(objpfx)Mcrt1.o $(objpfx)crt1.o:
+	cp /dev/null $(@:.o=.c)
+	$(COMPILE.c) $(@:.o=.c) $(OUTPUT_OPTION)
+	rm -f $(@:.o=.c)
 
 lib-noranlib: subdir_lib
 
