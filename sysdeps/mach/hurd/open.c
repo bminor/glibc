@@ -79,9 +79,9 @@ DEFUN(__open, (file, oflag), CONST char *file AND int oflag DOTS)
       return -1;
     }
 
-  err = __hurd_path_lookup (file, fl, mode, &port);
+  port = __hurd_path_lookup (file, fl, mode);
 
-  if (!err && !_hurd_hasctty && !(oflag & O_NOCTTY))
+  if (port != MACH_PORT_NULL && !_hurd_hasctty && !(oflag & O_NOCTTY))
     {
       mach_port_t cttyid;
       io_statbuf_t stb;
@@ -107,5 +107,5 @@ DEFUN(__open, (file, oflag), CONST char *file AND int oflag DOTS)
 
   _hurd_dtable.d[fd].server = port;
   __mutex_unlock (&_hurd_dtable.lock);
-  return fd;
+  return port == MACH_PORT_NULL ? -1 : fd;
 }
