@@ -42,7 +42,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 
 /* Open a stream on a Mach device.  */
-extern FILE *mach_open_devstream (mach_port_t device_port);
+extern FILE *mach_open_devstream (mach_port_t device_port, const char *mode);
 
 
 #endif	/* mach.h */
