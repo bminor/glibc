@@ -1,3 +1,7 @@
+1999-08-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db2/Makefile: Link db_dump185 against libdb1.
+
 1999-08-25  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/unix/sysv/linux/ptsname.c: Add checks to make sure we're
