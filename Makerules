@@ -74,7 +74,8 @@ sysdirs := $(subst $(\n), ,$(sysdirs))
 endif
 $(+sysdir_pfx)sysdirs: $(+sysdir_pfx)Sysnames $(..)find-sysdirs
 	(echo define sysdirs; \
-	 $(dir $(word 2,$^))$(notdir $(word 2,$^)) < $<; \
+	 sysdep_dir=$(sysdep_dir) \
+	   $(dir $(word 2,$^))$(notdir $(word 2,$^)) < $<; \
 	 echo endef) > $@
 $(+sysdir_pfx)Sysnames:
 	@(echo The GNU C Library has not been configured!	;\
