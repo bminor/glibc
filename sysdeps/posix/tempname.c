@@ -62,25 +62,27 @@ DEFUN(exists, (file), CONST char *file)
 static CONST char letters[] =
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-/* Generate a temporary filename.
-   If DIR_SEARCH is nonzero, DIR and PFX are used as
-   described for tempnam.  If not, a temporary filename
-   in P_tmpdir with no special prefix is generated.  If LENPTR
-   is not NULL, *LENPTR is set the to length (including the
-   terminating '\0') of the resultant filename, which is returned.
-   This goes through a cyclic pattern of all possible filenames
-   consisting of five decimal digits of the current pid and three
-   of the characters in `letters'.  Data for tempnam and tmpnam
-   is kept separate, but when tempnam is using P_tmpdir and no
-   prefix (i.e, it is identical to tmpnam), the same data is used.
-   Each potential filename is tested for an already-existing file of
-   the same name, and no name of an existing file will be returned.
-   When the cycle reaches its end (12345ZZZ), NULL is returned.  */
+/* Generate a temporary filename and return it (in a static buffer).  If
+   STREAMPTR is not NULL, open a stream "w+b" on the file and set
+   *STREAMPTR to it.  If DIR_SEARCH is nonzero, DIR and PFX are used as
+   described for tempnam.  If not, a temporary filename in P_tmpdir with no
+   special prefix is generated.  If LENPTR is not NULL, *LENPTR is set the
+   to length (including the terminating '\0') of the resultant filename,
+   which is returned.  This goes through a cyclic pattern of all possible
+   filenames consisting of five decimal digits of the current pid and three
+   of the characters in `letters'.  Data for tempnam and tmpnam is kept
+   separate, but when tempnam is using P_tmpdir and no prefix (i.e, it is
+   identical to tmpnam), the same data is used.  Each potential filename is
+   tested for an already-existing file of the same name, and no name of an
+   existing file will be returned.  When the cycle reaches its end
+   (12345ZZZ), NULL is returned.  */
 char *
-DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr),
+DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr, streamptr),
       CONST char *dir AND CONST char *pfx AND
-      int dir_search AND size_t *lenptr)
+      int dir_search AND size_t *lenptr AND
+      FILE **streamptr)
 {
+  int saverrno = errno;
   static CONST char tmpdir[] = P_tmpdir;
   static struct
     {
@@ -157,7 +159,27 @@ DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr),
       /* Always return a unique string.  */
       ++info->i;
 
-      if (!exists (buf))
+      if (streamptr != NULL)
+	{
+	  int fd = __open (buf, O_RDWR|O_CREAT|O_EXCL, 0666);
+	  if (fd >= 0)
+	    {
+	      *streamptr = __newstream ();
+	      if (*streamptr == NULL)
+		{
+		  int save = errno;
+		  (void) __close (fd);
+		  errno = save;
+		  return NULL;
+		}
+	      (*streamptr)->__cookie = (PTR) fd;
+	      (*streamptr)->__mode.__write = 1;
+	      (*streamptr)->__mode.__read = 1;
+	      (*streamptr)->__mode.__binary = 1;
+	      break;
+	    }
+	}
+      else if (!exists (buf))
 	break;
 
       if (info->i > sizeof (letters) - 2)
@@ -171,6 +193,8 @@ DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr),
 	  ++info->s;
 	}
     }
+
+  errno = saverrno;
 
   if (lenptr != NULL)
     *lenptr = len + 1;
