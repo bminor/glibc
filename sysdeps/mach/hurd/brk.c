@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/resource.h>
 #include <hurd.h>
-#include <mutex.h>
+#include <cthreads.h>		/* For `struct mutex'.  */
 #include <gnu-stabs.h>
 
 
@@ -114,10 +114,10 @@ init_brk (void)
 		     VM_INHERIT_COPY)) /* ? */
 	_hurd_data_end = pagend;
     }
+
+  (void) &init_brk;		/* Avoid ``defined but not used'' warning.  */
 }
-#ifdef HAVE_GNU_LD
-text_set_element (__libc_subinit, init_brk);
-#endif
+text_set_element (_hurd_preinit_hook, init_brk);
 
 
 int
