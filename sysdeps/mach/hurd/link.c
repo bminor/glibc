@@ -38,27 +38,9 @@ DEFUN(__link, (from, to), CONST char *from AND CONST char *to)
      the receiving filesystem (the one containing TODIR) in dir_link.  */
 
   err = __file_getlinknode (oldfile, &linknode);
-  if (err == EOPNOTSUPP)
-    linknode = oldfile;
-  else
-    __mach_port_deallocate (__mach_task_self (), oldfile);
+  __mach_port_deallocate (__mach_task_self (), oldfile);
   if (err)
     return __hurd_fail (err);
-
-  if (linknode != oldfile)
-    {
-      /* When file_getlinknode gives us a new port, we need to
-         reauthenticate it before we can use it in dir_link.  */
-      file_t authed_linknode;
-      err = __io_reauthenticate (linknode);
-      if (!err)
-	err = __USEPORT (AUTH, __auth_user_authenticate (port, linknode,
-							 &authed_linknode));
-      __mach_port_deallocate (__mach_task_self (), linknode);
-      if (err)
-	return __hurd_fail (err);
-      linknode = authed_linknode;
-    }
 
   todir = __path_split (to, &toname);
   if (todir != MACH_PORT_NULL)
