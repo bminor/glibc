@@ -76,6 +76,13 @@ AC_ARG_ENABLE(omitfp, dnl
 [  --enable-omitfp         build undebuggable optimized library [default=no]],
 	      omitfp=$enableval, omitfp=no)
 
+dnl Some gcc versions have problems with omit-frame-pointer.  Warn about this.
+if test $omitfp = yes; then
+  echo "*** Not all versions of GCC compile code correctly when the"
+  echo "*** -fomit-frame-pointer version is used.  You are on your own"
+  echo "*** if you use it."
+fi
+
 dnl Generic infrastructure for drop-in additions to libc.
 AC_ARG_ENABLE(add-ons, dnl
 [  --enable-add-ons=DIR... configure and build named extra directories],
@@ -103,6 +110,30 @@ gnu*)
   host_os=`echo $host_os | sed -e 's/gnu/gnu-gnu/'`
   ;;
 esac
+###
+### I put this here to prevent those annoying emails from people who cannot
+### read and try to compile glibc on unsupported platforms.  --drepper
+###
+### By using the undocumented --enable-hacker-mode option for configure
+### one can skip this test to make the configuration not fail for unsupported
+### platforms.
+###
+if test -z "$enable_hacker_mode"; then
+  case "$host_os" in
+  linux* | gnu*)
+    ;;
+  *)
+    echo "*** The GNU C library is currently not available for this platform."
+    echo "*** So far nobody cared to port it and if there is no volunteer it"
+    echo "*** might never happen.  So, if you have interest to see glibc on"
+    echo "*** this platform visit"
+    echo "***  http://www.gnu.org/software/libc/porting.html"
+    echo "*** and join the group of porters"
+    exit 1
+    ;;
+  esac
+fi
+
 
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
@@ -116,7 +147,8 @@ gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
   gnu_ld=yes gnu_as=yes ;;
 esac
 case "$host_os" in
-linux*ecoff*)
+# i586-linuxaout is mangled into i586-pc-linux-gnuaout
+linux*ecoff* | linux*aout* | gnu*aout* | gnu*ecoff*)
   ;;
 gnu* | linux* | sysv4* | solaris2*)
   # These systems (almost) always use the ELF format.
@@ -351,7 +383,7 @@ AC_MSG_RESULT(sysdeps/generic sysdeps/stub)
 AC_PROG_INSTALL
 if test "$INSTALL" = "${srcdir}/install-sh -c"; then
   # The makefiles need to use a different form to find it in $srcdir.
-  INSTALL='$(..)./install-sh -c'
+  INSTALL='\$(..)./install-sh -c'
 fi
 AC_PROG_LN_S
 AC_CHECK_PROGS(MSGFMT, msgfmt gmsgfmt, :)
@@ -443,6 +475,37 @@ if test $libc_cv_need_minus_P = yes; then
 asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
 fi
 
+# gcc 2.7.x has a bug where if -pipe is set, the assembler will always
+# be told to read stdin.  This causes the compiler to hang when fed an
+# .s file.
+if test $ac_cv_prog_gcc = yes; then
+ case `${CC-cc} -v 2>&1` in
+  *2.7*)
+  # We must check this even if -pipe is not given here, because the user
+  # might do `make CFLAGS=-pipe'.
+  AC_CACHE_CHECK(for gcc 2.7.x -pipe bug, libc_cv_gcc_pipe_bug, [dnl
+   cp /dev/null conftest.s
+   cat >conftest1.s <<EOF
+.nosuchdirective
+EOF
+   if ${CC-cc} -pipe -c conftest.s <conftest1.s 2>/dev/null; then
+    libc_cv_gcc_pipe_bug=no
+   else
+    libc_cv_gcc_pipe_bug=yes
+   fi
+   rm -f conftest*])
+  if test $libc_cv_gcc_pipe_bug = yes; then
+   makeCC="${CC-cc} -B\$(common-objpfx)"
+   makeCFLAGS=$CFLAGS
+   CFLAGS=`echo $CFLAGS |sed 's/-pipe//'`
+  fi;;
+ *) libc_cv_gcc_pipe_bug=no;;
+ esac
+else
+ libc_cv_gcc_pipe_bug=no
+fi
+
+
 AC_CACHE_CHECK(for assembler global-symbol directive,
 	       libc_cv_asm_global_directive, [dnl
 libc_cv_asm_global_directive=UNKNOWN
@@ -450,7 +513,7 @@ for ac_globl in .globl .global; do
   cat > conftest.s <<EOF
 .text
 ${ac_globl} foo
-foo: .long 0
+foo:
 EOF
   if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
     libc_cv_asm_global_directive=${ac_globl}
@@ -535,13 +598,45 @@ if test $elf != yes; then
   fi
 fi
 
+dnl AC_CHECK_ASM_UNDERSCORE([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
+AC_DEFUN(AC_CHECK_ASM_UNDERSCORE,
+[cat > conftest.$ac_ext <<EOF
+dnl This sometimes fails to find confdefs.h, for some reason.
+dnl [#]line __oline__ "[$]0"
+[#]line __oline__ "configure"
+#include "confdefs.h"
+void underscore_test(void) {
+return; }
+EOF
+if AC_TRY_EVAL(ac_compile); then
+  if grep _underscore_test conftest* >/dev/null; then
+    ifelse([$1], , :, [rm -f conftest*
+    $1])
+  else
+    ifelse([$2], , , [rm -f conftest*
+    $2])
+  fi
+else
+  echo "configure: failed program was:" >&AC_FD_CC
+  cat conftest.$ac_ext >&AC_FD_CC
+  ifelse([$2], , , [rm -f conftest*
+  $2])
+fi
+rm -f conftest*])
+
 if test $elf = yes; then
   libc_cv_asm_underscores=no
 else
-  AC_CACHE_CHECK(for _ prefix on C symbol names, libc_cv_asm_underscores,
-		 [AC_TRY_LINK([asm ("_glibc_foobar:");], [glibc_foobar ();],
-			      libc_cv_asm_underscores=yes,
-			      libc_cv_asm_underscores=no)])
+  if test $ac_cv_prog_cc_works = yes; then
+    AC_CACHE_CHECK(for _ prefix on C symbol names, libc_cv_asm_underscores,
+                  [AC_TRY_LINK([asm ("_glibc_foobar:");], [glibc_foobar ();],
+                               libc_cv_asm_underscores=yes,
+                               libc_cv_asm_underscores=no)])
+  else
+    AC_CACHE_CHECK(for _ prefix on C symbol names, libc_cv_asm_underscores,
+                  [AC_CHECK_ASM_UNDERSCORE(libc_cv_asm_underscores=yes,
+                                           libc_cv_asm_underscores=no)])
+  fi
 fi
 if test $libc_cv_asm_underscores = no; then
   AC_DEFINE(NO_UNDERSCORES)
@@ -557,7 +652,7 @@ else
 cat > conftest.s <<EOF
 .text
 ${libc_cv_asm_global_directive} foo
-foo: .long 0
+foo:
 .weak foo
 .weak bar; bar = foo
 EOF
@@ -575,7 +670,7 @@ if test $libc_cv_asm_weak_directive = no; then
 cat > conftest.s <<EOF
 .text
 ${libc_cv_asm_global_directive} foo
-foo: .long 0
+foo:
 .weakext foo
 .weakext foo, bar
 EOF
@@ -768,6 +863,17 @@ fi
 
 VERSION=`sed -e 's/^#define VERSION "\([^"]*\)"/\1/p' -e d < $srcdir/version.h`
 AC_SUBST(VERSION)
+
+if test $libc_cv_gcc_pipe_bug = yes; then
+ realCC=$CC
+ CC=$makeCC
+ CFLAGS=$makeCFLAGS
+fi
+AC_OUTPUT_COMMANDS([
+if test "$realCC"; then
+ sed -e 's/%{pipe:-}/%|/g' `$realCC -print-file-name=specs` >specsT
+ mv specsT specs
+fi], [realCC=$realCC])
 
 AC_OUTPUT(config.make glibcbug ${config_makefile} ${config_uname}, ,
           [echo '$config_vars' >> config.make])

@@ -175,11 +175,15 @@ facilities, type @code{make check}.  This will produce several files
 with names like @file{@var{program}.out}.
 
 To format the @cite{GNU C Library Reference Manual} for printing, type
-@w{@code{make dvi}}.
+@w{@code{make dvi}}.  You need a working TeX installation to do this.
 
 To install the library and its header files, and the Info files of the
 manual, type @code{make install}.  This will build things if necessary,
-before installing them.@refill
+before installing them.  If you want to install the files in a different
+place than the one specified at configuration time you can specify a
+value for the Makefile variable @code{install_root} on the command line.
+This is useful to create chroot'ed environment or to prepare binary
+releases.@refill
 
 @node Tools for Installation
 @appendixsubsec Recommended Tools to Install the GNU C Library
@@ -196,7 +200,9 @@ build the GNU C library:
 You need the latest version of GNU @code{make}.  Modifying the GNU C
 Library to work with other @code{make} programs would be so hard that we
 recommend you port GNU @code{make} instead.  @strong{Really.}
-We recommend version GNU @code{make} version 3.75 or later.
+We recommend version GNU @code{make} version 3.75.  Versions 3.76 and
+3.76.1 are known to have bugs which only show up in big projects like
+GNU @code{libc}.
 
 @item
 GCC 2.7.2
@@ -206,12 +212,27 @@ compiler.  We recommend GCC version 2.7.2 or later; earlier versions may
 have problems.
 
 @item
-@code{binutils} 2.8
+@code{binutils} 2.8.1
 
 Using the GNU @code{binutils} (assembler, linker, and related tools) is
 preferable when possible, and they are required to build an ELF shared C
 library.  We recommend @code{binutils} version 2.8 or later; earlier
 versions are known to have problems or to not support all architectures.
+
+@item
+@code{texinfo} 3.11
+
+To correctly translate and install the Texinfo documentation you need
+this version of the @code{texinfo} package.  Former versions did not
+understand all the tags used in the document and also the installation
+mechanisms for the info files was not present or worked differently.
+
+On some Debian Linux based systems the used @code{install-info} program
+works differently.  Here you have to run make like this:
+
+@smallexample
+make INSTALL_INFO=/path/to/GNU/install-info install
+@end smallexample
 @end itemize
 
 @node Supported Configurations
@@ -233,7 +254,6 @@ versions) used to run on the following configurations:
 
 @smallexample
 alpha-dec-osf1
-alpha-@var{anything}-linuxecoff
 i@var{x}86-@var{anything}-bsd4.3
 i@var{x}86-@var{anything}-isc2.2
 i@var{x}86-@var{anything}-isc3.@var{n}
