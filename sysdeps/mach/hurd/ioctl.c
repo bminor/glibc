@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/fd.h>
 #include <stdarg.h>
 #include <mach/notify.h>
+#include <assert.h>
 
 /* Symbol set of ioctl handler lists.  If there are user-registered
    handlers, one of these lists will contain them.  The other lists are
@@ -46,14 +47,21 @@ DEFUN(__ioctl, (fd, request),
     { MACH_MSG_TYPE_CHAR, MACH_MSG_TYPE_INTEGER_16, MACH_MSG_TYPE_INTEGER_32,
       -1 };
 
+  /* Extract the type information encoded in the request.  */
+  unsigned int type = _IOC_TYPE (request);
+
   /* Message buffer.  */
-  char msg[sizeof (mach_msg_header_t) +	/* Header.  */
-	   sizeof (mach_msg_type_t) + 4 + /* Return code.  */
-	   3 * (sizeof (mach_msg_type_t) + (4 * 32))]; /* Argument data.  */
-  mach_msg_header_t *m = (mach_msg_header_t *) msg;
-  mach_msg_type_t *t = (mach_msg_type_t *) &m[1];
+  struct
+    {
+      mig_reply_header_t header;
+      char data[_IOT_COUNT0 (type) * (_IOT_TYPE0 (request) << 1) +
+		_IOT_COUNT1 (type) * (_IOT_TYPE1 (request) << 1) +
+		_IOT_COUNT2 (type) * (_IOT_TYPE2 (request) << 1)];
+    } msg;
+  mach_msg_header_t *const m = &msg.header.Head;
+  mach_msg_type_t *t = (mach_msg_type_t *) msg.data;
   mach_msg_id_t msgid;
-  unsigned int type;
+  unsigned int reply_size;
 
   void *arg;
 
@@ -114,22 +122,49 @@ DEFUN(__ioctl, (fd, request),
 	  /* This handler groks REQUEST.  Se lo puntamonos.  */
 	  return (*h->handler) (fd, request, arg);
   }
-  
 
-  /* Pack the argument data.  */
+  /* Compute the Mach message ID for the RPC from the group and command
+     parts of the ioctl request.  */
   msgid = (100000 +
-	   ((_IOC_GROUP (request) << 2) * 1000) + _IOC_COMMAND (request));
+	   ((_IOC_GROUP (request) - 'f') * 4000) + _IOC_COMMAND (request));
 
-  type = _IOC_TYPE (request);
+  if (_IOC_INOUT (request) & IOC_IN)
+    {
+      /* Pack the argument data.  */
+      in (_IOT_COUNT0 (type), _IOT_TYPE0 (type));
+      in (_IOT_COUNT1 (type), _IOT_TYPE1 (type));
+      in (_IOT_COUNT2 (type), _IOT_TYPE2 (type));
+    }
 
-  in (_IOT_COUNT0 (type), _IOT_TYPE0 (type));
-  in (_IOT_COUNT1 (type), _IOT_TYPE1 (type));
-  in (_IOT_COUNT2 (type), _IOT_TYPE2 (type));
+  /* Compute the expected size of the reply.  There is a standard header
+     consisting of the message header and the reply code.  Then, for out
+     and in/out ioctls, there come the data with their type headers.  */
+  reply_size = sizeof (mig_reply_header_t);
+
+  if (_IOC_INOUT (request) & IOC_OUT)
+    {
+      inline void figure_reply (unsigned int count, enum __ioctl_datum type)
+	{
+	  if (count > 0)
+	    {
+	      /* Add the size of the type and data.  */
+	      reply_size += sizeof (mach_msg_type_t) + (type << 1) * count;
+	      /* Align it to word size.  */
+	      reply_size += sizeof (mach_msg_type_t) - 1;
+	      reply_size &= ~(sizeof (mach_msg_type_t) - 1);
+	    }
+	}
+      figure_reply (_IOT_COUNT0 (request), _IOT_TYPE0 (request));
+      figure_reply (_IOT_COUNT1 (request), _IOT_TYPE1 (request));
+      figure_reply (_IOT_COUNT2 (request), _IOT_TYPE2 (request));
+    }
+
+  /* Send the RPC.  */
 
   err = HURD_DPORT_USE
     (fd,
      ({
-       m->msgh_size = (char *) t - msg;
+       m->msgh_size = (char *) t - (char *) &msg;
        m->msgh_remote_port = port;
        m->msgh_local_port = __mig_get_reply_port ();
        m->msgh_seqno = 0;
@@ -159,25 +194,35 @@ DEFUN(__ioctl, (fd, request),
       return __hurd_fail (err);
     }
 
+  if ((m->msgh_bits & MACH_MSGH_BITS_COMPLEX))
+    {
+      /* Allow no ports or VM.  */
+      __mach_msg_destroy (m);
+      /* Want to return a different error below for a different msgid.  */
+      if (m->msgh_id == msgid + 100)
+	return __hurd_fail (MIG_TYPE_ERROR);
+    }
+
   if (m->msgh_id != msgid + 100)
     return __hurd_fail (m->msgh_id == MACH_NOTIFY_SEND_ONCE ?
 			MIG_SERVER_DIED : MIG_REPLY_MISMATCH);
 
-  if ((m->msgh_bits & MACH_MSGH_BITS_COMPLEX) || /* Allow no ports or VM.  */
-      m->msgh_size != (char *) t - msg)
-    {
-      __mach_msg_destroy (m);
-      return __hurd_fail (MIG_TYPE_ERROR);
-    }
-
-  t = (mach_msg_type_t *) &m[1];
-  if (out (1, _IOTS (sizeof (error_t)), &err, NULL))
+  if (m->msgh_size != reply_size &&
+      m->msgh_size != sizeof (mig_reply_header_t))
     return __hurd_fail (MIG_TYPE_ERROR);
 
+  if (*(int *) &msg.header.RetCodeType !=
+      ((union { mach_msg_type_t t; int i; })
+       { t: io2mach_type (1, _IOTS (sizeof msg.header.RetCode)) }).i)
+    return __hurd_fail (MIG_TYPE_ERROR);
+  err = msg.header.RetCode;
+
+  t = (mach_msg_type_t *) msg.data;
   switch (err)
     {
     case 0:
-      if (out (_IOT_COUNT0 (type), _IOT_TYPE0 (type), arg, &arg) ||
+      if (m->msgh_size != reply_size ||
+	  out (_IOT_COUNT0 (type), _IOT_TYPE0 (type), arg, &arg) ||
 	  out (_IOT_COUNT1 (type), _IOT_TYPE1 (type), arg, &arg) ||
 	  out (_IOT_COUNT2 (type), _IOT_TYPE2 (type), arg, &arg))
 	return __hurd_fail (MIG_TYPE_ERROR);
