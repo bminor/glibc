@@ -1,3 +1,9 @@
+2004-10-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/s390/jmpbuf-unwind.h: Include bits/wordsize.h.
+	(JMPBUF_CFA_UNWINDS_ADJ): Subtract 96 resp. 160 bytes from
+	CFA.
+
 2004-10-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-cancel4.c (tf_msgrcv): Check for failure in msgget.  If the
