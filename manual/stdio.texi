@@ -277,9 +277,9 @@ If the @code{main} function to your program returns, or if you call the
 automatically closed properly.  If your program terminates in any other
 manner, such as by calling the @code{abort} function (@pxref{Aborting a
 Program}) or from a fatal signal (@pxref{Signal Handling}), open streams
-might not be closed properly.  Buffered output may not be flushed and
-files may not be complete.  For more information on buffering of
-streams, see @ref{Stream Buffering}.
+might not be closed properly.  Buffered output might not be flushed and
+files may be incomplete.  For more information on buffering of streams,
+see @ref{Stream Buffering}.
 
 @node Simple Output
 @section Simple Output by Characters or Lines
@@ -1114,7 +1114,7 @@ specifies how many significant digits to print.  Significant digits are
 the first digit before the decimal point, and all the digits after it.
 If the precision @code{0} or not specified for @samp{%g} or @samp{%G},
 it is treated like a value of @code{1}.  If the value being printed
-cannot be expressed precisely in the specified number of digits, the
+cannot be expressed accurately in the specified number of digits, the
 value is rounded to the nearest number that fits.
 
 Without a type modifier, the floating-point conversions use an argument
@@ -2923,8 +2923,7 @@ If you are writing programs that do interactive input and output using
 streams, you need to understand how buffering works when you design the
 user interface to your program.  Otherwise, you might find that output
 (such as progress or prompt messages) doesn't appear when you intended
-it to, or that input typed by the user is made available by lines
-instead of by single characters, or other unexpected behavior.  
+it to, or other unexpected behavior.
 
 This section deals only with controlling when characters are transmitted
 between the stream and the file or device, and @emph{not} with how
@@ -2954,9 +2953,8 @@ transmitted individually to or from the file as soon as possible.
 @cindex unbuffered stream
 
 @item
-Characters written to or read from a @dfn{line buffered} stream are
-transmitted to or from the file in blocks when a newline character is
-encountered.
+Characters written to a @dfn{line buffered} stream are transmitted to
+the file in blocks when a newline character is encountered.
 @cindex line buffered stream
 
 @item
@@ -2968,7 +2966,9 @@ transmitted to or from the file in blocks of arbitrary size.
 Newly opened streams are normally fully buffered, with one exception: a
 stream connected to an interactive device such as a terminal is
 initially line buffered.  @xref{Controlling Buffering}, for information
-on how to select a different kind of buffering.
+on how to select a different kind of buffering.  Usually the automatic
+selection gives you the most convenient kind of buffering for the file
+or device you open.
 
 The use of line buffering for interactive devices implies that output
 messages ending in a newline will appear immediately---which is usually
@@ -2976,25 +2976,6 @@ what you want.  Output that doesn't end in a newline might or might not
 show up immediately, so if you want them to appear immediately, you
 should flush buffered output explicitly with @code{fflush}, as described
 in @ref{Flushing Buffers}.
-
-Line buffering is a good default for terminal input as well, because
-most interactive programs read commands that are normally single lines.
-The program should be able to execute each line right away.  A line
-buffered stream permits this, whereas a fully buffered stream would
-always read enough text to fill the buffer before allowing the program
-to read any of it.  Line buffering also fits in with the usual
-input-editing facilities of most operating systems, which work within a
-line of input.
-
-Some programs need an unbuffered terminal input stream.  These include
-programs that read single-character commands (like Emacs) and programs
-that do their own input editing (such as those that use readline).  In
-order to read a character at a time, it is not enough to turn off
-buffering in the input stream; you must also turn off input editing in
-the operating system.  This requires changing the terminal mode
-(@pxref{Terminal Modes}).  If you want to change the terminal modes, you
-have to do this separately---merely using an unbuffered stream does not
-change the modes.
 
 @node Flushing Buffers
 @subsection Flushing Buffers
