@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992, 1994, 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994, 1996, 1998, 1999
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,7 +50,7 @@ getenv (name)
       /* The name of the variable consists of only one character.  Therefore
 	 the first two characters of the environment entry are this character
 	 and a '=' character.  */
-#if __BYTE_ORDER == __LITTLE_ENDIAN
+#if __BYTE_ORDER == __LITTLE_ENDIAN || !_STRING_ARCH_unaligned
       name_start = ('=' << 8) | *(const unsigned char *) name;
 #else
 # if __BYTE_ORDER == __BIG_ENDIAN
