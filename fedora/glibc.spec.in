@@ -1,4 +1,4 @@
-%define glibcrelease 87
+%define glibcrelease 88
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -856,7 +856,7 @@ grep -v '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist.full |
 
 grep '%{_prefix}/bin' < rpm.filelist >> common.filelist
 grep '%{_prefix}/lib/locale' < rpm.filelist >> common.filelist
-grep '%{_prefix}/libexec' < rpm.filelist >> common.filelist
+grep '%{_prefix}/libexec/pt_chown' < rpm.filelist >> common.filelist
 grep '%{_prefix}/sbin/[^gi]' < rpm.filelist >> common.filelist
 grep '%{_prefix}/share' < rpm.filelist \
   | grep -v '%{_prefix}/share/zoneinfo' >> common.filelist
@@ -864,7 +864,7 @@ grep '%{_prefix}/share' < rpm.filelist \
 mv rpm.filelist rpm.filelist.full
 grep -v '%{_prefix}/bin' < rpm.filelist.full |
 	grep -v '%{_prefix}/lib/locale' |
-	grep -v '%{_prefix}/libexec' |
+	grep -v '%{_prefix}/libexec/pt_chown' |
 	grep -v '%{_prefix}/sbin/[^gi]' |
 	grep -v '%{_prefix}/share' > rpm.filelist
 
@@ -1187,6 +1187,7 @@ rm -f *.filelist*
 %verify(not md5 size mtime) %config(noreplace) /etc/nsswitch.conf
 %verify(not md5 size mtime) %config(noreplace) /etc/ld.so.conf
 %dir /etc/ld.so.conf.d
+%dir %{_prefix}/libexec/getconf
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /etc/ld.so.cache
 %doc README NEWS INSTALL FAQ BUGS NOTES PROJECTS CONFORMANCE
 %doc COPYING COPYING.LIB README.libm LICENSES
@@ -1258,6 +1259,19 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Dec  7 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-88
+- update from CVS
+  - disregard LD_SHOW_AUXV and LD_DYNAMIC_WEAK if __libc_enable_secure
+  - disregard LD_DEBUG if __libc_enable_secure in normal mode
+    if /suid-debug doesn't exist
+  - fix fseekpos after ungetc
+  - avoid reading bytes before start of buffers in regex's
+    check_dst_limits_calc_pos_1 (#142060)
+  - make getpid () working with clone/clone2 without CLONE_THREAD
+    (so far on i386/x86_64/ia64 only)
+- move %{_prefix}/libexec/getconf/* to glibc from glibc-common
+- make %{_prefix}/libexec/getconf directory owned by glibc package
+
 * Fri Dec  3 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-87
 - update from CVS
   - build libpthread_nonshared.a objects with -fPIC on s390/s390x

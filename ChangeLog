@@ -1,5 +1,105 @@
 2004-12-01  Jakub Jelinek  <jakub@redhat.com>
 
+	* elf/rtld.c (process_envvars): Don't consider LD_SHOW_AUXV
+	and LD_DYNAMIC_WEAK if __libc_enable_secure.
+	If __libc_enable_secure, /etc/suid-debug doesn't exist and
+	program will be actually run, turn off all debugging.
+	* sysdeps/generic/unsecvars.h (UNSECURE_ENVVARS): Add LD_DEBUG,
+	LD_DYNAMIC_WEAK and LD_SHOW_AUXV.
+
+2004-12-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tzset.c (tzset_internal): If + or - is seen,
+	but no offset after it, reset offset to 0.  [BZ #601]
+
+2004-12-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/ioseekpos.c (_IO_seekpos_unlocked): Call _IO_SEEKOFF not
+	_IO_SEEKPOS, saving one indirect jump.
+
+	* libio/fileops.c (_IO_new_file_seekoff): Fix optimization of in-buffer
+	seek.  Remove dead code.
+
+2004-12-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/Makefile (tests): Add bug-ungetc4.
+	* libio/bug-ungetc4.c: New test.
+
+2004-12-06  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/clock_nanosleep.c (clock_nanosleep): Diagnose EINVAL
+	for CLOCK_THREAD_CPUTIME_ID, not ENOTSUP.
+	Use SYSDEP_NANOSLEEP handler before validating CLOCK_ID value.
+
+	* rt/tst-timer4.c (TEST_CLOCK, TEST_CLOCK_NANOSLEEP): New macros.
+	Use them throughout in place of CLOCK_REALTIME and nanosleep.
+	(do_test) [TEST_CLOCK_MISSING]: Call this macro and if it returns
+	non-null, punt the test with a message using the string returned.
+	* rt/tst-timer5.c: New file.
+	* rt/Makefile (tests): Add it.
+
+2004-12-01  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c (free_dfa_content, init_dfa): Remove
+	references to re_dfa_t's subexps field.
+	(parse_sub_exp, parse_expression): Do not use it.  Use
+	completed_bkref_map instead.
+	(create_initial_state, peek_token): Store a backreference \N
+	with opr.idx = N-1.
+	* posix/regexec.c (proceed_next_node, check_dst_limits, get_subexp):
+	Likewise.
+	(check_subexp_limits): Remove useless condition.
+	* posix/regex_internal.h (re_subexp_t): Remove.
+	(re_dfa_t): Remove subexps and subexps_alloc field, add
+	completed_bkref_map.
+
+2004-12-05  Roland McGrath  <roland@frob.com>
+
+	* Makeconfig: Comment typo fix.
+
+2004-11-30  Andreas Schwab  <schwab@suse.de>
+
+	* nis/ypclnt.c (ypprot_err): Remove unused entries.
+
+2004-11-30  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (check_dst_limits_calc_pos_1): Check for
+	bkref_idx == -1, and don't recurse in that case.
+
+2004-11-30  GOTO Masanori  <gotom@debian.or.jp>
+
+	* posix/confstr.c: Enclose #error message with double quote
+	for gcc-3.3 and lower.
+
+2004-12-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/clone.S: Add support for NPTL where
+	the PID is stored at userlevel and needs to be reset when CLONE_THREAD
+	is not used.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Likewise.
+
+2004-11-18  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/arm/sysdep.h: Define __USE_BX__ if bx is available.
+	Use it instead of __THUMB_INTERWORK__.  Make RETINSTR take
+	only a condition and a register.
+	* sysdeps/arm/dl-machine.h: Use __USE_BX__ instead of
+	__THUMB_INTERWORK__.
+	(_dl_start_user): Use BX.
+	* sysdeps/arm/strlen.S: Use DO_RET.
+	* sysdeps/unix/arm/brk.S: Likewise.
+	* sysdeps/unix/arm/fork.S: Likewise.
+	* sysdeps/unix/arm/sysdep.S: Likewise.
+	* sysdeps/unix/arm/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/clone.S: Update uses of RETINSTR.
+	* sysdeps/unix/sysv/linux/arm/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/mmap64.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/vfork.S: Likewise.
+
+2004-12-01  Jakub Jelinek  <jakub@redhat.com>
+
 	* posix/tst-regex.c: Use defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
 	conditionals instead of defined _POSIX_CPUTIME.
 	(main): If _POSIX_CPUTIME == 0, call sysconf to see if CPUTIME
@@ -11,11 +111,6 @@
 	* sysdeps/posix/sysconf.c (__sysconf): If _POSIX_CPUTIME resp.
 	_POSIX_THREAD_CPUTIME is defined to 0, return -1 for the corresponding
 	_SC_ argument.
-
-2004-12-02  Jakub Jelinek  <jakub@redhat.com>
-
-	* libio/Makefile (tests): Add bug-ungetc4.
-	* libio/bug-ungetc4.c: New test.
 
 2004-12-02  Roland McGrath  <roland@redhat.com>
 
