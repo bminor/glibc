@@ -17,7 +17,9 @@
 # Cambridge, MA 02139, USA.
 
 #
-#	Propagated rules for making the GNU C library.
+#	Common rules for making the GNU C library.  This file is included
+#	by the top-level Makefile and by all subdirectory makefiles
+#	(through Rules).
 #
 ifneq (,)
 This makefile requires GNU Make.
