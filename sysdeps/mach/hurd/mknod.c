@@ -51,20 +51,26 @@ DEFUN(__mknod, (path, mode, dev),
 			  FS_LOOKUP_CREATE|FS_LOOKUP_EXCL|FS_LOOKUP_WRITE,
 			  mode & 0777,
 			  &node))
-    return __hurd_fail (err);
+    goto lose;
 
   if (err = __io_write (node, dev, sizeof (dev), &n))
-    return __hurd_fail (err);
+    goto lose;
   if (n != sizeof (dev))
     {
-      errno = EIO;
-      return -1;
+      err = POSIX_EIO;
+      goto lose;
     }
 
-  if (err = __dir_set_translator (dir, name, FS_TRANS_EXCL, FS_GOAWAY_DONT,
-				  translator, MACH_PORT_NULL))
+  err = __dir_set_translator (dir, name, FS_TRANS_EXCL, FS_GOAWAY_DONT,
+			      translator, MACH_PORT_NULL);
+  __mach_port_deallocate (__mach_task_self (), dir);
+  if (err)
     /* XXX The node still exists.... */
     return __hurd_fail (err);
 
   return 0;
+
+ lose:
+  __mach_port_deallocate (__mach_task_self (), dir);
+  return __hurd_fail (err);
 }
