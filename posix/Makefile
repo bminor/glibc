@@ -52,12 +52,12 @@ include ../Rules
 
 $(objpfx)libposix.a:
 	$(AR) cr $@ /dev/null
-
+
 # Make the standalone glob/fnmatch package.
 glob.tar.Z: glob.tar
 	compress -c $< > $@-tmp
 	mv $@-tmp $@
-glob.tar: glob/COPYING.LIB glob/Makefile \
+glob.tar: glob/COPYING.LIB glob/Makefile.in glob/configure \
 	  glob/fnmatch.h glob/glob.h glob/fnmatch.c glob/glob.c	  
 	tar ch$(verbose)f $@ $^
 glob/%.c: %.c
@@ -66,3 +66,7 @@ glob/%.c: %.c
 glob/%.h: %.h
 	rm -f $@
 	ln -s ../$< $@
+
+glob/configure: /home/gd/gnu/autoconf/glob.conf
+	cp $< $@
+/home/gd/gnu/autoconf/%: force;$(MAKE) -C $(@D) $(@F)
