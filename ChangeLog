@@ -1,3 +1,45 @@
+1997-12-21 22:09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* xopen_lim.h: Include stdio_lim.h to get definition of FOPEN_MAX.
+	Define STREAM_MAX using FOPEN_MAX.
+
+	* locale/programs/ld-ctype.c (map_collection_max, map_collection_act):
+	Define as size_t.
+	* locale/programs/locale.c: Use correct cast from pointer value.
+
+	* misc/regexp.h (compile): Use parameter names without __.
+
+	* nis/nss_nis/nis-ethers.c (internal_nis_getetherent_r): Use strncpy
+	instead of strcpy for security reasons.
+	* nis/nss_nis/nis-proto.c (internal_nis_getprotoent_r): Likewise.
+	* nis/nss_nis/nis-rpc.c (internal_nis_getrpcent_r): Likewise.
+	* nis/nss_nis/nis-service.c (internal_nis_getservent_r): Likewise.
+	* sunrpc/clnt_simp.c (callrpc): Likewise.
+
+	* nis/nss_nis/nis-hosts.c (LINE_PARSER): Use pointer of correct type
+	for map_v4v6_hostent call.
+
+	* sysdeps/posix/mk-stdio-lim.c: Generate file which recognizes
+	__need_FOPEN_MAX.
+	* sysdeps/standalone/stdio_lim.h: Rewrite to recognize
+	__need_FOPEN_MAX.
+	* sysdeps/stub/stdio_lim.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/gnu/types.h: Define __ipc_pid_t type.
+	* sysdeps/unix/sysv/linux/gnu/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/msq_buf.h: Use __ipc_pid_t for
+	msg_lspid and msg_lrpid field.
+	* sysdeps/unix/sysv/linux/sys/shm_buf.h: Likewise for shm_cpid and
+	shm_lpid field.
+
+1997-12-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in (libc_cv_gcc_alpha_ng_prefix): Correct quoting.
+
+1997-12-13  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* libc-work/nis/ypclnt.c (do_ypcall): Don't free dom_binding twice.
+
 1997-12-11 18:19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c: Don't count in multiply reference object in number
@@ -35,6 +77,11 @@
 	* configure.in: If --enable-add-ons is given without an
 	argument, set the addons list to all subdirs with a configure
 	script.
+
+1997-05-23 15:26  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* resolv/res_query.c (res_querydomain): Avoid potential buffer
+	overrun.  Reported by Dan A. Dickey <ddickey@transition.com>.
 
 1997-11-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
