@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/syscall.h>
+#include <sys/types.h>
 
 /*
   In Linux 2.1.x the chown functions have been changed.  A new function lchown
