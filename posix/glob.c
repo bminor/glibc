@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -344,7 +344,7 @@ glob (pattern, flags, errfunc, pglob)
 	/* No matches.  */
 	if (flags & GLOB_NOCHECK)
 	  {
-	    const size_t len = strlen (pattern) + 1;
+	    size_t len = strlen (pattern) + 1;
 	    char *patcopy = (char *) malloc (len);
 	    if (patcopy == NULL)
 	      return GLOB_NOSPACE;
@@ -458,7 +458,7 @@ prefix_array (dirname, array, n)
 
   for (i = 0; i < n; ++i)
     {
-      const size_t eltlen = strlen (array[i]) + 1;
+      size_t eltlen = strlen (array[i]) + 1;
       char *new = (char *) malloc (dirlen + 1 + eltlen);
       if (new == NULL)
 	{
