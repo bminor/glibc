@@ -354,7 +354,7 @@ posix
 @end example
 
 @noindent
-So the final list is @file{unix/bsd/vax unix/bsd vax unix/inet unix posix}.
+So the final list is @file{unix/bsd/vax unix/bsd unix/inet unix posix}.
 
 @file{sysdeps} has two ``special'' subdirectories, called @file{generic}
 and @file{stub}.  These two are always implicitly appended to the list
