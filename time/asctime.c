@@ -39,7 +39,7 @@ DEFUN(asctime, (tp), CONST struct tm *tp)
   
   if (sprintf (result, format,
 	       (tp->tm_wday < 0 || tp->tm_wday >= 7 ?
-		"???" : _time_info->abbrev_wkday[tp->tm_wday])
+		"???" : _time_info->abbrev_wkday[tp->tm_wday]),
 	       (tp->tm_mon < 0 || tp->tm_mon >= 12 ?
 		"???" : _time_info->abbrev_month[tp->tm_mon]),
 	       tp->tm_mday, tp->tm_hour, tp->tm_min,
