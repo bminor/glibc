@@ -53,14 +53,13 @@ dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport setdtsz \
 	  fd-read fd-write
 inlines = $(addprefix inline-,fd port signal userlink)
-omit-deps += $(inlines)
 aux := hurdsyms hurdinit # hurdmsg
 
 # The files inline-*.c contain the real-function definition of the
 # functions defined with `extern inline' in hurd/*.h.
-$(objpfx)inline-%.c: hurd/%.h
+$(inlines:%=$(objpfx)%.c): $(objpfx)inline-%.c: 
 	(echo '#define _EXTERN_INLINE /* Define the real function. */';\
-	 echo '#include "$<"') > $@-tmp
+	 echo '#include "hurd/$*.h"') > $@-tmp
 	mv $@-tmp $@
 
 # Get the proper definition of `hurd-srcdir'.
