@@ -1,4 +1,19 @@
+2000-03-07  H.J. Lu  <hjl@gnu.org>
+
+	* locale/C-ctype.c (_nl_C_LC_CTYPE): Fix the initializer order
+	for _NL_CTYPE_TOXXXER32_EX.
+
 2000-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/africa: Update from tzdata2000d.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+
+	* po/fr.po: Update from translation team.
+	* po/de.po: Likewise.
 
 	* elf/dl-deps.c (_dl_map_object_deps): Change return type and remove
 	last parameter.  Move code to add map to global scope from here...
@@ -705,7 +720,7 @@
 
 1999-12-19  Andreas Jaeger  <aj@suse.de>
 
-        * include/fcntl.h: Declare __libc_fcntl.
+	* include/fcntl.h: Declare __libc_fcntl.
 
 	* include/unistd.h: Move __libc_open and __libc_open64 to ...
 	* include/fcntl.h: ...here.
