@@ -24,9 +24,6 @@ Cambridge, MA 02139, USA.  */
 #include "config.h"
 #endif
 
-#include <glob.h>
-#include <fnmatch.h>
-
 #include <errno.h>
 #include <sys/types.h>
 
@@ -184,6 +181,25 @@ extern char *alloca ();
 #undef	size_t
 #define	size_t	unsigned int
 #endif
+
+/* Some system header files erroneously define these.
+   We want our own definitions from <fnmatch.h> to take precedence.  */
+#undef	FNM_PATHNAME
+#undef	FNM_NOESCAPE
+#undef	FNM_PERIOD
+#include <fnmatch.h>
+
+/* Some system header files erroneously define these.
+   We want our own definitions from <glob.h> to take precedence.  */
+#undef	GLOB_ERR
+#undef	GLOB_MARK
+#undef	GLOB_NOSORT
+#undef	GLOB_DOOFFS
+#undef	GLOB_NOCHECK
+#undef	GLOB_APPEND
+#undef	GLOB_NOESCAPE
+#undef	GLOB_PERIOD
+#include <glob.h>
 
 __ptr_t (*__glob_opendir_hook) __P ((const char *directory));
 const char *(*__glob_readdir_hook) __P ((__ptr_t stream));
