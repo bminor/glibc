@@ -33,11 +33,11 @@ Cambridge, MA 02139, USA.  */
 #ifdef	__STDC__
 #define	PSEUDO(name, syscall_name)					      \
   .text;								      \
-  .globl syscall_error							      \
-  .align 4								      \
+  .globl syscall_error;							      \
+  .align 4;								      \
   ENTRY (name)								      \
   lea SYS_##syscall_name, %eax;						      \
-  lcall $7, $0								      \
+  lcall $7, $0;								      \
   jb syscall_error
 #else
 #define	PSEUDO(name, syscall_name)					      \
