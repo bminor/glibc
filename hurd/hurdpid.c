@@ -36,9 +36,14 @@ text_set_element (_hurd_proc_subinit, init_pids);
 
 #include <hurd/msg_server.h>
 #include "set-hooks.h"
+#include <cthreads.h>
 
 DEFINE_HOOK (_hurd_pgrp_changed_hook, (pid_t));
- 
+
+/* These let user threads synchronize with an operation which changes ids.  */
+unsigned int _hurd_pids_changed_stamp;
+struct condition _hurd_pids_changed_sync;
+
 kern_return_t
 _S_proc_newids (mach_port_t me,
 		task_t task,
@@ -55,6 +60,12 @@ _S_proc_newids (mach_port_t me,
 
   /* Run things that want notification of a pgrp change.  */
   RUN_HOOK (_hurd_pgrp_changed_hook, (_hurd_pgrp));
+
+  /* Notify any waiting user threads that the id change as been completed.  */
+  ++_hurd_pids_changed_stamp;
+#ifdef noteven
+  __condition_broadcast (&_hurd_pids_changed_sync);
+#endif
 
   return 0;
 }
