@@ -41,5 +41,6 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv
 
 $(objpfx)testsort.input: /usr/dict/words
 	cp $< $@
+dont_distribute := testsort.input
 
 include ../Rules
