@@ -33,8 +33,10 @@ DEFUN(chroot, (path), CONST char *path)
   if (crdir == MACH_PORT_NULL)
     return -1;
 
+  __mutex_lock (&_hurd_lock);
   old = _hurd_crdir;
   _hurd_crdir = crdir;
+  __mutex_lock (&_hurd_lock);
   __mach_port_deallocate (__mach_task_self (), old);
 
   return 0;
