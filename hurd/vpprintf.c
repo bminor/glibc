@@ -17,14 +17,10 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <errno.h>
-#include <limits.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 #include <hurd.h>
-#include <hurd/io.h>
-
 
 static ssize_t
 DEFUN(pwrite, (cookie, buf, n),
@@ -32,10 +28,7 @@ DEFUN(pwrite, (cookie, buf, n),
 {
   error_t error = __io_write ((io_t) cookie, buf, n, &n);
   if (error)
-    {
-      errno = h2ae (err);
-      return -1;
-    }
+    return __hurd_fail (error);
   return n;
 }
 
