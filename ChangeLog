@@ -1,3 +1,15 @@
+1998-10-07 07:57  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-close.c (_dl_close): Fix a memory leak.
+
+1998-09-02 19:18  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-open.c (_dl_open): Don't put the shared object on the
+	global scope list twice.
+
+	* elf/dl-close.c (_dl_close): Update _dl_global_scope[2] if the
+	first object on the list is removed.
+
 1998-10-07 16:48  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Improve the autodetection
