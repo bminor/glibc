@@ -12,10 +12,6 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- * 	This product includes software developed by the University of
- * 	California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
@@ -90,6 +86,13 @@ static char rcsid[] = "$Id$";
 #else
 # include "../conf/portability.h"
 #endif
+
+#include <bits/libc-lock.h>
+
+/* Lock to protect the connection use.  */
+__libc_lock_define_initialized (static, lock)
+
+static void res_close_internal (void);
 
 #if defined(USE_OPTIONS_H)
 # include <../conf/options.h>
@@ -297,6 +300,7 @@ res_send(buf, buflen, ans, anssiz)
 	int gotsomewhere, connreset, terrno, try, v_circuit, resplen, ns;
 	register int n;
 	u_int badns;	/* XXX NSMAX can't exceed #/bits in this var */
+	int result = -1;
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
 		/* errno should have been set by res_init() in this case. */
@@ -314,6 +318,8 @@ res_send(buf, buflen, ans, anssiz)
 	terrno = ETIMEDOUT;
 	badns = 0;
 
+	__libc_lock_lock (lock);
+
 	/*
 	 * Send request, RETRY times, or until successful
 	 */
@@ -322,7 +328,7 @@ res_send(buf, buflen, ans, anssiz)
 		struct sockaddr_in *nsap = &_res.nsaddr_list[ns];
     same_ns:
 		if (badns & (1 << ns)) {
-			res_close();
+			res_close_internal();
 			goto next_ns;
 		}
 
@@ -339,10 +345,11 @@ res_send(buf, buflen, ans, anssiz)
 					done = 1;
 					break;
 				case res_nextns:
-					res_close();
+					res_close_internal();
 					goto next_ns;
 				case res_done:
-					return (resplen);
+					result = resplen;
+					goto and_out;
 				case res_modified:
 					/* give the hook another try */
 					if (++loops < 42) /*doug adams*/
@@ -351,7 +358,7 @@ res_send(buf, buflen, ans, anssiz)
 				case res_error:
 					/*FALLTHROUGH*/
 				default:
-					return (-1);
+					goto and_out;
 				}
 			} while (!done);
 		}
@@ -374,13 +381,13 @@ res_send(buf, buflen, ans, anssiz)
 			truncated = 0;
 			if ((s < 0) || (!vc)) {
 				if (s >= 0)
-					res_close();
+					res_close_internal();
 
 				s = socket(PF_INET, SOCK_STREAM, 0);
 				if (s < 0) {
 					terrno = errno;
 					Perror(stderr, "socket(vc)", errno);
-					return (-1);
+					goto and_out;
 				}
 				__set_errno (0);
 				if (connect(s, (struct sockaddr *)nsap,
@@ -389,7 +396,7 @@ res_send(buf, buflen, ans, anssiz)
 					Aerror(stderr, "connect/vc",
 					       errno, *nsap);
 					badns |= (1 << ns);
-					res_close();
+					res_close_internal();
 					goto next_ns;
 				}
 				vc = 1;
@@ -406,7 +413,7 @@ res_send(buf, buflen, ans, anssiz)
 				terrno = errno;
 				Perror(stderr, "write failed", errno);
 				badns |= (1 << ns);
-				res_close();
+				res_close_internal();
 				goto next_ns;
 			}
 			/*
@@ -423,7 +430,7 @@ read_len:
 			if (n <= 0) {
 				terrno = errno;
 				Perror(stderr, "read failed", errno);
-				res_close();
+				res_close_internal();
 				/*
 				 * A long running process might get its TCP
 				 * connection reset if the remote server was
@@ -435,10 +442,10 @@ read_len:
 				 */
 				if (terrno == ECONNRESET && !connreset) {
 					connreset = 1;
-					res_close();
+					res_close_internal();
 					goto same_ns;
 				}
-				res_close();
+				res_close_internal();
 				goto next_ns;
 			}
 			resplen = _getshort(ans);
@@ -458,7 +465,7 @@ read_len:
 				       (stdout, ";; undersized: %d\n", len));
 				terrno = EMSGSIZE;
 				badns |= (1 << ns);
-				res_close();
+				res_close_internal();
 				goto next_ns;
 			}
 			cp = ans;
@@ -470,7 +477,7 @@ read_len:
 			if (n <= 0) {
 				terrno = errno;
 				Perror(stderr, "read(vc)", errno);
-				res_close();
+				res_close_internal();
 				goto next_ns;
 			}
 			if (truncated) {
@@ -517,7 +524,7 @@ read_len:
 
 			if ((s < 0) || vc) {
 				if (vc)
-					res_close();
+					res_close_internal();
 				s = socket(PF_INET, SOCK_DGRAM, 0);
 				if (s < 0) {
 #if !CAN_RECONNECT
@@ -525,7 +532,7 @@ read_len:
 #endif
 					terrno = errno;
 					Perror(stderr, "socket(dg)", errno);
-					return (-1);
+					goto and_out;
 				}
 				connected = 0;
 			}
@@ -557,7 +564,7 @@ read_len:
 						       "connect(dg)",
 						       errno, *nsap);
 						badns |= (1 << ns);
-						res_close();
+						res_close_internal();
 						goto next_ns;
 					}
 					connected = 1;
@@ -565,7 +572,7 @@ read_len:
 				if (send(s, (char*)buf, buflen, 0) != buflen) {
 					Perror(stderr, "send", errno);
 					badns |= (1 << ns);
-					res_close();
+					res_close_internal();
 					goto next_ns;
 				}
 			} else {
@@ -602,7 +609,7 @@ read_len:
 				    != buflen) {
 					Aerror(stderr, "sendto", errno, *nsap);
 					badns |= (1 << ns);
-					res_close();
+					res_close_internal();
 					goto next_ns;
 				}
 			}
@@ -618,7 +625,7 @@ read_len:
     wait:
 			if (s < 0 || s >= FD_SETSIZE) {
 				Perror(stderr, "s out-of-bounds", EMFILE);
-				res_close();
+				res_close_internal();
 				goto next_ns;
 			}
 			pfd[0].fd = s;
@@ -628,7 +635,7 @@ read_len:
 				if (errno == EINTR)
 					goto wait;
 				Perror(stderr, "poll", errno);
-				res_close();
+				res_close_internal();
 				goto next_ns;
 			}
 			if (n == 0) {
@@ -638,7 +645,7 @@ read_len:
 				Dprint(_res.options & RES_DEBUG,
 				       (stdout, ";; timeout\n"));
 				gotsomewhere = 1;
-				res_close();
+				res_close_internal();
 				goto next_ns;
 			}
 			__set_errno (0);
@@ -647,7 +654,7 @@ read_len:
 					   (struct sockaddr *)&from, &fromlen);
 			if (resplen <= 0) {
 				Perror(stderr, "recvfrom", errno);
-				res_close();
+				res_close_internal();
 				goto next_ns;
 			}
 			gotsomewhere = 1;
@@ -660,7 +667,7 @@ read_len:
 					resplen));
 				terrno = EMSGSIZE;
 				badns |= (1 << ns);
-				res_close();
+				res_close_internal();
 				goto next_ns;
 			}
 			if (hp->id != anhp->id) {
@@ -711,7 +718,7 @@ read_len:
 					(stdout, "server rejected query:\n"),
 					ans, (resplen>anssiz)?anssiz:resplen);
 				badns |= (1 << ns);
-				res_close();
+				res_close_internal();
 				/* don't retry if called from dig */
 				if (!_res.pfcode)
 					goto next_ns;
@@ -724,7 +731,7 @@ read_len:
 				Dprint(_res.options & RES_DEBUG,
 				       (stdout, ";; truncated answer\n"));
 				v_circuit = 1;
-				res_close();
+				res_close_internal();
 				goto same_ns;
 			}
 		} /*if vc/dg*/
@@ -746,7 +753,7 @@ read_len:
 		 */
 		if ((v_circuit && (!(_res.options & RES_USEVC) || ns != 0)) ||
 		    !(_res.options & RES_STAYOPEN)) {
-			res_close();
+			res_close_internal();
 		}
 		if (Rhook) {
 			int done = 0, loops = 0;
@@ -762,7 +769,7 @@ read_len:
 					done = 1;
 					break;
 				case res_nextns:
-					res_close();
+					res_close_internal();
 					goto next_ns;
 				case res_modified:
 					/* give the hook another try */
@@ -772,16 +779,17 @@ read_len:
 				case res_error:
 					/*FALLTHROUGH*/
 				default:
-					return (-1);
+					goto and_out;
 				}
 			} while (!done);
 
 		}
-		return (resplen);
+		result = resplen;
+		goto and_out;
     next_ns: ;
 	   } /*foreach ns*/
 	} /*foreach retry*/
-	res_close();
+	res_close_internal();
 	if (!v_circuit) {
 		if (!gotsomewhere)
 			__set_errno (ECONNREFUSED); /* no nameservers found */
@@ -789,7 +797,11 @@ read_len:
 			__set_errno (ETIMEDOUT);    /* no answer obtained */
 	} else
 		__set_errno (terrno);
-	return (-1);
+
+ and_out:
+	__libc_lock_unlock (lock);
+
+	return result;
 }
 
 /*
@@ -799,8 +811,8 @@ read_len:
  *
  * This routine is not expected to be user visible.
  */
-void
-res_close()
+static void
+res_close_internal()
 {
 	if (s >= 0) {
 		(void) close(s);
@@ -808,6 +820,14 @@ res_close()
 		connected = 0;
 		vc = 0;
 	}
+}
+
+void
+res_close ()
+{
+	__libc_lock_lock (lock);
+	res_close_internal ();
+	__libc_lock_unlock (lock);
 }
 
 #ifdef ultrix
