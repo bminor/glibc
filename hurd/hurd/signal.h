@@ -44,7 +44,8 @@ Cambridge, MA 02139, USA.  */
 
 struct hurd_sigstate
   {
-    /* XXX should be in cthread variable (?) */
+    /* XXX This should perhaps instead be something that identifies
+       cthreads multiplexed on a single kernel thread.  */
     thread_t thread;
     struct hurd_sigstate *next; /* Linked-list of thread sigstates.  */
 
@@ -90,6 +91,22 @@ extern struct mutex _hurd_siglock; /* Locks _hurd_sigstates.  */
 /* Get the sigstate of a given thread, taking its lock.  */
 
 extern struct hurd_sigstate *_hurd_thread_sigstate (thread_t);
+
+/* Get the sigstate of the current thread, taking its lock.
+   This uses a per-thread variable to optimize the lookup.  */
+
+#include <hurd/threadvar.h>
+_EXTERN_INLINE struct hurd_sigstate *
+_hurd_self_sigstate (void)
+{
+  struct hurd_sigstate **location =
+    (void *) __hurd_threadvar_location (_HURD_THREADVAR_SIGSTATE);
+  if (*location)
+    __mutex_lock (&(*location)->lock);
+  else
+    *location = _hurd_thread_sigstate (__mach_thread_self ()); /* cproc_self */
+  return *location;
+}
 
 /* Thread listening on our message port; also called the "signal thread".  */
 
@@ -180,8 +197,7 @@ extern void _hurd_siginfo_handler (int);
 #define	HURD_EINTR_RPC(port, call) \
   ({
     error_t __err;
-    struct hurd_sigstate *__ss
-      = _hurd_thread_sigstate (__mach_thread_self ());
+    struct hurd_sigstate *__ss = _hurd_self_sigstate ();
     __mutex_unlock (&__ss->lock); /* Lock not needed.  */
     /* If we get a signal and should return EINTR, the signal thread will
        clear this.  The RPC might return EINTR when some other thread gets
@@ -292,10 +308,6 @@ struct hurd_signal_preempt
 extern struct hurd_signal_preempt *_hurd_signal_preempt[NSIG];
 extern struct mutex _hurd_signal_preempt_lock;
 
-
-#ifndef _EXTERN_INLINE
-#define _EXTERN_INLINE extern __inline
-#endif
 
 /* Initialize PREEMPTER with the information given and stick it in the
    chain of preempters for SIGNO.  */
