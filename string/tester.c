@@ -532,8 +532,8 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
     int f;
     it = "strerror";
     f = open("/", O_WRONLY);	/* Should always fail. */
-    check(f < 0 && errno > 0 && errno < _sys_nerr, 1);
-    equal(strerror(errno), _sys_errlist[errno], 2);
+    check(f < 0 && errno > 0 && errno < sys_nerr, 1);
+    equal(strerror(errno), sys_errlist[errno], 2);
   }
 
   {
