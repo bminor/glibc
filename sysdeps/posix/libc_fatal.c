@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <errno.h>
 #include <sysdep.h>
 
 /* Abort with an error message.  */
