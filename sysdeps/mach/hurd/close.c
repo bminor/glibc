@@ -26,20 +26,9 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(__close, (fd), int fd)
 {
-  struct hurd_userlink ulink;
-  struct hurd_fd_user d;
   error_t err;
 
-  HURD_CRITICAL_BEGIN;
-  d = _hurd_fd_get (fd, &ulink);
-
-  if (d.d == NULL)
-    err = EBADF;
-  else
-    err = _hurd_fd_close (d.d);
-
-  _hurd_fd_free (d, &ulink);
-  HURD_CRITICAL_END;
+  err = HURD_FD_USE (fd, _hurd_fd_close (descriptor));
 
   return err ? __hurd_fail (err) : 0;
 }
