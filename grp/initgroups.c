@@ -49,8 +49,7 @@ DEFUN(initgroups, (user, group),
     return -1;
 
   n = 0;
-  if (group >= 0)
-    groups[n++] = group;
+  groups[n++] = group;
 
   while (n < NGROUPS_MAX && (g = __grpread(stream, info)) != NULL)
     if (g->gr_gid != group)
