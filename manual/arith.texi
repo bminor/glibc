@@ -84,13 +84,15 @@ This function returns a nonzero value if @var{x} is finite or a ``not a
 number'' value, and zero otherwise.
 @end deftypefun
 
-@ignore This is an internal function, and is being renamed.
 @comment math.h
 @comment BSD
 @deftypefun double infnan (int @var{error})
-@strong{Incomplete:}  I don't understand what this function does.
+This function is provided for compatibility with BSD.  Its argument
+is an error code, @code{EDOM} or @code{ERANGE}; its value
+is what a mathematical function should return if it fails with that
+error code.  @code{-ERANGE} is also acceptable as an argument, and
+corresponds to @code{-HUGE_VAL} as a value.
 @end deftypefun
-@end ignore
 
 @strong{Portability Note:} The functions listed in this section are BSD
 extensions.
