@@ -212,7 +212,7 @@ mcheck (func)
   abortfunc = (func != NULL) ? func : &mabort;
 
   /* These hooks may not be safely inserted if malloc is already in use.  */
-  if (!__malloc_initialized <= 0 && !mcheck_used)
+  if (__malloc_initialized <= 0 && !mcheck_used)
     {
       old_free_hook = __free_hook;
       __free_hook = freehook;
