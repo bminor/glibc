@@ -57,7 +57,7 @@ routines := brk sbrk sstk ioctl \
 aux := data_start progname
 distribute := bsd-compat.c
 extra-objs := bsd-compat.o
-install-lib := libbsd-compat.a
+install-lib := libbsd-compat.a libg.a
 non-lib.a := libbsd-compat.a
 
 include ../Rules
@@ -67,3 +67,6 @@ $(objpfx)libbsd-compat.a: $(objpfx)bsd-compat.o
 	ln $< $@
 
 lib: $(objpfx)libbsd-compat.a
+
+$(objpfx)libg.a: $(dep-dummy-lib); $(make-dummy-lib)
+lib: $(objpfx)libg.a

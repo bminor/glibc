@@ -24,6 +24,9 @@ Cambridge, MA 02139, USA.  */
 /* Defined in fopen.c.  */
 extern int __getmode __P ((const char *, __io_mode *));
 
+/* Defined in sysd-stdio.c.  */
+extern int __stdio_reopen __P ((const char *filename, __io_mode mode,
+				PTR *cookieptr, __io_close_fn closefn));
 
 /* Replace STREAM, opening it on FILENAME.  */
 FILE *
@@ -46,7 +49,10 @@ DEFUN(freopen, (filename, mode, stream),
 
   /* Open the file, attempting to preserve the old cookie value.  */
   cookie = stream->__cookie;
-  if (__stdio_reopen (filename, m, &cookie, stream->__io_funcs.__close))
+  if (__stdio_reopen (filename, m, &cookie,
+		      stream->__seen ?
+		      stream->__io_funcs.__close :
+		      __stdio_close))
     {
       int save = errno;
       (void) fclose (stream);
