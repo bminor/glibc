@@ -304,14 +304,22 @@ _hurd_internal_post_signal (reply_port_t reply,
 	 ({
 	   /* Hold the siglock while stopping other threads to be
 	      sure it is not held by another thread afterwards.  */
+	   __mutex_unlock (&ss->lock);
 	   __mutex_lock (&_hurd_siglock);
 	   __proc_dostop (port, __mach_thread_self ());
 	   __mutex_unlock (&_hurd_siglock);
-	   __mutex_unlock (&ss->lock);
 	   abort_all_rpcs (signo, thread_state);
 	   __proc_markstop (port, signo);
 	 }));
       _hurd_stopped = 1;
+
+      __mutex_lock (&ss->lock);
+      if (ss->suspended)
+	/* There is a sigsuspend waiting.  Tell it to wake up.  */
+	__condition_signal (&ss->arrived);
+      else
+	__mutex_unlock (&ss->lock);
+	
       return MIG_NO_REPLY;	/* Already replied.  */
 
     case ignore:
@@ -366,7 +374,12 @@ _hurd_internal_post_signal (reply_port_t reply,
 					   NULL);
       }
 
-  __mutex_unlock (&ss->lock);
+  if (ss->suspended)
+    /* There is a sigsuspend waiting.  Tell it to wake up.  */
+    __condition_signal (&ss->arrived);
+  else
+    __mutex_unlock (&ss->lock);
+
   return MIG_NO_REPLY;
 }
 
@@ -410,14 +423,6 @@ __sig_post (sigthread_t me,
 
  win:
   ss = _hurd_thread_sigstate (_hurd_sigthread);
-  if (ss->suspended)
-    {
-      /* There is a sigsuspend waiting.  Let it take the signal.  */
-      ss->suspend_reply = reply;
-      __condition_broadcast (&ss->arrived);
-      return MIG_NO_REPLY;
-    }
-
   return _hurd_internal_post_signal (reply, ss, signo, 0, NULL);
 }
 
