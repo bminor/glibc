@@ -1,3 +1,8 @@
+1999-10-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/s_nextafterl.c: Define aliases __nexttowardl
+	and nexttowardl.
+
 1999-10-19  Bruno Haible  <haible@ilog.fr>
 
         * sysdeps/mach/sleep.c (__sleep): If we slept longer than requested,
