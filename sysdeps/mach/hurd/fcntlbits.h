@@ -103,6 +103,7 @@ Cambridge, MA 02139, USA.  */
 #define	O_EXLOCK	0x00040000 /* Open with shared exclusive lock.  */
 #endif
 
+
 /* Controlling terminal flags.  These are understood only by `open',
    and are not preserved once the file has been opened.  */
 
@@ -130,6 +131,7 @@ Cambridge, MA 02139, USA.  */
 #define FNONBLOCK	O_NONBLOCK
 #define FNDELAY		O_NDELAY
 #endif
+
 
 /* Values for the second argument to `fcntl'.  */
 #define	F_DUPFD	  	0	/* Duplicate file descriptor.  */
