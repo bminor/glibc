@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -52,11 +52,18 @@ DEFUN(__sigaction, (sig, act, oact),
     }
   else
     {
-      if (act->sa_flags != 0 || act->sa_mask != 0)
+      int i;
+
+      if (act->sa_flags != 0)
 	{
+	unimplemented:
 	  errno = ENOSYS;
 	  return -1;
 	}
+
+      for (i = 1; i < NSIG; ++i)
+	if (__sigismember (&act->sa_mask, i))
+	  goto unimplemented;
 
       handler = signal (sig, act->sa_handler);
       if (handler == SIG_ERR)
@@ -66,7 +73,7 @@ DEFUN(__sigaction, (sig, act, oact),
   if (oact != NULL)
     {
       oact->sa_handler = handler;
-      oact->sa_mask = 0;
+      __sigemptyset (&oact->sa_mask);
       oact->sa_flags = 0;
     }
 
