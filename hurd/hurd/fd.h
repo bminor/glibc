@@ -192,19 +192,20 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
    and `ctty' bound to the ctty port.  */
 
 #define HURD_DPORT_USE(fd, expr) \
-  HURD_FD_USE ((fd), HURD_FD_PORT_USE (d, (expr)))
+  HURD_FD_USE ((fd), HURD_FD_PORT_USE (descriptor, (expr)))
 
 /* Likewise, but FD is a pointer to the locked file descriptor structure.  */
 
 #define	HURD_FD_PORT_USE(fd, expr)					      \
   ({ error_t __result;							      \
+     struct hurd_fd *const __d = (fd);					      \
      struct hurd_userlink __ulink, __ctty_ulink;			      \
-     io_t port = _hurd_port_locked_get (&__d.d->port, &__ulink);	      \
-     io_t ctty = _hurd_port_locked_get (&__d.d->ctty, &__ctty_ulink);	      \
+     io_t port = _hurd_port_locked_get (&__d->port, &__ulink);		      \
+     io_t ctty = _hurd_port_locked_get (&__d->ctty, &__ctty_ulink);	      \
      __result = (expr);							      \
-     _hurd_port_free (&__d.d->port, &__ulink, port);			      \
+     _hurd_port_free (&d->port, &__ulink, port);			      \
      if (ctty != MACH_PORT_NULL)					      \
-       _hurd_port_free (&__d.d->ctty, &__ctty_ulink, ctty);		      \
+       _hurd_port_free (&d->ctty, &__ctty_ulink, ctty);			      \
      __result; })
 
 #include <errno.h>
