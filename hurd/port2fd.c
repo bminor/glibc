@@ -16,14 +16,15 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <hurd.h>
+#include <hurd/fd.h>
+#include <fcntl.h>
 
 /* Store PORT in file descriptor D, doing appropriate ctty magic.
    FLAGS are as for `open'; only O_IGNORE_CTTY is meaningful.
    D should be locked, and will not be unlocked.  */
 
 void
-_hurd_port2fd (struct _hurd_fd *d, io_t port, int flags)
+_hurd_port2fd (struct hurd_fd *d, io_t port, int flags)
 {
   io_t ctty;
   mach_port_t cttyid;
@@ -33,8 +34,6 @@ _hurd_port2fd (struct _hurd_fd *d, io_t port, int flags)
     {
       /* This port is capable of being a controlling tty.
 	 Is it ours?  */
-      is_ctty &= __USEPORT (CTTYID, port == cttyid);
-      __mach_port_deallocate (__mach_task_self (), cttyid);
       struct hurd_port *const id = &_hurd_ports[INIT_PORT_CTTYID];
       __spin_lock (&id->lock);
       if (id->port == MACH_PORT_NULL)
@@ -46,8 +45,8 @@ _hurd_port2fd (struct _hurd_fd *d, io_t port, int flags)
 	    /* We have a controlling tty and this is not it.  */
 	    is_ctty = 0;
 	  /* Either we don't want CTTYID, or ID->port already is it.
-	     So we don't need to change ID->port, and we
-	     can release the reference to CTTYID.  */
+	     So we don't need to change ID->port, and we can release
+	     the reference to CTTYID.  */
 	  __spin_unlock (&id->lock);
 	  __mach_port_deallocate (__mach_task_self (), cttyid);
 	}
