@@ -37,7 +37,7 @@ include ../Rules
 
 
 $(objpfx)libm.a:
-	$(AR) cr$(verbose) $@
+	$(AR) cr $@ /dev/null
 
 # Other dirs to look for source files (for dist).
 export source_dirs = $(filter-out unused,$(shell find bsd -type d -print))
