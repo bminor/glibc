@@ -36,7 +36,7 @@ extern boolean_t __msg_server (mach_msg_header_t *inp,
 
 static boolean_t
 msgport_server (mach_msg_header_t *inp,
-		     mach_msg_header_t *outp)
+		mach_msg_header_t *outp)
 {
   struct demux *d;
 
