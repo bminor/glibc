@@ -84,6 +84,10 @@ ifeq ($(wildcard $(+sysdir_pfx)sysd-Makefile),)
 no_deps=t
 endif
 
+# Some sysdep makefiles use this to distinguish being included here from
+# being included individually by a subdir makefile (hurd/Makefile needs this).
+in-Makerules := yes
+
 include $(+sysdir_pfx)sysd-Makefile
 $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules
 	-@rm -f $@T
@@ -305,7 +309,7 @@ endef
 
 # Make the target directory if it doesn't exist.
 define make-target-directory
-$(patsubst %/,-mkdir %,$(filter-out $(wildcard $(@D)),$(@D)))
+$(patsubst %/,-mkdir %,$(filter-out $(wildcard $(@D:%/=%)),$(@D:%/=%)))
 endef
 
 
