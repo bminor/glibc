@@ -18,7 +18,8 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-export subdir := manual
+subdir := manual
+export subdir := $(subdir)
 
 .PHONY: all dvi info
 all: dvi info
