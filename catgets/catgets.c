@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -34,6 +34,7 @@ catopen (const char *cat_name, int flag)
 {
   __nl_catd result;
   const char *env_var;
+  const char *nlspath;
 
   result = (__nl_catd) malloc (sizeof (*result));
   if (result == NULL)
@@ -82,8 +83,16 @@ catopen (const char *cat_name, int flag)
 	  return (nl_catd) -1;
 	}
 
-      if (__secure_getenv ("NLSPATH") != NULL)
-	result->nlspath = __strdup (getenv ("NLSPATH"));
+      nlspath = __secure_getenv ("NLSPATH");
+      if (nlspath != NULL && *nlspath != '\0')
+	{
+	  /* Append the system dependent directory.  */
+	  size_t len = strlen (nlspath + 1 + sizeof NLSPATH);
+	  char *tmp = alloca (len);
+
+	  __stpcpy (__stpcpy (__stpcpy (tmp, nlspath), ":"), NLSPATH);
+	  nlspath = tmp;
+	}
       else
 	result->nlspath = __strdup (NLSPATH);
 
