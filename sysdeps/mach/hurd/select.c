@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <sys/types.h>
 #include <hurd.h>
+#include <hurd/fd.h>
 #include <stdlib.h>
 #include <gnu-stabs.h>
 
@@ -38,21 +39,20 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   mach_port_t port;
   int got;
   struct _hurd_dtable dtable;
-  struct _hurd_port_userlink *ulink;
-  int dealloc_dtable;
+  struct hurd_userlink dtable_ulink, *ulink;
   int *types;
   mach_port_t *ports;
-  struct _hurd_fd **cells;
+  struct hurd_fd **cells;
   error_t err;
 
 
   /* If we're going to bomb, do it before we acquire any locks.  */
   if (readfds != NULL)
-    *(volatile fd_set *) readfds;
+    *(volatile fd_set *) readfds = *readfds;
   if (writefds != NULL)
-    *(volatile fd_set *) writefds;
+    *(volatile fd_set *) writefds = *writefds;
   if (exceptfds != NULL)
-    *(volatile fd_set *) exceptfds;
+    *(volatile fd_set *) exceptfds = *exceptfds;
 
   if (timeout != NULL && timeout->tv_sec == 0 && timeout->tv_usec == 0)
     /* We just want to poll, so we don't need a receive right.  */
@@ -61,7 +61,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
     /* Get a port to receive the io_select_done message on.  */
     port = __mach_reply_port ();
 
-  dtable = _hurd_dtable_use (&dealloc_dtable);
+  dtable = _hurd_dtable_get (&dtable_ulink);
 
   if (nfds > _hurd_dtable.size)
     nfds = _hurd_dtable.size;
@@ -90,7 +90,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	      /* If one descriptor is bogus, we fail completely.  */
 	      while (i-- > 0)
 		_hurd_port_free (&cells[i]->port, &ulink[i], ports[i]);
-	      _hurd_dtable_done (dtable, &dealloc_dtable);
+	      _hurd_dtable_free (dtable, &dtable_ulink);
 	      errno = EBADF;
 	      return -1;
 	    }
@@ -112,6 +112,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	_hurd_port_free (&cells[i]->port, &ulink[i], ports[i]);
       }
 
+  /* If none were ready immediately, wait for a callback.  */
   if (!err && got == 0 && port != MACH_PORT_NULL)
     {
       /* Now wait for select_done messages on PORT,
@@ -136,6 +137,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	{
 	case MACH_MSG_SUCCESS:
 	  {
+	    /* We got a message.  Decode it.  */
 	    const mach_msg_type_t inttype =
 	      { MACH_MSG_TYPE_INTEGER_32, 32, 1, 1, 0, 0 };
 	    if (msg.head.msgh_id == SELECT_DONE_MSGID &&
@@ -145,11 +147,17 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 		(msg.result & (SELECT_READ|SELECT_WRITE|SELECT_URG)) &&
 		msg.tag >= 0 && msg.tag < nfds)
 	      {
+		/* This is a winning io_select_done message!
+		   Record the readiness it indicates and send a reply.  */
+
 		if (types[msg.tag] == 0)
+		  /* This descriptor is ready and it was not before,
+		     so we increment our count of ready descriptors.  */
 		  ++got;
 		types[msg.tag] |= msg.result;
 		if (msg.head.msgh_remote_port != MACH_PORT_NULL)
 		  {
+		  /* XXX */
 		    msg.head.msgh_id += 100;
 		    msg.result_type = inttype;
 		    msg.result = 0;
@@ -187,24 +195,23 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 
   /* Set the user bitarrays.  */
   for (i = 0; i < nfds; ++i)
-    if (types[i] & (SELECT_READ|SELECT_WRITE|SELECT_URG))
-      {
-	if (readfds != NULL)
-	  if (types[i] & SELECT_READ)
-	    FD_SET (i, readfds);
-	  else
-	    FD_CLR (i, readfds);
-	if (writefds != NULL)
-	  if (types[i] & SELECT_WRITE)
-	    FD_SET (i, writefds);
-	  else
-	    FD_CLR (i, writefds);
-	if (exceptfds != NULL)
-	  if (types[i] & SELECT_URG)
-	    FD_SET (i, exceptfds);
-	  else
-	    FD_CLR (i, exceptfds);
-      }
+    {
+      if (readfds != NULL)
+	if (types[i] & SELECT_READ)
+	  FD_SET (i, readfds);
+	else
+	  FD_CLR (i, readfds);
+      if (writefds != NULL)
+	if (types[i] & SELECT_WRITE)
+	  FD_SET (i, writefds);
+	else
+	  FD_CLR (i, writefds);
+      if (exceptfds != NULL)
+	if (types[i] & SELECT_URG)
+	  FD_SET (i, exceptfds);
+	else
+	  FD_CLR (i, exceptfds);
+    }
 
   return got;
 }
