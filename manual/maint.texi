@@ -556,7 +556,19 @@ implemented in terms of itself, so a configuration using just
 
 @item unix
 This is the directory for Unix-like things.  See @xref{Porting to Unix}.
-@file{unix} implies @file{posix}.
+@file{unix} implies @file{posix}.  There are some special-purpose
+subdirectories of @file{unix}:
+
+@table @file
+@item unix/common
+This directory is for things common to both BSD and System V release 4.
+Both @file{unix/bsd} and @file{unix/sysv/sysv4} imply @file{unix/common}.
+
+@item unix/inet
+This directory is for @code{socket} and related functions on Unix systems.
+The @file{inet} top-level subdirectory is enabled by @file{unix/inet/Subdirs}.
+@file{unix/common} implies @file{unix/inet}.
+@end table
 
 @item mach
 This is the directory for things based on the Mach microkernel from CMU
