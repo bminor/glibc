@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,10 +26,13 @@ DEFUN(strpbrk, (s, accept),
       register CONST char *s AND register CONST char *accept)
 {
   while (*s != '\0')
-    if (strchr(accept, *s) == NULL)
+    {
+      const char *a = accept;
+      while (*a != '\0')
+	if (*a++ == *s)
+	  return (char *) s;
       ++s;
-    else
-      return (char *) s;
+    }
 
   return NULL;
 }
