@@ -1,3 +1,11 @@
+2001-11-30  Andreas Schwab  <schwab@suse.de>
+
+	* pthread.c (pthread_handle_sigcancel) [THREAD_SELF]: Double check
+	that self is the manager thread, and initialize the thread
+	register if not.
+	(thread_self_stack) [THREAD_SELF]: New function to find self via
+	stack pointer.
+
 2001-11-28  Kaz Kylheku  <kaz@ashi.footprints.net>
 
 	Bugfix to pthread_key_delete. It was iterating over the thread
