@@ -85,18 +85,19 @@ $(objpfx)%.ir: $(objpfx)%.uh $(objpfx)%.h
 	 awk '/^kern_return_t/ { print $$2 }' $<		;\
 	 echo 'endef'						;\
 	 echo '$*-calls := $$(subst $$(nl), ,$$($*-calls))'	;\
-	 echo '$$($*-calls:%=$$(objpfx)R\%C_%.c): $*.defs'	;\
-	 echo '	$$(generate-user-calls)'			 \
+	 echo '$$($*-calls:%=$$(objpfx)R\%C_%.c): $*.ustamp ;'	;\
 	) > $@-new
 	mv $@-new $@
 vpath Machrules ../mach	# Find ourselves.
 
-define generate-user-calls
-@echo '+++ generating $< calls for $@: $^ ($?)'
-$(MIG) $< $(MIGFLAGS) \
-       -prefix __ -i $(objpfx)RPC_ \
-       -server /dev/null -user /dev/null -header /dev/null
-endef
+$(objpfx)%.ustamp: %.defs
+	$(MIG) $< $(MIGFLAGS) \
+	       -prefix __ -i $(objpfx)tmp_ \
+	       -server /dev/null -user /dev/null -header /dev/null
+	for call in $($*-calls); do \
+	  ../move-if-change $(objpfx)tmp_$${call}.c $(objpfx)RPC_$${call}.c; \
+	done
+	touch $@
 
 # Look for the server stub files where they will be written.
 vpath %_server.c $(addprefix $(objpfx),$(sort $(dir $(server-interfaces))))
