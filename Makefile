@@ -26,7 +26,7 @@ endif
 
 # This is the default target; it makes everything except the tests.
 .PHONY: all
-all: lib others # doc
+all: lib others
 
 configure: configure.in
 	autoconf $(ACFLAGS)
@@ -184,7 +184,7 @@ parent_echo-distinfo:
 
 distribute  := README INSTALL NOTES COPYING.LIB COPYING ChangeLog NEWS	\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
-	       ansidecl.h		     				\
+	       ansidecl.h mkinstalldirs	     				\
 	       configure configure.in aclocal.m4 config.sub config.guess\
 	       munch-tmpl.c munch.awk gnu-stabs.h sysdep.h
 
