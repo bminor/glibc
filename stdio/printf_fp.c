@@ -52,12 +52,12 @@ DEFUN(__printf_fp, (s, info, args),
   /* Decimal point character.  */
   CONST char *CONST decimal = _numeric_info->decimal_point;
 
-  LONG_DOUBLE fpnum;
+  LONG_DOUBLE fpnum;		/* Input.  */
   int is_neg;
 
   LONG_DOUBLE f;		/* Fraction.  */
   int e;			/* Base-2 exponent of the input.  */
-  const int p = DBL_MANT_DIG;	/* Internal precision.  */
+  CONST int p = DBL_MANT_DIG;	/* Internal precision.  */
   LONG_DOUBLE scale, scale10;	/* Scale factor.  */
   LONG_DOUBLE loerr, hierr;	/* Potential error in the fraction.  */
   int k;			/* Digits to the left of the decimal point.  */
@@ -67,14 +67,13 @@ DEFUN(__printf_fp, (s, info, args),
   int low, high;
   char digit;
 
-  char type = tolower(info->spec);
+  char type = tolower (info->spec);
   CONST char pad = info->pad;
   int prec = info->prec;
   int width = info->width;
 
 
   /* Fetch the argument value.  */
-
   if (info->is_long_double)
     fpnum = va_arg (*args, LONG_DOUBLE);
   else
@@ -109,135 +108,3 @@ DEFUN(__printf_fp, (s, info, args),
       --prec;
     }
   
-  if (fpnum == 0.0)
-    /* Special case for zero.
-       The general algorithm does not work for zero.  */
-    puts ("0.0");
-  else
-    {
-      /* Split the number into a fraction and base-2 exponent.  */
-      f = frexp (fpnum, &e);
-
-      /* Scale the fractional part by the highest possible number of
-	 significant bits of fraction.  We want to represent the
-	 fractional part as a (very) large integer.  */
-      f = ldexp (f, p);
-
-      cutoff = 0;
-
-      roundup = 0;
-
-      if (e > p)
-	{
-	  /* The exponent is bigger than the number of fractional digits.  */
-	  r = ldexp (f, e - p);
-	  scale = 1;
-	  /* The number is (E - P) powers of two larger than
-	     the fraction can represent; this is the potential error.  */
-	  loerr = ldexp (1.0, e - p);
-	}
-      else
-	{
-	  /* The number of fractional digits is greater than the exponent.
-	     Scale by the difference factors of two.  */
-	  r = f;
-	  scale = ldexp (1.0, p - e);
-	  loerr = 1.0;
-	}
-      hierr = loerr;
-
-      /* Fixup.  */
-
-      if (f == ldexp (1.0, p - 1))
-	{
-	  /* Account for unequal gaps.  */
-	  hierr = ldexp (hierr, 1);
-	  r = ldexp (r, 1);
-	  scale = ldexp (scale, 1);
-	}
-
-      tenth_scale = ceil (scale / 10.0);
-      k = 0;
-      while (r < tenth_scale)
-	{
-	  --k;
-	  r *= 10;
-	  loerr *= 10;
-	  hierr *= 10;
-	}
-      do
-	{
-	  while ((2 * r) + hierr >= 2 * scale)
-	    {
-	      scale *= 10;
-	      ++k;
-	    }
-
-	  /* Perform any necessary adjustment of loerr and hierr to
-	     take into account the formatting requirements.  */
-	  cutoff = k;		/* CutOffMode == "normal" */
-	} while ((2 * r) + hierr >= 2 * scale);
-
-      /* End Fixup.  */
-
-      /* First digit.  */
-      {
-	--k;
-	digit = '0' + (unsigned int) floor ((r * 10) / scale);
-	r = fmod (r * 10, scale);
-	loerr *= 10;
-	hierr *= 10;
-	
-	low = 2 * r < loerr;
-	if (roundup)
-	  high = 2 * r >= (2 * scale) - hierr;
-	else
-	  high = 2 * r > (2 * scale) - hierr;
-      }
-
-      if (k < 0)
-	{
-	  int j;
-	  putchar ('0');
-	  putchar ('.');
-	  for (j = 0; j >= k; --j)
-	    putchar ('0');
-	}
-      
-      if (low || high || k == cutoff)
-	{
-	  if ((high && !low) || (2 * r > scale))
-	    ++digit;
-	  putchar (digit);
-	}
-      else
-	while (1)
-	  {
-	    putchar (digit);
-	    if (k == 0)
-	      putchar ('.');
-	    
-	    --k;
-	    digit = '0' + (unsigned int) floor ((r * 10) / scale);
-	    r = fmod (r * 10, scale);
-	    loerr *= 10;
-	    hierr *= 10;
-	    
-	    low = 2 *r < loerr;
-	    if (roundup)
-	      high = 2 * r >= (2 * scale) - hierr;
-	    else
-	      high = 2 *r > (2 * scale) - hierr;
-	    
-	    if (low || high || k == cutoff)
-	      {
-		if ((high && !low) || (2 * r > scale))
-		  ++digit;
-		putchar (digit);
-		break;
-	      }
-	  }
-
-      putchar ('\n');
-    }
-}
