@@ -29,6 +29,8 @@ DEFUN(fchdir, (fd), int fd)
   error_t err;
   file_t cwdir;
 
+/* XXX verify that it's a directory */
+
   if (err = _HURD_DPORT_USE (fd,
 			     __mach_port_mod_refs (__mach_task_self (),
 						   (cwdir = port),
