@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <signal.h>
 #include <hurd.h>
+#include <hurd/port.h>
 
 /* Send signal SIG to process number PID.  If PID is zero,
    send SIG to all processes in the current process's process group.
@@ -27,12 +28,13 @@ Cambridge, MA 02139, USA.  */
 int
 __kill (pid_t pid, int sig)
 {
+  int delivered = 0;		/* Set when we deliver any signal.  */
   error_t err;
   mach_port_t oneport, *ports;
   pid_t *pids;
   mach_msg_type_number_t npids, nports, i;
   mach_port_t proc;
-  struct _hurd_port_userlink ulink;
+  struct hurd_userlink ulink;
 
   proc = _hurd_port_get (&_hurd_ports[INIT_PORT_PROC], &ulink);
 
@@ -65,7 +67,11 @@ __kill (pid_t pid, int sig)
     }
 
   if (npids != nports)
-    err = EGRATUITOUS;
+    {
+      /* This is scrod.  We can't reasonably try to deliver any signals.  */
+      err = EGRATUITOUS;
+      goto out;
+    }
 
   if (sig == SIGKILL)
     {
@@ -76,10 +82,6 @@ __kill (pid_t pid, int sig)
 	  /* We don't care about the message port.  Deallocate it.  */
 	  if (ports[i])
 	    __mach_port_deallocate (__mach_task_self (), ports[i]);
-	  if (!err)
-	    /* XXX The above if makes kill fail as soon as it cannot kill
-               one process, returning that one's error and ignoring the
-               rest.  Is that right?  */
 
 	    /* Fetch the process's task port and terminate the task.  We
 	       loop in case the process execs and changes its task port.
@@ -98,35 +100,33 @@ __kill (pid_t pid, int sig)
 		  }
 	      } while (err != MACH_SEND_INVALID_DEST &&
 		       err != MIG_SERVER_DIED);
+	  if (! err)
+	    delivered = 1;
 	}
     }
 
   for (i = 0; i < nports; ++i)
     {
       int tried = 0;
-      if (err)
-	/* We have already lost.  Just deallocate the port.  */
-	    /* XXX The above if makes kill fail as soon as it cannot kill
-               one process, returning that one's error and ignoring the
-               rest.  Is that right?  */
-	__mach_port_deallocate (__mach_task_self (), ports[i]);
-      else
-	err = _HURD_MSGPORT_RPC (tried ?
-				 __proc_getmsgport (proc, pids[i], &msgport) :
-				 (tried = 1, ports[i]),
-				 ({ err = __proc_pid2task (proc, pids[i],
-							   &refport);
-				    if (err)
-				      err = __proc_getsidport (proc, &refport);
-				    err; }),
-				 __sig_post (msgport, sig, refport));
+      err = HURD_MSGPORT_RPC (tried ?
+			      __proc_getmsgport (proc, pids[i], &msgport) :
+			      (tried = 1, ports[i]),
+			      ({ err = __proc_pid2task (proc, pids[i],
+							&refport);
+				 if (err)
+				 err = __proc_getsidport (proc, &refport);
+				 err; }),
+			      __sig_post (msgport, sig, refport));
+      if (! err)
+	delivered = 1;
     }
 
+ out:
   _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], &ulink, proc);
 
   if (ports != &oneport)
     __vm_deallocate (__mach_task_self (),
 		     (vm_address_t) ports, nports * sizeof (ports[0]));
 
-  return err ? __hurd_fail (err) : 0;
+  return delivered ? 0 : __hurd_fail (err);
 }
