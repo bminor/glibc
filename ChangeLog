@@ -1,3 +1,15 @@
+2002-03-31  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdselect.c (_hurd_select): Fix
+	MACH_MSG_TYPE_INTEGER_T -> integer_t in sizeof.
+	Use a union rather than casts to compare mach_msg_type_t as int.
+
+2002-03-25  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdchdir.c (_hurd_change_directory_port_from_name): Don't
+	check off the end of NAME when it's shorter than 2 chars.
+	Reported by Ognyan Kulev <ogi@fmi.uni-sofia.bg>.
+
 2002-03-27  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h (struct
