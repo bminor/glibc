@@ -66,6 +66,8 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
       fputs(" isupper", stdout);
     if (isxdigit(c))
       fputs(" isxdigit", stdout);
+    if (isblank(c))
+      fputs(" isblank", stdout);
     fputs("; lower = ", stdout);
     print_char(tolower(c));
     fputs("; upper = ", stdout);
