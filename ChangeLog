@@ -1,3 +1,23 @@
+1999-10-01  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdfchdir.c (_hurd_change_directory_port_from_fd): Rewrite
+	without HURD_DPORT_USE to clean up warnings.
+	* hurd/dtable.c (get_dtable_port): Likewise.
+
+	* hurd/hurdioctl.c (rectty_dtable): Renamed to install_ctty.
+	(install_ctty): Do the changing of the cttyid port cell here, inside
+	the critical section while we holding the dtable lock.
+	(_hurd_setcttyid, tiocsctty, tiocnotty): Use that instead of changing
+	the port cell and calling rectty_dtable.
+	(_hurd_locked_install_cttyid): New function, split out of install_ctty.
+	(install_ctty): Use it inside a critical section, with the lock held.
+	* sysdeps/mach/hurd/setsid.c (__setsid): Use
+	_hurd_locked_install_cttyid to effect the cttyid and dtable changes
+	after proc_setsid, having held the dtable lock throughout.
+	* hurd/dtable.c (ctty_new_pgrp): With the dtable lock held, check the
+	cttyid port for null and bail out early if so.  The dtable lock
+	serializes us after any cttyid change and its associated dtable update.
+
 1999-10-01  Andreas Jaeger  <aj@suse.de>
 
 	* intl/finddomain.c (_nl_find_domain): Add cast to avoid warning.
