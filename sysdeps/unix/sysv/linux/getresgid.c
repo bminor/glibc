@@ -22,7 +22,7 @@
 #include <linux/posix_types.h>
 #include <linux/unistd.h>
 
-#ifndef __NR_getresuid
+#ifndef __NR_getresgid
 /* The kernel does not define the getresgid syscall.  */
 #include <sysdeps/generic/getresgid.c>
 #else
