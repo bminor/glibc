@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,10 @@ Cambridge, MA 02139, USA.  */
 		             CONST char *file AND int mode))
    Yes, this is very repetitive.  Nothing you can do about it, so shut up.  */
 #define	function_alias(name, _name, type, args, defun) \
-  symbol_alias(_name, name);
+  symbol_alias (_name, name);
+
+#define function_alias_void(name, _name, args, defun) \
+  symbol_alias (_name, name);
 
 /* Make references to ALIAS refer to SYMBOL.  */
 #ifdef	__STDC__
@@ -76,7 +79,10 @@ Cambridge, MA 02139, USA.  */
 #else	/* No GNU stabs.  */
 
 #define	function_alias(name, _name, type, args, defun) \
-  type defun { return name args; }
+  type defun { return _name args; }
+
+#define function_alias_void(name, _name, args, defun) \
+  void defun { _name args; }
 
 #endif	/* GNU stabs.  */
 
