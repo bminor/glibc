@@ -30,9 +30,6 @@ Cambridge, MA 02139, USA.  */
 #define	__need_NULL
 #include <stddef.h>
 
-#define	__need___va_list
-#include <stdarg.h>
-
 #include <gnu/types.h>
 #endif	/* Don't need FILE.  */
 #undef	__need_FILE
@@ -322,11 +319,11 @@ extern int EXFUN(printf, (CONST char *__format, ...));
 extern int EXFUN(sprintf, (char *__s, CONST char *__format, ...));
 
 /* Write formatted output to S from argument list ARG.  */
-extern int EXFUN(vfprintf, (FILE *__s, CONST char *__format, __va_list __arg));
+extern int EXFUN(vfprintf, (FILE *__s, CONST char *__format, PTR __arg));
 /* Write formatted output to stdout from argument list ARG.  */
-extern int EXFUN(vprintf, (CONST char *__format, __va_list __arg));
+extern int EXFUN(vprintf, (CONST char *__format, PTR __arg));
 /* Write formatted output to S from argument list ARG.  */
-extern int EXFUN(vsprintf, (char *__s, CONST char *__format, __va_list __arg));
+extern int EXFUN(vsprintf, (char *__s, CONST char *__format, PTR __arg));
 
 #ifdef	__OPTIMIZE__
 #define	vprintf(fmt, arg)		vfprintf(stdout, (fmt), (arg))
@@ -338,15 +335,15 @@ extern int EXFUN(snprintf, (char *__s, size_t __maxlen,
 			    CONST char *__format, ...));
 
 extern int EXFUN(vsnprintf, (char *__s, size_t __maxlen,
-			     CONST char *__format, __va_list __arg));
+			     CONST char *__format, PTR __arg));
 
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
-extern int EXFUN(vasprintf, (char **__ptr, CONST char *__f, __va_list __arg));
+extern int EXFUN(vasprintf, (char **__ptr, CONST char *__f, PTR __arg));
 extern int EXFUN(asprintf, (char **__ptr, CONST char *__fmt, ...));
 
 /* Write formatted output to a file descriptor.  */
-extern int EXFUN(vdprintf, (int __fd, CONST char *__fmt, __va_list __arg));
+extern int EXFUN(vdprintf, (int __fd, CONST char *__fmt, PTR __arg));
 extern int EXFUN(dprintf, (int __fd, CONST char *__fmt, ...));
 #endif
 
@@ -361,18 +358,18 @@ extern int EXFUN(sscanf, (CONST char *__s, CONST char *__format, ...));
 #ifdef	__USE_GNU
 /* Read formatted input from S into argument list ARG.  */
 extern int EXFUN(__vfscanf, (FILE *__s, CONST char *__format,
-			     __va_list __arg));
+			     PTR __arg));
 extern int EXFUN(vfscanf, (FILE *__s, CONST char *__format,
-			   __va_list __arg));
+			   PTR __arg));
 
 /* Read formatted input from stdin into argument list ARG.  */
-extern int EXFUN(vscanf, (CONST char *__format, __va_list __arg));
+extern int EXFUN(vscanf, (CONST char *__format, PTR __arg));
 
 /* Read formatted input from S into argument list ARG.  */
 extern int EXFUN(__vsscanf, (CONST char *__s, CONST char *__format,
-			     __va_list __arg));
+			     PTR __arg));
 extern int EXFUN(vsscanf, (CONST char *__s, CONST char *__format,
-			   __va_list __arg));
+			   PTR __arg));
 
 
 #ifdef	__OPTIMIZE__
