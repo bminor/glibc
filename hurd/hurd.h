@@ -314,7 +314,7 @@ _hurd_fd_done (struct _hurd_fd_user d, int *dealloc)
    
 #define	_HURD_DPORT_USE(fd, expr)					      \
   ({ int __dealloc_dt;							      \
-     __typeof (expr) __result;						      \
+     error_t __result;							      \
      struct _hurd_fd_user __d = _hurd_fd (fd, &__dealloc_dt);		      \
      if (__d.d == NULL)							      \
        __result = EBADF;						      \
@@ -566,7 +566,7 @@ extern volatile void _hurd_exit (int status);
 /* Initialize the library data structures from the
    ints and ports passed to us by the exec server.
    Then vm_deallocate PORTARRAY and INTARRAY.  */
-extern void _hurd_init (char **argv,
+extern void _hurd_init (int flags, char **argv,
 			mach_port_t *portarray, size_t portarraysize,
 			int *intarray, size_t intarraysize);
 
