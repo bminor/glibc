@@ -81,11 +81,12 @@ sources := $(filter-out $(addsuffix .c,$(basename $(.S.s))),$(sources)) $(.S.s)
 +out := $(patsubst %.S,%.c,$(+sysdep-names:.s=.c)) \
 	$(addsuffix .c,$(sysdep_routines)) \
 	$(+subdir-nodist)
-foo:=$(shell echo '+out=$(+out)' >&2; echo foofoo >&2)
+#foo:=$(shell echo '+out=$(+out)' >&2; echo foofoo >&2)
 +tsrcs	:= $(filter-out $(+out) $(addprefix %/,$(+out)), \
 			$(sources) $(all-headers) $(distribute)) \
 	   $(+sysdeps)
 foo:=$(shell echo made +tsrcs >&2)
+generated := $(patsubst $(objpfx)%,$(objpfx)% %,$(generated))
 +tsrcs := $(sort $(filter-out $(generated),$(+tsrcs)))
 foo:=$(shell echo '+tsrcs=$(+tsrcs)'>&2)
 foo:=$(shell echo foobie, dammit! >&2)
@@ -96,7 +97,7 @@ rel+vers := $(shell sed -n -e 's/^.*libc_release.*\"\([^"]*\)";$$/\1/p' \
 		    < $(..)version.c)
 release := $(word 1,$(rel+vers))
 version := $(word 2,$(rel+vers))
-tardir := glibc-$(version)
+export tardir := glibc-$(version)
 endif
 
 $(..)glibc-%:
@@ -154,7 +155,8 @@ subdirs := $(filter-out crypt,$(subdirs))
 +tsrcs := $(+tsrcs) $(+sysdep-tsrcs)
 
 %/configure: %/configure.in
-	autoconf $(ACFLAGS)
+	autoconf $(ACFLAGS) $< > $@.new
+	mv $@.new $@
 
 .PHONY: dist
 # N.B.: The order in which these are done matters (so don't use -j).
@@ -204,4 +206,4 @@ README: README.template version.c
 endif	# Subdirectory vs. parent makefile
 
 # Get these things out of the environment because they take up lots of space.
-unexport distribute sources
+unexport distribute sources generated headers
