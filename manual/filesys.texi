@@ -936,55 +936,55 @@ is equivalent to:
 
 @comment sys/stat.h
 @comment BSD
-@defvr Macro S_IFMT
+@deftypevr Macro int S_IFMT
 This is a bit mask used to extract the file format portion of a mode value.
-@end defvr
+@end deftypevr
 
 These are the constants for the different file format values:
 
 @comment sys/stat.h
 @comment BSD
-@defvr Macro S_IFDIR
+@deftypevr Macro int S_IFDIR
 This macro represents the value of the file format for a directory file.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment BSD
-@defvr Macro S_IFCHR
+@deftypevr Macro int S_IFCHR
 This macro represents the value of the file format for a character-oriented
 device file.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment BSD
-@defvr Macro S_IFBLK
+@deftypevr Macro int S_IFBLK
 This macro represents the value of the file format for a block-oriented
 device file.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment BSD
-@defvr Macro S_IFREG
+@deftypevr Macro int S_IFREG
 This macro represents the value of the file format for a regular file.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment BSD
-@defvr Macro S_IFLNK
+@deftypevr Macro int S_IFLNK
 This macro represents the value of the file format for a symbolic link.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment BSD
-@defvr Macro S_IFSOCK
+@deftypevr Macro int S_IFSOCK
 This macro represents the value of the file format for a socket.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment BSD
-@defvr Macro S_IFIFO
+@deftypevr Macro int S_IFIFO
 This macro represents the value of the file format for a FIFO or pipe.
-@end defvr
+@end deftypevr
 
 
 @cindex file permission bits
@@ -993,123 +993,123 @@ permission bits} part of the file mode.
 
 @comment sys/stat.h
 @comment POSIX.1
-@defvr {Macro} S_IRUSR
+@deftypevr Macro int S_IRUSR
 Read permission bit for the owner of the file.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment POSIX.1
-@defvr {Macro} S_IWUSR
+@deftypevr Macro int S_IWUSR
 Write permission bit for the owner of the file.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment POSIX.1
-@defvr {Macro} S_IXUSR
+@deftypevr Macro int S_IXUSR
 Execute (for ordinary files) or search (for directories) permission bit
 for the owner of the file.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment POSIX.1
-@defvr {Macro} S_IRWXU
+@deftypevr Macro int S_IRWXU
 This is equivalent to @samp{(S_IRUSR | S_IWUSR | S_IXUSR)}.
-@end defvr
+@end deftypevr
 
 
 @comment sys/stat.h
 @comment BSD
-@defvr {Macro} S_IREAD
+@deftypevr Macro int S_IREAD
 This is a synonym for @code{S_IRUSR}, provided for compatibility with
 old BSD code.  Use @code{S_IRUSR} instead.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment BSD
-@defvr {Macro} S_IWRITE
+@deftypevr Macro int S_IWRITE
 This is a synonym for @code{S_IWUSR}, provided for compatibility with
 old BSD code.  Use @code{S_IWUSR} instead.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment BSD
-@defvr {Macro} S_IEXEC
+@deftypevr Macro int S_IEXEC
 This is a synonym for @code{S_IXUSR}, provided for compatibility with
 old BSD code.  Use @code{S_IXUSR} instead.
-@end defvr
+@end deftypevr
 
 
 @comment sys/stat.h
 @comment POSIX.1
-@defvr {Macro} S_IRGRP
+@deftypevr Macro int S_IRGRP
 Read permission bit for the group owner of the file.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment POSIX.1
-@defvr {Macro} S_IWGRP
+@deftypevr Macro int S_IWGRP
 Write permission bit for the group owner of the file.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment POSIX.1
-@defvr {Macro} S_IXGRP
+@deftypevr Macro int S_IXGRP
 Execute or search permission bit for the group owner of the file.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment POSIX.1
-@defvr {Macro} S_IRWXG
+@deftypevr Macro int S_IRWXG
 This is equivalent to @samp{(S_IRGRP | S_IWGRP | S_IXGRP)}.
-@end defvr
+@end deftypevr
 
 
 @comment sys/stat.h
 @comment POSIX.1
-@defvr {Macro} S_IROTH
+@deftypevr Macro int S_IROTH
 Read permission bit for other users.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment POSIX.1
-@defvr {Macro} S_IWOTH
+@deftypevr Macro int S_IWOTH
 Write permission bit for other users.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment POSIX.1
-@defvr {Macro} S_IXOTH
+@deftypevr Macro int S_IXOTH
 Execute or search permission bit for other users.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment POSIX.1
-@defvr {Macro} S_IRWXO
+@deftypevr Macro int S_IRWXO
 This is equivalent to @samp{(S_IROTH | S_IWOTH | S_IXOTH)}.
-@end defvr
+@end deftypevr
 
 
 @comment sys/stat.h
 @comment POSIX
-@defvr {Macro} S_ISUID
+@deftypevr Macro int S_ISUID
 This is the set-user-ID on execute bit.  @xref{User/Group IDs of a Process}.
-@end defvr
+@end deftypevr
 
 @comment sys/stat.h
 @comment POSIX
-@defvr {Macro} S_ISGID
+@deftypevr Macro int S_ISGID
 This is the set-group-ID on execute bit.  @xref{User/Group IDs of a Process}.
-@end defvr
+@end deftypevr
 
 @cindex sticky bit
 @comment sys/stat.h
 @comment BSD
-@defvr {Macro} S_ISVTX
+@deftypevr Macro int S_ISVTX
 This is the @dfn{sticky} bit.  On executables, this bit inhibits swapping.
 On directories, this allows deletion of files in the directory only by
 users who have write permission on the specific file (not anybody who has
 write permission on the directory).
-@end defvr
+@end deftypevr
 
 On most systems, you can also specify the file permission bits as
 an octal number using the following bit assignments:
@@ -1233,27 +1233,27 @@ are integer constants.
 
 @comment unistd.h
 @comment POSIX.1
-@defvr Macro R_OK
+@deftypevr Macro int R_OK
 Test for read permission.
-@end defvr
+@end deftypevr
 
 @comment unistd.h
 @comment POSIX.1
-@defvr Macro W_OK
+@deftypevr Macro int W_OK
 Test for write permission.
-@end defvr
+@end deftypevr
 
 @comment unistd.h
 @comment POSIX.1
-@defvr Macro X_OK
+@deftypevr Macro int X_OK
 Test for execute/search permission.
-@end defvr
+@end deftypevr
 
 @comment unistd.h
 @comment POSIX.1
-@defvr Macro F_OK
+@deftypevr Macro int F_OK
 Test for existence of the file.
-@end defvr
+@end deftypevr
 
 @node Assigning File Permissions
 @subsection Assigning File Permissions

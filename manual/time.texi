@@ -88,16 +88,16 @@ what the underlying representation is.
 
 @comment time.h
 @comment ANSI
-@defvr Macro CLOCKS_PER_SEC
+@deftypevr Macro int CLOCKS_PER_SEC
 The value of this macro is the number of clock ticks per second measured
 by the @code{clock} function.
-@end defvr
+@end deftypevr
 
 @comment time.h
 @comment POSIX.1
-@defvr Macro CLK_TCK
+@deftypevr Macro int CLK_TCK
 This is an obsolete name for @code{CLOCKS_PER_SEC}.  
-@end defvr
+@end deftypevr
 
 @comment time.h
 @comment ANSI
@@ -903,27 +903,27 @@ The return value and error conditions are the same as for @code{setitimer}.
 
 @comment sys/time.h
 @comment BSD
-@defvr Macro ITIMER_REAL
+@deftypevr Macro int ITIMER_REAL
 This macro can be used as the @var{which} argument to the
 @code{setitimer} and @code{getitimer} functions to specify the real-time
 timer.
-@end defvr
+@end deftypevr
 
 @comment sys/time.h
 @comment BSD
-@defvr Macro ITIMER_VIRTUAL
+@deftypevr Macro int ITIMER_VIRTUAL
 This macro can be used as the @var{which} argument to the
 @code{setitimer} and @code{getitimer} functions to specify the virtual
 timer.
-@end defvr
+@end deftypevr
 
 @comment sys/time.h
 @comment BSD
-@defvr Macro ITIMER_PROF
+@deftypevr Macro int ITIMER_PROF
 This macro can be used as the @var{which} argument to the
 @code{setitimer} and @code{getitimer} functions to specify the profiling
 timer.
-@end defvr
+@end deftypevr
 
 @strong{Incomplete:}  In @file{sys/time.h}, the @var{which} argument
 is given as an @code{enum}.  Does it matter?

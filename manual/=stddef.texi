@@ -49,7 +49,7 @@ and @code{int} for pointer subtraction results.
 
 @comment stddef.h
 @comment ANSI
-@defvr {Macro} NULL
+@deftypevr Macro {void *} NULL
 @cindex null pointer
 This is a null pointer constant.  It can be assigned to any pointer
 variable since it has type @code {void *}, and is guaranteed not to
@@ -63,7 +63,7 @@ is no prototype declaration in scope, you should explicitly cast
 @code{NULL} or @code{0} into a pointer of the appropriate type.  Again,
 this is because the default argument promotions may not do the right
 thing.
-@end defvr
+@end deftypevr
 
 @comment stddef.h
 @comment ANSI

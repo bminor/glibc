@@ -565,25 +565,25 @@ The following facilities are declared in @file{stdlib.h}.
 
 @comment stdlib.h
 @comment ANSI
-@defvr Macro EXIT_SUCCESS
+@deftypevr Macro int EXIT_SUCCESS
 This macro can be used with the @code{exit} function to indicate
 successful program completion.
 
 In the GNU library, the value of this macro is @code{0}.
 In other implementations, the value might be some other (possibly
 non-constant) integer expression.
-@end defvr
+@end deftypevr
 
 @comment stdlib.h
 @comment ANSI
-@defvr Macro EXIT_FAILURE
+@deftypevr Macro int EXIT_FAILURE
 This macro can be used with the @code{exit} function to indicate unsuccessful
 program completion.
 
 In the GNU Library, the value of this macro is @code{1}.  In other
 implementations, the value might be some other (possibly non-constant)
 integer expression.
-@end defvr
+@end deftypevr
 
 @comment stdlib.h
 @comment ANSI
@@ -1180,37 +1180,38 @@ to the @code{waitpid} function.
 
 @comment sys/wait.h
 @comment BSD
-@defvr {Macro} WAIT_ANY
+@deftypevr Macro int WAIT_ANY
 This macro has value @code{-1} and specifies that @code{waitpid} should
 return status information about any child process.
-@end defvr
+@end deftypevr
 
 @comment sys/wait.h
 @comment BSD
-@defvr {Macro} WAIT_MYPGRP
+@deftypevr Macro int WAIT_MYPGRP
 This macro has value @code{0} and specifies that @code{waitpid} should
 return status information about any child process in the same process
 group as the calling process.
-@end defvr
+@end deftypevr
 
 These symbolic constants are defined as flags for the @var{options}
-argument to the @code{waitpid} function.
+argument to the @code{waitpid} function.  You can bitwise-OR the flags
+together to obtain a value to use as the argument.
 
 @comment sys/wait.h
 @comment POSIX.1
-@defvr {Macro} WNOHANG
+@deftypevr Macro int WNOHANG
 This macro is used to specify that @code{waitpid} should return
 immediately instead of suspending execution if there is no status
 information immediately available.
-@end defvr
+@end deftypevr
 
 @comment sys/wait.h
 @comment POSIX.1
-@defvr {Macro} WUNTRACED
+@deftypevr Macro int WUNTRACED
 This macro is used to specify that @code{waitpid} should also report the
 status of any child processes that are stopped but whose status hasn't
 been reported since they were stopped.
-@end defvr
+@end deftypevr
 
 @comment sys/wait.h
 @comment POSIX.1

@@ -60,49 +60,49 @@ is an integer constant expression.
 
 @comment locale.h
 @comment ANSI
-@defvr Macro LC_ALL
+@deftypevr Macro int LC_ALL
 Selects all attributes.
-@end defvr
+@end deftypevr
 
 @comment locale.h
 @comment ANSI
-@defvr Macro LC_COLLATE
+@deftypevr Macro int LC_COLLATE
 Selects attributes affecting the collation sequence (functions @code{strcoll}
 and @code{strxfrm}; @pxref{Collation Functions}.
-@end defvr
+@end deftypevr
 
 @comment locale.h
 @comment ANSI
-@defvr Macro LC_CTYPE
+@deftypevr Macro int LC_CTYPE
 Selects attributes affecting classification and conversion of characters;
 @pxref{Character Handling}.
-@end defvr
+@end deftypevr
 
 @comment locale.h
 @comment ANSI
-@defvr Macro LC_MONETARY
+@deftypevr Macro int LC_MONETARY
 Selects attributes affecting how monetary values should be formatted,
 returned by the @code{localeconv} function; @pxref{Numeric and Monetary
 Formatting}.
-@end defvr
+@end deftypevr
 
 @comment locale.h
 @comment ANSI
-@defvr Macro LC_NUMERIC
+@deftypevr Macro int LC_NUMERIC
 Selects attributes affecting formatting of numeric values;
 @pxref{Numeric and Monetary Formatting}.
-@end defvr
+@end deftypevr
 
 @comment locale.h
 @comment ANSI
-@defvr Macro LC_TIME
+@deftypevr Macro int LC_TIME
 Selects attributes affecting formatting of date and time values;
 @pxref{Formatting Date and Time}.
-@end defvr
+@end deftypevr
 
 @comment locale.h
 @comment GNU
-@defvr Macro LC_RESPONSE
+@deftypevr Macro int LC_RESPONSE
 Selects attributes affecting which string patterns are recognized as
 ``yes'' or ``no'' responses to questions.
 
@@ -110,7 +110,7 @@ Selects attributes affecting which string patterns are recognized as
 draft of the POSIX.2 standard, but it's not listed in draft 11.  Do we
 still support this anyway?  Is there a corresponding environment
 variable?
-@end defvr
+@end deftypevr
 
 The ANSI C standard permits implementations to define additional attribute
 categories.  You should consider all names that begin with the characters

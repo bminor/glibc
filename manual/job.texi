@@ -994,11 +994,11 @@ represents is not guaranteed.
 
 @comment stdio.h
 @comment POSIX.1
-@defvr Macro L_ctermid
+@deftypevr Macro int L_ctermid
 The value of this macro is an integer constant expression that
 represents the size of a string large enough to hold the file name
 returned by @code{ctermid}.
-@end defvr
+@end deftypevr
 
 See also the @code{isatty} and @code{ttyname} functions, in 
 @ref{Terminal Identification}.

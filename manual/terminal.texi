@@ -268,23 +268,23 @@ to @code{tcsetattr}:
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro TCSANOW
+@deftypevr Macro int TCSANOW
 Make the change to the terminal attributes immediately.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro TCSADRAIN
+@deftypevr Macro int TCSADRAIN
 Make the change to the terminal attributes after queued output has been
 transmitted.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro TCSAFLUSH
+@deftypevr Macro int TCSAFLUSH
 Make the change to the terminal attributes after queued output has been
 completed, also flushing any queued input in the typeahead buffer.
-@end defvr
+@end deftypevr
 
 
 @node Input Modes
@@ -300,7 +300,7 @@ OR of the desired flags.
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro INPCK
+@deftypevr Macro int INPCK
 @cindex parity checking
 If this bit is set, input parity checking is enabled.  If it is not set,
 no checking at all is done for parity errors on input; the
@@ -316,38 +316,38 @@ If this bit is set, what happens when a parity error is detected depends
 on whether the @code{IGNPAR} or @code{PARMRK} bits are set.  If neither
 of these bits are set, a byte with a parity error is passed to the
 application as a @code{'\0'} character.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro IGNPAR
+@deftypevr Macro int IGNPAR
 If this bit is set, any byte with a framing or parity error is ignored.
 This is only useful if @code{INPCK} is also set.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro PARMRK
+@deftypevr Macro int PARMRK
 If this bit is set and @code{IGNPAR} is not set, a byte with a framing
 or parity error is prefixed with the characters @code{'\377'} and
 @code{'\0'} before being passed to the application.  This is only useful
 if @code{INPCK} is also set.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro ISTRIP
+@deftypevr Macro int ISTRIP
 If this bit is set, valid input bytes are stripped to seven bits;
 otherwise, all eight bits are processed.
 
 If both @code{ISTRIP} and @code{PARMRK} are set, an input byte of 
 @code{'\377'} is passed to the application as a two-byte sequence
 @code{'\377'}, @code{'\377'}.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro IGNBRK
+@deftypevr Macro int IGNBRK
 If this bit is set, break conditions are ignored.
 
 @cindex break condition
@@ -355,11 +355,11 @@ If this bit is set, break conditions are ignored.
 A @dfn{break condition} is defined in the context of asynchronous
 serial data transmission as a series of zero-value bits longer than a
 single byte.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro BRKINT
+@deftypevr Macro int BRKINT
 If this bit is set and @code{IGNBRK} is not set, a break condition
 causes input and output queues on the terminal to be flushed and a
 @code{SIGINT} signal is sent to any foreground process group associated
@@ -369,33 +369,33 @@ If neither @code{BRKINT} nor @code{IGNBRK} are set, a break condition is
 passed to the application as a single @code{'\0'} character if
 @code{PARMRK} is not set, or otherwise as a three-character sequence 
 @code{'\377'}, @code{'\0'}, @code{'\0'}.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro IGNCR
+@deftypevr Macro int IGNCR
 If this bit is set, carriage return characters (@code{'\r'}) are
 discarded on input.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro ICRNL
+@deftypevr Macro int ICRNL
 If this bit is set and @code{IGNCR} is not set, carriage return characters
 (@code{'\r'}) received as input are passed to the application as newline
 characters (@code{'\n'}).
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro INLCR
+@deftypevr Macro int INLCR
 If this bit is set, newline characters (@code{'\n'}) received as input
 are passed to the application as carriage return characters (@code{'\r'}).
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro IXOFF
+@deftypevr Macro int IXOFF
 If this bit is set, start/stop control on input is enabled.  In other
 words, STOP and START characters are transmitted as necessary to
 prevent input being received faster than the input queue is emptied by
@@ -403,18 +403,18 @@ calls to @code{read}.  It's assumed that the actual terminal hardware
 that is generating the data being read responds to a STOP character
 by suspending data transmission, and to a START character by resuming
 transmission.  @xref{Special Characters}.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro IXON
+@deftypevr Macro int IXON
 If this bit is set, start/stop control on output is enabled.  In other
 words, if a STOP character is received as input, output is suspended
 until a START character is received.  In this case, the STOP and START
 characters are never passed to the application.  If this bit is not set,
 then START and STOP can be read as ordinary characters.
 @xref{Special Characters}.
-@end defvr
+@end deftypevr
 
 @node Output Modes
 @subsection Output Modes
@@ -429,14 +429,14 @@ OR of the desired flags.
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro OPOST
+@deftypevr Macro int OPOST
 If this bit is set, output data is processed in some unspecified way so
 that it is displayed appropriately on the terminal device.  This
 typically includes mapping newline characters (@code{'\n'}) onto
 carriage return and linefeed pairs.
 
 If this bit isn't set, the characters are transmitted as-is.
-@end defvr
+@end deftypevr
 
 @node Control Modes
 @subsection Control Modes
@@ -453,7 +453,7 @@ the bitwise OR of the desired flags.
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro CLOCAL
+@deftypevr Macro int CLOCAL
 If this bit is set, it indicates that the terminal is connected
 ``locally'' and that the modem status lines (carrier detect) should be
 ignored.
@@ -472,44 +472,44 @@ causes an end-of-file condition, and writing causes an
 @code{EIO} error to be returned.  The terminal file must be closed and
 reopened to clear the condition.
 @cindex modem disconnect
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro HUPCL
+@deftypevr Macro int HUPCL
 If this bit is set, a modem disconnect is generated when all processes
 that have the terminal port open have either closed the file or exited.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro CREAD
+@deftypevr Macro int CREAD
 If this bit is set, input can be read from the terminal.  Otherwise, no
 characters can be read.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro CSTOPB
+@deftypevr Macro int CSTOPB
 If this bit is set, two stop bits are used.  Otherwise, only one stop bit
 is used.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro PARENB
+@deftypevr Macro int PARENB
 If this bit is set, generation and detection of a parity bit are enabled.
 @xref{Input Modes}, for information on how input parity errors are handled.
 
 If this bit is not set, no parity bit is added.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro PARODD
+@deftypevr Macro int PARODD
 This bit is only useful if @code{PARENB} is set.  If @code{PARODD} is set,
 odd parity is used, otherwise even parity is used.
-@end defvr
+@end deftypevr
 
 The control mode flags also includes a field for the number of bits per
 character.  You can use the @code{CSIZE} macro as a mask to extract the
@@ -517,33 +517,33 @@ value.
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro CSIZE
+@deftypevr Macro int CSIZE
 This is a mask for the number of bits per character.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro CS5
+@deftypevr Macro int CS5
 This specifies five bits per byte.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro CS6
+@deftypevr Macro int CS6
 This specifies six bits per byte.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro CS7
+@deftypevr Macro int CS7
 This specifies seven bits per byte.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro CS8
+@deftypevr Macro int CS8
 This specifies eight bits per byte.
-@end defvr
+@end deftypevr
 
 @node Baud Rate
 @subsection Baud Rate
@@ -573,99 +573,99 @@ You can use these constants as baud rate values.
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B0
+@deftypevr Macro int B0
 Hang up; turns off the modem control lines.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B50
+@deftypevr Macro int B50
 50 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B75
+@deftypevr Macro int B75
 75 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B110
+@deftypevr Macro int B110
 110 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B134
+@deftypevr Macro int B134
 134.5 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B150
+@deftypevr Macro int B150
 150 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B200
+@deftypevr Macro int B200
 200 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B300
+@deftypevr Macro int B300
 300 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B600
+@deftypevr Macro int B600
 600 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B1200
+@deftypevr Macro int B1200
 1200 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B1800
+@deftypevr Macro int B1800
 1800 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B2400
+@deftypevr Macro int B2400
 2400 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B4800
+@deftypevr Macro int B4800
 4800 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B9600
+@deftypevr Macro int B9600
 9600 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B19200
+@deftypevr Macro int B19200
 19200 baud.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro B38400
+@deftypevr Macro int B38400
 38400 baud.
-@end defvr
+@end deftypevr
 
 You can use the following functions to inquire about and modify the
 baud rates in a @code{termios} structure.
@@ -746,47 +746,47 @@ the bitwise OR of the desired flags.
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro ICANON
+@deftypevr Macro int ICANON
 If set, this bit enables canonical input processing mode.  Otherwise,
 input is processed in non-canonical mode.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro ECHO
+@deftypevr Macro int ECHO
 If this bit is set, echoing of input characters back to the terminal
 is enabled.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro ECHOE
+@deftypevr Macro int ECHOE
 If this bit is set and the @code{ICANON} bit is also set, then the ERASE
 character is echoed by erasing the last character in the current line
 from the terminal display.  This bit only controls the echoing behavior;
 the @code{ICANON} bit controls actual recognition of the ERASE character.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro ECHOK
+@deftypevr Macro int ECHOK
 If this bit is set and the @code{ICANON} bit is also set, then the
 KILL character is echoed either by erasing the current line, or by
 writing a newline character.  This bit only controls the echoing behavior;
 the @code{ICANON} bit controls actual recognition of the KILL character.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro ECHONL
+@deftypevr Macro int ECHONL
 If this bit is set and the @code{ICANON} bit is also set, then the
 newline (@code{'\n'}) character is echoed even if the @code{ECHO} bit
 is not set.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro ISIG
+@deftypevr Macro int ISIG
 This bit controls whether the INTR, QUIT, and SUSP characters are
 recognized.  The functions associated with these characters are performed
 if and only if this bit is set.  Being in canonical or non-canonical
@@ -797,32 +797,32 @@ Programs that cannot be interrupted interactively are very
 user-unfriendly.  If you clear this bit, your program should provide
 some alternate interface that allows the user to interactively send the
 signals associated with these characters.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro IEXTEN
+@deftypevr Macro int IEXTEN
 This bit is similar to @code{ISIG}, but controls implementation-defined
 special characters.  If it is set, it might override the default behavior
 for the @code{ICANON} and @code{ISIG} local mode flags, and the @code{IXON}
 and @code{IXOFF} input mode flags.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro NOFLSH
+@deftypevr Macro int NOFLSH
 Normally, the INTR, QUIT, and SUSP characters cause input and output
 queues for the terminal to be flushed.  If this bit is set, the flush
 is not performed.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro TOSTOP
+@deftypevr Macro int TOSTOP
 If this bit is set and the implementation supports job control, then
 @code{SIGTTOU} signals are generated by background processes that
 attempt to write to the terminal.  @xref{Access to the Controlling Terminal}.
-@end defvr
+@end deftypevr
 
 @node Special Characters
 @subsection Special Characters
@@ -855,10 +855,10 @@ the corresponding array element to @code{_POSIX_VDISABLE}.
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro NCCS
+@deftypevr Macro int NCCS
 The value of this macro is the number of array elements in the
 @code{c_cc} member of the @code{termios} structure.
-@end defvr
+@end deftypevr
 
 Each of the following macros has a distinct value, except that the
 @code{VMIN} and @code{VTIME} macros (which are used only in
@@ -868,7 +868,7 @@ constants.
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro VEOF
+@deftypevr Macro int VEOF
 @cindex EOF character
 This is the subscript for the EOF character in the special control character
 array.
@@ -880,11 +880,11 @@ to return a byte count of zero, indicating end-of-file.  The EOF
 character itself is discarded.
 
 Usually, the EOF character is @kbd{C-d}.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro VEOL
+@deftypevr Macro int VEOL
 @cindex EOL character
 This is the subscript for the EOL character in the special control character
 array.
@@ -893,11 +893,11 @@ The EOL character is recognized only in canonical input mode.  It acts
 as a line terminator, just like a newline character.
 
 @strong{Incomplete:}  Is this usually a carriage return?
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro VERASE
+@deftypevr Macro int VERASE
 @cindex ERASE character
 This is the subscript for the ERASE character in the special control character
 array.
@@ -910,11 +910,11 @@ cannot be used to erase past the beginning of the current line of text.
 The ERASE character itself is discarded.
 
 Usually, the ERASE character is delete.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro VKILL
+@deftypevr Macro int VKILL
 @cindex KILL character
 This is the subscript for the KILL character in the special control character
 array.
@@ -924,11 +924,11 @@ user types the kill character, the entire contents of the current line
 of input are discarded.  The @code{KILL} character itself is discarded.
 
 The KILL character is usually @kbd{C-u}.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro VINTR
+@deftypevr Macro int VINTR
 @cindex INTR character
 @cindex interrupt character
 This is the subscript for the INTR character in the special control character
@@ -941,11 +941,11 @@ to all processes in the foreground job associated with the terminal.
 INTR character itself is discarded.
 
 Typically, the INTR character is @kbd{C-c}.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro VQUIT
+@deftypevr Macro int VQUIT
 @cindex QUIT character
 This is the subscript for the QUIT character in the special control character
 array.
@@ -957,11 +957,11 @@ Handling}, for more information about signals.  The QUIT character
 itself is discarded.
 
 Typically, the QUIT character is @kbd{C-\}.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro VSUSP
+@deftypevr Macro int VSUSP
 @cindex SUSP character
 @cindex suspend character
 This is the subscript for the SUSP character in the special control character
@@ -975,11 +975,11 @@ processes in the foreground job associated with the terminal.
 character itself is discarded.
 
 Typically, the SUSP character is @kbd{C-z}.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro VSTART
+@deftypevr Macro int VSTART
 @cindex START character
 This is the subscript for the START character in the special control character
 array.
@@ -991,11 +991,11 @@ is set, the system may also transmit START characters.
 
 The usual value for the START character is @kbd{C-q}.  You may not be
 able to change this value.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro VSTOP
+@deftypevr Macro int VSTOP
 @cindex STOP character
 This is the subscript for the STOP character in the special control character
 array.
@@ -1008,11 +1008,11 @@ prevent its input queue from overflowing.
 
 The usual value for the STOP character is @kbd{C-s}.  You may not be
 able to change this value.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro VMIN
+@deftypevr Macro int VMIN
 @cindex MIN character
 This is the subscript for the MIN character in the special control character
 array.
@@ -1065,11 +1065,11 @@ If the timer expires, the bytes received so far are returned.
 @strong{Incomplete:}  What happens if the number of bytes requested by
 a particular call to @code{read} is less than MIN?
 @end itemize
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro VTIME
+@deftypevr Macro int VTIME
 @cindex TIME character
 This is the subscript for the TIME character in the special control character
 array.
@@ -1078,7 +1078,7 @@ The TIME character is only meaningful in non-canonical input mode; it is
 used as a timer with a resolution 0.1 seconds.  It interacts with the
 TIME character to determine the granularity with which input from the
 terminal is passed to the application program, as described above.
-@end defvr
+@end deftypevr
 
 
 @node Line Control Functions
@@ -1181,22 +1181,22 @@ argument to @code{tcflush}:
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro TCIFLUSH
+@deftypevr Macro int TCIFLUSH
 This specifies that the terminal input queue should be flushed.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro TCOFLUSH
+@deftypevr Macro int TCOFLUSH
 This specifies that the terminal output queue should be flushed.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro TCIOFLUSH
+@deftypevr Macro int TCIOFLUSH
 This specifies that both the terminal input queue and the terminal
 output queue should be flushed.
-@end defvr
+@end deftypevr
 
 
 @comment termios.h
@@ -1246,27 +1246,27 @@ argument to @code{tcflow}:
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro TCOOFF
+@deftypevr Macro int TCOOFF
 The action is to suspend transmission of output.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro TCOON
+@deftypevr Macro int TCOON
 The action is to resume transmission of output.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro TCIOFF
+@deftypevr Macro int TCIOFF
 The action is to send a STOP character.
-@end defvr
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@defvr Macro TCION
+@deftypevr Macro int TCION
 The action is to send a START character.
-@end defvr
+@end deftypevr
 
 
 @node Terminal Control Example

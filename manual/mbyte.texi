@@ -135,18 +135,18 @@ the shift state getting changed behind your back.
 
 @comment limits.h
 @comment ANSI
-@defvr Macro MB_LEN_MAX
+@deftypevr Macro int MB_LEN_MAX
 This is the maximum length of a multibyte character for any supported
 locale.
-@end defvr
+@end deftypevr
 
 @comment stdlib.h
 @comment ANSI
-@defvr Macro MB_CUR_MAX
+@deftypevr Macro int MB_CUR_MAX
 This macro expands into a (possibly non-constant) positive integer
 expression that is the maximum number of bytes in a multibyte character
 in the current locale.  The value is never greater than @code{MB_LEN_MAX}.
-@end defvr
+@end deftypevr
 
 
 @node Conversion of Extended Characters

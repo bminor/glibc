@@ -72,16 +72,16 @@ In the meantime, you should avoid using these names yourself.
 
 @comment math.h
 @comment ANSI
-@defvr Macro HUGE_VAL
-This macro expands into a (possibly non-constant) expression of type
-@code{double} representing a very large positive number.  This is
+@deftypevr Macro double HUGE_VAL
+This macro expands into a (possibly non-constant) expression
+representing a very large positive number.  This is
 typically either the largest representable floating-point number, or a
 value indicating infinity if the floating-point representation has one.
 (The IEEE floating-point does have such a reserved value.)
 
 The value of this macro is used as the return value from various 
 mathematical functions in overflow situations.
-@end defvr
+@end deftypevr
 
 For more information about floating-point representations and limits,
 @xref{Floating-Point Limits}.  In particular, the macro @code{DBL_MAX}
@@ -572,11 +572,11 @@ To use these facilities, you should include the header file
 
 @comment stdlib.h
 @comment ANSI
-@defvr Macro RAND_MAX
+@deftypevr Macro int RAND_MAX
 The value of this macro is an integer constant expression that
 represents the maximum possible value returned by the @code{rand}
 function.  It is guaranteed to be at least @code{32767}.
-@end defvr
+@end deftypevr
 
 @comment stdlib.h
 @comment ANSI

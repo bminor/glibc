@@ -285,31 +285,31 @@ You can use these symbolic constants to identify the address family:
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro AF_UNSPEC
+@deftypevr Macro int AF_UNSPEC
 This is the unspecified address family.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment GNU
-@defvr Macro AF_LOCAL
+@deftypevr Macro int AF_LOCAL
 This is the address family for sockets in the local domain.  @xref{The
 Local Domain}.
 
 @strong{Incomplete:}  This isn't actually in the header file yet!!!
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro AF_UNIX
+@deftypevr Macro int AF_UNIX
 This is a synonym for @code{AF_LOCAL}.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro AF_INET
+@deftypevr Macro int AF_INET
 This is the address family for sockets in the Internet domain.
 @xref{The Internet Domain}.
-@end defvr
+@end deftypevr
 
 @strong{Incomplete:}  There are a bunch more of these.
 
@@ -370,25 +370,25 @@ macros as values for the @var{domain} argument to the @code{socket} or
 
 @comment sys/socket.h
 @comment GNU
-@defvr Macro PF_LOCAL
+@deftypevr Macro int PF_LOCAL
 This is the domain local to the host machine.  The local domain is
 discussed in more detail in @ref{The Local Domain}.
 
 @strong{Incomplete:}  This isn't actually in the header file yet!!!
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro PF_UNIX
+@deftypevr Macro int PF_UNIX
 This is a synonym for @code{PF_LOCAL}.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro PF_INET
+@deftypevr Macro int PF_INET
 This is the Internet protocol (IP) family.  @xref{The Internet Domain},
 for more information.
-@end defvr
+@end deftypevr
 
 @strong{Incomplete:} These are only the most important protocol
 families.  This chapter includes detailed information about socket
@@ -734,12 +734,12 @@ number.
 
 @comment netinet/in.h
 @comment BSD
-@defvr Macro INADDR_ANY
+@deftypevr Macro {unsigned long int} INADDR_ANY
 This constant can be used to specify the address of the host computer;
 it is essentially equivalent to saying that any of the host addresses of
 the machine the program is running on may be used by connection
 requests.
-@end defvr
+@end deftypevr
 
 These additional functions for manipulating Internet addresses are
 declared in @file{arpa/inet.h}:
@@ -887,29 +887,29 @@ The value of @code{h_errno} can be one of the following symbolic constants:
 
 @comment netdb.h
 @comment BSD
-@defvr Macro HOST_NOT_FOUND
+@deftypevr Macro int HOST_NOT_FOUND
 No such host is known.
-@end defvr
+@end deftypevr
 
 @comment netdb.h
 @comment BSD
-@defvr Macro TRY_AGAIN
+@deftypevr Macro int TRY_AGAIN
 This condition happens when the name server could not be contacted.
 If you trying again later, the request may succeed.
-@end defvr
+@end deftypevr
 
 @comment netdb.h
 @comment BSD 
-@defvr Macro NO_RECOVERY 
+@deftypevr Macro int NO_RECOVERY 
 A non-recoverable error occurred.
-@end defvr
+@end deftypevr
 
 @comment netdb.h
 @comment BSD
-@defvr Macro NO_ADDRESS
+@deftypevr Macro int NO_ADDRESS
 The host database contains an entry for the name, but it doesn't have an
 associated Internet address.
-@end defvr
+@end deftypevr
 
 @strong{Incomplete:} Is there some similar error-reporting mechanism
 for the other server-based databases?  
@@ -1278,19 +1278,19 @@ arrive out of order or be duplicated.
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SOCK_STREAM
+@deftypevr Macro int SOCK_STREAM
 The @code{SOCK_STREAM} socket type is similar to a pipe; it provides
 a byte stream based communications channel with connection state
 and reliable, sequential transmission of messages.
 
 Operations on this type of stream are covered in detail in @ref{Byte
 Stream Socket Operations}.
-@end defvr
+@end deftypevr
 
 @cindex datagrams
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SOCK_DGRAM
+@deftypevr Macro int SOCK_DGRAM
 The @code{SOCK_DGRAM} socket type is used for sending individually-addressed
 datagrams.  This kind of socket does not guarantee reliable or sequential
 transmission of messages.  It is typically used in situations where
@@ -1299,31 +1299,31 @@ in a reasonable amount of time.
 
 @ref{Datagram Socket Operations}, contains detailed information about
 how to use sockets of this type.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SOCK_SEQPACKET
+@deftypevr Macro int SOCK_SEQPACKET
 This socket type is similar to @code{SOCK_STREAM}, except that messages
 are sent by datagrams rather than as bytes.  This socket type may not
 be supported by all protocols.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SOCK_RDM
+@deftypevr Macro int SOCK_RDM
 This socket type is similar to @code{SOCK_DGRAM}, except that reliable
 delivery of datagrams is guaranteed.  This socket type may not be
 supported by all protocols.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SOCK_RAW
+@deftypevr Macro int SOCK_RAW
 This socket type provides access to internal network protocols and
 interfaces.  Ordinary user programs usually have no need to use this
 socket type.
-@end defvr
+@end deftypevr
 
 
 @node Byte Stream Socket Operations
@@ -1590,24 +1590,24 @@ value for this argument.
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro MSG_OOB
+@deftypevr Macro int MSG_OOB
 Send or receive out-of-band data.  @xref{Out-of-Band Data}.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro MSG_PEEK
+@deftypevr Macro int MSG_PEEK
 Look at the data but don't remove it from the input queue.  This is
 only useful on read operations.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro MSG_DONTROUTE
+@deftypevr Macro int MSG_DONTROUTE
 Don't include routing information in the message.  This is only useful
 on write operations, and is generally only of interest for diagnostic or
 routing programs.
-@end defvr
+@end deftypevr
 
 @node Byte Stream Socket Example
 @subsection Byte Stream Socket Example
@@ -2103,52 +2103,52 @@ The flags for socket-level options are defined in the header file
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SOL_SOCKET
+@deftypevr Macro int SOL_SOCKET
 You should use this macro as the @var{level} argument to @code{getsockopt}
 or @code{setsockopt} to manipulate the socket-level options described
 in this section.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SO_DEBUG
+@deftypevr Macro int SO_DEBUG
 This option toggles recording of debugging information in the underlying
 protocol modules.  The value is an @code{int}, interpreted as a boolean.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SO_REUSEADDR
+@deftypevr Macro int SO_REUSEADDR
 This option controls whether @code{bind} should permit reuse of local
 addresses for this socket.  The value is an @code{int}, interpreted as a
 boolean.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SO_KEEPALIVE
+@deftypevr Macro int SO_KEEPALIVE
 This option controls whether the underlying protocol should periodically
 transmit messages on a connected socket.  If the peer fails to respond
 to these messages, the connection is considered broken.  The value is an
 @code{int}, interpreted as a boolean.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SO_DONTROUTE
+@deftypevr Macro int SO_DONTROUTE
 This option controls whether outgoing messages bypass the normal message
 routing facilities.  If set, messages are sent directly to the network
 interface instead.  The value is an @code{int}, interpreted as a boolean.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SO_LINGER
+@deftypevr Macro int SO_LINGER
 This option specifies what should happen when the socket of a type that
 promises reliable delivery still has untransmitted messages when it is
 closed; @pxref{Closing a Socket}.  The value is a @code{struct linger}
 object.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
@@ -2168,46 +2168,46 @@ This specifies the timeout period, in seconds.
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SO_BROADCAST
+@deftypevr Macro int SO_BROADCAST
 This option controls whether datagrams may be broadcast from the socket.
 The value is an @code{int}, interpreted as a boolean.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SO_OOBINLINE
+@deftypevr Macro int SO_OOBINLINE
 If this option is set, out-of-band data received on the socket is placed
 in the normal input queue.  This permits it to be read using @code{read}
 or @code{recv} without specifying the @code{MSG_OOB} flag.
 @xref{Out-of-Band Data}.  The value is an @code{int}, interpreted as a boolean.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SO_SNDBUF
+@deftypevr Macro int SO_SNDBUF
 This option gets or sets the size of the output buffer.  The value is an
 @code{int}, which is the size in bytes.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD
-@defvr Macro SO_RCVBUF
+@deftypevr Macro int SO_RCVBUF
 This option gets or sets the size of the input buffer.  The value is an
 @code{int}, which is the size in bytes.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD 
-@defvr Macro SO_TYPE
+@deftypevr Macro int SO_TYPE
 This option can be used with @code{getsockopt} only.  It is used to return
 the socket type.  The value is an @code{int}.
-@end defvr
+@end deftypevr
 
 @comment sys/socket.h
 @comment BSD 
-@defvr Macro SO_ERROR
+@deftypevr Macro int SO_ERROR
 This option can be used with @code{getsockopt} only.  It is used to reset
 the error status of the socket.  The value is an @code{int}, which represents
 the previous error status.
-@end defvr
+@end deftypevr
 

@@ -77,28 +77,26 @@ These streams are declared in the header file @file{stdio.h}.
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} stdin
-This macro expands into an expression of type @code{FILE *} that
-represents the @dfn{standard input} stream, the normal source of input
-for the program.
-@end defvr
+@deftypevr Macro {FILE *} stdin
+This macro expands into an expression that represents the @dfn{standard
+input} stream, the normal source of input for the program.
+@end deftypevr
 @cindex standard input
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} stdout
-This macro expands into an expression of type @code{FILE *} that
-represents the @dfn{standard output} stream, the destination for normal
-output from the program.
-@end defvr
+@deftypevr Macro {FILE *} stdout
+This macro expands into an expression that represents the @dfn{standard
+output} stream, the destination for normal output from the program.
+@end deftypevr
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} stderr
-This macro expands into an expression of type @code{FILE *} that
-represents the @dfn{standard error} stream, the destination for error
-and diagnostic messages issued by the program.
-@end defvr
+@deftypevr Macro {FILE *} stderr
+This macro expands into an expression that represents the @dfn{standard
+error} stream, the destination for error and diagnostic messages issued
+by the program.
+@end deftypevr
 
 In the GNU system, you can specify what files or processes correspond to
 these streams using the pipe and redirection facilities provided by the
@@ -203,13 +201,13 @@ Locks}.
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} FOPEN_MAX
+@deftypevr Macro int FOPEN_MAX
 The value of this macro is an integer constant expression that
 represents the minimum number of streams that the implementation
 guarantees can be open simultaneously.  The value of this constant is at
 least eight, which includes the three standard streams @code{stdin},
 @code{stdout}, and @code{stderr}.
-@end defvr
+@end deftypevr
 
 @comment stdio.h
 @comment ANSI
@@ -1321,40 +1319,40 @@ encoded by using one of these base types:
 
 @comment printf.h
 @comment GNU
-@defvr {Macro} PA_INT
+@deftypevr Macro int PA_INT
 This specifies that the base type is @code{int}.
-@end defvr
+@end deftypevr
 
 @comment printf.h
 @comment GNU
-@defvr {Macro} PA_CHAR
+@deftypevr Macro int PA_CHAR
 This specifies that the base type is @code{int}, cast to @code{char}.
-@end defvr
+@end deftypevr
 
 @comment printf.h
 @comment GNU
-@defvr {Macro} PA_STRING
+@deftypevr Macro int PA_STRING
 This specifies that the base type is @code{char *}, a null-terminated string.
-@end defvr
+@end deftypevr
 
 @comment printf.h
 @comment GNU
-@defvr {Macro} PA_POINTER
+@deftypevr Macro int PA_POINTER
 This specifies that the base type is @code{void *}, an arbitrary pointer.
-@end defvr
+@end deftypevr
 
 @comment printf.h
 @comment GNU
-@defvr {Macro} PA_FLOAT
+@deftypevr Macro int PA_FLOAT
 This specifies that the base type is @code{double}.
 
 @strong{Incomplete:}  Should this be @code{float} instead?  How do you
 encode the type of @code{float *}?
-@end defvr
+@end deftypevr
 
 @comment printf.h
 @comment GNU
-@defvr {Macro} PA_LAST
+@deftypevr Macro int PA_LAST
 You can define additional base types for your own programs as offsets
 from @code{PA_LAST}.  For example, if you have data types @samp{foo}
 and @samp{bar} with their own specialized @code{printf} conversions,
@@ -1364,53 +1362,53 @@ you could define encodings for these types as:
 #define PA_FOO  PA_LAST
 #define PA_BAR  (PA_LAST + 1)
 @end example
-@end defvr
+@end deftypevr
 
 You can also specify type modifiers in the encoded type as a bit mask,
 using the following macros:
 
 @comment printf.h
 @comment GNU
-@defvr {Macro} PA_FLAG_MASK
+@deftypevr Macro int PA_FLAG_MASK
 This macro can be used to extract the type modifier flags from an encoded
 type.
-@end defvr
+@end deftypevr
 
 @comment printf.h
 @comment GNU
-@defvr {Macro} PA_FLAG_PTR
+@deftypevr Macro int PA_FLAG_PTR
 If this bit is set, it indicates that the encoded type is a pointer to
 the base type, rather than an immediate value.
 For example, @samp{PA_INT|PA_FLAG_PTR} represents the type @samp{int *}.
-@end defvr
+@end deftypevr
 
 @comment printf.h
 @comment GNU
-@defvr {Macro} PA_FLAG_SHORT
+@deftypevr Macro int PA_FLAG_SHORT
 If this bit is set, it indicates that the base type is modified with
 @code{short}.  (This corresponds to the @samp{h} type modifier.)
-@end defvr
+@end deftypevr
 
 @comment printf.h
 @comment GNU
-@defvr {Macro} PA_FLAG_LONG
+@deftypevr Macro int PA_FLAG_LONG
 If this bit is set, it indicates that the base type is modified with
 @code{long}.  (This corresponds to the @samp{l} type modifier.)
-@end defvr
+@end deftypevr
 
 @comment printf.h
 @comment GNU
-@defvr {Macro} PA_FLAG_LONGLONG
+@deftypevr Macro int PA_FLAG_LONGLONG
 If this bit is set, it indicates that the base type is modified with
 @code {long long}.  (This corresponds to the @samp{L} type modifier.)
-@end defvr
+@end deftypevr
 
 @comment printf.h
 @comment GNU
-@defvr {Macro} PA_FLAG_LONGDOUBLE
+@deftypevr Macro int PA_FLAG_LONGDOUBLE
 This is a synonym for @code{PA_FLAG_LONGLONG}, used by convention with
 a base type of @code{PA_FLOAT} to indicate a type of @code{long double}.
-@end defvr
+@end deftypevr
 
 @node @code{printf} Extension Example
 @subsection @code{printf} Extension Example
@@ -2017,12 +2015,12 @@ These facilities are declared in the header file @file{stdio.h}.
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} EOF
+@deftypevr Macro int EOF
 This macro expands to an integer constant expression that is returned
 by a number of functions to indicate an end-of-file condition, or some
 other error situation.  The value of this constant is always a negative
 number; in the GNU system, its value is @code{-1}.
-@end defvr
+@end deftypevr
 
 @comment stdio.h
 @comment ANSI
@@ -2112,29 +2110,29 @@ for file locks (@pxref{Control Operations on Files}).
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} SEEK_SET
+@deftypevr Macro int SEEK_SET
 This macro expands into an integer constant expression that can be used
 as the @var{whence} argument to the @code{fseek} function, to
 specify that the offset provided is relative to the beginning of the
 file.
-@end defvr
+@end deftypevr
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} SEEK_CUR
+@deftypevr Macro int SEEK_CUR
 This macro expands into an integer constant expression that can be used
 as the @var{whence} argument to the @code{fseek} function, to
 specify that the offset provided is relative to the currrent file
 position.
-@end defvr
+@end deftypevr
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} SEEK_END
+@deftypevr Macro int SEEK_END
 This macro expands into an integer constant expression that can be used
 as the @var{whence} argument to the @code{fseek} function, to
 specify that the offset provided is relative to the end of the file.
-@end defvr
+@end deftypevr
 
 @comment stdio.h
 @comment ANSI
@@ -2453,31 +2451,31 @@ be honored.
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} _IOFBF
+@deftypevr Macro int _IOFBF
 The value of this macro is an integer constant expression that can be
 used as the @var{mode} argument to the @code{setvbuf} function to
 specify that the stream should be fully buffered.
-@end defvr
+@end deftypevr
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} _IOLBF
+@deftypevr Macro int _IOLBF
 The value of this macro is an integer constant expression that can be
 used as the @var{mode} argument to the @code{setvbuf} function to
 specify that the stream should be line buffered.
-@end defvr
+@end deftypevr
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} _IONBF
+@deftypevr Macro int _IONBF
 The value of this macro is an integer constant expression that can be
 used as the @var{mode} argument to the @code{setvbuf} function to
 specify that the stream should be unbuffered.
-@end defvr
+@end deftypevr
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} BUFSIZ
+@deftypevr Macro int BUFSIZ
 The value of this macro is an integer constant expression that is an
 appropriate (but implementation-defined) value for the @var{size}
 argument to @code{setvbuf}.  This value is guaranteed to be at least
@@ -2486,7 +2484,7 @@ argument to @code{setvbuf}.  This value is guaranteed to be at least
 Sometimes people also use @code{BUFSIZ} as the allocation size of
 buffers used for related purposes, such as strings used to receive a
 line of input with @code{fgets} (@pxref{Character Input}).
-@end defvr
+@end deftypevr
 
 @comment stdio.h
 @comment ANSI
@@ -2557,20 +2555,20 @@ the @var{result} argument should be a pointer to an array of at least
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} L_tmpnam
+@deftypevr Macro int L_tmpnam
 The value of this macro is an integer constant expression that represents
 the minimum allocation size of a string large enough to hold the
 file name generated by the @code{tmpnam} function.
-@end defvr
+@end deftypevr
 
 @comment stdio.h
 @comment ANSI
-@defvr {Macro} TMP_MAX
+@deftypevr Macro int TMP_MAX
 The value of this macro is an integer constant expression that represents
 the minimum number of unique file names that can be generated by
 the @code{tmpnam} function.  The value of this macro is guaranteed to
 be at least @code{25}.
-@end defvr
+@end deftypevr
 
 @comment stdio.h
 @comment SVID
@@ -2597,10 +2595,10 @@ writable.
 
 @comment stdio.h
 @comment SVID
-@defvr Macro P_tmpdir
+@deftypevr Macro {char *} P_tmpdir
 The value of this macro is the file name prefix identifying
 the default directory for temporary files.  It is used by @code{tempnam}.
-@end defvr
+@end deftypevr
 
 
 @node Other Kinds of Streams
