@@ -176,8 +176,10 @@ lookup (const DBT *key, struct STRUCTURE *result,
     }
   else
     {
+      /* Copy the result to a safe place.  */
+      p = (char *) memcpy (buffer, value.data, value.size);
+
       /* Skip leading blanks.  */
-      p = (char *) value.data;
       while (isspace (*p))
 	++p;
 
