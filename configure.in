@@ -31,10 +31,6 @@ dnl You can ignore the following line if you are reading this sentence.
 
 prog="`basename $0`"
 
-if [ $# -eq 0 -a "${ARCH-${machine}}" != "" ]; then
-  set "${ARCH-${machine}}"
-fi
-
 # All the standard GNU configure options are accepted but only
 # --nfp, --with-gnu-ld, and --with-gnu-as are meaningful.
 nfp=
@@ -148,18 +144,25 @@ if [ "$next" ]; then
   lose=yes
 fi
 
+dnl This deals with setting srcdir if it needs to be set.
+changequote([,])
+AC_PREPARE(features.h)
+changequote(,)
+
+if [ ! "$target" ]; then
+  echo 'No target given.  Trying to guess target...'
+  target=`$srcdir/config.guess`
+fi
+
 if [ "$lose" = yes -o ! "$target" ]; then
-  echo "Usage: $prog [--srcdir=DIR] [--nfp] [--with-gnu-ld] TARGET" >&2
+  echo "\
+Usage: $prog [--srcdir=DIR] [--prefix=DIR] [--exec-prefix=DIR]
+	     [--nfp] [--with-gnu-ld] [--with-gnu-as] TARGET" >&2
   if [ -r config.status ]; then
     cat config.status >&2
   fi
   exit 1
 fi
-
-dnl This deals with setting srcdir if it needs to be set.
-changequote([,])
-AC_PREPARE(features.h)
-changequote(,)
 
 # Canonicalize the configuration name.
 config=`$srcdir/config.sub $target`
