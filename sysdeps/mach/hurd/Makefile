@@ -31,6 +31,20 @@ includes += -I$(hurd-srcdir)
 
 # Find the Hurd header files in the Hurd source.
 vpath hurd/%.h $(hurd-srcdir)
+
+
+ifneq (hurd,$(subdir))
+ifneq (mach,$(subdir))
+# Subdirectories other than hurd/ might use the generated Hurd headers.
+# So make sure we get a chance to run in hurd/ to make them before all else.
+# (But we don't want to do this in mach/, because hurd/ needs some things
+# there, and we know mach/ doesn't need anything from hurd/.)
+
+before-compile += $(common-objpfx)hurd/io.h
+$(common-objpfx)hurd/%:	# Run only if it doesn't exist.
+	$(MAKE) -C $(..)hurd $(patsubst $(..)hurd/%,%,$@)
+endif
+endif
 
 # Generate errnos.h and sys_errlist.c from the section of the manual that
 # lists all the errno codes.
