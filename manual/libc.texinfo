@@ -98,11 +98,14 @@ Contents of the Library
 					 system limits.
 
 Appendices
-* Header File Contents::	A complete list of what facilities are
-				 declared in each header file.
-* Maintenance::			How to install and maintain the GNU C Library.
-* Copying::			The GNU General Public License says
-				 how you can copy and share the GNU C Library.
+* Summary of Library Facilities::       A summary showing the syntax, header
+                                         file, and derivation of each library
+                                         feature.
+* Maintenance:: 			How to install and maintain the
+                                         GNU C Library.
+* Copying::			        The GNU General Public License says
+				         how you can copy and share the
+                                         GNU C Library.
 
 Indices
 * Concept Index::	Index of concepts and names.
