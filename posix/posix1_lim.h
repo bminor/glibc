@@ -64,13 +64,9 @@ Cambridge, MA 02139, USA.  */
 /* Number of streams a process can have open at once.  */
 #define	_POSIX_STREAM_MAX	8
 
-/* Number of bytes in an element of `tzname'.  */
-#define	_POSIX_TZNAME_MAX	3
-
 
 /* Get the implementation-specific values for the above.  */
 #include <local_lim.h>
-
 
 #ifndef	SSIZE_MAX
 #define	SSIZE_MAX	INT_MAX
@@ -83,5 +79,13 @@ Cambridge, MA 02139, USA.  */
 #ifndef	NGROUPS_MAX
 #define	NGROUPS_MAX	_POSIX_NGROUPS_MAX
 #endif
+
+
+/* Maximum length of a timezone name (element of `tzname').  */
+#define	_POSIX_TZNAME_MAX	3
+
+/* Get the real value for that.  */
+#include <tzname_max.h>
+
 
 #endif	/* posix1_limits.h  */
