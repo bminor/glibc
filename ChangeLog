@@ -1,3 +1,17 @@
+2000-02-23  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/sigstack.c (sigstack): Remove `const' from
+	argument type, for 2000-02-22 change in signal/signal.h declaration.
+
+	* iconv/loop.c: Don't include <sys/param.h>.  On Hurd it includes
+	<signal.h> -> <sys/ucontext.h> defines ES, conflicting with
+	iconvdata/iso646.c's (unrelated) ES.
+	(MIN): New macro, just define it here instead to avoid that conflict.
+
+	* string/argz-stringify.c (__argz_stringify): Fix loop termination
+	conditions so as not to clobber the final '\0' when there is only one
+	element in the vector.
+
 2000-02-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/stdio.h: Define macros stdin, stdout, and stderr.
