@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   mach_port_t port;
   int got;
   struct _hurd_dtable dtable;
-  int dealloc_dtable; *dealloc, *types;
+  int dealloc_dtable, *dealloc, *types;
   mach_port_t *ports;
   struct _hurd_fd *cells;
   error_t err;
@@ -50,13 +50,11 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
     *(volatile fd_set *) exceptfds;
 
   if (timeout != NULL && timeout->tv_sec == 0 && timeval->tv_usec == 0)
+    /* We just want to poll, so we don't need a receive right.  */
     port = MACH_PORT_NULL;
   else
-    {
-      /* Get a port to receive io_select_done messages on.  */
-      __mach_port_allocate (__mach_task_self (),
-			    MACH_PORT_RIGHT_RECEIVE, &port);
-    }
+    /* Get a port to receive the io_select_done message on.  */
+    port = __mach_reply_port ();
 
   dtable = _hurd_dtable_use (&dealloc_dtable);
 
@@ -84,8 +82,9 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	  ports[i] = _hurd_port_locked_get (&cells[i]->port, &dealloc[i]);
 	  if (ports[i] == MACH_PORT_NULL)
 	    {
+	      /* If one descriptor is bogus, we fail completely.  */
 	      while (i-- > 0)
-		_hurd_port_free (&cells[i]->port, &dealloc[i]);
+		_hurd_port_free (&cells[i]->port, &dealloc[i], ports[i]);
 	      _hurd_dtable_done (dtable, &dealloc_dtable);
 	      errno = EBADF;
 	      return -1;
@@ -110,6 +109,9 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 
   if (!err && got == 0 && port != MACH_PORT_NULL)
     {
+      /* Now wait for select_done messages on PORT,
+	 timing out as appropriate.  */
+
       struct
 	{
 	  mach_msg_header_t head;
@@ -138,13 +140,14 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 		(msg.result & (SELECT_READ|SELECT_WRITE|SELECT_URG)) &&
 		msg.tag >= 0 && msg.tag < nfds)
 	      {
-		types[i] = msg.result;
-		++got;
+		if (types[msg.tag] == 0)
+		  ++got;
+		types[msg.tag] |= msg.result;
 		if (msg.msgh_remote_port != MACH_PORT_NULL)
 		  {
 		    msg.head.msgh_id += 100;
 		    msg.result_type = inttype;
-		    msg.result = POSIX_SUCCESS;
+		    msg.result = ERR_SUCCESS;
 		    options = MACH_SEND_MSG | MACH_RCV_TIMEOUT;
 		  }
 	      }
@@ -172,7 +175,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
        If the port were reused, that notification could confuse the next
        select call to use the port.  The notification might be valid,
        but the descriptor may have changed to a different server.  */
-    __mach_port_destroy (port);
+    __mach_port_destroy (__mach_task_self (), port);
 
   if (err)
     return __hurd_fail (err);
@@ -196,7 +199,6 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	    FD_SET (i, exceptfds);
 	  else
 	    FD_CLR (i, exceptfds);
-	++got;
       }
 
   return got;
