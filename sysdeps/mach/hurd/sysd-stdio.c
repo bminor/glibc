@@ -20,9 +20,9 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <stdio.h>
 #include <hurd.h>
+#include <fcntl.h>
 
-
-/* XXX FILE * locking */
+/* XXX ctty undone */
 
 
 /* Read up to N chars into BUF from COOKIE.
@@ -41,7 +41,8 @@ DEFUN(__stdio_read, (cookie, buf, n),
   if (bufp != buf)
     {
       memcpy (buf, bufp, nread);
-      __vm_deallocate ((vm_address_t) bufp, (vm_size_t) nread);
+      __vm_deallocate (__mach_task_self (),
+		       (vm_address_t) bufp, (vm_size_t) nread);
     }
 
   return nread;
@@ -95,7 +96,7 @@ DEFUN(__stdio_open, (filename, m, cookieptr),
 {
   error_t error;
   int flags;
-  file_t file;
+  file_t port;
 
   flags = 0;
   if (m.__read)
@@ -109,11 +110,13 @@ DEFUN(__stdio_open, (filename, m, cookieptr),
   if (m.__truncate)
     flags |= O_TRUNC;
   if (m.__exclusive)
-    flags |= OEXCL;
+    flags |= O_EXCL;
 
-  error = __hurd_path_lookup (filename, flags, 0666 & ~_hurd_umask,
-			     (file_t *) cookieptr);
-  return error ? __hurd_fail (error) : 0;
+  port = __path_lookup (filename, flags, 0666 & ~_hurd_umask);
+  if (port == MACH_PORT_NULL)
+    return -1;
+  *cookieptr = (void *) port;
+  return 0;
 }
 
 
@@ -126,7 +129,7 @@ DEFUN(__stdio_errmsg, (msg, len), CONST char *msg AND size_t len)
   size_t wrote;
 
   server = __getdport (2);
-  __io_write (server, buf, n, -1, &wrote);
+  __io_write (server, msg, len, -1, &wrote);
   __mach_port_deallocate (__mach_task_self (), server);
 }
 
