@@ -51,7 +51,7 @@ typedef struct intern_t intern_t;
 static intern_t intern = {NULL, NULL};
 
 static int
-saveit (int instatus, char *inkey, int inkeylen, char *inval, 
+saveit (int instatus, char *inkey, int inkeylen, char *inval,
         int invallen, char *indata)
 {
   intern_t *intern = (intern_t *)indata;
@@ -76,7 +76,7 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
       strncpy (intern->next->val, inval, invallen);
       intern->next->val[invallen] = '\0';
     }
-  
+
   return 0;
 }
 
@@ -86,10 +86,10 @@ internal_nis_setrpcent (intern_t *intern)
   char *domainname;
   struct ypall_callback ypcb;
   enum nss_status status;
-  
+
   if (yp_get_default_domain (&domainname))
     return NSS_STATUS_UNAVAIL;
-  
+
   while (intern->start != NULL)
     {
       if (intern->start->val != NULL)
@@ -134,7 +134,7 @@ internal_nis_endrpcent (intern_t *intern)
       free (intern->next);
     }
   intern->start = NULL;
-  
+
   return NSS_STATUS_SUCCESS;
 }
 
@@ -159,26 +159,26 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
   struct parser_data *pdata = (void *) buffer;
   int parse_res;
   char *p;
-  
+
   if (data->start == NULL)
     internal_nis_setrpcent (data);
-  
+
   /* Get the next entry until we found a correct one. */
   do
     {
       if (data->next == NULL)
         return NSS_STATUS_NOTFOUND;
-      p = strcpy (buffer, data->next->val);
+      p = strncpy (buffer, data->next->val, buflen);
       data->next = data->next->next;
       while (isspace (*p))
         ++p;
-      
+
       parse_res = _nss_files_parse_rpcent (p, rpc, pdata, buflen);
       if (!parse_res && errno == ERANGE)
 	return NSS_STATUS_TRYAGAIN;
     }
   while (!parse_res);
-  
+
   return NSS_STATUS_SUCCESS;
 }
 
