@@ -1,3 +1,8 @@
+2002-06-28  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/dl-machine.h (elf_machine_load_address): Use local
+	labels in assembler instructions.
+
 2002-06-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/Versions: Export libgcc functions for GLIBC_2.0.
