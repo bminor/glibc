@@ -37,7 +37,7 @@ extern __thread int errno attribute_tls_model_ie;
 
 # ifndef __ASSEMBLER__
 extern int *__errno_location (void) __THROW __attribute__ ((__const__))
-#  ifdef RTLD_PRIVATE_ERRNO
+#  if RTLD_PRIVATE_ERRNO
      attribute_hidden
 #  endif
 ;
