@@ -127,7 +127,7 @@ $(objpfx)sysd-dirs: $(+sysdir_pfx)config.make
 	(echo define sysdep-subdirs;					      \
 	 for dir in $(sysdirs); do					      \
 	   if [ -r $(sysdep_dir)/$$dir/Subdirs ]; then			      \
-	     cat $(sysdep_dir)/$$dir/Subdirs;				      \
+	     sed 's/#.*$$//' $(sysdep_dir)/$$dir/Subdirs;		      \
 	   else true;							      \
 	   fi;								      \
 	 done;								      \
