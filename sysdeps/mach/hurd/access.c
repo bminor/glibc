@@ -32,13 +32,12 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   struct hurd_userlink crdir_ulink, cwdir_ulink;
   int flags;
 
+  HURD_CRITICAL_BEGIN;
+
   __mutex_lock (&_hurd_id.lock);
   /* Get _hurd_id up to date.  */
   if (err = _hurd_check_ids ())
-    {
-      __mutex_unlock (&_hurd_id.lock);
-      return __hurd_fail (err);
-    }
+    goto lose;
 
   if (_hurd_id.rid_auth == MACH_PORT_NULL)
     {
@@ -49,8 +48,8 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
       if (_hurd_id.aux.nuids < 1 || _hurd_id.aux.ngids < 1)
 	{
 	  /* We do not have a real UID and GID.  Lose, lose, lose!  */
-	  __mutex_unlock (&_hurd_id.lock);
-	  return __hurd_fail (EGRATUITOUS);
+	  err = EGRATUITOUS;
+	  goto lose;
 	}
 
       /* Create a new auth port using our real UID and GID (the first
@@ -95,7 +94,10 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
     }
 
   /* We are done with _hurd_id.rid_auth now.  */
+ lose:
   __mutex_unlock (&_hurd_id.lock);
+
+  HURD_CRITICAL_END;
 
   if (err)
     return __hurd_fail (err);
@@ -119,8 +121,4 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 
   __mach_port_deallocate (__mach_task_self (), io);
   return 0;
-
- lose:
-  __mutex_unlock (&_hurd_id.lock);
-  return __hurd_fail (err);
 }
