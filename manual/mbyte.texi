@@ -272,10 +272,23 @@ shift state.  In fact, the set of basic sequences might even be
 different depending on the current shift state.  @xref{Shift State}, for
 more information on handling this sort of code.
 
-@strong{Incomplete:}  There should be a statement here about what 
-functions that operate on strings deal with multibyte strings correctly.
-For example, @code{printf} and friends do, but what about multibyte
-strings as file names, etc?
+What happens if you try to pass a string containing multibyte characters
+to a function that doesn't know about them?  Normally, such a function
+treats a string as a sequence of bytes, and interprets certain byte
+values specially; all other byte values are ``ordinary''.  As long as a
+multibyte character doesn't contain any of the special byte values, the
+function should pass it through as if it were several ordinary
+characters.
+
+For example, let's figure out what happens if you use multibyte
+characters in a file name.  The functions such as @code{open} and
+@code{unlink} that operate on file names treat the name as a sequence of
+byte values, with @samp{/} as the only special value.  Any other byte
+values are copied, or compared, in sequence, and all byte values are
+treated alike.  Thus, you may think of the file name as a sequence of
+bytes or as a string containing multibyte characters; the same behavior
+makes sense equally either way, provided no multibyte character contains
+a @samp{/}.
 
 @node Wide Char Intro, Wide String Conversion, Multibyte Char Intro, Extended Characters
 @section Wide Character Introduction
