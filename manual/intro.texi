@@ -109,16 +109,10 @@ by the library implementation, and the GNU extensions don't fit these
 limitations.  @xref{Reserved Names}, for more information about these
 restrictions.
 
-@c !!! but glibc is backward compatible!
-The GNU C library specifically does @emph{not} attempt to provide
-backward compatibility with library facilities from older,
-``traditional'' C dialects.  Likewise, this document does not attempt to
-give you complete details on the differences between ANSI C and older
-dialects, or on how to write your programs in such a way that they
-work portably under multiple C dialects.  However, in many areas where
-ANSI C has diverged significantly from older C dialects, this manual
-includes compatibility notes simply to warn you to beware of potential
-portability problems.
+This manual does not attempt to give you complete details on the
+differences between ANSI C and older dialects.  It gives advice on how
+to write programs to work portably under multiple C dialects, but does
+not aim for completeness.
 
 @node POSIX, Berkeley Unix, ANSI C, Standards and Portability
 @subsection POSIX (The Portable Operating System Interface)
@@ -182,8 +176,8 @@ specifically from the 4.2 BSD and 4.3 BSD Unix systems (also known as
 @dfn{Berkeley Unix}) and from @dfn{SunOS} (a popular 4.2 BSD derivative
 that includes some Unix System V functionality).  
 
-The BSD facilities include symbolic links (@pref{Symbolic Links}), the
-@code{select} function (@pref{Waiting for I/O}), the BSD signal
+The BSD facilities include symbolic links (@pxref{Symbolic Links}), the
+@code{select} function (@pxref{Waiting for I/O}), the BSD signal
 functions (@pxref{BSD Signal Handling}), and sockets (@pxref{Sockets}).
 
 @node SVID,  , Berkeley Unix, Standards and Portability
