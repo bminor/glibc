@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/ioctl.h>
 #include <hurd.h>
+#include <stdarg.h>
+#include <mach/notify.h>
 
 /* Symbol set of ioctl handler lists.  If there are user-registered
    handlers, one of these lists will contain them.  The other lists are
@@ -49,6 +51,8 @@ DEFUN(__ioctl, (fd, request),
   mach_msg_header_t *m = (mach_msg_header_t *) msg;
   mach_msg_type_t *t = (mach_msg_type_t *) &m[1];
   mach_msg_id_t msgid;
+
+  void *arg;
 
   union __ioctl r;
   error_t err;
@@ -91,7 +95,6 @@ DEFUN(__ioctl, (fd, request),
     }
 
   va_list ap;
-  void *arg;
 
   va_start (ap, request);
   arg = va_arg (ap, void *);
@@ -104,7 +107,7 @@ DEFUN(__ioctl, (fd, request),
     const struct ioctl_handler *h;
 
     for (i = 0; i < _hurd_ioctl_handler_lists.n; ++i)
-      for (h = _hurd_ioctl_handler_lists.v[i]; *h; h = h->next)
+      for (h = _hurd_ioctl_handler_lists.v[i]; h != NULL; h = h->next)
 	if (request >= h->first_request && request <= h->last_request)
 	  /* This handler groks REQUEST.  Se lo puntamonos.  */
 	  return (*h->handler) (fd, request, arg);
@@ -116,22 +119,22 @@ DEFUN(__ioctl, (fd, request),
 
   msgid = 100000 + ((r.__s.group << 2) * 1000) + r.__s.command;
 
-  in (r.__s.count0, r.__s.type0);
-  in (r.__s.count1, r.__s.type1);
-  in (r.__s.count2, r.__s.type2);
+  in (r.__t.count0, r.__t.type0);
+  in (r.__t.count1, r.__t.type1);
+  in (r.__t.count2, r.__t.type2);
 
   err = _HURD_DPORT_USE
     (fd,
      ({
-       m->msgh_size = (char *) t - msg;
-       m->msgh_request_port = port;
-       m->msgh_reply_port = __mig_reply_port ();
-       m->msgh_seqno = 0;
-       m->msgh_id = msgid;
-       m->msgh_bits = ?;	/* XXX */
+       m->head.msgh_size = (char *) t - msg;
+       m->head.msgh_request_port = port;
+       m->head.msgh_reply_port = __mig_reply_port ();
+       m->head.msgh_seqno = 0;
+       m->head.msgh_id = msgid;
+       m->head.msgh_bits = ?;	/* XXX */
        _HURD_EINTR_RPC (port, __mach_msg (m, MACH_SEND_MSG|MACH_RCV_MSG,
-					  m->msgh_size, sizeof (msg),
-					  m->msgh_reply_port,
+					  m->head.msgh_size, sizeof (msg),
+					  m->head.msgh_reply_port,
 					  MACH_MSG_TIMEOUT_NONE,
 					  MACH_PORT_NULL));
      }));
@@ -155,11 +158,11 @@ DEFUN(__ioctl, (fd, request),
       m->msgh_size != (char *) t - msg)
     return __hurd_fail (MIG_TYPE_ERROR);
 
-  t = (mach_msg_type_t) &m[1];
+  t = (mach_msg_type_t *) &m[1];
   if (out (1, _IOTS (sizeof (error_t)), &err, NULL) ||
-      out (r.__s.count0, r.__s.type0, arg, &arg) ||
-      out (r.__s.count1, r.__s.type2, arg, &arg) ||
-      out (r.__s.count2, r.__s.type2, arg, &arg))
+      out (r.__t.count0, r.__t.type0, arg, &arg) ||
+      out (r.__t.count1, r.__t.type2, arg, &arg) ||
+      out (r.__t.count2, r.__t.type2, arg, &arg))
     return __hurd_fail (MIG_TYPE_ERROR);
 
   if (err)
