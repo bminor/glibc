@@ -77,7 +77,7 @@ endif
 # This is here so things in sysdep Makefiles can easily depend on foo.h as
 # appropriate and not worry about where foo.h comes from, which may be
 # system dependent and not known by that Makefile.
-vpath %.h $(subst $(empty) ,:,$(strip $(objpfx) \
+vpath %.h $(subst $(empty) ,:,$(strip $(common-objpfx) \
 				      $(addprefix $(sysdep_dir)/,$(sysdirs)) \
 				      $(..)))
 
@@ -168,7 +168,7 @@ endif
 # be suppressed.
 ifdef inhibit-sysdep-asm
 define open-check-inhibit-asm
-case $$sysdir in $(subst $(empty) ,|,$(inhibit-sysdep-asm))) ;; *)
+case $$sysdir in $(subst $(empty) ,|,$(inhibit-sysdep-asm))) : ;; *)
 endef
 close-check-inhibit-asm = ;; esac
 endif
