@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <memcopy.h>
 
 PTR
-DEFUN(memset, (dstpp, c, n), PTR dstpp AND int c AND size_t len)
+DEFUN(memset, (dstpp, c, len), PTR dstpp AND int c AND size_t len)
 {
   long int dstp = (long int) dstpp;
 
