@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -126,15 +126,17 @@ DEFUN(__ioctl, (fd, request),
   err = _HURD_DPORT_USE
     (fd,
      ({
-       m->head.msgh_size = (char *) t - msg;
-       m->head.msgh_request_port = port;
-       m->head.msgh_reply_port = __mig_reply_port ();
-       m->head.msgh_seqno = 0;
-       m->head.msgh_id = msgid;
-       m->head.msgh_bits = ?;	/* XXX */
+       m->msgh_size = (char *) t - msg;
+       m->msgh_request_port = port;
+       m->msgh_reply_port = __mig_reply_port ();
+       m->msgh_seqno = 0;
+       m->msgh_id = msgid;
+#if 0
+       m->msgh_bits = ?;	/* XXX */
+#endif
        _HURD_EINTR_RPC (port, __mach_msg (m, MACH_SEND_MSG|MACH_RCV_MSG,
-					  m->head.msgh_size, sizeof (msg),
-					  m->head.msgh_reply_port,
+					  m->msgh_size, sizeof (msg),
+					  m->msgh_reply_port,
 					  MACH_MSG_TIMEOUT_NONE,
 					  MACH_PORT_NULL));
      }));
