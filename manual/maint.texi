@@ -774,6 +774,9 @@ The @code{ftw} function was contributed by Ian Lance Taylor.
 
 @item
 The code to support SunOS shared libraries was contributed by Tom Quinn.
+
+@item
+The @code{mktime} function was contributed by Noel Cragg.
 @end itemize
 
 @c @bye
