@@ -125,8 +125,8 @@ DEFUN(__getdelim, (lineptr, n, terminator, stream),
 	      i = stream->__get_limit - stream->__bufp;	
 	    }
 
-	  if (i > copy)
-	    i = copy;
+	  if (i > copy - 1)
+	    i = copy - 1;
 
 	  found = (char *) __memccpy ((PTR) p, stream->__bufp, terminator, i);
 	  if (found != NULL)
