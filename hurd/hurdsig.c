@@ -232,6 +232,11 @@ abort_all_rpcs (int signo, void *state)
 }
 
 
+struct hurd_signal_preempt _hurd_signal_preempt[NSIG];
+#ifdef noteven
+struct mutex _hurd_signal_preempt_lock;
+#endif
+
 /* Deliver a signal.
    SS->lock is held on entry and released before return.  */
 void
@@ -241,7 +246,28 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 {
   struct machine_thread_state thread_state;
   enum { stop, ignore, core, term, handle } act;
-  __sighandler_t handler = ss->actions[signo].sa_handler;
+  sighandler_t handler;
+  struct hurd_signal_preempt *pe;
+  sighandler_t (*preempt) (thread_t, int, int) = NULL;
+
+  /* Check for a preempted signal.  */
+  __mutex_lock (&_hurd_signal_preempt_lock);
+  for (pe = _hurd_signal_preempt[signo]; pe != NULL; pe = pe->next)
+    if (sigcode >= pe->first && sigcode <= pe->last)
+      {
+	preempt = pe->handler;
+	break;
+      }
+  __mutex_unlock (&_hurd_signal_preempt_lock);
+
+  handler = SIG_DFL;
+  if (preempt)
+    /* Let the preempting handler examine the thread.
+       If it returns SIG_DFL, we run the normal handler;
+       otherwise we use the handler it returns.  */
+    handler = (*preempt) (thread, signo, sigcode);
+  if (handler != SIG_DFL)
+    handler = ss->actions[signo].sa_handler;
 
   if (handler == SIG_DFL)
     /* Figure out the default action for this signal.  */
