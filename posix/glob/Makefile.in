@@ -24,8 +24,11 @@ VPATH = @srcdir@
 srcdir = @srcdir@
 
 CC = @CC@
-CPPFLAGS = @DEFS@ @CPPFLAGS@
+CPPFLAGS = @CPPFLAGS@
 CFLAGS = @CFLAGS@
+
+# Information determined by configure.
+DEFS = @DEFS@
 
 # How to invoke ar.
 AR = @AR@
@@ -48,7 +51,8 @@ glob.o: $(srcdir)/glob.h $(srcdir)/fnmatch.h glob.c
 fnmatch.o: $(srcdir)/fnmatch.h fnmatch.c
 
 .c.o:
-	$(CC) -I. -I$(srcdir) -c $(CPPFLAGS) $(CFLAGS) $< $(OUTPUT_OPTION)
+	$(CC) -I. -I$(srcdir) -c \
+	      $(DEFS) $(CPPFLAGS) $(CFLAGS) $< $(OUTPUT_OPTION)
 
 .PHONY: clean realclean glob-clean glob-realclean
 clean glob-clean:
