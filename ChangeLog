@@ -1,3 +1,14 @@
+2002-02-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_load_address, RTLD_START):
+	Work around an Alpha gas bug.
+
+2002-02-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* catgets/open_catalog.c (__open_catalog): Fix typo in code which
+	uses read to load the catalog.
+	Patch by Andy Isaacson <adi@unlimitedscale.com> [PR libc/3011].
+
 2002-02-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfscanf.c (_IO_vfwscanf): Always use ungetc, never
