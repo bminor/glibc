@@ -74,7 +74,7 @@ RTLD_START
 #error "sysdeps/MACHINE/dl-machine.h fails to define RTLD_START"
 #endif
 
-ElfW(Addr)
+static ElfW(Addr)
 _dl_start (void *arg)
 {
   struct link_map bootstrap_map;
