@@ -26,6 +26,7 @@ netinet/ip_icmp.h
 netinet/tcp.h
 netinet/udp.h
 netipx/ipx.h
+netrose/rose.h
 nfs/nfs.h
 sys/acct.h
 sys/debugreg.h
