@@ -25,6 +25,16 @@ Cambridge, MA 02139, USA.  */
 #define	_SETJMP_H	1
 #include <features.h>
 
+#ifndef	__NORETURN
+#ifdef	__GNUC__
+/* The `volatile' keyword tells GCC that a function never returns.  */
+#define	__NORETURN	__volatile
+#else	/* Not GCC.  */
+#define	__NORETURN
+#endif	/* GCC.  */
+#endif	/* __NORETURN not defined.  */
+
+
 /* Get the machine-dependent definition of `__jmp_buf'.  */
 #include <jmp_buf.h>
 
@@ -66,15 +76,6 @@ typedef	__jmp_buf jmp_buf;
 
 #endif	/* Favor BSD.  */
 
-
-#ifndef	__NORETURN
-#ifdef	__GNUC__
-/* The `volatile' keyword tells GCC that a function never returns.  */
-#define	__NORETURN	__volatile
-#else	/* Not GCC.  */
-#define	__NORETURN
-#endif	/* GCC.  */
-#endif	/* __NORETURN not defined.  */
 
 /* Jump to the environment saved in ENV, making the
    setjmp call there return VAL, or 1 if VAL is 0.  */
