@@ -406,7 +406,7 @@ __fork (void)
       statecount = MACHINE_THREAD_STATE_COUNT;
       if (err = __thread_get_state (_hurd_msgport_thread,
 				    MACHINE_THREAD_STATE_FLAVOR,
-				    (int *) &state, &statecount))
+				    (natural_t *) &state, &statecount))
 	goto lose;
 #if STACK_GROWTH_UP
       state.SP = __hurd_sigthread_stack_base;
@@ -416,7 +416,7 @@ __fork (void)
       MACHINE_THREAD_STATE_SET_PC (&state,
 				   (unsigned long int) _hurd_msgport_receive);
       if (err = __thread_set_state (sigthread, MACHINE_THREAD_STATE_FLAVOR,
-				    (int *) &state, statecount))
+				    (natural_t *) &state, statecount))
 	goto lose;
       /* We do not thread_resume SIGTHREAD here because the child
 	 fork needs to do more setup before it can take signals.  */
@@ -424,7 +424,7 @@ __fork (void)
       /* Set the child user thread up to return 1 from the setjmp above.  */
       _hurd_longjmp_thread_state (&state, env, 1);
       if (err = __thread_set_state (thread, MACHINE_THREAD_STATE_FLAVOR,
-				    (int *) &state, statecount))
+				    (natural_t *) &state, statecount))
 	goto lose;
 
       /* Get the PID of the child from the proc server.  We must do this
