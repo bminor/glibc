@@ -599,9 +599,13 @@ getspent_next_file (struct spwd *result, ent_t *ent,
             if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
               continue;
             else
-              return status;
+	      {
+		if (status == NSS_STATUS_TRYAGAIN)
+		  fsetpos (ent->stream, &pos);
+		return status;
+	      }
 	}
-
+ 
       /* +:... */
       if (result->sp_namp[0] == '+' && result->sp_namp[1] == '\0')
 	{
