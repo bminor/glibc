@@ -1,9 +1,4 @@
-2004-11-18  Daniel Jacobowitz  <dan@codesourcery.com>
-
-	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h: Update RETINSTR use.
-	* sysdeps/unix/sysv/linux/arm/vfork.S: Likewise.
-
-2004-12-01  Jakub Jelinek  <jakub@redhat.com>
+2004-12-01  Jakub Jelinek  <jakub@redhat.coM.
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_POSIX_CPUTIME,
 	_POSIX_THREAD_CPUTIME): Define to 0.
@@ -18,6 +13,12 @@
 	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Removed.
 	* sysdeps/unix/sysv/linux/ia64/bits/posix_opt.h: Removed.
 	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h: Removed.
+	* tst-clock1.c (do_test): Check for availability of CPU clock.
+
+2004-11-18  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h: Update RETINSTR use.
+	* sysdeps/unix/sysv/linux/arm/vfork.S: Likewise.
 
 2004-12-02  Roland McGrath  <roland@redhat.com>
 
