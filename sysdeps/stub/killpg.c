@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
    If PGRP is zero, send SIG to all processes in
    the current process's process group.  */
 int
-DEFUN(killpg, (pgrp, sig), int pgrp AND int sig)
+DEFUN(killpg, (pgrp, sig), pid_t pgrp AND int sig)
 {
   errno = ENOSYS;
   return -1;
