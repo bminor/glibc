@@ -45,7 +45,7 @@ routines :=								      \
 	getopt getopt1
 routines	:= $(sort $(foreach f,$(routines),$f $(f:__%=%)))
 aux		:= init-posix environ
-tests		:= tstgetopt
+tests		:= tstgetopt testfnm
 others		:= getconf
 install-lib	:= libposix.a
 gpl2lgpl := getopt.c getopt1.c getopt.h	# Frob these guys' copying notices.
