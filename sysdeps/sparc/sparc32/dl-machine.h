@@ -274,6 +274,10 @@ elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
      if we execute it and hw does not support it. */
   __asm ("" : "=r" (hwcap) : "0" (hwcap));
   do_flush = (!hwcap || (*hwcap & HWCAP_SPARC_FLUSH));
+#else
+  /* Unfortunately, this is necessary, so that we can ensure
+     ld.so will not execute corrupt PLT entry instructions. */
+  const int do_flush = 1;
 #endif
 
   /* For thread safety, write the instructions from the bottom and
@@ -282,16 +286,12 @@ elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
      But we also can't tell if we _can_ use flush, so don't. */
 
   reloc_addr[2] = OPCODE_JMP_G1 | (value & 0x3ff);
-#ifndef RTLD_BOOTSTRAP
   if (do_flush)
     __asm __volatile ("flush %0+8" : : "r"(reloc_addr));
-#endif
 
   reloc_addr[1] = OPCODE_SETHI_G1 | (value >> 10);
-#ifndef RTLD_BOOTSTRAP
   if (do_flush)
     __asm __volatile ("flush %0+4" : : "r"(reloc_addr));
-#endif
 }
 
 #ifdef RESOLVE
