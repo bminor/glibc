@@ -95,6 +95,9 @@ DEFUN(__getdelim, (lineptr, n, terminator, stream),
     }
   else
     {
+      /* Leave space for the terminating null.  */
+      --copy;
+
       if (!stream->__seen || stream->__buffer == NULL || stream->__pushed_back)
 	{
 	  /* Do one with getc to allocate a buffer.  */
@@ -125,8 +128,8 @@ DEFUN(__getdelim, (lineptr, n, terminator, stream),
 	      i = stream->__get_limit - stream->__bufp;	
 	    }
 
-	  if (i > copy - 1)
-	    i = copy - 1;
+	  if (i > copy)
+	    i = copy;
 
 	  found = (char *) __memccpy ((PTR) p, stream->__bufp, terminator, i);
 	  if (found != NULL)
@@ -151,6 +154,8 @@ DEFUN(__getdelim, (lineptr, n, terminator, stream),
 	      *n = size;
 	      p = line + len;
 	      copy = size - len;
+	      /* Leave space for the terminating null.  */
+	      --copy;
 	    }
 	}
     }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -24,26 +24,25 @@ extern int sys_nerr;
 extern char *sys_errlist[];
 
 int
-main()
+main ()
 {
   register int i;
 
-  puts("#include \"ansidecl.h\"\n#include <stddef.h>\n");
+  puts ("#include \"ansidecl.h\"\n#include <stddef.h>\n");
+  puts ("\n/* This is a list of all known `errno' codes.  */\n");
 
-  puts("\n/* This is a list of all known `errno' codes.  */");
+  puts ("#ifndef HAVE_GNU_LD");
+  puts ("#define _sys_nerr\tsys_nerr");
+  puts ("#define _sys_errlist\tsys_errlist");
+  puts ("#endif");
 
-#ifdef HAVE_GNU_LD
-  printf("\nCONST int _sys_nerr = %d;\n\n", sys_nerr);
-  puts("CONST char *CONST _sys_errlist[] =\n  {");
-#else
-  printf("\nCONST int sys_nerr = %d;\n\n", sys_nerr);
-  puts("CONST char *CONST sys_errlist[] =\n  {");
-#endif
+  printf ("\nCONST int _sys_nerr = %d;\n\n", sys_nerr);
+  puts ("CONST char *CONST _sys_errlist[] =\n  {");
 
   for (i = 0; i < sys_nerr; ++i)
-    printf("    \"%s\",\n", sys_errlist[i]);
+    printf ("    \"%s\",\n", sys_errlist[i]);
 
-  puts("    NULL\n  };");
+  puts ("    NULL\n  };");
 
-  exit(0);
+  exit (0);
 }
