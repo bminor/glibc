@@ -1970,6 +1970,7 @@ reading arbitrary values under the control of a @dfn{format string} or
 * Table of Input Conversions::  Summary of input conversions and what they do.
 * Numeric Input Conversions::   Details of conversions for reading numbers.
 * String Input Conversions::    Details of conversions for reading strings.
+* Dynamic String Input::	String conversions that @code{malloc} the buffer.
 * Other Input Conversions::     Details of miscellaneous other conversions.
 * Formatted Input Functions::   Descriptions of the actual functions.
 * Variable Arguments Input::    @code{vscanf} and friends.
@@ -2008,9 +2009,9 @@ number of values that were assigned, so you can use this to determine if
 a matching error happened before all the expected values were read.
 @cindex matching failure, in @code{scanf}
 
-The @code{scanf} function is typically used to do things like reading
-in the contents of tables.  For example, here is a function that uses
-@code{scanf} to initialize an array of @code{double}s:
+The @code{scanf} function is typically used for things like reading in
+the contents of tables.  For example, here is a function that uses
+@code{scanf} to initialize an array of @code{double}:
 
 @example
 void
@@ -2019,7 +2020,7 @@ readarray (double *array, int n)
   int i;
   for (i=0; i<n; i++)
     if (scanf (" %lf", &(array[i])) != 1)
-      input_failure ();
+      invalid_input_error ();
 @}
 @end example
 
@@ -2038,8 +2039,8 @@ Manual}.
 @subsection Input Conversion Syntax
 
 A @code{scanf} template string is a string that contains ordinary
-multibyte characters and conversion specifications introduced by a
-@samp{%} character.
+multibyte characters interspersed with conversion specifications that
+start with @samp{%}.
 
 Any whitespace character (as defined by the @code{isspace} function;
 @pxref{Classification of Characters}) in the template causes any number
@@ -2060,17 +2061,23 @@ have the general form:
 % @var{flags} @var{width} @var{type} @var{conversion}
 @end example
 
-More specifically, input conversion specifications consist of an initial
+In more detail, an input conversion specification consists of an initial
 @samp{%} character followed in sequence by:
 
 @itemize @bullet
 @item
-An optional @dfn{flag character} @samp{*}, which causes assignment to be
-suppressed.  If this flag appears, input is read from the stream and
-matched against the conversion specification in the usual way, but no
-optional pointer argument is used, no assignment takes place, and the
-count of successful assignments is not incremented.
+An optional @dfn{flag character} @samp{*}, which says to ignore the text
+read for this specification.  When @code{scanf} finds a conversion
+specification that uses this flag, it reads input as directed by the
+rest of the conversion specification, but it discards this input, does
+not use a pointer argument, and does not increment the count of
+successful assignments.
 @cindex flag character (@code{scanf})
+
+@item
+An optional flag character @samp{a} (valid with string conversions only)
+which requests allocation of a buffer long enough to store the string in.
+@xref{Dynamic String Input}.
 
 @item
 An optional decimal integer that specifies the @dfn{maximum field
@@ -2097,7 +2104,7 @@ A character that specifies the conversion to be applied.
 The exact options that are permitted and how they are interpreted vary 
 between the different conversion specifiers.  See the descriptions of the
 individual conversions for information about the particular options that
-they use.
+they allow.
 
 @node Table of Input Conversions
 @subsection Table of Input Conversions
@@ -2162,8 +2169,8 @@ If the syntax of a conversion specification is invalid, the behavior is
 undefined.  If there aren't enough function arguments provided to supply
 addresses for all the conversion specifications in the template strings
 that perform assignments, or if the arguments are not of the correct
-types, the behavior is also undefined.  On the other hand, if there are
-extra arguments, their values are simply ignored.
+types, the behavior is also undefined.  On the other hand, extra
+arguments are simply ignored.
 
 @node Numeric Input Conversions
 @subsection Numeric Input Conversions
@@ -2242,32 +2249,43 @@ Specifies that the argument is of type @code{long double *}.
 
 This section describes the @code{scanf} input conversions for reading
 string and character values: @samp{%s}, @samp{%[}, and @samp{%c}.  
-The corresponding argument for all of these conversions should be of
-type @code{char *}.
 
-@strong{Warning:} The argument points to an array of characters where
-the input is stored.  To make a robust program, you must make sure that
-the input (including terminating null) cannot possibly exceed the size
-of this array.  In general, the only way to do this is to specify a
-maximum field width equal to the size you have allocated (minus one, to
-leave room for the terminating null).  @strong{Always specify a field
-width to limit the number of characters read.}
+You have two options for how to receive the input from these
+conversions:
 
-The @samp{%c} conversion is the simplest.  It matches a fixed-sized
-string of characters.  The number of characters read is controlled by
-the maximum field width.  If you don't supply a field width, then only
-one character is read.  Note that this conversion doesn't append a null
-character to the end of the string it reads.  It also does not skip over
-initial whitespace characters.
+@itemize @bullet
+@item
+Provide a buffer to store it in.  This is the default.  You
+should provide an argument of type @code{char *}.
+
+@strong{Warning:} To make a robust program, you must make sure that the
+input (plus its terminating null) cannot possibly exceed the size of the
+buffer you provide.  In general, the only way to do this is to specify a
+maximum field width one less than the buffer size.  @strong{If you
+provide the buffer, always specify a maximum field width to prevent
+overflow.}
+
+@item
+Ask @code{scanf} to allocate a big enough buffer, by specifying the
+@samp{a} flag character.  This is a GNU extension.  You should provide
+an argument of type @code{char **} for the buffer address to be stored
+in.  @xref{Dynamic String Input}.
+@end itemize
+
+The @samp{%c} conversion is the simplest: it matches a fixed number of
+characters, always.  The maximum field with says how many characters to
+read; if you don't specify the maximum, the default is 1.  This
+conversion doesn't append a null character to the end of the text it
+reads.  It also does not skip over initial whitespace characters.  It
+reads precisely the next @var{n} characters, and fails if it cannot get
+that many.  Since there is always a maximum field width with @samp{%c}
+(whether specified, or 1 by default), you can always prevent overflow by
+making the buffer long enough.
 
 The @samp{%s} conversion matches a string of non-whitespace characters.
-Unlike @samp{%c}, this conversion does skip over initial whitespace and
-does mark the end of the string with a null character.
-
-@strong{Warning:} If you do not specify a field width for @samp{%s},
-then the number of characters read is limited only by where the next
-whitespace character appears.  This almost certainly means your program
-will crash if given invalid input.
+It skips and discards initial whitespace, but stops when it encounters
+more whitespace after having read something.  It stores a null character
+at the end of the text that it reads.
 
 For example, reading the input:
 
@@ -2280,19 +2298,17 @@ with the conversion @samp{%10c} produces @code{" hello, wo"}, but
 reading the same input with the conversion @samp{%10s} produces
 @code{"hello,"}.
 
-The @samp{%s} conversion effectively reads in characters that belong to
-the set of non-whitespace characters.  To read in characters that belong
-to an arbitrary set, you can use the @samp{%[} conversion.  The
-characters which make up the set are specified immediately following the
-@samp{[} character, up to a matching @samp{]} character.  As special
-cases:
+@strong{Warning:} If you do not specify a field width for @samp{%s},
+then the number of characters read is limited only by where the next
+whitespace character appears.  This almost certainly means that invalid
+input can make your program crash---which is a bug.
+
+To read in characters that belong to an arbitrary set of your choice,
+use the @samp{%[} conversion.  You specify the set between the @samp{[}
+character and a following @samp{]} character, using the same syntax used
+in regular expressions.  As special cases:
 
 @itemize @bullet
-@item 
-If a caret character @samp{^} immediately follows the
-initial @samp{[}, then the set that is used for matching is the
-@emph{complement} of the set of characters that are explicitly listed.
-
 @item 
 A literal @samp{]} character can be specified as the first character
 of the set.
@@ -2300,12 +2316,17 @@ of the set.
 @item 
 An embedded @samp{-} character (that is, one that is not the first or
 last character of the set) is used to specify a range of characters.
+
+@item 
+If a caret character @samp{^} immediately follows the initial @samp{[},
+then the set of allowed input characters is the everything @emph{except}
+the characters listed.
 @end itemize
 
 The @samp{%[} conversion does not skip over initial whitespace
 characters.
 
-Here are some examples of @samp{%[} conversions and what they mean.
+Here are some examples of @samp{%[} conversions and what they mean:
 
 @table @samp
 @item %25[1234567890]
@@ -2321,23 +2342,49 @@ the standard whitespace characters.  This is slightly different from
 @samp{%[} reports a matching failure while @samp{%s} simply discards the
 initial whitespace.
 
-@item %[a-z] 
-Matches a string of lowercase characters.
+@item %25[a-z] 
+Matches up to 25 lowercase characters.
 @end table
 
 One more reminder: the @samp{%s} and @samp{%[} conversions are
-potentially @strong{dangerous} if you don't specify a maximum width,
-because input too long would overflow whatever buffer you have provided
-for it.  No matter how long your buffer is, a user could supply input
-that is longer.  Don't assume that the input will be short enough to
-fit; a well-written program reports invalid input with a comprehensible
-error message, not with a crash.
+@strong{dangerous} if you don't specify a maximum width or use the
+@samp{a} flag, because input too long would overflow whatever buffer you
+have provided for it.  No matter how long your buffer is, a user could
+supply input that is longer.  A well-written program reports invalid
+input with a comprehensible error message, not with a crash.
 
-So make your programs clean---@strong{always} specify a maximum field
-width with the @samp{%s} and @samp{%[} conversions.  Then you will
-probably get a matching error instead if the input string is too long,
-and you can detect this and report it properly.
+@node Dynamic String Input
+@subsection Dynamically Allocating String Conversions
 
+A GNU extension to formatted input lets you safely read a string with no
+maximum size.  Using this feature, you don't supply a buffer; instead,
+@code{scanf} allocates a buffer big enough to hold the data and gives
+you its address.  To use this feature, write @samp{a} as a flag
+character, as in @samp{%as} or @samp{%a[0-9a-z]}.
+
+The pointer argument you supply for where to store the input should have
+type @code{char **}.  The @code{scanf} function allocates a buffer and
+stores its address in the word that the argument points to.  You should
+free the buffer with @code{free} when you no longer need it.
+
+Here is an example of using the @samp{a} flag with the @samp{%[@dots{}]}
+conversion specification to read a ``variable assignment'' of the form
+@samp{@var{variable} = @var{value}}.
+
+@example
+@{
+  char *variable, *value;
+
+  if (2 > scanf ("%a[a-zA-Z0-9] = %a[^\n]\n",
+                 &variable, &value))
+    @{
+      invalid_input_error ();
+      return 0;
+    @}
+
+  @dots{}
+@}
+@end example
 
 @node Other Input Conversions
 @subsection Other Input Conversions
@@ -2363,7 +2410,7 @@ If the @samp{%n} follows the locus of a matching failure, then no value
 is stored for it since @code{scanf} returns before processing the
 @samp{%n}.  If you store @code{-1} in that argument slot before calling
 @code{scanf}, the presence of @code{-1} after @code{scanf} indicates an
-error before the @samp{%n} was reached.
+error occurred before the @samp{%n} was reached.
 
 Finally, the @samp{%%} conversion matches a literal @samp{%} character
 in the input stream, without using an argument.  This conversion does
@@ -2713,6 +2760,30 @@ begining of the file.  It is equivalent to calling @code{fseek} on the
 @var{whence} argument of @code{SEEK_SET}, except that the return
 value is discarded and the error indicator for the stream is reset.
 @end deftypefun
+
+These three aliases for the @samp{SEEK_@dots{}} constants exist for the
+sake of compatibility with older BSD systems.  They are defined in two
+different header files: @file{fcntl.h} and @file{sys/file.h}.
+
+@table @code
+@comment sys/file.h
+@comment BSD
+@item L_SET
+@vindex L_SET
+An alias for @code{SEEK_SET}.
+
+@comment sys/file.h
+@comment BSD
+@item L_INCR
+@vindex L_INCR
+An alias for @code{SEEK_CUR}.
+
+@comment sys/file.h
+@comment BSD
+@item L_XTND
+@vindex L_XTND
+An alias for @code{SEEK_END}.
+@end table
 
 @node Portable Positioning
 @section Portable File-Position Functions
