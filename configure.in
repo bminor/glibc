@@ -85,8 +85,9 @@ fi
 
 dnl Generic infrastructure for drop-in additions to libc.
 AC_ARG_ENABLE(add-ons, dnl
-[  --enable-add-ons[=DIR1,DIR2]... configure and build add-ons in DIR1,DIR2,...
-                                  search for add-ons if no parameter given],
+[  --enable-add-ons[=DIR1,DIR2]...
+			  configure and build add-ons in DIR1,DIR2,...;
+                          search for add-ons if no parameter given],
  [case "$enableval" in
     yes) if test "$srcdir" = "."; then
 	   add_ons=`echo */configure | sed -e 's!/configure!!g'`
@@ -109,6 +110,12 @@ if test x"$add_ons" != x; then
     fi
   done
 fi
+
+AC_ARG_ENABLE(force-install,
+[  --disable-force-install  don't force installation of files from this package,
+			  so that newer installed files are preserved],
+	      force_install=$enableval, force_install=yes)
+AC_SUBST(force_install)
 
 AC_CANONICAL_HOST
 
