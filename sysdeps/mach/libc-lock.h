@@ -84,7 +84,7 @@ struct __libc_once
   };
 
 #define __libc_once_define(CLASS,NAME) \
-  CLASS struct __libc_once NAME = { MUTEX_INITIALZER, 0 }
+  CLASS struct __libc_once NAME = { MUTEX_INITIALIZER, 0 }
 
 
 /* Call handler iff the first call.  */
