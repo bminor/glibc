@@ -151,13 +151,13 @@ I am ready for my first lesson today.";
   printf("decimal negative:\t\"%d\"\n", -2345);
   printf("octal negative:\t\"%o\"\n", -2345);
   printf("hex negative:\t\"%x\"\n", -2345);
-  printf("long decimal number:\t\"%ld\"\n", -123456);
+  printf("long decimal number:\t\"%ld\"\n", -123456L);
   printf("long octal negative:\t\"%lo\"\n", -2345L);
-  printf("long unsigned decimal number:\t\"%lu\"\n", -123456);
-  printf("zero-padded LDN:\t\"%010ld\"\n", -123456);
+  printf("long unsigned decimal number:\t\"%lu\"\n", -123456L);
+  printf("zero-padded LDN:\t\"%010ld\"\n", -123456L);
   printf("left-adjusted ZLDN:\t\"%-010ld\"\n", -123456);
-  printf("space-padded LDN:\t\"%10ld\"\n", -123456);
-  printf("left-adjusted SLDN:\t\"%-10ld\"\n", -123456);
+  printf("space-padded LDN:\t\"%10ld\"\n", -123456L);
+  printf("left-adjusted SLDN:\t\"%-10ld\"\n", -123456L);
 
   printf("zero-padded string:\t\"%010s\"\n", shortstr);
   printf("left-adjusted Z string:\t\"%-010s\"\n", shortstr);
@@ -179,13 +179,13 @@ I am ready for my first lesson today.";
   printf("g-style < .1:\t\"%g\"\n", 0.001234);
   printf("g-style big:\t\"%.60g\"\n", 1e20);
 
-  printf (" %6.5lf\n", .099999999860301614);
-  printf (" %6.5lf\n", .1);
-  printf ("x%5.4lfx\n", .5);
+  printf (" %6.5f\n", .099999999860301614);
+  printf (" %6.5f\n", .1);
+  printf ("x%5.4fx\n", .5);
 
   printf ("%#03x\n", 1);
 
-#if 0				/* XXX printf_fp still broken */
+
   {
     double d = FLT_MIN;
     int niter = 17;
@@ -196,7 +196,6 @@ I am ready for my first lesson today.";
   }
 
   printf ("%15.5e\n", 4.9406564584124654e-324);
-#endif
 
 #define FORMAT "|%12.4f|%12.4e|%12.4g|\n"
   printf (FORMAT, 0.0, 0.0, 0.0);
