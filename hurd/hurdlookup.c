@@ -38,7 +38,7 @@ __hurd_path_lookup (const char *path, int flags, mode_t mode)
   err = __dir_lookup (startdir, path, flags, mode, &result);
   if (err)
     {
-      errno = __hurd_errno (err);
+      errno = err;
       return MACH_PORT_NULL;
     }
   return result;
@@ -50,20 +50,17 @@ __dir_lookup (file_t startdir, const char *path, int flags, mode_t mode,
 {
   enum retry_type doretry;
   char retryname[PATH_MAX];
-  size_t retrynamelen;
   file_t newpt;
-  size_t pathlen;
   int dealloc_dir;
   int nloops;
 
   dealloc_dir = 0;
   nloops = 0;
-  pathlen = strlen (path) + 1;
   
   for (;;)
     {
-      err = __dir_pathtrans (startdir, path, pathlen, flags, mode,
-			     &doretry, retryname, &retrynamelen, &result);
+      err = __dir_pathtrans (startdir, path, flags, mode,
+			     &doretry, retryname, &result);
 
       if (dealloc_dir)
 	__mach_port_deallocate (__mach_task_self (), startdir);
@@ -84,26 +81,21 @@ __dir_lookup (file_t startdir, const char *path, int flags, mode_t mode,
 
 	case FS_RETRY_NORMAL:
 	  if (nloops++ >= MAXSYMLINKS)
-	    return POSIX_ELOOP;
+	    return ELOOP;
 
-	  if (*retryname == '/')
+	  if (retryname[0] == '/')
 	    {
-	      startdir = _hurd_crdir;
+	      startdir = _hurd_crdir; /* XXX not modular--pass crdir arg? */
 	      dealloc_dir = 0;
 	      path = retryname;
-	      pathlen = retrynamelen;
 	      while (*path == '/')
-		{
-		  ++path;
-		  --pathlen;
-		}
+		++path;
 	    }
 	  else
 	    {
 	      startdir = *result;
 	      dealloc_dir = 1;
 	      path = retryname;
-	      pathlen = retrynamelen;
 	    }
 	}
     }
@@ -128,13 +120,13 @@ __hurd_path_split (const char *path, const char **name)
     {
       if (lastslash == path)
 	{
+	  /* "/foobar" => crdir + "foobar".  */
 	  *name = path;
-	  __mach_port_mod_refs (__mach_task_self (), _hurd_crdir,
-				MACH_PORT_RIGHT_SEND, 1);
-	  return _hurd_crdir;
+	  return _hurd_getport (&_hurd_crdir, &_hurd_lock);
 	}
       else
 	{
+	  /* "/dir1/dir2/.../file".  */
 	  char dirname[lastslash - path + 1];
 	  memcpy (dirname, path, lastslash - path);
 	  dirname[lastslath - path] = '\0';
@@ -144,9 +136,8 @@ __hurd_path_split (const char *path, const char **name)
     }
   else
     {
+      /* "foobar" => cwdir + "foobar".  */
       *name = path;
-      __mach_port_mod_refs (__mach_task_self (), _hurd_cwdir,
-			    MACH_PORT_RIGHT_SEND, 1);
-      return _hurd_cwdir;
+      return _hurd_getport (&_hurd_cwdir, &_hurd_lock);
     }
 }
