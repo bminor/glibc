@@ -1,4 +1,4 @@
-@node Process Startup, Child Processes, Signal Handling, Top
+@node Process Startup
 @chapter Process Startup and Termination
 
 @cindex process
