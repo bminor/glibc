@@ -66,6 +66,7 @@ DEFUN(__vfscanf, (s, format, arg),
 #else
 #define	is_longlong	0
 #endif
+  int malloc_string;		/* Args are char ** to be filled in.  */
   /* Status for reading F-P nums.  */
   char got_dot, got_e;
   /* If a [...] is a [^...].  */
@@ -78,11 +79,12 @@ DEFUN(__vfscanf, (s, format, arg),
   /* Floating-point holding variable.  */
   LONG_DOUBLE fp_num;
   /* Character-buffer pointer.  */
-  register char *str;
+  register char *str, **strptr;
+  size_t strsize;
   /* Workspace.  */
   char work[200];
-  char *w;		/* Pointer into WORK.  */
-  wchar_t decimal;	/* Decimal point character.  */
+  char *w;			/* Pointer into WORK.  */
+  wchar_t decimal;		/* Decimal point character.  */
 
   if (!__validfp(s) || !s->__mode.__read || format == NULL)
     {
@@ -177,6 +179,11 @@ DEFUN(__vfscanf, (s, format, arg),
 	    /* double's are long double's, and int's are long long int's.  */
 	    is_long_double = 1;
 	    break;
+	  case 'a':
+	    /* String conversions (%s, %[) take a `char **'
+	       arg and fill it in with a malloc'd pointer.  */
+	    malloc_string = 1;
+	    break;
 	  }
 
       /* End of the format string?  */
@@ -205,9 +212,9 @@ DEFUN(__vfscanf, (s, format, arg),
 	case 'c':	/* Match characters.  */
 	  if (do_assign)
 	    {
-	      str = va_arg(arg, char *);
+	      str = va_arg (arg, char *);
 	      if (str == NULL)
-		conv_error();
+		conv_error ();
 	    }
 
 	  if (c == EOF)
@@ -233,24 +240,72 @@ DEFUN(__vfscanf, (s, format, arg),
 	    input_error();
 	  break;
 
-	case 's':	/* Read a string.  */
-	  if (do_assign)
-	    {
-	      str = va_arg(arg, char *);
-	      if (str == NULL)
-		conv_error();
+	case 's':		/* Read a string.  */
+#define STRING_ARG							      \
+	  if (do_assign)						      \
+	    {								      \
+	      if (malloc_string)					      \
+		{							      \
+		  /* The string is to be stored in a malloc'd buffer.  */     \
+		  strptr = va_arg (arg, char *);			      \
+		  if (strptr == NULL)					      \
+		    conv_error ();					      \
+		  /* Allocate an initial buffer.  */			      \
+		  strsize = 100;					      \
+		  *strptr = str = malloc (strsize);			      \
+		}							      \
+	      else							      \
+		str = va_arg (arg, char *);				      \
+	      if (str == NULL)						      \
+		conv_error ();						      \
 	    }
+	  STRING_ARG;
 
 	  if (c == EOF)
-	    input_error();
+	    input_error ();
 
 	  do
 	    {
-	      if (isspace(c))
+	      if (isspace (c))
 		break;
-	      if (do_assign)
-		*str++ = c;
-	    } while (inchar() != EOF && (width <= 0 || --width > 0));
+#define	STRING_ADD_CHAR(c)						      \
+	      if (do_assign)						      \
+		{							      \
+		  *str++ = c;						      \
+		  if (malloc_string && str == *strptr + strsize)	      \
+		    {							      \
+		      /* Enlarge the buffer.  */			      \
+		      str = realloc (*strptr, strsize * 2);		      \
+		      if (str == NULL)					      \
+			{						      \
+			  /* Can't allocate that much.  Last-ditch effort.  */\
+			  str = realloc (*strptr, strsize + 1);		      \
+			  if (str == NULL)				      \
+			    {						      \
+			      /* We lose.  Oh well.			      \
+				 Terminate the string and stop converting,    \
+				 so at least we don't swallow any input.  */  \
+			      (*strptr)[strsize] = '\0';		      \
+			      ++done;					      \
+			      conv_error ();				      \
+			    }						      \
+			  else						      \
+			    {						      \
+			      *strptr = str;				      \
+			      str += strsize;				      \
+			      ++strsize;				      \
+			    }						      \
+			}						      \
+		      else						      \
+			{						      \
+			  *strptr = str;				      \
+			  str += strsize;				      \
+			  strsize *= 2;					      \
+			}						      \
+		    }							      \
+		}
+	      STRING_ADD_CHAR (c);
+	    } while (inchar () != EOF && (width <= 0 || --width > 0));
 
 	  if (do_assign)
 	    {
@@ -417,12 +472,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	  break;
 
 	case '[':	/* Character class.  */
-	  if (do_assign)
-	    {
-	      str = va_arg(arg, char *);
-	      if (str == NULL)
-		conv_error();
-	    }
+	  STRING_ARG;
 
 	  if (c == EOF)
 	    input_error();
@@ -454,15 +504,14 @@ DEFUN(__vfscanf, (s, format, arg),
 	  unum = read_in;
 	  do
 	    {
-	      if ((strchr(work, c) == NULL) != not_in)
+	      if ((strchr (work, c) == NULL) != not_in)
 		break;
-	      if (do_assign)
-		*str++ = c;
+	      STRING_ADD_CHAR (c);
 	      if (width > 0)
 		--width;
-	    } while (inchar() != EOF && width != 0);
+	    } while (inchar () != EOF && width != 0);
 	  if (read_in == unum)
-	    conv_error();
+	    conv_error ();
 
 	  if (do_assign)
 	    {
