@@ -40,4 +40,5 @@ $(objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
 
 ifeq ($(subdir),posix)
 generated := $(generated) stdio_lim.h
+before-compile := $(before-compile) stdio_lim.h
 endif
