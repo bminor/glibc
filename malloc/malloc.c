@@ -4233,7 +4233,7 @@ _int_free(mstate av, Void_t* mem)
 #endif
       ) {
 
-    if (__builtin_expect (chunksize (chunk_at_offset (p, size)) <= 2 * SIZE_SZ,
+    if (__builtin_expect (chunk_at_offset (p, size)->size <= 2 * SIZE_SZ,
 			  0)
 	|| __builtin_expect (chunksize (chunk_at_offset (p, size))
 			     >= av->system_mem, 0))
@@ -4285,7 +4285,7 @@ _int_free(mstate av, Void_t* mem)
       }
 
     nextsize = chunksize(nextchunk);
-    if (__builtin_expect (nextsize <= 2 * SIZE_SZ, 0)
+    if (__builtin_expect (nextchunk->size <= 2 * SIZE_SZ, 0)
 	|| __builtin_expect (nextsize >= av->system_mem, 0))
       {
 	errstr = "invalid next size (normal)";
