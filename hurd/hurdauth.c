@@ -30,7 +30,7 @@ _hurd_refport_secure_p (mach_port_t ref)
   return 0;
 }
 
-error_t
+kern_return_t
 _S_add_auth (mach_port_t me,
 	     auth_t addauth)
 {
@@ -56,7 +56,7 @@ _S_add_auth (mach_port_t me,
   return 0;
 }
 
-error_t
+kern_return_t
 _S_del_auth (mach_port_t me,
 	     task_t task,
 	     intarray_t uids, mach_msg_type_number_t nuids,
