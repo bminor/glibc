@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <unistd.h>
 
 
@@ -29,7 +30,11 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
 {
   int save;
 
-  if (fd2 < 0)
+  if (fd2 < 0
+#ifdef OPEN_MAX
+      || fd2 >= OPEN_MAX
+#endif
+)
     {
       errno = EBADF;
       return -1;
