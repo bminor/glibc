@@ -32,6 +32,10 @@ _S_catch_exception_raise (mach_port_t port,
   int signo, sigcode, error;
   struct hurd_sigstate *ss;
 
+  if (task != __mach_task_self ())
+    /* The sender wasn't the kernel.  */
+    return EPERM;
+
   /* Call the machine-dependent function to translate the Mach exception
      codes into a signal number and subcode.  */
   _hurd_exception2signal (exception, code, subcode,
