@@ -330,6 +330,9 @@ while [ $# -gt 0 ]; do
   if [ -f $sysdep_dir/$name/Implies ]; then
     # Collect more names from the `Implies' file (removing comments).
     implied="`sed 's/#.*$//' < $sysdep_dir/$name/Implies`"
+    for x in $implied; do
+      test -d $sysdep_dir/$x || echo "Warning: $name implies nonexistent $x">&2
+    done
   else
     implied=
   fi
