@@ -21,6 +21,10 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <stdlib.h>
+#include <string.h>
 
 /* Replace the current process, executing PATH with arguments ARGV and
    environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
@@ -45,7 +49,7 @@ DEFUN(__execve, (path, argv, envp),
   struct _hurd_sigstate *ss;
 
   /* Get a port to the file we want to execute.  */
-  file = __path_lookup (path, FS_LOOKUP_EXECUTE, 0);
+  file = __path_lookup (path, FS_LOOKUP_EXEC, 0);
   if (file == MACH_PORT_NULL)
     return -1;
 
@@ -113,7 +117,7 @@ DEFUN(__execve, (path, argv, envp),
       dtable_cells = __alloca (dtablesize * sizeof (dealloc_cells[0]));
       for (i = 0; i < dtablesize; ++i)
 	{
-	  struct _hurd_fd *const = &_hurd_dtable.d[i];
+	  struct _hurd_fd *const d = &_hurd_dtable.d[i];
 	  __spin_lock (&d->port.lock);
 	  if (d->flags & FD_CLOEXEC)
 	    {
@@ -168,9 +172,10 @@ DEFUN(__execve, (path, argv, envp),
 		       0,
 		       args, argslen, env, envlen,
 		       dtable, dtablesize,
-		       ints, INIT_INT_MAX,
 		       ports, _hurd_nports,
-		       please_dealloc, _hurd_nports + dtablesize);
+		       ints, INIT_INT_MAX,
+		       please_dealloc, _hurd_nports + dtablesize,
+		       NULL, 0);
   }
 
   /* Safe to let signals happen now.  */
