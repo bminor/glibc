@@ -1,3 +1,8 @@
+1999-09-20  Jean-Louis Martineau  <martinea@IRO.UMontreal.CA>
+
+	* nis/nss_compat/compat-pwd.c (getpwuid_plusgroup): Correct
+	returned errno value in some cases.
+
 1999-09-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/isomac.c: Add va_copy to allowed macros.
