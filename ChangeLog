@@ -1,3 +1,8 @@
+2001-12-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (clone): Subtract
+	stack bias from child stack pointer before passing it to clone syscall.
+
 2001-12-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* crypt/md5.h: Define md5_uintptr.
