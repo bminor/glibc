@@ -155,8 +155,8 @@ mach_msg_timeout_t _hurd_interrupt_timeout = 1000; /* One second.  */
 
    Abort any interruptible RPC operation the thread is doing.
 
-   This uses only the constant member SS->thread and the unlocked,
-   atomically set member SS->intr_port, so no locking is needed.  */
+   This uses only the constant member SS->thread and the unlocked, atomically
+   set member SS->intr_port, so no locking is needed.  */
 static void
 abort_rpcs (struct hurd_sigstate *ss, int signo, void *state)
 {
@@ -171,6 +171,7 @@ abort_rpcs (struct hurd_sigstate *ss, int signo, void *state)
     return;			/* XXX */
 
   if (ss->intr_port == MACH_PORT_NULL)
+    /* No interruption needs done.  */
     return;
 
   /* Tell the server to abort whatever the thread is doing.
@@ -209,7 +210,8 @@ abort_rpcs (struct hurd_sigstate *ss, int signo, void *state)
 
       /* Tell the thread whether it should restart the
 	 operation or return EINTR when it wakes up.  */
-      ss->intr_restart = ss->actions[signo].sa_flags & SA_RESTART;
+      if (ss->actions[signo].sa_flags & SA_RESTART)
+	ss->intr_port = MACH_PORT_NULL;
     }
 
   /* If the thread is anywhere before the system call trap,
@@ -590,6 +592,8 @@ _S_sig_post (mach_port_t me,
     case SIGTSTP:
     case SIGHUP:
     case SIGINFO:
+    case SIGTTIN:
+    case SIGTTOU:
       /* Job control signals can be sent by the controlling terminal.  */
       if (__USEPORT (CTTYID, port == refport))
 	goto win;
