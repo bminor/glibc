@@ -299,13 +299,21 @@ for dir in `$srcdir/find-sysdirs < Sysnames`; do
   fi
 done
 if [ $uname = generic ]; then
-  if [ ! "$release" -o ! "$version" ] && [ -r /vmunix ]; then
-    kernel_id=`strings /vmunix | grep UNIX`
-    kernel_release=`echo "$kernel_id" | sed 's/^[^0-9.]*\([0-9.]*\).*$/\1/'`
-    kernel_version=`echo "$kernel_id" | sed 's/^[^#]*#\([0-9]*\).*$/\1/'`
-  else
-    kernel_release=
-    kernel_version=
+  kernel_release=
+  kernel_version=
+
+  if [ ! "$release" -o ! "$version" ]; then
+    if [ -r /vmunix ]; then
+      kernel_id=`strings /vmunix | grep UNIX`
+    elif [ -r /dynix ]; then
+      kernel_id=`strings /dynix | grep DYNIX`
+    else
+      kernel_id=
+    fi
+    if [ "$kernel_id" ]; then
+      kernel_release=`echo "$kernel_id" | sed 's/^[^0-9.]*\([0-9.]*\).*$/\1/'`
+      kernel_version=`echo "$kernel_id" | sed 's/^[^#]*#\([0-9]*\).*$/\1/'`
+    fi
   fi
 
   sysname=`echo $os | sed 's/[0-9.]*$//'`
