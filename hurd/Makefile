@@ -35,6 +35,7 @@ user-interfaces		:= $(addprefix hurd/,\
 				       exec core interrupt \
 				       fs fsys io term socket )
 server-interfaces	:= hurd/msg
+server-MIGFLAGS		:= -DMSG_SREPLYPORT# Work around mig bug; see msg.defs.
 
 routines = hurdid hurdpath hurdpid hurdports \
 	   hurdexec \
@@ -47,7 +48,7 @@ routines = hurdid hurdpath hurdpid hurdports \
 	   fopenport __fopenport \
 	   vpprintf \
 	   $(sig) $(dtable) $(inlines)
-sig	= hurdsig siginfo init-fault msging-p hurd-raise \
+sig	= hurdsig siginfo init-fault msging-p hurd-raise preempt-sig \
 	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  __getdport getdport openport setdtsz \
