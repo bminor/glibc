@@ -524,6 +524,9 @@ _S_sig_post (mach_port_t me,
   /* Get a hold of the designated signal-receiving thread.  */
   ss = _hurd_thread_sigstate (_hurd_sigthread);
 
+  /* XXX POSIX.1-1990 p56 ll605-607 says we must deliver a signal
+     before `kill' (and thus sig_post) can return.  */
+
   /* Send a reply indicating success to the signaller.  */
   __sig_post_reply (reply, 0);
 
