@@ -757,6 +757,10 @@ text_set_element (__hurd_reauth_hook, reauth_proc);
 
 /* Setting up signals in the child for fork.  */
 
+text_set_element (_hurd_fork_locks, _hurd_siglock); /* Lock before fork.  */
+
+static struct hurd_sigstate *forking_thread_sigstate;
+
 static error_t
 hurdsig_fork (task_t newtask, process_t newproc)
 {
@@ -794,12 +798,52 @@ hurdsig_fork (task_t newtask, process_t newproc)
     /* Where did that come from?  */
     __mach_port_deallocate (__mach_task_self (), oldmsgport);
 
+  {
+    /* Record a pointer to the sigstate structure for this thread (the one
+       calling fork).  We don't use _hurd_self_sigstate because the
+       _hurd_siglock is already locked; also we don't need to allocate a
+       new structure if there is none of this thread.  */
+    struct hurd_sigstate **location =
+      (void *) __hurd_threadvar_location (_HURD_THREADVAR_SIGSTATE);
+    if (*location == NULL)
+      {
+	thread_t self = __mach_thread_self ();
+	for (*location = _hurd_sigstates; *location != NULL;
+	     *location = (*location)->next)
+	  if ((*location)->thread == self)
+	    break;
+      }
+    forking_thread_sigstate = *location;
+  }
+
  lose:
   __mach_port_deallocate (__mach_task_self (), msgport);
 
   return err;
 }
-
 text_set_element (_hurd_fork_setup_hook, hurdsig_fork);
-text_set_element (_hurd_fork_child_hook, _hurdsig_init);
-text_set_element (_hurd_fork_child_hook, _hurdsig_fault_init);
+
+static error_t
+hurdsig_fork_child (void)
+{
+  /* Free the sigstate structures for threads that existed in the parent
+     task but don't exist in this task (the child process).  */
+
+  struct hurd_sigstate *ss = _hurd_sigstates;
+  while (ss != NULL)
+    {
+      struct hurd_sigstate *next = ss->next;
+      if (ss != forking_thread_sigstate)
+	free (ss);
+      ss = next;
+    }
+  _hurd_sigstates = forking_thread_sigstate;
+  _hurd_sigstates->next = NULL;
+
+  /* Start the signal thread.  */
+  _hurdsig_init ();
+
+  /* Set up proc server-assisted fault recovery for the signal thread.  */
+  _hurdsig_fault_init ();
+}
+text_set_element (_hurd_fork_child_hook, hurdsig_fork_child);
