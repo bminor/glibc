@@ -79,9 +79,9 @@ $(addprefix $(mach-srcdir)/,$(mach-headers)) : ;
 install-others += $(addprefix $(includedir)/,$(mach-headers))
 $(includedir)/%: $(mach-srcdir)/%; $(do-install)
 
-# Make a symlink for mach/machine in the installed include directory.
-install-others += $(includedir)/mach/machine
-$(includedir)/mach/machine: $(common-objpfx)config.make
+# Make symlinks for machine and mach/machine in the include directory.
+install-others += $(includedir)/mach/machine $(includedir)/machine
+$(includedir)/mach/machine $(includedir)/machine: $(common-objpfx)config.make
 	-rm -f $@
 	cd $(@D); ln -s $(config-machine) $(@F)
 
