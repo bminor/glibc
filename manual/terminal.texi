@@ -934,9 +934,12 @@ Parameters}, for more information about how to tell whether the
 operating system you are using supports @code{_POSIX_VDISABLE}.
 
 @menu
-* Editing Characters::          
-* Signal Characters::           
-* Start/Stop Characters::       
+* Editing Characters::          Special characters that terminate lines and
+                                 delete text. 
+* Signal Characters::           Special characters that send or raise signals
+                                 to or for certain classes of processes.
+* Start/Stop Characters::       Special characters that suspend or resume
+                                 suspended output.
 @end menu
 
 @node Editing Characters, Signal Characters,  , Special Characters
@@ -1013,7 +1016,7 @@ The KILL character is usually @kbd{C-u}.
 @node Signal Characters, Start/Stop Characters, Editing Characters, Special Characters
 @subsubsection Characters that Cause Signals
 
-These special characters may active in either canonical or noncanonical
+These special characters may be active in either canonical or noncanonical
 input mode, but only when the @code{ISIG} flag is set (@pxref{Local
 Modes}).
 

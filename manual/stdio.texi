@@ -31,7 +31,8 @@ useful here.
 * Portable Positioning::        Random access on peculiar ANSI C systems.
 * Stream Buffering::            How to control buffering of streams.
 * Temporary Files::             How to open a temporary file.
-* Other Kinds of Streams::      Other Kinds of Streams
+* Other Kinds of Streams::      Streams that do not necessarily correspond
+                                 to an open file. 
 @end menu
 
 @node Streams, Standard Streams,  , I/O on Streams
@@ -1590,11 +1591,6 @@ The facilities of this section are declared in the header file
 * Printf Extension Example::            How to define a @code{printf}
                                          handler function. 
 @end menu
-
-@c the above menu may still need soe work.  Specifically, the second
-@c entry; maybe insert the followi g instead: Functions with information
-@c re: options appearing in an instance of the conversion specifier.
-@c --melissa 
 
 @strong{Portability Note:} The ability to extend the syntax of
 @code{printf} template strings is a GNU extension.  ANSI standard C has
