@@ -149,4 +149,5 @@ generated += $(mach-generated)
 before-compile += $(interface-headers:%=$(objpfx)%)
 
 # Don't let these be intermediate files and get removed.
-$(interface-headers:%=$(objpfx)%) $(interface-routines:%=$(objpfx)%.c) :
+$(foreach h,$(interface-headers:%.h=$(objpfx)%),$h.h $h.__h $h.uh) :
+$(interface-routines:%=$(objpfx)%.c) :
