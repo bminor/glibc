@@ -1,3 +1,25 @@
+2005-01-27  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #730]
+	* stdio-common/tst-fmemopen2.c: Include string.h.
+
+2005-01-19  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #730]
+	* libio/iofopncook.c (_IO_cookie_seekoff): Add prototype.
+
+2005-01-05  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #730]
+	* libio/iofopncook.c (_IO_cookie_seekoff): Define.  Mark offset as
+	invalid to disable optimizations in fileops which won't work here.
+	(_IO_cookie_jumps): Use it.
+	(_IO_old_cookie_jumps): Likewise.
+	* libio/fmemopen.c (fmemopen_seek): Result must be returned in *P,
+	not the return value.
+	* stdio-common/Makefile (tests): Add tst-fmemopen2.
+	* stdio-common/tst-fmemopen2.c: New file.
+
 2005-01-03  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #727]
@@ -33,8 +55,6 @@
 	* sysdeps/unix/sysv/linux/i386/clone.S (__clone): Make sure %esp when
 	calling fn is 16 byte aligned.
 	* sysdeps/i386/tst-stack-align.h: New file.
-
-2004-12-21  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #725]
 	* misc/efgcvt_r.c (FLOAT_MIN_10_EXP, FLOAT_MIN_10_NORM): Define.
