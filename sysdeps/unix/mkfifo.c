@@ -19,10 +19,11 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 /* Create a named pipe (FIFO) named PATH with protections MODE.  */
 int
-DEFUN(mkfifo, (path, mode), CONST char *path AND int mode)
+DEFUN(mkfifo, (path, mode), CONST char *path AND mode_t mode)
 {
   return __mknod (path, mode | S_IFIFO, 0);
 }

@@ -20,11 +20,11 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <stdio.h>
 #include <pwd.h>
-
+#include <sys/types.h>
 
 /* Search for an entry with a matching uid.  */
 struct passwd *
-DEFUN(getpwuid, (uid), register int uid)
+DEFUN(getpwuid, (uid), register uid_t uid)
 {
   static PTR info;
   register FILE *stream;

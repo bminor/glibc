@@ -17,34 +17,14 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <stddef.h>
-#include <stdio.h>
+#include <fcntl.h>
 #include <sys/types.h>
-#include <grp.h>
 
-/* Search for an entry with a matching group ID.  */
-struct group *
-DEFUN(getgrgid, (gid), register gid_t gid)
+#undef	creat
+
+/* Create FILE with protections MODE.  */
+int
+DEFUN(creat, (file, mode), CONST char *file AND mode_t mode)
 {
-  static PTR info = NULL;
-  register FILE *stream;
-  register struct group *g;
-
-  if (info == NULL)
-    {
-      info = __grpalloc();
-      if (info == NULL)
-	return NULL;
-    }
-
-  stream = __grpopen();
-  if (stream == NULL)
-    return NULL;
-
-  while ((g = __grpread(stream, info)) != NULL)
-    if (g->gr_gid == (gid_t) gid)
-      break;
-
-  (void) fclose(stream);
-  return g;
+  return __open(file, O_WRONLY|O_CREAT|O_TRUNC, mode);
 }
