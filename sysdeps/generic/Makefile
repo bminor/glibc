@@ -40,7 +40,7 @@ $(objpfx)endian.h: $(objpfx)det_endian
 	mv $@-tmp $@
 
 $(objpfx)det_endian: $(sysdep_dir)/generic/det_endian.c
-	cd $(objdir); $(CC) $(<:$(objpfx)%=%) -o $(@:$(objpfx)%=%)
+	$(native-compile)
 
 before-compile := $(before-compile) $(objpfx)endian.h
 
@@ -54,7 +54,7 @@ $(objpfx)siglist.c: $(objpfx)make_siglist
 	mv $@-tmp $@
 
 $(objpfx)make_siglist: $(sysdep_dir)/generic/make_siglist.c
-	cd $(objdir); $(CC) $< -o $(@:$(objpfx)%=%)
+	$(native-compile)
 endif
 
 endif
