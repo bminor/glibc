@@ -32,7 +32,7 @@ DEFUN(fchroot, (fd), int fd)
 		   ({ file_t crdir = port;
 		      HURD_DPORT_USE (fd,
 				      __hurd_path_lookup (crdir, port, "",
-							  O_EXEC, 0, &dir));
+							  0, 0, &dir));
 		    }));
 
   if (err)
