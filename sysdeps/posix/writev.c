@@ -57,7 +57,7 @@ __writev (fd, vector, count)
 
       bp += copy;
       to_copy -= copy;
-      if (bytes == 0)
+      if (to_copy == 0)
 	break;
     }
 
