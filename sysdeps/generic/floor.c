@@ -121,7 +121,7 @@ double x;
  *	customary for IEEE 754.  No other signal can be emitted.
  */
 double
-rint(x)
+__rint(x)
 double x;
 {
 	double s,t;
