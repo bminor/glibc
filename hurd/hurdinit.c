@@ -83,6 +83,10 @@ _hurd_init (char **argv,
 		   portarray, nports * sizeof (mach_port_t));
 }
 
+/* The user can do "int _hide_arguments = 1;" to make sure the
+   arguments are never visible with `ps'.  */
+int _hide_arguments;
+
 /* Make PROCSERVER be our proc server port.
    Tell the proc server that we exist.  */
 
@@ -94,7 +98,7 @@ _hurd_proc_init (process_t procserver, char **argv)
   _hurd_port_init (&_hurd_proc, procserver);
 
   /* Tell the proc server where our args and environment are.  */
-  __proc_setprocargs (procserver, argv, __environ);
+  __proc_setprocargs (procserver, _hide_arguments ? 0 : argv, __environ);
 
   /* Initialize the signal code; Mach exceptions will become signals.
      This sets _hurd_sigport; it must be run before _hurd_proc_init.  */
