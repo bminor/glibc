@@ -73,9 +73,9 @@ static inline void pthread_call_handlers(struct handler_list * list)
   for (/*nothing*/; list != NULL; list = list->next) (list->handler)();
 }
 
-extern int __fork(void);
+extern int __libc_fork(void);
 
-pid_t fork(void)
+pid_t __fork(void)
 {
   pid_t pid;
   struct handler_list * prepare, * child, * parent;
