@@ -97,6 +97,9 @@ endif
 $(..)glibc-%:
 	ln -s . $@
 
++tsrcs := $(+tsrcs) \
+	  TAGS
+
 ifdef	   subdir
 
 foo:=$(shell echo subdir foo >&2)
@@ -107,6 +110,8 @@ foo:=$(shell echo subdir foo >&2)
 	  $(addsuffix .args,$(tests)))
 +tardeps := $(strip $(+tsrcs))
 +tsrcs := $(addprefix $(tardir)/$(subdir)/,$(+tardeps))
+
+verbose = v
 
 .PHONY: dist
 dist: $(..)$(tardir) $(+tardeps)
