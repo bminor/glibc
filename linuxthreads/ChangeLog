@@ -1,3 +1,8 @@
+1999-09-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* condvar.c (pthread_cond_timedwait_relative): Never return with
+	EINTR.  Patch by Andreas Schwab.
+
 1999-09-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* specific.c: Move definitions of struct pthread_key_struct and
