@@ -842,6 +842,12 @@ descriptors, or until timer expires, whichever comes first.  This
 facility is declared in the header file @file{sys/types.h}.
 @pindex sys/types.h
 
+In the case of a server socket (@pxref{Listening}), we say that
+``input'' is available when there are pending connections that could be
+accepted (@pxref{Accepting Connections}).  @code{accept} for server
+sockets blocks and interacts with @code{select} just as @code{read} does
+for normal input.
+
 @cindex file descriptor sets, for @code{select}
 The file descriptor sets for the @code{select} function are specified
 as @code{fd_set} objects.  Here is the description of the data type
@@ -902,12 +908,12 @@ activity on any of the specified sets of file descriptors, or until the
 timeout period has expired.
 
 The file descriptors specified by the @var{read-fds} argument are
-checked to see if they are ready for reading; the @var{write-fds} file
-descriptors are checked to see if they are ready for writing; and the
-@var{except-fds} file descriptors are checked for exceptional
-conditions.  You can pass a null pointer for any of these arguments if
-you are not interested in checking for that kind of condition.
-
+checked to see if they are ready for reading (or if a server socket, for
+accepting a connection); the @var{write-fds} file descriptors are
+checked to see if they are ready for writing; and the @var{except-fds}
+file descriptors are checked for exceptional conditions.  You can pass a
+null pointer for any of these arguments if you are not interested in
+checking for that kind of condition.
 ``Exceptional conditions'' does not mean errors---errors are reported
 immediately when an erroneous system call is executed, and do not
 constitute a state of the descriptor.  Rather, they include conditions
