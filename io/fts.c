@@ -45,6 +45,18 @@ static char sccsid[] = "@(#)fts.c	8.2 (Berkeley) 1/2/94";
 #include <string.h>
 #include <unistd.h>
 
+
+/* Largest alignment size needed, minus one.
+   Usually long double is the worst case.  */
+#ifndef ALIGNBYTES
+#define ALIGNBYTES	(__alignof__ (long double) - 1)
+#endif
+/* Align P to that size.  */
+#ifndef ALIGN
+#define	ALIGN(p)	(((unsigned long int) (p) + ALIGNBYTES) & ~ALIGNBYTES)
+#endif
+
+
 static FTSENT	*fts_alloc __P((FTS *, char *, int));
 static FTSENT	*fts_build __P((FTS *, int));
 static void	 fts_lfree __P((FTSENT *));
