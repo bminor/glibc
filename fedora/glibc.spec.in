@@ -1270,7 +1270,7 @@ rm -f *.filelist*
 %endif
 
 %changelog
-* Sat Feb 26 2005 Roland McGrath <roland@redhat.com> 2.3.4-2.fc3.2
+* Mon Feb 28 2005 Roland McGrath <roland@redhat.com> 2.3.4-2.fc3.3
 - update from CVS (glibc-2_3-branch)
   - fix handling of hosts with ~ 1K or bigger info per answer
     when using nscd (#140378, BZ#769)
