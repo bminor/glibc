@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 #define	_SYS_STAT_H	1
 #include <features.h>
 
-#include <gnu/stat.h>
+#include <statbuf.h>
 
 #if defined(__USE_BSD) || defined(__USE_MISC)
 #define	S_IFMT		__S_IFMT
@@ -89,28 +89,38 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Get file attributes for FILE and put them in BUF.  */
-extern int EXFUN(__stat, (CONST char *__file, struct __stat *__buf));
+extern int EXFUN(__stat, (CONST char *__file, struct stat *__buf));
+extern int EXFUN(stat, (CONST char *__file, struct stat *__buf));
 
 /* Get file attributes for the file, device, pipe, or socket
    that file descriptor FD is open on and put them in BUF.  */
-extern int EXFUN(__fstat, (int __fd, struct __stat *__buf));
+extern int EXFUN(__fstat, (int __fd, struct stat *__buf));
+extern int EXFUN(fstat, (int __fd, struct stat *__buf));
 
 /* Get file attributes about FILE and put them in BUF.
    If FILE is a symbolic link, do not follow it.  */
-extern int EXFUN(__lstat, (CONST char *__file, struct __stat *__buf));
+extern int EXFUN(__lstat, (CONST char *__file, struct stat *__buf));
+#ifdef	__USE_BSD
+extern int EXFUN(lstat, (CONST char *__file, struct stat *__buf));
+#endif
 
 /* Set file access permissions for FILE to MODE.
    This takes an `int' MODE argument because that
    is what `mode_t's get widened to.  */
 extern int EXFUN(__chmod, (CONST char *__file, __mode_t __mode));
+extern int EXFUN(chmod, (CONST char *__file, __mode_t __mode));
 
 /* Set file access permissions of the file FD is open on to MODE.  */
 extern int EXFUN(__fchmod, (int __fd, __mode_t __mode));
+#ifdef	__USE_BSD
+extern int EXFUN(__fchmod, (int __fd, __mode_t __mode));
+#endif
 
 
 /* Set the file creation mask of the current process to MASK,
    and return the old creation mask.  */
 extern __mode_t EXFUN(__umask, (__mode_t __mask));
+extern __mode_t EXFUN(umask, (__mode_t __mask));
 
 #ifdef	__USE_GNU
 /* Get the current `umask' value without changing it.
@@ -120,35 +130,20 @@ extern __mode_t EXFUN(getumask, (NOARGS));
 
 /* Create a new directory named PATH, with permission bits MODE.  */
 extern int EXFUN(__mkdir, (CONST char *__path, __mode_t __mode));
+extern int EXFUN(mkdir, (CONST char *__path, __mode_t __mode));
 
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
    device numbers with the `makedev' macro above).  */
 extern int EXFUN(__mknod, (CONST char *__path,
 			   __mode_t __mode, __dev_t __dev));
-
-
-#define	stat	__stat
-#define	fstat	__fstat
-
-#ifdef	__USE_BSD
-#define	lstat	__lstat
-#endif	/* Use BSD.  */
-
-#define	chmod	__chmod
-
-#ifdef	__USE_BSD
-#define	fchmod	__fchmod
+#if	defined(__USE_MISC) || defined(__USE_BSD)
+extern int EXFUN(mknod, (CONST char *__path,
+			 __mode_t __mode, __dev_t __dev));
 #endif
 
-#define	umask	__umask
-#define	mkdir	__mkdir
 
 /* Create a new FIFO named PATH, with permission bits MODE.  */
 extern int EXFUN(mkfifo, (CONST char *__path, __mode_t __mode));
-
-#if	defined(__USE_MISC) || defined(__USE_BSD)
-#define	mknod	__mknod
-#endif
 
 #endif	/* sys/stat.h  */
