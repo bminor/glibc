@@ -31,7 +31,7 @@ DEFUN(__getpgrp, (pid), pid_t pid)
   if (pid == 0)
     return _hurd_pgrp;
 
-  if (err = __proc_getpgrp (pid, &pgrp))
+  if (err = __proc_getpgrp (_hurd_proc, pid, &pgrp))
     return __hurd_fail (err);
 
   return pgrp;
