@@ -26,14 +26,6 @@ endif
 
 include $(..)Makeconfig
 
-foo:=$(shell echo first generated='$(generated)' >&2)
-ifdef objpfx
-generated := $(foreach file,$(filter $(objpfx)%,$(generated)),\
-		       $(file:$(objpfx)%=%) $(file)) \
-	     $(filter-out $(objpfx)%,$(generated))
-foo:=$(shell echo generated='$(generated)' >&2)
-endif
-
 foo:=$(shell echo 'distribute=$(distribute)'>&2)
 foo:=$(shell echo 'foobar=$(filter %.c %.S %.s %.h,$(distribute))'>&2)
 
@@ -108,7 +100,7 @@ version := $(word 2,$(rel+vers))
 export tardir := glibc-$(version)
 endif
 
-$(..)$(tardir):
+$(..)glibc-%:
 	ln -s . $@
 
 +tsrcs := $(+tsrcs) \
