@@ -187,19 +187,21 @@ DEFUN(__tzfile_compute, (timer, tm), time_t timer AND struct tm tm)
   struct ttinfo *info;
   register size_t i;
 
+  /* Find the first transition after TIMER, and then go back one.  */
   i = 0;
-  while (i < num_transitions &&
-	 (timer >= transitions[i] && timer < transitions[i + 1]))
+  while (i < num_transitions && transitions[i] < timer)
     ++i;
   if (i == num_transitions)
     i = 0;
+  else
+    --i;
 
   info = &types[type_idxs[i]];
-  __daylight = info->isdst != 0;
+  __daylight = info->isdst;
   __timezone = info->offset;
-  __tzname[0] = &zone_names[types[0].idx];
-  if (num_types > 0)
-    __tzname[1] = &zone_names[types[1].idx];
+  for (i = 0; i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
+       ++i)
+    __tzname[types[i].isdst] = &zone_names[types[i].idx];
 
   i = num_leaps;
   do
