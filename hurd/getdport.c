@@ -26,20 +26,35 @@ __getdport (int fd)
   if (_hurd_dtable.d != NULL)
     {
       /* We have a real descriptor table.  */
-       = _hurd_dport (fd);
-  /* getdport is the only use of file descriptors,
-     so we don't bother allocating a real table.  */
-  else if (fd < 0 || fd > _hurd_init_dtablesize ||
-	   _hurd_init_dtable[fd] == MACH_PORT_NULL)
-    {
-      errno = EBADF;
-      return MACH_PORT_NULL;
+      file_t dport;
+      int err = _HURD_DPORT_USE (fd,
+				 __mach_port_mod_refs (__mach_task_self (),
+						       (dport = port),
+						       MACH_PORT_RIGHT_SEND,
+						       1));
+      if (err)
+	{
+	  errno = err;
+	  return MACH_PORT_NULL;
+	}
+      else
+	return dport;
     }
-  else      
-    port = _hurd_init_dtable[fd];
-
-  __mach_port_mod_refs (__mach_task_self (), port,
-			MACH_PORT_RIGHT_SEND, 1);
-
-  return port;
+  else
+    {
+      /* getdport is the only use of file descriptors,
+	 so we don't bother allocating a real table.  */
+      if (fd < 0 || fd > _hurd_init_dtablesize ||
+	  _hurd_init_dtable[fd] == MACH_PORT_NULL)
+	{
+	  errno = EBADF;
+	  return MACH_PORT_NULL;
+	}
+      else      
+	{
+	  __mach_port_mod_refs (__mach_task_self (), _hurd_init_dtable[fd],
+				MACH_PORT_RIGHT_SEND, 1);
+	  return _hurd_init_dtable[fd];
+	}
+    }
 }
