@@ -1,3 +1,9 @@
+2005-02-07  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #742]
+	* nscd/nscd.init (reload): Print Reloading nscd: before and a newline
+	after the status string printed by killproc.
+
 2005-02-02  Alfred M. Szmidt  <ams@gnu.org>
 
 	[BZ #671]
