@@ -29,6 +29,7 @@ int
 DEFUN(__sigprocmask, (how, set, oset),
       int how AND CONST sigset_t *set AND sigset_t *oset)
 {
+#ifdef notyet
   struct _hurd_sigstate *ss;
   sigset_t old, new;
 
@@ -75,5 +76,6 @@ DEFUN(__sigprocmask, (how, set, oset),
   if (oset != NULL)
     *oset = old;
 
+#endif
   return 0;
 }
