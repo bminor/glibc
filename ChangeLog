@@ -1,3 +1,8 @@
+1998-03-30 08:05  H.J. Lu  <hjl@gnu.org>
+
+	* resolv/res_comp.c (underscorechar): New.
+	(middlechar): Allow '_'.
+
 1998-04-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/ioctls.h (SIOCPROTOPRIVATE): Added.
