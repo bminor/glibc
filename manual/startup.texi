@@ -625,10 +625,14 @@ more detail in @ref{Signal Handling}.  The @code{abort} function causes
 a signal that kills the program.
 
 @menu
-* Normal Termination::  
-* Exit Status::                 Exit Status
-* Cleanups on Exit::            Cleanups on Exit
-* Aborting a Program::          
+* Normal Termination::          If a program calls @code{exit}, a
+                                 process terminates normally.
+* Exit Status::                 The @code{exit status} provides information 
+                                 about why the process terminated. 
+* Cleanups on Exit::            A process can run its own cleanup
+                                 functions upon normal termination. 
+* Aborting a Program::          The @code{abort} function causes
+                                 abnormal program termination. 
 * Termination Internals::       Termination Internals
 @end menu
 
