@@ -25,6 +25,8 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 #endif
 
+#include <float.h>
+
 
 void
 DEFUN(fmtchk, (fmt), CONST char *fmt)
@@ -110,6 +112,16 @@ I am ready for my first lesson today.";
 
   printf (" %6.5lf\n", .099999999860301614);
   printf (" %6.5lf\n", .1);
+  printf ("x%5.4lfx\n", .5);
+
+  {
+    double d = FLT_MIN;
+    int niter = 17;
+    
+    while (niter-- != 0)
+      printf ("%.17e\n", d / 2);
+    fflush (stdout);
+  }
 
 #define FORMAT "|%12.4f|%12.4e|%12.4g|\n"
   printf (FORMAT, 0.0, 0.0, 0.0);
