@@ -169,11 +169,14 @@ _hurd_setcttyid (mach_port_t cttyid)
 {
   error_t err;
 
-  /* Give the new send right a user reference.
-     This is a good way to check that it is valid.  */
-  if (err = __mach_port_mod_refs (__mach_task_self (), cttyid,
-				  MACH_PORT_RIGHT_SEND, 1))
-    return err;
+  if (cttyid != MACH_PORT_NULL)
+    {
+      /* Give the new send right a user reference.
+	 This is a good way to check that it is valid.  */
+      if (err = __mach_port_mod_refs (__mach_task_self (), cttyid,
+				      MACH_PORT_RIGHT_SEND, 1))
+	return err;
+    }
 
   /* Install the port, consuming the reference we just created.  */
   _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], cttyid);
