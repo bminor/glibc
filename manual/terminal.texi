@@ -1,4 +1,4 @@
-@node Low-Level Terminal Interface, Mathematics, Sockets, Top
+@node Low-Level Terminal @deftypevr Macro tcflag_t deftypevr Macro tcflag_t nterface, Mathematics, Sockets, Top
 @chapter Low-Level Terminal Interface
 
 This chapter describes functions that are specific to terminal devices.
@@ -405,11 +405,9 @@ try to specify the entire value for @code{c_iflag}---instead, change
 only specific flags and leave the rest untouched (@pxref{Setting
 Modes}).
 
-@table @code
 @comment termios.h
 @comment POSIX.1
-@vindex INPCK
-@item INPCK
+@deftypevr Macro tcflag_t INPCK
 @cindex parity checking
 If this bit is set, input parity checking is enabled.  If it is not set,
 no checking at all is done for parity errors on input; the
@@ -425,18 +423,18 @@ If this bit is set, what happens when a parity error is detected depends
 on whether the @code{IGNPAR} or @code{PARMRK} bits are set.  If neither
 of these bits are set, a byte with a parity error is passed to the
 application as a @code{'\0'} character.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex IGNPAR
-@item IGNPAR
+@deftypevr Macro tcflag_t IGNPAR
 If this bit is set, any byte with a framing or parity error is ignored.
 This is only useful if @code{INPCK} is also set.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex PARMRK
-@item PARMRK
+@deftypevr Macro tcflag_t PARMRK
 If this bit is set, input bytes with parity or framing errors are marked
 when passed to the program.  This bit is meaningful only when
 @code{INPCK} is set and @code{IGNPAR} is not set.
@@ -449,29 +447,29 @@ If a valid byte has the value @code{0377}, and @code{ISTRIP} (see below)
 is not set, the program might confuse it with the prefix that marks a
 parity error.  So a valid byte @code{0377} is passed to the program as
 two bytes, @code{0377} @code{0377}, in this case.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex ISTRIP
-@item ISTRIP
+@deftypevr Macro tcflag_t ISTRIP
 If this bit is set, valid input bytes are stripped to seven bits;
 otherwise, all eight bits are available for programs to read.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex IGNBRK
-@item IGNBRK
+@deftypevr Macro tcflag_t IGNBRK
 If this bit is set, break conditions are ignored.
 
 @cindex break condition, detecting
 A @dfn{break condition} is defined in the context of asynchronous
 serial data transmission as a series of zero-value bits longer than a
 single byte.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex BRKINT
-@item BRKINT
+@deftypevr Macro tcflag_t BRKINT
 If this bit is set and @code{IGNBRK} is not set, a break condition
 clears the terminal input and output queues and raises a @code{SIGINT}
 signal for the foreground process group associated with the terminal.
@@ -480,46 +478,46 @@ If neither @code{BRKINT} nor @code{IGNBRK} are set, a break condition is
 passed to the application as a single @code{'\0'} character if
 @code{PARMRK} is not set, or otherwise as a three-character sequence 
 @code{'\377'}, @code{'\0'}, @code{'\0'}.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex IGNCR
-@item IGNCR
+@deftypevr Macro tcflag_t IGNCR
 If this bit is set, carriage return characters (@code{'\r'}) are
 discarded on input.  Discarding carriage return may be useful on
 terminals that send both carriage return and linefeed when you type the
 @key{RET} key.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex ICRNL
-@item ICRNL
+@deftypevr Macro tcflag_t ICRNL
 If this bit is set and @code{IGNCR} is not set, carriage return characters
 (@code{'\r'}) received as input are passed to the application as newline
 characters (@code{'\n'}).
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex INLCR
-@item INLCR
+@deftypevr Macro tcflag_t INLCR
 If this bit is set, newline characters (@code{'\n'}) received as input
 are passed to the application as carriage return characters (@code{'\r'}).
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex IXOFF
-@item IXOFF
+@deftypevr Macro tcflag_t IXOFF
 If this bit is set, start/stop control on input is enabled.  In other
 words, the computer sends STOP and START characters as necessary to
 prevent input from coming in faster than programs are reading it.  The
 idea is that the actual terminal hardware that is generating the input
 data responds to a STOP character by suspending transmission, and to a
 START character by resuming transmission.  @xref{Start/Stop Characters}.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex IXON
-@item IXON
+@deftypevr Macro tcflag_t IXON
 If this bit is set, start/stop control on output is enabled.  In other
 words, if the computer receives a STOP character, it suspends output
 until a START character is received.  In this case, the STOP and START
@@ -527,20 +525,22 @@ characters are never passed to the application program.  If this bit is
 not set, then START and STOP can be read as ordinary characters.
 @xref{Start/Stop Characters}.
 @c !!! mention this interferes with using C-s and C-q for programs like emacs
+@end deftypevr
 
 @comment termios.h
 @comment BSD
-@item IXANY
+@deftypevr Macro tcflag_t IXANY
 If this bit is set, any input character restarts output when output has
 been suspended with the STOP character.  Otherwise, only the START
 character restarts output.
+@end deftypevr
 
 @comment termios.h
 @comment BSD
-@item IMAXBEL
+@deftypevr Macro tcflag_t IMAXBEL
 If this bit is set, then filling up the terminal input buffer sends a
 BEL character (code @code{007}) to the terminal to ring the bell.
-@end table
+@end deftypevr
 
 @node Output Modes
 @subsection Output Modes
@@ -558,7 +558,7 @@ Modes}).
 
 @comment termios.h
 @comment POSIX.1
-@deftypevr Macro int OPOST
+@deftypevr Macro tcflag_t OPOST
 If this bit is set, output data is processed in some unspecified way so
 that it is displayed appropriately on the terminal device.  This
 typically includes mapping newline characters (@code{'\n'}) onto
@@ -573,21 +573,21 @@ non-BSD systems.  On all systems, they are effective only if
 
 @comment termios.h
 @comment BSD
-@deftypevr Macro int ONLCR
+@deftypevr Macro tcflag_t ONLCR
 If this bit is set, convert the newline character on output into a pair
 of characters, carriage return followed by linefeed.
 @end deftypevr
 
 @comment termios.h
 @comment BSD
-@deftypevr Macro int OXTABS
+@deftypevr Macro tcflag_t OXTABS
 If this bit is set, convert tab characters on output into the appropriate
 number of spaces to emulate a tab stop every eight columns.
 @end deftypevr
 
 @comment termios.h
 @comment BSD
-@deftypevr Macro int ONOEOT
+@deftypevr Macro tcflag_t ONOEOT
 If this bit is set, discard @kbd{C-d} characters (code @code{004}) on
 output.  These characters cause many dial-up terminals to disconnect.
 @end deftypevr
@@ -608,11 +608,9 @@ try to specify the entire value for @code{c_cflag}---instead, change
 only specific flags and leave the rest untouched (@pxref{Setting
 Modes}).
 
-@table @code
 @comment termios.h
 @comment POSIX.1
-@vindex CLOCAL
-@item CLOCAL
+@deftypevr Macro tcflag_t CLOCAL
 If this bit is set, it indicates that the terminal is connected
 ``locally'' and that the modem status lines (such as carrier detect)
 should be ignored.
@@ -631,101 +629,99 @@ causes an end-of-file condition, and writing causes an @code{EIO} error
 to be returned.  The terminal device must be closed and reopened to
 clear the condition.
 @cindex modem disconnect
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex HUPCL
-@item HUPCL
+@deftypevr Macro tcflag_t HUPCL
 If this bit is set, a modem disconnect is generated when all processes
 that have the terminal device open have either closed the file or exited.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex CREAD
-@item CREAD
+@deftypevr Macro tcflag_t CREAD
 If this bit is set, input can be read from the terminal.  Otherwise,
 input is discarded when it arrives.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex CSTOPB
-@item CSTOPB
+@deftypevr Macro tcflag_t CSTOPB
 If this bit is set, two stop bits are used.  Otherwise, only one stop bit
 is used.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex PARENB
-@item PARENB
+@deftypevr Macro tcflag_t PARENB
 If this bit is set, generation and detection of a parity bit are enabled.
 @xref{Input Modes}, for information on how input parity errors are handled.
 
 If this bit is not set, no parity bit is added to output characters, and
 input characters are not checked for correct parity.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex PARODD
-@item PARODD
+@deftypevr Macro tcflag_t PARODD
 This bit is only useful if @code{PARENB} is set.  If @code{PARODD} is set,
 odd parity is used, otherwise even parity is used.
-@end table
+@end deftypevr
 
 The control mode flags also includes a field for the number of bits per
 character.  You can use the @code{CSIZE} macro as a mask to extract the
 value, like this: @code{settings.c_cflag & CSIZE}.
 
-@table @code
 @comment termios.h
 @comment POSIX.1
-@vindex CSIZE
-@item CSIZE
+@deftypevr Macro tcflag_t CSIZE
 This is a mask for the number of bits per character.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex CS5
-@item CS5
+@deftypevr Macro tcflag_t CS5
 This specifies five bits per byte.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex CS6
-@item CS6
+@deftypevr Macro tcflag_t CS6
 This specifies six bits per byte.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex CS7
-@item CS7
+@deftypevr Macro tcflag_t CS7
 This specifies seven bits per byte.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex CS8
-@item CS8
+@deftypevr Macro tcflag_t CS8
 This specifies eight bits per byte.
+@end deftypevr
 
 @comment termios.h
 @comment BSD
-@vindex CCTS_OFLOW
-@item CCTS_OFLOW
+@deftypevr Macro tcflag_t CCTS_OFLOW
 If this bit is set, enable flow control of output based on the CTS wire
 (RS232 protocol).
+@end deftypevr
 
 @comment termios.h
 @comment BSD
-@vindex CRTS_IFLOW
-@item CRTS_IFLOW
+@deftypevr Macro tcflag_t CRTS_IFLOW
 If this bit is set, enable flow control of input based on the RTS wire
 (RS232 protocol).
+@end deftypevr
 
 @comment termios.h
 @comment BSD
-@vindex MDMBUF
-@item MDMBUF
+@deftypevr Macro tcflag_t MDMBUF
 If this bit is set, enable carrier-based flow control of output.
-@end table
+@end deftypevr
 
 @c !!! BSD also has CIGNORE
 
@@ -744,26 +740,24 @@ try to specify the entire value for @code{c_lflag}---instead, change
 only specific flags and leave the rest untouched (@pxref{Setting
 Modes}).
 
-@table @code
 @comment termios.h
 @comment POSIX.1
-@vindex ICANON
-@item ICANON
+@deftypevr Macro tcflag_t ICANON
 This bit, if set, enables canonical input processing mode.  Otherwise,
 input is processed in noncanonical mode.  @xref{Canonical or Not}.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex ECHO
-@item ECHO
+@deftypevr Macro tcflag_t ECHO
 If this bit is set, echoing of input characters back to the terminal
 is enabled.
 @cindex echo of terminal input
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex ECHOE
-@item ECHOE
+@deftypevr Macro tcflag_t ECHOE
 If this bit is set, echoing indicates erasure of input with the ERASE
 character by erasing the last character in the current line from the
 screen.  Otherwise, the character erased is re-echoed to show what has
@@ -772,11 +766,11 @@ happened (suitable for a printing terminal).
 This bit only controls the display behavior; the @code{ICANON} bit by
 itself controls actual recognition of the ERASE character and erasure of
 input, without which @code{ECHOE} is simply irrelevant.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex ECHOK
-@item ECHOK
+@deftypevr Macro tcflag_t ECHOK
 This bit enables special display of the KILL character.  There are two
 ways this can be done.  The better way is by erasing on the screen the
 entire line that has been killed.  The worse way is by moving to a new
@@ -791,19 +785,19 @@ indication of this on the screen.
 This bit only controls the display behavior; the @code{ICANON} bit by
 itself controls actual recognition of the KILL character and erasure of
 input, without which @code{ECHOK} is simply irrelevant.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex ECHONL
-@item ECHONL
+@deftypevr Macro tcflag_t ECHONL
 If this bit is set and the @code{ICANON} bit is also set, then the
 newline (@code{'\n'}) character is echoed even if the @code{ECHO} bit
 is not set.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex ISIG
-@item ISIG
+@deftypevr Macro tcflag_t ISIG
 This bit controls whether the INTR, QUIT, and SUSP characters are
 recognized.  The functions associated with these characters are performed
 if and only if this bit is set.  Being in canonical or noncanonical
@@ -817,66 +811,65 @@ signals associated with these characters, or to escape from the program.
 @cindex interactive signals, from terminal
 
 @xref{Signal Characters}.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex IEXTEN
-@item IEXTEN
-This bit is similar to @code{ISIG}, but controls implementation-defined
-special characters.  If it is set, it might override the default behavior
-for the @code{ICANON} and @code{ISIG} local mode flags, and the @code{IXON}
-and @code{IXOFF} input mode flags.
+@deftypevr Macro tcflag_t IEXTEN
+POSIX.1 gives @code{IEXTEN} implementation-defined meaning,
+so you cannot rely on this interpretation on all systems.
+
+On BSD systems and the GNU system, it enables the LNEXT character.
+@xref{Editting Characters}.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex NOFLSH
-@item NOFLSH
+@deftypevr Macro tcflag_t NOFLSH
 Normally, the INTR, QUIT, and SUSP characters cause input and output
 queues for the terminal to be cleared.  If this bit is set, the queues
 are not cleared.
+@end deftypevr
 
 @comment termios.h
 @comment POSIX.1
-@vindex TOSTOP
-@item TOSTOP
+@deftypevr Macro tcflag_t TOSTOP
 If this bit is set and the system supports job control, then
 @code{SIGTTOU} signals are generated by background processes that
 attempt to write to the terminal.  @xref{Access to the Terminal}.
-@end table
+@end deftypevr
 
 The following bits are BSD extensions; the GNU library defines these
 symbols on any system if you ask for them, but the settings of the bits
 have no effect except on BSD systems and on the GNU system.
 
-@table @code
 @comment termios.h
 @comment BSD
-@vindex ECHOKE
-@item ECHOKE
+@deftypevr Macro tcflag_t ECHOKE
 On BSD systems, this bit selects between the two alternative ways of
 displaying the KILL character, when @code{ECHOK} is set.  If
 @code{ECHOKE} is set, then the KILL character erases the whole screen
 line; otherwise, the KILL character moves to the next screen line.
 The setting of @code{ECHOKE} has no effect when @code{ECHOK} is clear.
+@end deftypevr
 
 @comment termios.h
 @comment BSD
-@item ECHOPRT
-@vindex ECHOPRT
+@deftypevr Macro tcflag_t ECHOPRT
 This bit enables display of the ERASE character in a way that is geared
 to a hardcopy terminal.
+@end deftypevr
 
 @comment termios.h
 @comment BSD
-@vindex ECHOCTL
-@item ECHOCTL
+@deftypevr Macro tcflag_t ECHOCTL
 If this bit is set, echo control characters with @samp{^} followed by
 the corresponding text character.  Thus, control-A echoes as @samp{^A}.
+@end deftypevr
 
 @comment termios.h
 @comment BSD
-@vindex ALTWERASE
-@item ALTWERASE
+@deftypevr Macro tcflag_t ALTWERASE
 This bit determines how far the WERASE character should erase.  The
 WERASE character erases back to the beginning of a word; the question
 is, where do words begin?
@@ -886,28 +879,30 @@ character following a whitespace character.  If the bit is set, then the
 beginning of a word is an alphanumeric character or underscore following
 a character which is none of those.
 
+@xref{Editting Characters}, for more information about the WERASE character.
+@end deftypevr
+
 @comment termios.h
 @comment BSD
-@vindex FLUSHO
-@item FLUSHO
+@deftypevr Macro tcflag_t FLUSHO
 This is the bit that toggles when the user types the DISCARD character.
 While this bit is set, all output is discarded.  @xref{Other Special}.
+@end deftypevr
 
 @comment termios.h
 @comment BSD
-@vindex NOKERNINFO
-@item NOKERNINFO
+@deftypevr Macro tcflag_t NOKERNINFO
 Setting this bit disables handling of the STATUS character.
 @xref{Other Special}.
+@end deftypevr
 
 @comment termios.h
 @comment BSD
-@vindex PENDIN
-@item PENDIN
+@deftypevr Macro tcflag_t PENDIN
 If this bit is set, it indicates that there is a line of input that
 needs to be reprinted.  Typing the REPRINT character sets this bit; the
 bit remains set until reprinting is finished.  @xref{BSD Editing}.
-@end table
+@end deftypevr
 
 @node Line Speed
 @subsection Line Speed
@@ -1100,7 +1095,6 @@ system you are using supports @code{_POSIX_VDISABLE}.
 @menu
 * Editing Characters::          Special characters that terminate lines and
                                   delete text, and other editing functions.
-* BSD Editing::			Special editing characters for BSD systems.
 * Signal Characters::           Special characters that send or raise signals
                                   to or for certain classes of processes.
 * Start/Stop Characters::       Special characters that suspend or resume
@@ -1153,6 +1147,23 @@ affairs.
 @end deftypevr
 
 @comment termios.h
+@comment BSD
+@deftypevr Macro int VEOL2
+@cindex EOL2 character
+This is the subscript for the EOL2 character in the special control
+character array.  @code{@var{termios}.c_cc[VEOL2]} holds the character
+itself.
+
+The EOL2 character works just like the EOL character (see above), but it
+can be a different character.  Thus, you can specify two characters to
+terminate an input line, by setting EOL to one of them and EOL2 to the
+other.
+
+The EOL2 character is a BSD extension; it exists only on BSD systems
+and the GNU system.
+@end deftypevr
+
+@comment termios.h
 @comment POSIX.1
 @deftypevr Macro int VERASE
 @cindex ERASE character
@@ -1172,6 +1183,33 @@ Usually, the ERASE character is @key{DEL}.
 @end deftypevr
 
 @comment termios.h
+@comment BSD
+@deftypevr Macro int VWERASE
+@cindex WERASE character
+This is the subscript for the WERASE character in the special control
+character array.  @code{@var{termios}.c_cc[VWERASE]} holds the character
+itself.
+
+The WERASE character is recognized only in canonical mode.  It erases an
+entire word of prior input, and any whitespace after it; whitespace
+characters before the word are not erased.
+
+The definition of a ``word'' depends on the setting of the
+@code{ALTWERASE} mode; @pxref{Local Modes}.
+
+If the @code{ALTWERASE} mode is not set, a word is defined as a sequence
+of any characters except space or tab.
+
+If the @code{ALTWERASE} mode is set, a word is defined as a sequence of
+characters containing only letters, numbers, and underscores, optionally
+followed by one character that is not a letter, number, or underscore.
+
+The WERASE character is usually @kbd{C-w}.
+
+This is a BSD extension.
+@end deftypevr
+
+@comment termios.h
 @comment POSIX.1
 @deftypevr Macro int VKILL
 @cindex KILL character
@@ -1186,41 +1224,6 @@ of input are discarded.  The kill character itself is discarded too.
 The KILL character is usually @kbd{C-u}.
 @end deftypevr
 
-@node BSD Editing
-@subsubsection BSD Extensions to Editing Characters
-
-These special characters are active only in canonical input mode.
-@xref{Canonical or Not}.  They are BSD extensions; the GNU library
-defines the symbols on any system if you ask for them, but the
-characters you specify don't actually @emph{do} anything except on a BSD
-system.
-
-@comment termios.h
-@comment BSD
-@deftypevr Macro int VEOL2
-@cindex EOL2 character
-This is the subscript for the EOL2 character in the special control
-character array.  @code{@var{termios}.c_cc[VEOL2]} holds the character
-itself.
-
-The EOL2 character works just like the EOL character (see above), but it
-can be a different character.  Thus, you can specify two characters to
-terminate an input line, but setting EOL to one of them and EOL2 to the
-other.
-@end deftypevr
-
-@comment termios.h
-@comment BSD
-@deftypevr Macro int VWERASE
-@cindex WERASE character
-This is the subscript for the WERASE character in the special control
-character array.  @code{@var{termios}.c_cc[VWERASE]} holds the character
-itself.
-
-The WERASE character is recognized only in canonical input mode.  It
-erases an entire word of prior input.
-@end deftypevr
-
 @comment termios.h
 @comment BSD
 @deftypevr Macro int VREPRINT
@@ -1229,8 +1232,13 @@ This is the subscript for the REPRINT character in the special control
 character array.  @code{@var{termios}.c_cc[VREPRINT]} holds the character
 itself.
 
-The REPRINT character is recognized only in canonical input mode.  It
-reprints the current input line.
+The REPRINT character is recognized only in canonical mode.  It reprints
+the current input line.  If some asynchronous output has come while you
+are typing, this lets you see the line you are typing clearly again.
+
+The REPRINT character is usually @kbd{C-r}.
+
+This is a BSD extension.
 @end deftypevr
 
 @comment termios.h
@@ -1241,12 +1249,16 @@ This is the subscript for the LNEXT character in the special control
 character array.  @code{@var{termios}.c_cc[VLNEXT]} holds the character
 itself.
 
-The LNEXT character is recognized only when @code{IEXTEN} is set.  It
-disables the editing significance of the next character the user types.
-It is the analogue of the @kbd{C-q} command in Emacs.  ``LNEXT'' stands
-for ``literal next.''
+The LNEXT character is recognized only when @code{IEXTEN} is set, but in
+both canonical and noncanonical mode.  It disables any special
+significance of the next character the user types.  Even if the
+character would normally perform some editting function or generate a
+signal, it is read as a plain character.  This is the analogue of the
+@kbd{C-q} command in Emacs.  ``LNEXT'' stands for ``literal next.''
 
 The LNEXT character is usually @kbd{C-v}.
+
+This is a BSD extension.
 @end deftypevr
 
 @node Signal Characters
