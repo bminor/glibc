@@ -218,6 +218,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 						   ? INADDRSZ : IN6ADDRSZ)))
 	{
 	no_room:
+	  *h_errnop = NETDB_INTERNAL;
 	  __set_errno (ERANGE);
 	  retval = ERANGE;
 	  goto out_close;
