@@ -93,7 +93,7 @@ start1 (void)
 	  argv = (char **) &args;
 	}
       else
-	argc = split_args (args, argslen, NULL) + 1;
+	argc = split_args (args, argslen, NULL);
     }
 
   if (! envp)
@@ -102,7 +102,7 @@ start1 (void)
 	/* No environment passed; set __environ to { NULL }.  */
 	envp = (char **) &env;
       else
-	envc = split_args (env, envlen, NULL) + 1;
+	envc = split_args (env, envlen, NULL);
     }
 
   if (! argv && ! envp && argc + envc > 0)
@@ -110,8 +110,8 @@ start1 (void)
       /* There were some arguments or environment.
 	 Allocate space for the vectors of pointers and fill them in.  */
 
-      argv = __alloca (argc * sizeof (char *));
-      envp = __alloca (envc * sizeof (char *));
+      argv = __alloca ((argc + 1) * sizeof (char *));
+      envp = __alloca ((envc + 1) * sizeof (char *));
       
       split_args (args, argslen, argv);
       split_args (env, envlen, envp);
