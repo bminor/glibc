@@ -1,3 +1,42 @@
+1998-08-12 12:09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/socketbits.h: Add more magic to work better
+	with kernel headers.  Patch by Matti Aarnio <matti.aarnio@sonera.fi>.
+
+	* elf/elf.h: Define R_68K_NUM, R_386_NUM, R_SPARC_NUM, R_MIPS_NUM,
+	and R_ALPHA_NUM.
+
+	* elf/Makefile: Undo last change.
+
+	* po/dv.po: Update for 2.0.7.
+
+	* posix/glob.c: Carry over changes from 2.1 which increase the speed
+	and fix some bugs.
+
+1998-08-07  Cristian Gafton  <gafton@redhat.com>
+
+	* pwd/putpwent.c (putpwent): Avoid writting (none) in the passwd file.
+	* shadow/putspent.c (putspent): Likewise.
+
+1998-08-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nss_db/db-XXX.c (_nss_db_getXXX): If buffer is too small
+	decrement `entidx' to allow retrieving the same entry again.
+
+1998-08-09 09:40  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nss_files/files-XXX.c (internal_getent): In case of an read
+	error do not trust errno value, set it to ENOENT.
+
+1998-08-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* inet/rcmd.c (__ivaliduser): Allow '#' as comment character.
+
+1998-08-08 14:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c: Take empty LD_PRELOAD string into account.
+	Patch by Cristian Gafton <gafton@redhat.com>.
+
 1998-08-04 15:24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* po/de.po: Update for 2.0.7.
