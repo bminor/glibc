@@ -38,6 +38,6 @@ DEFUN(getpeername, (fd, addr, len),
 	   err = __socket_whatis_address (aport, addr, len);
 	   __mach_port_deallocate (__mach_task_self (), aport);
 	 }
-       err ? __hurd_fail (err) : 0;
+       err ? __hurd_dfail (fd, err) : 0;
      }));
 }
