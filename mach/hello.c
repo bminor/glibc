@@ -1,6 +1,6 @@
 /* "Hello world" program for GNU C Library on bare Mach 3.0.
 
-Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,8 +23,6 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <stdio.h>
 
-extern FILE *mach_open_devstream (device_t dev);
-
 int
 main (void)
 {
@@ -40,7 +38,7 @@ main (void)
   if (err)
     _exit (err);
 
-  consf = mach_open_devstream (consdev);
+  consf = mach_open_devstream (consdev, "w");
   if (consf == NULL)
     exit (errno);
 
