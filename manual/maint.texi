@@ -570,6 +570,9 @@ Lance Taylor.
 @item
 The DES encryption function @code{crypt} and related code was donated by
 Michael Glad.
+
+@item
+The @code{ftw} function was contributed by Ian Lance Taylor.
 @end itemize
 
 @c @bye
