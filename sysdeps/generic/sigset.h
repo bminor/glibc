@@ -1,5 +1,5 @@
 /* __sig_atomic_t, __sigset_t, and related definitions.  Generic/BSD version.
-Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,16 +25,36 @@ typedef int __sig_atomic_t;
 /* Return a mask that includes SIG only.
    The cast to `sigset_t' avoids overflow
    if `sigset_t' is wider than `int'.  */
-#define	__sigmask(sig)	(((sigset_t) 1) << ((sig) - 1))
+#define	__sigmask(sig)	(((__sigset_t) 1) << ((sig) - 1))
 
 /* A `sigset_t' has a bit for each signal.  */
 typedef unsigned long int __sigset_t;
 
 #define	__sigemptyset(set)	((*(set) = 0L), 0)
 #define	__sigfillset(set)	((*(set) = -1L), 0)
-#define	__sigaddset(set, sig)	((*(set) |= __sigmask (sig)), 0)
-#define	__sigdelset(set, sig)	((*(set) &= ~__sigmask (sig)), 0)
-#define	__sigismember(set, sig)	((*(set) & __sigmask (sig)) ? 1 : 0)
+
+/* These functions must check for a bogus signal number.  We detect it by a
+   zero sigmask, since a number too low or too high will have shifted the 1
+   off the high end of the mask.  If we find an error, we punt to the
+   real-function version of the same function, so as to avoid referring to
+   `errno' in this file (sigh).  */
+
+#ifndef _EXTERN_INLINE
+#define _EXTERN_INLINE extern __inline
+#endif
+#define __SIGSETFN(NAME, BODY) \
+_EXTERN_INLINE int
+__##NAME (__sigset_t *__set, int __sig)
+{
+  __sigset_t __mask = __sigmask (sig);
+  return __mask ? (BODY) : (NAME) (__set, __sig);
+}
+
+__SIGSETFN (sigismember, (*__set & __mask) ? 1 : 0)
+__SIGSETFN (sigaddset, ((*__set |= __mask), 0))
+__SIGSETFN (sigdelset, ((*__set &= ~__mask), 0))
+
+#undef __SIGSETFN
 
 
 #endif /* sigset.h  */
