@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <stddef.h>
 
 /* Wait for a child to exit.  When one does, put its status in *STAT_LOC and
    return its process ID.  For errors return (pid_t) -1.  If USAGE is not nil,
