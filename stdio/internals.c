@@ -103,7 +103,7 @@ DEFUN(__stdio_check_offset, (stream), FILE *stream)
 	}
       else
 	{
-	  /* Unknown.  Find it out. */
+	  /* Unknown.  Find it out.  */
 	  fpos_t pos = (fpos_t) 0;
 	  if ((*stream->__io_funcs.__seek)(stream->__cookie,
 					   &pos, SEEK_CUR) < 0)
@@ -478,6 +478,13 @@ DEFUN(__flshfp, (fp, c),
   if (ferror(fp))
     return EOF;
 
+  if (fp->__pushed_back)
+    {
+      /* Discard the char pushed back by ungetc.  */
+      fp->__bufp = fp->__pushback_bufp;
+      fp->__pushed_back = 0;
+    }
+
   /* Make sure the stream is initialized (has functions and buffering).  */
   init_stream(fp);
 
@@ -504,46 +511,27 @@ DEFUN(__flshfp, (fp, c),
 	return (unsigned char) c;
     }
 
-  if (!fp->__linebuf_active &&
-      fp->__put_limit == fp->__buffer)
+  if (fp->__linebuf_active)
+    /* This is an active line-buffered stream, so its put-limit is set
+       to the beginning of the buffer in order to force a __flshfp call
+       on each putc (see below).  We undo this hack here (by setting
+       the limit to the end of the buffer) to simplify the interface
+       with the output-room function.  */
+    fp->__put_limit = fp->__buffer + fp->__bufsize;
+
+  /* Make room in the buffer.  */
+  (*fp->__room_funcs.__output) (fp, flush_only ? EOF : (unsigned char) c);
+
+  if (fp->__linebuf)
     {
-      /* The buffer was being used for reading (if at all).
-	 We must reset the buffer pointer, so it doesn't appear that
-	 the buffer contains text to be written out.  Movement of bufp
-	 should move the stream's file position, so we update its target
-	 (where buffer maps to) to account for this.  */
-      fp->__target += fp->__bufp - fp->__buffer;
-      fp->__bufp = fp->__buffer;
-    }
-
-  if (!flush_only ||		/* We must write C.  */
-      (fp->__bufp > fp->__buffer && /* There is something in the buffer.  */
-       /* And we are not in the midst of reading.  */
-       fp->__get_limit <= (fp->__linebuf_active ?
-			   fp->__buffer + fp->__bufsize : fp->__put_limit)))
-    {
-      if (fp->__linebuf_active)
-	/* This is an active line-buffered stream, so its put-limit is set
-	   to the beginning of the buffer in order to force a __flshfp call
-	   on each putc (see below).  We undo this hack here (by setting
-	   the limit to the end of the buffer) to simplify the interface
-	   with the output-room function.  */
-	fp->__put_limit = fp->__buffer + fp->__bufsize;
-
-      /* Make room in the buffer.  */
-      (*fp->__room_funcs.__output) (fp, flush_only ? EOF : (unsigned char) c);
-
-      if (fp->__linebuf)
-	{
-	  /* This is a line-buffered stream, and it is now ready to do
-	     some output.  We call this an "active line-buffered stream".
-	     We set the put_limit to the beginning of the buffer,
-	     so the next `putc' call will force a call to this function.
-	     Setting the linebuf_active flag tells the code above
-	     (on the next call) to undo this hackery.  */
-	  fp->__put_limit = fp->__buffer;
-	  fp->__linebuf_active = 1;
-	}
+      /* This is a line-buffered stream, and it is now ready to do
+	 some output.  We call this an "active line-buffered stream".
+	 We set the put_limit to the beginning of the buffer,
+	 so the next `putc' call will force a call to this function.
+	 Setting the linebuf_active flag tells the code above
+	 (on the next call) to undo this hackery.  */
+      fp->__put_limit = fp->__buffer;
+      fp->__linebuf_active = 1;
     }
 
   if (ferror (fp))
