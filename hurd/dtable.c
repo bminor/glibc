@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <hurd.h>
+#include <hurd/term.h>
 #include <gnu-stabs.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -25,8 +26,10 @@ Cambridge, MA 02139, USA.  */
 #include <limits.h>
 
 
-struct _hurd_dtable _hurd_dtable;
+#ifdef noteven
 struct mutex _hurd_dtable_lock;
+#endif
+struct _hurd_dtable _hurd_dtable;
 int _hurd_dtable_rlimit;
 int *_hurd_dtable_user_dealloc;
 
@@ -40,7 +43,9 @@ init_dtable (void)
 {
   register size_t i;
 
+#ifdef noteven
   __mutex_init (&_hurd_dtable_lock);
+#endif
 
   _hurd_dtable_user_dealloc = NULL;
 
@@ -319,7 +324,7 @@ rectty_dtable (mach_port_t cttyid)
 				 /* XXX it is our ctty but the call failed? */
 				 newctty = MACH_PORT_NULL;
 			       __mach_port_deallocate
-				 (__mach_task_self, (mach_port_t) id);
+				 (__mach_task_self (), (mach_port_t) id);
 			     }
 			   else
 			     newctty = MACH_PORT_NULL;
@@ -332,6 +337,8 @@ rectty_dtable (mach_port_t cttyid)
 
   __mutex_unlock (&_hurd_dtable_lock);
 }
+
+#include <sys/ioctl.h>
 
 
 /* Make FD be the controlling terminal.
@@ -362,13 +369,14 @@ tiocsctty (int fd,
 
   return 0;
 }
-_HURD_HANDLE_IOCTL (tciosctty, TCIOSCTTY);
+_HURD_HANDLE_IOCTL (tiocsctty, TIOCSCTTY);
 
+#ifdef TIOCNOCTTY
 /* Dissociate from the controlling terminal.  */
 
 static int
 tiocnoctty (int fd,
-	    int request,	/* Always TIONOCTTY.  */
+	    int request,	/* Always TIOCNOCTTY.  */
 	    void *arg)		/* Not used.  */
 {
   /* XXX should verify that FD is ctty and return EINVAL? */
@@ -383,3 +391,4 @@ tiocnoctty (int fd,
   return 0;
 }
 _HURD_HANDLE_IOCTL (tiocnotty, TIOCNOTTY);
+#endif
