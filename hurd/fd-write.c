@@ -28,14 +28,14 @@ _hurd_fd_write (struct hurd_fd *fd, const void *buf, size_t *nbytes)
   error_t err;
   mach_msg_type_number_t wrote;
   int noctty;
-  struct _hurd_sigstate *ss;
+  struct hurd_sigstate *ss;
 
   /* Note that __ioctl.c implements the same SIGTTOU behavior.
      Any changes here should be done there as well.  */
 
   /* Don't use the ctty io port if we are blocking or ignoring SIGTTOU.  */
   ss = _hurd_self_sigstate ();
-  noctty = (__sigismember (SIGTTOU, &ss->blocked) ||
+  noctty = (__sigismember (&ss->blocked, SIGTTOU) ||
 	    ss->actions[SIGTTOU].sa_handler == SIG_IGN);
   __mutex_unlock (&ss->lock);
 
@@ -55,7 +55,6 @@ _hurd_fd_write (struct hurd_fd *fd, const void *buf, size_t *nbytes)
 	       else
 		 {
 		   /* Send a SIGTTOU signal to our process group.  */
-		   int restart;
 		   err = __USEPORT (CTTYID, _hurd_sig_post (0, SIGTTOU, port));
 		   /* XXX what to do if error here? */
 		   /* At this point we should have just run the handler for

@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <limits.h>
 #include <fcntl.h>
+#include "stdio/_itoa.h"
 
 error_t
 __hurd_path_lookup (file_t crdir, file_t cwdir,
@@ -122,7 +123,7 @@ __hurd_path_lookup_retry (file_t crdir,
 		  char *end;
 		  int save = errno;
 		  errno = 0;
-		  fd = (int) strtol (retryname, 10, &end);
+		  fd = (int) strtol (retryname, &end, 10);
 		  if (end == NULL || errno)
 		    {
 		      errno = save;
@@ -152,8 +153,8 @@ __hurd_path_lookup_retry (file_t crdir,
 		  struct host_basic_info hostinfo;
 		  unsigned int hostinfocnt = HOST_BASIC_INFO_COUNT;
 		  char *p;
-		  if (err = __host_info (host, HOST_BASIC_INFO,
-					 &hostinfo, &hostinfocnt))
+		  if (err = __host_info (__mach_host_self (), HOST_BASIC_INFO,
+					 (int *) &hostinfo, &hostinfocnt))
 		    return err;
 		  if (hostinfocnt != HOST_BASIC_INFO_COUNT)
 		    return EGRATUITOUS;

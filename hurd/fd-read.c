@@ -39,14 +39,14 @@ _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes)
 	     {
 	       /* We are a background job and tried to read from the tty.
 		  We should probably get a SIGTTIN signal.  */
-	       struct _hurd_sigstate *ss;
+	       struct hurd_sigstate *ss;
 	       if (_hurd_orphaned)
 		 /* Our process group is orphaned.  Don't stop; just fail.  */
 		 err = EIO;
 	       else
 		 {
 		   ss = _hurd_self_sigstate ();
-		   if (__sigismember (SIGTTIN, &ss->blocked) ||
+		   if (__sigismember (&ss->blocked, SIGTTIN) ||
 		       ss->actions[SIGTTIN].sa_handler == SIG_IGN)
 		     /* We are blocking or ignoring SIGTTIN.  Just fail.  */
 		     err = EIO;
@@ -55,7 +55,6 @@ _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes)
 	       if (err == EBACKGROUND)
 		 {
 		   /* Send a SIGTTIN signal to our process group.  */
-		   int restart;
 		   err = __USEPORT (CTTYID, _hurd_sig_post (0, SIGTTIN, port));
 		   /* XXX what to do if error here? */
 		   /* At this point we should have just run the handler for
