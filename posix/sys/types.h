@@ -27,12 +27,14 @@ Cambridge, MA 02139, USA.  */
 
 #include <gnu/types.h>
 
+#ifdef	__USE_BSD
 #define u_char __u_char
 #define u_short __u_short
 #define u_int __u_int
 #define u_long __u_long
 #define quad __quad
 #define u_quad __u_quad
+#endif
 
 #define dev_t __dev_t
 #define gid_t __gid_t
@@ -46,8 +48,10 @@ Cambridge, MA 02139, USA.  */
 #define	ssize_t	__ssize_t
 #endif
 
+#ifdef	__USE_BSD
 #define daddr_t __daddr_t
 #define caddr_t __caddr_t
+#endif
 
 #define	__need_time_t
 #include <time.h>
@@ -55,15 +59,15 @@ Cambridge, MA 02139, USA.  */
 #define	__need_size_t
 #include <stddef.h>
 
-#define	quad	__quad
 
-
+#ifdef	__USE_BSD
 #define	FD_SETSIZE	__FD_SETSIZE
 #define	fd_set		__fd_set
 #define	FD_ZERO(set)	__FD_ZERO(set)
 #define	FD_SET(d, set)	__FD_SET((d), (set))
 #define	FD_CLR(d, set)	__FD_CLR((d), (set))
 #define	FD_ISSET(d, set)__FD_ISSET((d), (set))
+#endif
 
 #include <gnu/time.h>
 
