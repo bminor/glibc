@@ -408,7 +408,8 @@ directories.@refill
 There are a few special files that may exist in each subdirectory of
 @file{sysdeps}:
 
-@table @file                    @c Blank lines after items make it look better.
+@comment Blank lines after items make the table look better.
+@table @file
 @item Makefile
 
 A makefile for this machine or operating system, or class of machine or
@@ -841,7 +842,7 @@ The port to the Sequent Symmetry running Dynix version 3
 
 @item
 The timezone support code is derived from the public-domain timezone
-package by Arthur David Olsen.
+package by Arthur David Olson.
 
 @item
 The Internet resolver code is taken directly from BIND 4.9.1, which is
