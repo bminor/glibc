@@ -1,0 +1,132 @@
+# Copyright (C) 1991 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+#
+#	Propagated rules for making the GNU C library
+#
+ifneq (,)
+This makefile requires GNU Make.
+endif
+
+include ../Makeconfig
+
+ifndef	subdir
+Each subdirectory makefile must define the `subdir' variable.
+endif
+
+# This is the default target; it makes the library.
+.PHONY: all
+all: lib headers
+
+ifneq	"$(findstring env,$(origin headers))" ""
+override headers :=
+endif
+
+ifeq "$(strip $(headers))" ""
+ifneq "$(wildcard $(subdir).h)" ""
+override headers := $(subdir).h
+endif
+endif
+
+include ../Makerules
+
+.PHONY: subdir_lib
+subdir_lib: lib-noranlib
+
+.PHONY: subdir_headers
+subdir_headers: headers
+
+# This makes all the auxilliary and test programs.
+
+.PHONY: others tests
+others: $(addprefix $(objpfx),$(others))
+tests: $(tests:%=$(objpfx)%.out)
+
+ifneq "$(strip $(others) $(tests))" ""
+$(addprefix $(objpfx),$(others) $(tests)): %: %.o lib
+	$(+link)
+endif
+
+ifneq "$(strip $(tests))" ""
+# These are the implicit rules for making test outputs
+# from the test programs and whatever input files are present.
+$(objpfx)%.out: $(objpfx)% %.args %.input
+	$(dir $<)$(notdir $<) `cat $(word 2,$^)` < $(word 3,$^) > $@
+$(objpfx)%.out: $(objpfx)% %.args
+	$(dir $<)$(notdir $<) `cat $(word 2,$^)` > $@
+$(objpfx)%.out: $(objpfx)% %.input
+	$(dir $<)$(notdir $<) < $(word 2,$^) > $@
+$(objpfx)%.out: $(objpfx)%
+	$(dir $<)$(notdir $<) > $@
+endif	# tests
+
+# This removes everything that can be regenerated
+# except for the object files and the object-file library members.
+.PHONY: mostlyclean
+mostlyclean:
+	rm -f $(addprefix $(objpfx),$(tests) $(others))
+	rm -f core TAGS depend
+
+# This removes absolutely everything that can be regenerated.
+.PHONY: subdir_clean clean realclean
+subdir_clean realclean: clean
+clean: mostlyclean
+	rm -f $(objects) $(+depfiles)
+
+.PHONY: subdir_echo-headers
+subdir_echo-headers: echo-headers
+
+.PHONY: subdir_echo-distinfo
+subdir_echo-distinfo:
+	@echo $(addprefix +header+,$(headers)) \
+	      $(addprefix +nodist+,$(dont_distribute))
+
+.PHONY: subdir_install
+subdir_install: install
+
+# In most cases, we want the C source files to come before
+# the header files so tags for optimizing #define's in the
+# headers won't be put in the tags files, but for ctype,
+# the functions are just backup for the #define's in the header.
+ifeq	"$(subdir)" "ctype"
++tags_sources	:= *.h $(sources)
+else
++tags_sources	:= $(sources) *.h
+endif
+
+# This makes the tags file.
+TAGS: $(+tags_sources)
+	@$(cmdecho) '$(ctags) -f $@ ...'
+	@$(ctags) -f $@ $^
+.PHONY: subdir_TAGS
+subdir_TAGS: TAGS
+
+# Make the distribution tarfile for the parent makefile.
+
+ifneq "$(findstring env,$(origin distribute))" ""
+override distribute :=
+endif
+
+.PHONY: subdir_dist dist
+subdir_dist: dist
+dist: ../Make-dist
+	$(MAKE) -f $< $(Make-dist-args)
+
+# Keep these out of the environment so it doesn't get too big.
+override routines :=
+override aux :=
