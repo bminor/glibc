@@ -212,12 +212,14 @@ endef
 .PHONY: ar-it
 ar-it: $(objects)
 #	$(+libc_lock_open)
+ifdef objects
 ifdef objdir
 	cd $(objdir); $(AR) ru$(verbose) libc.a $(patsubst $(objpfx)%,%,$^)
 else
 	$(AR) ru$(verbose) $(..)libc.a $^
 endif
 #	$(+libc_lock_close)
+endif
 
 
 
