@@ -23,6 +23,8 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+extern int __syscall_setrlimit (unsigned int resource,
+				const struct rlimit *rlimits);
 
 /* Linux 2.3.25 introduced a new system call since the types used for
    the limits are now unsigned.  */
