@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,9 +29,8 @@ void
 DEFUN(__libc_init, (argc, argv, envp),
       int argc AND char **argv AND char **envp)
 {
-  
-  void EXFUN((**fn), (int argc, char **argv, char **envp));
+  size_t i;
 
-  for (fn = __libc_subinit.fn; *fn != NULL; ++fn)
-    (**fn) (argc, argv, envp);
+  for (i = 0; i < __libc_subinit.n; ++i)
+    (*__libc_subinit.fn[i]) (argc, argv, envp);
 }
