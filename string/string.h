@@ -151,6 +151,10 @@ extern int strcasecmp __P ((__const char *__s1, __const char *__s2));
 extern char *strsep __P ((char **__stringp, __const char *__delim));
 #endif
 
+/* Copy no more than N characters of SRC to DEST, returning the address of
+   the last character written into DEST.  */
+extern char *__stpncpy __P ((char *__dest, __const char *__src, size_t __n));
+
 #ifdef	__USE_GNU
 /* Compare no more than N chars of S1 and S2, ignoring case.  */
 extern int strncasecmp __P ((__const char *__s1, __const char *__s2,
@@ -161,6 +165,14 @@ extern char *strsignal __P ((int __sig));
 
 /* Copy SRC to DEST, returning the address of the terminating '\0' in DEST.  */
 extern char *stpcpy __P ((char *__dest, __const char *__src));
+
+/* Copy no more than N characters of SRC to DEST, returning the address of
+   the last character written into DEST.  */
+extern char *stpncpy __P ((char *__dest, __const char *__src, size_t __n));
+
+#ifdef __OPTIMIZE__
+#define stpncpy(dest, src, n)	__stpncpy ((dest), (src), (n))
+#endif
 
 /* Sautee STRING briskly.  */
 extern char *strfry __P ((char *__string));
