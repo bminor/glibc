@@ -34,5 +34,4 @@ DEFUN(__stat, (file, buf), CONST char *file AND struct stat *buf)
   if (err)
     return __hurd_fail (err);
   return 0;
-
 }
