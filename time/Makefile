@@ -48,7 +48,6 @@ define nl
 
 endef
 include zonenames
-zonenames := $(subst $(nl), ,$(zonenames))
 
 install-data = $(addprefix zoneinfo/,$(zonenames) \
 			   	     $(filter-out /%,$(localtime-file) \
@@ -57,20 +56,20 @@ install-others = $(filter /%,$(localtime-file) $(posixrules-file))
 
 include ../Rules
 
-$(tzfiles:%=zones-%): zones-%: %
+$(tzfiles:%=zones-%): zones-%: % Makefile
+# Kludge alert: we use an implicit rule (in what we are generating here)
+# because that is the only way to tell Make that the one command builds all
+# the files.
 	(echo 'define $*-zones'						;\
 	 awk '$$1 == "Zone" { print $$2 } $$1 == "Link" { print $$3 }' $^;\
 	 echo 'endef'							;\
 	 echo '$*-zones := $$(subst $$(nl), ,$$($*-zones))'		;\
 	 echo 'ifdef $*-zones'						;\
-	 echo '$$(addprefix zoneinfo/%/,$$($*-zones)): \'		;\
+	 echo '$$(addprefix zone%/,$$($*-zones)): \'			;\
 	 echo '$< $$(objpfx)zic leapseconds zoneinfo/'			;\
 	 echo '	$$(tzcompile)'						;\
 	 echo 'endif'							;\
-	 echo 'define zonenames'					;\
-	 echo '$$($*-zones)'						;\
-	 echo 'endef'							;\
-	 echo 'zonenames := $$(subst $$(nl), ,$$(zonenames))'		;\
+	 echo 'zonenames := $$(zonenames) $$($*-zones)'			;\
 	) > $@
 zonenames: Makefile
 	(for file in $(tzfiles); do	\
