@@ -221,18 +221,19 @@ smallest test case that reproduces the problem.  In the case of a C
 library, you really only need to narrow it down to one library
 function call, if possible.  This should not be too difficult.
 
-The final step when you have a simple test case is to report the
-bug.  When reporting a bug, send your test case, the results you
-got, the results you expected, what you think the problem might be
-(if you've thought of anything), your system type, and the version
-of the GNU C library which you are using.
+The final step when you have a simple test case is to report the bug.
+When reporting a bug, send your test case, the results you got, the
+results you expected, what you think the problem might be (if you've
+thought of anything), your system type, and the version of the GNU C
+library which you are using.  Also include the files
+@file{config.status} and @file{config.make} which are created by running
+@file{configure}; they will be in whatever directory was current when
+you ran @file{configure}.
 
-@ignore @c this makes no sense for `INSTALL' before the manual is out. --rm
 If you are not sure how a function should behave, and this manual
-doesn't tell you, that's a bug in the manual.  Report that too!
-If the function's behavior disagrees with the manual, then either the
-library or the manual has a bug, so report the disagreement.
-@end ignore
+doesn't tell you, that's a bug in the manual.  Report that too!  If the
+function's behavior disagrees with the manual, then either the library
+or the manual has a bug, so report the disagreement.
 
 If you think you have found some way in which the GNU C library does not
 conform to the ANSI and POSIX standards (@pxref{Standards and
