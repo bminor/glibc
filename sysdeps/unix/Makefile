@@ -249,7 +249,7 @@ $(common-objpfx)syscall.h: $(syscall.h)
 	    -e 's/^#define[ 	]*\([a-z0-9_]*\)[ 	]*/#define SYS_\1 /' \
 	    -e 's/[ 	]sys_/ SYS_/' \
 	    -e 's/SYS_syscall_basenum/syscall_basenum/g' \
-	    -e 's/SYS_sysvoffset/sysvoffset//g' \
+	    -e 's/SYS_sysvoffset/sysvoffset/g' \
 	    -e '/^#/!d' \
 	    -e '/^#ident/d' \
 	    -e 's-\(/\*[^*]*\)$$-\1\*/-' \
