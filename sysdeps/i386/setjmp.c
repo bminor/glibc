@@ -37,20 +37,19 @@ int
 __sigsetjmp (jmp_buf env, int savemask)
 {
   /* Save the general registers.  */
-#define	REG(xx)	env[0].__##xx = xx
+#define	REG(xx)	env[0].__jmpbuf[0].__##xx = xx
   REGS;
-
-  /* Save the signal mask if requested.  */
-  __sigjmp_save (env, savemask);
+#undef REG
 
   /* Save the return PC.  */
-  env[0].__pc = ((void **) &env)[-1];
+  env[0].__jmpbuf[0].__pc = ((void **) &env)[-1];
 
   /* Save caller's FP, not our own.  */
-  env[0].__bp = ((void **) &env)[-2];
+  env[0].__jmpbuf[0].__bp = ((void **) &env)[-2];
 
   /* Save caller's SP, not our own.  */
-  env[0].__sp = (void *) &env;
+  env[0].__jmpbuf[0].__sp = (void *) &env;
 
-  return 0;
+  /* Save the signal mask if requested.  */
+  return __sigjmp_save (env, savemask);
 }
