@@ -72,6 +72,17 @@ DEFUN(__execve, (path, argv, envp),
   ints[INIT_CTTY_FSID1] = _hurd_ctty_fsid.val[0];
   ints[INIT_CTTY_FSID2] = _hurd_ctty_fsid.val[1];
   ints[INIT_CTTY_FILEID] = _hurd_ctty_fileid;
+
+  {
+    struct _hurd_sigstate *ss = _hurd_thread_sigstate (__mach_thread_self ());
+    int i;
+    ints[INIT_SIGMASK] = ss->sigmask;
+    ints[INIT_SIGIGN] = 0;
+    for (i = 1; i < NSIG; ++i)
+      if (ss->actions[i].sa_handler == SIG_IGN)
+	ints[INIT_SIGIGN] |= sigmask (i);
+    __mutex_unlock (&ss->lock);
+  }
   
   __mutex_lock (&_hurd_dtable.lock);
   dtablesize = _hurd_dtable.size;
@@ -83,8 +94,8 @@ DEFUN(__execve, (path, argv, envp),
   err = __file_exec (file, __mach_task_self (),
 		     args, argslen, env, envlen,
 		     dtable, dtablesize,
-		     ints, INIT_MAX_INTS,
-		     ports, INIT_MAX_PORTS,
+		     ints, INIT_INT_MAX,
+		     ports, INIT_PORT_MAX,
 		     0);
   if (err)
     return __hurd_fail (err);
