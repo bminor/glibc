@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 19911993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,10 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <string.h>
 
-#ifndef HAVE_GNU_LD
-#define _sys_errlist sys_errlist
-#define _sys_nerr sys_nerr
-#endif
+extern char *_strerror_internal __P ((int, char buf[1024]));
 
 /* Return a string descibing the errno code in ERRNUM.
    The storage is good only until the next call to strerror.
@@ -31,16 +28,6 @@ Cambridge, MA 02139, USA.  */
 char *
 DEFUN(strerror, (errnum), int errnum)
 {
-  if (errnum < 0 || errnum > _sys_nerr)
-    {
-      static char unknown_error[] = "Unknown error 000000000000000000";
-      static char fmt[] = "Unknown error %d";
-      size_t len = sprintf(unknown_error, fmt, errnum);
-      if (len < sizeof(fmt) - 2)
-	return NULL;
-      unknown_error[len - 1] = '\0';
-      return unknown_error;
-    }
-
-  return (char *) _sys_errlist[errnum];
+  static buf[1024];
+  return _strerror_internal (errnum, buf);
 }
