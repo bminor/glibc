@@ -26,6 +26,7 @@ struct stat
   {
     int st_fstype;		/* File system type.  */
     __fsid_t st_fsid;		/* File system ID.  */
+#define	st_dev	st_fsid
     __ino_t st_ino;		/* File number.  */
     unsigned int st_gen;	/* To detect reuse of file numbers.  */
     __dev_t st_rdev;		/* Device if special file.  */
