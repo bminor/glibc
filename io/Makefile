@@ -31,7 +31,7 @@ routines :=								      \
 	__open __close __read __write __lseek __access __fcntl __flock	      \
 	__dup __dup2 __pipe						      \
 	creat								      \
-	__chdir getcwd getwd						      \
+	__chdir getcwd getwd getdirname					      \
 	__chown __fchown						      \
 	ttyname __isatty						      \
 	__link __symlink __readlink					      \
