@@ -33,7 +33,7 @@ DEFUN(__readlink, (file_name, buf, len),
   error_t err;
   file_t file;
   char mybuf[2048], *transp = mybuf;
-  unsigned int translen = sizeof (mybuf);
+  mach_msg_type_number_t translen = sizeof (mybuf);
 
   file = __file_name_lookup (file_name, O_NOTRANS, 0);
   if (file == MACH_PORT_NULL)

@@ -88,13 +88,13 @@ __fork (void)
       thread_t thread, sigthread;
       mach_port_urefs_t thread_refs, sigthread_refs;
       struct machine_thread_state state;
-      unsigned int statecount;
+      mach_msg_type_number_t statecount;
       mach_port_t *portnames = NULL;
-      unsigned int nportnames = 0;
+      mach_msg_type_number_t nportnames = 0;
       mach_port_type_t *porttypes = NULL;
-      unsigned int nporttypes = 0;
+      mach_msg_type_number_t nporttypes = 0;
       thread_t *threads = NULL;
-      unsigned int nthreads = 0;
+      mach_msg_type_number_t nthreads = 0;
       int ports_locked = 0;
 
       /* Run things that prepare for forking before we create the task.  */
@@ -293,7 +293,7 @@ __fork (void)
 	      else
 		{
 		  /* Skip the name we use for any of our own thread ports.  */
-		  unsigned int j;
+		  mach_msg_type_number_t j;
 		  for (j = 0; j < nthreads; ++j)
 		    if (portnames[i] == threads[j])
 		      break;
