@@ -29,12 +29,15 @@ struct hurd_fd *
 _hurd_alloc_fd (int *fd, const int first_fd)
 {
   int i;
+  void *crit;
 
   if (first_fd < 0)
     {
       errno = EINVAL;
       return NULL;
     }
+
+  crit = _hurd_critical_section_lock ();
 
   __mutex_lock (&_hurd_dtable_lock);
 
@@ -50,6 +53,7 @@ _hurd_alloc_fd (int *fd, const int first_fd)
 	  if (d == NULL)
 	    {
 	      __mutex_unlock (&_hurd_dtable_lock);
+	      _hurd_critical_section_unlock (crit);
 	      return NULL;
 	    }
 	  _hurd_dtable.d[i] = d;
@@ -59,6 +63,7 @@ _hurd_alloc_fd (int *fd, const int first_fd)
       if (d->port.port == MACH_PORT_NULL)
 	{
 	  __mutex_unlock (&_hurd_dtable_lock);
+	  _hurd_critical_section_unlock (crit);
 	  if (fd != NULL)
 	    *fd = i;
 	  return d;
@@ -70,6 +75,7 @@ _hurd_alloc_fd (int *fd, const int first_fd)
   errno = first_fd < _hurd_dtable.size ? EMFILE : EINVAL;
 
   __mutex_unlock (&_hurd_dtable_lock);
+  _hurd_critical_section_unlock (crit);
 
   return NULL;
 }
