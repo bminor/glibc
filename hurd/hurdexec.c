@@ -39,10 +39,10 @@ _hurd_exec (task_t task, file_t file,
   int ints[INIT_INT_MAX];
   mach_port_t ports[_hurd_nports];
   struct hurd_userlink ulink_ports[_hurd_nports];
-  file_t *dtable, *dtable_ctty;
+  file_t *dtable;
   int dtablesize;
-  struct hurd_port **dtable_cells, **dtable_ctty_cells;
-  struct hurd_userlink *ulink_dtable, *ulink_dtable_ctty;
+  struct hurd_port **dtable_cells;
+  struct hurd_userlink *ulink_dtable;
   int i;
   char *const *p;
   struct hurd_sigstate *ss;
@@ -153,11 +153,8 @@ _hurd_exec (task_t task, file_t file,
   if (_hurd_dtable != NULL)
     {
       dtable = __alloca (dtablesize * sizeof (dtable[0]));
-      dtable_ctty = __alloca (dtablesize * sizeof (dtable[0]));
       ulink_dtable = __alloca (dtablesize * sizeof (ulink_dtable[0]));
       dtable_cells = __alloca (dtablesize * sizeof (dtable_cells[0]));
-      ulink_dtable_ctty = __alloca (dtablesize * sizeof (ulink_dtable[0]));
-      dtable_ctty_cells = __alloca (dtablesize * sizeof (dtable_cells[0]));
       for (i = 0; i < dtablesize; ++i)
 	{
 	  struct hurd_fd *const d = _hurd_dtable[i];
@@ -183,26 +180,14 @@ _hurd_exec (task_t task, file_t file,
 	    }
 	  else
 	    {
-	      /* If this is a descriptor to our controlling tty,
-		 we want to give the normal port, not the foreground port.  */
-	      dtable[i] = _hurd_port_get (&d->ctty, &ulink_dtable[i]);
-	      if (dtable[i] == MACH_PORT_NULL)
-		{
-		  dtable[i] = _hurd_port_locked_get (&d->port,
-						     &ulink_dtable[i]);
-		  dtable_cells[i] = &d->port;
-		}
-	      else
-		{
-		  if (pdp)
-		    /* All the elements of DTABLE are added to PLEASE_DEALLOC
-		       below, so we needn't add the port in the branch above.
-		       But we must deallocate the foreground port as well as
-		       the normal port that got installed in DTABLE[I].  */
-		    *pdp++ = d->port.port;
-		  __spin_unlock (&d->port.lock);
-		  dtable_cells[i] = &d->ctty;
-		}
+	      if (pdp && d->ctty.port != MACH_PORT_NULL)
+		/* All the elements of DTABLE are added to PLEASE_DEALLOC
+		   below, so we needn't add the port itself.
+		   But we must deallocate the ctty port as well as
+		   the normal port that got installed in DTABLE[I].  */
+		*pdp++ = d->ctty.port;
+	      dtable[i] = _hurd_port_locked_get (&d->port, &ulink_dtable[i]);
+	      dtable_cells[i] = &d->port;
 	    }
 	}
     }
