@@ -48,7 +48,7 @@ DEFUN(fgets, (s, n, stream), char *s AND size_t n AND register FILE *stream)
       while (--n > 0 && (c = getc (stream)) != EOF) 
 	if ((*p++ = c) == '\n')
 	  break;
-      if (c == EOF)
+      if (c == EOF && (p == s || ferror (stream)))
 	return NULL;
       *p = '\0';
       return s;
@@ -58,7 +58,7 @@ DEFUN(fgets, (s, n, stream), char *s AND size_t n AND register FILE *stream)
   --n;
 
   if (n > 0 &&
-      !stream->__seen || stream->__buffer == NULL || stream->__pushed_back)
+      (!stream->__seen || stream->__buffer == NULL || stream->__pushed_back))
     {
       /* Do one with getc to allocate a buffer.  */
       int c = getc (stream);
