@@ -58,3 +58,4 @@ Cambridge, MA 02139, USA.  */
 
 #define	r0	%eax
 #define	r1	%edx
+#define MOVE(x,y)	movl x , y
