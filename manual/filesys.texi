@@ -146,7 +146,7 @@ These facilities are declared in the header file @file{<dirent.h>}.
 
 @comment dirent.h
 @comment POSIX.1
-@deftp {Data Type} {struct dirent}
+@deftp {struct Type} dirent
 This is a structure type used to return information about directory
 entries.  It contains the following members:
 
@@ -710,7 +710,7 @@ files @file{<sys/types.h>} and @file{<time.h>}.
 
 @comment sys/stat.h
 @comment POSIX.1
-@deftp {Data Type} struct stat
+@deftp {struct Type} stat
 The @code{stat} structure type is used to return information about the
 attributes of a file.  It contains at least the following members:
 
@@ -1449,7 +1449,7 @@ You can also change the timestamps of a file explicitly using the
 
 @comment time.h
 @comment POSIX.1
-@deftp {Data Type} {struct utimbuf}
+@deftp {struct Type} utimbuf
 The @code{utimbuf} structure is used with the @code{utime} function to
 specify new access and modification times for a file.  It contains at
 least the following members:
