@@ -564,6 +564,10 @@ extern void perror __P ((__const char *__s));
 extern int sys_nerr;
 extern char *sys_errlist[];
 #endif
+#ifdef	__USE_GNU
+extern int _sys_nerr;
+extern char *_sys_errlist[];
+#endif
 
 #ifdef	__USE_MISC
 /* Print a message describing the meaning of the given signal number.  */
