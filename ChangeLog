@@ -1,5 +1,15 @@
 1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/generic/libc-start.c (check_one_fd): Use __libc_open
+	instead of __open.
+
+1999-12-11  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/generic/libc-start.c (check_one_fd): Use __libc_fcntl
+	instead of __fcntl.
+
+1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
+
 	* include/features.h: Recognize _ISOC99_SOURCE as well.
 
 1999-12-10  Jakub Jelinek  <jakub@redhat.com>
