@@ -29,7 +29,11 @@ Cambridge, MA 02139, USA.  */
 #define _SYSV_VERASE 2
 #define _SYSV_VKILL 3
 #define _SYSV_VEOF 4
+/* This field means VEOF if ICANON, VMIN if not.  */
+#define _SYSV_VMIN 4
 #define _SYSV_VEOL 5
+/* This field means VEOL if ICANON, VTIME if not.  */
+#define _SYSV_VTIME 5
 #define _SYSV_VEOL2 6
 
 /* Flags in c_iflag.  */
@@ -42,6 +46,7 @@ Cambridge, MA 02139, USA.  */
 #define _SYSV_INLCR 0x40
 #define _SYSV_IGNCR 0x80
 #define _SYSV_ICRNL 0x100
+#define _SYSV_IUCLC 0x200
 #define _SYSV_IXON 0x400
 #define _SYSV_IXANY 0x800
 #define _SYSV_IXOFF 0x1000
@@ -99,7 +104,30 @@ Cambridge, MA 02139, USA.  */
 
 /* Flags in c_oflag.  */
 #define _SYSV_OPOST 1
+#define _SYSV_OLCUC 2
 #define _SYSV_ONLCR 4
+#define _SYSV_NLDLY 0x100
+#define _SYSV_NL0 0
+#define _SYSV_NL1 0x100
+#define _SYSV_CRDLY 0x600
+#define _SYSV_CR0 0
+#define _SYSV_CR1 0x200
+#define _SYSV_CR2 0x400
+#define _SYSV_CR3 0x600
+#define _SYSV_TABDLY 0x1800
+#define _SYSV_TAB0 0
+#define _SYSV_TAB1 0x0800
+#define _SYSV_TAB2 0x1000
+#define _SYSV_XTABS 0x1800
+#define _SYSV_BSDLY 0x2000
+#define _SYSV_BS0 0
+#define _SYSV_BS1 0x2000
+#define _SYSV_VTDLY 0x4000
+#define _SYSV_VT0 0
+#define _SYSV_VT1 0x4000
+#define _SYSV_FFDLY 0x8000
+#define _SYSV_FF0 0
+#define _SYSV_FF1 0x8000
 
 /* ioctl's.  */
 
