@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/ptrace.h>
 #include <sys/types.h>
+#include <stdarg.h>
 
 /* Perform process tracing functions.  REQUEST is one of the values
    in <sys/ptrace.h>, and determines the action to be taken.
@@ -34,8 +35,10 @@ int
 DEFUN(ptrace, (request), enum __ptrace_request request DOTS)
 {
   pid_t pid;
-  PTR addr, addr2;
+  PTR addr;
+  PTR addr2;
   int data;
+  va_list ap;
 
   switch (request)
     {
