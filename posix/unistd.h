@@ -190,6 +190,11 @@ extern int fchown __P ((int __fd,
 extern int __chdir __P ((__const char *__path));
 extern int chdir __P ((__const char *__path));
 
+#ifdef __USE_BSD
+/* Change the process's working directory to the one FD is open on.  */
+extern int fchdir __P ((int __fd));
+#endif
+
 /* Get the pathname of the current working directory,
    and put it in SIZE bytes of BUF.  Returns NULL if the
    directory couldn't be determined or SIZE was too small.
