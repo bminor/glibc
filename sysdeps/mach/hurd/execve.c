@@ -21,11 +21,11 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <fcntl.h>
 
-/* Replace the current process, executing PATH with arguments ARGV and
+/* Replace the current process, executing FILE_NAME with arguments ARGV and
    environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
 int
-DEFUN(__execve, (path, argv, envp),
-      CONST char *path AND char *CONST argv[] AND char *CONST envp[])
+DEFUN(__execve, (file_name, argv, envp),
+      CONST char *file_name AND char *CONST argv[] AND char *CONST envp[])
 {
   error_t err;
   file_t file = __file_name_lookup (file_name, O_EXEC, 0);
