@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -131,7 +131,7 @@ $(before-compile):
 # have source in .s files, and thus do not in fact need a .dep file.
 # So we must define rules to make .dep files for .s files.
 define make-dummy-dep
-$(addprefix ln $(objpfx)dummy.dep ,$(wildcard $@))
+$(addprefix ln $(objpfx)dummy.dep ,$(filter-out $(wildcard $@),$@))
 endef
 $(objpfx)dummy.dep:
 	echo '# .s files cannot contain includes, so they need no deps.' > $@
