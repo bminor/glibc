@@ -78,8 +78,7 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
   memset (&ts, 0, sizeof (ts));
   ts.PC = (int) pc;
 #ifdef STACK_GROWTH_DOWN
-  ts.SP = stack + size;
-  stack -= __vm_page_size;
+  ts.SP = stack + __vm_page_size + size;
 #elif defined (STACK_GROWTH_UP)
   ts.SP = stack;
   stack += size;
