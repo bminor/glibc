@@ -18,6 +18,19 @@ Cambridge, MA 02139, USA.  */
 
 /* Different systems have different names for the array.
    This order is important for some systems.  */
+
+#if !defined(TABLE) && defined(HAVE__LOCP)
+/* OSF/1 has the name _ctype defined as a macro, which points down into
+   the _locp structure.  Jesus.  We'll hope this works.  We need to
+   check for LOCP first, since there is no symbol actually named _ctype
+   in their library.  */
+#include <sys/types.h> /* for wchar_t used by localdef.h */
+#include <sys/localedef.h>
+extern loc_t *_locp;
+#define TABLE		(_locp->lc_chrtbl)->lc_ctype
+#undef _ctype
+#define TABLE_NAME	_ctype
+#endif
 #ifdef	HAVE__CTYPE__
 #define	TABLE	_ctype__
 #endif
@@ -32,15 +45,6 @@ Cambridge, MA 02139, USA.  */
 #endif
 #if !defined(TABLE) && defined(HAVE___CTYPE)
 #define	TABLE	__ctype
-#endif
-#if !defined(TABLE) && defined(HAVE__LOCP)
-/* OSF/1 has the name _ctype defined as a macro, which points down into
-   the _locp structure.  Jesus.  We'll hope this works.  */
-#include <sys/localedef.h>
-extern loc_t *_locp;
-#define TABLE		(_locp->lc_chrtbl)->lc_ctype
-#undef _ctype
-#define TABLE_NAME	_ctype
 #endif
 
 #if defined (__STDC__) && __STDC__
@@ -57,7 +61,10 @@ main ()
 
   int i;
 
+#ifndef HAVE__LOCP
+  /* This won't work for the define to look into _locp.  */
   extern unsigned char TABLE[];
+#endif
 
   puts ("#include <ansidecl.h>");
 #ifdef TABLE_NAME
