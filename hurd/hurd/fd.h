@@ -171,10 +171,10 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
 }
 
 
-/* Evaluate EXPR with the variable `port' bound to the port to FD,
-   and `ctty' bound to the ctty port.  */
-   
-#define	HURD_DPORT_USE(fd, expr)					      \
+/* Evaluate EXPR with the variable `descriptor' bound to a pointer to the
+   locked file descriptor structure for FD.  */
+
+#define	HURD_FD_USE(fd, expr)						      \
   ({ struct hurd_userlink __dt_ulink;					      \
      error_t __result;							      \
      struct hurd_fd_user __d = _hurd_fd_get (fd, &__dt_ulink);		      \
@@ -182,17 +182,30 @@ _hurd_fd_free (struct hurd_fd_user d, struct hurd_userlink *ulink)
        __result = EBADF;						      \
      else								      \
        {								      \
-         struct hurd_userlink __ulink, __ctty_ulink; 			      \
-	 io_t port = _hurd_port_locked_get (&__d.d->port, &__ulink);	      \
-	 io_t ctty = _hurd_port_locked_get (&__d.d->ctty, &__ctty_ulink);     \
+	 struct hurd_fd *const descriptor = __d.d;			      \
 	 __result = (expr);						      \
-	 _hurd_port_free (&__d.d->port, &__ulink, port);		      \
-	 if (ctty != MACH_PORT_NULL)					      \
-	   _hurd_port_free (&__d.d->ctty, &__ctty_ulink, ctty);		      \
 	 _hurd_fd_free (__d, &__dt_ulink);				      \
        }								      \
-      __result;								      \
-   })									      \
+     __result; })
+
+/* Evaluate EXPR with the variable `port' bound to the port to FD,
+   and `ctty' bound to the ctty port.  */
+
+#define HURD_DPORT_USE(fd, expr) \
+  HURD_FD_USE ((fd), HURD_FD_PORT_USE (d, (expr)))
+
+/* Likewise, but FD is a pointer to the locked file descriptor structure.  */
+
+#define	HURD_FD_PORT_USE(fd, expr)					      \
+  ({ error_t __result;							      \
+     struct hurd_userlink __ulink, __ctty_ulink;			      \
+     io_t port = _hurd_port_locked_get (&__d.d->port, &__ulink);	      \
+     io_t ctty = _hurd_port_locked_get (&__d.d->ctty, &__ctty_ulink);	      \
+     __result = (expr);							      \
+     _hurd_port_free (&__d.d->port, &__ulink, port);			      \
+     if (ctty != MACH_PORT_NULL)					      \
+       _hurd_port_free (&__d.d->ctty, &__ctty_ulink, ctty);		      \
+     __result; })
 
 #include <errno.h>
 
@@ -250,7 +263,7 @@ extern int _hurd_intern_fd (io_t port, int flags, int dealloc);
 /* Allocate a new file descriptor in the table and return it, locked.  The
    new descriptor number will be no less than FIRST_FD.  If the table is
    full, set errno to EMFILE and return NULL.  If FIRST_FD is negative or
-   bigger than the size of the table, set errno to EINVAL and return NULL. */
+   bigger than the size of the table, set errno to EINVAL and return NULL.  */
 
 extern struct hurd_fd *_hurd_alloc_fd (int *fd_ptr, int first_fd);
 
@@ -258,6 +271,14 @@ extern struct hurd_fd *_hurd_alloc_fd (int *fd_ptr, int first_fd);
    with PORT and CTTY.  (This does not affect the descriptor table.)  */
 
 extern struct hurd_fd *_hurd_new_fd (io_t port, io_t ctty);
+
+/* Read and write data from a file descriptor; just like `read' and `write'.
+   If successful, stores the amount actually read or written in *NBYTES.  */
+
+extern error_t _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes);
+extern error_t _hurd_fd_write (struct hurd_fd *fd,
+			       const void *buf, size_t *nbytes);
+
 
 /* User-registered handlers for specific `ioctl' requests.  */
 
