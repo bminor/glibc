@@ -73,7 +73,8 @@ The process has too many files open.
 
 @item ENFILE
 There are too many open files in the entire system.  @xref{Error Codes},
-for more information about @code{ENFILE}.
+for more information about @code{ENFILE}.  This error never occurs in
+the GNU system.
 @end table
 @end deftypefun
 
@@ -172,7 +173,7 @@ permissions; see @ref{Setting Permissions}.
 
 The normal, successful return value from @code{mkfifo} is @code{0}.  In
 the case of an error, @code{-1} is returned.  In addition to the usual
-file name syntax errors (@pxref{File Name Errors}), the following
+file name errors (@pxref{File Name Errors}), the following
 @code{errno} error conditions are defined for this function:
 
 @table @code

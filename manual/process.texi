@@ -345,7 +345,7 @@ rules for counting.
 These functions normally don't return, since execution of a new program
 causes the currently executing program to go away completely.  A value
 of @code{-1} is returned in the event of a failure.  In addition to the
-usual file name syntax errors (@pxref{File Name Errors}), the following
+usual file name errors (@pxref{File Name Errors}), the following
 @code{errno} error conditions are defined for these functions:
 
 @table @code

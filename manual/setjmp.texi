@@ -48,7 +48,7 @@ You identify return points for non-local exits calling the function
 environment in which the call to @code{setjmp} appears in an object of
 type @code{jmp_buf}.  Execution of the program continues normally after
 the call to @code{setjmp}, but if a exit is later made to this return
-point by calling @code{longjmp} with the corresponding @code{jmp_buf}
+point by calling @code{longjmp} with the corresponding @w{@code{jmp_buf}}
 object, control is transferred back to the point where @code{setjmp} was
 called.  The return value from @code{setjmp} is used to distinguish
 between an ordinary return and a return made by a call to

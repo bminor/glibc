@@ -423,10 +423,10 @@ header files can define functions, variables, and macros for internal
 purposes without risk of conflict with names in user programs.
 
 Some additional classes of identifier names are reserved for future
-extensions to the C language.  While using these names for your own
-purposes right now might not cause a problem, they do raise the
-possibility of conflict with future versions of the C standard, so you
-should avoid these names.
+extensions to the C language or the POSIX.1 environment.  While using these
+names for your own purposes right now might not cause a problem, they do
+raise the possibility of conflict with future versions of the C
+or POSIX standards, so you should avoid these names.
 
 @itemize @bullet
 @item 
@@ -581,7 +581,8 @@ modes.
 @ref{Pipes and FIFOs}, contains information about simple interprocess
 communication mechanisms.  Pipes allow communication between two related
 processes (such as between a parent and child), while FIFOs allow
-communication between processes sharing a common file system.
+communication between processes sharing a common file system on the same
+machine.
 
 @item
 @ref{Sockets}, describes a more complicated interprocess communication
@@ -649,8 +650,10 @@ command-line arguments and environment variables.
 and run programs.
 
 @item
-@ref{Job Control}, describes functions for manipulating process groups.
-This material is probably only of interest if you are writing a shell.
+@ref{Job Control}, describes functions for manipulating process groups
+and the controlling terminal.  This material is probably only of
+interest if you are writing a shell or other program which handles job
+control specially.
 
 @item
 @ref{User Database}, and @ref{Group Database}, tell you how to access

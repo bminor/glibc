@@ -120,7 +120,7 @@ of the @code{ld} command requires an argument---an output file name.
 @item
 An option and its argument may or may not appear as separate tokens.  (In
 other words, the whitespace separating them is optional.)  Thus,
-@samp{-o foo} and @samp{-ofoo} are equivalent.
+@w{@samp{-o foo}} and @samp{-ofoo} are equivalent.
 
 @item
 Options typically precede other non-option arguments.
@@ -336,7 +336,7 @@ This field is the name of the option.  It is a string.
 
 @item int has_arg
 This field says whether the option takes an argument.  It is an integer,
-and there are three legitimate values: @code{no_argument},
+and there are three legitimate values: @w{@code{no_argument}},
 @code{required_argument} and @code{optional_argument}.
 
 @item int *flag

@@ -154,7 +154,7 @@ position on a file that doesn't support random access, you get the
 Streams and descriptors that are opened for @dfn{append access} are
 treated specially for output: output to such files is @emph{always}
 appended sequentially to the @emph{end} of the file, regardless of the
-file position.  But, the file position is still used to control where in
+file position.  However, the file position is still used to control where in
 the file reading is done.
 @cindex append-access files
 
@@ -217,13 +217,16 @@ directory.  A file name with multiple components names a directory, and
 then a file in that directory, and so on.
 
 Some other documents, such as the POSIX standard, use the term
-@dfn{pathname} for what we call a file name, and either
-@dfn{filename} or @dfn{pathname component} for what this manual calls a
-file name component.  We don't use this terminology because a ``path''
-is something completely different (a list of directories to search), and
-we think that ``pathname'' used for something else will confuse users.
-We always use ``file name'' and ``file name component'' (or sometimes
-just ``component'', where the context is obvious) in GNU documentation.
+@dfn{pathname} for what we call a file name, and either @dfn{filename}
+or @dfn{pathname component} for what this manual calls a file name
+component.  We don't use this terminology because a ``path'' is
+something completely different (a list of directories to search), and we
+think that ``pathname'' used for something else will confuse users.  We
+always use ``file name'' and ``file name component'' (or sometimes just
+``component'', where the context is obvious) in GNU documentation.  Some
+macros use the POSIX terminology in their names, such as
+@code{PATH_MAX}.  These macros are defined by the POSIX standard, so we
+cannot change their names.
 
 You can find more detailed information about operations on directories
 in @ref{File System Interface}.
@@ -310,13 +313,13 @@ system itself that enforces this kind of convention.
 @node File Name Errors, File Name Portability, File Name Resolution, File Names
 @subsection File Name Errors
 
-@cindex file name syntax errors
-@cindex usual file name syntax errors
+@cindex file name errors
+@cindex usual file name errors
 
 Functions that accept file name arguments usually detect these
-@code{errno} error conditions relating to file name syntax.  These
-errors are referred to throughout this manual as the @dfn{usual file
-name syntax errors}.
+@code{errno} error conditions relating to the file name syntax or
+trouble finding the named file.  These errors are referred to throughout
+this manual as the @dfn{usual file name errors}.
 
 @table @code
 @item EACCES

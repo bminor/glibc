@@ -270,7 +270,7 @@ where subtraction doesn't work directly.
 The @code{time} function returns the current time as a value of type
 @code{time_t}.  If the argument @var{result} is not a null pointer, the
 time value is also stored in @code{*@var{result}}.  If the calendar 
-time is not available, the value @code{(time_t)(-1)} is returned.
+time is not available, the value @w{@code{(time_t)(-1)}} is returned.
 @end deftypefun
 
 

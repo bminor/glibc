@@ -1640,11 +1640,14 @@ The socket address of the given @var{addr} is already in use.
 
 @item EINPROGRESS
 The socket @var{socket} is non-blocking and the connection could not be
-established immediately.
+established immediately.  You can determine when the connection is
+completely established with @code{select}; @pxref{Waiting for I/O}.
+Another @code{connect} call on the same socket, before the connection is
+completely established, will fail with @code{EALREADY}.
 
 @item EALREADY
 The socket @var{socket} is non-blocking and already has a pending
-connection in progress.
+connection in progress (see @code{EINPROGRESS} above).
 @end table
 @end deftypefun
 

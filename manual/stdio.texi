@@ -16,11 +16,11 @@ representing a communications channel to a file, device, or process.
 * Character Input::             Unformatted input by characters and words.
 * Line Input::                  Reading a line or a record from a stream.
 * Unreading::                   Peeking ahead/pushing back input just read.
+* Block Input/Output::          Input and output operations on blocks of data.
 * Formatted Output::            @code{printf} and related functions.
 * Customizing Printf::          You can define new conversion specifiers for
                                  @code{printf} and friends.
 * Formatted Input::             @code{scanf} and related functions.
-* Block Input/Output::          Input and output operations on blocks of data.
 * EOF and Errors::              How you can tell if an I/O error happens.
 * Binary Streams::              Some systems distinguish between text files
                                  and binary files.
@@ -182,6 +182,10 @@ might not be emptied properly.  The GNU C library does not have this
 limitation; you can do arbitrary reading and writing operations on a
 stream in whatever order.
 
+Additional characters may appear after these to specify flags for the
+call.  Always put the mode (@samp{r}, @samp{w+}, etc.) first; that is
+the only part you are guaranteed will be understood by all systems.
+
 The GNU C library defines one additional character for use in
 @var{opentype}: the character @samp{x} insists on creating a new
 file---if a file @var{filename} already exists, @code{fopen} fails
@@ -308,8 +312,9 @@ character @var{c} is returned.
 @deftypefun int putc (int @var{c}, FILE *@var{stream})
 This is just like @code{fputc}, except that most systems implement it as
 a macro, making it faster.  One consequence is that it may evaluate the
-@var{stream} argument more than once.  @code{putc} is usually the best
-function to use for writing a single character.
+@var{stream} argument more than once, which is an exception to the
+general rule for macros.  @code{putc} is usually the best function to
+use for writing a single character.
 @end deftypefun
 
 @comment stdio.h
@@ -325,7 +330,7 @@ The @code{putchar} function is equivalent to @code{putc} with
 The function @code{fputs} writes the string @var{s} to the stream
 @var{stream}.  The terminating null character is not written.
 This function does @emph{not} add a newline character, either.
-It outputs only the chars in the string.
+It outputs only the characters in the string.
 
 This function returns @code{EOF} if a write error occurs, and otherwise
 a non-negative value.
@@ -347,7 +352,8 @@ outputs the text @samp{Are you hungry?} followed by a newline.
 @deftypefun int puts (const char *@var{s})
 The @code{puts} function writes the string @var{s} to the stream
 @code{stdout} followed by a newline.  The terminating null character of
-the string is not written.
+the string is not written.  (Note that @code{fputs} does @emph{not}
+write a newline as this function does.)
 
 @code{puts} is the most convenient function for printing simple
 messages.  For example:
@@ -369,10 +375,21 @@ recommend you use @code{fwrite} instead (@pxref{Block Input/Output}).
 @section Character Input
 
 @cindex reading from a stream, by characters
-This section describes functions for performing character- and
-line-oriented input.
+This section describes functions for performing character-oriented input.
 These functions are declared in the header file @file{stdio.h}.
 @pindex stdio.h
+
+These functions return an @code{int} value that is either a character of
+input, or the special value @code{EOF} (usually -1).  It is important to
+store the result of these functions in a variable of type @code{int}
+instead of @code{char}, even when you plan to use it only as a
+character.  Storing @code{EOF} in a @code{char} variable truncates its
+value to the size of a character, so that it is no longer
+distinguishable from the valid character @samp{(char) -1}.  So always
+use an @code{int} for the result of @code{getc} and friends, and check
+for @code{EOF} after the call; once you've verified that the result is
+not @code{EOF}, you can be sure that it will fit in a @samp{char}
+variable without loss of information.
 
 @comment stdio.h
 @comment ANSI
@@ -380,7 +397,7 @@ These functions are declared in the header file @file{stdio.h}.
 This function reads the next character as an @code{unsigned char} from
 the stream @var{stream} and returns its value, converted to an
 @code{int}.  If an end-of-file condition or read error occurs,
-@code{EOF} is returned instead.
+@code{EOF} is returned instead.  
 @end deftypefun
 
 @comment stdio.h
@@ -419,7 +436,7 @@ y_or_n_p (const char *question)
       c = tolower (fgetc (stdin));
       answer = c;
       /* @r{Discard rest of input line.} */
-      while (c != '\n')
+      while (c != '\n' && c != EOF)
         c = fgetc (stdin);
       /* @r{Obey the answer if it was valid.} */
       if (answer == 'y')
@@ -437,7 +454,10 @@ y_or_n_p (const char *question)
 @deftypefun int getw (FILE *@var{stream})
 This function reads a word (that is, an @code{int}) from @var{stream}.
 It's provided for compatibility with SVID.  We recommend you use
-@code{fread} instead (@pxref{Block Input/Output}).
+@code{fread} instead (@pxref{Block Input/Output}).  Unlike @code{getc},
+any @code{int} value could be a valid result.  @code{getw} returns
+@code{EOF} when it encounters end-of-file or an error, but there is no
+way to distinguish this from an input word with value -1.
 @end deftypefun
 
 @node Line Input
@@ -685,6 +705,59 @@ skip_whitespace (FILE *stream)
   ungetc (c, stream);
 @}
 @end smallexample
+
+@node Block Input/Output
+@section Block Input/Output
+
+This section describes how to do input and output operations on blocks
+of data.  You can use these functions to read and write binary data, as
+well as to read and write text in fixed-size blocks instead of by
+characters or lines.
+@cindex binary I/O to a stream
+@cindex block I/O to a stream
+@cindex reading from a stream, by blocks
+@cindex writing to a stream, by blocks
+
+Binary files are typically used to read and write blocks of data in the
+same format as is used to represent the data in a running program.  In
+other words, arbitrary blocks of memory---not just character or string
+objects---can be written to a binary file, and meaningfully read in
+again by the same program.
+
+Storing data in binary form is often considerably more efficient than
+using the formatted I/O functions.  Also, for floating-point numbers,
+the binary form avoids possible loss of precision in the conversion
+process.  On the other hand, binary files can't be examined or modified
+easily using many standard file utilities (such as text editors), and
+are not portable between different implementations of the language, or
+different kinds of computers.
+
+These functions are declared in @file{stdio.h}.
+@pindex stdio.h
+
+@comment stdio.h
+@comment ANSI
+@deftypefun size_t fread (void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
+This function reads up to @var{count} objects of size @var{size} into
+the array @var{data}, from the stream @var{stream}.  It returns the
+number of objects actually read, which might be less than @var{count} if
+a read error occurs or the end of the file is reached.  This function
+returns a value of zero (and doesn't read anything) if either @var{size}
+or @var{count} is zero.
+
+If @code{fread} encounters end of file in the middle of an object, it
+returns the number of complete objects read, and discards the partial
+object.  Therefore, the stream remains at the actual end of the file.
+@end deftypefun
+
+@comment stdio.h
+@comment ANSI
+@deftypefun size_t fwrite (const void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
+This function writes up to @var{count} objects of size @var{size} from
+the array @var{data}, to the stream @var{stream}.  The return value is
+normally @var{count}, if the call succeeds.  Any other value indicates
+some sort of error, such as running out of space.
+@end deftypefun
 
 @node Formatted Output
 @section Formatted Output
@@ -1438,6 +1511,19 @@ Since that method is impossible, we provide alternative functions, the
 @code{vprintf} series, which lets you pass a @code{va_list} to describe
 ``all of my arguments after the first five.''
 
+When it is sufficient to define a macro rather than a real function, 
+the GNU C compiler provides a way to do this much more easily with macros.
+For example:
+
+@smallexample
+#define myprintf(a, b, c, d, e, rest...) printf (mytemplate , ## rest...)
+@end smallexample
+
+@noindent
+@xref{Macro Varargs, , Macros with Variable Numbers of Arguments,
+gcc.info, Using GNU CC}, for details.  But this is limited to macros,
+and does not apply to real functions at all.
+
 Before calling @code{vprintf} or the other functions listed in this
 section, you @emph{must} call @code{va_start} (@pxref{Variadic
 Functions}) to initialize a pointer to the variable arguments.  Then you
@@ -1830,7 +1916,11 @@ The function to register a new output conversion is
 @comment GNU
 @deftypefun int register_printf_function (int @var{spec}, printf_function @var{handler-function}, printf_arginfo_function @var{arginfo-function})
 This function defines the conversion specifier character @var{spec}.
-Thus, if @var{spec} is @code{'q'}, it defines the conversion @samp{%q}.
+Thus, if @var{spec} is @code{'z'}, it defines the conversion @samp{%z}.
+You can redefine the built-in conversions like @samp{%s}, but flag
+characters like @samp{#} and type modifiers like @samp{l} can never be
+used as conversions; calling @code{register_printf_function} for those
+characters has no effect.
 
 The @var{handler-function} is the function called by @code{printf} and
 friends when this conversion appears in a template string.
@@ -1864,7 +1954,7 @@ the handler when called needs to be able to get the options specified in
 the template.
 
 Both the @var{handler-function} and @var{arginfo-function} arguments
-to @code{register_printf_function} accept an argument of type
+to @code{register_printf_function} accept an argument that points to a
 @code{struct printf_info}, which contains information about the options
 appearing in an instance of the conversion specifier.  This data type
 is declared in the header file @file{printf.h}.
@@ -1902,7 +1992,10 @@ multiple characters, but still have a way to tell them apart when the
 handler function is called.
 
 @item unsigned int is_long_double
-This is a boolean that is true if the @samp{L} type modifier was specified.
+This is a boolean that is true if the @samp{L}, @samp{ll}, or @samp{q}
+type modifier was specified.  For integer conversions, this indicates
+@code{long long int}, as opposed to @code{long double} for floating
+point conversions.
 
 @item unsigned int is_short
 This is a boolean that is true if the @samp{h} type modifier was specified.
@@ -1973,7 +2066,7 @@ negative value to indicate an error.
 This is the data type that a handler function should have.
 @end deftp
 
-If you are going to use @code{parse_printf_format} in your
+If you are going to use @w{@code{parse_printf_format}} in your
 application, you should also define a function to pass as the
 @var{arginfo-function} argument for each new conversion you install with
 @code{register_printf_function}. 
@@ -2102,9 +2195,9 @@ from a matching error.
 If you are trying to read input that doesn't match a single, fixed
 pattern, you may be better off using a tool such as Flex to generate a
 lexical scanner, or Bison to generate a parser, rather than using
-@code{scanf}.  For more information about this, see @ref{Top, Flex,
-Flex, flex.info, Flex: The Lexical Scanner Generator}, and @ref{Top,
-Bison, Bison, bison.info, The Bison Reference Manual}.
+@code{scanf}.  For more information about these tools, see @ref{, , ,
+flex.info, Flex: The Lexical Scanner Generator}, and @ref{, , ,
+bison.info, The Bison Reference Manual}.
 
 @node Input Conversion Syntax
 @subsection Input Conversion Syntax
@@ -2298,6 +2391,7 @@ short int *}.
 Specifies that the argument is a @code{long int *} or @code{unsigned
 long int *}.  Two @samp{l} characters is like the @samp{L} modifier, below.
 
+@need 100
 @item ll
 @itemx L
 @itemx q
@@ -2589,59 +2683,6 @@ function, and warn you when they do not match the format string.
 @xref{Function Attributes, , Declaring Attributes of Functions,
 gcc.info, Using GNU CC}, for details.
 
-@node Block Input/Output
-@section Block Input/Output
-
-This section describes how to do input and output operations on blocks
-of data.  You can use these functions to read and write binary data, as
-well as to read and write text in fixed-size blocks instead of by
-characters or lines.
-@cindex binary I/O to a stream
-@cindex block I/O to a stream
-@cindex reading from a stream, by blocks
-@cindex writing to a stream, by blocks
-
-Binary files are typically used to read and write blocks of data in the
-same format as is used to represent the data in a running program.  In
-other words, arbitrary blocks of memory---not just character or string
-objects---can be written to a binary file, and meaningfully read in
-again by the same program.
-
-Storing data in binary form is often considerably more efficient than
-using the formatted I/O functions.  Also, for floating-point numbers,
-the binary form avoids possible loss of precision in the conversion
-process.  On the other hand, binary files can't be examined or modified
-easily using many standard file utilities (such as text editors), and
-are not portable between different implementations of the language, or
-different kinds of computers.
-
-These functions are declared in @file{stdio.h}.
-@pindex stdio.h
-
-@comment stdio.h
-@comment ANSI
-@deftypefun size_t fread (void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
-This function reads up to @var{count} objects of size @var{size} into
-the array @var{data}, from the stream @var{stream}.  It returns the
-number of objects actually read, which might be less than @var{count} if
-a read error occurs or the end of the file is reached.  This function
-returns a value of zero (and doesn't read anything) if either @var{size}
-or @var{count} is zero.
-
-If @code{fread} encounters end of file in the middle of an object, it
-returns the number of complete objects read, and discards the partial
-object.  Therefore, the stream remains at the actual end of the file.
-@end deftypefun
-
-@comment stdio.h
-@comment ANSI
-@deftypefun size_t fwrite (const void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
-This function writes up to @var{count} objects of size @var{size} from
-the array @var{data}, to the stream @var{stream}.  The return value is
-normally @var{count}, if the call succeeds.  Any other value indicates
-some sort of error, such as running out of space.
-@end deftypefun
-
 @node EOF and Errors
 @section End-Of-File and Errors
 
@@ -2661,10 +2702,10 @@ These symbols are declared in the header file @file{stdio.h}.
 @comment stdio.h
 @comment ANSI
 @deftypevr Macro int EOF
-This macro is an integer value that is returned
-by a number of functions to indicate an end-of-file condition, or some
-other error situation.  With the GNU library, @code{EOF} is @code{-1}.
-In other libraries, its value may be some other negative number.
+This macro is an integer value that is returned by a number of functions
+to indicate an end-of-file condition, or some other error situation.
+With the GNU library, @code{EOF} is @code{-1}.  In other libraries, its
+value may be some other negative number.
 @end deftypevr
 
 @comment stdio.h

@@ -85,14 +85,15 @@ parameters (using the @samp{|} operator in C).
 
 The normal return value from @code{open} is a non-negative integer file
 descriptor.  In the case of an error, a value of @code{-1} is returned
-instead.  In addition to the usual file name syntax errors (@pxref{File
+instead.  In addition to the usual file name errors (@pxref{File
 Name Errors}), the following @code{errno} error conditions are defined
 for this function:
 
 @table @code
 @item EACCES
 The file exists but is not readable/writable as requested by the @var{flags}
-argument.
+argument, the file does not exist and the directory is unwritable so
+it cannot be created.
 
 @item EEXIST
 Both @code{O_CREAT} and @code{O_EXCL} are set, and the named file already
@@ -107,6 +108,8 @@ The @var{flags} argument specified write access, and the file is a directory.
 
 @item EMFILE
 The process has too many files open.
+The maximum number of file descriptors is controlled by the
+@code{RLIMIT_NOFILE} resource limit; @pxref{Limits on Resources}.
 
 @item ENFILE
 The entire system, or perhaps the file system which contains the
@@ -126,10 +129,12 @@ argument, the file named by @var{filename} is a FIFO (@pxref{Pipes and
 FIFOs}), and no process has the file open for reading.
 
 @item EROFS
-The file resides on a read-only file system and any of @code{O_WRONLY},
+The file resides on a read-only file system and any of @w{@code{O_WRONLY}},
 @code{O_RDWR}, and @code{O_TRUNC} are set in the @var{flags} argument,
 or @code{O_CREAT} is set and the file does not already exist.
 @end table
+
+@c !!! umask
 
 The @code{open} function is the underlying primitive for the @code{fopen}
 and @code{freopen} functions, that create streams.
@@ -186,6 +191,13 @@ Here is an example of how to handle @code{EINTR} properly:
 @smallexample
 TEMP_FAILURE_RETRY (close (desc));
 @end smallexample
+
+@item ENOSPC
+@itemx EIO
+@itemx EDQUOT
+When the file is accessed by NFS, these errors from @code{write} can sometimes 
+not be detected until @code{close}.  @xref{I/O Primitives}, for details
+on their meaning.
 @end table
 @end deftypefun
 
@@ -256,18 +268,22 @@ file can also fail with @code{EAGAIN} if the kernel cannot find enough
 physical memory to lock down the user's pages.  This is limited to
 devices that transfer with direct memory access into the user's memory,
 which means it does not include terminals, since they always use
-separate buffers inside the kernel.
+separate buffers inside the kernel.  This problem never happens in the
+GNU system.
 
 Any condition that could result in @code{EAGAIN} can instead result in a
 successful @code{read} which returns fewer bytes than requested.
 Calling @code{read} again immediately would result in @code{EAGAIN}.
 
 @item EBADF
-The @var{filedes} argument is not a valid file descriptor.
+The @var{filedes} argument is not a valid file descriptor,
+or is not open for reading.
 
 @item EINTR
 @code{read} was interrupted by a signal while it was waiting for input.
-@xref{Interrupted Primitives}.
+@xref{Interrupted Primitives}.  A signal will not necessary cause
+@code{read} to return @code{EINTR}; it may instead result in a
+successful @code{read} which returns fewer bytes than requested.
 
 @item EIO
 For many devices, and for disk files, this error code indicates
@@ -294,9 +310,20 @@ The @code{write} function writes up to @var{size} bytes from
 @var{buffer} is not necessarily a character string and a null character is
 output like any other character.
 
-The return value is the number of bytes actually written.  This is
-normally the same as @var{size}, but might be less (for example, if the
-physical media being written to fills up).
+The return value is the number of bytes actually written.  This may be
+@var{size}, but can always be smaller.  Your program should always call
+@code{write} in a loop, iterating until all the data is written.
+
+Once @code{write} returns, the data is enqueued to be written and can be
+read back right away, but it is not necessarily written out to permanent
+storage immediately.  You can use @code{fsync} when you need to be sure
+your data has been permanently stored before continuing.  (It is more
+efficient for the system to batch up consecutive writes and do them all
+at once when convenient.  Normally they will always be written to disk
+within a minute or less.)
+@c !!! xref fsync
+You can use the @code{O_FSYNC} open mode to make @code{write} always 
+store the data to disk before returning; @pxref{Operating Modes}.
 
 In the case of an error, @code{write} returns @code{-1}.  The following
 @code{errno} error conditions are defined for this function:
@@ -321,24 +348,29 @@ file can also fail with @code{EAGAIN} if the kernel cannot find enough
 physical memory to lock down the user's pages.  This is limited to
 devices that transfer with direct memory access into the user's memory,
 which means it does not include terminals, since they always use
-separate buffers inside the kernel.
+separate buffers inside the kernel.  This problem does not arise in the
+GNU system.
 
 @item EBADF
-The @var{filedes} argument is not a valid file descriptor.
+The @var{filedes} argument is not a valid file descriptor,
+or is not open for writing.
 
 @item EFBIG
-The size of the file is larger than the implementation can support.
+The size of the file would become larger than the implementation can support.
 
 @item EINTR
 The @code{write} operation was interrupted by a signal while it was
-blocked waiting for completion.  @xref{Interrupted Primitives}.
+blocked waiting for completion.  A signal will not necessary cause
+@code{write} to return @code{EINTR}; it may instead result in a
+successful @code{write} which writes fewer bytes than requested.
+@xref{Interrupted Primitives}.
 
 @item EIO
 For many devices, and for disk files, this error code indicates
 a hardware error.
 
 @item ENOSPC
-The device is full.
+The device containing the file is full.
 
 @item EPIPE
 This error is returned when you try to write to a pipe or FIFO that
@@ -382,7 +414,7 @@ The @code{lseek} function is used to change the file position of the
 file with descriptor @var{filedes}.
 
 The @var{whence} argument specifies how the @var{offset} should be
-interpreted in the same way as for the @code{fseek} function, and can be
+interpreted in the same way as for the @code{fseek} function, and must be
 one of the symbolic constants @code{SEEK_SET}, @code{SEEK_CUR}, or
 @code{SEEK_END}.
 
@@ -401,19 +433,29 @@ the file.  A negative count specifies a position within the current
 extent of the file; a positive count specifies a position past the
 current end.  If you set the position past the current end, and 
 actually write data, you will extend the file with zeros up to that
-position.
-@end table
+position.@end table
 
 The return value from @code{lseek} is normally the resulting file
 position, measured in bytes from the beginning of the file.
 You can use this feature together with @code{SEEK_CUR} to read the
 current file position.
 
+If you want to append to the file, setting the file position to the
+current end of file with @code{SEEK_END} is not sufficient.  Another
+process may write more data after you seek but before you write,
+extending the file so the position you write onto clobbers their data.
+Instead, use the @code{O_APPEND} operating mode; @pxref{Operating Modes}.
+
 You can set the file position past the current end of the file.  This
 does not by itself make the file longer; @code{lseek} never changes the
 file.  But subsequent output at that position will extend the file.
-Characters between the previous end of file and the new position
-are filled with zeros.
+Characters between the previous end of file and the new position are
+filled with zeros.  Extending the file in this way can create a
+``hole'': the blocks of zeros are not actually allocated on disk, so the
+file takes up less space than it appears so; it is then called a
+``sparse file''.
+@cindex sparse files
+@cindex holes in files
 
 If the file position cannot be changed, or the operation is in some way
 invalid, @code{lseek} returns a value of @code{-1}.  The following
@@ -425,12 +467,13 @@ The @var{filedes} is not a valid file descriptor.
 
 @item EINVAL
 The @var{whence} argument value is not valid, or the resulting
-file offset is not valid.
+file offset is not valid.  A file offset is invalid.
 
 @item ESPIPE
-The @var{filedes} corresponds to a pipe or FIFO, which cannot be positioned.
-(There may be other kinds of files that cannot be positioned either, but
-the behavior is not specified in those cases.)
+The @var{filedes} corresponds to an object that cannot be positioned,
+such as a pipe, FIFO or terminal device.  (POSIX.1 specifies this error
+only for pipes and FIFOs, but in the GNU system, you always get
+@code{ESPIPE} if the object is not seekable.)
 @end table
 
 The @code{lseek} function is the underlying primitive for the
@@ -538,6 +581,10 @@ The return value is the new stream.  If the stream cannot be created
 (for example, if the modes for the file indicated by the file descriptor
 do not permit the access specified by the @var{opentype} argument), a
 null pointer is returned instead.
+
+In some other systems, @code{fdopen} may fail to detect that the modes
+for file descriptor do not permit the access specified by
+@code{opentype}.  The GNU C library always checks for this.
 @end deftypefun
 
 For an example showing the use of the @code{fdopen} function,
@@ -620,11 +667,12 @@ the stream.
 Channels that come from a single opening share the same file position;
 we call them @dfn{linked} channels.  Linked channels result when you
 make a stream from a descriptor using @code{fdopen}, when you get a
-descriptor from a stream with @code{fileno}, and when you copy a
-descriptor with @code{dup} or @code{dup2}.  For files that don't support
-random access, such as terminals and pipes, @emph{all} channels are
-effectively linked.  On random-access files, all append-type output
-streams are effectively linked to each other.
+descriptor from a stream with @code{fileno}, when you copy a descriptor
+with @code{dup} or @code{dup2}, and when descriptors are inherited
+during @code{fork}.  For files that don't support random access, such as
+terminals and pipes, @emph{all} channels are effectively linked.  On
+random-access files, all append-type output streams are effectively
+linked to each other.
 
 @cindex cleaning up a stream
 If you have been using a stream for I/O, and you want to do I/O using
@@ -664,13 +712,13 @@ obsolete data that had been in the stream's buffer.
 
 If you do output to one channel at the end of the file, this will
 certainly leave the other independent channels positioned somewhere
-before the new end.  If you want them to output at the end, you must set
-their file positions to end of file, first.  (This is not necessary if
-you use an append-type descriptor or stream; they always output at the
-current end of the file.)  In order to make the end-of-file position
-accurate, you must clean the output channel you were using, if it is a
-stream.  (This is necessary even if you plan to use an append-type
-channel next.)
+before the new end.  You cannot reliably set their file positions to the
+new end of file before writing, because the file can always be extended
+by another process between when you set the file position and when you
+write the data.  Instead, use an append-type descriptor or stream; they
+always output at the current end of the file.  In order to make the
+end-of-file position accurate, you must clean the output channel you
+were using, if it is a stream.
 
 It's impossible for two channels to have separate file pointers for a
 file that doesn't support random access.  Thus, channels for reading or
@@ -778,7 +826,9 @@ The value of this macro is the maximum number of file descriptors that a
 fixed maximum number, @code{FD_SETSIZE} is at least that number.  On
 some systems, including GNU, there is no absolute limit on the number of
 descriptors open, but this macro still has a constant value which
-controls the number of bits in an @code{fd_set}.
+controls the number of bits in an @code{fd_set}; if you get a file
+descriptor with a value as high as @code{FD_SETSIZE}, you cannot put
+that descriptor into an @code{fd_set}.
 @end deftypevr
 
 @comment sys/types.h
@@ -817,12 +867,18 @@ activity on any of the specified sets of file descriptors, or until the
 timeout period has expired.
 
 The file descriptors specified by the @var{read-fds} argument are
-checked to see if they are ready for reading (or if a server socket, for
-accepting a connection); the @var{write-fds} file descriptors are
-checked to see if they are ready for writing; and the @var{except-fds}
-file descriptors are checked for exceptional conditions.  You can pass a
-null pointer for any of these arguments if you are not interested in
-checking for that kind of condition.
+checked to see if they are ready for reading; the @var{write-fds} file
+descriptors are checked to see if they are ready for writing; and the
+@var{except-fds} file descriptors are checked for exceptional
+conditions.  You can pass a null pointer for any of these arguments if
+you are not interested in checking for that kind of condition.
+
+A file descriptor is considered ready for reading if it is at end of
+file.  A server socket is considered ready for reading if there is a
+pending connection which can be accepted with @code{accept};
+@pxref{Accepting Connections}.  A client socket is ready for writing when
+its connection is fully established; @pxref{Connecting}.
+
 ``Exceptional conditions'' does not mean errors---errors are reported
 immediately when an erroneous system call is executed, and do not
 constitute a state of the descriptor.  Rather, they include conditions
@@ -903,8 +959,8 @@ like.  All of these operations are performed by the function @code{fcntl}.
 The second argument to the @code{fcntl} function is a command that
 specifies which operation to perform.  The function and macros that name
 various flags that are used with it are declared in the header file
-@file{fcntl.h}.  (Many of these flags are also used by the @code{open}
-function; see @ref{Opening and Closing Files}.)
+@file{fcntl.h}.  Many of these flags are also used by the @code{open}
+function; see @ref{Opening and Closing Files}.
 @pindex fcntl.h
 
 @comment fcntl.h
@@ -1296,7 +1352,8 @@ extract the file access mode bits is with @code{O_ACCMODE}.
 This macro stands for a mask that can be bitwise-ANDed with the file
 status flag value to produce a value representing the file access mode.
 The mode will be @code{O_RDONLY}, @code{O_WRONLY}, or @code{O_RDWR}.
-(In the GNU system it could also be zero.)
+(In the GNU system it could also be zero, and it never includes the
+@code{O_EXEC} bit.)
 @end deftypevr
 
 @node Open-time Flags
@@ -1330,6 +1387,7 @@ Here are the file name translation flags.
 @comment POSIX.1
 @deftypevr Macro int O_CREAT
 If set, the file will be created if it doesn't already exist.
+@c !!! mode arg, umask
 @cindex create on open (file status flag)
 @end deftypevr
 
@@ -1347,9 +1405,10 @@ clobber an existing file.
 @cindex non-blocking open
 This prevents @code{open} from blocking for a ``long time'' to open the
 file.  This is only meaningful for some kinds of files, usually devices
-such as serial ports.  Often opening a port to a modem blocks until the
-modem reports carrier detection; if @code{O_NONBLOCK} is specified,
-@code{open} will return immediately without a carrier.
+such as serial ports; when it is not meaningful, it is harmless and
+ignored.  Often opening a port to a modem blocks until the modem reports
+carrier detection; if @code{O_NONBLOCK} is specified, @code{open} will
+return immediately without a carrier.
 
 Note that the @code{O_NONBLOCK} flag is overloaded as both an I/O operating
 mode and a file name translation flag.  This means that specifying
@@ -1364,13 +1423,17 @@ then call @code{fcntl} to turn the bit off.
 @deftypevr Macro int O_NOCTTY
 If the named file is a terminal device, don't make it the controlling
 terminal for the process.  @xref{Job Control}, for information about
-what it means to be the controlling terminal.  In the GNU system and 4.4
-BSD, opening a file never makes it the controlling terminal and
-@code{O_NOCTTY} is zero.
+what it means to be the controlling terminal.
+
+In the GNU system and 4.4 BSD, opening a file never makes it the
+controlling terminal and @code{O_NOCTTY} is zero.  However, other
+systems may use a nonzero value for @code{O_NOCTTY} and set the
+controlling terminal when you open a file that is a terminal device; so
+to be portable, use @code{O_NOCTTY} when it is important to avoid this.
 @cindex controlling terminal, setting
 @end deftypevr
 
-These three file name translation flags exist only in the GNU system.
+The following three file name translation flags exist only in the GNU system.
 
 @comment fcntl.h
 @comment GNU
@@ -1449,7 +1512,13 @@ and changed with @code{fcntl}.
 @deftypevr Macro int O_APPEND
 The bit that enables append mode for the file.  If set, then all
 @code{write} operations write the data at the end of the file, extending
-it, regardless of the current file position.
+it, regardless of the current file position.  This is the only reliable
+way to append to a file.  In append mode, you are guaranteed that the
+data you write will always go to the current end of the file, regardless
+of other processes writing to the file.  Conversely, if you simply set
+the file position to the end of file and write, then another process can
+extend the file after you set the file position but before you write,
+resulting in your data appearing someplace before the real end of file.
 @end deftypevr
 
 @comment fcntl.h
@@ -1506,6 +1575,7 @@ This is another name for @code{O_FSYNC}.  They have the same value.
 If this bit is set, @code{read} will not update the access time of the
 file.  @xref{File Times}.  This is used by programs that do backups, so
 that backing a file up does not count as reading it.
+Only the owner of the file or the superuser may use this bit.
 
 This is a GNU extension.
 @end deftypevr
@@ -1731,12 +1801,12 @@ The following @code{errno} error conditions are defined for this
 function:
 
 @table @code
-@item EACCES
-@itemx EAGAIN
+@item EAGAIN
+@itemx EACCES
 The lock cannot be set because it is blocked by an existing lock on the
 file.  Some systems use @code{EAGAIN} in this case, and other systems
 use @code{EACCES}; your program should treat them alike, after
-@code{F_SETLK}.
+@code{F_SETLK}.  (The GNU system always uses @code{EAGAIN}.)
 
 @item EBADF
 Either: the @var{filedes} argument is invalid; you requested a read lock
@@ -1755,13 +1825,6 @@ Well-designed file systems never report this error, because they have no
 limitation on the number of locks.  However, you must still take account
 of the possibility of this error, as it could result from network access
 to a file system on another machine.
-
-@item EDEADLK
-The specified region is being locked by another process.  But that
-process is waiting to lock a region which the current process has
-locked, so waiting for the lock would result in deadlock.  The system
-does not guarantee that it will detect all such conditions, but it lets
-you know if it notices one.
 @end table
 @end deftypevr
 
@@ -1786,9 +1849,11 @@ The function was interrupted by a signal while it was waiting.
 @xref{Interrupted Primitives}.
 
 @item EDEADLK
-A deadlock condition was detected.  This can happen if two processes
-each already controlling a locked region request a lock on the same
-region locked by the other process.
+The specified region is being locked by another process.  But that
+process is waiting to lock a region which the current process has
+locked, so waiting for the lock would result in deadlock.  The system
+does not guarantee that it will detect all such conditions, but it lets
+you know if it notices one.
 @end table
 @end deftypevr
 

@@ -74,7 +74,7 @@ The @dfn{terminal input queue} is also sometimes referred to as its
 from the terminal but not yet read by any process.
 
 The size of the terminal's input queue is described by the
-@code{_POSIX_MAX_INPUT} and @code{MAX_INPUT} parameters; see @ref{Limits
+@w{@code{_POSIX_MAX_INPUT}} and @code{MAX_INPUT} parameters; see @ref{Limits
 for Files}.  You are guaranteed a queue size of at least
 @code{MAX_INPUT}, but the queue might be larger, and might even
 dynamically change size.  If input flow control is enabled by setting

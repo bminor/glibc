@@ -277,7 +277,7 @@ reading the directory whose file name is @var{dirname}.  The stream has
 type @code{DIR *}.
 
 If unsuccessful, @code{opendir} returns a null pointer.  In addition to
-the usual file name syntax errors (@pxref{File Name Errors}), the
+the usual file name errors (@pxref{File Name Errors}), the
 following @code{errno} error conditions are defined for this function:
 
 @table @code
@@ -435,13 +435,14 @@ The @code{link} function makes a new link to the existing file named by
 @var{oldname}, under the new name @var{newname}.
 
 This function returns a value of @code{0} if it is successful and
-@code{-1} on failure.  In addition to the usual file name syntax errors
+@code{-1} on failure.  In addition to the usual file name errors
 (@pxref{File Name Errors}) for both @var{oldname} and @var{newname}, the
 following @code{errno} error conditions are defined for this function:
 
 @table @code
 @item EACCES
-The directory in which the new link is to be written is not writable.
+You are not allowed to write the directory in which the new link is to
+be written.
 @ignore 
 Some implementations also require that the existing file be accessible
 by the caller, and use this error to report failure for that reason.
@@ -453,25 +454,20 @@ this link with a new link, you must remove the old link explicitly first.
 
 @item EMLINK
 There are already too many links to the file named by @var{oldname}.
-(The maximum number of links to a file is @code{LINK_MAX}; see
+(The maximum number of links to a file is @w{@code{LINK_MAX}}; see
 @ref{Limits for Files}.)
-
-Well-designed file systems never report this error, because they permit
-more links than your disk could possibly hold.  However, you must still
-take account of the possibility of this error, as it could result from
-network access to a file system on another machine.
 
 @item ENOENT
 The file named by @var{oldname} doesn't exist.  You can't make a link to
 a file that doesn't exist.
 
 @item ENOSPC
-The directory or file system that would contain the new link is ``full''
+The directory or file system that would contain the new link is full
 and cannot be extended.
 
 @item EPERM
 In the GNU system and some others, you cannot make links to directories.
-many systems allow only privileged users to do so.  This error
+Many systems allow only privileged users to do so.  This error
 is used to report the problem.
 
 @item EROFS
@@ -481,6 +477,9 @@ a read-only file system.
 @item EXDEV
 The directory specified in @var{newname} is on a different file system
 than the existing file.
+
+@item EIO
+A hardware error occurred while trying to read or write the to filesystem.
 @end table
 @end deftypefun
 
@@ -512,7 +511,7 @@ By contrast, other operations such as deleting or renaming the file
 operate on the link itself.  The functions @code{readlink} and
 @code{lstat} also refrain from following symbolic links, because their
 purpose is to obtain information about the link.  So does @code{link},
-the function that makes a hard link--it makes a hard link to the
+the function that makes a hard link---it makes a hard link to the
 symbolic link, which one rarely wants.
 
 Prototypes for the functions listed in this section are in
@@ -590,7 +589,7 @@ readlink_malloc (char *filename)
 
 @c @group  Invalid outside example.
 A value of @code{-1} is returned in case of error.  In addition to the
-usual file name syntax errors (@pxref{File Name Errors}), the following
+usual file name errors (@pxref{File Name Errors}), the following
 @code{errno} error conditions are defined for this function:
 
 @table @code
@@ -627,14 +626,14 @@ postponed until all processes have closed the file.)
 The function @code{unlink} is declared in the header file @file{unistd.h}.
 
 This function returns @code{0} on successful completion, and @code{-1}
-on error.  In addition to the usual file name syntax errors
+on error.  In addition to the usual file name errors
 (@pxref{File Name Errors}), the following @code{errno} error conditions are 
 defined for this function:
 
 @table @code
 @item EACCES
 Write permission is denied for the directory from which the file is to be
-removed.
+removed, or the directory has the sticky bit set and you do not own the file.
 
 @item EBUSY
 This error indicates that the file is being used by the system in such a
@@ -649,7 +648,7 @@ The file name to be deleted doesn't exist.
 On some systems, @code{unlink} cannot be used to delete the name of a
 directory, or can only be used this way by a privileged user.
 To avoid such problems, use @code{rmdir} to delete directories.
-The GNU system 
+(In the GNU system @code{unlink} can never delete the name of a directory.)
 
 @item EROFS
 The directory in which the file name is to be deleted is on a read-only
@@ -738,7 +737,7 @@ names to still exist; but @var{newname} will always be intact if it
 exists at all.
 
 If @code{rename} fails, it returns @code{-1}.  In addition to the usual
-file name syntax errors (@pxref{File Name Errors}), the following
+file name errors (@pxref{File Name Errors}), the following
 @code{errno} error conditions are defined for this function:
 
 @table @code
@@ -767,11 +766,6 @@ The @var{newname} names a directory, but the @var{oldname} doesn't.
 @item EMLINK
 The parent directory of @var{newname} would have too many links.
 
-Well-designed file systems never report this error, because they permit
-more links than your disk could possibly hold.  However, you must still
-take account of the possibility of this error, as it could result from
-network access to a file system on another machine.
-
 @item ENOENT
 The file named by @var{oldname} doesn't exist.
 
@@ -797,6 +791,7 @@ file systems.
 @pindex mkdir
 Directories are created with the @code{mkdir} function.  (There is also
 a shell command @code{mkdir} which does the same thing.)
+@c !!! umask
 
 @comment sys/stat.h
 @comment POSIX.1
@@ -911,10 +906,11 @@ Identifies the device containing the file.  The @code{st_ino} and
 system crashes, however.
 
 @item nlink_t st_nlink
-The number of hard links to the file.  This count keeps track of how many
-directories have entries for this file.  If the count is ever
-decremented to zero, then the file itself is discarded.  Symbolic links
-are not counted in the total.
+The number of hard links to the file.  This count keeps track of how
+many directories have entries for this file.  If the count is ever
+decremented to zero, then the file itself is discarded as soon as no
+process still holds it open.  Symbolic links are not counted in the
+total.
 
 @item uid_t st_uid
 The user ID of the file's owner.  @xref{File Owner}.
@@ -925,6 +921,8 @@ The group ID of the file.  @xref{File Owner}.
 @item off_t st_size
 This specifies the size of a regular file in bytes.  For files that
 are really devices and the like, this field isn't usually meaningful.
+For symbolic links, this specifies the length of the file name the link
+refers to.
 
 @item time_t st_atime
 This is the last access time for the file.  @xref{File Times}.
@@ -949,7 +947,8 @@ This is the time of the last modification to the attributes of the file.
 This is the fractional part of the time of last modification to the
 attributes of the file.  @xref{File Times}.
 
-@item unsigned int st_nblocks
+@c !!! st_rdev
+@item unsigned int st_blocks
 This is the amount of disk space that the file occupies, measured in
 units of 512-byte blocks.
 
@@ -1033,7 +1032,7 @@ nonexistent file name, then @code{stat} fails, reporting a nonexistent
 file.
 
 The return value is @code{0} if the operation is successful, and @code{-1}
-on failure.  In addition to the usual file name syntax errors
+on failure.  In addition to the usual file name errors
 (@pxref{File Name Errors}, the following @code{errno} error conditions
 are defined for this function:
 
@@ -1261,7 +1260,7 @@ bits may not be appropriate for the new owner.)  The other file
 permission bits are not changed.
 
 The return value is @code{0} on success and @code{-1} on failure.
-In addition to the usual file name syntax errors (@pxref{File Name Errors}), 
+In addition to the usual file name errors (@pxref{File Name Errors}), 
 the following @code{errno} error conditions are defined for this function:
 
 @table @code
@@ -1349,7 +1348,7 @@ compatibility.
 @itemx S_IWRITE
 @vindex S_IWRITE
 Write permission bit for the owner of the file.  Usually 0200.
-@code{S_IWRITE} is an obsolete synonym provided for BSD compatibility.
+@w{@code{S_IWRITE}} is an obsolete synonym provided for BSD compatibility.
 
 @comment sys/stat.h
 @comment POSIX.1
@@ -1604,7 +1603,7 @@ permission of the file pointed to by the link, not those of the link
 itself.
 
 This function returns @code{0} if successful and @code{-1} if not.  In
-addition to the usual file name syntax errors (@pxref{File Name
+addition to the usual file name errors (@pxref{File Name
 Errors}), the following @code{errno} error conditions are defined for
 this function:
 
@@ -1723,7 +1722,7 @@ The return value is @code{0} if the access is permitted, and @code{-1}
 otherwise.  (In other words, treated as a predicate function,
 @code{access} returns true if the requested access is @emph{denied}.)
 
-In addition to the usual file name syntax errors (@pxref{File Name
+In addition to the usual file name errors (@pxref{File Name
 Errors}), the following @code{errno} error conditions are defined for
 this function:
 
@@ -1785,14 +1784,11 @@ For more information about representation and manipulation of time
 values, see @ref{Calendar Time}.
 @pindex time.h
 
-When an existing file is opened, its attribute change time and
-modification time fields are updated.  Reading from a file updates its
-access time attribute, and writing updates its modification time.
-
-When a file is created, all three timestamps for that file are set to
-the current time.  In addition, the attribute change time and
-modification time fields of the directory that contains the new entry
-are updated.
+Reading from a file updates its access time attribute, and writing
+updates its modification time.  When a file is created, all three
+timestamps for that file are set to the current time.  In addition, the
+attribute change time and modification time fields of the directory that
+contains the new entry are updated.
 
 Adding a new name for a file with the @code{link} function updates the
 attribute change time field of the file being linked, and both the
@@ -1843,7 +1839,7 @@ in either case (since changing the timestamps is itself a modification
 of the file attributes).
 
 The @code{utime} function returns @code{0} if successful and @code{-1}
-on failure.  In addition to the usual file name syntax errors
+on failure.  In addition to the usual file name errors
 (@pxref{File Name Errors}), the following @code{errno} error conditions
 are defined for this function:
 
@@ -1915,7 +1911,7 @@ The @var{dev} argument specifies which device the special file refers to.
 Its exact interpretation depends on the kind of special file being created.
 
 The return value is @code{0} on success and @code{-1} on error.  In addition
-to the usual file name syntax errors (@pxref{File Name Errors}), the
+to the usual file name errors (@pxref{File Name Errors}), the
 following @code{errno} error conditions are defined for this function:
 
 @table @code
@@ -1924,7 +1920,7 @@ The calling process is not privileged.  Only the superuser can create
 special files.
 
 @item ENOSPC
-The directory or file system that would contain the new file is ``full''
+The directory or file system that would contain the new file is full
 and cannot be extended.
 
 @item EROFS

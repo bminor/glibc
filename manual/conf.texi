@@ -805,7 +805,7 @@ to indicate the cause of the problem.  So the only way to use this
 function robustly is to store @code{0} into @code{errno} just before
 calling it.
 
-Besides the usual file name syntax errors (@pxref{File Name Errors}),
+Besides the usual file name errors (@pxref{File Name Errors}),
 the following error condition is defined for this function:
 
 @table @code
