@@ -1,5 +1,8 @@
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* wcsmbs/mbrtowc.c: Don't set errno if byte sequence is only
+	incomplete but correct.
+
 	* iconv/loop.c (COUNT_CONVERTED): Remove macro, comment, and all uses.
 	Remove done variable and all uses.
 	* iconv/skeleton.c: Update comment for *written modification.
