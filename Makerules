@@ -249,7 +249,7 @@ do-install = $(INSTALL_DATA) $< $@
 # should install libc.a; this way "make install" in a subdir is guaranteed
 # to install everything it changes.
 ifdef objects
-install-lib := $(install-lib) libc.a
+install-lib := $(install-lib) $(libc.a)
 endif
 
 ifdef install
@@ -278,7 +278,7 @@ endif	# headers
 install: $(+install)
 $(+install): installdirs
 installdirs: $(..)mkinstalldirs
-	$(dir $<)$(notdir $<) $(dir $(+install))
+	$(dir $<)$(notdir $<) $(sort $(dir $(+install)))
 
 S-CPPFLAGS = $(asm-CPPFLAGS)
 +make-deps = $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
