@@ -5,7 +5,6 @@ glibc.spec: # The default target.
 tag-prefix := fedora-
 
 .PHONY: update commit-merge commit patch tag archive finish_archive srpm rpm
-FORCE:
 
 snapshot-date-fmt := +'%Y-%m-%d %H:%M %Z'
 snapshot-name-fmt := +'%Y%m%dT%H%M'
@@ -60,7 +59,8 @@ spec-tag = $(subst .,_,$(spec-nvr))
 tag: glibc.spec
 	cd ..; cvs -Q tag -c $(tag-prefix)$(spec-tag)
 
-$(tar-name)-$(glibc-branch).patch: makepatch.awk glibc.spec FORCE
+$(tar-name)-$(glibc-branch).patch: makepatch.awk glibc.spec \
+				   ../ChangeLog ../*/ChangeLog
 	(cd ..; cvs -q diff -upN \
 		    $(select-snapshot) -r $(tag-prefix)$(spec-tag)) | \
 	awk -v OLDVER=$(tar-name)-$(snapshot-name) \
@@ -72,7 +72,9 @@ $(tar-name)-$(glibc-branch).patch: makepatch.awk glibc.spec FORCE
 outside-patch = fedora c_stubs rtkaio glibc-compat \
 		localedata/charmaps/GB18030 iconvdata/gb18030.c
 
-$(tar-name)-$(glibc-branch)-$(snapshot-name).tar.bz2: FORCE
+$(tar-name)-$(glibc-branch)-$(snapshot-name).tar.bz2: Makefile branch.mk \
+						      ../ChangeLog \
+						      ../*/ChangeLog
 	@rm -rf libc
 	cvs -Q export -r$(tag-prefix)$(spec-tag) \
 		      $(addprefix libc/,$(outside-patch))
