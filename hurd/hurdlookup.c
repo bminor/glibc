@@ -77,6 +77,7 @@ __hurd_path_lookup_retry (file_t crdir,
 
   dealloc_dir = 0;
   nloops = 0;
+  err = 0;
   
   while (1)
     {
