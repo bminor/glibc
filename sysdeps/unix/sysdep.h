@@ -37,3 +37,5 @@ Cambridge, MA 02139, USA.  */
 #ifndef	 HAVE_GNU_LD
 #define	 ___errno	_errno
 #endif
+
+#define	HAVE_SYSCALLS
