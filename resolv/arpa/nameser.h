@@ -1,13 +1,8 @@
 /*
- *	@(#)nameser.h	5.25 (Berkeley) 4/3/91
- *	$Id$
- */
-
-/*
- * ++Copyright++ 1983, 1989
+ * ++Copyright++ 1983, 1989, 1993
  * -
- * Copyright (c) 1983, 1989 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1983, 1989, 1993
+ *    The Regents of the University of California.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,6 +53,11 @@
  * --Copyright--
  */
 
+/*
+ *      @(#)nameser.h	8.1 (Berkeley) 6/2/93
+ *	$Id$
+ */
+
 #ifndef _NAMESER_H_
 #define	_NAMESER_H_
 
@@ -70,16 +70,28 @@
 #include <sys/cdefs.h>
 
 /*
+ * revision information.  this is the release date in YYYYMMDD format.
+ * it can change every day so the right thing to do with it is use it
+ * in preprocessor commands such as "#if (__BIND > 19931104)".  do not
+ * compare for equality; rather, use it to determine whether your resolver
+ * is new enough to contain a certain feature.
+ */
+
+#define	__BIND		19940417	/* interface version stamp */
+
+/*
  * Define constants based on rfc883
  */
 #define PACKETSZ	512		/* maximum packet size */
 #define MAXDNAME	256		/* maximum domain name */
 #define MAXCDNAME	255		/* maximum compressed domain name */
 #define MAXLABEL	63		/* maximum length of domain label */
-	/* Number of bytes of fixed size data in query structure */
-#define QFIXEDSZ	4
-	/* number of bytes of fixed size data in resource record */
-#define RRFIXEDSZ	10
+#define	HFIXEDSZ	12		/* #/bytes of fixed data in header */
+#define QFIXEDSZ	4		/* #/bytes of fixed data in query */
+#define RRFIXEDSZ	10		/* #/bytes of fixed data in r record */
+#define	INT32SZ		4		/* for systems without 32-bit ints */
+#define	INT16SZ		2		/* for systems without 16-bit ints */
+#define	INADDRSZ	4		/* for sizeof(struct inaddr) != 4 */
 
 /*
  * Internet nameserver port number
@@ -135,11 +147,18 @@
 #define T_MX		15		/* mail routing information */
 #define T_TXT		16		/* text strings */
 #define	T_RP		17		/* responsible person */
+#define T_AFSDB		18		/* AFS cell database */
+#define T_X25		19		/* X_25 calling address */
+#define T_ISDN		20		/* ISDN calling address */
+#define T_RT		21		/* router */
+#define T_NSAP		22		/* NSAP address */
+#define T_NSAP_PTR	23		/* reverse NSAP lookup (deprecated) */
 	/* non standard */
 #define T_UINFO		100		/* user (finger) information */
 #define T_UID		101		/* user ID */
 #define T_GID		102		/* group ID */
 #define T_UNSPEC	103		/* Unspecified format (binary data) */
+#define T_SA		200		/* shuffle address */
 	/* Query type values which do not appear in resource records */
 #define T_AXFR		252		/* transfer zone of authority */
 #define T_MAILB		253		/* transfer mailbox records */
@@ -152,20 +171,26 @@
 
 #define C_IN		1		/* the arpa internet */
 #define C_CHAOS		3		/* for chaos net (MIT) */
-#define C_HS		4		/* for Hesiod name server (MIT) */
+#define C_HS		4		/* for Hesiod name server (MIT) (XXX) */
 	/* Query class values which do not appear in resource records */
 #define C_ANY		255		/* wildcard match */
 
 /*
  * Status return codes for T_UNSPEC conversion routines
  */
-#define CONV_SUCCESS 0
-#define CONV_OVERFLOW -1
-#define CONV_BADFMT -2
-#define CONV_BADCKSUM -3
-#define CONV_BADBUFLEN -4
+#define CONV_SUCCESS	0
+#define CONV_OVERFLOW	(-1)
+#define CONV_BADFMT	(-2)
+#define CONV_BADCKSUM	(-3)
+#define CONV_BADBUFLEN	(-4)
 
 #ifndef BYTE_ORDER
+#if (BSD >= 199103)
+# include <machine/endian.h>
+#else
+#ifdef linux
+# include <endian.h>
+#else
 #define	LITTLE_ENDIAN	1234	/* least-significant byte first (vax, pc) */
 #define	BIG_ENDIAN	4321	/* most-significant byte first (IBM, net) */
 #define	PDP_ENDIAN	3412	/* LSB first in word, MSW first in long (pdp)*/
@@ -178,11 +203,15 @@
 
 #if defined(sel) || defined(pyr) || defined(mc68000) || defined(sparc) || \
     defined(is68k) || defined(tahoe) || defined(ibm032) || defined(ibm370) || \
-    defined(MIPSEB) || defined(_MIPSEB) || defined(_IBMR2) || \
-    defined(apollo) || defined(hp9000) || defined(hp9000s300) || \
+    defined(MIPSEB) || defined(_MIPSEB) || defined(_IBMR2) || defined(DGUX) ||\
+    defined(apollo) || defined(__convex__) || defined(_CRAY) || \
+    defined(__hppa) || defined(__hp9000) || \
+    defined(__hp9000s300) || defined(__hp9000s700) || \
     defined (BIT_ZERO_ON_LEFT)
 #define BYTE_ORDER	BIG_ENDIAN
 #endif
+#endif /* linux */
+#endif /* BSD */
 #endif /* BYTE_ORDER */
 
 #if !defined(BYTE_ORDER) || \
@@ -193,48 +222,49 @@
 	 * which will force your compiles to bomb until you fix
 	 * the above macros.
 	 */
-  #error "Undefined or invalid BYTE_ORDER";
+  error "Undefined or invalid BYTE_ORDER";
 #endif
+
 /*
- * Structure for query header, the order of the fields is machine and
- * compiler dependent, in our case, the bits within a byte are assignd 
- * least significant first, while the order of transmition is most 
- * significant first.  This requires a somewhat confusing rearrangement.
+ * Structure for query header.  The order of the fields is machine- and
+ * compiler-dependent, depending on the byte/bit order and the layout
+ * of bit fields.  We use bit fields only in int variables, as this
+ * is all ANSI requires.  This requires a somewhat confusing rearrangement.
  */
 
 typedef struct {
-	u_short	id;		/* query identification number */
+	unsigned	id :16;		/* query identification number */
 #if BYTE_ORDER == BIG_ENDIAN
 			/* fields in third byte */
-	u_int	qr:1;		/* response flag */
-	u_int	opcode:4;	/* purpose of message */
-	u_int	aa:1;		/* authoritive answer */
-	u_int	tc:1;		/* truncated message */
-	u_int	rd:1;		/* recursion desired */
+	unsigned	qr: 1;		/* response flag */
+	unsigned	opcode: 4;	/* purpose of message */
+	unsigned	aa: 1;		/* authoritive answer */
+	unsigned	tc: 1;		/* truncated message */
+	unsigned	rd: 1;		/* recursion desired */
 			/* fields in fourth byte */
-	u_int	ra:1;		/* recursion available */
-	u_int	pr:1;		/* primary server required (non standard) */
-	u_int	unused:2;	/* unused bits */
-	u_int	rcode:4;	/* response code */
+	unsigned	ra: 1;		/* recursion available */
+	unsigned	pr: 1;		/* primary server req'd (!standard) */
+	unsigned	unused :2;	/* unused bits (MBZ as of 4.9.3a3) */
+	unsigned	rcode :4;	/* response code */
 #endif
 #if BYTE_ORDER == LITTLE_ENDIAN || BYTE_ORDER == PDP_ENDIAN
 			/* fields in third byte */
-	u_int	rd:1;		/* recursion desired */
-	u_int	tc:1;		/* truncated message */
-	u_int	aa:1;		/* authoritive answer */
-	u_int	opcode:4;	/* purpose of message */
-	u_int	qr:1;		/* response flag */
+	unsigned	rd :1;		/* recursion desired */
+	unsigned	tc :1;		/* truncated message */
+	unsigned	aa :1;		/* authoritive answer */
+	unsigned	opcode :4;	/* purpose of message */
+	unsigned	qr :1;		/* response flag */
 			/* fields in fourth byte */
-	u_int	rcode:4;	/* response code */
-	u_int	unused:2;	/* unused bits */
-	u_int	pr:1;		/* primary server required (non standard) */
-	u_int	ra:1;		/* recursion available */
+	unsigned	rcode :4;	/* response code */
+	unsigned	unused :2;	/* unused bits (MBZ as of 4.9.3a3) */
+	unsigned	pr :1;		/* primary server req'd (!standard) */
+	unsigned	ra :1;		/* recursion available */
 #endif
 			/* remaining bytes */
-	u_short	qdcount;	/* number of question entries */
-	u_short	ancount;	/* number of answer entries */
-	u_short	nscount;	/* number of authority entries */
-	u_short	arcount;	/* number of resource entries */
+	unsigned	qdcount :16;	/* number of question entries */
+	unsigned	ancount :16;	/* number of answer entries */
+	unsigned	nscount :16;	/* number of authority entries */
+	unsigned	arcount :16;	/* number of resource entries */
 } HEADER;
 
 /*
@@ -246,63 +276,57 @@ typedef struct {
  * Structure for passing resource records around.
  */
 struct rrec {
-	short	r_zone;			/* zone number */
-	short	r_class;		/* class number */
-	short	r_type;			/* type number */
+	int16_t		r_zone;			/* zone number */
+	int16_t		r_class;		/* class number */
+	int16_t		r_type;			/* type number */
 	u_int32_t	r_ttl;			/* time to live */
-	int	r_size;			/* size of data area */
-	char	*r_data;		/* pointer to data */
+	int		r_size;			/* size of data area */
+	char		*r_data;		/* pointer to data */
 };
 
-extern	u_short	_getshort();
-extern	u_int32_t	_getlong();
+extern	u_int16_t	_getshort __P((const u_char *));
+extern	u_int32_t	_getlong __P((const u_char *));
 
 /*
  * Inline versions of get/put short/long.  Pointer is advanced.
- * We also assume that a "u_short" holds 2 "chars"
- * and that a "u_int32_t" holds 4 "chars".
  *
  * These macros demonstrate the property of C whereby it can be
- * portable or it can be elegant but never both.
+ * portable or it can be elegant but rarely both.
  */
 #define GETSHORT(s, cp) { \
-	register u_char *t_cp = (u_char*)(cp); \
-	(s) = (((u_short)t_cp[0]) << 8) \
-	    | (((u_short)t_cp[1])) \
+	register u_char *t_cp = (u_char *)(cp); \
+	(s) = ((u_int16_t)t_cp[0] << 8) \
+	    | ((u_int16_t)t_cp[1]) \
 	    ; \
-	(cp) += 2; \
+	(cp) += INT16SZ; \
 }
 
 #define GETLONG(l, cp) { \
-	register u_char *t_cp = (u_char*)(cp); \
-	(l) = (((u_int32_t)t_cp[0]) << 24) \
-	    | (((u_int32_t)t_cp[1]) << 16) \
-	    | (((u_int32_t)t_cp[2]) << 8) \
-	    | (((u_int32_t)t_cp[3])) \
+	register u_char *t_cp = (u_char *)(cp); \
+	(l) = ((u_int32_t)t_cp[0] << 24) \
+	    | ((u_int32_t)t_cp[1] << 16) \
+	    | ((u_int32_t)t_cp[2] << 8) \
+	    | ((u_int32_t)t_cp[3]) \
 	    ; \
-	(cp) += 4; \
+	(cp) += INT32SZ; \
 }
 
 #define PUTSHORT(s, cp) { \
-	register u_short t_s = (u_short)(s); \
-	register u_char *t_cp = (u_char*)(cp); \
+	register u_int16_t t_s = (u_int16_t)(s); \
+	register u_char *t_cp = (u_char *)(cp); \
 	*t_cp++ = t_s >> 8; \
 	*t_cp   = t_s; \
-	(cp) += 2; \
+	(cp) += INT16SZ; \
 }
 
-/*
- * Warning: PUTLONG --no-longer-- destroys its first argument.  if you
- * were depending on this "feature", you will lose.
- */
 #define PUTLONG(l, cp) { \
 	register u_int32_t t_l = (u_int32_t)(l); \
-	register u_char *t_cp = (u_char*)(cp); \
+	register u_char *t_cp = (u_char *)(cp); \
 	*t_cp++ = t_l >> 24; \
 	*t_cp++ = t_l >> 16; \
 	*t_cp++ = t_l >> 8; \
 	*t_cp   = t_l; \
-	(cp) += 4; \
+	(cp) += INT32SZ; \
 }
 
 #endif /* !_NAMESER_H_ */

@@ -32,7 +32,8 @@
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)getnetbyname.c	5.7 (Berkeley) 2/24/91";
+static char sccsid[] = "@(#)getnetbyname.c	1.1 (Coimbra) 93/06/02";
+static char rcsid[] = "$Id$";
 #endif /* LIBC_SCCS and not lint */
 
 #include <netdb.h>
@@ -41,19 +42,24 @@ static char sccsid[] = "@(#)getnetbyname.c	5.7 (Berkeley) 2/24/91";
 extern int _net_stayopen;
 
 struct netent *
-getnetbyname(name)
+_getnetbyname(name)
+#if (defined(sun) || defined(DGUX))
+	register char *name;
+#else
 	register const char *name;
+#endif
 {
 	register struct netent *p;
 	register char **cp;
 
 	setnetent(_net_stayopen);
 	while (p = getnetent()) {
-		if (strcmp(p->n_name, name) == 0)
+		if (strcasecmp(p->n_name, name) == 0)
 			break;
-		for (cp = p->n_aliases; *cp != 0; cp++)
-			if (strcmp(*cp, name) == 0)
+		for (cp = p->n_aliases; *cp != 0; cp++){
+			if (strcasecmp(*cp, name) == 0)
 				goto found;
+		}
 	}
 found:
 	if (!_net_stayopen)

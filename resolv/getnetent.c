@@ -31,17 +31,34 @@
  * SUCH DAMAGE.
  */
 
+/* Portions Copyright (c) 1993 Carlos Leandro and Rui Salgueiro
+ *	Dep. Matematica Universidade de Coimbra, Portugal, Europe
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * from getnetent.c	1.1 (Coimbra) 93/06/02
+ */
+
 #if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)getnetent.c	5.8 (Berkeley) 2/24/91";
+static char rcsid[] = "$Id$";
 #endif /* LIBC_SCCS and not lint */
 
-#include <sys/types.h>
+#include <sys/param.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <netdb.h>
+#include <arpa/nameser.h>
+
 #include <stdio.h>
+#include <resolv.h>
+#include <netdb.h>
 #include <string.h>
+
+#ifndef _PATH_NETWORKS 
+#define _PATH_NETWORKS  "/etc/networks"
+#endif
 
 #define	MAXALIASES	35
 
@@ -51,9 +68,26 @@ static struct netent net;
 static char *net_aliases[MAXALIASES];
 int _net_stayopen;
 
+void _setnetent __P((int)), _endnetent __P((void));
+
 void
-setnetent(f)
-	int f;
+setnetent(stayopen)
+int stayopen;
+{
+	sethostent(stayopen);
+	_setnetent(stayopen);
+}
+
+void
+endnetent()
+{
+	endhostent();
+	_endnetent();
+}
+
+void
+_setnetent(f)
+int f;
 {
 	if (netf == NULL)
 		netf = fopen(_PATH_NETWORKS, "r" );
@@ -63,7 +97,7 @@ setnetent(f)
 }
 
 void
-endnetent()
+_endnetent()
 {
 	if (netf) {
 		fclose(netf);

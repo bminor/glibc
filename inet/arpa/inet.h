@@ -1,13 +1,8 @@
 /*
- *	@(#)inet.h	5.7 (Berkeley) 4/3/91
- *	$Id$
- */
-
-/*
- * ++Copyright++ 1983
+ * ++Copyright++ 1983, 1993
  * -
- * Copyright (c) 1983 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1983, 1993
+ *    The Regents of the University of California.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,6 +53,11 @@
  * --Copyright--
  */
 
+/*
+ *	@(#)inet.h	8.1 (Berkeley) 6/2/93
+ *	$Id$
+ */
+
 #ifndef _INET_H_
 #define	_INET_H_
 
@@ -72,13 +72,13 @@
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
-extern u_int32_t		inet_addr __P((const char *));
-extern u_int32_t		inet_lnaof __P((struct in_addr));
-extern struct in_addr	inet_makeaddr __P((u_int32_t, u_int32_t));
-extern u_int32_t		inet_netof __P((struct in_addr));
-extern u_int32_t		inet_network __P((const char *));
-extern int		inet_aton __P((const char *, struct in_addr *));
-extern char		*inet_ntoa __P((struct in_addr));
+unsigned long	 inet_addr __P((const char *));
+int		 inet_aton __P((const char *, struct in_addr *));
+unsigned long	 inet_lnaof __P((struct in_addr));
+struct in_addr	 inet_makeaddr __P((u_long , u_long));
+unsigned long	 inet_netof __P((struct in_addr));
+unsigned long	 inet_network __P((const char *));
+char		*inet_ntoa __P((struct in_addr));
 __END_DECLS
 
 #endif /* !_INET_H_ */

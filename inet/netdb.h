@@ -1,13 +1,8 @@
 /*
- *	@(#)netdb.h	5.15 (Berkeley) 4/3/91
- *	$Id$
- */
-
-/*
- * ++Copyright++ 1980, 1983, 1988
+ * ++Copyright++ 1980, 1983, 1988, 1993
  * -
- * Copyright (c) 1980, 1983, 1988 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1980, 1983, 1988, 1993
+ *    The Regents of the University of California.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,14 +53,17 @@
  * --Copyright--
  */
 
+/*
+ *      @(#)netdb.h	8.1 (Berkeley) 6/2/93
+ *	$Id$
+ */
+
 #ifndef _NETDB_H_
 #define _NETDB_H_
 
 #include <sys/param.h>
 #if (!defined(BSD)) || (BSD < 199306)
 # include <sys/bitypes.h>
-#else
-# include <sys/types.h>
 #endif
 #include <sys/cdefs.h>
 
@@ -91,13 +89,13 @@ struct	hostent {
 
 /*
  * Assumption here is that a network number
- * fits in 32 bits -- probably a poor one.
+ * fits in an unsigned long -- probably a poor one.
  */
 struct	netent {
 	char		*n_name;	/* official name of net */
 	char		**n_aliases;	/* alias list */
 	int		n_addrtype;	/* net address type */
-	u_int32_t		n_net;		/* network # */
+	unsigned long	n_net;		/* network # */
 };
 
 struct	servent {
@@ -132,8 +130,12 @@ void		endservent __P((void));
 struct hostent	*gethostbyaddr __P((const char *, int, int));
 struct hostent	*gethostbyname __P((const char *));
 struct hostent	*gethostent __P((void));
-struct netent	*getnetbyaddr __P((int32_t, int)); /* u_int32_t? */
+struct netent	*getnetbyaddr __P((long, int)); /* u_long? */
+#ifdef sun
+struct netent	*getnetbyname __P((char *));
+#else
 struct netent	*getnetbyname __P((const char *));
+#endif
 struct netent	*getnetent __P((void));
 struct protoent	*getprotobyname __P((const char *));
 struct protoent	*getprotobynumber __P((int));
@@ -142,15 +144,12 @@ struct servent	*getservbyname __P((const char *, const char *));
 struct servent	*getservbyport __P((int, const char *));
 struct servent	*getservent __P((void));
 void		herror __P((const char *));
-char *		hstrerror __P((int));
+char		*hstrerror __P((int));
 void		sethostent __P((int));
 /* void		sethostfile __P((const char *)); */
 void		setnetent __P((int));
 void		setprotoent __P((int));
 void		setservent __P((int));
 __END_DECLS
-
-/* Get `struct rpcent' and the definition for reading /etc/rpc.  */
-#include <rpc/netdb.h>
 
 #endif /* !_NETDB_H_ */

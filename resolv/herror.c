@@ -1,8 +1,8 @@
 /*
- * ++Copyright++ 1987
+ * ++Copyright++ 1987, 1993
  * -
- * Copyright (c) 1987 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1987, 1993
+ *    The Regents of the University of California.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -54,14 +54,19 @@
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)herror.c	6.6 (Berkeley) 2/24/91";
+static char sccsid[] = "@(#)herror.c	8.1 (Berkeley) 6/4/93";
 static char rcsid[] = "$Id$";
 #endif /* LIBC_SCCS and not lint */
 
-#include <sys/types.h>
+#include <sys/param.h>
 #include <sys/uio.h>
 #include <netdb.h>
-#include "../conf/portability.h"
+#if defined(BSD) && (BSD >= 199103)
+# include <unistd.h>
+# include <string.h>
+#else
+# include "../conf/portability.h"
+#endif
 
 char	*h_errlist[] = {
 	"Error 0",

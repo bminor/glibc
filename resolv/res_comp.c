@@ -1,8 +1,8 @@
 /*
- * ++Copyright++ 1985
+ * ++Copyright++ 1985, 1993
  * -
- * Copyright (c) 1985 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1985, 1993
+ *    The Regents of the University of California.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -54,18 +54,27 @@
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)res_comp.c	6.22 (Berkeley) 3/19/91";
+static char sccsid[] = "@(#)res_comp.c	8.1 (Berkeley) 6/4/93";
 static char rcsid[] = "$Id$";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/param.h>
-#include <arpa/nameser.h>
 #include <netinet/in.h>
-#include <resolv.h>
-#include <stdio.h>
-#include "../conf/portability.h"
+#include <arpa/nameser.h>
 
-static int dn_find();
+#include <stdio.h>
+#include <resolv.h>
+#include <ctype.h>
+
+#if defined(BSD) && (BSD >= 199103)
+# include <unistd.h>
+# include <string.h>
+#else
+# include "../conf/portability.h"
+#endif
+
+static int	dn_find __P((u_char *exp_dn, u_char *msg,
+			     u_char **dnptrs, u_char **lastdnptr));
 
 /*
  * Expand compressed domain name 'comp_dn' to full domain name.
@@ -74,18 +83,20 @@ static int dn_find();
  * 'exp_dn' is a pointer to a buffer of size 'length' for the result.
  * Return size of compressed name or -1 if there was an error.
  */
+int
 dn_expand(msg, eomorig, comp_dn, exp_dn, length)
 	const u_char *msg, *eomorig, *comp_dn;
-	u_char *exp_dn;
+	char *exp_dn;
 	int length;
 {
-	register u_char *cp, *dn;
+	register const u_char *cp;
+	register char *dn;
 	register int n, c;
-	u_char *eom;
+	char *eom;
 	int len = -1, checked = 0;
 
 	dn = exp_dn;
-	cp = (u_char *)comp_dn;
+	cp = comp_dn;
 	eom = exp_dn + length;
 	/*
 	 * fetch next label in domain name
@@ -119,7 +130,7 @@ dn_expand(msg, eomorig, comp_dn, exp_dn, length)
 		case INDIR_MASK:
 			if (len < 0)
 				len = cp - comp_dn + 1;
-			cp = (u_char *)msg + (((n & 0x3f) << 8) | (*cp & 0xff));
+			cp = msg + (((n & 0x3f) << 8) | (*cp & 0xff));
 			if (cp < msg || cp >= eomorig)	/* out of range */
 				return(-1);
 			checked += 2;
@@ -137,6 +148,9 @@ dn_expand(msg, eomorig, comp_dn, exp_dn, length)
 		}
 	}
 	*dn = '\0';
+	for (dn = exp_dn; (c = *dn) != '\0'; dn++)
+		if (isascii(c) && isspace(c))
+			return (-1);
 	if (len < 0)
 		len = cp - comp_dn;
 	return (len);
@@ -154,8 +168,9 @@ dn_expand(msg, eomorig, comp_dn, exp_dn, length)
  * If 'dnptr' is NULL, we don't try to compress names. If 'lastdnptr'
  * is NULL, we don't update the list.
  */
+int
 dn_comp(exp_dn, comp_dn, length, dnptrs, lastdnptr)
-	const u_char *exp_dn;
+	const char *exp_dn;
 	u_char *comp_dn, **dnptrs, **lastdnptr;
 	int length;
 {
@@ -167,6 +182,7 @@ dn_comp(exp_dn, comp_dn, length, dnptrs, lastdnptr)
 	dn = (u_char *)exp_dn;
 	cp = comp_dn;
 	eob = cp + length;
+	lpp = cpp = NULL;
 	if (dnptrs != NULL) {
 		if ((msg = *dnptrs++) != NULL) {
 			for (cpp = dnptrs; *cpp != NULL; cpp++)
@@ -232,29 +248,42 @@ dn_comp(exp_dn, comp_dn, length, dnptrs, lastdnptr)
 /*
  * Skip over a compressed domain name. Return the size or -1.
  */
+int
 __dn_skipname(comp_dn, eom)
 	const u_char *comp_dn, *eom;
 {
-	register u_char *cp;
+	register const u_char *cp;
 	register int n;
 
-	cp = (u_char *)comp_dn;
+	cp = comp_dn;
 	while (cp < eom && (n = *cp++)) {
 		/*
 		 * check for indirection
 		 */
 		switch (n & INDIR_MASK) {
-		case 0:		/* normal case, n == len */
+		case 0:			/* normal case, n == len */
 			cp += n;
 			continue;
-		default:	/* illegal type */
-			return (-1);
 		case INDIR_MASK:	/* indirection */
 			cp++;
+			break;
+		default:		/* illegal type */
+			return -1;
 		}
 		break;
 	}
+	if (cp > eom)
+		return -1;
 	return (cp - comp_dn);
+}
+
+static int
+mklower(ch)
+	register int ch;
+{
+	if (isascii(ch) && isupper(ch))
+		return (tolower(ch));
+	return (ch);
 }
 
 /*
@@ -286,7 +315,7 @@ dn_find(exp_dn, msg, dnptrs, lastdnptr)
 						goto next;
 					if (*dn == '\\')
 						dn++;
-					if (*dn++ != *cp++)
+					if (mklower(*dn++) != mklower(*cp++))
 						goto next;
 				}
 				if ((n = *dn++) == '\0' && *cp == '\0')
@@ -317,32 +346,32 @@ dn_find(exp_dn, msg, dnptrs, lastdnptr)
  * used by sendmail.
  */
 
-u_short
+u_int16_t
 _getshort(msgp)
-	register u_char *msgp;
+	register const u_char *msgp;
 {
-	register u_short u;
+	register u_int16_t u;
 
 	GETSHORT(u, msgp);
-	return u;
+	return (u);
 }
 
 u_int32_t
 _getlong(msgp)
-	register u_char *msgp;
+	register const u_char *msgp;
 {
 	register u_int32_t u;
 
 	GETLONG(u, msgp);
-	return u;
+	return (u);
 }
 
 void
 #if defined(__STDC__) || defined(__cplusplus)
-__putshort(register u_short s, register u_char *msgp)
+__putshort(register u_int16_t s, register u_char *msgp)	/* must match proto */
 #else
 __putshort(s, msgp)
-	register u_short s;
+	register u_int16_t s;
 	register u_char *msgp;
 #endif
 {
@@ -356,3 +385,36 @@ __putlong(l, msgp)
 {
 	PUTLONG(l, msgp);
 }
+
+#ifdef ultrix
+/* ultrix 4.0 had some icky packaging in its libc.a.  alias for it here.
+ * there is more gunk of this kind over in res_debug.c.
+ */
+#undef putshort
+void
+#if defined(__STDC__) || defined(__cplusplus)
+putshort(register u_short s, register u_char *msgp)
+#else
+putshort(s, msgp)
+	register u_short s;
+	register u_char *msgp;
+#endif
+{
+	__putshort(s, msgp);
+}
+#undef putlong
+void
+putlong(l, msgp)
+	register u_int32_t l;
+	register u_char *msgp;
+{
+	__putlong(l, msgp);
+}
+ 
+#undef dn_skipname
+dn_skipname(comp_dn, eom)
+	const u_char *comp_dn, *eom;
+{
+	return __dn_skipname(comp_dn, eom);
+}
+#endif /* Ultrix 4.0 hackery */

@@ -32,7 +32,8 @@
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)getnetbyaddr.c	5.7 (Berkeley) 6/1/90";
+static char sccsid[] = "@(#)getnetbyaddr.c	1.1 (Coimbra) 93/06/02";
+static char rcsid[] = "$Id$";
 #endif /* LIBC_SCCS and not lint */
 
 #include <netdb.h>
@@ -40,8 +41,8 @@ static char sccsid[] = "@(#)getnetbyaddr.c	5.7 (Berkeley) 6/1/90";
 extern int _net_stayopen;
 
 struct netent *
-getnetbyaddr(net, type)
-	register int32_t net;
+_getnetbyaddr(net, type)
+	register long net;
 	register int type;
 {
 	register struct netent *p;

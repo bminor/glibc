@@ -1,8 +1,8 @@
 /*
- * ++Copyright++ 1985
+ * ++Copyright++ 1985, 1993
  * -
- * Copyright (c) 1985 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1985, 1993
+ *    The Regents of the University of California.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -54,36 +54,46 @@
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)res_mkquery.c	6.16 (Berkeley) 3/6/91";
+static char sccsid[] = "@(#)res_mkquery.c	8.1 (Berkeley) 6/4/93";
 static char rcsid[] = "$Id$";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/nameser.h>
-#include <resolv.h>
+
 #include <stdio.h>
-#include "../conf/portability.h"
+#include <resolv.h>
+#if defined(BSD) && (BSD >= 199103)
+# include <string.h>
+#else
+# include "../conf/portability.h"
+#endif
+
+#if defined(USE_OPTIONS_H)
+# include <../conf/options.h>
+#endif
 
 /*
  * Form all types of queries.
  * Returns the size of the result or -1.
  */
+int
 res_mkquery(op, dname, class, type, data, datalen, newrr_in, buf, buflen)
 	int op;			/* opcode of query */
-	const char *dname;		/* domain name */
+	const char *dname;	/* domain name */
 	int class, type;	/* class and type of query */
-	const char *data;		/* resource record data */
+	const u_char *data;	/* resource record data */
 	int datalen;		/* length of data */
-	const char *newrr_in;	/* new rr for modify or append */
-	char *buf;		/* buffer to put query */
+	const u_char *newrr_in;	/* new rr for modify or append */
+	u_char *buf;		/* buffer to put query */
 	int buflen;		/* size of buffer */
 {
 	register HEADER *hp;
-	register char *cp;
+	register u_char *cp;
 	register int n;
 	struct rrec *newrr = (struct rrec *) newrr_in;
-	char *dnptrs[10], **dpp, **lastdnptr;
+	u_char *dnptrs[20], **dpp, **lastdnptr;
 
 #ifdef DEBUG
 	if (_res.options & RES_DEBUG)
@@ -93,21 +103,21 @@ res_mkquery(op, dname, class, type, data, datalen, newrr_in, buf, buflen)
 	/*
 	 * Initialize header fields.
 	 */
-	if ((buf == NULL) || (buflen < sizeof(HEADER)))
+	if ((buf == NULL) || (buflen < HFIXEDSZ))
 		return(-1);
-	bzero(buf, sizeof(HEADER));
+	bzero(buf, HFIXEDSZ);
 	hp = (HEADER *) buf;
 	hp->id = htons(++_res.id);
 	hp->opcode = op;
 	hp->pr = (_res.options & RES_PRIMARY) != 0;
 	hp->rd = (_res.options & RES_RECURSE) != 0;
 	hp->rcode = NOERROR;
-	cp = buf + sizeof(HEADER);
-	buflen -= sizeof(HEADER);
+	cp = buf + HFIXEDSZ;
+	buflen -= HFIXEDSZ;
 	dpp = dnptrs;
 	*dpp++ = buf;
 	*dpp++ = NULL;
-	lastdnptr = dnptrs + sizeof(dnptrs)/sizeof(dnptrs[0]);
+	lastdnptr = dnptrs + sizeof dnptrs / sizeof dnptrs[0];
 	/*
 	 * perform opcode specific processing
 	 */
@@ -115,15 +125,14 @@ res_mkquery(op, dname, class, type, data, datalen, newrr_in, buf, buflen)
 	case QUERY:
 		if ((buflen -= QFIXEDSZ) < 0)
 			return(-1);
-		if ((n = dn_comp((u_char *)dname, (u_char *)cp, buflen,
-		    (u_char **)dnptrs, (u_char **)lastdnptr)) < 0)
+		if ((n = dn_comp(dname, cp, buflen, dnptrs, lastdnptr)) < 0)
 			return (-1);
 		cp += n;
 		buflen -= n;
-		__putshort(type, (u_char *)cp);
-		cp += sizeof(u_short);
-		__putshort(class, (u_char *)cp);
-		cp += sizeof(u_short);
+		__putshort(type, cp);
+		cp += INT16SZ;
+		__putshort(class, cp);
+		cp += INT16SZ;
 		hp->qdcount = htons(1);
 		if (op == QUERY || data == NULL)
 			break;
@@ -131,19 +140,19 @@ res_mkquery(op, dname, class, type, data, datalen, newrr_in, buf, buflen)
 		 * Make an additional record for completion domain.
 		 */
 		buflen -= RRFIXEDSZ;
-		if ((n = dn_comp((u_char *)data, (u_char *)cp, buflen,
-		    (u_char **)dnptrs, (u_char **)lastdnptr)) < 0)
+		n = dn_comp((char *)data, cp, buflen, dnptrs, lastdnptr);
+		if (n < 0)
 			return (-1);
 		cp += n;
 		buflen -= n;
-		__putshort(T_NULL, (u_char *)cp);
-		cp += sizeof(u_short);
-		__putshort(class, (u_char *)cp);
-		cp += sizeof(u_short);
-		__putlong(0, (u_char *)cp);
-		cp += sizeof(u_int32_t);
-		__putshort(0, (u_char *)cp);
-		cp += sizeof(u_short);
+		__putshort(T_NULL, cp);
+		cp += INT16SZ;
+		__putshort(class, cp);
+		cp += INT16SZ;
+		__putlong(0, cp);
+		cp += INT32SZ;
+		__putshort(0, cp);
+		cp += INT16SZ;
 		hp->arcount = htons(1);
 		break;
 
@@ -154,14 +163,14 @@ res_mkquery(op, dname, class, type, data, datalen, newrr_in, buf, buflen)
 		if (buflen < 1 + RRFIXEDSZ + datalen)
 			return (-1);
 		*cp++ = '\0';	/* no domain name */
-		__putshort(type, (u_char *)cp);
-		cp += sizeof(u_short);
-		__putshort(class, (u_char *)cp);
-		cp += sizeof(u_short);
-		__putlong(0, (u_char *)cp);
-		cp += sizeof(u_int32_t);
-		__putshort(datalen, (u_char *)cp);
-		cp += sizeof(u_short);
+		__putshort(type, cp);
+		cp += INT16SZ;
+		__putshort(class, cp);
+		cp += INT16SZ;
+		__putlong(0, cp);
+		cp += INT32SZ;
+		__putshort(datalen, cp);
+		cp += INT16SZ;
 		if (datalen) {
 			bcopy(data, cp, datalen);
 			cp += datalen;
@@ -189,13 +198,13 @@ res_mkquery(op, dname, class, type, data, datalen, newrr_in, buf, buflen)
 			return (-1);
 		cp += n;
 		__putshort(type, cp);
-                cp += sizeof(u_short);
+                cp += INT16SZ;
                 __putshort(class, cp);
-                cp += sizeof(u_short);
+                cp += INT16SZ;
 		__putlong(0, cp);
-		cp += sizeof(u_int32_t);
+		cp += INT32SZ;
 		__putshort(datalen, cp);
-                cp += sizeof(u_short);
+                cp += INT16SZ;
 		if (datalen) {
 			bcopy(data, cp, datalen);
 			cp += datalen;
@@ -212,13 +221,13 @@ res_mkquery(op, dname, class, type, data, datalen, newrr_in, buf, buflen)
 			return (-1);
 		cp += n;
 		__putshort(newrr->r_type, cp);
-                cp += sizeof(u_short);
+                cp += INT16SZ;
                 __putshort(newrr->r_class, cp);
-                cp += sizeof(u_short);
+                cp += INT16SZ;
 		__putlong(0, cp);
-		cp += sizeof(u_int32_t);
+		cp += INT32SZ;
 		__putshort(newrr->r_size, cp);
-                cp += sizeof(u_short);
+                cp += INT16SZ;
 		if (newrr->r_size) {
 			bcopy(newrr->r_data, cp, newrr->r_size);
 			cp += newrr->r_size;
