@@ -148,6 +148,10 @@ DEFUN(vfprintf, (s, format, args),
       unsigned LONGLONG int num;
       LONGLONG int signed_num;
 
+      /* String to be written.  */
+      CONST char *str;
+      char unknown_error[256];	/* Buffer sometimes used by %m.  */
+
       /* Auxiliary function to do output.  */
       printf_function *function;
 
@@ -465,13 +469,14 @@ DEFUN(vfprintf, (s, format, args),
 	    break;
 
 	  case 's':
-	    /* String.  */
 	    {
 	      static CONST char null[] = "(null)";
-	      CONST char *str;
 	      size_t len;
 
 	      nextarg(str, CONST char *);
+
+	    string:
+
 	      if (str == NULL)
 		/* Write "(null)" if there's space.  */
 		if (prec == -1 || prec >= (int) sizeof(null) - 1)
@@ -569,6 +574,20 @@ DEFUN(vfprintf, (s, format, args),
 		*p = done;
 	      }
 	    break;
+
+	  case 'm':
+#ifndef HAVE_GNU_LD
+#define _sys_errlist sys_errlist
+#define _sys_nerr sys_nerr
+#endif
+	    if (errno < 0 || errno > _sys_nerr)
+	      {
+		sprintf (unknown_error, "Unknown error %d", errno);
+		str = unknown_error;
+	      }
+	    else
+	      str = _sys_errlist[errno];
+	    goto string;
 
 	  default:
 	    /* Unrecognized format specifier.  */
