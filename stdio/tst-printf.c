@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -99,6 +99,7 @@ I am ready for my first lesson today.";
   printf("e-style >= .1:\t\"%e\"\n", 0.1234);
   printf("e-style < .1:\t\"%e\"\n", 0.001234);
   printf("e-style big:\t\"%.60e\"\n", 1e20);
+  printf ("e-style == .1:\t\"%e\"\n", 0.1);
   printf("f-style >= 1:\t\"%f\"\n", 12.34);
   printf("f-style >= .1:\t\"%f\"\n", 0.1234);
   printf("f-style < .1:\t\"%f\"\n", 0.001234);
