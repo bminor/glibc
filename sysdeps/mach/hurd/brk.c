@@ -103,9 +103,13 @@ init_brk (void)
 
   __mutex_init (&_hurd_brk_lock);
 
-  _hurd_brk = (vm_address_t) &_end;
+  /* If _hurd_brk is already set, don't change it.  The assumption is that
+     it was set in a previous run before something like Emacs's unexec was
+     called and dumped all the data up to the break at that point.  */
+  if (_hurd_brk == 0)
+    _hurd_brk = (vm_address_t) &_end;
 
-  pagend = round_page (&_end);
+  pagend = round_page (_hurd_brk);
 
   _hurd_data_end = (vm_address_t) &__data_start + DATA_SIZE;
 
