@@ -35,7 +35,7 @@ foo:=$(shell echo 'foobar=$(filter %.c %.S %.s %.h,$(distribute))'>&2)
 
 ifndef sysdep_dirs
 # Find all sysdep directories.
-sysdep_dirs := $(shell find $(..)sysdeps -type d -print)
+export sysdep_dirs := $(shell find $(..)sysdeps -type d -print)
 else
 # Defined by the parent.
 sysdep_dirs := $(addprefix $(..),$(sysdep_dirs))
@@ -166,8 +166,4 @@ $(dist-subdirs):
 endif	# Subdirectory vs. parent makefile
 
 # Get these things out of the environment because they take up lots of space.
-override distribute :=
-override sources :=
-override objects :=
-override routines :=
-override aux :=
+unexport distribute sources
