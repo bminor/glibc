@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or modify
@@ -113,7 +113,7 @@ struct in_addr
 #define	IN_CLASSB_HOST		(0xffffffff & ~IN_CLASSB_NET)
 #define	IN_CLASSB_MAX		65536
 
-#define	IN_CLASSC(a)		((((unsigned) (a)) & 0xc0000000) == 0xc0000000)
+#define	IN_CLASSC(a)		((((unsigned) (a)) & 0xe0000000) == 0xc0000000)
 #define	IN_CLASSC_NET		0xffffff00
 #define	IN_CLASSC_NSHIFT	8
 #define	IN_CLASSC_HOST		(0xffffffff & ~IN_CLASSC_NET)
