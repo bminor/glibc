@@ -92,7 +92,9 @@ LINE_PARSER
      {
        char *bufptr = data->linebuffer;
        size_t buflen = (char *) data + datalen - bufptr;
-       map_v4v6_hostent (result, &bufptr, &buflen);
+       int ibuflen = buflen;	/* Use this for machines with size_t > int.  */
+       map_v4v6_hostent (result, &bufptr, &ibuflen);
+       buflen = ibuflen;
      }
 
    STRING_FIELD (result->h_name, isspace, 1);
