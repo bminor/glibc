@@ -36,26 +36,6 @@
 #ifndef	_IOCTLS_H_
 #define	_IOCTLS_H_
 
-/*
- * Window/terminal size structure.  This information is stored by the kernel
- * in order to provide a consistent interface, but is not used by the kernel.
- */
-struct winsize {
-	unsigned short	ws_row;		/* rows, in characters */
-	unsigned short	ws_col;		/* columns, in characters */
-	unsigned short	ws_xpixel;	/* horizontal size, pixels */
-	unsigned short	ws_ypixel;	/* vertical size, pixels */
-};
-
-/*
- * Pun for SUN.
- */
-struct ttysize {
-	unsigned short	ts_lines;
-	unsigned short	ts_cols;
-	unsigned short	ts_xxx;
-	unsigned short	ts_yyy;
-};
 #define	TIOCGSIZE	TIOCGWINSZ
 #define	TIOCSSIZE	TIOCSWINSZ
 
