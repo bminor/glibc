@@ -1,4 +1,23 @@
-2002-08-26 Brian Youmans <3diff@gnu.org>
+2002-08-27  Brian Youmans  <3diff@gnu.org>
+
+	* sysdeps/ieee754/flt-32/e_asinf.c: Modified copying permission
+	wording at request of copyright holder Stephen Moshier.
+	* sysdeps/ieee754/ldbl-128/e_acosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_asinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_coshl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_powl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_sinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_asinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j0l.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_lgammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_erfl.c: Likewise.
+
+2002-08-26  Brian Youmans  <3diff@gnu.org>
 
         * COPYING.LIB: Replaced with fresh copy from
 	ftp://ftp.gnu.org/gnu/Licenses/COPYING.LIB-2.1;
@@ -256,7 +275,7 @@
 	* sysdeps/powerpc/divdi3.c: Remove INTDEF/INTUSE from last change.
 	* sysdeps/powerpc/libgcc-compat.S (INTUSE): Define it locally.
 
-2002-08-20 Brian Youmans <3diff@gnu.org>
+2002-08-20  Brian Youmans  <3diff@gnu.org>
 
         * manual/contrib.texi: Removed licenses, added acknowledgements
         for contributions by Intel, IBM, Craig Metz.
