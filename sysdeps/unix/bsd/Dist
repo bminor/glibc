@@ -1,2 +1,2 @@
 make-local_lim.c bsddir.h bsd_getgrp.S bsdtty.h
-glue-ctype.c
+glue-ctype.c make_siglist.c 
