@@ -20,7 +20,7 @@ exists only for this purpose.
 @deftp {Data Type} size_t
 This is an unsigned integer type used to represent the sizes of objects.
 The result of the @code{sizeof} operator is of this type, and functions
-such as @code{malloc} (@pxref{Storage Management Functions}) and
+such as @code{malloc} (@pxref{Unconstrained Allocation}) and
 @code{memcpy} (@pxref{Copying and Concatenation}) that manipulate
 objects of arbitrary sizes accept arguments of this type to specify
 object sizes.

@@ -63,7 +63,7 @@ initialized to point at the array.  Otherwise, you can get into big
 trouble by accessing random memory locations.  You can allocate storage
 for a string either by defining a character array variable, by
 allocating memory dynamically using a library function like
-@code{malloc} (@pxref{Storage Management Functions}), or by means of a
+@code{malloc} (@pxref{Unconstrained Allocation}), or by means of a
 string literal.
 
 @cindex string literal

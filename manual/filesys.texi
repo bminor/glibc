@@ -1392,9 +1392,9 @@ represents the maximum length of a file name string.
 
 Unlike @code{PATH_MAX}, this macro is defined even if there is no actual
 limit imposed.  In such a case, its value is typically a very large
-number.  Don't try to use @code{FILENAME_MAX} as the size of an array in
-which to store a file name!  Use dynamic allocation (@pxref{wherever})
-instead.
+number.  Don't try to use @code{FILENAME_MAX} as the size of an
+array in which to store a file name!  Use dynamic allocation
+(@pxref{Memory Allocation}) instead.
 @end defvr
 
 @defvr Macro _POSIX_PIPE_BUF
