@@ -48,14 +48,14 @@ union __ioctl
 	unsigned int group:4, command:7;
       } __s;
     /* We use the plain integer to pass around.  */
-    int __i;
+    unsigned long int __i;
   };
 
 /* Construct an ioctl from all the broken-out fields.  */
 #define	_IOCT(inout, group, num, t0, c0, t1, c1, t2, c2)		      \
   (((union __ioctl)							      \
     { __t: { (inout), (t0), (t1), (t2), (c0), (c1), (c2),		      \
-	       ((group) - 'a') >> 2, (num) } }).i)
+	       ((group) - 'a') >> 2, (num) } }).__i)
 
 /* Construct an ioctl from constructed type plus other fields.  */
 #define	_IOC(inout, group, num, type) \
