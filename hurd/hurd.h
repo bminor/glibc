@@ -81,9 +81,9 @@ _hurd_port_init (struct _hurd_port *port, mach_port_t init)
 {
 #ifdef noteven
   __spin_lock_init (&port->lock);
+#endif
   port->user_dealloc = NULL;
   port->port = init;
-#endif
 }
 
 /* Get a reference to *PORT, which is locked.
