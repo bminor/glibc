@@ -1,3 +1,11 @@
+1999-07-02  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp-test.c: Revert bogus 'unset IFS' change.  It
+	doesn't belong in the tests, but in the wordexp implementation.
+
+	* posix/wordexp.c (exec_comm): Unset IFS so that subshells don't
+	split fields.
+
 1999-07-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Update for some more
