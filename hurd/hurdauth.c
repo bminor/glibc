@@ -20,9 +20,9 @@ Cambridge, MA 02139, USA.  */
 
 struct _hurd_port _hurd_auth;
 
-static error_t
-add_auth (sigthread_t me,
-	  auth_t addauth)
+error_t
+__add_auth (sigthread_t me,
+	    auth_t addauth)
 {
   error_t err;
   auth_t newauth;
@@ -41,15 +41,10 @@ add_auth (sigthread_t me,
   return POSIX_SUCCESS;
 }
 
-#include "misc_server/add_auth.c"
-
-asm (".stabs \"__hurd_sigport_ids\",23,0,0,23005"); /* XXX */
-text_set_element (_hurd_sigport_routines, _Xadd_auth);
-
-static error_t
-del_auth (sigthread_t me, task_t task,
-	  uid_t *uids, size_t nuids,
-	  gid_t *gids, size_t ngids)
+error_t
+__del_auth (sigthread_t me, task_t task,
+	    uid_t *uids, size_t nuids,
+	    gid_t *gids, size_t ngids)
 {
   error_t err;
   auth_t newauth;
@@ -103,8 +98,3 @@ del_auth (sigthread_t me, task_t task,
     return errno;
   return POSIX_SUCCESS;
 }
-
-#include "misc_server/del_auth.c"
-
-asm (".stabs \"__hurd_sigport_ids\",23,0,0,23006"); /* XXX */
-text_set_element (_hurd_sigport_routines, _Xdel_auth);
