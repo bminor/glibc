@@ -33,11 +33,12 @@ Cambridge, MA 02139, USA.  */
 #define O_WRITE		O_WRONLY /* Open for writing.  */
 #define	O_EXEC		0x0004	/* Open for execution.  */
 #endif
-#define	O_RDONLY	0x0001	/* POSIX.1 name: Open read-only.  */
-#define	O_WRONLY	0x0002	/* POSIX.1 name: Open write-only.  */
+/* POSIX.1 standard names.  */
+#define	O_RDONLY	0x0001	/* Open read-only.  */
+#define	O_WRONLY	0x0002	/* Open write-only.  */
 #define	O_RDWR		(O_RDONLY|O_WRONLY) /* Open for reading and writing. */
-/* Mask for file access modes.  XXX Should this include O_EXEC??? */
-#define	O_ACCMODE	O_RDWR
+#define	O_ACCMODE	O_RDWR	/* Mask for file access modes.  */
+
 
 
 /* File name translation flags.  These are understood by io servers;
