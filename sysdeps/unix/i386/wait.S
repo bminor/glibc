@@ -19,8 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 SYSCALL__ (wait, 1)
-	movl 4(%esp), %ecx
-	orl %ecx, %ecx
-	je 1f	
-	movl %edx, (%ecx)
-	ret
+	movl 4(%esp), %ecx	/* Put status pointer in %ecx.  */
+	testl %ecx, %ecx	/* Is it non-nil?  */
+	je null
+	movl %edx, (%ecx)	/* Yes; store the status there.  */
+null:	ret
