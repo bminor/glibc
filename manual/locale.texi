@@ -162,17 +162,18 @@ monetary; see @ref{Numeric Formatting}.
 This category applies to formatting date and time values; see
 @ref{Formatting Date and Time}.
 
+@ignore   This is apparently a feature that was in some early
+draft of the POSIX.2 standard, but it's not listed in draft 11.  Do we
+still support this anyway?  Is there a corresponding environment
+variable?
+
 @comment locale.h
 @comment GNU
 @item LC_RESPONSE
 @vindex LC_RESPONSE
 This category applies to recognizing ``yes'' or ``no'' responses to
 questions.
-
-@strong{Incomplete:} This is apparently a feature that was in some early
-draft of the POSIX.2 standard, but it's not listed in draft 11.  Do we
-still support this anyway?  Is there a corresponding environment
-variable?
+@end ignore
 
 @comment locale.h
 @comment ANSI
