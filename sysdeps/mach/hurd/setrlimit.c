@@ -34,13 +34,13 @@ DEFUN(setrlimit, (resource, rlimits),
 {
   struct rlimit lim;
 
-  if (rlimits == NULL)
+  if (rlimits == NULL || resource < 0 || resource >= RLIMIT_NLIMITS)
     {
       errno = EINVAL;
       return -1;
     }
 
-  lim = *rlimits;		/* Fault now if ever.  */
+  lim = *rlimits;
 
   if (lim.rlim_max != RLIM_INFINITY)
     {
@@ -49,34 +49,12 @@ DEFUN(setrlimit, (resource, rlimits),
       return -1;
     }
 
-  switch (resource)
-    {
-    default:
-      errno = EINVAL;
-      return -1;
+  if (lim.rlim_cur > lim.rlim_max)
+    lim.rlim_cur = lim.rlim_max;
 
-    case RLIMIT_CORE:
-      _hurd_core_limit = lim.rlim_cur;
-      return 0;
+  __mutex_lock (&_hurd_rlimit_lock);
+  _hurd_rlimits[resource] = lim;
+  __mutex_unlock (&_hurd_rlimit_lock);
 
-    case RLIMIT_DATA:
-      return _hurd_set_data_limit (&lim);
-
-    case RLIMIT_CPU:
-    case RLIMIT_FSIZE:
-    case RLIMIT_STACK:
-    case RLIMIT_RSS:
-    case RLIMIT_NPROC:
-    case RLIMIT_MEMLOCK:
-      errno = ENOSYS;
-      return -1;
-
-    case RLIMIT_OFILE:
-      HURD_CRITICAL_BEGIN;
-      __mutex_lock (&_hurd_dtable_lock);
-      _hurd_dtable_rlimit = lim.rlim_cur; /* XXX open descriptors? */
-      __mutex_unlock (&_hurd_dtable_lock);
-      HURD_CRITICAL_END;
-      return 0;
-    }
+  return 0;
 }
