@@ -31,6 +31,7 @@ void
 _dl_close (struct link_map *map)
 {
   struct link_map **list;
+  unsigned int nsearchlist;
   unsigned int i;
 
   if (map->l_opencount == 0)
@@ -45,9 +46,10 @@ _dl_close (struct link_map *map)
     }
 
   list = map->l_searchlist;
+  nsearchlist = map->l_nsearchlist;
 
   /* Call all termination functions at once.  */
-  for (i = 0; i < map->l_nsearchlist; ++i)
+  for (i = 0; i < nsearchlist; ++i)
     {
       struct link_map *imap = list[i];
       if (imap->l_opencount == 1 && imap->l_type == lt_loaded)
@@ -66,12 +68,12 @@ _dl_close (struct link_map *map)
   /* The search list contains a counted reference to each object it
      points to, the 0th elt being MAP itself.  Decrement the reference
      counts on all the objects MAP depends on.  */
-  for (i = 0; i < map->l_nsearchlist; ++i)
+  for (i = 0; i < nsearchlist; ++i)
     --list[i]->l_opencount;
 
   /* Check each element of the search list to see if all references to
      it are gone.  */
-  for (i = 0; i < map->l_nsearchlist; ++i)
+  for (i = 0; i < nsearchlist; ++i)
     {
       struct link_map *imap = list[i];
       if (imap->l_opencount == 0 && imap->l_type == lt_loaded)
