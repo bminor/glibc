@@ -1,5 +1,8 @@
 1998-03-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Makerules (install): Change comment for libc.so following the
+	libc_nonshared changes.
+
 	* sysdeps/unix/sysv/linux/socketbits.h (MSG_*): Also define as macros.
 
 1998-03-31 08:01  H.J. Lu  <hjl@gnu.org>
