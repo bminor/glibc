@@ -22,14 +22,17 @@ Cambridge, MA 02139, USA.  */
 /* State of this thread when the signal was taken.  */
 struct sigcontext
 {
-  /* The first three members are machine-independent.  */
+  /* The first four members are machine-independent.  */
 
   int sc_onstack;		/* Nonzero if running on sigstack.  */
   sigset_t sc_mask;		/* Blocked signals to restore.  */
 
+  /* MiG reply port this thread is using.  */
+  unsigned int sc_reply_port;
+
   /* Port this thread is doing an interruptible RPC on.  */
-  unsigned long int sc_intr_port;
-  
+  unsigned int sc_intr_port;
+
   /* All following members are machine-dependent.  */
 
   /* Segment registers.  */
@@ -40,7 +43,7 @@ struct sigcontext
   int sc_ss;
   
   /* "General" registers.  These members are in the order that the i386
-     `pushad' and `popad' instructions use (`popad' ignores %esp).  */
+     `pusha' and `popa' instructions use (`popa' ignores %esp).  */
   int sc_edi;
   int sc_esi;
   int sc_ebp;

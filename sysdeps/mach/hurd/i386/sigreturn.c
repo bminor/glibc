@@ -18,12 +18,14 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 #include <hurd/signal.h>
+#include <hurd/threadvar.h>
 
 int
 __sigreturn (register const struct sigcontext *scp)
 {
   struct hurd_sigstate *ss;
   register int *usp asm ("%eax"); /* Force it into a register.  */
+  mach_port_t *reply_port;
 
   if (scp == NULL)
     {
@@ -35,8 +37,16 @@ __sigreturn (register const struct sigcontext *scp)
   ss->blocked = scp->sc_mask;
   ss->intr_port = scp->sc_intr_port;
   if (scp->sc_onstack)
-    ss->sigaltstack.ss_flags &= ~SA_ONSTACK;
+    ss->sigaltstack.ss_flags &= ~SA_ONSTACK; /* XXX threadvars */
   __mutex_unlock (&ss->lock);
+
+  /* Destroy the MiG reply port used by the signal handler, and restore the
+     reply port in use by the thread when interrupted.  */
+  reply_port =
+    (mach_port_t *) __hurd_threadvar_location (_HURD_THREADVAR_MIG_REPLY);
+  if (*reply_port)
+    __mach_port_destroy (__mach_task_self (), *reply_port);
+  *reply_port = scp->sc_reply_port;
 
   /* Push the flags and registers onto the stack we're returning to.  */
   usp = (int *) scp->sc_uesp;
