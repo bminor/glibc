@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1982, 1986, 1988 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1982, 1986, 1988, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,7 +30,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)syslog.h	7.20 (Berkeley) 2/23/91
+ *	@(#)syslog.h	8.1 (Berkeley) 6/2/93
  */
 
 #define	_PATH_LOG	"/dev/log"
@@ -96,6 +96,7 @@ CODE prioritynames[] = {
 #define	LOG_UUCP	(8<<3)	/* UUCP subsystem */
 #define	LOG_CRON	(9<<3)	/* clock daemon */
 #define	LOG_AUTHPRIV	(10<<3)	/* security/authorization messages (private) */
+#define	LOG_FTP		(11<<3)	/* ftp daemon */
 
 	/* other codes through 15 reserved for system use */
 #define	LOG_LOCAL0	(16<<3)	/* reserved for local use */
@@ -118,6 +119,7 @@ CODE facilitynames[] = {
 	"authpriv",	LOG_AUTHPRIV,
 	"cron", 	LOG_CRON,
 	"daemon",	LOG_DAEMON,
+	"ftp",		LOG_FTP,
 	"kern",		LOG_KERN,
 	"lpr",		LOG_LPR,
 	"mail",		LOG_MAIL,
@@ -164,15 +166,22 @@ CODE facilitynames[] = {
 
 #ifndef KERNEL
 
+/*
+ * Don't use va_list in the vsyslog() prototype.   Va_list is typedef'd in two
+ * places (<machine/varargs.h> and <machine/stdarg.h>), so if we include one
+ * of them here we may collide with the utility's includes.  It's unreasonable
+ * for utilities to have to include one of them to include syslog.h, so we get
+ * _BSD_VA_LIST_ from <machine/ansi.h> and use it.
+ */
+#include <machine/ansi.h>
 #include <sys/cdefs.h>
-#include <stdarg.h>
 
 __BEGIN_DECLS
 void	closelog __P((void));
 void	openlog __P((const char *, int, int));
 int	setlogmask __P((int));
 void	syslog __P((int, const char *, ...));
-void	vsyslog __P((int, const char *, va_list));
+void	vsyslog __P((int, const char *, _BSD_VA_LIST_));
 __END_DECLS
 
 #endif /* !KERNEL */
