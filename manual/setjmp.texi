@@ -109,7 +109,7 @@ When called normally, @code{setjmp} stores information about the
 execution state of the program in @var{state} and returns zero.  If
 @code{longjmp} is later used to perform a non-local exit to this
 @var{state}, @code{setjmp} returns a nonzero value.
-@end deftypefun
+@end deftypefn
 
 @comment setjmp.h
 @comment ANSI
