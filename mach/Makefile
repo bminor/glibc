@@ -47,8 +47,8 @@ tests := hello
 distribute = Machrules syscalls.awk shortcut.awk
 
 
-# XXX currently these files have been copied into mach/ (which should not
-# otherwise exist).  They will supposedly disappear in the future.
+# XXX currently these files have been copied into mach/.  They will
+# supposedly disappear in the future.
 headers += $(addprefix mach/default_pager_types.,h defs)
 user-interfaces += mach/default_pager
 server-interfaces += mach/default_pager_helper
