@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <signal.h>
+#include <hurd.h>
 
 
 /* If SET is not NULL, modify the current set of blocked signals
@@ -62,7 +63,7 @@ DEFUN(__sigprocmask, (how, set, oset),
 	  return -1;
 	}
 
-      ss->blocked &= ~_SIG_CANT_BLOCK;
+      ss->blocked &= ~_SIG_CANT_MASK;
 
       if (ss->pending & ~ss->blocked)
 	/* XXX deliver pending signals */
