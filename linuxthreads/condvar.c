@@ -134,13 +134,12 @@ pthread_cond_timedwait_relative_old(pthread_cond_t *cond,
 {
   volatile pthread_descr self = thread_self();
   sigset_t unblock, initial_mask;
-  int retsleep, already_canceled, was_signalled;
+  int already_canceled = 0;
+  int was_signalled = 0;
   sigjmp_buf jmpbuf;
   pthread_extricate_if extr;
   struct timeval now;
   struct timespec reltime;
-
-requeue_and_wait_again:
 
   /* Compute a time offset relative to now.  */
   __gettimeofday (&now, NULL);
@@ -152,10 +151,6 @@ requeue_and_wait_again:
   }
   if (reltime.tv_sec < 0)
     return ETIMEDOUT;
-
-  retsleep = 0;
-  already_canceled = 0;
-  was_signalled = 0;
 
   /* Set up extrication interface */
   extr.pu_object = cond;
@@ -191,13 +186,14 @@ requeue_and_wait_again:
       sigemptyset(&unblock);
       sigaddset(&unblock, __pthread_sig_restart);
       sigprocmask(SIG_UNBLOCK, &unblock, &initial_mask);
-      /* Sleep for the required duration */
-      retsleep = __libc_nanosleep(&reltime, NULL);
+      /* Sleep for the required duration. If woken by a signal, resume waiting
+	 as required by Single Unix Specification.  */
+      while (__libc_nanosleep(&reltime, &reltime) != 0)
+	;
       /* Block the restart signal again */
       sigprocmask(SIG_SETMASK, &initial_mask, NULL);
       was_signalled = 0;
     } else {
-      retsleep = -1;
       was_signalled = 1;
     }
     THREAD_SETMEM(self, p_signal_jmp, NULL);
@@ -229,12 +225,7 @@ requeue_and_wait_again:
       if (was_on_queue) {
 	__pthread_set_own_extricate_if(self, 0);
 	pthread_mutex_lock(mutex);
-
-	if (retsleep == 0)
-	  return ETIMEDOUT;
-	/* Woken by a signal: resume waiting as required by Single Unix
-	   Specification.  */
-	goto requeue_and_wait_again;
+	return ETIMEDOUT;
       }
 
       suspend(self);
@@ -267,13 +258,12 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
 {
   volatile pthread_descr self = thread_self();
   sigset_t unblock, initial_mask;
-  int retsleep, already_canceled, was_signalled;
+  int already_canceled = 0;
+  int was_signalled = 0;
   sigjmp_buf jmpbuf;
   pthread_extricate_if extr;
   struct timeval now;
   struct timespec reltime;
-
- requeue_and_wait_again:
 
   /* Compute a time offset relative to now.  */
   __gettimeofday (&now, NULL);
@@ -286,7 +276,6 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
   if (reltime.tv_sec < 0)
     return ETIMEDOUT;
 
-  retsleep = 0;
   already_canceled = 0;
   was_signalled = 0;
 
@@ -323,13 +312,14 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
     sigemptyset(&unblock);
     sigaddset(&unblock, __pthread_sig_restart);
     sigprocmask(SIG_UNBLOCK, &unblock, &initial_mask);
-    /* Sleep for the required duration */
-    retsleep = __libc_nanosleep(&reltime, NULL);
+    /* Sleep for the required duration. If woken by a signal, resume waiting
+       as required by Single Unix Specification.  */
+    while (__libc_nanosleep(&reltime, &reltime) != 0)
+      ;
     /* Block the restart signal again */
     sigprocmask(SIG_SETMASK, &initial_mask, NULL);
     was_signalled = 0;
   } else {
-    retsleep = -1;
     was_signalled = 1;
   }
   THREAD_SETMEM(self, p_signal_jmp, NULL);
@@ -358,12 +348,7 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
     if (was_on_queue) {
       __pthread_set_own_extricate_if(self, 0);
       pthread_mutex_lock(mutex);
-
-      if (retsleep == 0)
-	return ETIMEDOUT;
-      /* Woken by a signal: resume waiting as required by Single Unix
-	 Specification.  */
-      goto requeue_and_wait_again;
+      return ETIMEDOUT;
     }
 
     /* Eat the outstanding restart() from the signaller */
