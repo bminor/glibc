@@ -77,9 +77,12 @@ messages_finish (struct localedef_t *locale)
     = locale->categories[LC_MESSAGES].messages;
 
   /* The fields YESSTR and NOSTR are optional.  */
-  if (messages->yesexpr == NULL && !be_quiet)
-    error (0, 0, _("field `%s' in category `%s' undefined"),
-	   "yesexpr", "LC_MESSAGES");
+  if (messages->yesexpr == NULL)
+    {
+      if (!be_quiet)
+	error (0, 0, _("field `%s' in category `%s' undefined"),
+	       "yesexpr", "LC_MESSAGES");
+    }
   else
     {
       int result;
@@ -98,9 +101,12 @@ no correct regular expression for field `%s' in category `%s': %s"),
 	}
     }
 
-  if (messages->noexpr == NULL && !be_quiet)
-    error (0, 0, _("field `%s' in category `%s' undefined"),
-	   "noexpr", "LC_MESSAGES");
+  if (messages->noexpr == NULL)
+    {
+      if (!be_quiet)
+	error (0, 0, _("field `%s' in category `%s' undefined"),
+	       "noexpr", "LC_MESSAGES");
+    }
   else
     {
       int result;
