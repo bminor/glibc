@@ -72,7 +72,11 @@ $(objpfx)dummy.o:
 
 .PHONY: others tests
 others: $(addprefix $(objpfx),$(others))
+ifeq ($(cross-compiling),yes)
+tests: $(addprefix $(objpfx),$(tests))
+else
 tests: $(tests:%=$(objpfx)%.out)
+endif
 
 ifneq "$(strip $(others) $(tests))" ""
 $(addprefix $(objpfx),$(others) $(tests)): %: %.o $(libc.a)
