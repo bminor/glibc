@@ -159,7 +159,10 @@ main (void)
 
   if (! utimes (GCONV_MODULES_DIR "/gconv-modules.cache", NULL))
     {
-      verbose_exec (113, "/usr/sbin/iconvconfig", "/usr/sbin/iconvconfig",
+#ifndef ICONVCONFIG
+#define ICONVCONFIG "/usr/sbin/iconvconfig"
+#endif
+      verbose_exec (113, ICONVCONFIG, "/usr/sbin/iconvconfig",
 		    "-o", GCONV_MODULES_DIR"/gconv-modules.cache",
 		    "--nostdlib", GCONV_MODULES_DIR);
     }

@@ -1,4 +1,4 @@
-%define glibcrelease 1
+%define glibcrelease 2
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -525,7 +525,8 @@ $GCC -static -L. -Os ../fedora/glibc_post_upgrade.c -o glibc_post_upgrade.%{_tar
     '-DLIBTLS="/%{_lib}/tls/"' \
 %endif
     '-DGCONV_MODULES_DIR="%{_prefix}/%{_lib}/gconv"' \
-    '-DLD_SO_CONF="/etc/ld.so.conf"'
+    '-DLD_SO_CONF="/etc/ld.so.conf"' \
+    '-DICONVCONFIG="%{_sbindir}/iconvconfig.%{_target_cpu}"'
 cd ..
 
 # hack
@@ -799,6 +800,9 @@ build-%{_target_cpu}-linux/hardlink -vc $RPM_BUILD_ROOT%{_prefix}/lib/locale
 rm -f ${RPM_BUILD_ROOT}/%{_lib}/libnss1-*
 rm -f ${RPM_BUILD_ROOT}/%{_lib}/libnss-*.so.1
 %endif
+
+# Ugly hack for buggy rpm
+ln -f ${RPM_BUILD_ROOT}%{_sbindir}/iconvconfig{,.%{_target_cpu}}
 
 # BUILD THE FILE LIST
 find $RPM_BUILD_ROOT -type f -or -type l |
@@ -1266,6 +1270,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Dec 19 2004 Jakub Jelinek <jakub@redhat.com> 2.3.4-2
+- work around rpm bug some more, this time by copying
+  iconvconfig to iconvconfig.%%{_target_cpu}.
+
 * Mon Dec 19 2004 Jakub Jelinek <jakub@redhat.com> 2.3.4-1
 - update from CVS
   - glibc 2.3.4 release
