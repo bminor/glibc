@@ -78,7 +78,8 @@ _hurd_set_brk (vm_address_t addr)
   if (err = __vm_protect (__mach_task_self (), pagebrk, pagend - pagebrk,
 			  0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE))
     {
-      return __hurd_fail (err);
+      errno = EIO;		/* XXX ? */
+      return -1;
     }
 
   _hurd_brk = addr;
@@ -101,14 +102,13 @@ init_brk (void)
   if (pagend < _hurd_data_end)
     {
       /* We use vm_map to allocate and change permissions atomically.  */
-      if (__vm_map (__mach_task_self (), &pagend, _hurd_data_end - pagend,
-		    0, 0, MACH_PORT_NULL, 0, 0,
-		    0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE,
-		    VM_INHERIT_COPY)) /* ? */
+      if (!__vm_map (__mach_task_self (), &pagend, _hurd_data_end - pagend,
+		     0, 0, MACH_PORT_NULL, 0, 0,
+		     0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE,
+		     VM_INHERIT_COPY)) /* ? */
 	_hurd_data_end = pagend;
     }
 }
-
 text_set_element (__libc_subinit, init_brk);
 
 
