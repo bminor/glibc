@@ -21,7 +21,6 @@
 # Makefiles define these variable before including this file:
 #	user-interfaces		Names of interfaces to put user stubs in for.
 #	server-interfaces	Names of interfaces to put server stubs in for.
-#	interface-header-prefix	Directory prefix for interface header files.
 # This file sets:
 #	interface-headers	Names of generated interface header files.
 #	interface-routines	Names of generated interface routines.
@@ -46,54 +45,53 @@ ifndef MIG
 MIG = mig
 endif
 MIGFLAGS = -DMACH_IPC_COMPAT=0 -DSTANDALONE -DTypeCheck=0 \
-	   $(includes) $(migdefines)
+	   $(includes) $(migdefines) # -subrprefix __
 
 .SUFFIXES: .defs
 
-define nl
+define nl	# This is needed by *.ir.
 
 
 endef
 ifdef user-interfaces
-include interface-rules
+include $(user-interfaces:%=%.ir)
 endif
-interface-rules: Makefile Machrules
-	(for interface in $(user-interfaces); do	\
-	   echo "include .ir-$${interface}";		\
-	 done) > $@-new
-	mv $@-new $@
-.ir-%: %.uh Machrules
-	(echo 'define $*-calls'					;\
-	 awk '/^kern_return_t/ { print $$2 }' $<		;\
-	 echo 'endef'						;\
-	 echo '$*-calls := $$(subst $$(nl), ,$$($*-calls))'	;\
-	 echo '$$(patsubst %,foreign-%%c,$$($*-calls:%=__%)): $*.defs'	;\
-	 echo '	$$(MIG) < $$< $$(MIGFLAGS) -subrprefix __ -prefix __ -i ./foreign-__')\
-	> $@-new
-	mv $@-new $@
-vpath Machrules ../mach
 
-%.c: foreign-%.c
-	(echo '#include <ansidecl.h>'; cat $^) > $@
+# %.ir defines a variable `%-calls', which lists the RPCs defined by
+# %.defs, and a rule to build $(%-calls:%=__%.c) from %.defs.  We use the
+# kludgificacious method of defining a pattern rule to build files matching
+# patterns we are pretty damn sure will only match the particular files we
+# have in mind.
+%.ir: %.uh Machrules
+	(echo 'define $*-calls'						;\
+	 awk '/^kern_return_t/ { print $$2 }' $<			;\
+	 echo 'endef'							;\
+	 echo '$*-calls := $$(subst $$(nl), ,$$($*-calls))'		;\
+	 echo '$$($*-calls:%=__%%c): $*.defs'				;\
+	 echo '	$$(MIG) < $$< $$(MIGFLAGS) -prefix __ -i ./__' \
+	) > $@-new
+	mv $@-new $@
+vpath Machrules ../mach	# Find ourselves.
 
-# MiG doesn't know how to make separate files for the server stubs.
-foreign-__%_server.c %_server.h: %.defs
-	$(MIG) < $< $(MIGFLAGS) -subrprefix __ -prefix __ \
+__%_server.c %_server.h: %.defs
+	$(MIG) < $< $(MIGFLAGS) -prefix __ \
 	       -user /dev/null -header /dev/null \
 	       -server $@ -sheader $(@:__%.c=%.h)
-foreign-%_server.c %_server.h: %.defs
-	$(MIG) < $< $(MIGFLAGS) -subrprefix __ \
+%_server.c %_server.h: %.defs
+	$(MIG) < $< $(MIGFLAGS) \
 	       -user /dev/null -header /dev/null \
 	       -server $@ -sheader $(@:.c=.h)
 
+# To get header files that declare both the straight and __ functions,
+# we generate two files and paste them together.
 %.uh: %.defs
-	$(MIG) < $< $(MIGFLAGS) -subrprefix __ \
+	$(MIG) < $< $(MIGFLAGS) \
 	       -header $@ -server /dev/null -user /dev/null
 %.__h: %.defs
-	$(MIG) < $< $(MIGFLAGS) -subrprefix __ -prefix __ \
+	$(MIG) < $< $(MIGFLAGS) -prefix __ \
 	       -header $@ -server /dev/null -user /dev/null
 
-$(interface-header-prefix)%.h: %.__h %.uh $(interface-header-prefix)
+%.h: %.__h %.uh
 # The last line of foo.uh is "#endif _foo_user_".
 # The first two lines of foo.__h are "#ifndef _foo_user_"/"#define _foo_user_".
 	(sed '$$d' < $<; tail +2 $(word 2,$^)) > $@
@@ -103,9 +101,10 @@ $(interface-header-prefix)%.h: %.__h %.uh $(interface-header-prefix)
 	 echo 'symbol_alias (__$*, $*)') > $@
 
 interface-routines := $(foreach if,$(user-interfaces),		\
-				$(calls-$(if))			\
-				$(addprefix __,$(calls-$(if))))	\
+				$($(if)-calls)			\
+				$(addprefix __,$($(if)-calls)))	\
 		      $(server-interfaces:%=%_server)
-interface-headers := $(addprefix $(interface-header-prefix),\
-				 $(user-interfaces:%=%.h) \
-				 $(server-interfaces:%=%_server.h))
+interface-headers := $(user-interfaces:%=%.h) $(server-interfaces:%=%_server.h)
+
+# These are needed to generate the dependencies.
+before-compile := $(before-compile) $(interface-headers)
