@@ -628,6 +628,9 @@ __xdr_ypresp_all (XDR *xdrs, u_long *objp)
 	    int keylen = resp.ypresp_all_u.val.key.keydat_len;
 	    int vallen = resp.ypresp_all_u.val.val.valdat_len;
 
+	    /* XXX We are not allowed to modify the key and val data.
+	       But I don't know if all other code will continue to work,
+	       so we will fix this for glibc 2.2 <kukuk@suse.de> */
 	    *objp = YP_TRUE;
 	    memcpy (key, resp.ypresp_all_u.val.key.keydat_val, keylen);
 	    key[keylen] = '\0';
@@ -639,14 +642,13 @@ __xdr_ypresp_all (XDR *xdrs, u_long *objp)
 	      return TRUE;
 	  }
 	  break;
-	case YP_NOMORE:
-	  *objp = YP_NOMORE;
-	  xdr_free ((xdrproc_t) xdr_ypresp_all, (char *) &resp);
-	  return TRUE;
-	  break;
 	default:
 	  *objp = resp.ypresp_all_u.val.stat;
 	  xdr_free ((xdrproc_t) xdr_ypresp_all, (char *) &resp);
+	  /* Sun says we don't need to make this call, but must return
+	     immediatly. Since Solaris makes this call, we will call
+	     the callback function, too. */
+	  (*ypall_foreach) (*objp, NULL, 0, NULL, 0, ypall_data);
 	  return TRUE;
 	}
     }
