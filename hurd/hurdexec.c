@@ -79,6 +79,17 @@ _hurd_exec (task_t task, file_t file,
   for (i = 0; i < _hurd_nports; ++i)
     ports[i] = _hurd_port_get (&_hurd_ports[i], &ulink_ports[i]);
 
+  /* If this is another task, get the correct proc server port. */
+  if (task != __mach_task_self ())
+    {
+      mach_port_t newproc = MACH_PORT_NULL;
+      proc_task2proc (ports[INIT_PORT_PROC], task, &newproc);
+      _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], 
+		       &ulink_ports[INIT_PORT_PROC], 
+		       ports[INIT_PORT_PROC]);
+      ports[INIT_PORT_PROC] = newproc;
+    }
+
   /* Load up the ints to give the new program.  */
   for (i = 0; i < INIT_INT_MAX; ++i)
     switch (i)
@@ -204,8 +215,8 @@ _hurd_exec (task_t task, file_t file,
     err = __file_exec (file, task,
 		       0,	/* No particular flags.  */
 		       args, argslen, env, envlen,
-		       dtable, dtablesize, MACH_MSG_TYPE_COPY_SEND,
-		       ports, _hurd_nports, MACH_MSG_TYPE_COPY_SEND,
+		       dtable, MACH_MSG_TYPE_COPY_SEND, dtablesize, 
+		       ports, MACH_MSG_TYPE_COPY_SEND, _hurd_nports, 
 		       ints, INIT_INT_MAX,
 		       please_dealloc, pdp - please_dealloc,
 		       NULL, 0);
@@ -216,7 +227,10 @@ _hurd_exec (task_t task, file_t file,
 
   /* Release references to the standard ports.  */
   for (i = 0; i < _hurd_nports; ++i)
-    _hurd_port_free (&_hurd_ports[i], &ulink_ports[i], ports[i]);
+    if (i == INIT_PORT_PROC && task != __mach_task_self ())
+      mach_port_deallocate (__mach_task_self (), ports[i]);
+    else
+      _hurd_port_free (&_hurd_ports[i], &ulink_ports[i], ports[i]);
 
   if (ulink_dtable != NULL)
     /* Release references to the file descriptor ports.  */
