@@ -1,3 +1,7 @@
+1999-07-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sparc/Dist: Add ldd-rewrite.sed.
+
 1999-07-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/arm/Versions: Undo last change.
