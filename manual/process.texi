@@ -179,7 +179,9 @@ defined for @code{fork}:
 @table @code
 @item EAGAIN
 There aren't enough system resources to create another process, or the
-user already has too many processes running.
+user already has too many processes running.  This means exceeding the
+@code{RLIMIT_NPROC} resource limit, which can usually be increased;
+@pxref{Limits on Resources}.
 
 @item ENOMEM
 The process requires more space than the system can supply.
