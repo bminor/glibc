@@ -574,10 +574,12 @@ _hurdsig_init (void)
   if (err = __thread_create (__mach_task_self (), &_hurd_msgport_thread))
     __libc_fatal ("hurd: Can't create signal thread\n");
 
-  if (err = _hurd_start_sigthread (_hurd_msgport_thread,
-				   _hurd_msgport_receive))
-    __libc_fatal ("hurd: Can't start signal thread\n");
-
+  if (err = _hurd_setup_thread (__mach_task_self (), _hurd_msgport_thread,
+				_hurd_msgport_receive))
+    __libc_fatal ("hurd: Can't setup signal thread\n");
+  if (err = __thread_resume (_hurd_msgport_thread))
+    __libc_fatal ("hurd: Can't resume signal thread\n");
+    
   /* Receive exceptions on the signal port.  */
   __task_set_special_port (__mach_task_self (),
 			   TASK_EXCEPTION_PORT, _hurd_msgport);
