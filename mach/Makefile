@@ -55,7 +55,7 @@ routines = $(interface-routines) \
 	   mig_support mig_syms \
 	   msg_destroy msg_server msg_server_t \
 	   __msg_dest __msg_server \
-	   devstream bootprivport # privports
+	   devstream
 
 tests := hello
 
