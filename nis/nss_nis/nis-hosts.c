@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -314,6 +314,7 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
       else
 	{
 	  *h_errnop = HOST_NOT_FOUND;
+	  *errnop = ENOENT;
 	  return NSS_STATUS_NOTFOUND;
 	}
     }
@@ -375,7 +376,10 @@ _nss_nis_gethostbyaddr_r (char *addr, int addrlen, int type,
 	  *errnop = errno;
 	}
       if (retval == NSS_STATUS_NOTFOUND)
-	*h_errnop = HOST_NOT_FOUND;
+	{
+	  *h_errnop = HOST_NOT_FOUND;
+	  *errnop = ENOENT;
+	}
       return retval;
     }
 
@@ -404,6 +408,7 @@ _nss_nis_gethostbyaddr_r (char *addr, int addrlen, int type,
       else
 	{
 	  *h_errnop = HOST_NOT_FOUND;
+	  *errnop = ENOENT;
 	  return NSS_STATUS_NOTFOUND;
 	}
     }
