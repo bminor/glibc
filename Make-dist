@@ -51,8 +51,8 @@ endif
 ifdef	subdir
 all-headers = $(headers)
 else
-+distinfo := $(shell MAKEFLAGS= MFLAGS= $(MAKE) -s no_deps=t echo-distinfo \
-		     | grep -v '^make')
++distinfo := $(shell MAKEFLAGS= MFLAGS= $(MAKE) -s no_deps=t no_ir=t \
+		     echo-distinfo | grep -v '^make')
 all-headers := $(patsubst +header+%,%,$(filter +header+%,$(+distinfo)))
 +subdir-nodist := $(patsubst +nodist+%,%,$(filter +nodist+%,$(+distinfo)))
 +subdir-headers := $(filter-out $(headers),$(all-headers))
@@ -213,3 +213,4 @@ unexport distribute generated
 # Fnord.
 export inhibit_mach_syscalls=t
 export no_deps=t
+export inhibit_interface_rules=t
