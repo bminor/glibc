@@ -17,7 +17,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <hurd/fault.h>
+#include "hurdfault.h"
 #include <string.h>
 #include <setjmp.h>
 #include "thread_state.h"
