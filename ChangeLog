@@ -1,3 +1,42 @@
+1999-09-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/Makefile: Update from main branch.
+	* nscd/cache.c: Likewise.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/nscd.h: Likewise.
+	* nscd/nscd_nischeck: Likewise.
+	* nscd/pwdcache.c: Likewise.
+
+1999-09-26  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/connections.c: Invalidate caches on request.
+	* nscd/nscd-client.h: Add INVALIDATE to request_type.
+	* nscd/nscd.c: Add invalidate cache option.
+	* nscd/nscd.conf: Change log directory to /var/log (FHS).
+
+1999-06-14  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/connections.c (handle_request): Only root is allowed to
+	send GETSTAT request in non secure mode.
+	* nscd/nscd.c: Print error message if other then root try to
+	use getstat.
+
+1999-07-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nscd/nscd_proto.h (__nscd_gethostbyaddr_r): Follow change from
+	1999-07-17 and adjust len parameter.
+	* nscd/nscd_gethst_r.c (__nscd_gethostbyaddr_r): Likewise.
+	* nscd/gethstbyad_r.c (ADD_PARAMS): Likewise.
+
+1999-07-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/netdb.h: Adjust parameters of gethostbyaddr and
+	gethostbyaddr_r.
+	* include/netdb.h: Likewise.
+	* inet/gethstbyad.c: Correct type of len parameter.
+	* inet/gethstbyad_r.c: Likewise.
+
 1999-09-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/strptime.c [!_LIBC] (__mon_yday): Fix typo in definition.
