@@ -24,7 +24,7 @@ VPATH = @srcdir@
 srcdir = @srcdir@
 
 CC = @CC@
-CPPFLAGS = @CPPFLAGS@
+CPPFLAGS = @DEFS@ @CPPFLAGS@
 CFLAGS = @CFLAGS@
 
 # How to invoke ar.
