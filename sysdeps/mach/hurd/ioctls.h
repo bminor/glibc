@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ union __ioctl
 #define	_IOCT(inout, group, num, t0, c0, t1, c1, t2, c2)		      \
   (((union __ioctl)							      \
     { t: { (inout), (t0), (t1), (t2), (c0), (c1), (c2),			      \
-	     ((group) - 'a') >> 2, (num) } }).__i)
+	     ((group) - 'a') >> 2, (num) } }).i)
 
 /* Construct an ioctl from constructed type plus other fields.  */
 #define	_IOC(inout, group, num, type) \
