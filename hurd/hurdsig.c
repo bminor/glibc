@@ -380,10 +380,10 @@ _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 
 /* Sent when someone wants us to get a signal.  */
 error_t
-__sig_post (sigthread_t me,
-	    mig_reply_port_t reply,
-	    int signo,
-	    mach_port_t refport)
+_S_sig_post (sigthread_t me,
+	     mig_reply_port_t reply,
+	     int signo,
+	     mach_port_t refport)
 {
   struct _hurd_sigstate *ss;
 
@@ -417,6 +417,7 @@ __sig_post (sigthread_t me,
   return EPERM;
 
  win:
+  __mach_port_deallocate (__mach_task_self (), refport);
   ss = _hurd_thread_sigstate (_hurd_sigthread);
   __sig_post_reply (reply, 0);
   _hurd_internal_post_signal (ss, signo, 0, NULL);
