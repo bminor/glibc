@@ -16,13 +16,16 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* Signal context.  */
+/* Signal handlers are actually called:
+   void handler (int sig, int code, struct sigcontext *scp);  */
+
+/* State of this thread when the signal was taken.  */
 struct sigcontext
 {
   int sc_onstack;		/* Nonzero if running on sigstack.  */
   sigset_t sc_mask;		/* Blocked signals to restore.  */
   
-  /* Segment registers XXX */
+  /* Segment registers (not used).  */
   int sc_gs;
   int sc_fs;
   int sc_es;
