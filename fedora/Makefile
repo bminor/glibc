@@ -81,7 +81,8 @@ force-tag: glibc.spec
 # Note this rule assumes that your working directory (..) is up to date.
 $(tar-name)-$(branch-name).patch: makepatch.awk glibc.spec \
 				  ../ChangeLog ../*/ChangeLog
-	(cd ..; cvs -q diff -upN $(select-snapshot) $(select-release)) | \
+# Use -kk to suppress patches for $Id$ differences between branches.
+	(cd ..; cvs -q diff -kk -upN $(select-snapshot) $(select-release)) | \
 	awk -v OLDVER=$(tar-name)-$(snapshot-name) \
 	    -v NEWVER=$(tar-name)-$(snapshot-name)-$(branch-name) \
 	    -f $< > patch.tmp
