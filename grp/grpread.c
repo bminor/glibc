@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
 #include <grp.h>
 
 /* This is the function that all the others are based on.
@@ -30,10 +31,10 @@ Cambridge, MA 02139, USA.  */
 /* Structure containing info kept by each __grpread caller.  */
 typedef struct
   {
-#define	NAME_SIZE	9
-#define	PASSWD_SIZE	21
-#define	MEMLIST_SIZE	1001
-    char name[NAME_SIZE], passwd[PASSWD_SIZE], memlist[MEMLIST_SIZE];
+#define	NAME_SIZE	8
+#define	PASSWD_SIZE	20
+#define	MEMLIST_SIZE	1000
+    char buf[NAME_SIZE + 1 + PASSWD_SIZE + 1 + 20 + 1 + 20 + MEMLIST_SIZE + 1];
     size_t max_members;
     char **members;
     struct group g;
@@ -64,8 +65,8 @@ struct group *
 DEFUN(__grpread, (stream, g), FILE *stream AND PTR CONST g)
 {
   register grpread_info *CONST info = (grpread_info *) g;
+  char *start, *end;
   register size_t i;
-  register char *s;
 
   /* Idiocy checks.  */
   if (stream == NULL)
@@ -74,30 +75,58 @@ DEFUN(__grpread, (stream, g), FILE *stream AND PTR CONST g)
       return NULL;
     }
 
-  if (fscanf(stream, "%8[^:]:%20[^:]:%hd:%1000[^\n]\n",
-	     info->name, info->passwd, &info->g.gr_gid, info->memlist) != 4)
+  if (fgets (info->buf, sizeof(info->buf), stream) == NULL)
     return NULL;
 
-  /* Turn the comma-separated list into an array.  */
+  start = info->buf;
+  end = strchr (start, ':');
+  if (end == NULL)
+    return NULL;
+  *end = '\0';
+  info->g.gr_name = start;
+
+  start = end + 1;
+  end = strchr (start, ':');
+  if (end == NULL)
+    return NULL;
+  *end = '\0';
+  info->g.gr_passwd = start;
+
+  info->g.gr_gid = (gid_t) strtol (end + 1, &end, 10);
+  if (*end != ':')
+    return NULL;
+
   i = 0;
-  for (s = strtok(info->memlist, ","); s != NULL;
-       s = strtok((char *) NULL, ","))
+  do
     {
+      start = end + 1;
+      end = strchr (start, ',');
+      if (end == NULL)
+	{
+	  end = strchr (start, '\n');
+	  if (end == start)
+	    break;
+	  if (end == NULL)
+	    return NULL;
+	  *end = '\0';
+	  end = NULL;
+	}
+      else
+	*end = '\0';
+
       if (i == info->max_members - 2)
 	{
 	  info->max_members += 5;
 	  info->members = (char **)
-	    realloc((PTR) info->members, info->max_members * sizeof(char *));
+	    realloc ((PTR) info->members, info->max_members * sizeof (char *));
 	  if (info->members == NULL)
 	    return NULL;
 	}
 
-      info->members[i++] = s;
-    }
+      info->members[i++] = start;
+    } while (end != NULL);
   info->members[i] = NULL;
-
-  info->g.gr_name = info->name;
-  info->g.gr_passwd = info->passwd;
   info->g.gr_mem = info->members;
+
   return &info->g;
 }
