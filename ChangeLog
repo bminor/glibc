@@ -1,3 +1,8 @@
+1999-06-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/bits/ioctl-types.h: Add missing line
+	disciplines.
+
 1999-06-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/getXXbyYY_r.c: Return error code not -1.
