@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -64,23 +64,9 @@ DEFUN(__sigprocmask, (how, set, oset),
 
       ss->blocked &= ~_SIG_CANT_BLOCK;
 
-      pending = ss->pending & ~ss->blocked;
-      for (i = 1; i < NSIG; ++i)
-	if (pending & __sigmask (i))
-	  {
-	    /* Post the first pending signal.
-	       This call will deal with the remaining pending signals.
-	       The call releases SS->lock.  */
-	    int ignore;
-	    __sigdelmember (i, &ss->pending);
-	    (void) _hurd_internal_post_signal (MACH_PORT_NULL,
-					       ss,
-					       signo,
-					       ss->sigcodes[signo],
-					       0, 0, &ignore,
-					       NULL);
-	    break;
-	  }
+      if (ss->pending & ~ss->blocked)
+	/* XXX deliver pending signals */
+	;
     }
 
   __mutex_unlock (&ss->lock);
