@@ -53,10 +53,16 @@ define nl
 endef
 include $(objpfx)zonenames
 
-install-others = $(addprefix $(datadir)zoneinfo/,$(zonenames)		\
-			     $(filter-out /%,$(localtime-file)		\
-					     $(posixrules-file)))	\
-		 $(filter /%,$(localtime-file) $(posixrules-file))
+# Make these absolute file names.
+localtime-file := $(firstword $(filter /%,$(localtime-file)) \
+			      $(addprefix $(datadir)/zoneinfo/, \
+					  $(localtime-file)))
+posixrules-file := $(firstword $(filter /%,$(posixrules-file)) \
+			       $(addprefix $(datadir)/zoneinfo/, \
+					   $(posixrules-file)))
+
+install-others = $(addprefix $(datadir)/zoneinfo/,$(zonenames)) \
+		 $(localtime-file) $(posixrules-file)
 
 include ../Rules
 
@@ -89,16 +95,16 @@ echo-zonenames: zonenames
 
 zic-cmd = $(dir $(word 2,$^))$(notdir $(word 2,$^))
 define tzcompile
-$(zic-cmd) -d $(patsubst %/,%,$(word 4,$^)) -L $(word 3,$^) $<
+$(zic-cmd) -d $(@D) -L $(word 3,$^) $<
 endef
 
 ifdef localtime
-$(datadir)/zoneinfo/localtime: $(datadir)/zoneinfo/$(localtime) $(objpfx)zic
-	$(zic-cmd) -d $(@D) -l $(<F)
+$(localtime-file): $(datadir)/zoneinfo/$(localtime) $(objpfx)zic
+	$(zic-cmd) -d $(<D) -l $(<F)
 endif
 ifdef posixrules
-$(datadir)/zoneinfo/posixrules: $(datadir)/zoneinfo/$(posixrules) $(objpfx)zic
-	$(zic-cmd) -d $(@D) -p $(<F)
+$(posixrules-file): $(datadir)/zoneinfo/$(posixrules) $(objpfx)zic
+	$(zic-cmd) -d $(<D) -p $(<F)
 endif
 
 
