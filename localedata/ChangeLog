@@ -1,5 +1,9 @@
 2000-02-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/en_BW: Work around limitation in current localedef
+	version.
+	* locales/en_ZW: Likewise.
+
 	* SUPPORTED: Add gl_ES.
 	* locales/gl_ES: Copy CTYPE category from es_ES.
 
