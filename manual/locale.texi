@@ -145,8 +145,8 @@ implementation-defined attributes.
 There might also be additional, non-standard locales available on the
 particular machine you are using.  Defining and installing named locales
 is normally a responsibility of the system administrator at your site
-(or the person who installed the GNU C library).  @xref{Locale Writing},
-for information about what this involves.
+(or the person who installed the GNU C library).  @xref{Defining New
+Locales}, for information about what this involves.
 
 You cannot readily define the attributes of new, named locales in the
 programs you write.  You can only select attribute categories from named
