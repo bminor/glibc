@@ -13,16 +13,14 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #ifndef	_GLOB_H
 
 #define	_GLOB_H	1
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 /* Bits set in the FLAGS argument to `glob'.  */
 #define	GLOB_ERR	(1 << 0)/* Return on read errors.  */
@@ -36,7 +34,7 @@ extern "C" {
 #define	__GLOB_FLAGS	(GLOB_ERR|GLOB_MARK|GLOB_NOSORT|GLOB_DOOFFS| \
 			 GLOB_NOESCAPE|GLOB_NOCHECK|GLOB_APPEND|GLOB_PERIOD)
 
-#ifdef __USE_BSD
+#if !defined (_POSIX_C_SOURCE) || _POSIX_C_SOURCE < 2 || defined (_BSD_SOURCE)
 #define	GLOB_MAGCHAR	(1 << 8)/* Set in gl_flags if any metachars seen.  */
 #endif
 
@@ -47,12 +45,12 @@ extern "C" {
 
 /* Structure describing a globbing run.  */
 typedef struct
-  {
-    int gl_pathc;		/* Count of paths matched by the pattern.  */
-    char **gl_pathv;		/* List of matched pathnames.  */
-    int gl_offs;		/* Slots to reserve in `gl_pathv'.  */
-    int gl_flags;		/* Set to FLAGS, maybe | GLOB_MAGCHAR.  */
-  } glob_t;
+{
+  int gl_pathc;			/* Count of paths matched by the pattern.  */
+  char **gl_pathv;		/* List of matched pathnames.  */
+  int gl_offs;			/* Slots to reserve in `gl_pathv'.  */
+  int gl_flags;			/* Set to FLAGS, maybe | GLOB_MAGCHAR.  */
+} glob_t;
 
 /* Do glob searching for PATTERN, placing results in PGLOB.
    The bits defined above may be set in FLAGS.
@@ -62,15 +60,13 @@ typedef struct
    `glob' returns GLOB_ABEND; if it returns zero, the error is ignored.
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
-extern int EXFUN(glob, (CONST char *__pattern, int __flags,
-			int EXFUN((*__errfunc), (CONST char *, int)),
-			glob_t *__pglob));
+extern int glob __P ((__const char *__pattern, int __flags,
+		      int (*__errfunc) __P ((__const char *, int)),
+		      glob_t * __pglob));
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
-extern void EXFUN(globfree, (glob_t *__pglob));
+     extern void globfree __P ((glob_t * __pglob));
 
-#ifdef	__cplusplus
-}
-#endif
+__END_DECLS
 
-#endif	/* glob.h  */
+#endif /* glob.h  */
