@@ -272,12 +272,13 @@ new process image.
 The @var{argv} argument is an array of null-terminated strings that is
 used to provide a value for the @code{argv} argument to the @code{main}
 function of the program to be executed.  The last element of this array
-must be a null pointer.  @xref{Program Arguments}, for information on
-how programs can access these arguments.
+must be a null pointer.  By convention, the first element of this array
+is the file name of the program sans directory names.  @xref{Program
+Arguments}, for full details on how programs can access these arguments.
 
 The environment for the new process image is taken from the
-@code{environ} variable of the current process image; see @ref{Environment
-Variables}, for information about environments.
+@code{environ} variable of the current process image; see
+@ref{Environment Variables}, for information about environments.
 @end deftypefun
 
 @comment unistd.h
