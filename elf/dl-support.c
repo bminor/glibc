@@ -32,6 +32,9 @@ char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
 /* This defines the default search path for libraries.
    For the dynamic linker it is set by -rpath when linking.  */
 const char *_dl_rpath = DEFAULT_RPATH;
+
+/* The search path for dynamic libraries.  */
+const char *_dl_library_path;
 
 #ifndef MAP_ANON
 /* This is the only dl-sysdep.c function that is actually needed at run-time
