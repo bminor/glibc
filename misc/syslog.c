@@ -210,7 +210,7 @@ vsyslog(pri, fmt, ap)
 	     * is the one from the syslogd failure.
 	     */
 	    if (LogStat & LOG_CONS &&
-		(fd = open(_PATH_CONSOLE, O_WRONLY, 0)) >= 0)
+		(fd = open(_PATH_CONSOLE, O_WRONLY|O_NOCTTY, 0)) >= 0)
 	      {
 		dprintf (fd, "%s\r\n", buf + msgoff);
 		(void)close(fd);
@@ -251,6 +251,8 @@ openlog_internal(const char *ident, int logstat, int logfac)
 			}
 		}
 		if (LogFile != -1 && !connected)
+		{
+			int old_errno = errno;
 			if (__connect(LogFile, &SyslogAddr, sizeof(SyslogAddr))
 			    == -1)
 			{
@@ -262,10 +264,12 @@ openlog_internal(const char *ident, int logstat, int logfac)
 				{
 					/* retry with next SOCK_STREAM: */
 					LogType = SOCK_STREAM;
+					__set_errno (old_errno);
 					continue;
 				}
 			} else
 				connected = 1;
+		}
 		break;
 	}
 }
