@@ -37,7 +37,7 @@ others	:= ap zdump zic
 tests	:= test_time clocktest
 
 tzfiles := africa antarctica asia australasia europe northamerica \
-	   southamerica etcetera factory systemv
+	   southamerica etcetera factory systemv backward
 # pacificnew doesn't compile; if it is to be used, it should be included in
 # northamerica.
 distribute := $(distribute) $(tzfiles) leapseconds pacificnew
