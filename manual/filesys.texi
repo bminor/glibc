@@ -156,7 +156,7 @@ parallels here to the stream facilities for ordinary files, described in
 * Reading/Closing Directory::   How to read directory entries from the stream.
 * Simple Directory Lister::     A very simple directory listing program.
 * Random Access Directory::     Rereading part of the directory
-                                  already read with the same stream.
+                                 already read with the same stream.
 @end menu
 
 @node Directory Entries, Opening a Directory,  , Accessing Directories
@@ -787,16 +787,19 @@ modify these attributes of files.
 
 @menu
 * Attribute Meanings::          The names of the file attributes, 
-                           and what their values mean.
+                                 and what their values mean.
 * Reading Attributes::          How to read the attributes of a file.
-* Testing File Type::           Distinguishing ordinary files, directories, links...
+* Testing File Type::           Distinguishing ordinary files,
+                                 directories, links... 
 * File Owner::                  How ownership for new files is determined,
-			   and how to change it.
-* Permission Bits::             How information about a file's access mode is stored.
+			         and how to change it.
+* Permission Bits::             How information about a file's access
+                                 mode is stored. 
 * Access Permission::           How the system decides who can access a file.
 * Setting Permissions::         How permissions for new files are assigned,
-			   and how to change them.
-* Testing File Access::         How to find out if your process can access a file.
+			         and how to change them.
+* Testing File Access::         How to find out if your process can
+                                 access a file. 
 * File Times::                  About the time attributes of a file.
 @end menu
 

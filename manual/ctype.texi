@@ -15,9 +15,10 @@ by the locale currently selected for character classification.)
 @xref{Locales}.
 
 @menu
-* Classification of Characters::  Testing whether characters are
-					 letters, digits, punctuation, etc.
-* Case Conversion::             Case mapping, and the like.
+* Classification of Characters::   Testing whether characters are
+			            letters, digits, punctuation, etc.
+
+* Case Conversion::                Case mapping, and the like.
 @end menu
 
 @node Classification of Characters, Case Conversion,  , Character Handling

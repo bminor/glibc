@@ -8,12 +8,12 @@ fractional parts.  These functions are declared in the header file
 
 @menu
 * Normalization Functions::     Hacks for radix-2 representations.
-* Rounding and Remainders::  Determinining the integer and
-					 fractional parts of a float.
+* Rounding and Remainders::     Determinining the integer and
+			         fractional parts of a float.
 * Integer Division::            Functions for performing integer
-					 division.
+				 division.
 * Parsing of Numbers::          Functions for ``reading'' numbers
-					 from strings.
+			         from strings.
 * Predicates on Floats::        Some miscellaneous test functions.
 @end menu
 

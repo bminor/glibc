@@ -76,7 +76,8 @@ standards specify what features.
 @menu
 * ANSI C::                      The American National Standard for the
 				 C programming language.  
-* POSIX::                       The IEEE 1003 standards for operating systems.
+* POSIX::                       The IEEE 1003 standards for operating
+                                 systems. 
 * Berkeley Unix::               BSD and SunOS.
 * SVID::                        The System V Interface Description.  
 @end menu
@@ -213,11 +214,12 @@ This section describes some of the practical issues involved in using
 the GNU C library.
 
 @menu
-* Header Files::                How to include the header files in your programs.
-* Macro Definitions::           Some functions in the library may really be 
-			 implemented as macros.
-* Reserved Names::              The C standard reserves some names for the library,
-			 and some for users.
+* Header Files::                How to include the header files in your
+                                 programs. 
+* Macro Definitions::           Some functions in the library may really
+                                 be implemented as macros.
+* Reserved Names::              The C standard reserves some names for
+                                 the library, and some for users.
 * Feature Test Macros::         How to control what names are defined.
 @end menu
 
