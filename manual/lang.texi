@@ -779,6 +779,7 @@ long long int} and @code{unsigned long long int}, respectively.
 @item WCHAR_MAX
 
 This is the maximum value that can be represented by a @code{wchar_t}.
+@xref{Wide Character Intro}.
 @end table
 
 The header file @file{limits.h} also defines some additional constants
@@ -940,6 +941,8 @@ supported are suitable.
 This value characterizes the rounding mode for floating point addition.
 The following values indicate standard rounding modes:
 
+@c !!! want @group or somesuch near here
+
 @table @code
 @item -1
 The mode is indeterminable.
@@ -957,7 +960,7 @@ Rounding is towards negative infinity.
 Any other value represents a machine-dependent nonstandard rounding
 mode.
 
-On most machines, the value is @code{1}, in accord with the IEEE
+On most machines, the value is @code{1}, in accordance with the IEEE
 standard for floating point.
 
 Here is a table showing how certain values round for each possible value
