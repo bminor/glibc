@@ -114,11 +114,13 @@ _hurd_proc_init (char **argv)
 
   procserver = _hurd_port_get (&_hurd_ports[INIT_PORT_PROC], &dealloc);
 
+#ifdef notyet
   /* Give the proc server our message port.  */
   __proc_setmsgport (procserver, _hurd_msgport, &oldmsg);
   if (oldmsg != MACH_PORT_NULL)
     /* Deallocate the old msg port we replaced.  */
     __mach_port_deallocate (__mach_task_self (), oldmsg);
+#endif
 
   /* Tell the proc server where our args and environment are.  */
   __proc_setprocargs (procserver,
