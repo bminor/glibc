@@ -1,3 +1,8 @@
+2000-03-16  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/unix/sysv/linux/i386/sys/procfs.h (prfpregset_t):
+	Typedef for elf_fpregset_t instead of `elf_fpregset_t *'.
+
 2000-04-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Prepend REG_ to
