@@ -4,7 +4,7 @@
 #define TESTFILE "test.dat"
 
 int
-main ()
+main __P((void))
 {
   FILE *fp;
   int i, j;

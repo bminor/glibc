@@ -22,7 +22,11 @@ int main (int argc, char **argv)
       cvalue = optarg;
       break;
     case '?':
+#if 0
       fprintf (stderr, "Unknown option %c.\n", optopt);
+#else
+      fputs ("Unknown option.\n", stderr);
+#endif
       return -1;
     default:
       fprintf (stderr, "This should never happen!\n");
