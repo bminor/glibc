@@ -1,4 +1,4 @@
-%define glibcrelease 76
+%define glibcrelease 77
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1256,6 +1256,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Nov 12 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-77
+- update from CVS
+  - speedup regex on palindromes (BZ #429)
+  - fix NPTL set{,e,re,res}[ug]id, so that even if making process
+    less priviledged all threads change their credentials successfully
+
 * Wed Nov 10 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-76
 - update from CVS
   - fix regcomp crash (#138439)

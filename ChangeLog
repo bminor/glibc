@@ -1,11 +1,118 @@
+2004-11-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Makefile (tests): Add bug-regex24.
+	* posix/bug-regex24.c: New file.
+
+2004-11-12  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (check_dst_limits_calc_pos_1): Use the map to
+	cut recursive paths.  Make exit condition more precise.
+	(match_ctx_add_entry): Initialize the map.
+	* posix/regex_internal.h (struct re_backref_cache_entry): Add a map of
+	reachable subexpression nodes from each backreference cache entry.
+
+2004-11-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/setreuid.c: Remove sys/syscall.h,
+	sys/types.h, linux/posix_types.h, sysdep.h and pthread-functions.h
+	includes.  Include setxid.h.  Use INLINE_SETXID_SYSCALL macro
+	instead of INLINE_SYSCALL, kill the HAVE_PTR__NPTL_SETXID guarded
+	snippets.
+	* sysdeps/unix/sysv/linux/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setreuid.c: Likewise.
+	Formatting.  Change signed int into int.
+	* sysdeps/unix/sysv/linux/alpha/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list (setresuid, setresgid):
+	Remove.
+	* sysdeps/unix/setxid.h: New file.
+
+	* Rules (binaries-static): Add xtests-static.
+	* Makeconfig (run-program-prefix): Filter also xtests-static.
+
+2004-11-09  Paul Eggert  <eggert@cs.ucla.edu.
+
+	[BZ #535]
+	* time/difftime.c: Fix a double-rounding bug on hosts with
+	64-bit time_t and long double being IEEE double.  Also, port
+	to more valid C99 hosts, even those that have padding bits.
+	Don't include <values.h> since it is marked as an obsolescent
+	interface.  Include <limits.h>, <float.h>, and <stdint.h> instead.
+	(TYPE_BITS, TYPE_FLOATING, TYPE_SIGNED): New macros.
+	(subtract): New static function, that works correctly without
+	double-rounding, even on hosts with 64-bit time_t.  Also cater
+	to hosts with padding bits.
+	(__difftime): Use it.  Use DBL_MANT_DIG and LDBL_MANT_DIG to
+	determine whether floating types are wide enough: the old
+	test (which used sizeof) could in theory report the wrong results
+	on hosts with padding bits in floating-point values.
+
+2004-11-11  Simon Josefsson  <jas@extundo.com>
+
+	[BZ #542]
+	* sysdeps/generic/strtok_r.c [HAVE_CONFIG_H]: Include config.h.
+	[!_LIBC]: Include strtok_r.h (in gnulib), map __strtok_r to
+	strtok_r and __rawmemchr to strch.
+	(__strtok_r): Use C89 prototype.
+	[weak_alias]: Move calls to libc_hidden_def and weak_alias into
+	this #ifdef.
+
+2004-11-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #541]
+	* time/mktime.c (SHR): New macro, which is a portable
+	substitute for >> that should work even on Crays.
+	(TIME_T_MIDPOINT, ydhms_diff, __mktime_internal): Use it.
+	Problem reported by Mark D. Baushke in
+	<http://lists.gnu.org/archive/html/bug-gnulib/2004-11/msg00071.html>.
+
+2004-11-09  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (match_ctx_free_subtops): Remove, merge into...
+	(match_ctx_clean): ... this function.
+	(match_ctx_free): Call match_ctx_clean.
+
+	* posix/regexec.c (transit_state): Remove the check for
+	out-of-bounds buffers.
+	(check_matching): Check here for out-of-bounds buffers.
+	(re_search_internal): Store into match_kind a set of bits
+	indicating which incantation of fastmap scanning must be
+	used.  Use a switch statement instead of multiple ifs.
+	Exit the final "for (;;)" with goto free_return unless
+	the match succeeded, thus simplifying some conditionals.
+
+	* posix/regex_internal.c (re_string_reconstruct,
+	re_string_context_at): Add several branch predictions for
+	case-sensitive matching and no transition table being used.
+
+2004-11-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/tst-waitid.c: Don't use error to print error message, they
+	won't end up in the .out file.
+
 2004-11-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd-client.h (libc_locked_map_ptr): Add new first
 	parameter, used as class for definition.
 	* nscd/nscd_getpw_r.c: Adjust for libc_locked_map_ptr change.
 	(pw_map_free): Ensure no crash after memory is freed.
-	* nscd/nscd_getgr.c: Likewise.  Make map externally visible.
-	* nscd/nscd_gethst.c: Likewise.
+	* nscd/nscd_getgr_r.c: Likewise.  Make map externally visible.
+	* nscd/nscd_gethst_r.c: Likewise.
 	* nscd/nscd_getai.c: Use map from nscd_gethost.c.
 	* nscd/nscd_initgroups.c: Use map from nscd_getgr.c.
 
