@@ -231,13 +231,15 @@ ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
 # it's in <sys/syscall.h>;
 # it's in <sys.s>;
 # it defines `CALL' instead of `SYS_call'.
+# Irix has a <syscall.h> which is not what we want, so check for <sys.s> first.
 
 # Find a file that might have these.  NOTE: This list of possibilities is
 # repeated in sysdeps/unix/configure and the two should be kept in sync.
 syscall.h := $(firstword $(wildcard $(addprefix $(sysincludedir)/, \
-						syscall.h sys/syscall.h \
 						sys.s sys/sys.s \
-						sys.S sys/sys.S)))
+						sys.S sys/sys.S \
+						syscall.h sys/syscall.h \
+						)))
 ifdef syscall.h
 
 # Transmogrify any of several formats of the file into the one we want.
@@ -247,6 +249,7 @@ $(common-objpfx)syscall.h: $(syscall.h)
 	    -e 's/^#define[ 	]*\([a-z0-9_]*\)[ 	]*/#define SYS_\1 /' \
 	    -e 's/[ 	]sys_/ SYS_/' \
 	    -e 's/SYS_syscall_basenum/syscall_basenum/g' \
+	    -e 's/SYS_sysvoffset/sysvoffset//g' \
 	    -e '/^#/!d' \
 	    -e '/^#ident/d' \
 	    -e 's-\(/\*[^*]*\)$$-\1\*/-' \
