@@ -571,11 +571,12 @@ void
 _hurdsig_init (void)
 {
   error_t err;
+  vm_size_t stacksize;
 
-    /* If _hurd_msgport is already set, we are in the child side of a fork.
-       We already have a message port set up by in __fork.c the parent, and
-       the parent took the siglock before we copied its memory, so it still
-       appears locked for us (__fork will unlock it after we return).  */
+  /* If _hurd_msgport is already set, we are in the child side of a fork.
+     We already have a message port set up by in __fork.c the parent, and
+     the parent took the siglock before we copied its memory, so it still
+     appears locked for us (__fork will unlock it after we return).  */
 
   if (_hurd_msgport == MACH_PORT_NULL)
     {
@@ -597,8 +598,10 @@ _hurdsig_init (void)
   if (err = __thread_create (__mach_task_self (), &_hurd_msgport_thread))
     __libc_fatal ("hurd: Can't create signal thread\n");
 
+  stacksize = __vm_page_size * 4; /* Small stack for signal thread.  */
   if (err = __mach_setup_thread (__mach_task_self (), _hurd_msgport_thread,
-				_hurd_msgport_receive))
+				_hurd_msgport_receive,
+				 NULL, &stacksize))
     __libc_fatal ("hurd: Can't setup signal thread\n");
   if (err = __thread_resume (_hurd_msgport_thread))
     __libc_fatal ("hurd: Can't resume signal thread\n");
