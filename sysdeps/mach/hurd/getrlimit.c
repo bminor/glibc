@@ -56,9 +56,11 @@ DEFUN(getrlimit, (resource, rlimits),
     case RLIMIT_OFILE:
       {
 	int lim;
+	HURD_CRITICAL_BEGIN;
 	__mutex_lock (&_hurd_dtable_lock);
 	lim = _hurd_dtable_rlimit;
 	__mutex_unlock (&_hurd_dtable_lock);
+	HURD_CRITICAL_END;
 	rlimits->rlim_cur = lim;
 	rlimits->rlim_max = RLIM_INFINITY;
 	break;
