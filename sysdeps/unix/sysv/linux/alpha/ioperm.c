@@ -32,12 +32,6 @@
    sparse address space would work (e.g., the Low Cost Alpha chip has an
    I/O address space that's 512MB large!).  */
 
-/* The TSUNAMI support below requires the use of real BWX insns.
-   Tell the assembler that such are available.  This requires
-   binutils 2.8.1.18 or later.  */
-
-asm(".arch ev6");
-
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
