@@ -1,3 +1,8 @@
+2002-05-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/wordsize-32/divdi3.c (__moddi3): Fix pasto.
+	Patch by <radu@netsoft.ro>.
+
 2002-05-26  Bruno Haible  <bruno@clisp.org>
 
 	* iconvdata/iso-2022-jp.c (BODY for TO_LOOP): Avoid running off the
