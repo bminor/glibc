@@ -28,7 +28,7 @@ DEFUN(__rmdir, (path), CONST char *path)
 {
   error_t err;
   const char *name;
-  file_t parent = __path_split (path, &name);
+  file_t parent = __hurd_path_split (path, &name);
   if (parent == MACH_PORT_NULL)
     return -1;
   err = __dir_rmdir (parent, name);
