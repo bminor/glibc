@@ -247,7 +247,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	      if (malloc_string)					      \
 		{							      \
 		  /* The string is to be stored in a malloc'd buffer.  */     \
-		  strptr = va_arg (arg, char *);			      \
+		  strptr = va_arg (arg, char **);			      \
 		  if (strptr == NULL)					      \
 		    conv_error ();					      \
 		  /* Allocate an initial buffer.  */			      \
