@@ -2,10 +2,10 @@ This directory contains the version VERSION test release of the GNU C Library.
 All known bugs have been fixed.
 Some bugs surely remain.
 
-As of this release, the GNU C library has been ported to only two machines:
-sparcs running SunOS 4.1, and HP 300s running 4.3 BSD.  Porting the library
-is not hard.  If you are interested in doing a port, please contact
-roland@prep.ai.mit.edu.
+As of this release, the GNU C library has been ported to only three machines:
+sparcs and Sun 3s running SunOS 4.1, and HP 300s running 4.3 BSD.  Porting
+the library is not hard.  If you are interested in doing a port, please
+get on the mailing list bug-glibc-request@prep.ai.mit.edu
 
 See the file INSTALL for how to configure, build, and install the GNU C
 library.
@@ -18,7 +18,7 @@ The file NOTES contains a description of the feature-test macros used in
 the GNU C library, explaining how you can tell the library what facilities
 you want it to make available.
 
-Send bug reports to bug-gnu-libc@prep.ai.mit.edu.
+Send bug reports to bug-glibc@prep.ai.mit.edu.
 
 The GNU C Library is free software.  See the file COPYING.LIB for copying
 conditions.
