@@ -57,9 +57,11 @@ common-objpfx = $(objpfx)
 common-objdir = $(objdir)
 else
 objpfx :=
-common-objpfx = $(..)
 ifdef ..
+common-objpfx = $(..)
 common-objdir = ..
+else
+common-objpfx = sysdeps/..	# This is a kludge.  make wizards might grok.
 endif
 endif
 
