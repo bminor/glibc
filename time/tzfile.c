@@ -193,8 +193,47 @@ DEFUN(__tzfile_read, (file), CONST char *file)
  lose:;
   (void) fclose(f);
 }
+
+void
+DEFUN(__tzfile_default, (std, dst, stdoff, dstoff),
+      char *std AND char *dst AND
+      long int stdoff AND long int dstoff)
+{
+  size_t stdlen, dstlen;
 
+  __tzfile_read (TZDEFRULES);
+  if (!__use_tzfile)
+    return;
 
+  if (num_types != 2)
+    {
+      __use_tzfile = 0;
+      return;
+    }
+
+  free (zone_names);
+
+  stdlen = strlen (std) + 1;
+  dstlen = strlen (dst) + 1;
+  zone_names = malloc (stdlen + dstlen);
+  if (zone_names == NULL)
+    {
+      __use_tzfile = 0;
+      return;
+    }
+  memcpy (zone_names, std, stdlen);
+  memcpy (&zone_names[stdlen], dst, dstlen);
+
+  types[0].idx = 0;
+  types[0].isdst = 0;
+  if (std[0] != '\0')
+    types[0].offset = stdoff;
+  types[1].idx = stdlen;
+  types[1].isdst = 1;
+  if (dst[0] != '\0')
+    types[1].offset = dstoff;
+}
+
 int
 DEFUN(__tzfile_compute, (timer, tm), time_t timer AND struct tm tm)
 {
