@@ -45,7 +45,7 @@ REGS;
 __NORETURN
 void
 DEFUN(__longjmp, (env, val),
-      CONST jmp_buf env AND
+      CONST __jmp_buf env AND
       int val)
 {
   /* We specify explicit registers because, when not optimizing,
