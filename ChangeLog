@@ -1,6 +1,32 @@
+2005-02-02  Alfred M. Szmidt  <ams@gnu.org>
+
+	[BZ #671]
+	* sysdeps/generic/syslog.c (send_flags) [!send_flags]: Define it.
+
 2005-01-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/execvp.c: Include stdbool.h.
+
+2005-01-26  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #671]
+	* sysdeps/unix/sysv/linux/kernel-features.h: Found reference to
+	MSG_NOSIGNAL being in 2.2 kernels.
+
+2005-01-25  Roland McGrath  <roland@redhat.com>
+
+	[BZ #671]
+	* sysdeps/generic/syslog.c [NO_SIGPIPE]: Protect sigpipe_handler decl.
+
+2005-01-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #671]
+	* misc/syslog.c: Moved to...
+	* sysdeps/generic/syslog.c: ...here.
+	[NO_SIGIPE]: Don't install SIGPIPE handler.
+	* sysdeps/unix/sysv/linux/syslog.c: New file.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_MSG_NOSIGNAL.
 
 2005-01-22  Ulrich Drepper  <drepper@redhat.com>
 
