@@ -21,24 +21,27 @@ Cambridge, MA 02139, USA.  */
 #define	_SYS_FILE_H	1
 #include <features.h>
 
+#ifndef	_FCNTL_H
+#include <fcntl.h>
+#endif
+
 __BEGIN_DECLS
 
-#include <fcntl.h>
 
-
-/* Alternate names for values for the WHENCE argument to `lseek'.  */
-#define	L_SET	__L_SET		/* Seek from beginning of file.  */
-#define	L_INCR	__L_INCR	/* Seek from current position.  */
-#define	L_XTND	__L_XTND	/* Seek from end of file.  */
+/* Alternate names for values for the WHENCE argument to `lseek'.
+   These are the same as SEEK_SET, SEEK_CUR, and SEEK_END, respectively.  */
+#define	L_SET	0	/* Seek from beginning of file.  */
+#define	L_INCR	1	/* Seek from current position.  */
+#define	L_XTND	2	/* Seek from end of file.  */
 
 
 /* Operations for the `flock' call.  */
-#define	LOCK_SH	__LOCK_SH	/* Shared lock.  */
-#define	LOCK_EX	__LOCK_EX	/* Exclusive lock.  */
-#define	LOCK_UN	__LOCK_UN	/* Unlock.  */
+#define	LOCK_SH	1    /* Shared lock.  */
+#define	LOCK_EX	2    /* Exclusive lock.  */
+#define	LOCK_UN	8    /* Unlock.  */
 
 /* Can be OR'd in to one of the above.  */
-#define	LOCK_NB	__LOCK_NB	/* Don't block when locking.  */
+#define	LOCK_NB	4    /* Don't block when locking.  */
 
 
 /* Apply or remove an advisory lock, according to OPERATION,

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* O_*, F_*, FD_* bit values for stub configuration.
+Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,57 +25,45 @@ Cambridge, MA 02139, USA.  */
 
 
 /* File access modes for `open' and `fcntl'.  */
-#define	__O_RDONLY	0	/* Open read-only.  */
-#define	__O_WRONLY	1	/* Open write-only.  */
-#define	__O_RDWR	2	/* Open read/write.  */
+#define	O_RDONLY	0	/* Open read-only.  */
+#define	O_WRONLY	1	/* Open write-only.  */
+#define	O_RDWR		2	/* Open read/write.  */
 
 
 /* Bits OR'd into the second argument to open.  */
-#define	__O_CREAT	001000	/* Create file if it doesn't exist.  */
-#define	__O_EXCL	004000	/* Fail if file already exists.  */
-#define	__O_TRUNC	002000	/* Truncate file to zero length.  */
-#define	__O_NOCTTY	000040	/* Don't assign a controlling terminal.  */
+#define	O_CREAT		0x0200	/* Create file if it doesn't exist.  */
+#define	O_EXCL		0x0800	/* Fail if file already exists.  */
+#define	O_TRUNC		0x0400	/* Truncate file to zero length.  */
+#define	O_NOCTTY	0x0100	/* Don't assign a controlling terminal.  */
 
 /* File status flags for `open' and `fcntl'.  */
-#define	__O_APPEND	000010	/* Writes append to the file.  */
-#define	__O_NONBLOCK	000004	/* Non-blocking I/O.  */
+#define	O_APPEND	0x0008	/* Writes append to the file.  */
+#define	O_NONBLOCK	0x0004	/* Non-blocking I/O.  */
 
-/* BSD before 4.4 doesn't support POSIX.1 O_NONBLOCK,
-   but O_NDELAY is close.  */
-#define	__O_NDELAY	__O_NONBLOCK
+#ifdef __USE_BSD
+#define	O_NDELAY	O_NONBLOCK
+#endif
 
 /* Mask for file access modes.  This is system-dependent in case
    some system ever wants to define some other flavor of access.  */
-#define	__O_ACCMODE	(__O_RDONLY|__O_WRONLY|__O_RDWR)
-
-/* Alternate names for values for the WHENCE argument to `lseek'.  */
-#define	__L_SET		0	/* Seek from beginning of file.  */
-#define	__L_INCR	1	/* Seek from current position.  */
-#define	__L_XTND	2	/* Seek from end of file.  */
-
-/* Operations for the `flock' call.  */
-#define	__LOCK_SH	1    /* Shared lock.  */
-#define	__LOCK_EX	2    /* Exclusive lock.  */
-#define	__LOCK_UN	8    /* Unlock.  */
-
-/* Can be OR'd in to one of the above.  */
-#define	__LOCK_NB	4    /* Don't block when locking.  */
-
+#define	O_ACCMODE	(O_RDONLY|O_WRONLY|O_RDWR)
 
 /* Values for the second argument to `fcntl'.  */
-#define	__F_DUPFD	0	/* Duplicate file descriptor.  */
-#define	__F_GETFD	1	/* Get file descriptor flags.  */
-#define	__F_SETFD	2	/* Set file descriptor flags.  */
-#define	__F_GETFL	3	/* Get file status flags.  */
-#define	__F_SETFL	4	/* Set file status flags.  */
-#define	__F_GETOWN	5	/* Get owner (receiver of SIGIO).  */
-#define	__F_SETOWN	6	/* Set owner (receiver of SIGIO).  */
-#define	__F_GETLK	7	/* Get record locking info.  */
-#define	__F_SETLK	8	/* Set record locking info.  */
-#define	__F_SETLKW	9	/* Set record locking info, wait.  */
+#define	F_DUPFD	  	0	/* Duplicate file descriptor.  */
+#define	F_GETFD		1	/* Get file descriptor flags.  */
+#define	F_SETFD		2	/* Set file descriptor flags.  */
+#define	F_GETFL		3	/* Get file status flags.  */
+#define	F_SETFL		4	/* Set file status flags.  */
+#ifdef __USE_BSD
+#define	F_GETOWN	5	/* Get owner (receiver of SIGIO).  */
+#define	F_SETOWN	6	/* Set owner (receiver of SIGIO).  */
+#endif
+#define	F_GETLK		7	/* Get record locking info.  */
+#define	F_SETLK		8	/* Set record locking info.  */
+#define	F_SETLKW	9	/* Set record locking info, wait.  */
 
 /* File descriptor flags used with F_GETFD and F_SETFD.  */
-#define	__FD_CLOEXEC	1	/* Close on exec.  */
+#define	FD_CLOEXEC	1	/* Close on exec.  */
 
 
 #include <gnu/types.h>
@@ -91,9 +80,9 @@ struct flock
   };
 
 /* Values for the `l_type' field of a `struct flock'.  */
-#define	__F_RDLCK	1	/* Read lock.  */
-#define	__F_WRLCK	2	/* Write lock.  */
-#define	__F_UNLCK	3	/* Remove lock.  */
+#define	F_RDLCK	1	/* Read lock.  */
+#define	F_WRLCK	2	/* Write lock.  */
+#define	F_UNLCK	3	/* Remove lock.  */
 
 
 #endif	/* fcntlbits.h */
