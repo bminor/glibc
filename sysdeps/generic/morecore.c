@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -15,10 +15,7 @@ You should have received a copy of the GNU General Public License
 along with the GNU C Library; see the file COPYING.  If not, write to
 the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* IGNORE(@ */
-#include <ansidecl.h>
-#include <stddef.h>
-/* @) */
+#include <stdio.h>
 
 #define	_MALLOC_INTERNAL
 #include <malloc.h>
@@ -27,16 +24,17 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #define	__sbrk	sbrk
 #endif
 
-extern PTR EXFUN(__sbrk, (int increment));
+extern __ptr_t __sbrk __P ((int increment));
 
 /* Allocate INCREMENT more bytes of data space,
    and return the start of data space, or NULL on errors.
    If INCREMENT is negative, shrink data space.  */
-PTR
-DEFUN(__default_morecore, (increment), long int increment)
+__ptr_t
+__default_morecore (increment)
+     long int increment;
 {
-  PTR result = __sbrk((int) increment);
-  if (result == (PTR) -1)
+  __ptr_t result = __sbrk ((int) increment);
+  if (result == (__ptr_t) -1)
     return NULL;
   return result;
 }
