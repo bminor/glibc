@@ -359,7 +359,7 @@ of this helper program; chances are you did not intend to run this program.\n",
   npreloads = 0;
 
   preloadlist = getenv ("LD_PRELOAD");
-  if (preloadlist)
+  if (preloadlist && *preloadlist != '\0')
     {
       /* The LD_PRELOAD environment variable gives list of libraries
 	 separated by white space or colons that are loaded before the
