@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,10 +20,14 @@
 # error "Never use <bits/mathdef.h> directly; include <math.h> instead"
 #endif
 
+#include <bits/wordsize.h>
+
 /* FIXME! This file describes properties of the compiler, not the machine;
    it should not be part of libc!  */
 
-#if defined __USE_ISOC9X && defined _MATH_H
+#if defined __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
+# define _MATH_H_MATHDEF	1
+
 # ifdef __GNUC__
 #  if __STDC__ == 1
 
@@ -71,10 +75,15 @@ typedef double double_t;
 /* Number of decimal digits for the `double' type.  */
 # define DECIMAL_DIG	15
 
-#endif	/* ISO C 9X */
+#endif	/* ISO C99 */
 
 #ifndef __NO_LONG_DOUBLE_MATH
-/* Signal that we do not really have a `long double'.  The disables the
-   declaration of all the `long double' function variants.  */
-# define __NO_LONG_DOUBLE_MATH	1
+
+# if __WORDSIZE == 32
+/* Signal that in 32bit ABI we do not really have a `long double'.
+   The disables the declaration of all the `long double' function
+   variants.  */
+#  define __NO_LONG_DOUBLE_MATH	1
+# endif
+
 #endif
