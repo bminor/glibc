@@ -144,9 +144,10 @@ will be used, and CFLAGS sets optimization options for the compiler.
      is.  This is most useful to change the CPU submodel.  For example,
      if configure guesses your machine as `i586-pc-linux-gnu' but you
      want to compile a library optimized for 386es, give
-     `--host=i386-pc-linux-gnu' or just `--host=i386-linux'.  (A
-     library compiled for a Pentium (`i586') will still work on a 386,
-     but it may be slower.)
+     `--host=i386-pc-linux-gnu' or just `--host=i386-linux' and add the
+     appropriate compiler flags (`-mcpu=i386' will do the trick) to
+     CFLAGS. (A library compiled for a Pentium (`i586') will still work
+     on a 386, but it may be slower.)
 
      If you give just `--build', configure will get confused.
 
@@ -367,10 +368,13 @@ maintainers by sending electronic mail to <bug-glibc@gnu.org>.
 
    Each case of `iX86' can be `i386', `i486', `i586', or `i686'.  All
 of those configurations produce a library that can run on any of these
-processors.  The library will be optimized for the specified processor,
-but will not use instructions not available on all of them.  If you
-want the library to use instructions only available on newer
-processors, give GCC the appropriate `-m' switches via CFLAGS.
+processors if the compiler is configured correctly.  The GCC compiler
+by default generates code that's optimized for the machine it's
+configured for and will use the instructions available on that machine.
+For example if your GCC is configured for `i686', gcc will optimize
+for `i686' and might issue some `i686' specific instructions.  To
+generate code for other models you should give GCC the appropriate
+`-march=' and `-mcpu=' compiler switches via CFLAGS.
 
 Specific advice for Linux systems
 =================================
