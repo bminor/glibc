@@ -52,12 +52,12 @@ extern void mig_reply_setup (const mach_msg_header_t *__request,
 extern __inline vm_size_t
 __mig_strncpy (char *__dst, const char *__src, vm_size_t __len)
 {
-  return __stpncpy (dst, src, len) - dst;
+  return __stpncpy (__dst, __src, __len) - __dst;
 }
 extern __inline vm_size_t 
 mig_strncpy (char *__dst, const char *__src, vm_size_t __len)
 {
-  return __mig_strncpy (dst, src, len);
+  return __mig_strncpy (__dst, __src, __len);
 }
 
 
