@@ -32,7 +32,8 @@ typedef struct
     __off_t __filepos;		/* Current file position.  */
     size_t __block_size;	/* Size to read chunks in (st_blksize).  */
     char *__data;		/* Directory block.  */
-    size_t __size;		/* Total valid data in the block.  */
+    unsigned int __allocation;	/* Space allocated for the block.  */
+    unsigned int __size;	/* Total valid data in the block.  */
     size_t __offset;		/* Current offset into the block.  */
   } DIR;
 
