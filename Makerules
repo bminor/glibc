@@ -245,7 +245,8 @@ sysdep_routines := $(sysdep_routines)
 # replacing every ".c" in `sources' with a ".o".
 override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
 
-+depfiles := $(strip $(sources:.c=.dep) $(extra-objs:.o=.dep) \
++depfiles := $(strip $(sources:.c=.dep) \
+		     $(patsubst %.o,%.dep,$(filter %.o,$(extra-objs))) \
 		     $(addsuffix .dep,$(others) $(tests)))
 +depfiles := $(addprefix $(objpfx),\
 			 $(filter-out $(addsuffix .dep,$(omit-deps)),\
