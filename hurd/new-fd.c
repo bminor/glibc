@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd/fd.h>
 #include <stdlib.h>
+#include "hurdmalloc.h"		/* XXX */
 
 /* Allocate a new file descriptor structure 
    and initialize it with PORT and CTTY.  */
