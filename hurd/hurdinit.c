@@ -104,9 +104,7 @@ _hurd_proc_init (char **argv)
   process_t procserver;
 
 #ifdef notyet
-  /* Initialize the signal code; Mach exceptions will become signals.
-     This function will be a no-op on calls after the first.
-     On the first call, it sets up the message port and the signal thread.  */
+  /* Initialize the signal code; Mach exceptions will become signals.  */
   _hurdsig_init ();
 #endif
 
