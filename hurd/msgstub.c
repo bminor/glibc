@@ -22,3 +22,5 @@ STUB(_S_set_env_variable)
 STUB(_S_io_select_done)
 STUB(_S_startup_dosync)
 
+STUB(_S_dir_changed)
+STUB(_S_file_changed)
