@@ -3,6 +3,7 @@
 #endif
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 int stdio_block_read = 1, stdio_block_write = 1;
 
@@ -35,5 +36,15 @@ DEFUN(main, (argc, argv),
   fread(buffer, 1, 31, f);
   fwrite(buffer, 1, 31, stdout);
   fclose(f);
-  return 0;
+
+  if (!memcmp (buffer, "Where does this text come from?", 31))
+    {
+      puts ("\nTest succeeded.");
+      return 0;
+    }
+  else
+    {
+      puts ("\nTest FAILED!");
+      return 1;
+    }
 }
