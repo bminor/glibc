@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -77,7 +77,7 @@ write_corefile (int signo, int sigcode)
     /* User doesn't want a core.  */
     return 0;
 
-  coreserver = _hurd_path_lookup (_SERVERS_CORE, 0, 0);
+  coreserver = __hurd_path_lookup (_SERVERS_CORE, 0, 0);
   if (coreserver == MACH_PORT_NULL)
     return 0;
   if (err = __dir_lookup (_hurd_ccdir, "core",
@@ -87,9 +87,9 @@ write_corefile (int signo, int sigcode)
     return 0;
   err = __core_dump_task (coreserver,
 			  __mach_task_self (),
-			  __mach_host_self (),
 			  file,
-			  signo, sigcode);
+			  signo, sigcode,
+			  getenv ("GNUTARGET"));
   __mach_port_deallocate (__mach_task_self (), coreserver);
   if (!err && _hurd_core_limit != RLIM_INFINITY)
     {
@@ -129,10 +129,7 @@ abort_rpcs (struct _hurd_sigstate *ss, int signo, void *state)
 	  /* The thread was waiting for the RPC to return.
 	     Abort the operation.  The RPC will return POSIX_EINTR,
 	     or mach_msg will return an interrupt error.  */
-	  if (ss->intr_is_wait)
-	    __proc_waitintr (ss->intr_port);
-	  else
-	    __io_intr (ss->intr_port);
+	  __interrupt_operation (ss->intr_port);
 	  ss->intr_restart = ss->actions[signo].sa_flags & SA_RESTART;
 	}
 
@@ -144,6 +141,8 @@ abort_rpcs (struct _hurd_sigstate *ss, int signo, void *state)
     }
 }
 
+/* Abort the RPCs being run by all threads but this one;
+   all other threads should be suspended.  */
 static inline void
 abort_all_rpcs (int signo, void *state)
 {
@@ -162,22 +161,13 @@ abort_all_rpcs (int signo, void *state)
       }
 }
 
-static inline void
-return_sig_post (reply_port_t reply, int willstop)
-{
-  if (reply != MACH_PORT_NULL)
-    __sig_post_reply (reply, POSIX_SUCCESS, willstop);
-}
 
-/* SS->lock is held.  */
+/* SS->lock is held on entry and released before return.  */
 error_t
 _hurd_internal_post_signal (reply_port_t reply,
 			    struct _hurd_sigstate *ss,
 			    int signo,
 			    int sigcode,
-			    int orphaned,
-			    int cttykill,
-			    int *willstop,
 			    sigset_t *restore_blocked)
 {
   char thread_state[_hurd_thread_state_count];
@@ -225,8 +215,9 @@ _hurd_internal_post_signal (reply_port_t reply,
     act = ignore;
   else
     act = handle;
-  if (orphaned && (signo == SIGTTIN || signo == SIGTTOU) && act == stop)
+  if (_hurd_orphaned && (signo == SIGTTIN || signo == SIGTTOU) && act == stop)
     {
+      sigcode = signo;
       signo = SIGKILL;
       act = term;
     }
@@ -235,8 +226,7 @@ _hurd_internal_post_signal (reply_port_t reply,
   if (((sigmask (signo) & ss->blocked) && act != ignore) ||
       (signo != SIGKILL && _hurd_stopped))
     {
-      if (!cttykill)
-	__sigaddmember (signo, &ss->pending);
+      __sigaddmember (signo, &ss->pending);
       /* Save the code to be given to the handler when SIGNO is unblocked.  */
       ss->sigcodes[signo] = sigcode;
       act = ignore;
@@ -248,8 +238,10 @@ _hurd_internal_post_signal (reply_port_t reply,
   switch (act)
     {
     case stop:
-      return_sig_post (reply, WILLSTOP);
+      __sig_post_reply (reply, POSIX_SUCCESS, WILLSTOP);
+      __mutex_lock (&_hurd_lock);
       __proc_dostop (_hurd_proc, __mach_thread_self ());
+      __mutex_unlock (&_hurd_lock);
       __mutex_unlock (&ss->lock);
       abort_all_rpcs (signo, thread_state);
       __proc_markstop (_hurd_proc, signo);
@@ -257,14 +249,14 @@ _hurd_internal_post_signal (reply_port_t reply,
       return MIG_NO_REPLY;	/* Already replied.  */
 
     case ignore:
-      return_sig_post (reply, IGNBLK);
+      __sig_post_reply (reply, POSIX_SUCCESS, IGNBLK);
       break;
 
     case core:
     case term:
-      return_sig_post (reply, CATCH);
+      __sig_post_reply (reply, POSIX_SUCCESS, CATCH);
+      __mutex_lock (&_hurd_lock);
       __proc_dostop (_hurd_proc, __mach_thread_self ());
-      __mutex_unlock (&ss->lock);
       abort_all_rpcs (signo, thread_state);
       __proc_exit (_hurd_proc,
 		   (W_EXITCODE (0, signo) |
@@ -274,7 +266,7 @@ _hurd_internal_post_signal (reply_port_t reply,
       return MIG_NO_REPLY;	/* Yeah, right.  */
 
     case handle:
-      return_sig_post (reply, CATCH);
+      __sig_post_reply (reply, POSIX_SUCCESS, CATCH);
       __thread_suspend (ss->thread);
       abort_rpcs (ss, signo, thread_state);
       {
@@ -299,7 +291,7 @@ _hurd_internal_post_signal (reply_port_t reply,
 	__sigdelmember (signo, &ss->pending);
 	return _hurd_internal_post_signal (MACH_PORT_NULL, ss,
 					   signo, ss->sigcodes[signo],
-					   0, 0, willstop);
+					   NULL);
       }
 
   __mutex_unlock (&ss->lock);
@@ -311,25 +303,54 @@ static error_t
 sig_post (sigthread_t me,
 	  mig_reply_port_t reply,
 	  int signo,
-	  int orphaned,
-	  int cttykill,
-	  int *willstop)
+	  mach_port_t refport)
 {
   struct _hurd_sigstate *ss;
 
   if (signo < 0 || signo >= NSIG)
-    return POSIX_EINVAL;
+    return EINVAL;
+
+  if (refport == __mach_task_self ())
+    /* Can send any signal.  */
+    ;
+  else if (refport == _hurd_cttyport)
+    switch (signo)
+      {
+      case SIGINT:
+      case SIGQUIT:
+      case SIGTSTP:
+      case SIGHUP:
+	break;
+      default:
+	return EPERM;
+      }
+  else
+    {
+      static mach_port_t sessport = MACH_PORT_NULL;
+      if (sessport == MACH_PORT_NULL)
+	{
+	  __mutex_lock (&_hurd_lock);
+	  __proc_getsidport (_hurd_proc, &sessport);
+	  __mutex_unlock (&_hurd_lock);
+	}
+      if (refport == sessport && signo != SIGCONT)
+	return EPERM;
+    }
+  else
+    /* XXX async io? */
+    return EPERM;
 
   ss = _hurd_thread_sigstate (_hurd_sigthread);
   if (ss->suspended)
     {
+      /* There is a sigsuspend waiting.  Let it take the signal.  */
       ss->suspend_reply = reply;
       __condition_broadcast (&ss->arrived);
       return MIG_NO_REPLY;
     }
 
   return _hurd_internal_post_signal (reply,
-				     signo, 0, orphaned, cttykill, willstop,
+				     signo, 0,
 				     NULL);
 }
 
@@ -343,10 +364,7 @@ text_set_element (_hurd_sigport_routines, _Xsig_post);
 void
 _hurd_exc_post_signal (thread_t thread, int signo, int sigcode)
 {
-  int ignore;
   (void) _hurd_internal_post_signal (MACH_PORT_NULL,
 				     _hurd_thread_sigstate (thread),
-				     signo, sigcode,
-				     0, 0, &ignore,
-				     NULL);
+				     signo, sigcode, NULL);
 }
