@@ -25,7 +25,7 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	\
 	   glob.h wordexp.h fnmatch.h gnu/wait.h gnu/types.h getopt.h	\
 	   posix1_lim.h posix2_lim.h posix_opt.h local_lim.h tar.h
 
-distribute := confstr.h
+distribute := confstr.h utsnamelen.h
 
 routines :=								      \
 	uname								      \
@@ -44,11 +44,14 @@ routines :=								      \
 	getopt getopt1
 routines	:= $(sort $(foreach f,$(routines),$f $(f:__%=%)))
 aux		:= init-posix environ
-tests := tstgetopt
-
+tests		:= tstgetopt
 others		:= getconf
+install-lib	:= libposix.a
 
 include ../Rules
+
+$(objpfx)libposix.a:
+	$(AR) cr $@ /dev/null
 
 # Make the standalone glob/fnmatch package.
 glob.tar.Z: glob.tar
