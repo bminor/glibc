@@ -33,10 +33,10 @@ DEFUN(putpwent, (p, stream), register CONST struct passwd *p AND FILE *stream)
       return -1;
     }
 
-  if (fprintf (stream, "%s:%s:%u:%u:%s:%s\n",
+  if (fprintf (stream, "%s:%s:%u:%u:%s:%s:%s\n",
 	       p->pw_name, p->pw_passwd,
 	       p->pw_uid, p->pw_gid,
-	       p->pw_gecos, p->pw_shell) < 0)
+	       p->pw_gecos, p->pw_dir, p->pw_shell) < 0)
     return(-1);
 
   return(0);
