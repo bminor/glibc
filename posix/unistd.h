@@ -190,10 +190,10 @@ extern int pause __P ((void));
 
 
 /* Change the owner and group of FILE.  */
-extern int __chown __P ((__const char *__file AND
-			 __uid_t __owner AND __gid_t __group));
-extern int chown __P ((__const char *__file AND
-		       __uid_t __owner AND __gid_t __group));
+extern int __chown __P ((__const char *__file,
+			 __uid_t __owner, __gid_t __group));
+extern int chown __P ((__const char *__file,
+		       __uid_t __owner, __gid_t __group));
 
 #ifdef __OPTIMIZE__
 #define chown(file, owner, group)	__chown((file), (owner), (group))
@@ -201,10 +201,10 @@ extern int chown __P ((__const char *__file AND
 
 #ifdef	__USE_BSD
 /* Change the owner and group of the file that FD is open on.  */
-extern int __fchown __P ((int __fd AND
-			  __uid_t __owner AND __gid_t __group));
-extern int fchown __P ((int __fd AND
-			__uid_t __owner AND __gid_t __group));
+extern int __fchown __P ((int __fd,
+			  __uid_t __owner, __gid_t __group));
+extern int fchown __P ((int __fd,
+			__uid_t __owner, __gid_t __group));
 #ifdef __OPTIMIZE__
 #define fchown(fd, owner, group)	__fchown((fd), (owner), (group))
 #endif /* Optimizing.  */
