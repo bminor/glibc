@@ -1,5 +1,20 @@
 1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/i386/bits/string.h (__memcpy_c): Help some stupid old
+	compilers.
+	(__memset_cc): Likewise.
+
+	* sysdeps/generic/libc-start.c: For SUID binaries check whether
+	the standard file descriptors are open.
+	Reported by Chris Evans <chris@ferret.lmh.ox.ac.uk>.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove mmap64 alias for mmap.
+	* sysdeps/unix/sysv/linux/mmap64.c: Test whether mapped area is in
+	range of mmap.  If not fail.
+	Patches by Daniel Jacobowitz <dan@debian.org>.
+
+1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
+
 	* stdio-common/vfprintf.c (buffered_vfprintf): Add locking.
 
 1999-07-09  H.J. Lu  <hjl@gnu.org>
