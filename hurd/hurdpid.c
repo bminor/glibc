@@ -32,24 +32,19 @@ init_pids (void)
 	     }));
 }
 
-text_set_element (__libc_subinit, init_pids);
+text_set_element (_hurd_proc_subinit, init_pids);
 text_set_element (_hurd_fork_child_hook, init_pids);
 
 #include <hurd/msg_server.h>
+#include "set-hooks.h"
 
-const struct
-  {
-    size_t n;
-    void (*fn[0]) (pid_t);
-  } _hurd_pgrp_changed_hook;
-
+DEFINE_HOOK (_hurd_pgrp_changed_hook, (pid_t));
+ 
 error_t
 _S_proc_newids (mach_port_t me,
 		task_t task,
 		pid_t ppid, pid_t pgrp, int orphaned)
 {
-  size_t i;
-
   if (task != __mach_task_self ())
     return EPERM;
 
@@ -60,8 +55,7 @@ _S_proc_newids (mach_port_t me,
   _hurd_orphaned = orphaned;
 
   /* Run things that want notification of a pgrp change.  */
-  for (i = 0; i < _hurd_pgrp_changed_hook.n; ++i)
-    (*_hurd_pgrp_changed_hook.fn[i]) (_hurd_pgrp);
+  RUN_HOOK (_hurd_pgrp_changed_hook, (_hurd_pgrp));
 
   return 0;
 }
