@@ -101,7 +101,7 @@ $(common-objpfx)make-errnos.c: $(sysdep_dir)/unix/errnos-tmpl.c \
 
 $(common-objpfx)errnos: $(wildcard $(sysincludedir)/errno.h	\
 				   $(sysincludedir)/sys/errno.h)
-	cat $^ | sed -n 's/^#define[ 	]*\(E[A-Z0-9]*\)[ 	]*[0-9][0-9]*[	]*.*$$/\1/p' > $@-tmp
+	cat $^ | sed -n 's/^#define[ 	]*\(E[A-Z0-9][A-Z0-9]*\)[ 	].*$$/\1/p' > $@-tmp
 	mv $@-tmp $@
 endif
 
