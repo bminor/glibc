@@ -96,7 +96,7 @@ extern const struct locale_data *_nl_current_##category;
 
 extern const char *const _nl_category_names[LC_ALL + 1];
 extern const size_t _nl_category_name_sizes[LC_ALL + 1];
-extern const struct locale_data * *const _nl_current[LC_ALL];
+extern const struct locale_data * *const _nl_current[LC_ALL + 1];
 
 /* Name of the standard locale.  */
 extern const char _nl_C_name[];
