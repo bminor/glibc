@@ -496,9 +496,10 @@ common-clean: common-mostlyclean
 stubs: $(common-objpfx)stub-$(subdir)
 $(common-objpfx)stub-$(subdir): $(+depfiles)
 # Use /dev/null since `...` might expand to empty.
+	$(patsubst %,cd %;,$(objdir)) \
 	sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
 	    `sed -n 's@^.*\($(sysdep_dir)/stub/[a-z0-9_]*\.c\).*$$@\1@p' \
-		 $^ /dev/null` \
+		 $(patsubst $(objpfx)%,%,$^) /dev/null` \
 	    /dev/null > $@T
 	mv -f $@T $@
 
