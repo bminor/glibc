@@ -575,7 +575,7 @@ if [ $srcdir != . ]; then
 srcdir = $srcdir
 
 all .DEFAULT:
-	\$(MAKE) -C \$(srcdir) ARCH=\`pwd\` \$@
+	\$(MAKE) -C \$(srcdir) objdir=\`pwd\` \$@
 END
 
 echo "Wrote Makefile in $PWD."
