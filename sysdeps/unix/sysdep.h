@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,8 +29,8 @@ Cambridge, MA 02139, USA.  */
 /* Machine-dependent sysdep.h files are expected to define the macro
    PSEUDO (function_name, syscall_name) to emit assembly code to define the
    C-callable function FUNCTION_NAME to do system call SYSCALL_NAME.
-   r0 and r1 are the system call outputs.  movl should be defined as
-   an instruction such that "movl r1, r0" works.  ret should be defined
+   r0 and r1 are the system call outputs.  MOVE(x, y) should be defined as
+   an instruction such that "MOVE(r1, r0)" works.  ret should be defined
    as the return instruction.  */
 
 #define	HAVE_SYSCALLS
