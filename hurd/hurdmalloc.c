@@ -1,4 +1,10 @@
+#include <stdlib.h>
 #include "hurdmalloc.h"		/* XXX see that file */
+
+#include <gnu-stabs.h>
+text_set_element (_hurd_fork_prepare_hook, malloc_fork_prepare);
+text_set_element (_hurd_fork_parent_hook, malloc_fork_parent);
+text_set_element (_hurd_fork_child_hook, malloc_fork_child);
 
 
 /* 
@@ -29,8 +35,8 @@
 /*
  * HISTORY
  * $Log$
- * Revision 1.1  1994/05/26 02:23:26  roland
- * Initial revision
+ * Revision 1.2  1994/05/26 03:02:24  roland
+ * Formerly ../hurd/hurdmalloc.c.~2~
  *
  * Revision 2.7  91/05/14  17:57:34  mrt
  * 	Correcting copyright
