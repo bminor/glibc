@@ -33,12 +33,52 @@ DEFUN(socketpair, (domain, type, protocol, fds),
       int domain AND enum __socket_type type AND int protocol AND int fds[2])
 {
   error_t err;
+  socket_t server, sock1, sock2;
   int d1, d2;
 
-  d1 = socket (domain, type, protocol);
-  if (d1 < 0)
+  if (fds == NULL)
+    return __hurd_fail (EINVAL);
+
+  /* Find the domain's socket server.  */
+  server = _hurd_socket_server (domain, 0);
+  if (server == MACH_PORT_NULL)
     return -1;
-  d2 = socket (domain, type, protocol);
+
+  /* Create two sockets and connect them together.  */
+
+  err = __socket_create (server, type, protocol, &sock1);
+  if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED)
+    {
+      /* On the first use of the socket server during the operation,
+	 allow for the old server port dying.  */
+      server = _hurd_socket_server (domain, 1);
+      if (server == MACH_PORT_NULL)
+	return -1;
+      err = __socket_create (server, type, protocol, &sock1);
+    }
+  if (err)
+    return __hurd_fail (err);
+  if (err = __socket_create (server, type, protocol, &sock2))
+    {
+      __mach_port_deallocate (__mach_task_self (), sock1);
+      return __hurd_fail (err);
+    }
+  if (err = __socket_connect2 (sock1, sock2))
+    {
+      __mach_port_deallocate (__mach_task_self (), sock1);
+      __mach_port_deallocate (__mach_task_self (), sock2);
+      return __hurd_fail (err);
+    }
+
+  /* Put the sockets into file descriptors.  */
+
+  d1 = _hurd_intern_fd (sock1, O_IGNORE_CTTY, 1);
+  if (d1 < 0)
+    {
+      __mach_port_deallocate (__mach_task_self (), sock2);
+      return -1;
+    }
+  d2 = _hurd_intern_fd (sock2, O_IGNORE_CTTY, 1);
   if (d2 < 0)
     {
       err = errno;
@@ -46,17 +86,7 @@ DEFUN(socketpair, (domain, type, protocol, fds),
       return __hurd_fail (err);
     }
 
-  if (err = HURD_DPORT_USE
-      (d1,
-       ({ socket_t sock1 = port;
-	  HURD_DPORT_USE (d2, __socket_connect2 (sock1, port)); })))
-    {
-      close (d1);
-      close (d2);
-      return __hurd_fail (err);
-    }
-
   fds[0] = d1;
-  fds[2] = d2;
+  fds[1] = d2;
   return 0;
 }
