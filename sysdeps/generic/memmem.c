@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,10 +23,10 @@ Cambridge, MA 02139, USA.  */
 
 /* Return the first occurrence of NEEDLE in HAYSTACK.  */
 PTR
-DEFUN(memmem, (needle, needle_len,
-	       haystack, haystack_len),
-      CONST PTRCONST needle AND CONST size_t needle_len AND
-      CONST PTRCONST haystack AND CONST size_t haystack_len)
+DEFUN(memmem, (haystack, haystack_len,
+	       needle, needle_len),
+      CONST PTRCONST haystack AND CONST size_t haystack_len AND
+      CONST PTRCONST needle AND CONST size_t needle_len)
 {
   register CONST char *begin;
 
