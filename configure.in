@@ -263,7 +263,7 @@ echo '#include <stddef.h>
 FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c
 eval "$CPP conftest.c 2>/dev/null" \
 | grep '^FOOBAR.*unsigned.*FOOBAR$' >/dev/null \
-|| AC_DEFINE(__SIZE_TYPE__, 'unsigned long int')
+|| AC_DEFINE(__SIZE_TYPE__, unsigned long int)
 rm -f conftest*
 
 AC_HEADER_EGREP(__gnuc_va_list, stdarg.h, [config_vars="$config_vars
