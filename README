@@ -1,6 +1,9 @@
-This directory contains the version 2.3.4 release of the GNU C Library.
+This directory contains the version 2.3.5 release of the GNU C Library.
 Many bugs have been fixed since the last release.
 Some bugs surely remain.
+
+Please note that version 2.3.5 cannot be built with GCC 4!
+The next release will be compatible with the newer compiler.
 
 As of this release, the GNU C library is known to run on the following
 configurations:
