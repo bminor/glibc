@@ -71,26 +71,33 @@ write_corefile (int signo, int sigcode)
   mach_port_t coreserver;
   file_t file;
   char *name;
+  char *target;
 
   if (_hurd_core_limit == 0)
     /* User doesn't want a core.  */
     return 0;
 
-  name = getenv ("CORESERVER");	/* XXX don't lose if environ scrod */
-  if (name != NULL)
-    coreserver = __path_lookup (name, 0, 0);
-  else
-    coreserver = MACH_PORT_NULL;
+  coreserver = MACH_PORT_NULL;
+  if (!setjmp (_hurd_sigthread_fault_env))
+    {
+      name = getenv ("CORESERVER");
+      if (name != NULL)
+	coreserver = __path_lookup (name, 0, 0);
+    }
 
   if (coreserver == MACH_PORT_NULL)
     coreserver = __path_lookup (_SERVERS_CORE, 0, 0);
   if (coreserver == MACH_PORT_NULL)
     return 0;
 
-  name = getenv ("COREFILE");	/* XXX ditto */
-  if (name != NULL)
-    file = __path_lookup (name, FS_LOOKUP_WRITE|FS_LOOKUP_CREATE,
-			  0666 & ~_hurd_umask);
+  file = MACH_PORT_NULL;
+  if (!setjmp (_hurd_sigthread_fault_env))
+    {
+      name = getenv ("COREFILE");
+      if (name != NULL)
+	file = __path_lookup (name, FS_LOOKUP_WRITE|FS_LOOKUP_CREATE,
+			      0666 & ~_hurd_umask);
+    }
   if (name == NULL || file == MACH_PORT_NULL)
     {
       name = "core";
@@ -101,11 +108,21 @@ write_corefile (int signo, int sigcode)
   if (file == MACH_PORT_NULL)
     return 0;
 
+  if (setjmp (_hurd_sigthread_fault_env))
+    /* We bombed in getenv.  */
+    target = NULL;
+  else
+    {
+      target = getenv ("GNUTARGET");
+      /* Fault now if TARGET is a bogus string.  */
+      (void) strlen (target)
+    }
+
   err = __core_dump_task (coreserver,
 			  __mach_task_self (),
 			  file,
 			  signo, sigcode,
-			  getenv ("GNUTARGET")); /* XXX ditto */
+			  target);
   __mach_port_deallocate (__mach_task_self (), coreserver);
   if (!err && _hurd_core_limit != RLIM_INFINITY)
     {
@@ -134,28 +151,13 @@ abort_rpcs (struct _hurd_sigstate *ss, int signo, void *state)
 {
   if (ss->intr_port != MACH_PORT_NULL)
     {
-      /* XXX I am changing how this is done.
-	 There will be a new proc call that needs done
-	 at init time to give a thread state to restore
-	 when the sigthread faults.  proc will then forward
-	 the exception msg and set the thread state to
-	 a state we gave it at startup.
-	 This state will be to run a function which will
-	 longjmp to something here.  */
-
-      /* This is the address the PC will be at if the thread
-	 is waiting for a mach_msg syscall to return.  */
-      extern const int __mach_msg_trap_syscall_pc;
-      extern error_t _hurd_thread_state (thread_t, void *state);
-      extern int *_hurd_thread_pc (void *state);
-      
       /* Abort whatever the thread is doing.
 	 If it is in the mach_msg syscall doing the send,
 	 the syscall will return MACH_SEND_INTERRUPTED.  */
       __thread_abort (ss->thread);
       _hurd_thread_state (ss->thread, state);
 
-      if (_hurd_thread_pc (state) == &__mach_msg_trap_syscall_pc)
+      if (_hurd_thread_msging_p (state))
 	{
 	  /* The thread was waiting for the RPC to return.
 	     Abort the operation.  The RPC will return EINTR.  */
@@ -502,6 +504,29 @@ _hurdsig_init (void)
   __task_set_special_port (__mach_task_self (),
 			   TASK_EXCEPTION,
 			   _hurd_msgport);
+
+  {
+    /* Send exceptions for the signal thread to the proc server.
+       It will forward the message on to our message port,
+       and then restore the thread's state to code which
+       does `longjmp (_hurd_sigthread_fault_env, 1)'.  */
+
+    mach_port_t sigexc;
+    int state[_hurd_thread_state_count];
+    if (err = __mach_port_allocate (__mach_task_self (),
+				    MACH_PORT_RIGHT_RECEIVE, &sigexc))
+      __libc_fatal ("hurd: Can't create receive right for sigthread exc\n");
+    _hurd_initialize_fault_recovery_state (state);
+    __thread_set_special_port (sigthread, THREAD_EXCEPTION, sigexc);
+    if (err = HURD_PORT_USE
+	(&_hurd_proc,
+	 __proc_handle_exceptions (port,
+				   sigexc,
+				   _hurd_msgport, MACH_PORT_RIGHT_COPY_SEND,
+				   _hurd_thread_state_flavor,
+				   state, _hurd_thread_state_count)))
+      __libc_fatal ("hurd: proc won't handle sigthread exceptions\n");
+  }
 }
 
 struct _hurd_port _hurd_proc;
