@@ -1,6 +1,6 @@
 /* Definitions of global stdio data structures.
 
-Copyright (C) 1991 Free Software Foundation, Inc.
+Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -34,16 +34,14 @@ Cambridge, MA 02139, USA.  */
     {									      \
       _IOMAGIC,								      \
       NULL, NULL, NULL, NULL, 0,					      \
-      (next),								      \
       &(name)->__fileno, fd,						      \
-      '\0', NULL, 0,							      \
-      0, 0,								      \
-      unbuffered, 0,							      \
-      0, 0,								      \
       { readwrite, /* ... */ },						      \
       { NULL, NULL, NULL, NULL },					      \
       { NULL, NULL },							      \
-      0, 0								      \
+      -1, -1,								      \
+      (next),								      \
+      NULL, '\0', 0,							      \
+      0, 0, unbuffered, 0, 0, 0, 0					      \
     }
 static FILE stdstreams[3] =
   {
