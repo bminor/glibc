@@ -28,7 +28,8 @@ include ../Makeconfig
 ifndef	subdir
 Each subdirectory makefile must define the `subdir' variable.
 endif
-export subdir := $(subdir)	# Benign, useless in GNU make before 3.63.
+# This is benign and useless in GNU make before 3.63.
+export subdir := $(subdir)
 
 # This is the default target; it makes the library.
 .PHONY: all
