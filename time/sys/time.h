@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -77,7 +77,7 @@ enum __itimer_which
     ITIMER_VIRTUAL = 1,
     /* Timers run when the process is executing and when
        the system is executing on behalf of the process.  */
-    ITIMER_PROF = 2,
+    ITIMER_PROF = 2
   };
 
 /* Type of the second argument to `getitimer' and
