@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1997-11-22T02:35:55+0100 drepper>
+Time-stamp: <1997/12/24 21:37:17 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -10,7 +10,7 @@ of these bugs/limitations I'll certainly be glad to receive a patch.
 Another source of information about bugs is the problem data base of the
 GNU project.  There is an easy to use WWW interface available at
 
-	http://www-gnats.gnu.ai.mit.edu:8080/cgi-bin/wwwgnats.pl
+	http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl
 
 I would appreciate it very much if you could verify the problem was not
 reported before by looking through the database.  To make the information
@@ -61,6 +61,10 @@ Severity: [  *] to [***]
 
 [ **]  When popen() was called with an illegal command the function still
        returns with a value not equal to NULL.
+
+[  *]  setlocale() leaks memory.  This becomes only a problem if a program
+       calls this function very often which normally is not the case.  The
+       problem is fixed for glibc 2.1.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Ulrich Drepper

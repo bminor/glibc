@@ -15,7 +15,7 @@ please let me know.
 
 						  --drepper@cygnus.com
 
-~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 1. Compiling glibc
 
@@ -96,7 +96,7 @@ please let me know.
 	Nothing seems to work.
 
 
-~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 1. Compiling glibc
 
@@ -122,7 +122,7 @@ few people have expressed interest.
 If you have a system not listed above (or in the `README' file) and
 you are really interested in porting it, contact
 
-	<bug-glibc@prep.ai.mit.edu>
+	<bug-glibc@gnu.org>
 
 
 1.2.	What compiler do I need to build GNU libc?
@@ -303,7 +303,7 @@ The compilation of these extra libraries and the compiler optimizations
 slow down the build process and need more disk space.
 
 
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
 2. Installation and configuration issues
 
@@ -626,7 +626,7 @@ happened.  So in case of doubt report such a warning message as a
 problem.
 
 
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -812,7 +812,7 @@ and return EINTR (for example, to implement a timeout) you can do this with
 siginterrupt().
 
 
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
 4. Miscellaneous
 
@@ -836,7 +836,7 @@ snapshot, according to Philip Blundell <Philip.Blundell@pobox.com>, the
 required kernel version is at least 2.1.30.
 
 
-~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
