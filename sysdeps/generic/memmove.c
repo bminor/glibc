@@ -39,8 +39,8 @@ rettype
 DEFUN(memmove, (a1, a2, len),
       a1const PTR a1 AND a2const PTR a2 AND size_t len)
 {
-  long int dstp = (long int) dest;
-  long int srcp = (long int) src;
+  unsigned long int dstp = (long int) dest;
+  unsigned long int srcp = (long int) src;
 
   /* This test makes the forward copying code be used whenever possible.
      Reduces the working set.  */
