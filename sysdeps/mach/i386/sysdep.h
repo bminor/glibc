@@ -32,10 +32,6 @@ Cambridge, MA 02139, USA.  */
 
 #define MOVE(x,y)	movl x , y
 
-
-#define SET_SP(sp) \
-  asm volatile ("movl %0, %%esp" : : "g" (sp) : "%esp")
-
 #define LOSE asm volatile ("hlt")
 
 #define SNARF_ARGS(argc, argv, envp)					      \
@@ -55,3 +51,10 @@ Cambridge, MA 02139, USA.  */
 	--p;								      \
       envp = p;							      \
     } while (0)
+
+#define SET_SP(sp) \
+
+#define CALL_WITH_SP(fn, sp) \
+  asm volatile ("movl %0, %%esp; jmp %1" : : "g" (sp), "m" (fn) : "%esp")
+
+#include_next <sysdep.h>
