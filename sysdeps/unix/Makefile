@@ -16,6 +16,14 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
+# The unix-specific configure fragment writes `unix-generated' in config.make.
+ifdef objdir
+unix-generated-pfx = $(objpfx)
+else
+unix-generated-pfx = $(sysdep_dir)/unix/
+endif
+generated := $(generated) $(addprefix $(unix-generated-pfx),$(unix-generated))
+
 ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/local_lim.h))))))
 
