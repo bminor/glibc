@@ -61,7 +61,7 @@ DEFUN(opendir, (name), CONST char *name)
       goto lose;
     }
 
-  dirp = (DIR *) malloc (sizeof (DIR) + NAME_MAX);
+  dirp = (DIR *) calloc (1, sizeof (DIR) + NAME_MAX); /* Zero-fill.  */
   if (dirp == NULL)
   lose:
     {
@@ -91,7 +91,5 @@ DEFUN(opendir, (name), CONST char *name)
     }
 
   dirp->__fd = fd;
-  dirp->__offset = 0;
-  dirp->__size = 0;
   return dirp;
 }
