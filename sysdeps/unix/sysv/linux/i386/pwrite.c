@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -30,7 +30,7 @@ static ssize_t __emulate_pwrite (int fd, const void *buf, size_t count,
 
 
 ssize_t
-__pwrite (fd, buf, count, offset)
+__libc_pwrite (fd, buf, count, offset)
      int fd;
      const void *buf;
      size_t count;
@@ -47,9 +47,10 @@ __pwrite (fd, buf, count, offset)
   return result;
 }
 
-weak_alias (__pwrite, pwrite)
+strong_alias (__libc_pwrite, __pwrite)
+weak_alias (__libc_pwrite, pwrite)
 
-#define __pwrite(fd, buf, count, offset) \
+#define __libc_pwrite(fd, buf, count, offset) \
      static internal_function __emulate_pwrite (fd, buf, count, offset)
 #endif
 #include <sysdeps/posix/pwrite.c>
