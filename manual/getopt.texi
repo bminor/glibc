@@ -73,7 +73,7 @@ required argument.  If an option character is followed by two colons
 
 If the @var{options} argument string begins with a hyphen (@samp{-}), this
 is treated specially.  It permits arguments that are not options to be
-returned as if they were associated with option character @samp{\0}.
+returned as if they were associated with option character @samp{\1}.
 
 The @code{getopt} function returns the option character for the next
 command line option.  When no more option arguments are available, it
