@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,30 +18,13 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <unistd.h>
-#include <limits.h>
-#include <errno.h>
+
+extern long int EXFUN(__sysconf, (int));
 
 /* Return the maximum number of file descriptors
    the current process could possibly have.  */
 int
 DEFUN_VOID(__getdtablesize)
 {
-#ifdef	OPEN_MAX
-  return OPEN_MAX;
-#else
-  errno = ENOSYS;
-  return -1;
-#endif
+  return __sysconf (_SC_OPEN_MAX);
 }
-
-#ifndef	OPEN_MAX
-
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning(__getdtablesize);
-
-#endif	/* GNU stabs.  */
-
-#endif

@@ -44,6 +44,7 @@ enum
     _SC_JOB_CONTROL,
     _SC_SAVED_IDS,
     _SC_VERSION,
+    _SC_PAGESIZE,
 
     /* Values for the argument to `sysconf'
        corresponding to _POSIX2_* symbols.  */
