@@ -18,10 +18,9 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 #include <hurd/fd.h>
+#include <hurd/resource.h>
 #include <stdlib.h>
 #include "hurdmalloc.h"		/* XXX */
-
-int _hurd_dtable_rlimit;	/* Resource limit on open descriptors.  */
 
 /* Allocate a new file descriptor and return it, locked.  The new
    descriptor number will be no less than FIRST_FD.  If the table is full,
@@ -33,6 +32,7 @@ _hurd_alloc_fd (int *fd, int first_fd)
 {
   int i;
   void *crit;
+  long int rlimit;
 
   if (first_fd < 0)
     {
@@ -76,11 +76,15 @@ _hurd_alloc_fd (int *fd, int first_fd)
 	__spin_unlock (&d->port.lock);
     }
 
-  if (first_fd < _hurd_dtable_rlimit)
+  __mutex_lock (&_hurd_rlimit_lock);
+  rlimit = _hurd_rlimits[RLIMIT_OFILE].rlim_cur;
+  __mutex_unlock (&_hurd_rlimit_lock);
+
+  if (first_fd < rlimit)
     {
       /* The descriptor table is full.  Check if we have reached the
 	 resource limit, or only the allocated size.  */
-      if (_hurd_dtablesize < _hurd_dtable_rlimit)
+      if (_hurd_dtablesize < rlimit)
 	{
 	  /* Enlarge the table.  */
 	  int save = errno;
@@ -89,8 +93,8 @@ _hurd_alloc_fd (int *fd, int first_fd)
 	     If there isn't any at all, give it three slots (because
 	     stdio will take that many anyway).  */
 	  int size = _hurd_dtablesize ? _hurd_dtablesize * 2 : 3;
-	  if (size > _hurd_dtable_rlimit)
-	    size = _hurd_dtable_rlimit;
+	  if (size > rlimit)
+	    size = rlimit;
 	  /* If we fail to allocate that, decrement the desired size
 	     until we succeed in allocating it.  */
 	  do
