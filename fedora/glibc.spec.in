@@ -12,7 +12,8 @@ Version: %{glibcversion}
 Release: %{glibcrelease}
 Copyright: LGPL
 Group: System Environment/Libraries
-Source0: %{name}-%{glibcdate}.tar.bz2
+%define glibcsrcdir %{name}-%{glibcdate}
+Source0: %{glibcsrcdir}.tar.bz2
 Source1: %{name}-fedora-%{glibcdate}.tar.bz2
 Patch0: %{name}-fedora.patch
 Patch1: %{name}-nptl-check.patch
@@ -75,7 +76,7 @@ BuildRequires: gcc >= 3.2.1-5
 BuildPreReq: elfutils >= 0.72
 BuildPreReq: rpm >= 4.2-0.56
 %endif
-%define __find_provides %{_builddir}/%{name}-%{version}-%{glibcdate}/find_provides.sh
+%define __find_provides %{_builddir}/%{glibcsrcdir}/find_provides.sh
 %define _filter_GLIBC_PRIVATE 1
 
 %description
@@ -245,7 +246,7 @@ package or when debugging this package.
 %endif
 
 %prep
-%setup -q -n %{name}-%{version}-%{glibcdate} -a1
+%setup -q -n %{glibcsrcdir} -a1
 %patch0 -p1
 case "`gcc --version | head -1`" in
 gcc*\ 3.3*)
@@ -1068,18 +1069,18 @@ find $RPM_BUILD_ROOT/usr/src/debug -type d -print | xargs chmod a+rx
 %define basearch sparc
 %endif
 cat $blf > debuginfo.filelist
-find $RPM_BUILD_ROOT/usr/src/debug/%{name}-%{version}-%{glibcdate} -type d \
+find $RPM_BUILD_ROOT/usr/src/debug/%{glibcsrcdir} -type d \
   | sed "s#^$RPM_BUILD_ROOT#%%dir #" >> debuginfo.filelist
-grep '/generic/\|/linux/\|/%{basearch}/\|/nptl\(_db\)\?/\|^%{name}-%{version}-%{glibcdate}/build' \
+grep '/generic/\|/linux/\|/%{basearch}/\|/nptl\(_db\)\?/\|^%{glibcsrcdir}/build' \
   $sf.sorted | sed 's|^|/usr/src/debug/|' >> debuginfo.filelist
 touch debuginfocommon.filelist
 %else
-( grep '^%{name}-%{version}-%{glibcdate}/build-\|dl-osinfo\.h' $csf.sorted || : ) > $csf.sorted.build
+( grep '^%{glibcsrcdir}/build-\|dl-osinfo\.h' $csf.sorted || : ) > $csf.sorted.build
 cat $blf > debuginfo.filelist
 cat $cblf > debuginfocommon.filelist
-grep '^%{name}-%{version}-%{glibcdate}/build-\|dl-osinfo\.h' $sf.sorted \
+grep '^%{glibcsrcdir}/build-\|dl-osinfo\.h' $sf.sorted \
   | sed 's|^|/usr/src/debug/|' >> debuginfo.filelist
-find $RPM_BUILD_ROOT/usr/src/debug/%{name}-%{version}-%{glibcdate} -type d \
+find $RPM_BUILD_ROOT/usr/src/debug/%{glibcsrcdir} -type d \
   | sed "s#^$RPM_BUILD_ROOT#%%dir #" >> debuginfocommon.filelist
 ( cat $csf.sorted; grep -v -f $csf.sorted.build $sf.sorted ) \
   | grep -v 'dl-osinfo\.h' | LC_ALL=C sort -u \
@@ -1087,7 +1088,7 @@ find $RPM_BUILD_ROOT/usr/src/debug/%{name}-%{version}-%{glibcdate} -type d \
 %endif
 %else
 cat $blf $cblf | LC_ALL=C sort -u > debuginfo.filelist
-echo '/usr/src/debug/%{name}-%{version}-%{glibcdate}' >> debuginfo.filelist
+echo '/usr/src/debug/%{glibcsrcdir}' >> debuginfo.filelist
 %endif
 
 [ "x$save_trace" = xyes ] && set -x
