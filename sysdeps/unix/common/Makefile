@@ -34,7 +34,7 @@ sysdep_routines := $(sysdep_routines) ctype-glue
 
 $(objpfx)ctype-glue.c: $(objpfx)glue-ctype
 	@rm -f $@
-	$< > $@-tmp
+	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 
 $(objpfx)glue-ctype: $(sysdep_dir)/unix/bsd/glue-ctype.c
