@@ -53,11 +53,12 @@ routines := brk sbrk sstk ioctl \
 	    chflags fchflags \
 	    insremque getttyent getusersh getpass ttyslot \
 	    syslog syscall \
-	    mmap munmap mprotect msync
+	    mmap munmap mprotect msync madvise
 aux := data_start progname
 distribute := bsd-compat.c
 extra-objs := bsd-compat.o
 install-lib := libbsd-compat.a
+non-lib.a := libbsd-compat.a
 
 include ../Rules
 
