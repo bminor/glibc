@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ struct sigcontext
   sigset_t sc_mask;		/* Blocked signals to restore.  */
 
   /* Port this thread is doing an interruptible RPC on.  */
-  unsigned long int intr_port;
+  unsigned long int sc_intr_port;
   
   /* Segment registers (not used).  */
   int sc_gs;
