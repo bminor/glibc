@@ -465,6 +465,11 @@ This is the actual implementation limit corresponding to
 a constant within a given implementation.
 @end defvr
 
+@strong{Incomplete:}  There are some more constants from the POSIX.2
+standard that go here.  But, what's specified in draft 11 doesn't
+agree with what is currently implemented.
+
+
 Definitions for these additional macros that describe system parameters
 appear in the header file @file{<unistd.h>}.
 
@@ -491,10 +496,14 @@ it back again.  @xref{User/Group IDs of a Process}.
 @comment unistd.h
 @comment POSIX.1
 @defvr Macro _POSIX_VERSION
-This constant represents the version of the POSIX standard to which
+This constant represents the version of the POSIX.1 standard to which
 the implementation conforms.  For an implementation conforming to the
 1990 POSIX.1 standard, the value is the integer @code{199009L}.
 @end defvr
+
+@strong{Incomplete:}  There are some more constants from the POSIX.2
+standard that go here.  But, what's specified in draft 11 doesn't
+agree with what is currently implemented.
 
 You can request the actual runtime values of these parameters using the
 @code{sysconf} function.  This function and the macros for use as its
