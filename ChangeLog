@@ -3,6 +3,10 @@
 	* Make-dist (sysdep_dirs): Exclude SCCS.
 	* MakeTAGS (sysdep_dirs): Likewise.
 
+1999-06-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/regex.c (re_error_msgid): Remove extra commas.
+
 1999-06-14  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* stdlib/strtol.c: It is not generally true that if
