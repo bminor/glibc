@@ -23,7 +23,7 @@ char *
 DEFUN(strsep, (stringp, delim),
       char **stringp AND CONST char *delim)
 {
-  char *begin, end;
+  char *begin, *end;
   begin = *stringp + strspn (*stringp, delim);
   end = *stringp + strcspn (*stringp, delim);
   if (end == *stringp)
