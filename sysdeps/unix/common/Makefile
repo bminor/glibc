@@ -44,7 +44,7 @@ endif
 
 ifeq ($(subdir),stdio)
 
-before-compile: $(objpfx)siglist.c
+before-compile := $(before-compile) $(objpfx)siglist.c
 $(objpfx)siglist.c: $(objpfx)make_siglist
 	@rm -f $@
 	$< > $@-tmp
