@@ -31,6 +31,7 @@ endif
 
 ifeq ($(subdir),time)
 sysdep_headers += sys/timex.h
+sysdep_routines += adjtimex
 endif
 
 ifeq ($(subdir),socket)
