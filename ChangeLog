@@ -1,5 +1,8 @@
 2004-12-15  Jakub Jelinek  <jakub@redhat.com>
 
+	* nis/nis_domain_of_r.c (nis_domain_of_r): Use libnsl_hidden_def,
+	not libnsl_hidden_proto.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (__clone): Save
 	and restore r2 around call to fn.
 
