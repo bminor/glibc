@@ -134,39 +134,10 @@ pthread_cond_timedwait_relative_old(pthread_cond_t *cond,
 {
   volatile pthread_descr self = thread_self();
   sigset_t unblock, initial_mask;
-#ifdef NANOSLEEP_WORKS
   int already_canceled = 0;
   int was_signalled = 0;
-#else
-  int retsleep;
-  int already_canceled;
-  int was_signalled;
-#endif
   sigjmp_buf jmpbuf;
   pthread_extricate_if extr;
-  struct timeval now;
-  struct timespec reltime;
-
-#ifndef NANOSLEEP_WORKS
- requeue_and_wait_again:
-#endif
-
-  /* Compute a time offset relative to now.  */
-  __gettimeofday (&now, NULL);
-  reltime.tv_nsec = abstime->tv_nsec - now.tv_usec * 1000;
-  reltime.tv_sec = abstime->tv_sec - now.tv_sec;
-  if (reltime.tv_nsec < 0) {
-    reltime.tv_nsec += 1000000000;
-    reltime.tv_sec -= 1;
-  }
-  if (reltime.tv_sec < 0)
-    return ETIMEDOUT;
-
-#ifndef NANOSLEEP_WORKS
-  retsleep = 0;
-  already_canceled = 0;
-  was_signalled = 0;
-#endif
 
   /* Set up extrication interface */
   extr.pu_object = cond;
@@ -202,22 +173,30 @@ pthread_cond_timedwait_relative_old(pthread_cond_t *cond,
       sigemptyset(&unblock);
       sigaddset(&unblock, __pthread_sig_restart);
       sigprocmask(SIG_UNBLOCK, &unblock, &initial_mask);
-#ifdef NANOSLEEP_WORKS
-      /* Sleep for the required duration. If woken by a signal, resume waiting
-	 as required by Single Unix Specification.  */
-      while (__libc_nanosleep(&reltime, &reltime) != 0)
-	;
-#else
-      /* Sleep for the required duration */
-      retsleep = __libc_nanosleep(&reltime, NULL);
-#endif
+
+      while (1) {
+	struct timeval now;
+	struct timespec reltime;
+
+	/* Compute a time offset relative to now.  */
+	__gettimeofday (&now, NULL);
+	reltime.tv_nsec = abstime->tv_nsec - now.tv_usec * 1000;
+	reltime.tv_sec = abstime->tv_sec - now.tv_sec;
+	if (reltime.tv_nsec < 0) {
+	  reltime.tv_nsec += 1000000000;
+	  reltime.tv_sec -= 1;
+	}
+
+	/* Sleep for the required duration. If woken by a signal, resume waiting
+	   as required by Single Unix Specification.  */
+	if (reltime.tv_sec < 0 || __libc_nanosleep(&reltime, NULL) == 0)
+	  break;
+      }
+
       /* Block the restart signal again */
       sigprocmask(SIG_SETMASK, &initial_mask, NULL);
       was_signalled = 0;
     } else {
-#ifndef NANOSLEEP_WORKS
-      retsleep = -1;
-#endif
       was_signalled = 1;
     }
     THREAD_SETMEM(self, p_signal_jmp, NULL);
@@ -249,15 +228,7 @@ pthread_cond_timedwait_relative_old(pthread_cond_t *cond,
       if (was_on_queue) {
 	__pthread_set_own_extricate_if(self, 0);
 	pthread_mutex_lock(mutex);
-#ifdef NANOSLEEP_WORKS
 	return ETIMEDOUT;
-#else
-	if (retsleep == 0)
-	  return ETIMEDOUT;
-	/* Woken by a signal: resume waiting as required by Single Unix
-	   Specification.  */
-	goto requeue_and_wait_again;
-#endif
       }
 
       suspend(self);
@@ -290,39 +261,10 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
 {
   volatile pthread_descr self = thread_self();
   sigset_t unblock, initial_mask;
-#ifdef NANOSLEEP_WORKS
   int already_canceled = 0;
   int was_signalled = 0;
-#else
-  int retsleep;
-  int already_canceled;
-  int was_signalled;
-#endif
   sigjmp_buf jmpbuf;
   pthread_extricate_if extr;
-  struct timeval now;
-  struct timespec reltime;
-
-#ifndef NANOSLEEP_WORKS
- requeue_and_wait_again:
-#endif
-
-  /* Compute a time offset relative to now.  */
-  __gettimeofday (&now, NULL);
-  reltime.tv_nsec = abstime->tv_nsec - now.tv_usec * 1000;
-  reltime.tv_sec = abstime->tv_sec - now.tv_sec;
-  if (reltime.tv_nsec < 0) {
-    reltime.tv_nsec += 1000000000;
-    reltime.tv_sec -= 1;
-  }
-  if (reltime.tv_sec < 0)
-    return ETIMEDOUT;
-
-#ifndef NANOSLEEP_WORKS
-  retsleep = 0;
-  already_canceled = 0;
-  was_signalled = 0;
-#endif
 
   /* Set up extrication interface */
   extr.pu_object = cond;
@@ -357,22 +299,30 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
     sigemptyset(&unblock);
     sigaddset(&unblock, __pthread_sig_restart);
     sigprocmask(SIG_UNBLOCK, &unblock, &initial_mask);
-#ifdef NANOSLEEP_WORKS
-    /* Sleep for the required duration. If woken by a signal, resume waiting
-       as required by Single Unix Specification.  */
-    while (__libc_nanosleep(&reltime, &reltime) != 0)
-      ;
-#else
-    /* Sleep for the required duration */
-    retsleep = __libc_nanosleep(&reltime, NULL);
-#endif
+
+    while (1) {
+	struct timeval now;
+	struct timespec reltime;
+
+	/* Compute a time offset relative to now.  */
+	__gettimeofday (&now, NULL);
+	reltime.tv_nsec = abstime->tv_nsec - now.tv_usec * 1000;
+	reltime.tv_sec = abstime->tv_sec - now.tv_sec;
+	if (reltime.tv_nsec < 0) {
+	  reltime.tv_nsec += 1000000000;
+	  reltime.tv_sec -= 1;
+	}
+
+	/* Sleep for the required duration. If woken by a signal,
+	   resume waiting as required by Single Unix Specification.  */
+	if (reltime.tv_sec < 0 || __libc_nanosleep(&reltime, NULL) == 0)
+	  break;
+      }
+
     /* Block the restart signal again */
     sigprocmask(SIG_SETMASK, &initial_mask, NULL);
     was_signalled = 0;
   } else {
-#ifndef NANOSLEEP_WORKS
-    retsleep = -1;
-#endif
     was_signalled = 1;
   }
   THREAD_SETMEM(self, p_signal_jmp, NULL);
@@ -401,15 +351,7 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
     if (was_on_queue) {
       __pthread_set_own_extricate_if(self, 0);
       pthread_mutex_lock(mutex);
-#ifdef NANOSLEEP_WORKS
       return ETIMEDOUT;
-#else
-      if (retsleep == 0)
-	return ETIMEDOUT;
-      /* Woken by a signal: resume waiting as required by Single Unix
-	 Specification.  */
-      goto requeue_and_wait_again;
-#endif
     }
 
     /* Eat the outstanding restart() from the signaller */
