@@ -50,19 +50,23 @@ possibility except when writing signal handlers.
 The initial value of @code{errno} at program startup is zero.  Many
 library functions are guaranteed to set it to certain nonzero values
 when they encounter certain kinds of errors.  These error conditions are
-listed for each function.  No library function ever stores zero in
-@code{errno}.
-@c !!! No library function ever returns with errno==0, but it might
-@c store 0 in errno temporarily, which could be detected by a user's
-@c signal handler (for nonreentrant fns).
-@end deftypevr
+listed for each function.  These functions do not change @code{errno}
+when they succeed; thus, the value of @code{errno} after a successful
+call is not necessarily zero, and you should not use @code{errno} to
+determine @emph{whether} a call failed.  The proper way to do that is
+documented for each function.  @emph{If} the call the failed, you can
+examine @code{errno}.
+
+Many library functions can set @code{errno} to a nonzero value as a
+result of calling other library functions which might fail.  You should
+assume that any library function might alter @code{errno}.
 
 @strong{Portability Note:} ANSI C specifies @code{errno} as a
 ``modifiable lvalue'' rather than as a variable, permitting it to be
 implemented as a macro.  For example, its expansion might involve a
-function call, like @code{*_errno ()}.  But in the GNU system,
-@code{errno} really is a variable.
-@c !!! No.  In GNU, errno will be (*_errno ()).
+function call, like @code{*_errno ()}.  In fact, that is what it is
+on the GNU system itself.  The GNU library, on non-GNU systems, does
+whatever is right for the particular system.
 
 There are a few library functions, like @code{sqrt} and @code{atan},
 that return a perfectly legitimate value in case of an error, but also
@@ -270,13 +274,14 @@ with passing the wrong argument to a library function.
 @deftypevr Macro int ENFILE
 There are too many files open in the entire system.
 @c !!! this will never happen in GNU; EMFILE or ENOMEM instead.
+@c ??? I'm not sure it is a good thing to return ENOMEM
+@c ??? in a case where programmers have been told to expect ENFILE--rms.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1: Too many open files
 @deftypevr Macro int EMFILE
-The current process has too many files open and can't open any more,
-and the kernel's table of open files is full.
+The current process has too many files open and can't open any more.
 @c !!! In 4.4BSD and GNU, the number of open files is a resource limit
 @c set with setrlimit.
 @end deftypevr
@@ -332,7 +337,10 @@ Too many links; the link count of a single file is too large.
 @comment POSIX.1: Broken pipe
 @deftypevr Macro int EPIPE
 Broken pipe; there is no process reading from the other end of a pipe.
-@c !!! mention relationship to SIGPIPE
+Every library function that returns this error code also generates a
+@code{SIGPIPE} signal; this signal terminates the program if not handled
+or blocked.  Thus, your program will never actually see @code{EPIPE}
+unless it has handled or blocked @code{SIGPIPE}.
 @end deftypevr
 
 @comment errno.h
@@ -503,6 +511,8 @@ The kernel's buffers for I/O operations are all in use.
 @c !!! this will probably never happen in GNU (I'm presuming the
 @c eventual implementation of the network won't want to use it); you get
 @c ENOMEM instead.
+@c ??? I think the network code should convert ENOMEM into ENOBUFS
+@c ??? just to be compatible--rms.
 @end deftypevr
 
 @comment errno.h
@@ -578,7 +588,7 @@ this error occurs when you are trying to delete a directory.
 @comment BSD: Too many users
 @deftypevr Macro int EUSERS
 The file quota system is confused because there are too many users.
-@c !!! never in GNU
+@c This can probably happen in a GNU system when using NFS.
 @end deftypevr
 
 @comment errno.h
@@ -601,7 +611,8 @@ the NFS file system on the local host.
 @deftypevr Macro int EREMOTE
 An attempt was made to NFS-mount a remote file system with a file name that
 already specifies an NFS-mounted file.
-@c !!! won't be an error in GNU
+(This is an error on some operating systems, but we expect it to work
+properly on the GNU system, making this error code impossible.)
 @end deftypevr
 
 @comment errno.h
