@@ -23,15 +23,20 @@ Cambridge, MA 02139, USA.  */
 #include <gnu-stabs.h>
 
 /* This must be given an initializer, or the a.out linking rules will
-   not include the entire file when this symbol is refernced. */
+   not include the entire file when this symbol is referenced. */
 struct rlimit _hurd_rlimits[RLIM_NLIMITS] = {[0] = 0};
 
-struct mutex _hurd_rlimit_lock = MUTEX_INITIALIZER;
+/* This must be initialized data for the same reason as above, but this is
+   intentionally initialized to a bogus value to emphasize the point that
+   mutex_init is still required below just in case of unexec.  */
+struct mutex _hurd_rlimit_lock = { SPIN_LOCK_INITIALIZER, };
 
 static void
 init_rlimit (void)
 {
   int i;
+
+  __mutex_init (&_hurd_rlimit_lock);
 
   for (i = 0; i < RLIM_NLIMITS; ++i)
     {
