@@ -1,3 +1,38 @@
+1998-08-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/glob.h: Define GLOB_TILDE_CHECK.
+
+1998-07-27 17:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nss_files/files-parse.c (INT_FIELD): Use strtoul instead of
+	strtol.
+	(INT_FIELD_MAYBE_NULL): Likewise.
+
+1998-07-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signal/signal.h: Add prototype for sysv_signal.
+
+1998-08-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/generic/netinet/in.h (IN_CLASSC): Correct mask.
+	* sysdeps/unix/sysv/linux/netinet/in.h: Likewise.
+	Reported by Ian Staniforth <I.Staniforth@sheffield.ac.uk> [fixes
+	PR libc/727].
+
+1998-07-26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/Makefile: Include Makeconfig early enough.  Add rules for
+	%.info and %.dvi.
+	(dir-add.texinfo): Renamed from dir-add.texi.
+
+1998-07-24 10:58  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (install-clean-symbolic-link-list): Make phony.
+	* Makefile (install-symblolic-link): Make phony.  Depend on
+	subdir_install for parallel makes.
+
+	* elf/Makefile: Don't install sln.
+
 1998-07-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/glob.c: Fix two problems with GLOB_DOOFFS.
