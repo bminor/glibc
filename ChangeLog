@@ -1,3 +1,8 @@
+1998-02-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/syslog.c: Change to allow user the interpretation of the
+	outcome even with syslog having no return value.
+
 1998-03-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/chown.c: New file for compatibility of
