@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/resource.h>
 #include <hurd.h>
 #include <errno.h>
+#include <hurd/fd.h>
 
 
 extern _hurd_core_limit, _hurd_dtable_rlimit; /* XXX */
