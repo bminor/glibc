@@ -63,8 +63,8 @@ _svcauth_unix(rqst, msg)
 		gid_t area_gids[NGRPS];
 	} *area;
 	u_int auth_len;
-	int str_len, gid_len;
-	register int i;
+	u_int str_len, gid_len;
+	u_int i;
 
 	area = (struct area *) rqst->rq_clntcred;
 	aup = &area->area_aup;
