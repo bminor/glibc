@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,6 @@ Cambridge, MA 02139, USA.  */
 
 #ifndef	_LIMITS_H
 
-#define	_LIMITS_H	1
 #include <features.h>
 
 #ifdef	__USE_POSIX
@@ -33,6 +32,19 @@ Cambridge, MA 02139, USA.  */
 #ifdef	__USE_POSIX2
 #include <posix2_lim.h>
 #endif
+
+
+#if	__GNUC__ >= 2
+
+/* Get GCC's limits.h.  It tests and defines _LIMITS_H.  */
+ #include_next <limits.h>
+
+#else	/* Not GCC 2.  */
+
+/* We don't have #include_next.
+   Define ANSI <limits.h> for standard 32-bit words.  */
+
+#define	_LIMITS_H	1
 
 /* These assume 8-bit `char's, 16-bit `short int's,
    and 32-bit `int's and `long int's.  */
@@ -88,6 +100,8 @@ Cambridge, MA 02139, USA.  */
 
 /* Maximum value an `unsigned long int' can hold.  (Minimum is 0.)  */
 #define	ULONG_MAX	UINT_MAX
+
+#endif	/* GCC 2.  */
 
 
 #endif	/* limits.h  */
