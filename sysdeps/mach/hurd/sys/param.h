@@ -66,6 +66,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 
 #include <sys/types.h>
+#include <errno.h>
 #include <signal.h>
 #include <endian.h>
 #include <limits.h>
