@@ -69,17 +69,15 @@ DEFUN(__setuid, (uid), uid_t uid)
 
   _hurd_id.ruid = _hurd_id.uids[0];
 
-  if (err = _HURD_PORT_USE (&_hurd_auth,
-			    __auth_makeauth (port, &_hurd_id, &newauth)))
-    {
-      _hurd_id_valid = 0;
-      __mutex_unlock (&_hurd_idlock);
-      return __hurd_fail (err);
-    }
-  else
-    {
-      int err = __setauth (newauth);
-      __mach_port_deallocate (__mach_task_self (), newauth);
-      return err;
-    }
+  err = _HURD_PORT_USE (&_hurd_auth,
+			__auth_makeauth (port, &_hurd_id, &newauth));
+  _hurd_id_valid = 0;
+  __mutex_unlock (&_hurd_idlock);
+
+  if (err)
+    return __hurd_fail (err);
+
+  err = __setauth (newauth);
+  __mach_port_deallocate (__mach_task_self (), newauth);
+  return err;
 }
