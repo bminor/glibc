@@ -26,17 +26,18 @@ BEGIN {
     print "";
     print "#ifdef _ERRNO_H";
     errno = 0;
+    errnoh = 0;
   }
 $1 == "@comment" && $2 == "errno.h" { errnoh=1; next }
-errnoh == 1 && $1 == "@comment"
+$1 == "@comment" && errnoh == 1 \
   {
     ++errnoh;
     etext = "";
     for (i = 3; i <= NF; ++i)
-      etext = etext "  " $i;
+      etext = etext " " $i;
     next;
   }
-errnoh == 2 && $1 == "@deftypevr" 
+errnoh == 2 && $1 == "@deftypevr"  && $2 == "Macro" && $3 == "int" \
   {
     e = $4;
     if (e == "EDOM" || e == "ERANGE")
@@ -44,11 +45,11 @@ errnoh == 2 && $1 == "@deftypevr"
         print "#endif /* <errno.h> included.  */";
 	print "#if (!defined (__Emath_defined) && \\\n     (defined (_ERRNO_H) || defined (__need_Emath)))";
       }
-     s = "#define\t" e;
-     l = 24 - length (s);
-     while (l-- > 0)
-       s = s " "
-     printf "%s%d\t/* %s */\n", s, ++errno, etext;
+    s = "#define\t" e;
+    l = 24 - length (s);
+    while (l-- > 0)
+      s = s " ";
+    printf "%s%d\t/*%s */\n", s, ++errno, etext;
     if (e == "EDOM" || e == "ERANGE")
       {
         print "#endif /* Emath not defined and <errno.h> included or need Emath.  */";
