@@ -1,5 +1,7 @@
 1999-09-12  Ulrich Drepper  <drepper@cygnus.com>
 
+	* version.h (VERSION): Bump to 2.1.3.
+
 	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname2_r): if res_search
 	fails don't rely on errno value.
 	(getanswer_r): Sett *ERRNOP in error cases.
