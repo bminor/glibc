@@ -22,8 +22,11 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/resource.h>
 #include <gnu-stabs.h>
 
-struct rlimit _hurd_rlimits[RLIM_NLIMITS];
-struct mutex _hurd_rlimit_lock;
+/* This must be given an initializer, or the a.out linking rules will
+   not include the entire file when this symbol is refernced. */
+struct rlimit _hurd_rlimits[RLIM_NLIMITS] = {[0] = 0};
+
+struct mutex _hurd_rlimit_lock = MUTEX_INITIALIZER;
 
 static void
 init_rlimit (void)
@@ -37,8 +40,6 @@ init_rlimit (void)
       if (_hurd_rlimits[i].rlim_cur == 0)
 	_hurd_rlimits[i].rlim_cur = _hurd_rlimits[i].rlim_max;
     }
-
-  __mutex_init (&_hurd_rlimit_lock);
 
   (void) &init_rlimit;
 }
