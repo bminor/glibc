@@ -145,7 +145,7 @@ Indices
 @include signal.texinfo
 @include process.texinfo
 @include job.texinfo
-@include database.texinfo
+@include users.texinfo
 @include sysinfo.texinfo
 @include limits.texinfo
 @include conf.texinfo
