@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/port.h>
 
 
-struct _hurd_port *_hurd_ports;
+struct hurd_port *_hurd_ports;
 unsigned int _hurd_nports;
 mode_t _hurd_umask;
 
@@ -100,7 +100,7 @@ void
 _hurd_proc_init (char **argv)
 {
   mach_port_t oldmsg;
-  struct _hurd_port_userlink ulink;
+  struct hurd_userlink ulink;
   process_t procserver;
 
 #ifdef notyet
