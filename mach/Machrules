@@ -71,7 +71,7 @@ $(objpfx)%.ir: $(objpfx)%.uh
 	 awk '/^kern_return_t/ { print $$2 }' $<		;\
 	 echo 'endef'						;\
 	 echo '$*-calls := $$(subst $$(nl), ,$$($*-calls))'	;\
-	 echo '$$($*-calls:%=$(objpfx)_\%%.c): $*.defs'		;\
+	 echo '$$($*-calls:%=\$(objpfx)_\%%.c): $*.defs'		;\
 	 echo '	$$(generate-user-calls)'			 \
 	) > $@-new
 	mv $@-new $@
@@ -83,6 +83,11 @@ $(MIG) $< $(MIGFLAGS) \
        -server /dev/null -user /dev/null -header /dev/null
 endef
 
+# Look for the server stub files where they will be written.
+vpath %_server.c $(addprefix $(objpfx),$(sort $(dir $(server-interfaces))))
+
+# Build the server stubs in $(objdir).
+# XXX __ loses for subdirs: __mach/exc???
 $(objpfx)__%_server.c $(objpfx)__%_server.h: %.defs
 	$(MIG) $< $(MIGFLAGS) -prefix __ \
 	       -user /dev/null -header /dev/null \
