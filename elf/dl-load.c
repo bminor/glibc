@@ -1748,14 +1748,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       /* Finally, try the default path.  */
       if (fd == -1
-	  && ((l = loader ?: _dl_loaded)
-	      /* 'l' is always != NULL for dynamically linked objects.  */
-#ifdef SHARED
-	      ,
-#else
-	      == NULL ||
-#endif
-	      __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1))
+	  && ((l = loader ?: _dl_loaded) == NULL
+	      || __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1))
 	  && rtld_search_dirs.dirs != (void *) -1)
 	fd = open_path (name, namelen, preloaded, &rtld_search_dirs,
 			&realname, &fb);
