@@ -1,3 +1,261 @@
+1997-11-19 23:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Update from 2.1 version.
+	* glibcbug.in: Likewise.
+	* manual/maint.texi: Likewise.
+
+	* math/mathcalls.c: Remove declaration of infnan and cabs.
+
+	* libio/stdio.h: Don't use _POSIX_SOURCE in header.
+
+	* manual/errno.texi: Define new Linux errors.
+
+	* math/math_private.h: Correct result type of __ieee754_rem_pio2{,f,l}
+	and __kernel_rem_pio2{,f,l}.
+
+	* posix/glob.h: Define GLOB_ABORTED and GLOB_ABEND only if __USE_GNU.
+
+	* stdio-common/printf_fp.c: Define NDEBUG only if not yet defined.
+
+	* sysdeps/i386/selectbits.h: Don't use casts, use element access.
+
+	* sysdeps/libm-i387/s_nextafterl.c: Correct result value for x==y.
+
+	* sysdeps/libm-ieee754/s_cbrt.c: Correct result for NAN, Inf, 0.0.
+	* sysdeps/libm-ieee754/s_cbrtf.c: Likewise.
+	* sysdeps/libm-ieee754/s_cbrtl.c: Likewise.
+
+	* sysdeps/mach/hurd/cthreads.c: Include <libc-lock.h>, not
+	<bits/libc-lock.h>.
+
+	* sysdeps/unix/sysv/linux/socketbits.h: Add new values and correct
+	types in struct cmsghdr.
+
+	* sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S: Correct
+	loading of return address.
+
+	* sysdeps/unix/sysv/linux/net/if.h: Add new values.
+	* sysdeps/unix/sysv/linux/net/if_arp.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/sys/quota.h: Include <asm/types.h>.
+
+1997-09-16 04:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (ptrace): Change return
+	value type to long int.
+	* sysdeps/unix/sysv/linux/ptrace.c: Likewise.  Adopt local variable
+	types.
+
+1997-11-06 00:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/writev.c: Correct condition to leave the loop.
+
+1997-10-28 17:40  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_cbrt.c: Testing the returned exponent for
+	zero isn't enough to determine illegal arguments.
+	* sysdeps/libm-ieee754/s_cbrtf.c: Likewise.
+	* sysdeps/libm-ieee754/s_cbrtl.c: Likewise.
+
+1997-08-20 05:30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/e_remainder.S: Pretty print.
+	* sysdeps/libm-i387/e_remainderf.S: Likewise.
+	* sysdeps/libm-i387/e_remainderl.S: Pop extra value from FPU stack.
+
+1997-10-22 18:47  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/rpc/clnt.h: Add get_myaddress prototype.
+
+1997-10-25 18:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/stdlib.h: Remove mblen optimization.
+	* stdlib/mblen.c: Rewrite to make sure global state is not changed.
+	Reported by anderson@metrolink.com.
+
+1997-10-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* po/Makefile ($(mo-installed)): Don't fail during installation if
+	files don't exist (might happen if msgfmt doesn't exist) (PR 328).
+	Suggested by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>.
+
+1997-09-30 18:03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/sys/select.h: Define pselect only is __USE_POSIX since this
+	header is used in some others as well for historical reasons.
+
+1997-09-27 01:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/setlocale.c (setname): Only remove old name when it
+	is for category LC_ALL.
+
+1997-11-03 00:20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/localealias.c (read_alias_file): Correct handling of line
+	reader which sometimes skipped complete lines (PR 205).
+
+1997-11-09 18:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/Makefile (CFLAGS-initfini.s): Correctly fix moving function
+	definition.  Patch by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+	* stdlib/strtod.c: Handle numbers like 0.0e10000 correctly which
+	produce ±0.0.  Reported by Joe Keane <jgk@jgk.org>.
+
+1997-11-09 18:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules (libc.so): Fix typo.
+
+	* csu/Makefile (CFLAGS-initfini.s): Correctly fix moving function
+	definition.  Patch by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+	* stdlib/strtod.c: Handle numbers like 0.0e10000 correctly which
+	produce ±0.0.  Reported by Joe Keane <jgk@jgk.org>.
+
+1997-09-19 14:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/argz.h (__argz_next): Cast NULL to char * to satisfy C++
+	compilers.
+	Reported by Mirko Streckenbach <mirko@ramz.ing.tu-bs.de>.
+
+	* catgets/catgets.c (catopen): Correctly allocate string of nlspath.
+	Reported by Charles C. Fu <ccwf@klab.caltech.edu>.
+
+1997-11-18 02:31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/_G_config.h: Define __need_NULL to get definition
+	for NULL.
+	* sysdeps/unix/sysv/linux/_G_config.h: Likewise.
+	Reported by H.J. Lu <hjl@gnu.ai.mit.edu>.
+
+	* configure.in: Correct test for bash2.
+	Patch by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+	* locale/Makefile (CFLAGS-charmap.c): Add -Wno-char-subscripts.
+	(CFLAGS-locfile.c): Likewise.
+	Suggested by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+	* misc/hsearch_r.c (hsearch_r): Avoid undefinitely search for
+	non-existing entry if the table is full.
+
+	* stdio-common/printf_fp.c: Don't define NDEBUG if already defined.
+
+1997-11-18 18:04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/pty.c: Define REVOKE to use revoke function.
+	Replace revoke call by use of REVOKE.
+	* sysdeps/unix/sysv/linux/pty.c: New file.  Define REVOKE as
+	empty and #include generic version.
+	Suggested by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+1997-11-18 06:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/pty.c: Make thread safe.  Fix bug when calling
+	again after successful call.
+	Patch by Marc Lehmann <pcg@goof.com>.
+
+1997-11-17 02:02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/thread-m.h: Remove malloc_key-data definition.
+	Reported by Trevor Johnson <trevor@jpj.net>.
+
+1997-10-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/filesys.texi (Scanning Directory Content): Document error
+	case more.
+
+	* dirent/scandir.c (scandir): Ignore errors from select function.
+	Suggested by urbanw@cs.umu.se (closes PR libc/316).
+
+1997-09-04 15:57  Ulrich Drepper  <drepper@cygnus.com>
+
+	* termios/cfsetspeed.c (cfsetspeed): Change return value to int.
+	* termios/termios.h: Change prototype accordingly.
+
+1997-09-28 08:27  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/rpcsvc/yp_prot.h: Rename struct keydat to struct keydat_t
+	for C++.
+
+1997-11-14 05:59  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/efgcvt_r: Use version fromglibc 2.1 which corrects several
+	bugs.
+
+1997-11-13 15:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_compat/compat-grp.c: Carry over several patches from glibc
+	2.1 development version  to fix some more severe bugs.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/ypclnt.c: Likewise.
+	Patch by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>.
+
+	* version.h (VERSION): Bump to 2.0.6.
+
+1997-11-09 18:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/stdtod.c: Handle numbers like 0.0e10000 correctly which
+	produce ±0.0.  Reported by Joe Keane <jgk@jgk.org>.
+
+1997-10-31 23:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/glob.c (glob): If calling glob_in_dir for a list which was
+	generated by a glob call disable GLOB_ERR since there might be
+	non-directories in the list (PR203).
+
+1997-10-30 06:04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/efgcvt.c: Call correct reentrant functions.
+
+1997-10-28 04:26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/tzfile.c (__tzfile_compute): Use negated value of offset for
+	timezone variable.
+	* time/tzset.c (tz_compute): Likewise.
+	Reported by Erik Troan <ewt@redhat.com>.
+
+1997-10-29 03:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/nss_dns/dns-host.c: Change variable pointed to by h_errnop
+	in all error cases (PR 244).
+
+1997-10-28 02:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/filesys.texi: Correct prototype in readdir_r description.
+	Reported by Jim Meyering <meyering@eng.ascend.com>.
+
+1997-10-25 04:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Favour exact
+	matching of version function if both the general (1) and
+	glibc-specific (3) entry are present.
+
+1997-10-18 15:03  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Correct types of some
+	elements in struct msghdr and struct cmsghdr, to keep in step with
+	the kernel.
+
+1997-10-09 05:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/digits_dots.c: Place `result' in resbuf and not in `buffer'.
+	* nss/getXXbyYY_r.c: Make sure digits_dots.c sees `resbuf' as
+	struct and not a pointer.  Little optimizations.
+
+1997-10-07  Paul Eggert  <eggert@twinsun.com>
+
+	* intl/loadmsgcat.c (_nl_load_domain):
+	Fix &&/|| typo when checking file size.
+
+1997-10-07 18:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/africa: Update from tzdata1997i.
+
+1997-10-03 20:56  Jason Merrill  <jason@yorick.cygnus.com>
+
+	* malloc/obstack.h (obstack_empty_p): New macro.
+
 1997-09-09  Paul Eggert  <eggert@twinsun.com>
 
 	* time/mktime.c (__mktime_internal): Declare sec_requested even if
