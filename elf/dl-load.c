@@ -1788,7 +1788,12 @@ open_path (const char *name, size_t namelen, int preloaded,
 	 must not be freed using the general free() in libc.  */
       if (sps->malloced)
 	free (sps->dirs);
-      sps->dirs = (void *) -1;
+#ifdef HAVE_Z_RELRO
+      /* rtld_search_dirs is attribute_relro, therefore avoid writing
+	 into it.  */
+      if (sps != &rtld_search_dirs)
+#endif
+	sps->dirs = (void *) -1;
     }
 
   return -1;
