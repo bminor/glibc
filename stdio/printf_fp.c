@@ -295,7 +295,8 @@ DEFUN(__printf_fp, (s, info, args),
      part is scaled by the highest possible number of significant bits of
      fraction.  We represent the fractional part as a (very) large integer. */
 
-  fsize = __mpn_extract_double (f, LDBL_MANT_DIG, &e, &is_neg, fpnum);
+  fsize = __mpn_extract_double (f, sizeof (f) / sizeof (f[0]),
+				&e, &is_neg, fpnum);
 
   if (prec == -1)
     prec = 6;
