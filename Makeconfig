@@ -521,12 +521,6 @@ endif
 ifndef BUILD_CC
 BUILD_CC = $(CC)
 endif
-
-ifneq ($(BUILD_CC),$(CC))
-cross-compiling := yes
-else
-cross-compiling := no
-endif
 
 # Figure out the version numbers from version.h.
 
