@@ -144,7 +144,7 @@ GCC, use its version instead of the C library's.  To do this, put the
 line @w{@samp{override stddef.h =}} in @file{configparms}.  The other
 files are corrected in release 2.3 and later of GCC.  If you have a new
 enough release of GCC, use its files instead of the C library's.  To do
-this, put the line @w{samp{override stdarg.h =}} in @file{configparms}.
+this, put the line @w{@samp{override stdarg.h =}} in @file{configparms}.
 
 There is a potential problem with the @code{size_t} type and versions of
 GCC prior to release 2.4.  ANSI C requires that @code{size_t} always be
