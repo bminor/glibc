@@ -1,5 +1,5 @@
 /* Fmemopen implementation.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by  Hanno Mueller, kontakt@hanno.de, 2000.
 
@@ -71,6 +71,7 @@
 #include <libio.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <sys/types.h>
 #include "libioP.h"
