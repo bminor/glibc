@@ -33,7 +33,7 @@ routines := ntohl ntohs htonl htons		\
 	    getsrvbynm getsrvbypt getservent	\
 	    res_comp res_debug res_init res_mkqry res_query res_send	\
 	    gethstnmad sethostent	    \
-	    rcmd rexec ruserpass
+	    rcmd rexec
 aux	 := herror
 
 # No warnings about losing BSD code.
