@@ -35,6 +35,8 @@ CONST char *CONST _sys_errlist[] =
     "Bad file descriptor",	/* 6 = EBADF */
     "Cannot allocate memory",	/* 7 = ENOMEM */
     "Permission denied",	/* 8 = EACCES */
+    "Too many open files in system", /* 9 = ENFILE */
+    "Too many open files",	/* 10 = EMFILE */
   };
 
 CONST int _sys_nerr = sizeof (_sys_errlist) / sizeof (_sys_errlist[0]);
