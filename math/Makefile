@@ -35,9 +35,7 @@ install-lib := libm.a
 
 include ../Rules
 
-$(objpfx)libm.a:
-	$(AR) cr $@ /dev/null
-
+$(objpfx)libm.a: $(dep-dummy-lib); $(make-dummy-lib)
 lib: $(objpfx)libm.a
 
 ifneq (,)     # the code is now distributed through ../sysdeps/
