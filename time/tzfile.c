@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -44,8 +44,8 @@ struct ttinfo
 
 struct leap
   {
-    time_t transition;
-    long int change;
+    time_t transition;		/* Time the transition takes effect.  */
+    long int change;		/* Seconds of correction to apply.  */
   };
 
 static size_t num_transitions;
@@ -199,13 +199,13 @@ DEFUN(__tzfile_default, (std, dst, stdoff, dstoff),
       char *std AND char *dst AND
       long int stdoff AND long int dstoff)
 {
-  size_t stdlen, dstlen;
+  size_t stdlen, dstlen, i;
 
   __tzfile_read (TZDEFRULES);
   if (!__use_tzfile)
     return;
 
-  if (num_types != 2)
+  if (num_types < 2)
     {
       __use_tzfile = 0;
       return;
@@ -224,18 +224,24 @@ DEFUN(__tzfile_default, (std, dst, stdoff, dstoff),
   memcpy (zone_names, std, stdlen);
   memcpy (&zone_names[stdlen], dst, dstlen);
 
-  types[0].idx = 0;
-  types[0].isdst = 0;
-  if (std[0] != '\0')
-    types[0].offset = stdoff;
-  types[1].idx = stdlen;
-  types[1].isdst = 1;
-  if (dst[0] != '\0')
-    types[1].offset = dstoff;
+  for (i = 0; i < num_types; ++i)
+    if (types[i].isdst)
+      {
+	types[i].idx = stdlen;
+	if (dst[0] != '\0')
+	  types[i].offset = dstoff;
+      }
+    else
+      {
+	types[i].idx = 0;
+	if (dst[0] != '\0')
+	  types[i].offset = stdoff;
+      }
 }
 
 int
-DEFUN(__tzfile_compute, (timer, tm), time_t timer AND struct tm tm)
+DEFUN(__tzfile_compute, (timer, leap_correct, leap_hit),
+      time_t timer AND long int *leap_correct AND int *leap_hit)
 {
   struct ttinfo *info;
   register size_t i;
@@ -253,14 +259,15 @@ DEFUN(__tzfile_compute, (timer, tm), time_t timer AND struct tm tm)
     }
   else
     {
-      /* Find the first transition after TIMER, and then go back one.  */
-      i = 1;
-      while (i < num_transitions && transitions[i] < timer)
-	++i;
-      --i;
+      /* Find the first transition after TIMER, and
+	 then pick the type of the transition before it.  */
+      for (i = 1; i < num_transitions; ++i)
+	if (timer < transitions[i])
+	  break;
+      i = type_idxs[i - 1];
     }
 
-  info = &types[type_idxs[i]];
+  info = &types[i];
   __daylight = info->isdst;
   __timezone = info->offset;
   for (i = 0; i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
@@ -269,11 +276,32 @@ DEFUN(__tzfile_compute, (timer, tm), time_t timer AND struct tm tm)
   if (info->isdst < sizeof (__tzname) / sizeof (__tzname[0]))
     __tzname[info->isdst] = &zone_names[info->idx];
 
+  *leap_correct = 0L;
+  *leap_hit = 0;
+
+  /* Find the last leap second correction transition time before TIMER.  */
   i = num_leaps;
   do
     if (i-- == 0)
       return 1;
   while (timer < leaps[i].transition);
-  __timezone += leaps[i].change;
+
+  /* Apply its correction.  */
+  *leap_correct = leaps[i].change;
+
+  if (timer == leaps[i].transition && /* Exactly at the transition time.  */
+      ((i == 0 && leaps[i].change > 0) ||
+       leaps[i].change > leaps[i - 1].change))
+    {
+      *leap_hit = 1;
+      while (i > 0 &&
+	     leaps[i].transition == leaps[i - 1].transition + 1 &&
+	     leaps[i].change == leaps[i - 1].change + 1)
+	{
+	  ++*leap_hit;
+	  --i;
+	}
+    }
+
   return 1;
 }
