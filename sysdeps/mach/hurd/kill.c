@@ -79,7 +79,7 @@ __kill (pid_t pid, int sig)
       pid_t pidbuf[10], *pids = pidbuf;
       mach_msg_type_number_t i, npids = sizeof (pidbuf) / sizeof (pidbuf[0]);
       
-      err = __proc_getpgrppids (proc, pid ? - pid : _hurd_pgrp, &pids, &npids);
+      err = __proc_getpgrppids (proc, - pid, &pids, &npids);
       if (!err)
 	{
 	  for (i = 0; i < npids; ++i)
