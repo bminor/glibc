@@ -48,7 +48,7 @@ __hurd_path_lookup (file_t crdir, file_t cwdir,
   
   for (;;)
     {
-      err = __dir_pathtrans (startdir, path, flags, mode,
+      err = __dir_pathtrans (startdir, (char *)path, flags, mode,
 			     &doretry, retryname, result);
 
       if (dealloc_dir)
