@@ -286,6 +286,9 @@ cat > asm/unistd.h <<EOF
 #define __NR_mq_notify			436
 #define __NR_mq_getsetattr		437
 #endif
+#ifndef __NR_waitid
+#define __NR_waitid			438
+#endif
 %endif
 %ifarch %{ix86}
 #ifndef __NR_mq_open
@@ -319,6 +322,9 @@ cat > asm/unistd.h <<EOF
 #define __NR_mq_timedreceive		1265
 #define __NR_mq_notify			1266
 #define __NR_mq_getsetattr		1267
+#endif
+#ifndef __NR_waitid
+#define __NR_waitid			1270
 #endif
 %endif
 %ifarch ppc
@@ -1259,6 +1265,8 @@ rm -f *.filelist*
 %endif
 
 %changelog
+- add __NR_waitid defines for alpha and ia64
+
 * Wed Dec  8 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-89
 - update from CVS
   - fix clone2 on ia64
