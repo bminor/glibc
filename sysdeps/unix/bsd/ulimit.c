@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
 #define	 _etext	etext
 #endif
 
-extern char _etext;
+extern int _etext;
 
 /* Function depends on CMD:
    1 = Return the limit on the size of a file, in units of 512 bytes.
