@@ -117,6 +117,7 @@ extern void bcopy ();
 
 extern char *malloc (), *realloc ();
 extern void free ();
+extern void qsort ();
 
 #endif /* Standard headers.  */
 
@@ -127,14 +128,10 @@ extern void free ();
 #define bcmp(s1, s2, n)	memcmp ((s1), (s2), (n))
 #define bzero(s, n)	memset ((s), 0, (n))
 #define bcopy(s, d, n)	memcpy ((d), (s), (n))
-#endif	/* ANSI_STRING.  */
 #undef	ANSI_STRING
+#else	/* Not ANSI_STRING.  */
 #define	strcoll	strcmp
-extern void free ();
-extern void qsort ();
-extern char *malloc ();
-extern char *realloc ();
-
+#endif	/* ANSI_STRING.  */
 
 
 #ifndef	__GNU_LIBRARY__
