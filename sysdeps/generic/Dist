@@ -1,0 +1,8 @@
+det_endian.c
+../../math/bsd/common/mathimpl.h
+../../math/bsd/common/trig.h
+../../math/bsd/sys/stdc.h
+../../math/bsd/common/sincos.c
+../../math/bsd/common_source/asincos.c
+../../math/bsd/common_source/exp__E.c
+../../math/bsd/common_source/log__L.c
