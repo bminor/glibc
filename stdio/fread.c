@@ -43,12 +43,11 @@ DEFUN(fread, (p, size, nmemb, stream),
   if (p == NULL || to_read == 0)
     return 0;
 
-  if (!stream->__seen || stream->__get_limit == stream->__buffer ||
-      stream->__put_limit > stream->__buffer || stream->__pushed_back)
+  if (!stream->__seen || stream->__buffer == NULL || stream->__pushed_back)
     {
-      /* This stream has never been seen before.
-	 Calling __fillbf will give it a buffer
-	 and I/O functions if it needs them.  */
+      /* This stream has never been seen before, or it has a character
+	 pushed back.  Call __fillbf to deal with those cases.  Life will
+	 be simpler after this call.  */
       int c = __fillbf(stream);
       if (c == EOF)
 	return 0;
