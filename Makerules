@@ -94,7 +94,7 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules
 	   else true; fi;						      \
 	 done; \
 	 echo 'sysd-Makefile-done=t') > $@T
-	mv $@T $@
+	mv -f $@T $@
 
 
 # Reorder before-compile so that mach things come first, and hurd things
@@ -194,7 +194,7 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 	   echo "\$$(objpfx)%.dep: $$dir/%.c \$$(before-compile); \
 		\$$(+make-deps)";					      \
 	 done) > $@T
-	mv $@T $@
+	mv -f $@T $@
 
 ifndef compile-command.S
 compile-command.S = $(compile.S) $(OUTPUT_OPTION)
@@ -229,11 +229,11 @@ define +make-deps
 -@rm -f $@
 $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
 sed -e 's,$*\.o,$(@:.dep=.o) $@,' $(sed-remove-objpfx) > $(@:.dep=.dtm)
-mv $(@:.dep=.dtm) $@
+mv -f $(@:.dep=.dtm) $@
 endef
 ifneq (,$(objpfx))
 sed-remove-objpfx = -e 's@ $(subst @,\@,$(objpfx))@ $$(objpfx)@g' \
-		    -e 's@^$(subst @,\@,$(objpfx))@$$(objpfx)@g' \
+		    -e 's@^$(subst @,\@,$(objpfx))@$$(objpfx)@g'
 endif
 
 # Figure out the source filenames in this directory.
@@ -485,7 +485,7 @@ $(common-objpfx)stub-$(subdir): $(+depfiles)
 	    `sed -n 's@^.*\($(sysdep_dir)/stub/[a-z0-9_]*\.c\).*$$@\1@p' \
 		 $^ /dev/null` \
 	    /dev/null > $@T
-	mv $@T $@
+	mv -f $@T $@
 
 # Make the distribution tar file.
 
