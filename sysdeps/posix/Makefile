@@ -17,8 +17,8 @@
 # Cambridge, MA 02139, USA.
 
 $(objpfx)stdio_lim.h: $(objpfx)mk-stdiolim
-	$(dir $<)$(notdir $<) > $@-tmp
-	mv $@-tmp $@
+	$(dir $<)$(notdir $<) > $@-t
+	mv $@-t $@
 
 vpath %.h $(..)
 
