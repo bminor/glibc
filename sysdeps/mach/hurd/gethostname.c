@@ -39,5 +39,7 @@ DEFUN(__gethostname, (name, len),
       memcpy (name, buf, len < buflen ? len : buflen);
       __vm_deallocate (__mach_task_self (), (vm_address_t) buf, buflen);
     }
+  if (buflen > len)
+    return __hurd_fail (ENAMETOOLONG);
   return 0;
 }
