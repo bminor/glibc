@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1993 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -23,14 +23,13 @@
 # Generate errnos.h and sys_errlist.c from the section of the manual that
 # lists all the errno codes.
 
-errno.texinfo = $(..)manual/errno.texinfo
+errno.texinfo = $(..)manual/errno.texi
 
-$(objpfx)errnos.h: $(errno.texinfo) $(..)sysdeps/mach/hurd/errnos.awk
-	awk -f $(word 2,$^) $< > $@-tmp
-	mv $@-tmp $@
-$(objpfx)sys_errlist.c: $(errno.texinfo) $(..)sysdeps/mach/hurd/errlist.awk
-	grep '^@comment.###errno:' $< | sort -n +3 | \
-	awk -f $(word 2,$^) > $@-tmp
-	mv $@-tmp $@
+hurd = $(..)sysdeps/mach/hurd
 
-before-compile := $(before-compile) $(objpfx)errnos.h $(objpfx)sys_errlist.c
+$(hurd)/errnos.h: $(hurd)/errnos.awk $(errno.texinfo)
+	awk -f $^ > $@-tmp
+	mv $@-tmp $@
+$(hurd)/errlist.c: $(hurd)/errlist.awk $(errno.texinfo)
+	awk -f $^ > $@-tmp
+	mv $@-tmp $@
