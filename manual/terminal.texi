@@ -1547,6 +1547,7 @@ The @var{filedes} is not associated with a terminal device.
 
 @item EINTR
 The operation was interrupted by delivery of a signal.
+@xref{Interrupted Primitives}.
 @end table
 @end deftypefun
 
