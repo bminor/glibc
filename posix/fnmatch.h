@@ -1,18 +1,17 @@
 /* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
+This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
 published by the Free Software Foundation; either version 2 of the
 License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
+This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
+License along with this library; see the file COPYING.LIB.  If
 not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
@@ -21,18 +20,19 @@ Cambridge, MA 02139, USA.  */
 #define	_FNMATCH_H	1
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #if defined (__cplusplus) || (defined (__STDC__) && __STDC__)
 #undef	__P
 #define	__P(args)	args
-#else				/* Not C++ or ANSI C.  */
+#else /* Not C++ or ANSI C.  */
 #undef	__P
 #define	__P(args)	()
 #undef	const
 #define	const
-#endif				/* C++ or ANSI C.  */
+#endif /* C++ or ANSI C.  */
 
 /* Bits set in the FLAGS argument to `fnmatch'.  */
 #define	FNM_PATHNAME	(1 << 0)/* No wildcard can ever match `/'.  */
@@ -40,16 +40,21 @@ extern "C" {
 #define	FNM_PERIOD	(1 << 2)/* Leading `.' is matched only explicitly.  */
 #define	__FNM_FLAGS	(FNM_PATHNAME|FNM_NOESCAPE|FNM_PERIOD)
 
+#if !defined (_POSIX_C_SOURCE) || _POSIX_C_SOURCE < 2 || defined (_BSD_SOURCE)
+#define	FNM_FILE_NAME	FNM_PATHNAME
+#endif
+
 /* Value returned by `fnmatch' if STRING does not match PATTERN.  */
 #define	FNM_NOMATCH	1
 
 /* Match STRING against the filename pattern PATTERN,
    returning zero if it matches, FNM_NOMATCH if not.  */
-extern int fnmatch __P ((const char *__pattern, const char *__string,
-			 int __flags));
+  extern int fnmatch __P ((const char *__pattern, const char *__string,
+			   int __flags));
 
 #ifdef	__cplusplus
 }
+
 #endif
 
 #endif /* fnmatch.h */
