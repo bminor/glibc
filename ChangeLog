@@ -1,3 +1,9 @@
+1999-11-15  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add
+	__syscall_setrlimit.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	
 1999-11-14  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/nfs/nfs.h: New file, empty but for comments.
@@ -14,7 +20,7 @@
 	prototype.
 	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add setrlimit.
 	* sysdeps/powerpc/stackinfo.h: New file.
-	Patches by Franz Sirl <Franz.Sirl@lauterback.com>.
+	Patches by Franz Sirl <Franz.Sirl@lauterbach.com>.
 
 1999-11-13  Ulrich Drepper  <drepper@cygnus.com>
 
