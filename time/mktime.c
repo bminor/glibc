@@ -71,16 +71,38 @@ DEFUN(mktime, (tp), register struct tm *tp)
 	  max.tm_mday = max.tm_mon = max.tm_year = INT_MAX;
     }
 
-  while (tp->tm_mon < 0)
-    {
-      --tp->tm_year;
-      tp->tm_mon += 12;
+  /* Make all the elements of TP that we pay attention to
+     be within the ranges of reasonable values for those things.  */
+#define	normalize(elt, min, max, nextelt) \
+  while (tp->elt < min)							      \
+    {									      \
+      --tp->nextelt;							      \
+      tp->elt += max + 1;						      \
+    }									      \
+  while (tp->elt > max)							      \
+    {									      \
+      ++tp->nextelt;							      \
+      tp->elt -= max + 1;						      \
     }
-  while (tp->tm_mon > 11)
-    {
-      ++tp->tm_year;
-      tp->tm_mon -= 12;
-    }
+
+  normalize (tm_sec, 0, 59, tm_min);
+  normalize (tm_min, 0, 59, tm_hour);
+  normalize (tm_hour, 0, 24, tm_mday);
+
+  /* Normalize the month first so we can use
+     it to figure the range for the day.  */
+  normalize (tm_mon, 0, 11, tm_year);
+  normalize (tm_mday, 1, __mon_lengths[__isleap (tp->tm_year)][tp->tm_mon],
+	     tm_mon);
+
+  /* Normalize the month again, since normalizing
+     the day may have pushed it out of range.  */
+  normalize (tm_mon, 0, 11, tm_year);
+
+  /* Normalize the day again, because normalizing
+     the month may have changed the range.  */
+  normalize (tm_mday, 1, __mon_lengths[__isleap (tp->tm_year)][tp->tm_mon],
+	     tm_mon);
 
   /* Check for out-of-range values.  */
 #define	lowhigh(field, minmax, cmp)	(tp->field cmp minmax.field)
