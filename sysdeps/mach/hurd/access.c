@@ -95,7 +95,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
     }
 
   /* We are done with _hurd_id.rid_auth now.  */
-  __mutex_unlock (&_hurd_idlock);
+  __mutex_unlock (&_hurd_id.lock);
 
   if (err)
     return __hurd_fail (err);
@@ -121,6 +121,6 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   return 0;
 
  lose:
-  __mutex_unlock (&_hurd_idlock);
+  __mutex_unlock (&_hurd_id.lock);
   return __hurd_fail (err);
 }
