@@ -96,7 +96,7 @@ glibc-manual-$(edition).tar: $(distribute)
 	mv $@.new $@
 
 .PHONY: dist
-dist: $(addprefix glibc-manual-$(edition).tar,.z .Z)
+dist: glibc-manual-$(edition).tar.z
 
 ifneq (,)
 dist: ../Make-dist
