@@ -58,6 +58,7 @@ mach-before-compile := $(common-objpfx)mach-shortcuts.h \
 				  interface port host)
 
 $(patsubst %.h,%.%,$(mach-before-compile)): # Run only if one doesn't exist.
+	@echo '+++ mach generation for $@: $^ ($?)'
 	$(MAKE) -C $(..)mach generated no_deps=t
 
 before-compile += $(mach-before-compile)
