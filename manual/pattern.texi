@@ -137,6 +137,7 @@ The @code{gl_offs} field is meaningful only if you use the
 @code{GLOB_DOOFFS} flag.  Otherwise, the offset is always zero
 regardless of what is in this field, and the first real element comes at
 the beginning of the vector.
+@end table
 @end deftp
 
 @comment glob.h
@@ -806,6 +807,7 @@ The @code{we_offs} field is meaningful only if you use the
 @code{WRDE_DOOFFS} flag.  Otherwise, the offset is always zero
 regardless of what is in this field, and the first real element comes at
 the beginning of the vector.
+@end table
 @end deftp
 
 @deftypefun int wordexp (const char *@var{words}, wordexp_t *@var{word-vector-ptr}, int @var{flags})
