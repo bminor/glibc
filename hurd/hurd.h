@@ -37,14 +37,19 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/io.h>
 #include <hurd/msg.h>
 
-#include <errno.h>
-#define	__hurd_fail(err)	(errno = (err), -1)
-
 #define __spin_lock(lockaddr) /* no-op XXX */
 #define __spin_unlock(lockaddr) /* no-op XXX */
 
 #define __mutex_lock(lockaddr) /* no-op XXX */
 #define __mutex_unlock(lockaddr) /* no-op XXX */
+
+/* Get `struct hurd_port' and related definitions implementing lightweight
+   user references for ports.  These are used pervasively throughout the C
+   library; this is here to avoid putting it in nearly every source file.  */
+#include <hurd/port.h>
+
+#include <errno.h>
+#define	__hurd_fail(err)	(errno = (err), -1)
 
 /* Basic ports and info, initialized by startup.  */
 
