@@ -1,3 +1,32 @@
+1997-05-01 20:02  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/unix/sysv/linux/alpha/brk.S: Don't presume that the kernel
+	will preserve non-call-saved registers; save and restore a0 across
+	the system call.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise tuck the thread
+	data onto the new thread's stack.
+
+1997-04-29 21:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig: Don't set cross-compiling based on $(BUILD_CC) != $(CC).
+	* config.make.in: Set cross-compiling from configure result.
+	* configure.in: Emit definition of `cross_compiling'.
+	Patches by Marcus G. Daniels <marcus@cathcart.sysc.pdx.edu>.
+
+1997-04-29 19:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/e_powf.S Generate invalid exception correctly.
+	* sysdeps/libm-i387/e_pow.S: Likewise.
+	* sysdeps/libm-i387/e_powl.S: Likewise.
+
+1997-04-26 13:37  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/ip_fw.h: Use <netinet/ip_icmp.h>
+	not <netinet/icmp.h>.
+	* inet/netinet/tcp.h: Move to...
+	* sysdeps/generic/netinet/tcp.h: ...here.
+	Reported by Michael Deutschmann <ldeutsch@mail.netshop.net>.
+
 1997-04-21 16:28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Net release 2.0.3.
@@ -23,6 +52,7 @@
 
 	* stdlib/seed48_r.c: Also reset `a' and `c' to default values.
 	* stdlib/srand48_r.c: Likewise.
+
 1997-04-20 01:28  Richard Henderson  <rth@tamu.edu>
 
 	* rellns-sh: Handle files in the same directory correctly.
@@ -1335,6 +1365,11 @@
 	* locale/weight.h: Likewise.
 
 	* shadow/sgetspent_r.c (LINE_PARSER): Add missing ')'.
+
+1997-02-19 02:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/locale.c: Check whether output of `locale -a'
+	really is locale directory.  Also print locale aliases.
 
 1997-02-19 01:02  Ulrich Drepper  <drepper@cygnus.com>
 
