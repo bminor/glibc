@@ -70,5 +70,7 @@ DEFUN_VOID(main)
   printf("x%-8.6gx\n", .5);
   printf("x%6.6gx\n", .5);
 
+  puts (atof ("-1e-17-") == -1e-17 ? "4 Worked!" : "4 Failed!");
+
   return 0;
 }
