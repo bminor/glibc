@@ -235,6 +235,23 @@ privileges.)  If you are using a 2.1 or newer Linux kernel with the
 this program; otherwise you do.  The source for `pt_chown' is in
 `login/programs/pt_chown.c'.
 
+   After installation you might want to configure the timezone and
+locale installation of your system.  The GNU C library comes with a
+locale database which gets configured with `localedef'.  For example, to
+set up a German locale with name `de_DE', simply issue the command
+`localedef -i de_DE -f ISO-8859-1 de_DE'.  To configure all locales
+that are supported by glibc, you can issue from your build directory the
+command `make localedata/install-locales'.
+
+   To configure the locally used timezone, you can either set the `TZ'
+environment variable.  The script `tzselect' helps you to select the
+right value.  As an example for Germany, tzselect would tell you to use
+`TZ='Europe/Berlin''.  For a system wide installation (the given paths
+are for an installation with `--prefix=/usr'), link the timezone file
+which is in `/usr/share/zoneinfo' to the file `/etc/localtime'.  For
+Germany, you might execute `ln -s /usr/share/zoneinfo/Europe/Berlin
+/etc/localtime'.
+
 Recommended Tools for Compilation
 =================================
 
