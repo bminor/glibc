@@ -40,6 +40,8 @@ msgport_server (mach_msg_header_t *inp,
 {
   extern boolean_t _S_msg_server (mach_msg_header_t *inp,
 				  mach_msg_header_t *outp);
+  extern boolean_t _S_exc_server (mach_msg_header_t *inp,
+				  mach_msg_header_t *outp);
   struct demux *d;
 
   for (d = _hurd_msgport_demuxers; d != NULL; d = d->next)
