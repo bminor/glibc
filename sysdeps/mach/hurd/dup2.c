@@ -29,17 +29,17 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
 {
-  struct hurd_fd_user d;
+  struct hurd_fd *d;
   struct hurd_fd *d2;
   io_t port, ctty;
-  struct hurd_userlink dtable_ulink, ulink, ctty_ulink;
+  struct hurd_userlink ulink, ctty_ulink;
   int flags;
 
   HURD_CRITICAL_BEGIN;
 
   /* Extract the ports and flags from FD.  */
-  d = _hurd_fd_get (fd, &dtable_ulink); /* Locks D.d.  */
-  if (d.d == NULL)
+  d = _hurd_fd_get (fd);
+  if (d == NULL)
     {
       errno = EBADF;
       goto earlyout;
@@ -48,16 +48,16 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
   if (fd2 == fd)
     {
       /* FD is valid and FD2 is already the same; just return it.  */
-      __spin_unlock (&d.d->port.lock);
+      __spin_unlock (&d->port.lock);
       goto out;
     }
 
-  flags = d.d->flags;
-  ctty = _hurd_port_get (&d.d->ctty, &ctty_ulink);
-  port = _hurd_port_locked_get (&d.d->port, &ulink); /* Unlocks D.d.  */
+  flags = d->flags;
+  ctty = _hurd_port_get (&d->ctty, &ctty_ulink);
+  port = _hurd_port_locked_get (&d->port, &ulink); /* Unlocks D.d.  */
 
   __mutex_lock (&_hurd_dtable_lock);
-  if (fd2 < 0 || fd2 >= _hurd_dtable.size)
+  if (fd2 < 0 || fd2 >= _hurd_dtablesize)
     {
       errno = EBADF;
       fd2 = -1;
@@ -65,15 +65,15 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
   else
     {
       /* Get a hold of the destination descriptor.  */
-      d2 = _hurd_dtable.d[fd2];
+      d2 = _hurd_dtable[fd2];
       if (d2 == NULL)
 	{
 	  /* Must allocate a new one.  We don't initialize the port cells
 	     with this call so that if it fails (out of memory), we will
 	     not have already added user references for the ports, which we
 	     would then have to deallocate.  */
-	  d2 = _hurd_dtable.d[fd2] = _hurd_new_fd (MACH_PORT_NULL,
-						   MACH_PORT_NULL);
+	  d2 = _hurd_dtable[fd2] = _hurd_new_fd (MACH_PORT_NULL,
+						 MACH_PORT_NULL);
 	}
       if (d2 == NULL)
 	{
@@ -99,12 +99,12 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
     }
   __mutex_unlock (&_hurd_dtable_lock);
 
-  _hurd_port_free (&d.d->port, &ulink, port);
+  _hurd_port_free (&d->port, &ulink, port);
   if (ctty != MACH_PORT_NULL)
-    _hurd_port_free (&d.d->ctty, &ctty_ulink, port);
+    _hurd_port_free (&d->ctty, &ctty_ulink, port);
 
  out:
-  _hurd_fd_free (d, &dtable_ulink);
+  __spin_unlock (&d->port.lock);
 
  earlyout:
   HURD_CRITICAL_END;
