@@ -1,4 +1,4 @@
-%define glibcrelease 79
+%define glibcrelease 80
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1256,6 +1256,17 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Nov 19 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-80
+- update from CVS
+  - with -D_FORTIFY_SOURCE=2, prevent missing %N$ formats
+  - for -D_FORTIFY_SOURCE=2 and %n in writable format string,
+    issue special error message instead of using the buffer overflow
+    detected one
+  - speedup regex searching with REG_NOSUB, add RE_NO_SUB,
+    speedup searching with nested subexps (BZ #544)
+  - block SIGCANCEL in NPTL timer_* helper thread
+- further free () checking
+
 * Tue Nov 16 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-79
 - update from CVS
 - fix free () checking
