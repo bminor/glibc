@@ -42,7 +42,7 @@ install-lib += $(foreach lib,$(versioned),\
 			 $(lib)$($(lib)-version) $(lib))
 
 # Add libc.a and libc_p.a.
-install-lib += $(foreach o,$(filter-out .so,$(object-suffixes)),\
+install-lib += $(foreach o,$(filter-out .so,$(object-suffixes-for-libc)),\
 			 $(patsubst %,$(libtype$o),c))
 
 ifeq (yes,$(build-shared))
