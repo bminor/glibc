@@ -165,5 +165,9 @@ fnmatch (pattern, string, flags)
   if (*n == '\0')
     return 0;
 
+  if ((flags & FNM_LEADING_DIR) && *n == '/')
+    /* The FNM_LEADING_DIR flag says that "foo*" matches "foobar/frobozz".  */
+    return 0;
+
   return FNM_NOMATCH;
 }
