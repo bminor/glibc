@@ -33,7 +33,7 @@ DEFUN(strstr, (haystack, needle),
   register CONST char *begin;
 
   if (needle_len == 0)
-    return (char *) haystack;
+    return (char *) haystack_end;
   if ((size_t) (haystack_end - haystack) < needle_len)
     return NULL;
 
