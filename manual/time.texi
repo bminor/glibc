@@ -370,12 +370,11 @@ following @code{errno} error condition is defined for this function:
 
 @table @code
 @item ENOSYS
-@c !!! rms check my writing
 The operating system does not support getting time zone information, and
 @var{tzp} is not a null pointer.  The GNU operating system does not
 support using @w{@code{struct timezone}} to represent time zone
-information.  Use @code{tzname} et al instead.  @strong{Say something
-more helpful here.}
+information; that is an obsolete feature of 4.3 BSD.
+Instead, use the facilities described in @ref{Time Zone Functions}.
 @end table
 @end deftypefun
 
@@ -897,7 +896,7 @@ The time is 01:02 PM.
 
 The @code{alarm} and @code{setitimer} functions provide a mechanism for a
 process to interrupt itself at some future time.  They do this by setting a
-timer; when the timer expires, the process recieves a signal.
+timer; when the timer expires, the process receives a signal.
 
 @cindex setting an alarm
 @cindex interval timer, setting
