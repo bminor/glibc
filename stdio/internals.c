@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -207,7 +207,8 @@ DEFUN(flushbuf, (fp, c),
 	  !fp->__mode.__append)
 	{
 	  int save = errno;
-	  CONST int aligned = (__stdio_check_offset(fp) == EOF ||
+	  CONST int aligned = (fp->__buffer == NULL ||
+			       __stdio_check_offset(fp) == EOF ||
 			       fp->__target % fp->__bufsize == 0);
 	  errno = save;
 
