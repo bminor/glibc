@@ -227,8 +227,9 @@ parent_echo-distinfo:
 
 distribute  := README INSTALL NOTES COPYING.LIB COPYING ChangeLog NEWS	\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
-	       ansidecl.h mkinstalldirs move-if-change install.sh	\
+	       ansidecl.h mkinstalldirs move-if-change install-sh	\
 	       configure configure.in aclocal.m4 config.sub config.guess\
+	       config.make.in config-name.in \
 	       munch-tmpl.c munch.awk gnu-stabs.h sysdep.h set-hooks.h
 
 distribute := $(strip $(distribute))
