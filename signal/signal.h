@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -65,7 +65,7 @@ extern int kill __P ((__pid_t __pid, int __sig));
 /* Send SIG to all processes in process group PGRP.
    If PGRP is zero, send SIG to all processes in
    the current process's process group.  */
-extern int killpg __P ((int __pgrp, int __sig));
+extern int killpg __P ((pid_t __pgrp, int __sig));
 #endif /* Use BSD.  */
 
 /* Raise signal SIG, i.e., send SIG to yourself.  */
