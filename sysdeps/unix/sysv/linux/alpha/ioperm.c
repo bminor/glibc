@@ -32,6 +32,12 @@
    sparse address space would work (e.g., the Low Cost Alpha chip has an
    I/O address space that's 512MB large!).  */
 
+/* The TSUNAMI support below requires the use of real BWX insns.
+   Tell the assembler that such are available.  This requires
+   binutils 2.8.1.18 or later.  */
+
+asm(".arch ev6");
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -70,9 +76,58 @@
 #define T2_SPARSE_MEM		(0xfffffc0200000000UL)
 #define T2_DENSE_MEM		(0xfffffc03c0000000UL)
 
+/* these are for the RAWHIDE family */
+#define MCPCIA_IO_BASE		(0xfffffcf980000000UL)
+#define MCPCIA_SPARSE_MEM	(0xfffffcf800000000UL)
+#define MCPCIA_DENSE_MEM	(0xfffffcf900000000UL)
+
+/* Tsunami has no SPARSE space */
+/* NOTE: these are hardwired to PCI bus 0 addresses!!! */
+/* Also, these are PHYSICAL, as/so there's no KSEG translation */
+#define TSUNAMI_IO_BASE		(0x00000801fc000000UL + 0xfffffc0000000000UL)
+#define TSUNAMI_DENSE_MEM	(0x0000080000000000UL + 0xfffffc0000000000UL)
+
 typedef enum {
-  IOSYS_UNKNOWN, IOSYS_JENSEN, IOSYS_APECS, IOSYS_CIA, IOSYS_T2
+  IOSYS_UNKNOWN, IOSYS_JENSEN, IOSYS_APECS, IOSYS_CIA, IOSYS_T2,
+  IOSYS_TSUNAMI, IOSYS_MCPCIA
 } iosys_t;
+
+static struct io_system {
+  int		    hae_shift;
+  unsigned long	int bus_memory_base;
+  unsigned long	int sparse_bus_mem_base;
+  unsigned long	int bus_io_base;
+} io_system[] = { /* NOTE! must match iosys_t enumeration */
+/* UNKNOWN */	{0, 0, 0, 0},
+/* JENSEN */	{7, 0, JENSEN_SPARSE_MEM, JENSEN_IO_BASE},
+/* APECS */	{5, APECS_DENSE_MEM, APECS_SPARSE_MEM, APECS_IO_BASE},
+/* CIA */	{5, CIA_DENSE_MEM, CIA_SPARSE_MEM, CIA_IO_BASE},
+/* T2 */	{5, T2_DENSE_MEM, T2_SPARSE_MEM, T2_IO_BASE},
+/* TSUNAMI */	{0, TSUNAMI_DENSE_MEM, 0, TSUNAMI_IO_BASE},
+/* MCPCIA */	{5, MCPCIA_DENSE_MEM, MCPCIA_SPARSE_MEM, MCPCIA_IO_BASE},
+};
+
+static struct platform {
+  const char	   *name;
+  iosys_t	    io_sys;
+} platform[] = {
+  {"Alcor",	IOSYS_CIA},
+  {"Avanti",	IOSYS_APECS},
+  {"XL",	IOSYS_APECS},
+  {"Cabriolet",	IOSYS_APECS},
+  {"EB164",	IOSYS_CIA},
+  {"EB64+",	IOSYS_APECS},
+  {"EB66",	IOSYS_APECS},
+  {"EB66P",	IOSYS_APECS},
+  {"Jensen",	IOSYS_JENSEN},
+  {"Mikasa",	IOSYS_APECS},
+  {"Noritake",	IOSYS_APECS},
+  {"Noname",	IOSYS_APECS},
+  {"Sable",	IOSYS_T2},
+  {"Miata",	IOSYS_CIA},
+  {"Tsunami",	IOSYS_TSUNAMI},
+  {"Rawhide",	IOSYS_MCPCIA},
+};
 
 struct ioswtch {
   void		(*sethae)(unsigned long int addr);
@@ -83,29 +138,6 @@ struct ioswtch {
   unsigned int	(*inw)(unsigned long int port);
   unsigned int	(*inl)(unsigned long int port);
 };
-
-static struct platform {
-  const char	   *name;
-  int		    io_sys;
-  iosys_t	    hae_shift;
-  unsigned long	int bus_memory_base;
-  unsigned long	int sparse_bus_memory_base;
-} platform[] = {
-  {"Alcor",	IOSYS_CIA,	5, CIA_DENSE_MEM,	CIA_SPARSE_MEM},
-  {"Avanti",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"Cabriolet",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"EB164",	IOSYS_CIA,	5, CIA_DENSE_MEM,	CIA_SPARSE_MEM},
-  {"EB64+",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"EB66",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"EB66P",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"Jensen",	IOSYS_JENSEN,	7, 0,			JENSEN_SPARSE_MEM},
-  {"Mikasa",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"Mustang",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"Noname",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"Sable",	IOSYS_T2,	5, T2_DENSE_MEM,	T2_SPARSE_MEM},
-  {"Miata",	IOSYS_CIA,	5, CIA_DENSE_MEM,	CIA_SPARSE_MEM},
-};
-
 
 static struct {
   struct hae {
@@ -129,6 +161,8 @@ port_to_cpu_addr (unsigned long int port, iosys_t iosys, int size)
 {
   if (iosys == IOSYS_JENSEN)
     return (port << 7) + ((size - 1) << 5) + io.base;
+  else if (iosys == IOSYS_TSUNAMI)
+    return port + io.base;
   else
     return (port << 5) + ((size - 1) << 3) + io.base;
 }
@@ -193,9 +227,6 @@ inline_outl (unsigned int b, unsigned long int port, iosys_t iosys)
 {
   unsigned long int addr = port_to_cpu_addr (port, iosys, 4);
 
-  if (port >= MAX_PORT)
-    return;
-
   inline_sethae (0, iosys);
   *(vuip)addr = b;
   mb ();
@@ -235,8 +266,77 @@ inline_inl (unsigned long int port, iosys_t iosys)
   return *(vuip) addr;
 }
 
+/*
+ * Now define the inline functions for CPUs supporting byte/word insns,
+ * and whose core logic supports I/O space accesses utilizing them.
+ *
+ * These routines could be used by MIATA, for example, because it has
+ * and EV56 plus PYXIS, but it currently uses SPARSE anyway.
+ *
+ * These routines are necessary for TSUNAMI/TYPHOON based platforms,
+ * which will have (at least) EV6.
+ */
 
-#define DCL_SETHAE(name, iosys)			\
+static inline void
+inline_bwx_outb (unsigned char b, unsigned long int port, iosys_t iosys)
+{
+  unsigned long int addr = port_to_cpu_addr (port, iosys, 4);
+
+  __asm__ __volatile__ ("stb %1,%0" : : "m"(*(unsigned char *)addr), "r"(b));
+  mb ();
+}
+
+
+static inline void
+inline_bwx_outw (unsigned short int b, unsigned long int port, iosys_t iosys)
+{
+  unsigned long int addr = port_to_cpu_addr (port, iosys, 4);
+
+  __asm__ __volatile__ ("stw %1,%0" : : "m"(*(unsigned short *)addr), "r"(b));
+  mb ();
+}
+
+
+static inline void
+inline_bwx_outl (unsigned int b, unsigned long int port, iosys_t iosys)
+{
+  unsigned long int addr = port_to_cpu_addr (port, iosys, 4);
+
+  *(vuip)addr = b;
+  mb ();
+}
+
+
+static inline unsigned int
+inline_bwx_inb (unsigned long int port, iosys_t iosys)
+{
+  unsigned long int r, addr = port_to_cpu_addr (port, iosys, 1);
+
+  __asm__ __volatile__ ("ldbu %0,%1" : "=r"(r) : "m"(*(unsigned char *)addr));
+  return 0xffUL & r;
+}
+
+
+static inline unsigned int
+inline_bwx_inw (unsigned long int port, iosys_t iosys)
+{
+  unsigned long int r, addr = port_to_cpu_addr (port, iosys, 1);
+
+  __asm__ __volatile__ ("ldwu %0,%1" : "=r"(r) : "m"(*(unsigned short *)addr));
+  return 0xffffUL & r;
+}
+
+
+static inline unsigned int
+inline_bwx_inl (unsigned long int port, iosys_t iosys)
+{
+  unsigned long int addr = port_to_cpu_addr (port, iosys, 4);
+
+  return *(vuip) addr;
+}
+
+
+#define DCL_SETHAE(name, iosys)				\
 static void						\
 name##_sethae (unsigned long int addr)			\
 {							\
@@ -256,6 +356,28 @@ static unsigned int					\
 name##_##func (unsigned long int addr)			\
 {							\
   return inline_##func (addr, IOSYS_##iosys);		\
+}
+
+#define DCL_SETHAE_IGNORE(name, iosys)			\
+static void						\
+name##_sethae (unsigned long int addr)			\
+{							\
+/* do nothing */					\
+}
+
+#define DCL_OUT_BWX(name, func, type, iosys)		\
+static void						\
+name##_##func (unsigned type b, unsigned long int addr)	\
+{							\
+  inline_bwx_##func (b, addr, IOSYS_##iosys);		\
+}
+
+
+#define DCL_IN_BWX(name, func, iosys)			\
+static unsigned int					\
+name##_##func (unsigned long int addr)			\
+{							\
+  return inline_bwx_##func (addr, IOSYS_##iosys);	\
 }
 
 
@@ -278,7 +400,15 @@ DCL_IN(apecs, inb, APECS)
 DCL_IN(apecs, inw, APECS)
 DCL_IN(apecs, inl, APECS)
 
-struct ioswtch ioswtch[] = {
+DCL_SETHAE_IGNORE(tsunami, TSUNAMI)
+DCL_OUT_BWX(tsunami, outb, char,  TSUNAMI)
+DCL_OUT_BWX(tsunami, outw, short int, TSUNAMI)
+DCL_OUT_BWX(tsunami, outl, int,   TSUNAMI)
+DCL_IN_BWX(tsunami, inb, TSUNAMI)
+DCL_IN_BWX(tsunami, inw, TSUNAMI)
+DCL_IN_BWX(tsunami, inl, TSUNAMI)
+
+static struct ioswtch ioswtch[] = {
   {
     jensen_sethae,
     jensen_outb, jensen_outw, jensen_outl,
@@ -288,6 +418,11 @@ struct ioswtch ioswtch[] = {
     apecs_sethae,
     apecs_outb, apecs_outw, apecs_outl,
     apecs_inb, apecs_inw, apecs_inl
+  },
+  {
+    tsunami_sethae,
+    tsunami_outb, tsunami_outw, tsunami_outl,
+    tsunami_inb, tsunami_inw, tsunami_inl
   }
 };
 
@@ -357,12 +492,16 @@ init_iosys (void)
     {
       if (strcmp (platform[i].name, systype) == 0)
 	{
-	  io.hae_shift = platform[i].hae_shift;
-	  io.bus_memory_base = platform[i].bus_memory_base;
-	  io.sparse_bus_memory_base = platform[i].sparse_bus_memory_base;
 	  io.sys = platform[i].io_sys;
+	  io.hae_shift = io_system[io.sys].hae_shift;
+	  io.bus_memory_base = io_system[io.sys].bus_memory_base;
+	  io.sparse_bus_memory_base = io_system[io.sys].sparse_bus_mem_base;
+	  io.io_base = io_system[io.sys].bus_io_base;
+
 	  if (io.sys == IOSYS_JENSEN)
 	    io.swp = &ioswtch[0];
+	  else if (io.sys == IOSYS_TSUNAMI)
+	    io.swp = &ioswtch[2];
 	  else
 	    io.swp = &ioswtch[1];
 	  return 0;
@@ -395,32 +534,22 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
     {
       if (!io.base)
 	{
-	  unsigned long int base;
 	  int fd;
 
 	  io.hae.reg   = 0;		/* not used in user-level */
 	  io.hae.cache = 0;
-	  __sethae (io.hae.cache);	/* synchronize with hw */
+	  if (io.sys != IOSYS_TSUNAMI)
+	    __sethae (io.hae.cache);	/* synchronize with hw */
 
 	  fd = open ("/dev/mem", O_RDWR);
 	  if (fd < 0)
-	    return fd;
+	    return -1;
 
-	  switch (io.sys)
-	    {
-	    case IOSYS_UNKNOWN: base = io.io_base; break;
-	    case IOSYS_JENSEN:	base = JENSEN_IO_BASE; break;
-	    case IOSYS_APECS:	base = APECS_IO_BASE; break;
-	    case IOSYS_CIA:	base = CIA_IO_BASE; break;
-	    default:
-	      __set_errno (ENODEV);
-	      return -1;
-	    }
-	  addr  = port_to_cpu_addr (0, io.sys, 1);
+	  addr = port_to_cpu_addr (0, io.sys, 1);
 	  len = port_to_cpu_addr (MAX_PORT, io.sys, 1) - addr;
 	  io.base =
 	    (unsigned long int) __mmap (0, len, PROT_NONE, MAP_SHARED,
-					fd, base);
+					fd, io.io_base));
 	  close (fd);
 	  if ((long) io.base == -1)
 	    return -1;
