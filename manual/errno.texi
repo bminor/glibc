@@ -442,7 +442,7 @@ inconsistent with the protocol being used on the socket.  @xref{Sockets}.
 @comment errno.h
 @comment BSD: Address already in use
 @deftypevr Macro int EADDRINUSE
-The requested socket address is already in use.  @xref{Socket Naming}.
+The requested socket address is already in use.  @xref{Socket Addresses}.
 @end deftypevr
 
 @comment errno.h
@@ -450,7 +450,7 @@ The requested socket address is already in use.  @xref{Socket Naming}.
 @deftypevr Macro int EADDRNOTAVAIL
 The requested socket address is not available; for example, you tried
 to give a socket a name that doesn't match the local host name.
-@xref{Socket Naming}.
+@xref{Socket Addresses}.
 @end deftypevr
 
 @comment errno.h
@@ -497,7 +497,7 @@ The kernel's buffers for I/O operations are all in use.
 @comment BSD: Socket is already connected
 @deftypevr Macro int EISCONN
 You tried to connect a socket that is already connected.
-@xref{Establishing a Connection}.
+@xref{Connecting}.
 @end deftypevr
 
 @comment errno.h
@@ -538,9 +538,9 @@ This often indicates a cycle of symbolic links.
 @comment errno.h
 @comment POSIX.1: File name too long
 @deftypevr Macro int ENAMETOOLONG
-Filename too long (longer than @code{PATH_MAX}; @pxref{File Limits}) or
-host name too long (in @code{gethostname} or @code{sethostname};
-@pxref{Host Identification}).
+Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
+Files}) or host name too long (in @code{gethostname} or
+@code{sethostname}; @pxref{Host Identification}).
 @end deftypevr
 
 @comment errno.h

@@ -24,7 +24,7 @@ fractional parts.  These functions are declared in the header file
 The functions described in this section are primarily provided as a way
 to efficiently perform certain low-level manipulations on floating point
 numbers that are represented internally using a binary radix;
-see @ref{Floating-Point Representation}.  These functions are required to
+see @ref{Floating Point Concepts}.  These functions are required to
 have equivalent behavior even if the representation does not use a radix
 of 2, but of course they are unlikely to be particularly efficient in
 those cases.
@@ -114,7 +114,7 @@ integer, returning that value as a @code{double}.
 @comment BSD
 @deftypefun double rint (double @var{x})
 This function returns the integer nearest @var{x} according to the
-current rounding mode.  @xref{Floating-Point Parameters}, for information
+current rounding mode.  @xref{Floating Point Parameters}, for information
 about the @code{FLT_ROUNDS} macro.
 @end deftypefun
 
@@ -313,8 +313,8 @@ may recognize additional implementation-dependent syntax.
 
 If the string has valid syntax for an integer but the value is not
 representable because of overflow, @code{strtol} returns either
-@code{LONG_MAX} or @code{LONG_MIN} (@pxref{Integer Representation
-Limits}), as appropriate for the sign of the value.
+@code{LONG_MAX} or @code{LONG_MIN} (@pxref{Range of Type}), as
+appropriate for the sign of the value.
 
 The following @code{errno} error conditions are defined for this
 function:
@@ -331,7 +331,7 @@ An overflow condition was detected.
 The @code{strtoul} (``string-to-unsigned-long'') function is similar to
 @code{strtol} except that it returns its value as an object of type
 @code{unsigned long int}.  The value returned in case of overflow is
-@code{ULONG_MAX} (@pxref{Integer Representation Limits}).
+@code{ULONG_MAX} (@pxref{Range of Type}).
 @end deftypefun
 
 @comment stdlib.h

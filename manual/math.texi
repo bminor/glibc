@@ -85,7 +85,7 @@ mathematical functions in overflow situations.
 @end deftypevr
 
 For more information about floating-point representations and limits,
-@xref{Floating-Point Limits}.  In particular, the macro @code{DBL_MAX}
+@xref{Floating Point Parameters}.  In particular, the macro @code{DBL_MAX}
 might be more appropriate than @code{HUGE_VAL} for many uses.
 
 @node Not a Number
@@ -240,7 +240,7 @@ If @var{x} and @var{y} are coordinates of a point in the plane,
 @code{atan2} returns the signed angle between the line from the origin
 to that point and the x-axis.  Thus, @code{atan2} is useful for
 converting Cartesian coordinates to polar coordinates.  (To compute the
-radial coordinate, use @code{hypot}; see @ref{Exponentiation and
+radial coordinate, use @code{hypot}; see @ref{Exponents and
 Logarithms}.)
 
 The following @code{errno} error conditions are defined for this function:

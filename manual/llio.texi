@@ -2,10 +2,10 @@
 @chapter Low-Level Input/Output
 
 This chapter describes functions for performing low-level input/output
-operations on file descriptors.  These functions include the primitives for
-the higher-level I/O functions described in @ref{Input/Output on
-Streams}, as well as functions for performing low-level control operations
-for which there are no equivalents on streams.
+operations on file descriptors.  These functions include the primitives
+for the higher-level I/O functions described in @ref{I/O on Streams}, as
+well as functions for performing low-level control operations for which
+there are no equivalents on streams.
 
 @c ??? Why use descriptor-level fns?
 
@@ -233,10 +233,10 @@ The call was interrupted by a signal.
 @end table
 @end deftypefun
 
-To close a stream, you should call @code{fclose} (@pxref{Opening and
-Closing Streams}) instead of trying to close its underlying file
-descriptor with @code{close}.  This flushes any buffered output and
-updates the stream object to indicate that it is closed.
+To close a stream, you should call @code{fclose} (@pxref{Closing
+Streams}) instead of trying to close its underlying file descriptor with
+@code{close}.  This flushes any buffered output and updates the stream
+object to indicate that it is closed.
 
 @node I/O Primitives, File Position Primitive, Opening and Closing Files, Low-Level I/O
 @section Input and Output Primitives
@@ -528,7 +528,7 @@ The @code{fdopen} function returns a new stream for the file descriptor
 @var{filedes}.
 
 The @var{opentype} argument is interpreted in the same way as for the
-@code{fopen} function (@pxref{Opening and Closing Streams}), except that
+@code{fopen} function (@pxref{Opening Streams}), except that
 the @samp{b} option is not permitted; this is because GNU makes no
 distinction between text and binary files.  Also, @code{"w"} and
 @code{"w+"} do not cause truncation of the file; these have affect only
@@ -843,7 +843,7 @@ input_timeout (int filedes, int seconds)
 @end example
 
 There is another example showing the use of @code{select} to multiplex
-input from multiple sockets in @ref{Byte Stream Socket Example}.
+input from multiple sockets in @ref{Server Example}.
 
 
 @node Control Operations, Duplicating Descriptors, Waiting for I/O, Low-Level I/O
@@ -1546,7 +1546,7 @@ This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should get information about the process or process
 group to which @code{SIGIO} signals are sent.  (For a terminal, this is
 actually the foreground process group ID, which you can get using
-@code{tcgetpgrp}; see @ref{Foreground Process Group Functions}.)
+@code{tcgetpgrp}; see @ref{Terminal Access Functions}.)
 
 The return value is interpreted as a process ID; if negative, its
 absolute value is the process group ID.

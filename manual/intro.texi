@@ -740,7 +740,7 @@ command-line arguments and environment variables.
 This material is probably only of interest if you are writing a shell.
 
 @item
-@ref{Users Database}, and @ref{Group Database}, tell you how to access
+@ref{User Database}, and @ref{Group Database}, tell you how to access
 the system user and group databases.
 
 @item

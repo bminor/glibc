@@ -336,7 +336,7 @@ the value to store in the flag to indicate that the option was seen.
 
 @comment getopt.h
 @comment GNU
-@deftypefun getopt_long (int @var{argc}, char **@var{argv}, const char *@var{short}, struct option *@var{long}, int *@var{indexptr})
+@deftypefun int getopt_long (int @var{argc}, char **@var{argv}, const char *@var{short}, struct option *@var{long}, int *@var{indexptr})
 Decode options from the vector @var{argv} (whose length is @var{argc}).
 The argument @var{short} describes the short options to accept, just as
 it does in @code{getopt}.  The argument @var{long} describes the long
@@ -517,7 +517,7 @@ this lets the user specify the value.
 This is the name that the user used to log in.  Since the value in the
 environment can be tweaked arbitrarily, this is not a reliable way to
 identify the user who is running a process; a function like
-@code{getlogin} (@pxref{User Identification Functions}) is better for
+@code{getlogin} (@pxref{Identifying Who Logged In}) is better for
 that purpose.
 
 For most purposes, it is better to use @code{LOGNAME}, precisely because
@@ -559,7 +559,7 @@ Manual}) use the @code{TERM} environment variable, for example.
 
 @item TZ
 @cindex TZ environment variable
-This specifies the time zone.  @xref{Time Zone}, for information about
+This specifies the time zone.  @xref{TZ Variable}, for information about
 the format of this string and how it is used.
 
 @item LANG
@@ -663,7 +663,7 @@ locks in shared data bases.
 
 @item 
 All open streams are closed, writing out any buffered output data.  See
-@ref{Opening and Closing Streams}.  In addition, temporary files opened
+@ref{Closing Streams}.  In addition, temporary files opened
 with the @code{tmpfile} function are removed; see @ref{Temporary Files}.
 
 @item 
@@ -848,8 +848,7 @@ following things happen:
 
 @itemize @bullet
 @item
-All open file descriptors in the process are closed.  @xref{Low-Level
-Input/Output}.
+All open file descriptors in the process are closed.  @xref{Low-Level I/O}.
 
 @item
 The low-order 8 bits of the return status code are saved to be reported

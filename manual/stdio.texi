@@ -2,8 +2,7 @@
 @chapter Input/Output on Streams
 
 This chapter describes the functions for creating streams and performing
-input and output operations on them.  As discussed in @ref{Input/Output
-Overview}, a stream is a fairly abstract, high-level concept
+input and output operations on them.  As discussed in @ref{I/O Overview}, a stream is a fairly abstract, high-level concept
 representing a communications channel to a file, device, or process.
 
 @strong{Incomplete:}  RMS suggests that a short example might be
@@ -35,7 +34,7 @@ useful here.
                                  to an open file. 
 @end menu
 
-@node Streams, Standard Streams,  , I/O on Streams
+@node Streams
 @section Streams
 
 For historical reasons, the type of the C data structure that represents
@@ -58,8 +57,7 @@ This is the data type is used to represent stream objects.  A
 connection to the associated file, including such things as the file
 position indicator and buffering information.  Each stream also has
 error and end-of-file status indicators that can be tested with the
-@code{ferror} and @code{feof} functions; see @ref{End-Of-File and
-Errors}.
+@code{ferror} and @code{feof} functions; see @ref{EOF and Errors}.
 @end deftp
 
 @code{FILE} objects are allocated and managed internally by the
@@ -69,7 +67,7 @@ deal only with pointers to these objects (that is, @code{FILE *} values)
 rather than the objects themselves.
 
 
-@node Standard Streams, Opening Streams, Streams, I/O on Streams
+@node Standard Streams
 @section Standard Streams
 @cindex standard streams
 @cindex streams, standard
@@ -116,7 +114,7 @@ provide similar mechanisms, but the details of how to use them can vary.
 It is probably not a good idea to close any of the standard streams.
 
 
-@node Opening Streams, Closing Streams, Standard Streams, I/O on Streams
+@node Opening Streams
 @section Opening Streams
 
 @cindex opening a stream
@@ -240,7 +238,7 @@ in which use of a standard stream for certain purposes is hard-coded.
 @end deftypefun
 
 
-@node Closing Streams, Simple Output, Opening Streams, I/O on Streams
+@node Closing Streams
 @section Closing Streams
 
 @cindex closing a stream
@@ -268,15 +266,15 @@ The function @code{fclose} is declared in @file{stdio.h}.
 @end deftypefun
 
 If the @code{main} function to your program returns, or if you call the
-@code{exit} function (@pxref{Normal Program Termination}), all open
-streams are automatically closed properly.  If your program terminates
-in any other manner, such as by calling the @code{abort} function
-(@pxref{Aborting a Program}) or from a fatal signal (@pxref{Signal
-Handling}), open streams might not be closed properly.  Buffered output
-may not be flushed and files may not be complete.  For more information
-on buffering of streams, see @ref{Stream Buffering}.
+@code{exit} function (@pxref{Normal Termination}), all open streams are
+automatically closed properly.  If your program terminates in any other
+manner, such as by calling the @code{abort} function (@pxref{Aborting a
+Program}) or from a fatal signal (@pxref{Signal Handling}), open streams
+might not be closed properly.  Buffered output may not be flushed and
+files may not be complete.  For more information on buffering of
+streams, see @ref{Stream Buffering}.
 
-@node Simple Output, Character Input, Closing Streams, I/O on Streams
+@node Simple Output
 @section Simple Output by Characters or Lines
 
 @cindex writing to a stream, by characters
@@ -356,7 +354,7 @@ This function writes the word @var{w} (that is, an @code{int}) to
 recommend you use @code{fwrite} instead (@pxref{Block Input/Output}).
 @end deftypefun
 
-@node Character Input, Line Input, Simple Output, I/O on Streams
+@node Character Input
 @section Character Input
 
 @cindex reading from a stream, by characters
@@ -432,7 +430,7 @@ It's provided for compatibility with SVID.  We recommend you use
 @code{fread} instead (@pxref{Block Input/Output}).
 @end deftypefun
 
-@node Line Input, Unreading, Character Input, I/O on Streams
+@node Line Input
 @section Line-Oriented Input
 
 Since many programs interpret input on the basis of lines, it's
@@ -529,7 +527,7 @@ The GNU library includes it for compatibility only.  You should
 @strong{always} use @code{fgets} or @code{getline} instead.
 @end deftypefn
 
-@node Unreading, Formatted Output, Line Input, I/O on Streams
+@node Unreading
 @section Unreading
 @cindex peeking at input
 @cindex unreading characters
@@ -550,7 +548,7 @@ by  the next call to @code{fgetc} or other input function on that stream.
 * How Unread::                  How to call @code{ungetc} to do unreading.
 @end menu
 
-@node Unreading Idea, How Unread,  , Unreading
+@node Unreading Idea
 @subsection What Unreading Means
 
 Here is a pictorial explanation of unreading.  Suppose you have a
@@ -591,7 +589,7 @@ f  o  o  b  a  r
 @noindent
 so that the next input characters will be @samp{9} and @samp{b}.
 
-@node How Unread,  , Unreading Idea, Unreading
+@node How Unread
 @subsection Using @code{ungetc} To Do Unreading
  
 The function to unread a character is called @code{ungetc}, because it
@@ -648,7 +646,7 @@ skip_whitespace (FILE *stream)
 @}
 @end example
 
-@node Formatted Output, Customizing Printf, Unreading, I/O on Streams
+@node Formatted Output
 @section Formatted Output
 
 @cindex format string, for @code{printf}
@@ -684,7 +682,7 @@ useful for printing error messages, tables of data, and the like.
                                  call for? 
 @end menu
 
-@node Formatted Output Basics, Output Conversion Syntax,  , Formatted Output
+@node Formatted Output Basics
 @subsection Formatted Output Basics
 
 The @code{printf} function can be used to print any number of arguments.
@@ -744,7 +742,7 @@ reasonable free-format output without using any of the modifiers at all.
 The modifiers are mostly used to make the output look ``prettier'' in
 tables.
 
-@node Output Conversion Syntax, Table of Output Conversions, Formatted Output Basics, Formatted Output
+@node Output Conversion Syntax
 @subsection Output Conversion Syntax
 
 This section provides details about the precise syntax of conversion
@@ -826,7 +824,7 @@ between the different conversion specifiers.  See the descriptions of the
 individual conversions for information about the particular options that
 they use.
 
-@node Table of Output Conversions, Integer Conversions, Output Conversion Syntax, Formatted Output
+@node Table of Output Conversions
 @subsection Table of Output Conversions
 @cindex output conversions, for @code{printf}
 
@@ -895,7 +893,7 @@ the correct types, the results are unpredictable.  If you supply more
 arguments than conversion specifications, the extra argument values are
 simply ignored; this is sometimes useful.
 
-@node Integer Conversions, Floating-Point Conversions, Table of Output Conversions, Formatted Output
+@node Integer Conversions
 @subsection Integer Conversions
 
 This section describes the options for the @samp{%d}, @samp{%i},
@@ -1006,7 +1004,7 @@ various format options, using the template string:
 @end example
 
 
-@node Floating-Point Conversions, Other Output Conversions, Integer Conversions, Formatted Output
+@node Floating-Point Conversions
 @subsection Floating-Point Conversions
 
 This section discusses the conversion specifications for floating-point
@@ -1105,7 +1103,7 @@ Here is the output:
 
 Notice how the @samp{%g} conversion drops trailing zeros.
 
-@node Other Output Conversions, Formatted Output Functions, Floating-Point Conversions, Formatted Output
+@node Other Output Conversions
 @subsection Other Output Conversions
 
 This section describes miscellaneous conversions for @code{printf}.
@@ -1198,7 +1196,7 @@ conversion doesn't use an argument, and no flags, field width,
 precision, or type modifiers are permitted.
 
 
-@node Formatted Output Functions, Variable Arguments Output, Other Output Conversions, Formatted Output
+@node Formatted Output Functions
 @subsection Formatted Output Functions
 
 This section describes how to call @code{printf} and related functions.
@@ -1327,7 +1325,7 @@ To get at them, you must finish the object with @code{obstack_finish}
 (@pxref{Growing Objects}).@refill
 @end deftypefun
 
-@node Variable Arguments Output, Parsing a Template String, Formatted Output Functions, Formatted Output
+@node Variable Arguments Output
 @subsection Variable Arguments Output Functions
 
 The functions @code{vprintf} and friends are provided so that you can
@@ -1345,10 +1343,10 @@ Since that method is impossible, we provide alternative functions, the
 ``all of my arguments after the first five.''
 
 Before calling @code{vprintf} or the other functions listed in this
-section, you @emph{must} call @code{va_start} (@pxref{Variable Argument
-Facilities}) to initialize a pointer to the variable arguments.  Then
-you can call @code{va_arg} to fetch the arguments that you want to
-handle yourself.  This advances the pointer past those arguments.
+section, you @emph{must} call @code{va_start} (@pxref{Variadic
+Functions}) to initialize a pointer to the variable arguments.  Then you
+can call @code{va_arg} to fetch the arguments that you want to handle
+yourself.  This advances the pointer past those arguments.
 
 Once your @code{va_list} pointer is pointing at the argument of your
 choice, you are ready to call @code{vprintf}.  That argument and all
@@ -1444,7 +1442,7 @@ You could call @code{eprintf} like this:
 eprintf ("file `%s' does not exist\n", filename);
 @end example
 
-@node Parsing a Template String,  , Variable Arguments Output, Formatted Output
+@node Parsing a Template String
 @subsection Parsing a Template String
 @cindex parsing a template string
 
@@ -1582,7 +1580,7 @@ a base type of @code{PA_DOUBLE} to indicate a type of @code{long double}.
 interpreter, showing how one might validate a list of args and then
 call @code{vprintf}.
 
-@node Customizing Printf, Formatted Input, Formatted Output, I/O on Streams
+@node Customizing Printf
 @section Customizing Printf
 @cindex customizing @code{printf}
 @cindex defining new @code{printf} conversions
@@ -1622,7 +1620,7 @@ The facilities of this section are declared in the header file
 @code{printf} template strings is a GNU extension.  ANSI standard C has
 nothing similar.
 
-@node Registering New Conversions, Conversion Specifier Options,  , Customizing Printf
+@node Registering New Conversions
 @subsection Registering New Conversions
 
 The function to register a new output conversion is
@@ -1658,7 +1656,7 @@ not a good idea because of the potential for confusion.  Library routines
 written by other people could break if you do this.
 @end deftypefun
 
-@node Conversion Specifier Options, Defining the Output Handler, Registering New Conversions, Customizing Printf
+@node Conversion Specifier Options
 @subsection Conversion Specifier Options
 
 If you define a meaning for @samp{%q}, what if the template contains
@@ -1733,7 +1731,7 @@ width.  The value is @code{'0'} if the @samp{0} flag was specified, and
 @end deftp
 
 
-@node Defining the Output Handler, Printf Extension Example, Conversion Specifier Options, Customizing Printf
+@node Defining the Output Handler
 @subsection Defining the Output Handler
 
 Now let's look at how to define the handler and arginfo functions
@@ -1764,8 +1762,7 @@ means of @code{va_arg (@var{type}, *ap_pointer)}.
 
 (Passing a pointer here allows the function that calls your handler
 function to update its own @code{va_list} variable to account for the
-arguments that your handler processes.  @xref{Variable Argument
-Facilities}.)
+arguments that your handler processes.  @xref{Variadic Functions}.)
 
 The return value from your handler function should be the number of
 argument values that it processes from the variable argument list.  You
@@ -1802,7 +1799,7 @@ This type is used to describe functions that return information about
 the number and type of arguments used by a conversion specifier.
 @end deftp
 
-@node Printf Extension Example,  , Defining the Output Handler, Customizing Printf
+@node Printf Extension Example
 @subsection Printf Extension Example
 
 Here is an example showing how to define a @code{printf} handler function.
@@ -1824,7 +1821,7 @@ The output produced by this program looks like:
 |<Widget 0xffeffb7c: mywidget>      |
 @end example
 
-@node Formatted Input, Block Input/Output, Customizing Printf, I/O on Streams
+@node Formatted Input
 @section Formatted Input
 
 @cindex formatted input from a stream
@@ -1848,7 +1845,7 @@ reading arbitrary values under the control of a @dfn{format string} or
 * Variable Arguments Input::    @code{vscanf} and friends.
 @end menu
 
-@node Formatted Input Basics, Input Conversion Syntax,  , Formatted Input
+@node Formatted Input Basics
 @subsection Formatted Input Basics
 
 Calls to @code{scanf} are superficially similar to calls to
@@ -1907,7 +1904,7 @@ a parser, rather than using @code{scanf}.  For more information about
 this, see @cite{The Bison Reference Manual}.
 @c ??? Don't use @cite, use @xref with five args.
 
-@node Input Conversion Syntax, Table of Input Conversions, Formatted Input Basics, Formatted Input
+@node Input Conversion Syntax
 @subsection Input Conversion Syntax
 
 A @code{scanf} template string is a string that contains ordinary
@@ -1972,7 +1969,7 @@ between the different conversion specifiers.  See the descriptions of the
 individual conversions for information about the particular options that
 they use.
 
-@node Table of Input Conversions, Numeric Input Conversions, Input Conversion Syntax, Formatted Input
+@node Table of Input Conversions
 @subsection Table of Input Conversions
 @cindex input conversions, for @code{scanf}
 
@@ -2038,7 +2035,7 @@ that perform assignments, or if the arguments are not of the correct
 types, the behavior is also undefined.  On the other hand, if there are
 extra arguments, their values are simply ignored.
 
-@node Numeric Input Conversions, String Input Conversions, Table of Input Conversions, Formatted Input
+@node Numeric Input Conversions
 @subsection Numeric Input Conversions
 
 This section describes the @code{scanf} conversions for reading numeric
@@ -2109,7 +2106,7 @@ Specifies that the argument is of type @code{double *}.
 Specifies that the argument is of type @code{long double *}.
 @end table
 
-@node String Input Conversions, Other Input Conversions, Numeric Input Conversions, Formatted Input
+@node String Input Conversions
 @subsection String Input Conversions
 
 This section describes the @code{scanf} input conversions for reading
@@ -2211,7 +2208,7 @@ probably get a matching error instead if the input string is too long,
 and you can detect this and report it properly.
 
 
-@node Other Input Conversions, Formatted Input Functions, String Input Conversions, Formatted Input
+@node Other Input Conversions
 @subsection Other Input Conversions
 
 This section describes the miscellaneous input conversions.
@@ -2241,7 +2238,7 @@ Finally, the @samp{%%} conversion matches a literal @samp{%} character
 in the input stream, without using an argument.  This conversion does
 not permit any flags, field width, or type modifier to be specified.
 
-@node Formatted Input Functions, Variable Arguments Input, Other Input Conversions, Formatted Input
+@node Formatted Input Functions
 @subsection Formatted Input Functions
 
 Here are the descriptions of the functions for performing formatted
@@ -2283,7 +2280,7 @@ as an argument to receive a string read under control of the @samp{%s}
 conversion.
 @end deftypefun
 
-@node Variable Arguments Input,  , Formatted Input Functions, Formatted Input
+@node Variable Arguments Input
 @subsection Variable Arguments Input Functions
 
 The functions @code{vscanf} and friends are provided so that you can
@@ -2301,8 +2298,7 @@ extensions.
 @deftypefun int vscanf (const char *@var{template}, va_list @var{ap})
 This function is similar to @code{scanf} except that, instead of taking
 a variable number of arguments directly, it takes an argument list
-pointer @var{ap} of type @code{va_list} (@pxref{Variable Argument
-Facilities}).
+pointer @var{ap} of type @code{va_list} (@pxref{Variadic Functions}).
 @end deftypefun
 
 @comment stdio.h
@@ -2319,7 +2315,7 @@ This is the equivalent of @code{sscanf} with the variable argument list
 specified directly as for @code{vscanf}.
 @end deftypefun
 
-@node Block Input/Output, EOF and Errors, Formatted Input, I/O on Streams
+@node Block Input/Output
 @section Block Input/Output
 
 This section describes how to do input and output operations on blocks
@@ -2377,7 +2373,7 @@ only if a write error occurs.
 @end deftypefun
 
 
-@node EOF and Errors, Binary Streams, Block Input/Output, I/O on Streams
+@node EOF and Errors
 @section End-Of-File and Errors
 
 @cindex end of file, on a stream
@@ -2437,7 +2433,7 @@ conditions defined for @code{write} are meaningful for these functions.
 For more information about the descriptor-level I/O functions, see
 @ref{Low-Level I/O}.
 
-@node Binary Streams, File Positioning, EOF and Errors, I/O on Streams
+@node Binary Streams
 @section Text and Binary Streams
 
 The GNU system and other POSIX-compatible operating systems organize all
@@ -2452,7 +2448,7 @@ to such systems.
 When you open a stream, you can specify either a @dfn{text stream} or a
 @dfn{binary stream}.  You indicate that you want a binary stream by
 specifying the @samp{b} modifier in the @var{opentype} argument to
-@code{fopen}; see @ref{Opening and Closing Streams}.  Without this
+@code{fopen}; see @ref{Opening Streams}.  Without this
 option, @code{fopen} opens the file as a text stream.
 
 Text and binary streams differ in several ways:
@@ -2495,7 +2491,7 @@ get the same kind of stream regardless of whether you ask for binary.
 This stream can handle any file content, and has none of the
 restrictions that text streams sometimes have.
 
-@node File Positioning, Portable Positioning, Binary Streams, I/O on Streams
+@node File Positioning
 @section File Positioning
 @cindex file positioning on a stream
 @cindex positioning a stream
@@ -2550,8 +2546,8 @@ place in the file.
 @end deftypefun
 
 @strong{Portability Note:} In non-POSIX systems, @code{ftell} and
-@code{fseek} might work reliably only on binary streams.  @xref{Text and
-Binary Streams}.
+@code{fseek} might work reliably only on binary streams.  @xref{Binary
+Streams}.
 
 The following symbolic constants are defined for use as the @var{whence}
 argument to @code{fseek}.  They are also used with the @code{lseek}
@@ -2592,7 +2588,7 @@ begining of the file.  It is equivalent to calling @code{fseek} on the
 value is discarded and the error indicator for the stream is reset.
 @end deftypefun
 
-@node Portable Positioning, Stream Buffering, File Positioning, I/O on Streams
+@node Portable Positioning
 @section Portable File-Position Functions
 
 On the GNU system, the file position is truly a character count.  You
@@ -2677,7 +2673,7 @@ of zero.  Otherwise, @code{fsetpos} returns a nonzero value and stores
 an implementation-defined positive value in @code{errno}.
 @end deftypefun
 
-@node Stream Buffering, Temporary Files, Portable Positioning, I/O on Streams
+@node Stream Buffering
 @section Stream Buffering
 
 @cindex buffering of streams
@@ -2710,7 +2706,7 @@ instead.  @xref{Low-Level I/O}.
 * Controlling Buffering::       How to specify what kind of buffering to use.
 @end menu
 
-@node Buffering Concepts, Flushing Buffers,  , Stream Buffering
+@node Buffering Concepts
 @subsection Buffering Concepts
 
 There are three different kinds of buffering strategies:
@@ -2764,7 +2760,7 @@ the operating system.  This requires changing the terminal mode
 have to do this separately---merely using an unbuffered stream does not
 change the modes.
 
-@node Flushing Buffers, Controlling Buffering, Buffering Concepts, Stream Buffering
+@node Flushing Buffers
 @subsection Flushing Buffers
 
 @cindex flushing a stream
@@ -2814,7 +2810,7 @@ Fortunately, this ``feature'' seems to be becoming less common.  You do
 not need to worry about this in the GNU system.
 
 
-@node Controlling Buffering,  , Flushing Buffers, Stream Buffering
+@node Controlling Buffering
 @subsection Controlling Which Kind of Buffering
 
 After opening a stream (but before any other operations have been
@@ -2938,7 +2934,7 @@ This function is provided for compatibility with old BSD code.  Use
 @end deftypefun
 
 
-@node Temporary Files, Other Kinds of Streams, Stream Buffering, I/O on Streams
+@node Temporary Files
 @section Temporary Files
 
 If you need to use a temporary file in your program, you can use the
@@ -3033,7 +3029,7 @@ This function is defined for SVID compatibility.
 This macro is the name of the default directory for temporary files.
 @end deftypevr
 
-@node Other Kinds of Streams,  , Temporary Files, I/O on Streams
+@node Other Kinds of Streams
 @section Other Kinds of Streams
 
 The GNU library provides ways for you to define additional kinds of
@@ -3062,6 +3058,7 @@ provide equivalent functionality.
 
 @node String Streams
 @subsection String Streams
+
 @cindex stream, for I/O to a string
 @cindex string stream
 The @code{fmemopen} and @code{open_memstream} functions allow you to do
@@ -3085,7 +3082,7 @@ buffer (for this, try @code{open_memstream}, below).  The buffer is
 freed when the stream is open.
 
 The argument @var{opentype} is the same as in @code{fopen}
-(@xref{Opening and Closing Streams}).  If the @var{opentype} specifies
+(@xref{Opening Streams}).  If the @var{opentype} specifies
 append mode, then the initial file position is set to the first null
 character in the buffer.  Otherwise the initial file position is at the
 beginning of the buffer.
@@ -3226,7 +3223,7 @@ programmed by you.  We call these @dfn{custom streams}.
                                  functions} that a custom stream needs. 
 @end menu
 
-@node Streams and Cookies, Hook Functions,  , Custom Streams
+@node Streams and Cookies
 @subsubsection Custom Streams and Cookies
 @cindex cookie, for custom stream
 
@@ -3289,7 +3286,7 @@ closed.
 This function actually creates the stream for communicating with the
 @var{cookie} using the functions in the @var{io_functions} argument.
 The @var{opentype} argument is interpreted as for @code{fopen};
-see @ref{Opening and Closing Streams}.  (But note that the ``truncate on
+see @ref{Opening Streams}.  (But note that the ``truncate on
 open'' option is ignored.)
 
 @strong{Incomplete:} What is the default buffering mode for the newly
@@ -3299,7 +3296,7 @@ The @code{fopencookie} function returns the newly created stream, or a null
 pointer in case of an error.
 @end deftypefun
 
-@node Hook Functions,  , Streams and Cookies, Custom Streams
+@node Hook Functions
 @subsubsection Custom Stream Hook Functions
 @cindex hook functions (of custom streams)
 

@@ -396,8 +396,8 @@ this link with a new link, you must remove the old link explicitly first.
 
 @item EMLINK
 There are already too many links to the file named by @var{oldname}.
-(The maximum number of links to a file is @code{LINK_MAX}; see @ref{File
-System Parameters}.)
+(The maximum number of links to a file is @code{LINK_MAX}; see
+@ref{Limits for Files}.)
 @c Can this really happen in GNU?
 
 @item ENOENT
@@ -1198,7 +1198,7 @@ systems allow you to change the owner if you are currently the owner.
 
 @strong{Incomplete:}  What does the GNU system do?
 
-@xref{File System Parameters}, for information about the
+@xref{Options for Files}, for information about the
 @code{_POSIX_CHOWN_RESTRICTED} macro.
 
 @item EROFS
@@ -1346,14 +1346,14 @@ This is equivalent to @samp{(S_IROTH | S_IWOTH | S_IXOTH)}.
 @item S_ISUID
 @vindex S_ISUID
 This is the set-user-ID on execute bit, usually 04000. 
-@xref{User/Group IDs of a Process}.
+@xref{How Change Persona}.
 
 @comment sys/stat.h
 @comment POSIX
 @item S_ISGID
 @vindex S_ISGID
 This is the set-group-ID on execute bit, usually 02000.
-@xref{User/Group IDs of a Process}.
+@xref{How Change Persona}.
 
 @cindex sticky bit
 @comment sys/stat.h
@@ -1393,7 +1393,7 @@ Recall that the operating system normally decides access permission for
 a file based on the effective user and group IDs of the process, and its
 supplementary group IDs, together with the file's owner, group and
 permission bits.  These concepts are discussed in detail in
-@ref{User/Group IDs of a Process}.
+@ref{Process Persona}.
 
 If the effective user ID of the process matches the owner user ID of the
 file, then permissions for read, write, and execute/search are
@@ -1597,7 +1597,7 @@ flags @code{R_OK}, @code{W_OK}, @code{X_OK}, or the existence test
 This function uses the @emph{real} user and group ID's of the calling
 process, rather than the @emph{effective} ID's, to check for access
 permission.  As a result, if you use the function from a @code{setuid}
-or @code{setgid} program (@pxref{User/Group IDs of a Process}), it gives
+or @code{setgid} program (@pxref{How Change Persona}), it gives
 information relative to the user who actually ran the program.
 
 The return value is @code{0} if the access is permitted, and @code{-1}

@@ -387,8 +387,8 @@ Modes}.
 This signal is also used to report the termination of the controlling
 process on a terminal to jobs associated with that session; this
 termination effectively disconnects all processes in the session from
-the controlling terminal.  For more information, see @ref{Process
-Termination Details}.
+the controlling terminal.  For more information, see @ref{Termination
+Internals}.
 @end deftypevr
 
 @comment signal.h
@@ -598,7 +598,7 @@ as a background job.  When any process in a background job tries to
 read from the terminal, all of the processes in the job are sent a
 @code{SIGTTIN} signal.  The default action for this signal is to
 stop the process.  For more information about how this interacts with
-the terminal driver, see @ref{Access to the Controlling Terminal}.
+the terminal driver, see @ref{Access to the Terminal}.
 @end deftypevr
 @cindex terminal input signal
 
@@ -622,7 +622,7 @@ discarded.  Likewise, any pending @code{SIGCONT} signals for a process
 are discarded when it receives a stop signal.
 
 The default action for a process that is a member of an orphaned
-process group (@pxref{Process Termination Details}) that receives a
+process group (@pxref{Orphaned Process Groups}) that receives a
 @code{SIGTSTP}, @code{SIGTTIN}, or @code{SIGTTOU} signal is not to stop
 the process.  This makes sense; if a process is stopped by one of these
 signals, it must be continued by the shell, and if a process group has
@@ -1705,7 +1705,7 @@ Two processes need to synchronize while working together.
 @end itemize
 
 This section assumes that you know a little bit about how processes
-work.  For more information on this subject, see @ref{Processes}.
+work.  For more information on this subject, see @ref{Child Processes}.
 
 The @code{kill} function is declared in @file{signal.h}.
 @pindex signal.h
@@ -1803,7 +1803,7 @@ permission to send a signal.  The @code{su} program does this.
 
 Whether a process has permission to send a signal to another process
 is determined by the user IDs of the two processes.  This concept is
-discussed in detail in @ref{User/Group IDs of a Process}.
+discussed in detail in @ref{Process Persona}.
 
 Generally, for a process to be able to send a signal to another process,
 either the sending process must belong to a privileged user (like
@@ -2015,7 +2015,7 @@ The @var{signum} argument doesn't specify a valid signal.
 
 The collection of signals that are currently blocked is called the
 @dfn{signal mask}.  Each process has its own signal mask.  When you
-create a new process (@pxref{Creating New Processes}), it inherits its
+create a new process (@pxref{Creating a Process}), it inherits its
 parent's mask.  You can block or unblock signals with total flexibility
 by modifying the signal mask.
 
