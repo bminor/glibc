@@ -39,7 +39,7 @@ DEFUN(__pipe, (fds), int fds[2])
 
   /* Find the file domain socket server.  */
   server = _hurd_socket_server (AF_FILE);
-  if (server == NULL)
+  if (server == MACH_PORT_NULL)
     return -1;
 
   /* Create two file domain sockets and connect them together.  */
