@@ -1,5 +1,8 @@
 1998-08-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* io/sys/stat.h (ALLPERMS): Fix type (S_ISTXT -> S_ISVTX).
+	Reported by Rob.Hagopian@vu.union.edu [PR libc/763].
+
 	* glibcbug.in: Use mktemp to generate temporary files.
 
 1998-08-28  Ulrich Drepper  <drepper@cygnus.com>
