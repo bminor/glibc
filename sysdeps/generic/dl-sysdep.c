@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Generic Unix version.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -225,4 +225,23 @@ _dl_sysdep_message (const char *msg, ...)
       msg = va_arg (ap, const char *);
     } while (msg);
   va_end (ap);
+}
+
+void
+unsetenv (const char *name)
+{
+  const size_t len = strlen (name);
+  char **ep;
+
+  for (ep = __environ; *ep != NULL; ++ep)
+    if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
+      {
+	/* Found it.  Remove this pointer by moving later ones back.  */
+	char **dp = ep;
+
+	do
+	  dp[0] = dp[1];
+	while (*dp++);
+	/* Continue the loop in case NAME appears again.  */
+      }
 }
