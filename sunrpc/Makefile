@@ -53,7 +53,7 @@ rpcsvc = bootparam.x nlm_prot.x rstat.x \
 	 rnusers.x spray.x nfs_prot.x rquota.x yp.x
 install-others = $(includedir)/rpcsvc/bootparam_prot.h \
 		 $(etcdir)/rpc
-generated = $(rpcsvc:%.x=$(objpfx)rpcsvc/%.h) $(rpcsvc:%.x=$(objpfx)x%.c)
+generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c)
 
 routines := auth_none auth_unix authuxprot bindrsvprt \
 	    clnt_gen clnt_perr clnt_raw clnt_simp clnt_tcp \
