@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ _hurd_socket_server (int domain)
 
   if (sockdir == MACH_PORT_NULL)
     {
-      sockdir = __hurd_path_lookup (_HURD_SOCKET, FS_LOOKUP_EXEC, 0);
+      sockdir = __hurd_path_lookup (_SERVERS_SOCKET, FS_LOOKUP_EXEC, 0);
       if (sockdir == MACH_PORT_NULL)
 	{
 	  __mutex_unlock (&lock);
@@ -66,7 +66,7 @@ _hurd_socket_server (int domain)
     char buf[100];
     sprintf (buf, "%d", domain);
     if (err = __dir_lookup (sockdir, 0, 0, &servers[domain]))
-      errno = __hurd_errno (err);
+      errno = err;
   }
 
   __mutex_unlock (&lock);
