@@ -18,9 +18,11 @@ Cambridge, MA 02139, USA.  */
 
 #include "DEFS.h"
 
+/* Code produced by Sun's C compiler calls this function with two extra
+   arguments which it makes relocatable symbols but seem always to be
+   the constant 96; I have no idea what they are for.  */
+
 FUNC (__builtin_alloca)
-	add %o0, 7, %o0		/* Round up to longword alignment.  */
-	andn %o0, 7, %o0
 	sub %sp, %o0, %sp	/* Push some stack space.  */
 	retl			/* Return; the returned buffer leaves 96 */
 	add %sp, 96, %o0	/* bytes of register save area at the top. */
