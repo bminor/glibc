@@ -382,6 +382,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	    {
 	      thread_t *threads;
 	      unsigned int nthreads, i;
+	      error_t err;
 	      /* Tell the proc server we are continuing.  */
 	      __USEPORT (PROC, __proc_mark_cont (port));
 	      /* Fetch ports to all our threads and resume them.  */
