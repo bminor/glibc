@@ -159,7 +159,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	width = -1;
 
       /* Check for type modifiers.  */
-      is_short = is_long = is_long_double = 0;
+      is_short = is_long = is_long_double = malloc_string = 0;
       while (*f == 'h' || *f == 'l' || *f == 'L')
 	switch (*f++)
 	  {
