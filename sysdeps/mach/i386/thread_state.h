@@ -1,4 +1,4 @@
-/* Mach thread state definitions for Hurd code.  i386 version.
+/* Mach thread state definitions for machine-independent code.  i386 version.
 Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -21,10 +21,10 @@ Cambridge, MA 02139, USA.  */
    called `thread_status'.  Oh boy.  */
 #include <mach/thread_status.h>
 
-#define HURD_THREAD_STATE_FLAVOR	i386_THREAD_STATE
-#define HURD_THREAD_STATE_COUNT		i386_THREAD_STATE_COUNT
+#define MACHINE_THREAD_STATE_FLAVOR	i386_THREAD_STATE
+#define MACHINE_THREAD_STATE_COUNT	i386_THREAD_STATE_COUNT
 
-#define hurd_thread_state i386_thread_state
+#define machine_thread_state i386_thread_state
 
 #define PC eip
 #define SP uesp

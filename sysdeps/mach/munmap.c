@@ -1,5 +1,4 @@
-/* Mach thread state definitions for machine-independent code.  Stub version.
-Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,18 +16,24 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* Everything else is called `thread_state', but CMU's header file is
-   called `thread_status'.  Oh boy.  */
-#include <mach/thread_state.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <errno.h>
+#include <mach.h>
 
-/* Replace <machine> with "i386" or "mips" or whatever.  */
+/* Deallocate any mapping for the region starting at ADDR and extending LEN
+   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
 
-#define MACHINE_THREAD_STATE_FLAVOR	<machine>_THREAD_STATE
-#define MACHINE_THREAD_STATE_COUNT	<machine>_THREAD_STATE_COUNT
-
-#define machine_thread_state <machine>_thread_state
-
-/* Define these to the member names in `struct <machine>_thread_state'
-   for the PC and stack pointer.  */
-#define PC ?
-#define SP ?
+int
+munmap (caddr_t addr, size_t len)
+{
+  kern_return_t err;
+  if (err = __vm_deallocate (__mach_task_self (),
+			     (vm_address_t) addr, (vm_size_t) len))
+    {
+      errno = err;
+      return -1;
+    }
+  return 0;
+}
+	
