@@ -294,8 +294,14 @@ echo on `(hostname || uname -n) 2>/dev/null | sed 1q` for ${config}.
 sysnames="`echo $sysnames | sed -e 's@^/@@' -e 's@ /@ @g'`"
 
 # Prepend the machine's FPU directory unless --nfp.
-if [ ! "$nfp" -a -d $sysdep_dir/$machine/fpu ]; then
-  sysnames="${machine}/fpu $sysnames"
+if [ ! "$nfp" ]; then
+  fpu_dirs=
+  for m in $mach; do
+    if [ -d $sysdep_dir$mach/fpu ]; then
+      fpu_dirs="$fpu_dirs $mach/fpu"
+    fi
+  done
+  sysnames="`echo $fpu_dirs | sed -e 's,^/,,' -e 's, /,,g'` $sysnames"
 fi
 
 # Expand the list of system names into a full list of directories
