@@ -1,3 +1,22 @@
+2004-11-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_POSIX_PRIORITIZED_IO,
+	_POSIX2_CHAR_TERM, _POSIX_THREAD_PRIO_INHERIT,
+	_POSIX_THREAD_PRIO_PROTECT): Define.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/posix_opt.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h: Likewise.
+
+2004-11-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_POSIX_ADVISORY_INFO,
+	_POSIX_SPORADIC_SERVER, _POSIX_THREAD_SPORADIC_SERVER, _POSIX_TRACE,
+	_POSIX_TRACE_EVENT_FILTER, _POSIX_TRACE_INHERIT, _POSIX_TRACE_LOG,
+	_POSIX_TYPED_MEMORY_OBJECTS): Define.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/posix_opt.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h: Likewise.
+
 2004-11-05  Maciej W. Rozycki  <macro@mips.com>
 
 	* sysdeps/mips/pspinlock.c: Include <sgidefs.h>.  Use _ABIO32,
