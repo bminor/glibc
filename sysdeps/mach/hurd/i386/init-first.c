@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For i386/Hurd.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -247,22 +247,18 @@ init (int *data)
    we will run on, and jmp to the run-time address of `init1'; when it
    returns, it will run the user code with the argument data at the
    top of the stack.  */
-asm ("
- switch_stacks:
-  movl %eax, %esp
-  jmp *%ecx
-");
+asm ("switch_stacks:\n"
+     "	movl %eax, %esp\n"
+     "	jmp *%ecx");
 
 /* As in the stack-switching case, at this point our stack is unwound
    and callers' registers restored, and only %ecx and %eax communicate
    values from the lines above.  In this case we have stashed in %eax
    the user code return address.  Push it on the top of the stack so
    it acts as init1's return address, and then jump there.  */
-asm ("
-  call_init1:
-  push %eax
-  jmp *%ecx
-");
+asm ("call_init1:\n"
+     "	push %eax\n"
+     "	jmp *%ecx\n");
 
 
 /* Do the first essential initializations that must precede all else.  */
@@ -313,14 +309,14 @@ strong_alias (posixland_init, __libc_init_first);
    This poorly-named function is called by static-start.S,
    which should not exist at all.  */
 void
-_hurd_stack_setup (int argc __attribute__ ((unused)), ...)
+_hurd_stack_setup (volatile int argc, ...)
 {
   void doinit (int *data)
     {
       /* This function gets called with the argument data at TOS.  */
-      void doinit1 (int argc, ...)
+      void doinit1 (volatile int argc, ...)
 	{
-	  init (&argc);
+	  init ((int *) &argc);
 	}
 
       /* Push the user return address after the argument data, and then
