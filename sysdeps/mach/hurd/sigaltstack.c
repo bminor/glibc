@@ -36,7 +36,7 @@ DEFUN(sigaltstack, (ss, oss),
   if (oss != NULL)
     *(volatile struct sigaltstack *) oss = *oss;
 
-  s = _hurd_thread_sigstate (__mach_thread_self ());
+  s = _hurd_self_sigstate ();
 
   if (argss != NULL &&
       (ss.ss_flags & SA_DISABLE) && (s->sigaltstack.ss_flags & SA_ONSTACK))
