@@ -97,9 +97,6 @@ endif	# tests
 ifdef mib_hacks
 others :=
 endif
-
-export others := $(others)
-export tests := $(tests)
 
 .PHONY: distclean realclean subdir_distclean subdir_realclean \
 	subdir_clean subdir_mostlyclean
@@ -124,18 +121,9 @@ subdir_echo-distinfo:
 .PHONY: subdir_install
 subdir_install: install-no-libc.a lib-noranlib stubs
 
-.PHONY: subdir_TAGS
+.PHONY: subdir_TAGS subdir_dist
 subdir_TAGS: TAGS
-
-# Make the distribution tarfile for the parent makefile.
-.PHONY: subdir_dist dist
 subdir_dist: dist
-dist: ../Make-dist
-	$(MAKE) -f $< \
-		'distribute := $(distribute)' \
-		'dont_distribute := $(dont_distribute)' \
-		'generated := $(generated)' \
-		$(Make-dist-args)
 
 # Convenient target to update all the generated source files.
 .PHONY: generated
