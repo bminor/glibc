@@ -39,5 +39,5 @@ DEFUN(setjmp, (env), jmp_buf env)
 }
 
 #undef	longjmp
-function_alias_void(longjmp, siglongjmp, void, (env, val),
-		    DEFUN(longjmp, (env, val), jmp_buf env AND int val))
+function_alias_void(longjmp, siglongjmp, (env, val),
+		    DEFUN(longjmp, (env, val), CONST jmp_buf env AND int val))
