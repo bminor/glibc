@@ -65,7 +65,7 @@ DEFUN(fmemopen, (s, len, mode),
   /* Can't seek outside the buffer.  */
   stream->__io_funcs.__seek = NULL;
   /* There is no associated file descriptor to fetch.  */
-  stream->__io_funcs.__fileno = NULL
+  stream->__io_funcs.__fileno = NULL;
 
   stream->__seen = 1;
 

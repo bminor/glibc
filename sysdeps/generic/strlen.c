@@ -36,9 +36,9 @@ DEFUN(strlen, (str), CONST char *str)
      Do this until CHAR_PTR is aligned on a longword boundary.  */
   for (char_ptr = str; ((unsigned long int) char_ptr
 			& (sizeof (longword) - 1)) != 0;
-       --n, ++char_ptr)
+       ++char_ptr)
     if (*char_ptr == '\0')
-      return (PTR) char_ptr;
+      return char_ptr - str;
 
   /* All these elucidatory comments refer to 4-byte longwords,
      but the theory applies equally well to 8-byte longwords.  */
@@ -54,16 +54,18 @@ DEFUN(strlen, (str), CONST char *str)
 
      The 1-bits make sure that carries propagate to the next 0-bit.
      The 0-bits provide holes for carries to fall into.  */
-  magic_bits = 0x7efefeff;
-  himagic = 0x80808080;
-  lomagic = 0x01010101;
+  magic_bits = 0x7efefeffL;
+  himagic = 0x80808080L;
+  lomagic = 0x01010101L;
   if (sizeof (longword) > 4)
     {
       /* 64-bit version of the magic.  */
-      magic_bits = (0x7efefefe << 32) | 0xfefefeff;
+      magic_bits = (0x7efefefeL << 32) | 0xfefefeffL;
       himagic = (himagic << 32) | himagic;
       lomagic = (lomagic << 32) | lomagic;
     }
+  if (sizeof (longword) > 8)
+    abort ();
 
   /* Instead of the traditional loop which tests each character,
      we will test a longword at a time.  The tricky part is testing

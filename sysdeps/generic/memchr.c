@@ -57,16 +57,21 @@ DEFUN(memchr, (s, c, n), CONST PTR s AND int c AND size_t n)
 
      The 1-bits make sure that carries propagate to the next 0-bit.
      The 0-bits provide holes for carries to fall into.  */
-  magic_bits = 0x7efefeff;
-  if (sizeof (longword) > 4)
-    /* 64-bit version of the magic.  */
-    magic_bits = (0x7efefefe << 32) | 0xfefefeff;
+  switch (sizeof (longword))
+    {
+    case 4: magic_bits = 0x7efefeffL; break;
+    case 8: magic_bits = (0x7efefefeL << 32) | 0xfefefeffL; break;
+    default:
+      abort ();
+    }
 
   /* Set up a longword, each of whose bytes is C.  */
   charmask = c | (c << 8);
   charmask |= charmask << 16;
   if (sizeof (longword) > 4)
     charmask |= charmask << 32;
+  if (sizeof (longword) > 8)
+    abort ();
 
   /* Instead of the traditional loop which tests each character,
      we will test a longword at a time.  The tricky part is testing
