@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -162,7 +162,7 @@ DEFUN(__vfscanf, (s, format, arg),
 
       /* Check for type modifiers.  */
       is_short = is_long = is_long_double = malloc_string = 0;
-      while (*f == 'h' || *f == 'l' || *f == 'L')
+      while (*f == 'h' || *f == 'l' || *f == 'L' || *f == 'a')
 	switch (*f++)
 	  {
 	  case 'h':
