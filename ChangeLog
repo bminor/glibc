@@ -1,3 +1,8 @@
+1999-10-19  Bruno Haible  <haible@ilog.fr>
+
+        * sysdeps/mach/sleep.c (__sleep): If we slept longer than requested,
+	return 0, not UINT_MAX.
+
 1999-10-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/rcmd.c (iruserok2): Initialize isbad to -1 [PR libc/1405].
