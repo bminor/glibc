@@ -83,7 +83,10 @@ you run @code{configure}:
 @table @samp
 @item --with-gnu-ld
 Use this option if you plan to use GNU @code{ld} to link programs with
-the GNU C Library.  (We strongly recommend that you do.)
+the GNU C Library.  (We strongly recommend that you do.)  This option
+enables use of features that exist only in GNU @code{ld}; so if you
+configure for GNU @code{ld} you must use GNU @code{ld} @emph{every time}
+you link with the GNU C Library, and when building it.
 
 @item --with-gnu-as
 Use this option if you plan to use the GNU assembler, @code{gas}, when
