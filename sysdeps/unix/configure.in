@@ -120,6 +120,6 @@ done
 
 # Store the list of files we created in config.make; Makefile uses it.
 test -n "$unix_generated" && config_vars="$config_vars
-unix-generated := \$(addprefix $(objpfx),${unix_generated})"
+unix-generated := \$(addprefix \$(objpfx),${unix_generated})"
 
 }
