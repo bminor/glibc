@@ -1,3 +1,8 @@
+2000-01-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: Fix code for running on
+	kernel without mmap2 syscall.
+
 2000-01-03  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/arm/bits/string.h (_HAVE_STRING_ARCH_mempcpy): Define.
