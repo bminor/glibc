@@ -115,6 +115,9 @@ extern int _hurd_set_data_limit (const struct rlimit *);
 
 extern int _hurd_set_brk (vm_address_t newbrk);
 
+#define __need_FILE
+#include <stdio.h>
+
 /* Calls to get and set basic ports.  */
 
 extern process_t getproc (void);
@@ -172,9 +175,16 @@ extern file_t __path_lookup (const char *file, int flags, mode_t mode);
 extern file_t path_lookup (const char *file, int flags, mode_t mode);
 
 
-/* Open a file descriptor on a port.  */
+/* Open a file descriptor on a port.  FLAGS are as for `open'.  */
 
 extern int openport (io_t port, int flags);
+
+/* Open a stream on a port.  MODE is as for `fopen'.
+   If successful, this consumes a user reference for PORT
+   (which will be deallocated on fclose).  */
+
+extern FILE *fopenport (io_t port, const char *mode);
+extern FILE *__fopenport (io_t port, const char *mode);
 
 
 /* Execute a file, replacing TASK's current program image.  */
