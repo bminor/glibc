@@ -743,7 +743,7 @@ Child Processes
 * Process Completion::          How to tell when a child process has completed.
 * Process Completion Status::   How to interpret the status value 
                                    returned from a child process.
-* BSD wait Functions::		More functions, for backward compatibility.
+* BSD Wait Functions::		More functions, for backward compatibility.
 * Process Creation Example::    A complete example program.
 
 Job Control

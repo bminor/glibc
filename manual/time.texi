@@ -1389,7 +1389,7 @@ The combination of @var{class} and @var{id} does not match any existing
 process.
 
 @item EINVAL
-The value of var{class} is not valid.
+The value of @var{class} is not valid.
 @end table
 
 When the return value is @code{-1}, it could indicate failure, or it
@@ -1413,7 +1413,7 @@ The combination of @var{class} and @var{id} does not match any existing
 process.
 
 @item EINVAL
-The value of var{class} is not valid.
+The value of @var{class} is not valid.
 
 @item EPERM
 You tried to set the priority of some other user's process, and you
