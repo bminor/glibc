@@ -49,6 +49,9 @@ generated := $(generated) \
 
 endif
 
+ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
+	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/sys/param.h))))))
+
 before-compile := $(before-compile) $(common-objpfx)sys/param.h
 
 $(common-objpfx)sys/param.h: $(sysincludedir)/sys/param.h
@@ -122,6 +125,8 @@ ifeq ($(subdir),misc)
 sysdep_headers := $(sysdep_headers) sys/param.h $(sys/param.h-includes)
 
 endif # misc
+
+endif # No sysdep sys/param.h.
 
 ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/errnos.h))))))
