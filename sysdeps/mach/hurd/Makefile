@@ -16,12 +16,25 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
+ifndef sysdeps/mach/hurd/Makefile
+sysdeps/mach/hurd/Makefile := included
+
 
 # If we were configured with `--with-hurd=DIR', then config.make sets
 # hurd-srcdir to DIR.  Otherwise guess we are in a big source tree.
 ifndef hurd-srcdir
-hurd-srcdir = ../../hurd
+hurd-srcdir = ../hurd
 endif
+
+# hurd-srcdir is now set to the logical directory name.  This name might be
+# relative to $(objdir), might be relative to the source directory, or
+# might be absolute.  We choose among these possibilities by looking for a
+# canonical file in each of those places (in that order).
+f := hurd/hurd_types.defs # Random file that identifies the Hurd source dir.
+hurd-srcdir := $(firstword $(patsubst %/$f,%,$(wildcard $(addsuffix /$f,\
+	       $(objpfx)$(hurd-srcdir) $(hurd-srcdir)))) $(hurd-srcdir))
+
+
 
 # Look for header files in hurd/ under the top-level library source directory.
 includes += -I$(..)hurd
@@ -59,3 +72,6 @@ $(hurd)/errnos.h: $(hurd)/errnos.awk $(errno.texinfo)
 $(hurd)/errlist.c: $(hurd)/errlist.awk $(errno.texinfo)
 	awk -f $^ > $@-tmp
 	mv $@-tmp $@
+
+
+endif # sysdeps/mach/hurd/Makefile
