@@ -43,6 +43,15 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #endif
 
+#ifdef	HAVE_UNISTD_H
+#include <unistd.h>
+#ifndef POSIX
+#ifdef	_POSIX_VERSION
+#define	POSIX
+#endif
+#endif
+#endif
+
 #if !defined(__GNU_LIBRARY__) && !defined(STDC_HEADERS)
 extern int errno;
 #endif
@@ -79,10 +88,6 @@ extern int errno;
 #else
 #define REAL_DIR_ENTRY(dp) (dp->d_ino != 0)
 #endif /* POSIX */
-
-#ifdef	HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 
 #if	(defined (STDC_HEADERS) || defined (__GNU_LIBRARY__))
 #include <stdlib.h>
