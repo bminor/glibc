@@ -189,8 +189,7 @@ export generated := $(generated) $(objpfx)stubs.h
 dist: Make-dist $(distribute)
 	$(MAKE) -f $< no_deps=t $(Make-dist-args)
 
-README: Make-dist README.template
-	$(MAKE) -f $^
+README: README.template version.c ; # Make-dist should update README.
 
 INSTALL: manual/maint.texi
 	makeinfo --no-validate --no-warn --no-headers $< -o $@
