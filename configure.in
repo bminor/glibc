@@ -239,7 +239,7 @@ netbsd* | 386bsd*)
   base_os=unix/bsd/bsd4.4 ;;
 osf1* | sunos* | ultrix* | newsos* | dynix* | *bsd*)
   base_os=unix/bsd ;;
-linux* | sysv* | isc* | esix* | sco* | minix*)
+linux* | sysv* | isc* | esix* | sco* | minix* | irix4*)
   base_os=unix/sysv ;;
 solaris[2-9]*)
   base_os=unix/sysv/sysv4 ;;
