@@ -1,4 +1,4 @@
-# Copyright (C) 1991 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -85,8 +85,9 @@ mostlyclean:
 # This removes absolutely everything that can be regenerated.
 .PHONY: subdir_clean clean realclean
 subdir_clean realclean: clean
++objs := $(objects)
 clean: mostlyclean
-	rm -f $(objects) $(+depfiles)
+	rm -f $(+objs) $(+depfiles)
 
 .PHONY: subdir_echo-headers
 subdir_echo-headers: echo-headers
@@ -130,3 +131,4 @@ dist: ../Make-dist
 # Keep these out of the environment so it doesn't get too big.
 override routines :=
 override aux :=
+override objects :=
