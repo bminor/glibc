@@ -132,7 +132,7 @@ support file positioning operations.
 When you are finished using a socket, you can simply close its
 file descriptor with @code{close}; @pxref{Opening and Closing Files}.
 If there is still data waiting to be transmitted over the connection,
-normally @code{close} will try to complete this transmission.  You
+normally @code{close} tries to complete this transmission.  You
 can control this behavior using the @code{SO_LINGER} socket option;
 @pxref{Socket Options}.
 
@@ -185,7 +185,7 @@ function.
 
 Only sockets belonging to server processes need to be named.  You can
 also call @code{bind} to establish the name of the socket on the client
-side, but this is optional; a name will be assigned automatically if you
+side, but this is optional; a name is assigned automatically if you
 don't.
 
 The details of how sockets are named vary depending on the particular
@@ -237,7 +237,7 @@ The @code{getsockname} information returns information about the name
 of the socket @var{filedes} in the locations specified by the @var{addr} 
 and @var{length_ptr} arguments.  Note that the @var{length_ptr} is a pointer;
 you should initialize it to be the allocation size of @var{addr}, and on
-return it will contain the actual size of the name.  Again, the format of the
+return it contains the actual size of the name.  Again, the format of the
 information depends on the socket domain.
 
 The return value is @code{0} on success and @code{-1} on error.  The
@@ -257,7 +257,7 @@ There are not enough internal buffers available for the operation.
 
 @comment sys/socket.h
 @comment BSD
-@deftp {Data Type} {struct sockaddr}
+@deftp {struct Type} sockaddr
 Since the format of socket addresses varies depending on the domain of
 the socket, the functions that deal with socket names treat them as a
 byte vector prefixed with a code that identifies the format of the data
@@ -415,11 +415,11 @@ file.  It's typical to put these files in the @file{/tmp} directory.
 access to the socket?
 
 The structure for specifying socket names in the local domain is
-defined in the header file @file{<sys/un.h}:
+defined in the header file @file{<sys/un.h>}:
 
 @comment sys/un.h
 @comment BSD
-@deftp {Data Type} {struct sockaddr_un}
+@deftp {struct Type} sockaddr_un
 This structure is used to specify local domain socket addresses.  It has
 the following members:
 
@@ -470,7 +470,7 @@ int make_named_socket (const char *filename)
   
   sock = socket (PF_UNIX, SOCK_DGRAM, 0);
   if (sock < 0) @{
-    fprintf (stderr, "socket() failed with error %d.\n", errno);
+    perror ("socket");
     exit (EXIT_FAILURE);
   @}
 
@@ -481,7 +481,7 @@ int make_named_socket (const char *filename)
   size = strlen (name.sun_path) + sizeof (name.sun_family);
   status = bind (sock, (struct sockaddr *)&name, size);
   if (size < 0) @{
-    fprintf (stderr, "bind() failed with error %d.\n", errno);
+    perror ("bind");
     exit (EXIT_FAILURE);
   @}
 
@@ -531,7 +531,7 @@ protocols database.  These are declared in @file{<netdb.h>}.
 
 @comment netdb.h
 @comment BSD
-@deftp {Data Type} {struct protoent}
+@deftp {struct Type} protoent
 This data type is used to represent entries in the network protocols
 database.  It has the following members:
 
@@ -552,7 +552,7 @@ argument to @code{socket}.
 You can use @code{getprotobyname} and @code{getprotobynumber} to search
 the protocols database for a specific protocol.  The information is
 returned in a statically-allocated structure; you must copy the
-information if you need to save it.
+information if you need to save it across calls.
 
 @comment netdb.h
 @comment BSD
@@ -609,7 +609,7 @@ is defined in the header file @file{<netinet/in.h>}.
 
 @comment netinet/in.h
 @comment BSD
-@deftp {Data Type} {struct sockaddr_in}
+@deftp {struct Type} sockaddr_in
 This is the data type used to represent socket addresses in the
 Internet domain.  It has the following members:
 
@@ -716,7 +716,7 @@ header file @file{<netinet.in.h>}:
 
 @comment netinet/in.h
 @comment BSD
-@deftp {Data Type} {struct in_addr}
+@deftp {struct Type} in_addr
 This is the data type representing an Internet host address.  You can
 cast this structure type to a @code{unsigned long int} to get the host address
 number.
@@ -800,7 +800,7 @@ The utilities for accessing this database are declared in @file{<netdb.h>}.
 
 @comment netdb.h
 @comment BSD
-@deftp {Data Type} {struct hostent}
+@deftp {struct Type} hostent
 This data type is used to represent an entry in the hosts database.  It
 has the following members:
 
@@ -813,7 +813,7 @@ These are alternative names for the host, represented as a null-terminated
 vector of strings.
 
 @item int h_addrtype
-This is the host address type; this is always @code{AF_INET}.
+This is the host address type; its value is always @code{AF_INET}.
 @xref{Socket Naming}.
 
 @item int h_length
@@ -957,7 +957,7 @@ the services database.
 
 @comment netdb.h
 @comment BSD
-@deftp {Data Type} {struct servent}
+@deftp {struct Type} servent
 This data type holds information about entries from the services database.
 It has the following members:
 
@@ -1039,7 +1039,7 @@ presented here for completeness only.
 
 @comment netdb.h
 @comment BSD
-@deftp {Data Type} {struct netent}
+@deftp {struct Type} netent
 This data type is used to represent information about entries in the
 networks database.  It has the following members:
 
@@ -1124,7 +1124,7 @@ If you use @code{getservbyname} and @code{gethostbyname} or
 already in the network byte order, and you can copy them directly into
 the @code{sockaddr_in} structure.
 
-Otherwise, you will have to convert the values explicitly.  Use
+Otherwise, you have to convert the values explicitly.  Use
 @code{htons} and @code{ntohs} to convert values for the @code{sin_port}
 member.  Use @code{htonl} and @code{ntohl} to convert values for the
 @code{sin_addr} member.  (Remember, @code{struct in_addr} is equivalent
@@ -1186,7 +1186,7 @@ int make_socket (unsigned short int port)
   /* @r{Create the socket.} */
   sock = socket (PF_INET, SOCK_STREAM, 0);
   if (sock < 0) @{
-    fprintf (stderr, "socket() failed with error %d.\n", errno);
+    perror ("socket");
     exit (EXIT_FAILURE);
   @}
 
@@ -1197,7 +1197,7 @@ int make_socket (unsigned short int port)
   memcpy (&name.sin_addr, &addr, sizeof (addr));
   status = bind (sock, (struct sockaddr *)&name, sizeof (name));
   if (status < 0) @{
-    fprintf (stderr, "bind() failed with error %d.\n", errno);
+    perror ("bind");
     exit (EXIT_FAILURE);
   @}
 
@@ -1428,7 +1428,7 @@ This function is used to accept a connection to the socket @var{filedes}.
 You must first call @code{listen} on this socket to enable connections to
 be made.
 
-The @code{accept} function causes the calling process to block if there
+The @code{accept} function blocks the calling process if there
 are no connections pending, unless the socket @var{filedes} has
 nonblocking mode set.  @xref{File Status Flags}.
 
@@ -1565,7 +1565,8 @@ The operation was interrupted by a signal before any data was read.
 @end deftypefun
 
 The @var{flags} argument to these functions is a bit mask.  You can
-specify the following options by OR'ing the bit values together:
+bitwise-OR the values of the following macros together to obtain a
+value for this argument.
 
 @comment sys/socket.h
 @comment BSD
@@ -1622,7 +1623,7 @@ void write_to_server (int filedes)
 
   nbytes = write (filedes, MESSAGE, strlen (MESSAGE) + 1);
   if (nbytes < 0) @{
-    fprintf (stderr, "write() failed with error %d.\n", errno);
+    perror ("write");
     exit (EXIT_FAILURE);
   @}
 @}
@@ -1637,7 +1638,7 @@ void main (void)
   /* @r{Create the socket.}  */
   sock = socket (PF_INET, SOCK_STREAM, 0);
   if (sock < 0) @{
-    fprintf (stderr, "Client: socket() failed with error %d.\n", errno);
+    perror ("socket (client)");
     exit (EXIT_FAILURE);
   @}
 
@@ -1646,7 +1647,7 @@ void main (void)
   status = connect (sock, (struct sockaddr *) &servername,
                     sizeof (servername));
   if (status < 0) @{
-    fprintf (stderr, "Client: connect() failed with error %d.\n", errno);
+    perror ("connect (client)");
     exit (EXIT_FAILURE);
   @}
 
@@ -1691,7 +1692,7 @@ int read_from_client (int filedes)
   nbytes = read (filedes, buffer, MAXMSG);
   if (nbytes < 0) @{
     /* Read error. */
-    fprintf (stderr, "read() failed with error %d.\n", errno);
+    perror ("read");
     exit (EXIT_FAILURE);
   @}
   else if (nbytes == 0) @{
@@ -1719,7 +1720,7 @@ void main (void)
   sock = make_socket (PORT);
   status = listen (sock, 1);
   if (status < 0) @{
-    fprintf (stderr, "listen() failed with error %d.\n", errno);
+    perror ("listen");
     exit (EXIT_FAILURE);
   @}
 
@@ -1732,7 +1733,7 @@ void main (void)
     memcpy (&read_fd_set, &active_fd_set, sizeof (active_fd_set));
     status = select (FD_SETSIZE, &read_fd_set, NULL, NULL, NULL);
     if (status < 0) @{
-      fprintf (stderr, "select() failed with error %d.\n", errno);
+      perror ("select");
       exit (EXIT_FAILURE);
     @}
     /* @r{Service all the sockets with input pending.} */
@@ -1744,7 +1745,7 @@ void main (void)
           size = sizeof (clientname);
           status = accept (sock, (struct sockaddr *)&clientname, &size);
           if (status < 0) @{
-            fprintf (stderr, "accept() failed with error %d.\n", errno);
+            perror ("accept");
             exit (EXIT_FAILURE);
           @}
           fprintf (stderr, "Server: connection from host %s, port %d.\n",
@@ -1790,7 +1791,7 @@ information about @code{select}.
 
 Receiving a @code{SIGURG} signal only means that out-of-band data is
 pending, not that it has arrived.  If you try to read the out-of-band
-data with @code{recv} when it has not yet arrived, it will fail with a
+data with @code{recv} when it has not yet arrived, it fails with a
 @code{EWOULDBLOCK} error.  You may even need to read some of the in-band
 data to empty out internal buffers before the out-of-band data can be
 delivered.
@@ -1864,7 +1865,7 @@ related to @code{readv}, which I don't understand either.
 
 @comment sys/socket.h
 @comment BSD
-@deftp {Data Type} {struct msghdr}
+@deftp {struct Type} msghdr
 @end deftp
 
 @comment sys/socket.h
@@ -1921,7 +1922,7 @@ void main (void)
     nbytes = recvfrom (sock, message, MAXMSG, 0,
                        (struct sockaddr *)&name, &size);
     if (nbytes < 0) @{
-      fprintf (stderr, "Server: recvfrom () failed with error %d.\n", errno);
+      perror ("recfrom (server)");
       exit (EXIT_FAILURE);
     @}
 
@@ -1932,7 +1933,7 @@ void main (void)
     nbytes = sendto (sock, message, nbytes, 0,
                      (struct sockaddr *)&name, size);
     if (nbytes < 0) @{
-      fprintf (stderr, "Server: sendto () failed with error %d.\n", errno);
+      perror ("sendto (server)");
       exit (EXIT_FAILURE);
     @}
   @}
@@ -1980,14 +1981,14 @@ void main (void)
   nbytes = sendto (sock, MESSAGE, strlen (MESSAGE) + 1, 0,
                    (struct sockaddr *)&name, size);
   if (nbytes < 0) @{
-    fprintf (stderr, "Client: sendto () failed with error %d.\n", errno);
+    perror ("sendto (client)");
     exit (EXIT_FAILURE);
   @}
 
   /* @r{Wait for a reply.} */   
   nbytes = recvfrom (sock, message, MAXMSG, 0, NULL, 0);
   if (nbytes < 0) @{
-    fprintf (stderr, "Client: recvfrom () failed with error %d.\n", errno);
+    perror ("recfrom (client)");
     exit (EXIT_FAILURE);
   @}
 
@@ -2001,13 +2002,13 @@ void main (void)
 @end example
 
 Finally, remember that datagram socket communications are unreliable.
-In this example, the client program will simply block indefinitely if
-the message is not delivered to the server; it's left up to the user of
-the program to kill it off and restart it interactively, if necessary.
-A better solution would be to use @code{select} (@pxref{Waiting for
-Input or Output}) to establish a timeout period for the reply, and
-either resend the message or shut down the socket cleanly before exiting
-if the connection appears to be dead.
+In this example, the client program simply blocks indefinitely if the
+message is not delivered to the server; it's left up to the user of the
+program to kill it off and restart it interactively, if necessary.  A
+better solution would be to use @code{select} (@pxref{Waiting for Input
+or Output}) to establish a timeout period for the reply, and either
+resend the message or shut down the socket cleanly before exiting if the
+connection appears to be dead.
 
 
 @node Socket Options
@@ -2041,7 +2042,7 @@ The @code{getsockopt} function gets information about the value of
 option @var{optname} at level @var{level} for socket @var{filedes}.  The
 information is stored at the location pointed at by @var{optval}.  You
 should initialize the value at @var{optlen_ptr} to contain the size of
-this buffer, and on return it will contain the actual number of bytes of
+this buffer, and on return it contains the actual number of bytes of
 information stored.  Most options interpret the @var{optval} buffer as a
 single @code{int} value.
 
@@ -2128,14 +2129,14 @@ object.
 
 @comment sys/socket.h
 @comment BSD
-@deftp {Data Type} {struct linger}
+@deftp {struct Type} linger
 This data type is used to supply a value for the @code{SO_LINGER} socket
 option.  It has the following members:
 
 @table @code
 @item int l_onoff
-This field is interpreted as a boolean.  If nonzero, @code{close} will
-block until the data is transmitted or the timeout period has expired.
+This field is interpreted as a boolean.  If nonzero, @code{close}
+blocks until the data is transmitted or the timeout period has expired.
 
 @item int l_linger
 This specifies the timeout period, in seconds.
