@@ -37,7 +37,7 @@ routines := brk sbrk sstk ioctl \
 	    __getpgsz \
 	    getdtsz \
 	    __getdtsz \
-	    __gethstnm gethstnm sethostnam \
+	    __gethstnm gethstnm sethostnam getdomain setdomain \
 	    __select select \
 	    acct chroot fsync sync reboot \
 	    gethostid sethostid \
