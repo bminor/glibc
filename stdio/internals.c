@@ -370,7 +370,8 @@ DEFUN(fillbuf, (fp), register FILE *fp)
   size_t buffer_offset = 0;
   register char *buffer;
   register size_t to_read, nread = 0;
-  char c;
+  /* This must be unsigned to avoid sign extension in return.  */
+  unsigned char c;
 
   if (fp->__io_funcs.__read == NULL)
     {
@@ -382,7 +383,7 @@ DEFUN(fillbuf, (fp), register FILE *fp)
   if (fp->__buffer == NULL)
     {
       /* We're unbuffered, so we want to read only one character.  */
-      buffer = &c;
+      buffer = (char *) &c;
       to_read = 1;
     }
   else
@@ -455,7 +456,7 @@ DEFUN(fillbuf, (fp), register FILE *fp)
   fp->__put_limit = fp->__buffer;
 
   /* Return the first character in the buffer.  */
-  return (unsigned char) *fp->__bufp++;
+  return *((unsigned char *) (fp->__bufp++));
 }
 
 
