@@ -371,8 +371,7 @@ DCGETTEXT (domainname, msgid, category)
 
 	  /* When this is a SUID binary we must not allow accessing files
 	     outside the dedicated directories.  */
-	  if (ENABLE_SECURE
-	      && memchr (single_locale, '/', single_locale) != NULL)
+	  if (ENABLE_SECURE && strchr (single_locale, '/') != NULL)
 	    /* Ingore this entry.  */
 	    continue;
 	}
