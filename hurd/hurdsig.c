@@ -362,6 +362,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	    act = handle;
 	    handler = _hurd_siginfo_handler;
 	  }
+	else
+	  act = ignore;
 	break;
 
       default:
@@ -602,8 +604,8 @@ _S_sig_post (mach_port_t me,
 	   Someday we could implement some reasonable scheme for
 	   authorizing SIGIO and SIGURG signals properly.  */
 
-	__mutex_lock (&_hurd_dtable_lock);
 	int d;
+	__mutex_lock (&_hurd_dtable_lock);
 	for (d = 0; (unsigned int) d < (unsigned int) _hurd_dtablesize; ++d)
 	  {
 	    struct hurd_userlink ulink;
