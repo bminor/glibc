@@ -39,35 +39,26 @@ extern int errno;
 #define	NULL	0
 #endif
 
-#if defined (USGr3) && !defined (DIRENT)
-#define DIRENT
-#endif /* USGr3 */
-#if defined (Xenix) && !defined (SYSNDIR)
-#define SYSNDIR
-#endif /* Xenix */
-
-#if defined (POSIX) || defined (DIRENT) || defined (__GNU_LIBRARY__)
+#if	defined (POSIX) || defined (DIRENT) || defined (__GNU_LIBRARY__)
 #include <dirent.h>
 #ifndef	__GNU_LIBRARY__
 #define D_NAMLEN(d) strlen((d)->d_name)
-#else
-#define	HAVE_D_NAMLEN
+#else	/* GNU C library.  */
 #define D_NAMLEN(d) ((d)->d_namlen)
-#endif
-#else /* not POSIX or DIRENT */
-#define	dirent		direct
-#define D_NAMLEN(d)	((d)->d_namlen)
-#define	HAVE_D_NAMLEN
-#if defined (USG) && !defined (sgi)
-#if defined (SYSNDIR)
+#endif	/* Not GNU C library.  */
+#else	/* Not POSIX or DIRENT.  */
+#define direct dirent
+#define D_NAMLEN(d) ((d)->d_namlen)
+#ifdef	SYSNDIR
 #include <sys/ndir.h>
-#else /* Not SYSNDIR */
-#include "ndir.h"
-#endif /* SYSNDIR */
-#else /* not USG */
+#endif	/* SYSNDIR */
+#ifdef	SYSDIR
 #include <sys/dir.h>
-#endif /* USG */
-#endif /* POSIX or DIRENT or __GNU_LIBRARY__ */
+#endif	/* SYSDIR */
+#ifdef NDIR
+#include <ndir.h>
+#endif	/* NDIR */
+#endif	/* POSIX or DIRENT or __GNU_LIBRARY__.  */
 
 #if defined (POSIX) && !defined (__GNU_LIBRARY__)
 /* Posix does not require that the d_ino field be present, and some
