@@ -26,9 +26,6 @@ Cambridge, MA 02139, USA.  */
 /* The first piece of initialized data.  */
 int __data_start = 0;
 
-struct _hurd_port *_hurd_ports;
-mode_t _hurd_umask;
-
 mach_port_t *_hurd_init_dtable;
 mach_msg_type_number_t _hurd_init_dtablesize;
 
@@ -60,7 +57,7 @@ static char **argv, **envp;
 static int argc;
 
 
-static volatile void
+static __NORETURN void
 start1 (void)
 {
   register int envc = 0;
@@ -93,6 +90,7 @@ start1 (void)
 	  argv = (char **) &args;
 	}
       else
+	/* Count up the arguments so we can allocate ARGV.  */
 	argc = split_args (args, argslen, NULL);
     }
 
@@ -102,6 +100,7 @@ start1 (void)
 	/* No environment passed; set __environ to { NULL }.  */
 	envp = (char **) &env;
       else
+	/* Count up the environment variables so we can allocate ENVP.  */
 	envc = split_args (env, envlen, NULL);
     }
 
@@ -117,7 +116,6 @@ start1 (void)
     {
       /* There was some environment.
 	 Allocate space for the vectors of pointers and fill them in.  */
-
       envp = __alloca ((envc + 1) * sizeof (char *));
       split_args (env, envlen, envp);
     }
@@ -126,10 +124,8 @@ start1 (void)
     /* Initialize library data structures, start signal processing, etc.  */
     _hurd_init (flags, argv, portarray, portarraysize, intarray, intarraysize);
 
-
   /* Random library initialization.  */
   __libc_init (argc, argv, __environ);
-
 
   /* Finally, run the user program.  */
   (_cthread_exit_routine != NULL ? *_cthread_exit_routine : exit)
@@ -138,6 +134,10 @@ start1 (void)
   /* Should never get here.  */
   LOSE;
 }
+
+/* Split ARGSLEN bytes at ARGS into words, breaking at NUL characters.  If
+   ARGV is not a null pointer, store a pointer to the start of each word in
+   ARGV[n], and null-terminate ARGV.  Return the number of words split.  */
 
 static int
 split_args (char *args, size_t argslen, char **argv)
@@ -183,7 +183,7 @@ split_args (char *args, size_t argslen, char **argv)
    This is unfortunate but preferable to machine-dependent frobnication to copy
    the state from the old stack to the new one.  */
 
-void
+__NORETURN void
 _start (void)
 {
   error_t err;
