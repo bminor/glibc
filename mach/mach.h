@@ -28,7 +28,7 @@ Cambridge, MA 02139, USA.  */
 #include <mach_init.h>
 
 /* These are MiG-generated headers for the kernel interfaces commonly used.  */
-#include <mach/mach_interface.h>
+#include <mach/mach_interface.h> /* From <mach/mach.defs>.  */
 #include <mach/mach_port.h>
 #include <mach/mach_host.h>
 
