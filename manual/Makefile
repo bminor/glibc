@@ -18,29 +18,37 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
+subdir := manual
+
 .PHONY: all
 all: library.dvi library.info
 
-chapters: library.texinfo Makefile
-	(echo 'define chapters'				;\
-	 sed -n 's/^@include *\(.*\)$$/\1/p' < $<	;\
-	 echo 'endef') > $@.new
-	 mv $@.new $@
+# Set chapters and chapters-incl.
 include chapters
-define \n
+chapters: library.texinfo Makefile
+	$(find-includes)
+ifdef chapters
+include chapters-incl
+chapters-incl: $(chapters)
+	$(find-includes)
+endif
 
-
+define find-includes
+(echo '$@ :=' \\	;\
+ awk '$$1 == "@include" { print $$2 " \\" }' $^) > $@.new
+mv $@.new $@
 endef
-chapters := $(subst $(\n), ,$(chapters))
 
-library.dvi library.info: $(chapters) summary.texinfo
+library.dvi library.info: $(chapters) summary.texinfo $(chapters-incl)
 library.dvi: texinfo.tex
 
+# Generate the summary from the Texinfo source files for each chapter.
 summary.texinfo: summary.awk $(chapters)
 	awk -f $^ \
 	| sort +1 -2 | tr '\014' '\012' > $@.new
 	mv $@.new $@
 
+# Generate Texinfo files from the C source for the example programs.
 %.c.texi: examples/%.c
 	sed -e 's,[{}],@&,g'				\
 	    -e 's,/\*\(@.*\)\*/,\1,g'			\
@@ -49,25 +57,24 @@ summary.texinfo: summary.awk $(chapters)
 	    $< > $@.new
 	mv $@.new $@
 
-ifdef chapters
-include chapters-incl
-chapters-incl: $(chapters)
-	(echo library.dvi library.info: \\	;\
-	 grep '^@include' $^ | awk '{ print $$2 " \\" }') > $@.new
-	mv $@.new $@
-endif
 
-ifeq (,)
-headers :=
-sources :=
-subdir := manual
-distribute := library.texinfo $(chapters) texinfo.tex \
-	      summary.texinfo summary.awk
+minimal-dist = library.texinfo summary.awk Makefile	\
+	       $(chapters) $(chapters-incl:%.c.texi=examples/%.c)
+distribute = $(minimal-dist) texinfo.tex summary.texinfo
+
+manual.tar: $(minimal-dist)
+	tar uvf $@ $^
+
+%.Z: %
+	compress -c $< > $@.new
+	mv $@.new $@
+
+%.uu: %
+	uuencode $< < $< > $@.new
+	mv $@.new $@
+
+ifneq (,)
 .PHONY: dist
 dist: ../Make-dist
 	$(MAKE) -f $< $(Make-dist-args)
-
-#This caused failure, and it should be unnecessary to configure
-#just to process the manual -- rms
-#include ../Makeconfig
 endif
