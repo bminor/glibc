@@ -8,7 +8,9 @@
 #undef ____strtoll_l_internal
 #undef __strtoll_l
 #undef strtoll_l
+#if !UNSIGNED
 strong_alias (____strtol_l_internal, ____strtoll_l_internal)
 libc_hidden_ver (____strtol_l_internal, ____strtoll_l_internal)
 weak_alias (__strtol_l, __strtoll_l)
 weak_alias (__strtol_l, strtoll_l)
+#endif

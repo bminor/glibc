@@ -1,3 +1,8 @@
+2005-03-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/wordsize-64/strtol_l.c: Don't add aliases if UNSIGNED.
+	* sysdeps/wordsize-64/wcstol_l.c: Likewise.
+
 2005-03-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/ypclnt.c (yp_2_yperr): Revert 2004-11-30 patch.
