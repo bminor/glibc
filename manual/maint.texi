@@ -416,27 +416,14 @@ and @file{errlist.c} (for the @file{stdio} section of the library).
 @node Traditional C Compatibility, Contributors, Porting, Maintenance
 @appendixsec Compatibility with Traditional C
 
-Although the GNU C library implements the ANSI C library facilities,
-you @emph{can} use the GNU C library with traditional, ``pre-ANSI'' C
-compilers.  However, there are a couple things you need to watch out for.
+@c ??? This section is really short now.  Want to keep it? --roland
 
-You must include a different set of header files when compiling your
-program using a traditional C compiler than when compiling with an ANSI
-C compiler.  (This is because traditional C compilers do not understand
-the function prototypes used in the ANSI C header files.  On the other
-hand, if you are using an ANSI C compiler like GCC, you should use the
-ANSI C header files because the prototypes permit the compiler to do a
-better job of detecting errors in calls to library functions.)  You can
-tell the C compiler what directories to search for header files by using
-the @samp{-I} option.  Set the @samp{trad-incldir} variable in
-@file{Makeconfig} to choose where to install this set of header
-files.@refill
-
-You also need to be careful because the content and organization of the
-GNU C library header files differs from that of traditional C
-implementations.  This means you may need to make changes to your
-program in order to get it to compile.
-
+Although the GNU C library implements the ANSI C library facilities, you
+@emph{can} use the GNU C library with traditional, ``pre-ANSI'' C
+compilers.  However, you need to be careful because the content and
+organization of the GNU C library header files differs from that of
+traditional C implementations.  This means you may need to make changes
+to your program in order to get it to compile.
 
 @node Contributors,  , Traditional C Compatibility, Maintenance
 @appendixsec Contributors to the GNU C Library
