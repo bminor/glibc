@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -92,7 +92,7 @@ typedef __ssize_t __io_write __P ((__ptr_t __cookie, __const char *__buf,
    or the end of the file (if W is SEEK_END).
    Set *POS to the new file position.
    Returns zero if successful, nonzero if not.  */
-typedef int __io_seek __P ((__ptr_t __cookie, fpos_t * __pos, int __w));
+typedef int __io_seek __P ((__ptr_t __cookie, fpos_t *__pos, int __w));
 
 /* Close COOKIE.  */
 typedef int __io_close __P ((__ptr_t __cookie));
@@ -110,9 +110,9 @@ typedef struct
 typedef struct
 {
   /* Make room in the input buffer.  */
-  int (*__input) __P ((FILE * __stream));
+  int (*__input) __P ((FILE *__stream));
   /* Make room in the output buffer.  */
-  void (*__output) __P ((FILE * __stream, int __c));
+  void (*__output) __P ((FILE *__stream, int __c));
 } __room_functions;
 
 extern __const __io_functions __default_io_functions;
@@ -129,7 +129,7 @@ extern void __stdio_errmsg __P ((__const char *__msg, size_t __len));
 /* Generate a unique file name.  */
 extern char *__stdio_gen_tempname __P ((__const char *__dir,
 					__const char *__pfx,
-					int __dir_search, size_t * __lenptr));
+					int __dir_search, size_t *__lenptr));
 
 #ifndef	__NORETURN
 #ifdef	__GNUC__
@@ -193,12 +193,12 @@ struct __stdio_file
 #define	__clearerr(stream)	((stream)->__error = (stream)->__eof = 0)
 
 /* Nuke STREAM, making it unusable but available for reuse.  */
-extern void __invalidate __P ((FILE * __stream));
+extern void __invalidate __P ((FILE *__stream));
 
 /* Make sure STREAM->__offset and STREAM->__target are initialized.
    Returns 0 if successful, or EOF on
    error (but doesn't set STREAM->__error).  */
-extern int __stdio_check_offset __P ((FILE * __stream));
+extern int __stdio_check_offset __P ((FILE *__stream));
 
 
 /* The possibilities for the third argument to `setvbuf'.  */
@@ -275,20 +275,20 @@ extern char *tempnam __P ((__const char *__dir, __const char *__pfx));
 
 /* This performs actual output when necessary, flushing
    STREAM's buffer and optionally writing another character.  */
-extern int __flshfp __P ((FILE * __stream, int __c));
+extern int __flshfp __P ((FILE *__stream, int __c));
 
 
 /* Close STREAM, or all streams if STREAM is NULL.  */
-extern int fclose __P ((FILE * __stream));
+extern int fclose __P ((FILE *__stream));
 /* Flush STREAM, or all streams if STREAM is NULL.  */
-extern int fflush __P ((FILE * __stream));
+extern int fflush __P ((FILE *__stream));
 
 
 /* Open a file and create a new stream for it.  */
 extern FILE *fopen __P ((__const char *__filename, __const char *__modes));
 /* Open a file, replacing an existing stream with it. */
 extern FILE *freopen __P ((__const char *__filename,
-			   __const char *__modes, FILE * __stream));
+			   __const char *__modes, FILE *__stream));
 
 /* Return a new, zeroed, stream.
    You must set its cookie and io_mode.
@@ -310,7 +310,7 @@ extern FILE *fdopen __P ((int __fd, __const char *__modes));
 /* Create a new stream that refers to the given magic cookie,
    and uses the given functions for input and output.  */
 extern FILE *fopencookie __P ((__ptr_t __magic_cookie, __const char *__modes,
-			       __io_functions __io_functions));
+			       __io_functions __io_funcs));
 
 /* Create a new stream that refers to a memory buffer.  */
 extern FILE *fmemopen __P ((__ptr_t __s, size_t __len, __const char *__modes));
@@ -318,38 +318,38 @@ extern FILE *fmemopen __P ((__ptr_t __s, size_t __len, __const char *__modes));
 /* Open a stream that writes into a malloc'd buffer that is expanded as
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */
-extern FILE *open_memstream __P ((char **__bufloc, size_t * sizeloc));
+extern FILE *open_memstream __P ((char **__bufloc, size_t *__sizeloc));
 #endif
 
 
 /* If BUF is NULL, make STREAM unbuffered.
    Else make it use buffer BUF, of size BUFSIZ.  */
-extern void setbuf __P ((FILE * __stream, char *__buf));
+extern void setbuf __P ((FILE *__stream, char *__buf));
 /* Make STREAM use buffering mode MODE.
    If BUF is not NULL, use N bytes of it for buffering;
    else allocate an internal buffer N bytes long.  */
-extern int setvbuf __P ((FILE * __stream, char *__buf,
+extern int setvbuf __P ((FILE *__stream, char *__buf,
 			 int __modes, size_t __n));
 
 #ifdef	__USE_BSD
 /* If BUF is NULL, make STREAM unbuffered.
    Else make it use SIZE bytes of BUF for buffering.  */
-extern void setbuffer __P ((FILE * __stream, char *__buf, size_t __size));
+extern void setbuffer __P ((FILE *__stream, char *__buf, size_t __size));
 
 /* Make STREAM line-buffered.  */
-extern void setlinebuf __P ((FILE * __stream));
+extern void setlinebuf __P ((FILE *__stream));
 #endif
 
 
 /* Write formatted output to STREAM.  */
-extern int fprintf __P ((FILE * __stream, __const char *__format, ...));
+extern int fprintf __P ((FILE *__stream, __const char *__format, ...));
 /* Write formatted output to stdout.  */
 extern int printf __P ((__const char *__format, ...));
 /* Write formatted output to S.  */
 extern int sprintf __P ((char *__s, __const char *__format, ...));
 
 /* Write formatted output to S from argument list ARG.  */
-extern int vfprintf __P ((FILE * __s, __const char *__format,
+extern int vfprintf __P ((FILE *__s, __const char *__format,
 			  __gnuc_va_list __arg));
 /* Write formatted output to stdout from argument list ARG.  */
 extern int vprintf __P ((__const char *__format, __ptr_t __arg));
@@ -383,7 +383,7 @@ extern int dprintf __P ((int __fd, __const char *__fmt, ...));
 
 
 /* Read formatted input from STREAM.  */
-extern int fscanf __P ((FILE * __stream, __const char *__format, ...));
+extern int fscanf __P ((FILE *__stream, __const char *__format, ...));
 /* Read formatted input from stdin.  */
 extern int scanf __P ((__const char *__format, ...));
 /* Read formatted input from S.  */
@@ -391,9 +391,9 @@ extern int sscanf __P ((__const char *__s, __const char *__format, ...));
 
 #ifdef	__USE_GNU
 /* Read formatted input from S into argument list ARG.  */
-extern int __vfscanf __P ((FILE * __s, __const char *__format,
+extern int __vfscanf __P ((FILE *__s, __const char *__format,
 			   __gnuc_va_list __arg));
-extern int vfscanf __P ((FILE * __s, __const char *__format,
+extern int vfscanf __P ((FILE *__s, __const char *__format,
 			 __gnuc_va_list __arg));
 
 /* Read formatted input from stdin into argument list ARG.  */
@@ -416,12 +416,12 @@ extern int vsscanf __P ((__const char *__s, __const char *__format,
 
 /* This does actual reading when necessary, filling STREAM's
    buffer and returning the first character in it.  */
-extern int __fillbf __P ((FILE * __stream));
+extern int __fillbf __P ((FILE *__stream));
 
 
 /* Read a character from STREAM.  */
-extern int fgetc __P ((FILE * __stream));
-extern int getc __P ((FILE * __stream));
+extern int fgetc __P ((FILE *__stream));
+extern int getc __P ((FILE *__stream));
 
 /* Read a character from stdin.  */
 extern int getchar __P ((void));
@@ -442,8 +442,8 @@ extern int getchar __P ((void));
 
 
 /* Write a character to STREAM.  */
-extern int fputc __P ((int __c, FILE * __stream));
-extern int putc __P ((int __c, FILE * __stream));
+extern int fputc __P ((int __c, FILE *__stream));
+extern int putc __P ((int __c, FILE *__stream));
 
 /* Write a character to stdout.  */
 extern int putchar __P ((int __c));
@@ -469,15 +469,15 @@ extern int putchar __P ((int __c));
 
 #if defined(__USE_SVID) || defined(__USE_MISC)
 /* Get a word (int) from STREAM.  */
-extern int getw __P ((FILE * __stream));
+extern int getw __P ((FILE *__stream));
 
 /* Write a word (int) to STREAM.  */
-extern int putw __P ((int __w, FILE * __stream));
+extern int putw __P ((int __w, FILE *__stream));
 #endif
 
 
 /* Get a newline-terminated string of finite length from STREAM.  */
-extern char *fgets __P ((char *__s, size_t __n, FILE * __stream));
+extern char *fgets __P ((char *__s, size_t __n, FILE *__stream));
 
 /* Get a newline-terminated string from stdin, removing the newline.
    DO NOT USE THIS FUNCTION!!  There is no limit on how much it will read.  */
@@ -492,14 +492,14 @@ extern char *gets __P ((char *__s));
    NULL), pointing to *N characters of space.  It is realloc'd as
    necessary.  Returns the number of characters read (not including the
    null terminator), or -1 on error or EOF.  */
-ssize_t __getdelim __P ((char **lineptr, size_t * n,
-			 int delimiter, FILE * stream));
-ssize_t getdelim __P ((char **lineptr, size_t * n,
-		       int delimiter, FILE * stream));
+ssize_t __getdelim __P ((char **__lineptr, size_t *__n,
+			 int __delimiter, FILE *__stream));
+ssize_t getdelim __P ((char **__lineptr, size_t *__n,
+		       int __delimiter, FILE *__stream));
 
 /* Like `getdelim', but reads up to a newline.  */
-ssize_t __getline __P ((char **lineptr, size_t * n, FILE * stream));
-ssize_t getline __P ((char **lineptr, size_t * n, FILE * stream));
+ssize_t __getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
+ssize_t getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
 
 #ifdef	__OPTIMIZE__
 #define	getdelim(l, n, d, s)	__getdelim ((l), (n), (d), (s))
@@ -510,7 +510,7 @@ ssize_t getline __P ((char **lineptr, size_t * n, FILE * stream));
 
 
 /* Write a string to STREAM.  */
-extern int fputs __P ((__const char *__s, FILE * __stream));
+extern int fputs __P ((__const char *__s, FILE *__stream));
 /* Write a string, followed by a newline, to stdout.  */
 extern int puts __P ((__const char *__s));
 
@@ -520,36 +520,36 @@ extern int puts __P ((__const char *__s));
 
 
 /* Push a character back onto the input buffer of STREAM.  */
-extern int ungetc __P ((int __c, FILE * __stream));
+extern int ungetc __P ((int __c, FILE *__stream));
 
 
 /* Read chunks of generic data from STREAM.  */
 extern size_t fread __P ((__ptr_t __ptr, size_t __size,
-			  size_t __n, FILE * __stream));
+			  size_t __n, FILE *__stream));
 /* Write chunks of generic data to STREAM.  */
 extern size_t fwrite __P ((__const __ptr_t __ptr, size_t __size,
-			   size_t __n, FILE * __s));
+			   size_t __n, FILE *__s));
 
 
 /* Seek to a certain position on STREAM.  */
-extern int fseek __P ((FILE * __stream, long int __off, int __whence));
+extern int fseek __P ((FILE *__stream, long int __off, int __whence));
 /* Return the current position of STREAM.  */
-extern long int ftell __P ((FILE * __stream));
+extern long int ftell __P ((FILE *__stream));
 /* Rewind to the beginning of STREAM.  */
-extern void rewind __P ((FILE * __stream));
+extern void rewind __P ((FILE *__stream));
 
 /* Get STREAM's position.  */
-extern int fgetpos __P ((FILE * __stream, fpos_t * __pos));
+extern int fgetpos __P ((FILE *__stream, fpos_t *__pos));
 /* Set STREAM's position.  */
-extern int fsetpos __P ((FILE * __stream, __const fpos_t * __pos));
+extern int fsetpos __P ((FILE *__stream, __const fpos_t *__pos));
 
 
 /* Clear the error and EOF indicators for STREAM.  */
-extern void clearerr __P ((FILE * __stream));
+extern void clearerr __P ((FILE *__stream));
 /* Return the EOF indicator for STREAM.  */
-extern int feof __P ((FILE * __stream));
+extern int feof __P ((FILE *__stream));
 /* Return the error indicator for STREAM.  */
-extern int ferror __P ((FILE * __stream));
+extern int ferror __P ((FILE *__stream));
 
 #ifdef	__OPTIMIZE__
 #define	feof(stream)	((stream)->__eof != 0)
@@ -577,7 +577,7 @@ extern void psignal __P ((int __sig, __const char *__s));
 
 #ifdef	__USE_POSIX
 /* Return the system file descriptor for STREAM.  */
-extern int fileno __P ((__const FILE * __stream));
+extern int fileno __P ((__const FILE *__stream));
 
 #ifdef	__OPTIMIZE__
 /* The `+ 0' makes this not be an lvalue, so it can't be changed.  */
@@ -593,7 +593,7 @@ extern int fileno __P ((__const FILE * __stream));
 extern FILE *popen __P ((__const char *__command, __const char *__modes));
 
 /* Close a stream opened by popen and return the status of its child.  */
-extern int pclose __P ((FILE * __stream));
+extern int pclose __P ((FILE *__stream));
 #endif
 
 
