@@ -26,5 +26,9 @@ headers	:= sys/socket.h sys/un.h
 routines := accept bind connect getpeernam getsocknam getsockopt	\
 	    listen recv recvfrom recvmsg send sendmsg sendto		\
 	    setsockopt shutdown socket socketpair
+tests := tstsockcli tstsocksrv
+extra-objs = tstsockcom.o
 
 include ../Rules
+
+$(objpfx)tstsockcli $(objpfx)tstsocksrv: $(objpfx)tstsockcom.o
