@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,15 +17,16 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #define	ENTRY(name)							      \
+  .text;								      \
   .globl _##name;							      \
   .align 4;								      \
   _##name##:
 
 #define	SYSCALL_TRAP(name, number)					      \
-  .text;								      \
-  .align 4								      \
   ENTRY (name)								      \
   lea number, %eax;							      \
-  lcall $7, $0								      \
-  ENTRY (name##_syscall_pc)						      \
+  /* lcall $7, $0; */							      \
+  /* Above loses; GAS bug.  */						      \
+  .byte 0x9a, 0, 0, 0, 0, 7, 0;						      \
+  _##name##_syscall_pc:							      \
   ret
