@@ -46,9 +46,9 @@ typedef unsigned long int __sigset_t;
 
 /* These functions must check for a bogus signal number.  We detect it by a
    zero sigmask, since a number too low or too high will have shifted the 1
-   off the high end of the mask.  If we find an error, we punt to the
-   real-function version of the same function, so as to avoid referring to
-   `errno' in this file (sigh).  */
+   off the high end of the mask.  If we find an error, we punt to a random
+   call we know fails with EINVAL (kludge city!), so as to avoid referring
+   to `errno' in this file (sigh).  */
 
 #ifndef _EXTERN_INLINE
 #define _EXTERN_INLINE extern __inline
@@ -57,9 +57,9 @@ typedef unsigned long int __sigset_t;
   _EXTERN_INLINE int							      \
   __##NAME (CONST __sigset_t *__set, int __sig)				      \
   {									      \
-    extern int NAME (CONST __sigset_t *, int);				      \
+    extern int raise (int);						      \
     __sigset_t __mask = __sigmask (__sig);				      \
-    return __mask ? (BODY) : (NAME) (__set, __sig);			      \
+    return __mask ? (BODY) : raise (-1);				      \
   }
 
 __SIGSETFN (sigismember, (*__set & __mask) ? 1 : 0, __const)
