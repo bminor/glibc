@@ -135,11 +135,16 @@ DEFUN(__ioctl, (fd, request),
 #if 0
        m->msgh_bits = ?;	/* XXX */
 #endif
+#ifdef notyet
        HURD_EINTR_RPC (port, __mach_msg (m, MACH_SEND_MSG|MACH_RCV_MSG,
 					 m->msgh_size, sizeof (msg),
 					 m->msgh_local_port,
 					 MACH_MSG_TIMEOUT_NONE,
 					 MACH_PORT_NULL));
+#else
+       __mach_msg (m, MACH_SEND_MSG|MACH_RCV_MSG, m->msgh_size, sizeof (msg),
+		   m->msgh_local_port, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
+#endif       
      }));
 
   switch (err)
