@@ -61,14 +61,25 @@ extern int __vfprintf_chk (FILE *__restrict __stream, int __flag,
 extern int __vprintf_chk (int __flag, __const char *__restrict __format,
 			  _G_va_list __ap);
 
-# define printf(...) \
+# if __GNUC_PREREQ (4, 0)
+#  define printf(...) \
   __printf_chk (__USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
-# define fprintf(stream, ...) \
+#  define fprintf(stream, ...) \
   __fprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
-# define vprintf(format, ap) \
+#  define vprintf(format, ap) \
   __vprintf_chk (__USE_FORTIFY_LEVEL - 1, format, ap)
-# define vfprintf(stream, format, ap) \
+#  define vfprintf(stream, format, ap) \
   __vfprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, format, ap)
+# else
+#  define printf(...) \
+  __builtin___printf_chk (__USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+#  define fprintf(stream, ...) \
+  __builtin___fprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+#  define vprintf(format, ap) \
+  __builtin___vprintf_chk (__USE_FORTIFY_LEVEL - 1, format, ap)
+#  define vfprintf(stream, format, ap) \
+  __builtin___vfprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, format, ap)
+# endif
 
 #endif
 

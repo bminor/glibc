@@ -1,3 +1,13 @@
+2004-11-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/features.h (__USE_FORTIFY_LEVEL): Also set for Red Hat
+	GCC 3.4.x-RH >= 3.4.2-8.
+	* libio/bits/features.h (printf, fprintf, vprintf, vfprintf): For
+	GCC 3.4.x-RH use __builtin___{,v}{,f}printf_chk instead of
+	__{,v}{,f}printf_chk.
+	* debug/tst-chk1.c (do_test): Deal with GCC 3.4.x-RH not
+	being able to recognize subobjects.
+
 2004-11-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sys/procfs.h [__WORDSIZE == 32]

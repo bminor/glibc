@@ -201,7 +201,7 @@ do_test (void)
   if (memcmp (a.buf1, "aabcdabcjj", 10))
     FAIL ();
 
-#if __USE_FORTIFY_LEVEL < 2
+#if __USE_FORTIFY_LEVEL < 2 || !__GNUC_PREREQ (4, 0)
   /* The following tests are supposed to crash with -D_FORTIFY_SOURCE=2
      and sufficient GCC support, as the string operations overflow
      from a.buf1 into a.buf2.  */
@@ -300,7 +300,7 @@ do_test (void)
   memset (a.buf1 + 9, 'j', l0 + 2);
   CHK_FAIL_END
 
-#if __USE_FORTIFY_LEVEL >= 2
+#if __USE_FORTIFY_LEVEL >= 2 && __GNUC_PREREQ (4, 0)
 # define O 0
 #else
 # define O 1
