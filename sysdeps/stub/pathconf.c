@@ -31,5 +31,5 @@ DEFUN(__pathconf, (path, name), CONST char *path AND int name)
       errno = EINVAL;
       return -1;
     }
-  return fpathconf(0, name);
+  return __fpathconf (0, name);
 }
