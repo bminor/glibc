@@ -1,3 +1,8 @@
+2004-12-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #744]
+	* include/signal.h: Define __sigemptyset.
+
 2004-12-21  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #723]
