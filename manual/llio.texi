@@ -393,7 +393,6 @@ process to block on output is writing to a terminal device that supports
 flow control, where output has been suspended by receipt of a STOP
 character.
 
-@c ??? This is a change yet to be made in the library.
 @strong{Compatibility Note:} Most versions of BSD Unix use a different
 error code for this: @code{EWOULDBLOCK}.  In the GNU library,
 @code{EWOULDBLOCK} is an alias for @code{EAGAIN}, so it doesn't matter
@@ -621,8 +620,6 @@ The return value is the new stream.  If the stream cannot be created
 (for example, if the modes for the file indicated by the file descriptor
 do not permit the access specified by the @var{opentype} argument), a
 null pointer is returned instead.
-@c ??? The library does not currently detect the mismatch.
-@c ??? It ought to.  It can check the descriptor using fcntl F_GETFL.
 @end deftypefun
 
 For an example showing the use of the @code{fdopen} function,
@@ -864,7 +861,6 @@ fixed maximum number, @code{FD_SETSIZE} is at least that number.  On
 some systems, including GNU, there is no absolute limit on the number of
 descriptors open, but this macro still has a constant value which
 controls the number of bits in an @code{fd_set}.
-@c ??? xref needed here to setrlimit once we document that.
 @end deftypevr
 
 @comment sys/types.h
@@ -1129,9 +1125,9 @@ The @var{next-filedes} argument is invalid.
 
 @item EMFILE
 There are no more file descriptors available---your program is already
-using the maximum.
-@c !!! in GNU and 4.4, this can be fixed with setrlimit RLIM_OFILES;
-@c xref to there.
+using the maximum.  In BSD and GNU, the maximum is controlled by a
+resource limit that can be changed; @pxref{Limits on Resources}, for
+more information about the @code{RLIMIT_NOFILE} limit.
 @end table
 
 @code{ENFILE} is not a possible error code for @code{dup2} because

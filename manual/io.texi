@@ -253,8 +253,6 @@ name is located in the @dfn{root directory} of the process (usually all
 processes on the system have the same root directory).  Such a file name
 is called an @dfn{absolute file name}.
 @c !!! xref here to chroot, if we ever document chroot. -rm
-@c ??? I don't like the idea of encouraging smoking--rms.
-@c !!! What the hell is that bad pun supposed to mean?  I don't get it.  -rm
 
 @cindex relative file name
 Otherwise, the first component in the file name is located in the
