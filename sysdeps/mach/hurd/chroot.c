@@ -27,12 +27,11 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(chroot, (path), CONST char *path)
 {
-  error_t err;
-  file_t old, crdir;
+  file_t crdir;
 
   /* XXX check is dir */
 
-  crdir = __path_lookup (path, O_EXE, 0);
+  crdir = __path_lookup (path, O_EXEC, 0);
   if (crdir == MACH_PORT_NULL)
     return -1;
 
