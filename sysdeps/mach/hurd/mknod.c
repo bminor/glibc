@@ -93,9 +93,11 @@ DEFUN(__mknod, (path, mode, dev),
 
   if (! err)
     /* Set the node's translator to make it a device.  */
-  err = __file_set_translator (node, FS_TRANS_EXCL, 0,
-			       translator, len,
-			       MACH_PORT_NULL, MACH_MSG_TYPE_COPY_SEND);
+    err = __file_set_translator (node, 
+				 FS_TRANS_EXCL | FS_TRANS_SET,
+				 FS_TRANS_EXCL | FS_TRANS_SET, 0,
+				 translator, len,
+				 MACH_PORT_NULL, MACH_MSG_TYPE_COPY_SEND);
 
   if (! err)
     /* Link the node, now a valid device, into the target directory.  */

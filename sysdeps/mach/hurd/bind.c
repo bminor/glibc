@@ -56,7 +56,9 @@ DEFUN(bind, (fd, addr, len),
 	{
 	  file_t ifsock;
 	  /* Set the node's translator to make it a local-domain socket.  */
-	  err = __file_set_translator (node, FS_TRANS_EXCL, 0,
+	  err = __file_set_translator (node, 
+				       FS_TRANS_EXCL | FS_TRANS_SET,
+				       FS_TRANS_EXCL | FS_TRANS_SET, 0,
 				       _HURD_IFSOCK, sizeof _HURD_IFSOCK,
 				       MACH_PORT_NULL,
 				       MACH_MSG_TYPE_COPY_SEND);

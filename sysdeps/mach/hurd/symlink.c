@@ -47,7 +47,9 @@ DEFUN(__symlink, (from, to), CONST char *from AND CONST char *to)
 
   if (! err)
     /* Set the node's translator to make it a symlink.  */
-    err = __file_set_translator (node, FS_TRANS_EXCL, 0,
+    err = __file_set_translator (node, 
+				 FS_TRANS_EXCL|FS_TRANS_SET, 
+				 FS_TRANS_EXCL|FS_TRANS_SET, 0,
 				 buf, sizeof (_HURD_SYMLINK) + len,
 				 MACH_PORT_NULL, MACH_MSG_TYPE_COPY_SEND);
 
