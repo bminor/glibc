@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ mpn-headers = longlong.h gmp.h gmp-impl.h gmp-mparam.h asm.h
 
 routines := $(strip $(routines) $(mpn-routines)) dbl2mpn
 aux	:= errlist siglist defs syms-stdio glue mp_clz_tab
-distribute = $(mpn-headers)
+distribute = $(mpn-headers) mpn-copy.mk
 
 tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 bug1 bug2 bug3 bug4 bug5 bug6 temptest
@@ -78,23 +78,18 @@ mpn-sysdep := $(addsuffix .c,$(mpn-routines)) \
 
 mpn-try := $(addprefix $(gmp-srcdir)/mpn/*/,$(mpn-sysdep))
 mpn-found := $(wildcard $(mpn-try))
+mpn-found := $(filter-out $(patsubst %.S,%.s,$(filter %.s,$(mpn-found))),\
+			  $(mpn-found))
 
-# We call `m68k' the directory GMP calls `mc68020'.
+include mpn-copy.mk
+%.mk: gen-%; sh $< > $@
 
-mpn-found-68k := $(filter $(gmp-srcdir)/mpn/mc68020/%,$(mpn-found))
-mpn-found-no-68k := $(filter-out $(gmp-srcdir)/mpn/mc68020/%,$(mpn-found))
-
-mpn-no-m68k := $(patsubst $(gmp-srcdir)/mpn/%,$(sysdep_dir)/%,\
-			  $(mpn-found-no-68k))
-$(mpn-no-m68k): $(sysdep_dir)/%: gmp2glibc.sed $(gmp-srcdir)/mpn/%
+mpn-copy-1 := $(patsubst $(gmp-srcdir)/mpn/%,$(sysdep_dir)/%,$(mpn-found))
+mpn-copy-sysdep := $(mpn-copy-sysdep) $(mpn-copy-1)
+$(mpn-copy-1): $(sysdep_dir)/%: gmp2glibc.sed $(gmp-srcdir)/mpn/%
 	$(gmp2glibc)
 
-mpn-m68k := $(patsubst $(gmp-srcdir)/mpn/mc68020/%,$(sysdep_dir)/m68k/%,\
-		       $(mpn-found-68k))
-$(mpn-m68k): $(sysdep_dir)/m68k/%: gmp2glibc.sed $(gmp-srcdir)/mpn/mc68020/%
-	$(gmp2glibc)
-
-mpn-stuff = $(mpn-m68k) $(mpn-no-m68k) $(mpn-copy)
+mpn-stuff = $(mpn-copy-sysdep) $(mpn-copy)
 
 # chmod so I don't edit them by mistake.
 define gmp2glibc
@@ -109,6 +104,6 @@ $(mpn-copy): %: gmp2glibc.sed $(gmp-srcdir)/%; $(gmp2glibc)
 .PHONY: copy-mpn clean-mpn
 copy-mpn: $(mpn-stuff)
 clean-mpn:
-	rm $(mpn-stuff)
+	rm -f $(mpn-stuff)
 
 endif
