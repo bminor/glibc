@@ -173,7 +173,10 @@ ifndef default_cflags
 endif
 
 # Command for linking programs with the C library.
-+link = $(LD) -o $@ -e __start $(objpfx)start.o $(^:lib=$(objpfx)libc.a) $(libdir)/gcc-gnulib $(objpfx)libc.a -lc
+ifndef +link
++link = $(CC) -nostdlib -o $@ $(objpfx)start.o $(^:lib=$(objpfx)libc.a) \
+	/usr/local/lib/gcc-gnulib $(objpfx)libc.a
+endif
 
 ifndef LD
 LD := ld -X
@@ -188,7 +191,7 @@ endif
 
 # Extra flags to pass to GCC.
 +gccwarn := -Wall -Wwrite-strings -Wpointer-arith -Wstrict-prototypes
-+gccopt := -fstrength-reduce -fcombine-regs
++gccopt := -fstrength-reduce
 
 # This is the program that generates makefile
 # dependencies from C source files.
