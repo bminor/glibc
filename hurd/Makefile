@@ -19,14 +19,13 @@
 subdir := hurd
 
 interface-header-prefix = hurd/
-headers = hurd.h # $(interface-headers)
+headers = hurd.h $(interface-headers)
+distribute := intr_rpc.awk hurdintr.awk
 
-ifneq (,)
 user-interfaces		:= auth process \
 			   exec core interrupt \
 			   fs io socket term
-server-interfaces	:= misc
-endif
+server-interfaces	:= __misc
 
 routines = __pid2task __task2pid pid2task task2pid \
 	   __setauth setauth hurdports \
@@ -45,6 +44,7 @@ aux := hurdinit hurdsyms
 all:
 
 
+ifdef intrhack # XXX
 # This rule needs to come before the implicit rules in Machrules.
 __%.c: intr_rpc.awk %_rpc.c
 	gawk -v call=__$* -v rpc=__$*_rpc -f $^ > $@-new
@@ -52,9 +52,11 @@ __%.c: intr_rpc.awk %_rpc.c
 # __%_rpc.c is made with mig by Machrules.
 %_rpc.c: __%_rpc.c
 	sed s/MACH_MSG_OPTION_NONE/MACH_SEND_INTERRUPT/ $< > $@
+endif
 
 include ../mach/Machrules
 
+ifdef intrhack # XXX
 ifdef user-interfaces
 include hurdintr
 endif
@@ -67,8 +69,7 @@ migdefines := $(migdefines) $(foreach call,$(intr-calls),-D$(call)=$(call)_rpc)
 
 interface-routines := $(filter-out %_rpc,$(interface-routines)) \
 		      $(intr-calls:%=__% %)
-generated = $(interface-routines:%=%.c) $(interface-headers)
+endif
 
-distribute := intr_rpc.awk hurdintr.awk
 
 include ../Rules
