@@ -236,10 +236,6 @@ extern int EXFUN(execve, (CONST char *__path, char *CONST __argv[],
 /* Execute PATH with arguments ARGV and environment from `environ'.  */
 extern int EXFUN(execv, (CONST char *__path, char *CONST __argv[]));
 
-#ifdef	__OPTIMIZE__
-#define	execv(path, argv)	__execve((path), (argv), __environ)
-#endif	/* Optimizing.  */
-
 /* Execute PATH with all arguments after PATH until a NULL pointer,
    and the argument after that for environment.  */
 extern int EXFUN(execle, (CONST char *__path, CONST char *__arg, ...));
