@@ -122,7 +122,8 @@ get_dtable_port (int fd)
     return dport;
 }
 
-text_set_element (_hurd_getdport_fn, get_dtable_port);
+/* text_set_element (_hurd_getdport_fn, get_dtable_port); */
+file_t (*_hurd_getdport_fn) (int fd) = get_dtable_port;	/* XXX */
 
 #if 0
 /* Called on fork to install the dtable in NEWTASK.
