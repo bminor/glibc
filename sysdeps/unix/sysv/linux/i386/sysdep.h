@@ -1,5 +1,5 @@
-/* Copyright (C) 1992,1993,1995-2000,2002,2003,2004
-   Free Software Foundation, Inc.
+/* Copyright (C) 1992,1993,1995,1996,1997,1998,1999,2000,2002,2003,2004,2005
+   	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>, August 1995.
 
@@ -154,9 +154,17 @@ __i686.get_pc_thunk.reg:						      \
   movl SYSCALL_ERROR_ERRNO@GOTNTPOFF(%ecx), %ecx;			      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
-  movl %edx, %gs:0(%ecx);						      \
+  SYSCALL_ERROR_HANDLER_TLS_STORE (%edx, %ecx);				      \
   orl $-1, %eax;							      \
   jmp L(pseudo_end);
+#   ifndef NO_TLS_DIRECT_SEG_REFS
+#    define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
+  movl src, %gs:(destoff)
+#   else
+#    define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
+  addl %gs:0, destoff;							      \
+  movl src, (destoff)
+#   endif
 #  else
 #   define SYSCALL_ERROR_HANDLER					      \
 0:pushl %ebx;								      \
@@ -530,6 +538,29 @@ asm (".L__X'%ebx = 1\n\t"
 # define EXTRAVAR_5 int _xv;
 #else
 # define EXTRAVAR_5
+#endif
+
+/* Consistency check for position-independent code.  */
+#ifdef __PIC__
+# define check_consistency()						      \
+  ({ int __res;								      \
+     __asm__ __volatile__						      \
+       ("call __i686.get_pc_thunk.cx;"					      \
+	"addl $_GLOBAL_OFFSET_TABLE_, %%ecx;"				      \
+	"subl %%ebx, %%ecx;"						      \
+	"je 1f;"							      \
+	"ud2;"								      \
+	"1:\n"								      \
+	".section .gnu.linkonce.t.__i686.get_pc_thunk.cx,\"ax\",@progbits;"   \
+	".globl __i686.get_pc_thunk.cx;"				      \
+	".hidden __i686.get_pc_thunk.cx;"				      \
+	".type __i686.get_pc_thunk.cx,@function;"			      \
+	"__i686.get_pc_thunk.cx:"					      \
+	"movl (%%esp), %%ecx;"						      \
+	"ret;"								      \
+	".previous"							      \
+	: "=c" (__res));						      \
+     __res; })
 #endif
 
 #endif	/* __ASSEMBLER__ */

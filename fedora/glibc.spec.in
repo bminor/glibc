@@ -1,4 +1,4 @@
-%define glibcrelease 5
+%define glibcrelease 6
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1270,6 +1270,33 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Feb  8 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-6
+- update from CVS
+  - ld.so auditing
+  - fix segfault if chrooted app attempts to dlopen a library
+    and no standard library directory exists at all (#147067, #144303)
+  - fix initgroups when nscd is running, but has group caching disabled
+    (#146588)
+  - fix pthread_key_{create,destroy} in LinuxThreads when pthread_create
+    has not been called yet (#146710)
+  - fix ppc64 swapcontext and setcontext (#146736, BZ#700)
+  - service nscd cosmetic fixes (#146776)
+  - fix IA-32 and x86-64 stack alignment in DSO constructors (#145689)
+  - fix zdump -v segfaults on x86-64 (#146210)
+  - avoid calling sigaction (SIGPIPE, ...) inside syslog (#146021, IT#56686)
+  - fix errno values for futimes (BZ#633)
+  - unconditionally include <features.h> in malloc.h (BZ#650)
+  - change regex \B handling to match old GNU regex as well as perl/grep's dfa
+    (from empty string inside of word to empty string not at a word boundary,
+     BZ#693)
+  - slightly optimize i686 TLS accesses, use direct TLS %gs access in sem_*
+    and allow building -mno-tls-direct-seg-refs glibc that is free of direct TLS
+    %gs access with negative offsets
+  - fix addseverity
+  - fix fmemopen
+  - fix rewinddir
+  - increase svc{tcp,unix}_create listen backlog
+
 * Thu Jan  6 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-5
 - update from CVS
   - add some warn_unused_result marking
@@ -1279,7 +1306,7 @@ rm -f *.filelist*
 * Thu Jan  6 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-4
 - update from CVS
   - fix IA-32 stack alignment for LinuxThreads thread functions
-  and functions passed to clone(2) directly
+    and functions passed to clone(2) directly
   - fix ecvt{,_r} on denormals (#143279)
   - fix __tls_get_addr typo
   - fix rounding in IA-64 alarm (#143710)

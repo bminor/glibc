@@ -20,8 +20,8 @@
 
 subdir		:= elf
 
-headers		= elf.h bits/elfclass.h link.h
-routines	= $(dl-routines) dl-open dl-close dl-support dl-iteratephdr \
+headers		= elf.h bits/elfclass.h link.h bits/link.h
+routines	= $(dl-routines) dl-support dl-iteratephdr \
 		  dl-addr enbl-secure dl-profstub \
 		  dl-origin dl-libc dl-sym dl-tsd
 
@@ -30,7 +30,7 @@ routines	= $(dl-routines) dl-open dl-close dl-support dl-iteratephdr \
 dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 			          runtime error init fini debug misc \
 				  version profile conflict tls origin \
-				  execstack caller)
+				  execstack caller open close trampoline)
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin
@@ -72,7 +72,7 @@ distribute	:= rtld-Rules \
 		   tst-tlsmod1.c tst-tlsmod2.c tst-tlsmod3.c tst-tlsmod4.c \
 		   tst-tlsmod5.c tst-tlsmod6.c tst-tlsmod7.c tst-tlsmod8.c \
 		   tst-tlsmod9.c tst-tlsmod10.c tst-tlsmod11.c \
-		   tst-tlsmod12.c tst-tls10.h tst-alignmod.c \
+		   tst-tlsmod12.c tst-tls10.h tst-alignmod.c tst-alignmod2.c \
 		   circlemod1.c circlemod1a.c circlemod2.c circlemod2a.c \
 		   circlemod3.c circlemod3a.c nodlopenmod2.c \
 		   tls-macros.h \
@@ -83,7 +83,8 @@ distribute	:= rtld-Rules \
 		   tst-array2dep.c tst-piemod1.c \
 		   tst-execstack-mod.c tst-dlmodcount.c \
 		   check-textrel.c dl-sysdep.h test-dlopenrpathmod.c \
-		   tst-deep1mod1.c tst-deep1mod2.c tst-deep1mod3.c
+		   tst-deep1mod1.c tst-deep1mod2.c tst-deep1mod3.c \
+		   tst-auditmod1.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -153,8 +154,9 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-align \
-	 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount \
-	 tst-dlopenrpath tst-deep1 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3
+	 tst-align2 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount \
+	 tst-dlopenrpath tst-deep1 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
+	 tst-audit1
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
@@ -163,7 +165,7 @@ tests-nodlopen-yes = nodlopen nodlopen2
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
-tests += tst-pie1
+tests: $(objpfx)tst-pie1.out
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 unloadmod \
@@ -186,9 +188,10 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		circlemod3 circlemod3a \
 		reldep8mod1 reldep8mod2 reldep8mod3 \
 		reldep9mod1 reldep9mod2 reldep9mod3 \
-		tst-alignmod $(modules-execstack-$(have-z-execstack)) \
+		tst-alignmod tst-alignmod2 \
+		$(modules-execstack-$(have-z-execstack)) \
 		tst-dlopenrpathmod tst-deep1mod1 tst-deep1mod2 tst-deep1mod3 \
-		tst-dlmopen1mod
+		tst-dlmopen1mod tst-auditmod1
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep
 endif
@@ -668,9 +671,12 @@ $(objpfx)tst-tls14:  $(objpfx)tst-tlsmod14a.so $(libdl)
 $(objpfx)tst-tls14.out:$(objpfx)tst-tlsmod14b.so
 
 CFLAGS-tst-align.c = $(stack-align-test-flags)
+CFLAGS-tst-align2.c = $(stack-align-test-flags)
 CFLAGS-tst-alignmod.c = $(stack-align-test-flags)
+CFLAGS-tst-alignmod2.c = $(stack-align-test-flags)
 $(objpfx)tst-align: $(libdl)
 $(objpfx)tst-align.out: $(objpfx)tst-alignmod.so
+$(objpfx)tst-align2: $(objpfx)tst-alignmod2.so
 
 ifdef libdl
 $(objpfx)tst-tls9-static: $(common-objpfx)dlfcn/libdl.a
@@ -732,6 +738,8 @@ $(objpfx)tst-pie1: $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
 	  -o $@ $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so \
 	  $(common-objpfx)libc_nonshared.a
+
+generated += tst-pie1 tst-pie1.out tst-pie1.o
 endif
 
 check-textrel-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE
@@ -773,3 +781,6 @@ $(objpfx)tst-dlmopen2.out: $(objpfx)tst-dlmopen1mod.so
 
 $(objpfx)tst-dlmopen3: $(libdl)
 $(objpfx)tst-dlmopen3.out: $(objpfx)tst-dlmopen1mod.so
+
+$(objpfx)tst-audit1.out: $(objpfx)tst-auditmod1.so
+tst-audit1-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so

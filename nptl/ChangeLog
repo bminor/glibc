@@ -1,3 +1,40 @@
+2005-02-07  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/pthread/pthread.h (__sigsetjmp): Use pointer as first
+	argument.
+
+2004-11-03  Marcus Brinkmann  <marcus@gnu.org>
+
+	* sysdeps/generic/lowlevellock.h (__generic_mutex_unlock): Fix
+	order of arguments in invocation of atomic_add_zero.
+
+2005-01-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/sem_trywait.S (__new_sem_trywait):
+	Use direct %gs segment access or, if NO_TLS_DIRECT_SEG_REFS,
+	at least gotntpoff relocation and addition.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S (sem_timedwait):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S (__new_sem_post):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_wait.S (__new_sem_wait):
+	Likewise.
+
+2005-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (init_one_static_tls): Adjust initialization of DTV
+	entry for static tls deallocation fix.
+	* sysdeps/alpha/tls.h (dtv_t): Change pointer type to be struct which
+	also contains information whether the memory pointed to is static
+	TLS or not.
+	* sysdeps/i386/tls.h: Likewise.
+	* sysdeps/ia64/tls.h: Likewise.
+	* sysdeps/powerpc/tls.h: Likewise.
+	* sysdeps/s390/tls.h: Likewise.
+	* sysdeps/sh/tls.h: Likewise.
+	* sysdeps/sparc/tls.h: Likewise.
+	* sysdeps/x86_64/tls.h: Likewise.
+
 2004-12-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* init.c (__pthread_initialize_minimal_internal): Use __sigemptyset.
@@ -69,7 +106,7 @@
 	* sysdeps/pthread/posix-timer.h (__timer_signal_thread_pclk,
 	__timer_signal_thread_tclk): Remove.
 	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Removed.
-	* sysdeps/unix/sysv/linux/ia64/bits/posix_>opt.h: Removed.
+	* sysdeps/unix/sysv/linux/ia64/bits/posix_opt.h: Removed.
 	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h: Removed.
 
 2004-12-07  Jakub Jelinek  <jakub@redhat.com>

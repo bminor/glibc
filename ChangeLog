@@ -1,4 +1,735 @@
+2005-02-07  Richard Henderson  <rth@redhat.com>
+
+	* iconvdata/jis0208.h (struct jisx0208_ucs_idx): Move before use.
+
+2005-02-08  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): Remove code using
+	RESOLVE.
+
+2005-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Makre sure registers are
+	set correctly.
+
+2005-01-07  Richard Henderson  <rth@redhat.com>
+
+	* math/math_private.h (__copysign): Define as builtin for gcc 4.
+	(__copysignf, __copysignl): Likewise.
+	* sysdeps/alpha/fpu/bits/mathinline.h (copysign): Don't define
+	for gcc 4.0.
+	(copysignf, copysignl, fabsf, fabs): Likewise.
+	(__copysign, __copysignf, __copysignl): Remove.
+	(__fabs, __fabsf): Remove.
+
+2005-01-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-load.c (open_path): If rtld_search_dirs is in RELRO segment,
+	avoid writing to it if none of the standard search directories exist.
+
+2005-02-07  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #700]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S
+	(__novec_setcontext, __setcontext): Fix typo so CCR is restored.
+	Load MSR as a doubleword.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
+	(__novec_swapcontext, __swapcontext): Likewise.
+
+2005-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/iconv_prog.c (main): Provide more help in case on an error.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (check_consistency): Define.
+
+2005-02-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd.c (termination_handler): Avoid segfault if some database
+	is not enabled.
+
+	* nscd/nscd_getai.c (__nscd_getai): If ai_resp->found == -1, set
+	__nss_not_use_nscd_hosts and return -1.
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): If
+	initgr_resp->found == -1, set __nss_not_use_nscd_group and return -1.
+	Avoid leaking sockets.
+
+2005-01-28  Andreas Schwab  <schwab@suse.de>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #677]
+	* elf/dl-runtime.c (fixup): Change return type to
+	DL_FIXUP_VALUE_TYPE. Use DL_FIXUP_VALUE_TYPE,
+	DL_FIXUP_MAKE_VALUE and DL_FIXUP_VALUE_CODE_ADDR for relocation
+	values. Use DL_FIXUP_VALUE_ADDR and DL_FIXUP_ADDR_VALUE to
+	store and retrieve relocation values.
+	(profile_fixup): Likewise.
+	* include/link.h (link_map): Use DL_FIXUP_VALUE_TYPE for
+	l_reloc_result.
+	* sysdeps/generic/dl-fptr.h (link_map): Forward declaration.
+	* sysdeps/generic/dl-lookupcfg.h (DL_FIXUP_VALUE_TYPE): New.
+	(DL_FIXUP_MAKE_VALUE): Likewise.
+	(DL_FIXUP_VALUE_CODE_ADDR): Likewise.
+	(DL_FIXUP_VALUE_ADDR): Likewise.
+	(DL_FIXUP_ADDR_VALUE): Likewise.
+	* sysdeps/ia64/dl-lookupcfg.h: Include <dl-fptr.h> for "struct fdesc".
+	(DL_FIXUP_VALUE_TYPE): New.
+	(DL_FIXUP_MAKE_VALUE): Likewise.
+	(DL_FIXUP_VALUE_CODE_ADDR): Likewise.
+	(DL_FIXUP_VALUE_ADDR): Likewise.
+	(DL_FIXUP_ADDR_VALUE): Likewise.
+	* sysdeps/ia64/dl-machine.h (elf_machine_profile_fixup_plt): Removed.
+	(elf_machine_profile_plt): Removed.
+	(elf_machine_fixup_plt): Change return type and type of value
+	parameter to struct fdesc.
+	(elf_machine_plt_value): Likewise.
+	(elf_machine_rela): Use DL_FIXUP_MAKE_VALUE to construct
+	argument for elf_machine_fixup_plt.
+
+2005-02-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd.init (reload): Print Reloading nscd: before and a newline
+	after the status string printed by killproc.
+
+2004-11-18  Alexandre Oliva  <aoliva@redhat.com>
+
+	* manual/.cvsignore: Add dir-add.texi.
+
+2005-02-06  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Use RESOLVE_MAP
+	all the time.
+
+2004-11-03  Marcus Brinkmann  <marcus@gnu.org>
+
+	* configure.in (sysnames): Append sysdeps/generic for each add-on.
+	* configure: Regenerated.
+
+2005-02-02  Alfred M. Szmidt  <ams@gnu.org>
+
+	* sysdeps/mach/hurd/tls.h: Include <stdbool.h>
+	(dtv_t): Change pointer type to be a struct which also contains
+	information whether the memory pointed to is static TLS or not.
+
+	* sysdeps/generic/syslog.c (send_flags) [!send_flags]: Define it.
+
+	* shadow/sgetspent_r.c (FALSE): Macro renamed to ...
+	(FALSEP): ... this.  Updated all references.
+
+	* libio/fmemopen.c: Include <stdint.h>.
+
+2005-01-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_helper.c (get_mapping): Use MSG_NOSIGNAL if available.
+	* nscd/connections.c (send_ro_fd): Likewise.
+
+2005-01-28  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/tst-auditmod1.c: Add ia64 entries.
+	* sysdeps/generic/ldsodefs.h (La_ia64_regs): New.
+	(La_ia64_retval): New.
+	(audit_ifaces): Add ia64 entries.
+	* sysdeps/ia64/bits/link.h: New file.
+	* sysdeps/ia64/dl-machine.h (elf_machine_runtime_setup): Test
+	for dl_profile non-null.
+	(ARCH_LA_PLTENTER): New.
+	(ARCH_LA_PLTEXIT): New.
+	* sysdeps/ia64/dl-trampoline.S (_dl_runtime_resolve): Allocate
+	only 2 output registers. Allocate stack to save/restore
+	8 incoming fp registers. Call _dl_fixup instead of fixup.
+	(_dl_runtime_profile): Rewrite.
+
+2005-01-28  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/bits/link.h: New file.
+	* sysdeps/s390/s390-32/dl-trampoline.S: New file.
+	* sysdeps/s390/s390-64/dl-trampoline.S: New file.
+	* sysdeps/s390/s390-32/dl-machine.h: Move PLT trampolines to
+	dl-trampoline.S. Use RESOLVE_MAP instead of RESOLVE to protect
+	relocation code.
+	(elf_machine_runtime_setup): Test for dl_profile non-null.
+	(elf_machine_rela): Remove code using RESOLVE.
+	(ARCH_LA_PLTENTER, ARCH_LA_PLTEXIT): New.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+	* sysdeps/generic/ldsodefs.h (La_s390_32_regs, La_s390_32_retval,
+	La_s390_64_regs, La_s390_64_retval): New.
+	* elf/tst-auditmod1.c: Add s390 entries.
+
+	* sysdeps/s390/bits/string.h (strlen, strncpy, strcat, strncat,
+	strncat, memchr, strcmp): Add missing memory clobber.
+
+2005-01-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/oldglob.c (__old_globfree): Also
+	copy gl_offs.  Patch by Sergey Tikhonov <tsv@solvo.ru>.
+
+2005-01-27  Paolo Bonzini  <bonzini@gnu.org>
+
+	[BZ #558]
+	* posix/regcomp.c (calc_inveclosure): Return reg_errcode_t.
+	Initialize the node sets in dfa->inveclosures.
+	(analyze): Initialize inveclosures only if it is needed.
+	Check errors from calc_inveclosure.
+	* posix/regex_internal.c (re_dfa_add_node): Do not initialize
+	the inveclosure node set.
+	* posix/regexec.c (re_search_internal): If nmatch includes unused
+	subexpressions, reset them to { rm_so: -1, rm_eo: -1 } here.
+
+	* posix/regcomp.c (parse_bracket_exp) [!RE_ENABLE_I18N]:
+	Do build a SIMPLE_BRACKET token.
+
+	* posix/regexec.c (transit_state_mb): Do not examine nodes
+	where ACCEPT_MB is not set.
+
+2005-01-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/tst-fmtmsg.c: Include stdlib.h.
+	* stdio-common/tst-fmemopen2.c: Include string.h.
+	* posix/execvp.c: Include stdbool.h.
+
+2004-12-13  Paolo Bonzini  <bonzini@gnu.org>
+
+	Separate parsing and creation of the NFA.  Avoided recursion on
+	the (very unbalanced) parse tree.
+	[BZ #611]
+	* posix/regcomp.c (struct subexp_optimize, analyze_tree, calc_epsdest,
+	re_dfa_add_tree_node, mark_opt_subexp_iter): Removed.
+	(optimize_subexps, duplicate_tree, calc_first, calc_next,
+	mark_opt_subexp): Rewritten.
+	(preorder, postorder, lower_subexps, lower_subexp, link_nfa_nodes,
+	create_token_tree, free_tree, free_token): New.
+	(analyze): Accept a regex_t *.  Invoke the passes via the preorder and
+	postorder generic visitors.  Do not initialize the fields in the
+	re_dfa_t that represent the transitions.
+	(free_dfa_content): Use free_token.
+	(re_compile_internal): Analyze before UTF-8 optimizations.  Do not
+	include optimization of subexpressions.
+	(create_initial_state): Fetch the DFA node index from the first node's
+	bin_tree_t *.
+	(optimize_utf8): Abort on unexpected nodes, including OP_DUP_QUESTION.
+	Return on COMPLEX_BRACKET.
+	(duplicate_node_closure): Fix comment.
+	(duplicate_node): Do not initialize the fields in the
+	re_dfa_t that represent the transitions.
+	(calc_eclosure, calc_inveclosure): Do not handle OP_DELETED_SUBEXP.
+	(create_tree): Remove final argument.  All callers adjusted.  Rewritten
+	to use create_token_tree.
+	(parse_reg_exp, parse_branch, parse_expression, parse_bracket_exp,
+	build_charclass_op): Use create_tree or create_token_tree instead
+	of re_dfa_add_tree_node.
+	(parse_dup_op): Likewise.  Also free the tree using free_tree for
+	"<re>{0}", and lower OP_DUP_QUESTION to OP_ALT: "a?" is equivalent
+	to "a|".  Adjust invocation of mark_opt_subexp.
+	(parse_sub_exp): Create a single SUBEXP node.
+	* posix/regex_internal.c (re_dfa_add_node): Remove last parameter,
+	always perform as if it was 1.  Do not initialize OPT_SUBEXP and
+	DUPLICATED, and initialize the DFA fields representing the transitions.
+	* posix/regex_internal.h (re_dfa_add_node): Adjust prototype.
+	(re_token_type_t): Move OP_DUP_PLUS and OP_DUP_QUESTION to the tokens
+	section.  Add a tree-only code SUBEXP.  Remove OP_DELETED_SUBEXP.
+	(bin_tree_t): Include a full re_token_t for TOKEN.  Turn FIRST and
+	NEXT into pointers to trees.  Remove ECLOSURE.
+
+2004-12-28  Paolo Bonzini  <bonzini@gnu.org >
+
+	[BZ #605]
+	* posix/regcomp.c (parse_bracket_exp): Do not modify DFA nodes
+	that were already created.
+	* posix/regex_internal.c (re_dfa_add_node): Set accept_mb field
+	in the token if needed.
+	(create_ci_newstate, create_cd_newstate): Set accept_mb field
+	from the tokens' field.
+	* posix/regex_internal.h (re_token_t): Add accept_mb field.
+	(ACCEPT_MB_NODE): Removed.
+	* posix/regexec.c (proceed_next_node, transit_states_mb,
+	build_sifted_states, check_arrival_add_next_nodes): Use
+	accept_mb instead of ACCEPT_MB_NODE.
+
+2005-01-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* debug/chk_fail.c (__chk_fail): Print program name in final message.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Found reference to
+	MSG_NOSIGNAL being in 2.2 kernels.
+
+2005-01-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h
+	(SYSCALL_ERROR_HANDLER_TLS_STORE): Remove unnecessary 0 imm.
+
+	[BZ #693]
+	* posix/regex_internal.h (DUMMY_CONSTRAINT): Rename to...
+	(WORD_DELIM_CONSTRAINT): ...this.
+	(NOT_WORD_DELIM_CONSTRAINT): Define.
+	(re_context_type): Add INSIDE_NOTWORD and NOT_WORD_DELIM,
+	change WORD_DELIM to use WORD_DELIM_CONSTRAINT.
+	* posix/regcomp.c (peek_token): For \B create NOT_WORD_DELIM
+	anchor instead of INSIDE_WORD.
+	(parse_expression): Handle NOT_WORD_DELIM constraint.
+	* posix/bug-regex19.c (tests): Adjust tests that relied on \B
+	being inside word instead of not word delim.
+	* posix/tst-rxspencer.c (mb_frob_pattern): Don't frob escaped
+	characters.
+	* posix/rxspencer/tests: Add some new tests.
+
+2005-01-14  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sunrpc/rpc_main.c (s_output): Generate #include <rpc/pmap_clnt.h>
+	irrespective of Cflag.
+
+	* manual/memory.texi (sbrk): Fix definition.
+	* manual/string.texi (strcasestr): Fix example typo.
+
+2005-01-25  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/syslog.c [NO_SIGPIPE]: Protect sigpipe_handler decl.
+
+2005-01-23  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/Makefile (defines): If -mno-tls-direct-seg-refs appears
+	in $(CFLAGS), add -DNO_TLS_DIRECT_SEG_REFS.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h [USE___THREAD]
+	(SYSCALL_ERROR_HANDLER) [NO_TLS_DIRECT_SEG_REFS]: Load thread pointer
+	from %gs:0 and add to that value, rather that direct %gs:OFFSET access.
+	* sysdeps/unix/i386/sysdep.S [NO_TLS_DIRECT_SEG_REFS]: Likewise.
+
+2005-01-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/fmtmsg.c (addseverity): Remove new_string variable.
+	(free_mem): Don't free string.
+	* stdlib/tst-fmtmsg.c: Include string.h.
+	(main): Add some more tests.
+
+2005-01-25  Andreas Schwab  <schwab@suse.de>
+
+	* timezone/asia: Update from tzdata2005c.
+	* timezone/backward: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+
+	* timezone/private.h: Update from tzcode2005c.
+	* timezone/tzfile.h: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
+2005-01-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Remove code using
+	RESOLVE.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Remove code
+	using RESOLVE.
+	* elf/rtld.c (_dl_start): Remove RESOLVE definition.
+
+2005-01-25  Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela): Test
+	sym_map, not sym, against zero.
+
+2005-01-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/syslog.c: Moved to...
+	* sysdeps/generic/syslog.c: ...here.
+	[NO_SIGIPE]: Don't install SIGPIPE handler.
+	* sysdeps/unix/sysv/linux/syslog.c: New file.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_MSG_NOSIGNAL.
+
+2005-01-22  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/dl-trampoline.S: New file.
+	* sysdeps/alpha/dl-machine.h: Move PLT trampolines there.
+	Use RESOLVE_MAP instead of RESOLVE to protect relocation code.
+	(elf_machine_runtime_setup): Test for dl_profile non-null.
+	(ARCH_LA_PLTENTER, ARCH_LA_PLTEXIT): New.
+	* sysdeps/alpha/bits/link.h: New file.
+	* sysdeps/generic/ldsodefs.h (La_alpha_regs, La_alpha_retval): New.
+	(struct audit_ifaces): Add alpha entries.
+	* elf/tst-auditmod1.c: Add alpha entries.
+
+2005-01-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/dl-machine.h: Remove PLT trampolines here.
+	* sysdeps/ia64/dl-trampoline.S: New file.
+
+	* sysdeps/x86_64/bits/link.h: Use namespace-safe identifiers in
+	La_x86_64_xmm definition.
+
+	* posix/Makefile: Use CFLAGS-*.os instead of CFLAGS-*.c for frame
+	pointer option.
+	* stdlib/Makefile (CFLAGS-system.os): Use this instead of
+	CFLAGS-system.c for frame pointer option.
+
+2005-01-21  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-runtime.c (_dl_profile_fixup): Remove const from REGS.
+	* sysdeps/i386/dl-machine.h: Update decl.
+
+2005-01-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile: Add rules to build and run tst-align2.
+	* elf/tst-align2.c: New test.
+	* elf/tst-alignmod2.c: New file.
+	* sysdeps/powerpc/tst-stack-align.h: New file.
+	* sysdeps/i386/dl-machine.h (RTLD_START): Align stack and clear frame
+	pointer before calling _dl_init.
+	* sysdeps/x86_64/dl-machine.h (RTLD_START): Likewise.
+
+2005-01-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/execl.c: Do not allocate potentially large buffers on the
+	stack.
+	* posix/execle.c: Likewise.
+	* posix/execlp.c: Likewise.
+	* posix/execlp.c: Likewise.
+	(script_execute): Removed.
+	(allocate_scripts_argv): New function.  Called at most once to
+	allocate memory, not every time a script is run.  Adjust caller.
+
+	* sysdeps/generic/wordexp.c (exec_comm): Add a few
+	TEMP_FAILURE_RETRY.  Reorganize code to avoid multiple calls to
+	exec_comm_child.
+	(exec_comm_child): Can now be inlined.
+
+	* posix/Makefile: Add -fomit-frame-pointer for a few more files.
+	* stdlib/Makefile: Likewise.
+
+2005-01-19  Roland McGrath  <roland@redhat.com>
+
+	[BZ #681]
+	* sunrpc/openchild.c (_openchild): Use NULL instead of 0 for trailing
+	argument to execlp.
+	Reported by Marcus Meissner <meissner@suse.de>.
+
+2005-01-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* hurd/sigunwind.c (_hurdsig_longjmp_from_handler): Fix a typo
+	in assert.
+	* iconv/strtab.c (strtabfinalize): Likewise.
+
+	* libio/iofopncook.c (_IO_cookie_seekoff): Add prototype.
+
+2005-01-17  Roland McGrath  <roland@redhat.com>
+
+	* nscd/Makefile (LDLIBS-nscd): New variable.
+	($(objpfx)nscd): Use that instead of selinux-LIBS.
+
+	* Makeconfig (link-extra-libs): Define just as $(LDLIBS-$(@F)).
+	(link-extra-libs-static): Define to $(link-extra-libs).
+	(link-extra-libs-bounded): Likewise.
+
+2005-01-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/link.h: Remove stray definition of pltenter.
+
+2005-01-16  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sysdeps/unix/rewinddir.c: Reset filepos.
+	* dirent/tst-seekdir.c: Check telldir value after calling rewinddir.
+
+2005-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/tst-auditmod1.c: Reduce duplication.
+
+2005-01-16  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/dl-machine.h: Remove trampoline code.  Define
+	ARCH_LA_PLTENTER and ARCH_LA_PLTEXIT.
+	(elf_machine_runtime_setup): If profile != 0 does not anymore mean
+	GLRO(dl_profile) != NULL.
+	* sysdeps/m68k/dl-trampoline.S: New file.
+	* sysdeps/m68k/bits/link.h: New file.
+	* sysdeps/generic/ldsodefs.h (struct audit_ifaces): Add m68k
+	variants.
+	* elf/tst-auditmod1.c: Add m68k support.
+
+2005-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c [!_LIBC] (init_dfa): Fix determining of relevant
+	LC_* variable.  Patch by Aharon Robbins <arnold@skeeve.com>.
+
+	* stdlib/fmtmsg.c (internal_addseverity): Remove incorrect free call.
+	* stdlib/tst-fmtmsg.c (main): Add another addseverity test.
+
+2005-01-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): We don't have to allow
+	callers from libc anymore.
+
+	* elf/dl-open.c (dl_open_worker): Pass __RTLD_AUDIT flag from caller
+	to _dl_map_object_deps.
+	* elf/dl-load.c (_dl_map_object_from_fd): Don't change memory
+	protections when loading auditing modules.
+
+	* dlfcn/dlopen.c (dlopen_doit): Catch invalid mode arguments and fail.
+
+	* posix/getconf.c: Update copyright year.
+	* nss/getent.c: Likewise.
+	* nscd/nscd_nischeck.c: Likewise.
+	* iconv/iconvconfig.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* catgets/gencat.c: Likewise.
+	* csu/version.c: Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* elf/sprof.c (print_version): Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* nscd/nscd.c (print_version): Likewise.
+	* debug/xtrace.sh: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* malloc/mtrace.pl: Likewise.
+	* debug/catchsegv.sh: Likewise.
+
+2005-01-11  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/svc_tcp.c (svctcp_create): Call listen with SOMAXCONN
+	as backlog.
+	* sunrpc/svc_unix.c (svcunix_create): Likewise.
+
+	* grp/putgrent.c (putgrent): Don't write 0 as group
+	ID if groupname starts with + or -.
+	* pwd/putpwent.c (putpwent): Don't write 0 as user or
+	group ID if user name starts with + or -.
+
+2005-01-09  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/generic/ldsodefs.h (struct audit_ifaces): Add sh variants.
+	* sysdeps/elf/tst-auditmod1.c: Add sh support.
+	* sysdeps/sh/bits/link.h: New.
+	* sysdeps/sh/dl-machine.h: Remove trampoline code here.  Define
+	ARCH_LA_PLTENTER and ARCH_LA_PLTEXIT.  Remove obsolete comments.
+	(RTLD_START): Define __fpscr_values.
+	* sysdeps/sh/dl-trampoline.S: New file.
+	* sysdeps/sh/sh4/dl-trampoline.S: New file.
+	* sysdeps/sh/sh4/Versions [ld]: Add __fpscr_values.
+	* sysdeps/sh/sh4/dl-machine.h: Remove.
+
+2005-01-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tst-strptime.c (day_tests): Add 2 new tests.
+	(test_tm, main): Issue an error instead of segfaulting if
+	strptime returns NULL.
+
+2005-01-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/alpha/libc-tls.c (__tls_get_addr): Updated for dtv_t union.
+	* sysdeps/ia64/libc-tls.c (__tls_get_addr): Likewise.
+
+2005-01-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.h: Remove no-glibc support.
+
+2005-01-12  GOTO Masanori  <gotom@debian.or.jp>
+
+	[BZ #650]
+	* malloc/malloc.h: Always include features.h.
+
+2005-01-10  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/ia64/fpu/e_logl.c: File removed.
+
+	* dlfcn/dlfcn.c (init): Fix typo in attribute decl.
+
+2005-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (_dl_next_tls_modid): Fix assertion and
+	recognition of last entry.
+
+2005-01-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-runtime.c: Include <sys/param.h>.
+
+	* elf/Makefile (headers): Add bits/link.h.
+
+2005-01-09  Andreas Schwab  <schwab@suse.de>
+
+	* elf/rtld.c (dl_main): Create main_map with __RTLD_OPENEXEC.
+
+2005-01-09  Andreas Jaeger  <aj@suse.de>
+
+	* time/strptime_l.c (__strptime_internal): Add braces to avoid
+	warning.
+
+	* sysdeps/x86_64/bits/link.h: Use vector_size for GCC 4.0.
+
+	* elf/rtld.c (dl_main): Call _dl_add_to_slotinfo only if USE_TLS.
+
+2005-01-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile (generated): Add tst-pie1{,.out,.o}.
+
+2005-01-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-fini.c (_dl_fini): Call destructors of audit DSOs after
+	those of all the regular objects.
+
+	* elf/dl-debug.c (_dl_debug_initialize): Take extra parameter and
+	use it to select the r_debug structure for that namespace.
+	* elf/dl-close.c (_dl_close): Adjust call to _dl_debug_initialize.
+	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
+	* elf/dl-open.c (_dl_open): Likewise.
+	* elf/rtld.c (dl_main): Likewise.
+	* sysdeps/generic/ldsodefs.h (struct link_namespaces): Add _ns_debug
+	member.
+	(_dl_debug_initialize): Add new parameter in declaration.
+
+	* elf/dl-close.c (_dl_close): Make sure auditing callbacks are not
+	called for the auditing objects themselves.
+	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
+
+2005-01-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h
+	(elf_machine_runtime_setup): If profile != 0 does not anymore mean
+	GLRO(dl_profile) != NULL.
+	* sysdeps/powerpc/powerpc64/bits/link.h (struct la_ppc64_regs): Add
+	padding.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S: (_dl_profile_resolve):
+	Extend _dl_prof_resolve to add pass extra parameters to
+	_dl_profile_fixup and set up structure with register content.
+
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__elf_machine_runtime_setup):
+	If profile != 0 does not anymore mean GLRO(dl_profile) != NULL.
+	* sysdeps/powerpc/powerpc32/dl-trampoline.S (_dl_prof_resolve):
+	Extend _dl_prof_resolve to add pass extra parameters to
+	_dl_profile_fixup and set up structure with register content.
+	* sysdeps/powerpc/powerpc32/bits/link.h: Fix types of some fields in
+	the register and result structures.
+	* sysdeps/powerpc/powerpc64/bits/link.h: Fix types of some fields
+	in the 32-bit register and result structures.
+
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S: Use register names.
+
+	* sysdeps/powerpc/powerpc32/dl-trampoline.S: New file.
+	* sysdeps/powerpc/powerpc32/dl-machine.h: Remove trampoline code here.
+	Define ARCH_LA_PLTENTER and ARCH_LA_PLTEXIT.
+	* sysdeps/generic/ldsodefs.h (struct audit_ifaces): Add ppc32 variants.
+	* elf/tst-auditmod1.c: Add ppc32 support.
+	* sysdeps/powerpc/powerpc32/bits/link.h: New file.
+	* sysdeps/powerpc/powerpc64/bits/link.h: Add ppc32 definitions.
+
+	* malloc/malloc.c (malloc_printerr): Print program name as part of
+	error message.
+
+	* misc/sys/cdefs.h (__attribute_warn_unused_result__): Define.
+	* stdlib/stdlib.h: Make realloc with
+	__attribute_warn_unused_result__ instead of __wur.
+	* malloc/malloc.h: Add __wur and __attribute_warn_unused_result__
+	markers as in <stdlib.h>.
+
+	* libio/stdio.h: Remove __wur from rename and remove.
+	* posix/unistd.h: Remove __wur from dup2.
+
+2005-01-03  Andreas Jaeger  <aj@suse.de>
+
+	* elf/Makefile (tests): Revert patch from 2005-01-03.
+
+2005-01-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/init-first.c (__libc_init_first): Don't
+	make __libc_init_first hidden.
+
+	* elf/rtld.c [!DONT_USE_BOOTSTRAP_MAP] (_dl_start_final): Initialize
+	l_relocated of rtld map.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S: New file.
+	* sysdeps/powerpc/powerpc64/dl-machine.h: Remove trampoline code here.
+	Define ARCH_LA_PLTENTER and ARCH_LA_PLTEXIT.
+	* sysdeps/generic/ldsodefs.h (struct audit_ifaces): Add ppc64 variants.
+	* elf/tst-auditmod1.c: Add ppc64 support.
+	* sysdeps/powerpc/powerpc64/bits/link.h: New file.
+
+2005-01-06  Roland McGrath  <roland@redhat.com>
+
+	[BZ #633]
+	* sysdeps/unix/sysv/linux/futimes.c (__futimes): Catch errno values
+	indicating file-name lookup errors, and return ENOSYS or EBADF instead.
+
 2005-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* csu/elf-init.c (__libc_csu_fini): Don't do anything here.
+	* sysdeps/generic/libc-start.c: Don't register program destructor here.
+
+	* dlfcn/Makefile: Add rules to build dlfcn.c.
+	(LDFLAGS-dl.so): Removed.
+	* dlfcn/dlclose.c: _dl_close is now in ld.so, use function pointer
+	table.
+	* dlfcn/dlmopen.c: Likewise for _dl_open.
+	* dlfcn/dlopen.c: Likewise.
+	* dlfcn/dlopenold.c: Likewise.
+	* elf/dl-libc.c: Likewise for _dl_open and _dl_close.
+	* elf/Makefile (routines): Remove dl-open and dl-close.
+	(dl-routines): Add dl-open, dl-close, and dl-trampoline.
+	Add rules to build and run tst-audit1.
+	* elf/tst-audit1.c: New file.
+	* elf/tst-auditmod1.c: New file.
+	* elf/Versions [libc]: Remove _dl_open and _dl_close.
+	* elf/dl-close.c: Change for use inside ld.so instead of libc.so.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-debug.c (_dl_debug_initialize): Allow reinitialization,
+	signaled by nonzero parameter.
+	* elf/dl-init.c: Fix use of r_state.
+	* elf/dl-load.c: Likewise.
+
+	* elf/dl-close.c: Add auditing checkpoints.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-sym.c: Likewise.
+	* sysdeps/generic/libc-start.c: Likewise.
+	* elf/dl-object.c: Allocate memory for auditing information.
+	* elf/dl-reloc.c: Remove RESOLV.  We now always need the map.
+	Correctly initialize slotinfo.
+	* elf/dynamic-link.h: Adjust after removal of RESOLV.
+	* sysdeps/hppa/dl-lookupcfg.h: Likewise.
+	* sysdeps/ia64/dl-lookupcfg.h: Likewise.
+	* sysdeps/powerpc/powerpc64/dl-lookupcfg.h: Removed.
+	* elf/dl-runtime.c (_dl_fixup): Little cleanup.
+	(_dl_profile_fixup): New parameters to point to register struct and
+	variable for frame size.
+	Add auditing checkpoints.
+	(_dl_call_pltexit): New function.
+	Don't define trampoline code here.
+	* elf/rtld.c: Recognize LD_AUDIT.  Load modules on startup.
+	Remove all the functions from _rtld_global_ro which only _dl_open
+	and _dl_close needed.
+	Add auditing checkpoints.
+	* elf/link.h: Define symbols for auditing interfaces.
+	* include/link.h: Likewise.
+	* include/dlfcn.h: Define __RTLD_AUDIT.
+	Remove prototypes for _dl_open and _dl_close.
+	Adjust access to argc and argv in libdl.
+	* dlfcn/dlfcn.c: New file.
+	* sysdeps/generic/dl-lookupcfg.h: Remove all content now that RESOLVE
+	is gone.
+	* sysdeps/generic/ldsodefs.h: Add definitions for auditing interfaces.
+	* sysdeps/generic/unsecvars.h: Add LD_AUDIT.
+	* sysdeps/i386/dl-machine.h: Remove trampoline code here.
+	Adjust for removal of RESOLVE.
+	* sysdeps/x86_64/dl-machine.h: Likewise.
+	* sysdeps/generic/dl-trampoline.c: New file.
+	* sysdeps/i386/dl-trampoline.c: New file.
+	* sysdeps/x86_64/dl-trampoline.c: New file.
+
+	* sysdeps/generic/dl-tls.c: Cleanups.  Fixup for dtv_t change.
+	Fix updating of DTV.
+	* sysdeps/generic/libc-tls.c: Likewise.
+
+	* sysdeps/arm/bits/link.h: Renamed to ...
+	* sysdeps/arm/bits/linkmap.h: ...this.
+	* sysdeps/generic/bits/link.h: Renamed to...
+	* sysdeps/generic/bits/linkmap.h: ...this.
+	* sysdeps/hppa/bits/link.h: Renamed to...
+	* sysdeps/hppa/bits/linkmap.h: ...this.
+	* sysdeps/i386/bits/link.h: Renamed to...
+	* sysdeps/i386/bits/linkmap.h: ...this.
+	* sysdeps/ia64/bits/link.h: Renamed to...
+	* sysdeps/ia64/bits/linkmap.h: ...this.
+	* sysdeps/s390/bits/link.h: Renamed to...
+	* sysdeps/s390/bits/linkmap.h: ...this.
+	* sysdeps/sh/bits/link.h: Renamed to...
+	* sysdeps/sh/bits/linkmap.h: ...this.
+	* sysdeps/x86_64/bits/link.h: Renamed to...
+	* sysdeps/x86_64/bits/linkmap.h: ...this.
 
 	* posix/unistd.h: Declare ftruncate for POSIX 2003.  [BZ #640]
 
@@ -338,9 +1069,6 @@
 	l_text_end are set for a VDSO with a single PT_LOAD entry.
 
 2005-01-05  Ulrich Drepper  <drepper@redhat.com>
-
-	* libio/fmemopen.c (fmemopen_seek): SEEK_END should count from
-	maximum used address, not maximum buffer position.
 
 	* libio/iofopncook.c (_IO_cookie_seekoff): Define.  Mark offset as
 	invalid to disable optimizations in fileops which won't work here.

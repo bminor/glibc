@@ -92,6 +92,7 @@ CFLAGS-bsearch.c = $(uses-callbacks)
 CFLAGS-msort.c = $(uses-callbacks)
 CFLAGS-qsort.c = $(uses-callbacks)
 CFLAGS-system.c = -fexceptions
+CFLAGS-system.os = -fomit-frame-pointer
 CFLAGS-fmtmsg.c = -fexceptions
 
 ifneq (,$(filter %REENTRANT, $(defines)))
