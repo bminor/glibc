@@ -163,7 +163,9 @@ extern AUTH *authunix_create __P ((char *__machname, __uid_t __uid,
 				   __gid_t *__aup_gids));
 extern AUTH *authunix_create_default __P ((void));
 extern AUTH *authnone_create __P ((void));
-extern AUTH *authdes_create();
+extern AUTH *authdes_create __P ((const char *__servername, u_int __window,
+				  struct sockaddr *__syncaddr,
+				  des_block *__ckey));
 
 #define AUTH_NONE	0		/* no authentication */
 #define	AUTH_NULL	0		/* backward compatibility */

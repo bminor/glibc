@@ -243,7 +243,7 @@ struct xdr_discrim {
 /*
  * These are the "generic" xdr routines.
  */
-extern bool_t	xdr_void ();
+extern bool_t	xdr_void __P ((void));
 extern bool_t	xdr_int __P ((XDR *__xdrs, int *__ip));
 extern bool_t	xdr_u_int __P ((XDR *__xdrs, u_int *__up));
 extern bool_t	xdr_long __P ((XDR *__xdrs, long *__lp));
@@ -302,7 +302,8 @@ extern void   xdrstdio_create __P ((XDR *__xdrs, FILE *__file,
 /* XDR pseudo records for tcp */
 extern void   xdrrec_create __P ((XDR *__xdrs, u_int __sendsize,
 				  u_int __recvsize, caddr_t __tcp_handle,
-				  int (*__readit) (), int (*__writeit) ()));
+				  int (*__readit) (char *, char *, int),
+				  int (*__writeit) (char *, char *, int)));
 
 /* make end of xdr record */
 extern bool_t xdrrec_endofrecord __P ((XDR *__xdrs, bool_t __sendnow));
