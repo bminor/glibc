@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -121,7 +121,7 @@ DEFUN(__ioctl, (fd, request, arg),
     return __hurd_fail (m->msgh_id == MACH_NOTIFY_SEND_ONCE ?
 			MIG_SERVER_DIED : MIG_REPLY_MISMATCH);
 
-  if ((m->msgh_bits & MACH_MSGH_BITS_COMPLEX) ||
+  if ((m->msgh_bits & MACH_MSGH_BITS_COMPLEX) || /* XXX ? */
       m->msgh_size != (char *) t - msg)
     return __hurd_fail (MIG_TYPE_ERROR);
 
