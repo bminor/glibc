@@ -1,3 +1,14 @@
+1999-11-08  Andreas Jaeger  <aj@suse.de>
+
+	* locale/findlocale.c (_nl_find_locale): Free normalized_codeset;
+	this fixes a memory leak (closes PR libc/1435).
+
+	* intl/l10nflist.c (_nl_normalize_codeset): Update comment to
+	reflect memory allocation.
+
+	* intl/loadinfo.h: Comment _nl_normalize_codeset, comment memory
+	allocation in _nl_explode_name.
+
 1999-11-06  Andreas Jaeger  <aj@suse.de>
 
 	* time/tzset.c: Use __libc_lock_define_initialized for tzset_lock
