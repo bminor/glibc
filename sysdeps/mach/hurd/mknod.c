@@ -31,8 +31,9 @@ int
 DEFUN(__mknod, (path, mode, dev),
       CONST char *path AND mode_t mode AND dev_t dev)
 {
-  file_t node;
   error_t err;
+  file_t dir, node;
+  char *name;
   char buf[100], *bp;
   const char *translator;
   size_t len;
@@ -77,18 +78,27 @@ DEFUN(__mknod, (path, mode, dev),
       translator = buf;
       len += buf + sizeof (buf) - bp;
     }
-
   
-  node = __path_lookup (path, O_WRITE|O_CREAT|O_EXCL, mode & 0777);
-  if (node == MACH_PORT_NULL)
+  dir = __path_split (to, &name);
+  if (dir == MACH_PORT_NULL)
     return -1;
 
+  /* Create a new, unlinked node in the target directory.  */
+  err = __dir_mkfile (dir, O_WRITE, mode & ~S_IFMT & _hurd_umask, &node);
+
+  if (! err)
+    /* Set the node's translator to make it a device.  */
   err = __file_set_translator (node, FS_TRANS_EXCL, 0,
 			       translator, len, MACH_PORT_NULL);
 
-  if (err)
-    /* XXX The node still exists.... */
-    return __hurd_fail (err);
+  if (! err)
+    /* Link the node, now a valid device, into the target directory.  */
+    err = __dir_link (node, dir, name);
 
+  __mach_port_deallocate (__mach_task_self (), dir);
+  __mach_port_deallocate (__mach_task_self (), node);
+
+  if (err)
+    return __hurd_fail (err);
   return 0;
 }
