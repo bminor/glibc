@@ -22,6 +22,10 @@ Cambridge, MA 02139, USA.  */
 
 #ifndef	_TIME_H
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
 #if	!defined(__need_time_t) && !defined(__need_clock_t)
 #define	_TIME_H		1
 #include <features.h>
@@ -179,5 +183,9 @@ extern long int timezone;
   ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
 
 #endif	/* <time.h> included.  */
+
+#ifdef	__cplusplus
+}
+#endif
 
 #endif	/* <time.h> not already included.  */
