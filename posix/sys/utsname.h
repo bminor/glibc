@@ -50,6 +50,10 @@ struct utsname
     char machine[_UTSNAME_LENGTH];
   };
 
+#ifdef __USE_SVID
+#define SYS_NMLN  _UTSNAME_LENGTH
+#endif
+
 
 /* Put information about the system in NAME.  */
 extern int uname __P ((struct utsname *__name));
