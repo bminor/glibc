@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1998 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <pwd.h>
 
+#define _S(x)	x ? x : ""
 
 /* Write an entry to the given stream.
    This must know the format of the password file.  */
@@ -35,9 +36,9 @@ putpwent (p, stream)
     }
 
   if (fprintf (stream, "%s:%s:%u:%u:%s:%s:%s\n",
-	       p->pw_name, p->pw_passwd,
+	       p->pw_name, _(p->pw_passwd),
 	       p->pw_uid, p->pw_gid,
-	       p->pw_gecos, p->pw_dir, p->pw_shell) < 0)
+	       _S(p->pw_gecos), _S(p->pw_dir), _S(p->pw_shell)) < 0)
     return(-1);
 
   return(0);
