@@ -87,7 +87,6 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   0,                          /* int p_priority */
   &__pthread_handles[1].h_lock, /* struct _pthread_fastlock * p_lock */
   0,                          /* int p_signal */
-  ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
   NULL,                       /* sigjmp_buf * p_signal_buf */
   NULL,                       /* sigjmp_buf * p_cancel_buf */
   0,                          /* char p_terminated */
@@ -100,8 +99,6 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   0,                          /* char p_cancelstate */
   0,                          /* char p_canceltype */
   0,                          /* char p_canceled */
-  0,                          /* char p_woken_by_cancel */
-  NULL,                       /* struct pthread_extricate_if *p_extricate */
   &__pthread_manager_thread.p_errno, /* int *p_errnop */
   0,                          /* int p_errno */
   NULL,                       /* int *p_h_errnop */

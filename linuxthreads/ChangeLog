@@ -1,3 +1,7 @@
+2000-01-06  Andreas Jaeger  <aj@suse.de>
+
+	* pthread.c: Remove extra initializer.
+
 2000-01-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* pthread.c (__pthread_initial_thread, pthread_manager_thread):
