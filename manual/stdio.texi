@@ -2,11 +2,9 @@
 @chapter Input/Output on Streams
 
 This chapter describes the functions for creating streams and performing
-input and output operations on them.  As discussed in @ref{I/O Overview}, a stream is a fairly abstract, high-level concept
+input and output operations on them.  As discussed in @ref{I/O
+Overview}, a stream is a fairly abstract, high-level concept
 representing a communications channel to a file, device, or process.
-
-@strong{Incomplete:}  RMS suggests that a short example might be
-useful here.
 
 @menu
 * Streams::                     About the data type representing a stream.
@@ -46,8 +44,8 @@ manual, however, is careful to use the terms ``file'' and ``stream''
 only in the technical sense.
 @cindex file pointer
 
-The @code{FILE} type is declared in the header file @file{stdio.h}.
 @pindex stdio.h
+The @code{FILE} type is declared in the header file @file{stdio.h}.
 
 @comment stdio.h
 @comment ANSI
@@ -73,9 +71,9 @@ rather than the objects themselves.
 @cindex streams, standard
 
 When the @code{main} function of your program is invoked, it already has
-some predefined streams open and available for use.  These represent the
-``standard'' input and output channels that have been established for
-the process.
+three predefined streams open and available for use.  These represent
+the ``standard'' input and output channels that have been established
+for the process.
 
 These streams are declared in the header file @file{stdio.h}.
 @pindex stdio.h
@@ -83,25 +81,24 @@ These streams are declared in the header file @file{stdio.h}.
 @comment stdio.h
 @comment ANSI
 @deftypevr Macro {FILE *} stdin
-This macro expands into an expression that represents the @dfn{standard
-input} stream, the normal source of input for the program.
+The @dfn{standard input} stream, which is the normal source of input for the
+program.
 @end deftypevr
 @cindex standard input stream
 
 @comment stdio.h
 @comment ANSI
 @deftypevr Macro {FILE *} stdout
-This macro expands into an expression that represents the @dfn{standard
-output} stream, the destination for normal output from the program.
+The @dfn{standard output} stream, which is used for normal output from
+the program.
 @end deftypevr
 @cindex standard output stream
 
 @comment stdio.h
 @comment ANSI
 @deftypevr Macro {FILE *} stderr
-This macro expands into an expression that represents the @dfn{standard
-error} stream, the destination for error and diagnostic messages issued
-by the program.
+The @dfn{standard error} stream, which is used for error messages and
+diagnostics issued by the program.
 @end deftypevr
 @cindex standard error stream
 
@@ -112,7 +109,8 @@ described in @ref{File System Interface}.)  Most other operating systems
 provide similar mechanisms, but the details of how to use them can vary.
 
 It is probably not a good idea to close any of the standard streams.
-
+But you can use @code{freopen} to get te effect of closing one and
+reopening it.  @xref{Opening Streams}.
 
 @node Opening Streams
 @section Opening Streams
@@ -122,45 +120,44 @@ Opening a file with the @code{fopen} function creates a new stream and
 establishes a connection between the stream and a file.  This may
 involve creating a new file.  
 
-The functions in this section are declared in the header file
-@file{stdio.h}.
 @pindex stdio.h
+Everything described in this section is declared in the header file
+@file{stdio.h}.
 
 @comment stdio.h
 @comment ANSI
 @deftypefun {FILE *} fopen (const char *@var{filename}, const char *@var{opentype})
-The @code{fopen} function opens the file named by the string
-@var{filename}, and returns a pointer to a stream that is associated
-with it.
+The @code{fopen} function opens a stream for I/O to the file
+@var{filename}, and returns a pointer to the stream.
 
 The @var{opentype} argument is a string that controls how the file is
 opened and specifies attributes of the resulting stream.  It must begin
 with one of the following sequences of characters:
 
-@table @code
-@item "r"
+@table @samp
+@item r
 Open existing file for reading only.
 
-@item "w"
+@item w
 Open file for writing only.  If the file already exists, it is truncated
 to zero length.  Otherwise a new file is created.
 
-@item "a"
+@item a
 Open file for append access; that is, writing at the end of file only.
 If the file already exists, its initial contents are unchanged and
 output to the stream is appended to the end of the file.
 Otherwise, a new, empty file is created.
 
-@item "r+"
+@item r+
 Open existing file for both reading and writing.  The initial contents
 of the file are unchanged and the initial file position is at the
 beginning of the file.
 
-@item "w+"
+@item w+
 Open file for both reading and writing.  If the file already exists, it
 is truncated to zero length.  Otherwise, a new file is created.
 
-@item "a+"
+@item a+
 Open or create file for both reading and appending.  If the file exists,
 its initial contents are unchanged.  Otherwise, a new file is
 created.  The initial file position for reading might be at either
@@ -168,45 +165,39 @@ the beginning or end of the file, but output is always appended
 to the end of the file.
 @end table
 
-Any of the above sequences can also be followed by a character @samp{b}
-to indicate that a binary (rather than text) stream should be created;
-see @ref{Binary Streams}.  If both @samp{+} and @samp{b} are
-specified, they can appear in either order.  For example, @code{"r+b"}
-and @code{"rb+"} are equivalent; they both specify an existing binary
-file being opened for both read and write access.  In GNU and other
-POSIX systems, `b' has no effect since there is no difference between 
-text and binary streams.
+As you can see, @samp{+} requests a stream that can do both input and
+output.  When using such a stream, you must call @code{fflush}
+(@pxref{Stream Buffering}) or a file positioning function such as
+@code{fseek} (@pxref{File Positioning}) when switching from reading to
+writing or vice versa.  Otherwise, internal buffers might not be emptied
+properly.
 
-When a file is opened with the @samp{+} option for both reading and
-writing, you must call either @code{fflush} (@pxref{Stream Buffering})
-or a file positioning function such as @code{fseek} (@pxref{File
-Positioning}) when switching back and forth between read and write
-operations.  Otherwise, internal buffers might not be emptied properly.
+The GNU C library defines one additional character for use in
+@var{opentype}: the character @samp{x} insists on creating a new
+file---if a file @var{filename} already exists, @code{fopen} fails
+rather than opening it.  This is equivalent to the @code{O_EXCL} option
+to the @code{open} function (@pxref{File Status Flags}).
 
-Additional characters that follow these sequences specify other
-implementation-specific file or stream attributes.
+The character @samp{b} in @var{opentype} has a standard meaning; it
+requests a binary stream rather than a text stream.  But this makes no
+difference in POSIX systems (including the GNU system).  If both
+@samp{+} and @samp{b} are specified, they can appear in either order.
+@xref{Binary Streams}.
 
-The GNU C library defines only one additional attribute: if the
-character @samp{x} is given, this specifies exclusive use of a new file.
-This is equivalent to the @code{O_EXCL} option to the @code{open}
-function (@pxref{File Status Flags}).  Any other characters are simply
-ignored.
-
-Other systems may define other character sequences to specify things
-like a record size or access control specification.
+Any other characters in @var{opentype} are simply ignored.  They may be
+meaningful in other systems.
 
 If the open fails, @code{fopen} returns a null pointer.
 @end deftypefun
 
 You can have multiple streams (or file descriptors) pointing to the same
-file open at the same time.  If you do only input, this works fine, but
-you can get unpredictable results if you are writing to the file.  It is
-unusual to have more than one stream open for a given file in one
-program, but not unusual for several programs (or at least several
-instances of one program) to open the same file.  In such cases, your
-programs should use the file locking facilities to avoid simultaneous
-access.  @xref{File Locks}.
-
+file open at the same time.  If you do only input, this works
+straightforwardly, but you must be careful if any output streams are
+included.  @xref{Stream/Descriptor Precautions}.  This is equally true
+whether the streams are in one program (not usual) or in several
+programs (which can easily happen).  It may be advantageous to use the
+file locking facilities to avoid simultaneous access.  @xref{File
+Locks}.
 
 @comment stdio.h
 @comment ANSI
@@ -680,6 +671,7 @@ useful for printing error messages, tables of data, and the like.
 * Variable Arguments Output::   @code{vprintf} and friends.
 * Parsing a Template String::   What kinds of args does a given template
                                  call for? 
+* Example of Parsing::          Sample program using @code{parse_printf_format}.
 @end menu
 
 @node Formatted Output Basics
@@ -845,6 +837,10 @@ Conversions}, for details.
 Print an integer as an unsigned decimal number.  @xref{Integer
 Conversions}, for details.
 
+@item @samp{%Z}
+Print an integer as an unsigned decimal number, assuming it was passed
+with type @cod{size_t}.  @xref{Integer Conversions}, for details.
+
 @item @samp{%x}, @samp{%X}
 Print an integer as an unsigned hexadecimal number.  @samp{%x} uses
 lower-case letters and @samp{%X} uses upper-case.  @xref{Integer
@@ -881,10 +877,6 @@ Get the number of characters printed so far.  @xref{Other Output Conversions}.
 Print a literal @samp{%} character.  @xref{Other Output Conversions}.
 @end table
 
-@strong{Incomplete:} There also seems to be a @samp{Z} conversion for
-printing a @code{size_t} value in decimal notation.  Is this something
-we want to publicize?
-
 If the syntax of a conversion specification is invalid, unpredictable
 things will happen, so don't do this.  If there aren't enough function
 arguments provided to supply values for all the conversion
@@ -897,7 +889,7 @@ simply ignored; this is sometimes useful.
 @subsection Integer Conversions
 
 This section describes the options for the @samp{%d}, @samp{%i},
-@samp{%o}, @samp{%u}, @samp{%x}, and @samp{%X} conversion
+@samp{%o}, @samp{%u}, @samp{%x}, @samp{%X}, and @samp{%Z} conversion
 specifications.  These conversions print integers in various formats.
 
 The @samp{%d} and @samp{%i} conversion specifications both print an
@@ -905,7 +897,8 @@ The @samp{%d} and @samp{%i} conversion specifications both print an
 @samp{%u}, and @samp{%x} print the argument as an unsigned octal,
 decimal, or hexadecimal number (respectively).  The @samp{%X} conversion
 specification is just like @samp{%x} except that it uses the characters
-@samp{ABCDEF} as digits instead of @samp{abcdef}.
+@samp{ABCDEF} as digits instead of @samp{abcdef}.  @samp{%Z} is like
+@samp{%u} but expects an argument of type @code{size_t}.
 
 The following flags are meaningful:
 
@@ -970,7 +963,11 @@ an extension supported by the GNU C compiler.  On systems that don't
 support extra-long integers, this is the same as @code{long int}.)
 @end table
 
-For example, using the template string:
+The modifiers for argument type are not applicable to @samp{%Z}, since
+the sole purpose of @samp{%Z} is to specify the data type
+@code{size_t}.
+
+Here is an example.  Using the template string:
 
 @example
 |%5d|%-5d|%+5d|%+-5d|% 5d|%05d|%5.0d|%5.2d|%d|\n"
@@ -1457,9 +1454,9 @@ arguments from the user's program, which could cause a crash.
 @deftypefun size_t parse_printf_format (const char *@var{template}, size_t @var{n}, int *@var{argtypes})
 This function returns information about the number and types of
 arguments expected by the @code{printf} template string @var{template}.
-The information is stored in the array @var{argtypes}.  One element of
-this array is used for each argument expected.  This information is
-encoded using the various @samp{PA_} macros, listed below.
+The information is stored in the array @var{argtypes}; each element of
+this array describes one argument.  This information is encoded using
+the various @samp{PA_} macros, listed below.
 
 The @var{n} argument specifies the number of elements in the array
 @var{argtypes}.  This is the most elements that
@@ -1487,45 +1484,47 @@ extract just the basic type code.
 Here are symbolic constants that represent the basic types; they stand
 for integer values.
 
+@table @code
 @comment printf.h
 @comment GNU
-@deftypevr Macro int PA_INT
+@item PA_INT
+@vindex PA_INT
 This specifies that the base type is @code{int}.
-@end deftypevr
 
 @comment printf.h
 @comment GNU
-@deftypevr Macro int PA_CHAR
+@item PA_CHAR
+@vindex PA_CHAR
 This specifies that the base type is @code{int}, cast to @code{char}.
-@end deftypevr
 
 @comment printf.h
 @comment GNU
-@deftypevr Macro int PA_STRING
+@item PA_STRING
+@vindex PA_STRING
 This specifies that the base type is @code{char *}, a null-terminated string.
-@end deftypevr
 
 @comment printf.h
 @comment GNU
-@deftypevr Macro int PA_POINTER
+@item PA_POINTER
+@vindex PA_POINTER
 This specifies that the base type is @code{void *}, an arbitrary pointer.
-@end deftypevr
 
 @comment printf.h
 @comment GNU
-@deftypevr Macro int PA_FLOAT
+@item PA_FLOAT
+@vindex PA_FLOAT
 This specifies that the base type is @code{float}.
-@end deftypevr
 
 @comment printf.h
 @comment GNU
-@deftypevr Macro int PA_DOUBLE
+@item PA_DOUBLE
+@vindex PA_DOUBLE
 This specifies that the base type is @code{double}.
-@end deftypevr
 
 @comment printf.h
 @comment GNU
-@deftypevr Macro int PA_LAST
+@item PA_LAST
+@vindex PA_LAST
 You can define additional base types for your own programs as offsets
 from @code{PA_LAST}.  For example, if you have data types @samp{foo}
 and @samp{bar} with their own specialized @code{printf} conversions,
@@ -1535,50 +1534,122 @@ you could define encodings for these types as:
 #define PA_FOO  PA_LAST
 #define PA_BAR  (PA_LAST + 1)
 @end example
-@end deftypevr
+@end table
 
 Here are the flag bits that modify a basic type.  They are combined with
 the code for the basic type using inclusive-or.
 
+@table @code
 @comment printf.h
 @comment GNU
-@deftypevr Macro int PA_FLAG_PTR
+@item PA_FLAG_PTR
+@vindex PA_FLAG_PTR
 If this bit is set, it indicates that the encoded type is a pointer to
 the base type, rather than an immediate value.
 For example, @samp{PA_INT|PA_FLAG_PTR} represents the type @samp{int *}.
-@end deftypevr
 
 @comment printf.h
 @comment GNU
-@deftypevr Macro int PA_FLAG_SHORT
+@item PA_FLAG_SHORT
+@vindex PA_FLAG_SHORT
 If this bit is set, it indicates that the base type is modified with
 @code{short}.  (This corresponds to the @samp{h} type modifier.)
-@end deftypevr
 
 @comment printf.h
 @comment GNU
-@deftypevr Macro int PA_FLAG_LONG
+@item PA_FLAG_LONG
+@vindex PA_FLAG_LONG
 If this bit is set, it indicates that the base type is modified with
 @code{long}.  (This corresponds to the @samp{l} type modifier.)
-@end deftypevr
 
 @comment printf.h
 @comment GNU
-@deftypevr Macro int PA_FLAG_LONGLONG
+@item PA_FLAG_LONGLONG
+@vindex PA_FLAG_LONGLONG
 If this bit is set, it indicates that the base type is modified with
 @code{long long}.  (This corresponds to the @samp{L} type modifier.)
-@end deftypevr
 
 @comment printf.h
 @comment GNU
-@deftypevr Macro int PA_FLAG_LONGDOUBLE
+@item PA_FLAG_LONGDOUBLE
+@vindex PA_FLAG_LONGDOUBLE
 This is a synonym for @code{PA_FLAG_LONGLONG}, used by convention with
 a base type of @code{PA_DOUBLE} to indicate a type of @code{long double}.
-@end deftypevr
+@end table
 
-@strong{Incomplete:} Should have an example here from a fictional
-interpreter, showing how one might validate a list of args and then
-call @code{vprintf}.
+@ifinfo
+For an example of using these facilitles, see @ref{Example of Parsing}.
+@end ifinfo
+
+@node Example of Parsing
+@subsection Example of Parsing a Template String
+
+Here is an example of decoding argument types for a format string.  We
+assume this is part of an interpreter which contains arguments of type
+@code{NUMBER}, @code{CHAR}, @code{STRING} and @code{STRUCTURE} (and
+perhaps others which are not valid here).
+
+@example
+/* @r{Test whether the @var{nargs} specified objects}
+   @r{in the vector @var{args} are valid}
+   @r{for the format string @var{format}:}
+   @r{if so, return 1.}
+   @r{If not, return 0 after printing an error message.}  */
+
+int
+validate_args (char *format, int nargs, OBJECT *args)
+@{
+  int nelts = 20;
+  int *argtypes;
+  int nwanted;
+
+  /* @r{Get the information about the arguments.}  */
+  while (1) @{
+    argtypes = (int *) alloca (nelts * sizeof (int));
+    nwanted = parse_printf_format (string, nelts, argtypes);
+    if (nwanted <= nelts)
+      break;
+    nelts *= 2;
+  @}
+
+  /* @r{Check the number of arguments.}  */
+  if (nwanted > nargs) @{
+    error ("too few arguments (at least %d required)", nwanted);
+    return 0;
+  @}
+    
+  /* @r{Check the C type wanted for each argument}
+     @r{and see if the object given is suitable.}  */
+  for (i = 0; i < nwanted; i++) @{
+    int wanted;
+
+    if (argtypes[i] & PA_FLAG_PTR)
+      wanted = STRUCTURE;
+    else
+      switch (argtypes[i] & ~PA_FLAG_MASK) @{
+      case PA_INT:
+      case PA_FLOAT:
+      case PA_DOUBLE:
+        wanted = NUMBER;
+        break;
+      case PA_CHAR:
+        wanted = CHAR;
+        break;
+      case PA_STRING:
+        wanted = STRING;
+        break;
+      case PA_POINTER:
+        wanted = STRUCTURE;
+        break;
+      @}
+    if (TYPE (args[i]) != wanted) @{
+      error ("type mismatch for arg number %d", i);
+      return 0;
+    @}
+  @}
+  return 1;
+@}
+@end example
 
 @node Customizing Printf
 @section Customizing Printf
@@ -1899,10 +1970,10 @@ to use them properly.  Another reason is that it is difficult to recover
 from a matching error.
 
 If you are trying to read input that doesn't match a single, fixed
-pattern, you may be better off using a tool such as Bison to generate
-a parser, rather than using @code{scanf}.  For more information about
-this, see @cite{The Bison Reference Manual}.
-@c ??? Don't use @cite, use @xref with five args.
+pattern, you may be better off using a tool such as Bison to generate a
+parser, rather than using @code{scanf}.  For more information about
+this, see @ref{Top, Bison, Bison, bison.info, The Bison Reference
+Manual}.
 
 @node Input Conversion Syntax
 @subsection Input Conversion Syntax
@@ -2364,14 +2435,9 @@ object.  Therefore, the stream remains at the actual end of the file.
 @deftypefun size_t fwrite (const void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
 This function writes up to @var{count} objects of size @var{size} from
 the array @var{data}, to the stream @var{stream}.  The return value is
-the number of objects actually written, which is less than @var{count}
-only if a write error occurs.
-
-@c ??? What happens if medium is full in the middle of an object?
-@c ??? Does it write an incomplete object?
-@c ??? Can that happen in any other case?
+normally @var{count}, if the call succeeds.  Any other value indicates
+some sort of error, such as running out of space.
 @end deftypefun
-
 
 @node EOF and Errors
 @section End-Of-File and Errors
@@ -2773,18 +2839,18 @@ buffered output on a stream is flushed automatically:
 When you try to do output and the output buffer is full.
 
 @item
-When the stream is closed.
+When the stream is closed.  @xref{Closing Streams}.
 
 @item 
 When the program terminates by calling @code{exit}.
-@c ??? xref here.
+@xref{Normal Termination}.
 
 @item
 When a newline is written, if the stream is line buffered.
 
 @item
 Whenever an input operation on @emph{any} stream actually reads data
-from the file.
+from its file.
 @end itemize
 
 If you want to flush the buffered output at another time, call
@@ -3244,35 +3310,35 @@ know.
 
 When you create a custom stream, you must specify the cookie pointer,
 and also the four hook functions stored in a structure of type 
-@code{__io_functions}.
+@code{struct cookie_io_functions}.
 
 These facilities are declared in @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
 @comment GNU
-@deftp {Data Type} __io_functions
+@deftp {Data Type} {struct cookie_io_functions}
 This is a structure type that holds the functions that define the 
 communications protocol between the stream and its cookie.  It has
 the following members:
 
 @table @code
-@item __io_read *__read
+@item cookie_read_function *read
 This is the function that reads data from the cookie.  If the value is a
 null pointer instead of a function, then read operations on ths stream
 always return @code{EOF}.
 
-@item __io_write *__write
+@item cookie_write_function *write
 This is the function that writes data to the cookie.  If the value is a
 null pointer instead of a function, then data written to the stream is
 discarded.
 
-@item __io_seek *__seek
+@item cookie_seek_function *seek
 This is the function that performs the equivalent of file positioning on
 the cookie.  If the value is a null pointer instead of a function, calls
 to @code{fseek} on this stream return an @code{ESPIPE} error.
 
-@item __io_close *__close
+@item cookie_close_function *close
 This function performs any appropriate cleanup on the cookie when
 closing the stream.  If the value is a null pointer instead of a
 function, nothing special is done to close the cookie when the stream is
@@ -3282,15 +3348,12 @@ closed.
 
 @comment stdio.h
 @comment GNU
-@deftypefun {FILE *} fopencookie (void *@var{cookie}, const char *@var{opentype}, __io_functions @var{io_functions})
+@deftypefun {FILE *} fopencookie (void *@var{cookie}, const char *@var{opentype}, struct cookie_functions @var{io_functions})
 This function actually creates the stream for communicating with the
 @var{cookie} using the functions in the @var{io_functions} argument.
 The @var{opentype} argument is interpreted as for @code{fopen};
 see @ref{Opening Streams}.  (But note that the ``truncate on
-open'' option is ignored.)
-
-@strong{Incomplete:} What is the default buffering mode for the newly
-created stream?
+open'' option is ignored.)  The new stream is fully buffered.
 
 The @code{fopencookie} function returns the newly created stream, or a null
 pointer in case of an error.
@@ -3306,34 +3369,37 @@ that a custom stream needs.
 You should define the function to read data from the cookie as:
 
 @example
-int @var{function} (void *@var{cookie}, void *@var{buffer}, size_t @var{size})
+int @var{reader} (void *@var{cookie}, void *@var{buffer}, size_t @var{size})
 @end example
 
 This is very similar to the @code{read} function; see @ref{I/O
 Primitives}.  Your function should transfer up to @var{size} bytes into
 the @var{buffer}, and return the number of bytes read.  You can return a
-value of @code{-1} to indicate an error.  You should define the function
-to write data to the cookie as:
+value of @code{-1} to indicate an error.
+
+You should define the function to write data to the cookie as:
 
 @example
-int @var{function} (void *@var{cookie}, const void *@var{buffer}, size_t @var{size})
+int @var{writer} (void *@var{cookie}, const void *@var{buffer}, size_t @var{size})
 @end example
 
 This is very similar to the @code{write} function; see @ref{I/O
 Primitives}.  Your function should transfer up to @var{size} bytes from
 the buffer, and return the number of bytes written.  You can return a
-value of @code{-1} to indicate an error.  You should define the function
-to perform seek operations on the cookie as:
+value of @code{-1} to indicate an error.
+
+You should define the function to perform seek operations on the cookie
+as:
 
 @example
-int @var{function} (void *@var{cookie}, fpos_t *@var{position}, int @var{whence})
+int @var{seeker} (void *@var{cookie}, fpos_t *@var{position}, int @var{whence})
 @end example
 
 For this function, the @code{position} and @code{whence} arguments are
-interpreted as for @code{fgetpos}; see @ref{Binary Streams}.
-Remember that in the GNU system, @code{fpos_t} is equivalent to
-@code{off_t} or @code{long int}, and simply represents the number of
-bytes from the beginning of the file.
+interpreted as for @code{fgetpos}; see @ref{Binary Streams}.  In the GNU
+library, @code{fpos_t} is equivalent to @code{off_t} or @code{long int},
+and simply represents the number of bytes from the beginning of the
+file.
 
 After doing the seek operation, your function should store the resulting 
 file position relative to the beginning of the file in @var{position}.
@@ -3344,7 +3410,7 @@ You should define the function to do cleanup operations on the cookie
 appropriate for closing the stream as:
 
 @example
-int @var{function} (void *@var{cookie})
+int @var{cleaner} (void *@var{cookie})
 @end example
 
 Your function should return @code{-1} to indicate an error, and @code{0}
@@ -3352,31 +3418,31 @@ otherwise.
 
 @comment stdio.h
 @comment GNU
-@deftp {Data Type} __io_read
+@deftp {Data Type} cookie_read_function
 This is the data type that the read function for a custom stream should have.
 If you declare the function as shown above, this is the type it will have.
 @end deftp
 
 @comment stdio.h
 @comment GNU
-@deftp {Data Type} __io_write
+@deftp {Data Type} cookie_write_function
 The data type of the write function for a custom stream.
 @end deftp
 
 @comment stdio.h
 @comment GNU
-@deftp {Data Type} __io_seek
+@deftp {Data Type} cookie_seek_function
 The data type of the seek function for a custom stream.
 @end deftp
 
 @comment stdio.h
 @comment GNU
-@deftp {Data Type} __io_close
+@deftp {Data Type} cookie_close_function
 The data type of the close function for a custom stream.
 @end deftp
 
 @ignore
-@strong{Incomplete:}  Roland says:
+Roland says:
 
 @quotation
 There is another set of functions one can give a stream, the
@@ -3391,4 +3457,4 @@ wait until the rest of the manual is more done and polished.
 @end quotation
 @end ignore
 
-@strong{Incomplete:}  This section could use an example.
+@c ??? This section could use an example.
