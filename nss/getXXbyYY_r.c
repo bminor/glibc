@@ -130,13 +130,18 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   while (no_more == 0)
     {
       status = (*fct) (ADD_VARIABLES, resbuf, buffer, buflen H_ERRNO_VAR);
-      if (status == NSS_STATUS_TRYAGAIN)
-	{
-	  /* XXX This is very wrong but there is no fast soluation in sight.
-	     Give the previous module a chance to complete it's
-	     operation before errno will be reset by the next call */
-	  break;
-	}
+
+      /* The the status is NSS_STATUS_TRYAGAIN and errno is ERANGE the
+	 provided buffer is too small.  In this case we should give
+	 the user the possibility to enlarge the buffer and we should
+	 not simply go on with the next service (even if the TRYAGAIN
+	 action tells us so).  */
+      if (status == NSS_STATUS_TRYAGAIN
+#ifdef NEED_H_ERRNO
+	  && *h_errnop == NETDB_INTERNAL
+#endif
+	  && errno == ERANGE)
+	break;
 
       no_more = __nss_next (&nip, REENTRANT_NAME_STRING,
 			    (void **) &fct, status, 0);
