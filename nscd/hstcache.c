@@ -205,7 +205,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 	 unnecessarily let the receiver wait.  */
       written = write (fd, data, total);
 
-      addr_list_type = (hst->h_length == NS_INADDRSZ
+      addr_list_type = (hst->h_length == INADDRSZ
 			? GETHOSTBYADDR : GETHOSTBYADDRv6);
 
       /* Compute the timeout time.  */
@@ -340,7 +340,7 @@ addhstbyaddr (struct database *db, int fd, request_header *req,
       seteuid (uid);
     }
 
-  while (__gethostbyaddr_r (key, NS_INADDRSZ, AF_INET, &resultbuf, buffer,
+  while (__gethostbyaddr_r (key, INADDRSZ, AF_INET, &resultbuf, buffer,
   			    buflen, &hst, &h_errno) != 0
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
@@ -429,7 +429,7 @@ addhstbyaddrv6 (struct database *db, int fd, request_header *req,
       seteuid (uid);
     }
 
-  while (__gethostbyaddr_r (key, NS_IN6ADDRSZ, AF_INET6, &resultbuf,
+  while (__gethostbyaddr_r (key, IN6ADDRSZ, AF_INET6, &resultbuf,
   			    buffer, buflen, &hst, &h_errno) != 0
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
