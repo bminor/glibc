@@ -74,6 +74,10 @@ _hurd_socket_server (int domain)
     server = servers[domain] = __path_lookup (name, 0, 0);
   }
 
+  if (errno == ENOENT)
+    /* If the server node is absent, we don't support that protocol.  */
+    errno = EPROTONOSUPPORT;
+
  out:
   __mutex_unlock (&lock);
   HURD_CRITICAL_END;
