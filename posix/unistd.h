@@ -268,18 +268,10 @@ extern int execlp __P ((__const char *__file, ...));
 extern __NORETURN void _exit __P ((int __status));
 
 
-/* Values for the NAME argument to `pathconf' and `fpathconf'.
-   These correspond to the _POSIX_* symbols above, but for
-   specific files or file descriptors.  */
-#define	_PC_LINK_MAX		0
-#define	_PC_MAX_CANON		1
-#define	_PC_MAX_INPUT		2
-#define	_PC_NAME_MAX		3
-#define	_PC_PATH_MAX		4
-#define	_PC_PIPE_BUF		5
-#define	_PC_CHOWN_RESTRICTED	6
-#define	_PC_NO_TRUNC		7
-#define	_PC_VDISABLE		8
+/* Get the `_PC_*' symbols for the NAME argument to `pathconf' and `fpathconf';
+   the `_SC_*' symbols for the NAME argument to `sysconf';
+   and the `_CS_*' symbols for the NAME argument to `confstr'.  */
+#include <confname.h>
 
 /* Get file-specific configuration information about PATH.  */
 extern long int __pathconf __P ((__const char *__path, int __name));
@@ -289,54 +281,11 @@ extern long int pathconf __P ((__const char *__path, int __name));
 extern long int __fpathconf __P ((int __fd, int __name));
 extern long int fpathconf __P ((int __fd, int __name));
 
-
-/* Values for the argument to `sysconf'.
-   These correspond to the _POSIX_* symbols in <posix_limits.h> and above,
-   but may vary at run time.  */
-enum
-{
-  _SC_ARG_MAX,
-  _SC_CHILD_MAX,
-  _SC_CLK_TCK,
-  _SC_NGROUPS_MAX,
-  _SC_OPEN_MAX,
-  _SC_STREAM_MAX,
-  _SC_TZNAME_MAX,
-  _SC_JOB_CONTROL,
-  _SC_SAVED_IDS,
-  _SC_VERSION,
-
-  /* Values for the argument to `sysconf'
-     corresponding to _POSIX2_* symbols.  */
-  _SC_BC_BASE_MAX,
-  _SC_BC_DIM_MAX,
-  _SC_BC_SCALE_MAX,
-  _SC_BC_STRING_MAX,
-  _SC_COLL_WEIGHTS_MAX,
-  _SC_EQUIV_CLASS_MAX,
-  _SC_EXPR_NEST_MAX,
-  _SC_LINE_MAX,
-  _SC_RE_DUP_MAX,
-
-  _SC_2_VERSION,
-  _SC_2_C_BIND,
-  _SC_2_C_DEV,
-  _SC_2_FORT_DEV,
-  _SC_2_FORT_RUN,
-  _SC_2_SW_DEV,
-  _SC_2_LOCALEDEF
-};
-
-
 /* Get the value of the system variable NAME.  */
 extern long int __sysconf __P ((int __name));
 extern long int sysconf __P ((int __name));
 
-
 #ifdef	__USE_POSIX2
-/* Values for the argument to `confstr'.  */
-#define	_CS_PATH	0	/* The default search path.  */
-
 /* Get the value of the string-valued system variable NAME.  */
 extern size_t confstr __P ((int __name, char *__buf, size_t __len));
 #endif
