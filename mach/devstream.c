@@ -30,7 +30,8 @@ input (FILE *f)
 {
   kern_return_t err;
   char *buffer;
-  size_t to_read, nread;
+  size_t to_read;
+  mach_msg_type_size_t nread;
   char c;
 
   if (f->__buffer == NULL)
