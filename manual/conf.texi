@@ -461,7 +461,7 @@ support.
 @item _SC_PAGESIZE
 Inquire about the virtual memory page size of the machine.
 @code{getpagesize} returns the same value.
-@xref{XXX getpagesize}.
+@c @xref{XXX getpagesize}. !!! ???
 @end table
 
 @node Examples of Sysconf 
