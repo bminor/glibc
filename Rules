@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -139,16 +139,3 @@ subdir_dist: dist
 .PHONY: generated
 generated: $(addprefix $(common-objpfx),$(common-generated)) \
 	$(addprefix $(objpfx),$(generated))
-
-ifndef libc.so-version
-# Undefine this because it can't work when we libc.so is unversioned.
-static-only-routines =
-endif
-
-ifdef static-only-routines
-# These routines are to be omitted from the shared library object,
-# so we replace the PIC objects for them with the empty object file.
-$(static-only-routines:%=$(objpfx)%.so): %.so: $(common-objpfx)empty.o
-	rm -f $@
-	ln $< $@
-endif
