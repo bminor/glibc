@@ -1,21 +1,21 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <string.h>
@@ -30,7 +30,7 @@ logout (const char *line)
   int result = 0;
 
   /* Tell that we want to use the UTMP file.  */
-  if (utmpname (_PATH_UTMP) == 0)
+  if (utmpname (_PATH_UTMP) == -1)
     return 0;
 
   /* Open UTMP file.  */
@@ -55,8 +55,11 @@ logout (const char *line)
 #else
       time (&ut->ut_time);
 #endif
+#if _HAVE_UT_TYPE - 0
+      ut->ut_type = DEAD_PROCESS;
+#endif
 
-      if (pututline (ut) >= 0)
+      if (pututline (ut) != NULL)
 	result = 1;
     }
 
