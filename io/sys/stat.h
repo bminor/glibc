@@ -64,7 +64,8 @@ __BEGIN_DECLS
 #define	S_ISGID	__S_ISGID	/* Set group ID on execution.  */
 
 #if defined(__USE_BSD) || defined(__USE_MISC)
-#define	S_ISVTX	__S_ISVTX	/* Save swapped text after use (sticky bit).  */
+/* Save swapped text after use (sticky bit).  This is pretty well obsolete.  */
+#define	S_ISVTX	__S_ISVTX
 #endif
 
 #define	S_IRUSR	__S_IREAD	/* Read by owner.  */
