@@ -53,9 +53,9 @@ mpn-routines := add_1 add_n addmul_1 cmp divmod divmod_1 udiv_qrnnd \
 		lshift rshift mod_1 mul mul_1 mul_n sub_n submul_1 
 mpn-headers = longlong.h gmp.h gmp-impl.h gmp-mparam.h asm.h
 
-routines := $(strip $(routines) $(mpn-routines))
+routines := $(strip $(routines) $(mpn-routines)) dbl2mpn
 aux	:= errlist siglist defs syms-stdio glue mp_clz_tab
-distribute = $(mpn-headers) gmp2glibc.sed
+distribute = $(mpn-headers)
 
 tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 bug1 bug2 bug3 bug4 bug5 bug6 temptest
