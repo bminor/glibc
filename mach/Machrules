@@ -88,7 +88,8 @@ endif
 # intermediate in order to make %.ir and then removed before re-exec, when
 # %.uh is built all over again to build %.h.
 $(objpfx)%.ir: $(objpfx)%.uh $(objpfx)%.h
-	(awk "/^kern_return_t/ { printf \"$*-calls += %s\\n\", \$$2 }	\
+	(awk "NF == 4 && \$$2 == \"Routine\" \
+	        { printf \"$*-calls += %s\\n\", \$$3 }	\
 	      /^#include/ { printf \"$*-imports += %s\\n\", \$$2 }" $<	;\
 	 echo '$$($*-calls:%=$$(objpfx)R\%C_%.c): $$(objpfx)$*.ustamp ;';\
 	 echo '$$($*-calls:%=$$(objpfx)RPC_%.o): $$($*-imports:<%>=%)'	;\
@@ -96,13 +97,19 @@ $(objpfx)%.ir: $(objpfx)%.uh $(objpfx)%.h
 	mv $@-new $@
 vpath Machrules ../mach	# Find ourselves.
 
+ifndef transform-user-stub-output
+transform-user-stub-output = tmp
+endif
+
 # Not an implicit rule so the stamps are never removed as intermediates!
 $(patsubst %,$(objpfx)%.ustamp,$(user-interfaces)): $(objpfx)%.ustamp: %.defs
 	$(MIG) $< $(MIGFLAGS) $(user-MIGFLAGS) \
 	       -prefix __ -i $(objpfx)tmp_ \
 	       -server /dev/null -user /dev/null -header /dev/null
 	for call in $($*-calls); do \
-	  ../move-if-change $(objpfx)tmp_$${call}.c $(objpfx)RPC_$${call}.c; \
+	  $(transform-user-stub) \
+	  ../move-if-change $(objpfx)$(transform-user-stub-output)_$${call}.c \
+			    $(objpfx)RPC_$${call}.c; \
 	done
 	touch $@
 
