@@ -23,6 +23,9 @@ ifndef hurd-srcdir
 hurd-srcdir = ../../hurd
 endif
 
+# Look for header files in hurd/ under the top-level library source directory.
+includes += -I$(..)hurd
+
 # When compiling, use the Hurd header files directly from the sources.
 includes += -I$(hurd-srcdir)
 
