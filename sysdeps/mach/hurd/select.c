@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <stdlib.h>
 #include <gnu-stabs.h>
+
+#define SELECT_DONE_MSGID 23016	/* XXX */
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
