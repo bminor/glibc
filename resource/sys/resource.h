@@ -24,8 +24,6 @@ Cambridge, MA 02139, USA.  */
 __BEGIN_DECLS
 
 
-#include <gnu/time.h>
-
 /* Kinds of resource limit.  */
 enum __rlimit_resource
   {
