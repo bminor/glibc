@@ -53,7 +53,17 @@ typedef struct
 
 /* Store the calling environment in ENV, also saving the
    signal mask if SAVEMASK is nonzero.  Return 0.  */
-extern int EXFUN(sigsetjmp, (sigjmp_buf __env, int __savemask));
+extern void EXFUN(__sigjmp_save, (sigjmp_buf __env, int __savemask));
+#ifdef __GNUC__
+#define	sigsetjmp(env, savemask) \
+  ({ sigjmp_buf *__e = (env);	 \
+     __sigjmp_save (*__e, (savemask)), __setjmp ((*__e)[0].__jmpbuf) })
+#else
+/* Not strictly POSIX-compliant, because it evaluates ENV more than once.  */
+#define	sigsetjmp(env, savemask) \
+  (__sigjmp_save ((env), (savemask)), __setjmp ((env)[0].__jmpbuf))
+#endif
+
 
 /* Jump to the environment saved in ENV, making the
    sigsetjmp call there return VAL, or 1 if VAL is 0.
@@ -94,20 +104,25 @@ extern int EXFUN(__setjmp, (__jmp_buf __env));
 
 #ifdef	__USE_BSD
 extern __NORETURN void EXFUN(_longjmp, (CONST jmp_buf __env, int __val));
-extern int EXFUN(_setjmp, (jmp_buf __env));
+#define	_setjmp(env)	sigsetjmp((env), 0)
 
 #ifdef	__OPTIMIZE__
 #define	_longjmp(env, val)	siglongjmp ((env), (val))
-#define	_setjmp(env)		sigsetjmp ((env), 0)
 #endif	/* Optimizing.  */
 #endif	/* Use BSD.  */
 
 
 #ifdef	__FAVOR_BSD
+
 #undef	setjmp
 #undef	longjmp
+
 #define	setjmp(env)		sigsetjmp ((env), 1)
+
+#ifdef	__OPTIMIZE__
 #define	longjmp(env, val)	siglongjmp ((env), (val))
+#endif	/* Optimizing.  */
+
 #endif	/* Favor BSD.  */
 
 
