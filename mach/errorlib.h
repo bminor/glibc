@@ -26,8 +26,8 @@
 /*
  * HISTORY
  * $Log$
- * Revision 1.2  1993/11/18 10:13:58  roland
- * Formerly ../mach/errorlib.h.~2~
+ * Revision 1.3  1993/11/23 21:03:37  mib
+ * Formerly ../mach/errorlib.h.~3~
  *
  * Revision 2.3  92/03/31  15:18:52  rpd
  * 	Added KERN_DEVICE_MOD for device errors.
@@ -70,14 +70,14 @@
 #define	NO_SUCH_ERROR		"unknown error code"
 
 struct error_subsystem {
-	char			* subsys_name;
+	const char		* subsys_name;
 	int			max_code;
-	char			* * codes;
+	const char		* const * codes;
 };
 
 struct error_system {
 	int			max_sub;
-	char			* bad_sub;
+	const char		* bad_sub;
 	struct error_subsystem	* subsystem;
 };
 
