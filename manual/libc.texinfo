@@ -23,7 +23,7 @@ This will be free information when it is finished, but isn't finished yet.
 @center Andrew Oram
 @center Richard M. Stallman
 @sp 3
-@center last updated May 6, 1991
+@center last updated Aug 9, 1991
 @sp 1
 @center for version 0.00
 @page
@@ -55,6 +55,8 @@ Contents of the Library
 					 types.
 * Floating-Point Limits::		Parameters describing floating-point
 					 data types.
+* System Configuration Limits::		Parameters describing operating
+					 system limits.
 * Common Definitions::			<stddef.h>.
 * Variable Argument Facilities::	How to process variable-length
 					 argument lists.
@@ -114,6 +116,7 @@ Indices
 @include errno.texinfo
 @include limits.texinfo
 @include float.texinfo
+@include conf.texinfo
 @include stddef.texinfo
 @include stdarg.texinfo
 @include memory.texinfo
