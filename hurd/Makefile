@@ -47,7 +47,7 @@ routines = hurdid hurdpath hurdpid hurdports \
 	   privports \
 	   msgportdemux \
 	   fopenport __fopenport \
-	   vpprintf \
+ 	   vpprintf \
 	   $(sig) $(dtable) $(inlines)
 sig	= hurdsig siginfo init-fault msging-p hurd-raise preempt-sig \
 	  trampoline longjmp-ctx longjmp-ts catch-exc exc2signal
