@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,8 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 SYSCALL__ (pipe, 1)
-	movl 4(%esp), %ecx
-	movl %eax, (%ecx)
-	movl %edx, 4(%ecx)
+	movl 4(%esp), scratch
+	movl %eax, (scratch)
+	movl r1, 4(scratch)
 	xorl %eax, %eax
 	ret
