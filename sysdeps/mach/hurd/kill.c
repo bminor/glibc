@@ -83,7 +83,12 @@ __kill (pid_t pid, int sig)
       if (!err)
 	{
 	  for (i = 0; i < npids; ++i)
-	    kill_pid (pids[i]);
+	    {
+	      kill_pid (pids[i]);
+	      if (err == ESRCH)
+		/* The process died already.  Ignore it.  */
+		err = 0;
+	    }
 	  if (pids != pidbuf)
 	    __vm_deallocate (__mach_task_self (),
 			     (vm_address_t) pids, npids * sizeof (pids[0]));
@@ -94,5 +99,9 @@ __kill (pid_t pid, int sig)
 
   _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], &ulink, proc);
 
-  return delivered ? 0 : __hurd_fail (err);
+  /* If we delivered no signals, but ERR is clear, this must mean that
+     every kill_pid call failed with ESRCH, meaning all the processes in
+     the pgrp died between proc_getpgrppids and kill_pid; in that case we
+     fail with ESRCH.  */
+  return delivered ? 0 : __hurd_fail (err ?: ESRCH);
 }
