@@ -257,8 +257,9 @@ AC_PROG_CPP
 echo checking for signed size_t type
 echo '#include <stddef.h>
 FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c
-$CPP conftest.c 2>/dev/null | grep '^FOOBAR.*unsigned.*FOOBAR$' \
-|| AC_DEFINE([__SIZE_TYPE__],[unsigned long int])
+eval "$CPP conftest.c 2>/dev/null" \
+| grep '^FOOBAR.*unsigned.*FOOBAR$' >/dev/null \
+|| AC_DEFINE(__SIZE_TYPE__, 'unsigned long int')
 rm -f conftest*
 
 # Find out what this system calls `sys_siglist'.
