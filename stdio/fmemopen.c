@@ -98,7 +98,7 @@ DEFUN(fmemopen, (s, len, mode),
       if (p == NULL)
 	stream->__bufp = stream->__get_limit;
       else
-	stream->bufp = p;
+	stream->__bufp = p;
     }
   else if (stream->__mode.__truncate)
     memset ((PTR) stream->__buffer, 0, len);
