@@ -38,10 +38,6 @@ endif
 
 headers := $(headers) $(sysdep_headers)
 
-# This is benign and useless in GNU make before version 3.63.
-export sources := $(sources)
-export headers := $(headers)
-
 oPATH := $(PATH)
 PATH := this definition should take precedence over $(oPATH)
 ifeq ($(PATH),$(oPATH))
@@ -237,7 +233,7 @@ endif
 
 override sources	:= $(addsuffix .c,$(routines) $(aux) \
 				          $(sysdep_routines))
-export sysdep_routines := $(sysdep_routines)
+sysdep_routines := $(sysdep_routines)
 
 # This is the list of all object files, gotten by
 # replacing every ".c" in `sources' with a ".o".
@@ -322,7 +318,6 @@ $(patsubst %,\%(%),$(notdir $(objects))): $(objpfx)stamp-$(subdir) ;
 $(objpfx)stamp-$(subdir): $(objects)
 #	$(+libc_lock_open)
 ifdef objdir
-	printenv; : XXX
 	cd $(objdir); $(AR) cru$(verbose) libc.a $(patsubst $(objpfx)%,%,$^)
 else
 	$(AR) cru$(verbose) $(..)libc.a $^
@@ -461,8 +456,8 @@ native-CFLAGS = $(config-defines) -I$(sysincludedir)
 check: tests
 
 .PHONY: TAGS
-TAGS: $(..)MakeTAGS
-	$(MAKE) -f $< $@
+TAGS: distfile $(..)MakeTAGS
+	$(MAKE) $(addprefix -f ,$^)
 
 .PHONY: echo-headers
 echo-headers:
@@ -501,6 +496,30 @@ $(common-objpfx)stub-$(subdir): $(+depfiles)
 		 $^ /dev/null` \
 	    /dev/null > $@T
 	mv $@T $@
+
+# Make the distribution tar file.
+
+.PHONY: dist
+dist: distinfo $(..)Make-dist 
+	$(MAKE) -f $< -f $(word 2,$^) $(Make-dist-args)
+
+dist: $(distribute) DEPENDING-ON-A-LOSER
+
+# We used to simply export all these variables, but that frequently made the
+# environment get too large.  Instead, we write all the information into
+# a generated makefile fragment `distinfo', and then include it with -f in
+# the sub-make that makes the distribution (above).
+distinfo: Makefile $(..)Makerules
+	rm -f $@
+	echo >> $@ 'subdir		:= $(subdir)'
+	echo >> $@ 'sources		:= $(sources)'
+	echo >> $@ 'sysdep_routines	:= $(sysdep_routines)'
+	echo >> $@ 'headers		:= $(headers)'
+	echo >> $@ 'distribute		:= $(distribute)'
+	echo >> $@ 'dont_distribute	:= $(dont_distribute)'
+	echo >> $@ 'generated		:= $(generated)'
+	echo >> $@ 'others		:= $(others)'
+	echo >> $@ 'tests		:= $(tests)'
 
 ifneq (,$(strip $(gpl2lgpl)))
 ifneq (,$(wildcard $(..)gpl2lgpl.sed))
