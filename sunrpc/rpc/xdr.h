@@ -101,23 +101,36 @@ enum xdr_op {
  * an operations vector for the particular implementation (e.g. see xdr_mem.c),
  * and two private fields for the use of the particular implementation.
  */
-typedef struct {
-	enum xdr_op	x_op;		/* operation; fast additional param */
-	struct xdr_ops {
-		bool_t	(*x_getlong)();	/* get a long from underlying stream */
-		bool_t	(*x_putlong)();	/* put a long to " */
-		bool_t	(*x_getbytes)();/* get some bytes from " */
-		bool_t	(*x_putbytes)();/* put some bytes to " */
-		u_int	(*x_getpostn)();/* returns bytes off from beginning */
-		bool_t  (*x_setpostn)();/* lets you reposition the stream */
-		long *	(*x_inline)();	/* buf quick ptr to buffered data */
-		void	(*x_destroy)();	/* free privates of this xdr_stream */
-	} *x_ops;
-	caddr_t 	x_public;	/* users' data */
-	caddr_t		x_private;	/* pointer to private data */
-	caddr_t 	x_base;		/* private used for position info */
-	int		x_handy;	/* extra private word */
-} XDR;
+typedef struct XDR XDR;
+struct XDR
+  {
+    enum xdr_op x_op;		/* operation; fast additional param */
+    const struct xdr_ops
+      {
+	bool_t (*x_getlong) __P ((XDR * __xdrs, long *__lp));
+	/* get a long from underlying stream */
+	bool_t (*x_putlong) __P ((XDR * __xdrs, __const long *__lp));
+	/* put a long to " */
+	bool_t (*x_getbytes) __P ((XDR * __xdrs, caddr_t __addr, u_int __len));
+	/* get some bytes from " */
+	bool_t (*x_putbytes) __P ((XDR * __xdrs, __const char *__addr,
+				   u_int __len));
+	/* put some bytes to " */
+	u_int (*x_getpostn) __P ((__const XDR * __xdrs));
+	/* returns bytes off from beginning */
+	bool_t (*x_setpostn) __P ((XDR * __xdrs, u_int pos));
+	/* lets you reposition the stream */
+	long *(*x_inline) __P ((XDR * __xdrs, int len));
+	/* buf quick ptr to buffered data */
+	void (*x_destroy) __P ((XDR * __xdrs));
+	/* free privates of this xdr_stream */
+      }
+     *x_ops;
+    caddr_t x_public;		/* users' data */
+    caddr_t x_private;		/* pointer to private data */
+    caddr_t x_base;		/* private used for position info */
+    int x_handy;		/* extra private word */
+  };
 
 /*
  * A xdrproc_t exists for each data type which is to be encoded or decoded.

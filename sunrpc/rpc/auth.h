@@ -42,6 +42,7 @@
 
 #define _RPC_AUTH_H	1
 #include <features.h>
+#include <rpc/xdr.h>
 
 __BEGIN_DECLS
 
@@ -76,7 +77,7 @@ union des_block {
 	char c[8];
 };
 typedef union des_block des_block;
-extern bool_t xdr_des_block();
+extern bool_t xdr_des_block __P ((XDR *__xdrs, des_block *__blkp));
 
 /*
  * Authentication info.  Opaque to client.
@@ -90,19 +91,21 @@ struct opaque_auth {
 /*
  * Auth handle, interface to client side authenticators.
  */
-typedef struct {
-	struct	opaque_auth	ah_cred;
-	struct	opaque_auth	ah_verf;
-	union	des_block	ah_key;
-	struct auth_ops {
-		void	(*ah_nextverf)();
-		int	(*ah_marshal)();	/* nextverf & serialize */
-		int	(*ah_validate)();	/* validate verifier */
-		int	(*ah_refresh)();	/* refresh credentials */
-		void	(*ah_destroy)();	/* destroy this structure */
-	} *ah_ops;
-	caddr_t ah_private;
-} AUTH;
+typedef struct AUTH AUTH;
+struct AUTH {
+  struct opaque_auth ah_cred;
+  struct opaque_auth ah_verf;
+  union des_block ah_key;
+  struct auth_ops {
+    void (*ah_nextverf) __P ((AUTH *));
+    int  (*ah_marshal) __P ((AUTH *, XDR *));	/* nextverf & serialize */
+    int  (*ah_validate) __P ((AUTH *, struct opaque_auth *));
+						/* validate verifier */
+    int  (*ah_refresh) __P ((AUTH *));		/* refresh credentials */
+    void (*ah_destroy) __P ((AUTH *));     	/* destroy this structure */
+  } *ah_ops;
+  caddr_t ah_private;
+};
 
 
 /*
