@@ -238,8 +238,8 @@ extern int sigaltstack __P ((__const struct sigaltstack *__ss,
 #include <sigcontext.h>
 
 /* Restore the state saved in SCP.  */
-extern int __sigreturn __P ((__const struct sigcontext *__scp));
-extern int sigreturn __P ((__const struct sigcontext *__scp));
+extern int __sigreturn __P ((struct sigcontext *__scp));
+extern int sigreturn __P ((struct sigcontext *__scp));
 
 #endif /* signal.h included and use BSD.  */
 
