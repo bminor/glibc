@@ -254,6 +254,7 @@ ifdef +depfiles
 # to overflow the arg limit on USG systems.  Since `sources' is in the
 # environment anyway, we do some shell processing on it instead.
 	for file in $(patsubst %,%.dep,$(others) $(tests)) \
+		    $(patsubst %.o,%.dep,$(filter %.o,$(extra-objs))) \
 		    `echo $${sources} | sed 's/\.c/.dep/g'`; do \
 	  echo "include \$$(objpfx)$$file";	\
 	done > $@
@@ -360,11 +361,8 @@ endef
 # Don't attempt binaries for the Hurd version (yet).
 ifdef mib_hacks
 install :=
-ifeq ($(subdir),time)
 install-others :=
 endif
-endif
-
 
 
 # Any directory (parent or subdir) that has any object files to build
