@@ -1,6 +1,6 @@
 /* Demux messages sent on the signal port.
 
-Copyright (C) 1991 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,47 +18,38 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <hurd.h>
+#include <mach.h>
+#include <hurd/signal.h>
 
-const struct
+struct demux
   {
-    size_t n;
-    mach_msg_id_t id[0];
-  } _hurd_sigport_ids;
-const struct
-  {
-    size_t n;
-    void (*routine[0]) (mach_msg_header_t *inp, mach_msg_header_t *outp);
-  } _hurd_sigport_routines;
+    struct demux *next;
+    boolean_t (*demux) (mach_msg_header_t *inp,
+			mach_msg_header_t *outp);
+  };
+
+struct demux *_hurd_msgport_demuxers = NULL;
+
+extern boolean_t __msg_server (mach_msg_header_t *inp,
+			       mach_msg_header_t *outp);
 
 static boolean_t
-_hurd_sigport_demux (mach_msg_header_t *inp,
+msgport_server (mach_msg_header_t *inp,
 		     mach_msg_header_t *outp)
 {
-  size_t i;
+  struct demux *d;
 
-  if (_hurd_sigport_ids.n != _hurd_sigport_routines.n)
-    __libc_fatal ("LIBRARY BUG: bogus sigport demux table");
+  for (d = _hurd_msgport_demuxers; d != NULL; d = d->next)
+    if ((*d->demux) (inp, outp))
+      return 1;
 
-  for (i = 0; i < _hurd_sigport_ids.n; ++i)
-    if (inp->msgh_id == _hurd_sigport_ids.id[i])
-      {
-	(*_hurd_sigport_routines.routine[i]) (inp, outp);
-	return 1;
-      }
-
-  {
-    mig_reply_header_t *r = (mig_reply_header_t *) outp;
-    r->RetCode = MIG_BAD_ID;
-    return 0;
-  }
+  return __msg_server (inp, outp);
 }
 
 /* This is the code that the signal thread runs.  */
 void
-_hurd_sigport_receive (void)
+_hurd_msgport_receive (void)
 {
   while (1)
-    (void) __mach_msg_server (_hurd_sigport_demux, __vm_page_size,
-			      _hurd_sigport);
+    (void) __mach_msg_server (msgport_server, __vm_page_size, _hurd_msgport);
 }
