@@ -302,9 +302,13 @@ $(objpfx)%.dep: %.s
 
 $(objpfx)depend-$(subdir): Makefile
 ifdef +depfiles
-	(for file in $(patsubst $(objpfx)%,%,$(+depfiles)); do	\
-	 echo "include \$$(objpfx)$$file";	\
-	 done) > $@
+# This used to simply use $(+depfiles) on the command line, but that tended
+# to overflow the arg limit on USG systems.  Since `sources' is in the
+# environment anyway, we do some shell processing on it instead.
+	for file in $(patsubst %,%.dep,$(others) $(tests)) \
+		    `echo $${sources} | sed 's/\.c/.dep/g'`; do \
+	  echo "include \$$(objpfx)$$file";	\
+	done > $@
 else
 	cp /dev/null $@
 endif
