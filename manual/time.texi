@@ -1089,14 +1089,18 @@ make the waiting period quite accurate.  (Of course, heavy system load
 can cause unavoidable additional delays---unless the machine is 
 dedicated to one application, there is no way you can avoid this.)
 
-On some systems, @code{sleep} interacts in strange ways with other uses
-of @code{SIGALRM}.  Even if @code{SIGALRM} signals are being ignored or
-blocked when @code{sleep} is called, @code{sleep} might return
-prematurely on delivery of a @code{SIGALRM} signal.  If you have
+On some systems, @code{sleep} can do strange things if your program uses
+@code{SIGALRM} explicitly.  Even if @code{SIGALRM} signals are being
+ignored or blocked when @code{sleep} is called, @code{sleep} might
+return prematurely on delivery of a @code{SIGALRM} signal.  If you have
 established a handler for @code{SIGALRM} signals and a @code{SIGALRM}
 signal is delivered while the process is sleeping, the action taken
 might be just to cause @code{sleep} to return instead of invoking your
 handler.  And, if @code{sleep} is interrupted by delivery of a signal
-whose handler messes with @code{SIGALRM} signals, things can really get
-confused.  In short, avoid messing with @code{SIGALRM} directly if you
-use @code{sleep}.
+whose handler requests an alarm or alters the handling of @code{SIGALRM},
+this handler and @code{sleep} will interfere.
+
+On the GNU system, it is safe to use @code{sleep} and @code{SIGALRM} in
+the same program, because @code{sleep} does not work by means of
+@code{SIGALRM}.
+
