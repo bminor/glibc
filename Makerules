@@ -99,8 +99,7 @@ endif
 
 # Add -I switches to get the right sysdep directories.
 +sysdep-includes := $(addprefix -I,$(+sysdep_dirs))
-override CPPFLAGS := $(strip $(filter-out $(+sysdep-includes),$(CPPFLAGS)) \
-			     $(+sysdep-includes))
++includes := $(+includes) $(+sysdep-includes)
 
 # Include any system-specific makefiles.
 
