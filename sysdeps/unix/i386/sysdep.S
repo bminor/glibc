@@ -16,13 +16,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifdef	   __GNU_STAB__
-#define	   ___errno	_errno
-#endif
-
-.globl ___errno
+.globl _errno
 .globl syscall_error
 syscall_error:
-	movl %eax, ___errno
+	movl %eax, _errno
 	movl $-1, %eax
 	ret
