@@ -1,3 +1,9 @@
+2002-08-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/xdr_array.c (xdr_array): Check for overflow on multiplication.
+	* sunrpc/rpc/types.h (mem_free): Add comment.
+	Patch by Solar Designer <solar@openwall.com>.
+
 2002-07-31  Jeff Bailey  <jbailey@gnu.org>
 
         * libio/stdio.h (sys_errlist, sys_nerr, _sys_errlist, _sys_nerr):
