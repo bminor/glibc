@@ -118,7 +118,7 @@ __kill (pid_t pid, int sig)
 							   &refport);
 				    if (err)
 				      err = __proc_getsidport (proc, &refport);
-				  }),
+				    err; }),
 				 __sig_post (msgport, sig, refport));
     }
 
