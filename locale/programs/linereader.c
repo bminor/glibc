@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -400,7 +400,7 @@ get_symname (struct linereader *lr)
 	{
 	  /* Yes, it is.  */
 	  lr->token.tok = bufact == 6 ? tok_ucs2 : tok_ucs4;
-	  lr->token.val.charcode.val = strtoul (buf, NULL, 16);
+	  lr->token.val.charcode.val = strtoul (buf + 1, NULL, 16);
 	  lr->token.val.charcode.nbytes = lr->token.tok == tok_ucs2 ? 2 : 4;
 
 	  return &lr->token;
