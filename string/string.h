@@ -46,7 +46,7 @@ extern PTR EXFUN(memmove, (PTR __dest, CONST PTR __src, size_t __n));
    or NULL if C was not found in the first N bytes of SRC.  */
 extern PTR EXFUN(__memccpy, (PTR __dest, CONST PTR __src,
 			     int __c, size_t __n));
-#ifdef	__USE_SVID
+#if defined (__USE_SVID) || defined (__USE_BSD)
 extern PTR EXFUN(memccpy, (PTR __dest, CONST PTR __src,
 			   int __c, size_t __n));
 #ifdef	__OPTIMIZE__
@@ -85,7 +85,7 @@ extern int EXFUN(strcoll, (CONST char *__s1, CONST char *__s2));
 /* Put a transformation of SRC into no more than N bytes of DEST.  */
 extern size_t EXFUN(strxfrm, (char *__dest, CONST char *__src, size_t __n));
 
-#ifdef	__USE_SVID
+#if defined (__USE_SVID) || defined (__USE_BSD)
 /* Duplicate S, returning an identical malloc'd string.  */
 extern char *EXFUN(strdup, (CONST char *__s));
 #endif
@@ -123,6 +123,29 @@ extern size_t EXFUN(strlen, (CONST char *__s));
 extern char *EXFUN(strerror, (int __errnum));
 
 #ifdef	__USE_BSD
+/* Find the first occurrence of C in S (same as strchr).  */
+extern char *EXFUN(index, (CONST char *__s, int __c));
+
+/* Find the last occurrence of C in S (same as strrchr).  */
+extern char *EXFUN(rindex, (CONST char *__s, int __c));
+
+/* Copy N bytes of SRC to DEST (like memmove, but args reversed).  */
+extern void EXFUN(bcopy, (CONST PTR __src, PTR __dest, size_t __n));
+
+/* Set N bytes of S to 0.  */
+extern void EXFUN(bzero, (PTR __s, size_t __n));
+
+/* Compare N bytes of S1 and S2 (same as memcmp).  */
+extern int EXFUN(bcmp, (CONST PTR __s1, CONST PTR __s2, size_t __n));
+
+/* Return the position of the first bit set in I, or 0 if none are set.
+   The least-significant bit is position 1, the most-significant 32.  */
+extern int EXFUN(ffs, (int __i));
+
+#if	defined(__GNUC__) && defined(__OPTIMIZE__)
+#define	ffs()	__builtin_ffs()
+#endif	/* GCC and optimizing.  */
+
 /* Compare S1 and S2, ignoring case.  */
 extern int EXFUN(strcasecmp, (CONST char *__s1, CONST char *__s2));
 
