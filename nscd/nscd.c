@@ -1,6 +1,6 @@
 /* Copyright (c) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -58,10 +58,13 @@ typedef struct
 
 thread_info_t thread_info;
 
-int do_shutdown = 0;
-int disabled_passwd = 0;
-int disabled_group = 0;
+int do_shutdown;
+int disabled_passwd;
+int disabled_group;
 int go_background = 1;
+
+int secure[lastdb];
+int secure_in_use;
 static const char *conffile = _PATH_NSCDCONF;
 
 static int check_pid (const char *file);
@@ -81,6 +84,9 @@ static const struct argp_option options[] =
   { "nthreads", 't', N_("NUMBER"), 0, N_("Start NUMBER threads") },
   { "shutdown", 'K', NULL, 0, N_("Shut the server down") },
   { "statistic", 'g', NULL, 0, N_("Print current configuration statistic") },
+  { "invalidate", 'i', N_("TABLE"), 0,
+    N_("Invalidate the specified cache") },
+  { "secure", 'S', N_("TABLE,yes"), 0, N_("Use separate cache for each user")},
   { NULL, 0, NULL, 0, NULL }
 };
 
@@ -201,11 +207,59 @@ parse_opt (int key, char *arg, struct argp_state *state)
       }
 
     case 'g':
+      if (getuid () != 0)
+	error (EXIT_FAILURE, 0, _("Only root is allowed to use this option!"));
       receive_print_stats ();
       /* Does not return.  */
 
+    case 'i':
+      if (getuid () != 0)
+	error (EXIT_FAILURE, 0, _("Only root is allowed to use this option!"));
+      else
+	{
+	  int sock = nscd_open_socket ();
+	  request_header req;
+	  ssize_t nbytes;
+
+	  if (sock == -1)
+	    exit (EXIT_FAILURE);
+
+	  if (strcmp (arg, "passwd") == 0)
+	    req.key_len = sizeof "passwd";
+	  else if (strcmp (arg, "group") == 0)
+	    req.key_len = sizeof "group";
+	  else if (strcmp (arg, "hosts") == 0)
+	    req.key_len = sizeof "hosts";
+	  else
+	    return ARGP_ERR_UNKNOWN;
+
+	  req.version = NSCD_VERSION;
+	  req.type = INVALIDATE;
+	  nbytes = TEMP_FAILURE_RETRY (write (sock, &req,
+					      sizeof (request_header)));
+	  if (nbytes != sizeof (request_header))
+	    {
+	      close (sock);
+	      exit (EXIT_FAILURE);
+	    }
+
+	  nbytes = TEMP_FAILURE_RETRY (write (sock, (void *)arg, req.key_len));
+
+	  close (sock);
+	  exit (nbytes != req.key_len ? EXIT_FAILURE : EXIT_SUCCESS);
+	}
+
     case 't':
       nthreads = atol (arg);
+      break;
+
+    case 'S':
+      if (strcmp (arg, "passwd,yes") == 0)
+	secure_in_use = secure[pwddb] = 1;
+      else if (strcmp (arg, "group,yes") == 0)
+	secure_in_use = secure[grpdb] = 1;
+      else if (strcmp (arg, "hosts,yes") == 0)
+	secure_in_use = secure[hstdb] = 1;
       break;
 
     default:
