@@ -18,7 +18,7 @@ software, and the individual machine's name.
 
 This section explains how to identify the particular machine that your
 program is running on.  The identification of a machine consists of its
-Internet host name and Internet address; see @ref{Internet Domain}.  
+Internet host name and Internet address; see @ref{Internet Namespace}.  
 
 @pindex hostname
 @pindex hostid

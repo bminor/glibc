@@ -147,7 +147,7 @@ The function @code{glob} does globbing using the pattern @var{pattern}
 in the current directory.  It puts the result in a newly allocated
 vector, and store the size and address of this vector into
 @code{*@var{vector-ptr}}.  The argument @var{flags} is a combination of
-bit flags; see @ref{Flags for Glob}, for details of the flags.
+bit flags; see @ref{Flags for Globbing}, for details of the flags.
 
 The result of globbing is a sequence of file names.  The function
 @code{glob} allocates a string for each resulting word, then
@@ -322,7 +322,7 @@ There is a special data type for compiled regular expressions:
 
 @comment regex.h
 @comment POSIX.2
-@deftp{Data Type} regex_t
+@deftp {Data Type} regex_t
 This type of object holds a compiled regular expression.
 It is actually a structure.  It has just one field that your programs
 should look at:
