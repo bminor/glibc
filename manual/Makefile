@@ -18,30 +18,29 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-chapters=archive.texinfo assert.texinfo conf.texinfo copying.texinfo	\
-ctype.texinfo database.texinfo errno.texinfo filesys.texinfo		\
-header.texinfo intro.texinfo io.texinfo job.texinfo			\
-lgpl.texinfo limits.texinfo llio.texinfo				\
-locale.texinfo maint.texinfo math.texinfo mbyte.texinfo memory.texinfo	\
-pipe.texinfo process.texinfo search.texinfo setjmp.texinfo		\
-signal.texinfo socket.texinfo stdarg.texinfo stddef.texinfo		\
-stdio.texinfo string.texinfo sysinfo.texinfo terminal.texinfo		\
-time.texinfo
-
-
 .PHONY: all
 all: library.dvi library.info
 
-library.dvi library.info: $(chapters) summary.texinfo texinfo.tex
+chapters: library.texinfo Makefile
+	(echo 'define chapters'				;\
+	 sed -n 's/^@include *\(.*\)$$/\1/p' < $<	;\
+	 echo 'endef') > $@.new
+	 mv $@.new $@
+include chapters
+define \n
 
-library.info:
-	makeinfo library.texinfo
+
+endef
+chapters := $(subst $(\n), ,$(chapters))
+
+library.dvi library.info: $(chapters) summary.texinfo texinfo.tex
 
 summary.texinfo: summary.awk $(chapters)
 	awk -f $^ \
 	| sort +1 -2 | tr '\014' '\012' > $@.new
 	mv $@.new $@
 
+ifeq (,)
 headers :=
 sources :=
 subdir := manual
@@ -50,3 +49,6 @@ distribute := library.texinfo $(chapters) texinfo.tex \
 .PHONY: dist
 dist: ../Make-dist
 	$(MAKE) -f $< $(Make-dist-args)
+
+include ../Makeconfig
+endif
