@@ -17,7 +17,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <mach/thread_state.h>
+/* Everything else is called `thread_state', but CMU's header file is
+   called `thread_status'.  Oh boy.  */
+#include <mach/thread_status.h>
 
 #define HURD_THREAD_STATE_FLAVOR	i386_THREAD_STATE
 #define HURD_THREAD_STATE_COUNT		i386_THREAD_STATE_COUNT
