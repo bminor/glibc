@@ -48,6 +48,8 @@ struct leap
     long int change;		/* Seconds of correction to apply.  */
   };
 
+static void compute_tzname_max __P ((size_t));
+
 static size_t num_transitions;
 static time_t *transitions = NULL;
 static unsigned char *type_idxs = NULL;
@@ -187,6 +189,9 @@ DEFUN(__tzfile_read, (file), CONST char *file)
     types[i++].isstd = 0;
 
   (void) fclose(f);
+
+  compute_tzname_max (chars);
+  
   __use_tzfile = 1;
   return;
 
@@ -237,6 +242,8 @@ DEFUN(__tzfile_default, (std, dst, stdoff, dstoff),
 	if (dst[0] != '\0')
 	  types[i].offset = stdoff;
       }
+
+  compute_tzname_max (stdlen + dstlen);
 }
 
 int
@@ -304,4 +311,20 @@ DEFUN(__tzfile_compute, (timer, leap_correct, leap_hit),
     }
 
   return 1;
+}
+
+void
+DEFUN(compute_tzname_max, (chars), size_t chars)
+{
+  const char *p;
+
+  p = zone_names;
+  do
+    {
+      const char *start = p;
+      while (*p != '\0')
+	++p;
+      if (p - start > __tzname_max)
+	__tzname_max = p - start;
+    } while (++p < &zone_names[chars]);
 }
