@@ -13,7 +13,7 @@ if test -n "$sysheaders"; then
 fi
 echo $ac_n "checking installed Linux kernel header files""... $ac_c" 1>&6
 echo "configure:16: checking installed Linux kernel header files" >&5
-if eval "test \"`echo '$''{'libc_cv_linux2010'+set}'`\" = set"; then
+if eval "test \"\${libc_cv_linux2010+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
@@ -117,9 +117,12 @@ fi
 # We need some extensions to the `ldd' script.
 
 case "$machine" in
-  i[3456]86* | m68* | sparc/sparc32)
+  i[3456]86* | m68*)
     ldd_rewrite_script=../sysdeps/unix/sysv/linux/ldd-rewrite.sed
     ;;
+    ;;
+  sparc/sparc32)
+    ldd_rewrite_script=../sysdeps/unix/sysv/linux/sparc/ldd-rewrite.sed
   *)
     ;;
 esac
@@ -135,7 +138,7 @@ if test $host = $build; then
     ac_prefix=$ac_default_prefix
   fi
   echo $ac_n "checking for symlinks in ${ac_prefix}/include""... $ac_c" 1>&6
-echo "configure:131: checking for symlinks in ${ac_prefix}/include" >&5
+echo "configure:142: checking for symlinks in ${ac_prefix}/include" >&5
   ac_message=
   if test -L ${ac_prefix}/include/net; then
     ac_message="$ac_message
