@@ -38,12 +38,12 @@ thread_t _hurd_msgport_thread;
 thread_t _hurd_sigthread;
 
 /* Linked-list of per-thread signal state.  */
-struct _hurd_sigstate *_hurd_sigstates;
+struct hurd_sigstate *_hurd_sigstates;
 
-struct _hurd_sigstate *
+struct hurd_sigstate *
 _hurd_thread_sigstate (thread_t thread)
 {
-  struct _hurd_sigstate *ss;
+  struct hurd_sigstate *ss;
   __mutex_lock (&_hurd_siglock);
   for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
     if (ss->thread == thread)
@@ -65,6 +65,7 @@ _hurd_thread_sigstate (thread_t thread)
   return ss;
 }
 
+#include <hurd/fd.h>
 #include <hurd/core.h>
 #include <hurd/paths.h>
 #include <setjmp.h>
@@ -147,16 +148,20 @@ mach_msg_timeout_t _hurd_interrupt_timeout = 1000; /* One second.  */
 /* SS->thread is suspended.  Fills STATE in with its registers.
    SS->lock is held and kept.  */
 static inline void
-abort_rpcs (struct _hurd_sigstate *ss, int signo, void *state)
+abort_rpcs (struct hurd_sigstate *ss, int signo, void *state)
 {
   if (ss->intr_port != MACH_PORT_NULL)
     {
       /* Abort whatever the thread is doing.
 	 If it is in the mach_msg syscall doing the send,
 	 the syscall will return MACH_SEND_INTERRUPTED.  */
+      unsigned int count;
       __thread_abort (ss->thread);
       __thread_get_state (ss->thread, HURD_THREAD_STATE_FLAVOR,
-			  state, HURD_THREAD_STATE_COUNT);
+			  state, &count);
+      if (count != HURD_THREAD_STATE_COUNT)
+	/* What kind of thread?? */
+	return;			/* XXX */
 
       if (_hurd_thread_state_msging_p (state))
 	{
@@ -218,7 +223,7 @@ abort_all_rpcs (int signo, void *state)
     {
       if (threads[i] != me)
 	{
-	  struct _hurd_sigstate *ss = _hurd_thread_sigstate (threads[i]);
+	  struct hurd_sigstate *ss = _hurd_thread_sigstate (threads[i]);
 	  abort_rpcs (ss, signo, state);
 	  __mutex_unlock (&ss->lock);
 	}
@@ -431,7 +436,7 @@ _S_sig_post (mach_port_t me,
 	     int signo,
 	     mach_port_t refport)
 {
-  struct _hurd_sigstate *ss;
+  struct hurd_sigstate *ss;
 
   if (signo < 0 || signo >= NSIG)
     return EINVAL;
@@ -616,10 +621,10 @@ reauth_proc (mach_port_t new)
   mach_port_t ignore;
 
   /* Reauthenticate with the proc server.  */
-  if (! _HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
-			__proc_reauthenticate (port, _hurd_pid) ||
-			__auth_user_authenticate (new, port, _hurd_pid,
-						  &ignore))
+  if (! HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
+		       __proc_reauthenticate (port, _hurd_pid) ||
+		       __auth_user_authenticate (new, port, _hurd_pid,
+						 &ignore))
       && ignore != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), ignore);
 }
