@@ -34,10 +34,12 @@ __BEGIN_DECLS
 
 
 /* Copy N bytes of SRC to DEST.  */
-extern __ptr_t memcpy __P ((__ptr_t __dest, __const __ptr_t __src, size_t __n));
+extern __ptr_t memcpy __P ((__ptr_t __dest, __const __ptr_t __src,
+			    size_t __n));
 /* Copy N bytes of SRC to DEST, guaranteeing
    correct behavior for overlapping strings.  */
-extern __ptr_t memmove __P ((__ptr_t __dest, __const __ptr_t __src, size_t __n));
+extern __ptr_t memmove __P ((__ptr_t __dest, __const __ptr_t __src,
+			     size_t __n));
 
 /* Copy no more than N bytes of SRC to DEST, stopping when C is found.
    Return the position in DEST one byte past where C was copied,
@@ -57,7 +59,8 @@ extern __ptr_t memccpy __P ((__ptr_t __dest, __const __ptr_t __src,
 extern __ptr_t memset __P ((__ptr_t __s, int __c, size_t __n));
 
 /* Compare N bytes of S1 and S2.  */
-extern int memcmp __P ((__const __ptr_t __s1, __const __ptr_t __s2, size_t __n));
+extern int memcmp __P ((__const __ptr_t __s1, __const __ptr_t __s2,
+			size_t __n));
 
 /* Search N bytes of S for C.  */
 extern __ptr_t memchr __P ((__const __ptr_t __s, int __c, size_t __n));
@@ -167,7 +170,7 @@ extern char *stpcpy __P ((char *__dest, __const char *__src));
 extern char *strfry __P ((char *__string));
 
 /* Frobnicate N bytes of S.  */
-extern __ptr_t memfrob __P ((char *__s, size_t __n));
+extern __ptr_t memfrob __P ((__ptr_t __s, size_t __n));
 #endif
 
 __END_DECLS
