@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -293,8 +293,11 @@ DEFUN(flushbuf, (fp, c),
 	  if ((*fp->__io_funcs.__write)(fp->__cookie, &cc, 1) < 1)
 	    fp->__error = 1;
 	  else
-	    /* Record that we've moved forward in the file.  */
-	    ++fp->__offset;
+	    {
+	      /* Record that we've moved forward in the file.  */
+	      ++fp->__offset;
+	      ++fp->__target;
+	    }
 	}
       else
 	/* Just put C in the buffer.  */
