@@ -211,40 +211,26 @@ library are in the subdirectory @file{sysdeps} under the top-level
 library source directory.  This directory contains a hierarchy of
 directories.  Each subdirectory of @file{sysdeps} contains source files
 for a particular machine or operating system, or for a class of machine
-or operating system.  A configuration is specified by an ordered list of
-these subdirectories.  Each subdirectory implicitly appends its parent
-directory to the list.  For example, specifying the list
-@file{unix/bsd/hp9k3bsd} is equivalent to specifying the list
-@file{unix/bsd/hp9k3bsd unix/bsd unix}.  A subdirectory can also specify
+or operating system (for example, systems by a particular vendor, or all
+machines that use IEEE floating-point format).  A configuration
+specifies an ordered list of these subdirectories.  Each subdirectory
+implicitly appends its parent directory to the list.  For example,
+specifying the list @file{unix/bsd/vax} is equivalent to specifying the
+list @file{unix/bsd/vax unix/bsd unix}.  A subdirectory can also specify
 that it implies other subdirectories which are not directly above it in
 the directory hierarchy.  If the file @file{Implies} exists in a
 subdirectory, it lists other subdirectories of @file{sysdeps} which are
 appended to the list, appearing after the subdirectory containing the
 @file{Implies} file.  Lines in an @file{Implies} file that begin with a
 @samp{#} character are ignored as comments.  For example,
-@file{unix/bsd/hp9k3bsd/Implies} contains:@refill
-
-@example
-# HP 9000 series 300 is 68k.
-m68k
-@end example
-
-@noindent
-Since @file{m68k/Implies} contains:
-
-@example
-# 68k uses IEEE 754 floating point.
-ieee754
-@end example
-
-@noindent
-and @file{unix/bsd/Implies} contains:
+@file{unix/bsd/Implies} contains:@refill
 
 @example
 # BSD has Internet-related things.
-unix/inet
+inet
 @end example
 
+@noindent
 and @file{unix/Implies} contains:
 
 @example
@@ -252,9 +238,16 @@ posix
 @end example
 
 @noindent
-the final list is @file{
-unix/bsd/hp9k3bsd unix/bsd m68k unix/inet unix ieee754 posix
-}.@refill
+So the final list is @file{unix/bsd/vax unix/bsd vax unix/inet unix posix}.
+
+A configuration is specified by three parameters: the machine, the
+vendor, and the operating system.  @file{configure} uses these to pick
+the list of system-dependent directories to look for.  The operating
+system usually has a @dfn{base operating system}; this is used like an
+additional parameter, and is the most significant one.  For example, if
+the operating system is @samp{sunos411}, the base operating system is
+@samp{unix/bsd}.  The algorithm is simple; read @file{configure} to see
+the details.
 
 There are two ``special'' subdirectories of @file{sysdeps},
 @file{generic} and @file{stub}.  These two are always implicitly
