@@ -313,6 +313,22 @@ _hurd_fd_done (struct _hurd_fd_user d, int *dealloc)
 	 __result;							      \
        }								      \
    })									      \
+
+static inline int
+_hurd_dfail (int fd, error_t err)
+{
+  int signo;
+  switch (err)
+    {
+    case MACH_SEND_INVALID_DEST: /* The server has disappeared!  */
+      _hurd_raise_signal (NULL, SIGLOST, fd);
+      break;
+    case EPIPE:
+      _hurd_raise_signal (NULL, SIGPIPE, fd);
+      break;
+    }
+  return __hurd_fail (err);
+}
 
 /* Return the socket server for sockaddr domain DOMAIN.  */
 extern socket_t _hurd_socket_server (int domain);
@@ -359,7 +375,7 @@ struct _hurd_sigstate
     sigset_t blocked;
     sigset_t pending;
     struct sigaction actions[NSIG];
-    struct sigstack sigstack;
+    struct sigaltstack sigaltstack;
     int sigcodes[NSIG];		/* Codes for pending signals.  */
 
     int suspended;		/* If nonzero, sig_post signals `arrived'.  */
@@ -397,8 +413,7 @@ extern thread_t _hurd_sigthread;
 extern void _hurd_exc_post_signal (thread_t, int sig, int code);
 
 /* SS->lock is held on entry, and released before return.  */
-extern void _hurd_internal_post_signal (reply_port_t,
-					struct _hurd_sigstate *ss,
+extern void _hurd_internal_post_signal (struct _hurd_sigstate *ss,
 					int signo, int sigcode,
 					sigset_t *restore_blocked);
 
