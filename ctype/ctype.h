@@ -27,8 +27,9 @@ Cambridge, MA 02139, USA.  */
 
 /* These are all the characteristics of characters.  All the
    interdependencies (such as that an alphabetic is an uppercase or a
-   lowercase) are here.  If there get to be more than CHAR_BIT distinct
-   characteristics, many things must be changed that use `unsigned char's.  */
+   lowercase) are here.  If there get to be more than
+   (sizeof (unsigned short int) * CHAR_BIT) distinct characteristics,
+   many things must be changed that use `unsigned short int's.  */
 enum
   {
     _ISupper	= 1 << 0,		/* UPPERCASE.  */
@@ -39,6 +40,7 @@ enum
     _IShex	= 1 << 5,		/* A - F, a - f.  */
     _ISpunct	= 1 << 6,		/* Punctuation.  */
     _NOgraph	= 1 << 7,		/* Printing but nongraphical.  */
+    _ISblank	= 1 << 8,		/* Blank (usually SPC and TAB).  */
     _ISalpha	= _ISupper | _ISlower,	/* Alphabetic.  */
     _ISalnum	= _ISalpha | _ISdigit,	/* Alphanumeric.  */
     _ISxdigit	= _ISdigit | _IShex,	/* Hexadecimal numeric.  */
@@ -48,12 +50,11 @@ enum
 
 /* These are defined in localeinfo.c.
    The declarations here must match those in localeinfo.h.  */
-extern CONST unsigned char *__ctype_b;		/* Characteristics.  */
+extern CONST unsigned short int *__ctype_b;	/* Characteristics.  */
 extern CONST unsigned char *__ctype_tolower;	/* Case conversions.  */
 extern CONST unsigned char *__ctype_toupper;	/* Case conversions.  */
 
-#define	__uc(c)			((unsigned char) (c))
-#define	__isctype(c, type)	(__ctype_b[c] & __uc(type))
+#define	__isctype(c, type)	(__ctype_b[c] & (unsigned short int) type)
 
 #define	__isascii(c)	(((c) & (1 << 7)) == 0)
 #define	__toascii(c)	((c) & 0x7f)
@@ -80,6 +81,10 @@ __exctype(ispunct);
 __exctype(isspace);
 __exctype(isupper);
 __exctype(isxdigit);
+
+#ifdef	__USE_GNU
+__exctype(isblank);
+#endif
 
 
 /* Return the lowercase version of C.  */
@@ -119,6 +124,10 @@ __exctype(_tolower);
 #define	isspace(c)	__isctype((c), _ISspace)
 #define	isupper(c)	__isctype((c), _ISupper)
 #define	isxdigit(c)	__isctype((c), _ISxdigit)
+
+#ifdef	__USE_GNU
+#define	isblank(c)	__isctype((c), _ISblank)
+#endif
 
 #define	tolower(c)	__tolower(c)
 #define	toupper(c)	__toupper(c)
