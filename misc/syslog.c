@@ -302,6 +302,7 @@ closelog_internal()
 	(void)close(LogFile);
 	LogFile = -1;
 	connected = 0;
+	LogTag = NULL;
 }
 
 void
