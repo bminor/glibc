@@ -149,7 +149,7 @@ endif
 # whose contents $(localtime) specifies.  If this is a relative
 # pathname, it is relative to $(datadir)/zoneinfo.
 ifndef localtime-file
-localtime-file = /etc/localtime
+localtime-file = $(prefix)/etc/localtime
 endif
 
 # What timezone's DST rules should be used when a POSIX-style TZ
