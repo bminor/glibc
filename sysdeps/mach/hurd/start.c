@@ -120,6 +120,8 @@ start1 (void)
       split_args (env, envlen, envp);
     }
 
+  __environ = envp;
+
   if (portarray || intarray)
     /* Initialize library data structures, start signal processing, etc.  */
     _hurd_init (flags, argv, portarray, portarraysize, intarray, intarraysize);
