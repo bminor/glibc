@@ -1,3 +1,8 @@
+1999-11-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/t.61.c (CHARSET_NAME): Correct name to what is used in
+	gconv-modules.
+
 1999-11-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/rcmd.c (ruserok): Use iruserok2 not iruserok.
@@ -7,7 +12,7 @@
 	* sysdeps/gnu/siglist.h: If SIGPWR == SIGLOST, don't include SIGPWR
 	message.
 	* sysdeps/unix/sysv/linux/sparc/sparc32/register-dump.h: Include
-	asm/ptrace.h, since this will not be done with 2.3.xx automatically
+	asm/ptrace.h, since this will not be done with 2.3.xx automatically.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/register-dump.h: Likewise.
 
 1999-11-26  Andreas Jaeger  <aj@suse.de>
