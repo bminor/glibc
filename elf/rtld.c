@@ -368,17 +368,15 @@ of this helper program; chances are you did not intend to run this program.\n",
 	 containing a '/' are ignored since it is insecure.  */
       char *list = strdupa (preloadlist);
       char *p;
-      list += strspn (list, " :");
-      while (list && *list && (p = strsep (&list, " :")) != NULL)
-	if (! __libc_enable_secure || strchr (p, '/') == NULL)
+      while ((p = strsep (&list, " :")) != NULL)
+	if (p[0] != '\0'
+	    && (! __libc_enable_secure || strchr (p, '/') == NULL))
 	  {
 	    struct link_map *new_map = _dl_map_object (l, p, 1, lt_library, 0);
 	    if (new_map->l_opencount == 1)
 	      /* It is no duplicate.  */
 	      ++npreloads;
 	  }
-      if (list != NULL)
-	list += strspn (list, " :");
 
       if (__libc_enable_secure)
 	unsetenv ("LD_PRELOAD");
