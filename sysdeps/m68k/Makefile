@@ -1,4 +1,4 @@
-# Copyright (C) 1993, 1994, 1996 Free Software Foundation, Inc.
+# Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -33,4 +33,9 @@ long-double-fcts = yes
 
 ifeq ($(subdir),elf)
 CFLAGS-rtld.c += -Wno-uninitialized
+endif
+
+ifeq ($(subdir),math)
+# Avoid a bug in gcc
+CFLAGS-s_copysignl.c += -mnobitfield
 endif
