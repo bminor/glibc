@@ -37,8 +37,9 @@ ifdef machine
 # so don't try to be clever and find another directory to build in.
 ifeq (,$(wildcard $(..)config.make))
 ARCH = $(machine)
-endif
-endif
+endif # config.make
+endif # machine
+endif # ARCH
 
 # Directory for object files and libc.a.  If this is not defined, the
 # object files live in the subdirectories where their sources live, and
