@@ -22,14 +22,13 @@ Cambridge, MA 02139, USA.  */
 #define	_HURD_ID_H	1
 #include <features.h>
 
+#include <mutex.h>
 
 /* Structure describing authorization data for the process.  */
 
 struct hurd_id_data
   {
-#ifdef noteven
     struct mutex lock;
-#endif
 
     int valid;			/* If following data are up to date.  */
 
