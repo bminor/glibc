@@ -31,9 +31,8 @@ bsdmath_dirs := $(bsdmath_dirs) common common_source
 
 endif
 
-ifeq	($(subdir),string)
-dont_distribute := $(dont_distribute) endian.h	# Generated.
-endif
+ifeq "$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/endian.h))))" \
+     "$(sysdep_dir)/stub/"
 
 $(objpfx)endian.h: $(objpfx)det_endian
 	$(dir $<)$(notdir $<) > $@-tmp
@@ -43,6 +42,8 @@ $(objpfx)det_endian: $(sysdep_dir)/generic/det_endian.c
 	$(native-compile)
 
 before-compile := $(before-compile) $(objpfx)endian.h
+
+endif
 
 ifeq ($(subdir),stdio)
 
