@@ -49,8 +49,7 @@ endef
 include zonenames
 zonenames := $(subst $(nl), ,$(zonenames))
 
-install-data = zoneinfo/ \
-	       $(addprefix zoneinfo/,$(zonenames) \
+install-data = $(addprefix zoneinfo/,$(zonenames) \
 			   	     $(filter-out /%,$(localtime-file) \
 						     $(posixrules-file)))
 install-others = $(filter /%,$(localtime-file) $(posixrules-file))
