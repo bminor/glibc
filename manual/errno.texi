@@ -66,11 +66,11 @@ set @code{errno}.  For these functions, if you want to check to see
 whether an error occurred, the recommended method is to set @code{errno}
 to zero before calling the function, and then check its value afterward.
 
+@pindex errno.h
 All the error codes have symbolic names; they are macros defined in
 @file{errno.h}.  The names start with @samp{E} and an upper-case
 letter or digit; you should consider names of this form to be
 reserved names.  @xref{Reserved Names}.
-@pindex errno.h
 
 The error code values are all positive integers and are all distinct.
 (Since the values are distinct, you can use them as labels in a
@@ -125,6 +125,10 @@ No process matches the specified process ID.
 Interrupted function call; an asynchronous signal occured and prevented
 completion of the call.  When this happens, you should try the call
 again.
+
+You can choose to have functions resume after a signal that is handled,
+rather than failing with @code{EINTR}; see @ref{Interrupted
+Primitives}.
 @end deftypevr
 
 @comment errno.h
@@ -231,10 +235,8 @@ An attempt to make an improper link across file systems was detected.
 @comment errno.h
 @comment POSIX.1: Operation not supported by device
 @deftypevr Macro int ENODEV
-No such device.  This a ``file doesn't exist'' error, but is
-used only when the file is expected to represent a device, like a
-block special file for a disk.  @strong{Incomplete:} The user should
-verify this meaning; it might not be true.
+The wrong type of device was given to a function that expects a
+particular sort of device.
 @end deftypevr
 
 @comment errno.h
@@ -343,7 +345,8 @@ not representable because of overflow or underflow.
 @comment POSIX.1: Resource temporarily unavailable
 @deftypevr Macro int EAGAIN
 Resource temporarily unavailable; the call might work if you try again
-later.
+later.  Only @code{fork} returns error code @code{EAGAIN} for such a
+reason.
 @end deftypevr
 
 @comment errno.h
@@ -355,7 +358,7 @@ non-blocking mode selected.
 @strong{Portability Note:} In 4.4BSD and GNU, @code{EWOULDBLOCK} and
 @code{EAGAIN} are the same.  Earlier versions of BSD (@pxref{Berkeley
 Unix}) have two distinct codes, and use @code{EWOULDBLOCK} to indicate
-an i/o operation that would block on an object with non-blocking mode
+an I/O operation that would block on an object with non-blocking mode
 set, and @code{EAGAIN} for other kinds of errors.@refill
 @end deftypevr
 
@@ -469,9 +472,7 @@ was unreachable.
 @comment errno.h
 @comment BSD: Network dropped connection on reset
 @deftypevr Macro int ENETRESET
-The network connection was reset because the remote host crashed.
-@strong{Incomplete:} The user should verify this definition; it
-might be incorrect.
+A network connection was reset because the remote host crashed.
 @end deftypevr
 
 @comment errno.h
