@@ -28,14 +28,15 @@ headers = hurd.h $(addprefix hurd/,fd.h id.h port.h signal.h userlink.h) \
 	  $(interface-headers)
 distribute := intr_rpc.awk hurdintr.awk
 
+# The RPC interfaces go in a separate library.
+interface-library := libhurduser.a
 user-interfaces		:= $(addprefix hurd/,\
 				       auth process startup msg msg_reply \
 				       exec core interrupt \
 				       fs fsys io term socket )
 server-interfaces	:= hurd/msg
 
-routines = $(interface-routines) \
-	   hurdid hurdpath hurdpid hurdports \
+routines = hurdid hurdpath hurdpid hurdports \
 	   hurdexec \
 	   __setauth setauth \
 	   __pid2task __task2pid pid2task task2pid \
