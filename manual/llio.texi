@@ -7,7 +7,27 @@ for the higher-level I/O functions described in @ref{I/O on Streams}, as
 well as functions for performing low-level control operations for which
 there are no equivalents on streams.
 
-@c ??? Why use descriptor-level fns?
+Stream-level I/O is more flexible and usually more convenient;
+therefore, programmers generally use the descriptor-level functions only
+when necessary.  These are some of the usual reasons:
+
+@itemize @bullet
+@item
+For reading binary files in large chunks.
+
+@item
+For reading an entire file into core before parsing it.
+
+@item
+To perform operations other than data transfer, which can only be done
+with a descriptor.  (You can use @code{fileno} to get the descriptor
+corresponding to a stream.)
+
+@item
+To pass descriptors to a child process.  (The child can create its own
+stream to use a descriptor that it inherits, but cannot inherit a stream
+directly.)
+@end itemize
 
 @menu
 * Opening and Closing Files::           How to open and close file
@@ -37,7 +57,7 @@ there are no equivalents on streams.
 @end menu
 
 
-@node Opening and Closing Files, I/O Primitives,  , Low-Level I/O
+@node Opening and Closing Files
 @section Opening and Closing Files
 
 @cindex opening a file descriptor
@@ -148,6 +168,7 @@ exists.
 
 @item EINTR
 The @code{open} operation was interrupted by a signal.
+@xref{Interrupted Primitives}.
 
 @item EISDIR
 The @var{flags} argument specified write access, and the file is a directory.
@@ -165,8 +186,7 @@ The named file does not exist, but @code{O_CREAT} is not specified.
 
 @item ENOSPC
 The directory or file system that would contain the new file cannot be
-extended, because there is no disk space left.  @strong{Incomplete:} Talk
-about nodes versus blocks.
+extended, because there is no disk space left.
 
 @item ENXIO
 @code{O_NONBLOCK} and @code{O_WRONLY} are both set in the @var{flags}
@@ -227,18 +247,20 @@ conditions are defined for this function:
 The @var{filedes} argument is not a valid file descriptor.
 
 @item EINTR
-The call was interrupted by a signal.
+The call was interrupted by a signal.  @xref{Interrupted Primitives}.
+Here's an example of how to handle @code{EINTR} properly:
 
-@emph{Incomplete}: Explain and show example to handle @code{EINTR}.
-@end table
+@example
+TEMP_FAILURE_RETRY (close (desc));
+@end example
 @end deftypefun
 
-To close a stream, you should call @code{fclose} (@pxref{Closing
-Streams}) instead of trying to close its underlying file descriptor with
-@code{close}.  This flushes any buffered output and updates the stream
-object to indicate that it is closed.
+To close a stream, call @code{fclose} (@pxref{Closing Streams}) instead
+of trying to close its underlying file descriptor with @code{close}.
+This flushes any buffered output and updates the stream object to
+indicate that it is closed.
 
-@node I/O Primitives, File Position Primitive, Opening and Closing Files, Low-Level I/O
+@node I/O Primitives
 @section Input and Output Primitives
 
 This section describes the functions for performing primitive input and
@@ -290,11 +312,19 @@ some input.  But if the @code{O_NONBLOCK} flag is set for the file
 (@pxref{File Status Flags}), @code{read} returns immediately without
 reading any data, and reports this error.
 
+On some systems, reading a large amount of data from a character special
+file can also fail with @code{EAGAIN} if the kernel cannot find enough
+physical memory to lock down the user's pages.  This is limited to
+devices that transfer with direct memory access into the user's memory,
+which means it does not include terminals, since they always use
+separate buffers inside the kernel.
+
 @item EBADF
 The @var{filedes} argument is not a valid file descriptor.
 
 @item EINTR
 @code{read} was interrupted by a signal while it was waiting for input.
+@xref{Interrupted Primitives}.
 
 @item EIO
 For many devices, and for disk files, this error code indicates
@@ -338,6 +368,13 @@ process to block on output is writing to a terminal device that supports
 flow control, where output has been suspended by receipt of a STOP
 character.
 
+On some systems, writing a large amount of data from a character special
+file can also fail with @code{EAGAIN} if the kernel cannot find enough
+physical memory to lock down the user's pages.  This is limited to
+devices that transfer with direct memory access into the user's memory,
+which means it does not include terminals, since they always use
+separate buffers inside the kernel.
+
 @item EBADF
 The @var{filedes} argument is not a valid file descriptor.
 
@@ -345,8 +382,8 @@ The @var{filedes} argument is not a valid file descriptor.
 The size of the file is larger than the implementation can support.
 
 @item EINTR
-The write operation was interrupted by a signal while it was blocked
-waiting for completion.
+The @code{write} operation was interrupted by a signal while it was
+blocked waiting for completion.  @xref{Interrupted Primitives}.
 
 @item EIO
 For many devices, and for disk files, this error code indicates
@@ -368,9 +405,10 @@ isn't open for reading by any process.  When this happens, a @code{SIGPIPE}
 signal is also sent to the process; see @ref{Signal Handling}.
 @end table
 
-Normally, you should check @code{errno} after each failing call to
-@code{write}, and if the error was @code{EINTR} or @code{EAGAIN}, you
-should simply repeat the call.  The easy way to do this is with the
+Unless you have arranged to prevent @code{EINTR} failures, you should
+check @code{errno} after each failing call to @code{write}, and if the
+error was @code{EINTR}, you should simply repeat the call.
+@xref{Interrupted Primitives}.  The easy way to do this is with the
 macro @code{TEMP_FAILURE_RETRY}, as follows:
 
 @example
@@ -381,11 +419,7 @@ The @code{write} function is the underlying primitive for all of the
 functions that write to streams, such as @code{fputc}.
 @end deftypefun
 
-@strong{Incomplete:} The POSIX.1 document goes into a lot of verbiage here
-about writing to a pipe and the interaction with the @code{O_NONBLOCK} 
-flag and the @code{PIPE_BUF} parameter.  Is this really important?
-
-@node File Position Primitive, Descriptors and Streams, I/O Primitives, Low-Level I/O
+@node File Position Primitive
 @section Setting the File Position of a Descriptor
 
 Just as you can set the file position of a stream with @code{fseek}, you
@@ -509,7 +543,7 @@ This is an arithmetic data type used to represent file sizes.
 In the GNU system, this is equivalent to @code{fpos_t} or @code{long int}.
 @end deftp
 
-@node Descriptors and Streams, Stream/Descriptor Precautions, File Position Primitive, Low-Level I/O
+@node Descriptors and Streams
 @section Descriptors and Streams
 @cindex streams, and file descriptors
 @cindex converting file descriptor to stream
@@ -550,9 +584,8 @@ see @ref{Creating a Pipe}.
 @deftypefun int fileno (FILE *@var{stream})
 This function returns the file descriptor associated with the stream
 @var{stream}.  If an error is detected (for example, if the @var{stream}
-is not valid), @code{-1} is returned instead.
-
-@c ??? Is this really true?  What about streams that don't have descriptors?
+is not valid) or if @var{stream} does not do I/O to a file,
+@code{fileno} returns @code{-1}.
 @end deftypefun
 
 @cindex standard file descriptors
@@ -588,7 +621,7 @@ standard error output.
 @end table
 @cindex standard error file descriptor
 
-@node Stream/Descriptor Precautions, Waiting for I/O, Descriptors and Streams, Low-Level I/O
+@node Stream/Descriptor Precautions
 @section Precautions for Mixing Streams and Descriptors
 @cindex channels
 @cindex streams and descriptors
@@ -597,58 +630,135 @@ standard error output.
 
 You can have multiple file descriptors and streams (let's call both
 streams and descriptors ``channels'' for short) connected to the same
-file, but if you are doing any output, you have to be very careful to
-avoid confusion within the system.  The system handles each descriptor or
-stream more or less independently, so its handling of one channel may go
-awry if another channel has been used.
+file, but you must take care to avoid confusion between channels.  There
+are two cases to consider: @dfn{linked} channels that share a single
+file position value, and @dfn{independent} channels that have their own
+file positions.
 
-One basic rule is that if you have been doing output on a stream, you
-should use @code{fflush} on that stream before doing output to the same
-file through any other channel.  This way, the output buffered by that
-stream will at least appear at the proper place in the file.
+It's best to use just one channel in your program for actual data
+transfer to any given file, except when all the access is for input.
+For example, if you open a pipe (something you can only do at the file
+descriptor level), either do all I/O with the descriptor, or construct a
+stream from the descriptor with @code{fdopen} and then do all I/O with
+the stream.
 
-If you do output to the same file through several channels that were
-opened separately, keep in mind that each channel has its own file
-position.  In some cases, this is just what you want: each channel can
-read or write sequentially, at its own place in the file.  But if you do
-output to one channel at the end of the file, this will certainly leave
-the others positioned somewhere before the new end.  If you want them to
-output at the end, you must set their file positions first.
+@menu
+* Linked Channels::	   Dealing with channels sharing a file position.
+* Independent Channels::   Dealing with separately opened, unlinked channels.
+* Cleaning Streams::	   Clean a stream makes it safe to use another channel.
+@end menu
 
-@c ??? How can you force a stream to reread its input buffer
-@c ??? if that part of the file might have been modified?
-@c ??? Or should people simply avoid using streams in such cases?
+@node Linked Channels
+@subsection Linked Channels
+@cindex linked channels
 
-The worst thing you can do is operate on the same descriptor used by a
-stream, or a duplicate of that descriptor, because this can modify the
-descriptor's file pointer behind the stream's back.  If you set the file
-position of such a descriptor, even by calling @code{read} or
-@code{write}, you should call @code{fflush} on the stream beforehand,
-and you should call @code{fseek} to tell the stream its new file
-position afterward.
+Channels that come from a single opening share the same file position;
+we call them @dfn{linked} channels.  Linked channels result when you
+make a stream from a descriptor using @code{fdopen}, when you get a
+descriptor from a stream with @code{fileno}, and when you copy a
+descriptor with @code{dup} or @code{dup2}.  For files that don't support
+random access, such as terminals and pipes, @emph{all} channels are
+effectively linked.  On random-access files, all append-type output
+streams are effectively linked to each other.
 
-@c ??? Look at the POSIX book and state here the precise rules 
-@c ??? guaranteed to work for any system.
+@cindex cleaning up a stream
+If you have been using a stream for I/O, and you want to do I/O using
+another channel (either a stream or a descriptor) that is linked to it,
+you must first @dfn{clean up} the stream that you have been using.
+@xref{Cleaning Streams}.
 
-Control operations such as setting the mode flags of a terminal are
-mostly safe---you can use any descriptor for these operations, and all
-channels are affected simultaneously.  However, text already ``output''
-to a stream but still buffered by the stream will be subject to the new
-terminal modes when subsequently flushed.  To make sure ``past''
-output is covered by the terminal settings that were in effect at the
-time, always flush all possible output streams for that terminal before
-setting the modes.  @xref{Terminal Modes}.
+Terminating a process, or executing a new program in the process,
+destroys all the streams in the process.  If descriptors linked to these
+streams persist in other processes, their file positions become
+undefined as a result.  To prevent this, you must clean up the streams
+before destroying them.
 
-It's best not to use more than one channel in your program for actual
-data transfer to any given file except when all the access is for input.
-And for each opening of a file, choose either a descriptor or a stream
-to use for all data transfer.  For example, if you open a pipe
-(something you can only do at the file descriptor level), you can
-construct a stream for the pipe using @code{fdopen}, but you should do
-all subsequent I/O operations on the stream and never on the file
-descriptor.
+@node Independent Channels
+@subsection Independent Channels
+@cindex independent channels
 
-@node Waiting for I/O, Control Operations, Stream/Descriptor Precautions, Low-Level I/O
+When you open channels (streams or descriptors) separately on a seekable
+file, each channel has its own file position.  These are called
+@dfn{independent channels}.
+
+The system handles each channel independently.  Most of the time, this
+is quite predictable and natural (especially for input): each channel
+can read or write sequentially at its own place in the file.
+The precautions you should take are these:
+
+@itemize @bullet
+@item
+You should clean an output stream after use, before doing anything else
+that might read or write from the same part of the file.
+
+@item
+You should clean an input stream before reading data that may have been
+modified using an independent channel.  Otherwise, you might read
+obsolete data that had been in the stream's buffer.
+@end itemize
+
+If you do output to one channel at the end of the file, this will
+certainly leave the other independent channels positioned somewhere
+before the new end.  If you want them to output at the end, you must set
+their file positions to end of file, first.  In order to make the
+end-of-file position accurate, you must clean the output channel you
+were using, if it is a stream.
+
+It's impossible for two channels to have separate file pointers for a
+file that doesn't support random access.  Thus, channels reading or
+writing such files are always linked, never independent.  Append-type
+channels are also always linked.  For these channels, follow the rules
+for linked channels; see @ref{Linked Channels}.
+
+@node Cleaning Streams
+@subsection Cleaning Streams
+
+On the GNU system, you can clean up any stream with @code{fclean}:
+
+@comment stdio.h
+@comment GNU
+@deftypefun int fclean (@var{stream})
+Clean up the stream @var{stream} so that its buffer is empty.  If
+@var{stream} is doing output, force it out.  If @var{stream} is doing
+input, give the data in the buffer back to the system, arranging to
+reread it.
+@end deftypefun
+
+On other systems, you can use @code{fflush} to clean a stream in most
+cases.
+
+You can skip the @code{fclean} or @code{fflush} if you know the stream
+is already clean.  A stream is clean whenever its buffer is empty.  For
+example, an unbuffered stream is always clean.  An input stream that is
+at end-of-file is clean.  A line-buffered stream is clean when the last
+character output was a newline.
+
+There is one case in which cleaning a stream is impossible on most
+systems.  This is when the stream is doing input from a file that is not
+random-access.  Such streams typically read ahead, and when the file is
+not random access, there is no way to give back the excess data already
+read.  When an input stream reads from a random-access file,
+@code{fflush} does clean the stream, but leaves the file pointer at an
+unpredictable place; you must set the file pointer before doing any
+further I/O.  On the GNU system, using @code{fclean} avoids both of
+these problems.
+
+Closing an output-only stream also does @code{fflush}, so this is a
+valid way of cleaning an output stream.  On the GNU system, closing an
+input stream does @code{fclean}.
+
+You need not clean a stream before using its descriptor for control
+operations such as setting terminal modes; these operations don't affect
+the file position and are not affected by it.  You can use any
+descriptor for these operations, and all channels are affected
+simultaneously.  However, text already ``output'' to a stream but still
+buffered by the stream will be subject to the new terminal modes when
+subsequently flushed.  To make sure ``past'' output is covered by the
+terminal settings that were in effect at the time, flush the output
+streams for that terminal before setting the modes.  @xref{Terminal
+Modes}.
+
+@node Waiting for I/O
 @section Waiting for Input or Output
 @cindex waiting for input or output
 @cindex multiplexing input
@@ -768,7 +878,7 @@ program uses signals, you can't rely on @code{select} to keep waiting
 for the full time specified.  If you want to be sure of waiting for a
 particular amount of time, you must check for @code{EINTR} and repeat
 the @code{select} with a newly calculated timeout based on the current
-time.  See the example below.
+time.  See the example below.  See also @ref{Interrupted Primitives}.
 
 If an error occurs, @code{select} returns @code{-1} and does not modify
 the argument file descriptor sets.  The following @code{errno} error 
@@ -779,7 +889,7 @@ conditions are defined for this function:
 One of the file descriptor sets specified an invalid file descriptor.
 
 @item EINTR
-The operation was interrupted by a signal.
+The operation was interrupted by a signal.  @xref{Interrupted Primitives}.
 
 @item EINVAL
 The @var{timeout} argument is invalid; one of the components is negative
@@ -833,11 +943,7 @@ input_timeout (int filedes, int seconds)
       return 0;
 
     /* @r{@code{select} returns 0 if timeout, 1 if input available, -1 if error.} */
-    val = select (FD_SETSIZE, &set, NULL, NULL, &timeout);
-    /* @r{Return as @code{select} would return,}
-       @r{but retry instead if we had a signal.} */
-    if (val >= 0 || errno != EINTR)
-      return val;
+    return TEMP_FAILURE_RETRY (select (FD_SETSIZE, &set, NULL, NULL, &timeout));
   @}
 @}
 @end example
@@ -846,7 +952,7 @@ There is another example showing the use of @code{select} to multiplex
 input from multiple sockets in @ref{Server Example}.
 
 
-@node Control Operations, Duplicating Descriptors, Waiting for I/O, Low-Level I/O
+@node Control Operations
 @section Control Operations on Files
 
 @cindex control operations on files
@@ -911,7 +1017,7 @@ Set process or process group ID to receive @code{SIGIO} signals.
 @end deftypefun
 
 
-@node Duplicating Descriptors, Descriptor Flags, Control Operations, Low-Level I/O
+@node Duplicating Descriptors
 @section Duplicating Descriptors
 
 @cindex duplicating file descriptors
@@ -1028,7 +1134,7 @@ There is also a more detailed example showing how to implement redirection
 in the context of a pipeline of processes in @ref{Launching Jobs}.
 
 
-@node Descriptor Flags, File Status Flags, Duplicating Descriptors, Low-Level I/O
+@node Descriptor Flags
 @section File Descriptor Flags
 @cindex file descriptor flags
 
@@ -1127,7 +1233,7 @@ set_cloexec_flag (int desc, int value)
 @}
 @end example
 
-@node File Status Flags, File Locks, Descriptor Flags, Low-Level I/O
+@node File Status Flags
 @section File Status Flags
 @cindex file status flags
 
@@ -1243,12 +1349,6 @@ Open the file for write access.
 Open the file for both reading and writing.
 @end table
 
-@c ??? 
-@strong{Incomplete:} @file{fcntl.h} also contains defines for
-@code{FREAD}, @code{FWRITE}, etc.  Mib says: ``Those are internal flags
-in the kernel.  They won't exist in the GNU system.''  But this can't
-be right, since apparently at least @code{FASYNC} will be supported.
-
 If you want to modify the file status flags, you should get the current
 flags with @code{F_GETFL} and modify the value.  Don't assume that the
 flags listed here are the only ones that are implemented; your program
@@ -1278,7 +1378,7 @@ set_nonblock_flag (int desc, int value)
 @}
 @end example
 
-@node File Locks, Interrupt Input, File Status Flags, Low-Level I/O
+@node File Locks
 @section File Locks
 
 @cindex file locks
@@ -1418,7 +1518,7 @@ to release locks.  If @code{fcntl} succeeds, it return a value other
 than @code{-1}.
 
 The following @code{errno} error conditions are defined for this
-command:
+function:
 
 @table @code
 @item EACCES
@@ -1441,7 +1541,11 @@ or the file associated with @var{filedes} doesn't support locks.
 @item ENOLCK
 The system has run out of file lock resources; there are already too
 many file locks in place.
-@c ??? Can this happen in the GNU kernel?
+
+Well-designed file systems never report this error, because they have no
+limitation on the number of locks.  However, you must still take account
+of the possibility of this error, as it could result from network access
+to a file system on another machine.
 @end table
 @end deftypevr
 
@@ -1463,6 +1567,7 @@ are defined for this command:
 @table @code
 @item EINTR
 The function was interrupted by a signal while it was waiting.
+@xref{Interrupted Primitives}.
 
 @item EDEADLK
 A deadlock condition was detected.  This can happen if two processes
@@ -1511,14 +1616,14 @@ the contents of the file are in a consistent state, then it can also use
 a read lock.  While the read lock is set, no other process can lock
 that part of the file for writing.
 
-@strong{Incomplete:}  This section needs an example.
+@c ??? This section could use an example program.
 
 Remember that file locks are only a @emph{voluntary} protocol for
 controlling access to a file.  There is still potential for access to
 the file by programs that don't use the lock protocol.
 @end table
 
-@node Interrupt Input,  , File Locks, Low-Level I/O
+@node Interrupt Input
 @section Interrupt-Driven Input
 
 @cindex interrupt-driven input
@@ -1574,7 +1679,7 @@ fcntl (@var{filedes}, F_SETOWN, @var{pid})
 @end example
 
 The @var{pid} argument should be a process ID.  You can also pass a
-negative number whose absolute value is the process group ID.
+negative number whose absolute value is a process group ID.
 
 The return value from @code{fcntl} with this command is @code{-1}
 in case of error and some other value if successful.  The following
@@ -1589,4 +1694,4 @@ There is no process or process group corresponding to @var{pid}.
 @end table
 @end deftypevr
 
-@strong{Incomplete:}  This section could use an example program.
+@c ??? This section could use an example program.
