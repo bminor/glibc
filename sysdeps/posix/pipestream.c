@@ -80,8 +80,8 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
 
       CONST char *new_argv[4];
 
-      if ((*mode == 'r' ? dup2(pipedes[STDIN_FILENO], STDOUT_FILENO) :
-	  dup2(pipedes[STDOUT_FILENO], STDIN_FILENO)) < 0)
+      if ((*mode == 'w' ? dup2(pipedes[STDIN_FILENO], STDIN_FILENO) :
+	  dup2(pipedes[STDOUT_FILENO], STDOUT_FILENO)) < 0)
 	_exit(127);
 
       /* Close the pipe descriptors.  */
@@ -101,8 +101,8 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
   /* We are the parent side.  */
 
   /* Close the irrelevant side of the pipe and open the relevant side as a
-     new stream.  Mark our side of the pipe to close on exec, so new popen
-     children won't see it.  */
+     new stream.  Mark our side of the pipe to close on exec, so new children
+     won't see it.  */
   if (*mode == 'r')
     {
       (void) close(pipedes[STDOUT_FILENO]);
@@ -138,7 +138,16 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
       (void) close(pipedes[*mode == 'r' ? STDOUT_FILENO : STDIN_FILENO]);
     else
       (void) fclose(stream);
+#ifndef	NO_WAITPID
     (void) waitpid(pid, (int *) NULL, 0);
+#else
+    {
+      pid_t dead;
+      do
+	dead = wait ((int *) NULL);
+      while (dead > 0 && dead != pid);
+    }
+#endif
     errno = save;
     return NULL;
   }
@@ -149,7 +158,7 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
 int
 DEFUN(pclose, (stream), register FILE *stream)
 {
-  pid_t pid;
+  pid_t pid, dead;
   int status;
 
   if (!__validfp(stream) || !stream->__ispipe)
@@ -165,7 +174,15 @@ DEFUN(pclose, (stream), register FILE *stream)
   if (fclose(stream))
     return -1;
 
-  if (waitpid(pid, &status, 0) != pid)
+#ifndef	NO_WAITPID
+  dead = waitpid (pid, &status, 0);
+#else
+  do
+    dead = wait (&status);
+  while (dead > 0 && dead != pid);
+#endif
+  if (dead != pid)
     status = -1;
+
   return status;
 }
