@@ -1,3 +1,83 @@
+1998-05-18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* timezone/Makefile (tz-cflags): Define TM_GMTOFF and TM_ZONE.
+	(CFLAGS-zdump.c): Add $(tz-cflags).
+
+	* timezone/zdump.c (abbr): Use TM_ZONE if defined.  Add const to
+	return type.
+
+1998-05-18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* time/tzfile.c (__tzfile_compute): Undo last change.  Instead
+	take struct tm parameter and set tm_isdst, tm_zone and tm_offset
+	if use_localtime.
+	* time/tzset.c: Update prototype of __tzfile_compute.
+	(__tz_convert): Pass tp to __tzfile_compute.  Don't set tm_isdst,
+	tm_zone and tm_offset here if __use_tzfile.
+
+1998-05-15 14:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/tzfile.c (__tzfile_compute): Take new arguments.  Store
+	DST information and offset in them.
+	* time/tzset.c (__tz_convert): Pass extra parameters to
+	__tzfile_compute.  Compute equivalent values for use of tz_rules.
+	* time/offset.c: Update from glibc 2.1.
+	* time/time.h: Adopt prototype for __offset.
+
+1998-05-14 13:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/netinet/in.h: Add defines for multicast.
+	Reported by Jeremy Hall <jhall@UU.NET>.
+
+1998-05-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* Makeconfig (rpath-link): Add resolvobjdir.
+	(resolvobjdir): New variable.
+	Reported by Peter Breitenlohner <peb@mppmu.mpg.de> [fixes PR libc/633].
+
+1998-05-20 09:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-close.c: Call shared object terminators at the right time.
+	Patch by Philippe Troin <phil@fifi.org>.
+
+1998-05-19 15:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (process_envvars): Fix typo.  Don't handle
+	LD_PROFILE_OUTPUT in SUID binaries.
+	* intl/dcgettext.c: In SUID binaries don't let language part of
+	locale value contain path elements.
+	* intl/explodename.h: Define new function _nl_find_language.
+	* intl/loadinfo.h: Declare _nl_find_language.
+	* locale/findlocale.c (_nl_find_locale): Use _nl_find_locale to get
+	language part it drop the value is path element is contained.
+
+1998-05-19  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/svc_tcp.c: Add FreeBSD DoS patch.
+	* sunrpc/xdr_rec.c: Likewise.
+
+1998-04-07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in: Add new option --disable-force-install.  Substitute
+	force_install.
+	* config.make.in (force-install): Set from configure.
+	* Makerules (force-install): New phony target.
+	* Makeconfig (+force): New variable.
+	* Makefile: Use it in dependency list of installation targets.
+	* db/Makefile: Likewise.
+	* elf/Makefile: Likewise.
+	* hurd/Makefile: Likewise.
+	* intl/Makefile: Likewise.
+	* po/Makefile: Likewise.
+	* sunrpc/Makefile: Likewise.
+	* sysdeps/mach/hurd/Makefile: Likewise.
+	* sysdeps/standalone/i386/force_cpu386/Makefile: Likewise.
+	* time/Makefile: Likewise.
+
+1998-05-12  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c: Fix for NO_THREADS case.
+
 1998-05-06 12:51  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/fpu/bits/mathinline.h (pow): Use long long int for
