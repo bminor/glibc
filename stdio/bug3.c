@@ -3,7 +3,7 @@
 #include <string.h>
 
 int
-main ()
+DEFUN_VOID(main)
 {
   FILE *f;
   int i;

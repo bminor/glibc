@@ -18,10 +18,10 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-ENTRY(___pipe)
-	mov %o0, %o2
+ENTRY (__pipe)
+	mov %o0, %o2		/* Save PIPEDES. */
 PSEUDO (__Spipe, pipe, 1)
-	st %o0, [%o2]
-	st %o1, [%o2 + 4]
-	retl
+	st %o0, [%o2]		/* PIPEDES[0] = %o0; */
+	st %o1, [%o2 + 4]	/* PIPEDES[1] = %o1; */
+	retl			/* return 0; */
 	clr %o0
