@@ -65,6 +65,66 @@ input (FILE *f)
   return (unsigned char) *f->__bufp++;
 }
 
+
+static void
+output (FILE *f, int c)
+{
+  inline void write_some (const char *p, size_t to_write)
+    {
+      kern_return_t err;
+      int wrote;
+      while (to_write > 0)
+	{
+e	  if (err = device_write_inband ((device_t) f->__cookie, 0,
+					 f->__target, p, to_write, &wrote))
+	    {
+	      errno = err;
+	      f->__error = 1;
+	      break;
+	    }
+	  p += wrote;
+	  to_write -= wrote;
+	  f->__target += wrote;
+	}
+    }
+
+  if (f->__buffer != NULL)
+    {
+      if (f->__put_limit == f->__buffer)
+	{
+	  /* Prime the stream for writing.  */
+	  f->__put_limit = f->__buffer + f->__bufsize;
+	  f->__bufp = f->__buffer;
+	  if (c != EOF)
+	    {
+	      *f->__bufp++ = (unsigned char) c;
+	      c = EOF;
+	    }
+	}
+
+
+      /* Write out the buffer.  */
+
+      write_some (start, f->__bufp - start);
+
+      f->__bufp = f->__buffer;
+    }
+
+  if (c != EOF && !ferror (f))
+    {
+      if (f->__linebuf && (unsigned char) c == '\n')
+	{
+	  static const char nl = '\n';
+	  write_some (&nl, 1);
+	}
+      else
+	*f->__bufp++ = (unsigned char) c;
+    }
+}
+
+
+
+#if 0				/* Translates \n to \r\n.  */
 static void
 output (FILE *f, int c)
 {
@@ -74,7 +134,7 @@ output (FILE *f, int c)
       int wrote;
       while (to_write > 0)
 	{
-e	  if (err = device_write_inband ((device_t) f->__cookie, 0,
+	  if (err = device_write_inband ((device_t) f->__cookie, 0,
 					 f->__target, p, to_write, &wrote))
 	    {
 	      errno = err;
@@ -154,6 +214,7 @@ e	  if (err = device_write_inband ((device_t) f->__cookie, 0,
 	*f->__bufp++ = (unsigned char) c;
     }
 }
+#endif
 
 FILE *
 mach_open_devstream (mach_port_t dev, const char *mode)
