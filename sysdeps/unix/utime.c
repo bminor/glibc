@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ utime (file, times)
      const char *file;
      const struct utimbuf *times;
 {
-  struct timeval timevals[2];
+  struct timeval timevals[2], *tvp;
 
   if (times != NULL)
     {
@@ -39,13 +39,10 @@ utime (file, times)
       timevals[0].tv_usec = 0L;
       timevals[1].tv_sec = (long int) times->modtime;
       timevals[1].tv_usec = 0L;
+      tvp = timevals;
     }
   else
-    {
-      if (__gettimeofday (&timevals[0], NULL) < 0)
-	return -1;
-      timevals[1] = timevals[0];
-    }
+    tvp = NULL;
 
-  return __utimes (file, timevals);
+  return __utimes (file, tvp);
 }
