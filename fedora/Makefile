@@ -57,7 +57,7 @@ glibc.spec: glibc.spec.in ../version.h branch.mk
 	mv -f $@.new $@
 
 spec-nvr := $(shell rpm -q --qf '%{NAME}-%{VERSION}-%{RELEASE}\n' \
-			--specfile glibc.spec)
+			--specfile glibc.spec | sed 1q)
 spec-tag = $(subst .,_,$(spec-nvr))
 
 tag: glibc.spec
