@@ -25,6 +25,12 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <time.h>
 
+#ifndef	HAVE_GNU_LD
+#define	__tzname	tzname
+#define	__daylight	daylight
+#define	__timezone	timezone
+#endif
+
 extern int __use_tzfile;
 extern void EXFUN(__tzfile_read, (CONST char *file));
 extern int EXFUN(__tzfile_compute, (time_t, struct tm));
