@@ -32,18 +32,16 @@ DEFUN(__sigprocmask, (how, set, oset),
 {
   struct hurd_sigstate *ss;
   sigset_t old, new;
-  int pending;
+  sigset_t pending;
 
   if (set != NULL)
     new = *set;
 
-  ss = _hurd_thread_sigstate (__mach_thread_self ());
+  ss = _hurd_self_sigstate ();
   old = ss->blocked;
 
   if (set != NULL)
     {
-      sigset_t pending;
-
       switch (how)
 	{
 	case SIG_BLOCK:
@@ -65,9 +63,9 @@ DEFUN(__sigprocmask, (how, set, oset),
 	}
 
       ss->blocked &= ~_SIG_CANT_MASK;
-
-      pending = ss->pending & ~ss->blocked;
     }
+
+  pending = ss->pending & ~ss->blocked;
 
   __mutex_unlock (&ss->lock);
 
