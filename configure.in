@@ -44,6 +44,7 @@ version=
 release=
 prefix=
 exec_prefix=
+verbose=
 
 lose=
 for arg in $*; do
@@ -120,6 +121,11 @@ for arg in $*; do
      -prefix | --prefix | --prefi | --pref | --pre | --pr | --p)
 	next=prefix
 	;;
+
+     -v | -verbose | --verbose | --verbos | --verbo | --verb | --ver | --ve | --v)
+       # Autoconf-generated code below will test this.
+       verbose=yes
+       ;;
 
      -*)
 	echo "Invalid option \`$arg'" 1>&2
