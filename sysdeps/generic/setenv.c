@@ -120,17 +120,21 @@ __add_to_environ (name, value, combined, replace)
 
   LOCK;
 
+  /* We have to get the pointer now that we have the lock and not earlier
+     since another thread might have created a new environment.  */
+  ep = __environ;
+
   size = 0;
-  if (__environ != NULL)
+  if (ep != NULL)
     {
-      for (ep = __environ; *ep != NULL; ++ep)
+      for (; *ep != NULL; ++ep)
 	if (!strncmp (*ep, name, namelen) && (*ep)[namelen] == '=')
 	  break;
 	else
 	  ++size;
     }
 
-  if (__environ == NULL || *ep == NULL)
+  if (ep == NULL || *ep == NULL)
     {
       char **new_environ;
 #ifdef USE_TSEARCH
