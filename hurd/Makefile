@@ -30,7 +30,7 @@ distribute := intr_rpc.awk hurdintr.awk
 user-interfaces		:= $(addprefix hurd/,\
 				       auth process \
 				       exec core interrupt \
-				       fs io) # socket term
+				       fs io startup) # socket term
 server-interfaces	:= # hurd/__misc
 
 routines = $(interface-routines) # XXX
