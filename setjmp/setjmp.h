@@ -29,6 +29,29 @@ Cambridge, MA 02139, USA.  */
 #include <jmp_buf.h>
 
 
+#ifdef	__USE_POSIX
+#define	__need_sigset_t
+#include <signal.h>
+
+/* Calling environment, plus possibly a saved signal mask.  */
+typedef struct
+  {
+    __jmp_buf __jmpbuf;		/* Calling environment.  */
+    int __savemask;		/* Saved the signal mask?  */
+    sigset_t __sigmask;		/* Saved signal mask.  */
+  } sigjmp_buf[1];
+
+/* Store the calling environment in ENV, also saving the
+   signal mask if SAVEMASK is nonzero.  Return 0.  */
+extern int EXFUN(sigsetjmp, (sigjmp_buf __env, int __savemask));
+
+/* Jump to the environment saved in ENV, making the
+   sigsetjmp call there return VAL, or 1 if VAL is 0.
+   Restore the signal mask if that sigsetjmp call saved it.  */
+extern __NORETURN void EXFUN(siglongjmp, (CONST sigjmp_buf __env, int __val));
+#endif	/* Use POSIX.  */
+
+
 #ifdef	__FAVOR_BSD
 
 /* BSD defines `setjmp' and `longjmp' to save and restore the set of
@@ -66,29 +89,6 @@ extern __NORETURN void EXFUN(longjmp, (CONST jmp_buf __env, int __val));
 extern int EXFUN(__setjmp, (__jmp_buf __env));
 /* The ANSI C standard says `setjmp' is a macro.  */
 #define	setjmp(env)	__setjmp (env)
-
-
-#ifdef	__USE_POSIX
-#define	__need_sigset_t
-#include <signal.h>
-
-/* Calling environment, plus possibly a saved signal mask.  */
-typedef struct
-  {
-    __jmp_buf __jmpbuf;		/* Calling environment.  */
-    int __savemask;		/* Saved the signal mask?  */
-    sigset_t __sigmask;		/* Saved signal mask.  */
-  } sigjmp_buf[1];
-
-/* Store the calling environment in ENV, also saving the
-   signal mask if SAVEMASK is nonzero.  Return 0.  */
-extern int EXFUN(sigsetjmp, (sigjmp_buf __env, int __savemask));
-
-/* Jump to the environment saved in ENV, making the
-   sigsetjmp call there return VAL, or 1 if VAL is 0.
-   Restore the signal mask if that sigsetjmp call saved it.  */
-extern __NORETURN void EXFUN(siglongjmp, (CONST sigjmp_buf __env, int __val));
-#endif	/* Use POSIX.  */
 
 
 #ifdef	__USE_BSD
