@@ -547,12 +547,10 @@ extern volatile void _hurd_exit (int status);
 
 /* Initialize the library data structures from the
    ints and ports passed to us by the exec server.
-
-   PORTARRAY and INTARRAY are vm_deallocate'd.  */
-
+   Then vm_deallocate PORTARRAY and INTARRAY.  */
 extern void _hurd_init (char **argv,
 			mach_port_t *portarray, size_t portarraysize,
-			int *intarray, size_t intarraysize)
+			int *intarray, size_t intarraysize);
 
 /* Do startup handshaking with the proc server.  */
 extern void _hurd_proc_init (char **argv);
