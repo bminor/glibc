@@ -163,8 +163,8 @@ If the value of this variable is nonzero, then @code{getopt} prints an
 error message to the standard error stream if it encounters an unknown
 option character or an option with a missing required argument.  This is
 the default behavior.  If you set this variable to zero, @code{getopt}
-does not print any messages, but it still returns @code{?} to indicate
-an error.
+does not print any messages, but it still returns the character @code{?}
+to indicate an error.
 @end deftypevar
 
 @comment unistd.h
