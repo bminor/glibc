@@ -96,19 +96,19 @@ ifelse(S, `true',
 	tst	dividend
 	! divisor is definitely negative; dividend might also be negative
 	bge	2f			! if dividend not negative...
-	neg	divisor			! in any case, make divisor nonneg
+	sub	%g0, divisor, divisor	! in any case, make divisor nonneg
 1:	! dividend is negative, divisor is nonnegative
-	neg	dividend		! make dividend nonnegative
+	sub	%g0, dividend, dividend	! make dividend nonnegative
 2:
 ')
 	! Ready to divide.  Compute size of quotient; scale comparand.
 	orcc	divisor, %g0, V
-	bnz	1f
+	bne	1f
 	mov	dividend, R
 
 		! Divide by zero trap.  If it returns, return 0 (about as
 		! wrong as possible, but that is what SunOS does...).
-		t	ST_DIV0
+		ta	ST_DIV0
 		retl
 		clr	%o0
 
@@ -132,12 +132,12 @@ ifelse(S, `true',
 		mov	1, SC
 		sll	V, N, V
 		b	1b
-		inc	ITER
+		add	ITER, 1, ITER
 
 	! Now compute SC.
 	2:	addcc	V, V, V
 		bcc	Lnot_too_big
-		inc	SC
+		add	SC, 1, SC
 
 		! We get here if the divisor overflowed while shifting.
 		! This means that R has the high-order bit set.
@@ -146,7 +146,7 @@ ifelse(S, `true',
 		srl	V, 1, V		! rest of V
 		add	V, T, V
 		b	Ldo_single_div
-		dec	SC
+		sub	SC, 1, SC
 
 	Lnot_too_big:
 	3:	cmp	V, R
@@ -168,7 +168,7 @@ ifelse(S, `true',
 	! division loop will mess up the first time around.
 	! So we unroll slightly...
 	Ldo_single_div:
-		deccc	SC
+		subcc	SC, 1, SC
 		bl	Lend_regular_divide
 		nop
 		sub	R, V, R
@@ -182,13 +182,13 @@ ifelse(S, `true',
 		! R >= 0
 		sub	R, V, R
 		b	2f
-		inc	Q
+		add	Q, 1, Q
 	1:	! R < 0
 		add	R, V, R
-		dec	Q
+		sub	Q, 1, Q
 	2:
 	Lend_single_divloop:
-		deccc	SC
+		subcc	SC, 1, SC
 		bge	Lsingle_divloop
 		tst	R
 		b,a	Lend_regular_divide
@@ -198,22 +198,22 @@ Lnot_really_big:
 	sll	V, N, V
 	cmp	V, R
 	bleu	1b
-	inccc	ITER
+	addcc	ITER, 1, ITER
 	be	Lgot_result
-	dec	ITER
+	sub	ITER, 1, ITER
 
 	tst	R	! set up for initial iteration
 Ldivloop:
 	sll	Q, N, Q
 	DEVELOP_QUOTIENT_BITS(1, 0)
 Lend_regular_divide:
-	deccc	ITER
+	subcc	ITER, 1, ITER
 	bge	Ldivloop
 	tst	R
 	bl,a	Lgot_result
 	! non-restoring fixup here (one instruction only!)
 ifelse(OP, `div',
-`	dec	Q
+`	sub	Q, 1, Q
 ', `	add	R, divisor, R
 ')
 
@@ -222,7 +222,7 @@ ifelse(S, `true',
 `	! check to see if answer should be < 0
 	tst	SIGN
 	bl,a	1f
-	ifelse(OP, `div', `neg Q', `neg R')
+	ifelse(OP, `div', `sub %g0, Q, Q', `sub %g0, R, R')
 1:')
 	retl
 	ifelse(OP, `div', `mov Q, %o0', `mov R, %o0')
