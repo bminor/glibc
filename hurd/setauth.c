@@ -46,6 +46,8 @@ __setauth (auth_t new)
       return -1;
     }
 
+  HURD_CRITICAL_BEGIN;
+
   /* We lock against another thread doing setauth.  Anyone who sets
      _hurd_ports[INIT_PORT_AUTH] some other way is asking to lose.  */
   __mutex_lock (&reauth_lock);
@@ -95,6 +97,8 @@ __setauth (auth_t new)
   RUN_HOOK (_hurd_reauth_hook, (new));
 
   __mutex_unlock (&reauth_lock);
+
+  HURD_CRITICAL_END;
 
   return 0;
 }
