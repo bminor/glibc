@@ -22,6 +22,70 @@ Cambridge, MA 02139, USA.  */
 #include <fcntl.h>
 
 
+/* Read up to N chars into BUF from COOKIE.
+   Return how many chars were read, 0 for EOF or -1 for error.  */
+static ssize_t
+readio (void *cookie, char *buf, size_t n)
+{
+  unsigned int nread;
+  error_t err;
+  char *bufp = buf;
+
+  nread = n;
+  if (err = __io_read ((io_t) cookie, &bufp, &nread, -1, n))
+    return __hurd_fail (err);
+
+  if (bufp != buf)
+    {
+      memcpy (buf, bufp, nread);
+      __vm_deallocate (__mach_task_self (),
+		       (vm_address_t) bufp, (vm_size_t) nread);
+    }
+
+  return nread;
+}
+
+/* Write up to N chars from BUF to COOKIE.
+   Return how many chars were written or -1 for error.  */
+static ssize_t
+writeio (void *cookie, const char *buf, size_t n)
+{
+  unsigned int wrote;
+  error_t err;
+
+  if (err = __io_write ((io_t) cookie, buf, n, -1, &wrote))
+    return __hurd_fail (err);
+
+  return wrote;
+}
+
+/* Move COOKIE's file position *POS bytes, according to WHENCE.
+   The current file position is stored in *POS.
+   Returns zero if successful, nonzero if not.  */
+static int
+seekio (void *cookie, fpos_t *pos, int whence)
+{
+  error_t error = __io_seek ((file_t) cookie, *pos, whence, pos);
+  if (error)
+    return __hurd_fail (error);
+  return 0;
+}
+
+/* Close the file associated with COOKIE.
+   Return 0 for success or -1 for failure.  */
+static int
+closeio (void *cookie)
+{
+  error_t error = __mach_port_deallocate (__mach_task_self (),
+					  (mach_port_t) cookie);
+  if (error)
+    return __hurd_fail (error);
+  return 0;
+}
+
+static const __io_functions funcsio = { readio, writeio, seekio, closeio };
+
+
 /* Defined in fopen.c.  */
 extern int EXFUN(__getmode, (CONST char *mode, __io_mode *mptr));
 
@@ -55,10 +119,11 @@ __fopenport (mach_port_t port, const char *mode)
   if (stream == NULL)
     return NULL;
 
-  /* The default io functions in sysd-stdio.c use Hurd io ports as cookies.  */
-
   stream->__cookie = (PTR) port;
   stream->__mode = m;
+  stream->__io_funcs = funcsio;
+  stream->__room_funcs = __default_room_functions;
+  stream->__seen = 1;
 
   return stream;
 }
