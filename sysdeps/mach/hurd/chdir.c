@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ DEFUN(__chdir, (path), CONST char *path)
   if (cwdir == MACH_PORT_NULL)
     return -1;
 
-  _hurd_port_set (&_hurd_cwdir, cwdir);
+  _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], cwdir);
 
   return 0;
 }
