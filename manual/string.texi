@@ -396,8 +396,8 @@ hello, wo
 @comment string.h
 @comment BSD
 @deftypefun {void *} bcopy (void *@var{from}, const void *@var{to}, size_t @var{size})
-This is a partially obsolete alternative for @code{memcpy}, derived from
-BSD.  Note that it is not quite equivalent to @code{memcpy}, because the
+This is a partially obsolete alternative for @code{memmove}, derived from
+BSD.  Note that it is not quite equivalent to @code{memmove}, because the
 arguments are not in the same order.
 @end deftypefun
 
