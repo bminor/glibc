@@ -1,5 +1,7 @@
 1999-08-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* misc/search.h: Avoid namespace pollution.
+
 	* db2/Makefile: Link db_dump185 against libdb1.
 
 1999-08-25  Mark Kettenis  <kettenis@gnu.org>
