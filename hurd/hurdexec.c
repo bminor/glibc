@@ -18,11 +18,12 @@ Cambridge, MA 02139, USA.  */
 
 #include <errno.h>
 #include <unistd.h>
-#include <hurd.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <hurd.h>
+#include <hurd/fd.h>
 
 /* Replace the current process, executing FILE with arguments ARGV and
    environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
@@ -38,11 +39,12 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
   file_t *dtable;
   int dtablesize;
   struct _hurd_port **dtable_cells;
-  int *dealloc_dtable;
   struct _hurd_port_userlink *ulink_dtable;
   int i;
   char *const *p;
   struct _hurd_sigstate *ss;
+  mach_port_t *please_dealloc, *pdp;
+
 
   /* Pack the arguments into an array with nulls separating the elements.  */
   argslen = 0;
@@ -102,18 +104,29 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
   
   /* Pack up the descriptor table to give the new program.  */
   __mutex_lock (&_hurd_dtable_lock);
+
+  dtablesize = _hurd_dtable.d ? _hurd_dtable.size : _hurd_init_dtablesize;
+
+  please_dealloc = __alloca ((_hurd_nports + (2 * dtablesize)
+			     * sizeof (mach_port_t));
+  pdp = please_dealloc;
+
   if (_hurd_dtable.d != NULL)
     {
-      dtablesize = _hurd_dtable.size;
       dtable = __alloca (dtablesize * sizeof (dtable[0]));
       ulink_dtable = __alloca (dtablesize * sizeof (ulink_dtable[0]));
       dtable_cells = __alloca (dtablesize * sizeof (dtable_cells[0]));
       for (i = 0; i < dtablesize; ++i)
 	{
-	  struct _hurd_fd *const d = &_hurd_dtable.d[i];
+	  struct _hurd_fd *const d = _hurd_dtable.d[i];
 	  __spin_lock (&d->port.lock);
+	  __spin_lock (&d->ctty.lock);
+	  if (d->port.port != MACH_PORT_NULL)
+	    *pdp++ = d->port.port;
 	  if (d->flags & FD_CLOEXEC)
 	    {
+	      /* This descriptor is marked to be closed on exec.
+		 So don't pass it to the new program.  */
 	      dtable[i] = MACH_PORT_NULL;
 	      __spin_unlock (&d->port.lock);
 	    }
@@ -139,7 +152,6 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
   else
     {
       dtable = _hurd_init_dtable;
-      dtablesize = _hurd_init_dtablesize;
       ulink_dtable = NULL;
       dtable_cells = NULL;
     }
