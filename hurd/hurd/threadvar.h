@@ -68,6 +68,21 @@ enum __hurd_threadvar_index
 #define _EXTERN_INLINE extern __inline
 #endif
 
+/* Return the location of the value for the per-thread variable with index
+   INDEX used by the thread whose stack pointer is SP.  */
+
+_EXTERN_INLINE unsigned long int *
+__hurd_threadvar_location_from_sp (enum __hurd_threadvar_index __index,
+				   void *__sp)
+{
+  unsigned long int __stack = (unsigned long int) __sp;
+  return &((__stack >= __hurd_sigthread_stack_base &&
+	    __stack < __hurd_sigthread_stack_end)
+	   ? __hurd_sigthread_variables
+	   : (unsigned long int *) ((__stack & __hurd_threadvar_stack_mask) +
+				    __hurd_threadvar_stack_offset))[__index];
+}
+
 #include <machine-sp.h>		/* Define __thread_stack_pointer.  */
 
 /* Return the location of the current thread's value for the
@@ -76,14 +91,9 @@ enum __hurd_threadvar_index
 _EXTERN_INLINE unsigned long int *
 __hurd_threadvar_location (enum __hurd_threadvar_index __index)
 {
-  unsigned long int __stack = (unsigned long int) __thread_stack_pointer ();
-  return &((__stack >= __hurd_sigthread_stack_base &&
-	    __stack < __hurd_sigthread_stack_end)
-	   ? __hurd_sigthread_variables
-	   : (unsigned long int *) ((__stack & __hurd_threadvar_stack_mask) +
-				    __hurd_threadvar_stack_offset))[__index];
+  return __hurd_threadvar_location_from_sp (__index,
+					    __thread_stack_pointer ());
 }
-
 
 /* Return the current thread's location for `errno'.
    The syntax of this function allows redeclarations like `int errno'.  */
