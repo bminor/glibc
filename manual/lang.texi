@@ -7,16 +7,16 @@ to be documented in the C Language Manual, not in the library manual; but
 since we don't have the language manual yet, and documentation for these
 features has been written, we are publishing it here.
 
-@menu 
-* Consistency Checking::     Using @code{assert} to abort
+@menu
+* Consistency Checking::        Using @code{assert} to abort
 				if something ``impossible'' happens.
-* Variadic Functions::       Defining functions with varying numbers of args.
-* Null Pointer Constant::    The macro @code{NULL}.
-* Important Data Types::     Data types for object sizes.
-* Data Type Measurements::   Parameters of data type representations.
+* Variadic Functions::          Defining functions with varying numbers of args.
+* Null Pointer Constant::       The macro @code{NULL}.
+* Important Data Types::        Data types for object sizes.
+* Data Type Measurements::      Parameters of data type representations.
 @end menu
 
-@node Consistency Checking
+@node Consistency Checking, Variadic Functions,  , Language Features
 @section Explicitly Checking Internal Consistency
 @cindex consistency checking
 @cindex impossible events
@@ -95,7 +95,7 @@ command or move on to the next input file.
 problems that @emph{do not} represent bugs in the program.
 
 
-@node Variadic Functions
+@node Variadic Functions, Null Pointer Constant, Consistency Checking, Language Features
 @section Variadic Functions
 @cindex variable number of arguments
 @cindex variadic functions
@@ -116,14 +116,14 @@ but incompatible, mechanism for defining functions with variable numbers
 of arguments, using @file{varargs.h}.
 
 @menu
-* Why Variadic::        Reasons for making functions take variable arguments.
-* How Variadic::        How to define and call variadic functions.
-* Argument Macros::     Detailed specification of the macros
+* Why Variadic::                Reasons for making functions take variable arguments.
+* How Variadic::                How to define and call variadic functions.
+* Argument Macros::             Detailed specification of the macros
 			   for accessing variable arguments.
-* Variadic Example::    A complete example.
+* Variadic Example::            A complete example.
 @end menu
 
-@node Why Variadic
+@node Why Variadic, How Variadic,  , Variadic Functions
 @subsection Why Variadic Functions are Used
 
 Ordinary C functions take a fixed number of arguments.  When you define
@@ -160,7 +160,7 @@ take a fixed set of arguments---the most it can ever use---and then only
 @emph{declare} the function as variadic (or not declare its arguments
 at all!).
 
-@node How Variadic
+@node How Variadic, Argument Macros, Why Variadic, Variadic Functions
 @subsection How Variadic Functions are Defined and Used
 
 Defining and using a variadic function involves three steps:
@@ -191,7 +191,7 @@ additional variable arguments.  @xref{Calling Variadic Functions}.
 				   variable arguments functions.
 @end menu
 
-@node Variadic Prototypes
+@node Variadic Prototypes, Receiving Argument Values,  , How Variadic
 @subsubsection Syntax for Variable Arguments
 
 A function that accepts a variable number of arguments must be declared
@@ -222,7 +222,7 @@ its type.  This rules out array and function types, as well as
 @code{float}, @code{char} (whether signed or not) and @code{short}
 (whether signed or not).  This is actually an ANSI C requirement.
 
-@node Receiving Argument Values
+@node Receiving Argument Values, How Many Arguments, Variadic Prototypes, How Variadic
 @subsubsection Receiving the Argument Values
 
 Ordinary fixed arguments have individual names, and you can use these
@@ -282,7 +282,7 @@ portability, you should just pass it to @code{va_end}.  This is actually
 an ANSI C requirement, but most ANSI C compilers work happily
 regardless.
 
-@node How Many Arguments
+@node How Many Arguments, Calling Variadic Functions, Receiving Argument Values, How Variadic
 @subsubsection How Many Arguments Were Supplied
 
 There is no general way for a function to determine the number and type
@@ -313,7 +313,7 @@ end of the argument list.  (This assumes that a null pointer isn't
 otherwise meaningful to the function.)
 
 
-@node Calling Variadic Functions
+@node Calling Variadic Functions,  , How Many Arguments, How Variadic
 @subsubsection Calling Variadic Functions
 
 In principle, functions that are @emph{defined} to be variadic must also
@@ -352,7 +352,7 @@ prototype in the usual way: the argument expression is converted to the
 declared argument type as if it were being assigned to a variable of
 that type.
 
-@node Argument Macros
+@node Argument Macros, Variadic Example, How Variadic, Variadic Functions
 @subsection Argument Access Macros
 
 Here are descriptions of the macros used to retrieve variable arguments.
@@ -400,7 +400,7 @@ use it except for reasons of portability.
 @refill
 @end deftypefn
 
-@node Variadic Example
+@node Variadic Example,  , Argument Macros, Variadic Functions
 @subsection Example of a Variadic Function
 
 Here is a complete sample function that accepts variable numbers of
@@ -414,7 +414,7 @@ arguments facility.
 @include add.c.texi
 @end example
 
-@node Null Pointer Constant
+@node Null Pointer Constant, Important Data Types, Variadic Functions, Language Features
 @section Null Pointer Constant
 
 @comment stddef.h
@@ -435,7 +435,7 @@ this is because the default argument promotions may not do the right
 thing.
 @end deftypevr
 
-@node Important Data Types
+@node Important Data Types, Data Type Measurements, Null Pointer Constant, Language Features
 @section Important Data Types
 
 @comment stddef.h
@@ -481,7 +481,7 @@ features of ANSI C.  Older, pre-ANSI C implementations have
 traditionally used @code{unsigned int} for representing object sizes
 and @code{int} for pointer subtraction results.
 
-@node Data Type Measurements
+@node Data Type Measurements,  , Important Data Types, Language Features
 @section Data Type Measurements
 
 Most of the time, if you choose the proper C data type for each object
@@ -492,12 +492,12 @@ But the information is available in macros defined in the header files
 @file{limits.h} and @file{float.h}.
 
 @menu
-* Integer Type Macros::    Parameters that measure the integer types.
-* Floating Type Macros::   Parameters that measure the floating point types.
-* Structure Measurement::  Getting measurements on structure types.
+* Integer Type Macros::         Parameters that measure the integer types.
+* Floating Type Macros::        Parameters that measure the floating point types.
+* Structure Measurement::       Getting measurements on structure types.
 @end menu
 
-@node Integer Type Macros
+@node Integer Type Macros, Floating Type Macros,  , Data Type Measurements
 @subsection Integer Data Type Macros
 @cindex integer type measurements
 @cindex measurements of integer types
@@ -660,7 +660,7 @@ that parameterize various operating system and file system limits.  These
 constants are described in @ref{System Parameters} and @ref{File System
 Parameters}.
 
-@node Floating Type Macros
+@node Floating Type Macros, Structure Measurement, Integer Type Macros, Data Type Measurements
 @subsection Floating Type Macros
 @cindex floating type measurements
 @cindex measurements of floating types
@@ -685,11 +685,11 @@ format used by your machine.
 
 @menu
 * Floating Point Concepts::     Definitions of terminology.
-* Floating Type Parameters::    Descriptions of the individual macros.
+* Floating-Point Parameters::   Floating-Point Parameters
 * IEEE Floating Point::         How one common representation is described.
 @end menu
 
-@node Floating Point Concepts
+@node Floating Point Concepts, Floating-Point Parameters,  , Floating Type Macros
 @subsubsection Floating Point Representation Concepts
 
 This section introduces the terminology used to characterize the
@@ -768,7 +768,7 @@ in which case the mantissa is zero).  The fractional quantity is
 therefore greater than or equal to @code{1/@var{b}}, where @var{b} is
 the base.
 
-@node Floating-Point Parameters
+@node Floating-Point Parameters, IEEE Floating Point, Floating Point Concepts, Floating Type Macros
 @subsubsection Floating-Point Parameters
 
 @strong{Incomplete:}  This section needs some more concrete examples
@@ -970,7 +970,7 @@ macro's value is the same as the type it describes.  The values are
 never greater than @code{1E-9}.
 @end itemize
 
-@node IEEE Floating Point
+@node IEEE Floating Point,  , Floating-Point Parameters, Floating Type Macros
 @subsubsection IEEE Floating Point
 @cindex IEEE floating-point representation 
 @cindex floating-point, IEEE
@@ -1016,7 +1016,7 @@ DBL_MIN         2.2250738585072014E-308
 DBL_EPSILON     2.2204460492503131E-016
 @end example
 
-@node Structure Measurement
+@node Structure Measurement,  , Floating Type Macros, Data Type Measurements
 @subsection Structure Type Measurement
 
 You can use @code{offsetof} to measure the location within a structure

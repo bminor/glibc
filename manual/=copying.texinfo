@@ -1,6 +1,6 @@
 @comment This material was copied from /gd/gnu/doc/lgpl.texinfo.
 
-@node Copying
+@node Copying, Concept Index, Maintenance, Top
 @appendix GNU GENERAL PUBLIC LICENSE
 @center Version 2, June 1991
 
