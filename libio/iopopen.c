@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -132,6 +132,8 @@ _IO_new_proc_open (fp, command, mode)
     }
   else
     {
+      _IO_close (pipe_fds[0]);
+      _IO_close (pipe_fds[1]);
       __set_errno (EINVAL);
       return NULL;
     }
