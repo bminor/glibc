@@ -39,6 +39,7 @@ build-profile = @profile@
 build-omitfp = @omitfp@
 stdio = @stdio@
 add-ons = @subdirs@
+cross-compiling = @cross_compiling@
 
 # Build tools.
 CC = @CC@
