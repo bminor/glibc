@@ -122,11 +122,11 @@ struct sockaddr
 struct sockaddr_in;
 struct sockaddr_un;
 struct sockaddr_ns;
-#define	__SOCKADDR_ARG	union { struct sockaddr *__sa;			      \
-				struct sockaddr_in *__sa_in;		      \
-				struct sockaddr_un *__sa_un;		      \
-				struct sockaddr_ns *__sa_ns;		      \
-			      }
+typedef union { struct sockaddr *__sa;
+		struct sockaddr_in *__sa_in;
+		struct sockaddr_un *__sa_un;
+		struct sockaddr_ns *__sa_ns;
+	      } __SOCKADDR_ARG __attribute__ ((transparent_union));
 #endif
 
 
