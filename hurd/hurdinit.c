@@ -52,25 +52,16 @@ _hurd_init (int flags, char **argv,
 
   /* See what ports we were passed.  */
   for (i = 0; i < portarraysize; ++i)
-    {
-      _hurd_port_init (&_hurd_ports[i], portarray[i]);
+    _hurd_port_init (&_hurd_ports[i], portarray[i]);
 
-      switch (i)
-	{
-	case INIT_PORT_PROC:
-	  /* Tell the proc server we exist, if it does.  */
-	  if (portarray[i] != MACH_PORT_NULL)
-	    _hurd_proc_init (argv);
-	  break;
+  /* When the user asks for the bootstrap port,
+     he will get the one the exec server passed us.  */
+  __task_set_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
+			   portarray[INIT_PORT_BOOTSTRAP]);
 
-	case INIT_PORT_BOOTSTRAP:
-	  /* When the user asks for the bootstrap port,
-	     he will get the one the exec server passed us.  */
-	  __task_set_special_port (__mach_task_self (),
-				   TASK_BOOTSTRAP_PORT, portarray[i]);
-	  break;
-	}
-    }
+  /* Tell the proc server we exist, if it does.  */
+  if (portarray[INIT_PORT_PROC] != MACH_PORT_NULL)
+    _hurd_proc_init (argv);
 
   if (intarraysize > INIT_UMASK)
     _hurd_umask = intarray[INIT_UMASK] & 0777;
