@@ -35,6 +35,5 @@ $(common-objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
 	  $$cwd/$< -o $(patsubst $(common-objpfx)%,%,$@)
 
 
-common-generated := $(common-generated) $(common-objpfx)stdio_lim.h \
-					$(common-objpfx)mk-stdiolim
+common-generated := $(common-generated) stdio_lim.h mk-stdiolim
 before-compile := $(before-compile) $(common-objpfx)stdio_lim.h
