@@ -27,10 +27,12 @@ BEGIN {
       printf " %s", ARGV[i];
     printf ".  */\n";
     print "";
-    print "#ifdef _ERRNO_H\n";
-    print "/* The Hurd uses Mach error system 0x10, currently only subsystem 0. */"
+    print "/* The Hurd uses Mach error system 0x10, currently only subsystem 0. */";
+    print "#ifndef _HURD_ERRNO";
     print "#define _HURD_ERRNO(n)\t((0x10 << 26) | ((n) & 0x3fff))";
+    print "#endif";
     print "";
+    print "#ifdef _ERRNO_H\n";
     print "enum\n{";
     errno = 0;
     errnoh = 0;
