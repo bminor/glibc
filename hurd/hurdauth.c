@@ -27,7 +27,8 @@ add_auth (sigthread_t me,
   error_t err;
   auth_t newauth;
 
-  if (err = __auth_combine (_hurd_auth, addauth, &newauth))
+  if (err = _HURD_PORT_USE (&_hurd_auth,
+			    __auth_combine (port, addauth, &newauth)))
     return err;
 
   /* XXX clobbers errno. Need per-thread errno. */
@@ -46,7 +47,7 @@ asm (".stabs \"__hurd_sigport_ids\",23,0,0,23005"); /* XXX */
 text_set_element (_hurd_sigport_routines, _Xadd_auth);
 
 static error_t
-del_auth (sigthread_t me,
+del_auth (sigthread_t me, task_t task,
 	  uid_t *uids, size_t nuids,
 	  gid_t *gids, size_t ngids)
 {
@@ -54,10 +55,14 @@ del_auth (sigthread_t me,
   auth_t newauth;
   size_t i, j;
 
+  if (task != __mach_task_self ())
+    return EPERM;
+
   __mutex_lock (&_hurd_idlock);
   if (!_hurd_id_valid)
     {
-      error_t err = __auth_getids (_hurd_auth, &_hurd_id);
+      error_t err = _HURD_PORT_USE (&_hurd_auth,
+				    __auth_getids (port, &_hurd_id));
       if (err)
 	{
 	  __mutex_unlock (&_hurd_idlock);
@@ -85,7 +90,8 @@ del_auth (sigthread_t me,
 	  _hurd_id.gidset[i] = _hurd_id.gidset[--_hurd_id.ngroups];
     }
 
-  err = __auth_makeauth (_hurd_auth, &_hurd_id, &newauth);
+  err = _HURD_PORT_USE (&_hurd_auth,
+			__auth_makeauth (port, &_hurd_id, &newauth));
   _hurd_id_valid = !err;
   __mutex_unlock (&_hurd_idlock);
 
