@@ -347,7 +347,13 @@ echo '#include <stddef.h>
 FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c
 eval "$CPP conftest.c 2>/dev/null" \
 | grep '^FOOBAR.*unsigned.*FOOBAR$' >/dev/null \
-|| AC_DEFINE(__SIZE_TYPE__, unsigned)
+|| {
+  # Do this by hand instead of AC_DEFINE so we can use -U to avoid warnings.
+  DEFS="$DEFS -U__SIZE_TYPE__ -D__SIZE_TYPE__=unsigned"
+  (echo '#undef __SIZE_TYPE__';
+   echo '#define __SIZE_TYPE__ unsigned') >> confdefs.h
+  test -n "$verbose" && echo '	using unsigned int for size_t'
+}
 rm -f conftest*
 
 AC_HEADER_EGREP(__gnuc_va_list, stdarg.h, [config_vars="$config_vars
@@ -511,7 +517,7 @@ if [ $srcdir != . ]; then
 srcdir = $srcdir
 
 all .DEFAULT:
-	\$(MAKE) -C \$(srcdir) ARCH=$objdir \$@
+	\$(MAKE) -C \$(srcdir) ARCH=\`pwd\` \$@
 END
 
 echo "Wrote Makefile in $PWD."
