@@ -32,8 +32,8 @@ DEFUN(strsep, (stringp, delim),
     return NULL;
 
   if (*end != '\0')
-    *end = '\0';
-  *stringp = end + 1;
+    *end++ = '\0';
+  *stringp = end;
 
   return begin;
 }

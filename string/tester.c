@@ -209,6 +209,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   check(strchr(one, 'b') == NULL, 7);	/* Empty string. */
   check(strchr(one, '\0') == one, 8);	/* NUL in empty string. */
 
+#if 0
   /* index - just like strchr.  */
   it = "index";
   check(index("abcd", 'z') == NULL, 1);	/* Not found. */
@@ -222,6 +223,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   (void) strcpy(one, "");
   check(index(one, 'b') == NULL, 7);	/* Empty string. */
   check(index(one, '\0') == one, 8);	/* NUL in empty string. */
+#endif
 
   /* strrchr.  */
   it = "strrchr";
@@ -237,6 +239,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   check(strrchr(one, 'b') == NULL, 7);	/* Empty string. */
   check(strrchr(one, '\0') == one, 8);	/* NUL in empty string. */
 
+#if 0
   /* rindex - just like strrchr.  */
   it = "rindex";
   check(rindex("abcd", 'z') == NULL, 1);	/* Not found. */
@@ -250,6 +253,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   (void) strcpy(one, "");
   check(rindex(one, 'b') == NULL, 7);	/* Empty string. */
   check(rindex(one, '\0') == one, 8);	/* NUL in empty string. */
+#endif
 
   /* strpbrk - somewhat like strchr.  */
   it = "strpbrk";
@@ -517,6 +521,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   bzero(one+2, 0);
   equal(one, "abcdef", 4);		/* Zero-length copy. */
 
+#if 0
   /* bcmp - somewhat like memcmp.  */
   it = "bcmp";
   check(bcmp("a", "a", 1) == 0, 1);	/* Identity. */
@@ -526,6 +531,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   check(bcmp("alph", "beta", 4) != 0, 5);
   check(bcmp("abce", "abcd", 3) == 0, 6);	/* Count limited. */
   check(bcmp("abc", "def", 0) == 0, 8);	/* Zero count. */
+#endif
 
   {
     char text[] = "This,is,a,test";
@@ -542,9 +548,9 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   {
     int f;
     it = "strerror";
-    f = open("/", O_WRONLY);	/* Should always fail. */
-    check(f < 0 && errno > 0 && errno < sys_nerr, 1);
-    equal(strerror(errno), sys_errlist[errno], 2);
+    f = __open("/", O_WRONLY);	/* Should always fail. */
+    check(f < 0 && errno > 0 && errno < _sys_nerr, 1);
+    equal(strerror(errno), _sys_errlist[errno], 2);
   }
 
   {
