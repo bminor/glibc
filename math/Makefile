@@ -39,6 +39,9 @@ include ../Rules
 $(objpfx)libm.a:
 	$(AR) cr $@ /dev/null
 
+
+ifneq (,)     # the code is now distributed through ../sysdeps/
+
 # Other dirs to look for source files (for dist).
 export source_dirs = $(filter-out unused,$(shell find bsd -type d -print))
 
@@ -104,3 +107,5 @@ endif
 endif	# +bsdfiles
 
 endif	# bsdmath_dirs
+
+endif
