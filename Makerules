@@ -101,20 +101,33 @@ ifeq ($(wildcard $(+sysdir_pfx)sysd-Makefile),)
 no_deps=t
 endif
 
+# Define first rules to find the source files in $(objpfx).
+# Generated source files will end up there.
+$(objpfx)%.o: $(objpfx)/%.S $(before-compile); $(compile-command.S)
+$(objpfx)%.dep: $(objpfx)/%.S $(before-compile); $(+make-deps)
+$(objpfx)%.o: $(objpfx)/%.s $(before-compile); $(compile-command.s)
+$(objpfx)%.o: $(objpfx)/%.c $(before-compile); $(compile-command.c)
+$(objpfx)%.dep: $(objpfx)/%.c $(before-compile); $(+make-deps)
+
 include $(+sysdir_pfx)sysd-Makefile
-$(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)sysdirs
-	(for dir in `cat $<`; do					      \
+$(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)sysdirs $(..)Makerules
+	(for dir in `sed -e 1d -e '$$d' $<`; do	   			      \
 	   file=sysdeps/$$dir/Makefile;					      \
 	   if [ -f $(..)$$file ]; then					      \
 	     echo include "\$$(..)$$file";				      \
 	   else true;							      \
 	   fi;								      \
+	   dir="\$$(sysdep_dir)/$$dir";					      \
 	   echo "\$$(objpfx)%.o: $$dir/%.S \$$(before-compile); \
 		\$$(compile-command.S)";				      \
+	   echo "\$$(objpfx)%.dep: $$dir/%.S \$$(before-compile); \
+		\$$(+make-deps)";					      \
 	   echo "\$$(objpfx)%.o: $$dir/%.s \$$(before-compile); \
 		\$$(compile-command.s)";				      \
 	   echo "\$$(objpfx)%.o: $$dir/%.c \$$(before-compile); \
 		\$$(compile-command.c)";				      \
+	   echo "\$$(objpfx)%.dep: $$dir/%.c \$$(before-compile); \
+		\$$(+make-deps)";					      \
 	 done) > $@
 
 # Maximize efficiency by minimizing the number of rules.
