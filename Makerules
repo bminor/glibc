@@ -76,18 +76,27 @@ endif
 # This is here so things in sysdep Makefiles can easily depend on foo.h as
 # appropriate and not worry about where foo.h comes from, which may be
 # system dependent and not known by that Makefile.
-vpath %.h $(objpfx):$(addprefix $(sysdep_dir)/,$(sysdirs)) $(..)
+vpath %.h $(subst $(empty) ,:,$(strip $(objpfx) \
+				      $(addprefix $(sysdep_dir)/,$(sysdirs)) \
+				      $(..)))
 
 ifeq ($(wildcard $(+sysdir_pfx)sysd-Makefile),)
 # Don't do deps until this exists, because it might change the sources list.
 no_deps=t
 endif
 
+# When making the list of .dep files to include, we can't know which ones
+# have source in .s files, and thus do not in fact need a .dep file.
+# So we must define rules to make .dep files for .s files.
+make-dummy-dep = \
+	echo '\# $< cannot contain includes, so it needs no deps.' > $@
+
 # Define first rules to find the source files in $(objpfx).
 # Generated source files will end up there.
 $(objpfx)%.o: $(objpfx)%.S $(before-compile); $(compile-command.S)
 $(objpfx)%.dep: $(objpfx)%.S $(before-compile); $(+make-deps)
 $(objpfx)%.o: $(objpfx)%.s $(before-compile); $(compile-command.s)
+$(objpfx)%.dep: $(objpfx)%.s; $(make-dummy-dep)
 $(objpfx)%.o: $(objpfx)%.c $(before-compile); $(compile-command.c)
 $(objpfx)%.dep: $(objpfx)%.c $(before-compile); $(+make-deps)
 
@@ -106,6 +115,7 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules
 		\$$(+make-deps)";					      \
 	   echo "\$$(objpfx)%.o: $$dir/%.s \$$(before-compile); \
 		\$$(compile-command.s)";				      \
+	   echo "\$$(objpfx)%.dep: $$dir/%.s; \$$(make-dummy-dep)";	      \
 	   echo "\$$(objpfx)%.o: $$dir/%.c \$$(before-compile); \
 		\$$(compile-command.c)";				      \
 	   echo "\$$(objpfx)%.dep: $$dir/%.c \$$(before-compile); \
@@ -283,6 +293,8 @@ $(objpfx)%.dep: %.S $(before-compile)
 	$(+make-deps)
 $(objpfx)%.dep: %.c $(before-compile)
 	$(+make-deps)
+$(objpfx)%.dep: %.s
+	$(make-dummy-dep)
 
 +depfiles := $(strip $(sources:.c=.dep) $(addsuffix .dep,$(others) $(tests)))
 +depfiles := $(addprefix $(objpfx),$(+depfiles))
