@@ -44,8 +44,9 @@ _hurd_init (char **argv,
       switch (i)
 	{
 	case INIT_PORT_PROC:
-	  /* Tell the proc server we exist.  */
-	  _hurd_proc_init (argv);
+	  /* Tell the proc server we exist, if it does.  */
+	  if (portarray[i] != MACH_PORT_NULL)
+	    _hurd_proc_init (argv);
 	  break;
 
 	case INIT_PORT_BOOTSTRAP:
@@ -82,10 +83,12 @@ _hurd_proc_init (char **argv)
   int dealloc;
   process_t procserver;
 
+#ifdef notyet
   /* Initialize the signal code; Mach exceptions will become signals.
      This function will be a no-op on calls after the first.
      On the first call, it sets up the message port and the signal thread.  */
   _hurdsig_init ();
+#endif
 
   /* The signal thread is now prepared to receive messages.
      It is safe to give the port to the proc server.  */
@@ -104,8 +107,10 @@ _hurd_proc_init (char **argv)
 
   _hurd_port_free (&_hurd_ports[INIT_PORT_PROC], &dealloc, procserver);
 
+#ifdef notyet
   /* Initialize proc server-assisted fault recovery for the signal thread.  */
   _hurdsig_fault_init ();
+#endif
 
   if (oldmsg != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), oldmsg);
