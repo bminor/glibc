@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,142 +27,12 @@ Cambridge, MA 02139, USA.  */
 
 __BEGIN_DECLS
 
-/* This is supposed to be compatible with 4.4BSD.  */
+/* Get the system-dependent definitions of `struct termios', `tcflag_t',
+   `cc_t', `speed_t', and all the macros specifying the flag bits.  */
+#include <termbits.h>
 
-/* Type of terminal control flag masks.  */
-typedef unsigned long int tcflag_t;
-
-/* Type of control characters.  */
-typedef unsigned char cc_t;
-
-/* Type of baud rate specifiers.  */
-typedef long int speed_t;
-
-/* Terminal control structure.  */
-struct termios
-{
-  /* Input modes.  */
-  tcflag_t c_iflag;
-#define	IGNBRK	(1 << 0)	/* Ignore break condition.  */
-#define	BRKINT	(1 << 1)	/* Signal interrupt on break.  */
-#define	IGNPAR	(1 << 2)	/* Ignore characters with parity errors.  */
-#define	PARMRK	(1 << 3)	/* Mark parity and framing errors.  */
-#define	INPCK	(1 << 4)	/* Enable input parity check.  */
-#define	INLCR	(1 << 5)	/* Map NL to CR on input.  */
-#define	ISTRIP	(1 << 6)	/* Strip 8th bit off characters.  */
-#define	IGNCR	(1 << 7)	/* Ignore CR.  */
-#define	ICRNL	(1 << 8)	/* Map CR to NL on input.  */
-#define	IXON	(1 << 9)	/* Enable start/stop output control.  */
-#define	IXOFF	(1 << 10)	/* Enable start/stop input control.  */
-#ifdef	__USE_BSD
-#define	IXANY	(1 << 11)	/* Any character will restart after stop.  */
-#define	IMAXBEL	(1 << 13)	/* Ring bell when input queue is full.  */
-#endif
-
-  /* Output modes.  */
-  tcflag_t c_oflag;
-#define	OPOST	(1 << 0)	/* Perform output processing.  */
-#ifdef	__USE_BSD
-#define	ONLCR	(1 << 1)	/* Map NL to CR-NL on output.  */
-#define	OXTABS	(1 << 2)	/* Expand tabs to spaces.  */
-#define	ONOEOT	(1 << 8)	/* Discard EOT (^D) on output.  */
-#endif
-
-  /* Control modes.  */
-  tcflag_t c_cflag;
-#ifdef	__USE_BSD
-#define	CIGNORE	(1 << 0)	/* Ignore these control flags.  */
-#endif
-#define	CSIZE	(CS5|CS6|CS7|CS8)	/* Number of bits per byte (mask).  */
-#define	CS5	0		/* 5 bits per byte.  */
-#define	CS6	(1 << 8)	/* 6 bits per byte.  */
-#define	CS7	(1 << 9)	/* 7 bits per byte.  */
-#define	CS8	(CS6|CS7)	/* 8 bits per byte.  */
-#define	CSTOPB	(1 << 10)	/* Two stop bits instead of one.  */
-#define	CREAD	(1 << 11)	/* Enable receiver.  */
-#define	PARENB	(1 << 12)	/* Parity enable.  */
-#define	PARODD	(1 << 13)	/* Odd parity instead of even.  */
-#define	HUPCL	(1 << 14)	/* Hang up on last close.  */
-#define	CLOCAL	(1 << 15)	/* Ignore modem status lines.  */
-#ifdef	__USE_BSD
-#define	CCTS_OFLOW	(1 << 16)	/* CTS flow control of output.  */
-#define	CRTS_IFLOW	(1 << 17)	/* RTS flow control of input.  */
-#define	MDMBUF		(1 << 20)	/* Carrier flow control of output.  */
-#endif
-
-  /* Local modes.  */
-  tcflag_t c_lflag;
-#ifdef	__USE_BSD
-#define	ECHOKE	(1 << 0)	/* Visual erase for KILL.  */
-#endif
-#define	_ECHOE	(1 << 1)	/* Visual erase for ERASE.  */
-#define	ECHOE	_ECHOE
-#define	_ECHOK	(1 << 2)	/* Echo NL after KILL.  */
-#define	ECHOK	_ECHOK
-#define	_ECHO	(1 << 3)	/* Enable echo.  */
-#define	ECHO	_ECHO
-#define	_ECHONL	(1 << 4)	/* Echo NL even if ECHO is off.  */
-#define	ECHONL	_ECHONL
-#ifdef	__USE_BSD
-#define	ECHOPRT	(1 << 5)	/* Hardcopy visual erase.  */
-#define	ECHOCTL	(1 << 6)	/* Echo control characters as ^X.  */
-#endif
-#define	_ISIG	(1 << 7)	/* Enable signals.  */
-#define	ISIG	_ISIG
-#define	_ICANON	(1 << 8)	/* Do erase and kill processing.  */
-#define	ICANON	_ICANON
-#ifdef	__USE_BSD
-#define	ALTWERASE (1 << 9)	/* Alternate WERASE algorithm.  */
-#endif
-#define	_IEXTEN	(1 << 10)	/* Enable DISCARD and LNEXT.  */
-#define	IEXTEN	_IEXTEN
-#define	EXTPROC	(1 << 11)	/* External processing.  */
-#define	_TOSTOP	(1 << 22)	/* Send SIGTTOU for background output.  */
-#define	TOSTOP	_TOSTOP
-#ifdef	__USE_BSD
-#define	FLUSHO	(1 << 23)	/* Output being flushed (state).  */
-#define	NOKERNINFO (1 << 25)	/* Disable VSTATUS.  */
-#define	PENDIN	(1 << 29)	/* Retype pending input (state).  */
-#endif
-#define	_NOFLSH	(1 << 31)	/* Disable flush after interrupt.  */
-#define	NOFLSH	_NOFLSH
-
-  /* Control characters.  */
-#define	VEOF	0		/* End-of-file character [ICANON].  */
-#define	VEOL	1		/* End-of-line character [ICANON].  */
-#ifdef	__USE_BSD
-#define	VEOL2	2		/* Second EOL character [ICANON].  */
-#endif
-#define	VERASE	3		/* Erase character [ICANON].  */
-#ifdef	__USE_BSD
-#define	VWERASE	4		/* Word-erase character [ICANON].  */
-#endif
-#define	VKILL	5		/* Kill-line character [ICANON].  */
-#ifdef	__USE_BSD
-#define	VREPRINT 6		/* Reprint-line character [ICANON].  */
-#endif
-#define	VINTR	8		/* Interrupt character [ISIG].  */
-#define	VQUIT	9		/* Quit character [ISIG].  */
-#define	VSUSP	10		/* Suspend character [ISIG].  */
-#ifdef	__USE_BSD
-#define	VDSUSP	11		/* Delayed suspend character [ISIG].  */
-#endif
-#define	VSTART	12		/* Start (X-ON) character [IXON, IXOFF].  */
-#define	VSTOP	13		/* Stop (X-OFF) character [IXON, IXOFF].  */
-#ifdef	__USE_BSD
-#define	VLNEXT	14		/* Literal-next character [IEXTEN].  */
-#define	VDISCARD 15		/* Discard character [IEXTEN].  */
-#endif
-#define	VMIN	16		/* Minimum number of bytes read at once [!ICANON].  */
-#define	VTIME	17		/* Time-out value (tenths of a second) [!ICANON].  */
-#ifdef	__USE_BSD
-#define	VSTATUS	18		/* Status character [ICANON].  */
-#endif
-#define	NCCS	20
-  cc_t c_cc[NCCS];
-
-  /* Input and output baud rates.  */
-  speed_t __ispeed, __ospeed;
+/* Input and output baud rates.
+   These are not system-dependent, because Bn is always n.  */
 #define	B0	0		/* Hang up.  */
 #define	B50	50		/* 50 baud.  */
 #define	B75	75		/* 75 baud.  */
@@ -183,60 +53,42 @@ struct termios
 #define	EXTA	19200
 #define	EXTB	38400
 #endif
-};
-
-#define _IOT_termios /* Hurd ioctl type field.  */ \
-  _IOT (_IOTS (cflag_t), 4, _IOTS (cc_t), NCCS, _IOTS (speed_t), 2)
 
 /* Return the output baud rate stored in *TERMIOS_P.  */
-extern speed_t cfgetospeed __P ((__const struct termios * __termios_p));
+extern speed_t cfgetospeed __P ((__const struct termios *__termios_p));
 
 /* Return the input baud rate stored in *TERMIOS_P.  */
-extern speed_t cfgetispeed __P ((__const struct termios * __termios_p));
+extern speed_t cfgetispeed __P ((__const struct termios *__termios_p));
 
 /* Set the output baud rate stored in *TERMIOS_P to SPEED.  */
-extern int cfsetospeed __P ((struct termios * __termios_p, speed_t __speed));
+extern int cfsetospeed __P ((struct termios *__termios_p, speed_t __speed));
 
 /* Set the input baud rate stored in *TERMIOS_P to SPEED.  */
-extern int cfsetispeed __P ((struct termios * __termios_p, speed_t __speed));
-
-#ifdef	__OPTIMIZE__
-#define	cfgetospeed(t)		((t)->__ospeed)
-#define	cfgetispeed(t)		((t)->__ispeed)
-#define	cfsetospeed(t, s)	((t)->__ospeed = (s))
-#define	cfsetispeed(t, s)	((t)->__ispeed = (s))
-#endif
+extern int cfsetispeed __P ((struct termios *__termios_p, speed_t __speed));
 
 #ifdef	__USE_BSD
 /* Set both the input and output baud rates in *TERMIOS_OP to SPEED.  */
-extern void cfsetspeed __P ((struct termios * __termios_p, speed_t __speed));
+extern void cfsetspeed __P ((struct termios *__termios_p, speed_t __speed));
 #endif
 
 
 /* Put the state of FD into *TERMIOS_P.  */
-extern int __tcgetattr __P ((int __fd, struct termios * __termios_p));
-extern int tcgetattr __P ((int __fd, struct termios * __termios_p));
+extern int __tcgetattr __P ((int __fd, struct termios *__termios_p));
+extern int tcgetattr __P ((int __fd, struct termios *__termios_p));
 
 #ifdef	__OPTIMIZE__
 #define	tcgetattr(fd, termios_p)	__tcgetattr((fd), (termios_p))
 #endif /* Optimizing.  */
 
-/* Values for the OPTIONAL_ACTIONS argument to `tcsetattr'.  */
-#define	TCSANOW		0	/* Change immediately.  */
-#define	TCSADRAIN	1	/* Change when pending output is written.  */
-#define	TCSAFLUSH	2	/* Flush pending input before changing.  */
-#ifdef	__USE_BSD
-#define	TCSASOFT	0x10	/* Flag: Don't alter hardware state.  */
-#endif
-
-/* Set the state of FD to *TERMIOS_P.  */
+/* Set the state of FD to *TERMIOS_P.
+   Values for OPTIONAL_ACTIONS (TCSA*) are in <termbits.h>.  */
 extern int tcsetattr __P ((int __fd, int __optional_actions,
-			   __const struct termios * __termios_p));
+			   __const struct termios *__termios_p));
 
 
 #ifdef	__USE_BSD
 /* Set *TERMIOS_P to indicate raw mode.  */
-extern void cfmakeraw __P ((struct termios * __termios_p));
+extern void cfmakeraw __P ((struct termios *__termios_p));
 #endif
 
 /* Send zero bits on FD.  */
@@ -245,21 +97,12 @@ extern int tcsendbreak __P ((int __fd, int __duration));
 /* Wait for pending output to be written on FD.  */
 extern int tcdrain __P ((int __fd));
 
-/* Values for the QUEUE_SELECTOR argument to `tcflush'.  */
-#define	TCIFLUSH	1	/* Discard data received but not yet read.  */
-#define	TCOFLUSH	2	/* Discard data written but not yet sent.  */
-#define	TCIOFLUSH	3	/* Discard all pending data.  */
-
-/* Flush pending data on FD.  */
+/* Flush pending data on FD.
+   Values for QUEUE_SELECTOR (TC{I,O,IO}FLUSH) are in <termbits.h>.  */
 extern int tcflush __P ((int __fd, int __queue_selector));
 
-/* Values for the ACTION argument to `tcflow'.  */
-#define	TCOOFF	1		/* Suspend output.  */
-#define	TCOON	2		/* Restart suspended output.  */
-#define	TCIOFF	3		/* Send a STOP character.  */
-#define	TCION	4		/* Send a START character.  */
-
-/* Suspend or restart transmission on FD.  */
+/* Suspend or restart transmission on FD.
+   Values for ACTION (TC[IO]{OFF,ON}) are in <termbits.h>.  */
 extern int tcflow __P ((int __fd, int __action));
 
 
