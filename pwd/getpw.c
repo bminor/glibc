@@ -30,19 +30,19 @@ DEFUN(getpw, (uid, buf), __uid_t uid AND register char *buf)
 {
   register struct passwd *p;
 
-  if (uid < 0 || buf == NULL)
+  if (buf == NULL)
     {
       errno = EINVAL;
-      return(-1);
+      return -1;
     }
 
-  p = getpwuid(uid);
+  p = getpwuid (uid);
   if (p == NULL)
-    return(-1);
+    return -1;
 
-  if (sprintf(buf, "%s:%s:%d:%d:%s:%s:%s", p->pw_name, p->pw_passwd,
-	      p->pw_uid, p->pw_gid, p->pw_gecos, p->pw_dir, p->pw_shell) < 0)
-    return(-1);
+  if (sprintf (buf, "%s:%s:%u:%u:%s:%s:%s", p->pw_name, p->pw_passwd,
+	       p->pw_uid, p->pw_gid, p->pw_gecos, p->pw_dir, p->pw_shell) < 0)
+    return -1;
 
-  return(0);
+  return 0;
 }
