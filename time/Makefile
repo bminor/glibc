@@ -53,6 +53,9 @@ include ../Makeconfig
 ifdef localtime
 zonenames := $(zonenames) localtime
 endif
+ifdef posixrules
+zonenames := $(zonenames) posixrules
+endif
 
 install-data := $(addprefix zoneinfo/,$(zonenames))
 
@@ -98,6 +101,11 @@ zoneinfo/localtime: zoneinfo/$(localtime) $(objpfx)zic
 	$(word 2,$^) -d zoneinfo -l $(<:zoneinfo/%=%)
 zoneinfo: zoneinfo/localtime
 endif
+ifdef posixrules
+zoneinfo/posixrules: zoneinfo/$(posixrules) $(objpfx)zic
+	$(word 2,$^) -d zoneinfo -p $(<:zoneinfo/%=%)
+zoneinfo: zoneinfo/posixrules
+endif
 
 $(objpfx)zic: $(objpfx)scheck.o $(objpfx)ialloc.o $(objpfx)emkdir.o
 
@@ -106,5 +114,6 @@ $(objpfx)zic.o: zic.c; $(tz-cc)
 define tz-cc
 $(COMPILE.c) -DTZDIR='"$(datadir)/zoneinfo"' \
 	     -DTZDEFAULT='"$(localtime-file)"' \
+	     -DTZDEFRULES='"$(posixrules-file)"' \
 	     $< $(OUTPUT_OPTION)
 endef
