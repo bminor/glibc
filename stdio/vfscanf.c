@@ -217,11 +217,14 @@ DEFUN(__vfscanf, (s, format, arg),
 	    width = 1;
 
 	  if (do_assign)
-	    while (inchar() != EOF && width-- > 0)
-	      *str++ = c;
+	    {
+	      do
+		*str++ = c;
+	      while (inchar() != EOF && width-- > 0);
+	    }
 	  else
-	    while (inchar() != EOF && width-- > 0)
-	      ;
+	    while (inchar() != EOF && width > 0)
+	      --width;
 
 	  if (do_assign)
 	    ++done;
@@ -247,9 +250,7 @@ DEFUN(__vfscanf, (s, format, arg),
 		break;
 	      if (do_assign)
 		*str++ = c;
-	      if (width > 0 && --width == 0)
-		break;
-	    } while (inchar() != EOF);
+	    } while (inchar() != EOF && (width <= 0 || --width > 0));
 
 	  if (do_assign)
 	    {
