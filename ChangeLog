@@ -1,3 +1,10 @@
+1999-06-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio/fputc.c: Don't define alias if fputc is defined as a
+	macro.
+	* stdio/putc.c: Define weak alias here since it is not done
+	anymore in fputc.c.
+
 1999-06-22  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* sysdeps/powerpc/strcmp.S: Don't return a zero result if the high
