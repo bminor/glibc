@@ -39,18 +39,18 @@ __libc_lock_define_initialized(static, lock) /* Locks above data.  */
 
 
 /* Return the current position of DIRP.  */
-off_t
+long int
 telldir (dirp)
      DIR *dirp;
 {
   struct record *new;
-  off_t pos;
+  long int pos;
 
   __libc_lock_lock (lock);
 
   new = malloc (sizeof *new);
   if (new == NULL)
-    return (off_t) -1;
+    return -1l;
 
   new->pos = dirp->filepos;
   new->offset = dirp->offset;
@@ -71,7 +71,7 @@ telldir (dirp)
 void
 seekdir (dirp, pos)
      DIR *dirp;
-     __off_t pos;
+     long int pos;
 {
   struct record *r, **prevr;
 

@@ -25,7 +25,7 @@
 void
 seekdir (dirp, pos)
      DIR *dirp;
-     off_t pos;
+     long int pos;
 {
   if (dirp == NULL)
     {

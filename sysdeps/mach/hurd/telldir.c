@@ -25,7 +25,7 @@
 
 /* Return the current position of DIRP.  */
 /* XXX should be __telldir ? */
-off_t
+long int
 telldir (dirp)
      DIR *dirp;
 {

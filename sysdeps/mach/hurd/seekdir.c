@@ -27,7 +27,7 @@
 void
 seekdir (dirp, pos)
      DIR *dirp;
-     __off_t pos;
+     long int pos;
 {
   __libc_lock_lock (dirp->__lock);
   /* Change our entry index pointer to POS and discard any data already

@@ -21,7 +21,7 @@
 #include <dirstream.h>
 
 /* Return the current position of DIRP.  */
-off_t
+long int
 telldir (DIR *dirp)
 {
   return dirp->filepos;
