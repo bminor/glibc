@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <sys/types.h>
 #include <hurd.h>
+#include <stdlib.h>
 #include <gnu-stabs.h>
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
@@ -37,7 +38,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   struct _hurd_dtable dtable;
   int dealloc_dtable, *dealloc, *types;
   mach_port_t *ports;
-  struct _hurd_fd *cells;
+  struct _hurd_fd **cells;
   error_t err;
 
 
@@ -49,7 +50,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   if (exceptfds != NULL)
     *(volatile fd_set *) exceptfds;
 
-  if (timeout != NULL && timeout->tv_sec == 0 && timeval->tv_usec == 0)
+  if (timeout != NULL && timeout->tv_sec == 0 && timeout->tv_usec == 0)
     /* We just want to poll, so we don't need a receive right.  */
     port = MACH_PORT_NULL;
   else
@@ -104,7 +105,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	    if (types[i])
 	      ++got;
 	  }
-	_hurd_port_free (&cells[i]->port, ports[i], &dealloc[i]);
+	_hurd_port_free (&cells[i]->port, &dealloc[i], ports[i]);
       }
 
   if (!err && got == 0 && port != MACH_PORT_NULL)
@@ -120,14 +121,14 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	  mach_msg_type_t tag_type;
 	  int tag;
 	} msg;
-      mach_msg_timeout_t timeout = (timeval != NULL ?
- 				    (timeval->tv_sec * 1000 +
-				     timeval->tv_usec / 1000) :
- 				    0);
-      mach_msg_option_t options = (timeval == NULL ? 0 : MACH_RCV_TIMEOUT);
+      const mach_msg_timeout_t to = (timeout != NULL ?
+				     (timeout->tv_sec * 1000 +
+				      timeout->tv_usec / 1000) :
+				     0);
+      mach_msg_option_t options = (timeout == NULL ? 0 : MACH_RCV_TIMEOUT);
     receive:
       switch (err = __mach_msg (&msg, MACH_RCV_MSG | options, 0, sizeof (msg),
-				port, timeout, MACH_PORT_NULL))
+				port, to, MACH_PORT_NULL))
 	{
 	case MACH_MSG_SUCCESS:
 	  {
@@ -143,11 +144,11 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 		if (types[msg.tag] == 0)
 		  ++got;
 		types[msg.tag] |= msg.result;
-		if (msg.msgh_remote_port != MACH_PORT_NULL)
+		if (msg.head.msgh_remote_port != MACH_PORT_NULL)
 		  {
 		    msg.head.msgh_id += 100;
 		    msg.result_type = inttype;
-		    msg.result = ERR_SUCCESS;
+		    msg.result = 0;
 		    options = MACH_SEND_MSG | MACH_RCV_TIMEOUT;
 		  }
 	      }
