@@ -40,16 +40,16 @@ __wcsrtombs (dst, src, len, ps)
      size_t len;
      mbstate_t *ps;
 {
-  struct __gconv_step_data data;
+  struct gconv_step_data data;
   int status;
   size_t result;
-  struct __gconv_step *tomb;
+  struct gconv_step *tomb;
 
   /* Tell where we want the result.  */
-  data.__invocation_counter = 0;
-  data.__internal_use = 1;
-  data.__is_last = 1;
-  data.__statep = ps ?: &state;
+  data.invocation_counter = 0;
+  data.internal_use = 1;
+  data.is_last = 1;
+  data.statep = ps ?: &state;
 
   /* Make sure we use the correct function.  */
   update_conversion_ptrs ();
@@ -66,25 +66,25 @@ __wcsrtombs (dst, src, len, ps)
       size_t dummy;
 
       result = 0;
-      data.__outbufend = buf + sizeof (buf);
+      data.outbufend = buf + sizeof (buf);
 
       do
 	{
-	  data.__outbuf = buf;
+	  data.outbuf = buf;
 
-	  status = (*tomb->__fct) (__wcsmbs_gconv_fcts.tomb, &data,
-				   (const unsigned char **) &inbuf,
-				   (const unsigned char *) srcend, &dummy, 0);
+	  status = (*tomb->fct) (__wcsmbs_gconv_fcts.tomb, &data,
+				 (const unsigned char **) &inbuf,
+				 (const unsigned char *) srcend, &dummy, 0);
 
 	  /* Count the number of bytes.  */
-	  result += data.__outbuf - buf;
+	  result += data.outbuf - buf;
 	}
       while (status == GCONV_FULL_OUTPUT);
 
       if (status == GCONV_OK || status == GCONV_EMPTY_INPUT)
 	{
 	  /* There better should be a NUL byte at the end.  */
-	  assert (data.__outbuf[-1] == '\0');
+	  assert (data.outbuf[-1] == '\0');
 	  /* Don't count the NUL character in.  */
 	  --result;
 	}
@@ -97,24 +97,24 @@ __wcsrtombs (dst, src, len, ps)
       const wchar_t *srcend = *src + __wcsnlen (*src, len) + 1;
       size_t dummy;
 
-      data.__outbuf = dst;
-      data.__outbufend = dst + len;
+      data.outbuf = dst;
+      data.outbufend = dst + len;
 
-      status = (*tomb->__fct) (__wcsmbs_gconv_fcts.tomb, &data,
-			       (const unsigned char **) src,
-			       (const unsigned char *) srcend, &dummy, 0);
+      status = (*tomb->fct) (__wcsmbs_gconv_fcts.tomb, &data,
+			     (const unsigned char **) src,
+			     (const unsigned char *) srcend, &dummy, 0);
 
       /* Count the number of bytes.  */
-      result = data.__outbuf - (unsigned char *) dst;
+      result = data.outbuf - (unsigned char *) dst;
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */
       if ((status == GCONV_OK || status == GCONV_EMPTY_INPUT
 	   || status == GCONV_FULL_OUTPUT)
-	  && data.__outbuf[-1] == '\0')
+	  && data.outbuf[-1] == '\0')
 	{
-	  assert (data.__outbuf != (unsigned char *) dst);
-	  assert (__mbsinit (data.__statep));
+	  assert (data.outbuf != (unsigned char *) dst);
+	  assert (__mbsinit (data.statep));
 	  *src = NULL;
 	  --result;
 	}
