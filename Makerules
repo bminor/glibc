@@ -346,6 +346,15 @@ define make-target-directory
 $(addprefix -mkdir ,$(filter-out $(wildcard $(@D:%/=%)),$(@D:%/=%)))
 endef
 
+# Don't attempt binaries for the Hurd version (yet).
+ifdef mib_hacks
+install :=
+ifeq ($(subdir),time)
+install-others :=
+endif
+endif
+
+
 
 # Any directory (parent or subdir) that has any object files to build
 # should install libc.a; this way "make install" in a subdir is guaranteed
