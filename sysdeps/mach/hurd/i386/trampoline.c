@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include "thread_state.h"
 #include <assert.h>
 #include <errno.h>
+#include <hurd/fault.h>
 
      
 struct mach_msg_trap_args
@@ -35,9 +36,6 @@ struct mach_msg_trap_args
     mach_msg_timeout_t timeout;
     mach_port_t notify;
   };
-
-extern jmp_buf _hurd_sigthread_fault_env;
-
 
 struct sigcontext *
 _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
@@ -62,7 +60,10 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
       /* We have a previous sigcontext that sigreturn was about
 	 to restore when another signal arrived.  We will just base
 	 our setup on that.  */
-      if (! setjmp (_hurd_sigthread_fault_env))
+      if (_hurdsig_catch_fault (SIGSEGV))
+	assert (_hurdsig_fault_sigcode >= ss->context &&
+		_hurdsig_fault_sigcode < ss->context + 1);
+      else
 	{
 	  memcpy (&state->basic, &ss->context->sc_i386_thread_state,
 		  sizeof (state->basic));
@@ -102,8 +103,19 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   sigsp -= sizeof (*stackframe);
   stackframe = sigsp;
 
-  if (! setjmp (_hurd_sigthread_fault_env))
+  if (_hurdsig_catch_fault (SIGSEGV))
     {
+      assert (_hurdsig_fault_sigcode >= (int) stackframe &&
+	      _hurdsig_fault_sigcode <= (int) (stackframe + 1));
+      /* We got a fault trying to write the stack frame.
+	 We cannot set up the signal handler.
+	 Returning NULL tells our caller, who will nuke us with a SIGILL.  */
+      return NULL;
+    }
+  else
+    {
+      int ok;
+
       /* Set up the arguments for the signal handler.  */
       stackframe->signo = signo;
       stackframe->sigcode = sigcode;
@@ -120,16 +132,15 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 
       /* struct sigcontext is laid out so that starting at sc_fpkind mimics
 	 a struct i386_float_state.  */
-      if (! machine_get_state (ss->thread, state, i386_FLOAT_STATE,
-			       &state->fpu, &scp->sc_i386_float_state,
-			       sizeof (state->fpu)))
+      ok = machine_get_state (ss->thread, state, i386_FLOAT_STATE,
+			      &state->fpu, &scp->sc_i386_float_state,
+			      sizeof (state->fpu));
+
+      _hurdsig_end_catch_fault ();
+
+      if (! ok)
 	return NULL;
     }
-  else
-    /* We got a fault trying to write the stack frame.
-       We cannot set up the signal handler.
-       Returning NULL tells our caller, who will nuke us with a SIGILL.  */
-    return NULL;
 
   /* Modify the thread state to call the trampoline code on the new stack.  */
   if (rpc_wait)
