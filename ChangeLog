@@ -1,3 +1,8 @@
+1997-05-22 18:37  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/__math.h (logb): Remove second value placed on
+	stack by fxtract.
+
 1997-05-22 17:44  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/shmat.c (shmat): Add cast to prevent
