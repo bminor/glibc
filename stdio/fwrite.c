@@ -157,10 +157,23 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
 	    /* We've filled the buffer, so flush it.  */
 	    if (fflush (stream) == EOF)
 	      break;
+
 	    /* Reset our record of the space available in the buffer,
 	       since we have just flushed it.  */
+	  check_space:
 	    buffer_space = (stream->__bufsize -
 			    (stream->__bufp - stream->__buffer));
+	    if (buffer_space == 0)
+	      {
+		/* With a custom output-room function, flushing might
+		   not create any buffer space.  Try writing a single
+		   character to create the space.  */
+		if (__flshfp (stream, *p++) == EOF)
+		  goto done;
+		++written;
+		--to_write;
+		goto check_space;
+	      }
 	  }
       }
   else
