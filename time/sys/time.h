@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -111,6 +111,17 @@ extern int setitimer __P ((enum __itimer_which __which,
    the modification time of FILE to TVP[1].  */
 extern int __utimes __P ((__const char *__file, struct timeval __tvp[2]));
 extern int utimes __P ((__const char *__file, struct timeval __tvp[2]));
+
+
+/* Convenience macros for operations on timevals.
+   NOTE: `timercmp' does not work for >= or <=.  */
+#define	timerisset(tvp)		((tvp)->tv_sec || (tvp)->tv_usec)
+#define	timercmp(tvp, uvp, CMP)	\
+  ((tvp)->tv_sec CMP (uvp)->tv_sec || \
+   (tvp)->tv_sec == (uvp)->tv_sec && (tvp)->tv_usec CMP (uvp)->tv_usec)
+#define	timerclear(tvp)		((tvp)->tv_sec = (tvp)->tv_usec = 0)
+
+
 
 __END_DECLS
 
