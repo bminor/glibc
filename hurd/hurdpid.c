@@ -25,20 +25,19 @@ int _hurd_orphaned;
 static void
 init_pids (void)
 {
-  int dealloc;
-  process_t proc = _hurd_port_get (&_hurd_ports[INIT_PORT_PROC], &dealloc);
-
   __mutex_init (&_hurd_pid_lock);
-  __proc_getpids (proc, &_hurd_pid, &_hurd_ppid, &_hurd_orphaned);
-  __proc_getpgrp (proc, _hurd_pid, &_hurd_pgrp);
 
-  _hurd_port_free (proc, &dealloc);
+  __USEPORT (PROC,
+	     ({
+	       __proc_getpids (proc, &_hurd_pid, &_hurd_ppid, &_hurd_orphaned);
+	       __proc_getpgrp (proc, _hurd_pid, &_hurd_pgrp);
+	     }));
 }
 
 text_set_element (__libc_subinit, init_pids);
 
 error_t
-__proc_newids (sigthread_t me,
+__proc_newids (mach_port_t me,
 	       pid_t ppid, pid_t pgrp, int orphaned)
 {
   __mutex_lock (&_hurd_pid_lock);
@@ -46,5 +45,5 @@ __proc_newids (sigthread_t me,
   _hurd_pgrp = pgrp;
   _hurd_orphaned = orphaned;
   __mutex_unlock (&_hurd_pid_lock);
-  return POSIX_SUCCESS;
+  return 0;
 }
