@@ -87,6 +87,7 @@ DEFUN(fgets, (s, n, stream), char *s AND size_t n AND register FILE *stream)
 	  if (c == EOF)
 	    break;
 	  *p++ = c;
+	  --n;
 	  if (c == '\n')
 	    {
 	      *p = '\0';

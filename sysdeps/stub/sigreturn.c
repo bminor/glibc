@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,33 +17,12 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
+#include <signal.h>
 #include <errno.h>
-#include <stddef.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <limits.h>
 
-
-/* If SIZE is zero, return the number of supplementary groups
-   the calling process is in.  Otherwise, fill in the group IDs
-   of its supplementary groups in LIST and return the number written.  */
 int
-DEFUN(__getgroups, (size, list), int size AND gid_t *list)
+DEFUN(__sigreturn, (context), CONST struct sigcontext *context)
 {
-#if defined (NGROUPS_MAX) && NGROUPS_MAX == 0
-  /* The system has no supplementary groups.  */
-  return 0;
-#endif
-
   errno = ENOSYS;
   return -1;
 }
-
-
-#if defined (HAVE_GNU_LD) && !(defined (NGROUPS_MAX) && NGROUPS_MAX == 0)
-
-#include <gnu-stabs.h>
-
-stub_warning (__getgroups);
-
-#endif	/* GNU stabs.  */
