@@ -57,10 +57,11 @@ extern __sighandler_t signal __P ((int __sig, __sighandler_t __handler));
    requested.  */
 extern __sighandler_t __sysv_signal __P ((int __sig,
 					  __sighandler_t __handler));
-
-#if defined __USE_XOPEN && !defined __USE_GNU
+#ifdef __USE_GNU
 extern __sighandler_t sysv_signal __P ((int __sig, __sighandler_t __handler));
+#endif
 
+#ifndef __USE_BSD
 /* Make sure the used `signal' implementation is the SVID version.  */
 #define signal(sig, handler) __sysv_signal ((sig), (handler))
 #endif
