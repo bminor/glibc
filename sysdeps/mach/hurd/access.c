@@ -31,6 +31,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
   file_t crdir, cwdir, rcrdir, rcwdir, io;
   struct hurd_userlink crdir_ulink, cwdir_ulink;
   int flags, allowed;
+  mach_port_t ref;
 
   HURD_CRITICAL_BEGIN;
 
@@ -69,22 +70,30 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 
   /* Get a port to our root directory, authenticated with the real IDs.  */
   crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink);
-  err = __io_reauthenticate (crdir, _hurd_pid);
+  ref = __mach_reply_port ();
+  err = __io_reauthenticate (crdir, ref, MACH_MSG_TYPE_MAKE_SEND_ONCE);
   if (!err)
     err = __auth_user_authenticate (_hurd_id.rid_auth,
-				    crdir, _hurd_pid, &rcrdir);
+				    crdir,
+				    ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+				    &rcrdir);
   _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink, crdir);
+  __mach_port_destroy (__mach_task_self (), ref);
 
   if (!err)
     {
       /* Get a port to our current working directory, authenticated with
          the real IDs.  */
       cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink);
-      err = __io_reauthenticate (cwdir, _hurd_pid);
+      ref = __mach_reply_port ();
+      err = __io_reauthenticate (cwdir, ref, MACH_MSG_TYPE_MAKE_SEND_ONCE);
       if (!err)
 	err = __auth_user_authenticate (_hurd_id.rid_auth,
-					cwdir, _hurd_pid, &rcwdir);
+					cwdir,
+					ref, MACH_MSG_TYPE_MAKE_SEND_ONCE,
+					&rcwdir);
       _hurd_port_free (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink, cwdir);
+      __mach_port_destroy (__mach_task_self (), ref);
     }
 
   /* We are done with _hurd_id.rid_auth now.  */
