@@ -1,6 +1,6 @@
 #! @BASH@
 
-# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,8 @@ while test $# -gt 0; do
 Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
-    exit 0 ;;
+    exit 0
+    ;;
   --h | --he | --hel | --help)
     echo $"ldd [OPTION]... FILE...
       --help              print this help and exit
@@ -46,24 +47,30 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
   -d, --data-relocs       process data relocations
   -r, --function-relocs   process data and function relocations
 Report bugs using the \`glibcbug' script to <bugs@gnu.ai.mit.edu>."
-    exit 0 ;;
+    exit 0
+    ;;
   -d | --d | --da | --dat | --data | --data- | --data-r | --data-re | \
   --data-rel | --data-relo | --data-reloc | --data-relocs)
     RELOCS='--data-relocs'
-    shift ;;
+    shift
+    ;;
   -r | --f | --fu | --fun | --func | --funct | --functi | --functio | \
   --function | --function- | --function-r | --function-re | --function-rel | \
   --function-relo | --function-reloc | --function-relocs)
     RELOCS='--function-relocs'
-    shift ;;
+    shift
+    ;;
   --)		# Stop option processing.
-    shift; break ;;
+    shift; break
+    ;;
   -*)
     echo >&2 $"ldd: unrecognized option" "\`$1'"
     echo >&2 $"Try \`ldd --help' for more information."
-    exit 1 ;;
+    exit 1
+    ;;
   *)
-    break ;;
+    break
+    ;;
   esac
 done
 
@@ -71,12 +78,15 @@ case $# in
 0)
   echo >&2 $"ldd: missing file arguments"
   echo >&2 $"Try \`ldd --help' for more information."
-  exit 1 ;;
+  exit 1
+  ;;
 1)
   # We don't list the file name when there is only one.
   case "$1" in
-  /*) file="$1" ;;
-  *) file="./$1" ;;
+  /*) file="$1"
+      ;;
+  *) file="./$1"
+     ;;
   esac
   if test ! -f "$file"; then
     echo "ldd: ${file}:" $"no such file"
@@ -94,15 +104,18 @@ case $# in
     echo $"ldd: error: you do not have read permission for" "\`$file'"
     exit 1
   fi
-  exit ;;
+  exit
+  ;;
 *)
   set -e	# Bail out immediately if ${RTLD} loses on any argument.
   result=0
   for file; do
     echo "${file}:"
     case "$file" in
-    /*) : ;;
-    *) file="./$file" ;;
+    /*) :
+        ;;
+    *) file="./$file"
+       ;;
     esac
     if test ! -f "$file"; then
       echo "ldd: ${file}:" $"no such file"
