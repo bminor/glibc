@@ -27,16 +27,15 @@ Cambridge, MA 02139, USA.  */
 #define	GLOB_DOOFFS	(1 << 3)/* Insert PGLOB->gl_offs NULLs.  */
 #define	GLOB_NOCHECK	(1 << 4)/* If nothing matches, return the pattern.  */
 #define	GLOB_APPEND	(1 << 5)/* Append to results of a previous call.  */
-#define	GLOB_QUOTE	(1 << 6)/* Backslashes quote metacharacters.  */
-#if defined(__USE_GNU) || !defined(__GNU_LIBRARY__)
+#define	GLOB_NOESCAPE	(1 << 6)/* Backslashes don't quote metacharacters.  */
 #define	GLOB_PERIOD	(1 << 7)/* Leading `.' can be matched by metachars.  */
-#endif
 #define	__GLOB_FLAGS	(GLOB_ERR|GLOB_MARK|GLOB_NOSORT|GLOB_DOOFFS| \
-			 GLOB_QUOTE|GLOB_NOCHECK|GLOB_APPEND)
+			 GLOB_NOESCAPE|GLOB_NOCHECK|GLOB_APPEND|GLOB_PERIOD)
 
 /* Error returns from `glob'.  */
 #define	GLOB_NOSPACE	1	/* Ran out of memory.  */
 #define	GLOB_ABEND	2	/* Read error.  */
+#define	GLOB_NOMATCH	3	/* No matches found.  */
 
 /* Structure describing a globbing run.  */
 typedef struct
