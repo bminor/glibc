@@ -1,4 +1,4 @@
-%define glibcrelease 92
+%define glibcrelease 93
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1265,6 +1265,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Dec 15 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-93
+- update from CVS
+  - ppc/ppc64 clone without CLONE_THREAD getpid () adjustement
+  - fix MALLOC_CHECK_={1,2,3} for non-contiguous main arena
+    (BZ#457)
+  - fix sysconf (_POSIX_V6_*) for other ABI environments in
+    bi-arch setups
+- s390/s390x clone without CLONE_THREAD getpid () adjustement
+
 * Tue Dec 14 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-92
 - update from CVS
 - fix %{_prefix}/libexec/getconf filenames generation
