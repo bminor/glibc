@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,7 +73,7 @@
 #ifndef PIC
 #define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
 #else
-/* Store (- %rax) into errno through the GOT.  */
+/* Store (- %rax) into errno through the GOT.  Note that errno occupies 4 bytes.  */
 #ifdef _LIBC_REENTRANT
 #define SYSCALL_ERROR_HANDLER			\
 0:						\
@@ -84,7 +84,7 @@
   call BP_SYM (__errno_location)@PLT;		\
   POP_ERRNO_LOCATION_RETURN;			\
   popq %rdx;					\
-  movq %rdx, (%rax);				\
+  movl %edx, (%rax);				\
   orq $-1, %rax;				\
   jmp L(pseudo_end);
 
@@ -95,7 +95,7 @@
 0:movq errno@GOTPCREL(%RIP), %rcx;		\
   xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
-  movq %rdx, (%rcx);				\
+  movl %edx, (%rcx);				\
   orq $-1, %rax;				\
   jmp L(pseudo_end);
 #endif	/* _LIBC_REENTRANT */
