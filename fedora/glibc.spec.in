@@ -1,4 +1,4 @@
-%define glibcrelease 55
+%define glibcrelease 56
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1243,6 +1243,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Sep 22 2004 Roland McGrath <roland@redhat.com> 2.3.3-56
+- migrated CVS to fedora-branch in sources.redhat.com glibc repository
+  - source tarballs renamed
+  - redhat/ moved to fedora/, some old cruft removed
+- update from trunk
+  - some __nonnull annotations
+
 * Wed Sep 22 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-55
 - update from CVS
   - set{re,e,res}[ug]id now affect the whole process in NPTL
