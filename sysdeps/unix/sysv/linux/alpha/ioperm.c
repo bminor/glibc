@@ -66,9 +66,14 @@
 #define CIA_SPARSE_MEM		(0xfffffc8000000000UL)
 #define CIA_DENSE_MEM		(0xfffffc8600000000UL)
 
+/* SABLE is EV4, GAMMA is EV5 */
 #define T2_IO_BASE		(0xfffffc03a0000000UL)
 #define T2_SPARSE_MEM		(0xfffffc0200000000UL)
 #define T2_DENSE_MEM		(0xfffffc03c0000000UL)
+
+#define GAMMA_IO_BASE		(0xfffffc83a0000000UL)
+#define GAMMA_SPARSE_MEM	(0xfffffc8200000000UL)
+#define GAMMA_DENSE_MEM		(0xfffffc83c0000000UL)
 
 /* these are for the RAWHIDE family */
 #define MCPCIA_IO_BASE		(0xfffffcf980000000UL)
@@ -83,7 +88,7 @@
 
 typedef enum {
   IOSYS_UNKNOWN, IOSYS_JENSEN, IOSYS_APECS, IOSYS_CIA, IOSYS_T2,
-  IOSYS_TSUNAMI, IOSYS_MCPCIA
+  IOSYS_TSUNAMI, IOSYS_MCPCIA, IOSYS_GAMMA, IOSYS_CPUDEP
 } iosys_t;
 
 static struct io_system {
@@ -99,6 +104,8 @@ static struct io_system {
 /* T2 */	{5, T2_DENSE_MEM, T2_SPARSE_MEM, T2_IO_BASE},
 /* TSUNAMI */	{0, TSUNAMI_DENSE_MEM, 0, TSUNAMI_IO_BASE},
 /* MCPCIA */	{5, MCPCIA_DENSE_MEM, MCPCIA_SPARSE_MEM, MCPCIA_IO_BASE},
+/* GAMMA */	{5, GAMMA_DENSE_MEM, GAMMA_SPARSE_MEM, GAMMA_IO_BASE},
+/* CPUDEP */	{0, 0, 0, 0},
 };
 
 static struct platform {
@@ -114,13 +121,14 @@ static struct platform {
   {"EB66",	IOSYS_APECS},
   {"EB66P",	IOSYS_APECS},
   {"Jensen",	IOSYS_JENSEN},
-  {"Mikasa",	IOSYS_APECS},
-  {"Noritake",	IOSYS_APECS},
+  {"Mikasa",	IOSYS_CPUDEP},
+  {"Noritake",	IOSYS_CPUDEP},
   {"Noname",	IOSYS_APECS},
-  {"Sable",	IOSYS_T2},
+  {"Sable",	IOSYS_CPUDEP},
   {"Miata",	IOSYS_CIA},
   {"Tsunami",	IOSYS_TSUNAMI},
   {"Rawhide",	IOSYS_MCPCIA},
+  {"Takara",	IOSYS_CIA},
 };
 
 struct ioswtch {
@@ -487,6 +495,44 @@ init_iosys (void)
       if (strcmp (platform[i].name, systype) == 0)
 	{
 	  io.sys = platform[i].io_sys;
+	  /* some platforms can have either EV4 or EV5 CPUs */
+	  if (io.sys == IOSYS_CPUDEP)
+	    {
+	      FILE * fp;
+	      char cputype[256];
+	      fp = fopen (PATH_CPUINFO, "r");
+	      if (fp == NULL)
+		return -1;
+	      while ((n = fscanf (fp, "cpu model : %256[^\n]\n", cputype))
+		     != EOF
+		     && n != 1)
+		fgets (cputype, 256, fp);
+
+	      fclose (fp);
+
+	      if (strcmp (platform[i].name, "Sable") == 0)
+		{
+		  if (strncmp (cputype, "EV4", 3) == 0)
+		    io.sys = IOSYS_T2;
+		  else if (strncmp (cputype, "EV5", 3) == 0)
+		    io.sys = IOSYS_GAMMA;
+		}
+	      else
+		{
+		  if (strncmp (cputype, "EV4", 3) == 0)
+		    io.sys = IOSYS_APECS;
+		  else if (strncmp (cputype, "EV5", 3) == 0)
+		    io.sys = IOSYS_CIA;
+		}
+	      if (n == EOF || io.sys == IOSYS_CPUDEP)
+		{
+		  /* This can happen if the format of /proc/cpuinfo changes.*/
+		  fprintf (stderr, "ioperm.init_iosys(): Unable to determine"
+			   " CPU model.\n");
+		  __set_errno (ENODEV);
+		  return -1;
+		}
+	    }
 	  io.hae_shift = io_system[io.sys].hae_shift;
 	  io.bus_memory_base = io_system[io.sys].bus_memory_base;
 	  io.sparse_bus_memory_base = io_system[io.sys].sparse_bus_mem_base;
