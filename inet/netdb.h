@@ -2,22 +2,39 @@
  * Copyright (c) 1980, 1983, 1988 Regents of the University of California.
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms are permitted
- * provided that: (1) source distributions retain this entire copyright
- * notice and comment, and (2) distributions including binaries display
- * the following acknowledgement:  ``This product includes software
- * developed by the University of California, Berkeley and its contributors''
- * in the documentation or other materials provided with the distribution
- * and in all advertising materials mentioning features or use of this
- * software. Neither the name of the University nor the names of its
- * contributors may be used to endorse or promote products derived
- * from this software without specific prior written permission.
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *	This product includes software developed by the University of
+ *	California, Berkeley and its contributors.
+ * 4. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
  *
- *	@(#)netdb.h	5.11 (Berkeley) 5/21/90
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ *	@(#)netdb.h	5.15 (Berkeley) 4/3/91
  */
+
+#ifndef _NETDB_H_
+#define _NETDB_H_
 
 #define	_PATH_HEQUIV	"/etc/hosts.equiv"
 #define	_PATH_HOSTS	"/etc/hosts"
@@ -63,11 +80,6 @@ struct	protoent {
 	int	p_proto;	/* protocol # */
 };
 
-struct hostent	*gethostbyname(), *gethostbyaddr(), *gethostent();
-struct netent	*getnetbyname(), *getnetbyaddr(), *getnetent();
-struct servent	*getservbyname(), *getservbyport(), *getservent();
-struct protoent	*getprotobyname(), *getprotobynumber(), *getprotoent();
-
 /*
  * Error return codes from gethostbyname() and gethostbyaddr()
  * (left in extern int h_errno).
@@ -78,3 +90,32 @@ struct protoent	*getprotobyname(), *getprotobynumber(), *getprotoent();
 #define	NO_RECOVERY	3 /* Non recoverable errors, FORMERR, REFUSED, NOTIMP */
 #define	NO_DATA		4 /* Valid name, no data record of requested type */
 #define	NO_ADDRESS	NO_DATA		/* no address, look for MX record */
+
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
+void		endhostent __P((void));
+void		endnetent __P((void));
+void		endprotoent __P((void));
+void		endservent __P((void));
+struct hostent	*gethostbyaddr __P((const char *, int, int));
+struct hostent	*gethostbyname __P((char *));
+struct hostent *gethostent __P((void));
+struct netent	*getnetbyaddr __P((long, int)); /* u_long? */
+struct netent	*getnetbyname __P((const char *));
+struct netent	*getnetent __P((void));
+struct protoent	*getprotobyname __P((const char *));
+struct protoent	*getprotobynumber __P((int));
+struct protoent	*getprotoent __P((void));
+struct servent	*getservbyname __P((const char *, const char *));
+struct servent	*getservbyport __P((int, const char *));
+struct servent	*getservent __P((void));
+void		herror __P((const char *));
+void		sethostent __P((int));
+/* void		sethostfile __P((const char *)); */
+void		setnetent __P((int));
+void		setprotoent __P((int));
+void		setservent __P((int));
+__END_DECLS
+
+#endif /* !_NETDB_H_ */
