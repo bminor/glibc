@@ -236,5 +236,10 @@ generated := $(generated) stubs.h
 
 README: README.template version.c ; # Make-dist should update README.
 
-INSTALL: manual/maint.texi
-	makeinfo --no-validate --no-warn --no-headers $< -o $@
+define format-me
+@rm -f $@
+makeinfo --no-validate --no-warn --no-headers $< -o $@
+-chmod a-w $@
+endef
+INSTALL: manual/maint.texi; $(format-me)
+NOTES: manual/creature.texi; $(format-me)
