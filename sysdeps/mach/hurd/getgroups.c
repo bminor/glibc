@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,27 +24,35 @@ Cambridge, MA 02139, USA.  */
 int
 __getgroups (int n, gid_t *gidset)
 {
+  error_t err;
   int ngids;
 
   __mutex_lock (&_hurd_idlock);
-  if (!_hurd_id_valid)
+
+  if (err = _hurd_check_ids ())
     {
-      error_t err = _HURD_PORT_USE (&_hurd_auth,
-				    __auth_getids (port, &_hurd_id));
-      if (err)
-	{
-	  __mutex_unlock (&_hurd_idlock);
-	  return __hurd_fail (err);
-	}
-      _hurd_id_valid = 1;
-    }
-  ngids = _hurd_id.ngroups;
-  if (gidset != NULL)
-    {
-      gid_t gids[ngids];
-      memcpy (gids, _hurd_id.groups, sizeof (gids));
       __mutex_unlock (&_hurd_idlock);
-      memcpy (gidset, gids, sizeof (gids));
+      return __hurd_fail (err);
+    }
+
+  if (_hurd_ngids <= 2)
+    /* The first two are the real and saved-set gids.  */
+    ngids = 0;
+  else
+    ngids = _hurd_ngids - 2;
+
+  if (n != 0)
+    {
+      /* Copy the gids onto stack storage and then release the idlock.  */
+      gid_t gids[ngids];
+      memcpy (gids, _hurd_gid->ids, sizeof (gids));
+      __mutex_unlock (&_hurd_idlock);
+
+      /* Now that the lock is released, we can safely copy the
+	 group set into the user's array, which might fault.  */
+      if (ngids > n)
+	ngids = n;
+      memcpy (gidset, gids, ngids * sizeof (gid_t));
     }
   else
     __mutex_unlock (&_hurd_idlock);
