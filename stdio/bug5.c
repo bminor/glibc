@@ -6,6 +6,7 @@
 #include <ansidecl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 static char buf[8192];
 
