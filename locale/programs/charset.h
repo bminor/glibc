@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -55,6 +55,9 @@ struct charset_t
    first is used and we have plenty of room.  */
 #define ILLEGAL_CHAR_VALUE ((wchar_t) 0xffffffffu)
 
+
+/* Declared in localedef.c.  */
+extern int be_quiet;
 
 /* Prototypes for charmap handling functions.  */
 struct charset_t *charmap_read (const char *filename);
