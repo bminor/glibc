@@ -43,7 +43,8 @@ main (void)
 
   /* Connect to the server.  */
   init_sockaddr (&servername, SERVERHOST, PORT);
-  if (0 > connect (sock, (struct sockaddr *) &servername,
+  if (0 > connect (sock,
+		   (struct sockaddr *) &servername,
 		   sizeof (servername)))
     {
       perror ("connect (client)");
