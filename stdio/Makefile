@@ -74,7 +74,7 @@ gmp-srcdir := $(firstword $(filter-out ..//%,$(..)$(gmp-srcdir) $(gmp-srcdir)))
 
 mpn-sysdep := $(addsuffix .c,$(mpn-routines)) \
 	      $(addsuffix .S,$(mpn-routines)) \
-	      $(addsuffix .s,$(mpn-routines)) gmp-mparam.h asm.h
+	      $(addsuffix .s,$(mpn-routines)) gmp-mparam.h asm-syntax.h
 
 mpn-try := $(addprefix $(gmp-srcdir)/mpn/*/,$(mpn-sysdep))
 mpn-found := $(wildcard $(mpn-try))
