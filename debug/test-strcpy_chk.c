@@ -48,6 +48,7 @@ simple_strcpy_chk (char *dst, const char *src, size_t len)
 
 #include <setjmp.h>
 #include <signal.h>
+#include <fcntl.h>
 
 volatile int chk_fail_ok;
 jmp_buf chk_fail_buf;
@@ -80,8 +81,8 @@ do_one_test (impl_t *impl, char *dst, const char *src,
       if (setjmp (chk_fail_buf) == 0)
 	{
 	  res = CALL (impl, dst, src, dlen);
-	  error (0, 0, "Function %s (%zd; %zd) did not __chk_fail",
-	  	 impl->name, len, dlen);
+	  printf ("*** Function %s (%zd; %zd) did not __chk_fail",
+	          impl->name, len, dlen);
 	  chk_fail_ok = 0;
 	  ret = 1;
 	}
@@ -92,16 +93,16 @@ do_one_test (impl_t *impl, char *dst, const char *src,
 
   if (res != STRCPY_RESULT (dst, len))
     {
-      error (0, 0, "Wrong result in function %s %p %p", impl->name,
-	     res, STRCPY_RESULT (dst, len));
+      printf ("*** Wrong result in function %s %p %p", impl->name,
+	      res, STRCPY_RESULT (dst, len));
       ret = 1;
       return;
     }
 
   if (strcmp (dst, src) != 0)
     {
-      error (0, 0, "Wrong result in function %s dst \"%s\" src \"%s\"",
-	     impl->name, dst, src);
+      printf ("*** Wrong result in function %s dst \"%s\" src \"%s\"",
+	      impl->name, dst, src);
       ret = 1;
       return;
     }
@@ -232,7 +233,7 @@ do_random_tests (void)
 		  if (setjmp (chk_fail_buf) == 0)
 		    {
 		      res = CALL (impl, p2 + align2, p1 + align1, dlen);
-		      error (0, 0, "Iteration %zd - did not __chk_fail", n);
+		      printf ("*** Iteration %zd - did not __chk_fail", n);
 		      chk_fail_ok = 0;
 		      ret = 1;
 		    }
@@ -243,17 +244,17 @@ do_random_tests (void)
 	  res = CALL (impl, p2 + align2, p1 + align1, dlen);
 	  if (res != STRCPY_RESULT (p2 + align2, len))
 	    {
-	      error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %zd, %zd) %p != %p",
-		     n, impl->name, align1, align2, len, res,
-		     STRCPY_RESULT (p2 + align2, len));
+	      printf ("*** Iteration %zd - wrong result in function %s (%zd, %zd, %zd) %p != %p",
+		      n, impl->name, align1, align2, len, res,
+		      STRCPY_RESULT (p2 + align2, len));
 	      ret = 1;
 	    }
 	  for (j = 0; j < align2 + 64; ++j)
 	    {
 	      if (p2[j - 64] != '\1')
 		{
-		  error (0, 0, "Iteration %zd - garbage before, %s (%zd, %zd, %zd)",
-			 n, impl->name, align1, align2, len);
+		  printf ("*** Iteration %zd - garbage before, %s (%zd, %zd, %zd)",
+			  n, impl->name, align1, align2, len);
 		  ret = 1;
 		  break;
 		}
@@ -262,16 +263,16 @@ do_random_tests (void)
 	    {
 	      if (p2[j] != '\1')
 		{
-		  error (0, 0, "Iteration %zd - garbage after, %s (%zd, %zd, %zd)",
-			 n, impl->name, align1, align2, len);
+		  printf ("*** Iteration %zd - garbage after, %s (%zd, %zd, %zd)",
+			  n, impl->name, align1, align2, len);
 		  ret = 1;
 		  break;
 		}
 	    }
 	  if (memcmp (p1 + align1, p2 + align2, len + 1))
 	    {
-	      error (0, 0, "Iteration %zd - different strings, %s (%zd, %zd, %zd)",
-		     n, impl->name, align1, align2, len);
+	      printf ("*** Iteration %zd - different strings, %s (%zd, %zd, %zd)",
+		      n, impl->name, align1, align2, len);
 	      ret = 1;
 	    }
 	}
@@ -289,6 +290,10 @@ test_main (void)
   sigemptyset (&sa.sa_mask);
 
   sigaction (SIGABRT, &sa, NULL);
+
+  /* Avoid all the buffer overflow messages on stderr.  */
+  close (STDERR_FILENO);
+  open ("/dev/null", O_WRONLY);
 
   test_init ();
 

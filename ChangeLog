@@ -1,3 +1,14 @@
+2004-11-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* debug/chk_fail.c: Include errno.h and string.h.
+	(__chk_fail): Write a short message to stderr.
+	* debug/tst-chk1.c: Include fcntl.h.
+	(do_test): Redirect stderr to /dev/null.
+	* debug/test-strcpy_chk.c: Include fcntl.h.
+	(test_main): Redirect stderr to /dev/null.
+	(do_one_test, do_random_tests): Use printf instead of
+	error.
+
 2004-11-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Makefile (tests): Add bug-regex24.

@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <fcntl.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <stdio.h>
@@ -105,6 +106,10 @@ do_test (void)
   sigemptyset (&sa.sa_mask);
 
   sigaction (SIGABRT, &sa, NULL);
+
+  /* Avoid all the buffer overflow messages on stderr.  */
+  close (STDERR_FILENO);
+  open ("/dev/null", O_WRONLY);
 
   struct A { char buf1[9]; char buf2[1]; } a;
 

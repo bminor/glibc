@@ -16,7 +16,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <abort-instr.h>
 
@@ -27,6 +29,8 @@ __chk_fail (void)
 {
   while (1)
     {
+      const char *text = "*** buffer overflow detected ***\n";
+      TEMP_FAILURE_RETRY (write (STDERR_FILENO, text, strlen (text)));
       /* This will leave a nice backtrace.  */
       abort ();
 #ifdef ABORT_INSTRUCTION
