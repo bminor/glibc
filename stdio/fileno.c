@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,24 +20,25 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <stdio.h>
 
-#undef	fileno
-
-
 /* Return the system file descriptor associated with STREAM.  */
 int
-DEFUN(fileno, (stream), CONST FILE *stream)
+DEFUN(fileno, (stream), FILE *stream)
 {
-  if (!__validfp(stream))
+  if (! __validfp (stream))
     {
       errno = EINVAL;
       return -1;
     }
 
-  if (stream->__cookie != &stream->__fileno)
+  if (stream->__io_funcs.__fileno == NULL)
     {
+#ifdef EOPNOTSUPP
+      errno = EOPNOTSUPP;
+#else
       errno = ENOSYS;
+#endif
       return -1;
     }
 
-  return stream->__fileno;
+  return (*stream->__io_funcs.__fileno) (stream->__cookie);
 }
