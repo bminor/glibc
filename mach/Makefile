@@ -47,9 +47,11 @@ distribute = Machrules syscalls.awk shortcut.awk
 
 
 # XXX currently these files are symlinked into mach/ (which should not otherwise exist)
+ifndef no_deps # XXX for dist
 headers += $(addprefix mach/default_pager_types.,h defs)
 user-interfaces += mach/default_pager
 server-interfaces += mach/default_pager_helper
+endif
 
 # Use and install the Mach header files directly out of the Mach kernel source.
 
@@ -87,7 +89,7 @@ install-others += $(includedir)/mach/version.h
 $(includedir)/mach/version.h: $(mach-srcdir)/sys/version.h; $(do-install)
 
 # Define mach-syscalls and sysno-*.
-ifndef inhibit-mach-syscalls
+ifndef inhibit_mach_syscalls
 include $(objpfx)mach-syscalls.mk
 endif
 $(objpfx)mach-syscalls.mk: mach/syscall_sw.h syscalls.awk
