@@ -1,5 +1,7 @@
 1997-03-21 20:55  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Makefile (distribute): Add BUGS.
+
 	* sysdeps/generic/machine-gmon.h: Update copyright.
 
 	* sysdeps/i386/Makefile [$(subdir)=gmon] (sysdep_routines): Add
