@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,32 +18,32 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
 
-const struct
-  {
-    size_t n;
-    file_t (*getdport) (int fd);
-  } _hurd_getdport_fn;
+/* This is initialized in dtable.c when that gets linked in.  */
+file_t (*_hurd_getdport_fn) (int fd);
 
 file_t
 __getdport (int fd)
 {
-  if (_hurd_init_dtable != NULL)
+  if (_hurd_getdport_fn)
+    return (*_hurd_getdport_fn) (fd);
+
+  /* getdport is the only use of file descriptors,
+     so we don't bother allocating a real table.  */
+
+  if (_hurd_init_dtable == NULL)
+    /* Never had a descriptor table.  */
+    return EBADF;
+
+  if (fd < 0 || fd > _hurd_init_dtablesize ||
+      _hurd_init_dtable[fd] == MACH_PORT_NULL)
     {
-      /* getdport is the only use of file descriptors,
-	 so we don't bother allocating a real table.  */
-      if (fd < 0 || fd > _hurd_init_dtablesize ||
-	  _hurd_init_dtable[fd] == MACH_PORT_NULL)
-	{
-	  errno = EBADF;
-	  return MACH_PORT_NULL;
-	}
-      else      
-	{
-	  __mach_port_mod_refs (__mach_task_self (), _hurd_init_dtable[fd],
-				MACH_PORT_RIGHT_SEND, 1);
-	  return _hurd_init_dtable[fd];
-	}
+      errno = EBADF;
+      return MACH_PORT_NULL;
     }
-  else
-    return (*_hurd_getdport_fn.getdport) (fd);
+  else      
+    {
+      __mach_port_mod_refs (__mach_task_self (), _hurd_init_dtable[fd],
+			    MACH_PORT_RIGHT_SEND, 1);
+      return _hurd_init_dtable[fd];
+    }
 }
