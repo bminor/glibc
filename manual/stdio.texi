@@ -2795,8 +2795,8 @@ Fortunately, this ``feature'' seems to be becoming less common.  You do
 not need to worry about this in the GNU system.
 
 
-@node Specifying Which Kind of Buffering
-@subsection Specifying Which Kind of Buffering
+@node Controlling Buffering
+@subsection Controlling Which Kind of Buffering
 
 After opening a stream (but before any other operations have been
 performed on it), you can explicitly specify what kind of buffering you

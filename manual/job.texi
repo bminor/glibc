@@ -1006,7 +1006,7 @@ returned by @code{ctermid}.
 @end deftypevr
 
 See also the @code{isatty} and @code{ttyname} functions, in 
-@ref{Terminal Identification}.
+@ref{Is It a Terminal}.
 
 
 @node Process Group Functions

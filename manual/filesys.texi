@@ -1677,7 +1677,7 @@ members of the @code{stat} structure; see @ref{File Attributes}.
 All of these times are represented in calendar time format, as
 @code{time_t} objects.  This data type is defined in @file{time.h}.
 For more information about representation and manipulation of time
-values, see @ref{Calendar and Local Time}.
+values, see @ref{Calendar Time}.
 @pindex time.h
 
 When an existing file is opened, its attribute change time and
