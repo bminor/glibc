@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #define	_HURD_PORT_H	1
 #include <features.h>
 
-#include <mach/mach_port.h>
+#include <mach.h>
 #include <hurd/userlink.h>
 
 
