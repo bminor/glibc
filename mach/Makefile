@@ -161,7 +161,7 @@ $(mach-shortcuts:%=$(objpfx)%.c): $(objpfx)%.c: # Makefile
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*);') > $@-new
 	mv $@-new $@
-generated += $(mach-shortcuts:%=%.c)
+generated += $(mach-shortcuts:%=%.c) $(mach-shortcuts:%=__%.c)
 endif	# mach-shortcuts
 
 # Generate mach-shortcuts.h, which will contain the prototypes for the
