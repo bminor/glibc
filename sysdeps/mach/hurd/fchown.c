@@ -29,7 +29,7 @@ DEFUN(__fchown, (fd, owner, group),
   error_t err;
 
   if (err = _HURD_DPORT_USE (fd, __file_chown (port, owner, group)))
-    return __hurd_fail (err);
+    return __hurd_dfail (fd, err);
 
   return 0;
 }
