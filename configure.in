@@ -141,7 +141,7 @@ if [ "$next" ]; then
   lose=yes
 fi
 
-if [ x$lose = yes -o ! "$target" ]; then
+if [ "$lose" = yes -o ! "$target" ]; then
   echo "Usage: $prog [--srcdir=DIR] [--nfp] [--with-gnu-ld] TARGET" >&2
   if [ -r config.status ]; then
     cat config.status >&2
@@ -371,6 +371,9 @@ fi
     echo "exec_prefix = ${exec_prefix}"
   fi
   echo "config-defines = ${DEFS}"
+  for var in INSTALL INSTALL_PROGRAM INSTALL_DATA RANLIB; do
+    eval "echo \"${var} = \${$var}\""
+  done
 ) > config.make
 
 switches=
@@ -424,5 +427,5 @@ exit 0
 dnl This gets rid of the random stuff autoconf has stuffed in weird places.
 divert(-1)dnl AC_This is here so I can search for `AC_' to find the frobs.
 dnl Local Variables:
-dnl compile-command: "m4 /gd/gnu/autoconf/acgeneral.m4 /gd/gnu/autoconf/acspecific.m4 configure.in > configure"
+dnl compile-command: "m4 /gd/gnu/autoconf/acgeneral.m4 /gd/gnu/autoconf/acspecific.m4 configure.in > configure && chmod a+x configure"
 dnl End:
