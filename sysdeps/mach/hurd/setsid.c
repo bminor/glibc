@@ -34,8 +34,12 @@ DEFUN_VOID(__setsid)
 
   stamp = _hurd_pids_changed_stamp; /* Atomic fetch.  */
 
+  /* Tell the proc server we want to start a new session.  */
   if (err = __USEPORT (PROC, __proc_setsid (port)))
     return __hurd_fail (err);
+
+  /* Punt our current ctty.  */
+  _hurd_setcttyid (MACH_PORT_NULL);
 
   /* Synchronize with the signal thread to make sure we have
      received and processed proc_newids before returning to the user.  */
