@@ -21,7 +21,6 @@ Cambridge, MA 02139, USA.  */
 #include <gnu-stabs.h>
 #include <hurd.h>
 #include <hurd/signal.h>
-#include <hurd/msg_reply.h>	/* For __sig_post_reply.  */
 #include <mutex.h>
 
 struct mutex _hurd_siglock = MUTEX_INITIALIZER;
@@ -69,6 +68,8 @@ _hurd_thread_sigstate (thread_t thread)
 #include <fcntl.h>
 #include <sys/wait.h>
 #include "thread_state.h"
+#include <hurd/msg_server.h>
+#include <hurd/msg_reply.h>	/* For __sig_post_reply.  */
 
 jmp_buf _hurd_sigthread_fault_env;
 
@@ -147,20 +148,20 @@ mach_msg_timeout_t _hurd_interrupt_timeout = 1000; /* One second.  */
 static inline void
 abort_rpcs (struct hurd_sigstate *ss, int signo, void *state)
 {
+  unsigned int count;
+  __thread_abort (ss->thread);
+  __thread_get_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
+		      state, &count);
+  if (count != MACHINE_THREAD_STATE_COUNT)
+    /* What kind of thread?? */
+    return;			/* XXX */
+
   if (ss->intr_port != MACH_PORT_NULL)
     {
       /* Abort whatever the thread is doing.
 	 If it is in the mach_msg syscall doing the send,
 	 the syscall will return MACH_SEND_INTERRUPTED.  */
       mach_port_t msging_port;
-      unsigned int count;
-      __thread_abort (ss->thread);
-      __thread_get_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
-			  state, &count);
-      if (count != MACHINE_THREAD_STATE_COUNT)
-	/* What kind of thread?? */
-	return;			/* XXX */
-
       if (_hurd_thread_state_msging_p (state, &msging_port))
 	{
 	  /* The thread was waiting for the RPC to return.
@@ -235,8 +236,8 @@ struct mutex _hurd_signal_preempt_lock;
    SS->lock is held on entry and released before return.  */
 void
 _hurd_internal_post_signal (struct hurd_sigstate *ss,
-			    int signo,
-			    int sigcode)
+			    int signo, int sigcode,
+			    mach_port_t reply_port)
 {
   struct machine_thread_state thread_state;
   enum { stop, ignore, core, term, handle } act;
@@ -260,7 +261,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
        If it returns SIG_DFL, we run the normal handler;
        otherwise we use the handler it returns.  */
     handler = (*preempt) (ss->thread, signo, sigcode);
-  if (handler != SIG_DFL)
+  if (handler == SIG_DFL)
     handler = ss->actions[signo].sa_handler;
 
   if (handler == SIG_DFL)
@@ -387,6 +388,10 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       __USEPORT (PROC, __proc_dostop (port, __mach_thread_self ()));
       /* Abort all server operations now in progress.  */
       abort_all_rpcs (signo, &thread_state);
+      /* The signal can now be considered delivered.
+	 Don't make the killer wait for us to dump core.  */
+      if (reply_port)
+	__sig_post_reply (reply_port, 0);
       /* Tell proc how we died and then stick the saber in the gut.  */
       _hurd_exit (W_EXITCODE (0, signo) |
 		  /* Do a core dump if desired.  Only set the wait status
@@ -428,16 +433,23 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       }
     }
 
+  /* The signal has either been ignored or is now being handled.
+     We can consider it delivered and reply to the killer.  */
+  if (reply_port)
+    __sig_post_reply (reply_port, 0);
+
   /* We get here only if we are handling or ignoring the signal;
      otherwise we are stopped or dead by now.  We still hold SS->lock.
      Check for pending signals, and loop to post them.  */
-  for (signo = 1; signo < NSIG; ++signo)
-    if (__sigismember (&ss->pending, signo))
-      {
-	__sigdelset (&ss->pending, signo);
-	_hurd_internal_post_signal (ss, signo, ss->sigcodes[signo]);
-	return;
-      }
+  if (ss->pending)
+    for (signo = 1; signo < NSIG; ++signo)
+      if (__sigismember (&ss->pending, signo))
+	{
+	  __sigdelset (&ss->pending, signo);
+	  _hurd_internal_post_signal (ss, signo, ss->sigcodes[signo],
+				      MACH_PORT_NULL);
+	  return;
+	}
 
 #ifdef noteven
   if (ss->suspended)
@@ -450,7 +462,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
 /* Implement the sig_post RPC from <hurd/msg.defs>;
    sent when someone wants us to get a signal.  */
-error_t
+kern_return_t
 _S_sig_post (mach_port_t me,
 	     mach_port_t reply,
 	     int signo,
@@ -549,18 +561,15 @@ _S_sig_post (mach_port_t me,
   /* Get a hold of the designated signal-receiving thread.  */
   ss = _hurd_thread_sigstate (_hurd_sigthread);
 
-  /* XXX POSIX.1-1990 p56 ll605-607 says we must deliver a signal
-     before `kill' (and thus sig_post) can return.  */
-
-  /* Send a reply indicating success to the signaller.  */
-  __sig_post_reply (reply, 0);
-
-  /* Post the signal.  */
-  _hurd_internal_post_signal (ss, signo, 0);
+  /* Post the signal; this will reply when the signal can be considered
+     delivered.  */
+  _hurd_internal_post_signal (ss, signo, 0, reply);
 
   return MIG_NO_REPLY;		/* Already replied.  */
 }
 
+extern void __mig_init (void *);
+
 #include <mach/task_special_ports.h>
 
 /* Initialize the message port and signal thread once.
@@ -592,6 +601,10 @@ _hurdsig_init (void)
 	__libc_fatal ("hurd: Can't create send right to message port\n");
     }
 
+  /* Set the default thread to receive task-global signals
+     to this one, the main (first) user thread.  */
+  _hurd_sigthread = __mach_thread_self ();
+
   /* Start the signal thread listening on the message port.  */
 
   if (err = __thread_create (__mach_task_self (), &_hurd_msgport_thread))
@@ -603,11 +616,17 @@ _hurdsig_init (void)
 				 (vm_address_t *) &__hurd_sigthread_stack_base,
 				 &stacksize))
     __libc_fatal ("hurd: Can't setup signal thread\n");
+
   __hurd_sigthread_stack_end = __hurd_sigthread_stack_base + stacksize;
   __hurd_sigthread_variables =
     malloc (__hurd_threadvar_max * sizeof (unsigned long int));
   if (__hurd_sigthread_variables == NULL)
     __libc_fatal ("hurd: Can't allocate thread variables for signal thread\n");
+
+  /* Reinitialize the MiG support routines so they will use a per-thread
+     variable for the cached reply port.  */
+  __mig_init ((void *) __hurd_sigthread_stack_base);
+
   if (err = __thread_resume (_hurd_msgport_thread))
     __libc_fatal ("hurd: Can't resume signal thread\n");
     
