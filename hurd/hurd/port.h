@@ -105,6 +105,11 @@ _hurd_port_free (struct hurd_port *port,
 		 mach_port_t used_port)
 {
   int dealloc;
+  if (used_port == MACH_PORT_NULL)
+    /* When we fetch an empty port cell with _hurd_port_get,
+       it does not link us on the users chain, since there is
+       no shared resource.  */
+    return;
 #ifdef noteven
   __spin_lock (&port->lock);
 #endif
