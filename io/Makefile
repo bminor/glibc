@@ -21,7 +21,7 @@
 #
 subdir	:= io
 
-headers := statbuf.h sys/stat.h fcntlbits.h filebits.h fcntl.h utime.h
+headers := statbuf.h sys/stat.h fcntlbits.h filebits.h fcntl.h utime.h ftw.h
 
 routines :=								      \
 	utime								      \
@@ -35,7 +35,8 @@ routines :=								      \
 	__chown __fchown						      \
 	ttyname __isatty						      \
 	__link __symlink __readlink					      \
-	__unlink __rmdir
+	__unlink __rmdir						      \
+	ftw
 routines	:= $(sort $(foreach f,$(routines),$f $(f:__%=%)))
 
 others		:= pwd
