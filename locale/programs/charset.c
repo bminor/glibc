@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -46,7 +46,7 @@ charset_find_value (const hash_table *ht, const char *name, size_t len)
 
 
 void
-charset_new_char (struct linereader *lr, hash_table *ht, int bytes,
+charset_new_char (struct linereader *lr, hash_table *ht,
 		  unsigned int value, const char *from, const char *to)
 {
   char *from_end;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -64,7 +64,7 @@ extern int be_quiet;
 struct charset_t *charmap_read (const char *filename);
 
 /* Prototypes for function to insert new character.  */
-void charset_new_char (struct linereader *lr, hash_table *ht, int bytes,
+void charset_new_char (struct linereader *lr, hash_table *ht,
 		       unsigned int value, const char *from, const char *to);
 
 /* Return the value stored under the given key in the hashing table.  */
