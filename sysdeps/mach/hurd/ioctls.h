@@ -77,7 +77,7 @@ union __ioctl
 /* Construct an individual type field for TYPE.  */
 #define _IOTS(type)		(sizeof (type) >> 1)
 
-/* Construct a type information field  for
+/* Construct a type information field for
    a single argument of the scalar TYPE.  */
 #define	_IOT_SIMPLE(type)	_IOT (_IOTS (type), 1, 0, 0, 0, 0)
 
