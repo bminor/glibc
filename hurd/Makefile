@@ -31,7 +31,7 @@ endif
 routines = __pid2task __task2pid pid2task task2pid \
 	   __setauth setauth hurdports \
 	   fchroot \
-	   exec-startup \
+	   privports \
 	   hurdauth hurdid hurdpath hurdpid hurdsig hurdsock hurdfrob \
 	   dtable __getdport getdport openport setdtsz \
 	   msgportdemux startsig \
