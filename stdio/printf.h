@@ -21,13 +21,13 @@ Cambridge, MA 02139, USA.  */
 #define	_PRINTF_H	1
 #include <features.h>
 
-
 #define	__need_FILE
 #include <stdio.h>
-#define	__need___va_list
-#include <stdarg.h>
 #define	__need_size_t
 #include <stddef.h>
+
+#include <stdarg.h>		/* Need va_list.  */
+
 
 struct printf_info
   {
@@ -54,7 +54,7 @@ struct printf_info
    
 typedef int EXFUN(printf_function, (FILE *__stream,
 				    CONST struct printf_info *__info,
-				    __va_list *__args));
+				    va_list *__args));
 typedef int EXFUN(printf_arginfo_function, (CONST struct printf_info *__info,
 					    size_t __n,
 					    int *__argtypes));
