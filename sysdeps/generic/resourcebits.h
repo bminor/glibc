@@ -46,6 +46,7 @@ enum __rlimit_resource
     RLIMIT_NPROC,
     /* Number of open files.  */
     RLIMIT_OFILE,
+    RLIMIT_NOFILE = RLIMIT_OFILE, /* Another name for the same thing.  */
 
     RLIM_NLIMITS
   };
