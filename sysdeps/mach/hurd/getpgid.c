@@ -29,17 +29,18 @@ DEFUN(__getpgrp, (pid), pid_t pid)
   error_t err;
   pid_t pgrp;
 
-  __mutex_lock (&_hurd_pid_lock);
-
   if (pid == 0)
     {
+      HURD_CRITICAL_BEGIN;
+      __mutex_lock (&_hurd_pid_lock);
       pgrp = _hurd_pgrp;
+      __mutex_unlock (&_hurd_pid_lock);
+      HURD_CRITICAL_END;
       err = 0;
     }
   else
     err = __USEPORT (PROC, __proc_getpgrp (port, pid, &pgrp));
 
-  __mutex_unlock (&_hurd_pid_lock);
 
   return err ? __hurd_fail (err) : pgrp;
 }
