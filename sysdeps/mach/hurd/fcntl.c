@@ -159,6 +159,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
       {
 	pid_t owner = va_arg (ap, pid_t);
 	error_t err;
+	int dealloc;
 	io_t port
 	  = _hurd_port_locked_get (&d.d->port, &dealloc); /* Unlocks D.d.  */
 	err = __io_mod_owner (port, owner);
