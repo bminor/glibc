@@ -39,10 +39,8 @@ mach-headers := host_info.h kern_return.h \
 endif
 
 user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
-				     default_pager_object		\
 				     memory_object_user			\
 				     memory_object_default		\
-				     kernel_boot			\
 	            )\
 		   $(addprefix device/,device device_request)
 # device_reply is giving me headaches because of userprefix
@@ -75,7 +73,7 @@ $(objpfx)mach-syscalls.mk: mach/syscall_sw.h syscalls.awk
 	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),[0-9]*)$$/\1 \2/p' \
 	< $< | awk -f $(word 2,$^) > $@-new		      
 	mv $@-new $@
-generated := $(generated) $(objpfx)mach-syscalls.mk
+generated += mach-syscalls.mk
 
 ifdef mach-syscalls
 $(mach-syscalls:%=$(objpfx)__%.S): $(objpfx)__%.S: $(objpfx)mach-syscalls.mk
@@ -86,9 +84,8 @@ $(mach-syscalls:%=$(objpfx)%.c): $(objpfx)%.c:
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*)') > $@-new
 	mv $@-new $@
-generated := $(generated) \
-		$(mach-syscalls:%=$(objpfx)__%.S) \
-		$(mach-syscalls:%=$(objpfx)%.c)
+generated += $(mach-syscalls:%=__%.S) \
+	     $(mach-syscalls:%=%.c)
 endif
 
 mach-shortcuts := $(patsubst syscall_%,%,$(filter syscall_%,$(mach-syscalls)))
@@ -103,8 +100,7 @@ user-interfaces := $(filter-out mach/mach_interface \
 endif
 
 # Make the MiG stubs for $(mach-shortcuts) be CALL_rpc.
-migdefines := $(migdefines) \
-	      $(foreach call,$(mach-shortcuts),-D$(call)=$(call)_rpc)
+migdefines += $(foreach call,$(mach-shortcuts),-D$(call)=$(call)_rpc)
 mach/mach_interface.uh mach/mach_port.uh: $(objpfx)mach-syscalls.mk
 
 ifdef mach-shortcuts
@@ -120,11 +116,11 @@ $(mach-shortcuts:%=%.c):
 	(echo '#include <gnu-stabs.h>'; \
 	 echo 'symbol_alias (__$*, $*)') > $@-new
 	mv $@-new $@
-generated := $(generated) $(mach-shortcuts:%=%.c)
+generated += $(mach-shortcuts:%=%.c)
 
 # Generate mach-shortcuts.h, which will contain the prototypes for the
 # shortcutted kernel RPC functions.
-$(objpfx)mach-shortcuts.h: mach/mach_interface.uh mach/mach_port.uh
+$(objpfx)mach-shortcuts.h: mach/mach_interface.h mach/mach_port.h
 # The first line gets us one paragraph per line, with @s separating real lines.
 # The second line selects paragraphs for the shortcutted functions.
 # The third line removes `_rpc' from the names and rerealifies the lines.
@@ -132,6 +128,8 @@ $(objpfx)mach-shortcuts.h: mach/mach_interface.uh mach/mach_port.uh
 	| grep '^/\* Routine [a-z0-9_]*_rpc \*/' \
 	| sed 's/_rpc//' | tr @ \\012 > $@-new
 	mv $@-new $@
+
+before-compile += $(objpfx)mach-shortcuts.h
 endif	# mach-shortcuts
 
 include Machrules
@@ -145,7 +143,7 @@ mach/mach_interface.defs: mach/mach.defs
 # so memory_object.defs generates memory_object_user.h.
 mach/memory_object_user.defs: mach/memory_object.defs
 	ln $< $@ || cp $< $@
-generated := $(generated) mach/mach.defs mach/memory_object_user.defs
+generated += mach/mach.defs mach/memory_object_user.defs
 
 # Be sure not to make these with implicit rules from foo.defs.
-$(filter-out $(interface-headers),$(headers)) : ;
+mach.h mach/memory_object.h: ;
