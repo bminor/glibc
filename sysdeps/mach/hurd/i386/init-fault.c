@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/signal.h>
 #include <mach/thread_status.h>
 #include <string.h>
+#include <setjmp.h>
 
 extern jmp_buf _hurd_sigthread_fault_env;
 
@@ -35,6 +36,6 @@ _hurd_initialize_fault_recovery_state (void *state)
 {
   struct i386_thread_state *ts = state;
   memset (ts, 0, sizeof (*ts));
-  ts->uesp = &fault_stack[sizeof (fault_stack)];
-  ts->eip = faulted;
+  ts->uesp = (int) &fault_stack[sizeof (fault_stack)];
+  ts->eip = (int) &faulted;
 }
