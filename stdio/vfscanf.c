@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,9 +36,9 @@ Cambridge, MA 02139, USA.  */
 
 
 #define	inchar()	((c = getc(s)) == EOF ? EOF : (++read_in, c))
-#define	conv_error()	return((c == EOF || ungetc(c, s)), done)
-#define input_error()	return(-1)
-#define	memory_error()	return((errno = ENOMEM), EOF)
+#define	conv_error()	return ((c == EOF || ungetc(c, s)), done)
+#define input_error()	return (done == 0 ? EOF : done)
+#define	memory_error()	return ((errno = ENOMEM), EOF)
 
 
 /* Read formatted input from S according to the format string
@@ -89,7 +89,7 @@ DEFUN(__vfscanf, (s, format, arg),
   if (!__validfp(s) || !s->__mode.__read || format == NULL)
     {
       errno = EINVAL;
-      input_error();
+      return EOF;
     }
 
   /* Figure out the decimal point character.  */
@@ -236,8 +236,6 @@ DEFUN(__vfscanf, (s, format, arg),
 	  if (do_assign)
 	    ++done;
 
-	  if (c == EOF)
-	    input_error();
 	  break;
 
 	case 's':		/* Read a string.  */
@@ -420,7 +418,8 @@ DEFUN(__vfscanf, (s, format, arg),
 	    {
 	      *w++ = c;
 	      if (inchar() == EOF)
-		input_error();
+		/* EOF is only an input error before we read any chars.  */
+		conv_error();
 	      if (width > 0)
 		--width;
 	    }
