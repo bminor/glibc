@@ -30,10 +30,20 @@
 # define makedev(major, minor) ((((unsigned int) (major)) << 8) \
 				| ((unsigned int) (minor)))
 #else
-# define major(dev) (((dev).__val[0] >> 8) & 0xff)
-# define minor(dev) ((dev).__val[0] & 0xff)
-# define makedev(major, minor) { ((((unsigned int) (major)) << 8) \
-				  | ((unsigned int) (minor))), 0 }
+/* We need to know the word order here.  This assumes that the word order
+   is consistent with the byte order.  */
+# include <endian.h>
+# if __BYTE_ORDER == __BIG_ENDIAN
+#  define major(dev) (((dev).__val[1] >> 8) & 0xff)
+#  define minor(dev) ((dev).__val[1] & 0xff)
+#  define makedev(major, minor) { 0, ((((unsigned int) (major)) << 8) \
+				      | ((unsigned int) (minor))) }
+# else
+#  define major(dev) (((dev).__val[0] >> 8) & 0xff)
+#  define minor(dev) ((dev).__val[0] & 0xff)
+#  define makedev(major, minor) { ((((unsigned int) (major)) << 8) \
+				   | ((unsigned int) (minor))), 0 }
+# endif
 #endif
 
 #endif /* sys/sysmacros.h */
