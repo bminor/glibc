@@ -384,7 +384,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     }
 
   /* Wake up a sigsuspend call that is blocking SS->thread.  */
-  inline void sigwakeup (struct hurd_sigstate *ss)
+  inline void sigwakeup (void)
     {
       if (ss->suspended != MACH_PORT_NULL)
 	{
@@ -578,7 +578,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	}
 
       __mutex_lock (&ss->lock);
-      sigwakeup (ss);		/* Wake up sigsuspend.  */
+      sigwakeup ();		/* Wake up sigsuspend.  */
       break;
 
     case ignore:
