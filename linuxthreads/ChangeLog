@@ -1,3 +1,7 @@
+2002-03-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* internals.h (MEMORY_BARRIER): Define as asm with memory as clobber.
+
 2002-02-17  Andreas Schwab  <schwab@suse.de>
 
 	* signals.c (sigwait): Check for old sighandler being SIG_ERR,
