@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
@@ -40,6 +40,17 @@
 
 /* @@ end of prolog @@ */
 
+char *
+_nl_find_language (const char *name)
+{
+  while (name[0] != '\0' && name[0] != '_' && name[0] != '@'
+	 && name[0] != '+' && name[0] != ',')
+    ++name;
+
+  return (char *) name;
+}
+
+
 int
 _nl_explode_name (name, language, modifier, territory, codeset,
 		  normalized_codeset, special, sponsor, revision)
@@ -71,9 +82,7 @@ _nl_explode_name (name, language, modifier, territory, codeset,
   mask = 0;
   syntax = undecided;
   *language = cp = name;
-  while (cp[0] != '\0' && cp[0] != '_' && cp[0] != '@'
-	 && cp[0] != '+' && cp[0] != ',')
-    ++cp;
+  cp = _nl_find_language (*language);
 
   if (*language == cp)
     /* This does not make sense: language has to be specified.  Use
