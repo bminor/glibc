@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <ctype.h>
 #include <localeinfo.h>
 
-/* Defined in locale/locale-C-ctype.c.  */
+/* Defined in locale/locale-C-ct.c.  */
 extern CONST unsigned short int __ctype_b_C[];
 extern CONST short int __ctype_tolower_C[];
 extern CONST short int __ctype_toupper_C[];
