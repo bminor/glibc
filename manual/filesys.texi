@@ -266,8 +266,8 @@ This structure is statically allocated and can be rewritten by a
 subsequent call.
 
 @strong{Portability Note:} On some systems, @code{readdir} may not
-return entries for @file{.} and @file{..}, though you can always use
-@file{.} and @file{..} in file names.  @xref{File Name Resolution}.
+return entries for @file{.} and @file{..}, even though these are always
+valid file names in any directory.  @xref{File Name Resolution}.
 
 If there are no more entries in the directory or an error is detected,
 @code{readdir} returns a null pointer.  The following @code{errno} error
