@@ -26,6 +26,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <hurd/term.h>
 
 char *__ttyname = NULL;
 
@@ -35,13 +36,9 @@ char *
 ttyname (int fd)
 {
   static const char dev[] = "/dev";
-  static char *name;
-  static size_t namelen = 0;
-  struct stat st;
   DIR *dirstream;
   struct dirent *d;
   error_t err;
-  io_t port;
   mach_port_t fd_cttyid;
   static char nodename[1024] = "";	/* XXX */
   
