@@ -17,7 +17,6 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
-#include <gnu-stabs.h>
 
 pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 int _hurd_orphaned;
@@ -36,17 +35,12 @@ init_pids (void)
 
 text_set_element (__libc_subinit, init_pids);
 
-static error_t
-proc_newids (sigthread_t me,
-	     pid_t ppid, pid_t pgrp, int orphaned)
+error_t
+__proc_newids (sigthread_t me,
+	       pid_t ppid, pid_t pgrp, int orphaned)
 {
   _hurd_ppid = ppid;
   _hurd_pgrp = pgrp;
   _hurd_orphaned = orphaned;
   return POSIX_SUCCESS;
 }
-
-#include "misc/proc_newids.c"
-
-asm (".stabs \"__hurd_sigport_ids\",23,0,0,23002"); /* XXX */
-text_set_element (_hurd_sigport_routines, _Xproc_newids);
