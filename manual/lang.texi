@@ -893,7 +893,8 @@ point number with @var{q} base 10 digits can be rounded to a floating
 point number with @var{p} base @var{b} digits and back again, without
 change to the @var{q} decimal digits.
 
-The value of this macro is guaranteed to be at least @code{6}.
+The value of this macro is supposed to be at least @code{6}, to satisfy
+ANSI C.
 
 @comment float.h
 @comment ANSI
@@ -901,16 +902,15 @@ The value of this macro is guaranteed to be at least @code{6}.
 @itemx LDBL_DIG
 These are similar to @code{FLT_DIG}, but for the data types
 @code{double} and @code{long double}, respectively.  The values of these
-macros are guaranteed to be at least @code{10}.
+macros are supposed to be at least @code{10}.
 
 @comment float.h
 @comment ANSI
 @item FLT_MIN_EXP
-This is the minimum negative integer such that the mathematical value
+This is the smallest possible exponent value for type @code{float}.
+More precisely, is the minimum negative integer such that the value
 @code{FLT_RADIX} raised to this power minus 1 can be represented as a
-normalized floating point number of type @code{float}.  In terms of the
-actual implementation, this is just the smallest value that can be
-represented in the exponent field of the number.
+normalized floating point number of type @code{float}.
 
 @comment float.h
 @comment ANSI
@@ -922,10 +922,9 @@ These are similar to @code{FLT_MIN_EXP}, but for the data types
 @comment float.h
 @comment ANSI
 @item FLT_MIN_10_EXP
-This is the minimum negative integer such that the mathematical value
-@code{10} raised to this power minus 1 can be represented as a
-normalized floating point number of type @code{float}.  This is
-guaranteed to be no greater than @code{-37}.
+This is the minimum negative integer such that @code{10} raised to this
+power minus 1 can be represented as a normalized floating point number
+of type @code{float}.  This is supposed to be @code{-37} or even less.
 
 @comment float.h
 @comment ANSI
@@ -936,11 +935,10 @@ These are similar to @code{FLT_MIN_10_EXP}, but for the data types
 @comment float.h
 @comment ANSI
 @item FLT_MAX_EXP
-This is the maximum negative integer such that the mathematical value
+This is the largest possible exponent value for type @code{float}.  More
+precisely, this is the maximum negative integer such that value
 @code{FLT_RADIX} raised to this power minus 1 can be represented as a
-floating point number of type @code{float}.  In terms of the actual
-implementation, this is just the largest value that can be represented
-in the exponent field of the number.
+floating point number of type @code{float}.
 
 @comment float.h
 @comment ANSI
@@ -952,10 +950,9 @@ These are similar to @code{FLT_MAX_EXP}, but for the data types
 @comment float.h
 @comment ANSI
 @item FLT_MAX_10_EXP
-This is the maximum negative integer such that the mathematical value
-@code{10} raised to this power minus 1 can be represented as a
-normalized floating point number of type @code{float}.  This is
-guaranteed to be at least @code{37}.
+This is the maximum negative integer such that @code{10} raised to this
+power minus 1 can be represented as a normalized floating point number
+of type @code{float}.  This is supposed to be at least @code{37}.
 
 @comment float.h
 @comment ANSI
@@ -968,8 +965,10 @@ These are similar to @code{FLT_MAX_10_EXP}, but for the data types
 @comment ANSI
 @item FLT_MAX
 The value of this macro is the maximum number representable in type
-@code{float}.  It is guaranteed to be at least @code{1E+37}.  The value
+@code{float}.  It is supposed to be at least @code{1E+37}.  The value
 has type @code{float}.
+
+The smallest representable number is @code{- FLT_MAX}.
 
 @comment float.h
 @comment ANSI
@@ -982,9 +981,9 @@ macro's value is the same as the type it describes.
 @comment float.h
 @comment ANSI
 @item FLT_MIN
-The value of this macro is the minimum normalized positive
-floating point number that is representable by type @code{float}, and is
-guaranteed to be no more than @code{1E-37}.
+The value of this macro is the minimum normalized positive floating
+point number that is representable in type @code{float}.  It is supposed
+to be no more than @code{1E-37}.
 
 @comment float.h
 @comment ANSI
@@ -998,7 +997,7 @@ macro's value is the same as the type it describes.
 @comment ANSI
 @item FLT_EPSILON
 This is the minimum positive floating point number of type @code{float}
-such that @code{1.0 + FLT_EPSILON != 1.0} is true.  It's guaranteed to
+such that @code{1.0 + FLT_EPSILON != 1.0} is true.  It's supposed to
 be no greater than @code{1E-5}.
 
 @comment float.h
@@ -1007,8 +1006,8 @@ be no greater than @code{1E-5}.
 @itemx LDBL_EPSILON
 These are similar to @code{FLT_MIN}, but for the data types
 @code{double} and @code{long double}, respectively.  The type of the
-macro's value is the same as the type it describes.  The values are
-never greater than @code{1E-9}.
+macro's value is the same as the type it describes.  The values are not
+supposed to be greater than @code{1E-9}.
 @end itemize
 
 @node IEEE Floating Point
@@ -1016,8 +1015,8 @@ never greater than @code{1E-9}.
 @cindex IEEE floating point representation 
 @cindex floating point, IEEE
 
-Here is an example showing how the floating type measurements work for
-the most common floating point representation, specified by the
+Here is an example showing how the floating type measurements come out
+for the most common floating point representation, specified by the
 @cite{IEEE Standard for Binary Floating Point Arithmetic (ANSI/IEEE Std
 754-1985)}.  Nearly all computers designed since the 1980s use this
 format.
