@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,36 +27,33 @@ int
 DEFUN(__symlink, (from, to), CONST char *from AND CONST char *to)
 {
   error_t err;
-  file_t todir;
-  const char *toname;
   file_t node;
 
-  todir = __hurd_path_split (to, &toname);
-  if (todir == MACH_PORT_NULL)
+  node = __path_lookup (to, FS_LOOKUP_CREATE|FS_LOOKUP_WRITE|FS_LOOKUP_EXCL,
+			0777 & _hurd_umask);
+  if (node == MACH_PORT_NULL)
     return -1;
-  err = __dir_lookup (todir, toname,
-		      FS_LOOKUP_CREATE|FS_LOOKUP_WRITE|FS_LOOKUP_EXCL,
-		      0777 & umask,
-		      &file);
+
   if (!err)
     {
       size_t to_write = strlen (from);
       while (to_write > 0)
 	{
 	  size_t wrote;
-	  if (err = __io_write (file, from, strlen (from), -1, &wrote))
+	  if (err = __io_write (node, from, to_write, -1, &wrote))
 	    break;
 	  to_write -= wrote;
 	  from += wrote;
 	}
-      __mach_port_deallocate (__mach_task_self (), file);
     }
 
   if (!err)
-    err = __dir_set_translator (todir, toname, FS_TRANS_EXCL, FS_GOAWAY_DONT,
-				_HURD_SYMLINK,
-				MACH_PORT_NULL);
-  __mach_port_deallocate (__mach_task_self (), todir);
+    err = __file_set_translator (node, FS_TRANS_EXCL, 0,
+				 _HURD_SYMLINK, MACH_PORT_NULL);
+
+  /* XXX can leave half-finished file */
+
+  __mach_port_deallocate (__mach_task_self (), node);
 
   if (err)
     return __hurd_fail (err);
