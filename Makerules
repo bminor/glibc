@@ -337,10 +337,12 @@ objects objs: $(objects)
 
 # Installation.
 
-# install-lib are installed from the object directory into $(libdir).
-# install-data are installed as they are into $(datadir).  headers are
-# installed as they are in $(includedir).  install-others are absolute path
-# names of files to install; rules to install them are defined elsewhere.
+# $(install-lib) are installed from the object directory into $(libdir);
+# files in $(install-lib) matching `lib%.a' are ranlib'd after installation
+# unless they also appear in $(non-lib.a).  $(install-data) are installed
+# as they are into $(datadir).  $(headers) are installed as they are in
+# $(includedir).  $(install-others) are absolute path names of files to
+# install; rules to install them are defined elsewhere.
 
 define do-install
 $(make-target-directory)
@@ -355,13 +357,6 @@ endef
 define make-target-directory
 $(addprefix -mkdir ,$(filter-out $(wildcard $(@D:%/=%)),$(@D:%/=%)))
 endef
-
-# Don't attempt binaries for the Hurd version (yet).
-ifdef mib_hacks
-install :=
-install-others := $(filter %.h %.defs,$(install-others))
-endif
-
 
 # Any directory (parent or subdir) that has any object files to build
 # should install libc.a; this way "make install" in a subdir is guaranteed
@@ -386,8 +381,8 @@ $(addprefix $(bindir)/,$(install)): $(bindir)/%: $(objpfx)%
 	$(INSTALL_PROGRAM) $< $@
 endif
 ifdef install-lib
-install-lib.a := $(filter lib%.a,$(install-lib))
-install-lib-non.a := $(filter-out lib%.a,$(install-lib))
+install-lib.a := $(filter-out $(non-lib.a),$(filter lib%.a,$(install-lib)))
+install-lib-non.a := $(filter-out lib%.a,$(install-lib)) $(non-lib.a)
 ifdef install-lib-non.a
 $(addprefix $(libdir)/$(libprefix),$(install-lib-non.a)): \
   $(libdir)/$(libprefix)%: $(objpfx)%
