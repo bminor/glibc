@@ -49,7 +49,7 @@ DEFUN(strstr, (haystack, needle),
 
       return (char *) h;
 
-    loop:
+    loop:;
     }
 
   return NULL;
