@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ int
 DEFUN(__lstat, (file, buf), CONST char *file AND struct stat *buf)
 {
   error_t err;
-  file_t port = __path_lookup (file, O_NOTRANS, 0);
+  file_t port = __path_lookup (file, O_NOLINK, 0);
   if (port == MACH_PORT_NULL)
     return -1;
   err = __io_stat (port, buf);
