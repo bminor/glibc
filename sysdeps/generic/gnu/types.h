@@ -68,7 +68,7 @@ typedef long int __key_t;	/* Type of an IPC key */
 /* It's easier to assume 8-bit bytes than to get CHAR_BIT.  */
 #define	__NFDBITS	(sizeof (unsigned long int) * 8)
 #define	__FDELT(d)	((d) / __NFDBITS)
-#define	__FDMASK(d)	(1 << ((d) % __NFDBITS))
+#define	__FDMASK(d)	((unsigned long int) 1 << ((d) % __NFDBITS))
 
 typedef struct
   {
