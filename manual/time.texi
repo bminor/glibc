@@ -26,6 +26,7 @@ an Alarm}.
 * Calendar Time::               Manipulation of ``real'' dates and times.
 * Setting an Alarm::            Sending a signal after a specified time.
 * Sleeping::                    Waiting for a period of time.
+* Usage Measurements::		Measuring various resources used.
 @end menu
 
 @node Processor Time, Calendar Time,  , Date and Time
@@ -217,13 +218,12 @@ date and time values.
 * Broken-down Time::            Facilities for manipulating local time.
 * Formatting Date and Time::    Converting times to strings.
 * TZ Variable::                 How users specify the time zone.
-* TZ Functions::                Functions to examine or specify the time
-                                 zone. 
+* Time Zone Functions::         Functions to examine or specify the time zone. 
 * Time Functions Example::      An example program showing use of some of
 				 the time functions.
 @end menu
 
-@node Simple Calendar Time, High-Resolution Calendar,  , Calendar Time
+@node Simple Calendar Time
 @subsection Simple Calendar Time
 
 This section describes the @code{time_t} data type for representing
@@ -268,7 +268,7 @@ time is not available, the value @code{(time_t)(-1)} is returned.
 @end deftypefun
 
 
-@node High-Resolution Calendar, Broken-down Time, Simple Calendar Time, Calendar Time
+@node High-Resolution Calendar
 @subsection High-Resolution Calendar
 
 The @code{time_t} data type used to represent calendar times has a 
@@ -413,7 +413,7 @@ You do not have privilege to set the time.
 and @code{adjtime} functions are derived from BSD.  
 
 
-@node Broken-down Time, Formatting Date and Time, High-Resolution Calendar, Calendar Time
+@node Broken-down Time
 @subsection Broken-down Time
 @cindex broken-down time
 @cindex calendar time and broken-down time
@@ -480,7 +480,7 @@ information is not available.
 This field describes the time zone that was used to compute this
 broken-down time value; it is the amount you must add to the local time
 in that zone to get GMT, in units of seconds.  The value is like that of
-the variable @code{timezone} (@pxref{TZ Functions}).  You can
+the variable @code{timezone} (@pxref{Time Zone Functions}).  You can
 also think of this as the ``number of seconds west'' of GMT.  The
 @code{tm_gmtoff} field is a GNU library extension.
 
@@ -542,10 +542,10 @@ If the specified broken-down time cannot be represented as a calendar time,
 the contents of @var{brokentime}.
 
 Calling @code{mktime} also sets the variable @code{tzname} with
-information about the current time zone.  @xref{TZ Functions}.
+information about the current time zone.  @xref{Time Zone Functions}.
 @end deftypefun
 
-@node Formatting Date and Time, TZ Variable, Broken-down Time, Calendar Time
+@node Formatting Date and Time
 @subsection Formatting Date and Time
 
 The functions described in this section format time values as strings.
@@ -587,7 +587,7 @@ asctime (localtime (@var{time}))
 @end example
 
 @code{ctime} sets the variable @code{tzname}, because @code{localtime}
-does so.  @xref{TZ Functions}.
+does so.  @xref{Time Zone Functions}.
 @end deftypefun
 
 @comment time.h
@@ -692,7 +692,7 @@ repeat the call, providing a bigger array.
 For an example of @code{strftime}, see @ref{Time Functions Example}.
 @end deftypefun
 
-@node TZ Variable, TZ Functions, Formatting Date and Time, Calendar Time
+@node TZ Variable
 @subsection Specifying the Time Zone with @code{TZ}
 
 In the GNU system, a user can specify the time zone by means of the
@@ -802,7 +802,7 @@ operation chooses a time zone by default.  Each operating system has its
 own rules for choosing the default time zone, so there is little we can
 say about them.
 
-@node TZ Functions, Time Functions Example, TZ Variable, Calendar Time
+@node Time Zone Functions
 @subsection Functions and Variables for Time Zones
 
 @comment time.h
@@ -851,7 +851,7 @@ This variable has a nonzero value if the standard U.S. daylight savings
 time rules apply.
 @end deftypevar
 
-@node Time Functions Example,  , TZ Functions, Calendar Time
+@node Time Functions Example
 @subsection Time Functions Example
 
 Here is an example program showing the use of some of the local time and
@@ -1094,3 +1094,77 @@ On the GNU system, it is safe to use @code{sleep} and @code{SIGALRM} in
 the same program, because @code{sleep} does not work by means of
 @code{SIGALRM}.
 
+@node Resource Usage
+@section Resource Usage
+
+@pindex sys/resource.h
+The function @code{getrusage} and the data type @code{struct rusage}
+are used for examining the usage figures of a process.  They are declared
+in @file{sys/resource.h}.
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int getrusage (int @var{processes}, struct rusage *@var{rusage})
+This function reports the usage totals for processes specified by
+@var{processes}, storing the information in @code{*@var{rusage}}.
+
+In most systems, @var{processes} has only two valid values:
+
+@table @code
+@comment sys/resource.h
+@comment BSD
+@item RUSAGE_SELF
+Just the current process.
+
+@comment sys/resource.h
+@comment BSD
+@item RUSAGE_CHILDREN
+All child processes (direct and indirect) that have terminated already.
+@end table
+
+In the GNU system, you can also inquire about a particular child process
+by specifying its process ID.
+
+The return value of @code{getrusage} is zero for success, and @code{-1}
+for failure.
+
+@table @code
+@item EINVAL
+The argument @var{processes} is not valid.
+@end table
+@end deftypefun
+
+One way of getting usage figures for a particular child process is with
+the function @code{wait4}, which returns totals for a child when it
+terminates.  @xref{BSD Wait Functions}.
+
+@deftp {Data Type} {struct rusage}
+This data type records a collection usage amounts for various sorts of
+resources.  It has the following members, and possibly others:
+
+@table @code
+@item struct timeval ru_utime
+User time used.
+
+@item struct timeval ru_stime
+System time used.
+
+@item long ru_majflt
+Number of page faults.
+
+@item long ru_inblock
+Number of block input operations.
+
+@item long ru_oublock
+Number of block output operations.
+
+@item long ru_msgsnd
+Number of messages sent.
+
+@item long ru_msgrcv
+Number of messages received.
+
+@item long ru_nsignals
+Number of signals received.
+@end table
+@end deftp
