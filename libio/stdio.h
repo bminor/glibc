@@ -1,6 +1,6 @@
 /* This is part of the iostream/stdio library, providing -*- C -*- I/O.
    Define ANSI C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public
@@ -103,39 +103,39 @@ extern int feof __P ((FILE*));
 extern int ferror __P ((FILE*));
 extern int fflush __P ((FILE*));
 extern int fgetc __P ((FILE *));
-extern int fgetpos __P ((FILE* fp, fpos_t *pos));
+extern int fgetpos __P ((FILE* fp, fpos_t *__pos));
 extern char* fgets __P ((char*, int, FILE*));
 extern FILE* fopen __P ((__const char*, __const char*));
-extern FILE* fopencookie __P ((void *cookie, __const char *mode,
-			       _IO_cookie_io_functions_t io_functions));
-extern int fprintf __P ((FILE*, __const char* format, ...));
+extern FILE* fopencookie __P ((void *__cookie, __const char *__mode,
+			       _IO_cookie_io_functions_t __io_functions));
+extern int fprintf __P ((FILE*, __const char* __format, ...));
 extern int fputc __P ((int, FILE*));
-extern int fputs __P ((__const char *str, FILE *fp));
+extern int fputs __P ((__const char *__str, FILE *__fp));
 extern size_t fread __P ((void*, size_t, size_t, FILE*));
 extern FILE* freopen __P ((__const char*, __const char*, FILE*));
-extern int fscanf __P ((FILE *fp, __const char* format, ...));
-extern int fseek __P ((FILE* fp, long int offset, int whence));
-extern int fsetpos __P ((FILE* fp, __const fpos_t *pos));
-extern long int ftell __P ((FILE* fp));
+extern int fscanf __P ((FILE *__fp, __const char* __format, ...));
+extern int fseek __P ((FILE* __fp, long int __offset, int __whence));
+extern int fsetpos __P ((FILE* __fp, __const fpos_t *__pos));
+extern long int ftell __P ((FILE* __fp));
 extern size_t fwrite __P ((__const void*, size_t, size_t, FILE*));
 extern int getc __P ((FILE *));
 extern int getchar __P ((void));
 extern char* gets __P ((char*));
 extern void perror __P ((__const char *));
-extern int printf __P ((__const char* format, ...));
+extern int printf __P ((__const char* __format, ...));
 extern int putc __P ((int, FILE *));
 extern int putchar __P ((int));
-extern int puts __P ((__const char *str));
+extern int puts __P ((__const char *__str));
 extern int remove __P ((__const char*));
-extern int rename __P ((__const char* _old, __const char* _new));
+extern int rename __P ((__const char* __old, __const char* __new));
 extern void rewind __P ((FILE*));
 extern int scanf __P ((__const char* format, ...));
 extern void setbuf __P ((FILE*, char*));
 extern void setlinebuf __P ((FILE*));
 extern void setbuffer __P ((FILE*, char*, int));
-extern int setvbuf __P ((FILE*, char*, int mode, size_t size));
-extern int sprintf __P ((char*, __const char* format, ...));
-extern int sscanf __P ((__const char* string, __const char* format, ...));
+extern int setvbuf __P ((FILE*, char*, int __mode, size_t __size));
+extern int sprintf __P ((char*, __const char* __format, ...));
+extern int sscanf __P ((__const char* string, __const char* __format, ...));
 extern FILE* tmpfile __P ((void));
 extern char* tmpnam __P ((char*));
 #ifdef	__USE_MISC
