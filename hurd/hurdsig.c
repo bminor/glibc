@@ -643,6 +643,14 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	/* Stop the thread and abort its pending RPC operations.  */
 	if (! ss_suspended)
 	  __thread_suspend (ss->thread);
+
+	/* Abort the thread's kernel context, so any pending message send
+	   or receive completes immediately or aborts.  If an interruptible
+	   RPC is in progress, abort_rpcs will do this.  But we must always
+	   do it before fetching the thread's state, because
+	   thread_get_state is never kosher before thread_abort.  */
+	abort_thread (ss, &thread_state, &reply_port, reply_port_type);
+
 	wait_for_reply = (abort_rpcs (ss, signo, &thread_state,
 				      &reply_port, reply_port_type)
 			  != MACH_PORT_NULL);
