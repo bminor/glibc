@@ -1,3 +1,93 @@
+2004-10-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/asia: Update from tzdata2004e.
+	* timezone/southamerica: Likewise.
+	* timezone/private.h: Update from tzcode2004e.
+	* timezone/zdump.c: Likewise.
+
+	* stdio-common/vfscanf.c: Add support for reading localized
+	digits.  Patch mainly by Hamed Malek <hamed@bamdad.org>.
+
+	* resolv/res_init.c (res_thread_freeres): Reset _res.options.
+	[BZ #434]
+
+	* resolv/res_send.c (send_dg): Use nonblocking sockets.  Add
+	appropriate poll/select calls and restart operation if necessary.
+	Also handle EINTR.
+
+	* elf/tst-dlopenrpath.c (do_test): Enable code which was disabled
+	for debugging.
+
+	* elf/dl-sym.c (do_sym): Avoid using global variable.
+
+	* elf/dl-addr.c (_dl_addr): Really use match everywhere.
+
+2004-10-09  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/memcopy.h (WORD_COPY_BWD): Remove use of cast as
+	lvalue.
+
+	* sysdeps/m68k/fpu/bits/mathinline.h: Remove __THROW from inline
+	definitions.
+
+2004-10-07  Andreas Schwab  <schwab@suse.de>
+
+	* misc/sys/uio.h: Change __vector to __iovec to avoid clash with
+	altivec.
+
+2004-10-06  Alan Modra  <amodra@bigpond.net.au>
+
+	* gmon/Makefile (CFLAGS-mcount.c): Move before inclusion of "Rules".
+	* sysdeps/powerpc/powerpc64/Makefile (CFLAGS-mcount.c): Add
+	-msoft-float.
+	* sysdeps/powerpc/powerpc64/sysdep.h (SAVE_ARG, REST_ARG): New macros.
+	(CALL_MCOUNT): Replace with a gas macro implementation.
+	(EALIGN): Delete PROF version.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Invoke CALL_MCOUNT.
+	* sysdeps/powerpc/powerpc64/bsd-_setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/bsd-setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc64/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc64/stpcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strlen.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceil.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceilf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_floor.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_floorf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_rint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_rintf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_round.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_roundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_trunc.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_truncf.S: Likewise.
+
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Add extra entry point
+	past _mcount call.
+	* sysdeps/powerpc/powerpc64/bsd-_setjmp.S: Use it.
+	* sysdeps/powerpc/powerpc64/bsd-setjmp.S: Likewise.
+
+2004-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_mkquery.c (res_nmkquery): Reject randombits value if
+	low 16 bits are zero.
+
+2004-10-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/tst-getaddrinfo2.c: Include stdlib.h and string.h.
+	(do_test): Use %p instead of 0x%08X to print a pointer.
+
+	* malloc/malloc.c: Include stdio-common/_itoa.h.
+
 2004-10-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c (dl_main): Use _dl_debug_printf instead of _dl_printf
