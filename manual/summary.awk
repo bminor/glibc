@@ -69,6 +69,8 @@ $1 == "@comment" && $2 ~ /\.h$/ { header="@file{" $2 "}";
 				    header=header ", @file{" $i "}"
 				}
 
+$1 == "@comment" && $2 == "(none)" { header = -1; }
+
 $1 == "@comment" && header != 0 { std=$2;
 				  for (i=3;i<=NF;++i) std=std " " $i }
 
@@ -103,5 +105,6 @@ header != 0 && $1 ~ /@def|@item|@vindex/ \
 	  }
 	  printf "@comment %s%c", name, 012 # FF
 	  printf "@item%s%c%c", defn, 012, 012
-	  printf "%s (%s):  @ref{%s}.%c\n", header, std, node, 012;
+	  if (header != -1) printf "%s ", header;
+	  printf "(%s):  @ref{%s}.%c\n", std, node, 012;
 	  header = 0 }
