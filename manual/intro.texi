@@ -63,8 +63,8 @@ library.  This section gives you an overview of these standards, so that
 you will know what they are when they are mentioned in other parts of
 the manual.
 
-For information about what standards specify what features, 
-@pxref{Summary of Library Facilities}.
+@xref{Summary of Library Facilities} for information about what
+standards specify what features.
 
 @menu
 * ANSI C::			The American National Standard for the
@@ -80,7 +80,7 @@ For information about what standards specify what features,
 
 The GNU C library is compatible with the C standard adopted by the
 American National Standards Institute (ANSI):
-@cite{American National Standard X3.159-1989 --- ``ANSI C''}.
+@cite{American National Standard X3.159-1989---``ANSI C''}.
 The header files and library facilities that make up the GNU library are
 a superset of those specified by the ANSI C standard.@refill
 
@@ -226,7 +226,7 @@ definitions of the variables and functions.
 (Recall that in C, a @dfn{declaration} merely provides information that
 a function or variable exists and gives its type.  For a function
 declaration, information about the types of its arguments might be
-provided as well.  The purpose of declarations are to allow the compiler
+provided as well.  The purpose of declarations is to allow the compiler
 to correctly process references to the declared variables and functions.
 A @dfn{definition}, on the other hand, actually allocates storage for a
 variable or says what a function does.)
@@ -242,16 +242,17 @@ the actual definitions provided in the archive file.
 
 Header files are included into a program source file by the
 @samp{#include} preprocessor directive.  The C language supports two
-forms of this directive:
+forms of this directive; the first,
 
 @example
-#include "@var{file.h}"
+#include "@var{header}"
 @end example
 
 @noindent 
-is typically used to include a header file @file{file.h} that you write
-yourself that contains definitions and declarations about the interfaces
-between the different parts of your particular application, while
+is typically used to include a header file @var{header} that you write
+yourself; this would contain definitions and declarations describing the
+interfaces between the different parts of your particular application.
+By contrast,
 
 @example
 #include <file.h>
@@ -259,9 +260,9 @@ between the different parts of your particular application, while
 
 @noindent
 is typically used to include a header file @file{file.h} that contains
-definitions and declarations for a standard library, that is normally
-installed in a standard place by your system administrator.  You should
-use this second form for the C library header files.
+definitions and declarations for a standard library.  This file would
+normally be installed in a standard place by your system administrator.
+You should use this second form for the C library header files.
 
 For more information about the use of header files and @samp{#include}
 directives, @pxref{Header Files,,, cpp.texinfo, The GNU C Preprocessor
@@ -327,7 +328,7 @@ function isn't followed by the left parenthesis that is syntactically
 necessary to recognize the  a macro call.
 
 You might occasionally want to avoid using the a macro definition of a
-function --- perhaps to make your program easier to debug.  There are
+function---perhaps to make your program easier to debug.  There are
 two ways you can do this:
 
 @itemize @bullet
@@ -354,7 +355,7 @@ int f (int *i) @{ return (abs (++*i)); @}
 
 @noindent
 the reference to @code{abs} might refer to either a macro or a function.
-On the other hand, in each of the following examples, the reference is
+On the other hand, in each of the following examples the reference is
 to a function and not a macro.
 
 @example
@@ -407,19 +408,17 @@ implementationally it might be easier for the compiler to treat these as
 built-in parts of the language.
 @end itemize
 
-In addition to the names documented in this manual, all external
-identifiers (global functions and variables) that begin with an
-underscore (@samp{_}) and all other identifiers that begin with either
-two underscores or an underscore followed by a capital letter are
-reserved names.  This is so that functions, variables, and macros
-internal to the workings of the C library or the compiler can be defined
-without intruding on the name space of user programs, and without the
-possibility of a user program redefining names used internally in the
-implementation of the library.
+In addition to the names documented in this manual, reserved names
+include all external identifiers (global functions and variables) that
+begin with an underscore (@samp{_}) and all identifiers regardless of
+use that begin with either two underscores or an underscore followed by
+a capital letter are reserved names.  This is so that the library and
+header files can define functions, variables, and macros for internal
+purposes without risk of conflict with names in user programs.
 
 Some additional classes of identifier names are reserved for future
 extensions to the C language.  While using these names for your own
-purposes right now might not cause a problem, this raises the
+purposes right now might not cause a problem, they do raise the
 possibility of conflict with future versions of the C standard, so you
 should avoid these names.
 
@@ -442,8 +441,8 @@ used for additional macros specifying locale attributes.
 @item
 Names of all existing mathematics functions (@pxref{Mathematics})
 suffixed with @samp{f} or @samp{l} are reserved for corresponding
-functions that operate on @code{float} or @code{long double} arguments
-(respectively).
+functions that operate on @code{float} or @code{long double} arguments,
+respectively.
 
 @item
 Names that begin with @samp{SIG} followed by an uppercase letter are
@@ -462,7 +461,7 @@ lowercase letter are reserved for additional string and array functions.
 Names that end with @samp{_t} are reserved for additional type names.
 @end itemize
 
-In addition to this, some individual header files reserve names beyond
+In addition, some individual header files reserve names beyond
 those that they actually define.  You only need to worry about these
 restrictions if your program includes that particular header file.
 
@@ -664,12 +663,12 @@ facilities in the library, and contains information about basic concepts
 such as file names.
 
 @item
-@ref{Input/Output on Streams}, describes i/o operations involving
+@ref{Input/Output on Streams}, describes I/O operations involving
 streams (or @code{FILE *} objects).  These are the normal C library
 functions from @file{stdio.h}.
 
 @item
-@ref{Low-Level Input/Output}, contains information about i/o operations
+@ref{Low-Level Input/Output}, contains information about I/O operations
 on file descriptors.  File descriptors are a lower-level mechanism
 specific to the Unix family of operating systems.
 
@@ -718,7 +717,7 @@ and CPU time, as well as functions for setting alarms and timers.
 @code{longjmp} functions.
 
 @item
-@ref{Signal Handling}, tells you all about signals --- what they are,
+@ref{Signal Handling}, tells you all about signals---what they are,
 how to establish a handler that is called when a particular kind of
 signal is delivered, and how to prevent signals from arriving during
 critical sections of your program.
