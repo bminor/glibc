@@ -272,6 +272,14 @@ CONCAT(_nss_db_get,ENTNAME_r) (struct STRUCTURE *result,
     {
       key.size = snprintf (key.data = buf, sizeof buf, "0%u", entidx++);
       status = lookup (&key, result, buffer, buflen H_ERRNO_ARG);
+      if (status == NSS_STATUS_TRYAGAIN
+#ifdef NEED_H_ERRNO
+	  && *herrnop == NETDB_INTERNAL
+#endif
+	  && errno == ERANGE)
+	/* Give the user a chance to get the same entry with a larger
+	   buffer.  */
+	--entidx;
     }
   while (status == NSS_STATUS_RETURN);
   __libc_lock_unlock (lock);
