@@ -1,3 +1,8 @@
+1998-05-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sunrpc/rpc/pmap_clnt.h: Carry over change from 2.1 to properly
+	typedef resultproc_t.  Reported by Peter Leven. [PR libc/595]
+
 1998-05-02  7:06  Richard Henderson  <rth@cygnus.com>
 
 	* sysdeps/alpha/lshift.s: Correct .prologue usage.
