@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -68,7 +68,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 	else if (c != hello[i])
 	  {
 	    printf("Got '%c' instead of '%c' at %u.\n",
-		   (unsigned char) c, hello[i]);
+		   (unsigned char) c, hello[i], i);
 	    lose = 1;
 	    break;
 	  }
