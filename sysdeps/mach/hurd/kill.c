@@ -27,36 +27,53 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(__kill, (pid, sig), int pid AND int sig)
 {
-  /* XXXXXXXXXXXXXXXXXXXXXXXXXXX */
   error_t err;
+  mach_port_t portbuf[10];
+  mach_port_t *ports = portbuf;
+  size_t nports = 10, i;
+  mach_port_t proc;
+  int dealloc_proc;
 
-  __mutex_lock (&_hurd_lock);
+  proc = _hurd_port_get (&_hurd_proc, &dealloc_proc);
 
-  if (pid == 0)
-    pid = - _hurd_pgrp;
-
-  if (pid < 0)
+  if (pid <= 0)
     {
       /* Send SIG to each process in pgrp (- PID).  */
       proccoll_t pcoll;
-      err = __proc_pgrp_pcoll (_hurd_proc, - pid, &pcoll);
+      err = __proc_pgrp_pcoll (proc, - pid, &pcoll);
       if (!err)
 	{
-	  err = __proc_get_collports (_hurd_proc, pcoll, &ports, &nports);
+	  err = __proc_get_collports (proc, pcoll, &ports, &nports);
 	  __mach_port_deallocate (__mach_task_self (), pcoll);
 	}
     }
   else
     {
-      err = __proc_pid2task (_hurd_proc, pid, &refport);
-      if (err)
-	err = __proc_getsidport (_hurd_proc, &refport);
-      if (!err)
-	err = __proc_kill (_hurd_proc, pid, sig);
-      if (refport != MACH_PORT_NULL)
-	__mach_port_deallocate (__mach_task_self (), refport);
-      __mutex_unlock (&_hurd_lock);
+      err = __proc_getmsgport (proc, pid, &ports[0]);
+      nports = 1;
     }
+
+  if (!err)
+    {
+      err = __proc_pid2task (proc, pid, &refport);
+      if (err)
+	err = __proc_getsidport (proc, &refport);
+    }
+
+  _hurd_port_free (proc, &dealloc_proc);
+
+  for (i = 0; i < nports; ++i)
+    {
+      if (!err)
+	err = __sig_post (ports[i], sig, refport);
+      __mach_port_deallocate (__mach_task_self (), ports[i]);
+    }
+
+  if (refport != MACH_PORT_NULL)
+    __mach_port_deallocate (__mach_task_self (), refport);
+
+  if (ports != portbuf)
+    __vm_deallocate (__mach_task_self (), ports, nports * sizeof (ports[0]));
 
   if (err)
     return __hurd_fail (err);
