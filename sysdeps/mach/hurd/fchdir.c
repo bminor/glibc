@@ -34,7 +34,7 @@ DEFUN(fchdir, (fd), int fd)
 		   ({ file_t crdir = port;
 		      HURD_DPORT_USE (fd,
 				      __hurd_path_lookup (crdir, port, "",
-							  O_EXEC, 0, &cwdir));
+							  0, 0, &cwdir));
 		    }));
 
   if (err)
