@@ -109,6 +109,14 @@ extern thread_t _hurd_sigthread;
 /* Resource limit on core file size.  Enforced by hurdsig.c.  */
 extern int _hurd_core_limit;
 
+/* Initialize the signal code, and start the signal thread.  */
+
+extern void _hurdsig_init (void);
+
+/* Initialize proc server-assisted fault recovery for the signal thread.  */
+
+extern void _hurdsig_fault_init (void);
+
 /* Raise a signal as described by SIGNO and SIGCODE, on the thread whose
    sigstate SS points to.  If SS is a null pointer, this instead affects
    the calling thread.  */
@@ -149,11 +157,6 @@ extern void _hurd_msgport_receive (void);
    system call (machine-dependent).  */
 
 extern int _hurd_thread_state_msging_p (void *state);
-
-/* Start THREAD running FUNCTION (machine-dependent).  */
-
-extern kern_return_t _hurd_start_sigthread (thread_t thread,
-					    void (*function) (void));
 
 /* Set up STATE with a thread state that, when resumed, is
    like `longjmp (_hurd_sigthread_fault_env, 1)'.  */
