@@ -89,7 +89,7 @@ __BEGIN_DECLS
 #define	S_IWOTH	(S_IWGRP >> 3)	/* Write by others.  */
 #define	S_IXOTH	(S_IXGRP >> 3)	/* Execute by others.  */
 /* Read, write, and execute by others.  */
-#define	S_IRWXO	(S_IRXWG >> 3)
+#define	S_IRWXO	(S_IRWXG >> 3)
 
 
 /* Get file attributes for FILE and put them in BUF.  */
