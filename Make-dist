@@ -167,9 +167,9 @@ subdirs := $(filter-out crypt,$(subdirs))
 	mv $@.new $@
 
 .PHONY: dist
-dist: $(tardir).tar.z $(tardir)-crypt.tar.z
+dist: $(tardir).tar.gz $(tardir)-crypt.tar.gz
 
-$(tardir)-crypt.tar.z: crypt/crypt.tar.z
+$(tardir)-crypt.tar.gz: crypt/crypt.tar.gz
 	ln $< $@
 crypt/%: FORCE
 	$(MAKE) -C $(@D) $(@F)
@@ -187,8 +187,8 @@ $(tardir).tar: dist.tar subdir_dist
 %.Z: %
 	compress -c $< > $@
 
-%.z: %
-	gzip -9 -c $< > $@
+%.gz: %
+	gzip -9 -v -c $< > $@
 
 foo:=$(shell echo 'subdirs=$(subdirs)' >&2)
 dist-subdirs := $(addprefix dist-,$(subdirs)) # dist-manual
