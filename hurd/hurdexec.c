@@ -16,9 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
-#include <stddef.h>
 #include <unistd.h>
 #include <hurd.h>
 #include <fcntl.h>
@@ -191,9 +189,5 @@ _hurd_exec (file_t file, char *const argv[], char *const envp[])
       if (dtable[i] != MACH_PORT_NULL)
 	_hurd_port_free (dtable_cells[i], &dealloc_dtable[i], dtable[i]);
 
-  if (err)
-    return __hurd_fail (err);
-
-  /* That's interesting.  */
-  return 0;
+  return err;
 }
