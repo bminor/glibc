@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -99,41 +99,47 @@ struct tm
 extern clock_t clock __P ((void));
 
 /* Return the current time and put it in *TIMER if TIMER is not NULL.  */
-extern time_t time __P ((time_t * __timer));
+extern time_t time __P ((time_t *__timer));
 
 /* Return the difference between TIME1 and TIME0.  */
 extern __CONSTVALUE double difftime __P ((time_t __time1, time_t __time0));
 
 /* Return the `time_t' representation of TP and normalize TP.  */
-extern time_t mktime __P ((struct tm * __tp));
+extern time_t mktime __P ((struct tm *__tp));
+
+/* Subroutine of `mktime'.  Return the `time_t' representation of TP and
+   normalize TP, given that a `struct tm *' maps to a `time_t' as performed
+   by FUNC.  */
+extern time_t _mktime_internal __P ((struct tm *__tp,
+				     struct tm *(*__func) (const time_t *)));
 
 
 /* Format TP into S according to FORMAT.
    Write no more than MAXSIZE characters and return the number
    of characters written, or 0 if it would exceed MAXSIZE.  */
 extern size_t strftime __P ((char *__s, size_t __maxsize,
-			 __const char *__format, __const struct tm * __tp));
+			 __const char *__format, __const struct tm *__tp));
 
 
 /* Return the `struct tm' representation of *TIMER
    in Universal Coordinated Time (aka Greenwich Mean Time).  */
-extern struct tm *gmtime __P ((__const time_t * __timer));
+extern struct tm *gmtime __P ((__const time_t *__timer));
 
 /* Return the `struct tm' representation
    of *TIMER in the local timezone.  */
-extern struct tm *localtime __P ((__const time_t * __timer));
+extern struct tm *localtime __P ((__const time_t *__timer));
 
 /* Return the `struct tm' representation of *TIMER,
    offset OFFSET seconds east of Universal Coordinated Time.  */
-extern struct tm *__offtime __P ((__const time_t * __timer,
+extern struct tm *__offtime __P ((__const time_t *__timer,
 				  long int __offset));
 
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */
-extern char *asctime __P ((__const struct tm * __tp));
+extern char *asctime __P ((__const struct tm *__tp));
 
 /* Equivalent to `asctime(localtime(timer))'.  */
-extern char *ctime __P ((__const time_t * __timer));
+extern char *ctime __P ((__const time_t *__timer));
 
 
 /* Defined in localtime.c.  */
@@ -165,7 +171,7 @@ extern long int timezone;
 
 /* Set the system time to *WHEN.
    This call is restricted to the superuser.  */
-extern int stime __P ((__const time_t * __when));
+extern int stime __P ((__const time_t *__when));
 #endif
 
 
@@ -173,6 +179,22 @@ extern int stime __P ((__const time_t * __when));
    except every 100th isn't, and every 400th is).  */
 #define	__isleap(year)	\
   ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
+
+
+#ifdef __USE_MISC
+/* Miscellaneous functions many Unices inherited from the public domain
+   localtime package.  These are included only for compatibility.  */
+
+/* Like `mktime', but for TP represents Universal Time, not local time.  */
+extern time_t timegm __P ((struct tm *__tp));
+
+/* Another name for `mktime'.  */
+extern time_t timelocal __P ((struct tm *__tp));
+
+/* Return the number of days in YEAR.  */
+extern int dysize __P ((int __year));
+#endif
+
 
 __END_DECLS
 
