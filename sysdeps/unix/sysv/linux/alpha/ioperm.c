@@ -549,7 +549,7 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 	  len = port_to_cpu_addr (MAX_PORT, io.sys, 1) - addr;
 	  io.base =
 	    (unsigned long int) __mmap (0, len, PROT_NONE, MAP_SHARED,
-					fd, io.io_base));
+					fd, io.io_base);
 	  close (fd);
 	  if ((long) io.base == -1)
 	    return -1;
