@@ -1,4 +1,4 @@
-/* xstat using old-style Unix fstat system call.
+/* xstat using old-style Unix stat system call.
    Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -21,7 +21,7 @@
 #include <stddef.h>
 #include <sys/stat.h>
 
-#include "kernel_stat.h"
+#include <kernel_stat.h>
 
 extern int __syscall_stat (const char *, struct kernel_stat *);
 
