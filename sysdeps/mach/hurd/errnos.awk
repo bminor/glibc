@@ -25,9 +25,8 @@ BEGIN {
     print "/* This file is generated from errno.texinfo by errnos.awk. */";
     print "";
     print "#ifdef _ERRNO_H\n";
-    print "\
-/* The Hurd uses Mach error system 0x10, currently only subsystem 0.  */";
-    print "#define _HURD_ERRNO(n)\t((0x10 << 26) | ((n) & 0x3fff))";
+    print "/* The Hurd is Mach error system 0, subsystem 2. */"
+    print "#define _HURD_ERRNO(n)\t((2 << 14) | ((n) & 0x3fff))";
     errno = 0;
     errnoh = 0;
   }
@@ -46,8 +45,7 @@ errnoh == 2 && $1 == "@deftypevr"  && $2 == "Macro" && $3 == "int" \
     if (e == "EDOM" || e == "ERANGE")
       {
 	print "#endif /* <errno.h> included.  */";
-	print "#if (!defined (__Emath_defined) && \\\n\
-     (defined (_ERRNO_H) || defined (__need_Emath)))";\
+	print "#if (!defined (__Emath_defined) && (defined (_ERRNO_H) || defined (__need_Emath)))";\
       }
     s = "#define\t" e;
     l = 24 - length (s);
