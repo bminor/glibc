@@ -63,6 +63,7 @@ glibc.spec: glibc.spec.in ../version.h branch.mk
 	(echo '%define glibcdate $(snapshot-name)'; \
 	 echo '%define glibcname $(tar-name)'; \
 	 echo '%define glibcsrcdir $(srcdir-name)'; \
+	 echo '%define glibc_release_tarballs $(if $(upstream),1,0)'; \
 	 sed -n '/VERSION/s/^.*"\([^"]*\)"$$/%define glibcversion \1/p' \
 	     ../version.h; \
 	 cat $<) > $@.new
@@ -126,6 +127,7 @@ $(tar-name)-$(branch-name)-$(snapshot-name).tar.bz2: Makefile branch.mk \
 	rm -rf libc
 	mv -f $@.new $@
 
+glibc-tarballs = $(srcdir-name).tar.bz2
 ifeq (,$(upstream))
 $(srcdir-name).tar.bz2: Makefile branch.mk
 	@rm -rf $(srcdir-name)
@@ -134,13 +136,17 @@ $(srcdir-name).tar.bz2: Makefile branch.mk
 	rm -rf $(srcdir-name)
 	mv -f $@.new $@
 else
-$(srcdir-name).tar.bz2:
+glibc-tarballs += $(srcdir-name:glibc-%=glibc-linuxthreads-%).tar.bz2 \
+		  $(srcdir-name:glibc-%=glibc-libidn-%).tar.bz2
+
+$(glibc-tarballs):
 	curl -O $(releases-url)/$@
 endif
 
 archives = $(srcdir-name).tar.bz2 \
 	   $(tar-name)-$(branch-name)-$(snapshot-name).tar.bz2 \
 	   $(tar-name)-$(branch-name).patch
+
 finish_archive: $(archives)
 
 archive: glibc.spec

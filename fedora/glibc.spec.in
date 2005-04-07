@@ -1,4 +1,4 @@
-%define glibcrelease 2.fc3.6
+%define glibcrelease 0.fc3.1
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -13,7 +13,12 @@ Release: %{glibcrelease}
 License: LGPL
 Group: System Environment/Libraries
 Source0: %{glibcsrcdir}.tar.bz2
-Source1: %{glibcname}-fedora-%{glibcdate}.tar.bz2
+%if %{glibc_release_tarballs}
+Source1: %(echo %{glibcsrcdir} | sed s/glibc-/glibc-linuxthreads-/).tar.bz2
+Source2: %(echo %{glibcsrcdir} | sed s/glibc-/glibc-libidn-/).tar.bz2
+%define glibc_release_unpack -a1 -a2
+%endif
+Source3: %{glibcname}-fedora-%{glibcdate}.tar.bz2
 Patch0: %{glibcname}-fedora.patch
 Patch1: %{name}-nptl-check.patch
 Patch2: %{name}-ppc-assume.patch
@@ -247,7 +252,7 @@ package or when debugging this package.
 %endif
 
 %prep
-%setup -q -n %{glibcsrcdir} -a1
+%setup -q -n %{glibcsrcdir} %{glibc_release_unpack} -a3
 %patch0 -E -p1
 case "`gcc --version | head -1`" in
 gcc*\ 3.[34]*)
@@ -1269,8 +1274,8 @@ rm -f *.filelist*
 %endif
 
 %changelog
-* Tue Apr  5 2005 Roland McGrath <roland@redhat.com> 2.3.4-2.fc3.6
-- update from CVS (glibc-2_3-branch)
+* Thu Apr  7 2005 Roland McGrath <roland@redhat.com> 2.3.5-0.fc3.1
+- update to glibc 2.3.5 release
   - dlclose fixes merged (#145810, #150414, BZ#821)
   - fix a typo in WINDOWS-31J charmap (#151739, BZ#823)
   - fix NIS ypprot_err (#151469, BZ#822)
