@@ -143,7 +143,7 @@ $(glibc-tarballs):
 	curl -O $(releases-url)/$@
 endif
 
-archives = $(srcdir-name).tar.bz2 \
+archives = $(glibc-tarballs) \
 	   $(tar-name)-$(branch-name)-$(snapshot-name).tar.bz2 \
 	   $(tar-name)-$(branch-name).patch
 
