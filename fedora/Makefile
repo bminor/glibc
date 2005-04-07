@@ -43,7 +43,7 @@ update:
 	cvs -Q rtag $(if $(on-branch),-r $(glibc-base),-D "$$now") $$new libc;\
 	)\
 	(echo '# This file is updated automatically by Makefile.'; \
-	 $(foreach var,$(branch.mk-vars),\
+	 $(foreach var,$(branch.mk-vars) $(if $(upstream-tag),upstream),\
 		   $(if $($(var)),echo '$(var) := $($(var))';)) \
 	 echo "$(glibc-branch)-sync-date := $$now"; \
 	 echo "$(glibc-branch)-sync-tag := $$new"; \
