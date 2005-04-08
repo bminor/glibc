@@ -1,3 +1,7 @@
+2005-04-07  Roland McGrath  <roland@redhat.com>
+
+	* po/libc.pot: Regenerated.
+
 2005-04-05  Roland McGrath  <roland@redhat.com>
 
 	* NEWS, version.h (VERSION): 2.3.5.
