@@ -26,15 +26,24 @@ snapshot-id = $($(glibc-branch)-sync-tag)
 branch-name := $(patsubst %-$(patsubst glibc-%,%,$(tag-name)),%,\
 			  $(glibc-branch))
 
-branch.mk-vars = glibc-branch glibc-base DIST_BRANCH COLLECTION
+branch.mk-vars = glibc-branch glibc-base DIST_BRANCH COLLECTION \
+		 releases-url
+
+ifeq (,$(upstream-tag))
+ifneq (,$(upstream))
+upstream-tag := glibc-$(subst .,_,$(upstream))
+endif
+endif
 
 update:
 	now=`date -u $(snapshot-date-fmt)`; \
+	$(if $(upstream-tag),new='$(upstream-tag)';,\
 	name=`date -u -d "$$now" $(snapshot-name-fmt)`; \
 	new="$(tag-prefix)$(tag-name)-$$name"; \
 	cvs -Q rtag $(if $(on-branch),-r $(glibc-base),-D "$$now") $$new libc;\
+	)\
 	(echo '# This file is updated automatically by Makefile.'; \
-	 $(foreach var,$(branch.mk-vars),\
+	 $(foreach var,$(branch.mk-vars) $(if $(upstream-tag),upstream),\
 		   $(if $($(var)),echo '$(var) := $($(var))';)) \
 	 echo "$(glibc-branch)-sync-date := $$now"; \
 	 echo "$(glibc-branch)-sync-tag := $$new"; \
@@ -53,6 +62,8 @@ commit-merge:
 glibc.spec: glibc.spec.in ../version.h branch.mk
 	(echo '%define glibcdate $(snapshot-name)'; \
 	 echo '%define glibcname $(tar-name)'; \
+	 echo '%define glibcsrcdir $(srcdir-name)'; \
+	 echo '%define glibc_release_tarballs $(if $(upstream),1,0)'; \
 	 sed -n '/VERSION/s/^.*"\([^"]*\)"$$/%define glibcversion \1/p' \
 	     ../version.h; \
 	 cat $<) > $@.new
@@ -78,13 +89,27 @@ tag: glibc.spec
 force-tag: glibc.spec
 	cd ..; cvs -Q tag -F -c $(tag-prefix)$(spec-tag)
 
+ifeq (,$(upstream))
+srcdir-name = $(tar-name)-$(snapshot-name)
+else
+tar-name = glibc-$(upstream)
+srcdir-name = $(tar-name)
+
+ifneq ($($(glibc-branch)-sync-tag),$(upstream-tag))
+define upstream-tag-check
+	@echo Need to run make update upstream=$(upstream); exit 1
+endef
+endif
+endif
+
 # Note this rule assumes that your working directory (..) is up to date.
 $(tar-name)-$(branch-name).patch: makepatch.awk glibc.spec \
 				  ../ChangeLog ../*/ChangeLog
-# Use -kk to suppress patches for $Id$ differences between branches.
+	$(upstream-tag-check)
+# Use -kk to suppress patches for $ Id $ differences between branches.
 	(cd ..; cvs -q diff -kk -upN $(select-snapshot) $(select-release)) | \
-	awk -v OLDVER=$(tar-name)-$(snapshot-name) \
-	    -v NEWVER=$(tar-name)-$(snapshot-name)-$(branch-name) \
+	awk -v OLDVER=$(srcdir-name) \
+	    -v NEWVER=$(srcdir-name)-$(branch-name) \
 	    -f $< > patch.tmp
 	mv -f patch.tmp $@
 
@@ -95,22 +120,33 @@ outside-patch = fedora c_stubs rtkaio glibc-compat \
 $(tar-name)-$(branch-name)-$(snapshot-name).tar.bz2: Makefile branch.mk \
 						     ../ChangeLog \
 						     ../*/ChangeLog
+	$(upstream-tag-check)
 	@rm -rf libc
 	cvs -Q export $(select-release) $(addprefix libc/,$(outside-patch))
 	tar cf - -C libc $(outside-patch) | bzip2 -9 > $@.new
 	rm -rf libc
 	mv -f $@.new $@
 
-$(tar-name)-$(snapshot-name).tar.bz2: Makefile branch.mk
-	@rm -rf $(tar-name)-$(snapshot-name)
-	cvs -Q export -d $(tar-name)-$(snapshot-name) $(select-snapshot) libc
-	tar cf - $(tar-name)-$(snapshot-name) | bzip2 -9 > $@.new
-	rm -rf $(tar-name)-$(snapshot-name)
+glibc-tarballs = $(srcdir-name).tar.bz2
+ifeq (,$(upstream))
+$(srcdir-name).tar.bz2: Makefile branch.mk
+	@rm -rf $(srcdir-name)
+	cvs -Q export -d $(srcdir-name) $(select-snapshot) libc
+	tar cf - $(srcdir-name) | bzip2 -9 > $@.new
+	rm -rf $(srcdir-name)
 	mv -f $@.new $@
+else
+glibc-tarballs += $(srcdir-name:glibc-%=glibc-linuxthreads-%).tar.bz2 \
+		  $(srcdir-name:glibc-%=glibc-libidn-%).tar.bz2
 
-archives = $(tar-name)-$(snapshot-name).tar.bz2 \
+$(glibc-tarballs):
+	curl -O $(releases-url)/$@
+endif
+
+archives = $(glibc-tarballs) \
 	   $(tar-name)-$(branch-name)-$(snapshot-name).tar.bz2 \
 	   $(tar-name)-$(branch-name).patch
+
 finish_archive: $(archives)
 
 archive: glibc.spec

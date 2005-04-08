@@ -12,9 +12,13 @@ Version: %{glibcversion}
 Release: %{glibcrelease}
 License: LGPL
 Group: System Environment/Libraries
-%define glibcsrcdir %{glibcname}-%{glibcdate}
 Source0: %{glibcsrcdir}.tar.bz2
-Source1: %{glibcname}-fedora-%{glibcdate}.tar.bz2
+%if %{glibc_release_tarballs}
+Source1: %(echo %{glibcsrcdir} | sed s/glibc-/glibc-linuxthreads-/).tar.bz2
+Source2: %(echo %{glibcsrcdir} | sed s/glibc-/glibc-libidn-/).tar.bz2
+%define glibc_release_unpack -a1 -a2
+%endif
+Source3: %{glibcname}-fedora-%{glibcdate}.tar.bz2
 Patch0: %{glibcname}-fedora.patch
 Patch1: %{name}-nptl-check.patch
 Patch2: %{name}-ppc-assume.patch
@@ -253,7 +257,7 @@ package or when debugging this package.
 %endif
 
 %prep
-%setup -q -n %{glibcsrcdir} -a1
+%setup -q -n %{glibcsrcdir} %{glibc_release_unpack} -a3
 %patch0 -E -p1
 case "`gcc --version | head -1`" in
 gcc*\ 3.[34]*)
