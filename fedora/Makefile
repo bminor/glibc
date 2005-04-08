@@ -4,7 +4,7 @@ glibc.spec: # The default target.
 
 tag-prefix := fedora-
 
-.PHONY: update commit-merge commit patch tag archive finish_archive srpm rpm
+.PHONY: update commit-merge tag archive finish_archive srpm rpm
 
 snapshot-date-fmt := +'%Y-%m-%d %H:%M %Z'
 snapshot-name-fmt := +'%Y%m%dT%H%M'
