@@ -1,3 +1,8 @@
+2005-04-13  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h: New file.
+	* sysdeps/sparc/sparc64/clone.S: New file.
+
 2005-04-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/pthread.h (__pthread_cleanup_routine): Use
@@ -79,6 +84,7 @@
 
 2005-02-07  Richard Henderson  <rth@redhat.com>
 
+	[BZ #787]
 	* sysdeps/pthread/pthread.h (__sigsetjmp): Use pointer as first
 	argument.
 

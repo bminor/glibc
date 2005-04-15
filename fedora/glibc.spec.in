@@ -1,4 +1,4 @@
-%define glibcrelease 21
+%define glibcrelease 1
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1264,6 +1264,14 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Apr 15 2005 Roland McGrath <roland@redhat.com> 2.3.5-1
+- update from CVS
+  - fix execvp regression (BZ#851)
+  - ia64 libm updates
+  - sparc updates
+  - grok PT_NOTE in vDSO for kernel version and extra hwcap dirs,
+    support "hwcap" keyword in ld.so.conf files
+
 * Tue Apr  4 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-21
 - update from CVS
   - fix xdr_rmtcall_args on 64-bit arches (#151686)
