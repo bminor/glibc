@@ -5,8 +5,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.3.5\n"
-"POT-Creation-Date: 2005-04-07 21:30-0700\n"
+"Project-Id-Version: libc 2.3.6\n"
+"POT-Creation-Date: 2005-04-14 23:31-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -296,7 +296,7 @@ msgstr ""
 #: iconv/iconv_prog.c:423 iconv/iconvconfig.c:396 locale/programs/locale.c:276
 #: locale/programs/localedef.c:388 catgets/gencat.c:247 posix/getconf.c:963
 #: nss/getent.c:82 nscd/nscd.c:394 nscd/nscd_nischeck.c:90 elf/ldconfig.c:278
-#: elf/sprof.c:355
+#: elf/ldd.bash.in:39 elf/sprof.c:355
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -1831,7 +1831,7 @@ msgstr ""
 #. TRANS No such file or directory.  This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: stdio-common/../sysdeps/gnu/errlist.c:36
+#: stdio-common/../sysdeps/gnu/errlist.c:36 elf/ldd.bash.in:148
 msgid "No such file or directory"
 msgstr ""
 
@@ -5182,6 +5182,54 @@ msgstr ""
 msgid "Invalid numeric uid \"%s\"!"
 msgstr ""
 
+#: nscd/selinux.c:105
+msgid "Failed to determine if kernel supports SELinux"
+msgstr ""
+
+#: nscd/selinux.c:120
+msgid "Failed to start AVC thread"
+msgstr ""
+
+#: nscd/selinux.c:142
+msgid "Failed to create AVC lock"
+msgstr ""
+
+#: nscd/selinux.c:182
+msgid "Failed to start AVC"
+msgstr ""
+
+#: nscd/selinux.c:184
+msgid "Access Vector Cache (AVC) started"
+msgstr ""
+
+#: nscd/selinux.c:202
+msgid "Error getting context of socket peer"
+msgstr ""
+
+#: nscd/selinux.c:207
+msgid "Error getting context of nscd"
+msgstr ""
+
+#: nscd/selinux.c:213
+msgid "Error getting sid from context"
+msgstr ""
+
+#: nscd/selinux.c:245
+#, c-format
+msgid ""
+"\n"
+"SELinux AVC Statistics:\n"
+"\n"
+"%15u  entry lookups\n"
+"%15u  entry hits\n"
+"%15u  entry misses\n"
+"%15u  entry discards\n"
+"%15u  CAV lookups\n"
+"%15u  CAV hits\n"
+"%15u  CAV probes\n"
+"%15u  CAV misses\n"
+msgstr ""
+
 #: elf/../sysdeps/generic/dl-sysdep.c:424
 msgid "cannot create capability list"
 msgstr ""
@@ -5733,6 +5781,55 @@ msgstr ""
 #: elf/ldconfig.c:1181
 #, c-format
 msgid "Can't open cache file directory %s\n"
+msgstr ""
+
+#: elf/ldd.bash.in:43
+msgid "Written by %s and %s.\n"
+msgstr ""
+
+#: elf/ldd.bash.in:48
+msgid ""
+"Usage: ldd [OPTION]... FILE...\n"
+"      --help              print this help and exit\n"
+"      --version           print version information and exit\n"
+"  -d, --data-relocs       process data relocations\n"
+"  -r, --function-relocs   process data and function relocations\n"
+"  -u, --unused            print unused direct dependencies\n"
+"  -v, --verbose           print all information\n"
+"For bug reporting instructions, please see:\n"
+"<http://www.gnu.org/software/libc/bugs.html>."
+msgstr ""
+
+#: elf/ldd.bash.in:80
+msgid "ldd: option `$1' is ambiguous"
+msgstr ""
+
+#: elf/ldd.bash.in:87
+msgid "unrecognized option"
+msgstr ""
+
+#: elf/ldd.bash.in:88 elf/ldd.bash.in:126
+msgid "Try `ldd --help' for more information."
+msgstr ""
+
+#: elf/ldd.bash.in:125
+msgid "missing file arguments"
+msgstr ""
+
+#: elf/ldd.bash.in:151
+msgid "warning: you do not have execution permission for"
+msgstr ""
+
+#: elf/ldd.bash.in:185
+msgid "\tnot a dynamic executable"
+msgstr ""
+
+#: elf/ldd.bash.in:193
+msgid "exited with unknown exit code"
+msgstr ""
+
+#: elf/ldd.bash.in:198
+msgid "error: you do not have read permission for"
 msgstr ""
 
 #: elf/readlib.c:98
