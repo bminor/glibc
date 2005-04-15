@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,1995-99,2002,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,1995-99,2002,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -133,14 +133,14 @@ execvp (file, argv)
 	  else
 	    startp = (char *) memcpy (name - (p - path), path, p - path);
 
-	  /* Try to execute this name.  If it works, execv will not return.  */
+	  /* Try to execute this name.  If it works, execve will not return. */
 	  __execve (startp, argv, __environ);
 
 	  if (errno == ENOEXEC)
 	    {
 	      if (script_argv == NULL)
 		{
-		  script_argv = allocate_scripts_argv (file, argv);
+		  script_argv = allocate_scripts_argv (startp, argv);
 		  if (script_argv == NULL)
 		    {
 		      /* A possible EACCES error is not as important as
