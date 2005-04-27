@@ -1382,6 +1382,12 @@ ld.so does not support TLS, but program uses it!\n");
     }
 #endif
 
+  if (GLRO(dl_osversion) <= 0x20413)
+    {
+      extern void internal_function _dl_init_linuxthreads_paths (void);
+      _dl_init_linuxthreads_paths ();
+    }
+
   /* If LD_USE_LOAD_BIAS env variable has not been seen, default
      to not using bias for non-prelinked PIEs and libraries
      and using it for executables or prelinked PIEs or libraries.  */

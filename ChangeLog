@@ -1,3 +1,11 @@
+2005-04-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (dl_main): Call _dl_init_linuxthreads_paths
+	if GLRO(dl_osversion) <= 0x20413.
+	* elf/dl-load.c (_dl_init_paths): Allocate one extra pointer in
+	rtld_search_dirs.dirs.
+	(_dl_init_linuxthreads_paths): New function.
+
 2005-04-27  Roland McGrath  <roland@redhat.com>
 
 	[BZ #877]

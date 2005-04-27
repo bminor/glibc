@@ -644,7 +644,7 @@ _dl_init_paths (const char *llp)
 
   /* First set up the rest of the default search directory entries.  */
   aelem = rtld_search_dirs.dirs = (struct r_search_path_elem **)
-    malloc ((nsystem_dirs_len + 1) * sizeof (struct r_search_path_elem *));
+    malloc ((nsystem_dirs_len + 2) * sizeof (struct r_search_path_elem *));
   if (rtld_search_dirs.dirs == NULL)
     {
       errstring = N_("cannot create search path array");
@@ -777,6 +777,34 @@ _dl_init_paths (const char *llp)
 
   /* Remember the last search directory added at startup.  */
   GLRO(dl_init_all_dirs) = GL(dl_all_dirs);
+}
+
+
+void
+internal_function
+_dl_init_linuxthreads_paths (void)
+{
+  size_t cnt;
+  struct r_search_path_elem *elem, **aelem;
+
+  elem = malloc (sizeof (struct r_search_path_elem)
+		 + ncapstr * sizeof (enum r_dir_status));
+  if (elem == NULL)
+    return;
+
+  for (aelem = rtld_search_dirs.dirs; *aelem; aelem++);
+  aelem[0] = elem;
+  aelem[1] = NULL;
+  elem->what = "linuxthreads search path";
+  elem->where = NULL;
+  elem->dirname = "/" DL_DST_LIB "/obsolete/linuxthreads/";
+  elem->dirnamelen = sizeof ("/" DL_DST_LIB "/obsolete/linuxthreads/") - 1;
+  if (elem->dirnamelen > max_dirnamelen)
+    max_dirnamelen = elem->dirnamelen;
+  for (cnt = 0; cnt < ncapstr; ++cnt)
+    elem->status[cnt] = unknown;
+  elem->next = NULL;
+  aelem[-1]->next = elem;
 }
 
 
