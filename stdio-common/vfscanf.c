@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1602,6 +1602,8 @@ _IO_vfscanf (s, format, argptr, errp)
 	  if (c == EOF)
 	    input_error ();
 
+	  got_dot = got_e = 0;
+
 	  /* Check for a sign.  */
 	  if (c == L_('-') || c == L_('+'))
 	    {
@@ -1629,14 +1631,13 @@ _IO_vfscanf (s, format, argptr, errp)
 		  const char *cmpp = decimal;
 		  int avail = width > 0 ? width : INT_MAX;
 
-		  while ((unsigned char) *cmpp == c && avail > 0)
+		  while ((unsigned char) *cmpp == c && avail-- > 0)
 		    if (*++cmpp == '\0')
 		      break;
 		    else
 		      {
 			if (inchar () == EOF)
 			  break;
-			--avail;
 		      }
 
 		  if (*cmpp != '\0')
@@ -1651,6 +1652,17 @@ _IO_vfscanf (s, format, argptr, errp)
 			}
 
 		      conv_error ();
+		    }
+		  else
+		    {
+                     /* Add all the characters.  */
+                     for (cmpp = decimal; *cmpp != '\0'; ++cmpp)
+                       ADDW ((unsigned char) *cmpp);
+                     if (width > 0)
+                       width = avail;
+                     got_dot = 1;
+
+		      c = inchar ();
 		    }
 		  if (width > 0)
 		    width = avail;
@@ -1759,7 +1771,6 @@ _IO_vfscanf (s, format, argptr, errp)
 		}
 	    }
 
-	  got_dot = got_e = 0;
 	  do
 	    {
 	      if (ISDIGIT (c))

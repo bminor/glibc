@@ -1,3 +1,145 @@
+2005-04-27  Roland McGrath  <roland@redhat.com>
+
+	[BZ #877]
+	* posix/unistd.h: Remove __nonnull from acct decl.
+
+	* rt/tst-cpuclock1.c: New file.
+	* rt/tst-cpuclock2.c: New file.
+	* rt/tst-cputimer1.c: New file.
+	* rt/tst-cputimer2.c: New file.
+	* rt/tst-cputimer3.c: New file.
+	* rt/Makefile (tests): Add them.
+
+	* sysdeps/unix/sysv/linux/kernel-posix-cpu-timers.h: New file.
+	* sysdeps/unix/sysv/linux/clock_getcpuclockid.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/clock_getcpuclockid.c
+	(HAS_CPUCLOCK): New macro.
+	(clock_getcpuclockid): Function removed.
+	#include the new linux file to define it instead.
+	* sysdeps/unix/clock_gettime.c [HP_TIMING_AVAIL] (hp_timing_gettime):
+	New function, broken out of ...
+	(clock_gettime) [HP_TIMING_AVAIL]: ... here.  Call it.
+	(realtime_gettime): New function, broken out of ...
+	(clock_gettime) [! HANDLED_REALTIME]: ... here.  Call it.
+	(clock_gettime) [SYSDEP_GETTIME_CPU]: Use new macro in default case.
+	* sysdeps/unix/sysv/linux/clock_gettime.c (SYSCALL_GETTIME): New macro.
+	(SYSDEP_GETTIME_CPUTIME): New macro.
+	(SYSDEP_GETTIME): Use both.
+	[! __ASSUME_POSIX_TIMERS] (maybe_syscall_gettime): New function, broken
+	out of ...
+	(SYSDEP_GETTIME): ... here.  Use it.
+	[__NR_clock_gettime] (HANDLED_CPUTIME): Define it.
+	(SYSDEP_GETTIME_CPUTIME): New macro.  Handle CPU timers by trying
+	kernel support and falling back to hp-timing code.
+	* sysdeps/posix/clock_getres.c
+	[HP_TIMING_AVAIL] (hp_timing_getres): New function, broken out of ...
+	(clock_getres) [HP_TIMING_AVAIL]: ... here.  Call it.
+	(realtime_getres): New function, broken out of ...
+	(clock_getres) [! HANDLED_REALTIME]: ... here.  Call it.
+	(clock_getres) [SYSDEP_GETRES_CPU]: Use new macro in default case.
+	* sysdeps/unix/sysv/linux/clock_getres.c (SYSCALL_GETRES): New macro.
+	(SYSDEP_GETRES_CPUTIME): New macro.
+	(SYSDEP_GETRES): Use both.
+	[! __ASSUME_POSIX_TIMERS] (maybe_syscall_getres): New function, broken
+	out of ...
+	(SYSDEP_GETRES): ... here.  Use it.
+	[__NR_clock_getres] (HANDLED_CPUTIME): Define it.
+	(SYSDEP_GETRES_CPUTIME): New macro.  Handle CPU timers by trying
+	kernel support and falling back to hp-timing code.
+	* sysdeps/unix/sysv/linux/clock_nanosleep.c: Handle
+	CLOCK_PROCESS_CPUTIME_ID and CLOCK_PROCESS_THREAD_ID specially,
+	translating to the kernel clockid_t for our own process/thread clock.
+
+2005-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/test-canon.c: Make doesExist a directory and add more tests
+	for the new error case.
+
+2004-06-02  Dmitry V. Levin  <ldv@altlinux.org>
+	    Ranjani Murthy <ranmur@gmail.com>
+
+	* stdlib/canonicalize.c (__realpath): Change realpath(3) to
+	return NULL and set errno to ENOTDIR for such pathnames like
+	"/path/to/existing-non-directory/".
+
+2005-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/strptime_l.c (__strptime_internal): Handle 'z' to set
+	tm_gmtoff.
+	* time/Makefile (tests): Add tst-strptime2.
+	* time/tst-strptime2.c: New file.
+
+2005-04-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-close.c: Include stddef.h.
+	(_dl_close): If called recursively, just remember GC needs to be rerun
+	and decrease l_direct_opencount.  Avoid GC if l_direct_opencount
+	decreased to 1.  Rerun GC at the end if any destructor unloaded some
+	additional libraries.
+	* elf/Makefile: Add rules to build and run unload6 test.
+	* elf/unload6.c: New test.
+	* elf/unload6mod1.c: New file.
+	* elf/unload6mod2.c: New file.
+	* elf/unload6mod3.c: New file.
+
+	* malloc/hooks.c (mem2chunk_check): Add magic_p argument, set *magic_p
+	if magic_p is not NULL.
+	(top_check): Invoke MALLOC_FAILURE_ACTION if MORECORE failed.
+	(malloc_check): Fail if sz == -1.
+	(free_check): Adjust mem2chunk_check caller.
+	(realloc_check): Likewise.  Fail if bytes == -1.  If bytes == 0 and
+	oldmem != NULL, call free_check and return NULL.  If reallocating
+	and returning NULL, invert magic byte again to make oldmem valid
+	region for further checking.
+	(memalign_check): Fail if bytes == -1.
+	* malloc/Makefile: Add rules to build and run tst-mcheck.
+	* malloc/tst-mcheck.c: New test.
+
+2005-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c: Correctly account for characters of
+	decimal points right after +-.
+
+2005-04-26  Roland McGrath  <roland@redhat.com>
+
+	* elf/rtld-Rules (rtld-all): Test ifndef rtld-modules instead of
+	ifeq ($(subdir),elf) to distinguish main driver from subdir runs.
+
+2005-04-25  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	(INTERNAL_SYSCALL_ERROR_P): Fix typo in last change.
+
+	* sunrpc/xdr.c (xdr_u_int): Use `long' for L and cast where needed.
+
+	* elf/dl-load.c: Revert last change.
+
+2005-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c: Fix parsing of decimal point after +-.
+	Patch by Hamed Malek <hamed@bamdad.org>.
+
+2005-04-21  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Don't use MAP_DENYWRITE,
+	since Linux ignores it in user mmap calls.
+
+2005-04-17  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/elf/start.S: Define __data_start.
+	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
+
+2005-04-15  Roland McGrath  <roland@redhat.com>
+
+	* timezone/Makefile (zic-deps): New variable.
+	($(testdata)/America/New_York): Use it instead of explicit deps.
+	($(testdata)/Etc/UTC, $(testdata)/Australia/Melbourne): Likewise.
+	($(testdata)/America/Sao_Paulo, $(testdata)/Asia/Tokyo): Likewise.
+	(%/UTC %/Universal): New pattern rule, replaces ...
+	($(testdata)/UTC, $(testdata)/Universal): ... these removed targets.
+	($(testdata)/%/Berlin $(testdata)/%/London): New pattern rule.
+	($(testdata)/Europe/London, $(testdata)/Europe/Berlin): Removed.
+
 2005-04-14  Roland McGrath  <roland@redhat.com>
 
 	* MakeTAGS ($P/$(domain).pot): Depend on distinfo file as well.
