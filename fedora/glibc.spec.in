@@ -1337,6 +1337,21 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Apr 27 2005 Jakub Jelinek <jakub@redhat.com> 2.3.5-2
+- update from CVS
+  - with MALLOC_CHECK_=N N>0 (#153003)
+  - fix recursive dlclose (#154641)
+  - handle %z in strptime (#154804)
+  - automatically append /%{_lib}/obsolete/linuxthreads/
+    to standard library search path if LD_ASSUME_KERNEL=N N <= 2.4.19
+    or for glibc 2.0 binaries (or broken ones that don't use errno/h_errno
+    properly).  Warning: all those will stop working when LinuxThreads
+    is finally nuked, which is not very far away
+  - remove nonnull attribute from acct prototype (BZ#877)
+  - kernel CPU clocks support
+  - fix *scanf in locales with multi-byte decimal point
+
+* Wed Apr 27 2005 Roland McGrath <roland@redhat.com>
 - glibc-xen subpackage for i686
 
 * Fri Apr 15 2005 Roland McGrath <roland@redhat.com> 2.3.5-1
@@ -1344,6 +1359,7 @@ rm -f *.filelist*
   - fix execvp regression (BZ#851)
   - ia64 libm updates
   - sparc updates
+  - fix initstate{,_r}/strfry (#154504)
   - grok PT_NOTE in vDSO for kernel version and extra hwcap dirs,
     support "hwcap" keyword in ld.so.conf files
 
