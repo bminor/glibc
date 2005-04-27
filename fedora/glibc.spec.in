@@ -1,12 +1,12 @@
-%define glibcrelease 2
+%define glibcrelease 3
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
-%define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
-%define withtlsarches i386 i686 athlon x86_64 ia64 s390 s390x alpha alphaev6 sparc sparcv9 ppc ppc64
+%define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 sparc64 ppc ppc64
+%define withtlsarches i386 i686 athlon x86_64 ia64 s390 s390x alpha alphaev6 sparc sparcv9 sparc64 ppc ppc64
 %define xenarches i686 athlon
 %ifarch %{xenarches}
 %define buildxen 1
-%define xenpackage 1
+%define xenpackage 0
 %else
 %define buildxen 0
 %define xenpackage 0
@@ -169,6 +169,7 @@ Install glibc-headers if you are going to develop programs which will
 use the standard C libraries.
 
 %ifarch %{nptlarches}
+%ifnarch %{auxarches}
 %package -n linuxthreads-devel
 Summary: Header files and static libraries for development using LinuxThreads library.
 Group: Development/Libraries
@@ -182,6 +183,7 @@ newly linked programs will work only with NPTL).  To compile and link
 a program against LinuxThreads libraries, use
 -I/usr/include/linuxthreads -L/usr/%{_lib}/linuxthreads \\
 -Wl,-rpath-link,/%{_lib}/obsolete/linuxthreads
+%endif
 %endif
 
 %package profile
@@ -716,10 +718,10 @@ sed "s| /%{_lib}/| /%{_lib}/$ObsDir/|" $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libc.so
 sed "s| /%{_lib}/| /%{_lib}/$ObsDir/|;s|/libpthread_nonshared|/linuxthreads&|" $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libpthread.so \
   > $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/libpthread.so
 %ifarch %{rtkaioarches}
-ln -sf /%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed 's/librt-/librtkaio-/'` \
+ln -sf /%{_lib}/$ObsDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed 's/librt-/librtkaio-/'` \
   $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/librt.so
 %else
-ln -sf /%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` \
+ln -sf /%{_lib}/$ObsDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` \
   $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/librt.so
 %endif
 strip -g $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/*.a
@@ -1311,9 +1313,11 @@ rm -f *.filelist*
 %endif
 
 %ifarch %{nptlarches}
+%ifnarch %{auxarches}
 %files -n linuxthreads-devel
 %defattr(-,root,root)
 %{_prefix}/%{_lib}/linuxthreads
+%endif
 %endif
 
 %if "%{_enable_debug_packages}" == "1"
@@ -1337,6 +1341,14 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Apr 27 2005 Jakub Jelinek <jakub@redhat.com> 2.3.5-3
+- update from CVS
+  - fix linuxthreads clocks
+- put xen libs into the glibc-2*.i686 package instead of a separate one
+- fix librt.so symlink in linuxthreads-devel
+- do not include linuxthreads-devel on %{auxarches},
+  just on the base architectures
+
 * Wed Apr 27 2005 Jakub Jelinek <jakub@redhat.com> 2.3.5-2
 - update from CVS
   - with MALLOC_CHECK_=N N>0 (#153003)
