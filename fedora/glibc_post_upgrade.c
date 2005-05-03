@@ -45,7 +45,10 @@ main (void)
 #ifdef __i386__
   const char *remove_dirs[] = { "/lib/tls", "/lib/i686", "/lib/tls/i486", "/lib/tls/i586", "/lib/tls/i686" };
 #else
-  const char *remove_dirs[] = { "/lib/tls" };
+#ifndef LIBTLS
+#define LIBTLS "/lib/tls"
+#endif
+  const char *remove_dirs[] = { LIBTLS };
 #endif
   for (j = 0; j < sizeof (remove_dirs) / sizeof (remove_dirs[0]); ++j)
     {

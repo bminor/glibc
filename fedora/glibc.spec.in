@@ -1,4 +1,4 @@
-%define glibcrelease 4
+%define glibcrelease 5
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 sparc64 ppc ppc64
@@ -557,9 +557,7 @@ $GCC -static -L. -Os ../fedora/glibc_post_upgrade.c -o glibc_post_upgrade.%{_tar
 %ifarch i386
     -DARCH_386 \
 %endif
-%ifarch %{nptlarches}
     '-DLIBTLS="/%{_lib}/tls/"' \
-%endif
     '-DGCONV_MODULES_DIR="%{_prefix}/%{_lib}/gconv"' \
     '-DLD_SO_CONF="/etc/ld.so.conf"' \
     '-DICONVCONFIG="%{_sbindir}/iconvconfig.%{_target_cpu}"'
@@ -1341,6 +1339,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue May  3 2005 Jakub Jelinek <jakub@redhat.com> 2.3.5-5
+- update from CVS
+  - add some more UTF-8 locales (#156115)
+- clean up /lib64/tls instead of /lib/tls on x86-64, s390x and
+  ppc64 in glibc_post_upgrade (#156656)
+- fix posix_fallocate{,64} (#156289)
+
 * Thu Apr 28 2005 Jakub Jelinek <jakub@redhat.com> 2.3.5-4
 - update from CVS
   - fix nscd cache pruning (#150748)
