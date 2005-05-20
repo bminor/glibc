@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.90\n"
-"POT-Creation-Date: 2005-04-07 21:55-0700\n"
+"POT-Creation-Date: 2005-05-08 09:40-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -193,15 +193,18 @@ msgid "illegal input sequence at position %Zd"
 msgstr ""
 
 #: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:527
+#, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr ""
 
 #: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:570
 #: iconv/iconv_prog.c:606
+#, c-format
 msgid "error while reading the input"
 msgstr ""
 
 #: iconv/iconv_charmap.c:525 iconv/iconv_prog.c:588
+#, c-format
 msgid "unable to allocate buffer for input"
 msgstr ""
 
@@ -254,6 +257,7 @@ msgid "[FILE...]"
 msgstr ""
 
 #: iconv/iconv_prog.c:201
+#, c-format
 msgid "cannot open output file"
 msgstr ""
 
@@ -278,10 +282,12 @@ msgid "conversion from `%s' to `%s' is not supported"
 msgstr ""
 
 #: iconv/iconv_prog.c:269
+#, c-format
 msgid "failed to start conversion processing"
 msgstr ""
 
 #: iconv/iconv_prog.c:363
+#, c-format
 msgid "error while closing output file"
 msgstr ""
 
@@ -296,7 +302,7 @@ msgstr ""
 #: iconv/iconv_prog.c:427 iconv/iconvconfig.c:396 locale/programs/locale.c:276
 #: locale/programs/localedef.c:388 catgets/gencat.c:247 posix/getconf.c:963
 #: nss/getent.c:82 nscd/nscd.c:394 nscd/nscd_nischeck.c:90 elf/ldconfig.c:287
-#: elf/sprof.c:355
+#: elf/ldd.bash.in:39 elf/sprof.c:355
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -313,6 +319,7 @@ msgid "Written by %s.\n"
 msgstr ""
 
 #: iconv/iconv_prog.c:472 iconv/iconv_prog.c:498
+#, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr ""
 
@@ -322,6 +329,7 @@ msgid "illegal input sequence at position %ld"
 msgstr ""
 
 #: iconv/iconv_prog.c:531
+#, c-format
 msgid "internal error (illegal descriptor)"
 msgstr ""
 
@@ -363,18 +371,22 @@ msgid "Do not search standard directories, only those on the command line"
 msgstr ""
 
 #: iconv/iconvconfig.c:302
+#, c-format
 msgid "Directory arguments required when using --nostdlib"
 msgstr ""
 
 #: iconv/iconvconfig.c:344 locale/programs/localedef.c:292
+#, c-format
 msgid "no output file produced because warning were issued"
 msgstr ""
 
 #: iconv/iconvconfig.c:430
+#, c-format
 msgid "while inserting in search tree"
 msgstr ""
 
 #: iconv/iconvconfig.c:1238
+#, c-format
 msgid "cannot generate output file"
 msgstr ""
 
@@ -784,10 +796,12 @@ msgid "symbol `%s'"
 msgstr ""
 
 #: locale/programs/ld-collate.c:1803
+#, c-format
 msgid "no definition of `UNDEFINED'"
 msgstr ""
 
 #: locale/programs/ld-collate.c:1832
+#, c-format
 msgid "too many errors; giving up"
 msgstr ""
 
@@ -902,6 +916,7 @@ msgid "%s: missing `reorder-sections-end' keyword"
 msgstr ""
 
 #: locale/programs/ld-ctype.c:440
+#, c-format
 msgid "No character set name specified in charmap"
 msgstr ""
 
@@ -941,22 +956,27 @@ msgid "<SP> character must not be in class `%s'"
 msgstr ""
 
 #: locale/programs/ld-ctype.c:600
+#, c-format
 msgid "character <SP> not defined in character map"
 msgstr ""
 
 #: locale/programs/ld-ctype.c:714
+#, c-format
 msgid "`digit' category has not entries in groups of ten"
 msgstr ""
 
 #: locale/programs/ld-ctype.c:763
+#, c-format
 msgid "no input digits defined and none of the standard names in the charmap"
 msgstr ""
 
 #: locale/programs/ld-ctype.c:828
+#, c-format
 msgid "not all characters used in `outdigit' are available in the charmap"
 msgstr ""
 
 #: locale/programs/ld-ctype.c:845
+#, c-format
 msgid "not all characters used in `outdigit' are available in the repertoire"
 msgstr ""
 
@@ -1097,6 +1117,7 @@ msgid ""
 msgstr ""
 
 #: locale/programs/ld-ctype.c:3482
+#, c-format
 msgid "no output digits defined and none of the standard names in the charmap"
 msgstr ""
 
@@ -1371,22 +1392,27 @@ msgid ""
 msgstr ""
 
 #: locale/programs/locale.c:194
+#, c-format
 msgid "Cannot set LC_CTYPE to default locale"
 msgstr ""
 
 #: locale/programs/locale.c:196
+#, c-format
 msgid "Cannot set LC_MESSAGES to default locale"
 msgstr ""
 
 #: locale/programs/locale.c:209
+#, c-format
 msgid "Cannot set LC_COLLATE to default locale"
 msgstr ""
 
 #: locale/programs/locale.c:225
+#, c-format
 msgid "Cannot set LC_ALL to default locale"
 msgstr ""
 
 #: locale/programs/locale.c:501
+#, c-format
 msgid "while preparing output"
 msgstr ""
 
@@ -1470,10 +1496,12 @@ msgid ""
 msgstr ""
 
 #: locale/programs/localedef.c:233
+#, c-format
 msgid "cannot create directory for output files"
 msgstr ""
 
 #: locale/programs/localedef.c:244
+#, c-format
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr ""
 
@@ -1498,6 +1526,7 @@ msgid ""
 msgstr ""
 
 #: locale/programs/localedef.c:568
+#, c-format
 msgid "circular dependencies between locale definitions"
 msgstr ""
 
@@ -1507,47 +1536,58 @@ msgid "cannot add already read locale `%s' a second time"
 msgstr ""
 
 #: locale/programs/locarchive.c:89 locale/programs/locarchive.c:258
+#, c-format
 msgid "cannot create temporary file"
 msgstr ""
 
 #: locale/programs/locarchive.c:118 locale/programs/locarchive.c:304
+#, c-format
 msgid "cannot initialize archive file"
 msgstr ""
 
 #: locale/programs/locarchive.c:125 locale/programs/locarchive.c:311
+#, c-format
 msgid "cannot resize archive file"
 msgstr ""
 
 #: locale/programs/locarchive.c:134 locale/programs/locarchive.c:320
 #: locale/programs/locarchive.c:508
+#, c-format
 msgid "cannot map archive header"
 msgstr ""
 
 #: locale/programs/locarchive.c:156
+#, c-format
 msgid "failed to create new locale archive"
 msgstr ""
 
 #: locale/programs/locarchive.c:168
+#, c-format
 msgid "cannot change mode of new locale archive"
 msgstr ""
 
 #: locale/programs/locarchive.c:252
+#, c-format
 msgid "cannot map locale archive file"
 msgstr ""
 
 #: locale/programs/locarchive.c:328
+#, c-format
 msgid "cannot lock new archive"
 msgstr ""
 
 #: locale/programs/locarchive.c:377
+#, c-format
 msgid "cannot extend locale archive file"
 msgstr ""
 
 #: locale/programs/locarchive.c:386
+#, c-format
 msgid "cannot change mode of resized locale archive"
 msgstr ""
 
 #: locale/programs/locarchive.c:394
+#, c-format
 msgid "cannot rename new archive"
 msgstr ""
 
@@ -1567,6 +1607,7 @@ msgid "cannot lock locale archive \"%s\""
 msgstr ""
 
 #: locale/programs/locarchive.c:494
+#, c-format
 msgid "cannot read archive header"
 msgstr ""
 
@@ -1578,6 +1619,7 @@ msgstr ""
 #: locale/programs/locarchive.c:785 locale/programs/locarchive.c:800
 #: locale/programs/locarchive.c:812 locale/programs/locarchive.c:824
 #: locale/programs/locfile.c:344
+#, c-format
 msgid "cannot add to locale archive"
 msgstr ""
 
@@ -1668,6 +1710,7 @@ msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr ""
 
 #: locale/programs/repertoire.c:333
+#, c-format
 msgid "cannot safe new repertoire map"
 msgstr ""
 
@@ -1687,6 +1730,7 @@ msgstr ""
 
 #: locale/programs/xmalloc.c:70 malloc/obstack.c:415 malloc/obstack.c:418
 #: posix/getconf.c:1104 elf/ldconfig.c:1101
+#, c-format
 msgid "memory exhausted"
 msgstr ""
 
@@ -1698,19 +1742,6 @@ msgstr ""
 #: assert/assert.c:56
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-msgstr ""
-
-#: intl/tst-codeset.c:40 intl/tst-codeset.c:50 intl/tst-gettext3.c:42
-#: intl/tst-gettext3.c:52
-msgid "cheese"
-msgstr ""
-
-#: intl/tst-gettext2.c:37
-msgid "First string for testing."
-msgstr ""
-
-#: intl/tst-gettext2.c:38
-msgid "Another string for testing."
 msgstr ""
 
 #: catgets/gencat.c:111 catgets/gencat.c:115 nscd/nscd.c:99
@@ -1802,14 +1833,17 @@ msgid "unterminated message"
 msgstr ""
 
 #: catgets/gencat.c:1242
+#, c-format
 msgid "while opening old catalog file"
 msgstr ""
 
 #: catgets/gencat.c:1333
+#, c-format
 msgid "conversion modules not available"
 msgstr ""
 
 #: catgets/gencat.c:1359
+#, c-format
 msgid "cannot determine escape character"
 msgstr ""
 
@@ -1832,7 +1866,7 @@ msgstr ""
 #. TRANS No such file or directory.  This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: stdio-common/../sysdeps/gnu/errlist.c:36
+#: stdio-common/../sysdeps/gnu/errlist.c:36 elf/ldd.bash.in:148
 msgid "No such file or directory"
 msgstr ""
 
@@ -3507,6 +3541,7 @@ msgid "Supported databases:"
 msgstr ""
 
 #: nss/getent.c:848 nscd/nscd.c:146 nscd/nscd_nischeck.c:64
+#, c-format
 msgid "wrong number of arguments"
 msgstr ""
 
@@ -3528,14 +3563,17 @@ msgid "[FILE]"
 msgstr ""
 
 #: debug/pcprofiledump.c:100
+#, c-format
 msgid "cannot open input file"
 msgstr ""
 
 #: debug/pcprofiledump.c:106
+#, c-format
 msgid "cannot read header"
 msgstr ""
 
 #: debug/pcprofiledump.c:170
+#, c-format
 msgid "invalid pointer size"
 msgstr ""
 
@@ -4929,27 +4967,30 @@ msgstr ""
 msgid "handle_request: request received (Version = %d)"
 msgstr ""
 
-#: nscd/connections.c:1515
+#: nscd/connections.c:1514
 #, c-format
 msgid "could only start %d threads; terminating"
 msgstr ""
 
-#: nscd/connections.c:1563 nscd/connections.c:1564 nscd/connections.c:1581
-#: nscd/connections.c:1590 nscd/connections.c:1603 nscd/connections.c:1609
-#: nscd/connections.c:1616
+#: nscd/connections.c:1562 nscd/connections.c:1563 nscd/connections.c:1580
+#: nscd/connections.c:1589 nscd/connections.c:1602 nscd/connections.c:1608
+#: nscd/connections.c:1615
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr ""
 
-#: nscd/connections.c:1582
+#: nscd/connections.c:1581
+#, c-format
 msgid "initial getgrouplist failed"
 msgstr ""
 
-#: nscd/connections.c:1591
+#: nscd/connections.c:1590
+#, c-format
 msgid "getgrouplist failed"
 msgstr ""
 
-#: nscd/connections.c:1604
+#: nscd/connections.c:1603
+#, c-format
 msgid "setgroups failed"
 msgstr ""
 
@@ -5033,10 +5074,12 @@ msgid "cannot read configuration file; this is fatal"
 msgstr ""
 
 #: nscd/nscd.c:167
+#, c-format
 msgid "already running"
 msgstr ""
 
 #: nscd/nscd.c:182 nscd/nscd.c:237
+#, c-format
 msgid "cannot fork"
 msgstr ""
 
@@ -5045,10 +5088,12 @@ msgid "Could not create log file"
 msgstr ""
 
 #: nscd/nscd.c:304 nscd/nscd.c:328 nscd/nscd_stat.c:162
+#, c-format
 msgid "Only root is allowed to use this option!"
 msgstr ""
 
 #: nscd/nscd.c:378
+#, c-format
 msgid "secure services not implemented anymore"
 msgstr ""
 
@@ -5095,14 +5140,17 @@ msgid "Only root or %s is allowed to use this option!"
 msgstr ""
 
 #: nscd/nscd_stat.c:169
+#, c-format
 msgid "nscd not running!\n"
 msgstr ""
 
 #: nscd/nscd_stat.c:180
+#, c-format
 msgid "write incomplete"
 msgstr ""
 
 #: nscd/nscd_stat.c:192
+#, c-format
 msgid "cannot read statistics data"
 msgstr ""
 
@@ -5187,6 +5235,57 @@ msgstr ""
 msgid "Invalid numeric uid \"%s\"!"
 msgstr ""
 
+#: nscd/selinux.c:105
+msgid "Failed to determine if kernel supports SELinux"
+msgstr ""
+
+#: nscd/selinux.c:120
+#, c-format
+msgid "Failed to start AVC thread"
+msgstr ""
+
+#: nscd/selinux.c:142
+#, c-format
+msgid "Failed to create AVC lock"
+msgstr ""
+
+#: nscd/selinux.c:182
+#, c-format
+msgid "Failed to start AVC"
+msgstr ""
+
+#: nscd/selinux.c:184
+msgid "Access Vector Cache (AVC) started"
+msgstr ""
+
+#: nscd/selinux.c:202
+msgid "Error getting context of socket peer"
+msgstr ""
+
+#: nscd/selinux.c:207
+msgid "Error getting context of nscd"
+msgstr ""
+
+#: nscd/selinux.c:213
+msgid "Error getting sid from context"
+msgstr ""
+
+#: nscd/selinux.c:245
+#, c-format
+msgid ""
+"\n"
+"SELinux AVC Statistics:\n"
+"\n"
+"%15u  entry lookups\n"
+"%15u  entry hits\n"
+"%15u  entry misses\n"
+"%15u  entry discards\n"
+"%15u  CAV lookups\n"
+"%15u  CAV hits\n"
+"%15u  CAV probes\n"
+"%15u  CAV misses\n"
+msgstr ""
+
 #: elf/../sysdeps/generic/dl-sysdep.c:486
 msgid "cannot create capability list"
 msgstr ""
@@ -5221,6 +5320,7 @@ msgid "%s is not a shared object file (Type: %d).\n"
 msgstr ""
 
 #: elf/../sysdeps/generic/readelflib.c:109
+#, c-format
 msgid "more than one dynamic segment\n"
 msgstr ""
 
@@ -5248,10 +5348,12 @@ msgid "Can't open cache file %s\n"
 msgstr ""
 
 #: elf/cache.c:154
+#, c-format
 msgid "mmap of cache file failed.\n"
 msgstr ""
 
 #: elf/cache.c:158 elf/cache.c:168
+#, c-format
 msgid "File is not a cache file.\n"
 msgstr ""
 
@@ -5271,10 +5373,12 @@ msgid "Can't create temporary cache file %s"
 msgstr ""
 
 #: elf/cache.c:425 elf/cache.c:434 elf/cache.c:438
+#, c-format
 msgid "Writing of cache data failed"
 msgstr ""
 
 #: elf/cache.c:442
+#, c-format
 msgid "Writing of cache data failed."
 msgstr ""
 
@@ -5288,7 +5392,7 @@ msgstr ""
 msgid "Renaming of %s to %s failed"
 msgstr ""
 
-#: elf/dl-close.c:119
+#: elf/dl-close.c:116
 msgid "shared object not open"
 msgstr ""
 
@@ -5732,6 +5836,7 @@ msgid "%s:%u: duplicate hwcap %lu %s"
 msgstr ""
 
 #: elf/ldconfig.c:1094
+#, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr ""
 
@@ -5746,12 +5851,62 @@ msgid "relative path `%s' used to build cache"
 msgstr ""
 
 #: elf/ldconfig.c:1199
+#, c-format
 msgid "Can't chdir to /"
 msgstr ""
 
 #: elf/ldconfig.c:1241
 #, c-format
 msgid "Can't open cache file directory %s\n"
+msgstr ""
+
+#: elf/ldd.bash.in:43
+msgid "Written by %s and %s.\n"
+msgstr ""
+
+#: elf/ldd.bash.in:48
+msgid ""
+"Usage: ldd [OPTION]... FILE...\n"
+"      --help              print this help and exit\n"
+"      --version           print version information and exit\n"
+"  -d, --data-relocs       process data relocations\n"
+"  -r, --function-relocs   process data and function relocations\n"
+"  -u, --unused            print unused direct dependencies\n"
+"  -v, --verbose           print all information\n"
+"For bug reporting instructions, please see:\n"
+"<http://www.gnu.org/software/libc/bugs.html>."
+msgstr ""
+
+#: elf/ldd.bash.in:80
+msgid "ldd: option `$1' is ambiguous"
+msgstr ""
+
+#: elf/ldd.bash.in:87
+msgid "unrecognized option"
+msgstr ""
+
+#: elf/ldd.bash.in:88 elf/ldd.bash.in:126
+msgid "Try `ldd --help' for more information."
+msgstr ""
+
+#: elf/ldd.bash.in:125
+msgid "missing file arguments"
+msgstr ""
+
+#: elf/ldd.bash.in:151
+msgid "warning: you do not have execution permission for"
+msgstr ""
+
+#: elf/ldd.bash.in:185
+msgid "\tnot a dynamic executable"
+msgstr ""
+
+#: elf/ldd.bash.in:193
+msgid "exited with unknown exit code"
+msgstr ""
+
+#: elf/ldd.bash.in:198
+msgid "error: you do not have read permission for"
 msgstr ""
 
 #: elf/readlib.c:98
@@ -5812,6 +5967,7 @@ msgid "failed to load shared object `%s'"
 msgstr ""
 
 #: elf/sprof.c:409
+#, c-format
 msgid "cannot create internal descriptors"
 msgstr ""
 
@@ -5821,10 +5977,12 @@ msgid "Reopening shared object `%s' failed"
 msgstr ""
 
 #: elf/sprof.c:535 elf/sprof.c:629
+#, c-format
 msgid "reading of section headers failed"
 msgstr ""
 
 #: elf/sprof.c:543 elf/sprof.c:637
+#, c-format
 msgid "reading of section header string table failed"
 msgstr ""
 
@@ -5834,10 +5992,12 @@ msgid "*** Cannot read debuginfo file name: %m\n"
 msgstr ""
 
 #: elf/sprof.c:589
+#, c-format
 msgid "cannot determine file name"
 msgstr ""
 
 #: elf/sprof.c:622
+#, c-format
 msgid "reading of ELF header failed"
 msgstr ""
 
@@ -5847,14 +6007,17 @@ msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
 msgstr ""
 
 #: elf/sprof.c:688
+#, c-format
 msgid "failed to load symbol data"
 msgstr ""
 
 #: elf/sprof.c:755
+#, c-format
 msgid "cannot load profiling data"
 msgstr ""
 
 #: elf/sprof.c:764
+#, c-format
 msgid "while stat'ing profiling data file"
 msgstr ""
 
@@ -5864,14 +6027,17 @@ msgid "profiling data file `%s' does not match shared object `%s'"
 msgstr ""
 
 #: elf/sprof.c:783
+#, c-format
 msgid "failed to mmap the profiling data file"
 msgstr ""
 
 #: elf/sprof.c:791
+#, c-format
 msgid "error while closing the profiling data file"
 msgstr ""
 
 #: elf/sprof.c:800 elf/sprof.c:870
+#, c-format
 msgid "cannot create internal descriptor"
 msgstr ""
 
@@ -5881,5 +6047,6 @@ msgid "`%s' is no correct profile data file for `%s'"
 msgstr ""
 
 #: elf/sprof.c:1027 elf/sprof.c:1085
+#, c-format
 msgid "cannot allocate symbol data"
 msgstr ""
