@@ -1,3 +1,9 @@
+2005-05-19  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #955]
+	* iconvdata/ibm939.c (BODY): Avoid segfaults with input characters
+	<UFFFF> and above.
+
 2005-05-17  Neal H. Walfield  <neal@gnu.org>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_local): Check [_HAVE_SA_LEN]
