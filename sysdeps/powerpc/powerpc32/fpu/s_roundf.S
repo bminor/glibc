@@ -19,19 +19,8 @@
 
 #include <sysdep.h>
 
-	.section	.rodata
-	.align 2
-	.type	TWO23.0,@object
-	.size	TWO23.0,4
-TWO23.0:
-	.long 0x4b000000
-	.type	POINTFIVE.0,@object
-	.size	POINTFIVE.0,4
-POINTFIVE.0:
-	.long 0x3f000000
-
-	.section	.rodata.cst4,"aM",@progbits,4
-	.align 2
+	.section	.rodata.cst8,"aM",@progbits,8
+	.align	2
 .LC0:	/* 2**23 */
 	.long 0x4b000000
 .LC1:	/* 0.5 */
@@ -47,6 +36,7 @@ POINTFIVE.0:
    "Round toward Zero" mode and round by adding +-0.5 before rounding
    to the integer value.  */
 
+	.section	".text"
 ENTRY (__roundf )
 	mffs	fp11		/* Save current FPU rounding mode.  */
 #ifdef SHARED
@@ -67,8 +57,7 @@ ENTRY (__roundf )
 	bnllr-	cr7
 	mtfsfi	7,1		/* Set rounding mode toward 0.  */
 #ifdef SHARED
-	lwz	r9,.LC1@got(10)
-	lfs	fp10,0(r9)
+	lfs	fp10,.LC1-.LC0(r9)
 #else
 	lis	r9,.LC1@ha
 	lfs	fp10,.LC1@l(r9)

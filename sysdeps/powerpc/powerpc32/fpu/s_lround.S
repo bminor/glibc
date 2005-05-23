@@ -19,27 +19,12 @@
 
 #include <sysdep.h>
 
-	.section	.rodata
-	.align 3
-	.type	NEGZERO.0,@object
-	.size	NEGZERO.0,8
-NEGZERO.0:
-	.long 0x00000000
-	.long 0
-	.type	POINTFIVE.0,@object
-	.size	POINTFIVE.0,8
-POINTFIVE.0:
-	.long 0x3fe00000
-	.long 0
-
 	.section	.rodata.cst8,"aM",@progbits,8
-	.align 3
+	.align	2
 .LC0:	/* 0.0 */
 	.long 0x00000000
-	.long 0
 .LC1:	/* 0.5 */
-	.long 0x3fe00000
-	.long 0
+	.long 0x3f000000
 
 	.section	".text"
 	
@@ -60,17 +45,16 @@ ENTRY (__lround)
 	mflr	r10
 	lwz	r9,.LC0@got(10)
 	mtlr	r11
-	lfd	fp12,0(r9)
+	lfs	fp12,0(r9)
 #else
 	lis	r9,.LC0@ha
-	lfd	fp12,.LC0@l(r9)
+	lfs	fp12,.LC0@l(r9)
 #endif
 #ifdef SHARED
-	lwz	r9,.LC1@got(10)
-	lfd	fp10,0(r9)
+	lfs	fp10,.LC1-.LC0(r9)
 #else
 	lis	r9,.LC1@ha
-	lfd	fp10,.LC1@l(r9)
+	lfs	fp10,.LC1@l(r9)
 #endif
 	fcmpu	cr6,fp1,fp12	/* if (x > 0.0)  */
 	ble-	cr6,.L4
@@ -78,8 +62,8 @@ ENTRY (__lround)
 .L9:
 	fctiwz	fp2,fp1		/* Convert To Integer DW lround toward 0.  */
 	stfd	fp2,-8(r1)
-	nop	/* Insure the following load is in a different dispatch group */
-	nop	/* to avoid pipe stall on POWER4&5.  */
+	nop	/* Ensure the following load is in a different dispatch  */
+	nop	/* group to avoid pipe stall on POWER4&5.  */
 	nop
 	lwz	r3,-4(r1)
 	blr
