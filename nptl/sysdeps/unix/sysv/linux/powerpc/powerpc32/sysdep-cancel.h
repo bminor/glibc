@@ -91,8 +91,8 @@
 #  define CENABLE	bl __libc_enable_asynccancel@local
 #  define CDISABLE	bl __libc_disable_asynccancel@local
 # elif defined IS_IN_librt
-#  define CENABLE	JUMPTARGET(__librt_enable_asynccancel)
-#  define CDISABLE	JUMPTARGET(__librt_disable_asynccancel)
+#  define CENABLE	bl JUMPTARGET(__librt_enable_asynccancel)
+#  define CDISABLE	bl JUMPTARGET(__librt_disable_asynccancel)
 # else
 #  error Unsupported library
 # endif
