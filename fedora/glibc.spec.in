@@ -1343,6 +1343,9 @@ rm -f *.filelist*
 - update from CVS
   - fix kernel version check in ld.so
 - fix sendfile{,64} prototypes (BZ#961)
+- try more ports in bindresvport if all 600..1023 are
+  used, don't use priviledged ports when talking to portmap
+  (#141773)
 
 * Fri May 20 2005 Jakub Jelinek <jakub@redhat.com> 2.3.5-7
 - update from CVS
