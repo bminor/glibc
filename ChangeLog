@@ -1,3 +1,21 @@
+2005-05-23  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/arm, sysdeps/unix/arm, sysdeps/unix/sysv/linux/arm:
+	Subdirectories moved to ports repository.
+	* configure.in (base_machine): Remove arm* and thumb* patterns.
+	* shlib-versions (arm.*-.*-linux.*): Remove this pattern.
+
+2005-05-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/bindrsvprt.c (LOWPORT): Apparently some mountd
+	implementations are broken and don't accept ports < 512.
+
+2005-05-22  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #961]
+	* io/sys/sendfile.h: Remove __nonnull from sendfile and sendfile64
+	declarations.
+
 2005-05-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/pm_getport.c (__get_socket): New function.
@@ -13,12 +31,6 @@
 	range to even lower ports.
 
 	* sysdeps/unix/clock_gettime.c (clock_gettime): Revert last patch.
-
-2005-05-22  Dmitry V. Levin  <ldv@altlinux.org>
-
-	[BZ #961]
-	* io/sys/sendfile.h: Remove __nonnull from sendfile and sendfile64
-	declarations.
 
 2005-05-22  Andreas Schwab  <schwab@suse.de>
 

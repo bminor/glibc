@@ -48,7 +48,7 @@ bindresvport (int sd, struct sockaddr_in *sin)
   int i;
 
 #define STARTPORT 600
-#define LOWPORT 200
+#define LOWPORT 512
 #define ENDPORT (IPPORT_RESERVED - 1)
 #define NPORTS	(ENDPORT - STARTPORT + 1)
   static short startport = STARTPORT;

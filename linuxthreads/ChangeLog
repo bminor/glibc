@@ -1,8 +1,13 @@
+2005-05-23  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/arm, sysdeps/unix/sysv/linux/arm: Subdirectories moved to
+	ports repository.
+
 2005-05-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h
 	[IS_IN_librt] (CENABLE, CDISABLE): Use JUMPTARGET instead of
-	bl __librt_*_asynccancel@local.
+	__librt_*_asynccancel@local.
 
 2005-05-17  Alan Modra  <amodra@bigpond.net.au>
 
