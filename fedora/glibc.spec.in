@@ -1,4 +1,4 @@
-%define glibcrelease 9
+%define glibcrelease 10
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 sparc64 ppc ppc64
@@ -1339,6 +1339,14 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon May 30 2005 Jakub Jelinek <jakub@redhat.com> 2.3.5-10
+- fix LD_ASSUME_KERNEL (since 2.3.5-8 GLRO(dl_osversion)
+  has been always overwritten with the version of currently
+  running kernel)
+- remove linuxthreads man pages other than those covered in
+  3p section, as 3p man pages are far better quality and describe
+  POSIX behaviour that NPTL implements (#159084)
+
 * Tue May 24 2005 Jakub Jelinek <jakub@redhat.com> 2.3.5-9
 - update from CVS
   - increase bindresvport's LOWPORT to 512, apparently some
