@@ -1,3 +1,9 @@
+2005-05-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (DL_SYSDEP_OSCHECK): If
+	GLRO(dl_osversion) has been already set to a value smaller than
+	_dl_discover_osversion (), don't overwrite it here.
+
 2005-05-23  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/arm, sysdeps/unix/arm, sysdeps/unix/sysv/linux/arm:
