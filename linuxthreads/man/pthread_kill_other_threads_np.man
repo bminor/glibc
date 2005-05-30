@@ -16,7 +16,7 @@ called just before a thread calls one of the !exec! functions,
 e.g. !execve!(2).
 
 Termination of the other threads is not performed through
-!pthread_cancel!(3) and completely bypasses the cancellation
+!pthread_cancel!(3p) and completely bypasses the cancellation
 mechanism. Hence, the current settings for cancellation state and
 cancellation type are ignored, and the cleanup handlers are not
 executed in the terminated threads.
@@ -26,9 +26,9 @@ Xavier Leroy <Xavier.Leroy@inria.fr>
 
 .SH "SEE ALSO"
 !execve!(2),
-!pthread_setcancelstate!(3),
-!pthread_setcanceltype!(3),
-!pthread_cancel!(3).
+!pthread_setcancelstate!(3p),
+!pthread_setcanceltype!(3p),
+!pthread_cancel!(3p).
 
 .SH BUGS
 

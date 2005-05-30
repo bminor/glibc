@@ -14,8 +14,8 @@ int pthread_mutexattr_getkind_np(const pthread_mutexattr_t *attr, int *kind);
 
 .SH DESCRIPTION
 
-These functions are deprecated, use !pthread_mutexattr_settype!(3)
-and !pthread_mutexattr_gettype!(3) instead.
+These functions are deprecated, use !pthread_mutexattr_settype!(3p)
+and !pthread_mutexattr_gettype!(3p) instead.
 
 .SH "RETURN VALUE"
 !pthread_mutexattr_getkind_np! always returns 0.
@@ -35,5 +35,5 @@ nor !PTHREAD_MUTEX_ERRORCHECK_NP!
 Xavier Leroy <Xavier.Leroy@inria.fr>
 
 .SH "SEE ALSO"
-!pthread_mutexattr_settype!(3),
-!pthread_mutexattr_gettype!(3).
+!pthread_mutexattr_settype!(3p),
+!pthread_mutexattr_gettype!(3p).

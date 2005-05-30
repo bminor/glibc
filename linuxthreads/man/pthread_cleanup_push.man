@@ -21,7 +21,7 @@ void pthread_cleanup_pop_restore_np(int execute);
 .SH DESCRIPTION
 
 Cleanup handlers are functions that get called when a thread
-terminates, either by calling !pthread_exit!(3) or because of
+terminates, either by calling !pthread_exit!(3p) or because of
 cancellation. Cleanup handlers are installed and removed following a
 stack-like discipline.
 
@@ -37,7 +37,7 @@ with !malloc!(3) or close file descriptors on thread termination.
 !pthread_cleanup_push! installs the |routine| function with argument
 |arg| as a cleanup handler. From this point on to the matching
 !pthread_cleanup_pop!, the function |routine| will be called with
-arguments |arg| when the thread terminates, either through !pthread_exit!(3)
+arguments |arg| when the thread terminates, either through !pthread_exit!(3p)
 or by cancellation. If several cleanup handlers are active at that
 point, they are called in LIFO order: the most recently installed
 handler is called first.
@@ -56,7 +56,7 @@ with the matching closing brace !}! being introduced by the expansion
 of the matching !pthread_cleanup_pop!.
 
 !pthread_cleanup_push_defer_np! is a non-portable extension that
-combines !pthread_cleanup_push! and !pthread_setcanceltype!(3).
+combines !pthread_cleanup_push! and !pthread_setcanceltype!(3p).
 It pushes a cleanup handler just as !pthread_cleanup_push! does, but
 also saves the current cancellation type and sets it to deferred
 cancellation. This ensures that the cleanup mechanism is effective
@@ -113,9 +113,9 @@ None.
 Xavier Leroy <Xavier.Leroy@inria.fr>
 
 .SH "SEE ALSO"
-!pthread_exit!(3),
-!pthread_cancel!(3),
-!pthread_setcanceltype!(3).
+!pthread_exit!(3p),
+!pthread_cancel!(3p),
+!pthread_setcanceltype!(3p).
 
 .SH EXAMPLE
 
@@ -149,7 +149,7 @@ pthread_cleanup_pop(1);
 .fi
 
 Notice that the code above is safe only in deferred cancellation mode
-(see !pthread_setcanceltype!(3)). In asynchronous cancellation mode,
+(see !pthread_setcanceltype!(3p)). In asynchronous cancellation mode,
 a cancellation can occur between !pthread_cleanup_push! and
 !pthread_mutex_lock!, or between !pthread_mutex_unlock! and
 !pthread_cleanup_pop!, resulting in both cases in the thread trying to

@@ -1,3 +1,13 @@
+2005-05-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* man/Makefile (SOURCES): Remove all man pages but
+	pthread_cleanup_push.man, pthread_kill_other_threads_np.man
+	and pthread_mutexattr_setkind_np.man.
+	* man/pthread_cleanup_push.man: Replace (3) with (3p) where man page
+	was not kept.
+	* man/pthread_kill_other_threads_np.man: Likewise.
+	* man/pthread_mutexattr_setkind_np.man: Likewise.
+
 2005-05-23  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/arm, sysdeps/unix/sysv/linux/arm: Subdirectories moved to
