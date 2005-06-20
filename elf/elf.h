@@ -1866,6 +1866,9 @@ typedef Elf32_Addr Elf32_Conflict;
 #define LITUSE_ALPHA_TLS_GD	4
 #define LITUSE_ALPHA_TLS_LDM	5
 
+/* Legal values for d_tag of Elf64_Dyn.  */
+#define DT_ALPHA_PLTRO		0x70000000
+#define DT_ALPHA_NUM		1
 
 /* PowerPC specific declarations */
 
@@ -1976,10 +1979,19 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PPC_DIAB_RELSDA_HI	184	/* like EMB_RELSDA, but high 16 bit */
 #define R_PPC_DIAB_RELSDA_HA	185	/* like EMB_RELSDA, adjusted high 16 */
 
+/* GNU relocs used in PIC code sequences.  */
+#define R_PPC_REL16		249	/* word32   (sym-.) */
+#define R_PPC_REL16_LO		250	/* half16   (sym-.)@l */
+#define R_PPC_REL16_HI		251	/* half16   (sym-.)@h */
+#define R_PPC_REL16_HA		252	/* half16   (sym-.)@ha */
+
 /* This is a phony reloc to handle any old fashioned TOC16 references
    that may still be in object files.  */
 #define R_PPC_TOC16		255
 
+/* PowerPC specific values for the Dyn d_tag field.  */
+#define DT_PPC_GOT		(DT_LOPROC + 0)
+#define DT_PPC_NUM		1
 
 /* PowerPC64 relocations defined by the ABIs */
 #define R_PPC64_NONE		R_PPC_NONE

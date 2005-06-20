@@ -1,8 +1,357 @@
+2005-06-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/quota.h: Add definitions and types for
+	_LINUX_QUOTA_VERSION >= 2.
+	(_LINUX_QUOTA_VERSION): Define if not yet defined.
+
+	* sysdeps/unix/sysv/linux/bits/resource.h (RLIMIT_NICE,
+	RLIMIT_RTPRIO): Add.
+	(RLIMIT_NLIMITS): Adjust.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h (RLIMIT_NICE,
+	RLIMIT_RTPRIO): Add.
+	(RLIMIT_NLIMITS): Adjust.
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h (RLIMIT_NICE,
+	RLIMIT_RTPRIO): Add.
+	(RLIMIT_NLIMITS): Adjust.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h (RLIMIT_NICE,
+	RLIMIT_RTPRIO): Add.
+	(RLIMIT_NLIMITS): Adjust.
+
+2005-06-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/mktime.c: Always include <string.h> for prototype of
+	implicitly used memcpy.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/truncate64.c
+	(truncate64): Use __truncate, not truncate.
+	(__have_no_truncate64): Renamed from have_no_truncate64.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ftruncate64.c
+	(__have_no_truncate64): Renamed from have_no_truncate64.
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Adjust ulps for complex
+	float functions for gcc 4.
+
+2005-06-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_runtime_setup):
+	Handle prelinked libraries and binaries with new style PLT.
+
+2005-06-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/elf.h (R_PPC_REL16, R_PPC_REL16_LO, R_PPC_REL16_HI,
+	R_PPC_REL16_HA): Define.
+
+2005-06-14  Alan Modra  <amodra@bigpond.net.au>
+
+	* config.h.in (HAVE_ASM_PPC_REL16): Add.
+	* elf/elf.h (DT_PPC_GOT, DT_PPC_NUM): Define.
+	* elf/tls-macros.h (PowerPC32): Include config.h.  Add variants of
+	TLS_IE, TLS_LD and TLS_GD for new PLT/GOT layout.
+	* sysdeps/powerpc/powerpc32/configure.in: New file,
+	* sysdeps/powerpc/powerpc32/dl-dtprocnum.h: New file.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (DT_PPC): Define.
+	(ppc_got): New inline function.
+	(elf_machine_dynamic): Use ppc_got.  Add attribute const.
+	(elf_machine_load_address): Add attribute const.  Don't use int vars.
+	Use bcl rather than bl to save trashing branch target stack.  Use
+	elf_machine_dynamic rather than duplicating code here.
+	(elf_machine_runtime_setup): New inline function replacing define.
+	Handle new PLT.
+	(elf_machine_fixup_plt): Handle new PLT.
+	(elf_machine_rela): Likewise.
+	* sysdeps/powerpc/powerpc32/sysdep.h: Include config.h.
+	(CALL_MCOUNT): Don't set up counter vars.
+	* sysdeps/powerpc/powerpc32/ppc-mcount.S: Correct comment.
+	* sysdeps/powerpc/powerpc32/elf/start.S (start_addressesp): Don't
+	define when HAVE_ASM_PPC_REL16.
+	(_start): Add HAVE_ASM_PPC_REL16 code.
+	* sysdeps/powerpc/powerpc32/dl-start.S (_dl_start_user): Don't bl
+	into the GOT when HAVE_ASM_PPC_REL16.
+	* sysdeps/powerpc/powerpc32/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S (__longjmp): Ditto.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S (__ceil): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceilf.S (__ceilf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S (__floor): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floorf.S (__floorf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S (__lround): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S (__rint): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rintf.S (__rintf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S (__round): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S (__roundf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S (__trunc): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S (__truncf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S (__sigsetjmp):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/brk.S (__brk): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S
+	(__getcontext): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S
+	(__setcontext): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S
+	(__swapcontext): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/socket.S (stackblock):
+	Comment.
+	(__socket): Bomb if NARGS >= 7.  Invoke CGOTSETUP and CGOTRESTORE.
+
+2005-06-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/sigignore.c: Include <string.h> to tell the compiler
+	to use __GI_memset.
+	* sysdeps/posix/signal.c: Likewise.
+	* sysdeps/posix/sigset.c: Likewise.
+	* sysdeps/posix/sysv_signal.c: Likewise.
+	* sysdeps/unix/sysv/linux/sleep.c: Likewise.
+	* sysdeps/unix/sysv/linux/sysctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/system.c: Likewise.
+
+2005-06-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* hesiod/hesiod.c (hesiod_init): Don't check for ctx->classes[0] == 0
+	or both classes equal here.
+	(parse_config_file): If both classes are equal, clear the second one.
+
+2005-06-08  Karl Kelley  <kekelley@iastate.edu>
+
+	* hesiod/hesiod_p.h (struct hesiod_p): Add classes array.
+	* hesiod/hesiod.c (hesiod_init): Initialize classes.  Fail if no
+	valid classes were given or if both are equal.
+	(hesiod_resolve): Use ctx->classes instead of hardcoded C_IN
+	and C_HS order.
+	(parse_config_file): Handle classes keyword.
+	* hesiod/README.hesiod: Mention addition of the classes keyword.
+
+2005-06-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Add test for availability of libaudit.
+	* config.h.in: Define HAVE_LIBAUDIT.
+	* config.make.in: Define have-libaudit.
+	* nscd/Makefile: If libaudit is available, link nscd with it.
+	* nscd/selinux.c: If HAVE_LIBAUDIT is defined, log using libaudit.
+	Patch by Steve Grubb <sgrubb@redhat.com>.
+
+	* debug/pread64_chk.c: Use __libc_pread64 instead of __pread64.
+	* sysdeps/posix/posix_fallocate64.c: Likewise.
+	* include/string.h: Use libc_hidden_proto for strnlen.
+	* sysdeps/generic/strnlen.c: Add libc_hidden_def.
+	* include/libintl.h: Use libc_hidden_proto for __dcgettext.
+	* intl/dcgettext.c: Add libc_hidden_def.
+	* include/execinfo.h: Add libc_hidden_proto for __backtrace and
+	__backtrace_symbols_fd.
+	* sysdeps/generic/backtrace.c: Add libc_hidden_def.
+	* sysdeps/generic/backtracesymsfd.c: Likewise.
+	* sysdeps/generic/elf/backtracesymsfd.c: Likewise.
+	* sysdeps/i386/backtrace.c: Likewise.
+	* sysdeps/ia64/backtrace.c: Likewise.
+	* sysdeps/powerpc/powerpc32/backtrace.c: Likewise.
+	* sysdeps/powerpc/powerpc64/backtrace.c: Likewise.
+	* sysdeps/s390/s390-32/backtrace.c: Likewise.
+	* sysdeps/s390/s390-64/backtrace.c: Likewise.
+
+2005-06-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/clock_gettime.c (clock_gettime): Implement case
+	where HANDLED_REALTIME is not defined.  [BZ #966]
+
+2005-06-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/netlinkaccess.h (__netlink_sendreq,
+	__netlink_receive): Remove prototypes.
+	(__netlink_request): New prototype.
+	* sysdeps/unix/sysv/linux/ifaddrs.c: Include <alloca.h> and
+	<stdint.h>.
+	(__netlink_sendreq): Make static.
+	(__netlink_receive): Rename to...
+	(__netlink_request): ... this.  Add type argument, call
+	__netlink_sendreq.  If MSG_TRUNC is set after recvmsg, retry
+	with a bigger buffer.  Don't record buffers that contain no
+	messages we are expecting.
+	(getifaddrs): Use __netlink_request instead of __netlink_sendreq
+	and __netlink_receive pairs.  Formatting.
+	* sysdeps/unix/sysv/linux/if_index.c (if_nameindex_netlink): Use
+	__netlink_request instead of __netlink_sendreq and __netlink_receive
+	pair.
+
+2005-06-13  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/netinet/if_tr.h: Don't include kernel
+	headers, instead copy important structs/defines.
+
+2005-06-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (dl_main): Move DT_DEBUG setup before first
+	_dl_debug_state call.
+
+2005-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-error.c (_dl_signal_error): Store information about use of
+	real malloc in the catch object.
+	(_dl_catch_error): Forward information about malloc use to caller
+	in new parameter.
+	(_dl_out_of_memory): Make static.
+	* elf/dl-deps.c: Adjust callers of _dl_catch_error.
+	* elf/dl-libc.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/rtld.c: Likewise.
+	Add new --audit option.
+	* sysdeps/generic/ldsodefs.h: Remove _dl_out_of_memory declaration.
+	(rtld_global_ro._dl_signal_error): Add new parameter.
+	* include/dlfcn.h (_dl_catch_error): Add new parameter.
+	* dlfcn/dlfcn.c (_dlerror_run): Pass additional parameter to
+	_dl_catch_error.  Only free if the returned newly value says so.
+
+2005-06-01  Roland McGrath  <roland@redhat.com>
+
+	[BZ #959]
+	* posix/tst-mmap.c (main): Fill the test file with enough data for the
+	page size.
+
 2005-05-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-osinfo.h (DL_SYSDEP_OSCHECK): If
 	GLRO(dl_osversion) has been already set to a value smaller than
 	_dl_discover_osversion (), don't overwrite it here.
+
+2005-05-24  Thomas Schwinge  <schwinge@nic-nac-project.de>
+
+	* sysdeps/mach/i386/syscall.S (syscall): Call END.
+
+2005-05-28  Richard Henderson  <rth@redhat.com>
+
+	* elf/elf.h (DT_ALPHA_PLTRO, DT_ALPHA_NUM): New.
+	* sysdeps/alpha/dl-dtprocnum.h: New file.
+	* sysdeps/alpha/dl-machine.h (DT_ALPHA): New.
+	(elf_machine_load_address): Simplify to rely on gprel relocations.
+	(elf_machine_runtime_setup): Handle DT_ALPHA_PLTRO plt format.
+	Remove thread safety workaround for binutils 2.6.
+	(elf_machine_fixup_plt): Handle DT_ALPHA_PLTRO plt format.
+	* sysdeps/alpha/dl-trampoline.S (_dl_runtime_resolve_new): New.
+	(_dl_runtime_profile_new): New.
+	(_dl_runtime_resolve_old): Rename from _dl_runtime_resolve.
+	(_dl_runtime_profile_old): Rename from _dl_runtime_profile.  Fix
+	typo in _dl_call_pltexit argument loading.
+
+	* sysdeps/alpha/div_libc.h (funcnoplt): New.
+	* sysdeps/alpha/divl.S: Use it.
+	* sysdeps/alpha/divq.S: Likewise
+	* sysdeps/alpha/divqu.S: Likewise.
+	* sysdeps/alpha/reml.S: Likewise.
+	* sysdeps/alpha/remq.S: Likewise.
+	* sysdeps/alpha/remqu.S: Likewise.
+
+2005-05-26  Andreas Schwab  <schwab@suse.de>
+
+	* locale/Makefile (CFLAGS-loadlocale.c): Don't define.
+
+2005-05-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (O_DIRECT): Fix value.
+	Reported by Colin Gibbs <colin@gibbsonline.net>.  [BZ #954]
+
+2005-05-17  Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S (__longjmp): Corrent
+	_dl_hwcap access in PIC && !SHARED case.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Likewise.
+
+2005-05-25  Dwayne Grant McConnell  <dgm69@us.ibm.com>
+
+	* gmon/gmon.c: Add space in weak_alias use.
+	* linuxthreads/sysdeps/unix/sysv/linux/mips/vfork.S: Likewise.
+	* sysdeps/alpha/htonl.S: Likewise.
+	* sysdeps/alpha/htons.S: Likewise.
+	* sysdeps/alpha/elf/start.S: Likewise.
+	* sysdeps/i386/i386-mcount.S: Likewise.
+	* sysdeps/ia64/strchr.S: Likewise.
+	* sysdeps/ia64/fpu/e_lgamma_r.c: Likewise.
+	* sysdeps/ia64/fpu/e_lgamma_r.c: Likewise.
+	* sysdeps/ia64/fpu/e_lgammaf_r.c: Likewise.
+	* sysdeps/ia64/fpu/e_lgammaf_r.c: Likewise.
+	* sysdeps/ia64/fpu/e_lgammal_r.c: Likewise.
+	* sysdeps/ia64/fpu/e_lgammal_r.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgamma.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgamma.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgammaf.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgammaf.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgammal.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgammal.c: Likewise.
+	* sysdeps/mach/hurd/readdir64_r.c: Likewise.
+	* sysdeps/mach/hurd/sigaltstack.c: Likewise.
+	* sysdeps/powerpc/fpu/s_fabs.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fabs.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fabs.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fabs.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fmax.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fmax.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fmax.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fmax.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fmin.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fmin.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fmin.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fmin.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Likewise.
+	* sysdeps/s390/s390-32/s390-mcount.S: Likewise.
+	* sysdeps/s390/s390-64/s390x-mcount.S: Likewise.
+	* sysdeps/sparc/sparc32/memset.S: Likewise.
+	* sysdeps/sparc/sparc32/stpcpy.S: Likewise.
+	* sysdeps/sparc/sparc32/strchr.S: Likewise.
+	* sysdeps/sparc/sparc32/strchr.S: Likewise.
+	* sysdeps/sparc/sparc64/memcmp.S: Likewise.
+	* sysdeps/sparc/sparc64/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/memset.S: Likewise.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/getrusage.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sigsuspend.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/readdir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/readdir64_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/makecontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/longjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/longjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/longjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/getdents.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/makecontext.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/swapcontext.S: Likewise.
+	* sysdeps/x86_64/_mcount.S: Likewise.
+
+2005-05-24  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h
+	(SETUP_PIC_REG, LOAD_PIC_REG): Move these macros ...
+	* sysdeps/i386/sysdep.h [PIC]: ... to here.
 
 2005-05-23  Roland McGrath  <roland@redhat.com>
 

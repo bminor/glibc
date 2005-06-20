@@ -1,3 +1,16 @@
+2005-06-14  Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h (PSEUDO):
+	Invoke CGOTSETUP and CGOTRESTORE.
+	(CGOTSETUP, CGOTRESTORE): Define.
+
+2005-05-29  Richard Henderson  <rth@redhat.com>
+
+	* tst-cancel4.c (WRITE_BUFFER_SIZE): New.
+	(tf_write, tf_writev): Use it.
+	(do_test): Use socketpair instead of pipe.  Set SO_SNDBUF to
+	the system minimum.
+
 2005-05-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h
