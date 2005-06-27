@@ -1,3 +1,64 @@
+2005-06-16  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1016]
+	* sysdeps/ia64/strlen.S (strlen): Change l2 into a local label.
+
+2005-06-23  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/nscd_stat.c (receive_print_stats): Replace YESSTR/NOSTR
+	with own translation.
+
+2005-06-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/xdr.c (xdr_hyper, xdr_u_hyper): When decoding, cast
+	t2 to uint32_t instead of ulong.
+	* sunrpc/Makefile (tests): Add tst-xdrmem.
+	* sunrpc/tst-xdrmem.c: New test.
+
+	* Versions.def (ld): Add GLIBC_2.4.
+	* configure.in: Add --enable-stackguard-randomization option.
+	(ENABLE_STACKGUARD_RANDOMIZE): New define.
+	* config.h.in (ENABLE_STACKGUARD_RANDOMIZE): Add.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Include stdint.h.
+	(_dl_setup_stack_chk_guard): New inline function.
+	* sysdeps/generic/dl-osinfo.h: Include stdint.h.
+	(_dl_setup_stack_chk_guard): New inline function.
+	* elf/rtld.c (__stack_chk_guard): New variable.
+	(dl_main): Remove all traces of TLS_INIT_TP_EXPENSIVE.
+	Set __stack_chk_guard to _dl_setup_stack_chk_guard (),
+	use THREAD_SET_STACK_GUARD if defined.
+	* elf/Versions (ld): Export __stack_chk_guard@@GLIBC_2.4.
+	* sysdeps/generic/libc-start.c (__stack_chk_guard): New variable.
+	(__libc_start_main): Set __stack_chk_guard to
+	_dl_setup_stack_chk_guard (), use THREAD_SET_STACK_GUARD if defined.
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Remove all
+	traces of TLS_INIT_TP_EXPENSIVE.
+	* debug/Versions (libc): Export __stack_chk_fail@@GLIBC_2.4.
+	* debug/Makefile (routines): Add stack_chk_fail.
+	(static-only-routines): Add stack_chk_fail_local.
+	* debug/stack_chk_fail_local.c: New file.
+	* debug/stack_chk_fail.c: New file.
+	* elf/Makefile: Add rules to build and run tst-stackguard1{,-static}
+	tests.
+	* elf/tst-stackguard1.c: New file.
+	* elf/tst-stackguard1-static.c: New file.
+	* elf/stackguard-macros.h: New file.
+
+2005-06-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* resource/Makefile (tests): Add tst-getrlimit.
+	* resource/tst-getrlimit.c: New file.
+
+	* sysdeps/unix/sysv/linux/bits/resource.h (RLIMIT_RTPRIO): Fix typo.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
+
+2005-06-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.init: Get more in line with lsb3.
+	* nscd/nscd.c: Adjust some error codes to fit in better with lsb3.
+	* nscd/connections.c: Likewise.
+
 2005-06-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sys/quota.h: Add definitions and types for
