@@ -94,7 +94,8 @@ gets (char *__str)
   return __gets_alias (__str);
 }
 
-extern void __chk_fail (void) __attribute__((__noreturn__));
+extern char *__fgets_chk (char *__restrict __s, size_t __size, int __n,
+			  FILE *__restrict __stream) __wur;
 extern char *__REDIRECT (__fgets_alias,
 			 (char *__restrict __s, int __n,
 			  FILE *__restrict __stream), fgets) __wur;
@@ -102,12 +103,15 @@ extern char *__REDIRECT (__fgets_alias,
 extern __always_inline __wur char *
 fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
 {
-  if (__bos (__s) != (size_t) -1 && (size_t) __n > __bos (__s))
-    __chk_fail ();
+  if (__bos (__s) != (size_t) -1
+      && (!__builtin_constant_p (__n) || (size_t) __n > __bos (__s)))
+    return __fgets_chk (__s, __bos (__s), __n, __stream);
   return __fgets_alias (__s, __n, __stream);
 }
 
 #ifdef __USE_GNU
+extern char *__fgets_unlocked_chk (char *__restrict __s, size_t __size,
+				   int __n, FILE *__restrict __stream) __wur;
 extern char *__REDIRECT (__fgets_unlocked_alias,
 			 (char *__restrict __s, int __n,
 			  FILE *__restrict __stream), fgets_unlocked) __wur;
@@ -115,8 +119,9 @@ extern char *__REDIRECT (__fgets_unlocked_alias,
 extern __always_inline __wur char *
 fgets_unlocked (char *__restrict __s, int __n, FILE *__restrict __stream)
 {
-  if (__bos (__s) != (size_t) -1 && (size_t) __n > __bos (__s))
-    __chk_fail ();
+  if (__bos (__s) != (size_t) -1
+      && (!__builtin_constant_p (__n) || (size_t) __n > __bos (__s)))
+    return __fgets_unlocked_chk (__s, __bos (__s), __n, __stream);
   return __fgets_unlocked_alias (__s, __n, __stream);
 }
 #endif

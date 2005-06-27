@@ -1,8 +1,6 @@
-%define glibcrelease 11
+%define glibcrelease 1
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
-%define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 sparc64 ppc ppc64
-%define withtlsarches i386 i686 athlon x86_64 ia64 s390 s390x alpha alphaev6 sparc sparcv9 sparc64 ppc ppc64
 %define xenarches i686 athlon
 %ifarch %{xenarches}
 %define buildxen 1
@@ -28,12 +26,11 @@ Source2: %(echo %{glibcsrcdir} | sed s/glibc-/glibc-libidn-/).tar.bz2
 %endif
 Source3: %{glibcname}-fedora-%{glibcdate}.tar.bz2
 Patch0: %{glibcname}-fedora.patch
-Patch1: %{name}-nptl-check.patch
-Patch2: %{name}-ppc-assume.patch
-Patch3: %{name}-ia64-lib64.patch
+Patch1: %{name}-ppc-assume.patch
+Patch2: %{name}-ia64-lib64.patch
 Buildroot: %{_tmppath}/glibc-%{PACKAGE_VERSION}-root
 Obsoletes: zoneinfo, libc-static, libc-devel, libc-profile, libc-headers,
-Obsoletes:  linuxthreads, gencat, locale, ldconfig, locale-ja
+Obsoletes: gencat, locale, ldconfig, locale-ja
 Provides: ldconfig
 Autoreq: false
 Requires: glibc-common = %{version}-%{release}
@@ -59,27 +56,12 @@ Conflicts: gcc4 <= 4.0.0-0.6
 # /etc/default
 Conflicts: shadow-utils < 2:4.0.3-20
 Conflicts: nscd < 2.3.3-52
-%ifarch ia64 sparc64 s390x x86_64
-Conflicts: kernel < 2.4.0
-%define enablekernel 2.4.0
-%else
-%ifarch ppc64
-Conflicts: kernel < 2.4.19
-%define enablekernel 2.4.19
-%else
-%define enablekernel 2.2.5
-%ifarch i686 athlon
-%define enablekernelltfs 2.4.1
-%endif
-%endif
-%endif
-%ifarch %{nptlarches}
-%define enablekernelnptl 2.4.20
+Conflicts: kernel < 2.4.20
+%define enablekernel 2.4.20
 %ifarch i386
 %define nptl_target_cpu i486
 %else
 %define nptl_target_cpu %{_target_cpu}
-%endif
 %endif
 # Need AS_NEEDED directive
 BuildRequires: binutils >= 2.15.94.0.2-1
@@ -167,24 +149,6 @@ executables.
 
 Install glibc-headers if you are going to develop programs which will
 use the standard C libraries.
-
-%ifarch %{nptlarches}
-%ifnarch %{auxarches}
-%package -n linuxthreads-devel
-Summary: Header files and static libraries for development using LinuxThreads library.
-Group: Development/Libraries
-Requires: glibc-devel = %{version}-%{release}
-Autoreq: true
-
-%description -n linuxthreads-devel
-The linuxthreads-devel package contains the header and object files necessary
-for developing programs which can use the LinuxThreads library (normally
-newly linked programs will work only with NPTL).  To compile and link
-a program against LinuxThreads libraries, use
--I/usr/include/linuxthreads -L/usr/%{_lib}/linuxthreads \\
--Wl,-rpath-link,/%{_lib}/obsolete/linuxthreads
-%endif
-%endif
 
 %package profile
 Summary: The GNU libc libraries, including support for gprof profiling.
@@ -283,20 +247,10 @@ package or when debugging this package.
 %prep
 %setup -q -n %{glibcsrcdir} %{glibc_release_unpack} -a3
 %patch0 -E -p1
-case "`gcc --version | head -1`" in
-gcc*\ 3.[34]*)
-%ifarch %{nptlarches}
 %patch1 -p1
-%endif
-  ;;
-gcc*\ 3.2.3*)
-  case "`uname -r`" in *.ent*|*.EL*)
-%patch2 -p1
-  ;; esac ;;
-esac
 %ifarch ia64
 %if "%{_lib}" == "lib64"
-%patch3 -p1
+%patch2 -p1
 %endif
 %endif
 
@@ -471,10 +425,6 @@ cat > asm/unistd.h <<EOF
 #endif
 EOF
 
-%ifnarch %{ix86} alpha alphaev6 sparc sparcv9
-rm -rf glibc-compat
-%endif
-
 # A lot of programs still misuse memcpy when they have to use
 # memmove. The memcpy implementation below is not tolerant at
 # all.
@@ -490,8 +440,6 @@ chmod +x find_provides.sh
 touch `find . -name configure`
 
 %build
-rm -rf build-%{_target_cpu}-linux
-mkdir build-%{_target_cpu}-linux ; cd build-%{_target_cpu}-linux
 GCC=gcc
 %ifarch %{ix86}
 BuildFlags="-march=%{_target_cpu}"
@@ -519,12 +467,6 @@ BuildFlags="-mno-minimal-toc"
 GCC="gcc -m64"
 %endif
 
-# If gcc supports __thread, test it even in --with-tls --without-__thread
-# builds.
-if echo '__thread int a;' | $GCC -xc - -S -o /dev/null 2>/dev/null; then
-  sed -ie 's/0 [|][|]/1 ||/' ../elf/tst-tls10.h ../linuxthreads/tst-tls1.h
-fi
-
 BuildFlags="$BuildFlags -DNDEBUG=1"
 if gcc -v 2>&1 | grep -q 'gcc version 3.[0123]'; then
   BuildFlags="$BuildFlags -finline-limit=2000"
@@ -533,27 +475,38 @@ EnableKernel="--enable-kernel=%{enablekernel}"
 echo "$BuildFlags" > ../BuildFlags
 echo "$GCC" > ../Gcc
 AddOns=`cd .. && echo */configure | sed -e 's!/configure!!g;s!\(linuxthreads\|nptl\|rtkaio\)\( \|$\)!!g;s! \+$!!;s! !,!g;s!^!,!;/^,\*$/d'`
-echo "$AddOns" > ../AddOns
-Pthreads=linuxthreads
-%ifarch %{withtlsarches}
-WithTls="--with-tls --without-__thread"
-%else
-WithTls="--without-tls --without-__thread"
+%ifarch %{rtkaioarches}
+AddOns=,rtkaio$AddOns
 %endif
-CC="$GCC" CFLAGS="$BuildFlags -g -O3" ../configure --prefix=%{_prefix} \
-	--enable-add-ons=$Pthreads$AddOns --without-cvs $EnableKernel \
+echo "$AddOns" > ../AddOns
+
+build_nptl()
+{
+builddir=build-%{nptl_target_cpu}-$1
+shift
+rm -rf $builddir
+mkdir $builddir ; cd $builddir
+build_CFLAGS="$BuildFlags -g -O3 $*"
+CC="$GCC" CFLAGS="$build_CFLAGS" ../configure --prefix=%{_prefix} \
+	--enable-add-ons=nptl$AddOns --without-cvs $EnableKernel \
 	--with-headers=%{_prefix}/include --enable-bind-now \
-	$WithTls --build %{_target_cpu}-redhat-linux --host %{_target_cpu}-redhat-linux
-if [ -x /usr/bin/getconf ] ; then
-  numprocs=$(/usr/bin/getconf _NPROCESSORS_ONLN)
-  if [ $numprocs -eq 0 ]; then
-    numprocs=1
-  fi
-else
-  numprocs=1
-fi
-make -j$numprocs -r CFLAGS="$BuildFlags -g -O3" PARALLELMFLAGS=-s
+	--with-tls --with-__thread --build %{nptl_target_cpu}-redhat-linux \
+	--host %{nptl_target_cpu}-redhat-linux
+make %{?_smp_mflags} -r CFLAGS="$build_CFLAGS" PARALLELMFLAGS=-s
+
+cd ..
+}
+
+build_nptl linuxnptl
+
+%if %{buildxen}
+EnableKernel="$EnableKernel --disable-profile"
+build_nptl linuxnptl-nosegneg -mno-tls-direct-seg-refs
+%endif
+
+cd build-%{nptl_target_cpu}-linuxnptl
 $GCC -static -L. -Os ../fedora/glibc_post_upgrade.c -o glibc_post_upgrade.%{_target_cpu} \
+    -DNO_SIZE_OPTIMIZATION \
 %ifarch i386
     -DARCH_386 \
 %endif
@@ -563,190 +516,43 @@ $GCC -static -L. -Os ../fedora/glibc_post_upgrade.c -o glibc_post_upgrade.%{_tar
     '-DICONVCONFIG="%{_sbindir}/iconvconfig.%{_target_cpu}"'
 cd ..
 
-# hack
-unset LD_ASSUME_KERNEL || :
-
-%ifarch %{rtkaioarches}
-AddOns=,rtkaio$AddOns
-%endif
-
-%ifarch i686 athlon
-rm -rf build-%{_target_cpu}-linuxltfs
-mkdir build-%{_target_cpu}-linuxltfs ; cd build-%{_target_cpu}-linuxltfs
-EnableKernel="--enable-kernel=%{enablekernelltfs} --disable-profile"
-Pthreads=linuxthreads
-%ifarch %{withtlsarches}
-WithTls="--with-tls --without-__thread"
-%else
-WithTls="--without-tls --without-__thread"
-%endif
-CC="$GCC" CFLAGS="$BuildFlags -g -O3" ../configure --prefix=%{_prefix} \
-	--enable-add-ons=$Pthreads$AddOns --without-cvs $EnableKernel \
-	--with-headers=%{_prefix}/include --enable-bind-now \
-	$WithTls --build %{_target_cpu}-redhat-linux --host %{_target_cpu}-redhat-linux
-make -j$numprocs -r CFLAGS="$BuildFlags -g -O3" PARALLELMFLAGS=-s
-
-cd ..
-%endif
-
-%ifarch %{nptlarches}
-build_nptl()
-{
-builddir=build-%{nptl_target_cpu}-$1
-shift
-rm -rf $builddir
-mkdir $builddir ; cd $builddir
-EnableKernel="--enable-kernel=%{enablekernelnptl} --disable-profile"
-Pthreads=nptl
-WithTls="--with-tls --with-__thread"
-build_CFLAGS="$BuildFlags -g -O3 $*"
-CC="$GCC" CFLAGS="$build_CFLAGS" ../configure --prefix=%{_prefix} \
-	--enable-add-ons=$Pthreads$AddOns --without-cvs $EnableKernel \
-	--with-headers=%{_prefix}/include --enable-bind-now \
-	$WithTls --build %{nptl_target_cpu}-redhat-linux --host %{nptl_target_cpu}-redhat-linux
-make -j$numprocs -r CFLAGS="$build_CFLAGS" PARALLELMFLAGS=-s
-
-cd ..
-}
-
-build_nptl linuxnptl
-
-%if %{buildxen}
-build_nptl linuxnptl-nosegneg -mno-tls-direct-seg-refs
-%endif
-%endif
-
 %install
-# hack
-unset LD_ASSUME_KERNEL || :
-
 BuildFlags=`cat BuildFlags`
 GCC=`cat Gcc`
 AddOns=`cat AddOns`
 
-%ifarch %{rtkaioarches}
-AddOns=,rtkaio$AddOns
-%endif
-
-if [ -x /usr/bin/getconf ] ; then
-  numprocs=$(/usr/bin/getconf _NPROCESSORS_ONLN)
-  if [ $numprocs -eq 0 ]; then
-    numprocs=1
-  fi
-else
-  numprocs=1
-fi
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT
-make -j1 install_root=$RPM_BUILD_ROOT install -C build-%{_target_cpu}-linux PARALLELMFLAGS=-s
+make -j1 install_root=$RPM_BUILD_ROOT install -C build-%{nptl_target_cpu}-linuxnptl PARALLELMFLAGS=-s
 %ifnarch %{auxarches}
-cd build-%{_target_cpu}-linux && \
-    make -j$numprocs install_root=$RPM_BUILD_ROOT install-locales -C ../localedata objdir=`pwd` && \
+cd build-%{nptl_target_cpu}-linuxnptl && \
+    make %{?_smp_mflags} install_root=$RPM_BUILD_ROOT install-locales -C ../localedata objdir=`pwd` && \
     cd ..
 %endif
 
-SubDir=
-
-%ifarch i686 athlon
-cd build-%{_target_cpu}-linuxltfs
-Pthreads=linuxthreads
-%ifarch %{nptlarches}
-SubDir=obsolete/linuxthreads/i686
-%else
-SubDir=i686
-%endif
-mkdir -p $RPM_BUILD_ROOT/lib/$SubDir/
-cp -a libc.so $RPM_BUILD_ROOT/lib/$SubDir/`basename $RPM_BUILD_ROOT/lib/libc-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/lib/libc-*.so` $RPM_BUILD_ROOT/lib/$SubDir/`basename $RPM_BUILD_ROOT/lib/libc.so.*`
-cp -a math/libm.so $RPM_BUILD_ROOT/lib/$SubDir/`basename $RPM_BUILD_ROOT/lib/libm-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/lib/libm-*.so` $RPM_BUILD_ROOT/lib/$SubDir/`basename $RPM_BUILD_ROOT/lib/libm.so.*`
-cp -a $Pthreads/libpthread.so $RPM_BUILD_ROOT/lib/$SubDir/`basename $RPM_BUILD_ROOT/lib/libpthread-*.so`
-pushd $RPM_BUILD_ROOT/lib/$SubDir
-ln -sf libpthread-*.so `basename $RPM_BUILD_ROOT/lib/libpthread.so.*`
-popd
-%ifarch %{rtkaioarches}
-cp -a rtkaio/librtkaio.so $RPM_BUILD_ROOT/lib/$SubDir/`basename $RPM_BUILD_ROOT/lib/librt-*.so | sed s/librt-/librtkaio-/`
-ln -sf `basename $RPM_BUILD_ROOT/lib/librt-*.so | sed s/librt-/librtkaio-/` $RPM_BUILD_ROOT/lib/$SubDir/`basename $RPM_BUILD_ROOT/lib/librt.so.*`
-%else
-cp -a rt/librt.so $RPM_BUILD_ROOT/lib/$SubDir/`basename $RPM_BUILD_ROOT/lib/librt-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/lib/librt-*.so` $RPM_BUILD_ROOT/lib/$SubDir/`basename $RPM_BUILD_ROOT/lib/librt.so.*`
-%endif
-
-cd ..
-%endif
-
-%ifarch %{nptlarches}
-ObsDir=obsolete/linuxthreads
-mkdir -p $RPM_BUILD_ROOT/%{_lib}/obsolete/linuxthreads
-mv -f $RPM_BUILD_ROOT/%{_lib}/lib{c,m,pthread,rt,thread_db}[.-]*so* $RPM_BUILD_ROOT/%{_lib}/obsolete/linuxthreads/
-
-install_nptl() {
-cd build-%{nptl_target_cpu}-$1
-Pthreads=nptl
-SubDir=$2
-mkdir -p $RPM_BUILD_ROOT/%{_lib}/$SubDir/
-cp -a libc.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libc-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libc-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libc.so.*`
-cp -a math/libm.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libm-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libm-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libm.so.*`
-cp -a $Pthreads/libpthread.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/libpthread-%{version}.so
-pushd $RPM_BUILD_ROOT/%{_lib}/$SubDir
-ln -sf libpthread-*.so `basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libpthread.so.*`
-popd
-%ifarch %{rtkaioarches}
-cp -a rtkaio/librtkaio.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/librt-*.so | sed s/librt-/librtkaio-/`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/librt-*.so | sed s/librt-/librtkaio-/` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/librt.so.*`
-%else
-cp -a rt/librt.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/librt-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/librt-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/librt.so.*`
-%endif
-cp -a ${Pthreads}_db/libthread_db.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libthread_db-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libthread_db-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/$ObsDir/libthread_db.so.*`
-}
-
-install_nptl linuxnptl
-
-mkdir -p $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads
-mv -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/{libc,libpthread,libpthread_nonshared,librt}.a \
-  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/
-cp -a libc.a nptl/libpthread.a nptl/libpthread_nonshared.a rt/librt.a \
-  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/
-sed "s| /%{_lib}/| /%{_lib}/$ObsDir/|" $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libc.so \
-  > $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/libc.so
-sed "s| /%{_lib}/| /%{_lib}/$ObsDir/|;s|/libpthread_nonshared|/linuxthreads&|" $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libpthread.so \
-  > $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/libpthread.so
-%ifarch %{rtkaioarches}
-ln -sf /%{_lib}/$ObsDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed 's/librt-/librtkaio-/'` \
-  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/librt.so
-%else
-ln -sf /%{_lib}/$ObsDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` \
-  $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/librt.so
-%endif
-strip -g $RPM_BUILD_ROOT%{_prefix}/%{_lib}/linuxthreads/*.a
-mkdir -p $RPM_BUILD_ROOT/nptl $RPM_BUILD_ROOT%{_prefix}/include/linuxthreads
-make -j1 install_root=$RPM_BUILD_ROOT/nptl install-headers PARALLELMFLAGS=-s
-pushd $RPM_BUILD_ROOT/nptl%{_prefix}/include
-  for i in `find . -type f`; do
-    if ! [ -f $RPM_BUILD_ROOT%{_prefix}/include/$i ] \
-       || ! cmp -s $i $RPM_BUILD_ROOT%{_prefix}/include/$i; then
-      mkdir -p $RPM_BUILD_ROOT%{_prefix}/include/linuxthreads/`dirname $i`
-      if [ -f $RPM_BUILD_ROOT%{_prefix}/include/$i ]; then
-        cp -a $RPM_BUILD_ROOT%{_prefix}/include/{,linuxthreads/}$i
-      fi
-      cp -a $i $RPM_BUILD_ROOT%{_prefix}/include/$i
-    fi
-  done
-popd
-rm -rf $RPM_BUILD_ROOT/nptl
-
-cd ..
-
 %if %{buildxen}
 %define nosegneg_subdir i686/nosegneg
-install_nptl linuxnptl-nosegneg %{nosegneg_subdir}
-cd ..
+cd build-%{nptl_target_cpu}-linuxnptl-nosegneg
+SubDir=%{nosegneg_subdir}
+mkdir -p $RPM_BUILD_ROOT/%{_lib}/$SubDir/
+cp -a libc.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libc-*.so`
+ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libc-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libc.so.*`
+cp -a math/libm.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libm-*.so`
+ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libm-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libm.so.*`
+cp -a nptl/libpthread.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/libpthread-%{version}.so
+pushd $RPM_BUILD_ROOT/%{_lib}/$SubDir
+ln -sf libpthread-*.so `basename $RPM_BUILD_ROOT/%{_lib}/libpthread.so.*`
+popd
+%ifarch %{rtkaioarches}
+cp -a rtkaio/librtkaio.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/`
+ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
+%else
+cp -a rt/librt.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so`
+ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
 %endif
-
+cp -a nptl_db/libthread_db.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so`
+ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db.so.*`
+cd ..
 %endif
 
 # compatibility hack: this locale has vanished from glibc, but some other
@@ -756,15 +562,7 @@ mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/locale/ru_RU/LC_MESSAGES
 
 # Remove the files we don't want to distribute
 rm -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libNoVersion*
-%ifnarch %{ix86} alpha alphaev6 sparc sparcv9
 rm -f $RPM_BUILD_ROOT/%{_lib}/libNoVersion*
-%endif
-
-# the man pages for the linuxthreads require special attention
-make -C linuxthreads/man
-mkdir -p $RPM_BUILD_ROOT%{_mandir}/man3
-install -m 0644 linuxthreads/man/*.3thr $RPM_BUILD_ROOT%{_mandir}/man3
-gzip -9nvf $RPM_BUILD_ROOT%{_mandir}/man3/*
 
 if [ -d $RPM_BUILD_ROOT%{_prefix}/info -a "%{_infodir}" != "%{_prefix}/info" ]; then
     mkdir -p $RPM_BUILD_ROOT%{_infodir}
@@ -804,7 +602,7 @@ mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
 chmod 644 $RPM_BUILD_ROOT%{_prefix}/%{_lib}/gconv/gconv-modules.cache
 
 # Install the upgrade program
-install -m 700 build-%{_target_cpu}-linux/glibc_post_upgrade.%{_target_cpu} \
+install -m 700 build-%{nptl_target_cpu}-linuxnptl/glibc_post_upgrade.%{_target_cpu} \
   $RPM_BUILD_ROOT/usr/sbin/glibc_post_upgrade.%{_target_cpu}
 
 strip -g $RPM_BUILD_ROOT%{_prefix}/%{_lib}/*.o
@@ -830,14 +628,12 @@ rm -f $RPM_BUILD_ROOT%{_prefix}/include/rpcsvc/rquota.[hx]
 
 # Hardlink identical locale files together
 %ifnarch %{auxarches}
-gcc -O2 -o build-%{_target_cpu}-linux/hardlink fedora/hardlink.c
-build-%{_target_cpu}-linux/hardlink -vc $RPM_BUILD_ROOT%{_prefix}/lib/locale
+gcc -O2 -o build-%{nptl_target_cpu}-linuxnptl/hardlink fedora/hardlink.c
+build-%{nptl_target_cpu}-linuxnptl/hardlink -vc $RPM_BUILD_ROOT%{_prefix}/lib/locale
 %endif
 
-%ifarch %{ix86} alpha alphaev6 sparc sparcv9
 rm -f ${RPM_BUILD_ROOT}/%{_lib}/libnss1-*
 rm -f ${RPM_BUILD_ROOT}/%{_lib}/libnss-*.so.1
-%endif
 
 # Ugly hack for buggy rpm
 ln -f ${RPM_BUILD_ROOT}%{_sbindir}/iconvconfig{,.%{_target_cpu}}
@@ -945,21 +741,16 @@ rm -rf $RPM_BUILD_ROOT%{_prefix}/share/zoneinfo
 
 cd fedora
 $GCC -Os -static -o build-locale-archive build-locale-archive.c \
-  ../build-%{_target_cpu}-linux/locale/locarchive.o \
-  ../build-%{_target_cpu}-linux/locale/md5.o \
+  ../build-%{nptl_target_cpu}-linuxnptl/locale/locarchive.o \
+  ../build-%{nptl_target_cpu}-linuxnptl/locale/md5.o \
   -DDATADIR=\"%{_datadir}\" -DPREFIX=\"%{_prefix}\" \
-  -L../build-%{_target_cpu}-linux
+  -L../build-%{nptl_target_cpu}-linuxnptl
 install -m 700 build-locale-archive $RPM_BUILD_ROOT/usr/sbin/build-locale-archive
 cd ..
 
 # the last bit: more documentation
 rm -rf documentation
 mkdir documentation
-cp linuxthreads/ChangeLog  documentation/ChangeLog.threads
-cp linuxthreads/Changes documentation/Changes.threads
-cp linuxthreads/README documentation/README.threads
-cp linuxthreads/FAQ.html documentation/FAQ-threads.html
-cp -r linuxthreads/Examples documentation/examples.threads
 cp crypt/README.ufc-crypt documentation/README.ufc-crypt
 cp timezone/README documentation/README.timezone
 cp ChangeLog{,.14,.15} documentation
@@ -981,53 +772,17 @@ ln -sf /%{_lib}/ld-linux-ia64.so.2 $RPM_BUILD_ROOT/lib/ld-linux-ia64.so.2
 # Increase timeouts
 export TIMEOUTFACTOR=16
 echo ====================TESTING=========================
-cd build-%{_target_cpu}-linux
-make -j$numprocs -k check PARALLELMFLAGS=-s 2>&1 | tee check.log || :
-cd ..
-%ifarch i686 athlon
-echo ====================TESTING LINUXTHREADS FS=========
-cd build-%{_target_cpu}-linuxltfs
-make -j$numprocs -k check PARALLELMFLAGS=-s 2>&1 | tee check.log || :
-cd ..
-%endif
-%ifarch %{nptlarches}
-echo ====================TESTING NPTL====================
-cd build-%{nptl_target_cpu}-linuxnptl
-make -j$numprocs -k check PARALLELMFLAGS=-s 2>&1 | tee check.log || :
+cd build-%{_target_cpu}-linuxnptl
+make %{?_smp_mflags} -k check PARALLELMFLAGS=-s 2>&1 | tee check.log || :
 cd ..
 %if %{buildxen}
-echo ====================TESTING NPTL -mno-tls-direct-seg-refs=============
+echo ====================TESTING -mno-tls-direct-seg-refs=============
 cd build-%{nptl_target_cpu}-linuxnptl-nosegneg
 make -j$numprocs -k check PARALLELMFLAGS=-s 2>&1 | tee check.log || :
 cd ..
 %endif
-%endif
 echo ====================TESTING DETAILS=================
 for i in `sed -n 's|^.*\*\*\* \[\([^]]*\.out\)\].*$|\1|p' build-*-linux*/check.log`; do
-  echo =====$i=====
-  cat $i || :
-  echo ============
-done
-%ifarch i686 athlon
-echo ====================TESTING LINUXTHREADS FS LD.SO===
-cd build-%{_target_cpu}-linuxltfs
-mv elf/ld.so elf/ld.so.orig
-cp -a ../build-%{_target_cpu}-linux/elf/ld.so elf/ld.so
-find . -name \*.out -exec mv -f '{}' '{}'.origldso \;
-make -j$numprocs -k check PARALLELMFLAGS=-s 2>&1 | tee check2.log || :
-cd ..
-%endif
-%ifarch %{nptlarches}
-echo ====================TESTING NPTL LD.SO==============
-cd build-%{nptl_target_cpu}-linuxnptl
-mv elf/ld.so elf/ld.so.orig
-cp -a ../build-%{_target_cpu}-linux/elf/ld.so elf/ld.so
-find . -name \*.out -exec mv -f '{}' '{}'.origldso \;
-make -j$numprocs -k check PARALLELMFLAGS=-s 2>&1 | tee check2.log || :
-cd ..
-%endif
-echo ====================TESTING DETAILS=================
-for i in `sed -n 's|^.*\*\*\* \[\([^]]*\.out\)\].*$|\1|p' build-*-linux*/check2.log`; do
   echo =====$i=====
   cat $i || :
   echo ============
@@ -1037,7 +792,7 @@ PLTCMD='/^Relocation section .*\(\.rela\?\.plt\|\.rela\.IA_64\.pltoff\)/,/^$/p'
 echo ====================PLT RELOCS LD.SO================
 readelf -Wr $RPM_BUILD_ROOT/%{_lib}/ld-*.so | sed -n -e "$PLTCMD"
 echo ====================PLT RELOCS LIBC.SO==============
-readelf -Wr $RPM_BUILD_ROOT/%{_lib}/$SubDir/libc-*.so | sed -n -e "$PLTCMD"
+readelf -Wr $RPM_BUILD_ROOT/%{_lib}/libc-*.so | sed -n -e "$PLTCMD"
 echo ====================PLT RELOCS END==================
 
 %if "%{_enable_debug_packages}" == "1"
@@ -1230,17 +985,6 @@ rm -f *.filelist*
 
 %files -f rpm.filelist
 %defattr(-,root,root)
-%ifarch %{nptlarches}
-%dir /%{_lib}/obsolete
-%dir /%{_lib}/obsolete/linuxthreads
-%ifarch i686 athlon
-%dir /%{_lib}/obsolete/linuxthreads/i686
-%endif
-%else
-%ifarch i686 athlon
-%dir /lib/i686
-%endif
-%endif
 %if %{buildxen} && !%{xenpackage}
 %dir /%{_lib}/%{nosegneg_subdir}
 %endif
@@ -1284,9 +1028,6 @@ rm -f *.filelist*
 
 %files -f headers.filelist headers
 %defattr(-,root,root)
-%ifarch %{nptlarches}
-%{_prefix}/include/linuxthreads
-%endif
 
 %files -f profile.filelist profile
 %defattr(-,root,root)
@@ -1310,14 +1051,6 @@ rm -f *.filelist*
 %attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/db/nscd/hosts
 %endif
 
-%ifarch %{nptlarches}
-%ifnarch %{auxarches}
-%files -n linuxthreads-devel
-%defattr(-,root,root)
-%{_prefix}/%{_lib}/linuxthreads
-%endif
-%endif
-
 %if "%{_enable_debug_packages}" == "1"
 %files debuginfo -f debuginfo.filelist
 %defattr(-,root,root)
@@ -1339,6 +1072,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Jun 27 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-1
+- update from CVS
+  - stack protector support
+  - fix xdr_{,u_}{longlong_t,hyper} on 64-bit arches (#161583)
+- enable @GLIBC_2.4 symbols
+- remove linuxthreads
+
 * Mon Jun 20 2005 Jakub Jelinek <jakub@redhat.com> 2.3.5-11
 - update from CVS
   - PPC32 -msecure-plt support

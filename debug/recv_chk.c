@@ -19,7 +19,7 @@
 #include <sys/param.h>
 #include <sys/socket.h>
 
-#if 0
+
 ssize_t
 __recv_chk (int fd, void *buf, size_t n, size_t buflen, int flags)
 {
@@ -28,4 +28,3 @@ __recv_chk (int fd, void *buf, size_t n, size_t buflen, int flags)
 
   return __recv (fd, buf, n, flags);
 }
-#endif

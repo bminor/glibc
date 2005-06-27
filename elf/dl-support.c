@@ -281,11 +281,6 @@ _dl_non_dynamic_init (void)
   if (_dl_platform != NULL)
     _dl_platformlen = strlen (_dl_platform);
 
-#if defined (__i386__) && !defined (USE_TLS)
-  /* Load libs not using TLS.  */
-  _dl_osversion = 0x20205;
-#endif
-
   /* Scan for a program header telling us the stack is nonexecutable.  */
   if (_dl_phdr != NULL)
     for (uint_fast16_t i = 0; i < _dl_phnum; ++i)

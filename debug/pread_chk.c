@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <sys/param.h>
 
-#if 0
+
 ssize_t
 __pread_chk (int fd, void *buf, size_t nbytes, off_t offset, size_t buflen)
 {
@@ -28,4 +28,3 @@ __pread_chk (int fd, void *buf, size_t nbytes, off_t offset, size_t buflen)
 
   return __pread (fd, buf, nbytes, offset);
 }
-#endif

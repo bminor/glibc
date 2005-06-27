@@ -230,10 +230,7 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 		if (strcmp (arg2, "no") == 0)
 		  dbs[cnt].shared = 0;
 		else if (strcmp (arg2, "yes") == 0)
-#ifndef atomic_supports_shared
-#define atomic_supports_shared 1
-#endif
-		  dbs[cnt].shared = atomic_supports_shared;
+		  dbs[cnt].shared = 1;
 		break;
 	      }
 	  if (cnt == lastdb)

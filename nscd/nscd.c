@@ -128,10 +128,6 @@ extern void sighup_handler(int signum);
 /* True if only statistics are requested.  */
 static bool get_stats;
 
-#ifdef atomic_init_nscd
-atomic_init_nscd
-#endif
-
 int
 main (int argc, char **argv)
 {

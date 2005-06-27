@@ -1356,59 +1356,6 @@ ld.so does not support TLS, but program uses it!\n");
   ++GL(dl_ns)[LM_ID_BASE]._ns_nloaded;
   ++GL(dl_load_adds);
 
-#if defined(__i386__)
-  /* Force non-TLS libraries for glibc 2.0 binaries
-     or if a buggy binary references non-TLS errno or h_errno.  */
-  if (__builtin_expect (main_map->l_info[DT_NUM + DT_THISPROCNUM
-                                         + DT_VERSIONTAGIDX (DT_VERNEED)]
-                        == NULL, 0)
-      && main_map->l_info[DT_DEBUG])
-    GLRO(dl_osversion) = 0x20205;
-  else if ((__builtin_expect (mode, normal) != normal
-	    || main_map->l_info[ADDRIDX (DT_GNU_LIBLIST)] == NULL)
-	      /* Only binaries have DT_DEBUG dynamic tags...  */
-	   && main_map->l_info[DT_DEBUG])
-    {
-      /* Workaround for buggy binaries.  This doesn't handle buggy
-	 libraries.  */
-      bool buggy = false;
-      const ElfW(Sym) *symtab = (const void *) D_PTR (main_map,
-                                                      l_info[DT_SYMTAB]);
-      const char *strtab = (const void *) D_PTR (main_map,
-                                                 l_info[DT_STRTAB]);
-      Elf_Symndx symidx;
-      for (symidx = main_map->l_buckets[0x6c994f % main_map->l_nbuckets];
-	   symidx != STN_UNDEF;
-	   symidx = main_map->l_chain[symidx])
-	{
-	  if (__builtin_expect (strcmp (strtab + symtab[symidx].st_name,
-					"errno") == 0, 0)
-	      && ELFW(ST_TYPE) (symtab[symidx].st_info) != STT_TLS)
-	    buggy = true;
-	}
-      for (symidx = main_map->l_buckets[0xe5c992f % main_map->l_nbuckets];
-	   symidx != STN_UNDEF;
-	   symidx = main_map->l_chain[symidx])
-	{
-	  if (__builtin_expect (strcmp (strtab + symtab[symidx].st_name,
-					"h_errno") == 0, 0)
-	      && ELFW(ST_TYPE) (symtab[symidx].st_info) != STT_TLS)
-	    buggy = true;
-	}
-      if (__builtin_expect (buggy, false) && GLRO(dl_osversion) > 0x20401)
-	{
-	  GLRO(dl_osversion) = 0x20401;
-	  _dl_error_printf ("Incorrectly built binary which accesses errno or h_errno directly. Needs to be fixed.\n");
-	}
-    }
-#endif
-
-  if (GLRO(dl_osversion) <= 0x20413)
-    {
-      extern void internal_function _dl_init_linuxthreads_paths (void);
-      _dl_init_linuxthreads_paths ();
-    }
-
   /* If LD_USE_LOAD_BIAS env variable has not been seen, default
      to not using bias for non-prelinked PIEs and libraries
      and using it for executables or prelinked PIEs or libraries.  */
@@ -1763,57 +1710,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	  __munmap (file, file_size);
 	}
     }
-
-#if defined(__i386__) || defined(__alpha__) || (defined(__sparc__) && !defined(__arch64__))
-  /*
-   * Modifications by Red Hat Software
-   *
-   * Deal with the broken binaries from the non-versioned ages of glibc.
-   * If a binary does not have version information enabled, we assume that
-   * it is a glibc 2.0 binary and we load a compatibility library to try to
-   * overcome binary incompatibilities.
-   *			Blame: gafton@redhat.com
-   */
-#define LIB_NOVERSION "/lib/libNoVersion.so.1"
-
-  if (__builtin_expect (main_map->l_info[DT_NUM + DT_THISPROCNUM
-                                         + DT_VERSIONTAGIDX (DT_VERNEED)]
-                        == NULL, 0)
-      && (main_map->l_info[DT_DEBUG]
-          || !(GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)))
-    {
-      struct stat test_st;
-      int test_fd;
-      int can_load;
-
-      HP_TIMING_NOW (start);
-
-/*       _dl_sysdep_message("Loading compatibility library... ", NULL); */
-
-      can_load = 1;
-      test_fd = __open (LIB_NOVERSION, O_RDONLY);
-      if (test_fd < 0) {
-	  can_load = 0;
-/* 	  _dl_sysdep_message(" Can't find " LIB_NOVERSION "\n",  NULL); */
-      } else {
-	  if (__fxstat (_STAT_VER, test_fd, &test_st) < 0 || test_st.st_size == 0) {
-	      can_load = 0;
-/* 	      _dl_sysdep_message(" Can't stat " LIB_NOVERSION "\n",  NULL); */
-	  }
-      }
-
-      if (test_fd >= 0) /* open did no fail.. */
-	  __close(test_fd); /* avoid fd leaks */
-
-      if (can_load != 0)
-	npreloads += do_preload (LIB_NOVERSION, main_map,
-				 "nonversioned binary");
-
-      HP_TIMING_NOW (stop);
-      HP_TIMING_DIFF (diff, start, stop);
-      HP_TIMING_ACCUM_NT (load_time, diff);
-    }
-#endif
 
   if (__builtin_expect (*first_preload != NULL, 0))
     {

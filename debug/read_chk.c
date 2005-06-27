@@ -23,7 +23,7 @@
 # include <sysdep.h>
 #endif
 
-#if 0
+
 ssize_t
 __read_chk (int fd, void *buf, size_t nbytes, size_t buflen)
 {
@@ -36,4 +36,3 @@ __read_chk (int fd, void *buf, size_t nbytes, size_t buflen)
   return __read (fd, buf, nbytes);
 #endif
 }
-#endif

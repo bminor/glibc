@@ -19,6 +19,11 @@ libc {
     __gets_chk;
   }
   GLIBC_2.4 {
+    __fgets_chk; __fgets_unlocked_chk;
+    __read_chk; __pread_chk; __pread64_chk;
+    __readlink_chk; __getcwd_chk; __getwd_chk;
+    __recv_chk; __recvfrom_chk;
+
     __stack_chk_fail;
   }
 }

@@ -151,6 +151,7 @@ main (void)
   _exit(0);
 }
 
+#ifndef NO_SIZE_OPTIMIZATION
 int __libc_multiple_threads __attribute__((nocommon));
 int __libc_enable_asynccancel (void) { return 0; }
 void __libc_disable_asynccancel (int x) { }
@@ -159,12 +160,12 @@ void __libc_csu_fini (void) { }
 pid_t __fork (void) { return -1; }
 char thr_buf[65536];
 
-#ifndef __powerpc__
+# ifndef __powerpc__
 int
 __libc_start_main (int (*main) (void), int argc, char **argv,
 		   void (*init) (void), void (*fini) (void),
 		   void (*rtld_fini) (void), void * stack_end)
-#else
+# else
 struct startup_info
 {
   void *sda_base;
@@ -178,7 +179,7 @@ __libc_start_main (int argc, char **ubp_av, char **ubp_ev,
 		   void *auxvec, void (*rtld_fini) (void),
 		   struct startup_info *stinfo,
 		   char **stack_on_entry)
-#endif
+# endif
 {
 #if defined __ia64__ || defined __powerpc64__
   register void *r13 __asm ("r13") = thr_buf + 32768;
@@ -202,6 +203,7 @@ __libc_start_main (int argc, char **ubp_av, char **ubp_ev,
   main();
   return 0;
 }
+#endif
 
 void
 vexec (int failcode, char *const path[])

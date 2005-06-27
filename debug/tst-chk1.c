@@ -771,7 +771,7 @@ do_test (void)
 	      || strcmp (getcwdbuf + 1, fname) != 0)
 	    FAIL ();
 
-#if 0 && __USE_FORTIFY_LEVEL >= 1
+#if __USE_FORTIFY_LEVEL >= 1
 	  CHK_FAIL_START
 	  if (getwd (getcwdbuf + 2) != getcwdbuf + 2)
 	    FAIL ();

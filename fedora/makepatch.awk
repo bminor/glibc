@@ -34,8 +34,7 @@
 	    $2 ~ /^rtkaio/ ||
 	    $2 ~ /^fedora/ ||
 	    $2 ~ /^localedata\/charmaps\/GB18030/ ||
-	    $2 ~ /^iconvdata\/gb18030\.c/ ||
-	    $2 ~ /^glibc-compat/) {
+	    $2 ~ /^iconvdata\/gb18030\.c/) {
 		hide = 1
 		next
 	} else {

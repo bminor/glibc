@@ -814,14 +814,6 @@
 	* nscd/connections.c (nscd_run): Use time() value in prune_cache
 	call, not timeout value, since the latter might be from another clock.
 
-2005-04-27  Jakub Jelinek  <jakub@redhat.com>
-
-	* elf/rtld.c (dl_main): Call _dl_init_linuxthreads_paths
-	if GLRO(dl_osversion) <= 0x20413.
-	* elf/dl-load.c (_dl_init_paths): Allocate one extra pointer in
-	rtld_search_dirs.dirs.
-	(_dl_init_linuxthreads_paths): New function.
-
 2005-04-27  Roland McGrath  <roland@redhat.com>
 
 	[BZ #877]
@@ -1436,6 +1428,17 @@
 	* posix/tst-execle2.c (do_test): Likewise.
 
 2005-03-28  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/w_exp2.c [NO_LONG_DOUBLE]: Fix typos in alias names.
+	Reported by Mark Mitchell <mark@codesourcery.com>.
+	* Versions.def (libm): Define GLIBC_2.4 set.
+	* math/Versions (libm: GLIBC_2.4): Add this set, with exp2l.
+	* sysdeps/i386/Versions (libm: GLIBC_2.1): Add this set, with exp2l.
+	* sysdeps/ia64/Versions: Likewise.
+	* sysdeps/m68k/Versions: Likewise.
+	* sysdeps/sparc/sparc64/Versions: Likewise.
+	* sysdeps/x86_64/Versions: New file.
+	* sysdeps/mips/mips64/Versions: New file.
 
 	* locale/langinfo.h (_NL_LOCALE_NAME): New macro.
 	[__USE_GNU] (NL_LOCALE_NAME): New macro.

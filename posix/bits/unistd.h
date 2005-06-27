@@ -21,19 +21,25 @@
 # error "Never include <bits/unistd.h> directly; use <unistd.h> instead."
 #endif
 
-extern void __chk_fail (void) __attribute__((__noreturn__));
+extern ssize_t __read_chk (int __fd, void *__buf, size_t __nbytes,
+			   size_t __buflen) __wur;
 extern ssize_t __REDIRECT (__read_alias, (int __fd, void *__buf,
 					  size_t __nbytes), read) __wur;
 
 extern __always_inline __wur ssize_t
 read (int __fd, void *__buf, size_t __nbytes)
 {
-  if (__bos0 (__buf) != (size_t) -1 && __nbytes > __bos0 (__buf))
-    __chk_fail ();
+  if (__bos0 (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__nbytes) || __nbytes > __bos0 (__buf)))
+    return __read_chk (__fd, __buf, __nbytes, __bos0 (__buf));
   return __read_alias (__fd, __buf, __nbytes);
 }
 
 #ifdef __USE_UNIX98
+extern ssize_t __pread_chk (int __fd, void *__buf, size_t __nbytes,
+			    __off_t __offset, size_t __bufsize) __wur;
+extern ssize_t __pread64_chk (int __fd, void *__buf, size_t __nbytes,
+			      __off64_t __offset, size_t __bufsize) __wur;
 extern ssize_t __REDIRECT (__pread_alias,
 			   (int __fd, void *__buf, size_t __nbytes,
 			    __off_t __offset), pread) __wur;
@@ -45,16 +51,18 @@ extern ssize_t __REDIRECT (__pread64_alias,
 extern __always_inline __wur ssize_t
 pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
 {
-  if (__bos0 (__buf) != (size_t) -1 && __nbytes > __bos0 (__buf))
-    __chk_fail ();
+  if (__bos0 (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__nbytes) || __nbytes > __bos0 (__buf)))
+    return __pread_chk (__fd, __buf, __nbytes, __offset, __bos0 (__buf));
   return __pread_alias (__fd, __buf, __nbytes, __offset);
 }
 # else
 extern __always_inline __wur ssize_t
 pread (int __fd, void *__buf, size_t __nbytes, __off64_t __offset)
 {
-  if (__bos0 (__buf) != (size_t) -1 && __nbytes > __bos0 (__buf))
-    __chk_fail ();
+  if (__bos0 (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__nbytes) || __nbytes > __bos0 (__buf)))
+    return __pread64_chk (__fd, __buf, __nbytes, __offset, __bos0 (__buf));
   return __pread64_alias (__fd, __buf, __nbytes, __offset);
 }
 # endif
@@ -63,14 +71,19 @@ pread (int __fd, void *__buf, size_t __nbytes, __off64_t __offset)
 extern __always_inline __wur ssize_t
 pread64 (int __fd, void *__buf, size_t __nbytes, __off64_t __offset)
 {
-  if (__bos0 (__buf) != (size_t) -1 && __nbytes > __bos0 (__buf))
-    __chk_fail ();
+  if (__bos0 (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__nbytes) || __nbytes > __bos0 (__buf)))
+    return __pread64_chk (__fd, __buf, __nbytes, __offset, __bos0 (__buf));
   return __pread64_alias (__fd, __buf, __nbytes, __offset);
 }
 # endif
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
+extern int __readlink_chk (__const char *__restrict __path,
+			   char *__restrict __buf, size_t __len,
+			   size_t __buflen)
+     __THROW __nonnull ((1, 2)) __wur;
 extern int __REDIRECT_NTH (__readlink_alias,
 			   (__const char *__restrict __path,
 			    char *__restrict __buf, size_t __len), readlink)
@@ -80,19 +93,38 @@ extern __always_inline __nonnull ((1, 2)) __wur int
 __NTH (readlink (__const char *__restrict __path, char *__restrict __buf,
 		 size_t __len))
 {
-  if (__bos (__buf) != (size_t) -1 && __len > __bos (__buf))
-    __chk_fail ();
+  if (__bos (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__len) || __len > __bos (__buf)))
+    return __readlink_chk (__path, __buf, __len, __bos (__buf));
   return __readlink_alias (__path, __buf, __len);
 }
 #endif
 
+extern char *__getcwd_chk (char *__buf, size_t __size, size_t __buflen)
+     __THROW __wur;
 extern char *__REDIRECT_NTH (__getcwd_alias,
 			     (char *__buf, size_t __size), getcwd) __wur;
 
 extern __always_inline __wur char *
 __NTH (getcwd (char *__buf, size_t __size))
 {
-  if (__bos (__buf) != (size_t) -1 && __size > __bos (__buf))
-    __chk_fail ();
+  if (__bos (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__size) || __size > __bos (__buf)))
+    return __getcwd_chk (__buf, __size, __bos (__buf));
   return __getcwd_alias (__buf, __size);
 }
+
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+extern char *__getwd_chk (char *__buf, size_t buflen)
+     __THROW __nonnull ((1)) __wur;
+extern char *__REDIRECT_NTH (__getwd_alias, (char *__buf), getwd)
+     __nonnull ((1)) __wur;
+
+extern __always_inline __nonnull ((1)) __attribute_deprecated__ __wur char *
+__NTH (getwd (char *__buf))
+{
+  if (__bos (__buf) != (size_t) -1)
+    return __getwd_chk (__buf, __bos (__buf));
+  return __getwd_alias (__buf);
+}
+#endif
