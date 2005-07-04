@@ -1,4 +1,4 @@
-# Copyright (C) 1998, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1998,2000,2002,2003,2004,2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -51,6 +51,7 @@ otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
 	     $(resolvobjdir)/libresolv.a
 endif
 
+all-nscd-modules := $(nscd-modules) selinux
 ifeq (yes,$(have-selinux))
 nscd-modules += selinux
 selinux-LIBS := -lselinux
@@ -59,7 +60,7 @@ endif
 LDLIBS-nscd = $(selinux-LIBS)
 
 distribute := nscd.h nscd-client.h dbg_log.h \
-	      $(addsuffix .c, $(filter-out xmalloc, $(nscd-modules))) \
+	      $(addsuffix .c, $(filter-out xmalloc,$(all-nscd-modules))) \
 	      nscd_nischeck.c nscd.conf nscd.init nscd_proto.h \
 	      nscd-types.h
 

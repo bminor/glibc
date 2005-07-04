@@ -1,3 +1,36 @@
+2005-04-27  Roland McGrath  <roland@redhat.com>
+
+	[BZ #877]
+	* posix/unistd.h: Remove __nonnull from acct decl.
+
+2005-04-14  Roland McGrath  <roland@redhat.com>
+
+	[BZ #253]
+	* po/libc.pot: Regenerated.
+
+	* MakeTAGS ($P/$(domain).pot): Depend on distinfo file as well.
+	(extract): Filter-out distinfo file name.
+
+	[BZ #253]
+	* MakeTAGS (text-srcs): Match %.bash.in files too.
+
+	[BZ #253]
+	* nscd/Makefile (all-nscd-modules): New variable, include selinux
+	module regardless of configuration.
+	(distribute): Use that instead of $(nscd-modules).
+
+2005-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #851]
+	* posix/execvp.c (execvp): Use file name including path when
+	trying to run it with shell.
+	* posix/Makefile: Add rules to build and run tst-execvp3.
+	* posix/tst-execvp3.c: New file.
+
+2005-04-07  Roland McGrath  <roland@redhat.com>
+
+	* po/libc.pot: Regenerated.
+
 2005-04-05  Roland McGrath  <roland@redhat.com>
 
 	* NEWS, version.h (VERSION): 2.3.5.
