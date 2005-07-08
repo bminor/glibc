@@ -1,3 +1,127 @@
+2005-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (send_dg): Recognize referral results and
+	treat them as server errors.
+	Based on a patch by Jason Vas Dias <jvdias@redhat.com>.
+
+2005-07-08  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/setjmp.S (__sigsetjmp): Use %r1 not %r19.
+
+	* sysdeps/hppa/add_n.s (__mpn_add_n): Use sr0 or r0, not 0.
+	* sysdeps/hppa/lshift.s (__mpn_lshift): Likewise.
+	* sysdeps/hppa/rshift.s (__mpn_rshift): Likewise.
+	* sysdeps/hppa/sub_n.s (__mpn_sub_n): Likewise.
+	* sysdeps/hppa/udiv_qrnnd.s (__udiv_qrnnd): Likewise.
+	* sysdeps/hppa/hppa1.1/udiv_qrnnd.s (__udiv_qrnnd): Likewise.
+
+2005-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/s_ctanh.c (__ctanh): Handle case of zero den better.
+	* sysdeps/generic/s_ctanhf.c (__ctanhf): Likewise.
+	* sysdeps/generic/s_ctanhl.c (__ctanhl): Likewise.
+	* sysdeps/generic/s_ctan.c (__ctan): Likewise.
+	* sysdeps/generic/s_ctanf.c (__ctanf): Likewise.
+	* sysdeps/generic/s_ctanl.c (__ctanl): Likewise.
+
+2005-04-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #974]
+	* csu/elf-init.c (__preinit_array_start): Take int, char **, char **.
+	(__preinit_array_end): Likewise.
+	(__init_array_start): Likewise.
+	(__init_array_end): Likewise.
+	(__libc_csu_init): Take int argc, char **argv, char **envp.
+	Call preinit_array and init_array with argc, argv, envp.
+	* sysdeps/generic/libc-start.c (LIBC_START_MAIN): Remove
+	INIT_MAIN_ARGS.
+	* sysdeps/powerpc/elf/libc-start.c (INIT_MAIN_ARGS): Removed.
+	* elf/Makefile (distribute): Add tst-array5.c, tst-array5-static.c,
+	tst-array5dep.c, and tst-array5.exp.
+	(tests): Add tst-array5.
+	(tests-static): Add tst-array5-static.
+	($(objpfx)tst-array5): New target.
+	($(objpfx)tst-array5.out): Likewise.
+	($(objpfx)tst-array5-static.out): Likewise.
+	* elf/tst-array5-static.c: New file.
+	* elf/tst-array5-static.exp: Likewise.
+	* elf/tst-array5.c: Likewise.
+	* elf/tst-array5.exp: Likewise.
+	* elf/tst-array5dep.c: Likewise.
+
+2005-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/sched.h: Adjust clone prototype.
+
+2005-07-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/stackguard-macros.h (STACK_CHK_GUARD): Fix s390/s390x definition.
+	Reported by Ulrich Weigand <uweigand@de.ibm.com>.
+
+	* elf/stackguard-macros.h (STACK_CHK_GUARD): Add ia64 definition.
+
+2005-07-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-error.c (_dl_signal_error): When testing for executable
+	being relocated, take into account that nothing might even be loaded.
+
+	* elf/dl-reloc.c [PROF] (_dl_relocate_object): Define
+	consider_profiling always to zero.  Don't count of compiler to
+	remove unreached if block.
+	* sysdeps/x86_64/dl-trampoline.S [PROF] (_dl_runtime_profile):
+	Don't compile.
+	* sysdeps/i386/dl-trampoline.S [PROF] (_dl_runtime_profile): Likewise.
+	* sysdeps/ia64/dl-trampoline.S [PROF] (_dl_runtime_profile): Likewise.
+	* sysdeps/s390/s390-64/dl-trampoline.S [PROF] (_dl_runtime_profile):
+	Likewise.
+	* sysdeps/s390/s390-32/dl-trampoline.S [PROF] (_dl_runtime_profile):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S [PROF]
+	(_dl_profile_resolve): Likewise.
+	* sysdeps/powerpc/powerpc32/dl-trampoline.S [PROF]
+	(_dl_profile_resolve): Likewise.
+	* gmon/Makefile: Add rules to build and run tst-profile-static.
+	* gmon/tst-profile-static.c: New file.
+	* Makeconfig (+link-static): Allow passing program-specific flags.
+
+2005-07-05  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nss_compat/compat-grp.c (internal_getgrgid_r): Check if NSS
+	module provides getgrgid_r.
+	(getgrnam_plusgroup): Preserve original return value.
+	* nis/nss_compat/compat-pwd.c (getpwnam_plususer): Preserve
+	original return value.
+	* nis/nss_compat/compat-spwd.c (getspnam_plususer): Likewise.
+
+2005-07-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex_internal.c (build_wcs_buffer): Use MB_LEN_MAX not
+	MB_CUR_MAX.
+	(build_wcs_upper_buffer): Likewise.
+
+	* csu/elf-init.c (__libc_csu_fini): Pretty printing.
+
+2005-07-02  Roland McGrath  <roland@redhat.com>
+
+	* NEWS: Note LinuxThreads removal.
+	* manual/install.texi (Installation): Don't mention linuxthreads.
+	(Configuring and compiling): Don't use linuxthreads as example.
+
+	* sysdeps/unix/sysv/linux/configure.in: Check for nptl add-on only,
+	not linuxthreads.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* resolv/Depend: Add nptl.
+	* rt/Depend: Likewise.
+
+	* linuxthreads, linuxthreads_db: Directories removed (preserved in
+	ports repository).
+
+2005-06-27  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	[BZ #1037]
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile: -mv8 is deprecated,
+	use -mcpu=v8.
+
 2005-06-16  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #1016]
