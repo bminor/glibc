@@ -16,3 +16,14 @@
 +#if !defined __ASSUME_NEW_RT_SIGRETURN_SYSCALL && defined __powerpc64__
 +# define __ASSUME_NEW_RT_SIGRETURN_SYSCALL	1
 +#endif
+--- libc/sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c.jj	2003-03-16 01:40:44.000000000 +0100
++++ libc/sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c	2005-06-27 16:33:19.000000000 +0200
+@@ -19,7 +19,7 @@
+ 
+ 
+ #include "config.h"
+-#include "kernel-features.h"
++#include <kernel-features.h>
+ #include <ldsodefs.h>
+ 
+ extern int __cache_line_size;

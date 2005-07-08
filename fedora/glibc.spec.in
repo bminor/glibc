@@ -472,13 +472,13 @@ if gcc -v 2>&1 | grep -q 'gcc version 3.[0123]'; then
   BuildFlags="$BuildFlags -finline-limit=2000"
 fi
 EnableKernel="--enable-kernel=%{enablekernel}"
-echo "$BuildFlags" > ../BuildFlags
-echo "$GCC" > ../Gcc
-AddOns=`cd .. && echo */configure | sed -e 's!/configure!!g;s!\(linuxthreads\|nptl\|rtkaio\)\( \|$\)!!g;s! \+$!!;s! !,!g;s!^!,!;/^,\*$/d'`
+echo "$BuildFlags" > BuildFlags
+echo "$GCC" > Gcc
+AddOns=`echo */configure | sed -e 's!/configure!!g;s!\(linuxthreads\|nptl\|rtkaio\)\( \|$\)!!g;s! \+$!!;s! !,!g;s!^!,!;/^,\*$/d'`
 %ifarch %{rtkaioarches}
 AddOns=,rtkaio$AddOns
 %endif
-echo "$AddOns" > ../AddOns
+echo "$AddOns" > AddOns
 
 build_nptl()
 {
@@ -651,7 +651,7 @@ find $RPM_BUILD_ROOT -type f -or -type l |
 for n in %{_prefix}/share %{_prefix}/include %{_prefix}/lib/locale; do
     find ${RPM_BUILD_ROOT}${n} -type d | \
 	grep -v '%{_prefix}/share$' | \
-	grep -v '\(%{_mandir}\|%{_infodir}\)' | \
+	grep -v '%{_infodir}' | \
 	sed "s/^/%dir /" >> rpm.filelist.in
 done
 
@@ -692,14 +692,12 @@ grep -v '%{_prefix}/%{_lib}/lib.*_p.a' rpm.filelist.full |
 grep '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist >> devel.filelist
 grep '%{_prefix}/%{_lib}/.*\.o' < rpm.filelist >> devel.filelist
 grep '%{_prefix}/%{_lib}/lib.*\.so' < rpm.filelist >> devel.filelist
-grep '%{_mandir}' < rpm.filelist >> devel.filelist
 
 mv rpm.filelist rpm.filelist.full
 grep -v '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist.full |
 	grep -v '%{_prefix}/%{_lib}/.*\.o' |
 	grep -v '%{_prefix}/%{_lib}/lib.*\.so'|
 	grep -v '%{_prefix}/%{_lib}/linuxthreads' |
-	grep -v '%{_mandir}' |
 	grep -v 'nscd' > rpm.filelist
 
 grep '%{_prefix}/bin' < rpm.filelist >> common.filelist
@@ -776,7 +774,7 @@ ln -sf /%{_lib}/ld-linux-ia64.so.2 $RPM_BUILD_ROOT/lib/ld-linux-ia64.so.2
 # Increase timeouts
 export TIMEOUTFACTOR=16
 echo ====================TESTING=========================
-cd build-%{_target_cpu}-linuxnptl
+cd build-%{nptl_target_cpu}-linuxnptl
 make %{?_smp_mflags} -k check PARALLELMFLAGS=-s 2>&1 | tee check.log || :
 cd ..
 %if %{buildxen}
