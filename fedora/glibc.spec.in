@@ -564,6 +564,10 @@ mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/locale/ru_RU/LC_MESSAGES
 rm -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libNoVersion*
 rm -f $RPM_BUILD_ROOT/%{_lib}/libNoVersion*
 
+# NPTL <bits/stdio-lock.h> is not usable outside of glibc, so include
+# the generic one (#162634)
+cp -a ../sysdeps/generic/bits/stdio-lock.h $RPM_BUILD_ROOT%{_prefix}/include/bits/stdio-lock.h
+
 if [ -d $RPM_BUILD_ROOT%{_prefix}/info -a "%{_infodir}" != "%{_prefix}/info" ]; then
     mkdir -p $RPM_BUILD_ROOT%{_infodir}
     mv -f $RPM_BUILD_ROOT%{_prefix}/info/* $RPM_BUILD_ROOT%{_infodir}
@@ -1075,6 +1079,15 @@ rm -f *.filelist*
 * Fri Jul  8 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-2
 - update from CVS
   - ia64 stack protector support
+  - handle DNS referral results as server errors (#162625)
+  - ctan{,h}{,f,l} fixes (#160759)
+  - pass argc, argv and envp also to executable's *ni_array
+    functions (BZ#974)
+  - add ellipsis to clone prototype (#161593)
+  - fix glibc-profile (#162601)
+  - nss_compat fixes
+- use sysdeps/generic version of <bits/stdio-lock.h> in installed
+  headers instead of NPTL version (#162634)
 
 * Mon Jun 27 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-1
 - update from CVS
