@@ -17,12 +17,44 @@
 	(get_mapping): Make sure BUF is aligned correctly.
 	(get_mapping): Use munmap on correct pointer.
 
+2005-07-12  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1106]
+	* sysdeps/unix/sysv/linux/ia64/has_cpuclock.c: Include not-cancel.h.
+	(has_cpuclock): Use open_not_cancel_2 instead of open, read_not_cancel
+	instead of read and close_not_cancel_no_status instead of close.
+
+	[BZ #1106]
+	* sysdeps/s390/s390-64/bcopy.S (__bcopy): Use
+	HIDDEN_BUILTIN_JUMPTARGET to jump to memmove.
+
+2005-07-05  Thorsten Kukuk  <kukuk@suse.de>
+
+	[BZ #1111]
+	* nis/nss_compat/compat-grp.c (internal_getgrgid_r): Check if NSS
+	module provides getgrgid_r.
+	(getgrnam_plusgroup): Preserve original return value.
+	* nis/nss_compat/compat-pwd.c (getpwnam_plususer): Preserve
+	original return value.
+	* nis/nss_compat/compat-spwd.c (getspnam_plususer): Likewise.
+
 2005-07-05  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1101]
 	* posix/regex_internal.c (build_wcs_buffer): Use MB_LEN_MAX not
 	MB_CUR_MAX.
 	(build_wcs_upper_buffer): Likewise.
+
+2005-06-16  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1016]
+	* sysdeps/ia64/strlen.S (strlen): Change l2 into a local label.
+
+2005-06-23  Thorsten Kukuk  <kukuk@suse.de>
+
+	[BZ #1109]
+	* nscd/nscd_stat.c (receive_print_stats): Replace YESSTR/NOSTR
+	with own translation.
 
 2005-06-25  Jakub Jelinek  <jakub@redhat.com>
 
@@ -38,6 +70,31 @@
 	* sysdeps/unix/sysv/linux/sys/quota.h: Add definitions and types for
 	_LINUX_QUOTA_VERSION >= 2.
 	(_LINUX_QUOTA_VERSION): Define if not yet defined.
+
+2005-06-17  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1106]
+	* time/mktime.c: Always include <string.h> for prototype of
+	implicitly used memcpy.
+
+	[BZ #1104]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/truncate64.c
+	(truncate64): Use __truncate, not truncate.
+	(__have_no_truncate64): Renamed from have_no_truncate64.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ftruncate64.c
+	(__have_no_truncate64): Renamed from have_no_truncate64.
+
+2005-06-17  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1106]
+	* sysdeps/posix/sigignore.c: Include <string.h> to tell the compiler
+	to use __GI_memset.
+	* sysdeps/posix/signal.c: Likewise.
+	* sysdeps/posix/sigset.c: Likewise.
+	* sysdeps/posix/sysv_signal.c: Likewise.
+	* sysdeps/unix/sysv/linux/sleep.c: Likewise.
+	* sysdeps/unix/sysv/linux/sysctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/system.c: Likewise.
 
 2005-06-15  Jakub Jelinek  <jakub@redhat.com>
 
@@ -165,6 +222,14 @@
 	[BZ #877]
 	* posix/unistd.h: Remove __nonnull from acct decl.
 
+2005-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1105]
+	* time/strptime_l.c (__strptime_internal): Handle 'z' to set
+	tm_gmtoff.
+	* time/Makefile (tests): Add tst-strptime2.
+	* time/tst-strptime2.c: New file.
+
 2005-04-26  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #1081]
@@ -178,6 +243,18 @@
 	* elf/unload6mod1.c: New file.
 	* elf/unload6mod2.c: New file.
 	* elf/unload6mod3.c: New file.
+
+2005-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1110]
+	* stdio-common/vfscanf.c: Correctly account for characters of
+	decimal points right after +-.
+
+2005-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1110]
+	* stdio-common/vfscanf.c: Fix parsing of decimal point after +-.
+	Patch by Hamed Malek <hamed@bamdad.org>.
 
 2005-04-14  Roland McGrath  <roland@redhat.com>
 
@@ -237,11 +314,32 @@
 	dynamically sized array.
 	(build_wcs_upper_buffer): Likewise.
 
+2005-02-22  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1095]
+	* malloc/Makefile (CFLAGS-mcheck-init.c): Add.
+	* sunrpc/Makefile: Add $(PIC-ccflag) to CFLAGS-x* for
+	librpcsvc.a objects.
+
+2005-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1107]
+	* iconvdata/ibm930.h: Correct Yen mapping.
+	* iconvdata/ibm939.h: Likewise.
+	* iconvdata/testdata/IBM930..UTF8: Adjust test data.
+	* iconvdata/testdata/IBM939..UTF8: Likewise.
+	Patch by Jiro Sekiba <SEKIBA@jp.ibm.com>.
+
 2005-02-11  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #1100]
 	* debug/chk_fail.c (__chk_fail): Add a while (1) loop around
 	__libc_message to kill GCC warning about noreturn function returning.
+
+2005-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-execstack.c: Include sysdep.h.
+	(_dl_make_stack_executable): Make sure registers are set correctly.
 
 2005-01-30  Ulrich Drepper  <drepper@redhat.com>
 
@@ -253,6 +351,12 @@
 
 	[BZ #1100]
 	* debug/chk_fail.c (__chk_fail): Print program name in final message.
+
+2005-01-14  GOTO Masanori  <gotom@debian.or.jp>
+
+	[BZ #1108]
+	* sunrpc/rpc_main.c (s_output): Generate #include <rpc/pmap_clnt.h>
+	irrespective of Cflag.
 
 2005-01-11  Thorsten Kukuk  <kukuk@suse.de>
 
@@ -693,13 +797,6 @@
 2005-02-22  Andreas Schwab  <schwab@suse.de>
 
 	* posix/execvp.c (execvp): Fix invalid free.
-
-2005-02-22  Jakub Jelinek  <jakub@redhat.com>
-
-	[BZ #1095]
-	* malloc/Makefile (CFLAGS-mcheck-init.c): Add.
-	* sunrpc/Makefile: Add $(PIC-ccflag) to CFLAGS-x* for
-	librpcsvc.a objects.
 
 2005-02-21  Alan Modra <amodra@bigpond.net.au>
 
