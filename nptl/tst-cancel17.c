@@ -228,7 +228,7 @@ do_test (void)
 
   size_t len2 = fpathconf (fds[1], _PC_PIPE_BUF);
   size_t page_size = sysconf (_SC_PAGESIZE);
-  len2 = (len2 < page_size ? page_size : len2) + sizeof (mem) + 1;
+  len2 = 20 * (len2 < page_size ? page_size : len2) + sizeof (mem) + 1;
   char *mem2 = malloc (len2);
   if (mem2 == NULL)
     {
