@@ -1,7 +1,47 @@
+2005-05-28  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #622]
+	* locales/pa_IN (am_pm): Fix typos.
+	Patch by Denis Barbier <barbier@linuxfr.org>.
+
+2005-05-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1092]
+	* locales/mn_MN: Update.  Patch by Sanlig Badral <s_badral@yahoo.com>.
+
+2005-04-28  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1084]
+	* SUPPORTED: Add UTF-8 locales where UTF-8 was not already supported.
+
+2005-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1091]
+	* locales/fa_IR: Add alt_digits, change date and time
+	representation, and various cleanups.
+	Patch by Hamed Malek <hamed@bamdad.org>.
+
 2005-03-21  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #823]
 	* charmaps/WINDOWS-31J: Add % before alias keyword.
+
+2005-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1084]
+	* SUPPORTED (SUPPORTED-LOCALES): Add af_ZA.UTF-8.
+
+2005-02-27  Denis Barbier  <barbier@debian.org>
+
+	[BZ #38]
+	* locales/sr_CS: New file.
+	Contributed by Danilo Segan <dsegan@gmx.net>
+	* SUPPORTED: Add sr_CS/ISO-8859-5 and sr_CS.UTF-8/UTF-8.
+
+2005-03-18  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #622]
+	* locales/pa_IN (am_pm): Fix character names.
 
 2004-12-19  Roland McGrath  <roland@frob.com>
 

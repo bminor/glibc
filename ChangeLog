@@ -295,6 +295,23 @@
 
 	* po/libc.pot: Regenerated.
 
+2005-04-04  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1082]
+	* sunrpc/pmap_rmt.c (xdr_rmtcall_args): Use a dummy arglen instead
+	of trying to encode uninitialized arglen.
+
+2005-03-29  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1087]
+	* posix/fnmatch.c (fnmatch): For short patterns or strings attempt to
+	avoid calling mbsrtowcs twice.
+
+2005-02-27  Denis Barbier  <barbier@debian.org>
+
+	[BZ #549]
+	* locale/iso-4217.def: Add CSD currency.
+
 2005-03-21  Thorsten Kukuk  <kukuk@suse.de>
 
 	[BZ #1098]
@@ -420,12 +437,6 @@
 	* sysdeps/ia64/fpu/w_tgamma.S: Likewise.
 	* sysdeps/ia64/fpu/w_tgammaf.S: Likewise.
 	* sysdeps/ia64/fpu/w_tgammal.S: Likewise.
-
-2005-04-04  Jakub Jelinek  <jakub@redhat.com>
-
-	[BZ #1082]
-	* sunrpc/pmap_rmt.c (xdr_rmtcall_args): Use a dummy arglen instead
-	of trying to encode uninitialized arglen.
 
 2005-04-04  Ulrich Drepper  <drepper@redhat.com>
 
@@ -599,12 +610,6 @@
 	* sysdeps/ia64/fpu/import_intel_libm: Likewise.
 	* sysdeps/ia64/fpu/Makefile: Likewise.
 
-2005-03-29  Jakub Jelinek  <jakub@redhat.com>
-
-	[BZ #1087]
-	* posix/fnmatch.c (fnmatch): For short patterns or strings attempt to
-	avoid calling mbsrtowcs twice.
-
 2005-03-29  Thorsten Kukuk  <kukuk@suse.de>
 
 	[BZ #661]
@@ -623,11 +628,6 @@
 2005-03-20  Alfred M. Szmidt  <ams@gnu.org>
 
 	* elf/dl-open.c (dl_open_worker): Fix typo.
-
-2005-02-27  Denis Barbier  <barbier@debian.org>
-
-	[BZ #549]
-	* locale/iso-4217.def: Add CSD currency.
 
 2005-03-19  Ulrich Drepper  <drepper@redhat.com>
 

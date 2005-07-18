@@ -29,6 +29,11 @@
 	__inline instead of inline.
 	* sysdeps/pthread/bits/libc-lock.h (__libc_cleanup_routine): Likewise.
 
+2005-03-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_create.c (__pthread_create_2_1): Rename syscall error
+	variable to scerr.
+
 2005-02-25  Roland McGrath  <roland@redhat.com>
 
 	* alloca_cutoff.c: Correct license text.
@@ -142,7 +147,7 @@
 	* sysdeps/pthread/posix-timer.h (__timer_signal_thread_pclk,
 	__timer_signal_thread_tclk): Remove.
 	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Removed.
-	* sysdeps/unix/sysv/linux/ia64/bits/posix_>opt.h: Removed.
+	* sysdeps/unix/sysv/linux/ia64/bits/posix_opt.h: Removed.
 	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h: Removed.
 
 2004-12-07  Jakub Jelinek  <jakub@redhat.com>
