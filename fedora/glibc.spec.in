@@ -1,4 +1,4 @@
-%define glibcrelease 0.fc3.2
+%define glibcrelease 0.fc3.4
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1274,6 +1274,72 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Jul 18 2005 Roland McGrath <roland@redhat.com> 2.3.5-0.fc3.4
+- update from CVS (glibc-2_3-branch)
+  - make sure nscd cmsg buffers aren't misaligned, handle EINTR from
+    poll when contacting nscd more gracefully (BZ#1080)
+  - remove malloc attribute from posix_memalign (BZ#1079)
+  - include program name in __chk_fail error message (BZ#1100)
+  - don't write 0 to gid/uid column for group/username starting with + or -
+    in putgrent/putpwent (BZ#1099)
+  - fix Yen mapping ib IBM93{0,9} charsets (BZ#1107)
+  - add sr_CS{,.UTF-8} locales (BZ#38, BZ#549)
+  - update mn_MN locale (BZ#1092)
+  - update fa_IR locale (BZ#1091)
+  - make sure EINVAL is returned from pthread_create if requested thread
+    scheduling priority is invalid (BZ#1112)
+  - change NPTL <pthread.h> initializers to avoid warnings, with both -pedantic
+    and -W (BZ#915, #162722)
+  - fix NPTL <pthread.h> with -ansi -fexceptions (BZ#1102)
+  - fix tst-cancel17 testcase
+  - avoid SIGPIPE in nscd (BZ#1103)
+  - fix nscd -g yes/no strings (BZ#1109)
+  - avoid using variable length arrays in regex internals unnecessarily (BZ#1101)
+  - fix *scanf if decimal point is more than one byte long (BZ#1110)
+  - fix rpcgen to output #include <rpc/pmap_clnt.h> even without -C (BZ#1108)
+  - cosmetic fix for ia64 strlen (BZ#1016)
+  - add GOT check to dl-execstack.c on i?86
+  - avoid namespace pollution in ppc32 {,f}truncate64 (BZ#1104)
+  - handle 'z' in strptime* (BZ#1105)
+  - properly propagate return values in nss_compat (BZ#1111)
+  - avoid some unnecessary PLT relocations (BZ#1106)
+  - remove nonnull attribute from acct (BZ#877)
+  - allow NLS of some strings that couldn't be translated before (BZ#253)
+  - execvp fix (BZ#851)
+  - update IA-64 libm from Intel 2005-04-05 (#142494, BZ#592)
+  - fix initgroups when passed zero-size buffer (BZ#661)
+  - update tzcode to 2005h (BZ#825)
+  - add 19 UTF-8 locales where only non-UTF-8 locales existed before
+    (#156115, BZ#1084)
+  - fix xdr_rmtcall_args on 64-bit architectures (#151686, BZ#1082)
+  - fix posix_fallocate{,64} (#156289, BZ#1083)
+  - use -laudit in nscd (#159217, BZ#1085)
+  - fix fix xdr_{,u_}{longlong_t,hyper} on 64-bit arches (#161583, BZ#1097)
+  - handle big amounts of networking interfaces in getifaddrs/if_nameindex
+    (#159399, BZ#1096)
+  - fix nscd cache pruning (#150748, BZ#1094)
+  - try more ports in bindresvport if all 600..1023 are
+    used, don't use priviledged ports when talking to portmap
+    (#141773, #160091, BZ#1086)
+  - support classes keyword in /etc/hesiod.conf (#150350, BZ#1088)
+  - fix IBM939 iconv module (BZ#955)
+  - fix malloc_trim (BZ#779)
+  - change sys/quota.h to match current kernel's quotactl interface,
+    include support for the obsoleted interface (no longer supported
+    in current kernels) with -D_LINUX_QUOTA_VERSION=1 (#133095, BZ#653)
+  - make regexec thread safe (BZ#934)
+  - make -lrpcsvc and -lmcheck usable for PIEs and shared libraries
+    (#149284, BZ#1095)
+  - fix sendfile{,64} prototypes (BZ#961)
+  - fix pa_IN locale's am_pm (#158715, BZ#622)
+  - don't use nisplus in nsswitch.conf examples, mention that nisplus is
+    unsupported (#159729, IT#74024)
+  - fix strfry and initstate{,_r} (BZ#1090)
+  - slightly optimize fnmatch in multi-byte locales (BZ#1087)
+  - fix a typo in libc info wmemcpy description
+  - fix nis memory handling when realloc fails (BZ#1093)
+  - fix xdrstdio_putlong on 64-bit architectures (BZ#1098)
+
 * Wed Jul  6 2005 Jakub Jelinek <jakub@redhat.com> 2.3.5-0.fc3.2
 - update from CVS (glibc-2_3-branch)
   - remove nonnull attribute from acct (BZ#877)
