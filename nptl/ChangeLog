@@ -31,6 +31,7 @@
 
 2005-03-23  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1112]
 	* pthread_create.c (__pthread_create_2_1): Rename syscall error
 	variable to scerr.
 
