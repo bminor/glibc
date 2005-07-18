@@ -619,7 +619,10 @@ send_ro_fd (struct database_dyn *db, char *key, int fd)
 
   /* Send the control message.  We repeat when we are interrupted but
      everything else is ignored.  */
-  (void) TEMP_FAILURE_RETRY (sendmsg (fd, &msg, 0));
+#ifndef MSG_NOSIGNAL
+# define MSG_NOSIGNAL 0
+#endif
+  (void) TEMP_FAILURE_RETRY (sendmsg (fd, &msg, MSG_NOSIGNAL));
 
   if (__builtin_expect (debug_level > 0, 0))
     dbg_log (_("provide access to FD %d, for %s"), db->ro_fd, key);
