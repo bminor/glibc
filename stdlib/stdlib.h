@@ -614,7 +614,7 @@ extern void *valloc (size_t __size) __THROW __attribute_malloc__;
 #ifdef __USE_XOPEN2K
 /* Allocate memory of SIZE bytes with an alignment of ALIGNMENT.  */
 extern int posix_memalign (void **__memptr, size_t __alignment, size_t __size)
-     __THROW __attribute_malloc__ __nonnull ((1));
+     __THROW __nonnull ((1));
 #endif
 
 __BEGIN_NAMESPACE_STD
