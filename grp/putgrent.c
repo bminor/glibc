@@ -44,8 +44,13 @@ putgrent (gr, stream)
 
   flockfile (stream);
 
-  retval = fprintf (stream, "%s:%s:%u:",
-		    gr->gr_name, _S (gr->gr_passwd), gr->gr_gid);
+  if (gr->gr_name[0] == '+' || gr->gr_name[0] == '-')
+    retval = fprintf (stream, "%s:%s::",
+		      gr->gr_name, _S (gr->gr_passwd));
+  else
+    retval = fprintf (stream, "%s:%s:%lu:",
+		      gr->gr_name, _S (gr->gr_passwd),
+		      (unsigned long int) gr->gr_gid);
   if (__builtin_expect (retval, 0) < 0)
     {
       funlockfile (stream);

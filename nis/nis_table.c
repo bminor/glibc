@@ -94,9 +94,10 @@ __create_ib_request (const_nis_name name, unsigned int flags)
       if ((search_len + 1) >= size)
         {
           size += 1;
-          search_val = realloc (search_val, size * sizeof (nis_attr));
-	  if (search_val == NULL)
+	  nis_attr *newp = realloc (search_val, size * sizeof (nis_attr));
+	  if (newp == NULL)
 	    goto free_null;
+	  search_val = newp;
 	}
       search_val[search_len].zattr_ndx = strdup (key);
       if ((search_val[search_len].zattr_ndx) == NULL)

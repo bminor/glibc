@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <string.h>	/* For the real memset prototype.  */
 #include <sys/sysctl.h>
 
 #include <sysdep.h>

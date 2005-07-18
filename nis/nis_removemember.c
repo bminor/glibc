@@ -92,9 +92,13 @@ nis_removemember (const_nis_name member, const_nis_name group)
       /* This realloc() call always decreases the size.  This cannot
 	 fail.  We still have the test but do not recover memory
 	 (i.e., we overwrite the input pointer).  */
-      newmem = realloc (newmem, k * sizeof (char*));
-      if (newmem == NULL)
-	return NIS_NOMEMORY;
+      nis_name *newp = realloc (newmem, k * sizeof (char*));
+      if (newp == NULL)
+	{
+	  free (newmem);
+	  return NIS_NOMEMORY;
+	}
+      newmem = newp;
 
       NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val = newmem;
       NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len = k;

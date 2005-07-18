@@ -621,7 +621,10 @@ send_ro_fd (struct database_dyn *db, char *key, int fd)
 
   /* Send the control message.  We repeat when we are interrupted but
      everything else is ignored.  */
-  (void) TEMP_FAILURE_RETRY (sendmsg (fd, &msg, 0));
+#ifndef MSG_NOSIGNAL
+# define MSG_NOSIGNAL 0
+#endif
+  (void) TEMP_FAILURE_RETRY (sendmsg (fd, &msg, MSG_NOSIGNAL));
 
   if (__builtin_expect (debug_level > 0, 0))
     dbg_log (_("provide access to FD %d, for %s"), db->ro_fd, key);
@@ -1173,8 +1176,7 @@ handle_request: request received (Version = %d)"), req.version);
 	  /* The pthread_cond_timedwait() call timed out.  It is time
 		 to clean up the cache.  */
 	  assert (my_number < lastdb);
-	  prune_cache (&dbs[my_number],
-		       prune_ts.tv_sec + (prune_ts.tv_nsec >= 500000000));
+	  prune_cache (&dbs[my_number], time (NULL));
 
 	  if (clock_gettime (timeout_clock, &prune_ts) == -1)
 	    /* Should never happen.  */

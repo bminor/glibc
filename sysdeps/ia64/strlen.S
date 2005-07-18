@@ -73,7 +73,7 @@ ENTRY(strlen)
 	ld8	val1 = [str], 8;;
 	nop.b	0
 	nop.b 	0
-l2:	ld8.s	val2 = [str], 8		// don't bomb out here
+.l2:	ld8.s	val2 = [str], 8		// don't bomb out here
 	czx1.r	pos0 = val1	
 	;;
 	cmp.ne	p6, p0 = 8, pos0
@@ -81,7 +81,7 @@ l2:	ld8.s	val2 = [str], 8		// don't bomb out here
 	chk.s	val2, .recovery
 .back:
 	mov	val1 = val2	
-	br.cond.dptk l2
+	br.cond.dptk	.l2
 .foundit:
 	sub	tmp = str, origadd	// tmp = crt address - orig
 	add	len = len, pos0;;

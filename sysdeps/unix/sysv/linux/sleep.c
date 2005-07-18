@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <time.h>
 #include <signal.h>
+#include <string.h>	/* For the real memset prototype.  */
 #include <unistd.h>
 #include <sys/param.h>
 

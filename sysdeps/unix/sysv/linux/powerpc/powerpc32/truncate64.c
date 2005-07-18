@@ -29,7 +29,7 @@
 #ifdef __NR_truncate64
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
 /* The variable is shared between all wrappers around *truncate64 calls.  */
-int have_no_truncate64;
+int __have_no_truncate64;
 #endif
 
 
@@ -40,7 +40,7 @@ truncate64 (path, length)
      off64_t length;
 {
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
-  if (! have_no_truncate64)
+  if (! __have_no_truncate64)
 #endif
     {
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
@@ -58,7 +58,7 @@ truncate64 (path, length)
 
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       __set_errno (saved_errno);
-      have_no_truncate64 = 1;
+      __have_no_truncate64 = 1;
 #endif
     }
 

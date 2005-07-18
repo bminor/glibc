@@ -3766,6 +3766,8 @@ public_mTRIm(size_t s)
 {
   int result;
 
+  if(__malloc_initialized < 0)
+    ptmalloc_init ();
   (void)mutex_lock(&main_arena.mutex);
   result = mTRIm(s);
   (void)mutex_unlock(&main_arena.mutex);
