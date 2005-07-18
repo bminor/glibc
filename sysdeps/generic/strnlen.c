@@ -158,3 +158,4 @@ __strnlen (const char *str, size_t maxlen)
   return char_ptr - str;
 }
 weak_alias (__strnlen, strnlen)
+libc_hidden_def (strnlen)
