@@ -20,6 +20,7 @@
 #define __need_NULL
 #include <stddef.h>
 #include <signal.h>
+#include <string.h>	/* For the real memset prototype.  */
 
 
 /* Set the disposition for SIG.  */

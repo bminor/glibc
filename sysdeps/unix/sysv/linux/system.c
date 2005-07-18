@@ -18,6 +18,7 @@
 
 #include <sched.h>
 #include <signal.h>
+#include <string.h>	/* For the real memset prototype.  */
 #include <sysdep.h>
 #include <unistd.h>
 #include <sys/wait.h>
