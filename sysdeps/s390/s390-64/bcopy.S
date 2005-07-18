@@ -59,14 +59,10 @@ ENTRY(__bcopy)
 	jo	.L6
 	br	%r14
 .L7:				    # destructive overlay, can not use mvcle
-	lgr    %r1,%r2		    # bcopy is called with source,dest
-	lgr    %r2,%r3		    # memmove with dest,source! Oh, well...
-	lgr    %r3,%r1
-#ifdef PIC
-	jg     memmove@PLT
-#else
-	jg     memmove
-#endif
+	lgr	%r1,%r2		    # bcopy is called with source,dest
+	lgr	%r2,%r3		    # memmove with dest,source! Oh, well...
+	lgr	%r3,%r1
+	jg	HIDDEN_BUILTIN_JUMPTARGET(memmove)
 
 END(__bcopy)
 
