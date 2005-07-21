@@ -1,4 +1,4 @@
-%define glibcrelease 2
+%define glibcrelease 3
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -1074,6 +1074,16 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Jul 21 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-3
+- update from CVS
+  - make sure nscd cmsg buffers aren't misaligned, handle EINTR from
+    poll when contacting nscd more gracefully
+  - remove malloc attribute from posix_memalign
+  - correctly size nscd buffer for grpcache key (#163538)
+  - fix atan2f
+  - fix error memory leaks
+  - some more _FORTIFY_SOURCE protection
+
 * Fri Jul  8 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-2
 - update from CVS
   - ia64 stack protector support
