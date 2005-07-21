@@ -618,7 +618,7 @@ extern void *valloc (size_t __size) __THROW __attribute_malloc__ __wur;
 #ifdef __USE_XOPEN2K
 /* Allocate memory of SIZE bytes with an alignment of ALIGNMENT.  */
 extern int posix_memalign (void **__memptr, size_t __alignment, size_t __size)
-     __THROW __attribute_malloc__ __nonnull ((1)) __wur;
+     __THROW __nonnull ((1)) __wur;
 #endif
 
 __BEGIN_NAMESPACE_STD
@@ -959,6 +959,12 @@ extern int getpt (void);
    three, but may be less than NELEM), or -1 if an error occurred.  */
 extern int getloadavg (double __loadavg[], int __nelem)
      __THROW __nonnull ((1));
+#endif
+
+
+/* Define some macros helping to catch buffer overflows.  */
+#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+# include <bits/stdlib.h>
 #endif
 
 #endif /* don't just need malloc and calloc */

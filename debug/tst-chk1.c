@@ -21,15 +21,17 @@
 #define __noreturn__
 
 #include <fcntl.h>
+#include <locale.h>
 #include <paths.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <wchar.h>
 #include <sys/socket.h>
 #include <sys/un.h>
-#include <unistd.h>
 
 char *temp_filename;
 static void do_prepare (void);
@@ -74,13 +76,20 @@ handler (int sig)
 }
 
 char buf[10];
+wchar_t wbuf[10];
 volatile size_t l0;
 volatile char *p;
+volatile wchar_t *wp;
 const char *str1 = "JIHGFEDCBA";
 const char *str2 = "F";
 const char *str3 = "%s%n%s%n";
 const char *str4 = "Hello, ";
 const char *str5 = "World!\n";
+const wchar_t *wstr1 = L"JIHGFEDCBA";
+const wchar_t *wstr2 = L"F";
+const wchar_t *wstr3 = L"%s%n%s%n";
+const wchar_t *wstr4 = L"Hello, ";
+const wchar_t *wstr5 = L"World!\n";
 char buf2[10] = "%s";
 int num1 = 67;
 int num2 = 987654;
@@ -125,6 +134,7 @@ do_test (void)
   setenv ("LIBC_FATAL_STDERR_", "1", 1);
 
   struct A { char buf1[9]; char buf2[1]; } a;
+  struct wA { wchar_t buf1[9]; wchar_t buf2[1]; } wa;
 
   printf ("Test checking routines at fortify level %d\n",
 #ifdef __USE_FORTIFY_LEVEL
@@ -140,7 +150,8 @@ do_test (void)
   if (memcmp (buf, "aabcdefghi", 10))
     FAIL ();
 
-  if (mempcpy (buf + 5, "abcde", 5) != buf + 10 || memcmp (buf, "aabcdabcde", 10))
+  if (mempcpy (buf + 5, "abcde", 5) != buf + 10
+      || memcmp (buf, "aabcdabcde", 10))
     FAIL ();
 
   memset (buf + 8, 'j', 2);
@@ -171,7 +182,8 @@ do_test (void)
   if (memcmp (buf, "aabcdefghi", 10))
     FAIL ();
 
-  if (mempcpy (buf + 5, "abcde", l0 + 5) != buf + 10 || memcmp (buf, "aabcdabcde", 10))
+  if (mempcpy (buf + 5, "abcde", l0 + 5) != buf + 10
+      || memcmp (buf, "aabcdabcde", 10))
     FAIL ();
 
   memset (buf + 8, 'j', l0 + 2);
@@ -189,20 +201,24 @@ do_test (void)
   if (memcmp (buf, "aabcEDX\0\0", 10))
     FAIL ();
 
-  if (sprintf (buf + 7, "%d", num1) != 2 || memcmp (buf, "aabcEDX67", 10))
+  if (stpncpy (buf + 5, "cd", l0 + 5) != buf + 7
+      || memcmp (buf, "aabcEcd\0\0", 10))
     FAIL ();
 
-  if (snprintf (buf + 7, 3, "%d", num2) != 6 || memcmp (buf, "aabcEDX98", 10))
+  if (sprintf (buf + 7, "%d", num1) != 2 || memcmp (buf, "aabcEcd67", 10))
+    FAIL ();
+
+  if (snprintf (buf + 7, 3, "%d", num2) != 6 || memcmp (buf, "aabcEcd98", 10))
     FAIL ();
 
   buf[l0 + 8] = '\0';
   strcat (buf, "A");
-  if (memcmp (buf, "aabcEDX9A", 10))
+  if (memcmp (buf, "aabcEcd9A", 10))
     FAIL ();
 
   buf[l0 + 7] = '\0';
   strncat (buf, "ZYXWV", l0 + 2);
-  if (memcmp (buf, "aabcEDXZY", 10))
+  if (memcmp (buf, "aabcEcdZY", 10))
     FAIL ();
 
   memcpy (a.buf1, "abcdefghij", l0 + 10);
@@ -226,14 +242,16 @@ do_test (void)
   if (memcmp (a.buf1, "aabcEDCBA", 10))
     FAIL ();
 
-  if (stpcpy (a.buf1 + 8, str2) != a.buf1 + 9 || memcmp (a.buf1, "aabcEDCBF", 10))
+  if (stpcpy (a.buf1 + 8, str2) != a.buf1 + 9
+      || memcmp (a.buf1, "aabcEDCBF", 10))
     FAIL ();
 
   strncpy (a.buf1 + 6, "X", l0 + 4);
   if (memcmp (a.buf1, "aabcEDX\0\0", 10))
     FAIL ();
 
-  if (sprintf (a.buf1 + 7, "%d", num1) != 2 || memcmp (a.buf1, "aabcEDX67", 10))
+  if (sprintf (a.buf1 + 7, "%d", num1) != 2
+      || memcmp (a.buf1, "aabcEDX67", 10))
     FAIL ();
 
   if (snprintf (a.buf1 + 7, 3, "%d", num2) != 6
@@ -281,6 +299,10 @@ do_test (void)
 
   CHK_FAIL_START
   strncpy (buf + 7, "X", l0 + 4);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  stpncpy (buf + 6, "cd", l0 + 5);
   CHK_FAIL_END
 
   CHK_FAIL_START
@@ -353,6 +375,215 @@ do_test (void)
   strncat (a.buf1, "ZYXWV", l0 + 3);
   CHK_FAIL_END
 #endif
+
+
+  /* These ops can be done without runtime checking of object size.  */
+  wmemcpy (wbuf, L"abcdefghij", 10);
+  wmemmove (wbuf + 1, wbuf, 9);
+  if (wmemcmp (wbuf, L"aabcdefghi", 10))
+    FAIL ();
+
+  if (wmempcpy (wbuf + 5, L"abcde", 5) != wbuf + 10
+      || wmemcmp (wbuf, L"aabcdabcde", 10))
+    FAIL ();
+
+  wmemset (wbuf + 8, L'j', 2);
+  if (wmemcmp (wbuf, L"aabcdabcjj", 10))
+    FAIL ();
+
+  wcscpy (wbuf + 4, L"EDCBA");
+  if (wmemcmp (wbuf, L"aabcEDCBA", 10))
+    FAIL ();
+
+  if (wcpcpy (wbuf + 8, L"F") != wbuf + 9 || wmemcmp (wbuf, L"aabcEDCBF", 10))
+    FAIL ();
+
+  wcsncpy (wbuf + 6, L"X", 4);
+  if (wmemcmp (wbuf, L"aabcEDX\0\0", 10))
+    FAIL ();
+
+  if (swprintf (wbuf + 7, 3, L"%ls", L"987654") >= 0
+      || wmemcmp (wbuf, L"aabcEDX98", 10))
+    FAIL ();
+
+  /* These ops need runtime checking, but shouldn't __chk_fail.  */
+  wmemcpy (wbuf, L"abcdefghij", l0 + 10);
+  wmemmove (wbuf + 1, wbuf, l0 + 9);
+  if (wmemcmp (wbuf, L"aabcdefghi", 10))
+    FAIL ();
+
+  if (wmempcpy (wbuf + 5, L"abcde", l0 + 5) != wbuf + 10
+      || wmemcmp (wbuf, L"aabcdabcde", 10))
+    FAIL ();
+
+  wmemset (wbuf + 8, L'j', l0 + 2);
+  if (wmemcmp (wbuf, L"aabcdabcjj", 10))
+    FAIL ();
+
+  wcscpy (wbuf + 4, wstr1 + 5);
+  if (wmemcmp (wbuf, L"aabcEDCBA", 10))
+    FAIL ();
+
+  if (wcpcpy (wbuf + 8, wstr2) != wbuf + 9 || wmemcmp (wbuf, L"aabcEDCBF", 10))
+    FAIL ();
+
+  wcsncpy (wbuf + 6, L"X", l0 + 4);
+  if (wmemcmp (wbuf, L"aabcEDX\0\0", 10))
+    FAIL ();
+
+  if (wcpncpy (wbuf + 5, L"cd", l0 + 5) != wbuf + 7
+      || wmemcmp (wbuf, L"aabcEcd\0\0", 10))
+    FAIL ();
+
+  if (swprintf (wbuf + 7, 3, L"%d", num2) >= 0
+      || wmemcmp (wbuf, L"aabcEcd98", 10))
+    FAIL ();
+
+  wbuf[l0 + 8] = L'\0';
+  wcscat (wbuf, L"A");
+  if (wmemcmp (wbuf, L"aabcEcd9A", 10))
+    FAIL ();
+
+  wbuf[l0 + 7] = L'\0';
+  wcsncat (wbuf, L"ZYXWV", l0 + 2);
+  if (wmemcmp (wbuf, L"aabcEcdZY", 10))
+    FAIL ();
+
+  wmemcpy (wa.buf1, L"abcdefghij", l0 + 10);
+  wmemmove (wa.buf1 + 1, wa.buf1, l0 + 9);
+  if (wmemcmp (wa.buf1, L"aabcdefghi", 10))
+    FAIL ();
+
+  if (wmempcpy (wa.buf1 + 5, L"abcde", l0 + 5) != wa.buf1 + 10
+      || wmemcmp (wa.buf1, L"aabcdabcde", 10))
+    FAIL ();
+
+  wmemset (wa.buf1 + 8, L'j', l0 + 2);
+  if (wmemcmp (wa.buf1, L"aabcdabcjj", 10))
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL < 2
+  /* The following tests are supposed to crash with -D_FORTIFY_SOURCE=2
+     and sufficient GCC support, as the string operations overflow
+     from a.buf1 into a.buf2.  */
+  wcscpy (wa.buf1 + 4, wstr1 + 5);
+  if (wmemcmp (wa.buf1, L"aabcEDCBA", 10))
+    FAIL ();
+
+  if (wcpcpy (wa.buf1 + 8, wstr2) != wa.buf1 + 9
+      || wmemcmp (wa.buf1, L"aabcEDCBF", 10))
+    FAIL ();
+
+  wcsncpy (wa.buf1 + 6, L"X", l0 + 4);
+  if (wmemcmp (wa.buf1, L"aabcEDX\0\0", 10))
+    FAIL ();
+
+  if (swprintf (wa.buf1 + 7, 3, L"%d", num2) >= 0
+      || wmemcmp (wa.buf1, L"aabcEDX98", 10))
+    FAIL ();
+
+  wa.buf1[l0 + 8] = L'\0';
+  wcscat (wa.buf1, L"A");
+  if (wmemcmp (wa.buf1, L"aabcEDX9A", 10))
+    FAIL ();
+
+  wa.buf1[l0 + 7] = L'\0';
+  wcsncat (wa.buf1, L"ZYXWV", l0 + 2);
+  if (wmemcmp (wa.buf1, L"aabcEDXZY", 10))
+    FAIL ();
+
+#endif
+
+#if __USE_FORTIFY_LEVEL >= 1
+  /* Now check if all buffer overflows are caught at runtime.  */
+
+  CHK_FAIL_START
+  wmemcpy (wbuf + 1, L"abcdefghij", l0 + 10);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wmemmove (wbuf + 2, wbuf + 1, l0 + 9);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+    wp = wmempcpy (wbuf + 6, L"abcde", l0 + 5);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wmemset (wbuf + 9, L'j', l0 + 2);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wcscpy (wbuf + 5, wstr1 + 5);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wp = wcpcpy (wbuf + 9, wstr2);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wcsncpy (wbuf + 7, L"X", l0 + 4);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wcpncpy (wbuf + 6, L"cd", l0 + 5);
+  CHK_FAIL_END
+
+  wmemcpy (wbuf, wstr1 + 2, l0 + 9);
+  CHK_FAIL_START
+  wcscat (wbuf, L"AB");
+  CHK_FAIL_END
+
+  wmemcpy (wbuf, wstr1 + 3, l0 + 8);
+  CHK_FAIL_START
+  wcsncat (wbuf, L"ZYXWV", l0 + 3);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wmemcpy (wa.buf1 + 1, L"abcdefghij", l0 + 10);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wmemmove (wa.buf1 + 2, wa.buf1 + 1, l0 + 9);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wp = wmempcpy (wa.buf1 + 6, L"abcde", l0 + 5);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wmemset (wa.buf1 + 9, L'j', l0 + 2);
+  CHK_FAIL_END
+
+#if __USE_FORTIFY_LEVEL >= 2
+# define O 0
+#else
+# define O 1
+#endif
+
+  CHK_FAIL_START
+  wcscpy (wa.buf1 + (O + 4), wstr1 + 5);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wp = wcpcpy (wa.buf1 + (O + 8), wstr2);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wcsncpy (wa.buf1 + (O + 6), L"X", l0 + 4);
+  CHK_FAIL_END
+
+  wmemcpy (wa.buf1, wstr1 + (3 - O), l0 + 8 + O);
+  CHK_FAIL_START
+  wcscat (wa.buf1, L"AB");
+  CHK_FAIL_END
+
+  wmemcpy (wa.buf1, wstr1 + (4 - O), l0 + 7 + O);
+  CHK_FAIL_START
+  wcsncat (wa.buf1, L"ZYXWV", l0 + 3);
+  CHK_FAIL_END
+#endif
+
 
   /* Now checks for %n protection.  */
 
@@ -793,6 +1024,237 @@ do_test (void)
   *enddir = '\0';
   if (rmdir (fname) != 0)
     FAIL ();
+
+
+#if PATH_MAX > 0
+  char largebuf[PATH_MAX];
+  char *realres = realpath (".", largebuf);
+#endif
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  char realbuf[1];
+  realres = realpath (".", realbuf);
+  CHK_FAIL_END
+#endif
+
+  if (setlocale (LC_ALL, "de_DE.UTF-8") != NULL)
+    {
+      /* First a simple test.  */
+      char enough[MB_CUR_MAX];
+      if (wctomb (enough, L'A') != 1)
+	{
+	  puts ("first wctomb test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      char smallbuf[2];
+      if (wctomb (smallbuf, L'\x100') != 2)
+	{
+	  puts ("second wctomb test failed");
+	  ret = 1;
+	}
+      CHK_FAIL_END
+#endif
+
+      mbstate_t s;
+      memset (&s, '\0', sizeof (s));
+      if (wcrtomb (enough, L'A', &s) != 1)
+	{
+	  puts ("first wcrtomb test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      char smallbuf[2];
+      if (wcrtomb (smallbuf, L'\x100', &s) != 2)
+	{
+	  puts ("second wcrtomb test failed");
+	  ret = 1;
+	}
+      CHK_FAIL_END
+#endif
+
+      wchar_t wenough[10];
+      memset (&s, '\0', sizeof (s));
+      const char *cp = "A";
+      if (mbsrtowcs (wenough, &cp, 10, &s) != 1)
+	{
+	  puts ("first mbsrtowcs test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      wchar_t wsmallbuf[2];
+      cp = "ABC";
+      mbsrtowcs (wsmallbuf, &cp, 10, &s);
+      CHK_FAIL_END
+#endif
+
+      memset (&s, '\0', sizeof (s));
+      cp = "A";
+      if (mbsnrtowcs (wenough, &cp, 1, 10, &s) != 1)
+	{
+	  puts ("first mbsnrtowcs test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      wchar_t wsmallbuf[2];
+      cp = "ABC";
+      mbsnrtowcs (wsmallbuf, &cp, 3, 10, &s);
+      CHK_FAIL_END
+#endif
+
+      memset (&s, '\0', sizeof (s));
+      const wchar_t *wcp = L"A";
+      if (wcsrtombs (enough, &wcp, 10, &s) != 1)
+	{
+	  puts ("first wcsrtombs test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      char smallbuf[2];
+      wcp = L"ABC";
+      wcsrtombs (smallbuf, &wcp, 10, &s);
+      CHK_FAIL_END
+#endif
+
+      memset (&s, '\0', sizeof (s));
+      wcp = L"A";
+      if (wcsnrtombs (enough, &wcp, 1, 10, &s) != 1)
+	{
+	  puts ("first wcsnrtombs test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      char smallbuf[2];
+      wcp = L"ABC";
+      wcsnrtombs (smallbuf, &wcp, 3, 10, &s);
+      CHK_FAIL_END
+#endif
+    }
+  else
+    {
+      puts ("cannot set locale");
+      ret = 1;
+    }
+
+  fd = posix_openpt (O_RDWR);
+  if (fd != -1)
+    {
+      char enough[1000];
+      if (ptsname_r (fd, enough, sizeof (enough)) != 0)
+	{
+	  puts ("first ptsname_r failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      CHK_FAIL_START
+      char smallbuf[2];
+      if (ptsname_r (fd, smallbuf, sizeof (smallbuf) + 1) == 0)
+	{
+	  puts ("second ptsname_r somehow suceeded");
+	  ret = 1;
+	}
+      CHK_FAIL_END
+#endif
+      close (fd);
+    }
+
+  confstr (_CS_GNU_LIBC_VERSION, largebuf, sizeof (largebuf));
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  char smallbuf[1];
+  confstr (_CS_GNU_LIBC_VERSION, smallbuf, sizeof (largebuf));
+  CHK_FAIL_END
+#endif
+
+  gid_t grpslarge[5];
+  int ngr = getgroups (5, grpslarge);
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  char smallbuf[1];
+  ngr = getgroups (5, (gid_t *) smallbuf);
+  CHK_FAIL_END
+#endif
+
+  fd = open (_PATH_TTY, O_RDONLY);
+  if (fd != -1)
+    {
+      char enough[1000];
+      if (ttyname_r (fd, enough, sizeof (enough)) != 0)
+	{
+	  puts ("first ttyname_r failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      CHK_FAIL_START
+      char smallbuf[2];
+      if (ttyname_r (fd, smallbuf, sizeof (smallbuf) + 1) == 0)
+	{
+	  puts ("second ttyname_r somehow suceeded");
+	  ret = 1;
+	}
+      CHK_FAIL_END
+#endif
+      close (fd);
+    }
+
+  char hostnamelarge[1000];
+  gethostname (hostnamelarge, sizeof (hostnamelarge));
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  char smallbuf[1];
+  gethostname (smallbuf, sizeof (hostnamelarge));
+  CHK_FAIL_END
+#endif
+
+  char loginlarge[1000];
+  getlogin_r (loginlarge, sizeof (hostnamelarge));
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  char smallbuf[1];
+  getlogin_r (smallbuf, sizeof (loginlarge));
+  CHK_FAIL_END
+#endif
+
+  char domainnamelarge[1000];
+  int res = getdomainname (domainnamelarge, sizeof (domainnamelarge));
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  char smallbuf[1];
+  res = getdomainname (smallbuf, sizeof (domainnamelarge));
+  CHK_FAIL_END
+#endif
 
   return ret;
 }

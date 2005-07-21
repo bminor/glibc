@@ -26,12 +26,21 @@ distribute = sigcontextinfo.h register-dump.h frame.h
 
 routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    memcpy_chk memmove_chk mempcpy_chk memset_chk stpcpy_chk \
-	    strcat_chk strcpy_chk strncat_chk strncpy_chk \
+	    strcat_chk strcpy_chk strncat_chk strncpy_chk stpncpy_chk \
 	    sprintf_chk vsprintf_chk snprintf_chk vsnprintf_chk \
 	    printf_chk fprintf_chk vprintf_chk vfprintf_chk \
 	    gets_chk chk_fail readonly-area fgets_chk fgets_u_chk \
 	    read_chk pread_chk pread64_chk recv_chk recvfrom_chk \
-	    readlink_chk getwd_chk getcwd_chk stack_chk_fail \
+	    readlink_chk getwd_chk getcwd_chk realpath_chk ptsname_r_chk \
+	    wctomb_chk wcscpy_chk wmemcpy_chk wmemmove_chk wmempcpy_chk \
+	    wcpcpy_chk wcsncpy_chk wcscat_chk wcsncat_chk wmemset_chk \
+	    wcpncpy_chk \
+	    swprintf_chk vswprintf_chk wprintf_chk fwprintf_chk \
+	    vwprintf_chk vfwprintf_chk fgetws_chk fgetws_u_chk \
+	    confstr_chk getgroups_chk ttyname_r_chk getlogin_r_chk \
+	    gethostname_chk getdomainname_chk wcrtomb_chk mbsnrtowcs_chk \
+	    wcsnrtombs_chk mbsrtowcs_chk wcsrtombs_chk \
+	    stack_chk_fail \
 	    $(static-only-routines)
 static-only-routines := warning-nop stack_chk_fail_local
 
@@ -47,11 +56,26 @@ CFLAGS-vfprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 CFLAGS-gets_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 CFLAGS-fgets_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 CFLAGS-fgets_u_chk.c = -D_IO_MTSAFE_IO $(exceptions)
+CFLAGS-swprintf_chk.c = -D_IO_MTSAFE_IO
+CFLAGS-vswprintf_chk.c = -D_IO_MTSAFE_IO
+CFLAGS-wprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
+CFLAGS-fwprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
+CFLAGS-vwprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
+CFLAGS-vfwprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
+CFLAGS-fgetws_chk.c = -D_IO_MTSAFE_IO $(exceptions)
+CFLAGS-fgetws_u_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 CFLAGS-read_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pread_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pread64_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recv_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvfrom_chk.c = -fexceptions -fasynchronous-unwind-tables
+
+tst-chk1-ENV = LOCPATH=$(common-objpfx)localedata
+tst-chk2-ENV = LOCPATH=$(common-objpfx)localedata
+tst-chk3-ENV = LOCPATH=$(common-objpfx)localedata
+tst-lfschk1-ENV = LOCPATH=$(common-objpfx)localedata
+tst-lfschk2-ENV = LOCPATH=$(common-objpfx)localedata
+tst-lfschk3-ENV = LOCPATH=$(common-objpfx)localedata
 
 tests = backtrace-tst tst-chk1 tst-chk2 tst-chk3 \
 	tst-lfschk1 tst-lfschk2 tst-lfschk3 test-strcpy_chk test-stpcpy_chk
