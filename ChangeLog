@@ -1,3 +1,38 @@
+2005-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/test-memset.c (test_main): Use negative byte value is
+	test.
+
+	* string/test-memset.c (do_one_test): Compare effect of call, not
+	only return value.
+	Add a few casts to avoid warnings.
+
+2005-07-24  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* sysdeps/sh/memset.S (memset): Correct 2nd argument handling.
+
+2005-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1125]
+	* posix/Makefile (tests): Add tst-execvp4.
+	* posix/tst-execvp4.c: New file.
+
+2005-07-24  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1125]
+	* posix/execvp.c (execvp): Change path_malloc to
+	char *, free that pointer on failure.
+
+2005-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/bits/wchar2.h: Use __FILE not FILE.
+	* wcsmbs/Makefile: Add rules to build and run tst-wchar-h.
+	* wcsmbs/tst-wchar-h.c: New file.
+
+2005-07-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/fxprintf.c (__fxprintf): Define variable more local.
+
 2005-07-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* wcsmbs/bits/wchar2.h (__vfwprintf_chk, __vwprintf_chk): Use
