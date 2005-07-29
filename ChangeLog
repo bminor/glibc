@@ -1,3 +1,14 @@
+2005-07-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/dl-osinfo.h: Include errno.h, hp-timing.h,
+	endian.h.
+	(_dl_setup_stack_chk_guard): Even without
+	--enable-stackguard-randomization attempt to do some guard
+	randomization using hp-timing (if available) and kernel stack and
+	mmap randomization.
+	* elf/tst-stackguard1.c (do_test): Don't fail if the poor man's
+	randomization doesn't work well enough.
+
 2005-07-28  Thomas Schwinge  <schwinge@nic-nac-project.de>
 
 	* misc/error.c [_LIBC]: Include <stdbool.h> and <stdint.h>.

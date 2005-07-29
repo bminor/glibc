@@ -190,17 +190,21 @@ do_test (void)
      the 16 runs, something is very wrong.  */
   int ndifferences = 0;
   int ndefaults = 0;
+  int npartlyrandomized = 0;
   for (i = 0; i < N; ++i) 
     {
       if (child_stack_chk_guards[i] != child_stack_chk_guards[i+1])
 	ndifferences++;
       else if (child_stack_chk_guards[i] == default_guard)
 	ndefaults++;
+      else if (*(char *) &child_stack_chk_guards[i] == 0)
+	npartlyrandomized = 0;
     }
 
-  printf ("differences %d defaults %d\n", ndifferences, ndefaults);
+  printf ("differences %d defaults %d partly randomized %d\n",
+	  ndifferences, ndefaults, npartlyrandomized);
 
-  if (ndifferences < N / 2 && ndefaults < N / 2)
+  if ((ndifferences + ndefaults + npartlyrandomized) < 3 * N / 4)
     {
       puts ("stack guard canaries are not randomized enough");
       puts ("nor equal to the default canary value");
