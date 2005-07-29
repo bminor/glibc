@@ -1,6 +1,5 @@
 /* Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,39 +16,20 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
-#include <ctype.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <wchar.h>
+#include <locale.h>
 #include <string.h>
+#include <wchar.h>
 
 
-int
-__fxprintf (FILE *fp, const char *fmt, ...)
+size_t
+__mbstowcs_chk (wchar_t *dst, const char **src, size_t len, size_t dstlen)
 {
-  if (fp == NULL)
-    fp = stderr;
+  if (__builtin_expect (dstlen < len * sizeof (wchar_t), 0))
+    __chk_fail ();
 
-  va_list ap;
-  va_start (ap, fmt);
+  mbstate_t state;
 
-  int res;
-  if (_IO_fwide (fp, 0) > 0)
-    {
-      size_t len = strlen (fmt) + 1;
-      wchar_t wfmt[len];
-      for (size_t i = 0; i < len; ++i)
-	{
-	  assert (isascii (fmt[i]));
-	  wfmt[i] = fmt[i];
-	}
-      res = __vfwprintf (fp, wfmt, ap);
-    }
-  else
-    res = INTUSE(_IO_vfprintf) (fp, fmt, ap);
-
-  va_end (ap);
-
-  return res;
+  memset (&state, '\0', sizeof state);
+  /* Return how many we wrote (or maybe an error).  */
+  return __mbsrtowcs (dst, src, len, &state);
 }
