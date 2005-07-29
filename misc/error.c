@@ -74,6 +74,7 @@ unsigned int error_message_count;
 
 # define program_name program_invocation_name
 # include <errno.h>
+# include <limits.h>
 # include <libio/libioP.h>
 
 /* In GNU libc we want do not want to use the common name `error' directly.
@@ -182,14 +183,15 @@ error_tail (int status, int errnum, const char *message, va_list args)
       mbstate_t st;
       size_t res;
       const char *tmp;
+      bool use_malloc = false;
 
-      do
+      while (1)
 	{
-	  if (len < ALLOCA_LIMIT)
+	  if (__libc_use_alloca (len * sizeof (wchar_t)))
 	    wmessage = (wchar_t *) alloca (len * sizeof (wchar_t));
 	  else
 	    {
-	      if (wmessage != NULL && len / 2 < ALLOCA_LIMIT)
+	      if (!use_malloc)
 		wmessage = NULL;
 
 	      wchar_t *p = (wchar_t *) realloc (wmessage,
@@ -201,18 +203,38 @@ error_tail (int status, int errnum, const char *message, va_list args)
 		  return;
 		}
 	      wmessage = p;
+	      use_malloc = true;
 	    }
 
 	  memset (&st, '\0', sizeof (st));
 	  tmp = message;
+
+	  res = mbsrtowcs (wmessage, &tmp, len, &st);
+	  if (res != len)
+	    break;
+
+	  if (__builtin_expect (len >= SIZE_MAX / 2, 0))
+	    {
+	      /* This really should not happen if everything is fine.  */
+	      res = (size_t) -1;
+	      break;
+	    }
+
+	  len *= 2;
 	}
-      while ((res = mbsrtowcs (wmessage, &tmp, len, &st)) == len);
 
       if (res == (size_t) -1)
-	/* The string cannot be converted.  */
-	wmessage = (wchar_t *) L"???";
+	{
+	  /* The string cannot be converted.  */
+	  if (use_malloc)
+	    free (wmessage);
+	  wmessage = (wchar_t *) L"???";
+	}
 
       __vfwprintf (stderr, wmessage, args);
+
+      if (use_malloc)
+	free (wmessage);
     }
   else
 #  endif
