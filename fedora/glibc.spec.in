@@ -1,4 +1,4 @@
-%define glibcrelease 0.fc3.4
+%define glibcrelease 0.fc3.5
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -102,7 +102,8 @@ Prereq: /sbin/install-info
 Obsoletes: libc-debug, libc-headers, libc-devel, linuxthreads-devel
 Obsoletes: glibc-debug
 Prereq: %{name}-headers
-Requires: %{name}-headers = %{version}-%{release}, %{name} = %{version}
+Requires: %{name}-headers = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
 %ifarch %{ix86}
 # Earlier gcc's had atexit reference in crtendS.o, which does not
 # work with this glibc where atexit is in libc_nonshared.a
@@ -132,7 +133,7 @@ Obsoletes: %{name}-headers(i386)
 %endif
 Obsoletes: libc-debug, libc-headers, libc-devel, linuxthreads-devel
 Prereq: kernel-headers
-Requires: kernel-headers >= 2.2.1, %{name} = %{version}
+Requires: kernel-headers >= 2.2.1, %{name} = %{version}-%{release}
 Autoreq: true
 
 %description headers
@@ -1274,6 +1275,16 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Jul 29 2005 Roland McGrath <roland@redhat.com> 2.3.5-0.fc3.5
+- update from CVS (glibc-2_3-branch)
+  - correctly size nscd buffer for grpcache key (#163538, BZ#1113)
+  - fix atan2f (BZ#1138)
+  - avoid memory leaks in error(3) (BZ#1137)
+  - use NVR rather than NV dependency on glibc package in
+    glibc-{headers,devel} subpackages (#164073)
+  - fix execvp if PATH is not set in environment and the call is about to fail
+    (BZ#1125)
+
 * Mon Jul 18 2005 Roland McGrath <roland@redhat.com> 2.3.5-0.fc3.4
 - update from CVS (glibc-2_3-branch)
   - make sure nscd cmsg buffers aren't misaligned, handle EINTR from
