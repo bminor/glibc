@@ -1,3 +1,8 @@
+2005-07-28  Thomas Schwinge  <schwinge@nic-nac-project.de>
+
+	[BZ #1137]
+	* misc/error.c [_LIBC]: Include <stdbool.h> and <stdint.h>.
+
 2005-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1138]
