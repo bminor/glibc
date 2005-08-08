@@ -168,7 +168,7 @@ do_test (void)
       else if (child_stack_chk_guards[i] == default_guard)
 	ndefaults++;
       else if (*(char *) &child_stack_chk_guards[i] == 0)
-	npartlyrandomized = 0;
+	npartlyrandomized++;
     }
 
   printf ("differences %d defaults %d partly randomized %d\n",

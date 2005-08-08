@@ -203,7 +203,7 @@ _dl_setup_stack_chk_guard (void)
 #if __BYTE_ORDER == __LITTLE_ENDIAN
   stk <<= (__WORDSIZE - 29);
 #else
-  stk <<= (__WORDSIZE == 64 ? 24 : 5);
+  stk >>= 8;
 #endif
   ret ^= stk;
   return ret;

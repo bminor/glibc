@@ -1,6 +1,12 @@
+2005-08-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard):
+	Shift marked &errno down on big-endian instead of up.
+	* elf/tst-stackguard1.c (do_test): Fix a typo.
+
 2005-07-29  Jakub Jelinek  <jakub@redhat.com>
 
-	* sysdeps/unix/sysv/dl-osinfo.h: Include errno.h, hp-timing.h,
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Include errno.h, hp-timing.h,
 	endian.h.
 	(_dl_setup_stack_chk_guard): Even without
 	--enable-stackguard-randomization attempt to do some guard
