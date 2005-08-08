@@ -1,6 +1,6 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Checking macros for syslog functions.
+   Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,40 +17,23 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
-#include <ctype.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <wchar.h>
-#include <string.h>
-#include <libioP.h>
+#ifndef _SYS_SYSLOG_H
+# error "Never include <bits/syslog.h> directly; use <sys/syslog.h> instead."
+#endif
 
 
-int
-__fxprintf (FILE *fp, const char *fmt, ...)
-{
-  if (fp == NULL)
-    fp = stderr;
+extern void __syslog_chk (int __pri, int __flag, __const char *__fmt, ...)
+     __attribute__ ((__format__ (__printf__, 3, 4)));
 
-  va_list ap;
-  va_start (ap, fmt);
+#define syslog(pri, ...) \
+  __syslog_chk (pri, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
 
-  int res;
-  if (_IO_fwide (fp, 0) > 0)
-    {
-      size_t len = strlen (fmt) + 1;
-      wchar_t wfmt[len];
-      for (size_t i = 0; i < len; ++i)
-	{
-	  assert (isascii (fmt[i]));
-	  wfmt[i] = fmt[i];
-	}
-      res = __vfwprintf (fp, wfmt, ap);
-    }
-  else
-    res = INTUSE(_IO_vfprintf) (fp, fmt, ap);
 
-  va_end (ap);
+#ifdef __USE_BSD
+extern void __vsyslog_chk (int __pri, int __flag, __const char *__fmt,
+			   __gnuc_va_list __ap)
+     __attribute__ ((__format__ (__printf__, 3, 0)));
 
-  return res;
-}
+# define vsyslog(pri, fmt, ap)						\
+  __vsyslog_chk (pri, __USE_FORTIFY_LEVEL - 1, fmt, ap)
+#endif

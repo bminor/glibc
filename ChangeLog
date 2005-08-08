@@ -4,6 +4,128 @@
 	Shift marked &errno down on big-endian instead of up.
 	* elf/tst-stackguard1.c (do_test): Fix a typo.
 
+2005-08-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/cache.c (cache_add): Commit hash table and header to disk.
+
+	* nscd/mem.c (mempool_alloc): Use posix_fallocate instead of ftruncate.
+	* nscd/connections.c (nscd_init): Likewise.
+
+2005-08-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/fxprintf.c: Include libioP.h.
+
+	* posix/bits/unistd.h (confstr, getgroups, ttyname_r, gethostname,
+	getdomainname): Add __NTH.
+	* stdlib/bits/stdlib.h (ptsname_r, wctomb, mbstowcs, wcstombs):
+	Likewise.
+	(realpath): Likewise.  Use __const instead of const.  Add __restrict
+	keywords.
+	* socket/bits/socket2.h (recvfrom): Add __restrict keyword to __buf.
+	* wcsmbs/bits/wchar2.h (wmemcpy, wmemmove, wmempcpy, wmemset,
+	wcscpy, wcpcpy, wcsncpy, wcpncpy, wcscat, wcsncat, vswprintf, wcrtomb,
+	mbsrtowcs, wcsrtombs, mbsnrtowcs, wcsnrtombs): Add __NTH.
+	* string/bits/string3.h (__memset_ichk): Likewise.
+	(__memcpy_ichk, __memmove_ichk, __mempcpy_ichk, __strcpy_ichk,
+	__stpcpy_ichk, __strncpy_ichk, stpncpy, __strcat_ichk,
+	__strncat_ichk): Likewise.  Use __const instead of const.
+	(__stpncpy_chk): Use __const instead of const.
+	(__stpncpy_alias): Use __REDIRECT_NTH instead of __REDIRECT.
+
+2005-08-08  Ulrich Drepper  <drepper@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/mem.c (BLOCK_ALIGN_LOG, BLOCK_ALIGN, BLOCK_ALIGN_M1): Move
+	definitions to...
+	* nscd/nscd.h (BLOCK_ALIGN_LOG, BLOCK_ALIGN, BLOCK_ALIGN_M1): ...here.
+	* nscd/connections.c (usekey): New enum.
+	(check_use, verify_persistent_db): New functions.
+	(nscd_init): If persistent database is corrupted, unlink it and
+	recreate rather than falling back to non-persistent database.
+	Call verify_persistent_db.  Avoid overflows in total computation.
+
+2005-08-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/utf-16.c (PREPARE_LOOP): Minor cleanups to make code
+	better readable.  Avoid passing var to loop function, it's not
+	necessary at all.
+
+2005-08-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h (DT_ALPHA_PLTRO): Use symbolic name in DT_ALPHA_PLTRO
+	definition.
+
+2005-08-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/checktab.awk: Update from tzcode2005k.
+	* timezone/private.h: Likewise.
+	* timezone/scheck.c: Likewise.
+	* timezone/tzselect.ksh: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+	* timezone/africa: Update from tzdata2005k.
+	* timezone/antarctica: Likewise.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/solar87: Likewise.
+	* timezone/solar88: Likewise.
+	* timezone/solar89: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
+2005-08-05  Roland McGrath  <roland@redhat.com>
+
+	* mach/shortcut.awk: Ignore `weak_alias' lines.
+	Reported by Alfred M. Szmidt <ams@gnu.org>.
+
+	* sysdeps/mach/hurd/mig-reply.c (reply_port): Don't use ?: as lvalue.
+	Reported by Alfred M. Szmidt <ams@gnu.org>.
+
+2005-08-03  Dwayne Grant McConnell  <dgm69@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/Makefile (CFLAGS-initfini.s):
+	Use +=, not =, to append.  Remove duplicate flags.
+	* sysdeps/powerpc/powerpc64/Makefile (CFLAGS-initfini.s):
+	Likewise.  Fix comments.
+
+2005-08-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sigwait.c (do_sigwait): Restart system
+	call if it returned EINTR.
+
+2005-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_load_address): Move
+	helper variable into .data.rel.ro.  Simplify the code.  Extend
+	comment to explain prelinking.
+
+2005-07-31  Andreas Jaeger  <aj@suse.de>
+
+	* include/bits/syslog.h: New file.
+
+2005-07-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c [__WORDSIZE==64] (FILEBUF_SIZE): Adjust the value
+	up.  We have more program header entries now and the note section
+	was normally not loaded.
+
+	* nis/nis_subr.c: Some minor code cleanups.
+
+2005-07-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/bits/syslog.h: New file.
+	* misc/sys/syslog.h: Include <bits/syslog.h> for fortification.
+	* misc/Makefile (headers): Add bits/syslog.h.
+	* include/sys/syslog.h: Add __vsyslog_chk prototype and hidden_proto.
+	* sysdeps/generic/syslog.c: Change vsyslog function to __vsyslog_chk.
+	Call __vfprintf_chk if necessary.  Make vsyslog a wrapper.  Add
+	__syslog_chk.
+	* misc/Versions: Export __syslog_chk and __vsyslog_chk.
+
 2005-07-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-osinfo.h: Include errno.h, hp-timing.h,
@@ -17,11 +139,13 @@
 
 2005-07-28  Thomas Schwinge  <schwinge@nic-nac-project.de>
 
+	[BZ #1137]
 	* misc/error.c [_LIBC]: Include <stdbool.h> and <stdint.h>.
 
 2005-07-28  Ulrich Drepper  <drepper@redhat.com>
 
-	* nis/nis_xdr.c: Help gcc to generate unnecessary wrapper functions.
+	* nis/nis_xdr.c: Help gcc to avoid generating unnecessary wrapper
+	functions.
 
 2005-07-28  Jakub Jelinek  <jakub@redhat.com>
 
@@ -121,6 +245,7 @@
 
 2005-07-20  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #1138]
 	* sysdeps/x86_64/fpu/libm-test-ulps: Adjust expected atan2f results.
 	* sysdeps/powerpc/fpu/libm-test-ulps: Likewise.
 	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
@@ -128,6 +253,7 @@
 2005-07-20  Bob Wilson  <bob.wilson@acm.org>
             Darin Petkov  <darin@tensilica.com>
 
+	[BZ #1138]
 	* sysdeps/ieee754/flt-32/e_atan2f.c (pi_lo): Correct exponent value.
 
 2005-07-20  Jakub Jelinek  <jakub@redhat.com>
@@ -215,6 +341,7 @@
 	* sunrpc/xdr_ref.c: Likewise.
 	* sysdeps/generic/wordexp.c: Likewise.
 
+	[BZ #1137]
 	* misc/Makefile: Add rules to build and run tst-error1.
 	* misc/tst-error1.c: New file.
 	* misc/error.c: Fix memory leak and possibly endless loop.
