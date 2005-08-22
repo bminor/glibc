@@ -654,7 +654,9 @@ send_vc(res_state statp,
 		}
 		__set_errno (0);
 		if (connect(statp->_vcsock, (struct sockaddr *)nsap,
-			    sizeof *nsap) < 0) {
+			    nsap->sin6_family == AF_INET
+			    ? sizeof (struct sockaddr_in)
+			    : sizeof (struct sockaddr_in6)) < 0) {
 			*terrno = errno;
 			Aerror(statp, stderr, "connect/vc", errno,
 			       (struct sockaddr *) nsap);
@@ -1060,8 +1062,13 @@ Aerror(const res_state statp, FILE *file, const char *string, int error,
 
 		fprintf(file, "res_send: %s ([%s].%u): %s\n",
 			string,
-			inet_ntop(address->sa_family, address->sa_data,
-				  tmp, sizeof tmp),
+			(address->sa_family == AF_INET
+			 ? inet_ntop(address->sa_family,
+				     &((const struct sockaddr_in *) address)->sin_addr,
+				     tmp, sizeof tmp)
+			 : inet_ntop(address->sa_family,
+				     &((const struct sockaddr_in6 *) address)->sin6_addr,
+				     tmp, sizeof tmp)),
 			(address->sa_family == AF_INET
 			 ? ntohs(((struct sockaddr_in *) address)->sin_port)
 			 : address->sa_family == AF_INET6

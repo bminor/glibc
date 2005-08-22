@@ -1,3 +1,95 @@
+2005-08-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (Aerror): Fix printing IP address.
+
+	* resolv/res_send.c (send_vc): Pass correct sockaddr size to connect.
+
+2005-08-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ia64/fpu/libm_error.c (__libm_error_support): Don't abort.
+
+2005-08-17  Robert Love  <rml@novell.com>
+
+	* sysdeps/unix/sysv/linux/sys/inotify.h: Add IN_MOVE_SELF event.
+
+2005-08-19  Bruno Haible  <bruno@clisp.org>
+
+	* intl/localealias.c (read_alias_file): In case of failure, close the
+	file descriptor and sort the array before returning.
+
+2005-08-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/Makefile: Link libmemusage.so with ld.so.
+	* malloc/memusage.c: Use atomic operations for all counter and size
+	 computations.  Handle thread stacks.
+	* sysdeps/generic/memusage.h: Define memusage_cntr_t and
+	memusage_size_t.
+	* sysdeps/i386/i686/memusage.h: New file.
+	* include/atomic.h: Define atomic_max and atomic_min.
+
+	* debug/tst-chk1.c: Add tests for mbstowcs and wcstombs.
+
+2005-08-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #1207]
+	* posix/regex.h: Remove spurious space-before-tab.  From gnulib.
+
+2005-08-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	sys/inotify.h.
+	* sysdeps/unix/sysv/linux/sys/inotify.h: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add inotify syscalls.
+
+	* nscd/cache.c (prune_cache): Add more debug output.  Only for
+	debug level 3 and higher and very verbose.
+
+	* nscd/cache.c (prune_cache): Use stat64 not stat.
+	* nscd/connections.c (nscd_init): Likewise.
+
+2005-08-10  Sergio Gelato  <Sergio.Gelato@astro.su.se>
+
+	[BZ #1188]
+	* nis/nss_nis/nis-netgrp.c (_nss_nis_setnetgrent): Change assert check
+	from (len > 0) to (len >= 0).
+
+2005-08-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_xdr.c (_xdr_nis_result): Fix type of res variable.
+	Reported by Thomas Schwinge.
+
+2005-08-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nis_subr.c (nis_leaf_of_r): Handle buflen == 0 correctly.
+
+2005-08-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getent.c (more_help): Use open_memstream instead of handling
+	memory allocation ourselves.
+
+2005-08-16  Jay Fenlason  <fenlason@redhat.com>
+
+	* nss/getent.c (parse_options): change the -s option to support
+	{database}:{search} to override /etc/resolv.conf for only the
+	specified database.
+
+2005-08-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (main_loop_epoll): Pass NULL as event
+	argument for epoll_ctl(EPOLL_CTL_DEL) calls.
+
+	* nscd/nscd_stat.c (receive_print_stats): Really print values of
+	thread number, paranoia, and restart interval the server is using.
+
+	* argp/argp-help.c: Use _IO_vasprintf instead of vasprintf.
+	* include/stdio.h: Add libc_hidden_proto for __vfprintf_chk.
+	* debug/vfprintf_chk.c: Add libc_hidden_def.
+
+2005-08-08  Roland McGrath  <roland@redhat.com>
+
+	* argp/argp-help.c (__argp_error): __asprintf -> vasprintf.
+	(__argp_failure): Likewise.
+
 2005-08-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard):

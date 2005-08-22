@@ -1,5 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2001, 2004, 2005
-   Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,27 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <stdarg.h>
-#include <stdio.h>
-#include "../libio/libioP.h"
+#define GETSP() ({ register uintptr_t stack_ptr asm ("esp"); stack_ptr; })
+#define GETTIME(low,high) asm ("rdtsc" : "=a" (low), "=d" (high))
 
-
-/* Write formatted output to FP from the format string FORMAT.  */
-int
-__vfprintf_chk (FILE *fp, int flag, const char *format, va_list ap)
-{
-  int done;
-
-  _IO_acquire_lock (fp);
-  if (flag > 0)
-    fp->_flags2 |= _IO_FLAGS2_FORTIFY;
-
-  done = vfprintf (fp, format, ap);
-
-  if (flag > 0)
-    fp->_flags2 &= ~_IO_FLAGS2_FORTIFY;
-  _IO_release_lock (fp);
-
-  return done;
-}
-libc_hidden_def (__vfprintf_chk)
+#include <sysdeps/generic/memusage.h>
