@@ -153,12 +153,10 @@ main (int argc, char **argv)
 
   /* Read the configuration file.  */
   if (nscd_parse_file (conffile, dbs) != 0)
-    {
-      /* We couldn't read the configuration file.  We don't start the
-	 server.  */
-      dbg_log (_("cannot read configuration file; this is fatal"));
-      exit (1);
-    }
+    /* We couldn't read the configuration file.  We don't start the
+       server.  */
+    error (EXIT_FAILURE, 0,
+	   _("failure while reading configuration file; this is fatal"));
 
   /* Do we only get statistics?  */
   if (get_stats)
@@ -319,8 +317,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	req.version = NSCD_VERSION;
 	req.type = SHUTDOWN;
 	req.key_len = 0;
-	nbytes = TEMP_FAILURE_RETRY (write (sock, &req,
-					    sizeof (request_header)));
+	nbytes = TEMP_FAILURE_RETRY (send (sock, &req,
+					   sizeof (request_header),
+					   MSG_NOSIGNAL));
 	close (sock);
 	exit (nbytes != sizeof (request_header) ? EXIT_FAILURE : EXIT_SUCCESS);
       }

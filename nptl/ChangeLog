@@ -1,3 +1,9 @@
+2005-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/timer_routines.c (timer_helper_thread):
+	Use __sigfillset.  Document that sigfillset does the right thing wrt
+	to SIGSETXID.
+
 2005-08-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-stackguard1.c (do_test): Likewise.
