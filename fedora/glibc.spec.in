@@ -1,4 +1,4 @@
-%define glibcrelease 9
+%define glibcrelease 10
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -1074,6 +1074,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Aug 24 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-10
+- update from CVS
+  - fix growing of nscd persistent database (BZ#1204)
+  - fix _FORTIFY_SOURCE mbstowcs and wcstombs if destination size
+    is known at compile time, but length argument is not
+
 * Mon Aug 22 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-9
 - update from CVS
   - fix resolving over TCP (#161181, #165802)
