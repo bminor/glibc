@@ -3,5 +3,5 @@ glibc-branch := fedora
 glibc-base := HEAD
 DIST_BRANCH := devel
 COLLECTION := dist-fc4
-fedora-sync-date := 2005-08-24 07:05 UTC
-fedora-sync-tag := fedora-glibc-20050824T0705
+fedora-sync-date := 2005-08-29 18:54 UTC
+fedora-sync-tag := fedora-glibc-20050829T1854
