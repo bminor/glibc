@@ -417,7 +417,7 @@ readall (int fd, void *buf, size_t len)
       n -= ret;
     }
   while (n > 0);
-  return ret < 0 ? ret : len - n;
+  return ret < 0 ? ret : (ssize_t) (len - n);
 }
 
 ssize_t
@@ -440,7 +440,7 @@ writeall (int fd, const void *buf, size_t len)
       n -= ret;
     }
   while (n > 0);
-  return ret < 0 ? ret : len - n;
+  return ret < 0 ? ret : (ssize_t) (len - n);
 }
 
 void
@@ -484,7 +484,7 @@ clean_up:
 }
 
 int
-main (void)
+main (int argc, char **argv)
 {
   INTERNAL_SYSCALL_DECL (err);
   long int fd = INTERNAL_SYSCALL (open, err, 2, "/etc/sysconfig/clock", O_RDONLY);
