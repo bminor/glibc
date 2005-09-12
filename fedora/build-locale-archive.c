@@ -156,5 +156,7 @@ int main ()
     }
   closedir (dirp);
   add_locales_to_archive (cnt, list, 0);
+  char *argv[] = { "/usr/sbin/tzdata-update", NULL };
+  execve (argv[0], (char *const *)argv, (char *const *)&argv[1]);
   exit (0);
 }
