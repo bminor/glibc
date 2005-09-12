@@ -400,12 +400,18 @@ char zonename[1024];
 ssize_t
 readall (int fd, void *buf, size_t len)
 {
+  INTERNAL_SYSCALL_DECL (err);
   size_t n = len;
   ssize_t ret;
   do
     {
       ret = INTERNAL_SYSCALL (read, err, 3, fd, buf, n);
-      if (ret <= 0)
+      if (INTERNAL_SYSCALL_ERROR_P (ret, err))
+	{
+	  ret = -1;
+	  break;
+	}
+      else if (ret == 0)
 	break;
       buf = (char *) buf + ret;
       n -= ret;
@@ -417,12 +423,18 @@ readall (int fd, void *buf, size_t len)
 ssize_t
 writeall (int fd, const void *buf, size_t len)
 {
+  INTERNAL_SYSCALL_DECL (err);
   size_t n = len;
   ssize_t ret;
   do
     {
       ret = INTERNAL_SYSCALL (write, err, 3, fd, buf, n);
-      if (ret <= 0)
+      if (INTERNAL_SYSCALL_ERROR_P (ret, err))
+	{
+	  ret = -1;
+	  break;
+	}
+      else if (ret == 0)
 	break;
       buf = (const char *) buf + ret;
       n -= ret;
