@@ -1,3 +1,349 @@
+2005-09-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/getnetgrent_r.c: Include assert.
+	(setup): Remove FUNC_NAME and ALL arguments, assume they are always
+	"setnetgrent" and 1.
+	(endnetgrent_hook): New function.
+	(internal_endnetgrent): Use it.
+	(__internal_setnetgrent_reuse): Use it.  Adjust setup caller.
+	If status is NSS_STATUS_SUCCESS, yet action is continue, call
+	endnetgrent hook.
+	(internal_getnetgrent_r): Use __nss_lookup_function rather than
+	setup.  Recompute getfct pointer after successful
+	__internal_setnetgrent_reuse.  Don't use __nss_next.
+	(innetgr): Use __nss_lookup_function instead of __nss_lookup.
+	Adjust setup caller.
+	* nss/nss_files/files-netgrp.c (_nss_files_endnetgrent): Always clear
+	data_size and cursor.  Add libnss_files_hidden_proto and
+	libnss_files_hidden_def.
+	(_nss_files_setnetgrent): Call _nss_files_endnetgrent on failure.
+	* nis/nss_nis/nis-netgrp.c (internal_endnetgrent): Always clear
+	data_size and cursor.
+	(_nss_nis_setnetgrent): Don't call internal_endnetgrent.
+	(_nss_nis_getnetgrent_r): Remove result->cursor == NULL handling.
+	* nis/nss_nisplus/nisplus-netgrp.c (internal_endnetgrent): Always clear
+	data_size and position.
+	(_nss_nisplus_setnetgrent): Don't call internal_endnetgrent.
+
+2005-09-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getent.c (netgroup_keys): Call endnetgrent.
+	(main): Call mtrace.
+
+	* nss/nss_files/files-netgrp.c (_nss_files_setnetgrent): We don't
+	need locking for the stream.  Use feof_unlocked.
+
+2005-09-09  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1318]
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Free
+	normalized_codeset even if p was already normalized.
+	Reported by Jaroslav Snajdr <jsnajdr@kerio.com>.
+
+2005-09-08  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): Decode DSOCAPS
+	properly, first byte is bit number in mask.  Skip disabled caps.
+
+2005-07-11  Derek R. Price  <derek@ximbiot.com>
+
+	[BZ #1061]
+	* sysdeps/generic/glob.c (glob): Only a 0 return from
+	getlogin_r means success, according to POSIX 1003.2.
+
+2005-06-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #1033]
+	* time/mktime.c: Import from gnulib.
+	The following macros are now consistent with other gnulib code.
+	This does not change mktime's behavior.
+	(TYPE_IS_INTEGER): New macro.
+	(time_t_is_integer): Use it.
+	(TYPE_TWOS_COMPLEMENT): New macro.
+	(twos_complement_arithmetic): Use it.
+	(TYPE_ONES_COMPLEMENT): New macro.
+	(TYPE_MINIMUM, TYPE_MAXIMUM): Now supports signed-magnitude.
+	mktime doesn't use this, but the code now matches other gnulib code.
+	(ranged_convert): Pacify GCC 4.0 in a different way, which
+	generates a few bytes less code.
+	(ranged_convert, __mktime_internal): When calling a function via a
+	pointer P, use P () rather than (*P) (), as we now assume C89 or
+	better.
+
+2005-09-07  Alexandre Oliva  <aoliva@redhat.com>
+
+	* timezone/test-tz.c: Update to match tzdata2005m.
+	* timezone/tst-timezone.c: Likewise.
+
+2005-09-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regexec.c (find_recover_state): Remove unnecessary
+	initialization.
+	(transit_state_bkref): Make DFA a const pointer.
+	(get_subexp): Likewise.
+	(check_arrival): Likewise.
+	(update_cur_sifted_state): Likewise.
+	(re_search_internal): Likewise.
+	(prune_impossible_nodes): Likewise.
+	(acquire_init_state_context): Likewise.
+	(proceed_next_node): Likewise.
+	(set_regs): Likewise.
+	(free_fail_stack_return): Likewise.
+	(check_arrival_expand_ecl): Mark DFA parameter as const.
+	(check_arrival_expand_ecl_sub): Likewise.
+	(check_subexp_limits): Likewise.
+	(sub_epsilon_src_nodes):  Likewise.
+	(add_epsilon_src_nodes):  Likewise.
+	(merge_state_array): Likewise.
+	(update_regs): Likewise.
+	(build_trtable): Likewise.
+	(sift_states_backward): Mark MCTX parameter as const.
+	(build_sifted_states): Likewise.
+	(update_cur_sifted_state): Likewise.
+	(sift_states_mkref): Likewise.
+	(check_arrival_expand_ecl): Mark eclosure as const.
+	(check_dst_limits_calc_pos_1): Likewise.
+	* posix/regex_internal.h (re_match_context_t): Make dfa a const
+	pointer.
+
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/africa: Update from tzdata2005m.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+	* timezone/zdump.c: Update from tzcode2005m.
+
+	* posix/regexec.c (merge_state_with_log): Define dfa as const pointer.
+	(transit_state_sb): Likewise.
+	(transit_state_mb): Likewise.
+	(sift_states_iter_mb): Likewise.
+	(check_arrival_add_next_nodes): Likewise.
+	(check_node_accept_bytes): Change first parameter to pointer-to-const.
+	[_LIBC] (re_search_2_stub): Use mempcpy.
+
+	* posix/regex_internal.c (re_string_reconstruct): Avoid calling
+	mbrtowc for very simple UTF-8 case.
+
+2005-09-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regex_internal.c (build_wcs_upper_buffer): Fix portability
+	bugs in int versus size_t comparisons.
+
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex_internal.c (re_acquire_state): Make DFA pointer arg
+	a pointer-to-const.
+	(re_acquire_state_context): Likewise.
+	* posix/regex_internal.h: Adjust prototypes.
+
+2005-08-31  Jim Meyering  <jim@meyering.net>
+
+	* posix/regcomp.c (search_duplicated_node): Make first pointer arg
+	a pointer-to-const.
+	* posix/regex_internal.c (create_ci_newstate, create_cd_newstate,
+	register_state): Likewise.
+	* posix/regexec.c (search_cur_bkref_entry, check_dst_limits):
+	(check_dst_limits_calc_pos_1, check_dst_limits_calc_pos):
+	(group_nodes_into_DFAstates): Likewise.
+
+2005-08-31  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regexec.c (re_search_internal): Simplify update of
+	rm_so and rm_eo by replacing "if (A == B) A += C - B;"
+	with the equivalent of "if (A == B) A = C;".
+
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c (re_compile_internal): Change third parameter type
+	to size_t.
+	(init_dfa): Likewise.  Make sure that arithmetic on pat_len doesn't
+	overflow.
+	* posix/regex_internal.h (struct re_dfa_t): Change type of nodes_alloc
+	and nodes_len to size_t.
+	* posix/regex_internal.c (re_dfa_add_node): Use size_t as type for
+	new_nodes_alloc.  Check for overflow.
+
+2005-08-31  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regcomp.c (re_compile_fastmap_iter, init_dfa, init_word_char):
+	(optimize_subexps, lower_subexp):
+	Don't assume 1<<31 has defined behavior on hosts with 32-bit int,
+	since the signed shift might overflow.  Use 1u<<31 instead.
+	* posix/regex_internal.h (bitset_set, bitset_clear, bitset_contain):
+	Likewise.
+	* posix/regexec.c (check_dst_limits_calc_pos_1): Likewise.
+	(check_subexp_matching_top): Likewise.
+	* posix/regcomp.c (optimize_subexps, lower_subexp):
+	Use CHAR_BIT rather than 8, for clarity.
+	* posix/regexec.c (check_dst_limits_calc_pos_1):
+	(check_subexp_matching_top): Likewise.
+	* posix/regcomp.c (init_dfa): Make table_size unsigned, so that we
+	don't have to worry about portability issues when shifting it left.
+	Remove no-longer-needed test for table_size > 0.
+	* posix/regcomp.c (parse_sub_exp): Do not shift more bits than there
+	are in a word, as the resulting behavior is undefined.
+	* posix/regexec.c (check_dst_limits_calc_pos_1): Likewise;
+	in one case, a <= should have been an <, and in another case the
+	whole test was missing.
+	* posix/regex_internal.h (BYTE_BITS): Remove.  All uses changed to
+	the standard name CHAR_BIT.
+
+	* posix/regex_internal.h (re_sub_match_top_t): Remove unused member
+	next_last_offset.
+	(struct re_dfa_t): Remove unused member states_alloc.
+	* posix/regcomp.c (init_dfa): Don't initialize unused members.
+
+2005-08-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regexec.c (set_regs): Don't alloca with an unbounded size.
+
+	alloca modernization/simplification for regex.
+	* posix/regex.c: Remove portability cruft for alloca.  This no longer
+	needs to be at the start of the file, and can be moved into
+	regex_internal.h and simplified.
+	* posix/regex_internal.h: Include <alloca.h>.
+	(__libc_use_alloca) [!defined _LIBC]: New macro.
+	* posix/regexec.c (build_trtable): Remove "#ifdef _LIBC",
+	since the code now works outside glibc.
+
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/regex.h: Remove use of _RE_ARGS.
+
+2005-08-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regexec.c (find_recover_state): Change "err" to "*err".
+
+2005-08-24  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regcomp.c (regerror): Pointer args are 'restrict',
+	as per POSIX.
+	* posix/regex.h (regerror): Likewise.
+	* manual/pattern.texi (POSIX Regexp Compilation): Likewise.
+	Similarly for regcomp and regexec.  Also, first 2 args of regexec
+	and 2nd arg of regerror are const.
+
+	* posix/regex.c: Do not include <sys/types.h>, as POSIX no longer
+	requires this.  (The code never needed it.)
+
+2005-08-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regexec.c (sift_states_bkref): re_node_set_insert returns
+	int, not reg_errcode_t.
+
+	* posix/regex_internal.c (calc_state_hash): Put 'inline' before type,
+	since some broken compilers warn about it otherwise.
+
+	* posix/regcomp.c (create_initial_state): Remove duplicate decl.
+
+2005-08-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regex.h (_RE_ARGS): Remove.  No longer needed, since we assume
+	C89 or better.  All uses removed.
+
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.c: Prevent using C++ compilers.
+
+2005-08-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regcomp.c (duplicate_node): Return new index, not an error
+	code, and let the caller return REG_ESPACE if out of space.  This
+	removes an uninitialied-variable warning with GCC 4.0.1, and also
+	avoids taking the address of a local variable.  All callers
+	changed.
+
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/time.h (__strptime_internal): Rename parameter to avoid
+	bogus compiler warning.
+
+2005-08-19  Jim Meyering  <jim@meyering.net>
+
+	* posix/regexec.c (proceed_next_node): Redo local variables to
+	avoid GCC shadowing warnings.
+
+2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex_internal.c (re_acquire_state): Minor code rearrangement.
+	(re_acquire_state_context): Likewise.
+
+2005-08-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regex_internal.c (re_string_realloc_buffers):
+	(re_node_set_insert, re_node_set_insert_last, re_dfa_add_node):
+	Rename local variables to avoid GCC shadowing warnings.
+
+2005-07-08  Eric Blake  <ebb9@byu.net>
+            Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regcomp.c (init_dfa): Store __btowc value in wint_t, not
+	wchar_t.  Remove now-unnecessary cast.
+	(build_range_exp): Likewise.
+
+2005-08-31  Bob Wilson  <bob.wilson@acm.org>
+
+	* sysdeps/ieee754/flt-32/e_hypotf.c (__ieee754_hypotf):  Remove the
+	exponent bias from the increment value for scaling by 2^60.
+
+2005-09-05  Alexandre Oliva  <aoliva@redhat.com>
+
+	* configure.in: Compile source test file with -fPIC for -shared.
+
+2005-09-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/skeleton.c: Eliminate DEFINE_DIRECTION_OBJECTS macro use,
+	it wasn't used.  Remove use of from_object and to_object variable,
+	replace with some constants.  Adjust users.
+
+	* sysdeps/i386/bits/string.h: Removed.
+
+	* stdio-common/Makefile (tests): Add tst-put-error.
+	* stdio-common/tst-put-error.c: New file.
+	* libio/fileops.c (_IO_new_file_xsputn): If overflow fails and no more
+	data would have to be written signal error.
+	* libio/oldfileops.c (_IO_old_file_xsputn): Likewise.
+
+	* libio/fileops.c (_IO_new_file_overflow): Use NULL not 0.
+
+2005-09-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): No need to change
+	protection of memory used for the last segment.
+
+2005-08-22  Robert Millan  <robertmh@gnu.org>
+
+	* sysdeps/mach/hurd/nfs/nfs.h: Move to ...
+	* sysdeps/generic/nfs/nfs.h: ... here.
+
+2005-09-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/stdio.h: Remove __wur from ungetc, sscanf, and vsscanf.
+	Add __wur to feof{,_unlocked}, ferror{,_unlocked},
+	fileno{,_unlocked}, and popen.
+
+2005-08-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/flt-32/e_hypotf.c [!__STDC__]: Fix function name.
+
+2005-08-01  Bob Wilson  <bob.wilson@acm.org>
+	    Richard Sandiford  <richard@codesourcery.com>
+
+	* sysdeps/ieee754/flt-32/e_hypotf.c (__ieee754_hypotf): Add missing
+	exponent bias to the value for 2^126.
+
+2005-08-30  Jakub Jelinek  <jakub@redhat.com>
+	    Alan Modra  <amodra@bigpond.net.au>
+
+	* elf/dl-addr.c (_dl_addr): Use DL_ADDR_SYM_MATCH macro.
+	* sysdeps/generic/ldsodefs.h (DL_ADDR_SYM_MATCH): Define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ldsodefs.h: New file.
+
 2005-08-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd.c (main): Use error while process isn't running in the

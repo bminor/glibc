@@ -91,8 +91,6 @@
 # define inline
 #endif
 
-/* Number of bits in a byte.  */
-#define BYTE_BITS 8
 /* Number of single byte character.  */
 #define SBC_MAX 256
 
@@ -123,16 +121,16 @@ extern const char __re_error_msgid[] attribute_hidden;
 extern const size_t __re_error_msgid_idx[] attribute_hidden;
 
 /* Number of bits in an unsinged int.  */
-#define UINT_BITS (sizeof (unsigned int) * BYTE_BITS)
+#define UINT_BITS (sizeof (unsigned int) * CHAR_BIT)
 /* Number of unsigned int in an bit_set.  */
 #define BITSET_UINTS ((SBC_MAX + UINT_BITS - 1) / UINT_BITS)
 typedef unsigned int bitset[BITSET_UINTS];
 typedef unsigned int *re_bitset_ptr_t;
 typedef const unsigned int *re_const_bitset_ptr_t;
 
-#define bitset_set(set,i) (set[i / UINT_BITS] |= 1 << i % UINT_BITS)
-#define bitset_clear(set,i) (set[i / UINT_BITS] &= ~(1 << i % UINT_BITS))
-#define bitset_contain(set,i) (set[i / UINT_BITS] & (1 << i % UINT_BITS))
+#define bitset_set(set,i) (set[i / UINT_BITS] |= 1u << i % UINT_BITS)
+#define bitset_clear(set,i) (set[i / UINT_BITS] &= ~(1u << i % UINT_BITS))
+#define bitset_contain(set,i) (set[i / UINT_BITS] & (1u << i % UINT_BITS))
 #define bitset_empty(set) memset (set, 0, sizeof (unsigned int) * BITSET_UINTS)
 #define bitset_set_all(set) \
   memset (set, 255, sizeof (unsigned int) * BITSET_UINTS)
@@ -430,6 +428,21 @@ static unsigned char re_string_fetch_byte_case (re_string_t *pstr)
 #define re_string_skip_bytes(pstr,idx) ((pstr)->cur_idx += (idx))
 #define re_string_set_index(pstr,idx) ((pstr)->cur_idx = (idx))
 
+#include <alloca.h>
+
+#ifndef _LIBC
+# if HAVE_ALLOCA
+/* The OS usually guarantees only one guard page at the bottom of the stack,
+   and a page size can be as small as 4096 bytes.  So we cannot safely
+   allocate anything larger than 4096 bytes.  Also care for the possibility
+   of a few compiler-allocated temporary stack slots.  */
+#  define __libc_use_alloca(n) ((n) < 4032)
+# else
+/* alloca is implemented with malloc, so just use malloc.  */
+#  define __libc_use_alloca(n) 0
+# endif
+#endif
+
 #define re_malloc(t,n) ((t *) malloc ((n) * sizeof (t)))
 #define re_realloc(p,t,n) ((t *) realloc (p, (n) * sizeof (t)))
 #define re_free(p) free (p)
@@ -541,7 +554,6 @@ typedef struct
 {
   int str_idx;
   int node;
-  int next_last_offset;
   state_array_t *path;
   int alasts; /* Allocation size of LASTS.  */
   int nlasts; /* The number of LASTS.  */
@@ -564,9 +576,9 @@ typedef struct
   /* The string object corresponding to the input string.  */
   re_string_t input;
 #if defined _LIBC || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L)
-  re_dfa_t *const dfa;
+  const re_dfa_t *const dfa;
 #else
-  re_dfa_t *dfa;
+  const re_dfa_t *dfa;
 #endif
   /* EFLAGS of the argument of regexec.  */
   int eflags;
@@ -613,8 +625,8 @@ struct re_fail_stack_t
 struct re_dfa_t
 {
   re_token_t *nodes;
-  int nodes_alloc;
-  int nodes_len;
+  size_t nodes_alloc;
+  size_t nodes_len;
   int *nexts;
   int *org_indices;
   re_node_set *edests;
@@ -632,7 +644,6 @@ struct re_dfa_t
 
   /* number of subexpressions `re_nsub' is in regex_t.  */
   unsigned int state_hash_mask;
-  int states_alloc;
   int init_node;
   int nbackref; /* The number of backreference in this dfa.  */
 
@@ -688,10 +699,12 @@ static void re_node_set_remove_at (re_node_set *set, int idx) internal_function;
 #define re_node_set_empty(p) ((p)->nelem = 0)
 #define re_node_set_free(set) re_free ((set)->elems)
 static int re_dfa_add_node (re_dfa_t *dfa, re_token_t token) internal_function;
-static re_dfastate_t *re_acquire_state (reg_errcode_t *err, re_dfa_t *dfa,
-					const re_node_set *nodes) internal_function;
+static re_dfastate_t *re_acquire_state (reg_errcode_t *err, const
+					re_dfa_t *dfa,
+					const re_node_set *nodes)
+  internal_function;
 static re_dfastate_t *re_acquire_state_context (reg_errcode_t *err,
-						re_dfa_t *dfa,
+						const re_dfa_t *dfa,
 						const re_node_set *nodes,
 						unsigned int context) internal_function;
 static void free_state (re_dfastate_t *state) internal_function;

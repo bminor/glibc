@@ -26,16 +26,17 @@ static void re_string_construct_common (const char *str, int len,
 static int re_string_skip_chars (re_string_t *pstr, int new_raw_idx,
 				 wint_t *last_wc) internal_function;
 #endif /* RE_ENABLE_I18N */
-static reg_errcode_t register_state (re_dfa_t *dfa, re_dfastate_t *newstate,
+static reg_errcode_t register_state (const re_dfa_t *dfa,
+				     re_dfastate_t *newstate,
 				     unsigned int hash) internal_function;
-static re_dfastate_t *create_ci_newstate (re_dfa_t *dfa,
+static re_dfastate_t *create_ci_newstate (const re_dfa_t *dfa,
 					  const re_node_set *nodes,
 					  unsigned int hash) internal_function;
-static re_dfastate_t *create_cd_newstate (re_dfa_t *dfa,
+static re_dfastate_t *create_cd_newstate (const re_dfa_t *dfa,
 					  const re_node_set *nodes,
 					  unsigned int context,
 					  unsigned int hash) internal_function;
-static unsigned int inline calc_state_hash (const re_node_set *nodes,
+static inline unsigned int calc_state_hash (const re_node_set *nodes,
 					    unsigned int context) internal_function;
 
 /* Functions for string operation.  */
@@ -148,26 +149,26 @@ re_string_realloc_buffers (pstr, new_buf_len)
 #ifdef RE_ENABLE_I18N
   if (pstr->mb_cur_max > 1)
     {
-      wint_t *new_array = re_realloc (pstr->wcs, wint_t, new_buf_len);
-      if (BE (new_array == NULL, 0))
+      wint_t *new_wcs = re_realloc (pstr->wcs, wint_t, new_buf_len);
+      if (BE (new_wcs == NULL, 0))
 	return REG_ESPACE;
-      pstr->wcs = new_array;
+      pstr->wcs = new_wcs;
       if (pstr->offsets != NULL)
 	{
-	  int *new_array = re_realloc (pstr->offsets, int, new_buf_len);
-	  if (BE (new_array == NULL, 0))
+	  int *new_offsets = re_realloc (pstr->offsets, int, new_buf_len);
+	  if (BE (new_offsets == NULL, 0))
 	    return REG_ESPACE;
-	  pstr->offsets = new_array;
+	  pstr->offsets = new_offsets;
 	}
     }
 #endif /* RE_ENABLE_I18N  */
   if (pstr->mbs_allocated)
     {
-      unsigned char *new_array = re_realloc (pstr->mbs, unsigned char,
-					     new_buf_len);
-      if (BE (new_array == NULL, 0))
+      unsigned char *new_mbs = re_realloc (pstr->mbs, unsigned char,
+					   new_buf_len);
+      if (BE (new_mbs == NULL, 0))
 	return REG_ESPACE;
-      pstr->mbs = new_array;
+      pstr->mbs = new_mbs;
     }
   pstr->bufs_len = new_buf_len;
   return REG_NOERROR;
@@ -654,37 +655,50 @@ re_string_reconstruct (pstr, idx, eflags)
 		     byte other than 0x80 - 0xbf.  */
 		  raw = pstr->raw_mbs + pstr->raw_mbs_idx;
 		  end = raw + (offset - pstr->mb_cur_max);
-		  for (p = raw + offset - 1; p >= end; --p)
-		    if ((*p & 0xc0) != 0x80)
-		      {
-			mbstate_t cur_state;
-			wchar_t wc2;
-			int mlen = raw + pstr->len - p;
-			unsigned char buf[6];
+		  p = raw + offset - 1;
+#ifdef _LIBC
+		  /* We know the wchar_t encoding is UCS4, so for the simple
+		     case, ASCII characters, skip the conversion step.  */
+		  if (isascii (*p) && BE (pstr->trans == NULL, 1))
+		    {
+		      memset (&pstr->cur_state, '\0', sizeof (mbstate_t));
+		      pstr->valid_len = 0;
+		      wc = (wchar_t) *p;
+		    }
+		  else
+#endif
+		    for (; p >= end; --p)
+		      if ((*p & 0xc0) != 0x80)
+			{
+			  mbstate_t cur_state;
+			  wchar_t wc2;
+			  int mlen = raw + pstr->len - p;
+			  unsigned char buf[6];
+			  size_t mbclen;
 
-			q = p;
-			if (BE (pstr->trans != NULL, 0))
-			  {
-			    int i = mlen < 6 ? mlen : 6;
-			    while (--i >= 0)
-			      buf[i] = pstr->trans[p[i]];
-			    q = buf;
-			  }
-			/* XXX Don't use mbrtowc, we know which conversion
-			   to use (UTF-8 -> UCS4).  */
-			memset (&cur_state, 0, sizeof (cur_state));
-			mlen = (mbrtowc (&wc2, (const char *) p, mlen,
-					 &cur_state)
-				- (raw + offset - p));
-			if (mlen >= 0)
-			  {
-			    memset (&pstr->cur_state, '\0',
-				    sizeof (mbstate_t));
-			    pstr->valid_len = mlen;
-			    wc = wc2;
-			  }
-			break;
-		      }
+			  q = p;
+			  if (BE (pstr->trans != NULL, 0))
+			    {
+			      int i = mlen < 6 ? mlen : 6;
+			      while (--i >= 0)
+				buf[i] = pstr->trans[p[i]];
+			      q = buf;
+			    }
+			  /* XXX Don't use mbrtowc, we know which conversion
+			     to use (UTF-8 -> UCS4).  */
+			  memset (&cur_state, 0, sizeof (cur_state));
+			  mbclen = mbrtowc (&wc2, (const char *) p, mlen,
+					    &cur_state);
+			  if (raw + offset - p <= mbclen
+			      && mbclen < (size_t) -2)
+			    {
+			      memset (&pstr->cur_state, '\0',
+				      sizeof (mbstate_t));
+			      pstr->valid_len = mbclen - (raw + offset - p);
+			      wc = wc2;
+			    }
+			  break;
+			}
 		}
 
 	      if (wc == WEOF)
@@ -738,15 +752,15 @@ re_string_reconstruct (pstr, idx, eflags)
     }
   else
 #endif /* RE_ENABLE_I18N */
-  if (BE (pstr->mbs_allocated, 0))
-    {
-      if (pstr->icase)
-	build_upper_buffer (pstr);
-      else if (pstr->trans != NULL)
-	re_string_translate_buffer (pstr);
-    }
-  else
-    pstr->valid_len = pstr->len;
+    if (BE (pstr->mbs_allocated, 0))
+      {
+	if (pstr->icase)
+	  build_upper_buffer (pstr);
+	else if (pstr->trans != NULL)
+	  re_string_translate_buffer (pstr);
+      }
+    else
+      pstr->valid_len = pstr->len;
 
   pstr->cur_idx = 0;
   return REG_NOERROR;
@@ -1227,12 +1241,12 @@ re_node_set_insert (set, elem)
   /* Realloc if we need.  */
   if (set->alloc == set->nelem)
     {
-      int *new_array;
+      int *new_elems;
       set->alloc = set->alloc * 2;
-      new_array = re_realloc (set->elems, int, set->alloc);
-      if (BE (new_array == NULL, 0))
+      new_elems = re_realloc (set->elems, int, set->alloc);
+      if (BE (new_elems == NULL, 0))
 	return -1;
-      set->elems = new_array;
+      set->elems = new_elems;
     }
 
   /* Move the elements which follows the new element.  Test the
@@ -1267,12 +1281,12 @@ re_node_set_insert_last (set, elem)
   /* Realloc if we need.  */
   if (set->alloc == set->nelem)
     {
-      int *new_array;
+      int *new_elems;
       set->alloc = (set->alloc + 1) * 2;
-      new_array = re_realloc (set->elems, int, set->alloc);
-      if (BE (new_array == NULL, 0))
+      new_elems = re_realloc (set->elems, int, set->alloc);
+      if (BE (new_elems == NULL, 0))
 	return -1;
-      set->elems = new_array;
+      set->elems = new_elems;
     }
 
   /* Insert the new element.  */
@@ -1345,15 +1359,19 @@ re_dfa_add_node (dfa, token)
   int type = token.type;
   if (BE (dfa->nodes_len >= dfa->nodes_alloc, 0))
     {
-      int new_nodes_alloc = dfa->nodes_alloc * 2;
+      size_t new_nodes_alloc = dfa->nodes_alloc * 2;
       int *new_nexts, *new_indices;
       re_node_set *new_edests, *new_eclosures;
+      re_token_t *new_nodes;
 
-      re_token_t *new_array = re_realloc (dfa->nodes, re_token_t,
-					  new_nodes_alloc);
-      if (BE (new_array == NULL, 0))
+      /* Avoid overflows.  */
+      if (BE (new_nodes_alloc < dfa->nodes_alloc, 0))
 	return -1;
-      dfa->nodes = new_array;
+
+      new_nodes = re_realloc (dfa->nodes, re_token_t, new_nodes_alloc);
+      if (BE (new_nodes == NULL, 0))
+	return -1;
+      dfa->nodes = new_nodes;
       new_nexts = re_realloc (dfa->nexts, int, new_nodes_alloc);
       new_indices = re_realloc (dfa->org_indices, int, new_nodes_alloc);
       new_edests = re_realloc (dfa->edests, re_node_set, new_nodes_alloc);
@@ -1379,7 +1397,7 @@ re_dfa_add_node (dfa, token)
   return dfa->nodes_len++;
 }
 
-static unsigned int inline
+static inline unsigned int
 calc_state_hash (nodes, context)
      const re_node_set *nodes;
      unsigned int context;
@@ -1403,7 +1421,7 @@ calc_state_hash (nodes, context)
 static re_dfastate_t*
 re_acquire_state (err, dfa, nodes)
      reg_errcode_t *err;
-     re_dfa_t *dfa;
+     const re_dfa_t *dfa;
      const re_node_set *nodes;
 {
   unsigned int hash;
@@ -1429,13 +1447,10 @@ re_acquire_state (err, dfa, nodes)
 
   /* There are no appropriate state in the dfa, create the new one.  */
   new_state = create_ci_newstate (dfa, nodes, hash);
-  if (BE (new_state != NULL, 1))
-    return new_state;
-  else
-    {
-      *err = REG_ESPACE;
-      return NULL;
-    }
+  if (BE (new_state == NULL, 0))
+    *err = REG_ESPACE;
+
+  return new_state;
 }
 
 /* Search for the state whose node_set is equivalent to NODES and
@@ -1451,7 +1466,7 @@ re_acquire_state (err, dfa, nodes)
 static re_dfastate_t*
 re_acquire_state_context (err, dfa, nodes, context)
      reg_errcode_t *err;
-     re_dfa_t *dfa;
+     const re_dfa_t *dfa;
      const re_node_set *nodes;
      unsigned int context;
 {
@@ -1477,13 +1492,10 @@ re_acquire_state_context (err, dfa, nodes, context)
     }
   /* There are no appropriate state in `dfa', create the new one.  */
   new_state = create_cd_newstate (dfa, nodes, context, hash);
-  if (BE (new_state != NULL, 1))
-    return new_state;
-  else
-    {
-      *err = REG_ESPACE;
-      return NULL;
-    }
+  if (BE (new_state == NULL, 0))
+    *err = REG_ESPACE;
+
+  return new_state;
 }
 
 /* Finish initialization of the new state NEWSTATE, and using its hash value
@@ -1492,7 +1504,7 @@ re_acquire_state_context (err, dfa, nodes, context)
 
 static reg_errcode_t
 register_state (dfa, newstate, hash)
-     re_dfa_t *dfa;
+     const re_dfa_t *dfa;
      re_dfastate_t *newstate;
      unsigned int hash;
 {
@@ -1531,7 +1543,7 @@ register_state (dfa, newstate, hash)
 
 static re_dfastate_t *
 create_ci_newstate (dfa, nodes, hash)
-     re_dfa_t *dfa;
+     const re_dfa_t *dfa;
      const re_node_set *nodes;
      unsigned int hash;
 {
@@ -1582,7 +1594,7 @@ create_ci_newstate (dfa, nodes, hash)
 
 static re_dfastate_t *
 create_cd_newstate (dfa, nodes, context, hash)
-     re_dfa_t *dfa;
+     const re_dfa_t *dfa;
      const re_node_set *nodes;
      unsigned int context, hash;
 {
