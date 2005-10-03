@@ -1,6 +1,500 @@
+2005-10-03  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/nofpu: Directory removed, saved in ports repository.
+
+2005-09-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.h: Pretty printing.
+	Clean up namespace a bit.
+
+2005-09-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regexec.c (update_cur_sifted_state, check_arrival,
+	check_arrival_add_next_nodes): Avoid using uninitialized variable.
+
+	* malloc/memusage.c (dest): Fix a bunch of warnings on 32-bit arches.
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update for GCC 4.0.x.
+
+2005-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile (modules): Add IBM803, IBM901, IBM902, IBM921,
+	IBM1008, IBM1008_420, IBM1097, IBM1112, IBM1123, IBM1130, IBM1140,
+	IBM1141, IBM1142, IBM1143, IBM1144, IBM1145, IBM1146, IBM1147, IBM1148,
+	IBM1149, IBM1166, IBM1167, IBM4517, IBM4899, IBM4909, IBM4971,
+	IBM5347, IBM9030, IBM9066, IBM9448, IBM12712, IBM16804.
+	(distribute): Add ibm803.c, ibm803.h, ibm901.c, ibm901.h, ibm902.c,
+	ibm902.h, ibm921.c, ibm921.h, ibm1008.c, ibm1008.h, ibm1008_420.c,
+	ibm1097.c, ibm1097.h, ibm1112.c, ibm1112.h, ibm1123.c, ibm1123.h,
+	ibm1130.c, ibm1130.h, ibm1140.c, ibm1140.h, ibm1141.c, ibm1141.h,
+	ibm1142.c, ibm1142.h, ibm1143.c, ibm1143.h, ibm1144.c, ibm1144.h,
+	ibm1145.c, ibm1145.h, ibm1146.c, ibm1146.h, ibm1147.c, ibm1147.h,
+	ibm1148.c, ibm1148.h, ibm1149.c, ibm1149.h, ibm1166.c, ibm1166.h,
+	ibm1167.c, ibm1167.h, ibm4517.c, ibm4517.h, ibm4899.c, ibm4899.h,
+	ibm4909.c, ibm4909.h, ibm4971.c, ibm4971.h, ibm5347.c, ibm5347.h,
+	ibm9030.c, ibm9030.h, ibm9066.c, ibm9066.h, ibm9448.c, ibm9448.h,
+	ibm12712.c, ibm12712.h, ibm16804.c, ibm16804.h.
+	* iconvdata/TESTS: Add entries for new modules.
+	* iconvdata/gconv-modules: Likewise.
+	* iconvdata/ibm803.c: New file.
+	* iconvdata/ibm803.h: New file.
+	* iconvdata/ibm901.c: New file.
+	* iconvdata/ibm901.h: New file.
+	* iconvdata/ibm902.c: New file.
+	* iconvdata/ibm902.h: New file.
+	* iconvdata/ibm921.c: New file.
+	* iconvdata/ibm921.h: New file.
+	* iconvdata/ibm1008.c: New file.
+	* iconvdata/ibm1008.h: New file.
+	* iconvdata/ibm1008_420.c: New file.
+	* iconvdata/ibm1097.c: New file.
+	* iconvdata/ibm1097.h: New file.
+	* iconvdata/ibm1112.c: New file.
+	* iconvdata/ibm1112.h: New file.
+	* iconvdata/ibm1123.c: New file.
+	* iconvdata/ibm1123.h: New file.
+	* iconvdata/ibm1130.c: New file.
+	* iconvdata/ibm1130.h: New file.
+	* iconvdata/ibm1140.c: New file.
+	* iconvdata/ibm1140.h: New file.
+	* iconvdata/ibm1141.c: New file.
+	* iconvdata/ibm1141.h: New file.
+	* iconvdata/ibm1142.c: New file.
+	* iconvdata/ibm1142.h: New file.
+	* iconvdata/ibm1143.c: New file.
+	* iconvdata/ibm1143.h: New file.
+	* iconvdata/ibm1144.c: New file.
+	* iconvdata/ibm1144.h: New file.
+	* iconvdata/ibm1145.c: New file.
+	* iconvdata/ibm1145.h: New file.
+	* iconvdata/ibm1146.c: New file.
+	* iconvdata/ibm1146.h: New file.
+	* iconvdata/ibm1147.c: New file.
+	* iconvdata/ibm1147.h: New file.
+	* iconvdata/ibm1148.c: New file.
+	* iconvdata/ibm1148.h: New file.
+	* iconvdata/ibm1149.c: New file.
+	* iconvdata/ibm1149.h: New file.
+	* iconvdata/ibm1166.c: New file.
+	* iconvdata/ibm1166.h: New file.
+	* iconvdata/ibm1167.c: New file.
+	* iconvdata/ibm1167.h: New file.
+	* iconvdata/ibm4517.c: New file.
+	* iconvdata/ibm4517.h: New file.
+	* iconvdata/ibm4899.c: New file.
+	* iconvdata/ibm4899.h: New file.
+	* iconvdata/ibm4909.c: New file.
+	* iconvdata/ibm4909.h: New file.
+	* iconvdata/ibm4971.c: New file.
+	* iconvdata/ibm4971.h: New file.
+	* iconvdata/ibm5347.c: New file.
+	* iconvdata/ibm5347.h: New file.
+	* iconvdata/ibm9030.c: New file.
+	* iconvdata/ibm9030.h: New file.
+	* iconvdata/ibm9066.c: New file.
+	* iconvdata/ibm9066.h: New file.
+	* iconvdata/ibm9448.c: New file.
+	* iconvdata/ibm9448.h: New file.
+	* iconvdata/ibm12712.c: New file.
+	* iconvdata/ibm12712.h: New file.
+	* iconvdata/ibm16804.c: New file.
+	* iconvdata/ibm16804.h: New file.
+	* iconvdata/testdata/IBM803: New file.
+	* iconvdata/testdata/IBM803..UTF8: New file.
+	* iconvdata/testdata/IBM901: New file.
+	* iconvdata/testdata/IBM901..UTF8: New file.
+	* iconvdata/testdata/IBM902: New file.
+	* iconvdata/testdata/IBM902..UTF8: New file.
+	* iconvdata/testdata/IBM921: New file.
+	* iconvdata/testdata/IBM921..UTF8: New file.
+	* iconvdata/testdata/IBM1008: New file.
+	* iconvdata/testdata/IBM1008..UTF8: New file.
+	* iconvdata/testdata/IBM1097: New file.
+	* iconvdata/testdata/IBM1097..UTF8: New file.
+	* iconvdata/testdata/IBM1112: New file.
+	* iconvdata/testdata/IBM1112..UTF8: New file.
+	* iconvdata/testdata/IBM1123: New file.
+	* iconvdata/testdata/IBM1123..UTF8: New file.
+	* iconvdata/testdata/IBM1130: New file.
+	* iconvdata/testdata/IBM1130..UTF8: New file.
+	* iconvdata/testdata/IBM1140: New file.
+	* iconvdata/testdata/IBM1140..UTF8: New file.
+	* iconvdata/testdata/IBM1141: New file.
+	* iconvdata/testdata/IBM1141..UTF8: New file.
+	* iconvdata/testdata/IBM1142: New file.
+	* iconvdata/testdata/IBM1142..UTF8: New file.
+	* iconvdata/testdata/IBM1143: New file.
+	* iconvdata/testdata/IBM1143..UTF8: New file.
+	* iconvdata/testdata/IBM1144: New file.
+	* iconvdata/testdata/IBM1144..UTF8: New file.
+	* iconvdata/testdata/IBM1145: New file.
+	* iconvdata/testdata/IBM1145..UTF8: New file.
+	* iconvdata/testdata/IBM1146: New file.
+	* iconvdata/testdata/IBM1146..UTF8: New file.
+	* iconvdata/testdata/IBM1147: New file.
+	* iconvdata/testdata/IBM1147..UTF8: New file.
+	* iconvdata/testdata/IBM1148: New file.
+	* iconvdata/testdata/IBM1148..UTF8: New file.
+	* iconvdata/testdata/IBM1149: New file.
+	* iconvdata/testdata/IBM1149..UTF8: New file.
+	* iconvdata/testdata/IBM1166: New file.
+	* iconvdata/testdata/IBM1166..UTF8: New file.
+	* iconvdata/testdata/IBM1167: New file.
+	* iconvdata/testdata/IBM1167..UTF8: New file.
+	* iconvdata/testdata/IBM4517: New file.
+	* iconvdata/testdata/IBM4517..UTF8: New file.
+	* iconvdata/testdata/IBM4899: New file.
+	* iconvdata/testdata/IBM4899..UTF8: New file.
+	* iconvdata/testdata/IBM4909: New file.
+	* iconvdata/testdata/IBM4909..UTF8: New file.
+	* iconvdata/testdata/IBM4971: New file.
+	* iconvdata/testdata/IBM4971..UTF8: New file.
+	* iconvdata/testdata/IBM5347: New file.
+	* iconvdata/testdata/IBM5347..UTF8: New file.
+	* iconvdata/testdata/IBM9030: New file.
+	* iconvdata/testdata/IBM9030..UTF8: New file.
+	* iconvdata/testdata/IBM9066: New file.
+	* iconvdata/testdata/IBM9066..UTF8: New file.
+	* iconvdata/testdata/IBM9448: New file.
+	* iconvdata/testdata/IBM9448..UTF8: New file.
+	* iconvdata/testdata/IBM12712: New file.
+	* iconvdata/testdata/IBM12712..UTF8: New file.
+	* iconvdata/testdata/IBM16804: New file.
+	* iconvdata/testdata/IBM16804..UTF8: New file.
+	Patch by Masahide WASHIZAWA <washi@jp.ibm.com>.
+
+	* iconvdata/run-iconv-test.sh: Run ASCII->encoding->ASCII suntzus
+	test only if $subset is N.
+
+2005-09-29  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1392]
+	* posix/sys/wait.h [!__GNUC__ || __cplusplus] (__WAIT_INT): Use const.
+
+2005-09-29  Alfred M. Szmidt  <ams@gnu.org>
+
+	* elf/rtld.c [DL_ARGV_NOT_RELRO] (_dl_argc, _dl_skip_args):
+	Don't use attribute_relro.
+
+2005-09-29  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1392]
+	* posix/sys/wait.h (__WAIT_INT): Rewrite using an initializer,
+	in case __typeof yields a const-qualified type.
+
+2005-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* dirent/dirent.h: Declare fdopendir.
+	* dirent/Versions: Export fdopendir for GLIBC_2.4.
+	* dirent/Makefile (routines): Add fdopendir.
+	(tests): Add tst-fdopendir.
+	* dirent/tst-fdopendir.c: New file.
+	* include/dirent.h: Declare __alloc_dir.
+	* sysdeps/generic/fdopendir.c: New file.
+	* sysdeps/unix/fdopendir.c: New file.
+	* sysdeps/unix/opendir.c: Split off back part of opendir into new
+	function __alloc_dir.
+
+2005-09-26  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #1384]
+	* sysdeps/powerpc/fpu/libm-test-ulps: Adjust expected y1, y1f, yn,
+	ynf results.
+
+2005-09-06  Paul Eggert  <eggert@cs.ucla.edu>
+            Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1302]
+	Change bitset word type from unsigned int to unsigned long int,
+	as this has better performance on typical 64-bit hosts.  Change
+	bitset type name to bitset_t.
+	* posix/regcomp.c (build_equiv_class, build_charclass):
+	(build_range_exp, build_collating_symbol):
+	Prefer bitset_t to re_bitset_ptr_t in prototypes, when the actual
+	argument is a bitset.  This is merely a style issue, but it makes
+	it clearer that an entire array is expected.
+	(re_compile_fastmap_iter, init_dfa, init_word_char, optimize_subexps,
+	lower_subexp): Adjust for new bitset_t definition.
+	(lower_subexp, parse_bracket_exp, built_charclass_op): Likewise.
+	* posix/regex_internal.h (bitset_set, bitset_clear, bitset_contain,
+	bitset_not, bitset_merge, bitset_set_all, bitset_mask): Likewise.
+	* posix/regexec.c (check_dst_limits_calc_pos_1,
+	check_subexp_matching_top, build_trtable, group_nodes_into_DFAstates):
+	Likewise.
+	* posix/regcomp.c (utf8_sb_map): Don't assume initializer
+	== 0xffffffff.
+	* posix/regex_internal.h (BITSET_WORD_BITS): Renamed from UINT_BITS.
+	All uses changed.
+	(BITSET_WORDS): Renamed from BITSET_UINTS.  All uses changed.
+	(bitset_word_t): New type, replacing 'unsigned int' for bitset uses.
+	All uses changed.
+	(BITSET_WORD_MAX): New macro.
+	(bitset_set, bitset_clear, bitset_contain, bitset_empty,
+	(bitset_set_all, bitset_copy):  Adjust for bitset_t change.
+	(bitset_empty, bitset_copy):
+	Prefer sizeof (bitset_t) to multiplying it out ourselves.
+	(bitset_not_merge): Remove; unused.
+	(bitset_contain): Return bool, not unsigned int with one bit on.
+	All callers changed.
+	* posix/regexec.c (build_trtable): Don't assume bitset_t has no
+	stricter alignment than re_node_set; do this by defining a new
+	internal type struct dests_alloc and using it to allocate memory.
+
+2005-09-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1230]
+	* stdlib/strtod_l.c (STRNCASECMP): Always use C locale object.
+	(TOLOWER_C): Define.  Use it when recognizing inf and nan.
+	* stdlib/Makefile (tests): Add bug-strtod2.
+	* stdlib/bug-strtod2.c: New file.
+
+2005-09-21  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	[BZ #1361]
+	* argp/argp-fmtstream.h [HAVE_CONFIG_H]: Do not #include <config.h>.
+	* argp/argp-eexst.c, argp/argp-fmtstream.c, argp/argp-fs-xinl.c,
+	argp/argp-xinl.c: Fix up whitespace.
+
+2005-09-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1158]
+	* stdlib/cxa_atexit.c (__new_exitfn): Rewrite to preserve order in
+	which the functions were registered.
+	* dlfcn/Makefile: Add rules to build and run bug-atexit1 and
+	bug-atexit2.
+	* dlfcn/bug-atexit1.c: New file.
+	* dlfcn/bug-atexit1-lib.c: New file.
+	* dlfcn/bug-atexit2.c: New file.
+	* dlfcn/bug-atexit2-lib.c: New file.
+
+	[BZ #1078]
+	* libio/fileops.c (_IO_new_file_xsputn): Determine amount of
+	available space in non-line-buffered buffer correctly.
+	* libio/oldfileops.c (_IO_old_file_xsputn): Likewise.
+	* stdio-common/Makefile (tests): Add tst-fwrite.
+	* stdio-common/tst-fwrite.c: New file.
+
+2005-09-26  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #838]
+	* malloc/arena.c (ptmalloc_lock_all): If global lock already taken
+	by the same thread, just bump the counter.
+	(ptmalloc_unlock_all): If counter for recursive locks hasn't reached
+	zero, don't do anything else.
+	* malloc/Makefile (tests): Add tst-mallocfork.
+	* malloc/tst-mallocfork.c: New file.
+
+	[BZ #808]
+	* malloc/malloc.c (_int_realloc): Make error message clearer.
+
+	[BZ #713]
+	* libio/iofgets.c: Treat N==1 correctly.
+	* libio/iofgets_u.c: Likewise.
+	* libio/iofgetws.c: Likewise.
+	* libio/iofgetws_u.c: Likewise.
+	* stdio-common/Makefile (tests): Add tst-fgets.
+	* stdio-common/tst-fgets.c: New file.
+
+2005-01-11  Thorsten Kukuk  <kukuk@suse.de>
+
+	[BZ #652]
+	* posix/getconf.c: Add new option -a to print the names of
+	the current system configuration variables to stdout.
+	Based on patch from Josh Aas <josha@sgi.com>.
+
+2005-09-26  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #644]
+	* sysdeps/posix/getaddrinfo.c (fls): New function.
+	(gaih_inet): Don't use ffs, use fls.  Convert address to native byte
+	order first.
+	* posix/Makefile (tests): Add tst-rfc3484.
+	* posix/tst-rfc3484.c: New file.
+
+	[BZ #627]
+	* libio/iofclose.c (_IO_new_fclose): Unlock the internal lock
+	before destroying it as part of the _IO_FINISH call.
+	* libio/oldiofclose.c (_IO_old_fclose): Likewise.
+
+	[BZ #524]
+	* sysdeps/posix/getaddrinfo.c (match_prefix): Fix matching loop if
+	number of bits is multiple of 8.
+	Patch by Fredrik Tolf <fredrik@dolda2000.com>.
+
+	[BZ #516]
+	* elf/dl-load.c: Report failed loading due to ELF class mismatch
+	with better words.
+
+	[BZ #162]
+	* manual/llio.texi (Waiting for I/O): Correct description of read
+	conditions reported by select.
+
+2005-09-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/getnetgrent_r.c (innetgr): Call endfct even if result != 0.
+	Return 1 only if result == 1.  Patch by Benoit Capelle.
+
+2005-09-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #278]
+	* manual/stdio.texi (Hook Functions): Correct type of position
+	parameter of seeker and fix fallout of the change in the text.
+
+	[BZ #714]
+	* iconv/loop.c [!STORE_REST] (SINGLE): Correctly record number of
+	left-over bytes and store them correctly.
+	* wcsmbs/tst-mbrtowc2.c: New file.
+	* wcsmbs/Makefile (tests): Add tst-mbrtowc2.
+
+2005-09-24  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/i386/signal.S: Removed, saved in ports repository.
+	* sysdeps/unix/sysv/i386/sigreturn.S: Likewise.
+
+2005-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #545]
+	* locale/iso-639.def: More updates from the current spec.
+
+	* locale/programs/ld-address.c (address_finish): Produce better
+	error messages for invalid lang_ab use.
+
+	* locale/iso-639.def: Add a few updates from current spec.
+
+2005-09-23  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #704]
+	* locale/iso-4217.def: Replace MGF with MGA.
+
+	* iconvdata/jis0208.c (__jisx0208_from_ucs4_lat1): Reduce size of
+	array.
+	* iconvdata/jis0208.h (ucs4_to_jisx0208): Adjust access.
+
+2004-08-13  GOTO Masanori  <gotom@debian.or.jp>
+
+	[BZ #395]
+	* iconvdata/jis0208.c: Remove 0x005C mapping from
+	__jisx0208_from_ucs4_lat1.
+	Reported by Fumitoshi UKAI <ukai@debian.or.jp>
+
+2005-09-23  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #394]
+	* libio/fmemopen.c (fmemopen_write): Return 0 instead of -1 if
+	nothing can be written.
+	* libio/iofopncook.c (_IO_cookie_write): If something went wrong,
+	set error bit.
+
+2005-09-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #281]
+	* posix/regex.h: Define RE_TRANSLATE_TYPE as unsigned char *.
+	* posix/regcomp.c: Remove unnecessary uses of
+	unsigned RE_TRANSLATE_TYPE.
+	* posix/regex_internal.h: Likewise.
+	* posix/regex_internal.c: Likewise.
+	* posix/regexexec.c: Likewise.
+	Based on a patch by Stepan Kasal <kasal@ucw.cz>.
+
+	[BZ #1035]
+	* locale/iso-4217.def: Replace TRL entry with TRY for new Turkish Lira.
+
+	[BZ #1363]
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Remove incorrectly C&Ped
+	free call in code handling detection of GC runs.
+
+2005-09-22  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-tsd.c (__libc_dl_error_tsd): Use attribute_tls_model_ie for
+	static __thread variable.
+	From Alexandre Oliva <aoliva@redhat.com>
+
+	* Makefile ($(objpfx)c++-types-check.out): Use $<, not $^, in command.
+	Reported by Alexandre Oliva <aoliva@redhat.com>.
+
+2005-09-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/dbg_log.c (init_logfile): Use fopen64 rather than fopen.
+
+2005-09-20  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/lddlibc4.c (main): Use execv, not execl.
+
+	[BZ #1346]
+	* elf/dl-load.c (_dl_map_object_from_fd) [HAVE_Z_RELRO]: Do relro
+	magic on __stack_prot only if [SHARED].  Skip mprotect if __stack_prot
+	lies outside the page-rounded-down relro region.
+
+2005-09-19  Richard Henderson  <rth@redhat.com>
+
+	[BZ #1358]
+	* sysdeps/unix/alpha/sysdep.h (inline_syscall1): Copy argument(s)
+	to a temporary first.
+	(inline_syscall2, inline_syscall3, inline_syscall4): Likewise.
+	(inline_syscall5, inline_syscall6): Likewise.
+
+	* sysdeps/alpha/ldiv.S (lldiv): Add alias.
+
+2005-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1010]
+	* sysdeps/unix/sockatmark.c (sockatmark): Use SIOCATMARK correctly.
+
+	[BZ #1053]
+	* debug/xtrace.sh: Add missing escape character in -? match.
+	Patch by Peter Breitenlohner <peb@mppmu.mpg.de>.
+
+	[BZ #1051]
+	* wctype/wctype.h: Remove stray __END_NAMESPACE_C99.
+	* stdlib/stdlib.h: Use __END_NAMESPACE_STD instead of
+	__END_NAMESPACE_C99 in one place.
+	* scripts/begin-end-check.pl: New file.
+	Patch by Ralph Loader <suckfish@ihug.co.nz>.
+	* Makefile: Add rules to run scripts/begin-end-check.pl.
+
+2005-09-17  Andreas Jaeger  <aj@suse.de>
+
+	* timezone/zdump.c: Include ctype.h.
+
+2005-09-16  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #1047]
+	* sysdeps/unix/sysv/linux/mips/getpagesize.c: New file.
+
+2005-09-16  Maciej W. Rozycki  <macro@linux-mips.org>
+
+	[BZ #933]
+	* sysdeps/unix/sysv/linux/mips/brk.c (__brk): Load the number of
+	the syscall immediately before invocation.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/ioctl.S (__ioctl): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscall.S (syscall): Likewise.
+
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/ioctl.S (__ioctl): Use
+	macros to handle GP.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscall.S (syscall):
+	Likewise.  Update inaccurate comments.
+
+2005-09-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/spawni.c (__spawni): Automatically recognize some
+	more cases when we can use vfork.
+
+2005-08-29  Thomas Schwinge  <schwinge@nic-nac-project.de>
+
+	[BZ #1261]
+	* manual/memory.texi (Hooks for Malloc): Correct prototype of
+	my_init_hook and definition of my_free_hook.
+
+2005-09-12  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1331]
+	* malloc/obstack.h [!__STDC__] (obstack_int_grow_fast): Fix misnamed
+	macro argument.
+	Reported by Matej Vela <vela@debian.org>.
+
 2005-09-12  Jakub Jelinek  <jakub@redhat.com>
 
-	* malloc.c (struct malloc_chunk): Fix comment typo.
+	* malloc/malloc.c (struct malloc_chunk): Fix comment typo.
 	(public_cALLOc): For mmapped chunks and perturb_byte != 0,
 	don't clear SIZE_SZ bytes more than should be cleared.
 

@@ -1,3 +1,95 @@
+2005-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_US: Fix postal_fmt.
+	* locales/es_US: Update LC_ADDRESS info from en_US.
+	Reported by FrankTang@gmail.com.
+
+2005-09-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #811]
+	* locales/zh_CN: Fix date_fmt information.
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add km_KH.
+
+	[BZ #826]
+	* locales/km_KH: New file.
+
+	* Makefile (LOCALES): Add zh_TW.EUC-TW.
+
+2005-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #668]
+	* locales/yi_US: Spelling fixes.
+
+	[BZ #667]
+	* locales/wa_BE: Fixed weekday names to match new orthographic rules.
+
+	[BZ #666]
+	* locales/tg_TJ: Correct yesexpr.
+
+	[BZ #665]
+	* locales/sq_AL: Add language specific collation.
+
+	[BZ #663]
+	* locales/bs_BA: Don't comment out reorder-after.  Fix tel_int_fmt.
+
+	[BZ #662]
+	* locales/az_AZ: Fix the day and month names.  Add transliteration
+	for schwa character.
+
+	[BZ #657]
+	* locales/bn_BD: Some corrections.
+	Patch by Jamil Ahmed <jamil@bengalinux.org>.
+
+	[BZ #588]
+	* locales/el_GR: Change to use 12h time format.
+	Patch by Konstantinos Margaritis <markos@debian.org>.
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add hsb_DE and hsb_DE.UTF-8.
+
+	[BZ #566]
+	* locales/hsb_DE: New file.
+
+	[BZ #527]
+	* locales/sid_ET: Remove incorrect lang_ab definition.
+
+	[BZ #525]
+	* locales/ru_RU: Use nominative instead of genitive in mon data to
+	align with other locales with the same issue.
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add ky_KG.
+
+	[BZ #520]
+	* locales/ky_KG: New file.
+
+	[BZ #495]
+	* locales/st_ZA: Updates and corrections.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	[BZ #493]
+	* locales/xh_ZA: Updates and corrections.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	[BZ #488]
+	* locales/zu_ZA: Updates and corrections.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	[BZ #484]
+	* locales/af_ZA: Updates and corrections.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add be_BY@latin.
+
+	[BZ #1347]
+	* locales/be_BY@latin: New file.
+
+2005-09-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add mg_MG and mg_MG.UTF-8.
+
+	[BZ #704]
+	* locales/mg_MG: New file.
+
 2005-07-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/hu_HU: Better collation.

@@ -1354,22 +1354,36 @@ cannot allocate TLS data structures for initial thread");
 
   if (__builtin_expect ((stack_flags &~ GL(dl_stack_flags)) & PF_X, 0))
     {
+      if (__builtin_expect (__check_caller (RETURN_ADDRESS (0), allow_ldso),
+			    0) != 0)
+	{
+	  errstring = N_("invalid caller");
+	  goto call_lose;
+	}
+
       /* The stack is presently not executable, but this module
 	 requires that it be executable.  We must change the
 	 protection of the variable which contains the flags used in
 	 the mprotect calls.  */
-#ifdef HAVE_Z_RELRO
+#if defined HAVE_Z_RELRO && defined SHARED
       if ((mode & (__RTLD_DLOPEN | __RTLD_AUDIT)) == __RTLD_DLOPEN)
 	{
-	  uintptr_t p = ((uintptr_t) &__stack_prot) & ~(GLRO(dl_pagesize) - 1);
-	  size_t s = (uintptr_t) &__stack_prot - p + sizeof (int);
+	  const uintptr_t p = (uintptr_t) &__stack_prot & -GLRO(dl_pagesize);
+	  const size_t s = (uintptr_t) (&__stack_prot + 1) - p;
 
-	  __mprotect ((void *) p, s, PROT_READ|PROT_WRITE);
-	  if (__builtin_expect (__check_caller (RETURN_ADDRESS (0),
-						allow_ldso) == 0,
-				0))
+	  struct link_map *const m = &GL(dl_rtld_map);
+	  const uintptr_t relro_end = ((m->l_addr + m->l_relro_addr
+					+ m->l_relro_size)
+				       & -GLRO(dl_pagesize));
+	  if (__builtin_expect (p + s <= relro_end, 1))
+	    {
+	      /* The variable lies in the region protected by RELRO.  */
+	      __mprotect ((void *) p, s, PROT_READ|PROT_WRITE);
+	      __stack_prot |= PROT_READ|PROT_WRITE|PROT_EXEC;
+	      __mprotect ((void *) p, s, PROT_READ);
+	    }
+	  else
 	    __stack_prot |= PROT_READ|PROT_WRITE|PROT_EXEC;
-	  __mprotect ((void *) p, s, PROT_READ);
 	}
       else
 #endif
@@ -1538,7 +1552,7 @@ print_search_path (struct r_search_path_elem **list,
    user might want to know about this.  */
 static int
 open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
-	     int whatcode)
+	     int whatcode, bool *found_other_class)
 {
   /* This is the expected ELF header.  */
 #define ELF32_CLASS ELFCLASS32
@@ -1642,10 +1656,13 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 	      )
 	    errstring = N_("invalid ELF header");
 	  else if (ehdr->e_ident[EI_CLASS] != ELFW(CLASS))
-	    /* This is not a fatal error.  On architectures where
-	       32-bit and 64-bit binaries can be run this might
-	       happen.  */
-	    goto close_and_out;
+	    {
+	      /* This is not a fatal error.  On architectures where
+		 32-bit and 64-bit binaries can be run this might
+		 happen.  */
+	      *found_other_class = true;
+	      goto close_and_out;
+	    }
 	  else if (ehdr->e_ident[EI_DATA] != byteorder)
 	    {
 	      if (BYTE_ORDER == BIG_ENDIAN)
@@ -1752,7 +1769,8 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 static int
 open_path (const char *name, size_t namelen, int preloaded,
 	   struct r_search_path_struct *sps, char **realname,
-	   struct filebuf *fbp, struct link_map *loader, int whatcode)
+	   struct filebuf *fbp, struct link_map *loader, int whatcode,
+	   bool *found_other_class)
 {
   struct r_search_path_elem **dirs = sps->dirs;
   char *buf;
@@ -1801,7 +1819,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
 	    _dl_debug_printf ("  trying file=%s\n", buf);
 
-	  fd = open_verify (buf, fbp, loader, whatcode);
+	  fd = open_verify (buf, fbp, loader, whatcode, found_other_class);
 	  if (this_dir->status[cnt] == unknown)
 	    {
 	      if (fd != -1)
@@ -1976,6 +1994,9 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
     }
 #endif
 
+  /* Will be true if we found a DSO which is of the other ELF class.  */
+  bool found_other_class = false;
+
   if (strchr (name, '/') == NULL)
     {
       /* Search for NAME in several places.  */
@@ -1996,7 +2017,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  for (l = loader; fd == -1 && l; l = l->l_loader)
 	    if (cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
 	      fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
-			      &realname, &fb, loader, LA_SER_RUNPATH);
+			      &realname, &fb, loader, LA_SER_RUNPATH,
+			      &found_other_class);
 
 	  /* If dynamically linked, try the DT_RPATH of the executable
              itself.  NB: we do this for lookups in any namespace.  */
@@ -2006,7 +2028,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	      if (l && l->l_type != lt_loaded && l != loader
 		  && cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
 		fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
-				&realname, &fb, loader ?: l, LA_SER_RUNPATH);
+				&realname, &fb, loader ?: l, LA_SER_RUNPATH,
+				&found_other_class);
 	    }
 	}
 
@@ -2015,7 +2038,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	fd = open_path (name, namelen, preloaded, &env_path_list,
 			&realname, &fb,
 			loader ?: GL(dl_ns)[LM_ID_BASE]._ns_loaded,
-			LA_SER_LIBPATH);
+			LA_SER_LIBPATH, &found_other_class);
 
       /* Look at the RUNPATH information for this binary.  */
       if (fd == -1 && loader != NULL
@@ -2023,7 +2046,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 			  DT_RUNPATH, "RUNPATH"))
 	fd = open_path (name, namelen, preloaded,
 			&loader->l_runpath_dirs, &realname, &fb, loader,
-			LA_SER_RUNPATH);
+			LA_SER_RUNPATH, &found_other_class);
 
       if (fd == -1
 	  && (__builtin_expect (! preloaded, 1)
@@ -2073,7 +2096,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 		{
 		  fd = open_verify (cached,
 				    &fb, loader ?: GL(dl_ns)[nsid]._ns_loaded,
-				    LA_SER_CONFIG);
+				    LA_SER_CONFIG, &found_other_class);
 		  if (__builtin_expect (fd != -1, 1))
 		    {
 		      realname = local_strdup (cached);
@@ -2093,7 +2116,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	      || __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1))
 	  && rtld_search_dirs.dirs != (void *) -1)
 	fd = open_path (name, namelen, preloaded, &rtld_search_dirs,
-			&realname, &fb, l, LA_SER_DEFAULT);
+			&realname, &fb, l, LA_SER_DEFAULT, &found_other_class);
 
       /* Add another newline when we are tracing the library loading.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
@@ -2110,7 +2133,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       else
 	{
 	  fd = open_verify (realname, &fb,
-			    loader ?: GL(dl_ns)[nsid]._ns_loaded, 0);
+			    loader ?: GL(dl_ns)[nsid]._ns_loaded, 0,
+			    &found_other_class);
 	  if (__builtin_expect (fd, 0) == -1)
 	    free (realname);
 	}
@@ -2153,6 +2177,11 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
 	  return l;
 	}
+      else if (found_other_class)
+	_dl_signal_error (0, name, NULL,
+			  ELFW(CLASS) == ELFCLASS32
+			  ? N_("wrong ELF class: ELFCLASS64")
+			  : N_("wrong ELF class: ELFCLASS32"));
       else
 	_dl_signal_error (errno, name, NULL,
 			  N_("cannot open shared object file"));
