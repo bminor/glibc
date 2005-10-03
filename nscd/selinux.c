@@ -127,7 +127,7 @@ audit_init (void)
 {
   audit_fd = audit_open ();
   if (audit_fd < 0)
-     dbg_log (_("Failed opening connection to the audit subsystem"));
+    dbg_log (_("Failed opening connection to the audit subsystem: %m"));
 }
 #endif /* HAVE_LIBAUDIT */
 
