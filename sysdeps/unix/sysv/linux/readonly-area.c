@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdio_ext.h>
@@ -33,10 +34,14 @@ __readonly_area (const char *ptr, size_t size)
 
   FILE *fp = fopen ("/proc/self/maps", "rc");
   if (fp == NULL)
-    /* We don't know.  Returning 1 here means that programs using %n
-       and -D_FORTIFY_SOURCE=2 will work even when /proc is not mounted,
-       but will allow %n even in writable areas.  */
-    return 1;
+    {
+      if (errno == ENOENT)
+	/* It is the system administrator's choice to not have /proc
+	   available to this process (e.g., because it runs in a chroot
+	   environment.  Don't fail in this case.  */
+	return 1;
+      return -1;
+    }
 
   /* We need no locking.  */
   __fsetlocking (fp, FSETLOCKING_BYCALLER);

@@ -1,3 +1,46 @@
+2005-10-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/arena.c (ptmalloc_unlock_all2): Reset atfork_recursive_cntr.
+
+2005-10-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* nss/getent.c (hosts_keys): Pass INADDRSZ as size rather
+	than IN6ADDRSZ to AF_INET gethostbyaddr.
+
+2005-10-07  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1438]
+	* include/features.h: Make tests on _FORTIFY_SOURCE and __OPTIMIZE__
+	friendly to -Wundef.
+	(__USE_FORTIFY_LEVEL): Always define it, to 0 if nothing else.
+
+2005-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/readonly-area.c: Allow fopen to fail because
+	the file does not exist.
+
+2005-10-05  Simon Josefsson  <jas@extundo.com>
+
+	[BZ #1423]
+	* crypt/md5.h (MD5_DIGEST_SIZE, MD5_BLOCK_SIZE): New macros.
+
+2005-10-05  Roland McGrath  <roland@redhat.com>
+
+	* crypt/Makefile (distribute): Remove duplicate defn.
+
+	* sysdeps/generic/ldsodefs.h (struct audit_ifaces):
+	Use ARCH_PLTENTER_MEMBERS and ARCH_PLTEXIT_MEMBERS macros if defined.
+	* elf/tst-auditmod1.c: Include <tst-audit.h> to define more
+	architecture-specific code.
+	* sysdeps/generic/tst-audit.h: New file.
+	* elf/Makefile (distribute): Add it.
+
+2005-10-05  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* elf/elf.h (R_ARM_TLS_DTPMOD32, R_ARM_TLS_DTPOFF32,
+	R_ARM_TLS_TPOFF32, R_ARM_TLS_GD32, R_ARM_TLS_LDM32,
+	R_ARM_TLS_LDO32, R_ARM_TLS_IE32, R_ARM_TLS_LE32): New macros.
+
 2005-10-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/selinux.c (audit_init): Print error string in the failure

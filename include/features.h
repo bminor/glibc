@@ -262,18 +262,21 @@
 # define __USE_REENTRANT	1
 #endif
 
-#if _FORTIFY_SOURCE > 0 && __OPTIMIZE__ > 0 \
+#if defined _FORTIFY_SOURCE && _FORTIFY_SOURCE > 0 \
+    && defined __OPTIMIZE__ && __OPTIMIZE__ > 0 \
     && (__GNUC_PREREQ (4, 1) \
         || (defined __GNUC_RH_RELEASE__ && __GNUC_PREREQ (4, 0)) \
         || (defined __GNUC_RH_RELEASE__ && __GNUC_PREREQ (3, 4) \
             && __GNUC_MINOR__ == 4 \
             && (__GNUC_PATCHLEVEL__ > 2 \
                 || (__GNUC_PATCHLEVEL__ == 2 && __GNUC_RH_RELEASE__ >= 8))))
-# if _FORTIFY_SOURCE == 1
-#  define __USE_FORTIFY_LEVEL 1
-# elif _FORTIFY_SOURCE > 1
+# if _FORTIFY_SOURCE > 1
 #  define __USE_FORTIFY_LEVEL 2
+# else
+#  define __USE_FORTIFY_LEVEL 1
 # endif
+#else
+# define __USE_FORTIFY_LEVEL 0
 #endif
 
 /* We do support the IEC 559 math functionality, real and complex.  */
