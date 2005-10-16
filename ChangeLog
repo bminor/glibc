@@ -776,6 +776,12 @@
 	* elf/unload3mod3.c: New file.
 	* elf/unload3mod4.c: New file.
 
+2005-02-21  Alan Modra <amodra@bigpond.net.au>
+
+	[BZ #1394]
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h (elf_vrreg_t): Don't
+	use __uint128_t.
+
 2005-03-01  Alfred M. Szmidt  <ams@gnu.org>
 
 	[BZ #777]
