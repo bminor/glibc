@@ -8,6 +8,16 @@
 
         * sysdeps/alpha/ldiv.S (lldiv): Add alias.
 
+2005-08-05  Roland McGrath  <roland@frob.com>
+
+	[BZ #1251]
+	* mach/shortcut.awk: Ignore `weak_alias' lines.
+	Reported by Alfred M. Szmidt <ams@gnu.org>.
+
+	[BZ #1250]
+	* sysdeps/mach/hurd/mig-reply.c (reply_port): Don't use ?: as lvalue.
+	Reported by Alfred M. Szmidt <ams@gnu.org>.
+
 2005-07-28  Thomas Schwinge  <schwinge@nic-nac-project.de>
 
 	[BZ #1137]
