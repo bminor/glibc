@@ -348,6 +348,11 @@
 	* posix/fnmatch.c (fnmatch): For short patterns or strings attempt to
 	avoid calling mbsrtowcs twice.
 
+2005-02-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #1076]
+	* sysdeps/ia64/elf/initfini.c: Add local _init and _fini labels.
+
 2005-02-27  Denis Barbier  <barbier@debian.org>
 
 	[BZ #549]
