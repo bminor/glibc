@@ -1,3 +1,10 @@
+2005-08-05  Alfred M. Szmidt  <ams@gnu.org>
+
+	[BZ #1252]
+	* sysdeps/mach/hurd/setitimer.c (restart_itimer): Move static fn
+	forward decl out of function body.
+	* sysdeps/mach/hurd/profil.c: Likewise.
+
 2005-09-19  Richard Henderson  <rth@redhat.com>
 
         [BZ #1358]
