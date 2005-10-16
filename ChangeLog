@@ -237,6 +237,13 @@
 	* iconvdata/ibm939.c (BODY): Avoid segfaults with input characters
 	<UFFFF> and above.
 
+2005-05-17  Neal H. Walfield  <neal@gnu.org>
+
+	[BZ #1350]
+	* sysdeps/posix/getaddrinfo.c (gaih_local): Check [_HAVE_SA_LEN]
+	instead of [SALEN].
+	(gaih_inet): Likewise.
+
 2005-05-06  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #934]
@@ -896,6 +903,10 @@
 	[BZ #767]
 	* posix/unistd.h: symlink and readlink are unconditionally
 	available in the 2001 spec.
+
+2005-02-16  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Fix type of ADDR local.
 
 2004-07-23  Jakub Jelinek  <jakub@redhat.com>
 
