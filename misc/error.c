@@ -1,5 +1,5 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990-1998, 2000-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1990-1998,2000-2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
 
@@ -27,6 +27,8 @@
 #include <stdio.h>
 #include <libintl.h>
 #ifdef _LIBC
+# include <stdbool.h>
+# include <stdint.h>
 # include <wchar.h>
 # define mbsrtowcs __mbsrtowcs
 #endif

@@ -1,3 +1,35 @@
+2005-08-05  Alfred M. Szmidt  <ams@gnu.org>
+
+	[BZ #1252]
+	* sysdeps/mach/hurd/setitimer.c (restart_itimer): Move static fn
+	forward decl out of function body.
+	* sysdeps/mach/hurd/profil.c: Likewise.
+
+2005-09-19  Richard Henderson  <rth@redhat.com>
+
+        [BZ #1358]
+        * sysdeps/unix/alpha/sysdep.h (inline_syscall1): Copy argument(s)
+        to a temporary first.
+        (inline_syscall2, inline_syscall3, inline_syscall4): Likewise.
+        (inline_syscall5, inline_syscall6): Likewise.
+
+        * sysdeps/alpha/ldiv.S (lldiv): Add alias.
+
+2005-08-05  Roland McGrath  <roland@frob.com>
+
+	[BZ #1251]
+	* mach/shortcut.awk: Ignore `weak_alias' lines.
+	Reported by Alfred M. Szmidt <ams@gnu.org>.
+
+	[BZ #1250]
+	* sysdeps/mach/hurd/mig-reply.c (reply_port): Don't use ?: as lvalue.
+	Reported by Alfred M. Szmidt <ams@gnu.org>.
+
+2005-07-28  Thomas Schwinge  <schwinge@nic-nac-project.de>
+
+	[BZ #1137]
+	* misc/error.c [_LIBC]: Include <stdbool.h> and <stdint.h>.
+
 2005-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1138]
@@ -212,6 +244,13 @@
 	* iconvdata/ibm939.c (BODY): Avoid segfaults with input characters
 	<UFFFF> and above.
 
+2005-05-17  Neal H. Walfield  <neal@gnu.org>
+
+	[BZ #1350]
+	* sysdeps/posix/getaddrinfo.c (gaih_local): Check [_HAVE_SA_LEN]
+	instead of [SALEN].
+	(gaih_inet): Likewise.
+
 2005-05-06  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #934]
@@ -332,6 +371,11 @@
 	[BZ #1087]
 	* posix/fnmatch.c (fnmatch): For short patterns or strings attempt to
 	avoid calling mbsrtowcs twice.
+
+2005-02-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #1076]
+	* sysdeps/ia64/elf/initfini.c: Add local _init and _fini labels.
 
 2005-02-27  Denis Barbier  <barbier@debian.org>
 
@@ -761,6 +805,12 @@
 	* elf/unload3mod3.c: New file.
 	* elf/unload3mod4.c: New file.
 
+2005-02-21  Alan Modra <amodra@bigpond.net.au>
+
+	[BZ #1394]
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h (elf_vrreg_t): Don't
+	use __uint128_t.
+
 2005-03-01  Alfred M. Szmidt  <ams@gnu.org>
 
 	[BZ #777]
@@ -860,6 +910,10 @@
 	[BZ #767]
 	* posix/unistd.h: symlink and readlink are unconditionally
 	available in the 2001 spec.
+
+2005-02-16  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Fix type of ADDR local.
 
 2004-07-23  Jakub Jelinek  <jakub@redhat.com>
 

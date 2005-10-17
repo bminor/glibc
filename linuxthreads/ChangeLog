@@ -1,3 +1,9 @@
+2005-02-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #1076]
+	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: Add local _init
+	and _fini labels.
+
 2005-02-09  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	[BZ #740]

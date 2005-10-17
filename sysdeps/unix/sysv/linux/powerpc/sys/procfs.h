@@ -32,9 +32,9 @@
 
 __BEGIN_DECLS
 
-/* These definitions are normally provided by ucontext.h via 
-   asm/sigcontext.h, asm/ptrace.h, and asm/elf.h.  Otherwise we define 
-   them here.  */ 
+/* These definitions are normally provided by ucontext.h via
+   asm/sigcontext.h, asm/ptrace.h, and asm/elf.h.  Otherwise we define
+   them here.  */
 #ifndef __PPC64_ELF_H
 #define ELF_NGREG       48      /* includes nip, msr, lr, etc. */
 #define ELF_NFPREG      33      /* includes fpscr */
@@ -46,15 +46,10 @@ typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 typedef double elf_fpreg_t;
 typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
 
-/* gcc 3.1 and newer support __uint128_t.  */
-#if !__GNUC_PREREQ(3,1)
-typedef struct {
-  unsigned long u[4];
-} __attribute((aligned(16))) __uint128_t;
-#endif
-
 /* Altivec registers */
-typedef __uint128_t elf_vrreg_t;
+typedef struct {
+  unsigned int u[4];
+} __attribute__ ((aligned (16))) elf_vrreg_t;
 typedef elf_vrreg_t elf_vrregset_t[ELF_NVRREG];
 #endif
 
