@@ -83,6 +83,18 @@
 	* sysdeps/powerpc/fpu/libm-test-ulps: Adjust expected y1, y1f, yn,
 	ynf results.
 
+2005-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1125]
+	* posix/Makefile (tests): Add tst-execvp4.
+	* posix/tst-execvp4.c: New file.
+
+2005-07-24  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1125]
+	* posix/execvp.c (execvp): Change path_malloc to
+	char *, free that pointer on failure.
+
 2005-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1138]
