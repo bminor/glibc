@@ -264,7 +264,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 #else
 #define ELF_MACHINE_RUNTIME_TRAMPOLINE				\
   TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);		\
-  strong_alias (_dl_runtime_resolve, _dl_runtime_profile);
+  asm (".globl _dl_runtime_profile\n"				\
+       ".set _dl_runtime_profile, _dl_runtime_resolve");
 #endif
 
 /* Undo the adds out0 = 16, sp below to get at the value we want in
