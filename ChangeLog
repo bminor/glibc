@@ -30,6 +30,16 @@
 	[BZ #1137]
 	* misc/error.c [_LIBC]: Include <stdbool.h> and <stdint.h>.
 
+2005-09-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update for GCC 4.0.x.
+
+2005-09-26  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #1384]
+	* sysdeps/powerpc/fpu/libm-test-ulps: Adjust expected y1, y1f, yn,
+	ynf results.
+
 2005-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1138]
@@ -142,6 +152,9 @@
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ftruncate64.c
 	(__have_no_truncate64): Renamed from have_no_truncate64.
 
+	* sysdeps/powerpc/fpu/libm-test-ulps: Adjust ulps for complex
+	float functions for gcc 4.
+
 2005-06-17  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1106]
@@ -251,6 +264,15 @@
 	instead of [SALEN].
 	(gaih_inet): Likewise.
 
+2005-04-13  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #721]
+	* sysdeps/ia64/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE)
+	[PROF]: Open code strong_alias because the original name is not
+	visible to the compiler.
+	* sysdeps/powerpc/powerpc64/dl-machine.h
+	(ELF_MACHINE_RUNTIME_TRAMPOLINE) [PROF]: Likewise.
+
 2005-05-06  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #934]
@@ -259,6 +281,10 @@
 	(struct re_dfa_t): Add lock.
 	* posix/regcomp.c (re_compile_internal): Add __libc_lock_init.
 	* posix/regexec.c (regexec, re_search_stub): Add locking.
+
+2005-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Adjust for gcc 4.
 
 2005-04-29  Jakub Jelinek  <jakub@redhat.com>
 
@@ -689,6 +715,12 @@
 	* posix/tst-execle1.c (do_test): Fix execle arguments.
 	* posix/tst-execle2.c (do_test): Likewise.
 
+2005-03-25  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #721]
+	* sysdeps/generic/wcstoul_l.c: Include "wcstol_l.c" rather than
+	<wcstol_l.c>.
+
 2005-03-23  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #822]
@@ -780,6 +812,13 @@
 	* elf/unload3mod4.c: Declare foo.
 	* elf/testobj2.c: Include <stdio.h>.
 
+2005-03-05  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #721]
+	* sysdeps/i386/dl-machine.h (ELF_MACHINE_NO_RELA): Define
+	unconditionally to (defined RTLD_BOOTSTRAP).
+	* sysdeps/arm/dl-machine.h (ELF_MACHINE_NO_RELA): Likewise.
+
 2005-03-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #776]
@@ -804,6 +843,47 @@
 	* elf/unload3mod2.c: New file.
 	* elf/unload3mod3.c: New file.
 	* elf/unload3mod4.c: New file.
+
+2005-03-16  Richard Henderson  <rth@redhat.com>
+
+	[BZ #721]
+	* include/libc-symbols.h (__hidden_proto): Remove bogus declaration
+	of internal.
+	(__hidden_def1, __hidden_dot_def1): Remove.
+	(__hidden_def2, __hidden_def3): Remove.
+	(__hidden_ver1): New.
+	(hidden_ver, hidden_def, hidden_weak): Use it.
+	(hidden_data_ver, hidden_data_ver, hidden_data_weak): Use non-data
+	version of the macro.
+
+	[BZ #721]
+	* include/wchar.h (__wcscoll): Remove.
+	* wcsmbs/wcscoll.c: Define wcscoll directly instead of via __wcscoll.
+	* string/strcoll.c: Don't issue libc_hidden_def STRCOLL redefined.
+
+2005-03-15  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #721]
+	* elf/dynamic-link.h (elf_machine_rel, elf_machine_rel_relative,
+	elf_machine_rela, elf_machine_rela_relative, elf_machine_lazy_rel):
+	Add inline keyword.
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative, elf_machine_lazy_rel): Add always_inline
+	attribute.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.  Change
+	static inline into auto inline.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.
+	* sysdeps/generic/dl-machine.h (elf_machine_rel, elf_machine_rela):
+	Likewise.
+	* sysdeps/arm/dl-machine.h (elf_machine_rel, elf_machine_rel_relative,
+	elf_machine_rela, elf_machine_rela_relative, elf_machine_lazy_rel):
+	Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.
 
 2005-02-21  Alan Modra <amodra@bigpond.net.au>
 
@@ -915,6 +995,19 @@
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Fix type of ADDR local.
 
+2005-02-16  Roland McGrath  <roland@redhat.com>
+
+	[BZ #721]
+	* sysdeps/i386/dl-machine.h (ELF_MACHINE_NO_RELA): Define this outside
+	of [RESOLVE].
+	* sysdeps/sh/dl-machine.h (ELF_MACHINE_NO_REL): Likewise.
+
+2005-02-03  Alexandre Oliva  <aoliva@redhat.com>
+
+	[BZ #721]
+	* elf/dynamic-link.h: Don't declare nested auto functions that are
+	not going to be defined.
+
 2004-07-23  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #284]
@@ -927,6 +1020,18 @@
 	* sysdeps/mach/hurd/setresgid.c: Use weak_alias.
 	* sysdeps/mach/hurd/setresuid.c: Likewise.
 
+2005-02-14  Alan Modra  <amodra@bigpond.net.au>
+
+	[BZ #721]
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela): Define
+	with auto inline, and attribute always_inline.
+	(elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.
+	(elf_machine_rel, elf_machine_rel_relative): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela): Likewise.
+	(elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.
+	(elf_machine_rel, elf_machine_rel_relative): Likewise.
+	(elf_machine_tprel): Likewise.
+
 2005-02-09  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #710]
@@ -935,10 +1040,26 @@
 	* stdlib/tst-random2.c: New test.
 	Reported by Peter Bergner <bergner@vnet.ibm.com>.
 
+2005-02-07  Richard Henderson  <rth@redhat.com>
+
+	[BZ #721]
+	* iconvdata/jis0208.h (struct jisx0208_ucs_idx): Move before use.
+
 2005-02-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Make sure registers are
 	set correctly.
+
+2005-01-07  Richard Henderson  <rth@redhat.com>
+
+	[BZ #721]
+	* math/math_private.h (__copysign): Define as builtin for gcc 4.
+	(__copysignf, __copysignl): Likewise.
+	* sysdeps/alpha/fpu/bits/mathinline.h (copysign): Don't define
+	for gcc 4.0.
+	(copysignf, copysignl, fabsf, fabs): Likewise.
+	(__copysign, __copysignf, __copysignl): Remove.
+	(__fabs, __fabsf): Remove.
 
 2005-01-07  Jakub Jelinek  <jakub@redhat.com>
 
