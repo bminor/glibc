@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SH version.
-   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004
-   Free Software Foundation, Inc.
+   Copyright (C) 1999,2000,2001,2002,2003,2004,2005
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -512,10 +512,10 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
 
 #endif /* !dl_machine_h */
 
-#ifdef RESOLVE
-
 /* SH never uses Elf32_Rel relocations.	 */
 #define ELF_MACHINE_NO_REL 1
+
+#ifdef RESOLVE
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */

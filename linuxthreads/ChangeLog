@@ -4,6 +4,11 @@
 	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: Add local _init
 	and _fini labels.
 
+2005-03-05  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #721]
+	* sysdeps/powerpc/tcb-offsets.sym (thread_offsetof): Rework for GCC 4.
+
 2005-02-09  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	[BZ #740]

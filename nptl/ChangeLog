@@ -47,6 +47,12 @@
 	* sysdeps/unix/sysv/linux/bits/local_lim.h: Likewise.
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Likewise.
 
+2005-02-14  Alan Modra  <amodra@bigpond.net.au>
+
+	[BZ #721]
+	* sysdeps/powerpc/tcb-offsets.sym (thread_offsetof): Redefine to suit
+	gcc4.
+
 2005-02-07  Richard Henderson  <rth@redhat.com>
 
 	[BZ #787]

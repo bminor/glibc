@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002,2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -387,13 +387,11 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 
 #endif /* !dl_machine_h */
 
-#ifdef RESOLVE
-
 /* The i386 never uses Elf32_Rela relocations for the dynamic linker.
    Prelinked libraries may use Elf32_Rela though.  */
-#ifdef RTLD_BOOTSTRAP
-# define ELF_MACHINE_NO_RELA 1
-#endif
+#define ELF_MACHINE_NO_RELA defined RTLD_BOOTSTRAP
+
+#ifdef RESOLVE
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  ARM version.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
+   Copyright (C) 1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -350,13 +350,11 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 
 #endif /* !dl_machine_h */
 
-#ifdef RESOLVE
-
 /* ARM never uses Elf32_Rela relocations for the dynamic linker.
    Prelinked libraries may use Elf32_Rela though.  */
-# ifdef RTLD_BOOTSTRAP
-#  define ELF_MACHINE_NO_RELA 1
-# endif
+#define ELF_MACHINE_NO_RELA defined RTLD_BOOTSTRAP
+
+#ifdef RESOLVE
 
 /* Deal with an out-of-range PC24 reloc.  */
 static Elf32_Addr
@@ -392,7 +390,8 @@ fix_bad_pc24 (Elf32_Addr *const reloc_addr, Elf32_Addr value)
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 
-static inline void
+auto inline void
+__attribute__ ((always_inline))
 elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		 const Elf32_Sym *sym, const struct r_found_version *version,
 		 void *const reloc_addr_arg)
@@ -517,7 +516,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 }
 
 # ifndef RTLD_BOOTSTRAP
-static inline void
+auto inline void
+__attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
 		  void *const reloc_addr_arg)
@@ -597,7 +597,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 }
 # endif
 
-static inline void
+auto inline void
+__attribute__ ((always_inline))
 elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
 			  void *const reloc_addr_arg)
 {
@@ -606,7 +607,8 @@ elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
 }
 
 # ifndef RTLD_BOOTSTRAP
-static inline void
+auto inline void
+__attribute__ ((always_inline))
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 			   void *const reloc_addr_arg)
 {
@@ -615,7 +617,8 @@ elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 }
 # endif
 
-static inline void
+auto inline void
+__attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf32_Addr l_addr, const Elf32_Rel *reloc)
 {
