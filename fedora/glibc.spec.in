@@ -1,4 +1,4 @@
-%define glibcrelease 14
+%define glibcrelease 15
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -1083,6 +1083,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Oct 20 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-15
+- update from CVS
+  - be permissive in %n check because of kernel bug #165351 (#171240)
+  - don't misalign stack in pthread_once on x86_64 (#170786, IT#81521)
+  - many locale fixes
+
 * Mon Oct 10 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-14
 - update from CVS
   - fix malloc bug after fork introduced in the last update
