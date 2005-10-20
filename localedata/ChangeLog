@@ -1,3 +1,121 @@
+2005-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #119]
+	* locales/es_AR: Fix thousands_sep and grouping.
+
+2005-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #451]
+	* locales/rw_RW: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add rw_RW.UTF-8.
+
+	[BZ #367]
+	* locales/si_LK: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add si_LK.UTF-8.
+
+	[BZ #297]
+	* locales/fi_FI: Change date_fmt.
+
+	* locales/te_IN: Fix noexpr, replace yY with nN.
+
+	[BZ #305]
+	* locales/bn_BD: Add yY and nN to yesexpr and noexpr respectively.
+	* locales/ml_IN: Likewise.
+	* locales/ta_IN: Likewise.
+	* locales/kw_GB: Add yY to yesexpr.
+	* locales/oc_FR: Likewise.
+
+	* locales/bn_IN: Use copy "bn_BD" in LC_MESSAGES definition.
+
+	[BZ #71]
+	[BZ #305]
+	* locales/ar_EG: Add yY and nN to yesexpr and noexpr respectively.
+	Define yesstr and nostr.
+	* locales/ar_AE: Use copy "ar_EG" in LC_MESSAGES definition.
+	* locales/ar_BH: Likewise.
+	* locales/ar_DZ: Likewise.
+	* locales/ar_IN: Likewise.
+	* locales/ar_IQ: Likewise.
+	* locales/ar_JO: Likewise.
+	* locales/ar_KW: Likewise.
+	* locales/ar_LB: Likewise.
+	* locales/ar_LY: Likewise.
+	* locales/ar_MA: Likewise.
+	* locales/ar_OM: Likewise.
+	* locales/ar_QA: Likewise.
+	* locales/ar_SA: Likewise.
+	* locales/ar_SD: Likewise.
+	* locales/ar_SY: Likewise.
+	* locales/ar_TN: Likewise.
+	* locales/ar_YE: Likewise.
+
+	[BZ #56]
+	* locales/de_DE: Add transliterations for quoting characters.
+
+	[BZ #448]
+	* locales/vi_VN: Several fixes.
+	Patch by Nguyen Thai Ngoc Duy <pclouds@gmail.com>.
+
+	[BZ #428]
+	* locales/te_IN: Several fixes.
+	Patch by Sunil Mohan Adapa <sunil@atc.tcs.co.in>.
+
+	[BZ #368]
+	* locales/dz_BT: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add dz_BT.UTF-8.
+
+	[BZ #195]
+	* locales/hu_HU: Add some transliterations.
+
+	[BZ #1429]
+	* locales/hu_HU: Define week.
+
+	[BZ #982]
+	* locales/ml_IN: Fix title.
+
+	[BZ #981]
+	* locales/ca_ES: Fix title.
+
+	[BZ #980]
+	* locales/yi_US: Fix title.
+
+	* locales/nl_NL: Define country_car, lang_name, lang_ab,
+	lang_term, and lang_lib.
+
+	[BZ #870]
+	* locales/ku_TR: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add ku_TR.ISO-8859-9 and
+	ku_TR.UTF-8.
+
+2005-10-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #533]
+	* locales/ss_ZA: New file.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	[BZ #529]
+	* locales/tn_ZA: New file.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	[BZ #491]
+	* locales/ve_ZA: New file.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	[BZ #486]
+	* locales/nso_ZA: New file.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	* SUPPORTED: Add nso_ZA.UTF-8, ve_ZA.UTF-8, tn_ZA.UTF-8, and
+	ss_ZA.UTF-8.
+
+2005-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #532]
+	* locales/ts_ZA: New file.
+	Patch by Dwayne Bailey <dwayne@translate.org.za>.
+
+	* SUPPORTED: Add ts_ZA.UTF-8.
+
 2005-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/en_US: Fix postal_fmt.

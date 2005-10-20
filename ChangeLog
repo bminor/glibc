@@ -1,3 +1,352 @@
+2005-08-23  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sysdeps/alpha/remqu.S: Return the correct result when the same
+	dividend and divisor are provided, and they're negative numbers.
+	* sysdeps/alpha/divqu.S: Likewise.
+
+2005-10-18  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ucontext_i.h (TESTS):
+	Define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ucontext_i.h (TESTS):
+	Likewise.
+
+2005-10-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile (modules): Add IBM1364, IBM1371, IBM1388, IBM1390,
+	and IBM1399.
+	(distribute): Add ibm1364.c, ibm1364.h, ibm1371.c, ibm1371.h,
+	ibm1388.c, ibm1388.h, ibm1390.c, ibm1390.h, ibm1399.c, and ibm1399.h.
+	* iconvdata/TESTS: Add entries for IBM1364, IBM1371, IBM1388, IBM1390,
+	and IBM1399.
+	* iconvdata/gconv-modules: Likewise.
+	* iconvdata/ibm1364.c: New file.
+	* iconvdata/ibm1364.h: New file.
+	* iconvdata/ibm1371.c: New file.
+	* iconvdata/ibm1371.h: New file.
+	* iconvdata/ibm1388.c: New file.
+	* iconvdata/ibm1388.h: New file.
+	* iconvdata/ibm1390.c: New file.
+	* iconvdata/ibm1390.h: New file.
+	* iconvdata/ibm1399.c: New file.
+	* iconvdata/ibm1399.h: New file.
+	* iconvdata/testdata/IBM1364: New file.
+	* iconvdata/testdata/IBM1364..UTF8: New file.
+	* iconvdata/testdata/IBM1371: New file.
+	* iconvdata/testdata/IBM1371..UTF8: New file.
+	* iconvdata/testdata/IBM1388: New file.
+	* iconvdata/testdata/IBM1388..UTF8: New file
+	* iconvdata/testdata/IBM1390: New file.
+	* iconvdata/testdata/IBM1390..UTF8: New file.
+	* iconvdata/testdata/IBM1399: New file.
+	* iconvdata/testdata/IBM1399..UTF8: New file.
+	Original patch by Masahide Washizawa <washi@jp.ibm.com>.
+
+2005-10-17  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-load.c (MAP_COPY): When undefined, define to
+	MAP_PRIVATE|MAP_DENYWRITE instead of just MAP_PRIVATE.
+	(_dl_map_object_from_fd): Don't use MAP_DENYWRITE explicitly.
+
+2005-10-17  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/ucontext_i.h (SC_STSZ, TESTS):
+	Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/ucontext_i.h (SC_STSZ, TESTS):
+	Likewise.
+
+2005-10-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/oldfileops.c (_IO_old_file_xsputn): Fix last patch.
+	Return EOF not 0.
+
+	* sysdeps/unix/sysv/linux/readonly-area.c (__readonly_area): Also
+	allow EACCES errors when opening /proc for now.
+
+	* wctype/wcfuncs.c: Don't use expensive wide char lookups in isw*
+	functions if character is in ASCII range.
+	* wctype/wcfuncs_l.c: Likewise.
+
+2005-05-03  Robert Millan  <robertmh@gnu.org>
+
+	* abi-tags (.*-.*-knetbsd.*-gnu.*): New match, with ABI value 4.
+	* elf/cache.c (print_entry): Match the kNetBSD ABI tag.
+
+2005-10-16  Alfred M. Szmidt  <ams@gnu.org>
+
+	* sysdeps/generic/bits/mman.h
+	[__USE_GNU] (MREMAP_MAYMOVE, REMAP_FIXED): New macros.
+
+2005-10-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/makecontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh3/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh4/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh3/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh4/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh3/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh4/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sh3/ucontext_i.h: New file.
+	* sysdeps/unix/sysv/linux/sh/sh4/ucontext_i.h: New file.
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h: Removed.
+	* sysdeps/unix/sysv/linux/sh/sh3/sys/ucontext.h: New file.
+	* sysdeps/unix/sysv/linux/sh/sh4/sys/ucontext.h: New file.
+
+2005-09-13  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1228]
+	* include/limits.h (LLONG_MIN, LLONG_MAX, ULLONG_MAX): Make sure these
+	are defined for -D_GNU_SOURCE or -D_ISOC99_SOURCE even when not
+	-std=c99.
+
+2005-10-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Define MREMAP_FIXED.
+
+2005-08-05  Alfred M. Szmidt  <ams@gnu.org>
+
+	[BZ #1252]
+	* sysdeps/mach/hurd/setitimer.c (restart_itimer): Move static fn
+	forward decl out of function body.
+	* sysdeps/mach/hurd/profil.c: Likewise.
+
+2005-10-16  Roland McGrath  <roland@frob.com>
+
+	[BZ #1254]
+	* sysdeps/mach/hurd/getpeername.c (__getpeername): Respect *LEN
+	byte limit when setting ADDR->sa_family.
+	Reported by Samuel Thibault <samuel.thibault@ens-lyon.org>.
+
+	[BZ #1253]
+	* sysdeps/mach/hurd/dl-sysdep.h
+	[SHARED] (DL_ARGV_NOT_RELRO): New macro.
+
+	[BZ #1253]
+	* sysdeps/mach/hurd/i386/init-first.c (init): Make cast kosher.
+	(_hurd_stack_setup): Don't declare with arguments and ellipsis.
+	Use __builtin_frame_address and __builtin_return_address.
+	(_dl_init_first): Likewise.
+
+	[BZ #1249]
+	* sysdeps/mach/hurd/i386/init-first.c (_cthread_init_routine): Declare
+	as weak extern.
+	(init): Check for it being undefined.
+
+2005-10-16  Daniel Jacobowitz  <dan@codesourcery.com>
+	    Roland McGrath  <roland@redhat.com>
+
+	* Makerules [module-names] (extra-modules-build): New variable.
+	($(extra-modules-build:%=$(objpfx)%.so)): New static pattern rule.
+	Depend on libc.so and libc_nonshared.a.
+	* dlfcn/Makefile ($(test-modules)): Remove static pattern rule.
+	* elf/Makefile (modules-names-nobuild): New variable, add filtmod1.
+	($(test-modules)): Remove static pattern rule.
+
+2005-10-15  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* include/dirent.h: Include <stdbool.h>.
+	* sysdeps/mach/hurd/fdopendir.c: Include <fcntl.h>.
+	(fdopendir): Correct argument to _hurd_fd_get().
+	* sysdeps/mach/hurd/opendir.c (__opendir): Remove stray `}'.
+
+2005-08-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #1224]
+	* posix/regcomp.c (init_word_char, duplicate_node_closure,
+	fetch_token, peek_token_bracket, build_range_exp,
+	build_collating_symbol): Remove forward decls; no longer needed
+	now that we use prototypes.
+
+2005-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1221]
+	* posix/regex_internal.h: Remove last traces of
+	RE_NO_INTERNAL_PROTOTYPES.
+
+	[BZ #968]
+	* string/strxfrm_l.c (STRXFRM): Fix exit conditions of two loops.
+
+	* sysdeps/unix/fdopendir.c (fdopendir): Make sure descriptor
+	allows reading.
+
+	* wcsmbs/tst-mbrtowc2.c: Use de_DE.UTF-8 instead of en_US.UTF-8.
+	* wcsmbs/Makefile: Define tst-mbrtowc2-ENV.
+
+	* posix/regexec.c: Finish prototyping of static functions.
+	* posix/regex_internal.c: Likewise.
+
+2005-10-14  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/opendir.c (_hurd_fd_opendir): New function, broken
+	out of ...
+	(__opendir): ... here.  Call it.
+	* sysdeps/mach/hurd/fdopendir.c: New file.
+
+2005-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #865]
+	* math/tgmath.h: Correctly determine result type for
+	__TGMATH_BINARY_REAL_ONLY,
+	__TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY,
+	__TGMATH_TERNARY_REAL_ONLY, and __TGMATH_BINARY_REAL_IMAG.
+
+2005-09-17  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #865]
+	* math/test-tgmath-int.c: New file.
+	* math/Makefile (tests): Add test-tgmath-int.
+
+2005-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #804]
+	* malloc/tst-mtrace.sh: Work around for bootstraping.
+
+	* locale/programs/ld-collate.c (collate_output): Fix counting of
+	elements.  Don't limit table size.  Use correct secondary hash
+	function.
+	* locale/localeinfo.h (LIMAGIC): Change value returned for LC_COLLATE.
+	* posix/fnmatch_loop.c: Adjust for changed secondary hash function.
+	* posix/regcomp.c: Likewise.
+
+	* time/asctime.c (asctime_internal): Use __snprintf instead of
+	snprintf to avoid PLT entry.
+
+	* sysdeps/unix/opendir.c (__opendir): Pass extra argument to
+	__alloc_dir.
+	(__alloc_dir): Only close descriptor on error if new parameter is true.
+	* sysdeps/unix/fdopendir.c (fdopendir): Pass extra argument to
+	__alloc_dir.  Don't close fd on error.
+	* include/dirent.h (__alloc_dir): Adjust prototype.
+
+	* stdlib/Makefile (tests): Add tst-ucontext-off.
+	* stdlib/tst-ucontext-off.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.h (TESTS): Define.
+	* sysdeps/unix/sysv/linux/i386/ucontext_i.h (TESTS): Likewise.
+
+	[BZ #1468]
+	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.h: Fix values for
+	oFPREGS, oSIGMASK, oFPREGSMEM, and oMXCSR.
+	Patch by Nicholas Miell <nmiell@comcast.net>.
+
+	[BZ #1460]
+	* time/asctime.c (asctime_internal): New function, derived from
+	asctime_r.  Takes additional parameter which is the buffer length.
+	Use snprintf instead sprintf, if it overflows, fail.
+	(asctime_r): Call asctime_internal with 26 as buffer length.
+	(asctime): Call asctime_internal with length of internal buffer.
+	* time/Makefile (tests): Add bug-asctime_r.
+	* time/bug-asctime_r.c: New file.
+
+	[BZ #1459]
+	* time/asctime.c (__asctime_r): Check for tm_year computation to
+	overflow and fail in this case.
+	* time/Makefile (tests): Add bug-asctime.
+	* time/bug-asctime.c: New file.
+
+	[BZ #1458]
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Define MREMAP_FIXED.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Likewise.
+	* misc/sys/mman.h: Add ellipsis after last parameter of mremap and
+	adjust leading comment.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add pointer parameter to
+	mremap syscall.
+	* include/sys/mman.h (__mremap): Add ellipsis.
+	* malloc/memusage.c: Adjust mremap wrapper for optional additional
+	parameter.
+
+2005-10-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1405]
+	* libio/iogetdelim.c (_IO_getdelim): Fix truncation of return
+	value.  Avoid overflow in computation.
+
+	[BZ #1373]
+	* argp/argp.h: Remove __NTH for __argp_usage inline function.
+
+2005-08-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #1248]
+	* posix/regex_internal.h (bitset_not, bitset_merge, bitset_not_merge,
+	bitset_mask, re_string_allocate, re_string_construct,
+	re_string_reconstruct, re_string_destruct, re_string_elem_size_at,
+	re_string_char_size_at, re_string_wchar_at, re_string_peek_byte_case,
+	re_string_fetch_byte_case, re_node_set_alloc, re_node_set_init_1,
+	re_node_set_init_2, re_node_set_init_copy, re_node_set_add_intersect,
+	re_node_set_init_union, re_node_set_merge, re_node_set_insert,
+	re_node_set_insert_last, re_node_set_compare, re_node_set_contains,
+	re_node_set_remove_at, re_dfa_add_node, re_acquire_state,
+	re_acquire_state_context): Remove unnecessary forward decls.
+	(re_string_char_size_at, re_string_wchar_at, re_string_elem_size_at):
+	Put __attribute at function definition, now that the function decl
+	has been removed.
+	* posix/regex_internal.c (re_string_peek_byte_case,
+	re_string_fetch_byte_case, re_node_set_compare, re_node_set_contains):
+	Likewise.
+
+2005-08-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #1231]
+	* posix/regex_internal.c (re_string_skip_chars, register_state,
+	calc_state_hash): Remove forward decls.
+	* posix/regexec.c (acquire_init_state_context, check_halt_node_context,
+	proceed_next_node, pop_fail_stack, sub_epsilon_src_nodes,
+	clean_state_log_if_needed): Likewise.
+
+2005-10-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.c: No need to use K&R definitions for static functions.
+	* posix/regex_internal.c: Likewise.
+	* posix/regcomp.c: Likewise.
+
+	[BZ #1466]
+	* sysdeps/generic/s_csqrt.c (__csqrt): For zero real part, return
+	principal square root.
+	* sysdeps/generic/s_csqrtf.c (__csqrtf): Likewise.
+	* sysdeps/generic/s_csqrtl.c (__csqrtl): Likewise.
+	* math/libm-test.inc (csqrt_test): Add test for returning
+	principal value.
+
+	* include/features.h: Define _POSIX_C_SOURCE to 200112 for
+	_XOPEN_SOURCE == 600.
+
+2005-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (_int_free): Fail if block size is obviously wrong.
+
+	* include/malloc.h: Remove _int_new_arena prototype.
+	* malloc/arena.c (_int_new_arena): Move definition ahead of
+	arena_get2 and make static.
+
+	Correctly implement M_MXFAST.
+	* malloc/malloc.c (struct malloc_state): Replace max_fast with flags
+	fields.
+	(global_max_fast): New variable.
+	(set_max_fast): Change to not require arena parameter and to modify
+	global_max_fast.  Change all callers.
+	(get_max_fast): New macro.  Use this instead of directly accessing
+	now removed max_fast arena member.
+	(have_fastchunks): Use flags instead of max_fast.
+	(clear_fastchunks): Likewise.
+	(set_fastchunks): Likewise.
+	(contiguous): Likewise.
+	(noncontiguous): Likewise.
+	(set_noncontiguous): Likewise.
+	(set_contiguous): Likewise.
+	(malloc_init_state): Explicitly set FASTCHUNKS_BIT.  Call set_max_fast
+	only for main arena.
+	* malloc/hooks.c (public_sET_STATe): Adjust set_max_fast use.
+
+2005-10-10  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/generic/bits/byteswap.h (__bswap_constant_16): New macro.
+	(__bswap_16): Use it.
+	(__bswap_constant_32): New macro.
+	(__bswap_32): Use it.
+
 2005-10-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/arena.c (ptmalloc_unlock_all2): Reset atfork_recursive_cntr.
@@ -1119,11 +1468,13 @@
 	* timezone/southamerica: Likewise.
 	* timezone/zone.tab: Likewise.
 
-2005-08-05  Roland McGrath  <roland@redhat.com>
+2005-08-05  Roland McGrath  <roland@frob.com>
 
+	[BZ #1251]
 	* mach/shortcut.awk: Ignore `weak_alias' lines.
 	Reported by Alfred M. Szmidt <ams@gnu.org>.
 
+	[BZ #1250]
 	* sysdeps/mach/hurd/mig-reply.c (reply_port): Don't use ?: as lvalue.
 	Reported by Alfred M. Szmidt <ams@gnu.org>.
 
@@ -2228,6 +2579,7 @@
 
 2005-05-17  Neal H. Walfield  <neal@gnu.org>
 
+	[BZ #1350]
 	* sysdeps/posix/getaddrinfo.c (gaih_local): Check [_HAVE_SA_LEN]
 	instead of [SALEN].
 	(gaih_inet): Likewise.
@@ -3164,6 +3516,7 @@
 
 2005-03-25  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #721]
 	* sysdeps/generic/wcstoul_l.c: Include "wcstol_l.c" rather than
 	<wcstol_l.c>.
 
@@ -3321,6 +3674,7 @@
 
 2005-02-10  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #1076]
 	* sysdeps/ia64/elf/initfini.c: Add local _init and _fini labels.
 
 2005-02-27  Denis Barbier  <barbier@debian.org>
@@ -3482,6 +3836,7 @@
 
 2005-03-16  Richard Henderson  <rth@redhat.com>
 
+	[BZ #721]
 	* include/libc-symbols.h (__hidden_proto): Remove bogus declaration
 	of internal.
 	(__hidden_def1, __hidden_dot_def1): Remove.
@@ -3491,6 +3846,7 @@
 	(hidden_data_ver, hidden_data_ver, hidden_data_weak): Use non-data
 	version of the macro.
 
+	[BZ #721]
 	* include/wchar.h (__wcscoll): Remove.
 	* wcsmbs/wcscoll.c: Define wcscoll directly instead of via __wcscoll.
 	* string/strcoll.c: Don't issue libc_hidden_def STRCOLL redefined.
@@ -3508,6 +3864,7 @@
 	* sysdeps/generic/wordexp.c (exec_comm_child): Add inline keyword.
 	Patch by Dan Kegel <dank@kegel.com>.
 
+	[BZ #721]
 	* elf/dynamic-link.h (elf_machine_rel, elf_machine_rel_relative,
 	elf_machine_rela, elf_machine_rela_relative, elf_machine_lazy_rel):
 	Add inline keyword.
@@ -3678,6 +4035,7 @@
 
 2005-03-05  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #721]
 	* sysdeps/i386/dl-machine.h (ELF_MACHINE_NO_RELA): Define
 	unconditionally to (defined RTLD_BOOTSTRAP).
 	* sysdeps/arm/dl-machine.h (ELF_MACHINE_NO_RELA): Likewise.
@@ -3718,6 +4076,7 @@
 
 2005-02-21  Alan Modra <amodra@bigpond.net.au>
 
+	[BZ #1394]
 	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h (elf_vrreg_t): Don't
 	use __uint128_t.
 
@@ -4172,6 +4531,7 @@
 
 2005-02-14  Alan Modra  <amodra@bigpond.net.au>
 
+	[BZ #721]
 	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela): Define
 	with auto inline, and attribute always_inline.
 	(elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.
@@ -4313,6 +4673,7 @@
 
 2005-02-07  Richard Henderson  <rth@redhat.com>
 
+	[BZ #721]
 	* iconvdata/jis0208.h (struct jisx0208_ucs_idx): Move before use.
 
 2005-02-08  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
@@ -4327,6 +4688,7 @@
 
 2005-01-07  Richard Henderson  <rth@redhat.com>
 
+	[BZ #721]
 	* math/math_private.h (__copysign): Define as builtin for gcc 4.
 	(__copysignf, __copysignl): Likewise.
 	* sysdeps/alpha/fpu/bits/mathinline.h (copysign): Don't define

@@ -18,6 +18,7 @@
 
 #include <dirent.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <sys/stat.h>
 
 #include <not-cancel.h>
@@ -29,14 +30,21 @@ fdopendir (int fd)
   struct stat64 statbuf;
 
   if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &statbuf), 0) < 0)
-    goto out;
+    return NULL;
   if (__builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
     {
       __set_errno (ENOTDIR);
-    out:
-      close_not_cancel_no_status (fd);
+      return NULL;
+    }
+  /* Make sure the descriptor allows for reading.  */
+  int flags = __fcntl (fd, F_GETFL);
+  if (__builtin_expect (flags == -1, 0))
+    return NULL;
+  if (__builtin_expect ((flags & O_ACCMODE) == O_WRONLY, 0))
+    {
+      __set_errno (EINVAL);
       return NULL;
     }
 
-  return __alloc_dir (fd, &statbuf);
+  return __alloc_dir (fd, false, &statbuf);
 }
