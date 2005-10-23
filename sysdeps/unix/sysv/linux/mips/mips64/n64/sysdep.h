@@ -28,9 +28,9 @@
    so we have to redefine the `SYS_ify' macro here.  */
 #undef SYS_ify
 #ifdef __STDC__
-# define SYS_ify(syscall_name)	__NR_N64_##syscall_name
+# define SYS_ify(syscall_name)	__NR_##syscall_name
 #else
-# define SYS_ify(syscall_name)	__NR_N64_/**/syscall_name
+# define SYS_ify(syscall_name)	__NR_/**/syscall_name
 #endif
 
 #ifdef __ASSEMBLER__
