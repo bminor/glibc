@@ -1,4 +1,5 @@
-/* Copyright (C) 1992,93,94,95,96,97,99,2000,02 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,99,2000,2002,2005
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -136,9 +137,11 @@ __ioctl (int fd, unsigned long int request, ...)
 	     Rather than pointing to the value, ARG is the value itself.  */
 #ifdef MACH_MSG_TYPE_BIT
 	  *t++ = io2mach_type (1, _IOTS (integer_t));
-	  *((integer_t *) t)++ = (integer_t) arg;
+	  *(integer_t *) t = (integer_t) arg;
+	  t = (void *) t + sizeof (integer_t);
 #else
-	  *((integer_t *) p)++ = (integer_t) arg;
+	  *(integer_t *) p = (integer_t) arg;
+	  p = (void *) p + sizeof (integer_t);
 #endif
 	}
 
