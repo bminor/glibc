@@ -1,3 +1,49 @@
+2005-10-22  Roland McGrath  <roland@redhat.com>
+
+	* README.template: Remove GCC 4 note.
+	* NEWS: Add 2.3.6 items.
+
+2005-10-22  Roland McGrath  <roland@frob.com>
+
+	[BZ #1254]
+	* sysdeps/mach/hurd/getpeername.c (__getpeername): Fix last change.
+	From Samuel Thibault <samuel.thibault@ens-lyon.org>.
+
+2005-10-17  Thomas Schwinge  <tschwinge@gnu.org>
+
+	[BZ #1252]
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): Don't use ?: as lvalue.
+	* sysdeps/mach/hurd/ioctl.c (__ioctl): Likewise.
+
+2005-08-23  GOTO Masanori  <gotom@debian.or.jp>
+
+	[BZ #1498]
+	* sysdeps/alpha/remqu.S: Return the correct result when the same
+	dividend and divisor are provided, and they're negative numbers.
+	* sysdeps/alpha/divqu.S: Likewise.
+
+2005-10-16  Roland McGrath  <roland@frob.com>
+
+	[BZ #1254]
+	* sysdeps/mach/hurd/getpeername.c (__getpeername): Respect *LEN
+	byte limit when setting ADDR->sa_family.
+	Reported by Samuel Thibault <samuel.thibault@ens-lyon.org>.
+
+	[BZ #1253]
+	* sysdeps/mach/hurd/dl-sysdep.h
+	[SHARED] (DL_ARGV_NOT_RELRO): New macro.
+
+	[BZ #1253]
+	* sysdeps/mach/hurd/i386/init-first.c (init): Make cast kosher.
+	(_hurd_stack_setup): Don't declare with arguments and ellipsis.
+	Use __builtin_frame_address and __builtin_return_address.
+	(_dl_init_first): Likewise.
+
+	[BZ #1249]
+	* sysdeps/mach/hurd/i386/init-first.c (_cthread_init_routine): Declare
+	as weak extern.
+	(init): Check for it being undefined.
+
 2005-08-05  Alfred M. Szmidt  <ams@gnu.org>
 
 	[BZ #1252]
@@ -82,6 +128,18 @@
 	[BZ #1384]
 	* sysdeps/powerpc/fpu/libm-test-ulps: Adjust expected y1, y1f, yn,
 	ynf results.
+
+2005-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1125]
+	* posix/Makefile (tests): Add tst-execvp4.
+	* posix/tst-execvp4.c: New file.
+
+2005-07-24  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1125]
+	* posix/execvp.c (execvp): Change path_malloc to
+	char *, free that pointer on failure.
 
 2005-07-20  Ulrich Drepper  <drepper@redhat.com>
 
@@ -961,6 +1019,21 @@
 	[BZ #777]
 	* malloc/arena.c: #include <stdbool.h> outside of [SHARED &&
 	USE_TLS && !USE___THREAD].
+
+2004-11-11  Richard Sandiford  <rsandifo@redhat.com>
+
+	[BZ #758]
+	* sysdeps/unix/sysv/linux/mips/configure.in (asm-unistd.h): Only
+	preprocess <asm/unistd.h> if it defines ABI-prefixed syscall names
+	like __NR_N32_open.  Just include <asm/unistd.h> otherwise.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/mips/mips32/kern64/sysdep.h: Delete
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h (SYS_ify): Use the
+	standard __NR prefix.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h (SYS_ify): Likewise.
+	* sysdeps/unix/sysv/linux/mips/Makefile (syscall-%.h): Rework so that
+	the output file is compatible with both pre-2.6 and 2.6 kernel headers.
+	Extract separate syscall lists for each ABI.
 
 2005-02-23  Ulrich Drepper  <drepper@redhat.com>
 
