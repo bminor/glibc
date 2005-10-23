@@ -1275,6 +1275,11 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sat Oct 22 2005 Roland McGrath <roland@redhat.com> 2.3.5-0.fc3.8
+- update from CVS (glibc-2_3-branch)
+  - alpha div/rem fix (BZ#1498)
+  - fix mips syscall.h generation (BZ#758)
+
 * Sun Oct 16 2005 Roland McGrath <roland@redhat.com> 2.3.5-0.fc3.7
 - update from CVS (glibc-2_3-branch)
   - can compile source using gcc 4.0.x (BZ#721, BZ#1384)
