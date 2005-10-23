@@ -2,9 +2,6 @@ This directory contains the version VERSION release of the GNU C Library.
 Many bugs have been fixed since the last release.
 Some bugs surely remain.
 
-Please note that version VERSION cannot be built with GCC 4!
-The next release will be compatible with the newer compiler.
-
 As of this release, the GNU C library is known to run on the following
 configurations:
 
