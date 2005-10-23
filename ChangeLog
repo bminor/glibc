@@ -1,3 +1,8 @@
+2005-10-22  Roland McGrath  <roland@redhat.com>
+
+	* README.template: Remove GCC 4 note.
+	* NEWS: Add 2.3.6 items.
+
 2005-10-22  Roland McGrath  <roland@frob.com>
 
 	[BZ #1254]
