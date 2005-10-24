@@ -1,3 +1,9 @@
+2005-10-24  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1534]
+	* include/string.h: Use libc_hidden_proto, not
+	libc_hidden_builtin_proto, for strnlen.
+
 2005-10-22  Roland McGrath  <roland@redhat.com>
 
 	* README.template: Remove GCC 4 note.
