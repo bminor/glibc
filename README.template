@@ -28,6 +28,10 @@ no longer supported.  Porting the library is not hard.  If you are
 interested in doing a port, please contact the glibc maintainers;
 see http://www.gnu.org/software/libc/ for more information.
 
+This release can be compiled using GCC 4.0, but you should expect many more
+compiler warnings than using GCC 3.4.  The development version of libc is
+better suited to being built with the most recent GCC versions.
+
 There are some add-ons which can be used together with GNU libc.  They
 are designed in a way to ease the installation by integrating them in
 the libc source tree.  Simply get the add-ons you need and use the

@@ -1,9 +1,6 @@
-This directory contains the version 2.3.5 release of the GNU C Library.
+This directory contains the version 2.3.6 release of the GNU C Library.
 Many bugs have been fixed since the last release.
 Some bugs surely remain.
-
-Please note that version 2.3.5 cannot be built with GCC 4!
-The next release will be compatible with the newer compiler.
 
 As of this release, the GNU C library is known to run on the following
 configurations:
@@ -30,6 +27,10 @@ Past releases of this library ran on a variety of configurations that are
 no longer supported.  Porting the library is not hard.  If you are
 interested in doing a port, please contact the glibc maintainers;
 see http://www.gnu.org/software/libc/ for more information.
+
+This release can be compiled using GCC 4.0, but you should expect many more
+compiler warnings than using GCC 3.4.  The development version of libc is
+better suited to being built with the most recent GCC versions.
 
 There are some add-ons which can be used together with GNU libc.  They
 are designed in a way to ease the installation by integrating them in
