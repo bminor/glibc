@@ -1,3 +1,21 @@
+2005-11-03  Roland McGrath  <roland@redhat.com>
+
+	* NEWS, version.h (VERSION): 2.3.6.
+	* README.template: Add note about GCC 4 compiler warnings.
+	* README: Regenerated.
+
+2005-10-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ia64/fpu/libm-symbols.h (WEAK_LIBM_ENTRY): Add "__"
+	prefix to LOCAL_LIBM_ENTRY.
+	(WEAK_LIBM_END): Add "__" prefix to LOCAL_LIBM_END.
+
+2005-10-24  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1534]
+	* include/string.h: Use libc_hidden_proto, not
+	libc_hidden_builtin_proto, for strnlen.
+
 2005-10-22  Roland McGrath  <roland@redhat.com>
 
 	* README.template: Remove GCC 4 note.
