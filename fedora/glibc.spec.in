@@ -1,4 +1,4 @@
-%define glibcrelease 0.fc3.8
+%define glibcrelease 0.fc3.1
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define nptlarches i386 i686 athlon x86_64 ia64 s390 s390x sparcv9 ppc ppc64
@@ -1275,6 +1275,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Nov  3 2005 Roland McGrath <roland@redhat.com> 2.3.6-0.fc3.1
+- update to glibc 2.3.6 release
+
 * Sat Oct 22 2005 Roland McGrath <roland@redhat.com> 2.3.5-0.fc3.8
 - update from CVS (glibc-2_3-branch)
   - alpha div/rem fix (BZ#1498)
