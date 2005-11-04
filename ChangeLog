@@ -1,3 +1,9 @@
+2005-11-03  Roland McGrath  <roland@redhat.com>
+
+	* NEWS, version.h (VERSION): 2.3.6.
+	* README.template: Add note about GCC 4 compiler warnings.
+	* README: Regenerated.
+
 2005-10-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/ia64/fpu/libm-symbols.h (WEAK_LIBM_ENTRY): Add "__"
