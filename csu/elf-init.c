@@ -49,16 +49,16 @@ extern void (*__init_array_end []) (int, char **, char **)
 extern void (*__fini_array_start []) (void) attribute_hidden;
 extern void (*__fini_array_end []) (void) attribute_hidden;
 
-# if defined HAVE_VISIBILITY_ATTRIBUTE \
-     && (defined SHARED || defined LIBC_NONSHARED)
-#  define hidden_undef_2(x) #x
-#  define hidden_undef_1(x) hidden_undef_2 (x)
-#  define hidden_undef(x) \
+#if defined HAVE_VISIBILITY_ATTRIBUTE \
+    && (defined SHARED || defined LIBC_NONSHARED)
+# define hidden_undef_2(x) #x
+# define hidden_undef_1(x) hidden_undef_2 (x)
+# define hidden_undef(x) \
   __asm (hidden_undef_1 (ASM_GLOBAL_DIRECTIVE) " " #x); \
   __asm (".hidden " #x);
-# else
-#  define hidden_undef(x)
-# endif
+#else
+# define hidden_undef(x)
+#endif
 
 hidden_undef (__preinit_array_start)
 hidden_undef (__preinit_array_end)
@@ -66,7 +66,6 @@ hidden_undef (__init_array_start)
 hidden_undef (__init_array_end)
 hidden_undef (__fini_array_start)
 hidden_undef (__fini_array_end)
-#endif
 
 /* These function symbols are provided for the .init/.fini section entry
    points automagically by the linker.  */
