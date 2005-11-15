@@ -1,3 +1,8 @@
+2005-11-14  Roland McGrath  <roland@redhat.com>
+
+	[BZ #758]
+	* sysdeps/unix/sysv/linux/mips/mips32/kern64/sysdep.h: Really remove.
+
 2005-11-03  Roland McGrath  <roland@redhat.com>
 
 	* NEWS, version.h (VERSION): 2.3.6.
