@@ -1,3 +1,17 @@
+2005-11-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/configure: Removed.
+
+2005-11-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: Remove trace of
+	optional init_array/fini_array support.
+
+2005-10-24  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sem_trywait.S: Remove unnecessary
+	versioned_symbol use.
+
 2005-10-16  Roland McGrath  <roland@redhat.com>
 
 	* init.c (__pthread_initialize_minimal_internal): Even when using a
@@ -323,6 +337,7 @@
 
 2005-02-14  Alan Modra  <amodra@bigpond.net.au>
 
+	[BZ #721]
 	* sysdeps/powerpc/tcb-offsets.sym (thread_offsetof): Redefine to suit
 	gcc4.
 

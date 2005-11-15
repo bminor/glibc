@@ -8,11 +8,6 @@
 # error "glibc must not be compiled with -ffast-math"
 #endif
 
-/* Define if using GNU ld, with support for weak symbols in a.out,
-   and for symbol set and warning messages extensions in a.out and ELF.
-   This implies HAVE_WEAK_SYMBOLS; set by --with-gnu-ld.  */
-#undef	HAVE_GNU_LD
-
 /* Define if using ELF, which supports weak symbols.
    This implies HAVE_ASM_WEAK_DIRECTIVE and NO_UNDERSCORES; set by
    --with-elf.  */
@@ -49,9 +44,6 @@
 
 /* Define if __attribute__((section("foo"))) puts quotes around foo.  */
 #undef  HAVE_SECTION_QUOTES
-
-/* Define if using the GNU assembler, gas.  */
-#undef	HAVE_GNU_AS
 
 /* Define if the assembler supports the `.set' directive.  */
 #undef	HAVE_ASM_SET_DIRECTIVE
@@ -158,10 +150,6 @@
 /* Define if binutils support TLS handling.  */
 #undef	HAVE_TLS_SUPPORT
 
-/* Define if the linker supports .preinit_array/.init_array/.fini_array
-   sections.  */
-#undef	HAVE_INITFINI_ARRAY
-
 /* Define if the compiler's exception support is based on libunwind.  */
 #undef	HAVE_CC_WITH_LIBUNWIND
 
@@ -185,10 +173,6 @@
 
 /* Override abi-tags ABI version if necessary.  */
 #undef  __ABI_TAG_VERSION
-
-/* An extension in gcc 2.96 and up allows the subtraction of two
-   local labels.  */
-#undef	HAVE_SUBTRACT_LOCAL_LABELS
 
 /* bash 2.0 introduced the _XXX_GNU_nonoption_argv_flags_ variable to help
    getopt determine whether a parameter is a flag or not.  This features

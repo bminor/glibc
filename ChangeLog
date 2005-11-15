@@ -1,5 +1,296 @@
+2005-11-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-open.c [!SHARED]: Remove _dl_tls_static_size definition.
+	* sysdeps/generic/libc-tls.c: Initialize _dl_tls_static_size here.
+
+2005-11-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/Makefile (routines): Add fstatat, fstatat64, fxstatat, fxstatat64,
+	fchownat, and unlinkat.
+	(static-only-routines): Add fstatat and fstatat64.
+	(tests): Add tst-unlinkat, tst-fstatat, tst-futimesat, tst-renameat,
+	and tst-fchownat.
+	* io/Versions [GLIBC_2.4]: Add fchownat, __fxstatat, __fxstatat64,
+	and unlinkat.
+	* io/fcntl.h: Define AT_FDCWD, AT_SYMLINK_NOFOLLOW, and AT_REMOVEDIR.
+	* io/fstatat.c: New file.
+	* io/fstatat64.c: New file.
+	* io/sys/stat.h: Declare fstatat, fstatat64, __fxstatat, __fxstatat64
+	and define fstatat and fstatat64 inline functions.
+	* libio/stdio.h: Declare renameat.
+	* misc/Makefile (routines): Add futimesat.
+	* misc/Versions [GLIBC_2.4]: Add futimesat.
+	* posix/unistd.h: Declare fchownat and unlinkat.
+	* stdio-common/Makefile (routines): Add renameat.
+	* stdio-common/Versions [GLIBC_2.4]: Add renameat.
+	* sysdeps/generic/fchownat.c: New file.
+	* sysdeps/generic/futimesat.c: New file.
+	* sysdeps/generic/fxstatat.c: New file.
+	* sysdeps/generic/fxstatat64.c: New file.
+	* sysdeps/generic/renameat.c: New file.
+	* sysdeps/generic/unlinkat.c: New file.
+	* sysdeps/unix/sysv/linux/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/futimesat.c: New file.
+	* sysdeps/unix/sysv/linux/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/fxstatat64.c: New file.
+	* sysdeps/unix/sysv/linux/renameat.c: New file.
+	* sysdeps/unix/sysv/linux/unlinkat.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/i386/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/sh/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/sh/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fchownat.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat64.c: New file.
+	* time/sys/time.h: Declare futimesat.
+	* include/fcntl.h: Declare __atfct_seterrno.
+	* sysdeps/unix/sysv/linux/openat.c (__atfct_seterrno): New function.
+	Split out from openat code and called.
+	(do_test): Allow openat to fail with ENOSYS.  Handle AT_FDCWD.
+	* sysdeps/generic/openat.c: Handle AT_FDCWD.
+	* sysdeps/generic/openat64.c: Likewise.
+	* io/tst-unlinkat.c: New file.
+	* io/tst-fstatat.c: New file.
+	* io/tst-futimesat.c: New file.
+	* io/tst-renameat.c: New file.
+	* io/tst-fchownat.c: New file.
+	* io/tst-openat.c: Don't fail if openat is not implemented.
+
+	* sysdeps/unix/sysv/linux/powerpc/chown.c: Don't provide backward
+	compatibility code if new kernel is guaranteed.
+
+	* time/sys/time.h: Add a few nonnull attributes.
+
+2005-11-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/fcntl.h: Declare openat and openat64.
+	* io/Makefile (routines): Add openat and openat64.
+	(tests): Add tst-openat.
+	* io/Versions: Add openat and openat64 for GLIBC_2.4.
+	* sysdeps/generic/openat.c: New file.
+	* sysdeps/generic/openat64.c: New file.
+	* sysdeps/unix/sysv/linux/openat.c: New file.
+	* sysdeps/unix/sysv/linux/openat64.c: New file.
+	* io/tst-openat.c: New file.
+
+	* sysdeps/generic/check_fds.c (check_one_fd): For writable
+	descriptors, use /dev/full.
+	(__libc_check_standard_fds): Reverse modes so that common operations on
+	the descriptors fail.
+	* sysdeps/unix/sysv/linux/device-nrs.h: Add info for /dev/full.
+
+2005-11-07  Kazuhiro Inaoka  <inaoka.kazuhiro@renesas.com>
+
+	* elf/elf.h (R_M32R_REL32): New macro.
+
+2005-11-05  Marcus Brinkmann  <marcus@gnu.org>
+
+	* sysdeps/mach/hurd/bits/stat.h (S_IMMAP0): New macro.
+	(S_ISPARE): Unset the S_IMMAP0 flag.
+
+2005-11-07  Roland McGrath  <roland@redhat.com>
+
+	* configure.in: Grok --with-cpu=CPU option.  If given, search for
+	sysdeps/.../machine/CPU subdirs, and give error if none are found.
+	* configure: Regenerated.
+	* config.make.in (with-cpu): New substituted variable.
+	* Makeconfig (+cflags): Add -mcpu=$(with-cpu) if set.
+
+	* malloc/malloc.c (munmap_chunk): Suppress warnings from last change.
+
+	* sysdeps/unix/bsd/sun: Directory and all subdirectories removed,
+	saved in ports repository.
+	* sysdeps/unix/sysv/linux/tcflush.c: Rewritten.
+	* sysdeps/unix/sysv/linux/tcflow.c: Rewritten.
+
+2005-11-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (munmap_chunk): Add sanity checks.
+
+	* sysdeps/pthread/configure: Fix comment.
+
+2005-11-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Remove gnu_as definition and everything using it.
+	* config.make.in: Remove gnu-as.
+	* config.h.in: Remove HAVE_GNU_AS.
+
+	* configure.in: Remove gnu_ld definition and everything using it.
+	* config.h.in: Remove HAVE_GNU_LD.
+	* config.make.in: Remove gnu-ld.
+	* csu/Makefile: Remove use of gnu-ld.
+	* csu/munch.awk: Removed.
+	* csu/munch-tmpl.c: Removed.
+	* include/libc-symbols.h: Remove use of HAVE_GNU_LD.
+	* posix/execl.c: Likewise.
+	* posix/execv.c: Likewise.
+	* stdio-common/psignal.c: Likewise.
+	* stdlib/exit.c: Likewise.
+	* string/strsignal.c: Likewise.
+	* string/tester.c: Likewise.
+	* sysdeps/generic/errlist.c: Likewise.
+	* sysdeps/generic/getenv.c: Likewise.
+	* sysdeps/generic/getgroups.c: Likewise.
+	* sysdeps/generic/init-posix.c: Likewise.
+	* sysdeps/posix/gettimeofday.c: Likewise.
+	* sysdeps/posix/system.c: Likewise.
+	* sysdeps/unix/bsd/init-posix.c: Likewise.
+	* sysdeps/unix/bsd/ulimit.c: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/brk.S: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/sethostid.S: Likewise.
+	* sysdeps/unix/bsd/sun/sparc/sethostid.S: Likewise.
+	* sysdeps/unix/i386/brk.S: Likewise.
+	* sysdeps/unix/sparc/brk.S: Likewise.
+
+	* configure.in: Remove test for support for subtracting local labels.
+	* config.h.in: Remove HAVE_SUBTRACT_LOCAL_LABELS.
+	* stdio-common/vfprintf.c: Remove test of
+	HAVE_SUBTRACT_LOCAL_LABELS.
+
+	* configure.in: If init_array/fini_array support is not available,
+	bail out.
+	* config.h.in: Remove trace of optional init_array/fini_array support.
+	* config.make.in: Likewise.
+	* csu/elf-init.c: Likewise.
+	* dlfcn/dlfcn.c: Likewise.
+	* elf/soinit.c: Likewise.
+	* sysdeps/ia64/elf/initfinit.c: Likewise.
+
+2005-11-04  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/configure.in (libc_mtune_example): Variable removed.
+	* sysdeps/i386/configure: Regenerated.
+
+	[BZ #1089]
+	* configure.in: Change order of add-on sysdeps directories,
+	so they are interleaved with main sysdeps directories.
+	* configure: Regenerated.
+
+2005-11-03  Roland McGrath  <roland@redhat.com>
+
+	* NEWS: Synch with 2.3 branch updates.
+
+2005-11-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/svc.c (svc_getreq_poll): Fix inefficient loop test.
+
+2005-11-03  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1548]
+	* sunrpc/svc.c (svc_getreqset): Use ffsl instead of ffs on fd_mask,
+	make sure constant is long.
+	From Jay Lan <jlan@engr.sgi.com>.
+
+2005-11-03  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1774]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't use simple
+	gethostbyname2 lookup if AI_V4MAPPED|AI_ALL is set.
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Avoid alloca when possible
+	while looking for scope delimiter.
+	Some pretty printing.
+
+2005-10-31  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/Makefile
+	(sysdep_routines, elide-routines.os): Add hp-timing.
+	* sysdeps/powerpc/powerpc64/hp-timing.c: New file.
+	* sysdeps/powerpc/powerpc64/hp-timing.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/get_clockfreq.c: New file.
+
+2005-10-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_init.c (__res_iclose): New function.  Broken out of
+	res_nclose.  Take addition parameter which determines whether
+	addresses should be freed.
+	(res_nclose): Call __res_iclose.
+	(res_thread_freeres): Likewise.
+	* resolv/res_data.c (res_close): Call __res_iclose.
+	* resolv/res_libc.c (res_init): No need to separately free the
+	addresses.
+	(__res_maybe_init): Likewise.
+	* resolv/res_send.c: Use __res_iclose instead of res_nclose.
+	* resolv/Versions [GLIBC_PRIVATE]: Add __res_iclose.
+	* include/resolv.h: Declare __res_iclose.
+	Add libc_hidden_proto for __res_iclose.
+	* hesiod/hesiod.c (__hesiod_res_set): No need to free name server
+	addresses here again.
+
+	[BZ #1579]
+	* debug/execinfo.h: Change backtrace_symbols_fd comment.
+
+2005-10-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ia64/fpu/libm-symbols.h (WEAK_LIBM_ENTRY): Add "__"
+	prefix to LOCAL_LIBM_ENTRY.
+	(WEAK_LIBM_END): Add "__" prefix to LOCAL_LIBM_END.
+
+2005-10-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-conflict.c (_dl_resolve_conflicts): Use _dl_debug_printf
+	instead of _dl_printf to print conflict processing debug message.
+	Reported by John Reiser <jreiser@BitWagon.com>.
+
+2005-10-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/hsearch_r.c (hsearch_r): Remove duplicate test.
+	Patch by Chris Caputo <ccaputo@alt.net>.
+
+2005-10-28  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sh/sysdep.S: Remove unnecessary weak_alias.
+	* sysdeps/unix/sysv/linux/sh/socket.S: Honor NO_WEAK_ALIAS.
+
+2005-10-28  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nss_nis/nis-publickey.c (_nss_nis_getpublickey): Fix off
+	by one error.
+
+2005-10-24  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1534]
+	* include/string.h: Use libc_hidden_proto for strnlen,
+	not libc_hidden_builtin_proto.
+
+2005-10-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/mqueue.h: Cleanups.
+
+2005-10-22  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1254]
+	* sysdeps/mach/hurd/getpeername.c (__getpeername): Fix last change.
+	From Samuel Thibault <samuel.thibault@ens-lyon.org>.
+
+2005-10-17  Thomas Schwinge  <tschwinge@gnu.org>
+
+	[BZ #1252]
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): Don't use ?: as lvalue.
+	* sysdeps/mach/hurd/ioctl.c (__ioctl): Likewise.
+
+2005-10-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/ibm1364.h (__ucs4_to_ibm1364sb): Fix one mapping.
+	* iconvdata/ibm1388.h (__ucs4_to_ibm1388sb): Likewise.
+	* iconvdata/testdata/IBM1364: Add missing valid input.
+	* iconvdata/testdata/IBM1388: Likewise.
+	* iconvdata/testdata/IBM1364..UTF8: Adjust appropriately.
+	* iconvdata/testdata/IBM1388..UTF8: Likewise.
+	Patch by Masahide Washizawa <washi@jp.ibm.com>.
+
 2005-08-23  GOTO Masanori  <gotom@debian.or.jp>
 
+	[BZ #1498]
 	* sysdeps/alpha/remqu.S: Return the correct result when the same
 	dividend and divisor are provided, and they're negative numbers.
 	* sysdeps/alpha/divqu.S: Likewise.

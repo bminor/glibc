@@ -298,11 +298,6 @@ config_os="`echo $config_os | sed 's/^unknown-//'`"
 
 # Some configurations imply other options.
 case "$host_os" in
-gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
-  # These systems always use GNU tools.
-  gnu_ld=yes gnu_as=yes ;;
-esac
-case "$host_os" in
 # i586-linuxaout is mangled into i586-pc-linux-gnuaout
 linux*ecoff* | linux*aout* | gnu*aout* | gnu*ecoff*)
   ;;
@@ -336,6 +331,17 @@ case "$machine-$host_os" in
     with_fp=no
     ;;
 esac
+
+submachine=
+AC_ARG_WITH([cpu],
+	    AS_HELP_STRING([--with-cpu=CPU], [select code for CPU variant]),
+	    [dnl
+  case "$withval" in
+  yes|'') AC_MSG_ERROR([--with-cpu requires an argument]) ;;
+  no) ;;
+  *) submachine="$withval" ;;
+  esac
+])
 
 
 # An add-on can set this when it the tuple to disable the sanity check below.
@@ -556,7 +562,7 @@ done
 
 # For sparc/sparc32, try sparc/sparc32 and then sparc.
 mach=
-tail=$machine
+tail=$machine${submachine:+/$submachine}
 while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
   set $m
   # Prepend the machine's FPU directory unless --without-fp.
@@ -575,23 +581,26 @@ changequote([,])dnl
 # Find what sysdep directories exist.
 sysnames=
 IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
-for d in $add_ons_pfx ''; do
-  for b in $base ''; do
-    for m0 in $mach ''; do
-      for v in /$vendor ''; do
-	test "$v" = / && continue
-	for o in /$ostry ''; do
-	  test "$o" = / && continue
-	  for m in $mach ''; do
+for b in $base ''; do
+  for m0 in $mach ''; do
+    for v in /$vendor ''; do
+      test "$v" = / && continue
+      for o in /$ostry ''; do
+	test "$o" = / && continue
+	for m in $mach ''; do
+	  for d in $add_ons_pfx ''; do
 	    for a in $add_ons_sfx ''; do
-	      if test "$m0$b$v$o$m"; then
-		try="${d}sysdeps$m0$b$v$o$m$a"
+	      if test "$m0$m0sub$b$v$o$m$msub"; then
+		try="${d}sysdeps$m0$m0sub$b$v$o$m$msub$a"
 		test -n "$enable_debug_configure" &&
 		echo "$0 [DEBUG]: try $try" >&2
 		if test -d $srcdir/$try; then
 		  sysnames="$sysnames $try"
 		  { test -n "$o" || test -n "$b"; } && os_used=t
 		  { test -n "$m" || test -n "$m0"; } && machine_used=t
+		  case x${m0:-$m} in
+		  x*/$submachine) submachine_used=t ;;
+		  esac
 		fi
 	      fi
 	    done
@@ -600,14 +609,18 @@ for d in $add_ons_pfx ''; do
       done
     done
   done
-  if test -n "$d"; then
-    try="${d}sysdeps/generic"
-    test -n "$enable_debug_configure" &&
-    echo "$0 DEBUG: try $try" >&2
-    if test -d $srcdir/$try; then
-      sysnames="$sysnames $try"
+done
+for d in $add_ons_pfx ''; do
+  for a in $add_ons_sfx ''; do
+    if test -n "$d" && test "$d" != "$a"; then
+      try="${d}sysdeps/generic${a}"
+      test -n "$enable_debug_configure" &&
+      echo "$0 DEBUG: try $try" >&2
+      if test -d $srcdir/$try; then
+	sysnames="$sysnames $try"
+      fi
     fi
-  fi
+  done
 done
 IFS="$ac_save_ifs"
 
@@ -617,6 +630,10 @@ fi
 if test -z "$machine_used" && test "$machine" != none; then
   AC_MSG_ERROR(The $machine is not supported.)
 fi
+if test -z "$submachine_used" && test -n "$submachine"; then
+  AC_MSG_ERROR(The $submachine subspecies of $host_cpu is not supported.)
+fi
+AC_SUBST(submachine)
 
 # We have now validated the configuration.
 
@@ -1233,7 +1250,7 @@ EOF
     AC_DEFINE(HAVE_BROKEN_ALIAS_ATTRIBUTE)
   fi
 
-  if test $libc_cv_visibility_attribute = yes -a $gnu_ld = yes; then
+  if test $libc_cv_visibility_attribute = yes; then
     AC_CACHE_CHECK(whether to put _rtld_local into .sdata section,
 		 libc_cv_have_sdata_section,
 		 [echo "int i;" > conftest.c
@@ -1250,7 +1267,7 @@ EOF
   fi
 
   AC_CACHE_CHECK(for .preinit_array/.init_array/.fini_array support,
-		 libc_cv_initfinit_array, [dnl
+		 libc_cv_initfini_array, [dnl
   cat > conftest.c <<EOF
 int _start (void) { return 0; }
 int __start (void) { return 0; }
@@ -1261,17 +1278,16 @@ EOF
 		     -static -nostartfiles -nostdlib 1>&AS_MESSAGE_LOG_FD])
   then
     if readelf -S conftest | fgrep INIT_ARRAY > /dev/null; then
-      libc_cv_initfinit_array=yes
+      libc_cv_initfini_array=yes
     else
-      libc_cv_initfinit_array=no
+      libc_cv_initfini_array=no
     fi
   else
-    libc_cv_initfinit_array=no
+    libc_cv_initfini_array=no
   fi
   rm -f conftest*])
-  AC_SUBST(libc_cv_initfinit_array)
-  if test $libc_cv_initfinit_array = yes; then
-    AC_DEFINE(HAVE_INITFINI_ARRAY)
+  if test $libc_cv_initfini_array != yes; then
+    AC_MSG_ERROR([Need linker with .init_array/.fini_array support.])
   fi
 
   AC_CACHE_CHECK(for libunwind-support in compiler,
@@ -1536,7 +1552,7 @@ if test $elf != yes; then
   fi
 fi
 
-if test $elf = yes -a $gnu_ld = yes; then
+if test $elf = yes; then
   AC_CACHE_CHECK(whether cc puts quotes around section names,
 		 libc_cv_have_section_quotes,
 		 [cat > conftest.c <<EOF
@@ -1849,35 +1865,6 @@ if test "$libc_cv_gcc_builtin_redirection" = yes ; then
   AC_DEFINE(HAVE_BUILTIN_REDIRECTION)
 fi
 
-dnl Check whether the compiler supports subtraction of local labels.
-AC_CACHE_CHECK(for local label subtraction, libc_cv_gcc_subtract_local_labels,
-[cat > conftest.c <<EOF
-changequote(,)dnl
-#line $LINENO "configure"
-int foo (int a)
-{
-  static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };
-  void *p = &&l1 + ar[a];
-  goto *p;
- l1:
-  return 1;
- l2:
-  return 2;
-}
-changequote([,])dnl
-EOF
-dnl No \ in command here because it ends up inside ''.
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostdlib -nostartfiles
-			    -o conftest conftest.c -lgcc >&AS_MESSAGE_LOG_FD]); then
-  libc_cv_gcc_subtract_local_labels=yes
-else
-  libc_cv_gcc_subtract_local_labels=no
-fi
-rm -f conftest*])
-if test "$libc_cv_gcc_subtract_local_labels" = yes; then
-  AC_DEFINE(HAVE_SUBTRACT_LOCAL_LABELS)
-fi
-
 dnl Check whether the compiler supports the __thread keyword.
 if test "x$use__thread" != xno; then
   AC_CACHE_CHECK([for __thread], libc_cv_gcc___thread,
@@ -2103,13 +2090,7 @@ AC_SUBST(libc_cv_forced_unwind)
 AC_SUBST(use_ldconfig)
 AC_SUBST(ldd_rewrite_script)
 
-AC_SUBST(gnu_ld) AC_SUBST(gnu_as) AC_SUBST(elf) AC_SUBST(xcoff)
-if test $gnu_ld = yes; then
-  AC_DEFINE(HAVE_GNU_LD)
-fi
-if test $gnu_as = yes; then
-  AC_DEFINE(HAVE_GNU_AS)
-fi
+AC_SUBST(elf) AC_SUBST(xcoff)
 if test $elf = yes; then
   AC_DEFINE(HAVE_ELF)
 fi
@@ -2120,13 +2101,7 @@ fi
 AC_SUBST(static)
 AC_SUBST(shared)
 if test $shared = default; then
-  if test $gnu_ld = yes; then
-    shared=$elf
-  else
-    # For now we do not assume shared libs are available.  In future more
-    # tests might become available.
-    shared=no
-  fi
+  shared=$elf
 fi
 
 if test x"$libc_cv_idn" = xyes; then
