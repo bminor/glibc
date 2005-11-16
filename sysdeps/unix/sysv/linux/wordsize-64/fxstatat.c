@@ -24,6 +24,7 @@
 #include <fcntl.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/stat.h>
 
 #include <sysdep.h>
@@ -70,7 +71,10 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
     res = INTERNAL_SYSCALL (stat, err, 2, file, CHECK_1 (st));
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
-    __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (res, err), fd, buf);
+    {
+      __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (res, err), fd, buf);
+      res = -1;
+    }
 
   return res;
 }

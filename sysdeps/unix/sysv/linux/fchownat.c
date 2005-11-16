@@ -20,6 +20,7 @@
 #include <fcntl.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
 
@@ -67,7 +68,10 @@ fchownat (fd, file, owner, group, flag)
     result = INTERNAL_SYSCALL (chown, err, 3, file, owner, group);
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
-    __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
+    {
+      __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
+      result = -1;
+    }
 
   return result;
 }

@@ -1,3 +1,58 @@
+2005-11-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fchownat.c: Include string.h.
+	* sysdeps/unix/sysv/linux/futimesat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/renameat.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/unlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c: Likewise.
+
+2005-11-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile (modules): Add ISO_11548-1.
+	(distribute): Add iso_11548-1.c.
+	* iconvdata/gconv-modules: Add entries for ISO 11548-1.
+	* iconvdata/TESTS: Add entry for ISO 11548-1.
+
+	[BZ 1872]
+	* iconvdata/iso_11548-1.c: New file.
+	* iconvdata/testdata/ISO_11548-1: New file.
+	* iconvdata/testdata/ISO_11548-1..UTF8: New file.
+	Patch by Samuel Thibault <samuel.thibault@ens-lyon.org>.
+
+2005-11-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/bits/setjmp.h (_JMPBUF_UNWINDS): Remove incorrect &.
+
+2005-11-15  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ 1865]
+	* inet/netinet/icmp6.h: More updates for RFC3542.
+	* inet/netinet/ip6.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/in.h: Adjust for current kernel sources.
+	Patch by David L Stevens <dlstevens@us.ibm.com>.
+
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c (__fxstatat):
+	Return -1 on failure.
+	* sysdeps/unix/sysv/linux/fchownat.c (fchownat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c (__fxstatat): Likewise..
+	* sysdeps/unix/sysv/linux/fxstatat64.c [__ASSUME_STAT64_SYSCALL]
+	(__fxstatat64): Handle errors.
+
+	* io/sys/poll.h: Add comment explaining poll is a cancellation	point.
+
+	* sysdeps/unix/sysv/linux/syscalls.list (epoll_wait): Align with
+	poll, make cancelable.
+	* sysdeps/unix/sysv/linux/sys/epoll.h: Add comment explaining
+	epoll_wait is a cancellation point.
+
+2005-11-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/sys/stat.h (fstatat): Don't use __THROW together with
+	__REDIRECT_NTH.
+
 2005-11-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-open.c [!SHARED]: Remove _dl_tls_static_size definition.
