@@ -1,4 +1,4 @@
-%define glibcrelease 17
+%define glibcrelease 18
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -1095,6 +1095,14 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sat Nov 19 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-18
+- update from CVS
+  - change <sys/stat.h> for broken apps that #define const /**/,
+    handle non-GCC compilers
+  - fix ppc{32,64} strncmp (BZ#1877, #173643, IT#83510)
+  - provide shmatt_t typedef in ia64 <sys/shm.h (#173680)
+  - support 2nd arg to futimesat being NULL (#173581)
+
 * Wed Nov 16 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-17
 - update from CVS
   - fix <sys/stat.h> in C++
