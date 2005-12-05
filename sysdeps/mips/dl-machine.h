@@ -528,7 +528,7 @@ _dl_start_user:\n\
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 
-static inline void
+auto inline void
 #ifdef RTLD_BOOTSTRAP
   __attribute__ ((always_inline))
 #endif
@@ -635,14 +635,14 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
     }
 }
 
-static inline void
+auto inline void
 elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
 			  void *const reloc_addr)
 {
   /* XXX Nothing to do.  There is no relative relocation, right?  */
 }
 
-static inline void
+auto inline void
 elf_machine_lazy_rel (struct link_map *map,
 		      ElfW(Addr) l_addr, const ElfW(Rel) *reloc)
 {
@@ -651,7 +651,7 @@ elf_machine_lazy_rel (struct link_map *map,
 
 #ifndef RTLD_BOOTSTRAP
 /* Relocate GOT. */
-static inline void
+auto inline void
 elf_machine_got_rel (struct link_map *map, int lazy)
 {
   ElfW(Addr) *got;
@@ -738,7 +738,7 @@ elf_machine_got_rel (struct link_map *map, int lazy)
 /* Set up the loaded object described by L so its stub function
    will jump to the on-demand fixup code __dl_runtime_resolve.  */
 
-static inline int
+auto inline int
 elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
 # ifndef RTLD_BOOTSTRAP
