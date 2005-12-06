@@ -1,5 +1,19 @@
 2005-12-05  Roland McGrath  <roland@redhat.com>
 
+	* hurd/hurdmalloc.c: Remove $ tag $ magic.
+	* mach/err_kern.sub: Likewise.
+	* mach/err_server.sub: Likewise.
+	* mach/err_us.sub: Likewise.
+	* mach/error_compat.c: Likewise.
+	* mach/errorlib.h: Likewise.
+	* mach/errstring.c: Likewise.
+	* mach/mach/error.h: Likewise.
+	* mach/mach_error.c: Likewise.
+	* mach/mach_error.h: Likewise.
+	* mach/msg-destroy.c: Likewise.
+	* mach/msgserver.c: Likewise.
+	* sysdeps/mach/sys/reboot.h: Likewise.
+
 	* sysdeps/generic/dwarf2.h: Replace license text with glibc LGPL.
 
 2005-11-30  Bruno Haible  <bruno@clisp.org>
