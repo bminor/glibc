@@ -557,6 +557,10 @@ else
 +gccwarn := -Wall -Wwrite-strings -Winline -Wstrict-prototypes
 endif
 
+# We do not depend on the address of constants in different files to be
+# actually different, so allow the compiler to merge them all.
++merge-constants = -fmerge-all-constants
+
 # This is the program that generates makefile dependencies from C source files.
 # The -MP flag tells GCC >= 3.2 (which we now require) to produce dummy
 # targets for headers so that removed headers don't break the build.
@@ -611,21 +615,22 @@ ifeq	"$(strip $(+cflags))" ""
 +cflags	:= $(default_cflags)
 endif	# $(+cflags) == ""
 
-+cflags := $(+cflags) $(addprefix -mcpu=,$(with-cpu)) $(+gccwarn)
++cflags += $(addprefix -mcpu=,$(with-cpu)) $(+gccwarn) $(+merge-constants)
 +gcc-nowarn := -w
 
 # Don't duplicate options if we inherited variables from the parent.
 +cflags	:= $(sort $(+cflags))
 
 
-# These are flags given to the C compiler to tell it to look for include
-# files (including ones given in angle brackets) in the current directory,
-# in the parent library source directory and in the include directory.
+# These are flags given to the C compiler to tell it to look for
+# include files (including ones given in angle brackets) in the parent
+# library source directory, in the include directory, and in the
+# current directory.
 # `+sysdep-includes' will be defined by Makerules.
-+includes = -I$(..)include -I. \
-	    $(patsubst %/,-I%,$(objpfx)) $(patsubst %/,-I%,$(..)) \
++includes = -I$(..)include $(patsubst %/,-I%,$(..)) \
 	    $(libio-include) $(includes) \
-	    $(+sysdep-includes) $(sysincludes)
+	    $(+sysdep-includes) $(sysincludes) -I. \
+	    $(patsubst %/,-I%,$(objpfx))
 
 # Since libio has several internal header files, we use a -I instead
 # of many little headers in the include directory.

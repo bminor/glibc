@@ -112,7 +112,8 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
 	  lcatch->errstring = _dl_out_of_memory;
 	  lcatch->malloced = false;
 	}
-      longjmp (lcatch->env, errcode ?: -1);
+      /* We do not restore the signal mask because none was saved.  */
+      __longjmp (lcatch->env, errcode ?: -1);
     }
   else
     {
@@ -169,7 +170,8 @@ _dl_catch_error (const char **objname, const char **errstring,
 
   struct catch **const catchp = &CATCH_HOOK;
   old = *catchp;
-  errcode = setjmp (c.env);
+  /* Do not save the signal mask.  */
+  errcode = __sigsetjmp (c.env, 0);
   if (__builtin_expect (errcode, 0) == 0)
     {
       *catchp = &c;

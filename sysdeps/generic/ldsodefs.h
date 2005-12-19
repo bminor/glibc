@@ -508,7 +508,6 @@ struct rtld_global
     struct dtv_slotinfo
     {
       size_t gen;
-      bool is_static;
       struct link_map *map;
     } slotinfo[0];
   } *_dl_tls_dtv_slotinfo_list;
@@ -623,6 +622,9 @@ struct rtld_global_ro
 
   /* Expected cache ID.  */
   EXTERN int _dl_correct_cache_id;
+
+  /* 0 if internal pointer values should not be guarded, 1 if they should.  */
+  EXTERN int _dl_pointer_guard;
 
   /* Mask for hardware capabilities that are available.  */
   EXTERN uint64_t _dl_hwcap;

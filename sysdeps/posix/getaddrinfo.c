@@ -121,7 +121,8 @@ struct gaih
   {
     int family;
     int (*gaih)(const char *name, const struct gaih_service *service,
-		const struct addrinfo *req, struct addrinfo **pai);
+		const struct addrinfo *req, struct addrinfo **pai,
+		unsigned int *naddrs);
   };
 
 static const struct addrinfo default_hints =
@@ -363,7 +364,8 @@ extern service_user *__nss_hosts_database attribute_hidden;
 
 static int
 gaih_inet (const char *name, const struct gaih_service *service,
-	   const struct addrinfo *req, struct addrinfo **pai)
+	   const struct addrinfo *req, struct addrinfo **pai,
+	   unsigned int *naddrs)
 {
   const struct gaih_typeproto *tp = gaih_inet_typeproto;
   struct gaih_servtuple *st = (struct gaih_servtuple *) &nullserv;
@@ -393,6 +395,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	}
     }
 
+  int port = 0;
   if (service != NULL)
     {
       if ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0)
@@ -445,63 +448,41 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	}
       else
 	{
-	  if (req->ai_socktype || req->ai_protocol)
-	    {
-	      st = __alloca (sizeof (struct gaih_servtuple));
-	      st->next = NULL;
-	      st->socktype = tp->socktype;
-	      st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
-			      ? req->ai_protocol : tp->protocol);
-	      st->port = htons (service->num);
-	    }
-	  else
-	    {
-	      /* Neither socket type nor protocol is set.  Return all
-		 socket types we know about.  */
-	      struct gaih_servtuple **lastp = &st;
-	      for (tp = gaih_inet_typeproto + 1; tp->name[0]; ++tp)
-		if ((tp->protoflag & GAI_PROTO_NOSERVICE) == 0)
-		  {
-		    struct gaih_servtuple *newp;
-
-		    newp = __alloca (sizeof (struct gaih_servtuple));
-		    newp->next = NULL;
-		    newp->socktype = tp->socktype;
-		    newp->protocol = tp->protocol;
-		    newp->port = htons (service->num);
-
-		    *lastp = newp;
-		    lastp = &newp->next;
-		  }
-	    }
+	  port = htons (service->num);
+	  goto got_port;
 	}
-    }
-  else if (req->ai_socktype || req->ai_protocol)
-    {
-      st = __alloca (sizeof (struct gaih_servtuple));
-      st->next = NULL;
-      st->socktype = tp->socktype;
-      st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
-		      ? req->ai_protocol : tp->protocol);
-      st->port = 0;
     }
   else
     {
-      /* Neither socket type nor protocol is set.  Return all socket types
-	 we know about.  */
-      struct gaih_servtuple **lastp = &st;
-      for (++tp; tp->name[0]; ++tp)
+    got_port:
+
+      if (req->ai_socktype || req->ai_protocol)
 	{
-	  struct gaih_servtuple *newp;
+	  st = __alloca (sizeof (struct gaih_servtuple));
+	  st->next = NULL;
+	  st->socktype = tp->socktype;
+	  st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
+			  ? req->ai_protocol : tp->protocol);
+	  st->port = port;
+	}
+      else
+	{
+	  /* Neither socket type nor protocol is set.  Return all socket types
+	     we know about.  */
+	  struct gaih_servtuple **lastp = &st;
+	  for (++tp; tp->name[0]; ++tp)
+	    {
+	      struct gaih_servtuple *newp;
 
-	  newp = __alloca (sizeof (struct gaih_servtuple));
-	  newp->next = NULL;
-	  newp->socktype = tp->socktype;
-	  newp->protocol = tp->protocol;
-	  newp->port = 0;
+	      newp = __alloca (sizeof (struct gaih_servtuple));
+	      newp->next = NULL;
+	      newp->socktype = tp->socktype;
+	      newp->protocol = tp->protocol;
+	      newp->port = port;
 
-	  *lastp = newp;
-	  lastp = &newp->next;
+	      *lastp = newp;
+	      lastp = &newp->next;
+	    }
 	}
     }
 
@@ -1108,6 +1089,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  }
 	*pai = NULL;
 
+	++*naddrs;
+
       ignore:
 	at2 = at2->next;
       }
@@ -1556,6 +1539,7 @@ getaddrinfo (const char *name, const char *service,
   else
     end = NULL;
 
+  unsigned int naddrs = 0;
   while (g->gaih)
     {
       if (hints->ai_family == g->family || hints->ai_family == AF_UNSPEC)
@@ -1564,7 +1548,7 @@ getaddrinfo (const char *name, const char *service,
 	  if (pg == NULL || pg->gaih != g->gaih)
 	    {
 	      pg = g;
-	      i = g->gaih (name, pservice, hints, end);
+	      i = g->gaih (name, pservice, hints, end, &naddrs);
 	      if (i != 0)
 		{
 		  /* EAI_NODATA is a more specific result as it says that
@@ -1596,7 +1580,7 @@ getaddrinfo (const char *name, const char *service,
   if (j == 0)
     return EAI_FAMILY;
 
-  if (nresults > 1)
+  if (naddrs > 1)
     {
       /* Sort results according to RFC 3484.  */
       struct sort_result results[nresults];
