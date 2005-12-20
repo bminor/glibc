@@ -1,5 +1,23 @@
 2005-12-20  Jakub Jelinek  <jakub@redhat.com>
 
+	* malloc/mtrace.c (__libc_malloc, __libc_free, __libc_realloc,
+	__libc_memalign): Add prototypes and libc_hidden_proto resp.
+	defines for !_LIBC.
+	(tr_freehook): Call __libc_free instead of free.
+	(tr_mallochook): Call __libc_malloc instead of malloc.
+	(tr_reallochook): Call __libc_realloc instead of realloc.
+	(tr_memalignhook): Call __libc_memalign instead of memalign.
+	* malloc/mcheck.c: Include stdlib.h.
+	(__libc_malloc, __libc_free, __libc_realloc,
+	__libc_memalign): Add prototypes and libc_hidden_proto resp.
+	defines for !_LIBC.
+	(freehook): Call __libc_free instead of free.
+	(mallochook): Call __libc_malloc instead of malloc.
+	(reallochook): Call __libc_realloc instead of realloc.
+	(memalignhook): Call __libc_memalign instead of memalign.
+	(mcheck): Call __libc_malloc and __libc_free instead of
+	malloc and free.
+
 	Workaround for http://gcc.gnu.org/PR25240
 	* include/libc-symbols.h (weak_extern): Define using weak attribute.
 	(_weak_extern): Remove.
