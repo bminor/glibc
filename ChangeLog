@@ -1,3 +1,13 @@
+2005-12-20  Jakub Jelinek  <jakub@redhat.com>
+
+	Workaround for http://gcc.gnu.org/PR25240
+	* include/libc-symbols.h (weak_extern): Define using weak attribute.
+	(_weak_extern): Remove.
+	(weak_tls_extern): Define.
+	* locale/uselocale.c (DEFINE_CATEGORY): Use weak_tls_extern for
+	_nl_current_##category.
+	* locale/setlocale.c (DEFINE_CATEGORY): Likewise.
+
 2005-12-19  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1955]

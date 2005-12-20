@@ -54,7 +54,7 @@ __uselocale (locale_t newloc)
       {									      \
 	extern char _nl_current_##category##_used;			      \
 	weak_extern (_nl_current_##category##_used)			      \
-	weak_extern (_nl_current_##category)				      \
+	weak_tls_extern (_nl_current_##category)				      \
 	if (&_nl_current_##category##_used != 0)			      \
 	  _nl_current_##category = &locobj->__locales[category];	      \
       }
