@@ -16,31 +16,20 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <fcntl.h>
 #include <stddef.h>
-#include <sys/time.h>
+#include <time.h>
+
+#include <sysdep.h>
 
 
-/* Change the access time of FILE relative to FD to TVP[0] and
-   the modification time of FILE to TVP[1].  */
-int
-futimesat (fd, file, tvp)
-     int fd;
-     const char *file;
-     const struct timeval tvp[2];
+time_t
+time (time_t *t)
 {
-  if (fd < 0
-      && (file == NULL
-          || (fd != AT_FDCWD && file[0] != '/')))
-    {
-      __set_errno (EBADF);
-      return -1;
-    }
-
-  __set_errno (ENOSYS);
-  return -1;
+  INTERNAL_SYSCALL_DECL (err);
+  time_t res = INTERNAL_SYSCALL (time, err, 1, NULL);
+  /* There cannot be any error.  */
+  if (t != NULL)
+    *t = res;
+  return res;
 }
-
-stub_warning (futimesat)
-#include <stub-tag.h>
+libc_hidden_def (time)

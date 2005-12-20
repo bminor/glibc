@@ -1,4 +1,4 @@
-%define glibcrelease 19
+%define glibcrelease 20
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -432,6 +432,7 @@ exit 0
 EOF
 chmod +x find_provides.sh
 touch `find . -name configure`
+touch locale/programs/*-kw.h
 
 %build
 GCC=gcc
@@ -1073,6 +1074,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Dec 20 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-20
+- update from CVS
+  - time ((void *) 1) should segfault, not return -EFAULT (#174856, BZ#1952)
+  - fix errlist generation
+- update ulps for GCC 4.1
+
 * Mon Dec 19 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-19
 - update from CVS
   - sysdeps/generic reorg
@@ -1080,6 +1087,9 @@ rm -f *.filelist*
 - rebuilt with GCC 4.1-RH prerelease, worked around broken _Pragma ()
   handling in it
 - remove glibc-profile subpackage
+- use non-PLT calls for malloc/free/realloc/memalign invocations in
+  mtrace and mcheck hooks (#175261)
+- setjmp/longjmp jump pointer mangling on ppc{,64}/ia64/s390{,x}
 
 * Sat Nov 19 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-18
 - update from CVS
