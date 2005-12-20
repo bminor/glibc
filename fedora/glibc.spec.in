@@ -1,4 +1,4 @@
-%define glibcrelease 20
+%define glibcrelease 21
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -865,8 +865,8 @@ for f in `find $RPM_BUILD_ROOT/%{_lib} -type l`; do
 done
 
 echo Sorting source file lists. Might take a while...
-xargs -0 -n 1 echo < $sf | LC_ALL=C grep -v '/<internal>$' | LC_ALL=C sort -u > $sf.sorted
-xargs -0 -n 1 echo < $csf | LC_ALL=C grep -v '/<internal>$' | LC_ALL=C sort -u > $csf.sorted
+xargs -0 -n 1 echo < $sf | LC_ALL=C grep -v '/<internal>$\|\.gperf$' | LC_ALL=C sort -u > $sf.sorted
+xargs -0 -n 1 echo < $csf | LC_ALL=C grep -v '/<internal>$\|\.gperf$' | LC_ALL=C sort -u > $csf.sorted
 mkdir -p $RPM_BUILD_ROOT/usr/src/debug
 cat $sf.sorted $csf.sorted \
   | (cd $RPM_BUILD_DIR; LC_ALL=C sort -u | cpio -pdm ${RPM_BUILD_ROOT}/usr/src/debug)
@@ -1074,11 +1074,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Dec 20 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-21
+- update from CVS
+  - fix pointer (de)mangling in gconv_cache.c
+
 * Tue Dec 20 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-20
 - update from CVS
   - time ((void *) 1) should segfault, not return -EFAULT (#174856, BZ#1952)
   - fix errlist generation
-- update ulps for GCC 4.1
+- update ulps for GCC 4.1 on IA-64
 
 * Mon Dec 19 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-19
 - update from CVS
