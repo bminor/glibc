@@ -39,7 +39,7 @@
 # define DEFINE_CATEGORY(category, category_name, items, a) \
     extern char _nl_current_##category##_used; \
     weak_extern (_nl_current_##category##_used) \
-    weak_tls_extern (_nl_current_##category)
+    weak_extern (_nl_current_##category)
 # include "categories.def"
 # undef	DEFINE_CATEGORY
 

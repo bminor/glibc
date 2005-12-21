@@ -114,8 +114,8 @@
   extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
 
 /* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
-#  define weak_extern(symbol) extern __typeof (symbol) symbol __attribute__ ((weak));
-#  define weak_tls_extern(symbol) extern __thread __typeof (symbol) symbol __attribute__ ((weak));
+#  define weak_extern(symbol) _weak_extern (weak symbol)
+#  define _weak_extern(expr) _Pragma (#expr)
 
 # else
 
