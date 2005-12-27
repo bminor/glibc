@@ -1,3 +1,160 @@
+2005-12-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def: Add GLIBC_2.4 for libpthread.
+
+2005-12-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/Makefile ($(objpfx)isomac.out): Move -I.. to the end so
+	that $(..)/bits is not found early.
+
+2005-12-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/errno.texi: Add new Linux errno codes.
+	* sysdeps/unix/sysv/linux/Versions: Add new errlist-compat entry
+	for up to 132 errnos.
+	* sysdeps/unix/sysv/linux/bits/errno.h: Define EOWNERDEAD and
+	ENOTRECOVERABLE if not already defined.
+
+2005-12-23  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1566]
+	* sysdeps/i386/i586/memusage.h: New file.
+	* sysdeps/i386/memusage.h: Don't define GETTIME.
+
+2005-12-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1499]
+	* misc/syslog.c (SyslogAddr): Use sockaddr_un instead of sockaddr.
+	(openlog_internal): Adjust for this change.
+
+	* Makeconfig: Define CXXFLAGS.  Split out warnings from +gccwarn which
+	are not understood by the C++ compiler.
+	* Makerules: Add rules to build C++ code for test cases.
+	* include/stdlib.h: Protect for inclusion in C++ code.
+	* include/time.h: Likewise.
+
+2005-12-22  Roland McGrath  <roland@redhat.com>
+
+	* Makerules [gen-as-const-headers] (tests): Add one test per .sym
+	file, not just one.
+	($(objpfx)test-as-const.c): Target replaced with ...
+	($(objpfx)test-as-const-%.c): ... this pattern rule.
+	(generated): Add those files.
+
+2005-12-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* test-skeleton.c (timeout_handler): Rewrite ts initialization for
+	C++ compatibility.
+
+	* sysdeps/x86_64/__longjmp.S: Also protect SP and BP.
+	* sysdeps/x86_64/setjmp.S: Likewise.
+
+2005-12-21  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/i386/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/s390/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/sh/sh3/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/sh/sh3/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/sh/sh4/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/sh/sh4/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.h: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/i386/Makefile [$(subdir) = stdlib]:
+	(gen-as-const-headers): Add it.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/sh/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/s390/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile: Likewise.
+	* stdlib/tst-ucontext-off.c: File removed.
+	* stdlib/Makefile (tests): Remove it.
+
+	* scripts/gen-as-const.awk: Support generating a test program.
+	* Makerules [gen-as-const-headers] (tests): Add test-as-const.
+	[gen-as-const-headers] ($(objpfx)test-as-const.c): New target.
+
+	* sysdeps/generic/bits: Subdirectory and all files moved to ...
+	* bits: ... here, new subdirectory.
+	* Makeconfig (+includes): Reordered includes to put build and sysdeps
+	dirs first after $(..)include, $(sysincludes) last.
+
+	[BZ #2066]
+	* intl/l10nflist.c (_nl_make_l10nflist): Free ABS_FILENAME when later
+	malloc fails.
+
+2005-12-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update for GCC 4.1 prerelease.
+
+2005-12-21  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/mach/hurd/ifreq.c: Add missing #includes.
+
+	* elf/cache.c: Use <> rather than "" #includes.
+	* elf/chroot_canon.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* elf/readlib.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* gmon/mcount.c: Likewise.
+	* hurd/hurdfault.c: Likewise.
+	* hurd/hurdsig.c: Likewise.
+	* hurd/report-wait.c: Likewise.
+	* hurd/sigunwind.c: Likewise.
+	* mach/setup-thread.c: Likewise.
+	* rt/aio_read64.c: Likewise.
+	* rt/aio_sigqueue.c: Likewise.
+	* rt/aio_write64.c: Likewise.
+	* soft-fp/soft-fp.h: Likewise.
+	* stdio-common/tmpfile64.c: Likewise.
+	* sysdeps/mach/hurd/fork.c: Likewise.
+	* sysdeps/mach/hurd/hppa/trampoline.c: Likewise.
+	* sysdeps/mach/hurd/i386/trampoline.c: Likewise.
+	* sysdeps/mach/hurd/mips/trampoline.c: Likewise.
+	* sysdeps/mach/hurd/powerpc/trampoline.c: Likewise.
+	* sysdeps/posix/sprofil.c: Likewise.
+	* sysdeps/pthread/aio_cancel.c: Likewise.
+	* sysdeps/pthread/aio_fsync.c: Likewise.
+	* sysdeps/pthread/aio_read64.c: Likewise.
+	* sysdeps/pthread/aio_read.c: Likewise.
+	* sysdeps/pthread/aio_suspend.c: Likewise.
+	* sysdeps/pthread/aio_write64.c: Likewise.
+	* sysdeps/pthread/aio_write.c: Likewise.
+	* sysdeps/pthread/lio_listio64.c: Likewise.
+	* sysdeps/pthread/lio_listio.c: Likewise.
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c: Likewise.
+	* sysdeps/unix/sysv/tcflow.c: Likewise.
+
+	* sysdeps/generic/unwind-dw2.c (extract_cie_info): Add a cast.
+
+	* elf/dl-error.c (_dl_signal_error): Use .__jmpbuf in __longjmp call.
+
+	* csu/dso_handle.c (__dso_handle): Add const to pointer type too.
+
+2005-12-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_conf.c: Initialize empty_path_elem.
+
+	* sysdeps/ieee754/dbl-64/halfulp.c: Mark tab54 as static and const.
+	* sysdeps/i386/fpu/e_expl.c: Mark c0 and c1 as const.
+	* sysdeps/ieee754/flt-32/s_expm1f.c: Make sure huge and tiny end
+	up in .rodata.
+	* sysdeps/ieee754/flt-32/e_exp2f.c: Make sure TWO127 and TWOM100
+	end up in .rodata.
+	* sysdeps/ieee754/flt-32/e_expf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp2.c: Make sure TWO1023 and TWOM1000
+	end up in .rodata.
+
+2005-12-21  Thorsten Kukuk  <kukuk@suse.de>
+
+	* elf/readlib.c: Fix include of readelflib.c.
+
 2005-12-21  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #1962]

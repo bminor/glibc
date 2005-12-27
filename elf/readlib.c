@@ -34,7 +34,7 @@
 #include <sys/stat.h>
 #include <gnu/lib-names.h>
 
-#include "ldconfig.h"
+#include <ldconfig.h>
 
 #define Elf32_CLASS ELFCLASS32
 #define Elf64_CLASS ELFCLASS64
@@ -178,4 +178,4 @@ process_file (const char *real_file_name, const char *file_name,
 }
 
 /* Get architecture specific version of process_elf_file.  */
-#include "readelflib.c"
+#include <readelflib.c>

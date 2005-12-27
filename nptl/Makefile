@@ -116,6 +116,8 @@ libpthread-routines = init vars events version \
 		      pthread_kill_other_threads \
 		      pthread_getaffinity pthread_setaffinity \
 		      pthread_attr_getaffinity pthread_attr_setaffinity \
+		      pthread_mutexattr_getrobust pthread_mutexattr_setrobust \
+		      pthread_mutex_consistent \
 		      cleanup_routine unwind-forcedunwind
 #		      pthread_setuid pthread_seteuid pthread_setreuid \
 #		      pthread_setresuid \
@@ -189,7 +191,8 @@ CFLAGS-pt-system.c = -fexceptions
 omit-deps = $(unix-syscalls:%=ptw-%)
 
 
-tests = tst-attr1 tst-attr2 tst-attr3 \
+tests = tst-typesizes \
+	tst-attr1 tst-attr2 tst-attr3 \
 	tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-mutex7 tst-mutex8 tst-mutex9 tst-mutex5a tst-mutex7a \
 	tst-spin1 tst-spin2 tst-spin3 \
@@ -197,6 +200,8 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-cond8 tst-cond9 tst-cond10 tst-cond11 tst-cond12 tst-cond13 \
 	tst-cond14 tst-cond15 tst-cond16 tst-cond17 tst-cond18 tst-cond19 \
 	tst-cond20 tst-cond21 \
+	tst-robust1 tst-robust2 tst-robust3 tst-robust4 tst-robust5 \
+	tst-robust6 tst-robust7 \
 	tst-rwlock1 tst-rwlock2 tst-rwlock3 tst-rwlock4 tst-rwlock5 \
 	tst-rwlock6 tst-rwlock7 tst-rwlock8 tst-rwlock9 tst-rwlock10 \
 	tst-rwlock11 tst-rwlock12 tst-rwlock13 tst-rwlock14 \
@@ -220,7 +225,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-cancel6 tst-cancel7 tst-cancel8 tst-cancel9 tst-cancel10 \
 	tst-cancel11 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 \
 	tst-cancel16 tst-cancel17 tst-cancel18 tst-cancel19 tst-cancel20 \
-	tst-cancel21 tst-cancel22 tst-cancel23 \
+	tst-cancel21 tst-cancel22 tst-cancel23 tst-cancel24 \
 	tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 tst-cleanup4 \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 tst-signal4 tst-signal5 \
@@ -478,6 +483,8 @@ $(objpfx)tst-cancelx18: $(common-objpfx)rt/librt.a
 $(objpfx)tst-clock2: $(common-objpfx)rt/librt.a
 $(objpfx)tst-rwlock14: $(common-objpfx)rt/librt.a
 endif
+
+LDFLAGS-tst-cancel24 = -lstdc++
 
 extra-B-pthread.so = -B$(common-objpfx)nptl/
 $(objpfx)libpthread.so: $(addprefix $(objpfx),$(crti-objs) $(crtn-objs))

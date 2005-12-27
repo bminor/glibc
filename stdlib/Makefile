@@ -63,8 +63,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   test-canon test-canon2 tst-strtoll tst-environ	    \
 		   tst-xpg-basename tst-random tst-random2 tst-bsearch	    \
 		   tst-limits tst-rand48 bug-strtod tst-setcontext	    \
-		   test-a64l tst-qsort tst-system testmb2 bug-strtod2	    \
-		   tst-ucontext-off
+		   test-a64l tst-qsort tst-system testmb2 bug-strtod2
 
 include ../Makeconfig
 
@@ -125,7 +124,7 @@ endif
 
 $(objpfx)isomac.out: $(objpfx)isomac
 	$(dir $<)$(notdir $<) '$(CC)'  \
-	'-I../include -I.. $(+sysdep-includes) $(sysincludes)' > $<.out
+	'-I../include $(+sysdep-includes) $(sysincludes) -I..' > $<.out
 
 isomac-CFLAGS = -O
 $(objpfx)isomac: isomac.c
