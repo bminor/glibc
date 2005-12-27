@@ -693,7 +693,18 @@ search_dir (const struct dir_entry *entry)
 #endif
 	      !is_hwcap_platform (direntry->d_name)))
 	continue;
-      len = strlen (entry->path) + strlen (direntry->d_name);
+      len = strlen (direntry->d_name);
+      if (len >= sizeof (".#prelink#") - 1)
+	{
+	  if (strcmp (direntry->d_name + len - sizeof (".#prelink#") + 1,
+		      ".#prelink#") == 0)
+	    continue;
+	  if (len >= sizeof (".#prelink#.XXXXXX") - 1
+	      && memcmp (direntry->d_name + len - sizeof (".#prelink#.XXXXXX")
+			 + 1, ".#prelink#.", sizeof (".#prelink#.") - 1) == 0)
+	    continue;
+	}
+      len += strlen (entry->path);
       if (len > file_name_len)
 	{
 	  file_name_len = len + 1;
