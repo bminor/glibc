@@ -1125,6 +1125,7 @@ rm -f *.filelist*
 - update from CVS
   - minor fts fixes
 - revert broken _Pragma () workaround
+- fix ldconfig on bi-arch architectures (#176316)
 
 * Tue Dec 20 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-21
 - update from CVS
