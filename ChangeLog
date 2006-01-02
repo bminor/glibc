@@ -1,8 +1,282 @@
+2006-01-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getconf.c: Update copyright year.
+	* nss/getent.c: Likewise.
+	* iconv/iconvconfig.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* catgets/gencat.c: Likewise.
+	* csu/version.c: Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* elf/sprof.c (print_version): Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* nscd/nscd.c (print_version): Likewise.
+	* debug/xtrace.sh: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* malloc/mtrace.pl: Likewise.
+	* debug/catchsegv.sh: Likewise.
+
+2005-12-31  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #1395]
+	* manual/filesys.texi (Symbolic Links): Fix description of
+	canonicalize_file_name based on patch by Oskar Liljeblad
+	<oskar@osk.mine.nu>.
+
+2005-12-29  Andreas Jaeger  <aj@suse.de>
+
+	* resolv/res_debug.c (latlon2ul): Use ISO C function definition.
+	(precsize_aton): Likewise.
+	(precsize_ntoa): Likewise.
+
+	* resolv/gethnamaddr.c (_gethtbyname): Remove extra prototype.
+	(gethostbyname2): Likewise.
+	(gethostbyaddr): Likewise.
+	(getanswer): Use ISO C function definition.
+
+2005-12-29  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/sysdep.h: Add cfi instrumentation to asm fragments.
+	* sysdeps/unix/sysv/linux/sh/sysdep.h: Likewise.
+	* sysdeps/sh/_mcount.S: Add cfi instrumentation.
+	* sysdeps/unix/sh/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/makecontext.S: Adjust cfi_startproc.
+	* sysdeps/unix/sysv/linux/sh/sh4/getcontext.S: Remove now duplicate
+	cfi_startproc and cfi_endproc.
+	* sysdeps/unix/sysv/linux/sh/sh4/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh3/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh3/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh3/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep.S: Add cfi_endproc.
+
+2005-12-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Make sure pointer guard
+	value doesn't survive in a registers when the function returns.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/setjmp-common.S: Likewise.
+
+2005-12-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Define
+	PTR_MANGLE2.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Define
+	PTR_MANGLE2 and PTR_DEMANGLE2.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Use PTR_DEMANGLE2.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Use PTR_MANGLE2.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/setjmp-common.S: Likewise.
+
+2005-12-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/setjmp.h (_JMPBUF_UNWINDS):
+	Don't use _demangle parameter for now.
+
+	[BZ #2080]
+	* libio/iogetwline.c (_IO_getwline_info): Move return to correct
+	location.
+
+	* nscd/connections.c: Remove last remnants of -S option support.
+	* nscd/nscd.c: Likewise.
+	* nscd/nscd.h: Likewise.
+
+2005-12-30  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #1067]
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Fix struct msghdr
+	for 64-bit mips kernel.
+
+2005-12-08  Steven Munroe  <sjmunroe@us.ibm.com>
+            Tom Gall <tom_gall@vnet.ibm.com>
+
+	* elf/rtld.c (dl_main): Initialize l_local_scope for sysinfo_map.
+	* sysdeps/powerpc/elf/libc-start.c: Move this...
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c: ...to here.
+	* sysdeps/powerpc/powerpc32/dl-start.S: Add _dl_main_dispatch label.
+	* sysdeps/powerpc/powerpc32/hp-timing.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/Versions: New file.
+	* sysdeps/unix/sysv/linux/clock_getres.c: If HAVE_CLOCK_GETRES_VSYSCALL
+	is not defined, redefine INTERNAL_VSYSCALL and INLINE_VSYSCALL to
+	INTERNAL_SYSCALL and INLINE_SYSCALL respectively.  Otherwise include
+	<bits/libc-vdso.h>.  Use INLINE_VSYSCALL and INTERNAL_SYSCALL instead
+	of the normal versions throughout the code.
+	* sysdeps/unix/sysv/linux/clock_gettime.c: Likewise if
+	HAVE_CLOCK_GETTIME_VSYSCALL is defined.
+	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/dl-vdso.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/dl-vdso.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/get_clockfreq.c: Use vDSO.
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: Add dl-vdso to routines.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Define
+	INLINE_VSYSCALL, INTERNAL_VSYSCALL, INTERNAL_SYSCALL_NCS,
+	INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK, HAVE_CLOCK_GETRES_VSYSCALL,
+	and HAVE_CLOCK_GETTIME_VSYSCALL.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Likewise.
+
+2005-12-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h [ASSEMBLER]:
+	Define PTR_DEMANGLE2.
+	* sysdeps/powerpc/powerpc32/setjmp-common.S [PTR_MANGLE]: Also
+	mangle r1.
+	* sysdeps/powerpc/powerpc32/__longjmp-common.S [PTR_DEMANGLE]: Also
+	demangle r1.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S [PTR_MANGLE]: Mangle
+	r0 and r1.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S [PTR_DEMANGLE]:
+	Demangle r0 and r1.
+
+	* sysdeps/powerpc/powerpc64/setjmp-common.S [PTR_MANGLE]: Also
+	mangle r1.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S [PTR_DEMANGLE]: Also
+	demangle  r1.
+
+2005-12-26  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S:
+	Move common function to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S:
+	Move common function to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S:
+	Move common function to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ucontext_i.sym
+	(_FRAME_BACKCHAIN, _FRAME_LR_SAVE, _FRAME_PARM_SAVE1,
+	_FRAME_PARM_SAVE2, _FRAME_PARM_SAVE3, _FRAME_PARM_SAVE4):
+	Remove unrelated stack frame defines.
+
+2005-12-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/tstdiomisc.c [FLT_EVAL_METHOD!=2] (dbl_max):
+	Defining as macro as before the last change.
+
+	* sysdeps/unix/sysv/linux/sigaction.c: If WRAPPER_INCLUDE is defined,
+	include the named file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigaction.c: Likewise.
+
+2005-12-29  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/errno.c: New file.
+
+	* sysdeps/mach/hurd/ioctl.c (__ioctl): Use a union to avoid a cast.
+
+	* sysdeps/posix/libc_fatal.c (__libc_message): Add a const, a cast.
+
+	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Fix cast.
+	* hurd/report-wait.c (_S_msg_report_wait): Likewise.
+
+	* include/sys/xattr.h: New file.
+
+2005-12-28  Roland McGrath  <roland@redhat.com>
+
+	* hurd/sigunwind.c: Include <stdint.h>.
+	* sysdeps/mach/hurd/jmp-unwind.c: Likewise.
+
+2005-12-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/selinux.c (log_callback): Use audit_log_user_avc_message.
+	Don't do anything if audit_fd is invalid.
+	(audit_init): Don't complain if kernel support is missing.
+	Patch by Steve Grubb <sgrubb@redhat.com>.
+
+	* sysdeps/i386/__longjmp.S [PTR_DEMANGLE]: Also demangle stack
+	pointer.  Add CFI.
+	* sysdeps/i386/bsd-_setjmp.S [PTR_MANGLE]: Also mangle stack pointer.
+	* sysdeps/i386/bsd-setjmp.S: Likewise.
+	* sysdeps/i386/setjmp.S: Likewise.
+
+	* sysdeps/x86_64/__longjmp.S: No need to make sure return value is
+	!= 0, the caller did that.
+
+2005-12-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/x86_64/__longjmp.S: Don't confuse unwinder by loading
+	mangled values in %rbp and %rsp registers and by wrong cfi.
+
+	* config.make.in (c++-sysincludes): New substituted variable.
+	* configure.in (CXX_SYSINCLUDES): New substituted variable.
+	* configure: Regenerated.
+	* Makeconfig (CXXFLAGS): Prepend $(c++-sysincludes) here.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	(PTR_MANGLE): Fix cast.
+
+	* sysdeps/alpha/bits/setjmp.h (_JMPBUF_UNWINDS): Take third argument
+	DEMANGLE, and pass SP value through it.
+	* sysdeps/hppa/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/i386/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/m68k/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/mips/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/powerpc/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/s390/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/sh/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/sparc/sparc32/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/setjmp.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/setjmp.h: Likewise.
+	* sysdeps/x86_64/bits/setjmp.h (_JMPBUF_UNWINDS): Likewise.
+	* hurd/sigunwind.c (_hurdsig_longjmp_from_handler): Pass inline
+	demangler function to _JMPBUF_UNWINDS.
+	* sysdeps/mach/hurd/jmp-unwind.c (demangle_ptr): New function.
+	(_longjmp_unwind): Pass it to _JMPBUF_UNWINDS.
+
+	* posix/tst-execle1.c (do_test): Add a const.
+	* posix/tst-execle2.c (do_test): Likewise.
+
+	* posix/transbug.c (run_test): Add some casts.
+	* posix/bug-regex22.c (main): Likewise.
+	* posix/bug-regex5.c (main): Likewise.
+	* wcsmbs/tst-mbsrtowcs.c (main): Likewise.
+	* string/test-strspn.c (do_test, do_random_tests): Likewise.
+	* string/test-strrchr.c (do_test, do_random_tests): Likewise.
+	* string/test-strlen.c (do_random_tests): Likewise.
+	* string/test-strpbrk.c (do_test, do_random_tests): Likewise.
+	* string/test-strcmp.c (do_random_tests): Likewise.
+	* string/test-strchr.c (do_test, do_random_tests): Likewise.
+	* string/test-strcat.c (do_test, do_random_tests): Likewise.
+	* string/test-strncpy.c (do_random_tests): Likewise.
+	* string/test-strcpy.c (do_test, do_random_tests): Likewise.
+	* string/test-memccpy.c (do_test): Likewise.
+	* string/test-memmove.c (do_test, do_random_tests): Likewise.
+	* string/test-memcpy.c (do_test, do_random_tests): Likewise.
+	* string/test-memcmp.c (do_test, do_random_tests): Likewise.
+	* string/test-memchr.c (do_test, do_random_tests): Likewise.
+	* dlfcn/bug-atexit1.c (do_test): Fix up prototype in cast.
+	* stdio-common/tst-fgets.c (do_test): Add a cast.
+	* iconvdata/bug-iconv4.c (xiconv): Add a cast.
+
+	* locale/programs/simple-hash.c (insert_entry_2): Remove useless casts.
+
+	* resolv/herror.c (herror): Remove unused extern decl.
+
+	* libio/obprintf.c: Include "strfile.h".
+
+	* elf/order2mod2.c (init): Cast ignored value to void.
+
 2005-12-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/ldconfig.c (search_dir): Skip prelink temporaries.
 
 2005-12-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/tst-tls13.c (do_test): Avoid using the library path when
+	looking for tst-tlsmod13a.so.
+
+	* stdio-common/tstdiomisc.c: If FLT_EVAL_METHOD is 2, use long
+	double math to generate NaN results.
 
 	* sysdeps/unix/sysv/linux/sparc/bits/errno.h: Define EOWNERDEAD
 	and ENOTRECOVERABLE if not already defined.

@@ -109,6 +109,9 @@ aligned_restore_vmx:
 L(no_vmx):
 #endif
 	ld r1,(JB_GPR1*8)(r3)
+#ifdef PTR_DEMANGLE
+	PTR_DEMANGLE (r1, r25)
+#endif
 	ld r2,(JB_GPR2*8)(r3)
 	ld r0,(JB_LR*8)(r3)
 	ld r14,((JB_GPRS+0)*8)(r3)
@@ -129,7 +132,7 @@ L(no_vmx):
 	ld r20,((JB_GPRS+6)*8)(r3)
 	lfd fp20,((JB_FPRS+6)*8)(r3)
 #ifdef PTR_DEMANGLE
-	PTR_DEMANGLE (r0, r25)
+	PTR_DEMANGLE2 (r0, r25)
 #endif
 	mtlr r0
 /* 	std r2,40(r1)	Restore the TOC save area.  */

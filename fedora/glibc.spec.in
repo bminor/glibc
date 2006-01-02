@@ -602,7 +602,7 @@ rm -f $RPM_BUILD_ROOT/%{_lib}/libNoVersion*
 
 # NPTL <bits/stdio-lock.h> is not usable outside of glibc, so include
 # the generic one (#162634)
-cp -a sysdeps/generic/bits/stdio-lock.h $RPM_BUILD_ROOT%{_prefix}/include/bits/stdio-lock.h
+cp -a bits/stdio-lock.h $RPM_BUILD_ROOT%{_prefix}/include/bits/stdio-lock.h
 
 if [ -d $RPM_BUILD_ROOT%{_prefix}/info -a "%{_infodir}" != "%{_prefix}/info" ]; then
     mkdir -p $RPM_BUILD_ROOT%{_infodir}

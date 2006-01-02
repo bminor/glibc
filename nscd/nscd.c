@@ -1,4 +1,4 @@
-/* Copyright (c) 1998-2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (c) 1998-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -70,7 +70,6 @@ int disabled_passwd;
 int disabled_group;
 int go_background = 1;
 
-int secure_in_use;
 static const char *conffile = _PATH_NSCDCONF;
 
 time_t start_time;
@@ -370,16 +369,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case 'S':
-#if 0
-      if (strcmp (arg, "passwd,yes") == 0)
-	secure_in_use = dbs[pwddb].secure = 1;
-      else if (strcmp (arg, "group,yes") == 0)
-	secure_in_use = dbs[grpdb].secure = 1;
-      else if (strcmp (arg, "hosts,yes") == 0)
-	secure_in_use = dbs[hstdb].secure = 1;
-#else
       error (0, 0, _("secure services not implemented anymore"));
-#endif
       break;
 
     default:
@@ -398,7 +388,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2005");
+"), "2006");
   fprintf (stream, gettext ("Written by %s.\n"),
 	   "Thorsten Kukuk and Ulrich Drepper");
 }
