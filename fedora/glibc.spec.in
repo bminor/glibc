@@ -1,4 +1,4 @@
-%define glibcrelease 24
+%define glibcrelease 25
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -603,6 +603,8 @@ rm -f $RPM_BUILD_ROOT/%{_lib}/libNoVersion*
 # NPTL <bits/stdio-lock.h> is not usable outside of glibc, so include
 # the generic one (#162634)
 cp -a bits/stdio-lock.h $RPM_BUILD_ROOT%{_prefix}/include/bits/stdio-lock.h
+# And <bits/libc-lock.h> needs sanitizing as well.
+cp -a redhat/libc-lock.h $RPM_BUILD_ROOT%{_prefix}/include/bits/libc-lock.h
 
 if [ -d $RPM_BUILD_ROOT%{_prefix}/info -a "%{_infodir}" != "%{_prefix}/info" ]; then
     mkdir -p $RPM_BUILD_ROOT%{_infodir}
@@ -1115,6 +1117,11 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Jan  2 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-25
+- update from CVS
+  - s390{,x} and sparc{,64} pointer mangling fixes
+  - install a sanitized LinuxThreads <bits/libc-lock.h>
+
 * Mon Jan  2 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-24
 - update from CVS
   - nscd audit changes (#174422)
