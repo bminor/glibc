@@ -1,3 +1,74 @@
+2006-01-04  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/brk.c (__brk): Use
+	__SYSCALL_CLOBBERS.
+
+2006-01-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in (HAVE_LIBAUDIT): Check
+	audit_log_user_avc_message instead of audit_log_avc.
+
+2006-01-04  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/bits/nan.h: Fix typo.
+
+2006-01-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/m68k/fchownat.c: Include string.h.
+
+	* sysdeps/sparc/sparc32/dl-machine.h (LD_SO_PRELOAD): Remove unused
+	define.
+
+	* sysdeps/sparc/sparc32/bits/atomic.h: Include stdint.h, add
+	{,u}atomic*_t typedefs.
+	(__sparc32_atomic_do_lock): Add __volatile and memory clobber.
+	(__sparc32_atomic_do_unlock): Add memory barrier.
+	(__sparc32_atomic_do_lock24, __sparc32_atomic_do_unlock24): Define.
+	[!SHARED] (__v9_compare_and_exchange_val_32_acq): Define.
+	(__v7_compare_and_exchange_val_acq, __v7_compare_and_exchange_bool_acq,
+	__v7_exchange_acq, __v7_exchange_and_add, __v7_exchange_24_rel,
+	__v7_compare_and_exchange_val_24_acq, __atomic_is_v9,
+	atomic_exchange_acq, atomic_compare_and_exchange_val_24_acq,
+	atomic_exchange_24_rel): Define.
+	[SHARED] (atomic_exchange_and_add): Define.
+	[!SHARED] (__ATOMIC_HWCAP_SPARC_V9): Define.
+	[!SHARED] (_dl_hwcap): New weak decl.
+	* sysdeps/sparc/sparc32/sparcv9/bits/atomic.h (atomic_exchange_24_rel,
+	atomic_compare_and_exchange_val_24_acq): Define.
+	* sysdeps/sparc/sparc64/bits/atomic.h (atomic_exchange_24_rel,
+	atomic_compare_and_exchange_val_24_acq): Define.
+
+2006-01-03  Ulrich Drepper  <drepper@redhat.com>
+
+	lio_listio should emit an event for each individual request in
+	addition to the global event.
+	* sysdeps/pthread/lio_listio.c (lio_listio): Renamed to
+	lio_listio_internal.  Remove mode parameter check.  Only set sigevent
+	type to SIGEV_NONE if LIO_NO_INDIVIDUAL_EVENT is set.
+	(__lio_listio_21): New function.  Compatiblity version which sets
+	LIO_NO_INDIVIDUAL_EVENT before calling lio_listio_internal.
+	(__lio_listio_item_notify): New function.
+	* sysdeps/pthread/lio_listio64.c: Define __lio_listio_21 and
+	__lio_listio_item_notify macros.
+	* sysdeps/pthread/Versions: New file.
+	* rt/tst-aio2.c: Adjust test for new semantics of lio_listio.
+	* include/aio.h: Define LIO_NO_INDIVIDUAL_EVENT.
+	* Versions.def: Add GLIBC_2.4 for librt.
+
+	* rt/Versions: Whitespace fix.
+	* sysdeps/pthread/aio_misc.c: Likewise.
+
+	* nscd/connections.c (nscd_init): Remove if block which should
+	have been removed as part of the -S option removal.
+
+2006-01-03  Andreas Jaeger  <aj@suse.de>
+
+	* scripts/check-local-headers.sh: Allow $includedir/c++.
+
+2006-01-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/unistd.h (ctermid): Remove __nonnull attribute.
+
 2006-01-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h (PTR_MANGLE,
