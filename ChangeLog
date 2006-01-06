@@ -1,3 +1,79 @@
+2006-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2114]
+	* ncsd/aicache.c: Don't use sendfile for records on the stack.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/initgrcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+	Patch by dmueller@suse.com.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Define MADV_REMOVE.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Likewise.
+
+2006-01-06  Roland McGrath  <roland@redhat.com>
+
+	* Makeconfig (+gnu-stabs): Remove ancient cruft.
+
+	[BZ #2103]
+	* sysdeps/unix/sysv/linux/net/if_arp.h (ARPHRD_HWX25): Corrected macro
+	name (was typo ARPHDR_HWX25).
+	(ARPHRD_IEEE80211_PRISM, ARPHRD_IEEE80211_RADIOTAP): New macros.
+	(ARPHRD_VOID, ARPHRD_NONE): New macros.
+
+	* sysdeps/wordsize-32/divdi3.c (__moddi3): Add a cast.
+
+	* io/fcntl.h [__USE_ATFILE] (AT_EACCESS): New macro.
+	* posix/unistd.h [__USE_ATFILE]: Declare faccessat.
+	* io/faccessat.c: New file.
+	* sysdeps/unix/sysv/linux/faccessat.c: New file.
+	* io/Makefile (routines): Add faccessat.
+	* io/Versions (libc: GLIBC_2.4): Likewise.
+	* io/tst-faccessat.c: New file.
+	* io/Makefile (tests): Add it.
+
+	* scripts/check-local-headers.sh: Revert last change.
+
+	* io/euidaccess.c: Add eaccess as an alias.
+	* sysdeps/mach/hurd/euidaccess.c: Likewise.
+	* sysdeps/posix/euidaccess.c: Likewise.
+	* posix/unistd.h [__USE_GNU]: Declare eaccess.
+	* io/Versions (libc: GLIBC_2.4): Add eaccess.
+
+2005-12-04  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* soft-fp/Makefile (gcc-single-routines): Add unordsf2,
+	floatunsisf, floatundisf.
+	(gcc-double-routines): Add unorddf2, floatunsidf, floatundidf.
+	(gcc-quad-routines): Add unordtf2, floatunsitf, floatunditf.
+	* soft-fp/op-common.h (_FP_CMP_UNORD): Define.
+	* soft-fp/single.h (FP_CMP_UNORD_S): Define.
+	* soft-fp/double.h (FP_CMP_UNORD_D): Define.
+	* soft-fp/quad.h (FP_CMP_UNORD_Q): Define.
+	* soft-fp/extended.h (FP_CMP_UNORD_E): Define.
+	* soft-fp/unordsf2.c: New file.
+	* soft-fp/unorddf2.c: New file.
+	* soft-fp/unordtf2.c: New file.
+	* soft-fp/floatunsisf.c: New file.
+	* soft-fp/floatundisf.c: New file.
+	* soft-fp/floatunsidf.c: New file.
+	* soft-fp/floatundidf.c: New file.
+	* soft-fp/floatunsitf.c: New file.
+	* soft-fp/floatunditf.c: New file.
+
+	* soft-fp/op-common.h (__FP_CLZ): Define using __builtin_clz,
+	__builtin_clzl and __builtin_clzll.
+
+2006-01-05  Mike Frysinger  <vapier@gentoo.org>
+
+	* include/alloca.h (extend_alloca): Fix typoed name 'extern_alloca'.
+
 2006-01-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_WAITID_SYSCALL):
@@ -29,6 +105,7 @@
 	* libio/stdio.h: Likewise.
 	* posix/unistd.h: Likewise.
 	* time/sys/time.h: Likewise.
+	* io/sys/stat.h: Likewise.
 
 	* io/sys/stat.h [__USE_GNU]: Declare fchmodat.
 	* io/fchmodat.c: New file.

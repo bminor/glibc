@@ -1,5 +1,5 @@
-/* Test for access to FILE using effective UID and GID.  Hurd version.
-   Copyright (C) 1991, 1995, 1997, 2006 Free Software Foundation, Inc.
+/* Test for access to file, relative to open directory.  Stub version.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,43 +18,34 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <fcntl.h>
 #include <stddef.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <hurd.h>
+#include <sys/types.h>
 
 int
-__euidaccess (file, type)
+faccessat (fd, file, type, flag)
+     int fd;
      const char *file;
      int type;
+     int flag;
 {
-  error_t err;
-  file_t port;
-  int allowed, flags;
+  if (file == NULL || (flag & ~(AT_SYMLINK_NOFOLLOW | AT_EACCESS)) != 0
+      || (type & ~(R_OK|W_OK|X_OK|F_OK)) != 0)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
-  port = __file_name_lookup (file, 0, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
+  if (fd < 0 && fd != AT_FDCWD)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
 
-  /* Find out what types of access we are allowed to this file.  */
-  err = __file_check_access (port, &allowed);
-  __mach_port_deallocate (__mach_task_self (), port);
-  if (err)
-    return __hurd_fail (err);
-
-  flags = 0;
-  if (type & R_OK)
-    flags |= O_READ;
-  if (type & W_OK)
-    flags |= O_WRITE;
-  if (type & X_OK)
-    flags |= O_EXEC;
-
-  if (flags & ~allowed)
-    /* We are not allowed all the requested types of access.  */
-    return __hurd_fail (EACCES);
-
-  return 0;
+  __set_errno (ENOSYS);
+  return -1;
 }
-weak_alias (__euidaccess, euidaccess)
-weak_alias (__euidaccess, eaccess)
+stub_warning (faccessat)
+
+#include <stub-tag.h>

@@ -1,5 +1,5 @@
 /* Software floating-point emulation. Common operations.
-   Copyright (C) 1997,1998,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz),
@@ -553,6 +553,14 @@ do {							\
       }									  \
   } while (0)
 
+/* Version to test unordered.  */
+
+#define _FP_CMP_UNORD(fs, wc, ret, X, Y)				\
+  do {									\
+    ret = ((X##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc(X))	\
+	   || (Y##_e == _FP_EXPMAX_##fs && !_FP_FRAC_ZEROP_##wc(Y)));	\
+  } while (0)
+
 /*
  * Main square root routine.  The input value should be cooked.
  */
@@ -725,40 +733,18 @@ do {									\
 /* Count leading zeros in a word.  */
 
 #ifndef __FP_CLZ
-#if _FP_W_TYPE_SIZE < 64
-/* this is just to shut the compiler up about shifts > word length -- PMM 02/1998 */
-#define __FP_CLZ(r, x)				\
-  do {						\
-    _FP_W_TYPE _t = (x);			\
-    r = _FP_W_TYPE_SIZE - 1;			\
-    if (_t > 0xffff) r -= 16;			\
-    if (_t > 0xffff) _t >>= 16;			\
-    if (_t > 0xff) r -= 8;			\
-    if (_t > 0xff) _t >>= 8;			\
-    if (_t & 0xf0) r -= 4;			\
-    if (_t & 0xf0) _t >>= 4;			\
-    if (_t & 0xc) r -= 2;			\
-    if (_t & 0xc) _t >>= 2;			\
-    if (_t & 0x2) r -= 1;			\
+/* GCC 3.4 and later provide the builtins for us.  */
+#define __FP_CLZ(r, x)							      \
+  do {									      \
+    if (sizeof (_FP_W_TYPE) == sizeof (unsigned int))			      \
+      r = __builtin_clz (x);						      \
+    else if (sizeof (_FP_W_TYPE) == sizeof (unsigned long))		      \
+      r = __builtin_clzl (x);						      \
+    else if (sizeof (_FP_W_TYPE) == sizeof (unsigned long long))	      \
+      r = __builtin_clzll (x);						      \
+    else								      \
+      abort ();								      \
   } while (0)
-#else /* not _FP_W_TYPE_SIZE < 64 */
-#define __FP_CLZ(r, x)				\
-  do {						\
-    _FP_W_TYPE _t = (x);			\
-    r = _FP_W_TYPE_SIZE - 1;			\
-    if (_t > 0xffffffff) r -= 32;		\
-    if (_t > 0xffffffff) _t >>= 32;		\
-    if (_t > 0xffff) r -= 16;			\
-    if (_t > 0xffff) _t >>= 16;			\
-    if (_t > 0xff) r -= 8;			\
-    if (_t > 0xff) _t >>= 8;			\
-    if (_t & 0xf0) r -= 4;			\
-    if (_t & 0xf0) _t >>= 4;			\
-    if (_t & 0xc) r -= 2;			\
-    if (_t & 0xc) _t >>= 2;			\
-    if (_t & 0x2) r -= 1;			\
-  } while (0)
-#endif /* not _FP_W_TYPE_SIZE < 64 */
 #endif /* ndef __FP_CLZ */
 
 #define _FP_DIV_HELP_imm(q, r, n, d)		\

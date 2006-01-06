@@ -1,6 +1,8 @@
-/* Test for access to FILE using effective UID and GID.  Stub version.
-   Copyright (C) 1991,1995,1996,1997,2006 Free Software Foundation, Inc.
+/* Software floating-point emulation.
+   Return 1 iff a or b is a NaN, 0 otherwise.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Joseph Myers (joseph@codesourcery.com).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,26 +19,19 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <stddef.h>
-#include <unistd.h>
+#include "soft-fp.h"
+#include "quad.h"
 
 int
-__euidaccess (file, type)
-     const char *file;
-     int type;
+__unordtf2(long double a, long double b)
 {
-  if (file == NULL || (type & ~(R_OK|W_OK|X_OK|F_OK)) != 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+  FP_DECL_Q(A);
+  FP_DECL_Q(B);
+  int r;
 
-  __set_errno (ENOSYS);
-  return -1;
+  FP_UNPACK_RAW_Q(A, a);
+  FP_UNPACK_RAW_Q(B, b);
+  FP_CMP_UNORD_Q(r, A, B);
+
+  return r;
 }
-weak_alias (__euidaccess, euidaccess)
-weak_alias (__euidaccess, eaccess)
-stub_warning (euidaccess)
-stub_warning (eaccess)
-#include <stub-tag.h>
