@@ -205,7 +205,8 @@
     register long _r8 __asm ("r8");					      \
     register long _r10 __asm ("r10");					      \
     register long _r15 __asm ("r15") = name;				      \
-    register void *_b7 __asm ("b7") = ((tcbhead_t *) __thread_self)->private; \
+    register void *_b7 __asm ("b7")					      \
+      = ((tcbhead_t *) __thread_self)->__private;			      \
     long _retval;							      \
     LOAD_REGS_##nr							      \
     /*									      \
