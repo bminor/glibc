@@ -1,5 +1,5 @@
-/* brk system call for Linux/MIPS.
-   Copyright (C) 2000, 2005, 2006 Free Software Foundation, Inc.
+/* Change the protections of file relative to open directory.  Stub version.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,40 +18,33 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <fcntl.h>
+#include <stddef.h>
 #include <unistd.h>
-#include <sysdep.h>
-
-void *__curbrk = 0;
-
-/* Old braindamage in GCC's crtstuff.c requires this symbol in an attempt
-   to work around different old braindamage in the old Linux/x86 ELF
-   dynamic linker.  Sigh.  */
-weak_alias (__curbrk, ___brk_addr)
+#include <sys/types.h>
 
 int
-__brk (void *addr)
+fchmodat (fd, file, mode, flag)
+     int fd;
+     const char *file;
+     mode_t mode;
+     int flag;
 {
-  void *newbrk;
-
-  {
-    register long int res __asm__ ("$2");
-
-    asm ("move\t$4,%2\n\t"
-	 "li\t%0,%1\n\t"
-	 "syscall"		/* Perform the system call.  */
-	 : "=r" (res)
-	 : "I" (SYS_ify (brk)), "r" (addr)
-	 : "$4", "$7", __SYSCALL_CLOBBERS);
-    newbrk = (void *) res;
-  }
-  __curbrk = newbrk;
-
-  if (newbrk < addr)
+  if (file == NULL || (flag & ~AT_SYMLINK_NOFOLLOW) != 0)
     {
-      __set_errno (ENOMEM);
+      __set_errno (EINVAL);
       return -1;
     }
 
-  return 0;
+  if (fd < 0 && fd != AT_FDCWD)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
+
+  __set_errno (ENOSYS);
+  return -1;
 }
-weak_alias (__brk, brk)
+stub_warning (fchownat)
+
+#include <stub-tag.h>

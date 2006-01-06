@@ -1,3 +1,84 @@
+2006-01-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_WAITID_SYSCALL):
+	Only define for 2.6.12+ on s390{,x}.
+	(__ASSUME_GETDENTS32_D_TYPE): Only define for 2.6.8+ on most arches
+	and only for 2.6.11+ on s390{,x}.
+
+2006-01-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/aio_misc.h [!DONT_USE_BOOTSTRAP_MAP]
+	(struct waitlist): Don't add cond.
+	* sysdeps/pthread/aio_notify.c [!DONT_USE_BOOTSTRAP_MAP]
+	(__aio_notify): Use AIO_MISC_NOTIFY instead of pthread_cond_signal.
+	* sysdeps/pthread/aio_suspend.c [!DONT_USE_BOOTSTRAP_MAP]: Don't
+	use condvar, use AIO_MISC_WAIT.
+	* sysdeps/pthread/lio_listio.c: Likewise.
+	* rt/Makefile (tests): Add tst-aio9 and tst-aio10.
+	* rt/tst-aio9.c: New file.
+	* rt/tst-aio10.c: New file.
+
+	* rt/tst-aio3.c: The thread is now supposed to be created.
+
+2006-01-05  Roland McGrath  <roland@redhat.com>
+
+	* include/features.h: Grok _ATFILE_SOURCE and define __USE_ATFILE when
+	it or _GNU_SOURCE is defined.
+	* io/fcntl.h: Protect *at and AT_* with [__USE_ATFILE] instead of
+	[__USE_GNU].
+	* libio/stdio.h: Likewise.
+	* posix/unistd.h: Likewise.
+	* time/sys/time.h: Likewise.
+
+	* io/sys/stat.h [__USE_GNU]: Declare fchmodat.
+	* io/fchmodat.c: New file.
+	* io/Makefile (routines): Add fchmodat.
+	* io/Versions (libc: GLIBC_2.4): Likewise.
+	* sysdeps/unix/sysv/linux/fchmodat.c: New file.
+	* io/tst-fchmodat.c: New file.
+	* io/Makefile (tests): Add it.
+
+2006-01-03  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/sysdep.h (ENTRY, EALIGN): Add cfi_startproc
+	directive to ENTRY macros.
+	(END): Add cfi_endproc directive to END macro.
+	* sysdeps/powerpc/powerpc64/sysdep.h (ENTRY, EALIGN): Add cfi_startproc
+	directive to ENTRY macros.
+	(END, END_GEN_TB): Add cfi_endproc directive to END macros.
+	* sysdeps/powerpc/powerpc32/dl-start.S: Remove ENTRY()s for
+	_dl_start_user and _dl_main_dispatch.
+	* sysdeps/powerpc/powerpc32/fpu/fprrest.S: Use END macro.
+	* sysdeps/powerpc/powerpc32/fpu/fprsave.S: Use Likewise.
+	* sysdeps/powerpc/powerpc32/gprrest0.S: Likewise.
+	* sysdeps/powerpc/powerpc32/gprrest1.S: Likewise.
+	* sysdeps/powerpc/powerpc32/gprsave0.S: Likewise.
+	* sysdeps/powerpc/powerpc32/gprsave1.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/socket.S: Remove redundant
+	cfi_startproc and cfi_endproc.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S: Likewise.
+
+2006-01-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/aio_misc.h (struct waitlist): Add result member.
+	* sysdeps/pthread/aio_notify.c (__aio_notify): For synchronous waiters,
+	failed I/O, and a result pointer, set value to -1.
+	* sysdeps/pthread/aio_suspend.c: Initialize result pointer to NULL.
+	* sysdeps/pthread/lio_listio.c: For LIO_WAIT, point result pointer in
+	wait list to local variable result.  If nonzero afterwards, set errno
+	to EIO.  For LIO_NOWAIT set result to NULL.
+	* rt/Makefile (tests): Add tst-aio8.
+	* rt/tst-aio8.c: New file.
+
+2005-12-25  Kristian Van Der Vliet  <vanders@liqwyd.com>
+
+	* abi-tags (*-.*-syllable.*): New match, with ABI value 5.
+	* elf/cache.c (print_entry): Match the Syllable ABI tag.
+
+2006-01-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/stdlib.h: Make even more C++ compliant.
+
 2006-01-04  Joseph S. Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/brk.c (__brk): Use
