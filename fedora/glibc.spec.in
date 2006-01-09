@@ -1,4 +1,4 @@
-%define glibcrelease 29
+%define glibcrelease 30
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -42,7 +42,7 @@ Prereq: basesystem, libgcc
 # This is for building auxiliary programs like memusage, nscd
 # For initial glibc bootstraps it can be commented out
 BuildPreReq: gd-devel libpng-devel zlib-devel texinfo, libselinux-devel >= 1.17.10-1
-BuildPreReq: sed >= 3.95
+BuildPreReq: audit-libs-devel >= 1.1.3, sed >= 3.95
 %ifarch %{prelinkarches}
 BuildPreReq: prelink >= 0.2.0-5
 %endif
@@ -166,7 +166,7 @@ libraries, as well as national language (locale) support.
 Summary: A Name Service Caching Daemon (nscd).
 Group: System Environment/Daemons
 Conflicts: kernel < 2.2.0
-Requires: libselinux >= 1.17.10-1
+Requires: libselinux >= 1.17.10-1, audit-libs >= 1.1.3
 Conflicts: selinux-policy-targeted < 1.17.30-2.2
 Prereq: /sbin/chkconfig, /usr/sbin/useradd, /usr/sbin/userdel, sh-utils
 Autoreq: true
@@ -407,6 +407,11 @@ cat > override_headers/asm/unistd.h <<EOF
 #endif
 #ifndef __NR_waitid
 #define __NR_waitid		279
+#endif
+#ifndef __NR_stat64
+#define __NR_fstat64		63
+#define __NR_lstat64		132
+#define __NR_stat64		139
 #endif
 %endif
 %ifarch x86_64
@@ -1128,6 +1133,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Jan  9 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-30
+- update from CVS
+  - <pthread.h> initializer fixes for -std=c{8,9}9 on 32-bit
+    arches
+  - 
+
 * Fri Jan  6 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-29
 - update from CVS
   - make pthread_mutex_t an unnamed union again, as it affects

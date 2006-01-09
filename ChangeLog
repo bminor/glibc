@@ -1,4 +1,366 @@
+2006-01-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/setjmp.h (_JMPBUF_UNWINDS): Add
+	stack bias to mc_fp field.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/kernel_stat.h
+	(struct kernel_stat): Rename st_[amc]time fields to st_[amc]time_sec.
+	(struct kernel_stat64): New type.
+	(_HAVE___UNUSED1, _HAVE___UNUSED2, _HAVE_STAT___UNUSED1,
+	_HAVE_STAT___UNUSED2, _HAVE_STAT___UNUSED3, _HAVE_STAT___UNUSED4,
+	_HAVE_STAT___UNUSED5, _HAVE_STAT___PAD1, _HAVE_STAT___PAD2,
+	_HAVE_STAT64___UNUSED1, _HAVE_STAT64___UNUSED2,
+	_HAVE_STAT64___UNUSED3, _HAVE_STAT64___UNUSED4,
+	_HAVE_STAT64___UNUSED5, _HAVE_STAT64___PAD1, _HAVE_STAT64___PAD2):
+	Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/xstat.c: Use i386/xstat.c.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/fxstatat.c:
+	Use i386/fxstatat.c.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/lxstat.c: Use i386/lxstat.c.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/xstatconv.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h (struct stat,
+	struct stat64): Add nsec resolution for 64-bit code like already done
+	for 32-bit code.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_TRUNCATE64_SYSCALL, __ASSUME_MMAP2_SYSCALL): Don't define
+	for sparc64.
+	(__ASSUME_STAT64_SYSCALL): Only define for sparc64 for >= 2.6.12
+	kernels.
+
+	* scripts/data/c++-types-sparc-linux-gnu.data: New file.
+	* scripts/data/c++-types-sparc64-linux-gnu.data: New file.
+	* scripts/data/c++-types-alpha-linux-gnu.data: Adjust.
+
+2006-01-08  Roland McGrath  <roland@redhat.com>
+
+	[BZ #1535]
+	* sysdeps/unix/get_child_max.c: New file.
+	* posix/get_child_max.c: New file.
+	* posix/Makefile (routines): Add it.
+	* include/sys/sysinfo.h (__get_child_max): Declare it.
+	* sysdeps/posix/sysconf.c (__sysconf) [! CHILD_MAX]: Use it.
+
+	* sysdeps/unix/sysv/linux/futimes.c [!__NR_fcntl && __NR_fcntl64]: Use
+	fcntl64 syscall instead.
+
+	* stdio-common/tst-fmemopen2.c (do_test): Add a cast.
+	* stdio-common/printf-parsemb.c (__find_specmb): Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/adjtime.c: Use <> instead of "" in
+	#include for kernel-features.h.
+	* sysdeps/unix/sysv/linux/alpha/dl-sysdep.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/fraiseexcpt.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/getitimer.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/getrusage.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/gettimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/msgctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/select.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setitimer.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/settimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/utimes.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/wait4.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/xstatconv.h: Likewise.
+	* sysdeps/unix/sysv/linux/check_pf.c: Likewise.
+	* sysdeps/unix/sysv/linux/clock_getcpuclockid.c: Likewise.
+	* sysdeps/unix/sysv/linux/clock_getres.c: Likewise.
+	* sysdeps/unix/sysv/linux/clock_gettime.c: Likewise.
+	* sysdeps/unix/sysv/linux/clock_nanosleep.c: Likewise.
+	* sysdeps/unix/sysv/linux/clock_settime.c: Likewise.
+	* sysdeps/unix/sysv/linux/dl-execstack.c: Likewise.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/dl-sysdep.c: Likewise.
+	* sysdeps/unix/sysv/linux/fstatvfs64.c: Likewise.
+	* sysdeps/unix/sysv/linux/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/futimes.c: Likewise.
+	* sysdeps/unix/sysv/linux/futimesat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstatat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/getcwd.c: Likewise.
+	* sysdeps/unix/sysv/linux/getdents.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/geteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lockf64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/msgctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/posix_fadvise64.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setfsgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setfsuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/ifreq.c: Likewise.
+	* sysdeps/unix/sysv/linux/ldsodefs.h: Likewise.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mmap64.c: Likewise.
+	* sysdeps/unix/sysv/linux/msgctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/netlinkaccess.h: Likewise.
+	* sysdeps/unix/sysv/linux/opendir.c: Likewise.
+	* sysdeps/unix/sysv/linux/poll.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fe_nomask.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fe_nomask.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/prof-freq.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/lchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigpending.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/statvfs64.c: Likewise.
+	* sysdeps/unix/sysv/linux/syslog.c: Likewise.
+	* sysdeps/unix/sysv/linux/testrtsig.h: Likewise.
+	* sysdeps/unix/sysv/linux/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/utimes.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstatconv.h: Likewise.
+
+2006-01-07  Roland McGrath  <roland@redhat.com>
+
+	* po/libc.pot: Regenerated.
+
+	* po/.cvsignore: List libc.pot.files, and not any .pot names.
+
+	* manual/maint.texi (Porting): Don't mention Dist files.
+	* sysdeps/alpha/soft-fp/Dist: File removed.
+	* sysdeps/alpha/Dist: File removed.
+	* sysdeps/i386/i686/Dist: File removed.
+	* sysdeps/i386/soft-fp/Dist: File removed.
+	* sysdeps/i386/Dist: File removed.
+	* sysdeps/mips/soft-fp/Dist: File removed.
+	* sysdeps/mips/mips64/soft-fp/Dist: File removed.
+	* sysdeps/mips/mips64/Dist: File removed.
+	* sysdeps/mips/Dist: File removed.
+	* sysdeps/wordsize-32/Dist: File removed.
+	* sysdeps/m68k/fpu/switch/Dist: File removed.
+	* sysdeps/m68k/fpu/Dist: File removed.
+	* sysdeps/powerpc/powerpc64/Dist: File removed.
+	* sysdeps/powerpc/soft-fp/Dist: File removed.
+	* sysdeps/powerpc/powerpc32/fpu/Dist: File removed.
+	* sysdeps/powerpc/powerpc32/Dist: File removed.
+	* sysdeps/powerpc/fpu/Dist: File removed.
+	* sysdeps/powerpc/Dist: File removed.
+	* sysdeps/unix/common/Dist: File removed.
+	* sysdeps/unix/bsd/bsd4.4/Dist: File removed.
+	* sysdeps/unix/bsd/Dist: File removed.
+	* sysdeps/unix/sysv/linux/alpha/Dist: File removed.
+	* sysdeps/unix/sysv/linux/i386/Dist: File removed.
+	* sysdeps/unix/sysv/linux/mips/mips64/Dist: File removed.
+	* sysdeps/unix/sysv/linux/mips/Dist: File removed.
+	* sysdeps/unix/sysv/linux/m68k/Dist: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Dist: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Dist: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/aix/Dist: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: File removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Dist: File removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Dist: File removed.
+	* sysdeps/unix/sysv/linux/sparc/Dist: File removed.
+	* sysdeps/unix/sysv/linux/ia64/Dist: File removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Dist: File removed.
+	* sysdeps/unix/sysv/linux/s390/Dist: File removed.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Dist: File removed.
+	* sysdeps/unix/sysv/linux/sh/Dist: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/Dist: File removed.
+	* sysdeps/unix/sysv/linux/hppa/Dist: File removed.
+	* sysdeps/unix/sysv/linux/Dist: File removed.
+	* sysdeps/unix/sysv/Dist: File removed.
+	* sysdeps/unix/Dist: File removed.
+	* sysdeps/generic/Dist: File removed.
+	* sysdeps/sparc/sparc32/soft-fp/Dist: File removed.
+	* sysdeps/sparc/sparc32/sparcv9/Dist: File removed.
+	* sysdeps/sparc/sparc32/sparcv8/Dist: File removed.
+	* sysdeps/sparc/sparc32/Dist: File removed.
+	* sysdeps/sparc/sparc64/soft-fp/Dist: File removed.
+	* sysdeps/sparc/sparc64/Dist: File removed.
+	* sysdeps/sparc/Dist: File removed.
+	* sysdeps/gnu/Dist: File removed.
+	* sysdeps/ia64/fpu/Dist: File removed.
+	* sysdeps/ia64/Dist: File removed.
+	* sysdeps/mach/mips/Dist: File removed.
+	* sysdeps/mach/hurd/alpha/Dist: File removed.
+	* sysdeps/mach/hurd/i386/Dist: File removed.
+	* sysdeps/mach/hurd/mips/Dist: File removed.
+	* sysdeps/mach/hurd/powerpc/Dist: File removed.
+	* sysdeps/mach/hurd/Dist: File removed.
+	* sysdeps/s390/s390-64/Dist: File removed.
+	* sysdeps/s390/Dist: File removed.
+	* sysdeps/s390/s390-32/Dist: File removed.
+	* sysdeps/sh/Dist: File removed.
+	* sysdeps/posix/Dist: File removed.
+	* sysdeps/ieee754/dbl-64/Dist: File removed.
+	* sysdeps/ieee754/ldbl-128/Dist: File removed.
+	* sysdeps/ieee754/flt-32/Dist: File removed.
+	* sysdeps/ieee754/Dist: File removed.
+	* sysdeps/x86_64/soft-fp/Dist: File removed.
+	* sysdeps/x86_64/Dist: File removed.
+	* sysdeps/hppa/Dist: File removed.
+
+	* Makerules (common-clean): Don't remove distinfo file.
+	($(objpfx)distinfo): Target removed.
+	* manual/Makefile (mostlyclean): Don't remove distinfo file.
+	(glibc-targets): Remove echo-distinfo.
+
+	* scripts/list-sources.sh: New file.
+	* Makefile (TAGS): New target.
+	* po/Makefile (libc.pot, libc.pot.files): New targets.
+	* Makeconfig (XGETTEXT): New variable.
+	* Makerules ($(..)po/%.pot): Rule removed.
+	(TAGS): Target removed.
+	* Rules (subdir_TAGS): Target removed.
+	* MakeTAGS: File removed.
+
+	* Makefile (iconvdata/% localedata/% po/% manual/%): Depend on FORCE.
+	* Makeconfig ($(all-Depend-files)): New targets with no-op commands.
+
+2004-08-03  Marco Gerards  <marco@gnu.org>
+
+	[BZ #2119]
+	* sysdeps/mach/hurd/bits/ioctls.h (SIOCGIFHWADDR): New macro.
+
+2006-01-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/tstdiomisc.c (F): Use NAN to get NaN value.
+
 2006-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/tst-tls8.c (do_test): Use $ORIGIN in module names.
+
+2006-01-03  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/generic/sysdep.h (cfi_same_value): Define macro.
+
+	* sysdeps/powerpc/powerpc32/dl-trampoline.S (_dl_runtime_resolve,
+	_dl_profile_resolve): Add CFI directives for stack and LR save.
+	Save LR in LRSAVE of previous frame per ABI.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Add CFI directives
+	for LR save.
+	* sysdeps/powerpc/powerpc32/lshift.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/makecontext.S
+	(__makecontext, __novec_makecontext): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S: Add CFI directive
+	for LR save to register.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceilf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floorf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rintf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: Add CFI directive
+	for stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Likewise.
+	* sysdeps/powerpc/powerpc32/ppc-mcount.S: Add CFI directives for stack
+	and LR save.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/brk.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S:  Likewise.  Don't use
+	negative stack addressing.
+
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S (_dl_runtime_resolve,
+	_dl_profile_resolve): Add CFI directives for stack and LR save.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Add CFI directives
+	for stack.
+	* sysdeps/powerpc/powerpc64/ppc-mcount.S (_mcount): Add CFI
+	directives for stack and LR save.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/brk.S (__brk): Add CFI
+	directives for stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (__clone): Add CFI
+	directives for stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S
+	(__getcontext, __novec_getcontext): Add CFI directives for stack
+	and LR save.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S
+	(__makecontext): Add CFI directives for stack and LR save.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S
+	(__setcontext, __novec_setcontext): Add CFI directives for stack
+	and LR save.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
+	(__swapcontext, __novec_swapcontext):  Add CFI directives for stack
+	and LR save.
+
+2006-01-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Include tls.h.
+	(SYSCALL_ERROR_HANDLER_ENTRY): Use %g4 instead of %g2, to avoid
+	the need of .register directive for it.
+	* configure.in (libc_cv_asm_cfi_directives): Use CFI rel offset
+	2047 instead of 0 in the test on sparc64.
+
+2006-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* scripts/check-c++-types.sh: Add more pthread types.
+	* scripts/data//c++-types-i386-linux-gnu.data: Adjust.
+	* scripts/data//c++-types-ia64-linux-gnu.data: Likewise.
+	* scripts/data//c++-types-powerpc-linux-gnu.data: Likewise.
+	* scripts/data//c++-types-powerpc64-linux-gnu.data: Likewise.
+	* scripts/data//c++-types-s390-linux-gnu.data: Likewise.
+	* scripts/data//c++-types-s390x-linux-gnu.data: Likewise.
+	* scripts/data//c++-types-x86_64-linux-gnu.data: Likewise.
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (DO_INLINE_SYSCALL_NCS):
+	Adjust for private->__private rename in tcbhead_t.
 
 	[BZ #2114]
 	* ncsd/aicache.c: Don't use sendfile for records on the stack.
