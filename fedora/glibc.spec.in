@@ -1,4 +1,4 @@
-%define glibcrelease 30
+%define glibcrelease 31
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -26,8 +26,7 @@ Source2: %(echo %{glibcsrcdir} | sed s/glibc-/glibc-libidn-/).tar.bz2
 %endif
 Source3: %{glibcname}-fedora-%{glibcdate}.tar.bz2
 Patch0: %{glibcname}-fedora.patch
-Patch1: %{name}-ppc-assume.patch
-Patch2: %{name}-ia64-lib64.patch
+Patch1: %{name}-ia64-lib64.patch
 Buildroot: %{_tmppath}/glibc-%{PACKAGE_VERSION}-root
 Obsoletes: zoneinfo, libc-static, libc-devel, libc-profile, libc-headers,
 Obsoletes: gencat, locale, ldconfig, locale-ja, glibc-profile
@@ -66,6 +65,9 @@ Conflicts: kernel < 2.6.9
 # Need AS_NEEDED directive
 BuildRequires: binutils >= 2.15.94.0.2-1
 BuildRequires: gcc >= 3.2.1-5
+%ifarch ppc s390 s390x
+BuildRequires: gcc >= 4.1.0-0.17
+%endif
 %if "%{_enable_debug_packages}" == "1"
 BuildPreReq: elfutils >= 0.72
 BuildPreReq: rpm >= 4.2-0.56
@@ -229,10 +231,9 @@ package or when debugging this package.
 %prep
 %setup -q -n %{glibcsrcdir} %{glibc_release_unpack} -a3
 %patch0 -E -p1
-%patch1 -p1
 %ifarch ia64
 %if "%{_lib}" == "lib64"
-%patch2 -p1
+%patch1 -p1
 %endif
 %endif
 
@@ -1133,11 +1134,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Jan 30 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-31
+- update from CVS
+  - 128-bit long double on ppc, ppc64, s390, s390x and sparc{,v9}
+
 * Mon Jan  9 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-30
 - update from CVS
   - <pthread.h> initializer fixes for -std=c{8,9}9 on 32-bit
     arches
-  - 
+- avoid writable .rodata (#177121)
 
 * Fri Jan  6 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-29
 - update from CVS
