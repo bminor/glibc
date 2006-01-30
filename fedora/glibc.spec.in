@@ -278,6 +278,25 @@ cat > override_headers/asm/unistd.h <<EOF
 #ifndef __NR_waitid
 #define __NR_waitid		284
 #endif
+#ifndef __NR_openat
+#define __NR_openat		295
+#define __NR_mkdirat		296
+#define __NR_mknodat		297
+#define __NR_fchownat		298
+#define __NR_futimesat		299
+#define __NR_newfstatat		300
+#define __NR_unlinkat		301
+#define __NR_renameat		302
+#define __NR_linkat		303
+#define __NR_symlinkat		304
+#define __NR_readlinkat		305
+#define __NR_fchmodat		306
+#define __NR_faccessat		307
+#endif
+#ifndef __NR_pselect6
+#define __NR_pselect6		308
+#define __NR_ppoll		309
+#endif
 %endif
 %ifarch ia64
 #ifndef __NR_timer_create
@@ -325,6 +344,10 @@ cat > override_headers/asm/unistd.h <<EOF
 #ifndef __NR_waitid
 #define __NR_waitid		272
 #endif
+#ifndef __NR_pselect6
+#define __NR_pselect6		280
+#define __NR_ppoll		281
+#endif
 %endif
 %ifarch ppc64
 #ifndef __NR_utimes
@@ -340,6 +363,10 @@ cat > override_headers/asm/unistd.h <<EOF
 #endif
 #ifndef __NR_waitid
 #define __NR_waitid		272
+#endif
+#ifndef __NR_pselect6
+#define __NR_pselect6		280
+#define __NR_ppoll		281
 #endif
 %endif
 %ifarch s390
@@ -414,6 +441,25 @@ cat > override_headers/asm/unistd.h <<EOF
 #define __NR_lstat64		132
 #define __NR_stat64		139
 #endif
+#ifndef __NR_openat
+#define __NR_openat		284
+#define __NR_mkdirat		285
+#define __NR_mknodat		286
+#define __NR_fchownat		287
+#define __NR_futimesat		288
+#define __NR_newfstatat		289
+#define __NR_unlinkat		290
+#define __NR_renameat		291
+#define __NR_linkat		292
+#define __NR_symlinkat		293
+#define __NR_readlinkat		294
+#define __NR_fchmodat		295
+#define __NR_faccessat		296
+#endif
+#ifndef __NR_pselect6
+#define __NR_pselect6		297
+#define __NR_ppoll		298
+#endif
 %endif
 %ifarch x86_64
 #ifndef __NR_mq_open
@@ -426,6 +472,21 @@ cat > override_headers/asm/unistd.h <<EOF
 #endif
 #ifndef __NR_waitid
 #define __NR_waitid		247
+#endif
+#ifndef __NR_openat
+#define __NR_openat		257
+#define __NR_mkdirat		258
+#define __NR_mknodat		259
+#define __NR_fchownat		260
+#define __NR_futimesat		261
+#define __NR_newfstatat		262
+#define __NR_unlinkat		263
+#define __NR_renameat		264
+#define __NR_linkat		265
+#define __NR_symlinkat		266
+#define __NR_readlinkat		267
+#define __NR_fchmodat		268
+#define __NR_faccessat		269
 #endif
 %endif
 #endif
@@ -1137,6 +1198,8 @@ rm -f *.filelist*
 * Mon Jan 30 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-31
 - update from CVS
   - 128-bit long double on ppc, ppc64, s390, s390x and sparc{,v9}
+- add some new syscall numbers to the override <asm/unistd.h>
+  headers
 
 * Mon Jan  9 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-30
 - update from CVS
