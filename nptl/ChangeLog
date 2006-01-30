@@ -1,4 +1,48 @@
+2006-01-20  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h (lll_futex_wait):
+	Return status.
+	(lll_futex_timed_wait): Define.
+
+2006-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-cancel4.c: Test ppoll.
+
+2006-01-18  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #2167]
+	* sysdeps/unix/sysv/linux/mips/bits/pthreadtypes.h
+	(pthread_mutex_t): Follow changes for other archs.  Based on patch
+	by Jim Gifford <patches@jg555.com>.
+
+2006-01-13  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/tls.h (tcbhead_t): Rename member to __private.
+
+2006-01-10  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/alpha/jmpbuf-unwind.h: File moved to main source tree.
+	* sysdeps/i386/jmpbuf-unwind.h: Likewise.
+	* sysdeps/mips/jmpbuf-unwind.h: Likewise.
+	* sysdeps/powerpc/jmpbuf-unwind.h: Likewise.
+	* sysdeps/s390/jmpbuf-unwind.h: Likewise.
+	* sysdeps/sh/jmpbuf-unwind.h: Likewise.
+	* sysdeps/sparc/sparc32/jmpbuf-unwind.h: Likewise.
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h: Likewise.
+	* sysdeps/x86_64/jmpbuf-unwind.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/jmpbuf-unwind.h: Likewise.
+
 2006-01-09  Roland McGrath  <roland@redhat.com>
+
+	* tst-initializers1-c89.c: New file.
+	* tst-initializers1-c99.c: New file.
+	* tst-initializers1-gnu89.c: New file.
+	* tst-initializers1-gnu99.c: New file.
+	* Makefile (tests): Add them.
+	(CFLAGS-tst-initializers1-c89.c): New variable.
+	(CFLAGS-tst-initializers1-c99.c): New variable.
+	(CFLAGS-tst-initializers1-gnu89.c): New variable.
+	(CFLAGS-tst-initializers1-gnu99.c): New variable.
 
 	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h (pthread_mutex_t):
 	Use __extension__ on anonymous union definition.
@@ -7,6 +51,16 @@
 	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h: Likewise.
+
+2006-01-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h (pthread_mutex_t):
+	Don't give the union a name because it changes the mangled name.
+	Instead name the struct for __data.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h (pthread_mutex_t):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h (pthread_mutex_t):
+	Likewise.
 
 2006-01-09  Jakub Jelinek  <jakub@redhat.com>
 

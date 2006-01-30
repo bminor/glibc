@@ -58,27 +58,11 @@ typedef struct __sparc64_jmp_buf
   } __jmp_buf[1];
 #endif
 
-/* Test if longjmp to JMPBUF would unwind the frame
-   containing a local variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(jmpbuf, address, demangle)			\
-  ((unsigned long int) (address) < (jmpbuf)->uc_mcontext.mc_fp + 2047)
-
 #else
-
-#if defined __USE_MISC || defined _ASM
-# define JB_SP  0
-# define JB_FP  1
-# define JB_PC  2
-#endif
 
 #ifndef _ASM
 typedef int __jmp_buf[3];
 #endif
-
-/* Test if longjmp to JMPBUF would unwind the frame
-   containing a local variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(jmpbuf, address, demangle)	\
-  ((int) (address) < demangle ((jmpbuf)[JB_SP]))
 
 #endif
 

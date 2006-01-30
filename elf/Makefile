@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1995-2004, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -647,7 +647,7 @@ $(objpfx)dblunload: $(libdl)
 $(objpfx)dblunload.out: $(objpfx)dblloadmod1.so $(objpfx)dblloadmod2.so
 
 $(objpfx)reldep5: $(libdl)
-$(objpfx)reldep5.out: $(objpfx)reldepmod5.so $(objpfx)reldepmod5.so
+$(objpfx)reldep5.out: $(objpfx)reldepmod5.so $(objpfx)reldepmod6.so
 
 $(objpfx)reldep6: $(libdl)
 $(objpfx)reldep6.out: $(objpfx)reldep6mod3.so $(objpfx)reldep6mod4.so
@@ -806,6 +806,10 @@ check-textrel-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE
 $(objpfx)check-textrel: check-textrel.c
 	$(native-compile)
 
+check-localplt-CFLAGS = -O -Wall -D_GNU_SOURCE -std=gnu99
+$(objpfx)check-localplt: check-localplt.c
+	$(native-compile)
+
 ifeq (yes,$(build-shared))
 tests: $(objpfx)check-textrel.out
 
@@ -818,6 +822,28 @@ generated += check-textrel check-textrel.out
 $(objpfx)tst-dlmodcount: $(libdl)
 $(objpfx)tst-dlmodcount.out: $(test-modules)
 
+check-data := $(firstword $(wildcard \
+	        $(foreach M,$(config-machine) $(base-machine),\
+			  ../scripts/data/localplt-$M-$(config-os).data)))
+ifneq (,$(check-data))
+tests: $(objpfx)check-localplt.out
+
+ifeq ($(have-thread-library),yes)
+thread-dso := $(filter-out %_nonshared.a, $(shared-thread-library))
+endif
+
+$(objpfx)check-localplt.out: $(objpfx)check-localplt $(common-objpfx)libc.so \
+			     $(common-objpfx)math/libm.so $(thread-dso) \
+			     $(common-objpfx)rt/librt.so \
+			     $(common-objpfx)dlfcn/libdl.so \
+			     $(check-data)
+	$(objpfx)check-localplt $(common-objpfx)libc.so \
+				$(common-objpfx)math/libm.so $(thread-dso) \
+				$(common-objpfx)rt/librt.so \
+				$(common-objpfx)dlfcn/libdl.so | \
+	  LC_ALL=C sort | \
+	  diff -u $(check-data) - > $@
+endif
 endif
 
 $(objpfx)tst-dlopenrpathmod.so: $(libdl)

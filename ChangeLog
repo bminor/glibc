@@ -1,3 +1,1387 @@
+2006-01-27  Dwayne Grant McConnell  <decimal@us.ibm.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+	    Roland McGrath  <roland@redhat.com>
+	    Steven Munroe  <sjmunroe@us.ibm.com>
+	    Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/powerpc/powerpc64/fpu/s_truncf.S: Comment fix.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundf.S: Likewise.
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
+	* math/libm-test.inc (check_float_internal): Allow ulp <= 0.5.
+	(erfc_test): Don't run erfcl (27.0L) test if erfcl (27.0L) is
+	denormal.
+	[TEST_LDOUBLE] (ceil_test, floor_test, llrint_test, llround_test,
+	rint_test, round_test, trunc_test): Add new tests.
+
+	* sysdeps/powerpc/powerpc32/fpu/s_copysignl.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_fabs.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_fabsl.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_fdim.c: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_fmax.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_fmin.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_isnan.c: New file.
+
+	* sysdeps/powerpc/powerpc64/fpu/s_ceill.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysignl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_fabs.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_fabsl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_fdim.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_floorl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_fmax.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_fmin.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_isnan.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrintl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_lroundl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_nearbyintl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_rintl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_roundl.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_truncl.S: New file.
+
+	* sysdeps/unix/sysv/linux/powerpc/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/configure.in: New file.
+	* sysdeps/unix/sysv/linux/powerpc/configure: New file.
+	* sysdeps/unix/sysv/linux/powerpc/bits/wordsize.h
+	(__LONG_DOUBLE_MATH_OPTIONAL): Define.
+	(__NO_LONG_DOUBLE_MATH): Define.
+	* sysdeps/unix/sysv/linux/powerpc/nldbl-abi.h: New file.
+	* sysdeps/powerpc/fpu/s_isnan.c: Include math_ldbl_opt.h.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceil.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (ceill): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (copysignl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_floor.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (floorl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (llrintl, lrintl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_llround.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (llroundl, lroundl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_rint.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (rintl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_round.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (roundl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc64/fpu/s_trunc.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (truncl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (ceill): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (copysignl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (floorl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_lrint.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (lrintl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_llrint.c: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (llrintl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (lroundl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (rintl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (roundl): Add compatibility symbols.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (truncl): Add compatibility symbols.
+
+	* misc/qefgcvt_r.c [LDBL_MIN_10_EXP == -291] (FLOAT_MIN_10_NORM): New.
+
+	* sysdeps/powerpc/fpu/bits/mathdef.h (__NO_LONG_DOUBLE_MATH): Remove.
+	* sysdeps/powerpc/Implies: Add ieee754/ldbl-128ibm.
+	* sysdeps/powerpc/powerpc32/Implies: Remove powerpc/soft-fp.
+	* sysdeps/ieee754/ldbl-128ibm/Makefile: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_acoshl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_acosl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_atan2l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_atanhl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_coshl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_hypotl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_j1l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_lgammal_r.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_log10l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_log2l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_logl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_powl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_rem_pio2l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_remainderl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_sinhl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/e_sqrtl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/ieee754.h: New file.
+	* sysdeps/ieee754/ldbl-128ibm/k_cosl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/k_sincosl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/k_sinl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/k_tanl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/ldbl2mpn.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h: New file.
+	* sysdeps/ieee754/ldbl-128ibm/mpn2ldbl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/printf_fphex.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_asinhl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_atanl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_cbrtl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_cosl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_expm1l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_fabsl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_finitel.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_fpclassifyl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_frexpl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_ilogbl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_isinfl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_isnanl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_log1pl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_logbl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_modfl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttowardf.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_remquol.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_rintl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalblnl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalbnl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_signbitl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_sincosl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_sinl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_tanhl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_tanl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_truncl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/strtold_l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/t_sincosl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/w_expl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_copysignl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_floorl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_llrintl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_llroundl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_roundl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_ceill.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_nearbyintl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_lrintl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_lroundl.c: New file.
+
+	* sysdeps/ieee754/ldbl-128/e_powl.c: Fix old comment.
+
+2006-01-22  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/gnu/errlist-compat.awk: Reduce required number of symbols in
+	sanity check.
+
+2006-01-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/renameat.c (__atfct_seterrno_2): Correctly
+	return EBADF for non-existing file descriptors.
+	* sysdeps/unix/sysv/linux/openat.c (__atfct_seterrno): Likewise.
+	* io/tst-openat.c (do_test): Add some more tests.
+	* io/tst-faccessat.c (do_test): Likewise.
+	* io/tst-renameat.c (do_test): Likewise.
+	* io/tst-fstatat.c (do_test): Likewise.
+	* io/tst-fchmodat.c (do_test): Likewise.
+	* io/tst-fchownat.c (do_test): Likewise.
+
+2006-01-21  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/faccessat.c: Move RESULT defn inside block.
+
+	* misc/tst-pselect.c: Include <unistd.h>.
+
+	* time/time.h [__need_timespec et al]: Include <bits/types.h> here too.
+
+	* stdlib/fpioconst.c: Fix whitespace typo.
+
+2006-01-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-64-128/s_nexttowardfd.c: Moved to...
+	* sysdeps/ieee754/ldbl-opt/s_nexttowardfd.c: ... here.  New file.
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h (long_double_symbol_1): For
+	C define again using _weak_alias, for assembler use weak_alias.
+
+	* sysdeps/powerpc/powerpc64/fpu/e_sqrt.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/e_sqrtf.c: New file.
+	* sysdeps/powerpc/fpu/bits/mathinline.h (__CPU_HAS_FSQRT): New macro.
+	(__ieee754_sqrt, __ieee754_sqrtf): Use it.
+
+2006-01-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pselect.c (__pselect): Allow actual
+	system call code to be redefined in macro CALL_PSELECT6.
+	* sysdeps/unix/sysv/linux/i386/Makefile [subdir=misc]
+	(sysdep_routines): Add call_pselect6.
+	* sysdeps/unix/sysv/linux/i386/call_pselect6.S: New file.
+	* sysdeps/unix/sysv/linux/i386/pselect.c: New file.
+	* misc/Makefile (tests): Add tst-pselect.
+	* misc/tst-pselect.c: New file.
+
+2006-01-20  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/ppoll.c: New file.
+
+2006-01-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pselect.c: Fix typo in declaration.
+
+	* sysdeps/unix/sysv/linux/xmknodat.c (__xmknodat): Cast k_dev
+	value to unsigned int to match kernel.
+
+	* sysdeps/unix/sysv/linux/faccessat.c (faccessat): Try using the
+	syscall in more cases.
+
+	* io/Makefile (tests): Add tst-symlinkat, tst-linkat, tst-readlinkat,
+	tst-mkdirat, tst-mknodat, and tst-mkfifoat.
+	* io/tst-symlinkat.c: New file.
+	* io/tst-linkat.c: New file.
+	* io/tst-readlinkat.c: New file.
+	* io/tst-mkdirat.c: New file.
+	* io/tst-mknodat.c: New file.
+	* io/tst-mkfifoat.c: New file.
+
+	* dirent/Makefile (tests): Add tst-fdopendir2.
+	* dirent/tst-fdopendir2.c: New file.
+
+2006-01-20  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h
+	(sigcontext_struct) [__WORDSIZE == 32]: Define.
+
+2006-01-20  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/sh4/__longjmp.S: Demangle also r14 and r15.
+	* sysdeps/sh/sh3/__longjmp.S: Likewise.
+	* sysdeps/sh/sh4/setjmp.S: Mangle also r14 and r15.
+	* sysdeps/sh/sh3/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep.h [__ASSEMBLER__]
+	(PTR_MANGLE): Add temporary register as the second parameter.
+	(PTR_DEMANGLE): Likewize.
+	(PTR_MANGLE2, PTR_DEMANGLE2): Define.
+
+2006-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/fcntl.h: Declare __have_atfcts.
+	* sysdeps/unix/sysv/linux/faccessat.c: Use syscall if available.
+	* sysdeps/unix/sysv/linux/fchmodat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/futimesat.c: Likewise.
+	* sysdeps/unix/sysv/linux/linkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/mkdirat.c: Likewise.
+	* sysdeps/unix/sysv/linux/openat.c: Likewise.
+	* sysdeps/unix/sysv/linux/readlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/renameat.c: Likewise.
+	* sysdeps/unix/sysv/linux/symlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/unlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/xmknodat.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_PSELECT,
+	__ASSUME_PPOLL, and __ASSUME_ATFCTS if possible.
+
+	* io/ppoll.c: New file.
+	* io/Makefile (routines): Add ppoll.
+	(CFLAGS-ppoll.c): Define.
+	* io/Versions: Export ppoll for GLIBC_2.4.
+	* io/sys/poll.h: Declare ppoll.
+	* sysdeps/unix/sysv/linux/ppoll.c: New file.
+
+	* misc/pselect.c: Make it possible to include this file to define
+	the generic code as a static function.
+	* sysdeps/unix/sysv/linux/pselect.c: New file.
+
+2006-01-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/pselect.c (__pselect): Remove static.
+	Include sysdep-cancel.h again.  Add LIBC_CANCEL_HANDLED ().
+
+2006-01-18  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h [__ASSEMBLER__]: Don't
+	include problematic headers for assembler.
+
+	* Makerules ($(+sysdir_pfx)sysd-rules): Don't emit m_%.c rules,
+	instead emit m_%.o compilation rules from s_%.? source files.
+	* math/Makefile ($(objpfx)m_%$o: s_%.c): New rule using o-iterator.
+
+2006-01-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/pselect.c (__pselect): No need to enable async cancellation
+	here.  This is done in select.
+
+	* sysdeps/unix/sysv/linux/fxstatat.c [STAT_IS_KERNEL_STAT]
+	(__fxstatat): Correct handling of invalid vers values.
+
+	[BZ #2173]
+	* libio/fileops.c (_IO_new_file_fopen): If ,ccs= is given, also
+	set vtable to the wide vtable.
+	* libio/tst-fopenloc2.c: New file.
+	* libio/Makefile (tests): Add tst-fopenloc2.
+
+2006-01-18  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/ieee754/ldbl-opt/nldbl-dprintf.c: Restore
+	attribute_hidden here.
+
+	* sysdeps/sparc/sparc64/Makefile (long-double-fcts): Move this ...
+	* sysdeps/sparc/Makefile (long-double-fcts): ... to here.
+
+2006-01-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-deps.c (_dl_map_object_deps): In case of failure also make a
+	copy of objname string.
+
+2006-01-16  Roland McGrath  <roland@redhat.com>
+
+	* Makerules ($(+sysdir_pfx)sysd-rules): Emit pattern rules to install
+	into $(inst_includedir)/%.h from sysdirs.
+	[headers]: Change static pattern rule for installing
+	$(headers) to do only those not matching %.h.
+	($(inst_includedir)/%.h: $(objpfx)%.h): Add this pattern rule instead.
+	($(inst_includedir)/%.h: %.h): Likewise.
+	($(inst_includedir)/%.h: $(..)include/%.h): Likewise.
+
+	* Makefile ($(inst_includedir)/gnu/stubs.h):
+	Add $(make-target-directory).
+
+	* stdlib/Makefile (headers): Restore headers removed in last change.
+
+2006-01-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/e_exp2l.c: Don't include stdio.h, errno.h, stub-tag.h, include
+	math_private.h.
+	(__ieee754_exp2l): Compute for now as expl (M_LN2l * x)
+	instead of failing.
+	(exp2l): Remove stub_warning.
+
+2006-01-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/tst-faccessat.c (do_test): Don't fail if geteuid () == 0.
+
+2006-01-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_TMPFS_NAME.
+	* sysdeps/unix/sysv/linux/shm_open.c [__ASSUME_TMPFS_NAME]
+	(where_is_shmfs): Don't test for obsolete shm filesystem name.
+
+	* sysdeps/unix/sysv/linux/getsysstats.c: Don't search for proc
+	mount point.  We assume procfs is mounted at /proc in many other
+	places already.
+
+2006-01-15  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #1950]
+	* posix/regex_internal.c (re_string_reconstruct): Adjust for
+	build_wcs_upper_buffer change.
+	(build_wcs_upper_buffer): Change return type.
+
+	[BZ #2153]
+	* math/s_cacosh.c (__cacosh): Do not return a negative
+	value. Patch by Wes Loewer <wjltemp-temp01@yahoo.com>.
+	* math/s_cacoshl.c (__cacoshl): Likewise.
+	* math/s_cacoshf.c (__cacoshf): Likewise.
+	* math/libm-test.inc (cacosh_test): Adjust for change.
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Adopt for cacosh test change.
+	* sysdeps/hppa/fpu/libm-test-ulps: Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Likewise.
+	* sysdeps/ia64/fpu/libm-test-ulps: Likewise.
+	* sysdeps/m68k/fpu/libm-test-ulps: Likewise.
+	* sysdeps/mips/fpu/libm-test-ulps: Likewise.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sh/sh4/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Likewise.
+
+	[BZ #2079]
+	* libio/fputwc_u.c (fputwc_unlocked): Fix return value.
+	* libio/getwc_u.c (__getwc_unlocked): Likewise.
+	* libio/wfileops.c (_IO_wdo_write): Likewise.
+
+	[BZ #2078]
+	* libio/fputwc.c (fputwc): Use proper type for result.
+	* libio/ioungetwc.c (ungetwc): Likewise.
+
+2006-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/sched.h: Define SCHED_BATCH.
+
+2006-01-14  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (NLDBL_DECL): Don't try
+	attribute_hidden here.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsyslog.c (vsyslog): Restore
+	attribute_hidden here.
+	* sysdeps/ieee754/ldbl-opt/nldbl-asprintf.c (__asprintf): Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fprintf.c (fprintf): Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qecvt.c (qecvt): Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qfcvt.c (qfcvt): Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qgcvt.c (qgcvt): Likewise.
+
+	* sysdeps/ieee754/ldbl-opt/configure.in: Use AC_TRY_COMPILE and
+	verify __LONG_DOUBLE_128__ predefine.
+	* sysdeps/ieee754/ldbl-opt/configure: Regenerated.
+
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (NLDBL_HIDDEN): Removed.
+	(NLDBL_DECL): Rewritten.
+	Remove __THROW from NLDBL_DECL uses.
+	Use NLDBL_DECL for __vstrfmon_l.
+	(__nldbl___vsyslog_chk): Restore missing decl.
+	* sysdeps/ieee754/ldbl-opt/nldbl-asinh.c: Restore attribute_hidden.
+
+2006-01-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/cdefs.h (__LDBL_REDIR1_DECL): Define.
+	(__LDBL_REDIR_DECL): Stringize __nldbl and name.
+	* stdlib/bits/monetary-ldbl.h: Remove pastos from wchar-ldbl.h.
+	(strfmon, strfmon_l): Add __LDBL_REDIR_DECL.
+	* stdlib/bits/stdlib-ldbl.h (strtold, strtold_l, __strtold_internal,
+	qecvt, qfcvt, qgcvt, qecvt_r, qfcvt_r): Use __LDBL_REDIR1_DECL
+	instead of __LDBL_REDIR_DECL.
+	* wcsmbs/bits/wchar-ldbl.h: Remove stale #if.
+	(__LDBL_REDIR_WCHAR): Remove.
+	(fwprintf, wprintf, swprintf, vfwprintf, vwprintf, vswprintf,
+	fwscanf, wscanf, swscanf, vfwscanf, vwscanf, vswscanf): Use
+	__LDBL_REDIR_DECL instead of __LDBL_REDIR_WCHAR.
+	(wcstold, wcstold_l, __wcstold_internal): Add __LDBL_REDIR1_DECL.
+	* wcsmbs/wchar.h: Include bits/wchar-ldbl.h after bits/wchar2.h
+	instead of before it.
+	(wcstold inline): Move #ifndef __LDBL_COMPAT before
+	extern keyword.
+	* libio/bits/stdio-ldbl.h (__snprintf_chk, __vsnprintf_chk): Add
+	__LDBL_REDIR_DECL.
+	* misc/bits/syslog-ldbl.h (vsyslog): Protect with #ifdef __USE_BSD.
+	(__syslog_chk, __vsyslog_chk): Add __LDBL_REDIR_DECL.
+
+2006-01-14  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (NLDBL_DECL): Fix typo.
+	(NLDBL_HIDDEN): New macro.
+	(NLDBL_DECL): Use it in place of attribute_hidden.
+
+	* misc/efgcvt.c: Include <math_ldbl_opt.h> instead of <shlib-compat.h>.
+	* misc/efgcvt_r.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nldbl-abi.h: New file.
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h: #include <nldbl-abi.h>
+	to define LONG_DOUBLE_COMPAT_VERSION.  Use that in place of
+	NLDBL_VERSION.
+	* sysdeps/ieee754/ldbl-opt/Versions: Include <nldbl-abi.h>.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions: Revert last change.
+
+2006-01-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/math.h [__NO_LONG_DOUBLE_MATH] (__nldbl_nexttowardf): New
+	prototype.
+	(nexttowardf): Redirect to __nldbl_nexttowardf.
+	(nexttoward): Redirect to nextafter.
+	(__MATHDECL_2, __MATHDECL_1): Redirect *l functions to
+	non-*l versions if __LONG_DOUBLE_MATH_OPTIONAL and
+	__NO_LONG_DOUBLE_MATH.
+	* math/complex.h (__MATHDECL_1): Likewise.
+	* math/bits/mathcalls.h (nexttoward): Don't prototype if
+	__LDBL_COMPAT.
+	* misc/sys/cdefs.h: Include <bits/wordsize.h>.
+	(__LDBL_COMPAT, __LDBL_REDIR1, __LDBL_REDIR, __LDBL_REDIR1_NTH,
+	__LDBL_REDIR_NTH, __LDBL_REDIR_DECL): New macros.
+
+	* libio/bits/stdio-ldbl.h: New file.
+	* libio/Makefile (headers): Add it.
+	* libio/stdio.h [__LDBL_COMPAT]: #include it.
+	* libio/bits/libio-ldbl.h: New file.
+	* libio/Makefile (headers): Add it.
+	* libio/libio.h [__LDBL_COMPAT]: #include it.
+	* libio/libioP.h: Include <math_ldbl_opt.h>.
+	* include/wchar.h (__fwprintf, __vfwprintf): Fix commented out
+	attribute.
+	(__vfwprintf_chk): New prototype.  Add libc_hidden_proto.
+	* wcsmbs/bits/wchar-ldbl.h: New file.
+	* wcsmbs/Makefile (headers): Add it.
+	* wcsmbs/wchar.h [__LDBL_COMPAT]: #include it.
+	* wcsmbs/bits/wchar2.h (__vswprintf_alias): Removed.
+	(vswprintf): Define as a macro rather than inline function.
+	* stdio-common/bits/printf-ldbl.h: New file.
+	* stdio-common/Makefile (headers): Add it.
+	* stdio-common/printf.h [__LDBL_COMPAT]: #include it.
+	* libio/fwprintf.c: Include libioP.h.
+	(fwprintf): Use ldbl_weak_alias instead of weak_alias.
+	* libio/fwscanf.c: Include libioP.h.
+	(fwscanf): Rename to __fwscanf and add ldbl_strong_alias.
+	* libio/iovdprintf.c (vdprintf): Use ldbl_weak_alias instead of
+	weak_alias.
+	* libio/iovsprintf.c (_IO_vsprintf): Rename to __IO_vsprintf,
+	add ldbl_strong_alias and use INTDEF2 instead of INTDEF.
+	(vsprintf): Use ldbl_weak_alias instead of weak_alias.
+	* libio/iovsscanf.c (__vsscanf, vsscanf): Use ldbl_weak_alias
+	instead of weak_alias.
+	* libio/iovswscanf.c (vswscanf): Rename to __vswscanf,
+	add ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+	* libio/obprintf.c (obstack_printf, obstack_vprintf): Use
+	ldbl_weak_alias instead of weak_alias.
+	* libio/swprintf.c: Include libioP.h.
+	(swprintf): Rename to __swprintf and add ldbl_strong_alias.
+	* libio/swscanf.c: Include libioP.h.
+	(swscanf): Rename to __swscanf and add ldbl_strong_alias.
+	* libio/vasprintf.c (vasprintf): Use ldbl_weak_alias instead of
+	weak_alias.
+	* libio/vscanf.c (vscanf): Use ldbl_weak_alias instead of
+	weak_alias.
+	* libio/vsnprintf.c (__vsnprintf, vsnprintf): Use ldbl_weak_alias
+	instead of weak_alias.
+	* libio/vswprintf.c (__vswprintf): Remove alias.
+	(vswprintf): Use ldbl_weak_alias instead of weak_alias.
+	* libio/vwprintf.c: Include libioP.h.
+	(vwprintf): Rename to __vwprintf and add ldbl_strong_alias.
+	* libio/vwscanf.c (vwscanf): Rename to __vwscanf and add
+	ldbl_strong_alias.
+	* libio/wprintf.c: Include libioP.h.
+	(wprintf): Rename to __wprintf and add ldbl_strong_alias.
+	* libio/wscanf.c: Include libioP.h.
+	(wscanf): Rename to __wscanf and add ldbl_strong_alias.
+	* stdio-common/asprintf.c (__asprintf): Rename to ___asprintf, add
+	ldbl_strong_alias and use INTDEF2 instead of INTDEF.
+	(asprintf): Use ldbl_weak_alias instead of weak_alias.
+	* stdio-common/dprintf.c (dprintf): Rename to __dprintf, add
+	ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+	* stdio-common/fprintf.c: Include libioP.h.
+	(fprintf): Rename to __fprintf, add ldbl_strong_alias and
+	use ldbl_hidden_def instead of libc_hidden_def.
+	(_IO_fprintf): Use ldbl_weak_alias instead of weak_alias.
+	* stdio-common/fscanf.c: Include libioP.h.
+	(fscanf): Rename to __fscanf and add ldbl_strong_alias.
+	* stdio-common/printf.c: Include libioP.h.
+	(printf): Rename to __printf and add ldbl_strong_alias.
+	(_IO_printf): Use ldbl_strong_alias instead of strong_alias.
+	* stdio-common/printf_fp.c (__printf_fp): Rename to __printf_fp, add
+	ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+	* stdio-common/printf_size.c (printf_size): Rename to __printf_size
+	and add ldbl_strong_alias.
+	* stdio-common/scanf.c (scanf): Rename to __scanf and add
+	ldbl_strong_alias.
+	* stdio-common/snprintf.c (snprintf): Use ldbl_weak_alias instead of
+	weak_alias.
+	* stdio-common/sprintf.c (sprintf): Rename to __sprintf, add
+	ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+	(_IO_sprintf): Use ldbl_strong_alias instead of strong_alias.
+	* stdio-common/sscanf.c: Include libioP.h instead of iolibio.h.
+	(sscanf): Rename to __sscanf and add ldbl_strong_alias.
+	* stdio-common/vfprintf.c (vfprintf): Define to
+	_IO_vfprintf_internal.  Use ldbl_strong_alias instead.  Use
+	ldbl_hidden_def instead of libc_hidden_def.
+	(_IO_vfprintf_internal): Clear is_long_double if __ldbl_is_dbl,
+	handle the argument as double if it is non-zero.
+	(vfwprintf): Use ldbl_weak_alias instead of weak_alias.
+	(_IO_vfprintf): Add ldbl_strong_alias.
+	* stdio-common/vfscanf.c (_IO_vfscanf): Rename to
+	_IO_vfscanf_internal, don't use strtold if __ldbl_is_dbl, add
+	ldbl_strong_alias.
+	(vfwscanf): Use ldbl_weak_alias instead of weak_alias.
+	(__vfscanf): Rename to ___vfscanf, add ldbl_strong_alias and
+	use ldbl_hidden_def instead of libc_hidden_def.
+	(vfscanf): Use ldbl_weak_alias instead of weak_alias.
+	* stdio-common/vprintf.c: Include libioP.h.
+	(vprintf): Rename to __vprintf and add ldbl_strong_alias.
+	* debug/fprintf_chk.c (__fprintf_chk): Rename to ___fprintf_chk
+	and add ldbl_strong_alias.
+	* debug/printf_chk.c (__printf_chk): Rename to ___printf_chk
+	and add ldbl_strong_alias.
+	* debug/snprintf_chk.c: Include libioP.h.
+	(__snprintf_chk): Rename to ___snprintf_chk and add ldbl_strong_alias.
+	* debug/sprintf_chk.c: Include libioP.h.
+	(__sprintf_chk): Rename to ___sprintf_chk and add ldbl_strong_alias.
+	* debug/vfprintf_chk.c (__vfprintf_chk): Rename to ___vfprintf_chk,
+	add ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+	* debug/vfwprintf_chk.c (__vfwprintf_chk): Add libc_hidden_def.
+	* debug/vprintf_chk.c (__vprintf_chk): Rename to ___vprintf_chk
+	and add ldbl_strong_alias.
+	* debug/vsnprintf_chk.c (__vsnprintf_chk): Rename to ___vsnprintf_chk,
+	add ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+	* debug/vsprintf_chk.c (__vsprintf_chk): Rename to ___vsprintf_chk,
+	add ldbl_strong_alias and use ldbl_hidden_def instead of
+	libc_hidden_def.
+
+	* stdlib/stdlib.h (strtold): Don't define inline if [!__LDBL_COMPAT].
+	* wcsmbs/wchar.h (wcstold): Likewise.
+	* stdlib/strtod_l.c: Include math_ldbl_opt.h.
+	(____STRTOF_INTERNAL): Define.
+	(INTERNAL (__STRTOF)): Rename to ____STRTOF_INTERNAL.
+	(__STRTOF): Call ____STRTOF_INTERNAL instead.
+	[LONG_DOUBLE_COMPAT] (strtold_l, wcstold_l, __strtold_l, __wcstold_l):
+	Add compatibility symbols.
+	* stdlib/strtod.c: Include math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (strtold, wcstold, __strtold_internal,
+	__wcstold_internal): Add compatibility symbols.
+	* stdlib/strtold.c: Include bits/wordsize.h, wchar.h.
+	(NEW, NEW1): Define.
+	(__new_strtold, __new_wcstold): New prototypes.
+	(____new_strtold_internal, ____new_wcstold_internal): Likewise.
+	Add libc_hidden_proto.
+	(STRTOF): Define to NEW (*told).
+	[__LONG_DOUBLE_MATH_OPTIONAL] (wcstold, strtold): Add
+	long_double_symbol.
+	[__LONG_DOUBLE_MATH_OPTIONAL] (__wcstold_internal,
+	__strtold_internal): Likewise. Add libc_hidden_ver.
+
+	* stdlib/bits/stdlib-ldbl.h: New file.
+	* stdlib/Makefile (headers): Add it.
+	* stdlib/stdlib.h [__LDBL_COMPAT]: #include it.
+	* include/stdlib.h (ecvt_r, fcvt_r, qecvt_r, qfcvt_r): Remove
+	libc_hidden_proto.
+	(__ecvt, __fcvt, __gcvt, __ecvt_r, __fcvt_r, __qecvt, __qfcvt,
+	__qgcvt, __qecvt_r, __qfcvt_r): New prototypes.
+	* misc/efgcvt_r.c: Include shlib-compat.h.
+	(LONG_DOUBLE_CVT): Define.
+	(__APPEND, __APPEND2): Define.
+	(*fcvt_r): Use __APPEND instead of APPEND.  Remove libc_hidden_def.
+	(*ecvt_r): Likewise.
+	(cvt_symbol): Define.  Use it on fcvt_r and ecvt_r.
+	* misc/efgcvt.c: Include shlib-compat.h.
+	(LONG_DOUBLE_CVT): Define.
+	(__APPEND, __APPEND2): Define.
+	(fcvt): Use __APPEND instead of APPEND.  Remove libc_hidden_def.
+	(ecvt, gcvt): Likewise.
+	(cvt_symbol): Define.  Use it on fcvt, ecvt and gcvt.
+
+	* stdlib/bits/monetary-ldbl.h: New file.
+	* stdlib/Makefile (headers): Add it.
+	* stdlib/monetary.h [__LDBL_COMPAT]: #include it.
+	* stdlib/strfmon.c: Include math_ldbl_opt.h.
+	(strfmon): Rename to __strfmon and add ldbl_strong_alias.
+	* stdlib/strfmon_l.c: Remove all traces of [!USE_IN_LIBIO].
+	(__vstrfmon_l): Don't set is_long_double if __ldbl_is_dbl.
+	(__strfmon_l): Rename to ___strfmon_l and add ldbl_strong_alias.
+	(strfmon_l): Use ldbl_weak_alias instead of weak_alias.
+
+	* misc/bits/syslog-ldbl.h: New file.
+	* misc/Makefile (headers): Add it.
+	* misc/sys/syslog.h [__LDBL_COMPAT]: #include it.
+	* misc/syslog.c: Include math_ldbl_opt.h.
+	(syslog): Rename to __syslog and add ldbl_strong_alias,
+	use ldbl_hidden_def instead of libc_hidden_def.
+	(vsyslog): Rename to __vsyslog and add ldbl_strong_alias,
+	use ldbl_hidden_def instead of libc_hidden_def.
+
+	* sysdeps/generic/math_ldbl_opt.h: New file.
+	* math/w_j1l.c (j1l, y1l): Rename to __ prefixed variants.
+	Add weak_alias.
+	* math/w_j0l.c (j0l, y0l): Likewise.
+	* math/w_jnl.c (jnl, ynl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttoward.c
+	(__nexttowardl): Remove strong_alias.
+	(nexttowardl): Remove weak_alias.
+	* sysdeps/ieee754/ldbl-96/s_erfl.c
+	(__erfl, __erfcl): Remove strong_alias.
+	(erfl, erfcl): Remove weak_alias.
+
+	* sysdeps/ieee754/ldbl-64-128/s_asinhl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_atanl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_cbrtl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_ceill.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_copysignl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_cosl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_erfl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_expm1l.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_fabsl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_finitel.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_floorl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_fpclassifyl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_frexpl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_ilogbl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_isinfl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_isnanl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_llrintl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_llroundl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_log1pl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_logbl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_lrintl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_lroundl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_modfl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_nearbyintl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_nextafterl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_nexttoward.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_nexttowardf.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_nexttowardfd.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_remquol.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_rintl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_roundl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_scalblnl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_scalbnl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_signbitl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_sincosl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_sinl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_tanhl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_tanl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/s_truncl.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/strtold_l.c: New file.
+	* sysdeps/ieee754/ldbl-64-128/w_expl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/configure.in: New file.
+	* sysdeps/ieee754/ldbl-opt/configure: New file.
+	* sysdeps/ieee754/ldbl-opt/Makefile: New file.
+	* sysdeps/ieee754/ldbl-opt/Versions: New file.
+	* sysdeps/ieee754/ldbl-opt/cabs.c: New file.
+	* sysdeps/ieee754/ldbl-opt/cabsl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/carg.c: New file.
+	* sysdeps/ieee754/ldbl-opt/cargl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/cimag.c: New file.
+	* sysdeps/ieee754/ldbl-opt/cimagl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/conj.c: New file.
+	* sysdeps/ieee754/ldbl-opt/conjl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/creal.c: New file.
+	* sysdeps/ieee754/ldbl-opt/creall.c: New file.
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-acos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-acosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-asin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-asinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-asprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-atan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-atan2.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-atanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cabs.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cacos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cacosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-carg.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-casin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-casinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-catan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-catanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cbrt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ccos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ccosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ceil.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cexp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cimag.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-clog.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-clog10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-conj.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-copysign.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cpow.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-cproj.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-creal.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-csin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-csinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-csqrt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ctan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ctanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-dprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-drem.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-erf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-erfc.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-exp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-exp10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-exp2.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-expm1.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fabs.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fdim.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-finite.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-floor.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fmax.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fmin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fmod.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-frexp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fwprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fwprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fwscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-gamma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-hypot.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ilogb.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-iovfscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isinf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-isnan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-j0.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-j1.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-jn.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ldexp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-lgamma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-lgamma_r.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-llrint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-llround.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-log.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-log10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-log1p.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-log2.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-logb.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-lrint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-lround.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-modf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-nan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-nearbyint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-nextafter.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-nexttoward.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-nexttowardf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-obstack_printf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-obstack_vprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-pow.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-pow10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-printf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-printf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-printf_fp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-printf_size.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qecvt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qecvt_r.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qfcvt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qfcvt_r.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-qgcvt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-remainder.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-remquo.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-rint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-round.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-scalb.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-scalbln.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-scalbn.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-scanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-signbit.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-significand.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sincos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-snprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-snprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sqrt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-sscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-strfmon.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-strfmon_l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-strtold.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-strtold_l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-strtoldint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-swprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-swprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-swscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-syslog.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-syslog_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-tan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-tanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-tgamma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-trunc.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vasprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vdprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfwprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfwprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfwscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsnprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsnprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vswprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vswprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vswscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsyslog.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsyslog_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vwprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vwprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-vwscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-wcstold.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-wcstold_l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-wcstoldint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-wprintf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-wprintf_chk.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-wscanf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-y0.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-y1.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-yn.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_asinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_atan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cacos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cacosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cacoshl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cacosl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_casin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_casinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_casinhl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_casinl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_catan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_catanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_catanhl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_catanl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cbrt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ccos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ccosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ccoshl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ccosl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ceil.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cexp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cexpl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_clog.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_clog10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_clog10l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_clogl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_copysign.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cpow.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cpowl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cproj.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_cprojl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_csin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_csinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_csinhl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_csinl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_csqrt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_csqrtl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ctan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ctanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ctanhl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ctanl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_erf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_expm1.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fabs.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fdim.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fdiml.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_finite.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_floor.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fmal.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fmax.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fmaxl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fmin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_fminl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_frexp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ilogb.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_isinf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_isnan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ldexp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ldexpl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_llrint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_llround.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_log1p.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_logb.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_lrint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_lround.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_modf.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_nan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_nanl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_nearbyint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_nextafter.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_remquo.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_rint.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_round.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_scalbln.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_scalbn.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_significand.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_significandl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_sin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_sincos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_tan.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_tanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_trunc.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_acos.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_acosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_acoshl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_acosl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_asin.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_asinl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_atan2.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_atan2l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_atanh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_atanhl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_cosh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_coshl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_drem.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_dreml.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_exp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_exp10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_exp10l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_fmod.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_fmodl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_hypot.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_hypotl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_j0.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_j0l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_j1.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_j1l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_jn.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_jnl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_lgamma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_lgamma_r.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_lgammal.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_lgammal_r.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_log.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_log10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_log10l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_log2.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_log2l.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_logl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_pow.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_powl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_remainder.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_remainderl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_scalb.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_scalbl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_sinh.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_sinhl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_sqrt.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_sqrtl.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_tgamma.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_tgammal.c: New file.
+
+	* sysdeps/unix/sysv/linux/sparc/bits/wordsize.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Implies: New file.
+	* sysdeps/sparc/sparc32/Implies: Move ldbl-128 first and flt-32
+	after dbl-64.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions (NLDBL_VERSION):
+	%define this to to GLIBC_2.4.
+	* sysdeps/sparc/sparc32/fpu/e_sqrtl.c: New file.
+	* sysdeps/sparc/sparc32/fpu/s_fabs.c: New file.
+	* sysdeps/sparc/sparc32/fpu/s_fabsf.S: New file.
+	* sysdeps/sparc/sparc32/fpu/s_fabsl.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtoui.c: Removed.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtoux.c: Removed.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtox.c: Removed.
+	* sysdeps/sparc/sparc32/soft-fp/q_uitoq.c: Removed.
+	* sysdeps/sparc/sparc32/soft-fp/q_uxtoq.c: Removed.
+	* sysdeps/sparc/sparc32/soft-fp/q_xtoq.c: Removed.
+	* sysdeps/sparc/sparc32/soft-fp/q_lltoq.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtoll.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtou.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/q_qtoull.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/q_ulltoq.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/q_utoq.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/Versions: New file.
+	* sysdeps/sparc/fpu/bits/mathinline.h (__unordered_cmp,
+	__unordered_v9cmp): Define differently depending on
+	-m32 -mlong-double-{64,128}.
+	(__signbitl, sqrtl, __ieee754_sqrtl): New inlines.
+	* sysdeps/sparc/fpu/bits/mathdef.h (__NO_LONG_DOUBLE_MATH): Remove.
+	* sysdeps/sparc/sparc32/soft-fp/Makefile (sparc32-quad-routines):
+	Set.
+	(sysdep-routines): Add sparc32-quad-routines.
+	* sysdeps/sparc/sparc32/soft-fp/sfp-machine.h: Include stdlib.h.
+	(FP_HANDLE_EXCEPTIONS): Call ___Q_simulate_exceptions as a normal
+	function.
+	* sysdeps/sparc/sparc32/soft-fp/q_sqrt.c (__ieee754_sqrtl): New
+	alias to _Q_sqrt.
+	* sysdeps/sparc/sparc32/soft-fp/q_div.c (_Q_div): Fix a typo.
+	* sysdeps/sparc/sparc64/soft-fp/sfp-machine.h: Include stdlib.h.
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Update.
+
+	* libio/libio.h (_IO_vfscanf, _IO_vfprintf): Remove __THROW.
+	(_IO_vfwscanf, _IO_vfwprintf): Likewise.
+	* libio/libioP.h (_IO_vdprintf): Likewise.
+
+2006-01-13  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h (PTR_MANGLE, PTR_MANGLE2,
+	PTR_DEMANGLE, PTR_DEMANGLE2): Move ...
+	* sysdeps/unix/alpha/sysdep.h: ... here.
+	* sysdeps/unix/sysv/linux/alpha/fxstatat.c: Define __GI___fxstatat64.
+
+2006-01-13  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h (ELF_NVRREG): Fix
+	value for PowerPC64.
+
+2006-01-12  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/s390/jmpbuf-offsets.h: New file.
+	* sysdeps/s390/jmpbuf-unwind.h: Include it.
+
+	* sysdeps/alpha/__longjmp.S: Include <jmpbuf-offsets.h>
+	instead of <bits/setjmp.h>.
+	* sysdeps/alpha/setjmp.S: Likewise.
+	* sysdeps/i386/__longjmp.S: Likewise.
+	* sysdeps/i386/bsd-_setjmp.S: Likewise.
+	* sysdeps/i386/bsd-setjmp.S: Likewise.
+	* sysdeps/i386/setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/__longjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S:
+	* sysdeps/powerpc/powerpc32/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Likewise.
+	* sysdeps/sh/sh3/setjmp.S: Likewise.
+	* sysdeps/sh/sh4/setjmp.S: Likewise.
+	* sysdeps/sparc/sparc32/__longjmp.S: Likewise.
+	* sysdeps/sparc/sparc32/setjmp.S: Likewise.
+	* sysdeps/x86_64/__longjmp.S: Likewise.
+	* sysdeps/x86_64/setjmp.S: Likewise.
+	* sysdeps/mach/hurd/i386/longjmp-ts.c: Include <jmpbuf-offsets.h>.
+	* sysdeps/mach/hurd/powerpc/longjmp-ts.c: Likewise.
+	* sysdeps/mach/hurd/alpha/longjmp-ts.c: Likewise.
+	* sysdeps/alpha/jmpbuf-unwind.h: Likewise.
+	* sysdeps/hppa/jmpbuf-unwind.h: Likewise.
+	* sysdeps/i386/jmpbuf-unwind.h: Likewise.
+	* sysdeps/powerpc/jmpbuf-unwind.h: Likewise.
+	* sysdeps/sparc/sparc32/jmpbuf-unwind.h: Likewise.
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h: Likewise.
+	* sysdeps/x86_64/jmpbuf-unwind.h: Likewise.
+	* setjmp/jmpbuf-offsets.h: File removed.
+	* include/bits/setjmp.h: File removed.
+
+2006-01-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/wmemstream.c: New file.
+	* libio/stdio.h: Declare open_wmemstream.
+	* libio/Versions: Export open_wmemstream for GLIBC_2.4.
+	* libio/Makefile (routines): Add wmemstream.
+	(tests): Add tst-memstream1, tst-memstream2, tst-wmemstream2, and
+	tst-wmemstream2.
+	* libio/tst-memstream1.c: New file.
+	* libio/tst-memstream2.c: New file.
+	* libio/tst-wmemstream1.c: New file.
+	* libio/tst-wmemstream2.c: New file.
+
+	* libio/memstream.c (_IO_mem_sync): Remove useless call to
+	_IO_default_sync.
+
+	* elf/check-textrel.c: Add missing argument.
+
+	* Makerules: Define build-module-asneeded.
+	* iconvdata/extra-module.mk: Use build-module-asneeded.
+	needed.
+
+2006-01-09  Richard Henderson  <rth@redhat.com>
+
+	* iconvdata/extra-module.mk ($(objpfx)$(mod).so): Depend on ld.so.
+	* sysdeps/alpha/__longjmp.S: Use PTR_DEMANGLE.
+	* sysdeps/alpha/setjmp.S: Likewise.  Avoid __sigjmp_save for rtld;
+	tailcall in libc.so.
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h (PTR_MANGLE): Define.
+	(PTR_MANGLE2): Define.
+
+2006-01-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/check-localplt.c: New file.
+	* elf/Makefile: Add rules to build and run check-localplt.
+	* scripts/data/localplt-x86_64-linux-gnu.data: New file.
+	* scripts/data/localplt-i386-linux-gnu.data: New file.
+
+	* include/sys/stat.h: Add libc_hidden_proto for __fxstatat64.
+	* sysdeps/unix/sysv/linux/fxstatat64.c: Add libc_hidden_def for
+	__fxstatat64.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c: Add
+	__GI___fxstatat64 alias.
+
+	* libio/memstream.c (_IO_mem_finish): Fix potential memory leak if
+	realloc fails.
+
+	* include/sched.h: Add libc_hidden_proto for __sched_yield.
+
+	* libio/genops.c (_IO_unbuffer_write): Give concurrently running
+	threads the chance to work correctly by trying to lock the stream.
+	If this does not work, proceed without locking.
+
+2006-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/genops.c (_IO_unbuffer_write): Don't always free the
+	buffer.  This is not necessary except in debug mode.  If we don't
+	free the buffer but the FILE structure to a list.
+	(buffer_free): New function.  Free buffers or tell _IO_unbuffer_write
+	to do so.
+	* libio/libio.h (struct _IO_FILE): Add new members to keep track
+	of which buffers have to be freed.
+
+	* iconv/gconv_cache.c (free_mem): Don't call munmap if gconv_cache
+	is NULL.
+
+2005-10-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* malloc/obstack.c: Fix old comments.  Update FSF snail mail address.
+	* malloc/obstack.h: Likewise.
+
+	[BZ #321]
+	Fix portability bugs encountered when porting to Itanium.
+	* malloc/obstack.h (obstack_empty_p, obstack_finish): Do not
+	assume that the "contents" member is suitably aligned.  It is
+	not, for some hosts and alignments: e.g., Itanium, long-double.
+	* malloc/obstack.c (_obstack_begin, _obstack_begin_1,
+	_obstack_newchunk): Likewise.
+	* malloc/obstack.c: Include <stddef.h>, for size_t.
+	Include <inttypes.h>, <stdint.h> if needed and available.
+	(DEFAULT_ALIGNMENT): Now an enum constant, not a macro.
+	Use C89 offsetof rather than K&R trick.
+	Use the maximum alignment of uintmax_t, long double, void *
+	rather than the alignment of double.
+	(union fooround): Use uintmax_t, long double, void * members
+	rather than just long and double.
+
+	[BZ #321]
+	Fix portability bugs encountered when porting to the IBM iSeries,
+	where pointers are 256 bits wide and no integers are that wide.
+	* malloc/obstack.h (__PTR_TO_INT, __INT_TO_PTR): Remove.
+	All uses changed to:
+	(__BPTR_ALIGN, __PTR_ALIGN): New macros.
+	(struct _obstack_chunk.temp): Change from int to a union
+	of pointer and int.  All uses changed.
+
+	[BZ #321]
+	* malloc/obstack.c (print_and_abort) [!_LIBC]:
+	Call fprintf (stderr, ...), not __fxprintf (NULL, ...).
+	[_LIBC && USE_IN_LIBIO]: Don't include <wchar.h>; no longer needed.
+
+2006-01-10  Derek Price  <derek@ximbiot.com>
+	    Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #1060]
+	* posix/glob.c: Assume freestanding C89 compiler.  Simplify cruft that
+	may be replaced with GNULIB modules.  Make no attempt to find 64-bit
+	versions of file access functions directly when [!_LIBC].
+	Don't define GLOB_* macros here.
+	(DIRENT_MUST_BE, DIRENT_MIGHT_BE_SYMLINK, DIRENT_MIGHT_BE_DIR): New
+	macros to abstract dirent->d_type access.
+	(GETPW_R_SIZE_MAX, GET_LOGIN_NAME_MAX): New macros to abstract sysconf
+	access.
+
+2006-01-10  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	(PTR_MANGLE): Fix cast.
+
+	* timezone/test-tz.c: Revert last change, updating to match
+	tzdata2005r definition of "MST".
+
+2006-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/bits/setjmp.h: Don't include jmpbuf-offsets.h if _ISOMAC is
+	defined.
+
+2006-01-10  Andreas Jaeger  <aj@suse.de>
+
+	* include/time.h: Use normal comments.
+
+2006-01-10  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* hurd/sigunwind.c: Include <jmpbuf-unwind.h> instead of <setjmp.h>.
+	* sysdeps/mach/hurd/jmp-unwind.c: Likewise.
+
+2006-01-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* wcsmbs/bits/wchar2.h (vswprintf): Call __vswprintf_alias rather than
+	vswprintf recursively.
+
+2006-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/bits/setjmp.h: Add back accidently removed #endif.
+
+2006-01-10  Roland McGrath  <roland@redhat.com>
+
+	* include/bits/setjmp.h: New file.
+	* setjmp/jmpbuf-offsets.h: New file.
+	* sysdeps/alpha/bits/setjmp.h: Move JB_* macros ...
+	* sysdeps/alpha/jmpbuf-offsets.h: ... here, new file.
+	* sysdeps/hppa/bits/setjmp.h (JB_SP): Macro moved ...
+	* sysdeps/hppa/jmpbuf-offsets.h: ... here, new file.
+	* sysdeps/i386/bits/setjmp.h: Move JB_* macros ...
+	* sysdeps/i386/jmpbuf-offsets.h: ... here, new file.
+	* sysdeps/mips/bits/setjmp.h (JB_PC): Macro removed.
+	* sysdeps/powerpc/bits/setjmp.h: Move JB_* macros ...
+	* sysdeps/powerpc/jmpbuf-offsets.h: ... here, new file.
+	* sysdeps/s390/bits/setjmp.h: Remove __JB_* macros.
+	* sysdeps/sh/bits/setjmp.h (JB_SIZE): Macro moved ...
+	* sysdeps/sh/jmpbuf-offsets.h: ... here, new file.
+	* sysdeps/sparc/sparc32/bits/setjmp.h: Move JB_* macros ...
+	* sysdeps/sparc/sparc32/jmpbuf-offsets.h: ... here, new file.
+	* sysdeps/unix/sysv/linux/sparc/bits/setjmp.h: Remove JB_* macros.
+	* sysdeps/x86_64/bits/setjmp.h: Move JB_* macros ...
+	* sysdeps/x86_64/jmpbuf-offsets.h: ... here, new file.
+
+	* sysdeps/powerpc/bits/setjmp.h (_JMPBUF_UNWINDS): Move macro ...
+	* sysdeps/powerpc/jmpbuf-unwind.h: ... here.
+	* sysdeps/alpha/bits/setjmp.h (_JMPBUF_UNWINDS): Move macro ...
+	* sysdeps/alpha/jmpbuf-unwind.h: ... here.
+	* sysdeps/sparc/sparc32/bits/setjmp.h (_JMPBUF_UNWINDS): Move macro ...
+	* sysdeps/sparc/sparc32/jmpbuf-unwind.h: ... here.
+	* sysdeps/i386/bits/setjmp.h (_JMPBUF_UNWINDS): Move macro ...
+	* sysdeps/i386/jmpbuf-unwind.h: ... here.
+	* sysdeps/x86_64/bits/setjmp.h (_JMPBUF_UNWINDS): Move macro ...
+	* sysdeps/x86_64/jmpbuf-unwind.h: ... here.
+	* sysdeps/sh/bits/setjmp.h (_JMPBUF_UNWINDS): Move macro ...
+	* sysdeps/sh/jmpbuf-unwind.h: ... here.
+	* sysdeps/hppa/bits/setjmp.h (_JMPBUF_UNWINDS): Move macro ...
+	* sysdeps/hppa/jmpbuf-unwind.h: ... here, new file.
+	* sysdeps/mips/bits/setjmp.h (_JMPBUF_UNWINDS): Move macro ...
+	* sysdeps/mips/jmpbuf-unwind.h: ... here.
+	* sysdeps/m68k/bits/setjmp.h (_JMPBUF_UNWINDS): Move macro ...
+	* sysdeps/m68k/jmpbuf-unwind.h: ... here, new file.
+	* sysdeps/s390/bits/setjmp.h (_JMPBUF_UNWINDS): Move macro ...
+	* sysdeps/s390/jmpbuf-unwind.h: ... here.
+	* sysdeps/unix/sysv/linux/ia64/bits/setjmp.h (_JMPBUF_UNWINDS):
+	Move macro ...
+	* sysdeps/ia64/jmpbuf-unwind.h: ... here.
+	* sysdeps/unix/sysv/linux/sparc/bits/setjmp.h (_JMPBUF_UNWINDS):
+	Move macro ...
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h: ... here.
+
+	* sysdeps/alpha/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/i386/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/ia64/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/mips/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/powerpc/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/s390/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/sh/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/sparc/sparc32/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h: New file, moved from nptl/.
+	* sysdeps/x86_64/jmpbuf-unwind.h: New file, moved from nptl/.
+
+	* sysdeps/linkmap.h: File removed.
+
+2006-01-07  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/elf/start.S (_start): Use PLABEL32 relocations
+	by using LR and RR. Add %sr0 to iitlbp.
+
+2006-01-09  Roland McGrath  <roland@redhat.com>
+
+	* timezone/private.h: Update from tzcode2005r.
+	* timezone/tzfile.h: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+	* timezone/africa: Update from tzdata2005r.
+	* timezone/antarctica: Likewise.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/systemv: Likewise.
+
+	* elf/Makefile ($(objpfx)reldep5.out): Fix dependency typo,
+	so we depend on $(objpfx)reldepmod6.so as intended.
+
+2006-01-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2126]
+	* sysdeps/i386/i686/strtok.S: Store pointer to NUL byte if NULL is
+	returned.
+	* sysdeps/i386/strtok.S: Likewise.
+	* sysdeps/x86_64/strtok.S: Likewise.
+	* string/Makefile (tests): Add bug-strtok1.
+	* string/bug-strtok1.c: New file.
+
+	* elf/check-textrel.c (AB): Also check for writable and executable
+	segments.
+
+	* sysdeps/ieee754/dbl-64/e_exp2.c: Remove section attribute from
+	const variables, gas produces garbage.
+	* sysdeps/ieee754/flt-32/e_exp2f.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_expf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_expm1f.c: Likewise.
+
 2006-01-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/setjmp.h (_JMPBUF_UNWINDS): Add

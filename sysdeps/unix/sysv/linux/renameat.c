@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,53 +20,87 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
+#include <kernel-features.h>
 #include <sysdep.h>
 
 
+#ifndef __ASSUME_ATFCTS
 void
 attribute_hidden
 __atfct_seterrno_2 (int errval, int fd1, const char *buf1, int fd2,
 		    const char *buf2)
 {
-  if (errval == ENOTDIR && (buf1 != NULL || buf2 != NULL))
+  if (buf1 != NULL || buf2 != NULL)
     {
-      /* This can mean either the file descriptor is invalid or
-	 /proc is not mounted.  */
       struct stat64 st;
 
-      if (buf1 != NULL)
+      if (errval == ENOTDIR)
 	{
-	  if (__fxstat64 (_STAT_VER, fd1, &st) != 0)
-	    /* errno is already set correctly.  */
-	    return;
-
-	  /* If /proc is not mounted there is nothing we can do.  */
-	  if (S_ISDIR (st.st_mode)
-	      && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
-		  || !S_ISDIR (st.st_mode)))
+	  /* This can mean either the file descriptor is invalid or
+	     /proc is not mounted.  */
+	  if (buf1 != NULL)
 	    {
-	      errval = ENOSYS;
-	      goto out;
+	      if (__fxstat64 (_STAT_VER, fd1, &st) != 0)
+		/* errno is already set correctly.  */
+		return;
+
+	      /* If /proc is not mounted there is nothing we can do.  */
+	      if (S_ISDIR (st.st_mode)
+		  && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
+		      || !S_ISDIR (st.st_mode)))
+		{
+		  errval = ENOSYS;
+		  goto out;
+		}
+	    }
+
+	  if (buf2 != NULL)
+	    {
+	      if (__fxstat64 (_STAT_VER, fd2, &st) != 0)
+		/* errno is already set correctly.  */
+		return;
+
+	      /* If /proc is not mounted there is nothing we can do.  */
+	      if (S_ISDIR (st.st_mode)
+		  && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
+		      || !S_ISDIR (st.st_mode)))
+		errval = ENOSYS;
 	    }
 	}
-
-      if (buf2 != NULL)
+      else if (errval == ENOENT)
 	{
-	  if (__fxstat64 (_STAT_VER, fd2, &st) != 0)
-	    /* errno is already set correctly.  */
-	    return;
+	  /* This could mean the file descriptor is not valid.  We
+	     reuse BUF for the stat call.  Find the slash after the
+	     file descriptor number.  */
+	  if (buf1 != NULL)
+	    {
+	      *(char *) strchr (buf1 + sizeof "/proc/self/fd", '/') = '\0';
 
-	  /* If /proc is not mounted there is nothing we can do.  */
-	  if (S_ISDIR (st.st_mode)
-	      && (__xstat64 (_STAT_VER, "/proc/self/fd", &st) != 0
-		  || !S_ISDIR (st.st_mode)))
-	    errval = ENOSYS;
+	      int e = __lxstat64 (_STAT_VER, buf1, &st);
+	      if ((e == -1 && errno == ENOENT)
+		  ||(e == 0 && !S_ISLNK (st.st_mode)))
+		{
+		  errval = EBADF;
+		  goto out;
+		}
+	    }
+
+	  if (buf2 != NULL)
+	    {
+	      *(char *) strchr (buf2 + sizeof "/proc/self/fd", '/') = '\0';
+
+	      int e = __lxstat64 (_STAT_VER, buf2, &st);
+	      if ((e == -1 && errno == ENOENT)
+		  ||(e == 0 && !S_ISLNK (st.st_mode)))
+		errval = EBADF;
+	    }
 	}
     }
 
  out:
   __set_errno (errval);
 }
+#endif
 
 
 /* Rename the file OLD relative to OLDFD to NEW relative to NEWFD.  */
@@ -77,6 +111,24 @@ renameat (oldfd, old, newfd, new)
      int newfd;
      const char *new;
 {
+  int result;
+
+#ifdef __NR_renameat
+# ifndef __ASSUME_ATFCTS
+  if (__have_atfcts >= 0)
+# endif
+    {
+      result = INLINE_SYSCALL (renameat, 4, oldfd, old, newfd, new);
+# ifndef __ASSUME_ATFCTS
+      if (result == -1 && errno == ENOSYS)
+	__have_atfcts = -1;
+      else
+# endif
+	return result;
+    }
+#endif
+
+#ifndef __ASSUME_ATFCTS
   static const char procfd[] = "/proc/self/fd/%d/%s";
   char *bufold = NULL;
 
@@ -118,7 +170,7 @@ renameat (oldfd, old, newfd, new)
 
   INTERNAL_SYSCALL_DECL (err);
 
-  int result = INTERNAL_SYSCALL (rename, err, 2, old,  new);
+  result = INTERNAL_SYSCALL (rename, err, 2, old,  new);
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
     {
@@ -128,4 +180,5 @@ renameat (oldfd, old, newfd, new)
     }
 
   return result;
+#endif
 }

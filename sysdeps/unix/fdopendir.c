@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,7 @@ fdopendir (int fd)
       __set_errno (ENOTDIR);
       return NULL;
     }
+
   /* Make sure the descriptor allows for reading.  */
   int flags = __fcntl (fd, F_GETFL);
   if (__builtin_expect (flags == -1, 0))

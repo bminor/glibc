@@ -1,5 +1,5 @@
 /* Checking macros for wchar functions.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -210,22 +210,11 @@ extern int __vswprintf_chk (wchar_t *__restrict __s, size_t __n,
 			    __const wchar_t *__restrict __format,
 			    __gnuc_va_list __arg)
      __THROW /* __attribute__ ((__format__ (__wprintf__, 5, 0))) */;
-extern int __REDIRECT_NTH (__vswprintf_alias,
-			   (wchar_t *__restrict __s, size_t __n,
-			    __const wchar_t *__restrict __format,
-			    __gnuc_va_list __arg), vswprintf)
-     /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
 
-
-extern __always_inline int
-__NTH (vswprintf (wchar_t *__s, size_t __n, __const wchar_t *__format,
-		  __gnuc_va_list __arg))
-{
-  if (__bos (__s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1)
-    return __vswprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1, __bos (__s),
-			    __format, __arg);
-  return vswprintf (__s, __n, __format, __arg);
-}
+#define vswprintf(s, n, fmt, ap) \
+  (__bos (s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1			      \
+   ? __vswprintf_chk (s, n, __USE_FORTIFY_LEVEL - 1, __bos (s), fmt, ap)      \
+   : vswprintf (s, n, fmt, ap))
 
 
 #if __USE_FORTIFY_LEVEL > 1

@@ -48,7 +48,7 @@ routines :=								\
 	ttyname ttyname_r isatty					\
 	link linkat symlink symlinkat readlink readlinkat		\
 	unlink unlinkat rmdir						\
-	ftw ftw64 fts poll						\
+	ftw ftw64 fts poll ppoll					\
 	posix_fadvise posix_fadvise64					\
 	posix_fallocate posix_fallocate64				\
 	sendfile sendfile64
@@ -64,7 +64,9 @@ test-srcs	:= ftwtest
 tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-fcntl bug-ftw1 bug-ftw2 bug-ftw3 bug-ftw4 tst-statvfs \
 		   tst-openat tst-unlinkat tst-fstatat tst-futimesat \
-		   tst-renameat tst-fchownat tst-fchmodat tst-faccessat
+		   tst-renameat tst-fchownat tst-fchmodat tst-faccessat \
+		   tst-symlinkat tst-linkat tst-readlinkat tst-mkdirat \
+		   tst-mknodat tst-mkfifoat
 
 distribute	:= ftwtest-sh
 
@@ -72,6 +74,7 @@ include ../Rules
 
 CFLAGS-fcntl.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-poll.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-ppoll.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-lockf.c = -fexceptions
 CFLAGS-statfs.c = -fexceptions
 CFLAGS-fstatfs.c = -fexceptions

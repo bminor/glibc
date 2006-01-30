@@ -257,6 +257,10 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 		  \$$(compile-command.S)";				      \
 	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.s \$$(before-compile); \
 		  \$$(compile-command.s)";			              \
+	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.S \$$(before-compile); \
+		  \$$(compile-command.S)";				      \
+	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.s \$$(before-compile); \
+		  \$$(compile-command.s)";			              \
 	     $(close-check-inhibit-asm)	\
 	     echo "\$$(objpfx)%$$o: $$dir/%.c \$$(before-compile); \
 		  \$$(compile-command.c)";				      \
@@ -264,11 +268,12 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 		  \$$(compile-command.c)";				      \
 	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.c \$$(before-compile); \
 		  \$$(compile-command.c)";				      \
+	     echo "\$$(objpfx)m_%$$o: $$dir/s_%.c \$$(before-compile); \
+		  \$$(compile-command.c)";				      \
 	   done; \
-	   echo "\$$(objpfx)m_%.S: $$dir/s_%.S; \$$(+make-include-of-dep)";   \
-	   echo "\$$(objpfx)m_%.c: $$dir/s_%.c; \$$(+make-include-of-dep)";   \
+	   echo "\$$(inst_includedir)/%.h: $$dir/%.h \$$(+force); \
+	   	 	\$$(do-install)"; 				      \
 	 done;								      \
-	 echo "\$$(objpfx)m_%.c: s_%.c; \$$(+make-include-of-dep)";   \
 	 echo 'sysd-rules-done = t') > $@T
 	mv -f $@T $@
 
@@ -277,17 +282,6 @@ ifndef sysd-rules-done
 no_deps=t
 endif
 
-# This is used by the m_%.[Sc] pattern rules in sysd-rules.
-define +make-include-of-dep
-echo '#include <$<>' > $@T
-mv -f $@T $@
-endef
-
-# It matters that this set of rules, for compiling from sources in
-# the current directory (the $srcdir/$subdir) come before the
-# generated sysdep rules in included from sysd-rules below.  When
-# compiling in the source tree, generated sources go into the current
-# directory, and those should be chosen before any sources in sysdeps.
 define o-iterator-doit
 $(objpfx)%$o: %.S $(before-compile); $$(compile-command.S)
 endef
@@ -571,6 +565,11 @@ ifeq (yes,$(elf))
 define build-module
 $(build-module-helper) -o $@ -T $(common-objpfx)shlib.lds \
 	  $(csu-objpfx)abi-note.o $(build-module-objlist)
+endef
+define build-module-asneeded
+$(build-module-helper) -o $@ -T $(common-objpfx)shlib.lds \
+	  $(csu-objpfx)abi-note.o \
+	  -Wl,--as-needed $(build-module-objlist) -Wl,--no-as-needed
 endef
 else
 ifneq (,$(findstring aix,$(config-os)))
@@ -1121,8 +1120,21 @@ $(addprefix $(inst_datadir)/,$(install-data)): $(inst_datadir)/%: % $(+force)
 endif
 headers := $(strip $(headers))
 ifdef headers
-$(addprefix $(inst_includedir)/,$(headers)): $(inst_includedir)/%: % $(+force)
+# This implicit rule installs headers from the source directory.
+# It may be ignored in preference to rules from sysd-rules to find
+# headers in the sysdeps tree.
+$(inst_includedir)/%.h: $(objpfx)%.h $(+force)
 	$(do-install)
+$(inst_includedir)/%.h: %.h $(+force)
+	$(do-install)
+$(inst_includedir)/%.h: $(..)include/%.h $(+force)
+	$(do-install)
+headers-nonh := $(filter-out %.h,$(headers))
+ifdef headers-nonh
+$(addprefix $(inst_includedir)/,$(headers-nonh)): $(inst_includedir)/%: \
+						 % $(+force)
+	$(do-install)
+endif	# headers-nonh
 endif	# headers
 
 .PHONY: install-bin-nosubdir install-bin-script-nosubdir \
