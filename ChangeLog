@@ -1,3 +1,142 @@
+2006-01-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/fpu/Implies: New file.
+	* sysdeps/alpha/fpu/s_ceil.c: Include math_ldbl_opt.h, add
+	compat_symbol if LONG_DOUBLE_COMPAT.
+	* sysdeps/alpha/fpu/s_copysign.c: Likewise.
+	* sysdeps/alpha/fpu/s_fabs.c: Likewise.
+	* sysdeps/alpha/fpu/s_floor.c: Likewise.
+	* sysdeps/alpha/fpu/s_rint.c: Likewise.
+	* sysdeps/alpha/soft-fp/e_sqrtl.c: New file.
+	* sysdeps/alpha/Implies: Add ieee754/ldbl-128.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/wordsize.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/Implies: Add ieee754/ldbl-64-128,
+	ieee754/ldbl-opt.
+	* sysdeps/alpha/bits/mathdef.h (__NO_LONG_DOUBLE_MATH): Remove.
+	* sysdeps/unix/sysv/linux/alpha/nldbl-abi.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/Makefile
+	[$(subdir) = math] (libm-routines): Add multc3, divtc3.
+
+	* math/divtc3.c: New file.
+	* math/multc3.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile
+	[$(subdir) = math] (libm-routines): Add multc3, divtc3.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fpu/Implies: New file.
+	* sysdeps/sparc/sparc32/fpu/s_fabsl.c: Include math.h and
+	math_ldbl_opt.h.
+	(fabsl): Use long_double_symbol instead of weak_alias.
+	* sysdeps/sparc/sparc32/fpu/s_fabs.c: Include math.h and
+	math_ldbl_opt.h.
+	[LONG_DOUBLE_COMPAT] (fabsl): Add compat_symbol.
+
+2006-01-31  Martin Schwidefsky	<schwidefsky@de.ibm.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/Implies: New file.
+	* sysdeps/unix/sysv/linux/s390/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/s390/nldbl-abi.h: New file.
+	* sysdeps/s390/fpu/bits/mathinline.h (signbitl, sqrtl): New inlines.
+	* sysdeps/s390/bits/mathdef.h: New file.
+	* sysdeps/s390/fpu/e_sqrtl.c: New file.
+	* sysdeps/s390/s390-32/bits/wordsize.h (__LONG_DOUBLE_MATH_OPTIONAL,
+	__NO_LONG_DOUBLE_MATH): Define.
+	* sysdeps/s390/s390-64/bits/wordsize.h: Likewise.
+	* sysdeps/s390/Implies: Add ieee754/ldbl-128.
+	* sysdeps/s390/ldbl2mpn.c: File removed.
+	* sysdeps/s390/fpu/libm-test-ulps: Updated.
+
+2006-01-31  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/alpha/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/alpha/bits/mathdef.h: ... here.
+	* sysdeps/i386/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/i386/bits/mathdef.h: ... here.
+	* sysdeps/mips/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/mips/bits/mathdef.h: ... here.
+	* sysdeps/m68k/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/m68k/bits/mathdef.h: ... here.
+	* sysdeps/powerpc/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/powerpc/bits/mathdef.h: ... here.
+	* sysdeps/sparc/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/sparc/bits/mathdef.h: ... here.
+	* sysdeps/ia64/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/ia64/bits/mathdef.h: ... here.
+	* sysdeps/sh/sh4/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/sh/sh4/bits/mathdef.h: ... here.
+	* sysdeps/x86_64/fpu/bits/mathdef.h: Moved to ...
+	* sysdeps/x86_64/bits/mathdef.h: ... here.
+
+2006-01-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c [XSTAT_IS_STAT64]
+	(__fxstatat64): Add libc_hidden_ver.
+	* sysdeps/unix/sysv/linux/fxstatat.c [XSTAT_IS_STAT64] (__fxstatat64):
+	Likewise.
+
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h: Remove jmpbuf-offsets.h
+	include.
+
+2006-01-31  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update by Jakub.
+
+	* inet/rcmd.c (iruserfopen): Remove redundant initialization.
+	From Bernhard Fischer <rep.nop@aon.at>.
+
+	* posix/regcomp.c (calc_eclosure_iter): Remove dead variables.
+	Reported by Mike Frysinger <vapier@gentoo.org>.
+
+2006-01-30  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/k_cosl.c (__kernel_cosl): Correct index
+	for __sincosl_table.
+	* sysdeps/ieee754/ldbl-128ibm/k_sincosl.c (__kernel_sincosl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_sinl.c (__kernel_sinl): Likewise.
+
+	* sysdeps/ieee754/ldbl-128ibm/s_ceill.c: Correct sign of 0.0.
+	* sysdeps/ieee754/ldbl-128ibm/s_floorl.c: Likewise.
+
+	* sysdeps/ieee754/ldbl-128ibm/s_cprojl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_ctanhl.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_ctanl.c: New file.
+
+2006-01-29  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/errno.h (ECANCELED,
+	EOWNERDEAD, ENOTRECOVERABLE): Define.
+
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h (MADV_REMOVE): Define.
+
+	* sysdeps/mips/dl-machine.h (RTLD_START): Correct offsets for
+	N64.
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h (struct msghdr): Use
+	size_t for msg_controllen.
+	(__cmsg_nxthdr): Correct test.
+	(__SCM_CONNECT): Delete.
+
+2006-01-30  Alexandre Oliva  <aoliva@redhat.com>
+            Roland McGrath  <roland@redhat.com>
+
+	* configure.in (fno_unit_at_a_time): Set to
+	-fno-toplevel-reorder if the compiler supports it.
+	Otherwise use -fno-unit-at-a-time unconditionally.
+	* configure: Regenerated.
+
+2006-01-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Merge ulps with older
+	libm-test-ulps rather than overwrite it.  Remove excessively high ulps.
+
+2006-01-29  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* soft-fp/double.h (FP_CMP_UNORD_D): Also define in
+	[_FP_W_TYPE_SIZE >= 64] case.
+	* soft-fp/extended.h (FP_CMP_UNORD_E): Likewise.
+	* soft-fp/quad.h (FP_CMP_UNORD_Q): Likewise.
+
 2006-01-27  Dwayne Grant McConnell  <decimal@us.ibm.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 	    Roland McGrath  <roland@redhat.com>

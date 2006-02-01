@@ -1,6 +1,6 @@
-/* Copyright (C) 2000, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2004, 2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,25 +17,22 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <math.h>
-#include <math_ldbl_opt.h>
-
-double
-__copysign (double x, double y)
-{
-  __asm ("cpys %1, %2, %0" : "=f" (x) : "f" (y), "f" (x));
-  return x;
-}
-
-weak_alias (__copysign, copysign)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__copysign, __copysignl)
-weak_alias (__copysign, copysignl)
+#if !defined _MATH_H && !defined _COMPLEX_H
+# error "Never use <bits/mathdef.h> directly; include <math.h> instead"
 #endif
-#ifdef IS_IN_libm
-# if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __copysign, copysignl, GLIBC_2_0);
-# endif
-#elif LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
-compat_symbol (libc, __copysign, copysignl, GLIBC_2_0);
-#endif
+
+#if defined  __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
+# define _MATH_H_MATHDEF	1
+
+/* Normally, there is no long double type and the `float' and `double'
+   expressions are evaluated as `double'.  */
+typedef double float_t;		/* `float' expressions are evaluated as
+				   `double'.  */
+typedef double double_t;	/* `double' expressions are evaluated as
+				   `double'.  */
+
+/* The values returned by `ilogb' for 0 and NaN respectively.  */
+# define FP_ILOGB0	(-2147483647)
+# define FP_ILOGBNAN	2147483647
+
+#endif	/* ISO C99 */
