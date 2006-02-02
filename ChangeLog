@@ -1,12 +1,38 @@
+2006-02-01  Roland McGrath  <roland@frob.com>
+
+	* mach/Machrules ($(objpfx)%.uh, $(objpfx)%.__h): Use static pattern
+	rules for these, not implicit rules.
+	($(objpfx)%.h): Likewise.
+	Reported by Thomas Schwinge <tschwinge@gnu.org>.
+
+2006-02-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/s_finitel.c: Use long_double_symbol
+	even for libm.
+
+	* libio/bits/libio-ldbl.h (_IO_vfwscanf, _IO_vfwprintf): Remove
+	__LDBL_REDIR_DECL.
+
+	* math/bits/mathcalls.h: Guard __END_NAMESPACE_C99 with the
+	same #if condition as corresponding __BEGIN_NAMESPACE_C99.
+	(scalb): Don't define only if __USE_ISOC99.
+
+	* sysdeps/ieee754/ldbl-128/s_llrintl.c (__llrintl): Fix a typo.
+	* sysdeps/s390/fpu/libm-test-ulps: Remove llrint ulps.
+
 2006-01-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/bits/stdlib-ldbl.h: New file.
 	* include/bits/wchar-ldbl.h: New file.
 
-2006-02-01  Jakub Jelinek  <jakub@redhat.com>
+2006-01-19  Thomas Schwinge  <tschwinge@gnu.org>
 
-	* sysdeps/ieee754/ldbl-128/s_llrintl.c (__llrintl): Fix a typo.
-	* sysdeps/s390/fpu/libm-test-ulps: Remove llrint ulps.
+	* libio/genops.c: Include <stdbool.h>.
+
+2006-02-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Add
+	some more entries.
 
 2006-01-31  Jakub Jelinek  <jakub@redhat.com>
 
