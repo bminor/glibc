@@ -1,5 +1,9 @@
 2006-02-03  Jakub Jelinek  <jakub@redhat.com>
 
+	* stdlib/bits/stdlib-ldbl.h (qecvt, qfcvt, qgcvt, qecvt_r,
+	qfcvt_r): Guard with #if defined __USE_SVID || defined
+	__USE_XOPEN_EXTENDED.
+
 	* sysdeps/unix/sysv/linux/futimesat.c (futimesat): If
 	file == NULL, use __futimes unconditionally.
 
