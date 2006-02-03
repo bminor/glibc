@@ -37,14 +37,14 @@ futimesat (fd, file, tvp)
 {
   int result;
 
+  if (file == NULL)
+    return __futimes (fd, tvp);
+
 #ifdef __NR_futimesat
 # ifndef __ASSUME_ATFCTS
   if (__have_atfcts >= 0)
 # endif
     {
-      if (file == NULL)
-	return __futimes (fd, tvp);
-
       result = INLINE_SYSCALL (futimesat, 3, fd, file, tvp);
 # ifndef __ASSUME_ATFCTS
       if (result == -1 && errno == ENOSYS)
@@ -58,22 +58,7 @@ futimesat (fd, file, tvp)
 #ifndef __ASSUME_ATFCTS
   char *buf = NULL;
 
-  if (file == NULL)
-    {
-      static const char procfd[] = "/proc/self/fd/%d";
-      /* Buffer for the path name we are going to use.  It consists of
-	 - the string /proc/self/fd/
-	 - the file descriptor number.
-	 The final NUL is included in the sizeof.   A bit of overhead
-	 due to the format elements compensates for possible negative
-	 numbers.  */
-      size_t buflen = sizeof (procfd) + sizeof (int) * 3;
-      buf = alloca (buflen);
-
-      __snprintf (buf, buflen, procfd, fd);
-      file = buf;
-    }
-  else if (fd != AT_FDCWD && file[0] != '/')
+  if (fd != AT_FDCWD && file[0] != '/')
     {
       size_t filelen = strlen (file);
       static const char procfd[] = "/proc/self/fd/%d/%s";
