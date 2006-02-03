@@ -1,3 +1,13 @@
+2006-02-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/math.h (__nldbl_nexttowardf): Put __THROW before
+	__attribute__ ((__const__)).
+	(__MATHDECL_2): Use __REDIRECT_NTH instead of __REDIRECT
+	followed by __THROW.
+
+	* math/math.h [__LDBL_COMPAT && __USE_ISOC99] (nexttowardl): New
+	prototype.
+
 2006-02-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/futimesat.c [__NR_futimesat]
