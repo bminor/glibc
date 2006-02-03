@@ -1,4 +1,21 @@
+2006-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/futimesat.c [__NR_futimesat]
+	(futimesat): If file is NULL use __futimes.
+	* include/sys/time.h: Declare __futimes.
+
 2006-02-02  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/openat.c (__atfct_seterrno): Use the same
+	fstat check for ENOENT that should be EBADF as for ENOTDIR, and also
+	check for missing /proc the same way.
+
+	* include/errno.h [__cplusplus]: Avoid extra header magic for C++.
+
+	* manual/install.texi (Tools for Compilation): Require gcc 3.4,
+	recommend 4.1, advise 4.0 for powerpc64, and note 4.1 required for
+	powerpc, s390{x,} with new long double.
+	* INSTALL: Regenerated.
 
 	* timezone/private.h: Update from tzcode2006a.
 	* timezone/scheck.c: Likewise.
@@ -11,7 +28,7 @@
 	* sysdeps/powerpc/powerpc64/elf/Makefile
 	(CFLAGS-dl-runtime.os, CFLAGS-dl-lookup.os, CFLAGS-dl-misc.os,
 	CFLAGS-rtld-mempcpy.os, CFLAGS-rtld-memmove.os, CFLAGS-rtld-memchr.os,
-	CFLAGS-rtld-strnlen.os): LIkewise
+	CFLAGS-rtld-strnlen.os): Likewise.
 
 2006-02-01  Roland McGrath  <roland@redhat.com>
 
@@ -53,6 +70,7 @@
 
 	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Add
 	some more entries.
+	* sysdeps/unix/sysv/linux/x86_64/sysconf.c (intel_02_known): Likewise.
 
 2006-01-31  Jakub Jelinek  <jakub@redhat.com>
 
