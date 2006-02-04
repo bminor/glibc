@@ -1,4 +1,4 @@
-%define glibcrelease 35
+%define glibcrelease 36
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -1240,6 +1240,11 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sat Feb  4 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-36
+- update from CVS
+  - fix frequency setting for ITIMER_PROF (BZ #2268)
+  - fix powerpc inline fegetround ()
+
 * Fri Feb  3 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-35
 - update from CVS
   - handle futimesat (fd, NULL, tvp) as futimes (fd, tvp)
