@@ -1242,8 +1242,9 @@ rm -f *.filelist*
 %changelog
 * Sat Feb  4 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-36
 - update from CVS
-  - fix frequency setting for ITIMER_PROF (BZ #2268)
+  - fix frequency setting for ITIMER_PROF (#179938, BZ#2268)
   - fix powerpc inline fegetround ()
+  - fix nptl_db (#179946)
 
 * Fri Feb  3 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-35
 - update from CVS
