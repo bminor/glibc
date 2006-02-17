@@ -1,5 +1,20 @@
+2006-02-17  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Add lll_robust_mutex_*
+	definitions.
+	* sysdeps/unix/sysv/linux/sh/lowlevelrobustlock.S: New file.
+
+2006-02-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
+	(lll_robust_mutex_unlock): Avoid unnecessary wakeups.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h
+	(lll_robust_mutex_unlock): Likewise.
+
 2006-02-13  Jakub Jelinek  <jakub@redhat.com>
 
+	* descr.h [!__PTHREAD_MUTEX_HAVE_PREV] (DEQUEUE_MUTEX):
+	Set robust_list.__next rather than robust_list.
 	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h
 	(__pthread_list_t): New typedef.
 	(pthread_mutex_t): Replace __next and __prev fields with __list.
@@ -18,6 +33,33 @@
 	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h
 	(__pthread_slist_t): New typedef.
 	(pthread_mutex_t): Replace __next field with __list.
+
+2006-02-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthreadp.h: Define PTHREAD_MUTEX_INCONSISTENT instead of
+	PTHREAD_MUTEX_OWNERDEAD.
+	(PTHREAD_MUTEX_ROBUST_PRIVATE_NP): Define as 16, not 256.
+	Define FUTEX_WAITERS, FUTEX_OWNER_DIED, FUTEX_TID_MASK.
+	* Makefile (libpthread-routines): Add lowlevelrobustlock.
+	* pthread_create.c (start_thread): Very much simplify robust_list loop.
+	* pthread_mutex_consistent.c: Inconsistent mutex have __owner now set
+	to PTHREAD_MUTEX_INCONSISTENT.
+	* pthread_mutex_destroy.c: Allow destroying of inconsistent mutexes.
+	* pthread_mutex_lock.c: Reimplement robust mutex handling.
+	* pthread_mutex_trylock.c: Likewise.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_unlock.c: Likewise.
+	* sysdeps/unix/sysv/linux/pthread_mutex_cond_lock.c: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile (gen-as-const-headers): Add
+	lowlevelrobustlock.sym.
+	* sysdeps/unix/sysv/linux/lowlevelrobustlock.sym: New file.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Add lll_robust_mutex_*
+	definitions.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelrobustlock.S: New file.
+	* sysdeps/unix/sysv/linux/i386/i586/lowlevelrobustlock.S: New file.
+	* sysdeps/unix/sysv/linux/i386/i686/lowlevelrobustlock.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelrobustlock.S: New file.
 
 2006-02-12  Ulrich Drepper  <drepper@redhat.com>
 
