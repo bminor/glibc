@@ -1,3 +1,10 @@
+2004-07-10  GOTO Masanori  <gotom@debian.or.jp>
+
+	[BZ #398]
+	* sysdeps/s390/s390-32/dl-machine.h: Include <sysdep.h> for CFI
+	directive.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+
 2005-12-05  Roland McGrath  <roland@redhat.com>
 
 	* hurd/hurdmalloc.c: Remove $ tag $ magic.
