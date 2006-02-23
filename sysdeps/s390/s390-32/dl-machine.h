@@ -27,6 +27,7 @@
 #include <sys/param.h>
 #include <string.h>
 #include <link.h>
+#include <sysdep.h>
 
 /* This is an older, now obsolete value.  */
 #define EM_S390_OLD	0xA390
