@@ -21,10 +21,6 @@
 /* This file must not contain any C code.  At least it must be protected
    to allow using the file also in assembler files.  */
 
-#if defined __mips__
-# include <sgidefs.h>
-#endif
-
 #ifndef __LINUX_KERNEL_VERSION
 /* We assume the worst; all kernels should be supported.  */
 # define __LINUX_KERNEL_VERSION	0
@@ -133,7 +129,7 @@
 
 /* Linux 2.3.39 introduced 32bit UID/GIDs.  Some platforms had 32
    bit type all along.  */
-#if __LINUX_KERNEL_VERSION >= 131879 || defined __powerpc__ || defined __mips__
+#if __LINUX_KERNEL_VERSION >= 131879 || defined __powerpc__
 # define __ASSUME_32BITUIDS		1
 #endif
 
@@ -148,11 +144,6 @@
 
 /* Linux 2.3.39 introduced IPC64.  Except for powerpc.  */
 #if __LINUX_KERNEL_VERSION >= 131879 && !defined __powerpc__
-# define __ASSUME_IPC64		1
-#endif
-
-/* MIPS platforms had IPC64 all along.  */
-#if defined __mips__
 # define __ASSUME_IPC64		1
 #endif
 
@@ -292,15 +283,16 @@
 # define __ASSUME_TIMEVAL64		1
 #endif
 
-#if defined __mips__ && _MIPS_SIM == _ABIN32
-# define __ASSUME_FCNTL64		1
-#endif
-
 /* The late 2.5 kernels saw a lot of new CLONE_* flags.  Summarize
    their availability with one define.  The changes were made first
    for i386 and the have to be done separately for the other archs.
-   For i386 we pick 2.5.50 as the first version with support.  */
-#if __LINUX_KERNEL_VERSION >= 132402 && defined __i386__
+   For i386 we pick 2.5.50 as the first version with support.
+   For ia64, s390*, PPC, x86-64, and SH we pick 2.5.64 as the first
+   version with support.  */
+#if ((__LINUX_KERNEL_VERSION >= 132402 && defined __i386__)		\
+     || (__LINUX_KERNEL_VERSION >= 132416				\
+	 && (defined __ia64__ || defined __s390__			\
+	     || defined __powerpc__ || defined __x86_64__ || defined __sh__)))
 # define __ASSUME_CLONE_THREAD_FLAGS	1
 #endif
 
@@ -322,17 +314,6 @@
 /* Beginning with 2.6.12 the clock and timer supports CPU clocks.  */
 #if __LINUX_KERNEL_VERSION >= 0x2060c
 # define __ASSUME_POSIX_CPU_TIMERS	1
-#endif
-
-/* The late 2.5 kernels saw a lot of new CLONE_* flags.  Summarize
-   their availability with one define.  The changes were made first
-   for i386 and the have to be done separately for the other archs.
-   For ia64, s390*, PPC, x86-64 we pick 2.5.64 as the first version
-   with support.  */
-#if __LINUX_KERNEL_VERSION >= 132416 \
-    && (defined __ia64__ || defined __s390__ || defined __powerpc__ \
-	|| defined __x86_64__ || defined __sh__)
-# define __ASSUME_CLONE_THREAD_FLAGS	1
 #endif
 
 /* With kernel 2.4.17 we always have netlink support.  */

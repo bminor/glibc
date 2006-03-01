@@ -1,5 +1,5 @@
 /* SELinux access controls for nscd.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Matthew Rickard <mjricka@epoch.ncsc.mil>, 2004.
 

@@ -276,17 +276,17 @@ __lll_mutex_unlock (int *futex)
 
 static inline void
 __attribute__ ((always_inline))
-__lll_robust_mutex_unlock (int *futex)
+__lll_robust_mutex_unlock (int *futex, int mask)
 {
   int oldval;
   int newval = 0;
 
   lll_compare_and_swap (futex, oldval, newval, "slr %2,%2");
-  if (oldval & FUTEX_WAITERS)
+  if (oldval & mask)
     lll_futex_wake (futex, 1);
 }
 #define lll_robust_mutex_unlock(futex) \
-  __lll_robust_mutex_unlock(&(futex))
+  __lll_robust_mutex_unlock(&(futex), FUTEX_WAITERS)
 
 
 static inline void

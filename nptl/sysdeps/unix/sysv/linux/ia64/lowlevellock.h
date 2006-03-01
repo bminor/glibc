@@ -120,7 +120,7 @@ extern int __lll_robust_lock_wait (int *futex) attribute_hidden;
     if (atomic_compare_and_exchange_bool_acq (__futex, id, 0) != 0)	\
       __val = __lll_robust_lock_wait (__futex);				\
     __val;								\
-  }))
+  })
 #define lll_robust_mutex_lock(futex, id) __lll_robust_mutex_lock (&(futex), id)
 
 
@@ -142,7 +142,7 @@ extern int __lll_robust_lock_wait (int *futex) attribute_hidden;
     if (atomic_compare_and_exchange_bool_acq (__futex, __id, 0) != 0)	\
       __val = __lll_robust_lock_wait (__futex);				\
     __val;								\
-  }))
+  })
 #define lll_robust_mutex_cond_lock(futex, id) \
   __lll_robust_mutex_cond_lock (&(futex), id)
 
@@ -174,7 +174,7 @@ extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *)
     if (atomic_compare_and_exchange_bool_acq (__futex, id, 0) != 0)	\
       __val = __lll_robust_timedlock_wait (__futex, abstime);		\
     __val;								\
-  }))
+  })
 #define lll_robust_mutex_timedlock(futex, abstime, id) \
   __lll_robust_mutex_timedlock (&(futex), abstime, id)
 

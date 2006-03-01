@@ -28,11 +28,12 @@
 /* Make a link to FROM named TO but relative paths in TO and FROM are
    interpreted relative to FROMFD and TOFD respectively.  */
 int
-linkat (fromfd, from, tofd, to)
+linkat (fromfd, from, tofd, to, flags)
      int fromfd;
      const char *from;
      int tofd;
      const char *to;
+     int flags;
 {
   int result;
 
@@ -41,7 +42,7 @@ linkat (fromfd, from, tofd, to)
   if (__have_atfcts >= 0)
 # endif
     {
-      result = INLINE_SYSCALL (linkat, 4, fromfd, from, tofd, to);
+      result = INLINE_SYSCALL (linkat, 5, fromfd, from, tofd, to, flags);
 # ifndef __ASSUME_ATFCTS
       if (result == -1 && errno == ENOSYS)
 	__have_atfcts = -1;
@@ -52,6 +53,13 @@ linkat (fromfd, from, tofd, to)
 #endif
 
 #ifndef __ASSUME_ATFCTS
+  /* Without kernel support we cannot handle AT_SYMLINK_FOLLOW.  */
+  if (flags != 0)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
   static const char procfd[] = "/proc/self/fd/%d/%s";
   char *buffrom = NULL;
 

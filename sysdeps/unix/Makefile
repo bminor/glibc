@@ -212,24 +212,6 @@ common-generated := $(common-generated) \
 		    bits/ioctls.h ioctls make-ioctls make-ioctls.c
 endif
 
-ifeq ($(subdir),stdio-common)
-ifeq (,$(filter-out $(sysdep_dir)/generic/ $(objpfx),\
-	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/errlist.c))))))
-
-before-compile: $(objpfx)errlist.c
-$(objpfx)errlist.c: $(objpfx)make_errlist
-	@rm -f $@
-	$(dir $<)$(notdir $<) > $@-tmp
-	mv $@-tmp $@
-
-$(objpfx)make_errlist: $(sysdep_dir)/unix/make_errlist.c
-	$(native-compile)
-
-generated := $(generated) make_errlist errlist.c
-
-endif
-endif # stdio-common
-
 ifeq (,$(filter-out $(sysdep_dir)/generic/ $(common-objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/sys/syscall.h))))))
 
@@ -323,9 +305,6 @@ generated += stub-syscalls.c
 endif
 endif
 
-export sysdirs
-export asm_CPP := $(COMPILE.S) -E -x assembler-with-cpp
-
 # This is the end of the pipeline for compiling the syscall stubs.
 # The stdin in assembler with cpp using sysdep.h macros.
 # Be sure to disable debugging info since it would all just say "<stdin>".
@@ -336,7 +315,9 @@ $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
 			       $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
 	for dir in $(+sysdep_dirs); do \
 	  test -f $$dir/syscalls.list && \
-	  { $(SHELL) $(dir $<)$(notdir $<) $$dir || exit 1; }; \
+	  { sysdirs='$(sysdirs)' \
+	    asm_CPP='$(COMPILE.S) -E -x assembler-with-cpp' \
+	    $(SHELL) $(dir $<)$(notdir $<) $$dir || exit 1; }; \
 	  test $$dir = $(..)sysdeps/unix && break; \
 	done > $@T
 	mv -f $@T $@

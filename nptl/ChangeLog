@@ -1,3 +1,98 @@
+2006-02-28  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Include <clone2.S>
+	instead of <clone.S>.
+
+2006-02-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (libpthread-routines): Add
+	pthread_mutexattr_[sg]etprotocol, pthread_mutexattr_[sg]etprioceiling
+	and pthread_mutex_[sg]etprioceiling.
+	* Versions (GLIBC_2.4): Export pthread_mutexattr_getprotocol,
+	pthread_mutexattr_setprotocol, pthread_mutexattr_getprioceiling,
+	pthread_mutexattr_setprioceiling, pthread_mutex_getprioceiling and
+	pthread_mutex_setprioceiling.
+	* sysdeps/pthread/pthread.h (PTHREAD_PRIO_NONE, PTHREAD_PRIO_INHERIT,
+	PTHREAD_PRIO_PROTECT): New enum values.
+	(pthread_mutexattr_getprotocol, pthread_mutexattr_setprotocol,
+	pthread_mutexattr_getprioceiling, pthread_mutexattr_setprioceiling,
+	pthread_mutex_getprioceiling, pthread_mutex_setprioceiling): New
+	prototypes.
+	* pthreadP.h (PTHREAD_MUTEX_PRIO_INHERIT_PRIVATE_NP,
+	PTHREAD_MUTEX_PRIO_PROTECT_PRIVATE_NP): New enum values.
+	(PTHREAD_MUTEX_PRIO_CEILING_SHIFT, PTHREAD_MUTEX_PRIO_CEILING_MASK):
+	Define.
+	(PTHREAD_MUTEXATTR_PROTOCOL_SHIFT, PTHREAD_MUTEXATTR_PROTOCOL_MASK,
+	PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT,
+	PTHREAD_MUTEXATTR_PRIO_CEILING_MASK): Define.
+	(PTHREAD_MUTEXATTR_FLAG_BITS): Or in PTHREAD_MUTEXATTR_PROTOCOL_MASK
+	and PTHREAD_MUTEXATTR_PRIO_CEILING_MASK.
+	* pthread_mutex_init.c (__pthread_mutex_init): For the time being
+	return ENOTSUP for PTHREAD_PRIO_INHERIT or PTHREAD_PRIO_PROTECT
+	protocol mutexes.
+	* pthread_mutex_getprioceiling.c: New file.
+	* pthread_mutex_setprioceiling.c: New file.
+	* pthread_mutexattr_getprioceiling.c: New file.
+	* pthread_mutexattr_setprioceiling.c: New file.
+	* pthread_mutexattr_getprotocol.c: New file.
+	* pthread_mutexattr_setprotocol.c: New file.
+
+2006-02-27  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/aio_misc.h: Include <limits.h>.
+
+2006-02-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/pthread/Subdirs: List nptl here too.
+	* configure (libc_add_on_canonical): New variable.
+
+	* sysdeps/unix/sysv/linux/sh/sh4/lowlevellock.h: Use #include_next.
+
+	* sysdeps/unix/sysv/linux/sleep.c: Use #include_next after #include of
+	self to get main source tree's file.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Likewise.
+
+	* Makefile: Use $(sysdirs) in vpath directive.
+
+	* sysdeps/pthread/Makefile (CFLAGS-libc-start.c): Variable removed.
+	(CPPFLAGS-timer_routines.c): Likewise.
+
+	* Makeconfig (includes): Variable removed.
+
+2006-02-26  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/pt-raise.c: Moved to ...
+	* pt-raise.c: ... here.
+	* sysdeps/generic/lowlevellock.h: Moved to ...
+	* lowlevellock.h: ... here.
+
+2006-02-23  Roland McGrath  <roland@redhat.com>
+
+	* descr.h (struct pthread): Add final member `end_padding'.
+	(PTHREAD_STRUCT_END_PADDING): Use it.
+
+2006-02-20  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/mips: Directory removed, saved in ports repository.
+	* sysdeps/unix/sysv/linux/mips: Likewise.
+
+2006-02-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-robust1.c: Add second mutex to check that the mutex list is
+	handled correctly.
+
 2006-02-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h (lll_robust_mutex_dead,
@@ -48,7 +143,7 @@
 
 2006-02-15  Ulrich Drepper  <drepper@redhat.com>
 
-	* pthreadp.h: Define PTHREAD_MUTEX_INCONSISTENT instead of
+	* pthreadP.h: Define PTHREAD_MUTEX_INCONSISTENT instead of
 	PTHREAD_MUTEX_OWNERDEAD.
 	(PTHREAD_MUTEX_ROBUST_PRIVATE_NP): Define as 16, not 256.
 	Define FUTEX_WAITERS, FUTEX_OWNER_DIED, FUTEX_TID_MASK.
@@ -85,6 +180,7 @@
 	but the owner for all robust mutex types.
 	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Define
 	__pthread_list_t and __pthread_slist_t.  Use them in pthread_mutex_t.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
 	* sysdeps/pthread/pthread.h: Adjust mutex initializers.
 
 	* sysdeps/unix/sysv/linux/i386/not-cancel.h: Define openat_not_cancel,

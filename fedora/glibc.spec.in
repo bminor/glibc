@@ -1,4 +1,4 @@
-%define glibcrelease 38
+%define glibcrelease 39
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -1332,6 +1332,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Mar  1 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-39
+- update from CVS
+
 * Fri Feb 17 2006 Jakub Jelinek <jakub@redhat.com> 2.3.90-38
 - update from CVS
   - robust mutexes rewrite

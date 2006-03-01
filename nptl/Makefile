@@ -118,7 +118,12 @@ libpthread-routines = init vars events version \
 		      pthread_attr_getaffinity pthread_attr_setaffinity \
 		      pthread_mutexattr_getrobust pthread_mutexattr_setrobust \
 		      pthread_mutex_consistent \
-		      cleanup_routine unwind-forcedunwind
+		      cleanup_routine unwind-forcedunwind \
+		      pthread_mutexattr_getprotocol \
+		      pthread_mutexattr_setprotocol \
+		      pthread_mutexattr_getprioceiling \
+		      pthread_mutexattr_setprioceiling \
+		      pthread_mutex_getprioceiling pthread_mutex_setprioceiling
 #		      pthread_setuid pthread_seteuid pthread_setreuid \
 #		      pthread_setresuid \
 #		      pthread_setgid pthread_setegid pthread_setregid \
@@ -532,7 +537,7 @@ $(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.a
 endif
 
 ifeq ($(build-shared),yes)
-vpath pt-initfini.c $(full_config_sysdirs)
+vpath pt-initfini.c $(sysdirs)
 
 $(objpfx)pt-initfini.s: pt-initfini.c
 	$(compile.c) -S $(CFLAGS-pt-initfini.s) -finhibit-size-directive \
