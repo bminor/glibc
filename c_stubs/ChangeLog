@@ -1,3 +1,7 @@
+2006-03-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* configure (libc_add_on_canonical, libc_add_on_subdir): Set.
+
 2001-08-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* gconv_stubs.c (__gconv_lookup_alias): Remove.
