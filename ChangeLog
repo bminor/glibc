@@ -1,3 +1,58 @@
+2006-01-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #2013]
+	* sysdeps/ia64/memccpy.S: Properly handle recovery for
+	predicated speculative load.
+
+2006-03-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Update.
+
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c (__fxstatat64): Use
+	libc_hidden_ver rather than libc_hidden_def.
+
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Update.
+	* sysdeps/sparc/fpu/fraiseexcpt.c (__feraiseexcept):
+	Use inline asm to make sure the compiler doesn't optimize insns out.
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
+	(DECLARGS_6): Fix a typo.
+
+2006-03-01  Roland McGrath  <roland@redhat.com>
+
+	* version.h (VERSION): 2.3.91
+
+	* Makeconfig (sysdeps-srcdirs): New variable.
+	(sysdeps-add-ons-srcdirs): Use it.
+	* csu/Makefile (all-Banner-files): Use it.
+
+	* Makefile (dist-selector): New variable.
+	(glibc-%.tar rule): Use it.  Make $(dist-separate) tarballs
+	contain one version-named directory.
+
+	* Makefile (format-me): Use  --plaintext --no-number-sections.
+
+	* NOTES, INSTALL: Regenerated.
+
+	* NEWS: Update 2.4 items.
+
+2006-03-01  David S. Miller  <davem@sunset.davemloft.net>
+
+	* configure.in (machine): Match sparcv9v and sparc64v.
+	* configure: Regenerated.
+	* sysdeps/sparc/sparc32/sparcv9v/memcpy.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9v/memset.S: New file.
+	* sysdeps/sparc/sparc64/sparcv9v/memcpy.S: New file.
+	* sysdeps/sparc/sparc64/sparcv9v/memset.S: New file.
+
+2006-03-01  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/Subdirs: Use "first hurd".
+
+2006-02-28  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/rs6000: Directory removed, saved in ports repository.
+
 2006-03-01  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/pread.c: Copy in mips pread.c.
