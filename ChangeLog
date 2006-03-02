@@ -1,5 +1,12 @@
 2006-03-02  Jakub Jelinek  <jakub@redhat.com>
 
+	* malloc/malloc.c (MALLOC_ALIGNMENT): Set to __alignof__ (long double)
+	if long double is more aligned than 2 * SIZE_SZ.
+	(misaligned_chunk): Define.
+	(public_rEALLOc, _int_free, _int_realloc): Use it.
+
+2006-03-02  Jakub Jelinek  <jakub@redhat.com>
+
 	* elf/check-textrel.c: Include config.h.
 	(AB(handle_file)): Don't fail if PF_X | PF_W on architectures known
 	to have executable writable PLT.
