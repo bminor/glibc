@@ -1,19 +1,125 @@
+2006-03-05  Roland McGrath  <roland@redhat.com>
+
+	* malloc/malloc.c (MALLOC_ALIGNMENT): Revert to (2 * SIZE_SZ) value.
+	The correct value differs only on powerpc32, and for now changing it
+	there is causing more trouble than it's worth.
+
+	* malloc/arena.c: Add compile-time sanity check on padding calculation.
+
+2006-03-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/arena.c (heap_info): Adjust the padding size if
+	MALLOC_ALIGNMENT > 2 * SIZE_SZ.
+
+2006-03-05  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/posix/sysconf.c (__sysconf): Use #if _POSIX_FOO > 0
+	rather than #ifdef _POSIX_FOO for options.  We should return -1
+	at runtime for an option defined to 0 at compile time.
+
+	* sysdeps/mach/hurd/bits/posix_opt.h: Define many missing options,
+	many to -1 or 0.
+
+2006-03-05  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf)
+	[__NR_clock_getres || HP_TIMING_AVAIL]: Handle _SC_CPUTIME,
+	_SC_THREAD_CPUTIME.
+
+2006-03-05  David S. Miller  <davem@sunset.davemloft.net>
+
+	* sysdeps/sparc/sparc32/dl-trampoline.S: Add CFI markings.
+	* sysdeps/sparc/sparc32/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc64/dl-trampoline.S: Likewise.
+	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc32/memchr.S: Rearrange code to reside
+	within ENTRY/END.
+	* sysdeps/sparc/sparc32/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc32/stpcpy.S: Likewise.
+	* sysdeps/sparc/sparc32/strcat.S: Likewise.
+	* sysdeps/sparc/sparc32/strchr.S: Likewise.
+	* sysdeps/sparc/sparc32/strcmp.S: Likewise.
+	* sysdeps/sparc/sparc32/strcpy.S: Likewise.
+	* sysdeps/sparc/sparc32/strlen.S: Likewise.
+	* sysdeps/sparc/sparc64/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/sparcv9v/memset.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: Add CFI markings
+	and use __syscall_error.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/brk.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/pipe.S: Use __syscall_error.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pipe.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h: Rewrite to use
+	CFI markings and __syscall_error.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/setcontext.S: Rearrange
+	code to reside within ENTRY/END.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.S: File removed.
+	* sysdeps/unix/sysv/linux/sparc/rt-sysdep.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/Makefile (librt-routines): Add it.
+
+	* shlib-versions: Use sparc64.*- for CPU patterns.
+
+2006-03-05  Roland McGrath  <roland@frob.com>
+
+	* bits/resource.h (RLIMIT_SBSIZE, RLIMIT_AS, RLIMIT_VMEM): Define.
+
+	* sysdeps/mach/hurd/fdopendir.c (__fdopendir): Use O_DIRECTORY
+	to force directory check.
+	* sysdeps/mach/hurd/opendir.c (__opendir): Likewise.
+
+2006-03-04  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/tls.h (_hurd_tls_init): Make sure high bits
+	of SEL are clear after copying %gs to low bits.
+	(_hurd_tls_fork): Likewise.
+
+2006-03-03  Roland McGrath  <roland@redhat.com>
+
+	[BZ #2414]
+	* stdlib/tst-setcontext.c (f1): Take arguments of type int.
+
+2006-03-02  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/alpha/sysdep.h (PTR_MANGLE): Use __typeof in cast.
+
+2006-03-02  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/configure.in: Remove MIPS cases.  Allow
+	libc_cv_slibdir et al. to be overridden.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
+2005-12-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/ldconfig.c (search_dir): Skip prelink temporaries.
+
+2006-03-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/check-textrel.c: Don't include "config.h".
+
 2006-03-02  Jakub Jelinek  <jakub@redhat.com>
 
-	* malloc/malloc.c (MALLOC_ALIGNMENT): Set to __alignof__ (long double)
-	if long double is more aligned than 2 * SIZE_SZ.
-	(misaligned_chunk): Define.
-	(public_rEALLOc, _int_free, _int_realloc): Use it.
-
-2006-03-02  Jakub Jelinek  <jakub@redhat.com>
+	* io/ftw.c (process_entry): If dir->streamfd != -1,
+	use FXSTATAT rather than LXSTAT to find if unstatable
+	file is a dead symlink.
 
 	* elf/check-textrel.c: Include config.h.
 	(AB(handle_file)): Don't fail if PF_X | PF_W on architectures known
 	to have executable writable PLT.
 	* sysdeps/powerpc/powerpc32/configure.in (HAVE_PPC_SECURE_PLT): New
 	test.
-	* sysdeps/powerpc/powerpc32/configure: Rebuilt.
 	* config.h.in (HAVE_PPC_SECURE_PLT): Add.
+
+	* malloc/malloc.c (MALLOC_ALIGNMENT): Set to __alignof__ (long double)
+	if long double is more aligned than 2 * SIZE_SZ.
+	(misaligned_chunk): Define.
+	(public_rEALLOc, _int_free, _int_realloc): Use it.
 
 2006-01-05  H.J. Lu  <hongjiu.lu@intel.com>
 

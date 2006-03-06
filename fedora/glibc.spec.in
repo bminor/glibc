@@ -1,4 +1,4 @@
-%define glibcrelease 1
+%define glibcrelease 2
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -1332,6 +1332,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Mar  6 2006 Jakub Jelinek <jakub@redhat.com> 2.3.91-2
+- update from CVS
+  - fix sYSMALLOc for MALLOC_ALIGNMENT > 2 * SIZE_SZ (#183895)
+  - revert ppc32 malloc alignment patch, it breaks malloc_set_state
+    and needs some further thoughts and time (#183894)
+- provide accurate unwind info for lowlevellock.h stubs on x86_64
+
 * Thu Mar  2 2006 Jakub Jelinek <jakub@redhat.com> 2.3.91-1
 - update from CVS
   - fixes for various arches
