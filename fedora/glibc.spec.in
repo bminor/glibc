@@ -694,6 +694,9 @@ BuildFlags="-march=%{_target_cpu}"
 %ifarch i686
 BuildFlags="-march=i686 -mtune=pentium4"
 %endif
+%ifarch x86_64
+BuildFlags="-DUSE_CFA_VAL_EXPRESSION"
+%endif
 %ifarch alphaev6
 BuildFlags="-mcpu=ev6"
 %endif
