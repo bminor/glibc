@@ -694,6 +694,8 @@ search_dir (const struct dir_entry *entry)
 	      !is_hwcap_platform (direntry->d_name)))
 	continue;
       len = strlen (direntry->d_name);
+      /* Skip temporary files created by the prelink program.  Files with
+	 names like these are never really DSOs we want to look at.  */
       if (len >= sizeof (".#prelink#") - 1)
 	{
 	  if (strcmp (direntry->d_name + len - sizeof (".#prelink#") + 1,

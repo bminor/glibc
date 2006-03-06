@@ -1,4 +1,4 @@
-%define glibcrelease 2
+%define glibcrelease 1
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -1335,6 +1335,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Mar  6 2006 Jakub Jelinek <jakub@redhat.com> 2.4-1
+- update from CVS
+  - glibc 2.4 release
+
 * Mon Mar  6 2006 Jakub Jelinek <jakub@redhat.com> 2.3.91-2
 - update from CVS
   - fix sYSMALLOc for MALLOC_ALIGNMENT > 2 * SIZE_SZ (#183895)

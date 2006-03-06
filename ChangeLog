@@ -1,3 +1,23 @@
+2006-03-06  Roland McGrath  <roland@redhat.com>
+
+	* version.h (VERSION): 2.4
+	* README.template: Update for 2.4.
+	* README: Regenerated.
+	* manual/install.texi (Configuring and compiling): Separate build
+	directory is mandatory.  Use glibc-2.4 in example.
+	Update --enable-add-ons description.
+	(Supported Configurations): Remove section.
+	* INSTALL: Regenerated.
+
+	* sysdeps/unix/sysv/linux/x86_64/sysconf.c
+	(handle_intel, handle_amd): Add __attribute__ ((noinline)).
+	* sysdeps/unix/sysv/linux/i386/sysconf.c
+	(handle_i486, handle_intel, handle_amd): Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (__sysconf): Don't handle
+	_SC_CPUTIME and _SC_THREAD_CPUTIME here.
+	* sysdeps/unix/sysv/linux/x86_64/sysconf.c (__sysconf): Likewise.
+
 2006-03-04  Jakub Jelinek  <jakub@redhat.com>
 	    Roland McGrath  <roland@redhat.com>
 
@@ -40,6 +60,34 @@
 	MALLOC_ALIGNMENT > 2 * SIZE_SZ.
 
 2006-03-05  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/faccessat.c: New file.
+	* sysdeps/mach/hurd/fchmodat.c: New file.
+	* sysdeps/mach/hurd/fchownat.c: New file.
+	* sysdeps/mach/hurd/fxstatat.c: New file.
+	* sysdeps/mach/hurd/fxstatat64.c: New file.
+	* sysdeps/mach/hurd/linkat.c: New file.
+	* sysdeps/mach/hurd/mkdirat.c: New file.
+	* sysdeps/mach/hurd/openat.c: New file.
+	* sysdeps/mach/hurd/openat64.c: New file.
+	* sysdeps/mach/hurd/symlinkat.c: New file.
+	* sysdeps/mach/hurd/unlinkat.c: New file.
+	* sysdeps/mach/hurd/xmknod.c (__xmknod): Just call __xmknodat.
+	Guts move to ...
+	* sysdeps/mach/hurd/xmknodat.c: ... here, new file.
+
+	* hurd/lookup-at.c: New file.
+	* hurd/Makefile (routines): Add it.
+	* hurd/hurd/fd.h: Declare __file_name_lookup_at,
+	__file_name_split_at and __directory_name_split_at.
+
+	* hurd/hurd/lookup.h: Declare {,__}hurd_directory_name_split.
+
+	* hurd/hurdlookup.c (__hurd_directory_name_split): Use __memrchr
+	unconditionally.
+
+	* sysdeps/mach/hurd/open.c: Define {,__,__libc_,}open64 as aliases.
+	* sysdeps/mach/hurd/open64.c: New file.
 
 	* sysdeps/posix/sysconf.c (__sysconf): Use #if _POSIX_FOO > 0
 	rather than #ifdef _POSIX_FOO for options.  We should return -1
