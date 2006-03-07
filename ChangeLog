@@ -1,3 +1,9 @@
+2006-03-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/libm-test.inc [TEST_LDOUBLE] (ceil_test, floor_test, rint_test,
+	round_test, trunc_test): Only run some of the new tests if
+	LDBL_MANT_DIG > 100.
+
 2006-03-03  Steven Munroe  <sjmunroe@us.ibm.com>
 	    Alan Modra  <amodra@bigpond.net.au>
 
