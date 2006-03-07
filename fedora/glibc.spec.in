@@ -1,4 +1,4 @@
-%define glibcrelease 1
+%define glibcrelease 2
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -51,6 +51,15 @@ BuildPreReq: gcc >= 3.2
 Conflicts: rpm <= 4.0-0.65
 Conflicts: glibc-devel < 2.2.3
 Conflicts: gcc4 <= 4.0.0-0.6
+%ifarch x86_64
+# Need gdb that understands DW_CFA_val_expression
+Conflicts: gdb < 6.3.0.0-1.111
+%endif
+%ifarch %{ix86}
+# Need gdb that understands DW_CFA_val_expression and handles two frames
+# with the same entry point and CFA, but different PC
+Conflicts: gdb < 6.3.0.0-1.115
+%endif
 # Earlier shadow-utils packages had too restrictive permissions on
 # /etc/default
 Conflicts: shadow-utils < 2:4.0.3-20
@@ -689,10 +698,10 @@ touch locale/programs/*-kw.h
 GCC=gcc
 GXX=g++
 %ifarch %{ix86}
-BuildFlags="-march=%{_target_cpu}"
+BuildFlags="-march=%{_target_cpu} -DUSE_CFA_VAL_EXPRESSION"
 %endif
 %ifarch i686
-BuildFlags="-march=i686 -mtune=pentium4"
+BuildFlags="-march=i686 -mtune=pentium4 -DUSE_CFA_VAL_EXPRESSION"
 %endif
 %ifarch x86_64
 BuildFlags="-DUSE_CFA_VAL_EXPRESSION"
@@ -1335,6 +1344,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Mar  7 2006 Jakub Jelinek <jakub@redhat.com> 2.4-2
+- accurate unwind info for lowlevellock.h stubs on %%{ix86}
+- fix ppc/ppc64 ceill, floorl, rintl, roundl and truncl (BZ#2423)
+
 * Mon Mar  6 2006 Jakub Jelinek <jakub@redhat.com> 2.4-1
 - update from CVS
   - glibc 2.4 release
