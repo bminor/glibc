@@ -1,4 +1,4 @@
-%define glibcrelease 3
+%define glibcrelease 4
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -51,14 +51,9 @@ BuildPreReq: gcc >= 3.2
 Conflicts: rpm <= 4.0-0.65
 Conflicts: glibc-devel < 2.2.3
 Conflicts: gcc4 <= 4.0.0-0.6
-%ifarch x86_64
+%ifarch x86_64 %{ix86}
 # Need gdb that understands DW_CFA_val_expression
 Conflicts: gdb < 6.3.0.0-1.111
-%endif
-%ifarch %{ix86}
-# Need gdb that understands DW_CFA_val_expression and handles two frames
-# with the same entry point and CFA, but different PC
-Conflicts: gdb < 6.3.0.0-1.115
 %endif
 # Earlier shadow-utils packages had too restrictive permissions on
 # /etc/default
@@ -184,10 +179,7 @@ Autoreq: true
 
 %description -n nscd
 Nscd caches name service lookups and can dramatically improve
-performance with NIS+, and may help with DNS as well. Note that you
-can't use nscd with 2.0 kernels because of bugs in the kernel-side
-thread support. Unfortunately, nscd happens to hit these bugs
-particularly hard.
+performance with NIS+, and may help with DNS as well.
 
 %package utils
 Summary: Development utilities from GNU C library
@@ -1344,6 +1336,11 @@ rm -f *.filelist*
 %endif
 
 %changelog
+- don't mention nscd failures on 2.0 kernels (#185335)
+
+* Tue Mar  7 2006 Roland McGrath <roland@redhat.com> 2.4-4
+- back up %%{ix86} gdb conflicts to < 6.3.0.0-1.111
+
 * Tue Mar  7 2006 Jakub Jelinek <jakub@redhat.com> 2.4-3
 - really fix rintl on ppc64
 
