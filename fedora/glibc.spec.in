@@ -1,4 +1,4 @@
-%define glibcrelease 4
+%define glibcrelease 5
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -1336,6 +1336,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Mar 28 Jakub Jelinek <jakub@redhat.com> 2.4-5
+- update from CVS
+  - pshared robust mutex support
+  - fix btowc and bwtoc in C++ (#186410)
+  - fix NIS+ (#186592)
+  - don't declare __wcsto*l_internal for non-GCC or if not -O1+ (#185667)
 - don't mention nscd failures on 2.0 kernels (#185335)
 
 * Tue Mar  7 2006 Roland McGrath <roland@redhat.com> 2.4-4

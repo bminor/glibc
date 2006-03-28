@@ -321,6 +321,7 @@ __END_NAMESPACE_C99
 #ifdef __USE_EXTERN_INLINES
 /* Define inline function as optimization.  */
 
+# ifndef __cplusplus
 /* We can use the BTOWC and WCTOB optimizations since we know that all
    locales must use ASCII encoding for the values in the ASCII range
    and because the wchar_t encoding is always ISO 10646.  */
@@ -335,6 +336,7 @@ extern __inline int
 __NTH (wctob (wint_t __wc))
 { return (__builtin_constant_p (__wc) && __wc >= L'\0' && __wc <= L'\x7f'
 	  ? (int) __wc : __wctob_alias (__wc)); }
+# endif
 
 extern __inline size_t
 __NTH (mbrlen (__const char *__restrict __s, size_t __n,
@@ -507,26 +509,30 @@ extern long double __wcstold_internal (__const wchar_t *__restrict __nptr,
 				       wchar_t **__restrict __endptr,
 				       int __group) __THROW;
 
-#ifndef __wcstol_internal_defined
+#if !defined __wcstol_internal_defined \
+    && defined __OPTIMIZE__ && __GNUC__ >= 2
 extern long int __wcstol_internal (__const wchar_t *__restrict __nptr,
 				   wchar_t **__restrict __endptr,
 				   int __base, int __group) __THROW;
 # define __wcstol_internal_defined	1
 #endif
-#ifndef __wcstoul_internal_defined
+#if !defined __wcstoul_internal_defined \
+    && defined __OPTIMIZE__ && __GNUC__ >= 2
 extern unsigned long int __wcstoul_internal (__const wchar_t *__restrict __npt,
 					     wchar_t **__restrict __endptr,
 					     int __base, int __group) __THROW;
 # define __wcstoul_internal_defined	1
 #endif
-#ifndef __wcstoll_internal_defined
+#if !defined __wcstoll_internal_defined \
+    && defined __OPTIMIZE__ && __GNUC__ >= 2
 __extension__
 extern long long int __wcstoll_internal (__const wchar_t *__restrict __nptr,
 					 wchar_t **__restrict __endptr,
 					 int __base, int __group) __THROW;
 # define __wcstoll_internal_defined	1
 #endif
-#ifndef __wcstoull_internal_defined
+#if !defined __wcstoull_internal_defined \
+    && defined __OPTIMIZE__ && __GNUC__ >= 2
 __extension__
 extern unsigned long long int __wcstoull_internal (__const wchar_t *
 						   __restrict __nptr,

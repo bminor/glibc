@@ -1,5 +1,139 @@
+2006-03-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Remove support for
+	architectures which moved to ports.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Add
+	__ASSUME_SET_ROBUST_LIST.
+
+2006-03-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* wcsmbs/wchar.h (btowc, wctob): Don't optimize in C++.
+
+2006-03-24  David S. Miller  <davem@sunset.davemloft.net>
+
+	* sysdeps/sparc/sparc32/bits/atomic.h
+	(__v9_compare_and_exchange_val_32_acq): Add "memory" clobber.
+	* sysdeps/sparc/sparc32/sparcv9/bits/atomic.h
+	(__arch_compare_and_exchange_val_32_acq, atomic_exchange_acq):
+	Likewise.
+	* sysdeps/sparc/sparc64/bits/atomic.h
+	(__arch_compare_and_exchange_val_32_acq,
+	__arch_compare_and_exchange_val_64_acq, atomic_exchange_acq): Likewise.
+
+2006-03-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nss_nisplus/nisplus-proto.c (_nss_create_tablename): Check the
+	return value of malloc rather than the static var again.
+	* nis/nss_nisplus/nisplus-grp.c (_nss_create_tablename): Likewise.
+	* nis/nss_nisplus/nisplus-network.c (_nss_create_tablename): Likewise.
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_create_tablename): Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c (_nss_create_tablename): Likewise.
+	* nis/nss_nisplus/nisplus-service.c (_nss_create_tablename): Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_create_tablename): Likewise.
+	* nis/nss_nisplus/nisplus-alias.c (_nss_create_tablename): Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c (_nss_pwd_create_tablename): Likewise.
+
+2006-03-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/poll.h: Add POLLMSG,
+	POLLREMOVE, and POLLRDHUP.
+	* sysdeps/unix/sysv/linux/bits/poll.h: Add POLLREMOVE and POLLRDHUP.
+
+2006-03-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Define
+	LINUX_FADV_ASYNC_WRITE and LINUX_FADV_WRITE_WAIT.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+
+2006-03-17  Roland McGrath  <roland@redhat.com>
+
+	* elf/rtld.c (dl_main): Run final self-relocation after setting up TLS.
+	From Alexandre Oliva <aoliva@redhat.com>.
+
+	* elf/tst-audit2.c: New file.
+	* elf/Makefile (tests): Add it.
+	($(objpfx)tst-audit2.out): New target.
+	(tst-audit2-ENV): New variable.
+
+	* elf/tst-leaks1.c: Include <stdio.h>.
+
+2006-03-16  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/getcontext.S (__getcontext_x):
+	Use .set noat to quiet assembler warning.
+
+	* math/gen-libm-test.pl (parse_args): Take function name for pretty
+	output as an argument.
+	(generate_testfile): Pass it the name given in the START macro.
+
+	[BZ #2466]
+	* math/libm-test.inc (llrint_test, llround_test): Fix last change to
+	protect large-precision cases with [LDBL_MANT_DIG > 100].
+	(llrint_test_tonearest, llrint_test_towardzero): Likewise.
+	(llrint_test_downward, llrint_test_upward): Likewise.
+
+2006-03-15  Steven Munroe  <sjmunroe@us.ibm.com>
+	    Alan Modra  <amodra@bigpond.net.au>
+
+	[BZ #2466]
+	* math/libm-test.inc (llrint_test, llround_test) [TEST_LDOUBLE]:
+	Add new test values.
+	(llrint_test_tonearest, llrint_test_towardzero, llrint_test_downward,
+	llrint_test_upward): New functions.
+	(main): Call them.
+
+	* sysdeps/ieee754/ldbl-128ibm/s_llrintl.c (__llrintl): Handle
+	rounding that spans doubles in IBM long double format.
+	* sysdeps/ieee754/ldbl-128ibm/s_llroundl.c (__llroundl): Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintl.S: Removed.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundl.S: Removed.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrintl.S: Removed.
+	* sysdeps/powerpc/powerpc64/fpu/s_lroundl.S: Removed.
+
+2006-03-16  Roland McGrath  <roland@redhat.com>
+
+	* wcsmbs/wchar.h (__wcstol_internal, __wcstoul_internal): Declare these
+	 only when we will use them, under [__OPTIMIZE__ && __GNUC__ >= 2].
+	(__wcstoll_internal, __wcstoull_internal_defined): Likewise.
+
+2006-03-06  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/fpu/fprsave.S: Add cfi_offset for spilling
+	of non-volatile floating-point registers to the stack (fp14-fp31).
+	* sysdeps/powerpc/powerpc32/gprsave0.S: Add cfi_offset for spilling of
+	non-volatile general-purpose registers to the stack (gpr13-gpr31).
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S: Add cfi_offset
+	for non-volatiles gpr30 - grp31 spilled to the stack.
+	* sysdeps/powerpc/powerpc64/memcpy.S: Add cfi_offset for non-volatile
+	gpr31 spill to the stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S:
+	Add cfi_offset for non-volatile gpr31 spill to the stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Add cfi_offset
+	for non-volatiles gpr28 - grp31 spilled to the stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S: Add
+	cfi_adjust_cfa_offset when a frame is stacked.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S:
+	(__novec_setcontext) : Add cfi_offset for non-volatile gpr31 spill
+	add LR saved to the stack.  Add cfi_adjust_cfa_offset when frame is
+	stacked.
+	(__setcontext) : Add cfi_offset for non-volatile gpr31 spill to
+	the stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S:
+	(__novec_swapcontext) : Add cfi_offset for non-volatile gpr31 spill
+	add LR saved to the stack.
+	(__swapcontext) : Add cfi_offset for non-volatile gpr31 spill add LR
+	saved to the stack.  Add cfi_adjust_cfa_offset when frame is stacked.
+
 2006-03-07  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #2423]
 	* math/libm-test.inc [TEST_LDOUBLE] (ceil_test, floor_test, rint_test,
 	round_test, trunc_test): Only run some of the new tests if
 	LDBL_MANT_DIG > 100.
@@ -7,36 +141,50 @@
 2006-03-03  Steven Munroe  <sjmunroe@us.ibm.com>
 	    Alan Modra  <amodra@bigpond.net.au>
 
-	[BZ #2423]
-	* math/libm-test.inc [TEST_LDOUBLE] (ceil_test, floor_test, rint_test,
-	round_test, trunc_test): Add new tests.
-	
 	* sysdeps/powerpc/fpu/fenv_libc.h (__fegetround, __fesetround):
 	Define inline implementations.
 	* sysdeps/powerpc/fpu/fegetround.c: Use __fegetround.
 	* sysdeps/powerpc/fpu/fesetround.c: Use __fesetround.
 
+	* sysdeps/powerpc/fpu/math_ldbl.h: New file.
+
+	[BZ #2423]
+	* math/libm-test.inc [TEST_LDOUBLE] (ceil_test, floor_test, rint_test,
+	round_test, trunc_test): Add new tests.
 	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h
-	(EXTRACT_IBM_EXTENDED_MANTISSA, INSERT_IBM_EXTENDED_MANTISSA): 
-	Removed, replaced with.
+	(EXTRACT_IBM_EXTENDED_MANTISSA, INSERT_IBM_EXTENDED_MANTISSA):
+	Removed, replaced with ...
 	(ldbl_extract_mantissa, ldbl_insert_mantissa, ldbl_pack, ldbl_unpack,
-	ldbl_canonicalise, ldbl_nearbyint): Define inline utility
-	functions for IBM long double format.
+	ldbl_canonicalise, ldbl_nearbyint): New functions.
 	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c (__ieee754_fmodl): Replace
 	EXTRACT_IBM_EXTENDED_MANTISSA and INSERT_IBM_EXTENDED_MANTISSA
 	with ldbl_extract_mantissa and ldbl_insert_mantissa.
 	* sysdeps/ieee754/ldbl-128ibm/e_rem_pio2l.c (__ieee754_rem_pio2l):
 	Replace EXTRACT_IBM_EXTENDED_MANTISSA with ldbl_extract_mantissa.
-	(ldbl_extract_mantissa, ldbl_insert_mantissa): Defined.
-
+	(ldbl_extract_mantissa, ldbl_insert_mantissa): New inline functions.
 	* sysdeps/ieee754/ldbl-128ibm/s_ceill.c (__ceill): Handle rounding
 	that spans doubles in IBM long double format.
 	* sysdeps/ieee754/ldbl-128ibm/s_floorl.c: Likewise.
 	* sysdeps/ieee754/ldbl-128ibm/s_rintl.c: Likewise.
 	* sysdeps/ieee754/ldbl-128ibm/s_roundl.c: Likewise.
 	* sysdeps/ieee754/ldbl-128ibm/s_truncl.c: Likewise.
-	* sysdeps/powerpc/fpu/math_ldbl.h: New file.
-	* sysdeps/powerpc/powerpc64/fpu/s_rintl.S: Removed.
+	* sysdeps/powerpc/powerpc64/fpu/s_rintl.S: File removed.
+
+2004-12-09  Randolph Chung  <tausq@debian.org>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_UTIMES): Don't
+	define for hppa, which doesn't support this syscall.
+
+2006-03-13  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #2451]
+	* elf/dl-load.c (open_verify): Add free_name argument, if true, free
+	name before calling lose.
+	(open_path): Adjust caller.
+	(_dl_map_object): Adjust callers.  Free name_copy before calling
+	_dl_signal_error.
+	* elf/Makefile: Add rules to build and run tst-leaks1.
+	* elf/tst-leaks1.c: New test.
 
 2006-03-06  Roland McGrath  <roland@redhat.com>
 
