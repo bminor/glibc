@@ -1389,13 +1389,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
-* Mon Apr 24 Jakub Jelinek <jakub@redhat.com> 2.4-6
+* Mon Apr 24 2006 Jakub Jelinek <jakub@redhat.com> 2.4-6
 - update from CVS
   - NIS+ fixes
   - don't segfault on too large argp key values (#189545)
   - getaddrinfo fixes for RFC3484 (#188364)
 
-* Tue Mar 28 Jakub Jelinek <jakub@redhat.com> 2.4-5
+* Tue Mar 28 2006 Jakub Jelinek <jakub@redhat.com> 2.4-5
 - update from CVS
   - pshared robust mutex support
   - fix btowc and bwtoc in C++ (#186410)
