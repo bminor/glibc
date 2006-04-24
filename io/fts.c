@@ -93,7 +93,8 @@ fts_open(argv, options, compar)
 	register FTS *sp;
 	register FTSENT *p, *root;
 	register int nitems;
-	FTSENT *parent, *tmp;
+	FTSENT *parent = NULL;
+	FTSENT *tmp;
 
 	/* Options check. */
 	if (options & ~FTS_OPTIONMASK) {
@@ -124,9 +125,11 @@ fts_open(argv, options, compar)
 		goto mem1;
 
 	/* Allocate/initialize root's parent. */
-	if ((parent = fts_alloc(sp, "", 0)) == NULL)
-		goto mem2;
-	parent->fts_level = FTS_ROOTPARENTLEVEL;
+	if (*argv != NULL) {
+		if ((parent = fts_alloc(sp, "", 0)) == NULL)
+			goto mem2;
+		parent->fts_level = FTS_ROOTPARENTLEVEL;
+	  }
 
 	/* Allocate/initialize root(s). */
 	for (root = NULL, nitems = 0; *argv != NULL; ++argv, ++nitems) {
@@ -744,6 +747,10 @@ mem1:				saved_errno = errno;
 			p->fts_flags |= FTS_ISW;
 #endif
 
+#if 0
+		/* Unreachable code.  cderrno is only ever set to a nonnull
+		   value if dirp is closed at the same time.  But then we
+		   cannot enter this loop.  */
 		if (cderrno) {
 			if (nlinks) {
 				p->fts_info = FTS_NS;
@@ -751,7 +758,9 @@ mem1:				saved_errno = errno;
 			} else
 				p->fts_info = FTS_NSOK;
 			p->fts_accpath = cur->fts_accpath;
-		} else if (nlinks == 0
+		} else
+#endif
+		if (nlinks == 0
 #if defined DT_DIR && defined _DIRENT_HAVE_D_TYPE
 			   || (nostat &&
 			       dp->d_type != DT_DIR && dp->d_type != DT_UNKNOWN)
@@ -819,6 +828,7 @@ mem1:				saved_errno = errno;
 	     fts_safe_changedir(sp, cur->fts_parent, -1, ".."))) {
 		cur->fts_info = FTS_ERR;
 		SET(FTS_STOP);
+		fts_lfree(head);
 		return (NULL);
 	}
 
@@ -826,6 +836,7 @@ mem1:				saved_errno = errno;
 	if (!nitems) {
 		if (type == BREAD)
 			cur->fts_info = FTS_DP;
+		fts_lfree(head);
 		return (NULL);
 	}
 

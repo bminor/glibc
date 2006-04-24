@@ -38,11 +38,11 @@ static nis_name tablename_val;
 static u_long tablename_len;
 
 
-#define NISENTRYVAL(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
+#define NISENTRYVAL(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].zo_data.objdata_u.en_data.en_cols.en_cols_val[col].ec_value.ec_value_val)
 
-#define NISENTRYLEN(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
+#define NISENTRYLEN(idx, col, res) \
+        (NIS_RES_OBJECT (res)[idx].zo_data.objdata_u.en_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
 
 static int
 _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
@@ -55,7 +55,7 @@ _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
     return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
-      || result->objects.objects_len != 1
+      || NIS_RES_NUMOBJ (result) != 1
       || __type_of (NIS_RES_OBJECT (result)) != NIS_ENTRY_OBJ
       || strcmp (NIS_RES_OBJECT (result)->EN_data.en_type,
 		 "ethers_tbl") != 0
@@ -63,13 +63,15 @@ _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
     return 0;
 
   /* Generate the ether entry format and use the normal parser */
-  if (NISENTRYLEN (0, 0, result) +1 > room_left)
+  if (NISENTRYLEN (0, 0, result) + 1 > room_left)
     {
       *errnop = ERANGE;
       return -1;
     }
-  strncpy (p, NISENTRYVAL (0, 0, result), NISENTRYLEN (0, 0, result));
-  room_left -= (NISENTRYLEN (0, 0, result) +1);
+  char *cp = __stpncpy (p, NISENTRYVAL (0, 0, result),
+			NISENTRYLEN (0, 0, result));
+  *cp = '\0';
+  room_left -= NISENTRYLEN (0, 0, result) + 1;
   ether->e_name = p;
 
   struct ether_addr *ea = ether_aton (NISENTRYVAL (0, 1, result));
@@ -261,17 +263,18 @@ _nss_nisplus_gethostton_r (const char *name, struct etherent *eth,
 
   int parse_res = _nss_nisplus_parse_etherent (result, eth, buffer,
 					       buflen, errnop);
+
+  /* We do not need the lookup result anymore.  */
+  nis_freeresult (result);
+
   if (__builtin_expect (parse_res < 1, 0))
     {
       __set_errno (olderr);
 
       if (parse_res == -1)
-	{
-	  nis_freeresult (result);
-	  return NSS_STATUS_TRYAGAIN;
-	}
-      else
-	return NSS_STATUS_NOTFOUND;
+	return NSS_STATUS_TRYAGAIN;
+
+      return NSS_STATUS_NOTFOUND;
     }
 
   return NSS_STATUS_SUCCESS;
@@ -326,13 +329,14 @@ _nss_nisplus_getntohost_r (const struct ether_addr *addr, struct etherent *eth,
 
   int parse_res = _nss_nisplus_parse_etherent (result, eth, buffer,
 					       buflen, errnop);
+
+  /* We do not need the lookup result anymore.  */
+  nis_freeresult (result);
+
   if (__builtin_expect (parse_res < 1, 0))
     {
       if (parse_res == -1)
-	{
-	  nis_freeresult (result);
-	  return NSS_STATUS_TRYAGAIN;
-	}
+	return NSS_STATUS_TRYAGAIN;
 
       return NSS_STATUS_NOTFOUND;
     }

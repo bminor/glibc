@@ -295,7 +295,6 @@ cat > override_headers/asm/unistd.h <<EOF
 #define __NR_mknodat		297
 #define __NR_fchownat		298
 #define __NR_futimesat		299
-#define __NR_fstatat64		300
 #define __NR_unlinkat		301
 #define __NR_renameat		302
 #define __NR_linkat		303
@@ -303,6 +302,9 @@ cat > override_headers/asm/unistd.h <<EOF
 #define __NR_readlinkat		305
 #define __NR_fchmodat		306
 #define __NR_faccessat		307
+#endif
+#ifndef __NR_fstatat64
+#define __NR_fstatat64		300
 #endif
 #ifndef __NR_pselect6
 #define __NR_pselect6		308

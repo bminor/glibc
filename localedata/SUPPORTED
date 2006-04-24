@@ -60,9 +60,15 @@ br_FR@euro/ISO-8859-15 \
 bs_BA.UTF-8/UTF-8 \
 bs_BA/ISO-8859-2 \
 byn_ER/UTF-8 \
+ca_AD.UTF-8/UTF-8 \
+ca_AD/ISO-8859-15 \
 ca_ES.UTF-8/UTF-8 \
 ca_ES/ISO-8859-1 \
 ca_ES@euro/ISO-8859-15 \
+ca_FR.UTF-8/UTF-8 \
+ca_FR/ISO-8859-15 \
+ca_IT.UTF-8/UTF-8 \
+ca_IT/ISO-8859-15 \
 cs_CZ.UTF-8/UTF-8 \
 cs_CZ/ISO-8859-2 \
 cy_GB.UTF-8/UTF-8 \
@@ -268,6 +274,7 @@ nn_NO.UTF-8/UTF-8 \
 nn_NO/ISO-8859-1 \
 no_NO.UTF-8/UTF-8 \
 no_NO/ISO-8859-1 \
+nr_ZA/UTF-8 \
 nso_ZA/UTF-8 \
 oc_FR.UTF-8/UTF-8 \
 oc_FR/ISO-8859-1 \
@@ -275,6 +282,7 @@ om_ET/UTF-8 \
 om_KE.UTF-8/UTF-8 \
 om_KE/ISO-8859-1 \
 pa_IN/UTF-8 \
+pa_PK/UTF-8 \
 pl_PL.UTF-8/UTF-8 \
 pl_PL/ISO-8859-2 \
 pt_BR.UTF-8/UTF-8 \

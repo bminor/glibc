@@ -1,3 +1,519 @@
+2006-04-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_nisplus/nisplus-netgrp.c: Cleanups.	
+
+	[BZ #1951]
+	* sysdeps/posix/sigset.c (sigset): Return correct value reflecting
+	previous signal state.
+	* signal/Makefile (tests): Add tst-sigset2.
+	* signal/tst-sigset2.c: New file.
+
+2006-04-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* argp/argp.h (__option_is_short): Check upper limit of
+	__key.  isprint() requires its argument to have the value
+	of an unsigned char or EOF.
+	Patch by Sergey Poznyakoff <gray@Mirddin.farlep.net>.
+
+2006-04-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2534, BZ #2535]
+	* posix/regex.h: Remove obsolete <sys/types.h> comment and special
+	handling for VMS.
+
+	* iconvdata/ibm437.c: Define HAS_HOLES to 0.
+	* iconvdata/ibm861.c: Likewise.
+	* iconvdata/ibm862.c: Likewise.
+	* iconvdata/ibm863.c: Likewise.
+	* iconvdata/ibm865.c: Likewise.
+	Reported by <ash@contact.bg>.
+
+2006-04-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/ifaddrs.h: Get uint32_t definition.
+	* posix/tst-rfc3484.c: Update fake __check_pf implementation.
+	* posix/tst-rfc3484-2.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_PROC_SELF_FD_SYMLINK.
+	* sysdeps/unix/sysv/linux/ttyname.c: Cleanups.  Avoid compatibility
+	code if possible.  Move compatibility code in .text.compat section.
+	* sysdeps/unix/sysv/linux/ttyname_r.c: Likewise.
+
+2006-04-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Rewrite to avoid loop
+	over gaih array.  There is only on function to call in the moment.
+
+2006-04-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/ifaddrs.h: Define struct in6addrinfo.
+	Add two more parameters to __check_pf.
+	* sysdeps/unix/sysv/linux/check_pf.c: When using the netlink
+	interface, determine whether IPv6 addresses are deprecated or
+	temporary.  Create array of those addresses.
+	* inet/check_pf.c: Always tell caller there are no depracated
+	and temporary addresses.
+	* sysdeps/posix/getaddrinfo.c: Pretty printing.
+	(struct sort_result): Add source_addr_flags field.
+	(rfc3484_sort): Implement rule 3 and 7.
+	(in6aicmp): New function.
+	(getaddrinfo): Call __check_pf also when we need info about IPv6
+	source addresses.  When creating array for sorting addresses,
+	look up deprecated and temporary addresses returned by __check_pf
+	and add flag if necessary.
+
+2006-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c: Fix precedence for IP V4-to-V6
+	mapped addresses.
+	* posix/Makefile (tests): Add tst-rfc3484-2.
+	* posix/tst-rfc3484-2.c: New file.
+
+	* nis/nss_nisplus/nisplus-publickey.c: Minor cleanups throughout.
+	* nis/nss_nisplus/nisplus-service.c (_nss_nisplus_parse_servent):
+	Significant cleanups.  Correct adjustment for pointer array.
+	* nis/nss_nisplus/nisplus-rpc.c (_nss_nisplus_parse_rpcent):
+	Likewise.
+	* nis/nss_nisplus/nisplus-proto.c (_nss_nisplus_parse_protoent):
+	Likewise.
+	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_parse_netent):
+	Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_parse_hostent):
+	Likewise.
+
+2006-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add tee syscall.
+	* sysdeps/unix/sysv/linux/Versions: Export tee@GLIBC_2.5.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Add prototype for tee.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_parse_etherent):
+	Minor cleanups.  NUL terminate name string.
+
+	* nis/Versions: No need to export _nss_nisplus_parse_grent,
+	_nss_nisplus_parse_pwent, and _nss_nisplus_parse_spent.
+
+	* nis/nss_nisplus/nisplus-alias.c (_nss_nisplus_parse_aliasent):
+	Avoid unnecessary allocation.  Fix adjustment for pointer value.
+
+	* nis/nss_nisplus/nisplus-parser.c: Cleanups, use NIS_RES_*
+	macros.  Avoid unnecessary allocation.
+
+	* sysdeps/unix/sysv/linux/sync_file_range.c: New file.
+
+2006-04-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/Makefile (libnsl-routimes): Add nss-default.
+	* nis/Versions (libnsl) [GLIBC_PRIVATE]: Export _nsl_default_nss.
+	* nis/nss-nis.c: Move /etc/default/nss handling to...
+	* nis/nss-default.c: ...here.  New file.
+	* nis/libnsl.h: New file.
+	* nis/nss-nis.h: Remove NSS_FLAG_* definitions and _nis_default_nss
+	plus auxilary definitions.
+	* nis/nss_nis/nis-initgroups.c: Use _nsl_default_nss instead of
+	_nis_default_nss.
+	* nis/nss_nis/nis-service.c: Likewise.
+
+2006-04-07  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/fpu/bits/mathinline.h
+	[__WORDSIZE == 64 || _ARCH_PWR4]: Define __CPU_HAS_FSQRT.
+	(__ieee754_sqrt): Fix comment.
+	(__ieee754_sqrtf): Fix comment.
+	* sysdeps/powerpc/fpu/e_sqrt.c (__ieee754_sqrt): Fix comment.
+	Check __CPU_HAS_FSQRT instead of dl_hwcap.
+	* sysdeps/powerpc/fpu/e_sqrtf.c (__ieee754_sqrtf): Likewise.
+
+2006-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/inet_ntoa.c: Rewrite to use TLS instead of TSD.
+
+	* nis/nss_nis/nis-alias.c: Optimize use of yperr2nss.  Avoid calling
+	it for YPERR_SUCCESS.  Minor cleanups.  Add __builtin_expect.
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-initgroups.c: Likewise.
+	* nis/nss_nis/nis-netgrp.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-publickey.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+
+	* nis/nis_ping.c: Remove unnecessary conditionals before
+	nis_freeresult calls.
+	* nis/nis_ismember.c: Likewise.
+
+	* elf/rtld.c (process_envvars): Fix handling of LD_POINTER_GUARD.
+	Reported by genesh@comcast.net.
+
+	* io/fts.c (fts_build): Call fts_lfree in the two error cases
+	after the loop [Coverity CID 187].
+
+	* nis/nis_getservlist.c (nis_getservlist): Also free lookup result
+	in error case [Coverity CID 189].
+
+	* nis/nis_getservlist.c (nis_getservlist): One more free call
+	needed [Coverity CID 190].
+
+2006-04-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/unwind-dw2-fde.c (end_fde_sort): Remove
+	unnecessary test for accu->linear == NULL [Coverity CID 79].
+
+2006-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/tempname.c (__gen_tempname): Change attempts_min
+	into a macro.  Use preprocessor to decide how to initialize
+	attempts [Coverity CID 67].
+
+	* io/fts.c (fts_build): Comment out dead code [Coverity CID 68].
+
+	* sunrpc/rpc_parse.c (def_union): Comment out dead code
+	[Coverity CID 70].
+
+	* locale/programs/linereader.c (lr_token): Remove duplicate
+	handling of EOF [Coverity CID 71].
+
+	* locale/programs/ld-numeric.c (numeric_read) [case tok_grouping]:
+	We bail out early if ignore_content is set, so there is no need to
+	check it later again [Coverity CID 72].
+
+	* inet/inet6_option.c (inet6_option_find): Check *tptrp for NULL,
+	not tptrp [Coverity CID 73].
+
+	* inet/inet6_option.c (inet6_option_next): Check *tptrp for NULL,
+	not tptrp [Coverity CID 74].
+
+	* misc/tsearch.c (__tsearch): Don't rotate tree if memory
+	allocation failed [Coverity CID 78].
+
+2006-04-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/unwind-dw2.c (execute_cfa_program): Fix typo in
+	the last change.
+
+2006-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/rexec.c (rexec_af): If we have no canonical name don't
+	proceed further [Coverity CID 86].
+
+	* iconv/iconv_charmap.c (process_fd): Initialize inptr from inbuf,
+	not to NULL [Coverity CID 88].
+
+2006-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/ldconfig.c (main): Use rawmemchr instead of strchr.
+	* nis/nis_call.c (rec_dirsearch): Likewise.
+	* nis/nis_local_names.c (nis_local_host): Likewise.
+	(nis_local_directory): Likewise.
+	* intl/explodename.c (_nl_explode_name): Likewise.
+
+	* sysdeps/generic/unwind-dw2.c (execute_cfa_program): Don't handle
+	DW_CFA_GNU_window_save if it obviously cannot work [Coverity CID 102].
+
+	* locale/programs/ld-address.c (address_finish): Fix conditions
+	for error messages [Coverity CID 104].
+
+	* libio/fmemopen.c (fmemopen): Free stream memory in case of
+	invalid length [Coverity CID 106].
+
+	* nss/nss_files/files-key.c (search): Close stream before
+	successful return [Coverity CID 107].
+
+	* io/fts.c (fts_open): Don't allocate parent if *argv==NULL
+	[Coverity CID 108].
+
+	* sunrpc/rpc_cout.c (inline_struct): Free sizestr after use
+	[Coverity CID 110, 109].
+
+	* sunrpc/rpc_scan.c (docppline): Free file string if it is not
+	going to be used [Coverity CID 111].
+
+	* sysdeps/unix/sysv/linux/getsourcefilter.c (getsourcefilter): Free
+	memory if socket level value cannot be retrieved [Coverity CID 112].
+
+	* nis/nis_clone_dir.c (nis_clone_directory): Free all memory in
+	error case [Coverity CID 114].
+
+	* nis/nis_clone_res.c (nis_clone_result): Free all memory in the
+	error cases [Coverity CID 115].
+
+	* sunrpc/rpc_parse.c (get_definition): Free defp if tok ==
+	TOK_EOF [Coverity CID 116].
+
+	* sysdeps/unix/sysv/linux/setsourcefilter.c (setsourcefilter): Free
+	memory if socket level value cannot be retrieved [Coverity CID 117].
+
+	* elf/cache.c (save_cache): Initialize pad to avoid writing
+	uninitialized data to disk.
+
+	* elf/cache.c (save_cache): Free file_entries_new [Coverity CID 118].
+
+	* intl/finddomain.c (_nl_find_domain): Avoid strdup of expand
+	locale name, use strdupa.  Remove free call [Coverity CID 119].
+
+	* sunrpc/rpc_main.c (generate_guard): Avoid extra allocation and
+	the resulting leak [Coverity CID 121].
+
+	* sunrpc/rpc_main.c (mkfile_output): Free all allocated memory
+	[Coverity CID 122].
+
+	* sunrpc/rpc_main.c (h_output): Free guard after we are done
+	[Coverity CID 123].
+
+	* sunrpc/svc_udp.c (cache_set): Free victim if newbuf allocation
+	fails [Coverity CID 126].
+
+	* sunrpc/svc_udp.c (svcudp_enablecache): Free memory in error
+	cases [Coverity CID 127].
+
+	* nis/nis_table.c (__create_ib_request): Free ibreq in case strdup
+	fails [Coverity CID 128].
+
+	* nis/nis_getservlist.c (nis_getservlist): Free all memory in case
+	of an error [Coverity CID 130, 129].
+
+	* nis/nis_print_group_entry.c (nis_print_group_entry): If
+	nis_lookup call failed, return.  Free lookup result in error
+	cases [Coverity CID 131].
+
+	* nis/nis_removemember.c (nis_removemember): Free all memory in
+	error cases [Coverity CID 132].
+
+	* nis/nss_nisplus/nisplus-alias.c (_nss_nisplus_getaliasbyname_r):
+	Always free lookup result [Coverity CID 134].
+
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_gethostton_r):
+	Always free lookup result [Coverity CID 135].
+
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_getntohost_r):
+	Always free lookup result [Coverity CID 136].
+
+	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_getnetbyaddr_r):
+	Before retrying, free old result [Coverity CID 137].
+
+	* nis/nss_nisplus/nisplus-publickey.c (_nss_nisplus_netname2user):
+	Free res in case UID is zero [Coverity CID 138].
+
+	* nis/ypclnt.c (yp_update): Always free master string
+	[Coverity CID 140].
+
+	* nis/nis_creategroup.c (nis_creategroup): Free all memory in
+	error cases [Coverity CID 143, 142, 141].
+
+	* nis/nss_nis/nis-publickey.c (_nss_nis_getpublickey): Free result
+	if yp_match call succeeded [Coverity CID 155].
+
+	* nis/nss_nis/nis-publickey.c (_nss_nis_getsecretkey): Free string
+	allocated in yp_match at all times [Coverity CID 157, 156].
+
+	* nscd/nscd.c (write_pid): Close stream also if writing failed
+	[Coverity CID 165].
+
+	* nis/nis_table.c (nis_add_entry): Move test for NULL parameter
+	ahead of first use [Coverity CID 167].
+
+	* nis/nss_nis/nis-alias.c (_nss_nis_getaliasbyname_r): Move test
+	for NULL parameter ahead of first use [Coverity CID 168].
+
+	* intl/finddomain.c (_nl_find_domain): We never return NULL if we
+	found the locale [Coverity CID 169].
+
+	* inet/getnameinfo.c (getnameinfo): __getservbyport_r does not set
+	herrno [Coverity CID 178].
+
+	* nis/nis_checkpoint.c (nis_checkpoint): Don't access and returned
+	freed object [Coverity CID 182].
+
+2006-04-05  Alan Modra  <amodra@bigpond.net.au>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bits/unistd.h (readlink, __readlink_chk, __readlink_alias):
+	Change return value to ssize_t.
+
+2006-04-04  Roland McGrath  <roland@redhat.com>
+
+	* string/Makefile (CFLAGS-inl-tester.c): New variable.
+	(CFLAGS-tst-inlcall.c): Likewise.
+
+	[BZ #2508]
+	* nscd/Makefile ($(objpfx)nscd_stat.o: sysincludes): Move setting
+	inside [$(have-selinux) = yes].
+	($(objpfx)selinux.o: sysincludes): Likewise.
+
+	* iconvdata/Makefile (generate-8bit-table): Use LC_ALL=C.
+	(generate-8bit-gap-table): Likewise.
+	($(objpfx)iso8859-7jp.stmp): Likewise.
+	Reported by S.ÃaÄlar Onur <caglar@uludag.org.tr>.
+
+2006-03-21  Joseph S. Myers  <joseph@codesourcery.com>
+
+	* soft-fp/adddf3.c: Add libgcc exception.  Update FSF address.
+	* soft-fp/addsf3.c: Likewise.
+	* soft-fp/addtf3.c: Likewise.
+	* soft-fp/divdf3.c: Likewise.
+	* soft-fp/divsf3.c: Likewise.
+	* soft-fp/divtf3.c: Likewise.
+	* soft-fp/double.h: Likewise.
+	* soft-fp/eqdf2.c: Likewise.
+	* soft-fp/eqsf2.c: Likewise.
+	* soft-fp/eqtf2.c: Likewise.
+	* soft-fp/extenddftf2.c: Likewise.
+	* soft-fp/extended.h: Likewise.
+	* soft-fp/extendsfdf2.c: Likewise.
+	* soft-fp/extendsftf2.c: Likewise.
+	* soft-fp/fixdfdi.c: Likewise.
+	* soft-fp/fixdfsi.c: Likewise.
+	* soft-fp/fixsfdi.c: Likewise.
+	* soft-fp/fixsfsi.c: Likewise.
+	* soft-fp/fixtfdi.c: Likewise.
+	* soft-fp/fixtfsi.c: Likewise.
+	* soft-fp/fixunsdfdi.c: Likewise.
+	* soft-fp/fixunsdfsi.c: Likewise.
+	* soft-fp/fixunssfdi.c: Likewise.
+	* soft-fp/fixunssfsi.c: Likewise.
+	* soft-fp/fixunstfdi.c: Likewise.
+	* soft-fp/fixunstfsi.c: Likewise.
+	* soft-fp/floatdidf.c: Likewise.
+	* soft-fp/floatdisf.c: Likewise.
+	* soft-fp/floatditf.c: Likewise.
+	* soft-fp/floatsidf.c: Likewise.
+	* soft-fp/floatsisf.c: Likewise.
+	* soft-fp/floatsitf.c: Likewise.
+	* soft-fp/floatundidf.c: Likewise.
+	* soft-fp/floatundisf.c: Likewise.
+	* soft-fp/floatunditf.c: Likewise.
+	* soft-fp/floatunsidf.c: Likewise.
+	* soft-fp/floatunsisf.c: Likewise.
+	* soft-fp/floatunsitf.c: Likewise.
+	* soft-fp/gedf2.c: Likewise.
+	* soft-fp/gesf2.c: Likewise.
+	* soft-fp/getf2.c: Likewise.
+	* soft-fp/ledf2.c: Likewise.
+	* soft-fp/lesf2.c: Likewise.
+	* soft-fp/letf2.c: Likewise.
+	* soft-fp/muldf3.c: Likewise.
+	* soft-fp/mulsf3.c: Likewise.
+	* soft-fp/multf3.c: Likewise.
+	* soft-fp/negdf2.c: Likewise.
+	* soft-fp/negsf2.c: Likewise.
+	* soft-fp/negtf2.c: Likewise.
+	* soft-fp/op-1.h: Likewise.
+	* soft-fp/op-2.h: Likewise.
+	* soft-fp/op-4.h: Likewise.
+	* soft-fp/op-8.h: Likewise.
+	* soft-fp/op-common.h: Likewise.
+	* soft-fp/quad.h: Likewise.
+	* soft-fp/single.h: Likewise.
+	* soft-fp/soft-fp.h: Likewise.
+	* soft-fp/sqrtdf2.c: Likewise.
+	* soft-fp/sqrtsf2.c: Likewise.
+	* soft-fp/sqrttf2.c: Likewise.
+	* soft-fp/subdf3.c: Likewise.
+	* soft-fp/subsf3.c: Likewise.
+	* soft-fp/subtf3.c: Likewise.
+	* soft-fp/truncdfsf2.c: Likewise.
+	* soft-fp/trunctfdf2.c: Likewise.
+	* soft-fp/trunctfsf2.c: Likewise.
+	* soft-fp/unorddf2.c: Likewise.
+	* soft-fp/unordsf2.c: Likewise.
+	* soft-fp/unordtf2.c: Likewise.
+
+2006-04-03  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #2505]
+	* sysdeps/powerpc/powerpc32/bits/atomic.h [_ARCH_PWR4]:
+	Define atomic_read_barrier and __ARCH_REL_INSTR using lwsync.
+
+2006-04-03  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Terminate FDE
+	before syscall.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h: Test for <asm/elf.h>
+	with [! _ASM_POWERPC_ELF_H] as well as [!__PPC64_ELF_H].
+
+2006-04-03  Roland McGrath  <roland@frob.com>
+
+	[BZ #2507]
+	* mach/Machrules (.udeps-targets): New variable.
+	($(objpfx)%.udeps static pattern rule): Use it to avoid \ inside
+	quoted string.
+
+2006-04-02  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2501]
+	* nscd/nscd_helper.c (get_mapping): Rewrite code to send request
+	so it uses send and not writev.
+
+	[BZ #2418]
+	* sysdeps/unix/sysv/linux/bits/socket.h: Use larger of PATH_MAX and
+	page size when allocating buffer.
+
+2006-04-01  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2415]
+	* elf/ldd.bash.in: Create better error messages for invalid input
+	files.
+
+	[BZ #2477]
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Create correct LOADARGS_*
+	macros for non-shared position-independent code.
+
+	[BZ #2472]
+	* bits/siginfo.h: Fix typo in ILL_ILLOPN definition.
+
+	[BZ #2450]
+	* posix/unistd.h: Match return value of readlink to what POSIX
+	says these days.
+	* io/readlink.c: Likewise.
+	* io/readlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/readlinkat.c: Likewise.
+
+	[BZ #2498]
+	* nscd/connections.c (main_loop_poll): If the connection cannot be
+	accepted because of user-imposed limits close the descriptor.
+
+2006-03-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Versions: Export sync_file_range with
+	GLIBC_2.5.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Remove
+	LINUX_FADV_ASYNC_WRITE and LINUX_FADV_WRITE_WAIT.
+	Declare sync_file_range and splice.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Add
+	sync_file_range.
+	* sysdeps/unix/sysv/linux/i386/sync_file_range.S: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add splice syscall.
+	* sysdeps/unix/sysv/linux/Versions: Export splice with GLIBC_2.5
+	version.
+	* Versions.def: Define GLIBC_2.5 for libc.
+
+2006-03-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): No need to duplicate
+	'name' for 'canon'.  The final allocation will happen later.
+
 2006-03-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Remove support for
@@ -6165,7 +6681,7 @@
 2005-11-28  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/bits/mman.h (MREMAP_FIXED): Added,
-	Patch by René Rebe <rene@exactcode.de>.
+	Patch by RenÃ© Rebe <rene@exactcode.de>.
 
 2005-11-27  Ulrich Drepper  <drepper@redhat.com>
 
@@ -6177,7 +6693,7 @@
 2005-11-27  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fchownat.c: Include alloca.h, sysdep.h.
-	Reported by René Rebe <rene@exactcode.de>.
+	Reported by RenÃ© Rebe <rene@exactcode.de>.
 
 2005-11-27  Ulrich Drepper  <drepper@redhat.com>
 
