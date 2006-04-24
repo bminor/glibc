@@ -1,4 +1,4 @@
-%define glibcrelease 5
+%define glibcrelease 6
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -313,6 +313,19 @@ cat > override_headers/asm/unistd.h <<EOF
 #ifndef __NR_unshare
 #define __NR_unshare		310
 #endif
+#ifndef __NR_set_robust_list
+#define __NR_set_robust_list	311
+#define __NR_get_robust_list	312
+#endif
+#ifndef __NR_splice
+#define __NR_splice		313
+#endif
+#ifndef __NR_sync_file_range
+#define __NR_sync_file_range	314
+#endif
+#ifndef __NR_tee
+#define __NR_tee		315
+#endif
 %endif
 %ifarch ia64
 #ifndef __NR_timer_create
@@ -366,6 +379,19 @@ cat > override_headers/asm/unistd.h <<EOF
 #ifndef __NR_unshare
 #define __NR_unshare		1296
 #endif
+#ifndef __NR_splice
+#define __NR_splice		1297
+#endif
+#ifndef __NR_set_robust_list
+#define __NR_set_robust_list	1298
+#define __NR_get_robust_list	1299
+#endif
+#ifndef __NR_sync_file_range
+#define __NR_sync_file_range	1300
+#endif
+#ifndef __NR_tee
+#define __NR_tee		1301
+#endif
 %endif
 %ifarch ppc
 #ifndef __NR_utimes
@@ -401,6 +427,12 @@ cat > override_headers/asm/unistd.h <<EOF
 #ifndef __NR_unshare
 #define __NR_unshare		282
 #endif
+#ifndef __NR_splice
+#define __NR_splice		283
+#endif
+#ifndef __NR_tee
+#define __NR_tee		284
+#endif
 %endif
 %ifarch ppc64
 #ifndef __NR_utimes
@@ -428,6 +460,12 @@ cat > override_headers/asm/unistd.h <<EOF
 #endif
 #ifndef __NR_unshare
 #define __NR_unshare		282
+#endif
+#ifndef __NR_splice
+#define __NR_splice		283
+#endif
+#ifndef __NR_tee
+#define __NR_tee		284
 #endif
 %endif
 %ifarch s390
@@ -622,6 +660,19 @@ cat > override_headers/asm/unistd.h <<EOF
 #endif
 #ifndef __NR_unshare
 #define __NR_unshare		272
+#endif
+#ifndef __NR_set_robust_list
+#define __NR_set_robust_list	273
+#define __NR_get_robust_list	274
+#endif
+#ifndef __NR_splice
+#define __NR_splice		275
+#endif
+#ifndef __NR_tee
+#define __NR_tee		276
+#endif
+#ifndef __NR_sync_file_range
+#define __NR_sync_file_range	277
 #endif
 %endif
 %ifnarch %{ix86} x86_64
@@ -1338,6 +1389,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Apr 24 Jakub Jelinek <jakub@redhat.com> 2.4-6
+- update from CVS
+  - NIS+ fixes
+  - don't segfault on too large argp key values (#189545)
+  - getaddrinfo fixes for RFC3484 (#188364)
+
 * Tue Mar 28 Jakub Jelinek <jakub@redhat.com> 2.4-5
 - update from CVS
   - pshared robust mutex support
