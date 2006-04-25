@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <ifaddrs.h>
 
 /* Internal definitions used in the libc code.  */
 #define __getservbyname_r getservbyname_r
@@ -78,6 +79,7 @@ do_test (void)
       results[i].got_source_addr = true;
       memcpy(&results[i].source_addr, &so, sizeof (so));
       results[i].source_addr_len = sizeof (so);
+      results[i].source_addr_flags = 0;
     }
 
   qsort (results, naddrs, sizeof (results[0]), rfc3484_sort);

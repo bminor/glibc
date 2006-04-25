@@ -1,3 +1,14 @@
+2006-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/tst-rfc3484.c (do_test): Also initialize source_addr_flags
+	field.
+	* posix/tst-rfc3484-2.c (do_test): Likewise.
+
+	* posix/tst-rfc3484.c: Include <ifaddrs.h> early.
+	* posix/tst-rfc3484-2.c: Likewise.
+
+	* version.h (VERSION): Bunp to 2.4.90 for the trunk.
+
 2006-04-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/arena.c (ptmalloc_init): Don't call __malloc_check_init
