@@ -1,3 +1,74 @@
+2006-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Fix typo which caused
+	bugs not to be reported.
+
+	* nscd/nscd.h (struct database_dyn): Add propagate field.
+	* nscd/nscd_conf.c (nscd_parse_file): Parse auto-propagate lines.
+	* nscd/nscd.conf: Add auto-propagate lines.
+	* nscd/connections.c (dbs): Initialize .propagate fields.
+	* nscd/grpcache.c (cache_addgr): Do not add ID entry for name lookups
+	and vice versa if propagation is disabled for the database.
+	* nscd/pwdcache.c (cache_addpw): Likewise.
+
+2006-04-26  James Antill  <james.antill@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	* config.make.in: Add have-libcap.
+	* configure.in: Check for libcap.
+	* nscd/Makefile (selinux-LIBS): Add -lcap if possible.
+	* nscd/connections.c (finish_drop_privileges): When libcap is available
+	call preserve_capabilities and install_real_capabilities.
+	* nscd/selinux.c: Define preserve_capabilities and
+	install_real_capabilities.
+	* nscd/selinux.h: Declare preserve_capabilities and
+	install_real_capabilities.
+
+2006-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/iso-4217.def: Update.
+
+2006-04-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2420]
+	* stdlib/strfmon_l.c (__vstrfmon_l): Fix handling of ! modifier.
+	* localedata/Makefile: Add rules to build and run tst-strfmon1.
+	* localedata/tst-strfmon1.c: New file.
+
+	[BZ #2571]
+	* nscd/nscd_helper.c (__nscd_get_map_ref): Make mapptr argument a
+	volatile pointer so that the mapptr->mapped value is re-read after
+	the lock is retrieved.
+	* nscd/nscd-client.h: Update __nscd_get_map_ref prototype.
+
+	* include/features.h [_GNU_SOURCE] (_POSIX_C_SOURCE): Define to
+	200112L.
+
+	* resolv/res_hconf.c: Minor surgery to 'cmd' and the referenced
+	functions to avoid relocations.
+
+	[BZ #2389]
+	* resolv/res_hconf.c: Remove 'order' parsing.  Just ignore the line.
+	* resolv/res_hconf.h: Remove Name_Service definition.
+	(struct hconf): Replace service related fields with placeholders.
+
+	[BZ #2386]
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Check for NULL stack
+	pointers to match other architectures.
+	* sysdeps/unix/sysv/linux/Makefile [subdirs=misc] (tests): Add
+	tst-clone.
+	* sysdeps/unix/sysv/linux/tst-clone.c: New file.
+
+	[BZ #2072]
+	* stdio-common/printf_fp.c: Fix potential memory leaks for
+	malloc'ed wbuffer which isn't freed in error conditions.
+
+	[BZ #2569]
+	* iconv/gconv_db.c (__gconv_release_step): Fix condition of assert
+	call.
+	* iconvdata/Makefile (tests): Add tst-iconv6.
+	* iconvdata/tst-iconv6.c: New file.
+
 2006-04-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/tst-rfc3484.c (do_test): Also initialize source_addr_flags
@@ -7,7 +78,7 @@
 	* posix/tst-rfc3484.c: Include <ifaddrs.h> early.
 	* posix/tst-rfc3484-2.c: Likewise.
 
-	* version.h (VERSION): Bunp to 2.4.90 for the trunk.
+	* version.h (VERSION): Bump to 2.4.90 for the trunk.
 
 2006-04-24  Jakub Jelinek  <jakub@redhat.com>
 

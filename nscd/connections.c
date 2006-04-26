@@ -103,6 +103,7 @@ struct database_dyn dbs[lastdb] =
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
+    .propagate = 1,
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
     .filename = "/etc/passwd",
@@ -119,6 +120,7 @@ struct database_dyn dbs[lastdb] =
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
+    .propagate = 1,
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
     .filename = "/etc/group",
@@ -135,6 +137,7 @@ struct database_dyn dbs[lastdb] =
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
+    .propagate = 0,		/* Not used.  */
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
     .filename = "/etc/hosts",
@@ -1859,6 +1862,11 @@ begin_drop_privileges (void)
 static void
 finish_drop_privileges (void)
 {
+#if defined HAVE_LIBAUDIT && defined HAVE_LIBCAP
+  /* We need to preserve the capabilities to connect to the audit daemon.  */
+  cap_t new_caps = preserve_capabilities ();
+#endif
+
   if (setgroups (server_ngroups, server_groups) == -1)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
@@ -1878,6 +1886,11 @@ finish_drop_privileges (void)
       perror ("setuid");
       exit (4);
     }
+
+#if defined HAVE_LIBAUDIT && defined HAVE_LIBCAP
+  /* Remove the temporary capabilities.  */
+  install_real_capabilities (new_caps);
+#endif
 }
 
 /* Handle the HUP signal which will force a dump of the cache */

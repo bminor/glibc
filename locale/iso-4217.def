@@ -10,7 +10,7 @@
  */
 DEFINE_INT_CURR("ADP")		/* Andorran Peseta -> EUR  */
 DEFINE_INT_CURR("AED")		/* United Arab Emirates Dirham  */
-DEFINE_INT_CURR("AFA")		/* Afghanistan Afgani  */
+DEFINE_INT_CURR("AFN")		/* Afghanistan Afgani  */
 DEFINE_INT_CURR("ALL")		/* Albanian Lek  */
 DEFINE_INT_CURR("AMD")		/* Armenia Dram  */
 DEFINE_INT_CURR("ANG")		/* Netherlands Antilles  */
@@ -20,11 +20,11 @@ DEFINE_INT_CURR("ATS")		/* Austrian Schilling -> EUR  */
 DEFINE_INT_CURR("AUD")		/* Australian Dollar  */
 DEFINE_INT_CURR("AWG")		/* Aruba Guilder  */
 DEFINE_INT_CURR("AZM")		/* Azerbaijan Manat  */
-DEFINE_INT_CURR("BAK")		/* Bosnian and Herzegovina Convertible Mark  */
+DEFINE_INT_CURR("BAM")		/* Bosnian and Herzegovina Convertible Mark  */
 DEFINE_INT_CURR("BBD")		/* Barbados Dollar  */
 DEFINE_INT_CURR("BDT")		/* Bangladesh Taka  */
 DEFINE_INT_CURR("BEF")		/* Belgian Franc -> EUR  */
-DEFINE_INT_CURR("BGL")		/* Bulgarian Lev  */
+DEFINE_INT_CURR("BGN")		/* Bulgarian Lev  */
 DEFINE_INT_CURR("BHD")		/* Bahraini Dinar  */
 DEFINE_INT_CURR("BIF")		/* Burundi Franc  */
 DEFINE_INT_CURR("BMD")		/* Burmudian Dollar  */
@@ -86,6 +86,7 @@ DEFINE_INT_CURR("IQD")		/* Iraqi Dinar  */
 DEFINE_INT_CURR("IRR")		/* Iranian Rial  */
 DEFINE_INT_CURR("ISK")		/* Iceland Krona  */
 DEFINE_INT_CURR("ITL")		/* Italian Lira -> EUR  */
+DEFINE_INT_CURR("JEP")		/* Jersey Pound  */
 DEFINE_INT_CURR("JMD")		/* Jamaican Dollar  */
 DEFINE_INT_CURR("JOD")		/* Jordanian Dinar  */
 DEFINE_INT_CURR("JPY")		/* Japanese Yen  */
@@ -119,7 +120,7 @@ DEFINE_INT_CURR("MTL")		/* Maltese Lira  */
 DEFINE_INT_CURR("MUR")		/* Mauritius Rupee  */
 DEFINE_INT_CURR("MVR")		/* Maldives Rupee  */
 DEFINE_INT_CURR("MWK")		/* Malawi Kwacha  */
-DEFINE_INT_CURR("MXP")		/* Mexican Peso  */
+DEFINE_INT_CURR("MXN")		/* Mexican Peso  */
 DEFINE_INT_CURR("MYR")		/* Malaysian Ringgit  */
 DEFINE_INT_CURR("MZM")		/* Mozambique Metical  */
 DEFINE_INT_CURR("NAD")		/* Namibia Dollar  */
@@ -140,7 +141,8 @@ DEFINE_INT_CURR("PTE")		/* Portugese Escudo -> EUR  */
 DEFINE_INT_CURR("PYG")		/* Paraguay Guarani  */
 DEFINE_INT_CURR("QAR")		/* Qatar Rial  */
 DEFINE_INT_CURR("ROL")		/* Romanian Leu  */
-DEFINE_INT_CURR("RUR")		/* Russian Ruble  */
+DEFINE_INT_CURR("RON")		/* Romanian New Leu  */
+DEFINE_INT_CURR("RUB")		/* Russian Ruble  */
 DEFINE_INT_CURR("RWF")		/* Rwanda Franc  */
 DEFINE_INT_CURR("SAR")		/* Saudi Arabia Riyal  */
 DEFINE_INT_CURR("SBD")		/* Solomon Islands Dollar  */
@@ -160,7 +162,7 @@ DEFINE_INT_CURR("SVC")		/* El Salvador Colon  */
 DEFINE_INT_CURR("SYP")		/* Syrian Arab Republic Pound  */
 DEFINE_INT_CURR("SZL")		/* Swaziland Lilangeni  */
 DEFINE_INT_CURR("THB")		/* Thai Baht  */
-DEFINE_INT_CURR("TJR")		/* Tajikistani Ruble  */
+DEFINE_INT_CURR("TJS")		/* Tajikistani Somoni  */
 DEFINE_INT_CURR("TMM")		/* Turkmenistan Manet  */
 DEFINE_INT_CURR("TND")		/* Tunisian Dinar  */
 DEFINE_INT_CURR("TOP")		/* Tonga Pa'Anga  */
@@ -184,7 +186,6 @@ DEFINE_INT_CURR("XDR")		/* International Monetary Fund  */
 DEFINE_INT_CURR("XOF")		/* West African Franc (Benin, Ivory Coast, Niger, Senegal, Togo, Upper Volta)  */
 DEFINE_INT_CURR("XPF")		/* French polynesia, New Caledonia, Wallis and Futuna Islands  */
 DEFINE_INT_CURR("YER")		/* Yemeni Rial  */
-DEFINE_INT_CURR("YUM")		/* Yugoslavian New Dinar  */
 DEFINE_INT_CURR("ZAR")		/* South Africa Rand (Lesotho, Namibia)  */
 DEFINE_INT_CURR("ZMK")		/* Zambian Kwacha  */
 DEFINE_INT_CURR("ZWD")		/* Zimbabwe Dollar  */
