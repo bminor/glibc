@@ -1176,7 +1176,7 @@ cannot open /proc/self/cmdline: %s; disabling paranoia mode"),
   /* Second, change back to the old user if we changed it.  */
   if (server_user != NULL)
     {
-      if (setuid (old_uid) != 0)
+      if (setresuid (old_uid, old_uid, old_uid) != 0)
 	{
 	  dbg_log (_("\
 cannot change to old UID: %s; disabling paranoia mode"),
@@ -1186,7 +1186,7 @@ cannot change to old UID: %s; disabling paranoia mode"),
 	  return;
 	}
 
-      if (setgid (old_gid) != 0)
+      if (setresgid (old_gid, old_gid, old_gid) != 0)
 	{
 	  dbg_log (_("\
 cannot change to old GID: %s; disabling paranoia mode"),
@@ -1873,14 +1873,23 @@ finish_drop_privileges (void)
       error (EXIT_FAILURE, errno, _("setgroups failed"));
     }
 
-  if (setgid (server_gid) == -1)
+  int res;
+  if (paranoia)
+    res = setresgid (server_gid, server_gid, old_gid);
+  else
+    res = setgid (server_gid);
+  if (res == -1)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
       perror ("setgid");
       exit (4);
     }
 
-  if (setuid (server_uid) == -1)
+  if (paranoia)
+    res = setresuid (server_uid, server_uid, old_uid);
+  else
+    res = setuid (server_uid);
+  if (res == -1)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
       perror ("setuid");

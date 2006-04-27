@@ -1,9 +1,47 @@
+2006-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (restart): If we want to switch back to the
+	old ID use setresuid and setresgid.
+	(finish_drop_privileges): Likewise.
+
+2006-04-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd.conf: Fix a typo.
+
+2006-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2611]
+	* stdio-common/renameat.c (renameat): Fix typo.
+
 2006-04-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/connections.c (sighup_handler): Only run prune_cache on
 	enabled databases.
 
+2006-04-26  Roland McGrath  <roland@redhat.com>
+
+	* Makeconfig (%.v.i rule): Don't use -DASSEMBLER.
+	The predefined __ASSEMBLER__ is sufficient.
+
 2006-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1386]
+	* iconvdata/ibm932.c: Change mapping to allow round-trips.
+	* iconvdata/ibm943.c: Likewise.
+	Patch by Masahide Washizawa <WASHI@jp.ibm.com>.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add vmsplice.
+	* sysdeps/unix/sysv/linux/Versions: Export vmsplice@@GLIBC_2.5.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Declare vmsplice.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/bits/uio.h: Fix a typo in a comment.
 
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Fix typo which caused
 	bugs not to be reported.
