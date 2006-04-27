@@ -1,4 +1,4 @@
-%define glibcrelease 2
+%define glibcrelease 3
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -1389,6 +1389,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Apr 27 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-3
+- update from CVS
+  - fix a typo in nscd.conf (#190085)
+  - fix handling of SIGHUP in nscd when some caches are disabled (#189978)
+  - make nscd paranoia mode working with non-root server-user (#189779)
+
 * Wed Apr 26 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-2
 - update from CVS
   - fix getaddrinfo (#190002)
