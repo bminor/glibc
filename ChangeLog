@@ -1,3 +1,8 @@
+2006-04-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/connections.c (sighup_handler): Only run prune_cache on
+	enabled databases.
+
 2006-04-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Fix typo which caused

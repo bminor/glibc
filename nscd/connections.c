@@ -1897,13 +1897,16 @@ finish_drop_privileges (void)
 void
 sighup_handler (int signum)
 {
-    /* Prune the password database */
+  /* Prune the password database.  */
+  if (dbs[pwddb].enabled)
     prune_cache (&dbs[pwddb], LONG_MAX);
     
-    /* Prune the group database */
+  /* Prune the group database.  */
+  if (dbs[grpdb].enabled)
     prune_cache (&dbs[grpdb], LONG_MAX);
 
-    /* Prune the host database */
+  /* Prune the host database.  */
+  if (dbs[hstdb].enabled)
     prune_cache (&dbs[hstdb], LONG_MAX);
 }
 
