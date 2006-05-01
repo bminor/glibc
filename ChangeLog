@@ -1,3 +1,89 @@
+2006-04-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Move state change
+	notification...
+	(lose): ...to here.
+
+	* posix/Makefile (tests): Add tst-getaddrinfo3.
+	* posix/tst-getaddrinfo3.c: New file.
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Add parenthesis in test
+	for better readability.
+
+	* nscd/nscd.h (struct database_dyn): Change filename to an array
+	to avoid relocations.
+
+	* elf/ldd.bash.in: If --verify loop fails to find a dynamic linker
+	for the file don't just try the first one listed in RTLDLIST
+	again.  We already have the status.
+
+	* nis/nss_nisplus/nisplus-publickey.c (parse_grp_str): PIDLIST is
+	supposed to have NGRPS elements.
+
+	* nis/nss_nisplus/nisplus-parser.c: Minor optimizations and
+	cleanups.  Avoid copying data if it can be used in the old place.
+
+2006-04-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_nisplus/nisplus-ethers.c: Add missing null pointer check.
+	* nis/nss_nisplus/nisplus-hosts.c: Likewise.
+	* nis/nss_nisplus/nisplus-network.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus/nisplus-service.c: Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c: Likewise.
+
+	* nis/nisplus-parser.h (_nss_nisplus_parse_pwent): Add entry
+	parameter.
+	(_nss_nisplus_parse_pwent_chk): New prototype.
+	* nis/nss_nisplus/nisplus-parser.c (_nss_nisplus_parse_pwent):
+	Add entry parameter.  Use it for column value in all accesses.
+	Move checks for well-formed reply to...
+	(_nss_nisplus_parse_pwent_chk): ...here.  New function.
+	* nis/nss_nisplus/nisplus-pwd.c: Support SETENT_BATCH_READ option.
+
+	* nis/nss_nisplus/nisplus-parser.c: Some cleanups.  Remove
+	hidden_def definitions.
+	* nis/nisplus-parser.h: Add parameter names.  Remove hidden_proto
+	definitions.
+
+2006-04-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_nis/nis-spwd.c (internal_nis_getspent_r): Remove data
+	variable.
+
+	* nis/nss-nis.h: Define response_t and intern_t.  Declare _nis_saveit.
+	* nis/nss_nis/nis-pwd.c: Remove response_t and intern_t definition.
+	(saveit): Renamed to _nis_saveit.  Take parameter which is pointer
+	to the intern_t object.  Change all users.
+	* nis/nss_nis/nis-grp.c: Remove response_t, intern_t, and saveit
+	definition.  Use _nis_saveit instead of saveit.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/nss_nis/nis-initgroups.c: Likewise.
+	(internal_setgrent): Adjust for buffer handling.
+	(internal_getgrent_r): Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+
+	* nis/nss-default.c (vars): Add SETENT_BATCH_READ.
+	* nis/nss: Document SETENT_BATCH_READ.
+	* nis/libnsl.h: Define NSS_FLAG_SETENT_BATCH_READ.
+	* nis/nss_nis/nis-service.c (saveit): Don't add NUL byte if the
+	string is already NUL terminated.
+	(internal_nis_endservent): No need to return anything.  Change callers.
+	(internal_nis_setservent): One more initialization.
+	* nis/nss_nis/nis-pwd.c: Support SETENT_BATCH_READ option.
+	* nis/nss_nis/nis-grp.c: Likewise.
+
+	* nis/nss-default.c (init): Rewrite parser to get the variables
+	from a table.
+
+	* nis/nss_nis/nis-service.c: Avoid passing pointer to static
+	variable around.  Reduce number of memory allocations by creating
+	list of memory pools.
+
+	* nis/ypclnt.c (__xdr_ypresp_all): Minor optimization in string
+	handling.  Fix typo in comment.
+
 2006-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c (restart): If we want to switch back to the
