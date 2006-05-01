@@ -25,4 +25,4 @@
 #  memory with every getXXent() call.  Otherwise each getXXent() call
 #  might result into a network communication with the server to get
 #  the next entry.
-#SETENT_BATCH_READ=TRUE
+SETENT_BATCH_READ=TRUE
