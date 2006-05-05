@@ -1,4 +1,4 @@
-%define glibcrelease 5
+%define glibcrelease 6
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -1074,7 +1074,7 @@ cp crypt/README.ufc-crypt documentation/README.ufc-crypt
 cp timezone/README documentation/README.timezone
 cp ChangeLog{,.15,.16} documentation
 bzip2 -9 documentation/ChangeLog*
-cp ../posix/gai.conf documentation/
+cp posix/gai.conf documentation/
 
 %ifarch s390x
 # Compatibility symlink
@@ -1392,6 +1392,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri May  5 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-6
+- update from CVS
+- rebuilt using fixed rpm
+
 * Fri May  5 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-5
 - update from CVS
   - some NIS+ fixes
