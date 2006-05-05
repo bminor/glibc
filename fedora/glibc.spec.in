@@ -1,4 +1,4 @@
-%define glibcrelease 4
+%define glibcrelease 5
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -954,6 +954,8 @@ rm -f ${RPM_BUILD_ROOT}/%{_lib}/libnss-*.so.1
 # Ugly hack for buggy rpm
 ln -f ${RPM_BUILD_ROOT}%{_sbindir}/iconvconfig{,.%{_target_cpu}}
 
+rm -f $RPM_BUILD_ROOT/etc/gai.conf
+
 # BUILD THE FILE LIST
 find $RPM_BUILD_ROOT -type f -or -type l |
 	sed -e 's|.*/etc|%config &|' \
@@ -1070,8 +1072,9 @@ rm -rf documentation
 mkdir documentation
 cp crypt/README.ufc-crypt documentation/README.ufc-crypt
 cp timezone/README documentation/README.timezone
-cp ChangeLog{,.14,.15} documentation
+cp ChangeLog{,.15,.16} documentation
 bzip2 -9 documentation/ChangeLog*
+cp ../posix/gai.conf documentation/
 
 %ifarch s390x
 # Compatibility symlink
@@ -1389,6 +1392,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri May  5 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-5
+- update from CVS
+  - some NIS+ fixes
+  - allow overriding rfc3484 address sorting tables for getaddrinfo
+    through /etc/gai.conf (sample config file included in %%doc directory)
+
 * Mon May  1 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-4
 - update from CVS
   - SETENT_BATCH_READ /etc/default/nss option for speeding up
