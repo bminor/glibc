@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
@@ -31,13 +31,18 @@ static _Unwind_Reason_Code (*libgcc_s_forcedunwind)
 static _Unwind_Word (*libgcc_s_getcfa) (struct _Unwind_Context *);
 
 void
+__attribute_noinline__
 pthread_cancel_init (void)
 {
   void *resume, *personality, *forcedunwind, *getcfa;
   void *handle;
 
   if (__builtin_expect (libgcc_s_getcfa != NULL, 1))
-    return;
+    {
+      /* Force gcc to reload all values.  */
+      asm volatile ("" ::: "memory");
+      return;
+    }
 
   handle = __libc_dlopen ("libgcc_s.so.1");
 
@@ -68,6 +73,7 @@ _Unwind_Resume (struct _Unwind_Exception *exc)
 {
   if (__builtin_expect (libgcc_s_resume == NULL, 0))
     pthread_cancel_init ();
+
   libgcc_s_resume (exc);
 }
 
@@ -79,6 +85,7 @@ __gcc_personality_v0 (int version, _Unwind_Action actions,
 {
   if (__builtin_expect (libgcc_s_personality == NULL, 0))
     pthread_cancel_init ();
+
   return libgcc_s_personality (version, actions, exception_class,
 			       ue_header, context);
 }
@@ -89,6 +96,7 @@ _Unwind_ForcedUnwind (struct _Unwind_Exception *exc, _Unwind_Stop_Fn stop,
 {
   if (__builtin_expect (libgcc_s_forcedunwind == NULL, 0))
     pthread_cancel_init ();
+
   return libgcc_s_forcedunwind (exc, stop, stop_argument);
 }
 
@@ -97,5 +105,6 @@ _Unwind_GetCFA (struct _Unwind_Context *context)
 {
   if (__builtin_expect (libgcc_s_getcfa == NULL, 0))
     pthread_cancel_init ();
+
   return libgcc_s_getcfa (context);
 }

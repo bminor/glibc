@@ -267,8 +267,8 @@ res_nameinquery(const char *name, int type, int class,
 		cp += n;
 		if (cp + 2 * INT16SZ > eom)
 			return (-1);
-		ttype = ns_get16(cp); cp += INT16SZ;
-		tclass = ns_get16(cp); cp += INT16SZ;
+		NS_GET16(ttype, cp);
+		NS_GET16(tclass, cp);
 		if (ttype == type && tclass == class &&
 		    ns_samename(tname, name) == 1)
 			return (1);
@@ -292,9 +292,6 @@ int
 res_queriesmatch(const u_char *buf1, const u_char *eom1,
 		 const u_char *buf2, const u_char *eom2)
 {
-	const u_char *cp = buf1 + HFIXEDSZ;
-	int qdcount = ntohs(((HEADER*)buf1)->qdcount);
-
 	if (buf1 + HFIXEDSZ > eom1 || buf2 + HFIXEDSZ > eom2)
 		return (-1);
 
@@ -306,8 +303,16 @@ res_queriesmatch(const u_char *buf1, const u_char *eom1,
 	    (((HEADER *)buf2)->opcode == ns_o_update))
 		return (1);
 
-	if (qdcount != ntohs(((HEADER*)buf2)->qdcount))
+	/* Note that we initially do not convert QDCOUNT to the host byte
+	   order.  We can compare it with the second buffer's QDCOUNT
+	   value without doing this.  */
+	int qdcount = ((HEADER*)buf1)->qdcount;
+	if (qdcount != ((HEADER*)buf2)->qdcount)
 		return (0);
+
+	qdcount = htons (qdcount);
+	const u_char *cp = buf1 + HFIXEDSZ;
+
 	while (qdcount-- > 0) {
 		char tname[MAXDNAME+1];
 		int n, ttype, tclass;
@@ -318,8 +323,8 @@ res_queriesmatch(const u_char *buf1, const u_char *eom1,
 		cp += n;
 		if (cp + 2 * INT16SZ > eom1)
 			return (-1);
-		ttype = ns_get16(cp);	cp += INT16SZ;
-		tclass = ns_get16(cp); cp += INT16SZ;
+		NS_GET16(ttype, cp);
+		NS_GET16(tclass, cp);
 		if (!res_nameinquery(tname, ttype, tclass, buf2, eom2))
 			return (0);
 	}
@@ -669,7 +674,7 @@ send_vc(res_state statp,
 	/*
 	 * Send length & message
 	 */
-	putshort((u_short)buflen, (u_char*)&len);
+	ns_put16((u_short)buflen, (u_char*)&len);
 	evConsIovec(&len, INT16SZ, &iov[0]);
 	evConsIovec((void*)buf, buflen, &iov[1]);
 	if (TEMP_FAILURE_RETRY (writev(statp->_vcsock, iov, 2))
@@ -874,9 +879,12 @@ send_dg(res_state statp,
 	pfd[0].events = POLLOUT;
  wait:
 	if (need_recompute) {
+	recompute_resend:
 		evNowTime(&now);
 		if (evCmpTime(finish, now) <= 0) {
-			Perror(statp, stderr, "select", errno);
+		poll_err_out:
+			Perror(statp, stderr, "poll", errno);
+		err_out:
 			__res_iclose(statp, false);
 			return (0);
 		}
@@ -899,26 +907,18 @@ send_dg(res_state statp,
 		return (0);
 	}
 	if (n < 0) {
-		if (errno == EINTR) {
-		recompute_resend:
-			evNowTime(&now);
-			if (evCmpTime(finish, now) > 0) {
-				evSubTime(&timeout, &finish, &now);
-				goto wait;
-			}
-		}
-		Perror(statp, stderr, "poll", errno);
-		__res_iclose(statp, false);
-		return (0);
+		if (errno == EINTR)
+			goto recompute_resend;
+
+		goto poll_err_out;
 	}
 	__set_errno (0);
 	if (pfd[0].revents & POLLOUT) {
-		if (send(pfd[0].fd, (char*)buf, buflen, 0) != buflen) {
+		if (send (pfd[0].fd, buf, buflen, MSG_NOSIGNAL) != buflen) {
 			if (errno == EINTR || errno == EAGAIN)
 				goto recompute_resend;
 			Perror(statp, stderr, "send", errno);
-			__res_iclose(statp, false);
-			return (0);
+			goto err_out;
 		}
 		pfd[0].events = POLLIN;
 		++nwritten;
@@ -948,8 +948,7 @@ send_dg(res_state statp,
 				goto wait;
 			}
 			Perror(statp, stderr, "recvfrom", errno);
-			__res_iclose(statp, false);
-			return (0);
+			goto err_out;
 		}
 		*gotsomewhere = 1;
 		if (resplen < HFIXEDSZ) {
@@ -960,8 +959,7 @@ send_dg(res_state statp,
 			       (stdout, ";; undersized: %d\n",
 				resplen));
 			*terrno = EMSGSIZE;
-			__res_iclose(statp, false);
-			return (0);
+			goto err_out;
 		}
 		if (hp->id != anhp->id) {
 			/*
@@ -1039,8 +1037,7 @@ send_dg(res_state statp,
 		return (resplen);
 	} else if (pfd[0].revents & (POLLERR | POLLHUP | POLLNVAL)) {
 		/* Something went wrong.  We can stop trying.  */
-	  __res_iclose(statp, false);
-		return (0);
+		goto err_out;
 	}
 	else {
 	  	/* poll should not have returned > 0 in this case.  */

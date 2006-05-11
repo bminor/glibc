@@ -1,5 +1,5 @@
 /* POSIX.2 wordexp implementation.
-   Copyright (C) 1997-2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Tim Waugh <tim@cyberelk.demon.co.uk>.
 
@@ -166,6 +166,7 @@ w_addword (wordexp_t *pwordexp, char *word)
   /* Add a word to the wordlist */
   size_t num_p;
   char **new_wordv;
+  bool allocated = false;
 
   /* Internally, NULL acts like "".  Convert NULLs to "" before
    * the caller sees them.
@@ -175,6 +176,7 @@ w_addword (wordexp_t *pwordexp, char *word)
       word = __strdup ("");
       if (word == NULL)
 	goto no_space;
+      allocated = true;
     }
 
   num_p = 2 + pwordexp->we_wordc + pwordexp->we_offs;
@@ -186,6 +188,9 @@ w_addword (wordexp_t *pwordexp, char *word)
       pwordexp->we_wordv[pwordexp->we_offs + pwordexp->we_wordc] = NULL;
       return 0;
     }
+
+  if (allocated)
+    free (word);
 
 no_space:
   return WRDE_NOSPACE;
@@ -448,8 +453,7 @@ parse_glob (char **word, size_t *word_length, size_t *max_length,
   glob_list.we_offs = 0;
   for (; words[*offset] != '\0'; ++*offset)
     {
-      if ((ifs && strchr (ifs, words[*offset])) ||
-	  (!ifs && strchr (" \t\n", words[*offset])))
+      if (strchr (ifs, words[*offset]) != NULL)
 	/* Reached IFS */
 	break;
 
@@ -1162,9 +1166,8 @@ parse_comm (char **word, size_t *word_length, size_t *max_length,
 	return WRDE_NOSPACE;
     }
 
-  /* Premature end */
-  if (comm)
-    free (comm);
+  /* Premature end.  */
+  free (comm);
 
   return WRDE_SYNTAX;
 }
@@ -1425,8 +1428,7 @@ envsubst:
 			      &buffer[20], 10, 0);
 	  *word = w_addstr (*word, word_length, max_length, value);
 	  free (env);
-	  if (pattern)
-	    free (pattern);
+	  free (pattern);
 	  return *word ? 0 : WRDE_NOSPACE;
 	}
       /* Is it `$*' or `$@' (unquoted) ? */
@@ -1599,8 +1601,7 @@ envsubst:
 		      if (free_value)
 			free (value);
 
-		      if (expanded)
-			free (expanded);
+		      free (expanded);
 
 		      goto do_error;
 		    }
@@ -1620,8 +1621,7 @@ envsubst:
 		      if (free_value)
 			free (value);
 
-		      if (expanded)
-			free (expanded);
+		      free (expanded);
 
 		      goto do_error;
 		    }
@@ -1643,8 +1643,7 @@ envsubst:
 		goto no_space;
 	    }
 
-	  if (pattern)
-		  free (pattern);
+	  free (pattern);
 
 	  pattern = expanded;
 	}
@@ -1858,7 +1857,7 @@ envsubst:
 	      goto success;
 	    }
 
-	  if (free_value && value)
+	  if (free_value)
 	    free (value);
 
 	  value = pattern ? __strdup (pattern) : pattern;
@@ -1875,8 +1874,10 @@ envsubst:
 	}
     }
 
-  free (env); env = NULL;
-  free (pattern); pattern = NULL;
+  free (env);
+  env = NULL;
+  free (pattern);
+  pattern = NULL;
 
   if (seen_hash)
     {
@@ -1991,11 +1992,9 @@ syntax:
   error = WRDE_SYNTAX;
 
 do_error:
-  if (env)
-    free (env);
+  free (env);
 
-  if (pattern)
-    free (pattern);
+  free (pattern);
 
   return error;
 }
@@ -2265,7 +2264,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
    */
   ifs = getenv ("IFS");
 
-  if (!ifs)
+  if (ifs == NULL)
     /* IFS unset - use <space><tab><newline>. */
     ifs = strcpy (ifs_white, " \t\n");
   else
@@ -2273,18 +2272,15 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
       char *ifsch = ifs;
       char *whch = ifs_white;
 
-      /* Start off with no whitespace IFS characters */
-      ifs_white[0] = '\0';
-
       while (*ifsch != '\0')
 	{
-	  if ((*ifsch == ' ') || (*ifsch == '\t') || (*ifsch == '\n'))
+	  if (*ifsch == ' ' || *ifsch == '\t' || *ifsch == '\n')
 	    {
 	      /* Whitespace IFS.  See first whether it is already in our
 		 collection.  */
 	      char *runp = ifs_white;
 
-	      while (runp < whch && *runp != '\0' && *runp != *ifsch)
+	      while (runp < whch && *runp != *ifsch)
 		++runp;
 
 	      if (runp == whch)
@@ -2443,8 +2439,7 @@ do_error:
    *	set pwordexp members back to what they were.
    */
 
-  if (word != NULL)
-    free (word);
+  free (word);
 
   if (error == WRDE_NOSPACE)
     return WRDE_NOSPACE;

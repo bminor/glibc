@@ -1,3 +1,182 @@
+2006-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/tcgetattr.c (__tcgetattr): Only store
+	results if the call was succesful.
+
+	* nis/nss-nis.h: Mark __yperr2nss_tab and __yperr2nss_count as hidden.
+
+	* nis/nss-nisplus.h: Mark __niserr2nss_tab and __niserr2nss_count
+	as hidden.
+
+2006-05-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/queue.h: Remove uses of all QUEUEDEBUG_* macros.
+
+2006-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/wordexp.c (parse_glob): No need to check ifs for NULL, the
+	caller makes sure this is not the case.
+	(wordexp): Simplify ifs_white creation.  [Coverity CID 231]
+
+2006-05-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/wordexp.c: Remove numerous NULL pointer tests before FREE
+	calls.
+
+	* io/ftw.c (open_dir_stream): Return right away if REALLOC fails.
+	[Coverity CID 229, 230]
+
+	* argp/argp-help.c (hol_entry_help): Handle STATE==NULL in ARG and
+	DGETTEXT calls.
+	(hol_help): Likewise.  [Coverity CID 226, 227]
+
+	* string/argz-replace.c (__argz_replace): Unconditionally call
+	free on SRC.  [Coverity CID 225]
+
+	* nis/nis_creategroup.c (nis_creategroup): No need to duplicate
+	the return value of __nis_default_owner and __nis_default_group,
+	it has been especially allocated.  [Coverity CID 224]
+
+	* nis/nis_defaults.c (searchXYX): New functions.  Used by both
+	searchgroup and searchowner.  Significantly simplified.
+	(__nis_default_owner): Remove duplication.  Do not locally copy the
+	string before duplicating it.
+	(__nis_default_group): Likewise.
+
+	* nis/nis_lookup.c (nis_lookup): After calling nis_free_directory,
+	we must clear the variable before calling __nisfind_server.
+
+	* nis/nis_lookup.c (nis_lookup): Always free memory allocated with
+	nis_getnames.  [Coverity CID 223]
+
+	* locale/programs/locfile.c (locfile_read): Use alloca instead of
+	xmalloc to allocate local repertoire name.  [Coverity CID 222]
+
+	* iconv/iconv_charmap.c (use_to_charmap): No need to dynamically
+	allocate memory for the input to add_bytes.  [Coverity CID 221]
+
+	* posix/wordexp.c (w_addword): Free word if realloc fails and it
+	was allocated here.  [Coverity CID 219, 220]
+
+	* posix/getconf.c (print_all): Free confstr data after printing.
+	[Coverity CID 218]
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Free canon string if
+	list allocation fails.  [Coverity CID 215]
+
+	* nss/nsswitch.c (__nss_configure_lookup): Fix loop end condition.
+	[Coverity CID 213]
+
+	* argp/argp-help.c (hol_entry_cmp): Don't call canon_doc_option if
+	string is NULL.  [Coverity CID 212]
+	* argp/Makefile: Add rules to build and run bug-argp1.
+	* argp/bug-argp1.c: New file.
+
+	* io/ftw.c (ftw_dir): Use __rawmemchr instead of strchr to find
+	end of string.
+	* stdlib/canonicalize.c (__realpath): Likewise.
+
+	* locale/programs/ld-time.c (time_finish): Don't dereference NULL
+	pointer.  [Coverity CID 206]
+
+	* elf/dl-dst.h (DL_DST_REQUIRED): Be prepared for missing link map
+	in statically linked code.
+	* elf/dl-load.c (_dl_dst_substitute): When replacing ORIGIN in
+	statically built code, be prepared to have no link map.
+	[Coverity CID 205]
+
+	* argp/argp-help.c (fill_in_uparams): Handle STATE==NULL in
+	dgettext calls. [Coverity CID 204]
+
+	* argp/argp-help.c (struct uparams): Remove valid member.  Change
+	the one user.
+	(uparam_names): Reduce size.  Avoid relative relocations.
+	Moved to read-only segment.
+	(fill_in_uparams): Update for new layout.
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs): Parameter can be
+	assumed to always be != NULL. [Coverity CID 202]
+
+	* argp/argp-help.c (hol_entry_help): Remove some dead code
+	[Coverity CID 200].
+
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyport_r): Optimize
+	away a few more unconditional yperr2nss calls.
+	(_nss_nis_getservbyname_r): Likewise.
+
+2006-05-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h: Remove support for non-core
+	architectures.
+
+	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Make sure
+	that unused memory passed to sendto is nevertheless initialized.
+
+	[BZ #2499]
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Avoid
+	possibly unaligned memory accesses.
+
+	* include/arpa/nameser.h: Also optimize NS_PUT16 and NS_PUT32.
+	* resolv/res_mkquery.c: Use NS_PUT16 and NS_PUT32 instead of __putshort
+	and __putlong respectively.  Correct buffer overflow check for
+	NS_NOTIFY_OP.
+
+	* resolv/res_send.c (send_vc): Use ns_put16 instead of putshort.
+
+	* resolv/res_send.c (res_queriesmatch): Fix typo in comment.
+	(send_dg): Rewrite error handling to be more compact and avoid
+	double recomputation of timeouts.  Pass MSG_NOSIGNAL to send.
+
+	* include/arpa/nameser.h: Add optimizations for NS_GET16 and NS_GET32.
+
+	* resolv/res_send.c (res_nameinquery): Use NS_GET16 directly
+	instead of ns_get16.
+	(res_queriesmatch): Likewise.  Minor optimization.
+
+	[BZ #2499]
+	* resolv/res_query.c (__libc_res_nquery): If answerp != NULL,
+	__libc_res_nsend might reallocate the buffer for the answer.  In
+	this case we have to reload the HP pointer.
+
+2006-05-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c (memory_error): Remove definition.  Add
+	some branch prediction hints.
+
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Define SPLICE_F_*.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+
+2006-05-05  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-32/elf/start.S: Replace pc relative relocation
+	by a GOT relocation to make Scrt1.o position independent.
+	* sysdeps/s390/s390-64/elf/start.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscall.S: Add support for
+	six system call parameters.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscall.S: Likewise.
+
+2006-05-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/svcauth_des.c (cache_init): Use calloc instead of
+	malloc&bzero.
+
+	* sunrpc/svc_udp.c (BZERO): Remove definition.
+	(CALLOC): Define.
+	(svc_enablecache): Use CALLOC instead of ALLOC&BZERO.
+
+	* sunrpc/des_impl.c: Remove ALT_ECB support.  We never used it.
+	(des_SPtrans): Use uint32_t type.
+	(des_skb): Likewise.
+
+	* sunrpc/xdr_ref.c (xdr_reference): Use calloc instead of malloc&bzero.
+
 2006-05-05  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #2509]
@@ -7,7 +186,7 @@
 2006-05-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-address.c (address_finish): Fix one more
-	place where the iso639 array might be access beyond the limits.
+	place where the iso639 array might be accessed beyond the limits.
 
 2006-05-04  Ulrich Drepper  <drepper@redhat.com>
 
