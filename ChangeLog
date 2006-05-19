@@ -1,3 +1,177 @@
+2006-05-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_callback.c (__nis_create_callback): Calls to
+	svcudp_bufcreate and svctcp_create can fail.  Free ->xprt if
+	asprintf call fails.
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_sendreq): Make sure
+	no uninitialized memory is passed to sendto.
+
+2006-05-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_callback.c (__nis_create_callback): Use asprinf instead
+	of snprintf+strdup.  Handle OOM.
+	* nis/nis_callback.c (__nis_create_callback): Allocate cb and
+	cb->serv together.  Remove now obsolete free calls.
+	(__nis_destroy_callback): Remove now obsolete free call.
+
+2006-05-18  David Woodhouse  <dwmw2@infradead.org>
+
+	* sysdeps/posix/getaddrinfo.c: Add unique labels to the default
+	RFC3484 precedence table for fec0::/10 and fc00::/7 (site-local
+	and ULA respectively). Set precedence for IPv4 address to 10 as
+	defined in RFC3484 for preferring IPv6.
+	* posix/gai.conf: Update to match the new default tables.
+
+2006-05-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nss_compat/compat-pwd.c (internal_setpwent): If nss_set*ent
+	returned NSS_STATUS_UNAVAIL, still return NSS_STATUS_SUCCESS.
+	* nis/nss_compat/compat-spwd.c (internal_setspent): Likewise.
+	* nis/nss_compat/compat-grp.c (internal_setgrent): Likewise.
+
+	* nis/nss_compat/compat-initgroups.c (nss_setgrent, nss_endgrent):
+	Removed.
+	(init_nss_interface): Remove initialization of these variables.
+
+2006-05-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_call.c (rec_dirsearch): Little optimization: pull
+	nis_free_directory forward to avoid duplication.
+
+2006-05-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_call.c (rec_dirsearch): Handle __nis_finddirectory and
+	rec_dirsearch returning NULL.
+	(first_shoot): Handle __nis_finddirectory returning NULL.
+	(__nisfind_server): Fix leak when rec_dirsearch returns NULL.
+
+	* sysdeps/unix/sysv/linux/sys/inotify.h: Define IN_CLOSE, IN_MOVE,
+	IN_ONLYDIR, IN_DONT_FOLLOW, and IN_MASK_ADD.
+
+2006-05-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/key_call.c (getkeyserv_handle): Call auth_destroy if
+	pid changed.
+
+2006-05-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/rpc/pmap_prot.h: Mark all functions as hidden.
+
+	* nscd/nscd_initgroups.c: Mark __gr_map_handle as hidden.
+	* nscd/nscd_getgr_r.c: Likewise.
+
+	* include/rpc/pmap_rmt.h: Mark all functions as hidden.
+
+	* nscd/nscd_getai.c (__hst_map_handle): Mark as hidden.
+	* nscd/nscd_gethst_r.c (__hst_map_handle): Likewise.
+
+	* stdlib/longlong.h (__clz_tab): Mark as hidden.
+
+	* iconv/gconv_int.h: Mark __gconv_lock as hidden.
+
+	* include/rpc/key_prot.h: Mark all _internal functions as hidden.
+
+	* include/rpc/auth.h: Mark xdr_des_block_internal and
+	xdr_opaque_auth_internal as hidden.
+
+	* sysdeps/unix/sysv/linux/getdents.c: Mark __have_no_getdents64 as
+	hidden.
+
+	* include/rpc/xdr.h: Mark all _internal functions as hidden.
+
+	* misc/getusershell.c (okshells): Don't use static initializers,
+	do it dynamically.
+
+	* stdlib/fmtmsg.c (keywords): Change type of len element to
+	uint32_t to not waste space on 64bit machines.
+
+	* locale/setlocale.c: Change _nl_category_names into a string.
+	Add new _nl_category_name_idxs.  Change all users.
+	* locale/localeinfo.h: Adjust declaration of _nl_category_names.
+	Declare _nl_category_name_idxs.
+	* locale/findlocale.c: Adjust for _nl_category_names change.
+	* locale/loadlocale.c: Likewise.
+	* locale/newlocale.c: Likewise.
+	* intl/dcigettext.c: Likewise.
+
+	* iconv/gconv_conf.c (add_alias): Move actual alias handling to...
+	(add_alias2): ...here.  New function.
+	(__gconv_read_conf): Simplify builtin alias handling.
+	(builtin_aliases): Convert to string to avoid relocations.
+	* iconv/gconv_builtin.h: Add comment about correct formatting.
+
+2006-05-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/res_debug.c (loc_ntoa): Make error const.
+
+2006-05-14  Andreas Schwab  <schwab@suse.de>
+
+	* math/complex.h [__LDBL_COMPAT]: Use __REDIRECT_NTH.
+
+2006-05-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sched_getaffinity.c: Include sys/param.h.
+	(__sched_getaffinity_new): Don't crash if cpusetsize is smaller than
+	sizeof (cpu_set_t).
+
+2006-05-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_debug.c (loc_ntoa): Define error as array, not pointer.
+
+	* include/arpa/nameser.h: Declare _ns_flagdata as hidden.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypresp_master.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypresp_master.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypbind_resp.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypbind_resp.
+
+	* nis/nis_xdr.c: Add libnsl_hidden_def for xdr_cback_data.
+	* include/rpcsvc/nis_callback.h: Add libnsl_hidden_proto for
+	xdr_cback_data.
+
+	* nis/ypupdate_xdr.c: Add libnsl_hidden_def for xdr_ypupdate_args.
+	* include/rpcsvc/ypupd.h: Add libnsl_hidden_proto for
+	xdr_ypupdate_args.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypresp_order.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypresp_order.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypresp_maplist.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypresp_maplist.
+
+	* nis/nis_xdr.c: Add libnsl_hidden_def for xdr_obj_p.
+	* include/rpcsvc/nis_callback.h: New file.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypresp_val.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypresp_val.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypreq_nokey.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypreq_nokey.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypmaplist.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypmaplist.
+
+	* nis/yp_xdr.c: Add libnsl_hidden_def for xdr_ypreq_nokey.
+	* include/rpcsvc/yp.h: Add libnsl_hidden_proto for xdr_ypreq_nokey.
+
+	* nis/ypupdate_xdr.c: Add libnsl_hidden_def for xdr_ypdelete_args.
+	* include/rpcsvc/ypupd.h: Add libnsl_hidden_proto for
+	xdr_ypdelete_args.
+
+	* nis/nis_xdr.h: Mark all functions as hidden.  Remove
+	__BEGIN_DECLS and __END_DECLS, the header is not installed.
+
+	* nis/nis_error.c: Remove table of strings.  Use position
+	independent mechanism.
+	* nis/nis_error.h: New file.
+
+2006-05-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/ld-time.c (time_finish): If wide era name or
+	format aren't provided, set both wname and wformat to L"".
+
 2006-05-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/tcgetattr.c (__tcgetattr): Only store

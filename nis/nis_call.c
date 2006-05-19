@@ -368,6 +368,12 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	   domain ! (Now I understand why a root server must be a
 	   replica of the parent domain) */
 	fd_res = __nis_finddirectory (dir, ndomain);
+	if (fd_res == NULL)
+	  {
+	    nis_free_directory (dir);
+	    *status = NIS_NOMEMORY;
+	    return NULL;
+	  }
 	*status = fd_res->status;
 	if (fd_res->status != NIS_SUCCESS)
 	  {
@@ -375,27 +381,25 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	    __free_fdresult (fd_res);
 	    return dir;
 	  }
+	nis_free_directory (dir);
 	obj = calloc (1, sizeof (directory_obj));
+	if (obj == NULL)
+	  {
+	    __free_fdresult (fd_res);
+	    *status = NIS_NOMEMORY;
+	    return NULL;
+	  }
 	xdrmem_create (&xdrs, fd_res->dir_data.dir_data_val,
 		       fd_res->dir_data.dir_data_len, XDR_DECODE);
 	_xdr_directory_obj (&xdrs, obj);
 	xdr_destroy (&xdrs);
 	__free_fdresult (fd_res);
-	if (obj != NULL)
-	  {
-	    /* We have found a NIS+ server serving ndomain, now
-	       let us search for "name" */
-	    nis_free_directory (dir);
-	    return rec_dirsearch (name, obj, status);
-	  }
-	else
-	  {
-	    /* Ups, very bad. Are we already the root server ? */
-	    nis_free_directory (dir);
-	    return NULL;
-	  }
+
+	/* We have found a NIS+ server serving ndomain, now
+	   let us search for "name" */
+	return rec_dirsearch (name, obj, status);
       }
-    break;
+      break;
     case LOWER_NAME:
       {
 	directory_obj *obj;
@@ -433,6 +437,12 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	strcpy (cp, domain);
 
 	fd_res = __nis_finddirectory (dir, leaf);
+	if (fd_res == NULL)
+	  {
+	    nis_free_directory (dir);
+	    *status = NIS_NOMEMORY;
+	    return NULL;
+	  }
 	*status = fd_res->status;
 	if (fd_res->status != NIS_SUCCESS)
 	  {
@@ -440,21 +450,24 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	    __free_fdresult (fd_res);
 	    return dir;
 	  }
-	obj = calloc(1, sizeof(directory_obj));
-	xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
-		      fd_res->dir_data.dir_data_len, XDR_DECODE);
-	_xdr_directory_obj(&xdrs, obj);
-	xdr_destroy(&xdrs);
-	__free_fdresult (fd_res);
-	if (obj != NULL)
+	nis_free_directory (dir);
+	obj = calloc (1, sizeof(directory_obj));
+	if (obj == NULL)
 	  {
-	    /* We have found a NIS+ server serving ndomain, now
-	       let us search for "name" */
-	    nis_free_directory (dir);
-	    return rec_dirsearch (name, obj, status);
+	    __free_fdresult (fd_res);
+	    *status = NIS_NOMEMORY;
+	    return NULL;
 	  }
+	xdrmem_create (&xdrs, fd_res->dir_data.dir_data_val,
+		       fd_res->dir_data.dir_data_len, XDR_DECODE);
+	_xdr_directory_obj (&xdrs, obj);
+	xdr_destroy (&xdrs);
+	__free_fdresult (fd_res);
+	/* We have found a NIS+ server serving ndomain, now
+	   let us search for "name" */
+	return rec_dirsearch (name, obj, status);
       }
-    break;
+      break;
     case BAD_NAME:
       nis_free_directory (dir);
       *status = NIS_BADNAME;
@@ -484,6 +497,8 @@ first_shoot (const_nis_name name, directory_obj *dir)
     return dir;
 
   fd_res = __nis_finddirectory (dir, domain);
+  if (fd_res == NULL)
+    return NULL;
   if (fd_res->status == NIS_SUCCESS
       && (obj = calloc (1, sizeof (directory_obj))) != NULL)
     {
@@ -513,28 +528,30 @@ __nisfind_server (const_nis_name name, directory_obj **dir)
     dir = __nis_cache_search (name, flags, &cinfo);
 #endif
 
+  nis_error result = NIS_SUCCESS;
   if (*dir == NULL)
     {
       nis_error status;
       directory_obj *obj;
 
       *dir = readColdStartFile ();
-      if (*dir == NULL) /* No /var/nis/NIS_COLD_START->no NIS+ installed */
+      if (*dir == NULL)
+	/* No /var/nis/NIS_COLD_START->no NIS+ installed.  */
 	return NIS_UNAVAIL;
 
       /* Try at first, if servers in "dir" know our object */
       obj = first_shoot (name, *dir);
       if (obj == NULL)
 	{
-	  *dir = rec_dirsearch (name, *dir, &status);
-	  if (*dir == NULL)
-	    return status;
+	  obj = rec_dirsearch (name, *dir, &status);
+	  if (obj == NULL)
+	    result = status;
 	}
-      else
-	*dir = obj;
+
+      *dir = obj;
     }
 
-  return NIS_SUCCESS;
+  return result;
 }
 
 nis_error

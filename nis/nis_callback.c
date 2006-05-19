@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,1999,2000,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -275,15 +275,14 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
   int sock = RPC_ANYSOCK;
   struct sockaddr_in sin;
   socklen_t len = sizeof (struct sockaddr_in);
-  char addr[NIS_MAXNAMELEN + 1];
   unsigned short port;
+  int nomsg = 0;
 
-  cb = (struct nis_cb *) calloc (1, sizeof (struct nis_cb));
+  cb = (struct nis_cb *) calloc (1,
+				 sizeof (struct nis_cb) + sizeof (nis_server));
   if (__builtin_expect (cb == NULL, 0))
     goto failed;
-  cb->serv = (nis_server *) calloc (1, sizeof (nis_server));
-  if (__builtin_expect (cb->serv == NULL, 0))
-    goto failed;
+  cb->serv = (nis_server *) (cb + 1);
   cb->serv->name = strdup (nis_local_principal ());
   if (__builtin_expect (cb->serv->name == NULL, 0))
     goto failed;
@@ -326,15 +325,20 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
   cb->serv->ep.ep_val[0].proto = strdup ((flags & USE_DGRAM) ? "udp" : "tcp");
   if (__builtin_expect (cb->serv->ep.ep_val[0].proto == NULL, 0))
     goto failed;
-  cb->xprt = (flags & USE_DGRAM) ? svcudp_bufcreate (sock, 100, 8192) :
-				   svctcp_create (sock, 100, 8192);
+  cb->xprt = ((flags & USE_DGRAM)
+	      ? svcudp_bufcreate (sock, 100, 8192)
+	      : svctcp_create (sock, 100, 8192));
+  if (cb->xprt == NULL)
+    {
+      nomsg = 1;
+      goto failed;
+    }
   cb->sock = cb->xprt->xp_sock;
   if (!svc_register (cb->xprt, CB_PROG, CB_VERS, cb_prog_1, 0))
     {
       xprt_unregister (cb->xprt);
       svc_destroy (cb->xprt);
       xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
-      free (cb->serv);
       free (cb);
       syslog (LOG_ERR, "NIS+: failed to register callback dispatcher");
       return NULL;
@@ -345,30 +349,31 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
       xprt_unregister (cb->xprt);
       svc_destroy (cb->xprt);
       xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
-      free (cb->serv);
       free (cb);
       syslog (LOG_ERR, "NIS+: failed to read local socket info");
       return NULL;
     }
   port = ntohs (sin.sin_port);
   get_myaddress (&sin);
-  snprintf (addr, sizeof (addr), "%s.%d.%d", inet_ntoa (sin.sin_addr),
-	    (port & 0xFF00) >> 8, port & 0x00FF);
-  cb->serv->ep.ep_val[0].uaddr = strdup (addr);
+
+  if (asprintf (&cb->serv->ep.ep_val[0].uaddr, "%s.%d.%d",
+		inet_ntoa (sin.sin_addr), (port & 0xFF00) >> 8, port & 0x00FF)
+      < 0)
+    goto failed;
 
   return cb;
 
  failed:
   if (cb)
     {
+      if (cb->xprt)
+	svc_destroy (cb->xprt);
       if (cb->serv)
-	{
-	  xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
-	  free (cb->serv);
-	}
+	xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
       free (cb);
     }
-  syslog (LOG_ERR, "NIS+: out of memory allocating callback");
+  if (!nomsg)
+    syslog (LOG_ERR, "NIS+: out of memory allocating callback");
   return NULL;
 }
 
@@ -379,7 +384,6 @@ __nis_destroy_callback (struct nis_cb *cb)
   svc_destroy (cb->xprt);
   close (cb->sock);
   xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
-  free (cb->serv);
   free (cb);
 
   return NIS_SUCCESS;

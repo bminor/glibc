@@ -1,4 +1,4 @@
-%define glibcrelease 7
+%define glibcrelease 8
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define prelinkarches noarch
 %define xenarches i686 athlon
@@ -1392,6 +1392,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri May 19 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-8
+- update from CVS
+  - fix nss_compat when SETENT_BATCH_READ=TRUE is in /etc/default/nss
+  - fix RFC3484 precedence table for site-local and ULA addresses (#188364)
+  - fix a sunrpc memory leak
+
 * Thu May 11 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-7
 - update from CVS
   - fix tcgetattr (#177965)
