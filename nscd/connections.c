@@ -100,6 +100,7 @@ struct database_dyn dbs[lastdb] =
 {
   [pwddb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .prunelock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -117,6 +118,7 @@ struct database_dyn dbs[lastdb] =
   },
   [grpdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .prunelock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -134,6 +136,7 @@ struct database_dyn dbs[lastdb] =
   },
   [hstdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .prunelock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -813,9 +816,10 @@ close_sockets (void)
 
 
 static void
-invalidate_cache (char *key)
+invalidate_cache (char *key, int fd)
 {
   dbtype number;
+  int32_t resp;
 
   if (strcmp (key, "passwd") == 0)
     number = pwddb;
@@ -829,10 +833,19 @@ invalidate_cache (char *key)
       res_init ();
     }
   else
-    return;
+    {
+      resp = EINVAL;
+      writeall (fd, &resp, sizeof (resp));
+      return;
+    }
 
   if (dbs[number].enabled)
-    prune_cache (&dbs[number], LONG_MAX);
+    prune_cache (&dbs[number], LONG_MAX, fd);
+  else
+    {
+      resp = 0;
+      writeall (fd, &resp, sizeof (resp));
+    }
 }
 
 
@@ -1089,7 +1102,7 @@ cannot handle old request version %d; current version is %d"),
       else if (uid == 0)
 	{
 	  if (req->type == INVALIDATE)
-	    invalidate_cache (key);
+	    invalidate_cache (key, fd);
 	  else
 	    termination_handler (0);
 	}
@@ -1435,7 +1448,7 @@ handle_request: request received (Version = %d)"), req.version);
 	  /* The pthread_cond_timedwait() call timed out.  It is time
 		 to clean up the cache.  */
 	  assert (my_number < lastdb);
-	  prune_cache (&dbs[my_number], time (NULL));
+	  prune_cache (&dbs[my_number], time (NULL), -1);
 
 	  if (clock_gettime (timeout_clock, &prune_ts) == -1)
 	    /* Should never happen.  */
@@ -1908,14 +1921,14 @@ sighup_handler (int signum)
 {
   /* Prune the password database.  */
   if (dbs[pwddb].enabled)
-    prune_cache (&dbs[pwddb], LONG_MAX);
+    prune_cache (&dbs[pwddb], LONG_MAX, -1);
     
   /* Prune the group database.  */
   if (dbs[grpdb].enabled)
-    prune_cache (&dbs[grpdb], LONG_MAX);
+    prune_cache (&dbs[grpdb], LONG_MAX, -1);
 
   /* Prune the host database.  */
   if (dbs[hstdb].enabled)
-    prune_cache (&dbs[hstdb], LONG_MAX);
+    prune_cache (&dbs[hstdb], LONG_MAX, -1);
 }
 

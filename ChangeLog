@@ -1,3 +1,75 @@
+2006-05-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd.h (prune_cache): Add fd argument to prototype.
+	* nscd/nscd.c (parse_opt): Read response from INVALIDATE request
+	to make sure the database has been already invalidated.
+	* nscd/cache.c (prune_cache): Add fd argument.  Write response to fd
+	after the cache has been invalidated.  Use pthread_mutex_lock rather
+	than pthread_mutex_trylock if fd != -1.
+	* nscd/connections.c (invalidate_cache): Add fd argument, write
+	response to fd if not calling prune_cache, pass fd to prune_cache.
+	(handle_request): Adjust invalidate_cache caller.
+	(nscd_run): Pass -1 as fd to prune_cache.
+
+2006-05-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaiconf_init): Initialize bits in
+	the correct place.
+
+2006-05-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.h (struct database_dyn): Add prunelock field.
+	* nscd/cache.c (prune_cache): Take prunelock before starting the
+	work.  Just return in case it is already taken.
+	* nscd/connections.c (dbs): Initialize .prunelock.
+
+2006-05-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_removemember.c (nis_removemember): Avoid unnecessary
+	copying.  No need to allocate new array for group members.  Just
+	move the pointers and update the size.
+
+	* nis/nis_addmember.c (nis_addmember): Avoid unnecessary copying.
+	Avoid memory leak in case realloc fails.  Simplification for
+	better code generation.
+
+	Avoid deprecation warning because of libc_hidden_proto for
+	inet6_option_alloc.
+	* inet/inet6_option.c (option_alloc): Renamed from
+	inet6_option_alloc.  Made static.
+	(inet6_option_alloc): Now a simple wrapper around option_alloc.
+	(inet6_option_append): Call option_alloc.
+	* include/netinet/in.h: Remove libc_hidden_proto for
+	inet6_option_alloc.
+
+	* nis/nis_callback.c (__nis_create_callback): Always call xdr_free
+	for cleanup when cb!=NULL [Coverity CID 233].
+
+2006-05-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2693]
+	* inet/Makefile (routines): Add inet6_opt and inet6_rth.
+	* inet/Versions (libc, GLIBC_2.5): Add inet6_opt_init,
+	inet6_opt_append, inet6_opt_finish, inet6_opt_set_val, inet6_opt_next,
+	inet6_opt_find, inet6_opt_get_val, inet6_rth_space, inet6_rth_init,
+	inet6_rth_add, inet6_rth_reverse, inet6_rth_segments,
+	and inet6_rth_getaddr.
+	* inet/netinet/ip6.h (struct ip6_rthdr0): Make ip6r0_addr a flexible
+	array.
+	* inet/netinet/in.h (struct ip6_mtuinfo): Define.
+	Mark inet6_option_* interfaces as deprecated.
+	Declare inet6_opt_init, inet6_opt_append, inet6_opt_finish,
+	inet6_opt_set_val, inet6_opt_next, inet6_opt_find, inet6_opt_get_val,
+	inet6_rth_space, inet6_rth_init, inet6_rth_add, inet6_rth_reverse,
+	inet6_rth_segments, and inet6_rth_getaddr.
+	* inet/inet6_opt.c: New file.
+	* inet/inet6_rth.c: New file.
+
+	* inet/netinet/icmp6.h: Pretty printing.
+
+	[BZ #2683]
+	* elf/dl-addr.c (_dl_addr): Don't match undefined references.
+
 2006-05-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_lookup.c (nis_lookup): Use __prepare_niscall instead of
