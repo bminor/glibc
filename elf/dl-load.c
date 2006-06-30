@@ -1846,7 +1846,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 		 auditing code.  We must try to disturb the program as
 		 little as possible.  */
 	      else if (loader == NULL
-		       || GL(dl_ns)[loader->l_ns]._ns_loaded->l_audit == 0)
+		       || GL(dl_ns)[loader->l_ns]._ns_loaded->l_auditing == 0)
 		{
 		  /* We failed to open machine dependent library.  Let's
 		     test whether there is any directory at all.  */
@@ -2030,25 +2030,34 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
          RPATHs.  */
       if (loader == NULL || loader->l_info[DT_RUNPATH] == NULL)
 	{
+	  /* This is the executable's map (if there is one).  Make sure that
+	     we do not look at it twice.  */
+	  struct link_map *main_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+	  bool did_main_map = false;
+
 	  /* First try the DT_RPATH of the dependent object that caused NAME
 	     to be loaded.  Then that object's dependent, and on up.  */
-	  for (l = loader; fd == -1 && l; l = l->l_loader)
+	  for (l = loader; l; l = l->l_loader)
 	    if (cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
-	      fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
-			      &realname, &fb, loader, LA_SER_RUNPATH,
-			      &found_other_class);
+	      {
+		fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
+				&realname, &fb, loader, LA_SER_RUNPATH,
+				&found_other_class);
+		if (fd != -1)
+		  break;
+
+		did_main_map |= l == main_map;
+	      }
 
 	  /* If dynamically linked, try the DT_RPATH of the executable
              itself.  NB: we do this for lookups in any namespace.  */
-	  if (fd == -1)
-	    {
-	      l = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
-	      if (l && l->l_type != lt_loaded && l != loader
-		  && cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
-		fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
-				&realname, &fb, loader ?: l, LA_SER_RUNPATH,
-				&found_other_class);
-	    }
+	  if (fd == -1 && !did_main_map
+	      && main_map != NULL && main_map->l_type != lt_loaded
+	      && cache_rpath (main_map, &main_map->l_rpath_dirs, DT_RPATH,
+			      "RPATH"))
+	    fd = open_path (name, namelen, preloaded, &main_map->l_rpath_dirs,
+			    &realname, &fb, loader ?: main_map, LA_SER_RUNPATH,
+			    &found_other_class);
 	}
 
       /* Try the LD_LIBRARY_PATH environment variable.  */

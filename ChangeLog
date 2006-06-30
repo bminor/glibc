@@ -1,3 +1,70 @@
+2006-06-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (open_path): Fix test to determine whether DSO is
+	auditing.
+
+	* elf/dl-load.c (_dl_map_object): Try harder to avoid looking at
+	RPATH of main map twice.
+
+2006-06-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/dcigettext.c (DCIGETTEXT): If _nl_find_msg returns -1 don't
+	look further, return original strings.
+	(_nl_find_msg): Do not return found translation if the conversion
+	failed.  Either signal the string is unusable or that something went
+	wrong and the original should be used.
+
+2006-06-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/_strerror.c (__strerror_r): Add __builtin_expect.
+
+2006-06-14  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #2766]
+	* misc/insremque.c (insque): Handle prev == NULL.
+	* misc/Makefile (tests): Add tst-insremque.
+	* misc/tst-insremque.c: New test.
+
+2006-06-17  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2792]
+	* elf/dl-deps.c (expand_dst): Rename __cnt variable to not
+	conflict with DL_DST_REQUIRED.
+
+2006-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_subr.c (nis_getnames): Fix the implementation to better
+	match what Solaris does.
+
+2006-06-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/spawni.c (__spawni): Use local_seteuid and
+	local_setegid instead of seteuid and setegid.
+	* sysdeps/generic/local-setxid.h: New file.
+	* sysdeps/unix/sysv/linux/local-setxid.h: New file.
+
+	* sysdeps/posix/spawni.c (__spawni): Use non-cancelable interfaces.
+
+	* string/Makefile (tests): Add bug-envz1.
+	* string/bug-envz1.c: New file.
+
+2006-06-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.c (re_string_skip_chars): If no character has
+	been converted at all, set *last_wc to WEOF.  If mbrtowc failed, set wc
+	to the byte which couldn't be converted.
+	(re_string_reconstruct): Don't clear valid_raw_len before calling
+	re_string_skip_chars.  If wc is WEOF after re_string_skip_chars, set
+	tip_context using re_string_context_at.
+	* posix/Makefile: Add rules to build and run bug-regex25 test.
+	* posix/bug-regex25.c: New test.
+
+2006-06-02  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #2703]
+	* string/envz.c (envz_strip): Correct erroneously reversed src
+	and dest parameters to memmove() invocation.
+
 2006-05-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/nscd.h (prune_cache): Add fd argument to prototype.

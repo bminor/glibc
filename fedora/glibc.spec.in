@@ -1,6 +1,5 @@
-%define glibcrelease 11
+%define glibcrelease 12
 %define auxarches i586 i686 athlon sparcv9 alphaev6
-%define prelinkarches noarch
 %define xenarches i686 athlon
 %ifarch %{xenarches}
 %define buildxen 1
@@ -41,10 +40,7 @@ Prereq: basesystem, libgcc
 # This is for building auxiliary programs like memusage, nscd
 # For initial glibc bootstraps it can be commented out
 BuildPreReq: gd-devel libpng-devel zlib-devel texinfo, libselinux-devel >= 1.17.10-1
-BuildPreReq: audit-libs-devel >= 1.1.3, sed >= 3.95, libcap-devel
-%ifarch %{prelinkarches}
-BuildPreReq: prelink >= 0.2.0-5
-%endif
+BuildPreReq: audit-libs-devel >= 1.1.3, sed >= 3.95, libcap-devel, gettext
 # This is to ensure that __frame_state_for is exported by glibc
 # will be compatible with egcs 1.x.y
 BuildPreReq: gcc >= 3.2
@@ -719,11 +715,6 @@ cat > override_headers/asm/unistd.h <<EOF
 #ifndef __NR_vmsplice
 #define __NR_vmsplice		278
 #endif
-%endif
-%ifnarch %{ix86} x86_64
-/* FIXME: Reenable it when the kernel side is more stable.  */
-#undef __NR_newfstatat
-#undef __NR_fstatat64
 %endif
 #endif
 EOF
@@ -1439,6 +1430,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Jun 30 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-12
+- buildrequire gettext
+- enable fstatat64/newfstatat syscalls even on ppc*/s390*/ia64 (#196494)
+- fix out of memory behavior in gettext (#194321)
+- fix regex on multi-byte non-UTF-8 charsets (#193873)
+- minor NIS+ fixes (#190803)
+- don't use cancellable calls in posix_spawn* and only set{u,g}id
+  current thread if requested (#193631)
+
 * Wed May 31 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-11
 - don't exit from nscd -i <database> before the database is
   actually invalidated, add locking to prune_cache (#191464)
