@@ -1,4 +1,4 @@
-%define glibcrelease 12
+%define glibcrelease 13
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -63,7 +63,8 @@ Conflicts: kernel < 2.6.9
 %define nptl_target_cpu %{_target_cpu}
 %endif
 # Need AS_NEEDED directive
-BuildRequires: binutils >= 2.15.94.0.2-1
+# Need --hash-style=* support
+BuildRequires: binutils >= 2.17.50.0.2-5
 BuildRequires: gcc >= 3.2.1-5
 %ifarch ppc s390 s390x
 BuildRequires: gcc >= 4.1.0-0.17
@@ -1430,6 +1431,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Jul 10 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-13
+- DT_GNU_HASH support
+
 * Fri Jun 30 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-12
 - buildrequire gettext
 - enable fstatat64/newfstatat syscalls even on ppc*/s390*/ia64 (#196494)

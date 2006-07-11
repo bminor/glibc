@@ -43,9 +43,17 @@ __pthread_mutex_init (mutex, mutexattr)
   /* Sanity checks.  */
   // XXX For now we don't support priority inherited or priority protected
   // XXX mutexes.
-  if ((imutexattr->mutexkind & PTHREAD_MUTEXATTR_PROTOCOL_MASK)
-      != (PTHREAD_PRIO_NONE << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT))
-    return ENOTSUP;
+  switch (__builtin_expect (imutexattr->mutexkind
+			    & PTHREAD_MUTEXATTR_PROTOCOL_MASK,
+			    PTHREAD_PRIO_NONE
+			    << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT))
+    {
+    case PTHREAD_PRIO_NONE << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
+      break;
+
+    default:
+      return ENOTSUP;
+    }
 
   /* Clear the whole variable.  */
   memset (mutex, '\0', __SIZEOF_PTHREAD_MUTEX_T);
@@ -64,13 +72,13 @@ __pthread_mutex_init (mutex, mutexattr)
       mutex->__data.__kind |= PTHREAD_MUTEX_ROBUST_NORMAL_NP;
     }
 
-  switch ((imutexattr->mutexkind & PTHREAD_MUTEXATTR_PROTOCOL_MASK)
-	  >> PTHREAD_MUTEXATTR_PROTOCOL_SHIFT)
+  switch (imutexattr->mutexkind & PTHREAD_MUTEXATTR_PROTOCOL_MASK)
     {
-    case PTHREAD_PRIO_INHERIT:
+    case PTHREAD_PRIO_INHERIT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
       mutex->__data.__kind |= PTHREAD_MUTEX_PRIO_INHERIT_PRIVATE_NP;
       break;
-    case PTHREAD_PRIO_PROTECT:
+
+    case PTHREAD_PRIO_PROTECT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
       mutex->__data.__kind |= PTHREAD_MUTEX_PRIO_PROTECT_PRIVATE_NP;
       if (PTHREAD_MUTEX_PRIO_CEILING_MASK
 	  == PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
@@ -82,6 +90,7 @@ __pthread_mutex_init (mutex, mutexattr)
 				 >> PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT)
 				<< PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
       break;
+
     default:
       break;
     }
