@@ -1,3 +1,45 @@
+2006-07-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_FUTEX_LOCK_PI.
+	* include/time.h: Declare __nanosleep_nocancel.
+	* include/unistd.h: Declare __pause_nocancel.
+
+	* dlfcn/Makefile (LDLIBS-bug-atexit3-lib.so): Use this instead of
+	LDFLAGS.  Add -lgcc_eh and libc_nonshared (again) to make sure we
+	get the __stack_chk_fail_local definition when it's needed.
+
+2006-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* dlfcn/Makefile: Add rules to build and run bug-atexit3.
+	* dlfcn/bug-atexit3.c: New file.
+	* dlfcn/bug-atexit3-lib.cc: New file.
+
+	* dlfcn/dlmopen.c (dlmopen_doit): Don't allow RTLD_GLOBAL to be
+	used when the namespace is not the base namespace.
+
+2006-07-26  Gavin Romig-Koch  <gavin@redhat.com>
+
+	* stdlib/cxa_atexit.c (__new_exitfn_called): New variable.
+	(__new_exitfn): Bump it in every successful call.
+	* stdlib/cxa_finalize.c (__cxa_finalize): If destructor registered
+	more exit handlers, call them right away.
+	* stdlib/exit.h: Declare __new_exitfn_called.
+
+2006-07-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/cxa_finalize.c (__cxa_finalize): Fix race condition when
+	calling registered handler.
+
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Fix comment.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+
 2006-07-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-lookup.c (dl_new_hash): New functions.
