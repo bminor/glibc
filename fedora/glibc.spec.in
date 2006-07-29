@@ -30,6 +30,8 @@ Buildroot: %{_tmppath}/glibc-%{PACKAGE_VERSION}-root
 Obsoletes: zoneinfo, libc-static, libc-devel, libc-profile, libc-headers,
 Obsoletes: gencat, locale, ldconfig, locale-ja, glibc-profile
 Provides: ldconfig
+# The dynamic linker supports DT_GNU_HASH
+Provides: rtld(GNU_HASH)
 Autoreq: false
 Requires: glibc-common = %{version}-%{release}
 %ifarch sparc
