@@ -1,4 +1,4 @@
-%define glibcrelease 14
+%define glibcrelease 15
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -1433,7 +1433,7 @@ rm -f *.filelist*
 %endif
 
 %changelog
-* Sat Jul 29 2006 Roland McGrath <roland@redhat.com> - 2.4.90-14
+* Mon Jul 31 2006 Roland McGrath <roland@redhat.com> 2.4.90-15
 - fix missing destructor calls in dlclose (#197932)
 - PI mutex support
 
