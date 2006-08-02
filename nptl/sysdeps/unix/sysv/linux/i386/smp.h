@@ -17,12 +17,40 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
+#include <fcntl.h>
+#include <string.h>
+#include <sys/utsname.h>
+#include <not-cancel.h>
+
 /* Test whether the machine has more than one processor.  This is not the
    best test but good enough.  More complicated tests would require `malloc'
    which is not available at that time.  */
 static inline int
 is_smp_system (void)
 {
-  /* Assume all machines are SMP and/or CMT and/or SMT.  */
-  return 1;
+  union
+  {
+    struct utsname uts;
+    char buf[512];
+  } u;
+  char *cp;
+
+  /* Try reading the number using `sysctl' first.  */
+  if (uname (&u.uts) == 0)
+    cp = u.uts.version;
+  else
+    {
+      /* This was not successful.  Now try reading the /proc filesystem.  */
+      int fd = open_not_cancel_2 ("/proc/sys/kernel/version", O_RDONLY);
+      if (__builtin_expect (fd, 0) == -1
+	  || read_not_cancel (fd, u.buf, sizeof (u.buf)) <= 0)
+	/* This also didn't work.  We give up and say it's a UP machine.  */
+	u.buf[0] = '\0';
+
+      close_not_cancel_no_status (fd);
+      cp = u.buf;
+    }
+
+  return strstr (cp, "SMP") != NULL;
 }

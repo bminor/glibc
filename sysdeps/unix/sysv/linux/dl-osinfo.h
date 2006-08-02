@@ -20,7 +20,6 @@
 #include <string.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <sys/sysctl.h>
 #include <sys/utsname.h>
 #include <kernel-features.h>
 #include <dl-sysdep.h>

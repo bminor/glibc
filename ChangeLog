@@ -1,3 +1,51 @@
+2006-06-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #2980]
+	* posix/Makefile (CFLAGS-waitid.c): Add
+	-fasynchronous-unwind-tables.
+
+2006-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-addr.c (_dl_addr): If GNU-style hash tables are present,
+	walk them instead of the symbol table.
+
+2006-08-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/initgrcache.c (addinitgroupsX): Judge successful lookups by
+	status of NSS calls, not the number of returned entries.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove add_key,
+	request_key, keyctl.
+
+2006-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Remove unnecessary include.
+
+2006-07-16  Jeff Bailey  <jbailey@ubuntu.com>
+
+	* elf/tst-auditmod1.c: Fix typo in #error.
+
+2006-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/tst-auditmod1.c: Remove code for unsupported architectures.
+
+	* iconvdata/run-iconv-test.sh: Run cmp in C locale.
+
+2006-07-20  Adam Nemet  <anemet@caviumnetworks.com>
+
+	* stdlib/test-canon.c (do_test): Close fd before unlinking file so
+	that the directory is empty even on non-POSIX filesystems.
+
+2006-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Add branch prediction.
+
+	* nis/nss_compat/compat-grp.c: Avoid unnecessary setgrent calls into
+	the backend NSS module.  If backend setgrent call failed, don't have
+	internal_setgrent fail.  Just remember this until it is needed.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+
 2006-07-30  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sigsuspend.c: File removed.
