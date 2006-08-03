@@ -1439,6 +1439,8 @@ rm -f *.filelist*
 
 %changelog
 - fix memusage and xtrace scripts (#200736)
+- redirect /sbin/service sshd condrestart std{out,err} to /dev/null
+  when executed from glibc_post_upgrade
 
 * Wed Aug  2 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-17
 - typo fix for the dladdr patch

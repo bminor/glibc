@@ -145,7 +145,7 @@ main (void)
       && access ("/bin/bash", X_OK) == 0)
     {
       if (check_elf ("/usr/sbin/sshd"))
-	verbose_exec (121, "/sbin/service", "/sbin/service", "sshd", "condrestart");
+	verbose_exec (-121, "/sbin/service", "/sbin/service", "sshd", "condrestart");
     }
 
   _exit(0);
@@ -210,10 +210,23 @@ vexec (int failcode, char *const path[])
 {
   pid_t pid;
   int status, save_errno;
+  int devnull = 0;
 
+  if (failcode < 0)
+    {
+      devnull = 1;
+      failcode = -failcode;
+    }
   pid = vfork ();
   if (pid == 0)
-    {	
+    {
+      int fd;
+      if (devnull && (fd = open ("/dev/null", O_WRONLY)) >= 0)
+	{
+	  dup2 (fd, 1);
+	  dup2 (fd, 2);
+	  close (fd);
+	}
       execv (path[0], path + 1);
       save_errno = errno;
       message (path);
