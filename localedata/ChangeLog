@@ -1,3 +1,18 @@
+2006-06-03  Eddy Petrisor  <eddy.petrisor@gmail.com>
+
+	[BZ #2125]
+	* locales/ro_RO: Fix collation rules for <U0218> and <U021A>.
+	Define first_weekday, first_workdayweek_day, work_day,
+	country_isbn and country_post fields.
+	Comments for terminology and bibliographic codes were added.
+
+2006-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add csb_PL.UTF-8.
+
+	[BZ #2961]
+	* locales/csb_PL: New file.
+
 2006-08-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/es_NI: Define real t_fmt_ampm and am_pm.

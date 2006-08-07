@@ -1,4 +1,4 @@
-%define glibcrelease 17
+%define glibcrelease 18
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -1438,6 +1438,8 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Aug  7 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-18
+- NIS+ fixes
 - fix memusage and xtrace scripts (#200736)
 - redirect /sbin/service sshd condrestart std{out,err} to /dev/null
   when executed from glibc_post_upgrade

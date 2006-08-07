@@ -1,8 +1,86 @@
+2006-08-07  Jakub Jelinek  <jakub@redhat.com>
+            Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_call.c (rec_dirsearch) [case LOWER_NAME]: Don't take
+	short cut if only one name component is stripped away.
+
+2006-08-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_call.c: Minor cleanups throughout.
+	(rec_dirsearch) [HIGHER_NAME]: Correctly size ndomain array.
+	(first_shoot): Add search_parent_first parameter.  Only if it is set
+	search parent server first.
+	If directory for table found through cold start cache is not the same
+	as referenced in the cache, don't use it.
+	(__nisfind_server): Take additional parameter.  Pass it on to
+	first_shoot.
+	(__prepare_niscall): Adjust __nisfind_server call.
+	* nis/rpcsvc/nislib.h: Adjust __nisfind_server prototype.
+	* nis/nis_table.c: Adjust __nisfind_server call.
+	* nis/nis_lookup.c: Likewise.
+	(nis_lookup): Don't loop endlessly if name is reduced to ".".
+
+2006-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2182]
+	* math/s_cacosh.c: Return values from positive branch.
+	* math/s_cacoshf.c: Likewise.
+	* math/s_cacoshl.c: Likewise.
+
+	[BZ #2883]
+	* sysvipc/sys/msg.h: Change return value to ssize_t.
+	* sysdeps/unix/sysv/linux/msgrcv.c: Likewise.
+	* sysvipc/msgrcv.c: Likewise.
+	* include/sys/msg.h: Likewise.
+
+	* grp/initgroups.c (internal_getgrouplist): Remove unnecessary
+	test introduced in patch for bz #661.
+	(getgrouplist): Simplify code a bit.  Don't allocate one additional
+	element for NEWGROUPS.
+
+	[BZ #2908]
+	* stdio-common/printf_fphex.c (__printf_fphex): When rounding up
+	'f', use '1' as leading digit not '\1'.
+	* stdio-common/Makefile (tests): Add bug16.
+	* stdio-common/bug16.c: New file.
+
+	[BZ #2914]
+	* sysdeps/unix/sysv/linux/gethostid.c: Don't define OLD_HOSTIDFILE
+	and don't try to open it.  The patch introducing the macro
+	contained a bug and used the same file name as the new file
+	instead of using /var/adm/hostid.  Nobody complaint so I'm taking
+	this out completely.
+
+	[BZ #2926]
+	* assert/assert.h: Move cast to void inside ?: to quiet gcc.
+	Patch by Jerry James <Jerry.James@usu.edu>.
+
+	* rt/Makefile (tests): Add tst-clock2.
+	* rt/tst-clock2.c: New file.
+
+	[BZ #2978]
+	* resolv/gai_notify.c (__gai_notify_only): Copy memory for thread
+	function and its parameters and pass it to new thread.
+	(__gai_notify): Add support for alternative waiting for completion.
+	* resolv/gai_suspend.c (gai_suspend): Add support for alternative
+	waiting for completion.
+	* resolv/getaddrinfo_a.c: Likewise.
+	* resolv/gai_misc.h (struct waitlist): Don't add cond if alternative
+	waiting for completion is used.
+	* resolv/gai_misc.c: Allow overwriting code to start helper thread.
+	* resolv/gai_cancel.c: Include <gai_misc.h> not "gai_misc.h".
+	* resolv/gai_error.c: Likewise.
+	* resolv/gai_sigqueue.c: Likewise.
+
+2006-08-02  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* hurd/getdport.c (__getdport): Don't return EBADF; instead set
+	errno to EBADF and return MACH_PORT_NULL.
+
 2006-06-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #2980]
-	* posix/Makefile (CFLAGS-waitid.c): Add
-	-fasynchronous-unwind-tables.
+	* posix/Makefile (CFLAGS-waitid.c): Add -fasynchronous-unwind-tables.
 
 2006-08-02  Ulrich Drepper  <drepper@redhat.com>
 
@@ -11,6 +89,7 @@
 
 2006-08-01  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #2098]
 	* nscd/initgrcache.c (addinitgroupsX): Judge successful lookups by
 	status of NSS calls, not the number of returned entries.
 
