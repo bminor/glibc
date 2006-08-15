@@ -1,4 +1,4 @@
-%define glibcrelease 19
+%define glibcrelease 20
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -1438,6 +1438,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Aug 15 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-20
+- PTHREAD_PRIO_PROTECT support
+- fix errno if nice() fails (#201826)
+
 * Thu Aug 10 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-19
 - adaptive malloc brk/mmap threshold
 - fix fchownat to use kernel syscall (if available) on many arches (#201870)
