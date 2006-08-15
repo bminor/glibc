@@ -43,6 +43,7 @@ Prereq: basesystem, libgcc
 # For initial glibc bootstraps it can be commented out
 BuildPreReq: gd-devel libpng-devel zlib-devel texinfo, libselinux-devel >= 1.17.10-1
 BuildPreReq: audit-libs-devel >= 1.1.3, sed >= 3.95, libcap-devel, gettext
+BuildPreReq: /bin/ps, /bin/kill
 # This is to ensure that __frame_state_for is exported by glibc
 # will be compatible with egcs 1.x.y
 BuildPreReq: gcc >= 3.2
@@ -785,13 +786,13 @@ GXX=g++
 BuildFlags="-march=%{_target_cpu} -DUSE_CFA_VAL_EXPRESSION"
 %endif
 %ifarch i686
-BuildFlags="-march=i686 -mtune=pentium4 -DUSE_CFA_VAL_EXPRESSION"
+BuildFlags="-march=i686 -mtune=generic -DUSE_CFA_VAL_EXPRESSION"
 %endif
 %ifarch i386
 BuildFlags="$BuildFlags -mno-tls-direct-seg-refs"
 %endif
 %ifarch x86_64
-BuildFlags="-DUSE_CFA_VAL_EXPRESSION"
+BuildFlags="-mtune=generic -DUSE_CFA_VAL_EXPRESSION"
 %endif
 %ifarch alphaev6
 BuildFlags="-mcpu=ev6"
@@ -1136,14 +1137,23 @@ ln -sf /%{_lib}/ld-linux-ia64.so.2 $RPM_BUILD_ROOT/lib/ld-linux-ia64.so.2
 
 # Increase timeouts
 export TIMEOUTFACTOR=16
+parent=$$
 echo ====================TESTING=========================
 cd build-%{nptl_target_cpu}-linuxnptl
-make %{?_smp_mflags} -k check PARALLELMFLAGS=-s 2>&1 | tee check.log || :
+( make %{?_smp_mflags} -k check PARALLELMFLAGS=-s 2>&1
+  sleep 10s
+  teepid="`ps -eo ppid,pid,command | grep ^${parent}' [0-9]\+ tee' | cut -d' ' -f2`"
+  [ -n "$teepid" ] && kill $teepid
+) | tee check.log || :
 cd ..
 %if %{buildxen}
 echo ====================TESTING -mno-tls-direct-seg-refs=============
 cd build-%{nptl_target_cpu}-linuxnptl-nosegneg
-make -j$numprocs -k check PARALLELMFLAGS=-s 2>&1 | tee check.log || :
+( make -j$numprocs -k check PARALLELMFLAGS=-s 2>&1
+  sleep 10s
+  teepid="`ps -eo ppid,pid,command | grep ^${parent}' [0-9]\+ tee' | cut -d' ' -f2`"
+  [ -n "$teepid" ] && kill $teepid
+) | tee check.log || :
 cd ..
 %endif
 echo ====================TESTING DETAILS=================
@@ -1438,6 +1448,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+- if some test gets stuck, kill the tee process after make check
+  finishes
+- build with -mtune=generic on i686 and x86_64
+
 * Tue Aug 15 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-20
 - PTHREAD_PRIO_PROTECT support
 - fix errno if nice() fails (#201826)
