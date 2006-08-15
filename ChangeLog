@@ -1,3 +1,82 @@
+2006-08-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pause.c: Use
+	sysdeps/posix/pause.c implementation instead.
+
+2006-08-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/nice.c (nice): Transform EACCES errno from setpriority
+	to EPERM.
+
+2006-08-13  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/powerpc/powerpc32/dl-trampoline.S (_dl_runtime_resolve):
+	Don't clobber caller's LRSAVE.
+	(_dl_prof_resolve): Likewise.
+
+2006-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1996]
+	* libio/memstream.c (open_memstream): Allocate initial buffer with
+	calloc.
+	* libio/wmemstream.c (open_wmemstream): Likewise.
+	* libio/strops.c: Pretty printing.
+	(_IO_str_overflow): Clear uninitialized part of the new buffer.
+	(enlarge_userbuf): New function.
+	(_IO_str_seekoff): Call it if seek position is larger than current
+	buffer.
+	* libio/wstrops.c: Likewise.
+	* libio/vasprintf.c: Add comment as to why we do not have to use
+	calloc instead of malloc to allocate initial buffer.
+	* libio/Makefile (tests): Add bug-memstream1 and bug-wmemstream1.
+	* libio/bug-memstream1.c: New file.
+	* libio/bug-wmemstream1.c: New file.
+
+2006-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/wstrops.c: Remove dead macro definitions and comments.
+	* libio/strops.c: Likewise.
+
+	[BZ #2764]
+	* login/utmpname.c (__utmpname): Remove unnecessary test.
+
+2006-06-08  Joseph Myers  <jsm28@gcc.gnu.org>
+
+	[BZ #2832]
+	* math/gen-libm-test.pl (clean_up_number): Do not remove trailing
+	0s from integers.
+
+2006-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2987]
+	* sysdeps/unix/sysv/linux/clock_settime.c: Add code to use syscall
+	for CPU clocks.
+	* sysdeps/unix/clock_settime.c: Add support for platform-specific
+	setting of CPU clocks.
+
+2006-06-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #2841]
+	* sysdeps/generic/stdint.h (UINT8_C, UINT16_C): Don't append 'U',
+	since C99 requires the result to promote to 'int' when uint_least8_t
+	and uint_least16_t promote to 'int'.
+
+2006-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3013]
+	* locale/programs/ld-ctype.c (ctype_output): Adjust alignments, fix
+	lenght of one output field, correct bitmask creation.
+	* locale/programs/ld-time.c: Add alignment.
+
+	[BZ #2997]
+	* misc/error.c: Add space between program name and message if file
+	name is missing.
+
+2006-08-03  Eric Blake	<ebb9@byu.net>
+
+	[BZ #2998]
+	* misc/error.c (error_tail) [_LIBC]: Avoid invalid free.
+
 2006-08-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/memusagestat.c: Silence warnings.

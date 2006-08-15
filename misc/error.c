@@ -1,5 +1,5 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990-1998, 2000-2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1990-1998, 2000-2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -224,7 +224,10 @@ error_tail (int status, int errnum, const char *message, va_list args)
 	{
 	  /* The string cannot be converted.  */
 	  if (use_malloc)
-	    free (wmessage);
+	    {
+	      free (wmessage);
+	      use_malloc = false;
+	    }
 	  wmessage = (wchar_t *) L"???";
 	}
 
@@ -382,14 +385,13 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
 #endif
     }
 
-  if (file_name != NULL)
-    {
 #if _LIBC
-      __fxprintf (NULL, "%s:%d: ", file_name, line_number);
+  __fxprintf (NULL, file_name != NULL ? "%s:%d: " : " ",
+	      file_name, line_number);
 #else
-      fprintf (stderr, "%s:%d: ", file_name, line_number);
+  fprintf (stderr, file_name != NULL ? "%s:%d: " : " ",
+	   file_name, line_number);
 #endif
-    }
 
 #ifdef VA_START
   VA_START (args, message);
