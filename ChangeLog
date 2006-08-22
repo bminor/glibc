@@ -1,3 +1,56 @@
+2006-05-15  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #2751]
+	* string/strchr.c: Add cast to avoid warning.
+
+2006-08-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (DEFAULT_MMAP_THRESHOLD_MAX): For 32-bit
+	platforms define as 512K.  For 64-bit platforms as 32MB.  The lower
+	limit is needed to avoid the exploding of the address space
+	requirement for secondary heaps.
+	* malloc/arena.c (HEAP_MAX_SIZE): Define using
+	DEFAULT_MMAP_THRESHOLD_MAX if it is defined.
+
+2006-07-30  Joseph S. Myers  <joseph@codesourcery.com>
+
+	[BZ #3018]
+	* Makerules (depfiles): Handle extra-test-objs the same as
+	extra-objs.
+	(common-mostlyclean): Likewise.
+	* dlfcn/Makefile (extra-objs): Add modules to extra-test-objs
+	instead.
+	* elf/Makefile (extra-objs): Likewise.
+	* stdlib/Makefile (extra-objs): Likewise.
+
+2006-08-14  Eric Blake	<ebb9@byu.net>
+
+	[BZ #3044]
+	* misc/error.h: Assume C89 or better.
+	* misc/error.c: Likewise.
+
+2006-08-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3040]
+	* sysdeps/unix/sysv/linux/openat.c: Fix compilation if
+	__ASSUME_ATFCTS is defined.
+
+2006-08-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (_int_malloc): Limit number of unsorted blocks
+	to sort in each call.
+
+	* nis/nss_nis/nis-service.c (internal_nis_getservent_r): . If map
+	is empty simply return and use next service.
+	* nis/nss_nis/nis-rpc.c (internal_nis_getrpcent_r): Likewise.
+
+	* locale/programs/charmap.c (charmap_read): Add new parameter.  It
+	tells us when not finding a charmap file is an error.
+	* locale/programs/charmap.h: Adjust charmap_read prototype.
+	* iconv/iconv_prog.c (main): Tell charmap_read it's no error if we
+	cannot find a charmap.
+	* locale/programs/localedef.c (main): Adjust charmap_read call.
+
 2006-08-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/pause.c: Use
