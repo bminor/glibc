@@ -1142,7 +1142,7 @@ echo ====================TESTING=========================
 cd build-%{nptl_target_cpu}-linuxnptl
 ( make %{?_smp_mflags} -k check PARALLELMFLAGS=-s 2>&1
   sleep 10s
-  teepid="`ps -eo ppid,pid,command | grep ^${parent}' [0-9]\+ tee' | cut -d' ' -f2`"
+  teepid="`ps -eo ppid,pid,command | grep ^${parent}'[ 	]\+[0-9]\+[ 	]\+tee' | cut -d' ' -f2`"
   [ -n "$teepid" ] && kill $teepid
 ) | tee check.log || :
 cd ..
@@ -1151,7 +1151,7 @@ echo ====================TESTING -mno-tls-direct-seg-refs=============
 cd build-%{nptl_target_cpu}-linuxnptl-nosegneg
 ( make -j$numprocs -k check PARALLELMFLAGS=-s 2>&1
   sleep 10s
-  teepid="`ps -eo ppid,pid,command | grep ^${parent}' [0-9]\+ tee' | cut -d' ' -f2`"
+  teepid="`ps -eo ppid,pid,command | grep ^${parent}'[ 	]\+[0-9]\+[ 	]\+tee' | cut -d' ' -f2`"
   [ -n "$teepid" ] && kill $teepid
 ) | tee check.log || :
 cd ..

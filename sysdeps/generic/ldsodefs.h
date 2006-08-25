@@ -59,8 +59,8 @@ __BEGIN_DECLS
 
 /* Result of the lookup functions and how to retrieve the base address.  */
 typedef struct link_map *lookup_t;
-# define LOOKUP_VALUE(map) map
-# define LOOKUP_VALUE_ADDRESS(map) ((map) ? (map)->l_addr : 0)
+#define LOOKUP_VALUE(map) map
+#define LOOKUP_VALUE_ADDRESS(map) ((map) ? (map)->l_addr : 0)
 
 /* On some architectures a pointer to a function is not just a pointer
    to the actual code of the function but rather an architecture
@@ -76,7 +76,7 @@ typedef struct link_map *lookup_t;
 /* On some architectures dladdr can't use st_size of all symbols this way.  */
 #define DL_ADDR_SYM_MATCH(L, SYM, MATCHSYM, ADDR) \
   ((ADDR) >= (L)->l_addr + (SYM)->st_value				\
-   && (((SYM)->st_size == 0						\
+   && ((((SYM)->st_shndx == SHN_UNDEF || (SYM)->st_size == 0)		\
 	&& (ADDR) == (L)->l_addr + (SYM)->st_value)			\
        || (ADDR) < (L)->l_addr + (SYM)->st_value + (SYM)->st_size)	\
    && ((MATCHSYM) == NULL || (MATCHSYM)->st_value < (SYM)->st_value))

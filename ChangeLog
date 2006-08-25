@@ -1,3 +1,39 @@
+2006-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-ctype.c (ctype_read): If CTYPE is NULL, don't
+	do anything.
+
+	* sysdeps/generic/ldsodefs.h (DL_ADDR_SYM_MATCH): For undefined
+	symbol require exact match (these are PLTs).
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ldsodefs.h
+	(_dl_ppc64_addr_sym_match): Likewise.
+
+	[BZ #2683]
+	* elf/dl-addr.c (_dl_addr): Don't ignore all undefined symbols.
+	If symbol has a value use it.
+	* elf/tst-dladdr1.c: New file.
+	* elf/Makefile: Add rules to build and run tst-addr1.
+
+2006-08-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc.c (sYSMALLOc): Avoid infinite loop if MMAP
+	keeps failing and heap growth or new heap creation isn't
+	successful either.
+	* malloc/tst-malloc.c (main): Add new tests.
+
+2006-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2734]
+	* sysdeps/i386/bits/byteswap.h (__bswap_32): Use same conditions
+	as in the x86-64 code to use bswap.
+
+2006-05-21  Joseph S. Myers  <joseph@codesourcery.com>
+
+	[BZ #2680]
+	* posix/unistd.h (getlogin_r): Condition on __USE_POSIX199506, not
+	__USE_UNIX98.
+	* posix/bits/unistd.h: Likewise.
+
 2006-05-15  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #2751]
