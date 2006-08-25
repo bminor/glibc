@@ -4069,9 +4069,10 @@ _int_malloc(mstate av, size_t bytes)
   */
 
   for(;;) {
-
+#if 0
     int iters = 0;
     bool any_larger = false;
+#endif    
     while ( (victim = unsorted_chunks(av)->bk) != unsorted_chunks(av)) {
       bck = victim->bk;
       if (__builtin_expect (victim->size <= 2 * SIZE_SZ, 0)
@@ -4168,11 +4169,13 @@ _int_malloc(mstate av, size_t bytes)
       fwd->bk = victim;
       bck->fd = victim;
 
+#if 0
       if (size >= nb)
 	any_larger = true;
 #define MAX_ITERS	10000
       if (++iters >= MAX_ITERS)
 	break;
+#endif
     }
 
     /*
