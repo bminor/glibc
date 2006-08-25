@@ -1,4 +1,4 @@
-%define glibcrelease 23
+%define glibcrelease 24
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -1448,6 +1448,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Aug 25 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-24
+- temporarily back out code to limit number of unsorted block
+  sort iterations (#203735, #204027)
+- handle PLT symbols in dladdr properly (BZ#2683)
+- avoid malloc infinite looping for allocations larger than
+  the system can allocate (#203915)
+
 * Tue Aug 22 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-23
 - malloc fixes, especially for 32-bit arches (#202309)
 - further *_IN locale fixes (#200230)
