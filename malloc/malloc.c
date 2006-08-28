@@ -2061,7 +2061,9 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 typedef struct malloc_chunk* mbinptr;
 
 /* addressing -- note that bin_at(0) does not exist */
-#define bin_at(m, i) ((mbinptr)((char*)&((m)->bins[(i)<<1]) - (SIZE_SZ<<1)))
+#define bin_at(m, i) \
+  (mbinptr) (((char *) &((m)->bins[((i) - 1) * 2]))			      \
+	     - offsetof (struct malloc_chunk, fd))
 
 /* analog of ++bin */
 #define next_bin(b)  ((mbinptr)((char*)(b) + (sizeof(mchunkptr)<<1)))
@@ -2301,7 +2303,7 @@ struct malloc_state {
   mchunkptr        last_remainder;
 
   /* Normal bins packed as described above */
-  mchunkptr        bins[NBINS * 2];
+  mchunkptr        bins[NBINS * 2 - 2];
 
   /* Bitmap of bins */
   unsigned int     binmap[BINMAPSIZE];
@@ -3623,6 +3625,29 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
   (void)mutex_unlock(&ar_ptr->mutex);
   assert(!newp || chunk_is_mmapped(mem2chunk(newp)) ||
 	 ar_ptr == arena_for_chunk(mem2chunk(newp)));
+
+  if (newp == NULL)
+    {
+      /* Try harder to allocate memory in other arenas.  */
+      newp = public_mALLOc(bytes);
+      if (newp != NULL)
+	{
+	  MALLOC_COPY (newp, oldmem, oldsize - 2 * SIZE_SZ);
+#if THREAD_STATS
+	  if(!mutex_trylock(&ar_ptr->mutex))
+	    ++(ar_ptr->stat_lock_direct);
+	  else {
+	    (void)mutex_lock(&ar_ptr->mutex);
+	    ++(ar_ptr->stat_lock_wait);
+	  }
+#else
+	  (void)mutex_lock(&ar_ptr->mutex);
+#endif
+	  _int_free(ar_ptr, oldmem);
+	  (void)mutex_unlock(&ar_ptr->mutex);
+	}
+    }
+
   return newp;
 }
 #ifdef libc_hidden_def
@@ -4069,10 +4094,9 @@ _int_malloc(mstate av, size_t bytes)
   */
 
   for(;;) {
-#if 0
+
     int iters = 0;
     bool any_larger = false;
-#endif    
     while ( (victim = unsorted_chunks(av)->bk) != unsorted_chunks(av)) {
       bck = victim->bk;
       if (__builtin_expect (victim->size <= 2 * SIZE_SZ, 0)
@@ -4169,13 +4193,11 @@ _int_malloc(mstate av, size_t bytes)
       fwd->bk = victim;
       bck->fd = victim;
 
-#if 0
-      if (size >= nb)
+      if (size >= nb + MINSIZE)
 	any_larger = true;
 #define MAX_ITERS	10000
       if (++iters >= MAX_ITERS)
 	break;
-#endif
     }
 
     /*
@@ -4294,8 +4316,15 @@ _int_malloc(mstate av, size_t bytes)
         else {
           remainder = chunk_at_offset(victim, nb);
 
-          unsorted_chunks(av)->bk = unsorted_chunks(av)->fd = remainder;
-          remainder->bk = remainder->fd = unsorted_chunks(av);
+	  /* We cannot assume the unsorted list is empty and therefore
+	     have to perform a complete insert here.  */
+	  bck = unsorted_chunks(av);
+	  fwd = bck->fd;
+	  remainder->bk = bck;
+	  remainder->fd = fwd;
+	  bck->fd = remainder;
+	  fwd->bk = remainder;
+
           /* advertise as last remainder */
           if (in_smallbin_range(nb))
             av->last_remainder = remainder;

@@ -2245,6 +2245,9 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 	      if (locfile_read (copy_locale, charmap) != 0)
 		goto skip_category;
 	    }
+
+	  if (copy_locale->categories[LC_CTYPE].ctype == NULL)
+	    return;
 	}
 
       lr_ignore_rest (ldfile, 1);
@@ -2256,8 +2259,6 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
   /* Prepare the data structures.  */
   ctype_startup (ldfile, result, charmap, copy_locale, ignore_content);
   ctype = result->categories[LC_CTYPE].ctype;
-  if (ctype == NULL)
-    return;
 
   /* Remember the repertoire we use.  */
   if (!ignore_content)
@@ -3768,7 +3769,7 @@ translit_flatten (struct locale_ctype_t *ctype,
 
       other = find_locale (LC_CTYPE, copy_locale, copy_repertoire, charmap);
 
-      if (other == NULL)
+      if (other == NULL || other->categories[LC_CTYPE].ctype == NULL)
 	{
 	  WITH_CUR_LOCALE (error (0, 0, _("\
 %s: transliteration data from locale `%s' not available"),

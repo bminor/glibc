@@ -1,3 +1,34 @@
+2006-08-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/getnameinfo.c (getnameinfo): For AF_INET, check errno
+	only if herrno is NETDB_INTERNAL.  Handle errors other than
+	ERANGE outside of the loops, handle TRY_AGAIN.
+
+	* locale/programs/ld-ctype.c (translit_flatten): Issue error
+	if other's ctype category was missing.
+	* locale/programs/ld-collate.c (collate_read): Return if
+	copy_locale's collate category is missing.
+
+2006-08-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2684]
+	* malloc/malloc.c (public_rEALLOc): Try harder by using other
+	arenas if allocation failed.
+	Patch mostly by Jan Edler <jan.edler@indexengines.com>.
+
+2006-08-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (bin_at): Rewrite to be more clear and to not
+	waste bins[0..1].
+	(malloc_state): Reduce bins size by 2.
+	(_int_malloc): Fix test for large enough buffer for early termination.
+	When no unsorted block matches perfectly and an exiting block has
+	to be split, use full list insert and not shortcut which assumes
+	the list is empty.
+
+	* locale/programs/ld-ctype.c (ctype_read): Better patch for read
+	failure.
+
 2006-08-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-ctype.c (ctype_read): If CTYPE is NULL, don't
