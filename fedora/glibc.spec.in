@@ -1,4 +1,4 @@
-%define glibcrelease 26
+%define glibcrelease 27
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -1448,6 +1448,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Aug 31 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-27
+- allow $LIB and $PLATFORM in dlopen parameters even in suid/sgid (#204399)
+- fix splice prototype (#204530)
+- fix pthread_rwlock_{,try,timed}wrlock to honor reader preference
+  if requested
+
 * Mon Aug 28 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-26
 - real fix for the doubly linked list corruption problem
 - try harder in realloc to allocate memory (BZ#2684)
