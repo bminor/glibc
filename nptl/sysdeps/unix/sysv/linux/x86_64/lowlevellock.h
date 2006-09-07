@@ -49,8 +49,7 @@
 #define BUSY_WAIT_NOP          asm ("rep; nop")
 
 
-#ifdef USE_CFA_VAL_EXPRESSION
-# define LLL_STUB_UNWIND_INFO_START \
+#define LLL_STUB_UNWIND_INFO_START \
 	".section	.eh_frame,\"a\",@progbits\n" 		\
 "7:\t"	".long	9f-8f	# Length of Common Information Entry\n" \
 "8:\t"	".long	0x0	# CIE Identifier Tag\n\t" 		\
@@ -75,7 +74,7 @@
 	".uleb128 12f-11f\n" 					\
 "11:\t"	".byte	0x80	# DW_OP_breg16\n\t" 			\
 	".sleb128 4b-1b\n"
-# define LLL_STUB_UNWIND_INFO_END \
+#define LLL_STUB_UNWIND_INFO_END \
 	".byte	0x16	# DW_CFA_val_expression\n\t" 		\
 	".uleb128 0x10\n\t" 					\
 	".uleb128 14f-13f\n" 					\
@@ -122,7 +121,7 @@
    5: jmp 24f
    6:
    snippet.  */
-# define LLL_STUB_UNWIND_INFO_5 \
+#define LLL_STUB_UNWIND_INFO_5 \
 LLL_STUB_UNWIND_INFO_START					\
 "12:\t"	".byte	0x40 + (2b-1b) # DW_CFA_advance_loc\n\t" 	\
 LLL_STUB_UNWIND_INFO_END
@@ -136,7 +135,7 @@ LLL_STUB_UNWIND_INFO_END
    5: jmp 24f
    6:
    snippet.  */
-# define LLL_STUB_UNWIND_INFO_6 \
+#define LLL_STUB_UNWIND_INFO_6 \
 LLL_STUB_UNWIND_INFO_START					\
 "12:\t"	".byte	0x40 + (0b-1b) # DW_CFA_advance_loc\n\t" 	\
 	".byte	0x16	# DW_CFA_val_expression\n\t" 		\
@@ -146,11 +145,6 @@ LLL_STUB_UNWIND_INFO_START					\
 	".sleb128 4b-0b\n" 					\
 "26:\t"	".byte	0x40 + (2b-0b) # DW_CFA_advance_loc\n\t" 	\
 LLL_STUB_UNWIND_INFO_END
-
-#else
-# define LLL_STUB_UNWIND_INFO_5
-# define LLL_STUB_UNWIND_INFO_6
-#endif
 
 
 #define lll_futex_wait(futex, val) \

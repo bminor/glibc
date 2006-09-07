@@ -1,4 +1,4 @@
-%define glibcrelease 29
+%define glibcrelease 30
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -783,16 +783,16 @@ touch locale/programs/*-kw.h
 GCC=gcc
 GXX=g++
 %ifarch %{ix86}
-BuildFlags="-march=%{_target_cpu} -DUSE_CFA_VAL_EXPRESSION"
+BuildFlags="-march=%{_target_cpu}"
 %endif
 %ifarch i686
-BuildFlags="-march=i686 -mtune=generic -DUSE_CFA_VAL_EXPRESSION"
+BuildFlags="-march=i686 -mtune=generic"
 %endif
 %ifarch i386
 BuildFlags="$BuildFlags -mno-tls-direct-seg-refs"
 %endif
 %ifarch x86_64
-BuildFlags="-mtune=generic -DUSE_CFA_VAL_EXPRESSION"
+BuildFlags="-mtune=generic"
 %endif
 %ifarch alphaev6
 BuildFlags="-mcpu=ev6"
@@ -1448,6 +1448,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Sep  7 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-30
+- fix or_IN February name (#204730)
+- fix pthread_create called from cancellation handlers (BZ#3124)
+
 * Tue Sep  5 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-29
 - randomize resolver query ids before use instead after use (#205113)
 - fix resolver symver checking with DT_GNU_HASH (#204909)
