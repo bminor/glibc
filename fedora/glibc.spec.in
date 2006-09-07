@@ -1455,10 +1455,13 @@ rm -f *.filelist*
 
 %changelog
 * Thu Sep  7 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-30
-- fix or_IN February name (#204730)
-- fix pthread_create called from cancellation handlers (BZ#3124)
 - add librtkaio, to use it add /%{lib}/rtkaio to your
   LD_LIBRARY_PATH or /etc/ld.so.conf
+- fix or_IN February name (#204730)
+- fix pthread_create called from cancellation handlers (BZ#3124)
+- fix regex case insensitive searches with characters where upper
+  and lower case multibyte representations have different length
+  (e.g. I and dotless i, #202991)
 
 * Tue Sep  5 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-29
 - randomize resolver query ids before use instead after use (#205113)
