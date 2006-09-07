@@ -32,7 +32,7 @@
 #include <kaio_misc.h>
 
 #ifndef USE_KAIO
-#include <rt/aio_return.c>
+#include <aio_return.c>
 #else
 
 #include <errno.h>

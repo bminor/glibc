@@ -1,7 +1,7 @@
-/* Enqueue and list of read or write requests, 64bit offset version.
-   Copyright (C) 1997, 1998, 1999, 2003, 2006 Free Software Foundation, Inc.
+/* Tests for AIO in librt.
+   Copyright (C) 1998, 2000, 2002, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,23 +18,35 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <kaio_misc.h>
-
-#ifndef USE_KAIO
-#include <lio_listio64.c>
-#else
-
-#include <aio.h>
-#include <assert.h>
-#include <errno.h>
-#include <stdlib.h>
+#include <fcntl.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
-#define lio_listio lio_listio64
-#define __lio_listio_21 __lio_listio64_21
-#define __lio_listio_item_notify __lio_listio64_item_notify
-#define aiocb aiocb64
-#define LIO_OPCODE_BASE 128
-#include <klio_listio.c>
-
+static int
+set_o_direct (int fd)
+{
+  int ret = -1;
+#ifdef O_DIRECT
+  if (fcntl (fd, F_SETFL, fcntl (fd, F_GETFL) | O_DIRECT) >= 0)
+    {
+      int pgsz = sysconf (_SC_PAGESIZE);
+      char *buf = mmap (NULL, 16 * pgsz, PROT_READ | PROT_WRITE,
+			MAP_PRIVATE | MAP_ANON, -1, 0);
+      if (buf != MAP_FAILED)
+	{
+	  memset (buf, 0, 16 * pgsz);
+	  for (int sz = 256; sz <= 16 * pgsz; sz *= 2)
+	    if (write (fd, buf, sz) > 0)
+	      {
+		ret = sz;
+		break;
+	      }
+	  ftruncate64 (fd, 0);
+	  munmap (buf, 16 * pgsz);
+	}
+      if (ret < 0)
+	fcntl (fd, F_SETFL, fcntl (fd, F_GETFL) & ~O_DIRECT);
+    }
 #endif
+  return ret;
+}

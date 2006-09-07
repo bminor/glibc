@@ -14,6 +14,11 @@ $(objpfx)tst-timer: $(objpfx)librtkaio.so $(shared-thread-library)
 else
 $(objpfx)tst-timer: $(objpfx)librtkaio.a $(static-thread-library)
 endif
+
+ifeq ($(have-forced-unwind),yes)
+tests += tst-mqueue8x
+CFLAGS-tst-mqueue8x.c += -fexceptions
+endif
 endif
 
 endif

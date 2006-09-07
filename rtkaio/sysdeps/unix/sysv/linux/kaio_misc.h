@@ -1,4 +1,5 @@
-/* Copyright (C) 1997,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1999,2000,2001,2002,2003,2006
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +35,68 @@
 #include <aio.h>
 #include <pthread.h>
 #include <stdint.h>
+#include <signal.h>
+#include <sysdep.h>
+#include <limits.h>
+
+#ifdef HAVE_FORCED_UNWIND
+
+/* We define a special synchronization primitive for AIO.  POSIX
+   conditional variables would be ideal but the pthread_cond_*wait
+   operations do not return on EINTR.  This is a requirement for
+   correct aio_suspend and lio_listio implementations.  */
+
+#include <assert.h>
+#include <pthreadP.h>
+#include <lowlevellock.h>
+
+# define DONT_NEED_AIO_MISC_COND	1
+
+# define AIO_MISC_NOTIFY(waitlist) \
+  do {									      \
+    if (*waitlist->counterp > 0 && --*waitlist->counterp == 0)		      \
+      lll_futex_wake (waitlist->counterp, 1);				      \
+  } while (0)
+
+# define AIO_MISC_WAIT(result, futex, timeout, cancel)			      \
+  do {									      \
+    volatile int *futexaddr = &futex;					      \
+    int oldval = futex;							      \
+									      \
+    if (oldval != 0)							      \
+      {									      \
+	pthread_mutex_unlock (&__aio_requests_mutex);			      \
+									      \
+	int oldtype;							      \
+	if (cancel)							      \
+	  oldtype = LIBC_CANCEL_ASYNC ();				      \
+									      \
+	int status;							      \
+	do								      \
+	  {								      \
+	    status = lll_futex_timed_wait (futexaddr, oldval, timeout);	      \
+	    if (status != -EWOULDBLOCK)					      \
+	      break;							      \
+									      \
+	    oldval = *futexaddr;					      \
+	  }								      \
+	while (oldval != 0);						      \
+									      \
+	if (cancel)							      \
+	  LIBC_CANCEL_RESET (oldtype);					      \
+									      \
+	if (status == -EINTR)						      \
+	  result = EINTR;						      \
+	else if (status == -ETIMEDOUT)					      \
+	  result = EAGAIN;						      \
+	else								      \
+	  assert (status == 0 || status == -EWOULDBLOCK);		      \
+									      \
+	pthread_mutex_lock (&__aio_requests_mutex);			      \
+      }									      \
+  } while (0)
+
+#endif
 
 typedef unsigned long kctx_t;
 #define KCTX_NONE ~0UL
@@ -95,7 +158,12 @@ struct waitlist
   {
     struct waitlist *next;
 
+    /* The next two fields is used in synchronous io_listio' operations.  */
+#ifndef DONT_NEED_AIO_MISC_COND
     pthread_cond_t *cond;
+#endif
+    int *result;
+
     volatile int *counterp;
     /* The next field is used in asynchronous `lio_listio' operations.  */
     struct sigevent *sigevp;
@@ -211,6 +279,50 @@ extern int __aio_create_kernel_thread (void)
 
 extern int __have_no_kernel_aio attribute_hidden;
 extern int __kernel_thread_started attribute_hidden;
+
+#ifndef BROKEN_THREAD_SIGNALS
+# define aio_start_notify_thread __aio_start_notify_thread
+# define aio_create_helper_thread __aio_create_helper_thread
+
+extern inline void
+__aio_start_notify_thread (void)
+{
+  sigset_t ss;
+  sigemptyset (&ss);
+  INTERNAL_SYSCALL_DECL (err);
+  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, NULL, _NSIG / 8);
+}
+
+extern inline int
+__aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *), void *arg)
+{
+  pthread_attr_t attr;
+
+  /* Make sure the thread is created detached.  */
+  pthread_attr_init (&attr);
+  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+
+  /* The helper thread needs only very little resources.  */
+  (void) pthread_attr_setstacksize (&attr, PTHREAD_STACK_MIN);
+
+  /* Block all signals in the helper thread.  To do this thoroughly we
+     temporarily have to block all signals here.  */
+  sigset_t ss;
+  sigset_t oss;
+  sigfillset (&ss);
+  INTERNAL_SYSCALL_DECL (err);
+  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, &oss, _NSIG / 8);
+
+  int ret = pthread_create (threadp, &attr, tf, arg);
+
+  /* Restore the signal mask.  */
+  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &oss, NULL,
+		    _NSIG / 8);
+
+  (void) pthread_attr_destroy (&attr);
+  return ret;
+}                                                                                 
+#endif
 
 #endif
 #endif /* aio_misc.h */

@@ -31,7 +31,7 @@
 #include <kaio_misc.h>
 
 #ifndef USE_KAIO
-#include <rt/aio_error.c>
+#include <aio_error.c>
 #else
 
 #include <errno.h>

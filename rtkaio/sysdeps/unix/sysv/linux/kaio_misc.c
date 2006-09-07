@@ -1,5 +1,5 @@
 /* Handle general operations.
-   Copyright (C) 1997,1998,1999,2000,2001,2002,2003
+   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -27,6 +27,7 @@
 
 #include <aio.h>
 #include <assert.h>
+#include <atomic.h>
 #include <errno.h>
 #include <limits.h>
 #include <pthread.h>
@@ -34,6 +35,28 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/sysmacros.h>
+
+#ifndef aio_create_helper_thread
+# define aio_create_helper_thread __aio_create_helper_thread
+
+extern inline int
+__aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *), void *arg)
+{
+  pthread_attr_t attr;
+
+  /* Make sure the thread is created detached.  */
+  pthread_attr_init (&attr);
+  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+
+  int ret = pthread_create (threadp, &attr, tf, arg);
+
+  (void) pthread_attr_destroy (&attr);
+  return ret;
+}
+
+#endif
+
 
 static void add_request_to_runlist (struct requestlist *newrequest)
 	internal_function;
@@ -359,14 +382,16 @@ static void
 kernel_callback (kctx_t ctx, struct kiocb *kiocb, long res, long res2)
 {
   struct requestlist *req = (struct requestlist *)kiocb;
+  long errcode = 0;
 
-  req->aiocbp->aiocb.__error_code = 0;
-  req->aiocbp->aiocb.__return_value = res;
   if (res < 0 && res > -1000)
     {
-      req->aiocbp->aiocb.__error_code = -res;
-      req->aiocbp->aiocb.__return_value = -1;
+      errcode = -res;
+      res = -1;
     }
+  req->aiocbp->aiocb.__return_value = res;
+  atomic_write_barrier ();
+  req->aiocbp->aiocb.__error_code = errcode;
   __aio_notify (req);
   assert (req->running == allocated);
   req->running = done;
@@ -421,7 +446,7 @@ __aio_wait_for_events (kctx_t kctx, const struct timespec *timespec)
   ts.tv_nsec = 0;
   do
     {
-      ret = INTERNAL_SYSCALL (io_getevents, err, 5, kctx, 0, 10, ev,
+      ret = INTERNAL_SYSCALL (io_getevents, err, 5, kctx, 1, 10, ev,
 			      timespec);
       if (INTERNAL_SYSCALL_ERROR_P (ret, err) || ret == 0)
 	break;
@@ -453,16 +478,11 @@ internal_function
 __aio_create_kernel_thread (void)
 {
   pthread_t thid;
-  pthread_attr_t attr;
 
   if (__kernel_thread_started)
     return 0;
 
-  /* Make sure the thread is created detached.  */
-  pthread_attr_init (&attr);
-  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
-
-  if (pthread_create (&thid, &attr, handle_kernel_aio, NULL) != 0)
+  if (aio_create_helper_thread (&thid, handle_kernel_aio, NULL) != 0)
     return -1;
   __kernel_thread_started = 1;
   return 0;
@@ -477,7 +497,7 @@ handle_kernel_aio (void *arg __attribute__((unused)))
 
   for (;;)
     {
-      ret = INTERNAL_SYSCALL (io_getevents, err, 5, __aio_kioctx, 0, 10, ev,
+      ret = INTERNAL_SYSCALL (io_getevents, err, 5, __aio_kioctx, 1, 10, ev,
 			      NULL);
       if (INTERNAL_SYSCALL_ERROR_P (ret, err) || ret == 0)
         continue;
@@ -593,16 +613,11 @@ __aio_enqueue_user_request (struct requestlist *newp)
       if (nthreads < optim.aio_threads && idle_thread_count == 0)
 	{
 	  pthread_t thid;
-	  pthread_attr_t attr;
-
-	  /* Make sure the thread is created detached.  */
-	  pthread_attr_init (&attr);
-	  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 
 	  running = newp->running = allocated;
 
 	  /* Now try to start a thread.  */
-	  if (pthread_create (&thid, &attr, handle_fildes_io, newp) == 0)
+	  if (aio_create_helper_thread (&thid, handle_fildes_io, newp) == 0)
 	    /* We managed to enqueue the request.  All errors which can
 	       happen now can be recognized by calls to `aio_return' and
 	       `aio_error'.  */
@@ -653,6 +668,7 @@ __aio_enqueue_request_ctx (aiocb_union *aiocbp, int operation, kctx_t kctx)
       aiocbp->aiocb.aio_reqprio = 0;
       /* FIXME: Kernel doesn't support sync yet.  */
       operation &= ~LIO_KTHREAD;
+      kctx = KCTX_NONE;
     }
   else if (aiocbp->aiocb.aio_reqprio < 0
 	   || aiocbp->aiocb.aio_reqprio > AIO_PRIO_DELTA_MAX)
@@ -662,6 +678,23 @@ __aio_enqueue_request_ctx (aiocb_union *aiocbp, int operation, kctx_t kctx)
       aiocbp->aiocb.__error_code = EINVAL;
       aiocbp->aiocb.__return_value = -1;
       return NULL;
+    }
+
+  if ((operation & LIO_KTHREAD) || kctx != KCTX_NONE)
+    {
+      /* io_* is only really asynchronous for O_DIRECT or /dev/raw*.  */
+      int fl = __fcntl (aiocbp->aiocb.aio_fildes, F_GETFL);
+      if (fl < 0 || (fl & O_DIRECT) == 0)
+	{
+	  struct stat64 st;
+	  if (__fxstat64 (_STAT_VER, aiocbp->aiocb.aio_fildes, &st) < 0
+	      || ! S_ISCHR (st.st_mode)
+	      || major (st.st_rdev) != 162)
+	    {
+	      operation &= ~LIO_KTHREAD;
+	      kctx = KCTX_NONE;
+	    }
+	}
     }
 
   /* Compute priority for this request.  */
@@ -799,7 +832,9 @@ wait_for_kernel_requests (int fildes)
 	  return -1;
 	}
 
+#ifndef DONT_NEED_AIO_MISC_COND
       pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+#endif
       struct waitlist waitlist[nent];
       int cnt = 0;
 
@@ -807,7 +842,10 @@ wait_for_kernel_requests (int fildes)
 	{
 	  if (kreq->running == allocated)
 	    {
+#ifndef DONT_NEED_AIO_MISC_COND
 	      waitlist[cnt].cond = &cond;
+#endif
+	      waitlist[cnt].result = NULL;
 	      waitlist[cnt].next = kreq->waiting;
 	      waitlist[cnt].counterp = &nent;
 	      waitlist[cnt].sigevp = NULL;
@@ -819,11 +857,15 @@ wait_for_kernel_requests (int fildes)
 	  kreq = kreq->next_prio;
 	}
 
+#ifdef DONT_NEED_AIO_MISC_COND
+      AIO_MISC_WAIT (ret, nent, NULL, 0);
+#else
       do
 	pthread_cond_wait (&cond, &__aio_requests_mutex);
       while (nent);
 
       pthread_cond_destroy (&cond);
+#endif
     }
 
   pthread_mutex_unlock (&__aio_requests_mutex);
@@ -832,7 +874,6 @@ wait_for_kernel_requests (int fildes)
 
 
 static void *
-__attribute__ ((noreturn))
 handle_fildes_io (void *arg)
 {
   pthread_t self = pthread_self ();
@@ -1026,16 +1067,11 @@ handle_fildes_io (void *arg)
 	      else if (nthreads < optim.aio_threads)
 		{
 		  pthread_t thid;
-		  pthread_attr_t attr;
-
-		  /* Make sure the thread is created detached.  */
-		  pthread_attr_init (&attr);
-		  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 
 		  /* Now try to start a thread. If we fail, no big deal,
 		     because we know that there is at least one thread (us)
 		     that is working on AIO operations. */
-		  if (pthread_create (&thid, &attr, handle_fildes_io, NULL)
+		  if (aio_create_helper_thread (&thid, handle_fildes_io, NULL)
 		      == 0)
 		    ++nthreads;
 		}
@@ -1047,7 +1083,7 @@ handle_fildes_io (void *arg)
     }
   while (runp != NULL);
 
-  pthread_exit (NULL);
+  return NULL;
 }
 
 

@@ -1,4 +1,4 @@
-# This is only to keep the GNU C library configure mechanism happy.
-#
-# Perhaps some day we need a real configuration script for different
-# kernel versions or so.
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+
+libc_add_on_canonical=
+libc_add_on_subdirs=.

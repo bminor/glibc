@@ -1,4 +1,4 @@
-# Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -41,13 +41,19 @@ librtkaio-routines = $(patsubst %,k%,$(aio-routines)) \
 
 tests := tst-shm tst-clock tst-clock_nanosleep tst-timer tst-timer2 \
 	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \
-	 tst-aio7 tst-mqueue1 tst-mqueue2 tst-mqueue3 tst-mqueue4 \
-	 tst-mqueue5 tst-mqueue6 tst-mqueue7 tst-timer3 tst-timer4
+	 tst-aio7 tst-aio8 tst-aio9 tst-aio10 \
+	 tst-mqueue1 tst-mqueue2 tst-mqueue3 tst-mqueue4 \
+	 tst-mqueue5 tst-mqueue6 tst-mqueue7 tst-mqueue8 tst-mqueue9 \
+	 tst-timer3 tst-timer4 tst-timer5 \
+	 tst-cpuclock1 tst-cpuclock2 \
+	 tst-cputimer1 tst-cputimer2 tst-cputimer3 \
+	 tst-clock2 \
+	 tst-aiod tst-aiod64 tst-aiod2 tst-aiod3 tst-aiod4 tst-aiod5
 
 extra-libs := librtkaio
 extra-libs-others := $(extra-libs)
 
-include ../Makeconfig
+include $(..)Makeconfig
 
 ifeq (yesyes,$(build-shared)$(elf))
 generated += librt.so$(librt.so-version)
@@ -55,14 +61,15 @@ generated += librt.so$(librt.so-version)
 $(objpfx)librt.so$(librt.so-version): $(objpfx)librtkaio.so; $(make-link)
 endif
 
-include ../Rules
+include $(..)Rules
 
 CFLAGS-kaio_suspend.c = -fexceptions
 CFLAGS-kaio_clock_nanosleep.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-kaio_librt-cancellation.c = -fasynchronous-unwind-tables
 
-LDFLAGS-rtkaio.so = -Wl,-soname=lib$(libprefix)rt.so$(librt.so-version)
-CPPFLAGS-librtkaio += -DIS_IN_librt=1
+LDFLAGS-rtkaio.so = -Wl,-soname=lib$(libprefix)rt.so$(librt.so-version) \
+		    -Wl,--enable-new-dtags,-z,nodelete
+CPPFLAGS-librtkaio += -DIS_IN_librt=1 -I$(..)rt
 
 rpath-dirs := $(patsubst rt,rtkaio,$(rpath-dirs))
 
