@@ -26,13 +26,19 @@
 #include <errno.h>
 #include "tst-aiod.h"
 
-int flag;
+
+static pthread_barrier_t b;
 
 
 static void
 thrfct (sigval_t arg)
 {
-  flag = 1;
+  int e = pthread_barrier_wait (&b);
+  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      puts ("thread: barrier_wait failed");
+      exit (1);
+    }
 }
 
 
@@ -53,6 +59,12 @@ do_test (int argc, char *argv[])
     }
 
   unlink (name);
+
+  if (pthread_barrier_init (&b, NULL, 2) != 0)
+    {
+      puts ("barrier_init failed");
+      return 1;
+    }
 
   arr[0] = &cb;
 
@@ -99,9 +111,12 @@ do_test (int argc, char *argv[])
       return 1;
     }
 
-  if (flag != 0)
+  puts ("lio_listio returned");
+
+  int e = pthread_barrier_wait (&b);
+  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
     {
-      puts ("thread created, should not have happened");
+      puts ("barrier_wait failed");
       return 1;
     }
 

@@ -1,5 +1,8 @@
 2006-09-07  Jakub Jelinek  <jakub@redhat.com>
 
+	* tst-aiod2.c: Adjust test for new semantics of lio_listio.
+	* tst-aiod3.c: The thread is now supposed to be created.
+
 	* Makefile: Use $(..) in place of ../.
 	(tests): Add tst-aio{8,9,10}, tst-cpuclock{1,2}, tst-cputimer{1,2,3}
 	and tst-clock2.
