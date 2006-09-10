@@ -1,4 +1,4 @@
-%define glibcrelease 30
+%define glibcrelease 31
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -875,9 +875,10 @@ cd build-%{nptl_target_cpu}-linuxnptl && \
 %endif
 
 %ifarch %{rtkaioarches}
+rm -f $RPM_BUILD_ROOT{,%{_prefix}}/%{_lib}/librtkaio.so*
 mkdir -p $RPM_BUILD_ROOT/%{_lib}/rtkaio
-cp -a rtkaio/librtkaio.so $RPM_BUILD_ROOT/%{_lib}/rtkaio/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/` $RPM_BUILD_ROOT/%{_lib}/rtkaio/`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
+mv $RPM_BUILD_ROOT/%{_lib}/librtkaio-*.so $RPM_BUILD_ROOT/%{_lib}/rtkaio/
+ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/rtkaio/librtkaio-*.so` $RPM_BUILD_ROOT/%{_lib}/rtkaio/`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
 %endif
 
 %if %{buildxen}
@@ -901,7 +902,7 @@ ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so` $RPM_BUILD_ROOT/%{_l
 %ifarch %{rtkaioarches}
 mkdir -p $RPM_BUILD_ROOT/%{_lib}/rtkaio/$SubDir
 cp -a rtkaio/librtkaio.so $RPM_BUILD_ROOT/%{_lib}/rtkaio/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/` $RPM_BUILD_ROOT/%{_lib}/rtkaio/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
+ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/rtkaio/$SubDir/librtkaio-*.so` $RPM_BUILD_ROOT/%{_lib}/rtkaio/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
 %endif
 cd ..
 %endif
@@ -1454,6 +1455,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sun Sep 10 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-31
+- fix pthread_cond_{,timed}wait cancellation (BZ#3123)
+- fix lrint on ppc32 (BZ#3155)
+- fix malloc allocating more than half of address space (BZ#2775)
+- fix mktime on 32-bit arches a few years after 2038 (BZ#2821)
+
 * Thu Sep  7 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-30
 - add librtkaio, to use it add /%{lib}/rtkaio to your
   LD_LIBRARY_PATH or /etc/ld.so.conf

@@ -1,3 +1,33 @@
+2006-09-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2821]
+	* time/mktime.c (guess_time_tm): Fix overflow detection.
+	* time/Makefile (tests): Add bug-mktime1.
+	* time/bug-mktime1.c: New file.
+
+	[BZ #3189, #3188]
+	* misc/sys/mman.h (remap_file_pages): Make available for _GNU_SOURCE.
+	(mremap): Likewise.
+
+2006-09-07  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #1006]
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela):
+	Ensure relocation doesn't clobber any bits outside of the
+	immediate field for R_SPARC_TLS_LE_HIX22, R_SPARC_WDISP30,
+	R_SPARC_HI22 and R_SPARC_H44.
+
+	[BZ #2775]
+	* malloc/malloc.c (sYSMALLOc): Only call grow_heap if
+	(long) (MINSIZE + nb - old_size) is positive.
+
+	* malloc/arena.c (grow_heap): When growing bail even if new_size
+	is negative.
+
+	[BZ #3155]
+	* sysdeps/powerpc/powerpc32/fpu/s_lrint.S (__lrint): Don't access
+	stack below r1.
+
 2006-09-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regex_internal.c (re_string_reconstruct): Handle
@@ -36,8 +66,7 @@
 
 2006-08-31  Jakub Jelinek  <jakub@redhat.com>
 
-	* dlfcn/Makefile (LDLIBS-bug-atexit3-lib.so): Add
-	ld.so.
+	* dlfcn/Makefile (LDLIBS-bug-atexit3-lib.so): Add ld.so.
 
 	* malloc/malloc.c (_int_malloc): Use full list insert and not
 	shortcut which assumes the list is empty for large requests
