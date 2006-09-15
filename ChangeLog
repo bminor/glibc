@@ -1,5 +1,10 @@
 2006-09-14  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/ieee754/ldbl-128ibm/s_llrintl.c: Comment fixes.
+	* sysdeps/ieee754/ldbl-128ibm/s_llroundl.c: Comment fixes.
+	* sysdeps/ieee754/ldbl-128ibm/s_lrintl.c: Rewritten.
+	* sysdeps/ieee754/ldbl-128ibm/s_lroundl.c: Rewritten.
+
 	* io/Makefile (CFLAGS-fstatat.c): Set.
 	(CFLAGS-fstatat64.c): Likewise.
 	(CFLAGS-mknodat.c): Likewise.
