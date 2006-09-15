@@ -1,0 +1,66 @@
+2006-07-06  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power6/memcpy.S: New file.
+
+2006-06-19  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power6/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power6/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power6/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6/fpu/Implies:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/fpu/Implies:
+	New file.
+
+2006-06-15  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_ceil.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_ceilf.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_floor.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_floorf.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_round.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_roundf.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_trunc.S: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_truncf.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_ceil.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_ceilf.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_floor.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_floorf.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_round.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_roundf.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_trunc.S: New file.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_truncf.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power5+/fpu/Implies:
+	New file.
+
+2006-03-20  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* Makefile: New file.
+	* README: New file.
+	* configure: New file.
+	* sysdeps/powerpc/powerpc32/970/Implies: New file.
+	* sysdeps/powerpc/powerpc32/970/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power4/memcmp.S: New file.
+	* sysdeps/powerpc/powerpc32/power4/memcpy.S: New file.
+	* sysdeps/powerpc/powerpc32/power4/memset.S: New file.
+	* sysdeps/powerpc/powerpc32/power4/strncmp.S: New file.
+	* sysdeps/powerpc/powerpc32/power5/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power5/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power5+/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llrint.S: New file.
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llrintf.S: New file.
+	* sysdeps/powerpc/powerpc64/970/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power4/memcmp.S: New file.
+	* sysdeps/powerpc/powerpc64/power4/memcpy.S: New file.
+	* sysdeps/powerpc/powerpc64/power4/strncmp.S: New file.
+	* sysdeps/powerpc/powerpc64/power5/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/970/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power4/fpu/Implies:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power5/fpu/Implies:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power5+/fpu/Implies:
+	New file.

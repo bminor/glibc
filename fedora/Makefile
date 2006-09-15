@@ -114,7 +114,7 @@ $(tar-name)-$(branch-name).patch: makepatch.awk glibc.spec \
 	mv -f patch.tmp $@
 
 # makepatch.awk omits these files from the patch; we put them in a tar file.
-outside-patch = fedora c_stubs rtkaio \
+outside-patch = fedora c_stubs rtkaio powerpc-cpu \
 		localedata/charmaps/GB18030 iconvdata/gb18030.c
 
 $(tar-name)-$(branch-name)-$(snapshot-name).tar.bz2: Makefile branch.mk \

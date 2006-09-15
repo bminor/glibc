@@ -32,6 +32,7 @@
 	if ($2 ~ /.cvsignore$/ ||
 	    $2 ~ /^c_stubs/ ||
 	    $2 ~ /^rtkaio/ ||
+	    $2 ~ /^powerpc-cpu/ ||
 	    $2 ~ /^fedora/ ||
 	    $2 ~ /^localedata\/charmaps\/GB18030/ ||
 	    $2 ~ /^iconvdata\/gb18030\.c/) {
