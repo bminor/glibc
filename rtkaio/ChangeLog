@@ -1,3 +1,9 @@
+2006-09-15  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3138]
+	* rt/tst-aiod.c (do_prepare): Give name_len type size_t.
+	* rt/tst-aiod64.c (do_prepare): Likewise.
+
 2006-09-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-aiod2.c: Adjust test for new semantics of lio_listio.

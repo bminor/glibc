@@ -30,11 +30,17 @@ tf (void *arg)
       exit (1);
     }
   pthread_cleanup_push (cl, NULL);
-  if (pthread_cond_wait (&c, &m) != 0)
-    {
-      printf ("%s: cond_wait failed\n", __func__);
-      exit (1);
-    }
+  /* We have to loop here because the cancellation might come after
+     the cond_wait call left the cancelable area and is then waiting
+     on the mutex.  In this case the beginning of the second cond_wait
+     call will cause the cancellation to happen.  */
+  do
+    if (pthread_cond_wait (&c, &m) != 0)
+      {
+	printf ("%s: cond_wait failed\n", __func__);
+	exit (1);
+      }
+  while (arg == NULL);
   pthread_cleanup_pop (0);
   if (pthread_mutex_unlock (&m) != 0)
     {
@@ -105,7 +111,7 @@ do_test (void)
 	  c.__data.__wakeup_seq, c.__data.__woken_seq, c.__data.__mutex,
 	  c.__data.__nwaiters, c.__data.__broadcast_seq);
 
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
+  if (pthread_create (&th, NULL, tf, (void *) 1l) != 0)
     {
       puts ("2nd create failed");
       return 1;

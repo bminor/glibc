@@ -1,4 +1,4 @@
-%define glibcrelease 31
+%define glibcrelease 32
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -1455,6 +1455,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Sep 15 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-32
+- use just AT_PLATFORM and altivec AT_HWCAP bit for library selection
+
 * Sun Sep 10 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-31
 - fix pthread_cond_{,timed}wait cancellation (BZ#3123)
 - fix lrint on ppc32 (BZ#3155)
