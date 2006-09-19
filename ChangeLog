@@ -1,3 +1,63 @@
+2006-09-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-cache.c (HWCAP_CHECK): If _DL_PLATFORMS_COUNT, but
+	platform == -1, reject any libs with non-zero _DL_HWCAP_PLATFORM
+	bits.
+
+2006-09-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c (_dl_close): If dependency is not unloaded make
+	sure no reference to the unloaded map's search list remains in the
+	dependency's scope.
+
+2006-09-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile: Add rules to build and run unload7 test.
+	* elf/unload7.c: New test.
+	* elf/unload7mod1.c: New file.
+	* elf/unload7mod2.c: New file.
+
+2006-09-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (PT_GETEVENTMSG): Fix pasto.
+	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h (PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO, PTRACE_SETSIGINFO): Define.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h (PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO, PTRACE_SETSIGINFO): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h (PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO, PTRACE_SETSIGINFO): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h (PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG): Likewise.
+	(PTRACE_GETSIGINFO, PTRACE_SETSIGINFO): Change to the arch independent
+	values.
+
+2006-09-17  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO, PTRACE_SETSIGINFO): Define.
+	* sysdeps/unix/sysv/linux/ptrace.c (ptrace): Check PTRACE_SETOPTIONS,
+	PTRACE_GETEVENTMSG, PTRACE_GETSIGINFO and PTRACE_SETSIGINFO.
+
+2006-09-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/register-dump.h (register_dump): Don't
+	write '\0' to the fd.
+	* sysdeps/mach/hurd/powerpc/register-dump.h (register_dump): Likewise.
+	* sysdeps/powerpc/powerpc64/register-dump.h (register_dump): Likewise.
+	Change regs to unsigned long pointer from unsigned int, fix fscr
+	offset.
+
+2006-09-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/Makefile (CFLAGS-fstatat.c): Set.
+	(CFLAGS-fstatat64.c): Likewise.
+	(CFLAGS-mknodat.c): Likewise.
+
+	* sysdeps/ieee754/ldbl-128ibm/s_llrintl.c: Comment fixes.
+	* sysdeps/ieee754/ldbl-128ibm/s_llroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_lrintl.c: Rewritten.
+	* sysdeps/ieee754/ldbl-128ibm/s_lroundl.c: Rewritten.
+
 2006-09-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/s_llrintl.c: Comment fixes.
@@ -11,7 +71,7 @@
 
 2006-09-14  Jakub Jelinek  <jakub@redhat.com>
 	    Steven Munroe  <sjmunroe@us.ibm.com>
-	    
+
 	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags): Add 4 new cap
 	names to the beginning.  Rename "cell" to "cellbe".
 	(_dl_powerpc_platforms): New.
