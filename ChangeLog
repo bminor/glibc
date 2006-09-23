@@ -1,3 +1,94 @@
+2006-09-21  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3225]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h (PTR_MANGLE3,
+	PTR_DEMANGLE3): Define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h (PTR_MANGLE3,
+	PTR_DEMANGLE3): Likewise.
+	* sysdeps/powerpc/powerpc32/__longjmp-common.S (__longjmp): Use them.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S (__longjmp):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S (__longjmp): Likewise.
+
+2006-09-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* po/libc.pot: Regenerated.
+	* po/be.po: Updated.
+	* po/ca.po: Likewise.
+	* po/cs.po: Likewise.
+	* po/da.po: Likewise.
+	* po/de.po: Likewise.
+	* po/el.po: Likewise.
+	* po/en_GB.po: Likewise.
+	* po/es.po: Likewise.
+	* po/fi.po: Likewise.
+	* po/fr.po: Likewise.
+	* po/gl.po: Likewise.
+	* po/hr.po: Likewise.
+	* po/hu.po: Likewise.
+	* po/ja.po: Likewise.
+	* po/ko.po: Likewise.
+	* po/nb.po: Likewise.
+	* po/nl.po: Likewise.
+	* po/pl.po: Likewise.
+	* po/pt_BR.po: Likewise.
+	* po/ru.po: Likewise.
+	* po/rw.po: Likewise.
+	* po/sk.po: Likewise.
+	* po/sv.po: Likewise.
+	* po/tr.po: Likewise.
+	* po/zh_CN.po: Likewise.
+	* po/zh_TW.po: Likewise.
+
+	[BZ #3137]
+	* iconv/iconv_prog.c (main): Fix spelling in error message.
+	* iconv/iconvconfig.c (main): Likewise.
+	* locale/programs/ld-collate.c (handle_ellipsis): Likewise.
+	* locale/programs/ld-ctype.c (charclass_symbolic_ellipsis): Likewise.
+	* locale/programs/localedef.c (main): Likewise.
+	* locale/programs/repertoire.c (repertoire_read): Likewise.
+	* timezone/zdump.c (main): Likewise.
+	* nscd/connections.c (handle_request): Fix spelling in log message.
+	Patch by Malcolm Parsons <malcolm.parsons@gmail.com>.
+
+2006-09-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/inet6_option.c: Also emit linker warnings for the RFC 2292
+	interfaces.
+
+2006-09-20  Andreas Jaeger  <aj@suse.de>
+
+	* math/libm-test.inc (lrint_test_upward): Fix typo.
+
+2006-06-17  Joseph S. Myers  <joseph@codesourcery.com>
+
+	[BZ #2592]
+	* math/libm-test.inc (lrint_test_tonearest): New function.
+	(lrint_test_towardzero): New function.
+	(lrint_test_downward): New function.
+	(lrint_test_upward): New function.
+	(main): Run these new tests.
+	* sysdeps/ieee754/dbl-64/s_llrint.c (__llrint): Correct rounding
+	of values near to 0.
+	(two52): Use double not long double.
+	* sysdeps/ieee754/dbl-64/s_lrint.c (__lrint): Likewise.
+	* sysdeps/ieee754/flt-32/s_llrintf.c (__llrintf): Likewise.
+	(two23): Use float not double.
+	* sysdeps/ieee754/flt-32/s_lrintf.c (__lrintf): Likewise.
+	(two23): Use float not double.
+	* sysdeps/ieee754/ldbl-128/s_llrintl.c (__llrintl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c (__lrintl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_llrintl.c (__llrintl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_lrintl.c (__lrintl): Likewise.
+
+2006-09-20  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/makecontext.c (__makecontext):
+	Cast sp to unsigned long to avoid compiler warning.
+	Use __makecontext_ret function instead of a trampoline on the stack.
+	(__makecontext_ret): New function.
+	* sysdeps/unix/sysv/linux/s390/s390-64/makecontext.c: Likewise.
+
 2006-09-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-cache.c (HWCAP_CHECK): If _DL_PLATFORMS_COUNT, but
