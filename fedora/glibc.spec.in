@@ -1,4 +1,4 @@
-%define glibcrelease 1
+%define glibcrelease 2
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -1528,6 +1528,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Oct  2 2006 Jakub Jelinek <jakub@redhat.com> 2.5-2
+- fix nscd database growing (#207928)
+- bypass prelinking when LD_DYNAMIC_WEAK=1 is in the environment
+
 * Fri Sep 29 2006 Jakub Jelinek <jakub@redhat.com> 2.5-1
 - glibc 2.5 release
 

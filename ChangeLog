@@ -1,4 +1,50 @@
+2006-10-02  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3291]
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pause.c: Include
+	errno.h, signal.h, unistd.h and sysdep-cancel.h.
+	(__sigprocmask): Define.
+
+2006-10-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (dl_main): Don't use prelinking if LD_DYNAMIC_WEAK is
+	used.
+
+2006-10-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/mem.c (mempool_alloc): Round array size to 16 bytes
+	in oldtotal and newtotal calculation.
+	* nscd/nscd-client.h (struct mapped_database): Add datasize
+	field.
+	* nscd/nscd_helper.c (get_mapping): Initialize datasize field.
+	(__nscd_get_map_ref): Get a new mapping even if mapping's data_size
+	increased.
+	(__nscd_cache_search): Add checks to make sure we never reference
+	data beyond the current mapping.
+
+2006-10-02  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* sysdeps/posix/getaddrinfo.c (match_prefix): Make mask and val
+	variables const to avoid compiler warnings.
+
+	* io/fts.c (fts_close): Remove redundant checks.
+	(fts_build): Likewise.
+	(fts_palloc): Likewise.
+
+	* manual/message.texi (Advanced gettext functions,
+	Using gettextized software): Fix typos.
+
+2006-09-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/glob.c (glob_in_dir): Add some comments and asserts to
+	explain why there are no leaks.
+
 2006-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/wmemstream.c: Include <wchar.h>.
+	* libio/bug-wmemstream1.c: Likewise.
+	* libio/tst-wmemstream1.c: Likewise.
+	* libio/tst-wmemstream2.c: Likewise.
 
 	* version.h (RELEASE): Bump to 2.5.
 	* README: Regenerated.
