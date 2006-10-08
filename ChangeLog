@@ -1,3 +1,26 @@
+2006-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_table.c (nis_list): If __follow_path fails in the new
+	code, make sure the nis_freeresult call doesn't crash and that the
+	result is reported correctly.
+
+2006-09-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nis_table.c (nis_list): Handle FOLLOW_PATH | ALL_RESULTS
+	when callback is NULL.
+
+	* nis/Versions (libnss_nisplus): Add
+	_nss_nisplus_initgroups_dyn@@GLIBC_PRIVATE.
+	* nis/Makefile (libnss_nisplus-routines): Add nisplus-initgroups.
+	* nis/nss_nisplus/nisplus-grp.c (tablename_val, tablename_len,
+	_nss_create_tablename): Rename to...
+	(grp_tablename_val, grp_tablename_len, _nss_grp_create_tablename):
+	... these.  No longer static.
+	(internal_setgrent): Adjust users.
+	(_nss_nisplus_getgrnam_r, _nss_nisplus_getgrgid_r): Likewise.
+	Don't use locking around _nss_grp_create_tablename call.
+	* nis/nss_nisplus/nisplus-initgroups.c: New file.
+
 2006-10-06  Andreas Jaeger  <aj@suse.de>
 
 	* include/features.h (__GLIBC_MINOR__): It's glibc 2.5 now.
