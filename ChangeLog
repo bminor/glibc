@@ -1,3 +1,232 @@
+2006-10-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Disable building profile libraries by default.
+
+2006-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/xdr_mem.c (xdrmem_setpos): Don't compare addresses
+	as signed longs, check for x_base + pos overflow.
+	* sunrpc/Makefile (tests): Add tst-xdrmem2.
+	* sunrpc/tst-xdrmem2.c: New test.
+
+2006-10-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol_x): Add warning to
+	_dl_lookup_symbol_x code.
+
+2006-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-runtime.c: Include sysdep-cancel.h.
+	(_dl_fixup, _dl_profile_fixup): Use __rtld_mrlock_* and
+	scoperec->nusers only if !SINGLE_THREAD_P.  Use atomic_*
+	instead of catomic_* macros.
+	* elf/dl-sym.c: Include sysdep-cancel.h.
+	(do_sym): Use __rtld_mrlock_* and scoperec->nusers only
+	if !SINGLE_THREAD_P.  Use atomic_* instead of catomic_* macros.
+	* elf/dl-close.c: Include sysdep-cancel.h.
+	(_dl_close): Use __rtld_mrlock_* and scoperec->nusers only
+	if !SINGLE_THREAD_P.  Use atomic_* instead of catomic_* macros.
+	* elf/dl-open.c: Include sysdep-cancel.h.
+	(dl_open_worker): Use __rtld_mrlock_* and scoperec->nusers only
+	if !SINGLE_THREAD_P.  Use atomic_* instead of catomic_* macros.
+
+2006-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3313]
+	* malloc/malloc.c (malloc_consolidate): Set maxfb to address of last
+	fastbin rather than end of fastbin array.
+
+2006-10-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i486/bits/atomic.h (catomic_decrement): Use correct
+	body macro.
+	* sysdeps/x86_64/bits/atomic.h
+	(__arch_c_compare_and_exchange_val_64_acq): Add missing casts.
+	(catomic_decrement): Use correct body macro.
+
+2006-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/atomic.h: Add a unique prefix to all local variables
+	in macros.
+	* csu/tst-atomic.c (do_test): Test also catomic_* macros.
+
+2006-10-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3369]
+	* sysdeps/posix/getaddrinfo.c (rfc3484_sort): Fix typos in rules 4
+	and 7.
+
+2006-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/arpa/nameser.h: Document that ns_t_a6 is deprecated.
+
+2006-10-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3313]
+	* malloc/malloc.c (malloc_consolidate): Don't use get_fast_max to
+	determine highest fast bin to consolidate, always look into all of
+	them.
+	(do_check_malloc_state): Only require for empty bins for large
+	sizes in main arena.
+
+	* libio/stdio.h: Add more __wur attributes.
+
+	* elf/dl-minimal.c (realloc): Optimize last patch.
+
+2006-10-12  Richard Sandiford  <richard@codesourcery.com>
+
+	[BZ #3352]
+	* elf/dl-minimal.c (realloc): Let malloc() return a new pointer,
+	and use memcpy() if it does.
+
+2006-11-12  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #2510]
+	* manual/search.texi (Hash Search Function): Clarify.
+	(Array Search Function): Clarify.
+
+2006-11-12  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #2830]
+	* math/atest-exp.c (main): Cast hex value to mp_limb_t before
+	shifting.
+	* math/atest-exp2.c (read_mpn_hex): Likewise.
+	* math/atest-sincos.c (main): Likewise.
+
+2006-10-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add epoll_pwait.
+	* sysdeps/unix/sysv/linux/sys/epoll.h: Declare epoll_pwait.
+	* sysdeps/unix/sysv/linux/Versions (libc): Add epoll_pwait for
+	version GLIBC_2.6.
+	* Versions.def: Add GLIBC_2.6 for libc.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (DOARGS_6): Fix offset.
+
+	* sysdeps/i386/i486/bits/atomic.h: Add catomic_* support.
+
+2006-10-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc.c (_int_malloc): Remove unused any_larger variable.
+
+	* nis/nis_defaults.c (__nis_default_access): Don't call getenv twice.
+
+	* nis/nis_subr.c (nis_getnames): Use __secure_getenv instead of getenv.
+	* sysdeps/generic/unsecvars.h: Add NIS_PATH.
+
+2006-10-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/atomic.c: Define catomic_* operations.
+	* sysdeps/x86_64/bits/atomic.h: Likewise.  Fix a few minor problems.
+	* stdlib/cxa_finalize.c: Use catomic_* operations instead of atomic_*.
+	* malloc/memusage.c: Likewise.
+	* gmon/mcount.c: Likewise.
+	* elf/dl-close.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-profile.c: Likewise.
+	* elf/dl-sym.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-fptr.c: Likewise.
+	* resolv/res_libc.c: Likewise.
+
+2006-10-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_subr.c (nis_getnames): Add trailing dot to NIS_PATH
+	components which lack them.
+
+	* nis/nis_subr.c (nis_getnames): Make sure that we always return
+	at least one entry consisting of the parameter concatenated with
+	the domain.
+
+2006-10-10  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/utimes.c: Use a union to avoid an improper cast.
+	* sysdeps/mach/hurd/futimes.c: Likewise.
+	* sysdeps/mach/hurd/lutimes.c: Likewise.
+
+2006-10-09  Ulrich Drepper  <drepper@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	Implement reference counting of scope records.
+	* elf/dl-close.c (_dl_close): Remove all scopes from removed objects
+	from the list in objects which remain.  Always allocate new scope
+	record.
+	* elf/dl-open.c (dl_open_worker): When growing array for scopes,
+	don't resize, allocate a new one.
+	* elf/dl-runtime.c: Update reference counters before using a scope
+	array.
+	* elf/dl-sym.c: Likewise.
+	* elf/dl-libc.c: Adjust for l_scope name change.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-object.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* include/link.h: Include <rtld-lowlevel.h>.  Define struct
+	r_scoperec.  Replace r_scope with pointer to r_scoperec structure.
+	Add l_scoperec_lock.
+	* sysdeps/generic/ldsodefs.h: Include <rtld-lowlevel.h>.
+	* sysdeps/generic/rtld-lowlevel.h: New file.
+
+	* include/atomic.h: Rename atomic_and to atomic_and_val and
+	atomic_or to atomic_or_val.  Define new macros atomic_and and
+	atomic_or which do not return values.
+	* sysdeps/x86_64/bits/atomic.h: Define atomic_and and atomic_or.
+	Various cleanups.
+	* sysdeps/i386/i486/bits/atomic.h: Likewise.
+
+	* po/sv.po: Update from translation team.
+
+2006-10-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def: Add GLIBC_2.6 to libpthread.
+
+	* include/shlib-compat.h (SHLIB_COMPAT): Expand parameters before use.
+	(versioned_symbol): Likewise.
+	(compat_symbol): Likewise.
+
+	* po/tr.po: Update from translation team.
+
+2006-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/Banner: Removed.  It's been integral part forever and the
+	author info is incomplete anyway.
+	* libio/Banner: Likewise.
+
+	* nis/nis_table.c (nis_list): If __follow_path fails in the new
+	code, make sure the nis_freeresult call doesn't crash and that the
+	result is reported correctly.
+
+2006-09-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nis_table.c (nis_list): Handle FOLLOW_PATH | ALL_RESULTS
+	when callback is NULL.
+
+	* nis/Versions (libnss_nisplus): Add
+	_nss_nisplus_initgroups_dyn@@GLIBC_PRIVATE.
+	* nis/Makefile (libnss_nisplus-routines): Add nisplus-initgroups.
+	* nis/nss_nisplus/nisplus-grp.c (tablename_val, tablename_len,
+	_nss_create_tablename): Rename to...
+	(grp_tablename_val, grp_tablename_len, _nss_grp_create_tablename):
+	... these.  No longer static.
+	(internal_setgrent): Adjust users.
+	(_nss_nisplus_getgrnam_r, _nss_nisplus_getgrgid_r): Likewise.
+	Don't use locking around _nss_grp_create_tablename call.
+	* nis/nss_nisplus/nisplus-initgroups.c: New file.
+
+2006-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h (VERSION): Bump to 2.5.90 for new development tree.
+
+2006-10-06  Andreas Jaeger  <aj@suse.de>
+
+	* include/features.h (__GLIBC_MINOR__): It's glibc 2.5 now.
+
+2006-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/pl.po: Update from translation team.
+
+	* nscd/nscd.c (main): Fix typo in message.
+	Patch by Jakub Bogsz <qboosh@pld-linux.org>.
+
 2006-10-02  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3291]
@@ -632,7 +861,7 @@
 	* nis/nis_xdr.c: Avoid some function calls.
 
 2006-08-07  Jakub Jelinek  <jakub@redhat.com>
-            Ulrich Drepper  <drepper@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_call.c (rec_dirsearch) [case LOWER_NAME]: Don't take
 	short cut if only one name component is stripped away.

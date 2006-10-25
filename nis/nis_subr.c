@@ -178,7 +178,7 @@ nis_getnames (const_nis_name name)
     }
 
   /* Get the search path, where we have to search "name" */
-  path = getenv ("NIS_PATH");
+  path = __secure_getenv ("NIS_PATH");
   if (path == NULL)
     path = strdupa ("$");
   else
@@ -251,13 +251,16 @@ nis_getnames (const_nis_name name)
 	    {
 	      char *p;
 
-	      tmp = malloc (cplen + name_len + 2);
+	      tmp = malloc (cplen + name_len + 3);
 	      if (__builtin_expect (tmp == NULL, 0))
 		goto free_null;
 
-	      p = __stpcpy (tmp, name);
+	      p = __mempcpy (tmp, name, name_len);
 	      *p++ = '.';
-	      memcpy (p, cp, cplen + 1);
+	      p = __mempcpy (p, cp, cplen);
+	      if (p[-1] != '.')
+		*p++ = '.';
+	      *p = '\0';
 	    }
 
 	  if (pos >= count)
@@ -274,6 +277,13 @@ nis_getnames (const_nis_name name)
 	}
       cp = __strtok_r (NULL, ":", &saveptr);
     }
+
+  if (pos == 0
+      && __asprintf (&getnames[pos++], "%s%s%s%s",
+		     name, name[name_len - 1] == '.' ? "" : ".",
+		     local_domain,
+		     local_domain[local_domain_len - 1] == '.' ? "" : ".") < 0)
+    goto free_null;
 
   getnames[pos] = NULL;
 

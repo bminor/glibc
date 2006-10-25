@@ -1,18 +1,18 @@
-/* Minimum guaranteed maximum values for system limits.  Linux/SPARC version.
-   Copyright (C) 1993-1998,2000,2002,2003,2004 Free Software Foundation, Inc.
+/* Minimum guaranteed maximum values for system limits.  Linux/PPC version.
+   Copyright (C) 1993-1998,2000,2002-2004,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
+   modify it under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of the
    License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public
+   You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
@@ -70,8 +70,9 @@
    priority level.  */
 #define AIO_PRIO_DELTA_MAX	20
 
-/* Minimum size for a thread.  We are free to choose a reasonable value.  */
-#define PTHREAD_STACK_MIN	24576
+/* Minimum size for a thread.  At least two pages for systems with 64k
+   pages.  */
+#define PTHREAD_STACK_MIN	131072
 
 /* Maximum number of timer expiration overruns.  */
 #define DELAYTIMER_MAX	2147483647

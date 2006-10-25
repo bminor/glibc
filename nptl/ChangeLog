@@ -1,3 +1,52 @@
+2006-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/rtld-lowlevel.h (__rtld_mrlock_lock,
+	__rtld_mrlock_unlock, __rtld_mrlock_change, __rtld_mrlock_done): Use
+	atomic_* instead of catomic_* macros.
+
+2006-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3285]
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Add SEM_VALUE_MAX.
+	* sysdeps/unix/sysv/linux/powerpc/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/semaphore.h: Remove SEM_VALUE_MAX.
+	* sysdeps/unix/sysv/linux/powerpc/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/semaphore.h: Likewise.
+
+2006-10-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Add support for
+	cancelable syscalls with six parameters.
+
+	* sysdeps/unix/sysv/linux/rtld-lowlevel.h: Use catomic_*
+	operations instead of atomic_*.
+
+2006-10-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/rtld-lowlevel.h: New file..
+
+2006-10-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/local_lim.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_attr_setstack.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_attr_setstacksize.c:
+	New file.
+	* pthread_attr_setstack.c: Allow overwriting the version number of the
+	new symbol.
+	* pthread_attr_setstacksize.c: Likewise.
+	(__old_pthread_attr_setstacksize): If STACKSIZE_ADJUST is defined use
+	it.
+	* sysdeps/unix/sysv/linux/powerpc/Versions (libpthread): Add
+	pthread_attr_setstack and pthread_attr_setstacksize to GLIBC_2.6.
+
 2006-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3251]
