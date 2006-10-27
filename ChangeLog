@@ -1,3 +1,45 @@
+2006-10-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3426]
+	* stdlib/stdlib.h: Adjust comment for canonicalize_file_name to
+	reality.
+
+	[BZ #3429]
+	* elf/dl-open.c (dl_open_worker): Keep holding dl_load_lock until
+	we are sure we do not need it anymore for _dl_close.  ALso move
+	the asserts inside the lock region.
+	Patch mostly by Suzuki <suzuki@in.ibm.com>.
+
+2006-10-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-lookup.c (_dl_debug_bindings): Remove unised symbol_scope
+	argument.
+	(_dl_lookup_symbol_x): Adjust caller.
+
+	* sysdeps/generic/ldsodefs.h (struct link_namespaces): Remove
+	_ns_global_scope.
+	* elf/rtld.c (dl_main): Don't initialize _ns_global_scope.
+
+	* elf/dl-libc.c: Revert l_scope name changes.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-object.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* elf/dl-close.c (_dl_close): Likewise.
+	* elf/dl-open.c (dl_open_worker): Likewise.  If not SINGLE_THREAD_P,
+	always use __rtld_mrlock_{change,done}.  Always free old scope list
+	here if not l_scope_mem.
+	* elf/dl-runtime.c (_dl_fixup, _dl_profile_fixup): Revert l_scope name
+	change.  Never free scope list here.  Just __rtld_mrlock_lock before
+	the lookup and __rtld_mrlock_unlock it after the lookup.
+	* elf/dl-sym.c: Likewise.
+	* include/link.h (struct r_scoperec): Remove.
+	(struct link_map): Replace l_scoperec with l_scope, l_scoperec_mem
+	with l_scope_mem and l_scoperec_lock with l_scope_lock.
+
+2006-10-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/gnu/netinet/tcp.h: Define TCP_CONGESTION.
+
 2006-10-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Disable building profile libraries by default.
