@@ -26,12 +26,10 @@
 #include <ldsodefs.h>
 #include <dl-hash.h>
 #include <sysdep-cancel.h>
-#ifdef USE_TLS
-# include <dl-tls.h>
-#endif
+#include <dl-tls.h>
 
 
-#if defined USE_TLS && defined SHARED
+#ifdef SHARED
 /* Systems which do not have tls_index also probably have to define
    DONT_USE_TLS_INDEX.  */
 
@@ -115,7 +113,7 @@ do_sym (void *handle, const char *name, void *who,
 	 the initial binary.  And then the more complex part
 	 where the object is dynamically loaded and the scope
 	 array can change.  */
-      if (match->l_type != lt_loaded || SINGLE_THREAD_P)
+      if (match->l_type != lt_loaded || RTLD_SINGLE_THREAD_P)
 	result = GLRO(dl_lookup_symbol_x) (name, match, &ref,
 					   match->l_scope, vers, 0,
 					   flags | DL_LOOKUP_ADD_DEPENDENCY,
@@ -184,7 +182,7 @@ RTLD_NEXT used in code not dynamically loaded"));
     {
       void *value;
 
-#if defined USE_TLS && defined SHARED
+#ifdef SHARED
       if (ELFW(ST_TYPE) (ref->st_info) == STT_TLS)
 	/* The found symbol is a thread-local storage variable.
 	   Return the address for to the current thread.  */

@@ -447,11 +447,6 @@ struct rtld_global
      It returns an errno code or zero on success.  */
   EXTERN int (*_dl_make_stack_executable_hook) (void **) internal_function;
 
-  /* Keep the conditional TLS members at the end so the layout of the
-     structure used by !USE_TLS code matches the prefix of the layout in
-     the USE_TLS rtld.  Note that `struct link_map' is conditionally
-     defined as well, so _dl_rtld_map needs to be last before this.  */
-#ifdef USE_TLS
   /* Highest dtv index currently needed.  */
   EXTERN size_t _dl_tls_max_dtv_idx;
   /* Flag signalling whether there are gaps in the module ID allocation.  */
@@ -479,10 +474,10 @@ struct rtld_global
 /* Number of additional entries in the slotinfo array of each slotinfo
    list element.  A large number makes it almost certain take we never
    have to iterate beyond the first element in the slotinfo list.  */
-# define TLS_SLOTINFO_SURPLUS (62)
+#define TLS_SLOTINFO_SURPLUS (62)
 
 /* Number of additional slots in the dtv allocated.  */
-# define DTV_SURPLUS	(14)
+#define DTV_SURPLUS	(14)
 
   /* Initial dtv of the main thread, not allocated with normal malloc.  */
   EXTERN void *_dl_initial_dtv;
@@ -490,23 +485,18 @@ struct rtld_global
   EXTERN size_t _dl_tls_generation;
 
   EXTERN void (*_dl_init_static_tls) (struct link_map *);
-#endif
 
 #ifdef SHARED
 };
 # define __rtld_global_attribute__
 # ifdef IS_IN_rtld
-#  ifdef HAVE_VISIBILITY_ATTRIBUTE
-#   ifdef HAVE_SDATA_SECTION
-#    define __rtld_local_attribute__ \
+#  ifdef HAVE_SDATA_SECTION
+#   define __rtld_local_attribute__ \
 	    __attribute__ ((visibility ("hidden"), section (".sdata")))
-#    undef __rtld_global_attribute__
-#    define __rtld_global_attribute__ __attribute__ ((section (".sdata")))
-#   else
-#    define __rtld_local_attribute__ __attribute__ ((visibility ("hidden")))
-#   endif
+#   undef __rtld_global_attribute__
+#   define __rtld_global_attribute__ __attribute__ ((section (".sdata")))
 #  else
-#   define __rtld_local_attribute__
+#   define __rtld_local_attribute__ __attribute__ ((visibility ("hidden")))
 #  endif
 extern struct rtld_global _rtld_local __rtld_local_attribute__;
 #  undef __rtld_local_attribute__
@@ -668,11 +658,7 @@ struct rtld_global_ro
 };
 # define __rtld_global_attribute__
 # ifdef IS_IN_rtld
-#  ifdef HAVE_VISIBILITY_ATTRIBUTE
-#   define __rtld_local_attribute__ __attribute__ ((visibility ("hidden")))
-#  else
-#   define __rtld_local_attribute__
-#  endif
+#  define __rtld_local_attribute__ __attribute__ ((visibility ("hidden")))
 extern struct rtld_global_ro _rtld_local_ro
     attribute_relro __rtld_local_attribute__;
 extern struct rtld_global_ro _rtld_global_ro
@@ -1037,9 +1023,7 @@ rtld_hidden_proto (_dl_allocate_tls_init)
 extern void _dl_deallocate_tls (void *tcb, bool dealloc_tcb) internal_function;
 rtld_hidden_proto (_dl_deallocate_tls)
 
-#if defined USE_TLS
 extern void _dl_nothread_init_static_tls (struct link_map *) attribute_hidden;
-#endif
 
 /* Find origin of the executable.  */
 extern const char *_dl_get_origin (void) attribute_hidden;

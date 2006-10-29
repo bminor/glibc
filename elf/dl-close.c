@@ -41,7 +41,6 @@ typedef void (*fini_t) (void);
 #define IDX_STILL_USED -1
 
 
-#ifdef USE_TLS
 /* Returns true we an non-empty was found.  */
 static bool
 remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
@@ -103,26 +102,12 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
   /* No non-entry in this list element.  */
   return false;
 }
-#endif
 
 
 void
-_dl_close (void *_map)
+_dl_close_worker (struct link_map *map)
 {
-  struct link_map *map = _map;
   Lmid_t ns = map->l_ns;
-  unsigned int i;
-  /* First see whether we can remove the object at all.  */
-  if (__builtin_expect (map->l_flags_1 & DF_1_NODELETE, 0)
-      && map->l_init_called)
-    /* Nope.  Do nothing.  */
-    return;
-
-  if (__builtin_expect (map->l_direct_opencount, 1) == 0)
-    GLRO(dl_signal_error) (0, map->l_name, NULL, N_("shared object not open"));
-
-  /* Acquire the lock.  */
-  __rtld_lock_lock_recursive (GL(dl_load_lock));
 
   /* One less direct use.  */
   --map->l_direct_opencount;
@@ -143,16 +128,13 @@ _dl_close (void *_map)
 	_dl_debug_printf ("\nclosing file=%s; direct_opencount=%u\n",
 			  map->l_name, map->l_direct_opencount);
 
-      __rtld_lock_unlock_recursive (GL(dl_load_lock));
       return;
     }
 
  retry:
   dl_close_state = pending;
 
-#ifdef USE_TLS
   bool any_tls = false;
-#endif
   const unsigned int nloaded = GL(dl_ns)[ns]._ns_nloaded;
   char used[nloaded];
   char done[nloaded];
@@ -246,7 +228,7 @@ _dl_close (void *_map)
 #endif
   bool unload_any = false;
   unsigned int first_loaded = ~0;
-  for (i = 0; i < nloaded; ++i)
+  for (unsigned int i = 0; i < nloaded; ++i)
     {
       struct link_map *imap = maps[i];
 
@@ -417,7 +399,7 @@ _dl_close (void *_map)
 
 	      struct r_scope_elem **old = imap->l_scope;
 
-	      if (SINGLE_THREAD_P)
+	      if (RTLD_SINGLE_THREAD_P)
 		imap->l_scope = newp;
 	      else
 		{
@@ -474,15 +456,13 @@ _dl_close (void *_map)
   r->r_state = RT_DELETE;
   _dl_debug_state ();
 
-#ifdef USE_TLS
   size_t tls_free_start;
   size_t tls_free_end;
   tls_free_start = tls_free_end = NO_TLS_OFFSET;
-#endif
 
   /* Check each element of the search list to see if all references to
      it are gone.  */
-  for (i = first_loaded; i < nloaded; ++i)
+  for (unsigned int i = first_loaded; i < nloaded; ++i)
     {
       struct link_map *imap = maps[i];
       if (!used[i])
@@ -509,7 +489,6 @@ _dl_close (void *_map)
 	      --GL(dl_ns)[ns]._ns_main_searchlist->r_nlist;
 	    }
 
-#ifdef USE_TLS
 	  /* Remove the object from the dtv slotinfo array if it uses TLS.  */
 	  if (__builtin_expect (imap->l_tls_blocksize > 0, 0))
 	    {
@@ -528,7 +507,7 @@ _dl_close (void *_map)
 		     this search list, going in either direction.  When the
 		     whole chunk is at the end of the used area then we can
 		     reclaim it.  */
-# if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
 		  if (tls_free_start == NO_TLS_OFFSET
 		      || (size_t) imap->l_tls_offset == tls_free_start)
 		    {
@@ -568,7 +547,7 @@ _dl_close (void *_map)
 			    = tls_free_end - imap->l_tls_blocksize;
 			}
 		    }
-# elif TLS_DTV_AT_TP
+#elif TLS_DTV_AT_TP
 		  if ((size_t) imap->l_tls_offset == tls_free_end)
 		    /* Extend the contiguous chunk being reclaimed.  */
 		    tls_free_end -= imap->l_tls_blocksize;
@@ -585,12 +564,11 @@ _dl_close (void *_map)
 		      tls_free_start = imap->l_tls_offset;
 		      tls_free_end = tls_free_start + imap->l_tls_blocksize;
 		    }
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+#endif
 		}
 	    }
-#endif
 
 	  /* We can unmap all the maps at once.  We determined the
 	     start address and length when we loaded the object and
@@ -656,7 +634,6 @@ _dl_close (void *_map)
 	}
     }
 
-#ifdef USE_TLS
   /* If we removed any object which uses TLS bump the generation counter.  */
   if (any_tls)
     {
@@ -666,7 +643,6 @@ _dl_close (void *_map)
       if (tls_free_end == GL(dl_tls_static_used))
 	GL(dl_tls_static_used) = tls_free_start;
     }
-#endif
 
 #ifdef SHARED
   /* Auditing checkpoint: we have deleted all objects.  */
@@ -698,11 +674,34 @@ _dl_close (void *_map)
     goto retry;
 
   dl_close_state = not_pending;
+}
+
+
+void
+_dl_close (void *_map)
+{
+  struct link_map *map = _map;
+
+  /* First see whether we can remove the object at all.  */
+  if (__builtin_expect (map->l_flags_1 & DF_1_NODELETE, 0))
+    {
+      assert (map->l_init_called);
+      /* Nope.  Do nothing.  */
+      return;
+    }
+
+  if (__builtin_expect (map->l_direct_opencount, 1) == 0)
+    GLRO(dl_signal_error) (0, map->l_name, NULL, N_("shared object not open"));
+
+  /* Acquire the lock.  */
+  __rtld_lock_lock_recursive (GL(dl_load_lock));
+
+  _dl_close_worker (map);
+
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
 }
 
 
-#ifdef USE_TLS
 static bool __libc_freeres_fn_section
 free_slotinfo (struct dtv_slotinfo_list **elemp)
 {
@@ -729,7 +728,6 @@ free_slotinfo (struct dtv_slotinfo_list **elemp)
 
   return true;
 }
-#endif
 
 
 libc_freeres_fn (free_mem)
@@ -755,22 +753,20 @@ libc_freeres_fn (free_mem)
 	free (old);
       }
 
-#ifdef USE_TLS
   if (USE___THREAD || GL(dl_tls_dtv_slotinfo_list) != NULL)
     {
       /* Free the memory allocated for the dtv slotinfo array.  We can do
 	 this only if all modules which used this memory are unloaded.  */
-# ifdef SHARED
+#ifdef SHARED
       if (GL(dl_initial_dtv) == NULL)
 	/* There was no initial TLS setup, it was set up later when
 	   it used the normal malloc.  */
 	free_slotinfo (&GL(dl_tls_dtv_slotinfo_list));
       else
-# endif
+#endif
 	/* The first element of the list does not have to be deallocated.
 	   It was allocated in the dynamic linker (i.e., with a different
 	   malloc), and in the static library it's in .bss space.  */
 	free_slotinfo (&GL(dl_tls_dtv_slotinfo_list)->next);
     }
-#endif
 }
