@@ -1436,8 +1436,12 @@ EOF
   fi
   rm -f conftest*])
 
-  AC_CACHE_CHECK(for -z relro option,
-		 libc_cv_z_relro, [dnl
+  case "$base_machine" in
+changequote(,)dnl
+    i[34567]86 | x86_64 | powerpc* | s390* | sparc* | alpha*)
+changequote([,])dnl
+      AC_CACHE_CHECK(for -z relro option,
+		     libc_cv_z_relro, [dnl
   libc_cv_z_relro=no
   if AC_TRY_COMMAND([${CC-cc} -v --help 2>&1|grep "z relro" 1>&AS_MESSAGE_LOG_FD])
   then
@@ -1446,9 +1450,12 @@ EOF
       libc_cv_z_relro=yes
     fi
   fi])
-  if test $libc_cv_z_relro != yes; then
-    AC_MSG_ERROR(linker with -z relro support required)
-  fi
+      if test "$libc_cv_z_relro" = no; then
+        AC_MSG_ERROR(linker with -z relro support required)
+      fi
+      ;;
+    *) ;;
+   esac
 
   AC_CACHE_CHECK(for -Bgroup option,
 		 libc_cv_Bgroup, [dnl

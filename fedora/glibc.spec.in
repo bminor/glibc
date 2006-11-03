@@ -1,4 +1,4 @@
-%define glibcrelease 3
+%define glibcrelease 4
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -904,6 +904,7 @@ librtso=`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
 
 %ifarch %{rtkaioarches}
 rm -f $RPM_BUILD_ROOT{,%{_prefix}}/%{_lib}/librtkaio.so*
+rm -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/librt.so.*
 mkdir -p $RPM_BUILD_ROOT/%{_lib}/rtkaio
 mv $RPM_BUILD_ROOT/%{_lib}/librtkaio-*.so $RPM_BUILD_ROOT/%{_lib}/rtkaio/
 rm -f $RPM_BUILD_ROOT/%{_lib}/$librtso
@@ -1528,6 +1529,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Nov  3 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-4
+- fix atexit backwards compatibility (#213388)
+- add mai_IN locale (#213415)
+- remove bogus %{_libdir}/librt.so.1 symlink (#213555)
+- fix memusage (#213656)
+- change libc.info category (#209493)
+
 * Sun Oct 29 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-3
 - fix suid/sgid binaries on i?86/x86_64 (#212723)
 

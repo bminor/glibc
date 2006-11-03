@@ -1,4 +1,20 @@
+2006-11-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Work around ld --help change and avoid -z relro
+	test completely if the architecture doesn't care about security.
+
+2006-11-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/sv.po: Update from translation team.
+
+2006-10-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/atexit.c (atexit): Don't mark as hidden when used to
+	generate compatibility version.
+
 2006-10-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Relax -z relro requirement a bit.
 
 	* po/sv.po: Update from translation team.
 
