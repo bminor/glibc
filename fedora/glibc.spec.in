@@ -1536,6 +1536,7 @@ rm -f *.filelist*
 - fix --inhibit-rpath (#214569)
 - fix _r_debug content when prelinked ld.so executes
   a program as its argument
+- fix strxfrm
 - powerpc-cpu add-on updates
 
 * Fri Nov  3 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-4
