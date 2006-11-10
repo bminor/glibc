@@ -311,7 +311,7 @@ argument to <%s> must be a single character"),
 	case 90:
 	  if (nowtok != tok_charids)
 	    lr_error (repfile, _("\
-`%1$s' definition does not end with `END %1$s'"), "CHARIDS");
+%1$s: definition does not end with `END %1$s'"), "CHARIDS");
 
 	  lr_ignore_rest (repfile, nowtok == tok_charids);
 	  break;

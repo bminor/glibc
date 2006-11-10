@@ -607,7 +607,7 @@ character sets with locking states are not supported"));
 	case 90:
 	  if (nowtok != expected_tok)
 	    lr_error (cmfile, _("\
-`%1$s' definition does not end with `END %1$s'"), expected_str);
+%1$s: definition does not end with `END %1$s'"), expected_str);
 
 	  lr_ignore_rest (cmfile, nowtok == expected_tok);
 	  state = 91;
@@ -1019,7 +1019,7 @@ hexadecimal range format should use only capital characters"));
 	  && errno == ERANGE)
       || *to_end != '\0')
     {
-      lr_error (lr, _("<%s> and <%s> are illegal names for range"), from, to);
+      lr_error (lr, _("<%s> and <%s> are invalid names for range"), from, to);
       return;
     }
 
