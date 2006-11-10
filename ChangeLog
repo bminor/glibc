@@ -1,4 +1,43 @@
+2006-11-10  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3451]
+	* sysdeps/i386/fpu/bits/mathinline.h (floor): Make rounding mode
+	change atomic.
+	(ceil): Likewise.
+
+2006-11-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/strxfrm_l.c (STRXFRM): Fix trailing \1 optimization
+	if N is one bigger than return value.
+	* string/tst-strxfrm2.c (do_test): Also test strxfrm with l1 + 1
+	and l1 last arguments, if buf is defined, verify the return value
+	equals to strlen (buf) and verify no byte beyond passed length
+	is modified.
+
+2006-11-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/sv.po: Update from translation team.
+
 2006-11-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sysconf.c (intel_check_word): Add
+	noinline attribute.
+
+2006-11-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_check_word): Add
+	noinline attribute.
+
+	* sysdeps/gnu/siglist.c (__old_sys_siglist, __old_sys_sigabbrev):
+	Use __new_sys_siglist instead of _sys_siglist_internal as
+	second macro argument.
+	(_old_sys_siglist): Use declare_symbol_alias macro instead of
+	strong_alias.
+
+2006-11-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3493]
+	* posix/unistd.h (sysconf): Remove const attribute.
 
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Fix test for
 	temporary or deprecated addresses.
