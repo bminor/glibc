@@ -453,7 +453,7 @@ hexadecimal range format should use only capital characters"));
 
   if (from_nr > to_nr)
     {
-      lr_error (lr, _("upper limit in range is not smaller then lower limit"));
+      lr_error (lr, _("upper limit in range is smaller than lower limit"));
       return;
     }
 

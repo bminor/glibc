@@ -1,4 +1,4 @@
-%define glibcrelease 6
+%define glibcrelease 7
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -1529,6 +1529,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Nov 20 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-7
+- handle IPv6 addresses in /etc/hosts that are mappable to
+  IPv4 addresses in IPv4 host lookups (#215283)
+- fix :include: /etc/alias handling (#215572)
+- handle new tzdata format to cope with year > 2037 transitions
+  on 64-bit architectures
+
 * Fri Nov 10 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-6
 - fix strxfrm fix
 - fix i?86 floor and ceil inlines (BZ#3451)

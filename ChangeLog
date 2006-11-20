@@ -1,4 +1,98 @@
+2006-11-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/nss_files/files-hosts.c (LINE_PARSER): Support IPv6-style
+	addresses for IPv4 queries if they can be mapped.
+
+2006-11-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/x86_64/fpu/s_copysignf.S (__copysignf): Switch to .text.
+	* sysdeps/x86_64/fpu/s_copysign.S (__copysign): Likewise.
+	(signmask): Add .size directive.
+	(othermask): Add .type directive.
+
+2006-11-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/nl.po: Update from translation team.
+
+	* timezone/zdump.c: Redo fix for BZ #3137.
+2006-11-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* nss/nss_files/files-alias.c (get_next_alias): Set line back
+	to first_unused after parsing :include: file.
+
 2006-11-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/africa: Update from tzdata2006o.
+	* timezone/antarctica: Likewise.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
+	* time/tzfile.c (__tzfile_read): Extend to handle new file format
+	on machines with 64-bit time_t.
+
+	* timezone/checktab.awk: Update from tzcode2006o.
+	* timezone/ialloc.c: Likewise.
+	* timezone/private.h: Likewise.
+	* timezone/scheck.c: Likewise.
+	* timezone/tzfile.h: Likewise.
+	* timezone/tzselect.ksh: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
+	[BZ #3483]
+	* elf/ldconfig.c (main): Call setlocale and textdomain.
+	Patch mostly by Benno Schulenberg <bensberg@justemail.net>.
+
+	[BZ #3480]
+	* manual/argp.texi: Fix typos.
+	* manual/charset.texi: Likewise.
+	* manual/errno.texi: Likewise.
+	* manual/filesys.texi: Likewise.
+	* manual/lang.texi: Likewise.
+	* manual/maint.texi: Likewise.
+	* manual/memory.texi: Likewise.
+	* manual/message.texi: Likewise.
+	* manual/resource.texi: Likewise.
+	* manual/search.texi: Likewise.
+	* manual/signal.texi: Likewise.
+	* manual/startup.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/sysinfo.texi: Likewise.
+	* manual/syslog.texi: Likewise.
+	* manual/time.texi: Likewise.
+	Patch by Ralf Wildenhues <Ralf.Wildenhues@gmx.de>.
+
+	[BZ #3465]
+	* sunrpc/clnt_raw.c: Minimal message improvements.
+	* sunrpc/pm_getmaps.c: Likewise.
+	* nis/nss_nisplus/nisplus-publickey.c: Likewise.
+	* nis/nis_print_group_entry.c: Likewise.
+	* locale/programs/repertoire.c: Likewise.
+	* locale/programs/charmap.c: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* elf/dl-deps.c: Likewise.
+	* locale/programs/ld-collate.c: Likewise.
+	* libio/vswprintf.c: Likewise.
+	* malloc/memusagestat.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/rpc_main.c: Likewise.
+	* nscd/cache.c: Likewise.
+	* locale/programs/repertoire.c: Unify output messages.
+	* locale/programs/charmap.c: Likewise.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* nscd/selinux.c: Likewise.
+	* elf/cache.c: Likewise.
+	Patch mostly by Benno Schulenberg <bensberg@justemail.net>.
 
 	[BZ #3451]
 	* sysdeps/i386/fpu/bits/mathinline.h (floor): Make rounding mode
