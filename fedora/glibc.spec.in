@@ -1,4 +1,4 @@
-%define glibcrelease 7
+%define glibcrelease 8
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -823,7 +823,7 @@ GCC="gcc -m64"
 GXX="g++ -m64"
 %endif
 
-BuildFlags="$BuildFlags -DNDEBUG=1"
+BuildFlags="$BuildFlags -DNDEBUG=1 -fasynchronous-unwind-tables"
 EnableKernel="--enable-kernel=%{enablekernel}"
 echo "$GCC" > Gcc
 AddOns=`echo */configure | sed -e 's!/configure!!g;s!\(linuxthreads\|nptl\|rtkaio\|powerpc-cpu\)\( \|$\)!!g;s! \+$!!;s! !,!g;s!^!,!;/^,\*$/d'`
@@ -1154,6 +1154,11 @@ cp -f $RPM_BUILD_ROOT%{_prefix}/share/zoneinfo/US/Eastern $RPM_BUILD_ROOT/etc/lo
 #ln -sf ..%{_prefix}/share/zoneinfo/US/Eastern $RPM_BUILD_ROOT/etc/localtime
 
 rm -rf $RPM_BUILD_ROOT%{_prefix}/share/zoneinfo
+
+# Make sure %config files have the same timestamp
+touch -r fedora/glibc.spec.in $RPM_BUILD_ROOT/etc/ld.so.conf
+touch -r timezone/northamerica $RPM_BUILD_ROOT/etc/localtime
+touch -r sunrpc/etc.rpc $RPM_BUILD_ROOT/etc/rpc
 
 cd fedora
 $GCC -Os -static -o build-locale-archive build-locale-archive.c \
@@ -1529,6 +1534,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Nov 28 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-8
+- fix svc_run (#216834, BZ#3559)
+- add -fasynchronous-unwind-tables to CFLAGS (#216518)
+- make sure there is consistent timestamp for /etc/ld.so.conf,
+  /etc/localtime and /etc/rpc between multilib glibc rpms
+
 * Mon Nov 20 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-7
 - handle IPv6 addresses in /etc/hosts that are mappable to
   IPv4 addresses in IPv4 host lookups (#215283)

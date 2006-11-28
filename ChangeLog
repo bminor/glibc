@@ -1,3 +1,23 @@
+2006-11-27  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3559]
+	* sunrpc/svc_run.c (svc_run): Fail instead of segfaulting if
+	malloc crashed.  Don't allocate memory unnecessarily in each
+	loop.
+
+2006-10-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/mapv4v6addr.h (map_v4v6_address): Fix last change.
+
+2006-11-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/mapv4v6addr.h (map_v4v6_address): Optimize a bit.
+
+2006-11-18  Bruno Haible  <bruno@clisp.org>
+
+	* sysdeps/unix/sysv/linux/i386/getgroups.c (__getgroups): Invoke
+	__sysconf only after having tried to call getgroups32.
+
 2006-11-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/nss_files/files-hosts.c (LINE_PARSER): Support IPv6-style
@@ -15,6 +35,7 @@
 	* po/nl.po: Update from translation team.
 
 	* timezone/zdump.c: Redo fix for BZ #3137.
+
 2006-11-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* nss/nss_files/files-alias.c (get_next_alias): Set line back
