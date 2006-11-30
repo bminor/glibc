@@ -30,6 +30,7 @@ ifneq ($(elf),no)
 # we use -fpic instead which is much better.
 CFLAGS-initfini.s += -fpic -O1
 endif
+CFLAGS-libc-start.c += -fno-asynchronous-unwind-tables
 endif
 
 ifeq ($(subdir),elf)

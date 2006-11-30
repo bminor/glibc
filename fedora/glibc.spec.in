@@ -1,4 +1,4 @@
-%define glibcrelease 8
+%define glibcrelease 9
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -1534,6 +1534,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Nov 30 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-9
+- fix last svc_run change (#217850)
+- on ppc64 build __libc_start_main without unwind info,
+  as it breaks MD_FROB_UPDATE_CONTEXT (#217729, #217775; in the
+  future that could be fixable just by providing .cfi_undefined r2
+  in __libc_start_main instead)
+- add unwind info for x86-64 restore_rt signal return landing pad
+  (#217087)
+
 * Tue Nov 28 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-8
 - fix svc_run (#216834, BZ#3559)
 - add -fasynchronous-unwind-tables to CFLAGS (#216518)
