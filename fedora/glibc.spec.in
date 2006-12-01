@@ -1,4 +1,4 @@
-%define glibcrelease 9
+%define glibcrelease 10
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -940,7 +940,7 @@ cd ..
 
 %if %{buildpower6}
 cd build-%{nptl_target_cpu}-linuxnptl-power6
-mkdir -p $RPM_BUILD_ROOT/%{_lib}/power6/
+mkdir -p $RPM_BUILD_ROOT/%{_lib}/power6{,x}
 cp -a libc.so $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libc-*.so`
 ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libc-*.so` $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libc.so.*`
 cp -a math/libm.so $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libm-*.so`
@@ -953,10 +953,18 @@ cp -a rt/librt.so $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_li
 ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` $RPM_BUILD_ROOT/%{_lib}/power6/$librtso
 cp -a nptl_db/libthread_db.so $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so`
 ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so` $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db.so.*`
+pushd $RPM_BUILD_ROOT/%{_lib}/power6x
+ln -sf ../power6/*.so .
+cp -a ../power6/*.so.* .
+popd
 %ifarch %{rtkaioarches}
-mkdir -p $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6
+mkdir -p $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6{,x}
 cp -a rtkaio/librtkaio.so $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/`
 ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6/librtkaio-*.so` $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6/$librtso
+pushd $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6x
+ln -sf ../power6/*.so .
+cp -a ../power6/*.so.* .
+popd
 %endif
 cd ..
 %endif
@@ -1447,8 +1455,10 @@ rm -f *.filelist*
 %endif
 %if %{buildpower6}
 %dir /%{_lib}/power6
+%dir /%{_lib}/power6x
 %ifarch %{rtkaioarches}
 %dir /%{_lib}/rtkaio/power6
+%dir /%{_lib}/rtkaio/power6x
 %endif
 %endif
 %ifarch s390x
@@ -1534,6 +1544,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Dec  1 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-10
+- fix x86-64 restore_rt unwind info
+
 * Thu Nov 30 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-9
 - fix last svc_run change (#217850)
 - on ppc64 build __libc_start_main without unwind info,
@@ -1542,6 +1555,8 @@ rm -f *.filelist*
   in __libc_start_main instead)
 - add unwind info for x86-64 restore_rt signal return landing pad
   (#217087)
+- add power6x subdir to /%{_lib}/ and /%{_lib}/rtkaio/,
+  link all libs from ../power6/* into them
 
 * Tue Nov 28 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-8
 - fix svc_run (#216834, BZ#3559)
