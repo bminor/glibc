@@ -1,3 +1,12 @@
+2006-12-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/netlinkaccess.h: Include linux/if_addr.h
+	if IFA_MAX is not defined.
+	(IFA_RTA, IFA_PAYLOAD, IFLA_RTA, IFLA_PAYLOAD): Define if not
+	defined.
+	* sysdeps/unix/sysv/linux/check_pf.c: Include netlinkaccess.h
+	instead of asm/types.h, linux/netlink.h and linux/rtnetlink.h.
+
 2006-12-09  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3632]

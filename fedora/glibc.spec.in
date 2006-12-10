@@ -1555,6 +1555,7 @@ rm -f *.filelist*
   nis_list and nis_lookup (#209155)
 - fix ttyname and ttyname_r with invalid file descriptor (#218276)
 - cs_CZ LC_TIME fixes (#218438)
+- fix build with 2.6.19+ headers (#217723)
 
 * Fri Dec  1 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-10
 - fix x86-64 restore_rt unwind info

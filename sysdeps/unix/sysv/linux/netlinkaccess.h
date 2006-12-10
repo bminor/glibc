@@ -25,6 +25,24 @@
 
 #include <kernel-features.h>
 
+#ifndef IFA_MAX
+/* 2.6.19 kernel headers helpfully removed some macros and
+   moved lots of stuff into new headers, some of which aren't
+   included by linux/rtnetlink.h.  */
+#include <linux/if_addr.h>
+#endif
+
+#ifndef IFA_RTA
+# define IFA_RTA(r) \
+  ((struct rtattr*) ((char*)(r) + NLMSG_ALIGN (sizeof (struct ifaddrmsg))))
+# define IFA_PAYLOAD(n) NLMSG_PAYLOAD (n, sizeof (struct ifaddrmsg))
+#endif
+
+#ifndef IFLA_RTA
+# define IFLA_RTA(r) \
+  ((struct rtattr*) ((char*)(r) + NLMSG_ALIGN (sizeof (struct ifinfomsg))))
+# define IFLA_PAYLOAD(n) NLMSG_PAYLOAD (n, sizeof (struct ifinfomsg))
+#endif
 
 struct netlink_res
 {
