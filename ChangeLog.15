@@ -1115,9 +1115,6 @@
 
 	* include/features.h (__USE_FORTIFY_LEVEL): Also set for Red Hat
 	GCC 3.4.x-RH >= 3.4.2-8.
-	* libio/bits/features.h (printf, fprintf, vprintf, vfprintf): For
-	GCC 3.4.x-RH use __builtin___{,v}{,f}printf_chk instead of
-	__{,v}{,f}printf_chk.
 	* debug/tst-chk1.c (do_test): Deal with GCC 3.4.x-RH not
 	being able to recognize subobjects.
 
@@ -1415,11 +1412,6 @@
 
 	* posix/execvp.c (execvp): Also ignore ENODEV and ETIMEDOUT errno
 	values.
-
-2004-10-20  Jakub Jelinek  <jakub@redhat.com>
-
-	* sysdeps/unix/sysv/linux/readonly-area.c (__readonly_area): If /proc
-	is not mounted, return 1.
 
 2004-10-20  Roland McGrath  <roland@redhat.com>
 
