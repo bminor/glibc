@@ -1,3 +1,16 @@
+2007-01-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Fix handling of multi-byte
+	thousands separators.
+	* stdlib/Makefile: Add rules to build and run tst-strtod4.
+	* stdlib/tst-strtod4.c: New test.
+
+	[BZ #3855]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): 0x. not followed by
+	hexadecimal digit should accept just the initial 0.
+	* stdlib/tst-strtod2.c (tests): New variable.
+	(do_test): Run several tests rather than just one.
+
 2007-01-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/Makefile (tst-strtod3-ENV): Define.
