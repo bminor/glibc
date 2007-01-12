@@ -1,3 +1,10 @@
+2006-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/xdr_mem.c (xdrmem_setpos): Don't compare addresses
+	as signed longs, check for x_base + pos overflow.
+	* sunrpc/Makefile (tests): Add tst-xdrmem2.
+	* sunrpc/tst-xdrmem2.c: New test.
+
 2006-10-16  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3369]
