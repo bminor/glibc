@@ -1,4 +1,4 @@
-/* Copyright (C) 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ucontext.h>
@@ -37,16 +36,10 @@ cf (int i)
 }
 
 int
-do_test (void)
+main (void)
 {
   if (getcontext (&ucp) != 0)
     {
-      if (errno == ENOSYS)
-	{
-	  puts ("context handling not supported");
-	  return 0;
-	}
-
       puts ("getcontext failed");
       return 1;
     }
@@ -54,7 +47,7 @@ do_test (void)
   ucp.uc_link = NULL;
   ucp.uc_stack.ss_sp = st1;
   ucp.uc_stack.ss_size = sizeof st1;
-  makecontext (&ucp, (void (*) (void)) cf, 1, 78);
+  makecontext (&ucp, (void (*) ()) cf, 1, 78);
   if (setcontext (&ucp) != 0)
     {
       puts ("setcontext failed");
@@ -62,6 +55,3 @@ do_test (void)
     }
   return 2;
 }
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
