@@ -1,3 +1,10 @@
+2006-11-10  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3451]
+	* sysdeps/i386/fpu/bits/mathinline.h (floor): Make rounding mode
+	change atomic.
+	(ceil): Likewise.
+
 2006-11-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sysconf.c (intel_check_word): Add
