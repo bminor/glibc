@@ -1,3 +1,26 @@
+2007-01-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/Makefile (tst-strxfrm2-ENV): Define.
+
+2006-11-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/strxfrm_l.c (STRXFRM): Fix trailing \1 optimization
+	if N is one bigger than return value.
+	* string/tst-strxfrm2.c (do_test): Also test strxfrm with l1 + 1
+	and l1 last arguments, if buf is defined, verify the return value
+	equals to strlen (buf) and verify no byte beyond passed length
+	is modified.
+
+2006-11-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/Makefile (tests): Add tst-strxfrm2.
+	* string/tst-strxfrm2.c: New file.
+
+2006-11-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/strxfrm_l.c (STRXFRM): Do the trailing \1 removal
+	optimization even if needed > n.
+
 2006-12-22  Gavin Romig-Koch  <gavin@redhat.com>
 
 	* nis/nss_compat/compat-grp.c (internal_getgrgid_r): Don't
