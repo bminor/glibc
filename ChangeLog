@@ -1,3 +1,10 @@
+2006-11-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-load.c (decompose_rpath): Return bool rather than void.
+	If l->l_name is on inhibit_rpath list, set sps->dirs to -1 and
+	return false, otherwise return true.
+	(cache_rpath): Return decompose_rpath return value.
+
 2006-11-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/memusage.c (dest): Reset not_me back to false after
