@@ -1,3 +1,8 @@
+2006-10-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-debug.c (_dl_debug_initialize): Check r->r_map for 0
+	rather than r->r_brk.
+
 2006-10-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_table.c (nis_list): If __follow_path fails in the new
