@@ -1,3 +1,10 @@
+2006-12-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/mntent_r.c (__hasmntopt): Check p[optlen] even when p == rest.
+	Start searching for next comma at p rather than rest.
+	* misc/Makefile (tests): Add tst-mntent2.
+	* misc/tst-mntent2.c: New test.
+
 2006-12-09  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #3632]
