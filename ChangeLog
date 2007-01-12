@@ -1,3 +1,9 @@
+2007-01-05  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* stdlib/tst-makecontext.c: Include errno.h.  Change main()
+	to do_test().  Define TEST_FUNCTION. Include test-skeleton.c.
+	(do_test): Check errno and exit(0) if ENOSYS.
+
 2007-01-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Fix handling of multi-byte
