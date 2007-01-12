@@ -1,3 +1,9 @@
+2006-10-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3369]
+	* sysdeps/posix/getaddrinfo.c (rfc3484_sort): Fix typos in rules 4
+	and 7.
+
 2006-10-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-minimal.c (realloc): Optimize last patch.
