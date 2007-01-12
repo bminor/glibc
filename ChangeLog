@@ -1,3 +1,9 @@
+2006-11-27  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3559]
+	* sunrpc/svc_run.c (svc_run): Fail instead of segfaulting if
+	malloc crashed.
+
 2006-11-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* nss/nss_files/files-alias.c (get_next_alias): Set line back
