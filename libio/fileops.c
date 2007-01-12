@@ -174,8 +174,14 @@ _IO_new_file_close_it (fp)
   close_status = _IO_SYSCLOSE (fp);
 
   /* Free buffer. */
+  if (fp->_mode <= 0)
+    {
+      INTUSE(_IO_setb) (fp, NULL, NULL, 0);
+      _IO_setg (fp, NULL, NULL, NULL);
+      _IO_setp (fp, NULL, NULL);
+    }
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-  if (fp->_mode > 0)
+  else
     {
       if (_IO_have_wbackup (fp))
 	INTUSE(_IO_free_wbackup_area) (fp);
@@ -184,9 +190,6 @@ _IO_new_file_close_it (fp)
       _IO_wsetp (fp, NULL, NULL);
     }
 #endif
-  INTUSE(_IO_setb) (fp, NULL, NULL, 0);
-  _IO_setg (fp, NULL, NULL, NULL);
-  _IO_setp (fp, NULL, NULL);
 
   INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) fp);
   fp->_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;

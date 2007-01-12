@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002,2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,6 @@
 #include <unistd.h>
 #include <sys/param.h>
 #include <ldsodefs.h>
-#include <sysdep-cancel.h>
 #include "dynamic-link.h"
 
 #if (!defined ELF_MACHINE_NO_RELA && !defined ELF_MACHINE_PLT_REL) \
@@ -93,22 +92,16 @@ _dl_fixup (
 	    version = NULL;
 	}
 
-      if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
-	__rtld_mrlock_lock (l->l_scope_lock);
-
       result = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym,
 				    l->l_scope, version, ELF_RTYPE_CLASS_PLT,
 				    DL_LOOKUP_ADD_DEPENDENCY, NULL);
-
-      if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
-	__rtld_mrlock_unlock (l->l_scope_lock);
 
       /* Currently result contains the base load address (or link map)
 	 of the object that defines sym.  Now add in the symbol
 	 offset.  */
       value = DL_FIXUP_MAKE_VALUE (result,
-				   sym ? (LOOKUP_VALUE_ADDRESS (result)
-					  + sym->st_value) : 0);
+				   sym ? LOOKUP_VALUE_ADDRESS (result)
+					 + sym->st_value : 0);
     }
   else
     {
@@ -181,16 +174,10 @@ _dl_profile_fixup (
 		version = NULL;
 	    }
 
-	  if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
-	    __rtld_mrlock_lock (l->l_scope_lock);
-
 	  result = _dl_lookup_symbol_x (strtab + refsym->st_name, l, &defsym,
 					l->l_scope, version,
 					ELF_RTYPE_CLASS_PLT,
 					DL_LOOKUP_ADD_DEPENDENCY, NULL);
-
-	  if (l->l_type == lt_loaded && !RTLD_SINGLE_THREAD_P)
-	    __rtld_mrlock_unlock (l->l_scope_lock);
 
 	  /* Currently result contains the base load address (or link map)
 	     of the object that defines sym.  Now add in the symbol

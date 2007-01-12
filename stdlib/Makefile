@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -66,9 +66,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   test-canon test-canon2 tst-strtoll tst-environ	    \
 		   tst-xpg-basename tst-random tst-random2 tst-bsearch	    \
 		   tst-limits tst-rand48 bug-strtod tst-setcontext	    \
-		   test-a64l tst-qsort tst-system testmb2 bug-strtod2	    \
-		   tst-atof1 tst-atof2 tst-strtod2 tst-strtod3 tst-rand48-2 \
-		   tst-makecontext tst-strtod4
+		   test-a64l tst-qsort tst-system testmb2 bug-strtod2
 
 include ../Makeconfig
 
@@ -104,6 +102,10 @@ CFLAGS-strfmon.c = -D_IO_MTSAFE_IO
 CFLAGS-strfmon_l.c = -D_IO_MTSAFE_IO
 endif
 
+ifeq (yes,$(have-protected))
+CFLAGS-atexit.c = -DHAVE_DOT_HIDDEN
+endif
+
 CFLAGS-tst-bsearch.c = $(stack-align-test-flags)
 CFLAGS-tst-qsort.c = $(stack-align-test-flags)
 
@@ -113,8 +115,6 @@ include ../Rules
 test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 
 tst-strtod-ENV = LOCPATH=$(common-objpfx)localedata
-tst-strtod3-ENV = LOCPATH=$(common-objpfx)localedata
-tst-strtod4-ENV = LOCPATH=$(common-objpfx)localedata
 testmb2-ENV = LOCPATH=$(common-objpfx)localedata
 
 # Run a test on the header files we use.

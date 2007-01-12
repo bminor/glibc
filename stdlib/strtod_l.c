@@ -1,6 +1,5 @@
 /* Convert string representing a number to float value, using given locale.
-   Copyright (C) 1997,1998,2002,2004,2005,2006,2007
-   Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,2002,2004,2005,2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -651,11 +650,10 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	  if (c != '0')
 	    {
 	      for (cnt = 0; thousands[cnt] != '\0'; ++cnt)
-		if (thousands[cnt] != cp[cnt])
+		if (c != thousands[cnt])
 		  break;
 	      if (thousands[cnt] != '\0')
 		break;
-	      cp += cnt - 1;
 	    }
 	  c = *++cp;
 	}
@@ -664,29 +662,20 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 
   /* If no other digit but a '0' is found the result is 0.0.
      Return current read pointer.  */
-  if (!((c >= L_('0') && c <= L_('9'))
-	|| (base == 16 && ((CHAR_TYPE) TOLOWER (c) >= L_('a')
-			   && (CHAR_TYPE) TOLOWER (c) <= L_('f')))
-	|| (
+  if ((c < L_('0') || c > L_('9'))
+      && (base == 16 && (c < (CHAR_TYPE) TOLOWER (L_('a'))
+			 || c > (CHAR_TYPE) TOLOWER (L_('f'))))
 #ifdef USE_WIDE_CHAR
-	    c == (wint_t) decimal
+      && c != (wint_t) decimal
 #else
-	    ({ for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
-		 if (decimal[cnt] != cp[cnt])
-		   break;
-	       decimal[cnt] == '\0'; })
+      && ({ for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
+	      if (decimal[cnt] != cp[cnt])
+		break;
+	    decimal[cnt] != '\0'; })
 #endif
-	    /* '0x.' alone is not a valid hexadecimal number.
-	       '.' alone is not valid either, but that has been checked
-	       already earlier.  */
-	    && (base != 16
-		|| cp != start_of_digits
-		|| (cp[decimal_len] >= L_('0') && cp[decimal_len] <= L_('9'))
-		|| ((CHAR_TYPE) TOLOWER (cp[decimal_len]) >= L_('a')
-		    && (CHAR_TYPE) TOLOWER (cp[decimal_len]) <= L_('f'))))
-	|| (base == 16 && (cp != start_of_digits
-			   && (CHAR_TYPE) TOLOWER (c) == L_('p')))
-	|| (base != 16 && (CHAR_TYPE) TOLOWER (c) == L_('e'))))
+      && (base == 16 && (cp == start_of_digits
+			 || (CHAR_TYPE) TOLOWER (c) != L_('p')))
+      && (base != 16 && (CHAR_TYPE) TOLOWER (c) != L_('e')))
     {
 #ifdef USE_WIDE_CHAR
       tp = __correctly_grouped_prefixwc (start_of_digits, cp, thousands,
@@ -726,14 +715,13 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 		  break;
 	      if (thousands[cnt] != '\0')
 		break;
-	      cp += cnt - 1;
 	    }
 #endif
 	}
       c = *++cp;
     }
 
-  if (grouping && cp > start_of_digits)
+  if (grouping && dig_no > 0)
     {
       /* Check the grouping of the digits.  */
 #ifdef USE_WIDE_CHAR
@@ -771,15 +759,13 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	}
     }
 
-  /* We have the number of digits in the integer part.  Whether these
-     are all or any is really a fractional digit will be decided
-     later.  */
+  /* We have the number digits in the integer part.  Whether these are all or
+     any is really a fractional digit will be decided later.  */
   int_no = dig_no;
   lead_zero = int_no == 0 ? -1 : 0;
 
-  /* Read the fractional digits.  A special case are the 'american
-     style' numbers like `16.' i.e. with decimal point but without
-     trailing digits.  */
+  /* Read the fractional digits.  A special case are the 'american style'
+     numbers like `16.' i.e. with decimal but without trailing digits.  */
   if (
 #ifdef USE_WIDE_CHAR
       c == (wint_t) decimal
@@ -829,16 +815,15 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	  if (base == 16)
 	    exp_limit = (exp_negative ?
 			 -MIN_EXP + MANT_DIG + 4 * int_no :
-			 MAX_EXP - 4 * int_no + 4 * lead_zero + 3);
+			 MAX_EXP - 4 * int_no + lead_zero);
 	  else
 	    exp_limit = (exp_negative ?
 			 -MIN_10_EXP + MANT_DIG + int_no :
-			 MAX_10_EXP - int_no + lead_zero + 1);
+			 MAX_10_EXP - int_no + lead_zero);
 
 	  do
 	    {
 	      exponent *= 10;
-	      exponent += c - L_('0');
 
 	      if (exponent > exp_limit)
 		/* The exponent is too large/small to represent a valid
@@ -868,6 +853,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 		  /* NOTREACHED */
 		}
 
+	      exponent += c - L_('0');
 	      c = *++cp;
 	    }
 	  while (c >= L_('0') && c <= L_('9'));
@@ -902,7 +888,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	--expp;
 	--dig_no;
 	--int_no;
-	exponent += base == 16 ? 4 : 1;
+	++exponent;
       }
     while (dig_no > 0 && exponent < 0);
 

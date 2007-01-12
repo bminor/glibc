@@ -1395,10 +1395,10 @@ rfc3484_sort (const void *p1, const void *p2)
     {
       if (!(a1->source_addr_flags & in6ai_homeaddress)
 	  && (a2->source_addr_flags & in6ai_homeaddress))
-	return 1;
+	return -1;
       if ((a1->source_addr_flags & in6ai_homeaddress)
 	  && !(a2->source_addr_flags & in6ai_homeaddress))
-	return -1;
+	return 1;
     }
 
   /* Rule 5: Prefer matching label.  */
@@ -1435,11 +1435,11 @@ rfc3484_sort (const void *p1, const void *p2)
   if (a1->got_source_addr)
     {
       if (!(a1->source_addr_flags & in6ai_temporary)
-	  && (a2->source_addr_flags & in6ai_temporary))
+	  && (a1->source_addr_flags & in6ai_temporary))
 	return -1;
       if ((a1->source_addr_flags & in6ai_temporary)
-	  && !(a2->source_addr_flags & in6ai_temporary))
-	return 1;
+	  && !(a1->source_addr_flags & in6ai_temporary))
+	return -1;
 
       /* XXX Do we need to check anything beside temporary addresses?  */
     }
@@ -2085,12 +2085,10 @@ getaddrinfo (const char *name, const char *service,
 
 		  if (q->ai_family == PF_INET6 && in6ai != NULL)
 		    {
-		      /* See whether the source address is the list of
-			 deprecated or temporary addresses.  */
+		      /* See whether the address is the list of deprecated
+			 or temporary addresses.  */
 		      struct in6addrinfo tmp;
-		      struct sockaddr_in6 *sin6p
-			= (struct sockaddr_in6 *) &results[i].source_addr;
-		      memcpy (tmp.addr, &sin6p->sin6_addr, IN6ADDRSZ);
+		      memcpy (tmp.addr, q->ai_addr, IN6ADDRSZ);
 
 		      struct in6addrinfo *found
 			= bsearch (&tmp, in6ai, in6ailen, sizeof (*in6ai),

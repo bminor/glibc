@@ -376,14 +376,12 @@ fts_read(sp)
 		}
 		p = sp->fts_child;
 		sp->fts_child = NULL;
-		sp->fts_cur = p;
 		goto name;
 	}
 
 	/* Move to the next node on this level. */
 next:	tmp = p;
 	if ((p = p->fts_link) != NULL) {
-		sp->fts_cur = p;
 		free(tmp);
 
 		/*
@@ -396,7 +394,7 @@ next:	tmp = p;
 				return (NULL);
 			}
 			fts_load(sp, p);
-			return p;
+			return (sp->fts_cur = p);
 		}
 
 		/*
@@ -422,12 +420,11 @@ next:	tmp = p;
 name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 		*t++ = '/';
 		memmove(t, p->fts_name, p->fts_namelen + 1);
-		return p;
+		return (sp->fts_cur = p);
 	}
 
 	/* Move up to the parent node. */
 	p = tmp->fts_parent;
-	sp->fts_cur = p;
 	free(tmp);
 
 	if (p->fts_level == FTS_ROOTPARENTLEVEL) {
@@ -468,7 +465,7 @@ name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 		return (NULL);
 	}
 	p->fts_info = p->fts_errno ? FTS_ERR : FTS_DP;
-	return p;
+	return (sp->fts_cur = p);
 }
 
 /*

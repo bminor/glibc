@@ -42,9 +42,7 @@ extern unsigned int la_objopen (struct link_map *__map, Lmid_t __lmid,
 #include <stddef.h>
 #include <bits/linkmap.h>
 #include <dl-lookupcfg.h>
-#include <tls.h>
-#include <bits/libc-lock.h>
-#include <rtld-lowlevel.h>
+#include <tls.h>		/* Defines USE_TLS.  */
 
 
 /* Some internal data structures of the dynamic linker used in the
@@ -122,7 +120,7 @@ struct link_map
        are indexed by DT_ADDRTAGIDX(tagvalue), see <elf.h>.  */
 
     ElfW(Dyn) *l_info[DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM
-		      + DT_EXTRANUM + DT_VALNUM + DT_ADDRNUM];
+		     + DT_EXTRANUM + DT_VALNUM + DT_ADDRNUM];
     const ElfW(Phdr) *l_phdr;	/* Pointer to program header table in core.  */
     ElfW(Addr) l_entry;		/* Entry point location.  */
     ElfW(Half) l_phnum;		/* Number of program header entries.  */
@@ -220,8 +218,6 @@ struct link_map
     /* This is an array defining the lookup scope for this link map.
        There are initially at most three different scope lists.  */
     struct r_scope_elem **l_scope;
-    /* We need to protect using the SCOPEREC.  */
-    __rtld_mrlock_define (, l_scope_lock)
 
     /* A similar array, this time only with the local scope.  This is
        used occasionally.  */
@@ -261,6 +257,7 @@ struct link_map
       const ElfW(Sym) *ret;
     } l_lookup_cache;
 
+#ifdef USE_TLS
     /* Thread-local storage related info.  */
 
     /* Start of the initialization image.  */
@@ -273,13 +270,14 @@ struct link_map
     size_t l_tls_align;
     /* Offset of first byte module alignment.  */
     size_t l_tls_firstbyte_offset;
-#ifndef NO_TLS_OFFSET
-# define NO_TLS_OFFSET	0
-#endif
+# ifndef NO_TLS_OFFSET
+#  define NO_TLS_OFFSET	0
+# endif
     /* For objects present at startup time: offset in the static TLS block.  */
     ptrdiff_t l_tls_offset;
     /* Index of the module in the dtv array.  */
     size_t l_tls_modid;
+#endif
 
     /* Information used to change permission after the relocations are
        done.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -42,13 +42,7 @@ L(pseudo_cancel):							      \
 	brasl	%r14,CENABLE;						      \
 	lgr	%r0,%r2;						      \
 	LM_##args							      \
-	.if SYS_ify (syscall_name) < 256;				      \
-	svc SYS_ify (syscall_name);					      \
-	.else;								      \
-	lghi %r1,SYS_ify (syscall_name);				      \
-	svc 0;								      \
-	.endif;								      \
-	LR7_##args							      \
+	DO_CALL(syscall_name, args);					      \
 	lgr	%r13,%r2;						      \
 	lgr	%r2,%r0;						      \
 	brasl	%r14,CDISABLE;						      \
@@ -91,7 +85,6 @@ L(pseudo_end):
 #define STM_3		stmg %r2,%r4,16(%r15);
 #define STM_4		stmg %r2,%r5,16(%r15);
 #define STM_5		stmg %r2,%r5,16(%r15);
-#define STM_6		stmg %r2,%r7,16(%r15);
 
 #define LM_0		/* Nothing */
 #define LM_1		lg %r2,16+160(%r15);
@@ -99,18 +92,6 @@ L(pseudo_end):
 #define LM_3		lmg %r2,%r4,16+160(%r15);
 #define LM_4		lmg %r2,%r5,16+160(%r15);
 #define LM_5		lmg %r2,%r5,16+160(%r15);
-#define LM_6		lmg %r2,%r5,16+160(%r15); \
-			cfi_offset (%r7, -104); \
-			lg %r7,160+160(%r15);
-
-#define LR7_0		/* Nothing */
-#define LR7_1		/* Nothing */
-#define LR7_2		/* Nothing */
-#define LR7_3		/* Nothing */
-#define LR7_4		/* Nothing */
-#define LR7_5		/* Nothing */
-#define LR7_6		lg %r7,56+160(%r15); \
-			cfi_restore (%r7);
 
 # if defined IS_IN_libpthread || !defined NOT_IN_libc
 #  ifndef __ASSEMBLER__
@@ -144,10 +125,4 @@ extern int __local_multiple_threads attribute_hidden;
 # define SINGLE_THREAD_P (1)
 # define NO_CANCELLATION 1
 
-#endif
-
-#ifndef __ASSEMBLER__
-# define RTLD_SINGLE_THREAD_P \
-  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
-				   header.multiple_threads) == 0, 1)
 #endif

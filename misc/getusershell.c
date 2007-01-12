@@ -98,7 +98,7 @@ initshells()
 	register char **sp, *cp;
 	register FILE *fp;
 	struct stat64 statb;
-	size_t flen;
+	int flen;
 
 	free(shells);
 	shells = NULL;
@@ -114,11 +114,9 @@ initshells()
 		okshells[1] = _PATH_CSHELL;
 		return (char **) okshells;
 	}
-	if (statb.st_size > ~(size_t)0 / sizeof (char *) * 3)
+	if ((strings = malloc((u_int)statb.st_size + 1)) == NULL)
 		goto init_okshells;
-	if ((strings = malloc(statb.st_size + 2)) == NULL)
-		goto init_okshells;
-	shells = malloc(statb.st_size / 3 * sizeof (char *));
+	shells = calloc((unsigned)statb.st_size / 3, sizeof (char *));
 	if (shells == NULL) {
 		free(strings);
 		strings = NULL;
@@ -126,11 +124,11 @@ initshells()
 	}
 	sp = shells;
 	cp = strings;
-	flen = statb.st_size + 2;
+	flen = statb.st_size;
 	while (fgets_unlocked(cp, flen - (cp - strings), fp) != NULL) {
 		while (*cp != '#' && *cp != '/' && *cp != '\0')
 			cp++;
-		if (*cp == '#' || *cp == '\0' || cp[1] == '\0')
+		if (*cp == '#' || *cp == '\0')
 			continue;
 		*sp++ = cp;
 		while (!isspace(*cp) && *cp != '#' && *cp != '\0')

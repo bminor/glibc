@@ -22,7 +22,6 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <termios.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
@@ -119,12 +118,12 @@ ttyname (int fd)
   int dostat = 0;
   char *name;
   int save = errno;
-  struct termios term;
 
-  /* isatty check, tcgetattr is used because it sets the correct
-     errno (EBADF resp. ENOTTY) on error.  */
-  if (__builtin_expect (__tcgetattr (fd, &term) < 0, 0))
-    return NULL;
+  if (__builtin_expect (!__isatty (fd), 0))
+    {
+      __set_errno (ENOTTY);
+      return NULL;
+    }
 
   /* We try using the /proc filesystem.  */
   *_fitoa_word (fd, __stpcpy (procname, "/proc/self/fd/"), 10, 0) = '\0';

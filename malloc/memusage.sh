@@ -1,5 +1,5 @@
 #! @BASH@
-# Copyright (C) 1999-2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1999-2004, 2005, 2006 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@gnu.org>, 1999.
 
@@ -44,7 +44,7 @@ Profile memory usage of PROGRAM.
    -d,--data=FILE         Generate binary data file and store it in FILE
    -u,--unbuffered        Don't buffer output
    -b,--buffer=SIZE       Collect SIZE entries before writing them out
-      --no-timer          Don't collect additional information through timer
+      --no-timer          Don't collect additional information though timer
    -m,--mmap              Also trace mmap & friends
 
    -?,--help              Print this help and exit
@@ -71,7 +71,7 @@ do_version() {
   printf $"Copyright (C) %s Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-" "2007"
+" "2006"
   printf $"Written by %s.
 " "Ulrich Drepper"
   exit 0

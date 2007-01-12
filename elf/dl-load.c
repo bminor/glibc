@@ -511,7 +511,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 }
 
 
-static bool
+static void
 internal_function
 decompose_rpath (struct r_search_path_struct *sps,
 		 const char *rpath, struct link_map *l, const char *what)
@@ -546,8 +546,19 @@ decompose_rpath (struct r_search_path_struct *sps,
 	    {
 	      /* This object is on the list of objects for which the
 		 RUNPATH and RPATH must not be used.  */
-	      sps->dirs = (void *) -1;
-	      return false;
+	      result = calloc (1, sizeof *result);
+	      if (result == NULL)
+		{
+		signal_error_cache:
+		  errstring = N_("cannot create cache for search path");
+		signal_error:
+		  _dl_signal_error (ENOMEM, NULL, NULL, errstring);
+		}
+
+	      sps->dirs = result;
+	      sps->malloced = 1;
+
+	      return;
 	    }
 
 	  while (*inhp != '\0')
@@ -577,11 +588,7 @@ decompose_rpath (struct r_search_path_struct *sps,
   result = (struct r_search_path_elem **) malloc ((nelems + 1 + 1)
 						  * sizeof (*result));
   if (result == NULL)
-    {
-      errstring = N_("cannot create cache for search path");
-    signal_error:
-      _dl_signal_error (ENOMEM, NULL, NULL, errstring);
-    }
+    goto signal_error_cache;
 
   fillin_rpath (copy, result, ":", 0, what, where);
 
@@ -592,7 +599,6 @@ decompose_rpath (struct r_search_path_struct *sps,
   sps->dirs = result;
   /* The caller will change this value if we haven't used a real malloc.  */
   sps->malloced = 1;
-  return true;
 }
 
 /* Make sure cached path information is stored in *SP
@@ -617,9 +623,10 @@ cache_rpath (struct link_map *l,
     }
 
   /* Make sure the cache information is available.  */
-  return decompose_rpath (sp, (const char *) (D_PTR (l, l_info[DT_STRTAB])
-					      + l->l_info[tag]->d_un.d_val),
-			  l, what);
+  decompose_rpath (sp, (const char *) (D_PTR (l, l_info[DT_STRTAB])
+				       + l->l_info[tag]->d_un.d_val),
+		   l, what);
+  return true;
 }
 
 
@@ -1078,6 +1085,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	  break;
 
 	case PT_TLS:
+#ifdef USE_TLS
 	  if (ph->p_memsz == 0)
 	    /* Nothing to do for an empty segment.  */
 	    break;
@@ -1105,7 +1113,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	      break;
 	    }
 
-#ifdef SHARED
+# ifdef SHARED
 	  if (l->l_prev == NULL || (mode & __RTLD_AUDIT) != 0)
 	    /* We are loading the executable itself when the dynamic linker
 	       was executed directly.  The setup will happen later.  */
@@ -1114,7 +1122,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	  /* In a static binary there is no way to tell if we dynamically
 	     loaded libpthread.  */
 	  if (GL(dl_error_catch_tsd) == &_dl_initial_error_catch_tsd)
-#endif
+# endif
 	    {
 	      /* We have not yet loaded libpthread.
 		 We can do the TLS setup right now!  */
@@ -1147,6 +1155,7 @@ cannot allocate TLS data structures for initial thread");
 	      _dl_deallocate_tls (tcb, 1);
 	      goto call_lose;
 	    }
+#endif
 
 	  /* Uh-oh, the binary expects TLS support but we cannot
 	     provide it.  */
@@ -1385,7 +1394,7 @@ cannot allocate TLS data structures for initial thread");
 	 requires that it be executable.  We must change the
 	 protection of the variable which contains the flags used in
 	 the mprotect calls.  */
-#ifdef SHARED
+#if defined HAVE_Z_RELRO && defined SHARED
       if ((mode & (__RTLD_DLOPEN | __RTLD_AUDIT)) == __RTLD_DLOPEN)
 	{
 	  const uintptr_t p = (uintptr_t) &__stack_prot & -GLRO(dl_pagesize);
@@ -1422,9 +1431,11 @@ cannot enable executable stack as shared object requires");
 	}
     }
 
+#ifdef USE_TLS
   /* Adjust the address of the TLS initialization image.  */
   if (l->l_tls_initimage != NULL)
     l->l_tls_initimage = (char *) l->l_tls_initimage + l->l_addr;
+#endif
 
   /* We are done mapping in the file.  We no longer need the descriptor.  */
   if (__builtin_expect (__close (fd) != 0, 0))
@@ -1928,10 +1939,11 @@ open_path (const char *name, size_t namelen, int preloaded,
 	 must not be freed using the general free() in libc.  */
       if (sps->malloced)
 	free (sps->dirs);
-
+#ifdef HAVE_Z_RELRO
       /* rtld_search_dirs is attribute_relro, therefore avoid writing
 	 into it.  */
       if (sps != &rtld_search_dirs)
+#endif
 	sps->dirs = (void *) -1;
     }
 

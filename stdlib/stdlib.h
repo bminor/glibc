@@ -741,7 +741,8 @@ __END_NAMESPACE_STD
 
 #ifdef	__USE_GNU
 /* Return a malloc'd string containing the canonical absolute name of the
-   existing named file.  */
+   named file.  The last file name component need not exist, and may be a
+   symlink to a nonexistent file.  */
 extern char *canonicalize_file_name (__const char *__name)
      __THROW __nonnull ((1)) __wur;
 #endif

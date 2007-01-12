@@ -580,17 +580,13 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
       /* +group */
       if (result->gr_name[0] == '+' && result->gr_name[1] != '\0')
 	{
-	  /* Yes, no +1, see the memcpy call below.  */
-	  size_t len = strlen (result->gr_name);
-	  char buf[len];
 	  enum nss_status status;
 
 	  /* Store the group in the blacklist for the "+" at the end of
 	     /etc/group */
-	  memcpy (buf, &result->gr_name[1], len);
+	  blacklist_store_name (&result->gr_name[1], ent);
 	  status = getgrnam_plusgroup (&result->gr_name[1], result, ent,
 				       buffer, buflen, errnop);
-	  blacklist_store_name (buf, ent);
 	  if (status == NSS_STATUS_SUCCESS && result->gr_gid == gid)
 	    break;
 	  else
