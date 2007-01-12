@@ -1,5 +1,5 @@
 /* Profile heap and stack memory usage of running program.
-   Copyright (C) 1998-2002, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -887,4 +887,10 @@ dest (void)
         fputc ('=', stderr);
       fputs ("\e[0;0m\n", stderr);
     }
+
+  /* Any following malloc/free etc. calls should generate statistics again,
+     because otherwise freeing something that has been malloced before
+     this destructor (including struct header in front of it) wouldn't
+     be properly freed.  */
+  not_me = false;
 }
