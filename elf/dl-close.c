@@ -101,22 +101,9 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
 
 
 void
-_dl_close (void *_map)
+_dl_close_worker (struct link_map *map)
 {
-  struct link_map *map = _map;
   Lmid_t ns = map->l_ns;
-  unsigned int i;
-  /* First see whether we can remove the object at all.  */
-  if (__builtin_expect (map->l_flags_1 & DF_1_NODELETE, 0)
-      && map->l_init_called)
-    /* Nope.  Do nothing.  */
-    return;
-
-  if (__builtin_expect (map->l_direct_opencount, 1) == 0)
-    GLRO(dl_signal_error) (0, map->l_name, NULL, N_("shared object not open"));
-
-  /* Acquire the lock.  */
-  __rtld_lock_lock_recursive (GL(dl_load_lock));
 
   /* One less direct use.  */
   --map->l_direct_opencount;
@@ -137,7 +124,6 @@ _dl_close (void *_map)
 	_dl_debug_printf ("\nclosing file=%s; direct_opencount=%u\n",
 			  map->l_name, map->l_direct_opencount);
 
-      __rtld_lock_unlock_recursive (GL(dl_load_lock));
       return;
     }
 
@@ -240,7 +226,7 @@ _dl_close (void *_map)
 #endif
   bool unload_any = false;
   unsigned int first_loaded = ~0;
-  for (i = 0; i < nloaded; ++i)
+  for (unsigned int i = 0; i < nloaded; ++i)
     {
       struct link_map *imap = maps[i];
 
@@ -411,7 +397,7 @@ _dl_close (void *_map)
 
   /* Check each element of the search list to see if all references to
      it are gone.  */
-  for (i = first_loaded; i < nloaded; ++i)
+  for (unsigned int i = first_loaded; i < nloaded; ++i)
     {
       struct link_map *imap = maps[i];
       if (!used[i])
@@ -627,6 +613,30 @@ _dl_close (void *_map)
     goto retry;
 
   dl_close_state = not_pending;
+}
+
+
+void
+_dl_close (void *_map)
+{
+  struct link_map *map = _map;
+
+  /* First see whether we can remove the object at all.  */
+  if (__builtin_expect (map->l_flags_1 & DF_1_NODELETE, 0))
+    {
+      assert (map->l_init_called);
+      /* Nope.  Do nothing.  */
+      return;
+    }
+
+  if (__builtin_expect (map->l_direct_opencount, 1) == 0)
+    GLRO(dl_signal_error) (0, map->l_name, NULL, N_("shared object not open"));
+
+  /* Acquire the lock.  */
+  __rtld_lock_lock_recursive (GL(dl_load_lock));
+
+  _dl_close_worker (map);
+
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
 }
 

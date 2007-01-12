@@ -1,3 +1,19 @@
+2006-10-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c (_dl_close_worker): Renamed from _dl_close and
+	split out locking and parameter checking.
+	(_dl_close): Call _dl_close_worker after locking and checking.
+	* elf/dl-open.c (_dl_open): Call _dl_close_worker instead of
+	_dl_close.
+	* elf/Makefile: Add rules to build and run tst-thrlock.
+	* elf/tst-thrlock.c:  New file.
+
+	[BZ #3429]
+	* elf/dl-open.c (dl_open_worker): Keep holding dl_load_lock until
+	we are sure we do not need it anymore for _dl_close.  Also move
+	the asserts inside the lock region.
+	Patch mostly by Suzuki <suzuki@in.ibm.com>.
+
 2006-10-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sunrpc/xdr_mem.c (xdrmem_setpos): Don't compare addresses
