@@ -1,3 +1,9 @@
+2006-12-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* nss/getXXbyYY_r.c: Include atomic.h.
+	(INTERNAL (REENTRANT_NAME)): Write startp after start_fct,
+	add atomic_write_barrier () in between.
+
 2006-12-18  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3747]
